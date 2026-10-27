@@ -8,9 +8,11 @@
  *       cudit et SOLUM digestum imprimit - administrator eum inscribit
  *       (communio_apparatum_addere per canalem); tessera numquam
  *       imprimitur
- *   communio replica -volumen V
- *       replicam voluminis imprimit
+ *   communio replica -volumen V [-creare]
+ *       replicam voluminis imprimit; -creare = volumen novum si deest
+ *       (sine eo via falsa errorem dat, numquam volumen tacite creat)
  *   communio currere -volumen V -servus URL -tessera FILUM [-semel]
+ *           [-creare]
  *       clientem currit: -semel = sine mora usque ad quietem (exitus 0
  *       si sine errore), aliter semper (tractio dilata), status per
  *       mutationem
@@ -32,9 +34,9 @@ interior s32
 _usus (vacuum)
 {
     fprintf(stderr, "usus: communio tessera -via FILUM\n"
-        "       communio replica -volumen V\n"
+        "       communio replica -volumen V [-creare]\n"
         "       communio currere -volumen V -servus URL -tessera FILUM"
-        " [-semel]\n");
+        " [-semel] [-creare]\n");
     redde II;
 }
 
@@ -198,7 +200,9 @@ principale (
     }
     p = piscina_generare_dynamicum("communio", (memoriae_index)LXIV *
         (memoriae_index)MXXIV);
-    v = p ? volumen_aperire(p, via) : NIHIL;
+    v = !p ? NIHIL : _signum(argc, argv, "-creare")
+                   ? volumen_aperire_aut_creare(p, via)
+                   : volumen_aperire(p, via);
     si (!v)
     {
         fprintf(stderr, "communio: volumen aperiri nequit: %s\n", via);

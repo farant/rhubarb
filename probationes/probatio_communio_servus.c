@@ -12,6 +12,7 @@
 #include "scrinium.h"
 #include "communio_servus.h"
 #include "communio_forma.h"
+#include "sigillum.h"
 #include "json.h"
 #include "reactor.h"
 #include "hospitium.h"
@@ -535,9 +536,14 @@ constans character* titulus,
                volumen_replica(v)) == ZEPHYRUM);
 }
 
+/* recensio 6a: corpus_in_memoria (0 = ordinarium) parvum = massae per
+ * filum temporarium (via productionis supra I MB); petitio_maxima 0 =
+ * ordinaria (I MB) */
 interior Rete*
-rete_parare (
-    Mundus* m)
+rete_parare_cum (
+    Mundus* m,
+       i32  corpus_in_memoria,
+       i32  petitio_maxima)
 {
                      Rete* r;
     HospitiumConfiguratio  cfg;
@@ -549,6 +555,8 @@ rete_parare (
     r->reactor = reactor_creare(piscina);
     memset(&cfg, ZEPHYRUM, magnitudo(cfg));
     cfg.reactor = r->reactor;
+    cfg.corpus_in_memoria_maximum = corpus_in_memoria;
+    cfg.petitio_maxima = petitio_maxima;
     r->hospitium = r->reactor ? hospitium_creare(piscina, &cfg) : NIHIL;
     si (   !r->hospitium || !communio_servum_montare(m->servus,
             r->hospitium))
@@ -574,6 +582,13 @@ rete_parare (
         redde NIHIL;
     }
     redde r;
+}
+
+interior Rete*
+rete_parare (
+    Mundus* m)
+{
+    redde rete_parare_cum(m, ZEPHYRUM, ZEPHYRUM);
 }
 
 interior vacuum
@@ -1176,6 +1191,136 @@ _sectio_abrumpere (
     rete_purgare(r);
 }
 
+
+/* ==================================================
+ * Recensio finalis (plan-2)
+ * ================================================== */
+
+/* recensio 1: verificatio (omnis petitio) memoriam servi non auget */
+interior vacuum
+_sectio_memoria_stabilis (
+    CredoContextus* c)
+{
+               Mundus* m;
+            character  tessera[XLIV];
+            character  id[MONETA_ULID_MENSURA];
+    CommunioApparatus  a;
+       memoriae_index  ante;
+                  i32  i;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    CREDO_NECESSE(apparatum_primum(m, tessera, id));
+    CREDO_NECESSE(communio_apparatum_verificare(m->servus, lit(tessera),
+        &a, piscina));
+    ante = communio_servi_usus(m->servus);
+    per (i = ZEPHYRUM; i < D; i++)
+    {
+        CREDO_NECESSE(communio_apparatum_verificare(m->servus,
+            lit(tessera), &a, piscina));
+    }
+    CREDO_AEQUALIS_I32((i32)communio_servi_usus(m->servus), (i32)ante);
+}
+
+/* recensio 6a + 5: massae per filum temporarium (via productionis supra
+ * I MB) - vera servatur, falsa nihil relinquit, maior quam
+ * COMMUNIO_MASSA_MAXIMA recusatur (413) */
+interior vacuum
+_sectio_massa_per_filum (
+    CredoContextus* c)
+{
+       Mundus* m;
+         Rete* r;
+           i8* octeti;
+       chorda  contentum;
+       chorda  hex;
+     Sigillum  g;
+    character  h[SIGILLUM_HEX_MENSURA];
+    character  via[CXXVIII];
+          i32  i;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    r = rete_parare_cum(m, (i32)IV * (i32)MXXIV, (i32)XXXII * (i32)M
+        * (i32)M);
+    CREDO_NECESSE_NON_NIHIL(r);
+    octeti = (i8*)piscina_allocare(piscina, (memoriae_index)(X * M));
+    per (i = ZEPHYRUM; i < X * M; i++)
+    {
+        octeti[i] = (i8)(i % CXXVII);
+    }
+    contentum.datum = octeti;
+    contentum.mensura = X * M;
+    g = sigillum_computare(octeti, (memoriae_index)contentum.mensura);
+    sigillum_hex(&g, h);
+    hex = lit(h);
+    sprintf(via, "/communio/massae/%s", h);
+
+    CREDO_GRADUS("falsa per filum: nihil servatum");
+    octeti[ZEPHYRUM] = (i8)(octeti[ZEPHYRUM] + I);
+    CREDO_AEQUALIS_I32(rogare(r, HTTP_PUT, via, r->tx,
+        contentum).status,
+        CD);
+    CREDO_FALSUM(volumen_massam_habet(m->volumen, hex));
+
+    CREDO_GRADUS("vera per filum");
+    octeti[ZEPHYRUM] = (i8)(octeti[ZEPHYRUM] - I);
+    CREDO_AEQUALIS_I32(rogare(r, HTTP_PUT, via, r->tx,
+        contentum).status,
+        CCI);
+    CREDO_VERUM(volumen_massam_habet(m->volumen, hex));
+
+    CREDO_GRADUS("maior quam COMMUNIO_MASSA_MAXIMA: 413");
+    octeti = (i8*)piscina_allocare(piscina, (memoriae_index)(
+        COMMUNIO_MASSA_MAXIMA + I));
+    memset(octeti, VII, (size_t)(COMMUNIO_MASSA_MAXIMA + I));
+    contentum.datum = octeti;
+    contentum.mensura = COMMUNIO_MASSA_MAXIMA + I;
+    g = sigillum_computare(octeti, (memoriae_index)contentum.mensura);
+    sigillum_hex(&g, h);
+    sprintf(via, "/communio/massae/%s", h);
+    CREDO_AEQUALIS_I32(rogare(r, HTTP_PUT, via, r->tx,
+        contentum).status,
+        CDXIII);
+    CREDO_FALSUM(volumen_massam_habet(m->volumen, lit(h)));
+    rete_purgare(r);
+}
+
+/* recensio 3: ligatio et tractio servum nominant (replica voluminis
+ * servi) - cliens cursores renovat si servus mutatus est */
+interior vacuum
+_sectio_servus_nominatur (
+    CredoContextus* c)
+{
+       Mundus* m;
+         Rete* r;
+    Responsum  q;
+    character  corpus[CXXVIII];
+    character  tessera[XLIV];
+    character  replica[MONETA_ULID_MENSURA];
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    r = rete_parare(m);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_NECESSE(apparatum_inscribere(m, m->amanda, "familia", "Nova",
+        NIHIL, tessera));
+    moneta_ulid(replica);
+    sprintf(corpus, "{\"replica\":\"%s\"}", replica);
+    q = rogare_json(r, HTTP_POST, "/communio/apparatus", tessera,
+        corpus);
+    CREDO_AEQUALIS_I32(q.status, CC);
+    CREDO_CHORDA_AEQUALIS(json_capere_chorda(radix(q), "servus",
+        lit("")),
+        volumen_replica(m->volumen));
+    q = rogare_json(r, HTTP_GET, "/communio/acta?post=0", r->ty, NIHIL);
+    CREDO_AEQUALIS_I32(q.status, CC);
+    CREDO_CHORDA_AEQUALIS(json_capere_chorda(radix(q), "servus",
+        lit("")),
+        volumen_replica(m->volumen));
+    rete_purgare(r);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "apparatus", _sectio_apparatus, _parare, _purgare, NIHIL, NIHIL },
     { "revocatus", _sectio_revocatus, _parare, _purgare, NIHIL, NIHIL },
@@ -1203,6 +1348,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tempus (long-poll)", _sectio_tempus, _parare, _purgare, NIHIL,
         NIHIL },
     { "cliens abiit (long-poll)", _sectio_abrumpere, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "memoria stabilis (recensio)", _sectio_memoria_stabilis, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "massa per filum (recensio)", _sectio_massa_per_filum, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "servus nominatur (recensio)", _sectio_servus_nominatur, _parare,
         _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

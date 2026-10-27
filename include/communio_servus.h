@@ -66,6 +66,12 @@ vacuum
 communio_servum_destruere (
     CommunioServus* servus);
 
+/* octeti in piscina scripturarum servi (recensio 1: stabilis esse
+ * debet per petitiones - mensura et vigilia) */
+memoriae_index
+communio_servi_usus (
+    constans CommunioServus* servus);
+
 /* civem (activum) in spatium; iteratum = VERUM sine actu novo */
 b32
 communio_membrum_addere (
@@ -133,12 +139,13 @@ communio_tesseram_facere (
  * ==================================================
  *
  * POST /communio/apparatus {"replica":R} -> 200 {"apparatus",
- *      "spatium"};
+ *      "spatium", "servus"};
  *      409 replica alia aut aliena; 400 invalida
  * GET  /communio/apparatus -> {"apparatus":[{replica, titulus, civis,
  *      persona}]} spatii vocantis (ligati soli; digesta numquam)
  * POST /communio/massae/desunt {"massae":[hex]} -> {"desunt":[hex]}
  * PUT  /communio/massae/:sigillum (octeti; > 1 MB per filum) -> 201;
+ *      413 supra COMMUNIO_MASSA_MAXIMA (XVI MB, limes lectoris http);
  *      400 si SHA-256 octetorum non :sigillum (nihil servatur)
  * GET  /communio/massae/:sigillum -> 200 octeti (per fontem); 404
  * POST /communio/acta {"acta":[...]} (CC ad plurimum, omnia valida,
@@ -149,7 +156,9 @@ communio_tesseram_facere (
  * GET  /communio/acta?post=N -> {"acta":[...],"cursor":M,"plura":b,
  *      "massae":[hex]}: acta (seq servi > N) apparatuum ALIORUM spatii,
  *      CC ad plurimum; cursor = seq servi ultimi (N si nulla); massae =
- *      quas acta nominant et servus habet. &mora=S (T5, XXV s ad
+ *      quas acta nominant et servus habet; "servus" = replica voluminis
+ *      servi (recensio 3: cursores clientis ad eam ligati).
+ *      &mora=S (T5, XXV s ad
  *      plurimum): si nihil est, petitio exspectat donec apparatus alius
  *      spatii acta nova mittit (responsum idem ac tractio recens) aut S
  *      secundae transeunt (acta vacua, cursor N); loci LXIV, pleni =

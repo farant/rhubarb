@@ -18,6 +18,7 @@
 #include "hospitium.h"
 #include "communio_servus.h"
 #include "communio_cliens.h"
+#include "communio_forma.h"
 #include "sigillum.h"
 #include "lectiones.h"
 #include "filum.h"
@@ -1260,6 +1261,260 @@ _sectio_tessera_in_filo (
     CREDO_FALSUM(communio_tesseram_legere(via, tessera));
 }
 
+
+/* ==================================================
+ * Recensio finalis (plan-2): servus novus, massa nimia, acceptio
+ * partialis, derivata multa
+ * ================================================== */
+
+/* apparatum per tesseram EXSISTENTEM inscribere (digestum ex ea) */
+interior b32
+apparatum_tessera (
+                 Orbis* o,
+                chorda  civis,
+    constans character* tessera)
+{
+     Sigillum g;
+    character hex[SIGILLUM_HEX_MENSURA];
+    character id[MONETA_ULID_MENSURA];
+
+    g = sigillum_computare(tessera, (memoriae_index)strlen(tessera));
+    sigillum_hex(&g, hex);
+    redde communio_membrum_addere(o->servus,
+        chorda_ex_literis("familia",
+               piscina), civis)
+        && communio_apparatum_addere(o->servus, civis,
+        chorda_ex_literis(
+               "familia", piscina), chorda_ex_literis("apparatus",
+               piscina), chorda_ex_literis(hex, piscina), id);
+}
+
+/* servus alius: volumen novum (replica nova), portus idem, tesserae
+ * eaedem - ut cum communio.volumen deletur aut restituitur */
+interior b32
+servum_novum (
+    Orbis* o)
+{
+    chorda primus;
+    chorda secunda;
+
+    communio_servum_destruere(o->servus);
+    hospitium_destruere(o->hospitium);
+    o->hospitium = NIHIL;
+    volumen_claudere(o->vs);
+    o->vs = volumen_temporarium(piscina,
+        "probatio_communio_servus_novus");
+    o->cives = o->vs ? cives_aperire(o->vs, NIHIL, piscina) : NIHIL;
+    si (!o->cives || !volumen_transactionem_incipere(o->vs))
+    {
+        redde FALSUM;
+    }
+    (vacuum)cives_creare(o->cives, chorda_ex_literis("franciscus",
+        piscina), chorda_ex_literis("Franciscus", piscina), &primus,
+        piscina);
+    (vacuum)cives_creare(o->cives, chorda_ex_literis("amanda", piscina),
+        chorda_ex_literis("Amanda", piscina), &secunda, piscina);
+    (vacuum)volumen_transactionem_committere(o->vs);
+    o->servus = communio_servum_creare(piscina, o->vs, o->cives, NIHIL);
+    redde o->servus && hospitium_aperire(o)
+        && apparatum_tessera(o, primus, o->ta)
+        && apparatum_tessera(o, secunda, o->tb);
+}
+
+/* recensio 3: servo substituto (volumen novum) cursores veteres nihil
+ * valent - cliens servum novum agnoscit, omnia iterum mittit, trahit */
+interior vacuum
+_sectio_servus_novus (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+         CommunioCliens* ca;
+         CommunioCliens* cb;
+
+    (vacuum)c;
+    thema_initiare();
+    CREDO_NECESSE(orbem_parare(&o));
+    intern  = internamentum_creare(piscina);
+    va      = volumen_temporarium(piscina, "probatio_communio_na");
+    vb      = volumen_temporarium(piscina, "probatio_communio_nb");
+    CREDO_NECESSE(va && vb);
+    da = pictor_documentum_creare(piscina, intern, va, "p", C, LX, II);
+    CREDO_NECESSE(da && operationes(da, ZEPHYRUM));
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, o.tb, NIHIL);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+
+    CREDO_GRADUS("servus novus; A pergit pingere");
+    CREDO_NECESSE(servum_novum(&o));
+    CREDO_NECESSE(ictus(da, LXX, XXX, IX) > ZEPHYRUM);
+    CREDO_NECESSE(ictus(da, LXXX, XXX, X) > ZEPHYRUM);
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+    CREDO_AEQUALIS_I32(acta_replicae(o.vs, volumen_replica(va)),
+        acta_communicanda(va));
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, vb,
+        volumen_replica(va), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    CREDO_VERUM(aequales(da, aliena));
+    CREDO_AEQUALIS_I32(acta_replicae(vb, volumen_replica(va)),
+        acta_communicanda(va));
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+/* recensio 5: massa supra COMMUNIO_MASSA_MAXIMA non mittitur - error
+ * visibilis in apparatu scribente (non silentium in aliis), etiam dum
+ * tractio alia succedit */
+interior vacuum
+_sectio_massa_nimia (
+    CredoContextus* c)
+{
+             Orbis  o;
+           Volumen* va;
+    CommunioCliens* ca;
+                i8* octeti;
+            chorda  contentum;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    va = volumen_temporarium(piscina, "probatio_communio_ga");
+    CREDO_NECESSE_NON_NIHIL(va);
+    octeti = (i8*)piscina_allocare(piscina, (memoriae_index)(
+        COMMUNIO_MASSA_MAXIMA + I));
+    memset(octeti, III, (size_t)(COMMUNIO_MASSA_MAXIMA + I));
+    contentum.datum    = octeti;
+    contentum.mensura  = COMMUNIO_MASSA_MAXIMA + I;
+    CREDO_NECESSE(volumen_plagulam_condere(va, chorda_ex_literis(
+        "p/magna", piscina), contentum, "probatio"));
+    ca = clientem(&o, va, o.ta, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(ca);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    agere(&o, MMD);
+    CREDO_VERUM(continet_literas(communio_cliens_status(ca).error,
+        "massa nimia"));
+    communio_clientem_destruere(ca);
+    volumen_claudere(va);
+    orbem_purgare(&o);
+}
+
+/* recensio 6b: fasciculus partim acceptus (conflictus ad actum k) -
+ * ascensus = seq actus k-1, error notatus */
+interior vacuum
+_sectio_acceptio_partialis (
+    CredoContextus* c)
+{
+             Orbis  o;
+           Volumen* va;
+    CommunioCliens* ca;
+               Xar* propria;
+      VolumenActum  falsum;
+               i32  k;
+               i32  gyri;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    va = volumen_temporarium(piscina, "probatio_communio_pa");
+    CREDO_NECESSE_NON_NIHIL(va);
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        CREDO_NECESSE(volumen_actum_appendere(va, "x/actum",
+            chorda_ex_literis("{\"n\":1}", piscina)) > ZEPHYRUM);
+    }
+    propria = volumen_acta_propria_legere(va, ZEPHYRUM, piscina);
+    CREDO_NECESSE(propria && xar_numerus(propria) >= III);
+    /* actum penultimum in servo iam est cum datum alio: conflictus */
+    k             = xar_numerus(propria) - II;
+    falsum        = *(VolumenActum*)xar_obtinere(propria, k);
+    falsum.datum  = chorda_ex_literis("{\"n\":2}", piscina);
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(o.vs, &falsum),
+        (i32)VOLUMEN_IMPORTATUM);
+    ca = clientem(&o, va, o.ta, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(ca);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    per (gyri = ZEPHYRUM; communio_cliens_status(ca).missa == ZEPHYRUM
+         && gyri < CCC; gyri++)
+    {
+        agere(&o, X);
+    }
+    agere(&o, CC);
+    CREDO_AEQUALIS_S64(communio_cliens_status(ca).ascensus,
+        ((VolumenActum*)xar_obtinere(propria, k - I))->seq);
+    CREDO_VERUM(communio_cliens_status(ca).error.mensura > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(communio_cliens_status(ca).missa, k);
+    communio_clientem_destruere(ca);
+    volumen_claudere(va);
+    orbem_purgare(&o);
+}
+
+/* recensio 4: lectio limitata actorum propriorum - plus quam CD
+ * derivata ante acta vera non sistunt */
+interior vacuum
+_sectio_derivata_multa (
+    CredoContextus* c)
+{
+             Orbis  o;
+           Volumen* va;
+           Volumen* vb;
+    CommunioCliens* ca;
+    CommunioCliens* cb;
+         character  via[LXIV];
+         character  textus[XXXII];
+               i32  k;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    va = volumen_temporarium(piscina, "probatio_communio_ka");
+    vb = volumen_temporarium(piscina, "probatio_communio_kb");
+    CREDO_NECESSE(va && vb);
+    per (k = ZEPHYRUM; k < CDL; k++)
+    {
+        sprintf(via, "p/checkpoint/%d", (integer)k);
+        sprintf(textus, "c%d", (integer)k);
+        CREDO_NECESSE(volumen_plagulam_condere(va,
+            chorda_ex_literis(via,
+            piscina), chorda_ex_literis(textus, piscina),
+            "pictor:checkpoint"));
+    }
+    CREDO_NECESSE(volumen_actum_appendere(va, "x/actum",
+        chorda_ex_literis(
+        "{}", piscina)) > ZEPHYRUM);
+    CREDO_NECESSE(volumen_actum_appendere(va, "x/actum",
+        chorda_ex_literis(
+        "{}", piscina)) > ZEPHYRUM);
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, o.tb, NIHIL);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+    CREDO_AEQUALIS_I32(acta_replicae(vb, volumen_replica(va)),
+        acta_communicanda(va));
+    CREDO_AEQUALIS_S64(communio_cliens_status(ca).ascensus,
+        seq_proprium_ultimum(va));
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transferre, iterum, idempotens", _sectio_transferre, _parare,
         _purgare, NIHIL, NIHIL },
@@ -1289,6 +1544,15 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _purgare, NIHIL, NIHIL },
     { "tessera in filo", _sectio_tessera_in_filo, _parare, _purgare,
         NIHIL, NIHIL },
+    { "servus novus (recensio)", _sectio_servus_novus, _parare,
+        _purgare,
+        NIHIL, NIHIL },
+    { "massa nimia (recensio)", _sectio_massa_nimia, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "acceptio partialis (recensio)", _sectio_acceptio_partialis,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "derivata multa (recensio)", _sectio_derivata_multa, _parare,
+        _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

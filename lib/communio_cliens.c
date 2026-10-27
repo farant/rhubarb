@@ -29,6 +29,7 @@
 #define MORA_ORDINARIA     XXV
 #define MORA_MARGO_S       XV
 #define TEMPUS_PETITIONIS  ((i32)XXX * (i32)M)
+#define LECTIO_MAXIMA      ((i32)COMMUNIO_ACTA_MAXIMA * (i32)II)
 
 nomen enumeratio {
     GRADUS_NULLUS = ZEPHYRUM,
@@ -61,6 +62,8 @@ nomen structura {
                          Xar* massae;        /* chorda petendae */
                          s64  cursor_novus;
                          b32  plura;
+    /* recensio 3: epocha cycli - responsum epochae priori abicitur */
+                         i32 epocha;
 } Semita;
 
 structura CommunioCliens {
@@ -82,8 +85,14 @@ structura CommunioCliens {
              character  error[ERROR_MAXIMUS];
              character* error_ipse;
                    i32  error_mensura;
-                Semita  sursum;
-                Semita  deorsum;
+    /* semita quae errorem posuit: alia eum non delet (recensio 5) */
+       constans Semita* error_semita;
+    /* recensio 3: replica voluminis servi cuius cursores sunt; mutata
+     * = servus alius (volumen novum aut restitutum): cursores ad 0 */
+             character servus[XXVIII];
+                   i32 epocha;
+                Semita sursum;
+                Semita deorsum;
 };
 
 
@@ -151,9 +160,10 @@ constans character* nomen_cursoris,
 /* error (sine tessera umquam) */
 interior vacuum
 _errorem_ponere (
-    CommunioCliens* c,
-constans character* quid,
-               i32  status)
+       CommunioCliens* c,
+   constans character* quid,
+                  i32  status,
+      constans Semita* semita)
 {
     si (status > ZEPHYRUM)
     {
@@ -165,15 +175,23 @@ constans character* quid,
     }
     c->error_mensura  = (i32)strlen(c->error);
     c->connexus       = FALSUM;
+    c->error_semita   = semita;
 }
 
+/* successus semitae: error suus (aut nullius) deletur, alienus manet */
 interior vacuum
 _errorem_purgare (
-    CommunioCliens* c)
+      CommunioCliens* c,
+     constans Semita* semita)
 {
+    c->connexus = VERUM;
+    si (c->error_semita && c->error_semita != semita)
+    {
+        redde;
+    }
     c->error[ZEPHYRUM]  = '\0';
     c->error_mensura    = ZEPHYRUM;
-    c->connexus         = VERUM;
+    c->error_semita     = NIHIL;
 }
 
 interior vacuum
@@ -216,7 +234,7 @@ _defectus (
 constans character* quid,
                 i32  status)
 {
-    _errorem_ponere(s->cliens, quid, status);
+    _errorem_ponere(s->cliens, quid, status, s);
     s->otiosa = FALSUM;
     _horam_ponere(s, REPETITIO_MS, _semita_hora);
 }
@@ -303,6 +321,48 @@ _vacua (vacuum)
     redde v;
 }
 
+/* recensio 3: servum agnoscere (replica voluminis eius, ex ligatione
+ * aut tractione). Primus: notatur. Alius quam notatus: cursores ad 0,
+ * replica iterum ligatur, epocha crescit (responsa in itinere ad servum
+ * priorem abiciuntur) - VERUM redditur. */
+interior b32
+_servum_agnoscere (
+    CommunioCliens* c,
+            chorda  servus,
+           Piscina* piscina)
+{
+    character clavis[CLAVIS_MAXIMA];
+          i32 n;
+
+    si (!communio_replica_valida(servus))
+    {
+        redde FALSUM;
+    }
+    n = (i32)strlen(c->servus);
+    si (   n                                          == servus.mensura
+        && memcmp(c->servus, servus.datum, (size_t)n) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    memcpy(c->servus, servus.datum, (size_t)servus.mensura);
+    c->servus[servus.mensura] = '\0';
+    _clavem(c, "servus", clavis);
+    (vacuum)volumen_praesens_ponere(c->volumen,
+        chorda_ex_literis(clavis,
+        piscina), chorda_ex_literis(c->servus, piscina));
+    si (n == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    c->ascensus   = ZEPHYRUM;
+    c->descensus  = ZEPHYRUM;
+    _cursorem_scribere(c, "ascensus", ZEPHYRUM, piscina);
+    _cursorem_scribere(c, "descensus", ZEPHYRUM, piscina);
+    c->ligatum = FALSUM;
+    c->epocha++;
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Ascensus
@@ -323,17 +383,32 @@ interior vacuum
 _massam_mittere_proximam (
     Semita* s)
 {
-       chorda hex;
-       chorda contentum;
-          b32 inventum;
-    character via[VIA_MAXIMA];
+                chorda  hex;
+                chorda  contentum;
+                   b32  inventum;
+             character  via[VIA_MAXIMA];
+    VolumenMassaLector* lector;
+                   i64  mensura;
 
+    mensura = ZEPHYRUM;
     si (!s->desunt || s->index >= xar_numerus(s->desunt))
     {
         _acta_mittere(s);
         redde;
     }
     hex = *(chorda*)xar_obtinere(s->desunt, s->index);
+    /* recensio 5: mensura PRIUS (massa magna non in memoriam) */
+    lector = volumen_massam_aperire(s->cliens->volumen, hex, &mensura,
+        s->piscina);
+    si (lector)
+    {
+        volumen_massam_claudere(lector);
+    }
+    si (mensura > (i64)COMMUNIO_MASSA_MAXIMA)
+    {
+        _defectus(s, "massa nimia (supra XVI MB)", ZEPHYRUM);
+        redde;
+    }
     contentum = volumen_massam_promere(s->cliens->volumen, hex,
         s->piscina, &inventum);
     si (!inventum)
@@ -362,6 +437,7 @@ _ascensum_cyclus (
                i32  j;
                i32  k;
          character  corpus[XCVI];
+            chorda  replica;
 
     c = s->cliens;
     piscina_vacare(s->piscina);
@@ -369,6 +445,7 @@ _ascensum_cyclus (
     s->desunt             = NIHIL;
     s->index              = ZEPHYRUM;
     s->fasciculus_plenus  = FALSUM;
+    s->epocha             = c->epocha;
     si (!c->ligatum)
     {
         sprintf(corpus, "{\"replica\":\"%.26s\"}",
@@ -379,8 +456,10 @@ _ascensum_cyclus (
             TEMPUS_PETITIONIS);
         redde;
     }
-    acta     = volumen_acta_propria_legere(c->volumen, c->ascensus,
-        s->piscina);
+    /* recensio 4: lectio limitata, non omnia post cursorem */
+    replica  = volumen_replica(c->volumen);
+    acta     = volumen_acta_replicarum_legere(c->volumen, c->ascensus,
+        &replica, I, LECTIO_MAXIMA, s->piscina);
     s->fasciculus = xar_creare(s->piscina,
         (i32)magnitudo(VolumenActum));
     massae = xar_creare(s->piscina, (i32)magnitudo(chorda));
@@ -414,12 +493,22 @@ _ascensum_cyclus (
         octeti                                     += mensura;
         s->finis_fasciculi                         = a->seq;
     }
+    si (xar_numerus(acta) >= LECTIO_MAXIMA)
+    {
+        s->fasciculus_plenus = VERUM;
+    }
     si (xar_numerus(s->fasciculus) == ZEPHYRUM)
     {
         si (s->finis_fasciculi > c->ascensus)
         {
             c->ascensus = s->finis_fasciculi;
             _cursorem_scribere(c, "ascensus", c->ascensus, s->piscina);
+        }
+        si (s->fasciculus_plenus)
+        {
+            /* derivata sola in lectione plena: plura sequuntur */
+            _horam_ponere(s, I, _semita_hora);
+            redde;
         }
         s->otiosa = VERUM;
         _horam_ponere(s, QUAESTIO_MS, _semita_hora);
@@ -484,6 +573,7 @@ _descensum_cyclus (
     s->tracta  = NIHIL;
     s->massae  = NIHIL;
     s->index   = ZEPHYRUM;
+    s->epocha  = c->epocha;
     sprintf(via, "/communio/acta?post=%ld&mora=%d",
         (longus)c->descensus,
         (integer)c->mora);
@@ -525,7 +615,7 @@ _importare (
     c->descensus  = s->cursor_novus;
     c->recepta    += importata;
     _cursorem_scribere(c, "descensus", c->descensus, s->piscina);
-    _errorem_purgare(c);
+    _errorem_purgare(c, s);
     si (importata > ZEPHYRUM && c->advenerunt)
     {
         c->advenerunt(c->ctx, importata);
@@ -595,6 +685,17 @@ _tractum_legere (
         _defectus(s, "tractio mala", ZEPHYRUM);
         redde;
     }
+    si (_servum_agnoscere(c, json_capere_chorda(r.radix, "servus",
+            _vacua()), s->piscina))
+    {
+        /* servus alius: tractio haec cursore vetere facta - ab initio,
+         * et ascensus statim (replica iterum ligatur) */
+        s->otiosa         = FALSUM;
+        c->sursum.otiosa  = FALSUM;
+        _semita_cyclus(&c->sursum);
+        _descensum_cyclus(s);
+        redde;
+    }
     s->cursor_novus = json_capere_integer(r.radix, "cursor",
         c->descensus);
     s->plura   = json_capere_boolean(r.radix, "plura", FALSUM);
@@ -648,12 +749,12 @@ _acta_missa (
     _cursorem_scribere(c, "ascensus", c->ascensus, s->piscina);
     si (refusum && refusum->genus == JSON_OBJECTUM)
     {
-        _errorem_ponere(c, "refusum", ZEPHYRUM);
+        _errorem_ponere(c, "refusum", ZEPHYRUM, s);
         s->otiosa = FALSUM;
         _horam_ponere(s, REPETITIO_MS, _semita_hora);
         redde;
     }
-    _errorem_purgare(c);
+    _errorem_purgare(c, s);
     _ascensum_cyclus(s);
 }
 
@@ -680,6 +781,12 @@ _progredi_hora (
     {
         redde;
     }
+    si (s->epocha != s->cliens->epocha)
+    {
+        /* recensio 3: responsum servi prioris - cyclus de novo */
+        _semita_cyclus(s);
+        redde;
+    }
     res     = http_vocatio_resultus(v);
     status  = (res.successus && res.responsum) ? res.responsum->status
                                                : ZEPHYRUM;
@@ -693,8 +800,14 @@ _progredi_hora (
                 _defectus(s, "ligare", status);
                 frange;
             }
+            r = json_legere(corpus, s->piscina);
+            si (r.successus)
+            {
+                (vacuum)_servum_agnoscere(s->cliens, json_capere_chorda(
+                    r.radix, "servus", _vacua()), s->piscina);
+            }
             s->cliens->ligatum = VERUM;
-            _errorem_purgare(s->cliens);
+            _errorem_purgare(s->cliens, s);
             _ascensum_cyclus(s);
             frange;
         casus GRADUS_DESUNT:
@@ -847,6 +960,20 @@ communio_clientem_creare (
     }
     c->ascensus   = _cursorem_legere(c, "ascensus");
     c->descensus  = _cursorem_legere(c, "descensus");
+    {
+        character clavis[CLAVIS_MAXIMA];
+           chorda valor;
+              b32 inventum;
+
+        _clavem(c, "servus", clavis);
+        valor = volumen_praesens_legere(c->volumen, chorda_ex_literis(
+            clavis, c->piscina), c->piscina, &inventum);
+        si (   inventum && valor.mensura > ZEPHYRUM
+            && valor.mensura < (i32)magnitudo(c->servus))
+        {
+            memcpy(c->servus, valor.datum, (size_t)valor.mensura);
+        }
+    }
     redde c;
 }
 

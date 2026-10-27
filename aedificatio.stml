@@ -1297,7 +1297,7 @@
        declarations: SDK sprintf notat solum sub sanitatoribus. -->
   <actio titulus="probationes_veneni" genus="iudicium">
     <probationes_c exemplar="probationes/probatio_*.c"
-        membra="probatio_piscina probatio_magnus probatio_fractio probatio_situs probatio_polynomium probatio_matrix probatio_laqueus probatio_extensio probatio_quaternio probatio_radices probatio_cellae probatio_reticulum probatio_plexus probatio_nervus probatio_dependentia probatio_chorda_aedificator"
+        membra="probatio_piscina probatio_magnus probatio_fractio probatio_situs probatio_polynomium probatio_matrix probatio_laqueus probatio_extensio probatio_quaternio probatio_radices probatio_cellae probatio_reticulum probatio_plexus probatio_nervus probatio_dependentia probatio_chorda_aedificator probatio_communio_servus"
         vexilla="-g -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -Wno-deprecated-declarations -Wno-overlength-strings -DPISCINA_VENENUM=1"
         vexilla_nexus="-fsanitize=address,undefined"/>
   </actio>

@@ -68,3 +68,20 @@ already excludes the caller's replica, so a woken own-waiter finds nothing and
 stays deferred. The plant removing the shortcut stayed green by design; the test
 "propria non excitat" pins the behaviour, not the shortcut. The plant removing
 timer cancellation in destruere turned red.
+
+## 2026-10-27 - final review fixes (plan-2)
+
+- Per-request leak: `communio_apparatum_verificare` -> `_persona_activa` ->
+  `cives_per_id` allocated into the server's scratch pool on EVERY request and
+  never reset (every other writer marks/resets). Now marked/reset around it;
+  `communio_servi_usus` exposes the pool size and a test proves it flat over
+  500 verifications.
+- Read-after-reset: `colloquium_respondere` may drain synchronously and recycle
+  the colloquium pool (hospitium `_paratus_novae`), and `_excitare` then read
+  a.spatium/a.replica from it. Wake the waiters BEFORE responding. The same
+  family: `communio_replicam_ligare` compared the stored replica after
+  `piscina_reficere`. Both found/proved by adding probatio_communio_servus to the
+  `probationes_veneni` gate (PISCINA_VENENUM + ASan) - it stays there.
+- Server identity: bind + pull responses carry "servus" (this volume's replica)
+  so clients can tell a replaced/restored communio.volumen from the same one.
+- One blob limit: COMMUNIO_MASSA_MAXIMA (16 MB = http lector cap) -> PUT 413.

@@ -274,6 +274,14 @@ interior vacuum
 _exspectantem_solvere (
     Exspectans* x);
 
+memoriae_index
+communio_servi_usus (
+    constans CommunioServus* servus)
+{
+    redde servus && servus->tempus ? piscina_summa_usus(servus->tempus)
+                                   : (memoriae_index)ZEPHYRUM;
+}
+
 vacuum
 communio_servum_destruere (
     CommunioServus* servus)
@@ -560,7 +568,12 @@ communio_apparatum_verificare (
     scrinium_finire(e);
     si (bene)
     {
+        /* recensio 1: cives_per_id in tempus allocat - omnis petitio
+         * hic transit, ergo notare/reficere (aliter piscina crescit) */
+        PiscinaNotatio nota = piscina_notare(servus->tempus);
+
         bene = _persona_activa(servus, exitus->civis);
+        piscina_reficere(servus->tempus, nota);
     }
     si (bene)
     {
@@ -616,8 +629,11 @@ communio_replicam_ligare (
     scrinium_finire(e);
     si (praesens.mensura > ZEPHYRUM)
     {
+        /* recensio (venenum): comparatio ANTE refectionem - praesens in
+         * tempus habitat */
+        bene = chorda_aequalis(praesens, replica);
         piscina_reficere(servus->tempus, nota);
-        redde chorda_aequalis(praesens, replica) ? ZEPHYRUM : I;
+        redde bene ? ZEPHYRUM : I;
     }
     e = scrinium_praeparare(servus->scrinium,
         "SELECT 1 FROM communio_apparatus WHERE replica = ?");
@@ -835,6 +851,8 @@ _ligare_post (
     json_objectum_ponere(o, "apparatus", json_chorda_creare(p, a.id));
     json_objectum_ponere(o, "spatium", json_chorda_creare(p,
         a.spatium));
+    json_objectum_ponere(o, "servus", json_chorda_creare(p,
+        volumen_replica(s->volumen)));
     _json_respondere(col, CC, o);
 }
 
@@ -962,6 +980,14 @@ _massa_put (
     si (!_digestum_validum(hex) || !q)
     {
         _errare(col, CD, "sigillum");
+        redde;
+    }
+    /* recensio 5: limes unus utrimque - quod cliens trahere nequit
+     * (lector http) servus non accipit */
+    si (   (q->corpus_via ? q->content_length : q->corpus.mensura)
+        > COMMUNIO_MASSA_MAXIMA)
+    {
+        _errare(col, CDXIII, "massa nimia");
         redde;
     }
     memcpy(notum, hex.datum, (size_t)DIGESTUM_LONGITUDO);
@@ -1141,11 +1167,14 @@ _acta_post (
     json_objectum_ponere(o, "accepta", json_integer_creare(p,
         (s64)accepta));
     json_objectum_ponere(o, "refusum", refusum);
-    _json_respondere(col, CC, o);
+    /* recensio 2: ANTE responsum - respondere piscinam colloquii
+     * reficere potest (connexio parata petitioni novae), et a.spatium /
+     * a.replica in ea habitant */
     si (importata > ZEPHYRUM)
     {
         _excitare(s, a.spatium, a.replica);
     }
+    _json_respondere(col, CC, o);
 }
 
 /* replicae ligatae spatii praeter propriam: tabula chordarum */
@@ -1261,6 +1290,8 @@ _tractio (
     json_objectum_ponere(o, "plura", json_boolean_creare(p,
         xar_numerus(acta) >= COMMUNIO_ACTA_MAXIMA));
     json_objectum_ponere(o, "massae", m);
+    json_objectum_ponere(o, "servus", json_chorda_creare(p,
+        volumen_replica(s->volumen)));
     redde o;
 }
 

@@ -33,6 +33,12 @@
 /* acta per petitionem (missio aut tractio) */
 #define COMMUNIO_ACTA_MAXIMA CC
 
+/* massa maxima communicabilis (recensio 5): HTTP_LECTOR_CORPUS_MAXIMUM
+ * (http.h) - cliens massam maiorem trahere non potest, ergo servus eam
+ * non accipit et cliens eam non mittit (error visibilis in apparatu
+ * scribente, non silentium in omnibus aliis) */
+#define COMMUNIO_MASSA_MAXIMA ((i32)XVI * (i32)M * (i32)M)
+
 /* actum in obiectum JSON; NIHIL si memoria deficit */
 JsonValor*
 communio_actum_scribere (

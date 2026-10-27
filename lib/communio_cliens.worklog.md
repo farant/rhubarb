@@ -45,3 +45,17 @@ tools/communio.c is a thin wrapper (tessera / replica / currere [-semel]),
 built like oceanus: ./bin/aedilis tools/communio.c && bash
 build/aedilis/communio/struere.sh -> build/aedilis/communio/communio (never
 installed from a worktree).
+
+## 2026-10-27 - final review fixes (plan-2)
+
+- Server identity: the client remembers the server volume's replica
+  ("communio/<basis>/servus"); when a bind or pull names another one (the server
+  volume was replaced or restored), both cursors go to 0, the replica is re-bound
+  and `epocha` increments so a response already in flight to the old server is
+  discarded instead of writing a stale cursor back.
+- Own acts are read in pages of 400 (`volumen_acta_replicarum_legere` with the
+  own replica) - before, every cycle re-read everything after the cursor
+  (quadratic first sync). A page of derived acts only advances and re-cycles.
+- Blobs above COMMUNIO_MASSA_MAXIMA are refused BEFORE sending (size via the
+  massa reader, not by loading it) with a visible error on the writing device.
+- Errors are owned per lane: a successful pull no longer wipes a push error.
