@@ -1852,11 +1852,19 @@
     <forma textus="acordum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="acordi" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="acorda" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="acordorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
   <vocabulum lemma="instrumentarium" lingua="latina" classis="substantivum" nota="vox domus (-ium, -ii n., ut armamentarium, sanctuarium): locus instrumentorum - instrumenta musica domus ut data (instrumentarium.stml, include/carmen.h); WORDS caret">
     <forma textus="instrumentarium" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="unisonus" lingua="latina" classis="adiectivum" nota="Latina media (Boethius, theorici musicae: unisonus, -a, -um = eiusdem soni; unisonus = vox eadem altitudine): hic exemplaria undae paulo dispersa (sectio chordarum, include/tibia.h)"><forma textus="unisonus"/><forma textus="unisoni"/><forma textus="unisonos"/><forma textus="unisonorum"/></vocabulum>
+  <vocabulum lemma="picardia" lingua="latina" classis="substantivum" nota="Latina media (Picardia, -ae f.: regio Galliae septentrionalis): tertia Picardiae = acordum tonicae maius in clave minore (tierce de Picardie), include/functio.h"><forma textus="picardia"/><forma textus="picardiae"/></vocabulum>
+  <vocabulum lemma="limitator" lingua="latina" classis="substantivum" nota="limitator, -oris m. (Latinitas posterior, L&amp;S: qui limites ponit): hic limitator summae mixturae (apices supra tectum statim deprimit, include/mixtura.h)">
+    <forma textus="limitator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
   <!-- transformare T4 (2026-10-26): rescriptio vocationum per regulas (silva/fontes/silva_forma.h) -->
   <vocabulum lemma="rescriptio" lingua="latina" classis="substantivum" nota="Latinum serum (rescriptio, -onis f., a rescribere: responsum scriptum; Du Cange): hic rescriptio codicis - situs vocationis per regulam transformationis rescriptus (silva_rescriptiones_parare, transformare T4); WORDS caret">

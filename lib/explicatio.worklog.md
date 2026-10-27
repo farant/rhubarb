@@ -59,3 +59,129 @@ accordum = concordia); renamed tonica -> finalis (mode final), APPOGGIATURA -> I
 glossary entry), ESCAPATA -> EFFUGIENS, removibiles -> removendae. Displayed names
 stay the musical terms (appoggiatura, app., esc.). silva/renominare.sh refuses untracked
 files (git is its undo) - exact whole-word replacement instead.
+
+## 2026-10-26 - 43HA step 2: added tones must be held
+
+With 6/9/7sus4/7#5 in the vocabulary, the minimal-removal search started preferring
+"bigger" chord names that swallow melody notes (A passing over C E G -> C6; F/D over G C
+-> G7sus4). Rule `_additae_tenentur`: a window's name is kept only if every ADDED tone
+of the genus (acordum additae, rotated to the root) comes from a NON-candidate note -
+i.e. a note without passing/neighbour shape. Otherwise the name becomes IGNOTA and the
+search keeps removing. Passing A over C E G stays "C:1 (A4 vic.)"; held A gives
+"C6:1"; held G B F A gives "G9:1 (F4 sept.!)"; passing D over C E Bb stays C7.
+
+House songs: explicatio/functio lines unchanged for all eight; only lilia's per-beat
+harmonia line changed (bars 3, 6 "[Bb C D E]" -> C9/Bb; bar 10 "[Bb C D F]" -> Bbadd9) -
+harmonia names what sounds, by design.
+
+## 2026-10-26 - review batch 1.2: a note that starts the window and lasts it is held; fallback; 7sus4
+
+From the sexta review (harmony findings 1, 3 and the test reviewer's side finding).
+(1) ii65 regression: F A C D over F only names F6 (radix_basso), and the whole-bar D read as a
+candidate ('ant.': same pitch in the next bar), so F6 was rejected and D removed -> "F (D5
+ant.)" / IV. A note that STARTS with the window and sounds through it now counts as held for
+the added-tone rule (`tentae`), so the window names F6; functio reads IVadd6 before V as ii65
+(batch 1.3, Fran: "ii65, Iadd6 at final"). First version said "sounds the whole window" - it
+turned a prepared 4-3 suspension over G7 (C tied in from the bar before) into G7sus4; a
+suspension must stay a suspension, hence "starts with the window". A crotchet A at the window
+start (A4 G4 E2 over C E G) stays a non-chord tone.
+(3) the no-name fallback re-derived the full set name without the added-tone check, so a
+rejected G7sus4 / C9/D came back with every note "?" - fallback now checks too (IGNOTA).
+The reviewer's C9/D fixture is no longer a fallback case: its uppers start with and fill the
+half-note window, so C9/D is a fair literal name now.
+(side) 7sus4 absorbed candidate CHORD tones (G + C held, melody e f e d -> G7sus4): its added
+tones are now the fourth, fifth AND seventh (ADDITAE_SUSPENSAE) - all must be held. A fully
+held G C D F still names G7sus4.
+Tests also close two test-strength gaps: G-rooted passing/neighbour cases (the rotation was
+untested - all were C-rooted) and m6 / 7sus4 root-in-bass rows in acordum. Plants 8/8 first
+try (+1 re-plant on the macro form). House songs byte-identical.
+Formatter quirk: a PROPRIETATES row wrapped onto a second line got 'spatium unicum ante
+operatorem binarium' on its leading `-I` (read as binary minus) - routed around with the
+ADDITAE_SUSPENSAE macro; filed.
+
+## 2026-10-26 - review batch 3: suspension detection no longer depends on part order
+
+From the sexta review (harmony finding 4, pre-existing since N1). _motus read
+`segmenta[s - 1]` as "the same note's previous segment" and `segmentum + segmenta - 1` as "the
+prior note's last segment", assuming a note's segments are adjacent - but segmenta are qsorted
+by (initium, pars, pulsus) across ALL parts, so those slots often held another part's note.
+The same 4-3 suspension read "C5 susp." with the soprano listed last and "C5 ?" with it first
+(the alto's passing F4 sat at s-1). _segmentum_prius now searches backwards for the same
+CarmenNota. First attempt matched on the segment's `fenestra` field (the locata index during
+segment building) and found nothing: the second pass overwrites that field with the WINDOW
+index as it goes. The note pointer is stable and unique within a part, so no part check is
+needed. House songs byte-identical (censura too). Plant 1/1.
+
+## 2026-10-27 - voice tracking (step 1 of the declared-intent plan): a pad is four lines, and its notes are chord tones
+
+Found composing (park ...37ERWF #2): explicatio linked each note to the previous/next note IN ITS PART, but
+a comitatus '[1 2 3 4]' pad is one part with four simultaneous voices - "neighbours" were other
+chord members. Now CarmenNota.vox (0 = the line of a written MML part or comitatus 'B'/'Q';
+1..9 = comitatus upper voice, set by comitatus_componere) and the linking loop keeps one
+`prior` per (part, voice); rests still break a line.
+Gain: sevenths resolve in their own voice (Dm7 -> G7: C4 -> B3 reads plain 'Dm7:1', was 'C4
+sept.!'); oppidum 58 -> 43 censura monita. Regression found on the way: with real voices an
+accompaniment voice moves by step / repeats, so its ADDED tones looked like passing notes
+(lilia F6 -> "F (D4 ?)", C9 -> C7, ...). The earlier good readings relied on the wrong
+neighbour model (chord members = leaps = non-candidates). Fix (Fran approved): CarmenNota.acordi -
+a generated note comes FROM the declared chord, so it is never a candidate. lilia identical
+to HEAD again. Known debt for step 2 (declared harmony splits windows): a bar with two declared
+chords over one held bass (proelium bar 16 B7sus4:2 B7:2, oppidum bar 4 C7sus4:2 C7:2) is now
+unnamed - before it named the second chord only because the sus tone looked like a passing
+note. Side observation: comitatus matches voices BY RANK, so G7 -> C moves the seventh F up
+to G, not down to E (voice-leading quality, not analysis). Plants 5/5.
+
+## 2026-10-27 - step 2a: declared harmony anchors the windows (D03TB redesigned, Fran approved Q1-Q3)
+
+Principle: where the author declared a chord (<acorda>), that chord IS the reading and the
+sound is judged against it; the 'harmonia' line stays literal; elsewhere inference as before.
+- Window cuts: declared chord starts and ends join the slice points; slices merge within a bar
+  while the declared chord is the same, whatever the bass does (alternating bass = one chord).
+  Outside declared spans the old "same bass" merge rule stands.
+- A declared window takes the declared Acordum (author's letters); its bass = the lowest note
+  at the window start if that is a chord tone (C over E -> C/E), else the declared bass (a
+  passing D under C stays C). Minimal removal and bassus transiens are skipped there; notes are
+  classified against the declared classes (chord tones / shapes).
+House songs: the six without <acorda> and lilia identical. Fixed: proelium bar 16 (B7sus4:2
+B7:2, final cadence [perf.] back), oppidum bar 4 (C7sus4 C7), proelium bar 7 (D with G tr. B
+vic., was Gmaj9/D - park ...37ERWF #3/#4/#5 resolved where declared). New, by design (Q2): a
+held melody seventh over a declared triad (campus Bm with A, proelium Em/C/Am) now reads '?'
+against the declared chord - 2b's 'acorda' rule reports it. Plants 6/6 (the boundary plant had
+to remove both start and end points: a chord's end is the next chord's start).
+
+## 2026-10-27 - step 4: inference where nothing is declared - bass arpeggiation, chord core
+
+The last step of the declared-intent plan (park ...37ERWF #3, #5 for UNDECLARED music).
+- BASSUS FRACTUS (_bassus_fractus): within a bar, a bass LEAP (>= 3 semitones) to a pitch class
+  already sounding in the window, with nothing but the bass note itself starting there, does not
+  cut the window (alternating F C under held A C = F; a bass that stops under held chords too).
+  Two refinements found by the suites/house songs: (1) step motion is the passing-bass case (C D E
+  under C E kept three windows) - hence the leap; (2) "nothing else starts" must mean the bass
+  PITCH, not its class: campus's repeated G:2 A:2 bar had the arpeggio A4 and melody A5 start with
+  the new bass A2, and the G window swallowed the A chord.
+- NUCLEUS (_nucleus_tenetur): when the held notes (non-candidates, plus bass) already name a
+  complete chord (triad or seventh), a BIGGER reading whose root or third comes only from
+  candidate-shaped notes is rejected - D F# A held + passing G B = D, not Gmaj9/D. Refinements:
+  (1) first version judged every reading and broke C/G with an ornamented melody E and G(3) whose
+  B arrives as a suspension resolves - "candidate" is not "foreign"; (2) korobeiniki's E7/G#
+  (root E only in the melody over held G# B) is right - held notes that are NOT a complete chord
+  let the melody supply the root. A "big chords only" clause turned out redundant: held notes
+  cannot be removed, so with a complete held triad the only triad reading IS it (removed).
+House songs: all ten byte-identical (the rules only touch the textures they target). Lint:
+arpeggians -> fractus. Plants 6/6. Also: a scripted edit that did open(p,'w') before reading the
+file emptied lib/explicatio.c once - restored from the step's backup and reapplied.
+
+## 2026-10-27 - septima: "transiens sursum" narrowed; V43 -> I6 exception
+
+The chorale error study planted B4 C5 D5 over D7 -> G (the 7th steps up into the next chord);
+explicatio called it resolved because the old rule looked only at melodic shape (step in, step
+out, same direction). Narrowed (Fran's call): an upward step-through counts as resolved only if
+the next note sounds in the same chord (same radix + genus - same window, or the next window
+when only the bass moved: E7 -> E7/G#). Kept the one standard cross-chord ascent: a seventh
+chord in second inversion (bass = its fifth) whose bass steps up into the next window - V43 ->
+I6, F G over D E in tenths; this holds even without a prior note (the old rule needed one).
+V65 -> I (G7/B -> C) is NOT exempt. Two simplifications: "same window" is implied by "same
+chord" and by "bass moved" (d = 0), so neither helper checks it. The quinta < 0 guard is
+unreachable today (no seventh genus lacks a fifth) - kept as a guard for future genera.
+Impact: whole house book censura + explicatio lines byte-identical before/after (no song uses
+a cross-chord rising 7th); chorale errata 11/11.

@@ -168,3 +168,73 @@ range-checked by the lexer (only the next note's MIDI is), so status.octava can 
 `lucrum` is an f32 inside the lector; status rounds `lucrum * C + 0.5f` - of 0..100 only
 53 and 59 truncate wrong (0.59f * 100 = 58.999..), so the test uses v59 (v33 let the
 truncation plant survive). MML has no way to CLEAR '@' once set - emendatio relies on that.
+
+## 2026-10-24 - tempus in millesimis (praeparatio agogicae, ...4939S)
+
+CantusTempus gained `millesimae` (sounding tempo in thousandths of a quarter per minute);
+the frame math (_quadra_segmenti, cantus_tempora_computare, cantus_quadrum_pulsus,
+cantus_pulsus_quadri) reads ONLY that field. `tempus` stays the whole number ('t',
+debugging). Every producer fills both: the MML reader (tempus x M), carmen's sounding map
+(ramps, coronae, soon agogica - exact). Why: a lilt changes tempo on every beat; at whole
+bpm a 66 bpm waltz would run ~0.6% long per bar (half a second over 32 bars).
+
+Range: the numerator 2 x dp x 48000 x 240 x 1000 stays inside s64 while dp < ~4e8 pulses
+in ONE segment (~58 hours at 120 bpm) - no reduction needed. (I first added a gcd
+reduction believing a 10-minute segment overflowed; a plant that undid it stayed green,
+the arithmetic was wrong by 1000x - removed.) Same rational as before, so whole tempos
+round identically: stella/pastorale WAVs byte-identical before/after.
+
+Plants 9 + 2: two survived first and showed test gaps - the default first segment's
+millesimae was only checked on a melody starting with 't' (which overwrites it), and the
+only inverse check sat on a segment boundary where the fractional tempo cannot matter.
+
+Hand-built maps (tests) must set millesimae too - it is not derived from tempus.
+
+## 2026-10-24 - ligaturae '&' et trioli (desideratum ...MYH24)
+
+TIES: '&' after a note means the NEXT note (same MIDI pitch) continues it - the reader
+extends the previous CantusNota (pulsus_longitudo and frame longitudo, recomputed as
+_quadrum(end) - initium in the same segment) instead of emitting a new one, so analysis,
+cantor and partitura all see ONE note; partitura's existing bar split already prints
+"D4:2~ | ~:2". Between the two notes only spaces, '|' and octave marks (o N, < >) are
+allowed - in particular no 't' (a tie never spans a tempo segment, which keeps the
+frame recomputation valid), no 'r', 'l', 'v', '@'. State in CantusLector: ligata,
+post_notam (a note was the last musical token; cleared by r l t v @), nota_ultima. Errors:
+different pitch (that is legato, not a tie), '&' before a rest or at the end, '&&', '&'
+with no note before. Enharmonic ties (c#&d-) are the same MIDI pitch and allowed; the
+first note's letter wins.
+
+Caveat: emendatio / 'M:T' edit addressing works on notes by onset - the second half of a
+tie is not a note; CantusStatus does not carry 'ligata' (editing in the middle of a tie is
+not supported).
+
+TUPLETS: a length is legal iff it divides the whole note (3840 pulsus) and is 1..64:
+1 2 3 4 5 6 8 10 12 15 16 20 24 30 32 40 48 60 64 (triplets 3 6 12 24 48: c12 d12 e12 =
+three in a quarter; quintuplets 5 10 20 40). Dots stay integral for all of them. The BASIC
+PLAY convention (L3 is legal there too). Four older tests used 'c3'/'l3' as their example
+of an INVALID length (cantus, carmen, praeconium_cantus, cantuale) - switched to 7/9.
+
+Test sections: ligatura, ternarii ("trioli" is not Latin - ternarius, as partitura's existing "ternaria" flag).
+
+Plants 12/12 red after three rounds. Two showed gaps: an explicit '&&' check in the '&'
+branch could never fire (the "after '&' only spaces/bars/octaves/a note" filter rejects
+the second '&' first) - removed, the '&&' test stays; and "segment position does not
+advance after a tie" stayed green because the test checked the next note's PULSUS
+(from pulsus_totus) but not its frame onset - now k.notae[1].initium == 2 s is asserted.
+Note for plants: silva.planta matches anchors whitespace-insensitively - two lines that
+differ only in alignment ('l->ligata = FALSUM' in the reader init and in the tie block)
+count as the same anchor; give a second line of context.
+
+## 2026-10-26 - portamento '/' (RTB1F)
+
+`/` [length] after a note: the note's voice continues into the NEXT note and glides to
+its pitch from that note's onset over the length (MML divisor, default 16, capped at the
+next note's length). CantusNota gains `continuatur` (on the source) and `portamentum`
+(pulses, on the target). Reader state: `illapsus_proximus` pending + its offset. Errors: '/'
+not right after a note (post_notam false - so '//' and 'v50 /' fail too), a rest or the
+end before the next note, the same pitch (write '&'), '&/' (the tie rule's own message).
+Spaces, '|', o/</>, l, v, @ may sit between '/' and its note.
+
+Test lesson: "c4/ r4" alone did NOT prove the rest check - without it the end-of-text
+check fires at the same offset 2. "c4/ r4 e4" does. Same trap as before: an error test
+must fail through exactly one rule.

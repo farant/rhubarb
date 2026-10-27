@@ -144,6 +144,27 @@ partitura_orthographia (
             redde _notam_facere(n, g, _signatura(q, g));
         }
     }
+    /* sensibilis (gradus VII elevatus): littera sub finalis, ut C# in D
+     * minor (non Db) - finalis: quinta quaeque IV litteras promovet,
+     * minor VI gradus supra maiorem relativam */
+    {
+         constans CarmenClavis* k = _clavis(carmen, pulsus);
+                           i32  t = (i32)_modulus(q * IV
+                                   + (k->minor ? V : ZEPHYRUM), VII);
+                           s32 finalis = _modulus((s32)SEMITONIA[t]
+                                   + _signatura(q, t), XII);
+                           i32 l = (t + VI) % VII;
+
+        si (_modulus(finalis - I, XII) == classis)
+        {
+            a = _modulus(classis - SEMITONIA[l], XII);
+            a = a > VI ? a - XII : a;
+            si (a >= -II && a <= II)
+            {
+                redde _notam_facere(n, l, a);
+            }
+        }
+    }
     /* extra scalam: naturalis, aliter '#' (sine b) aut 'b' */
     per (g = ZEPHYRUM; g < VII; g++)
     {
@@ -214,13 +235,25 @@ partitura_clavis_littera (
                         : CLAVES_MAIORES[clavis->quintae + VII];
 }
 
+constans character*
+partitura_clavis_modus (
+    constans CarmenClavis* clavis)
+{
+    si (clavis->caerulea)
+    {
+        redde clavis->minor ? "minor caerulea" : "maior caerulea";
+    }
+    redde clavis->minor ? "minor" : "maior";
+}
+
 interior vacuum
 _clavem_scribere (
                  Scriptor* s,
     constans CarmenClavis* clavis)
 {
     _litterae(s, partitura_clavis_littera(clavis));
-    _litterae(s, clavis->minor ? " minor" : " maior");
+    _litterae(s, " ");
+    _litterae(s, partitura_clavis_modus(clavis));
 }
 
 /* ':valor' - 1..64, '.' punctata, 't' trioli, aliter '~pulsus' */
@@ -547,6 +580,10 @@ _partem_scribere (
             {
                 _character(s, '~');
             }
+            alioquin si (numerus == I && n->continuatur)
+            {
+                _character(s, '/');
+            }
             si ((ad < finis ? ad : finis) > cursor)
             {
                 cursor = ad < finis ? ad : finis;
@@ -574,6 +611,56 @@ _positionem_scribere (
     }
 }
 
+/* agogica metri ut scripta (' agogica vindobonensis'); nihil si
+ * aequale */
+interior vacuum
+_inaequalitatem_scribere (
+                 Scriptor* s,
+    constans CarmenMetrum* m)
+{
+    si (m->numerus_ponderum > ZEPHYRUM)
+    {
+        _litterae(s, " agogica ");
+        _chorda(s, m->inaequalitas);
+    }
+}
+
+/* factor fermatae: integer sine fractione (2), aliter ad centesimas
+ * sine zeris caudae (1.5, 1.25) */
+interior vacuum
+_factorem_scribere (
+    Scriptor* s,
+         f32  factor)
+{
+    s64 c = (s64)((f64)factor * 100.0 + 0.5);
+
+    _numerus(s, c / C);
+    si (c % C != ZEPHYRUM)
+    {
+        _character(s, '.');
+        _character(s, (character)('0' + (c % C) / X));
+        si (c % X != ZEPHYRUM)
+        {
+            _character(s, (character)('0' + c % X));
+        }
+    }
+}
+
+/* numerus mensurae quae ad pulsum incipit aut eum continet */
+interior i32
+_mensura_pulsus (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    i32 m = I;
+
+    dum (carmen_pulsus_mensurae(carmen, m + I) <= pulsus)
+    {
+        m++;
+    }
+    redde m;
+}
+
 interior vacuum
 _titulum_mensurae (
            Scriptor* s,
@@ -596,6 +683,7 @@ _titulum_mensurae (
             _numerus(s, (s64)m->numerator);
             _character(s, '/');
             _numerus(s, (s64)m->denominator);
+            _inaequalitatem_scribere(s, m);
             _positionem_scribere(s, m->pulsus, initium);
         }
     }
@@ -609,15 +697,71 @@ _titulum_mensurae (
             _positionem_scribere(s, carmen->claves[i].pulsus, initium);
         }
     }
-    per (i = I; i < carmen->numerus_temporum; i++)
+    /* tempora SCRIPTA (clivus: 'usque M'), non mappa sonandi */
+    per (i = I; i < carmen->numerus_temporum_scriptorum; i++)
     {
-        constans CantusTempus* t = &carmen->tempora[i];
+        constans CarmenTempus* t = &carmen->tempora_scripta[i];
 
         si (t->pulsus >= initium && t->pulsus < finis)
         {
             _litterae(s, "  tempus ");
             _numerus(s, (s64)t->tempus);
+            si (t->usque != ZEPHYRUM)
+            {
+                _litterae(s, " usque ");
+                _numerus(s, (s64)_mensura_pulsus(carmen, t->usque));
+            }
             _positionem_scribere(s, t->pulsus, initium);
+        }
+    }
+    per (i = ZEPHYRUM; i < carmen->numerus_coronarum; i++)
+    {
+        constans CarmenCorona* f = &carmen->coronae[i];
+
+        si (f->pulsus >= initium && f->pulsus < finis)
+        {
+            _litterae(s, "  fermata x");
+            _factorem_scribere(s, f->factor);
+            _positionem_scribere(s, f->pulsus, initium);
+        }
+    }
+    per (i = ZEPHYRUM; i < carmen->numerus_intensionum; i++)
+    {
+        constans CarmenIntensio* d = &carmen->intensiones[i];
+
+        si (d->pulsus >= initium && d->pulsus < finis)
+        {
+            _litterae(s, "  dynamica ");
+            si (d->pars >= ZEPHYRUM)
+            {
+                _chorda(s, carmen->partes[d->pars].titulus);
+                _character(s, ' ');
+            }
+            _chorda(s, d->textus);
+            si (d->usque != ZEPHYRUM)
+            {
+                _litterae(s, " usque ");
+                _numerus(s, (s64)_mensura_pulsus(carmen, d->usque));
+            }
+            _positionem_scribere(s, d->pulsus, initium);
+        }
+    }
+    per (i = ZEPHYRUM; i < carmen->numerus_repetitionum; i++)
+    {
+        constans CarmenRepetitio* r = &carmen->repetitiones[i];
+
+        si (r->pulsus >= initium && r->pulsus < finis)
+        {
+            _litterae(s, "  repetitio ");
+            _chorda(s, carmen->sectiones[r->sectio].titulus);
+            si (r->semitonia != ZEPHYRUM)
+            {
+                _character(s, ' ');
+                _character(s, r->semitonia > ZEPHYRUM ? '+' : '-');
+                _numerus(s, (s64)(r->semitonia > ZEPHYRUM
+                    ? r->semitonia : -r->semitonia));
+            }
+            _positionem_scribere(s, r->pulsus, initium);
         }
     }
     _character(s, '\n');
@@ -729,8 +873,9 @@ partitura_scribere (
     _numerus(&s, (s64)carmen->metra[ZEPHYRUM].numerator);
     _character(&s, '/');
     _numerus(&s, (s64)carmen->metra[ZEPHYRUM].denominator);
+    _inaequalitatem_scribere(&s, &carmen->metra[ZEPHYRUM]);
     _litterae(&s, ", ");
-    _numerus(&s, (s64)carmen->tempora[ZEPHYRUM].tempus);
+    _numerus(&s, (s64)carmen->tempora_scripta[ZEPHYRUM].tempus);
     _character(&s, '\n');
     per (i = ZEPHYRUM; i < carmen->numerus_partium; i++)
     {

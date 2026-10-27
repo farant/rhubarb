@@ -1240,6 +1240,183 @@ _sectio_tituli (
                  == NIHIL);
 }
 
+/* unisonus: N=1 (et 0) idem ac sine; dispersio sine N ignoratur; II
+ * sinus +/- L centesimae pulsant (apex fenestrae prope 0 et prope 1);
+ * V serrae sine dispersione non se delent (phasis 0 omnibus = una);
+ * deterministicum; apex <= amplitudo; chorda ignorat */
+interior vacuum
+_sectio_unisonus (
+    CredoContextus* c)
+{
+    TibiaParametra p = _pura();
+    TibiaParametra q;
+          TibiaVox v;
+               f32 minimum  = 1.0f;
+               f32 maximum  = 0.0f;
+               s32 nullum   = -I;
+               f64 unus;
+               i32 k;
+
+    (vacuum)c;
+    tibia_vocem_parare(&v, &p, 69.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA / X);
+    q            = p;
+    q.unisonus   = 1.0f;
+    q.dispersio  = 50.0f;
+    tibia_vocem_parare(&v, &q, 69.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / X);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b,
+                        (size_t)(SECUNDA / X) * magnitudo(f32))
+                            == ZEPHYRUM);
+    /* II sinus, C centesimae: pulsus ~25 Hz */
+    q.unisonus   = 2.0f;
+    q.dispersio  = 100.0f;
+    tibia_vocem_parare(&v, &q, 69.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / V);
+    per (k = ZEPHYRUM; k + XCVI <= SECUNDA / V; k += XCVI)
+    {
+        f32 a = _apex(tabula_b, k, k + XCVI);
+
+        si (a < 0.15f && nullum < ZEPHYRUM)
+        {
+            nullum = (s32)k;
+        }
+        minimum = a < minimum ? a : minimum;
+        maximum = a > maximum ? a : maximum;
+    }
+    CREDO_VERUM (minimum < 0.15f && maximum > 0.9f);
+    /* celeritas pulsus: C centesimae = 25.4 Hz, nullum primum ~19.7 ms
+     * (phasis 0 initio); X centesimae aut L ~200 aut 39 ms */
+    CREDO_VERUM (   nullum > (s32)(SECUNDA * XV / M)
+                 && nullum < (s32)(SECUNDA * XXV / M));
+    CREDO_VERUM (_apex(tabula_b, ZEPHYRUM, SECUNDA / V) <= 1.0f
+        + 1e-6f);
+    /* V serrae sine dispersione: non deletae */
+    p.forma = (f32)SONUS_UNDA_SERRA;
+    tibia_vocem_parare(&v, &p, 57.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA / X);
+    unus        = _efficax(tabula_a, ZEPHYRUM, SECUNDA / X);
+    q           = p;
+    q.unisonus  = 5.0f;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / X);
+    CREDO_VERUM (fabs(_efficax(tabula_b, ZEPHYRUM, SECUNDA / X) - unus)
+                 < 0.01 * unus);
+    /* V cum dispersione XIV: apex <= amplitudo, deterministicum */
+    q.dispersio = 14.0f;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA / II);
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / II);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b,
+                        (size_t)(SECUNDA / II) * magnitudo(f32))
+                            == ZEPHYRUM);
+    CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA / II) <= 1.0f
+        + 1e-6f);
+    /* formantes: unisonus mutat; chorda: ignorat */
+    q = *tibia_praeparatum("schola");
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA / X);
+    q.unisonus   = 3.0f;
+    q.dispersio  = 20.0f;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / X);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b,
+                        (size_t)(SECUNDA / X) * magnitudo(f32))
+                            != ZEPHYRUM);
+    CREDO_VERUM (_efficax(tabula_b, ZEPHYRUM, SECUNDA / X) > 0.0);
+    /* formantes SUMMAM sonant: II exemplaria +/- XII semitonia non idem
+     * ac unum octava inferiore (exemplar primum solum) */
+    q            = *tibia_praeparatum("schola");
+    /* flatus semen ex nota sumit: hic non comparatur */
+    q.flatus     = 0.0f;
+    q.unisonus   = 2.0f;
+    q.dispersio  = 2400.0f;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA / X);
+    q.unisonus   = 1.0f;
+    q.dispersio  = 0.0f;
+    tibia_vocem_parare(&v, &q, 45.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / X);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b,
+                        (size_t)(SECUNDA / X) * magnitudo(f32))
+                            != ZEPHYRUM);
+    /* modulatio (portans = unda): unisonus ignoratur */
+    q = *tibia_praeparatum("campana");
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA / X);
+    q.unisonus   = 5.0f;
+    q.dispersio  = 20.0f;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / X);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b,
+                        (size_t)(SECUNDA / X) * magnitudo(f32))
+                            == ZEPHYRUM);
+    q = *tibia_praeparatum("chorda");
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA / X);
+    q.unisonus   = 5.0f;
+    q.dispersio  = 20.0f;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / X);
+    CREDO_VERUM (memcmp(tabula_a, tabula_b,
+                        (size_t)(SECUNDA / X) * magnitudo(f32))
+                            == ZEPHYRUM);
+}
+
+/* mora vibrati: initio vox fere aequalis voci sine vibratu (differentia
+ * parva), post moram differentia magna; sine mora differentia initio
+ * maior */
+interior vacuum
+_sectio_mora_vibrati (
+    CredoContextus* c)
+{
+    TibiaParametra p = _pura();
+    TibiaParametra q;
+          TibiaVox v;
+               f32 cum_mora   = 0.0f;
+               f32 sine_mora  = 0.0f;
+               f32 sero       = 0.0f;
+               i32 k;
+
+    (vacuum)c;
+    tibia_vocem_parare(&v, &p, 69.0f);
+    _reddere(&v, tabula_a, ZEPHYRUM, SECUNDA + SECUNDA / X);
+    q                     = p;
+    q.vibratus            = 1.0f;
+    q.vibratus_celeritas  = 5.0f;
+    q.mora_vibrati        = 0.5f;
+    tibia_vocem_parare(&v, &q, 69.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA + SECUNDA / X);
+    per (k = ZEPHYRUM; k < SECUNDA / C; k++)
+    {
+        f32 d = tabula_b[k] - tabula_a[k];
+
+        d         = d < 0.0f ? -d : d;
+        cum_mora  = d > cum_mora ? d : cum_mora;
+    }
+    per (k = SECUNDA; k < SECUNDA + SECUNDA / X; k++)
+    {
+        f32 d = tabula_b[k] - tabula_a[k];
+
+        d     = d < 0.0f ? -d : d;
+        sero  = d > sero ? d : sero;
+    }
+    q.mora_vibrati = 0.0f;
+    tibia_vocem_parare(&v, &q, 69.0f);
+    _reddere(&v, tabula_b, ZEPHYRUM, SECUNDA / C);
+    per (k = ZEPHYRUM; k < SECUNDA / C; k++)
+    {
+        f32 d = tabula_b[k] - tabula_a[k];
+
+        d          = d < 0.0f ? -d : d;
+        sine_mora  = d > sine_mora ? d : sine_mora;
+    }
+    CREDO_VERUM (cum_mora < 0.05f);
+    CREDO_VERUM (sine_mora > 4.0f * cum_mora);
+    CREDO_VERUM (sero > 0.5f);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tenet", _sectio_tenet, _parare, NIHIL, NIHIL, NIHIL },
     { "involucrum", _sectio_involucrum, _parare, NIHIL, NIHIL, NIHIL },
@@ -1263,6 +1440,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "genus_coercitum", _sectio_genus_coercitum, _parare, NIHIL,
         NIHIL, NIHIL },
     { "tituli", _sectio_tituli, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "unisonus", _sectio_unisonus, _parare, NIHIL, NIHIL, NIHIL },
+    { "mora_vibrati", _sectio_mora_vibrati, _parare, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

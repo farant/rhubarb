@@ -89,3 +89,162 @@ test 'G2 contra F4, septima'.
 ## 2026-10-23 - ambitus: chorda 28..88, campana 48..96
 
 New tibia patches (Karplus-Strong string, FM bell) get default ranges; table AMBITUS[V].
+
+## 2026-10-24 - clavis: tertia Picardiae licita (desideratum ...CSJZHF)
+
+The key rule flagged the F# of a final D major in D minor (completorium, 2 findings).
+_picardiae_nota: in a minor key, a note whose class is the major third of the tonic
+(VII*quintae + IX + IV) is skipped when its window satisfies functio_tertia_picardiae.
+Only that one class is excused - any other chromatic note in the same window still counts.
+The explicatio is now built when CLAVIS is on too (before: only for DISSONANTIA); a
+CLAVIS-only forma pays for the window analysis. Six house songs: only completorium changed
+(2 -> 0).
+
+## 2026-10-24 - tertia: judged against the window chord (desideratum ...D03RH)
+
+The rule judged only the instant: vigilia's arpeggio (E2 E3 B3 at the downbeat, G4 on
+the fourth eighth) read "voces 3 sine tertia" on 18 downbeats although the explicatio
+names the bar Em. Now the instant still triggers (>= 3 voices, a new attack, classes
+without third), but _fenestra_cum_tertia stays silent when the window containing the beat
+names a chord with a third (window classes = after non-chord-tone removal; sus counts as
+"with" since harmonia_sine_tertia treats sus as deliberate). A bare-fifth window still
+fires, also when the third only arrives in the next window. Shared lookup
+_fenestra_ad_pulsum (index, -I if none) now serves both this and the Picardy skip.
+
+The window's genus is not checked: under an instant of >= 3 notes the window is never
+empty, so a NULLA guard would be untestable code - dropped.
+
+Explicatio is now built when TERTIA is on as well. Old 'tertia' fixture: bars 1, 3, 4
+(windows Dm, A7, Dm) no longer fire; only bar 6 (D3 D3 D5, window "(D)") remains and still
+carries the 'lowest equal = earlier part' and 'sustained once' checks. New 'fractum'
+section: bar 1 arpeggio with G (silent), bar 2 E+B only (fires at both strong beats -
+the arpeggio restarts), bar 3 G at mid-bar (silent: window Em).
+
+House songs with +tertia: vigilia 18 -> 0, completorium 7 -> 0 (chant + drone over Dm,
+C, F and the Picardy D); the others 0 -> 0; default rules unchanged everywhere.
+
+## 2026-10-27 - step 2b: declared harmony in censura - clavis exception, new rule 'acorda'
+
+D03TB part 1 + the new disagreement rule (Fran approved, Q1-Q3 of the declared-intent plan).
+- clavis: a note outside the key that belongs to the declared chord at its onset is intended
+  (lilia D7b9 F#/Eb: 5 -> 0 monita; oppidum Bbm6 Db). 'r' has no classes, so it excuses
+  nothing - the explicit 'nullum' check was redundant (its plant survived) and was removed.
+- acorda (ORD.): per declared window (ExplicatioFenestra.declaratum), a shapeless note outside
+  the declared chord (EXPLICATIO_IGNOTA already means "outside the declared classes" - a second
+  class check was redundant, removed), or a declared root / third that never sounds in the
+  window. Once per window: "Bm declaratum, sonat Bm7 (A5)" - CensuraInventum.sonans carries the
+  literal whole-window reading (acordum_ex_classibus of every class, bass = lowest note at the
+  window start); up to two foreign notes (nota, nota_prior), or causa "radix/tertia deest".
+House songs: no-<acorda> songs 0; campus 1 (Bm vs a held melody A - the author could declare
+Bm7); proelium +3 of the same kind; oppidum 44 -> 40. recensio tests pinned the default rule
+list (now 5). Plants 8/8 after two rewrites (one non-compiling form, one redundant check).
+
+## 2026-10-27 - step 3b: censura reads the song's style (presets as data, layered)
+
+censura_carminis_forma = censura_ordinaria (classicus), then the song's stylus chain applied
+BASE FIRST (basis, then the derived style: regulae + septimae), then the song's <censura
+regulae>; the caller's CLI -regulae last (auditio _formam_censurae, which replaced its private
+_regulas_legere - the grammar now lives in censura_regulas_legere: "+a,-b" changes the given
+form, "a,b" only these; unknown name -> FALSUM + *ignota). Rule names inside a style are judged
+here, not at book read time (carmen cannot know censura). New meaning switch
+CensuraForma.septimae_liberae: _culpa gives no 'septima non resoluta' (the seventh is a chord
+tone, popularis); a dissonance against a shapeless foreign note is still flagged. Test fixture
+lesson: C E B without G is "C(3) with B foreign", not Cmaj7 - the seventh rule needs the named
+chord. The application loop was rewritten with an explicit index so "base first" is plantable.
+Plants 9/9 first try.
+
+## 2026-10-27 - J2: jazz tensions (intentiones_liberae) and the 'evitanda' rule
+
+Second step of the jazz preset (J1 put intentiones/evitandae in AcordumProprietates).
+- carmen: <stylus intentiones="liberae"|"vetitae">, CarmenStylus.intentiones (-1 inherit).
+- CensuraForma.intentiones_liberae: a shapeless (EXPLICATIO_IGNOTA) note whose class is a
+  licensed tension of its window's chord (rotated from root-relative bits) is not foreign:
+  _culpa_notae replaces _culpa in _referenda, and the 'acorda' rule skips it. Shaped
+  non-chord tones (passing, neighbour) were never at issue - they keep their own rules.
+- evitanda (not ORD.): a shapeless note on the window chord's avoid class (11 over maj/dom,
+  3 over sus) -> "Fmaj7: nota evitanda Bb4 (11)". A passing Bb is shaped, so it is silent:
+  the avoid-note rule is about HELD notes, as in the jazz pedagogy it comes from.
+- Fixture lesson: a declared G7 with a held E5 counts as foreign under septimae_liberae alone
+  (the 13th is not a seventh); only intentiones_liberae clears it - the two switches are
+  independent, and the test asserts both sides.
+Plants 10/10.
+
+## 2026-10-27 - J4: tensions free whatever their shape; clavis admits declared tensions
+
+J2's header already said "a tension is a chord tone - dissonantia and acorda don't name it", but
+the code narrowed it to shapeless (IGNOTA) notes, so a 9th held over from Dm7 into G7 (labelled
+SUSPENSIO by explicatio) still drew "suspensio non resoluta". _culpa_notae now frees any segment
+whose class is a licensed tension of its window chord. The line between "free" and "must
+resolve" is the chord data itself: avoid notes are not tensions, so a 4-3 over G7 (C = 11)
+still must resolve under jazz - tested.
+clavis (new, Fran approved): under intentiones_liberae the declared-chord exception extends to
+the declared chord's tensions (F7 in F: Ab = #9). DECLARED only, on purpose: an inferred chord
+is shaped by the very chromatic note it would excuse (circular). No <acorda> -> still flagged.
+_declarati_nota takes the Iudex now (needs the form); _rotare/_intentio moved above it (C89).
+House: nocturnum 7 -> 0; ambulatio 24 -> 8 (4 B2 chromatic approaches under Gm7 - park 43HA /
+walking bass; 4 cornu above range - real). Side effect worth knowing: walking-bass approach
+notes B2/C#3 over F7 are now excused because they happen to be #11/b13 of F7 - right outcome,
+coincidental reason. Other 10 songs unchanged. Plants 4/4.
+
+## 2026-10-27 - chromatic ornaments in the key rule (park 43HA, first part)
+
+explicatio already named the shape of ambulatio's walking-bass approach (C#3 "app." into C3);
+the clavis rule simply never looked at shapes. New ExplicatioSegmentum.semitonium (the next
+note of the same voice is exactly one semitone away), set for every segment from _motus. The
+key rule excuses an out-of-key note whose onset segment is a passing tone, neighbour or
+appoggiatura AND leaves by a semitone - the lean that makes a chromatic note an ornament
+(C C# D, G F# G, D# E, the bass approach). Whole-step exits stay flagged on purpose: Bb
+passing A -> C in C major is modal colour, E F# E a real inflection. Applies in every style.
+The appoggiatura "resoluta" check I first wrote was dead: explicatio defines every
+appoggiatura as leap-in step-out, so resoluta is always true - removed from code and header.
+House: ambulatio 2 -> 0, all other songs unchanged. Plants 9/9.
+Still open from 43HA: passing diminished sevenths, chromatic inner lines over a held chord.
+
+## 2026-10-27 - voice-order rules: occultae, decussatio, spatium (chorale study, part 1)
+
+The laudes error study found six classical errors with no rule. This adds the three that only
+need an order of voices (all off by default; house stylus "choralis" turns them on with
+parallelae, saltus, tertia). VOICES = parts in book order, top first, skipping parts with no
+pitched note (percussion-only, empty) - _vox_proxima walks them.
+- occultae: outer voices only (first and last voice), sampled at successive onsets like
+  parallelae; upper = top note of its part, lower = bottom note. Similar motion into P5/P8 from a
+  different interval class (same class = parallelae's job), upper voice leaping (> 2 semitones).
+- decussatio: adjacent voices, upper part's lowest note below the lower part's highest.
+- spatium: adjacent upper voices > 12 apart; the pair containing the lowest voice is free.
+- Both pair rules report once per spell. First version tracked the spell by "flagged at the
+  previous onset", which bridged rests (rests are not onsets): a crossing in bar 3, rests, a new
+  crossing in bar 4 was swallowed. Fix: a spell continues only if both prior notes still sound
+  up to the new onset (end >= t, so legato continues).
+- Test gaps found while writing plants: no whole-step soprano case (the "> 2" boundary) and no
+  case with a middle voice between a moving outer pair (choice of the lowest voice) - both added.
+laudes: its one hidden fifth (bar 2 fermata -> bar 3, bass G2 -> G3) removed by keeping the
+bass on G2; with stylus choralis: 0. errata.py: crossing, spacing, hidden octaves now caught,
+plus the old bass as an 11th case. Still no rule: doubled leading tone, unresolved leading tone
+in an outer voice, rising chordal seventh (part 2 - needs the per-chord leading tone).
+
+## 2026-10-27 - resolution rules: duplicata, sensibilis, septima (chorale study, part 2)
+
+- Leading tone per window from functio: dominant = V or VII without alteration, or applied
+  (V/x, viio/x); never subV. Major-third chord -> its third; diminished (o, o7, h7) -> root. So
+  laudes' A7 (V7/V) has C#, not the key's F#. censura now runs functio_carminis (in its own
+  piscina, after explicatio) only when duplicata or sensibilis is on.
+- duplicata: two chord-tone LT notes sounding together in a dominant window, once per window.
+- sensibilis: outer voices only; the LT note's next note in the same voice (same part + vox,
+  contiguous - a rest breaks motion), when it lands in a window that is not a dominant with the
+  same LT and whose chord contains LT+1, must be LT+1. Repeated note: the later one is judged.
+  Fermata on the LT note frees it (laudes bar 4: F#4 at the half cadence, then B4). Two dead
+  checks found by surviving plants, both removed: "next note in the same window" and "next
+  window a dominant with the same LT" - every dominant shape lacks LT+1 (G7 G9 G7b9 G13 Bo7 have
+  no C), so the resolution-tone check already frees them. Third survivor was a weak test: subV
+  -> I has applicata 0 and was never a dominant anyway; only subV/x (Eb7 -> Dm, applicata ii)
+  exercises the substituta exclusion - test now uses that.
+- septima: explicatio's SEPTIMA !resoluta on every beat, judged at the note's LAST segment (a 7th
+  held across G7 G7/B is one finding), repeated note judged later, fermata frees it. dissonantia
+  hands its "septima non resoluta" cause over when septima is on (one finding, not two).
+  dissonantia alone still flags a repeated-then-resolved 7th and a 7th under a fermata - it
+  knows neither; noted, not changed.
+- errata.py: doubled LT and soprano LT leap now caught. The rising 7th (B4 C5 D5 over D7 -> G)
+  is NOT: explicatio's "transiens sursum" counts any step-in/step-out-upward 7th as resolved,
+  even when the next note is already in the next chord. Open design question for Fran:
+  restrict "transiens sursum" to motion within the same chord (C D E over E7, the documented
+  example).

@@ -280,7 +280,7 @@ _sectio_vitia (
 
     /* textus: offset lectoris cantus, '@' praeparati ignoti, nota
      * XXXIII, cantilena sine notis */
-    _vitium_libri(c, _liber_unius(c, "t180 l3 c"), "a", VI);
+    _vitium_libri(c, _liber_unius(c, "t180 l7 c"), "a", VI);
     _vitium_libri(c, _liber_unius(c, "c @nullum d"), "a", II);
     _vitium_libri(c, _liber_unius(c, _notae_multae(c, XXXIII)), "a",
                   LXVIII);
@@ -530,7 +530,7 @@ _sectio_cantio (
         CantualeVitium  vitium;
                 chorda  textus;
                    i32  k;
-    constans character* fracti[] = { "t180 l3 c", "c @nullum d",
+    constans character* fracti[] = { "t180 l7 c", "c @nullum d",
         "", "t90 r4 r2", NIHIL };
 
     textus = _chorda(c, "t150 o5 l16 c e g8");
@@ -558,7 +558,7 @@ _sectio_cantio (
         CANTUALE_NOTAE_MAXIMAE);
 
     /* vitia: offset in textu ipso (idem ac in libro) */
-    (vacuum)_vitium_cantionis(c, "t180 l3 c", VI);
+    (vacuum)_vitium_cantionis(c, "t180 l7 c", VI);
     (vacuum)_vitium_cantionis(c, "c @nullum d", II);
     (vacuum)_vitium_cantionis(c, _notae_multae(c, XXXIII), LXVIII);
     (vacuum)_vitium_cantionis(c, "", ZEPHYRUM);

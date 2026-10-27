@@ -130,3 +130,7 @@ instrumentarium (genus, its own ambitus). -carmina's instrumenta line only lists
 book instruments now (numerus_instrumentorum - numerus_instrumentarii). Without that,
 every song would print the five house instruments. Genus words come from
 tibia_generis_titulus.
+
+## 2026-10-24 - -auscultare names the limiter
+
+auscultatio_reddere_censum; the summary line adds ", limitator N quadra (-x.x dB; mixtura +y.y dBFS)" when the master limiter engaged. The un-hand-balanced vespera demo: mix +2.1 dBFS, 27 overs, WAV at full scale exactly, no clipping.

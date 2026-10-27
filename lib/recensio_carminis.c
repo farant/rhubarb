@@ -13,6 +13,10 @@
 #include <math.h>
 #include <string.h>
 
+/* limitatio ultra -3 dB (lucrum < 10^(-3/20)) = monitum: mixtura vere
+ * nimis calida, non apex fortuitus */
+#define RECENSIO_REDUCTIO_MONENDA 0.70794578f
+
 /* capacitas inventorum prima; plura -> iterum cum numero toto */
 #define RECENSIO_INVENTA LXIV
 
@@ -107,8 +111,8 @@ recensio_carminis_facere (
     }
 
     /* sonus: totum, partes solae, tacitae */
-    si (   !auscultatio_reddere(carmen, resolutor, piscina, &exempla,
-                                &quadra)
+    si (   !auscultatio_reddere_censum(carmen, resolutor, piscina,
+                                      &exempla, &quadra, &r->mixtura)
         || !auscultatio_metiri(carmen, exempla, quadra, piscina,
                                &r->sonus))
     {
@@ -124,13 +128,37 @@ recensio_carminis_facere (
             redde FALSUM;
         }
     }
+    si (carmen->numerus_partium > ZEPHYRUM)
+    {
+        r->tacitae_partium = (RecensioTacitae*)piscina_allocare(piscina,
+            (memoriae_index)carmen->numerus_partium
+                * magnitudo(RecensioTacitae));
+        si (r->tacitae_partium == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
     per (i = ZEPHYRUM; i < carmen->numerus_partium; i++)
     {
+        RecensioTacitae* t = &r->tacitae_partium[i];
+
         si (!auscultatio_partem(carmen, i, resolutor, piscina,
                                 &r->partes[i]))
         {
             redde FALSUM;
         }
+        t->mensurae = (i32*)piscina_allocare(piscina,
+            (memoriae_index)(r->partes[i].numerus
+                + I) * magnitudo(i32));
+        si (t->mensurae == NIHIL)
+        {
+            redde FALSUM;
+        }
+        t->numerus = auscultatio_partis_tacitae(carmen, i,
+            &r->partes[i],
+            t->mensurae, r->partes[i].numerus);
+        t->tota = t->numerus > ZEPHYRUM
+               && r->partes[i].rms < AUSCULTATIO_TACITUM;
     }
     r->tacitae = (i32*)piscina_allocare(piscina,
         (memoriae_index)r->sonus.numerus * magnitudo(i32));
@@ -166,8 +194,37 @@ i32
 recensio_carminis_monita (
     constans RecensioCarminis* recensio)
 {
+    i32 tacitae = ZEPHYRUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; recensio->tacitae_partium != NIHIL
+                       && i < recensio->carmen->numerus_partium; i++)
+    {
+         constans RecensioTacitae* t =
+             &recensio->tacitae_partium[i];
+                              b32 nova = FALSUM;
+                              i32 m;
+                              i32 n;
+
+        /* mensura tacita partis quam mixtura tota non iam nominat */
+        per (m = ZEPHYRUM; m < t->numerus && !nova; m++)
+        {
+            nova = VERUM;
+            per (n = ZEPHYRUM; n < recensio->numerus_tacitarum; n++)
+            {
+                si (recensio->tacitae[n] == t->mensurae[m])
+                {
+                    nova = FALSUM;
+                }
+            }
+        }
+        tacitae += nova ? I : ZEPHYRUM;
+    }
     redde recensio->numerus_inventorum + recensio->numerus_tacitarum
-        + (recensio->sonus.tonsa > ZEPHYRUM ? I : ZEPHYRUM);
+        + tacitae
+        + (recensio->sonus.tonsa > ZEPHYRUM ? I : ZEPHYRUM)
+        + (recensio->mixtura.reductio < RECENSIO_REDUCTIO_MONENDA
+           ? I : ZEPHYRUM);
 }
 
 
@@ -220,8 +277,9 @@ _clavem_scribere (
 
     redde chorda_aedificator_appendere_literis(a,
               partitura_clavis_littera(k))
+        && chorda_aedificator_appendere_character(a, ' ')
         && chorda_aedificator_appendere_literis(a,
-              k->minor ? " minor" : " maior");
+              partitura_clavis_modus(k));
 }
 
 
@@ -236,6 +294,50 @@ _numerum_scribere (
                   i32  decimales)
 {
     redde chorda_aedificator_appendere_f64(a, x, decimales);
+}
+
+/* '  TACET 3 7-9' (ordines contracti) et ' (tota: instrumentum?)';
+ * nihil si pars nusquam tacet */
+interior b32
+_tacitas_scribere (
+           ChordaAedificator* a,
+    constans RecensioTacitae* t)
+{
+    b32 bene  = VERUM;
+    i32 i     = ZEPHYRUM;
+
+    si (t->numerus == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    bene = chorda_aedificator_appendere_literis(a, "  TACET") && bene;
+    dum (i < t->numerus)
+    {
+        i32 j = i;
+
+        dum (   j + I < t->numerus
+             && t->mensurae[j + I] == t->mensurae[j] + I)
+        {
+            j++;
+        }
+        bene = chorda_aedificator_appendere_character(a, ' ') && bene;
+        bene = chorda_aedificator_appendere_i32(a, t->mensurae[i])
+            && bene;
+        si (j > i)
+        {
+            bene = chorda_aedificator_appendere_character(a, '-')
+                && bene;
+            bene = chorda_aedificator_appendere_i32(a, t->mensurae[j])
+                && bene;
+        }
+        i = j + I;
+    }
+    si (t->tota)
+    {
+        bene = chorda_aedificator_appendere_literis(a,
+            " (tota: instrumentum?)") && bene;
+    }
+    redde bene;
 }
 
 b32
@@ -263,7 +365,7 @@ recensio_carminis_textus (
         k->metra[ZEPHYRUM].denominator) && bene;
     bene = chorda_aedificator_appendere_literis(a, ", ") && bene;
     bene = chorda_aedificator_appendere_i32(a,
-        k->tempora[ZEPHYRUM].tempus) && bene;
+        k->tempora_scripta[ZEPHYRUM].tempus) && bene;
     bene = chorda_aedificator_appendere_literis(a, ", ") && bene;
     bene = chorda_aedificator_appendere_i32(a, r->mensurae) && bene;
     bene = chorda_aedificator_appendere_literis(a, " mensurae, ")
@@ -321,6 +423,7 @@ recensio_carminis_textus (
             && bene;
         bene = _numerum_scribere(a, (f64)r->partes[i].apex, III)
             && bene;
+        bene = _tacitas_scribere(a, &r->tacitae_partium[i]) && bene;
         bene = chorda_aedificator_appendere_character(a, '\n') && bene;
     }
 
@@ -336,7 +439,21 @@ recensio_carminis_textus (
     bene = _numerum_scribere(a, (f64)r->sonus.rms, III) && bene;
     bene = chorda_aedificator_appendere_literis(a, " (") && bene;
     bene = _numerum_scribere(a, _gradus_soni(r->sonus.rms), I) && bene;
-    bene = chorda_aedificator_appendere_literis(a, " dBFS)\n") && bene;
+    bene = chorda_aedificator_appendere_literis(a, " dBFS)") && bene;
+    si (r->mixtura.limitata > ZEPHYRUM)
+    {
+        bene = chorda_aedificator_appendere_literis(a, ", limitator ")
+            && bene;
+        bene = chorda_aedificator_appendere_i32(a, r->mixtura.limitata)
+            && bene;
+        bene = chorda_aedificator_appendere_literis(a, " quadra (")
+            && bene;
+        bene = _numerum_scribere(a, _gradus_soni(r->mixtura.reductio),
+            I)
+            && bene;
+        bene = chorda_aedificator_appendere_literis(a, " dB)") && bene;
+    }
+    bene = chorda_aedificator_appendere_character(a, '\n') && bene;
 
     bene = chorda_aedificator_appendere_literis(a, "  censura (")
         && bene;
@@ -533,7 +650,7 @@ recensio_carminis_json (
     json_objectum_ponere(o, "metrum", _chorda_json(piscina,
         chorda_aedificator_finire(a)));
     json_objectum_ponere(o, "tempus", json_integer_creare(piscina,
-        (s64)k->tempora[ZEPHYRUM].tempus));
+        (s64)k->tempora_scripta[ZEPHYRUM].tempus));
     json_objectum_ponere(o, "mensurae", json_integer_creare(piscina,
         (s64)r->mensurae));
     json_objectum_ponere(o, "secundae", _numerus_json(piscina,
@@ -567,6 +684,23 @@ recensio_carminis_json (
             _gradus_soni(r->partes[i].rms), 10.0));
         json_objectum_ponere(x, "apex", _numerus_json(piscina,
             (f64)r->partes[i].apex, 1000.0));
+        {
+            constans RecensioTacitae* t = &r->tacitae_partium[i];
+                           JsonValor* ta =
+                               json_tabulatum_creare(piscina);
+                                  i32 m;
+
+            si (ta == NIHIL)
+            {
+                redde NIHIL;
+            }
+            per (m = ZEPHYRUM; m < t->numerus; m++)
+            {
+                json_tabulatum_addere(ta, json_integer_creare(piscina,
+                    (s64)t->mensurae[m]));
+            }
+            json_objectum_ponere(x, "tacitae", ta);
+        }
         json_tabulatum_addere(partes, x);
     }
     json_objectum_ponere(o, "partes", partes);
@@ -577,6 +711,10 @@ recensio_carminis_json (
         _gradus_soni(r->sonus.apex), 10.0));
     json_objectum_ponere(sonus, "tonsa", json_integer_creare(piscina,
         (s64)r->sonus.tonsa));
+    json_objectum_ponere(sonus, "limitata", json_integer_creare(piscina,
+        (s64)r->mixtura.limitata));
+    json_objectum_ponere(sonus, "reductio_db", _numerus_json(piscina,
+        _gradus_soni(r->mixtura.reductio), 10.0));
     json_objectum_ponere(sonus, "rms", _numerus_json(piscina,
         (f64)r->sonus.rms, 1000.0));
     json_objectum_ponere(sonus, "dbfs", _numerus_json(piscina,
