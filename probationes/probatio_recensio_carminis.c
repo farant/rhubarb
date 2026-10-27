@@ -152,7 +152,7 @@ _sectio_munda (
     CREDO_CHORDA_CONTINET (t, chorda_ex_literis("\n  pars melodia ",
         c->piscina));
     CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  censura (lineae "
-        "clavis ambitus dissonantia): 0 inventa\n", c->piscina));
+        "clavis ambitus dissonantia acorda): 0 inventa\n", c->piscina));
     CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  tacitae: nullae\n",
         c->piscina));
 
@@ -187,7 +187,7 @@ _sectio_munda (
     regulae = json_objectum_capere(json_objectum_capere(j, "censura"),
         "regulae");
     CREDO_NECESSE (regulae != NIHIL
-                   && json_tabulatum_numerus(regulae) == IV);
+                   && json_tabulatum_numerus(regulae) == V);
     CREDO_CHORDA_AEQUALIS_LITERIS (json_ad_chorda(
         json_tabulatum_obtinere(regulae, ZEPHYRUM)), "lineae");
     CREDO_AEQUALIS_I32 (json_tabulatum_numerus(json_objectum_capere(

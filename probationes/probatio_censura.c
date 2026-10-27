@@ -104,6 +104,7 @@ _sectio_ordinaria (
     CREDO_FALSUM (f.activae[CENSURA_PARALLELAE]);
     CREDO_FALSUM (f.activae[CENSURA_SALTUS]);
     CREDO_FALSUM (f.activae[CENSURA_TERTIA]);
+    CREDO_VERUM (f.activae[CENSURA_ACORDA]);
     CREDO_AEQUALIS_I32 (f.saltus_maximus, ZEPHYRUM);
     CREDO_VERUM (f.ambitus == NIHIL);
     per (r = CENSURA_LINEAE; r < CENSURA_REGULAE;
@@ -772,6 +773,116 @@ _sectio_picardia (
     CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXVI);
 }
 
+/* harmonia declarata: clavis tonos acordi declarati admittit; acorda
+ * discordiam nominat (nota sine forma extra acordum, tertia deest) */
+interior vacuum
+_sectio_acorda (
+    CredoContextus* c)
+{
+    constans Carmen* k;
+    CensuraInventum  inv[CAPACITAS];
+       CensuraForma  f;
+                i32  n;
+
+    /* D7 declaratum in F: F# licet; C# (extra D7) non */
+    k = _carmen(c, "<carmina><carmen titulus=\"k\" clavis=\"f maior\">"
+        "<acorda mensura=\"1\" textus=\"F | D7 | Gm\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1 | f#2 c#2 | g1</textus>"
+        "</frustum></pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_CLAVIS);
+    n = censura_iudicare(k, &f, inv, CAPACITAS);
+    CREDO_NECESSE (n == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXI);
+    /* 'r' declaratum nihil admittit: F# extra clavem */
+    k = _carmen(c, "<carmina><carmen titulus=\"r\" clavis=\"f maior\">"
+        "<acorda mensura=\"1\" textus=\"F | r | Gm\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1 | f#1 | g1</textus>"
+        "</frustum></pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS), I);
+    /* Bm declaratum, A tenta sine forma: discordia */
+    k = _carmen(c, "<carmina><carmen titulus=\"b\" clavis=\"d maior\">"
+        "<acorda mensura=\"1\" textus=\"Bm\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 b1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 d1</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f#1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 a1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_ACORDA);
+    n = censura_iudicare(k, &f, inv, CAPACITAS);
+    CREDO_NECESSE (n == I);
+    CREDO_VERUM (inv[ZEPHYRUM].regula == CENSURA_ACORDA);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 1 s: Bm declaratum, sonat Bm7 (A5) (frustum 0, offset "
+        "3)\n");
+    /* C7 declaratum, E nusquam: tertia deest */
+    k = _carmen(c, "<carmina><carmen titulus=\"t\">"
+        "<acorda mensura=\"1\" textus=\"C7\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 g1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 b-1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    n = censura_iudicare(k, &f, inv, CAPACITAS);
+    CREDO_NECESSE (n == I);
+    CREDO_CHORDA_CONTINET (_linea(c, k, &inv[ZEPHYRUM]),
+        chorda_ex_literis("C7 declaratum, sonat ", c->piscina));
+    CREDO_CHORDA_CONTINET (_linea(c, k, &inv[ZEPHYRUM]),
+        chorda_ex_literis("(tertia deest)", c->piscina));
+    /* C declaratum, C nusquam: radix deest */
+    k = _carmen(c, "<carmina><carmen titulus=\"q\">"
+        "<acorda mensura=\"1\" textus=\"C\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 e1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_CHORDA_CONTINET (_linea(c, k, &inv[ZEPHYRUM]),
+        chorda_ex_literis("(radix deest)", c->piscina));
+    /* duae alienae tentae: ambae nominantur */
+    k = _carmen(c, "<carmina><carmen titulus=\"u\">"
+        "<acorda mensura=\"1\" textus=\"C\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 d1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_CHORDA_CONTINET (_linea(c, k, &inv[ZEPHYRUM]),
+        chorda_ex_literis("(A4 D5)", c->piscina));
+    /* nota transiens super C declaratum: concordia */
+    k = _carmen(c, "<carmina><carmen titulus=\"p\">"
+        "<acorda mensura=\"1\" textus=\"C\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c4 d4 e2</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+                        ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -782,6 +893,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "parallelae", _sectio_parallelae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "saltus", _sectio_saltus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tertia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fractum", _sectio_fractum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "explicata", _sectio_explicata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "capacitas", _sectio_capacitas, NIHIL, NIHIL, NIHIL, NIHIL },

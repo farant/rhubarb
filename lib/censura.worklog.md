@@ -122,3 +122,19 @@ the arpeggio restarts), bar 3 G at mid-bar (silent: window Em).
 
 House songs with +tertia: vigilia 18 -> 0, completorium 7 -> 0 (chant + drone over Dm,
 C, F and the Picardy D); the others 0 -> 0; default rules unchanged everywhere.
+
+## 2026-10-27 - step 2b: declared harmony in censura - clavis exception, new rule 'acorda'
+
+D03TB part 1 + the new disagreement rule (Fran approved, Q1-Q3 of the declared-intent plan).
+- clavis: a note outside the key that belongs to the declared chord at its onset is intended
+  (lilia D7b9 F#/Eb: 5 -> 0 monita; oppidum Bbm6 Db). 'r' has no classes, so it excuses
+  nothing - the explicit 'nullum' check was redundant (its plant survived) and was removed.
+- acorda (ORD.): per declared window (ExplicatioFenestra.declaratum), a shapeless note outside
+  the declared chord (EXPLICATIO_IGNOTA already means "outside the declared classes" - a second
+  class check was redundant, removed), or a declared root / third that never sounds in the
+  window. Once per window: "Bm declaratum, sonat Bm7 (A5)" - CensuraInventum.sonans carries the
+  literal whole-window reading (acordum_ex_classibus of every class, bass = lowest note at the
+  window start); up to two foreign notes (nota, nota_prior), or causa "radix/tertia deest".
+House songs: no-<acorda> songs 0; campus 1 (Bm vs a held melody A - the author could declare
+Bm7); proelium +3 of the same kind; oppidum 44 -> 40. recensio tests pinned the default rule
+list (now 5). Plants 8/8 after two rewrites (one non-compiling form, one redundant check).

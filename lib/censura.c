@@ -20,7 +20,7 @@
 hic_manens constans character* TITULI[CENSURA_REGULAE] = {
     "lineae", "clavis", "ambitus", "dissonantia", "parallelae",
         "saltus",
-    "tertia"
+    "tertia", "acorda"
 };
 
 nomen structura {
@@ -89,6 +89,7 @@ censura_ordinaria (
     forma->activae[CENSURA_CLAVIS]       = VERUM;
     forma->activae[CENSURA_AMBITUS]      = VERUM;
     forma->activae[CENSURA_DISSONANTIA]  = VERUM;
+    forma->activae[CENSURA_ACORDA]       = VERUM;
 }
 
 constans character*
@@ -372,6 +373,40 @@ _picardiae_nota (
                                    (i32)f);
 }
 
+/* acordum declaratum (Carmen.acorda) ad pulsum; NIHIL nullum ('r'
+ * classes nullas habet: nihil admittit) */
+interior constans ComitatusAcordum*
+_declaratum (
+    constans Carmen* k,
+                s64  pulsus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < k->numerus_acordorum; i++)
+    {
+        constans ComitatusAcordum* a = &k->acorda[i];
+
+        si (a->pulsus <= pulsus && pulsus < a->pulsus + a->longitudo)
+        {
+            redde a;
+        }
+    }
+    redde NIHIL;
+}
+
+/* nota acordi declarati ad initium suum (dominans applicata scripta) */
+interior b32
+_declarati_nota (
+        constans Carmen* k,
+    constans CarmenNota* nota,
+                    s64  pulsus)
+{
+    constans ComitatusAcordum* a = _declaratum(k, pulsus);
+
+    redde a != NIHIL
+        && (a->acordum.classes & ((i32)I << (nota->nota % XII)));
+}
+
 interior vacuum
 _clavis_regula (
     Iudex* iudex)
@@ -396,7 +431,8 @@ _clavis_regula (
 
                 si (   !_percussio(n)
                     && !_in_clave(_clavis(k, pulsus), (s32)n->nota)
-                    && !_picardiae_nota(iudex, n, pulsus))
+                    && !_picardiae_nota(iudex, n, pulsus)
+                    && !_declarati_nota(k, n, pulsus))
                 {
                     _addere(iudex, CENSURA_CLAVIS, p, (s32)f, pulsus,
                         n->offset, n, NIHIL, NIHIL, NIHIL, NIHIL);
@@ -994,6 +1030,122 @@ _saltus (
     }
 }
 
+/* index frusti partis quod notam continet; -I nullum */
+interior s32
+_frustum_notae (
+    constans CarmenPars* p,
+    constans CarmenNota* nota)
+{
+    i32 f;
+
+    per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &p->frusta[f];
+
+        si (   fr->numerus > ZEPHYRUM && nota >= fr->notae
+            && nota < fr->notae + fr->numerus)
+        {
+            redde (s32)f;
+        }
+    }
+    redde -I;
+}
+
+/* acorda: fenestra declarata cum nota sine forma extra acordum, aut
+ * radice / tertia declarata nusquam sonante - semel per fenestram */
+interior vacuum
+_acorda_regula (
+    Iudex* iudex)
+{
+        constans Carmen* k = iudex->carmen;
+    constans Explicatio* e = iudex->explicatio;
+                    i32  f;
+
+    si (e == NIHIL)
+    {
+        redde;
+    }
+    per (f = ZEPHYRUM; f < e->numerus_fenestrarum; f++)
+    {
+          constans ExplicatioFenestra* w = &e->fenestrae[f];
+         constans ExplicatioSegmentum* alienae[II];
+         constans ExplicatioSegmentum* infima   = NIHIL;
+         constans ExplicatioSegmentum* s;
+                     constans Acordum* d;
+                                  i32  classes = ZEPHYRUM;
+                                  i32  numerus = ZEPHYRUM;
+                                  i32  n;
+                                  i32  i;
+                   constans character* causa    = NIHIL;
+                                  s32  tertia;
+
+        si (!w->declaratum)
+        {
+            perge;
+        }
+        d = &w->harmonia;
+        per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+        {
+            i32 c;
+
+            s = &e->segmenta[i];
+            si ((i32)s->fenestra != f)
+            {
+                perge;
+            }
+            c        = s->nota->nota % XII;
+            classes  |= (i32)I << c;
+            si (   infima == NIHIL
+                || (   s->initium == w->initium
+                    && (   infima->initium != w->initium
+                        || s->nota->nota < infima->nota->nota)))
+            {
+                infima = s;
+            }
+            /* ignota = extra classes declaratas, sine forma */
+            si (s->genus == EXPLICATIO_IGNOTA && numerus < II)
+            {
+                alienae[numerus++] = s;
+            }
+        }
+        si (infima == NIHIL)
+        {
+            perge;
+        }
+        tertia = acordum_proprietates(d->genus) != NIHIL
+               ? acordum_proprietates(d->genus)->tertia : -I;
+        si (numerus == ZEPHYRUM)
+        {
+            si (!(classes & ((i32)I << d->radix)))
+            {
+                causa = "radix deest";
+            }
+            alioquin si (   tertia >= ZEPHYRUM
+                         && !(classes & ((i32)I
+                              << ((d->radix + (i32)tertia) % XII))))
+            {
+                causa = "tertia deest";
+            }
+            alioquin
+            {
+                perge;
+            }
+        }
+        n = iudex->numerus;
+        s = numerus > ZEPHYRUM ? alienae[ZEPHYRUM] : infima;
+        _addere(iudex, CENSURA_ACORDA, &k->partes[s->pars],
+            _frustum_notae(&k->partes[s->pars], s->nota), w->initium,
+            s->nota->offset, s->nota, NIHIL,
+            NIHIL, numerus > I ? alienae[I]->nota : NIHIL, NIHIL);
+        si (n < iudex->capacitas)
+        {
+            iudex->inventa[n].causa   = causa;
+            iudex->inventa[n].sonans  = acordum_ex_classibus(classes,
+                infima->nota->nota % XII);
+        }
+    }
+}
+
 i32
 censura_iudicare (
            constans Carmen* carmen,
@@ -1021,7 +1173,8 @@ censura_iudicare (
     iudex.explicatio  = NIHIL;
     si (   forma->activae[CENSURA_DISSONANTIA]
         || forma->activae[CENSURA_CLAVIS]
-        || forma->activae[CENSURA_TERTIA])
+        || forma->activae[CENSURA_TERTIA]
+        || forma->activae[CENSURA_ACORDA])
     {
         /* explicatio in piscina propria: inventa notas carminis et
          * causas staticas tenent, nihil ex ea (clavis: tertia
@@ -1060,6 +1213,10 @@ censura_iudicare (
     si (forma->activae[CENSURA_TERTIA])
     {
         _tertia(&iudex);
+    }
+    si (forma->activae[CENSURA_ACORDA])
+    {
+        _acorda_regula(&iudex);
     }
     /* ordinatio stabilis (insertio) per mensuram, pulsum */
     x = iudex.numerus < capacitas ? iudex.numerus : capacitas;
@@ -1242,6 +1399,42 @@ censura_inventum_scribere (
                 d < ZEPHYRUM ? -d : d) && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 " semitonia") && bene;
+            frange;
+        }
+        casus CENSURA_ACORDA:
+        {
+            constans ComitatusAcordum* a = _declaratum(carmen, pulsus);
+
+            si (a != NIHIL)
+            {
+                bene = harmonia_scribere(carmen, &a->acordum, pulsus,
+                    textus) && bene;
+            }
+            bene = chorda_aedificator_appendere_literis(textus,
+                " declaratum, sonat ") && bene;
+            bene = harmonia_scribere(carmen, &x->sonans, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus, " (")
+                && bene;
+            si (x->causa != NIHIL)
+            {
+                bene = chorda_aedificator_appendere_literis(textus,
+                    x->causa) && bene;
+            }
+            alioquin
+            {
+                bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                    textus) && bene;
+                si (x->nota_prior != NIHIL)
+                {
+                    bene = chorda_aedificator_appendere_character(
+                        textus, ' ') && bene;
+                    bene = partitura_notam_scribere(carmen,
+                        x->nota_prior, pulsus, textus) && bene;
+                }
+            }
+            bene = chorda_aedificator_appendere_character(textus, ')')
+                && bene;
             frange;
         }
         casus CENSURA_TERTIA:

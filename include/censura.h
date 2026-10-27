@@ -8,7 +8,9 @@
  * REGULAE (titulus; ORD. = in forma ordinaria):
  *   lineae       '|' scripta non in linea mensurae (mappa metri)  ORD.
  *   clavis       nota extra clavem; in minore VI et VII elevati
- *                licent (harmonica, melodica)                     ORD.
+ *                licent (harmonica, melodica); nota acordi
+ *                declarati ad initium suum licet (dominans
+ *                applicata scripta: D7 in F, F#)                  ORD.
  *   ambitus      nota extra ambitum instrumenti (ordinarius:
  *                aether 36..96, quadrans 48..96, triangulum
  *                24..72, chorda 28..88, campana 48..96; ignotum
@@ -36,6 +38,12 @@
  *                incipiat (acordum sustentum non iteratur); NON si
  *                fenestra explicationis cui tempus pertinet acordum
  *                cum tertia nominat (arpeggium E2 E3 B3, G4: Em)  -
+ *   acorda       harmonia declarata (<acorda>) et sonans discordant
+ *                (fenestra declarata, explicatio.h): nota sine forma
+ *                alienae extra acordum declaratum, aut radix /
+ *                tertia declarata nusquam in fenestra sonans. Semel
+ *                per fenestram: "D declaratum, sonat Gmaj9/D (G5
+ *                B5)"                                             ORD.
  *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
@@ -70,6 +78,7 @@ nomen enumeratio {
     CENSURA_PARALLELAE,
     CENSURA_SALTUS,
     CENSURA_TERTIA,
+    CENSURA_ACORDA,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -97,11 +106,14 @@ nomen structura {
                                          * sonantium); NIHIL: lineae */
     constans CarmenNota* nota_altera;   /* partis alterius */
     /* parallelae: notae initii prioris (par primum); saltus: nota
-     * prior partis; NIHIL aliter */
+     * prior partis; acorda: nota aliena altera; NIHIL aliter */
     constans CarmenNota* nota_prior;
     constans CarmenNota* nota_altera_prior;
-    /* dissonantia: cur non explicata (statica); NIHIL aliter */
+    /* dissonantia: cur non explicata (statica); acorda: "radix
+     * deest" / "tertia deest" (NIHIL: notae alienae); NIHIL aliter */
     constans character* causa;
+    /* acorda: harmonia SONANS fenestrae (litteralis, classes omnes) */
+                Acordum sonans;
 } CensuraInventum;
 
 /* ORD. activae (lineae, clavis, ambitus, dissonantia), ambitus
