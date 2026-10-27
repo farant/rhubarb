@@ -414,8 +414,25 @@ _par_eligere (
     }
     si (!inventum)
     {
-        /* componentes disiunctae: productum externum. O(L^2) per
-         * gradum - solum in cauda retis disiuncti. */
+        /* componentes disiunctae: productum externum. Si omnes vivi
+         * scalares sunt (in rete clauso semper), omnis clavis 1 est:
+         * par = duo id minimi, sine scansione O(L^2) per gradum. */
+        b32 sine_indicibus = VERUM;
+
+        per (x = ZEPHYRUM; x < numerus_vivorum; x++)
+        {
+            si (tensores[vivi[x]].numerus != ZEPHYRUM)
+            {
+                sine_indicibus = FALSUM;
+                frange;
+            }
+        }
+        si (sine_indicibus)
+        {
+            *sinister  = vivi[ZEPHYRUM];
+            *dexter    = vivi[I];
+            redde;
+        }
         per (x = ZEPHYRUM; x < numerus_vivorum; x++)
         {
             per (y = x + I; y < numerus_vivorum; y++)
@@ -588,6 +605,9 @@ _tabulam_disponere (
             }
             candidatum = occupata[j].finis;
         }
+        /* finis tabulae <= summa intermediorum <= multiplicationes:
+         * hic saturatio solum si multiplicationes iam saturatae
+         * (officina tunc refutatur) - ramus custos, non probatus */
         finis = _addere_saturate(candidatum, t->elementa);
         si (finis == CONTRACTIO_SATURATUM)
         {
@@ -909,6 +929,23 @@ contractio_ordo_sedes (
     redde VERUM;
 }
 
+b32
+contractio_ordo_indices (
+    constans ContractioOrdo*  ordo,
+                        i32   tensor,
+               constans i32** indices,
+                        i32*  numerus)
+{
+    si (   ordo   == NIHIL || indices == NIHIL || numerus == NIHIL
+        || tensor >= ordo->initiales + ordo->numerus_graduum)
+    {
+        redde FALSUM;
+    }
+    *indices = ordo->tensores[tensor].indices;
+    *numerus = ordo->tensores[tensor].numerus;
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Exsecutio
@@ -916,7 +953,9 @@ contractio_ordo_sedes (
 
 /* Multiplicationes non saturatae (< 2^64) implicant quemque gradum
  * habere < 64 indices dimensionis >= 2 in unione: numeratores
- * exsecutionis (T3) in acervo fixo capiunt. */
+ * exsecutionis (T3) in acervo fixo capiunt - SI indices dimensionis
+ * 1 omittuntur (eorum numerus non finitur: 100 indices dimensionis 1
+ * communes dant multiplicationem unam). */
 ContractioOfficina*
 contractio_officina_creare (
     constans ContractioOrdo* ordo,
@@ -930,9 +969,12 @@ contractio_officina_creare (
     {
         redde NIHIL;
     }
+    /* limes 2^62: piscina mensuram prope 2^64 non tuto tractat
+     * (offset + mensura exundat); nullum rete notum huc pervenit */
     octeti = ordo->sumptus.octeti_officinae;
     si (   octeti                         == CONTRACTIO_SATURATUM
         || ordo->sumptus.multiplicationes == CONTRACTIO_SATURATUM
+        || octeti > ((i64)I << LXII)
         || octeti > octeti_maximi)
     {
         redde NIHIL;

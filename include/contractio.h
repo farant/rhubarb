@@ -130,7 +130,10 @@ nomen structura {
  * tabulae: offsets per vitam, primum aptum (effectus gradus non
  * superponitur operandis eius). Rete post hoc immutabile. NIHIL si
  * rete non clausum (v1; rete tunc mutabile manet) aut optiones
- * invalidae. Rete vacuum aut tensor solus: ordo sine gradibus. */
+ * invalidae. Rete vacuum aut tensor solus: ordo sine gradibus.
+ * Memoria ordinis (magnitudine retis, non tensorum) per
+ * piscina_allocare: in piscina certae magnitudinis defectus fatalis
+ * est, non NIHIL. */
 ContractioOrdo*
 contractio_ordinare (
                  ContractioRete* rete,
@@ -163,7 +166,9 @@ contractio_ordo_gradus (
 
 /* sedes tensoris intermedii in tabula (offset et elementa, in
  * elementis i32). FALSUM pro tensore initiali aut ignoto, et si
- * tabula saturata est (exitus non tanguntur). */
+ * ELEMENTA tabulae saturantur (intermedius aut finis >= 2^64 - 1;
+ * si solum octeti saturantur, sedes tamen redduntur) - exitus tunc
+ * non tanguntur. */
 b32
 contractio_ordo_sedes (
     constans ContractioOrdo* ordo,
@@ -171,14 +176,25 @@ contractio_ordo_sedes (
                         i64* offset,
                         i64* elementa);
 
+/* indices tensoris (initialis: ordine vocantis; intermedius: ordine
+ * id ascendente), memoria ordinis - non mutanda. Scalaris: numerus
+ * 0, indices NIHIL. FALSUM si tensor ignotus (exitus non tanguntur). */
+b32
+contractio_ordo_indices (
+    constans ContractioOrdo*  ordo,
+                        i32   tensor,
+               constans i32** indices,
+                        i32*  numerus);
+
 
 /* ==================================================
  * Exsecutio
  * ================================================== */
 
-/* officina gradus calidi: UNA allocatio (piscina_conari_allocare)
- * octeti_officinae octetorum; reutilis per omnia puncta et primos.
- * NIHIL si octeti_officinae > octeti_maximi, si sumptus saturati
+/* officina gradus calidi: tabula UNA allocatione
+ * (piscina_conari_allocare) octeti_officinae octetorum, plus
+ * structura parva; reutilis per omnia puncta et primos. NIHIL si
+ * octeti_officinae > octeti_maximi aut > 2^62, si sumptus saturati
  * (octeti aut multiplicationes: 2^64 operationes numquam finiuntur),
  * aut si allocatio deficit. */
 ContractioOfficina*

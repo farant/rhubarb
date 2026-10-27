@@ -537,10 +537,18 @@ _independens_probare (
 
     per (k = ZEPHYRUM; k < n; k++)
     {
+        constans i32* lista;
+                 i32  longitudo;
+
+        /* initiales: indices ordine vocantis */
+        CREDO_NECESSE(contractio_ordo_indices(ordo, k, &lista,
+            &longitudo));
+        CREDO_AEQUALIS_I32(longitudo, f->longitudines[k]);
         masca[k] = ZEPHYRUM;
         per (j = ZEPHYRUM; j < f->longitudines[k]; j++)
         {
             masca[k] |= (i32)I << f->plani[initium + j];
+            CREDO_AEQUALIS_I32(lista[j], f->plani[initium + j]);
         }
         initium   += f->longitudines[k];
         vivus[k]  = VERUM;
@@ -621,6 +629,33 @@ _independens_probare (
         {
             summum = offsets[e] + magnitudines[e];
         }
+
+        /* intermedius: differentia symmetrica, ordine id ascendente */
+        {
+            constans i32* lista;
+                     i32  longitudo;
+                     i32  masca_listae = ZEPHYRUM;
+
+            CREDO_NECESSE(contractio_ordo_indices(ordo, e, &lista,
+                &longitudo));
+            per (j = ZEPHYRUM; j < longitudo; j++)
+            {
+                masca_listae |= (i32)I << lista[j];
+                si (j > ZEPHYRUM)
+                {
+                    CREDO_VERUM(lista[j - I] < lista[j]);
+                }
+            }
+            CREDO_AEQUALIS_I32(masca_listae, masca[e]);
+        }
+    }
+    {
+        constans i32* lista      = NIHIL;
+                 i32  longitudo  = (i32)0xDEADUL;
+
+        CREDO_FALSUM(contractio_ordo_indices(ordo, n + gradus, &lista,
+            &longitudo));
+        CREDO_AEQUALIS_I32(longitudo, (i32)0xDEADUL);
     }
     CREDO_AEQUALIS_I64(sumptus.apex, apex);
     CREDO_AEQUALIS_I64(sumptus.multiplicationes, multiplicationes);
@@ -903,6 +938,41 @@ _probare_officinam (
     CREDO_AEQUALIS_I32(exitus, (i32)0xDEADUL);
 }
 
+/* cauda scalarium: ordo septem (paria id minimorum) et 4000 scalares
+ * sine scansione O(L^2) per gradum (ante: ~14 s) */
+interior vacuum
+_ordinare_multos_vacuos (
+    Piscina* piscina)
+{
+    ContractioRete* rete = contractio_rete_creare(piscina);
+               i32  id;
+               i32  k;
+
+    per (k = ZEPHYRUM; k < (i32)4000UL; k++)
+    {
+        (vacuum)contractio_tensor_addere(rete, NIHIL, ZEPHYRUM, &id);
+    }
+    (vacuum)_ordinare(rete, piscina);
+}
+
+interior vacuum
+_probare_vacuos_multos (
+    CredoContextus* c)
+{
+         Piscina* piscina  = c->piscina;
+    constans i32  nulli[]  = { 0 };
+    constans i32  l[]      = { 0, 0, 0, 0, 0, 0, 0 };
+    constans i32  g[]     = { 0, I, VII, II, III, VIII, IV, V, IX, VI,
+        VII,
+        X, VIII, IX, XI, X, XI, XII };
+    ContractioOrdo* ordo;
+
+    ordo = _ordinare(_rete(piscina, nulli, 0, nulli, l, VII), piscina);
+    _gradus_probare(ordo, g, VI);
+    _sumptus_probare(ordo, I, XVI, VI, 0);
+    CREDO_NON_PENDET(_ordinare_multos_vacuos(piscina), MM);
+}
+
 
 /* ==================================================
  * Suita
@@ -926,6 +996,8 @@ interior constans CredoSectio SECTIONES[] = {
     { "refutationes", _probare_refutationes, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "officina", _probare_officinam, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scalares multi", _probare_vacuos_multos, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

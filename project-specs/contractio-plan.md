@@ -391,6 +391,12 @@ Fran's go-ahead.
   12 credo sections, 89,235 checks, 0.04 s; 300 random networks
   against an independent count; 19 plants red. Glossary: tensor. See
   lib/contractio.worklog.md.)*
+  *(2026-10-27, independent review of c1453413: no H; 19,000-network
+  differential fuzz with 0 mismatches. Fixed: officina capped at 2^62
+  bytes (piscina wraps near 2^64 — filed separately), O(1) scalar tail
+  in the outer-product fallback, new `contractio_ordo_indices` so the
+  sorted intermediate index order is tested, header wording. 13
+  sections, 106,758 checks; 4 more plants red.)*
 - **T3. contractio execution.** Hot tier with the two-word kernel and
   the officina; reference tier with per-step scratch.
   Credo: small networks against brute-force summation over all index
@@ -400,6 +406,16 @@ Fran's go-ahead.
   officina refused above `octeti_maximi` and reused across 100
   executions with no growth of the caller's arena; ordo/officina
   mismatch refused; dimension-3 indices.
+  From the T2 review (must hold): odometer and strides over dimension
+  ≥ 2 indices only — the ≤ 63 bound from unsaturated multiplications
+  counts only those, and dimension-1 indices are unbounded in number
+  (test: ≥ 64 shared dimension-1 indices in one step); the reference
+  tier has no officina, so it refuses saturated multiplications or apex
+  itself and sizes per-step scratch with overflow checks and
+  `piscina_conari_allocare` (test on T2's saturation networks); n = 1
+  → `valores[0][0]`, n = 0 → 1; strides per operand (inputs keep the
+  caller's order, intermediates are sorted); check `officina->ordo ==
+  ordo` and `ordo->rete == rete`.
 - **T4. Vertex-model bracket in laqueus.** Turning numbers, network
   builder (kink folding), `laqueus_uncinus_ex_pd_rete`,
   `laqueus_jones_ex_pd_rete`.

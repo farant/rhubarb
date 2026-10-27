@@ -90,3 +90,73 @@ Private names prefixed (`IntervallumTabulae`, `CONTRACTIO_NULLUS`,
 `CONTRACTIO_USUS_SIGNUM`): `Intervallum` is a type in fasti.h and
 `NULLUS` a macro in terminale.h / aemulator.h — harmless today, a
 collision in any amalgamation that includes both.
+
+## 2026-10-27 — T2 review (independent, after c1453413) and fixes
+
+Reviewer ported ordering, slab and latitudo to Python and fuzzed the C
+build (ASan + UBSan) against the port and against an independent
+set-based model: 19,000 networks in five regimes (up to 60 tensors and
+90 indices; huge dimensions; all dimension 1), ~40% hitting the
+outer-product fallback, ~4,300 saturating elements, ~640 saturating
+only the ×4 bytes — 0 mismatches. Intermediate index lists sorted and
+equal to the symmetric difference in 3,000 networks. Braid-shaped
+networks order fast: 12 strands / 801 crossings 19 ms (width 26, slab
+710 MB), 3,000 crossings 0.25 s, 8,000 crossings 2.0 s. No H.
+
+New invariant from the review: slab end ≤ Σ intermediate sizes ≤ Σ
+step multiplications, so `octeti_officinae ≤ 4·multiplicationes` and
+the slab-end saturation branch fires only when multiplications are
+already saturated (officina refused either way). Commented in place;
+the branch stays as a guard and is not testable.
+
+Fixed here:
+- **M1** `piscina` wraps on sizes near 2^64 (`offset + mensura` in
+  `_allocare_interna`; verified by the reviewer: a (size_t)−16 request
+  succeeds and the next allocation overlaps a live one). Not fixed in
+  piscina here (shared foundation library; filed for Fran). contractio
+  now refuses an officina above 2^62 bytes whatever `octeti_maximi`
+  says. No known network reaches it (the reviewer's targeted search
+  topped out at 7.7e10 bytes), so it is defense in depth, not planted.
+- **L1** the outer-product fallback was O(L^2) per step, O(L^3) for a
+  tail of L scalars (3,000 scalars: 6 s). When every live tensor is a
+  scalar (always, in a closed network) every key is 1, so the pair is
+  simply the two smallest live ids; the general scan stays for open
+  indices later. New section "scalares multi": the order of 7 scalars
+  by hand, and 4,000 scalars under CREDO_NON_PENDET 2 s (P20 red: the
+  old scan times out).
+- **L3** the intermediate index order (sorted by id, which the header
+  promises and open indices will need) was unobservable: deleting the
+  insertion sort survived. New accessor `contractio_ordo_indices`
+  (inputs in caller order, intermediates ascending); the random section
+  now checks each intermediate's list is strictly ascending and equals
+  the symmetric difference, and inputs return the caller's list.
+- **L4** header: `contractio_ordo_sedes` refuses when slab ELEMENTS
+  saturate, not when only the byte count does (the 3^20 triangle).
+- **L5** header: `ordinare` allocates network-sized memory with the
+  fatal allocator (fatal on a fixed-size arena).
+- **L6** header: the slab is one allocation, plus a small struct.
+
+Carried to T3 (in the plan): **M2** the ≤ 63 bound counts only
+dimension ≥ 2 indices — 100 shared dimension-1 indices give one
+multiplication — so the odometer and strides must skip dimension-1
+indices (they never move an offset), with a test of ≥ 64 dimension-1
+indices in one step. **M3** `contractio_exsequi_anulo` has no officina
+and so none of its guarantees: it must refuse saturated
+multiplications or apex itself and size per-step scratch with overflow
+checks and `piscina_conari_allocare`; test it on the saturation
+networks. **N4** n == 1 → the value is `valores[0][0]`, n == 0 → 1;
+inputs keep the caller's index order, so strides are per operand;
+check `officina->ordo == ordo` and `ordo->rete == rete`.
+
+Not acted on: L2 (guard branch, see invariant), L7 (`piscina_reficere`
+in `_latitudo` only affects memory), N1 equivalent mutants, N2
+disconnected components interleave by key (by spec; revisit if #SAT
+brings many components), N3 i32 id arithmetic overflows only near 2^31
+tensors.
+
+**Plants after the fixes, 4/4 red:** P20 scalar tail by full scan
+(CREDO_NON_PENDET), P21 scalar tail picks the wrong pair, P22
+intermediate lists not sorted (survived before), P23 `ordo_indices`
+one past the end.
+
+Tests now: 13 sections, 106,758 checks, 0.09 s.
