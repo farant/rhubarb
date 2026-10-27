@@ -94,8 +94,26 @@ _dominans_clavis (
     redde FALSUM;
 }
 
-/* clavis fenestrae f: ad initium eius, aut clavis fenestrae proximae si
- * alia est et acordum eius dominans (dominans praevia) */
+/* fenestra sonans proxima post f (pausae transiliuntur);
+ * numerus_fenestrarum si nulla */
+interior i32
+_proxima_sonans (
+    constans Explicatio* e,
+                    i32  f)
+{
+    i32 g = f + I;
+
+    dum (   g < e->numerus_fenestrarum
+         && e->fenestrae[g].harmonia.genus == ACORDUM_NULLA)
+    {
+        g++;
+    }
+    redde g;
+}
+
+/* clavis fenestrae f: ad initium eius, aut clavis fenestrae sonantis
+ * proximae si alia est et acordum eius dominans (dominans praevia);
+ * tonica clavis veteris numquam praevia */
 interior Clavis
 _clavis_fenestrae (
         constans Carmen* carmen,
@@ -105,11 +123,13 @@ _clavis_fenestrae (
 {
     Clavis k = _clavis(carmen, e->fenestrae[f].initium);
     Clavis n;
+       i32 g = _proxima_sonans(e, f);
 
     *praevia = FALSUM;
-    si (f + I < e->numerus_fenestrarum)
+    si (   g < e->numerus_fenestrarum
+        && (s32)e->fenestrae[f].harmonia.radix != k.tonica)
     {
-        n = _clavis(carmen, e->fenestrae[f + I].initium);
+        n = _clavis(carmen, e->fenestrae[g].initium);
         si (   (n.tonica != k.tonica || n.minor != k.minor)
             && _dominans_clavis(&n, &e->fenestrae[f].harmonia))
         {
@@ -441,6 +461,20 @@ _finalis (
             || h->genus == ACORDUM_CLASSIS_UNA);
 }
 
+/* dominans aut viio sine applicatione (duplex usus) */
+interior b32
+_ante_dominantem (
+    constans FunctioGradus* q,
+          constans Acordum* h)
+{
+    redde _dominans(q, h)
+        || (   q->applicata == ZEPHYRUM && q->alteratio == ZEPHYRUM
+            && q->gradus == VII
+            && (   h->genus == ACORDUM_DIMINUTA
+                || h->genus == ACORDUM_DIMINUTA_SEPTIMA
+                || h->genus == ACORDUM_DIMIDIA_DIMINUTA));
+}
+
 b32
 functio_carminis (
         constans Carmen* carmen,
@@ -472,6 +506,33 @@ functio_carminis (
         g->praevia   = praevia;
         _gradum_scribere(&k, &e->fenestrae[f], g,
                          functio_tertia_picardiae(carmen, e, f));
+    }
+    /* duplex usus: sexta (6, m6) in IV ante dominantem ut septima
+     * gradus II - F6 in C = Dm7/F = ii65; Dm6 in a minor = Bm7b5/D =
+     * iih65 */
+    per (f = ZEPHYRUM; f + I < e->numerus_fenestrarum; f++)
+    {
+                      FunctioGradus* g = &functio->gradus[f];
+        constans ExplicatioFenestra* w = &e->fenestrae[f];
+
+        si (   (   w->harmonia.genus == ACORDUM_SEXTA
+                || w->harmonia.genus == ACORDUM_SEXTA_MINOR)
+            && g->gradus    == IV && g->applicata == ZEPHYRUM
+            && g->alteratio == ZEPHYRUM
+            && _ante_dominantem(&functio->gradus[f + I],
+                                &e->fenestrae[f + I].harmonia))
+        {
+            ExplicatioFenestra secunda = *w;
+                        Clavis k;
+                           b32 praevia;
+
+            secunda.harmonia.radix  = (w->harmonia.radix + IX) % XII;
+            secunda.harmonia.genus  =
+                w->harmonia.genus == ACORDUM_SEXTA
+                    ? ACORDUM_SEPTIMA_MINOR : ACORDUM_DIMIDIA_DIMINUTA;
+            k = _clavis_fenestrae(carmen, e, f, &praevia);
+            _gradum_scribere(&k, &secunda, g, FALSUM);
+        }
     }
     /* clausulae: adventus et fenestra prior (fenestrae semper
      * contiguae) */
@@ -595,10 +656,12 @@ functio_lineam_scribere (
                 && bene;
         }
         primum  = FALSUM;
-        si (g->praevia && f + I < fx->numerus)
+        si (   g->praevia
+            && _proxima_sonans(fx->explicatio, f) < fx->numerus)
         {
             bene = _clavem_scribere(carmen,
-                fx->explicatio->fenestrae[f + I].initium, textus)
+                fx->explicatio->fenestrae[
+                    _proxima_sonans(fx->explicatio, f)].initium, textus)
                 && bene;
         }
         bene    = chorda_aedificator_appendere_literis(textus,

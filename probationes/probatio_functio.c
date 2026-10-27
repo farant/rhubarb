@@ -646,8 +646,8 @@ _sectio_modulatio (
     CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
         chorda_ex_literis(
         "  functio  V7:1\n", c->piscina));
-    /* picardia: D ante G maior dominans praevia est, non tertia (Em
-     * proxima non IV) */
+    /* tonica clavis veteris numquam praevia: D post A7 in d minor ante
+     * G maior Picardia est (Em proxima non IV) */
     partes[0] = "o3 a1 | d1 | e1";
     partes[1] = "o4 c#1 | d1 | <b1";
     partes[2] = "o4 g1 | f#1 | g1";
@@ -656,8 +656,9 @@ _sectio_modulatio (
         "<clavis mensura=\"3\" valor=\"g maior\"/>", partes);
     f = _functio(c, k);
     CREDO_NECESSE (f != NIHIL && f->numerus == III);
-    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "V");
-    CREDO_VERUM (!functio_tertia_picardiae(k, f->explicatio, I));
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "I");
+    CREDO_VERUM (!f->gradus[I].praevia);
+    CREDO_VERUM (functio_tertia_picardiae(k, f->explicatio, I));
     /* prior in clave fenestrae: A7 (F maior) ante d minor = V7 -> D
      * Picardia */
     partes[0] = "o3 a1 | d1 | a1";
@@ -683,6 +684,112 @@ _sectio_modulatio (
     CREDO_VERUM (!functio_tertia_picardiae(k, f->explicatio, I));
 }
 
+/* tonica veteris ante subdominantem: I cum clausula perfecta, non
+ * "F: V"; pausa ante mutationem transilitur */
+interior vacuum
+_sectio_modulatio_finalis (
+    CredoContextus* c)
+{
+    constans character* partes[V];
+       constans Carmen* k;
+               Functio* f;
+
+    partes[4] = NIHIL;
+    partes[0] = "o3 c1 | f1 | g1 | c1 | f1 | b-1 | c1 | f1";
+    partes[1] = "o4 e1 | f1 | f1 | e1 | f1 | f1 | e1 | f1";
+    partes[2] = "o4 g1 | a1 | b1 | g1 | a1 | b-1 | b-1 | a1";
+    partes[3] = "o5 c1 | c1 | d1 | c1 | c1 | d1 | g1 | f1";
+    k = _carmen_mutatum(c, "c maior",
+        "<clavis mensura=\"5\" valor=\"f maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == VIII);
+    CREDO_LITERAE_AEQUALES (f->gradus[III].numeralis, "I");
+    CREDO_VERUM (!f->gradus[III].praevia);
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[III].clausula,
+                        (i32)FUNCTIO_PERFECTA);
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[IV].clausula,
+                        (i32)FUNCTIO_NULLA);
+    /* D7 pausa secuta, deinde G maior: praevia ("G: V7") */
+    partes[0] = "o3 f1 | d2 r2 | g1";
+    partes[1] = "o4 c1 | c2 r2 | b1";
+    partes[2] = "o4 a1 | f#2 r2 | d1";
+    partes[3] = "o5 f1 | a2 r2 | g1";
+    k = _carmen_mutatum(c, "f maior",
+        "<clavis mensura=\"3\" valor=\"g maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus >= IV);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "V7");
+    CREDO_VERUM (f->gradus[I].praevia);
+    CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
+        chorda_ex_literis(
+        "  functio  G: V7:2 -:2\n", c->piscina));
+    /* nona praevia: D9 ante G maior in F */
+    partes[0] = "o3 d1 | g1";
+    partes[1] = "o4 f#1 | g1";
+    partes[2] = "o5 c1 | <b1";
+    partes[3] = "o5 e1 | d1";
+    k = _carmen_mutatum(c, "f maior",
+        "<clavis mensura=\"2\" valor=\"g maior\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == II);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "V9");
+    CREDO_VERUM (f->gradus[ZEPHYRUM].praevia);
+    /* clavis parallela: G7 in C maior ante c minor - "c: V7" */
+    partes[0] = "o3 g1 | c1";
+    partes[1] = "o4 f1 | e-1";
+    partes[2] = "o4 b1 | g1";
+    partes[3] = "o5 d1 | c1";
+    k = _carmen_mutatum(c, "c maior",
+        "<clavis mensura=\"2\" valor=\"c minor\"/>", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL && f->numerus == II);
+    CREDO_VERUM (f->gradus[ZEPHYRUM].praevia);
+    CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
+        chorda_ex_literis(
+        "  functio  c: V7:1\n", c->piscina));
+}
+
+/* duplex usus: sexta in IV ante dominantem = ii65 (iih65 in minore);
+ * ante I manet IVadd6 */
+interior vacuum
+_sectio_duplex (
+    CredoContextus* c)
+{
+    constans character* partes[V];
+               Functio* f;
+
+    partes[4]  = NIHIL;
+    partes[0]  = "o3 c1 | f1 | g1 | c1";
+    partes[1]  = "o4 c1 | c1 | b1 | c1";
+    partes[2]  = "o4 g1 | a1 | g1 | g1";
+    partes[3]  = "o5 e1 | d1 | d1 | c1";
+    f          = _functio(c, _carmen(c, "c maior", partes));
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "ii65");
+    partes[0]  = "o3 a1 | d1 | e1 | a1";
+    partes[1]  = "o4 a1 | a1 | g#1 | a1";
+    partes[2]  = "o4 e1 | f1 | e1 | e1";
+    partes[3]  = "o5 c1 | b1 | b1 | a1";
+    f          = _functio(c, _carmen(c, "a minor", partes));
+    CREDO_NECESSE (f != NIHIL && f->numerus == IV);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "iih65");
+    partes[0]  = "o3 c1 | f1 | c1";
+    partes[1]  = "o4 c1 | c1 | c1";
+    partes[2]  = "o4 g1 | a1 | g1";
+    partes[3]  = "o5 e1 | d1 | e1";
+    f          = _functio(c, _carmen(c, "c maior", partes));
+    CREDO_NECESSE (f != NIHIL && f->numerus == III);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "IVadd6");
+    /* ante viio quoque: F6 -> Bdim -> C */
+    partes[0]  = "o3 f1 | b1 | c1";
+    partes[1]  = "o4 c1 | d1 | c1";
+    partes[2]  = "o4 a1 | f1 | e1";
+    partes[3]  = "o5 d1 | d1 | c1";
+    f          = _functio(c, _carmen(c, "c maior", partes));
+    CREDO_NECESSE (f != NIHIL && f->numerus == III);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "ii65");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "vocabularium", _sectio_vocabularium, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -696,6 +803,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modulatio", _sectio_modulatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modulatio_finalis", _sectio_modulatio_finalis, NIHIL, NIHIL,
+        NIHIL,
+        NIHIL },
+    { "duplex", _sectio_duplex, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

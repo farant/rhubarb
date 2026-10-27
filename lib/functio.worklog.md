@@ -98,3 +98,22 @@ before/after comparison silently compared new vs new. Check with `strings bin/au
 fix by deleting build/aedilis/obiecta/lib__functio.o.
 
 Plants 10/10 red (the redundant guard's plant replaced by one on the key choice).
+
+## 2026-10-26 - review batch 1.3: pivot never on the old tonic; rests skipped; ii65 (double emploi)
+
+From the sexta review (harmony findings 2, 8) and Fran's calls ("ii65 and Iadd6 at final",
+"picardy sounds good").
+- Pivot misfired on the OLD key's tonic when the new key is the subdominant: C: I IV V7 I | F
+  read bar 4 "F: V [dimid.]" and bar 5 a false "[imperf.]"; A7 -> D in d minor before G minor
+  lost its Picardy third (and censura re-flagged the F#). Now a window whose root is the old
+  key's tonic is never praevia. Step 3's test (a) (D after A7 in d minor, then G major) flips
+  from "V" to Picardy I, by Fran's decision.
+- Rest windows between the dominant and the change are skipped (_proxima_sonans) - both for
+  the pivot test and for the line writer's key name ("G: V7:2 -:2", not "F:").
+- DUPLEX USUS: a 6/m6 chord on IV followed by a dominant (V/V7/V9/V7b9 via _dominans, or a viio
+  form) is re-read as the seventh chord on II: root + 9, genus m7 / m7b5, bass unchanged ->
+  "ii65" / "iih65". Second pass after the numeral loop (needs the next window's numeral). IV6
+  before I stays IVadd6 (lilia bar 9 unchanged); I6 stays Iadd6.
+- Tests also close test-strength gap 14 (pivot dominant forms): D9 before G -> "V9" praevia;
+  parallel key G7 in C before c minor -> "c: V7:1".
+Plants 9/9 first try. House songs byte-identical.

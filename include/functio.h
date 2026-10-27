@@ -7,24 +7,34 @@
  * Inversio ex basso: trias "" 6 64; septima 7 65 43 42. In minore VI
  * et VII elevati in clave sunt (V, viio). Radix extra clavem: gradus
  * supra eam deminutus, 'b' semper (bVII, bVI, bII6 - usus analysis;
- * orthographia clavis Bb in C '#VI' daret). Applicata: maior aut
- * septima dominantis extra clavem cuius radix quinta supra gradum
- * diatonicum (non diminutum, non tonicum) -> "V/V", "V7/ii"; diminuta
- * aut diminuta septima extra clavem semitonio infra -> "viio7/V".
+ * orthographia clavis Bb in C '#VI' daret). Applicata: maior, septima
+ * aut nona dominantis (9, 7b9) extra clavem cuius radix quinta supra
+ * gradum diatonicum (non diminutum, non tonicum) -> "V/V", "V7/ii";
+ * diminuta aut diminuta septima extra clavem semitonio infra ->
+ * "viio7/V".
  * Dyas: gradus cum qualitate dyadis ("I(5)", "ii(3)"); classis una
  * "(I)"; ignotum "?"; silentium "-". Sextae augmentatae et cetera
- * chromatica: nondum.
+ * chromatica: nondum. Toni additi (6, 9): figura inversionis nulla.
+ *
+ * DUPLEX USUS: acordum sextae (6, m6) in gradu IV ante dominantem
+ * (fenestra proxima V, V7, V9, V7b9, viio) ut septima gradus II
+ * legitur - F6 in C ante G = "ii65", Dm6 in a minor ante E = "iih65";
+ * aliter IVadd6; sexta in gradu I (Iadd6) manet.
  *
  * CLAVIS: clavis ad initium fenestrae (<clavis> carminis), praeter
- * DOMINANTEM PRAEVIAM - fenestra ultima ante mutationem clavis
- * (fenestra proxima in clave alia incipit) cuius acordum dominans
+ * DOMINANTEM PRAEVIAM - fenestra ultima SONANS ante mutationem clavis
+ * (fenestra sonans proxima in clave alia incipit; pausae
+ * transiliuntur) cuius acordum dominans
  * clavis novae est (forma dominantis: maior, 7, 9, 7b9, (3) in
  * quinta tonicae novae; aut o, o7, h7 semitonio infra eam) in clave
  * nova legitur: D7 ante G maior in F maior = V7, non V7/ii - sic
  * clausula in tonicam novam invenitur (D7 -> G, summa G: perfecta).
  * Linea functionis clavem novam ante dominantem praeviam nominat
  * ("G: V7:1"; minor littera parva: "e: V7:1"). Alia acorda ante
- * mutationem (ii-V: Am7 D7 | G) in clave vetere manent.
+ * mutationem (ii-V: Am7 D7 | G) in clave vetere manent. Tonica
+ * clavis veteris (radix = tonica: I, i, Picardia) numquam praevia: C
+ * in C maior ante F maior manet I cum clausula sua; D post A7 in d
+ * minor ante G maior Picardia est.
  *
  * CLAUSULA (cadentia; heuristica, sine signis formae): ADVENTUS =
  * fenestra quae in initio mensurae incipit et ad finem eius manet, et
@@ -103,12 +113,11 @@ functio_lineam_scribere (
     ChordaAedificator* textus);
 
 /* tertia Picardiae: clavis minor, acordum fenestrae MAIUS in finali
- * (trias maior aut tertia maior), et fenestra aut ultima sonans
- * carminis, aut adventus post dominantem (V, V7) cuius fenestra
- * proxima non in gradu IV stat (ubi V/iv verum est) - prior et
- * proxima in clave FENESTRAE leguntur; dominans praevia (CLAVIS)
- * numquam Picardia. Ut I legitur (clausula servatur); censura tertiam
- * eius clavem non violare iudicat */
+ * (trias maior, sexta, nona addita, tertia maior), et fenestra aut
+ * ultima sonans carminis, aut adventus post dominantem (V, V7) cuius
+ * fenestra proxima non in gradu IV stat (ubi V/iv verum est) - prior
+ * et proxima in clave FENESTRAE leguntur. Ut I legitur (clausula
+ * servatur); censura tertiam eius clavem non violare iudicat */
 b32
 functio_tertia_picardiae (
         constans Carmen* carmen,
