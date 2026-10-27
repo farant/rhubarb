@@ -10,7 +10,10 @@
  *   clavis       nota extra clavem; in minore VI et VII elevati
  *                licent (harmonica, melodica); clavis caerulea: toni
  *                caerulei (b3 b5 b7 tonicae) in clave (F: Ab, B,
- *                Eb); nota acordi
+ *                Eb); ORNAMENTUM CHROMATICUM licet: nota extra
+ *                clavem quae transitus, vicinus aut appoggiatura
+ *                est et SEMITONIO exit (C C# D, G F# G, D# E,
+ *                accessus bassi C#3 -> C3); nota acordi
  *                declarati ad initium suum licet (dominans
  *                applicata scripta: D7 in F, F#); intentionibus
  *                liberis etiam intentio eius (A7b9 in F: F#,

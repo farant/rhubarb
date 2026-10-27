@@ -185,3 +185,17 @@ House: nocturnum 7 -> 0; ambulatio 24 -> 8 (4 B2 chromatic approaches under Gm7 
 walking bass; 4 cornu above range - real). Side effect worth knowing: walking-bass approach
 notes B2/C#3 over F7 are now excused because they happen to be #11/b13 of F7 - right outcome,
 coincidental reason. Other 10 songs unchanged. Plants 4/4.
+
+## 2026-10-27 - chromatic ornaments in the key rule (park 43HA, first part)
+
+explicatio already named the shape of ambulatio's walking-bass approach (C#3 "app." into C3);
+the clavis rule simply never looked at shapes. New ExplicatioSegmentum.semitonium (the next
+note of the same voice is exactly one semitone away), set for every segment from _motus. The
+key rule excuses an out-of-key note whose onset segment is a passing tone, neighbour or
+appoggiatura AND leaves by a semitone - the lean that makes a chromatic note an ornament
+(C C# D, G F# G, D# E, the bass approach). Whole-step exits stay flagged on purpose: Bb
+passing A -> C in C major is modal colour, E F# E a real inflection. Applies in every style.
+The appoggiatura "resoluta" check I first wrote was dead: explicatio defines every
+appoggiatura as leap-in step-out, so resoluta is always true - removed from code and header.
+House: ambulatio 2 -> 0, all other songs unchanged. Plants 9/9.
+Still open from 43HA: passing diminished sevenths, chromatic inner lines over a held chord.

@@ -322,6 +322,55 @@ _sectio_caerulea (
 }
 
 
+/* ornamentum chromaticum: nota extra clavem quae transitus, vicinus
+ * aut appoggiatura resoluta est et semitonio exit licet; gradu toto
+ * exiens aut sine forma nominatur */
+interior constans Carmen*
+_melodia_super_c (
+        CredoContextus* c,
+    constans character* melodia)
+{
+    character* s = (character*)piscina_allocare(c->piscina, M);
+
+    sprintf(s, "<carmina><carmen titulus=\"o\" clavis=\"c maior\">"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>%s</textus></frustum></pars>"
+        "</carmen></carmina>", melodia);
+    redde _carmen(c, s);
+}
+
+interior vacuum
+_sectio_chromatica (
+    CredoContextus* c)
+{
+       CensuraForma f = _sola(CENSURA_CLAVIS);
+    CensuraInventum inv[CAPACITAS];
+
+    /* transitus C C# D, vicinus G F# G, appoggiatura C D# E: licent */
+    CREDO_AEQUALIS_I32 (censura_iudicare(_melodia_super_c(c,
+        "o5 c4 c#4 d4 e4"), &f, inv, CAPACITAS), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (censura_iudicare(_melodia_super_c(c,
+        "o5 g4 f#4 g4 e4"), &f, inv, CAPACITAS), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (censura_iudicare(_melodia_super_c(c,
+        "o5 c4 d#4 e4 g4"), &f, inv, CAPACITAS), ZEPHYRUM);
+    /* vicinus E F# E: gradu toto exit - nominatur */
+    CREDO_NECESSE (censura_iudicare(_melodia_super_c(c,
+        "o5 e4 f#4 e4 g4"), &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXXVIII);
+    /* transitus A Bb C: gradu toto exit - nominatur */
+    CREDO_NECESSE (censura_iudicare(_melodia_super_c(c,
+        "o5 a4 b-4 >c4 <g4"), &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXXXII);
+    /* sine forma (saltu intrat et exit) - nominatur */
+    CREDO_NECESSE (censura_iudicare(_melodia_super_c(c,
+        "o5 g4 >c#4 <e4 g4"), &f, inv, CAPACITAS) == I);
+}
+
+
     /* ==================================================
      * AMBITUS: ordinarius, instrumentum ignotum, ambitus proprius
      * ================================================== */
@@ -1192,6 +1241,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "caerulea", _sectio_caerulea, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "chromatica", _sectio_chromatica, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dissonantia", _sectio_dissonantia, NIHIL, NIHIL, NIHIL, NIHIL },

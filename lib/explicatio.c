@@ -1004,9 +1004,10 @@ explicatio_carminis (
                 {
                     s->initium = fenestrae[f].initium;
                 }
-                s->fenestra  = i;   /* locata ad tempus */
-                s->genus     = EXPLICATIO_ACORDI;
-                s->resoluta  = FALSUM;
+                s->fenestra    = i;   /* locata ad tempus */
+                s->genus       = EXPLICATIO_ACORDI;
+                s->resoluta    = FALSUM;
+                s->semitonium  = FALSUM;
             }
         }
     }
@@ -1098,6 +1099,11 @@ explicatio_carminis (
         {
         }
         s->fenestra = f;
+        {
+            Motus motus = _motus(locatae, segmenta, i, l);
+
+            s->semitonium = motus.proxima && _absolutum(motus.d2) == I;
+        }
         si (acorda[f].classes & _bit(c))
         {
             si ((s32)c == acorda[f].septima)

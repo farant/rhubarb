@@ -558,6 +558,36 @@ _declarati_nota (
                 && _intentio(&a->acordum, c)));
 }
 
+/* ORNAMENTUM CHROMATICUM (censura.h clavis): segmentum notae ad
+ * initium eius transitus, vicinus aut appoggiatura (semper gradu
+ * exit - explicatio.h), semitonio exiens */
+interior b32
+_ornamentum_chromaticum (
+                  Iudex* iudex,
+    constans CarmenNota* nota)
+{
+    i32 i;
+
+    si (iudex->explicatio == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < iudex->explicatio->numerus_segmentorum; i++)
+    {
+        constans ExplicatioSegmentum* s =
+            &iudex->explicatio->segmenta[i];
+
+        si (s->nota == nota && s->initium == s->pulsus)
+        {
+            redde s->semitonium
+                && (   s->genus == EXPLICATIO_TRANSITUS
+                    || s->genus == EXPLICATIO_VICINUS
+                    || s->genus == EXPLICATIO_INNIXA);
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _clavis_regula (
     Iudex* iudex)
@@ -583,7 +613,8 @@ _clavis_regula (
                 si (   !_percussio(n)
                     && !_in_clave(_clavis(k, pulsus), (s32)n->nota)
                     && !_picardiae_nota(iudex, n, pulsus)
-                    && !_declarati_nota(iudex, n, pulsus))
+                    && !_declarati_nota(iudex, n, pulsus)
+                    && !_ornamentum_chromaticum(iudex, n))
                 {
                     _addere(iudex, CENSURA_CLAVIS, p, (s32)f, pulsus,
                         n->offset, n, NIHIL, NIHIL, NIHIL, NIHIL);

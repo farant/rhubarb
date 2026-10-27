@@ -925,6 +925,39 @@ _sectio_bassus_fractus (
     CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "C(3):1");
 }
 
+/* semitonium: nota proxima vocis semitonio unico distat (C C# D: C et
+ * C# sic, D ad E non; A Bb C: Bb non; ultima nota non) */
+interior vacuum
+_sectio_semitonium (
+    CredoContextus* c)
+{
+                      Explicatio* e;
+    constans ExplicatioSegmentum* s;
+
+    e = _explicare(c, _tres(c, "4/4", "c maior", "o3 c1", "o4 e1",
+                            "o5 c4 c#4 d4 e4"));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, II, CMLX, EXPLICATIO_TRANSITUS, FALSUM));
+    s = _segmentum(e, II, CMLX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_VERUM (s->semitonium);
+    s = _segmentum(e, II, ZEPHYRUM);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_VERUM (s->semitonium);
+    s = _segmentum(e, II, MCMXX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_FALSUM (s->semitonium);
+    s = _segmentum(e, II, MMDCCCLXXX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_FALSUM (s->semitonium);
+    e = _explicare(c, _tres(c, "4/4", "c maior", "o3 c1", "o4 e1",
+                            "o5 a4 b-4 >c4 <g4"));
+    CREDO_NECESSE (e != NIHIL);
+    s = _segmentum(e, II, CMLX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_FALSUM (s->semitonium);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "additae", _sectio_additae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tentae", _sectio_tentae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -938,6 +971,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "suspensio", _sectio_suspensio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "semitonium", _sectio_semitonium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "septima", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tituli", _sectio_tituli, NIHIL, NIHIL, NIHIL, NIHIL },

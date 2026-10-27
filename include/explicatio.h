@@ -65,6 +65,9 @@
  *   anticipatio  proxima eadem altitudo, acordi in fenestra proxima
  *   escapata     gradu intrat, saltu contrario exit
  *   ignota       aliena sine forma
+ * SEMITONIUM (segmenti cuiusque): nota proxima eiusdem vocis
+ * semitonio unico distat - exitus chromaticus (censura: ornamentum
+ * chromaticum extra clavem licet).
  * gradus = I aut II semitonia; saltus >= III. Ordo probationis:
  * suspensio, transitus, vicinus, appoggiatura, escapata, anticipatio.
  * Tempus forte NON hic iudicatur (censura id facit, segmenti pulsus
@@ -110,6 +113,9 @@ nomen structura {
         ExplicatioGenus  genus;
                     b32  resoluta;    /* septima, suspensio,
                                        * retardatio, appoggiatura */
+                    b32 semitonium;  /* nota proxima eiusdem vocis
+                                       * semitonio unico distat
+                                       * (exitus chromaticus) */
 } ExplicatioSegmentum;
 
 nomen structura {
