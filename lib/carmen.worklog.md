@@ -348,3 +348,16 @@ reserved (= censura_ordinaria, always known), basis resolves, no circular chain,
 <carmen stylus> resolves, one <censura> per song. Rule NAMES are judged by censura (step 3b) -
 carmen cannot know them (censura depends on carmen). Plants 7/7 (merge-order and loop-guard
 plants skipped: they would read past an array / hang; the chain plant covers both chain errors).
+
+## 2026-10-27 - J3: jazz preset in the house book; <acorda> is not repeated (author trap)
+
+carmina.stml: <stylus titulus="iazz" basis="popularis" intentiones="liberae" regulae="+evitanda"/>;
+nocturnum and ambulatio use it. censura: nocturnum 42 -> 7, ambulatio 168 -> 24.
+Trap found while measuring: ambulatio's second chorus is a <repetitio>, and <acorda> is NOT
+iterated (by design, like clavis - a repeat may transpose). Bars 13-25 had no declared chords,
+so the walking bass cut a window per beat and inference fell apart (38 'sine explicatione').
+The author must declare repeated choruses: a second <acorda mensura="13"> fixed all of them.
+Worth a future censura hint: "repetitio sine acordis" when the source section had <acorda>.
+Remaining: ambulatio 20 blue notes out of key (blues mode, next arc) + 4 cornu above range
+(bars 6/18, a real finding); nocturnum 5 tensions out of key + 2 'suspensio non resoluta' on a
+G7 9th - J2 frees only shapeless tensions; extending clavis/dissonantia is a design question.

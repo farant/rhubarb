@@ -60,6 +60,12 @@
        non postulatur (pop, jazz, chiptune, SNES) -->
   <stylus titulus="popularis" septimae="liberae"/>
 
+  <!-- iazz: popularis cum intentionibus (9 11 13 et alteratae per
+       genus acordi) - nota tenta intentio acordi non aliena; notae
+       evitandae (11 super maiorem et dominantem) monentur -->
+  <stylus titulus="iazz" basis="popularis" intentiones="liberae"
+      regulae="+evitanda"/>
+
   <figura titulus="valsa"
       textus="v100 B:4 v60 [1 2 3] [1 2 3] | v100 Q:4 v60 [1 2 3] [1 2 3]"/>
   <figura titulus="marcia" textus="v100 B:4 v60 [1 2 3] v85 Q v60 [1 2 3]"/>
@@ -314,7 +320,7 @@
     </pars>
   </carmen>
 
-  <carmen titulus="nocturnum" stylus="popularis" tempus="66" metrum="4/4" clavis="f maior">
+  <carmen titulus="nocturnum" stylus="iazz" tempus="66" metrum="4/4" clavis="f maior">
     <reverberatio aula="0.7" mollities="0.5" latitudo="1" lucrum="0.35"/>
     <acorda mensura="1" textus="Fmaj7 | Em7b5:2 A7b9:2 | Dm7:2 G7:2 | Gm7:2 C7:2 | Fmaj7:2 Bb7:2 | Am7:2 D7b9:2 | Gm7:2 Gb7:2 | F6"/>
     <fermata mensura="8"/>
@@ -339,11 +345,13 @@
     </pars>
   </carmen>
 
-  <carmen titulus="ambulatio" stylus="popularis" tempus="160" metrum="4/4" clavis="f maior"
+  <carmen titulus="ambulatio" stylus="iazz" tempus="160" metrum="4/4" clavis="f maior"
           agogica="2 1 2 1 2 1 2 1">
     <reverberatio aula="0.4" mollities="0.6" latitudo="1" lucrum="0.25"/>
     <sectio titulus="chorus" mensura="1" usque="13"/>
     <acorda mensura="1" textus="F7 | Bb7 | F7 | Cm7:2 F7:2 | Bb7 | Bdim7 | F7 | D7b9 | Gm7 | C7 | F7:2 D7b9:2 | Gm7:2 C7:2"/>
+    <!-- acorda non iterantur: chorus secundus et finis declarantur -->
+    <acorda mensura="13" textus="F7 | Bb7 | F7 | Cm7:2 F7:2 | Bb7 | Bdim7 | F7 | D7b9 | Gm7 | C7 | F7:2 D7b9:2 | Gm7:2 C7:2 | F7"/>
     <repetitio sectio="chorus" mensura="13" partes="melodia laeva1 laeva2 laeva3 laeva4 bassus"/>
     <fermata mensura="25"/>
     <pars titulus="melodia" instrumentum="cornu" lucrum="0.7" reverberatio="0.3">
