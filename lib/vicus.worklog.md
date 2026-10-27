@@ -1103,3 +1103,75 @@ one forward; tests that need N terminals give each a distinct plain
 argument. And: the session runs inside tmux, so a private tmux server
 needs `env -u TMUX -u TMUX_PANE TMUX_TMPDIR=...` on every call (a bare
 `tmux new-session` landed on Fran's real server - removed at once).
+
+## 2026-10-27 - comites P7.4: companion per Claude Code session, no tmux in the pulse
+
+Spec project-specs/comites.md §XI. A terminal pane's locus now comes
+from a CACHE (TerminaleInVico.memoria: server, tmux session, active
+window index + name, active pane id) that the terminalia system fills
+- it now starts `list-panes -a` next to `list-clients` for every
+server (colloquia sessions' servers, each terminal pane's own server
+from its restore argument - NEW, the comites test server is only known
+that way - then the default), on the same T2b schedule, never waiting.
+Locus: live Claude session in the cached active pane
+(colloquium_panelli over colloquia_visus_fontis, titles included) ->
+`terminale/claude/<session id>`, title = session title; else
+`terminale/tmux/<session>/<window>`; else `terminale/<pane id>`.
+Cmd+T / focus-left (locum_renovare) still do ONE synchronous refresh
+of the cache. Closes desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4 (P4 ran
+list-clients + list-panes synchronously once a second while following).
+
+Found on the way: the colloquia session state only advanced inside
+colloquia_visus_fontem_pulsare, i.e. only while a sessions PANE was
+pulsed (that pulse also polls tmux synchronously). New
+colloquia_visus_fontem_legere (events only, own arena) called by the
+notifications system when specula reports the log changed; a version
+counter in the source makes the sessions pane's pulse still report the
+change. Also widened the terminal title buffer (session < 100 + " / "
++ window < 60 could overflow 128 - latent since P4).
+
+Trade-off (agreed): a tmux window switch now shows in the companion
+within 5 s (the visible-tmux re-check), not 1 s; Cmd+T is immediate.
+
+Tests: probatio_vicus_comites_terminale section claude (private tmux
+server, events in a log in the test area: tmux key -> SessionStart ->
+`terminale/claude/s-claude-1` "gamma" + Cmd+T companion -> /clear ->
+s-claude-2 -> SessionEnd -> tmux key); the suite now opens the
+notifications reader. probatio_vicus_quies comes_sine_processu (a
+following companion spawns no tmux for 3 s); its counters now count a
+check as one list-clients line (a check is two processes now).
+Plants: sync lookup on every read -> quies red; reader not called ->
+claude red; version check dropped -> colloquia_visus red.
+
+## 2026-10-27 — restore lost again: a failed tmux query cleared the argument
+
+Fran restarted vicus (onto the P7.4 build) and the tmux pane came back
+as a plain shell. Evidence: the pane's shell started at 09:35:40 with
+no attach attempted (Fran: clean prompt, no tmux error), the tmux
+server had survived since the night before, and Fran's own
+`tmux attach -t 0` came 34 s later. So the `tmux <servitor> <sessio>`
+argument was already gone from the layout at startup. Quit does not
+touch it (the host's finis only closes the volume). The restore test
+(probatio_vicus_saltus) passed on the current code.
+
+Cause (since T6): terminalia_applicare treated "this pane's tty is not
+in the client list" as "detached" and cleared the argument, even when
+the list-clients query had FAILED (exit != 0, timeout) - clientes_addere
+just returned with nothing added. Once cleared, nothing brought the
+argument back: the 5 s visible-tmux re-check keys off the argument
+itself, and switching tmux windows doesn't change the pane's foreground
+group. One bad query in a long run = no restore at the next start.
+
+Fix: clientes_addere reports whether the server answered; the
+terminalia system collects the servers that did (confirmati) and
+terminalia_applicare clears a tmux argument only when ITS server
+answered without listing the pane - otherwise argument and cached
+locus stay untouched. Each pane's current argument also names a
+server to query (servitor_argumenti), so a pane attached by hand to a
+server no Claude session mentions can still be confirmed detached.
+
+Test: probatio_vicus_quies section quaestio_defecta (fake tmux exits 1
+while `<area>/deficit` exists): record `tmux - beta`, fail the queries
+-> argument stays (red before), then a successful empty answer ->
+cleared. Plant (guard short-circuited with FALSUM) red at exactly that
+step; vicus 29/29.

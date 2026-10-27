@@ -360,6 +360,67 @@ _probare_incipere (
         xar_obtinere(k, ZEPHYRUM))->sessio, "beta");
 }
 
+/* comites P7: list-panes sine exspectatione - tmux FICTUS argumenta
+ * sua (linea mala, omittitur) et fixum panellorum effundit */
+interior vacuum
+_probare_panellos_incipere (
+    CredoContextus* c)
+{
+    constans character* area;
+             character  via[CCLVI];
+             character  scriptum[CCCLXXXIV];
+           Multiplexor  m;
+             Processus* pr;
+     ProcessusResultus  r;
+                   Xar* l;
+                   i32  gradus;
+       struct timespec  pausa;
+
+    area = credo_area(c);
+    CREDO_NECESSE(area != NIHIL && strlen(area) < CCXL);
+    sprintf(via, "%s/tmux", area);
+    sprintf(scriptum, "#!/bin/sh\n"
+        "printf '%%s %%s %%s\\n' \"$1\" \"$2\" \"$3\"\n"
+        "cat '%s'\n", VIA_FIXORUM "panelli.txt");
+    CREDO_NECESSE(filum_scribere_literis(via, scriptum));
+    CREDO_NECESSE(filum_modum_ponere(via, 0755));
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.binarium  = via;
+    pr          = multiplexor_panellos_incipere(&m, c->piscina);
+    CREDO_NECESSE(pr != NIHIL);
+    pausa.tv_sec   = ZEPHYRUM;
+    pausa.tv_nsec  = V * M * M;
+    per (gradus = ZEPHYRUM; gradus < M
+         && processus_pulsare(pr) != PROCESSUS_PARATUS; gradus++)
+    {
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    r = processus_metere(pr);
+    CREDO_VERUM(r.successus && r.codex_exitus == ZEPHYRUM);
+    CREDO_VERUM(chorda_continet(r.effusio, chorda_ex_literis(
+        "-u list-panes -a", c->piscina)));
+    l = multiplexor_panellos_legere(r.effusio, c->piscina);
+    CREDO_NECESSE(l != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(l), IV);
+    CREDO_NECESSE(multiplexor_panellum_invenire(l, chorda_ex_literis(
+        "%3", c->piscina)) != NIHIL);
+    /* binarium datum sed absens: via non probatur (ut
+     * multiplexor_clientes_incipere) - processus deficit, numquam
+     * effusio successa */
+    m.binarium  = "/nusquam/tmux";
+    pr          = multiplexor_panellos_incipere(&m, c->piscina);
+    per (gradus = ZEPHYRUM; pr && gradus < M
+         && processus_pulsare(pr) != PROCESSUS_PARATUS; gradus++)
+    {
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    si (pr)
+    {
+        r = processus_metere(pr);
+        CREDO_FALSUM(r.successus && r.codex_exitus == ZEPHYRUM);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "panellos_legere", _probare_panellos_legere, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -369,6 +430,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vivus", _probare_vivum, ministrum_parare, ministrum_purgare,
       NIHIL, NIHIL },
     { "incipere", _probare_incipere, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "panellos_incipere", _probare_panellos_incipere, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

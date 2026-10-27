@@ -95,6 +95,15 @@ multiplexor_clientes_incipere (
     constans Multiplexor* m,
                  Piscina* piscina);
 
+/* incipere sine exspectatione (comites P7): list-panes ut
+ * multiplexor_panelli, sed processus STATIM redditur - vocator
+ * pulsat, metit, effusionem per multiplexor_panellos_legere legit.
+ * NIHIL si tmux non invenitur */
+Processus*
+multiplexor_panellos_incipere (
+    constans Multiplexor* m,
+                 Piscina* piscina);
+
 /* panellus per id ("%17"); NIHIL si abest */
 constans MultiplexorPanellus*
 multiplexor_panellum_invenire (

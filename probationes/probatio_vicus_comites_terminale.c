@@ -7,7 +7,12 @@
  * select-window -> locus novus post memoriam (M ms); Cmd+T comes
  * terminalis et sequela per fenestras; focus in sinistrum et Cmd+T
  * locum statim recentem quaerunt (facies.locum_renovare). Terminale
- * sine tmux: locus "terminale/<id lateris>", titulus "Terminal". */
+ * sine tmux: locus "terminale/<id lateris>", titulus "Terminal".
+ * comites P7: locus ex memoria systematis terminalium (list-clients +
+ * list-panes sine exspectatione; fenestra mutata intra V s, Cmd+T
+ * statim) - sessio Claude in panello activo (liber praeconii in area)
+ * -> "terminale/claude/<sessio>", titulus sessionis; /clear -> sessio
+ * nova; SessionEnd -> locus tmux. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -41,6 +46,7 @@ nomen structura {
                 b32  paratus;
             Volumen* volumen;
     VicusApplicatio  app;
+          character  liber[CCLVI];      /* praeconium (P7) */
 } Mundus;
 
 interior b32
@@ -118,6 +124,7 @@ mundum_parare (
     (vacuum)setenv("TMUX_TMPDIR", s->tmpdir, I);
     s->m.binarium  = s->binarium;
     s->m.socket    = s->socket;
+    sprintf(s->liber, "%s/eventa.jsonl", credo_area(c));
     s->volumen     = volumen_temporarium(c->piscina,
         "probatio_vicus_comites_terminale");
     si (!s->volumen)
@@ -129,9 +136,12 @@ mundum_parare (
             "-n", "prima", c->piscina)
         && imperium_currere(s, "new-window", "-d", "-t", "alpha", "-n",
             "secunda", c->piscina)
+        && filum_appendere_firmiter(s->liber, chorda_ex_literis("",
+            c->piscina))
         && vicus_applicatio_aedificare(&s->app, c->piscina,
             internamentum_creare(c->piscina), s->volumen, CDLXXX,
             CDLXXX + VICUS_ALTITUDO_TABULARUM)
+        && vicus_applicatio_admonitiones_aperire(&s->app, s->liber)
         && vicus_activam_ponere(s->app.vicus, "3");
     si (s->paratus)
     {
@@ -247,6 +257,58 @@ locus_frontis_est (
     redde VERUM;
 }
 
+/* comites P7: pulsare donec locus frontis est (ms); ultimus nuntiatur */
+interior b32
+locum_exspectare (
+                 Mundus* s,
+     constans character* locus,
+     constans character* titulus,
+                    s32  ms,
+                Piscina* p)
+{
+    VicusLatus* l;
+        chorda  a;
+        chorda  b;
+           s32  gradus;
+
+    l = vicus_latus(vicus_activa(s->app.vicus), VICUS_DEXTRUM);
+    per (gradus = ZEPHYRUM; gradus * XX < ms; gradus++)
+    {
+        (vacuum)vicus_pulsare(s->app.vicus);
+        a = vicus_latus_locus(s->app.vicus, l, p);
+        b = vicus_latus_locus_titulus(s->app.vicus, l, p);
+        si (   chorda_aequalis_literis(a, locus)
+            && chorda_aequalis_literis(b, titulus))
+        {
+            redde VERUM;
+        }
+        dormire_ms(XX);
+    }
+    redde locus_frontis_est(s, locus, titulus, p);
+}
+
+/* eventus Claude in librum praeconii (sessio, eventus, panellus,
+ * genus) - servitor = socket proprius */
+interior b32
+eventum_scribere (
+                 Mundus* s,
+     constans character* sessio,
+     constans character* eventus,
+     constans character* panellus,
+     constans character* genus,
+                Piscina* p)
+{
+    character linea[DCCLXVIII];
+
+    sprintf(linea, "{\"tempus\":%ld000,\"sessio\":\"%s\","
+        "\"eventus\":\"%s\",\"panellus\":\"%s\",\"servitor\":"
+        "\"%s\",\"via\":\"/w/gamma\",\"transcriptum\":\"\","
+        "\"genus\":\"%s\",\"nuntius\":\"\"}\n", (long)time(NIHIL),
+        sessio, eventus, panellus, s->socket, genus);
+    redde filum_appendere_firmiter(s->liber, chorda_ex_literis(linea,
+        p));
+}
+
 /* praefixum libri scribae sinistrae */
 interior b32
 comes_sinister_est (
@@ -290,9 +352,8 @@ _sectio_tmux (
         TerminaleApplicatio*)l->montatio), c->piscina));
 
     CREDO_GRADUS("fenestra activa: prima");
-    dormire_ms(DC);
     sprintf(locus, "terminale/tmux/alpha/%d", (integer)prima);
-    CREDO_VERUM(locus_frontis_est(s, locus, "alpha / prima",
+    CREDO_VERUM(locum_exspectare(s, locus, "alpha / prima", III * M,
         c->piscina));
 
     CREDO_GRADUS("Cmd+T: comes fenestrae");
@@ -304,10 +365,9 @@ _sectio_tmux (
     CREDO_GRADUS("select-window: locus et comes sequuntur");
     CREDO_NECESSE(imperium_currere(s, "select-window", "-t",
         "alpha:secunda", NIHIL, NIHIL, NIHIL, c->piscina));
-    dormire_ms(M + CC);
-    (vacuum)vicus_pulsare(s->app.vicus);
+    /* P7: memoria systematis - tmux visibilis per V s */
     sprintf(locus, "terminale/tmux/alpha/%d", (integer)secunda);
-    CREDO_VERUM(locus_frontis_est(s, locus, "alpha / secunda",
+    CREDO_VERUM(locum_exspectare(s, locus, "alpha / secunda", VII * M,
         c->piscina));
     (vacuum)vicus_pulsare(s->app.vicus);
     sprintf(comes, "comes/terminale/tmux/alpha/%d", (integer)secunda);
@@ -333,6 +393,85 @@ _sectio_tmux (
     CREDO_VERUM(comes_sinister_est(s, comes));
 }
 
+/* comites P7: sessio Claude in panello activo fenestrae activae */
+interior vacuum
+_sectio_claude (
+    CredoContextus* c)
+{
+                          Mundus* s;
+                      VicusLatus* l;
+                             Xar* panelli;
+    constans MultiplexorPanellus* q;
+                       character  argumentum[CD];
+                       character  locus[CCLVI];
+                       character  panellus[XXXII];
+                             s32  prima;
+                             i32  i;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    prima = index_fenestrae(s, "prima", c->piscina);
+    CREDO_NECESSE(prima >= ZEPHYRUM);
+    sprintf(argumentum, "tmux %s alpha", s->socket);
+    CREDO_NECESSE(vicus_acervo_aperire(s->app.vicus, "terminale",
+        argumentum));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    l = vicus_latus(vicus_activa(s->app.vicus), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata
+        && chorda_aequalis_literis(l->genus, "terminale"));
+    CREDO_NECESSE(adhaerere(s, terminale_tty((constans
+        TerminaleApplicatio*)l->montatio), c->piscina));
+    /* panellus activus fenestrae activae sessionis alpha */
+    panellus[ZEPHYRUM]  = '\0';
+    panelli             = multiplexor_panelli(&s->m, c->piscina);
+    per (i = ZEPHYRUM; panelli && i < xar_numerus(panelli); i++)
+    {
+        q = (constans MultiplexorPanellus*)xar_obtinere(panelli, i);
+        si (   q->fenestra_activa && q->activus
+            && chorda_aequalis_literis(q->sessio, "alpha")
+            && q->id.mensura < (i32)magnitudo(panellus))
+        {
+            sprintf(panellus, "%.*s", (int)q->id.mensura,
+                (constans character*)q->id.datum);
+        }
+    }
+    CREDO_NECESSE(panellus[ZEPHYRUM] != '\0');
+
+    CREDO_GRADUS("sine sessione Claude: locus tmux");
+    sprintf(locus, "terminale/tmux/alpha/%d", (integer)prima);
+    CREDO_VERUM(locum_exspectare(s, locus, "alpha / prima", III * M,
+        c->piscina));
+
+    CREDO_GRADUS("SessionStart in panello: locus sessionis");
+    CREDO_NECESSE(eventum_scribere(s, "s-claude-1", "SessionStart",
+        panellus, "startup", c->piscina));
+    CREDO_VERUM(locum_exspectare(s, "terminale/claude/s-claude-1",
+        "gamma", M, c->piscina));
+
+    CREDO_GRADUS("Cmd+T: comes sessionis");
+    CREDO_VERUM(vicus_comitem_commutare(s->app.vicus));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_VERUM(comes_sinister_est(s,
+        "comes/terminale/claude/s-claude-1"));
+
+    CREDO_GRADUS("/clear: sessio nova, comes novus");
+    CREDO_NECESSE(eventum_scribere(s, "s-claude-1", "SessionEnd",
+        panellus, "clear", c->piscina));
+    CREDO_NECESSE(eventum_scribere(s, "s-claude-2", "SessionStart",
+        panellus, "clear", c->piscina));
+    CREDO_VERUM(locum_exspectare(s, "terminale/claude/s-claude-2",
+        "gamma", M, c->piscina));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_VERUM(comes_sinister_est(s,
+        "comes/terminale/claude/s-claude-2"));
+
+    CREDO_GRADUS("SessionEnd: locus tmux iterum");
+    CREDO_NECESSE(eventum_scribere(s, "s-claude-2", "SessionEnd",
+        panellus, "other", c->piscina));
+    CREDO_VERUM(locum_exspectare(s, locus, "alpha / prima", M,
+        c->piscina));
+}
+
 /* terminale sine tmux (tabula 1, dextrum): locus lateris */
 interior vacuum
 _sectio_sine_tmux (
@@ -353,6 +492,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "sine_tmux", _sectio_sine_tmux, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "claude", _sectio_claude, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -66,6 +66,11 @@ nomen structura {
                 Piscina* cursuum;    /* per lectionem vacatur */
                 Piscina* quaestionis; /* processus; post messem vacatur */
                     i64  signum_cursuum;  /* FNV linearum */
+    /* comites P7: versio eventuum - crescit omni applicatione
+     * (fontem_legere aut fontem_pulsare); pulsus 'mutatum' reddit si
+     * versio mota est post pulsum suum ultimum */
+                    i32 versio;
+                    i32 versio_pulsata;
 } ColloquiorumFons;
 
 b32
@@ -84,6 +89,15 @@ b32
 colloquia_visus_fontem_pulsare (
     ColloquiorumFons* f,
                  s64  nunc);
+
+/* comites P7: eventus novi SOLI - liber a positione legitur et in
+ * statum applicatur (piscina sua temporaria; scheda fontis non
+ * vacatur; nec tmux nec cursus). Vocatur ubi liber mutatus est (vicus:
+ * specula libri praeconii), ut status sessionum currat etiam sine
+ * latere sessionum. VERUM si eventus novi */
+b32
+colloquia_visus_fontem_legere (
+    ColloquiorumFons* f);
 
 /* binarium mensoris ponere (vicus: RHUBARB_MENSOR, deinde ~/.bin/mensor
  * si exstat); NIHIL = cursus nulli. Pulsus sequens quaestionem incipit */

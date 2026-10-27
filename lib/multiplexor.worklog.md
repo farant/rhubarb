@@ -52,3 +52,15 @@ locale (checked by hand with `env -i`). The live test now unsets LANG,
 LC_ALL and LC_CTYPE in parare so a plain shell run reproduces the gate;
 plant "no -u" red. Debugging note: zsh does not word-split "$E" in
 `$E cmd` - use ${=E}.
+
+## 2026-10-27 - comites P7.3: multiplexor_panellos_incipere
+
+`list-panes -a` started without waiting, the twin of
+multiplexor_clientes_incipere (quies T2): the vicus terminalia system
+will start it next to list-clients so the companion key can be read
+from a cache instead of a blocking tmux call in the pulse (comites P7,
+desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4). Test with a fake tmux that
+prints its own arguments and the panelli.txt fixture. A given but
+absent `binarium` is not checked (same as the clients twin): the
+process starts and fails; NIHIL only when tmux must be searched for
+and is not found. Plant: list-clients instead of list-panes -> red.

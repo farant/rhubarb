@@ -302,6 +302,24 @@ multiplexor_clientes_incipere (
         ? (i32)m->mora_ms : (i32)M, piscina);
 }
 
+Processus*
+multiplexor_panellos_incipere (
+    constans Multiplexor* m,
+                 Piscina* piscina)
+{
+    constans character* imperium[] = { "list-panes", "-a", "-F",
+        FORMA_PANELLORUM, NIHIL };
+    constans character** v;
+
+    v = vectorem_struere(m, piscina, imperium);
+    si (!v)
+    {
+        redde NIHIL;
+    }
+    redde processus_incipere(v, m && m->mora_ms > ZEPHYRUM
+        ? (i32)m->mora_ms : (i32)M, piscina);
+}
+
 constans MultiplexorPanellus*
 multiplexor_panellum_invenire (
        Xar* panelli,

@@ -109,6 +109,12 @@
     <forma textus="analysin" casus="accusativus" numerus="singularis"/>
   </vocabulum>
 
+  <vocabulum lemma="servitor" lingua="latina" classis="substantivum"
+    nota="WORDS servitor, servitoris N 3 M (servus, minister): vox domus pro servitore tmux (socket); formae obliquae pro PanellusServitoris, servitorem_quaerere (comites P7 2026-10-27)">
+    <forma textus="servitoris" casus="genitivus" numerus="singularis"/>
+    <forma textus="servitorem" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+
   <vocabulum lemma="indicator" lingua="latina" classis="substantivum"
     nota="Latinum serum: qui indicat - indicator muris/tactus (eventus.h); pluralis pro TESTA_INDICATORES_MAXIMI (testa B1 2026-10-23)">
     <forma textus="indicatores" casus="nominativus" numerus="pluralis"/>

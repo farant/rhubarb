@@ -222,7 +222,7 @@ window the terminal's client shows. So:
 |---|---|
 | **P7.1** | Headers (Fran first): `colloquium_panelli` (colloquia.h), `multiplexor_panellos_incipere` (multiplexor.h). Approved 2026-10-27. |
 | **P7.2** | `colloquium_panelli`: pure; tests on fixture sessions (match, server "-" = default socket, CLAUSUM skipped, most recent wins after `/clear`). DONE 2026-10-27 (section panellus_sessionis; two plants red). |
-| **P7.3** | `multiplexor_panellos_incipere`: tests with the fake tmux (as `multiplexor_clientes_incipere`). |
-| **P7.4** | vicus: panes queried in the terminalia system, per-pane cache, locus from cache + colloquia. Tests (fake tmux + fixture events): Claude pane -> `terminale/claude/<id>` with its title; SessionEnd -> tmux key; `/clear` -> new id; no tmux process during pulses outside the schedule. Plant: the old synchronous lookup restored -> the process-count test red. |
+| **P7.3** | `multiplexor_panellos_incipere`: tests with the fake tmux (as `multiplexor_clientes_incipere`). DONE 2026-10-27 (section panellos_incipere; plant red). |
+| **P7.4** | vicus: panes queried in the terminalia system, per-pane cache, locus from cache + colloquia. Tests (fake tmux + fixture events): Claude pane -> `terminale/claude/<id>` with its title; SessionEnd -> tmux key; `/clear` -> new id; no tmux process during pulses outside the schedule. Plant: the old synchronous lookup restored -> the process-count test red. DONE 2026-10-27: also `colloquia_visus_fontem_legere` + version (Fran approved; session state advanced only with a sessions pane), each pane's own server queried; window switch follows within 5 s. Plants red (3). |
 | **P7.5** | Live look with Fran (two Claude sessions in two tmux windows, resume, /clear); worklog, ledger (close the desideratum), commit on Fran's word. |
 
