@@ -711,7 +711,10 @@ _membrum_agere (
                        b32  incepit;
                  character  numerus[XXXII];
                        s64  photographia_ms;
+                       s64  secuta_ms;
                        s64  t0;
+                       Xar* ante_secuta;
+                       Xar* post_secuta;
 
     *duratio_out = ZEPHYRUM;
     si (   actio->gradus == NIHIL || actio->gradus->agere == NIHIL
@@ -747,12 +750,23 @@ _membrum_agere (
     }
     ante             = NIHIL;
     post             = NIHIL;
+    ante_secuta      = NIHIL;
+    post_secuta      = NIHIL;
     photographia_ms  = ZEPHYRUM;
+    secuta_ms        = ZEPHYRUM;
     si (sutura->vestigium_capere != NIHIL)
     {
         t0 = _momentum_ms(sutura);
         (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
         photographia_ms += _momentum_ms(sutura) - t0;
+    }
+    /* T2: testis secutorum (T3 eum in umbra confert) */
+    si (sutura->secuta_capere != NIHIL)
+    {
+        t0 = _momentum_ms(sutura);
+        (vacuum)sutura->secuta_capere(sutura->datum, piscina,
+            &ante_secuta);
+        secuta_ms += _momentum_ms(sutura) - t0;
     }
     actum.codex       = -I;
     actum.duratio_ms  = ZEPHYRUM;
@@ -776,11 +790,23 @@ _membrum_agere (
         post = NIHIL;
     }
     photographia_ms += _momentum_ms(sutura) - t0;
-    si (   ante != NIHIL && sutura->momentum_ms != NIHIL
+    si (ante_secuta != NIHIL)
+    {
+        t0 = _momentum_ms(sutura);
+        si (!sutura->secuta_capere(sutura->datum, piscina,
+                &post_secuta))
+        {
+            post_secuta = NIHIL;
+        }
+        secuta_ms += _momentum_ms(sutura) - t0;
+    }
+    si (   (ante != NIHIL || ante_secuta != NIHIL)
+        && sutura->momentum_ms          != NIHIL
         && sutura->photographiam_notare != NIHIL)
     {
         sutura->photographiam_notare(sutura->datum, actio->titulus,
-            (i32)photographia_ms);
+            ante != NIHIL ? (s32)photographia_ms : -I,
+            ante_secuta != NIHIL ? (s32)secuta_ms : -I);
     }
     si (sutura->vestigia_conferre && post != NIHIL)
     {

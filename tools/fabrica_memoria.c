@@ -604,8 +604,11 @@ _photographiam_annalibus_inscribere (
         constans character* diarium,
                        s64  momentum)
 {
-    Mensura  m;
-     vacuum* valor;
+                Mensura  m;
+                 vacuum* valor;
+           constans s32* ms;
+     constans character* tituli[II];
+                    i32  k;
 
     si (   memoria->photographiae == NIHIL
         || !tabula_dispersa_invenire(memoria->photographiae,
@@ -613,16 +616,25 @@ _photographiam_annalibus_inscribere (
     {
         redde;
     }
-    memset(&m, ZEPHYRUM, magnitudo(m));
-    m.sessio  = membrum->sessio;
-    m.id      = mensura_id_novum(memoria->piscina);
-    m.parens  = membrum->id;
-    m.titulus   = chorda_ex_literis(MENSURA_PHOTOGRAPHIA,
-        memoria->piscina);
-    m.valor     = (duplex)*(i32*)valor;
-    m.unitas    = chorda_ex_literis("ms", memoria->piscina);
-    m.momentum  = momentum;
-    (vacuum)mensura_annotare(diarium, &m, memoria->piscina);
+    ms                = (constans s32*)valor;
+    tituli[ZEPHYRUM]  = MENSURA_PHOTOGRAPHIA;
+    tituli[I]         = MENSURA_SECUTA;
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        si (ms[k] < ZEPHYRUM)
+        {
+            perge;   /* non capta */
+        }
+        memset(&m, ZEPHYRUM, magnitudo(m));
+        m.sessio    = membrum->sessio;
+        m.id        = mensura_id_novum(memoria->piscina);
+        m.parens    = membrum->id;
+        m.titulus   = chorda_ex_literis(tituli[k], memoria->piscina);
+        m.valor     = (duplex)ms[k];
+        m.unitas    = chorda_ex_literis("ms", memoria->piscina);
+        m.momentum  = momentum;
+        (vacuum)mensura_annotare(diarium, &m, memoria->piscina);
+    }
     (vacuum)tabula_dispersa_delere(memoria->photographiae,
         membrum->titulus);
 }
@@ -1066,22 +1078,25 @@ interior vacuum
 _photographiam_notare (
      vacuum* datum,
      chorda  titulus,
-        i32  ms)
+        s32  ms_photographiae,
+        s32  ms_secutorum)
 {
     Memoria* memoria = (Memoria*)datum;
-        i32* locus;
+        s32* locus;
 
     si (memoria->photographiae == NIHIL)
     {
         memoria->photographiae = tabula_dispersa_creare_chorda(
             memoria->piscina, XVI);
     }
-    locus = (i32*)piscina_allocare(memoria->piscina, magnitudo(i32));
+    locus = (s32*)piscina_allocare(memoria->piscina,
+        II * magnitudo(s32));
     si (memoria->photographiae == NIHIL || locus == NIHIL)
     {
         redde;
     }
-    *locus = ms;
+    locus[ZEPHYRUM]  = ms_photographiae;
+    locus[I]         = ms_secutorum;
     (vacuum)tabula_dispersa_inserere(memoria->photographiae,
         chorda_transcribere(titulus, memoria->piscina), locus);
 }

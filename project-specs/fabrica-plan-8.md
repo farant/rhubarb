@@ -43,7 +43,7 @@ the mode only decides which pair of lists they receive.
 `fabrica.photographia` (ms, both walks) under each member's run in the
 annals; fumus LXVII (planted). First reading, `probare -vis
 probationes_toml`: median 452 ms per member = ~0.23 s per snapshot.
-The tracked-snapshot fact (`fabrica.trackata`) comes with T2.
+The tracked-snapshot fact (`fabrica.secuta`) comes with T2.
 
 **G1 - lib/git opens a worktree.** ALREADY DONE (059fe759, found 2026-10-27): `git_aperire` follows `gitdir:` and `commondir`; probatio_git 'arborem operis' 9/9; fabrica's `_repositorium` resolves HEAD through it in quinta daily. Ledger …NGCM closed (was stale). Original scope: `git_aperire` follows a `.git`
 FILE (`gitdir: <path>`) and the worktree's `commondir` (objects and refs
@@ -58,8 +58,8 @@ Checksum verified (SHA-1 trailer). Test: a fixture index written by real
 git once (committed as a fixture) + a hand-built one; corrupt trailer ->
 refused; worktree index via G1.
 
-**T2 - the tracked-file list and snapshot.** Sutura hook
-`trackata_capere` -> sorted `FabricaVestigium` list of tracked paths
+**T2 - the tracked-file list and snapshot.** DONE 2026-10-27: `secuta_capere` (index via lib/git, once per process; lstat per path; same shape as the walk), wired only under FABRICA_VESTIGIUM=umbra|liber; facts `fabrica.secuta` + `fabrica.photographia`; fumus LXVIII (planted). Measured toml: tracked 49 ms vs walk 636 ms per member (~13x). Deviation: tested end to end in fumus (the hook lives in tools/), and 'tracked edit appears / untracked does not' moved to T3 where the comparison lives. Original scope: Sutura hook
+`secuta_capere` -> sorted `FabricaVestigium` list of tracked paths
 (lstat each). List from `git_indicem_legere`, read once per fabrica
 process.
 Test: probatio_fabrica_* with a fake sutura (shape, sort, absent file =

@@ -143,6 +143,9 @@
 #   LXVII tempus photographiae (fabrica-plan-8 T1): cursus membri
 #        quisque (transiens et fractus) factum fabrica.photographia (ms)
 #        habet - ambulationes arboris ante + post
+#   LXVIII photographia secutorum (fabrica-plan-8 T2): sub
+#        FABRICA_VESTIGIUM=umbra in repositorio git factum
+#        fabrica.secuta (ms) per cursum membri; ordinarie nullum
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # PARS PURA (2026-10-23, desideratum …VXWK8): casus arborem VIVAM
@@ -1268,6 +1271,30 @@ awk -F'\t' -v p=fumus-lxvii '$1 == "cursus" && $2 == "initium" && $4 == p && $6 
 printf 'probationes_t/probatio_a\tphotographia\nprobationes_t/probatio_d\tphotographia\n' > "$T/lxvii.exp"
 if cmp -s "$T/lxvii" "$T/lxvii.exp"; then echo "  LXVII tempus photographiae: factum fabrica.photographia (ms) per cursum membri, fracto quoque OK"; else echo "  LXVII FRACTUM"; sed 's/^/      lectum: /' "$T/lxvii"; fracta=1; fi
 
+# LXVIII (2026-10-27, fabrica-plan-8 T2): PHOTOGRAPHIA SECUTORUM - index
+# git (lib/git, git_indicem_legere) + lstat viarum sequendarum. Radix fumi
+# repositorium fit (git init + add: index solus, nullum commissum).
+# FABRICA_VESTIGIUM=umbra: factum fabrica.secuta per cursum membri;
+# sine variabili: nullum (cursus ordinarius immutatus).
+radix_c
+printf 'int main(void) { return 1; }\n' > "$T/r/t/probatio_d.c"
+(cd "$T/r" && git init -q . && git add -A) > "$T/lxviii.g" 2>&1
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lxviii MENSOR_SESSIO=sessio-lxviii MENSOR_ARBOR="$RP" \
+    FABRICA_VESTIGIUM=umbra "$F" probare -vis probationes_t) > "$T/lxviii.e" 2>&1
+(cd "$T/r" && MENSOR_PARENS=fumus-lxviii-0 MENSOR_SESSIO=sessio-lxviii MENSOR_ARBOR="$RP" \
+    "$F" probare -vis probationes_t) > "$T/lxviii0.e" 2>&1
+lxviii () {   # $1 parens -> "<membrum>\t<secuta|nulla>" ordinata
+    awk -F'\t' -v p="$1" '$1 == "cursus" && $2 == "initium" && $4 == p && $6 ~ /probatio_[ad]$/ { t[$3] = $6 }
+        $1 != "cursus" && $4 == "fabrica.secuta" && $6 == "ms" && $5 >= 0 { f[$3] = 1 }
+        END { for (i in t) print t[i] "\t" ((i in f) ? "secuta" : "nulla") }' \
+        "$MENSOR_DIARIUM" 2>/dev/null | sort
+}
+lxviii fumus-lxviii > "$T/lxviii"; lxviii fumus-lxviii-0 > "$T/lxviii0"
+printf 'probationes_t/probatio_a\tsecuta\nprobationes_t/probatio_d\tsecuta\n' > "$T/lxviii.exp"
+printf 'probationes_t/probatio_a\tnulla\nprobationes_t/probatio_d\tnulla\n' > "$T/lxviii0.exp"
+if cmp -s "$T/lxviii" "$T/lxviii.exp" && cmp -s "$T/lxviii0" "$T/lxviii0.exp"; then echo "  LXVIII photographia secutorum: sub umbra factum per membrum, ordinarie nullum OK"; else echo "  LXVIII FRACTUM"; sed 's/^/      umbra: /' "$T/lxviii"; sed 's/^/      ordinarie: /' "$T/lxviii0"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (pars pura: casus LXI; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
+echo "fumus fabricae: sanum (pars pura: casus LXII; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
 exit 0

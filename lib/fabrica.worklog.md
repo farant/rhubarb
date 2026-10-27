@@ -3861,3 +3861,26 @@ attach-to-run pattern as credo memory facts). First real reading
 = ~0.23 s per snapshot (min 449, first member 1196 - cold), 7.3 s of
 the run. Query: grep fabrica.photographia ~/.rhubarb/mensurae.diarium
 (column 5 = ms, column 3 = the member run's id).
+
+## 2026-10-27 - tracked-file snapshot (fabrica-plan-8 T2)
+
+`secuta_capere` (tools/fabrica_sutura.c): the tracked paths come from
+the git index through `lib/git` (`git_indicem_legere`, G2 - no `git
+ls-files`), read ONCE per fabrica process, NUL-terminated for lstat;
+conflict stages collapse to one path; residents' locations skipped for
+parity with the walk (none is tracked today). Capture = `_vestigium_addere`
+per path (lstat; absent omitted, so a deleted source shows as a vanished
+path exactly as in the full walk), sorted with the walk's comparator -
+same shape, so the comparers take it unchanged in T3. Wired ONLY under
+FABRICA_VESTIGIUM=umbra|liber; the default run is untouched.
+`photographiam_notare` now carries both times (-1 = not taken); facts
+`fabrica.photographia` and `fabrica.secuta` per member run.
+
+Measured (umbra, `probare -vis probationes_toml`, 13 members, both
+snapshots per member): tracked median 49 ms (43-58), full walk 636 ms
+(529-1284, other sessions active) - ~13x cheaper.
+
+Plant lesson (again): my first plant set the hook to NIHIL, which left
+`_secuta_capere` unused -> -Werror build failed silently behind
+`>/dev/null` -> the gate ran the OLD binary and stayed green. A plant
+must compile; check the build line, not just the gate.

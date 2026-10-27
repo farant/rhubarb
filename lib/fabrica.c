@@ -140,6 +140,7 @@ fabrica_suturam_parare (
     sutura->sigilla               = NIHIL;
     sutura->momentum_ms           = NIHIL;
     sutura->photographiam_notare  = NIHIL;
+    sutura->secuta_capere         = NIHIL;
     sutura->regenerationes        = NIHIL;
     sutura->digesta               = NIHIL;
     sutura->piscina_cursus        = NIHIL;

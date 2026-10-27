@@ -440,8 +440,18 @@ nomen structura {
      * Nucleus horologium non habet (sutura ficta: NIHIL, nihil
      * mensum). */
     s64 (*momentum_ms)(vacuum* datum);
+    /* ms_secutorum: photographiae secutorum (ante + post); -I =
+     * non capta (modus ordinarius) */
     vacuum (*photographiam_notare)(vacuum* datum, chorda titulus,
-                                   i32 ms);
+                                   s32 ms_photographiae,
+                                   s32 ms_secutorum);
+    /* PHOTOGRAPHIA SECUTORUM (fabrica-plan-8 T2): lstat viarum
+     * quas index git sequitur solum (~XII milia, non XLIX milia
+     * ambulationis) - forma eadem ac vestigium_capere (FabricaVestigium
+     * ordinata; plagula absens omittitur), ergo comparatores idem
+     * accipiunt. NIHIL = modus ordinarius aut index illegibilis. */
+    b32 (*secuta_capere)(vacuum* datum, Piscina* piscina,
+                           Xar** vestigia_out);
     /* vestigia lectionum (plan 2 T2): clavis = (titulus, via exitus,
      * sigillum ingressuum declaratorum, sigillum artificii) - vestigium
      * ULTIMUM per (titulus, exitus): actio exituum multorum (fragmenta
