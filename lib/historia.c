@@ -619,6 +619,7 @@ actum_appendere (
               chorda ramus;
     VolumenIdentitas basis;
            character machina_basis[LXIV];
+           character replica_basis[XXXII];
       PiscinaNotatio nota;
 
     si (!h || chorda_vacua(actum))
@@ -630,6 +631,8 @@ actum_appendere (
     basis.hora             = ZEPHYRUM;
     basis.machina.datum    = NIHIL;
     basis.machina.mensura  = ZEPHYRUM;
+    basis.replica.datum    = NIHIL;
+    basis.replica.mensura  = ZEPHYRUM;
     si (h->cursor > ZEPHYRUM)
     {
         /* lectio in piscinam documenti, statim reficitur: actum
@@ -637,7 +640,8 @@ actum_appendere (
         nota = piscina_notare(h->piscina);
         si (   !volumen_actum_identitas(h->volumen, h->cursor,
                 h->piscina, &basis)
-            || basis.machina.mensura >= (i32)magnitudo(machina_basis))
+            || basis.machina.mensura >= (i32)magnitudo(machina_basis)
+            || basis.replica.mensura >= (i32)magnitudo(replica_basis))
         {
             piscina_reficere(h->piscina, nota);
             redde ZEPHYRUM;
@@ -645,6 +649,9 @@ actum_appendere (
         memcpy(machina_basis, basis.machina.datum,
             (size_t)basis.machina.mensura);
         basis.machina.datum = (i8*)machina_basis;
+        memcpy(replica_basis, basis.replica.datum,
+            (size_t)basis.replica.mensura);
+        basis.replica.datum = (i8*)replica_basis;
         piscina_reficere(h->piscina, nota);
     }
     si (h->cursor < h->finis)

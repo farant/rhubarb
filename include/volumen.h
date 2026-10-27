@@ -132,11 +132,22 @@ constans character*
 volumen_error (
     constans Volumen* volumen);
 
-/* identitas actus trans machinas (D2): hora ZEPHYRUM = nulla */
+/* identitas actus trans machinas (D2; communio D2b): (hora, replica)
+ * - replica = volumen scriptoris (ULID proprium cuique volumini);
+ * machina ad memoriam servatur. hora ZEPHYRUM = nulla */
 nomen structura {
        s64 hora;
     chorda machina;
+    chorda replica;
 } VolumenIdentitas;
+
+/* replica huius voluminis (communio D2b): ULID XXVI characterum,
+ * conditum in apertione prima (praesentia "volumen/replica", locale,
+ * numquam communicatum), idem trans aperturas. Vacua si machina
+ * ignota (volumen solum legendum). */
+chorda
+volumen_replica (
+    constans Volumen* volumen);
 
 /* actum in caudam appendere (datum = JSON); seq redditum, 0 = vitium */
 s64

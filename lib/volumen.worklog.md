@@ -250,3 +250,21 @@ would otherwise open its own transaction can join the caller's instead
 (sqlite forbids nesting). First user: admissio_revocare, called inside
 the exemplar suspension transaction. Section "in_transactione" (begin,
 commit, rollback, NIHIL).
+
+## 2026-10-26 - replica identity (communio phase 1 T1, quarta)
+
+Act identity is now `(hora, replica)` instead of `(hora, machina)`:
+`hora` is minted per volume (MAX(hora)+1) and every volume on a Mac shares
+the host UUID, so two volumes (standalone pictor, vicus's pane, tests) can
+mint the same `(hora, machina)` - an idempotent import would have dropped a
+real act silently. Each volume gets a 26-char ULID replica on first open
+(`praesentia` key `volumen/replica`: device-local, never synced), stamped on
+every append (and on the basis, `basis_replica`); `machina` stays for the
+record. Migrations XII-XV: two columns, DROP the old unique index, CREATE
+UNIQUE (hora, replica). Old acts get this volume's replica at open (one
+UPDATE ... WHERE replica IS NULL - hora is already unique per volume, and
+SQLite treats NULLs as distinct in the new index, so the index can be
+created before the backfill). Row parsing of both act readers moved into
+`_actum_ex_ordine` + `ACTA_COLUMNAE`. Known limit: a volume FILE copied to a
+second device keeps its replica - fine for "restore this device" (communio
+D3b), wrong for "clone"; phase 3's device adoption decides.

@@ -4,6 +4,7 @@
 #include "scrinium.h"
 #include "hora_hybrida.h"
 #include "machina.h"
+#include "moneta.h"
 #include "filum.h"
 #include "chorda_aedificator.h"
 #include "tabula_dispersa.h"
@@ -25,6 +26,8 @@ structura Volumen {
 
     /* D2: identitas scriptoris actuum; vacua = appendere recusatur */
                 chorda machina;
+    /* communio D2b: identitas huius voluminis ut scriptoris */
+                chorda replica;
 
     /* D4c: "max(seq)" praeparatum semel (volumen_seq_ultimum);
      * finiendum ante scrinium_claudere, aliter sqlite3_close BUSY */
@@ -80,16 +83,62 @@ interior constans character* constans MIGRATIONES_VOLUMINIS[] = {
     /* 2026-10-20 (genera-datorum D2b): basis actus = identitas actus
      * contra quem factum est; NULL = sine basi aut ignota */
     "ALTER TABLE acta ADD COLUMN basis_hora INTEGER",
-    "ALTER TABLE acta ADD COLUMN basis_machina TEXT"
+    "ALTER TABLE acta ADD COLUMN basis_machina TEXT",
+
+    /* 2026-10-26 (communio D2b): identitas = (hora, replica) - duo
+     * volumina eiusdem machinae horas easdem cudere possunt; replica
+     * propria cuique volumini (acta vetera in aperiendo supplentur) */
+    "ALTER TABLE acta ADD COLUMN replica TEXT",
+    "ALTER TABLE acta ADD COLUMN basis_replica TEXT",
+    "DROP INDEX acta_hora",
+    "CREATE UNIQUE INDEX acta_replica ON acta (hora, replica)"
 };
 
-#define MIGRATIONES_VOLUMINIS_NUMERUS XI
+#define MIGRATIONES_VOLUMINIS_NUMERUS XV
 
 interior Volumen*
 _volumen_struere (
                      Piscina* piscina,
           constans character* via,
     constans VolumenOptiones* optiones);
+
+/* communio D2b: replica huius voluminis legitur aut conditur
+ * (praesentia "volumen/replica"); acta sine replica (ante migrationem
+ * XII, aut a codice vetere scripta) eam accipiunt - ut machina in
+ * _horas_supplere: actum vetus scriptori aperienti attribuitur */
+interior b32
+_replicam_parare (
+    Volumen* vol)
+{
+    ScriniumEnuntiatum* e;
+                chorda  clavis;
+                   b32  inventum;
+                   b32  bene;
+             character  ulid[MONETA_ULID_MENSURA];
+
+    clavis        = chorda_ex_literis("volumen/replica", vol->piscina);
+    vol->replica  = volumen_praesens_legere(vol, clavis, vol->piscina,
+        &inventum);
+    si (!inventum || vol->replica.mensura != XXVI)
+    {
+        moneta_ulid(ulid);
+        vol->replica = chorda_ex_literis(ulid, vol->piscina);
+        si (!volumen_praesens_ponere(vol, clavis, vol->replica))
+        {
+            redde FALSUM;
+        }
+    }
+    e = scrinium_praeparare(vol->scrinium,
+        "UPDATE acta SET replica = ? WHERE replica IS NULL");
+    si (e == NIHIL)
+    {
+        redde FALSUM;
+    }
+    scrinium_ligare_textum(e, 1, vol->replica);
+    bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
+    scrinium_finire(e);
+    redde bene;
+}
 
 /* actum sine hora (ante migrationem VII aut a codice vetere): seq et
  * millisecunda momenti eius */
@@ -256,7 +305,7 @@ _volumen_struere (
     /* sine machina acta legi possunt, non scribi nec suppleri */
     vol->machina = machina_identitas(piscina);
     si (   vol->machina.mensura > ZEPHYRUM
-        && !_horas_supplere(vol))
+        && (!_horas_supplere(vol) || !_replicam_parare(vol)))
     {
         fprintf(stderr, "volumen: horae actorum suppleri non potuerunt:"
             " %s\n", via);
@@ -489,6 +538,21 @@ volumen_error (
     redde scrinium_error(volumen->scrinium);
 }
 
+chorda
+volumen_replica (
+    constans Volumen* volumen)
+{
+    chorda vacua;
+
+    si (volumen == NIHIL)
+    {
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde vacua;
+    }
+    redde volumen->replica;
+}
+
 s64
 volumen_actum_appendere (
                Volumen* volumen,
@@ -500,6 +564,8 @@ volumen_actum_appendere (
     nulla.hora             = ZEPHYRUM;
     nulla.machina.datum    = NIHIL;
     nulla.machina.mensura  = ZEPHYRUM;
+    nulla.replica.datum    = NIHIL;
+    nulla.replica.mensura  = ZEPHYRUM;
     redde volumen_actum_super_appendere(volumen, genus, datum, nulla);
 }
 
@@ -524,9 +590,9 @@ volumen_actum_super_appendere (
      * etiam inter processus (hora_hybrida_proxima, forma SQL) */
     e = scrinium_praeparare(volumen->scrinium,
         "INSERT INTO acta (genus, datum, hora, machina, basis_hora,"
-        " basis_machina) VALUES (?, ?,"
+        " basis_machina, replica, basis_replica) VALUES (?, ?,"
         " MAX(?, (SELECT COALESCE(MAX(hora), -1) + 1 FROM acta)), ?,"
-        " ?, ?)");
+        " ?, ?, ?, ?)");
     si (e == NIHIL)
     {
         redde 0;
@@ -540,12 +606,22 @@ volumen_actum_super_appendere (
     {
         scrinium_ligare_numerum(e, 5, basis.hora);
         scrinium_ligare_textum(e, 6, basis.machina);
+        si (basis.replica.mensura > ZEPHYRUM)
+        {
+            scrinium_ligare_textum(e, 8, basis.replica);
+        }
+        alioquin
+        {
+            scrinium_ligare_nihil(e, 8);
+        }
     }
     alioquin
     {
         scrinium_ligare_nihil(e, 5);
         scrinium_ligare_nihil(e, 6);
+        scrinium_ligare_nihil(e, 8);
     }
+    scrinium_ligare_textum(e, 7, volumen->replica);
     gradus = scrinium_gradi(e);
     scrinium_finire(e);
     si (gradus != SCRINIUM_FACTUM)
@@ -565,7 +641,7 @@ volumen_actum_identitas (
     ScriniumEnuntiatum* e;
 
     e = scrinium_praeparare(volumen->scrinium,
-        "SELECT hora, machina FROM acta WHERE seq = ?");
+        "SELECT hora, machina, replica FROM acta WHERE seq = ?");
     si (e == NIHIL)
     {
         redde FALSUM;
@@ -578,8 +654,33 @@ volumen_actum_identitas (
     }
     exitus->hora     = scrinium_columna_numerus(e, 0);
     exitus->machina  = scrinium_columna_textus(e, 1, piscina);
+    exitus->replica  = scrinium_columna_textus(e, 2, piscina);
     scrinium_finire(e);
     redde VERUM;
+}
+
+/* columnae actus, ordine quem _actum_ex_ordine legit */
+#define ACTA_COLUMNAE "SELECT seq, momentum, genus, datum, hora," \
+    " machina, basis_hora, basis_machina, replica, basis_replica"
+
+/* ordo enuntiationis (ACTA_COLUMNAE) -> VolumenActum (chordae ex
+ * piscina vocantis) */
+interior vacuum
+_actum_ex_ordine (
+    ScriniumEnuntiatum* e,
+               Piscina* piscina,
+          VolumenActum* a)
+{
+    a->seq                = scrinium_columna_numerus(e, 0);
+    a->momentum           = scrinium_columna_textus(e, 1, piscina);
+    a->genus              = scrinium_columna_textus(e, 2, piscina);
+    a->datum              = scrinium_columna_textus(e, 3, piscina);
+    a->identitas.hora     = scrinium_columna_numerus(e, 4);
+    a->identitas.machina  = scrinium_columna_textus(e, 5, piscina);
+    a->basis.hora         = scrinium_columna_numerus(e, 6);
+    a->basis.machina      = scrinium_columna_textus(e, 7, piscina);
+    a->identitas.replica  = scrinium_columna_textus(e, 8, piscina);
+    a->basis.replica      = scrinium_columna_textus(e, 9, piscina);
 }
 
 /* datum JSON actus 'plagula-condita' */
@@ -1013,8 +1114,7 @@ volumen_acta_legere (
         redde NIHIL;
     }
     e = scrinium_praeparare(volumen->scrinium,
-        "SELECT seq, momentum, genus, datum, hora, machina, basis_hora,"
-        " basis_machina FROM acta"
+        ACTA_COLUMNAE " FROM acta"
         " WHERE seq > ? ORDER BY seq");
     si (e == NIHIL)
     {
@@ -1030,14 +1130,7 @@ volumen_acta_legere (
             scrinium_finire(e);
             redde NIHIL;
         }
-        a->seq                = scrinium_columna_numerus(e, 0);
-        a->momentum           = scrinium_columna_textus(e, 1, piscina);
-        a->genus              = scrinium_columna_textus(e, 2, piscina);
-        a->datum              = scrinium_columna_textus(e, 3, piscina);
-        a->identitas.hora     = scrinium_columna_numerus(e, 4);
-        a->identitas.machina  = scrinium_columna_textus(e, 5, piscina);
-        a->basis.hora         = scrinium_columna_numerus(e, 6);
-        a->basis.machina      = scrinium_columna_textus(e, 7, piscina);
+        _actum_ex_ordine(e, piscina, a);
     }
     scrinium_finire(e);
     redde ordo;
@@ -1076,8 +1169,7 @@ volumen_acta_generum_legere (
         redde NIHIL;
     }
     chorda_aedificator_appendere_literis(sql,
-        "SELECT seq, momentum, genus, datum, hora, machina, basis_hora,"
-        " basis_machina FROM acta"
+        ACTA_COLUMNAE " FROM acta"
         " WHERE seq > ? AND genus IN (");
     per (i = ZEPHYRUM; i < n; i++)
     {
@@ -1106,14 +1198,7 @@ volumen_acta_generum_legere (
             scrinium_finire(e);
             redde NIHIL;
         }
-        a->seq                = scrinium_columna_numerus(e, 0);
-        a->momentum           = scrinium_columna_textus(e, 1, piscina);
-        a->genus              = scrinium_columna_textus(e, 2, piscina);
-        a->datum              = scrinium_columna_textus(e, 3, piscina);
-        a->identitas.hora     = scrinium_columna_numerus(e, 4);
-        a->identitas.machina  = scrinium_columna_textus(e, 5, piscina);
-        a->basis.hora         = scrinium_columna_numerus(e, 6);
-        a->basis.machina      = scrinium_columna_textus(e, 7, piscina);
+        _actum_ex_ordine(e, piscina, a);
     }
     scrinium_finire(e);
     redde ordo;

@@ -1865,4 +1865,12 @@
     <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
 
+  <vocabulum lemma="replica" lingua="latina" classis="substantivum" nota="replica, -ae f. (ex replicare, 'iterum plicare'; Latinitas recentior): exemplar documenti quod scriptor proprium tenet - hic volumen ut scriptor actuum (communio D2b, volumen_replica); WORDS caret">
+    <forma textus="replica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="replicas" casus="accusativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+
 </glossarium>
