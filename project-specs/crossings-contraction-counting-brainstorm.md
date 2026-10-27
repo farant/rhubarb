@@ -297,10 +297,51 @@ At λ = 4 the worst piece costs about 3.03 bits per bit in the two directions to
 - Neither Lean development was built; each needs elan and a downloaded Mathlib cache of several GB (ANT-L: about 8 minutes on 24 CPUs, 7 GB peak).
 - That `MainResults.lean` and `StatementCanonical.lean` say what the papers say: read once by Claude, not by a person.
 - The 12^λ bound beyond λ = 4, and whether the pieces' rank factorizations are computable with integer entries of polynomial size.
-- The turning-number construction for the vertex model (5): sketched, not tried.
+- The turning-number construction for the vertex model (5): sketched, not tried. *(Done 10-27: contractio-plan T4, 62a02ef5; Jones of all 12,966 table knots, connected sums to c = 1,606 in review.)*
 - That J1–J2 gives no decomposition gain: argued from the transfer matrix, not measured.
 - AVW's results and the 3SUM/APSP claim in 3: taken from the README and statement file of `../formal-math/3sum-apsp/`, not from the paper.
 - The rest of the OpenAI drop (721 manuscripts, three withdrawn on Oct 7): unread except for overview entries.
+
+**Phase 1 engine measured (2026-10-27).** `tools/uncinus_mensura.c` (CPU time, this Mac; contractio/laqueus at 3dcabca8). Kauffman bracket by vertex model + `contractio` + `interpolatio`, against the 2^c state sum. Every network result below was equal to the state sum where that runs (c ≤ 24).
+
+*I. Against the state sum* (connected sums of table knots; random 5-strand braid closures):
+
+| c | state sum | network | ratio |
+| --- | --- | --- | --- |
+| 12 | 0.001 s | 0.0002 s | 5× |
+| 16 | 0.011 s | 0.0003 s | 40× |
+| 20 | 0.22 s | 0.0004 s | 550× |
+| 24 | 4.2 s | 0.0009 s | 4,600× |
+
+*II. Greedy width on the table* (all 12,966 knots): mean latitudo 4.0 (c ≤ 7) rising to 5.6 (c = 13), maximum 8 (apex 256). Building the network takes ~0.01 ms per knot.
+
+*III. Connected sums, c = 50 → 800* (width stays 6–8): total 0.004, 0.02, 0.14, 1.1, 8.6 s; contractions counted 255, 800, 2,660, 10,368, 40,651 (≈ c²/16); 2.1 ns per multiplication throughout; arena 10 MB at c = 800; largest coefficient 429 bits at c = 800 (bound 2c = 1,600).
+
+*IV. Random braid closures* (the shape T5 cares about; width grows with strands):
+
+| strands × crossings | latitudo | per point | full bracket |
+| --- | --- | --- | --- |
+| 4 × 201 | 8 | 0.6 ms | 0.5 s |
+| 6 × 201 | 12 | 2.2 ms | 4.8 s |
+| 8 × 201 | 16 | 22 ms | 43 s |
+| 12 × 201 | 18 | 98 ms | ~3.6 min (projected) |
+| 10 × 201 | 20 | 2.1 s | ~77 min (projected) |
+
+Largest coefficient at 201 crossings: 31–39 bits against a bound of 402.
+
+*Kernel with offset tables* (T3 review prototype, same inputs, same answers): 1.3× on sums, 1.6–2.1× on braids up to apex 2^16, only 1.08–1.3× at apex 2^18–2^20, where the kernel is memory-bound.
+
+**Cost model.** time ≈ (points × primes) × multiplications per contraction × ~1.5–2 ns. Points per prime ≈ window/4 ≈ c/2; primes ≈ 2c/31 + 2 from the 2c-bit bound; so ≈ c²/16 contractions, each costing ≈ apex × (a small factor) multiplications.
+
+**Levers, largest first:**
+1. *Width (contraction order).* Exponential: apex 2^16 → 2^20 cost 100× per point. Greedy gives ~2n on random n-strand braids. Min-fill or slicing is the T5 follow-on the plan anticipated.
+2. *Fewer primes.* The 2c-bit bound is loose by 3.7× at c = 800 (sums) and ~10× on 201-crossing braids. A tighter *provable* bound, or 62-bit primes (two-word residues), cuts the c²/16 factor directly. Stopping when the answer looks stable is excluded by the exactness rule.
+3. *Several points per sweep.* At large apex the kernel is memory-bound; reading each element once for B points amortizes the traffic that offset tables cannot.
+4. *Offset-table kernel.* 1.1–2×: worth adopting, but it is the smallest lever.
+
+Projection for the original T5 target (12 strands, ~800 crossings, greedy apex 2^26–2^28 per the design review): ~40,000 contractions at minutes each, i.e. weeks of CPU with today's engine. Not attempted. Levers 1–3 together are what would make it hours.
+
+**Incident.** The first braid run asked for 4 strands × 50 crossings, which cannot close to one component (an n-cycle needs word length ≡ n − 1 mod 2). The generator retried forever, allocating each time, and reached ~120 GB before macOS killed it; an RSS-based watcher did not see it (compressed pages). Fixed (parity, arena reset per attempt, 1,000-attempt cap), and long runs now go through `tools/custos.sh`, which kills on phys_footprint (compressed included).
 
 ## 12. Experiment families *(rev. 10-27)*
 

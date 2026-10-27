@@ -491,6 +491,18 @@ Fran's go-ahead.
   for min-fill and slicing if greedy width bites (the reviewer measured
   ~2n for n-strand braids: 12 strands, 801 crossings, 2^26–2^28
   elements, 1–2 GiB live).
+  *(2026-10-27, measurement first (Fran): `tools/uncinus_mensura.c` —
+  state sum vs network at c = 12–24 (4,600× at 24, all equal), greedy
+  width over the whole table (max 8), connected sums to c = 800 (8.6 s,
+  40,651 contractions ≈ c²/16, 2.1 ns/mult), random braid closures to
+  12 × 201 (10 × 201: apex 2^20, 2.1 s per point, ~77 min projected);
+  the offset-table kernel gains 1.1–2.1×, least at large apex. Results
+  and the ranked levers (order width, fewer primes via a tighter bound
+  or 62-bit primes, several points per sweep, kernel tables) are in
+  the brainstorm §11. Braid closure → PD lives in the tool for now
+  (checked against the state sum); `laqueus_pd_ex_plexu` still to do.
+  Long runs go through the new `tools/custos.sh` after a ~120 GB
+  runaway in the tool's first braid generator.)*
 
 ## Not in v1
 
