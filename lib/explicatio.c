@@ -155,19 +155,19 @@ _nominatum (
     redde h->genus != ACORDUM_IGNOTA && h->genus != ACORDUM_NULLA;
 }
 
-/* NOTA ADDITA (acordum.h): toni additi (sexta, nona) acordi pars
- * solum si nota eorum non candidata est (non_cand: classes notarum
- * sine forma alienae) */
+/* NOTA ADDITA (acordum.h): toni additi (sexta, nona; 7sus4 omnes
+ * praeter radicem) acordi pars solum si TENENTUR (tentae: classes
+ * notarum sine forma alienae aut fenestram totam sonantium) */
 interior b32
 _additae_tenentur (
     constans Acordum* h,
-                 i32  non_cand)
+                 i32  tentae)
 {
     i32 a = acordum_proprietates(h->genus)->additae;
     i32 r = h->radix;
 
     a = ((a << r) | (a >> (XII - r))) & 0xFFF;
-    redde (a & h->classes & ~non_cand) == ZEPHYRUM;
+    redde (a & h->classes & ~tentae) == ZEPHYRUM;
 }
 
 /* classis in scala clavis ad pulsum (signatura; minor = relativa) */
@@ -394,6 +394,7 @@ _acordum (
          i32 classes     = ZEPHYRUM;
          i32 removendae;
          i32 non_cand  = ZEPHYRUM;
+         i32 tentae    = ZEPHYRUM;
          i32 bassus    = f->harmonia.bassus;
          i32 optimum   = ZEPHYRUM;
          b32 inventum  = FALSUM;
@@ -415,7 +416,16 @@ _acordum (
         {
             non_cand |= _bit(c);
         }
+        /* cum fenestra incipiens et eam totam sonans: tenta (toni
+         * additi); praeparata (suspensio) non */
+        si (   segmenta[i].pulsus == f->initium
+            && segmenta[i].pulsus + segmenta[i].nota->longitudo
+               >= f->finis)
+        {
+            tentae |= _bit(c);
+        }
     }
+    tentae         |= non_cand;
     removendae     = classes & ~non_cand & ~_bit(bassus);
     f->implicitum  = FALSUM;
     electa         = acordum_ex_classibus(classes, bassus);
@@ -442,7 +452,7 @@ _acordum (
                 b32 implicata = FALSUM;
 
                 h = acordum_ex_classibus(classes & ~s, bassus);
-                si (_nominatum(&h) && !_additae_tenentur(&h, non_cand))
+                si (_nominatum(&h) && !_additae_tenentur(&h, tentae))
                 {
                     h.genus = ACORDUM_IGNOTA;
                 }
@@ -489,10 +499,16 @@ _acordum (
         _litteras_ponere(&f->harmonia, segmenta, primum, numerus);
         redde;
     }
-    /* ignotum: classes praeter bassum alienae */
+    /* ignotum: classes praeter bassum alienae; nomen a tono addito non
+     * tento reiectum non redit */
     f->harmonia  = acordum_ex_classibus(classes, bassus);
-    a->classes   = _bit(bassus);
-    a->septima   = -I;
+    si (   _nominatum(&f->harmonia)
+        && !_additae_tenentur(&f->harmonia, tentae))
+    {
+        f->harmonia.genus = ACORDUM_IGNOTA;
+    }
+    a->classes = _bit(bassus);
+    a->septima = -I;
     _litteras_ponere(&f->harmonia, segmenta, primum, numerus);
 }
 

@@ -82,6 +82,8 @@ hic_manens constans Exemplar EXEMPLARIA[] = {
 
 /* bit intervalli (additae) */
 #define ADDITUM(x) ((i32)I << (x))
+/* 7sus4: omnes praeter radicem tenendae (quarta, quinta, septima) */
+#define ADDITAE_SUSPENSAE (ADDITUM(V) | ADDITUM(VII) | ADDITUM(X))
 
 /* proprietates per genus (ordine enumerationis): suffixum,
  * numeralis, tertia, quinta, septima, gradus, additae */
@@ -123,7 +125,7 @@ hic_manens constans AcordumProprietates PROPRIETATES[] = {
     /* nona mollis */
     { "m9",    "9",     III, VII,  X,   III, ADDITUM(II) },
     /* septima suspensa */
-    { "7sus4", "7sus4", -I,  VII,  X,   II,  ADDITUM(V) },
+    { "7sus4", "7sus4", -I,  VII,  X,   II,  ADDITAE_SUSPENSAE },
     /* septima aucta */
     { "7#5",   "+7",    IV,  VIII, X,   III, ADDITUM(VIII) },
     /* classis una */

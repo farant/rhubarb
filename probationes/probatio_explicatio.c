@@ -67,6 +67,29 @@ _tres (
     redde _carmen(c, s);
 }
 
+/* carmen partium datarum (NIHIL finit), 4/4, clavis c maior */
+interior Carmen*
+_partes (
+          CredoContextus*  c,
+      constans character** partes)
+{
+    character* s = (character*)piscina_allocare(c->piscina, M * IV);
+          i32  n;
+          i32  i;
+
+    n = (i32)sprintf(s, "<carmina><carmen titulus=\"p\" metrum=\"4/4\" "
+                     "clavis=\"c maior\">");
+    per (i = ZEPHYRUM; partes[i] != NIHIL; i++)
+    {
+        n += (i32)sprintf(s + n,
+            "<pars titulus=\"p%u\" instrumentum=\"aether\"><frustum "
+            "mensura=\"1\"><textus!>%s</textus></frustum></pars>", i,
+            partes[i]);
+    }
+    sprintf(s + n, "</carmen></carmina>");
+    redde _carmen(c, s);
+}
+
 interior Explicatio*
 _explicare (
       CredoContextus* c,
@@ -586,8 +609,91 @@ _sectio_additae (
         chorda_ex_literis("C7:1", c->piscina));
 }
 
+/* tenta = nota non candidata AUT fenestram totam sonans (D per
+ * mensuram super F A C: F6, deinde functio ii65); 7sus4 omnes praeter
+ * radicem tenendos postulat; nomen reiectum in fallback non redit;
+ * additae ad radicem rotantur (G) */
+interior vacuum
+_sectio_tentae (
+    CredoContextus* c)
+{
+    constans character* partes[VI];
+       constans Carmen* k;
+            Explicatio* e;
+
+    partes[0]  = "o3 c1 | f1 | g1 | c1";
+    partes[1]  = "o4 c1 | c1 | b1 | c1";
+    partes[2]  = "o4 g1 | a1 | g1 | g1";
+    partes[3]  = "o5 e1 | d1 | d1 | c1";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, II), "F6:1");
+    /* A cum fenestra incipiens sed brevis (ad G gradu): non tenta */
+    partes[0]  = "o3 c1";
+    partes[1]  = "o4 e1";
+    partes[2]  = "o4 g1";
+    partes[3]  = "o5 a4 g4 e2";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:1", c->piscina));
+    /* C/G cum F vicino, D transeunte: non G7sus4 */
+    partes[0]  = "o3 g1";
+    partes[1]  = "o4 c1";
+    partes[2]  = "o5 e4 f4 e4 d4";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C/G:1", c->piscina));
+    /* 7sus4 tentum totum: nomen manet */
+    partes[0]  = "o3 g1";
+    partes[1]  = "o4 c1";
+    partes[2]  = "o4 d1";
+    partes[3]  = "o4 f1";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I),
+        "G7sus4:1 (F4 sept.!)");
+    /* fallback: suspensio C (praeparata, ad B resoluta) super G D F -
+     * nulla pars nominatur, G7sus4 reiectum non redit */
+    partes[0]  = "o3 c1 | g1 | g1 | c1";
+    partes[1]  = "r1 | o4 d1 | r1 | r1";
+    partes[2]  = "r1 | o4 f1 | r1 | r1";
+    partes[3]  = "o5 e2 c1. o4 b2 o5 c1";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("[", c->piscina));
+    /* rotatio ad radicem G: E vicinus et A transiens super G B D */
+    partes[0]  = "o3 g1";
+    partes[1]  = "o3 b1";
+    partes[2]  = "o4 d1";
+    partes[3]  = "o4 d4 e4 d2";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "G:1 (E4 vic.)");
+    partes[3]  = "o4 g4 a4 b2";
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "G:1 (A4 tr.)");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "additae", _sectio_additae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tentae", _sectio_tentae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fenestrae", _sectio_fenestrae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },

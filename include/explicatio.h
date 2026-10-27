@@ -14,7 +14,8 @@
  * tritoni = septima dominantis implicita, eadem magnitudine
  * remotionis ac nomina (radix in clave: [G# D] in a minor -> E7,
  * implicitum). Fenestra sine nomine: classes omnes praeter bassum
- * alienae (genus per formam).
+ * alienae (genus per formam) - nomen a tono addito non tento
+ * reiectum non redit (acordum.h NOTA ADDITA).
  *
  * BASSUS TRANSIENS: nota bassi gradu intrans et exiens (transitus aut
  * vicinus in parte sua) cuius superiores omnes in acordo fenestrae

@@ -122,7 +122,9 @@ _sectio_radices (
     hic_manens constans s32 AUG[]              = { 0, 4, 8, -1 };
     hic_manens constans s32 DIMINUTA_SEPTIMA_[]  = { 2, 5, 8, 11,
         -1 };
-    hic_manens constans s32 SUS[]                = { 0, 2, 7, -1 };
+    hic_manens constans s32 SUS[]             = { 0, 2, 7, -1 };
+    hic_manens constans s32 C_SEXTA_MINOR[]   = { 0, 3, 7, 9, -1 };
+    hic_manens constans s32 G_SUSPENSA_VII[]  = { 7, 0, 2, 5, -1 };
                     Acordum h;
 
     (vacuum)c;
@@ -141,6 +143,12 @@ _sectio_radices (
     /* C D G: Csus2 basso C, Gsus4 basso G */
     CREDO_VERUM (_est(SUS, 0, ACORDUM_SUSPENSA_II, 0));
     CREDO_VERUM (_est(SUS, 7, ACORDUM_SUSPENSA_IV, 7));
+    /* m6 et 7sus4 quoque solum radice in basso: C Eb G A super Eb =
+     * Am7b5/Eb; G C D F super C nullum nomen */
+    CREDO_VERUM (_est(C_SEXTA_MINOR, 0, ACORDUM_SEXTA_MINOR, 0));
+    CREDO_VERUM (_est(C_SEXTA_MINOR, 3, ACORDUM_DIMIDIA_DIMINUTA, 9));
+    CREDO_VERUM (_est(G_SUSPENSA_VII, 7, ACORDUM_SEPTIMA_SUSPENSA, 7));
+    CREDO_VERUM (_est(G_SUSPENSA_VII, 0, ACORDUM_IGNOTA, 0));
 }
 
 

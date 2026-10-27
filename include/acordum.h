@@ -42,10 +42,13 @@
  * Caug -> G#; Bbm6 -> G; C7b9 -> Db; F#7#5 -> C##.
  *
  * NOTA ADDITA (explicatio.h): tonus additus (sexta, nona, nona minor;
- * quarta in 7sus4, quinta aucta in 7#5) acordi pars est solum si nota
- * eius candidata non est (forma melodica
- * alienae caret) - A transiens super C E G manet transitus; A tenta
- * C6 facit.
+ * quinta aucta in 7#5; in 7sus4 omnes praeter radicem - quarta,
+ * quinta, septima) acordi pars est solum si TENETUR: nota eius aut
+ * candidata non est (forma melodica alienae caret) aut cum fenestra
+ * incipiens eam totam sonat (praeparata non: suspensio manet
+ * suspensio) - A transiens super C E G manet transitus; A tenta C6
+ * facit; D per mensuram totam super F A C F6 facit; C/G cum F vicino
+ * et D transeunte manet C/G, non G7sus4.
  */
 /* <aedilis corpus="lib/acordum.c"/> */
 #ifndef ACORDUM_H
@@ -129,7 +132,7 @@ acordum_suffixum (
  * suspensa; I dyas; 0 classis una, ignota, nulla); notatio numeralis
  * (functio: "o" "+" "M" "h" "sus4" "sus2" "(5)" "(3)", "" ceteris).
  * Numeralis parva = tertia minor. Genus septimae (figura 7 65 43 42)
- * = septima >= 0; figura inversionis solum gradu III */
+ * = septima >= 0; figura inversionis solum gradu III sine additis */
 nomen structura {
     constans character* suffixum;    /* ut acordum_suffixum */
     constans character* numeralis;
@@ -138,7 +141,8 @@ nomen structura {
                    s32  septima;     /* IX, X, XI; -1 nulla */
                    i32  gradus;      /* III, II, I, 0 */
                    i32  additae;     /* bits intervallorum ADDITORUM a
-                                      * radice (sexta, nona):
+                                      * radice (sexta, nona; 7sus4
+                                      * omnes praeter radicem):
                                       * explicatio */
 } AcordumProprietates;
 

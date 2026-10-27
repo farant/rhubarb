@@ -73,3 +73,28 @@ search keeps removing. Passing A over C E G stays "C:1 (A4 vic.)"; held A gives
 House songs: explicatio/functio lines unchanged for all eight; only lilia's per-beat
 harmonia line changed (bars 3, 6 "[Bb C D E]" -> C9/Bb; bar 10 "[Bb C D F]" -> Bbadd9) -
 harmonia names what sounds, by design.
+
+## 2026-10-26 - review batch 1.2: a note that starts the window and lasts it is held; fallback; 7sus4
+
+From the sexta review (harmony findings 1, 3 and the test reviewer's side finding).
+(1) ii65 regression: F A C D over F only names F6 (radix_basso), and the whole-bar D read as a
+candidate ('ant.': same pitch in the next bar), so F6 was rejected and D removed -> "F (D5
+ant.)" / IV. A note that STARTS with the window and sounds through it now counts as held for
+the added-tone rule (`tentae`), so the window names F6; functio reads IVadd6 before V as ii65
+(batch 1.3, Fran: "ii65, Iadd6 at final"). First version said "sounds the whole window" - it
+turned a prepared 4-3 suspension over G7 (C tied in from the bar before) into G7sus4; a
+suspension must stay a suspension, hence "starts with the window". A crotchet A at the window
+start (A4 G4 E2 over C E G) stays a non-chord tone.
+(3) the no-name fallback re-derived the full set name without the added-tone check, so a
+rejected G7sus4 / C9/D came back with every note "?" - fallback now checks too (IGNOTA).
+The reviewer's C9/D fixture is no longer a fallback case: its uppers start with and fill the
+half-note window, so C9/D is a fair literal name now.
+(side) 7sus4 absorbed candidate CHORD tones (G + C held, melody e f e d -> G7sus4): its added
+tones are now the fourth, fifth AND seventh (ADDITAE_SUSPENSAE) - all must be held. A fully
+held G C D F still names G7sus4.
+Tests also close two test-strength gaps: G-rooted passing/neighbour cases (the rotation was
+untested - all were C-rooted) and m6 / 7sus4 root-in-bass rows in acordum. Plants 8/8 first
+try (+1 re-plant on the macro form). House songs byte-identical.
+Formatter quirk: a PROPRIETATES row wrapped onto a second line got 'spatium unicum ante
+operatorem binarium' on its leading `-I` (read as binary minus) - routed around with the
+ADDITAE_SUSPENSAE macro; filed.
