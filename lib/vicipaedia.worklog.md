@@ -65,3 +65,10 @@ so "AC/DC" round-trips. In the `/wiki/` form a raw '/' belongs to the
 title. Host rule: `<lingua>[.m].wikipedia.org`, lingua [a-z0-9-]+,
 case-insensitive; userinfo refused. Not accepted in v1:
 `/w/index.php?title=`.
+
+## 2026-10-27 - /w/rest.php/v1/page/<T>/html (N2.5 live find)
+
+rest_v1 redirects redirect-titles to the new MediaWiki REST path
+(`/w/rest.php/v1/page/<T>/html?redirect=no`). sedem_legere now accepts
+that form too (title up to the first raw '/'). See
+navigator_petitio.worklog.md.

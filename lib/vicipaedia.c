@@ -1454,6 +1454,9 @@ vicipaedia_articulus (
 
 #define VIA_ARTICULI "/wiki/"
 #define VIA_FONTIS   "/api/rest_v1/page/html/"
+/* API MediaWiki nova: rest_v1 paginas redirectionis huc mittit
+ * (".../page/<T>/html?redirect=no", Vicipaedia viva 2026-10-27) */
+#define VIA_REST     "/w/rest.php/v1/page/"
 #define SUFFIXUM     ".wikipedia.org"
 
 /* "<lingua>[.m].wikipedia.org" (sine casu) -> "<lingua>.wikipedia.org";
@@ -1547,9 +1550,14 @@ vicipaedia_sedem_legere (
     }
     via        = u.via;
     praefixum  = chorda_ex_literis(VIA_FONTIS, piscina);
+    si (!chorda_incipit(via, praefixum))
+    {
+        praefixum = chorda_ex_literis(VIA_REST, piscina);
+    }
     si (chorda_incipit(via, praefixum))
     {
-        /* fons: titulus usque ad '/' crudum (revisio sequi potest) */
+        /* fons (rest_v1 aut rest.php): titulus usque ad '/' crudum
+         * (revisio aut "/html" sequitur) */
         titulus = chorda_sectio(via, praefixum.mensura, via.mensura);
         k       = chorda_invenire_index(titulus, chorda_ex_literis("/",
             piscina));

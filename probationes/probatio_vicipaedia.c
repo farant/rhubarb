@@ -468,6 +468,11 @@ _probare_sedes (
     CREDO_VERUM(sedes_est(
         "https://en.wikipedia.org/api/rest_v1/page/html/Thomas_Aquinas",
         "en.wikipedia.org", "Thomas_Aquinas", "", p));
+    CREDO_VERUM(sedes_est("https://en.wikipedia.org/w/rest.php/v1/page/"
+        "Thomas_Aquinas/html?redirect=no", "en.wikipedia.org",
+        "Thomas_Aquinas", "", p));
+    CREDO_VERUM(sedes_est("https://en.wikipedia.org/w/rest.php/v1/page/"
+        "AC%2FDC/html", "en.wikipedia.org", "AC/DC", "", p));
     CREDO_VERUM(sedes_est("https://EN.Wikipedia.ORG/wiki/Rhubarb",
         "en.wikipedia.org", "Rhubarb", "", p));
     CREDO_VERUM(sedes_est("http://en.wikipedia.org/wiki/Rhubarb",
@@ -499,6 +504,8 @@ _probare_sedes (
     CREDO_VERUM(recusata("https://a.b.wikipedia.org/wiki/X", p));
     CREDO_VERUM(recusata("https://en.wikipedia.org/wiki/", p));
     CREDO_VERUM(recusata("https://en.wikipedia.org/w/index.php?title=X",
+        p));
+    CREDO_VERUM(recusata("https://en.wikipedia.org/w/rest.php/v1/page/",
         p));
     CREDO_VERUM(recusata("https://example.com/wiki/X", p));
     CREDO_VERUM(recusata("ftp://en.wikipedia.org/wiki/X", p));

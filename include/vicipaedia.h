@@ -32,8 +32,9 @@ nomen structura {
     chorda ancora;  /* "Etymology" ex #...; vacua si nulla */
 } VicipaediaSedes;
 
-/* URL -> sedes. Accipit https://<lingua>[.m].wikipedia.org/wiki/<T>
- * et /api/rest_v1/page/html/<T> (fons noster), quaestione neglecta.
+/* URL -> sedes. Accipit https://<lingua>[.m].wikipedia.org/wiki/<T>,
+ * /api/rest_v1/page/html/<T> (fons noster) et /w/rest.php/v1/page/
+ * <T>/html (quo rest_v1 redirectiones mittit), quaestione neglecta.
  * Spatia -> '_'. FALSUM si hospes non <lingua>.wikipedia.org aut
  * titulus vacuus. */
 b32
