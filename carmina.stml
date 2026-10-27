@@ -440,4 +440,34 @@
     </pars>
   </carmen>
 
+
+  <!-- laudes: choralis IV vocum (superius, altus, tenor, bassus) in G
+       maior, organo. Studium regularum classicarum: quattuor voces
+       nota contra notam, cadentiae I (IAC), V (semicadentia per I6/4
+       cadentialem), V/V -> V (tonicizatio D, C# sensibilis), I (PAC per
+       I6/4 V7 I). Notae transeuntes octavis in voce media et basso;
+       septimae descendunt, sensibilis non duplicatur. Censura cum
+       parallelis, saltibus, tertia. Generator:
+       build/plantae_s4/choralis/laudes.py -->
+  <carmen titulus="laudes" tempus="69" metrum="4/4" clavis="g maior">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <censura regulae="+parallelae,+saltus,+tertia"/>
+    <acorda mensura="1" textus="G D G D/F# | G D7 G:2 | G G/B C Em | Am/C G/D D:2 | G Em Am D | Em/G A7 D:2 | G Em G/B C | G/D D7 G:2"/>
+    <fermata mensura="2" ictus="3"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="6" ictus="3"/>
+    <fermata mensura="8" ictus="3"/>
+    <pars titulus="superius" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 b4 a4 g4 a4 | b4 o5 c4 o4 b2 | o5 d4 d4 c4 o4 b4 | a4 g4 f#2 | b4 b4 o5 c4 d4 | e4 c#4 d2 | d4 e4 d4 c4 | o4 b4 a4 g2</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 g4 f#4 d4 d4 | g4 f#4 g2 | g4 g4 g4 g8 f#8 | e4 d4 d2 | g4 g4 a4 a4 | b8 a8 g4 f#2 | g4 g4 g4 g4 | g4 f#4 d2</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 d4 d4 o3 b4 a4 | o4 d4 d4 d2 | o3 b8 o4 c8 d4 e4 e4 | o3 a4 b4 a2 | o4 d4 e4 e4 f#4 | e4 e4 d2 | o3 b4 b4 o4 d4 e4 | d4 c4 o3 b2</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o3 g4 d4 g4 f#4 | g4 d4 o2 g2 | o3 g4 o2 b4 o3 c4 e4 | c4 d4 d2 | o2 g4 e4 a4 o3 d4 | o2 g4 a4 o3 d2 | g8 f#8 e4 o2 b4 o3 c4 | d4 d4 o2 g2</textus></frustum>
+    </pars>
+  </carmen>
 </carmina>

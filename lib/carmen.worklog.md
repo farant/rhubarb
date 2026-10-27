@@ -407,3 +407,18 @@ element with no notes at all is still "comitatus sine notis" (that error had no 
 _bassus_comitatus also looks at the bina figure's 'B' (static, like the main figure's).
 Proof: litus (26 lines -> 4) and ambulatio (18 -> 4) rewritten; score, WAV and summary are
 byte-identical to the hand-split version; censura counts for all 13 songs unchanged.
+
+## 2026-10-27 - house book: laudes (chorale study, SATB on organ)
+
+14th house song: four-voice chorale in G major, 8 bars, cadences I (IAC), V (half cadence via
+cadential I6/4), V/V -> V (D tonicized, C# leading tone), I (PAC via I6/4 V7 I); four eighth-
+note passing tones. Voiced by hand against the textbook rules. Censura with +parallelae,
++saltus, +tertia: 0; sounding harmony = declared in all 8 bars; functio as planned; all four
+passing tones explained (tr.). One hidden fifth in the outer voices across the bar-2 fermata
+(B4 -> D5 over G2 -> G3), usually tolerated at a phrase break - no rule checks hidden
+intervals. Error study (build/plantae_s4/choralis/errata.py: 10 copies, one planted error
+each): caught parallel 8ves, parallel 5ths, leap > octave, missing third (via 'acorda', since the
+declared chord has a third); missed - no rule exists - hidden 5ths/8ves, voice crossing,
+spacing > octave, doubled leading tone, unresolved leading tone in an outer voice, rising
+chordal seventh (a chord-tone 7th on a weak beat is never a dissonance). Three collateral
+finds from the edits were all real. No false positives. Organ x4 at lucrum 0.75: peak 0.73.
