@@ -91,10 +91,14 @@ interior constans character* constans MIGRATIONES_VOLUMINIS[] = {
     "ALTER TABLE acta ADD COLUMN replica TEXT",
     "ALTER TABLE acta ADD COLUMN basis_replica TEXT",
     "DROP INDEX acta_hora",
-    "CREATE UNIQUE INDEX acta_replica ON acta (hora, replica)"
+    "CREATE UNIQUE INDEX acta_replica ON acta (hora, replica)",
+
+    /* 2026-10-27 (communio II.1): seq in numeratione scriptoris (acta
+     * importata); NULL = proprium (seq ipsum) */
+    "ALTER TABLE acta ADD COLUMN seq_originis INTEGER"
 };
 
-#define MIGRATIONES_VOLUMINIS_NUMERUS XV
+#define MIGRATIONES_VOLUMINIS_NUMERUS XVI
 
 interior Volumen*
 _volumen_struere (
@@ -631,6 +635,188 @@ volumen_actum_super_appendere (
     redde scrinium_ultimum_id(volumen->scrinium);
 }
 
+/* via manifesti alieni: "aliena/<replica>/<via>" */
+interior chorda
+_via_aliena (
+     Piscina* piscina,
+      chorda  replica,
+      chorda  via)
+{
+    redde chorda_concatenare(chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("aliena/", piscina), replica, piscina),
+        chorda_ex_literis("/", piscina), piscina), via, piscina);
+}
+
+VolumenImportatio
+volumen_actum_importare (
+                  Volumen* volumen,
+    constans VolumenActum* actum)
+{
+      ScriniumEnuntiatum* e;
+                 Piscina* p;
+            JsonResultus  r;
+                  chorda  via;
+                  chorda  sigillum;
+                  chorda  origo;
+                     b32  condita;
+                     b32  remota;
+                 integer  gradus;
+       VolumenImportatio  exitus;
+
+    si (   !volumen || !actum || actum->identitas.hora <= ZEPHYRUM
+        || actum->identitas.replica.mensura == ZEPHYRUM
+        || actum->genus.mensura             == ZEPHYRUM
+        || chorda_aequalis(actum->identitas.replica, volumen->replica))
+    {
+        redde VOLUMEN_IMPORTATIO_MALA;
+    }
+    si ((s64)hora_hybrida_momentum(actum->identitas.hora)
+        > (s64)hora_hybrida_physica() + (s64)VOLUMEN_FUTURUM_MAXIMUM_MS)
+    {
+        redde VOLUMEN_HORA_FUTURA;
+    }
+    p = volumen->piscina;
+
+    /* identitas iam praesens? idem contentum = nihil, aliud =
+     * conflictus */
+    e = scrinium_praeparare(volumen->scrinium,
+        "SELECT genus, datum FROM acta WHERE hora = ? AND replica = ?");
+    si (e == NIHIL)
+    {
+        redde VOLUMEN_IMPORTATIO_MALA;
+    }
+    scrinium_ligare_numerum(e, 1, actum->identitas.hora);
+    scrinium_ligare_textum(e, 2, actum->identitas.replica);
+    si (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        exitus = (   chorda_aequalis(scrinium_columna_textus(e, 0, p),
+                         actum->genus)
+                  && chorda_aequalis(scrinium_columna_textus(e, 1, p),
+                         actum->datum))
+               ? VOLUMEN_IAM_ADEST : VOLUMEN_CONFLICTUS;
+        scrinium_finire(e);
+        redde exitus;
+    }
+    scrinium_finire(e);
+
+    /* plagula aliena: via (et sigillum, massa praesens) ex datum */
+    condita = chorda_aequalis_literis(actum->genus, "plagula-condita");
+    remota = chorda_aequalis_literis(actum->genus, "plagula-remota");
+    via.datum = NIHIL;
+    via.mensura = ZEPHYRUM;
+    sigillum = via;
+    origo = via;
+    si (condita || remota)
+    {
+        r = json_legere(actum->datum, p);
+        si (!r.successus)
+        {
+            redde VOLUMEN_IMPORTATIO_MALA;
+        }
+        via = json_capere_chorda(r.radix, "via", via);
+        si (via.mensura == ZEPHYRUM)
+        {
+            redde VOLUMEN_IMPORTATIO_MALA;
+        }
+        via = _via_aliena(p, actum->identitas.replica, via);
+    }
+    si (condita)
+    {
+        sigillum  = json_capere_chorda(r.radix, "sigillum", sigillum);
+        origo     = json_capere_chorda(r.radix, "origo", origo);
+        e = scrinium_praeparare(volumen->scrinium,
+            "SELECT 1 FROM massae WHERE sigillum = ?");
+        si (e == NIHIL)
+        {
+            redde VOLUMEN_IMPORTATIO_MALA;
+        }
+        scrinium_ligare_textum(e, 1, sigillum);
+        gradus = scrinium_gradi(e);
+        scrinium_finire(e);
+        si (gradus != SCRINIUM_ORDO)
+        {
+            redde VOLUMEN_MASSA_DEEST;
+        }
+    }
+
+    si (   !volumen->in_transactione
+        && !scrinium_incipere(volumen->scrinium))
+    {
+        redde VOLUMEN_IMPORTATIO_MALA;
+    }
+    e = scrinium_praeparare(volumen->scrinium,
+        "INSERT INTO acta (momentum, genus, datum, hora, machina,"
+        " basis_hora, basis_machina, replica, basis_replica,"
+        " seq_originis) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    si (e == NIHIL)
+    {
+        salta revolve;
+    }
+    scrinium_ligare_textum(e, 1, actum->momentum);
+    scrinium_ligare_textum(e, 2, actum->genus);
+    scrinium_ligare_textum(e, 3, actum->datum);
+    scrinium_ligare_numerum(e, 4, actum->identitas.hora);
+    scrinium_ligare_textum(e, 5, actum->identitas.machina);
+    si (actum->basis.hora > ZEPHYRUM)
+    {
+        scrinium_ligare_numerum(e, 6, actum->basis.hora);
+        scrinium_ligare_textum(e, 7, actum->basis.machina);
+        scrinium_ligare_textum(e, 9, actum->basis.replica);
+    }
+    alioquin
+    {
+        scrinium_ligare_nihil(e, 6);
+        scrinium_ligare_nihil(e, 7);
+        scrinium_ligare_nihil(e, 9);
+    }
+    scrinium_ligare_textum(e, 8, actum->identitas.replica);
+    scrinium_ligare_numerum(e, 10, actum->seq_originis > ZEPHYRUM
+        ? actum->seq_originis : actum->seq);
+    gradus = scrinium_gradi(e);
+    scrinium_finire(e);
+    si (gradus != SCRINIUM_FACTUM)
+    {
+        salta revolve;
+    }
+    si (condita || remota)
+    {
+        e = scrinium_praeparare(volumen->scrinium, condita
+            ? "INSERT INTO plagulae (via, sigillum, origo) VALUES"
+              " (?, ?, ?) ON CONFLICT(via) DO UPDATE SET"
+              " sigillum = excluded.sigillum, origo = excluded.origo,"
+              " momentum = strftime('%Y-%m-%dT%H:%M:%fZ','now')"
+            : "DELETE FROM plagulae WHERE via = ?");
+        si (e == NIHIL)
+        {
+            salta revolve;
+        }
+        scrinium_ligare_textum(e, 1, via);
+        si (condita)
+        {
+            scrinium_ligare_textum(e, 2, sigillum);
+            scrinium_ligare_textum(e, 3, origo);
+        }
+        gradus = scrinium_gradi(e);
+        scrinium_finire(e);
+        si (gradus != SCRINIUM_FACTUM)
+        {
+            salta revolve;
+        }
+    }
+    si (   volumen->in_transactione || scrinium_committere(
+            volumen->scrinium))
+    {
+        redde VOLUMEN_IMPORTATUM;
+    }
+
+revolve:
+    si (!volumen->in_transactione)
+    {
+        scrinium_revolvere(volumen->scrinium);
+    }
+    redde VOLUMEN_IMPORTATIO_MALA;
+}
+
 b32
 volumen_actum_identitas (
              Volumen* volumen,
@@ -661,7 +847,8 @@ volumen_actum_identitas (
 
 /* columnae actus, ordine quem _actum_ex_ordine legit */
 #define ACTA_COLUMNAE "SELECT seq, momentum, genus, datum, hora," \
-    " machina, basis_hora, basis_machina, replica, basis_replica"
+    " machina, basis_hora, basis_machina, replica, basis_replica," \
+    " COALESCE(seq_originis, seq)"
 
 /* ordo enuntiationis (ACTA_COLUMNAE) -> VolumenActum (chordae ex
  * piscina vocantis) */
@@ -681,6 +868,7 @@ _actum_ex_ordine (
     a->basis.machina      = scrinium_columna_textus(e, 7, piscina);
     a->identitas.replica  = scrinium_columna_textus(e, 8, piscina);
     a->basis.replica      = scrinium_columna_textus(e, 9, piscina);
+    a->seq_originis       = scrinium_columna_numerus(e, 10);
 }
 
 /* datum JSON actus 'plagula-condita' */

@@ -765,6 +765,230 @@ _sectio_replicae_veteris (
     volumen_claudere(vol);
 }
 
+/* communio II.1: actum alienum importare - identitas, momentum,
+ * genus, datum servantur, seq novum, seq_originis scriptoris;
+ * idempotens; conflictus; proprium recusatur */
+interior VolumenActum
+actum_ultimum (
+     Volumen* vol,
+     Piscina* piscina)
+{
+             Xar* l;
+    VolumenActum  vacuum_actum;
+
+    memset(&vacuum_actum, ZEPHYRUM, magnitudo(vacuum_actum));
+    l = volumen_acta_legere(vol, ZEPHYRUM, piscina);
+    si (!l || xar_numerus(l) == ZEPHYRUM)
+    {
+        redde vacuum_actum;
+    }
+    redde *(VolumenActum*)xar_obtinere(l, xar_numerus(l) - I);
+}
+
+interior vacuum
+_sectio_importationis (
+    CredoContextus* c)
+{
+         Piscina* piscina;
+         Volumen* a;
+         Volumen* b;
+    VolumenActum  originale;
+    VolumenActum  copia;
+    VolumenActum  mutatum;
+             s64  numerus;
+
+    piscina  = c->piscina;
+    a        = volumen_temporarium(piscina, "probatio_volumen_imp_a");
+    b        = volumen_temporarium(piscina, "probatio_volumen_imp_b");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_NECESSE_NON_NIHIL(b);
+    (vacuum)volumen_actum_appendere(b, "x/proprium",
+        chorda_ex_literis("{\"b\":1}", piscina));
+    CREDO_NECESSE(volumen_actum_appendere(a, "x/actum",
+        chorda_ex_literis("{\"n\":1}", piscina)) > ZEPHYRUM);
+    originale = actum_ultimum(a, piscina);
+    CREDO_AEQUALIS_S64(originale.seq_originis, originale.seq);
+
+    CREDO_GRADUS("importatum: identitas et contentum servata");
+    numerus = volumen_summa_actorum(b);
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &originale),
+        (i32)VOLUMEN_IMPORTATUM);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(b), numerus + I);
+    copia = actum_ultimum(b, piscina);
+    CREDO_AEQUALIS_S64(copia.identitas.hora, originale.identitas.hora);
+    CREDO_CHORDA_AEQUALIS(copia.identitas.replica,
+        volumen_replica(a));
+    CREDO_CHORDA_AEQUALIS(copia.identitas.machina,
+        originale.identitas.machina);
+    CREDO_CHORDA_AEQUALIS(copia.momentum, originale.momentum);
+    CREDO_CHORDA_AEQUALIS(copia.genus, originale.genus);
+    CREDO_CHORDA_AEQUALIS(copia.datum, originale.datum);
+    CREDO_AEQUALIS_S64(copia.seq_originis, originale.seq);
+    CREDO_VERUM(copia.seq != originale.seq || copia.seq > ZEPHYRUM);
+
+    CREDO_GRADUS("relatio: numeratio scriptoris servatur (A-B-C)");
+    {
+         Volumen* cc;
+    VolumenActum  relatum;
+
+        cc = volumen_temporarium(piscina, "probatio_volumen_imp_c");
+        CREDO_NECESSE_NON_NIHIL(cc);
+        (vacuum)volumen_actum_appendere(cc, "x/proprium",
+            chorda_ex_literis("{}", piscina));
+        (vacuum)volumen_actum_appendere(cc, "x/proprium",
+            chorda_ex_literis("{}", piscina));
+        CREDO_VERUM(copia.seq != copia.seq_originis);
+        CREDO_AEQUALIS_I32((i32)volumen_actum_importare(cc, &copia),
+            (i32)VOLUMEN_IMPORTATUM);
+        relatum = actum_ultimum(cc, piscina);
+        CREDO_AEQUALIS_S64(relatum.seq_originis, originale.seq);
+        CREDO_CHORDA_AEQUALIS(relatum.identitas.replica,
+            volumen_replica(a));
+        volumen_claudere(cc);
+    }
+
+    CREDO_GRADUS("idempotens");
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &originale),
+        (i32)VOLUMEN_IAM_ADEST);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(b), numerus + I);
+
+    CREDO_GRADUS("conflictus: identitas eadem, datum aliud");
+    mutatum        = originale;
+    mutatum.datum  = chorda_ex_literis("{\"n\":2}", piscina);
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &mutatum),
+        (i32)VOLUMEN_CONFLICTUS);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(b), numerus + I);
+
+    CREDO_GRADUS("proprium recusatur");
+    numerus = volumen_summa_actorum(b);
+    (vacuum)volumen_actum_appendere(b, "x/proprium",
+        chorda_ex_literis("{\"b\":2}", piscina));
+    mutatum = actum_ultimum(b, piscina);
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &mutatum),
+        (i32)VOLUMEN_IMPORTATIO_MALA);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(b), numerus + I);
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
+/* communio VIII-c: hora futura - intra limitem accipitur et horologium
+ * locale eam praeterit; ultra limitem recusatur (Review Focus 2) */
+interior vacuum
+_sectio_horae_futurae (
+    CredoContextus* c)
+{
+         Piscina* piscina;
+         Volumen* b;
+    VolumenActum  alienum;
+    VolumenActum  proprium;
+        Momentum  nunc;
+             s64  numerus;
+
+    piscina  = c->piscina;
+    b        = volumen_temporarium(piscina, "probatio_volumen_futura");
+    CREDO_NECESSE_NON_NIHIL(b);
+    nunc = hora_hybrida_physica();
+    memset(&alienum, ZEPHYRUM, magnitudo(alienum));
+    alienum.seq           = VII;
+    alienum.seq_originis  = VII;
+    alienum.momentum           = chorda_ex_literis(
+        "2026-10-26T12:00:00.000Z", piscina);
+    alienum.genus = chorda_ex_literis("x/actum", piscina);
+    alienum.datum = chorda_ex_literis("{}", piscina);
+    alienum.identitas.replica  = chorda_ex_literis(
+        "01ZZZZZZZZZZZZZZZZZZZZZZZZ", piscina);
+    alienum.identitas.machina  = chorda_ex_literis("aliena", piscina);
+    alienum.identitas.hora     = hora_hybrida_componere(nunc
+        + (Momentum)(V * LX * M), ZEPHYRUM);
+
+    CREDO_GRADUS("V minutae in futuro: accipitur");
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &alienum),
+        (i32)VOLUMEN_IMPORTATUM);
+    CREDO_NECESSE(volumen_actum_appendere(b, "x/proprium",
+        chorda_ex_literis("{}", piscina)) > ZEPHYRUM);
+    proprium = actum_ultimum(b, piscina);
+    CREDO_VERUM(proprium.identitas.hora > alienum.identitas.hora);
+
+    CREDO_GRADUS("XX minutae in futuro: recusatur");
+    numerus               = volumen_summa_actorum(b);
+    alienum.seq           = VIII;
+    alienum.seq_originis  = VIII;
+    alienum.identitas.hora  = hora_hybrida_componere(nunc
+        + (Momentum)(XX * LX * M), ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &alienum),
+        (i32)VOLUMEN_HORA_FUTURA);
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(b), numerus);
+    volumen_claudere(b);
+}
+
+/* communio II.1: plagula aliena in manifestum sub
+ * "aliena/<replica>/<via>" - propria intacta; massa prius necessaria;
+ * remota aliena tollit */
+interior vacuum
+_sectio_plagulae_alienae (
+    CredoContextus* c)
+{
+         Piscina* piscina;
+         Volumen* a;
+         Volumen* b;
+    VolumenActum  condita;
+    VolumenActum  remota;
+          chorda  via_aliena;
+          chorda  lectum;
+             b32  inventum;
+       character  hex[SIGILLUM_HEX_MENSURA];
+
+    piscina  = c->piscina;
+    a        = volumen_temporarium(piscina, "probatio_volumen_plag_a");
+    b        = volumen_temporarium(piscina, "probatio_volumen_plag_b");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_NECESSE_NON_NIHIL(b);
+    CREDO_NECESSE(volumen_plagulam_condere(b, chorda_ex_literis(
+        "documentum", piscina), chorda_ex_literis("B", piscina),
+        "probatio"));
+    CREDO_NECESSE(volumen_plagulam_condere(a, chorda_ex_literis(
+        "documentum", piscina), chorda_ex_literis("A", piscina),
+        "probatio"));
+    condita = actum_ultimum(a, piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS(condita.genus, "plagula-condita");
+    via_aliena = chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("aliena/", piscina), volumen_replica(a),
+        piscina), chorda_ex_literis("/documentum", piscina), piscina);
+
+    CREDO_GRADUS("massa deest: nihil scribitur");
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &condita),
+        (i32)VOLUMEN_MASSA_DEEST);
+    (vacuum)volumen_plagulam_promere(b, via_aliena, piscina, &inventum);
+    CREDO_FALSUM(inventum);
+
+    CREDO_GRADUS("massa praesens: plagula aliena, propria intacta");
+    CREDO_NECESSE(volumen_massam_condere(b, chorda_ex_literis("A",
+        piscina), hex));
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &condita),
+        (i32)VOLUMEN_IMPORTATUM);
+    lectum = volumen_plagulam_promere(b, via_aliena, piscina,
+        &inventum);
+    CREDO_VERUM(inventum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(lectum, "A");
+    lectum = volumen_plagulam_promere(b, chorda_ex_literis("documentum",
+        piscina), piscina, &inventum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(lectum, "B");
+
+    CREDO_GRADUS("remota aliena tollit");
+    CREDO_NECESSE(volumen_plagulam_removere(a, chorda_ex_literis(
+        "documentum", piscina)));
+    remota = actum_ultimum(a, piscina);
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b, &remota),
+        (i32)VOLUMEN_IMPORTATUM);
+    (vacuum)volumen_plagulam_promere(b, via_aliena, piscina, &inventum);
+    CREDO_FALSUM(inventum);
+    lectum = volumen_plagulam_promere(b, chorda_ex_literis("documentum",
+        piscina), piscina, &inventum);
+    CREDO_CHORDA_AEQUALIS_LITERIS(lectum, "B");
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
 interior vacuum
 _sectio_migrationis_praesentiae (
     CredoContextus* c)
@@ -1490,6 +1714,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "volumen vetus: replica suppletur", _sectio_replicae_veteris,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "importatio actus alieni (communio II.1)", _sectio_importationis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "hora futura (limes)", _sectio_horae_futurae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "plagula aliena", _sectio_plagulae_alienae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "volumen_temporarium", _sectio_decima, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "volumen_temporarium sub TMPDIR", _sectio_temporarii_ambitus,

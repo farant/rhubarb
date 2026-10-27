@@ -268,3 +268,20 @@ created before the backfill). Row parsing of both act readers moved into
 `_actum_ex_ordine` + `ACTA_COLUMNAE`. Known limit: a volume FILE copied to a
 second device keeps its replica - fine for "restore this device" (communio
 D3b), wrong for "clone"; phase 3's device adoption decides.
+
+## 2026-10-27 - importing a foreign act (communio phase 1 T2, quarta)
+
+`volumen_actum_importare` stores another replica's act as given (genus,
+datum, momentum, hora, replica, machina, basis) with a new local seq and
+`seq_originis` = the WRITER's seq (migration XVI; NULL for own acts, read
+back as seq). Relayed acts keep the original writer's number (A -> B -> C
+pinned): references inside a document (`<cursor ad>`, `<ramus ab>`) are in
+that numbering, so they stay valid everywhere. The HLC receive rule needs no
+code: the next local append computes MAX(hora)+1 over ALL rows, imported
+ones included (pinned). Bound: physical ms > now + 10 min -> HORA_FUTURA.
+Same identity + same genus/datum -> IAM_ADEST (idempotent); different ->
+CONFLICTUS (corruption, nothing written). Foreign plagula-condita/-remota
+project into the manifest under `aliena/<replica>/<via>`; because
+`PRAGMA foreign_keys = ON` and plagulae reference massae, a condita whose
+blob is missing returns MASSA_DEEST (send the blob first) - a sixth outcome
+the plan did not list.

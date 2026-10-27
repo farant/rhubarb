@@ -322,7 +322,38 @@ nomen structura {
               chorda datum;
     VolumenIdentitas identitas;
     VolumenIdentitas basis;
+    /* communio: seq in numeratione SCRIPTORIS (replicae suae) - actis
+     * propriis = seq; importatis = seq quod scriptor eis dedit.
+     * Relationes intra documentum (<cursor ad>, <ramus ab>) in hac
+     * numeratione stant, ergo ubique validae */
+                 s64 seq_originis;
 } VolumenActum;
+
+/* communio II.1: actum alienum (alterius replicae) inserere identitate
+ * sua servata - genus, datum, momentum, (hora, replica, machina),
+ * basis, seq_originis ut data; seq locale novum. Plagula-condita /
+ * plagula-remota aliena in manifestum sub "aliena/<replica>/<via>"
+ * proicitur (numquam via propria). Horologium locale per regulam
+ * appendendi (MAX(hora)+1) eam praeterit. */
+#define VOLUMEN_FUTURUM_MAXIMUM_MS 600000   /* X minutae */
+
+nomen enumeratio {
+    VOLUMEN_IMPORTATUM = ZEPHYRUM,  /* scriptum */
+    VOLUMEN_IAM_ADEST,              /* identitas et contentum eadem:
+                                     * nihil */
+    VOLUMEN_HORA_FUTURA,            /* ultra limitem: nihil */
+    VOLUMEN_CONFLICTUS,             /* identitas eadem, contentum
+                                     * aliud: nihil (corruptio) */
+    VOLUMEN_MASSA_DEEST,            /* plagula-condita sine massa sua:
+                                     * nihil, massam prius mitte */
+    VOLUMEN_IMPORTATIO_MALA         /* replica propria, identitas
+                                     * nulla, aut vitium scrinii */
+} VolumenImportatio;
+
+VolumenImportatio
+volumen_actum_importare (
+                  Volumen* volumen,
+    constans VolumenActum* actum);
 
 /* acta POST seq datum (exclusivum; 0 = omnia), ordine seq -
  * forma "acta post seq N" quam et plicae et replicatio volunt */
