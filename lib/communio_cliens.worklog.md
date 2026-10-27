@@ -33,3 +33,15 @@ Rules learned while building:
 Numbers (Mac, in-process, loopback): a 500-stroke picture A -> server -> B in
 ~120 ms wall. Plants: skipping blob fetch, not reading saved cursors, staying
 silent on a network failure - all three turned probatio_communio red.
+
+## 2026-10-27 - token file + CLI (plan-2 T7)
+
+`communio_tesseram_scribere/_legere` follow lib/oceanus.c's secret-file rules:
+O_CREAT|O_EXCL|O_NOFOLLOW 0600 on write (never overwrite), regular file + no
+symlink + mode not wider than 0600 on read, raw open/read under
+`<tolera codex="CANALIS_PRAETERITUS">` (secrets never go through lectiones;
+examen flags a tolera that absorbs nothing, so only the open() sites carry it).
+tools/communio.c is a thin wrapper (tessera / replica / currere [-semel]),
+built like oceanus: ./bin/aedilis tools/communio.c && bash
+build/aedilis/communio/struere.sh -> build/aedilis/communio/communio (never
+installed from a worktree).

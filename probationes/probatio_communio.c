@@ -18,11 +18,16 @@
 #include "hospitium.h"
 #include "communio_servus.h"
 #include "communio_cliens.h"
+#include "sigillum.h"
+#include "lectiones.h"
+#include "filum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <sys/time.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 hic_manens Piscina* piscina;
 
@@ -1209,6 +1214,52 @@ _sectio_mensura_per_servum (
     orbem_purgare(&o);
 }
 
+/* plan-2 T7: tessera in filo 0600 - scribere numquam supra
+ * exsistens, legere recusat modum latiorem */
+interior vacuum
+_sectio_tessera_in_filo (
+    CredoContextus* c)
+{
+            character via[CCLVI];
+            character tessera[XLIV];
+            character digestum[LXV];
+            character iterum[LXV];
+            character moneta[MONETA_ULID_MENSURA];
+             Sigillum g;
+            character hex[SIGILLUM_HEX_MENSURA];
+    structura stat  st;
+
+    (vacuum)c;
+    moneta_ulid(moneta);
+    sprintf(via, "/tmp/probatio_communio_tessera_%s", moneta);
+    CREDO_NECESSE(communio_tesseram_scribere(via, digestum));
+    CREDO_AEQUALIS_I32((i32)strlen(digestum), LXIV);
+    CREDO_NECESSE(lectiones_stat(via, &st) == ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)(st.st_mode & 0777), (i32)0600);
+
+    CREDO_GRADUS("lectio: digestum congruit");
+    CREDO_NECESSE(communio_tesseram_legere(via, tessera));
+    CREDO_AEQUALIS_I32((i32)strlen(tessera), XLIII);
+    g = sigillum_computare(tessera, (memoriae_index)strlen(tessera));
+    sigillum_hex(&g, hex);
+    CREDO_AEQUALIS_I32((i32)memcmp(hex, digestum, (size_t)LXIV),
+        ZEPHYRUM);
+
+    CREDO_GRADUS("numquam supra exsistens");
+    CREDO_FALSUM(communio_tesseram_scribere(via, iterum));
+    CREDO_NECESSE(communio_tesseram_legere(via, tessera));
+    g = sigillum_computare(tessera, (memoriae_index)strlen(tessera));
+    sigillum_hex(&g, hex);
+    CREDO_AEQUALIS_I32((i32)memcmp(hex, digestum, (size_t)LXIV),
+        ZEPHYRUM);
+
+    CREDO_GRADUS("modus 0644 recusatur");
+    CREDO_NECESSE(filum_modum_ponere(via, 0644));
+    CREDO_FALSUM(communio_tesseram_legere(via, tessera));
+    (vacuum)filum_delere(via);
+    CREDO_FALSUM(communio_tesseram_legere(via, tessera));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transferre, iterum, idempotens", _sectio_transferre, _parare,
         _purgare, NIHIL, NIHIL },
@@ -1236,6 +1287,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mensura per servum: D ictus", _sectio_mensura_per_servum,
         _parare,
         _purgare, NIHIL, NIHIL },
+    { "tessera in filo", _sectio_tessera_in_filo, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

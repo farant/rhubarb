@@ -9,9 +9,14 @@
 #include "http_vocatio.h"
 #include "json.h"
 #include "xar.h"
+#include "communio_servus.h"
+#include "filum.h"
 
 #include <string.h>
 #include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
 
 #define TESSERA_MAXIMA     XLIV
 #define BASIS_MAXIMA       CCLVI
@@ -963,4 +968,99 @@ communio_cliens_otiosus (
     redde cliens && cliens->currit
         && cliens->sursum.otiosa && cliens->deorsum.otiosa
         && !cliens->sursum.vocatio && !cliens->deorsum.vocatio;
+}
+
+
+/* ==================================================
+ * Tessera in filo (T7)
+ * ================================================== */
+
+b32
+communio_tesseram_scribere (
+     constans character* via,
+              character  digestum[LXV])
+{
+     character tessera[XLIV];
+       integer fd;
+       ssize_t n;
+           b32 bene;
+
+    si (   !via || !digestum
+        || !communio_tesseram_facere(tessera, digestum))
+    {
+        redde FALSUM;
+    }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>tessera secreta */
+    fd = open(via, O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW, 0600);
+    si (fd < 0)
+    {
+        memset(tessera, ZEPHYRUM, magnitudo(tessera));
+        fprintf(stderr,
+            "communio: tessera scribi nequit (iam exsistit?):"
+            " %s\n", via);
+        redde FALSUM;
+    }
+    n     = write(fd, tessera, (size_t)COMMUNIO_TESSERA_MENSURA);
+    bene  = n == (ssize_t)COMMUNIO_TESSERA_MENSURA;
+    bene  = close(fd) == ZEPHYRUM && bene;
+    memset(tessera, ZEPHYRUM, magnitudo(tessera));
+    si (!bene)
+    {
+        (vacuum)filum_delere(via);
+        memset(digestum, ZEPHYRUM, (size_t)LXV);
+        fprintf(stderr, "communio: tessera scribi nequit: %s\n", via);
+    }
+    redde bene;
+}
+
+b32
+communio_tesseram_legere (
+     constans character* via,
+              character  exitus[XLIV])
+{
+    structura stat st;
+         integer fd;
+         ssize_t n;
+
+    si (!via || !exitus)
+    {
+        redde FALSUM;
+    }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>tessera secreta */
+    fd = open(via, O_RDONLY | O_NOFOLLOW);
+    si (fd < 0)
+    {
+        fprintf(stderr, "communio: tessera legi nequit: %s\n", via);
+        redde FALSUM;
+    }
+    si (fstat(fd, &st) != ZEPHYRUM || !S_ISREG(st.st_mode))
+    {
+        (vacuum)close(fd);
+        fprintf(stderr, "communio: tessera non filum regulare: %s\n",
+            via);
+        redde FALSUM;
+    }
+    si ((st.st_mode & 077) != ZEPHYRUM)
+    {
+        (vacuum)close(fd);
+        fprintf(stderr,
+            "communio: tessera modus latior quam 0600 (chmod"
+            " 600 %s)\n", via);
+        redde FALSUM;
+    }
+    n = read(fd, exitus, (size_t)(XLIV - I));
+    (vacuum)close(fd);
+    si (n > ZEPHYRUM && exitus[n - I] == '\n')
+    {
+        n--;
+    }
+    si (n != (ssize_t)COMMUNIO_TESSERA_MENSURA)
+    {
+        memset(exitus, ZEPHYRUM, (size_t)XLIV);
+        fprintf(stderr, "communio: tessera mala (XLIII signa): %s\n",
+            via);
+        redde FALSUM;
+    }
+    exitus[n] = '\0';
+    redde VERUM;
 }

@@ -335,3 +335,24 @@ suspends through the volumen directly (grants untouched) -> bearer 401;
 restore -> 200 again. Red before; plant (status check made always-true)
 -> red. Also makes a silently empty `admissio_concessiones` list (prepare
 failure) harmless.
+
+## 2026-10-27 - communio server mounted (communio plan-2 T7)
+
+exemplar opens a SECOND volume, `<data>/communio.volumen` (durabilitas plena),
+for the sync act store (plan C1: imported acts never mix with notes/users, and
+`_replicare` - which reads every act of exemplar.volumen - needs no change). The
+communio server checks persons through `ianua_cives(e->ianua)` (cives live in
+exemplar.volumen). Routes mount under /communio/ - nginx's `location /` already
+proxies them, so no vhost change.
+
+Order matters at shutdown: `communio_servum_destruere` BEFORE
+`hospitium_destruere` (it cancels long-poll timers that would otherwise fire
+into a destroyed hospitium); both volumes get `wal_checkpoint(TRUNCATE)` so a
+plain `cp` after stop is consistent.
+
+Admin channel: 4 new tools (now XI): communio_membrum_addere {spatium, nomen},
+communio_apparatum_addere {nomen, spatium, titulus, digestum} -> {id},
+communio_apparatum_revocare {id}, communio_apparatus_enumerare. They take the
+person's HANDLE (what Fran types) rather than the civis ULID, and only ever the
+token's DIGEST - the device mints its token (`communio tessera`), so no secret
+crosses the channel or reaches Claude's context.

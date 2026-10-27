@@ -101,4 +101,26 @@ b32
 communio_cliens_otiosus (
     constans CommunioCliens* cliens);
 
+
+/* ==================================================
+ * Tessera in filo (T7) - secretum: numquam per lectiones
+ * ================================================== */
+
+/* tesseram novam cudit (communio_tesseram_facere) et in filum NOVUM
+ * modo 0600 scribit (O_EXCL: numquam supra exsistens; O_NOFOLLOW);
+ * digestum (LXIV hex + NUL) solum redditur ut administrator eum
+ * inscribat */
+b32
+communio_tesseram_scribere (
+     constans character* via,
+              character  digestum[LXV]);
+
+/* tesseram ex filo legit: filum regulare, non nexus symbolicus, modus
+ * non latior quam 0600, XLIII signa (linea finalis tolerata) - aliter
+ * FALSUM et causa in stderr (sine tessera) */
+b32
+communio_tesseram_legere (
+     constans character* via,
+              character  exitus[XLIV]);
+
 #endif /* COMMUNIO_CLIENS_H */
