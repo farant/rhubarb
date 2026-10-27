@@ -1453,6 +1453,66 @@ volumen_acta_propria_legere (
 }
 
 Xar*
+volumen_acta_replicarum_legere (
+    Volumen* volumen,
+        s64  post_seq,
+     chorda* replicae,
+        i32  numerus,
+        i32  limes,
+    Piscina* piscina)
+{
+     ScriniumEnuntiatum* e;
+      ChordaAedificator* sql;
+                    Xar* ordo;
+                    i32  i;
+
+    ordo = xar_creare(piscina, (i32)magnitudo(VolumenActum));
+    si (   ordo    == NIHIL || volumen == NIHIL || replicae == NIHIL
+        || numerus == ZEPHYRUM || limes == ZEPHYRUM)
+    {
+        redde ordo;
+    }
+    sql = chorda_aedificator_creare(piscina, (memoriae_index)CXXVIII);
+    si (sql == NIHIL)
+    {
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_literis(sql, ACTA_COLUMNAE
+        " FROM acta WHERE seq > ? AND replica IN (");
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        chorda_aedificator_appendere_literis(sql, i > ZEPHYRUM ? ", ?"
+                                                               : "?");
+    }
+    chorda_aedificator_appendere_literis(sql, ") ORDER BY seq LIMIT ?");
+    e = scrinium_praeparare(volumen->scrinium, chorda_ut_cstr(
+        chorda_aedificator_finire(sql), piscina));
+    si (e == NIHIL)
+    {
+        redde NIHIL;
+    }
+    scrinium_ligare_numerum(e, 1, post_seq);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        scrinium_ligare_textum(e, (integer)(i + II), replicae[i]);
+    }
+    scrinium_ligare_numerum(e, (integer)(numerus + II), (s64)limes);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        VolumenActum* a = (VolumenActum*)xar_addere(ordo);
+
+        si (a == NIHIL)
+        {
+            scrinium_finire(e);
+            redde NIHIL;
+        }
+        _actum_ex_ordine(e, piscina, a);
+    }
+    scrinium_finire(e);
+    redde ordo;
+}
+
+Xar*
 volumen_acta_generum_replicae_legere (
                          Volumen* volumen,
                           chorda  replica,

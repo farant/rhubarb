@@ -19,3 +19,17 @@ protocol will carry. Rules:
 - The cursor only advances past acts that imported or were already there;
   the first refusal stops the batch with the cursor just before it (a
   retry stops at the same act - corruption never gets skipped).
+
+## 2026-10-27 - communio_forma split out (plan-2 T2)
+
+The act <-> JSON codec, the network-boundary validation (deferred minor M4)
+and the 64-hex blob scan now live in `communio_forma` so the server and the
+client share one copy; `communio_transferre` uses the shared scan and the
+derived-act rule is public as `communio_actum_derivatum`. Wire choices: `hora`
+and `basis_hora` are decimal STRINGS (packed 64-bit clocks - no reader may pass
+them through a double), `datum` a string kept byte-for-byte, local `seq` never
+travels. Both `communio_actum_validum` and `communio_actum_derivatum` take a
+Piscina (they parse a plagula's JSON to see its via); `communio_actum_legere`
+takes a non-const JsonValor* because the house json readers do (a const
+parameter would need a -Wcast-qual cast). Strings read from JSON point into
+the parse's memory - the caller's pool must outlive the act.

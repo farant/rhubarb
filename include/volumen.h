@@ -367,6 +367,17 @@ volumen_acta_propria_legere (
         s64  post_seq,
     Piscina* piscina);
 
+/* communio plan-2 T2 (tractio servi): acta replicarum datarum post seq
+ * locale, ordine seq, 'limes' ad plurimum; numerus 0 = Xar vacuum */
+Xar*
+volumen_acta_replicarum_legere (
+    Volumen* volumen,
+        s64  post_seq,
+     chorda* replicae,
+        i32  numerus,
+        i32  limes,
+    Piscina* piscina);
+
 /* communio T4: acta generum datorum REPLICAE datae in numeratione
  * SCRIPTORIS - post_seq et ordo per seq_originis (actis propriis = seq)
  * - ut historia documenti alieni relationes suas (<cursor ad>, <ramus
