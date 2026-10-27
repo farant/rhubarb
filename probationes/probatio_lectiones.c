@@ -10,6 +10,7 @@
 #include "via.h"
 #include "lectiones.h"
 #include "processus.h"
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -310,6 +311,32 @@ _sectio_modi_arboris (
         piscina), piscina)));
 }
 
+/* errno SERVATUR (2026-10-27): notatio errno vocantis non mutat -
+ * liber in directorio absente (open libri fallit, errno ponit) et
+ * liber validus (appendit) */
+interior vacuum
+_sectio_errno (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    setenv("FABRICA_LECTIONES",
+        "build/probatio_lectiones_nusquam/liber.tsv", I);
+    errno = EDOM;
+    lectiones_notare(LECTIO_SCRIPSIT, "build/probatio_lectiones_x");
+    CREDO_AEQUALIS_S32((s32)errno, (s32)EDOM);
+    setenv("FABRICA_LECTIONES", LIBER, I);
+    errno = EDOM;
+    lectiones_notare(LECTIO_LEGIT, "build/probatio_lectiones_y");
+    CREDO_AEQUALIS_S32((s32)errno, (s32)EDOM);
+    unsetenv("FABRICA_LECTIONES");
+    /* notatio sine variabili descriptorem libri CLAUDIT - aliter
+     * sectio sequens (III) in inodum deletum scriberet */
+    lectiones_notare(LECTIO_LEGIT, "build/probatio_lectiones_y");
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
+    (vacuum)remove(LIBER);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. variabilis absens: nihil scribitur", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -323,6 +350,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "IIe. modus et arbor deleta (S, fabrica-8 T1)",
         _sectio_modi_arboris, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IIf. errno servatur", _sectio_errno, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "III. filii duo paralleli: lineae integrae", _sectio_quinta,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

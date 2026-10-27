@@ -13,6 +13,7 @@
 #include "credo.h"
 #include "sessio.h"
 #include "officina_machinula.h"   /* MACHINULA_* genera halitus */
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -979,7 +980,7 @@ _documentum_strictum_probare (
 
         sprintf(via_export, "%s/officina/build/strictum_export.c",
             radix);
-        pl = fopen(via_export, "wb");
+        pl = lectiones_fopen(via_export, "wb");
         CREDO_NON_NIHIL(pl);
         fwrite(strictum.datum, I, (memoriae_index)strictum.mensura,
             pl);

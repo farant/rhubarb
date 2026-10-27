@@ -65,7 +65,6 @@ md/instrumenta/extenta.c	ante regulam (2026-10-14): migratio ad filum cum tactu 
 md/instrumenta/html.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/amalgama/officina.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/fontes/officina_indicium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-officina/fontes/officina_machinula.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/praeparator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/principalia/colloquium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/principalia/cursor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -80,7 +79,6 @@ officina/probationes/probatio_officina_indicium.c	ante regulam (2026-10-14): mig
 officina/probationes/probatio_officina_legatus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_machinula.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_puncta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-officina/probationes/probatio_officina_renovatio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_sessio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_textus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_vindex.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

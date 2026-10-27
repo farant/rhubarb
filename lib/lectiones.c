@@ -7,6 +7,7 @@
  */
 #include "postulata_posix.h"
 #include "lectiones.h"
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,8 +35,8 @@ _littera (
     redde '?';
 }
 
-vacuum
-lectiones_notare (
+interior vacuum
+_lectionem_notare (
                  LectioGenus  genus,
           constans character* via)
 {
@@ -102,6 +103,21 @@ lectiones_notare (
 
         (vacuum)scripta;
     }
+}
+
+/* errno SERVATUR: notatio vocantem numquam mutat - vocatores errno post
+ * vocationem crudam legunt (machinula officinae errno hospiti reddit,
+ * filum _filum_error_ponere); liber apertus aut appendens errno
+ * mutare posset (2026-10-27) */
+vacuum
+lectiones_notare (
+                 LectioGenus  genus,
+          constans character* via)
+{
+    integer servatum = errno;
+
+    _lectionem_notare(genus, via);
+    errno = servatum;
 }
 
 constans character*

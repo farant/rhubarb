@@ -240,3 +240,18 @@ downstream of the generator - regenerated with the current aedilis
 (./tools/silva_fontes_generare.sh), the bootstrap cycle. All generated
 outputs then judged fresh by output comparison, byte-identical; silva
 57/57; nexus fumus sanum; three 96 debts paid.
+
+*Step 6, officina (2026-10-27):* 27 mechanical sites in 8 files
+(tests, tools, officina_indicium). machinula's guest libc builtins by
+hand, keeping exact libc semantics: fopen -> lectiones_fopen and stat
+-> lectiones_stat (same calls, noted); remove/unlink/rename/mkdir note
+S first, then the raw call under a per-site `<tolera>` (errno, int
+value, any mkdir mode). A gate running a guest script that writes now
+sees the write; probatio_officina_machinula section VI asserts S/L/X
+in a private book (plant: guest fopen raw -> red at L). Supporting:
+lectiones_notare preserves errno (lib/lectiones.worklog.md);
+officina's amalgam policy gains lectiones as an excludable base
+(EXCLUDENDA_LECTIONUM = lectiones_ambitus); officina test libs gain
+filum; officina/build/mech_lectiones.o warmed once. Debts paid:
+machinula, renovatio. Left: chmod inside CREDO_VERUM (renovatio),
+a few macro/shape refusals in legatus/cursor tests.

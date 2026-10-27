@@ -24,6 +24,8 @@
 #include "credo.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "filum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,7 +143,7 @@ _plagulam_scribere (
     constans character* via,
     constans character* contentum)
 {
-    FILE* pl = fopen(via, "wb");
+    FILE* pl = lectiones_fopen(via, "wb");
 
     CREDO_NON_NIHIL(pl);
     si (pl != NIHIL)
@@ -292,9 +294,9 @@ probatio_renovare_explorator_fractus (
 
     fclose(intra);
     fclose(extra);
-    remove(via_binarii);
-    remove(via_manifesti);
-    remove(via_stipulae);
+    (vacuum)filum_delere(via_binarii);
+    (vacuum)filum_delere(via_manifesti);
+    (vacuum)filum_delere(via_stipulae);
 }
 
 
@@ -325,7 +327,7 @@ probatio_renovatio_integra (
     /* stipula renovatoris: explorator signum novum echat; exec
      * HANC probationem ut legatum renatum agit */
     {
-        FILE* pl = fopen(via_stipulae, "wb");
+        FILE* pl = lectiones_fopen(via_stipulae, "wb");
 
         CREDO_NON_NIHIL(pl);
         si (pl != NIHIL)
@@ -449,9 +451,9 @@ probatio_renovatio_integra (
     }
 
     alarm(ZEPHYRUM);
-    remove(via_binarii);
-    remove(via_manifesti);
-    remove(via_stipulae);
+    (vacuum)filum_delere(via_binarii);
+    (vacuum)filum_delere(via_manifesti);
+    (vacuum)filum_delere(via_stipulae);
 }
 
 
