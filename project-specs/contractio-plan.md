@@ -564,6 +564,87 @@ Expected effect: ~2–2.5× fewer contractions on braid closures, ~2.4× on mixe
 
 **Design review (2026-10-27): approve after fixes, no H.** M1 colouring by union-find (above); M2 plant list corrected; M3 exact hand values with tight cases; M4 wiring test; L1 batched Magnus product; L2 reuse `faciei`; L3 optional pruning; L4 connected-sum gain ~2.4×, not 3×; L5 min needs no duality. Proof text completed: states as spanning subgraphs with loop count k + n, exponent from the corner pair rather than the writhe, bridge wording ("one more component"), explicit base identities. Review scripts: scratchpad/recensio_t5a/ (session of 2026-10-27).
 
+## T5b. Better contraction orders: best of several, chosen by exact cost (proposed 2026-10-27; revised after design review)
+
+**Why.** Time per point is set by the *step rank* of the order (largest union of one contraction step; a step costs ~2^step multiplications), and the T2 greedy key minimizes only each step's *result*. The design review converted min-fill elimination orders into pairwise schedules (Python, scratchpad/recensio_t5b/) and measured actual costs:
+- step rank of the converted schedule = min-fill width + 1, exactly, on every schedule tried (and an upper bound in general: each live tensor's open indices form a clique in the filled graph);
+- over 20 braid closures (8/10/12/16 strands × 201 crossings, 5 seeds each), AVIDUS's total multiplications average **3.35 bits (~10×) above the best order found**, maximum 6.9 bits (~120×); single braids vary widely (one 10 × 201: 25 vs 24 step rank; 16 × 401: 30× gain; 12 × 801: all candidates within 0.7 bits);
+- converted min-fill orders usually have *smaller* intermediates too (10 × 201 and 12 × 201: result rank 16 vs 20; slab 2^22.7 → 2^20.0 bytes). The earlier reading "memory ~2n is structural" was an artefact: the experiment printed min-fill's width |N(v)| as its result rank, where the result is |A Δ B| ≤ width − 1. Worst slab increase seen for a winner: +7% (12 × 801).
+- Table knots and connected sums: nothing to gain (greedy is already at min-fill's step rank).
+
+Ordering is milliseconds against seconds-to-hours of contraction, and an order's multiplication count is exact before anything runs, so several candidates can be tried and the cheapest kept.
+
+**Decision (Fran, 2026-10-27; tabularium 01M5ZGH8…):** AVIDUS stays the library default (identical answers either way — only time and memory differ; AVIDUS is hand-checkable and renumbering-invariant, and T2's tests depend on it). OPTIMUS is opt-in; laqueus is the first user. Flipping the default is a later, separately reviewed step if measurements show OPTIMUS winning broadly without memory surprises.
+
+**API** (forward-compatible, rule 7):
+
+```c
+#define CONTRACTIO_AVIDUS  I    /* clavis T2 (ordinarius) */
+#define CONTRACTIO_OPTIMUS II   /* plures ordines, vilissimus per multiplicationes */
+
+/* candidati OPTIMUS, ordine fixo */
+#define CONTRACTIO_CANDIDATUS_OMNES     ZEPHYRUM
+#define CONTRACTIO_CANDIDATUS_AVIDUS    I    /* clavis T2 */
+#define CONTRACTIO_CANDIDATUS_REDUCTIO  II   /* clavis 2^r - 2^a - 2^b */
+#define CONTRACTIO_CANDIDATUS_IMPLETIO  III  /* min-fill, nexus per (gradus, id) */
+#define CONTRACTIO_CANDIDATUS_FORTUITUS IV   /* + k: min-fill, nexus fortuiti, cursus k */
+
+nomen structura {
+    i32 methodus;      /* CONTRACTIO_AVIDUS (ordinarius) | CONTRACTIO_OPTIMUS */
+    i32 conatus;       /* OPTIMUS: cursus min-fill fortuiti (ordinarie XVI) */
+    i64 semen;         /* OPTIMUS: semen sortis (ordinarie valor fixus in capite nominatus) */
+    i64 octeti_maximi; /* OPTIMUS: candidati cum tabula maiore omittuntur
+                        * (ordinarie CONTRACTIO_SATURATUM = nullus limes) */
+    i32 candidatus;    /* OPTIMUS: CANDIDATUS_OMNES aut unus coactus (probationes) */
+} ContractioOptiones;
+
+/* quis candidatus vicit; sumptus simulatus candidati k (FALSUM si k ignotus aut
+ * omissus) */
+i32 contractio_ordo_candidatus (constans ContractioOrdo* ordo);
+b32 contractio_ordo_candidati (constans ContractioOrdo* ordo, i32 k,
+                               ContractioSumptus* simulatus);
+```
+
+**Candidates** (review M2; excess over best-of-everything, log₂ multiplications, 20 braids: AVIDUS alone 3.35 mean / 6.5 max; this set 0.08 / 0.5):
+1. AVIDUS (T2 key) — so OPTIMUS never costs more multiplications than AVIDUS when no memory limit is set;
+2. size-reduction key: 2^r − 2^a − 2^b as s64, each 2^x clamped at 2^62 (a heuristic: only determinism matters), ties by ids;
+3. min-fill on the line graph (indices adjacent if they share a tensor; dimension-1 indices left out of the fill count), fill evaluated among the 64 lowest-degree vertices per step (a bucket queue, not a sort), ties by (degree, id);
+4. `conatus` runs of (3) with ties among equal (fill, degree) broken by `sors_intra` draws from `semen` (integer draws only; on dimension-2 networks all ranks are even, so "near-ties" mean nothing — the T2 id tie-break is where greedy goes wrong).
+
+Dropped after review: union-first key, min-degree, randomized greedy (they add nothing once randomized min-fill is present). The 64 cap costs nothing measurable (8, 16, 64 and uncapped equivalent within seed noise).
+
+**Elimination order → pairwise schedule, online.** Each elimination immediately contracts the two live tensors holding the index (all their shared indices close at once; an index already closed is skipped); leftovers (disconnected pieces, scalars) by the existing fallback. Steps are emitted with sinister < dexter and effectus = n + s, as T2. Because cost accumulates as steps are emitted, a candidate is **abandoned as soon as its partial multiplications reach the incumbent's** (review M6) — this bounds the ordering cost on wide networks, where uncapped fill computation would be O(V·64·d²) ≈ 10¹⁰ at 3-SAT width ~660.
+
+**Choice.** Each candidate produces a step list; one shared simulation (index sets only) gives multiplications, slab bytes and apex. Pick min (multiplications, slab bytes, candidate number), skipping candidates whose slab exceeds `octeti_maximi`; if all exceed, the smallest slab (the officina then refuses as today). Saturated candidates tie and fall to candidate number (the officina refuses them anyway).
+
+**Implementation.**
+- `contractio_ordinare` splits into producers → step lists; `_simulare`; `_materializare` (today's `_contrahere`, `_gradum_parare`, `_tabulam_disponere`, `_latitudo`). **One** first-fit slab routine shared by simulation and materialization (the slab depends on step order; two copies would drift).
+- Memory: allocate the best and current step buffers (n − 1 pairs each) first; each candidate runs inside `piscina_notare`/`piscina_reficere`, so candidate state never outlives its evaluation; then materialize the winner.
+- AVIDUS = producer 1 + materialize, behaviour and tests unchanged. When candidate 1 wins, the OPTIMUS ordo is step-for-step identical to AVIDUS.
+- laqueus: `laqueus_modulus_vertex_creare` uses OPTIMUS with `octeti_maximi` from its caller. Test time at table scale (12,966 knots × ~19 orderings) is measured before/after; if it rivals the contractions, a deterministic rule skips extra candidates below an AVIDUS-multiplication threshold (review L8).
+
+**Tests** (`probatio_contractio`, braid-shaped networks built in the test — each crossing a rank-4 tensor on the two strands' current edges, no laqueus dependency):
+- every candidate's step list is a valid binary order, and `_independens_probare` passes on OPTIMUS orders of the 300 random networks;
+- **forced candidate = simulated cost** (review M3a): for every k, ordinare with candidate k forced gives `sumptus` equal to `contractio_ordo_candidati(k)` field by field, and OPTIMUS returns the argmin;
+- **counting anulus** (M3b): a Z/p wrapper whose `multiplica` counts calls; through `contractio_exsequi_anulo` the count equals `sumptus.multiplicationes` exactly, on OPTIMUS orders;
+- OPTIMUS multiplications ≤ AVIDUS on every network (no memory limit); when candidate 1 wins, identical orders;
+- exact expected winners and costs with `conatus = 0` on in-test braid networks, computed by an independent Python port (as T2); with `conatus > 0`, properties only — valid, cost ≤ deterministic best, same `semen` → same order (no bit-exact port of `sors`);
+- `octeti_maximi` respected (a network where the cheaper candidate needs a larger slab picks the other under a tight limit);
+- execution under OPTIMUS orders: brute force = hot tier = reference tier;
+- options: defaults (AVIDUS, conatus XVI, named semen, octeti_maximi SATURATUM, candidatus OMNES); invalid methodus is now **III** (the existing test at probatio_contractio.c:899 uses II, which becomes OPTIMUS);
+- `probatio_laqueus_rete` green under OPTIMUS, plus a **wiring test** (M4): on a fixed braid closure where OPTIMUS strictly wins, `laqueus_modulus_vertex_sumptus` multiplications equal the OPTIMUS value and are below AVIDUS's.
+
+**Plants** (red only): OPTIMUS picks the most expensive candidate; simulated slab or multiplications off by one step (red via forced-candidate equality); conversion contracts the wrong pair; min-fill fill count off (exact winners at conatus = 0); laqueus still passes AVIDUS (wiring test); pruning abandons a candidate before it reaches the incumbent (exact winners).
+
+**Measurement.** `tools/uncinus_mensura` III–IV before/after with the same seeds: winner per network, ns per multiplication per winner (confirming that fewer multiplications means less time in C — the review measured 2^4.5–2^8 multiplications per output entry on the dominant steps, so per-entry overhead is negligible), slab per winner, and laqueus test time.
+
+**Risks.**
+- The gain is uneven (0–120× per braid, ~10× mean); at the original 12 × 801 target it may be small. The measurement will say.
+- A winner can occasionally have a slightly larger slab (worst seen +7%); `octeti_maximi` bounds it.
+- Ordering cost on very wide networks is bounded by incumbent pruning; measured before relying on it for phase 2.
+
+**Design review (2026-10-27): approve after fixes, no H.** M1 evidence replaced by multi-seed totals, memory reading corrected (here and brainstorm §11); M2 candidate set (AVIDUS, size key, MF64, 16 randomized MF64); M3 forced-candidate equality, counting anulus, one first-fit routine; M4 laqueus wiring test; M5 exact winners at conatus = 0, properties otherwise, braid networks built in-test; M6 candidates in a reset arena region, online conversion with incumbent pruning, bucket queue; L1 invalid methodus III; L2 octeti_maximi default SATURATUM; L3 `contractio_ordo_candidatus`, named default semen; L4 size key exact definition; L5 cap kept; L6 multiplications are the right objective; L7 refactor traps checked; L8 laqueus test time measured; L9 AVIDUS stays default. Review scripts: scratchpad/recensio_t5b/ (session of 2026-10-27).
+
 ## Not in v1
 
 Min-fill ordering, slicing, open (output) indices (the `exitus` layout
