@@ -489,6 +489,26 @@ _picardiae_nota (
                                    (i32)f);
 }
 
+/* bits a radice (intentiones, evitandae) ad classes rotati */
+interior i32
+_rotare (
+    i32 bits,
+    i32 radix)
+{
+    redde ((bits << radix) | (bits >> (XII - radix))) & 0xFFF;
+}
+
+/* classis c tonus tensionis licitae acordi h (acordum.h intentiones) */
+interior b32
+_intentio (
+    constans Acordum* h,
+                 i32  c)
+{
+    redde h->genus != ACORDUM_IGNOTA && h->genus != ACORDUM_NULLA
+        && (_rotare(acordum_proprietates(h->genus)->intentiones,
+                    h->radix) & ((i32)I << c));
+}
+
 /* acordum declaratum (Carmen.acorda) ad pulsum; NIHIL nullum ('r'
  * classes nullas habet: nihil admittit) */
 interior constans ComitatusAcordum*
@@ -510,17 +530,21 @@ _declaratum (
     redde NIHIL;
 }
 
-/* nota acordi declarati ad initium suum (dominans applicata scripta) */
+/* nota acordi declarati ad initium suum (dominans applicata scripta);
+ * intentionibus liberis etiam intentio eius (F7: Ab) */
 interior b32
 _declarati_nota (
-        constans Carmen* k,
+                  Iudex* iudex,
     constans CarmenNota* nota,
                     s64  pulsus)
 {
-    constans ComitatusAcordum* a = _declaratum(k, pulsus);
+    constans ComitatusAcordum* a = _declaratum(iudex->carmen, pulsus);
+                          i32  c = nota->nota % XII;
 
     redde a != NIHIL
-        && (a->acordum.classes & ((i32)I << (nota->nota % XII)));
+        && (   (a->acordum.classes & ((i32)I << c))
+            || (   iudex->forma->intentiones_liberae
+                && _intentio(&a->acordum, c)));
 }
 
 interior vacuum
@@ -548,7 +572,7 @@ _clavis_regula (
                 si (   !_percussio(n)
                     && !_in_clave(_clavis(k, pulsus), (s32)n->nota)
                     && !_picardiae_nota(iudex, n, pulsus)
-                    && !_declarati_nota(k, n, pulsus))
+                    && !_declarati_nota(iudex, n, pulsus))
                 {
                     _addere(iudex, CENSURA_CLAVIS, p, (s32)f, pulsus,
                         n->offset, n, NIHIL, NIHIL, NIHIL, NIHIL);
@@ -741,26 +765,6 @@ _explicat (
     }
 }
 
-/* bits a radice (intentiones, evitandae) ad classes rotati */
-interior i32
-_rotare (
-    i32 bits,
-    i32 radix)
-{
-    redde ((bits << radix) | (bits >> (XII - radix))) & 0xFFF;
-}
-
-/* classis c tonus tensionis licitae acordi h (acordum.h intentiones) */
-interior b32
-_intentio (
-    constans Acordum* h,
-                 i32  c)
-{
-    redde h->genus != ACORDUM_IGNOTA && h->genus != ACORDUM_NULLA
-        && (_rotare(acordum_proprietates(h->genus)->intentiones,
-                    h->radix) & ((i32)I << c));
-}
-
 /* culpa notae (statica); NIHIL si nulla */
 interior constans character*
 _culpa (
@@ -785,8 +789,8 @@ _culpa (
 
 /* VERUM: dissonantia referenda (causa in *causa; NIHIL sine
  * explicatione - ut ante N2); FALSUM: explicata */
-/* culpa segmenti sub forma: tensio licita (intentiones_liberae) nulla,
- * ceterum _culpa */
+/* culpa segmenti sub forma: tensio licita (intentiones_liberae) nulla
+ * quacumque figura (nona suspensa non resolvenda), ceterum _culpa */
 interior constans character*
 _culpa_notae (
                            Iudex* iudex,
@@ -796,7 +800,6 @@ _culpa_notae (
                                 .harmonia;
 
     si (   iudex->forma->intentiones_liberae
-        && s->genus == EXPLICATIO_IGNOTA
         && _intentio(h, s->nota->nota % XII))
     {
         redde NIHIL;

@@ -168,3 +168,20 @@ Second step of the jazz preset (J1 put intentiones/evitandae in AcordumProprieta
   (the 13th is not a seventh); only intentiones_liberae clears it - the two switches are
   independent, and the test asserts both sides.
 Plants 10/10.
+
+## 2026-10-27 - J4: tensions free whatever their shape; clavis admits declared tensions
+
+J2's header already said "a tension is a chord tone - dissonantia and acorda don't name it", but
+the code narrowed it to shapeless (IGNOTA) notes, so a 9th held over from Dm7 into G7 (labelled
+SUSPENSIO by explicatio) still drew "suspensio non resoluta". _culpa_notae now frees any segment
+whose class is a licensed tension of its window chord. The line between "free" and "must
+resolve" is the chord data itself: avoid notes are not tensions, so a 4-3 over G7 (C = 11)
+still must resolve under jazz - tested.
+clavis (new, Fran approved): under intentiones_liberae the declared-chord exception extends to
+the declared chord's tensions (F7 in F: Ab = #9). DECLARED only, on purpose: an inferred chord
+is shaped by the very chromatic note it would excuse (circular). No <acorda> -> still flagged.
+_declarati_nota takes the Iudex now (needs the form); _rotare/_intentio moved above it (C89).
+House: nocturnum 7 -> 0; ambulatio 24 -> 8 (4 B2 chromatic approaches under Gm7 - park 43HA /
+walking bass; 4 cornu above range - real). Side effect worth knowing: walking-bass approach
+notes B2/C#3 over F7 are now excused because they happen to be #11/b13 of F7 - right outcome,
+coincidental reason. Other 10 songs unchanged. Plants 4/4.

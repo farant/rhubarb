@@ -10,7 +10,9 @@
  *   clavis       nota extra clavem; in minore VI et VII elevati
  *                licent (harmonica, melodica); nota acordi
  *                declarati ad initium suum licet (dominans
- *                applicata scripta: D7 in F, F#)                  ORD.
+ *                applicata scripta: D7 in F, F#); intentionibus
+ *                liberis etiam intentio eius (A7b9 in F: F#,
+ *                XIII; F7: Ab, #9)                                ORD.
  *   ambitus      nota extra ambitum instrumenti (ordinarius:
  *                aether 36..96, quadrans 48..96, triangulum
  *                24..72, chorda 28..88, campana 48..96; ignotum
@@ -59,8 +61,11 @@
  * acordi) resolutionem non postulat (dissonantia: causa 'septima non
  * resoluta' tacet); dissonantia notarum alienarum manet.
  * intentiones_liberae (stylus iazzicus): tonus tensionis licitae acordi
- * fenestrae (declarati aut nominati; acordum.h intentiones) acordi est
- * - dissonantia et acorda eum non nominant.
+ * fenestrae (declarati aut nominati; acordum.h intentiones) acordi est,
+ * quacumque figura (suspensio, appoggiatura non resolutae) -
+ * dissonantia et acorda eum non nominant. clavis intentionem acordi
+ * DECLARATI ad initium notae admittit. Notae evitandae intentiones non
+ * sunt: resolvendae manent.
  *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
