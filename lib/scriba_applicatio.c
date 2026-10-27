@@ -461,6 +461,14 @@ scriba_reficere (
 }
 
 b32
+scriba_occupata (
+    constans ScribaMontatio* m)
+{
+    redde m && (   m->actiones_ctx.opus != NIHIL
+                || m->actiones_ctx.dilatum != ZEPHYRUM);
+}
+
+b32
 scriba_applicatio_aedificare (
        ScribaApplicatio* app,
                 Piscina* piscina,

@@ -205,6 +205,8 @@ declare -a RADIX_FONTES=(
     # insula-rami T4: hospes (vicus) et compositio eius
     "vicus"
     "vicus_applicatio"
+    "reactor"         # vicus quies T6: fossae laterum in reactore
+    "specula_macos"   # vicus quies T6c: specula libri praeconii
     "aetherophonum"   # sonus S5c: latus theremin (sine sono: porta)
     # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"

@@ -189,6 +189,40 @@ volantes_pulsare (
     redde VERUM;
 }
 
+s64
+volantes_mora (
+    constans VolantiumMontatio* m)
+{
+    constans Admonitio* v[VOLANTES_MAXIMUM];
+                   s64  nunc;
+                   s64  reliquum;
+                   s64  mora;
+                   i32  n;
+                   i32  k;
+
+    si (!m || !m->privatum || !m->nunc)
+    {
+        redde -I;
+    }
+    n     = visibiles(m, v);
+    nunc  = m->nunc(m->nunc_ctx);
+    mora  = -I;
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        reliquum = v[k]->tempus + (v[k]->gradus == ADMONITIO_ATTENTIO
+            ? VOLANTES_ATTENTIO_MS : VOLANTES_NUNTIUS_MS) - nunc;
+        si (reliquum < ZEPHYRUM)
+        {
+            reliquum = ZEPHYRUM;
+        }
+        si (mora < ZEPHYRUM || reliquum < mora)
+        {
+            mora = reliquum;
+        }
+    }
+    redde mora;
+}
+
 
 /* ==================================================
  * Actio

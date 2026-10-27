@@ -171,6 +171,12 @@ b32
 scriba_reficere (
     ScribaMontatio* m);
 
+/* vicus quies T6: VERUM dum opus aut iussum dilatum pendet (pulsus
+ * crebri necessarii) */
+b32
+scriba_occupata (
+    constans ScribaMontatio* m);
+
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "scriba.volumen"). Reddit volumen apertum aut NIHIL. */
 Volumen*

@@ -146,6 +146,17 @@ emittere_asserta() {
     # flock (filum_seram_capere, 2026-09-29)
     echo "IUNGO_ASSERTA(LOCK_SH == 0x01 && LOCK_EX == 0x02);"
     echo "IUNGO_ASSERTA(LOCK_NB == 0x04 && LOCK_UN == 0x08);"
+    # kqueue (specula, vicus quies T6c 2026-10-26)
+    echo "IUNGO_ASSERTA(O_EVTONLY == 0x8000);"
+    echo "IUNGO_ASSERTA(sizeof(struct kevent) == 32);"
+    echo "IUNGO_ASSERTA(OFF(kevent, ident) == 0 && OFF(kevent, filter) == 8);"
+    echo "IUNGO_ASSERTA(OFF(kevent, flags) == 10 && OFF(kevent, fflags) == 12);"
+    echo "IUNGO_ASSERTA(OFF(kevent, data) == 16 && OFF(kevent, udata) == 24);"
+    echo "IUNGO_ASSERTA(sizeof(((struct kevent*)0)->ident) == 8);"
+    echo "IUNGO_ASSERTA(EVFILT_VNODE == -4 && EV_ADD == 0x1 && EV_DELETE == 0x2);"
+    echo "IUNGO_ASSERTA(EV_CLEAR == 0x20);"
+    echo "IUNGO_ASSERTA(NOTE_DELETE == 0x1 && NOTE_WRITE == 0x2 && NOTE_EXTEND == 0x4);"
+    echo "IUNGO_ASSERTA(NOTE_RENAME == 0x20);"
     # ifaddrs (rete_posix.c, 2026-08-01): forma catenae +
     # vexilla. ifa_data ULTIMUM utroque in systemate; campos
     # post ifa_netmask non tangimus, sed offsets priores
@@ -237,11 +248,14 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(__ARM_FEATURE_SHA2 == 1);"
 }
 
+# OFF per __builtin_offsetof (2026-10-26): forma vetus
+# ((unsigned long)&((struct S*)0)->C) sub clang 21 -Wgnu-folding-constant
+# rubra erat (tabula longitudinis variabilis) - porta in HEAD fracta
 PRAEAMBULUM='#define IUNGO2(a,b) a##b
 #define IUNGO(a,b) IUNGO2(a,b)
 #define IUNGO_ASSERTA(cond) \
     typedef char IUNGO(assertum_, __LINE__)[(cond) ? 1 : -1]
-#define OFF(S, C) ((unsigned long)&(((struct S*)0)->C))'
+#define OFF(S, C) __builtin_offsetof(struct S, C)'
 
 # TU verum
 {
@@ -274,6 +288,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <time.h>"
     echo "#include <sys/resource.h>"
     echo "#include <libproc.h>"
+    echo "#include <sys/event.h>"
     echo "$PRAEAMBULUM"
     emittere_asserta
 } > "$GEN_DIR/verum.c"
@@ -302,7 +317,7 @@ for tu in verum nostrum; do
 done
 
 if [ $BENE -eq 1 ]; then
-    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval/timespec 16 + dirent 1048 + termios 72 + winsize/utimbuf/sigaction/rusage + macra)"
+    echo "auspex_posix: FORMAE CERTIFICATAE (stat 144 + timeval/timespec 16 + dirent 1048 + termios 72 + winsize/utimbuf/sigaction/rusage + kevent 32 + macra)"
     exit 0
 fi
 exit 1

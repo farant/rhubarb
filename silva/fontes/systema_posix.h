@@ -219,6 +219,9 @@ int     execv(const char* plagula, char* const argumenta[]);
 /* setsid: sessio nova - proles ab horto terminali SOLVITUR, ergo
  * instrumentum exire potest dum applicatio vivit. */
 pid_t   setsid(void);
+/* tcgetpgrp: grex frontalis terminalis (pseudoterminale_posix, vicus
+ * quies T2b - tmux solum cum programma in fronte mutatur) */
+pid_t   tcgetpgrp(int fossa);
 /* execve, access, faccessat: oraculum effectuum (effectus T5,
  * 2026-10-05) eas interponit - execve cum ambitu explicito; access
  * et faccessat (sys/unistd.h, per unistd.h) exsistentiam probant */
@@ -282,6 +285,10 @@ int WTERMSIG(int status);
 #define O_EXCL     0x0800
 #define O_NOFOLLOW 0x0100
 #define O_CLOEXEC  0x01000000
+/* O_EVTONLY (Darwin): descriptor solum pro notitiis kqueue - nullum
+ * octetum legitur, volumen eicere non impedit (specula, vicus quies
+ * T6c) */
+#define O_EVTONLY  0x8000
 #define F_GETFL    3
 #define F_SETFL    4
 #define F_SETFD    2
@@ -749,6 +756,38 @@ struct rusage_info_v4 {
     uint64_t ri_interval_max_phys_footprint;
     uint64_t ri_runnable_time;
 };
+
+
+/* ==================================================
+ * <sectio caput="sys/event.h" poscit="time.h"/>
+ * sys/event.h - kqueue (BSD/Darwin): notitiae plagularum (specula,
+ * vicus quies T6c). Forma Darwin arm64 (32 octeti) per auspex_posix
+ * certificatur; ident = uintptr_t (LP64: unsigned long).
+ * ================================================== */
+
+struct kevent {
+    unsigned long ident;
+    int16_t       filter;
+    uint16_t      flags;
+    uint32_t      fflags;
+    intptr_t      data;
+    void*         udata;
+};
+
+#define EVFILT_VNODE  (-4)
+#define EV_ADD        0x0001
+#define EV_DELETE     0x0002
+#define EV_CLEAR      0x0020
+#define NOTE_DELETE   0x00000001
+#define NOTE_WRITE    0x00000002
+#define NOTE_EXTEND   0x00000004
+#define NOTE_RENAME   0x00000020
+
+int kqueue(void);
+int kevent(int kq, const struct kevent* mutationes,
+    int numerus_mutationum,
+           struct kevent* eventus, int numerus_eventuum,
+           const struct timespec* mora);
 
 
 /* ==================================================

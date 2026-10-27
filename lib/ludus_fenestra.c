@@ -197,15 +197,67 @@ ludus_fenestra_pingendum (
     redde versionem_summare(lf) != lf->versio_picta;
 }
 
+vacuum
+ludus_fenestra_quietem_ponere (
+       LudusFenestra* lf,
+    LudusMoraProxima  mora,
+              vacuum* ctx,
+             Reactor* reactor)
+{
+    si (!lf)
+    {
+        redde;
+    }
+    lf->quies           = VERUM;
+    lf->mora_proxima    = mora;
+    lf->mora_ctx        = ctx;
+    lf->reactor         = reactor;
+    lf->fossae_positae  = FALSUM;   /* reactor alius: renovandae */
+}
+
+/* minimum duarum morarum; -1 = nulla */
+interior Mora
+_moram_minuere (
+    Mora a,
+    Mora b)
+{
+    si (a < ZEPHYRUM)
+    {
+        redde b;
+    }
+    si (b < ZEPHYRUM)
+    {
+        redde a;
+    }
+    redde a < b ? a : b;
+}
+
 Mora
 ludus_fenestra_mora (
     constans LudusFenestra* lf)
 {
+    Mora mora;
+
     si (!lf || lf->mensurae.quadra == ZEPHYRUM)
     {
         redde ZEPHYRUM;
     }
-    redde (Mora)lf->d->quies_ms;
+    si (!lf->quies)
+    {
+        redde (Mora)lf->d->quies_ms;
+    }
+    /* vicus quies T5: minimum debitorum, -1 si nihil */
+    mora = (Mora)dispensator_mora_proxima(lf->d, fenestra_tempus_ms());
+    si (lf->mora_proxima)
+    {
+        mora = _moram_minuere(mora, lf->mora_proxima(lf->mora_ctx));
+    }
+    si (lf->reactor)
+    {
+        mora = _moram_minuere(mora,
+            (Mora)reactor_mora_proxima(lf->reactor));
+    }
+    redde mora;
 }
 
 /* Ansa fenestrae perscrutabilis (macOS): API publica - programmata
@@ -219,6 +271,77 @@ ludus_fenestra_mora (
 
 /* S1c: exspectatio maxima cum applicatione viva (ut terminale) */
 #define MORA_PULSUS  XVI
+
+/* vicus quies T5: nihil debitum - hora (eventus aut fossa citius) */
+#define MORA_SINE_FINE  (LX * LX * M)
+
+nomen structura {
+    FenestraFossa* fossae;
+              i32  numerus;
+              i32  capacitas;
+} FossaeLudi;
+
+interior vacuum
+_fossam_addere (
+     vacuum* ctx,
+    integer  fd,
+        i32  eventus)
+{
+       FossaeLudi* fl = (FossaeLudi*)ctx;
+    FenestraFossa* f;
+
+    fl->numerus++;
+    si (fl->numerus > fl->capacitas)
+    {
+        redde;
+    }
+    f           = &fl->fossae[fl->numerus - I];
+    f->fd       = fd;
+    f->eventus  = ZEPHYRUM;
+    si (eventus & REACTOR_LEGERE)
+    {
+        f->eventus |= FENESTRA_FOSSA_LEGERE;
+    }
+    si (eventus & REACTOR_SCRIBERE)
+    {
+        f->eventus |= FENESTRA_FOSSA_SCRIBERE;
+    }
+}
+
+/* fossae reactoris fenestrae traduntur solum cum versio mutatur.
+ * FALSUM = traditio fracta (plures quam CXXVIII, systema recusat):
+ * vocator ad MORA_PULSUS redit, ne fossa ignota dormiat */
+interior b32
+_fossas_renovare (
+    LudusFenestra* lf)
+{
+    FenestraFossa fossae[CXXVIII];
+       FossaeLudi fl;
+              i32 versio;
+
+    si (!lf->reactor)
+    {
+        si (!lf->fossae_positae)
+        {
+            lf->fossae_positae = fenestra_fossas_ponere(NIHIL,
+                ZEPHYRUM);
+        }
+        redde lf->fossae_positae;
+    }
+    versio = reactor_versio_fossarum(lf->reactor);
+    si (lf->fossae_positae && versio == lf->fossae_versio)
+    {
+        redde VERUM;
+    }
+    fl.fossae     = fossae;
+    fl.numerus    = ZEPHYRUM;
+    fl.capacitas  = CXXVIII;
+    reactor_fossas_visitare(lf->reactor, _fossam_addere, &fl);
+    lf->fossae_versio   = versio;
+    lf->fossae_positae  = fl.numerus <= fl.capacitas
+                       && fenestra_fossas_ponere(fossae, fl.numerus);
+    redde lf->fossae_positae;
+}
 
 s32
 ludus_fenestra_currere (
@@ -240,9 +363,23 @@ ludus_fenestra_currere (
         Mora mora;
          b32 eventa;
 
-        /* S1c: applicatio viva (pulsus) - XVI ms ad summum */
         mora = ludus_fenestra_mora(lf);
-        si (lf->pulsator && (mora == ZEPHYRUM || mora > MORA_PULSUS))
+        si (lf->quies)
+        {
+            /* vicus quies T5: usque ad debitum proximum; fossae
+             * reactoris expergefaciunt (traditio fracta: XVI ms) */
+            si (!_fossas_renovare(lf))
+            {
+                mora = _moram_minuere(mora, MORA_PULSUS);
+            }
+            alioquin si (mora < ZEPHYRUM)
+            {
+                mora = MORA_SINE_FINE;
+            }
+        }
+        /* S1c: applicatio viva (pulsus) - XVI ms ad summum */
+        alioquin si (   lf->pulsator
+                     && (mora == ZEPHYRUM || mora > MORA_PULSUS))
         {
             mora = MORA_PULSUS;
         }
@@ -277,6 +414,10 @@ ludus_fenestra_currere (
     }
     /* S1a: pendentia (gestus, pan/zoom) ante exitum effunduntur */
     dispensator_finire(lf->d);
+    si (lf->quies)
+    {
+        (vacuum)fenestra_fossas_ponere(NIHIL, ZEPHYRUM);
+    }
     imprimere("ludus: quadra=%d compositio=%ldms pingere=%ldms"
               " delineare=%ldms maximum=%ldms excitationes=%ld"
               " pulsus=%ld\n",

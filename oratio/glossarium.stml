@@ -1026,6 +1026,13 @@
   <vocabulum lemma="plist" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae Apple (tabula proprietatum), ut xml / json; bibliotheca plist 2026-09-11"/>
   <vocabulum lemma="lstat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (status nexus IPSIUS, non destinationis); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
   <vocabulum lemma="rmdir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (directorium vacuum delere); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
+  <vocabulum lemma="kqueue" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis BSD/Darwin (cauda notitiarum nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="kevent" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis et structurae BSD/Darwin (notitia nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="evtonly" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri O_EVTONLY (Darwin: descriptor solum pro notitiis); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="evfilt" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EVFILT_VNODE (filtrum kqueue); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="vnode" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EVFILT_VNODE (nodus plagulae in nucleo BSD); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="clear" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EV_CLEAR (kqueue: nota semel redditur); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="tcgetpgrp" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (grex processuum frontalis terminalis); systema_posix.h 2026-10-26 pro pseudoterminale_posix (vicus quies T2b)"/>
   <vocabulum lemma="symlink" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (nexum symbolicum creare); systema_posix.h 2026-09-14 pro probatio_filum"/>
   <vocabulum lemma="enoent" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen macri errno POSIX (via non exsistit); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
   <vocabulum lemma="numerichost" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri POSIX AI_NUMERICHOST (getaddrinfo: IP litteralis solum, numquam obstat); systema_posix.h 2026-10-22 pro nomina_posix.c"/>

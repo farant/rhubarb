@@ -250,27 +250,47 @@ notifications come from praeconium and the jump queries tmux live.
 **Files:** `include/reactor.h`, `lib/reactor.c`, `probationes/
 probatio_reactor.c`.
 
-- [ ] Tests: `reactor_mora_proxima` (none -> -1, timer in 250 ms ->
+- [x] Tests: `reactor_mora_proxima` (none -> -1, timer in 250 ms ->
   ~250, pending task -> 0, due timer -> 0); `reactor_fossas_visitare`
   lists exactly the active fds with their events; version bumps on
   add/modify/remove only.
-- [ ] Implement (wrap `_calculare_timer_timeout`; fd table walk).
-- [ ] Plants: version not bumped on remove; task not forcing 0.
+- [x] Implement (wrap `_calculare_timer_timeout`; fd table walk).
+- [x] Plants: version not bumped on remove; task not forcing 0.
+- Done 2026-10-26 (as built): visitor fd is `integer` (as
+  `reactor_adicere`); the internal signal pipe IS visited (it registers
+  through `reactor_adicere`, so it also bumps the version) - a signal
+  wakes a sleeping host. Two sections in probatio_reactor.c.
 
 ### Task 5: deadline wait in the window loop (+ macOS fds)
 
 **Files:** `include/fenestra.h`, `lib/fenestra_macos.m`,
 `include/ludus_fenestra.h`, `lib/ludus_fenestra.c`, tests.
 
-- [ ] Tests (macOS, headless-capable where possible): a pipe registered
+- [x] Tests (macOS, headless-capable where possible): a pipe registered
   as a wake fd -> writing to it ends a 5 s wait in well under 100 ms;
   no fd, deadline 200 ms -> the wait lasts ~200 ms; an app without
   `quietem_ponere` still waits <= 16 ms (old behaviour).
-- [ ] Implement: `CFFileDescriptor` per fd (re-synced only when the
+- [x] Implement: `CFFileDescriptor` per fd (re-synced only when the
   version changes), callback posts `ApplicationDefined`; loop wait =
   min(app deadline, dispensator `quies_ms`), no forced 16 ms.
-- [ ] Plants: fd callback not posting the event (the pipe test times
-  out); old 16 ms cap left in.
+- [x] Plants: fd callback not posting the event (the pipe test times
+  out); old 16 ms cap left in -> MOVED TO T6 (the cap decision lives in
+  `ludus_fenestra_currere`, which needs a real window; vicus's
+  excitationes counter will show it).
+- Done 2026-10-26 (as built, header approved with these changes):
+  `fenestra_fossas_ponere` is process-wide (one run loop) and takes
+  `FenestraFossa {fd, eventus}`; `fenestra_expectare_eventus(NIHIL, ms)`
+  waits on the loop alone (tests, no window). `ludus_fenestra_
+  quietem_ponere(lf, mora, ctx, reactor)` takes the Reactor directly
+  (not an fd callback). Found while reading: `ludus_fenestra_mora`
+  returned the dispensator's `quies_ms` (300) ALWAYS - new
+  `dispensator_mora_proxima` gives the real flush deadline (-1 when
+  nothing is pending), and a REFUSED flush restamps its time (retry
+  after quies_ms) so quiet mode can't spin at 0 ms. If the reactor has
+  > 128 fds or CF refuses, the loop falls back to 16 ms. New suite
+  probatio_fenestra_fossae (first NSApp wait ~70 ms: warmed up before
+  timing). Plants: 8 red (reactor T4 x2, dispensator x2, fenestra x2,
+  ludus x2). android-struere + ios-struere run early: green.
 
 ### Task 6: vicus on deadlines
 
@@ -292,6 +312,75 @@ probatio_reactor.c`.
   wakes the loop when the file is written (kqueue EVFILT_VNODE on
   macOS - `poll` reports regular files always readable), behind the
   platform layer; no timer.
+
+### Task 6 split (decided 2026-10-26, Fran)
+
+Unifying idea: every live part of vicus DECLARES its wake sources (a
+deadline and/or an fd); anything undeclared keeps 16 ms. Each step is
+safe alone; the gain shows once every pulsed part has declared (default
+layout has a terminal -> visible after 6b).
+
+Inventory (what each part needs): clock+battery -> next minute;
+scriba/kalendarium/nomenclator -> nothing unless a job runs (16 while
+busy); terminal (vivit_in_fundo) -> pty fd, 16 only while its input
+queue is non-empty or the child exit is unreaped; volantes -> next
+toast expiry; $sessions -> praeconium file watch + tmux 5 s + gate
+runs; admonitiones system -> praeconium file watch; terminalia -> T2b;
+sound -> 16 while playing; $question http -> reactor (T4).
+
+- [x] 6a: framework + wiring + clock + scriba family. Header (approved):
+  `VicusFacies.mora` / `.fossa` (ctx = pulsare_ctx; NIHIL -> 16 ms),
+  `VicusTempus.secundum`, `vicus_mora_proxima`,
+  `vicus_systema_cum_mora_addere`, `vicus_reactor_ponere`,
+  `TestaForma.mora_proxima/mora_ctx/reactor`, `scriba_occupata`,
+  `charta_occupata`, `kalendarium_occupatum`, `nomenclator_occupatus`.
+  Done 2026-10-26 (as built): `vicus_reactorem_ponere` RENAMED
+  `vicus_reactor_ponere` (lint: `reactorem` would be a new word;
+  `reactor` is on the tolerated list, a glossary entry risks the English
+  oracle). Also: fd panes > 64 -> 16 ms; `testa_cursus` calls
+  `ludus_fenestra_quietem_ponere` on macOS only (iOS/Android read -1
+  wrong). vicus already runs in quiet mode, but every undeclared part
+  (terminal, volantes, $sessions, 3 systems) still says 16 - no gain
+  yet, by design.
+- [x] 6b: terminal pty fd + mora; T2b foreground check.
+  Done 2026-10-26 (as built): `Pseudoterminale.grex_frontalis`
+  (tcgetpgrp; examen's POSIX surface + an ignotum-permissum glossary
+  line, oratio 19/19), `aemulator_hospes_mora/_grex_frontalis`,
+  `terminale_fossa/_mora/_grex_frontalis`. The tmux check keys on a
+  SIGNATURE of all terminal panes' foreground groups. Found by
+  probatio_vicus_saltus: `tmux attach` is in front slightly BEFORE its
+  client registers with the server, so the query on that change misses
+  it and nothing changes again -> every foreground-triggered query gets
+  ONE confirmation query 1 s later (plant: vicus_saltus red). Also
+  fixed a pre-existing flake in `sine_exspectatione` (fake tmux slept
+  0.8 s under the multiplexor's hard 1 s limit; now 0.4 s).
+  `terminale_adest` removed (the signature counts panes).
+- [x] 6c: praeconium file watch (kqueue) for admonitiones + $sessions.
+  Done 2026-10-26 (as built): new lib `specula` (aedilis variants
+  specula_macos.c kqueue / specula_posix.c NIHIL), `vicus_systema_
+  fossam_ponere`; the admonitiones system drains the watch every pulse
+  and keeps its cheap incremental log read (cost was the 60/s rate, not
+  the read). $sessions reads the same log in its pulse, which now runs
+  on the wake - its own timers are 6d. Side fixes: auspex_posix was RED
+  at HEAD under clang 21 (OFF() not a constant -> __builtin_offsetof);
+  kqueue surface added to silva/fontes/systema_posix.h (kevent 32 B
+  certified); 6 ignotum-permissum glossary lines (oratio 19/19);
+  compile_tests_fontes_generata.sh regenerated for the new lib. Moved
+  to variant files because examen does NOT judge `#ifdef __APPLE__`
+  branches (probe: an undefined call there passed).
+- [x] 6d: volantes expiry, $sessions timers, sound.
+  Done 2026-10-26 (as built): `volantes_mora`, `colloquia_visus_mora`,
+  `VicusPortaSoni.mora` (real port keeps concentus/tintinnabulum agere
+  results; open-and-quiet -> until CONCENTUS_QUIES 30 s after the last
+  busy agere, then 16 until it closes). End-to-end test: the test app
+  world (scriba layout, no clock) reports `vicus_mora_proxima` = -1
+  idle - every pulsed part declared. The real port's deadline has no
+  headless test (CoreAudio) - 6e measures it.
+- [x] 6e: measure (excitationes/s), the 16 ms-cap plant moved from T5.
+  Done 2026-10-26: idle 1 pulse per 14-19 s, CPU 0.0-0.1% (was 60/s,
+  ~5%). Planted old cap -> 54/s, ~6% (the measurement catches it).
+  Activity is event-driven: each hook event in the log = a brief wake;
+  a chime = ~2 s at 16 ms. Table in lib/vicus.worklog.md.
 
 ### Task 7: measure after, look, docs, commit
 

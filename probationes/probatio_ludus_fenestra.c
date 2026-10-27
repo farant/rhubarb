@@ -35,6 +35,21 @@ pulsus_probandus (
     redde p->reddere;
 }
 
+/* vicus quies T5: mora applicationis (ctx = Mora*) */
+interior Mora
+mora_applicationis (
+    vacuum* ctx)
+{
+    redde *(Mora*)ctx;
+}
+
+interior vacuum
+timer_nullus (
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+}
+
 /* scenarium unum: gradus fenestram eandem (repositorium, dispensator,
  * tabula) ordine mutant - quadra, mandata, pulsus a gradu priore
  * pendent - ergo una sectio cum gradibus nominatis */
@@ -161,6 +176,41 @@ _sectio_prima (
         ludus_fenestra_pulsum_ponere(lf, NIHIL, NIHIL);
         (vacuum)ludus_fenestra_pingendum(lf, FALSUM, M + DCCC);
         CREDO_AEQUALIS_S64(lf->mensurae.pulsus, (s64)pp.vocationes);
+    }
+
+    CREDO_GRADUS("vicus quies T5: mora quietis");
+    {
+        Reactor* reactor;
+           Mora  app;
+           Mora  m;
+
+        /* sine quiete: quies dispensatoris (mos vetus) */
+        CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), CCC);
+        app = -I;
+        ludus_fenestra_quietem_ponere(lf, mora_applicationis, &app,
+            NIHIL);
+        /* nihil debitum: -1 (ansa sine fine exspectat) */
+        CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), -I);
+        app = III * M;
+        CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), III * M);
+        reactor = reactor_creare(piscina);
+        (vacuum)reactor_timer_adicere(reactor, CCL, FALSUM,
+            timer_nullus,
+            NIHIL);
+        ludus_fenestra_quietem_ponere(lf, mora_applicationis, &app,
+            reactor);
+        m = ludus_fenestra_mora(lf);
+        CREDO_VERUM(m > CC && m <= CCL);
+        /* pan sordidum: dispensator effusionem post quies_ms petit */
+        ludus_fenestra_quietem_ponere(lf, NIHIL, NIHIL, NIHIL);
+        CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), -I);
+        lf->d->motus.sordida = VERUM;
+        lf->d->motus.tempus_ultimae_mutationis = fenestra_tempus_ms();
+        m = ludus_fenestra_mora(lf);
+        CREDO_VERUM(m > CC && m <= CCC);
+        dispensator_pulsare(lf->d, fenestra_tempus_ms() + CCC);
+        CREDO_AEQUALIS_S64(ludus_fenestra_mora(lf), -I);
+        reactor_destruere(reactor);
     }
 
     CREDO_GRADUS("013 B3b: tabula ad fenestram (scala servata)");

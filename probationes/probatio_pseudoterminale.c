@@ -25,6 +25,7 @@
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 /* litterae in chorda (non NUL-terminata) */
 interior b32
@@ -521,11 +522,95 @@ _sectio_tertia (
     posix_probare(c->piscina);
 }
 
+/* vicus quies T2b: grex frontalis - concha interactiva programma
+ * incipit (grex novus in fronte), finit (concha iterum) */
+interior vacuum
+pausa_brevis (vacuum)
+{
+    structura timespec t;
+
+    t.tv_sec   = ZEPHYRUM;
+    t.tv_nsec  = XX * M * M;
+    (vacuum)nanosleep(&t, NIHIL);
+}
+
+/* effusionem infantis exhaurire (prompta, eco) ne obstet */
+interior vacuum
+exhaurire (
+    Pseudoterminale* pt)
+{
+    i8 capsa[CCLVI];
+
+    dum (pt->legere(pt->datum, capsa, CCLVI, ZEPHYRUM) > ZEPHYRUM)
+    {
+    }
+}
+
+/* grex frontalis donec != (aut ==) 'grex', usque ad gradus pausas */
+interior s32
+grex_exspectare (
+    Pseudoterminale* pt,
+                s32  grex,
+                b32  alius,
+                i32  gradus)
+{
+    s32 g;
+    i32 k;
+
+    g = pt->grex_frontalis(pt->datum);
+    per (k = ZEPHYRUM; k < gradus && ((g != grex) != alius); k++)
+    {
+        pausa_brevis();
+        exhaurire(pt);
+        g = pt->grex_frontalis(pt->datum);
+    }
+    redde g;
+}
+
+interior vacuum
+_sectio_grex (
+    CredoContextus* c)
+{
+    constans character* concha[] = { "/bin/sh", "-i", NIHIL };
+       Pseudoterminale* pt;
+       Pseudoterminale* memoria;
+  PseudoterminaleError  error;
+                   s32  g0;
+                   s32  g1;
+
+    CREDO_GRADUS("pons memoriae: -1");
+    memoria = pseudoterminale_memoriae_creare(c->piscina,
+        (constans i8*)"x", I, ZEPHYRUM);
+    CREDO_NECESSE(memoria && memoria->grex_frontalis);
+    CREDO_AEQUALIS_S32(memoria->grex_frontalis(memoria->datum), -I);
+
+    CREDO_GRADUS("concha interactiva: grex suus in fronte");
+    pt = generare(concha, LXXX, XXIV, NIHIL, NIHIL, &error, c->piscina);
+    CREDO_NECESSE(pt && pt->grex_frontalis);
+    g0 = grex_exspectare(pt, -I, VERUM, L);
+    CREDO_VERUM(g0 > ZEPHYRUM);
+
+    CREDO_GRADUS("programma incipit: grex alius in fronte");
+    CREDO_AEQUALIS_S32(pt->scribere(pt->datum,
+        (constans i8*)"sleep 1\n",
+        VIII), VIII);
+    g1 = grex_exspectare(pt, g0, VERUM, C);
+    CREDO_VERUM(g1 > ZEPHYRUM && g1 != g0);
+
+    CREDO_GRADUS("programma finit: concha iterum in fronte");
+    CREDO_AEQUALIS_S32(grex_exspectare(pt, g0, FALSUM, CL), g0);
+
+    pt->claudere(pt->datum);
+    CREDO_AEQUALIS_S32(pt->grex_frontalis(pt->datum), -I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: configuratio", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "II: pons memoriae", _sectio_secunda, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "III: pons posix (infantes veri)", _sectio_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "IV: grex frontalis (quies T2b)", _sectio_grex, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -172,6 +172,15 @@ memoria_fossa (
     redde -I;
 }
 
+/* quies T2b: infans fictus nullum gregem habet */
+interior s32
+memoria_grex_frontalis (
+    vacuum* datum)
+{
+    (vacuum)datum;
+    redde -I;
+}
+
 interior vacuum
 memoria_claudere (
     vacuum* datum)
@@ -210,13 +219,14 @@ pseudoterminale_memoriae_creare (
     {
         redde NIHIL;
     }
-    m->pons.datum      = m;
-    m->pons.legere     = memoria_legere;
-    m->pons.scribere   = memoria_scribere;
-    m->pons.amplitudo  = memoria_amplitudo;
-    m->pons.finitus    = memoria_finitus;
-    m->pons.fossa      = memoria_fossa;
-    m->pons.claudere   = memoria_claudere;
+    m->pons.datum           = m;
+    m->pons.legere          = memoria_legere;
+    m->pons.scribere        = memoria_scribere;
+    m->pons.amplitudo       = memoria_amplitudo;
+    m->pons.finitus         = memoria_finitus;
+    m->pons.fossa           = memoria_fossa;
+    m->pons.claudere        = memoria_claudere;
+    m->pons.grex_frontalis  = memoria_grex_frontalis;
     redde &m->pons;
 }
 

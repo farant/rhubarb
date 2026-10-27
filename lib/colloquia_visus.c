@@ -1964,6 +1964,58 @@ colloquia_visus_reficere (
         ? m->nunc(m->nunc_ctx) : ZEPHYRUM);
 }
 
+/* quies T6d: quaestio cursuum in volatu - processus pulsandus */
+#define COLLOQUIA_MORA_VOLANS  XVI
+
+/* usque ad 'ad' + spatium (0 si iam debitum) */
+interior s64
+reliquum_usque (
+    s64 ad,
+    s64 spatium,
+    s64 nunc)
+{
+    s64 r;
+
+    r = ad + spatium - nunc;
+    redde r > ZEPHYRUM ? r : ZEPHYRUM;
+}
+
+s64
+colloquia_visus_mora (
+    constans ColloquiorumMontatio* m)
+{
+    constans ColloquiorumFons* f;
+                          s64  nunc;
+                          s64  mora;
+                          s64  r;
+
+    si (!m || !m->fons || !m->fons->scheda)
+    {
+        redde -I;
+    }
+    f = m->fons;
+    si (f->quaestio)
+    {
+        redde COLLOQUIA_MORA_VOLANS;
+    }
+    nunc = m->nunc ? m->nunc(m->nunc_ctx) : ZEPHYRUM;
+    mora = -I;
+    si (f->multiplexor)
+    {
+        mora = f->panelli ? reliquum_usque(f->panelli_ad,
+            COLLOQUIA_PANELLI_MS, nunc) : ZEPHYRUM;
+    }
+    si (f->mensor)
+    {
+        r = reliquum_usque(f->cursus_ad, COLLOQUIA_CURSUS_MS, nunc);
+        si (mora < ZEPHYRUM || r < mora)
+        {
+            mora = r;
+        }
+    }
+    redde mora;
+}
+
 b32
 colloquia_visus_montare (
     ColloquiorumMontatio* m,

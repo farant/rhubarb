@@ -315,6 +315,7 @@ declare -a SOURCE_FILES=(
     "lib/sonus_wav.c"
     "lib/sors.c"
     "lib/specimen.c"
+    "lib/specula_macos.c"
     "lib/speculum.c"
     "lib/sputnik_interpres.c"
     "lib/sputnik_lexema.c"

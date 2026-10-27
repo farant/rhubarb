@@ -68,6 +68,10 @@ structura Pseudoterminale {
      * tmux clientes per tty agnoscit; NIHIL si nullum (pons
      * memoriae) */
     constans character* tty;
+    /* vicus quies T2b: grex processuum frontalis (tcgetpgrp in
+     * magistro) - mutatur cum concha programma incipit aut finit
+     * (tmux attach, detach); -1 si ignotus (pons memoriae, error) */
+    s32 (*grex_frontalis) (vacuum* datum);
 };
 
 nomen enumeratio {

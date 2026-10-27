@@ -331,9 +331,71 @@ _sectio_prima (
 
 }
 
+/* vicus quies T5: mora usque ad effusionem quietis proximam */
+interior vacuum
+_sectio_mora_proxima (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern;
+     InsulaRepositorium* repo;
+         ActioRegistrum* reg;
+              ToyStatus  toy;
+            Dispensator* d;
+          GestusLudicer  g;
+
+    intern = internamentum_creare(c->piscina);
+    repo = insula_repositorium_creare(c->piscina, intern,
+        "<insula/>");
+    reg = actio_registrum_creare(c->piscina, intern);
+    memset(&toy, ZEPHYRUM, magnitudo(ToyStatus));
+    toy_registrare(reg, &toy);
+    d = dispensator_creare(c->piscina, intern, repo, reg,
+        toy_componere, &toy, CCC);
+    CREDO_NON_NIHIL(d);
+
+    CREDO_GRADUS("nihil pendet: -1");
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, M), -I);
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(NIHIL, M), -I);
+
+    CREDO_GRADUS("pan sordidum: quies_ms post mutationem, deinde -1");
+    dispensator_motus(d)->pan.x                      = VII;
+    dispensator_motus(d)->sordida                    = VERUM;
+    dispensator_motus(d)->tempus_ultimae_mutationis  = M;
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, M + C), CC);
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, M + D), ZEPHYRUM);
+    dispensator_pulsare(d, M + D);
+    CREDO_FALSUM(dispensator_motus(d)->sordida);
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, M + D), -I);
+
+    CREDO_GRADUS("gestus sordidus: quies sua; minimum duorum");
+    memset(&g, ZEPHYRUM, magnitudo(g));
+    motus_gestum_ponere(dispensator_motus(d), &g, gestum_effundere,
+        NIHIL, M);
+    mutare_gestum(dispensator_motus(d), littera_addere, NIHIL, II * M);
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, II * M + C), CM);
+    dispensator_motus(d)->sordida                    = VERUM;
+    dispensator_motus(d)->tempus_ultimae_mutationis  = II * M + C;
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, II * M + C), CCC);
+    dispensator_pulsare(d, II * M + CD);
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, II * M + CD), DC);
+
+    CREDO_GRADUS("effusio recusata: iterum post quies_ms, non 0");
+    g.recusare = VERUM;
+    dispensator_pulsare(d, III * M);
+    CREDO_AEQUALIS_I32(g.effusiones, ZEPHYRUM);
+    CREDO_VERUM(dispensator_motus(d)->gestus.sordidus);
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, III * M), M);
+    g.recusare = FALSUM;
+    dispensator_pulsare(d, IV * M);
+    CREDO_AEQUALIS_I32(g.effusiones, I);
+    CREDO_AEQUALIS_S64(dispensator_mora_proxima(d, IV * M), -I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ansa: derivare, destinatio, actio, componere", _sectio_prima,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vicus quies T5: mora proxima", _sectio_mora_proxima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

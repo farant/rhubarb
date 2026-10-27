@@ -77,4 +77,10 @@ b32
 volantes_pulsare (
     VolantiumMontatio* m);
 
+/* vicus quies T6d: ms usque ad exspirationem volantis visibilis
+ * proximae (copia visibilium tunc mutatur); -1 si nulla volat */
+s64
+volantes_mora (
+    constans VolantiumMontatio* m);
+
 #endif /* ADMONITIONES_VOLANTES_H */

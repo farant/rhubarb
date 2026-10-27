@@ -37,6 +37,11 @@ nomen structura {
     /* porta clausa: remissio. tacere (mutus) portas omnium vocum
      * vivarum quoque claudit */
     vacuum (*vocem_dimittere)(vacuum* ctx, i64 vox);
+    /* vicus quies T6d: ms usque ad agere proximum necessarium - XVI
+     * dum sonat aut exspectat; dum exitus apertus et quietus, usque ad
+     * clausuram (CONCENTUS_QUIES post sonum ultimum); -1 si clausus.
+     * NIHIL = XVI (mos vetus) */
+    s64    (*mora)(vacuum* ctx);
     vacuum* ctx;
 } VicusPortaSoni;
 

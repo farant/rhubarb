@@ -101,6 +101,15 @@ vicum_pulsare (
     redde mutatum;
 }
 
+/* vicus quies T6: mora vici (horologium, systemata, latera);
+ * reactor et dispensator a ludo adduntur */
+interior Mora
+vicum_morari (
+    vacuum* ctx)
+{
+    redde vicus_mora_proxima(((PulsusVici*)ctx)->vicus);
+}
+
 /* S5: porta pilae - energia_status systematis */
 interior b32
 pilam_systematis (
@@ -251,6 +260,12 @@ applicatio_initium (
     forma->fons_ctx      = h->app.vicus;
     forma->pulsator      = vicum_pulsare;
     forma->pulsator_ctx  = &h->pulsus;
+    /* vicus quies T6: ansa usque ad debitum proximum; fossae laterum
+     * (pty) in reactore */
+    vicus_reactor_ponere(h->app.vicus, reactor);
+    forma->mora_proxima  = vicum_morari;
+    forma->mora_ctx      = &h->pulsus;
+    forma->reactor       = reactor;
     forma->finis         = _vicum_finire;
     forma->finis_ctx     = h;
     redde VERUM;
