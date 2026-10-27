@@ -35,6 +35,7 @@
 #include "volumen.h"
 #include "cives.h"
 #include "hospitium.h"
+#include "moneta.h"
 
 #define COMMUNIO_TESSERA_MENSURA XLIII
 
@@ -168,5 +169,92 @@ b32
 communio_servum_montare (
     CommunioServus* servus,
          Hospitium* hospitium);
+
+
+/* ==================================================
+ * Index permissorum et aditus per epistulam (plan-3 T3; spec D6)
+ * ==================================================
+ *
+ * Index permissorum (radix accessus): epistula -> persona + spatium.
+ * Epistula normata (spatia extrema sublata, ASCII minusculae);
+ * clara solum in ordine communio_permissi (necessaria ad mittendum);
+ * acta et aditus solum SHA-256 eius ferunt.
+ *
+ * Aditus: apparatus petit (digestum tesserae suae + titulus); si
+ * epistula permissa est, codex (VIII signa Crockford) et signum (XXXII
+ * octeti, base64url) cuduntur, solum SHA-256 eorum servatur; aditus
+ * XV minuta vivit, semel valet, V conatus codicis admittit. Epistula
+ * ignota: id fortuitum redditur, nihil servatur - responsum idem.
+ */
+
+#define COMMUNIO_ADITUS_VITA_MS  ((s64)XV * (s64)LX * (s64)M)
+#define COMMUNIO_ADITUS_CONATUS  V
+#define COMMUNIO_CODEX_MENSURA   VIII
+#define COMMUNIO_EPISTULA_MAXIMA CCLIV
+
+/* chordae in piscina vocantis */
+nomen structura {
+    chorda epistula;
+    chorda civis;
+    chorda spatium;
+       b32 revocatus;
+} CommunioPermissus;
+
+/* exitus petitionis: codex et signum CLARA solum hic (pro epistula
+ * mittenda) - vocator ea post missionem delet (memset) */
+nomen structura {
+    character id[MONETA_ULID_MENSURA];
+    character codex[X];
+    character signum[XLIV];
+          b32 permissus;
+    character epistula[COMMUNIO_EPISTULA_MAXIMA + I];
+} CommunioAditus;
+
+/* epistulam permittere (aut iterum, post revocationem): persona activa
+ * et membrum spatii esse debet; FALSUM si epistula mala */
+b32
+communio_epistulam_permittere (
+    CommunioServus* servus,
+            chorda  epistula,
+            chorda  civis,
+            chorda  spatium);
+
+/* aditus novi recusantur; apparatus iam inscripti manent (separatim
+ * revocandi). FALSUM si epistula non in indice. */
+b32
+communio_epistulam_revocare (
+    CommunioServus* servus,
+            chorda  epistula);
+
+/* Xar de CommunioPermissus, ordine inscriptionis */
+Xar*
+communio_permissos_enumerare (
+    CommunioServus* servus,
+           Piscina* piscina);
+
+/* aditum petere: SEMPER id implet et VERUM (nisi argumenta NIHIL);
+ * permissus VERUM (aditus servatus, codex/signum impleta) solum si
+ * epistula permissa, persona activa, digestum validum et nondum usum,
+ * titulus non vacuus */
+b32
+communio_aditum_petere (
+    CommunioServus* servus,
+            chorda  epistula,
+            chorda  digestum,
+            chorda  titulus,
+    CommunioAditus* exitus);
+
+/* aditum confirmare per codicem (litterae quaevis, lineola ignorata)
+ * AUT per signum (unum vacuum): 0 = apparatus nunc inscriptus, 1 = iam
+ * confirmatus (idem apparatus redditur), -1 = recusatum (ignotus,
+ * expiratus, secretum falsum, conatus nimii, epistula revocata,
+ * persona non activa). apparatus_exitus >= MONETA_ULID_MENSURA. */
+s32
+communio_aditum_confirmare (
+    CommunioServus* servus,
+            chorda  id,
+            chorda  codex,
+            chorda  signum,
+         character* apparatus_exitus);
 
 #endif /* COMMUNIO_SERVUS_H */

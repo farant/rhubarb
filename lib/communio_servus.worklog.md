@@ -85,3 +85,27 @@ timer cancellation in destruere turned red.
 - Server identity: bind + pull responses carry "servus" (this volume's replica)
   so clients can tell a replaced/restored communio.volumen from the same one.
 - One blob limit: COMMUNIO_MASSA_MAXIMA (16 MB = http lector cap) -> PUT 413.
+
+## 2026-10-27 - allowlist and sign-in requests (plan-3 T3, spec D6)
+
+- `communio_permissi`: the ONLY place an address is stored in clear (needed to
+  send mail), plus its SHA-256 (`digestum`, UNIQUE). Sign-in requests
+  (`communio_aditus`) and every act carry only the digest - the act log is kept
+  forever and backed up, so it stays free of personal data. Addresses are
+  normalised (outer whitespace trimmed, ASCII lowercased, exactly one '@' not at
+  either end, no inner spaces/control characters).
+- `communio_aditum_petere` ALWAYS returns an id; only an allowlisted address of an
+  active member, with a valid unused device digest and a title, stores a request
+  and fills the code/link token. The caller cannot tell the difference from the
+  return value alone - T4 must keep the HTTP answer identical too.
+- Code: 8 Crockford base32 characters from 40 random bits (case and dashes
+  ignored on input); link token: 32 random bytes base64url. Only SHA-256 of each
+  is stored. A request lives 15 minutes, allows 5 wrong secrets (a wrong code OR
+  a wrong link token counts), and is single-use: confirming again with the right
+  secret returns 1 and the same device id (a double click is harmless).
+- At confirmation the allowlist entry (by digest, same person + space) and the
+  person's status are checked AGAIN - revoking an address or suspending a person
+  between request and confirmation stops the sign-in.
+- Requests expired more than a day ago are deleted on each new request.
+
+Plants (radix): attempt limit off, allowlist re-check off, expiry off - all red.

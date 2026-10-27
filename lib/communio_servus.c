@@ -45,6 +45,19 @@ hic_manens constans character* constans SCHEMA[] = {
     "CREATE TABLE IF NOT EXISTS communio_membra"
     " (spatium TEXT NOT NULL, civis TEXT NOT NULL,"
     " PRIMARY KEY (spatium, civis))",
+    "CREATE TABLE IF NOT EXISTS communio_permissi"
+    " (epistula TEXT PRIMARY KEY, digestum TEXT NOT NULL UNIQUE,"
+    " civis TEXT NOT NULL, spatium TEXT NOT NULL,"
+    " creatus_ms INTEGER NOT NULL,"
+    " revocatus INTEGER NOT NULL DEFAULT 0)",
+    "CREATE TABLE IF NOT EXISTS communio_aditus"
+    " (id TEXT PRIMARY KEY, epistula TEXT NOT NULL,"
+    " civis TEXT NOT NULL, spatium TEXT NOT NULL,"
+    " digestum TEXT NOT NULL, titulus TEXT NOT NULL,"
+    " codex TEXT NOT NULL, signum TEXT NOT NULL,"
+    " creatus_ms INTEGER NOT NULL, expirat_ms INTEGER NOT NULL,"
+    " conatus INTEGER NOT NULL DEFAULT 0,"
+    " confirmatus INTEGER NOT NULL DEFAULT 0, apparatus TEXT)",
     "CREATE TABLE IF NOT EXISTS communio_apparatus"
     " (id TEXT PRIMARY KEY, civis TEXT NOT NULL,"
     " spatium TEXT NOT NULL, titulus TEXT NOT NULL,"
@@ -1523,4 +1536,625 @@ communio_servum_montare (
                _acta_post, servus)
         && hospitium_praebere(hospitium, HTTP_GET, "/communio/acta",
                _acta_get, servus);
+}
+
+
+/* ==================================================
+ * Index permissorum et aditus (plan-3 T3)
+ * ================================================== */
+
+#define CROCKFORD "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
+#define SIGNUM_OCTETI XXXII
+
+/* epistulam normare in buffer (spatia extrema, ASCII minusculae);
+ * FALSUM si mala (longitudo, '@' unum non extremum, signa moderantia
+ * aut spatia interna) */
+interior b32
+_epistulam_normare (
+        chorda  epistula,
+     character* exitus)
+{
+    i32 a;
+    i32 z;
+    i32 i;
+    i32 n;
+    i32 ad;
+
+    a = ZEPHYRUM;
+    z = epistula.mensura;
+    dum (   a < z
+         && (epistula.datum[a] == ' ' || epistula.datum[a] == '\t'))
+    {
+        a++;
+    }
+    dum (   z > a && (epistula.datum[z - I] == ' '
+                   || epistula.datum[z - I] == '\t'
+                   || epistula.datum[z - I] == '\n'
+                   || epistula.datum[z - I] == '\r'))
+    {
+        z--;
+    }
+    n = z - a;
+    si (!epistula.datum || n < III || n > COMMUNIO_EPISTULA_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    ad = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        i8 c = epistula.datum[a + i];
+
+        si (c <= ' ' || c == (i8)CXXVII)
+        {
+            redde FALSUM;
+        }
+        si (c == '@')
+        {
+            si (i == ZEPHYRUM || i == n - I)
+            {
+                redde FALSUM;
+            }
+            ad++;
+        }
+        exitus[i] = (c >= 'A' && c <= 'Z') ? (character)(c - 'A' + 'a')
+                                           : (character)c;
+    }
+    exitus[n] = '\0';
+    redde ad == I;
+}
+
+/* SHA-256 hex textus in buffer LXV */
+interior vacuum
+_sigillum_textus (
+     constans character* textus,
+              character* hex)
+{
+    Sigillum g;
+
+    g = sigillum_computare(textus, (memoriae_index)strlen(textus));
+    sigillum_hex(&g, hex);
+}
+
+interior chorda
+_chorda_buffer (
+    character* buffer)
+{
+    chorda c;
+
+    c.datum    = (i8*)buffer;
+    c.mensura  = (i32)strlen(buffer);
+    redde c;
+}
+
+b32
+communio_epistulam_permittere (
+    CommunioServus* servus,
+            chorda  epistula,
+            chorda  civis,
+            chorda  spatium)
+{
+    ScriniumEnuntiatum* e;
+        PiscinaNotatio  nota;
+             JsonValor* o;
+             character  norma[COMMUNIO_EPISTULA_MAXIMA + I];
+             character  hex[SIGILLUM_HEX_MENSURA];
+                   b32  propria;
+                   b32  bene;
+
+    si (!servus || !_epistulam_normare(epistula, norma))
+    {
+        redde FALSUM;
+    }
+    _sigillum_textus(norma, hex);
+    nota = piscina_notare(servus->tempus);
+    bene = _persona_activa(servus, civis)
+        && _membrum_est(servus, spatium, civis)
+        && _incipere(servus, &propria);
+    si (bene)
+    {
+        e = scrinium_praeparare(servus->scrinium,
+            "INSERT OR REPLACE INTO communio_permissi"
+            " (epistula, digestum,"
+            " civis, spatium, creatus_ms, revocatus)"
+            " VALUES (?, ?, ?, ?, ?, 0)");
+        bene = e != NIHIL;
+        si (e)
+        {
+            scrinium_ligare_textum(e, I, _chorda_buffer(norma));
+            scrinium_ligare_textum(e, II, _chorda_buffer(hex));
+            scrinium_ligare_textum(e, III, civis);
+            scrinium_ligare_textum(e, IV, spatium);
+            scrinium_ligare_numerum(e, V, _nunc(servus));
+            bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
+            scrinium_finire(e);
+        }
+        o = json_objectum_creare(servus->tempus);
+        si (bene && o)
+        {
+            json_objectum_ponere(o, "epistula_digestum",
+                json_chorda_creare_literis(servus->tempus, hex));
+            json_objectum_ponere(o, "civis", json_chorda_creare(
+                servus->tempus, civis));
+            json_objectum_ponere(o, "spatium", json_chorda_creare(
+                servus->tempus, spatium));
+        }
+        bene = _finire(servus, propria, bene && _actum(servus,
+            "communio.permissus", o));
+    }
+    piscina_reficere(servus->tempus, nota);
+    redde bene;
+}
+
+b32
+communio_epistulam_revocare (
+    CommunioServus* servus,
+            chorda  epistula)
+{
+    ScriniumEnuntiatum* e;
+        PiscinaNotatio  nota;
+             JsonValor* o;
+             character  norma[COMMUNIO_EPISTULA_MAXIMA + I];
+             character  hex[SIGILLUM_HEX_MENSURA];
+                   b32  est;
+                   b32  propria;
+                   b32  bene;
+
+    si (!servus || !_epistulam_normare(epistula, norma))
+    {
+        redde FALSUM;
+    }
+    e = scrinium_praeparare(servus->scrinium,
+        "SELECT 1 FROM communio_permissi WHERE epistula = ?");
+    si (!e)
+    {
+        redde FALSUM;
+    }
+    scrinium_ligare_textum(e, I, _chorda_buffer(norma));
+    est = scrinium_gradi(e) == SCRINIUM_ORDO;
+    scrinium_finire(e);
+    si (!est)
+    {
+        redde FALSUM;
+    }
+    _sigillum_textus(norma, hex);
+    nota = piscina_notare(servus->tempus);
+    bene = _incipere(servus, &propria);
+    si (bene)
+    {
+        e = scrinium_praeparare(servus->scrinium,
+            "UPDATE communio_permissi SET revocatus = 1"
+            " WHERE epistula = ?");
+        bene = e != NIHIL;
+        si (e)
+        {
+            scrinium_ligare_textum(e, I, _chorda_buffer(norma));
+            bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
+            scrinium_finire(e);
+        }
+        o = json_objectum_creare(servus->tempus);
+        si (bene && o)
+        {
+            json_objectum_ponere(o, "epistula_digestum",
+                json_chorda_creare_literis(servus->tempus, hex));
+        }
+        bene = _finire(servus, propria, bene && _actum(servus,
+            "communio.permissio-revocata", o));
+    }
+    piscina_reficere(servus->tempus, nota);
+    redde bene;
+}
+
+Xar*
+communio_permissos_enumerare (
+    CommunioServus* servus,
+           Piscina* piscina)
+{
+    ScriniumEnuntiatum* e;
+                   Xar* l;
+
+    si (!servus || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina, (i32)magnitudo(CommunioPermissus));
+    e = scrinium_praeparare(servus->scrinium,
+        "SELECT epistula, civis, spatium, revocatus"
+        " FROM communio_permissi"
+        " ORDER BY creatus_ms, rowid");
+    si (!l || !e)
+    {
+        redde NIHIL;
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        CommunioPermissus* x = (CommunioPermissus*)xar_addere(l);
+
+        si (!x)
+        {
+            frange;
+        }
+        x->epistula   = scrinium_columna_textus(e, ZEPHYRUM, piscina);
+        x->civis      = scrinium_columna_textus(e, I, piscina);
+        x->spatium    = scrinium_columna_textus(e, II, piscina);
+        x->revocatus  = scrinium_columna_numerus(e, III) != ZEPHYRUM;
+    }
+    scrinium_finire(e);
+    redde l;
+}
+
+/* codex VIII signorum Crockford ex V octetis fortuitis (XL bits) */
+interior b32
+_codicem_cudere (
+    character* exitus)
+{
+     i8 o[V];
+    i64 bits;
+    i32 i;
+
+    si (!moneta_octeti_fortuiti(o, V))
+    {
+        redde FALSUM;
+    }
+    bits = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        bits = (bits << VIII) | (i64)(insignatus character)o[i];
+    }
+    per (i = ZEPHYRUM; i < COMMUNIO_CODEX_MENSURA; i++)
+    {
+        exitus[COMMUNIO_CODEX_MENSURA - I - i] =
+            CROCKFORD[(integer)(bits & (i64)XXXI)];
+        bits >>= V;
+    }
+    exitus[COMMUNIO_CODEX_MENSURA] = '\0';
+    memset(o, ZEPHYRUM, magnitudo(o));
+    redde VERUM;
+}
+
+/* codex ingressus normatur: lineolae et spatia omissa, maiusculae;
+ * FALSUM si non VIII signa Crockford */
+interior b32
+_codicem_normare (
+        chorda  codex,
+     character* exitus)
+{
+    i32 i;
+    i32 n;
+
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < codex.mensura; i++)
+    {
+        i8 c = codex.datum[i];
+
+        si (c == '-' || c == ' ')
+        {
+            perge;
+        }
+        si (c >= 'a' && c <= 'z')
+        {
+            c = (i8)(c - 'a' + 'A');
+        }
+        si (   n >= COMMUNIO_CODEX_MENSURA
+            || !strchr(CROCKFORD, (integer)c)
+            || c == '\0')
+        {
+            redde FALSUM;
+        }
+        exitus[n++] = (character)c;
+    }
+    exitus[n] = '\0';
+    redde n == COMMUNIO_CODEX_MENSURA;
+}
+
+b32
+communio_aditum_petere (
+    CommunioServus* servus,
+            chorda  epistula,
+            chorda  digestum,
+            chorda  titulus,
+    CommunioAditus* exitus)
+{
+    ScriniumEnuntiatum* e;
+        PiscinaNotatio  nota;
+             character  hex_epistulae[SIGILLUM_HEX_MENSURA];
+             character  hex_codicis[SIGILLUM_HEX_MENSURA];
+             character  hex_signi[SIGILLUM_HEX_MENSURA];
+                    i8  octeti[SIGNUM_OCTETI];
+                chorda  civis;
+                chorda  spatium;
+                   b32  bene;
+                   b32  propria;
+                   i32  n;
+                   s64  nunc;
+
+    si (!servus || !exitus)
+    {
+        redde FALSUM;
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(*exitus));
+    moneta_ulid(exitus->id);
+    si (   !_epistulam_normare(epistula, exitus->epistula)
+        || !_digestum_validum(digestum) || titulus.mensura == ZEPHYRUM
+        || titulus.mensura > LXIV)
+    {
+        redde VERUM;
+    }
+    nota = piscina_notare(servus->tempus);
+    nunc = _nunc(servus);
+    /* aditus expirati olim deleti (tabula parva manet) */
+    e = scrinium_praeparare(servus->scrinium,
+        "DELETE FROM communio_aditus WHERE expirat_ms < ?");
+    si (e)
+    {
+        scrinium_ligare_numerum(e, I, nunc - (s64)XXIV * LX * LX * M);
+        (vacuum)scrinium_gradi(e);
+        scrinium_finire(e);
+    }
+    e = scrinium_praeparare(servus->scrinium,
+        "SELECT civis, spatium FROM communio_permissi"
+        " WHERE epistula = ? AND revocatus = 0");
+    bene           = e != NIHIL;
+    civis.datum    = NIHIL;
+    civis.mensura  = ZEPHYRUM;
+    spatium        = civis;
+    si (e)
+    {
+        scrinium_ligare_textum(e, I, _chorda_buffer(exitus->epistula));
+        bene = scrinium_gradi(e) == SCRINIUM_ORDO;
+        si (bene)
+        {
+            civis = scrinium_columna_textus(e, ZEPHYRUM,
+                servus->tempus);
+            spatium = scrinium_columna_textus(e, I, servus->tempus);
+        }
+        scrinium_finire(e);
+    }
+    bene = bene && _persona_activa(servus, civis)
+        && _membrum_est(servus, spatium, civis);
+    /* digestum iam apparatus alicuius: non permissus */
+    si (bene)
+    {
+        e = scrinium_praeparare(servus->scrinium,
+            "SELECT COUNT(*) FROM communio_apparatus"
+            " WHERE digestum = ?");
+        n = (i32)I;
+        si (e)
+        {
+            scrinium_ligare_textum(e, I, digestum);
+            si (scrinium_gradi(e) == SCRINIUM_ORDO)
+            {
+                n = (i32)scrinium_columna_numerus(e, ZEPHYRUM);
+            }
+            scrinium_finire(e);
+        }
+        bene = n == ZEPHYRUM;
+    }
+    bene = bene && _codicem_cudere(exitus->codex)
+        && moneta_octeti_fortuiti(octeti, SIGNUM_OCTETI)
+        && base64url_scribere(octeti, SIGNUM_OCTETI, exitus->signum,
+               XLIV) == XLIII;
+    memset(octeti, ZEPHYRUM, magnitudo(octeti));
+    si (bene)
+    {
+        exitus->signum[XLIII] = '\0';
+        _sigillum_textus(exitus->epistula, hex_epistulae);
+        _sigillum_textus(exitus->codex, hex_codicis);
+        _sigillum_textus(exitus->signum, hex_signi);
+        bene = _incipere(servus, &propria);
+    }
+    si (bene)
+    {
+        e = scrinium_praeparare(servus->scrinium,
+            "INSERT INTO communio_aditus (id, epistula, civis, spatium,"
+            " digestum, titulus, codex, signum, creatus_ms, expirat_ms)"
+            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        bene = e != NIHIL;
+        si (e)
+        {
+            scrinium_ligare_textum(e, I, _chorda_buffer(exitus->id));
+            scrinium_ligare_textum(e, II,
+                _chorda_buffer(hex_epistulae));
+            scrinium_ligare_textum(e, III, civis);
+            scrinium_ligare_textum(e, IV, spatium);
+            scrinium_ligare_textum(e, V, digestum);
+            scrinium_ligare_textum(e, VI, titulus);
+            scrinium_ligare_textum(e, VII, _chorda_buffer(hex_codicis));
+            scrinium_ligare_textum(e, VIII, _chorda_buffer(hex_signi));
+            scrinium_ligare_numerum(e, IX, nunc);
+            scrinium_ligare_numerum(e, X, nunc
+                + COMMUNIO_ADITUS_VITA_MS);
+            bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
+            scrinium_finire(e);
+        }
+        bene = _finire(servus, propria, bene);
+    }
+    memset(hex_codicis, ZEPHYRUM, magnitudo(hex_codicis));
+    memset(hex_signi, ZEPHYRUM, magnitudo(hex_signi));
+    si (bene)
+    {
+        exitus->permissus = VERUM;
+    }
+    alioquin
+    {
+        memset(exitus->codex, ZEPHYRUM, magnitudo(exitus->codex));
+        memset(exitus->signum, ZEPHYRUM, magnitudo(exitus->signum));
+    }
+    piscina_reficere(servus->tempus, nota);
+    redde VERUM;
+}
+
+s32
+communio_aditum_confirmare (
+    CommunioServus* servus,
+            chorda  id,
+            chorda  codex,
+            chorda  signum,
+         character* apparatus_exitus)
+{
+    ScriniumEnuntiatum* e;
+        PiscinaNotatio  nota;
+             character  norma[X];
+             character  textus_signi[XLIV];
+             character  hex[SIGILLUM_HEX_MENSURA];
+             character  novum[MONETA_ULID_MENSURA];
+                chorda  servatum;
+                chorda  epistula;
+                chorda  civis;
+                chorda  spatium;
+                chorda  digestum;
+                chorda  titulus;
+                chorda  apparatus;
+                   s64  expirat;
+                   s64  conatus;
+                   b32  confirmatus;
+                   b32  per_codicem;
+                   b32  bene;
+                   b32  propria;
+                   b32  permissio;
+                   s32  exitus;
+             JsonValor* o;
+
+    si (   !servus || !apparatus_exitus
+        || (codex.mensura > ZEPHYRUM) == (signum.mensura > ZEPHYRUM))
+    {
+        redde -I;
+    }
+    per_codicem = codex.mensura > ZEPHYRUM;
+    si (per_codicem)
+    {
+        si (!_codicem_normare(codex, norma))
+        {
+            norma[ZEPHYRUM] = '\0';
+        }
+        _sigillum_textus(norma, hex);
+    }
+    alioquin
+    {
+        si (signum.mensura != XLIII)
+        {
+            redde -I;
+        }
+        memcpy(textus_signi, signum.datum, (size_t)XLIII);
+        textus_signi[XLIII] = '\0';
+        _sigillum_textus(textus_signi, hex);
+        memset(textus_signi, ZEPHYRUM, magnitudo(textus_signi));
+    }
+    nota    = piscina_notare(servus->tempus);
+    exitus  = -I;
+    e = scrinium_praeparare(servus->scrinium,
+        per_codicem
+        ? "SELECT codex, epistula, civis, spatium, digestum, titulus,"
+          " expirat_ms, conatus, confirmatus, COALESCE(apparatus, '')"
+          " FROM communio_aditus WHERE id = ?"
+        : "SELECT signum, epistula, civis, spatium, digestum, titulus,"
+          " expirat_ms, conatus, confirmatus, COALESCE(apparatus, '')"
+          " FROM communio_aditus WHERE id = ?");
+    si (!e)
+    {
+        piscina_reficere(servus->tempus, nota);
+        redde -I;
+    }
+    scrinium_ligare_textum(e, I, id);
+    si (scrinium_gradi(e) != SCRINIUM_ORDO)
+    {
+        scrinium_finire(e);
+        piscina_reficere(servus->tempus, nota);
+        redde -I;
+    }
+    servatum     = scrinium_columna_textus(e, ZEPHYRUM,
+        servus->tempus);
+    epistula     = scrinium_columna_textus(e, I, servus->tempus);
+    civis        = scrinium_columna_textus(e, II, servus->tempus);
+    spatium      = scrinium_columna_textus(e, III, servus->tempus);
+    digestum     = scrinium_columna_textus(e, IV, servus->tempus);
+    titulus      = scrinium_columna_textus(e, V, servus->tempus);
+    expirat      = scrinium_columna_numerus(e, VI);
+    conatus      = scrinium_columna_numerus(e, VII);
+    confirmatus  = scrinium_columna_numerus(e, VIII) != ZEPHYRUM;
+    apparatus    = scrinium_columna_textus(e, IX, servus->tempus);
+    scrinium_finire(e);
+    bene = expirat >= _nunc(servus)
+        && conatus < COMMUNIO_ADITUS_CONATUS;
+    si (bene && !_aequale_constans(servatum, _chorda_buffer(hex)))
+    {
+        /* secretum falsum: conatus crescit */
+        e = scrinium_praeparare(servus->scrinium,
+            "UPDATE communio_aditus SET conatus = conatus + 1"
+            " WHERE id = ?");
+        si (e)
+        {
+            scrinium_ligare_textum(e, I, id);
+            (vacuum)scrinium_gradi(e);
+            scrinium_finire(e);
+        }
+        bene = FALSUM;
+    }
+    si (bene && confirmatus)
+    {
+        si (apparatus.mensura == XXVI)
+        {
+            memcpy(apparatus_exitus, apparatus.datum, (size_t)XXVI);
+            apparatus_exitus[XXVI]  = '\0';
+            exitus                  = I;
+        }
+        bene = FALSUM;
+    }
+    si (bene)
+    {
+        /* index et persona etiam nunc valent? */
+        e = scrinium_praeparare(servus->scrinium,
+            "SELECT 1 FROM communio_permissi WHERE digestum = ?"
+            " AND revocatus = 0 AND civis = ? AND spatium = ?");
+        permissio = FALSUM;
+        si (e)
+        {
+            scrinium_ligare_textum(e, I, epistula);
+            scrinium_ligare_textum(e, II, civis);
+            scrinium_ligare_textum(e, III, spatium);
+            permissio = scrinium_gradi(e) == SCRINIUM_ORDO;
+            scrinium_finire(e);
+        }
+        bene = permissio && _persona_activa(servus, civis)
+            && _incipere(servus, &propria);
+    }
+    si (bene)
+    {
+        bene = communio_apparatum_addere(servus, civis, spatium,
+            titulus,
+            digestum, novum);
+        si (bene)
+        {
+            e = scrinium_praeparare(servus->scrinium,
+                "UPDATE communio_aditus SET confirmatus = 1,"
+                " apparatus = ? WHERE id = ? AND confirmatus = 0");
+            bene = e != NIHIL;
+            si (e)
+            {
+                scrinium_ligare_textum(e, I, _chorda_buffer(novum));
+                scrinium_ligare_textum(e, II, id);
+                bene = scrinium_gradi(e) == SCRINIUM_FACTUM;
+                scrinium_finire(e);
+            }
+        }
+        o = json_objectum_creare(servus->tempus);
+        si (bene && o)
+        {
+            json_objectum_ponere(o, "id", json_chorda_creare(
+                servus->tempus, id));
+            json_objectum_ponere(o, "apparatus",
+                json_chorda_creare_literis(servus->tempus, novum));
+        }
+        bene = _finire(servus, propria, bene && _actum(servus,
+            "communio.aditus-confirmatus", o));
+        si (bene)
+        {
+            memcpy(apparatus_exitus, novum,
+                (size_t)MONETA_ULID_MENSURA);
+            exitus = ZEPHYRUM;
+        }
+    }
+    memset(hex, ZEPHYRUM, magnitudo(hex));
+    memset(norma, ZEPHYRUM, magnitudo(norma));
+    piscina_reficere(servus->tempus, nota);
+    redde exitus;
 }
