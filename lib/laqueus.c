@@ -1752,10 +1752,18 @@ laqueus_pd_ex_plexu (
         *transitus_exitus  = ZEPHYRUM;
         redde VERUM;
     }
+    /* nodus: omne filum tangitur et permutatio fila coniungit, ergo c >=
+     * fila - 1 (exacte); simul ossa = fila + 2c <= 3c + 1 et IV c sine
+     * involutione i32 manent (recensio: fila 2^32 - 1 ossa involvebat) */
+    si (fila > c + I || c > (i32)0x3FFFFFFFUL)
+    {
+        redde FALSUM;
+    }
     per (k = ZEPHYRUM; k < c; k++)
     {
+        /* |littera| in i32 sine signo: -INT_MIN nullum UB */
         si (   verbum[k] == ZEPHYRUM || (verbum[k] > ZEPHYRUM
-            ? (i32)verbum[k] : (i32)-verbum[k]) >= fila)
+            ? (i32)verbum[k] : (i32)ZEPHYRUM - (i32)verbum[k]) >= fila)
         {
             redde FALSUM;
         }
@@ -1787,8 +1795,8 @@ laqueus_pd_ex_plexu (
     proximum = fila;
     per (k = ZEPHYRUM; k < c; k++)
     {
-        i32 i = (i32)(verbum[k] > ZEPHYRUM ? verbum[k] : -verbum[k])
-            - I;
+        i32 i = (verbum[k] > ZEPHYRUM ? (i32)verbum[k]
+            : (i32)ZEPHYRUM - (i32)verbum[k]) - I;
         i32 a   = currens[i];
         i32 b   = currens[i + I];
         i32 cn  = proximum++;

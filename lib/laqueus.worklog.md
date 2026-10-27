@@ -628,3 +628,40 @@ empty word accepted. Survivor: the range check `>= fila` relaxed to
 `> fila` — the out-of-range word is still refused by later checks
 (after an out-of-bounds write into arena memory), so the check is
 defense in depth and a test cannot see it without undefined behaviour.
+
+## 2026-10-27 — laqueus_pd_ex_plexu review (independent, after 1ec50212) and fixes
+
+Reviewer (scratch, ASan/UBSan): an independent Temperley–Lieb oracle on
+the braid word itself (σ = A·1 + A⁻¹e) against
+`laqueus_jones_ex_pd_rete` on the PD — exhaustive over all words for
+fila 2 (length ≤ 10), 3 (≤ 6), 4 (≤ 5), 5 (≤ 4) with out-of-range
+letters mixed in: 23,420 cases, 6,531 accepted knots, 0 mismatches,
+acceptance exactly "permutation is one fila-cycle"; ~600 random knots
+to 200 crossings; all 78 torus T(p, q) (p ≤ 8, q ≤ 12) against the
+formula, mirror and swapped braid; R3, far commutation, mirror and
+reversal on 107 random pairs; σ1³'s PD equals KnotInfo's 3_1 crossing
+for crossing, σ1⁵ = table 5_1, σ1³σ2σ1⁻¹σ2 = table 5_2 (no mirror). No H.
+
+Fixed:
+- **M** `ossa = fila + 2c` wrapped in i32 for an absurd fila (2^32 − 1
+  with the word {1}): idem/caput got one element and `idem[cn]` wrote
+  ~16 GB out of bounds (BUS). Now refused up front when fila > c + 1 —
+  exact, since every strand must be touched and connected, so a knot
+  needs c ≥ fila − 1 — which also bounds ossa ≤ 3c + 1; and c ≤ 2^30 − 1
+  so 4c cannot wrap. The plant removing this bound was run under
+  `tools/custos.sh`: the test began touching a 16 GB array and the guard
+  killed it at 5.9 GB of footprint (effectively red, and the hazard
+  itself demonstrated); the kill left the planted line in place,
+  restored from the pre-plant copy.
+- **L** `(i32)-verbum[k]` negated an s32 — undefined for INT_MIN, inside
+  the guard meant to reject it. Both places now negate in unsigned
+  arithmetic ((i32)0 − (i32)letter).
+- **L** sign pinning rested on σ1 alone. Added: σ1⁵ = table 5_1 and
+  σ1³σ2σ1⁻¹σ2 = table 5_2 (mixed signs on σ2, no mirror); R3 and far
+  commutation on 20 random braids of 4–8 strands; the exact
+  one-crossing codes ([1,1,2,2] for σ1, [2,1,1,2] for σ1⁻¹); refusals of
+  fila 2^32 − 1, fila 5 with two letters, and an INT_MIN letter (outputs
+  untouched).
+
+Trap: `brevis` is the latina.h macro for `short` (test variable,
+renamed `angustum`).

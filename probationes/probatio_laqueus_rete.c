@@ -1450,6 +1450,149 @@ _probare_plexum (
         &transitus));
     CREDO_AEQUALIS_I32(transitus, I);
 
+    /* signa mixta in sigma_2 (recensio): 5_1 = sigma_1^5, 5_2 =
+     * sigma_1^3 sigma_2 sigma_1^-1 sigma_2, ambo tabulae sine speculo */
+    {
+        constans s32 quinque[]    = { 1, 1, 1, 1, 1 };
+        constans s32 quinque_b[]  = { 1, 1, 1, 2, -1, 2 };
+
+        CREDO_VERUM(polynomium_aequalis(_jones_plexus(quinque, V, II,
+            piscina),
+            _polynomium_textus(tabula_nodorum_quaere("5_1")->jones,
+            piscina)));
+        CREDO_VERUM(polynomium_aequalis(_jones_plexus(quinque_b, VI,
+            III,
+            piscina),
+            _polynomium_textus(tabula_nodorum_quaere("5_2")->jones,
+            piscina)));
+    }
+
+    /* transitus unus: codices exacti */
+    {
+        constans s32 negativus[] = { -1 };
+
+        CREDO_NECESSE(laqueus_pd_ex_plexu(unus, I, II, piscina, &pd,
+            &transitus));
+        CREDO_AEQUALIS_I32(pd[0], I);
+        CREDO_AEQUALIS_I32(pd[I], I);
+        CREDO_AEQUALIS_I32(pd[II], II);
+        CREDO_AEQUALIS_I32(pd[III], II);
+        CREDO_NECESSE(laqueus_pd_ex_plexu(negativus, I, II, piscina,
+            &pd,
+            &transitus));
+        CREDO_AEQUALIS_I32(pd[0], II);
+        CREDO_AEQUALIS_I32(pd[I], I);
+        CREDO_AEQUALIS_I32(pd[II], I);
+        CREDO_AEQUALIS_I32(pd[III], II);
+    }
+
+    /* fila absurda (olim ossa involvebantur) et littera INT_MIN */
+    {
+        constans s32 angustum[] = { 1, 2 };
+                 s32 minimum[I];
+
+        minimum[0]  = -(s32)0x7FFFFFFFL - (s32)I;
+        signum      = (i32)0xBEEFUL;
+        pd          = &signum;
+        transitus   = (i32)0xDEADUL;
+        CREDO_FALSUM(laqueus_pd_ex_plexu(unus, I, (i32)0xFFFFFFFFUL,
+            piscina,
+            &pd, &transitus));
+        CREDO_FALSUM(laqueus_pd_ex_plexu(angustum, II, V, piscina, &pd,
+            &transitus));
+        CREDO_FALSUM(laqueus_pd_ex_plexu(minimum, I, III, piscina, &pd,
+            &transitus));
+        CREDO_AEQUALIS_I32(transitus, (i32)0xDEADUL);
+        CREDO_VERUM(pd == &signum);
+    }
+
+    /* relationes: R3 sigma_i sigma_i+1 sigma_i = sigma_i+1 sigma_i
+     * sigma_i+1, commutatio longinqua sigma_i sigma_j = sigma_j sigma_i
+     * (|i - j| >= 2); fila IV..VIII */
+    sors_seminare(&s, (i64)MMXXXVII, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < XX; t++)
+    {
+        PiscinaNotatio  nota       = piscina_notare(piscina);
+                   i32  fila       = IV + sors_intra(&s, V);
+                   i32  longitudo  = XVI + sors_intra(&s, XVI);
+                   s32  primum[XL];
+                   s32  secundum[XL];
+                   i32* probatum  = NIHIL;
+                   i32  probati;
+                   i32  conatus;
+                   i32  r;
+                   i32  k;
+                   s32  g;
+                   s32  h;
+                   b32  tria = t % II == ZEPHYRUM;
+
+        /* longitudo totalis = longitudo + 3 (R3) aut + 2: paritas */
+        si ((longitudo + (tria ? III : II) + fila - I) % II != ZEPHYRUM)
+        {
+            longitudo++;
+        }
+        per (conatus = ZEPHYRUM; conatus < M
+            && probatum == NIHIL; conatus++)
+        {
+            i32 gi;
+            i32 hi;
+
+            r = sors_intra(&s, longitudo + I);
+            si (tria)
+            {
+                gi = I + sors_intra(&s, fila - II);       /* 1..fila-2 */
+                hi = gi + I;
+            }
+            alioquin
+            {
+                gi = I + sors_intra(&s, fila - III);      /* 1..fila-3 */
+                hi = gi + II + sors_intra(&s, fila - gi - II);
+            }
+            g = (s32)gi;
+            h = (s32)hi;
+            per (k = ZEPHYRUM; k < longitudo; k++)
+            {
+                s32 x = (s32)(I + sors_intra(&s, fila - I));
+
+                primum[k < r ? k : k + (tria ? III : II)] =
+                    sors_intra(&s, II) == ZEPHYRUM ? x : -x;
+            }
+            si (tria)
+            {
+                primum[r] = g; primum[r + I] = h; primum[r + II] = g;
+            }
+            alioquin
+            {
+                primum[r] = g; primum[r + I] = h;
+            }
+            per (k = ZEPHYRUM; k < longitudo + (tria ? III : II); k++)
+            {
+                secundum[k] = primum[k];
+            }
+            si (tria)
+            {
+                secundum[r] = h; secundum[r + I] = g; secundum[r + II] =
+                                                          h;
+            }
+            alioquin
+            {
+                secundum[r] = h; secundum[r + I] = g;
+            }
+            si (!laqueus_pd_ex_plexu(primum, longitudo
+                + (tria ? III : II),
+                fila, piscina, &probatum, &probati))
+            {
+                probatum = NIHIL;
+            }
+        }
+        CREDO_NECESSE_NON_NIHIL(probatum);
+        CREDO_VERUM(polynomium_aequalis(_jones_plexus(primum,
+            longitudo + (tria ? III : II), fila, piscina),
+            _jones_plexus(
+            secundum, longitudo + (tria ? III : II), fila, piscina)));
+        piscina_reficere(piscina, nota);
+    }
+
     /* motus Markov */
     sors_seminare(&s, (i64)MMXXXVI, ZEPHYRUM);
     per (t = ZEPHYRUM; t < XL; t++)
