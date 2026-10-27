@@ -525,6 +525,94 @@ _sectio_sequi (
     volumen_claudere(b);
 }
 
+/* acta ictuum picturae "p" post cursorem (checkpoints omissi:
+ * intervallum II ea interserit) */
+interior Xar*
+ictus_post (
+    Volumen* vol,
+        s64  cursor)
+{
+    Xar* omnia;
+    Xar* ictus_soli;
+    i32  i;
+
+    omnia       = volumen_acta_propria_legere(vol, cursor, piscina);
+    ictus_soli  = xar_creare(piscina, magnitudo(VolumenActum));
+    per (i = ZEPHYRUM; omnia && i < xar_numerus(omnia); i++)
+    {
+        VolumenActum* a = (VolumenActum*)xar_obtinere(omnia, i);
+
+        si (chorda_aequalis_literis(a->genus, "p/ictus"))
+        {
+            *(VolumenActum*)xar_addere(ictus_soli) = *a;
+        }
+    }
+    redde ictus_soli;
+}
+
+/* plan-2 T1 (M1): acta extra ordinem advecta - ictus posterior ante
+ * priorem importatur; sequi semper aequale aperturae recenti */
+interior vacuum
+_sectio_sequi_extra_ordinem (
+    CredoContextus* c)
+{
+                Volumen* a;
+                Volumen* b;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+       PictorDocumentum* recens;
+                    Xar* nova;
+                    s64  cursor;
+                    s64  ultimum;
+
+    (vacuum)c;
+    thema_initiare();
+    intern  = internamentum_creare(piscina);
+    a       = volumen_temporarium(piscina, "probatio_communio_oa");
+    b       = volumen_temporarium(piscina, "probatio_communio_ob");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_NECESSE_NON_NIHIL(b);
+    da = pictor_documentum_creare(piscina, intern, a, "p", C, LX, II);
+    CREDO_NECESSE_NON_NIHIL(da);
+    CREDO_NECESSE(operationes(da, ZEPHYRUM));
+    cursor = ZEPHYRUM;
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, b,
+        volumen_replica(a), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+
+    /* duo ictus novi in A; B posteriorem prius accipit */
+    CREDO_NECESSE(ictus(da, LXX, XXX, IX) > ZEPHYRUM);
+    ultimum = ictus(da, LXXX, XXX, X);
+    CREDO_NECESSE(ultimum > ZEPHYRUM);
+    nova = ictus_post(a, cursor);
+    CREDO_NECESSE_NON_NIHIL(nova);
+    CREDO_NECESSE(xar_numerus(nova) == II);
+
+    CREDO_GRADUS("posterior prius");
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b,
+        (VolumenActum*)xar_obtinere(nova, I)), (i32)VOLUMEN_IMPORTATUM);
+    (vacuum)pictor_documentum_sequi(aliena);
+    recens = pictor_documentum_aperire_alienum(piscina, intern, b,
+        volumen_replica(a), "p");
+    CREDO_NECESSE_NON_NIHIL(recens);
+    CREDO_VERUM(aequales(recens, aliena));
+
+    CREDO_GRADUS("prior postea: status idem ac A");
+    CREDO_AEQUALIS_I32((i32)volumen_actum_importare(b,
+        (VolumenActum*)xar_obtinere(nova, ZEPHYRUM)),
+        (i32)VOLUMEN_IMPORTATUM);
+    CREDO_VERUM(pictor_documentum_sequi(aliena));
+    CREDO_VERUM(aequales(da, aliena));
+    recens = pictor_documentum_aperire_alienum(piscina, intern, b,
+        volumen_replica(a), "p");
+    CREDO_NECESSE_NON_NIHIL(recens);
+    CREDO_VERUM(aequales(recens, aliena));
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
 /* mensura: pictura D ictuum - apertio aliena et sequi unius ictus
  * novi (nulla assertio temporis) */
 interior vacuum
@@ -585,6 +673,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "pictura aliena (T4)", _sectio_pictura_aliena, _parare, _purgare,
         NIHIL, NIHIL },
     { "sequi (T5)", _sectio_sequi, _parare, _purgare, NIHIL, NIHIL },
+    { "sequi extra ordinem (plan-2 T1)", _sectio_sequi_extra_ordinem,
+        _parare, _purgare, NIHIL, NIHIL },
     { "mensura: D ictus", _sectio_mensura, _parare, _purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

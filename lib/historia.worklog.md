@@ -206,3 +206,13 @@ re-projection, always-incremental, always-"changed" - all caught.
 Measured (Mac): foreign open of a 500-stroke picture ~3 ms, following one
 new stroke ~2 ms (statum_computare still reads all acts of the document;
 fine at this size, an index-based shortcut is possible later).
+
+## 2026-10-27 - historia_sequi out-of-order guard (communio plan-2 T1, M1)
+
+The incremental path applied only acts after the previous end (finis_prior).
+An act that arrives late but sits BELOW the current end in writer numbering
+(stroke 5 imported before stroke 4) raised numerus_vivorum without any act
+after finis_prior, so the follower silently missed stroke 4. Guard: take the
+incremental path only if vivi_prior + |new live acts| == numerus_vivorum after
+recomputing; otherwise project from scratch. Test: probatio_communio "sequi
+extra ordinem" (RED before the guard).
