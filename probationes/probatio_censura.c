@@ -909,8 +909,8 @@ _sectio_stili (
     CREDO_FALSUM (censura_regulas_legere(chorda_ex_literis(
         "+tertia,-nulla", c->piscina), &f, &ignota));
     CREDO_CHORDA_AEQUALIS_LITERIS (ignota, "nulla");
-    /* catena: popularis (+tertia, liberae) -> jazz (-tertia, +parallelae)
-     * -> censura carminis (-lineae) */
+    /* catena: popularis (+tertia, liberae) -> jazz (-tertia,
+     * +parallelae) -> censura carminis (-lineae) */
     k = _carmen(c,
         "<carmina><stylus titulus=\"popularis\" septimae=\"liberae\" "
         "regulae=\"+tertia\"/>"

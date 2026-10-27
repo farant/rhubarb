@@ -56,6 +56,10 @@
      iudicanda. -->
 <carmina>
 
+  <!-- stili censurae: popularis - septima acordi color est, resolutio
+       non postulatur (pop, jazz, chiptune, SNES) -->
+  <stylus titulus="popularis" septimae="liberae"/>
+
   <figura titulus="valsa"
       textus="v100 B:4 v60 [1 2 3] [1 2 3] | v100 Q:4 v60 [1 2 3] [1 2 3]"/>
   <figura titulus="marcia" textus="v100 B:4 v60 [1 2 3] v85 Q v60 [1 2 3]"/>
@@ -226,7 +230,7 @@
     </>
   </>
 
-  <carmen titulus="campus" tempus="150" metrum="4/4" clavis="d maior">
+  <carmen titulus="campus" stylus="popularis" tempus="150" metrum="4/4" clavis="d maior">
     <instrumentum titulus="pulsus_quadrans" forma="pulsus" officium="0.25"
         impetus="0.002" lapsus="0.12" tenor="0.55" remissio="0.04"
         vibratus="0.2" celeritas="6" mora="0.2" amplitudo="0.45"/>
@@ -257,7 +261,7 @@
     </pars>
   </carmen>
 
-  <carmen titulus="oppidum" tempus="84" metrum="4/4" clavis="f maior">
+  <carmen titulus="oppidum" stylus="popularis" tempus="84" metrum="4/4" clavis="f maior">
     <reverberatio aula="0.6" mollities="0.5" latitudo="1" lucrum="0.3"/>
     <figura titulus="tabulatum" textus="v60 [1 2 3 4]:2 [1 2 3 4]:2"/>
     <figura titulus="harpa_lenta" textus="v80 B:8 v65 1 2 3 4 3 2 1"/>
@@ -282,7 +286,7 @@
     </pars>
   </carmen>
 
-  <carmen titulus="proelium" tempus="168" metrum="4/4" clavis="e minor">
+  <carmen titulus="proelium" stylus="popularis" tempus="168" metrum="4/4" clavis="e minor">
     <instrumentum titulus="pulsus_quadrans" forma="pulsus" officium="0.25"
         impetus="0.002" lapsus="0.1" tenor="0.6" remissio="0.04"
         vibratus="0.25" celeritas="7" mora="0.15" amplitudo="0.45"/>
