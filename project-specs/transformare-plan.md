@@ -278,3 +278,16 @@ materia 14/14, tessera 15/15, ludus_tessera 8/8.
 **The mechanical sweep is complete.** Next: the manual leftovers (calls
 inside CREDO_* macro arguments, mkdir with modes other than 0755, the
 few odd shapes the tool refused), then code 97 -> VIOLATIO with a plant.
+
+*Manual leftovers (2026-10-27):* examen over every live file with a
+write call (245; vendor/reference/archivum/oracula/fixa/snapshots
+excluded) left 25 code-97 sites in 6 files, now 0:
+natura_examen's APERIRE macro body -> lectiones_fopen (14 at once);
+CREDO_* arguments rewritten by hand (renovatio chmod x2 ->
+filum_modum_ponere, specimen rename -> filum_movere); officina cursor's
+stdout capture notes S then freopen under `<tolera>` (/dev/null =
+device); probatio_filum's symlink fixture and five officina-test utime
+calls tolerated (Fran: utime = mtime only, content unchanged - a traced
+wrapper would flag touching a committed fixture dir as a write outside
+the trace). Debt paid: natura_examen.
+**Code 97 is now clean on live code.** Next: flip 97 to VIOLATIO.

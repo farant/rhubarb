@@ -209,8 +209,7 @@ _sectio_tertia (
         /* ACCEPTIO: candidatum super exemplar movere. Nihil aliud. */
         _viam(candidatus, titulus, ".novum.png");
         _viam(exemplar, titulus, ".png");
-        CREDO_AEQUALIS_S32((s32)rename(candidatus, exemplar),
-            (s32)ZEPHYRUM);
+        CREDO_VERUM(filum_movere(candidatus, exemplar));
 
         /* Eadem captura nunc CONGRUIT */
         f = specimen_iudicare(&captura, titulus, regula, piscina);

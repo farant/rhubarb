@@ -1932,6 +1932,8 @@ probatio_vigilia (
         fclose(pl);
         tempora.actime   = 1000000L;
         tempora.modtime  = 1000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
     }
     _vigilia_agere(p, via_binarii, via_manifesti, VERUM);
@@ -2106,6 +2108,8 @@ probatio_capita_nova (
 
         tempora.actime   = 1000000L;
         tempora.modtime  = 1000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         CREDO_VERUM(utime("officina/probationes/fixa", &tempora)
             == ZEPHYRUM);
     }
@@ -2145,6 +2149,8 @@ probatio_capita_nova (
         /* tempus alterum deterministicum (granularitas secundi) */
         tempora.actime   = 2000000L;
         tempora.modtime  = 2000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         CREDO_VERUM(utime(via_capitis, &tempora) == ZEPHYRUM);
     }
     {
@@ -2318,6 +2324,8 @@ probatio_recensio (
 
         tempora.actime   = 1500000000L;
         tempora.modtime  = 1500000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         (vacuum)utime(via_stalae, &tempora);
     }
 

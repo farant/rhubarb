@@ -953,8 +953,14 @@ principale (
 
                     _vias_effusionis(suites[i], via_capturae,
                         via_aurei);
+                    lectiones_notare(LECTIO_SCRIPSIT, via_capturae);
+                    /* <tolera codex="SCRIPTURA_PRAETERITA" (>captura stdout
+                     * freopen involucrum in lectionibus non habet - notatur
+                     * supra */
                     si (freopen(via_capturae, "w", stdout) == NIHIL)
                     {
+                        /* <tolera codex="SCRIPTURA_PRAETERITA" (>machina
+                         * /dev/null: lectiones machinas numquam notant */
                         (vacuum)freopen("/dev/null", "w", stdout);
                     }
                 }

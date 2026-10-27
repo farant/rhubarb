@@ -168,6 +168,8 @@ _stalitatem_fingere (
     _plagulam_scribere(via_binarii, "x");
     tempora.actime   = 1000000L;
     tempora.modtime  = 1000000L;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+     * mtime consulto (staleness simulata), contentum non mutatur */
     CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
 }
 
@@ -255,7 +257,7 @@ probatio_renovare_explorator_fractus (
         "#!/bin/bash\n"
         "echo \"aedificatio ficta fracta\" 1>&2\n"
         "exit 1\n");
-    CREDO_VERUM(chmod(via_stipulae, 0755) == ZEPHYRUM);
+        CREDO_VERUM(filum_modum_ponere(via_stipulae, 0755));
 
     _scribe_lineam(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
@@ -345,7 +347,7 @@ probatio_renovatio_integra (
             fclose(pl);
         }
     }
-    CREDO_VERUM(chmod(via_stipulae, 0755) == ZEPHYRUM);
+        CREDO_VERUM(filum_modum_ponere(via_stipulae, 0755));
 
     CREDO_VERUM(pipe(p2i) == ZEPHYRUM);
     CREDO_VERUM(pipe(i2p) == ZEPHYRUM);

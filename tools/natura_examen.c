@@ -360,7 +360,7 @@ tabulas_scribere (
 
 #define APERIRE(var, nomen_tabulae)                                \
     sprintf(via, "%s/%s", dir, nomen_tabulae);                     \
-    var = fopen(via, "w");                                         \
+    var = lectiones_fopen(via, "w");                                         \
     si (!var) { fprintf(stderr, "natura_examen: %s scribi nequit\n", via); redde; }
 
     APERIRE(f_genera,       "genera.txt")
