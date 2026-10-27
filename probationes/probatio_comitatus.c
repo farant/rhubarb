@@ -836,11 +836,59 @@ _sectio_sine_radice (
     }
 }
 
+/* bassus ambulans: 'T' tertia, 'A' accessus semitonio ad bassum
+ * proximum (latere notae bassi ultimae propiore, aequales infra;
+ * ultimo gradu acordum currens); sine tertia quinta; extra ambitum
+ * latus alterum */
+interior vacuum
+_sectio_ambulans (
+    CredoContextus* c)
+{
+    hic_manens constans ComitatusAmbitus ANGUSTUS = { 55, 76, 40, 52 };
+                 hic_manens constans i32 SPERATAE[XII] = {
+        41, 45, 36, 45, 46, 50, 41, 40, 41, 45, 36, 40
+    };
+      ComitatusNota* e;
+                i32  n;
+                i32  k;
+    ComitatusVitium  v;
+
+    CREDO_NECESSE (_componere_basso(c, "B:4 T Q A", "F7 | Bb7 | F7",
+        QUARTA_QUARTA, &AMBITUS, FALSUM, &e, &n, &v));
+    CREDO_NECESSE (n == XII);
+    per (k = ZEPHYRUM; k < XII; k++)
+    {
+        CREDO_AEQUALIS_I32 (e[k].nota, SPERATAE[k]);
+        CREDO_AEQUALIS_I32 (e[k].vox, ZEPHYRUM);
+    }
+    CREDO_VERUM (_nota(e, III, (s64)CMLX * III, CMLX, XLV));
+    /* sine tertia: quinta (Csus4: C3, G2) */
+    CREDO_NECESSE (_componere_basso(c, "B:2 T:2", "Csus4",
+        QUARTA_QUARTA, &AMBITUS, FALSUM, &e, &n, &v));
+    CREDO_NECESSE (n == II);
+    CREDO_AEQUALIS_I32 (e[0].nota, XLVIII);
+    CREDO_AEQUALIS_I32 (e[I].nota, XLIII);
+    /* tertia in basso (C/E): 'T' octava altera - E2 (medium 46,
+     * aequales inferior) deinde E3 */
+    CREDO_NECESSE (_componere_basso(c, "B:2 T:2", "C/E",
+        QUARTA_QUARTA, &AMBITUS, FALSUM, &e, &n, &v));
+    CREDO_NECESSE (n == II);
+    CREDO_AEQUALIS_I32 (e[0].nota, XL);
+    CREDO_AEQUALIS_I32 (e[I].nota, LII);
+    /* ambitus 40..52, E tentum: accessus infra (39) extra - F2 */
+    CREDO_NECESSE (_componere_basso(c, "B:4 B B A", "E",
+        QUARTA_QUARTA, &ANGUSTUS, FALSUM, &e, &n, &v));
+    CREDO_NECESSE (n == IV);
+    CREDO_AEQUALIS_I32 (e[0].nota, XL);
+    CREDO_AEQUALIS_I32 (e[III].nota, XLI);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "radix_sonans", _sectio_radix_sonans, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "mensurae", _sectio_mensurae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_radice", _sectio_sine_radice, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ambulans", _sectio_ambulans, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda_vitia", _sectio_acorda_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },

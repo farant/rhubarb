@@ -22,6 +22,15 @@
  *   vox     := 'B'  bassus acordi (post '/' si scriptus)
  *            | 'Q'  quinta acordi (dim, aug: sua; sine quinta: radix +
  *                   VII), proxima basso, in ambitu bassi
+ *            | 'T'  tertia acordi (sine tertia: quinta), proxima basso,
+ *                   ab eo diversa, in ambitu bassi
+ *            | 'A'  accessus: semitonium iuxta bassum acordi gradus
+ *                   proximi (eum quem 'B' proximus sonabit: proxima
+ *                   basso currenti), latere notae bassi ultimae
+ *                   propiore (aequales: infra; extra ambitum: latus
+ *                   alterum); acordum idem aut nullum: bassus ipse
+ *                   accessu cingitur; gradus ultimus carminis:
+ *                   acordum currens. Bassus ambulans: "B:4 T Q A"
  *            | 1..9 vox superior ab ima; ultra numerum classium acordi
  *                   octava supra (in triade 4 = 1 octava supra)
  *   valor   := divisor integrae ut MML (1 2 4 8 16 32 64; 3 6 12 24 48;
@@ -101,7 +110,8 @@ nomen structura {
 } ComitatusAcordum;
 
 nomen structura {
-    s32 voces[IX];      /* -1 'B', -2 'Q', 1..9 superiores */
+    s32 voces[IX];      /* -1 'B', -2 'Q', -3 'T', -4 'A', 1..9
+                         * superiores */
     i32 numerus_vocum;  /* 0 = pausa */
     s64 pulsus;         /* intra mensuram figurae */
     s64 longitudo;
@@ -137,7 +147,8 @@ nomen structura {
           f32 lucrum;
     character littera;    /* 'a'..'g' */
           i32 offset;     /* gradus, in textu figurae */
-          i32 vox;        /* 0 bassus ('B' 'Q'), 1..9 superior */
+          i32 vox;        /* 0 bassus ('B' 'Q' 'T' 'A'), 1..9
+                           * superior */
 } ComitatusNota;
 
 nomen structura {

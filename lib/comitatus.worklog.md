@@ -137,3 +137,18 @@ five-voice figure tells them apart (tested).
 Letters: added tones have no chord letter -> _littera_addita by degree from the root letter
 (9 +1, 13 +5, 11 +3): Bb7 rootless G and C. Plants 10/10. House songs unchanged (no figure
 declares a positio yet).
+
+## 2026-10-27 - C2: walking bass tokens 'T' (third) and 'A' (chromatic approach)
+
+'T': the chord's third in bass range, nearest the current bass, not the bass itself (C/E gives
+the other octave); no third (sus) -> the fifth. 'A': a semitone beside the bass the NEXT 'B'
+will play. The prediction reuses _positionem's own rule (nearest the current p.bassus), so the
+target and the next note always agree - p.bassus, not the last emitted note, is what the next
+positio is measured from. Side: nearer the last emitted bass-family note (new `ultima`), ties
+below. Same chord or no chord next / end of song: approach the current bass.
+Range: only the lower edge can fail (a tie at the very bottom, e.g. E held in 40..52 with
+B B B A -> Eb2 out, F2 taken). The upper check was dead code - the upper side wins only when
+the last note is above the target, impossible when the target is the top of the range -
+removed with a comment. "B:4 T Q A" on F7 | Bb7 | F7: F2 A2 C2 A2 | Bb2 D3 F2 E2 | F2 A2 C2 E2.
+Plants 7/7 (two needed new tests: C/E for "third differs from bass"; the 'ultima' plant had to
+keep the variable used or -Werror refused it).

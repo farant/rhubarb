@@ -15,6 +15,8 @@
 
 #define COMITATUS_VOX_BASSI    (-I)
 #define COMITATUS_VOX_QUINTAE  (-II)
+#define COMITATUS_VOX_TERTIAE  (-III)
+#define COMITATUS_VOX_ACCESSUS (-IV)
 
 /* fractum: inter voces singulas sexagesima quarta */
 #define COMITATUS_INTERVALLUM_FRACTI \
@@ -270,7 +272,7 @@ comitatus_acorda_legere (
     redde VERUM;
 }
 
-/* vox: 'B' bassus, 'Q' quinta, 1..9 */
+/* vox: 'B' bassus, 'Q' quinta, 'T' tertia, 'A' accessus, 1..9 */
 interior b32
 _vocem (
     character  c,
@@ -284,6 +286,16 @@ _vocem (
     si (c == 'Q')
     {
         *vox = COMITATUS_VOX_QUINTAE;
+        redde VERUM;
+    }
+    si (c == 'T')
+    {
+        *vox = COMITATUS_VOX_TERTIAE;
+        redde VERUM;
+    }
+    si (c == 'A')
+    {
+        *vox = COMITATUS_VOX_ACCESSUS;
         redde VERUM;
     }
     si (c >= '1' && c <= '9')
@@ -485,12 +497,13 @@ comitatus_figuram_legere (
     redde VERUM;
 }
 
-/* positio sonans: acordum, bassus, quinta, voces clausae */
+/* positio sonans: acordum, bassus, quinta, tertia, voces clausae */
 nomen structura {
         b32 sonat;
     Acordum acordum;
         s32 bassus;
         s32 quinta;
+        s32 tertia;         /* 'T': sine tertia quinta */
         s32 voces[XII];     /* positio clausa, ascendens */
         i32 numerus;        /* k: classes acordi */
         i32 adhibitae;      /* min(V, k) */
@@ -680,6 +693,41 @@ _littera_addita (
     redde LITTERAE[((i32)(l - 'a') + V + g) % VII];
 }
 
+/* 'A' (comitatus.h): semitonium iuxta scopum - bassum quem 'B'
+ * proximus sonabit (acordum gradus proximi, proxima basso currenti;
+ * idem aut nullum: bassus currens) - latere notae ultimae propiore,
+ * aequales infra; infra extra ambitum: supra */
+interior s32
+_accessum (
+    constans ComitatusAcordum* proximum,
+             constans Positio* p,
+    constans ComitatusAmbitus* ambitus,
+                          s32  ultima)
+{
+    s32 scopus = p->bassus;
+    s32 infra;
+    s32 supra;
+
+    si (   proximum != NIHIL && !proximum->nullum
+        && !_acorda_aequalia(&p->acordum, &proximum->acordum))
+    {
+        scopus = _proxima(proximum->acordum.bassus,
+            (s32)ambitus->bassi_infima, (s32)ambitus->bassi_summa,
+            p->bassus, -I);
+    }
+    infra = scopus - I;
+    supra = scopus + I;
+    /* infra extra ambitum solum in aequalitate (ultima = scopus in
+     * fundo ambitus); supra extra numquam eligitur: ultima supra
+     * summam stare non potest */
+    si (infra < (s32)ambitus->bassi_infima)
+    {
+        redde supra;
+    }
+    redde _absolutum((s64)(supra - ultima))
+            < _absolutum((s64)(infra - ultima)) ? supra : infra;
+}
+
 /* positio nova pro acordo: bassus, quinta, voces superiores motu
  * minimo */
 interior vacuum
@@ -717,6 +765,21 @@ _positionem (
     si (p->quinta < ZEPHYRUM)
     {
         p->quinta = p->bassus;
+    }
+    p->tertia = p->quinta;
+    si (   acordum_proprietates(a->genus)         != NIHIL
+        && acordum_proprietates(a->genus)->tertia >= ZEPHYRUM)
+    {
+        s32 t = _proxima((a->radix
+                          + (i32)acordum_proprietates(a->genus)->tertia)
+                         % XII, (s32)ambitus->bassi_infima,
+                         (s32)ambitus->bassi_summa, p->bassus,
+                         p->bassus);
+
+        si (t >= ZEPHYRUM)
+        {
+            p->tertia = t;
+        }
     }
     /* classes a radice ascendentes; voces pauciores quam classes:
      * quinta omittitur (sensibilis et septima manent) */
@@ -903,6 +966,7 @@ comitatus_componere (
               i32  n                = ZEPHYRUM;
               i32  m;
               i32  k;
+              s32  ultima           = -I;   /* nota bassi ultima */
 
     si (   ambitus->summa > CXXVII || ambitus->bassi_summa > CXXVII
         || ambitus->infima > ambitus->summa
@@ -999,6 +1063,18 @@ comitatus_componere (
                 {
                     nota = p.quinta;
                 }
+                alioquin si (vox == COMITATUS_VOX_TERTIAE)
+                {
+                    nota = p.tertia;
+                }
+                alioquin si (vox == COMITATUS_VOX_ACCESSUS)
+                {
+                    nota = _accessum(_ad(acorda, numerus_acordorum,
+                                         t + g->longitudo),
+                                     &p, ambitus,
+                                     ultima < ZEPHYRUM ? p.bassus
+                                                       : ultima);
+                }
                 alioquin
                 {
                     i32 index = (i32)(vox - I);
@@ -1020,10 +1096,12 @@ comitatus_componere (
                     e->littera = _littera_addita(&a->acordum,
                                                  (i32)nota % XII);
                 }
-                e->offset     = g->offset;
-                e->vox        = (vox == COMITATUS_VOX_BASSI
-                                 || vox == COMITATUS_VOX_QUINTAE)
-                              ? ZEPHYRUM : (i32)vox;
+                e->offset  = g->offset;
+                e->vox     = vox < ZEPHYRUM ? ZEPHYRUM : (i32)vox;
+                si (vox < ZEPHYRUM)
+                {
+                    ultima = nota;
+                }
                 n++;
             }
         }
