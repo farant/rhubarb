@@ -75,6 +75,10 @@ _purgare (
     Mundus* m;
 
     m = (Mundus*)c->datum;
+    si (m && m->servus)
+    {
+        communio_servum_destruere(m->servus);
+    }
     si (m && m->volumen)
     {
         volumen_claudere(m->volumen);
@@ -970,6 +974,208 @@ _sectio_paginae_http (
     rete_purgare(r);
 }
 
+
+/* ==================================================
+ * T5: tractio viva (long-poll)
+ * ================================================== */
+
+nomen structura {
+    HttpVocatio* vocatio;
+            b32  finita;
+} Exspectatio;
+
+/* petitionem GET incipere sine exspectatione (reactor postea agitur) */
+interior b32
+exspectare (
+                Rete* r,
+  constans character* via,
+  constans character* tessera,
+         Exspectatio* e)
+{
+     HttpPetitio* pet;
+       character  url[CCLVI];
+       character  auctoritas[LXIV];
+
+    e->finita = FALSUM;
+    sprintf(url, "http://127.0.0.1:%d%s", (integer)r->portus, via);
+    pet = http_petitio_creare(piscina, HTTP_GET, url);
+    si (!pet)
+    {
+        redde FALSUM;
+    }
+    sprintf(auctoritas, "Bearer %s", tessera);
+    http_petitio_caput_addere(pet, "Authorization", auctoritas);
+    e->vocatio = http_vocare(r->reactor, pet, NIHIL, NIHIL, _finis,
+        &e->finita, NIHIL, piscina);
+    redde e->vocatio != NIHIL;
+}
+
+/* reactorem agere: gyri X ms */
+interior vacuum
+pulsare (
+    Rete* r,
+     i32  gyri)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < gyri; i++)
+    {
+        (vacuum)reactor_poll(r->reactor, X);
+    }
+}
+
+/* actorum numerus responsi exspectationis finitae (-1 si non CC) */
+interior s32
+acta_responsi (
+    Exspectatio* e)
+{
+    HttpResultus  res;
+             Xar* l;
+
+    res = http_vocatio_resultus(e->vocatio);
+    si (!res.successus || !res.responsum || res.responsum->status != CC)
+    {
+        redde -I;
+    }
+    l = communio_acta_legere(res.responsum->corpus, NIHIL, piscina);
+    redde l ? (s32)xar_numerus(l) : -I;
+}
+
+interior vacuum
+_sectio_exspectat (
+    CredoContextus* c)
+{
+         Mundus* m;
+           Rete* r;
+    Exspectatio  y;
+    Exspectatio  w;
+    Exspectatio  x;
+      character  tessera_quarta[XLIV];
+        Volumen* volumen_quartum;
+            i32  gyri;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    r = rete_parare(m);
+    CREDO_NECESSE_NON_NIHIL(r);
+    volumen_quartum = volumen_temporarium(piscina,
+        "probatio_communio_rw");
+    CREDO_NECESSE_NON_NIHIL(volumen_quartum);
+    CREDO_NECESSE(apparatum_inscribere(m, m->amanda, "familia", "iPad",
+        volumen_quartum, tessera_quarta));
+    CREDO_NECESSE(acta_addere(r->vx, III) > ZEPHYRUM);
+
+    CREDO_GRADUS("exspectat donec X mittit; duo exspectantes");
+    CREDO_NECESSE(exspectare(r, "/communio/acta?post=0&mora=5", r->ty,
+        &y));
+    CREDO_NECESSE(exspectare(r, "/communio/acta?post=0&mora=5",
+        tessera_quarta,
+        &w));
+    pulsare(r, X);
+    CREDO_FALSUM(y.finita);
+    CREDO_FALSUM(w.finita);
+    CREDO_AEQUALIS_I32(rogare(r, HTTP_POST, "/communio/acta", r->tx,
+        corpus_actorum(r->vx, ZEPHYRUM)).status, CC);
+    per (gyri = ZEPHYRUM; (!y.finita || !w.finita) && gyri < C; gyri++)
+    {
+        pulsare(r, I);
+    }
+    CREDO_VERUM(y.finita);
+    CREDO_VERUM(w.finita);
+    CREDO_AEQUALIS_S64((s64)acta_responsi(&y), (s64)xar_numerus(
+        volumen_acta_propria_legere(r->vx, ZEPHYRUM, piscina)));
+    CREDO_AEQUALIS_S64((s64)acta_responsi(&w), (s64)acta_responsi(&y));
+
+    CREDO_GRADUS("propria non excitat");
+    CREDO_NECESSE(exspectare(r, "/communio/acta?post=0&mora=1", r->tx,
+        &x));
+    pulsare(r, V);
+    CREDO_NECESSE(acta_addere(r->vx, I) > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(rogare(r, HTTP_POST, "/communio/acta", r->tx,
+        corpus_actorum(r->vx, ZEPHYRUM)).status, CC);
+    pulsare(r, V);
+    CREDO_FALSUM(x.finita);
+    per (gyri = ZEPHYRUM; !x.finita && gyri < CC; gyri++)
+    {
+        pulsare(r, I);
+    }
+    CREDO_VERUM(x.finita);
+    CREDO_AEQUALIS_S64((s64)acta_responsi(&x), ZEPHYRUM);
+
+    CREDO_GRADUS("mora mala");
+    CREDO_AEQUALIS_I32(rogare_json(r, HTTP_GET,
+        "/communio/acta?post=0&mora=x", r->ty, NIHIL).status, CD);
+    volumen_claudere(volumen_quartum);
+    rete_purgare(r);
+}
+
+interior vacuum
+_sectio_tempus (
+    CredoContextus* c)
+{
+         Mundus* m;
+           Rete* r;
+    Exspectatio  y;
+            i32  gyri;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    r = rete_parare(m);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_NECESSE(exspectare(r, "/communio/acta?post=0&mora=1", r->ty,
+        &y));
+    pulsare(r, L);
+    CREDO_FALSUM(y.finita);
+    per (gyri = ZEPHYRUM; !y.finita && gyri < CCC; gyri++)
+    {
+        pulsare(r, I);
+    }
+    CREDO_VERUM(y.finita);
+    CREDO_AEQUALIS_S64((s64)acta_responsi(&y), ZEPHYRUM);
+    rete_purgare(r);
+}
+
+interior vacuum
+_sectio_abrumpere (
+    CredoContextus* c)
+{
+         Mundus* m;
+           Rete* r;
+    Exspectatio  y;
+      Responsum  q;
+            i32  horae;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    r = rete_parare(m);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_NECESSE(exspectare(r, "/communio/acta?post=0&mora=5", r->ty,
+        &y));
+    pulsare(r, V);
+    http_vocationem_abrumpere(y.vocatio);
+    pulsare(r, V);
+    CREDO_NECESSE(acta_addere(r->vx, II) > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(rogare(r, HTTP_POST, "/communio/acta", r->tx,
+        corpus_actorum(r->vx, ZEPHYRUM)).status, CC);
+    q = rogare_json(r, HTTP_GET, "/communio/acta?post=0", r->ty, NIHIL);
+    CREDO_AEQUALIS_I32(q.status, CC);
+    CREDO_VERUM(xar_numerus(communio_acta_legere(q.corpus, NIHIL,
+        piscina)) > ZEPHYRUM);
+
+    CREDO_GRADUS("destruere: nullum tempus relictum");
+    CREDO_NECESSE(exspectare(r, "/communio/acta?post=999999&mora=5",
+        r->ty, &y));
+    pulsare(r, V);
+    horae = reactor_numerus_timer(r->reactor);
+    communio_servum_destruere(m->servus);
+    CREDO_AEQUALIS_I32(reactor_numerus_timer(r->reactor), horae - I);
+    http_vocationem_abrumpere(y.vocatio);
+    hospitium_destruere(r->hospitium);
+    r->hospitium = NIHIL;
+    CREDO_AEQUALIS_I32(reactor_numerus_timer(r->reactor), ZEPHYRUM);
+    rete_purgare(r);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "apparatus", _sectio_apparatus, _parare, _purgare, NIHIL, NIHIL },
     { "revocatus", _sectio_revocatus, _parare, _purgare, NIHIL, NIHIL },
@@ -992,6 +1198,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "paginae (HTTP)", _sectio_paginae_http, _parare, _purgare, NIHIL,
         NIHIL },
+    { "exspectat (long-poll)", _sectio_exspectat, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "tempus (long-poll)", _sectio_tempus, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "cliens abiit (long-poll)", _sectio_abrumpere, _parare,
+        _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

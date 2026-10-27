@@ -45,3 +45,26 @@ an outsider cannot probe which blobs exist). Calls made while building:
 
 Plants (porta radix): replica check off, blob hash check off, own replica not
 excluded from a pull, space filter off - all four turned the suite red.
+
+## 2026-10-27 - live pull / long-poll (plan-2 T5)
+
+`GET /communio/acta?post=N&mora=S` (S capped at XXV s, under hospitium's 30 s
+deferred limit) defers when nothing is there. Waiters live in a FIXED array of
+LXIV slots inside the server (no allocation per wait; when full the request is
+simply answered at once). Each slot holds the deferred handle, a copy of the
+caller's CommunioApparatus (its chordae point into the deferred request's pool,
+which lives as long as the deferral - only read after dilatum_colloquium
+confirms it is still alive), the cursor, and one non-repeating reactor timer.
+
+A push that IMPORTED something (not only "already present") wakes the waiters of
+the same space; each gets a fresh pull body, and only if it now has acts. Dead
+slots (client gone, handle invalid) are released on the next wake or the next
+wait. communio_servum_destruere cancels every live timer - exemplar must destroy
+the server BEFORE the hospitium (a timer firing into a destroyed hospitium would
+touch freed memory).
+
+Plant note: "the pusher's own waiter is skipped" is a shortcut only - _tractio
+already excludes the caller's replica, so a woken own-waiter finds nothing and
+stays deferred. The plant removing the shortcut stayed green by design; the test
+"propria non excitat" pins the behaviour, not the shortcut. The plant removing
+timer cancellation in destruere turned red.

@@ -59,8 +59,9 @@ communio_servum_creare (
       Cives* cives,
          s64 (*nunc_ms)(vacuum));
 
-/* arenas servi reddit; volumen et cives vocatoris manent. NIHIL =
- * nihil agit. */
+/* arenas servi reddit et horas exspectantium (T5) cancellat; volumen
+ * et cives vocatoris manent. ANTE hospitium_destruere vocandum. NIHIL
+ * = nihil agit. */
 vacuum
 communio_servum_destruere (
     CommunioServus* servus);
@@ -148,7 +149,11 @@ communio_tesseram_facere (
  * GET  /communio/acta?post=N -> {"acta":[...],"cursor":M,"plura":b,
  *      "massae":[hex]}: acta (seq servi > N) apparatuum ALIORUM spatii,
  *      CC ad plurimum; cursor = seq servi ultimi (N si nulla); massae =
- *      quas acta nominant et servus habet */
+ *      quas acta nominant et servus habet. &mora=S (T5, XXV s ad
+ *      plurimum): si nihil est, petitio exspectat donec apparatus alius
+ *      spatii acta nova mittit (responsum idem ac tractio recens) aut S
+ *      secundae transeunt (acta vacua, cursor N); loci LXIV, pleni =
+ *      responsum statim */
 
 b32
 communio_servum_montare (

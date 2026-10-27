@@ -16,6 +16,20 @@
 #define DIGESTUM_LONGITUDO   LXIV
 #define TESSERA_OCTETI       XXXII
 
+#define EXSPECTANTES_MAXIMI  LXIV
+#define MORA_MAXIMA_S        XXV
+
+/* T5: tractio dilata (long-poll) - locus fixus, nulla allocatio */
+nomen structura {
+    structura CommunioServus* servus;
+                         b32 vivus;
+            HospitiumDilatum dilatum;
+           CommunioApparatus apparatus;  /* chordae petitionis */
+                         s64 post;
+              ReactorTimerId hora;
+                         b32 hora_viva;
+} Exspectans;
+
 structura CommunioServus {
           Piscina* piscina;
           Piscina* tempus;      /* scripturae: notare/reficere */
@@ -23,6 +37,8 @@ structura CommunioServus {
          Scrinium* scrinium;
             Cives* cives;
                s64 (*nunc_ms)(vacuum);
+           Reactor* reactor;    /* hospitii (montare) */
+        Exspectans  exspectantes[EXSPECTANTES_MAXIMI];
 };
 
 hic_manens constans character* constans SCHEMA[] = {
@@ -254,11 +270,28 @@ communio_servum_creare (
     redde s;
 }
 
+interior vacuum
+_exspectantem_solvere (
+    Exspectans* x);
+
 vacuum
 communio_servum_destruere (
     CommunioServus* servus)
 {
-    si (servus && servus->tempus)
+    i32 i;
+
+    si (!servus)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < EXSPECTANTES_MAXIMI; i++)
+    {
+        si (servus->exspectantes[i].vivus)
+        {
+            _exspectantem_solvere(&servus->exspectantes[i]);
+        }
+    }
+    si (servus->tempus)
     {
         piscina_destruere(servus->tempus);
         servus->tempus = NIHIL;
@@ -1011,6 +1044,12 @@ _massa_get (
         fons);
 }
 
+interior vacuum
+_excitare (
+    CommunioServus* s,
+            chorda  spatium,
+            chorda  replica);
+
 interior constans character*
 _causa_importationis (
     VolumenImportatio x)
@@ -1042,6 +1081,7 @@ _acta_post (
                       JsonValor* refusum;
                             i32  i;
                             i32  accepta;
+                            i32  importata;
 
     s = (CommunioServus*)colloquium_datum(col);
     si (!_admissus(col, &a))
@@ -1072,8 +1112,9 @@ _acta_post (
             redde;
         }
     }
-    accepta = ZEPHYRUM;
-    refusum = json_nullum_creare(p);
+    accepta    = ZEPHYRUM;
+    importata  = ZEPHYRUM;
+    refusum    = json_nullum_creare(p);
     per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
     {
         VolumenImportatio x = volumen_actum_importare(s->volumen,
@@ -1082,6 +1123,10 @@ _acta_post (
         si (x == VOLUMEN_IMPORTATUM || x == VOLUMEN_IAM_ADEST)
         {
             accepta++;
+            si (x == VOLUMEN_IMPORTATUM)
+            {
+                importata++;
+            }
             perge;
         }
         refusum = json_objectum_creare(p);
@@ -1097,6 +1142,10 @@ _acta_post (
         (s64)accepta));
     json_objectum_ponere(o, "refusum", refusum);
     _json_respondere(col, CC, o);
+    si (importata > ZEPHYRUM)
+    {
+        _excitare(s, a.spatium, a.replica);
+    }
 }
 
 /* replicae ligatae spatii praeter propriam: tabula chordarum */
@@ -1215,6 +1264,164 @@ _tractio (
     redde o;
 }
 
+
+/* ==================================================
+ * Tractio dilata (T5)
+ * ================================================== */
+
+interior i32
+_numerus_actorum (
+    JsonValor* o)
+{
+    redde json_tabulatum_numerus(json_objectum_capere(o, "acta"));
+}
+
+interior vacuum
+_exspectantem_solvere (
+    Exspectans* x)
+{
+    si (x->hora_viva && x->servus->reactor)
+    {
+        (vacuum)reactor_timer_cancellare(x->servus->reactor, x->hora);
+    }
+    x->hora_viva  = FALSUM;
+    x->vivus      = FALSUM;
+}
+
+/* responsum dilatum dare (tractio recens); solvit */
+interior vacuum
+_exspectanti_respondere (
+             Exspectans* x,
+    HospitiumColloquium* col)
+{
+    JsonValor* o;
+
+    o = _tractio(x->servus, &x->apparatus, x->post,
+        colloquium_piscina(col));
+    si (o)
+    {
+        _json_respondere(col, CC, o);
+    }
+    alioquin
+    {
+        _errare(col, D, "tractio");
+    }
+    _exspectantem_solvere(x);
+}
+
+/* terminus: responsum (vacuum aut quod interim advenit) */
+interior vacuum
+_mora_exspirat (
+    vacuum* datum)
+{
+             Exspectans* x;
+    HospitiumColloquium* col;
+
+    x             = (Exspectans*)datum;
+    x->hora_viva  = FALSUM;
+    col           = dilatum_colloquium(x->dilatum);
+    si (col)
+    {
+        _exspectanti_respondere(x, col);
+    }
+    x->vivus = FALSUM;
+}
+
+/* petitionem differre; FALSUM (respondendum statim) si loci pleni aut
+ * horologium deficit */
+interior b32
+_exspectare (
+       CommunioServus* s,
+  HospitiumColloquium* col,
+    CommunioApparatus* a,
+                  s64  post,
+                  s64  mora)
+{
+    Exspectans* x;
+           i32  i;
+
+    si (!s->reactor)
+    {
+        redde FALSUM;
+    }
+    x = NIHIL;
+    per (i = ZEPHYRUM; i < EXSPECTANTES_MAXIMI && !x; i++)
+    {
+        si (   s->exspectantes[i].vivus
+            && !dilatum_valet(s->exspectantes[i].dilatum))
+        {
+            _exspectantem_solvere(&s->exspectantes[i]);
+        }
+        si (!s->exspectantes[i].vivus)
+        {
+            x = &s->exspectantes[i];
+        }
+    }
+    si (!x)
+    {
+        redde FALSUM;
+    }
+    si (mora > MORA_MAXIMA_S)
+    {
+        mora = MORA_MAXIMA_S;
+    }
+    x->servus     = s;
+    x->apparatus  = *a;
+    x->post       = post;
+    x->hora = reactor_timer_adicere(s->reactor, (i32)(mora * M), FALSUM,
+        _mora_exspirat, x);
+    si (x->hora == (ReactorTimerId)-I)
+    {
+        redde FALSUM;
+    }
+    x->hora_viva  = VERUM;
+    x->vivus      = VERUM;
+    x->dilatum    = colloquium_differre(col);
+    redde VERUM;
+}
+
+/* post importationem: exspectantes spatii excitantur si nunc aliquid
+ * habent; mortui solvuntur. Scriptor ipse praeteritur sine quaestione
+ * (compendium tantum: _tractio propria iam excludit) */
+interior vacuum
+_excitare (
+    CommunioServus* s,
+            chorda  spatium,
+            chorda  replica)
+{
+                    i32  i;
+    HospitiumColloquium* col;
+              JsonValor* o;
+
+    per (i = ZEPHYRUM; i < EXSPECTANTES_MAXIMI; i++)
+    {
+        Exspectans* x = &s->exspectantes[i];
+
+        si (!x->vivus)
+        {
+            perge;
+        }
+        col = dilatum_colloquium(x->dilatum);
+        si (!col)
+        {
+            _exspectantem_solvere(x);
+            perge;
+        }
+        si (   !chorda_aequalis(x->apparatus.spatium, spatium)
+            || chorda_aequalis(x->apparatus.replica, replica))
+        {
+            perge;
+        }
+        o = _tractio(s, &x->apparatus, x->post,
+            colloquium_piscina(col));
+        si (o && _numerus_actorum(o) > ZEPHYRUM)
+        {
+            _json_respondere(col, CC, o);
+            _exspectantem_solvere(x);
+        }
+    }
+}
+
 interior vacuum
 _acta_get (
     HospitiumColloquium* col)
@@ -1223,6 +1430,7 @@ _acta_get (
     CommunioApparatus  a;
                chorda  t;
                   s64  post;
+                  s64  mora;
             JsonValor* o;
 
     s = (CommunioServus*)colloquium_datum(col);
@@ -1231,16 +1439,28 @@ _acta_get (
         redde;
     }
     post  = ZEPHYRUM;
+    mora  = ZEPHYRUM;
     t     = colloquium_quaestio(col, "post");
     si (t.datum && !_numerus_legere(t, &post))
     {
         _errare(col, CD, "post");
         redde;
     }
+    t = colloquium_quaestio(col, "mora");
+    si (t.datum && !_numerus_legere(t, &mora))
+    {
+        _errare(col, CD, "mora");
+        redde;
+    }
     o = _tractio(s, &a, post, colloquium_piscina(col));
     si (!o)
     {
         _errare(col, D, "tractio");
+        redde;
+    }
+    si (   mora > ZEPHYRUM && _numerus_actorum(o) == ZEPHYRUM
+        && _exspectare(s, col, &a, post, mora))
+    {
         redde;
     }
     _json_respondere(col, CC, o);
@@ -1255,6 +1475,7 @@ communio_servum_montare (
     {
         redde FALSUM;
     }
+    servus->reactor = hospitium_reactor(hospitium);
     redde hospitium_praebere(hospitium, HTTP_POST,
         "/communio/apparatus",
                _ligare_post, servus)
