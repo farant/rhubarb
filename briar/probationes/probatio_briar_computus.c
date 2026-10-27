@@ -10,6 +10,7 @@
 #include "credo.h"
 #include "piscina.h"
 #include "briar_computus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -203,7 +204,7 @@ _aurum_conferre (
     si (getenv("COMPUTUS_SCRIBERE") != NIHIL)
     {
         imprimere("\n  AURUM SCRIBITUR (COMPUTUS_SCRIBERE) - AUDI causam\n");
-        aurum = fopen(f->via_auri, "w");
+        aurum = lectiones_fopen(f->via_auri, "w");
         CREDO_NON_NIHIL (aurum);
         si (aurum != NIHIL)
         {

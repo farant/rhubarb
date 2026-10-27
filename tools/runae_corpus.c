@@ -23,6 +23,7 @@
 #include "materia_nodus.h"
 #include "html_arbor.h"
 #include "html_registrum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -371,7 +372,7 @@ principale (
     chorda_aedificator_appendere_character(specimen, '\n');
     exitus = chorda_aedificator_spectare(specimen);
 
-    f = fopen(argv[II], "wb");
+    f = lectiones_fopen(argv[II], "wb");
     si (   f == NIHIL
         || fwrite(exitus.datum, I, (size_t)exitus.mensura, f)
                != (size_t)exitus.mensura)

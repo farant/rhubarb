@@ -19,3 +19,14 @@
 lib/sonitus.c	stml	a1b658d4 (…YR99SJ1): <stringificatio> invocationem et extentum fert, argumentum transclusum
 lib/sonitus.c	lectio	a1b658d4 (…YR99SJ1): documentum pignoris argumentum bis fert - lector vivus id per membra extentorum aliter derivat
 lib/sonitus.c	comparator	a1b658d4 (…YR99SJ1): comparator vivus lapsum documenti pignoris videt (lexema/offset); pignus caecus erat
+
+# 2026-10-27 (c07d0259, verritio fabrica-8): tolerae bicodices - commentarium
+# unum cum <tolera> DUOBUS (96 + 97 ad fopen scribentem). In contextu oraculi
+# (sine lexico systematis) nulla tolera absorbetur: viva elementum quodque
+# IRRITUM (56) notat; pignus (7a4847b0) codices 96/97 ignorat, elementa duo ut
+# 'ignotus' eadem linea in unum colligit - IRRITUM unum. Mensuratum: credo
+# IX commentaria -> pignus IX, viva X; filum XXXI -> XXXI, XXXVI. Examen verum
+# (cum lexico) ambo codices absorbet. Findi nequit: tolera superior sententiam
+# non tegit (REICE).
+lib/credo.c	semantica	c07d0259: tolera bicodex (I commentarium) - pignus 96/97 ignorat, elementa duo in unum colligit (IRRITUM unum), viva duo
+lib/filum.c	semantica	c07d0259: tolera bicodex (V commentaria) - pignus 96/97 ignorat, elementa duo in unum colligit (IRRITUM unum), viva duo

@@ -7,6 +7,7 @@
 #include "xar.h"
 #include "chorda_aedificator.h"
 #include "friatio.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -1239,7 +1240,7 @@ silva_gen_canonem_scribere (
         redde FALSUM;
     }
 
-    pl = fopen(via, "w");
+    pl = lectiones_fopen(via, "w");
     si (pl == NIHIL)
     {
         fprintf(stderr, "canon: plagula aperiri non potuit: %s\n", via);

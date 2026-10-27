@@ -17,6 +17,7 @@
 #include "imago.h"
 #include "imago_png.h"
 #include "lectiones.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -80,11 +81,11 @@ _purgare (
     character tabula[CCLVI];
 
     sprintf(tabula, "%s/%s.png", SCRINIUM, titulus);
-    remove(tabula);
+    (vacuum)filum_delere(tabula);
     sprintf(tabula, "%s/%s.novum.png", SCRINIUM, titulus);
-    remove(tabula);
+    (vacuum)filum_delere(tabula);
     sprintf(tabula, "%s/%s.differentia.png", SCRINIUM, titulus);
-    remove(tabula);
+    (vacuum)filum_delere(tabula);
 }
 
 interior vacuum
@@ -208,8 +209,7 @@ _sectio_tertia (
         /* ACCEPTIO: candidatum super exemplar movere. Nihil aliud. */
         _viam(candidatus, titulus, ".novum.png");
         _viam(exemplar, titulus, ".png");
-        CREDO_AEQUALIS_S32((s32)rename(candidatus, exemplar),
-            (s32)ZEPHYRUM);
+        CREDO_VERUM(filum_movere(candidatus, exemplar));
 
         /* Eadem captura nunc CONGRUIT */
         f = specimen_iudicare(&captura, titulus, regula, piscina);
@@ -249,7 +249,7 @@ _sectio_quarta (
         f = specimen_iudicare(&parva, titulus, regula, piscina);
         _viam(candidatus, titulus, ".novum.png");
         _viam(exemplar, titulus, ".png");
-        rename(candidatus, exemplar);
+        (vacuum)filum_movere(candidatus, exemplar);
 
         f = specimen_iudicare(&magna, titulus, regula, piscina);
         CREDO_AEQUALIS_S32((s32)f.sententia,
@@ -293,7 +293,7 @@ _sectio_quinta (
         _viam(candidatus, titulus, ".novum.png");
         _viam(exemplar, titulus, ".png");
         _viam(differentia, titulus, ".differentia.png");
-        rename(candidatus, exemplar);
+        (vacuum)filum_movere(candidatus, exemplar);
 
         /* Unum pixelum mutare */
         mutata = _imago_ficta(piscina, X, X, (i8)C);

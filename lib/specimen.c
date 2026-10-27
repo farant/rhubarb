@@ -14,6 +14,7 @@
 #include "specimen.h"
 #include "imago.h"       /* decodificator exemplarium (stb_image) */
 #include "imago_png.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -41,7 +42,8 @@ _viam_struere (
     m_suffixi  = strlen(suffixum);
 
     via = (character*)piscina_allocare(
-              piscina, (memoriae_index)(m_scrinii + m_tituli + m_suffixi + II));
+              piscina, (memoriae_index)(m_scrinii + m_tituli + m_suffixi
+                  + II));
     si (via == NIHIL)
     {
         redde NIHIL;
@@ -148,7 +150,8 @@ _secare (
     per (versus = ZEPHYRUM; versus < alt; versus++)
     {
         memcpy(nova.pixela + versus * lat * (i32)IV,
-               fons->pixela + ((y + versus) * fons->latitudo + x) * (i32)IV,
+               fons->pixela + ((y + versus) * fons->latitudo
+                   + x) * (i32)IV,
                (size_t)(lat * (i32)IV));
     }
 
@@ -248,7 +251,8 @@ specimen_iudicare (
     si (   captura         == NIHIL || captura->pixela == NIHIL
         || regula.scrinium == NIHIL)
     {
-        fructus.causa = chorda_ex_literis("Argumenta invalida", piscina);
+        fructus.causa = chorda_ex_literis("Argumenta invalida",
+            piscina);
         redde fructus;
     }
 
@@ -292,7 +296,8 @@ specimen_iudicare (
         }
 
         fructus.sententia = SPECIMEN_EXEMPLAR_ABEST;
-        fructus.via_candidati = chorda_ex_literis(via_candidati, piscina);
+        fructus.via_candidati = chorda_ex_literis(via_candidati,
+            piscina);
         fructus.causa = chorda_ex_literis(
             "Exemplar abest. Candidatus scriptus est - eum INSPICE, "
             "deinde super exemplar move ut acceptes.", piscina);
@@ -306,7 +311,8 @@ specimen_iudicare (
         scriptum = imago_png_scribere(captura, via_candidati, piscina);
         si (scriptum.successus)
         {
-            fructus.via_candidati = chorda_ex_literis(via_candidati, piscina);
+            fructus.via_candidati = chorda_ex_literis(via_candidati,
+                piscina);
         }
 
         fructus.sententia = SPECIMEN_MENSURAE_DISCREPANT;
@@ -325,8 +331,8 @@ specimen_iudicare (
     {
         /* Artificia vetera tollere: aliter probatio SANATA indicem
          * fracturarum inspiciendarum in `git status` relinquit */
-        remove(via_candidati);
-        remove(via_differentiae);
+        (vacuum)filum_delere(via_candidati);
+        (vacuum)filum_delere(via_differentiae);
 
         fructus.sententia = SPECIMEN_CONGRUIT;
         redde fructus;
@@ -335,7 +341,8 @@ specimen_iudicare (
     scriptum = imago_png_scribere(captura, via_candidati, piscina);
     si (scriptum.successus)
     {
-        fructus.via_candidati = chorda_ex_literis(via_candidati, piscina);
+        fructus.via_candidati = chorda_ex_literis(via_candidati,
+            piscina);
     }
 
     si (fructus.collatio.pictura_praesto)
@@ -468,7 +475,7 @@ specimen_manus (
     }
 
     captura = imago_caricare_ex_file(via_temporaria, piscina);
-    remove(via_temporaria);
+    (vacuum)filum_delere(via_temporaria);
 
     si (!captura.successus)
     {
@@ -503,7 +510,8 @@ specimen_manus (
             + strlen(pars_altera) + I));
         si (js == NIHIL)
         {
-            fructus.causa = chorda_ex_literis("Allocatio fracta", piscina);
+            fructus.causa = chorda_ex_literis("Allocatio fracta",
+                piscina);
             redde fructus;
         }
         js[0] = '\0';
@@ -530,10 +538,14 @@ specimen_manus (
             s32 css_latitudo = numeri[IV];
             s32 x, y, lat, alt;
 
-            x = (s32)((numeri[0] * (s32)iudicanda.latitudo) / css_latitudo);
-            y = (s32)((numeri[I] * (s32)iudicanda.latitudo) / css_latitudo);
-            lat = (s32)((numeri[II] * (s32)iudicanda.latitudo) / css_latitudo);
-            alt = (s32)((numeri[III] * (s32)iudicanda.latitudo) / css_latitudo);
+            x = (s32)((numeri[0] * (s32)iudicanda.latitudo)
+                / css_latitudo);
+            y = (s32)((numeri[I] * (s32)iudicanda.latitudo)
+                / css_latitudo);
+            lat = (s32)((numeri[II] * (s32)iudicanda.latitudo)
+                / css_latitudo);
+            alt = (s32)((numeri[III] * (s32)iudicanda.latitudo)
+                / css_latitudo);
 
             si (x < 0)
             { x = 0;

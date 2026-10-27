@@ -68,6 +68,7 @@
 #include "materia_scribere.h"
 #include "piscina.h"
 #include "sors.h"
+#include "lectiones.h"
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -331,7 +332,7 @@ _fractum_scribere (
 
     sprintf(via, "%s/crusta/build/totalitas_fractum.sh",
         _radix_viae());
-    f = fopen(via, "wb");
+    f = lectiones_fopen(via, "wb");
     si (f == NIHIL)
     {
         redde;

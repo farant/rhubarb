@@ -22,6 +22,7 @@
 #include "provenientia.h"
 #include "filum.h"
 #include "iter_directoria.h"
+#include "lectiones.h"
 #include <string.h>
 
 #define EXTENSIO ".genera"
@@ -1583,7 +1584,7 @@ _canonem_modulo_scribere (
         redde FALSUM;
     }
 
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (!f)
     {
         fprintf(stderr, "natura_canones: '%s' scribi nequit\n", via);
@@ -1610,7 +1611,7 @@ _canonem_modulo_scribere (
 
     si (!sanum)
     {
-        remove(via);
+        (vacuum)filum_delere(via);
         fprintf(stderr,
             "natura_canones: '%s' RECUSATUS et deletus\n", via);
         redde FALSUM;
@@ -1786,7 +1787,7 @@ _canonem_totum_scribere (
     _praefationem_scribere(praefatio, (i32)magnitudo(praefatio),
                            &census);
 
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (!f)
     {
         fprintf(stderr, "natura_canones: '%s' scribi nequit\n", via);
@@ -1808,7 +1809,7 @@ _canonem_totum_scribere (
 
     si (!sanum)
     {
-        remove(via);
+        (vacuum)filum_delere(via);
         fprintf(stderr,
             "natura_canones: '%s' RECUSATUS et deletus\n", via);
         redde FALSUM;

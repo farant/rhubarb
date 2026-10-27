@@ -36,7 +36,7 @@ declare -a INCLUDE_FLAGS=(
 #         silva lexer + the shared mechanism) ----
 declare -a MECHANISMI_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio"
+    "friatio" "lectiones"
 )
 # capita mutata sine recompilo = corruptio ABI (excubitor: mech_*
 # stala post latina.h - eadem classis mixturae)

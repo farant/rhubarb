@@ -444,7 +444,7 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "vocatio IO cruda extra canalem lectionum (filum) - fabrica"
       " ingressum non videt", EXAMEN_VIOLATIO },
     { "scriptura cruda extra canalem lectionum (filum) - fabrica"
-      " scripturam non videt", EXAMEN_DOMESTICUM }
+      " scripturam non videt", EXAMEN_VIOLATIO }
 };
 
 /* prototypa: sedes 89 (typus alienus, acies flexibilis) ante
@@ -1109,7 +1109,8 @@ _macros_domestica_in_alienis_examinare (
  * ================================================== */
 
 nomen structura {
-    i32 linea;          /* commentarii ipsius */
+    i32 linea;          /* commentarii ipsius (initium) */
+    i32 linea_finis;    /* commentarii finis (plurium linearum) */
     s32 fons_index;
     s32 codex;          /* -I = ignotus -> IRRITUM */
     b32 habet_causam;
@@ -1273,7 +1274,15 @@ _toleram_ex_elemento (
         {
             redde;
         }
-        e->linea         = a->linea;
+        e->linea        = a->linea;
+        e->linea_finis  = a->linea;
+        per (k = ZEPHYRUM; k < a->crudum.mensura; k++)
+        {
+            si (a->crudum.datum[k] == '\n')
+            {
+                e->linea_finis++;
+            }
+        }
         e->fons_index    = a->fons_index;
         e->codex         = codex;
         e->habet_causam  = causam;
@@ -1361,7 +1370,10 @@ _toleras_colligere (
 }
 
 /* suppressio per SEDEM: TOLERA cum causa, codice congruente, in
- * fonte eodem, linea firing aut praecedente. Absorbens usum notat.
+ * fonte eodem, linea firing aut praecedente - aut linea STATIM post
+ * finem commentarii sui (commentarium plurium linearum supra
+ * sententiam eam tegit: codices duo eidem sedi, 2026-10-26).
+ * Absorbens usum notat.
  * Congruentia semper per lineam fuit - nodus sedem solum dabat;
  * inventa sine nodo (EXTENSIO_COMPILATORIS, T17b) hic directe
  * intrant (porta quam familia portabilitatis nominat). */
@@ -1386,7 +1398,8 @@ _tolera_absorbere_sedem (
 
         si (   e != NIHIL && e->codex == codex && e->habet_causam
             && e->fons_index == fons_index
-            && (e->linea == linea || e->linea + I == linea))
+            && (   e->linea == linea || e->linea + I == linea
+                || e->linea_finis + I == linea))
         {
             e->usus = VERUM;
             redde VERUM;
@@ -7292,6 +7305,71 @@ _modus_scribens (
     redde FALSUM;
 }
 
+/* functiones quarum emendatio mechanica in silva/transformationes/
+ * <functio>.stml stat (transformare T6; nuntius 97 eam nominat) */
+interior b32
+_regulae_mechanicae (
+    chorda titulus)
+{
+    redde chorda_aequalis_literis(titulus, "remove")
+        || chorda_aequalis_literis(titulus, "unlink")
+        || chorda_aequalis_literis(titulus, "rmdir")
+        || chorda_aequalis_literis(titulus, "rename")
+        || chorda_aequalis_literis(titulus, "chmod")
+        || chorda_aequalis_literis(titulus, "mkdir")
+        || chorda_aequalis_literis(titulus, "fopen");
+}
+
+/* nomen DECLARATUM, non vocatum (codices 96/97, 2026-10-27): lexema
+ * praecedens (stellis '*' transitis) specificator est - verbum typi,
+ * classis memoriae, aut identificator (typus nominatus). 'int remove
+ * (...)' in capite systematis (systema_c89.h) vocatio non est; vocatio
+ * post identificatorem aut verbum typi in C stare nequit. LIMES:
+ * multiplicatio per valorem vocationis ('n * remove(v)') ut declaratio
+ * legitur - in codice vero nulla. */
+interior b32
+_declaratum_est (
+     Xar* fluxus,
+     i32  i)
+{
+     SilvaToken* prae  = NIHIL;
+            i32  k     = i;
+
+    dum (k > ZEPHYRUM)
+    {
+        k--;
+        prae = *(SilvaToken**)xar_obtinere(fluxus, k);
+        si (prae == NIHIL || prae->genus != SILVA_LEX_STAR)
+        {
+            frange;
+        }
+    }
+    si (prae == NIHIL || k == i)
+    {
+        redde FALSUM;
+    }
+    commutatio (prae->genus)
+    {
+        casus SILVA_LEX_IDENTIFICATOR:
+        casus SILVA_LEX_VOID:
+        casus SILVA_LEX_CHAR:
+        casus SILVA_LEX_SHORT:
+        casus SILVA_LEX_INT:
+        casus SILVA_LEX_LONG:
+        casus SILVA_LEX_FLOAT_KW:
+        casus SILVA_LEX_DOUBLE:
+        casus SILVA_LEX_SIGNED:
+        casus SILVA_LEX_UNSIGNED:
+        casus SILVA_LEX_CONST:
+        casus SILVA_LEX_VOLATILE:
+        casus SILVA_LEX_EXTERN:
+        casus SILVA_LEX_STATIC:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
 interior vacuum
 _canalem_examinare (
            SilvaSemantica* sem,
@@ -7365,6 +7443,10 @@ _canalem_examinare (
         {
             perge;
         }
+        si (_declaratum_est(fluxus, i))
+        {
+            perge;
+        }
         per (k = ZEPHYRUM; k + I < xar_numerus(visa); k += II)
         {
             si (   *(i32*)xar_obtinere(visa, k)     == t->linea
@@ -7394,8 +7476,8 @@ _canalem_examinare (
             perge;
         }
         nuntius = (character*)piscina_allocare(sem->piscina,
-            (memoriae_index)t0->valor.mensura
-            + (memoriae_index)gp->pro.mensura + (memoriae_index)CCLVI);
+            (memoriae_index)II * t0->valor.mensura
+            + (memoriae_index)gp->pro.mensura + (memoriae_index)DXII);
         si (nuntius == NIHIL)
         {
             perge;
@@ -7414,6 +7496,17 @@ _canalem_examinare (
                 gp->scriptura ? (int)gp->pro.mensura : ZEPHYRUM,
                 (constans character*)gp->pro.datum,
                 gp->scriptura && gp->pro.mensura > ZEPHYRUM ? "'" : "");
+            /* N4 (transformare): emendatio mechanica nominata -
+             * regulae silva/transformationes/<functio>.stml */
+            si (_regulae_mechanicae(t0->valor))
+            {
+                sprintf(nuntius + strlen(nuntius),
+                    "; emendatio mechanica:"
+                    " ./silva/transformare.sh -regulae"
+                    " silva/transformationes/%.*s.stml <viae>",
+                    (int)t0->valor.mensura,
+                    (constans character*)t0->valor.datum);
+            }
         }
         alioquin
         {

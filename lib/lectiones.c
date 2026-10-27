@@ -7,6 +7,7 @@
  */
 #include "postulata_posix.h"
 #include "lectiones.h"
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,8 +35,8 @@ _littera (
     redde '?';
 }
 
-vacuum
-lectiones_notare (
+interior vacuum
+_lectionem_notare (
                  LectioGenus  genus,
           constans character* via)
 {
@@ -74,6 +75,8 @@ lectiones_notare (
         /* CLOEXEC: programma exsecutum (alienum quoque) descriptorem
          * libri non hereditat; filii sine exec (fork) eum
          * communicant */
+        /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+         * liber lectionum ipse (se ipsum non notat) */
         _descriptor = open(liber, O_WRONLY | O_APPEND | O_CREAT
             | O_CLOEXEC, 0644);
         si (_descriptor < 0)
@@ -100,6 +103,21 @@ lectiones_notare (
 
         (vacuum)scripta;
     }
+}
+
+/* errno SERVATUR: notatio vocantem numquam mutat - vocatores errno post
+ * vocationem crudam legunt (machinula officinae errno hospiti reddit,
+ * filum _filum_error_ponere); liber apertus aut appendens errno
+ * mutare posset (2026-10-27) */
+vacuum
+lectiones_notare (
+                 LectioGenus  genus,
+          constans character* via)
+{
+    integer servatum = errno;
+
+    _lectionem_notare(genus, via);
+    errno = servatum;
 }
 
 constans character*
@@ -142,6 +160,8 @@ lectiones_fopen (
     constans character* via,
     constans character* modus)
 {
+     /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+      * lectiones_fopen notat SCRIPSIT */
      FILE* f = fopen(via, modus);
       b32  lectio;
 
@@ -167,6 +187,8 @@ lectiones_stat (
     constans character* via,
        structura stat* status)
 {
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * lectiones_stat notat EXSTAT/ABSENS */
     integer r = stat(via, status);
 
     si (via != NIHIL && !_machina_est(via))

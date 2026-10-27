@@ -21,6 +21,7 @@
 #include "filum.h"
 #include "flatura.h"
 #include "via.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -542,7 +543,7 @@ _process_section (
     }
 
     /* Write header file */
-    header_file = fopen(header_path, "w");
+    header_file = lectiones_fopen(header_path, "w");
     si (header_file == NIHIL)
     {
         fprintf(stderr, "Error: non possum creare '%s'\n", header_path);
@@ -563,7 +564,7 @@ _process_section (
     printf("    Generated: %s\n", header_path);
 
     /* Write source file */
-    source_file = fopen(source_path, "w");
+    source_file = lectiones_fopen(source_path, "w");
     si (source_file == NIHIL)
     {
         fprintf(stderr, "Error: non possum creare '%s'\n", source_path);

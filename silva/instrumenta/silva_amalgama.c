@@ -13,6 +13,7 @@
 #include "silva_token.h"
 #include "silva_lexema.h"
 #include "silva_unitates.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -659,7 +660,7 @@ silva_amalgama_currere (
 
         {
             chorda  exitus  = chorda_aedificator_finire(totum);
-              FILE* pl      = fopen(via_exitus, "wb");
+              FILE* pl      = lectiones_fopen(via_exitus, "wb");
 
             si (pl == NIHIL)
             {

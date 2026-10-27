@@ -12,6 +12,7 @@
 #include "qr.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -66,7 +67,7 @@ principale (
     lat = (qr.amplitudo + QUIES * II) * SCALA;
     pad = (IV - (lat * III) % IV) % IV;
 
-    f = fopen(via, "wb");
+    f = lectiones_fopen(via, "wb");
     si (f == NIHIL)
     {
         redde I;

@@ -4,9 +4,12 @@
  * honesti: sistere (causa), decipula (vocata), exit (aedificatum),
  * stiva exhausta (recursio infinita); numeratores. */
 
+#include "postulata_posix.h"
 #include "officina_machinula.h"
 #include "officina_medulla_textus.h"
 #include "credo.h"
+#include "filum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -428,12 +431,47 @@ _sectio_sexta (
             &regio);
         MachinulaExitus exitus;
 
+        constans character* liber   =
+            "officina/build/probatio_machinula_lectiones.tsv";
+        constans character* prior   = getenv("FABRICA_LECTIONES");
+                 character  servatum[DXII];
+                    chorda  lectum;
+
+        /* liber lectionum proprius (fabrica-8, 2026-10-27): libc
+         * hospitis per librum notatur - S scriptura et deletio, L
+         * lectio, X stat; variabilis vocantis restituitur (porta
+         * fabricae eam ponere potest) */
+        servatum[ZEPHYRUM] = '\0';
+        si (prior != NIHIL && strlen(prior) < magnitudo(servatum))
+        {
+            strcpy(servatum, prior);
+        }
+        (vacuum)filum_delere(liber);
+        setenv("FABRICA_LECTIONES", liber, I);
         CREDO_NON_NIHIL (machinula);
         exitus = machinula_currere(machinula, _ch("main"));
+        si (servatum[ZEPHYRUM] != '\0')
+        {
+            setenv("FABRICA_LECTIONES", servatum, I);
+        }
+        alioquin
+        {
+            unsetenv("FABRICA_LECTIONES");
+        }
+        /* notatio sequens descriptorem libri proprii claudit */
+        lectiones_notare(LECTIO_LEGIT, "officina/build/nihil");
         CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
         CREDO_VERUM (exitus.codex == (s64)XLII);
         CREDO_VERUM (machinula_numerus_aedificatorum(machinula)
             == XII);
+        lectum = filum_legere_totum(liber, piscina);
+        CREDO_VERUM (chorda_continet(lectum,
+            _ch("S\tofficina/build/pa.txt\n")));
+        CREDO_VERUM (chorda_continet(lectum,
+            _ch("L\tofficina/build/pa.txt\n")));
+        CREDO_VERUM (chorda_continet(lectum,
+            _ch("X\tofficina/build/pa.txt\n")));
+        (vacuum)filum_delere(liber);
         regio_destruere(regio);
     }
 }

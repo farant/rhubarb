@@ -503,6 +503,7 @@
     <ingressus genus="fasciculus" via="include/fractio.h"/>
     <ingressus genus="fasciculus" via="include/laqueus.h"/>
     <ingressus genus="fasciculus" via="include/latina.h"/>
+    <ingressus genus="fasciculus" via="include/lectiones.h"/>
     <ingressus genus="fasciculus" via="include/magnus.h"/>
     <ingressus genus="fasciculus" via="include/matrix.h"/>
     <ingressus genus="fasciculus" via="include/piscina.h"/>
@@ -520,6 +521,7 @@
     <ingressus genus="fasciculus" via="lib/chorda.c"/>
     <ingressus genus="fasciculus" via="lib/chorda_aedificator.c"/>
     <ingressus genus="fasciculus" via="lib/piscina.c"/>
+    <ingressus genus="fasciculus" via="lib/lectiones.c"/>
     <exitus via="lib/tabula_nodorum_data.c" provenientia="regeneratio"/>
   </actio>
   <!-- data ex tabula html.entities PYTHONIS legitur: ingressus EXTRA

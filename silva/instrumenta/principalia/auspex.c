@@ -28,6 +28,7 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -361,7 +362,7 @@ principale (vacuum)
         redde I;
     }
 
-    pl = fopen(AUSPEX_VIA_TU, "wb");
+    pl = lectiones_fopen(AUSPEX_VIA_TU, "wb");
     si (pl == NIHIL)
     {
         fprintf(stderr, "auspex: %s non apertum (curre ex radice"

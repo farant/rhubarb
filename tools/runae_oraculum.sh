@@ -22,7 +22,7 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 mkdir -p build
 BIN="build/runae_oraculum"
 clang "${GCC_FLAGS[@]}" -Iinclude tools/runae_oraculum.c lib/runae.c lib/utf8.c \
-    lib/runae_tabulae.c -o "$BIN" || exit 2
+    lib/runae_tabulae.c lib/lectiones.c -o "$BIN" || exit 2
 
 case "${1:-}" in
     -aurum)
