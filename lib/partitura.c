@@ -235,13 +235,25 @@ partitura_clavis_littera (
                         : CLAVES_MAIORES[clavis->quintae + VII];
 }
 
+constans character*
+partitura_clavis_modus (
+    constans CarmenClavis* clavis)
+{
+    si (clavis->caerulea)
+    {
+        redde clavis->minor ? "minor caerulea" : "maior caerulea";
+    }
+    redde clavis->minor ? "minor" : "maior";
+}
+
 interior vacuum
 _clavem_scribere (
                  Scriptor* s,
     constans CarmenClavis* clavis)
 {
     _litterae(s, partitura_clavis_littera(clavis));
-    _litterae(s, clavis->minor ? " minor" : " maior");
+    _litterae(s, " ");
+    _litterae(s, partitura_clavis_modus(clavis));
 }
 
 /* ':valor' - 1..64, '.' punctata, 't' trioli, aliter '~pulsus' */

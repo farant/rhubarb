@@ -8,7 +8,9 @@
  * REGULAE (titulus; ORD. = in forma ordinaria):
  *   lineae       '|' scripta non in linea mensurae (mappa metri)  ORD.
  *   clavis       nota extra clavem; in minore VI et VII elevati
- *                licent (harmonica, melodica); nota acordi
+ *                licent (harmonica, melodica); clavis caerulea: toni
+ *                caerulei (b3 b5 b7 tonicae) in clave (F: Ab, B,
+ *                Eb); nota acordi
  *                declarati ad initium suum licet (dominans
  *                applicata scripta: D7 in F, F#); intentionibus
  *                liberis etiam intentio eius (A7b9 in F: F#,

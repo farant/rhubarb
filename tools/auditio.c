@@ -325,7 +325,7 @@ _carmen_monstrare (
            Piscina* piscina)
 {
      constans character* clavis       = "c";
-                    b32  minor        = FALSUM;
+     constans character* modus        = "maior";
                     i32  numerator    = IV;
                     i32  denominator  = IV;
                     i32  i;
@@ -333,7 +333,7 @@ _carmen_monstrare (
     si (k->numerus_clavium > ZEPHYRUM)
     {
         clavis  = partitura_clavis_littera(&k->claves[ZEPHYRUM]);
-        minor   = k->claves[ZEPHYRUM].minor;
+        modus   = partitura_clavis_modus(&k->claves[ZEPHYRUM]);
     }
     si (k->numerus_metrorum > ZEPHYRUM)
     {
@@ -343,7 +343,7 @@ _carmen_monstrare (
     imprimere("%.*s: %s %s, %u/%u, %u quartae/min, %u mensurae, "
               "%.3f s\n", (integer)k->titulus.mensura,
               (constans character*)k->titulus.datum, clavis,
-              minor ? "minor" : "maior", numerator, denominator,
+              modus, numerator, denominator,
               k->tempora_scripta[ZEPHYRUM].tempus, _mensurae(k),
               (duplex)cantus_quadrum_pulsus(k->tempora,
                   k->numerus_temporum, k->pulsus)

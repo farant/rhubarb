@@ -30,6 +30,12 @@
  * Clausula: subV(7) -> I ut V -> I (perfecta si ambo radicales et
  * summa tonica, aliter imperfecta).
  *
+ * CLAVIS CAERULEA (blues; carmen.h "f maior caerulea"): forma
+ * dominantis in gradu I et IV non applicata - I7, IV7 (non V7/IV);
+ * forma dominantis in I adventus clausulae esse potest (C7 -> F7 in F:
+ * perfecta / imperfecta ut V -> I). Toni caerulei (b3 b5 b7) in scalam
+ * functionis NON intrant: Bdim7 manet viio7/V, G7 V7/V.
+ *
  * CLAVIS: clavis ad initium fenestrae (<clavis> carminis), praeter
  * DOMINANTEM PRAEVIAM - fenestra ultima SONANS ante mutationem clavis
  * (fenestra sonans proxima in clave alia incipit; pausae

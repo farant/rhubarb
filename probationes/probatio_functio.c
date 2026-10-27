@@ -887,6 +887,45 @@ _sectio_substituta (
     CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "VII7");
 }
 
+/* clavis caerulea: forma dominantis in I et IV non applicata (I7,
+ * IV7); V7/V et viio7/V manent; V7 -> I7 perfecta. Sine caerulea F7
+ * in F manet V7/IV */
+interior vacuum
+_sectio_caerulea (
+    CredoContextus* c)
+{
+    constans character* cadentia[] = {
+        "o2 c1 | f1", "o3 b-1 | a1", "o4 e1 | e-1", "o4 g1 | o5 f1",
+        NIHIL
+    };
+    Functio* f;
+
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "f maior caerulea",
+        "o2 f1", "o3 a1", "o4 c1", "o4 e-1"), "I7");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "f maior caerulea",
+        "o2 b-1", "o3 d1", "o3 a-1", "o4 f1"), "IV7");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "f maior caerulea",
+        "o2 g1", "o3 b1", "o4 d1", "o4 f1"), "V7/V");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "f maior caerulea",
+        "o3 b1", "o4 d1", "o4 f1", "o4 a-1"), "viio7/V");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "f maior", "o2 f1",
+        "o3 a1", "o4 c1", "o4 e-1"), "V7/IV");
+    /* minor caerulea: D7b9 in a = IV7b9 (sine caerulea V7b9/VII - D7
+     * ipsa diatonica est, VI elevato) */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "a minor caerulea",
+        "o3 d1", "o3 f#1", "o4 c1", "o4 e-1"), "IV7b9");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "a minor", "o3 d1",
+        "o3 f#1", "o4 c1", "o4 e-1"), "V7b9/VII");
+    f = _functio(c, _carmen(c, "f maior caerulea", cadentia));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[I].numeralis, "I7");
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[I].clausula,
+                        (i32)FUNCTIO_PERFECTA);
+    f = _functio(c, _carmen(c, "f maior", cadentia));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[I].clausula, (i32)FUNCTIO_NULLA);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "vocabularium", _sectio_vocabularium, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -907,6 +946,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vocabularium novum", _sectio_vocabularium_novum, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "substituta", _sectio_substituta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "caerulea", _sectio_caerulea, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

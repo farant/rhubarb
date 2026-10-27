@@ -124,6 +124,12 @@ constans character*
 partitura_clavis_littera (
     constans CarmenClavis* clavis);
 
+/* modus clavis ut scribitur: "maior", "minor", "maior caerulea",
+ * "minor caerulea". Statica */
+constans character*
+partitura_clavis_modus (
+    constans CarmenClavis* clavis);
+
 /* ':valor' partiturae (sine ':'): 1..64, '.' punctata, 't' trioli,
  * aliter '~pulsus' - lineis additis eadem grammatica */
 b32

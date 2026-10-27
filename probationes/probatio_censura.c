@@ -289,6 +289,39 @@ _sectio_clavis (
 }
 
 
+/* clavis caerulea: toni caerulei (b3 b5 b7 tonicae) in clave - F:
+ * Ab, B, Eb; F# extra, nomen clavis cum modo */
+interior vacuum
+_sectio_caerulea (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"b\" clavis=\"f maior caerulea\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\">"
+        "<textus!>o4 f8 a-8 b8 c8 e-8 f#8 f4</textus></frustum></pars>"
+        "</carmen></carmina>");
+    constans Carmen* m = _carmen(c,
+        "<carmina><carmen titulus=\"n\" clavis=\"a minor caerulea\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\">"
+        "<textus!>o4 a4 d#4 b-4 a4</textus></frustum></pars>"
+        "</carmen></carmina>");
+       CensuraForma f = _sola(CENSURA_CLAVIS);
+    CensuraInventum inv[CAPACITAS];
+
+    CREDO_NECESSE (k != NIHIL && m != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 1 +2400 m: F#4 extra clavem f maior caerulea (frustum "
+        "0, offset 20)\n");
+    /* minor: b5 (D#) caerulea a tonica A; Bb (b7 maioris relativae C)
+     * non */
+    CREDO_NECESSE (censura_iudicare(m, &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXX);
+}
+
+
     /* ==================================================
      * AMBITUS: ordinarius, instrumentum ignotum, ambitus proprius
      * ================================================== */
@@ -1158,6 +1191,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "caerulea", _sectio_caerulea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dissonantia", _sectio_dissonantia, NIHIL, NIHIL, NIHIL, NIHIL },

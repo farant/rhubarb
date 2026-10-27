@@ -39,7 +39,9 @@
  *             0.99". Valet usque ad metrum proximum (sine agogica =
  *             aequale). K 2..XVI, pondera > 0, mensura in K partes
  *             pulsuum integras divisibilis
- *   clavis    littera [#|b] maior|minor (quintae -7..7, ut MusicXML)
+ *   clavis    littera [#|b] maior|minor [caerulea] (quintae -7..7, ut
+ *             MusicXML; caerulea = blues: toni b3 b5 b7 tonicae in
+ *             clave - censura.h, functio.h)
  *   tempus    20..400 quartae per minutum (ordinarium CXX); sine
  *             'usque' gradus; cum usque="M" clivus: a tempore vigente
  *             ad valorem, linearis in pulsibus, finis ad initium
@@ -233,6 +235,7 @@ nomen structura {
     s64 pulsus;
     s32 quintae;              /* -7 (7 b) .. 7 (7 #) */
     b32 minor;
+    b32 caerulea;             /* modus caeruleus (blues) */
 } CarmenClavis;
 
 /* sectio nominata: [pulsus, usque) */

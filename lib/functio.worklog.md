@@ -134,3 +134,23 @@ conditions, unplanted.
 Refactor: _figura_acordi (figure only for gradus III without added tones) now shared.
 House: nocturnum bar 7 ii7 subV7 -> bar 8 Iadd6 [perf.]; bar 5 Bb7 -> Am7 reads subV7/iii (it
 IS the tritone sub of E7 -> Am - IV7 was the wrong name). Classical songs unchanged. Plants 6/6.
+
+## 2026-10-27 - F2: blues key (clavis caerulea)
+
+Declared on the KEY, not the style, because functio reads keys and never styles:
+clavis="f maior caerulea" (also <clavis valor>, and minor). CarmenClavis.caerulea; one writer
+partitura_clavis_modus for every printed key name (partitura, censura, recensio, auditio).
+censura: b3 b5 b7 of the TONIC are in key. Subtlety for minor: b5 of the minor tonic is the
+same class as b3 of the relative major (A: D#/Eb = C: Eb), so a test on D# cannot tell a
+wrong tonic apart - Bb (b7 of C, not blue in A) does; the test uses it.
+functio: blue notes do NOT enter functio's scale (else Bdim7 in F would be "diatonic" and read
+bVo7, G7 would read II7). Instead: a dominant shape on I or IV is never applicata (I7, IV7),
+and an unapplied dominant shape on I may be a cadence arrival. Reachability: in major IV7 is
+never applicata anyway (its target bVII is outside the key); in minor plain D7 is diatonic (VI
+raised) - the IV clause only matters with a non-scale extension (D7b9 in a: V7b9/VII vs IV7b9),
+tested that way. The "k.caerulea" guard in the arrival clause is unreachable without blues (I7
+is always applicata outside it) - kept as stated intent, its plant survives by construction.
+House: ambulatio now in "f maior caerulea": I7 IV7 I7 v7-I7 ... turnarounds into bars 13 and 25
+are cadences [imperf.] (top note G4 in the comping, not F); censura 4 -> 0 (B2 = blue b5).
+Plants 8/9 (the survivor above). Note: tools/auditio.c has ~10 pre-existing lines over 72 -
+the commit gate does not catch them; not touched here.

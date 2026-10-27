@@ -219,6 +219,20 @@ _sectio_legere (
     CREDO_AEQUALIS_S64 (k->partes[ZEPHYRUM].frusta[ZEPHYRUM].pulsus,
                         (s64)MMMDCCCXL);
 
+    CREDO_GRADUS ("clavis caerulea: maior et minor");
+    CREDO_NECESSE (_legere(c, _carmen(c, " clavis=\"f maior caerulea\"",
+        "<clavis mensura=\"2\" valor=\"a minor caerulea\"/>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1 | c1</textus></frustum></pars>"),
+        &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_clavium == II);
+    CREDO_AEQUALIS_S32 (k->claves[ZEPHYRUM].quintae, -I);
+    CREDO_FALSUM (k->claves[ZEPHYRUM].minor);
+    CREDO_VERUM (k->claves[ZEPHYRUM].caerulea);
+    CREDO_VERUM (k->claves[I].minor);
+    CREDO_VERUM (k->claves[I].caerulea);
+
     CREDO_GRADUS ("clavis acuta, tempus mensura I, '@' cum t");
     CREDO_NECESSE (_legere(c, _carmen(c, " clavis=\"f# minor\"",
         "<tempus mensura=\"1\" valor=\"100\"/>"
@@ -229,6 +243,7 @@ _sectio_legere (
     k = &liber.carmina[ZEPHYRUM];
     CREDO_AEQUALIS_S32 (k->claves[ZEPHYRUM].quintae, III);
     CREDO_VERUM (k->claves[ZEPHYRUM].minor);
+    CREDO_FALSUM (k->claves[ZEPHYRUM].caerulea);
     CREDO_AEQUALIS_I32 (k->numerus_temporum, I);
     CREDO_AEQUALIS_I32 (k->tempora[ZEPHYRUM].tempus, C);
     {
@@ -274,6 +289,12 @@ _sectio_vitia (
             -I, ZEPHYRUM);
     _vitium(c, _carmen(c, " clavis=\"a dur\"", pars_bona), "x", "", -I,
             ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"f maior blues\"", pars_bona), "x",
+            "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"f caerulea\"", pars_bona), "x", "",
+            -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"f maior caerulea \"", pars_bona),
+            "x", "", -I, ZEPHYRUM);
     _vitium(c, _carmen(c, " tempus=\"10\"", pars_bona), "x", "", -I,
             ZEPHYRUM);
     _vitium(c, _carmen(c, " tempus=\"lente\"", pars_bona), "x", "", -I,

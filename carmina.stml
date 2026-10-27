@@ -345,7 +345,7 @@
     </pars>
   </carmen>
 
-  <carmen titulus="ambulatio" stylus="iazz" tempus="160" metrum="4/4" clavis="f maior"
+  <carmen titulus="ambulatio" stylus="iazz" tempus="160" metrum="4/4" clavis="f maior caerulea"
           agogica="2 1 2 1 2 1 2 1">
     <reverberatio aula="0.4" mollities="0.6" latitudo="1" lucrum="0.25"/>
     <sectio titulus="chorus" mensura="1" usque="13"/>

@@ -42,6 +42,7 @@ _modulus (
 nomen structura {
     s32 tonica;
     b32 minor;
+    b32 caerulea;
 } Clavis;
 
 interior Clavis
@@ -53,13 +54,15 @@ _clavis (
        s32 q = ZEPHYRUM;
        i32 i;
 
-    c.minor = FALSUM;
+    c.minor     = FALSUM;
+    c.caerulea  = FALSUM;
     per (i = ZEPHYRUM; i < carmen->numerus_clavium; i++)
     {
         si (carmen->claves[i].pulsus <= pulsus)
         {
-            q        = carmen->claves[i].quintae;
-            c.minor  = carmen->claves[i].minor;
+            q           = carmen->claves[i].quintae;
+            c.minor     = carmen->claves[i].minor;
+            c.caerulea  = carmen->claves[i].caerulea;
         }
     }
     c.tonica = _modulus(VII * q, XII);
@@ -353,8 +356,11 @@ _gradum_scribere (
         redde;
     }
     /* applicata: extra scalam, forma dominantis aut septimae
-     * diminutae */
-    dominans  = _forma_dominantis(h);
+     * diminutae; clavis caerulea: forma dominantis in I et IV sua
+     * (I7, IV7) */
+    dominans  = _forma_dominantis(h)
+        && !(   k.caerulea && g->alteratio == ZEPHYRUM
+             && (d == I || d == IV));
     diminuta  = h->genus == ACORDUM_DIMINUTA
              || h->genus == ACORDUM_DIMINUTA_SEPTIMA;
     si (   !picardia && (dominans || diminuta)
@@ -626,7 +632,11 @@ functio_carminis (
         {
             g->clausula = FUNCTIO_DIMIDIA;
         }
-        alioquin si (_finalis(g, &w->harmonia))
+        alioquin si (   _finalis(g, &w->harmonia)
+                     || (   k.caerulea && g->gradus == I
+                         && g->applicata == ZEPHYRUM
+                         && g->alteratio == ZEPHYRUM
+                         && _forma_dominantis(&w->harmonia)))
         {
             b32 a_v   = _dominans(q, &p->harmonia)
                 || (q->substituta && q->applicata == ZEPHYRUM);

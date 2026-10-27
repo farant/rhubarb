@@ -417,7 +417,7 @@ _lineae (
 }
 
 /* classis in clave: scala maior tonicae relativae; minor etiam VI et
- * VII elevati */
+ * VII elevati; caerulea etiam b3 b5 b7 tonicae */
 interior b32
 _in_clave (
     constans CarmenClavis* clavis,
@@ -430,6 +430,17 @@ _in_clave (
     per (g = ZEPHYRUM; g < VII; g++)
     {
         si (_modulus(basis + SCALA[g], XII) == classis)
+        {
+            redde VERUM;
+        }
+    }
+    si (clavis->caerulea)
+    {
+        s32 t = clavis->minor ? _modulus(basis + IX, XII) : basis;
+
+        si (   classis == _modulus(t + III, XII)
+            || classis == _modulus(t + VI, XII)
+            || classis == _modulus(t + X, XII))
         {
             redde VERUM;
         }
@@ -1518,8 +1529,10 @@ censura_inventum_scribere (
                 " extra clavem ") && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 partitura_clavis_littera(k)) && bene;
+            bene = chorda_aedificator_appendere_character(textus, ' ')
+                && bene;
             bene = chorda_aedificator_appendere_literis(textus,
-                k->minor ? " minor" : " maior") && bene;
+                partitura_clavis_modus(k)) && bene;
             frange;
         }
         casus CENSURA_AMBITUS:

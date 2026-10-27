@@ -277,8 +277,9 @@ _clavem_scribere (
 
     redde chorda_aedificator_appendere_literis(a,
               partitura_clavis_littera(k))
+        && chorda_aedificator_appendere_character(a, ' ')
         && chorda_aedificator_appendere_literis(a,
-              k->minor ? " minor" : " maior");
+              partitura_clavis_modus(k));
 }
 
 

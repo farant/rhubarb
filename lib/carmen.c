@@ -129,9 +129,10 @@ _metrum_legere (
     redde VERUM;
 }
 
-/* "a minor", "f# maior", "bb minor" -> quintae (circulus quintarum,
- * ut MusicXML 'fifths'): maior ex littera, '#' +VII, 'b' -VII, minor
- * -III; extra -VII..VII vitium */
+/* "a minor", "f# maior", "bb minor", "f maior caerulea" -> quintae
+ * (circulus quintarum, ut MusicXML 'fifths'): maior ex littera, '#'
+ * +VII, 'b' -VII, minor -III; extra -VII..VII vitium; post modum
+ * solum " caerulea" */
 interior b32
 _clavem_legere (
           chorda  valor,
@@ -141,7 +142,9 @@ _clavem_legere (
         III, V, ZEPHYRUM, II, IV, -I, I };   /* a b c d e f g */
        s32 q;
        i32 i = I;
+       i32 j = ZEPHYRUM;
     chorda modus;
+    chorda reliquum;
 
     si (   valor.mensura < III || valor.datum[ZEPHYRUM] < 'a'
         || valor.datum[ZEPHYRUM] > 'g')
@@ -165,6 +168,22 @@ _clavem_legere (
     }
     modus.datum    = valor.datum + i + I;
     modus.mensura  = valor.mensura - i - I;
+    dum (j < modus.mensura && modus.datum[j] != ' ')
+    {
+        j++;
+    }
+    clavis->caerulea = FALSUM;
+    si (j < modus.mensura)
+    {
+        reliquum.datum    = modus.datum + j + I;
+        reliquum.mensura  = modus.mensura - j - I;
+        si (!chorda_aequalis_literis(reliquum, "caerulea"))
+        {
+            redde FALSUM;
+        }
+        clavis->caerulea  = VERUM;
+        modus.mensura     = j;
+    }
     si (chorda_aequalis_literis(modus, "minor"))
     {
         q              -= III;
@@ -2891,6 +2910,7 @@ _carmen_legere (
     k->claves[ZEPHYRUM].pulsus = ZEPHYRUM;
     k->claves[ZEPHYRUM].quintae = ZEPHYRUM;
     k->claves[ZEPHYRUM].minor = FALSUM;
+    k->claves[ZEPHYRUM].caerulea = FALSUM;
     k->numerus_temporum_scriptorum = I;
     k->numerus_metrorum = I;
     k->numerus_clavium = I;
