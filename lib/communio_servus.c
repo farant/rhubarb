@@ -655,3 +655,620 @@ communio_tesseram_facere (
     _digestum(t, digestum);
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Protocollum (T4)
+ * ================================================== */
+
+#define MASSAE_QUAESITAE_MAXIMAE M
+
+interior vacuum
+_json_respondere (
+    HospitiumColloquium* col,
+                    i32  status,
+              JsonValor* o)
+{
+    colloquium_respondere(col, status, "application/json",
+        json_scribere(o, colloquium_piscina(col)));
+}
+
+interior vacuum
+_errare (
+    HospitiumColloquium* col,
+                    i32  status,
+     constans character* causa)
+{
+      Piscina* p;
+    JsonValor* o;
+
+    p = colloquium_piscina(col);
+    o = json_objectum_creare(p);
+    json_objectum_ponere(o, "error", json_chorda_creare_literis(p,
+        causa));
+    _json_respondere(col, status, o);
+}
+
+/* "Bearer <tessera>" -> apparatus; aliter 401 missum, FALSUM */
+interior b32
+_admissus (
+    HospitiumColloquium* col,
+      CommunioApparatus* a)
+{
+    CommunioServus* s;
+            chorda  h;
+            chorda  t;
+
+    s = (CommunioServus*)colloquium_datum(col);
+    h = colloquium_caput(col, "Authorization");
+    si (   h.datum && h.mensura > VII
+        && memcmp(h.datum, "Bearer ", (size_t)VII) == ZEPHYRUM)
+    {
+        t.datum    = h.datum + VII;
+        t.mensura  = h.mensura - VII;
+        si (communio_apparatum_verificare(s, t, a,
+                colloquium_piscina(col)))
+        {
+            redde VERUM;
+        }
+    }
+    colloquium_caput_addere(col, "WWW-Authenticate", "Bearer");
+    _errare(col, CDI, "tessera");
+    redde FALSUM;
+}
+
+/* corpus petitionis ut JSON (NIHIL si non) */
+interior JsonValor*
+_corpus_json (
+    HospitiumColloquium* col)
+{
+    constans HttpPetitioServeri* q;
+                   JsonResultus  r;
+
+    q = colloquium_petitio(col);
+    si (!q || q->corpus_via)
+    {
+        redde NIHIL;
+    }
+    r = json_legere(q->corpus, colloquium_piscina(col));
+    redde r.successus ? r.radix : NIHIL;
+}
+
+/* numerus decimalis non negativus (XVIII signa ad plurimum) */
+interior b32
+_numerus_legere (
+    chorda  t,
+       s64* exitus)
+{
+    s64 v;
+    i32 i;
+
+    si (t.mensura == ZEPHYRUM || t.mensura > XVIII)
+    {
+        redde FALSUM;
+    }
+    v = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < t.mensura; i++)
+    {
+        si (t.datum[i] < '0' || t.datum[i] > '9')
+        {
+            redde FALSUM;
+        }
+        v = v * X + (s64)(t.datum[i] - '0');
+    }
+    *exitus = v;
+    redde VERUM;
+}
+
+interior vacuum
+_ligare_post (
+    HospitiumColloquium* col)
+{
+       CommunioServus* s;
+    CommunioApparatus  a;
+            JsonValor* corpus;
+            JsonValor* o;
+              Piscina* p;
+               chorda  vacua;
+                  s32  r;
+
+    s = (CommunioServus*)colloquium_datum(col);
+    si (!_admissus(col, &a))
+    {
+        redde;
+    }
+    p              = colloquium_piscina(col);
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    corpus         = _corpus_json(col);
+    si (!corpus)
+    {
+        _errare(col, CD, "corpus");
+        redde;
+    }
+    r = communio_replicam_ligare(s, a.id, json_capere_chorda(corpus,
+        "replica", vacua));
+    si (r == I || r == II)
+    {
+        _errare(col, CDIX, "replica");
+        redde;
+    }
+    si (r != ZEPHYRUM)
+    {
+        _errare(col, CD, "replica");
+        redde;
+    }
+    o = json_objectum_creare(p);
+    json_objectum_ponere(o, "apparatus", json_chorda_creare(p, a.id));
+    json_objectum_ponere(o, "spatium", json_chorda_creare(p,
+        a.spatium));
+    _json_respondere(col, CC, o);
+}
+
+interior vacuum
+_apparatus_get (
+    HospitiumColloquium* col)
+{
+        CommunioServus* s;
+     CommunioApparatus  a;
+    ScriniumEnuntiatum* e;
+               Piscina* p;
+             JsonValor* o;
+             JsonValor* l;
+
+    s = (CommunioServus*)colloquium_datum(col);
+    si (!_admissus(col, &a))
+    {
+        redde;
+    }
+    p = colloquium_piscina(col);
+    e = scrinium_praeparare(s->scrinium,
+        "SELECT replica, titulus, civis FROM communio_apparatus"
+        " WHERE spatium = ? AND replica IS NOT NULL"
+        " ORDER BY creatus_ms, rowid");
+    si (!e)
+    {
+        _errare(col, D, "scrinium");
+        redde;
+    }
+    scrinium_ligare_textum(e, I, a.spatium);
+    l = json_tabulatum_creare(p);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+         JsonValor* x      = json_objectum_creare(p);
+            chorda  civis  = scrinium_columna_textus(e, II, p);
+             Civis  persona;
+
+        json_objectum_ponere(x, "replica", json_chorda_creare(p,
+            scrinium_columna_textus(e, ZEPHYRUM, p)));
+        json_objectum_ponere(x, "titulus", json_chorda_creare(p,
+            scrinium_columna_textus(e, I, p)));
+        json_objectum_ponere(x, "civis", json_chorda_creare(p, civis));
+        si (cives_per_id(s->cives, civis, &persona, p))
+        {
+            json_objectum_ponere(x, "persona", json_chorda_creare(p,
+                persona.titulus));
+        }
+        json_tabulatum_addere(l, x);
+    }
+    scrinium_finire(e);
+    o = json_objectum_creare(p);
+    json_objectum_ponere(o, "apparatus", l);
+    _json_respondere(col, CC, o);
+}
+
+interior vacuum
+_desunt_post (
+    HospitiumColloquium* col)
+{
+       CommunioServus* s;
+    CommunioApparatus  a;
+            JsonValor* corpus;
+            JsonValor* quaesitae;
+            JsonValor* desunt;
+            JsonValor* o;
+              Piscina* p;
+                  i32  i;
+
+    s = (CommunioServus*)colloquium_datum(col);
+    si (!_admissus(col, &a))
+    {
+        redde;
+    }
+    p       = colloquium_piscina(col);
+    corpus  = _corpus_json(col);
+    quaesitae = corpus ? json_objectum_capere(corpus,
+        "massae") : NIHIL;
+    si (   !quaesitae || quaesitae->genus != JSON_TABULATUM
+        || json_tabulatum_numerus(quaesitae) > MASSAE_QUAESITAE_MAXIMAE)
+    {
+        _errare(col, CD, "massae");
+        redde;
+    }
+    desunt = json_tabulatum_creare(p);
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(quaesitae); i++)
+    {
+        JsonValor* h = json_tabulatum_obtinere(quaesitae, i);
+
+        si (   !h || h->genus != JSON_CHORDA
+            || !_digestum_validum(h->datum.chorda_valor))
+        {
+            _errare(col, CD, "massae");
+            redde;
+        }
+        si (!volumen_massam_habet(s->volumen, h->datum.chorda_valor))
+        {
+            json_tabulatum_addere(desunt, json_chorda_creare(p,
+                h->datum.chorda_valor));
+        }
+    }
+    o = json_objectum_creare(p);
+    json_objectum_ponere(o, "desunt", desunt);
+    _json_respondere(col, CC, o);
+}
+
+interior vacuum
+_massa_put (
+    HospitiumColloquium* col)
+{
+                 CommunioServus* s;
+              CommunioApparatus  a;
+    constans HttpPetitioServeri* q;
+                         chorda  hex;
+                       Sigillum  g;
+                      character  notum[SIGILLUM_HEX_MENSURA];
+                      character  computatum[SIGILLUM_HEX_MENSURA];
+
+    s = (CommunioServus*)colloquium_datum(col);
+    si (!_admissus(col, &a))
+    {
+        redde;
+    }
+    hex  = colloquium_param(col, "sigillum");
+    q    = colloquium_petitio(col);
+    si (!_digestum_validum(hex) || !q)
+    {
+        _errare(col, CD, "sigillum");
+        redde;
+    }
+    memcpy(notum, hex.datum, (size_t)DIGESTUM_LONGITUDO);
+    notum[DIGESTUM_LONGITUDO] = '\0';
+    si (q->corpus_via)
+    {
+        si (!volumen_massam_condere_ex_filo(s->volumen, q->corpus_via,
+                (i64)q->content_length, notum))
+        {
+            _errare(col, CD, "sigillum");
+            redde;
+        }
+        colloquium_respondere(col, CCI, NIHIL, hex);
+        redde;
+    }
+    g = sigillum_computare(q->corpus.datum,
+        (memoriae_index)q->corpus.mensura);
+    sigillum_hex(&g, computatum);
+    si (memcmp(computatum, notum, (size_t)DIGESTUM_LONGITUDO)
+        != ZEPHYRUM)
+    {
+        _errare(col, CD, "sigillum");
+        redde;
+    }
+    si (   !volumen_massam_habet(s->volumen, hex)
+        && !volumen_massam_condere(s->volumen, q->corpus, computatum))
+    {
+        _errare(col, D, "massa");
+        redde;
+    }
+    colloquium_respondere(col, CCI, NIHIL, hex);
+}
+
+interior s32
+_fons_massae_legere (
+    vacuum* datum,
+        i8* capsa,
+       i32  n)
+{
+    redde volumen_massam_legere((VolumenMassaLector*)datum, capsa, n);
+}
+
+interior vacuum
+_fons_massae_claudere (
+    vacuum* datum)
+{
+    volumen_massam_claudere((VolumenMassaLector*)datum);
+}
+
+interior vacuum
+_massa_get (
+    HospitiumColloquium* col)
+{
+        CommunioServus* s;
+     CommunioApparatus  a;
+                chorda  hex;
+    VolumenMassaLector* l;
+                   i64  mensura;
+         HospitiumFons  fons;
+
+    s = (CommunioServus*)colloquium_datum(col);
+    si (!_admissus(col, &a))
+    {
+        redde;
+    }
+    hex      = colloquium_param(col, "sigillum");
+    mensura  = ZEPHYRUM;
+    l = _digestum_validum(hex) ? volumen_massam_aperire(s->volumen, hex,
+            &mensura, colloquium_piscina(col)) : NIHIL;
+    si (!l)
+    {
+        _errare(col, CDIV, "massa");
+        redde;
+    }
+    fons.mensura   = mensura;
+    fons.legere    = _fons_massae_legere;
+    fons.claudere  = _fons_massae_claudere;
+    fons.datum     = l;
+    colloquium_respondere_fontem(col, CC, "application/octet-stream",
+        fons);
+}
+
+interior constans character*
+_causa_importationis (
+    VolumenImportatio x)
+{
+    commutatio (x)
+    {
+        casus VOLUMEN_HORA_FUTURA:
+            redde "hora-futura";
+        casus VOLUMEN_CONFLICTUS:
+            redde "conflictus";
+        casus VOLUMEN_MASSA_DEEST:
+            redde "massa-deest";
+        ordinarius:
+            redde "invalidum";
+    }
+}
+
+interior vacuum
+_acta_post (
+    HospitiumColloquium* col)
+{
+                 CommunioServus* s;
+              CommunioApparatus  a;
+    constans HttpPetitioServeri* q;
+                            Xar* acta;
+                         chorda  causa;
+                        Piscina* p;
+                      JsonValor* o;
+                      JsonValor* refusum;
+                            i32  i;
+                            i32  accepta;
+
+    s = (CommunioServus*)colloquium_datum(col);
+    si (!_admissus(col, &a))
+    {
+        redde;
+    }
+    p = colloquium_piscina(col);
+    q = colloquium_petitio(col);
+    acta  = (q && !q->corpus_via) ? communio_acta_legere(q->corpus,
+                &causa, p) : NIHIL;
+    si (!acta)
+    {
+        _errare(col, CD, q && q->corpus_via ? "corpus nimium"
+                                            : "acta mala");
+        redde;
+    }
+    si (a.replica.mensura == ZEPHYRUM)
+    {
+        _errare(col, CDIII, "replica non ligata");
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
+    {
+        si (!chorda_aequalis(((VolumenActum*)xar_obtinere(acta, i))
+                ->identitas.replica, a.replica))
+        {
+            _errare(col, CDIII, "replica aliena");
+            redde;
+        }
+    }
+    accepta = ZEPHYRUM;
+    refusum = json_nullum_creare(p);
+    per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
+    {
+        VolumenImportatio x = volumen_actum_importare(s->volumen,
+            (VolumenActum*)xar_obtinere(acta, i));
+
+        si (x == VOLUMEN_IMPORTATUM || x == VOLUMEN_IAM_ADEST)
+        {
+            accepta++;
+            perge;
+        }
+        refusum = json_objectum_creare(p);
+        json_objectum_ponere(refusum, "index", json_integer_creare(p,
+            (s64)i));
+        json_objectum_ponere(refusum, "causa",
+            json_chorda_creare_literis(
+            p, _causa_importationis(x)));
+        frange;
+    }
+    o = json_objectum_creare(p);
+    json_objectum_ponere(o, "accepta", json_integer_creare(p,
+        (s64)accepta));
+    json_objectum_ponere(o, "refusum", refusum);
+    _json_respondere(col, CC, o);
+}
+
+/* replicae ligatae spatii praeter propriam: tabula chordarum */
+interior chorda*
+_replicae_spatii (
+    CommunioServus* s,
+            chorda  spatium,
+            chorda  propria,
+               i32* numerus,
+           Piscina* p)
+{
+    ScriniumEnuntiatum* e;
+                   Xar* l;
+                chorda* tabula;
+                   i32  i;
+
+    *numerus  = ZEPHYRUM;
+    l         = xar_creare(p, (i32)magnitudo(chorda));
+    e = scrinium_praeparare(s->scrinium,
+        "SELECT replica FROM communio_apparatus WHERE spatium = ?"
+        " AND replica IS NOT NULL AND replica <> ?");
+    si (!l || !e)
+    {
+        redde NIHIL;
+    }
+    scrinium_ligare_textum(e, I, spatium);
+    scrinium_ligare_textum(e, II, propria);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        chorda* c = (chorda*)xar_addere(l);
+
+        si (c)
+        {
+            *c = scrinium_columna_textus(e, ZEPHYRUM, p);
+        }
+    }
+    scrinium_finire(e);
+    *numerus = xar_numerus(l);
+    tabula = (chorda*)piscina_allocare(p, (memoriae_index)(magnitudo(
+        chorda) * (size_t)(*numerus + I)));
+    per (i = ZEPHYRUM; tabula && i < *numerus; i++)
+    {
+        tabula[i] = *(chorda*)xar_obtinere(l, i);
+    }
+    redde tabula;
+}
+
+/* corpus tractionis post seq servi 'post' (NIHIL si error) */
+interior JsonValor*
+_tractio (
+       CommunioServus* s,
+    CommunioApparatus* a,
+                  s64  post,
+              Piscina* p)
+{
+       chorda* replicae;
+          Xar* acta;
+          Xar* massae;
+    JsonValor* o;
+    JsonValor* t;
+    JsonValor* m;
+          s64  cursor;
+          i32  n;
+          i32  i;
+          i32  j;
+          i32  k;
+
+    replicae = _replicae_spatii(s, a->spatium, a->replica, &n, p);
+    si (!replicae)
+    {
+        redde NIHIL;
+    }
+    acta = volumen_acta_replicarum_legere(s->volumen, post, replicae, n,
+        COMMUNIO_ACTA_MAXIMA, p);
+    massae  = xar_creare(p, (i32)magnitudo(chorda));
+    o       = json_objectum_creare(p);
+    t       = json_tabulatum_creare(p);
+    m       = json_tabulatum_creare(p);
+    si (!acta || !massae || !o || !t || !m)
+    {
+        redde NIHIL;
+    }
+    cursor = post;
+    per (i = ZEPHYRUM; i < xar_numerus(acta); i++)
+    {
+        VolumenActum* x          = (VolumenActum*)xar_obtinere(acta, i);
+                 Xar* nominatae  = communio_massas_nominatas(x, p);
+
+        json_tabulatum_addere(t, communio_actum_scribere(x, p));
+        cursor = x->seq;
+        per (j = ZEPHYRUM; nominatae && j < xar_numerus(nominatae); j++)
+        {
+            chorda h    = *(chorda*)xar_obtinere(nominatae, j);
+               b32 iam  = FALSUM;
+
+            per (k = ZEPHYRUM; k < xar_numerus(massae); k++)
+            {
+                si (chorda_aequalis(*(chorda*)xar_obtinere(massae, k),
+                        h))
+                {
+                    iam = VERUM;
+                }
+            }
+            si (!iam && volumen_massam_habet(s->volumen, h))
+            {
+                *(chorda*)xar_addere(massae) = h;
+                json_tabulatum_addere(m, json_chorda_creare(p, h));
+            }
+        }
+    }
+    json_objectum_ponere(o, "acta", t);
+    json_objectum_ponere(o, "cursor", json_integer_creare(p, cursor));
+    json_objectum_ponere(o, "plura", json_boolean_creare(p,
+        xar_numerus(acta) >= COMMUNIO_ACTA_MAXIMA));
+    json_objectum_ponere(o, "massae", m);
+    redde o;
+}
+
+interior vacuum
+_acta_get (
+    HospitiumColloquium* col)
+{
+       CommunioServus* s;
+    CommunioApparatus  a;
+               chorda  t;
+                  s64  post;
+            JsonValor* o;
+
+    s = (CommunioServus*)colloquium_datum(col);
+    si (!_admissus(col, &a))
+    {
+        redde;
+    }
+    post  = ZEPHYRUM;
+    t     = colloquium_quaestio(col, "post");
+    si (t.datum && !_numerus_legere(t, &post))
+    {
+        _errare(col, CD, "post");
+        redde;
+    }
+    o = _tractio(s, &a, post, colloquium_piscina(col));
+    si (!o)
+    {
+        _errare(col, D, "tractio");
+        redde;
+    }
+    _json_respondere(col, CC, o);
+}
+
+b32
+communio_servum_montare (
+    CommunioServus* servus,
+         Hospitium* hospitium)
+{
+    si (!servus || !hospitium)
+    {
+        redde FALSUM;
+    }
+    redde hospitium_praebere(hospitium, HTTP_POST,
+        "/communio/apparatus",
+               _ligare_post, servus)
+        && hospitium_praebere(hospitium, HTTP_GET,
+        "/communio/apparatus",
+               _apparatus_get, servus)
+        && hospitium_praebere(hospitium, HTTP_POST,
+               "/communio/massae/desunt", _desunt_post, servus)
+        && hospitium_praebere(hospitium, HTTP_PUT,
+               "/communio/massae/:sigillum", _massa_put, servus)
+        && hospitium_praebere(hospitium, HTTP_GET,
+               "/communio/massae/:sigillum", _massa_get, servus)
+        && hospitium_praebere(hospitium, HTTP_POST, "/communio/acta",
+               _acta_post, servus)
+        && hospitium_praebere(hospitium, HTTP_GET, "/communio/acta",
+               _acta_get, servus);
+}

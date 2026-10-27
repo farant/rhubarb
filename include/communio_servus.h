@@ -34,6 +34,7 @@
 #include "xar.h"
 #include "volumen.h"
 #include "cives.h"
+#include "hospitium.h"
 
 #define COMMUNIO_TESSERA_MENSURA XLIII
 
@@ -123,5 +124,35 @@ b32
 communio_tesseram_facere (
     character exitus[XLIV],
     character digestum[LXV]);
+
+
+/* ==================================================
+ * Protocollum (T4) - omnia sub /communio/, omnia cum
+ * "Authorization: Bearer <tessera>" (401 aliter)
+ * ==================================================
+ *
+ * POST /communio/apparatus {"replica":R} -> 200 {"apparatus",
+ *      "spatium"};
+ *      409 replica alia aut aliena; 400 invalida
+ * GET  /communio/apparatus -> {"apparatus":[{replica, titulus, civis,
+ *      persona}]} spatii vocantis (ligati soli; digesta numquam)
+ * POST /communio/massae/desunt {"massae":[hex]} -> {"desunt":[hex]}
+ * PUT  /communio/massae/:sigillum (octeti; > 1 MB per filum) -> 201;
+ *      400 si SHA-256 octetorum non :sigillum (nihil servatur)
+ * GET  /communio/massae/:sigillum -> 200 octeti (per fontem); 404
+ * POST /communio/acta {"acta":[...]} (CC ad plurimum, omnia valida,
+ *      omnia replicae ligatae vocantis - aliter 400 / 403, nihil
+ *      importatum) -> ordine importat, ad refusum primum sistit:
+ *      {"accepta":n,"refusum":null | {"index":i,"causa":"hora-futura|
+ *      conflictus|massa-deest|invalidum"}} (iam praesentia accepta)
+ * GET  /communio/acta?post=N -> {"acta":[...],"cursor":M,"plura":b,
+ *      "massae":[hex]}: acta (seq servi > N) apparatuum ALIORUM spatii,
+ *      CC ad plurimum; cursor = seq servi ultimi (N si nulla); massae =
+ *      quas acta nominant et servus habet */
+
+b32
+communio_servum_montare (
+    CommunioServus* servus,
+         Hospitium* hospitium);
 
 #endif /* COMMUNIO_SERVUS_H */
