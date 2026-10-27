@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 
 #define VIA_FIXORUM "probationes/fixa/multiplexor/"
 
@@ -315,6 +316,50 @@ _probare_vivum (
     CREDO_VERUM(multiplexor_panelli(&absens, c->piscina) == NIHIL);
 }
 
+/* vicus quies T2: incipere sine exspectatione - tmux FICTUS (scriptum
+ * in area, binarium datum): argumenta sua et clientem unum effundit */
+interior vacuum
+_probare_incipere (
+    CredoContextus* c)
+{
+    constans character* area;
+             character  via[CCLVI];
+           Multiplexor  m;
+             Processus* pr;
+     ProcessusResultus  r;
+                   Xar* k;
+                   i32  gradus;
+       struct timespec  pausa;
+
+    area = credo_area(c);
+    CREDO_NECESSE(area != NIHIL && strlen(area) < CCXL);
+    sprintf(via, "%s/tmux", area);
+    CREDO_NECESSE(filum_scribere_literis(via, "#!/bin/sh\n"
+        "printf '%s %s\\n' \"$1\" \"$2\"\n"
+        "printf '/dev/ttys001\\tbeta\\n'\n"));
+    CREDO_NECESSE(filum_modum_ponere(via, 0755));
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    m.binarium  = via;
+    pr          = multiplexor_clientes_incipere(&m, c->piscina);
+    CREDO_NECESSE(pr != NIHIL);
+    pausa.tv_sec   = ZEPHYRUM;
+    pausa.tv_nsec  = V * M * M;
+    per (gradus = ZEPHYRUM; gradus < M
+         && processus_pulsare(pr) != PROCESSUS_PARATUS; gradus++)
+    {
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    r = processus_metere(pr);
+    CREDO_VERUM(r.successus && r.codex_exitus == ZEPHYRUM);
+    CREDO_VERUM(chorda_continet(r.effusio, chorda_ex_literis(
+        "-u list-clients", c->piscina)));
+    k = multiplexor_clientes_legere(r.effusio, c->piscina);
+    CREDO_NECESSE(k != NIHIL);
+    CREDO_AEQUALIS_I32(xar_numerus(k), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans MultiplexorCliens*)
+        xar_obtinere(k, ZEPHYRUM))->sessio, "beta");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "panellos_legere", _probare_panellos_legere, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -323,6 +368,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "argumenta", _probare_argumenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vivus", _probare_vivum, ministrum_parare, ministrum_purgare,
       NIHIL, NIHIL },
+    { "incipere", _probare_incipere, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

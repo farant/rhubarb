@@ -430,6 +430,121 @@ _sectio_decima (
     volumen_claudere(vol_duplex);
 }
 
+/* natale testis: vocationes numerat (ctx = i32*) */
+interior b32
+natale_numerare (
+    vacuum* ctx)
+{
+    (*(i32*)ctx)++;
+    redde VERUM;
+}
+
+/* manifestum documenti in spatio exstat? */
+interior b32
+manifestum_exstat (
+                Volumen* vol,
+     constans character* spatium,
+                Piscina* piscina)
+{
+    b32 inventum;
+
+    (vacuum)volumen_plagulam_promere(vol, chorda_concatenare(
+        chorda_ex_literis(spatium, piscina), chorda_ex_literis(
+        "/documentum", piscina), piscina), piscina, &inventum);
+    redde inventum;
+}
+
+interior vacuum
+_sectio_nasciturum (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+      TabulaCharacterum  folium_novum;
+                Volumen* vol;
+       ScribaDocumentum* doc;
+       ScribaDocumentum* doc2;
+                    i32  natales;
+                    s64  acta_ante;
+                    s64  plagulae_ante;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    vol = volumen_temporarium(piscina,
+        "probatio_scriba_nasciturum");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    natales  = ZEPHYRUM;
+
+    CREDO_GRADUS("nasciturum: nihil scribitur, natum FALSUM");
+    acta_ante      = (s64)volumen_summa_actorum(vol);
+    plagulae_ante  = (s64)volumen_summa_plagularum(vol);
+    doc = scriba_documentum_nasciturum(piscina, intern, vol, "n1", LAT,
+        ALT, II, natale_numerare, &natales);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    CREDO_FALSUM(scriba_documentum_natum(doc));
+    CREDO_FALSUM(manifestum_exstat(vol, "n1", piscina));
+    CREDO_AEQUALIS_S64((s64)volumen_summa_actorum(vol), acta_ante);
+    CREDO_AEQUALIS_S64((s64)volumen_summa_plagularum(vol),
+        plagulae_ante);
+    folium(&folium_novum, "", piscina);
+    CREDO_VERUM(aequalia(scriba_documentum_tabula(doc), &folium_novum));
+
+    CREDO_GRADUS("actum vacuum et revocare: manet nasciturum");
+    CREDO_AEQUALIS_S64(scriba_documentum_committere(doc, &folium_novum),
+        ZEPHYRUM);
+    CREDO_FALSUM(scriba_documentum_revocare(doc));
+    CREDO_FALSUM(scriba_documentum_natum(doc));
+    CREDO_AEQUALIS_I32(natales, ZEPHYRUM);
+    CREDO_AEQUALIS_S64((s64)volumen_summa_actorum(vol), acta_ante);
+    CREDO_AEQUALIS_S64((s64)volumen_summa_plagularum(vol),
+        plagulae_ante);
+
+    CREDO_GRADUS("actum primum non vacuum: manifestum, actum, natale "
+        "semel");
+    folium(&folium_novum, "hi", piscina);
+    CREDO_VERUM(scriba_documentum_committere(doc, &folium_novum)
+        > ZEPHYRUM);
+    CREDO_VERUM(scriba_documentum_natum(doc));
+    CREDO_VERUM(manifestum_exstat(vol, "n1", piscina));
+    CREDO_AEQUALIS_I32(natales, I);
+    CREDO_VERUM((s64)volumen_summa_actorum(vol) > acta_ante);
+
+    CREDO_GRADUS("actum secundum: natale non iterum; apertum textum "
+        "tenet");
+    folium(&folium_novum, "hi\nyo", piscina);
+    CREDO_VERUM(scriba_documentum_committere(doc, &folium_novum)
+        > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(natales, I);
+    doc2 = scriba_documentum_aperire(piscina, intern, vol, "n1");
+    CREDO_NECESSE_NON_NIHIL(doc2);
+    CREDO_VERUM(scriba_documentum_natum(doc2));
+    CREDO_VERUM(aequalia(scriba_documentum_tabula(doc2),
+        &folium_novum));
+
+    CREDO_GRADUS("coniunctum quoque nascit; creare = natum");
+    doc = scriba_documentum_nasciturum(piscina, intern, vol, "n2", LAT,
+        ALT, II, natale_numerare, &natales);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    folium(&folium_novum, "x", piscina);
+    CREDO_VERUM(scriba_documentum_committere_coniunctum(doc,
+        &folium_novum) > ZEPHYRUM);
+    CREDO_VERUM(manifestum_exstat(vol, "n2", piscina));
+    CREDO_AEQUALIS_I32(natales, II);
+    doc = scriba_documentum_creare(piscina, intern, vol, "n3", LAT, ALT,
+        II);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    CREDO_VERUM(scriba_documentum_natum(doc));
+
+    CREDO_GRADUS("natale NIHIL: nascitur sine vocatione");
+    doc = scriba_documentum_nasciturum(piscina, intern, vol, "n4", LAT,
+        ALT, II, NIHIL, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(doc);
+    CREDO_VERUM(scriba_documentum_committere(doc, &folium_novum)
+        > ZEPHYRUM);
+    CREDO_VERUM(manifestum_exstat(vol, "n4", piscina));
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: aequalia, dimensiones aliae -> vacua", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -451,6 +566,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "XI: duo documenta in volumine uno (spatia)", _sectio_decima,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XII: nasciturum (comites pigri)", _sectio_nasciturum, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

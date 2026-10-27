@@ -77,6 +77,59 @@ known, genus has routable fields ("<genus>: semitas nondum accipit"),
 `vicus_acervo_mutare(genus, uri)`; the pane's `argumentum_ponere`
 applies it. The saints pane sets `f->ramus` (history).
 
+## 2026-10-22 — D5 S3b: the search pane in vicus (genus "indagatio")
+
+- **One registry, one agenda, one contacts document.** The registry the
+  calendar built lazily (D4c, `dies` only) now also holds the four
+  searchable kinds (`indagatio_genera_registrare` before `parare`), and
+  the search index is created over it on the first search pane. The
+  agenda document stays on ContextusKalendarii; the contacts document
+  stays on ContextusNomenclatoris, reached from the calendar context
+  (`ck->nomenclatoris`) - `personas_aperire` replaces the three inline
+  lazy opens. Why it matters: per-rem kinds read the DOCUMENT, so a
+  second document over the same volume would not see an item created
+  in the calendar or a contact created in the contacts pane until it
+  re-read. Test: probatio_vicus_indagatio "communia" (both plants red).
+- `$via`'s checks moved into `semitam_aperire` (messages unchanged);
+  the search pane's Enter gate uses it. Stopgap until S3c:
+  `scriba/<name>` is not a route, so the gate opens it like
+  `$scriba(name)` (vicus_acervo_aperire "scriba", name).
+- `$search` = vicus_advocare (prompt open with the current q);
+  `$search(words)` = vicus_acervo_mutare with the words (cognomen
+  turns them into `indagatio?q=`); several arguments (commas in the
+  words) are joined with ", ".
+- Cycle: admonitiones, colloquia, calendarium "agenda", indagatio.
+  Cmd+Shift+F: vicus_brevitatem_addere('f', MOD_SHIFT, "indagatio").
+- Testing note: a click into a scriba page that is NOT focused only
+  focuses (its first-click action runs a command under the cursor, it
+  does not place the cursor), so typing after it lands at the old
+  cursor. probatio_vicus_indagatio writes all commands up front (one
+  per line, Enter between) as probatio_vicus_acervus does, then clicks
+  each.
+- Plants (silva.planta, filter vicus_indagatio), all red at their own
+  assertions: 15 - modifiers not exact (Cmd+F fires), routing check
+  blind (ctx dropped in destinare), dispenser drops the strategy ctx,
+  advocatum not called, advocare flag not set, transient ignored in
+  the mutare branch / after a new mount / not set by the pane, cycle
+  without indagatio, common-notebook gate missing, Esc not returning,
+  contacts or agenda not shared (second document), `$search` without
+  argument not advocating, wrong shortcut key. The two routing plants
+  are red ONLY at the terminal-focus step: with scriba focused the
+  chord bubbles to the root handler anyway.
+
+## 2026-10-22 — D5 S3b, after Fran's look: notebook hits open LEFT
+
+Fran: a common-notebook hit is the main journal, so it belongs in the
+left pane, not stacked on the right. The gate now switches the active
+tab's left pane (if it is a mounted scriba) to the page with the new
+`scriba_paginam_ostendere` and focuses it; any other left pane falls
+back to `$scriba(name)` in the stack. Focus moves inside event
+handling - fine, a click does the same. Plants red: focus left
+missing, left never chosen, page ignored. `m->doc` not reassigned was
+GREEN in vicus (focusing calls scriba_reficere, which resyncs m->doc),
+so the direct test lives in probatio_montatio (page doc, saved view,
+unknown name refused) - red there.
+
 ## 2026-10-22 - sonus S4 step 4b: notification sounds, $sound mutes
 
 vicus_applicatio knows sound only through a PORT (`include/vicus_sonus.h`,
@@ -116,6 +169,66 @@ counts calls; TMUX_TMPDIR in the credo area so systema 'terminalia'
 never sees Fran's server). Plants 13/13 red (12 C via silva.planta,
 plus organum `vita="transiens"` by hand -> persistens red).
 
+## 2026-10-22 — book lookup for scriba panes (comites P2)
+
+ContextusScribae keeps opened companion books in a TabulaDispersa
+(prefix -> ScribaLiber*), opened once with
+`scriba_liber_aperire_in_spatio` at the common book's page size; ""
+is the common book. Every scriba pane gets the lookup at mount. Not
+plantable: dropping the cache (a reopened book reads the same volume
+state; only cost and object identity change, not behaviour).
+
+## 2026-10-22 — terminal locations (comites P4)
+
+Terminal panes are registered with `TerminaleInVico` (TerminaleApplicatio
+FIRST, so every existing cast stays valid) holding the pane id, the tmux
+server from the argument ("tmux <server> <session>", "-" = default) and
+a cached location. Location: the tmux client on the pane's tty -> its
+session -> the active pane of the session's active window ->
+`terminale/tmux/<session>/<window index>`, title "<session> / <window
+name>"; no client -> `terminale/<pane id>`, "Terminal". Session + INDEX
+(Fran): window ids reset with the tmux server, names auto-rename.
+Asking tmux starts processes, so the answer is cached 1 s (the follow
+check runs every pulse); results live in fixed buffers, the query
+arena is created and destroyed per inspection. The one harmful lag
+(switch tmux window, type into the companion at once -> previous
+window's notebook) is closed by `facies.locum_renovare`: vicus calls
+it on the right front before Cmd+T reads the location and when focus
+moves into the left pane; the terminal drops its cache. Plants red:
+no refresh on focus-left, none on Cmd+T, refresh a no-op. Test: probatio_vicus_comites_terminale against a
+private tmux server (build/pmx, own TMUX_TMPDIR, as probatio_vicus_saltus).
+Plants red: cache forever, client not matched, active window ignored,
+argument's server ignored, hooks unset. Not plantable: removing the cache
+(same answers, only cost).
+
+## 2026-10-22 - companion search results (comites P5b)
+
+The gate (`inventum_aperire`) splits `scriba/<page>?liber=<prefix>`; with a
+liber it goes to `comitem_inventum_aperire`: read the record via the left
+scriba's book context (`m->libri_ctx` = ContextusScribae - the montatio has
+no volume of its own, which is also why the RECORD is written in the
+`comitem_scribae_ponere` wrapper, not in scriba_comitem_ponere), open the
+paired route as a petition, then `vicus_comitem_ostendere` + page. No route
+(terminal companions): right pane unchanged and follow does not yank the
+left away, because ostendere seeds `comes_secutus` from the CURRENT front.
+Scriba's `facies.iter_semita` (`iter_scribae`) turns Cmd+F inside a
+companion into `indagatio?genus=comites&clavis=<locus>`.
+
+## 2026-10-22 - `$sound` toast, scriba text port
+
+- `nuntium_hospitis(ca, titulus)`: NUNTIUS into `ca->transientes` with
+  time = max(now, previous + 1 ms) - nunc_vici is whole seconds and the
+  index puts an equal-time entry AFTER older ones, so two quick `$sound`
+  clicks would show the stale toast first. `$sound` now registers with the
+  notifications context (it reaches the vicus through `ca->vicus`) and raises
+  "Sounds muted/unmuted" / "Notification sounds muted/unmuted".
+  Test trap: toasts are 48 cells wide at the right edge and cover scriba
+  line 3 from column ~30 at 480 px - the `$sound(x)` click had to hide them.
+- Text port: ContextusScribae.porta_textus (set any time via
+  vicus_applicatio_textus_portam_ponere, app->scribae is the context);
+  every scriba pane gets a trampoline at mount. apps/vicus and apps/scriba
+  wire clipboard_textum_ponere (new, NSPasteboard, manual retain/release).
+
 ## 2026-10-22 - praeco cantus step B: vicus plays Claude-sent jingles
 
 Transport = the praeconium log vicus already tails. `praeco cantus` will
@@ -146,3 +259,16 @@ notification mute is ignored on purpose. The port must now provide the
 three live-voice calls or it is refused as a whole (porta_dimidia).
 ludus_tessera's hand list gained "aetherophonum" (vicus_applicatio links
 the pane; the pane links nothing sound-related).
+
+## 2026-10-24 - lazy companions + lector note host (lector L5)
+
+The scriba book gate (`librum_scribae`) opens `comes/...` books lazily
+(other prefixes unchanged). Each gets a `ComesPendens` (prefix, latest
+title + route) in `cs->pendentes`; `comitem_scribae_ponere` updates it
+and writes the `comes` record only when the book is already born; the
+book's `natale` writes it at birth. `scriba_actiones` skips the
+`<prefix>/visus` write while unborn - showing a companion DOES write it
+(a plant proved the guard is needed). Lector's `notas_habet` =
+`lectoris_notas_habere`: "comes/" + locus (same key comitem_sequi
+builds - a Cmd+T end-to-end test pins it) has a non-blank line; scratch
+piscina `scheda_notarum` per call because it runs on every paint.

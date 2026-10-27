@@ -659,6 +659,57 @@ graeca_probare (
     CREDO_FALSUM(glyphae_ductae_est(0x221C));
 }
 
+/* IX: ellipsis media (pinacotheca D10): tria puncta in ordine III
+ * (altitudo lineolae et puncti medii ⋮), columnis eisdem quibus
+ * ellipsis U+2026 in ordine VI; scalata II x in XII x XVI */
+interior vacuum
+ellipsin_mediam_probare (
+    i8* larva)
+{
+    constans character* media[] = {
+        "......", "......", "......", ".#.#.#",
+        "......", "......", "......", "......" };
+    constans character* infima[] = {
+        "......", "......", "......", "......",
+        "......", "......", ".#.#.#", "......" };
+    i32 j;
+    i32 lucida;
+    b32 extra;
+
+    CREDO_VERUM(glyphae_ductae_est(0x22EF));
+    CREDO_VERUM(pictura_est(0x22EF, media, larva));
+    CREDO_VERUM(pictura_est(0x2026, infima, larva));
+    CREDO_VERUM(glyphae_ductae_pingere(0x22EF, XII, XVI, larva));
+    lucida  = ZEPHYRUM;
+    extra   = FALSUM;
+    per (j = ZEPHYRUM; j < XII * XVI; j++)
+    {
+        si (larva[j] != ZEPHYRUM)
+        {
+            lucida++;
+            si (j / XII != VI && j / XII != VII)
+            {
+                extra = VERUM;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32(lucida, XII);
+    CREDO_FALSUM(extra);
+    CREDO_AEQUALIS_I32((i32)larva[VI * XII + II], 0xFF);
+    CREDO_AEQUALIS_I32((i32)larva[VI * XII + VI], 0xFF);
+    CREDO_AEQUALIS_I32((i32)larva[VI * XII + X], 0xFF);
+}
+
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+    i8 larva[MAXIMA + XVI];
+
+    (vacuum)c;
+    ellipsin_mediam_probare(larva);
+}
+
 interior vacuum
 _sectio_prima (
     CredoContextus* c)
@@ -766,6 +817,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "VII: symbola (v2)", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
     { "VIII: symbola v3 (Graeca, mathematica)", _sectio_nona, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "IX: ellipsis media (pinacotheca)", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

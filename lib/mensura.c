@@ -13,6 +13,7 @@
 #include "chorda_aedificator.h"
 #include "lectiones.h"
 #include "tabula_dispersa.h"
+#include "filum.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -420,7 +421,7 @@ mensura_condere (
      * vacua manebant - MMMDCCCLXXXIV in /tmp intra dies IV, porta
      * probatio_saltuarius_limes rubra (parcum ...BPYFX). Appensor
      * posterior plagulam novam creat ('ab'). */
-    si (remove(via_diarii) != ZEPHYRUM)
+    si (!filum_delere(via_diarii))
     {
         plagula = lectiones_fopen(via_diarii, "wb");
         si (plagula != NIHIL)

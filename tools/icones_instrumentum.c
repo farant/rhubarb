@@ -5,6 +5,9 @@
  *   bin/icones_instrumentum -fons <x.png> -radix <directorium>
  *       [-titulus <AppIcon>] [-latera 16,32,64,128,256,512,1024]
  *   bin/icones_instrumentum -legere <x.icns>
+ *   bin/icones_instrumentum -amplificare <x.png> <latus> <exitus.png>
+ *       (testa-ios C2 T3: icon App Store, pixel art factore integro,
+ *       opacum super album)
  *
  * CUR EXSISTIT: icones bibliotheca imaginem DECODIFICATAM accipit
  * (spec D7), ergo sine hoc instrumento nihil in arbore iconem ex PNG
@@ -32,7 +35,9 @@
 #include "piscina.h"
 #include "chorda.h"
 
+#include "imago_png.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* \x89 P N G \r \n \x1a \n */
@@ -113,6 +118,45 @@ _usus (vacuum)
               " [-titulus <t>] [-latera 16,32,...]\n");
     imprimere("  icones_instrumentum -legere <x.icns>\n");
     imprimere("  icones_instrumentum -conferre <a.png> <b.png>\n");
+    imprimere("  icones_instrumentum -amplificare <x.png> <latus> "
+              "<exitus.png>\n");
+}
+
+/* -amplificare: PNG -> latus x latus, proximus vicinus, opacum */
+interior s32
+_amplificare (
+    constans character* via_fontis,
+    constans character* latus_textus,
+    constans character* via_exitus,
+               Piscina* piscina)
+{
+    ImagoFructus f;
+           Imago ex;
+    IconesStatus status;
+             i32 latus;
+
+    latus  = (i32)atoi(latus_textus);
+    f      = imago_caricare_ex_file(via_fontis, piscina);
+    si (!f.successus)
+    {
+        imprimere("RECUSATUM FONS: %s\n", via_fontis);
+        redde I;
+    }
+    status = icones_amplificare(&f.imago, latus, &ex, piscina);
+    si (status != ICONES_SUCCESSUS)
+    {
+        imprimere("RECUSATUM %s: %s (%dx%d -> %s)\n",
+            _titulus_status(status), via_fontis, (int)f.imago.latitudo,
+            (int)f.imago.altitudo, latus_textus);
+        redde I;
+    }
+    si (!imago_png_scribere_rgb(&ex, via_exitus, piscina).successus)
+    {
+        imprimere("RECUSATUM SCRIPTIO: %s\n", via_exitus);
+        redde I;
+    }
+    imprimere("%s\n", via_exitus);
+    redde ZEPHYRUM;
 }
 
 /* "16,32,1024" -> vexilla. Latus extra setum Apple argumentum ignotum
@@ -441,6 +485,9 @@ principale (
      constans character* via_legenda  = NIHIL;
      constans character* via_prima    = NIHIL;
      constans character* via_altera   = NIHIL;
+     constans character* amplianda    = NIHIL;
+     constans character* latus_ampli  = NIHIL;
+     constans character* via_ampla    = NIHIL;
                     i32  vexilla      = ZEPHYRUM;
                 integer  i;
                     s32  fructus      = II;
@@ -475,6 +522,18 @@ principale (
         {
             via_legenda = argumenta[++i];
         }
+        alioquin si (strcmp(a, "-amplificare") == ZEPHYRUM)
+        {
+            si (i + III >= numerus)
+            {
+                imprimere("-amplificare tres valores poscit\n");
+                _usus();
+                redde II;
+            }
+            amplianda    = argumenta[++i];
+            latus_ampli  = argumenta[++i];
+            via_ampla    = argumenta[++i];
+        }
         alioquin si (strcmp(a, "-conferre") == ZEPHYRUM)
         {
             si (i + II >= numerus)
@@ -494,7 +553,8 @@ principale (
         }
     }
 
-    si (!via_legenda && !via_prima && (!via_fontis || !via_radicis))
+    si (   !via_legenda && !via_prima && !amplianda
+        && (!via_fontis || !via_radicis))
     {
         _usus();
         redde II;
@@ -520,6 +580,11 @@ principale (
     alioquin si (via_prima)
     {
         fructus = _conferre(via_prima, via_altera, piscina);
+    }
+    alioquin si (amplianda)
+    {
+        fructus = _amplificare(amplianda, latus_ampli, via_ampla,
+            piscina);
     }
     alioquin
     {

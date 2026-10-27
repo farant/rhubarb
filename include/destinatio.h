@@ -43,12 +43,15 @@ nomen structura {
     Punctum punctum_locale;
 } Destinatio;
 
+/* strategia destinationis; ctx = quod dispensator_ponere_strategiam
+ * accepit (D5: vicus brevitates suas legit) */
 nomen Destinatio (*DestinatioStrategia)(
           Componens* arbor,
     constans Motus* motus,
               chorda focus,
    constans Eventus* ev,
-            Piscina* piscina);
+            Piscina* piscina,
+             vacuum* ctx);
 
 
 /* ==================================================

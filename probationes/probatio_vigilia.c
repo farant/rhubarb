@@ -12,6 +12,7 @@
 #include "sigillum.h"
 #include "credo.h"
 #include "lectiones.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -27,10 +28,10 @@ _purgare (
     CredoContextus* c)
 {
     (vacuum)c;
-    remove(VIA_BIN);
-    remove(VIA_MAN);
-    remove(VIA_FON);
-    remove(VIA_COM);
+    (vacuum)filum_delere(VIA_BIN);
+    (vacuum)filum_delere(VIA_MAN);
+    (vacuum)filum_delere(VIA_FON);
+    (vacuum)filum_delere(VIA_COM);
 }
 
 interior b32
@@ -284,7 +285,7 @@ _sectio_quinta (
          constans character* contentum  = "binarium tacendi";
                         s64  t          = (s64)1000;
 
-        remove(VIA_COM);
+        (vacuum)filum_delere(VIA_COM);
         CREDO_VERUM (_scribere(VIA_BIN, contentum));
         _sigillum_hex(contentum, hex);
         CREDO_VERUM (_scribere(VIA_MAN, VIA_FON "\n"));
@@ -343,7 +344,7 @@ _sectio_quinta (
         t++;
         CREDO_NON_NIHIL (vigilia_cautio_dicenda(v, t));
 
-        remove(VIA_COM);
+        (vacuum)filum_delere(VIA_COM);
     }
 }
 

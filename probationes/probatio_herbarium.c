@@ -213,16 +213,16 @@ _purgare (
         sprintf(plena, "%s/%.*s", via,
             (integer)introitus->titulus.mensura,
                 (constans character*)introitus->titulus.datum);
-        (vacuum)unlink(plena);
+        (vacuum)filum_delere(plena);
     }
     si (it)
     {
         directorium_iterator_claudere(it);
     }
-    (vacuum)rmdir(via);
+    (vacuum)filum_delere(via);
     sprintf(via, "%s/index.jsonl", dir);
-    (vacuum)unlink(via);
-    (vacuum)rmdir(dir);
+    (vacuum)filum_delere(via);
+    (vacuum)filum_delere(dir);
 }
 
 interior vacuum
@@ -497,16 +497,16 @@ probatio_captura_defectus(Piscina* piscina)
     CREDO_NON_NIHIL(h);
     /* directorium post aperitionem non scribendum */
     sprintf(spec, "%s/specimina", dir);
-    (vacuum)chmod(spec, 0500);
-    (vacuum)chmod(dir, 0500);
+    (vacuum)filum_modum_ponere(spec, 0500);
+    (vacuum)filum_modum_ponere(dir, 0500);
     r = http_vectura_exsequi(herbarium_vectura(h, _scripta(&s)),
                              _petitio(piscina), piscina);
     CREDO_VERUM(r.successus);
     CREDO_AEQUALIS_I32(r.responsum->status, D);
     CREDO_CHORDA_CONTINET(r.responsum->corpus,
         chorda_ex_literis("api_error", piscina));
-    (vacuum)chmod(dir, 0755);
-    (vacuum)chmod(spec, 0755);
+    (vacuum)filum_modum_ponere(dir, 0755);
+    (vacuum)filum_modum_ponere(spec, 0755);
 
     /* herbarium NIHIL in vectura: interior ipsa redditur */
     s.index = 0;
@@ -870,7 +870,7 @@ probatio_sedes_ordinaria(Piscina* piscina)
        chorda  sedes;
 
     _directorium(dir, "sedes");
-    (vacuum)mkdir(dir, 0755);
+    (vacuum)filum_directorium_creare(dir);
     /* $RHUBARB_HERBARIUM directorium exstans -> <dir>/<hospes> */
     herbarium_vetus = _ambitum_ponere("RHUBARB_HERBARIUM", dir,
         piscina);
@@ -913,7 +913,7 @@ probatio_sedes_ordinaria(Piscina* piscina)
     (vacuum)_ambitum_ponere("HOME", domus_vetus, piscina);
     (vacuum)_ambitum_ponere("RHUBARB_HERBARIUM", herbarium_vetus,
         piscina);
-    (vacuum)rmdir(dir);
+    (vacuum)filum_delere(dir);
 }
 
 interior vacuum

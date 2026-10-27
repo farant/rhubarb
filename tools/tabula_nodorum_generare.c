@@ -17,6 +17,7 @@
 #include "chorda.h"
 #include "polynomium.h"
 #include "laqueus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -349,7 +350,7 @@ scribere (
     constans character* fixum,
     constans character* via)
 {
-         FILE* f = fopen(via, "w");
+         FILE* f = lectiones_fopen(via, "w");
           i32  k;
           i32  o_titulus;
           i32  o_pd;

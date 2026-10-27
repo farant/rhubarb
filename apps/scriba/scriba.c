@@ -53,15 +53,18 @@ applicatio_initium (
     {
         redde FALSUM;
     }
-    forma->titulus    = "scriba";
-    forma->latitudo   = SCRIBA_LATITUDO;
-    forma->altitudo   = SCRIBA_ALTITUDO;
-    forma->scala      = SCALA;
-    forma->d          = app->d;
-    forma->figurae    = app->figurae;
-    forma->thema      = ZEPHYRUM;
-    forma->finis      = _scribam_finire;
-    forma->finis_ctx  = vol;
+    /* yy / y / dd: registrum in clipboard (servitium testae) */
+    app->montatio.actiones_ctx.textum_exportare  = a->textum_exportare;
+    app->montatio.actiones_ctx.exportare_ctx     = a->textus_ctx;
+    forma->titulus                               = "scriba";
+    forma->latitudo                              = SCRIBA_LATITUDO;
+    forma->altitudo                              = SCRIBA_ALTITUDO;
+    forma->scala                                 = SCALA;
+    forma->d                                     = app->d;
+    forma->figurae                               = app->figurae;
+    forma->thema                                 = ZEPHYRUM;
+    forma->finis                                 = _scribam_finire;
+    forma->finis_ctx                             = vol;
     redde VERUM;
 }
 

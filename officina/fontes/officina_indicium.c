@@ -16,6 +16,7 @@
 #include "xar.h"
 #include "tabula_dispersa.h"
 #include "piscina.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1330,7 +1331,7 @@ indicium_scribere (
         caput.versio             = (i32)INDICIUM_VERSIO;
         caput.numerus_sectionum  = (i32)INDICIUM_SECTIO_NUMERUS;
 
-        plagula = fopen(via, "wb");
+        plagula = lectiones_fopen(via, "wb");
         si (plagula == NIHIL)
         {
             redde FALSUM;

@@ -12,6 +12,7 @@
 #include "chorda.h"
 #include "tcp.h"
 #include "credo.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -29,13 +30,13 @@
 interior vacuum
 _purgare (vacuum)
 {
-    remove(VIA_DB);
-    remove(VIA_DB "-wal");
-    remove(VIA_DB "-shm");
-    remove(VIA_AN);
-    remove(VIA_PORT);
-    remove(VIA_PID);
-    remove(VIA_ERR);
+    (vacuum)filum_delere(VIA_DB);
+    (vacuum)filum_delere(VIA_DB "-wal");
+    (vacuum)filum_delere(VIA_DB "-shm");
+    (vacuum)filum_delere(VIA_AN);
+    (vacuum)filum_delere(VIA_PORT);
+    (vacuum)filum_delere(VIA_PID);
+    (vacuum)filum_delere(VIA_ERR);
 }
 
 /* lineam mittere, responsum ad novam lineam legere (obstruens) */

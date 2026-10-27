@@ -53,6 +53,41 @@
  * assignatae; notae sub quaque re. "prompta" (PARTES_CAMPUS) solum
  * dum prompta aperta est (A3b).
  *
+ * INDEX COTIDIANUS (pensa K3; visus diei, volumine dato): post res
+ * apertas titulus "k" (PARTES_INDEX, fascia "Checklist"; in pagina
+ * nova "k-c") et ordines "k<n>" (PARTES_ITEM): res pensorum diei
+ * (pensa_res_diei super librum "pensa" voluminis, ordine formae);
+ * deinde "c" et perfectae. Electio "k<n>" (res_electa); j/k per res et
+ * pensa ordine indicis; x aut ictus in capsa signum ponit aut tollit
+ * (pensa_ponere) - solum die hodierno aut praeterito (hodie ex porta);
+ * dies futuri obscuri, x nihil agit. Pensum signatum: capsa signata,
+ * titulus obscurus linea transversa (ut res perfecta), loco suo manet.
+ * Mandata rei (titulus, dies, nota, rubricae, < >, X) pensis non
+ * praesto (in menu obscura); u signa non revocat (x iterum).
+ *
+ * VISUS MONITORUM (pensa K4; visus="monita", post agendam): forma
+ * indicis cotidiani (liber "pensa" voluminis) lectioni sola. Titulus
+ * "Reminders"; caput cum sagittis paginae; ordines (album, paginae ut
+ * in die et agenda): fascia "m" ("Daily checklist"), pro grege k
+ * titulus "h<k>" (PARTES_INDEX; schedula ut scripta, aut "Every day"
+ * obscurum pro lineis sine capite; ad dextrum obscure "today", "next:
+ * Sat 24 Oct" (recursus_proximus) aut "no more dates"; in pagina nova
+ * "h<k>-c"), vitium "v<k>" (schedula non lecta: nuntius recursus
+ * involutus, colore erroris) et res "u<k>-<j>" (PARTES_ITEM, non
+ * eligendae); sine forma "nullum" ("No checklist yet."). Claves: [ ]
+ * paginae, Esc ad mensem. Globulus barrae "visus-monita": "Reminders"
+ * si barra capit, aliter campana (III cellulae).
+ *
+ * EDITIO MONITORUM (pensa K5; campus monita_modus lectio|editio): e
+ * aut globulus capitis "edere" ("Edit", solum in lectione) visum
+ * dividit - supra lectio (ordines ut in K4, paginae dimidiae), infra
+ * locus "forma" cum scriba nidificata "<id>_pensa" in libro "pensa"
+ * (Charta, ut notae diei). In scribam ictu aut Tab; ibi claves scribae
+ * sunt (calendarium nihil agit); Esc primum scribae, secundum ad
+ * indicem, tertium (in indice) editionem claudit, deinde ad mensem.
+ * Lectio formam in omni pictura legit: vitia et "next:" dum scribitur
+ * mutantur. Visus mutatus (globulo) lectionem restituit.
+ *
  * CLAVES (mensis): h/l dies -1/+1, k/j hebdomas -1/+1, H/L mensis
  * -1/+1 (dies ad finem mensis praecisa), t hodie, Enter diem aperit.
  * BARRA (M1b): supra omnes visus, globuli (PARTES_BOTTONE) "praecedens"
@@ -120,6 +155,7 @@
 #include "fasti.h"
 #include "agenda.h"
 #include "fasti_fontes.h"
+#include "conspectus.h"
 #include "organum_montatio.h"
 
 /* porta 'hodie': VERUM et *hodie posita, aut FALSUM (nulla lectio -
@@ -166,11 +202,26 @@ kalendarium_montare (
                   vacuum* hodie_ctx,
          StatusSystemata* systemata);
 
+/* proiectiones D4c: registrum commune (vicus: unum per volumen) in quo
+ * conspectus 'dies' iam registratus et paratus est, eodem agenda,
+ * fontibus et volumine quibus montatum est. NIHIL = sine cache (f
+ * directe vocatur). Kalendarium registrum proprium non creat. */
+vacuum
+kalendarium_conspectum_ponere (
+     KalendariumMontatio* m,
+     ConspectusRegistrum* repertorium);
+
 /* A6e: pulsus (vicus): notae diei refectae (indicium paginae post
  * navigationem in notis); VERUM si mutatum (pingendum) */
 b32
 kalendarium_reficere (
     KalendariumMontatio* m);
+
+/* vicus quies T6: VERUM dum opus aut iussum dilatum in editore ullo
+ * pendet (pulsus crebri necessarii) */
+b32
+kalendarium_occupatum (
+    constans KalendariumMontatio* m);
 
 /* A6d: gestus (vicus T3a): notae diei montatae - gestus scribae
  * notarum (liber diei refectus); aliter nullus */
@@ -189,9 +240,27 @@ kalendarium_argumentum_ponere (
     KalendariumMontatio* m,
      constans character* argumentum);
 
+/* comites P1 (facies.locus, facies.locus_titulus; ctx =
+ * KalendariumMontatio*): locus visus - dies ad unitatem visus
+ * rotundatus (hebdomas a dominica), hodie concreta:
+ * "calendarium/dies/2026-10-19", ".../hebdomas/2026-10-18",
+ * ".../mensis/2026-10", ".../annus/2026", "calendarium/agenda";
+ * titulus "Mon 19 Oct 2026", "Week of 18 Oct 2026", "October 2026",
+ * "2026", "Agenda" */
+chorda
+kalendarium_locus (
+     vacuum* ctx,
+    Piscina* piscina);
+
+chorda
+kalendarium_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina);
+
 /* semitae R4 (facies.semitam_secuta): post semitam a vico applicatam
- * (historia) liber notarum diem electum sequitur; FALSUM si liber
- * aptari non potuit */
+ * (historia) liber notarum diem electum sequitur; D5 S3c: pagina
+ * notarum semitae (notae.pagina) praevalet paginae visae ultimae.
+ * FALSUM si liber aptari non potuit */
 b32
 kalendarium_semitam_secuta (
     vacuum* ctx);

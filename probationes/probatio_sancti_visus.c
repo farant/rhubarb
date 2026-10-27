@@ -563,31 +563,26 @@ _sectio_congruentia (
     CREDO_VERUM(campus_est(w, "ordo", "calendarium"));
 }
 
-/* origo: sanctus per argumentum apertus (calendarium, $saints(id)) -
- * Esc non consumitur (latus tollitur, prius redit); per indicem
- * apertus - Esc ad indicem */
+/* Esc in visu sancti: semper ad indicem, unde sanctus apertus est
+ * (calendarium, $saints(id), index) - latus prius = Ctrl+O, non Esc
+ * (Franus 2026-10-22; "origo" sublata) */
 interior vacuum
-_sectio_origo (
+_sectio_effugium (
     CredoContextus* c)
 {
     Mundus* w;
 
     w = mundus(c, CCLVI);
     CREDO_NECESSE_NON_NIHIL(w);
+    /* per argumentum (calendarium, $saints(id)) */
     CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, "agnes-of-rome"));
-    CREDO_VERUM(campus_est(w, "origo", "argumentum"));
     dispensator_recomponere(w->d);
-    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
-    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
-    /* j k inter sanctos originem non mutant */
     clavis(w, 'j');
     CREDO_VERUM(campus_est(w, "sanctus_apertus", "thomas-aquinas"));
     clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
-    CREDO_VERUM(campus_est(w, "visus", "sanctus"));
-    /* argumentum vacuum: index (origo indicis) */
-    CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, ""));
-    CREDO_VERUM(campus_est(w, "origo", "index"));
-    dispensator_recomponere(w->d);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
+    /* per indicem (Enter) */
     clavis_nominata(w, CLAVIS_REDITUS, XIII);
     CREDO_VERUM(campus_est(w, "visus", "sanctus"));
     clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
@@ -643,7 +638,7 @@ _sectio_semitae (
     dispensator_recomponere(w->d);
     CREDO_VERUM(pictum(w, "Agnes of Rome", c->piscina));
     CREDO_VERUM(!pictum(w, "Thomas Aquinas", c->piscina));
-    /* sanctus cum pagina textus; origo, electus */
+    /* sanctus cum pagina textus; electus = apertus */
     CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
         "sancti/index?quaestio=&ordo="));
     CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m,
@@ -651,7 +646,6 @@ _sectio_semitae (
     CREDO_VERUM(campus_est(w, "visus", "sanctus"));
     CREDO_VERUM(campus_est(w, "sanctus_apertus", "thomas-aquinas"));
     CREDO_VERUM(campus_est(w, "pagina_textus", "2"));
-    CREDO_VERUM(campus_est(w, "origo", "argumentum"));
     CREDO_VERUM(campus_est(w, "electus", "thomas-aquinas"));
     CREDO_CHORDA_AEQUALIS_LITERIS(semita_currens(w, c->piscina),
         "sancti/sanctus/thomas-aquinas?pagina_textus=2");
@@ -670,7 +664,7 @@ _sectio_semitae (
         "sancti?nemo=1"));
     CREDO_VERUM(campus_est(w, "sanctus_apertus", "agnes-of-rome"));
     CREDO_VERUM(campus_est(w, "visus", "sanctus"));
-    /* Esc (origo indicis): ad indicem, sanctus apertus sublatus,
+    /* Esc: ad indicem, sanctus apertus sublatus,
      * electus manet; semita indicis sine sancto */
     CREDO_VERUM(sancti_visus_argumentum_ponere(&w->m, ""));
     dispensator_recomponere(w->d);
@@ -695,7 +689,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "argumentum", _sectio_argumentum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vivus", _sectio_vivus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "congruentia", _sectio_congruentia, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "origo", _sectio_origo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "effugium", _sectio_effugium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "semitae", _sectio_semitae, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

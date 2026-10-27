@@ -24,6 +24,8 @@
 #include "credo.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "filum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -141,7 +143,7 @@ _plagulam_scribere (
     constans character* via,
     constans character* contentum)
 {
-    FILE* pl = fopen(via, "wb");
+    FILE* pl = lectiones_fopen(via, "wb");
 
     CREDO_NON_NIHIL(pl);
     si (pl != NIHIL)
@@ -166,6 +168,8 @@ _stalitatem_fingere (
     _plagulam_scribere(via_binarii, "x");
     tempora.actime   = 1000000L;
     tempora.modtime  = 1000000L;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+     * mtime consulto (staleness simulata), contentum non mutatur */
     CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
 }
 
@@ -253,7 +257,7 @@ probatio_renovare_explorator_fractus (
         "#!/bin/bash\n"
         "echo \"aedificatio ficta fracta\" 1>&2\n"
         "exit 1\n");
-    CREDO_VERUM(chmod(via_stipulae, 0755) == ZEPHYRUM);
+        CREDO_VERUM(filum_modum_ponere(via_stipulae, 0755));
 
     _scribe_lineam(intra, p,
         "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\","
@@ -292,9 +296,9 @@ probatio_renovare_explorator_fractus (
 
     fclose(intra);
     fclose(extra);
-    remove(via_binarii);
-    remove(via_manifesti);
-    remove(via_stipulae);
+    (vacuum)filum_delere(via_binarii);
+    (vacuum)filum_delere(via_manifesti);
+    (vacuum)filum_delere(via_stipulae);
 }
 
 
@@ -325,7 +329,7 @@ probatio_renovatio_integra (
     /* stipula renovatoris: explorator signum novum echat; exec
      * HANC probationem ut legatum renatum agit */
     {
-        FILE* pl = fopen(via_stipulae, "wb");
+        FILE* pl = lectiones_fopen(via_stipulae, "wb");
 
         CREDO_NON_NIHIL(pl);
         si (pl != NIHIL)
@@ -343,7 +347,7 @@ probatio_renovatio_integra (
             fclose(pl);
         }
     }
-    CREDO_VERUM(chmod(via_stipulae, 0755) == ZEPHYRUM);
+        CREDO_VERUM(filum_modum_ponere(via_stipulae, 0755));
 
     CREDO_VERUM(pipe(p2i) == ZEPHYRUM);
     CREDO_VERUM(pipe(i2p) == ZEPHYRUM);
@@ -449,9 +453,9 @@ probatio_renovatio_integra (
     }
 
     alarm(ZEPHYRUM);
-    remove(via_binarii);
-    remove(via_manifesti);
-    remove(via_stipulae);
+    (vacuum)filum_delere(via_binarii);
+    (vacuum)filum_delere(via_manifesti);
+    (vacuum)filum_delere(via_stipulae);
 }
 
 

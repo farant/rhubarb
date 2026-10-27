@@ -336,6 +336,38 @@ aemulator_hospes_fossa (
     redde h->pt->fossa(h->pt->datum);
 }
 
+/* quies T6b: pulsus crebri solum dum aliquid sine fossa pendet - cauda
+ * quam infans nondum accepit, aut infans clausus sed non messus
+ * (waitpid WNOHANG iterum temptandum). Effusio infantis per fossam
+ * legendam expergefacit. */
+#define MORA_HOSPITIS_OCCUPATI  XVI
+
+s32
+aemulator_hospes_mora (
+    constans AemulatorHospes* h)
+{
+    si (!h || h->clausum)
+    {
+        redde -I;
+    }
+    si (h->mensura > ZEPHYRUM || (h->finis_lectus && !h->messus))
+    {
+        redde MORA_HOSPITIS_OCCUPATI;
+    }
+    redde -I;
+}
+
+s32
+aemulator_hospes_grex_frontalis (
+    constans AemulatorHospes* h)
+{
+    si (!h || h->clausum || !h->pt->grex_frontalis)
+    {
+        redde -I;
+    }
+    redde h->pt->grex_frontalis(h->pt->datum);
+}
+
 b32
 aemulator_hospes_exitus (
           AemulatorHospes* h,

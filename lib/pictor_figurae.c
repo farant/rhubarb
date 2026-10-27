@@ -1,6 +1,8 @@
 /* pictor_figurae.c - figurae pictoris */
 
 #include "pictor_figurae.h"
+#include "pictor_componentia.h"
+#include "elenchus.h"
 #include "thema.h"
 #include "color.h"
 #include "exemplaria.h"
@@ -407,6 +409,13 @@ pictor_imago_fons (
     {
         redde NIHIL;
     }
+    /* pinacotheca D4: "pinax:..." -> pinax (factus si deest) - ANTE
+     * sigillum, quod in memoriam picturae allocat (recensio) */
+    si (   pf->pinacotheca && provenientia.mensura > VI
+        && memcmp(provenientia.datum, "pinax:", VI) == ZEPHYRUM)
+    {
+        redde pictor_pinacotheca_pinax(pf->pinacotheca, provenientia);
+    }
     si (chorda_aequalis(provenientia,
             pictor_documentum_sigillum_hex(pf->doc, pf->doc->piscina)))
     {
@@ -572,6 +581,20 @@ figura_quadrati (
             VERUM);
         redde;
     }
+    /* pinacotheca D3: "pagina:p / n" - textus centratus sine margine */
+    si (   c->titulus.mensura > VII
+        && memcmp(c->titulus.datum, "pagina:", VII) == ZEPHYRUM)
+    {
+        s32 lx;
+
+        reliquum.datum = c->titulus.datum + VII;
+        reliquum.mensura = c->titulus.mensura - VII;
+        lx = (c->fines.latitudo - VI * (s32)reliquum.mensura) / II;
+        mandata_textus(m, lx < ZEPHYRUM ? ZEPHYRUM : lx,
+            (c->fines.altitudo - VIII) / II, reliquum, ZEPHYRUM,
+            figura_color_thematis(COLOR_TEXT));
+        redde;
+    }
     /* P1b: ':electum' - optio electa, margo accentus */
     t        = c->titulus;
     electum  = t.mensura > VIII
@@ -662,6 +685,57 @@ figura_quadrati (
         b.x = c->fines.latitudo - VI;
         b.y = a.y;
         mandata_linea(m, a, b, I, figura_color_thematis(COLOR_TEXT));
+        redde;
+    }
+    /* pinacotheca D4: pinax - imago (fons "pinax:..." sine
+     * ':electum') intra marginem II; margo accentus si aperta */
+    si (t.mensura > VI && memcmp(t.datum, "pinax:", VI) == ZEPHYRUM)
+    {
+        Fines g;
+
+        g.x         = II;
+        g.y         = II;
+        g.latitudo  = c->fines.latitudo - IV;
+        g.altitudo  = c->fines.altitudo - IV;
+        mandata_imago(m, t, g);
+        redde;
+    }
+    /* pinacotheca D3: sagittae paginarum - cuneus lineis duabus */
+    si (   chorda_aequalis_literis(t, "sagitta:sinistra")
+        || chorda_aequalis_literis(t, "sagitta:dextra"))
+    {
+        s32 apex;
+        s32 basis;
+
+        apex   = chorda_aequalis_literis(t, "sagitta:sinistra")
+               ? c->fines.latitudo / II - III : c->fines.latitudo / II
+                   + III;
+        basis  = chorda_aequalis_literis(t, "sagitta:sinistra")
+               ? apex + V : apex - V;
+        a.x = basis;
+        a.y = c->fines.altitudo / II - V;
+        b.x = apex;
+        b.y = c->fines.altitudo / II;
+        mandata_linea(m, a, b, II, figura_color_thematis(COLOR_TEXT));
+        a.y = c->fines.altitudo / II + V;
+        mandata_linea(m, a, b, II, figura_color_thematis(COLOR_TEXT));
+        redde;
+    }
+    /* pinacotheca D1: icon menu - tria puncta II x II, centrata */
+    si (chorda_aequalis_literis(t, "elenchus:quadratum"))
+    {
+        Fines g;
+          s32 k;
+
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            g.x         = (c->fines.latitudo - X) / II + IV * k;
+            g.y         = (c->fines.altitudo - II) / II;
+            g.latitudo  = II;
+            g.altitudo  = II;
+            mandata_rectangulum(m, g, figura_color_thematis(COLOR_TEXT),
+                VERUM);
+        }
         redde;
     }
     /* testa-ios C1b: icon imaginis - tabula picta (margo), mons
@@ -929,8 +1003,20 @@ figura_palettae (
 {
     Fines f;
 
-    (vacuum)thema;
     (vacuum)ctx;
+    /* pinacotheca D2: menu ⋯ - elenchus totum pingit; res ex tabula
+     * communi, importare ex numero liberorum (II aut III) */
+    si (chorda_aequalis_literis(c->id, "elenchus"))
+    {
+           Elenchus e;
+        ElenchusRes res[III];
+
+        pictor_elenchum_parare(c->liberi
+            && xar_numerus(c->liberi) == III, res, &e);
+        elenchus_figura(c, m, thema, &e);
+        redde;
+    }
+    (vacuum)thema;
     f.x         = ZEPHYRUM;
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;

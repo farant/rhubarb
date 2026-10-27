@@ -407,3 +407,59 @@ strokes and swaps which side shows ("or vice versa") with no extra code.
   no interleaving with document undo; Option-drag is the undo).
 - Plants (silva.planta): commit ignoring larva -> confirmare larva red;
   preview ignoring larva -> radere red.
+
+## 2026-10-26 - pictor_documenta_recentia (pinacotheca T2, quarta)
+
+Gallery order (spec D5) = the highest volume `seq` that belongs to a
+picture: its history's acts (`<spatium>/ictus`, `/ramus`, `/cursor`,
+`/coniunctio`; bare names for the root) or the `plagula-condita` of its
+`documentum` plagula (a new, empty picture). One read through
+`volumen_acta_generum_legere` with exactly those genera (indexed by
+genus), a genus -> PictorPictura hash table, then a stable insertion
+sort. The genus names come from the new `historia_genera` (historia.c),
+not a copy of historia's format. Measured: 13 pictures x 200 acts ->
+~2 ms on the Mac.
+
+Facts pinned by the tests: opening a picture appends nothing (viewing
+never reorders); undo appends a `cursor` act (undo counts as an edit);
+checkpoints are plagulae of other vias (ignored); a scriba document
+in the same volume (`x/documentum`, origin scriba) is not a picture.
+Known limit: a non-pictor root history in the same volume would share
+the bare names `ramus`/`cursor` with pictor's root - not the case in
+pictor's own volume; vicus keeps pictures under spatia.
+
+## 2026-10-26 - pictor_pinacem_facere (pinacotheca T3, quarta)
+
+Thumbnail = `pictor_documentum_aperire` into the CALLER's arena (the
+gallery's scratch; memory dies with it) -> composite projection (visible
+layers over the theme background) -> `pictor_imaginem_aptare` (contain,
+area scale, Atkinson into the 16-colour palette) -> RGBA on a
+background-filled image. No transparency trick needed: the background
+is PALETTE_WARM_GRAY, itself a palette colour, so empty areas dither to
+exactly the background (pinned: hidden layer -> all background).
+Opening writes nothing to the volume (pinned: act and plagula counts
+unchanged after 12 thumbnails). Measured on the Mac: ~0.9 ms per
+70 x 100 thumbnail of a 100 x 200 picture with one act; real pictures
+replay from the nearest checkpoint (<= 64 acts) - Fire 7 timing is T7.
+Glossary: pinax (pinacis, pinacem...) added; oratio 19/19 unchanged.
+
+## 2026-10-26 - PictorPinacotheca (T5, quarta)
+
+Gallery state: scratch arena (`piscina_generare_dynamicum` on the
+first opening, `piscina_vacare` on every later one - memory bounded by
+one session, pinned: usage equal across 5 openings), the newest-first
+list, and a provenance -> Imago table. `pictor_pinacotheca_pinax`
+parses "pinax:<w>x<h>:<seq>:<spatium>", builds on a miss with
+pictor_pinacem_facere into the scratch, copies the key into the
+scratch (the caller's provenance is transient). The figure source
+(`pictor_imago_fons`) resolves "pinax:" through it.
+
+## 2026-10-27 - foreign pictures (communio phase 1 T4, quarta)
+
+`pictor_documentum_aperire_alienum` (manifest `aliena/<replica>/...`,
+historia_aperire_alienam) and `pictor_documenta_aliena_enumerare`. Trap:
+the local listings matched ANY `<x>/documentum`, so a foreign picture
+(`aliena/<R>/p/documentum`) would have shown up as a LOCAL picture named
+`aliena/<R>/p` - `spatium_documenti` now refuses the `aliena/` prefix
+(covers pictor_documenta_enumerare and _recentia). Opening shares
+`documentum_ex_manifesto` with the local open.

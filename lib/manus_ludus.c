@@ -559,8 +559,12 @@ manus_ludus_iterare_per (
 
             /* divergentia: quid positio NOTATA nunc tangit (ante
              * traditionem - status ut in sessione notata) */
-            des = m->d->strategia(m->d->arbor, &m->d->motus,
-                dispensator_focus(m->d), &e, m->piscina);
+            des = m->d->strategia
+                ? m->d->strategia(m->d->arbor, &m->d->motus,
+                      dispensator_focus(m->d), &e, m->piscina,
+                      m->d->strategia_ctx)
+                : destinatio_geometrica(m->d->arbor, &m->d->motus,
+                      dispensator_focus(m->d), &e, m->piscina);
             nunc    = destinatio_componens(&des);
             crudus  = nunc ? nunc->id : chorda_nulla();
             si (!chorda_aequalis(crudus, en->scopus))

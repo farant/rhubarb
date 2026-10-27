@@ -1,0 +1,40 @@
+<!-- silva/transformationes/rename.stml - rename -> filum_movere (codex 97, fabrica-8).
+     filum_movere = rename() ipsum + lineae S (vetus et nova) ante motum.
+     Conventio: functio cruda 0 in successu, -1 in defectu (errno);
+     substituta VERUM in successu (b32). errno defectus servatur.
+     Formae non tectae (valor ut numerus, errno in eadem expressione,
+     macra) recusantur et manu emendantur: census primum,
+       ./silva/transformare.sh -census <functio> <viae>
+     consilium (nihil scribitur), deinde -scribere (custodia: codex 97
+     exacte, nihil crescit, clang ante et post). -->
+<transformatio functio="rename" codex="97">
+  <inclusio>filum.h</inclusio>
+  <regula>
+    <si! (>(vacuum)rename($vetus, $nova);
+    <fac! (>(vacuum)filum_movere($vetus, $nova);
+  </regula>
+  <regula>
+    <si! (>rename($vetus, $nova);
+    <fac! (>(vacuum)filum_movere($vetus, $nova);
+  </regula>
+  <regula>
+    <si! (>rename($vetus, $nova) != ZEPHYRUM
+    <fac! (>!filum_movere($vetus, $nova)
+  </regula>
+  <regula>
+    <si! (>rename($vetus, $nova) == ZEPHYRUM
+    <fac! (>filum_movere($vetus, $nova)
+  </regula>
+  <regula>
+    <si! (>rename($vetus, $nova) < ZEPHYRUM
+    <fac! (>!filum_movere($vetus, $nova)
+  </regula>
+  <regula>
+    <si! (>rename($vetus, $nova) == -I
+    <fac! (>!filum_movere($vetus, $nova)
+  </regula>
+  <regula>
+    <si! (>rename($vetus, $nova) != -I
+    <fac! (>filum_movere($vetus, $nova)
+  </regula>
+</transformatio>

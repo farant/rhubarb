@@ -167,3 +167,52 @@ every act would leave a 16-char machine string there. It is copied to a
 stack buffer and the piscina rewound (notare/reficere). No test pins
 that (allocation counts per act are not isolable here) - say so if it
 ever matters.
+
+## 2026-10-26 - historia_genera (quarta, pinacotheca T2)
+
+The four genus names of a history in a spatium (client genus, ramus,
+cursor, coniunctio) are now one public function; historia_struere uses
+it. pictor's gallery needs them to find a picture's latest act without
+opening its history. Test "genera nominata" compares the function with
+the fields of real histories (named spatium and root).
+
+## 2026-10-27 - foreign documents (communio phase 1 T4, quarta)
+
+`historia_aperire_alienam` opens another replica's document from imported
+acts. Every act read goes through one wrapper (`acta_generum`): own
+documents read as before; foreign ones read only that replica's acts
+(`volumen_acta_generum_replicae_legere`, ordered by `seq_originis`) and
+get `seq = seq_originis`, so the whole existing logic - live acts, branch
+`<ramus ab>`, cursor `<cursor ad>`, finis - runs unchanged in the WRITER's
+numbering (local seqs of imported acts are meaningless to those refs).
+The "everything up to" bound is the writer's highest number, not the local
+act count. Foreign documents NEVER use checkpoints: the checkpoint prefix
+is `<spatium>/checkpoint/`, the same as a local document of the same name,
+whose checkpoints sit at local seqs that can coincide with the writer's
+numbers (pinned by a same-named local picture built with the identical
+operation sequence - a plant proved the earlier test could not see it).
+Read-only: actum/coniunctum/revocare/reficere refuse foreign documents.
+
+## 2026-10-27 - following (communio phase 1 T5, quarta)
+
+`historia_sequi` catches an open document up with acts imported after it
+opened. The state computation of open (finis, cursor from the last live
+cursor note, live count) is now one function, `statum_computare`, shared
+by open and sequi. sequi: unchanged state -> FALSUM; if the new acts are
+plain (no branch, cursor note or grouping) and the cursor was and is at
+the end -> apply only the new live acts; otherwise re-project (foreign
+documents always from scratch - correct by construction). Plants: no
+re-projection, always-incremental, always-"changed" - all caught.
+Measured (Mac): foreign open of a 500-stroke picture ~3 ms, following one
+new stroke ~2 ms (statum_computare still reads all acts of the document;
+fine at this size, an index-based shortcut is possible later).
+
+## 2026-10-27 - historia_sequi out-of-order guard (communio plan-2 T1, M1)
+
+The incremental path applied only acts after the previous end (finis_prior).
+An act that arrives late but sits BELOW the current end in writer numbering
+(stroke 5 imported before stroke 4) raised numerus_vivorum without any act
+after finis_prior, so the follower silently missed stroke 4. Guard: take the
+incremental path only if vivi_prior + |new live acts| == numerus_vivorum after
+recomputing; otherwise project from scratch. Test: probatio_communio "sequi
+extra ordinem" (RED before the guard).

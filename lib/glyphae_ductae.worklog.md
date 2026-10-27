@@ -379,6 +379,7 @@ d(0x2286, '..####','.#....','.#....','.#....','..####',B,'.#####')           # �
 d(0x2287, '.####.','.....#','.....#','.....#','.####.',B,'.#####')           # ⊇ (2026-10-17)
 d(0x25B0, B,B,'..####','..####','.####.','.####.')                          # ▰ (2026-10-17)
 d(0x25B1, B,B,'..####','..#..#','.#..#.','.####.')                          # ▱ (2026-10-17)
+d(0x22EF, B,B,B,'.#.#.#')                                                   # ⋯ (2026-10-26)
 import unicodedata, sys
 out=[]
 for cp in sorted(S):
@@ -427,3 +428,40 @@ Then ⊆ ⊇: the same shape lifted to rows 0-4 with a full bar on row 6
 Fran saw ▱ as tofu; ▰ drawn with it (the pair makes progress bars,
 ▰▰▰▱▱). Four rows (II-V), slanting right: the edges move one column
 left after two rows, so a run of them reads as a bar with gaps.
+
+## 2026-10-23 — drawn glyphs in the general text path too
+
+Fran saw tofu in notifications for the Claude Code symbols terminale
+draws. terminale asks `glyphae_ductae` per cell before the font; the
+general pixel text path (`fenestra_textus.c`: plain 6x8
+`tabula_pixelorum_pingere_chordam`, the 8x16 title path in
+`_chordam_fonte`, and `_chordam_scalatam`) went straight to the bitmap
+font and fell back to FONS_TOFU. Now each of those loops tries
+`glypham_ductam_pingere` first: the opacity mask at the cell size (6x8
+or 8x16), scaled, full opacity = text colour, partial = blended with
+the pixel underneath (the shades ░▒▓ now really shade, better than
+terminale's mix with a fixed background). Everything drawing through
+mandata (vicus notifications, calendar, scriba chrome) gets the same
+symbols as terminale. Side effect: – — … were mapped by the font to
+'-' '-' '.'; they now draw as glyphae_ductae draws them.
+The tessera rasterizer needs nothing: it places whole characters into
+real terminal cells, so the host terminal draws them. The clipped
+`_chordam_praecisum` has no users and was left alone.
+Test: probatio_delineare_mandata section "glyphae ductae (non TOFU)" -
+every pixel of the drawn cell against glyphae_ductae's own mask (6x8,
+8x16, scaled x2), shades blended. Plants (one per path + blend) red.
+tessera's hand list and musivum_fontes_generata.sh gained
+glyphae_ductae (fenestra_textus now links it; tessera failed to link).
+Not covered (separate project): scriba stores one BYTE per cell and
+drops input bytes >= 0x80, so these symbols cannot be typed or stored
+in scriba documents yet.
+
+## 2026-10-26 - ⋯ (midline ellipsis, quarta)
+
+For pictor's ⋯ menu (pinacotheca spec D10): Fran saw ⋯ as tofu. Three
+single-pixel dots on row III - the row of ⋮'s middle dot and of the
+hyphen - at the same columns as … (row VI, `.#.#.#`), so the two
+ellipses differ only in height. 2 x 2 dots like the period do not fit
+three across in six columns. App text reaches these glyphs through
+secunda's a625afcb (fenestra_textus asks glyphae_ductae first) - merged
+into quarta with main the same day (entry above).

@@ -194,6 +194,68 @@ capsam_scribere (
     redde scriba_effugere(octeti, n, piscina);
 }
 
+/* exportatio registri: lineae '\n' iunctae, cellulae continuationis
+ * (tab) omissae, indentatio communis linearum non vacuarum dempta,
+ * spatia finalia dempta; sine fine novo */
+interior chorda
+capsam_exportandam (
+    constans VimClipboard* capsa,
+                  Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  i32  i;
+                  s32  c;
+                  s32  finis;
+                  s32  indentatio;
+                  s32  communis;
+
+    communis = -I;
+    per (i = ZEPHYRUM; i < capsa->numerus_linearum; i++)
+    {
+        constans character* l = capsa->lineae[i];
+
+        indentatio = ZEPHYRUM;
+        dum (   l[indentatio] == ' ' || l[indentatio] == '\t'
+             || l[indentatio] == TAB_CONTINUATIO)
+        {
+            indentatio++;
+        }
+        si (   l[indentatio] != '\0'
+            && (communis < ZEPHYRUM || indentatio < communis))
+        {
+            communis = indentatio;
+        }
+    }
+    si (communis < ZEPHYRUM)
+    {
+        communis = ZEPHYRUM;
+    }
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CCLVI);
+    per (i = ZEPHYRUM; i < capsa->numerus_linearum; i++)
+    {
+        constans character* l = capsa->lineae[i];
+
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(a, '\n');
+        }
+        finis = (s32)strlen(l);
+        dum (   finis > ZEPHYRUM && (l[finis - I] == ' '
+            || l[finis - I] == TAB_CONTINUATIO))
+        {
+            finis--;
+        }
+        per (c = communis; c < finis; c++)
+        {
+            si (l[c] != TAB_CONTINUATIO)
+            {
+                chorda_aedificator_appendere_character(a, l[c]);
+            }
+        }
+    }
+    redde chorda_aedificator_finire(a);
+}
+
 /* S7b: ramus registri - hospitis (ramus_capsae) aut proprius */
 interior constans InsulaRamus*
 capsae_ramum (
@@ -357,6 +419,12 @@ status_scribere (
     }
     (vacuum)mutare_ramum(ramus,
         status_scribere_mutator, &s);
+    /* exportatio: capsa hac clave scripta (etiam idem iterum) */
+    si (capsa->versio > ZEPHYRUM && sa->textum_exportare)
+    {
+        (vacuum)sa->textum_exportare(sa->exportare_ctx,
+            capsam_exportandam(capsa, sa->doc->piscina));
+    }
     /* S7b: registrum solum si mutatum - ramus hospitis (servatus)
      * aliter ad omnem clavem scriberetur */
     sc.capsa   = capsam_scribere(capsa, sa->doc->piscina);
@@ -583,8 +651,12 @@ paginam_ponere (
     sa->inserere           = FALSUM;
     sa->insertio_commissa  = FALSUM;
     laboris_reficere(sa);
-    (vacuum)volumen_plagulam_condere(doc->volumen, sa->visus, novum,
-        "scriba:visus");
+    /* lector L5: liber piger nondum natus paginam visam non scribit */
+    si (scriba_liber_natus(sa->liber))
+    {
+        (vacuum)volumen_plagulam_condere(doc->volumen, sa->visus, novum,
+            "scriba:visus");
+    }
     st                           = status_legere(ramus, sa, &capsa);
     st.cursor_linea              = (i32)(linea < (s32)doc->altitudo
                                          ? linea : ZEPHYRUM);
@@ -638,6 +710,21 @@ scriba_actiones_librum_ponere (
         currens = scriba_liber_nomen(liber, ZEPHYRUM);
     }
     redde paginam_ponere(ramus, motus, sa, currens, ZEPHYRUM, ZEPHYRUM);
+}
+
+b32
+scriba_actiones_paginam_ostendere (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                  chorda  titulus)
+{
+    si (   !ramus || !sa || !sa->liber || !sa->doc
+        || scriba_liber_index(sa->liber, titulus) < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde paginam_ponere(ramus, motus, sa, titulus, ZEPHYRUM, ZEPHYRUM);
 }
 
 /* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam

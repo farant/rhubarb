@@ -132,11 +132,22 @@ constans character*
 volumen_error (
     constans Volumen* volumen);
 
-/* identitas actus trans machinas (D2): hora ZEPHYRUM = nulla */
+/* identitas actus trans machinas (D2; communio D2b): (hora, replica)
+ * - replica = volumen scriptoris (ULID proprium cuique volumini);
+ * machina ad memoriam servatur. hora ZEPHYRUM = nulla */
 nomen structura {
        s64 hora;
     chorda machina;
+    chorda replica;
 } VolumenIdentitas;
+
+/* replica huius voluminis (communio D2b): ULID XXVI characterum,
+ * conditum in apertione prima (praesentia "volumen/replica", locale,
+ * numquam communicatum), idem trans aperturas. Vacua si machina
+ * ignota (volumen solum legendum). */
+chorda
+volumen_replica (
+    constans Volumen* volumen);
 
 /* actum in caudam appendere (datum = JSON); seq redditum, 0 = vitium */
 s64
@@ -311,7 +322,79 @@ nomen structura {
               chorda datum;
     VolumenIdentitas identitas;
     VolumenIdentitas basis;
+    /* communio: seq in numeratione SCRIPTORIS (replicae suae) - actis
+     * propriis = seq; importatis = seq quod scriptor eis dedit.
+     * Relationes intra documentum (<cursor ad>, <ramus ab>) in hac
+     * numeratione stant, ergo ubique validae */
+                 s64 seq_originis;
 } VolumenActum;
+
+/* communio II.1: actum alienum (alterius replicae) inserere identitate
+ * sua servata - genus, datum, momentum, (hora, replica, machina),
+ * basis, seq_originis ut data; seq locale novum. Plagula-condita /
+ * plagula-remota aliena in manifestum sub "aliena/<replica>/<via>"
+ * proicitur (numquam via propria). Horologium locale per regulam
+ * appendendi (MAX(hora)+1) eam praeterit. */
+#define VOLUMEN_FUTURUM_MAXIMUM_MS 600000   /* X minutae */
+
+nomen enumeratio {
+    VOLUMEN_IMPORTATUM = ZEPHYRUM,  /* scriptum */
+    VOLUMEN_IAM_ADEST,              /* identitas et contentum eadem:
+                                     * nihil */
+    VOLUMEN_HORA_FUTURA,            /* ultra limitem: nihil */
+    VOLUMEN_CONFLICTUS,             /* identitas eadem, contentum
+                                     * aliud: nihil (corruptio) */
+    VOLUMEN_MASSA_DEEST,            /* plagula-condita sine massa sua:
+                                     * nihil, massam prius mitte */
+    VOLUMEN_IMPORTATIO_MALA         /* replica propria, identitas
+                                     * nulla, aut vitium scrinii */
+} VolumenImportatio;
+
+VolumenImportatio
+volumen_actum_importare (
+                  Volumen* volumen,
+    constans VolumenActum* actum);
+
+/* communio: acta PROPRIA (replicae huius voluminis) post seq locale,
+ * ordine seq - quod communicatur (aliena numquam reexportantur).
+ * LEX (communio plan-2 T1): lector qui statum LOCALEM ex actis
+ * derivat (conspectus, historia propria, pictor recentia) sola acta
+ * propria legit - hoc aut volumen_acta_generum_replicae_legere cum
+ * replica sua; lector sine filtro solum si replica vacua est. */
+Xar*
+volumen_acta_propria_legere (
+    Volumen* volumen,
+        s64  post_seq,
+    Piscina* piscina);
+
+/* communio plan-2 T2 (tractio servi): acta replicarum datarum post seq
+ * locale, ordine seq, 'limes' ad plurimum; numerus 0 = Xar vacuum */
+Xar*
+volumen_acta_replicarum_legere (
+    Volumen* volumen,
+        s64  post_seq,
+     chorda* replicae,
+        i32  numerus,
+        i32  limes,
+    Piscina* piscina);
+
+/* communio T4: acta generum datorum REPLICAE datae in numeratione
+ * SCRIPTORIS - post_seq et ordo per seq_originis (actis propriis = seq)
+ * - ut historia documenti alieni relationes suas (<cursor ad>, <ramus
+ * ab>) intellegat. seq redditum manet locale. */
+Xar*
+volumen_acta_generum_replicae_legere (
+                         Volumen* volumen,
+                          chorda  replica,
+                             s64  post_seq,
+    constans character* constans* genera,
+                        Piscina* piscina);
+
+/* massa sigillo data praesens? */
+b32
+volumen_massam_habet (
+    Volumen* volumen,
+     chorda  sigillum_hex);
 
 /* acta POST seq datum (exclusivum; 0 = omnia), ordine seq -
  * forma "acta post seq N" quam et plicae et replicatio volunt */
@@ -330,6 +413,13 @@ volumen_acta_generum_legere (
                              s64  post_seq,
     constans character* constans* genera,
                         Piscina* piscina);
+
+/* seq actus ultimi (0 = volumen vacuum). Enuntiatum servatur et in
+ * volumen_claudere finitur: pretium lectionis indicis unius, sine
+ * praeparatione. Quaestio vera - acta aliorum processuum videt. */
+s64
+volumen_seq_ultimum (
+    Volumen* volumen);
 
 /* plica ad seq: manifestum RECONSTRUCTUM replicando acta plagularum
  * (plagula-condita ponit, plagula-remota tollit) cum seq <= ad_seq;

@@ -1,6 +1,7 @@
 /* fasti_fontes.c - fontes dierum (include/fasti_fontes.h) */
 #include "fasti_fontes.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -209,4 +210,28 @@ fasti_annuum_expandere (
         }
     }
     redde n;
+}
+
+chorda
+fasti_introitum_textus (
+    constans FastiIntroitus* introitus,
+                    Piscina* piscina)
+{
+    character textus[XXXII];
+          s32 aetas;
+
+    si (!chorda_aequalis_literis(introitus->genus, FASTI_GENUS_NATALIS))
+    {
+        redde introitus->titulus;
+    }
+    aetas = introitus->annus_originis > ZEPHYRUM ? introitus->dies.annus
+        - introitus->annus_originis : ZEPHYRUM;
+    si (aetas > ZEPHYRUM)
+    {
+        sprintf(textus, " turns %d", (integer)aetas);
+        redde chorda_concatenare(introitus->titulus, chorda_ex_literis(
+            textus, piscina), piscina);
+    }
+    redde chorda_concatenare(introitus->titulus, chorda_ex_literis(
+        "'s birthday", piscina), piscina);
 }

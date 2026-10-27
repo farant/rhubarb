@@ -1339,6 +1339,28 @@ terminale_tty (
     redde vacua;
 }
 
+s32
+terminale_fossa (
+    constans TerminaleApplicatio* app)
+{
+    redde app && app->hospes ? aemulator_hospes_fossa(app->hospes) : -I;
+}
+
+s32
+terminale_mora (
+    constans TerminaleApplicatio* app)
+{
+    redde app && app->hospes ? aemulator_hospes_mora(app->hospes) : -I;
+}
+
+s32
+terminale_grex_frontalis (
+    constans TerminaleApplicatio* app)
+{
+    redde app && app->hospes
+        ? aemulator_hospes_grex_frontalis(app->hospes) : -I;
+}
+
 /* ?1004 modo novo posito relatio status currentis statim (Ghostty
  * stream_handler focus_event) */
 interior vacuum

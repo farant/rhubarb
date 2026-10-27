@@ -153,6 +153,7 @@ _amalgamatorem_struere() {
                 silva/build/piscina.o silva/build/chorda.o \
                 silva/build/chorda_aedificator.o silva/build/xar.o \
                 silva/build/tabula_dispersa.o silva/build/friatio.o \
+                silva/build/lectiones.o \
                 silva/build/silva_token.o silva/build/silva_lexema.o \
                 silva/build/materia_token.o \
                 -o "$STATIO/amalgamator"

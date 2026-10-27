@@ -20,7 +20,7 @@
 # et ut porta SUA 'qr-gyrus' (2026-10-23): olim in residuis portae
 # radicis omni commissione (~IV.VIII s), nunc solum cum qr aut clausura
 # eius mutatur.
-# <porta titulus="qr-gyrus" tegit="probationes/probatio_qr_gyrus.sh probationes/qr_assets/*" currit="probationes/qr_assets/qr_gyrus.c lib/qr.c lib/piscina.c lib/chorda.c lib/chorda_aedificator.c"/>
+# <porta titulus="qr-gyrus" tegit="probationes/probatio_qr_gyrus.sh probationes/qr_assets/*" currit="probationes/qr_assets/qr_gyrus.c lib/qr.c lib/piscina.c lib/chorda.c lib/chorda_aedificator.c lib/lectiones.c"/>
 
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 1
@@ -42,7 +42,7 @@ clang -std=c89 -pedantic -Wall -Wextra -Werror -Wconversion \
     -Wmissing-prototypes -Wwrite-strings -Wno-long-long \
     -Wno-overlength-strings -Iinclude \
     probationes/qr_assets/qr_gyrus.c lib/qr.c lib/piscina.c \
-    lib/chorda.c lib/chorda_aedificator.c -o "$BIN" || {
+    lib/chorda.c lib/chorda_aedificator.c lib/lectiones.c -o "$BIN" || {
     echo "qr gyrus: compilatio fracta"
     exit 1
 }

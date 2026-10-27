@@ -12,9 +12,9 @@
  * nihil petunt. VII: reapertura - ordo, ids, argumenta, pagina visus
  * servantur. VIII-XIV (colloquia-plan T4f): cyclus Cmd+] / Cmd+[ -
  * domus -> admonitiones -> colloquia -> agenda (calendarium "agenda")
- * -> domus, retrorsum, focus domus restitutus, cyclus ab insigni
- * coeptus, gradus duo in pulsu uno, API recusat, latus cycli imum,
- * calendarium sine argumento domus manet. */
+ * -> indagatio (D5 S3b) -> domus, retrorsum, focus domus restitutus,
+ * cyclus ab insigni coeptus, gradus duo in pulsu uno, API recusat,
+ * latus cycli imum, calendarium sine argumento domus manet. */
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -296,6 +296,9 @@ _sectio_prima (
     CREDO_CHORDA_AEQUALIS_LITERIS(vicus_latus(vicus_activa(v),
         VICUS_DEXTRUM)->argumentum, "agenda");
     gradus(v, m, ']');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), VIII);
+    CREDO_VERUM(frons_est(v, "3_dextrum_indagatio"));
+    gradus(v, m, ']');
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
     CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
@@ -303,15 +306,18 @@ _sectio_prima (
     CREDO_GRADUS("IX: Cmd+[ - retrorsum");
     gradus(v, m, '[');
     CREDO_AEQUALIS_I32(numerus_acervi(v), V);
-    CREDO_VERUM(frons_est(v, "3_dextrum_calendarium"));
+    CREDO_VERUM(frons_est(v, "3_dextrum_indagatio"));
     gradus(v, m, '[');
     CREDO_AEQUALIS_I32(numerus_acervi(v), VI);
-    CREDO_VERUM(frons_est(v, "3_dextrum_colloquia"));
+    CREDO_VERUM(frons_est(v, "3_dextrum_calendarium"));
     gradus(v, m, '[');
     CREDO_AEQUALIS_I32(numerus_acervi(v), VII);
+    CREDO_VERUM(frons_est(v, "3_dextrum_colloquia"));
+    gradus(v, m, '[');
+    CREDO_AEQUALIS_I32(numerus_acervi(v), VIII);
     CREDO_VERUM(frons_est(v, "3_dextrum_admonitiones"));
     CREDO_CHORDA_AEQUALIS_LITERIS(acervi(v, IV)->id,
-        "3_dextrum_calendarium");
+        "3_dextrum_indagatio");
     gradus(v, m, '[');
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
@@ -335,6 +341,8 @@ _sectio_prima (
     gradus(v, m, ']');
     CREDO_VERUM(frons_est(v, "3_dextrum_calendarium"));
     gradus(v, m, ']');
+    CREDO_VERUM(frons_est(v, "3_dextrum_indagatio"));
+    gradus(v, m, ']');
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(frons_est(v, "3_dextrum_pictor"));
     CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
@@ -347,6 +355,8 @@ _sectio_prima (
     CREDO_VERUM(frons_est(v, "3_dextrum_colloquia"));
     gradus(v, m, ']');
     CREDO_VERUM(frons_est(v, "3_dextrum_calendarium"));
+    gradus(v, m, ']');
+    CREDO_VERUM(frons_est(v, "3_dextrum_indagatio"));
     gradus(v, m, ']');
     CREDO_AEQUALIS_I32(numerus_acervi(v), IV);
     CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
@@ -407,9 +417,13 @@ _sectio_prima (
     gradus(v, m, ']');
     CREDO_VERUM(frons_est(v, "1_dextrum_calendarium"));
     gradus(v, m, ']');
+    CREDO_VERUM(frons_est(v, "1_dextrum_indagatio"));
+    gradus(v, m, ']');
     CREDO_AEQUALIS_I32(numerus_acervi(v), I);
     CREDO_VERUM(frons_est(v, "1_dextrum_admonitiones"));
     CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
+    gradus(v, m, '[');
+    CREDO_VERUM(frons_est(v, "1_dextrum_indagatio"));
     gradus(v, m, '[');
     CREDO_VERUM(frons_est(v, "1_dextrum_calendarium"));
     gradus(v, m, '[');

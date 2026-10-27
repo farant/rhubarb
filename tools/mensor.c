@@ -1038,13 +1038,13 @@ _cursus_condere (
         MensuraFructus  fructus;
 
     sprintf(condendum, "%s.condendum.%ld", diarium, (longus)getpid());
-    si (rename(diarium, condendum) != ZEPHYRUM)
+    si (!filum_movere(diarium, condendum))
     {
         redde VERUM;   /* diarium absens: nihil condendum */
     }
     _dormire_ms((longus)L);
     fructus = mensura_condere(condendum, volumen, piscina);
-    (vacuum)remove(condendum);
+    (vacuum)filum_delere(condendum);
     redde fructus.successus;
 }
 

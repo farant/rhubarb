@@ -98,3 +98,23 @@ variable unused, which -Werror refuses - the plant is `(... && FALSUM)`.
 - examen's POSIX surface (`silva/fontes/systema_posix.h`) lacked
   SIGUSR1/SIGUSR2/SA_RESTART - added (Darwin values, like its neighbours)
   rather than tolerated.
+
+## 2026-10-26 - host API for loops the reactor doesn't own (vicus quies T4)
+
+vicus polls its reactor with `reactor_poll(r, 0)` from inside the
+fenestra loop, so the reactor can't tell the window how long to sleep.
+Three read-only additions: `reactor_mora_proxima` (0 if a labor is
+pending or a timer is due, ms to the next timer, -1 if none),
+`reactor_fossas_visitare` (active fds with requested events) and
+`reactor_versio_fossarum` (bumped on every successful add / modify /
+remove - re-adding an existing fd counts as modify).
+
+- The signal self-pipe is visited on purpose: it registers through
+  `reactor_adicere`, so a host that sleeps on the visited fds wakes when
+  a signal arrives. `reactor_numerus_fd` still hides it.
+- `_calculare_timer_timeout` and a new `_labores_numerare` take
+  `constans Reactor*` so the new getters can be const; `-1` falls out of
+  passing 0xFFFFFFFF as the cap (timer waits are clamped to 0x7FFFFFFF,
+  so only "no active timer" returns the cap).
+- Plants: version not bumped on remove (red l.1065), labor not forcing 0
+  (red l.993).

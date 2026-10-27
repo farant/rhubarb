@@ -26,6 +26,9 @@ nomen structura {
          Concentus* concentus;   /* hospes communis: mixtura, exitus */
      Tintinnabulum* t;
        MixturaAnsa  vivae[PORTA_VIVAE];   /* generatio 0 = vacua */
+    /* quies T6d: agere ultimum sonabat aut exspectabat; tempus eius */
+               b32 activa;
+               s64 activa_ad;
 } PortaSoni;
 
 
@@ -46,10 +49,44 @@ porta_agere (
     vacuum* ctx)
 {
     PortaSoni* p = (PortaSoni*)ctx;
+          s64  nunc;
+          b32  activa;
 
     /* hoc ordine: nuntii prius (sedes liberantur), deinde exspectata */
-    (vacuum)concentus_agere(p->concentus, fenestra_tempus_ms());
-    (vacuum)tintinnabulum_agere(p->t);
+    nunc       = fenestra_tempus_ms();
+    activa     = concentus_agere(p->concentus, nunc);
+    activa     = tintinnabulum_agere(p->t) || activa;
+    p->activa  = activa;
+    si (activa)
+    {
+        p->activa_ad = nunc;
+    }
+}
+
+/* quies T6d: XVI dum sonat; exitus apertus et quietus: usque ad
+ * clausuram (CONCENTUS_QUIES post agere activum ultimum - concentus
+ * quietem suam paulo post numerat, ergo post terminum XVI donec
+ * clauditur); clausus: -1 */
+#define MORA_SONANS  XVI
+
+interior s64
+porta_mora (
+    vacuum* ctx)
+{
+    PortaSoni* p = (PortaSoni*)ctx;
+          s64  reliquum;
+
+    si (p->activa)
+    {
+        redde MORA_SONANS;
+    }
+    si (!concentus_apertum(p->concentus))
+    {
+        redde -I;
+    }
+    reliquum = p->activa_ad + (s64)CONCENTUS_QUIES
+        - fenestra_tempus_ms();
+    redde reliquum > ZEPHYRUM ? reliquum : MORA_SONANS;
 }
 
 interior b32
@@ -268,6 +305,7 @@ vicus_sonus_porta (
     porta->vocem_incipere   = porta_vocem_incipere;
     porta->vocem_ponere     = porta_vocem_ponere;
     porta->vocem_dimittere  = porta_vocem_dimittere;
+    porta->mora             = porta_mora;
     porta->ctx              = p;
     redde VERUM;
 }

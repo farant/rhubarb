@@ -519,7 +519,7 @@ _currere (
         strcat(liber, liber_via);
         (vacuum)filum_directorium_creare_cum_parentibus(
             "build/fabrica/lectiones");
-        (vacuum)remove(liber);
+        (vacuum)filum_delere(liber);
         (vacuum)setenv("FABRICA_LECTIONES", liber, 1);
     }
     resultus = processus_exsequi(
@@ -1015,7 +1015,7 @@ suturae_currere_simul (
             }
             sprintf(scriptura, "%s/%s", radix, scripturae[k]);
             sprintf(liber, "%s/%s", radix, libri[k]);
-            (vacuum)remove(liber);
+            (vacuum)filum_delere(liber);
             (vacuum)setenv("FABRICA_SCRIPTURA", scriptura, 1);
             (vacuum)setenv("FABRICA_LECTIONES", liber, 1);
             processus[k] = processus_incipere(

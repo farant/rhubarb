@@ -313,3 +313,12 @@ Bug found by the vicus suite: the row-id buffer was `id[XXIV]` -
 book-key buffers are XLVIII now. After a manifest edit,
 `tools/organa_infigere.sh` must regenerate lib/organa_infixa.c, or the
 running app still validates against the old embedded manifest.
+
+## 2026-10-22 — notes page in the route (D5 S3c)
+
+`<montatio nomen="notae" genus="scriba"/>`: `nomenclator/1?notae.pagina=2`.
+The contact's notes are mounted inside nomenclator_montare (before the
+argument), so no reordering was needed - only organa_nomenclatoris
+answering for "scriba" and `librum_aptare_cum_pagina` (page read before
+the book follows the contact, shown after). Plants red: resolver
+without scriba, page not shown.

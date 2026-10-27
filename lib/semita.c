@@ -153,13 +153,29 @@ _hereditarius (
     redde FALSUM;
 }
 
-/* ramus liberi montationis (conventio: <genus id="nomen"/>) */
+/* ramus liberi montationis (conventio, semita.h): <genus
+ * id="<id parentis>_nomen"/> si exstat, aliter <genus id="nomen"/> */
 interior InsulaRamus
 _ramus_liberi (
         constans InsulaRamus* parens,
     constans OrganumMontatio* m,
                      Piscina* piscina)
 {
+    InsulaRamus r;
+         chorda id;
+
+    si (parens->id.mensura > ZEPHYRUM)
+    {
+        id = chorda_concatenare(chorda_concatenare(parens->id,
+            chorda_ex_literis("_", piscina), piscina), m->titulus,
+            piscina);
+        r  = insula_ramus_liberi(parens, chorda_ut_cstr(m->genus,
+            piscina), chorda_ut_cstr(id, piscina));
+        si (insula_ramus_nodus(&r))
+        {
+            redde r;
+        }
+    }
     redde insula_ramus_liberi(parens, chorda_ut_cstr(m->genus, piscina),
         chorda_ut_cstr(m->titulus, piscina));
 }
@@ -1263,6 +1279,71 @@ _substituere (
             (character)semita.datum[i]);
     }
     redde a ? chorda_aedificator_finire(a) : _vacua();
+}
+
+chorda
+semita_locus (
+            SemitaOrganum  organa,
+                   vacuum* ctx,
+     constans InsulaRamus* ramus,
+       constans character* genus,
+                  Piscina* piscina)
+{
+       constans Organum* o;
+      ChordaAedificator* a;
+                 chorda  g;
+                 chorda  valor;
+                    s32  ultima;
+                    i32  i;
+
+    g = chorda_ex_literis(genus ? genus : "", piscina);
+    o = (organa && g.mensura > ZEPHYRUM) ? organa(ctx, g) : NIHIL;
+    a = o ? chorda_aedificator_creare(piscina, (memoriae_index)LXIV)
+          : NIHIL;
+    si (!a || !ramus)
+    {
+        redde _vacua();
+    }
+    _effugere(a, g);
+    /* campus ligationis ultimus cum valore (absens numeratur) */
+    ultima = -I;
+    per (i = ZEPHYRUM; i < organum_numerus_camporum(o); i++)
+    {
+        constans OrganumCampus* k = organum_campus_index(o, i);
+                        chorda* v;
+
+        si (k->semita != ORGANUM_SEMITA_LIGATIO)
+        {
+            perge;
+        }
+        v = insula_ramus_attributum(ramus, chorda_ut_cstr(k->titulus,
+            piscina));
+        si ((v && v->mensura > ZEPHYRUM) || k->habet_absens)
+        {
+            ultima = (s32)i;
+        }
+    }
+    per (i = ZEPHYRUM; (s32)i <= ultima; i++)
+    {
+        constans OrganumCampus* k = organum_campus_index(o, i);
+                        chorda* v;
+
+        si (k->semita != ORGANUM_SEMITA_LIGATIO)
+        {
+            perge;
+        }
+        v = insula_ramus_attributum(ramus, chorda_ut_cstr(k->titulus,
+            piscina));
+        valor = (v && v->mensura > ZEPHYRUM) ? *v
+              : k->habet_absens ? k->absens : _vacua();
+        si (valor.mensura == ZEPHYRUM)
+        {
+            frange;
+        }
+        chorda_aedificator_appendere_character(a, '/');
+        _effugere(a, valor);
+    }
+    redde chorda_aedificator_finire(a);
 }
 
 StmlNodus*

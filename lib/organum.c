@@ -16,6 +16,7 @@ structura Organum {
        Xar* portae;       /* Xar de OrganumPorta */
        Xar* montationes;  /* Xar de OrganumMontatio (semitae R0) */
        Xar* cognomina;    /* Xar de OrganumCognomen (semitae R4e) */
+       Xar* itinera;      /* Xar de OrganumIter (comites P5) */
 };
 
 
@@ -551,6 +552,7 @@ organum_legere (
     o->montationes = xar_creare(piscina,
         (i32)magnitudo(OrganumMontatio));
     o->cognomina = xar_creare(piscina, (i32)magnitudo(OrganumCognomen));
+    o->itinera = xar_creare(piscina, (i32)magnitudo(OrganumIter));
 
     sectio  = stml_invenire_liberum(radix, "ligamina");
     l       = sectio ? liberi(sectio, "ligamen", piscina) : NIHIL;
@@ -636,6 +638,23 @@ organum_legere (
             vitium_cognominis(v, piscina, n, g->semita,
                 "cognomen alieni generis");
         }
+    }
+    /* comites P5: aditus (itinera; canon nomina et unicitatem
+     * iudicat) */
+    sectio  = stml_invenire_liberum(radix, "aditus");
+    l       = sectio ? liberi(sectio, "iter", piscina) : NIHIL;
+    per (i = ZEPHYRUM; l && o->itinera && i < xar_numerus(l); i++)
+    {
+        OrganumIter* it;
+          StmlNodus* n;
+
+        n            = liberum_ad(l, i);
+        it           = (OrganumIter*)xar_addere(o->itinera);
+        it->titulus  = attributum(n, "nomen");
+        it->semita   = attributum(n, "semita");
+        it->advocare  = chorda_aequalis_literis(attributum(n,
+            "advocare"),
+            "verum");
     }
     sectio  = stml_invenire_liberum(radix, "status");
     l       = sectio ? liberi(sectio, "campus", piscina) : NIHIL;
@@ -885,6 +904,26 @@ organum_cognomen_index (
     }
     redde (constans OrganumCognomen*)xar_obtinere(organum->cognomina,
         index);
+}
+
+constans OrganumIter*
+organum_iter (
+      constans Organum* o,
+    constans character* titulus)
+{
+    constans OrganumIter* it;
+                     i32  i;
+
+    per (i = ZEPHYRUM; o && o->itinera && titulus
+                       && i < xar_numerus(o->itinera); i++)
+    {
+        it = (constans OrganumIter*)xar_obtinere(o->itinera, i);
+        si (chorda_aequalis_literis(it->titulus, titulus))
+        {
+            redde it;
+        }
+    }
+    redde NIHIL;
 }
 
 b32

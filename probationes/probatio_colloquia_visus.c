@@ -920,6 +920,56 @@ _probare_finire (
     CREDO_VERUM(fons.quaestio == NIHIL);
 }
 
+/* vicus quies T6d: mora fontis (horologium fictum) */
+interior s64
+nunc_ficti (
+    vacuum* ctx)
+{
+    redde *(s64*)ctx;
+}
+
+interior vacuum
+_probare_moram (
+    CredoContextus* c)
+{
+    ColloquiorumMontatio m;
+        ColloquiorumFons f;
+                     s64 nunc;
+                     i32 fictum;
+
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    f.scheda    = c->piscina;
+    m.fons      = &f;
+    nunc        = III * M;
+    m.nunc      = nunc_ficti;
+    m.nunc_ctx  = &nunc;
+
+    CREDO_GRADUS("nec mensor nec multiplexor: -1");
+    CREDO_AEQUALIS_S64(colloquia_visus_mora(&m), -I);
+    CREDO_AEQUALIS_S64(colloquia_visus_mora(NIHIL), -I);
+
+    CREDO_GRADUS("mensor: usque ad V s post quaestionem ultimam");
+    f.mensor     = "mensor";
+    f.cursus_ad  = M;
+    CREDO_AEQUALIS_S64(colloquia_visus_mora(&m), III * M);
+    nunc = VII * M;
+    CREDO_AEQUALIS_S64(colloquia_visus_mora(&m), ZEPHYRUM);
+
+    CREDO_GRADUS("quaestio volat: XVI");
+    f.quaestio = (Processus*)(vacuum*)&fictum;
+    CREDO_AEQUALIS_S64(colloquia_visus_mora(&m), XVI);
+    f.quaestio = NIHIL;
+
+    CREDO_GRADUS("multiplexor: panelli nondum lecti 0, deinde V s");
+    f.mensor       = NIHIL;
+    f.multiplexor  = (constans Multiplexor*)(vacuum*)&fictum;
+    CREDO_AEQUALIS_S64(colloquia_visus_mora(&m), ZEPHYRUM);
+    f.panelli     = (Xar*)(vacuum*)&fictum;
+    f.panelli_ad  = VI * M;
+    CREDO_AEQUALIS_S64(colloquia_visus_mora(&m), IV * M);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fons", _probare_fontem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "finire", _probare_finire, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -932,6 +982,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "cursus ordines", _probare_cursus_ordines, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "mora (quies T6d)", _probare_moram, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -747,6 +747,7 @@ _delere_lineam (
         _clipboard_copiare_lineam(status.clipboard, status.tabula,
             status.cursor_linea, ZEPHYRUM);
         status.clipboard->numerus_linearum = I;
+        status.clipboard->versio++;
     }
 
     /* Trudere undo operationem (si praesens) */
@@ -1033,6 +1034,7 @@ _delere_selectio (
             clipboard_idx++;
         }
         status.clipboard->numerus_linearum = clipboard_idx;
+        status.clipboard->versio++;
     }
 
     /* Trudere undo operationes et delere lineas (a fine ad initium) */
@@ -1091,6 +1093,7 @@ _copiare_lineam (
         _clipboard_copiare_lineam(status.clipboard, status.tabula,
             status.cursor_linea, ZEPHYRUM);
         status.clipboard->numerus_linearum = I;
+        status.clipboard->versio++;
     }
     redde status;
 }
@@ -1123,6 +1126,7 @@ _copiare_selectio (
             index++;
         }
         status.clipboard->numerus_linearum = index;
+        status.clipboard->versio++;
     }
     status.modo                      = MODO_VIM_NORMALIS;
     status.selectio_initium_linea    = -I;

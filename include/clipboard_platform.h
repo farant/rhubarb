@@ -37,4 +37,18 @@ ImagoFructus
 clipboard_capere_imaginem (
     Piscina* piscina);
 
+/*
+ * clipboard_textum_ponere - textum in clipboard systematis ponere
+ * (exportatio registri scribae, 2026-10-22)
+ *
+ * @textus: octeti UTF-8 (non NUL-terminati)
+ * @mensura: numerus octetorum
+ *
+ * Redde: VERUM si positus, FALSUM aliter (UTF-8 malum quoque)
+ */
+b32
+clipboard_textum_ponere (
+    constans character* textus,
+                   i32  mensura);
+
 #endif /* CLIPBOARD_PLATFORM_H */

@@ -47,3 +47,13 @@ calls '\t' blank - the skip-blanks loop is bounded by `finis` and a
 remainder of only blanks deletes the line. Test fixtures are clipped to
 the sheet width on load (tabula_ex_literis_cum_dimensionibus), so a
 fixture line longer than latitudo silently tests something else.
+
+## 2026-10-22 - register 256 x 128, VimClipboard.versio
+
+Raised VIM_CLIPBOARD_LINEA_MAXIMA 68 -> 256 and LINEAE 32 -> 128: scriba
+pages are wider than 68 (half a window / 6 px), and the new export to the
+OS clipboard wants whole lines. VimUndoOperatio.data uses the same constant,
+so it grows with it (32 ops x 256 B). `versio` counts register writes since
+vim_clipboard_initiare (yy, visual y, dd, visual d) - a host can tell a
+write happened even when the text is identical (re-yank after copying
+elsewhere must still export). FAQ updated (lib/vim.interrogationes.stml).

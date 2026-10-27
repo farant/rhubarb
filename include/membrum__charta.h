@@ -110,6 +110,12 @@ b32
 charta_reficere (
     Charta* c);
 
+/* vicus quies T6: VERUM dum opus aut iussum dilatum scribae pendet
+ * (pulsus crebri necessarii) */
+b32
+charta_occupata (
+    constans Charta* c);
+
 /* gestus pendens scribae Motui addicitur (post reficere) */
 vacuum
 charta_gestum_ponere (

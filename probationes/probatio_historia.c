@@ -858,9 +858,51 @@ _sectio_prima (
     volumen_claudere(vol);
 }
 
+/* pinacotheca T2: historia_genera = genera historiae verae (fons
+ * unus nominum) - spatio "s" praefixa, radice nuda */
+interior vacuum
+_sectio_secunda (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+               Historia* h;
+                Ludicra  l;
+     constans character* genera[IV];
+                    i32  k;
+     constans character* spatia[II];
+
+    piscina           = c->piscina;
+    intern            = internamentum_creare(piscina);
+    spatia[ZEPHYRUM]  = "s";
+    spatia[I]         = "";
+    memset(&l, ZEPHYRUM, magnitudo(l));
+    vol = volumen_temporarium(piscina, "probatio_historia_genera");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        h = historia_creare(piscina, intern, vol, spatia[k], "numerus",
+                            "probatio:checkpoint", II, proiectio(&l));
+        CREDO_NECESSE_NON_NIHIL(h);
+        historia_genera(piscina, spatia[k], "numerus", genera);
+        CREDO_VERUM(strcmp(genera[ZEPHYRUM], h->genus) == ZEPHYRUM);
+        CREDO_VERUM(strcmp(genera[I], h->genus_rami) == ZEPHYRUM);
+        CREDO_VERUM(strcmp(genera[II], h->genus_cursoris) == ZEPHYRUM);
+        CREDO_VERUM(strcmp(genera[III], h->genus_coniunctionis)
+            == ZEPHYRUM);
+    }
+    CREDO_VERUM(strcmp(genera[I], "ramus") == ZEPHYRUM);
+    historia_genera(piscina, "s", "numerus", genera);
+    CREDO_VERUM(strcmp(genera[ZEPHYRUM], "s/numerus") == ZEPHYRUM);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "cauda actorum cum proiectione ludicra", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "genera nominata (pinacotheca)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -598,9 +598,10 @@ nomen enumeratio {
      * nequit. Tabula = tagi <gradus genus="scriptura" pro="vicarius">
      * in lexico systematis (ut 96); vocationes solae, lexema EXPANSUM,
      * sedes = radix in fonte principali. SINE DEBITIS: occurrentiae
-     * omnes una emendantur; <tolera> per sedem solum in filo ipso
-     * (canalis). DOMESTICUM dum emendatio currit, deinde VIOLATIO. */
-    EXAMEN_CODEX_SCRIPTURA_PRAETERITA,        /* DOMESTICUM (mox) */
+     * omnes emendatae (verritio fabrica-8, transformare); <tolera>
+     * per sedem cum causa (canalis ipse, credo, secreta, tempora).
+     * VIOLATIO ab 2026-10-27 (antea DOMESTICUM dum verritio currebat). */
+    EXAMEN_CODEX_SCRIPTURA_PRAETERITA,        /* VIOLATIO */
     EXAMEN_CODEX_NUMERUS
 } ExamenCodex;
 

@@ -120,10 +120,19 @@ declare -a RADIX_FONTES=(
     "organum_montatio" # status S6: organum in ramo montare
     "organa_infixa"    # status S7c-1: manifesta infixa (GENERATUM)
     "agenda"           # agenda-plan A1: documentum agendae
+    "recursus"         # pensa K1: schedulae naturales
+    "pensa"            # pensa K3: index cotidianus (calendarium)
     "rubrica"          # nomenclator-plan P1a: rubricae communes
     "personae"         # nomenclator-plan P1b: documentum contactuum
     "nomenclator"      # nomenclator-plan P2: index contactuum in vico
     "kalendarium"      # agenda-plan A2: calendarium in vico
+    "conspectus"       # proiectiones D4a: exemplaria visus (calendarium)
+    "conspectus_canon" # proiectiones D4a: canon declarationis infixus
+    "conspectus_dies"  # proiectiones D4b: conspectus diei
+    "conspectus_infixa" # proiectiones D4b: declarationes infixae
+    "indagatio"        # genera-datorum D5: quaestio per textum plenum
+    "indagatio_genera" # D5 S2: genera quaerenda domus
+    "indagatio_visus"  # D5 S3b: latus indagationis in vico ($search)
     "elenchus"         # agenda-plan M2b: menu contextuale (calendarium)
     "membrum__album"   # nomenclator-plan U1: index paginatus (calendarium)
     "membrum__praecepta" # nomenclator-plan U2: tabula praeceptorum
@@ -137,6 +146,17 @@ declare -a RADIX_FONTES=(
     "sancti"
     "sancti_canon"
     "sancti_visus"
+    # lector L3: liber EPUB in vico (bibliotheca, paginae)
+    "lector"
+    "lector_bibliotheca"
+    "lector_paginae"
+    "codex"
+    "sarcina"
+    "xml"
+    "html_lexema"
+    "entitates_html"
+    "entitates_html_tabula"
+    "sententia_fissio"
     "semita"
     "quaerere"
     "iter_directoria"
@@ -185,6 +205,8 @@ declare -a RADIX_FONTES=(
     # insula-rami T4: hospes (vicus) et compositio eius
     "vicus"
     "vicus_applicatio"
+    "reactor"         # vicus quies T6: fossae laterum in reactore
+    "specula_macos"   # vicus quies T6c: specula libri praeconii
     "aetherophonum"   # sonus S5c: latus theremin (sine sono: porta)
     # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
