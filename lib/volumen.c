@@ -1430,6 +1430,77 @@ volumen_acta_propria_legere (
     redde ordo;
 }
 
+Xar*
+volumen_acta_generum_replicae_legere (
+                         Volumen* volumen,
+                          chorda  replica,
+                             s64  post_seq,
+    constans character* constans* genera,
+                        Piscina* piscina)
+{
+     ScriniumEnuntiatum* e;
+      ChordaAedificator* sql;
+                    Xar* ordo;
+                    i32  n;
+                    i32  i;
+
+    ordo = xar_creare(piscina, (i32)magnitudo(VolumenActum));
+    si (ordo == NIHIL || genera == NIHIL || volumen == NIHIL)
+    {
+        redde ordo;
+    }
+    n = ZEPHYRUM;
+    dum (genera[n] != NIHIL)
+    {
+        n++;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde ordo;
+    }
+    sql = chorda_aedificator_creare(piscina, (memoriae_index)CXXVIII);
+    si (sql == NIHIL)
+    {
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_literis(sql, ACTA_COLUMNAE
+        " FROM acta WHERE replica = ?"
+        " AND COALESCE(seq_originis, seq) > ? AND genus IN (");
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        chorda_aedificator_appendere_literis(sql, i > ZEPHYRUM ? ", ?"
+                                                               : "?");
+    }
+    chorda_aedificator_appendere_literis(sql,
+        ") ORDER BY COALESCE(seq_originis, seq)");
+    e = scrinium_praeparare(volumen->scrinium, chorda_ut_cstr(
+        chorda_aedificator_finire(sql), piscina));
+    si (e == NIHIL)
+    {
+        redde NIHIL;
+    }
+    scrinium_ligare_textum(e, 1, replica);
+    scrinium_ligare_numerum(e, 2, post_seq);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        scrinium_ligare_textum(e, (integer)(i + III),
+            chorda_ex_literis(genera[i], piscina));
+    }
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        VolumenActum* a = (VolumenActum*)xar_addere(ordo);
+
+        si (a == NIHIL)
+        {
+            scrinium_finire(e);
+            redde NIHIL;
+        }
+        _actum_ex_ordine(e, piscina, a);
+    }
+    scrinium_finire(e);
+    redde ordo;
+}
+
 b32
 volumen_massam_habet (
     Volumen* volumen,

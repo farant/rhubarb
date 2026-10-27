@@ -1167,6 +1167,12 @@ spatium_documenti (
      chorda  via,
      chorda* spatium)
 {
+    /* communio T4: picturae aliae machinae non sunt propriae */
+    si (   via.mensura                       >= VII
+        && memcmp(via.datum, "aliena/", VII) == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
     si (chorda_aequalis_literis(via, "documentum"))
     {
         spatium->datum    = via.datum;
@@ -1430,27 +1436,28 @@ pictor_documentum_creare (
     redde doc;
 }
 
-PictorDocumentum*
-pictor_documentum_aperire (
-                Piscina* piscina,
-    InternamentumChorda* intern,
-                Volumen* volumen,
-     constans character* spatium)
+/* documentum sine historia ex manifesto viae datae (proprio aut
+ * alieno); NIHIL si manifestum abest aut malum */
+interior PictorDocumentum*
+documentum_ex_manifesto (
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+                 Volumen* volumen,
+                  chorda  via_manifesti)
 {
-    PictorDocumentum* doc;
-              chorda  manifestum;
-                 b32  inventum;
-        StmlResultus  res;
-                 s32  latitudo;
-                 s32  altitudo;
-                 s32  intervallum;
+              chorda manifestum;
+                 b32 inventum;
+        StmlResultus res;
+                 s32 latitudo;
+                 s32 altitudo;
+                 s32 intervallum;
 
     si (!piscina || !intern || !volumen)
     {
         redde NIHIL;
     }
-    manifestum = volumen_plagulam_promere(volumen,
-        clavis_manifesti(piscina, spatium), piscina, &inventum);
+    manifestum = volumen_plagulam_promere(volumen, via_manifesti,
+        piscina, &inventum);
     si (!inventum)
     {
         redde NIHIL;
@@ -1467,8 +1474,21 @@ pictor_documentum_aperire (
         ZEPHYRUM);
     intervallum = attributum_s32(res.elementum_radix, "intervallum",
         LXIV);
-    doc = documentum_struere(piscina, intern, volumen, (i32)latitudo,
-                             (i32)altitudo, (i32)intervallum);
+    redde documentum_struere(piscina, intern, volumen, (i32)latitudo,
+        (i32)altitudo, (i32)intervallum);
+}
+
+PictorDocumentum*
+pictor_documentum_aperire (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* spatium)
+{
+    PictorDocumentum* doc;
+
+    doc = documentum_ex_manifesto(piscina, intern, volumen,
+        clavis_manifesti(piscina, spatium));
     si (!doc)
     {
         redde NIHIL;
@@ -1483,6 +1503,93 @@ pictor_documentum_aperire (
         redde NIHIL;
     }
     redde doc;
+}
+
+PictorDocumentum*
+pictor_documentum_aperire_alienum (
+                 Piscina* piscina,
+     InternamentumChorda* intern,
+                 Volumen* volumen,
+                  chorda  replica,
+      constans character* spatium)
+{
+    PictorDocumentum* doc;
+              chorda  via;
+
+    si (!piscina || replica.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    via = chorda_concatenare(chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("aliena/", piscina), replica, piscina),
+        chorda_ex_literis("/", piscina), piscina),
+        clavis_manifesti(piscina, spatium), piscina);
+    doc = documentum_ex_manifesto(piscina, intern, volumen, via);
+    si (!doc)
+    {
+        redde NIHIL;
+    }
+    doc->historia = historia_aperire_alienam(piscina, intern, volumen,
+        replica, spatium, GENUS_ICTUUM, "pictor:checkpoint",
+        doc->intervallum, proiectio_facere(doc));
+    si (!doc->historia)
+    {
+        redde NIHIL;
+    }
+    redde doc;
+}
+
+Xar*
+pictor_documenta_aliena_enumerare (
+     Volumen* volumen,
+     Piscina* piscina)
+{
+                    Xar* plagulae;
+                    Xar* l;
+         VolumenPlagula* pl;
+    PictorPicturaAliena* p;
+                 chorda  reliquum;
+                    i32  i;
+                    i32  k;
+
+    si (!volumen || !piscina)
+    {
+        redde NIHIL;
+    }
+    l = xar_creare(piscina,
+        (i32)magnitudo(PictorPicturaAliena));
+    plagulae = volumen_plagulas_enumerare(volumen, piscina);
+    per (i = ZEPHYRUM; l && plagulae && i < xar_numerus(plagulae); i++)
+    {
+        pl = (VolumenPlagula*)xar_obtinere(plagulae, i);
+        si (   !chorda_aequalis_literis(pl->origo, "pictor:documentum")
+            || pl->via.mensura                       <= VII
+            || memcmp(pl->via.datum, "aliena/", VII) != ZEPHYRUM)
+        {
+            perge;
+        }
+        /* "aliena/<replica>/" deinde manifestum proprium formae */
+        reliquum.datum    = pl->via.datum + VII;
+        reliquum.mensura  = pl->via.mensura - VII;
+        per (k = ZEPHYRUM; k < reliquum.mensura
+             && reliquum.datum[k] != '/'; k++)
+        {
+        }
+        si (k == ZEPHYRUM || k >= reliquum.mensura)
+        {
+            perge;
+        }
+        p                   = (PictorPicturaAliena*)xar_addere(l);
+        p->replica.datum    = reliquum.datum;
+        p->replica.mensura  = k;
+        reliquum.datum      += k + I;
+        reliquum.mensura    -= k + I;
+        si (!spatium_documenti(reliquum, &p->spatium))
+        {
+            xar_truncare(l, xar_numerus(l) - I);
+        }
+    }
+    redde l;
 }
 
 

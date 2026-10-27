@@ -453,3 +453,13 @@ parses "pinax:<w>x<h>:<seq>:<spatium>", builds on a miss with
 pictor_pinacem_facere into the scratch, copies the key into the
 scratch (the caller's provenance is transient). The figure source
 (`pictor_imago_fons`) resolves "pinax:" through it.
+
+## 2026-10-27 - foreign pictures (communio phase 1 T4, quarta)
+
+`pictor_documentum_aperire_alienum` (manifest `aliena/<replica>/...`,
+historia_aperire_alienam) and `pictor_documenta_aliena_enumerare`. Trap:
+the local listings matched ANY `<x>/documentum`, so a foreign picture
+(`aliena/<R>/p/documentum`) would have shown up as a LOCAL picture named
+`aliena/<R>/p` - `spatium_documenti` now refuses the `aliena/` prefix
+(covers pictor_documenta_enumerare and _recentia). Opening shares
+`documentum_ex_manifesto` with the local open.

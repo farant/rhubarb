@@ -175,3 +175,20 @@ cursor, coniunctio) are now one public function; historia_struere uses
 it. pictor's gallery needs them to find a picture's latest act without
 opening its history. Test "genera nominata" compares the function with
 the fields of real histories (named spatium and root).
+
+## 2026-10-27 - foreign documents (communio phase 1 T4, quarta)
+
+`historia_aperire_alienam` opens another replica's document from imported
+acts. Every act read goes through one wrapper (`acta_generum`): own
+documents read as before; foreign ones read only that replica's acts
+(`volumen_acta_generum_replicae_legere`, ordered by `seq_originis`) and
+get `seq = seq_originis`, so the whole existing logic - live acts, branch
+`<ramus ab>`, cursor `<cursor ad>`, finis - runs unchanged in the WRITER's
+numbering (local seqs of imported acts are meaningless to those refs).
+The "everything up to" bound is the writer's highest number, not the local
+act count. Foreign documents NEVER use checkpoints: the checkpoint prefix
+is `<spatium>/checkpoint/`, the same as a local document of the same name,
+whose checkpoints sit at local seqs that can coincide with the writer's
+numbers (pinned by a same-named local picture built with the identical
+operation sequence - a plant proved the earlier test could not see it).
+Read-only: actum/coniunctum/revocare/reficere refuse foreign documents.

@@ -9,6 +9,9 @@
 #include "xar.h"
 #include "volumen.h"
 #include "communio.h"
+#include "internamentum.h"
+#include "thema.h"
+#include "pictor_documentum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -257,6 +260,144 @@ _sectio_refusa (
     volumen_claudere(b);
 }
 
+/* T4: ictus penicilli ad (x, y) */
+interior s64
+ictus (
+     PictorDocumentum* doc,
+                  i32  x,
+                  i32  y,
+                  i32  color)
+{
+    character t[CXXVIII];
+
+    sprintf(t, "<ictus instrumentum=\"penicillus\" color=\"%lu\""
+        " magnitudo=\"3\"><punctum x=\"%lu\" y=\"%lu\"/></ictus>",
+        (insignatus longus)color, (insignatus longus)x,
+        (insignatus longus)y);
+    redde pictor_documentum_actum(doc, chorda_ex_literis(t, piscina));
+}
+
+/* series operationum eadem in A et in pictura homonyma B (colore
+ * alio): seqs congruunt, ergo checkpoints B in numeris picturae A
+ * iacent - documentum alienum eos legens pixela B ostenderet */
+interior b32
+operationes (
+     PictorDocumentum* doc,
+                  i32  color)
+{
+     i8* indices;
+    i32  k;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        si (ictus(doc, X + k * X, X, (color + k) % XVI) <= ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    indices = (i8*)piscina_allocare(piscina, (memoriae_index)(XX * XX));
+    memset(indices, (integer)((color + II) % XVI), (size_t)(XX * XX));
+    redde pictor_documentum_imaginem_inserere(doc, indices, XX, XX, XL,
+               XX, I) > ZEPHYRUM
+        && pictor_documentum_revocare(doc)
+        && pictor_documentum_reficere(doc)
+        && pictor_documentum_revocare(doc)
+        && ictus(doc, L, XL, (color + V) % XVI) > ZEPHYRUM;
+}
+
+/* T4 (spec D4): pictura alterius replicae in B legitur - pixela eadem
+ * (strata, imago, revocatio, refectio, ramus), checkpoint fontis domi,
+ * checkpoint picturae localis eiusdem nominis NON adhibetur; picturae
+ * B propriae intactae; scriptura in alienam recusatur; enumeratio
+ * localis alienas non numerat */
+interior vacuum
+_sectio_pictura_aliena (
+    CredoContextus* c)
+{
+                Volumen* a;
+                Volumen* b;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* radix_b;
+       PictorDocumentum* homonyma;
+       PictorDocumentum* aliena;
+                    Xar* l;
+                    s64  cursor;
+                 chorda  sig_a;
+                 chorda  sig_radicis;
+                    s64  numerus;
+                    i32  k;
+
+    (vacuum)c;
+    thema_initiare();
+    intern  = internamentum_creare(piscina);
+    a       = volumen_temporarium(piscina, "probatio_communio_pa");
+    b       = volumen_temporarium(piscina, "probatio_communio_pb");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_NECESSE_NON_NIHIL(b);
+
+    /* A: pictura "p", intervallum II (checkpoints crebri) */
+    da = pictor_documentum_creare(piscina, intern, a, "p", C, LX, II);
+    CREDO_NECESSE_NON_NIHIL(da);
+    CREDO_NECESSE(operationes(da, ZEPHYRUM));
+    sig_a = pictor_documentum_sigillum_compositi_hex(da, piscina);
+
+    /* B: pictura "p" propria PRIMA, eadem series (alio colore), deinde
+     * radix propria */
+    homonyma = pictor_documentum_creare(piscina, intern, b, "p", C, LX,
+        II);
+    CREDO_NECESSE_NON_NIHIL(homonyma);
+    CREDO_NECESSE(operationes(homonyma, VII));
+    radix_b = pictor_documentum_creare(piscina, intern, b, "", C, LX,
+        II);
+    CREDO_NECESSE_NON_NIHIL(radix_b);
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        (vacuum)ictus(radix_b, V, V + k, I);
+    }
+    sig_radicis = pictor_documentum_sigillum_compositi_hex(radix_b,
+        piscina);
+
+    cursor = ZEPHYRUM;
+    CREDO_VERUM(communio_transferre(a, b, &cursor, NIHIL, piscina));
+
+    CREDO_GRADUS("enumeratio aliena");
+    l = pictor_documenta_aliena_enumerare(b, piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), I);
+    CREDO_CHORDA_AEQUALIS(((PictorPicturaAliena*)xar_obtinere(l,
+        ZEPHYRUM))->replica, volumen_replica(a));
+    CREDO_CHORDA_AEQUALIS_LITERIS(((PictorPicturaAliena*)xar_obtinere(l,
+        ZEPHYRUM))->spatium, "p");
+
+    CREDO_GRADUS("enumeratio localis alienas non numerat");
+    l = pictor_documenta_enumerare(b, piscina);
+    CREDO_AEQUALIS_I32(l ? xar_numerus(l) : ZEPHYRUM, II);
+    l = pictor_documenta_recentia(b, piscina);
+    CREDO_AEQUALIS_I32(l ? xar_numerus(l) : ZEPHYRUM, II);
+
+    CREDO_GRADUS("pixela eadem");
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, b,
+        volumen_replica(a), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    CREDO_CHORDA_AEQUALIS(pictor_documentum_sigillum_compositi_hex(
+        aliena, piscina), sig_a);
+
+    CREDO_GRADUS("propriae intactae");
+    radix_b = pictor_documentum_aperire(piscina, intern, b, "");
+    CREDO_NECESSE_NON_NIHIL(radix_b);
+    CREDO_CHORDA_AEQUALIS(pictor_documentum_sigillum_compositi_hex(
+        radix_b, piscina), sig_radicis);
+
+    CREDO_GRADUS("scriptura in alienam recusatur");
+    numerus = volumen_summa_actorum(b);
+    CREDO_AEQUALIS_S64(ictus(aliena, V, V, I), (s64)ZEPHYRUM);
+    CREDO_FALSUM(pictor_documentum_revocare(aliena));
+    CREDO_AEQUALIS_S64(volumen_summa_actorum(b), numerus);
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transferre, iterum, idempotens", _sectio_transferre, _parare,
         _purgare, NIHIL, NIHIL },
@@ -266,6 +407,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _purgare, NIHIL, NIHIL },
     { "refusa sistit", _sectio_refusa, _parare, _purgare, NIHIL,
         NIHIL },
+    { "pictura aliena (T4)", _sectio_pictura_aliena, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
