@@ -12,10 +12,17 @@
 #include "internamentum.h"
 #include "thema.h"
 #include "pictor_documentum.h"
+#include "cives.h"
+#include "moneta.h"
+#include "reactor.h"
+#include "hospitium.h"
+#include "communio_servus.h"
+#include "communio_cliens.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <sys/time.h>
 
 hic_manens Piscina* piscina;
 
@@ -661,6 +668,547 @@ _sectio_mensura (
     volumen_claudere(b);
 }
 
+
+/* ==================================================
+ * plan-2 T6: per servum (hospitium + communio_servus + duo clientes in
+ * reactore uno)
+ * ================================================== */
+
+nomen structura {
+            Volumen* vs;
+              Cives* cives;
+     CommunioServus* servus;
+            Reactor* reactor;
+          Hospitium* hospitium;
+                i32  portus;
+          character  basis[LXIV];
+          character  ta[XLIV];
+          character  tb[XLIV];
+} Orbis;
+
+nomen structura {
+    i32 vocationes;
+    i32 numerus;
+} Adventus;
+
+interior vacuum
+advenerunt (
+    vacuum* ctx,
+       i32  numerus)
+{
+    Adventus* a = (Adventus*)ctx;
+
+    a->vocationes++;
+    a->numerus += numerus;
+}
+
+interior b32
+hospitium_aperire (
+    Orbis* o)
+{
+    HospitiumConfiguratio cfg;
+
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
+    cfg.reactor   = o->reactor;
+    cfg.portus    = o->portus;
+    o->hospitium  = hospitium_creare(piscina, &cfg);
+    si (   !o->hospitium || !communio_servum_montare(o->servus,
+            o->hospitium))
+    {
+        redde FALSUM;
+    }
+    o->portus = (i32)hospitium_portus(o->hospitium);
+    sprintf(o->basis, "http://127.0.0.1:%d", (integer)o->portus);
+    redde VERUM;
+}
+
+interior b32
+apparatum_dare (
+          Orbis* o,
+         chorda  civis,
+      character* tessera)
+{
+    character digestum[LXV];
+    character id[MONETA_ULID_MENSURA];
+
+    redde communio_membrum_addere(o->servus,
+        chorda_ex_literis("familia",
+               piscina), civis)
+        && communio_tesseram_facere(tessera, digestum)
+        && communio_apparatum_addere(o->servus, civis,
+        chorda_ex_literis(
+               "familia", piscina), chorda_ex_literis("apparatus",
+               piscina), chorda_ex_literis(digestum, piscina), id);
+}
+
+interior b32
+orbem_parare (
+    Orbis* o)
+{
+    chorda primus;
+    chorda amanda;
+
+    memset(o, ZEPHYRUM, magnitudo(*o));
+    o->vs = volumen_temporarium(piscina, "probatio_communio_servus");
+    o->cives = o->vs ? cives_aperire(o->vs, NIHIL, piscina) : NIHIL;
+    si (!o->cives || !volumen_transactionem_incipere(o->vs))
+    {
+        redde FALSUM;
+    }
+    (vacuum)cives_creare(o->cives, chorda_ex_literis("franciscus",
+        piscina), chorda_ex_literis("Franciscus", piscina), &primus,
+        piscina);
+    (vacuum)cives_creare(o->cives, chorda_ex_literis("amanda", piscina),
+        chorda_ex_literis("Amanda", piscina), &amanda, piscina);
+    (vacuum)volumen_transactionem_committere(o->vs);
+    o->servus = communio_servum_creare(piscina, o->vs, o->cives,
+        NIHIL);
+    o->reactor = reactor_creare(piscina);
+    redde o->servus && o->reactor && hospitium_aperire(o)
+        && apparatum_dare(o, primus, o->ta)
+        && apparatum_dare(o, amanda, o->tb);
+}
+
+interior vacuum
+orbem_purgare (
+    Orbis* o)
+{
+    communio_servum_destruere(o->servus);
+    si (o->hospitium)
+    {
+        hospitium_destruere(o->hospitium);
+    }
+    si (o->reactor)
+    {
+        reactor_destruere(o->reactor);
+    }
+    si (o->vs)
+    {
+        volumen_claudere(o->vs);
+    }
+}
+
+interior CommunioCliens*
+clientem (
+                 Orbis* o,
+               Volumen* v,
+    constans character* tessera,
+              Adventus* adventus)
+{
+    redde communio_clientem_creare(piscina, o->reactor, v, o->basis,
+        chorda_ex_literis(tessera, piscina), adventus ? advenerunt
+                                                      : NIHIL,
+                                                      adventus);
+}
+
+/* reactorem agere donec cliens otiosus (aut tectum in ms) */
+interior b32
+donec_otiosus (
+             Orbis* o,
+    CommunioCliens* c,
+               i32  tectum_ms)
+{
+    i32 gyri;
+
+    per (gyri = ZEPHYRUM; !communio_cliens_otiosus(c)
+         && gyri < tectum_ms / X; gyri++)
+    {
+        (vacuum)reactor_poll(o->reactor, X);
+    }
+    redde communio_cliens_otiosus(c);
+}
+
+interior vacuum
+agere (
+    Orbis* o,
+      i32  ms)
+{
+    i32 gyri;
+
+    per (gyri = ZEPHYRUM; gyri < ms / X; gyri++)
+    {
+        (vacuum)reactor_poll(o->reactor, X);
+    }
+}
+
+/* ambo clientes ad quietem: A mittit, deinde B excitatus trahit */
+interior b32
+synchronizare (
+             Orbis* o,
+    CommunioCliens* ca,
+    CommunioCliens* cb)
+{
+    communio_cliens_excitare(ca);
+    si (!donec_otiosus(o, ca, M * V))
+    {
+        redde FALSUM;
+    }
+    communio_cliens_excitare(cb);
+    redde donec_otiosus(o, cb, M * V);
+}
+
+/* acta propria non derivata voluminis */
+interior i32
+acta_communicanda (
+    Volumen* v)
+{
+    Xar* l;
+    i32  i;
+    i32  n;
+
+    l = volumen_acta_propria_legere(v, ZEPHYRUM, piscina);
+    n = ZEPHYRUM;
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        si (!communio_actum_derivatum((VolumenActum*)xar_obtinere(l, i),
+                piscina))
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior s64
+seq_proprium_ultimum (
+    Volumen* v)
+{
+    Xar* l;
+
+    l = volumen_acta_propria_legere(v, ZEPHYRUM, piscina);
+    redde (l && xar_numerus(l) > ZEPHYRUM)
+        ? ((VolumenActum*)xar_obtinere(l, xar_numerus(l) - I))->seq
+        : ZEPHYRUM;
+}
+
+interior vacuum
+_sectio_per_servum (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+         CommunioCliens* ca;
+         CommunioCliens* cb;
+               Adventus  adventus;
+                    Xar* l;
+         CommunioStatus  sb;
+                clock_t  t0;
+
+    (vacuum)c;
+    thema_initiare();
+    memset(&adventus, ZEPHYRUM, magnitudo(adventus));
+    CREDO_NECESSE(orbem_parare(&o));
+    intern  = internamentum_creare(piscina);
+    va      = volumen_temporarium(piscina, "probatio_communio_ca");
+    vb      = volumen_temporarium(piscina, "probatio_communio_cb");
+    CREDO_NECESSE(va && vb);
+    da = pictor_documentum_creare(piscina, intern, va, "p", C, LX, II);
+    CREDO_NECESSE(da && operationes(da, ZEPHYRUM));
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, o.tb, &adventus);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    t0 = clock();
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+    imprimere("  per servum (pictura): %.1f ms\n",
+        (duplex)(clock() - t0) * 1000.0 / (duplex)CLOCKS_PER_SEC);
+    CREDO_AEQUALIS_I32(communio_cliens_status(ca).error.mensura,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).error.mensura,
+        ZEPHYRUM);
+    CREDO_VERUM(adventus.numerus > ZEPHYRUM);
+    l = pictor_documenta_aliena_enumerare(vb, piscina);
+    CREDO_NECESSE(l && xar_numerus(l) == I);
+    CREDO_CHORDA_AEQUALIS(((PictorPicturaAliena*)xar_obtinere(l,
+        ZEPHYRUM))->replica, volumen_replica(va));
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, vb,
+        volumen_replica(va), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    CREDO_VERUM(aequales(da, aliena));
+    CREDO_AEQUALIS_I32(acta_replicae(vb, volumen_replica(va)),
+        acta_communicanda(va));
+    CREDO_AEQUALIS_S64(communio_cliens_status(ca).ascensus,
+        seq_proprium_ultimum(va));
+
+    CREDO_GRADUS("cursores manent");
+    sb = communio_cliens_status(cb);
+    communio_clientem_destruere(cb);
+    cb = clientem(&o, vb, o.tb, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(cb);
+    CREDO_AEQUALIS_S64(communio_cliens_status(cb).descensus,
+        sb.descensus);
+    CREDO_AEQUALIS_S64(communio_cliens_status(cb).ascensus,
+        sb.ascensus);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(cb);
+    CREDO_VERUM(synchronizare(&o, ca, cb));
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).recepta, ZEPHYRUM);
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+interior vacuum
+_sectio_vivum (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+         CommunioCliens* ca;
+         CommunioCliens* cb;
+               Adventus  adventus;
+                    i32  gyri;
+
+    (vacuum)c;
+    thema_initiare();
+    memset(&adventus, ZEPHYRUM, magnitudo(adventus));
+    CREDO_NECESSE(orbem_parare(&o));
+    intern  = internamentum_creare(piscina);
+    va      = volumen_temporarium(piscina, "probatio_communio_va");
+    vb      = volumen_temporarium(piscina, "probatio_communio_vb");
+    CREDO_NECESSE(va && vb);
+    da = pictor_documentum_creare(piscina, intern, va, "p", C, LX, II);
+    CREDO_NECESSE(da && operationes(da, ZEPHYRUM));
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, o.tb, &adventus);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    CREDO_NECESSE(donec_otiosus(&o, ca, M * V));
+    per (gyri = ZEPHYRUM; adventus.vocationes == ZEPHYRUM && gyri < D;
+         gyri++)
+    {
+        agere(&o, X);
+    }
+    CREDO_NECESSE(adventus.vocationes > ZEPHYRUM);
+    agere(&o, C);
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, vb,
+        volumen_replica(va), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    CREDO_VERUM(aequales(da, aliena));
+
+    CREDO_GRADUS("ictus novi per tractionem dilatam");
+    adventus.vocationes = ZEPHYRUM;
+    CREDO_NECESSE(ictus(da, LXX, XXX, IX) > ZEPHYRUM);
+    CREDO_NECESSE(ictus(da, LXXX, XXX, X) > ZEPHYRUM);
+    per (gyri = ZEPHYRUM; adventus.vocationes == ZEPHYRUM && gyri < CCC;
+         gyri++)
+    {
+        agere(&o, X);
+    }
+    CREDO_VERUM(adventus.vocationes > ZEPHYRUM);
+    CREDO_VERUM(pictor_documentum_sequi(aliena));
+    CREDO_VERUM(aequales(da, aliena));
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+interior vacuum
+_sectio_servus_cadit (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+         CommunioCliens* ca;
+         CommunioCliens* cb;
+                    i32  k;
+
+    (vacuum)c;
+    thema_initiare();
+    CREDO_NECESSE(orbem_parare(&o));
+    intern  = internamentum_creare(piscina);
+    va      = volumen_temporarium(piscina, "probatio_communio_xa");
+    vb      = volumen_temporarium(piscina, "probatio_communio_xb");
+    CREDO_NECESSE(va && vb);
+    da = pictor_documentum_creare(piscina, intern, va, "p", C, LX, II);
+    CREDO_NECESSE(da && operationes(da, ZEPHYRUM));
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, o.tb, NIHIL);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+
+    CREDO_GRADUS("servus cadit; A pergit pingere");
+    hospitium_destruere(o.hospitium);
+    o.hospitium = NIHIL;
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        CREDO_NECESSE(ictus(da, X + k * X, L, IV) > ZEPHYRUM);
+    }
+    communio_cliens_excitare(ca);
+    agere(&o, MD);
+    CREDO_VERUM(communio_cliens_status(ca).error.mensura > ZEPHYRUM);
+    CREDO_FALSUM(communio_cliens_status(ca).connexus);
+
+    CREDO_GRADUS("servus redit: nihil duplicatum, nihil amissum");
+    CREDO_NECESSE(hospitium_aperire(&o));
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+    CREDO_AEQUALIS_I32(acta_replicae(vb, volumen_replica(va)),
+        acta_communicanda(va));
+    CREDO_AEQUALIS_S64(communio_cliens_status(ca).ascensus,
+        seq_proprium_ultimum(va));
+    CREDO_AEQUALIS_I32(communio_cliens_status(ca).error.mensura,
+        ZEPHYRUM);
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, vb,
+        volumen_replica(va), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    CREDO_VERUM(aequales(da, aliena));
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+/* chorda continet subchordam? */
+interior b32
+continet_literas (
+                chorda  c,
+    constans character* sub)
+{
+    i32 n;
+    i32 i;
+
+    n = (i32)strlen(sub);
+    per (i = ZEPHYRUM; i + n <= c.mensura; i++)
+    {
+        si (memcmp(c.datum + i, sub, (size_t)n) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_sectio_tessera_mala (
+    CredoContextus* c)
+{
+             Orbis  o;
+           Volumen* va;
+           Volumen* vb;
+    CommunioCliens* ca;
+    CommunioCliens* cb;
+         character  falsa[XLIV];
+         character  digestum[LXV];
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    va = volumen_temporarium(piscina, "probatio_communio_ma");
+    vb = volumen_temporarium(piscina, "probatio_communio_mb");
+    CREDO_NECESSE(va && vb);
+    CREDO_NECESSE(volumen_actum_appendere(va, "x/actum",
+        chorda_ex_literis("{}", piscina)) > ZEPHYRUM);
+    CREDO_NECESSE(communio_tesseram_facere(falsa, digestum));
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, falsa, NIHIL);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    CREDO_NECESSE(donec_otiosus(&o, ca, M * V));
+    communio_cliens_excitare(cb);
+    agere(&o, D);
+    CREDO_VERUM(communio_cliens_status(cb).error.mensura > ZEPHYRUM);
+    CREDO_FALSUM(continet_literas(communio_cliens_status(cb).error,
+        falsa));
+    CREDO_AEQUALIS_I32(acta_replicae(vb, volumen_replica(va)),
+        ZEPHYRUM);
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+interior s64
+ms_nunc (vacuum)
+{
+    structura timeval tv;
+
+    (vacuum)gettimeofday(&tv, NIHIL);
+    redde (s64)tv.tv_sec * M + (s64)(tv.tv_usec / M);
+}
+
+/* mensura (nulla assertio temporis): pictura D ictuum per servum,
+ * tempus murale ab incipere ad B otiosum */
+interior vacuum
+_sectio_mensura_per_servum (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+         CommunioCliens* ca;
+         CommunioCliens* cb;
+                    i32  k;
+                    s64  t0;
+
+    (vacuum)c;
+    thema_initiare();
+    CREDO_NECESSE(orbem_parare(&o));
+    intern  = internamentum_creare(piscina);
+    va      = volumen_temporarium(piscina, "probatio_communio_da");
+    vb      = volumen_temporarium(piscina, "probatio_communio_db");
+    CREDO_NECESSE(va && vb);
+    da = pictor_documentum_creare(piscina, intern, va, "p", C, LX,
+        LXIV);
+    CREDO_NECESSE_NON_NIHIL(da);
+    per (k = ZEPHYRUM; k < D; k++)
+    {
+        CREDO_NECESSE(ictus(da, k % C, (k / C) % LX, k % XVI)
+            > ZEPHYRUM);
+    }
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, o.tb, NIHIL);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    t0 = ms_nunc();
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+    imprimere("  D ictus per servum: %ld ms (murale)\n",
+        (longus)(ms_nunc() - t0));
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, vb,
+        volumen_replica(va), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    CREDO_VERUM(aequales(da, aliena));
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transferre, iterum, idempotens", _sectio_transferre, _parare,
         _purgare, NIHIL, NIHIL },
@@ -677,6 +1225,17 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _parare, _purgare, NIHIL, NIHIL },
     { "mensura: D ictus", _sectio_mensura, _parare, _purgare, NIHIL,
         NIHIL },
+    { "per servum (plan-2 T6)", _sectio_per_servum, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "vivum: tractio dilata", _sectio_vivum, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "servus cadit", _sectio_servus_cadit, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "tessera mala", _sectio_tessera_mala, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "mensura per servum: D ictus", _sectio_mensura_per_servum,
+        _parare,
+        _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
