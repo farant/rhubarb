@@ -41,6 +41,7 @@
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
 #include "silva_lexicon.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -2767,7 +2768,7 @@ _plagulam_scribere (
         memcpy(cursor, fons, (memoriae_index)cauda);
         scriptum += (memoriae_index)cauda;
 
-        pl = fopen(via, "wb");
+        pl = lectiones_fopen(via, "wb");
         si (pl == NIHIL)
         {
             _culpam_addere(_culpa_formata("plagula non"

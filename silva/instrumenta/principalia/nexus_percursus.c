@@ -51,6 +51,8 @@
 #include "xar.h"
 #include "silva.h"
 #include "nexus_ordines.h"
+#include "filum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -1602,14 +1604,14 @@ principale (
         }
     }
 
-    effusio = fopen(via_effusionis, "w");
+    effusio = lectiones_fopen(via_effusionis, "w");
     si (effusio == NIHIL)
     {
         fprintf(stderr, "nexus_percursus: %s non aperta"
             " (build/ adest?)\n", via_effusionis);
         redde I;
     }
-    effusio_inclusionum = fopen(via_incl_effusionis, "w");
+    effusio_inclusionum = lectiones_fopen(via_incl_effusionis, "w");
     si (effusio_inclusionum == NIHIL)
     {
         fprintf(stderr, "nexus_percursus: %s non aperta\n",
@@ -1676,13 +1678,13 @@ principale (
     c1 = clock();
     fclose(effusio);
     fclose(effusio_inclusionum);
-    si (rename(via_effusionis, via_finalis) != ZEPHYRUM)
+    si (!filum_movere(via_effusionis, via_finalis))
     {
         fprintf(stderr, "nexus_percursus: rename %s -> %s fractum\n",
             via_effusionis, via_finalis);
         redde I;
     }
-    si (rename(via_incl_effusionis, via_incl_finalis) != ZEPHYRUM)
+    si (!filum_movere(via_incl_effusionis, via_incl_finalis))
     {
         fprintf(stderr, "nexus_percursus: rename %s -> %s fractum\n",
             via_incl_effusionis, via_incl_finalis);

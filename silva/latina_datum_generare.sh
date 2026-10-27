@@ -14,7 +14,8 @@ source "$RADIX/tools/vexilla.sh"
 mkdir -p "$RADIX/build"
 BIN="$RADIX/build/latina_datum"
 clang "${VEXILLA_C89[@]}" -I"$RADIX/include" \
-    "$RADIX/silva/instrumenta/principalia/latina_datum.c" -o "$BIN" || exit 2
+    "$RADIX/silva/instrumenta/principalia/latina_datum.c" \
+    "$RADIX/lib/lectiones.c" -o "$BIN" || exit 2
 SCRIPTURA="$RADIX"
 if [ -n "${FABRICA_SCRIPTURA:-}" ]; then
     SCRIPTURA="$FABRICA_SCRIPTURA"

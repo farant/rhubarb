@@ -226,3 +226,17 @@ roles) red naming exactly the four snapshots.
 Routine fix: format with `tools/formare_viae.sh` (the commit judge),
 never `formator.sh` over every changed file - it reformatted
 knotapel's remissa main.c wholesale (restored, re-applied).
+
+*Step 5, silva (2026-10-27):* 10 files, 24 sites, all in the tools
+(silva/instrumenta), none in the parser; 36 read-mode fopen refusals
+(96). Four rewritten files are bootstrap generators (silva_amalgama,
+silva_coquere, silva_canon_coquere, latina_datum) with hand-kept lib
+lists: lectiones added to silva/tessera/officina amalgamare.sh,
+latina_datum_generare.sh, and as silva/build/lectiones.o to
+amalgama_excludenda_generare.sh + amalgama_ligare.sh (same "warm
+object" contract as its siblings; warmed once by hand). The generator
+build's own list (generare_fontes_generata.sh) is derived but sits
+downstream of the generator - regenerated with the current aedilis
+(./tools/silva_fontes_generare.sh), the bootstrap cycle. All generated
+outputs then judged fresh by output comparison, byte-identical; silva
+57/57; nexus fumus sanum; three 96 debts paid.

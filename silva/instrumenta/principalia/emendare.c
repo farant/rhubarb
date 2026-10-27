@@ -27,6 +27,7 @@
 #include "silva_c89_semantica.h"
 #include "silva_iudicium.h"
 #include "silva_emendatio.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -226,7 +227,7 @@ _plagulam_emendare (
 
     si (scribere_volo)
     {
-        FILE* pl = fopen(via, "wb");
+        FILE* pl = lectiones_fopen(via, "wb");
 
         si (   pl == NIHIL
             || fwrite(novum, I, (memoriae_index)mensura_novi, pl)
