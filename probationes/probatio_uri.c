@@ -309,6 +309,18 @@ _sectio_nona (
     resultatus  = uri_resolvere(base, relativum, piscina);
     CREDO_NON_NIHIL(resultatus);
     CREDO_VERUM(chorda_aequalis_literis(resultatus->via, "/other"));
+
+    /* Via retis (RFC 3986 5.2.2: "//hospes/via" - auctoritas ex
+     * relativo, schema ex base; navigator N1: <img src="//thumb...">) */
+    relativum   = chorda_ex_literis("//cdn.example.org/a/b.jpg?x=1",
+        piscina);
+    resultatus  = uri_resolvere(base, relativum, piscina);
+    CREDO_NON_NIHIL(resultatus);
+    CREDO_VERUM(chorda_aequalis_literis(resultatus->schema, "https"));
+    CREDO_VERUM(chorda_aequalis_literis(resultatus->hospes,
+        "cdn.example.org"));
+    CREDO_VERUM(chorda_aequalis_literis(resultatus->via, "/a/b.jpg"));
+    CREDO_VERUM(chorda_aequalis_literis(resultatus->quaestio, "x=1"));
 }
 
 

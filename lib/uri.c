@@ -175,7 +175,8 @@ uri_parse (
     si (fragment_start < longitudo)
     {
         uri->fragmentum = _copiare_substring(cursor, fragment_start + 1,
-                                              longitudo - fragment_start - 1,
+                                              longitudo - fragment_start
+                                                  - 1,
                                               piscina);
         longitudo = fragment_start;
     }
@@ -198,9 +199,10 @@ uri_parse (
     schema_end = _invenire_schema_separator(cursor, longitudo);
     si (schema_end < longitudo)
     {
-        uri->schema = _copiare_substring(cursor, 0, schema_end, piscina);
-        uri->est_absoluta = VERUM;
-        authority_start = schema_end + 3; /* Post "://" */
+        uri->schema = _copiare_substring(cursor, 0, schema_end,
+            piscina);
+        uri->est_absoluta  = VERUM;
+        authority_start    = schema_end + 3; /* Post "://" */
     }
     alioquin si (longitudo >= 2 && cursor[0] == '/' && cursor[1] == '/')
     {
@@ -221,7 +223,8 @@ uri_parse (
      * ---------------------------------------------------------------- */
     /* Invenire finem authority (initium viae) */
     authority_end = _invenire_character(cursor + authority_start,
-                                         longitudo - authority_start, '/');
+                                         longitudo - authority_start,
+                                         '/');
     si (authority_end < longitudo - authority_start)
     {
         path_start     = authority_start + authority_end;
@@ -247,7 +250,8 @@ uri_parse (
         at_pos = _invenire_character(auth, auth_len, '@');
         si (at_pos < auth_len)
         {
-            uri->userinfo = _copiare_substring(auth, 0, at_pos, piscina);
+            uri->userinfo = _copiare_substring(auth, 0, at_pos,
+                piscina);
             host_start = at_pos + 1;
         }
         alioquin
@@ -259,18 +263,21 @@ uri_parse (
         si (host_start < auth_len && auth[host_start] == '[')
         {
             bracket_end = _invenire_character(auth + host_start,
-                                               auth_len - host_start, ']');
+                                               auth_len - host_start,
+                                               ']');
             si (bracket_end < auth_len - host_start)
             {
                 /* Hospes cum brackets */
                 host_end = host_start + bracket_end + 1;
                 uri->hospes = _copiare_substring(auth, host_start,
-                                                  host_end - host_start, piscina);
+                                                  host_end - host_start,
+                                                  piscina);
                 /* Portus post ] */
                 si (host_end < auth_len && auth[host_end] == ':')
                 {
                     uri->portus = _parse_numerum(auth + host_end + 1,
-                                                  auth_len - host_end - 1);
+                                                  auth_len - host_end
+                                                      - 1);
                 }
             }
             alioquin
@@ -283,12 +290,14 @@ uri_parse (
         {
             /* Hospes normale - invenire : pro portus */
             colon_pos = _invenire_character(auth + host_start,
-                                             auth_len - host_start, ':');
+                                             auth_len - host_start,
+                                             ':');
             si (colon_pos < auth_len - host_start)
             {
                 host_end = host_start + colon_pos;
                 uri->hospes = _copiare_substring(auth, host_start,
-                                                  host_end - host_start, piscina);
+                                                  host_end - host_start,
+                                                  piscina);
                 uri->portus = _parse_numerum(auth + host_end + 1,
                                               auth_len - host_end - 1);
             }
@@ -296,7 +305,8 @@ uri_parse (
             {
                 host_end = auth_len;
                 uri->hospes = _copiare_substring(auth, host_start,
-                                                  host_end - host_start, piscina);
+                                                  host_end - host_start,
+                                                  piscina);
             }
         }
     }
@@ -390,7 +400,8 @@ uri_resolvere (
     {
         i8* temp;
         temp = piscina_allocare(piscina, relativum.mensura + 1);
-        memcpy(temp, relativum.datum, (memoriae_index)relativum.mensura);
+        memcpy(temp, relativum.datum,
+            (memoriae_index)relativum.mensura);
         temp[relativum.mensura] = '\0';
 
         si (!uri_parse((constans character*)temp, &rel_uri, piscina))
@@ -404,6 +415,18 @@ uri_resolvere (
     {
         *resultatus      = rel_uri;
         resultatus->via  = via_normalizare(rel_uri.via, piscina);
+        redde resultatus;
+    }
+
+    /* Via retis ("//hospes/via", RFC 3986 5.2.2): auctoritas, via et
+     * quaestio ex relativo, schema solum ex base */
+    si (rel_uri.hospes.mensura > 0)
+    {
+        *resultatus               = rel_uri;
+        resultatus->schema        = base->schema;
+        resultatus->est_absoluta  = VERUM;
+        resultatus->via           = via_normalizare(rel_uri.via,
+            piscina);
         redde resultatus;
     }
 
