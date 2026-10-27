@@ -21,6 +21,7 @@
 #include "gesta_expeditio.h"
 #include "moneta.h"   /* captura fragmentorum: minta fortuita
                        * (stampae linearum in articulis) */
+#include "lectiones.h"
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>   /* horologium politicae tacendi (sutura POSIX) */
@@ -4400,7 +4401,7 @@ _tabulam_scribere (
         }
     }
     textus  = chorda_aedificator_finire(aed);
-    pl      = fopen(t->via_tabulae, "wb");
+    pl      = lectiones_fopen(t->via_tabulae, "wb");
     si (pl == NIHIL)
     {
         redde;

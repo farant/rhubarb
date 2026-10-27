@@ -10,6 +10,8 @@
 #include "json.h"
 #include "gesta.h"
 #include "credo.h"
+#include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -29,32 +31,32 @@
 interior vacuum
 _purgare (vacuum)
 {
-    remove(VIA_DB);
-    remove(VIA_DB "-wal");
-    remove(VIA_DB "-shm");
-    remove(VIA_AN);
-    remove(VIA_DB3);
-    remove(VIA_DB3 "-wal");
-    remove(VIA_DB3 "-shm");
-    remove(VIA_DB4);
-    remove(VIA_DB4 "-wal");
-    remove(VIA_DB4 "-shm");
-    remove(VIA_AN4);
-    remove(VIA_DB5);
-    remove(VIA_DB5 "-wal");
-    remove(VIA_DB5 "-shm");
-    remove(VIA_AN5);
-    remove(VIA_DB6);
-    remove(VIA_DB6 "-wal");
-    remove(VIA_DB6 "-shm");
-    remove(VIA_AN6);
-    remove(VIA_DB7);
-    remove(VIA_DB7 "-wal");
-    remove(VIA_DB7 "-shm");
-    remove(VIA_AN7);
-    remove(VIA_DB7R);
-    remove(VIA_DB7R "-wal");
-    remove(VIA_DB7R "-shm");
+    (vacuum)filum_delere(VIA_DB);
+    (vacuum)filum_delere(VIA_DB "-wal");
+    (vacuum)filum_delere(VIA_DB "-shm");
+    (vacuum)filum_delere(VIA_AN);
+    (vacuum)filum_delere(VIA_DB3);
+    (vacuum)filum_delere(VIA_DB3 "-wal");
+    (vacuum)filum_delere(VIA_DB3 "-shm");
+    (vacuum)filum_delere(VIA_DB4);
+    (vacuum)filum_delere(VIA_DB4 "-wal");
+    (vacuum)filum_delere(VIA_DB4 "-shm");
+    (vacuum)filum_delere(VIA_AN4);
+    (vacuum)filum_delere(VIA_DB5);
+    (vacuum)filum_delere(VIA_DB5 "-wal");
+    (vacuum)filum_delere(VIA_DB5 "-shm");
+    (vacuum)filum_delere(VIA_AN5);
+    (vacuum)filum_delere(VIA_DB6);
+    (vacuum)filum_delere(VIA_DB6 "-wal");
+    (vacuum)filum_delere(VIA_DB6 "-shm");
+    (vacuum)filum_delere(VIA_AN6);
+    (vacuum)filum_delere(VIA_DB7);
+    (vacuum)filum_delere(VIA_DB7 "-wal");
+    (vacuum)filum_delere(VIA_DB7 "-shm");
+    (vacuum)filum_delere(VIA_AN7);
+    (vacuum)filum_delere(VIA_DB7R);
+    (vacuum)filum_delere(VIA_DB7R "-wal");
+    (vacuum)filum_delere(VIA_DB7R "-shm");
 }
 
 /* scriptura brevis asserta */
@@ -878,7 +880,7 @@ _mundum_principalem_probare (
              * ================================================== */
 
             {
-                FILE* pl = fopen(VIA_AN, "ab");
+                FILE* pl = lectiones_fopen(VIA_AN, "ab");
 
                 CREDO_NON_NIHIL (pl);
                 si (pl != NIHIL)
@@ -2070,7 +2072,7 @@ interior vacuum
 _fascem_probare (
     CredoContextus* c)
 {
-    Piscina* piscina = c->piscina;
+              Piscina* piscina = c->piscina;
           GestaMundus* m4;
     GestaActioFructus  fr;
             character  id_p[GESTA_RES_ID_MENSURA];
@@ -2721,7 +2723,7 @@ interior vacuum
 _processum_probare (
     CredoContextus* c)
 {
-    Piscina* piscina = c->piscina;
+                  Piscina* piscina = c->piscina;
               GestaMundus* m5;
     GestaProcessusFructus  pf;
         GestaActioFructus  fr;
@@ -3216,7 +3218,7 @@ interior vacuum
 _lectionem_ramorum_probare (
     CredoContextus* c)
 {
-    Piscina* piscina = c->piscina;
+        Piscina* piscina = c->piscina;
     GestaMundus* m6;
         integer  numerator = ZEPHYRUM;
       character  id_x[GESTA_RES_ID_MENSURA];
@@ -3472,7 +3474,7 @@ interior vacuum
 _scripturam_ramorum_probare (
     CredoContextus* c)
 {
-    Piscina* piscina = c->piscina;
+              Piscina* piscina = c->piscina;
           GestaMundus* m7;
             character  id_x[GESTA_RES_ID_MENSURA];
             character  id_z[GESTA_RES_ID_MENSURA];

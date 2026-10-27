@@ -28,6 +28,7 @@
 #include "volumen.h"
 #include "exemplar_nucleus.h"
 #include "custodia.h"
+#include "communio_servus.h"
 #include "cives.h"
 #include "admissio.h"
 #include "scrinium.h"
@@ -2781,7 +2782,7 @@ _sectio_canalis_fractus (CredoContextus* c)
      character  directorium[CCLVI];
      character  via[CCCLXXXIV];   /* directorium + "/servus" (gcc
                                     * format-overflow) */
-     character  n[MONETA_NANOID_PLAGULAE_MENSURA];
+     character n[MONETA_NANOID_PLAGULAE_MENSURA];
 
     (vacuum)moneta_nanoid_plagulae(n);
     sprintf(locus.via, "/tmp/exemplar_%s", n);
@@ -2875,6 +2876,83 @@ _sectio_mcp_status_civis (CredoContextus* c)
     _finire(e, &locus);
 }
 
+/* communio plan-2 T7: servus communionis in exemplare montatus;
+ * apparatus per canalem administrationis (digestum solum, numquam
+ * tessera); tessera vera admittit, revocata non */
+interior vacuum
+_sectio_communio (CredoContextus* c)
+{
+     Piscina* p = c->piscina;
+       Locus  locus;
+    Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+      Lector  l;
+   JsonValor* r;
+      chorda  id;
+      chorda  textus;
+   character  tessera[XLIV];
+   character  digestum[LXV];
+   character  argumenta[CCCLXXXIV];
+   character  caput[CXXVIII];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_NECESSE(_usor_novus(e, p, &locus, "fran")[ZEPHYRUM] != '\0');
+    r = _administrare(e, &locus, "communio_membrum_addere",
+        "{\"spatium\":\"familia\",\"nomen\":\"fran\"}", p);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(_vitium_administrationis(r));
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    sprintf(argumenta, "{\"nomen\":\"fran\",\"spatium\":\"familia\","
+        "\"titulus\":\"Macintosh\",\"digestum\":\"%s\"}", digestum);
+    r = _administrare(e, &locus, "communio_apparatum_addere", argumenta,
+        p);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(_vitium_administrationis(r));
+    id = json_ad_chorda(json_via(_structura(r), "id"));
+    CREDO_AEQUALIS_I32(id.mensura, XXVI);
+
+    CREDO_GRADUS("tessera admittit; sine tessera 401");
+    sprintf(caput, "Authorization: Bearer %s\r\n", tessera);
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /communio/acta?post=0",
+        caput, NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /communio/acta?post=0", "",
+        NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);
+
+    CREDO_GRADUS("enumeratio sine digestis");
+    r = _administrare(e, &locus, "communio_apparatus_enumerare", "{}",
+        p);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(_vitium_administrationis(r));
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(_structura(r),
+        "apparatus.0.titulus")), "Macintosh");
+    textus = _textus_administrationis(r);
+    CREDO_FALSUM(chorda_continet(textus, chorda_ex_literis(digestum,
+        p)));
+    CREDO_FALSUM(chorda_continet(textus, chorda_ex_literis(tessera,
+        p)));
+
+    CREDO_GRADUS("errores nominati");
+    CREDO_VERUM(_vitium_administrationis(_administrare(e, &locus,
+        "communio_membrum_addere",
+        "{\"spatium\":\"familia\",\"nomen\":\"nemo\"}", p)));
+    CREDO_VERUM(_vitium_administrationis(_administrare(e, &locus,
+        "communio_apparatum_addere", argumenta, p)));
+    CREDO_VERUM(_vitium_administrationis(_administrare(e, &locus,
+        "communio_apparatum_revocare",
+        "{\"id\":\"01ZZZZZZZZZZZZZZZZZZZZZZZZ\"}", p)));
+
+    CREDO_GRADUS("revocatus: 401");
+    sprintf(argumenta, "{\"id\":\"%.*s\"}", (integer)id.mensura,
+        (constans character*)id.datum);
+    CREDO_FALSUM(_vitium_administrationis(_administrare(e, &locus,
+        "communio_apparatum_revocare", argumenta, p)));
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /communio/acta?post=0",
+        caput, NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);
+    _finire(e, &locus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_invitatione", _sectio_sine_invitatione, NIHIL, NIHIL, NIHIL,
@@ -2911,6 +2989,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "adm_status", _sectio_administratio_status, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "communio", _sectio_communio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "adm_invitare", _sectio_administratio_invitare, NIHIL, NIHIL,
         NIHIL,
         NIHIL },

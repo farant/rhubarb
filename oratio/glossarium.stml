@@ -1880,6 +1880,13 @@
     <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <!-- transformare T4 (2026-10-26): rescriptio vocationum per regulas (silva/fontes/silva_forma.h) -->
+  <vocabulum lemma="rescriptio" lingua="latina" classis="substantivum" nota="Latinum serum (rescriptio, -onis f., a rescribere: responsum scriptum; Du Cange): hic rescriptio codicis - situs vocationis per regulam transformationis rescriptus (silva_rescriptiones_parare, transformare T4); WORDS caret">
+    <forma textus="rescriptio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="cryptographia" lingua="latina" classis="substantivum" nota="Latina nova (cryptographia, -ae f.; Graece kryptos + graphein, ut 'Cryptographia' Wilkins/Schott saec. XVII): ars scripturae occultae - hic cifrae in clausura applicationis (nundinae_apple_cryptographia, ITSAppUsesNonExemptEncryption); WORDS caret">
     <forma textus="cryptographia" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="cryptographiae" casus="genitivus" numerus="singularis" genus="femininum"/>
@@ -1892,6 +1899,14 @@
     <forma textus="pinace" casus="ablativus" numerus="singularis" genus="masculinum"/>
     <forma textus="pinaces" casus="nominativus" numerus="pluralis" genus="masculinum"/>
     <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+
+  <vocabulum lemma="replica" lingua="latina" classis="substantivum" nota="replica, -ae f. (ex replicare, 'iterum plicare'; Latinitas recentior): exemplar documenti quod scriptor proprium tenet - hic volumen ut scriptor actuum (communio D2b, volumen_replica); WORDS caret">
+    <forma textus="replica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="replicas" casus="accusativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
 </glossarium>

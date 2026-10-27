@@ -6588,6 +6588,64 @@ def renominare(vetus, novum, viae=None, scribere=False, intra_via=None):
     return r.stdout
 
 
+# transformare (spec project-specs/transformare-spec.md V): argv in, TSV ex.
+# genus situs: 'situs' | 'macro' (census; clavis = nomen macro) | 'facta' |
+# 'recusata' (regulae; regula = index, causa = verdictum nominatum).
+Situs = namedtuple('Situs', 'genus via linea columna clavis scriptura')
+Census = namedtuple('Census', 'situs fractae')
+Rescriptio = namedtuple('Rescriptio',
+                        'genus via linea columna regula causa clavis')
+Transformatio = namedtuple('Transformatio', 'rescriptiones fractae nuntii rc')
+
+
+def _fractas_et_reliquas(effusum):
+    """lineae 'fracta' (via, causa) separatim; ceterae ut TSV"""
+    fractae, ceterae = [], []
+    for o in _tsv(effusum):
+        if o and o[0] == 'fracta' and len(o) >= 3:
+            fractae.append((o[1], o[2]))
+        elif o:
+            ceterae.append(o)
+    return fractae, ceterae
+
+
+def census(functio, viae):
+    """census situum functionis (transformare.sh -census -machina): Census
+    (situs = [Situs] ordine plagularum, fractae = [(via, causa)] plagulae
+    non iudicatae). Directoria recursive (.c/.h)."""
+    r = _curre(['./silva/transformare.sh', '-census', functio]
+               + [_absoluta(v) for v in viae] + ['-machina'])
+    if r.returncode == 2:
+        raise SilvaError('transformare -census fractum: %s'
+                         % r.stderr.strip()[-300:])
+    fractae, ceterae = _fractas_et_reliquas(r.stdout)
+    situs = [Situs(o[0], o[1], int(o[2]), int(o[3]), o[4],
+                   o[5] if len(o) > 5 else '')
+             for o in ceterae if o[0] in ('situs', 'macro') and len(o) >= 5]
+    return Census(situs, fractae)
+
+
+def transformare(regulae, viae, scribere=False):
+    """regulae STML super viae (transformare.sh -regulae -machina):
+    Transformatio (rescriptiones = [Rescriptio], fractae, nuntii = summa
+    et SCRIPTA/NON SCRIPTA ex stderr, rc: 0 omnes rescripti/scripti, 1
+    recusati aut non scripti). Sine scribere nihil scribitur; scribere =
+    custodia (examen + clang) per plagulam, deinde scriptio."""
+    args = ['./silva/transformare.sh', '-regulae', _absoluta(regulae)] + \
+        [_absoluta(v) for v in viae] + ['-machina']
+    if scribere:
+        args.append('-scribere')
+    r = _curre(args)
+    if r.returncode == 2:
+        raise SilvaError('transformare -regulae fractum: %s'
+                         % r.stderr.strip()[-300:])
+    fractae, ceterae = _fractas_et_reliquas(r.stdout)
+    res = [Rescriptio(o[0], o[1], int(o[2]), int(o[3]), int(o[4]), o[5],
+                      o[6] if len(o) > 6 else '')
+           for o in ceterae if o[0] in ('facta', 'recusata') and len(o) >= 6]
+    return Transformatio(res, fractae, r.stderr, r.returncode)
+
+
 def _ut_plagula(x, praefixum):
     """x = via aut textus (cum '\\n'): via temporaria pro textu"""
     if '\n' not in x and os.path.exists(_absoluta(x)):

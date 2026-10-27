@@ -68,6 +68,7 @@
 #include "extensio.h"
 #include "processus.h"
 #include "fenestra_tempus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1677,7 +1678,7 @@ main (
     tempora = getenv("D125_TEMPORA") != NULL;
     pins_emit = getenv("D125_PINS") != NULL;
     if (getenv("D125_VICTORES") != NULL) {
-        victores = fopen(getenv("D125_VICTORES"), "w");
+        victores = lectiones_fopen(getenv("D125_VICTORES"), "w");
         if (victores == NULL) die("D125_VICTORES");
     }
     {

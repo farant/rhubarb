@@ -51,7 +51,7 @@ declare -a INCLUDE_FLAGS=(
 # ---- 1. dependency objects (rhubarb libs + the silva lexer) ----
 declare -a RADIX_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio"
+    "friatio" "lectiones"
 )
 # capita mutata sine recompilo = corruptio ABI (classis excubitoris;
 # custos tesserae aequatus - desideratum 01KY2P5X)

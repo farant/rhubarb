@@ -234,14 +234,14 @@ _commissum_obtinere (
         via_temporaria);
     si (system(mandatum) != 0)
     {
-        (vacuum)remove(via_temporaria);
+        (vacuum)filum_delere(via_temporaria);
         redde NIHIL;
     }
     /* filius scripsit: exitus cursus, non ingressus (fabrica plan 5
      * T5b). Contentum (HEAD) solum in commentum struere.sh it */
     lectiones_notare(LECTIO_SCRIPSIT, via_temporaria);
     textus = filum_legere_totum(via_temporaria, piscina);
-    (vacuum)remove(via_temporaria);
+    (vacuum)filum_delere(via_temporaria);
     finis = textus.mensura;
     dum (   finis > 0 && (textus.datum[finis - 1] == (i8)'\n'
         || textus.datum[finis - 1] == (i8)'\r'))

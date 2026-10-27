@@ -107,7 +107,7 @@ awk -F'\t' '
 # ligator (mechanismus communis; obiecta silva/build a vecte silvae)
 # ------------------------------------------------------------------
 for o in piscina chorda chorda_aedificator xar tabula_dispersa \
-         friatio silva_token silva_lexema materia_token; do
+         friatio lectiones silva_token silva_lexema materia_token; do
     [ -f "silva/build/$o.o" ] \
         || si_fracta "silva/build/$o.o deest (curre ./silva/amalgamare.sh prius)"
 done
@@ -124,6 +124,7 @@ clang "${VEXILLA[@]}" -Iinclude -Isilva/fontes -Imateria/fontes \
     silva/build/piscina.o silva/build/chorda.o \
     silva/build/chorda_aedificator.o silva/build/xar.o \
     silva/build/tabula_dispersa.o silva/build/friatio.o \
+    silva/build/lectiones.o \
     silva/build/silva_token.o silva/build/silva_lexema.o \
     silva/build/materia_token.o \
     -o "$STATIO/ligator" || si_fracta "constructio ligatoris"

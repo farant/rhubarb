@@ -2,6 +2,7 @@
 
 #include "silva_coquere.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -399,7 +400,7 @@ silva_gen_coquere (
      * Plagula .h
      * ---------------------------------------- */
     sprintf(via, "%s.h", basis_via);
-    pl = fopen(via, "wb");
+    pl = lectiones_fopen(via, "wb");
     si (pl == NIHIL)
     {
         redde FALSUM;
@@ -525,7 +526,7 @@ silva_gen_coquere (
      * Plagula .c
      * ---------------------------------------- */
     sprintf(via, "%s.c", basis_via);
-    pl = fopen(via, "wb");
+    pl = lectiones_fopen(via, "wb");
     si (pl == NIHIL)
     {
         redde FALSUM;
@@ -1502,7 +1503,7 @@ _splicare (
         }
         suffixi_initium = (memoriae_index)(l - buffer);
     }
-    pl = fopen(via, "wb");
+    pl = lectiones_fopen(via, "wb");
     si (pl == NIHIL)
     {
         fprintf(stderr, "coquere: plagula non scripta: %s\n", via);

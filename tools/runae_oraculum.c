@@ -22,6 +22,7 @@
 #include "latina.h"
 #include "runae.h"
 #include "utf8.h"
+#include "lectiones.h"
 #include <dlfcn.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -305,7 +306,7 @@ _aurum_scribere (
     constans character* via,
     constans character* versio)
 {
-    FILE* f        = fopen(via, "w");
+    FILE* f        = lectiones_fopen(via, "w");
      s32  initium  = ZEPHYRUM;
      s32  runa;
      s32  latitudo;
@@ -463,7 +464,7 @@ interior integer
 _graphemata (
     constans character* via_auri)
 {
-    FILE* aurum = fopen(via_auri, "w");
+    FILE* aurum = lectiones_fopen(via_auri, "w");
      i32  j;
      i32  discordiae_totae = ZEPHYRUM;
 

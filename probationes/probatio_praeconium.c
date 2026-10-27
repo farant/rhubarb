@@ -51,7 +51,7 @@ aream_purgare (
     si (a)
     {
         (vacuum)filum_delere(a->liber);
-        (vacuum)rmdir(a->directorium);
+        (vacuum)filum_delere(a->directorium);
     }
 }
 

@@ -11,6 +11,7 @@
 #include "paginatio.h"
 #include "gesta_inventarium.h"
 #include "gesta_expeditio.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1946,7 +1947,7 @@ _annalem_appendere (
         json_chorda_creare(m->piscina, creatum));
     textus = json_scribere(linea, m->piscina);
 
-    pl = fopen(m->via_annalium, "ab");
+    pl = lectiones_fopen(m->via_annalium, "ab");
     si (pl == NIHIL)
     {
         redde FALSUM;
@@ -3757,7 +3758,7 @@ gesta_aperire (
     }
     m->via_annalium = _litterae(piscina, _ch(via_annalium));
     /* annales creantur si absunt */
-    pl = fopen(m->via_annalium, "ab");
+    pl = lectiones_fopen(m->via_annalium, "ab");
     si (pl == NIHIL)
     {
         scrinium_claudere(m->scrinium);

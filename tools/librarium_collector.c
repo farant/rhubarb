@@ -17,6 +17,7 @@
 #include "filum.h"
 #include "via.h"
 #include "internamentum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -59,7 +60,7 @@ interior b32
 _creare_directorium (
     constans character* via)
 {
-    si (mkdir(via, 0755) == 0)
+    si (filum_directorium_creare(via))
     {
         redde VERUM;
     }
@@ -94,7 +95,7 @@ _copiare_filum (
         redde FALSUM;
     }
 
-    out = fopen(destinatio, "wb");
+    out = lectiones_fopen(destinatio, "wb");
     si (out == NIHIL)
     {
         redde FALSUM;
@@ -521,7 +522,7 @@ principale (
         "%s/librarium.stml", output_dir);
     stml_output = _generare_stml(libri_collecta, piscina);
 
-    out_file = fopen(output_stml_via, "w");
+    out_file = lectiones_fopen(output_stml_via, "w");
     si (out_file != NIHIL)
     {
         fwrite(stml_output.datum, 1, stml_output.mensura, out_file);
@@ -539,7 +540,7 @@ principale (
         output_dir);
     toml_output = _generare_toml(piscina);
 
-    out_file = fopen(output_toml_via, "w");
+    out_file = lectiones_fopen(output_toml_via, "w");
     si (out_file != NIHIL)
     {
         fwrite(toml_output.datum, 1, toml_output.mensura, out_file);

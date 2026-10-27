@@ -9,6 +9,7 @@
  * Vide project-specs/natura-canones-generati-spec.md.
  */
 #include "natura_canones.h"
+#include "lectiones.h"
 #include <string.h>
 
 /* receptacula: nomen naturae cum praefixo, et praestitutum planatum.
@@ -1688,7 +1689,7 @@ _censum_seminum_scribere (
     i32   i;
     i32   numerus;
 
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (!f)
     {
         fprintf(stderr,

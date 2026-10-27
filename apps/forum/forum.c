@@ -44,6 +44,7 @@
 #include "qr.h"
 #include "rete.h"
 #include "processus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -1576,9 +1577,9 @@ _tergale_ponere (JsonValor* argumenta, Piscina* piscina,
     {
         FILE* filum;
 
-        (vacuum)mkdir("privata", 0755);
-        (vacuum)mkdir("privata/forum", 0755);
-        filum = fopen(FORUM_TERGALE_VIA, "wb");
+        (vacuum)filum_directorium_creare("privata");
+        (vacuum)filum_directorium_creare("privata/forum");
+        filum = lectiones_fopen(FORUM_TERGALE_VIA, "wb");
         si (filum != NIHIL)
         {
             si (fwrite(imago.datum, I,
@@ -1661,7 +1662,7 @@ _tergale_delere (
     (vacuum)argumenta;
     (vacuum)datum;
     (vacuum)culpa;
-    (vacuum)remove(FORUM_TERGALE_VIA);
+    (vacuum)filum_delere(FORUM_TERGALE_VIA);
     json_objectum_ponere(fructus, "bene",
         json_boolean_creare(piscina, VERUM));
     redde fructus;
@@ -1894,6 +1895,8 @@ _tesseram_parare (
         redde NIHIL;
     }
     sprintf(via, "%s/.rhubarb", domus);
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>secretum servi
+     * tessera forum: directorium 0700, extra librum lectionum */
     (vacuum)mkdir(via, 0700);
     sprintf(via, "%s/.rhubarb/forum.tessera", domus);
 
@@ -1903,6 +1906,8 @@ _tesseram_parare (
         redde NIHIL;
     }
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>secretum servi
+     * tessera forum numquam per librum lectionum (sigillaretur) */
     f = fopen(via, "r");
     si (f != NIHIL)
     {
@@ -1935,6 +1940,9 @@ _tesseram_parare (
     }
     tessera[64] = '\0';
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>secretum servi
+     * <tolera codex="SCRIPTURA_PRAETERITA" (>secretum servi
+     * tessera forum numquam per librum lectionum (sigillaretur) */
     f = fopen(via, "w");
     si (f == NIHIL)
     {
@@ -1942,6 +1950,8 @@ _tesseram_parare (
     }
     fprintf(f, "%s\n", tessera);
     fclose(f);
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>secretum servi
+     * modus 0600 tesserae, extra librum lectionum */
     (vacuum)chmod(via, 0600);
     imprimere("[forum] tessera nova scripta: %s\n", via);
     redde tessera;

@@ -10,6 +10,8 @@
 #include "cives.h"
 #include "invitationes.h"
 #include "admissio.h"
+#include "communio_servus.h"
+#include "moneta.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -465,6 +467,141 @@ _civem_restituere (
     _statum_reddere(v, &x, CIVIS_ACTIVUS, VERUM, ZEPHYRUM, ZEPHYRUM);
 }
 
+/* ---- communio (plan-2 T7): spatia et apparatus. Digestum tesserae
+ * solum intrat (apparatus tesseram ipse cudit: communio tessera);
+ * nec tessera nec digestum umquam redditur ---- */
+
+interior vacuum
+_communio_membrum_addere (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+        Civis  x;
+       chorda  spatium;
+    JsonValor* r;
+
+    si (!_civem_invenire(v, &x))
+    {
+        redde;
+    }
+    (vacuum)mcp_argumentum_chorda(v, "spatium", &spatium);
+    si (!communio_membrum_addere(e->communio, spatium, x.id))
+    {
+        _vitium(v, "membrum addi nequit (persona non activa aut spatium"
+            " vacuum)");
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "spatium", json_chorda_creare(p, spatium));
+    json_objectum_ponere(r, "civis", json_chorda_creare(p, x.id));
+    json_objectum_ponere(r, "nomen", json_chorda_creare(p,
+        x.nomen_usoris));
+    mcp_respondere_json(v, r);
+}
+
+interior vacuum
+_communio_apparatum_addere (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+        Civis  x;
+       chorda  spatium;
+       chorda  titulus;
+       chorda  digestum;
+    character  id[MONETA_ULID_MENSURA];
+    JsonValor* r;
+
+    si (!_civem_invenire(v, &x))
+    {
+        redde;
+    }
+    (vacuum)mcp_argumentum_chorda(v, "spatium", &spatium);
+    (vacuum)mcp_argumentum_chorda(v, "titulus", &titulus);
+    (vacuum)mcp_argumentum_chorda(v, "digestum", &digestum);
+    si (!communio_apparatum_addere(e->communio, x.id, spatium, titulus,
+            digestum, id))
+    {
+        _vitium(v, "apparatus addi nequit (persona non activa, non"
+            " membrum spatii, aut digestum malum vel iam usum)");
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "id", json_chorda_creare_literis(p, id));
+    json_objectum_ponere(r, "spatium", json_chorda_creare(p, spatium));
+    json_objectum_ponere(r, "titulus", json_chorda_creare(p, titulus));
+    mcp_respondere_json(v, r);
+}
+
+interior vacuum
+_communio_apparatum_revocare (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+       chorda  id;
+    JsonValor* r;
+
+    (vacuum)mcp_argumentum_chorda(v, "id", &id);
+    si (!communio_apparatum_revocare(e->communio, id))
+    {
+        _vitium(v, "apparatus ignotus");
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "id", json_chorda_creare(p, id));
+    json_objectum_ponere(r, "revocatus", json_boolean_creare(p, VERUM));
+    mcp_respondere_json(v, r);
+}
+
+interior vacuum
+_communio_apparatus_enumerare (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+          Xar* l;
+    JsonValor* r;
+    JsonValor* t;
+          i32  i;
+
+    l = communio_apparatus_enumerare(e->communio, p);
+    si (!l)
+    {
+        _vitium(v, "registrum legi nequit");
+        redde;
+    }
+    t = json_tabulatum_creare(p);
+    per (i = ZEPHYRUM; i < xar_numerus(l); i++)
+    {
+        CommunioApparatus* a = (CommunioApparatus*)xar_obtinere(l, i);
+                JsonValor* o = json_objectum_creare(p);
+                    Civis  x;
+
+        json_objectum_ponere(o, "id", json_chorda_creare(p, a->id));
+        json_objectum_ponere(o, "civis", json_chorda_creare(p,
+            a->civis));
+        si (cives_per_id(ianua_cives(e->ianua), a->civis, &x, p))
+        {
+            json_objectum_ponere(o, "nomen", json_chorda_creare(p,
+                x.nomen_usoris));
+        }
+        json_objectum_ponere(o, "spatium", json_chorda_creare(p,
+            a->spatium));
+        json_objectum_ponere(o, "titulus", json_chorda_creare(p,
+            a->titulus));
+        json_objectum_ponere(o, "replica", json_chorda_creare(p,
+            a->replica));
+        json_objectum_ponere(o, "revocatus", json_boolean_creare(p,
+            a->revocatus));
+        json_tabulatum_addere(t, o);
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "apparatus", t);
+    mcp_respondere_json(v, r);
+}
+
 /* ---- tabula ---- */
 
 hic_manens constans McpArgumentum ARG_INVITARE[] = {
@@ -481,6 +618,27 @@ hic_manens constans McpArgumentum ARG_ID_INVITATIONIS[] = {
 
 hic_manens constans McpArgumentum ARG_NOMEN[] = {
     { "nomen", "nomen usoris (handle)", MCP_CHORDA, VERUM, NIHIL }
+};
+
+hic_manens constans McpArgumentum ARG_COMMUNIO_MEMBRUM[] = {
+    { "spatium", "spatium (e.g. familia)", MCP_CHORDA, VERUM, NIHIL },
+    { "nomen", "nomen usoris (handle)", MCP_CHORDA, VERUM, NIHIL }
+};
+
+hic_manens constans McpArgumentum ARG_COMMUNIO_APPARATUS[] = {
+    { "nomen", "nomen usoris cuius apparatus est", MCP_CHORDA, VERUM,
+        NIHIL },
+    { "spatium", "spatium apparatus (membrum esse debet)", MCP_CHORDA,
+        VERUM, NIHIL },
+    { "titulus", "nomen apparatus (e.g. Macintosh)", MCP_CHORDA, VERUM,
+        NIHIL },
+    { "digestum", "SHA-256 hex tesserae (ex 'communio tessera'; numquam"
+        " tessera ipsa)", MCP_CHORDA, VERUM, NIHIL }
+};
+
+hic_manens constans McpArgumentum ARG_ID_APPARATUS[] = {
+    { "id", "id apparatus (ex communio_apparatus_enumerare)",
+        MCP_CHORDA, VERUM, NIHIL }
 };
 
 hic_manens constans McpInstrumentum INSTRUMENTA_ADMINISTRATIONIS[] = {
@@ -508,7 +666,25 @@ hic_manens constans McpInstrumentum INSTRUMENTA_ADMINISTRATIONIS[] = {
         FALSUM, VERUM, _civem_suspendere },
     { "civem_restituere", "Civem suspensum restituit (intrare et"
         " Claudium reconnectere debet).", ARG_NOMEN, I,
-        SCOPUS_ADMINISTRATIONIS, FALSUM, FALSUM, _civem_restituere }
+        SCOPUS_ADMINISTRATIONIS, FALSUM, FALSUM, _civem_restituere },
+    { "communio_membrum_addere", "Civem in spatium communionis addit"
+        " (iteratum idem).", ARG_COMMUNIO_MEMBRUM, II,
+        SCOPUS_ADMINISTRATIONIS, FALSUM, FALSUM,
+        _communio_membrum_addere },
+    { "communio_apparatum_addere", "Apparatum per digestum tesserae"
+        " inscribit; id reddit.", ARG_COMMUNIO_APPARATUS, IV,
+        SCOPUS_ADMINISTRATIONIS, FALSUM, FALSUM,
+        _communio_apparatum_addere },
+    { "communio_apparatum_revocare", "Apparatum revocat: communicare"
+        " desinit, acta eius manent.", ARG_ID_APPARATUS, I,
+        SCOPUS_ADMINISTRATIONIS, FALSUM, VERUM,
+        _communio_apparatum_revocare },
+    { "communio_apparatus_enumerare",
+        "Apparatus omnes: persona, spatium,"
+        " titulus, replica, revocatus (sine digestis).", NIHIL,
+            ZEPHYRUM,
+        SCOPUS_ADMINISTRATIONIS, VERUM, FALSUM,
+        _communio_apparatus_enumerare }
 };
 
 McpServus*
@@ -527,9 +703,10 @@ exemplar_administrationem_creare (
     mc.versio   = "1";
     mc.instructiones  =
         "Administratio exemplaris per canalem localem (uid servi): "
-        "status, invitationes, cives (suspendere, restituere).";
+        "status, invitationes, cives (suspendere, restituere), "
+        "communio (membra, apparatus).";
     mc.instrumenta  = INSTRUMENTA_ADMINISTRATIONIS;
-    mc.numerus      = VII;
+    mc.numerus      = XI;
     mc.datum        = e;
     redde mcp_servus_creare(&mc, piscina);
 }

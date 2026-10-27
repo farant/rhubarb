@@ -244,7 +244,7 @@ principale (
     crudum = filum_legere_totum(via, piscina);
     clavis = chorda_praecidere(crudum);
 
-    (vacuum)unlink(RATIONARIUM);
+    (vacuum)filum_delere(RATIONARIUM);
     o                  = vates_optiones_ordinariae();
     o.rationarium_via  = RATIONARIUM;
     o.herbarium_via    = HERBARIUM;

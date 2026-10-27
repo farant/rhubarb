@@ -18,6 +18,7 @@
 #include "toml.h"
 #include "filum.h"
 #include "flatura.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -489,7 +490,7 @@ _append_assets (
         cursor += XVI;
 
         /* Now write entire blob in one operation */
-        target_file = fopen(target_path, "ab");
+        target_file = lectiones_fopen(target_path, "ab");
         si (target_file == NIHIL)
         {
             fprintf(stderr,

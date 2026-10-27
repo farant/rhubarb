@@ -15,6 +15,7 @@
 #include "piscina.h"
 #include "credo.h"
 #include "ludus_tessera_pons.h"
+#include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -223,7 +224,7 @@ _pontem_probare (
         (vacuum)lseek(fossa, ZEPHYRUM, SEEK_SET);
         n = (s32)read(fossa, lecti, XVI);
         (vacuum)close(fossa);
-        (vacuum)unlink(via);
+        (vacuum)filum_delere(via);
         /* intrare/egredi nihil; scribere solum "abc" */
         CREDO_VERUM (_aequat(lecti, (i32)(n > ZEPHYRUM ? n : ZEPHYRUM),
             "abc"));

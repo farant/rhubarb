@@ -10,6 +10,7 @@
 #include "via.h"
 #include "lectiones.h"
 #include "processus.h"
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,6 +58,8 @@ _sectio_prima (
 
     piscina = c->piscina;
     unsetenv("FABRICA_LECTIONES");
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
     (vacuum)remove(LIBER);
     (vacuum)filum_legere_totum("probationes/probatio_lectiones.c",
         piscina);
@@ -96,6 +99,8 @@ _sectio_tertia (
      chorda  liber;
 
     piscina = c->piscina;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
     (vacuum)remove(LIBER);
     /* plagula delenda SINE libro creata: S eius solum ex deletione */
     (vacuum)filum_scribere_literis("build/probatio_lectiones_d.txt",
@@ -127,6 +132,8 @@ _sectio_quarta (
      chorda  liber;
 
     piscina = c->piscina;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
     (vacuum)remove(LIBER);
     setenv("FABRICA_LECTIONES", LIBER, I);
     {
@@ -171,6 +178,8 @@ _sectio_quarta (
         "X\tinclude/latina.h\n", piscina)));
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "A\tinclude/nusquam_iii.h\n", piscina)));
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
     (vacuum)remove("build/probatio_lectiones_w.txt");
 }
 
@@ -189,6 +198,8 @@ _sectio_quinta (
           i32 omnes;
           i32 integrae;
 
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+         * liber sub probatione extra canalem purgatur */
         (vacuum)remove(LIBER);
         per (k = ZEPHYRUM; k < II; k++)
         {
@@ -233,6 +244,8 @@ _sectio_exsecutionis (
     verum[I]   = NIHIL;
     absens[0]  = "programma_nusquam_exstans";
     absens[I]  = NIHIL;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
     (vacuum)remove(LIBER);
     setenv("FABRICA_LECTIONES", LIBER, I);
     r = processus_exsequi(verum, 5000, piscina);
@@ -245,6 +258,8 @@ _sectio_exsecutionis (
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "P\tprogramma_nusquam_exstans\n", piscina)));
     /* sine libro: nihil notatur */
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
     (vacuum)remove(LIBER);
     r = processus_exsequi(verum, 5000, piscina);
     CREDO_VERUM(r.successus);
@@ -275,6 +290,8 @@ _sectio_modi_arboris (
     CREDO_NECESSE(filum_scribere_literis(plagula, "m\n"));
     CREDO_NECESSE(filum_directorium_creare(directorium));
     CREDO_NECESSE(filum_scribere_literis(filius, "f\n"));
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
     (vacuum)remove(LIBER);
     setenv("FABRICA_LECTIONES", LIBER, I);
     CREDO_VERUM(filum_modum_ponere(plagula, 0600));
@@ -294,6 +311,32 @@ _sectio_modi_arboris (
         piscina), piscina)));
 }
 
+/* errno SERVATUR (2026-10-27): notatio errno vocantis non mutat -
+ * liber in directorio absente (open libri fallit, errno ponit) et
+ * liber validus (appendit) */
+interior vacuum
+_sectio_errno (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    setenv("FABRICA_LECTIONES",
+        "build/probatio_lectiones_nusquam/liber.tsv", I);
+    errno = EDOM;
+    lectiones_notare(LECTIO_SCRIPSIT, "build/probatio_lectiones_x");
+    CREDO_AEQUALIS_S32((s32)errno, (s32)EDOM);
+    setenv("FABRICA_LECTIONES", LIBER, I);
+    errno = EDOM;
+    lectiones_notare(LECTIO_LEGIT, "build/probatio_lectiones_y");
+    CREDO_AEQUALIS_S32((s32)errno, (s32)EDOM);
+    unsetenv("FABRICA_LECTIONES");
+    /* notatio sine variabili descriptorem libri CLAUDIT - aliter
+     * sectio sequens (III) in inodum deletum scriberet */
+    lectiones_notare(LECTIO_LEGIT, "build/probatio_lectiones_y");
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
+    (vacuum)remove(LIBER);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I. variabilis absens: nihil scribitur", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
@@ -307,6 +350,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "IIe. modus et arbor deleta (S, fabrica-8 T1)",
         _sectio_modi_arboris, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IIf. errno servatur", _sectio_errno, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "III. filii duo paralleli: lineae integrae", _sectio_quinta,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

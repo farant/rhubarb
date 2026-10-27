@@ -11,6 +11,7 @@
 #include "credo.h"
 #include "piscina.h"
 #include "crusta_computus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -171,7 +172,7 @@ _scaenam_probare (
     si (scribere)
     {
         CREDO_GRADUS ("AURUM SCRIBITUR - AUDI causam");
-        aurum = fopen(via_auri, "w");
+        aurum = lectiones_fopen(via_auri, "w");
         CREDO_NON_NIHIL (aurum);
         si (aurum != NIHIL)
         {

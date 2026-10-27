@@ -198,6 +198,7 @@
     <exitus via="silva/quaestio_fontes_generata.sh" provenientia="regeneratio"/>
     <exitus via="silva/renominare_fontes_generata.sh" provenientia="regeneratio"/>
     <exitus via="silva/selecta_fontes_generata.sh" provenientia="regeneratio"/>
+    <exitus via="silva/transformare_fontes_generata.sh" provenientia="regeneratio"/>
   </actio>
   <!-- PROBATIONES SILVAE (cursores ad gradus T5, 2026-10-13): suita ut
        compositum - quaeque probatio actio sua (clausura aedilis, area,

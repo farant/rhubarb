@@ -20,6 +20,7 @@
 
 #include "postulata_posix.h"
 #include "officina_machinula.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -1455,7 +1456,8 @@ _aed_fopen (
         }
     }
     errno = ZEPHYRUM;
-    pl = fopen((constans character*)(memoriae_index)a[ZEPHYRUM],
+    pl =
+        lectiones_fopen((constans character*)(memoriae_index)a[ZEPHYRUM],
         (constans character*)(memoriae_index)a[I]);
     si (pl != NIHIL)
     {
@@ -1652,7 +1654,11 @@ _aed_remove (
         _recusare(m, "remove in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int) - notatur supra */
     *fr = (i64)(s64)remove(
         (constans character*)(memoriae_index)a[ZEPHYRUM]);
     _errno_retro(m);
@@ -1672,7 +1678,13 @@ _aed_rename (
         _recusare(m, "rename in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[I]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int) - notatur supra */
     *fr = (i64)(s64)rename(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
         (constans character*)(memoriae_index)a[I]);
@@ -1691,7 +1703,7 @@ _aed_stat (
 {
     (vacuum)n;
     errno = ZEPHYRUM;
-    *fr = (i64)(s64)stat(
+    *fr = (i64)(s64)lectiones_stat(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
         (structura stat*)(memoriae_index)a[I]);
     _errno_retro(m);
@@ -1711,7 +1723,11 @@ _aed_mkdir (
         _recusare(m, "mkdir in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int, modus quivis) - notatur supra */
     *fr = (i64)(s64)mkdir(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
         (mode_t)(s64)_canonicum(a[I], MEDULLA_TYPUS_S32));
@@ -1788,7 +1804,11 @@ _aed_unlink (
         _recusare(m, "unlink in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int) - notatur supra */
     *fr = (i64)(s64)unlink(
         (constans character*)(memoriae_index)a[ZEPHYRUM]);
     _errno_retro(m);

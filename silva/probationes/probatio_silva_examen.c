@@ -1172,6 +1172,46 @@ s32 principale (vacuum)
         "    return a - b;\n"
         "}\n",
         (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
+    /* TOLERA in commentario plurium linearum: lineam post FINEM
+     * commentarii tegit (codices duo eidem sedi - canalis ipse,
+     * 96+97 - commentarium unum supra sententiam) */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{\n"
+        "    /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>probatio finis\n"
+        "     * causa altera linea\n"
+        "     * et tertia */\n"
+        "    return a - b;\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{\n"
+        "    /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>probatio prima\n"
+        "     * <tolera codex=\"CHORDA_NUDA\" (>probatio altera */\n"
+        "    return a - b;\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, ZEPHYRUM);
+    /* ... CHORDA_NUDA non flagrat: elementum alterum IRRITUM
+     * manet (finis commentarii non omnia absolvit) */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{\n"
+        "    /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>probatio prima\n"
+        "     * <tolera codex=\"CHORDA_NUDA\" (>probatio altera */\n"
+        "    return a - b;\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_TOLERA_IRRITUM, I);
+    /* linea vacua inter commentarium et sententiam: NON tegit */
+    _codicem_probare(piscina,
+        "static unsigned f(unsigned char a, unsigned char b)\n"
+        "{\n"
+        "    /* <tolera codex=\"CONVERSIO_SIGNI_SEVERA\" (>probatio finis\n"
+        "     * causa altera linea */\n"
+        "\n"
+        "    return a - b;\n"
+        "}\n",
+        (s32)EXAMEN_CODEX_CONVERSIO_SIGNI_SEVERA, I);
     /* sine causa: NON supprimit + IRRITUM */
     _codicem_probare(piscina,
         "static unsigned f(unsigned char a, unsigned char b)\n"

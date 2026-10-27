@@ -21,6 +21,7 @@
 #include "imago.h"
 #include "imago_png.h"
 #include "imago_collatio.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -403,7 +404,7 @@ _sectio_octava (
         CREDO_AEQUALIS_S32((s32)collatio.sententia,
             (s32)COLLATIO_CONGRUUNT);
 
-        remove(via);
+        (vacuum)filum_delere(via);
 
         /* Via impossibilis: culpa NOMINATUR, non tacetur */
         png = imago_png_scribere(&fons, "/nusquam/omnino/x.png",
@@ -441,7 +442,7 @@ _sectio_nona (
         CREDO_VERUM(imago_mensuras_ex_file(via, &latitudo, &altitudo));
         CREDO_AEQUALIS_I32(latitudo, (i32)XXXII);
         CREDO_AEQUALIS_I32(altitudo, (i32)XVI);
-        remove(via);
+        (vacuum)filum_delere(via);
 
         png = imago_png_codificare(&fons, piscina);
         CREDO_VERUM(png.successus);

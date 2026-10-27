@@ -12,6 +12,7 @@
 #include "piscina.h"
 #include "uuid.h"
 #include "credo.h"
+#include "filum.h"
 #include <stdio.h>
 #include <unistd.h>  /* pro unlink */
 
@@ -47,7 +48,7 @@ _creare_repo_nuntium (
     Persistentia* pers;
 
     /* Delere file si existit */
-    unlink(VIA_PROBATIO);
+    (vacuum)filum_delere(VIA_PROBATIO);
 
     pers = persistentia_nuntium_creare(piscina, VIA_PROBATIO);
     si (!pers)
@@ -572,7 +573,7 @@ probare_replay(Piscina* piscina)
                     Xar* relatae;
 
     /* Delere file antiquum */
-    unlink(VIA_PROBATIO);
+    (vacuum)filum_delere(VIA_PROBATIO);
 
     /* PHASE 1: Creare et populare */
     imprimere("  Phase 1: Creare datum...\n");
@@ -659,14 +660,14 @@ probare_replay(Piscina* piscina)
     }
 
     /* Cleanup */
-    unlink(VIA_PROBATIO);
+    (vacuum)filum_delere(VIA_PROBATIO);
 }
 
 interior vacuum
 probare_continuare_post_replay(Piscina* piscina)
 {
     /* Delere file antiquum */
-    unlink(VIA_PROBATIO);
+    (vacuum)filum_delere(VIA_PROBATIO);
 
     /* PHASE 1: Creare initiale datum */
     imprimere("  Phase 1: Creare initiale...\n");
@@ -758,7 +759,7 @@ probare_continuare_post_replay(Piscina* piscina)
     }
 
     /* Cleanup */
-    unlink(VIA_PROBATIO);
+    (vacuum)filum_delere(VIA_PROBATIO);
 }
 
 
@@ -1140,7 +1141,7 @@ _sectio_secunda (
     currere_probationes_backend(repo);
 
     /* Cleanup file */
-    unlink(VIA_PROBATIO);
+    (vacuum)filum_delere(VIA_PROBATIO);
 }
 
 interior vacuum

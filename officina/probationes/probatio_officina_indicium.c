@@ -12,6 +12,7 @@
 #include "officina_machinula.h"
 #include "officina_regio.h"
 #include "credo.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -379,7 +380,7 @@ _circuitum_probare (
 
             CREDO_VERUM (octeti.mensura > ZEPHYRUM);
             octeti.datum[ZEPHYRUM]  = (i8)'X';
-            plagula                 = fopen(via_b, "wb");
+            plagula                 = lectiones_fopen(via_b, "wb");
             CREDO_NON_NIHIL (plagula);
             si (plagula != NIHIL)
             {

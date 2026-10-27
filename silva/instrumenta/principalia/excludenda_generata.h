@@ -23,7 +23,6 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
     "chorda_aequalis_case_insensitivus",
     "chorda_camelus",
     "chorda_character_ad",
-    "chorda_concatenare",
     "chorda_continet",
     "chorda_duplicare",
     "chorda_ex_buffer",

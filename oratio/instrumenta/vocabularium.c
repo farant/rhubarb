@@ -15,6 +15,7 @@
 #include "oratio_vocabularium.h"
 #include "chorda.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,7 +62,7 @@ _plagulam_scribere (
     constans character* via,
                 chorda  datum)
 {
-    FILE* f = fopen(via, "wb");
+    FILE* f = lectiones_fopen(via, "wb");
      b32  sanum;
 
     si (f == NIHIL)

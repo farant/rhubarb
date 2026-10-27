@@ -29,6 +29,7 @@
 #include "natura.h"
 #include "filum.h"
 #include "iter_directoria.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -686,7 +687,7 @@ _paginam_scribere (
     i32   g_i;
     i32   l_i;
 
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (!f)
     {
         redde FALSUM;
@@ -977,7 +978,7 @@ _paginam_scribere (
 
     si (fclose(f) != ZEPHYRUM)
     {
-        remove(via);
+        (vacuum)filum_delere(via);
         redde FALSUM;
     }
     redde VERUM;

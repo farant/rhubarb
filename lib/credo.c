@@ -1701,14 +1701,20 @@ _credo_arborem_delere (
          character    filius[DXII];
                b32    bene;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>credo sine filo
+     * credo spec 2 VI.2: area suitae (TMPDIR) purgatur */
     si (lstat(via, &st) != ZEPHYRUM)
     {
         redde errno == ENOENT;
     }
     si (!S_ISDIR(st.st_mode))
     {
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>credo sine filo
+         * credo spec 2 VI.2: area suitae (TMPDIR) purgatur */
         redde unlink(via) == ZEPHYRUM;
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>credo sine filo
+     * credo spec 2 VI.2: area suitae (TMPDIR) purgatur */
     d = opendir(via);
     si (d == NIHIL)
     {
@@ -1743,6 +1749,8 @@ _credo_arborem_delere (
         }
     }
     (vacuum)closedir(d);
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>credo sine filo
+     * credo spec 2 VI.2: area suitae (TMPDIR) purgatur */
     redde bene && rmdir(via) == ZEPHYRUM;
 }
 
@@ -1850,6 +1858,8 @@ credo_area (
     {
         /* reliquiae pid iterati prius deletae */
         si (   !_credo_arborem_delere(area->via)
+            /* <tolera codex="SCRIPTURA_PRAETERITA" (>credo sine filo
+             * credo spec 2 VI.2: area suitae creatur (0700) */
             || mkdir(area->via, 0700) != ZEPHYRUM)
         {
             redde NIHIL;
@@ -1959,6 +1969,8 @@ _credo_fixuras_notare (vacuum)
     {
         redde;
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>credo sine filo
+     * credo spec 2 VI.2: area suitae inspicitur */
     d = opendir(_credo_area_suitae.via);
     si (d == NIHIL)
     {
@@ -1988,6 +2000,8 @@ _credo_volumen_relictum (
        memoriae_index  ln;
                   b32  inventum;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>credo sine filo
+     * credo spec 2 VI.2: volumina relicta quaeruntur */
     d = opendir(_credo_area_suitae.via);
     si (d == NIHIL)
     {
@@ -2050,6 +2064,8 @@ _credo_volumina_iudicare (
             sprintf(via, "%.1000s/%s%s", _credo_area_suitae.via,
                 appellatio,
                 socii[k]);
+            /* <tolera codex="SCRIPTURA_PRAETERITA" (>credo sine filo
+             * credo spec 2 VI.2: volumen relictum deletur */
             si (unlink(via) != ZEPHYRUM && k == ZEPHYRUM)
             {
                 tectum = C;   /* deleri nequit: semel nominatum */
@@ -2445,6 +2461,9 @@ credo_suitam_currere_cum (
     plagula = NIHIL;
     si (via_verdictorum != NIHIL && via_verdictorum[0] != '\0')
     {
+        /* <tolera codex="CANALIS_PRAETERITUS" (>credo sine filo
+         * <tolera codex="SCRIPTURA_PRAETERITA" (>credo sine filo
+         * credo spec 2 VI.2: CREDO_VERDICTA scribitur */
         plagula = fopen(via_verdictorum, "w");
         si (plagula == NIHIL)
         {

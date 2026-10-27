@@ -20,6 +20,8 @@
 #include "credo.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "filum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1911,7 +1913,7 @@ probatio_vigilia (
 
     /* manifestum fictum: fons verus legati (recens per se) */
     {
-        FILE* pl = fopen(via_manifesti, "wb");
+        FILE* pl = lectiones_fopen(via_manifesti, "wb");
 
         CREDO_NON_NIHIL(pl);
         fputs("# probatio vigiliae\n"
@@ -1922,7 +1924,7 @@ probatio_vigilia (
     /* casus stalus: binarium antiquum - quivis fons clausurae
      * recentior est */
     {
-        FILE* pl = fopen(via_binarii, "wb");
+        FILE* pl = lectiones_fopen(via_binarii, "wb");
         structura utimbuf tempora;
 
         CREDO_NON_NIHIL(pl);
@@ -1930,6 +1932,8 @@ probatio_vigilia (
         fclose(pl);
         tempora.actime   = 1000000L;
         tempora.modtime  = 1000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         CREDO_VERUM(utime(via_binarii, &tempora) == ZEPHYRUM);
     }
     _vigilia_agere(p, via_binarii, via_manifesti, VERUM);
@@ -1937,7 +1941,7 @@ probatio_vigilia (
     /* casus recens: binarium nunc scriptum - vigilia quieta
      * (phantasma extra clausuram = via membri quoque probata) */
     {
-        FILE* pl = fopen(via_binarii, "wb");
+        FILE* pl = lectiones_fopen(via_binarii, "wb");
 
         CREDO_NON_NIHIL(pl);
         fputc('x', pl);
@@ -1945,8 +1949,8 @@ probatio_vigilia (
     }
     _vigilia_agere(p, via_binarii, via_manifesti, FALSUM);
 
-    remove(via_manifesti);
-    remove(via_binarii);
+    (vacuum)filum_delere(via_manifesti);
+    (vacuum)filum_delere(via_binarii);
 }
 
 /* derivatio lexici (design B 2026-07-27): praeparatio cum
@@ -2075,7 +2079,7 @@ probatio_capita_nova (
                     Piscina* piscina_capitum;
 
     (vacuum)c;
-    remove(via_capitis);
+    (vacuum)filum_delere(via_capitis);
 
     piscina_capitum = piscina_generare_dynamicum(
         "probatio_capita_nova", 8388608);
@@ -2090,7 +2094,7 @@ probatio_capita_nova (
 
     /* caput novum nascitur */
     {
-        FILE* pl = fopen(via_capitis, "wb");
+        FILE* pl = lectiones_fopen(via_capitis, "wb");
 
         CREDO_NON_NIHIL(pl);
         fputs("typedef int specimen_novum_t;\n", pl);
@@ -2104,6 +2108,8 @@ probatio_capita_nova (
 
         tempora.actime   = 1000000L;
         tempora.modtime  = 1000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         CREDO_VERUM(utime("officina/probationes/fixa", &tempora)
             == ZEPHYRUM);
     }
@@ -2131,7 +2137,7 @@ probatio_capita_nova (
      * vide legatus.worklog.md; harnessum interpositum = parcum). */
     CREDO_VERUM(praeparator_caput_stalum(&praeparatio) == NIHIL);
     {
-        FILE* pl = fopen(via_capitis, "wb");
+        FILE* pl = lectiones_fopen(via_capitis, "wb");
         structura utimbuf tempora;
 
         CREDO_NON_NIHIL(pl);
@@ -2143,6 +2149,8 @@ probatio_capita_nova (
         /* tempus alterum deterministicum (granularitas secundi) */
         tempora.actime   = 2000000L;
         tempora.modtime  = 2000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         CREDO_VERUM(utime(via_capitis, &tempora) == ZEPHYRUM);
     }
     {
@@ -2160,7 +2168,7 @@ probatio_capita_nova (
     CREDO_VERUM(praeparator_caput_stalum(&praeparatio) == NIHIL);
     praeparator_destruere(&praeparatio);
     piscina_destruere(piscina_capitum);
-    remove(via_capitis);
+    (vacuum)filum_delere(via_capitis);
 }
 
 
@@ -2182,7 +2190,7 @@ _stala_scribere (
     constans character* via,
                    b32  cum_altero)
 {
-    FILE* pl = fopen(via, "wb");
+    FILE* pl = lectiones_fopen(via, "wb");
 
     si (pl == NIHIL)
     {
@@ -2316,6 +2324,8 @@ probatio_recensio (
 
         tempora.actime   = 1500000000L;
         tempora.modtime  = 1500000000L;
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>tempora sola
+         * mtime consulto (staleness simulata), contentum non mutatur */
         (vacuum)utime(via_stalae, &tempora);
     }
 
@@ -2335,7 +2345,7 @@ probatio_recensio (
 
     fclose(intra);
     fclose(extra);
-    remove(via_stalae);
+    (vacuum)filum_delere(via_stalae);
 }
 
 

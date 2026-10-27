@@ -14,6 +14,7 @@
  * Exitus: 0 scriptum, 1 fractum, 2 usus.
  */
 #include "latina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -84,7 +85,7 @@ _caput_scribere (
 {
     FILE* plagula;
 
-    plagula = fopen(via, "wb");
+    plagula = lectiones_fopen(via, "wb");
     si (plagula == NIHIL)
     {
         fprintf(stderr, "latina_datum: %s non apertum\n", via);
@@ -115,7 +116,7 @@ _corpus_scribere (
     FILE* plagula;
       i32 k;
 
-    plagula = fopen(via, "wb");
+    plagula = lectiones_fopen(via, "wb");
     si (plagula == NIHIL)
     {
         fprintf(stderr, "latina_datum: %s non apertum\n", via);

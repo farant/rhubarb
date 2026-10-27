@@ -31,6 +31,8 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 #include "silva_annotationes.h"
+#include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -294,8 +296,8 @@ _renovare (
                integer   numerus,
              character** viae)
 {
-    FILE* ex = fopen(exitus, "w");
-    FILE* cit = exitus_cit != NIHIL ? fopen(exitus_cit, "w")
+    FILE* ex = lectiones_fopen(exitus, "w");
+    FILE* cit = exitus_cit != NIHIL ? lectiones_fopen(exitus_cit, "w")
                                     : NIHIL;
                     i32  citationes  = ZEPHYRUM;
     InternamentumChorda* intern      = internamentum_creare(piscina);
@@ -771,7 +773,7 @@ _mintare (
 
             sprintf(via_temp, "%s.mintatur", viae[f]);
             {
-                FILE* ex = fopen(via_temp, "wb");
+                FILE* ex = lectiones_fopen(via_temp, "wb");
 
                 si (   ex == NIHIL
                     || fwrite(novus, I, (memoriae_index)scripti,
@@ -801,7 +803,7 @@ _mintare (
                 si (   parsura_novi      == NIHIL
                     || (s32)mensura_novi != scripti)
                 {
-                    remove(via_temp);
+                    (vacuum)filum_delere(via_temp);
                     fprintf(stderr, "identitates: verificatio"
                         " fracta (parsura): %s\n", viae[f]);
                     redde I;
@@ -848,7 +850,7 @@ _mintare (
                     || identitates_novae != identitates_priores
                         + xar_numerus(splissa))
                 {
-                    remove(via_temp);
+                    (vacuum)filum_delere(via_temp);
                     fprintf(stderr, "identitates: verificatio"
                         " fracta (numeri %d/%d): %s - original"
                         " intactum\n", (int)petitiones_novae,
@@ -856,9 +858,9 @@ _mintare (
                     redde I;
                 }
             }
-            si (rename(via_temp, viae[f]) != ZEPHYRUM)
+            si (!filum_movere(via_temp, viae[f]))
             {
-                remove(via_temp);
+                (vacuum)filum_delere(via_temp);
                 fprintf(stderr, "identitates: renominatio fracta:"
                     " %s\n", viae[f]);
                 redde I;

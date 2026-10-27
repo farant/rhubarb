@@ -22,11 +22,11 @@
 interior vacuum
 _purgare (vacuum)
 {
-    remove(VIA_DB);
-    remove(VIA_DB "-wal");
-    remove(VIA_DB "-shm");
-    remove(VIA_AN);
-    remove(VIA_TB);
+    (vacuum)filum_delere(VIA_DB);
+    (vacuum)filum_delere(VIA_DB "-wal");
+    (vacuum)filum_delere(VIA_DB "-shm");
+    (vacuum)filum_delere(VIA_AN);
+    (vacuum)filum_delere(VIA_TB);
     (vacuum)filum_arborem_delere(VIA_EN);
 }
 

@@ -36,6 +36,7 @@
 #include "crusta_registrum.h"
 #include "piscina.h"
 #include "processus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -403,7 +404,7 @@ _scribere_plagulam (
        size_t scripti;
 
     sprintf(plena, "%s/%s", radix, via);
-    f = fopen(plena, "wb");
+    f = lectiones_fopen(plena, "wb");
     si (f == NIHIL)
     {
         redde FALSUM;

@@ -41,6 +41,7 @@
 #include "provenientia.h"
 #include "canon.h"
 #include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -1292,7 +1293,7 @@ principale (
         "bin/canon_coquere %s -praefixum %s -caput %s -corpus %s",
         via_canonis, praefixum, via_capitis, via_corporis);
 
-    f = fopen(via_capitis, "w");
+    f = lectiones_fopen(via_capitis, "w");
     si (!f)
     {
         fprintf(stderr, "canon_coquere: '%s' scribi nequit\n",
@@ -1303,7 +1304,7 @@ principale (
                     custos, via_canonis, iussum);
     fclose(f);
 
-    f = fopen(via_corporis, "w");
+    f = lectiones_fopen(via_corporis, "w");
     si (!f)
     {
         fprintf(stderr, "canon_coquere: '%s' scribi nequit\n",

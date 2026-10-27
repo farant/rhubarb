@@ -58,6 +58,8 @@
 #include "chorda.h"
 #include "manus.h"
 #include "provenientia.h"
+#include "filum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -137,9 +139,9 @@ _sedem_parare (vacuum)
     constans character* h = getenv("HOME");
 
     sprintf(domus, "%s/.rhubarb", (h != NIHIL) ? h : "/tmp");
-    (vacuum)mkdir(domus, 0755);   /* iam esse potest */
+    (vacuum)filum_directorium_creare(domus);   /* iam esse potest */
     _sedes(sedes, magnitudo(sedes));
-    (vacuum)mkdir(sedes, 0755);
+    (vacuum)filum_directorium_creare(sedes);
 }
 
 interior b32
@@ -162,7 +164,7 @@ _sessionem_scribere (
 
     _sedem_parare();
     _via_sessionis(via, s->portus);
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (f == NIHIL)
     {
         redde FALSUM;
@@ -239,7 +241,7 @@ _sessiones_legere (
             character via[VIAE_MENSURA];
 
             _via_sessionis(via, portus);
-            (vacuum)remove(via);
+            (vacuum)filum_delere(via);
             perge;
         }
         vas[n] = s;
@@ -890,7 +892,7 @@ principale (
             (vacuum)kill((pid_t)sessio.pid, SIGTERM);
         }
         _via_sessionis(via, sessio.portus);
-        (vacuum)remove(via);
+        (vacuum)filum_delere(via);
         imprimere("sessio %d finita\n", (integer)sessio.portus);
         redde ZEPHYRUM;
     }

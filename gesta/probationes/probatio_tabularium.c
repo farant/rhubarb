@@ -11,6 +11,8 @@
 #include "credo.h"
 #include "json.h"
 #include "iter_directoria.h"
+#include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>   /* system - purgatio recursiva arboris entitatum */
@@ -38,20 +40,20 @@
 interior vacuum
 _purgare (vacuum)
 {
-    remove(VIA_DB);
-    remove(VIA_DB "-wal");
-    remove(VIA_DB "-shm");
-    remove(VIA_AN);
-    remove(VIA_TB);
-    remove(VIA_BN);
-    remove(VIA_MN);
-    remove(VIA_FN);
-    remove(VIA_CIT);
-    remove(VIA_BN2);
-    remove(VIA_MN2);
-    remove(VIA_FN2);
-    remove(VIA_STIPULA_SANA);
-    remove(VIA_STIPULA_FRACTA);
+    (vacuum)filum_delere(VIA_DB);
+    (vacuum)filum_delere(VIA_DB "-wal");
+    (vacuum)filum_delere(VIA_DB "-shm");
+    (vacuum)filum_delere(VIA_AN);
+    (vacuum)filum_delere(VIA_TB);
+    (vacuum)filum_delere(VIA_BN);
+    (vacuum)filum_delere(VIA_MN);
+    (vacuum)filum_delere(VIA_FN);
+    (vacuum)filum_delere(VIA_CIT);
+    (vacuum)filum_delere(VIA_BN2);
+    (vacuum)filum_delere(VIA_MN2);
+    (vacuum)filum_delere(VIA_FN2);
+    (vacuum)filum_delere(VIA_STIPULA_SANA);
+    (vacuum)filum_delere(VIA_STIPULA_FRACTA);
     (vacuum)system("rm -rf " VIA_ENT);
 }
 
@@ -61,7 +63,7 @@ _plagulam_scribere (
     constans character* via,
     constans character* contentum)
 {
-    FILE* pl = fopen(via, "wb");
+    FILE* pl = lectiones_fopen(via, "wb");
 
     si (pl == NIHIL)
     {
@@ -2431,7 +2433,7 @@ _scaenam_probare (
          * verum rei + praefixum orbum) - lector cache-in-successu,
          * ergo scriptio media probationis visibilis fit */
         {
-            FILE* cit = fopen(VIA_CIT, "w");
+            FILE* cit = lectiones_fopen(VIA_CIT, "w");
 
             CREDO_NON_NIHIL (cit);
             si (cit != NIHIL)

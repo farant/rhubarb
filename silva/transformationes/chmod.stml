@@ -1,0 +1,41 @@
+<!-- silva/transformationes/chmod.stml - chmod -> filum_modum_ponere (codex 97, fabrica-8).
+     filum_modum_ponere(via, integer modus) = chmod(via, (mode_t)modus);
+     mode_t (unsigned short) in integer sine iactura promovetur.
+     Conventio: functio cruda 0 in successu, -1 in defectu (errno);
+     substituta VERUM in successu (b32). errno defectus servatur.
+     Formae non tectae (valor ut numerus, errno in eadem expressione,
+     macra) recusantur et manu emendantur: census primum,
+       ./silva/transformare.sh -census <functio> <viae>
+     consilium (nihil scribitur), deinde -scribere (custodia: codex 97
+     exacte, nihil crescit, clang ante et post). -->
+<transformatio functio="chmod" codex="97">
+  <inclusio>filum.h</inclusio>
+  <regula>
+    <si! (>(vacuum)chmod($via, $modus);
+    <fac! (>(vacuum)filum_modum_ponere($via, $modus);
+  </regula>
+  <regula>
+    <si! (>chmod($via, $modus);
+    <fac! (>(vacuum)filum_modum_ponere($via, $modus);
+  </regula>
+  <regula>
+    <si! (>chmod($via, $modus) != ZEPHYRUM
+    <fac! (>!filum_modum_ponere($via, $modus)
+  </regula>
+  <regula>
+    <si! (>chmod($via, $modus) == ZEPHYRUM
+    <fac! (>filum_modum_ponere($via, $modus)
+  </regula>
+  <regula>
+    <si! (>chmod($via, $modus) < ZEPHYRUM
+    <fac! (>!filum_modum_ponere($via, $modus)
+  </regula>
+  <regula>
+    <si! (>chmod($via, $modus) == -I
+    <fac! (>!filum_modum_ponere($via, $modus)
+  </regula>
+  <regula>
+    <si! (>chmod($via, $modus) != -I
+    <fac! (>filum_modum_ponere($via, $modus)
+  </regula>
+</transformatio>

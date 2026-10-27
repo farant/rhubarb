@@ -141,3 +141,8 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
     "xar_vacuum_est",
     NIHIL
 };
+
+interior constans character* constans EXCLUDENDA_LECTIONUM[] = {
+    "lectiones_ambitus",
+    NIHIL
+};

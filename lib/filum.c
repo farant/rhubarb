@@ -91,6 +91,8 @@ filum_legere_totum (
     _filum_error_purgare();
 
     /* Invenire mensuram per stat() - velocius quam fseek/ftell */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_legere_totum notat ABSENS/LEGIT */
     si (stat(via, &st) != ZEPHYRUM)
     {
         lectiones_notare(LECTIO_ABSENS, via);
@@ -103,6 +105,8 @@ filum_legere_totum (
     mensura = (memoriae_index)st.st_size;
 
     /* Aperire filum */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_legere_totum notat ABSENS/LEGIT */
     f = fopen(via, "rb");
     si (!f)
     {
@@ -149,6 +153,8 @@ filum_existit (
 
     si (!via) redde FALSUM;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_existit notat ABSENS/EXSTAT */
     f = fopen(via, "r");
     si (!f)
     {
@@ -170,6 +176,8 @@ filum_mensura (
 
     si (!via) redde ZEPHYRUM;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_mensura notat ABSENS/LEGIT */
     f = fopen(via, "rb");
     si (!f)
     {
@@ -221,6 +229,8 @@ filum_lector_aperire (
         redde NIHIL;
     }
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_lector_aperire notat ABSENS/LEGIT */
     lector->descriptum = fopen(via, "r");
     si (!lector->descriptum)
     {
@@ -554,6 +564,8 @@ filum_scriptor_aperire (
         modus_str = "wb";
     }
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_scriptor_aperire notat SCRIPSIT */
     scriptor->descriptum = fopen(via, modus_str);
     si (scriptor->descriptum)
     {
@@ -768,6 +780,9 @@ filum_scribere (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_scribere notat SCRIPSIT */
     f = fopen(via, "wb");
     si (f)
     {
@@ -809,6 +824,9 @@ filum_scribere_literis (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_scribere_literis notat SCRIPSIT */
     f = fopen(via, "w");
     si (f)
     {
@@ -849,6 +867,9 @@ filum_appendere (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_appendere notat SCRIPSIT */
     f = fopen(via, "ab");
     si (f)
     {
@@ -899,6 +920,8 @@ filum_appendere_firmiter (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_appendere_firmiter notat SCRIPSIT */
     descriptor = open(via, O_WRONLY | O_APPEND | O_CREAT, 0644);
     si (descriptor < 0)
     {
@@ -948,6 +971,9 @@ filum_appendere_literis (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_appendere_literis notat SCRIPSIT */
     f = fopen(via, "a");
     si (f)
     {
@@ -989,6 +1015,8 @@ filum_delere (
 
     _filum_error_purgare();
 
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_delere notat SCRIPSIT */
     si (remove(via) != ZEPHYRUM)
     {
         _filum_error_ponere("remove fracta");
@@ -1023,6 +1051,8 @@ filum_arborem_delere (
         redde FALSUM;
     }
     _filum_error_purgare();
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_arborem_delere notat SCRIPSIT */
     si (lstat(via, &st) != ZEPHYRUM)
     {
         si (errno == ENOENT)
@@ -1036,6 +1066,8 @@ filum_arborem_delere (
     {
         /* filum aut NEXUS: ipse removetur, numquam destinatio */
         lectiones_notare(LECTIO_SCRIPSIT, via);
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+         * filum_arborem_delere notat SCRIPSIT */
         si (unlink(via) != ZEPHYRUM)
         {
             _filum_error_ponere("unlink fracta");
@@ -1047,6 +1079,8 @@ filum_arborem_delere (
      * "/." et "/tmp/.." radicem quoque nominant. Stat radicis fractus
      * = recusatio. NUMQUAM culpam hic plantes: probatio functionem in
      * "/" vocat, et recusatio fracta discum deleret. */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_arborem_delere notat SCRIPSIT */
     si (   stat("/", &radix) != ZEPHYRUM
         || (st.st_dev == radix.st_dev && st.st_ino == radix.st_ino))
     {
@@ -1065,6 +1099,8 @@ filum_arborem_delere (
               character  filius[IV * MXXIV];
 
         deleta  = FALSUM;
+        /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+         * filum_arborem_delere notat SCRIPSIT */
         d       = opendir(via);
         si (d == NIHIL)
         {
@@ -1098,6 +1134,8 @@ filum_arborem_delere (
         closedir(d);
         transitus++;
     } dum (deleta && transitus < XVI);
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_arborem_delere notat SCRIPSIT */
     si (rmdir(via) != ZEPHYRUM)
     {
         _filum_error_ponere("rmdir fracta");
@@ -1124,6 +1162,8 @@ filum_movere (
 
     lectiones_notare(LECTIO_SCRIPSIT, via_vetus);
     lectiones_notare(LECTIO_SCRIPSIT, via_nova);
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_movere notat SCRIPSIT */
     si (rename(via_vetus, via_nova) != ZEPHYRUM)
     {
         _filum_error_ponere("rename fracta");
@@ -1152,6 +1192,8 @@ filum_copiare (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * LACUNA: fons copiae non notatur (parcum ...2R8YJVE1) */
     fons = fopen(via_fons, "rb");
     si (!fons)
     {
@@ -1159,6 +1201,9 @@ filum_copiare (
         redde FALSUM;
     }
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_copiare notat SCRIPSIT */
     dest = fopen(via_destinatio, "wb");
     si (dest)
     {
@@ -1208,6 +1253,8 @@ filum_modum_ponere (
      * filum_directorium_creare_cum_modo eandem custodiam gerit. */
     si (_chmod(via, modus) != ZEPHYRUM)
 #else
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_modum_ponere notat SCRIPSIT */
     si (chmod(via, (mode_t)modus) != ZEPHYRUM)
 #endif
     {
@@ -1242,6 +1289,8 @@ filum_directorium_creare (
 #ifdef _WIN32
     si (_mkdir(via) != ZEPHYRUM)
 #else
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_directorium_creare notat SCRIPSIT */
     si (mkdir(via, 0755) != ZEPHYRUM)
 #endif
     {
@@ -1267,6 +1316,8 @@ filum_directorium_creare_si_necesse (
     _filum_error_purgare();
 
     /* Si iam existit, successus */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * LACUNA: exstans non notatur (parcum ...2R8YJVE1) */
     si (stat(via, &st) == ZEPHYRUM)
     {
         si (S_ISDIR(st.st_mode))
@@ -1285,6 +1336,8 @@ filum_directorium_creare_si_necesse (
     {
         redde VERUM;
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * LACUNA: exstans non notatur (parcum ...2R8YJVE1) */
     si (stat(via, &st) == ZEPHYRUM && S_ISDIR(st.st_mode))
     {
         _filum_error_purgare();
@@ -1308,6 +1361,8 @@ filum_directorium_creare_cum_modo (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * LACUNA: exstans non notatur (parcum ...2R8YJVE1) */
     si (stat(via, &st) == ZEPHYRUM)
     {
         si (!S_ISDIR(st.st_mode))
@@ -1319,6 +1374,8 @@ filum_directorium_creare_cum_modo (
 		 * laxius creavit aliter tacite laxum maneret - et defectus
 		 * permissionum is est qui numquam clamat. */
 #ifndef _WIN32
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+         * filum_directorium_creare_cum_modo notat SCRIPSIT */
         si (chmod(via, (mode_t)modus) != ZEPHYRUM)
         {
             _filum_error_ponere("chmod fracta");
@@ -1333,6 +1390,8 @@ filum_directorium_creare_cum_modo (
     (vacuum)modus;
     si (_mkdir(via) != ZEPHYRUM)
 #else
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_directorium_creare_cum_modo notat SCRIPSIT */
     si (mkdir(via, (mode_t)modus) != ZEPHYRUM)
 #endif
     {
@@ -1341,6 +1400,8 @@ filum_directorium_creare_cum_modo (
     }
 #ifndef _WIN32
     /* umask mkdir corrigit; chmod explicitus modum VERUM ponit */
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>canalis ipse
+     * filum_directorium_creare_cum_modo notat SCRIPSIT */
     si (chmod(via, (mode_t)modus) != ZEPHYRUM)
     {
         _filum_error_ponere("chmod post mkdir fracta");
@@ -1420,6 +1481,8 @@ filum_directorium_existit (
 
     si (!via) redde FALSUM;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_directorium_existit notat ABSENS/EXSTAT */
     si (stat(via, &st) != ZEPHYRUM)
     {
         lectiones_notare(LECTIO_ABSENS, via);
@@ -1450,6 +1513,8 @@ filum_status (
 
     _filum_error_purgare();
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * filum_status notat ABSENS/EXSTAT */
     si (stat(via, &st) != ZEPHYRUM)
     {
         lectiones_notare(LECTIO_ABSENS, via);
@@ -1523,6 +1588,8 @@ filum_seram_capere (
     {
         redde NIHIL;
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * sera non notatur - quaestio ...CAM7QN */
     descriptor = open(via, O_RDWR | O_CREAT, 0644);
     si (descriptor < ZEPHYRUM)
     {

@@ -34,7 +34,6 @@ crusta/instrumenta/coctum.c	ante regulam (2026-10-14): migratio ad filum cum tac
 crusta/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/instrumenta/facies.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/instrumenta/interpositio_macos.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-crusta/instrumenta/oraculum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/probationes/probatio_crusta_canon.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/probationes/probatio_crusta_computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/probationes/probatio_crusta_corpus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -53,15 +52,9 @@ gesta/probationes/probatio_tabulariumd.c	ante regulam (2026-10-14): migratio ad 
 html/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 html/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 knotapel/demo_125_exact_crossing_depth/demo-snapshot.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
-knotapel/demo_125_exact_crossing_depth/main.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
 lib/compilator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-lib/credo.c	credo sine filo nectitur (credo spec 2 §VI.2) - <tolera> per sedem
-lib/filum.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
 lib/herbarium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-lib/iter_directoria.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
-lib/lectiones.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
 lib/mensura_contextus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-lib/via.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
 materia/fontes/materia_coctor.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 materia/instrumenta/oraculum_silvae.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 md/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -71,7 +64,6 @@ md/instrumenta/extenta.c	ante regulam (2026-10-14): migratio ad filum cum tactu 
 md/instrumenta/html.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/amalgama/officina.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/fontes/officina_indicium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-officina/fontes/officina_machinula.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/praeparator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/principalia/colloquium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/principalia/cursor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -86,7 +78,6 @@ officina/probationes/probatio_officina_indicium.c	ante regulam (2026-10-14): mig
 officina/probationes/probatio_officina_legatus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_machinula.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_puncta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-officina/probationes/probatio_officina_renovatio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_sessio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_textus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/probationes/probatio_officina_vindex.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -120,13 +111,9 @@ oratio/probationes/probatio_oratio_vocabula.c	ante regulam (2026-10-14): migrati
 oratio/probationes/probatio_oratio_vocabularium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 oratio/probationes/probatio_oratio_vocabularium_en.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 oratio/probationes/probatio_oratio_vocabularium_la.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-probationes/qr_assets/qr_gyrus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-silva/fontes/systema_c89.h	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-silva/instrumenta/principalia/auspex.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/censor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/census_ambigui.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-silva/instrumenta/principalia/emendare.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/emitte.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/examen.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/generator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -144,7 +131,6 @@ silva/instrumenta/principalia/quaestio.c	ante regulam (2026-10-14): migratio ad 
 silva/instrumenta/principalia/renominare.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/principalia/selecta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/silva_amalgama.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-silva/instrumenta/silva_canon_coquere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/silva_coquere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/silva_iudicium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tessera/probationes/probatio_tessera_folium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -157,19 +143,12 @@ tools/amalgama_ligator.c	ante regulam (2026-10-14): migratio ad filum cum tactu 
 tools/bitsyfont_ad_fons.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/briar.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/briar_spectator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/canon_coquere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/capsula_caudae_adiungere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/capsula_generare.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/diagnostica.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/fabrica_ansae.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/fabrica_sutura.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/librarium_collector.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/manus_instrumentum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/mensor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/natura_canones.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/natura_canones_emissio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/natura_examen.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/natura_glossae.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/runae_corpus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/runae_oraculum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/tabula_nodorum_generare.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

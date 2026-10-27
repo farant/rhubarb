@@ -1,0 +1,43 @@
+<!-- silva/transformationes/mkdir.stml - mkdir -> filum_directorium_creare (codex 97, fabrica-8).
+     SOLUM modus 0755: filum_directorium_creare = mkdir(via, 0755) exacte
+     (FALSUM si iam exstat, ut mkdir EEXIST). Modi alii recusantur:
+     _cum_modo modum directorii praeexsistentis COERCET (chmod) et
+     _si_necesse exsistens ut successum reddit - sensus mutaretur, manu.
+     Conventio: functio cruda 0 in successu, -1 in defectu (errno);
+     substituta VERUM in successu (b32). errno defectus servatur.
+     Formae non tectae (valor ut numerus, errno in eadem expressione,
+     macra) recusantur et manu emendantur: census primum,
+       ./silva/transformare.sh -census <functio> <viae>
+     consilium (nihil scribitur), deinde -scribere (custodia: codex 97
+     exacte, nihil crescit, clang ante et post). -->
+<transformatio functio="mkdir" codex="97">
+  <inclusio>filum.h</inclusio>
+  <regula>
+    <si! (>(vacuum)mkdir($via, 0755);
+    <fac! (>(vacuum)filum_directorium_creare($via);
+  </regula>
+  <regula>
+    <si! (>mkdir($via, 0755);
+    <fac! (>(vacuum)filum_directorium_creare($via);
+  </regula>
+  <regula>
+    <si! (>mkdir($via, 0755) != ZEPHYRUM
+    <fac! (>!filum_directorium_creare($via)
+  </regula>
+  <regula>
+    <si! (>mkdir($via, 0755) == ZEPHYRUM
+    <fac! (>filum_directorium_creare($via)
+  </regula>
+  <regula>
+    <si! (>mkdir($via, 0755) < ZEPHYRUM
+    <fac! (>!filum_directorium_creare($via)
+  </regula>
+  <regula>
+    <si! (>mkdir($via, 0755) == -I
+    <fac! (>!filum_directorium_creare($via)
+  </regula>
+  <regula>
+    <si! (>mkdir($via, 0755) != -I
+    <fac! (>filum_directorium_creare($via)
+  </regula>
+</transformatio>

@@ -13,6 +13,7 @@
 #include "credo.h"
 #include "sessio.h"
 #include "officina_machinula.h"   /* MACHINULA_* genera halitus */
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +43,24 @@ _chorda_continet (
     {
         si (memcmp(textus.datum + k, acus, (memoriae_index)m)
             == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* diagnosticum cum codice examinis in relato? */
+interior b32
+_codicem_habet (
+    constans SessioRelatum* r,
+                       s32  codex)
+{
+    s32 k;
+
+    per (k = ZEPHYRUM; k < r->diagnostica_numerus; k++)
+    {
+        si (r->diagnostica[k].codex == codex)
         {
             redde VERUM;
         }
@@ -467,9 +486,22 @@ _recusationes_probare (
         s = sessio_creare(piscina, &cfg);
         CREDO_NON_NIHIL(s);
 
+        /* B3a: iudicium - scriptura cruda vocata = codex XCVII
+         * (EXAMEN_CODEX_SCRIPTURA_PRAETERITA, VIOLATIO), ut examen;
+         * turnus numquam currit */
         r = sessio_turnum_offerre(s, _ch("{ remove(\"nulla\"); }",
             piscina));
         CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+        CREDO_VERUM(_codicem_habet(&r, (s32)XCVII));
+        CREDO_AEQUALIS_I32(sessio_turni_numerus(s), ZEPHYRUM);
+
+        /* B3b: machinula - per monstratorem functionis (non vocatio
+         * nominis: iudicium tacet) recusatio in tempore manet */
+        r = sessio_turnum_offerre(s, _ch(
+            "{ integer (*f)(constans character*) = remove;"
+            " f(\"nulla\"); }", piscina));
+        CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+        CREDO_FALSUM(_codicem_habet(&r, (s32)XCVII));
         CREDO_AEQUALIS_I32((i32)r.halitus_genus,
             (i32)MACHINULA_RECUSATIO);
         CREDO_VERUM(_chorda_continet(r.halitus_nuntius, "recusatum"));
@@ -979,7 +1011,7 @@ _documentum_strictum_probare (
 
         sprintf(via_export, "%s/officina/build/strictum_export.c",
             radix);
-        pl = fopen(via_export, "wb");
+        pl = lectiones_fopen(via_export, "wb");
         CREDO_NON_NIHIL(pl);
         fwrite(strictum.datum, I, (memoriae_index)strictum.mensura,
             pl);

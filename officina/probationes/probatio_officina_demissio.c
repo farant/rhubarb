@@ -6,6 +6,7 @@
 #include "officina_demissio.h"
 #include "officina_medulla_textus.h"
 #include "credo.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -77,7 +78,7 @@ _plagulam_scribere (
 
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
-    plagula = fopen(via, "wb");
+    plagula = lectiones_fopen(via, "wb");
     si (plagula == NIHIL)
     {
         redde;

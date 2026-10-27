@@ -570,6 +570,8 @@ int principalis(const char* v)
     if (f) { fclose(f); } if (g) { fclose(g); } if (h) { fclose(h); }
     return rename(v, "x");
 }
+int rename(const char* a, const char* b);
+FILE* fopen(const char* p, const char* m);
 FIXA
 ( cd "$RADIX_DIR" && ./silva/examen.sh "silva/$LOCA/scriptura.c" -machina ) \
     > "$SILVA_DIR/$LOCA/scriptura.tsv" 2>/dev/null
@@ -577,6 +579,14 @@ C97="$(_codex SCRIPTURA_PRAETERITA)"
 _loca "scriptura: sedes 9 (wb) 11 (a+) 14 (macrum) 15 (unlink) 18 (rename) - rb, monstrator, tolerata tacent" \
     "9:$C97 11:$C97 14:$C97 15:$C97 18:$C97" \
     "$(awk -F'\t' -v c="$C97" '$5==c{print $2":"$5}' "$SILVA_DIR/$LOCA/scriptura.tsv" | sort -n | tr '\n' ' ' | sed 's/ $//')"
+# VIOLATIO (2026-10-27, verritio fabrica-8 perfecta): scriptura cruda
+# sine <tolera> commissionem obstat - plagula REICE
+_loca "scriptura: gradus violatio (non domesticum)" \
+    "violatio" "$(awk -F'\t' -v c="$C97" '$5==c{print $4}' "$SILVA_DIR/$LOCA/scriptura.tsv" | sort -u | tr '\n' ' ' | sed 's/ $//')"
+_loca "scriptura: verdictum REICE" \
+    "REICE" "$(awk -F'\t' '$1=="VERDICTUM"{print $2}' "$SILVA_DIR/$LOCA/scriptura.tsv")"
+_loca "scriptura: declarationes (rename, fopen post functionem) tacent" \
+    "0" "$(awk -F'\t' -v a="$C97" -v b="$C96" '($5==a || $5==b) && $2>=20' "$SILVA_DIR/$LOCA/scriptura.tsv" | wc -l | tr -d ' ')"
 _loca "scriptura: tolera absorpta (nulla TOLERA_IRRITUM)" \
     "0" "$(awk -F'\t' -v c="$CIRR" '$5==c' "$SILVA_DIR/$LOCA/scriptura.tsv" | wc -l | tr -d ' ')"
 C86="$(_codex VERNACULUM_ADHIBITUM)"; C87="$(_codex OBSOLETUM_ADHIBITUM)"
@@ -595,7 +605,29 @@ if [ "${1:-}" = "-corpus" ]; then
                    sub(/.*\[verdictum REICE\] /, ""); print; next }
                /\[(externa|compositio|praeparatio) fracta\] / {
                    sub(/.*fracta\] /, ""); print "FRACTA " $0 }' \
-        | sort > "$SILVA_DIR/build/reice_currentes.txt"
+        | sort > "$SILVA_DIR/build/reice_omnes.txt"
+    # iudex examen_corporis (unitates.stml): verdicta REICE solum
+    # plagularum quas iudicat contra pinnas comparantur - testimonia
+    # (imagines congelatae knotapel) et archivata extra (decretum
+    # …0X3C2). FRACTA (annotatio/compositio fracta) SEMPER intrant:
+    # examen quod plagulam legere nequit numquam tacet. Iudex fractus
+    # = porta fracta (tabula vacua tacite omnia celaret).
+    if ! iudicatae="$(grep -v '^FRACTA ' "$SILVA_DIR/build/reice_omnes.txt" \
+            | sed 's|^\./||' \
+            | "$RADIX_DIR/tools/iudex_unitatum.sh" examen_corporis)"; then
+        echo "  FRACTA: iudex examen_corporis (tools/iudex_unitatum.sh)"
+        fracta=1
+        iudicatae=""
+    fi
+    printf '%s\n' $iudicatae | sed '/^$/d; s|^|./|' \
+        > "$SILVA_DIR/build/reice_iudicatae.txt"
+    { grep '^FRACTA ' "$SILVA_DIR/build/reice_omnes.txt"
+      grep -Fx -f "$SILVA_DIR/build/reice_iudicatae.txt" \
+          "$SILVA_DIR/build/reice_omnes.txt"
+    } | sort > "$SILVA_DIR/build/reice_currentes.txt"
+    extra="$(grep -vc '^FRACTA ' "$SILVA_DIR/build/reice_omnes.txt")"
+    extra=$((extra - $(wc -l < "$SILVA_DIR/build/reice_iudicatae.txt")))
+    echo "  REICE extra iudicem (testimonia, archivata): $extra"
     # forma pinnae: via<TAB>causa (lineae '#' = commentaria) -
     # columna prima sola contra sweep diffatur; causa documentum est
     if ! grep -v '^#' "$FIXA/exclusiones.txt" | cut -f1 \

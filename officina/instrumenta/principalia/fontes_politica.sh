@@ -35,6 +35,7 @@ excludenda_pro() {
         chorda_aedificator) echo "EXCLUDENDA_AEDIFICATORIS" ;;
         tabula_dispersa)    echo "EXCLUDENDA_TABULAE" ;;
         xar)                echo "EXCLUDENDA_XARIS" ;;
+        lectiones)          echo "EXCLUDENDA_LECTIONUM" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -43,5 +44,7 @@ excludenda_pro() {
 # amalgama_excludenda_generare.sh); friatio = servanda (politica
 # manualis, numquam messa)
 bases_excludendae() {
-    echo "piscina chorda chorda_aedificator tabula_dispersa xar"
+    # lectiones (2026-10-27): machinula libc hospitis per librum
+    # lectionum notat (fabrica-8) - lectiones_ambitus inusitatum
+    echo "piscina chorda chorda_aedificator tabula_dispersa xar lectiones"
 }

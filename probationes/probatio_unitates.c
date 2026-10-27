@@ -116,6 +116,7 @@ hic_manens constans character* constans POLITICA[] = {
     "  <munus titulus=\"probatio\" segmentum=\"probationes\""
         " extensiones=\".c .m .h\"/>",
     "  <munus titulus=\"fixtura\" segmentum=\"probationes\"/>",
+    "  <munus titulus=\"testimonium\" plagula=\"demo-snapshot.c\"/>",
     "  <munus titulus=\"caput\" extensiones=\".h\"/>",
     "  <munus titulus=\"fons\" extensiones=\".c .m\"/>",
     "  <munus titulus=\"interrogationes\""
@@ -176,6 +177,11 @@ hic_manens constans PlagulaFicta MUNDUS[] = {
         " genus=\"/elementa_programmatis/opus_explorationis\""
         " descriptio=\"k\"/>", NIHIL },
     { "knotapel/demo.c", "/* demo */\n", NIHIL },
+    { "knotapel/demo_1/demo-snapshot.c",
+        "/* demo-snapshot.c - GENERATUM */\n", NIHIL },
+    { "knotapel/demo_1/main.c", "/* demo vivum */\n", NIHIL },
+    { "knotapel/demo_1/alia-demo-snapshot.c", "/* non imago */\n",
+        NIHIL },
     { "archivum/unitas.stml", "<unitas titulus=\"archivum\" genus=\""
         SUB "\" vita=\"archivata\" descriptio=\"a\"/>", NIHIL },
     { "archivum/probationes/probatio_vetus.c", "/* vetus */\n", NIHIL },
@@ -485,6 +491,18 @@ _sectio_munera (
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "probatio");
     CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.causa,
         "regula munus 3 (segmentum probationes, .c .m .h)");
+
+    /* plagula: nomen plagulae EXACTUM (imago congelata knotapel,
+     * decretum …0X3C2) - ante 'fons'; demo vivum eiusdem directorii
+     * et nomen solum desinens non congruunt */
+    r = _quid(c, u, "knotapel/demo_1/demo-snapshot.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "testimonium");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.causa,
+        "regula munus 5 (plagula demo-snapshot.c)");
+    r = _quid(c, u, "knotapel/demo_1/main.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "fons");
+    r = _quid(c, u, "knotapel/demo_1/alia-demo-snapshot.c");
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.munus.valor, "fons");
 
     /* caput auxiliare probationum = probatio, non fixtura (lint
      * hodie iudicat; regula prima solum .c .m dabat - inventum

@@ -14,13 +14,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/stat.h>
 #include <sys/mman.h>
 #include <math.h>
-#include <errno.h>
 #include <time.h>
-#include <sys/stat.h>
 #include <sys/time.h>
-#include <unistd.h>
 
 /* ================= officina.h (verbatim) ================= */
 /* officina.h - Medulla: IR registrorum linearis (interfacies publica)
@@ -5421,6 +5422,67 @@ officina_xar_removere_cum_ultimo (
 
 #endif /* POSTULATA_POSIX_H */
 
+/* ================= ex include/lectiones.h ================= */
+/* lectiones.h - liber lectionum: quod processus legit, quaesivit,
+ * exstare confirmavit, enumeravit, scripsit (fabrica slice 2).
+ *
+ * Variabilis ambitus FABRICA_LECTIONES viam plagulae nominat; absens =
+ * nihil fit (nulla allocatio, nullus mos mutatus). Linea una per
+ * eventum, '<littera>\t<via>\n', una vocatione write() cum O_APPEND -
+ * filii paralleli lineas integras servant. Via ut data scribitur
+ * (relativa manet relativa); fabrica postea sigillat.
+ *
+ * Hoc modulo SOLO linea libri scribitur: filum, via_existit,
+ * iter_directoria et ansae directoriorum aedilis eum vocant. Ipse
+ * open/write crudos adhibet - canalis est, non cliens canalis.
+ */
+#ifndef LECTIONES_H
+#define LECTIONES_H
+
+nomen enumeratio {
+    LECTIO_LEGIT = 0,     /* 'L' plagula lecta */
+    LECTIO_ABSENS,        /* 'A' quaesita, non inventa */
+    LECTIO_EXSTAT,        /* 'X' exstare confirmata, non lecta */
+    LECTIO_ENUMERAVIT,    /* 'D' directorium enumeratum */
+    LECTIO_SCRIPSIT,      /* 'S' plagula scripta, deleta, mota */
+    LECTIO_AMBITUS,       /* 'E' variabilis ambitus lecta */
+    LECTIO_EXSECUTIO      /* 'P' programma exsecutum (exec): via =
+                           * argv[0] ut datum, ANTE fork notatum.
+                           * Liber completus est solum si programmata
+                           * omnia domus sunt (lectiones ipsa notant) -
+                           * alienum (sh, git, clang) scripturas suas
+                           * non notat (iudicium per librum solum,
+                           * consilium) */
+} LectioGenus;
+
+/* lineam unam appendere; nihil si variabilis absens aut via nimis
+ * longa (linea numquam scinditur) */
+static vacuum
+lectiones_notare (
+                 LectioGenus  genus,
+          constans character* via);
+
+/* FOPEN PER LIBRUM (fabrica plan 5 T5a) - fulcrum TRANSITORIUM pro
+ * vocationibus stdio crudis quae manent (codex novus filum adhibet):
+ * modus 'r'/'rb' (sine '+'): L si apertum, A si non; ceteri (w, a,
+ * r+): S. Viae sub /dev/ (machinae: entropia, terminalia) NON
+ * notantur - ingressus non sunt, et fabrica machinam sigillare nequit
+ * (IGNOTUM: verdictum numquam reutile). */
+static FILE*
+lectiones_fopen (
+    constans character* via,
+    constans character* modus);
+
+/* STAT PER LIBRUM: stat(2) idem; X si exstat, A si non (sub /dev/
+ * nihil). Status per 'structura stat' (sys/stat.h vocantis). */
+structura stat;
+static integer
+lectiones_stat (
+    constans character* via,
+       structura stat* status);
+
+#endif /* LECTIONES_H */
+
 /* ================= ex officina/fontes/officina_medulla.h ================= */
 /* officina_medulla.h - Medulla: IR registrorum linearis (M1a B)
  *
@@ -8005,6 +8067,166 @@ officina_xar_removere_cum_ultimo (
     xar->numerus_elementorum--;
 
     redde VERUM;
+}
+
+/* ================= ex lib/lectiones.c ================= */
+
+
+hic_manens  integer  _descriptor = -I;
+hic_manens character _via_aperta[IV * MXXIV];
+
+interior character
+_littera (
+    LectioGenus genus)
+{
+    commutatio (genus)
+    {
+        casus LECTIO_LEGIT:       redde 'L';
+        casus LECTIO_ABSENS:      redde 'A';
+        casus LECTIO_EXSTAT:      redde 'X';
+        casus LECTIO_ENUMERAVIT:  redde 'D';
+        casus LECTIO_SCRIPSIT:    redde 'S';
+        casus LECTIO_AMBITUS:     redde 'E';
+        casus LECTIO_EXSECUTIO:   redde 'P';
+    }
+    redde '?';
+}
+
+interior vacuum
+_lectionem_notare (
+                 LectioGenus  genus,
+          constans character* via)
+{
+    constans character* liber;
+             character  linea[IV * MXXIV + IV];
+        memoriae_index  mensura_viae;
+
+    liber = getenv("FABRICA_LECTIONES");
+    si (liber == NIHIL || liber[0] == '\0')
+    {
+        /* absens = CLAUSUM: descriptor servatus plagulam interea
+         * deletam (eadem via, inodus alius) scriberet - probatio III
+         * lineas omnes ita amisit */
+        si (_descriptor >= 0)
+        {
+            (vacuum)close(_descriptor);
+            _descriptor = -I;
+        }
+        redde;
+    }
+    si (via == NIHIL)
+    {
+        redde;
+    }
+    si (_descriptor < 0 || strcmp(liber, _via_aperta) != 0)
+    {
+        si (_descriptor >= 0)
+        {
+            (vacuum)close(_descriptor);
+            _descriptor = -I;
+        }
+        si (strlen(liber) >= magnitudo(_via_aperta))
+        {
+            redde;
+        }
+        /* CLOEXEC: programma exsecutum (alienum quoque) descriptorem
+         * libri non hereditat; filii sine exec (fork) eum
+         * communicant */
+        /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+         * liber lectionum ipse (se ipsum non notat) */
+        _descriptor = open(liber, O_WRONLY | O_APPEND | O_CREAT
+            | O_CLOEXEC, 0644);
+        si (_descriptor < 0)
+        {
+            redde;
+        }
+        strcpy(_via_aperta, liber);
+    }
+    mensura_viae = strlen(via);
+    si (mensura_viae + IV > magnitudo(linea))
+    {
+        redde;   /* linea numquam scinditur */
+    }
+    linea[0] = _littera(genus);
+    linea[I] = '\t';
+    memcpy(linea + II, via, mensura_viae);
+    linea[II + mensura_viae] = '\n';
+    {
+        /* optima conatio: defectus hic tractari nequit. Valor ad
+         * variabilem, non (vacuum) solum: glibc cum _FORTIFY_SOURCE
+         * write() warn_unused_result notat, quod gcc mittendo in
+         * vacuum NON tacet (hospitium v3 T9) */
+        ssize_t scripta = write(_descriptor, linea, mensura_viae + III);
+
+        (vacuum)scripta;
+    }
+}
+
+/* errno SERVATUR: notatio vocantem numquam mutat - vocatores errno post
+ * vocationem crudam legunt (machinula officinae errno hospiti reddit,
+ * filum _filum_error_ponere); liber apertus aut appendens errno
+ * mutare posset (2026-10-27) */
+static vacuum
+lectiones_notare (
+                 LectioGenus  genus,
+          constans character* via)
+{
+    integer servatum = errno;
+
+    _lectionem_notare(genus, via);
+    errno = servatum;
+}
+
+/* via machinae (/dev/): non ingressus */
+interior b32
+_machina_est (
+    constans character* via)
+{
+    redde via != NIHIL && strncmp(via, "/dev/", V) == ZEPHYRUM;
+}
+
+static FILE*
+lectiones_fopen (
+    constans character* via,
+    constans character* modus)
+{
+     /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+      * lectiones_fopen notat SCRIPSIT */
+     FILE* f = fopen(via, modus);
+      b32  lectio;
+
+    si (via == NIHIL || modus == NIHIL || _machina_est(via))
+    {
+        redde f;
+    }
+    lectio = modus[ZEPHYRUM] == 'r' && strchr(modus, '+') == NIHIL;
+    si (lectio)
+    {
+        lectiones_notare(f != NIHIL ? LECTIO_LEGIT : LECTIO_ABSENS,
+            via);
+    }
+    alioquin si (f != NIHIL)
+    {
+        lectiones_notare(LECTIO_SCRIPSIT, via);
+    }
+    redde f;
+}
+
+static integer
+lectiones_stat (
+    constans character* via,
+       structura stat* status)
+{
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * lectiones_stat notat EXSTAT/ABSENS */
+    integer r = stat(via, status);
+
+    si (via != NIHIL && !_machina_est(via))
+    {
+        lectiones_notare(r == ZEPHYRUM ? LECTIO_EXSTAT : LECTIO_ABSENS,
+            via);
+    }
+    redde r;
 }
 
 /* ================= ex officina/fontes/officina_medulla.c ================= */
@@ -12927,7 +13149,8 @@ _aed_fopen (
         }
     }
     errno = ZEPHYRUM;
-    pl = fopen((constans character*)(memoriae_index)a[ZEPHYRUM],
+    pl =
+        lectiones_fopen((constans character*)(memoriae_index)a[ZEPHYRUM],
         (constans character*)(memoriae_index)a[I]);
     si (pl != NIHIL)
     {
@@ -13124,7 +13347,11 @@ _aed_remove (
         _recusare(m, "remove in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int) - notatur supra */
     *fr = (i64)(s64)remove(
         (constans character*)(memoriae_index)a[ZEPHYRUM]);
     _errno_retro(m);
@@ -13144,7 +13371,13 @@ _aed_rename (
         _recusare(m, "rename in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[I]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int) - notatur supra */
     *fr = (i64)(s64)rename(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
         (constans character*)(memoriae_index)a[I]);
@@ -13163,7 +13396,7 @@ _aed_stat (
 {
     (vacuum)n;
     errno = ZEPHYRUM;
-    *fr = (i64)(s64)stat(
+    *fr = (i64)(s64)lectiones_stat(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
         (structura stat*)(memoriae_index)a[I]);
     _errno_retro(m);
@@ -13183,7 +13416,11 @@ _aed_mkdir (
         _recusare(m, "mkdir in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int, modus quivis) - notatur supra */
     *fr = (i64)(s64)mkdir(
         (constans character*)(memoriae_index)a[ZEPHYRUM],
         (mode_t)(s64)_canonicum(a[I], MEDULLA_TYPUS_S32));
@@ -13260,7 +13497,11 @@ _aed_unlink (
         _recusare(m, "unlink in sessione recusatum");
         redde FALSUM;
     }
+    lectiones_notare(LECTIO_SCRIPSIT,
+        (constans character*)(memoriae_index)a[ZEPHYRUM]);
     errno = ZEPHYRUM;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>machinula: libc hospitis
+     * exacta (errno, valor int) - notatur supra */
     *fr = (i64)(s64)unlink(
         (constans character*)(memoriae_index)a[ZEPHYRUM]);
     _errno_retro(m);
@@ -21283,7 +21524,7 @@ indicium_scribere (
         caput.versio             = (i32)INDICIUM_VERSIO;
         caput.numerus_sectionum  = (i32)INDICIUM_SECTIO_NUMERUS;
 
-        plagula = fopen(via, "wb");
+        plagula = lectiones_fopen(via, "wb");
         si (plagula == NIHIL)
         {
             redde FALSUM;

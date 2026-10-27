@@ -74,6 +74,7 @@ declare -a RADIX_FONTES=(
     "sigillum"
     "vigilia"
     "lectiones"    # vigilia per librum legit (fabrica plan 5 T5a)
+    "filum"        # probationes per filum delent (fabrica-8, 2026-10-27)
     "processus_posix"
 )
 

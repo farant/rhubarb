@@ -32,6 +32,7 @@
 #include "aedilis_silva.h"
 #include "compilator.h"
 #include "fabrica_sutura.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -486,8 +487,8 @@ suturae_in_area_currere (
     (vacuum)filum_directorium_creare_cum_parentibus(chorda_ut_cstr(
         via_directorium(chorda_ex_literis(liber_via, piscina), piscina),
         piscina));
-    (vacuum)remove(liber_via);
-    f = fopen(liber_via, "w");
+    (vacuum)filum_delere(liber_via);
+    f = lectiones_fopen(liber_via, "w");
     si (f != NIHIL)
     {
         fclose(f);

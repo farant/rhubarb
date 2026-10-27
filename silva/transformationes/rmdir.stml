@@ -1,0 +1,41 @@
+<!-- silva/transformationes/rmdir.stml - rmdir -> filum_delere (codex 97, fabrica-8).
+     DIFFERENTIA: filum_delere per remove() - filum quoque tollit, ubi
+     rmdir deficeret (ENOTDIR). Arbor tota: filum_arborem_delere (manu).
+     Conventio: functio cruda 0 in successu, -1 in defectu (errno);
+     substituta VERUM in successu (b32). errno defectus servatur.
+     Formae non tectae (valor ut numerus, errno in eadem expressione,
+     macra) recusantur et manu emendantur: census primum,
+       ./silva/transformare.sh -census <functio> <viae>
+     consilium (nihil scribitur), deinde -scribere (custodia: codex 97
+     exacte, nihil crescit, clang ante et post). -->
+<transformatio functio="rmdir" codex="97">
+  <inclusio>filum.h</inclusio>
+  <regula>
+    <si! (>(vacuum)rmdir($via);
+    <fac! (>(vacuum)filum_delere($via);
+  </regula>
+  <regula>
+    <si! (>rmdir($via);
+    <fac! (>(vacuum)filum_delere($via);
+  </regula>
+  <regula>
+    <si! (>rmdir($via) != ZEPHYRUM
+    <fac! (>!filum_delere($via)
+  </regula>
+  <regula>
+    <si! (>rmdir($via) == ZEPHYRUM
+    <fac! (>filum_delere($via)
+  </regula>
+  <regula>
+    <si! (>rmdir($via) < ZEPHYRUM
+    <fac! (>!filum_delere($via)
+  </regula>
+  <regula>
+    <si! (>rmdir($via) == -I
+    <fac! (>!filum_delere($via)
+  </regula>
+  <regula>
+    <si! (>rmdir($via) != -I
+    <fac! (>filum_delere($via)
+  </regula>
+</transformatio>

@@ -202,3 +202,15 @@ Open design note: the next projection kind can repeat this mistake.
 Structural option, not built: the registry hands `computare` a scratch
 pool next to the result pool (API change in conspectus), or
 conspectus_verificare flags entries above a size bound.
+
+## 2026-10-27 - own-replica rule (communio plan-2 T1)
+
+`conspectus_renovare` read EVERY act after its cursor. Once a volume imports
+other devices' acts (communio), a foreign act whose genus (or plagula via) falls
+under a local document or `dies/<k>` spatium marked local views stale - and
+for `omnia` sources invalidated whole declarations - though nothing local
+changed. Now it reads `volumen_acta_propria_legere` when the volume has a
+replica, and sets the cursor to `volumen_seq_ultimum` taken before the read
+(foreign acts are never returned, so without this the cheap "nothing new"
+check would never short-circuit again). Test: probatio_conspectus "acta
+aliena" (RED: day 19 STALUM from a foreign act).
