@@ -364,3 +364,49 @@ braids 8 × 201 6.9 s (T5a 20.9), 6 × 201 1.1 s (2.1), 12 × 201 9.2 s
 braids unchanged (below the limen). Ordering a 201-crossing braid:
 ~25–50 ms. A later run on a busier machine was uniformly ~1.4× slower
 (state sum 6.2 s instead of 4.2–5.3) — compare within a run only.
+
+## 2026-10-27 — T5b review (independent, after 9d1ff74e) and fixes
+
+Reviewer (scratch, ASan + UBSan + PISCINA_VENENUM): both suites clean;
+new AVIDUS byte-identical to 3b86cb69's on 9,000 random networks
+(steps, slab offsets, all cost fields); 4,600 OPTIMUS networks
+(disconnected, scalars, tori, saturating dims, dims 1–5, conatus 0–16)
+— every forced candidate valid and = simulated, OMNES winner = argmin
+of forced costs under `_melior` (also with octeti_maximi at a slab),
+evaluated = forced, pruned costlier than the winner, determinism, hot
+tier equal under all orders; candidates 1–3 = portus.py step for step
+on 4,378 networks (latitudo differs only on saturated networks, where
+the port says 64 and C computes it exactly). No H.
+
+Fixed:
+- **M1** the 16 randomized runs were never shown to differ from
+  candidate 3: replacing `&sors` with NIHIL kept both suites green, yet
+  they won two of the measured braids. New section "cursus fortuiti":
+  on three braid networks some run k ≥ 4 differs from min-fill and a
+  different semen changes some run; same semen → same order. Plant red.
+- **L2** an incumbent with saturated multiplications made pruning
+  inert (`<= SATURATUM` always true): 19 useless full candidates (60×60
+  torus 0.48 → 3.8 s of ordering). Now the limit is SATURATUM − 1 when
+  the incumbent is saturated, so saturating candidates are abandoned
+  (the officina refuses saturated orders anyway). Test: on the 3^20
+  star every candidate after the first is not evaluated. Plant red.
+- **L3** the limen shortcut returned AVIDUS even when its slab exceeded
+  octeti_maximi. It now also requires AVIDUS's slab to fit. Test: the
+  2,000-multiplication braid with a 768-byte cap picks candidate 2 under
+  the default limen. Plant red.
+- **L4** the plan said dimension-1 indices are left out of the fill
+  count; code and port count them. Plan corrected (heuristic quality
+  only; the exact cost decides).
+- **L5** the laqueus "ordo optimus" comment promised a polynomial check
+  that was not there. Now: a relabelled, permuted copy of the same braid
+  (another network, another order) gives the same bracket value at five
+  points; and a new section checks T(7,8) — the closure of
+  (σ1…σ6)^8, 48 crossings — against the torus-knot Jones formula
+  (mirror: `_plexus_pd`'s crossings are negative). A first version
+  compared two full Jones polynomials of 152-crossing braids and cost
+  6.8 s; point values give the same assurance in a fraction.
+- **L6** venenum did not cover these suites: probatio_contractio and
+  probatio_laqueus_rete added to `probationes_veneni` (aedificatio.stml)
+  and to the gate's `tegit`; lib/sors.c to its `currit`.
+
+Not acted on: N1 (stamp counter wrap needs ~4×10^9 increments).

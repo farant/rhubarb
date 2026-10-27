@@ -2036,6 +2036,107 @@ _probare_optimum_fortuitum (
     }
 }
 
+/* gradus duorum ordinum aequales? */
+interior b32
+_gradus_aequales (
+    constans ContractioOrdo* o1,
+    constans ContractioOrdo* o2)
+{
+    i32 g;
+
+    si (contractio_ordo_gradus_numerus(o1)
+        != contractio_ordo_gradus_numerus(o2))
+    {
+        redde FALSUM;
+    }
+    per (g = ZEPHYRUM; g < contractio_ordo_gradus_numerus(o1); g++)
+    {
+        i32 a1;
+        i32 b1;
+        i32 e1;
+        i32 a2;
+        i32 b2;
+        i32 e2;
+
+        (vacuum)contractio_ordo_gradus(o1, g, &a1, &b1, &e1);
+        (vacuum)contractio_ordo_gradus(o2, g, &a2, &b2, &e2);
+        si (a1 != a2 || b1 != b2)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* candidatus fortuitus forcatus ad semen datum */
+interior ContractioOrdo*
+_ordinare_fortuite (
+    constans CasusTricae* exemplum,
+                     i32  k,
+                     i64  semen,
+                 Piscina* piscina)
+{
+    ContractioOptiones  o = contractio_optiones_ordinariae();
+        ContractioOrdo* ordo;
+
+    o.methodus    = CONTRACTIO_OPTIMUS;
+    o.conatus     = IV;
+    o.semen       = semen;
+    o.candidatus  = k;
+    o.limen       = ZEPHYRUM;
+    ordo = contractio_ordinare(_rete_tricae(piscina, exemplum->fila,
+        exemplum->verbum, exemplum->longitudo), &o, piscina);
+    CREDO_NECESSE_NON_NIHIL(ordo);
+    redde ordo;
+}
+
+/* cursus fortuiti (k >= 4) VERE fortuiti (recensio T5b M1): in tricis
+ * nexus abundant, ergo aliquis cursus a min-fill deterministico
+ * differt, et semen aliud aliquem cursum mutat. Sine sorte (sors
+ * NIHIL) omnes cursus = candidatus 3: haec sectio rubescit. */
+interior vacuum
+_probare_cursus_fortuitos (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+        i32  t;
+
+    per (t = I; t < IV; t++)
+    {
+        constans CasusTricae* exemplum = &CASUS_TRICARUM[t];
+              ContractioOrdo* sine_sorte = _ordinare_fortuite(exemplum,
+                  CONTRACTIO_CANDIDATUS_IMPLETIO,
+                  CONTRACTIO_SEMEN_ORDINARIUM,
+                  piscina);
+        i32 differentes_a_tertio  = ZEPHYRUM;
+        i32 differentes_semine    = ZEPHYRUM;
+        i32 k;
+
+        per (k = CONTRACTIO_CANDIDATUS_FORTUITUS;
+             k < CONTRACTIO_CANDIDATUS_FORTUITUS + IV; k++)
+        {
+            ContractioOrdo* primus = _ordinare_fortuite(exemplum, k,
+                CONTRACTIO_SEMEN_ORDINARIUM, piscina);
+            ContractioOrdo* alius  = _ordinare_fortuite(exemplum, k,
+                (i64)VII, piscina);
+            ContractioOrdo* idem   = _ordinare_fortuite(exemplum, k,
+                CONTRACTIO_SEMEN_ORDINARIUM, piscina);
+
+            CREDO_VERUM(_gradus_aequales(primus, idem));
+            si (!_gradus_aequales(primus, sine_sorte))
+            {
+                differentes_a_tertio++;
+            }
+            si (!_gradus_aequales(primus, alius))
+            {
+                differentes_semine++;
+            }
+        }
+        CREDO_VERUM(differentes_a_tertio > ZEPHYRUM);
+        CREDO_VERUM(differentes_semine > ZEPHYRUM);
+    }
+}
+
 /* exsecutio sub ordine optimo = vis bruta (retia parva) */
 interior vacuum
 _probare_optimum_exsecutionem (
@@ -2198,6 +2299,41 @@ _probare_optimum_optiones (
     ordo = contractio_ordinare(_rete_tricae(piscina, exemplum->fila,
         exemplum->verbum, exemplum->longitudo), &o, piscina);
     CREDO_AEQUALIS_I32(contractio_ordo_candidatus(ordo), II);
+
+    /* limen non praebet ordinem avidum qui tabulam non capit (recensio
+     * T5b L3): exemplum ultimum, AVIDUS 2000 < limen sed octeti 1088 >
+     * 768 - candidatus 2 (768) vincit */
+    {
+        constans CasusTricae* ultimum = &CASUS_TRICARUM[IV];
+
+        o                = contractio_optiones_ordinariae();
+        o.methodus       = CONTRACTIO_OPTIMUS;
+        o.octeti_maximi  = (i64)768UL;
+        ordo = contractio_ordinare(_rete_tricae(piscina, ultimum->fila,
+            ultimum->verbum, ultimum->longitudo), &o, piscina);
+        CREDO_NECESSE_NON_NIHIL(ordo);
+        CREDO_AEQUALIS_I32(contractio_ordo_candidatus(ordo), II);
+    }
+
+    /* incumbens saturatus (recensio T5b L2): stella 3^20 - omnis ordo
+     * saturat; candidati post primum abiciuntur (non aestimati) */
+    {
+        constans i32 t3      = (i32)3486784401UL;
+        constans i32 tres[]  = { t3, t3, t3, t3 };
+        constans i32 ps[]    = { 0, I, II, III, 0, I, II, III };
+        constans i32 ls[]    = { IV, I, I, I, I };
+                 i32 k;
+
+        ordo = _ordinare_optime(_rete(piscina, tres, IV, ps, ls, V), IV,
+            CONTRACTIO_SATURATUM, CONTRACTIO_CANDIDATUS_OMNES, piscina);
+        CREDO_AEQUALIS_I32(contractio_ordo_candidatus(ordo), I);
+        CREDO_VERUM(contractio_ordo_candidati(ordo, I, &simulatus));
+        per (k = II; k <= VII; k++)
+        {
+            CREDO_FALSUM(contractio_ordo_candidati(ordo, k,
+                &simulatus));
+        }
+    }
 }
 
 
@@ -2247,6 +2383,8 @@ interior constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "optimus fortuitus", _probare_optimum_fortuitum, NIHIL, NIHIL,
         NIHIL,
+      NIHIL },
+    { "cursus fortuiti", _probare_cursus_fortuitos, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "optimus exsecutio", _probare_optimum_exsecutionem, NIHIL, NIHIL,
       NIHIL, NIHIL },

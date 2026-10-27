@@ -1505,6 +1505,12 @@ contractio_ordinare (
                <= optiones->octeti_maximi)
         {
             limes = candidati[optimus_k - I].multiplicationes;
+            si (limes == CONTRACTIO_SATURATUM)
+            {
+                /* incumbens saturatus: candidatus saturans abicitur
+                 * (officina ordinem saturatum utcumque refutat) */
+                limes = CONTRACTIO_SATURATUM - I;
+            }
         }
         nota = piscina_notare(piscina);
         si (_candidatum_currere(rete, k, optiones, FALSUM, limes,
@@ -1531,7 +1537,9 @@ contractio_ordinare (
         piscina_reficere(piscina, nota);
         si (   k == CONTRACTIO_CANDIDATUS_AVIDUS && aestimati[ZEPHYRUM]
             && optiones->candidatus == CONTRACTIO_CANDIDATUS_OMNES
-            && candidati[ZEPHYRUM].multiplicationes < optiones->limen)
+            && candidati[ZEPHYRUM].multiplicationes < optiones->limen
+            && candidati[ZEPHYRUM].octeti_officinae
+               <= optiones->octeti_maximi)
         {
             /* ordo avidus iam vilis: ceteri non aestimantur */
             per (k = k + I; k <= numerus; k++)

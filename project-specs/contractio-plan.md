@@ -608,7 +608,7 @@ b32 contractio_ordo_candidati (constans ContractioOrdo* ordo, i32 k,
 **Candidates** (review M2; excess over best-of-everything, log₂ multiplications, 20 braids: AVIDUS alone 3.35 mean / 6.5 max; this set 0.08 / 0.5):
 1. AVIDUS (T2 key) — so OPTIMUS never costs more multiplications than AVIDUS when no memory limit is set;
 2. size-reduction key: 2^r − 2^a − 2^b as s64, each 2^x clamped at 2^62 (a heuristic: only determinism matters), ties by ids;
-3. min-fill on the line graph (indices adjacent if they share a tensor; dimension-1 indices left out of the fill count), fill evaluated among the 64 lowest-degree vertices per step (a bucket queue, not a sort), ties by (degree, id);
+3. min-fill on the line graph (indices adjacent if they share a tensor; *as implemented, dimension-1 indices are counted like any other — leaving them out was proposed but not done; heuristic quality only, the exact cost decides*), fill evaluated among the 64 lowest-degree vertices per step (*as implemented, an insertion into a sorted 64-array per step rather than a bucket queue*), ties by (degree, id);
 4. `conatus` runs of (3) with ties among equal (fill, degree) broken by `sors_intra` draws from `semen` (integer draws only; on dimension-2 networks all ranks are even, so "near-ties" mean nothing — the T2 id tie-break is where greedy goes wrong).
 
 Dropped after review: union-first key, min-degree, randomized greedy (they add nothing once randomized min-fill is present). The 64 cap costs nothing measurable (8, 16, 64 and uncapped equivalent within seed noise).
@@ -642,6 +642,8 @@ Dropped after review: union-first key, min-degree, randomized greedy (they add n
 - The gain is uneven (0–120× per braid, ~10× mean); at the original 12 × 801 target it may be small. The measurement will say.
 - A winner can occasionally have a slightly larger slab (worst seen +7%); `octeti_maximi` bounds it.
 - Ordering cost on very wide networks is bounded by incumbent pruning; measured before relying on it for phase 2.
+
+*(2026-10-27, independent review of 9d1ff74e: no H; new AVIDUS byte-identical to the old on 9,000 networks; 4,600-network sanitized OPTIMUS fuzz and 4,378 networks against the port, 0 mismatches. Fixed: randomized runs now tested to differ (M1), pruning works with a saturated incumbent (L2), the limen shortcut respects octeti_maximi (L3), plan text on dimension-1 indices (L4), laqueus point-value check under another order + T(7,8) against the torus Jones formula (L5), venenum covers both suites (L6).)*
 
 *(2026-10-27: landed. As designed, plus the `limen` option (default 2^20 multiplications: below it only AVIDUS is evaluated — without it the laqueus suite went 2.9 → 10.4 s) and `laqueus_modulus_vertex_ordo` for the wiring test and the tool. 26 sections, 193,060 checks: candidates equal an independent Python port exactly, forced = simulated, counting anulus = multiplications; 7 plants red. Measured, same seeds: braids 8 × 201 20.9 → 6.9 s, 12 × 201 ~99 → 9.2 s, 10 × 201 ~34 min → 12.5 s; sums unchanged. See lib/contractio.worklog.md.)*
 

@@ -1305,7 +1305,8 @@ _probare_limitem_tricarum (
 
 /* ordo optimus VERE in usu (contractio-plan T5b): clausura tricae VIII
  * filorum supra limen - victor non avidus, sumptus retis = simulatus
- * victoris < avidi; uncinus = Jones per idem rete iterum */
+ * victoris < avidi; valores uncinus in punctis = valores copiae ora
+ * rotata et transitibus permixtis (rete aliud, ordo alius) */
 interior vacuum
 _probare_ordinem_optimum (
     CredoContextus* c)
@@ -1353,6 +1354,100 @@ _probare_ordinem_optimum (
         CREDO_VERUM(victoris.multiplicationes
             < avidus.multiplicationes);
     }
+    {
+        /* copia: ora rotata et transitus permixti - idem diagramma, idem
+         * uncinus, rete et ordo alii. Valores in punctis aequales. */
+        i32* copia = (i32*)piscina_allocare(piscina,
+            (memoriae_index)IV * CLI * magnitudo(i32));
+        LaqueusModulusVertex* mv = laqueus_modulus_vertex_creare(pd,
+            CLI,
+            OCTETI_MAXIMI, piscina);
+        LaqueusModulusVertex* mv_copiae;
+                         i32  omega;
+
+        per (k = ZEPHYRUM; k < IV * CLI; k++)
+        {
+            copia[k] = pd[k];
+        }
+        _permiscere(copia, CLI, &s);
+        mv_copiae = laqueus_modulus_vertex_creare(copia, CLI,
+            OCTETI_MAXIMI,
+            piscina);
+        CREDO_NECESSE_NON_NIHIL(mv);
+        CREDO_NECESSE_NON_NIHIL(mv_copiae);
+        per (omega = II; omega < VII; omega++)
+        {
+            i32 a1;
+            i32 v1;
+            i32 a2;
+            i32 v2;
+
+            CREDO_AEQUALIS_S32(laqueus_modulus_vertex_aestimare(mv,
+                omega,
+                (i32)4294967197UL, &a1, &v1), INTERPOLATIO_UTILE);
+            CREDO_AEQUALIS_S32(laqueus_modulus_vertex_aestimare(mv_copiae,
+                omega, (i32)4294967197UL, &a2, &v2),
+                INTERPOLATIO_UTILE);
+            CREDO_AEQUALIS_I32(a1, a2);
+            CREDO_AEQUALIS_I32(v1, v2);
+        }
+    }
+}
+
+/* nodus toroidalis T(7, 8) ut clausura (sigma_1 .. sigma_6)^8 (XLVIII
+ * transitus, omnes negativi in conventione _plexus_pd): Jones = speculum
+ * formulae t^((p-1)(q-1)/2) (1 - t^(p+1) - t^(q+1) + t^(p+q)) / (1 - t^2)
+ * - oraculum clausum ultra summam statuum */
+interior vacuum
+_probare_torum_septem_octo (
+    CredoContextus* c)
+{
+       Piscina* piscina = c->piscina;
+           s32  verbum[XLVIII];
+           i32* pd;
+    Polynomium  numerator    = polynomium_nullum();
+    Polynomium  denominator  = polynomium_nullum();
+    Polynomium  monomium     = polynomium_nullum();
+    Polynomium  quotiens;
+    Polynomium  formula;
+    Polynomium  speculum;
+    Polynomium  jones;
+        Magnus  coef[XVI];
+           i32  k;
+
+    per (k = ZEPHYRUM; k < XLVIII; k++)
+    {
+        verbum[k] = (s32)(k % VI + I);
+    }
+    pd = _plexus_pd(verbum, XLVIII, VII, piscina);
+    CREDO_NECESSE_NON_NIHIL(pd);
+    per (k = ZEPHYRUM; k < XVI; k++)
+    {
+        coef[k] = magnus_ex_s64((s64)ZEPHYRUM);
+    }
+    coef[0]     = magnus_ex_s64((s64)I);
+    coef[VIII]  = magnus_ex_s64(-(s64)I);
+    coef[IX]    = magnus_ex_s64(-(s64)I);
+    coef[XV]    = magnus_ex_s64((s64)I);
+    CREDO_NECESSE(polynomium_ex_coefficientibus(coef, XVI, ZEPHYRUM,
+        piscina, &numerator));
+    coef[0]   = magnus_ex_s64((s64)I);
+    coef[I]   = magnus_ex_s64((s64)ZEPHYRUM);
+    coef[II]  = magnus_ex_s64(-(s64)I);
+    CREDO_NECESSE(polynomium_ex_coefficientibus(coef, III, ZEPHYRUM,
+        piscina, &denominator));
+    CREDO_NECESSE(polynomium_divide_exacte(numerator, denominator,
+        piscina,
+        &quotiens));
+    CREDO_NECESSE(polynomium_monomium(magnus_ex_s64((s64)I), (s32)XXI,
+        piscina, &monomium));
+    CREDO_NECESSE(polynomium_multiplica(quotiens, monomium, piscina,
+        &formula));
+    CREDO_NECESSE(polynomium_dilata(formula, -(s32)I, piscina,
+        &speculum));
+    CREDO_NECESSE(laqueus_jones_ex_pd_rete(pd, XLVIII, OCTETI_MAXIMI,
+        piscina, &jones, NIHIL));
+    CREDO_VERUM(polynomium_aequalis(jones, speculum));
 }
 
 
@@ -1382,6 +1477,8 @@ interior constans CredoSectio SECTIONES[] = {
     { "limes tricarum", _probare_limitem_tricarum, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "ordo optimus", _probare_ordinem_optimum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "torus T(7,8)", _probare_torum_septem_octo, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "tabula tota", _probare_tabulam_totam, NIHIL, NIHIL, NIHIL,
       NIHIL },
