@@ -1796,6 +1796,24 @@ _sectio_intensio (
                                  ZEPHYRUM) == 1.0f);
 }
 
+/* agogica sine spatio: carmen vacuum, metrum ad finem - legitur (mappa
+ * capacitatem non excedit) */
+interior vacuum
+_sectio_inaequalitas_vacua (
+    CredoContextus* c)
+{
+    Carmina liber;
+
+    CREDO_VERUM (_legere(c, _carmen(c,
+        " metrum=\"3/4\" agogica=\"vindobonensis\"", ""), &liber));
+    CREDO_VERUM (_legere(c, _carmen(c, " metrum=\"3/4\"",
+        "<metrum mensura=\"3\" valor=\"3/4\" "
+        "agogica=\"vindobonensis\"/>"
+        "<pars titulus=\"p\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c2. | c2.</textus></frustum></pars>"),
+        &liber));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1806,6 +1824,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ictus", _sectio_ictus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fermata", _sectio_corona, NIHIL, NIHIL, NIHIL, NIHIL },
     { "agogica", _sectio_inaequalitas, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "agogica_vacua", _sectio_inaequalitas_vacua, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "dynamica", _sectio_intensio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "repetitio", _sectio_repetitio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },

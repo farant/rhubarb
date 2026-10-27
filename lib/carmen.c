@@ -1982,10 +1982,16 @@ _mappam_modulare (
                           s64  l = _longitudo_mensurae(m);
                           s64  spatium = _finis_metri(k, i) - m->pulsus;
 
+        /* lineae partium spatii, et finis spatii semper (etiam spatio
+         * nullo: carmen vacuum, metrum ad finem) */
+        si (m->numerus_ponderum > ZEPHYRUM)
+        {
+            capacitas += I;
+        }
         si (m->numerus_ponderum > ZEPHYRUM && spatium > ZEPHYRUM)
         {
             capacitas += (i32)((spatium + l - I) / l)
-                       * m->numerus_ponderum + I;
+                       * m->numerus_ponderum;
         }
     }
     lineae = (s64*)piscina_allocare(piscina,
@@ -2018,9 +2024,17 @@ _mappam_modulare (
         pars = _longitudo_mensurae(m) / (s64)m->numerus_ponderum;
         per (p = m->pulsus; p < _finis_metri(k, i); p += pars)
         {
+            si (n >= capacitas)
+            {
+                redde FALSUM;
+            }
             lineae[n++] = p;
         }
         /* finis spatii: metrum proximum (aequale fortasse) redit */
+        si (n >= capacitas)
+        {
+            redde FALSUM;
+        }
         lineae[n++] = _finis_metri(k, i);
     }
     /* ordo insertionis: catenae singulae iam ordinatae */

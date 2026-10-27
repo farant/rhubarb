@@ -315,3 +315,14 @@ pair only when BOTH notes were copied and are contiguous (pass 1 clears continua
 without a gliding next note, pass 2 clears illapsus without a continuing previous).
 cantor's orphan sweep would catch a dangling one anyway, but partitura would print a
 false '/'.
+
+## 2026-10-26 - review batch 1.4: agogica tempo map overflowed by one line when its span was empty
+
+From the sexta review (time finding 1, ASan): _mappam_modulare sized `lineae`/`nova` with
+ceil(spatium/l)*K + 1 only when spatium > 0, but always appended the "finis spatii" line - an
+agogica metrum with no span (an EMPTY waltz `<carmen metrum="3/4" agogica=...>`, the normal
+state of a song being started, or a `<metrum agogica>` at/after the last barline) wrote one
+s64 past the buffer; inside a piscina it landed silently in padding / nova[0], so no test could
+see it. Fix: the +1 is counted for every agogica metrum. To make it provable without ASan the
+write loop now checks n < capacitas and fails cleanly (FALSUM -> 'piscina exhausta') - with the
++1 planted out, the new empty-span tests fail instead of corrupting memory. Plant 1/1.
