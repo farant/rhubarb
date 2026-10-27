@@ -388,3 +388,22 @@ bossa_bina for two-chord bars), pizzicato root-fifth bass; written baculum clave
 bII7#11 (a tritone sub must fall a semitone to its target - Ab7#11 does), and an octave slip
 in bar 10 (Bb5 for Bb4). Mix: per-part peaks measured (pluck and bass ~0.49 each summed to 3
 clipped samples) -> rebalanced, peak 0.86. Generator: build/plantae_s4/iazz/litus.py.
+
+## 2026-10-27 - <comitatus bina>: second figure for divided bars (Option B)
+
+`<comitatus figura="bossa" bina="bossa_bina" ...>`: a bar is DIVIDED when a written chord
+(not 'r') starts strictly inside it; divided bars take the bina figure, the rest the main one.
+Pure carmen sugar - comitatus.h is untouched. _comitatum_legere walks the bars, groups
+contiguous bars of the same kind into runs and calls comitatus_componere once per run with the
+shared ComitatusStatus, i.e. exactly what the hand-alternated contiguous <comitatus> did. Each
+run is its own frustum (textus = its figure, so note offsets stay valid for emendatio's
+"fontem nominat"); all share the element's comitatus index. _partem_legere collects each
+element's frusta first, then allocates the final array at its exact size. A first version grew
+the array by doubling; the plant "array never grows" SURVIVED - the overflowing copies landed on
+the scratch run array they were being copied from, after each entry had been read, so no
+output changed. Silent overflow is untestable by output, so the growth path was removed rather
+than tested. A run with no notes is skipped; an
+element with no notes at all is still "comitatus sine notis" (that error had no test before).
+_bassus_comitatus also looks at the bina figure's 'B' (static, like the main figure's).
+Proof: litus (26 lines -> 4) and ambulatio (18 -> 4) rewritten; score, WAV and summary are
+byte-identical to the hand-split version; censura counts for all 13 songs unchanged.

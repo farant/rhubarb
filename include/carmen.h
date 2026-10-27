@@ -98,10 +98,18 @@
  *             [positio="clausa"|"sine_radice"]/> in libro aut carmine
  *             (carminis vincit); titulus [a-z0-9_]+; positio
  *             comitatus.h (ordinaria clausa)
- *   comitatus <comitatus figura="T" mensura="M" [usque="U"]
- *             [ambitus="55..76"] [bassus="36..57"]/> in parte: frustum
- *             GENERATUM [M, U) ex acordis declaratis (sine usque: finis
- *             acordorum); frusta non se tegunt (scripta et generata).
+ *   comitatus <comitatus figura="T" [bina="T2"] mensura="M"
+ *             [usque="U"] [ambitus="55..76"] [bassus="36..57"]/> in
+ *             parte: frustum GENERATUM [M, U) ex acordis declaratis
+ *             (sine usque: finis acordorum); frusta non se tegunt
+ *             (scripta et generata).
+ *             BINA: figura mensurarum DIVISARUM - ubi acordum
+ *             scriptum (non 'r') intra mensuram incipit, non ad
+ *             initium eius ("Gm7:2 C7:2"); ceterae figuram. Mensurae
+ *             eiusdem generis contiguae frustum unum faciunt (textus
+ *             = figura sua; comitatus idem): figura="bossa"
+ *             bina="bossa_bina" idem sonat ac comitatus contigui manu
+ *             alternati. Sine bina: figura ubique.
  *             Comitatus contiguus (mensura = usque prioris in parte
  *             eadem, nullo frusto scripto inter) positionem et bassum
  *             continuat (comitatus.h STATUS); aliter ab initio.
@@ -207,7 +215,8 @@ nomen structura {
             s32 scriptum;     /* index inter frusta SCRIPTA partis (ordo
                                * STML - emendatio); -1 = iteratum aut
                                * generatum */
-            s32 comitatus;    /* index <comitatus> in parte; -1 =
+            s32 comitatus;    /* index <comitatus> in parte (frusta
+                               * plura eiusdem si bina); -1 =
                                * scriptum aut iteratum */
 } CarmenFrustum;
 

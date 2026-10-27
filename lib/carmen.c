@@ -674,28 +674,126 @@ _initia_mensurarum (
     redde initia;
 }
 
-/* <comitatus figura mensura [usque] [ambitus] [bassus]/>: frustum
- * generatum ex acordis carminis (comitatus_componere) */
-interior b32
-_comitatum_legere (
-                  StmlNodus* nodus,
-            constans Carmen* carmen,
+/* figura nominata titulo attributi; NIHIL si attributum abest aut
+ * figura ignota */
+interior constans FiguraNominata*
+_figuram_invenire (
     constans FiguraNominata* figurae,
                         i32  numerus_figurarum,
-                        b32  bassus_sonat,
-                     chorda  titulus_partis,
-                        s32  index,
-            ComitatusStatus* status,
-                        s64* finis_prior,
-                    Piscina* piscina,
-              CarmenFrustum* frustum,
-             CarminisVitium* vitium)
+                     chorda* titulus)
 {
-    constans FiguraNominata* figura = NIHIL;
+    i32 i;
+
+    per (i = ZEPHYRUM; titulus != NIHIL && i < numerus_figurarum; i++)
+    {
+        si (chorda_aequalis(figurae[i].titulus, *titulus))
+        {
+            redde &figurae[i];
+        }
+    }
+    redde NIHIL;
+}
+
+/* mensura m DIVISA (bina adest et acordum scriptum, non 'r', intra
+ * mensuram incipit, non ad initium eius) */
+interior b32
+_mensura_divisa (
+            constans Carmen* carmen,
+    constans FiguraNominata* bina,
+               constans s64* initia,
+                        i32  m)
+{
+    i32 k;
+
+    si (bina == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < carmen->numerus_acordorum; k++)
+    {
+        constans ComitatusAcordum* a = &carmen->acorda[k];
+
+        si (   !a->nullum && a->pulsus > initia[m]
+            && a->pulsus < initia[m + I])
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* frustum generatum [ab, ad) ex notis compositis (pulsus carminis) */
+interior b32
+_frustum_generare (
+    constans ComitatusNota* notae,
+                       i32  numerus,
+                       s64  ab,
+                       s64  ad,
+                    chorda  textus,
+                   Piscina* piscina,
+             CarmenFrustum* frustum)
+{
+    i32 i;
+
+    memset(frustum, ZEPHYRUM, magnitudo(*frustum));
+    frustum->notae = (CarmenNota*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(CarmenNota));
+    si (frustum->notae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        CarmenNota* n = &frustum->notae[i];
+
+        n->pulsus       = notae[i].pulsus - ab;
+        n->longitudo    = notae[i].longitudo;
+        n->nota         = notae[i].nota;
+        n->lucrum       = notae[i].lucrum;
+        n->littera      = notae[i].littera;
+        n->praeparatum  = _vacua();
+        n->offset       = notae[i].offset;
+        n->illapsus     = ZEPHYRUM;
+        n->continuatur  = FALSUM;
+        n->vox          = notae[i].vox;
+        n->acordi       = VERUM;
+    }
+    frustum->pulsus     = ab;
+    frustum->textus     = textus;
+    frustum->numerus    = numerus;
+    frustum->longitudo  = ad - ab;
+    frustum->repetitio  = -I;
+    frustum->scriptum   = -I;
+    redde VERUM;
+}
+
+/* <comitatus figura [bina] mensura [usque] [ambitus] [bassus]/>:
+ * frusta generata ex acordis carminis (comitatus_componere), unum per
+ * cursum mensurarum contiguarum eiusdem generis (divisae: bina;
+ * ceterae: figura) - status per cursus continuatur, ut comitatus
+ * contigui manu alternati. Cursus sine notis omittitur */
+interior b32
+_comitatum_legere (
+                  StmlNodus*  nodus,
+            constans Carmen*  carmen,
+    constans FiguraNominata*  figurae,
+                        i32   numerus_figurarum,
+                        b32   bassus_sonat,
+                     chorda   titulus_partis,
+                        s32   index,
+            ComitatusStatus*  status,
+                        s64*  finis_prior,
+                    Piscina*  piscina,
+              CarmenFrustum** frusta,
+                        i32*  numerus_frustorum,
+             CarminisVitium*  vitium)
+{
+    constans FiguraNominata* figura;
+    constans FiguraNominata* bina    = NIHIL;
            ComitatusAmbitus  ambitus;
             ComitatusVitium  cv;
               ComitatusNota* notae;
-         constans character* causa = NIHIL;
+         constans character* causa   = NIHIL;
                      chorda* a;
                         s64* initia;
                         s64  ab;
@@ -703,22 +801,25 @@ _comitatum_legere (
                         s64  u;
                         i32  mensurae;
                         i32  numerus;
-                        i32  i;
+                        i32  m;
+                        i32  finis;
 
-    memset(frustum, ZEPHYRUM, magnitudo(*frustum));
-    a = stml_attributum_capere(nodus, "figura");
-    per (i = ZEPHYRUM; a != NIHIL && i < numerus_figurarum; i++)
-    {
-        si (chorda_aequalis(figurae[i].titulus, *a))
-        {
-            figura = &figurae[i];
-            frange;
-        }
-    }
+    figura = _figuram_invenire(figurae, numerus_figurarum,
+                               stml_attributum_capere(nodus, "figura"));
     si (figura == NIHIL)
     {
         redde _vitium(vitium, carmen->titulus, titulus_partis, index,
             ZEPHYRUM, "comitatus: figura ignota");
+    }
+    a = stml_attributum_capere(nodus, "bina");
+    si (a != NIHIL)
+    {
+        bina = _figuram_invenire(figurae, numerus_figurarum, a);
+        si (bina == NIHIL)
+        {
+            redde _vitium(vitium, carmen->titulus, titulus_partis,
+                index, ZEPHYRUM, "comitatus: figura bina ignota");
+        }
     }
     si (!_positionem_legere(nodus, carmen, VERUM, &ab, &causa))
     {
@@ -783,54 +884,60 @@ _comitatum_legere (
     {
         memset(status, ZEPHYRUM, magnitudo(*status));
     }
-    si (!comitatus_componere(&figura->figura, carmen->acorda,
-                             carmen->numerus_acordorum, initia,
-                             mensurae,
-                             &ambitus, bassus_sonat, status, piscina,
-                             &notae, &numerus, &cv))
-    {
-        redde _vitium(vitium, carmen->titulus, titulus_partis, index,
-            cv.offset, cv.causa);
-    }
-    si (numerus == ZEPHYRUM)
-    {
-        redde _vitium(vitium, carmen->titulus, titulus_partis, index,
-            ZEPHYRUM, "comitatus sine notis");
-    }
-    frustum->notae = (CarmenNota*)piscina_allocare(piscina,
-        (memoriae_index)numerus * magnitudo(CarmenNota));
-    si (frustum->notae == NIHIL)
+    *frusta = (CarmenFrustum*)piscina_allocare(piscina,
+        (memoriae_index)mensurae * magnitudo(CarmenFrustum));
+    si (*frusta == NIHIL)
     {
         redde _vitium(vitium, carmen->titulus, titulus_partis, index,
             ZEPHYRUM, "piscina exhausta");
     }
-    per (i = ZEPHYRUM; i < numerus; i++)
+    *numerus_frustorum = ZEPHYRUM;
+    per (m = ZEPHYRUM; m < mensurae; m = finis)
     {
-        CarmenNota* n = &frustum->notae[i];
+                            b32  divisa;
+        constans FiguraNominata* f;
 
-        n->pulsus       = notae[i].pulsus - ab;
-        n->longitudo    = notae[i].longitudo;
-        n->nota         = notae[i].nota;
-        n->lucrum       = notae[i].lucrum;
-        n->littera      = notae[i].littera;
-        n->praeparatum  = _vacua();
-        n->offset       = notae[i].offset;
-        n->illapsus     = ZEPHYRUM;
-        n->continuatur  = FALSUM;
-        n->vox          = notae[i].vox;
-        n->acordi       = VERUM;
+        divisa  = _mensura_divisa(carmen, bina, initia, m);
+        f       = divisa ? bina : figura;
+        finis   = m + I;
+        dum (   finis < mensurae
+             && _mensura_divisa(carmen, bina, initia, finis) == divisa)
+        {
+            finis++;
+        }
+        si (!comitatus_componere(&f->figura, carmen->acorda,
+                                 carmen->numerus_acordorum, initia + m,
+                                 finis - m, &ambitus, bassus_sonat,
+                                 status, piscina, &notae, &numerus,
+                                 &cv))
+        {
+            redde _vitium(vitium, carmen->titulus, titulus_partis,
+                index, cv.offset, cv.causa);
+        }
+        si (numerus == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (!_frustum_generare(notae, numerus, initia[m], initia[finis],
+                               f->textus, piscina,
+                               &(*frusta)[*numerus_frustorum]))
+        {
+            redde _vitium(vitium, carmen->titulus, titulus_partis,
+                index, ZEPHYRUM, "piscina exhausta");
+        }
+        (*numerus_frustorum)++;
     }
-    *finis_prior        = ad;
-    frustum->pulsus     = ab;
-    frustum->textus     = figura->textus;
-    frustum->numerus    = numerus;
-    frustum->longitudo  = ad - ab;
-    frustum->repetitio  = -I;
-    frustum->scriptum   = -I;
+    si (*numerus_frustorum == ZEPHYRUM)
+    {
+        redde _vitium(vitium, carmen->titulus, titulus_partis, index,
+            ZEPHYRUM, "comitatus sine notis");
+    }
+    *finis_prior = ad;
     redde VERUM;
 }
 
-/* aliquis <comitatus> partium carminis figuram cum voce 'B' adhibet */
+/* aliquis <comitatus> partium carminis figuram aut binam cum voce 'B'
+ * adhibet */
 interior b32
 _bassus_comitatus (
                   StmlNodus* nodus,
@@ -852,17 +959,19 @@ _bassus_comitatus (
         per (j = ZEPHYRUM; j < stml_numerus_liberorum(pars); j++)
         {
             StmlNodus* l = stml_liberum_ad_indicem(pars, j);
-               chorda* a;
 
             si (!_elementum_est(l, "comitatus"))
             {
                 perge;
             }
-            a = stml_attributum_capere(l, "figura");
-            per (f = ZEPHYRUM; a != NIHIL && f < numerus_figurarum; f++)
+            per (f = ZEPHYRUM; f < II; f++)
             {
-                si (   chorda_aequalis(figurae[f].titulus, *a)
-                    && figurae[f].figura.bassus)
+                constans FiguraNominata* x = _figuram_invenire(figurae,
+                    numerus_figurarum,
+                    stml_attributum_capere(l, f == ZEPHYRUM ? "figura"
+                                                            : "bina"));
+
+                si (x != NIHIL && x->figura.bassus)
                 {
                     redde VERUM;
                 }
@@ -883,15 +992,20 @@ _partem_legere (
                  CarmenPars* pars,
              CarminisVitium* vitium)
 {
-             chorda* a;
-                f64  lucrum;
-                i32  numerus    = ZEPHYRUM;
-                i32  scripta    = ZEPHYRUM;
-                i32  comitatus  = ZEPHYRUM;
-                i32  i;
-                i32  j;
-                s64  finis_prior = -I;
-    ComitatusStatus  status;
+             chorda*  a;
+                f64   lucrum;
+                i32   numerus    = ZEPHYRUM;
+                i32   summa      = ZEPHYRUM;
+                i32   scripta    = ZEPHYRUM;
+                i32   comitatus  = ZEPHYRUM;
+                i32   i;
+                i32   j;
+                s64   finis_prior = -I;
+    ComitatusStatus   status;
+      CarmenFrustum** lecta;
+                i32*  quot;
+                i32   e;
+                i32   t;
 
     /* status comitatus contigui; finis_prior = finis comitatus
      * prioris (frustum scriptum inter: -1, status novus) */
@@ -968,14 +1082,18 @@ _partem_legere (
     {
         redde VERUM;
     }
-    pars->frusta = (CarmenFrustum*)piscina_allocare(piscina,
-        (memoriae_index)numerus * magnitudo(CarmenFrustum));
-    si (pars->frusta == NIHIL)
+    /* frusta per elementum (<comitatus bina> plura dat), deinde tabula
+     * mensurae exactae */
+    lecta = (CarmenFrustum**)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(CarmenFrustum*));
+    quot  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(i32));
+    si (lecta == NIHIL || quot == NIHIL)
     {
         redde _vitium(vitium, carmen->titulus, pars->titulus, -I,
             ZEPHYRUM, "piscina exhausta");
     }
-    j = ZEPHYRUM;
+    e = ZEPHYRUM;
     per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus); i++)
     {
         StmlNodus* l = stml_liberum_ad_indicem(nodus, i);
@@ -987,40 +1105,70 @@ _partem_legere (
         si (_elementum_est(l, "comitatus"))
         {
             si (!_comitatum_legere(l, carmen, figurae,
-                numerus_figurarum, bassus_sonat,
-                                   pars->titulus, (s32)j, &status,
-                                   &finis_prior, piscina,
-                                   &pars->frusta[j], vitium))
+                                   numerus_figurarum, bassus_sonat,
+                                   pars->titulus, (s32)summa, &status,
+                                   &finis_prior, piscina, &lecta[e],
+                                   &quot[e], vitium))
             {
                 redde FALSUM;
             }
-            pars->frusta[j].comitatus = (s32)comitatus++;
+            per (t = ZEPHYRUM; t < quot[e]; t++)
+            {
+                lecta[e][t].comitatus = (s32)comitatus;
+            }
+            comitatus++;
         }
         alioquin
         {
-            si (!_frustum_legere(l, carmen, pars->titulus, (s32)j,
-                                 piscina, &pars->frusta[j], vitium))
+            lecta[e] = (CarmenFrustum*)piscina_allocare(piscina,
+                magnitudo(CarmenFrustum));
+            si (lecta[e] == NIHIL)
+            {
+                redde _vitium(vitium, carmen->titulus, pars->titulus,
+                    (s32)summa, ZEPHYRUM, "piscina exhausta");
+            }
+            si (!_frustum_legere(l, carmen, pars->titulus, (s32)summa,
+                                 piscina, lecta[e], vitium))
             {
                 redde FALSUM;
             }
-            finis_prior                = -I;
-            pars->frusta[j].repetitio  = -I;
-            pars->frusta[j].scriptum   = (s32)scripta++;
-            pars->frusta[j].comitatus  = -I;
+            finis_prior          = -I;
+            lecta[e]->repetitio  = -I;
+            lecta[e]->scriptum   = (s32)scripta++;
+            lecta[e]->comitatus  = -I;
+            quot[e]              = I;
         }
-        /* ordine positionis, non se tegentes */
-        si (   j > ZEPHYRUM
-            && pars->frusta[j].pulsus < pars->frusta[j - I].pulsus
-                                      + pars->frusta[j - I].longitudo)
-        {
-            redde _vitium(vitium, carmen->titulus, pars->titulus,
-                (s32)j,
-                ZEPHYRUM,
-                "frusta se tegunt aut ordine positionis non sunt");
-        }
-        j++;
+        summa += quot[e];
+        e++;
     }
-    pars->numerus_frustorum = numerus;
+    pars->frusta = (CarmenFrustum*)piscina_allocare(piscina,
+        (memoriae_index)summa * magnitudo(CarmenFrustum));
+    si (pars->frusta == NIHIL)
+    {
+        redde _vitium(vitium, carmen->titulus, pars->titulus, -I,
+            ZEPHYRUM, "piscina exhausta");
+    }
+    j = ZEPHYRUM;
+    per (e = ZEPHYRUM; e < numerus; e++)
+    {
+        per (t = ZEPHYRUM; t < quot[e]; t++)
+        {
+            pars->frusta[j] = lecta[e][t];
+            /* ordine positionis, non se tegentes */
+            si (   j > ZEPHYRUM
+                && pars->frusta[j].pulsus < pars->frusta[j - I].pulsus
+                                          + pars->frusta[j
+                                          - I].longitudo)
+            {
+                redde _vitium(vitium, carmen->titulus, pars->titulus,
+                    (s32)j,
+                    ZEPHYRUM,
+                    "frusta se tegunt aut ordine positionis non sunt");
+            }
+            j++;
+        }
+    }
+    pars->numerus_frustorum = j;
     redde VERUM;
 }
 

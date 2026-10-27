@@ -51,6 +51,8 @@
                             accessus chromaticus ad bassum proximum
        ambulans_bina   4/4  idem acordis binis: radix, accessus, radix,
                             accessus
+     Mensurae divisae (acordum intra mensuram incipit) figuram binam
+     accipiunt: <comitatus figura="ambulans" bina="ambulans_bina">.
 
      LILIA: valsa nostra (Claudius, 2026-10-26, prima figuris
      comitandi; desideratum ...Q7G5): F maior, 3/4, 138 agogica
@@ -359,10 +361,10 @@
 
   <!-- ambulatio: blues in F (clavis caerulea), XII mensurae bis et
        finis. Melodia scripta; laeva et bassus GENERATI ex acordis:
-       charleston / pulsus_bini sine radice (acorda bina), bassus
-       ambulans "B:4 T Q A" / "B:4 A B A"; comitatus contigui statum
-       continuant. Accessus C#3 super Gm7 (mensurae 12, 24) extra
-       clavem nominatur - accessus chromaticus nondum agnoscitur. -->
+       charleston sine radice, bassus ambulans "B:4 T Q A"; mensurae
+       divisae (acorda bina) figuras binas accipiunt (<comitatus
+       bina>): pulsus_bini, "B:4 A B A". Accessus C#3 super Gm7
+       (mensurae 12, 24) ornamentum chromaticum est (censura). -->
   <carmen titulus="ambulatio" stylus="iazz" tempus="160" metrum="4/4" clavis="f maior caerulea"
           agogica="2 1 2 1 2 1 2 1">
     <reverberatio aula="0.4" mollities="0.6" latitudo="1" lucrum="0.25"/>
@@ -379,25 +381,11 @@
     <figura titulus="tenuta" textus="[1 2 3 4]:1" positio="sine_radice"/>
     <figura titulus="bassus_finis" textus="B:1"/>
     <pars titulus="laeva" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
-      <comitatus figura="charleston" mensura="1" usque="4" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="pulsus_bini" mensura="4" usque="5" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="charleston" mensura="5" usque="11" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="pulsus_bini" mensura="11" usque="13" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="charleston" mensura="13" usque="16" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="pulsus_bini" mensura="16" usque="17" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="charleston" mensura="17" usque="23" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="pulsus_bini" mensura="23" usque="25" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="charleston" bina="pulsus_bini" mensura="1" usque="25" ambitus="55..72" bassus="36..55"/>
       <comitatus figura="tenuta" mensura="25" usque="26" ambitus="55..72" bassus="36..55"/>
     </pars>
     <pars titulus="bassus" instrumentum="pizzicato" lucrum="1" reverberatio="0.15">
-      <comitatus figura="ambulans" mensura="1" usque="4" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="ambulans_bina" mensura="4" usque="5" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="ambulans" mensura="5" usque="11" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="ambulans_bina" mensura="11" usque="13" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="ambulans" mensura="13" usque="16" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="ambulans_bina" mensura="16" usque="17" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="ambulans" mensura="17" usque="23" ambitus="55..72" bassus="36..55"/>
-      <comitatus figura="ambulans_bina" mensura="23" usque="25" ambitus="55..72" bassus="36..55"/>
+      <comitatus figura="ambulans" bina="ambulans_bina" mensura="1" usque="25" ambitus="55..72" bassus="36..55"/>
       <comitatus figura="bassus_finis" mensura="25" usque="26" ambitus="55..72" bassus="36..55"/>
     </pars>
     <pars titulus="cymbalum" instrumentum="aether" lucrum="0.6">
@@ -409,8 +397,9 @@
   </carmen>
 
   <!-- litus: bossa nova in D maior (originalis), XVI mensurae bis et
-       finis. Cithara (chorda) comitans sine radice: bossa / bossa_bina;
-       bassus radix et quinta (bossa_bassus / bossa_bassus_bina);
+       finis. Cithara (chorda) comitans sine radice: bossa, bina
+       bossa_bina; bassus radix et quinta (bossa_bassus, bina
+       bossa_bassus_bina);
        baculum clavis bossae (3-3-2 | 2-3), quassatio octavis, tympanum
        grave molle. Melodia intentionibus: 9 super Imaj9, #11 longa
        super A7#11, b9 super B7b9; Gm11 C9 = iv bVII9 (ianua postica),
@@ -433,33 +422,11 @@
       <frustum mensura="33"><textus!>o5 e1</textus></frustum>
     </pars>
     <pars titulus="cithara" instrumentum="chorda" lucrum="0.28" reverberatio="0.25">
-      <comitatus figura="bossa" mensura="1" usque="7" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bina" mensura="7" usque="9" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa" mensura="9" usque="10" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bina" mensura="10" usque="11" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa" mensura="11" usque="16" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bina" mensura="16" usque="17" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa" mensura="17" usque="23" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bina" mensura="23" usque="25" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa" mensura="25" usque="26" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bina" mensura="26" usque="27" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa" mensura="27" usque="32" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bina" mensura="32" usque="33" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa" bina="bossa_bina" mensura="1" usque="33" ambitus="55..72" bassus="38..57"/>
       <comitatus figura="bossa_finis" mensura="33" usque="34" ambitus="55..72" bassus="38..57"/>
     </pars>
     <pars titulus="bassus" instrumentum="pizzicato" lucrum="0.75" reverberatio="0.15">
-      <comitatus figura="bossa_bassus" mensura="1" usque="7" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus_bina" mensura="7" usque="9" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus" mensura="9" usque="10" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus_bina" mensura="10" usque="11" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus" mensura="11" usque="16" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus_bina" mensura="16" usque="17" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus" mensura="17" usque="23" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus_bina" mensura="23" usque="25" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus" mensura="25" usque="26" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus_bina" mensura="26" usque="27" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus" mensura="27" usque="32" ambitus="55..72" bassus="38..57"/>
-      <comitatus figura="bossa_bassus_bina" mensura="32" usque="33" ambitus="55..72" bassus="38..57"/>
+      <comitatus figura="bossa_bassus" bina="bossa_bassus_bina" mensura="1" usque="33" ambitus="55..72" bassus="38..57"/>
       <comitatus figura="bossa_bassus_finis" mensura="33" usque="34" ambitus="55..72" bassus="38..57"/>
     </pars>
     <pars titulus="baculum" instrumentum="aether" lucrum="0.5">
