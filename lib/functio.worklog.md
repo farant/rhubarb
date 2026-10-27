@@ -117,3 +117,20 @@ From the sexta review (harmony findings 2, 8) and Fran's calls ("ii65 and Iadd6 
 - Tests also close test-strength gap 14 (pivot dominant forms): D9 before G -> "V9" praevia;
   parallel key G7 in C before c minor -> "c: V7:1".
 Plants 9/9 first try. House songs byte-identical.
+
+## 2026-10-27 - F1: tritone substitution (subV)
+
+A post pass (after the first reading and the 6 -> ii65 pass, before clausulae), because subV
+is decided by the NEXT sounding window: a dominant shape WITH a seventh (7, 9, 7b9, 13, 7#9,
+7#11), outside the key, not applicata, whose root is a semitone above the next root, target
+a diatonic major/minor degree (I included) -> "subV7", "subV7/ii", "subV7#11". FunctioGradus
+.substituta; applicata = target (0 for I). Without the resolution it stays bII7; a triad stays
+bII (Neapolitan). Cadence: subV -> I counts like V -> I (Fran: yes).
+Guards: the diatonic check is reachable only in minor (G7 in a minor falling to the raised VI
+F# would read subV7/VI) - tested there. The applicata exclusion and _meta_idonea guard are not
+reachable by any common case I found (every V7/x that falls a semitone lands outside the key;
+the only diminished target, VII, is always reached by an applicata C7) - kept as header
+conditions, unplanted.
+Refactor: _figura_acordi (figure only for gradus III without added tones) now shared.
+House: nocturnum bar 7 ii7 subV7 -> bar 8 Iadd6 [perf.]; bar 5 Bb7 -> Am7 reads subV7/iii (it
+IS the tritone sub of E7 -> Am - IV7 was the wrong name). Classical songs unchanged. Plants 6/6.

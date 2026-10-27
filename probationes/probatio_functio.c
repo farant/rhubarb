@@ -828,6 +828,65 @@ _sectio_vocabularium_novum (
                         (i32)FUNCTIO_PERFECTA);
 }
 
+/* substituta (subV): forma dominantis cum septima semitonio supra
+ * proximam - Db7 -> C subV7 (perfecta), Eb7 -> Dm subV7/ii, Db7#11;
+ * sine resolutione bII7; trias Db manet bII */
+interior vacuum
+_sectio_substituta (
+    CredoContextus* c)
+{
+    constans character* ad_finalem[] = {
+        "o2 d-1 | o3 c1", "o3 b1 | o4 e1", "o4 f1 | g1",
+        "o4 a-1 | o5 c1", NIHIL
+    };
+    constans character* ad_ii[] = {
+        "o2 e-1 | d1", "o3 d-1 | c1", "o3 g1 | f1", "o4 b-1 | a1",
+        NIHIL
+    };
+    constans character* undecima[] = {
+        "o2 d-1 | o3 c1", "o3 f1 | e1", "o3 g1 | g1", "o3 b1 | o4 c1",
+        NIHIL
+    };
+    constans character* sine_resolutione[] = {
+        "o2 d-1 | g1", "o3 b1 | o3 b1", "o4 f1 | d1", "o4 a-1 | g1",
+        NIHIL
+    };
+    constans character* trias_sola[] = {
+        "o2 d-1 | o3 c1", "o3 a-1 | g1", "o4 f1 | e1", NIHIL
+    };
+    constans character* diatonica[] = {
+        "o2 g1 | f#1", "o3 b1 | a1", "o4 d1 | c1", "o4 f1 | f#1", NIHIL
+    };
+    Functio* f;
+
+    f = _functio(c, _carmen(c, "c maior", ad_finalem));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "subV7");
+    CREDO_VERUM (f->gradus[ZEPHYRUM].substituta);
+    CREDO_AEQUALIS_S32 (f->gradus[ZEPHYRUM].applicata, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[I].clausula,
+                        (i32)FUNCTIO_PERFECTA);
+    f = _functio(c, _carmen(c, "c maior", ad_ii));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "subV7/ii");
+    CREDO_AEQUALIS_S32 (f->gradus[ZEPHYRUM].applicata, II);
+    f = _functio(c, _carmen(c, "c maior", undecima));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "subV7#11");
+    f = _functio(c, _carmen(c, "c maior", sine_resolutione));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "bII7");
+    CREDO_FALSUM (f->gradus[ZEPHYRUM].substituta);
+    f = _functio(c, _carmen(c, "c maior", trias_sola));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "bII");
+    CREDO_FALSUM (f->gradus[ZEPHYRUM].substituta);
+    /* G7 in a minor diatonica (ad F#, VI elevatum): non substituta */
+    f = _functio(c, _carmen(c, "a minor", diatonica));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "VII7");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "vocabularium", _sectio_vocabularium, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -847,6 +906,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "duplex", _sectio_duplex, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vocabularium novum", _sectio_vocabularium_novum, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "substituta", _sectio_substituta, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

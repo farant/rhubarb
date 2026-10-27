@@ -21,6 +21,15 @@
  * legitur - F6 in C ante G = "ii65", Dm6 in a minor ante E = "iih65";
  * aliter IVadd6; sexta in gradu I (Iadd6) manet.
  *
+ * SUBSTITUTA (subV, tritonus substitutus): forma dominantis CUM
+ * septima (7, 9, 7b9, 13, 7#9, 7#11) extra clavem, non applicata,
+ * cuius radix semitonio supra radicem fenestrae sonantis proximae
+ * stat, meta gradus diatonicus (maior aut minor, etiam I) -> "subV7"
+ * (Db7 -> C in C), "subV7/ii" (Eb7 -> Dm), "subV7#11". Sine
+ * resolutione manet bII7; trias (Db) manet bII (Neapolitana).
+ * Clausula: subV(7) -> I ut V -> I (perfecta si ambo radicales et
+ * summa tonica, aliter imperfecta).
+ *
  * CLAVIS: clavis ad initium fenestrae (<clavis> carminis), praeter
  * DOMINANTEM PRAEVIAM - fenestra ultima SONANS ante mutationem clavis
  * (fenestra sonans proxima in clave alia incipit; pausae
@@ -42,9 +51,9 @@
  * posteriore mensurae incipit - tenet aut tacet (requies). Melodia
  * quartis currens (korobeiniki) sic non in omni mensura cadit. Genus
  * ex fenestra priore:
- *   perfecta     V aut V7 radicalis -> I radicalis, summa (in initio
- *                adventus) tonica
- *   imperfecta   V(7) aut viio -> I aliter
+ *   perfecta     V aut V7 (aut subV) radicalis -> I radicalis, summa
+ *                (in initio adventus) tonica
+ *   imperfecta   V(7), subV aut viio -> I aliter
  *   dimidia      adventus in V
  *   plagalis     IV -> I
  *   deceptiva    V(7) -> vi (minor: VI)
@@ -81,6 +90,8 @@ nomen structura {
     FunctioClausula clausula;        /* in fenestra adventus */
                 b32 praevia;         /* in clave proxima lecta
                                        * (dominans praevia) */
+                b32 substituta;      /* subV (tritonus substitutus);
+                                       * applicata = meta (0: I) */
 } FunctioGradus;
 
 nomen structura {

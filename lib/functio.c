@@ -280,6 +280,18 @@ _figura (
     redde septima ? "42" : "";
 }
 
+/* figura inversionis acordi: solum gradu III sine tonis additis */
+interior constans character*
+_figura_acordi (
+    constans Acordum* h)
+{
+    redde (   acordum_proprietates(h->genus)->gradus == III
+           && acordum_proprietates(h->genus)->additae == ZEPHYRUM)
+        ? _figura(h->genus,
+                  _modulus((s32)h->bassus - (s32)h->radix, XII))
+        : "";
+}
+
 /* picardia: tertia Picardiae (functio_tertia_picardiae) - acordum
  * finalis maius ut I, non applicata */
 interior vacuum
@@ -294,7 +306,6 @@ _gradum_scribere (
              Numeralis  x;
                    s32  iv;
                    s32  d;
-                   s32  b;
                    b32  parvus;
                    b32  dominans;
                    b32  diminuta;
@@ -319,7 +330,6 @@ _gradum_scribere (
     }
     iv  = _modulus((s32)h->radix - k.tonica, XII);
     d   = _gradus(&k, iv);
-    b   = _modulus((s32)h->bassus - (s32)h->radix, XII);
     si (d == ZEPHYRUM)
     {
         g->alteratio  = -I;
@@ -330,9 +340,7 @@ _gradum_scribere (
      * minor; figura inversionis solum gradu III */
     parvus    = acordum_proprietates(h->genus)->tertia == III;
     qualitas  = acordum_proprietates(h->genus)->numeralis;
-    figura    = (   acordum_proprietates(h->genus)->gradus == III
-                 && acordum_proprietates(h->genus)->additae == ZEPHYRUM)
-              ? _figura(h->genus, b) : "";
+    figura    = _figura_acordi(h);
     si (h->genus == ACORDUM_CLASSIS_UNA)
     {
         _scribere(&x, "(");
@@ -375,6 +383,58 @@ _gradum_scribere (
     _romanum(&x, d, parvus);
     _scribere(&x, qualitas);
     _scribere(&x, figura);
+}
+
+/* SUBSTITUTA (functio.h): forma dominantis cum septima extra clavem,
+ * non applicata, radix semitonio supra radicem fenestrae sonantis
+ * proximae; meta gradus diatonicus maior aut minor (etiam I) */
+interior vacuum
+_substitutam_legere (
+              constans Carmen* carmen,
+          constans Explicatio* e,
+                          i32  f,
+                FunctioGradus* g)
+{
+    constans Acordum* h = &e->fenestrae[f].harmonia;
+    constans Acordum* m;
+                 i32  p = _proxima_sonans(e, f);
+              Clavis  k;
+                 b32  praevia;
+                 s32  dm;
+           Numeralis  x;
+
+    si (   p >= e->numerus_fenestrarum || g->applicata != ZEPHYRUM
+        || !_forma_dominantis(h)
+        || acordum_proprietates(h->genus)->septima < ZEPHYRUM)
+    {
+        redde;
+    }
+    m = &e->fenestrae[p].harmonia;
+    k = _clavis_fenestrae(carmen, e, f, &praevia);
+    si (   m->genus == ACORDUM_IGNOTA || _diatonicum(&k, h->classes)
+        || _modulus((s32)h->radix - (s32)m->radix, XII) != I)
+    {
+        redde;
+    }
+    dm = _gradus(&k, _modulus((s32)m->radix - k.tonica, XII));
+    si (dm == ZEPHYRUM || !_meta_idonea(&k, dm))
+    {
+        redde;
+    }
+    g->substituta  = VERUM;
+    g->applicata   = dm == I ? ZEPHYRUM : dm;
+    x.t            = g->numeralis;
+    x.n            = ZEPHYRUM;
+    x.t[0]         = '\0';
+    _scribere(&x, "sub");
+    _romanum(&x, V, FALSUM);
+    _scribere(&x, acordum_proprietates(h->genus)->numeralis);
+    _scribere(&x, _figura_acordi(h));
+    si (dm != I)
+    {
+        _scribere(&x, "/");
+        _romanum(&x, dm, _meta_minor(&k, dm));
+    }
 }
 
 /* adventus: fenestra a linea mensurae ad finem eius; pars summa (notae
@@ -541,6 +601,11 @@ functio_carminis (
             _gradum_scribere(&k, &secunda, g, FALSUM);
         }
     }
+    /* substitutae: post lectionem primam (proxima nota) */
+    per (f = ZEPHYRUM; f < e->numerus_fenestrarum; f++)
+    {
+        _substitutam_legere(carmen, e, f, &functio->gradus[f]);
+    }
     /* clausulae: adventus et fenestra prior (fenestrae semper
      * contiguae) */
     per (f = I; f < e->numerus_fenestrarum; f++)
@@ -563,7 +628,8 @@ functio_carminis (
         }
         alioquin si (_finalis(g, &w->harmonia))
         {
-            b32 a_v   = _dominans(q, &p->harmonia);
+            b32 a_v   = _dominans(q, &p->harmonia)
+                || (q->substituta && q->applicata == ZEPHYRUM);
             b32 a_vii = q->applicata == ZEPHYRUM && q->gradus == VII
                 && (   p->harmonia.genus == ACORDUM_DIMINUTA
                     || p->harmonia.genus == ACORDUM_DIMINUTA_SEPTIMA
