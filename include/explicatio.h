@@ -54,8 +54,10 @@
  * (lilia: F6 vocibus D tenet):
  *   acordi       classis in acordo
  *   septima      septima acordi; resoluta = proxima gradu descendit,
- *                aut transiens sursum (C D E super E7: gradu intrat
- *                et exit eadem directione)
+ *                aut transiens sursum INTRA acordum idem (C D E
+ *                super E7: proxima in fenestra eadem), aut sursum in
+ *                inversione secunda cum basso gradu ascendente (V43
+ *                -> I6: F G super D E, decimae)
  *   transitus    gradu intrat, gradu exit, eadem directione
  *   vicinus      gradu exit, gradu redit ad eandem
  *   appoggiatura saltu intrat, gradu exit

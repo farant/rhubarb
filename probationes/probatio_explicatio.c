@@ -467,6 +467,55 @@ _sectio_septima (
 }
 
 
+/* septima sursum (explicatio.h): transiens sursum resoluta solum intra
+ * acordum idem - E5 F5 G5 super G7 -> C (proxima in C) non; idem
+ * acordum in fenestra proxima (E7 -> E7/G#) resoluta; V43 -> I6 (F4
+ * G4 super D3 E3) resoluta etiam sine nota priore; bassus descendens
+ * (D3 C3) non; V65 -> I (G7/B -> C, F4 G4 super B2 C3) non - solum
+ * inversio secunda */
+interior vacuum
+_sectio_septima_sursum (
+    CredoContextus* c)
+{
+            Explicatio* e;
+    constans character* transiens[] = {
+        "o2 g2 o3 c2", "o3 b2 o4 c2", "o4 d2 e2", "o5 d8 e8 f4 g2",
+        NIHIL };
+    constans character* v43[] = {
+        "o3 d2 e2", "o3 g2 g2", "o3 b2 o4 c2", "o4 f2 g2", NIHIL };
+    constans character* v43_descendens[] = {
+        "o3 d2 c2", "o3 g2 g2", "o3 b2 o4 c2", "o4 f2 g2", NIHIL };
+    constans character* v65[] = {
+        "o2 b2 o3 c2", "o3 g2 g2", "o4 d2 e2", "o4 f2 g2", NIHIL };
+
+    e = _explicare(c, _partes(c, transiens));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, CMLX, EXPLICATIO_SEPTIMA, FALSUM));
+    e = _explicare(c, _carmen(c,
+        "<carmina><carmen titulus=\"p\" clavis=\"a minor\">"
+        "<acorda mensura=\"1\" textus=\"E7:2 E7/G#:2\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 e2 g#2</textus></frustum></pars>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c4 d4 e2</textus></frustum></pars>"
+        "</carmen></carmina>"));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, CMLX, EXPLICATIO_SEPTIMA, VERUM));
+    e = _explicare(c, _partes(c, v43));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        VERUM));
+    e = _explicare(c, _partes(c, v43_descendens));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        FALSUM));
+    e = _explicare(c, _partes(c, v65));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        FALSUM));
+}
+
+
 /* ==================================================
  * Linea partiturae
  * ================================================== */
@@ -973,6 +1022,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "suspensio", _sectio_suspensio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "semitonium", _sectio_semitonium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "septima", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "septima sursum", _sectio_septima_sursum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tituli", _sectio_tituli, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

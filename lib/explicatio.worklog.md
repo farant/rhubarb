@@ -170,3 +170,18 @@ The last step of the declared-intent plan (park ...37ERWF #3, #5 for UNDECLARED 
 House songs: all ten byte-identical (the rules only touch the textures they target). Lint:
 arpeggians -> fractus. Plants 6/6. Also: a scripted edit that did open(p,'w') before reading the
 file emptied lib/explicatio.c once - restored from the step's backup and reapplied.
+
+## 2026-10-27 - septima: "transiens sursum" narrowed; V43 -> I6 exception
+
+The chorale error study planted B4 C5 D5 over D7 -> G (the 7th steps up into the next chord);
+explicatio called it resolved because the old rule looked only at melodic shape (step in, step
+out, same direction). Narrowed (Fran's call): an upward step-through counts as resolved only if
+the next note sounds in the same chord (same radix + genus - same window, or the next window
+when only the bass moved: E7 -> E7/G#). Kept the one standard cross-chord ascent: a seventh
+chord in second inversion (bass = its fifth) whose bass steps up into the next window - V43 ->
+I6, F G over D E in tenths; this holds even without a prior note (the old rule needed one).
+V65 -> I (G7/B -> C) is NOT exempt. Two simplifications: "same window" is implied by "same
+chord" and by "bass moved" (d = 0), so neither helper checks it. The quinta < 0 guard is
+unreachable today (no seventh genus lacks a fifth) - kept as a guard for future genera.
+Impact: whole house book censura + explicatio lines byte-identical before/after (no song uses
+a cross-chord rising 7th); chorale errata 11/11.

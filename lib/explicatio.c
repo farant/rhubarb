@@ -380,6 +380,63 @@ _motus (
     redde m;
 }
 
+/* fenestra quae pulsum tenet (ordine temporis); ultima si post
+ * finem */
+interior i32
+_fenestra_ad (
+    constans ExplicatioFenestra* fenestrae,
+                            i32  nf,
+                            s64  pulsus)
+{
+    i32 f;
+
+    per (f = ZEPHYRUM; f + I < nf && fenestrae[f].finis <= pulsus; f++)
+    {
+    }
+    redde f;
+}
+
+/* septima transiens sursum intra acordum idem: proxima (pulsus) in
+ * acordo eodem (radix, genus) - fenestra eadem aut proxima */
+interior b32
+_acordum_idem (
+    constans ExplicatioFenestra* fenestrae,
+                            i32  nf,
+                            i32  f,
+                            s64  pulsus)
+{
+    i32 g = _fenestra_ad(fenestrae, nf, pulsus);
+
+    redde fenestrae[g].harmonia.radix == fenestrae[f].harmonia.radix
+        && fenestrae[g].harmonia.genus == fenestrae[f].harmonia.genus;
+}
+
+/* V43 -> I6: acordum fenestrae in inversione secunda (bassus quinta)
+ * et bassus fenestrae proximae (pulsus) gradu supra */
+interior b32
+_secunda_ascendens (
+    constans ExplicatioFenestra* fenestrae,
+                            i32  nf,
+                            i32  f,
+                            s64  pulsus)
+{
+                constans Acordum* h = &fenestrae[f].harmonia;
+    constans AcordumProprietates* p = acordum_proprietates(h->genus);
+                             i32  g = _fenestra_ad(fenestrae, nf,
+                                 pulsus);
+                             i32 d;
+
+    /* genus septimae sine quinta hodie nullum - custodia generis
+     * futuri; fenestra eadem: bassus non motus (d = 0) */
+    si (   p->quinta < ZEPHYRUM
+        || h->bassus != (h->radix + (i32)p->quinta) % XII)
+    {
+        redde FALSUM;
+    }
+    d = (fenestrae[g].harmonia.bassus + XII - h->bassus) % XII;
+    redde d == I || d == II;
+}
+
 /* candidata: gradus aut altitudo eadem ab altero latere */
 interior b32
 _candidata (
@@ -1109,13 +1166,18 @@ explicatio_carminis (
             si ((s32)c == acorda[f].septima)
             {
                 Motus m_ = _motus(locatae, segmenta, i, l);
+                  s64 t  = m_.proxima
+                      ? locatae[locatae[l].proxima].initium : ZEPHYRUM;
 
-                /* gradu descendit, aut transiens (C D E super E7) */
+                /* gradu descendit; transiens sursum intra acordum
+                 * idem (C D E super E7); sursum in V43 -> I6 */
                 s->genus     = EXPLICATIO_SEPTIMA;
                 s->resoluta  = m_.proxima && _gradus(m_.d2)
                     && (   m_.d2 < ZEPHYRUM
                         || (   m_.prior && _gradus(m_.d1)
-                            && m_.d1 > ZEPHYRUM));
+                            && m_.d1 > ZEPHYRUM
+                            && _acordum_idem(fenestrae, nf, f, t))
+                        || _secunda_ascendens(fenestrae, nf, f, t));
             }
             alioquin
             {
