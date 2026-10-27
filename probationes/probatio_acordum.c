@@ -111,8 +111,8 @@ _sectio_exemplaria (
     CREDO_VERUM (_est(D_MAIOR, 2, ACORDUM_MAIOR, 2));
 }
 
-/* radices plures: bassus decernit; inversio; sextae non (Am7, non
- * C6) */
+/* radices plures: bassus decernit; inversio; sexta solum radice in
+ * basso (C6; aliter Am7) */
 interior vacuum
 _sectio_radices (
     CredoContextus* c)
@@ -129,8 +129,12 @@ _sectio_radices (
     CREDO_VERUM (_est(G_B, 11, ACORDUM_MAIOR, 7));
     h = acordum_ex_classibus((I << VII) | (I << XI) | (I << II), XI);
     CREDO_AEQUALIS_I32 (h.bassus, XI);
-    CREDO_VERUM (_est(A_SEPTIMA_MINOR, 0, ACORDUM_SEPTIMA_MINOR, 9));
+    /* C E G A: sexta solum radice in basso (C6); super A Am7, super E
+     * aut G Am7 inversum */
+    CREDO_VERUM (_est(A_SEPTIMA_MINOR, 0, ACORDUM_SEXTA, 0));
     CREDO_VERUM (_est(A_SEPTIMA_MINOR, 9, ACORDUM_SEPTIMA_MINOR, 9));
+    CREDO_VERUM (_est(A_SEPTIMA_MINOR, 4, ACORDUM_SEPTIMA_MINOR, 9));
+    CREDO_VERUM (_est(A_SEPTIMA_MINOR, 7, ACORDUM_SEPTIMA_MINOR, 9));
     CREDO_VERUM (_est(AUG, 4, ACORDUM_AUCTA, 4));
     CREDO_VERUM (_est(DIMINUTA_SEPTIMA_, 5, ACORDUM_DIMINUTA_SEPTIMA,
         5));
@@ -272,6 +276,33 @@ _sectio_lectio (
     CREDO_VERUM (_lectum(c, "B#", ACORDUM_MAIOR, 0, 0, NIHIL));
     CREDO_VERUM (_lectum(c, "Db", ACORDUM_MAIOR, 1, 1, NIHIL));
     CREDO_VERUM (_lectum(c, "C#m", ACORDUM_MINOR, 1, 1, NIHIL));
+    /* vocabularium additum */
+    {
+        hic_manens constans s32 C_SEXTA[]     = { 0, 4, 7, 9, -1 };
+        hic_manens constans s32 C_NONA_ADD[]  = { 0, 2, 4, 7, -1 };
+        hic_manens constans s32 G_NONA[]      = { 7, 11, 2, 5, 9, -1 };
+        hic_manens constans s32 G_NONA_MIN[]  = { 7, 11, 2, 5, 8, -1 };
+        hic_manens constans s32 G_SEPT_SUS[]  = { 7, 0, 2, 5, -1 };
+        hic_manens constans s32 C_SEPT_AUG[]  = { 0, 4, 8, 10, -1 };
+
+        CREDO_VERUM (_lectum(c, "C6", ACORDUM_SEXTA, 0, 0, C_SEXTA));
+        CREDO_VERUM (_lectum(c, "Am6", ACORDUM_SEXTA_MINOR, 9, 9,
+                             NIHIL));
+        CREDO_VERUM (_lectum(c, "Cadd9", ACORDUM_NONA_ADDITA, 0, 0,
+                             C_NONA_ADD));
+        CREDO_VERUM (_lectum(c, "G9", ACORDUM_NONA, 7, 7, G_NONA));
+        CREDO_VERUM (_lectum(c, "G7b9", ACORDUM_NONA_MINOR, 7, 7,
+                             G_NONA_MIN));
+        CREDO_VERUM (_lectum(c, "Fmaj9", ACORDUM_NONA_MAIOR, 5, 5,
+                             NIHIL));
+        CREDO_VERUM (_lectum(c, "Dm9", ACORDUM_NONA_MOLLIS, 2, 2,
+            NIHIL));
+        CREDO_VERUM (_lectum(c, "G7sus4", ACORDUM_SEPTIMA_SUSPENSA, 7,
+            7,
+                             G_SEPT_SUS));
+        CREDO_VERUM (_lectum(c, "C7#5", ACORDUM_SEPTIMA_AUCTA, 0, 0,
+                             C_SEPT_AUG));
+    }
 }
 
 /* suffixum longissimum: "maj7" non "m" + reliquum; "7" = exemplar
@@ -297,6 +328,13 @@ _sectio_suffixa (
     CREDO_VERUM (_lectum(c, "Csus4", ACORDUM_SUSPENSA_IV, 0, 0, NIHIL));
     CREDO_VERUM (_lectum(c, "Csus2", ACORDUM_SUSPENSA_II, 0, 0, NIHIL));
     CREDO_VERUM (_lectum(c, "C7", ACORDUM_SEPTIMA, 0, 0, C_SEPTIMA));
+    /* longissimum inter nova: "7sus4" non "7", "maj9" non "m", "7b9"
+     * non "7", "m6" non "m" */
+    CREDO_VERUM (_lectum(c, "C7sus4", ACORDUM_SEPTIMA_SUSPENSA, 0, 0,
+                         NIHIL));
+    CREDO_VERUM (_lectum(c, "Cmaj9", ACORDUM_NONA_MAIOR, 0, 0, NIHIL));
+    CREDO_VERUM (_lectum(c, "C7b9", ACORDUM_NONA_MINOR, 0, 0, NIHIL));
+    CREDO_VERUM (_lectum(c, "Cm6", ACORDUM_SEXTA_MINOR, 0, 0, NIHIL));
 }
 
 /* litterae ex nomine: radix scripta, ceterae gradibus litterarum */
@@ -336,6 +374,18 @@ _sectio_litterae (
     CREDO_AEQUALIS_I32 ((i32)a.litterae[11], (i32)'b');
     CREDO_NECESSE (_lege(c, "C/D", &a));
     CREDO_AEQUALIS_I32 ((i32)a.litterae[2], (i32)'d');
+    /* gradus litterarum per exemplar: sexta +5 (C6 A, Bbm6 G), nona
+     * minor (C7b9 Db), quinta aucta (F#7#5 C##) */
+    CREDO_NECESSE (_lege(c, "C6", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[9], (i32)'a');
+    CREDO_NECESSE (_lege(c, "Bbm6", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[7], (i32)'g');
+    CREDO_NECESSE (_lege(c, "C7b9", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[1], (i32)'d');
+    CREDO_NECESSE (_lege(c, "F#7#5", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[2], (i32)'c');
+    CREDO_NECESSE (_lege(c, "G9", &a));
+    CREDO_AEQUALIS_I32 ((i32)a.litterae[9], (i32)'a');
 }
 
 /* nomina mala: FALSUM, acordum non mutatur */
@@ -379,7 +429,7 @@ _sectio_circuitus (
           i32 g;
           i32 r;
 
-    per (g = ZEPHYRUM; g <= (i32)ACORDUM_TERTIA_MINOR; g++)
+    per (g = ZEPHYRUM; g < (i32)ACORDUM_CLASSIS_UNA; g++)
     {
         per (r = ZEPHYRUM; r < XII; r++)
         {
@@ -431,7 +481,7 @@ _sectio_proprietates (
     p = acordum_proprietates((AcordumGenus)XCIX);
     CREDO_AEQUALIS_I32 (p->gradus, ZEPHYRUM);
     CREDO_AEQUALIS_S32 (p->tertia, -I);
-    per (g = ZEPHYRUM; g <= (i32)ACORDUM_TERTIA_MINOR; g++)
+    per (g = ZEPHYRUM; g < (i32)ACORDUM_CLASSIS_UNA; g++)
     {
         p = acordum_proprietates((AcordumGenus)g);
         sprintf(scriptum, "C%s", p->suffixum);
@@ -443,6 +493,7 @@ _sectio_proprietates (
         CREDO_VERUM (p->septima < 0
                      || (a.classes & ((i32)I << p->septima)) != 0);
         CREDO_VERUM (p->gradus > ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (p->additae & ~a.classes, ZEPHYRUM);
     }
 }
 

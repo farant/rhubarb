@@ -155,6 +155,21 @@ _nominatum (
     redde h->genus != ACORDUM_IGNOTA && h->genus != ACORDUM_NULLA;
 }
 
+/* NOTA ADDITA (acordum.h): toni additi (sexta, nona) acordi pars
+ * solum si nota eorum non candidata est (non_cand: classes notarum
+ * sine forma alienae) */
+interior b32
+_additae_tenentur (
+    constans Acordum* h,
+                 i32  non_cand)
+{
+    i32 a = acordum_proprietates(h->genus)->additae;
+    i32 r = h->radix;
+
+    a = ((a << r) | (a >> (XII - r))) & 0xFFF;
+    redde (a & h->classes & ~non_cand) == ZEPHYRUM;
+}
+
 /* classis in scala clavis ad pulsum (signatura; minor = relativa) */
 interior b32
 _diatonica (
@@ -427,6 +442,10 @@ _acordum (
                 b32 implicata = FALSUM;
 
                 h = acordum_ex_classibus(classes & ~s, bassus);
+                si (_nominatum(&h) && !_additae_tenentur(&h, non_cand))
+                {
+                    h.genus = ACORDUM_IGNOTA;
+                }
                 si (   !_nominatum(&h)
                     && _implicitum(carmen, f->initium, classes & ~s,
                                    bassus, &h))

@@ -14,9 +14,16 @@
  *   maj7   {0,4,7,11}   m7     {0,3,7,10}   m7b5   {0,3,6,10}
  *   dim7   {0,3,6,9}    sus4   {0,5,7}      sus2   {0,2,7}
  *   (5)    {0,7}        (3)    {0,4}        m(3)   {0,3}
+ *   6      {0,4,7,9}    m6     {0,3,7,9}     (radix in basso solum -
+ *                                             aliter m7, m7b5: C E G A
+ *                                             super A = Am7, super E =
+ *                                             Am7/E; item 7sus4)
+ *   add9   {0,2,4,7}    9      {0,4,7,10,2} et {0,4,10,2}
+ *   7b9    {0,4,7,10,1} et {0,4,10,1}
+ *   maj9   {0,4,7,11,2} m9     {0,3,7,10,2}
+ *   7sus4  {0,5,7,10}   7#5    {0,4,8,10}
  * dyades in parenthesi: 'A5' notam A5 legeretur (grammatica eadem ac
  * partitura)
- * sextae (C6 = Am7) nondum (Franus 10-23): classes eaedem -> m7.
  * Radices plures (aug, dim7, dyades): radix = bassus si congruit,
  * aliter classis minima (ordo exemplarium, deinde classis).
  *
@@ -29,10 +36,16 @@
  * Bassus post '/' extra classes stare potest ("C/D": D transiens) -
  * classes = exemplar solum. Non hic: "(E)", "[C E F#]", "r"
  * (scriptiones analysis, non acorda petita).
- * LITTERAE ex nomine: radix et bassus ut scripti; ceterae per
- * intervallum, gradibus litterarum a radice - 2: +1; 3, 4: +2; 5: +3;
- * 6, 7, 8: +4; 9, 10, 11: +6 (C#m -> E G#; Bdim7 -> D F Ab;
- * Caug -> G#).
+ * LITTERAE ex nomine: radix et bassus ut scripti; ceterae per gradus
+ * litterarum exemplaris (tonus quisque suum: IX semitonia sexta +5 in
+ * 6, septima diminuta +6 in dim7) - C#m -> E G#; Bdim7 -> D F Ab;
+ * Caug -> G#; Bbm6 -> G; C7b9 -> Db; F#7#5 -> C##.
+ *
+ * NOTA ADDITA (explicatio.h): tonus additus (sexta, nona, nona minor;
+ * quarta in 7sus4, quinta aucta in 7#5) acordi pars est solum si nota
+ * eius candidata non est (forma melodica
+ * alienae caret) - A transiens super C E G manet transitus; A tenta
+ * C6 facit.
  */
 /* <aedilis corpus="lib/acordum.c"/> */
 #ifndef ACORDUM_H
@@ -56,6 +69,15 @@ nomen enumeratio {
     ACORDUM_QUINTA,
     ACORDUM_TERTIA_MAIOR,
     ACORDUM_TERTIA_MINOR,
+    ACORDUM_SEXTA,
+    ACORDUM_SEXTA_MINOR,
+    ACORDUM_NONA_ADDITA,
+    ACORDUM_NONA,
+    ACORDUM_NONA_MINOR,
+    ACORDUM_NONA_MAIOR,
+    ACORDUM_NONA_MOLLIS,          /* m9 */
+    ACORDUM_SEPTIMA_SUSPENSA,
+    ACORDUM_SEPTIMA_AUCTA,
     ACORDUM_CLASSIS_UNA,
     ACORDUM_IGNOTA,
     ACORDUM_NULLA
@@ -115,6 +137,9 @@ nomen structura {
                    s32  quinta;      /* VI, VII, VIII; -1 nulla */
                    s32  septima;     /* IX, X, XI; -1 nulla */
                    i32  gradus;      /* III, II, I, 0 */
+                   i32  additae;     /* bits intervallorum ADDITORUM a
+                                      * radice (sexta, nona):
+                                      * explicatio */
 } AcordumProprietates;
 
 /* genus extra tabulam: proprietates NULLA */

@@ -151,7 +151,7 @@ _sectio_nomina (
         "Bm7b5");
     CREDO_CHORDA_AEQUALIS_LITERIS (_titulus_harmoniae(c, d,
         _cl(A_SEPTIMA_MINOR), ZEPHYRUM),
-        "Am7/C");
+        "C6");
     CREDO_CHORDA_AEQUALIS_LITERIS (_titulus_harmoniae(c, d,
         _cl(D_TERTIA), II),
         "D(3)");

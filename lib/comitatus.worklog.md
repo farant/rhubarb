@@ -64,3 +64,12 @@ names the D7's F# three times (melody + two generated chord tones) - deliberate
 secondary dominant; a censura rule that accepts tones of the DECLARED chord is the
 natural follow-up (asked Fran). Mix rms about -22 dBFS vs -14 for the denser songs: the
 harp decays and the peak is already -3.4 dBFS, so it was left there.
+
+## 2026-10-26 - 43HA step 2: root omission
+
+After the fifth, if the figure still has fewer upper voices than classes, the root goes
+too (the bass has it): C7 in two voices E Bb, C9 in three E Bb D. Trap: the first test
+(single C7, single C9) passed even with the rule planted OFF - minimal motion from the
+middle of the range happened to pick E Bb / D E Bb. Discriminating test: a chain C7 F7
+Bb7 Eb7 Ab7 Db7 in two voices, no upper note ever equal to its root - voice leading pulls
+the root in somewhere without the rule.

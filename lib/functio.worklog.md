@@ -60,3 +60,11 @@ IV' check; no fixture ended on a dyad (TERTIA_MAIOR). And one plant was itself w
 on the genus test removed the whole check instead of rejecting the dyad - it survived
 because nothing asked about a minor tonic at the end (now 'final Dm false'), and the
 dyad plant proper is '!= TERTIA_MAIOR' -> '!= MAIOR'.
+
+## 2026-10-26 - 43HA step 2: new chords in the numerals
+
+Numerals from the row: Iadd6, Iadd9, V9, V7b9, V7sus4, V+7, V9/V. Inversion figures only
+for gradus III rows WITHOUT additae (Iadd9 over E: no figure - "Iadd9 6" would misread).
+Role lists extended: dominant forms (applicata and cadence) += 9, 7b9; cadence-final +=
+6, m6, add9; picardy += 6, add9. Operetta endings (V7 -> Iadd6) are perfect cadences.
+Plants 4/4 red first time.

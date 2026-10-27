@@ -59,3 +59,17 @@ accordum = concordia); renamed tonica -> finalis (mode final), APPOGGIATURA -> I
 glossary entry), ESCAPATA -> EFFUGIENS, removibiles -> removendae. Displayed names
 stay the musical terms (appoggiatura, app., esc.). silva/renominare.sh refuses untracked
 files (git is its undo) - exact whole-word replacement instead.
+
+## 2026-10-26 - 43HA step 2: added tones must be held
+
+With 6/9/7sus4/7#5 in the vocabulary, the minimal-removal search started preferring
+"bigger" chord names that swallow melody notes (A passing over C E G -> C6; F/D over G C
+-> G7sus4). Rule `_additae_tenentur`: a window's name is kept only if every ADDED tone
+of the genus (acordum additae, rotated to the root) comes from a NON-candidate note -
+i.e. a note without passing/neighbour shape. Otherwise the name becomes IGNOTA and the
+search keeps removing. Passing A over C E G stays "C:1 (A4 vic.)"; held A gives
+"C6:1"; held G B F A gives "G9:1 (F4 sept.!)"; passing D over C E Bb stays C7.
+
+House songs: explicatio/functio lines unchanged for all eight; only lilia's per-beat
+harmonia line changed (bars 3, 6 "[Bb C D E]" -> C9/Bb; bar 10 "[Bb C D F]" -> Bbadd9) -
+harmonia names what sounds, by design.

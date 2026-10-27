@@ -45,9 +45,11 @@
  *   SUPERIORES: positio clausa - classes acordi ascendentes ab
  *   inversione aliqua, intra octavam; figura voces pauciores quam
  *   classes adhibens (V < k) quintam acordi omittit (G7 tribus
- *   vocibus: G B F, sensibilis manet). Inter inversiones et octavas
- *   quarum voces adhibitae (1..min(V, k); V vox maxima figurae, k
- *   classes positionis) intra ambitum stant, motus minimus (summa
+ *   vocibus: G B F, sensibilis manet), deinde radicem si adhuc
+ *   pauciores (bassus eam tenet: C7 duabus E Bb, C9 tribus E Bb
+ *   D). Inter inversiones et octavas quarum voces adhibitae
+ *   (1..min(V, k); V vox maxima figurae, k classes positionis)
+ *   intra ambitum stant, motus minimus (summa
  *   |a - b| vocum adhibitarum) a positione priore; primo: medium
  *   vocum medio ambitus proximum; aequales: inferior. Ambitus
  *   superiorum et bassi >= XII (octava): positio semper invenitur.

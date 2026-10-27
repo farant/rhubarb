@@ -482,7 +482,55 @@ _sectio_picardia (
     CREDO_FALSUM (functio_tertia_picardiae(k, f->explicatio, I));
 }
 
+/* vocabularium additum: numeralia (add6 non 6 - figura inversionis),
+ * nonae dominantes, finis in Iadd6; figura nulla tonis additis */
+interior vacuum
+_sectio_vocabularium (
+    CredoContextus* c)
+{
+    constans character* nona_dominans[] = {
+        "o2 g1 | o3 c1", "o3 b1 | >c1", "o4 f1 | e1", "o4 a1 | >c1",
+        NIHIL
+    };
+    constans character* clausula_sextae[] = {
+        "o2 g1 | o3 c1", "o3 b1 | o4 e1", "o4 d1 | g1", "o4 f1 | a1",
+        "o5 d1 | c1", NIHIL
+    };
+    Functio* f;
+
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o3 c1",
+        "o4 e1", "o4 g1", "o4 a1"), "Iadd6");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o3 c1",
+        "o4 e1", "o4 g1", "o5 d1"), "Iadd9");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o3 e1",
+        "o4 g1", "o5 c1", "o5 d1"), "Iadd9");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o2 g1",
+        "o4 b1", "o5 f1", "o5 a1"), "V9");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "a minor", "o2 e1",
+        "o4 g#1", "o5 d1", "o5 f1"), "V7b9");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o2 g1",
+        "o4 c1", "o4 d1", "o4 f1"), "V7sus4");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o2 g1",
+        "o4 b1", "o5 d#1", "o5 f1"), "V+7");
+    /* nona dominans applicata: D9 in C = V9/V */
+    CREDO_CHORDA_AEQUALIS_LITERIS (_numeralis(c, "c maior", "o3 d1",
+        "o4 f#1", "o5 c1", "o5 e1"), "V9/V");
+    /* V9 -> I, V7 -> Iadd6: perfectae */
+    f = _functio(c, _carmen(c, "c maior", nona_dominans));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[I].clausula,
+                        (i32)FUNCTIO_PERFECTA);
+    f = _functio(c, _carmen(c, "c maior", clausula_sextae));
+    CREDO_NECESSE (f != NIHIL && f->numerus >= II);
+    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_ex_literis(
+        f->gradus[I].numeralis, c->piscina), "Iadd6");
+    CREDO_AEQUALIS_I32 ((i32)f->gradus[I].clausula,
+                        (i32)FUNCTIO_PERFECTA);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "vocabularium", _sectio_vocabularium, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "diatonici", _sectio_diatonici, NIHIL, NIHIL, NIHIL, NIHIL },
     { "conversiones", _sectio_conversiones, NIHIL, NIHIL, NIHIL,
         NIHIL },

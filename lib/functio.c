@@ -247,7 +247,8 @@ _gradum_scribere (
      * minor; figura inversionis solum gradu III */
     parvus    = acordum_proprietates(h->genus)->tertia == III;
     qualitas  = acordum_proprietates(h->genus)->numeralis;
-    figura    = acordum_proprietates(h->genus)->gradus == III
+    figura    = (   acordum_proprietates(h->genus)->gradus == III
+                 && acordum_proprietates(h->genus)->additae == ZEPHYRUM)
               ? _figura(h->genus, b) : "";
     si (h->genus == ACORDUM_CLASSIS_UNA)
     {
@@ -263,7 +264,8 @@ _gradum_scribere (
     /* applicata: extra scalam, forma dominantis aut septimae
      * diminutae */
     dominans  = h->genus == ACORDUM_MAIOR
-        || h->genus == ACORDUM_SEPTIMA;
+        || h->genus == ACORDUM_SEPTIMA || h->genus == ACORDUM_NONA
+        || h->genus == ACORDUM_NONA_MINOR;
     diminuta  = h->genus == ACORDUM_DIMINUTA
              || h->genus == ACORDUM_DIMINUTA_SEPTIMA;
     si (   !picardia && (dominans || diminuta)
@@ -352,7 +354,7 @@ _adventus (
     redde VERUM;
 }
 
-/* V (trias, septima, dyas tertiae) sine applicatione */
+/* V (trias, septima, nona, dyas tertiae) sine applicatione */
 interior b32
 _dominans (
     constans FunctioGradus* g,
@@ -362,10 +364,13 @@ _dominans (
         && g->gradus == V
         && (   h->genus == ACORDUM_MAIOR
         || h->genus == ACORDUM_SEPTIMA
+            || h->genus == ACORDUM_NONA
+            || h->genus == ACORDUM_NONA_MINOR
             || h->genus == ACORDUM_TERTIA_MAIOR);
 }
 
-/* I aut i (trias, dyas, unisonus: clausulae quintam saepe omittunt,
+/* I aut i (trias, sexta aut nona addita - operetta in Iadd6 desinit,
+ * dyas, unisonus: clausulae quintam saepe omittunt,
  * duae voces in unisono desinunt) */
 interior b32
 _finalis (
@@ -375,6 +380,9 @@ _finalis (
     redde g->applicata == ZEPHYRUM && g->alteratio == ZEPHYRUM
         && g->gradus == I
         && (   h->genus == ACORDUM_MAIOR || h->genus == ACORDUM_MINOR
+            || h->genus == ACORDUM_SEXTA
+            || h->genus == ACORDUM_SEXTA_MINOR
+            || h->genus == ACORDUM_NONA_ADDITA
             || h->genus == ACORDUM_TERTIA_MAIOR
             || h->genus == ACORDUM_TERTIA_MINOR
             || h->genus == ACORDUM_QUINTA
@@ -544,6 +552,8 @@ functio_tertia_picardiae (
     k = _clavis(carmen, w->initium);
     si (   !k.minor || (s32)w->harmonia.radix != k.tonica
         || (   w->harmonia.genus != ACORDUM_MAIOR
+            && w->harmonia.genus != ACORDUM_SEXTA
+            && w->harmonia.genus != ACORDUM_NONA_ADDITA
             && w->harmonia.genus != ACORDUM_TERTIA_MAIOR))
     {
         redde FALSUM;

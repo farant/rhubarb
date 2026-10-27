@@ -393,6 +393,7 @@ _sectio_figurae (
       ComitatusNota* e;
     ComitatusVitium  v;
                 i32  n;
+                i32  i;
 
     /* harpa: voces per sexagesimam quartam, finis communis */
     CREDO_NECESSE (_componere(c, "{B 1 2 3}:2.", "C", TERTIA_QUARTA,
@@ -445,6 +446,31 @@ _sectio_figurae (
                         ((i32)I << VII) | ((i32)I << XI) | ((i32)I
                             << II)
                         | ((i32)I << V));
+    /* adhuc pauciores: radix quoque (bassus eam tenet) - C7 duabus
+     * E Bb, C9 tribus E Bb D */
+    CREDO_NECESSE (_componere(c, "[1 2]:2.", "C7", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, II);
+    CREDO_AEQUALIS_I32 (((i32)I << (e[0].nota % XII))
+                        | ((i32)I << (e[1].nota % XII)),
+                        ((i32)I << IV) | ((i32)I << X));
+    CREDO_NECESSE (_componere(c, "[1 2 3]:2.", "C9", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, III);
+    CREDO_AEQUALIS_I32 (((i32)I << (e[0].nota % XII))
+                        | ((i32)I << (e[1].nota % XII))
+                        | ((i32)I << (e[2].nota % XII)),
+                        ((i32)I << IV) | ((i32)I << X) | ((i32)I
+                            << II));
+    /* catena septimarum: motus minimus radicem numquam reducit */
+    CREDO_NECESSE (_componere(c, "[1 2]:2.",
+                              "C7 | F7 | Bb7 | Eb7 | Ab7 | Db7",
+                              TERTIA_QUARTA, &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, XII);
+    per (i = ZEPHYRUM; i < XII; i++)
+    {
+        CREDO_VERUM (e[i].nota % XII != ((i / II) * V) % XII);
+    }
     /* C/G: quinta = bassus - octava altera (43 -> 55) */
     CREDO_NECESSE (_componere(c, "B:4 Q:2", "C/G", TERTIA_QUARTA,
                               &AMBITUS, &e, &n, &v));
