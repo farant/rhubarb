@@ -503,9 +503,72 @@ _generata_est (
     redde FALSUM;
 }
 
+/* finis directivae a 'locus' (initium lineae suae): octetus post '\n'
+ * lineae ubi directiva cum commentariis suis finitur. Commentarium
+ * in lineas sequentes iens transilitur (gesta/fontes/tabularium.c:
+ * '#include "moneta.h"   /' + '* ...' duabus lineis - linea nova intra
+ * commentarium caput numquam includebat); "..." et <...> nominis
+ * capitis commentarium non aperiunt. */
+interior s32
+_directivae_finis (
+    chorda textus,
+       s32 locus)
+{
+          s32 n         = (s32)textus.mensura;
+          s32 k         = locus;
+    character claudens  = '\0';
+
+    dum (k < n)
+    {
+        character c = (character)textus.datum[k];
+
+        si (claudens != '\0')
+        {
+            si (c == claudens)
+            {
+                claudens = '\0';
+            }
+            alioquin si (c == '\n')
+            {
+                redde k + I;
+            }
+            k++;
+            perge;
+        }
+        si (c == '"')
+        {
+            claudens = '"';
+        }
+        alioquin si (c == '<')
+        {
+            claudens = '>';
+        }
+        alioquin si (   c                   == '/' && k + I < n
+                     && textus.datum[k + I] == '*')
+        {
+            k += II;
+            dum (   k + I < n
+                 && !(textus.datum[k] == '*'
+                      && textus.datum[k + I] == '/'))
+            {
+                k++;
+            }
+            k = (k + I < n) ? k + II : n;
+            perge;
+        }
+        alioquin si (c == '\n')
+        {
+            redde k + I;
+        }
+        k++;
+    }
+    redde n;
+}
+
 /* '#include "caput"' addere si deest: post lineam '#include "..."'
  * ultimam ante limitem (rescriptionem primam), aliter post '#include
- * <...>' ultimam, aliter in capite */
+ * <...>' ultimam, aliter in capite - post finem commentarii lineae
+ * (_directivae_finis) */
 interior chorda
 _caput_addere (
          Piscina* piscina,
@@ -560,14 +623,7 @@ _caput_addere (
     locus = post_quotam >= ZEPHYRUM ? post_quotam : post_angulum;
     si (locus >= ZEPHYRUM)
     {
-        dum (locus < (s32)textus.mensura && textus.datum[locus] != '\n')
-        {
-            locus++;
-        }
-        si (locus < (s32)textus.mensura)
-        {
-            locus++;
-        }
+        locus = _directivae_finis(textus, locus);
     }
     alioquin
     {

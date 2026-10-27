@@ -198,3 +198,17 @@ as frozen input (97 is domestic there, like 96). Writing the reasons
 found three unnoted reads in filum (copiare's source, the existence
 stats of _si_necesse and _cum_modo; park …JVE1) and the lock-file
 question (…M7QN) - their tolera say LACUNA and name the record.
+
+*Step 3, gesta (2026-10-26, after merging main 5863a8e9 as 65ed2cca):*
+7 files, 65 sites (remove 59 in the tests, write-mode fopen 6: the
+ledger append in gesta.c x2, tabularium's snapshot, three in tests).
+The ledger writes are meant to go through lectiones: outside a gate
+nothing is noted; a gate that wrote the real ~/.rhubarb ledger would now
+show it as a write outside its trace - a real bug made visible. Read-mode
+fopen refusals belong to 96. All seven gesta suites green.
+Tool bug found: `<inclusio>` inserted the new #include after the last
+include LINE, which in tabularium.c ends inside a two-line trailing
+comment - the include was swallowed, lectiones_fopen undeclared, the
+guard refused (code 44). `_directivae_finis` now skips a trailing
+comment to its end; pythonica test + plant (red at the new check, read
+from the acta - the compendium quirk again).

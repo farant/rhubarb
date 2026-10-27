@@ -3574,6 +3574,21 @@ credo(t.rc == 0 and open(via_tr2).read() == FONS_TR_II.replace(
       and open(via_gen).read().endswith(FONS_TR_II)
       and all(x.via != via_gen for x in t.rescriptiones),
       'inclusio addita; GENERATUM intacta', causa=t.nuntii)
+# inclusio ultima cum commentario plurium linearum (gesta/fontes/
+# tabularium.c, 2026-10-26): linea nova POST finem commentarii, numquam
+# intra eum (aliter caput non includitur et custodia recusat)
+FONS_TR_III = FONS_TR_II.replace(
+    '#include "latina.h"\n',
+    '#include "latina.h"   /* commentarium quod\n'
+    '                       * in lineam alteram it */\n')
+via_tr3 = os.path.join(T, 'transformare_commentarium.c')
+open(via_tr3, 'w').write(FONS_TR_III)
+t = silva.transformare(via_reg, [via_tr3], scribere=True)
+credo(t.rc == 0 and open(via_tr3).read() == FONS_TR_III.replace(
+          '* in lineam alteram it */\n',
+          '* in lineam alteram it */\n#include "filum.h"\n')
+      .replace('    remove(v);', '    (vacuum)filum_delere(v);'),
+      'inclusio post commentarium plurium linearum', causa=t.nuntii)
 
 print()
 if fracta:
