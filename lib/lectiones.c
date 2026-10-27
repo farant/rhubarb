@@ -74,6 +74,8 @@ lectiones_notare (
         /* CLOEXEC: programma exsecutum (alienum quoque) descriptorem
          * libri non hereditat; filii sine exec (fork) eum
          * communicant */
+        /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+         * liber lectionum ipse (se ipsum non notat) */
         _descriptor = open(liber, O_WRONLY | O_APPEND | O_CREAT
             | O_CLOEXEC, 0644);
         si (_descriptor < 0)
@@ -142,6 +144,8 @@ lectiones_fopen (
     constans character* via,
     constans character* modus)
 {
+     /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+      * lectiones_fopen notat SCRIPSIT */
      FILE* f = fopen(via, modus);
       b32  lectio;
 
@@ -167,6 +171,8 @@ lectiones_stat (
     constans character* via,
        structura stat* status)
 {
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * lectiones_stat notat EXSTAT/ABSENS */
     integer r = stat(via, status);
 
     si (via != NIHIL && !_machina_est(via))

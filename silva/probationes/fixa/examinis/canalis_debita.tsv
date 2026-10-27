@@ -55,13 +55,8 @@ html/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tac
 knotapel/demo_125_exact_crossing_depth/demo-snapshot.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
 knotapel/demo_125_exact_crossing_depth/main.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
 lib/compilator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-lib/credo.c	credo sine filo nectitur (credo spec 2 §VI.2) - <tolera> per sedem
-lib/filum.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
 lib/herbarium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-lib/iter_directoria.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
-lib/lectiones.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
 lib/mensura_contextus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-lib/via.c	canalis ipse: vocationes crudae iure - <tolera> per sedem (spec T11; lib/filum.c tactus omnia renovat)
 materia/fontes/materia_coctor.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
 materia/instrumenta/oraculum_silvae.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 md/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

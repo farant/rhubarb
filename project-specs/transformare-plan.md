@@ -187,3 +187,14 @@ must stay raw - the 97 exemption question covers them too) and
 probatio_lectiones.c (tests the channel: toggles FABRICA_LECTIONES and
 forks writers into its own book). Left in macros: CREDO_AEQUALIS_S32
 around rename in probatio_specimen.c.
+
+*Exemptions decided (2026-10-26, Fran; ledger decretum …24P17):* per-site
+`<tolera>` for both 96 and 97, as the 96 spec already said - not a unit
+exemption. Done for filum, lectiones, iter_directoria, via, credo and
+probatio_lectiones (62 sites, debt lines deleted). One comment above a
+call can now carry both codes: examen's tolera window also covers the
+line right after the comment ENDS (4bcf5a69). probationes/fixa/ stays
+as frozen input (97 is domestic there, like 96). Writing the reasons
+found three unnoted reads in filum (copiare's source, the existence
+stats of _si_necesse and _cum_modo; park …JVE1) and the lock-file
+question (…M7QN) - their tolera say LACUNA and name the record.
