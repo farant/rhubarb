@@ -136,6 +136,18 @@ first client.
 - **D10 Devices in milestone 1: Fran's Mac, Fran's iPhone, Amanda's
   iPhone** (my call - the Android tablets follow once the iPhone path
   works; they need the INTERNET permission and a CA trust store).
+- **D12 Every entity has a ULID; names are fields (Fran 2026-10-27).**
+  Every "business entity" (picture, calendar item, contact, user,
+  volume, later shopping-list items, messages, ...) gets a ULID minted
+  where it is created - unique without coordination (offline devices),
+  time-ordered (index-friendly, genera-datorum VIII-c). Titles, display
+  names, handles and paths are ordinary fields that may change or
+  repeat; links, shares, "edit a copy" origins and MCP references
+  always point at the ULID. Already true for agenda, personae, cives and
+  (T1) volume replicas; pictor pictures move to ULIDs with D9. Fran:
+  once data in volumen is categorized (the category registry,
+  genera-datorum D6), "has a ULID" is enforced by the category for
+  entity kinds rather than remembered by each app.
 - **D11 HTTPS on iOS through Apple's networking (Fran).** Apps call one
   house HTTP interface; on iOS it is backed by URLSession through a host
   service (the `TestaAmbitus` pattern, like the photo picker), so the
