@@ -324,6 +324,117 @@ _sectio_nona (
 }
 
 
+/* RFC 3986 5.4.1 + 5.4.2 (navigator N2.3a: Location relativa
+ * redirectionum per uri_resolvere solvitur). Basis
+ * "http://a/b/c/d;p?q".
+ * OMISSI consulto: "g:h" et "http:g" (schema sine "//" - Uri campum
+ * auctoritatis non habet, uri_construere "://" semper scribit) et "//g"
+ * (redditur "http://g/" - pagina eadem; uri_construere viam vacuam ut
+ * "/" scribit). */
+hic_manens constans character* tabula_rfc[][II] = {
+    { "g",             "http://a/b/c/g" },
+    { "./g",           "http://a/b/c/g" },
+    { "g/",            "http://a/b/c/g/" },
+    { "/g",            "http://a/g" },
+    { "?y",            "http://a/b/c/d;p?y" },
+    { "g?y",           "http://a/b/c/g?y" },
+    { "#s",            "http://a/b/c/d;p?q#s" },
+    { "g#s",           "http://a/b/c/g#s" },
+    { "g?y#s",         "http://a/b/c/g?y#s" },
+    { ";x",            "http://a/b/c/;x" },
+    { "g;x",           "http://a/b/c/g;x" },
+    { "g;x?y#s",       "http://a/b/c/g;x?y#s" },
+    { "",              "http://a/b/c/d;p?q" },
+    { ".",             "http://a/b/c/" },
+    { "./",            "http://a/b/c/" },
+    { "..",            "http://a/b/" },
+    { "../",           "http://a/b/" },
+    { "../g",          "http://a/b/g" },
+    { "../..",         "http://a/" },
+    { "../../",        "http://a/" },
+    { "../../g",       "http://a/g" },
+    { "../../../g",    "http://a/g" },
+    { "../../../../g", "http://a/g" },
+    { "/./g",          "http://a/g" },
+    { "/../g",         "http://a/g" },
+    { "g.",            "http://a/b/c/g." },
+    { ".g",            "http://a/b/c/.g" },
+    { "g..",           "http://a/b/c/g.." },
+    { "..g",           "http://a/b/c/..g" },
+    { "./../g",        "http://a/b/g" },
+    { "./g/.",         "http://a/b/c/g/" },
+    { "g/./h",         "http://a/b/c/g/h" },
+    { "g/../h",        "http://a/b/c/h" },
+    { "g;x=1/./y",     "http://a/b/c/g;x=1/y" },
+    { "g;x=1/../y",    "http://a/b/c/y" },
+    { "g?y/./x",       "http://a/b/c/g?y/./x" },
+    { "g?y/../x",      "http://a/b/c/g?y/../x" },
+    { "g#s/./x",       "http://a/b/c/g#s/./x" },
+    { "g#s/../x",      "http://a/b/c/g#s/../x" },
+    { NIHIL,           NIHIL }
+};
+
+interior vacuum
+_sectio_rfc (
+    CredoContextus* c)
+{
+       Uri* basis;
+       Uri* r;
+    chorda  s;
+       i32  i;
+
+    basis = uri_creare("http://a/b/c/d;p?q", c->piscina);
+    CREDO_NECESSE_NON_NIHIL(basis);
+    per (i = ZEPHYRUM; tabula_rfc[i][ZEPHYRUM]; i++)
+    {
+        r = uri_resolvere(basis,
+            chorda_ex_literis(tabula_rfc[i][ZEPHYRUM],
+            c->piscina), c->piscina);
+        s = r ? uri_construere(r, c->piscina)
+              : chorda_ex_literis("(NIHIL)", c->piscina);
+        si (!chorda_aequalis_literis(s, tabula_rfc[i][I]))
+        {
+            imprimere("  RFC: \"%s\" -> %.*s (exspectatum %s)\n",
+                tabula_rfc[i][ZEPHYRUM], (integer)s.mensura,
+                (constans character*)s.datum, tabula_rfc[i][I]);
+        }
+        CREDO_CHORDA_AEQUALIS_LITERIS(s, tabula_rfc[i][I]);
+    }
+}
+
+/* schema = praefixum (ALPHA *(ALPHA/DIGIT/+/-/.)) ante "://"; "://"
+ * alibi (in via, quaestione) schema non facit */
+interior vacuum
+_sectio_schema_praefixum (
+    CredoContextus* c)
+{
+    Uri u;
+
+    CREDO_GRADUS("'://' in via relativa");
+    CREDO_VERUM(uri_parse("/proxy/http://evil.com/x", &u, c->piscina));
+    CREDO_FALSUM(u.est_absoluta);
+    CREDO_AEQUALIS_I32((i32)u.hospes.mensura, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(u.via, "/proxy/http://evil.com/x");
+
+    CREDO_GRADUS("'://' in via relativa sine solido initiali");
+    CREDO_VERUM(uri_parse("a/b://c", &u, c->piscina));
+    CREDO_FALSUM(u.est_absoluta);
+    CREDO_CHORDA_AEQUALIS_LITERIS(u.via, "a/b://c");
+
+    CREDO_GRADUS("'://' in quaestione");
+    CREDO_VERUM(uri_parse("/r?u=http://evil.com", &u, c->piscina));
+    CREDO_FALSUM(u.est_absoluta);
+    CREDO_CHORDA_AEQUALIS_LITERIS(u.via, "/r");
+    CREDO_CHORDA_AEQUALIS_LITERIS(u.quaestio, "u=http://evil.com");
+
+    CREDO_GRADUS("schema verum manet");
+    CREDO_VERUM(uri_parse("svn+ssh://h.example/x", &u, c->piscina));
+    CREDO_VERUM(u.est_absoluta);
+    CREDO_CHORDA_AEQUALIS_LITERIS(u.schema, "svn+ssh");
+    CREDO_CHORDA_AEQUALIS_LITERIS(u.hospes, "h.example");
+}
+
+
 /* ========================================================================
  * PROBATIONES - PORTUS DEFAULT
  * ======================================================================== */
@@ -445,6 +556,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "nullum argumenta", _sectio_decima_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "IPv6", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "RFC 3986 5.4", _sectio_rfc, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "schema praefixum", _sectio_schema_praefixum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
