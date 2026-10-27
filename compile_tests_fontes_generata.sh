@@ -225,6 +225,7 @@ declare -a SOURCE_FILES=(
     "lib/natura.c"
     "lib/navigator_bibliotheca.c"
     "lib/navigator_entitatum.c"
+    "lib/navigator_paginae.c"
     "lib/navigator_petitio.c"
     "lib/nervus.c"
     "lib/nomenclator.c"

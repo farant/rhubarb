@@ -1,0 +1,38 @@
+/* navigator_paginae.h - articulus in paginas (navigator N3.1).
+ * Articulus (articulus.h) in CodexCaput UNUM vertitur (contractus
+ * codex.h: clausulae "\n\n" iunctae, offsets in textu) quem
+ * lector_paginare (lector_paginae.h) paginat - articulus totus fluit,
+ * sectiones paginas novas NON incipiunt:
+ *   titulus articuli, tituli sectionum, TITULUS -> CODEX_TITULUS
+ *   PARAGRAPHUS, CITATIO                       -> CODEX_PARAGRAPHUS
+ *   INDEX gradu g -> CODEX_PARAGRAPHUS, praefixum 2(g-1) spatia + "• "
+ *   FIGURA        -> omittitur (imagines N5)
+ *   adiuncta      -> NON in columna principali (columna lateralis N3.5)
+ * Notae (nexus, emphasis, fortis) in offsets textus capitis
+ * translatae (N4 nexus in lineis invenit). Pura. */
+
+#ifndef NAVIGATOR_PAGINAE_H
+#define NAVIGATOR_PAGINAE_H
+
+/* <aedilis corpus="lib/navigator_paginae.c"/> */
+
+#include "latina.h"
+#include "piscina.h"
+#include "chorda.h"
+#include "xar.h"
+#include "codex.h"
+#include "articulus.h"
+
+nomen structura {
+    CodexCaput  caput;     /* textus + clausulae (lector_paginare) */
+           Xar* notae;      /* ArticulusNota, offsets in caput.textus,
+                            * ordine textus */
+} NavigatorTextus;
+
+/* NIHIL solum memoria deficiente */
+NavigatorTextus*
+navigator_textum_facere (
+    constans Articulus* articulus,
+               Piscina* piscina);
+
+#endif /* NAVIGATOR_PAGINAE_H */
