@@ -710,6 +710,44 @@ _sectio_decima (
     ellipsin_mediam_probare(larva);
 }
 
+/* X: nota alba U+2705 (Franus 2026-10-27, tofu in terminale - Claude
+ * Code eam scribit): signum ut ✔ (U+2714) pingitur, sine quadrato
+ * viridi; cellula lata (II) - pictura in cellula prima */
+interior vacuum
+_sectio_undecima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* nota_gravis[] = {
+        "......", ".....#", "....##", ".#.##.",
+        ".###..", "..#...", "......", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2705));
+    CREDO_VERUM(pictura_est(0x2705, nota_gravis, larva));
+    CREDO_VERUM(pictura_est(0x2714, nota_gravis, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x2704));
+    CREDO_FALSUM(glyphae_ductae_est(0x2706));
+}
+
+/* XI: fere aequale U+2248 (Franus 2026-10-27): duae undae ordinum
+ * binorum, altitudine eadem qua ≡ (ordines I-V) */
+interior vacuum
+_sectio_duodecima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* fere_aequale[] = {
+        "......", "..##.#", ".#..#.", "......",
+        "..##.#", ".#..#.", "......", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2248));
+    CREDO_VERUM(pictura_est(0x2248, fere_aequale, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x2247));
+    CREDO_FALSUM(glyphae_ductae_est(0x2249));
+}
+
 interior vacuum
 _sectio_prima (
     CredoContextus* c)
@@ -818,6 +856,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "VIII: symbola v3 (Graeca, mathematica)", _sectio_nona, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "IX: ellipsis media (pinacotheca)", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "X: nota alba (U+2705)", _sectio_undecima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XI: fere aequale (U+2248)", _sectio_duodecima, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

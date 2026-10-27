@@ -508,6 +508,47 @@ nomen_directorii (
     redde via;
 }
 
+/* comites P7: servitor ordinarius - "-", vacuus, aut via cuius nomen
+ * ultimum "default" (tmux: <TMUX_TMPDIR>/tmux-<uid>/default) */
+interior b32
+servitor_ordinarius (
+    chorda servitor)
+{
+    redde servitor.mensura == ZEPHYRUM
+        || (servitor.mensura == I && servitor.datum[ZEPHYRUM] == '-')
+        || chorda_aequalis_literis(nomen_directorii(servitor),
+               "default");
+}
+
+constans Colloquium*
+colloquium_panelli (
+       Xar* colloquia,
+    chorda  servitor,
+    chorda  panellus)
+{
+    constans Colloquium* c;
+                    b32  communis;
+                    i32  i;
+
+    si (!colloquia || panellus.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    communis = servitor_ordinarius(servitor);
+    per (i = ZEPHYRUM; i < xar_numerus(colloquia); i++)
+    {
+        c = (constans Colloquium*)xar_obtinere(colloquia, i);
+        si (   c->status != COLLOQUIUM_CLAUSUM
+            && chorda_aequalis(c->panellus, panellus)
+            && (communis ? servitor_ordinarius(c->servitor)
+                           : chorda_aequalis(c->servitor, servitor)))
+        {
+            redde c;
+        }
+    }
+    redde NIHIL;
+}
+
 Xar*
 colloquia_legere (
       constans character* via_libri,

@@ -1069,3 +1069,37 @@ pulse samples in 10 s, ~23 ms blocked per second while the front
 terminal streams with a Notes companion open. Not an idle cost.
 Filed as desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4 (fix: async like T2,
 or only on foreground-signature change like T2b).
+
+## 2026-10-27 - BUG (quies T2b): manual tmux attach never recorded with many terminal panes
+
+Fran: after a tmux server restart + vicus restart, panes stopped coming
+back attached. Chain: the server restart renamed the session (now `0`),
+so the saved restore arguments pointed at sessions that no longer
+existed - vicus correctly dropped them. The bug: re-attaching BY HAND
+(`tmux attach -t 0` in a vicus terminal) was never recorded, so the
+next restart had nothing to restore. Reproduced live twice.
+
+Found with a logging build run by Fran on the real volume (two checks
+at start-up, none after the attach) and then by reading
+`frontes_signare`: the foreground signature was
+`signum * 2^20 + 1 + pgrp` per terminal pane in an unsigned 64-bit
+value. Every later pane shifts the earlier ones up 20 bits, so after
+four more panes an early pane is shifted out entirely. Fran has TEN
+terminal panes; the tmux pane was the 6th - its foreground change could
+not move the signature, so no check ran, and the 5 s re-check only
+covers panes already known to run tmux. Tests had one or two panes.
+
+Fix: `signum = (signum ^ pgrp) * MULTIPLICATOR_SIGNI` (FNV-1a 64-bit
+prime, odd): each step is a bijection, so a change in ANY one pane
+always changes the signature. Test: probatio_vicus_quies section
+frontes_multae (six panes, program starts in the FIRST) - red before,
+green after; plant = the exact old statement -> red at the same step.
+Note for plants: my first plant `(signum ^ g) + signum*2^20` was green
+- it keeps signum through the xor, so it is not the old formula.
+
+Also learned: `vicus_acervo_aperire` opens by identity (kind +
+argument) - a second terminal with no argument just brings the first
+one forward; tests that need N terminals give each a distinct plain
+argument. And: the session runs inside tmux, so a private tmux server
+needs `env -u TMUX -u TMUX_PANE TMUX_TMPDIR=...` on every call (a bare
+`tmux new-session` landed on Fran's real server - removed at once).

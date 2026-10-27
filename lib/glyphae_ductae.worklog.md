@@ -465,3 +465,19 @@ ellipses differ only in height. 2 x 2 dots like the period do not fit
 three across in six columns. App text reaches these glyphs through
 secunda's a625afcb (fenestra_textus asks glyphae_ductae first) - merged
 into quarta with main the same day (entry above).
+
+## 2026-10-27 - ✅ (U+2705, secunda)
+
+Fran saw ✅ as tofu in a vicus terminal pane (Claude Code writes it).
+✓ and ✔ were already drawn; ✅ was not in the table. Drawn as the same
+picture as ✔ (U+2714), without the emoji's green square - Fran: "can
+just be a checkmark". It is a wide character (two cells): terminale
+draws a ducta glyph at one cell's width at the first cell, so the
+check sits in the left cell and the right cell shows the background.
+Test: probatio_glyphae_ductae section X (red before the entry: not
+recognised, not drawn). Not done: a trailing U+FE0F (emoji
+presentation, e.g. ✔️) still makes the grapheme two runes and falls to
+the font - Fran saw no case of it.
+Same day: ≈ (U+2248, Fran) - two two-row waves (`..##.#` over
+`.#..#.`) on rows 1-2 and 4-5, the vertical extent of ≡ (rows 1, 3,
+5). Section XI, red before the entry.

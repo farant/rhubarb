@@ -3426,6 +3426,9 @@ terminalia_applicare (
  * PAULO ANTE quam cliens apud servitorem inscribitur - quaestio prima
  * eum non videt, et frons iterum non mutatur (vicus_saltus I) */
 #define TERMINALIA_CONFIRMATIO_MS  ((s64)M)
+/* primus FNV-1a LXIV bitorum (2^40 + 0x1B3), impar: multiplicatio
+ * modulo 2^64 bijectio est */
+#define MULTIPLICATOR_SIGNI  (((i64)I << XL) + (i64)0x1B3)
 
 /* quies T2b: signum frontium - grex frontalis omnium laterum
  * terminalium vivorum (ordine tabularum); mutatur cum programma
@@ -3464,10 +3467,15 @@ frontes_signare (
                 perge;
             }
             (*numerus)++;
-            /* i64 insignatum: circuitio definita */
-            signum = signum * (i64)MXXIV * (i64)MXXIV + (i64)I
-                + (i64)(insignatus integer)terminale_grex_frontalis(
-                    (constans TerminaleApplicatio*)l->montatio);
+            /* (signum ^ grex) * impar: gradus quisque bijectio (i64
+             * insignatum, circuitio definita) - mutatio frontis
+             * CUIUSVIS lateris signum mutat. Olim signum * 2^20 + grex:
+             * post IV latera posteriora latus prius totum excidebat
+             * (Franus 2026-10-27, X latera: tmux manu non notatum) */
+            signum = (signum ^ (i64)(insignatus integer)
+                terminale_grex_frontalis(
+                    (constans TerminaleApplicatio*)l->montatio))
+                * MULTIPLICATOR_SIGNI;
             si (   t == activa && (k < ZEPHYRUM || l == frons)
                 && l->argumentum.mensura > IV
                 && memcmp(l->argumentum.datum, "tmux ", V)

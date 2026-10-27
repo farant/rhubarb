@@ -829,6 +829,54 @@ _probare_frontem (
                 >= n + I);
 }
 
+/* T2b (Franus 2026-10-27: tmux manu adhaesum non notatum, X latera
+ * terminalia): frons lateris PRIMI inter VI mutata quaestionem facit -
+ * signum frontium latera priora non amittit (olim signum * 2^20 per
+ * latus in i64: post IV latera posteriora latus prius totum excidit) */
+interior vacuum
+_probare_frontes_multas (
+    CredoContextus* c)
+{
+                 Mundus* s;
+             VicusLatus* l;
+    TerminaleApplicatio* prima;
+                    i32  n;
+                    i32  i;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0"));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    l = vicus_latus(vicus_activa(s->app.vicus), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "terminale"));
+    prima = (TerminaleApplicatio*)l->montatio;
+    /* identitas = genus + argumentum: argumenta distincta (non
+     * "tmux ...": concha plana) latera nova faciunt */
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        character argumentum[VIII];
+
+        sprintf(argumentum, "p%d", (integer)i);
+        CREDO_NECESSE(vicus_acervo_aperire(s->app.vicus, "terminale",
+            argumentum));
+        (vacuum)vicus_pulsare(s->app.vicus);
+    }
+    CREDO_AEQUALIS_I32(terminalia_numerare(s->app.vicus), VI);
+
+    CREDO_GRADUS("VI latera: conchae incipiunt, confirmatio - quiescant");
+    (vacuum)pulsare_usque(s, c->piscina, II * M, I);
+    n = pulsare_usque(s, c->piscina, III * M + D, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, II * M, ZEPHYRUM),
+        n);
+
+    CREDO_GRADUS("programma in latere PRIMO incipit: quaestio");
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(prima->hospes,
+        (constans i8*)"sleep 1\n", VIII), VIII);
+    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, II * M, n + I),
+        n + I);
+}
+
 /* ===== T6c: liber praeconii per speculam - scriptura vicum
  * expergefacit, pulsus legit, fossa iterum quieta ===== */
 
@@ -1050,6 +1098,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "frons", _probare_frontem, mundum_terminalis_parare,
       mundum_purgare, NIHIL, NIHIL },
+    { "frontes_multae", _probare_frontes_multas,
+      mundum_terminalis_parare, mundum_purgare, NIHIL, NIHIL },
     { "praeconium", _probare_praeconium, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
     { "otium", _probare_otium, mundum_parare, mundum_purgare, NIHIL,
