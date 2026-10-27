@@ -64,3 +64,22 @@ prints its own arguments and the panelli.txt fixture. A given but
 absent `binarium` is not checked (same as the clients twin): the
 process starts and fails; NIHIL only when tmux must be searched for
 and is not found. Plant: list-clients instead of list-panes -> red.
+
+## 2026-10-27 — `multiplexor_configurationem_legere` + test servers no longer read ~/.tmux.conf
+
+`multiplexor_configurationem_legere` = `tmux source-file <via>` (comites
+P8: praeco's hook file goes live without restarting tmux). Live test
+`hami_praeconis`: hook file from praeconium_tmux_configuratio with a
+fake praeco script, sourced into the private server; select-window
+-> line naming the window's active pane, select-pane -> line naming
+the new pane. Plants: each hook dropped -> its own step red.
+
+Found on the way: the private test servers (here, comites_terminale,
+saltus) were started without `-f`, so tmux read Fran's ~/.tmux.conf.
+Two consequences: once praeco's hooks are installed, every test
+server would have written `tmux` events into the REAL event log; and
+the tests silently depended on Fran's `base-index 1` /
+`pane-base-index 1` (`alpha:2`, pane index 2) - with `-f /dev/null`
+the harness failed to start. All three harnesses now pass
+`-f probationes/fixa/multiplexor/servitor.conf` (just those two
+settings).

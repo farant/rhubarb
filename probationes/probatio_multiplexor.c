@@ -11,6 +11,7 @@
 #include "filum.h"
 #include "processus.h"
 #include "multiplexor.h"
+#include "praeconium.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -149,19 +150,24 @@ imperium_currere (
      constans character* a5,
                 Piscina* p)
 {
-    constans character* v[X];
+    constans character* v[XII];
      ProcessusResultus  r;
 
+    /* comites P8: -f fixum - servitor probationis ~/.tmux.conf
+     * usoris non legit (hami praeconis eventus in librum verum
+     * scriberent; indices ab I olim ex conf usoris pendebant) */
     v[ZEPHYRUM]  = s->binarium;
-    v[I]         = "-S";
-    v[II]        = s->socket;
-    v[III]       = a0;
-    v[IV]        = a1;
-    v[V]         = a2;
-    v[VI]        = a3;
-    v[VII]       = a4;
-    v[VIII]      = a5;
-    v[IX]        = NIHIL;
+    v[I]         = "-f";
+    v[II]        = "probationes/fixa/multiplexor/servitor.conf";
+    v[III]       = "-S";
+    v[IV]        = s->socket;
+    v[V]         = a0;
+    v[VI]        = a1;
+    v[VII]       = a2;
+    v[VIII]      = a3;
+    v[IX]        = a4;
+    v[X]         = a5;
+    v[XI]        = NIHIL;
     r            = processus_exsequi(v, V * M, p);
     redde r.successus && r.codex_exitus == ZEPHYRUM;
 }
@@ -421,6 +427,97 @@ _probare_panellos_incipere (
     }
 }
 
+/* comites P8: fasciculus hamorum praeconis (praeconium_tmux_
+ * configuratio, praeco FICTUS in area: argumenta in librum) in
+ * servitorem proprium lectus - fenestra et panellus mutati praeconem
+ * cum socket et panello NOVO vocant */
+interior b32
+vocationem_exspectare (
+     constans character* liber,
+                 chorda  quaesita,
+                Piscina* p)
+{
+    struct timespec pausa;
+                i32 gradus;
+
+    pausa.tv_sec   = ZEPHYRUM;
+    pausa.tv_nsec  = XX * M * M;
+    per (gradus = ZEPHYRUM; gradus < CL; gradus++)
+    {
+        si (   filum_existit(liber)
+            && chorda_continet(filum_legere_totum(liber, p), quaesita))
+        {
+            redde VERUM;
+        }
+        (vacuum)nanosleep(&pausa, NIHIL);
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_probare_hamos_praeconis (
+    CredoContextus* c)
+{
+                        Minister* s;
+              constans character* area;
+                       character  praeco[CCLVI];
+                       character  hami[CCLVI];
+                       character  liber[CCLVI];
+                       character  linea[DXII];
+                          chorda  configuratio;
+                             Xar* l;
+    constans MultiplexorPanellus* p;
+                          chorda  secundus;
+                          chorda  primus;
+
+    s     = (Minister*)c->datum;
+    area  = credo_area(c);
+    CREDO_NECESSE(s && s->paratus && area && strlen(area) < CC);
+    sprintf(praeco, "%s/praeco", area);
+    sprintf(hami, "%s/hami.conf", area);
+    sprintf(liber, "%s/vocationes", area);
+    sprintf(linea, "#!/bin/sh\necho \"$*\" >> '%s'\n", liber);
+    CREDO_NECESSE(filum_scribere_literis(praeco, linea));
+    CREDO_NECESSE(filum_modum_ponere(praeco, 0755));
+    configuratio = praeconium_tmux_configuratio(praeco, c->piscina);
+    CREDO_NECESSE(configuratio.mensura > ZEPHYRUM);
+    CREDO_NECESSE(filum_scribere_literis(hami, chorda_ut_cstr(
+        configuratio, c->piscina)));
+
+    CREDO_GRADUS("fasciculus lectus (source-file); absens deficit");
+    CREDO_VERUM(multiplexor_configurationem_legere(&s->m, hami,
+        c->piscina));
+    CREDO_FALSUM(multiplexor_configurationem_legere(&s->m,
+        "/nusquam/hami.conf", c->piscina));
+
+    l = multiplexor_panelli(&s->m, c->piscina);
+    p = panellus_ad(l, II, II);
+    CREDO_NECESSE(p != NIHIL);
+    secundus  = chorda_transcribere(p->id, c->piscina);
+    p         = panellus_ad(l, II, I);
+    CREDO_NECESSE(p != NIHIL);
+    primus = chorda_transcribere(p->id, c->piscina);
+
+    /* fenestra II: panellus I activus (scissura -d) - hamus fenestrae
+     * eum nominat; panellus II nondum */
+    CREDO_GRADUS("fenestra mutata: praeco tmux <socket> <panellus>");
+    CREDO_NECESSE(imperium_currere(s, "select-window", "-t", "alpha:2",
+        NIHIL, NIHIL, NIHIL, c->piscina));
+    sprintf(linea, "tmux %s %.*s", s->socket, (integer)primus.mensura,
+        (constans character*)primus.datum);
+    CREDO_VERUM(vocationem_exspectare(liber, chorda_ex_literis(linea,
+        c->piscina), c->piscina));
+
+    CREDO_GRADUS("panellus mutatus in fenestra: panellus NOVUS");
+    CREDO_NECESSE(imperium_currere(s, "select-pane", "-t",
+        chorda_ut_cstr(secundus, c->piscina), NIHIL, NIHIL, NIHIL,
+        c->piscina));
+    sprintf(linea, "tmux %s %.*s", s->socket, (integer)secundus.mensura,
+        (constans character*)secundus.datum);
+    CREDO_VERUM(vocationem_exspectare(liber, chorda_ex_literis(linea,
+        c->piscina), c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "panellos_legere", _probare_panellos_legere, NIHIL, NIHIL, NIHIL,
       NIHIL },
@@ -432,6 +529,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "incipere", _probare_incipere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "panellos_incipere", _probare_panellos_incipere, NIHIL, NIHIL,
       NIHIL, NIHIL },
+    { "hami_praeconis", _probare_hamos_praeconis, ministrum_parare,
+      ministrum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

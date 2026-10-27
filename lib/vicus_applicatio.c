@@ -2675,6 +2675,25 @@ sonum_cantus (
         chorda_aequalis_literis(e->genus, "intactus"));
 }
 
+/* comites P8: eventus generis dati inter eventus pulsus? */
+interior b32
+eventum_continet (
+                   Xar* eventus,
+    constans character* genus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; eventus && i < xar_numerus(eventus); i++)
+    {
+        si (chorda_aequalis_literis(((constans PraeconiumEventus*)
+                xar_obtinere(eventus, i))->eventus, genus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* eventus 'cantus' recentissimus pulsus (ultimus ordine libri); NIHIL
  * si nullus */
 interior constans PraeconiumEventus*
@@ -2889,9 +2908,12 @@ nomen structura {
      * quaestionibus vacatur. signum = frontes ad quaestionem ultimam
      * (frontes_signare); confirmanda = quaestio altera post frontes
      * mutatas (ms fenestrae; 0 = nulla) */
-                    s64  terminalia_ad;
-                    i64  terminalia_signum;
-                    s64  terminalia_confirmanda;
+                    s64 terminalia_ad;
+                    i64 terminalia_signum;
+                    s64 terminalia_confirmanda;
+    /* comites P8: eventus "tmux" lectus (hamus tmux: fenestra aut
+     * panellus mutatus) - quaestio statim, non post V s */
+                    b32  terminalia_excitata;
                 Piscina* scheda_terminalium;
                     Xar* terminalia_quaestiones;
     /* quies T6c: specula libri praeconii - scriptura vicum
@@ -3204,6 +3226,11 @@ systema_admonitionum (
         mutatum = VERUM;
         /* sonus S4: recentissima sola - plures uno pulsu, sonus unus */
         nova = admonitio(ca->index, ZEPHYRUM);
+    }
+    /* comites P8: hamus tmux nuntiavit - terminalia statim */
+    si (eventum_continet(ca->sequax.eventus, "tmux"))
+    {
+        ca->terminalia_excitata = VERUM;
     }
     sonum_pulsus(ca->sonus, v, nova,
         cantum_recentissimum(ca->sequax.eventus));
@@ -3760,8 +3787,9 @@ frontes_signare (
 }
 
 /* quies T2b: quaestio debita? frontes mutatae (aut latus primum;
- * *mutatae), confirmatio debita, aut tmux visibilis et V s elapsa.
- * Nullum latus terminale: numquam (T2) */
+ * *mutatae), confirmatio debita, eventus "tmux" lectus (comites P8:
+ * hamus tmux), aut tmux visibilis et V s elapsa. Nullum latus
+ * terminale: numquam (T2) */
 interior b32
 terminalia_debita (
                     Vicus* v,
@@ -3779,11 +3807,12 @@ terminalia_debita (
     {
         ca->terminalia_signum       = ZEPHYRUM;
         ca->terminalia_confirmanda  = ZEPHYRUM;
+        ca->terminalia_excitata     = FALSUM;
         redde FALSUM;
     }
     nunc      = fenestra_tempus_ms();
     *mutatae  = *signum != ca->terminalia_signum;
-    redde *mutatae
+    redde *mutatae || ca->terminalia_excitata
         || (   ca->terminalia_confirmanda != ZEPHYRUM
             && nunc >= ca->terminalia_confirmanda)
         || (tmux_visibile && nunc - ca->terminalia_ad >= TERMINALIA_MS);
@@ -3868,8 +3897,9 @@ systema_terminalium (
     {
         redde FALSUM;
     }
-    ca->terminalia_signum  = signum;
-    ca->terminalia_ad      = fenestra_tempus_ms();
+    ca->terminalia_signum    = signum;
+    ca->terminalia_excitata  = FALSUM;
+    ca->terminalia_ad        = fenestra_tempus_ms();
     ca->terminalia_confirmanda  = mutatae
         ? ca->terminalia_ad + TERMINALIA_CONFIRMATIO_MS : ZEPHYRUM;
     piscina_vacare(ca->scheda_terminalium);
@@ -3953,7 +3983,7 @@ terminalia_morari (
     {
         redde -I;
     }
-    si (signum != ca->terminalia_signum)
+    si (signum != ca->terminalia_signum || ca->terminalia_excitata)
     {
         redde ZEPHYRUM;
     }

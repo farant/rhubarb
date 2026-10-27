@@ -141,4 +141,12 @@ multiplexor_argumenta_adhaerendi (
                   chorda  sessio,
                  Piscina* piscina);
 
+/* fasciculum configurationis in servitore legere (source-file): hami
+ * statim valent, servitor non renovatur */
+b32
+multiplexor_configurationem_legere (
+    constans Multiplexor* m,
+      constans character* via,
+                 Piscina* piscina);
+
 #endif /* MULTIPLEXOR_H */

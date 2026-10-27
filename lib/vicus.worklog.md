@@ -1175,3 +1175,22 @@ while `<area>/deficit` exists): record `tmux - beta`, fail the queries
 -> argument stays (red before), then a successful empty answer ->
 cleared. Plant (guard short-circuited with FALSUM) red at exactly that
 step; vicus 29/29.
+
+## 2026-10-27 — comites P8.3: a `tmux` event wakes the terminalia query
+
+tmux hooks (praeco tmux, see praeconium.worklog) append an event
+`tmux` to the notifications log when a window, pane or client session
+changes. The notifications system already wakes on that log (specula)
+and reads it every pulse; after admonitiones_sequi it now checks the
+pulse's events (sequax.eventus, ALL kinds) for `tmux` and sets
+ContextusAdmonitionum.terminalia_excitata. terminalia_debita treats the
+flag like a foreground change (query due now), terminalia_morari
+returns 0 while it is set, and starting a query clears it - a switch
+that lands while a query is in flight sets it again, so the next query
+follows. No terminal panes: the flag is dropped. The 5 s visible-tmux
+re-check stays as the fallback for servers without the hooks.
+
+Test: probatio_vicus_quies section eventus_tmux (shell in front, no 5 s
+rule): a `status` event starts no query in 1 s; a `tmux` event starts
+one within 500 ms (red before). Plant (scan short-circuited) red at
+that step. vicus 29/29.

@@ -139,6 +139,8 @@ scriba book in the volume (pages, own viewed page)
 | **P5b** | Companions searchable. Implemented 2026-10-22: record `comes/<locus>/comes` (label + the right view's canonical route; text children, not attributes - the STML writer emits attribute values raw) written by the app's `comitem_ponere` wrapper when shown (only when changed); search kind `comites` (cluster "Companion notes", title = label [+ " · page"], route `scriba/<page>?liber=comes/<locus>`); the gate opens the paired route on the right, `vicus_comitem_ostendere` shows the companion at that page on the left (follow starts from the CURRENT front; focus left after petitions); `IndagatioPetitio.clavis` + search field `clavis`; scriba `facies.iter_semita` makes Cmd+F in a companion search only it. Known gap: a record-only change (e.g. renamed contact) re-indexes only when a page of that companion changes. |
 | **P6 (lector L5)** | Lazy companions. DONE 2026-10-24 (plan `project-specs/lector-l5-plan.md`): showing or following a companion writes NOTHING - not the book index, the page manifest, the `comes` record nor `<prefix>/visus`. The gate opens `comes/...` books with `scriba_liber_aperire_pigre`; pages are `scriba_documentum_nasciturum`; the first non-empty commit (or new / named page) gives birth: page, then index, then the record with the companion's latest title and route (`ComesPendens` in `ContextusScribae`). Other scriba books unchanged. Empty companions from before are not cleaned up; the lector note mark counts a companion only when it has text. |
 | **P7** | Claude Code sessions (Fran 2026-10-27). Plan below (§XI). |
+| **P8** | tmux hooks tell vicus about window/pane switches (Fran 2026-10-27). Plan below (§XII). |
+| **P9** | Ctrl+1…9 switches the focused terminal's tmux window (Fran 2026-10-27). §XII. |
 | later | Drawing mode (§VII). (Saints as a search kind: done in D5 S4.) |
 
 ## VII. Future consumer: drawing mode (Fran 2026-10-22)
@@ -225,4 +227,44 @@ window the terminal's client shows. So:
 | **P7.3** | `multiplexor_panellos_incipere`: tests with the fake tmux (as `multiplexor_clientes_incipere`). DONE 2026-10-27 (section panellos_incipere; plant red). |
 | **P7.4** | vicus: panes queried in the terminalia system, per-pane cache, locus from cache + colloquia. Tests (fake tmux + fixture events): Claude pane -> `terminale/claude/<id>` with its title; SessionEnd -> tmux key; `/clear` -> new id; no tmux process during pulses outside the schedule. Plant: the old synchronous lookup restored -> the process-count test red. DONE 2026-10-27: also `colloquia_visus_fontem_legere` + version (Fran approved; session state advanced only with a sessions pane), each pane's own server queried; window switch follows within 5 s. Plants red (3). |
 | **P7.5** | Live look with Fran (two Claude sessions in two tmux windows, resume, /clear); worklog, ledger (close the desideratum), commit on Fran's word. |
+
+## XII. P8-P9: tmux switches reach vicus at once (Fran 2026-10-27)
+
+**Why.** Since P7.4 a tmux window or pane switch reaches the companion
+only through the terminalia system's 5 s re-check (vicus cannot see a
+switch inside tmux: the pane's foreground program stays `tmux`).
+
+**P8 - hooks.** tmux 3.4 runs a command on `session-window-changed`,
+`client-session-changed` and `window-pane-changed` (checked on a
+private server 2026-10-27: all three fire, `#{socket_path}` and
+`#{pane_id}` expand to the server and the NEW active pane; sourcing
+the same `set-hook` lines again replaces, never duplicates). Each hook
+runs `run-shell -b '<praeco> tmux "#{socket_path}" "#{pane_id}"'`,
+which appends an event `tmux` to the notifications log; vicus already
+wakes on that log (specula), and a `tmux` event among the pulse's new
+events makes the terminalia query run at once. The 5 s re-check stays
+as a fallback (servers without the hooks) until the hooks have proven
+themselves.
+
+Installation: `praeco tmux instituere` writes praeco's own hook file
+(`<colloquia dir>/tmux.conf`, absolute praeco path inside - a tmux
+server started with a short PATH must still find it), puts a marked
+block into `~/.tmux.conf` that sources it (replaced on re-runs), and
+sources it into the running server - no tmux restart. A separate file
+rather than re-sourcing `~/.tmux.conf`: Fran's conf has `set -as`
+appends, which would duplicate on every re-source.
+
+**P9 - Ctrl+1…9.** Focused terminal pane attached to tmux (cache
+`nota`): Ctrl+N runs `select-window -t =<session>:N` on that pane's
+server (Fran's `base-index 1`: Ctrl+1 = window 1), then the locus
+refreshes at once. Cmd+Shift+digits were rejected: Cmd+Shift+3/4/5 are
+macOS screenshot keys, taken before the app sees them.
+
+| Task | Content |
+|---|---|
+| **P8.1** | Headers (Fran first): event `tmux` doc (praeconium.h, approved 2026-10-27), `praeconium_tmux_configuratio`, `praeconium_tmux_conf` (praeconium.h), `multiplexor_configurationem_legere` (multiplexor.h); praeco usage. Approved 2026-10-27 (hooks in praeco's own file, sourced from a marked block). |
+| **P8.2** | Pure functions + praeco `tmux` / `tmux instituere`. Tests: hook text, block insert/replace/keep the rest, file sourced into a private server and a window switch runs the hook (fake praeco script). DONE 2026-10-27: sections tmux_configuratio, tmux_conf (praeconium), hami_praeconis (multiplexor; window and pane hook checked separately); plants red (3); sandboxed `instituere` check. Test tmux servers now start with a fixture config, not Fran's ~/.tmux.conf. |
+| **P8.3** | vicus: `tmux` event -> terminalia query in the same wake. Test: event appended -> query without waiting 5 s. Plant. DONE 2026-10-27: `terminalia_excitata` set from the pulse's events (quies section eventus_tmux: `status` -> no query, `tmux` -> query within 500 ms; plant red). 5 s re-check kept as fallback. |
+| **P8.4** | Live: install from the secunda build (hook points at its path), switch windows/panes; after the merge re-run from `~/.bin`. DONE 2026-10-27 (Fran: switching is "very fast now"; 3 hooks in the server, events in the log, backup `~/.tmux.conf.ante-praeco`). OWED after the merge: re-run `praeco tmux instituere` from `~/.bin`. |
+| **P9.1** | Header: `multiplexor_fenestram_eligere` (multiplexor.h). Then Ctrl+N in vicus; tests on a private server; live look. |
 

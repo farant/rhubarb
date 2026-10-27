@@ -15,6 +15,11 @@
  *                            (titulum electum imprimit)
  *   praeco cantuale          cantilenae libri: titulus, genera, textus
  *   praeco cauda [n]         ultimi n eventus (XX) legibiles
+ *   praeco tmux <servitor> <panellus>
+ *                            eventus "tmux" (ex hamis tmux: fenestra,
+ *                            panellus, sessio mutata)
+ *   praeco tmux instituere   hamos tmux ponere: ~/.tmux.conf (sectio
+ *                            signata) et servitor currens
  *
  * Tenue: omnis logica in lib/praeconium.c.
  */
@@ -31,11 +36,17 @@
 #include "cantuale.h"
 #include "sors.h"
 #include "provenientia.h"
+#include "multiplexor.h"
+#include "filum.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+
+/* comites P8: alveus viae pro realpath (PATH_MAX: macOS M+XXIV,
+ * Linux IV*M+XCVI - maximum sumitur; examen <limits.h> non novit) */
+#define VIA_MAXIMA (IV * M + XCVI)
 
 /* hamus legit quantum datur; JSON hami parvus est */
 #define PRAECO_STDIN_MAXIMUM (IV * M * M)
@@ -141,6 +152,214 @@ status (
     {
         fprintf(stderr, "praeco: scribere non potui\n");
         redde I;
+    }
+    redde ZEPHYRUM;
+}
+
+/* comites P8: eventus "tmux" ex hamo tmux - servitor et panellus ex
+ * argumentis (#{socket_path}, #{pane_id}). Exitus 0 SEMPER: run-shell
+ * errorem in linea status tmux monstraret */
+interior integer
+tmux_nuntiare (
+                Piscina* piscina,
+     constans character* servitor,
+     constans character* panellus)
+{
+    PraeconiumEventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(e));
+    e.tempus    = nunc_ms();
+    e.eventus   = chorda_ex_literis("tmux", piscina);
+    e.servitor  = chorda_ex_literis(servitor, piscina);
+    e.panellus  = chorda_ex_literis(panellus, piscina);
+    (vacuum)praeconium_scribere(praeconium_via(piscina), &e, piscina);
+    redde ZEPHYRUM;
+}
+
+/* via absoluta praeconis ipsius (argv[0]; sine '/' per PATH), nexibus
+ * resolutis; NIHIL si non invenitur */
+interior constans character*
+viam_propriam (
+    constans character* vocatum,
+               Piscina* piscina)
+{
+    constans character* semita;
+    constans character* initium;
+    constans character* finis;
+             character* candidatus;
+             character* plena;
+                   i32  n;
+
+    plena = (character*)piscina_allocare(piscina, VIA_MAXIMA);
+    si (!plena || !vocatum)
+    {
+        redde NIHIL;
+    }
+    si (strchr(vocatum, '/'))
+    {
+        redde realpath(vocatum, plena) ? plena : NIHIL;
+    }
+    semita   = getenv("PATH");
+    initium  = semita;
+    dum (initium && *initium)
+    {
+        finis       = strchr(initium, ':');
+        n           = finis ? (i32)(finis - initium)
+                            : (i32)strlen(initium);
+        candidatus  = (character*)piscina_allocare(piscina,
+            (memoriae_index)n + (memoriae_index)strlen(vocatum) + II);
+        si (candidatus && n > ZEPHYRUM)
+        {
+            sprintf(candidatus, "%.*s/%s", (integer)n, initium,
+                vocatum);
+            si (   filum_existit(candidatus)
+                && realpath(candidatus, plena))
+            {
+                redde plena;
+            }
+        }
+        initium = finis ? finis + I : NIHIL;
+    }
+    redde NIHIL;
+}
+
+/* ~/.tmux.conf novum per fasciculum temporarium et renominationem
+ * (nexus symbolicus resolvitur: scopus eius mutatur, non nexus); copia
+ * prior semel in <conf>.ante-praeco */
+interior b32
+conf_scribere (
+     constans character* via,
+                 chorda  textus,
+                Piscina* piscina)
+{
+     character* scopus;
+     character* copia;
+     character* novum;
+
+    scopus  = (character*)piscina_allocare(piscina, VIA_MAXIMA);
+    copia   = (character*)piscina_allocare(piscina, VIA_MAXIMA + XVI);
+    novum   = (character*)piscina_allocare(piscina, VIA_MAXIMA + XVI);
+    si (!scopus || !copia || !novum)
+    {
+        redde FALSUM;
+    }
+    si (!filum_existit(via) || !realpath(via, scopus))
+    {
+        si (strlen(via) >= VIA_MAXIMA)
+        {
+            redde FALSUM;
+        }
+        strcpy(scopus, via);
+    }
+    sprintf(copia, "%s.ante-praeco", scopus);
+    sprintf(novum, "%s.praeco-novum", scopus);
+    si (   filum_existit(scopus) && !filum_existit(copia)
+        && !filum_copiare(scopus, copia))
+    {
+        redde FALSUM;
+    }
+    redde filum_scribere(novum, textus) && filum_movere(novum, scopus);
+}
+
+/* comites P8: hamos tmux ponere - fasciculus proprius
+ * (<directorium libri>/tmux.conf), sectio signata in ~/.tmux.conf,
+ * servitor currens ($TMUX, aliter ordinarius) eum legit */
+interior integer
+tmux_instituere (
+                Piscina* piscina,
+     constans character* vocatum)
+{
+     constans character* praeco;
+     constans character* liber;
+     constans character* domus;
+     constans character* tmux;
+              character* directorium;
+              character* fasciculus;
+              character* conf_via;
+              character* socket;
+              character* finis;
+                 chorda  configuratio;
+                 chorda  conf;
+                 chorda  nova;
+            Multiplexor  m;
+
+    praeco = viam_propriam(vocatum, piscina);
+    configuratio = praeco ? praeconium_tmux_configuratio(praeco,
+        piscina) : chorda_ex_literis("", piscina);
+    liber = praeconium_via(piscina);
+    domus = getenv("HOME");
+    si (configuratio.mensura == ZEPHYRUM || !liber || !domus)
+    {
+        fprintf(stderr, "praeco: via praeconis ignota (aut ' vel \" "
+            "continet), aut HOME abest\n");
+        redde I;
+    }
+    directorium  = (character*)piscina_allocare(piscina,
+        (memoriae_index)strlen(liber) + I);
+    fasciculus   = (character*)piscina_allocare(piscina,
+        (memoriae_index)strlen(liber) + XVI);
+    conf_via     = (character*)piscina_allocare(piscina,
+        (memoriae_index)strlen(domus) + XVI);
+    si (!directorium || !fasciculus || !conf_via)
+    {
+        redde I;
+    }
+    strcpy(directorium, liber);
+    finis = strrchr(directorium, '/');
+    si (finis)
+    {
+        *finis = '\0';
+    }
+    sprintf(fasciculus, "%s/tmux.conf", directorium);
+    sprintf(conf_via, "%s/.tmux.conf", domus);
+    (vacuum)filum_directorium_creare_cum_parentibus(directorium);
+    si (!filum_scribere(fasciculus, configuratio))
+    {
+        fprintf(stderr, "praeco: %s scribere non potui\n", fasciculus);
+        redde I;
+    }
+    imprimere("praeco: hami (praeco %s): %s\n", praeco, fasciculus);
+
+    conf = filum_existit(conf_via) ? filum_legere_totum(conf_via,
+        piscina) : chorda_ex_literis("", piscina);
+    nova = praeconium_tmux_conf(conf, fasciculus, piscina);
+    si (chorda_aequalis(nova, conf))
+    {
+        imprimere("praeco: %s: sectio iam praesens\n", conf_via);
+    }
+    alioquin si (conf_scribere(conf_via, nova, piscina))
+    {
+        imprimere("praeco: %s: sectio posita\n", conf_via);
+    }
+    alioquin
+    {
+        fprintf(stderr, "praeco: %s scribere non potui\n", conf_via);
+        redde I;
+    }
+
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    tmux = getenv("TMUX");
+    si (tmux && tmux[ZEPHYRUM])
+    {
+        socket = chorda_ut_cstr(chorda_ex_literis(tmux, piscina),
+            piscina);
+        finis  = socket ? strchr(socket, ',') : NIHIL;
+        si (finis)
+        {
+            *finis = '\0';
+        }
+        m.socket = socket;
+    }
+    si (multiplexor_configurationem_legere(&m, fasciculus, piscina))
+    {
+        imprimere("praeco: servitor %s: hami positi\n",
+            m.socket ? m.socket : "ordinarius");
+    }
+    alioquin
+    {
+        imprimere("praeco: servitor %s non legit (non currit?) - "
+            "initio proximo ex ~/.tmux.conf\n",
+            m.socket ? m.socket : "ordinarius");
     }
     redde ZEPHYRUM;
 }
@@ -382,9 +601,18 @@ principale (
     {
         redde cauda(piscina, argc >= III ? atoi(argv[II]) : XX);
     }
+    si (   strcmp(argv[I], "tmux")        == ZEPHYRUM && argc == III
+        && strcmp(argv[II], "instituere") == ZEPHYRUM)
+    {
+        redde tmux_instituere(piscina, argv[ZEPHYRUM]);
+    }
+    si (strcmp(argv[I], "tmux") == ZEPHYRUM && argc >= IV)
+    {
+        redde tmux_nuntiare(piscina, argv[II], argv[III]);
+    }
     fprintf(stderr,
         "usus: praeco hamus | status <textus> | cantus [-intactus] "
         "<mml> | cantus -titulus T | cantus -genus G | cantuale | "
-        "cauda [n]\n");
+        "cauda [n] | tmux <servitor> <panellus> | tmux instituere\n");
     redde I;
 }

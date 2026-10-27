@@ -13,6 +13,14 @@
  * EVENTUS 'cantus' (praeconium_cantus.h scribit, vicus legit): eventus
  * "cantus", genus "intactus" aut "", nuntius = textus MML integer
  * (numquam praecisus: praeco longiorem recusat).
+ *
+ * EVENTUS 'tmux' (comites P8; praeco tmux, ex hamis tmux): fenestra,
+ * panellus aut sessio clientis mutata - eventus "tmux", servitor =
+ * #{socket_path}, panellus = #{pane_id}, sessio vacua. vicus eum
+ * legit ut signum: systema terminalium statim interrogat (non post
+ * V s). 'praeco tmux instituere': fasciculus hamorum proprius
+ * (<directorium libri>/tmux.conf), sectio signata in ~/.tmux.conf
+ * quae eum legit, et servitor currens eum legit.
  */
 
 #ifndef PRAECONIUM_H
@@ -84,5 +92,26 @@ praeconium_legere_ab (
     constans character* via,
                    s64* positio,
                Piscina* piscina);
+
+/* comites P8: textus fasciculi hamorum tmux - session-window-changed,
+ * client-session-changed, window-pane-changed, quisque "run-shell -b
+ * '<praeco> tmux \"#{socket_path}\" \"#{pane_id}\"'"; praeco = via
+ * absoluta (servitor cum PATH brevi eum tamen invenit). Iterum lectus
+ * hamos substituit, nihil duplicat. Chorda vacua si via ' aut "
+ * continet. PURA */
+chorda
+praeconium_tmux_configuratio (
+    constans character* praeco,
+               Piscina* piscina);
+
+/* comites P8: ~/.tmux.conf cum sectione signata ("# praeco tmux:
+ * initium" ... "# praeco tmux: finis") quae "source-file -q
+ * <fasciculus>" continet: sectio prior substituitur, aliter in fine
+ * appenditur; cetera intacta. PURA */
+chorda
+praeconium_tmux_conf (
+                 chorda  conf,
+     constans character* fasciculus,
+                Piscina* piscina);
 
 #endif /* PRAECONIUM_H */

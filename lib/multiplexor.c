@@ -407,3 +407,17 @@ multiplexor_argumenta_adhaerendi (
     imperium[III]       = NIHIL;
     redde imperium[II] ? vectorem_struere(m, piscina, imperium) : NIHIL;
 }
+
+b32
+multiplexor_configurationem_legere (
+    constans Multiplexor* m,
+      constans character* via,
+                 Piscina* piscina)
+{
+    constans character* imperium[III];
+
+    imperium[ZEPHYRUM]  = "source-file";
+    imperium[I]         = via;
+    imperium[II]        = NIHIL;
+    redde via && currere(m, piscina, imperium, NIHIL);
+}

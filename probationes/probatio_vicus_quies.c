@@ -958,6 +958,42 @@ _probare_quaestionem_defectam (
     CREDO_AEQUALIS_I32(l->argumentum.mensura, ZEPHYRUM);
 }
 
+/* comites P8: eventus "tmux" in libro (hamus tmux: fenestra aut
+ * panellus mutatus) quaestionem STATIM facit - concha in fronte, nulla
+ * regula V s: sine eventu numquam. Eventus alius (status) nullam */
+interior vacuum
+_probare_eventum_tmux (
+    CredoContextus* c)
+{
+    Mundus* s;
+       i32  n;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0"));
+    (vacuum)vicus_pulsare(s->app.vicus);
+
+    CREDO_GRADUS("latus apertum, confirmatio - quiescant");
+    (vacuum)pulsare_usque(s, c->piscina, II * M, I);
+    n = pulsare_usque(s, c->piscina, II * M + D, ZEPHYRUM);
+
+    CREDO_GRADUS("eventus 'status': nulla quaestio");
+    CREDO_NECESSE(filum_appendere_firmiter(s->liber, chorda_ex_literis(
+        "{\"tempus\":500,\"sessio\":\"\",\"eventus\":\"status\","
+        "\"panellus\":\"%1\",\"servitor\":\"\",\"via\":\"\","
+        "\"transcriptum\":\"\",\"genus\":\"\",\"nuntius\":\"x\"}\n",
+        c->piscina)));
+    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, M, ZEPHYRUM), n);
+
+    CREDO_GRADUS("eventus 'tmux': quaestio intra D ms");
+    CREDO_NECESSE(filum_appendere_firmiter(s->liber, chorda_ex_literis(
+        "{\"tempus\":600,\"sessio\":\"\",\"eventus\":\"tmux\","
+        "\"panellus\":\"%2\",\"servitor\":\"/x/s\",\"via\":\"\","
+        "\"transcriptum\":\"\",\"genus\":\"\",\"nuntius\":\"\"}\n",
+        c->piscina)));
+    CREDO_VERUM(pulsare_usque(s, c->piscina, D, n + I) >= n + I);
+}
+
 /* comites P7 (desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4): comes
  * terminalem sequens (comitem_sequi in omni pulsu) nullum tmux in
  * pulsu incipit - locus ex memoria systematis terminalium; Cmd+T
@@ -1219,6 +1255,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
       mundum_terminalis_parare, mundum_purgare, NIHIL, NIHIL },
     { "quaestio_defecta", _probare_quaestionem_defectam,
       mundum_terminalis_parare, mundum_purgare, NIHIL, NIHIL },
+    { "eventus_tmux", _probare_eventum_tmux, mundum_terminalis_parare,
+      mundum_purgare, NIHIL, NIHIL },
     { "praeconium", _probare_praeconium, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },
     { "otium", _probare_otium, mundum_parare, mundum_purgare, NIHIL,
