@@ -25,3 +25,12 @@ key; invoke without the status check - all red (the last two needed
 compiling variants: dropping the check left a parameter unused).
 Lint caught `invocationem` (not in the dictionary) - renamed
 `_probare_invocare`.
+
+## 2026-10-22 — "Up" / "Down" key forms (D5 S3b)
+
+Arrow keys as named forms (no Shift/Ctrl/Alt/Cmd). Matcher bug fixed
+on the way: forms longer than one character that are not named
+("Tab", typos) fell through to the produced-character path and matched
+their FIRST letter. Now only single-character forms take that path;
+anything else matches nothing. Scanned every Praeceptum table: no
+table used such a form, so nothing changed behaviour.

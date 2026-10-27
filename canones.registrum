@@ -58,6 +58,9 @@
 # (tools/norma_canon_infigere.sh) - lector sine plagula vivit.
 <normae>	norma.canon
 <organum>	organum.canon
+# Conspectus (proiectiones D4a): declaratio exemplaris visus; canon in
+# lib/conspectus_canon.c INFIXUS (tools/conspectus_canon_infigere.sh).
+<conspectus>	conspectus.canon
 .norma	norma.canon
 
 # Bibliotheca sanctorum (project-specs/sancti-plan.md par. II, 2026-10-17):

@@ -220,7 +220,10 @@ backed up forever, the screenshot expires.
 2. **Projections are `derived`.** Rebuildable by definition, excluded
    from backup and sync, droppable at any time; their SOURCES must be
    truth categories (records, documents, communications, workflow,
-   jobs) - a projection over derived data is refused.
+   jobs). *Narrowed by R5 (`proiectiones.md` §VIII, Fran 2026-10-20):*
+   derived data never feeds TRUTH and is never stored as truth; a
+   projection MAY read other projections when the dependency is
+   recorded, so the chain rebuilds and invalidates as one.
 3. **Search is declared per category.** Records, documents and
    communications are indexed; secrets never; logs with retention.
 4. **Backup and sync follow `veritas` and the table**, not a list of
@@ -242,8 +245,9 @@ The axes DESCRIBE data; CAPABILITIES are the mechanisms that implement
 them. Capabilities are built one at a time when a consumer pulls them,
 each with its API decided header-first; a category is a declaration
 that COMPOSES capabilities plus the CONSTRAINTS between them (secret
-forbids journal and index; derived may not be the source of another
-derived table; view state forbids journal) - the same split as
+forbids journal and index; derived never feeds truth (R5 narrowed
+this from "derived may not be the source of another derived table");
+view state forbids journal) - the same split as
 organum's canon (form) and loader rules (cross-attribute laws). The
 category registry is written once two or three capabilities exist,
 never before.
@@ -391,7 +395,8 @@ Recommendation, in order of how fast they get more expensive:
 
 **Slices:** D1 snapshot store -> D2 act identity (HLC + device) -> D3
 entity ids (`moneta_ulid`; old numeric ids stay valid as strings) ->
-R5 projections spec -> D4 derived tables -> D5 full-text -> D6
+R5 projections spec (`proiectiones.md`) -> D4 derived tables (D4a
+library, D4b calendar `dies`, D4c composition) -> D5 full-text -> D6
 category registry; later (on PULL) retention, secret store, S3 +
 outbox + encryption, document merge.
 

@@ -1258,9 +1258,9 @@ fac_sanctum_priorem (
     redde _sanctum_vertere((ContextusPraecepti*)ctx, -I);
 }
 
-/* Esc in visu sancti: ad indicem (electus = apertus); sanctus per
- * argumentum apertus (origo) - non consumitur: vicus latus tollit,
- * prius (calendarium) redit */
+/* Esc in visu sancti: ad indicem (electus = apertus), unde sanctus
+ * apertus est - latus prius = Ctrl+O (Franus 2026-10-22: Esc non est
+ * "retro" universale) */
 interior b32
 fac_ad_indicem (
     vacuum* ctx)
@@ -1268,11 +1268,6 @@ fac_ad_indicem (
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
     constans character* tituli[IV];
     constans character* valores[IV];
-
-    si (chorda_aequalis_literis(_campus(cp->m, "origo"), "argumentum"))
-    {
-        redde FALSUM;
-    }
 
     tituli[ZEPHYRUM]   = "visus";
     valores[ZEPHYRUM]  = "index";
@@ -2119,8 +2114,6 @@ sancti_visus_argumentum_ponere (
                  chorda* apertus;
                  chorda* visus;
                  chorda  vitium;
-     constans character* tituli[II];
-     constans character* valores[II];
 
     si (!m || !m->corpus)
     {
@@ -2145,17 +2138,42 @@ sancti_visus_argumentum_ponere (
     {
         redde FALSUM;
     }
-    /* sequelae lateris (non semita): origo, electus = apertus */
+    /* sequela lateris (non semita): electus = apertus */
     visus = insula_ramus_attributum(&m->ramus, "visus");
     si (visus && chorda_aequalis_literis(*visus, "sanctus"))
     {
-        tituli[ZEPHYRUM]   = "origo";
-        valores[ZEPHYRUM]  = "argumentum";
-        tituli[I]          = "electus";
-        valores[I]         = chorda_ut_cstr(_campus(m,
-            "sanctus_apertus"),
-            m->piscina);
-        redde _campos_scribere(m, tituli, valores, II);
+        redde _campum_scribere(m, "electus", chorda_ut_cstr(_campus(m,
+            "sanctus_apertus"), m->piscina));
     }
-    redde _campum_scribere(m, "origo", "index");
+    redde VERUM;
+}
+
+b32
+sancti_visus_quaestionem_aperire (
+    vacuum* ctx)
+{
+    ContextusPraecepti cp;
+
+    memset(&cp, ZEPHYRUM, magnitudo(cp));
+    cp.m = (SanctorumMontatio*)ctx;
+    cp.p = cp.m ? cp.m->piscina : NIHIL;
+    redde cp.m && fac_quaestionem(&cp);
+}
+
+chorda
+sancti_visus_locus_titulus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+      SanctorumMontatio* m;
+       constans Sanctus* s;
+                 chorda* a;
+
+    m = (SanctorumMontatio*)ctx;
+    a = m ? insula_ramus_attributum(&m->ramus,
+        "sanctus_apertus") : NIHIL;
+    s = (a && a->mensura > ZEPHYRUM && m->corpus)
+        ? sancti_invenire(m->corpus, *a) : NIHIL;
+    redde s ? chorda_transcribere(s->titulus, piscina)
+            : chorda_ex_literis("Saints", piscina);
 }

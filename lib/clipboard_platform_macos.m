@@ -224,3 +224,33 @@ clipboard_capere_imaginem(Piscina* piscina)
         redde fructus;
     }
 }
+
+/* ============================================================
+ * clipboard_textum_ponere
+ * ============================================================ */
+
+b32
+clipboard_textum_ponere(constans character* textus, i32 mensura)
+{
+    b32 positus;
+
+    si (!textus)
+    {
+        redde FALSUM;
+    }
+    positus = FALSUM;
+    @autoreleasepool {
+        NSPasteboard* pb = [NSPasteboard generalPasteboard];
+        NSString* s = [[NSString alloc] initWithBytes:textus
+            length:(NSUInteger)mensura encoding:NSUTF8StringEncoding];
+
+        si (s)
+        {
+            [pb clearContents];
+            positus = [pb setString:s forType:NSPasteboardTypeString]
+                ? VERUM : FALSUM;
+            [s release];
+        }
+    }
+    redde positus;
+}

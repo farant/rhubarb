@@ -227,6 +227,19 @@ binding changes) or `historia="substitue"` (replace: stepping a day,
 moving a selection, typing a filter); default `substitue`. A pane keeps
 its own back/forward list of canonical routes. Keys: OPEN (§IX).
 
+**Amended 2026-10-22 (Fran, genera-datorum D5): two lists per TAB,
+one per side - not per pane.** Per-pane lists could not go back across
+panes (terminal -> Cmd+Shift+F -> search -> Ctrl+O stayed in search).
+Ctrl+O / Ctrl+I step the FOCUSED side's list. LEFT: an `impelle`
+change of the left pane pushes (scriba's page is now route state,
+`scriba/<pagina>`: next/prev, #links, search hits all push). RIGHT: an
+`impelle` change of the stack's front pane pushes, and so does a change
+of the front pane itself (open, cycle, Esc, $via, a search hit).
+`substitue` replaces that pane's current entry; a focus click does
+nothing. A step brings the entry's pane to the front (reopens it if
+closed) and applies its route. The terminal consumes Ctrl+O itself.
+lib/vicus.worklog.md.
+
 ## VI-e. Restart: the saved argument is the route (R4d)
 
 Vicus saves each pane's argument and reopens with it. Until R4d that
@@ -255,6 +268,28 @@ cycle open a second agenda calendar (found 2026-10-20 before coding).
   gives the same state) - otherwise every launch appended an act;
   a pane opened WITH an argument saves at once (the argument may carry
   transient state: `calendarium/dies/2026-10-19`).
+
+## VI-f. Regular state vs modal state; what Esc means (Fran 2026-10-22)
+
+- **A reopened pane inherits the closed pane's regular state, per
+  tab.** Closing a pane (Esc at its top level, T4d) and reopening its
+  genus in the same tab gives the same pane id and the same insula
+  state - the last saint, the last list mode. Intended.
+- **Modal state is the exception: it lives on the HOST** (the tab or
+  pane record in vicus), never in the pane's insula state, so it is
+  never saved or rehydrated by construction. Today the only modal is
+  the summoned prompt (Cmd+F / Cmd+Shift+F / `$search`, comites P5a):
+  the open prompt IS the visible modal, so "Esc: cancel" is honest;
+  Esc cancels the whole summon (right history back, focus back).
+- **Esc is not a universal back button.** Inside a widget Esc goes UP
+  (saint -> list, day -> month, contact -> list, close prompt, clear
+  filter); at a widget's top level it closes the widget (T4d). Going
+  back to the PREVIOUS widget is Ctrl+O. The saints field `origo`
+  (Esc closed a saint opened by the calendar or `$saints(id)`) was a
+  modal flag kept in pane state: it leaked into a reopened pane (a
+  `$saints` over contacts showed an old saint and Esc dropped to
+  contacts), and the key hint "Esc: Back to list" lied. Removed: Esc
+  in a saint always goes to the list.
 
 ## VI-a. Actions declare their result route (POST-redirect-GET as contract)
 
@@ -307,6 +342,15 @@ A view answers a relation in one of three ways (no expressions):
   <relatio nomen="proxima" functio="sancti.proxima"/>             <!-- computed -->
 </relationes>
 ```
+
+**First slice shipped (comites P5a, 2026-10-22):** Fran named the
+element `<aditus>` with `<iter nomen="..." semita="URI"
+advocare="verum"/>` children (not `<relationes>`/`<relatio>`); only
+`quaestio` exists so far, bound to Cmd+F. `semita` is a plain URI (any
+genus - the calendar's search answer is `indagatio?genus=res`); absent
+`semita` means "this pane itself", answered by `facies.advocatum`.
+`{q}` parameters and `functio` answers are not built yet. See
+`project-specs/comites.md` P5a.
 
 A `functio` is registered like an actio but RETURNS a route (pure:
 reads state, writes nothing); the host applies it. So "routes only set
@@ -453,7 +497,7 @@ accessors, R1.)
 ## IX. Decisions (Fran, 2026-10-19)
 
 1. **History keys:** Ctrl+O (back) / Ctrl+I (forward), per pane (vim's
-   jump list). Cmd+[ / Cmd+] stay the pane cycle.
+   jump list) - per SIDE of a tab since 2026-10-22 (§VI amendment). Cmd+[ / Cmd+] stay the pane cycle.
 2. **Commands stay:** `$saints(thomas-aquinas)` remains an English
    alias that compiles to the route `sancti/sanctus/thomas-aquinas`;
    `$genus/...` route commands are added beside them (R3).
@@ -495,7 +539,11 @@ accessors, R1.)
 
 - Not verified: that every insula branch name maps 1:1 to a montatio
   name - today children are mounted by hand with ids like
-  `<id>_notae`; R0/R4 must reconcile the naming.
+  `<id>_notae`; R0/R4 must reconcile the naming. **Resolved 2026-10-22
+  (D5 S3c):** the route library looks for `<genus id="<parent id>_
+  nomen"/>` first, then `<genus id="nomen"/>` (`include/semita.h`);
+  the calendar and contacts declare `<montatio nomen="notae"
+  genus="scriba"/>` - `calendarium/dies/2026-10-19?notae.pagina=2`.
 - Not measured: cost of applying a route (expected trivial: one branch
   write).
 - Not designed: routes for documents themselves (a picture's layer, a

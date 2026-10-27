@@ -39,6 +39,7 @@
 #include "delineare_mandata.h"
 #include "organum_montatio.h"
 #include "semita.h"
+#include "tabula_dispersa.h"
 
 /* tabulae fixae (vicus-latera decisio IX): index ordinarius tot
  * dat; vicus plures non legit */
@@ -120,14 +121,66 @@ nomen structura {
                  b32  (*argumentum_ponere)(vacuum* ctx,
                           constans character* argumentum);
               vacuum* argumentum_ponere_ctx;
-    /* semitae R3: ramus lateris (semita.h) - historia lateris et
-     * $via; NIHIL = latus sine semitis */
+    /* semitae R3: ramus lateris (semita.h) - historia (tabulae, D5)
+     * et $via; NIHIL = latus sine semitis */
     constans InsulaRamus* ramus;
     /* semitae R4: post semitam a vico applicatam (historia) - latus
      * statum derivatum reconciliat (calendarium: liber notarum diei;
      * pictor: documentum). NIHIL = nihil reconciliandum */
                  b32  (*semitam_secuta)(vacuum* ctx);
               vacuum* semitam_secuta_ctx;
+    /* D5 (indagatio S3b): argumentum (vicus_acervo_mutare, $via)
+     * statum lateris mutat, non identitatem - latus argumentum
+     * vacuum servat (acervus, cyclus, vicus_advocare id sine
+     * argumento inveniunt; status in semita servata vivit, R4d).
+     * Ordinarie FALSUM */
+                 b32 argumentum_transiens;
+    /* D5: latus advocatum (vicus_advocare, brevitas hospitis), post
+     * frontem et focum: latus se parat (indagatio: prompta aperitur).
+     * NIHIL = nihil */
+                 b32  (*advocatum)(vacuum* ctx);
+              vacuum* advocatum_ctx;
+    /* comites P1: locus lateris; NIHIL = ordinarium (semita_locus;
+     * latus sine semitis: genus). Calendarium rotundat ad unitatem
+     * visus, hodie concreta. */
+               chorda  (*locus)(vacuum* ctx, Piscina* piscina);
+              vacuum* locus_ctx;
+    /* titulus loci humanus ("Anna Rossi", "Mon 19 Oct 2026");
+     * NIHIL = locus ipse */
+               chorda  (*locus_titulus)(vacuum* ctx, Piscina* piscina);
+              vacuum* locus_titulus_ctx;
+    /* comites P3: latus sinistrum librum comitem accipit - praefixum
+     * ("comes/<locus>"; vacuum = liber domus) et titulus vectis
+     * ("Notes · Anna Rossi"); P5b: semita visus comitati (URI
+     * canonica frontis dextrae; vacua = visus sine semitis) - nota
+     * comitis ad quaestionem. NIHIL = latus comites non fert. */
+                 b32  (*comitem_ponere)(vacuum* ctx, chorda praefixum,
+                          chorda titulus, chorda semita);
+              vacuum* comitem_ponere_ctx;
+    /* praefixum libri visi (comes activus: "comes/..."); NIHIL =
+     * comites non fert */
+               chorda  (*comes_currens)(vacuum* ctx, Piscina* piscina);
+              vacuum* comes_currens_ctx;
+    /* comites P4: ante lectionem loci decisivam (Cmd+T, focus in
+     * sinistrum) hospes latus monet ut locum recenter quaerat
+     * (terminale: tmux iterum interrogatur). NIHIL = nihil. */
+                 vacuum  (*locum_renovare)(vacuum* ctx);
+              vacuum* locum_renovare_ctx;
+    /* comites P3b: ambitus historiae - historia lateris per ambitum
+     * separatur (scriba: praefixum libri visi; liber quisque
+     * historiam suam habet); mutatio ambitus locum non facit, historia
+     * ambitus prioris servatur. NIHIL = ambitus unus. */
+               chorda  (*historiae_ambitus)(vacuum* ctx,
+                           Piscina* piscina);
+              vacuum* historiae_ambitus_ctx;
+    /* comites P5b: semita iteris (aditus) in CODICE - ut
+     * facies.locus manifestum supplet; vacua = semita manifesti
+     * (scriba: in comite "indagatio?genus=comites&clavis=<locus>").
+     * NIHIL = manifestum solum. */
+               chorda  (*iter_semita)(vacuum* ctx,
+                           constans character* titulus,
+                           Piscina* piscina);
+              vacuum* iter_semita_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -158,17 +211,27 @@ nomen structura {
                     b32  finita;         /* concha exiit: titulus
                                           * "[exitus]", non iam
                                           * pulsatur */
-    /* semitae R3 (vicus privatum): historia lateris - semitae plenae
-     * ut textus STML (cum signo camporum 'impelle'); cursor = locus
-     * currens */
-                    Xar* historia;
-                    i32  historia_cursor;
+    /* D5 (vicus privatum; olim historia lateris, R3 - nunc tabulae):
+     * status lateris pulsu ultimo visus - textus semitae plenae et
+     * signum camporum 'impelle' (mutatio = locus historiae tabulae);
+     * visa = semel computatus (R4d: semita servata ante restituitur) */
+                 chorda historia_textus;
+                 chorda historia_signum;
+                    b32 historia_visa;
     /* semitae R4d: semita persistens lateris (URI, campi transientes
      * omissi) - post pulsum mutata in indice servatur (attributum
      * semita), in initio post montationem applicatur (deinde
      * semitam_secuta); argumentum identitas manet (acervus, cyclus).
      * Vacua = nulla */
                  chorda semita_servata;
+    /* quies T3: semitae lateris (historia plena, semita servata)
+     * solum post scripturam in repositorio rami leguntur - versio =
+     * insula_versio cum ultimo lectae; lectae FALSUM = numquam
+     * (montatio nova eam reponit). lectiones = numerus lectionum
+     * (probationes, mensura) */
+                    b32 semitae_lectae;
+                    i32 semitae_versio;
+                    i32 semitae_lectiones;
 } VicusLatus;
 
 nomen structura {
@@ -180,6 +243,41 @@ nomen structura {
            i32 focus;       /* VICUS_SINISTRUM aut VICUS_DEXTRUM */
            i32 focus_domus; /* T4f: focus cum latus cycli domum texit
                              * (ordinarium VICUS_DEXTRUM) */
+    /* D5 (Franus 2026-10-22): historiae TABULAE, una per latus
+     * (Ctrl+O / Ctrl+I in latere focato). Locus = latus (id, genus,
+     * argumentum) et semita eius plena (NIHIL: latus sine semitis).
+     * SINISTRA: campus 'historia impelle' lateris sinistri mutatus
+     * (scriba: pagina) locum novum facit. DEXTRA: idem pro fronte
+     * acervi, et frons mutata (aperitio, cyclus, Esc, $via, porta
+     * indagationis) locum novum facit. Signum aequale eiusdem
+     * lateris: locus substituitur (ut R3). Focus ictu mutatus locum
+     * non facit. Futura tolluntur, antiquissimus abit post C. Index
+     * VICUS_SINISTRUM / VICUS_DEXTRUM. Vicus privatum. */
+                    Xar* historia[II];
+                    i32  historia_cursor[II];
+                 chorda  historia_frons;   /* id frontis pulsu ultimo
+                                            * (privatum) */
+                 chorda comes_secutus;    /* comites P3: praefixum
+                                            * comitis ultimo positum
+                                            * (privatum) */
+    /* comites P3b: historiae ambituum non currentium (ambitus ->
+     * historia et cursor), et ambitus currens per latus (privatum);
+     * historia[] / historia_cursor[] = ambitus currens */
+         TabulaDispersa* historiae_ambituum[II];
+                 chorda  historia_ambitus[II];
+    /* comites P5a: aditus (Cmd+F cum semita, vicus_advocare) - dum
+     * prompta lateris advocati aperta manet, Esc eam claudens aditum
+     * revocat: historia dextra ad cursorem priorem, focus ad latus
+     * prius. Gradus in lib/vicus.c (privatum) */
+                    i32 aditus_gradus;
+                 chorda aditus_frons;     /* id lateris advocati */
+                    i32 aditus_latus;     /* focus ante aditum */
+                    s32 aditus_cursor;    /* cursor historiae dextrae
+                                            * ante aditum; -I nullus */
+    /* focus post petitiones pulsus proximi (aditus revocatus, comes
+     * ostensus: aperitio nova focum dextrum cogit) - privatum */
+                    b32 focus_differtus;
+                    i32 focus_differtus_latus;
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
@@ -238,6 +336,8 @@ nomen structura {
           SemitaOrganum  organa;      /* semitae R3: NIHIL = nullae */
                  vacuum* organa_ctx;
                 Piscina* scheda_semitarum;   /* per pulsum vacatur */
+                    Xar* brevitates;  /* D5: brevitates hospitis
+                                       * (privatum); NIHIL = nullae */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -512,6 +612,38 @@ vicus_acervo_aperire (
      constans character* genus,
      constans character* argumentum);
 
+/* D5 (indagatio S3b): latus generis SINE argumento in frontem acervi
+ * tabulae activae (praesens venit, aliter montatur - ut
+ * vicus_acervo_aperire), focus dexter, deinde facies.advocatum.
+ * PETITIO. FALSUM si genus ignotum. */
+b32
+vicus_advocare (
+                  Vicus* v,
+     constans character* genus);
+
+/* D5: brevitas hospitis - Cmd + runa (modificantes praeterea: MOD_SHIFT
+ * aut ZEPHYRUM, exacte; Caps Lock ignoratur) = vicus_advocare(genus).
+ * Ut Cmd+numerus et Cmd+]: hospes ante latera eam capit, latera
+ * numquam vident. runa sine maiuscula ('f' pro Cmd+Shift+F, ut
+ * fenestra dat). FALSUM si genus ignotum aut brevitas iam posita. */
+b32
+vicus_brevitatem_addere (
+                  Vicus* v,
+                    s32  runa,
+                    i32  modificantes,
+     constans character* genus);
+
+/* comites P5 (semitae-spec VI-b): aditus lateris focati sequitur -
+ * manifestum generis eius (<aditus><iter nomen=titulus/>): semita
+ * (URI) = latus generis eius in frontem acervi cum semita (ut
+ * vicus_acervo_mutare; PETITIO), si advocare focus dexter et
+ * facies.advocatum; semita nulla = facies.advocatum lateris ipsius
+ * (statim). FALSUM si iter non declaratur. Cmd+F = "quaestio". */
+b32
+vicus_aditum_sequi (
+                  Vicus* v,
+     constans character* titulus);
+
 /* semitae R3: organa (genus -> manifestum) pro semitis laterum;
  * applicatio ponit (organa infixa, cache). NIHIL = nullae (historia
  * nulla) */
@@ -520,6 +652,42 @@ vicus_organa_ponere (
               Vicus* v,
       SemitaOrganum  organa,
              vacuum* ctx);
+
+/* comites P3 (Cmd+T, hospes): latus sinistrum tabulae activae - liber
+ * domus <-> comes frontis dextrae ("comes/" + locus, titulus
+ * "Notes · " + titulus loci); focus sinister. Dum comes ostenditur,
+ * vicus_pulsare eum sequitur (locus frontis mutatus: comes novus).
+ * FALSUM si sinistrum comites non fert. */
+b32
+vicus_comitem_commutare (
+    Vicus* v);
+
+/* comites P5b (inventum comitis): latus sinistrum tabulae activae
+ * librum comitem praefixi ostendit (facies.comitem_ponere, ut Cmd+T,
+ * sed comes datus non frontis); sequela a fronte CURRENTI incipit
+ * (mutatio eius posterior comitem mutat - visus comitatus per
+ * petitionem apertus comitem eundem dat); focus sinister post
+ * petitiones pulsus proximi. FALSUM si sinistrum comites non fert. */
+b32
+vicus_comitem_ostendere (
+      Vicus* v,
+     chorda  praefixum,
+     chorda  titulus,
+     chorda  semita);
+
+/* comites P1: locus lateris (facies.locus aut ordinarium) et titulus
+ * eius; vacua si latus non montatum */
+chorda
+vicus_latus_locus (
+                  Vicus* v,
+    constans VicusLatus* l,
+                Piscina* piscina);
+
+chorda
+vicus_latus_locus_titulus (
+                  Vicus* v,
+    constans VicusLatus* l,
+                Piscina* piscina);
 
 chorda
 vicus_causa (

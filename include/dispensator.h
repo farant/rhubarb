@@ -92,7 +92,8 @@ structura Dispensator {
                   Motus  motus;
               Derivator  derivator;
          ActioRegistrum* actiones;
-    DestinatioStrategia  strategia;
+    DestinatioStrategia  strategia;      /* NIHIL = geometrica */
+                 vacuum* strategia_ctx;
               Componere  componere;
                  vacuum* componere_ctx;
               Componens* arbor;
@@ -125,10 +126,13 @@ dispensator_creare (
                  vacuum* componere_ctx,
                     s64  quies_ms);
 
+/* strategia propria cum contextu; NIHIL = ordinaria
+ * (destinatio_geometrica) */
 vacuum
 dispensator_ponere_strategiam (
             Dispensator* d,
-    DestinatioStrategia  strategia);
+    DestinatioStrategia  strategia,
+                 vacuum* ctx);
 
 
 /* ==================================================

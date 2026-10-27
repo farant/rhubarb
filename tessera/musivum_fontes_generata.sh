@@ -15,6 +15,7 @@ declare -a RADIX_FONTES=(
     "filum"
     "fons"
     "friatio"
+    "glyphae_ductae"
     "imago"
     "imago_opus"
     "internamentum"

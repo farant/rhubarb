@@ -31,6 +31,11 @@ nomen structura {
           ActioRegistrum* actiones;
          FiguraRegistrum* figurae;
             Admonitiones* index;       /* ligamen (communis centro) */
+    /* nuntii hospitis ("Sounds muted"; index proprius, NIHIL = nulli):
+     * SOLI volant - nec centrum nec numerus non lectarum nec sonus eos
+     * videt (indicem communem legunt). Ictus corporis legit sine
+     * porta. Hospes post montationem ponit. */
+            Admonitiones* transientes;
        AdmonitionisActio  agere;       /* porta (ut centrum) */
                   vacuum* agere_ctx;
         AdmonitionumNunc  nunc;        /* NIHIL = nulla volat */

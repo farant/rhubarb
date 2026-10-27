@@ -1,0 +1,11 @@
+<!-- conspectus_dies.stml - declaratio conspectus 'dies'
+     (proiectiones D4b; C: lib/conspectus_dies.c). Infixa in
+     lib/conspectus_infixa.c per tools/conspectus_infigere.sh. -->
+<conspectus nomen="dies" versio="1">
+  <clavis typus="dies"/>
+  <fons documentum="agenda" irritat="per-rem"/>
+  <fons documentum="personae" irritat="omnia"/>
+  <fons spatium="dies/{clavis}"/>
+  <fons pura="liturgia"/>
+  <fons pura="fasti"/>
+</conspectus>

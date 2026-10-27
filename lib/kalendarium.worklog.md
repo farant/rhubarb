@@ -927,3 +927,193 @@ cuts the text up to '-'; ULIDs never contain '-'). Album `res` =
 `AgendaRes.ordo` (creation ordinal); `res_ordinis` maps it back for
 paging. Group order ties break by ordinal (= old id order for old
 data). Row-id buffer XXXII -> XLVIII.
+
+## 2026-10-22 — notes page in the route (D5 S3c)
+
+`<montatio nomen="notae" genus="scriba"/>`: the day-notes page is route
+state, `calendarium/dies/2026-10-19?notae.pagina=2`. Mount order: the
+notes book follows the selected day, so the argument is applied FIRST
+without children (day), then the notes are mounted, then the whole
+route again (idempotent) and `librum_aptare_cum_pagina` - which reads
+the requested page before re-pointing the book and shows it after (the
+book switch alone would land on the last viewed page). The same helper
+runs in kalendarium_semitam_secuta and argumentum_ponere. The saved
+route now carries the page: `calendarium/dies?notae.pagina=1`.
+organa_calendarii answers for "scriba" too (organum_scribae). Turning a
+notes page is a right-side history step (key test in
+probatio_vicus_kalendarium notae). Plants red: resolver without scriba,
+second application skipped, children not stripped at mount, page not
+shown.
+
+## 2026-10-22 — kalendarium_locus (comites P1)
+
+Locus rounded to the view's unit, today concrete: dies
+`calendarium/dies/2026-10-19`, hebdomas from Sunday
+`calendarium/hebdomas/2026-10-18`, mensis `calendarium/mensis/2026-10`,
+annus `calendarium/annus/2026`, agenda `calendarium/agenda`. Titles
+"Mon 19 Oct 2026", "Week of 18 Oct 2026", "October 2026", "2026",
+"Agenda". Plants red: week not rounded, month with day.
+
+## 2026-10-23 — Checklist block in the day view (pensa K3)
+
+The day view shows the day's checklist items (the `pensa` book of the
+volume, parsed by `pensa_formam_legere`, filtered by `pensa_res_diei`)
+between the open to-dos and Completed: band "k" ("Checklist", repeated
+as "k-c" when a page starts mid-block), rows "k<n>".
+
+Selection model. `res_electa` used to be an agenda id looked up in
+`ordines_currentes` (Xar of AgendaRes*). The day view now has one
+sequence of selectable rows, `electiones_diei` (Xar of chorda): open
+to-do ids, then "k0".."k<n-1>", then completed ids - the same order the
+album draws. `res_electa` (now takes a pool) looks the stored value up
+in it and falls back to the first row, so a stale "k5" after the
+template shrank never strands j/k. j/k in the day view walk that
+sequence (`electionem_gradi`); the agenda view keeps `rem_gradi`.
+Checklist rows go into the album with `res` = -(n+1): 0 is what titles
+and birthday rows carry, so "k0" cannot be 0. `pagina_rei`,
+`paginam_vertere` (a page starting with a checklist row selects it) and
+`ictus_ordinis` each map "k<n>" <-> -(n+1). Agenda ids never look like
+"k<digits>" (decimal or ULID).
+
+Ticking. `contextum_parare` resolves a "k<n>" selection to the item's
+index and text and whether the day is today or earlier (`hodie()`
+from the gate). "Complete" now requires REQUIRIT_SIGNANDUM: an agenda
+item, or a checklist row on a tickable day. The box click already
+called the same command, so it follows the same rule. `fac_perficere`
+flips the tick with `pensa_ponere(doc, dies, res, !pensa_factum(...))`.
+Item commands (title, date, note, rubrics, < >, X) keep REQUIRIT_REM,
+so they grey out on checklist rows. Ticks are NOT in agenda undo: they
+are pensa acts in the volume, not agenda acts; `x` again is the undo.
+The one `PensaDocumentum` per pane is opened at mount (NIHIL without a
+volume) and lives as long as the pane.
+
+Test design trap (Task 3): the future-day check first pressed `x` on k0
+and clicked k0's box - with the today rule broken, the two acts ticked
+and unticked the SAME item and the assertion stayed green. Act on
+different rows when asserting "nothing happened".
+
+Cost. The book is read on every listing (several times per frame:
+compose, paint, selection), and a scriba page read replays the page's
+history. Day view at 800x600, 5 to-dos, 200 frames of
+compose+paint (throwaway probe, scratchpad mensura_pensa.sh):
+no `pensa` book 0.050 ms/frame; template written once 0.479 ms; template
+edited 50 times 1.165 ms. Linear in edits, far inside a frame. If it
+ever matters: cache the parsed form keyed on the volume's last act seq.
+
+pensa side (lib/pensa.c, K3 Task 1): a long-lived document queried per
+frame must not grow its pool - per-query work moved to a scratch pool;
+see lib/pensa.worklog.md.
+
+## 2026-10-23 — garbage feast titles in the month view (A2b again)
+
+Fran saw the first week row's feast titles cycle through random bytes
+on every mouse move ("dies/2026-" in one cell - a day-notes book name).
+Not K3. The shared projection registry (`conspectus`, given by vicus)
+is an LRU with a byte ceiling: after each new day projection, `eicere`
+destroys the least recently read entries' pools. The month painter
+reads 42 days in a row and handed `v->festum` - a pointer INTO the
+entry's pool - straight to `mandata_textus`. Rasterization happens
+after all cells are queued; by then the later reads had evicted the
+first row's entries, and their text pointed at freed memory. The week
+view did the same with the celebration, birthday lines and notes-book
+lines (open items were already copied by chorda_concatenare).
+
+Fix: transcribe projection text into `md->piscina` at those four
+sites - the A2b rule (text given to mandata_textus lives in the
+mandata pool). A projection pointer is valid only until the next
+`conspectus_legere`.
+
+Test `textus_in_piscina`: render into a FIXED-SIZE pool, take its
+base from the first 1-byte allocation, and assert every text command's
+bytes lie in [base, base + size). Deterministic: it does not depend on
+an eviction happening or on what the freed memory holds (a
+read-the-text-back test could pass by luck). It covers every text
+command in the month and week views, so any future site that forgets
+to copy fails here. Plants: each of the four copies removed -> red (the
+birthday one needed a birthday in the fixture; it was green first).
+
+## 2026-10-23 — A2b is now the library's job
+
+`mandata_textus` copies its text itself (lib/mandatum.worklog.md), so
+the A2b rule ("text handed to mandata lives in the mandata pool") no
+longer depends on callers. The existing chorda_transcribe calls in this
+file are now redundant and harmless; `textus_in_piscina` keeps checking
+the invariant from the outside.
+
+## 2026-10-23 — Reminders tab, read view (pensa K4)
+
+A fifth view, `visus = monita` (bit VISUS_MONITORUM XVI), after Agenda:
+the daily checklist template rendered read-only. It reuses the index
+machinery: the composer gives it `indicem_disponere` (header row with
+page arrows; "+ New" only in VISUS_INDICIS views), `ordines_indicis`
+has a monita branch (`monita_in_album`), the root figure dispatches to
+`monita_pingere`. Rows: band "m" ("Daily checklist"), per group "h<k>"
+(ALBUM_TITULUS, so it repeats as "h<k>-c" on a new page), "v<k>" (the
+recursus error, wrapped), "u<k>-<j>" items; "nullum" when there is no
+volume, no book or an empty template. Every row has album res 0:
+nothing is selectable until K5's edit view gives the view something to
+act on, so `[`/`]` just turn pages (paginam_vertere finds no res).
+Headingless every-day lines show under a DIM "Every day" (Fran: not
+typed, so dim). Heading note: "today" (recursus_continet), else "next:
+Sat 17 Oct" (recursus_proximus from tomorrow), else "no more dates";
+none for a heading that does not parse.
+
+Wrap: `lineas_involvere` (break at spaces, hard-break long words) and
+`columnae_textus(m)` - the album sizes the error row from the SAME
+width the painter wraps to; test `monita_vitium` checks every error
+line lies inside the row, and a plant with the painter at half width
+goes red.
+
+Bar: "Reminders" made the widest bar (month view: < > Today + 5
+segments) 52 columns. Adding the word alone broke OLD tests in narrow
+panes (birthday popover position, day-view paging, vicus notes): an
+overflowing bar distorts the whole layout. `barra_verbum_capit` sums
+the visible buttons' word widths (+ left-group gaps) against the bar's
+columns; when the word does not fit, the button is III columns with no
+title and `figura_globuli` draws a 9x9 bell (`campana`, runs like the
+birthday cake). Limit found in the vicus test: at ~250 px panes the bar
+does not fit even with the bell (needs 44 columns) - the dispositio
+squeezes the last button to NEGATIVE width (the click misses); Agenda
+was already squeezed there before K4. Real panes (960 screen -> 480)
+fit the word; >= ~270 px fit the bell. Not addressed in K4.
+
+Tests: the fixture's scriba page was 40x10 and silently cut K4's
+14-line templates (debug print of pensa_textum_legere) - now 40x40.
+Bar buttons draw component-relative: the bell test finds the button's
+own commands by its command group (provenientia + magnitudo_arboris).
+
+## 2026-10-23 — Reminders edit view (pensa K5)
+
+`e` or the header button "Edit" (read mode only) sets `monita_modus`
+= editio: the view splits like the day view (PARS L list on top, page
+capacity halved; slot "forma" below) and a second Charta, `pensorum`
+(nested scriba "<id>_pensa" on book key "pensa"), is composed into the
+slot. It is mounted with the pane, like the notes. Entering the editor
+= click or Tab (dispatcher level rules); the dispatcher owns `focus`,
+so `e` cannot jump into the editor (a focus-request feature is parked
+in the spec). Esc chain: scriba's own Esc; idle Esc -> list (dispatcher
+gradus); Esc on the list -> read mode (`calendarium.monita_effugere`,
+the one Esc command of this view); again -> month. Switching views via
+the bar and coming back starts in read mode (fac_visum_monitorum writes
+visus + pagina + modus in one write). The read view re-reads the book
+every frame, so a heading typed wrong shows its error at once.
+
+GESTURE SLOT - the real lesson. A pane's Motus holds ONE gesture
+(scriba state + effusor). scriba edits only when a gesture is present
+(`mutare_gestum`) and saving commits the slot OWNER's working sheet.
+With the notes owning it, typing in the checklist editor was drawn but
+never saved. `charta_visibilis` (pensa editor in edit mode, else the
+notes) + `gestum_aptare` at the end of `agere` (every calendar action:
+e, Edit, Esc chain, view switch) and in `kalendarium_gestum_ponere`
+(vicus focus hook) keep the slot on the visible editor; a change of
+owner FLUSHES the pending edit first - insert-mode text followed by a
+click on a bar button would otherwise be lost (test
+monita_gestus_pendens; its plant was green until that test existed).
+
+Mounting the editor CREATES the "pensa" book with page 1 sized to the
+slot (as the notes editor does for today's book): on a real volume the
+first mount fixes the template's first page size from the pane. Tests
+must write fixture books BEFORE mounting (agendam_struere + mount);
+writing after mount went into the small page and cut the template.
+scriba pages are fixed grids: `G` = last grid row, Enter at the bottom
+has no room - tests navigate with gg/j and type.

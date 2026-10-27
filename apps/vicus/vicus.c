@@ -10,6 +10,8 @@
  * volumen temporarium, XXX quadra, exitus; -volumen <via>
  * (ordinarie vicus.volumen); -quaestio adiutor: $question per
  * bin/quaestio (via A) loco portae in processu (via B, http-vocatio).
+ * -quies: singulis X secundis in stderr pulsus per secundum et pulsus
+ * mutantes (quies T1: in ansa pulsus = excitatio).
  */
 #include "latina.h"
 #include "piscina.h"
@@ -24,6 +26,7 @@
 #include "vicus_quaestio_interna.h"
 #include "reactor.h"
 #include "vicus_sonus_porta.h"
+#include "fenestra.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,18 +42,63 @@
  * (vicus-latera S1c). Reactor: hospes eum SOLUS possidet et in omni
  * pulsu poscit (http-vocatio R1); nihil inscriptum = nihil agit. */
 nomen structura {
-      Vicus* vicus;
-    Reactor* reactor;
+       Vicus* vicus;
+     Reactor* reactor;
+         b32  quies;     /* -quies: mensurae in stderr */
+         s64  initium;   /* ms fenestrae, initium fenestrae X s */
+         s64  pulsus;
+         s64  mutata;
 } PulsusVici;
+
+/* quies T1: X secundorum fenestra - pulsus et mutata per secundum */
+#define QUIES_FENESTRA_MS  (X * M)
+
+interior vacuum
+_quietem_numerare (
+    PulsusVici* pv,
+           b32  mutatum)
+{
+    s64 nunc;
+    s64 spatium;
+
+    nunc = fenestra_tempus_ms();
+    si (pv->initium == ZEPHYRUM)
+    {
+        pv->initium = nunc;
+    }
+    pv->pulsus++;
+    si (mutatum)
+    {
+        pv->mutata++;
+    }
+    spatium = nunc - pv->initium;
+    si (spatium >= QUIES_FENESTRA_MS)
+    {
+        fprintf(stderr, "vicus quies: %ld ms: pulsus %ld (%ld/s),"
+                " mutata %ld (%ld/s)\n", (long)spatium,
+                (long)pv->pulsus,
+                (long)(pv->pulsus * M / spatium), (long)pv->mutata,
+                (long)(pv->mutata * M / spatium));
+        pv->initium  = nunc;
+        pv->pulsus   = ZEPHYRUM;
+        pv->mutata   = ZEPHYRUM;
+    }
+}
 
 interior b32
 vicum_pulsare (
     vacuum* ctx)
 {
     PulsusVici* pv = (PulsusVici*)ctx;
+           b32  mutatum;
 
     (vacuum)reactor_poll(pv->reactor, ZEPHYRUM);
-    redde vicus_pulsare(pv->vicus);
+    mutatum = vicus_pulsare(pv->vicus);
+    si (pv->quies)
+    {
+        _quietem_numerare(pv, mutatum);
+    }
+    redde mutatum;
 }
 
 /* S5: porta pilae - energia_status systematis */
@@ -160,6 +208,9 @@ applicatio_initium (
     /* L5: Cmd+V in pictore: imago e clipboard (servitium testae) */
     vicus_applicatio_imaginis_portam_ponere(&h->app, a->imago_glutinata,
         a->imago_ctx);
+    /* yy / y / dd in scriba: registrum in clipboard (servitium testae) */
+    vicus_applicatio_textus_portam_ponere(&h->app, a->textum_exportare,
+        a->textus_ctx);
     /* $question: in processu (via B) nisi -quaestio adiutor (via A) */
     per_adiutorem = FALSUM;
     per (k = I; k + I < a->argc; k++)
@@ -179,8 +230,15 @@ applicatio_initium (
     vicus_applicatio_quaestionis_portam_ponere(&h->app,
         &h->porta_quaestionis);
 
-    h->pulsus.vicus      = h->app.vicus;
-    h->pulsus.reactor    = reactor;
+    h->pulsus.vicus    = h->app.vicus;
+    h->pulsus.reactor  = reactor;
+    per (k = I; k < a->argc; k++)
+    {
+        si (strcmp(a->argv[k], "-quies") == ZEPHYRUM)
+        {
+            h->pulsus.quies = VERUM;
+        }
+    }
     forma->titulus       = "vicus";
     forma->latitudo      = latitudo;
     forma->altitudo      = altitudo;

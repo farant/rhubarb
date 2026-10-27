@@ -37,6 +37,10 @@ nomen structura {
     s64 ms_pingendi;
     s64 ms_delineandi;
     s64 ms_quadri_maximum;
+    /* vicus quies T1: circuitus ansae (ludus_fenestra_currere, post
+     * exspectationem quamque) et vocationes pulsatoris */
+    s64 excitationes;
+    s64 pulsus;
 } LudusMensurae;
 
 /* pulsus applicationis vivae (vicus-latera S1c): vocatur iteratione

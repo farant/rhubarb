@@ -269,3 +269,13 @@ edge: question contiguous, text right after the real '</>').
 Side find, parked (ledger ...A7C7K4R): the insert cascade DROPS a space
 that overflows at the edge (`of scriba` -> `ofscriba`) - in
 tabula_characterum, also reachable by ordinary typing.
+
+## 2026-10-22 - register export to the OS clipboard
+
+`textum_exportare` hook (NIHIL by default; pictor's image port pattern):
+status_scribere exports when `capsa->versio > 0` (this key wrote the
+register). Text = lines joined by '\n', no trailing newline, tab
+continuation cells skipped, trailing spaces dropped, and the common leading
+whitespace of NON-BLANK lines removed (Fran: "clean results"; blank lines
+don't count toward the indent and stay as empty lines). Deletes export too
+(the internal register gets them - vim's clipboard=unnamed).

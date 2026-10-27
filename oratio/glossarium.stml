@@ -1832,6 +1832,9 @@
     <forma textus="cantuali" casus="ablativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
 
+  <vocabulum lemma="phrasis" lingua="latina" classis="substantivum" nota="Latina (Quintilianus, Seneca): phrasis, -is f. ex Gr. phrasis - dictio, modus loquendi; hic phrasis schedulae ut persona eam scripsit (include/recursus.h, pensa K1)">
+    <forma textus="phrasis" casus="nominativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="aetherophonum" lingua="latina" classis="substantivum" nota="Latina nova (aetherophonum, -i n.; aether + phonum, ut 'etherphone' Termen 1920): theremin - latus vici sonus-spec S5c (include/aetherophonum.h); WORDS caret">
     <forma textus="aetherophonum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="aetherophoni" casus="genitivus" numerus="singularis" genus="neutrum"/>
@@ -1854,6 +1857,19 @@
     <forma textus="rescriptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="rescriptionem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="rescriptiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="cryptographia" lingua="latina" classis="substantivum" nota="Latina nova (cryptographia, -ae f.; Graece kryptos + graphein, ut 'Cryptographia' Wilkins/Schott saec. XVII): ars scripturae occultae - hic cifrae in clausura applicationis (nundinae_apple_cryptographia, ITSAppUsesNonExemptEncryption); WORDS caret">
+    <forma textus="cryptographia" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="cryptographiae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="cryptographiam" casus="accusativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="pinax" lingua="latina" classis="substantivum" nota="pinax, -acis m. (Graece pinax; Plinius, Varro): tabula picta - radix 'pinacothecae'; hic imago parva picturae in pinacotheca pictoris (pictor_pinacem_facere); WORDS caret">
+    <forma textus="pinax" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinacis" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinacem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinace" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinaces" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
 
 </glossarium>

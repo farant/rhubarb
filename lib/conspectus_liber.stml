@@ -1,0 +1,9 @@
+<!-- conspectus_liber.stml - genus quaerendum 'liber': paginae libri
+     communis vici (indagatio S2; C: lib/indagatio_genera.c). Clavis
+     textus: nomina paginarum '-' habere possunt. Infixa in
+     lib/conspectus_infixa.c per tools/conspectus_infigere.sh. -->
+<conspectus nomen="liber" versio="1">
+  <clavis typus="textus"/>
+  <fons spatium="paginae/{clavis}"/>
+  <quaerendum genus="Notebook"/>
+</conspectus>

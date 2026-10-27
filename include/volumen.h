@@ -331,6 +331,13 @@ volumen_acta_generum_legere (
     constans character* constans* genera,
                         Piscina* piscina);
 
+/* seq actus ultimi (0 = volumen vacuum). Enuntiatum servatur et in
+ * volumen_claudere finitur: pretium lectionis indicis unius, sine
+ * praeparatione. Quaestio vera - acta aliorum processuum videt. */
+s64
+volumen_seq_ultimum (
+    Volumen* volumen);
+
 /* plica ad seq: manifestum RECONSTRUCTUM replicando acta plagularum
  * (plagula-condita ponit, plagula-remota tollit) cum seq <= ad_seq;
  * ad_seq <= 0 = omnia (plica praesens - enumerationi aequalis, quod

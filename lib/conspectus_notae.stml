@@ -1,0 +1,8 @@
+<!-- conspectus_notae.stml - genus quaerendum 'notae': libri dierum,
+     ordo per paginam (indagatio S2; C: lib/indagatio_genera.c).
+     Infixa in lib/conspectus_infixa.c per tools/conspectus_infigere.sh. -->
+<conspectus nomen="notae" versio="1">
+  <clavis typus="dies"/>
+  <fons spatium="dies/{clavis}"/>
+  <quaerendum genus="Day notes"/>
+</conspectus>

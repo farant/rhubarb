@@ -344,6 +344,33 @@ scriba_figura_nuntii (
                    figura_color_thematis(COLOR_ERROR));
 }
 
+/* comites P3: vectis libri comitis - fascia coloris accentus, titulus
+ * colore fundi (distat a libro communi) */
+interior vacuum
+scriba_figura_vectis (
+    constans Componens* c,
+               Mandata* m,
+                   i32  thema,
+                vacuum* ctx)
+{
+    Fines f;
+      s32 y;
+
+    (vacuum)thema;
+    (vacuum)ctx;
+    f.x         = ZEPHYRUM;
+    f.y         = ZEPHYRUM;
+    f.latitudo  = c->fines.latitudo;
+    f.altitudo  = c->fines.altitudo;
+    mandata_rectangulum(m, f,
+        figura_color_thematis(COLOR_ACCENT_PRIMARY),
+        VERUM);
+    y = (c->fines.altitudo > VIII) ? (c->fines.altitudo - VIII) / II
+                                   : ZEPHYRUM;
+    mandata_textus(m, VI, y, c->titulus, ZEPHYRUM,
+                   figura_color_thematis(COLOR_BACKGROUND));
+}
+
 vacuum
 scriba_figurae_registrare (
     FiguraRegistrum* reg,
@@ -365,4 +392,6 @@ scriba_figurae_registrare (
                       ctx);
     figura_registrare(reg, PARTES_DIALOGUS, thema, scriba_figura_nuntii,
                       ctx);
+    figura_registrare(reg, PARTES_ITEM, thema, scriba_figura_vectis,
+        ctx);
 }

@@ -167,3 +167,11 @@ every act would leave a 16-char machine string there. It is copied to a
 stack buffer and the piscina rewound (notare/reficere). No test pins
 that (allocation counts per act are not isolable here) - say so if it
 ever matters.
+
+## 2026-10-26 - historia_genera (quarta, pinacotheca T2)
+
+The four genus names of a history in a spatium (client genus, ramus,
+cursor, coniunctio) are now one public function; historia_struere uses
+it. pictor's gallery needs them to find a picture's latest act without
+opening its history. Test "genera nominata" compares the function with
+the fields of real histories (named spatium and root).

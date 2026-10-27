@@ -182,6 +182,15 @@ agenda_res (
     constans AgendaDocumentum* doc,
                        chorda  id);
 
+/* D4b (conspectus 'dies'): codex canonicus rei unius vivae (index ut
+ * agenda_res_index) - idem textus quem status canonicus pro re scribit
+ * (<res id ...>...</res>); vestigium per-rem. Vacua si index extra. */
+chorda
+agenda_rem_codificare (
+    constans AgendaDocumentum* doc,
+                          i32  index,
+                      Piscina* piscina);
+
 /* A1b: quaestiones vistarum (A2 mensis, A3 dies). Xar de
  * (constans AgendaRes*) in piscina vocantis, ordine creationis;
  * indicia valent usque ad mutationem proximam. */

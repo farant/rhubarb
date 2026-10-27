@@ -750,6 +750,57 @@ _probare_ids_veteres (
     CREDO_CHORDA_AEQUALIS(agenda_res_index(altera, I)->id, nova);
 }
 
+/* D4b: codex rei unius = elementum eius in statu canonico; mutatur
+ * cum re, non cum re altera; deletae non numerantur */
+interior vacuum
+_probare_codicem_rei (
+    CredoContextus* c)
+{
+    Mundus* m;
+    chorda  a;
+    chorda  b;
+    chorda  ca;
+    chorda  cb;
+      Dies  d;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->doc);
+    a = agenda_rem_creare(m->doc, lit("panem emere", c->piscina));
+    b = agenda_rem_creare(m->doc, lit("epistulam scribere",
+        c->piscina));
+    d = fasti_dies(MMXXVI, X, XIV);
+    (vacuum)agenda_diem_ponere(m->doc, a, &d);
+    (vacuum)agenda_rubricas_ponere(m->doc, a, lit("domus", c->piscina));
+    (vacuum)agenda_notam_addere(m->doc, a, d, lit("lac quoque",
+        c->piscina));
+
+    ca = agenda_rem_codificare(m->doc, ZEPHYRUM, c->piscina);
+    CREDO_CHORDA_INCIPIT(ca, lit("<res", c->piscina));
+    CREDO_CHORDA_CONTINET(ca, lit("id=\"1\"", c->piscina));
+    CREDO_CHORDA_CONTINET(ca, lit("dies=\"2026-10-14\"", c->piscina));
+    CREDO_CHORDA_CONTINET(ca, lit("rubricae=\"domus\"", c->piscina));
+    CREDO_CHORDA_CONTINET(ca, lit("panem emere", c->piscina));
+    CREDO_CHORDA_CONTINET(ca, lit("lac quoque", c->piscina));
+    CREDO_CHORDA_TERMINATUR(ca, lit("</res>", c->piscina));
+    cb = agenda_rem_codificare(m->doc, I, c->piscina);
+    CREDO_CHORDA_CONTINET(cb, lit("epistulam scribere", c->piscina));
+    CREDO_CHORDA_VACUA(agenda_rem_codificare(m->doc, II, c->piscina));
+
+    /* res altera mutata: codex primae idem; prima mutata: alius */
+    (vacuum)agenda_titulum_ponere(m->doc, b, lit("epistulam mittere",
+        c->piscina));
+    CREDO_CHORDA_AEQUALIS(agenda_rem_codificare(m->doc, ZEPHYRUM,
+        c->piscina), ca);
+    (vacuum)agenda_perficere(m->doc, a, d);
+    CREDO_VERUM(!chorda_aequalis(agenda_rem_codificare(m->doc, ZEPHYRUM,
+        c->piscina), ca));
+
+    /* deleta non numeratur: index 0 = res altera */
+    (vacuum)agenda_rem_delere(m->doc, a);
+    CREDO_CHORDA_CONTINET(agenda_rem_codificare(m->doc, ZEPHYRUM,
+        c->piscina), lit("epistulam mittere", c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio",      _probare_creationem,     mundum_parare,
         mundum_purgare,
@@ -778,6 +829,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "quaestiones",  _probare_quaestiones,    mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "perfectae",    _probare_perfectas,      mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "codex rei",    _probare_codicem_rei,    mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "apertae",      _probare_apertas,        mundum_parare,
         mundum_purgare, NIHIL, NIHIL },

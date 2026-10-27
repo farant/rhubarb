@@ -384,9 +384,47 @@ proiectio_applicare (
     }
 }
 
-/* status canonicus: <agenda><res id [dies] [rubricae] [perfecta]>
- * <@titulus=>..</><nota dies>..</nota>..</res>..</agenda>; deletae
- * absunt */
+/* elementum rei in statu canonico: <res id [dies] [rubricae]
+ * [perfecta]><@titulus=>..</><nota dies>..</nota>..</res> - status
+ * canonicus et agenda_rem_codificare (D4b) idem scribunt */
+interior StmlNodus*
+elementum_rei_plenum (
+       constans AgendaDocumentum* doc,
+              constans AgendaRes* res,
+                         Piscina* piscina)
+{
+     StmlNodus* e;
+     StmlNodus* nota;
+    AgendaNota* an;
+           i32  k;
+
+    e = elementum_rei(piscina, doc->intern, NIHIL, res->id);
+    si (res->dies_posita)
+    {
+        diem_ponere(e, piscina, doc->intern, "dies", res->dies);
+    }
+    attributum_ponere(e, piscina, doc->intern, "rubricae",
+        rubricas_iungere(res->rubricae, piscina));
+    si (res->perfecta)
+    {
+        diem_ponere(e, piscina, doc->intern, "perfecta",
+            res->dies_perfectionis);
+    }
+    titulum_addere(e, piscina, doc->intern, res->titulus);
+    per (k = ZEPHYRUM; k < xar_numerus(res->notae); k++)
+    {
+        an    = (AgendaNota*)xar_obtinere(res->notae, k);
+        nota  = stml_elementum_creare(piscina, doc->intern, "nota");
+        diem_ponere(nota, piscina, doc->intern, "dies", an->dies);
+        (vacuum)stml_liberum_addere(nota,
+            stml_textum_creare_ex_chorda(piscina, doc->intern,
+            an->textus));
+        (vacuum)stml_liberum_addere(e, nota);
+    }
+    redde e;
+}
+
+/* status canonicus: <agenda><res .../>..</agenda>; deletae absunt */
 interior chorda
 proiectio_codificare (
      vacuum* ctx,
@@ -394,12 +432,8 @@ proiectio_codificare (
 {
     AgendaDocumentum* doc;
            StmlNodus* radix;
-           StmlNodus* e;
-           StmlNodus* nota;
             Recordum* r;
-          AgendaNota* an;
                  i32  i;
-                 i32  k;
 
     doc    = (AgendaDocumentum*)ctx;
     radix  = stml_elementum_creare(piscina, doc->intern, "agenda");
@@ -410,30 +444,8 @@ proiectio_codificare (
         {
             perge;
         }
-        e = elementum_rei(piscina, doc->intern, NIHIL, r->res.id);
-        si (r->res.dies_posita)
-        {
-            diem_ponere(e, piscina, doc->intern, "dies", r->res.dies);
-        }
-        attributum_ponere(e, piscina, doc->intern, "rubricae",
-            rubricas_iungere(r->res.rubricae, piscina));
-        si (r->res.perfecta)
-        {
-            diem_ponere(e, piscina, doc->intern, "perfecta",
-                r->res.dies_perfectionis);
-        }
-        titulum_addere(e, piscina, doc->intern, r->res.titulus);
-        per (k = ZEPHYRUM; k < xar_numerus(r->res.notae); k++)
-        {
-            an    = (AgendaNota*)xar_obtinere(r->res.notae, k);
-            nota  = stml_elementum_creare(piscina, doc->intern, "nota");
-            diem_ponere(nota, piscina, doc->intern, "dies", an->dies);
-            (vacuum)stml_liberum_addere(nota,
-                stml_textum_creare_ex_chorda(piscina, doc->intern,
-                an->textus));
-            (vacuum)stml_liberum_addere(e, nota);
-        }
-        (vacuum)stml_liberum_addere(radix, e);
+        (vacuum)stml_liberum_addere(radix, elementum_rei_plenum(doc,
+            &r->res, piscina));
     }
     redde stml_scribere(radix, piscina, FALSUM);
 }
@@ -896,6 +908,26 @@ agenda_numerus_rerum (
         }
     }
     redde n;
+}
+
+chorda
+agenda_rem_codificare (
+    constans AgendaDocumentum* doc,
+                          i32  index,
+                      Piscina* piscina)
+{
+     constans AgendaRes* res;
+                 chorda  c;
+
+    res = agenda_res_index(doc, index);
+    si (!res)
+    {
+        c.mensura  = ZEPHYRUM;
+        c.datum    = NIHIL;
+        redde c;
+    }
+    redde stml_scribere(elementum_rei_plenum(doc, res, piscina),
+        piscina, FALSUM);
 }
 
 constans AgendaRes*

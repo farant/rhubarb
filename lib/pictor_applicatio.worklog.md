@@ -48,3 +48,31 @@ drawings open in other panes; the skip lives in step 3).
 - Test note: without vicus's shared document memory a re-opened
   picture is a NEW PictorDocumentum pointer - compare dimensions, not
   pointers (probatio_pictor_semitae flores_ostensae).
+
+## 2026-10-26 - relaunch reopens the last picture (pinacotheca T6, quarta)
+
+Standalone pictor already persisted the `pictura` field (conservatio
+writes persistent fields after every successful write) but
+`pictor_montare` always mounted the root picture. `pictor_applicatio_
+aedificare` now acts on the restored field after montare: a library
+picture -> `pictor_picturam_ponere`; named but missing -> the most
+recently edited one (`pictor_documenta_recentia`); empty -> root as
+before. `app->doc` is assigned AFTER this (the audit trap: app->doc
+stays the old picture after ponere). The spatium is copied before
+ponere because ponere rewrites the field it was read from. Tests use a
+real file in `credo_area(c)` (volumen_temporarium deletes on close).
+
+## 2026-10-26 - restore moved out of aedificare (final review)
+
+The final review caught that putting the D8 restore inside
+`pictor_applicatio_aedificare` also changed the TERMINAL pictor
+(apps/pictor/pictor_terminalis.c calls aedificare and opens the same
+./pictor.volumen by default) - against spec D11. The restore is now
+`pictor_picturam_restituere(app)`, called only by apps/pictor/pictor.c
+after aedificare; it re-syncs app->doc/actiones/figurae itself.
+Test "recensio: terminalis non restituit" pins both halves.
+Same review: `pictor_imago_fons` allocated the picture's sigillum hex
+into the picture's long-lived arena BEFORE checking for "pinax:" - per
+thumbnail per repaint while the gallery is open. The "pinax:" branch
+now comes first (test "fons sine sumptu"); the canvas path keeps its
+pre-existing one-allocation-per-repaint (separate, untouched).

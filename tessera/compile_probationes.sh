@@ -83,6 +83,7 @@ declare -a RADIX_FONTES=(
     "delineare_mandata"
     "fenestra_textus"
     "fons"
+    "glyphae_ductae"   # fenestra_textus: glyphae ductae ut terminale
     "friatio"
     "internamentum"
     "mandatum"

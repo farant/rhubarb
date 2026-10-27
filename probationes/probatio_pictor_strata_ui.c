@@ -605,22 +605,14 @@ _sectio_palettae_telephoni (
     volumen_claudere(vol);
 }
 
-/* C1b T2: servitium electionis fictum - vocationes in ctx (i32*)
- * numerat (nullus status inter sectiones) */
-interior b32
-_eligere_fictum (
-    vacuum* ctx)
-{
-    *(i32*)ctx += I;
-    redde VERUM;
-}
-
-/* testa-ios C1b T2: quadratum imaginis solum ubi hospes electionem
- * imaginis praebet; ad sinistram quadrati stratorum; septem quadrata
- * in latitudine ANGUSTISSIMA disiuncta; ictus servitium semel vocat;
- * glutinatione pendente abest */
+/* pinacotheca T4 (spec D1, olim C1b quadratum imaginis): quadratum
+ * ⋯ solum cum vexillo elenchus_praesto (applicatio pictor id ponit;
+ * vicus et terminalis numquam); ad sinistram quadrati stratorum;
+ * septem quadrata in latitudine ANGUSTISSIMA disiuncta; ictus menu
+ * aperit (Import image... in menu, non quadratum); glutinatione
+ * pendente abest */
 interior vacuum
-_sectio_quadratum_imaginis (
+_sectio_quadratum_elenchi (
     CredoContextus* c)
 {
      constans character* ids[VII];
@@ -638,42 +630,39 @@ _sectio_quadratum_imaginis (
                     s32  y;
                     s32  x_s;
                     s32  y_s;
-                    i32  electiones;
 
-    electiones     = ZEPHYRUM;
     ids[ZEPHYRUM]  = "quadratum.instrumentum";
     ids[I]         = "quadratum.color_primus";
     ids[II]        = "quadratum.color_secundus";
     ids[III]       = "quadratum.exemplar";
     ids[IV]        = "quadratum.magnitudo";
     ids[V]         = "quadratum.strata";
-    ids[VI]        = "quadratum.imago";
+    ids[VI]        = "quadratum.elenchus";
     piscina        = c->piscina;
     intern         = internamentum_creare(piscina);
     thema_initiare();
-    vol = volumen_temporarium(piscina, "probatio_pictor_imago_quad");
+    vol = volumen_temporarium(piscina, "probatio_pictor_elenchi_quad");
     CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
         CLXXXVII, CCCXXIII));
     m = manus_ludus_creare(piscina, app.d);
     dispensator_recomponere(app.d);
 
-    CREDO_GRADUS("sine servitio: nullum quadratum");
+    CREDO_GRADUS("sine vexillo: nullum quadratum");
+    CREDO_VERUM(nodus_arboris(&app, "quadratum.elenchus") == NIHIL);
     CREDO_VERUM(nodus_arboris(&app, "quadratum.imago") == NIHIL);
 
-    CREDO_GRADUS("cum servitio: quadratum imaginis");
-    app.montatio.compositio.imago_eligibilis        = VERUM;
-    app.montatio.actiones_ctx.imaginem_eligere      = _eligere_fictum;
-    app.montatio.actiones_ctx.imaginem_eligere_ctx  = &electiones;
+    CREDO_GRADUS("cum vexillo: quadratum ⋯");
+    app.montatio.compositio.elenchus_praesto = VERUM;
     dispensator_recomponere(app.d);
-    q = nodus_arboris(&app, "quadratum.imago");
+    q = nodus_arboris(&app, "quadratum.elenchus");
     s = nodus_arboris(&app, "quadratum.strata");
     CREDO_NON_NIHIL(q);
     CREDO_NON_NIHIL(s);
     si (q && s)
     {
         CREDO_AEQUALIS_I32((i32)q->fines.latitudo, XX);
-        CREDO_CHORDA_AEQUALIS_LITERIS(q->titulus, "imago:quadratum");
-        CREDO_CHORDA_AEQUALIS_LITERIS(q->actio, "imago.eligere");
+        CREDO_CHORDA_AEQUALIS_LITERIS(q->titulus, "elenchus:quadratum");
+        CREDO_CHORDA_AEQUALIS_LITERIS(q->actio, "palette.aperire");
         _origo(q, &x, &y);
         _origo(s, &x_s, &y_s);
         CREDO_VERUM(x + q->fines.latitudo <= x_s);
@@ -693,7 +682,7 @@ _sectio_quadratum_imaginis (
         }
     }
 
-    CREDO_GRADUS("ictus servitium semel vocat, palette nulla");
+    CREDO_GRADUS("ictus menu aperit");
     si (q)
     {
         _origo(q, &x, &y);
@@ -701,8 +690,10 @@ _sectio_quadratum_imaginis (
             y + q->fines.altitudo / II);
         dispensator_recomponere(app.d);
     }
-    CREDO_AEQUALIS_I32(electiones, I);
-    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+        "elenchus");
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    dispensator_recomponere(app.d);
 
     CREDO_GRADUS("glutinatio pendens: quadratum abest");
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
@@ -714,7 +705,7 @@ _sectio_quadratum_imaginis (
     dispensator_tractare(app.d, &e);
     dispensator_recomponere(app.d);
     CREDO_VERUM(app.doc->glutinatio.pendens);
-    CREDO_VERUM(nodus_arboris(&app, "quadratum.imago") == NIHIL);
+    CREDO_VERUM(nodus_arboris(&app, "quadratum.elenchus") == NIHIL);
     volumen_claudere(vol);
 }
 
@@ -724,7 +715,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "palettae intra telephonum", _sectio_palettae_telephoni, NIHIL,
         NIHIL, NIHIL, NIHIL },
-    { "quadratum imaginis", _sectio_quadratum_imaginis, NIHIL, NIHIL,
+    { "quadratum elenchi (⋯)", _sectio_quadratum_elenchi, NIHIL,
+        NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

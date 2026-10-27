@@ -167,6 +167,10 @@ mandata_polygonum (
          ColorMandati  color,
                   b32  impletum);
 
+/* imago et textus: chorda in piscinam mandatorum COPIATUR (ut puncta
+ * lineae et polygoni) - vocans memoriam suam statim reddere potest
+ * (buffer acervi, introitus conspectus eiectus; kalendarium 10-13,
+ * 10-23). */
 vacuum
 mandata_imago (
      Mandata* m,
