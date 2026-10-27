@@ -1,8 +1,12 @@
 # pictor: the gallery and the ⋯ menu (pinacotheca)
 
-**Status: APPROBATUM 2026-10-26** - designed in conversation with Fran
-(2026-10-26), mockups in the browser companion (choice B, 3 x 4);
-approved ("everything else looks right", Mac = portrait pane).
+**Status: IMPLETUM IN TELEPHONO 2026-10-26; tabellae et Mac
+differuntur** - designed in conversation with Fran (2026-10-26),
+mockups in the browser companion (choice B, 3 x 4); approved
+("everything else looks right", Mac = portrait pane); plan
+`project-specs/pictor-pinacotheca-plan.md` built in T1-T7 + a review
+fix; Fran tried it on the iPhone ("everything is working, i can see
+the glyph came through too"). Section VI records what building found.
 Worktree quarta. Follows C1b (`project-specs/testa-ios-imago-spec.md`,
 IMPLETUM: photo import) and C2 (TestFlight, in main 83d03e29). Ledger:
 desideratum ...X7RJB (pinacotheca), under the mobile vision ...577GAS.
@@ -166,3 +170,65 @@ pictor (D11); moving pictures between devices; drag-and-drop on the Mac.
   the Fire 7, with 12 per page.
 - The tablets' orientation on the device (the manifest says
   landscape; confirm the gallery screenshots there).
+
+## VI. What building found (2026-10-26)
+
+**Commits (quarta):** T1 5e8db818 (⋯ glyph), T2 68a16462 (recency +
+`historia_genera`), T3 c5321551 (thumbnail maker), T4 763787ed (⋯ square
++ menu), T5 49a9cda0 (gallery), T6 be1bfe56 (relaunch), main merged
+516f2b7a (secunda's a625afcb: drawn glyphs in app text, so "…" in the
+menu labels became real dots), T7 73d8b1f7 (headless screenshots),
+review fixes 756c78c2.
+
+**Rulings worth keeping (full list in the executor ledger):**
+
+- *Owner check is silent.* `palette` belongs to `palette.aperire`; a
+  write from the menu action was dropped with no error. Menu and
+  gallery write it under that owner's name (`palettam_scribere`), as
+  `glutinationem_scribere` already did.
+- *Dimissio closes popovers after a "claudit" item.* "Open picture…"
+  switches `palette` to "pinacotheca" itself, so its item has `claudit`
+  cleared - otherwise the gallery would close the instant it opened.
+- *A half-drawn line captures the next tap anywhere* and abandons the
+  line (existing linea rule). The first tap on ⋯ only cancels the line;
+  a picture switch can never carry a pending stroke (Review Focus 1).
+- *One gallery state, three readers.* `PictorPinacotheca` lives in the
+  montatio (scratch arena emptied with `piscina_vacare` on each opening,
+  the newest-first list, a provenance -> thumbnail table); composer,
+  actions and figures point at it. The list is read by the opening
+  action, never the composer.
+- *Thumbnail identity is data.* `pinax:<w>x<h>:<seq>:<spatium>` - the
+  seq of the picture's latest edit is in the key, so an edited picture
+  gets a fresh thumbnail; nothing persists between openings.
+- *Recency without a clock* (D5): one indexed read of the pictures'
+  history genera + `plagula-condita`; `historia_genera` makes
+  historia's names public instead of copying them. 13 x 200 acts ~2 ms
+  (Mac); a thumbnail ~0.9 ms (Mac, small picture).
+- *Background is a palette colour* (`PALETTE_WARM_GRAY`), so empty
+  areas re-dither to exactly the background - no transparency step.
+- *Relaunch* (D8): `pictor_picturam_restituere(app)`, called by the
+  window app only. The final review caught the first version inside
+  `pictor_applicatio_aedificare`, which also changed the terminal
+  pictor (D11).
+- *fabrica-8:* a test reading an environment variable must declare it
+  (`<ambitus>` on probationes_radicis); the screenshot switch is
+  `PINACOTHECA_IMAGINES` (PNGs only when set; gates render in memory).
+- *Census pins* that count pictor's state fields moved (owners XVIII ->
+  XIX in pictor_canones and organum, defaults X -> XI in
+  pictor_montatio) for `pagina_pinacothecae`.
+
+**Deferred minors (final review):** tapping the open picture's
+thumbnail re-runs `picturam_ponere` (may push a duplicate route entry)
+- short-circuit on `:electum`; a thumbnail that fails to build is
+retried every repaint (cache a failure); the third menu item has two
+sources (`imago_eligibilis` vs `imaginem_eligere`); ‹ › not dimmed at
+the ends; `picturas_facere` test helper re-creates existing pictures;
+`spatium_novum` enumerates into the picture's long-lived arena; the
+organum note on `pagina_pinacothecae` overstates when it is cleared.
+
+**Still open (Fran, 2026-10-26: "test the tablets later"):** Fire 7
+and C30 Pro device runs, the C30 Pro and Mac half-pane surface sizes
+(their screenshots), and the Fire 7 gallery timing (spec IV) - if
+opening the gallery is noticeable there, a thumbnail cache is the
+follow-up. Then status -> IMPLETUM and the desideratum closes.
+
