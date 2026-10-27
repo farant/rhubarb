@@ -422,3 +422,15 @@ declared chord has a third); missed - no rule exists - hidden 5ths/8ves, voice c
 spacing > octave, doubled leading tone, unresolved leading tone in an outer voice, rising
 chordal seventh (a chord-tone 7th on a weak beat is never a dissonance). Three collateral
 finds from the edits were all real. No false positives. Organ x4 at lucrum 0.75: peak 0.73.
+
+## 2026-10-27 - house book: peregrinatio (modulation study)
+
+15th house song: SATB chorale on organ, D -> A -> D, 12 bars, stylus choralis. D: I-IV-V, PAC
+m4 (D A7 D under a fermata on beat 3); pivot Bm (vi in D = ii in A) at m5:4, E V, PAC in A via
+IV ii6 I64 V7 I (m8); return through A (I in A = V in D) and A7/G (V42, G natural) to a PAC in
+D (m12). m10 repeats m2's rising line. Voiced by hand; censura caught one error of mine
+(parallel 5ths alto/tenor into the m7 cadential 6/4) - re-voiced. Drove three functio fixes:
+fermata arrivals (d97a231d), key labels + pivot "vi=A: ii" / "I=D: V" (ae44723d). Without any
+<clavis> everything reads in D (m8 = half cadence) - analysis follows what is declared;
+undeclared-modulation warning is a possible later rule. Generator:
+build/plantae_s4/modulatio/peregrinatio.py (clavis positions as arguments).

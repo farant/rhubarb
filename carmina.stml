@@ -477,4 +477,34 @@
       <frustum mensura="1"><textus!>o3 g4 d4 g4 f#4 | g4 d4 o2 g2 | g4 b4 o3 c4 e4 | c4 d4 d2 | o2 g4 e4 a4 o3 d4 | o2 g4 a4 o3 d2 | g8 f#8 e4 o2 b4 o3 c4 | d4 d4 o2 g2</textus></frustum>
     </pars>
   </carmen>
+
+  <!-- peregrinatio: choralis IV vocum organo, studium modulationis. D
+       maior (I-IV-V, clausula perfecta m4) -> A maior per acordum
+       commune Bm (vi in D = ii in A, m5) -> E V -> clausula perfecta
+       in A (I64 V7 I, m8) -> D maior per A (I in A = V in D) et A7/G
+       (V42, G naturale) -> clausula perfecta in D (m12). m10 = m2
+       (ascensus iteratus). Stylus choralis. Generator:
+       build/plantae_s4/modulatio/peregrinatio.py -->
+  <carmen titulus="peregrinatio" stylus="choralis" tempus="72"
+          metrum="4/4" clavis="d maior">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <acorda mensura="1" textus="D A/C# D G | D/F# Em A Bm | G D/F# Em A | D A7 D:2 | D G D/F# Bm | E A F#m A/C# | D Bm/D A/E E7 | A | A A7/G D/F# G | D/F# Em A Bm | G Em/G D/A A7 | D"/>
+    <clavis mensura="5" ictus="4" valor="a maior"/>
+    <clavis mensura="9" ictus="2" valor="d maior"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="8"/>
+    <fermata mensura="12"/>
+    <pars titulus="superius" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 f#4 e4 f#4 g4 | a4 b4 o5 c#4 d4 | o4 b4 a4 g4 a4 | f#4 e4 d2 | a4 b4 a4 b4 | b4 o5 c#4 c#4 e4 | d4 o4 b4 o5 c#4 o4 b4 | a1 | o5 c#4 c#4 d4 o4 b4 | a4 b4 o5 c#4 d4 | o4 b4 b4 o5 d4 c#4 | d1</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 d4 o3 a4 o4 d4 d4 | d4 g4 e4 d4 | d4 d4 e4 e4 | d4 c#4 o3 a2 | o4 d4 d4 d4 d4 | e4 e4 f#4 e4 | f#4 f#4 a4 g#4 | e1 | e4 e4 d4 d4 | d4 g4 e4 d4 | d4 e4 f#4 e4 | d1</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o3 a4 e4 a4 b4 | a4 g4 a4 f#4 | g4 a4 b4 o4 c#4 | o3 a4 g4 f#2 | f#4 g4 a4 f#4 | g#4 a4 a4 a4 | a4 b4 o4 e4 d4 | c#1 | o3 a4 a4 a4 g4 | a4 g4 a4 f#4 | g4 b4 a4 g4 | f#1</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o3 d4 c#4 d4 o2 g4 | f#4 e4 a4 b4 | g4 f#4 e4 a4 | o3 d4 o2 a4 o3 d2 | d4 o2 g4 f#4 b4 | e4 a4 f#4 o3 c#4 | d4 d4 e4 e4 | o2 a1 | a4 g4 f#4 g4 | f#4 e4 a4 b4 | g4 g4 a4 a4 | o3 d1</textus></frustum>
+    </pars>
+  </carmen>
 </carmina>
