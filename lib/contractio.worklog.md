@@ -230,3 +230,53 @@ anyway — with a 1-byte element the size check would pass a size near
 2^64 to piscina, which wraps there (tabularium 01M5YW4S...).
 First forms of Q6, Q7, Q15 left a variable unused (-Werror) and Q16's
 multi-line anchor changed the line count; rewritten.
+
+## 2026-10-27 — T3 review (independent, after 21c44e3d) and fixes
+
+Reviewer built a sanitized scratch copy and fuzzed 62,500 networks
+(53,000 small against brute force with 128-bit mulmod; medium; dims up
+to 400; up to 120 indices, ~88% of dimension 1, so well over 64
+dimension-1 indices per step) at moduli 2, 3, 4, 17, 65537, 998244353,
+2^31, 3·2^30, 4294967279, 4294967291, 0xFFFFFFFF and random, with
+random / all n−1 / 0 and n−1 values. Four answers per network: hot
+tier, brute force, an independent evaluator built from
+`contractio_ordo_indices` that bypasses `_gradum_parare` and the
+odometer, and the reference tier over Z/n (and Z). Officina reuse
+checked. 0 mismatches, ASan/UBSan clean. No H, no correctness M.
+
+Fixed here:
+- **L1** the reference tier's size check (`elementa > (2^64−1) /
+  mensura`) still passed byte sizes in the last KB below 2^64, where
+  piscina wraps; and the T3 note above was wrong about what the apex
+  guard (Q14) protects — it only catches apex == 2^64 − 1. Now each
+  intermediate is refused above 2^62 bytes, as the officina is. The
+  apex guard stays as a cheap explicit refusal; it is not independently
+  testable (Q14 survives because the size check also refuses).
+  Unreachable in practice per the reviewer (every attempted network
+  saturated multiplications first); not planted.
+- **L2** the random sections were narrower than the code: dims 1–3
+  only, and all-n−1 values only on two fixed chains. Random dims are
+  now 1–5 (capped so brute force stays ≤ 2^16 assignments: the largest
+  dimension is decremented until it fits) for both "vis bruta" and
+  "anuli Z et Z[t]", and every third brute-force network uses all n−1
+  values.
+- **N** n = 1 now returns valores[0][0] mod n (free; plant Q17 red);
+  header: element memory in the reference tier (anulus operations,
+  transcribe) is allocated fatally — only the intermediate tables are
+  tried allocations.
+
+Deferred to T5 (performance, not correctness): the reviewer measured
+1.3–1.8 ns per multiplication on braid-closure networks (8 strands /
+400 crossings: 0.15–0.2 s per execution; 10 / 600, width 22: 14.6 s).
+Cheaper reduction made no difference; the overhead is the per-entry
+odometer (typical interni loop length 2). A prototype with a
+precomputed table of operand offsets over all interni assignments
+(inner loop `acc += A[oa + ta[q]] * B[ob + tb[q]]`) and the fastest
+externus as a plain loop was ~1.65× faster (1.05 vs 1.7 ns on 8/400),
+identical results. Tables could be built at `ordinare` (capped, odometer
+as fallback) so execution still allocates nothing. Width-22 steps are
+partly memory-bound — slicing or a GEMM-style layout, also T5.
+Prototype: scratchpad/recensio_contractio_t3/var/contractio_b.c
+(session 2026-10-27).
+
+Tests now: 21 sections, 153,949 checks, 0.11 s.

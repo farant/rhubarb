@@ -207,7 +207,7 @@ contractio_officina_creare (
  * ultimus celerrimus), 0 <= v < modulus (praesumptum, non probatum in
  * ansa calida), 2 <= modulus < 2^32 (primus non necessarius). exitus
  * = tensor densus super indices APERTOS ordine id (v1: unum
- * elementum; rete vacuum: 1; tensor solus: valores[0][0]). Nulla
+ * elementum; rete vacuum: 1; tensor solus: valores[0][0] mod n). Nulla
  * allocatio; accumulator duorum verborum, exactus pro omni
  * longitudine summae. FALSUM si ordo non huius retis, officina non
  * huius ordinis, modulus < 2, aut valores (vel valores[k]) NIHIL. */
@@ -224,10 +224,13 @@ contractio_exsequi_modulo (
  * (anulus->mensura octeti quisque), eadem dispositio. Intermedii in
  * piscina privata, summae in altera per elementum refecta; effectus
  * per anulus->transcribe in piscinam exitus. Ad retia parva: nullus
- * limes octetorum praeter allocationes conatas. FALSUM (exitus non
+ * limes octetorum nisi 2^62 per intermedium. FALSUM (exitus non
  * tactus) si ordo non huius retis, sumptus saturati (multiplicationes
- * aut apex - hic nulla officina custodit), allocatio aut operatio
- * anuli deficit, aut valores NIHIL. */
+ * aut apex - hic nulla officina custodit), tabula intermedii > 2^62
+ * octeti aut eius allocatio (conata) deficit, operatio anuli refutat,
+ * aut valores NIHIL. Memoria elementorum (operationes anuli,
+ * transcribe) per allocationem FATALEM: defectus ibi processum finit,
+ * non FALSUM. */
 b32
 contractio_exsequi_anulo (
       constans ContractioRete*  rete,

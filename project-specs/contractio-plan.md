@@ -426,6 +426,12 @@ Fran's go-ahead.
   random data), 100 reuses with no arena growth. 15 of 16 plants red;
   the survivor is a deliberately redundant guard. See
   lib/contractio.worklog.md.)*
+  *(2026-10-27, independent review of 21c44e3d: no H, no correctness
+  M; 62,500-network sanitized fuzz against brute force and an
+  evaluator independent of the loop plan, 0 mismatches. Fixed: the
+  reference tier caps each intermediate at 2^62 bytes, random tests
+  widened to dims 1–5 with all-n−1 networks, n = 1 reduced mod n.
+  Kernel speedup (~1.65×, offset tables) deferred to T5.)*
 - **T4. Vertex-model bracket in laqueus.** Turning numbers, network
   builder (kink folding), `laqueus_uncinus_ex_pd_rete`,
   `laqueus_jones_ex_pd_rete`.
@@ -446,7 +452,13 @@ Fran's go-ahead.
     M8); exponents ≡ 3w (mod 4) on the state-sum side;
   - d = 0 point (p = 17, A = 2) returned INUTILE;
   - invalid and non-planar codes refused as before; c = 0 → 1.
-- **T5. Measurement and braids.** `laqueus_pd_ex_plexu` (braid closure
+- **T5. Measurement and braids.** First, from the T3 review: the hot kernel
+  spends its time in the per-entry odometer (interni loops of length 2
+  on braid networks, 1.3–1.8 ns per multiplication); a prototype with
+  per-step offset tables over the interni assignments, built at
+  `ordinare` and capped with the odometer as fallback, measured ~1.65×
+  faster with identical results — measure it in the mensura harness
+  and adopt it if it holds. `laqueus_pd_ex_plexu` (braid closure
   to PD; even strand counts need odd word length for one component).
   Timings and costs against the state sum at 12, 16, 20, 24 crossings
   (via `mensura`); the greedy-width curve on table knots; braid closures

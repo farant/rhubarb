@@ -1300,7 +1300,7 @@ contractio_exsequi_modulo (
     }
     si (ordo->numerus_graduum == ZEPHYRUM)
     {
-        *exitus = valores[ZEPHYRUM][ZEPHYRUM];
+        *exitus = valores[ZEPHYRUM][ZEPHYRUM] % modulus;
         redde VERUM;
     }
     residuum_verbi = (CONTRACTIO_SATURATUM % (i64)modulus + I)
@@ -1409,7 +1409,6 @@ _exsequi_anulo_intra (
                             vacuum* exitus)
 {
      memoriae_index   mensura = anulus->mensura;
-     memoriae_index   maximum = ~(memoriae_index)ZEPHYRUM;
     constans vacuum** data;
           character*  officium;
                 i32   totales = ordo->initiales + ordo->numerus_graduum;
@@ -1435,7 +1434,9 @@ _exsequi_anulo_intra (
                                ordo->tensores[g->effectus].elementa;
                      character* effectus;
 
-        si (elementa > (i64)(maximum / mensura))
+        /* limes 2^62 octetorum, ut officina: piscina prope 2^64
+         * exundat (tabularium 01M5YW4S...) */
+        si (elementa > ((i64)I << LXII) / (i64)mensura)
         {
             redde FALSUM;
         }

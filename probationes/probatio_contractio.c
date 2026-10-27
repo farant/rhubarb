@@ -1005,9 +1005,31 @@ _fortuitum_parvum (
         {
             b++;
         }
-        f->dimensiones[j]       = I + sors_intra(s, III);
+        f->dimensiones[j]       = I + sors_intra(s, V);
         tabula[a][numeri[a]++]  = j;
         tabula[b][numeri[b]++]  = j;
+    }
+
+    /* dimensiones 1..5, sed assignationes vis brutae <= 2^16:
+     * dimensio maxima minuitur donec productum capit */
+    per (;;)
+    {
+        i64 productum  = I;
+        i32 maxima     = ZEPHYRUM;
+
+        per (j = ZEPHYRUM; j < f->numerus_indicum; j++)
+        {
+            productum *= f->dimensiones[j];
+            si (f->dimensiones[j] > f->dimensiones[maxima])
+            {
+                maxima = j;
+            }
+        }
+        si (productum <= (i64)0x10000UL)
+        {
+            frange;
+        }
+        f->dimensiones[maxima]--;
     }
     per (k = ZEPHYRUM; k < f->numerus_tensorum; k++)
     {
@@ -1176,6 +1198,20 @@ _probare_vim_brutam (
         CREDO_NECESSE_NON_NIHIL(officina);
         valores = _valores_parare(&f, piscina);
         _valores_implere(&s, &f, valores, p);
+        si (t % III == ZEPHYRUM)
+        {
+            /* tertium quodque rete: omnia n - 1 (portatio maxima) */
+            i32 k;
+            i64 j;
+
+            per (k = ZEPHYRUM; k < f.numerus_tensorum; k++)
+            {
+                per (j = ZEPHYRUM; j < _elementa_tensoris(&f, k); j++)
+                {
+                    valores[k][j] = p - I;
+                }
+            }
+        }
         CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
             (constans i32* constans*)valores, p, &calidum));
         CREDO_AEQUALIS_I32(calidum, _vis_bruta(&f, valores, p));
@@ -1616,6 +1652,9 @@ _probare_retia_minima (
     CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
         (constans i32* constans*)valores, XVII, &calidum));
     CREDO_AEQUALIS_I32(calidum, VII);
+    CREDO_NECESSE(contractio_exsequi_modulo(rete, ordo, officina,
+        (constans i32* constans*)valores, V, &calidum));
+    CREDO_AEQUALIS_I32(calidum, II);
     valores_z[0] = &septem_z;
     CREDO_NECESSE(contractio_exsequi_anulo(rete, ordo,
         (constans vacuum* constans*)valores_z, &ANULUS_INTEGRORUM,
