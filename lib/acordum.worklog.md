@@ -65,3 +65,16 @@ Plants 11/11 red (in three files); the 9-row additae plant survived until explic
 passing-D-over-C7 case, and the 7#5 plant's first anchor ended inside a comment (planta
 refuses - anchor before the comment). PROPRIETATES comments moved to their own lines
 (new rows ran past 72).
+
+## 2026-10-27 - jazz preset J1: available tensions and avoid notes per chord genus
+
+AcordumProprietates.intentiones (bits from the root: tensions a jazz symbol implies - major 9 #11
+13 (+7, 6 on a triad), minor 9 11 13 (+b7 on a triad), dominant b9 9 #9 #11 b13 13, 7sus4 9 13,
+m7b5 9 11 b13, diminished the whole-step-above tones) and .evitandae ("avoid notes": 11 over
+major and dominant, the third over sus). Fran approved the table. Test: every genus has its
+tensions outside its classes and its avoid notes outside both. Lint: 'tensiones' -> classical
+'intentiones' (intentio = stretching; intentio vocis), struct field and macros.
+Formatter: wrapped initializer rows trip -vitia twice now - a leading '-I' (…986XH) and binary
+'|' on the continuation line (columns measured wrongly; -scribere's own output is rejected).
+Routed around: '-I' in the table -> ABSENS, tension sets as named macros (INTENTIONES_*), so the
+continuation lines hold single tokens. Plants 5/5.

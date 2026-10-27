@@ -132,7 +132,13 @@ acordum_suffixum (
  * suspensa; I dyas; 0 classis una, ignota, nulla); notatio numeralis
  * (functio: "o" "+" "M" "h" "sus4" "sus2" "(5)" "(3)", "" ceteris).
  * Numeralis parva = tertia minor. Genus septimae (figura 7 65 43 42)
- * = septima >= 0; figura inversionis solum gradu III sine additis */
+ * = septima >= 0; figura inversionis solum gradu III sine additis.
+ * TENSIONES (usus iazzicus; bits a radice, extra classes acordi):
+ * maior 9 #11 13 (et 7, 6 triadi); minor 9 11 13 (et b7 triadi);
+ * dominans b9 9 #9 #11 b13 13; 7sus4 9 13; m7b5 9 11 b13; diminuta
+ * toni toni supra (9 11 b13 7). EVITANDAE ("avoid notes"): 11 super
+ * maiorem et dominantem, tertia super suspensam. Censura (stylus
+ * tensiones="liberae", regula evitanda) eas legit */
 nomen structura {
     constans character* suffixum;    /* ut acordum_suffixum */
     constans character* numeralis;
@@ -144,6 +150,9 @@ nomen structura {
                                       * radice (sexta, nona; 7sus4
                                       * omnes praeter radicem):
                                       * explicatio */
+                   i32 intentiones; /* bits tensionum licitarum a
+                                      * radice (iazz) */
+                   i32 evitandae;   /* bits "avoid notes" a radice */
 } AcordumProprietates;
 
 /* genus extra tabulam: proprietates NULLA */

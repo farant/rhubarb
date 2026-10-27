@@ -502,7 +502,30 @@ _sectio_proprietates (
                      || (a.classes & ((i32)I << p->septima)) != 0);
         CREDO_VERUM (p->gradus > ZEPHYRUM);
         CREDO_AEQUALIS_I32 (p->additae & ~a.classes, ZEPHYRUM);
+        /* tensiones et evitandae extra classes, inter se disiunctae */
+        CREDO_AEQUALIS_I32 (p->intentiones & a.classes, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (p->evitandae & (a.classes | p->intentiones),
+                            ZEPHYRUM);
     }
+    /* maj7: 9 #11 13, evitanda 11; dominans: b9 9 #9 #11 b13 13,
+     * evitanda 11; m7: 9 11 13; 7sus4: evitanda tertia */
+    p = acordum_proprietates(ACORDUM_SEPTIMA_MAIOR);
+    CREDO_AEQUALIS_I32 (p->intentiones,
+        ((i32)I << II) | ((i32)I << VI) | ((i32)I << IX));
+    CREDO_AEQUALIS_I32 (p->evitandae, (i32)I << V);
+    p = acordum_proprietates(ACORDUM_SEPTIMA);
+    CREDO_AEQUALIS_I32 (p->intentiones,
+        ((i32)I << I) | ((i32)I << II) | ((i32)I << III)
+        | ((i32)I << VI) | ((i32)I << VIII) | ((i32)I << IX));
+    CREDO_AEQUALIS_I32 (p->evitandae, (i32)I << V);
+    p = acordum_proprietates(ACORDUM_SEPTIMA_MINOR);
+    CREDO_AEQUALIS_I32 (p->intentiones,
+        ((i32)I << II) | ((i32)I << V) | ((i32)I << IX));
+    CREDO_AEQUALIS_I32 (p->evitandae, ZEPHYRUM);
+    p = acordum_proprietates(ACORDUM_SEPTIMA_SUSPENSA);
+    CREDO_AEQUALIS_I32 (p->evitandae, (i32)I << IV);
+    p = acordum_proprietates(ACORDUM_IGNOTA);
+    CREDO_AEQUALIS_I32 (p->intentiones | p->evitandae, ZEPHYRUM);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

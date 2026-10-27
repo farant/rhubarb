@@ -82,58 +82,132 @@ hic_manens constans Exemplar EXEMPLARIA[] = {
 
 /* bit intervalli (additae) */
 #define ADDITUM(x) ((i32)I << (x))
+/* intervallum nullum (tertia, quinta, septima) */
+#define ABSENS (-I)
 /* 7sus4: omnes praeter radicem tenendae (quarta, quinta, septima) */
 #define ADDITAE_SUSPENSAE (ADDITUM(V) | ADDITUM(VII) | ADDITUM(X))
 
 /* proprietates per genus (ordine enumerationis): suffixum,
- * numeralis, tertia, quinta, septima, gradus, additae */
+ * numeralis, tertia, quinta, septima, gradus, additae; tensiones,
+ * evitandae (usus iazzicus) */
+/* tensiones licitae per familiam (bits a radice; acordum.h) */
+#define INTENTIONES_MAIORIS \
+    (ADDITUM(II) | ADDITUM(VI) | ADDITUM(IX) | ADDITUM(XI))
+#define INTENTIONES_MINORIS \
+    (ADDITUM(II) | ADDITUM(V) | ADDITUM(IX) | ADDITUM(X))
+#define INTENTIONES_DIMINUTAE \
+    (ADDITUM(II) | ADDITUM(V) | ADDITUM(VIII) | ADDITUM(XI))
+#define INTENTIONES_AUCTAE \
+    (ADDITUM(II) | ADDITUM(VI) | ADDITUM(X))
+#define INTENTIONES_DOMINANTIS \
+    (ADDITUM(I) | ADDITUM(II) | ADDITUM(III) | ADDITUM(VI) \
+     | ADDITUM(VIII) | ADDITUM(IX))
+#define INTENTIONES_SEPTIMAE_MAIORIS \
+    (ADDITUM(II) | ADDITUM(VI) | ADDITUM(IX))
+#define INTENTIONES_SEPTIMAE_MINORIS \
+    (ADDITUM(II) | ADDITUM(V) | ADDITUM(IX))
+#define INTENTIONES_DIMIDIAE \
+    (ADDITUM(II) | ADDITUM(V) | ADDITUM(VIII))
+#define INTENTIONES_SUSPENSAE \
+    (ADDITUM(II) | ADDITUM(IX) | ADDITUM(X))
+#define INTENTIONES_SUSPENSAE_II \
+    (ADDITUM(V) | ADDITUM(IX) | ADDITUM(X))
+#define INTENTIONES_SEXTAE \
+    (ADDITUM(II) | ADDITUM(VI))
+#define INTENTIONES_SEXTAE_MINORIS \
+    (ADDITUM(II) | ADDITUM(V))
+#define INTENTIONES_NONAE_ADDITAE \
+    (ADDITUM(VI) | ADDITUM(IX) | ADDITUM(XI))
+#define INTENTIONES_NONAE \
+    (ADDITUM(III) | ADDITUM(VI) | ADDITUM(VIII) | ADDITUM(IX))
+#define INTENTIONES_NONAE_MAIORIS \
+    (ADDITUM(VI) | ADDITUM(IX))
+#define INTENTIONES_NONAE_MOLLIS \
+    (ADDITUM(V) | ADDITUM(IX))
+#define INTENTIONES_SEPTIMAE_SUSPENSAE \
+    (ADDITUM(II) | ADDITUM(IX))
+#define INTENTIONES_SEPTIMAE_AUCTAE \
+    (ADDITUM(I) | ADDITUM(II) | ADDITUM(III) | ADDITUM(VI))
+
 hic_manens constans AcordumProprietates PROPRIETATES[] = {
-    { "",      "",      IV,  VII,  -I,  III, ZEPHYRUM },  /* maior */
-    { "m",     "",      III, VII,  -I,  III, ZEPHYRUM },  /* minor */
-    { "dim",   "o",     III, VI,   -I,  III, ZEPHYRUM },  /* diminuta */
-    { "aug",   "+",     IV,  VIII, -I,  III, ZEPHYRUM },  /* aucta */
-    { "7",     "",      IV,  VII,  X,   III, ZEPHYRUM },  /* septima */
-    { "maj7",  "M",     IV,  VII,  XI,  III, ZEPHYRUM },  /* septima
-                                                           * maior */
-    { "m7",    "",      III, VII,  X,   III, ZEPHYRUM },  /* septima
-                                                           * minor */
-    { "m7b5",  "h",     III, VI,   X,   III, ZEPHYRUM },  /* dimidia
-                                                           * diminuta */
-    { "dim7",  "o",     III, VI,   IX,  III, ZEPHYRUM },  /* diminuta
-                                                           * septima */
-    { "sus4",  "sus4",  -I,  VII,  -I,  II,  ZEPHYRUM },  /* suspensa
-                                                           * IV */
-    { "sus2",  "sus2",  -I,  VII,  -I,  II,  ZEPHYRUM },  /* suspensa
-                                                           * II */
-    { "(5)",   "(5)",   -I,  VII,  -I,  I,   ZEPHYRUM },  /* quinta */
-    { "(3)",   "(3)",   IV,  -I,   -I,  I,   ZEPHYRUM },  /* tertia
-                                                           * maior */
-    { "m(3)",  "(3)",   III, -I,   -I,  I,   ZEPHYRUM },  /* tertia
-                                                           * minor */
+    /* maior */
+    { "", "", IV, VII, ABSENS, III, ZEPHYRUM,
+      INTENTIONES_MAIORIS, ADDITUM(V) },
+    /* minor */
+    { "m", "", III, VII, ABSENS, III, ZEPHYRUM,
+      INTENTIONES_MINORIS, ZEPHYRUM },
+    /* diminuta */
+    { "dim", "o", III, VI, ABSENS, III, ZEPHYRUM,
+      INTENTIONES_DIMINUTAE, ZEPHYRUM },
+    /* aucta */
+    { "aug", "+", IV, VIII, ABSENS, III, ZEPHYRUM,
+      INTENTIONES_AUCTAE, ZEPHYRUM },
+    /* septima */
+    { "7", "", IV, VII, X, III, ZEPHYRUM,
+      INTENTIONES_DOMINANTIS, ADDITUM(V) },
+    /* septima maior */
+    { "maj7", "M", IV, VII, XI, III, ZEPHYRUM,
+      INTENTIONES_SEPTIMAE_MAIORIS, ADDITUM(V) },
+    /* septima minor */
+    { "m7", "", III, VII, X, III, ZEPHYRUM,
+      INTENTIONES_SEPTIMAE_MINORIS, ZEPHYRUM },
+    /* dimidia diminuta */
+    { "m7b5", "h", III, VI, X, III, ZEPHYRUM,
+      INTENTIONES_DIMIDIAE, ZEPHYRUM },
+    /* diminuta septima */
+    { "dim7", "o", III, VI, IX, III, ZEPHYRUM,
+      INTENTIONES_DIMINUTAE, ZEPHYRUM },
+    /* suspensa IV */
+    { "sus4", "sus4", ABSENS, VII, ABSENS, II, ZEPHYRUM,
+      INTENTIONES_SUSPENSAE, ADDITUM(IV) },
+    /* suspensa II */
+    { "sus2", "sus2", ABSENS, VII, ABSENS, II, ZEPHYRUM,
+      INTENTIONES_SUSPENSAE_II, ZEPHYRUM },
+    /* quinta */
+    { "(5)", "(5)", ABSENS, VII, ABSENS, I, ZEPHYRUM,
+      ADDITUM(II), ZEPHYRUM },
+    /* tertia maior */
+    { "(3)", "(3)", IV, ABSENS, ABSENS, I, ZEPHYRUM,
+      INTENTIONES_MAIORIS, ADDITUM(V) },
+    /* tertia minor */
+    { "m(3)", "(3)", III, ABSENS, ABSENS, I, ZEPHYRUM,
+      INTENTIONES_MINORIS, ZEPHYRUM },
     /* sexta */
-    { "6",     "add6",  IV,  VII,  -I,  III, ADDITUM(IX) },
+    { "6", "add6", IV, VII, ABSENS, III, ADDITUM(IX),
+      INTENTIONES_SEXTAE, ADDITUM(V) },
     /* sexta minor */
-    { "m6",    "add6",  III, VII,  -I,  III, ADDITUM(IX) },
+    { "m6", "add6", III, VII, ABSENS, III, ADDITUM(IX),
+      INTENTIONES_SEXTAE_MINORIS, ZEPHYRUM },
     /* nona addita */
-    { "add9",  "add9",  IV,  VII,  -I,  III, ADDITUM(II) },
+    { "add9", "add9", IV, VII, ABSENS, III, ADDITUM(II),
+      INTENTIONES_NONAE_ADDITAE, ADDITUM(V) },
     /* nona */
-    { "9",     "9",     IV,  VII,  X,   III, ADDITUM(II) },
+    { "9", "9", IV, VII, X, III, ADDITUM(II),
+      INTENTIONES_NONAE, ADDITUM(V) },
     /* nona minor */
-    { "7b9",   "7b9",   IV,  VII,  X,   III, ADDITUM(I) },
+    { "7b9", "7b9", IV, VII, X, III, ADDITUM(I),
+      INTENTIONES_NONAE, ADDITUM(V) },
     /* nona maior */
-    { "maj9",  "M9",    IV,  VII,  XI,  III, ADDITUM(II) },
+    { "maj9", "M9", IV, VII, XI, III, ADDITUM(II),
+      INTENTIONES_NONAE_MAIORIS, ADDITUM(V) },
     /* nona mollis */
-    { "m9",    "9",     III, VII,  X,   III, ADDITUM(II) },
+    { "m9", "9", III, VII, X, III, ADDITUM(II),
+      INTENTIONES_NONAE_MOLLIS, ZEPHYRUM },
     /* septima suspensa */
-    { "7sus4", "7sus4", -I,  VII,  X,   II,  ADDITAE_SUSPENSAE },
+    { "7sus4", "7sus4", ABSENS, VII, X, II, ADDITAE_SUSPENSAE,
+      INTENTIONES_SEPTIMAE_SUSPENSAE, ADDITUM(IV) },
     /* septima aucta */
-    { "7#5",   "+7",    IV,  VIII, X,   III, ADDITUM(VIII) },
+    { "7#5", "+7", IV, VIII, X, III, ADDITUM(VIII),
+      INTENTIONES_SEPTIMAE_AUCTAE, ADDITUM(V) },
     /* classis una */
-    { "",      "",      -I,  -I,   -I,  ZEPHYRUM, ZEPHYRUM },
+    { "", "", ABSENS, ABSENS, ABSENS, ZEPHYRUM, ZEPHYRUM,
+      ZEPHYRUM, ZEPHYRUM },
     /* ignota */
-    { "",      "",      -I,  -I,   -I,  ZEPHYRUM, ZEPHYRUM },
+    { "", "", ABSENS, ABSENS, ABSENS, ZEPHYRUM, ZEPHYRUM,
+      ZEPHYRUM, ZEPHYRUM },
     /* nulla */
-    { "",      "",      -I,  -I,   -I,  ZEPHYRUM, ZEPHYRUM }
+    { "", "", ABSENS, ABSENS, ABSENS, ZEPHYRUM, ZEPHYRUM,
+      ZEPHYRUM, ZEPHYRUM }
 };
 
 /* litterae ordine gradus et classes earum naturales */
