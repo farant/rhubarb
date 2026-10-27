@@ -1040,3 +1040,32 @@ LESSON: `bin/aedilis apps/x/x.c` only WRITES build/aedilis/x/struere.sh
 - it does not compile. My 6a-6d "vicus builds / smoke run" used a
 binary from before the arc (the first after-measurement showed the old
 60/s for that reason). Build = `bash build/aedilis/x/struere.sh`.
+
+## 2026-10-27 - quies T7: re-measured after the merge (main fa6927d9)
+
+Main's bin/vicus (rebuilt after the ff), `-quies`, `.backup` copy of
+paginae-proba.volumen, fake tmux (`exit 1`) first on PATH, ~5 min
+while sessions were active (the copy reads the REAL colloquia
+eventa.jsonl, so every hook event from any session reaches it - ~37
+in those 5 min, most from the measuring session's own tool calls).
+
+- Quiet stretches: 1-5 pulses per 10-16 s, `top` 0.0%. Main thread
+  99.7% in mach_msg over a 20 s sample.
+- Bursts: 15-25 pulses/s for a few seconds, `top` 5-14%. A 60 s
+  sample caught one: mixtura_reddere + CoreAudio threads + toast
+  painting = notification chime + toast (16 ms while sounding, by
+  design).
+- Average after start-up: 5.7 pulses/s and ~2.8% CPU (7.7 s CPU over
+  ~270 s) - while sessions were busy. Before the arc: 60/s and ~5%
+  constant, idle or not. The 6e numbers (1 pulse per 14-19 s, 0.0-0.1%)
+  are the no-events case.
+
+Live vicus (Fran's, secunda build) while it showed a streaming
+terminal pane: 4-20% - painting the terminal (terminale_figura,
+tabula_pixelorum_vacare), as expected. Found there: comites'
+`locum_terminalis_inspicere` runs tmux SYNCHRONOUSLY in the pulse
+(multiplexor_clientes + multiplexor_panelli, cached 1 s): 233 of 251
+pulse samples in 10 s, ~23 ms blocked per second while the front
+terminal streams with a Notes companion open. Not an idle cost.
+Filed as desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4 (fix: async like T2,
+or only on foreground-signature change like T2b).
