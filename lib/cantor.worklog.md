@@ -110,3 +110,24 @@ prospectus window closes any continuing voice of the current transitus whose end
 inside the window (its target would have been iussed in this same window) or at/after
 the region end. This covers mute toggles, model edits, a '@' target, and region ends
 with one rule, so no voice ever hangs with an open gate.
+
+## 2026-10-26 - review batch 2: three loudness bugs around glides and same-position dynamics
+
+From the sexta review (time findings 2-4, all audible: 6-12 dB too loud). One mechanism under
+all three: two mixer commands at the same frame - the second ramps from the CURRENT value, so
+the first is lost.
+(2) A glide target ignored a <dynamica> step at its own onset: _illapsum_iubere sent a level
+change only when the note's own 'v' gain differed, and _segmentum_iubere skips steps at
+pulsus_initium. Now the target's level (note x part x dynamics at p) is compared with what the
+voice holds (old basis x dynamics at p-1) and a 5 ms jump is requested if they differ
+(`saltus` flag into _segmentum_iubere). `c1/ | d1` with pp at bar 2: -29.2 dBFS (was -15.4;
+the unglided version is -27.8 - the rest is the missing re-attack).
+(3) Step + ramp at the same position: the jump and the ramp were both stamped _quadrum(s);
+the ramp now starts at the jump's end (t + CANTOR_EVANESCENTIA). pp lands in <10 ms again,
+then the crescendo.
+(4) Dynamics points inside a glide SOURCE were dropped when its target fell in the same
+prospectus window: _notas_iubere runs first and moves pulsus_initium to the target, so
+_intensiones_iubere then starts there. The glide now streams the source's remaining points in
+[iussus, p) before it takes the voice. Tempo 400 probe: -21.8 vs -21.7 unglided (was -15.1).
+Unit tests read the mixer command list (VOCEM_PONERE at the exact frame, its clivus); plants
+4/4. House songs: -auscultare per bar identical before/after.

@@ -284,18 +284,22 @@ _vocem_ponere (
     (vacuum)concentus_iubere(c->concentus, &i);
 }
 
-/* segmentum dynamicae vocis a pulsu s ad punctum proximum: gradus ad s
- * (evanescentia brevis) si <dynamica> sine clivo ibi incipit, deinde
- * clivus ad valorem ante punctum proximum si differt */
+/* segmentum dynamicae vocis a pulsu s ad punctum proximum: saltus ad s
+ * (evanescentia brevis) si <dynamica> sine clivo ibi incipit aut
+ * vocans postulat (saltus: nota glissata), deinde clivus ad valorem
+ * ante punctum proximum si differt - ab FINE saltus (iussa eodem
+ * momento se tegunt: saltus aliter periret) */
 interior vacuum
 _segmentum_iubere (
                 Cantor* c,
     constans CantorVox* v,
-                   s64  s)
+                   s64  s,
+                   b32  saltus)
 {
     constans Carmen* k = c->carmen;
                 s64  e = _proximum_intensionis(k, v->pars, s);
                 f32  g = carmen_intensio(k, v->pars, s);
+                s64  t = _quadrum(c, s);
                 f32  h;
 
     si (e > v->pulsus_finis)
@@ -303,15 +307,16 @@ _segmentum_iubere (
         e = v->pulsus_finis;
     }
     h = carmen_intensio(k, v->pars, e - I);
-    si (s > v->pulsus_initium && _gradus_ad(k, v->pars, s))
+    si (saltus || (s > v->pulsus_initium && _gradus_ad(k, v->pars, s)))
     {
-        _vocem_ponere(c, v, _quadrum(c, s), CANTOR_EVANESCENTIA,
-                      v->basis * g);
+        _vocem_ponere(c, v, t, CANTOR_EVANESCENTIA, v->basis * g);
+        t += CANTOR_EVANESCENTIA;
     }
     si (fabs((f64)(h - g)) > 1e-6)
     {
-        _vocem_ponere(c, v, _quadrum(c, s),
-                      _quadrum(c, e) - _quadrum(c, s), v->basis * h);
+        _vocem_ponere(c, v, t,
+            _quadrum(c, e) > t ? _quadrum(c, e) - t : ZEPHYRUM,
+            v->basis * h);
     }
 }
 
@@ -366,7 +371,20 @@ _illapsum_iubere (
     MixturaIussum i;
               s64 initium  = _quadrum(c, p);
               f32 basis    = n->lucrum * pars->lucrum;
+              f32 tenet    = v->basis
+                  * carmen_intensio(c->carmen, v->pars, p - I);
+              s64 s;
 
+    /* puncta dynamicae notae prioris ante p (eodem prospectu: vox ad
+     * notam proximam transit antequam _intensiones_iubere currit) */
+    s = c->iussus > v->pulsus_initium ? c->iussus - I
+                                      : v->pulsus_initium;
+    s = _proximum_intensionis(c->carmen, v->pars, s);
+    dum (s < p)
+    {
+        _segmentum_iubere(c, v, s, FALSUM);
+        s = _proximum_intensionis(c->carmen, v->pars, s);
+    }
     mixtura_iussum_parare(&i, MIXTURA_IUSSUM_NOTAM_PONERE, initium);
     i.ansa    = v->ansa;
     i.nota    = (f32)n->nota;
@@ -376,17 +394,16 @@ _illapsum_iubere (
     v->pulsus_finis    = p + n->longitudo;
     v->finis           = _quadrum(c, p + n->longitudo);
     v->continuatur     = n->continuatur;
-    si (fabs((f64)(basis - v->basis)) > 1e-6)
-    {
-        v->basis = basis;
-        _vocem_ponere(c, v, initium, CANTOR_EVANESCENTIA,
-                      basis * carmen_intensio(c->carmen, v->pars, p));
-    }
+    v->basis           = basis;
     si (!v->continuatur)
     {
         _portam_claudere(c, v);
     }
-    _segmentum_iubere(c, v, p);
+    /* lucrum ad initium: saltus si ab eo quod vox tenet differt (lucrum
+     * notae aut gradus dynamicae ad p) */
+    _segmentum_iubere(c, v, p,
+        fabs((f64)(basis * carmen_intensio(c->carmen, v->pars, p)
+                   - tenet)) > 1e-6);
 }
 
 /* post prospectum: vox continuata cuius proxima non venit (finis intra
@@ -507,7 +524,8 @@ _notam_iubere (
     v->transitus       = c->basis_quadrum;
     si (v->sequitur)
     {
-        _segmentum_iubere(c, v, p);
+        /* lucrum initii in TIBIAM: saltus nullus */
+        _segmentum_iubere(c, v, p, FALSUM);
     }
 }
 
@@ -540,7 +558,7 @@ _intensiones_iubere (
         s = _proximum_intensionis(c->carmen, v->pars, s);
         dum (s < summus && s < v->pulsus_finis)
         {
-            _segmentum_iubere(c, v, s);
+            _segmentum_iubere(c, v, s, FALSUM);
             s = _proximum_intensionis(c->carmen, v->pars, s);
         }
     }

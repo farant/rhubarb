@@ -13,7 +13,9 @@
  * (percussio). Lucrum = nota x pars x carmen_intensio (dynamica ad
  * initium notae); voces tibiae sonantes dynamicam sequuntur:
  * VOCEM_PONERE per octavas (et ad mutationes) intra prospectum,
- * numquam praeiussa - iussa pendentia finita manent. Mutus omittitur,
+ * numquam praeiussa - iussa pendentia finita manent. Gradus et clivus
+ * eadem positione: gradus primum (evanescentia), clivus ab eius fine
+ * (pp deinde crescendo: saltus non perit). Mutus omittitur,
  * solus (si quis) alios tacet. Prioritas II: cantilenae (I) voces
  * musicae non surripiunt.
  *
@@ -34,7 +36,10 @@
  * PORTAMENTUM: nota 'continuatur' portam non claudit; nota proxima
  * vocem eius (pars eadem, finis = initium suum, transitus idem) per
  * NOTAM_PONERE ad initium suum glissat (clivus = portamentum in
- * quadris), lucrum suum per VOCEM_PONERE si differt, portam ad finem
+ * quadris); lucrum ad initium suum (nota x pars x dynamica ibi) per
+ * evanescentiam si ab eo quod vox tenet differt (lucrum notae aut
+ * gradus dynamicae ibi); puncta dynamicae notae prioris ante initium
+ * novum prius iubentur (eodem prospectu non pereunt); portam ad finem
  * suum claudit (nisi ipsa continuatur). Vox non inventa (quaerere,
  * iteratio, prior tacita) = nota ut solet incipit. Nota continuata ad
  * finem regionis (proxima extra) portam ut solet claudit - vox numquam
