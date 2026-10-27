@@ -175,4 +175,12 @@ b32
 colloquia_visus_reficere (
     ColloquiorumMontatio* m);
 
+/* vicus quies T6d: ms usque ad pulsum proximum necessarium - XVI dum
+ * quaestio cursuum volat; aliter usque ad panellos aut cursus (V s
+ * post ultimos); -1 si fons nec multiplexorem nec mensorem habet.
+ * Eventus libri per speculam vici expergefaciunt (non hic) */
+s64
+colloquia_visus_mora (
+    constans ColloquiorumMontatio* m);
+
 #endif /* COLLOQUIA_VISUS_H */

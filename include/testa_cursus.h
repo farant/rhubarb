@@ -75,6 +75,12 @@ nomen structura {
                 vacuum* fons_ctx;
          LudusPulsator  pulsator;           /* NIHIL = nullus */
                 vacuum* pulsator_ctx;
+    /* vicus quies T6: mora_proxima non NIHIL = quies
+     * (ludus_fenestra_quietem_ponere); macOS solum - iOS/Android
+     * ignorant */
+      LudusMoraProxima  mora_proxima;
+                vacuum* mora_ctx;
+               Reactor* reactor;
                 vacuum  (*finis)(vacuum* ctx);   /* NIHIL licet */
                 vacuum* finis_ctx;
 } TestaForma;

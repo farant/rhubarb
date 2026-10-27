@@ -23,6 +23,7 @@
 #include "praeconium.h"
 #include "aetherophonum.h"
 #include "filum.h"
+#include "specula.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1341,6 +1342,17 @@ scribam_pulsare (
     redde p;
 }
 
+/* quies T6: pulsus crebri solum dum opus aut iussum dilatum pendet */
+#define MORA_OCCUPATA  XVI
+
+interior Mora
+scribam_morari (
+    vacuum* ctx)
+{
+    redde scriba_occupata((constans ScribaMontatio*)ctx) ? MORA_OCCUPATA
+                                                         : -I;
+}
+
 /* ictus primus (Franus): ictus qui latus scribae focat iussum sub se
  * statim currit - ut si latus iam focatum esset. Pagina in spatio
  * lateris quaeritur (arbor composita); ictus extra iussum focat
@@ -1403,6 +1415,7 @@ scribam_describere (
     f->gestum_ctx        = m;
     f->pulsare           = scribam_pulsare;
     f->pulsare_ctx       = m;
+    f->mora              = scribam_morari;
     f->ictus_primus      = scribae_ictus_primus;
     f->ictus_primus_ctx  = m;
     /* D5 S3c: pagina = semita (scriba/<pagina>) - historia lateris,
@@ -2039,6 +2052,23 @@ terminale_montare_in_vico (
 }
 
 /* pulsus sine mora: ansa hospitis XVI ms ipsa exspectat */
+/* quies T6b: mora et fossa lateris terminalis (pty) */
+interior Mora
+terminale_morari (
+    vacuum* ctx)
+{
+    redde (Mora)terminale_mora((constans TerminaleApplicatio*)ctx);
+}
+
+interior s32
+terminale_fossam (
+    vacuum* ctx,
+       i32* eventus)
+{
+    *eventus = REACTOR_LEGERE;
+    redde terminale_fossa((constans TerminaleApplicatio*)ctx);
+}
+
 interior VicusPulsus
 terminale_pulsare_in_vico (
     vacuum* ctx)
@@ -2067,6 +2097,10 @@ terminale_describere (
     f->pulsare         = terminale_pulsare_in_vico;
     f->pulsare_ctx     = m;
     f->vivit_in_fundo  = VERUM;
+    /* quies T6b: pty expergefacit; XVI solum dum cauda aut messis
+     * pendet */
+    f->mora   = terminale_morari;
+    f->fossa  = terminale_fossam;
     /* Franus: 'tmux a' statim post aperturam ad concham, non scribam */
     f->focus_in_apertura = VERUM;
     /* comites P4: locus per fenestram tmux aut latus */
@@ -2259,6 +2293,14 @@ kalendarii_pulsare (
     redde p;
 }
 
+interior Mora
+kalendarium_morari (
+    vacuum* ctx)
+{
+    redde kalendarium_occupatum((constans KalendariumMontatio*)ctx)
+        ? MORA_OCCUPATA : -I;
+}
+
 interior vacuum
 kalendarium_describere (
          vacuum* montatio,
@@ -2279,6 +2321,7 @@ kalendarium_describere (
     /* A6e: pulsus - indicium paginae notarum */
     f->pulsare      = kalendarii_pulsare;
     f->pulsare_ctx  = m;
+    f->mora         = kalendarium_morari;
     /* semitae R4: historia lateris et $via; liber notarum diem sequitur
      * post semitam a vico applicatam */
     f->ramus               = &m->ramus;
@@ -2368,6 +2411,14 @@ nomenclatoris_pulsare (
     redde p;
 }
 
+interior Mora
+nomenclatorem_morari (
+    vacuum* ctx)
+{
+    redde nomenclator_occupatus((constans NomenclatorMontatio*)ctx)
+        ? MORA_OCCUPATA : -I;
+}
+
 interior vacuum
 nomenclatorem_describere (
          vacuum* montatio,
@@ -2385,6 +2436,7 @@ nomenclatorem_describere (
     f->gestum_ctx     = m;
     f->pulsare        = nomenclatoris_pulsare;
     f->pulsare_ctx    = m;
+    f->mora           = nomenclatorem_morari;
     /* P6b: "<id>" personam aperit (natalis ex calendario) */
     f->argumentum_ponere      = nomenclatoris_argumentum_ponere;
     f->argumentum_ponere_ctx  = m;
@@ -2603,6 +2655,25 @@ systema_soni (
     redde FALSUM;
 }
 
+/* quies T6d: mora portae (sonus, exitus apertus); sine porta nihil;
+ * porta sine mora: XVI (mos vetus) */
+#define MORA_SONI_IGNOTA  XVI
+
+interior Mora
+soni_morari (
+    vacuum* ctx)
+{
+    constans ContextusSoni* soni;
+
+    soni = (constans ContextusSoni*)ctx;
+    si (!soni->posita)
+    {
+        redde -I;
+    }
+    redde soni->porta.mora ? (Mora)soni->porta.mora(soni->porta.ctx)
+                           : MORA_SONI_IGNOTA;
+}
+
 /* S5c: porta aetherophoni - mutus TOTUS vocem negat (mutus
  * admonitionum non: aetherophonum admonitio non est); porta soni
  * nulla = 0 */
@@ -2721,12 +2792,20 @@ nomen structura {
      * (binarium; socket per sessionem) */
        ColloquiorumFons fons;
             Multiplexor multiplexor;
-    /* T6: terminalia - inspectio ultima (s), scheda sua; quies T2:
-     * quaestiones list-clients in volatu (QuaestioClientium; NIHIL =
-     * nulla) - scheda solum sine quaestionibus vacatur */
-                 time_t  terminalia_ad;
+    /* T6: terminalia - inspectio ultima (ms fenestrae; quies T2b),
+     * scheda sua; quies T2: quaestiones list-clients in volatu
+     * (QuaestioClientium; NIHIL = nulla) - scheda solum sine
+     * quaestionibus vacatur. signum = frontes ad quaestionem ultimam
+     * (frontes_signare); confirmanda = quaestio altera post frontes
+     * mutatas (ms fenestrae; 0 = nulla) */
+                    s64  terminalia_ad;
+                    i64  terminalia_signum;
+                    s64  terminalia_confirmanda;
                 Piscina* scheda_terminalium;
                     Xar* terminalia_quaestiones;
+    /* quies T6c: specula libri praeconii - scriptura vicum
+     * expergefacit (NIHIL: platforma sine specula, XVI ms) */
+                Specula* specula;
     /* sonus S4: admonitio nova pulsat */
           ContextusSoni* sonus;
     /* nuntii hospitis (toasts solae; nuntium_hospitis): index
@@ -3007,6 +3086,9 @@ systema_admonitionum (
     {
         redde FALSUM;
     }
+    /* quies T6c: notae speculae exhauriuntur (fossa iterum quieta);
+     * liber deinde legitur ut semper - lectio a positione, vilis */
+    (vacuum)specula_exhaurire(ca->specula);
     si (!ca->applicatae)
     {
         a = insula_attributum(v->repo, "admonitiones_lectae_ad");
@@ -3038,6 +3120,36 @@ systema_admonitionum (
         mutatum         = VERUM;
     }
     redde mutatum;
+}
+
+/* quies T6c: liber per speculam - nihil debitum (scriptura
+ * expergefacit); sine specula (platforma) pulsus crebri ut olim */
+#define MORA_SINE_SPECULA  XVI
+
+interior Mora
+admonitiones_morari (
+    vacuum* ctx)
+{
+    constans ContextusAdmonitionum* ca;
+
+    ca = (constans ContextusAdmonitionum*)ctx;
+    si (!ca->sequitur)
+    {
+        redde -I;
+    }
+    redde ca->specula ? -I : MORA_SINE_SPECULA;
+}
+
+interior s32
+admonitionum_fossa (
+    vacuum* ctx,
+       i32* eventus)
+{
+    constans ContextusAdmonitionum* ca;
+
+    ca        = (constans ContextusAdmonitionum*)ctx;
+    *eventus  = REACTOR_LEGERE;
+    redde ca->sequitur ? specula_fossa(ca->specula) : -I;
 }
 
 interior b32
@@ -3122,6 +3234,14 @@ volantes_montare_in_vico (
     redde VERUM;
 }
 
+/* quies T6d: usque ad exspirationem volantis proximae */
+interior Mora
+volantes_morari (
+    vacuum* ctx)
+{
+    redde (Mora)volantes_mora((constans VolantiumMontatio*)ctx);
+}
+
 interior VicusPulsus
 volantes_pulsare_in_vico (
     vacuum* ctx)
@@ -3147,6 +3267,7 @@ volantes_describere (
     f->componere_ctx  = m;
     f->pulsare        = volantes_pulsare_in_vico;
     f->pulsare_ctx    = m;
+    f->mora           = volantes_morari;
 }
 
 /* T6: cliens tmux cum servitore suo ("-" = ordinarius) */
@@ -3219,33 +3340,6 @@ clientes_addere (
             locus->sessio    = k->sessio;
         }
     }
-}
-
-/* quies T2: estne latus terminale vivum in aliqua tabula? */
-interior b32
-terminale_adest (
-    Vicus* v)
-{
-    VicusTabula* t;
-     VicusLatus* l;
-            i32  i;
-            s32  k;
-
-    per (i = ZEPHYRUM; i < (i32)vicus_numerus_tabularum(v); i++)
-    {
-        t = vicus_tabula(v, i);
-        per (k = -I; t && k < (s32)xar_numerus(t->acervus); k++)
-        {
-            l = k < ZEPHYRUM ? &t->sinistrum
-                : (VicusLatus*)xar_obtinere(t->acervus, (i32)k);
-            si (   l->montata && !l->finita
-                && chorda_aequalis_literis(l->genus, "terminale"))
-            {
-                redde VERUM;
-            }
-        }
-    }
-    redde FALSUM;
 }
 
 /* T6: latus terminalis cuius tty cliens tmux est argumentum "tmux
@@ -3323,6 +3417,99 @@ terminalia_applicare (
  * (nec mora consumitur: latus novum statim inspicitur); quaestiones
  * INCIPIUNTUR et in pulsibus sequentibus pulsantur (numquam
  * exspectantur), resultus cum omnes paratae sunt applicatur */
+/* quies T2b: tmux iterum per V s solum latere visibili cum tmux in
+ * fronte (sessio intra tmux mutari potest sine signo nostro) */
+#define TERMINALIA_MS  ((s64)V * (s64)M)
+/* quaestio in volatu: processus pulsandus */
+#define MORA_TERMINALIUM_VOLANTIUM  XVI
+/* quaestio altera post frontes mutatas: 'tmux attach' in fronte est
+ * PAULO ANTE quam cliens apud servitorem inscribitur - quaestio prima
+ * eum non videt, et frons iterum non mutatur (vicus_saltus I) */
+#define TERMINALIA_CONFIRMATIO_MS  ((s64)M)
+
+/* quies T2b: signum frontium - grex frontalis omnium laterum
+ * terminalium vivorum (ordine tabularum); mutatur cum programma
+ * incipit aut finit (tmux attach, detach) aut latus aperitur aut
+ * clauditur. *numerus = latera terminalia; *tmux_visibile = latus
+ * visibile cuius argumentum "tmux ..." est */
+interior i64
+frontes_signare (
+    Vicus* v,
+      i32* numerus,
+      b32* tmux_visibile)
+{
+    VicusTabula* t;
+    VicusTabula* activa;
+     VicusLatus* l;
+     VicusLatus* frons;
+            i64  signum;
+            i32  i;
+            s32  k;
+
+    signum          = ZEPHYRUM;
+    *numerus        = ZEPHYRUM;
+    *tmux_visibile  = FALSUM;
+    activa          = vicus_activa(v);
+    per (i = ZEPHYRUM; i < (i32)vicus_numerus_tabularum(v); i++)
+    {
+        t      = vicus_tabula(v, i);
+        frons  = t ? vicus_latus(t, VICUS_DEXTRUM) : NIHIL;
+        per (k = -I; t && k < (s32)xar_numerus(t->acervus); k++)
+        {
+            l = k < ZEPHYRUM ? &t->sinistrum
+                : (VicusLatus*)xar_obtinere(t->acervus, (i32)k);
+            si (   !l->montata || l->finita
+                || !chorda_aequalis_literis(l->genus, "terminale"))
+            {
+                perge;
+            }
+            (*numerus)++;
+            /* i64 insignatum: circuitio definita */
+            signum = signum * (i64)MXXIV * (i64)MXXIV + (i64)I
+                + (i64)(insignatus integer)terminale_grex_frontalis(
+                    (constans TerminaleApplicatio*)l->montatio);
+            si (   t == activa && (k < ZEPHYRUM || l == frons)
+                && l->argumentum.mensura > IV
+                && memcmp(l->argumentum.datum, "tmux ", V)
+                   == ZEPHYRUM)
+            {
+                *tmux_visibile = VERUM;
+            }
+        }
+    }
+    redde signum;
+}
+
+/* quies T2b: quaestio debita? frontes mutatae (aut latus primum;
+ * *mutatae), confirmatio debita, aut tmux visibilis et V s elapsa.
+ * Nullum latus terminale: numquam (T2) */
+interior b32
+terminalia_debita (
+                    Vicus* v,
+    ContextusAdmonitionum* ca,
+                      i64* signum,
+                      b32* mutatae)
+{
+    i32 numerus;
+    b32 tmux_visibile;
+    s64 nunc;
+
+    *signum   = frontes_signare(v, &numerus, &tmux_visibile);
+    *mutatae  = FALSUM;
+    si (numerus == ZEPHYRUM)
+    {
+        ca->terminalia_signum       = ZEPHYRUM;
+        ca->terminalia_confirmanda  = ZEPHYRUM;
+        redde FALSUM;
+    }
+    nunc      = fenestra_tempus_ms();
+    *mutatae  = *signum != ca->terminalia_signum;
+    redde *mutatae
+        || (   ca->terminalia_confirmanda != ZEPHYRUM
+            && nunc >= ca->terminalia_confirmanda)
+        || (tmux_visibile && nunc - ca->terminalia_ad >= TERMINALIA_MS);
+}
+
 interior b32
 systema_terminalium (
      Vicus* v,
@@ -3333,7 +3520,8 @@ systema_terminalium (
                       Xar* quaestiones;
                       Xar* sessiones;
         QuaestioClientium* q;
-                   time_t  nunc;
+                      i64  signum;
+                      b32  mutatae;
                       b32  paratae;
                       i32  i;
                       i32  j;
@@ -3373,17 +3561,14 @@ systema_terminalium (
         }
         redde FALSUM;
     }
-    si (!terminale_adest(v))
+    si (!terminalia_debita(v, ca, &signum, &mutatae))
     {
         redde FALSUM;
     }
-    nunc = time(NIHIL);
-    si (   ca->terminalia_ad != (time_t)ZEPHYRUM
-        && nunc - ca->terminalia_ad < (time_t)V)
-    {
-        redde FALSUM;
-    }
-    ca->terminalia_ad = nunc;
+    ca->terminalia_signum  = signum;
+    ca->terminalia_ad      = fenestra_tempus_ms();
+    ca->terminalia_confirmanda  = mutatae
+        ? ca->terminalia_ad + TERMINALIA_CONFIRMATIO_MS : ZEPHYRUM;
     piscina_vacare(ca->scheda_terminalium);
     quaestiones = xar_creare(ca->scheda_terminalium,
         (i32)magnitudo(QuaestioClientium));
@@ -3415,6 +3600,62 @@ systema_terminalium (
     }
     ca->terminalia_quaestiones = quaestiones;
     redde FALSUM;
+}
+
+/* quies T2b: mora systematis terminalium - XVI dum quaestio volat, 0
+ * si frontes mutatae, deinde minimum confirmationis et V s (si tmux
+ * visibilis); aliter -1 (fossa pty mutationem frontis cum effusione
+ * affert) */
+interior Mora
+terminalia_morari (
+    vacuum* ctx)
+{
+    ContextusAdmonitionum* ca;
+                      i64  signum;
+                      i32  numerus;
+                      b32  tmux_visibile;
+                      s64  reliquum;
+                      s64  nunc;
+                     Mora  mora;
+
+    ca = (ContextusAdmonitionum*)ctx;
+    si (!ca->sequitur || !ca->scheda_terminalium || !ca->vicus)
+    {
+        redde -I;
+    }
+    si (ca->terminalia_quaestiones)
+    {
+        redde MORA_TERMINALIUM_VOLANTIUM;
+    }
+    signum = frontes_signare(ca->vicus, &numerus, &tmux_visibile);
+    si (numerus == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    si (signum != ca->terminalia_signum)
+    {
+        redde ZEPHYRUM;
+    }
+    nunc = fenestra_tempus_ms();
+    mora = -I;
+    si (ca->terminalia_confirmanda != ZEPHYRUM)
+    {
+        reliquum  = ca->terminalia_confirmanda - nunc;
+        mora      = reliquum > ZEPHYRUM ? (Mora)reliquum : ZEPHYRUM;
+    }
+    si (tmux_visibile)
+    {
+        reliquum = ca->terminalia_ad + TERMINALIA_MS - nunc;
+        si (reliquum < ZEPHYRUM)
+        {
+            reliquum = ZEPHYRUM;
+        }
+        si (mora < ZEPHYRUM || (Mora)reliquum < mora)
+        {
+            mora = (Mora)reliquum;
+        }
+    }
+    redde mora;
 }
 
 /* T5: visus sessionum - fons communis, saltus. Fons SEMPER datur
@@ -3451,6 +3692,15 @@ colloquia_montare_in_vico (
     redde VERUM;
 }
 
+/* quies T6d: panelli et cursus per V s dum latus visibile */
+interior Mora
+colloquia_morari (
+    vacuum* ctx)
+{
+    redde (Mora)colloquia_visus_mora(
+        (constans ColloquiorumMontatio*)ctx);
+}
+
 interior VicusPulsus
 colloquia_pulsare_in_vico (
     vacuum* ctx)
@@ -3476,6 +3726,7 @@ colloquia_describere (
     f->componere_ctx  = m;
     f->pulsare        = colloquia_pulsare_in_vico;
     f->pulsare_ctx    = m;
+    f->mora           = colloquia_morari;
     /* T4d: Esc ad latus prius */
     f->effugium_redit = VERUM;
     /* comites P1 */
@@ -3532,6 +3783,7 @@ vicus_applicatio_admonitiones_aperire (
                CCLVI * M, &ca->multiplexor);
     si (ca->sequitur)
     {
+        ca->specula = specula_creare(ca->piscina, via);
         colloquia_visus_fontem_mensorem_ponere(&ca->fons,
             mensorem_quaerere(ca->piscina));
     }
@@ -3554,7 +3806,9 @@ vicus_applicatio_admonitiones_claudere (
         redde;
     }
     colloquia_visus_fontem_finire(&ca->fons);
-    ca->sequitur = FALSUM;
+    specula_claudere(ca->specula);
+    ca->specula   = NIHIL;
+    ca->sequitur  = FALSUM;
 }
 
 
@@ -4633,12 +4887,14 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "volantes",
                magnitudo(VolantiumMontatio), volantes_montare_in_vico,
                volantes_describere, cad)
-        || !vicus_systema_addere(app->vicus, "admonitiones",
-               systema_admonitionum, cad)
-        || !vicus_systema_addere(app->vicus, "terminalia",
-               systema_terminalium, cad)
-        || !vicus_systema_addere(app->vicus, "sonus", systema_soni,
-               soni)
+        || !vicus_systema_cum_mora_addere(app->vicus, "admonitiones",
+               systema_admonitionum, admonitiones_morari, cad)
+        || !vicus_systema_fossam_ponere(app->vicus, "admonitiones",
+               admonitionum_fossa)
+        || !vicus_systema_cum_mora_addere(app->vicus, "terminalia",
+               systema_terminalium, terminalia_morari, cad)
+        || !vicus_systema_cum_mora_addere(app->vicus, "sonus",
+               systema_soni, soni_morari, soni)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS)
         || !vicus_stratum_addere(app->vicus, "volantes"))
     {

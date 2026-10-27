@@ -348,12 +348,43 @@ _probare_transientes (
     CREDO_AEQUALIS_I32(admonitiones_non_lectae(communis), II);
 }
 
+/* vicus quies T6d: mora usque ad exspirationem visibilis proximae
+ * (a0 NUNTIUS 1000 + VIII s, a1 ATTENTIO 2000 + XXX s, a2 NUNTIUS
+ * 3000 + VIII s) */
+interior vacuum
+_probare_moram (
+    CredoContextus* c)
+{
+    Mundus* w;
+
+    w = mundus(c, III);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_GRADUS("nunc 8000: a0 exspirat 9000 -> M");
+    CREDO_AEQUALIS_S64(volantes_mora(&w->m), M);
+    CREDO_GRADUS("nunc 12000: a1 sola (ATTENTIO, 32000) -> XX s");
+    w->nunc = (s64)XII * (s64)M;
+    CREDO_AEQUALIS_S64(volantes_mora(&w->m), (s64)XX * (s64)M);
+    CREDO_GRADUS("nunc 32000: nulla volat -> -1");
+    w->nunc = (s64)XXXII * (s64)M;
+    CREDO_AEQUALIS_S64(volantes_mora(&w->m), -I);
+    CREDO_GRADUS("lecta non volat; sine horologio -1");
+    w = mundus(c, I);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_AEQUALIS_S64(volantes_mora(&w->m), M);
+    CREDO_VERUM(admonitionem_legere_notare(w->index, chorda_ex_literis(
+        "a0", c->piscina)));
+    CREDO_AEQUALIS_S64(volantes_mora(&w->m), -I);
+    w->m.nunc = NIHIL;
+    CREDO_AEQUALIS_S64(volantes_mora(&w->m), -I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "visibiles", _probare_visibiles, NIHIL, NIHIL, NIHIL, NIHIL },
     { "maximum", _probare_maximum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ictus", _probare_ictus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _probare_formam, NIHIL, NIHIL, NIHIL, NIHIL },
     { "transientes", _probare_transientes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mora (quies T6d)", _probare_moram, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

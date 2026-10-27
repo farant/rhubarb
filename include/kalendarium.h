@@ -217,6 +217,12 @@ b32
 kalendarium_reficere (
     KalendariumMontatio* m);
 
+/* vicus quies T6: VERUM dum opus aut iussum dilatum in editore ullo
+ * pendet (pulsus crebri necessarii) */
+b32
+kalendarium_occupatum (
+    constans KalendariumMontatio* m);
+
 /* A6d: gestus (vicus T3a): notae diei montatae - gestus scribae
  * notarum (liber diei refectus); aliter nullus */
 vacuum

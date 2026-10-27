@@ -88,6 +88,10 @@ structura Reactor {
                  i32 poll_generatio[REACTOR_FD_MAXIMA];
                  i32 poll_numerus;
 
+    /* vicus quies T4: crescit omni adiectione, modificatione,
+     * remotione - hospes cum ansa sua fossas solum tunc renovat */
+                 i32 fossarum_versio;
+
     /* Timer tracking */
     ReactorTimerEntry timers[REACTOR_TIMER_MAXIMA];
                   i32 timer_numerus;
@@ -251,8 +255,8 @@ _invenire_timer_index (
 /* Calculare timeout usque ad proximum timer */
 interior i32
 _calculare_timer_timeout (
-    Reactor* reactor,
-        i32  max_timeout_ms)
+    constans Reactor* reactor,
+                 i32  max_timeout_ms)
 {
     i64 nunc;
     i64 minimus;
@@ -311,6 +315,28 @@ _calculare_timer_timeout (
     }
 
     redde timeout;
+}
+
+/* labores pendentes (constans: reactor_mora_proxima) */
+interior i32
+_labores_numerare (
+    constans Reactor* reactor)
+{
+    i32 numerus = 0;
+    i32 i;
+
+    si (!reactor)
+    {
+        redde 0;
+    }
+    per (i = 0; i < reactor->labor_numerus; i++)
+    {
+        si (reactor->labores[i].activus)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
 }
 
 /* Processare expired timers */
@@ -491,6 +517,7 @@ reactor_creare (
     reactor->labor_numerus      = 0;
     reactor->cyclus             = 0;
     reactor->signa_numerus      = 0;
+    reactor->fossarum_versio    = 0;
 
     /* Initiare arrays */
     memset(reactor->fd_entries, 0, magnitudo(reactor->fd_entries));
@@ -568,6 +595,7 @@ reactor_adicere (
         reactor->fd_entries[index].eventus   = eventus;
         reactor->fd_entries[index].callback  = callback;
         reactor->fd_entries[index].data      = data;
+        reactor->fossarum_versio++;
         redde VERUM;
     }
 
@@ -601,6 +629,7 @@ reactor_adicere (
     reactor->fd_entries[index].activus   = VERUM;
     reactor->fd_entries[index].internus  = FALSUM;
     reactor->fd_entries[index].generatio++;
+    reactor->fossarum_versio++;
 
     /* nulla rebuilatio hic: reactor_poll in initio omnis transitus
      * rebuilat, et rebuilatio intra dispatchum revents posteriorum
@@ -628,6 +657,7 @@ reactor_modificare (
     }
 
     reactor->fd_entries[index].eventus = eventus;
+    reactor->fossarum_versio++;
 
     redde VERUM;
 }
@@ -652,6 +682,7 @@ reactor_removere (
 
     reactor->fd_entries[index].activus = FALSUM;
     reactor->fd_entries[index].generatio++;
+    reactor->fossarum_versio++;
 
     redde VERUM;
 }
@@ -784,21 +815,7 @@ i32
 reactor_numerus_laborum (
     Reactor* reactor)
 {
-    i32 numerus = 0;
-    i32 i;
-
-    si (!reactor)
-    {
-        redde 0;
-    }
-    per (i = 0; i < reactor->labor_numerus; i++)
-    {
-        si (reactor->labores[i].activus)
-        {
-            numerus++;
-        }
-    }
-    redde numerus;
+    redde _labores_numerare(reactor);
 }
 
 b32
@@ -1059,4 +1076,66 @@ reactor_numerus_timer (
     }
 
     redde count;
+}
+
+
+/* ========================================================================
+ * FUNCTIONES PUBLICAE - HOSPES CUM ANSA SUA (vicus quies T4)
+ * ======================================================================== */
+
+s32
+reactor_mora_proxima (
+    constans Reactor* reactor)
+{
+    i32 mora;
+
+    si (!reactor)
+    {
+        redde -I;
+    }
+    si (_labores_numerare(reactor) > 0)
+    {
+        redde 0;
+    }
+    /* maximum 0xFFFFFFFF redditur solum si nullus timer activus
+     * (mora timeris ad 0x7FFFFFFF coercetur) */
+    mora = _calculare_timer_timeout(reactor, REACTOR_NON_INVENIT);
+    si (mora == REACTOR_NON_INVENIT)
+    {
+        redde -I;
+    }
+    redde (s32)mora;
+}
+
+vacuum
+reactor_fossas_visitare (
+       constans Reactor* reactor,
+    ReactorFossaVisitor  visitor,
+                 vacuum* ctx)
+{
+    i32 i;
+
+    si (!reactor || !visitor)
+    {
+        redde;
+    }
+    per (i = 0; i < reactor->fd_numerus; i++)
+    {
+        si (reactor->fd_entries[i].activus)
+        {
+            visitor(ctx, reactor->fd_entries[i].fd,
+                reactor->fd_entries[i].eventus);
+        }
+    }
+}
+
+i32
+reactor_versio_fossarum (
+    constans Reactor* reactor)
+{
+    si (!reactor)
+    {
+        redde 0;
+    }
+    redde reactor->fossarum_versio;
 }

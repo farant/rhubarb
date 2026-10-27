@@ -233,6 +233,24 @@ posix_fossa (
     redde (s32)((PseudoterminalePosix*)datum)->magister;
 }
 
+/* quies T2b: grex in fronte terminalis (concha, aut programma quod
+ * incepit) - tcgetpgrp in magistro */
+interior s32
+posix_grex_frontalis (
+    vacuum* datum)
+{
+    PseudoterminalePosix* p;
+                   pid_t  grex;
+
+    p = (PseudoterminalePosix*)datum;
+    si (p->magister < ZEPHYRUM)
+    {
+        redde -I;
+    }
+    grex = tcgetpgrp(p->magister);
+    redde grex > ZEPHYRUM ? (s32)grex : -I;
+}
+
 interior vacuum
 posix_claudere (
     vacuum* datum)
@@ -501,15 +519,16 @@ pseudoterminale_posix_creare (
     (vacuum)fcntl(magister, F_SETFL, vexilla | O_NONBLOCK);
 
     memset(p, ZEPHYRUM, magnitudo(PseudoterminalePosix));
-    p->magister        = magister;
-    p->infans          = infans;
-    p->pons.datum      = p;
-    p->pons.legere     = posix_legere;
-    p->pons.scribere   = posix_scribere;
-    p->pons.amplitudo  = posix_amplitudo;
-    p->pons.finitus    = posix_finitus;
-    p->pons.fossa      = posix_fossa;
-    p->pons.claudere   = posix_claudere;
-    p->pons.tty        = tty;
+    p->magister             = magister;
+    p->infans               = infans;
+    p->pons.datum           = p;
+    p->pons.legere          = posix_legere;
+    p->pons.scribere        = posix_scribere;
+    p->pons.amplitudo       = posix_amplitudo;
+    p->pons.finitus         = posix_finitus;
+    p->pons.fossa           = posix_fossa;
+    p->pons.claudere        = posix_claudere;
+    p->pons.tty             = tty;
+    p->pons.grex_frontalis  = posix_grex_frontalis;
     redde &p->pons;
 }

@@ -119,6 +119,16 @@ testa_cursum_ludum_struere (
     }
     ludus_fenestra_pulsum_ponere(c->lf, c->forma.pulsator,
         c->forma.pulsator_ctx);
+#if !defined(__ANDROID__) \
+    && !defined(__ENVIRONMENT_IPHONE_OS_VERSION_MIN_REQUIRED__)
+    /* vicus quies T6: macOS solum - testae iOS/Android moram suam
+     * ducunt (ludus_fenestra_mora -1 non intellegunt) */
+    si (c->forma.mora_proxima)
+    {
+        ludus_fenestra_quietem_ponere(c->lf, c->forma.mora_proxima,
+            c->forma.mora_ctx, c->forma.reactor);
+    }
+#endif
     redde VERUM;
 }
 
