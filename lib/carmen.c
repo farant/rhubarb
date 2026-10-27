@@ -1095,6 +1095,17 @@ _figuras_legere (
             redde _vitium(vitium, carmen, _vacua(), -I, cv.offset,
                 cv.causa);
         }
+        a = stml_attributum_capere(l, "positio");
+        si (a != NIHIL && chorda_aequalis_literis(*a, "sine_radice"))
+        {
+            f[n].figura.sine_radice = VERUM;
+        }
+        alioquin si (   a != NIHIL
+                     && !chorda_aequalis_literis(*a, "clausa"))
+        {
+            redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
+                "figura: positio clausa aut sine_radice");
+        }
         n++;
     }
     *figurae = f;

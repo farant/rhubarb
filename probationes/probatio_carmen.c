@@ -1533,6 +1533,29 @@ _sectio_comitatus (
     CREDO_AEQUALIS_S32 (p->frusta[1].comitatus, -I);
     CREDO_AEQUALIS_I32 (p->frusta[1].numerus, XIV);
     CREDO_AEQUALIS_I32 (p->frusta[1].notae[0].nota, L);
+    /* figura positio="sine_radice": G7 B E F A */
+    CREDO_NECESSE (_legere(c, _liber_ternarius(c,
+        "<figura titulus=\"sr\" textus=\"[1 2 3 4]:2.\" "
+        "positio=\"sine_radice\"/>"
+        "<acorda mensura=\"1\" textus=\"G7\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<comitatus figura=\"sr\" mensura=\"1\"/></pars>"), &liber));
+    p = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_NECESSE (p->frusta[0].numerus == IV);
+    {
+        i32 cl = ZEPHYRUM;
+        i32 j;
+
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            cl |= (i32)I << (p->frusta[0].notae[j].nota % XII);
+        }
+        CREDO_AEQUALIS_I32 (cl, ((i32)I << XI) | ((i32)I << IV)
+            | ((i32)I << V) | ((i32)I << IX));
+    }
+    _vitium(c, _liber_ternarius(c,
+        "<figura titulus=\"sr\" textus=\"[1 2 3]:2.\" "
+        "positio=\"aperta\"/>"), "x", "", -I, ZEPHYRUM);
     /* bassus comitatus: figura sine 'B' sola - radix C9 superior
      * manet; comitatus alius cum 'B' (bassus in parte alia) - radix
      * omittitur (E Bb D) */

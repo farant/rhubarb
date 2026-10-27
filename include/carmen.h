@@ -94,8 +94,10 @@
  *             septimae aut intentionum ignotus (nomina regularum
  *             censura iudicat -
  *             carmen eam non novit)
- *   figura    <figura titulus="valsa" textus="B:4 [1 2 3] [1 2 3]"/> in
- *             libro aut carmine (carminis vincit); titulus [a-z0-9_]+
+ *   figura    <figura titulus="valsa" textus="B:4 [1 2 3] [1 2 3]"
+ *             [positio="clausa"|"sine_radice"]/> in libro aut carmine
+ *             (carminis vincit); titulus [a-z0-9_]+; positio
+ *             comitatus.h (ordinaria clausa)
  *   comitatus <comitatus figura="T" mensura="M" [usque="U"]
  *             [ambitus="55..76"] [bassus="36..57"]/> in parte: frustum
  *             GENERATUM [M, U) ex acordis declaratis (sine usque: finis

@@ -67,6 +67,20 @@
  *   Voces > k octavis supra stant (ambitum excedere licet). Positio
  *   solum cum acordo mutatur.
  *   LITTERAE ex acordo (Acordum.litterae).
+ *
+ * POSITIO SINE RADICE (<figura positio="sine_radice">; figura
+ *   ->sine_radice): voces superiores ex classibus acordi SINE radice
+ *   (bassus eam sonat - auctoris est). Pauciores quam IV: nona
+ *   additur si intentio licita (acordum.h intentiones) et nona propria
+ *   (b9 #9) abest; forma dominantis (tertia IV, septima X): quinta
+ *   iusta cum XIII commutatur si intentio licita; plures quam IV:
+ *   quinta omittitur. Dm7 F A C E, G7 B E F A, Cmaj7 E G B D, C6 E G A
+ *   D, A7b9 C# F# G Bb. Positio clausa et motus minimus manent - formae
+ *   A et B (3579 / 7935) ex motu nascuntur: Dm7 G7 Cmaj7 = C E F A ->
+ *   B E F A -> B D E G. Voces pauciores (V < IV): quinta aut XIII
+ *   prius, deinde nona (G7 tribus B F A). Acorda sine septima et sexta
+ *   (triades, sus, dyades) et dim7: positio ordinaria. LITTERAE tonorum
+ *   additorum per gradus a radice (nona +1, XIII +5: G13 E, Bb13 G).
  */
 /* <aedilis corpus="lib/comitatus.c"/> */
 #ifndef COMITATUS_H
@@ -104,6 +118,9 @@ nomen structura {
                 i32  numerus_mensurarum;
                 i32  vox_maxima;        /* V (0 si superiores nullae) */
                 b32  bassus;            /* vox 'B' in figura */
+                b32  sine_radice;       /* positio sine radice: vocans
+                                         * ponit (carmen: <figura
+                                         * positio>); lectio FALSUM */
 } ComitatusFigura;
 
 nomen structura {

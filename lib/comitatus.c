@@ -583,6 +583,103 @@ _quintam (
     redde (a->radix + VII) % XII;
 }
 
+/* bit classis */
+#define CLASSIS(c) ((i32)I << ((c) % XII))
+
+/* positio sine radice licet: gradus III cum septima aut sexta, non
+ * dim7 (symmetrica) */
+interior b32
+_sine_radice_licet (
+    constans Acordum* a)
+{
+    constans AcordumProprietates* p = acordum_proprietates(a->genus);
+
+    redde p != NIHIL && p->gradus == III
+        && a->genus != ACORDUM_DIMINUTA_SEPTIMA
+        && (p->septima >= ZEPHYRUM || (p->additae & CLASSIS(IX)));
+}
+
+/* classes positionis sine radice (comitatus.h); *color = XIII pro
+ * quinta aut quinta ipsa (prima omittenda), *nona = nona addita aut
+ * propria (secunda omittenda); -1 nulla */
+interior i32
+_classes_sine_radice (
+    constans Acordum* a,
+                 s32* color,
+                 s32* nona)
+{
+    constans AcordumProprietates* p        = acordum_proprietates(
+        a->genus);
+                             i32 r        = a->radix;
+                             i32 cl       = a->classes & ~CLASSIS(r);
+                             i32 numerus  = ZEPHYRUM;
+                             i32 t;
+                             i32 i;
+
+    /* intentiones a radice ad classes rotatae */
+    t       = (p->intentiones << r) & 0xFFF;
+    t       |= p->intentiones >> (XII - r);
+    *color  = -I;
+    *nona   = -I;
+    per (i = I; i <= III; i++)
+    {
+        si ((cl & CLASSIS(r + i)) && (p->additae & CLASSIS(i)))
+        {
+            *nona = (s32)((r + i) % XII);
+        }
+    }
+    per (i = ZEPHYRUM; i < XII; i++)
+    {
+        si (cl & CLASSIS(i))
+        {
+            numerus++;
+        }
+    }
+    si (numerus < IV && *nona < ZEPHYRUM && (t & CLASSIS(r + II)))
+    {
+        cl     |= CLASSIS(r + II);
+        *nona  = (s32)((r + II) % XII);
+        numerus++;
+    }
+    si (cl & CLASSIS(r + VII))
+    {
+        *color = (s32)((r + VII) % XII);
+    }
+    si (   p->tertia == IV && p->septima == X && p->quinta == VII
+        && (cl & CLASSIS(r + VII)) && (t & CLASSIS(r + IX)))
+    {
+        cl      = (cl & ~CLASSIS(r + VII)) | CLASSIS(r + IX);
+        *color  = (s32)((r + IX) % XII);
+    }
+    alioquin si (numerus > IV && (cl & CLASSIS(r + VII)))
+    {
+        cl      &= ~CLASSIS(r + VII);
+        *color  = -I;
+    }
+    redde cl;
+}
+
+/* littera tonus additi (sine littera acordi): gradus a radice - nona
+ * +1, XIII +5; '\0' si radix sine littera */
+interior character
+_littera_addita (
+    constans Acordum* a,
+                 i32  classis)
+{
+    hic_manens constans character LITTERAE[] = "cdefgab";
+                        character l = a->litterae[a->radix];
+                              i32 iv = (classis + XII - a->radix) % XII;
+                              i32 g;
+
+    si (l < 'a' || l > 'g')
+    {
+        redde '\0';
+    }
+    g = (iv >= I && iv <= III) ? I : (iv == VIII || iv == IX) ? V
+        : (iv == V || iv == VI) ? III : ZEPHYRUM;
+    redde LITTERAE[((i32)(l - 'a') + V + g) % VII];
+}
+
 /* positio nova pro acordo: bassus, quinta, voces superiores motu
  * minimo */
 interior vacuum
@@ -591,7 +688,8 @@ _positionem (
              constans Acordum* a,
     constans ComitatusAmbitus* ambitus,
                           i32  vox_maxima,
-                          b32  radix_licet)
+                          b32  radix_licet,
+                          b32  sine_radice)
 {
     i32 ordo[XII];
     s32 omissa;
@@ -605,6 +703,7 @@ _positionem (
     i32 r;
     i32 prima;
     s32 n0;
+    i32 classes = a->classes;
 
     /* bassus et quinta */
     p->bassus = _proxima(a->bassus, (s32)ambitus->bassi_infima,
@@ -641,29 +740,59 @@ _positionem (
         && acordum_proprietates(a->genus)->additae != ZEPHYRUM
         && acordum_proprietates(a->genus)->septima < ZEPHYRUM;
     radix_omissa  = -I;
-    si (conversus && radix_licet && vox_maxima < k)
+    si (sine_radice && _sine_radice_licet(a))
     {
-        radix_omissa = (s32)a->radix;
-        k--;
+        s32 color;
+        s32 nona;
+
+        /* radix extra classes: condicio "radix inter voces" cessat */
+        classes       = _classes_sine_radice(a, &color, &nona);
+        radix_omissa  = (s32)a->radix;
+        k             = ZEPHYRUM;
+        per (r = ZEPHYRUM; r < XII; r++)
+        {
+            si (classes & CLASSIS(r))
+            {
+                k++;
+            }
+        }
+        si (vox_maxima < k && color >= ZEPHYRUM)
+        {
+            classes &= ~CLASSIS(color);
+            k--;
+        }
+        si (vox_maxima < k && nona >= ZEPHYRUM)
+        {
+            classes &= ~CLASSIS(nona);
+            k--;
+        }
     }
-    si (   !quinta_mutata && vox_maxima < k
-        && (a->classes & ((i32)I << _quintam(a))))
+    alioquin
     {
-        omissa = (s32)_quintam(a);
-        k--;
-    }
-    /* adhuc pauciores: radix quoque si bassus eam sonat - C7 duabus
-     * vocibus E Bb, C9 tribus E Bb D */
-    si (radix_licet && vox_maxima < k)
-    {
-        radix_omissa = (s32)a->radix;
+        si (conversus && radix_licet && vox_maxima < k)
+        {
+            radix_omissa = (s32)a->radix;
+            k--;
+        }
+        si (   !quinta_mutata && vox_maxima < k
+            && (a->classes & ((i32)I << _quintam(a))))
+        {
+            omissa = (s32)_quintam(a);
+            k--;
+        }
+        /* adhuc pauciores: radix quoque si bassus eam sonat - C7 duabus
+         * vocibus E Bb, C9 tribus E Bb D */
+        si (radix_licet && vox_maxima < k)
+        {
+            radix_omissa = (s32)a->radix;
+        }
     }
     k             = ZEPHYRUM;
     per (r = ZEPHYRUM; r < XII; r++)
     {
         i32 c = (a->radix + r) % XII;
 
-        si (   (a->classes & ((i32)I << c)) && (s32)c != omissa
+        si (   (classes & ((i32)I << c)) && (s32)c != omissa
             && (s32)c != radix_omissa)
         {
             ordo[k++] = c;
@@ -851,7 +980,8 @@ comitatus_componere (
                 _positionem(&p, &a->acordum, ambitus,
                     figura->vox_maxima,
                     (bassus_sonat || figura->bassus)
-                        && a->acordum.bassus == a->acordum.radix);
+                        && a->acordum.bassus == a->acordum.radix,
+                    figura->sine_radice);
             }
             per (j = ZEPHYRUM; j < g->numerus_vocum; j++)
             {
@@ -885,6 +1015,11 @@ comitatus_componere (
                 e->nota       = (i32)nota;
                 e->lucrum     = g->lucrum;
                 e->littera    = a->acordum.litterae[(i32)nota % XII];
+                si (e->littera == '\0')
+                {
+                    e->littera = _littera_addita(&a->acordum,
+                                                 (i32)nota % XII);
+                }
                 e->offset     = g->offset;
                 e->vox        = (vox == COMITATUS_VOX_BASSI
                                  || vox == COMITATUS_VOX_QUINTAE)

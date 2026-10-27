@@ -722,10 +722,125 @@ _sectio_radix_sonans (
     }
 }
 
+/* figura sine radice (bassus sonat), 4/4 */
+interior b32
+_sine_radice (
+          CredoContextus*  c,
+      constans character*  figura_textus,
+      constans character*  acorda_textus,
+           ComitatusNota** notae,
+                     i32*  numerus)
+{
+              chorda  t = chorda_ex_literis(acorda_textus, c->piscina);
+                 i32  m = comitatus_mensurae(t);
+    ComitatusAcordum* a;
+                 i32  n;
+     ComitatusFigura  f;
+     ComitatusVitium  v;
+
+    si (   !comitatus_acorda_legere(t, _initia(c, m, QUARTA_QUARTA), m,
+                                    c->piscina, &a, &n, &v)
+        || !comitatus_figuram_legere(
+               chorda_ex_literis(figura_textus, c->piscina), c->piscina,
+               &f, &v))
+    {
+        redde FALSUM;
+    }
+    f.sine_radice = VERUM;
+    redde comitatus_componere(&f, a, n, _initia(c, m, QUARTA_QUARTA), m,
+                              &AMBITUS, VERUM, c->piscina, notae,
+                              numerus,
+                              &v);
+}
+
+/* positio sine radice: nona addita, XIII pro quinta (dominans), formae
+ * A et B ex motu (Dm7 G7 Cmaj7: C E F A -> B E F A -> B D E G);
+ * triades et dim7 ordinariae; tribus vocibus 3 7 9; litterae tonorum
+ * additorum */
+interior vacuum
+_sectio_sine_radice (
+    CredoContextus* c)
+{
+    ComitatusNota* e;
+              i32  n;
+              i32  k;
+
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3 4]:1", "Dm7 | G7 | Cmaj7",
+                                &e, &n));
+    CREDO_NECESSE (n == XII);
+    CREDO_VERUM (_nota(e, 0, ZEPHYRUM, QUARTA_QUARTA, LX));
+    CREDO_VERUM (_nota(e, 1, ZEPHYRUM, QUARTA_QUARTA, LXIV));
+    CREDO_VERUM (_nota(e, 2, ZEPHYRUM, QUARTA_QUARTA, LXV));
+    CREDO_VERUM (_nota(e, 3, ZEPHYRUM, QUARTA_QUARTA, LXIX));
+    CREDO_AEQUALIS_I32 (e[4].nota, LIX);
+    CREDO_AEQUALIS_I32 (e[5].nota, LXIV);
+    CREDO_AEQUALIS_I32 (e[6].nota, LXV);
+    CREDO_AEQUALIS_I32 (e[7].nota, LXIX);
+    CREDO_AEQUALIS_I32 (e[8].nota, LIX);
+    CREDO_AEQUALIS_I32 (e[9].nota, LXII);
+    CREDO_AEQUALIS_I32 (e[10].nota, LXIV);
+    CREDO_AEQUALIS_I32 (e[11].nota, LXVII);
+    /* A7b9: nona propria, XIII pro quinta - C# F# G Bb */
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3 4]:1", "A7b9", &e, &n));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        ((i32)I << I) | ((i32)I << VI) | ((i32)I << VII)
+        | ((i32)I << X));
+    /* C13 (V classes sine radice): quinta omittitur - E Bb D A */
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3 4]:1", "C13", &e, &n));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        ((i32)I << IV) | ((i32)I << X) | ((i32)I << II)
+        | ((i32)I << IX));
+    /* quinque vocibus: quinta manet omissa (vox V = octava) */
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3 4 5]:1", "C13", &e, &n));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        ((i32)I << IV) | ((i32)I << X) | ((i32)I << II)
+        | ((i32)I << IX));
+    /* duabus vocibus, classes plures manent (Bm7b5: D F A): positio
+     * ex eis, radix non exigitur */
+    CREDO_NECESSE (_sine_radice(c, "[1 2]:1", "Bm7b5", &e, &n));
+    CREDO_NECESSE (n == II);
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n)
+        & ~(((i32)I << II) | ((i32)I << V) | ((i32)I << IX)), ZEPHYRUM);
+    /* C6: E G A D */
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3 4]:1", "C6", &e, &n));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        ((i32)I << II) | ((i32)I << IV) | ((i32)I << VII)
+        | ((i32)I << IX));
+    /* trias et dim7: positio ordinaria */
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3]:1", "C", &e, &n));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        (i32)I | ((i32)I << IV) | ((i32)I << VII));
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3 4]:1", "Cdim7", &e, &n));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        (i32)I | ((i32)I << III) | ((i32)I << VI) | ((i32)I << IX));
+    /* tribus vocibus: XIII cedit - G7 B F A */
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3]:1", "G7", &e, &n));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        ((i32)I << XI) | ((i32)I << V) | ((i32)I << IX));
+    /* litterae additorum: Bb7 D G Ab C - G (XIII) et C (nona) */
+    CREDO_NECESSE (_sine_radice(c, "[1 2 3 4]:1", "Bb7", &e, &n));
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        si (e[k].nota % XII == VII)
+        {
+            CREDO_AEQUALIS_I32 ((i32)e[k].littera, (i32)'g');
+        }
+        si (e[k].nota % XII == ZEPHYRUM)
+        {
+            CREDO_AEQUALIS_I32 ((i32)e[k].littera, (i32)'c');
+        }
+        si (e[k].nota % XII == VIII)
+        {
+            CREDO_AEQUALIS_I32 ((i32)e[k].littera, (i32)'a');
+        }
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "radix_sonans", _sectio_radix_sonans, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "mensurae", _sectio_mensurae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sine_radice", _sectio_sine_radice, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda_vitia", _sectio_acorda_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },

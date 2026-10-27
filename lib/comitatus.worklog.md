@@ -116,3 +116,24 @@ block is observable, so that is the test.
 chord sounding just before the bar), so "C:2 G:2 | G" puts G (root) in bar 2's bass.
 Plants 11/11 (two rewritten to compile, one redundant clause removed). House songs
 byte-identical (swap built with the objects deleted - see …VWJKVB).
+
+## 2026-10-27 - C1: rootless voicings (<figura positio="sine_radice">)
+
+ComitatusFigura.sine_radice (set by carmen from <figura positio>, so comitatus_componere keeps
+its signature). _classes_sine_radice: chord classes minus root; under four -> add the 9 if it
+is a licensed tension (J1 data) and the chord has no ninth of its own (additae bits 1..3);
+dominant shape with a natural 5th -> 5 swapped for 13 if licensed; over four -> drop the 5th.
+Fewer voices: drop the colour tone (13 or 5) first, then the 9 (G7 three voices B F A).
+Only gradus-III chords with a 7th or 6th; triads, sus, dyads and dim7 keep ordinary positio.
+A/B forms are NOT coded: the existing closed-position + minimal-motion search produces them
+(Dm7 G7 Cmaj7 -> C E F A, B E F A, B D E G - textbook ii-V-I). Trap: the old rule "the root
+must be among the voices used" (when fewer voices than classes) rejects every rootless
+position - the rootless path sets radix_omissa = root to switch it off. That needed its own
+test: it only bites when classes still outnumber voices after the omissions (Bm7b5 two
+voices: the b5 is not a natural fifth, nothing swaps, three classes remain); with the plant,
+optima stayed uninitialized and composition failed. Second survivor: "drop the 5th when over
+four" is redundant at four voices (the voice-count omission drops it first) - only a
+five-voice figure tells them apart (tested).
+Letters: added tones have no chord letter -> _littera_addita by degree from the root letter
+(9 +1, 13 +5, 11 +3): Bb7 rootless G and C. Plants 10/10. House songs unchanged (no figure
+declares a positio yet).
