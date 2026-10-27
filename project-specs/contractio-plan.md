@@ -504,6 +504,62 @@ Fran's go-ahead.
   Long runs go through the new `tools/custos.sh` after a ~120 GB
   runaway in the tool's first braid generator.)*
 
+## T5a. Fewer primes: spanning-tree coefficient bound (proposed 2026-10-27; revised after design review)
+
+**Why.** Measured (T5): the bracket's coefficients use far fewer bits than the 2c-bit bound pays for — 25–48 bits against 402 on 201-crossing braids, 429 against 1,600 on c = 800 connected sums. Contractions ≈ points × primes, and primes ≈ limes/31 + 2, so the bound is a direct factor of the running time. Stopping early when the answer "looks stable" is excluded by the exactness rule; the bound must be proved.
+
+**Claim.** Let G be either checkerboard (Tait) graph of a connected diagram D: the regions of one colour as vertices, one edge per crossing joining its two corners of that colour (a loop if they are the same region). Then for the bracket in the house normalization (⟨D⟩ = Σ_states A^(#A − #B) d^(loops − 1), d = −A² − A⁻², ⟨O⟩ = 1):
+
+Σₖ |cₖ| ≤ τ(G) ≤ B(G) := Π_{v ≠ r} deg(v),
+
+τ = number of spanning trees, deg = number of non-loop edges at v (multi-edges counted with multiplicity), r any vertex (take one of maximal degree). The bound used is limes = bits(min(B(G), B(G*))), and |cₖ| ≤ min B < 2^limes is exactly interpolatio's contract |cₖ| < 2^limes_bitorum. (If the aestimator ever returned d·⟨D⟩ instead of ⟨D⟩, add one bit.)
+
+**Proof.**
+0. *States are spanning subgraphs.* The A-smoothing (X0 X1)(X2 X3) of crossing k always merges the regions at corners (k, 1) and (k, 3); B merges (k, 0) and (k, 2). So for the colour whose corners at k are {1, 3}, A = contracting edge k and B = deleting it; for the other colour the roles swap. Which one is A depends on which corner pair the colour occupies, **not on the crossing's writhe sign**, and the argument below works for any ±1 per edge — crossing signs, mirroring and non-alternation are irrelevant. A state is thus a spanning subgraph H of G (the contracted edges), and its loop count is k(H) + n(H), where k = components and n(H) = |E(H)| − |V| + k(H) (the boundary circles of a neighbourhood of H in the sphere, by Euler per component). So ⟨D⟩ = Σ_H A^(·) d^(k(H) + n(H) − 1) is a function of the graph alone.
+1. *Deletion–contraction.* For any edge e: ⟨G⟩ = A^(±1)⟨G − e⟩ + A^(∓1)⟨G / e⟩.
+2. *Bridges and loops collapse.* If e is a bridge, every spanning subgraph of G − e has one more component, hence one more state circle: ⟨G − e⟩ = d·⟨G / e⟩, and A^(∓x)·d + A^(±x) = −A^(∓3x), a monomial with coefficient −1. Dually for a loop (A^(±x) + A^(∓x)·d = −A^(±3x)).
+3. *Leaves are spanning trees.* Recurse on non-bridge, non-loop edges (deleting a non-bridge keeps G connected). Each leaf is a single vertex, ⟨·⟩ = 1, contributing one ±Aᵏ. The leaf count L satisfies L(G) = L(G − e) + L(G / e) for e neither bridge nor loop, L(G) = L(G / e) for a bridge, L(G) = L(G − e) for a loop, L(one vertex) = 1 — the identities of τ — so L = τ(G) whatever the recursion order. Cut vertices (connected sums) and multi-edges need no special case; a kink gives a loop in one colour and a pendant bridge in the other, both covered.
+4. *τ(G) ≤ B(G).* Map each spanning tree to the edge each non-root vertex uses toward r: injective, choices are non-loop edges counted with multiplicity, any root works. deg = 0 only when |V| = 1 (empty product, B = 1).
+5. *The min over the two colours needs no duality:* the argument holds for each colour separately. τ(G) = τ(G*) (plane duals) is a cross-check only.
+6. *Never worse than 2c:* the degrees of one colour sum to ≤ 2c, and positive integers with sum S have product ≤ 3^(S/3), so log₂ B ≤ 1.057c and bits(B) ≤ 2c for c ≥ 2.
+
+**Checked.** Python (scratch, mine): Σ|cₖ| ≤ τ for all 12,965 nontrivial table knots, equality for exactly 6,729 = the prime alternating knots up to 13 crossings (alternating: Σ|cₖ| of Jones = det = τ); 36 random braid closures (4–8 strands × 51–201): bits(τ) ≈ 0.6c, actual ≈ 0.2c. Design review (independent): a signed deletion–contraction asserting each collapse is ±Aᵏ, matched to an exact state sum and with leaf count = Kirchhoff τ, on every valid c = 2 (64) and c = 3 (2,016) code — including 512 diagrams with a one-vertex colour class — all table knots ≤ 9 and mirrors ≤ 10, kinked and relabelled knots, 400 braid closures, 150 connected sums: 3,411 diagrams, 0 violations; larger kinked braids (c 31–106) and mixed sums (c 91–160): bits(Σ|c|) ≤ bits(τ) ≤ bits(B), max bits(B)/c = 0.84.
+
+| case | 2c | B (min over colours) | τ | actual |
+| --- | --- | --- | --- | --- |
+| table, c = 13 (mean) | 26 | 10.2 | 8.8 | 5.2 |
+| braid 8 × 201 | 402 | 158–168 | 129–134 | 44–45 |
+| braid 4 × 201 | 402 | 114–130 | 103–116 | 25–31 |
+
+Expected effect: ~2–2.5× fewer contractions on braid closures, ~2.4× on mixed connected sums, none at table sizes (one prime already suffices). Exact τ (a determinant, O(V³)) would gain about one prime in seven over B; not in v1.
+
+**Design.**
+- *Colour classes by union-find, not a parity rule* (review M1). Regions come from the face numbering `_gyrationes` already computes: corner (k, j) = the region between arms j and j + 1 = `faciei[4k + (j + 1) % 4]`. Join corner (k, 0) with (k, 2) and (k, 1) with (k, 3) over all crossings: both Tait graphs are connected, so there are exactly two classes, and they are the colours. Refuse (NIHIL) unless there are exactly two classes and each crossing's adjacent corners lie in different classes. Degrees need no colour: per crossing, if corner (k, 0) ≠ corner (k, 2) add one to each, likewise (k, 1)/(k, 3). Rationale: the first Python version assumed "corners 0, 2 are always one colour" — wrong for non-alternating diagrams — and simulated over the table, that bug turns only 2 tests red with a bits-only check; union-find removes the bug class.
+- B(G), B(G*) as `Magnus`, products batched in a u64 accumulator (< 2^32 × degree ≤ 2c < 2^31) and multiplied into the Magnus only on flush (review L1: one Magnus allocation per factor would cost ~c²/16 bytes of arena). limes = bits(min). Stored in the structure.
+- `_uncinus_per_rete` passes limes instead of 2c. Nothing else changes.
+- Read-only accessors: `laqueus_modulus_vertex_limes(mv)` (bits) and `laqueus_modulus_vertex_limes_exactus(mv, &B)` (the Magnus min product), for tests and `tools/uncinus_mensura`. A counter of aestimare calls and of distinct primes in the structure (`laqueus_modulus_vertex_vocationes`), so a test can see the bound actually wired in (review M4).
+- Optional, not v1: prune degree-1 vertices before the product (pendant vertices contribute 1 to τ; kink chains give τ = 1 but B = 2) (L3).
+
+**Tests.**
+- All existing `probatio_laqueus_rete` sections green with the smaller bound.
+- Σ|cₖ| ≤ B (exact Magnus, not just bits) on every table knot, kinked codes, connected sums, random braid closures; limes ≤ 2c always; limes < 2c for c ≥ 3.
+- Exact hand values (review M3), including tight cases where Σ|c| = B = 2^limes − 1, so that "limes − 1" goes red without the whole table:
+
+| diagram | B | limes | Σ\|c\| |
+| --- | --- | --- | --- |
+| closure of σ₁³¹, T(2, 31) | 31 | 5 | 31 |
+| T(2, 7) # T(2, −9) (non-alternating composite, max\|c\| = 7) | 63 | 6 | 63 |
+| kinked unknot [[1,1,2,4],[2,4,3,3]] | 1 | 1 | 1 |
+| 3_1 / 4_1 / 5_1 / 5_2 / 7_1 | 3 / 6 / 5 / 8 / 7 | 2 / 3 / 3 / 4 / 3 | |
+| 3_1 # 3_1 / stabilized trefoil | 9 / 3 | 4 / 2 | |
+
+  Exact limes values also catch "looser" regressions that would quietly lose the speedup.
+- Wiring (M4): on a braid closure, the number of primes used matches limes (≈ limes/31 + 2), and is below what 2c would require.
+- Plants — only faults that make the bound *too small* should go red (review M2; simulated red counts over the table via the Σ ≤ B test): limes − 1 (441), ⌊log₂ B⌋ instead of bit length (441), multi-edges deduplicated (2,999), each edge counted at one endpoint only (12,811), two vertices excluded per class (5,556), "corners j and j + 1 same colour" (red via the two-class refusal), corners 0/2 forced into one colour (the original Python bug). Not plants (equivalent or looser, stay green): swapping the colours (the min makes it equivalent), loops counted in degrees, root not excluded, one colour only. Note the existing Jones/CRT tests alone barely see a too-small bound at table size (one 31-bit prime gives slack: limes − 2 turns 1 test red) — the Σ ≤ B test is the real detector.
+- `tools/uncinus_mensura` re-run: primes and contractions before/after on sections III–IV.
+
+**Design review (2026-10-27): approve after fixes, no H.** M1 colouring by union-find (above); M2 plant list corrected; M3 exact hand values with tight cases; M4 wiring test; L1 batched Magnus product; L2 reuse `faciei`; L3 optional pruning; L4 connected-sum gain ~2.4×, not 3×; L5 min needs no duality. Proof text completed: states as spanning subgraphs with loop count k + n, exponent from the corner pair rather than the writhe, bridge wording ("one more component"), explicit base identities. Review scripts: scratchpad/recensio_t5a/ (session of 2026-10-27).
+
 ## Not in v1
 
 Min-fill ordering, slicing, open (output) indices (the `exitus` layout

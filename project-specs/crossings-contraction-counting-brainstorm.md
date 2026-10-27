@@ -74,6 +74,16 @@ Both papers break the same working assumption: that a sum over a structured prob
 
 Both papers state Lean checks of their main theorems, and both note that AI models wrote and reviewed the formalizations. Treat the results as strongly supported but not yet human-reviewed. *(rev. 10-27)* What a machine cannot check is whether each statement file says what the paper says; both are short enough for a person to read, and that reading is the highest-value review either result can get. An independent group led by Impagliazzo, Paturi and Williams is examining OAI (`../math/history.md`, Oct 26).
 
+### 2.4 Lineage *(rev. 10-27)*
+
+Where ANT's move sits among older ideas (a conversation with Fran, 2026-10-27):
+
+- **Kron, tensor analysis of networks (1939) and diakoptics.** Treat a circuit as a tensor with a connection tensor between reference frames; *tear* it along a few branches, solve the pieces, reconnect with a correction whose size depends only on the torn interface (in modern terms a low-rank, Woodbury-type update). The shape is ANT's: cut at the expensive interface, pay only for the interface, and choose the frame in which the interface is cheap.
+- **What changes for counting.** Kron's algebra is linear: tearing k links costs a rank-k correction, polynomial. Counting is multilinear: cutting k indices means summing over all 2^k values on the cut. That is *slicing* in tensor-network practice (the T5 follow-on "min-fill and slicing").
+- **ANT = slicing with a better basis on the cut.** A crossing does not need full rank across the cut if expanded in the right terms (eight-square identity; SWAP = I − 2·singlet per bit), so each cut bit costs less than a factor 2: 16 → 12 per bit pair, ρ = 11/12, then 2^o(n) by recursion.
+- **Closest relatives.** Valiant's holographic algorithms (2004; Cai and others): change the basis on every edge so the problem becomes a planar perfect-matching count (FKT). "Change basis so the hard part factors" and "planarity is what is cheap" are both ANT's themes. The vertex model's turning numbers (5) are a small cousin: local edge phases turn the global loop count into a product of local weights.
+- **The Kauffman bracket as a model of both papers.** Its skein relation (crossing = A·smoothing + A⁻¹·smoothing) is a crossing decomposition into planar pieces, ANT's move; the state sum expands every crossing, the vertex model expands none and contracts, and ANT sits between. Computing it by evaluation at chosen points and interpolating back is OAI's move. Phase 1 built both halves exactly, with an answer key at every step.
+
 ## 3. Target domains
 
 The techniques apply wherever a problem is a large sum of products over structured variables and the cost is set by cut width or treewidth. Rows are ordered by how directly the ideas plug in; the fit column is a judgment, not a result from either paper.
