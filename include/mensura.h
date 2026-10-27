@@ -313,6 +313,9 @@ mensura_cursus_legere (
 #define MENSURA_SECUTA  "fabrica.secuta"  /* ms photographiae
                                                * secutorum membri (ante
                                                * + post; plan-8 T2) */
+#define MENSURA_UMBRA_DISCORDIA "fabrica.umbra_discordia" /* umbra
+                                               * (plan-8 T3): discordiae
+                                               * iudiciorum membri */
 #define MENSURA_PORTAE    "consilium.portae"  /* commissio: portae
                                                * debitae */
 #define MENSURA_COLLOQUIUM  "colloquium:"   /* + id sessionis Claude

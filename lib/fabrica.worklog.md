@@ -3884,3 +3884,23 @@ Plant lesson (again): my first plant set the hook to NIHIL, which left
 `_secuta_capere` unused -> -Werror build failed silently behind
 `>/dev/null` -> the gate ran the OLD binary and stayed green. A plant
 must compile; check the build line, not just the gate.
+
+## 2026-10-27 - shadow mode: two verdicts per member (fabrica-plan-8 T3, part 1)
+
+Under FABRICA_VESTIGIUM=umbra `_membrum_agere` keeps the real verdict
+(full walk) and also judges the member the trace way - its S lines plus
+the tracked snapshot (T2) - for all three jobs, writing every
+disagreement to `<area>/vestigia_umbra.txt` (`_umbram_conferre`):
+`vestigium photographia|secuta <via>` (outside the footprint, seen by one
+witness only - a walk-only path NAMED by the member's own S lines is not a
+disagreement: the S check applies in both modes), `debitum ...` (debt used
+per one side only) and `invalidatio photographia=X secuta=Y`. Count ->
+fact `fabrica.umbra_discordia` (third value on photographiam_notare).
+`_debita_notare` was split: `_debita_usurpata` (pure: which debts a
+before/after pair + the trace used) + the writer - XLIII unchanged.
+
+fumus LXIX: a raw x.txt + own S line (agree), b raw append to TRACKED
+lib/bib.c (agree - the tracked witness sees it), c raw extra.txt UNTRACKED
+outside the area (disagree: vestigium + invalidatio = 2 - the known blind
+spot, spec 8 T4's per-run walk), d clean. Three compiling plants (walk
+comparison off, S lines ignored, invalidation off) each red.

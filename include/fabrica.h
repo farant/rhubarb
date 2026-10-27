@@ -441,10 +441,12 @@ nomen structura {
      * mensum). */
     s64 (*momentum_ms)(vacuum* datum);
     /* ms_secutorum: photographiae secutorum (ante + post); -I =
-     * non capta (modus ordinarius) */
+     * non capta (modus ordinarius). discordiae: umbra (T3) - iudicia
+     * photographiae et libri discordantia; -I = non collata */
     vacuum (*photographiam_notare)(vacuum* datum, chorda titulus,
                                    s32 ms_photographiae,
-                                   s32 ms_secutorum);
+                                   s32 ms_secutorum,
+                                   s32 discordiae);
     /* PHOTOGRAPHIA SECUTORUM (fabrica-plan-8 T2): lstat viarum
      * quas index git sequitur solum (~XII milia, non XLIX milia
      * ambulationis) - forma eadem ac vestigium_capere (FabricaVestigium
