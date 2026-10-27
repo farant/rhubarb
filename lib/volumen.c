@@ -1392,6 +1392,68 @@ volumen_acta_generum_legere (
     redde ordo;
 }
 
+Xar*
+volumen_acta_propria_legere (
+    Volumen* volumen,
+        s64  post_seq,
+    Piscina* piscina)
+{
+    ScriniumEnuntiatum* e;
+                   Xar* ordo;
+
+    ordo = xar_creare(piscina, (i32)magnitudo(VolumenActum));
+    si (ordo == NIHIL || volumen == NIHIL)
+    {
+        redde NIHIL;
+    }
+    e = scrinium_praeparare(volumen->scrinium,
+        ACTA_COLUMNAE " FROM acta WHERE seq > ? AND replica = ?"
+        " ORDER BY seq");
+    si (e == NIHIL)
+    {
+        redde NIHIL;
+    }
+    scrinium_ligare_numerum(e, 1, post_seq);
+    scrinium_ligare_textum(e, 2, volumen->replica);
+    dum (scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        VolumenActum* a = (VolumenActum*)xar_addere(ordo);
+
+        si (a == NIHIL)
+        {
+            scrinium_finire(e);
+            redde NIHIL;
+        }
+        _actum_ex_ordine(e, piscina, a);
+    }
+    scrinium_finire(e);
+    redde ordo;
+}
+
+b32
+volumen_massam_habet (
+    Volumen* volumen,
+     chorda  sigillum_hex)
+{
+    ScriniumEnuntiatum* e;
+                   b32  habet;
+
+    si (volumen == NIHIL || sigillum_hex.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    e = scrinium_praeparare(volumen->scrinium,
+        "SELECT 1 FROM massae WHERE sigillum = ?");
+    si (e == NIHIL)
+    {
+        redde FALSUM;
+    }
+    scrinium_ligare_textum(e, 1, sigillum_hex);
+    habet = scrinium_gradi(e) == SCRINIUM_ORDO;
+    scrinium_finire(e);
+    redde habet;
+}
+
 /* comparator viae pro ordine plicae (aequalis ORDER BY via) */
 interior s32
 _plagulas_per_viam (

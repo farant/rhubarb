@@ -355,6 +355,20 @@ volumen_actum_importare (
                   Volumen* volumen,
     constans VolumenActum* actum);
 
+/* communio: acta PROPRIA (replicae huius voluminis) post seq locale,
+ * ordine seq - quod communicatur (aliena numquam reexportantur) */
+Xar*
+volumen_acta_propria_legere (
+    Volumen* volumen,
+        s64  post_seq,
+    Piscina* piscina);
+
+/* massa sigillo data praesens? */
+b32
+volumen_massam_habet (
+    Volumen* volumen,
+     chorda  sigillum_hex);
+
 /* acta POST seq datum (exclusivum; 0 = omnia), ordine seq -
  * forma "acta post seq N" quam et plicae et replicatio volunt */
 Xar*
