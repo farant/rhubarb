@@ -47,7 +47,10 @@
  *   classes adhibens (V < k) quintam acordi omittit (G7 tribus
  *   vocibus: G B F, sensibilis manet), deinde radicem si adhuc
  *   pauciores (bassus eam tenet: C7 duabus E Bb, C9 tribus E Bb
- *   D). Inter inversiones et octavas quarum voces adhibitae
+ *   D). Acorda cum tono addito sine septima (6, m6, add9) ordine
+ *   converso: radix prius, deinde quinta - quinta ea a cognatis
+ *   distinguit (F6 tribus A C D, non A D F = Dm/F; Bbadd9 tribus C D
+ *   F). Inter inversiones et octavas quarum voces adhibitae
  *   (1..min(V, k); V vox maxima figurae, k classes positionis)
  *   intra ambitum stant, motus minimus (summa
  *   |a - b| vocum adhibitarum) a positione priore; primo: medium

@@ -73,3 +73,23 @@ too (the bass has it): C7 in two voices E Bb, C9 in three E Bb D. Trap: the firs
 middle of the range happened to pick E Bb / D E Bb. Discriminating test: a chain C7 F7
 Bb7 Eb7 Ab7 Db7 in two voices, no upper note ever equal to its root - voice leading pulls
 the root in somewhere without the rule.
+
+## 2026-10-26 - 43HA step 4: added-tone chords drop the root first; lilia's harp splits
+
+lilia's new progression (F6, C9, Bb6, Bbadd9, D7b9, Gm9 - Fran approved) exposed two
+voicing facts. (1) In valsa the bass is a crotchet on beat 1, so the beat-2/3 windows had
+no bass: with root omission C9 became Bb D E with no C sounding anywhere (`?`), F6 A D F
+read Dm/A. Fix in the SONG: harp split into harpa_bassus (B:2. - a harp bass rings) and
+harpa (r:4 [1 2 3] [1 2 3]), figures local to lilia. (2) Even with the bass, F6 minus its
+fifth = F A D = Dm/F: for triads with an added tone and NO seventh (6, m6, add9) the fifth
+is what tells them from their relative, the root is in the bass - so `conversus` drops the
+root FIRST, then the fifth (F6 three voices A C D, two A D; Bbadd9 C D F). Sevenths keep
+the old order (C9 four voices C E Bb D). Result: every lilia bar names its declared chord;
+the end reads Iadd6.
+
+Tests: F6/Bbadd9 classes, C9 in four, and a chain F6 C6 G6 D6 A6 E6 in two voices where no
+upper note is ever the fifth - the single two-voice F6 case passed with the 'then the
+fifth' step planted out (A D chosen by motion alone), same trap as C7/C9 in step 2. A
+'!conversus' guard on the later root step was redundant (removed). Plants 4/4.
+probatio_carmen's embedded-book check now expects lilia's three parts (16 bass notes, 96
+chord notes).

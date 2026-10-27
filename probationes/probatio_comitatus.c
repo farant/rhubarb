@@ -471,6 +471,50 @@ _sectio_figurae (
     {
         CREDO_VERUM (e[i].nota % XII != ((i / II) * V) % XII);
     }
+    /* tonus additus sine septima: radix prius, deinde quinta - F6
+     * tribus A C D (non A D F), duabus A D; Bbadd9 tribus C D F */
+    CREDO_NECESSE (_componere(c, "[1 2 3]:2.", "F6", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, III);
+    CREDO_AEQUALIS_I32 (((i32)I << (e[0].nota % XII))
+                        | ((i32)I << (e[1].nota % XII))
+                        | ((i32)I << (e[2].nota % XII)),
+                        ((i32)I << IX) | ((i32)I << ZEPHYRUM)
+                        | ((i32)I << II));
+    CREDO_NECESSE (_componere(c, "[1 2]:2.", "F6", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, II);
+    CREDO_AEQUALIS_I32 (((i32)I << (e[0].nota % XII))
+                        | ((i32)I << (e[1].nota % XII)),
+                        ((i32)I << IX) | ((i32)I << II));
+    CREDO_NECESSE (_componere(c, "[1 2 3]:2.", "Bbadd9", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, III);
+    CREDO_AEQUALIS_I32 (((i32)I << (e[0].nota % XII))
+                        | ((i32)I << (e[1].nota % XII))
+                        | ((i32)I << (e[2].nota % XII)),
+                        ((i32)I << ZEPHYRUM) | ((i32)I << II)
+                        | ((i32)I << V));
+    /* catena sextarum duabus vocibus: radix et quinta omissae - quinta
+     * numquam redit */
+    CREDO_NECESSE (_componere(c, "[1 2]:2.",
+                              "F6 | C6 | G6 | D6 | A6 | E6",
+                              TERTIA_QUARTA, &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, XII);
+    per (i = ZEPHYRUM; i < XII; i++)
+    {
+        CREDO_VERUM (e[i].nota % XII != (XII + (i / II) * VII) % XII);
+    }
+    /* cum septima ordo solitus: C9 quattuor C E Bb D (non E G Bb D) */
+    CREDO_NECESSE (_componere(c, "[1 2 3 4]:2.", "C9", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (n, IV);
+    CREDO_AEQUALIS_I32 (((i32)I << (e[0].nota % XII))
+                        | ((i32)I << (e[1].nota % XII))
+                        | ((i32)I << (e[2].nota % XII))
+                        | ((i32)I << (e[3].nota % XII)),
+                        ((i32)I << ZEPHYRUM) | ((i32)I << IV)
+                        | ((i32)I << X) | ((i32)I << II));
     /* C/G: quinta = bassus - octava altera (43 -> 55) */
     CREDO_NECESSE (_componere(c, "B:4 Q:2", "C/G", TERTIA_QUARTA,
                               &AMBITUS, &e, &n, &v));

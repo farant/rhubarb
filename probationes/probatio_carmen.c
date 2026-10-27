@@ -463,14 +463,18 @@ _sectio_ordinarium (
     CREDO_CHORDA_AEQUALIS_LITERIS (k->partes[I].instrumentum,
                                    "triangulum");
     CREDO_AEQUALIS_I32 (k->partes[I].frusta[ZEPHYRUM].numerus, CXXVIII);
-    /* lilia: figura valsa libri, harpa = frustum generatum (bassus et
-     * acordum bis per mensuram, XVI mensurae) */
+    /* lilia: figurae carminis (valsa_bassus, valsa_superior) - harpa
+     * bassus tenet (nota una per mensuram), superior acordum bis tribus
+     * vocibus; frusta generata, XVI mensurae */
     k = carmina_invenire(&liber, _ch(c, "lilia"));
-    CREDO_NECESSE (k != NIHIL && k->numerus_partium == II);
+    CREDO_NECESSE (k != NIHIL && k->numerus_partium == III);
     CREDO_AEQUALIS_I32 (k->numerus_acordorum, XVI);
     CREDO_AEQUALIS_S32 (k->partes[I].frusta[ZEPHYRUM].comitatus,
         ZEPHYRUM);
-    CREDO_AEQUALIS_I32 (k->partes[I].frusta[ZEPHYRUM].numerus, CXII);
+    CREDO_AEQUALIS_I32 (k->partes[I].frusta[ZEPHYRUM].numerus, XVI);
+    CREDO_AEQUALIS_S32 (k->partes[II].frusta[ZEPHYRUM].comitatus,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (k->partes[II].frusta[ZEPHYRUM].numerus, XCVI);
 }
 
 /* lineae scriptae frusti: pulsus intra frustum, offset in textu eius */

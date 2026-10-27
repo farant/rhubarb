@@ -591,6 +591,7 @@ _positionem (
     i32 ordo[XII];
     s32 omissa;
     s32 radix_omissa;
+    b32 conversus;
     s32 optima[XII];
     s64 pretium_optimum  = -I;
     i32 k                = ZEPHYRUM;
@@ -622,6 +623,17 @@ _positionem (
             k++;
         }
     }
+    /* tonus additus sine septima (6, m6, add9): radix prius - quinta
+     * eos a cognatis distinguit (F6 A C D, non A D F = Dm/F) */
+    conversus     = acordum_proprietates(a->genus) != NIHIL
+        && acordum_proprietates(a->genus)->additae != ZEPHYRUM
+        && acordum_proprietates(a->genus)->septima < ZEPHYRUM;
+    radix_omissa  = -I;
+    si (conversus && vox_maxima < k)
+    {
+        radix_omissa = (s32)a->radix;
+        k--;
+    }
     si (vox_maxima < k && (a->classes & ((i32)I << _quintam(a))))
     {
         omissa = (s32)_quintam(a);
@@ -629,7 +641,10 @@ _positionem (
     }
     /* adhuc pauciores: radix quoque (bassus eam tenet) - C7 duabus
      * vocibus E Bb, C9 tribus E Bb D */
-    radix_omissa  = vox_maxima < k ? (s32)a->radix : -I;
+    si (vox_maxima < k)
+    {
+        radix_omissa = (s32)a->radix;
+    }
     k             = ZEPHYRUM;
     per (r = ZEPHYRUM; r < XII; r++)
     {

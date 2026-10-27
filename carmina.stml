@@ -208,15 +208,21 @@
     <dynamica mensura="1" valor="f"/>
     <dynamica mensura="9" valor="1" usque="13"/>
     <dynamica mensura="13" valor="mf" usque="16"/>
+    <figura titulus="valsa_bassus" textus="v100 B:2. | v100 Q:2."/>
+    <figura titulus="valsa_superior"
+        textus="r:4 v60 [1 2 3] [1 2 3] | r:4 v60 [1 2 3] [1 2 3]"/>
     <acorda mensura="1"
-        textus="F | F | C7 | C7 | C7 | C7 | F | F | Bb | Bb | F | D7 | Gm | C7 | F | F"/>
+        textus="F | F6 | C9 | C7 | C7 | C9 | F | F6 | Bb6 | Bbadd9 | F | D7b9 | Gm9 | C9 | F | F6"/>
     <pars titulus="melodia" instrumentum="chordae" lucrum="1">
       <frustum mensura="1">
         <textus!>o4 a2 o5 c4/8 | o5 f2. | o5 e2 d4 | o5 c2 o4 b-4 | o4 g2 b-4 | o5 e2 d4 | o5 c2 o4 a4 | o4 f2./8 | o5 d2 f4 | o5 d4 c4 o4 b-4 | o4 a2 o5 c4 | o5 f#2 d4/ | o5 g2 d4 | o5 c2 e4 | o5 f2 c4 | o5 f2.</textus>
       </>
     </>
+    <pars titulus="harpa_bassus" instrumentum="harpa" lucrum="1">
+      <comitatus figura="valsa_bassus" mensura="1" ambitus="53..72" bassus="36..55"/>
+    </>
     <pars titulus="harpa" instrumentum="harpa" lucrum="1">
-      <comitatus figura="valsa" mensura="1" ambitus="53..72" bassus="36..55"/>
+      <comitatus figura="valsa_superior" mensura="1" ambitus="53..72" bassus="36..55"/>
     </>
   </>
 
