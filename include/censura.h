@@ -56,6 +56,25 @@
  *                super maiorem aut dominantem, tertia super
  *                suspensam; transiens licet. "Fmaj7: nota evitanda
  *                Bb4 (11)"                                        -
+ *   occultae     quintae aut octavae occultae inter voces extremas
+ *                (VOCES infra: prima et ultima): ambae eodem sensu
+ *                motae ad quintam aut octavam non ex ea (ex ea:
+ *                parallelae), superior SALTU (> II semitonia);
+ *                gradu licet (B4 C5 super G3 C3). Initia sequentia
+ *                ut parallelae; superior nota summa, inferior
+ *                infima partis                                    -
+ *   decussatio   voces proximae se transeunt: nota infima vocis
+ *                superioris infra summam inferioris sonat; semel
+ *                per decussationem (ubi incipit)                  -
+ *   spatium      voces superiores proximae plus quam octavam
+ *                distant (infima superioris - summa inferioris >
+ *                XII); vox ima cum proxima libera (bassus et tenor
+ *                late licet); semel per spatium                   -
+ *
+ * VOCES (occultae, decussatio, spatium): partes ordine libri, summa
+ * prima; partes sine notis aut solum percussionis ('@') omissae.
+ * Carmen quod has regulas accendit partes sic ordinat (choralis:
+ * superius altus tenor bassus).
  *
  * STYLUS (censura_carminis_forma, carmen.h <stylus>): forma ordinaria
  * (classicus), deinde stylus carminis per catenam basium (basis prior:
@@ -107,6 +126,9 @@ nomen enumeratio {
     CENSURA_TERTIA,
     CENSURA_ACORDA,
     CENSURA_EVITANDA,
+    CENSURA_OCCULTAE,
+    CENSURA_DECUSSATIO,
+    CENSURA_SPATIUM,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -128,7 +150,9 @@ nomen structura {
 nomen structura {
           CensuraRegula regula;
                  chorda pars;
-                 chorda pars_altera;   /* dissonantia, parallelae */
+                 chorda pars_altera;   /* dissonantia, parallelae,
+                                         * occultae, decussatio,
+                                         * spatium (vox inferior) */
                     i32 mensura;       /* 1 = prima */
                     s64 pulsus;        /* intra mensuram */
                     s32 frustum;       /* index in parte; -1 = nullum */
@@ -137,8 +161,9 @@ nomen structura {
     constans CarmenNota* nota;          /* in carmine (tertia: infima
                                          * sonantium); NIHIL: lineae */
     constans CarmenNota* nota_altera;   /* partis alterius */
-    /* parallelae: notae initii prioris (par primum); saltus: nota
-     * prior partis; acorda: nota aliena altera; NIHIL aliter */
+    /* parallelae, occultae: notae initii prioris (par primum);
+     * saltus: nota prior partis; acorda: nota aliena altera; NIHIL
+     * aliter */
     constans CarmenNota* nota_prior;
     constans CarmenNota* nota_altera_prior;
     /* dissonantia: cur non explicata (statica); acorda: "radix

@@ -199,3 +199,25 @@ The appoggiatura "resoluta" check I first wrote was dead: explicatio defines eve
 appoggiatura as leap-in step-out, so resoluta is always true - removed from code and header.
 House: ambulatio 2 -> 0, all other songs unchanged. Plants 9/9.
 Still open from 43HA: passing diminished sevenths, chromatic inner lines over a held chord.
+
+## 2026-10-27 - voice-order rules: occultae, decussatio, spatium (chorale study, part 1)
+
+The laudes error study found six classical errors with no rule. This adds the three that only
+need an order of voices (all off by default; house stylus "choralis" turns them on with
+parallelae, saltus, tertia). VOICES = parts in book order, top first, skipping parts with no
+pitched note (percussion-only, empty) - _vox_proxima walks them.
+- occultae: outer voices only (first and last voice), sampled at successive onsets like
+  parallelae; upper = top note of its part, lower = bottom note. Similar motion into P5/P8 from a
+  different interval class (same class = parallelae's job), upper voice leaping (> 2 semitones).
+- decussatio: adjacent voices, upper part's lowest note below the lower part's highest.
+- spatium: adjacent upper voices > 12 apart; the pair containing the lowest voice is free.
+- Both pair rules report once per spell. First version tracked the spell by "flagged at the
+  previous onset", which bridged rests (rests are not onsets): a crossing in bar 3, rests, a new
+  crossing in bar 4 was swallowed. Fix: a spell continues only if both prior notes still sound
+  up to the new onset (end >= t, so legato continues).
+- Test gaps found while writing plants: no whole-step soprano case (the "> 2" boundary) and no
+  case with a middle voice between a moving outer pair (choice of the lowest voice) - both added.
+laudes: its one hidden fifth (bar 2 fermata -> bar 3, bass G2 -> G3) removed by keeping the
+bass on G2; with stylus choralis: 0. errata.py: crossing, spacing, hidden octaves now caught,
+plus the old bass as an 11th case. Still no rule: doubled leading tone, unresolved leading tone
+in an outer voice, rising chordal seventh (part 2 - needs the per-chord leading tone).

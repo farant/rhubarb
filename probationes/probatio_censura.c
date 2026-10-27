@@ -106,6 +106,9 @@ _sectio_ordinaria (
     CREDO_FALSUM (f.activae[CENSURA_TERTIA]);
     CREDO_VERUM (f.activae[CENSURA_ACORDA]);
     CREDO_FALSUM (f.activae[CENSURA_EVITANDA]);
+    CREDO_FALSUM (f.activae[CENSURA_OCCULTAE]);
+    CREDO_FALSUM (f.activae[CENSURA_DECUSSATIO]);
+    CREDO_FALSUM (f.activae[CENSURA_SPATIUM]);
     CREDO_FALSUM (f.intentiones_liberae);
     CREDO_AEQUALIS_I32 (f.saltus_maximus, ZEPHYRUM);
     CREDO_VERUM (f.ambitus == NIHIL);
@@ -1236,6 +1239,174 @@ _sectio_intentiones_figurae (
     CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS), II);
 }
 
+/* occultae: inter voces extremas (superius, bassus; percussio ultima
+ * non est vox): octavae saltu (m1), gradu licet (m2), contrariae (m3),
+ * quintae saltu deorsum (m4), parallelae non occultae (m5), gradu
+ * toto licet (m6: A4 B4 super C3 E3) */
+interior vacuum
+_sectio_occultae (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"o\">"
+        "<pars titulus=\"superius\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>"
+        "o4 b4 o5 e4 r2 | o4 b4 o5 c4 r2 | "
+        "o5 c4 g4 r2 | o5 e4 o4 a4 r2 | o5 d4 e4 r2 | o4 a4 b4 r2"
+        "</textus></frustum>"
+        "</pars>"
+        "<pars titulus=\"bassus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>"
+        "o2 g4 o3 e4 r2 | o2 g4 o3 c4 r2 | "
+        "o3 e4 c4 r2 | o3 g4 d4 r2 | o3 g4 a4 r2 | c4 e4 r2"
+        "</textus></frustum>"
+        "</pars>"
+        "<pars titulus=\"tympanum\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>@tympanum_grave o2 c4 c4 c4 c4"
+        "</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_OCCULTAE);
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, NIHIL, inv, CAPACITAS),
+        ZEPHYRUM);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, I);
+    CREDO_AEQUALIS_S64 (inv[ZEPHYRUM].pulsus, (s64)CMLX);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXXVI);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota_altera->nota, LII);
+    CREDO_AEQUALIS_I32 (inv[I].mensura, IV);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 1 +960 superius/bassus: octavae occultae "
+        "B4/G2 -> E5/E3 (frustum 0, offset 9)\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[I]),
+        "mensura 4 +960 superius/bassus: quintae occultae "
+        "E5/G3 -> A4/D3 (frustum 0, offset 57)\n");
+    /* voces duae: spatium nullum (vox ima cum proxima libera) */
+    f = _sola(CENSURA_SPATIUM);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+}
+
+/* occultae solum inter extremas: m1 altus saltu ad octavam cum basso
+ * (G4 -> C5 super G3 -> C4), superius tenet - nihil; m2 superius et
+ * bassus (B4 -> E5, G2 -> E3), altus inter tenet - extremae */
+interior vacuum
+_sectio_occultae_mediae (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"o\">"
+        "<pars titulus=\"superius\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o5 e2 e2 | o4 b4 o5 e4 r2"
+        "</textus></frustum>"
+        "</pars>"
+        "<pars titulus=\"altus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 g2 o5 c2 | o4 g2 r2"
+        "</textus></frustum>"
+        "</pars>"
+        "<pars titulus=\"bassus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o3 g2 o4 c2 | o2 g4 o3 e4 r2"
+        "</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_OCCULTAE);
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS (inv[ZEPHYRUM].pars_altera,
+        "bassus");
+}
+
+/* decussatio: voces proximae (percussio et pars vacua inter eas non
+ * sunt voces); m1 altus B4 super G4 bis - semel; m2 unisonus non; m3
+ * altus acervus [E4 B4] sub A4: summa inferioris; m4 superius acervus
+ * [F4 C5] super A4: infima superioris */
+interior vacuum
+_sectio_decussatio (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"d\">"
+        "<pars titulus=\"superius\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 g4 g4 g4 r4 | g4 r2. | "
+        "a4 r2. | f4 o5 c4 r2</textus></frustum></pars>"
+        "<pars titulus=\"tympanum\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>@tympanum_grave o2 c4 c4 c4 c4"
+        "</textus></frustum></pars>"
+        "<pars titulus=\"vacua\" instrumentum=\"aether\"/>"
+        "<pars titulus=\"altus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 e4 b4 b4 r4 | g4 r2. | "
+        "e4 b4 r2 | a4 r2.</textus></frustum></pars>"
+        "<pars titulus=\"bassus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o3 c4 c4 c4 r4 | c4 r2. | "
+        "c4 r2. | c4 r2.</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum  inv[CAPACITAS];
+       CensuraForma  f = _sola(CENSURA_DECUSSATIO);
+         CarmenNota* n;
+
+    CREDO_NECESSE (k != NIHIL);
+    /* acerva (editio, non MML): altus m3 [E4 B4], superius m4 [F4
+     * C5] */
+    n             = k->partes[III].frusta[ZEPHYRUM].notae;
+    n[V].pulsus   = n[IV].pulsus;
+    n             = k->partes[ZEPHYRUM].frusta[ZEPHYRUM].notae;
+    n[VI].pulsus  = n[V].pulsus;
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == III);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, I);
+    CREDO_AEQUALIS_S64 (inv[ZEPHYRUM].pulsus, (s64)CMLX);
+    CREDO_AEQUALIS_I32 (inv[I].mensura, III);
+    CREDO_AEQUALIS_I32 (inv[I].nota->nota, LXIX);
+    CREDO_AEQUALIS_I32 (inv[I].nota_altera->nota, LXXI);
+    CREDO_AEQUALIS_I32 (inv[II].mensura, IV);
+    CREDO_AEQUALIS_I32 (inv[II].nota->nota, LXV);
+    CREDO_AEQUALIS_I32 (inv[II].nota_altera->nota, LXIX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 1 +960 superius/altus: decussatio G4 infra B4 "
+        "(frustum 0, offset 6)\n");
+}
+
+/* spatium: voces superiores proximae > XII; vox ima libera. m1 C6
+ * C5 C4 C2 (XII, non); m2 D6 / C5 bis - semel; m3 altus E5 / tenor
+ * B3 (XVII) */
+interior vacuum
+_sectio_spatium (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"s\">"
+        "<pars titulus=\"superius\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o6 c1 | d2 d2 | o5 g1"
+        "</textus></frustum></pars>"
+        "<pars titulus=\"altus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o5 c1 | c2 c2 | e1"
+        "</textus></frustum></pars>"
+        "<pars titulus=\"tenor\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o4 c1 | c1 | o3 b1"
+        "</textus></frustum></pars>"
+        "<pars titulus=\"bassus\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>o2 c1 | c1 | c1"
+        "</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_SPATIUM);
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, II);
+    CREDO_AEQUALIS_S64 (inv[ZEPHYRUM].pulsus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (inv[I].mensura, III);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 superius/altus: spatium D6 / C5, 14 semitonia "
+        "(frustum 0, offset 8)\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[I]),
+        "mensura 3 altus/tenor: spatium E5 / B3, 17 semitonia "
+        "(frustum 0, offset 16)\n");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1247,6 +1418,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "dissonantia", _sectio_dissonantia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "parallelae", _sectio_parallelae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "saltus", _sectio_saltus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "occultae", _sectio_occultae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "occultae mediae", _sectio_occultae_mediae, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "decussatio", _sectio_decussatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "spatium", _sectio_spatium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tertia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stili", _sectio_stili, NIHIL, NIHIL, NIHIL, NIHIL },
