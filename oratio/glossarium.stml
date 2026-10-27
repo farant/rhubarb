@@ -1863,5 +1863,13 @@
     <forma textus="cryptographiae" casus="genitivus" numerus="singularis" genus="femininum"/>
     <forma textus="cryptographiam" casus="accusativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="pinax" lingua="latina" classis="substantivum" nota="pinax, -acis m. (Graece pinax; Plinius, Varro): tabula picta - radix 'pinacothecae'; hic imago parva picturae in pinacotheca pictoris (pictor_pinacem_facere); WORDS caret">
+    <forma textus="pinax" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinacis" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinacem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinace" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="pinaces" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
 
 </glossarium>

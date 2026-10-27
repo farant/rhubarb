@@ -112,6 +112,18 @@ structura Historia {
  * Vita
  * ================================================== */
 
+/* genera actorum historiae in spatio (fons unus nominum, quae
+ * historia_creare/aperire ponunt): genera[0] genus clientis, [I] rami,
+ * [II] cursoris, [III] coniunctionis - "spatium/<nomen>", spatio
+ * vacuo (aut NIHIL) nuda. Pinacotheca acta picturae sic agnoscit
+ * sine historia aperienda. */
+vacuum
+historia_genera (
+                Piscina* piscina,
+     constans character* spatium,
+     constans character* genus,
+     constans character* genera[IV]);
+
 /* historia nova: proiectio vacatur, cursor 0. Volumen non tangitur.
  * intervallum <= 0 -> LXIV. NIHIL si argumenta mala. */
 Historia*

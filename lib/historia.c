@@ -366,6 +366,22 @@ praefixum (
     redde chorda_ut_cstr(c, piscina);
 }
 
+vacuum
+historia_genera (
+                Piscina* piscina,
+     constans character* spatium,
+     constans character* genus,
+     constans character* genera[IV])
+{
+    constans character* s;
+
+    s                 = (spatium && spatium[ZEPHYRUM]) ? spatium : "";
+    genera[ZEPHYRUM]  = praefixum(piscina, s, genus);
+    genera[I]         = praefixum(piscina, s, "ramus");
+    genera[II]        = praefixum(piscina, s, "cursor");
+    genera[III]       = praefixum(piscina, s, "coniunctio");
+}
+
 interior Historia*
 historia_struere (
                 Piscina* piscina,
@@ -377,7 +393,8 @@ historia_struere (
                     i32  intervallum,
       HistoriaProiectio  proiectio)
 {
-    Historia* h;
+               Historia* h;
+     constans character* genera[IV];
 
     si (   !piscina || !intern || !volumen || !genus
         || !origo_checkpoint || !proiectio.vacare
@@ -412,11 +429,11 @@ historia_struere (
      * vacuum = nomina nuda (volumina vetera) */
     h->spatium              = (spatium && spatium[ZEPHYRUM]) ? spatium
                                                              : "";
-    h->genus           = praefixum(piscina, h->spatium, genus);
-    h->genus_rami      = praefixum(piscina, h->spatium, "ramus");
-    h->genus_cursoris  = praefixum(piscina, h->spatium, "cursor");
-    h->genus_coniunctionis  = praefixum(piscina, h->spatium,
-                                        "coniunctio");
+    historia_genera(piscina, h->spatium, genus, genera);
+    h->genus                = genera[ZEPHYRUM];
+    h->genus_rami           = genera[I];
+    h->genus_cursoris       = genera[II];
+    h->genus_coniunctionis  = genera[III];
     h->praefixum_checkpoint = praefixum(piscina, h->spatium,
                                         "checkpoint/");
     h->origo_checkpoint  = origo_checkpoint;

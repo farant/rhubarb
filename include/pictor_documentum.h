@@ -62,6 +62,7 @@
 #include "tabula_pixelorum.h"   /* typus solus: fenestra.h Cocoa
                                   * in terminalem trahebat (013 A4) */
 #include "imago_typus.h"
+#include "tabula_dispersa.h"
 
 #define PICTOR_ASPERGILLI_RADIUS  VIII   /* x magnitudo */
 #define PICTOR_GUTTAE_PUNCTO      VI
@@ -99,6 +100,23 @@ pictor_disci_pixelum (
  * ("" = documentum nudum radicis) */
 Xar*
 pictor_documenta_enumerare (
+     Volumen* volumen,
+     Piscina* piscina);
+
+/* pinacotheca (spec D5): pictura et seq actus sui ultimi - ictus,
+ * ramus, cursor, coniunctio historiae suae, aut conditio plagulae
+ * 'documentum' (pictura vacua) */
+nomen structura {
+    chorda spatium;   /* "" = radix */
+       s64 seq;
+} PictorPictura;
+
+/* picturae voluminis (ut pictor_documenta_enumerare), seq
+ * DESCENDENTE (aequales: ordine viae); transitus unus actorum
+ * voluminis. Aspicere (aperire) nihil appendit, ergo non movet;
+ * revocatio cursorem appendit, ergo movet. Xar de PictorPictura */
+Xar*
+pictor_documenta_recentia (
      Volumen* volumen,
      Piscina* piscina);
 
@@ -142,7 +160,7 @@ nomen structura {
         Imago  praevisio[PICTOR_GLUTINATIO_MODI];  /* RGBA, alpha 0
                                                     * perspicuum */
     character sigillum[PICTOR_GLUTINATIO_MODI][SIGILLUM_HEX_MENSURA];
-                                    /* identitas imaginis praevisionis */
+                                    /* identitas praevisionis */
            i8* larva;      /* latitudo x altitudo: 1 = modus ALTER hic
                             * (radendo, Franus 2026-10-13); praevisio
                             * [m] = larva ? indices alterius : [m] */
@@ -239,6 +257,49 @@ pictor_imaginem_aptare (
                s32* y,
                i32* lat,
                i32* alt);
+
+/* pinax (pinacotheca D4): compositum picturae 'spatium' (strata
+ * visibilia) in latitudo x altitudo "contain" (pictor_imaginem_aptare:
+ * scala et Atkinson in palettam), RGBA; extra picturam fundus
+ * thematis (COLOR_BACKGROUND). Omnia in 'piscina' (scheda vocantis);
+ * volumen non scribitur. FALSUM si pictura ignota aut magnitudo
+ * nulla. */
+b32
+pictor_pinacem_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus);
+
+/* PINACOTHECA (spec D3-D5): status dum aperta, in montatione
+ * habitans; compositio, actiones et figurae eam per indicem legunt.
+ * scheda VACATUR quaque apertione (memoria = sessio una), pinaces in
+ * ea facti per provenientiam memorantur. */
+nomen structura {
+                Volumen* volumen;
+    InternamentumChorda* intern;
+                Piscina* scheda;     /* NIHIL donec prima apertio */
+                    Xar* picturae;   /* PictorPictura, recentia */
+         TabulaDispersa* pinaces;    /* provenientia -> Imago* */
+} PictorPinacotheca;
+
+/* apertio: scheda vacatur (aut creatur), picturae relegitur
+ * (pictor_documenta_recentia), pinaces vacui. FALSUM si memoria */
+b32
+pictor_pinacothecam_parare (
+    PictorPinacotheca* p);
+
+/* provenientia "pinax:<lat>x<alt>:<seq>:<spatium>" -> pinax (in
+ * scheda factus si nondum; seq in clave, ergo pictura mutata pinacem
+ * novum habet). NIHIL si forma mala, pictura ignota, aut ante
+ * parare. */
+constans Imago*
+pictor_pinacotheca_pinax (
+    PictorPinacotheca* p,
+               chorda  provenientia);
 
 /* indices (lat x alt, 0xFF perspicuum) in stratum NOVUM supra
  * 'supra' ad (x, y): massa deflata in volumine, acta <stratum

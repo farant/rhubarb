@@ -379,6 +379,7 @@ d(0x2286, '..####','.#....','.#....','.#....','..####',B,'.#####')           # �
 d(0x2287, '.####.','.....#','.....#','.....#','.####.',B,'.#####')           # ⊇ (2026-10-17)
 d(0x25B0, B,B,'..####','..####','.####.','.####.')                          # ▰ (2026-10-17)
 d(0x25B1, B,B,'..####','..#..#','.#..#.','.####.')                          # ▱ (2026-10-17)
+d(0x22EF, B,B,B,'.#.#.#')                                                   # ⋯ (2026-10-26)
 import unicodedata, sys
 out=[]
 for cp in sorted(S):
@@ -454,3 +455,13 @@ glyphae_ductae (fenestra_textus now links it; tessera failed to link).
 Not covered (separate project): scriba stores one BYTE per cell and
 drops input bytes >= 0x80, so these symbols cannot be typed or stored
 in scriba documents yet.
+
+## 2026-10-26 - ⋯ (midline ellipsis, quarta)
+
+For pictor's ⋯ menu (pinacotheca spec D10): Fran saw ⋯ as tofu. Three
+single-pixel dots on row III - the row of ⋮'s middle dot and of the
+hyphen - at the same columns as … (row VI, `.#.#.#`), so the two
+ellipses differ only in height. 2 x 2 dots like the period do not fit
+three across in six columns. App text reaches these glyphs through
+secunda's a625afcb (fenestra_textus asks glyphae_ductae first) - merged
+into quarta with main the same day (entry above).

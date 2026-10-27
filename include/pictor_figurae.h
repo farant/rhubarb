@@ -22,6 +22,8 @@ nomen structura {
                  i32  cellula_latitudo;  /* margo cellula extra paginam;
                                           * 0 = I pixelum (olim) */
                  i32 cellula_altitudo;
+    /* pinacotheca T5: fons pinacum ("pinax:..."); NIHIL = nulla */
+    PictorPinacotheca* pinacotheca;
 } PictorFigurae;
 
 vacuum

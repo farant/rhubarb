@@ -45,6 +45,8 @@ nomen structura {
                                        * (picturae iam ostensae) */
         StatusSystemata systemata;   /* S5b: relatio ad ligationem
                                        * novam (picturam_ponere) */
+      PictorPinacotheca pinacotheca; /* T5: compositio, actiones,
+                                       * figurae in eam monstrant */
 } PictorMontatio;
 
 nomen structura {
@@ -115,6 +117,16 @@ pictor_montare (
                     i32  latitudo,
                     i32  altitudo,
         StatusSystemata* systemata);
+
+/* pinacotheca D8: picturam ultimam ex statu restituto (campus
+ * 'pictura', conservatio) ostendere - pictura bibliothecae ponitur;
+ * absens -> recentissima (pictor_documenta_recentia); vacua -> radix
+ * manet. app->doc (et actiones, figurae) post hoc renovantur. Solum
+ * applicatio fenestrae (apps/pictor/pictor.c) post aedificare vocat;
+ * pictor terminalis numquam (spec D11). FALSUM si app NIHIL. */
+b32
+pictor_picturam_restituere (
+    PictorApplicatio* app);
 
 /* Argumenta communia: -fumus (volumen temporarium), -volumen <via>
  * (ordinarie "pictor.volumen"). Reddit volumen apertum aut NIHIL. */

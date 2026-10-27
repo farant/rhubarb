@@ -14,6 +14,8 @@
 #include "dithering.h"
 #include "dithering_exemplaria.h"
 #include "imago_opus.h"
+#include "json.h"
+#include "tabula_dispersa.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1155,6 +1157,33 @@ proiectio_facere (
  * Vita
  * ================================================== */
 
+/* genus actorum pictoris in historia (historia_genera praefigit) */
+#define GENUS_ICTUUM "ictus"
+
+/* via plagulae: "documentum" (nuda) -> "", "<spatium>/documentum" ->
+ * "<spatium>" (in memoria viae); FALSUM aliter */
+interior b32
+spatium_documenti (
+     chorda  via,
+     chorda* spatium)
+{
+    si (chorda_aequalis_literis(via, "documentum"))
+    {
+        spatium->datum    = via.datum;
+        spatium->mensura  = ZEPHYRUM;
+        redde VERUM;
+    }
+    si (   via.mensura > XI
+        && memcmp(via.datum + via.mensura - XI, "/documentum", XI)
+               == ZEPHYRUM)
+    {
+        spatium->datum    = via.datum;
+        spatium->mensura  = via.mensura - XI;
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
 Xar*
 pictor_documenta_enumerare (
      Volumen* volumen,
@@ -1179,23 +1208,119 @@ pictor_documenta_enumerare (
         {
             perge;
         }
-        /* "documentum" (nuda) aut "<spatium>/documentum" */
-        si (chorda_aequalis_literis(pl->via, "documentum"))
-        {
-            spatium = chorda_ex_literis("", piscina);
-        }
-        alioquin si (   pl->via.mensura > XI
-                     && memcmp(pl->via.datum + pl->via.mensura - XI,
-                            "/documentum", XI) == ZEPHYRUM)
-        {
-            spatium.datum    = pl->via.datum;
-            spatium.mensura  = pl->via.mensura - XI;
-        }
-        alioquin
+        si (!spatium_documenti(pl->via, &spatium))
         {
             perge;
         }
         *(chorda*)xar_addere(l) = spatium;
+    }
+    redde l;
+}
+
+/* pinacotheca D5: acta generum picturarum (historia_genera) et
+ * conditiones plagularum - seq maximum cuiusque picturae */
+Xar*
+pictor_documenta_recentia (
+     Volumen* volumen,
+     Piscina* piscina)
+{
+                     Xar*  spatia;
+                     Xar*  l;
+                     Xar*  acta;
+          TabulaDispersa*  index;
+           PictorPictura*  p;
+           PictorPictura*  q;
+           PictorPictura   t;
+            VolumenActum*  a;
+      constans character** genera;
+      constans character*  g[IV];
+                  chorda   s;
+            JsonResultus   r;
+                  vacuum*  v;
+                     i32   i;
+                     i32   j;
+                     i32   n;
+
+    si (!volumen || !piscina)
+    {
+        redde NIHIL;
+    }
+    spatia  = pictor_documenta_enumerare(volumen, piscina);
+    l       = xar_creare(piscina, (i32)magnitudo(PictorPictura));
+    si (!spatia || !l)
+    {
+        redde NIHIL;
+    }
+    n      = xar_numerus(spatia);
+    index  = tabula_dispersa_creare_chorda(piscina, n * IV + XVI);
+    genera  = (constans character**)piscina_allocare(piscina,
+        magnitudo(character*) * (memoriae_index)(n * IV + II));
+    si (!index || !genera)
+    {
+        redde NIHIL;
+    }
+    /* genus actus -> pictura (Xar segmentatum: loca stabilia) */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        p           = (PictorPictura*)xar_addere(l);
+        p->spatium  = *(chorda*)xar_obtinere(spatia, i);
+        p->seq      = ZEPHYRUM;
+        historia_genera(piscina, chorda_ut_cstr(p->spatium, piscina),
+            GENUS_ICTUUM, g);
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            genera[i * IV + j] = g[j];
+            (vacuum)tabula_dispersa_inserere(index,
+                chorda_ex_literis(g[j], piscina), p);
+        }
+    }
+    genera[n * IV]      = "plagula-condita";
+    genera[n * IV + I]  = NIHIL;
+    acta = volumen_acta_generum_legere(volumen, ZEPHYRUM, genera,
+        piscina);
+    per (i = ZEPHYRUM; acta && i < xar_numerus(acta); i++)
+    {
+        a = (VolumenActum*)xar_obtinere(acta, i);
+        p = NIHIL;
+        si (chorda_aequalis_literis(a->genus, "plagula-condita"))
+        {
+            r = json_legere(a->datum, piscina);
+            si (   r.successus
+                && spatium_documenti(json_capere_chorda(r.radix, "via",
+                       chorda_ex_literis("", piscina)), &s))
+            {
+                per (j = ZEPHYRUM; j < n && !p; j++)
+                {
+                    q = (PictorPictura*)xar_obtinere(l, j);
+                    si (chorda_aequalis(q->spatium, s))
+                    {
+                        p = q;
+                    }
+                }
+            }
+        }
+        alioquin si (tabula_dispersa_invenire(index, a->genus, &v))
+        {
+            p = (PictorPictura*)v;
+        }
+        si (p && a->seq > p->seq)
+        {
+            p->seq = a->seq;
+        }
+    }
+    /* insertio stabilis, seq descendens (aequales: ordine viae) */
+    per (i = I; i < n; i++)
+    {
+        t = *(PictorPictura*)xar_obtinere(l, i);
+        j = i;
+        dum (   j > ZEPHYRUM
+             && ((PictorPictura*)xar_obtinere(l, j - I))->seq < t.seq)
+        {
+            *(PictorPictura*)xar_obtinere(l, j) =
+                *(PictorPictura*)xar_obtinere(l, j - I);
+            j--;
+        }
+        *(PictorPictura*)xar_obtinere(l, j) = t;
     }
     redde l;
 }
@@ -1294,7 +1419,7 @@ pictor_documentum_creare (
         spatium),
                              manifestum, "pictor:documentum");
     doc->historia = historia_creare(piscina, intern, volumen, spatium,
-        "ictus",
+        GENUS_ICTUUM,
                                     "pictor:checkpoint",
                                     doc->intervallum,
                                     proiectio_facere(doc));
@@ -1349,7 +1474,7 @@ pictor_documentum_aperire (
         redde NIHIL;
     }
     doc->historia = historia_aperire(piscina, intern, volumen, spatium,
-        "ictus",
+        GENUS_ICTUUM,
                                      "pictor:checkpoint",
                                      doc->intervallum,
                                      proiectio_facere(doc));
@@ -1534,6 +1659,170 @@ pictor_imaginem_aptare (
     *lat = scalata.latitudo;
     *alt = scalata.altitudo;
     redde df.indices;
+}
+
+b32
+pictor_pinacem_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus)
+{
+    PictorDocumentum* doc;
+                  i8* indices;
+                 s32  x;
+                 s32  y;
+                 i32  lat;
+                 i32  alt;
+                 i32  pixelum;
+                 i32  i;
+                 i32  j;
+
+    si (   !volumen || !intern || !spatium || !piscina || !exitus
+        || latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* apertura in scheda vocantis: memoria cum ea perit */
+    doc = pictor_documentum_aperire(piscina, intern, volumen, spatium);
+    si (!doc)
+    {
+        redde FALSUM;
+    }
+    indices = pictor_imaginem_aptare(pictor_documentum_proiectio(doc),
+        latitudo, altitudo, piscina, &x, &y, &lat, &alt);
+    exitus->pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)latitudo * (memoriae_index)altitudo * IV);
+    si (!indices || !exitus->pixela)
+    {
+        redde FALSUM;
+    }
+    exitus->latitudo  = latitudo;
+    exitus->altitudo  = altitudo;
+    pixelum           = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    per (i = ZEPHYRUM; i < latitudo * altitudo; i++)
+    {
+        memcpy(exitus->pixela + i * IV, &pixelum, IV);
+    }
+    per (j = ZEPHYRUM; j < alt; j++)
+    {
+        per (i = ZEPHYRUM; i < lat; i++)
+        {
+            si (indices[j * lat + i] >= XVI)
+            {
+                perge;
+            }
+            pixelum = color_ad_pixelum(color_ex_palette(
+                (i32)indices[j * lat + i]));
+            memcpy(exitus->pixela
+                       + (((i32)y + j) * latitudo + (i32)x + i) * IV,
+                   &pixelum, IV);
+        }
+    }
+    redde VERUM;
+}
+
+b32
+pictor_pinacothecam_parare (
+    PictorPinacotheca* p)
+{
+    si (!p || !p->volumen || !p->intern)
+    {
+        redde FALSUM;
+    }
+    si (!p->scheda)
+    {
+        p->scheda = piscina_generare_dynamicum("pinacotheca",
+            (memoriae_index)LXIV * (memoriae_index)M);
+    }
+    alioquin
+    {
+        piscina_vacare(p->scheda);
+    }
+    si (!p->scheda)
+    {
+        redde FALSUM;
+    }
+    p->picturae  = pictor_documenta_recentia(p->volumen, p->scheda);
+    p->pinaces   = tabula_dispersa_creare_chorda(p->scheda, XVI);
+    redde p->picturae && p->pinaces;
+}
+
+/* numerus decimalis initio chordae, deinde signum 'finis' (consumitur);
+ * FALSUM si non */
+interior b32
+numerum_legere (
+       chorda* c,
+          i32* n,
+    character  finis)
+{
+    i32 k;
+
+    *n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < c->mensura && c->datum[k] >= '0'
+         && c->datum[k] <= '9'; k++)
+    {
+        *n = *n * X + (i32)(c->datum[k] - '0');
+    }
+    si (k == ZEPHYRUM || k >= c->mensura || c->datum[k] != finis)
+    {
+        redde FALSUM;
+    }
+    c->datum    += k + I;
+    c->mensura  -= k + I;
+    redde VERUM;
+}
+
+constans Imago*
+pictor_pinacotheca_pinax (
+    PictorPinacotheca* p,
+               chorda  provenientia)
+{
+     vacuum* valor;
+      Imago* pinax;
+     chorda  reliquum;
+     chorda  clavis;
+        i32  latitudo;
+        i32  altitudo;
+        i32  seq;
+
+    si (!p || !p->scheda || !p->pinaces)
+    {
+        redde NIHIL;
+    }
+    si (tabula_dispersa_invenire(p->pinaces, provenientia, &valor))
+    {
+        redde (constans Imago*)valor;
+    }
+    si (   provenientia.mensura < VI
+        || memcmp(provenientia.datum, "pinax:", VI) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    reliquum.datum    = provenientia.datum + VI;
+    reliquum.mensura  = provenientia.mensura - VI;
+    si (   !numerum_legere(&reliquum, &latitudo, 'x')
+        || !numerum_legere(&reliquum, &altitudo, ':')
+        || !numerum_legere(&reliquum, &seq, ':'))
+    {
+        redde NIHIL;
+    }
+    pinax = (Imago*)piscina_allocare(p->scheda, magnitudo(Imago));
+    si (   !pinax
+        || !pictor_pinacem_facere(p->volumen, p->intern,
+               chorda_ut_cstr(reliquum, p->scheda), latitudo, altitudo,
+               p->scheda, pinax))
+    {
+        redde NIHIL;
+    }
+    /* clavis in scheda (provenientia vocantis transiens est) */
+    clavis = chorda_ex_literis(chorda_ut_cstr(provenientia, p->scheda),
+        p->scheda);
+    (vacuum)tabula_dispersa_inserere(p->pinaces, clavis, pinax);
+    redde pinax;
 }
 
 s32
