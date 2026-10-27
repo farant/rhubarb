@@ -268,3 +268,19 @@ for real deletes (D8c).
   under the house ObjC flags, testa-ios-imago-spec I).
 - Battery/background limits: milestone 1 syncs while the app is open
   (no background sync); acceptable for a proof?
+
+## VI. Phase 1 built (2026-10-27, quarta)
+
+Plan `project-specs/communio-plan-1.md`, tasks T1-T5: replica identity
+(0a61c01d), act import with writer numbering and the clock bound
+(b44ff2af), `communio_transferre` moving acts + blobs between volumes
+(94c80240), foreign documents read-only (dc10992a), following
+(this commit). Proven in-process with two volumes on the Mac: a picture
+drawn in A opens in B with identical pixels (strokes, image layer, undo,
+redo, branch), keeps following, B's own pictures untouched. Findings
+that change later phases: references inside a document are in the
+WRITER's numbering (`seq_originis`); foreign documents never use
+checkpoints; local listings must skip `aliena/`; a manifest change
+needs its blob first (`VOLUMEN_MASSA_DEEST`). Next: phase 2 (server act
+store + protocol).
+

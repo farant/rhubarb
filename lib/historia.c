@@ -497,6 +497,85 @@ historia_creare (
     redde h;
 }
 
+interior s64
+limes_superior (
+    Historia* h);
+
+/* status historiae ex actis: finis = seq ultimum vivum, cursor (nota
+ * cursoris ultima viva, aut finis), numerus vivorum - aperire et
+ * sequi idem computant */
+interior vacuum
+statum_computare (
+    Historia* h)
+{
+    Xar* viva;
+    i32  n;
+
+    /* finis = seq ultimum vivum; cursor = finis */
+    viva  = acta_viva(h, ZEPHYRUM, limes_superior(h), NIHIL);
+    n     = xar_numerus(viva);
+    h->finis = n > ZEPHYRUM
+             ? ((VolumenActum*)xar_obtinere(viva, n - I))->seq
+             : ZEPHYRUM;
+    h->cursor           = h->finis;
+    h->numerus_vivorum  = n;
+    /* R5: nota cursoris ultima, nisi actum, ramus aut coniunctio eam
+     * secutum est (tum ad finem, ut olim) */
+    {
+                   Xar* omnia;
+          VolumenActum* a;
+                   s64  notatus;
+                   i32  i;
+                   i32  k;
+          StmlResultus  res;
+    constans character* genera[V];
+
+        genera[ZEPHYRUM]  = h->genus_cursoris;
+        genera[I]         = h->genus;
+        genera[II]        = h->genus_rami;
+        genera[III]       = h->genus_coniunctionis;
+        genera[IV]        = NIHIL;
+        omnia             = acta_generum(h, ZEPHYRUM, genera);
+        notatus           = -I;
+        per (i = ZEPHYRUM; i < xar_numerus(omnia); i++)
+        {
+            a = (VolumenActum*)xar_obtinere(omnia, i);
+            si (chorda_aequalis_literis(a->genus, h->genus_cursoris))
+            {
+                res = stml_legere_ex_literis(chorda_ut_cstr(a->datum,
+                    h->piscina), h->piscina, h->intern);
+                notatus = res.successus
+                        ? (s64)attributum_s32(res.elementum_radix, "ad",
+                                              -I)
+                        : -I;
+            }
+            alioquin si (   chorda_aequalis_literis(a->genus, h->genus)
+                         || chorda_aequalis_literis(a->genus,
+                                h->genus_rami)
+                         || chorda_aequalis_literis(a->genus,
+                                h->genus_coniunctionis))
+            {
+                notatus = -I;
+            }
+        }
+        si (   notatus == ZEPHYRUM || (notatus > ZEPHYRUM
+                                    && seq_vivum(viva, notatus)))
+        {
+            k = ZEPHYRUM;
+            per (i = ZEPHYRUM; i < n; i++)
+            {
+                si (((VolumenActum*)xar_obtinere(viva, i))->seq
+                    <= notatus)
+                {
+                    k++;
+                }
+            }
+            h->cursor           = notatus;
+            h->numerus_vivorum  = k;
+        }
+    }
+}
+
 /* limes superior seq in numeratione historiae: proprium = summa
  * actorum voluminis; alienum = seq_originis maximum replicae suae */
 interior s64
@@ -544,8 +623,6 @@ aperire_replicae (
        HistoriaProiectio  proiectio)
 {
     Historia* h;
-         Xar* viva;
-         i32  n;
 
     h = historia_struere(piscina, intern, volumen, spatium, genus,
                          origo_checkpoint, intervallum, proiectio);
@@ -557,69 +634,7 @@ aperire_replicae (
                ? chorda_ex_literis(chorda_ut_cstr(replica, piscina),
                      piscina)
                : replica;
-    /* finis = seq ultimum vivum; cursor = finis */
-    viva  = acta_viva(h, ZEPHYRUM, limes_superior(h), NIHIL);
-    n     = xar_numerus(viva);
-    h->finis = n > ZEPHYRUM
-             ? ((VolumenActum*)xar_obtinere(viva, n - I))->seq
-             : ZEPHYRUM;
-    h->cursor           = h->finis;
-    h->numerus_vivorum  = n;
-    /* R5: nota cursoris ultima, nisi actum, ramus aut coniunctio eam
-     * secutum est (tum ad finem, ut olim) */
-    {
-                   Xar* omnia;
-          VolumenActum* a;
-                   s64  notatus;
-                   i32  i;
-                   i32  k;
-          StmlResultus  res;
-    constans character* genera[V];
-
-        genera[ZEPHYRUM]  = h->genus_cursoris;
-        genera[I]         = h->genus;
-        genera[II]        = h->genus_rami;
-        genera[III]       = h->genus_coniunctionis;
-        genera[IV]        = NIHIL;
-        omnia             = acta_generum(h, ZEPHYRUM, genera);
-        notatus           = -I;
-        per (i = ZEPHYRUM; i < xar_numerus(omnia); i++)
-        {
-            a = (VolumenActum*)xar_obtinere(omnia, i);
-            si (chorda_aequalis_literis(a->genus, h->genus_cursoris))
-            {
-                res = stml_legere_ex_literis(chorda_ut_cstr(a->datum,
-                    piscina), piscina, intern);
-                notatus = res.successus
-                        ? (s64)attributum_s32(res.elementum_radix, "ad",
-                                              -I)
-                        : -I;
-            }
-            alioquin si (   chorda_aequalis_literis(a->genus, h->genus)
-                         || chorda_aequalis_literis(a->genus,
-                                h->genus_rami)
-                         || chorda_aequalis_literis(a->genus,
-                                h->genus_coniunctionis))
-            {
-                notatus = -I;
-            }
-        }
-        si (   notatus == ZEPHYRUM || (notatus > ZEPHYRUM
-                                    && seq_vivum(viva, notatus)))
-        {
-            k = ZEPHYRUM;
-            per (i = ZEPHYRUM; i < n; i++)
-            {
-                si (((VolumenActum*)xar_obtinere(viva, i))->seq
-                    <= notatus)
-                {
-                    k++;
-                }
-            }
-            h->cursor           = notatus;
-            h->numerus_vivorum  = k;
-        }
-    }
+    statum_computare(h);
     proicere_ad(h, h->cursor, FALSUM);
     redde h;
 }
@@ -661,6 +676,56 @@ historia_aperire_alienam (
     }
     redde aperire_replicae(piscina, intern, volumen, replica, spatium,
         genus, origo_checkpoint, intervallum, proiectio);
+}
+
+b32
+historia_sequi (
+    Historia* h)
+{
+                   s64  finis_prior;
+                   s64  cursor_prior;
+                   i32  vivi_prior;
+                   Xar* notae;
+                   Xar* viva;
+                   i32  i;
+    constans character* genera[IV];
+
+    si (!h)
+    {
+        redde FALSUM;
+    }
+    finis_prior   = h->finis;
+    cursor_prior  = h->cursor;
+    vivi_prior    = h->numerus_vivorum;
+    statum_computare(h);
+    si (   h->finis == finis_prior && h->cursor == cursor_prior
+        && h->numerus_vivorum == vivi_prior)
+    {
+        redde FALSUM;
+    }
+    /* incrementalis solum si acta nova simplicia sunt (nec ramus nec
+     * nota cursoris nec coniunctio) et cursor prior et novus in fine;
+     * aliter proiectio tota (alienum: semper ex vacuo, recta) */
+    genera[ZEPHYRUM]  = h->genus_rami;
+    genera[I]         = h->genus_cursoris;
+    genera[II]        = h->genus_coniunctionis;
+    genera[III]       = NIHIL;
+    notae             = acta_generum(h, finis_prior, genera);
+    si (   cursor_prior == finis_prior && h->cursor == h->finis
+        && notae && xar_numerus(notae) == ZEPHYRUM)
+    {
+        viva = acta_viva(h, finis_prior, h->finis, NIHIL);
+        per (i = ZEPHYRUM; viva && i < xar_numerus(viva); i++)
+        {
+            applicare(h, ((VolumenActum*)xar_obtinere(viva, i))->datum);
+        }
+        sigillum_renovare(h);
+    }
+    alioquin
+    {
+        proicere_ad(h, h->cursor, FALSUM);
+    }
+    redde VERUM;
 }
 
 

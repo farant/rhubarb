@@ -15,6 +15,7 @@
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 hic_manens Piscina* piscina;
 
@@ -398,6 +399,142 @@ _sectio_pictura_aliena (
     volumen_claudere(b);
 }
 
+/* T5: picturam A in B sequi - sigillum aequale */
+interior b32
+aequales (
+    PictorDocumentum* a,
+    PictorDocumentum* b)
+{
+    redde chorda_aequalis(pictor_documentum_sigillum_compositi_hex(a,
+        piscina), pictor_documentum_sigillum_compositi_hex(b, piscina));
+}
+
+/* T5 (communio II.9): documentum alienum apertum acta nova sequitur -
+ * ictus novi, revocatio cum ramo, strata nova et occulta; nihil novum
+ * -> FALSUM; aequale aperturae recenti (Review Focus 4) */
+interior vacuum
+_sectio_sequi (
+    CredoContextus* c)
+{
+                Volumen* a;
+                Volumen* b;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+       PictorDocumentum* recens;
+                    s64  cursor;
+
+    (vacuum)c;
+    thema_initiare();
+    intern  = internamentum_creare(piscina);
+    a       = volumen_temporarium(piscina, "probatio_communio_sa");
+    b       = volumen_temporarium(piscina, "probatio_communio_sb");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_NECESSE_NON_NIHIL(b);
+    da = pictor_documentum_creare(piscina, intern, a, "p", C, LX, II);
+    CREDO_NECESSE_NON_NIHIL(da);
+    CREDO_NECESSE(operationes(da, ZEPHYRUM));
+    cursor = ZEPHYRUM;
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, b,
+        volumen_replica(a), "p");
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    CREDO_VERUM(aequales(da, aliena));
+
+    CREDO_GRADUS("nihil novum");
+    CREDO_FALSUM(pictor_documentum_sequi(aliena));
+
+    CREDO_GRADUS("sequitur: ictus novi");
+    CREDO_NECESSE(ictus(da, LXX, XXX, IX) > ZEPHYRUM);
+    CREDO_NECESSE(ictus(da, LXXX, XXX, X) > ZEPHYRUM);
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    CREDO_VERUM(pictor_documentum_sequi(aliena));
+    CREDO_VERUM(aequales(da, aliena));
+    CREDO_FALSUM(pictor_documentum_sequi(aliena));
+
+    CREDO_GRADUS("revocatio sequitur (ramus)");
+    CREDO_NECESSE(pictor_documentum_revocare(da));
+    CREDO_NECESSE(pictor_documentum_revocare(da));
+    CREDO_NECESSE(ictus(da, XC, L, XI) > ZEPHYRUM);
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    CREDO_VERUM(pictor_documentum_sequi(aliena));
+    CREDO_VERUM(aequales(da, aliena));
+    recens = pictor_documentum_aperire_alienum(piscina, intern, b,
+        volumen_replica(a), "p");
+    CREDO_NECESSE_NON_NIHIL(recens);
+    CREDO_VERUM(aequales(recens, aliena));
+
+    CREDO_GRADUS("revocatio sola sequitur");
+    CREDO_NECESSE(pictor_documentum_revocare(da));
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    CREDO_VERUM(pictor_documentum_sequi(aliena));
+    CREDO_VERUM(aequales(da, aliena));
+
+    CREDO_GRADUS("strata sequuntur");
+    CREDO_NECESSE(pictor_documentum_actum(da, chorda_ex_literis(
+        "<stratum actio=\"novum\" id=\"3\" supra=\"1\"/>", piscina))
+        > ZEPHYRUM);
+    CREDO_NECESSE(ictus(da, XX, L, IV) > ZEPHYRUM);
+    CREDO_NECESSE(pictor_documentum_actum(da, chorda_ex_literis(
+        "<stratum actio=\"visibile\" id=\"1\" valor=\"0\"/>", piscina))
+        > ZEPHYRUM);
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    CREDO_VERUM(pictor_documentum_sequi(aliena));
+    CREDO_VERUM(aequales(da, aliena));
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_stratorum(aliena),
+        pictor_documentum_numerus_stratorum(da));
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
+/* mensura: pictura D ictuum - apertio aliena et sequi unius ictus
+ * novi (nulla assertio temporis) */
+interior vacuum
+_sectio_mensura (
+    CredoContextus* c)
+{
+                Volumen* a;
+                Volumen* b;
+    InternamentumChorda* intern;
+       PictorDocumentum* da;
+       PictorDocumentum* aliena;
+                    s64  cursor;
+                clock_t  t0;
+                    i32  k;
+
+    (vacuum)c;
+    thema_initiare();
+    intern  = internamentum_creare(piscina);
+    a       = volumen_temporarium(piscina, "probatio_communio_ma5");
+    b       = volumen_temporarium(piscina, "probatio_communio_mb5");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_NECESSE_NON_NIHIL(b);
+    da = pictor_documentum_creare(piscina, intern, a, "p", CC, CC,
+        LXIV);
+    CREDO_NECESSE_NON_NIHIL(da);
+    per (k = ZEPHYRUM; k < D; k++)
+    {
+        (vacuum)ictus(da, (k * VII) % CC, (k * XIII) % CC, k % XVI);
+    }
+    cursor = ZEPHYRUM;
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    t0 = clock();
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, b,
+        volumen_replica(a), "p");
+    imprimere("  apertio aliena D ictuum: %.1f ms\n",
+        (duplex)(clock() - t0) * 1000.0 / (duplex)CLOCKS_PER_SEC);
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    (vacuum)ictus(da, I, I, I);
+    CREDO_NECESSE(communio_transferre(a, b, &cursor, NIHIL, piscina));
+    t0 = clock();
+    CREDO_VERUM(pictor_documentum_sequi(aliena));
+    imprimere("  sequi ictus unius: %.1f ms\n",
+        (duplex)(clock() - t0) * 1000.0 / (duplex)CLOCKS_PER_SEC);
+    CREDO_VERUM(aequales(da, aliena));
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transferre, iterum, idempotens", _sectio_transferre, _parare,
         _purgare, NIHIL, NIHIL },
@@ -409,6 +546,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "pictura aliena (T4)", _sectio_pictura_aliena, _parare, _purgare,
         NIHIL, NIHIL },
+    { "sequi (T5)", _sectio_sequi, _parare, _purgare, NIHIL, NIHIL },
+    { "mensura: D ictus", _sectio_mensura, _parare, _purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

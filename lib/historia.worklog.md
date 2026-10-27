@@ -192,3 +192,17 @@ whose checkpoints sit at local seqs that can coincide with the writer's
 numbers (pinned by a same-named local picture built with the identical
 operation sequence - a plant proved the earlier test could not see it).
 Read-only: actum/coniunctum/revocare/reficere refuse foreign documents.
+
+## 2026-10-27 - following (communio phase 1 T5, quarta)
+
+`historia_sequi` catches an open document up with acts imported after it
+opened. The state computation of open (finis, cursor from the last live
+cursor note, live count) is now one function, `statum_computare`, shared
+by open and sequi. sequi: unchanged state -> FALSUM; if the new acts are
+plain (no branch, cursor note or grouping) and the cursor was and is at
+the end -> apply only the new live acts; otherwise re-project (foreign
+documents always from scratch - correct by construction). Plants: no
+re-projection, always-incremental, always-"changed" - all caught.
+Measured (Mac): foreign open of a 500-stroke picture ~3 ms, following one
+new stroke ~2 ms (statum_computare still reads all acts of the document;
+fine at this size, an index-based shortcut is possible later).

@@ -159,6 +159,14 @@ historia_aperire_alienam (
                      i32  intervallum,
        HistoriaProiectio  proiectio);
 
+/* communio T5: acta post aperturam (aut sequi priorem) advecta
+ * sequi - status idem ac apertura recens; VERUM si mutatus.
+ * Incrementalis si acta nova simplicia sunt et cursor in fine, aliter
+ * proiectio tota. */
+b32
+historia_sequi (
+    Historia* h);
+
 /* ex volumine exsistente: finis = actum vivum ultimum, cursor =
  * finis, proiectio ex checkpoint proximo vivo + actis */
 Historia*

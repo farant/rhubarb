@@ -1539,6 +1539,13 @@ pictor_documentum_aperire_alienum (
     redde doc;
 }
 
+b32
+pictor_documentum_sequi (
+    PictorDocumentum* doc)
+{
+    redde doc ? historia_sequi(doc->historia) : FALSUM;
+}
+
 Xar*
 pictor_documenta_aliena_enumerare (
      Volumen* volumen,

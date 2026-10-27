@@ -203,6 +203,12 @@ pictor_documentum_aperire_alienum (
                   chorda  replica,
       constans character* spatium);
 
+/* communio T5: acta advecta sequi (historia_sequi; strata et
+ * compositum per proiectionem renovantur). VERUM si mutata */
+b32
+pictor_documentum_sequi (
+    PictorDocumentum* doc);
+
 /* picturae aliae machinae in volumine (manifestum "aliena/<replica>/
  * [<spatium>/]documentum", origo pictor:documentum) */
 nomen structura {
