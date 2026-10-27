@@ -609,6 +609,23 @@ silva_amalgama_currere (
 
         chorda_aedificator_appendere_literis(totum,
             manifestum->prooemium);
+        /* postulata_posix.h in corpore: vexillum eius ANTE omnia
+         * includenda systematis sublata ponendum. Vexilla probationis
+         * (feature-test macros) effectum habent solum si ante caput
+         * systematis PRIMUM stant; in loco suo (medio corpore) sero
+         * veniunt - glibc tunc snprintf / struct sigaction celat
+         * (macOS non curat, ergo hoc latebat; sonda Linux 2026-10-27).
+         * Corpus sine eo: exitus intactus. */
+        si (chorda_continet(corpus,
+                chorda_ex_literis("POSTULATA_POSIX_H", piscina)))
+        {
+            chorda_aedificator_appendere_literis(totum,
+                "/* postulata_posix.h: vexillum ante includenda"
+                " systematis */\n"
+                "#ifndef _DEFAULT_SOURCE\n"
+                "#define _DEFAULT_SOURCE 1\n"
+                "#endif\n");
+        }
         per (k = ZEPHYRUM; k < xar_numerus(am.systematis); k++)
         {
             chorda* c = (chorda*)xar_obtinere(am.systematis, k);

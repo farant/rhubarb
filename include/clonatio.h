@@ -4,7 +4,8 @@
  *
  * macOS: clonefile(2) - systema fasciculorum APFS, eadem area; arbor
  * tota uno vocamine in nucleo, spatium nullum donec scribatur.
- * Implementatio: lib/clonatio_macos.c (variantes aedilis.stml).
+ * Implementatio: lib/clonatio_macos.c (variantes aedilis.stml);
+ * lib/clonatio_posix.c extra macOS: semper FALSUM, errno ENOTSUP.
  */
 
 #ifndef CLONATIO_H

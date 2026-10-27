@@ -187,6 +187,8 @@ newest_header () {
 }
 
 obj_files=""
+# Linux: variantes _posix pro _macos (libproc.h et cetera absunt)
+[ "$(uname)" = "Linux" ] && RADIX_FONTES=("${RADIX_FONTES[@]/%_macos/_posix}")
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
@@ -348,7 +350,7 @@ for test_file in "$BRIAR_DIR"/probationes/probatio_*.c; do
     echo ""
     echo "=== $name ==="
     t0=$(mensor_suitae_nunc)
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -lm -o "$bin"; then
         echo "FRACTA (compilatio): $name"
         failed_names="$failed_names $name"
         continue

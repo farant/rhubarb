@@ -272,3 +272,24 @@ named. Plant (empty table = old reversal): "nomen exclusum rediit:
 stilus_terminalis_applicare (… gyrus 2)". Lesson in the house shape: "no
 new names" was a proxy for "no warnings"; the proxy forgave a name that
 never matched.
+
+## 2026-10-27 - feature-test macro hoisted (Linux)
+
+The amalgamator hoists every `#include <...>` to the top of the
+output, but `postulata_posix.h` (`#define _DEFAULT_SOURCE 1`) stays
+where it falls in the body - line 8091 of silva.c, long after
+`<stdio.h>` at line 10. Feature-test macros only work before the
+FIRST system header, so on glibc silva.c and tessera.c lost
+`snprintf` and `struct sigaction`. macOS headers don't care, so it
+never showed. Fix in the shared engine
+(silva/instrumenta/silva_amalgama.c): if the body contains
+POSTULATA_POSIX_H, emit a guarded `_DEFAULT_SOURCE` before the hoisted
+includes. Bodies without it are byte-identical. All three amalgams
+regenerated. Also: tools/amalgamata_probare.sh now sources vexilla.sh
+instead of keeping its own copy (minus -O2/-g, to stay cheap).
+
+Linux gate status: tessera VERIFICATUM; officina VERIFICATUM (after
+the officina_regio MAP_NORESERVE fix); silva passes standalone,
+hospes 40/40 and nm, but fails porta 6 - the censor self-test finds
+2/13 on Linux. Same 2/13 on the pre-change tree (83d03e29), so it's
+silva-on-Linux parsing, not the amalgam. Open.

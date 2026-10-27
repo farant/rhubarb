@@ -921,6 +921,7 @@ _radices_imprimere (vacuum)
         piscina_destruere(piscina);
         redde 1;
     }
+    aedilis_variantes_hospiti_aptare(configuratio, piscina);
     per (i = ZEPHYRUM; i < xar_numerus(configuratio->inclusa); i++)
     {
         chorda radix = *(chorda*)xar_obtinere(configuratio->inclusa, i);
@@ -1148,6 +1149,7 @@ principale (
             (s32)causa.mensura, (constans character*)causa.datum);
         redde 1;
     }
+    aedilis_variantes_hospiti_aptare(configuratio, piscina);
 
     {
                     chorda  memoria;

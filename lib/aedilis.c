@@ -902,6 +902,44 @@ _irregulare_invenire (
     redde NIHIL;
 }
 
+vacuum
+aedilis_variantes_hospiti_aptare (
+    AedilisConfiguratio* configuratio,
+                Piscina* piscina)
+{
+#ifdef __APPLE__
+    (vacuum)configuratio;
+    (vacuum)piscina;
+#else
+    /* hospes non-macOS: 'macos' ex praelatione tollitur - Cocoa,
+     * libproc.h, mach absunt; posix sequens vincit (sonda Linux
+     * 2026-10-27). Hic, non in aedilis_derivare: derivatio
+     * praelationem configuratam semper honorat (probationes fixturis
+     * 'macos posix' utuntur, hospite quovis). */
+    Xar* aptatae;
+    i32  i;
+    i32  numerus;
+
+    si (configuratio == NIHIL || configuratio->variantes == NIHIL)
+    {
+        redde;
+    }
+    aptatae = _xar_chordarum(piscina);
+    numerus = xar_numerus(configuratio->variantes);
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        chorda varians;
+
+        varians = *(chorda*)xar_obtinere(configuratio->variantes, i);
+        si (!chorda_aequalis_literis(varians, "macos"))
+        {
+            _chordam_addere(aptatae, varians);
+        }
+    }
+    configuratio->variantes = aptatae;
+#endif
+}
+
 AedilisFructus*
 aedilis_derivare (
                          Piscina* piscina,
@@ -2250,6 +2288,13 @@ aedilis_scriptum_scribere_ad (
             chorda_aedificator_appendere_literis(s, " \\\n");
         }
     }
+#ifndef __APPLE__
+    /* hospes non-macOS: libm extra libc (glibc, musl) - macOS eam in
+     * libSystem fert. Hic in scripto solo, non in
+     * aedilis_vexilla_nexus: illa data clausurae sunt (--nexus,
+     * transversa ios), hoc nexus hospitis ipsius */
+    chorda_aedificator_appendere_literis(s, "    -lm \\\n");
+#endif
     chorda_aedificator_appendere_literis(s,
         "    -o \"$EXITUS_DIR/");
     chorda_aedificator_appendere_chorda(s, basis);

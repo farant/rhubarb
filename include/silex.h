@@ -234,6 +234,14 @@ vacuum
 silex_monitiones_tacere (
     b32 tacere);
 
+/* derivatio pro hospite posix: VERUM = implementationes _posix.c /
+ * _impl.c solae, _macos numquam; ordinarium FALSUM (ordo aedilis.stml
+ * 'macos posix' in quovis hospite - probationes determinatae).
+ * Instrumenta extra macOS (briar, silex) VERUM ponunt. */
+vacuum
+silex_hospitem_posix_ponere (
+    b32 posix);
+
 
 /* ==================================================
  * VCS: status / condere / historia

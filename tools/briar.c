@@ -1046,6 +1046,9 @@ principale (
         redde ZEPHYRUM;
     }
     silex_monitiones_tacere(VERUM);
+#ifndef __APPLE__
+    silex_hospitem_posix_ponere(VERUM);   /* Linux: _posix, numquam _macos */
+#endif
     fons = _fontem_aperire(piscina, imp.fabrica, &e_disco);
     si (fons == NIHIL)
     {

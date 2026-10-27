@@ -83,8 +83,24 @@ compile_tool() {
     echo -e "Output: ${GREEN}$output_binary${RESET}"
     echo ""
 
+    # Nexus: frameworks macOS; Linux libm (macOS eam in libSystem fert)
+    local nexus_vexilla="-framework Cocoa -framework Security -framework WebKit -framework IOKit"
+    if [ "$(uname)" = "Linux" ]; then
+        nexus_vexilla="-lm"
+        # Linux: obiecta in archivum (.a), non omnia nexa. Fenestra et
+        # vitrea (Cocoa/WebKit) Linux carent; obiecta quae eas vocant
+        # (ludus_fenestra, concha...) nexum totum frangerent etiam
+        # instrumento quod eas numquam tangit. Ex archivo nexor membra
+        # sola trahit quae instrumentum postulat - instrumentum quod
+        # vere fenestram vocat adhuc (recte) cadit.
+        local archivum="$BUILD_DIR/instrumenta_linux.a"
+        rm -f "$archivum"
+        ar rcs "$archivum" $obj_files || return 1
+        obj_files="$archivum"
+    fi
+
     # Compile
-    if clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_file" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" 2>&1; then
+    if clang ${GCC_FLAGS[@]} ${INCLUDE_FLAGS[@]} "$tool_file" $obj_files $nexus_vexilla -o "$output_binary" 2>&1; then
         echo ""
         echo -e "${GREEN}✓ $tool_name compiled successfully${RESET}"
         echo -e "Run with: ./$output_binary"

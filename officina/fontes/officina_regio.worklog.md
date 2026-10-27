@@ -26,3 +26,15 @@ honest halt.
 
 Landmine log: `externus` = latina's `extern` — 8th macro firing
 (probatio variable renamed `alienus`).
+
+## 2026-10-27 - MAP_NORESERVE (Linux)
+
+`regio_generare` reserves 64 GB at the fixed base 0x300000000000.
+Linux's default overcommit heuristic (vm.overcommit_memory=0) refuses
+one mapping that far past RAM + swap: MAP_FAILED, the hospes gate
+printed INFIDELIS for every machinula check and then segfaulted.
+Measured on a 15 GB box: without the flag MAP_FAILED, with it the
+exact base. Added MAP_NORESERVE behind `#ifdef MAP_NORESERVE` (macOS
+defines and ignores it). Pages still arrive only when touched, so
+nothing changes in practice. officina amalgamare now VERIFICATUM on
+Linux, hospes 78/78.

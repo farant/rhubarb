@@ -106,6 +106,16 @@ aedilis_configurationem_legere (
     constans character* via_stml,
                 chorda* causa_out);
 
+/* Praelationem variantium hospiti aptare: extra macOS 'macos' tollitur
+ * (Cocoa, libproc.h, mach absunt), ergo posix vincit; in macOS nihil
+ * agit. Instrumenta (bin/aedilis, fabrica) post configurationem VERAM
+ * lectam vocant. Bibliotheca ipsa praelationem configuratam semper
+ * honorat - probationes fixturis utuntur, hospite quovis. */
+vacuum
+aedilis_variantes_hospiti_aptare (
+    AedilisConfiguratio* configuratio,
+                Piscina* piscina);
+
 /* Compilator oraculi -MM pro fonte .m: mandatum regulae 'oracula'
  * cuius varians suffixum basis est ("lib/testa_ios.m" -> regula
  * "ios"); nulla congruit -> "clang" (capita macOS). */

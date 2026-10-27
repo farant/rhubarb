@@ -480,6 +480,12 @@ Leges chartae:
   contentum; titulus STML "prospectus"); pictor prospectum mensa implet
   et paginam margine cingit.
 
+- Linux: briar in hospite Linux aedificatur et currit. Derivatio
+  corporis extra macOS variantes `_posix` eligit, `_macos` numquam
+  (`lib/silex.c`); plagulae sine fenestra currunt, plagulae cum
+  fenestra aut vitrea (Cocoa/WebKit) Linux non sustinentur. corpus:
+  stb_image in obiecto venditorio suo (`vendor/stb_imago.c`).
+
 ## v4 — 2026-09-29
 
 FRANGIT: `lib/toml.c` vetus remotum - plagulae `toml_capere_*` aut

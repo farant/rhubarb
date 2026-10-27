@@ -169,7 +169,7 @@ clang "${GCC_FLAGS[@]}" -I"$AMALGAMA_DIR" -I"$RADIX_DIR/silva/amalgama" \
     "$OFF_DIR/instrumenta/principalia/hospes.c" \
     "$BUILD_DIR/amalgama_verificatio.o" \
     "$BUILD_DIR/amalgama_silva.o" \
-    -o "$BUILD_DIR/hospes" || exit 1
+    -lm -o "$BUILD_DIR/hospes" || exit 1
 "$BUILD_DIR/hospes" || exit 1
 
 # ---- 5. VERIFICATIO: intersectio nm (symbola communia = 0) ----

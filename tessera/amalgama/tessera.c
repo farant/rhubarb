@@ -7,6 +7,10 @@
  * tessera/amalgamare.sh
  */
 
+/* postulata_posix.h: vexillum ante includenda systematis */
+#ifndef _DEFAULT_SOURCE
+#define _DEFAULT_SOURCE 1
+#endif
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>

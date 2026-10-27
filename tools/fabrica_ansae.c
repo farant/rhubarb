@@ -109,6 +109,8 @@ _gradus_parare (
         *causa_out = _causa_gradus;
         redde FALSUM;
     }
+    aedilis_variantes_hospiti_aptare(_configuratio_gradus,
+        _piscina_gradus);
     /* clavis thesauri: digestum extractoris infixum (P1); sine eo
      * binarium ipsum - illegibile = sine thesauro (ut olim) */
     clavis_bona = suturae_clavem_thesauri(_piscina_gradus, &praefixum,

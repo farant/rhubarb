@@ -115,6 +115,10 @@
          vendor/bearssl (tools/bearssl_amalgamare.sh); C99 laxe -->
     <fons via="vendor/bearssl_amalgama.c">
       <vexillum! (>-O2
+      <!-- x86 (Linux): sine eo clang viam pclmul/AES-NI dimidiam
+           compilat et cadit; ut tools/linux, android, ios iam ferunt.
+           arm64 macOS: nullum effectum (viae x86/POWER8 solae) -->
+      <vexillum! (>-DBR_ENABLE_INTRINSICS=1
     </fons>
     <!-- stb_image (imago): '//' quae gcc -std=c89 non legit - corpus
          in obiecto suo, vexillis laxis (vendor/stb_imago.h) -->

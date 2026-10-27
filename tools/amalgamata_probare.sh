@@ -32,12 +32,15 @@ set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 
-declare -a VEXILLA=(
-    "-std=c89" "-pedantic" "-Wall" "-Wextra" "-Werror"
-    "-Wconversion" "-Wsign-conversion" "-Wcast-qual"
-    "-Wstrict-prototypes" "-Wmissing-prototypes" "-Wwrite-strings"
-    "-Wno-long-long" "-Wno-overlength-strings" "-fbracket-depth=512"
-)
+# vexilla: tools/vexilla.sh (una sedes). Olim copia propria hic stabat
+# - et Linux (-D_DEFAULT_SOURCE, 2026-10-26) eam non attigit: silva et
+# tessera in snprintf / struct sigaction cadebant. -O2 et -g omissa:
+# porta VILIS manet (compilatio sola probatur, obiectum non curritur).
+source "$SCRIPT_DIR/vexilla.sh"
+declare -a VEXILLA=()
+for _v in "${VEXILLA_C89[@]}"; do
+    case "$_v" in -O2|-g) ;; *) VEXILLA+=("$_v") ;; esac
+done
 
 STATIO="build/amalgamata_probatio"
 mkdir -p "$STATIO"

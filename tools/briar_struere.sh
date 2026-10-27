@@ -93,7 +93,7 @@ clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     build/capsula_icon_briar.c build/capsula_mutationes_briar.c \
     build/briar_aedificatio.c \
     build/imago.o build/stb_imago.o $OBJ \
-    -o bin/briar || exit 1
+    -lm -o bin/briar || exit 1
 echo "aedificatum: bin/briar"
 
 # institutio: exemplum in ~/.bin (in PATH) - '#!/usr/bin/env briar'

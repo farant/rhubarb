@@ -25,6 +25,14 @@
  * (instrumentum scripti) eas tacet - silex_monitiones_tacere */
 hic_manens b32 _monitiones_tacitae = FALSUM;
 
+/* variantes hospitis: FALSUM (ordinarium) = ordo praelationis
+ * aedilis.stml ('macos posix': _macos.m, _macos.c, _posix.c, _impl.c)
+ * in QUOVIS hospite - derivatio determinata, probationes fixturis
+ * nituntur. VERUM = _posix.c, _impl.c solae (_macos numquam: Cocoa,
+ * libproc.h, mach absunt). Instrumenta extra macOS (briar, silex)
+ * VERUM ponunt - silex_hospitem_posix_ponere (sonda Linux 2026-10-27) */
+hic_manens b32 _hospes_posix = FALSUM;
+
 /* RADICES CLIENTIUM MATERIAE (2026-09-28, planum toml-arbor Q12): caput
  * et implementatio in EODEM directorio (toml/fontes/toml.h +
  * toml/fontes/toml.c), non include/ + lib/. Caput 'x.h' in include/
@@ -168,6 +176,13 @@ silex_monitiones_tacere (
     b32 tacere)
 {
     _monitiones_tacitae = tacere;
+}
+
+vacuum
+silex_hospitem_posix_ponere (
+    b32 posix)
+{
+    _hospes_posix = posix;
 }
 
 interior vacuum
@@ -929,7 +944,12 @@ silex_clausuram_colligere (
                 };
                 i32 s_i;
 
-                per (s_i = 0; s_i < IV && !inventum; s_i = s_i + I)
+                /* hospes posix (silex_hospitem_posix_ponere): duo
+                 * _macos praetereuntur - bibliotheca sine fratre
+                 * _posix (fenestra, vitrea) nihil invenit et monitio
+                 * infra clamat */
+                per (s_i = _hospes_posix ? II : ZEPHYRUM;
+                     s_i < IV && !inventum; s_i = s_i + I)
                 {
                     ChordaAedificator* aed_s =
                         chorda_aedificator_creare(piscina,

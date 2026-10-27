@@ -689,3 +689,21 @@ posix"`). Added "_macos.c" between _macos.m and _posix.c (aedilis's
 preference order). briar-fumus red (link error) -> green after a
 rebake. The suffix list is still a COPY of aedilis's rule - park
 …V2ET: read it from aedilis instead.
+
+## 2026-10-27 - host variant switch (Linux)
+
+On Linux, briar built every script against `_macos` sources: the
+suffix walk in silex's closure collection is hard-ordered `_macos.m,
+_macos.c, _posix.c, _impl.c`, so `memoria_processus_macos.c`
+(libproc.h) and `fenestra_tempus_macos.c` (mach) won every time.
+
+First try was an `#ifdef __APPLE__` around the suffix list. That broke
+8 silex tests on Linux: they derive closures from fixture corpora and
+assert the macOS picks (`novum -vitrea` copies `fenestra_macos.m`,
+etc.). The library's answer should not depend on which machine runs
+it. Now: `silex_hospitem_posix_ponere(b32)`, same shape as
+`silex_monitiones_tacere`, default FALSUM = today's order everywhere.
+tools/briar.c and tools/silex.c set it VERUM under `#ifndef
+__APPLE__`; the walk then starts at `_posix.c`. Tests never set it.
+Linux after: silex 370/370, briar 20/20, cold `.thistle` builds pick
+`_posix`.

@@ -10,6 +10,10 @@
 
 #include "silva.h"
 
+/* postulata_posix.h: vexillum ante includenda systematis */
+#ifndef _DEFAULT_SOURCE
+#define _DEFAULT_SOURCE 1
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10444,6 +10448,17 @@ medulla_textum_legere (
  * spatium altum, liberum in macOS arm64; si mmap eam non dat,
  * regio_generare NIHIL reddit (numquam basim aliam tacite). */
 #define REGIO_BASIS_VALOR   ((memoriae_index)0x300000000000UL)
+
+/* MAP_NORESERVE: Linux (overcommit heuristicus, ordinarius) mappam
+ * unam LXIV GB sine eo recusat - RAM + swap excedit; spatium solum
+ * reservatur, paginae cum tanguntur dantur. macOS vexillum definit
+ * et neglegit. Sonda Linux 2026-10-27: sine eo MAP_FAILED, cum eo
+ * basis ipsa 0x300000000000. */
+#ifdef MAP_NORESERVE
+#define REGIO_MAPPAE_VEXILLA  (MAP_PRIVATE | MAP_ANON | MAP_NORESERVE)
+#else
+#define REGIO_MAPPAE_VEXILLA  (MAP_PRIVATE | MAP_ANON)
+#endif
 #define REGIO_TOTA          ((memoriae_index)0x1000000000UL)  /* 64GB */
 #define REGIO_GLOBALIA_MAG  ((memoriae_index)0x200000000UL)   /*  8GB */
 #define REGIO_STIVA_MAG     ((memoriae_index)0x100000000UL)   /*  4GB */
@@ -10503,7 +10518,7 @@ regio_generare (
     }
 
     datus = mmap((vacuum*)REGIO_BASIS_VALOR, REGIO_TOTA,
-        PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
+        PROT_READ | PROT_WRITE, REGIO_MAPPAE_VEXILLA, -1, 0);
     si (datus == MAP_FAILED)
     {
         redde NIHIL;

@@ -30,3 +30,24 @@
 - Inverting mask 0 (`(x + y) % II == I`) is RED: 5/40 symbols unreadable (ECC-M V2 decoded 14 of 26 octets). Restored, green.
 
 **Still in the prae step:** library compiles (1.9 s wall, about 7.7 s CPU; a `bin/compilator` batch mode would amortize the per-call startup and compiler identification) and `amalgamata_probare` (0.9 s; could also become its own gate, as could the post-step oracles).
+
+## 2026-10-27 - root runner on Linux
+
+`./compile_tests.sh --obiecta` now builds all 391 root objects on
+Linux. What it took:
+- the generated source list (compile_tests_fontes_generata.sh) is
+  produced on macOS. On Linux the runner maps `_macos.c` -> `_posix.c`,
+  and `_macos.m` -> its `_posix.c` sibling when one exists (energia,
+  fiducia, nomina, tls_securetransport); `.m` without a sibling
+  (fenestra, vitrea, clipboard_platform) is dropped. New
+  lib/clonatio_posix.c (ENOTSUP, which the header already allows).
+- bin/aedilis (builds bin/compilator) picks posix through
+  `aedilis_variantes_hospiti_aptare` - tools only; the library still
+  honours the configured order (probatio_aedilis fixtures).
+- aedilis-emitted scripts add `-lm` off Apple.
+- VENDOR_FLAGS + aedilis.stml: `-DBR_ENABLE_INTRINSICS=1` for
+  bearssl (x86: pclmul path fails without it; the linux/android/ios
+  scripts already passed it; arm64 macOS: no effect).
+- compile_tools.sh on Linux links through an archive (.a) of the
+  objects, not every .o: fenestra/vitrea have no Linux build, and
+  linking all objects made every tool fail on objects that call them.

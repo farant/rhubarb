@@ -36,6 +36,21 @@ export INCLUDE_LINEA="${INCLUDE_FLAGS[*]}"
 # structura necte-omnia intacta, listae solae derivatae.
 # Regeneratio: ./tools/compile_tests_fontes_generare.sh
 source "$(dirname "$0")/compile_tests_fontes_generata.sh"
+# Linux: lista in macOS generata - variantes _posix pro _macos, nulla
+# Objective-C (Cocoa abest). Ut tools/linux/probatio.sh (aedilis
+# --varians posix), sed sine aedile in cursu.
+if [ "$(uname)" = "Linux" ]; then
+    SOURCE_FILES=("${SOURCE_FILES[@]/%_macos.c/_posix.c}")
+    # .m cum fratre _posix.c (tls_securetransport, fiducia, nomina...)
+    # -> frater; sine fratre (fenestra, vitrea: Cocoa/WebKit) omittitur
+    for _m in "${OBJC_SOURCES[@]}"; do
+        _p="${_m%_macos.m}_posix.c"
+        if [ "$_p" != "$_m" ] && [ -f "$(dirname "$0")/$_p" ]; then
+            SOURCE_FILES+=("$_p")
+        fi
+    done
+    OBJC_SOURCES=()
+fi
 
 # Vendored sources (compiled RELAXED in their own objects - treat
 # like libc; tabularium-gradus.md phase A). Flags decided at vendor
@@ -49,6 +64,7 @@ declare -a VENDOR_SOURCES=(
 )
 declare -a VENDOR_FLAGS=(
     "-O2"
+    "-DBR_ENABLE_INTRINSICS=1"  # bearssl x86 (Linux); arm64: nihil mutat
     "-DSQLITE_ENABLE_FTS5"
     "-DSQLITE_THREADSAFE=0"
     "-DSQLITE_DQS=0"

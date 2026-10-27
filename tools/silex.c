@@ -754,6 +754,9 @@ principale (
     {
         redde ZEPHYRUM;
     }
+#ifndef __APPLE__
+    silex_hospitem_posix_ponere(VERUM);   /* Linux: _posix, numquam _macos */
+#endif
     piscina = piscina_generare_dynamicum("silex", 65536);
     si (piscina == NIHIL)
     {
