@@ -602,6 +602,142 @@ _communio_apparatus_enumerare (
     mcp_respondere_json(v, r);
 }
 
+/* ---- communio plan-3 T5: index permissorum (epistula -> persona).
+ * Persona nova creatur si nomen liberum (titulus necessarius). ---- */
+
+interior vacuum
+_communio_epistulam_permittere (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+       chorda  epistula;
+       chorda  nomen_usoris;
+       chorda  titulus;
+       chorda  spatium;
+       chorda  id;
+        Civis  x;
+          b32  creatus;
+    JsonValor* r;
+
+    (vacuum)mcp_argumentum_chorda(v, "epistula", &epistula);
+    (vacuum)mcp_argumentum_chorda(v, "nomen", &nomen_usoris);
+    (vacuum)mcp_argumentum_chorda(v, "spatium", &spatium);
+    titulus.datum    = NIHIL;
+    titulus.mensura  = ZEPHYRUM;
+    (vacuum)mcp_argumentum_chorda(v, "titulus", &titulus);
+    nomen_usoris  = cives_nomen_normare(nomen_usoris, p);
+    creatus       = FALSUM;
+    si (cives_per_nomen(ianua_cives(e->ianua), nomen_usoris, &x, p))
+    {
+        id = x.id;
+    }
+    alioquin
+    {
+        si (titulus.mensura == ZEPHYRUM)
+        {
+            _vitium(v, "persona nova titulum poscit");
+            redde;
+        }
+        si (!volumen_transactionem_incipere(e->volumen))
+        {
+            _vitium(v, "volumen occupatum");
+            redde;
+        }
+        si (   !cives_creare(ianua_cives(e->ianua), nomen_usoris,
+            titulus,
+                   &id, p)
+            || !volumen_transactionem_committere(e->volumen))
+        {
+            (vacuum)volumen_transactionem_revolvere(e->volumen);
+            _vitium(v, "persona creari nequit (nomen invalidum aut olim"
+                " usum)");
+            redde;
+        }
+        creatus = VERUM;
+    }
+    si (   !communio_membrum_addere(e->communio, spatium, id)
+        || !communio_epistulam_permittere(e->communio, epistula, id,
+               spatium))
+    {
+        _vitium(v, "epistula permitti nequit (epistula mala aut persona"
+            " non activa)");
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "civis", json_chorda_creare(p, id));
+    json_objectum_ponere(r, "nomen", json_chorda_creare(p,
+        nomen_usoris));
+    json_objectum_ponere(r, "spatium", json_chorda_creare(p, spatium));
+    json_objectum_ponere(r, "persona_creata", json_boolean_creare(p,
+        creatus));
+    mcp_respondere_json(v, r);
+}
+
+interior vacuum
+_communio_epistulam_revocare (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+       chorda  epistula;
+    JsonValor* r;
+
+    (vacuum)mcp_argumentum_chorda(v, "epistula", &epistula);
+    si (!communio_epistulam_revocare(e->communio, epistula))
+    {
+        _vitium(v, "epistula non in indice");
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "revocata", json_boolean_creare(p, VERUM));
+    mcp_respondere_json(v, r);
+}
+
+interior vacuum
+_communio_permissos_enumerare (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+          Xar* l;
+    JsonValor* r;
+    JsonValor* t;
+          i32  i;
+
+    l = communio_permissos_enumerare(e->communio, p);
+    si (!l)
+    {
+        _vitium(v, "index legi nequit");
+        redde;
+    }
+    t = json_tabulatum_creare(p);
+    per (i = ZEPHYRUM; i < xar_numerus(l); i++)
+    {
+        CommunioPermissus* x = (CommunioPermissus*)xar_obtinere(l, i);
+                JsonValor* o = json_objectum_creare(p);
+                    Civis  persona;
+
+        json_objectum_ponere(o, "epistula", json_chorda_creare(p,
+            x->epistula));
+        json_objectum_ponere(o, "civis", json_chorda_creare(p,
+            x->civis));
+        si (cives_per_id(ianua_cives(e->ianua), x->civis, &persona, p))
+        {
+            json_objectum_ponere(o, "nomen", json_chorda_creare(p,
+                persona.nomen_usoris));
+        }
+        json_objectum_ponere(o, "spatium", json_chorda_creare(p,
+            x->spatium));
+        json_objectum_ponere(o, "revocatus", json_boolean_creare(p,
+            x->revocatus));
+        json_tabulatum_addere(t, o);
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "permissi", t);
+    mcp_respondere_json(v, r);
+}
+
 /* ---- tabula ---- */
 
 hic_manens constans McpArgumentum ARG_INVITARE[] = {
@@ -639,6 +775,22 @@ hic_manens constans McpArgumentum ARG_COMMUNIO_APPARATUS[] = {
 hic_manens constans McpArgumentum ARG_ID_APPARATUS[] = {
     { "id", "id apparatus (ex communio_apparatus_enumerare)",
         MCP_CHORDA, VERUM, NIHIL }
+};
+
+hic_manens constans McpArgumentum ARG_COMMUNIO_PERMITTERE[] = {
+    { "epistula", "inscriptio epistularum permittenda", MCP_CHORDA,
+        VERUM,
+        NIHIL },
+    { "nomen", "nomen usoris (creatur si liberum)", MCP_CHORDA, VERUM,
+        NIHIL },
+    { "titulus", "nomen ostensum personae novae (e.g. Amanda)",
+        MCP_CHORDA,
+        FALSUM, NIHIL },
+    { "spatium", "spatium (e.g. familia)", MCP_CHORDA, VERUM, NIHIL }
+};
+
+hic_manens constans McpArgumentum ARG_COMMUNIO_EPISTULA[] = {
+    { "epistula", "inscriptio epistularum", MCP_CHORDA, VERUM, NIHIL }
 };
 
 hic_manens constans McpInstrumentum INSTRUMENTA_ADMINISTRATIONIS[] = {
@@ -684,7 +836,21 @@ hic_manens constans McpInstrumentum INSTRUMENTA_ADMINISTRATIONIS[] = {
         " titulus, replica, revocatus (sine digestis).", NIHIL,
             ZEPHYRUM,
         SCOPUS_ADMINISTRATIONIS, VERUM, FALSUM,
-        _communio_apparatus_enumerare }
+        _communio_apparatus_enumerare },
+    { "communio_epistulam_permittere",
+        "Epistulam in indicem permissorum"
+        " addit (persona nova si nomen liberum); aditus per epistulam.",
+        ARG_COMMUNIO_PERMITTERE, IV, SCOPUS_ADMINISTRATIONIS, FALSUM,
+        FALSUM, _communio_epistulam_permittere },
+    { "communio_epistulam_revocare",
+        "Epistulam ex indice revocat: aditus"
+        " novi recusantur, apparatus manent.", ARG_COMMUNIO_EPISTULA, I,
+        SCOPUS_ADMINISTRATIONIS, FALSUM, VERUM,
+        _communio_epistulam_revocare },
+    { "communio_permissos_enumerare", "Index permissorum: epistula,"
+        " persona, spatium, revocatus.", NIHIL, ZEPHYRUM,
+        SCOPUS_ADMINISTRATIONIS, VERUM, FALSUM,
+        _communio_permissos_enumerare }
 };
 
 McpServus*
@@ -704,9 +870,9 @@ exemplar_administrationem_creare (
     mc.instructiones  =
         "Administratio exemplaris per canalem localem (uid servi): "
         "status, invitationes, cives (suspendere, restituere), "
-        "communio (membra, apparatus).";
+        "communio (membra, apparatus, index permissorum).";
     mc.instrumenta  = INSTRUMENTA_ADMINISTRATIONIS;
-    mc.numerus      = XI;
+    mc.numerus      = XIV;
     mc.datum        = e;
     redde mcp_servus_creare(&mc, piscina);
 }

@@ -356,3 +356,24 @@ communio_apparatum_revocare {id}, communio_apparatus_enumerare. They take the
 person's HANDLE (what Fran types) rather than the civis ULID, and only ever the
 token's DIGEST - the device mints its token (`communio tessera`), so no secret
 crosses the channel or reaches Claude's context.
+
+## 2026-10-27 - sign-in mail wiring (communio plan-3 T5)
+
+exemplar reads `<data>/resend.clavis` (put there by tools/secretum_mittere.sh:
+owner exemplar, 0600) with the oceanus-style reader (O_NOFOLLOW, regular file,
+mode not wider than 0600, trailing whitespace trimmed, buffer zeroed after the
+Epistularius copied it; only the open() carries the CANALIS_PRAETERITUS tolera).
+A missing key is not fatal: one stderr line "resend.clavis deest - epistulae non
+mittuntur" and sign-in requests still answer 202. The Epistularius is wired
+AFTER e->basis is known (mail links use the public base), with sender
+communio@golden.earth and exemplar's Custodia for throttling; it is closed before
+the communio server and the hospitium. `ExemplarConfiguratio.provisor_epistulae`
+(NIHIL = "resend") lets tests use "fictus"; `exemplar_epistularius()` exposes it.
+
+Admin tools now XIV: communio_epistulam_permittere {epistula, nomen, titulus,
+spatium} creates the person when the handle is free (cives_creare in an
+exemplar.volumen transaction; titulus required for a new person), then adds the
+membership and the entry (communio.volumen - two volumes, so person first; a
+re-run is idempotent); communio_epistulam_revocare {epistula};
+communio_permissos_enumerare (shows the addresses - this is the admin's own
+list, never written to the repository).

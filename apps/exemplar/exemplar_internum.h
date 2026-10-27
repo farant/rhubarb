@@ -71,6 +71,8 @@ structura Exemplar {
     /* communio plan-2 T7: servus actorum (volumen proprium, C1) */
                   Volumen* communio_volumen;
            CommunioServus* communio;
+    /* plan-3 T5: epistulae aditus (NIHIL = non mittuntur) */
+             Epistularius* epistularius;
 };
 
 
