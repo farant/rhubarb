@@ -475,6 +475,20 @@ _sectio_claves (
     (vacuum)vicus_pulsare(s->app.vicus);
     CREDO_AEQUALIS_S32(fenestra_activa(s, c->piscina), secunda);
 
+    /* Franus: in pagina cum terminali tmux dextro Ctrl+N etiam e
+     * scriba sinistra */
+    CREDO_GRADUS("focus sinister (scriba): Ctrl+<prima> fenestram "
+        "eligit");
+    CREDO_NECESSE(vicus_focum_ponere(s->app.vicus, VICUS_SINISTRUM));
+    CREDO_VERUM(manus_ludus_clavem(manus, (character)('0' + prima),
+        (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_AEQUALIS_S32(fenestra_activa(s, c->piscina), prima);
+    CREDO_NECESSE(manus_ludus_clavem(manus, (character)('0' + secunda),
+        (i32)MOD_IMPERIUM));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    CREDO_NECESSE(fenestra_activa(s, c->piscina) == secunda);
+
     CREDO_GRADUS("terminale sine tmux: Ctrl+<prima> fenestram non "
         "mutat");
     CREDO_NECESSE(vicus_acervo_aperire(s->app.vicus, "terminale",

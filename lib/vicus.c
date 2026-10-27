@@ -634,25 +634,39 @@ est_imperium_quaestionis (
         && ev->datum.clavis.runa == 'f';
 }
 
-/* comites P9: latus focatum clavem sibi sumit? (quaestio sola, sine
- * effectu - facies.clavem_sumere cum agere FALSUM) */
-interior b32
-clavis_sumpta (
+/* comites P9: latus quod clavem sibi sumit (quaestio sola, sine
+ * effectu - facies.clavem_sumere cum agere FALSUM): focatum; si non
+ * sumit et focus sinister est, frons dextra tabulae (Franus: Ctrl+N
+ * etiam e scriba sinistra terminali tmux dextro). NIHIL si nullum */
+interior VicusLatus*
+latus_sumens (
       constans Vicus* v,
     constans Eventus* ev)
 {
-    VicusLatus* l;
+     VicusTabula* t;
+      VicusLatus* l;
+             i32  i;
 
     si (   !v || !ev
         || (   ev->genus != EVENTUS_CLAVIS_DEPRESSUS
             && ev->genus != EVENTUS_CLAVIS_LIBERATUS))
     {
-        redde FALSUM;
+        redde NIHIL;
     }
-    l = vicus_latus_focatum(v);
-    redde l && l->montata && l->facies.clavem_sumere
-        && l->facies.clavem_sumere(l->facies.clavem_sumere_ctx, ev,
-               FALSUM);
+    t = vicus_activa(v);
+    per (i = ZEPHYRUM; i < II; i++)
+    {
+        l = i == ZEPHYRUM ? vicus_latus_focatum(v)
+            : (t && t->focus == VICUS_SINISTRUM)
+                ? vicus_latus(t, VICUS_DEXTRUM) : NIHIL;
+        si (   l && l->montata && l->facies.clavem_sumere
+            && l->facies.clavem_sumere(l->facies.clavem_sumere_ctx, ev,
+                   FALSUM))
+        {
+            redde l;
+        }
+    }
+    redde NIHIL;
 }
 
 /* D5: brevitas hospitis eventus clavis (depressi aut liberati); NIHIL
@@ -778,7 +792,7 @@ destinare (
                   || est_imperium_comitis(ev)
                   || est_imperium_quaestionis(ev)
                   || brevitatem_invenire((constans Vicus*)ctx, ev)
-                  || clavis_sumpta((constans Vicus*)ctx, ev)))
+                  || latus_sumens((constans Vicus*)ctx, ev)))
     {
         redde destinatio_ex_componente(arbor, piscina);
     }
@@ -1755,11 +1769,12 @@ radicem_tractare (
         }
         redde VERUM;
     }
-    /* comites P9: clavis a latere focato sumpta (terminale cum tmux:
-     * Ctrl+N) - depressa latus agit, liberata devoratur */
-    si (clavis_sumpta(v, ev))
+    /* comites P9: clavis a latere sumpta (focato, aut fronte dextra
+     * foco sinistro; terminale cum tmux: Ctrl+N) - depressa latus
+     * agit, liberata devoratur */
+    l = latus_sumens(v, ev);
+    si (l)
     {
-        l = vicus_latus_focatum(v);
         si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
         {
             (vacuum)l->facies.clavem_sumere(

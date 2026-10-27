@@ -1225,3 +1225,15 @@ does not consume Ctrl+digit, so the key bubbles to the root anyway
 sees a claimed key) in case the terminal ever encodes Ctrl+digit. The
 "plain terminal" step only shows the window did not change, not that
 the shell received the key.
+
+## 2026-10-27 — comites P9b: Ctrl+N also from the left page
+
+Fran: in a spread with a tmux terminal on the right, Ctrl+N should
+work whether the left scriba or the right terminal has focus.
+latus_sumens (lib/vicus.c) asks the focused pane first; if it does not
+claim the key and focus is on the left, it asks the active tab's
+right-front pane. Header comment in vicus.h updated (Fran approved).
+Scriba has no Ctrl+digit bindings, so nothing is shadowed; a plain
+terminal on the right does not claim, so the key still goes to the
+left pane. Test: claves step "focus sinister (scriba)"; plant (only
+the focused pane asked) red at that step.
