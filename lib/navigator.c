@@ -50,9 +50,11 @@ nomen structura {
                   s32  latitudo_arcae;
                   s32  altitudo_arcae;
       NavigatorTextus* textus;
-                  Xar* paginae;          /* LectorPagina */
-               chorda  titulus;          /* titulus versionis */
-               chorda  hospes;
+                  Xar* paginae;          /* LectorPagina: articulus,
+                                          * deinde index nexuum */
+                  i32 paginae_articuli; /* priores ex caput.textus */
+               chorda titulus;          /* titulus versionis */
+               chorda hospes;
 } NavigatorFigurae;
 
 
@@ -393,6 +395,24 @@ _paginas_parare (
     {
         f->textus = NIHIL;
         redde NIHIL;
+    }
+    /* index nexuum (N3.1b): paginae novae post articulum */
+    f->paginae_articuli = xar_numerus(f->paginae);
+    si (f->textus->nexus.textus.mensura > ZEPHYRUM)
+    {
+        Xar* nexus = lector_paginare(&f->textus->nexus, (i32)latitudo,
+            (i32)altitudo, f->arca);
+        i32 i;
+
+        per (i = ZEPHYRUM; nexus && i < xar_numerus(nexus); i++)
+        {
+            LectorPagina* g = (LectorPagina*)xar_addere(f->paginae);
+
+            si (g)
+            {
+                *g = *(LectorPagina*)xar_obtinere(nexus, i);
+            }
+        }
     }
     f->articulus_arcae  = chorda_transcribere(a->identitas, f->arca);
     f->versio_arcae     = chorda_transcribere(v->identitas, f->arca);
@@ -1212,8 +1232,9 @@ _paginam_pingere (
                 l = (constans LectorLinea*)xar_obtinere(g->lineae, j);
                 _textum_pingere(md, x->fines.x + lateris * NAV_LITTERA
                     + l->x, x->fines.y + l->y, chorda_sectio(
-                    f->textus->caput.textus, l->initium, l->finis),
-                    l->fons, COLOR_TEXT);
+                    (i32)k < f->paginae_articuli
+                    ? f->textus->caput.textus : f->textus->nexus.textus,
+                    l->initium, l->finis), l->fons, COLOR_TEXT);
             }
         }
         alioquin si (chorda_aequalis_literis(x->id, "pes"))

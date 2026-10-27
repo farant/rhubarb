@@ -5,6 +5,7 @@
  * lineas novas solum in titulis et versibus tractat. */
 #include "navigator_paginae.h"
 #include "chorda_aedificator.h"
+#include "url.h"
 #include <string.h>
 
 #define PUNCTUM "\xE2\x80\xA2 "   /* U+2022 + spatium */
@@ -115,6 +116,190 @@ praefixum_indicis (
     redde p;
 }
 
+
+/* ==================================================
+ * Index nexuum (N3.1b, spec V.19)
+ * ================================================== */
+
+/* "https://hospes/via..." -> hospes; via in *via (vacua si nulla).
+ * FALSUM si sine "://" */
+interior b32
+hospitem_et_viam (
+     chorda  url,
+     chorda* hospes,
+     chorda* via)
+{
+    i32 i;
+    i32 a = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i + II < url.mensura; i++)
+    {
+        si (   url.datum[i]      == ':' && url.datum[i + I] == '/'
+            && url.datum[i + II] == '/')
+        {
+            a = i + III;
+            frange;
+        }
+    }
+    si (a == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (i = a; i < url.mensura && url.datum[i] != '/'; i++)
+    {
+    }
+    *hospes  = chorda_sectio(url, a, i);
+    *via     = chorda_sectio(url, i, url.mensura);
+    redde VERUM;
+}
+
+/* URL sine #ancora */
+interior chorda
+sine_ancora (
+    chorda url)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < url.mensura; i++)
+    {
+        si (url.datum[i] == '#')
+        {
+            redde chorda_sectio(url, ZEPHYRUM, i);
+        }
+    }
+    redde url;
+}
+
+/* linea indicis: titulus in hospite articuli (/wiki/T), aliter
+ * "hospes: via decodicata"; scopus sine "://" ut est */
+interior chorda
+lineam_nexus (
+        chorda  scopus,
+        chorda  hospes_articuli,
+       Piscina* piscina)
+{
+                           chorda hospes;
+                           chorda via;
+                           chorda r;
+                              i32 i;
+    hic_manens constans character praefixum[] = "/wiki/";
+
+    scopus = sine_ancora(scopus);
+    si (!hospitem_et_viam(scopus, &hospes, &via))
+    {
+        redde chorda_transcribere(scopus, piscina);
+    }
+    si (   chorda_aequalis(hospes, hospes_articuli)
+        && chorda_incipit(via, chorda_ex_literis(praefixum, piscina))
+        && via.mensura > (i32)strlen(praefixum))
+    {
+        r = url_viam_decodificare(chorda_sectio(via,
+            (i32)strlen(praefixum), via.mensura), piscina);
+        per (i = ZEPHYRUM; i < r.mensura; i++)
+        {
+            si (r.datum[i] == '_')
+            {
+                r.datum[i] = ' ';
+            }
+        }
+        redde r;
+    }
+    redde chorda_concatenare(chorda_concatenare(hospes,
+        chorda_ex_literis(": ", piscina), piscina),
+        url_viam_decodificare(via, piscina), piscina);
+}
+
+/* fluxus secundus: "Links" + linea per scopum distinctum */
+interior vacuum
+indicem_nexuum_facere (
+    NavigatorTextus* t,
+             chorda  fons,
+            Piscina* piscina)
+{
+    ChordaAedificator* aed;
+                  Xar* visi;
+               chorda  hospes_articuli;
+               chorda  via;
+                  i32  mensura = ZEPHYRUM;
+                  i32  i;
+                  i32  j;
+
+    t->nexus.titulus = chorda_ex_literis("Links", piscina);
+    t->nexus.clausulae = xar_creare(piscina,
+        magnitudo(CodexClausula));
+    t->notae_nexuum = xar_creare(piscina,
+        magnitudo(ArticulusNota));
+    t->nexus.textus.datum = NIHIL;
+    t->nexus.textus.mensura = ZEPHYRUM;
+    visi = xar_creare(piscina, (i32)magnitudo(chorda));
+    aed = chorda_aedificator_creare(piscina,
+        (memoriae_index)(IV * MXXIV));
+    si (!t->nexus.clausulae || !t->notae_nexuum || !visi || !aed)
+    {
+        redde;
+    }
+    hospes_articuli.datum    = NIHIL;
+    hospes_articuli.mensura  = ZEPHYRUM;
+    (vacuum)hospitem_et_viam(fons, &hospes_articuli, &via);
+    per (i = ZEPHYRUM; i < xar_numerus(t->notae); i++)
+    {
+        constans ArticulusNota* n = (constans ArticulusNota*)
+            xar_obtinere(t->notae, i);
+                         chorda  clavis;
+                         chorda  linea;
+                  CodexClausula* k;
+                  ArticulusNota* m;
+
+        si (   n->genus          != ARTICULUS_NEXUS
+            || n->scopus.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        clavis = sine_ancora(n->scopus);
+        per (j = ZEPHYRUM; j < xar_numerus(visi); j++)
+        {
+            si (chorda_aequalis(*(chorda*)xar_obtinere(visi, j),
+                clavis))
+            {
+                frange;
+            }
+        }
+        si (j < xar_numerus(visi))
+        {
+            perge;
+        }
+        *(chorda*)xar_addere(visi) = clavis;
+        si (mensura == ZEPHYRUM)
+        {
+            /* titulus "Links" ante lineam primam */
+            chorda_aedificator_appendere_literis(aed, "Links");
+            k = (CodexClausula*)xar_addere(t->nexus.clausulae);
+            k->genus = CODEX_TITULUS;
+            k->initium = ZEPHYRUM;
+            k->finis = V;
+            mensura = V;
+        }
+        linea = lineam_nexus(n->scopus, hospes_articuli, piscina);
+        chorda_aedificator_appendere_literis(aed, "\n\n");
+        mensura += II;
+        chorda_aedificator_appendere_chorda(aed, linea);
+        k           = (CodexClausula*)xar_addere(t->nexus.clausulae);
+        k->genus    = CODEX_PARAGRAPHUS;
+        k->initium  = mensura;
+        k->finis    = mensura + linea.mensura;
+        m           = (ArticulusNota*)xar_addere(t->notae_nexuum);
+        m->genus    = ARTICULUS_NEXUS;
+        m->initium  = mensura;
+        m->finis    = mensura + linea.mensura;
+        m->scopus   = n->scopus;
+        mensura     += linea.mensura;
+    }
+    si (mensura > ZEPHYRUM)
+    {
+        t->nexus.textus = chorda_aedificator_finire(aed);
+    }
+}
+
 NavigatorTextus*
 navigator_textum_facere (
     constans Articulus* articulus,
@@ -187,5 +372,7 @@ navigator_textum_facere (
         }
     }
     t->caput.textus = chorda_aedificator_finire(s.aed);
+    indicem_nexuum_facere(t, articulus ? articulus->fons
+        : chorda_ex_literis("", piscina), piscina);
     redde t;
 }

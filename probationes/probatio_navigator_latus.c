@@ -100,7 +100,8 @@ mundus (
         offerre(w, URL_ANGLICUM, filum_legere_totum(
             "probationes/fixa/vicipaedia/rhubarb.html", c->piscina));
         offerre(w, URL_RHEUM, chorda_ex_literis(PAGINA("Rheum",
-            "<p>Rheum est genus plantarum.</p>"), c->piscina));
+            "<p>Rheum est <a rel=\"mw:WikiLink\" href=\"./Planta\">"
+            "genus</a> plantarum.</p>"), c->piscina));
         offerre(w, URL_BETA, chorda_ex_literis(PAGINA("Beta",
             "<p>Beta est planta.</p>"), c->piscina));
         offerre(w, URL_BETA, chorda_ex_literis(PAGINA("Beta",
@@ -418,6 +419,19 @@ _sectio_argumentum (
     CREDO_VERUM(campus_est(w, "visus", "pagina"));
     CREDO_VERUM(campus_est(w, "articulus", "3"));
     CREDO_VERUM(pictum(w, "Rheum est genus plantarum.", c->piscina));
+
+    CREDO_GRADUS("index nexuum: pagina nova post articulum (N3.1b)");
+    CREDO_VERUM(pictum(w, "Rheum - la.wikipedia.org - 1/2",
+        c->piscina));
+    CREDO_FALSUM(pictum(w, "Links", c->piscina));
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "Links", c->piscina));
+    CREDO_VERUM(pictum(w, "Planta", c->piscina));
+    CREDO_FALSUM(pictum(w, "plantarum", c->piscina));
+    CREDO_VERUM(pictum(w, "Rheum - la.wikipedia.org - 2/2",
+        c->piscina));
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "plantarum", c->piscina));
 
     CREDO_GRADUS("articulus ignotus: FALSUM, nihil mutatum");
     CREDO_FALSUM(argumentum(w, "99"));

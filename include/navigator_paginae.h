@@ -24,9 +24,19 @@
 #include "articulus.h"
 
 nomen structura {
-    CodexCaput  caput;     /* textus + clausulae (lector_paginare) */
-           Xar* notae;      /* ArticulusNota, offsets in caput.textus,
-                            * ordine textus */
+    CodexCaput caput;          /* articulus: textus + clausulae
+                                 * (lector_paginare) */
+          Xar* notae;           /* ArticulusNota, offsets in
+                                 * caput.textus, ordine textus */
+    /* INDEX NEXUUM (spec V.19): fluxus SECUNDUS, in paginis novis post
+     * articulum - titulus "Links", deinde linea per scopum distinctum
+     * (URL sine #ancora), ordine primae apparitionis. Linea = titulus
+     * scopi: in hospite articuli /wiki/<T> -> T decodicatus, '_' ->
+     * spatium ("Petiole (botany)"); aliter "<hospes>: <via
+     * decodicata>". Linea tota nexus est (nota NEXUS, scopus = URL
+     * prima apparitionis). Nullis nexibus: nexus.textus vacuus. */
+    CodexCaput  nexus;
+           Xar* notae_nexuum;    /* ArticulusNota in nexus.textus */
 } NavigatorTextus;
 
 /* NIHIL solum memoria deficiente */

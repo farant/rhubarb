@@ -235,6 +235,142 @@ _probare_omissa (
         "Taxon", c->piscina)));
 }
 
+/* clausula i indicis nexuum: genus et textus */
+interior b32
+clausula_nexus_est (
+    constans NavigatorTextus* t,
+                         i32  i,
+                  CodexGenus  genus,
+          constans character* textus)
+{
+    constans CodexClausula* k = (constans CodexClausula*)xar_obtinere(
+        t->nexus.clausulae, i);
+
+    redde k && k->genus == genus && chorda_aequalis_literis(
+        chorda_sectio(t->nexus.textus, k->initium, k->finis), textus);
+}
+
+/* nota i indicis: NEXUS, linea tecta, scopus */
+interior b32
+nota_nexus_est (
+    constans NavigatorTextus* t,
+                         i32  i,
+          constans character* linea,
+          constans character* scopus)
+{
+    constans ArticulusNota* n = (constans ArticulusNota*)xar_obtinere(
+        t->notae_nexuum, i);
+
+    redde n && n->genus == ARTICULUS_NEXUS && chorda_aequalis_literis(
+        chorda_sectio(t->nexus.textus, n->initium, n->finis), linea)
+        && chorda_aequalis_literis(n->scopus, scopus);
+}
+
+interior vacuum
+_probare_nexus (
+    CredoContextus* c)
+{
+    NavigatorTextus* t;
+
+    t = navigator_textum_facere(exemplar(c->piscina), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(t);
+
+    CREDO_GRADUS("index nexuum: titulus, linea per scopum");
+    CREDO_CHORDA_AEQUALIS_LITERIS(t->nexus.textus,
+        "Links\n\nRheum (planta)\n\nFragum");
+    CREDO_AEQUALIS_I32(xar_numerus(t->nexus.clausulae), III);
+    CREDO_VERUM(clausula_nexus_est(t, ZEPHYRUM, CODEX_TITULUS,
+        "Links"));
+    CREDO_VERUM(clausula_nexus_est(t, I, CODEX_PARAGRAPHUS,
+        "Rheum (planta)"));
+    CREDO_VERUM(clausula_nexus_est(t, II, CODEX_PARAGRAPHUS, "Fragum"));
+
+    CREDO_GRADUS("linea tota nexus est");
+    CREDO_AEQUALIS_I32(xar_numerus(t->notae_nexuum), II);
+    CREDO_VERUM(nota_nexus_est(t, ZEPHYRUM, "Rheum (planta)",
+        "https://la.wikipedia.org/wiki/Rheum_(planta)"));
+    CREDO_VERUM(nota_nexus_est(t, I, "Fragum",
+        "https://la.wikipedia.org/wiki/Fragum"));
+
+    CREDO_GRADUS("articulus ipse non mutatus");
+    CREDO_FALSUM(chorda_continet(t->caput.textus, chorda_ex_literis(
+        "Links", c->piscina)));
+}
+
+/* scopi distincti sine #ancora, ordo primae apparitionis, hospites
+ * alieni cum praefixo, decodicatio */
+interior vacuum
+_probare_nexus_distincti (
+    CredoContextus* c)
+{
+            Articulus* a;
+      ArticulusSectio* s;
+    ArticulusClausula* k;
+      NavigatorTextus* t;
+
+    a = (Articulus*)piscina_allocare(c->piscina, magnitudo(Articulus));
+    a->titulus = chorda_ex_literis("Alpha", c->piscina);
+    a->fons      =
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Alpha",
+        c->piscina);
+    a->sectiones  = xar_creare(c->piscina, magnitudo(ArticulusSectio));
+    s             = sectionem_addere(a, "", c->piscina);
+    k = clausulam_addere(s->clausulae, ARTICULUS_PARAGRAPHUS, ZEPHYRUM,
+        "", "a b c d e f g", c->piscina);
+    notam_addere(k, ARTICULUS_NEXUS, ZEPHYRUM, I,
+        "https://la.wikipedia.org/wiki/Alpha#x", c->piscina);
+    notam_addere(k, ARTICULUS_NEXUS, II, III,
+        "https://la.wikipedia.org/wiki/Caf%C3%A9", c->piscina);
+    notam_addere(k, ARTICULUS_EMPHASIS, II, III, "", c->piscina);
+    notam_addere(k, ARTICULUS_NEXUS, IV, V,
+        "https://la.wikipedia.org/wiki/Alpha#y", c->piscina);
+    notam_addere(k, ARTICULUS_NEXUS, VI, VII,
+        "https://en.wikipedia.org/wiki/Rhubarb", c->piscina);
+    notam_addere(k, ARTICULUS_NEXUS, VIII, IX,
+        "https://www.example.com/a_b%20c", c->piscina);
+    notam_addere(k, ARTICULUS_NEXUS, XII, XIII,
+        "https://la.wikipedia.org/wiki/Alpha", c->piscina);
+    t = navigator_textum_facere(a, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(t);
+
+    CREDO_GRADUS("Alpha#x, Alpha#y, Alpha: linea una; sine emphasi");
+    CREDO_CHORDA_AEQUALIS_LITERIS(t->nexus.textus,
+        "Links\n\n"
+        "Alpha\n\n"
+        "Caf\xC3\xA9\n\n"
+        "en.wikipedia.org: /wiki/Rhubarb\n\n"
+        "www.example.com: /a_b c");
+    CREDO_GRADUS("scopus = URL primae apparitionis (cum ancora)");
+    CREDO_VERUM(nota_nexus_est(t, ZEPHYRUM, "Alpha",
+        "https://la.wikipedia.org/wiki/Alpha#x"));
+    CREDO_AEQUALIS_I32(xar_numerus(t->notae_nexuum), IV);
+}
+
+interior vacuum
+_probare_nexus_nulli (
+    CredoContextus* c)
+{
+          Articulus* a;
+    ArticulusSectio* s;
+    NavigatorTextus* t;
+
+    a = (Articulus*)piscina_allocare(c->piscina, magnitudo(Articulus));
+    a->titulus = chorda_ex_literis("Nihil", c->piscina);
+    a->fons      =
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Nihil",
+        c->piscina);
+    a->sectiones  = xar_creare(c->piscina, magnitudo(ArticulusSectio));
+    s             = sectionem_addere(a, "", c->piscina);
+    clausulam_addere(s->clausulae, ARTICULUS_PARAGRAPHUS, ZEPHYRUM, "",
+        "Sine nexibus.", c->piscina);
+    t = navigator_textum_facere(a, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(t);
+    CREDO_GRADUS("nullis nexibus: index vacuus");
+    CREDO_AEQUALIS_I32((i32)t->nexus.textus.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(xar_numerus(t->nexus.clausulae), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(xar_numerus(t->notae_nexuum), ZEPHYRUM);
+}
+
 /* Rhubarb verus: paginatio, initia intra textum et crescentia, notae
  * intra textum, idem bis */
 interior vacuum
@@ -293,6 +429,56 @@ _probare_rheum (
     }
     CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
 
+    CREDO_GRADUS("index nexuum: lineae = scopi distincti (via alia)");
+    {
+        Xar* visi = xar_creare(c->piscina, (i32)magnitudo(chorda));
+        i32  j;
+        i32  k;
+        s32  p1;
+        s32  p2;
+        s32  p3;
+
+        per (j = ZEPHYRUM; j < xar_numerus(t->notae); j++)
+        {
+            chorda s = nota(t, j)->scopus;
+               s32 h = chorda_invenire_index(s,
+                   chorda_ex_literis("#",
+                   c->piscina));
+
+            si (nota(t, j)->genus != ARTICULUS_NEXUS)
+            {
+                perge;
+            }
+            si (h >= ZEPHYRUM)
+            {
+                s = chorda_sectio(s, ZEPHYRUM, (i32)h);
+            }
+            per (k = ZEPHYRUM; k < xar_numerus(visi); k++)
+            {
+                si (chorda_aequalis(*(chorda*)xar_obtinere(visi, k), s))
+                {
+                    frange;
+                }
+            }
+            si (k == xar_numerus(visi))
+            {
+                *(chorda*)xar_addere(visi) = s;
+            }
+        }
+        CREDO_VERUM(xar_numerus(visi) > XX);
+        CREDO_AEQUALIS_I32(xar_numerus(t->notae_nexuum),
+            xar_numerus(visi));
+        CREDO_AEQUALIS_I32(xar_numerus(t->nexus.clausulae),
+            xar_numerus(visi) + I);
+        p1 = chorda_invenire_index(t->nexus.textus, chorda_ex_literis(
+            "\nPetiole (botany)\n", c->piscina));
+        p2 = chorda_invenire_index(t->nexus.textus, chorda_ex_literis(
+            "\nRheum (plant)\n", c->piscina));
+        p3 = chorda_invenire_index(t->nexus.textus, chorda_ex_literis(
+            "\nPolygonaceae\n", c->piscina));
+        CREDO_VERUM(p1 > ZEPHYRUM && p1 < p2 && p2 < p3);
+    }
+
     CREDO_GRADUS("eadem area: eaedem paginae");
     iterum = lector_paginare(&navigator_textum_facere(a,
         c->piscina)->caput,
@@ -314,6 +500,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "textus", _probare_textus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "notae", _probare_notae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "omissa", _probare_omissa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nexus", _probare_nexus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nexus distincti", _probare_nexus_distincti, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "nexus nulli", _probare_nexus_nulli, NIHIL, NIHIL, NIHIL, NIHIL },
     { "rheum", _probare_rheum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
