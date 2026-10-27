@@ -314,4 +314,65 @@
     </pars>
   </carmen>
 
+  <carmen titulus="nocturnum" stylus="popularis" tempus="66" metrum="4/4" clavis="f maior">
+    <reverberatio aula="0.7" mollities="0.5" latitudo="1" lucrum="0.35"/>
+    <acorda mensura="1" textus="Fmaj7 | Em7b5:2 A7b9:2 | Dm7:2 G7:2 | Gm7:2 C7:2 | Fmaj7:2 Bb7:2 | Am7:2 D7b9:2 | Gm7:2 Gb7:2 | F6"/>
+    <fermata mensura="8"/>
+    <tempus mensura="7" valor="56" usque="8"/>
+    <pars titulus="melodia" instrumentum="piano_electricum" lucrum="0.8" reverberatio="0.3">
+      <frustum mensura="1"><textus!>o5 a4. g8 e4 c4 | o5 d2 c#4 e4 | o5 f4. e8 d4 c4 | o5 b-2 a4 g4 | o5 a4. c8 e4 d4 | o5 c2 a4 f#4 | o5 g4 f4 f4 e4 | o5 f1</textus></frustum>
+    </pars>
+    <pars titulus="laeva1" instrumentum="piano_electricum" lucrum="0.32" reverberatio="0.3">
+      <frustum mensura="1"><textus!>o3 a1 | o3 g2 o3 g2 | o3 f2 o3 f2 | o3 f2 o3 b-2 | o3 a2 o3 a-2 | o3 g2 o3 f#2 | o3 f2 o3 b-2 | o4 c1</textus></frustum>
+    </pars>
+    <pars titulus="laeva2" instrumentum="piano_electricum" lucrum="0.32" reverberatio="0.3">
+      <frustum mensura="1"><textus!>o4 c1 | o3 b-2 o3 b-2 | o3 a2 o3 a2 | o3 a2 o4 d2 | o4 c2 o4 c2 | o3 b2 o3 b2 | o3 a2 o4 e-2 | o4 d1</textus></frustum>
+    </pars>
+    <pars titulus="laeva3" instrumentum="piano_electricum" lucrum="0.32" reverberatio="0.3">
+      <frustum mensura="1"><textus!>o4 e1 | o4 d2 o4 c#2 | o4 c2 o3 b2 | o3 b-2 o4 e2 | o4 e2 o4 d2 | o4 c2 o4 c2 | o3 b-2 o4 f-2 | o4 g1</textus></frustum>
+    </pars>
+    <pars titulus="laeva4" instrumentum="piano_electricum" lucrum="0.32" reverberatio="0.3">
+      <frustum mensura="1"><textus!>o4 g1 | o4 e2 o4 f#2 | o4 e2 o4 e2 | o4 d2 o4 a2 | o4 g2 o4 g2 | o4 e2 o4 e-2 | o4 d2 o4 a-2 | o4 a1</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="pizzicato" lucrum="1" reverberatio="0.2">
+      <frustum mensura="1"><textus!>o2 f1 | o2 e2 a2 | o2 d2 g2 | o2 g2 c2 | o2 f2 b-2 | o2 a2 d2 | o2 g2 g-2 | o2 f1</textus></frustum>
+    </pars>
+  </carmen>
+
+  <carmen titulus="ambulatio" stylus="popularis" tempus="160" metrum="4/4" clavis="f maior"
+          agogica="2 1 2 1 2 1 2 1">
+    <reverberatio aula="0.4" mollities="0.6" latitudo="1" lucrum="0.25"/>
+    <sectio titulus="chorus" mensura="1" usque="13"/>
+    <acorda mensura="1" textus="F7 | Bb7 | F7 | Cm7:2 F7:2 | Bb7 | Bdim7 | F7 | D7b9 | Gm7 | C7 | F7:2 D7b9:2 | Gm7:2 C7:2"/>
+    <repetitio sectio="chorus" mensura="13" partes="melodia laeva1 laeva2 laeva3 laeva4 bassus"/>
+    <fermata mensura="25"/>
+    <pars titulus="melodia" instrumentum="cornu" lucrum="0.7" reverberatio="0.3">
+      <frustum mensura="1"><textus!>o4 c8 e-8 f8 a-8 a4 f4 | o4 r8 f8 a-8 b-8 o5 d4 r4 | o5 c8 e-8 c8 o4 a-8 a4 f4 | o5 e-4 d8 c8 o4 a4 f4 | o4 d8 f8 a-8 b-8 o5 d4 o4 b-4 | o4 b8 o5 d8 f8 a-8 g4 f4 | o5 c4 o4 a4 f8 a8 o5 c4 | o5 c8 o4 a8 f#8 d8 e-4 d4 | o4 b-4 g4 d4 g4 | o4 c8 e8 g8 b-8 o5 c4 o4 b-8 g8 | o4 a4 f4 f#4 a4 | o4 g4 b-4 e4 r4</textus></frustum>
+      <frustum mensura="25"><textus!>o4 f1</textus></frustum>
+    </pars>
+    <pars titulus="laeva1" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
+      <frustum mensura="1"><textus!>o3 a4. a8 r2 | o3 a-4. a-8 r2 | o3 a4. a8 r2 | o3 b-4 r4 o3 a4 r4 | o3 a-4. a-8 r2 | o3 g#4. g#8 r2 | o3 a4. a8 r2 | o4 c4. c8 r2 | o3 b-4. b-8 r2 | o3 b-4. b-8 r2 | o3 a4 r4 o4 c4 r4 | o3 b-4 r4 o3 b-4 r4</textus></frustum>
+      <frustum mensura="25"><textus!>o3 a1</textus></frustum>
+    </pars>
+    <pars titulus="laeva2" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
+      <frustum mensura="1"><textus!>o4 d4. d8 r2 | o4 c4. c8 r2 | o4 d4. d8 r2 | o4 d4 r4 o4 d4 r4 | o4 c4. c8 r2 | o3 b4. b8 r2 | o4 d4. d8 r2 | o4 e-4. e-8 r2 | o4 d4. d8 r2 | o4 d4. d8 r2 | o4 d4 r4 o4 e-4 r4 | o4 d4 r4 o4 d4 r4</textus></frustum>
+      <frustum mensura="25"><textus!>o4 d1</textus></frustum>
+    </pars>
+    <pars titulus="laeva3" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
+      <frustum mensura="1"><textus!>o4 e-4. e-8 r2 | o4 d4. d8 r2 | o4 e-4. e-8 r2 | o4 e-4 r4 o4 e-4 r4 | o4 d4. d8 r2 | o4 d4. d8 r2 | o4 e-4. e-8 r2 | o4 f#4. f#8 r2 | o4 f4. f8 r2 | o4 e4. e8 r2 | o4 e-4 r4 o4 f#4 r4 | o4 f4 r4 o4 e4 r4</textus></frustum>
+      <frustum mensura="25"><textus!>o4 e-1</textus></frustum>
+    </pars>
+    <pars titulus="laeva4" instrumentum="piano_electricum" lucrum="0.35" reverberatio="0.25">
+      <frustum mensura="1"><textus!>o4 g4. g8 r2 | o4 g4. g8 r2 | o4 g4. g8 r2 | o4 g4 r4 o4 g4 r4 | o4 g4. g8 r2 | o4 f4. f8 r2 | o4 g4. g8 r2 | o4 b4. b8 r2 | o4 a4. a8 r2 | o4 a4. a8 r2 | o4 g4 r4 o4 b4 r4 | o4 a4 r4 o4 a4 r4</textus></frustum>
+      <frustum mensura="25"><textus!>o4 g1</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="pizzicato" lucrum="1" reverberatio="0.15">
+      <frustum mensura="1"><textus!>o2 f4 o2 a4 o3 c4 o2 a4 | o2 b-4 o3 d4 o2 f4 o2 e4 | o2 f4 o2 a4 o3 c4 o2 b4 | o3 c4 o2 e4 o2 f4 o2 a4 | o2 b-4 o3 d4 o2 f4 o2 a#4 | o2 b4 o3 d4 o2 f4 o2 e4 | o2 f4 o2 a4 o3 c4 o3 c#4 | o3 d4 o2 f#4 o2 a4 o2 f#4 | o2 g4 o2 b-4 o3 d4 o2 b4 | o3 c4 o2 e4 o2 g4 o2 e4 | o2 f4 o2 c#4 o2 d4 o2 f#4 | o2 g4 o2 b4 o3 c4 o2 e4</textus></frustum>
+      <frustum mensura="25"><textus!>o2 f1</textus></frustum>
+    </pars>
+    <pars titulus="tympana" instrumentum="aether" lucrum="0.3">
+      <frustum mensura="1"><textus!>@passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 c8 c8 c4 c8 c8 | @passus c4 r2.</textus></frustum>
+    </pars>
+  </carmen>
+
 </carmina>
