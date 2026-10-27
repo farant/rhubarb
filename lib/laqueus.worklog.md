@@ -444,3 +444,59 @@ division by d; A⁻¹ sign; d = 0 not INUTILE; i not recomputed on a prime
 change; class w instead of 3w; Jones writhe sign. Most are caught inside
 the driver (the extra points and extra prime refuse the inconsistent
 interpolant); the A⁻¹ and writhe plants by the oracle comparisons.
+
+## 2026-10-27 — T4 review (independent, after 62a02ef5) and fixes
+
+Reviewer, all in scratch under ASan/UBSan: every one of the 65,536
+label assignments at c = 2 (64 valid, including face 0 as a monogon,
+[[2,1,3,2],[4,3,1,4]], t = 5 there); 1.2M biased random codes at c =
+3–5 and 200k garbage codes — the network path accepts and refuses
+exactly what the state sum does, with identical bracket and Jones;
+10,000 relabeled / permuted / mirrored / reversed / kinked table knots;
+2,000 connected sums of 2–5 kinked, scrambled knots (to ~70 crossings);
+5,000 nugatory crossings; connected sums with Jones = product at c =
+36, 65, 207, 404, 803 and 1606 (122-bit coefficients at c = 207). A
+negative control (mirror without t → 1/t) failed 153 times, so the
+harness bites. The loops-turn-±4 check alone catches a solver plant (m
+= 0): 4,084 of 8,334 checks fail. No H.
+
+Fixed here:
+- **M1** `laqueus_modulus_vertex_aestimare` promised ERRATUM for a
+  non-prime p but did not deliver: a composite ≡ 1 (mod 4) divisible by
+  3 has no g with g^((p−1)/2) = −1, so the search ran ~p modpows (2^32 −
+  7 never returned); p = 85 was accepted (g = 13), and with gcd(ω, p) >
+  1 the ignored `congruentia_inversa` left w⁻¹ uninitialized; the i² =
+  −1 check was dead (true by construction). Now p is tested with
+  `congruentia_est_primus` (deterministic below 2^32) before the
+  search; ω without an inverse is INUTILE; the dead check is gone. The
+  search keeps its g < p bound as a guard. That bound matters: my first
+  version dropped it, and the plant that bypasses the primality test
+  then looped forever in the parent instead of failing. Only public-API
+  misuse reaches any of this — interpolatio passes primes.
+- **M2** nothing above 24 crossings had structure beyond R1 kinks
+  (which only multiply the bracket by −A^±3: coefficients stayed those
+  of ≤ 13-crossing knots, one prime's worth). New section "summae
+  connexae": 30 sums of 2–5 table knots plus one of 12 knots of 9–13
+  crossings (c ≥ 100), each piece mirrored at random, one kink, labels
+  rotated and crossings permuted; Jones = the product of the pieces'
+  Jones (t → 1/t for mirrors). The big sum must have a coefficient
+  wider than 31 bits, so CRT across primes is tested end to end.
+  Builder: K1's incoming occurrence of m1 → m1 + m2, K2's incoming
+  occurrence of m2 → m1, other K2 labels + m1.
+- **L2** coverage: mirror images (in the sums), face 0 as a monogon
+  (hand code u3), kinks at crossing 0 (labels rotated and crossings
+  permuted in the R1 section and the sums), composite p (85 →
+  ERRATUM; 2^32 − 7 returns, under CREDO_NON_PENDET). Plant R18
+  (primality test bypassed) red.
+
+Carried to T5 (plan): **M3** contractions per bracket grow as c² —
+(window/4 + 3) points per prime × (2c/31 + 2) primes ≈ c²/16. The
+reviewer measured 8.1 s at c = 803 and 68 s at c = 1606 on connected
+sums of apex 256, ~90% inside `contractio_exsequi_modulo`; at T5's
+braid apex 2^26–2^28 that is hours per knot. The 2c-bit bound is 2–3×
+loose in practice (122 of 414 bits at c = 207), costing 2–3× the
+primes. **L1** memory: the caller's arena grows superquadratically (11.5
+MB at c = 803, 78 MB at 1606), almost all of it interpolatio's
+scratch, which shares the caller's piscina with `exitus`.
+
+Tests now: 10 sections, 56,344 checks, 2.2 s.

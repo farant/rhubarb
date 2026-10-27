@@ -285,7 +285,8 @@ laqueus_modulus_vertex_creare (
  * residuum quadraticum minimum), valor = <D>(A) modulo p.
  * INTERPOLATIO_UTILE (punctum = A); INTERPOLATIO_INUTILE si omega = 0
  * aut d = omega^4 + omega^-4 = 0 (A^4 = -1); INTERPOLATIO_ERRATUM si
- * p < 5, p non 1 modulo 4, aut p non primus deprehensus. Nihil
+ * p < 5, p non 1 modulo 4, aut p non primus (Miller-Rabin
+ * deterministicus, congruentia_est_primus). Nihil
  * allocat (officina reutitur); primus mutatus i recomputat. */
 s32
 laqueus_modulus_vertex_aestimare (

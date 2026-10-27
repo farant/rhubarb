@@ -2656,11 +2656,21 @@ laqueus_modulus_vertex_aestimare (
     }
     si (p != mv->primus)
     {
-        /* i = g^((p-1)/4), g non-residuum quadraticum minimum */
+        /* primus PROBATUS ante quaestionem g: modulus compositus 3 | p
+         * nullum g habet (scansio ~p), alii falso accipiuntur */
         i32 g = II;
 
-        dum (   g < p && congruentia_potentia(g, (i64)((p - I) / II), p)
-            != p - I)
+        si (!congruentia_est_primus(p))
+        {
+            redde INTERPOLATIO_ERRATUM;
+        }
+        /* i = g^((p-1)/4), g non-residuum quadraticum minimum (p
+         * primus: dimidium residuorum, g parvum invenitur; limes g < p
+         * custos tantum - sine eo modulus compositus, si probatio
+         * umquam praeteritur, in aeternum quaereret) */
+        dum (   g < p
+             && congruentia_potentia(g, (i64)((p - I) / II), p) != p
+                 - I)
         {
             g++;
         }
@@ -2668,20 +2678,14 @@ laqueus_modulus_vertex_aestimare (
         {
             redde INTERPOLATIO_ERRATUM;
         }
-        mv->radix_i = congruentia_potentia(g, (i64)((p - I) / IV), p);
-        si (congruentia_multiplica(mv->radix_i, mv->radix_i, p) != p
-            - I)
-        {
-            redde INTERPOLATIO_ERRATUM;
-        }
-        mv->primus = p;
+        mv->radix_i  = congruentia_potentia(g, (i64)((p - I) / IV), p);
+        mv->primus   = p;
     }
     w = omega % p;
-    si (w == ZEPHYRUM)
+    si (w == ZEPHYRUM || !congruentia_inversa(w, p, &w_inversa))
     {
         redde INTERPOLATIO_INUTILE;
     }
-    (vacuum)congruentia_inversa(w, p, &w_inversa);
 
     /* potentiae omega^j, j in [-E, E] */
     e_max                 = mv->exponens_maximus;

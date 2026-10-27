@@ -100,6 +100,103 @@ _ansam_inserere (
     }
 }
 
+/* occursus ad arma j intrans? infra X0; supra X3 (positivus) aut X1
+ * (negativus) */
+interior b32
+_intrans (
+    constans i32* x,
+             i32  j,
+             i32  m)
+{
+    s32 signum = _signum(x, m);
+
+    redde j == ZEPHYRUM || (j == III && signum > ZEPHYRUM)
+        || (j == I && signum < ZEPHYRUM);
+}
+
+/* summa connexa K1 # K2: os ultimum utriusque secatur - occursus
+ * intrans m1 in K1 -> m1 + m2, occursus intrans m2 in K2 -> m1,
+ * ceteri K2 + m1. Jones(K1 # K2) = Jones(K1) Jones(K2). */
+interior vacuum
+_summam_connexam (
+    constans i32* pd_sinister,
+             i32  c1,
+    constans i32* pd_dexter,
+             i32  c2,
+             i32* novum)
+{
+    i32 m1 = II * c1;
+    i32 m2 = II * c2;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < IV * c1; k++)
+    {
+        novum[k] = pd_sinister[k] == m1
+            && _intrans(pd_sinister + IV * (k / IV), k % IV,
+            m1) ? m1 + m2 : pd_sinister[k];
+    }
+    per (k = ZEPHYRUM; k < IV * c2; k++)
+    {
+        novum[IV * c1 + k] = pd_dexter[k] == m2
+            && _intrans(pd_dexter + IV * (k / IV),
+            k % IV, m2) ? m1 : pd_dexter[k] + m1;
+    }
+}
+
+/* speculum: positivus [a,b,c,d] -> [d,a,b,c], negativus -> [b,c,d,a]
+ * (filum supra fit infra); Jones(K*)(t) = Jones(K)(1/t) */
+interior vacuum
+_speculum (
+    constans i32* pd,
+             i32  c,
+             i32* novum)
+{
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        constans i32* x      = pd + IV * k;
+                 i32  motus  = _signum(x, II * c) > ZEPHYRUM ? III : I;
+
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            novum[IV * k + j] = x[(j + motus) % IV];
+        }
+    }
+}
+
+/* ora rotata (l -> l + r modulo m) et transitus permixti: idem nodus,
+ * ansa quaelibet ad transitum 0 venire potest */
+interior vacuum
+_permiscere (
+        i32* pd,
+        i32  c,
+       Sors* s)
+{
+    i32 m = II * c;
+    i32 r = sors_intra(s, m);
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        pd[k] = (pd[k] - I + r) % m + I;
+    }
+    per (k = c; k > I; k--)
+    {
+        i32 q = sors_intra(s, k);
+
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            i32 x = pd[IV * (k - I) + j];
+
+            pd[IV * (k - I) + j]  = pd[IV * q + j];
+            pd[IV * q + j]        = x;
+        }
+    }
+}
+
 /* polynomium tabulae ("..." in t) */
 interior Polynomium
 _polynomium_textus (
@@ -178,7 +275,9 @@ _probare_codices_manu (
          Piscina* piscina  = c->piscina;
     constans i32  u1[]     = { I, I, II, IV, II, IV, III, III };
     constans i32  u2[]     = { IV, I, I, II, II, IV, III, III };
-    constans i32  t1[] = { I, VII, II, VI, VII, III, VIII, II, III, I,
+    constans i32  u3[]     = { II, I, III, II, IV, III, I, IV };  /* facies 0
+                                                          * monogonum */
+    constans i32 t1[] = { I, VII, II, VI, VII, III, VIII, II, III, I,
         IV,
         VIII, IV, VI, V, V };
     constans i32 t2[] = { I, VII, II, VI, VII, III, VIII, II, III, I,
@@ -190,10 +289,12 @@ _probare_codices_manu (
 
     _uncinum_comparare(u1, II, piscina);
     _uncinum_comparare(u2, II, piscina);
+    _uncinum_comparare(u3, II, piscina);
     _uncinum_comparare(t1, IV, piscina);
     _uncinum_comparare(t2, IV, piscina);
     _jones_comparare(u1, II, unum, piscina);
     _jones_comparare(u2, II, unum, piscina);
+    _jones_comparare(u3, II, unum, piscina);
     _jones_comparare(t1, IV, trifolium, piscina);
     _jones_comparare(t2, IV, trifolium, piscina);
 }
@@ -304,6 +405,7 @@ _probare_ansas (
             pd = novum;
             transitus++;
         }
+        _permiscere(pd, transitus, &s);
         _jones_comparare(pd, transitus, _polynomium_textus(n->jones,
             piscina), piscina);
         _uncinum_comparare(pd, transitus, piscina);
@@ -418,6 +520,124 @@ _probare_laqueos_fortuitos (
         piscina_reficere(piscina, nota);
     }
     CREDO_MAIOR_I64((i64)probata, (i64)L);
+}
+
+
+/* nodus tabulae fortuitus cum transitibus in [imus, summus] */
+interior constans NodusTabulae*
+_nodum_eligere (
+     Sors* s,
+      i32  imus,
+      i32  summus)
+{
+    constans NodusTabulae* n;
+
+    fac
+    {
+        n = tabula_nodorum_nodus(sors_intra(s,
+            tabula_nodorum_numerus()));
+    }
+    dum (n->transitus < imus || n->transitus > summus);
+    redde n;
+}
+
+/* summae connexae: XXX summae II..V nodorum (III..IX transitus), una
+ * XII nodorum (IX..XIII, c >= C); quisque fortuito speculatus, ansa
+ * una, ora rotata et transitus permixti. Jones = productum Jones
+ * partium (speculum: t -> 1/t). Summa magna coefficientem > 31
+ * bitorum habet: restitutio trans primos plures vere probatur. */
+interior vacuum
+_probare_summas (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+
+    sors_seminare(&s, (i64)MMXXX, ZEPHYRUM);
+    per (t = ZEPHYRUM; t <= XXX; t++)
+    {
+        PiscinaNotatio nota   = piscina_notare(piscina);
+                   b32 magna  = t == XXX;
+                   i32 partes = magna ? XII : II
+                       + sors_intra(&s, IV);
+          constans i32* pd         = NIHIL;
+                   i32  transitus  = ZEPHYRUM;
+            Polynomium  exspectatum =
+                polynomium_constans(magnus_ex_s64(I),
+                piscina);
+        Polynomium  jones;
+               i32* novum;
+               i32  q;
+
+        per (q = ZEPHYRUM; q < partes; q++)
+        {
+            constans NodusTabulae* n = _nodum_eligere(&s,
+                magna ? IX : III,
+                magna ? XIII : IX);
+            constans i32* pars  = tabula_nodorum_pd(n, piscina);
+                     i32  ct    = n->transitus;
+              Polynomium  j = _polynomium_textus(n->jones,
+                  piscina);
+
+            si (sors_intra(&s, II) == ZEPHYRUM)
+            {
+                i32* speculum = (i32*)piscina_allocare(piscina,
+                    (memoriae_index)IV * ct * magnitudo(i32));
+
+                _speculum(pars, ct, speculum);
+                pars = speculum;
+                CREDO_NECESSE(polynomium_dilata(j, -(s32)I, piscina,
+                    &j));
+            }
+            si (pd == NIHIL)
+            {
+                pd         = pars;
+                transitus  = ct;
+            }
+            alioquin
+            {
+                novum = (i32*)piscina_allocare(piscina,
+                    (memoriae_index)IV * (transitus
+                        + ct) * magnitudo(i32));
+                _summam_connexam(pd, transitus, pars, ct, novum);
+                pd         = novum;
+                transitus  += ct;
+            }
+            CREDO_NECESSE(polynomium_multiplica(exspectatum, j, piscina,
+                &exspectatum));
+        }
+        novum = (i32*)piscina_allocare(piscina,
+            (memoriae_index)IV * (transitus + I) * magnitudo(i32));
+        _ansam_inserere(pd, transitus, I + sors_intra(&s,
+            II * transitus),
+            sors_intra(&s, IV), novum);
+        transitus++;
+        _permiscere(novum, transitus, &s);
+        CREDO_NECESSE(laqueus_jones_ex_pd_rete(novum, transitus,
+            OCTETI_MAXIMI, piscina, &jones, NIHIL));
+        CREDO_VERUM(polynomium_aequalis(jones, exspectatum));
+        si (magna)
+        {
+            i32 bita = ZEPHYRUM;
+            s32 e;
+
+            CREDO_VERUM(transitus >= C);
+            per (e = polynomium_gradus_imus(jones);
+                 e <= polynomium_gradus_summus(jones); e++)
+            {
+                i32 b = magnus_bitorum(polynomium_coefficiens(jones,
+                    e));
+
+                si (b > bita)
+                {
+                    bita = b;
+                }
+            }
+            CREDO_VERUM(bita > XXXI);
+        }
+        piscina_reficere(piscina, nota);
+    }
 }
 
 
@@ -596,6 +816,18 @@ _aestimare_modulo (
     redde summa;
 }
 
+/* filius CREDO_NON_PENDET: modulus compositus prope 2^32 */
+interior vacuum
+_compositum_magnum (
+    LaqueusModulusVertex* mv)
+{
+    i32 a;
+    i32 v;
+
+    (vacuum)laqueus_modulus_vertex_aestimare(mv, II, (i32)4294967289UL,
+        &a, &v);
+}
+
 /* puncta singula: valor = summa statuum in A modulo p (sine
  * interpolatione); d = 0 ad p = 17, omega = 5 (A = 2, A^4 = -1);
  * omega 0; primi inepti */
@@ -647,6 +879,12 @@ _probare_puncta (
     CREDO_AEQUALIS_S32(laqueus_modulus_vertex_aestimare(NIHIL, II, p,
         &a,
         &v), INTERPOLATIO_ERRATUM);
+    /* moduli compositi 1 mod 4: 85 = 5 * 17 (g = 13 olim falso
+     * acceptum), 2^32 - 7 = 3 * ... (nullum g: olim ~p conatus) */
+    CREDO_AEQUALIS_S32(laqueus_modulus_vertex_aestimare(mv, V, LXXXV,
+        &a,
+        &v), INTERPOLATIO_ERRATUM);
+    CREDO_NON_PENDET(_compositum_magnum(mv), MM);
     CREDO_AEQUALIS_I32(a, (i32)0xDEADUL);
 
     /* p = 17, omega = 2: A = 13 * 4 = 1, d = 16 + 16^-1 = 16 + 16 = 15
@@ -725,6 +963,7 @@ interior constans CredoSectio SECTIONES[] = {
     { "ansae R1", _probare_ansas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ultra XXIV", _probare_ultra_limitem, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "summae connexae", _probare_summas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "polygona fortuita", _probare_laqueos_fortuitos, NIHIL, NIHIL,
         NIHIL,
       NIHIL },

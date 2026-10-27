@@ -462,13 +462,26 @@ Fran's go-ahead.
   loops ±4, single points, d = 0. Random R2 insertions not written —
   bigons covered by table and polygon diagrams. 17 plants red.
   Glossary: gyratio. See lib/laqueus.worklog.md.)*
+  *(2026-10-27, independent review of 62a02ef5: no H; exhaustive c = 2,
+  1.2M random codes, transforms and connected sums to c = 1606 all
+  agree. Fixed: composite p now ERRATUM (was a ~p-step search or a
+  false accept); connected sums of up to 12 mirrored, kinked, permuted
+  knots (c ≥ 100, coefficients > 31 bits) with Jones = product;
+  monogon face 0. 10 sections, 56,344 checks.)*
 - **T5. Measurement and braids.** First, from the T3 review: the hot kernel
   spends its time in the per-entry odometer (interni loops of length 2
   on braid networks, 1.3–1.8 ns per multiplication); a prototype with
   per-step offset tables over the interni assignments, built at
   `ordinare` and capped with the odometer as fallback, measured ~1.65×
   faster with identical results — measure it in the mensura harness
-  and adopt it if it holds. `laqueus_pd_ex_plexu` (braid closure
+  and adopt it if it holds. From the T4 review: the number of
+  contractions per bracket grows as c² ((window/4 + 3) points × (2c/31
+  + 2) primes ≈ c²/16; 8.1 s at c = 803 and 68 s at c = 1606 with apex
+  256, hours at braid apex 2^26–2^28) — consider batching several points
+  per contraction (a vector of values per tensor entry) and a tighter
+  provable coefficient bound (the 2c-bit bound is 2–3× loose); and the
+  interpolation scratch grows superquadratically in the caller's arena
+  (78 MB at c = 1606) — give it its own arena. `laqueus_pd_ex_plexu` (braid closure
   to PD; even strand counts need odd word length for one component).
   Timings and costs against the state sum at 12, 16, 20, 24 crossings
   (via `mensura`); the greedy-width curve on table knots; braid closures
