@@ -651,6 +651,35 @@ _sectio_enumerationis (
     (vacuum)system(mandatum);
 }
 
+
+    /* ==================================================
+     * PROBARE: directorium_titulus_systematis (desideratum …P98RY)
+     * ================================================== */
+
+interior vacuum
+_sectio_systematis (
+    CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+
+    CREDO_VERUM (directorium_titulus_systematis(
+        chorda_ex_literis(".DS_Store", p)));
+    /* exacte - nomina vicina domus sunt */
+    CREDO_FALSUM (directorium_titulus_systematis(
+        chorda_ex_literis(".DS_Store2", p)));
+    CREDO_FALSUM (directorium_titulus_systematis(
+        chorda_ex_literis("x.DS_Store", p)));
+    CREDO_FALSUM (directorium_titulus_systematis(
+        chorda_ex_literis("DS_Store", p)));
+    CREDO_FALSUM (directorium_titulus_systematis(
+        chorda_ex_literis(".DS_Stor", p)));
+    /* .git a domo (git) scribitur, non a systemate */
+    CREDO_FALSUM (directorium_titulus_systematis(
+        chorda_ex_literis(".git", p)));
+    CREDO_FALSUM (directorium_titulus_systematis(
+        chorda_ex_literis("", p)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iterationem simplicem", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -677,6 +706,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "profunditatem maximam", _sectio_decima_tertia, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "enumerationem uno vocamine", _sectio_enumerationis, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "titulus systematis (.DS_Store)", _sectio_systematis, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -3825,3 +3825,24 @@ lib/fabrica_sanare.c in the live tree WHILE fusio ran (03:03-03:05Z) - the oracl
 file (87083 vs 89086 bytes). instrumenta (03:04-03:07Z) overlapped too and passed against the edited
 file. Both read lib/fabrica_sanare.c, so the fix commit owes them again and the next fusio reruns
 them on committed code. Freeze rule: drafts go to the scratchpad as patches while ANY gates run.
+
+## 2026-10-27 - .DS_Store is not an input (wish …P98RY)
+
+Finder writes `.DS_Store` into any folder you open. Two effects in fabrica:
+(1) a `D` lectio (directory enumerated) is fingerprinted as the hash of ALL
+names (`_enumerare` -> lib/fabrica.c LECTIO_ENUMERAVIT), so a new `.DS_Store`
+broke the trace fast path - regenerated artifacts fell to "regeneratio
+congruit", and trace-judged verdicts (test suites) would go STALUM and rerun;
+aedilis notes `D` for every include root, so opening include/ in Finder could
+stale every compile member. (2) the before/after tree snapshot
+(`_arborem_photographare`) saw a `.DS_Store` written WHILE an action ran as
+"scripsit extra vestigium" -> FRACTUM.
+
+Fix: `directorium_titulus_systematis` in iter_directoria (one list, exact
+match, only ".DS_Store" for now - add ._* AppleDouble there if non-APFS
+volumes ever matter), called at fabrica's enumeration sites only (Fran's
+call: other tools still see the file): `_enumerare`, the tree snapshot, the
+~/ snapshot, and the bin/ undeclared-binary count. fabrica-fumus LXVI pins
+both effects (relative `d` in the D line: an ABSOLUTE path under a temp root
+is ambient, never an input, so the trace never congruent there); hand plants
+on the two fabrica sites each red at LXVI.

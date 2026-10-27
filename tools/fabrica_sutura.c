@@ -379,8 +379,11 @@ _enumerare (
     {
         chorda* locus;
 
+        /* .DS_Store (Finder): non ingressus - sigillum 'D' aliter
+         * mutaretur cum directorium in Finder aperitur (…P98RY) */
         si (   chorda_aequalis_literis(introitus->titulus, ".")
-            || chorda_aequalis_literis(introitus->titulus, ".."))
+            || chorda_aequalis_literis(introitus->titulus, "..")
+            || directorium_titulus_systematis(introitus->titulus))
         {
             perge;
         }
@@ -1242,8 +1245,11 @@ _arborem_photographare (
     {
         chorda via;
 
+        /* .DS_Store: Finder eam QUOVIS tempore scribit - non
+         * scriptura actionis ('scripsit extra vestigium' falsum) */
         si (   chorda_aequalis_literis(introitus->titulus, ".")
             || chorda_aequalis_literis(introitus->titulus, "..")
+            || directorium_titulus_systematis(introitus->titulus)
             || (   directorium.mensura == 0
                 && chorda_aequalis_literis(introitus->titulus, ".git")))
         {
@@ -1338,7 +1344,8 @@ _directorium_extra_photographare (
         chorda pars;
 
         si (   chorda_aequalis_literis(introitus->titulus, ".")
-            || chorda_aequalis_literis(introitus->titulus, ".."))
+            || chorda_aequalis_literis(introitus->titulus, "..")
+            || directorium_titulus_systematis(introitus->titulus))
         {
             perge;
         }

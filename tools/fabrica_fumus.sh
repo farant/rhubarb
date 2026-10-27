@@ -135,6 +135,11 @@
 #   LXV  digestum lectores iudicis habet: actio cum ingressu
 #        identitas_clang LXIV hex (olim 'sutura sine
 #        identitate clang', exitus 1 - bearssl_amalgama 2026-10-17)
+#   LXVI .DS_Store (desideratum …P98RY): Finder eam in directorio
+#        enumerato scribit -> 'lectiones congruunt' manet (olim
+#        sigillum 'D' mutatum, regeneratio; verdictum stalum);
+#        plagula vera addita -> STALUM; scripta DURANTE actionem ->
+#        SANATUM (olim 'scripsit extra vestigium')
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # PARS PURA (2026-10-23, desideratum …VXWK8): casus arborem VIVAM
@@ -1219,6 +1224,31 @@ printf '<aedificatio>\n  <actio titulus="gc" genus="generator">\n    <mandatum>\
 (cd "$T/r" && "$F" digestum gc) > "$T/lxi" 2>&1; rc=$?
 if [ "$rc" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxi"; then echo "  LXV  digestum actionis cum identitate clang: LXIV hex OK"; else echo "  LXV  FRACTUM (rc=$rc)"; sed 's/^/      /' "$T/lxi" | head -3; fracta=1; fi
 
+# LXVI (2026-10-27, desideratum …P98RY): .DS_STORE - Finder eam in omni
+# directorio aperto scribit. Sigillum 'D' (directorium enumeratum) nomina
+# omnia hashabat: actio quae directorium enumeravit viam vestigii amittebat
+# (regeneratio; verdictum probationis STALUM, suita iterum currenda), et
+# scripta dum actio currit 'scripsit extra vestigium' FRACTUM faciebat.
+# directorium_titulus_systematis (iter_directoria) in enumeratione et
+# photographia arboris praetermittitur. Via 'd' RELATIVA (ut actiones
+# verae): absoluta sub radice temporaria (mktemp) ambitus est, non
+# ingressus - vestigium numquam congrueret.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+mkdir -p "$T/r/d" "$T/r/d2"; printf 'x\n' > "$T/r/d/x.c"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; [ -n "${FABRICA_LECTIONES:-}" ] && printf "D\\td\\n" >> "$FABRICA_LECTIONES"; ls d > "$D/b"\n' > "$T/r/gen_b.sh"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator" lectiones="verum">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="gen_b.sh"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" sanare) > "$T/lxvi_s" 2>&1; rcs=$?
+: > "$T/r/d/.DS_Store"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/lxvi_1" 2>&1; rc1=$?
+printf 'y\n' > "$T/r/d/y.c"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/lxvi_2" 2>&1; rc2=$?
+rm -f "$T/r/d/y.c"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; [ -z "${FABRICA_SCRIPTURA:-}" ] && : > d2/.DS_Store; { ls d; echo II; } > "$D/b"\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare) > "$T/lxvi_3" 2>&1; rc3=$?
+if [ "$rcs" -eq 0 ] && [ "$rc1" -eq 0 ] && grep -q '^RECENS b - lectiones congruunt (vestigium)' "$T/lxvi_1" \
+   && [ "$rc2" -eq 1 ] && grep -q '^STALUM b ' "$T/lxvi_2" \
+   && [ "$rc3" -eq 0 ] && grep -q '^SANATUM *g ' "$T/lxvi_3" && [ -e "$T/r/d2/.DS_Store" ]; then echo "  LXVI .DS_Store: vestigium manet, plagula vera STALUM, scripta durante SANATUM OK"; else echo "  LXVI FRACTUM (sanare rc=$rcs, DS rc=$rc1, y.c rc=$rc2, durante rc=$rc3)"; sed 's/^/      /' "$T/lxvi_1" "$T/lxvi_2" "$T/lxvi_3" | grep -E 'RECENS|STALUM|SANATUM|FRACTUM' | head -6; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (pars pura: casus LIX; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
+echo "fumus fabricae: sanum (pars pura: casus LX; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
 exit 0

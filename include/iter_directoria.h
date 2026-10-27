@@ -206,6 +206,19 @@ directorium_titulus_congruit (
     chorda titulus,
     chorda exemplar);
 
+/* Titulus a systemate operativo SPONTE scriptus, non a domo:
+ * Finder .DS_Store in omni directorio aperto scribit. Fabrica eos in
+ * enumeratione (sigillum 'D') et photographia arboris praetermittit -
+ * nec ingressus sunt nec scriptura actionis (desideratum …P98RY).
+ * Index UNUS: nomina alia (._* AppleDouble in voluminibus non-APFS)
+ * hic addenda. Comparatio exacta.
+ *
+ * Reddit: VERUM si titulus a systemate scribitur
+ */
+b32
+directorium_titulus_systematis (
+    chorda titulus);
+
 
 /* ==================================================
  * Constantae
