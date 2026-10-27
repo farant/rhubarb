@@ -408,6 +408,13 @@
   <vocabulum lemma="srgb" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: spatium colorum sRGB (IEC 61966-2-1; color_srgb_ad_linearem, lib/color.c)"/>
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
   <vocabulum lemma="montgomery" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: P. L. Montgomery (reductio Montgomery, 1985; lib/agmen.c)"/>
+  <vocabulum lemma="interpolatio" lingua="latina" classis="substantivum" nota="Latina classica (Plinius): interpolatio, -onis f., renovatio; mathematica: polynomium ex valoribus in punctis (lib/interpolatio.c)">
+    <forma textus="interpolatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="lagrange" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J.-L. Lagrange (interpolatio Lagrange, polynomium per puncta; lib/interpolatio.c)"/>
   <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
   <vocabulum lemma="exhaustivus" lingua="latina" classis="adiectivum"
     nota="Latinitas nova (exhaurire): exhaustive - vox domus (cellae.h: activatio_exhaustiva, quaestio per omnes copias); WORDS caret">

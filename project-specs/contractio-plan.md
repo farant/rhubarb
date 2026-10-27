@@ -354,6 +354,12 @@ Fran's go-ahead.
   `conatus_maximi`; duplicate y dropped; prime filter honored
   (p ≡ 1 mod 4), including a small `primus_limes` (p = 17); degree 0 as
   scalar reconstruction.
+  *(2026-10-27: landed. API as approved; 11 credo sections, 15,918
+  checks in 0.1 s against known random Laurent polynomials evaluated in
+  the test. The point-lie test was first one-prime-only, which the extra
+  prime also catches; it is now constant across primes, so the
+  extra-point check is tested on its own. 9 plants red. Glossary:
+  interpolatio, lagrange. See lib/interpolatio.worklog.md.)*
 - **T2. contractio structure, greedy order and slab.** Header with the
   whole v1 API (execution refuses until T3). Greedy key, exactly: among
   pairs of live tensors sharing at least one index, minimize (result

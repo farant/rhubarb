@@ -165,6 +165,7 @@ declare -a SOURCE_FILES=(
     "lib/insula.c"
     "lib/internamentum.c"
     "lib/internuntius.c"
+    "lib/interpolatio.c"
     "lib/interpres_terminalis.c"
     "lib/invitationes.c"
     "lib/iter_directoria.c"
