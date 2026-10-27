@@ -36,6 +36,8 @@
 #include "cives.h"
 #include "hospitium.h"
 #include "moneta.h"
+#include "epistula.h"
+#include "custodia.h"
 
 #define COMMUNIO_TESSERA_MENSURA XLIII
 
@@ -256,5 +258,37 @@ communio_aditum_confirmare (
             chorda  codex,
             chorda  signum,
          character* apparatus_exitus);
+
+
+/* ==================================================
+ * Viae aditus (plan-3 T4) - SINE tessera (apparatus nondum inscriptus)
+ * ==================================================
+ *
+ * POST /communio/intrare {"epistula","digestum","titulus"} -> SEMPER
+ *      202 {"aditus":id} (permissa an ignota: idem); 400 corpus malum
+ *      aut epistula non forma epistulae; 429 frenum (per epistulam
+ *      normatam - permissa et ignota eodem modo). Permissa: epistula
+ *      cum nexu et codice mittitur (Idempotency-Key = id).
+ * POST /communio/confirmare {"aditus","codex"} -> 200 {"apparatus"};
+ *      403 {"error":"aditus"}; 429 frenum (per IP).
+ * GET  /communio/confirmare?aditus=&signum= -> pagina HTML 200
+ *      ("Signed in: <titulus>") aut 403.
+ */
+
+/* epistularius (NIHIL = epistulae non mittuntur, nuntiatur in stderr),
+ * mittens ("communio@golden.earth"), basis publica nexuum
+ * ("https://exemplar.golden.earth"); copiae */
+vacuum
+communio_servum_epistularium_ponere (
+         CommunioServus* servus,
+           Epistularius* epistularius,
+     constans character* a,
+     constans character* basis);
+
+/* custodia (frenum) - NIHIL = sine freno */
+vacuum
+communio_servum_custodiam_ponere (
+    CommunioServus* servus,
+          Custodia* custodia);
 
 #endif /* COMMUNIO_SERVUS_H */

@@ -109,3 +109,27 @@ timer cancellation in destruere turned red.
 - Requests expired more than a day ago are deleted on each new request.
 
 Plants (radix): attempt limit off, allowlist re-check off, expiry off - all red.
+
+## 2026-10-27 - sign-in routes (plan-3 T4)
+
+Three routes WITHOUT the bearer check (the device has no token yet):
+`POST /communio/intrare` (always 202 {"aditus"} for any well-formed address -
+allowlisted or not; 400 only for a malformed body/address), `POST
+/communio/confirmare` (code), `GET /communio/confirmare` (the mail's link; a
+small HTML page). Calls:
+
+- Throttling through exemplar's Custodia (`custodia_frenum`, setter
+  `communio_servum_custodiam_ponere`; absent = no throttling): `intrare` per
+  NORMALISED ADDRESS (allowlisted or not, so 429 reveals nothing; caps mails per
+  address); confirmation per client IP (`colloquium_cliens`) on top of the
+  database's 5-attempt limit per request. A delay answer from custodia
+  (>0 ms) is treated as 429 - a device just retries later. Not per IP on
+  `intrare`: in-process tests share 127.0.0.1, and the per-address cap is what
+  bounds mail volume (unknown addresses cost nothing).
+- The mail (English): subject "Sign in to golden.earth", the device title, the
+  link `<basis>/communio/confirmare?aditus=<id>&signum=<token>`, "Code:
+  XXXX-XXXX", 15 minutes, once, "ignore if not you". Idempotency-Key = request id.
+  The title is HTML-escaped in the mail's HTML and the confirmation page (it is
+  user input). The text buffers holding the code and token are zeroed right
+  after the message is handed to the Epistularius (which copies what it needs).
+- No Epistularius set: `intrare` still 202, one stderr line, nothing else.
