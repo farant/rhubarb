@@ -16,6 +16,7 @@
 #include "html_arbor.h"
 #include "html_registrum.h"
 #include "uri.h"
+#include "url.h"
 
 #include <string.h>
 
@@ -1444,4 +1445,165 @@ vicipaedia_articulus (
     }
     a->sectiones = servatae;
     redde a;
+}
+
+
+/* ==================================================
+ * Sedes (N2.2)
+ * ================================================== */
+
+#define VIA_ARTICULI "/wiki/"
+#define VIA_FONTIS   "/api/rest_v1/page/html/"
+#define SUFFIXUM     ".wikipedia.org"
+
+/* "<lingua>[.m].wikipedia.org" (sine casu) -> "<lingua>.wikipedia.org";
+ * lingua = [a-z0-9-]+ */
+interior b32
+hospitem_legere (
+      chorda  hospes,
+      chorda* exitus,
+     Piscina* piscina)
+{
+    chorda h;
+    chorda suffixum;
+       i32 n;
+       i32 i;
+        i8 c;
+
+    h         = chorda_minuscula(hospes, piscina);
+    suffixum  = chorda_ex_literis(SUFFIXUM, piscina);
+    si (!chorda_terminatur(h, suffixum))
+    {
+        redde FALSUM;
+    }
+    n = h.mensura - suffixum.mensura;
+    si (n > II && h.datum[n - II] == '.' && h.datum[n - I] == 'm')
+    {
+        n -= II;
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        c = h.datum[i];
+        si (!((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')
+              || c == '-'))
+        {
+            redde FALSUM;
+        }
+    }
+    *exitus = chorda_concatenare(chorda_sectio(h, ZEPHYRUM, n),
+        suffixum, piscina);
+    redde VERUM;
+}
+
+/* percent-decodicatum (sine '+' -> spatium), spatia -> '_' */
+interior chorda
+titulum_purgare (
+      chorda  codificatus,
+     Piscina* piscina)
+{
+    chorda t;
+       i32 i;
+
+    t = url_viam_decodificare(codificatus, piscina);
+    per (i = ZEPHYRUM; i < t.mensura; i++)
+    {
+        si (t.datum[i] == ' ')
+        {
+            t.datum[i] = '_';
+        }
+    }
+    redde t;
+}
+
+b32
+vicipaedia_sedem_legere (
+               chorda  url,
+      VicipaediaSedes* exitus,
+              Piscina* piscina)
+{
+       Uri u;
+    chorda via;
+    chorda praefixum;
+    chorda titulus;
+       s32 k;
+
+    si (   !exitus || !piscina || url.mensura == ZEPHYRUM
+        || !uri_parse(chorda_ut_cstr(url, piscina), &u, piscina))
+    {
+        redde FALSUM;
+    }
+    si (   !(chorda_aequalis_case_insensitivus(u.schema,
+              chorda_ex_literis("https", piscina))
+          || chorda_aequalis_case_insensitivus(u.schema,
+              chorda_ex_literis("http", piscina)))
+        || u.userinfo.mensura > ZEPHYRUM
+        || !hospitem_legere(u.hospes, &exitus->hospes, piscina))
+    {
+        redde FALSUM;
+    }
+    via        = u.via;
+    praefixum  = chorda_ex_literis(VIA_FONTIS, piscina);
+    si (chorda_incipit(via, praefixum))
+    {
+        /* fons: titulus usque ad '/' crudum (revisio sequi potest) */
+        titulus = chorda_sectio(via, praefixum.mensura, via.mensura);
+        k       = chorda_invenire_index(titulus, chorda_ex_literis("/",
+            piscina));
+        si (k >= ZEPHYRUM)
+        {
+            titulus = chorda_sectio(titulus, ZEPHYRUM, (i32)k);
+        }
+    }
+    alioquin
+    {
+        praefixum = chorda_ex_literis(VIA_ARTICULI, piscina);
+        si (!chorda_incipit(via, praefixum))
+        {
+            redde FALSUM;
+        }
+        titulus = chorda_sectio(via, praefixum.mensura, via.mensura);
+    }
+    si (titulus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    exitus->titulus  = titulum_purgare(titulus, piscina);
+    exitus->ancora   = titulum_purgare(u.fragmentum, piscina);
+    redde VERUM;
+}
+
+/* "https://" + hospes + via + titulus codificatus */
+interior chorda
+inscriptionem_construere (
+    constans VicipaediaSedes* sedes,
+          constans character* via,
+                     Piscina* piscina)
+{
+    chorda r;
+
+    r = chorda_concatenare(chorda_ex_literis("https://", piscina),
+        sedes->hospes, piscina);
+    r = chorda_concatenare(r, chorda_ex_literis(via, piscina), piscina);
+    redde chorda_concatenare(r, url_codificare(sedes->titulus, piscina),
+        piscina);
+}
+
+chorda
+vicipaedia_url_articuli (
+    constans VicipaediaSedes* sedes,
+                     Piscina* piscina)
+{
+    redde inscriptionem_construere(sedes, VIA_ARTICULI, piscina);
+}
+
+chorda
+vicipaedia_url_fontis (
+    constans VicipaediaSedes* sedes,
+                     Piscina* piscina)
+{
+    redde inscriptionem_construere(sedes, VIA_FONTIS, piscina);
 }

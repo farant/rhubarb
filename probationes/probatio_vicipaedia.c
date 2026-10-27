@@ -383,10 +383,156 @@ _probare_minimum (
     CREDO_FALSUM(textus_continet(a, "color", c->piscina));
 }
 
+/* sedes ex URL: VERUM et campi exspectati */
+interior b32
+sedes_est (
+    constans character* url,
+    constans character* hospes,
+    constans character* titulus,
+    constans character* ancora,
+               Piscina* p)
+{
+    VicipaediaSedes s;
+
+    si (!vicipaedia_sedem_legere(chorda_ex_literis(url, p), &s, p))
+    {
+        redde FALSUM;
+    }
+    redde chorda_aequalis_literis(s.hospes, hospes)
+        && chorda_aequalis_literis(s.titulus, titulus)
+        && chorda_aequalis_literis(s.ancora, ancora);
+}
+
+interior b32
+recusata (
+    constans character* url,
+               Piscina* p)
+{
+    VicipaediaSedes s;
+
+    redde !vicipaedia_sedem_legere(chorda_ex_literis(url, p), &s, p);
+}
+
+/* URL articuli et fontis titulo dato (en.wikipedia.org) */
+interior b32
+inscriptiones_sunt (
+    constans character* titulus,
+    constans character* articuli,
+    constans character* fontis,
+               Piscina* p)
+{
+    VicipaediaSedes s;
+
+    s.hospes   = chorda_ex_literis("en.wikipedia.org", p);
+    s.titulus  = chorda_ex_literis(titulus, p);
+    s.ancora   = chorda_ex_literis("", p);
+    redde chorda_aequalis_literis(vicipaedia_url_articuli(&s, p),
+        articuli) && chorda_aequalis_literis(vicipaedia_url_fontis(&s,
+        p), fontis);
+}
+
+/* URL ex sedibus et retro: eadem sedes */
+interior b32
+circuitus (
+    constans character* titulus,
+               Piscina* p)
+{
+    VicipaediaSedes s;
+    VicipaediaSedes r;
+
+    s.hospes   = chorda_ex_literis("en.wikipedia.org", p);
+    s.titulus  = chorda_ex_literis(titulus, p);
+    s.ancora   = chorda_ex_literis("", p);
+    redde vicipaedia_sedem_legere(vicipaedia_url_articuli(&s, p), &r, p)
+        && chorda_aequalis(r.titulus, s.titulus)
+        && chorda_aequalis(r.hospes, s.hospes)
+        && vicipaedia_sedem_legere(vicipaedia_url_fontis(&s, p), &r, p)
+        && chorda_aequalis(r.titulus, s.titulus);
+}
+
+interior vacuum
+_probare_sedes (
+    CredoContextus* c)
+{
+    Piscina* p;
+
+    p = c->piscina;
+
+    CREDO_GRADUS("formae eiusdem articuli");
+    CREDO_VERUM(sedes_est(
+        "https://en.wikipedia.org/wiki/Thomas_Aquinas",
+        "en.wikipedia.org", "Thomas_Aquinas", "", p));
+    CREDO_VERUM(sedes_est(
+        "https://en.m.wikipedia.org/wiki/Thomas_Aquinas#Early_life",
+        "en.wikipedia.org", "Thomas_Aquinas", "Early_life", p));
+    CREDO_VERUM(sedes_est(
+        "https://en.wikipedia.org/api/rest_v1/page/html/Thomas_Aquinas",
+        "en.wikipedia.org", "Thomas_Aquinas", "", p));
+    CREDO_VERUM(sedes_est("https://EN.Wikipedia.ORG/wiki/Rhubarb",
+        "en.wikipedia.org", "Rhubarb", "", p));
+    CREDO_VERUM(sedes_est("http://en.wikipedia.org/wiki/Rhubarb",
+        "en.wikipedia.org", "Rhubarb", "", p));
+
+    CREDO_GRADUS("titulus decodicatus, spatia -> _, quaestio neglecta");
+    CREDO_VERUM(sedes_est("https://la.wikipedia.org/wiki/Caf%C3%A9?a=b",
+        "la.wikipedia.org", "Caf\xC3\xA9", "", p));
+    CREDO_VERUM(sedes_est(
+        "https://en.wikipedia.org/wiki/Thomas%20Aquinas",
+        "en.wikipedia.org", "Thomas_Aquinas", "", p));
+    CREDO_VERUM(sedes_est("https://en.wikipedia.org/wiki/C++",
+        "en.wikipedia.org", "C++", "", p));
+    CREDO_VERUM(sedes_est("https://en.wikipedia.org/wiki/AC/DC",
+        "en.wikipedia.org", "AC/DC", "", p));
+    CREDO_VERUM(sedes_est(
+        "https://simple.wikipedia.org/wiki/Rheum_(plant)",
+        "simple.wikipedia.org", "Rheum_(plant)", "", p));
+    CREDO_VERUM(sedes_est(
+        "https://be-tarask.wikipedia.org/wiki/X#Caf%C3%A9",
+        "be-tarask.wikipedia.org", "X", "Caf\xC3\xA9", p));
+
+    CREDO_GRADUS("recusata");
+    CREDO_VERUM(recusata("https://wikipedia.org.evil.com/wiki/X", p));
+    CREDO_VERUM(recusata("https://en.wikipedia.org.evil.com/wiki/X",
+        p));
+    CREDO_VERUM(recusata("https://evilwikipedia.org/wiki/X", p));
+    CREDO_VERUM(recusata("https://wikipedia.org/wiki/X", p));
+    CREDO_VERUM(recusata("https://a.b.wikipedia.org/wiki/X", p));
+    CREDO_VERUM(recusata("https://en.wikipedia.org/wiki/", p));
+    CREDO_VERUM(recusata("https://en.wikipedia.org/w/index.php?title=X",
+        p));
+    CREDO_VERUM(recusata("https://example.com/wiki/X", p));
+    CREDO_VERUM(recusata("ftp://en.wikipedia.org/wiki/X", p));
+    CREDO_VERUM(recusata("./X", p));
+
+    CREDO_GRADUS("URL articuli et fontis codificatae");
+    CREDO_VERUM(inscriptiones_sunt("Thomas_Aquinas",
+        "https://en.wikipedia.org/wiki/Thomas_Aquinas",
+        "https://en.wikipedia.org/api/rest_v1/page/html/Thomas_Aquinas",
+        p));
+    CREDO_VERUM(inscriptiones_sunt("C++",
+        "https://en.wikipedia.org/wiki/C%2B%2B",
+        "https://en.wikipedia.org/api/rest_v1/page/html/C%2B%2B", p));
+    CREDO_VERUM(inscriptiones_sunt("AC/DC",
+        "https://en.wikipedia.org/wiki/AC%2FDC",
+        "https://en.wikipedia.org/api/rest_v1/page/html/AC%2FDC", p));
+    CREDO_VERUM(inscriptiones_sunt("Rheum_(plant)",
+        "https://en.wikipedia.org/wiki/Rheum_%28plant%29",
+        "https://en.wikipedia.org/api/rest_v1/page/html/"
+        "Rheum_%28plant%29",
+        p));
+
+    CREDO_GRADUS("circuitus URL -> sedes");
+    CREDO_VERUM(circuitus("C++", p));
+    CREDO_VERUM(circuitus("AC/DC", p));
+    CREDO_VERUM(circuitus("Caf\xC3\xA9_au_lait", p));
+    CREDO_VERUM(circuitus("Rheum_(plant)", p));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "minimum", _probare_minimum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "rhubarb", _probare_rheum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aquinas", _probare_aquinas, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sedes", _probare_sedes, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

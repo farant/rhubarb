@@ -748,6 +748,23 @@ _sectio_duodecima (
     CREDO_FALSUM(glyphae_ductae_est(0x2249));
 }
 
+/* XII: sagitta utrimque U+2194 (Franus 2026-10-27, tofu in terminale):
+ * hastile per latitudinem totam, capita ut in sagittis ← et → */
+interior vacuum
+_sectio_tertia_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* utrimque[] = {
+        "......", "......", ".#..#.", "######",
+        ".#..#.", "......", "......", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2194));
+    CREDO_VERUM(pictura_est(0x2194, utrimque, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x2195));
+}
+
 interior vacuum
 _sectio_prima (
     CredoContextus* c)
@@ -861,6 +878,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "XI: fere aequale (U+2248)", _sectio_duodecima, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "XII: sagitta utrimque (U+2194)", _sectio_tertia_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -23,4 +23,38 @@ vicipaedia_articulus (
      constans character* fons,
                 Piscina* piscina);
 
+/* sedes articuli Vicipaediae: hospes + titulus (+ ancora). titulus
+ * DECODICATUS (UTF-8, '_' pro spatio: "Rheum_(plant)", "C++",
+ * "AC/DC") - identitas articuli est (hospes, titulus). */
+nomen structura {
+    chorda hospes;  /* "en.wikipedia.org" (mobilis "en.m." -> "en.") */
+    chorda titulus;
+    chorda ancora;  /* "Etymology" ex #...; vacua si nulla */
+} VicipaediaSedes;
+
+/* URL -> sedes. Accipit https://<lingua>[.m].wikipedia.org/wiki/<T>
+ * et /api/rest_v1/page/html/<T> (fons noster), quaestione neglecta.
+ * Spatia -> '_'. FALSUM si hospes non <lingua>.wikipedia.org aut
+ * titulus vacuus. */
+b32
+vicipaedia_sedem_legere (
+               chorda  url,
+      VicipaediaSedes* exitus,
+              Piscina* piscina);
+
+/* URL canonica articuli (sine ancora): https://<hospes>/wiki/<T
+ * codificatus> - clavis articuli in bibliotheca (N2.4) et 'fons'
+ * vicipaedia_articulus. */
+chorda
+vicipaedia_url_articuli (
+    constans VicipaediaSedes* sedes,
+                     Piscina* piscina);
+
+/* URL fontis (REST Parsoid HTML): https://<hospes>/api/rest_v1/
+ * page/html/<T codificatus> ('/' tituli -> %2F) */
+chorda
+vicipaedia_url_fontis (
+    constans VicipaediaSedes* sedes,
+                     Piscina* piscina);
+
 #endif /* VICIPAEDIA_H */

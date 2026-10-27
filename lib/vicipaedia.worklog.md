@@ -46,3 +46,22 @@ Gotcha: a new lib/*.c is only linked into the test runner after
 `./tools/compile_tests_fontes_generare.sh` regenerates
 compile_tests_fontes_generata.sh (here it also pulled in the five
 html/fontes objects).
+
+## 2026-10-27 - N2.2 sedes (URL <-> article identity)
+
+`VicipaediaSedes` = (hospes, titulus decoded with '_', ancora). Identity
+of an article is (hospes, titulus); the canonical URL is rebuilt from it
+with `url_codificare`, so `(` comes out as `%28` - noisier than
+Wikipedia's own links but one spelling per article, which is what a
+bookmark key needs.
+
+Trap found: `url_decodificare` maps '+' to a space (form encoding), so
+the article "C++" decoded to "C  ". Added `url_viam_decodificare`
+(RFC 3986 path: '+' stays); both share one static decoder in url.c.
+
+REST form `/api/rest_v1/page/html/<T>` is cut at the first RAW '/'
+(a revision id can follow); a '/' inside a title arrives as %2F there,
+so "AC/DC" round-trips. In the `/wiki/` form a raw '/' belongs to the
+title. Host rule: `<lingua>[.m].wikipedia.org`, lingua [a-z0-9-]+,
+case-insensitive; userinfo refused. Not accepted in v1:
+`/w/index.php?title=`.

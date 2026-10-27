@@ -481,3 +481,11 @@ the font - Fran saw no case of it.
 Same day: ≈ (U+2248, Fran) - two two-row waves (`..##.#` over
 `.#..#.`) on rows 1-2 and 4-5, the vertical extent of ≡ (rows 1, 3,
 5). Section XI, red before the entry.
+
+## 2026-10-27 - ↔ (U+2194, secunda)
+
+Fran saw ↔ as tofu (Claude's messages use it, e.g. "URL ↔ API URL").
+Drawn from ← and →: shaft across the full width on row 3, barbs at
+columns 1 and 4 on rows 2 and 4, so each tip is the cell edge (← and
+→ keep column 0 empty; with two heads that left a stubby bar).
+Section XII, red before the entry.
