@@ -584,3 +584,47 @@ Fixed:
   on 998244353 so the driver's first prime is counted as a switch.
   Like-for-like at c = 800: 8.6 → 3.6 s (2.4×), arena 10 → 2.3 MB (the
   4.9 s in the T5a entry included building a second network).
+
+## 2026-10-27 — laqueus_pd_ex_plexu: braid closure → PD (contractio-plan T5)
+
+Moves the braid-closure builder that lived twice (test, measurement
+tool) into the library. Word = s32 letters ±i (σ_i^±1), the same
+encoding as `Plexus` (plexus.h) — a caller holding a plexus passes
+`p.litterae, p.longitudo, p.fila`. plexus.h is deliberately NOT
+included: it pulls matrix, radices, cyclotomia and nervus into every
+binary that links laqueus, and tools/tabula_nodorum_generare.sh (a hand
+list, tabularium 01M5ZJ7X) has already broken twice on new laqueus
+dependencies today.
+
+**Convention, standard and now tested:** σ_i^(+1) gives a POSITIVE
+crossing (writhe +1): the closure of σ1³ is the right-handed trefoil,
+table 3_1, and (σ1…σ_{p−1})^q is the right-handed T(p, q). The test and
+tool copies had the opposite sign (their T(7,8) needed a mirror); with
+the library, T(7,8) equals the torus formula and NOT its mirror. Shape:
+strands run downward; at crossing k between positions i, i+1, a = upper
+left (goes to lower right), b = upper right; positive → [a, c', d', b]
+(a under, b over from X3 to X1), negative → [b, a, c', d']. Arms
+counterclockwise from the under-strand's entry. Edges relabelled 1..2c
+by traversal from edge 0; the result is validated by `_pd_legere`
+(c ≥ 2).
+
+Refusals (outputs untouched): fila 0, letter 0 or |letter| ≥ fila,
+empty word with fila ≥ 2, an untouched strand, a closure with several
+components (permutation not one fila-cycle — e.g. word length and
+fila of the same parity). fila 1 with the empty word = unknot
+(transitus 0, pd NIHIL); σ1 on 2 strands = the one-crossing kinked
+unknot (returned; laqueus' invariants refuse c = 1 as documented).
+
+**Tests** (new section "plexus"): σ1³ = table 3_1, σ1⁻³ = its mirror;
+40 random braids (3–6 strands, 10–41 crossings): Jones unchanged under
+conjugation g w g⁻¹, cyclic rotation, stabilization σ_n^(±1) on n + 1
+strands and σσ⁻¹ insertion; bracket = state sum up to 16 crossings;
+Hopf link, three-component, untouched-strand, out-of-range and empty
+words refused with outputs untouched. The test and the tool now call
+the library (thin `_plexus_pd` wrappers).
+
+**Plants 3/4 red:** forms swapped; closure identification dropped;
+empty word accepted. Survivor: the range check `>= fila` relaxed to
+`> fila` — the out-of-range word is still refused by later checks
+(after an out-of-bounds write into arena memory), so the check is
+defense in depth and a test cannot see it without undefined behaviour.

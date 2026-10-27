@@ -503,6 +503,11 @@ Fran's go-ahead.
   (checked against the state sum); `laqueus_pd_ex_plexu` still to do.
   Long runs go through the new `tools/custos.sh` after a ~120 GB
   runaway in the tool's first braid generator.)*
+  *(2026-10-27: `laqueus_pd_ex_plexu` landed — braid word (Plexus
+  encoding, without including plexus.h) → PD, σ_i^(+1) = positive
+  crossing (σ1³ = 3_1, T(7,8) = torus formula unmirrored), Markov moves
+  leave Jones unchanged on 40 random braids, refusals for multi-component
+  closures. Test and tool now use it.)*
 
 ## T5a. Fewer primes: spanning-tree coefficient bound (proposed 2026-10-27; revised after design review)
 

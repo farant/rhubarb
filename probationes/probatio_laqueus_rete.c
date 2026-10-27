@@ -1017,10 +1017,8 @@ _probare_refutationes (
  * Limes arborum (contractio-plan T5a)
  * ================================================== */
 
-/* clausura tricae (verbum in +-1..+-(n-1)): sigma_i positivum [b, a,
- * c', d'], negativum [a, c', d', b] (arma contra horologium a sinistro
- * superiore), ora per percursum renumerata. NIHIL si componentes
- * plures. (Idem ac tools/uncinus_mensura.c.) */
+/* clausura tricae per bibliothecam (laqueus_pd_ex_plexu); NIHIL si
+ * refutata */
 interior i32*
 _plexus_pd (
     constans s32* verbum,
@@ -1028,95 +1026,11 @@ _plexus_pd (
              i32  n,
          Piscina* piscina)
 {
-    i32  c    = longitudo;
-    i32  ora  = n + II * c;
-    i32* x        = (i32*)piscina_allocare(piscina, (memoriae_index)IV
-        * c * magnitudo(i32));
-    i32* currens  = (i32*)piscina_allocare(piscina, (memoriae_index)n
-        * magnitudo(i32));
-    i32* idem     = (i32*)piscina_allocare(piscina, (memoriae_index)ora
-        * magnitudo(i32));
-    i32* caput    = (i32*)piscina_allocare(piscina, (memoriae_index)ora
-        * magnitudo(i32));
-    i32* titulus  = (i32*)piscina_allocare(piscina, (memoriae_index)ora
-        * magnitudo(i32));
-    i32* pd       = (i32*)piscina_allocare(piscina, (memoriae_index)IV
-        * c * magnitudo(i32));
-    i32 proximum  = n;
-    i32 numerus   = ZEPHYRUM;
-    i32 e;
-    i32 k;
-    i32 j;
+    i32* pd;
+    i32  transitus;
 
-    per (j = ZEPHYRUM; j < n; j++)
-    {
-        currens[j] = j;
-    }
-    per (k = ZEPHYRUM; k < c; k++)
-    {
-        i32 i = (i32)(verbum[k] > ZEPHYRUM ? verbum[k] : -verbum[k])
-            - I;
-        i32 a   = currens[i];
-        i32 b   = currens[i + I];
-        i32 cn  = proximum++;
-        i32 dn  = proximum++;
-
-        si (verbum[k] > ZEPHYRUM)
-        {
-            x[IV * k] = b; x[IV * k + I] = a;
-            x[IV * k + II] = cn; x[IV * k + III] = dn;
-        }
-        alioquin
-        {
-            x[IV * k] = a; x[IV * k + I] = cn;
-            x[IV * k + II] = dn; x[IV * k + III] = b;
-        }
-        currens[i]      = cn;
-        currens[i + I]  = dn;
-    }
-    per (e = ZEPHYRUM; e < ora; e++)
-    {
-        idem[e]     = e;
-        titulus[e]  = ZEPHYRUM;
-    }
-    per (j = ZEPHYRUM; j < n; j++)
-    {
-        si (currens[j] == j)
-        {
-            redde NIHIL;
-        }
-        idem[currens[j]] = j;
-    }
-    per (k = ZEPHYRUM; k < IV * c; k++)
-    {
-        x[k] = idem[x[k]];
-    }
-    per (k = ZEPHYRUM; k < c; k++)
-    {
-        caput[x[IV * k]] = IV * k;
-        caput[verbum[k] > ZEPHYRUM ? x[IV * k + I] : x[IV * k + III]] =
-            verbum[k] > ZEPHYRUM ? IV * k + I : IV * k + III;
-    }
-    e = ZEPHYRUM;
-    fac
-    {
-        i32 positio  = caput[e];
-        i32 arma     = positio % IV;
-
-        titulus[e] = ++numerus;
-        e = x[IV * (positio / IV) + (arma == ZEPHYRUM ? II
-            : (arma == I ? III : I))];
-    }
-    dum (e != ZEPHYRUM && numerus <= II * c);
-    si (numerus != II * c)
-    {
-        redde NIHIL;
-    }
-    per (k = ZEPHYRUM; k < IV * c; k++)
-    {
-        pd[k] = titulus[x[k]];
-    }
-    redde pd;
+    redde laqueus_pd_ex_plexu(verbum, longitudo, n, piscina, &pd,
+        &transitus) ? pd : NIHIL;
 }
 
 /* torus T(2, n): clausura sigma_1^n (n impar; n < 0: sigma_1^-|n|) */
@@ -1395,9 +1309,9 @@ _probare_ordinem_optimum (
 }
 
 /* nodus toroidalis T(7, 8) ut clausura (sigma_1 .. sigma_6)^8 (XLVIII
- * transitus, omnes negativi in conventione _plexus_pd): Jones = speculum
- * formulae t^((p-1)(q-1)/2) (1 - t^(p+1) - t^(q+1) + t^(p+q)) / (1 - t^2)
- * - oraculum clausum ultra summam statuum */
+ * transitus positivi): Jones = t^((p-1)(q-1)/2) (1 - t^(p+1) - t^(q+1)
+ * + t^(p+q)) / (1 - t^2) - oraculum clausum ultra summam statuum;
+ * conventio signi laqueus_pd_ex_plexu ita probatur */
 interior vacuum
 _probare_torum_septem_octo (
     CredoContextus* c)
@@ -1447,7 +1361,181 @@ _probare_torum_septem_octo (
         &speculum));
     CREDO_NECESSE(laqueus_jones_ex_pd_rete(pd, XLVIII, OCTETI_MAXIMI,
         piscina, &jones, NIHIL));
-    CREDO_VERUM(polynomium_aequalis(jones, speculum));
+    CREDO_VERUM(polynomium_aequalis(jones, formula));
+    CREDO_FALSUM(polynomium_aequalis(jones, speculum));
+}
+
+
+/* Jones clausurae tricae */
+interior Polynomium
+_jones_plexus (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+         Piscina* piscina)
+{
+           i32* pd;
+           i32  transitus;
+    Polynomium  jones = polynomium_nullum();
+
+    CREDO_NECESSE(laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina,
+        &pd,
+        &transitus));
+    CREDO_AEQUALIS_I32(transitus, longitudo);
+    CREDO_NECESSE(laqueus_jones_ex_pd_rete(pd, transitus, OCTETI_MAXIMI,
+        piscina, &jones, NIHIL));
+    redde jones;
+}
+
+/* laqueus_pd_ex_plexu: trifolium dextrum sigma_1^3 = 3_1 tabulae,
+ * sinistrum speculum; motus Markov (coniugatio, rotatio, stabilizatio
+ * +-) et insertio sigma sigma^-1 Jones non mutant; usque ad XVI
+ * transitus uncinus = summa statuum; refutationes */
+interior vacuum
+_probare_plexum (
+    CredoContextus* c)
+{
+         Piscina* piscina      = c->piscina;
+    constans s32  dextrum[]    = { 1, 1, 1 };
+    constans s32  sinistrum[]  = { -1, -1, -1 };
+    constans s32  hopf[]       = { 1, 1 };
+    constans s32  triplex[]    = { 1, 2, 1, 2, 1, 2 };
+    constans s32  intactum[]   = { 1, 1, 1 };
+    constans s32  nulla[]      = { 0, 1, 1 };
+    constans s32  ultra[]      = { 1, 3, 1 };
+    constans s32  unus[]       = { 1 };
+      Polynomium  trifolium = _polynomium_textus(
+          tabula_nodorum_quaere("3_1")->jones, piscina);
+    Polynomium  speculum;
+           i32  signum     = (i32)0xBEEFUL;
+           i32* pd         = &signum;
+           i32  transitus  = (i32)0xDEADUL;
+          Sors  s;
+           i32  t;
+
+    CREDO_VERUM(polynomium_aequalis(_jones_plexus(dextrum, III, II,
+        piscina), trifolium));
+    CREDO_NECESSE(polynomium_dilata(trifolium, -(s32)I, piscina,
+        &speculum));
+    CREDO_VERUM(polynomium_aequalis(_jones_plexus(sinistrum, III, II,
+        piscina), speculum));
+
+    /* refutationes: exitus intacti */
+    CREDO_FALSUM(laqueus_pd_ex_plexu(hopf, II, II, piscina, &pd,
+        &transitus));
+    CREDO_FALSUM(laqueus_pd_ex_plexu(triplex, VI, III, piscina, &pd,
+        &transitus));
+    CREDO_FALSUM(laqueus_pd_ex_plexu(intactum, III, III, piscina, &pd,
+        &transitus));
+    CREDO_FALSUM(laqueus_pd_ex_plexu(nulla, III, II, piscina, &pd,
+        &transitus));
+    CREDO_FALSUM(laqueus_pd_ex_plexu(ultra, III, III, piscina, &pd,
+        &transitus));
+    CREDO_FALSUM(laqueus_pd_ex_plexu(dextrum, III, ZEPHYRUM, piscina,
+        &pd,
+        &transitus));
+    CREDO_FALSUM(laqueus_pd_ex_plexu(NIHIL, ZEPHYRUM, II, piscina, &pd,
+        &transitus));
+    CREDO_FALSUM(laqueus_pd_ex_plexu(NIHIL, III, II, piscina, &pd,
+        &transitus));
+    CREDO_AEQUALIS_I32(transitus, (i32)0xDEADUL);
+    CREDO_VERUM(pd == &signum);
+
+    /* nodus trivialis: filum unum, verbum vacuum; transitus unus */
+    CREDO_VERUM(laqueus_pd_ex_plexu(NIHIL, ZEPHYRUM, I, piscina, &pd,
+        &transitus));
+    CREDO_AEQUALIS_I32(transitus, ZEPHYRUM);
+    CREDO_NIHIL(pd);
+    CREDO_VERUM(laqueus_pd_ex_plexu(unus, I, II, piscina, &pd,
+        &transitus));
+    CREDO_AEQUALIS_I32(transitus, I);
+
+    /* motus Markov */
+    sors_seminare(&s, (i64)MMXXXVI, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < XL; t++)
+    {
+        PiscinaNotatio  nota       = piscina_notare(piscina);
+                   i32  fila       = III + sors_intra(&s, IV);
+                   i32  longitudo  = X + sors_intra(&s, XXXI);
+                   s32  verbum[XLIV];
+                   s32  alterum[XLIV];
+                   i32* probatum  = NIHIL;
+                   i32  probati;
+                   i32  conatus;
+                   i32  k;
+                   i32  r;
+                   s32  g;
+            Polynomium  jones;
+
+        si ((longitudo + fila - I) % II != ZEPHYRUM)
+        {
+            longitudo++;
+        }
+        per (conatus = ZEPHYRUM; conatus < M
+            && probatum == NIHIL; conatus++)
+        {
+            per (k = ZEPHYRUM; k < longitudo; k++)
+            {
+                g          = (s32)(I + sors_intra(&s, fila - I));
+                verbum[k]  = sors_intra(&s, II) == ZEPHYRUM ? g : -g;
+            }
+            si (!laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina,
+                &probatum, &probati))
+            {
+                probatum = NIHIL;
+            }
+        }
+        CREDO_NECESSE_NON_NIHIL(probatum);
+        jones = _jones_plexus(verbum, longitudo, fila, piscina);
+        si (longitudo <= XVI)
+        {
+            _uncinum_comparare(probatum, longitudo, piscina);
+        }
+
+        /* coniugatio: g w g^-1 */
+        g           = (s32)(I + sors_intra(&s, fila - I));
+        alterum[0]  = g;
+        per (k = ZEPHYRUM; k < longitudo; k++)
+        {
+            alterum[k + I] = verbum[k];
+        }
+        alterum[longitudo + I] = -g;
+        CREDO_VERUM(polynomium_aequalis(_jones_plexus(alterum,
+            longitudo + II, fila, piscina), jones));
+
+        /* rotatio cyclica */
+        r = sors_intra(&s, longitudo);
+        per (k = ZEPHYRUM; k < longitudo; k++)
+        {
+            alterum[k] = verbum[(k + r) % longitudo];
+        }
+        CREDO_VERUM(polynomium_aequalis(_jones_plexus(alterum,
+            longitudo,
+            fila, piscina), jones));
+
+        /* stabilizatio +- : w sigma_fila^(+-1) in fila + 1 */
+        per (k = ZEPHYRUM; k < longitudo; k++)
+        {
+            alterum[k] = verbum[k];
+        }
+        alterum[longitudo] = sors_intra(&s, II) == ZEPHYRUM ? (s32)fila
+            : -(s32)fila;
+        CREDO_VERUM(polynomium_aequalis(_jones_plexus(alterum,
+            longitudo + I, fila + I, piscina), jones));
+
+        /* insertio sigma sigma^-1 (R2) */
+        r = sors_intra(&s, longitudo + I);
+        g = (s32)(I + sors_intra(&s, fila - I));
+        per (k = ZEPHYRUM; k < longitudo + II; k++)
+        {
+            alterum[k] = k < r ? verbum[k] : (k == r ? g : (k == r
+                + I ? -g
+                : verbum[k - II]));
+        }
+        CREDO_VERUM(polynomium_aequalis(_jones_plexus(alterum,
+            longitudo + II, fila, piscina), jones));
+        piscina_reficere(piscina, nota);
+    }
 }
 
 
@@ -1480,6 +1568,7 @@ interior constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "torus T(7,8)", _probare_torum_septem_octo, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "plexus", _probare_plexum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tabula tota", _probare_tabulam_totam, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

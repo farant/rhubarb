@@ -1712,6 +1712,169 @@ _pd_motus (
 }
 
 b32
+laqueus_pd_ex_plexu (
+    constans s32*  verbum,
+             i32   longitudo,
+             i32   fila,
+         Piscina*  piscina,
+             i32** pd_exitus,
+             i32*  transitus_exitus)
+{
+    i32  c = longitudo;
+    i32  ossa;
+    i32* x;
+    i32* currens;
+    i32* idem;
+    i32* caput;
+    i32* titulus;
+    i32* pd;
+    i32* ora;
+    s32* signa;
+    i32  proximum;
+    i32  numerus = ZEPHYRUM;
+    i32  e;
+    i32  k;
+    i32  j;
+
+    si (   piscina == NIHIL || pd_exitus == NIHIL
+        || transitus_exitus == NIHIL
+        || fila == ZEPHYRUM || (c > ZEPHYRUM && verbum == NIHIL))
+    {
+        redde FALSUM;
+    }
+    si (c == ZEPHYRUM)
+    {
+        si (fila != I)
+        {
+            redde FALSUM;
+        }
+        *pd_exitus         = NIHIL;
+        *transitus_exitus  = ZEPHYRUM;
+        redde VERUM;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        si (   verbum[k] == ZEPHYRUM || (verbum[k] > ZEPHYRUM
+            ? (i32)verbum[k] : (i32)-verbum[k]) >= fila)
+        {
+            redde FALSUM;
+        }
+    }
+    ossa     = fila + II * c;
+    x        = (i32*)piscina_allocare(piscina, (memoriae_index)IV * c
+        * magnitudo(i32));
+    currens  = (i32*)piscina_allocare(piscina, (memoriae_index)fila
+        * magnitudo(i32));
+    idem     = (i32*)piscina_allocare(piscina, (memoriae_index)ossa
+        * magnitudo(i32));
+    caput    = (i32*)piscina_allocare(piscina, (memoriae_index)ossa
+        * magnitudo(i32));
+    titulus  = (i32*)piscina_allocare(piscina, (memoriae_index)ossa
+        * magnitudo(i32));
+    pd       = (i32*)piscina_allocare(piscina, (memoriae_index)IV * c
+        * magnitudo(i32));
+    per (j = ZEPHYRUM; j < fila; j++)
+    {
+        currens[j] = j;
+    }
+
+    /* fila a summo deorsum; transitus k inter positiones i, i + 1:
+     * a = filum sinistrum superius (it ad dextrum inferius), b =
+     * dextrum superius (ad sinistrum inferius); ossa nova cn (positio
+     * i) et dn (i + 1). sigma positivum: a infra, b supra ab X3 ad X1
+     * -> [a, cn, dn, b]; negativum: b infra, a supra ab X1 ad X3 ->
+     * [b, a, cn, dn]. Arma contra horologium. */
+    proximum = fila;
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        i32 i = (i32)(verbum[k] > ZEPHYRUM ? verbum[k] : -verbum[k])
+            - I;
+        i32 a   = currens[i];
+        i32 b   = currens[i + I];
+        i32 cn  = proximum++;
+        i32 dn  = proximum++;
+
+        si (verbum[k] > ZEPHYRUM)
+        {
+            x[IV * k]        = a;
+            x[IV * k + I]    = cn;
+            x[IV * k + II]   = dn;
+            x[IV * k + III]  = b;
+        }
+        alioquin
+        {
+            x[IV * k]        = b;
+            x[IV * k + I]    = a;
+            x[IV * k + II]   = cn;
+            x[IV * k + III]  = dn;
+        }
+        currens[i]      = cn;
+        currens[i + I]  = dn;
+    }
+
+    /* clausura: os ultimum positionis j = os initiale j */
+    per (e = ZEPHYRUM; e < ossa; e++)
+    {
+        idem[e]     = e;
+        titulus[e]  = ZEPHYRUM;
+    }
+    per (j = ZEPHYRUM; j < fila; j++)
+    {
+        si (currens[j] == j)
+        {
+            redde FALSUM;
+        }
+        idem[currens[j]] = j;
+    }
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        x[k] = idem[x[k]];
+    }
+
+    /* caput ossis: ubi intrat (X0; X3 si positivum, X1 si negativum) */
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        caput[x[IV * k]] = IV * k;
+        si (verbum[k] > ZEPHYRUM)
+        {
+            caput[x[IV * k + III]] = IV * k + III;
+        }
+        alioquin
+        {
+            caput[x[IV * k + I]] = IV * k + I;
+        }
+    }
+
+    /* percursus ab osse 0: tituli 1..2c; aliter componentes plures */
+    e = ZEPHYRUM;
+    fac
+    {
+        i32 positio  = caput[e];
+        i32 arma     = positio % IV;
+        i32 exiens   = arma == ZEPHYRUM ? II : (arma == I ? III : I);
+
+        titulus[e]  = ++numerus;
+        e           = x[IV * (positio / IV) + exiens];
+    }
+    dum (e != ZEPHYRUM && numerus <= II * c);
+    si (numerus != II * c)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        pd[k] = titulus[x[k]];
+    }
+    si (c >= II && !_pd_legere(pd, c, piscina, &ora, &signa))
+    {
+        redde FALSUM;
+    }
+    *pd_exitus         = pd;
+    *transitus_exitus  = c;
+    redde VERUM;
+}
+
+b32
 laqueus_pd_simplificare (
     constans i32*  pd,
              i32   transitus,

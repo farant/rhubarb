@@ -423,6 +423,14 @@
     <forma textus="tensorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
     <forma textus="tensoribus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="plexus" lingua="latina" classis="substantivum" nota="Latina (plecto): plexus, -us m., implicatio, textura; mathematica: trica (braid), grex braidarum B_n (lib/plexus.c; laqueus_pd_ex_plexu)">
+    <forma textus="plexus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexui" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexu" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexuum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="plexibus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="gyratio" lingua="latina" classis="substantivum" nota="Latina posterior: gyratio, -onis f., circumactio (gyrus, gyrare); mathematica: summa conversionum (quartarum) curvae in plano, numerus gyrationis (lib/laqueus.c, modulus vertex)">
     <forma textus="gyratio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="gyrationis" casus="genitivus" numerus="singularis" genus="femininum"/>

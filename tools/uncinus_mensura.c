@@ -18,8 +18,7 @@
  * I effectum cum laqueus_uncinus_ex_pd comparat. Columna limes = bita
  * limitis coefficientium (T5a), bita = coefficiens maximus verus.
  *
- * Clausura tricae (verbum in +-1..+-(n-1)) hic scripta pro mensura;
- * laqueus_pd_ex_plexu (T5) eam postea in bibliothecam ducet.
+ * Clausura tricae per laqueus_pd_ex_plexu.
  *
  * Usus: ./bin/aedilis tools/uncinus_mensura.c && bash
  *   build/aedilis/uncinus_mensura/struere.sh &&
@@ -153,11 +152,8 @@ _summa_fortuita (
     }
 }
 
-/* clausura tricae: n fila, verbum[k] in +-1..+-(n-1) (sigma_i:
- * filum i supra filum i+1, sic: [b, a, c', d'] ; inversum: [a, c',
- * d', b]; arma contra horologium a sinistro superiore). Ora per
- * percursum 1..2c renumerantur. NIHIL si clausura plures componentes
- * habet. */
+/* clausura tricae per bibliothecam (laqueus_pd_ex_plexu; sigma
+ * positivum = transitus positivus); NIHIL si refutata */
 interior i32*
 _plexus_pd (
     constans s32* verbum,
@@ -165,108 +161,11 @@ _plexus_pd (
              i32  n,
          Piscina* piscina)
 {
-    i32  c    = longitudo;
-    i32  ora  = n + II * c;
-    i32* x        = (i32*)piscina_allocare(piscina, (memoriae_index)IV
-        * c * magnitudo(i32));
-    i32* currens  = (i32*)piscina_allocare(piscina, (memoriae_index)n
-        * magnitudo(i32));
-    i32* idem     = (i32*)piscina_allocare(piscina, (memoriae_index)ora
-        * magnitudo(i32));
-    i32* caput    = (i32*)piscina_allocare(piscina, (memoriae_index)ora
-        * magnitudo(i32));
-    i32* titulus  = (i32*)piscina_allocare(piscina, (memoriae_index)ora
-        * magnitudo(i32));
-    i32* pd       = (i32*)piscina_allocare(piscina, (memoriae_index)IV
-        * c * magnitudo(i32));
-    i32 proximum = n;
-    i32 numerus;
-    i32 e;
-    i32 k;
-    i32 j;
+    i32* pd;
+    i32  transitus;
 
-    per (j = ZEPHYRUM; j < n; j++)
-    {
-        currens[j] = j;
-    }
-    per (k = ZEPHYRUM; k < c; k++)
-    {
-        i32 i = (i32)(verbum[k] > ZEPHYRUM ? verbum[k] : -verbum[k])
-            - I;
-        i32 a   = currens[i];
-        i32 b   = currens[i + I];
-        i32 cn  = proximum++;
-        i32 dn  = proximum++;
-
-        si (verbum[k] > ZEPHYRUM)
-        {
-            x[IV * k] = b; x[IV * k + I] = a;
-            x[IV * k + II] = cn; x[IV * k + III] = dn;
-        }
-        alioquin
-        {
-            x[IV * k] = a; x[IV * k + I] = cn;
-            x[IV * k + II] = dn; x[IV * k + III] = b;
-        }
-        currens[i]      = cn;
-        currens[i + I]  = dn;
-    }
-    /* clausura: os ultimum positionis j = os j */
-    per (e = ZEPHYRUM; e < ora; e++)
-    {
-        idem[e] = e;
-    }
-    per (j = ZEPHYRUM; j < n; j++)
-    {
-        si (currens[j] == j)
-        {
-            redde NIHIL;
-        }
-        idem[currens[j]] = j;
-    }
-    per (k = ZEPHYRUM; k < IV * c; k++)
-    {
-        x[k] = idem[x[k]];
-    }
-    /* caput ossis: positio ubi intrat (X0; X1 si sigma positivum, X3
-     * si negativum) */
-    per (k = ZEPHYRUM; k < c; k++)
-    {
-        caput[x[IV * k]] = IV * k;
-        si (verbum[k] > ZEPHYRUM)
-        {
-            caput[x[IV * k + I]] = IV * k + I;
-        }
-        alioquin
-        {
-            caput[x[IV * k + III]] = IV * k + III;
-        }
-    }
-    per (e = ZEPHYRUM; e < ora; e++)
-    {
-        titulus[e] = ZEPHYRUM;
-    }
-    e        = ZEPHYRUM;
-    numerus  = ZEPHYRUM;
-    fac
-    {
-        i32 positio  = caput[e];
-        i32 arma     = positio % IV;
-        i32 exiens   = arma == ZEPHYRUM ? II : (arma == I ? III : I);
-
-        titulus[e]  = ++numerus;
-        e           = x[IV * (positio / IV) + exiens];
-    }
-    dum (e != ZEPHYRUM && numerus <= II * c);
-    si (numerus != II * c)
-    {
-        redde NIHIL;
-    }
-    per (k = ZEPHYRUM; k < IV * c; k++)
-    {
-        pd[k] = titulus[x[k]];
-    }
-    redde pd;
+    redde laqueus_pd_ex_plexu(verbum, longitudo, n, piscina, &pd,
+        &transitus) ? pd : NIHIL;
 }
 
 /* verbum fortuitum cuius permutatio cyclus n est (nodus). PARITAS:

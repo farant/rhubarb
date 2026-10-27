@@ -391,6 +391,30 @@ laqueus_pd_simplificare (
              i32** pd_exitus,
              i32*  transitus_exitus);
 
+/* codex PD clausurae tricae (plexus): verbum[k] = +-i (1 <= i < fila)
+ * = sigma_i^(+-1). Conventio: sigma_i^(+1) transitum POSITIVUM dat
+ * (scriptura +1), ergo clausura sigma_1^3 = trifolium dextrum (3_1
+ * tabulae), (sigma_1 .. sigma_(p-1))^q = T(p, q) dextrum. Ora 1..2c per
+ * percursum renumerantur, transitus [infra intrans, contra horologium]
+ * ut in diagramma_pd; transitus k = littera k verbi. Codex reddendus
+ * per _pd_legere probatur (c >= 2). fila 1 et verbum vacuum: nodus
+ * trivialis (transitus 0, pd_exitus NIHIL). FALSUM (exitus non tacti)
+ * si fila 0, littera 0 aut |littera| >= fila, verbum vacuum cum fila >= 2,
+ * filum quod nulla littera tangit, aut clausura plures componentes
+ * habet (permutatio verbi non cyclus fila: e.g. longitudo et fila
+ * eiusdem paritatis non possunt nodum dare). Memoria in piscina.
+ * Litterae eaedem ac Plexus (plexus.h): vocans plexum tenens
+ * laqueus_pd_ex_plexu(p.litterae, p.longitudo, p.fila, ...) vocat -
+ * caput plexus.h hic non includitur (eius dependentiae graves). */
+b32
+laqueus_pd_ex_plexu (
+    constans s32*  verbum,
+             i32   longitudo,
+             i32   fila,
+         Piscina*  piscina,
+             i32** pd_exitus,
+             i32*  transitus_exitus);
+
 /* determinans nodi |Delta(-1)|, magnus exactus; nodi soli (FALSUM pro
  * catenis, sicut diagramma_alexander). Residua in piscina manent. */
 b32
