@@ -49,3 +49,29 @@ run with text from pythonica's OWN fake-gate fixture ("planta rubra:
 ficta ... NIHIL PROBATUM"), not the failing check. Verified by hand that
 both plants fail exactly "inclusio addita; GENERATUM intacta". The
 compendium for the pythonica gate picks the wrong line.
+
+## 2026-10-27 - the clang guard compiles ONE variant (found by fusio_probare)
+
+Sweep VIII rewrote `materia/instrumenta/oraculum_silvae.c`'s output write to
+`lectiones_fopen` and `<inclusio>` put `#include "lectiones.h"` in the file's
+`#else` branch (live silva). The guard's before/after clang compiled only the
+default configuration, so it passed - but `materia/oraculum_silvae_struere.sh`
+also builds the file with `-DORACULUM_PIGNUS` against the frozen amalgam
+(7a4847b0), where the header is absent: "implicit declaration of function
+'lectiones_fopen'". Gate oraculum-silvae caught it, not the guard.
+
+Fix in the file (not the tool): per-branch alias `oraculi_fopen` (fopen under
+a TOLERA in the pignus branch - its ISOLATIO allows amalgam + libc only - and
+lectiones_fopen in the live branch), like the file's piscina aliases.
+
+Lesson for the tool: a file with `#if`/`#ifdef` branches can be compiled in
+several configurations by different actions; the guard must compile every
+variant the build actually uses (the -D flags are in the clang lectiones of
+the traces), or at least warn "variants not compiled". Ledger …MDR6.
+
+Same run, related: officina sessions judge turns exactly like examen, so the
+97 flip made `remove("x")` a judgment-time REIECTUM before machinula's runtime
+refusal - test B3 now pins both layers (direct call = codex XCVII; call
+through a function pointer = MACHINULA_RECUSATIO, planted red). A gate run
+with a filter (`officina.machinula`) at the sweep commit hid this - when a
+sweep touches a subsystem, run its whole gate.

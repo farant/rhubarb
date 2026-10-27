@@ -43,6 +43,10 @@ nomen SilvaPiscina PiscinaOraculi;
 nomen SilvaChorda  ChordaOraculi;
 #define piscina_oraculi_generare silva_piscina_generare_dynamicum
 #define piscina_oraculi_destruere silva_piscina_destruere
+/* <tolera codex="SCRIPTURA_PRAETERITA" (>ISOLATIO pignoris: binarium
+ * ad pignus solum amalgama + libc nectit (oraculum_silvae_struere.sh,
+ * index LIBC) - liber lectionum non intrat; vivum per eum scribit */
+#define oraculi_fopen fopen
 #else
 #include "latina.h"
 #include "piscina.h"
@@ -58,6 +62,7 @@ nomen Piscina PiscinaOraculi;
 nomen chorda  ChordaOraculi;
 #define piscina_oraculi_generare piscina_generare_dynamicum
 #define piscina_oraculi_destruere piscina_destruere
+#define oraculi_fopen lectiones_fopen
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -374,7 +379,7 @@ _plagulam_iudicare (
 
         _viam_documenti(directorium_stml, via, via_documenti,
             magnitudo(via_documenti));
-        f = lectiones_fopen(via_documenti, "wb");
+        f = oraculi_fopen(via_documenti, "wb");
         si (f == NIHIL)
         {
             fprintf(stderr, "oraculum_silvae: scribi non potest: %s\n",
