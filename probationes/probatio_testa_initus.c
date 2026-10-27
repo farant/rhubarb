@@ -410,7 +410,8 @@ _sectio_transferre (
         speratum[VII]       = 0x77u;
         per (x = I; x < VII; x++)
         {
-            speratum[x] = (i32)((y < IV ? I : III) + (x < IV ? ZEPHYRUM : I));
+            speratum[x] = (i32)((y < IV ? I : III)
+                + (x < IV ? ZEPHYRUM : I));
         }
         per (x = ZEPHYRUM; x < VIII; x++)
         {

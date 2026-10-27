@@ -1316,7 +1316,7 @@ fabrica_composita_legere (
             artificium  = stml_attributum_capere(filius, "artificium");
             actio       = stml_attributum_capere(filius, "actio");
             aliud       = stml_attributum_capere(filius, "compositum");
-            numerus = ZEPHYRUM;
+            numerus     = ZEPHYRUM;
             si (artificium != NIHIL)
             {
                 numerus++;

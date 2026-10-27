@@ -36,8 +36,8 @@ _generare_randomos (
     memoriae_index  lecta;
                i32  i;
 
-    lecta   = ZEPHYRUM;
-    urandom = lectiones_fopen("/dev/urandom", "rb");
+    lecta    = ZEPHYRUM;
+    urandom  = lectiones_fopen("/dev/urandom", "rb");
     si (urandom)
     {
         lecta = fread(bytes, I, (memoriae_index)mensura, urandom);
