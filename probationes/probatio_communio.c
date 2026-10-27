@@ -1587,20 +1587,46 @@ _finis_simplex (
     *(b32*)datum = VERUM;
 }
 
-/* GET simplex (nexus epistulae aperitur ut in navigatro) */
+/* nexus epistulae ut in navigatro: GET paginae, aut (premere) bulla
+ * eius - POST formae "aditus=..&signum=.." ad /communio/confirmare */
 interior i32
 aperire_nexum (
        Orbis* o,
-      chorda  url)
+      chorda  url,
+         b32  premere)
 {
      HttpPetitio* pet;
      HttpVocatio* v;
     HttpResultus  res;
              b32  finita;
              i32  gyri;
+             i32  q;
+       character  actio[CXXVIII];
+          chorda  forma;
 
-    pet = http_petitio_creare(piscina, HTTP_GET, chorda_ut_cstr(url,
-        piscina));
+    si (premere)
+    {
+        q = ZEPHYRUM;
+        dum (q < url.mensura && url.datum[q] != '?')
+        {
+            q++;
+        }
+        sprintf(actio, "%s/communio/confirmare", o->basis);
+        pet = http_petitio_creare(piscina, HTTP_POST, actio);
+        si (pet && q < url.mensura)
+        {
+            forma.datum    = url.datum + q + I;
+            forma.mensura  = url.mensura - q - I;
+            http_petitio_caput_addere(pet, "Content-Type",
+                "application/x-www-form-urlencoded");
+            http_petitio_corpus_ponere_chorda(pet, forma);
+        }
+    }
+    alioquin
+    {
+        pet = http_petitio_creare(piscina, HTTP_GET, chorda_ut_cstr(url,
+            piscina));
+    }
     finita = FALSUM;
     v = pet ? http_vocare(o->reactor, pet, NIHIL, NIHIL, _finis_simplex,
             &finita, NIHIL, piscina) : NIHIL;
@@ -1725,7 +1751,11 @@ _sectio_inscribere_nexu (
     CREDO_NECESSE(nexus.mensura > ZEPHYRUM);
     CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
         piscina));
-    CREDO_AEQUALIS_I32(aperire_nexum(&o, nexus), CC);
+    CREDO_AEQUALIS_I32(aperire_nexum(&o, nexus, FALSUM), CC);
+    /* recensio 3: pagina sola nihil mutat (scrutatores epistularum) */
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+        piscina));
+    CREDO_AEQUALIS_I32(aperire_nexum(&o, nexus, VERUM), CC);
     CREDO_VERUM(communio_tessera_valet(o.reactor, o.basis, via,
         piscina));
     (vacuum)filum_delere(via);

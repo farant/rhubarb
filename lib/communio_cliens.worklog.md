@@ -76,3 +76,11 @@ covers both.
 stdin (2 s) for a typed code and checks the token after each wait, whichever
 comes first; 15 minutes then exit 1. EOF on stdin just stops reading (the link
 path keeps working).
+
+## 2026-10-27 - correction (plan-3 final review)
+
+The T6 entry said EOF on stdin "just stops reading (the link path keeps
+working)": it did not - reactor_poll returns at once when nothing is registered,
+so the loop raced through its 450 turns in seconds. With stdin closed the CLI now
+sleeps 2 s (poll with no fds) between token checks. The link path also now needs
+the page's button press (server change, see communio_servus worklog).

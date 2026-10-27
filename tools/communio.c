@@ -245,7 +245,8 @@ constans character* titulus)
         }
         alioquin si (!stdin_apertum)
         {
-            (vacuum)reactor_poll(r, (i32)MM);
+            /* recensio 4: reactor vacuus statim redit - dormire */
+            (vacuum)poll(NIHIL, ZEPHYRUM, (integer)MM);
         }
         si (communio_tessera_valet(r, servus, via_tesserae, p))
         {

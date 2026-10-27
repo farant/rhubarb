@@ -194,6 +194,17 @@ communio_servum_montare (
 #define COMMUNIO_CODEX_MENSURA   VIII
 #define COMMUNIO_EPISTULA_MAXIMA CCLIV
 
+/* recensio 1: limites epistularum aditus ex ordinibus communio_aditus
+ * (non ex memoria evincibili): per epistulam per horam, servo toto per
+ * diem (sub quota provisoris). Supra: aditus non servatur, epistula
+ * non mittitur, responsum idem (202). */
+#define COMMUNIO_EPISTULAE_PER_HORAM III
+#define COMMUNIO_EPISTULAE_PER_DIEM  XXX
+
+/* recensio 2: intrare respondet post hanc moram ab initio petitionis
+ * (permissa et ignota idem tempus) */
+#define COMMUNIO_INTRARE_MORA_MS     CCL
+
 /* chordae in piscina vocantis */
 nomen structura {
     chorda epistula;
@@ -271,8 +282,12 @@ communio_aditum_confirmare (
  *      cum nexu et codice mittitur (Idempotency-Key = id).
  * POST /communio/confirmare {"aditus","codex"} -> 200 {"apparatus"};
  *      403 {"error":"aditus"}; 429 frenum (per IP).
- * GET  /communio/confirmare?aditus=&signum= -> pagina HTML 200
- *      ("Signed in: <titulus>") aut 403.
+ * GET  /communio/confirmare?aditus=&signum= -> pagina HTML 200 cum
+ *      bulla "Sign in" (forma POST) - NIHIL mutat (recensio 3:
+ *      scrutatores epistularum nexus aperiunt); 403 si aditus ignotus.
+ * POST /communio/confirmare (forma: aditus, signum) -> pagina HTML 200
+ *      ("Signed in: <titulus>") aut 403. Titulus apparatus: LXIV octeti
+ *      ad plurimum, sine signis moderantibus (aliter intrare 400).
  */
 
 /* epistularius (NIHIL = epistulae non mittuntur, nuntiatur in stderr),
@@ -284,6 +299,13 @@ communio_servum_epistularium_ponere (
            Epistularius* epistularius,
      constans character* a,
      constans character* basis);
+
+/* mora fixa responsi intrare in ms (ordinarie COMMUNIO_INTRARE_MORA_MS;
+ * 0 = statim - probationes) */
+vacuum
+communio_servum_moram_intrandi_ponere (
+    CommunioServus* servus,
+               i32  ms);
 
 /* custodia (frenum) - NIHIL = sine freno */
 vacuum

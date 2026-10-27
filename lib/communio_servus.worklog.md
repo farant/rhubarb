@@ -133,3 +133,23 @@ small HTML page). Calls:
   user input). The text buffers holding the code and token are zeroed right
   after the message is handed to the Epistularius (which copies what it needs).
 - No Epistularius set: `intrare` still 202, one stderr line, nothing else.
+
+## 2026-10-27 - final review fixes (plan-3)
+
+- CORRECTION of the T4 entry: per-address throttling in custodia is NOT a mail
+  cap - its table (1024 slots) evicts the oldest key, so junk addresses flush a
+  real address's counter. The cap now comes from the database: at most
+  COMMUNIO_EPISTULAE_PER_HORAM (III) sign-in requests per address per hour and
+  COMMUNIO_EPISTULAE_PER_DIEM (XXX) per server per day are stored (= mailed);
+  beyond that intrare still answers 202 and one stderr line notes it. Rows of
+  unknown addresses are never stored, so they cannot fill the budget.
+- intrare answers after a fixed floor (COMMUNIO_INTRARE_MORA_MS, 250 ms from the
+  request start) through a deferred response in 16 fixed slots, so an
+  allowlisted address (DB write + fsync + mail setup) and an unknown one take
+  the same time. Tests set 0 via communio_servum_moram_intrandi_ponere.
+- The mail's link no longer signs in on GET (mail scanners prefetch links): GET
+  shows "Sign in the device <title>?" with a form button; only the form POST to
+  /communio/confirmare (aditus + signum) registers the device. The token also
+  leaves the state-changing URL.
+- Device titles: 1..64 bytes, no control characters (no newlines in the mail
+  from our domain) - otherwise 400, the same for known and unknown addresses.

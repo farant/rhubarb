@@ -23,6 +23,7 @@
 #include "credo.h"
 #include <string.h>
 #include <stdio.h>
+#include <sys/time.h>
 
 nomen structura {
            Volumen* volumen;
@@ -1718,6 +1719,8 @@ epistulas_parare (
     cfg.frenum_conatus  = II;
     custodia            = custodia_creare(&cfg, r->reactor, piscina);
     communio_servum_custodiam_ponere(m->servus, custodia);
+    /* recensio 2: probationes celeres; mora propria probatur infra */
+    communio_servum_moram_intrandi_ponere(m->servus, ZEPHYRUM);
     si (!cum_epistulario)
     {
         redde NIHIL;
@@ -1792,6 +1795,83 @@ intrare (
     sprintf(corpus, "{\"epistula\":\"%s\",\"digestum\":\"%s\","
         "\"titulus\":\"%s\"}", epistula, digestum, titulus);
     redde rogare_json(r, HTTP_POST, "/communio/intrare", NIHIL, corpus);
+}
+
+/* POST formae (navigator bullam premens) */
+interior Responsum
+rogare_formam (
+                  Rete* r,
+    constans character* via,
+                chorda  corpus)
+{
+     HttpPetitio* pet;
+     HttpVocatio* voc;
+    HttpResultus  res;
+       Responsum  exitus;
+       character  url[CCLVI];
+             b32  finita;
+             i32  gyri;
+
+    exitus.status          = ZEPHYRUM;
+    exitus.corpus.datum    = NIHIL;
+    exitus.corpus.mensura  = ZEPHYRUM;
+    sprintf(url, "http://127.0.0.1:%d%s", (integer)r->portus, via);
+    pet = http_petitio_creare(piscina, HTTP_POST, url);
+    si (!pet)
+    {
+        redde exitus;
+    }
+    http_petitio_caput_addere(pet, "Content-Type",
+        "application/x-www-form-urlencoded");
+    http_petitio_corpus_ponere_chorda(pet, corpus);
+    finita = FALSUM;
+    voc = http_vocare(r->reactor, pet, NIHIL, NIHIL, _finis, &finita,
+        NIHIL, piscina);
+    per (gyri = ZEPHYRUM; voc && !finita && gyri < M; gyri++)
+    {
+        (vacuum)reactor_poll(r->reactor, X);
+    }
+    si (!voc || !finita)
+    {
+        redde exitus;
+    }
+    res = http_vocatio_resultus(voc);
+    si (res.successus && res.responsum)
+    {
+        exitus.status = res.responsum->status;
+        exitus.corpus = res.responsum->corpus;
+    }
+    redde exitus;
+}
+
+/* "...?aditus=A&signum=S" -> corpus formae "aditus=A&signum=S" */
+interior chorda
+forma_ex_nexu (
+    chorda nexus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < nexus.mensura; i++)
+    {
+        si (nexus.datum[i] == '?')
+        {
+            chorda c;
+
+            c.datum    = nexus.datum + i + I;
+            c.mensura  = nexus.mensura - i - I;
+            redde c;
+        }
+    }
+    redde nexus;
+}
+
+interior s64
+ms_nunc (vacuum)
+{
+    structura timeval tv;
+
+    (vacuum)gettimeofday(&tv, NIHIL);
+    redde (s64)tv.tv_sec * M + (s64)(tv.tv_usec / M);
 }
 
 interior vacuum
@@ -1894,19 +1974,27 @@ _sectio_confirmare_signo (
     CREDO_VERUM(continet(lit(via),
         lit("/communio/confirmare?aditus=")));
 
-    CREDO_GRADUS("nexus apertus: pagina, titulus effugatus");
+    CREDO_GRADUS("nexus apertus: pagina cum bulla, NIHIL mutatum");
     q = rogare_json(r, HTTP_GET, via, NIHIL, NIHIL);
     CREDO_AEQUALIS_I32(q.status, CC);
     CREDO_VERUM(continet(q.corpus, lit("&lt;b&gt;Tabula&lt;/b&gt;")));
     CREDO_FALSUM(continet(q.corpus, lit("<b>Tabula</b>")));
     CREDO_FALSUM(continet(n.html, lit("<b>Tabula</b>")));
+    CREDO_VERUM(continet(q.corpus, lit("<form")));
+    CREDO_AEQUALIS_I32(rogare_json(r, HTTP_GET, "/communio/acta?post=0",
+        tessera, NIHIL).status, CDI);
+
+    CREDO_GRADUS("bulla pressa (POST formae): inscriptus");
+    q = rogare_formam(r, "/communio/confirmare",
+        forma_ex_nexu(lit(via)));
+    CREDO_AEQUALIS_I32(q.status, CC);
+    CREDO_VERUM(continet(q.corpus, lit("Signed in")));
     CREDO_AEQUALIS_I32(rogare_json(r, HTTP_GET, "/communio/acta?post=0",
         tessera, NIHIL).status, CC);
 
-    CREDO_GRADUS("nexus iterum: idem, sine damno");
-    CREDO_AEQUALIS_I32(rogare_json(r, HTTP_GET, via, NIHIL,
-        NIHIL).status,
-        CC);
+    CREDO_GRADUS("bulla iterum: idem, sine damno");
+    CREDO_AEQUALIS_I32(rogare_formam(r, "/communio/confirmare",
+        forma_ex_nexu(lit(via))).status, CC);
     CREDO_AEQUALIS_I32(rogare_json(r, HTTP_GET,
         "/communio/confirmare?aditus=01ZZZZZZZZZZZZZZZZZZZZZZZZ"
         "&signum=x",
@@ -2048,6 +2136,126 @@ _sectio_sine_epistulario (
     rete_purgare(r);
 }
 
+/* recensio 1: limites epistularum ex ordinibus aditus (non ex
+ * memoria evincibili): III per epistulam per horam, XXX per diem in
+ * servo toto - supra: aditus non servatur, nulla epistula */
+interior vacuum
+_sectio_limes_epistularum (
+    CredoContextus* c)
+{
+            Mundus* m;
+    CommunioAditus  a;
+         character  tessera[XLIV];
+         character  digestum[LXV];
+         character  epistula[LXIV];
+               i32  k;
+               i32  permissi;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    CREDO_NECESSE(permissum_parare(m));
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    permissi = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        CREDO_NECESSE(communio_aditum_petere(m->servus,
+            lit("fran@example.org"), lit(digestum), lit("x"), &a));
+        si (a.permissus)
+        {
+            permissi++;
+        }
+    }
+    CREDO_AEQUALIS_I32(permissi, COMMUNIO_EPISTULAE_PER_HORAM);
+
+    CREDO_GRADUS("servus totus: XXX per diem");
+    per (k = ZEPHYRUM; k < XL; k++)
+    {
+        sprintf(epistula, "c%d@example.org", (integer)k);
+        CREDO_NECESSE(communio_epistulam_permittere(m->servus,
+            lit(epistula), m->franciscus, lit("familia")));
+        CREDO_NECESSE(communio_aditum_petere(m->servus, lit(epistula),
+            lit(digestum), lit("x"), &a));
+        si (a.permissus)
+        {
+            permissi++;
+        }
+    }
+    CREDO_AEQUALIS_I32(permissi, COMMUNIO_EPISTULAE_PER_DIEM);
+}
+
+/* recensio 2: intrare respondet post moram fixam (permissa et ignota
+ * idem tempus) */
+interior vacuum
+_sectio_mora_intrandi (
+    CredoContextus* c)
+{
+            Mundus* m;
+              Rete* r;
+      Epistularius* e;
+         character  tessera[XLIV];
+         character  digestum[LXV];
+               s64  t0;
+               s64  t_permissa;
+               s64  t_ignota;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    r = rete_parare(m);
+    CREDO_NECESSE_NON_NIHIL(r);
+    e = epistulas_parare(m, r, VERUM);
+    CREDO_NECESSE(e && permissum_parare(m));
+    communio_servum_moram_intrandi_ponere(m->servus, CCL);
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    t0 = ms_nunc();
+    CREDO_AEQUALIS_I32(intrare(r, "fran@example.org", digestum, "x")
+        .status, CCII);
+    t_permissa  = ms_nunc() - t0;
+    t0          = ms_nunc();
+    CREDO_AEQUALIS_I32(intrare(r, "ignota@example.org", digestum, "x")
+        .status, CCII);
+    t_ignota = ms_nunc() - t0;
+    CREDO_VERUM(t_permissa >= CC);
+    CREDO_VERUM(t_ignota >= CC);
+    rete_purgare(r);
+}
+
+/* recensio 5: titulus apparatus (ingressus ignotus, in epistula
+ * missus) - longior quam LXIV aut signa moderantia: 400, uniformiter */
+interior vacuum
+_sectio_titulus_malus (
+    CredoContextus* c)
+{
+            Mundus* m;
+              Rete* r;
+      Epistularius* e;
+         character  tessera[XLIV];
+         character  digestum[LXV];
+         character  prolixus[LXX];
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->servus);
+    r = rete_parare(m);
+    CREDO_NECESSE_NON_NIHIL(r);
+    e = epistulas_parare(m, r, VERUM);
+    CREDO_NECESSE(e && permissum_parare(m));
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    memset(prolixus, 'a', (size_t)LXV);
+    prolixus[LXV] = '\0';
+    CREDO_AEQUALIS_I32(intrare(r, "fran@example.org", digestum,
+        prolixus)
+        .status, CD);
+    CREDO_AEQUALIS_I32(intrare(r, "ignota@example.org", digestum,
+        prolixus)
+        .status, CD);
+    CREDO_AEQUALIS_I32(intrare(r, "fran@example.org", digestum,
+        "ALERT\\ncall now").status, CD);
+    CREDO_AEQUALIS_I32(intrare(r, "ignota@example.org", digestum,
+        "ALERT\\ncall now").status, CD);
+    (vacuum)epistulas_exspectare(r, e, I);
+    CREDO_AEQUALIS_I32(epistularius_fictus_numerus(e), ZEPHYRUM);
+    rete_purgare(r);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "apparatus", _sectio_apparatus, _parare, _purgare, NIHIL, NIHIL },
     { "revocatus", _sectio_revocatus, _parare, _purgare, NIHIL, NIHIL },
@@ -2104,6 +2312,13 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _purgare, NIHIL, NIHIL },
     { "sine epistulario (plan-3 HTTP)", _sectio_sine_epistulario,
         _parare,
+        _purgare, NIHIL, NIHIL },
+    { "limes epistularum (recensio)", _sectio_limes_epistularum,
+        _parare,
+        _purgare, NIHIL, NIHIL },
+    { "mora intrandi (recensio)", _sectio_mora_intrandi, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "titulus malus (recensio)", _sectio_titulus_malus, _parare,
         _purgare, NIHIL, NIHIL },
     { "massa per filum (recensio)", _sectio_massa_per_filum, _parare,
         _purgare, NIHIL, NIHIL },
