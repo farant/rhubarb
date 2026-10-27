@@ -14,6 +14,8 @@
 #include "colloquia_visus.h"
 #include "sancti_visus.h"
 #include "lector.h"
+#include "navigator.h"
+#include "navigator_bibliotheca.h"
 #include "lectiones.h"
 #include "indagatio.h"
 #include "indagatio_genera.h"
@@ -4642,32 +4644,40 @@ bibliotheca_lectoris (
  * deletae - non numeratur); lectio sola. Liber absens: exstat solum
  * (via celeris, nullum documentum aperitur) */
 interior b32
+comitis_notas_habere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+                Piscina* scheda,
+                 chorda  locus)
+{
+           Xar* lineae;
+     character* praefixum;
+
+    si (!scheda || locus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    piscina_vacare(scheda);
+    praefixum = chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        "comes/", scheda), locus, scheda), scheda);
+    si (!scriba_liber_exstat(volumen, praefixum, scheda))
+    {
+        redde FALSUM;
+    }
+    lineae = xar_creare(scheda, (i32)magnitudo(chorda));
+    redde lineae && scriba_liber_lineas_legere(scheda, intern, volumen,
+        praefixum, I, lineae) && xar_numerus(lineae) > ZEPHYRUM;
+}
+
+interior b32
 lectoris_notas_habere (
     vacuum* ctx,
     chorda  locus)
 {
-    ContextusLectoris* cl;
-                  Xar* lineae;
-            character* praefixum;
+    ContextusLectoris* cl = (ContextusLectoris*)ctx;
 
-    cl = (ContextusLectoris*)ctx;
-    si (!cl || !cl->scheda_notarum || locus.mensura == ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    piscina_vacare(cl->scheda_notarum);
-    praefixum = chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
-        "comes/", cl->scheda_notarum), locus, cl->scheda_notarum),
-        cl->scheda_notarum);
-    si (!scriba_liber_exstat(cl->volumen, praefixum,
-        cl->scheda_notarum))
-    {
-        redde FALSUM;
-    }
-    lineae = xar_creare(cl->scheda_notarum, (i32)magnitudo(chorda));
-    redde lineae && scriba_liber_lineas_legere(cl->scheda_notarum,
-        cl->intern, cl->volumen, praefixum, I, lineae)
-        && xar_numerus(lineae) > ZEPHYRUM;
+    redde cl && comitis_notas_habere(cl->volumen, cl->intern,
+        cl->scheda_notarum, locus);
 }
 
 interior b32
@@ -4744,6 +4754,122 @@ lectorem_describere (
     f->locus              = lector_locus;
     f->locus_ctx          = m;
     f->locus_titulus      = lector_locus_titulus;
+    f->locus_titulus_ctx  = m;
+}
+
+
+/* ==================================================
+ * Navigator (navigator N3.2)
+ * ================================================== */
+
+/* bibliotheca articulorum communis omnibus lateribus, in volumine vici
+ * pigre aperta (ut lector) */
+nomen structura {
+                   Vicus* vicus;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+                 Volumen* volumen;
+    NavigatorBibliotheca* bibliotheca;
+         StatusSystemata* systemata;
+                 Piscina* scheda_notarum;
+} ContextusNavigatoris;
+
+interior NavigatorBibliotheca*
+bibliotheca_navigatoris (
+    ContextusNavigatoris* cn)
+{
+    si (!cn->bibliotheca && cn->volumen)
+    {
+        cn->bibliotheca = navigator_bibliotheca_aperire(cn->volumen,
+            NIHIL, NIHIL, cn->piscina);
+    }
+    redde cn->bibliotheca;
+}
+
+interior b32
+navigatoris_notas_habere (
+    vacuum* ctx,
+    chorda  locus)
+{
+    ContextusNavigatoris* cn = (ContextusNavigatoris*)ctx;
+
+    redde cn && comitis_notas_habere(cn->volumen, cn->intern,
+        cn->scheda_notarum, locus);
+}
+
+interior b32
+navigatorem_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusNavigatoris* cn;
+       NavigatorMontatio* m;
+
+    (vacuum)volumen;
+    cn  = (ContextusNavigatoris*)ctx;
+    m   = (NavigatorMontatio*)sedes;
+    si (   !cn
+        || !navigator_montare(m, piscina, intern, repo, id,
+               bibliotheca_navigatoris(cn), latitudo, altitudo,
+               cn->systemata))
+    {
+        redde FALSUM;
+    }
+    si (!cn->scheda_notarum)
+    {
+        cn->scheda_notarum = piscina_generare_dynamicum(
+            "navigator_notae", IV * M);
+    }
+    m->notas_habet      = navigatoris_notas_habere;
+    m->notas_habet_ctx  = cn;
+    /* URI aut ULID articuli; mala: index manet */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)navigator_argumentum_ponere(m, argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+navigatoris_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde navigator_argumentum_ponere((NavigatorMontatio*)ctx,
+        argumentum);
+}
+
+interior vacuum
+navigatorem_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    NavigatorMontatio* m;
+
+    m                 = (NavigatorMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = navigator_componere;
+    f->componere_ctx  = m;
+    f->ramus          = &m->ramus;
+    /* Esc quod index non consumpsit: latus prius */
+    f->effugium_redit         = VERUM;
+    f->argumentum_ponere      = navigatoris_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->semitam_secuta         = navigator_semitam_secuta;
+    f->semitam_secuta_ctx     = m;
+    /* comites: locus paginae cum versione (spec V.11, V.16) */
+    f->locus              = navigator_locus;
+    f->locus_ctx          = m;
+    f->locus_titulus      = navigator_locus_titulus;
     f->locus_titulus_ctx  = m;
 }
 
@@ -5028,6 +5154,7 @@ ContextusNomenclatoris* cn;
          ContextusSoni* soni;
     ContextusSanctorum* sanctorum;
      ContextusLectoris* lectoris;
+  ContextusNavigatoris* navigatoris;
  ContextusIndagationis* ci;
        StatusSystemata* systemata;
 
@@ -5107,6 +5234,18 @@ ContextusNomenclatoris* cn;
         lectoris->intern     = intern;
         lectoris->volumen    = volumen;
         lectoris->systemata  = systemata;
+    }
+    /* navigator: bibliotheca articulorum communis, pigre aperta */
+    navigatoris = (ContextusNavigatoris*)piscina_allocare(piscina,
+        magnitudo(ContextusNavigatoris));
+    si (navigatoris)
+    {
+        memset(navigatoris, ZEPHYRUM, magnitudo(ContextusNavigatoris));
+        navigatoris->vicus      = app->vicus;
+        navigatoris->piscina    = piscina;
+        navigatoris->intern     = intern;
+        navigatoris->volumen    = volumen;
+        navigatoris->systemata  = systemata;
     }
     /* D5 S4: registrum commune sanctos quaerit (corpus pigre) */
     si (ck && sanctorum)
@@ -5224,6 +5363,10 @@ ContextusNomenclatoris* cn;
         /* lector L6: $epubs (bibliotheca), $epubs(id aut URI) */
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "epubs",
                "lector", NIHIL, piscina)
+        /* navigator N3.2: $nav (index), $nav(ULID aut URI) */
+        || !navigatoris
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "nav",
+               "navigator", NIHIL, piscina)
         || !ci
         || !via_registrare(cs->iussa, app->vicus, piscina, intern,
                &ci->via)
@@ -5274,6 +5417,10 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "lector",
                magnitudo(LectorMontatio), lectorem_montare_in_vico,
                lectorem_describere, lectoris)
+        || !vicus_genus_addere(app->vicus, "navigator",
+               magnitudo(NavigatorMontatio),
+               navigatorem_montare_in_vico,
+               navigatorem_describere, navigatoris)
         || !vicus_genus_addere(app->vicus, "colloquia",
                magnitudo(ColloquiorumMontatio),
                colloquia_montare_in_vico,

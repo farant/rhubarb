@@ -121,9 +121,16 @@
     <forma textus="vicipaediae" casus="genitivus" numerus="singularis"/>
   </vocabulum>
 
+  <vocabulum lemma="navigator" lingua="latina" classis="substantivum"
+    nota="WORDS navigator, navigatoris N 3 M (nauta): vox domus pro latere navigatoris paginarum interretis (lib/navigator.c, apps/navigator; navigator N3.2 2026-10-27); formae obliquae pro navigatorem_montare_in_vico, ContextusNavigatoris">
+    <forma textus="navigatorem" casus="accusativus" numerus="singularis"/>
+    <forma textus="navigatoris" casus="genitivus" numerus="singularis"/>
+  </vocabulum>
+
   <vocabulum lemma="rheum" lingua="latina" classis="substantivum"
     nota="Latinum botanicum (Gk. rheon): genus Rheum, rhabarbarum; nomen sectionis probatio_vicipaedia (_probare_rheum, fixum rhubarb.html; navigator N1 2026-10-27)">
     <forma textus="rheum" casus="nominativus" numerus="singularis"/>
+    <forma textus="rhei" casus="genitivus" numerus="singularis"/>
   </vocabulum>
 
   <vocabulum lemma="insecabilis" lingua="latina" classis="adiectivum"

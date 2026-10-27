@@ -1,0 +1,52 @@
+<!-- organum.stml - manifestum navigatoris (genus "navigator"; navigator
+     N3.2, spec project-specs/navigator-spec.md): index articulorum
+     servatorum, articulus paginatus. Bibliotheca (navigator_
+     bibliotheca.h) per ligamen a parente, communis omnibus lateribus -
+     hic solum status visus. Locus paginae versionem nominat: comes
+     (Cmd+T) versionis suae est (spec V.11, V.16). -->
+<organum genus="navigator" versio="1">
+
+  <ligamina>
+    <ligamen nomen="bibliotheca" genus="navigator" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="navigator.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="navigator.agere"
+            semita="ligatio" historia="impelle">
+      <optio>index</optio>
+      <optio>pagina</optio>
+    </campus>
+    <campus nomen="articulus" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="ligatio"
+            historia="impelle"
+            nota="ULID articuli aperti; in indice absens"/>
+    <campus nomen="versio" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            ambitus="ligatio"
+            nota="ULID versionis lectae; absens = versio ultima"/>
+    <campus nomen="pagina" typus="numerus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            ambitus="ligatio" nota="pagina in articulo (ab 0)"/>
+    <campus nomen="electus_articulus" typus="textus" vita="persistens"
+            scriptor="navigator.agere"
+            nota="ULID articuli electi in indice; absens = primus"/>
+    <campus nomen="nota" typus="textus" vita="transiens"
+            scriptor="navigator.agere"
+            nota="nuntius in linea ima ('article not found')"/>
+  </status>
+
+  <!-- argumentum nudum: vacuum = index; ULID articuli = articulus,
+       versio ultima, pagina prima -->
+  <cognomina>
+    <cognomen semita="navigator/index"/>
+    <cognomen typus="textus" semita="navigator/pagina/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

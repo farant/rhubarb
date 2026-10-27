@@ -223,6 +223,7 @@ declare -a SOURCE_FILES=(
     "lib/multipartita.c"
     "lib/multiplexor.c"
     "lib/natura.c"
+    "lib/navigator.c"
     "lib/navigator_bibliotheca.c"
     "lib/navigator_entitatum.c"
     "lib/navigator_paginae.c"

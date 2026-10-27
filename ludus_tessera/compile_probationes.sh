@@ -49,6 +49,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/tessera/instrumenta/musivum"
     "-I$LT_DIR/fontes"
     "-I$LT_DIR/probationes"
+    "-I$RADIX_DIR/html/fontes"
+    "-I$RADIX_DIR/materia/fontes"
     # A3: ludus_toy.h (applicatio ludicra probationum radicis)
     "-I$RADIX_DIR/probationes"
 )
@@ -217,6 +219,16 @@ declare -a RADIX_FONTES=(
     "pseudoterminale"
     "pseudoterminale_posix"
     "glyphae_ductae"
+    # navigator N3.2: latus navigatoris in vico ($nav) - bibliotheca,
+    # paginae, adaptator Vicipaediae (arbor HTML: sectio 2c)
+    "navigator"
+    "navigator_bibliotheca"
+    "navigator_paginae"
+    "vicipaedia"
+    "articulus"
+    "uri"
+    "url"
+    "excerptum"        # materia_pictor (arbor materiae)
 )
 
 FILTER="${1:-}"
@@ -271,6 +283,19 @@ for src in "$RADIX_DIR"/tessera/fontes/*.c \
     obj="$BUILD_DIR/tessera_$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [tessera] $base.c"
+        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+            echo "FRACTA: $base.c" ; exit 1
+        fi
+    fi
+    obj_files="$obj_files $obj"
+done
+
+# ---- 2c. arbor HTML et materia (navigator N3.2: vicipaedia) ----
+for src in "$RADIX_DIR"/html/fontes/*.c "$RADIX_DIR"/materia/fontes/*.c; do
+    base="$(basename "$src" .c)"
+    obj="$BUILD_DIR/arbor_$base.o"
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [arbor] $base.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $base.c" ; exit 1
         fi
