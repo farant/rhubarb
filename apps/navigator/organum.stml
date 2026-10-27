@@ -38,6 +38,16 @@
     <campus nomen="nota" typus="textus" vita="transiens"
             scriptor="navigator.agere"
             nota="nuntius in linea ima ('article not found')"/>
+    <campus nomen="prompta" typus="electio" vita="transiens"
+            absens="nulla" scriptor="navigator.agere"
+            nota="N3.3: linea promptae (membrum__prompta)">
+      <optio>nulla</optio>
+      <optio>url</optio>
+    </campus>
+    <campus nomen="prompta_textus" typus="textus" vita="transiens"
+            scriptor="navigator.agere"/>
+    <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
+            scriptor="navigator.agere"/>
   </status>
 
   <!-- argumentum nudum: vacuum = index; ULID articuli = articulus,

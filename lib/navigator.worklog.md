@@ -29,3 +29,29 @@ it). I overwrote it by accident with the first draft of the pane suite
 the same hour; the pane suite is probatio_navigator_latus.c.
 vicus: lector's "comes/<locus> has text" check is now shared
 (comitis_notas_habere) by lector and navigator.
+
+## 2026-10-27 - N3.3 opening by URL inside vicus
+
+'o' / "Open URL..." button -> prompt (membrum__prompta, fields like
+sancti's); Enter or $nav(URL) -> saved article opens with no network,
+otherwise navigator_petere on the HOST reactor (m->reactor hook; vicus
+gives v->reactor). Messages (Fetching / Not found / Unsupported site /
+Network: ...) live in `nota`; the index gives them a full-width row of
+their own (in the header row they were cut off at 360 px), dim while a
+fetch is pending, red otherwise.
+
+Pulse/timer: vicus pulses a pane with `pulsare` every 16 ms unless the
+pane also has `mora` - so navigator_mora returns -1 (idle) except right
+after a fetch finished; the fetch's sockets in vicus's reactor are what
+wake the loop. navigator_pulsare reports "changed" once and frees
+finished fetches (never inside their own callback).
+
+Superseding: a new fetch cancels the pending one AT ONCE. dimittere on
+the next pulse would also cancel it, so a plant that removed the
+explicit cancel first stayed green; the race is the window before that
+pulse, where a late answer would be taken as the current fetch's. The
+test now sends the old fetch to a slow (300 ms) server that would
+succeed and polls the reactor without pulsing - red without the cancel.
+
+Found on the way: probatio_vicus_quies is flaky under load (~1 in 3 at
+load 7.7), also with the committed vicus_applicatio - ledger …N8S6.

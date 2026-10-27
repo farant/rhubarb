@@ -21,6 +21,9 @@
 #include "vicipaedia.h"
 #include "navigator_bibliotheca.h"
 #include "navigator.h"
+#include "navigator_petitio.h"
+#include "reactor.h"
+#include "servus_scriptus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -38,16 +41,25 @@
 #define URL_BETA    "https://la.wikipedia.org/wiki/Beta"
 
 nomen structura {
-     InternamentumChorda* intern;
-      InsulaRepositorium* repo;
-                 Volumen* volumen;
-    NavigatorBibliotheca* bibliotheca;
-                     i32  numerator;
-       NavigatorMontatio  m;
-             Dispensator* d;
-                     b32  notae;      /* notas_habet probationis */
-                 Piscina* p;
+         InternamentumChorda* intern;
+          InsulaRepositorium* repo;
+                     Volumen* volumen;
+        NavigatorBibliotheca* bibliotheca;
+                         i32  numerator;
+           NavigatorMontatio  m;
+                 Dispensator* d;
+                         b32  notae;      /* notas_habet probationis */
+                     Piscina* p;
+                     Reactor* reactor;    /* N3.3: petitiones */
+    NavigatorPetitioOptiones  optiones;   /* radix ad servum scriptum */
 } Mundus;
+
+interior Reactor*
+reactor_mundi (
+    vacuum* ctx)
+{
+    redde ((Mundus*)ctx)->reactor;
+}
 
 interior b32
 notas_habere (
@@ -115,8 +127,13 @@ mundus (
     {
         redde NIHIL;
     }
-    w->m.notas_habet      = notas_habere;
-    w->m.notas_habet_ctx  = w;
+    w->m.notas_habet = notas_habere;
+    w->m.notas_habet_ctx = w;
+    w->reactor = reactor_creare(c->piscina);
+    w->m.reactor = reactor_mundi;
+    w->m.reactor_ctx = w;
+    w->optiones.agens = chorda_ex_literis("proba/1", c->piscina);
+    w->m.optiones_petitionis = &w->optiones;
     w->d = dispensator_creare(c->piscina, w->intern, w->repo,
         w->m.actiones, navigator_componere, &w->m, CCC);
     si (!w->d)
@@ -259,6 +276,242 @@ argumentum (
     r = navigator_argumentum_ponere(&w->m, arg);
     dispensator_recomponere(w->d);
     redde r;
+}
+
+/* ===== N3.3: aperire per URL ===== */
+
+/* servus scriptus gradu uno (octeti NIHIL et claudere FALSUM =
+ * tacitus); radix optionum ad eum */
+interior ServusScriptus*
+servum_ponere (
+                Mundus* w,
+    constans character* octeti,
+                   b32  claudere)
+{
+    ServusGradus* g;
+  ServusScriptus* s;
+       character* radix;
+
+    g = (ServusGradus*)piscina_allocare(w->p, magnitudo(ServusGradus));
+    g->octeti = octeti;
+    g->mensura = ZEPHYRUM;
+    g->mora_ms = ZEPHYRUM;
+    g->claudere = claudere;
+    s = servum_scriptum_creare(w->reactor, g, (octeti || claudere) ? I
+        : ZEPHYRUM, w->p);
+    si (s)
+    {
+        radix = (character*)piscina_allocare(w->p, LXIV);
+        sprintf(radix, "http://127.0.0.1:%u",
+            (insignatus integer)s->portus);
+        w->optiones.radix_fontis = radix;
+    }
+    redde s;
+}
+
+interior constans character*
+responsum_ducenti (
+    constans character* corpus,
+               Piscina* p)
+{
+    character* s;
+
+    s = (character*)piscina_allocare(p, (memoriae_index)(strlen(corpus)
+        + CXXVIII));
+    sprintf(s, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n"
+        "Content-Length: %u\r\n\r\n%s",
+        (insignatus integer)strlen(corpus), corpus);
+    redde s;
+}
+
+/* litterae in promptam, deinde Enter */
+interior vacuum
+scribere (
+                Mundus* w,
+    constans character* textus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; textus[i]; i++)
+    {
+        clavis(w, textus[i]);
+    }
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+}
+
+/* reactor poscitur usque ad pulsum mutatum (petitio finita) */
+interior b32
+pervenire (
+    Mundus* w)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < CL; k++)
+    {
+        (vacuum)reactor_poll(w->reactor, XX);
+        si (navigator_pulsare(&w->m))
+        {
+            dispensator_recomponere(w->d);
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+prompta_clausa (
+    Mundus* w)
+{
+    redde campus_est(w, "prompta", NIHIL)
+        || campus_est(w, "prompta", "nulla");
+}
+
+interior vacuum
+_sectio_aperire (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Planta",
+        "<p>Planta viva est.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("o: prompta url aperitur; mora nulla sine petitione");
+    CREDO_AEQUALIS_I32((i32)navigator_mora(&w->m), (i32)-I);
+    clavis(w, 'o');
+    CREDO_VERUM(campus_est(w, "prompta", "url"));
+
+    CREDO_GRADUS("URL + Enter: petitio, nota 'Fetching', index manet");
+    scribere(w, "https://la.wikipedia.org/wiki/Planta");
+    CREDO_VERUM(prompta_clausa(w));
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Planta",
+        c->piscina));
+
+    CREDO_GRADUS("petitio finita: articulus apertus, versio fixa");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Planta",
+        c->piscina)) != NIHIL);
+    CREDO_VERUM(!campus_est(w, "versio", NIHIL));
+    CREDO_VERUM(pictum(w, "Planta viva est.", c->piscina));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+    CREDO_FALSUM(navigator_pulsare(&w->m));
+
+    CREDO_GRADUS("URL servata: statim, sine rete");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis(w, 'o');
+    scribere(w, "https://la.wikipedia.org/wiki/Beta");
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("$nav(URL): argumentum cum :// petit");
+    CREDO_VERUM(argumentum(w, "https://la.wikipedia.org/wiki/Herba"));
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Herba",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_AEQUALIS_I32(s->acceptae, II);
+    servum_scriptum_claudere(s);
+}
+
+interior vacuum
+_sectio_errores (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, "HTTP/1.1 404 Not Found\r\nContent-Length: 0"
+        "\r\n\r\n", FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("404: 'Not found', nihil servatum");
+    clavis(w, 'o');
+    scribere(w, "https://la.wikipedia.org/wiki/Nusquam");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Not found", c->piscina));
+    CREDO_AEQUALIS_I32(navigator_articulorum_numerus(w->bibliotheca),
+        III);
+
+    CREDO_GRADUS("situs alienus: 'Unsupported site', sine rete");
+    clavis(w, 'o');
+    scribere(w, "https://example.com/pagina");
+    CREDO_VERUM(pictum(w, "Unsupported site", c->piscina));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("verba sine '://': 'Not a URL'");
+    clavis(w, 'o');
+    scribere(w, "rhabarbarum");
+    CREDO_VERUM(pictum(w, "Not a URL", c->piscina));
+    servum_scriptum_claudere(s);
+}
+
+/* petitio nova pendentem abrumpit STATIM (non solum in pulsu
+ * proximo): prima ad servum tardum (CCC ms) qui bene responderet;
+ * reactor sine pulsu poscitur - sine abruptione prima servaretur et
+ * ut petitio currens acciperetur. Globulus "Open URL...". */
+interior vacuum
+_sectio_supersedere (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+      ServusGradus* g;
+    ServusScriptus* tardus;
+    ServusScriptus* vivus;
+         character* radix;
+               i32  k;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    g = (ServusGradus*)piscina_allocare(c->piscina,
+        magnitudo(ServusGradus));
+    g->octeti   = responsum_ducenti(PAGINA("Prima", "<p>Prima.</p>"),
+        c->piscina);
+    g->mensura   = ZEPHYRUM;
+    g->mora_ms   = CCC;
+    g->claudere  = FALSUM;
+    tardus       = servum_scriptum_creare(w->reactor, g, I, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(tardus);
+    radix = (character*)piscina_allocare(c->piscina, LXIV);
+    sprintf(radix, "http://127.0.0.1:%u",
+        (insignatus integer)tardus->portus);
+    w->optiones.radix_fontis = radix;
+
+    CREDO_GRADUS("globulus 'Open URL...': prompta aperitur");
+    CREDO_VERUM(pictum(w, "Open URL", c->piscina));
+    CREDO_VERUM(ictus_in(w, "aperire-url", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "prompta", "url"));
+    scribere(w, "https://la.wikipedia.org/wiki/Prima");
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Prima",
+        c->piscina));
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        (vacuum)reactor_poll(w->reactor, X);
+    }
+
+    CREDO_GRADUS("altera (servus alius) primam statim abrumpit");
+    vivus = servum_ponere(w, responsum_ducenti(PAGINA("Altera",
+        "<p>Altera pagina.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(vivus);
+    clavis(w, 'o');
+    scribere(w, "https://la.wikipedia.org/wiki/Altera");
+    per (k = ZEPHYRUM; k < L; k++)
+    {
+        (vacuum)reactor_poll(w->reactor, X);   /* sine pulsu */
+    }
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Altera pagina.", c->piscina));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Prima",
+        c->piscina)) == NIHIL);
+    CREDO_AEQUALIS_I32(navigator_articulorum_numerus(w->bibliotheca),
+        IV);
+    servum_scriptum_claudere(tardus);
+    servum_scriptum_claudere(vivus);
 }
 
 interior vacuum
@@ -460,6 +713,10 @@ _sectio_vacua (
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "aperire", _sectio_aperire, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "errores", _sectio_errores, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "supersedere", _sectio_supersedere, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
     { "index", _sectio_index, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,

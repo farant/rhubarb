@@ -229,6 +229,27 @@ declare -a RADIX_FONTES=(
     "uri"
     "url"
     "excerptum"        # materia_pictor (arbor materiae)
+    "navigator_petitio" # N3.3: petitio in reactore vici
+    # N3.3: clausura petitionis HTTPS (http_vocatio, nomina, tcp, TLS
+    # 1.2/1.3 super BearSSL, fiducia) - variantes posix (C pura; ita
+    # suitae TLS etiam sub Linux currunt)
+    "fiducia_der"
+    "fiducia_diffisa_tabula" # N3.3: tabula (data, non functio)
+    "fiducia_diffisa"
+    "tls13_clavis"
+    "tls13_nuntii"
+    "tls13_recordum"
+    "fiducia_posix"
+    "tls13"
+    "tls_bearssl"
+    "tls_securetransport_posix"
+    "tls_tls13"
+    "nomina"
+    "nomina_posix"
+    "tcp_posix"
+    "tls"
+    "http"
+    "http_vocatio"
 )
 
 FILTER="${1:-}"
@@ -314,6 +335,18 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
             -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_OMIT_DEPRECATED \
             -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -c "$src" -o "$obj"; then
         echo "FRACTA: sqlite3.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# ---- 2d. BearSSL vendicata (navigator N3.3: petitio HTTPS in vico) -
+#          RELAXATUM ut compile_tests.sh radicis ----
+src="$RADIX_DIR/vendor/bearssl_amalgama.c"
+obj="$BUILD_DIR/vendor_bearssl_amalgama.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+    echo "  [vendicatum] bearssl_amalgama.c"
+    if ! clang -O2 -I"$RADIX_DIR/vendor" -c "$src" -o "$obj"; then
+        echo "FRACTA: bearssl_amalgama.c" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"

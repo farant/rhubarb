@@ -4797,6 +4797,37 @@ navigatoris_notas_habere (
         cn->scheda_notarum, locus);
 }
 
+/* N3.3: reactor vici pro petitionibus (NIHIL ante vicus_reactor_ponere
+ * - probationes sine ansa: "Offline") */
+interior Reactor*
+navigatoris_reactor (
+    vacuum* ctx)
+{
+    ContextusNavigatoris* cn = (ContextusNavigatoris*)ctx;
+
+    redde cn && cn->vicus ? cn->vicus->reactor : NIHIL;
+}
+
+interior VicusPulsus
+navigatorem_pulsare (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = navigator_pulsare(ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+/* -1 = nullus pulsus debitus: vicus quiescit; fossae petitionis in
+ * reactore vici ansam expergefaciunt */
+interior Mora
+navigatorem_morari (
+    vacuum* ctx)
+{
+    redde (Mora)navigator_mora(ctx);
+}
+
 interior b32
 navigatorem_montare_in_vico (
                  vacuum* sedes,
@@ -4830,6 +4861,8 @@ navigatorem_montare_in_vico (
     }
     m->notas_habet      = navigatoris_notas_habere;
     m->notas_habet_ctx  = cn;
+    m->reactor          = navigatoris_reactor;
+    m->reactor_ctx      = cn;
     /* URI aut ULID articuli; mala: index manet */
     si (argumentum && argumentum[ZEPHYRUM])
     {
@@ -4871,6 +4904,11 @@ navigatorem_describere (
     f->locus_ctx          = m;
     f->locus_titulus      = navigator_locus_titulus;
     f->locus_titulus_ctx  = m;
+    /* N3.3: petitio finita -> pulsus mutatus (recompositio); mora -1
+     * ceterum (vicus quies servatur) */
+    f->pulsare      = navigatorem_pulsare;
+    f->pulsare_ctx  = m;
+    f->mora         = navigatorem_morari;
 }
 
 

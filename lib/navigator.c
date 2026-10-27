@@ -9,6 +9,7 @@
 #include "navigator.h"
 #include "membrum__album.h"
 #include "membrum__praecepta.h"
+#include "membrum__prompta.h"
 #include "dispositio.h"
 #include "fons.h"
 #include "thema.h"
@@ -55,6 +56,10 @@ nomen structura {
                   i32 paginae_articuli; /* priores ex caput.textus */
                chorda titulus;          /* titulus versionis */
                chorda hospes;
+    /* N3.3: petitio pendens (una); finitae pulsu proximo dimittuntur */
+     NavigatorPetitio* petitio;
+                  Xar* dimittendae;      /* NavigatorPetitio* */
+                  b32  mutatum;          /* petitio finita: pingere */
 } NavigatorFigurae;
 
 
@@ -540,13 +545,16 @@ _index_ordinis (
     redde *(i32*)xar_obtinere(ordo, (i32)positio);
 }
 
-/* capacitas in cellulis: altitudo minus margines, titulus, caput */
+/* capacitas in cellulis: altitudo minus margines, titulus, caput,
+ * linea notae et prompta si adsunt (N3.3) */
 interior s32
 _capacitas (
     constans NavigatorMontatio* m)
 {
     redde _superficies(m, FALSUM) / NAV_LINEA - II - NAV_TITULI
-        - NAV_CAPUT;
+        - NAV_CAPUT
+        - (_campus(m, "nota").mensura > ZEPHYRUM ? NAV_CAPUT : ZEPHYRUM)
+        - (prompta_aperta(&m->ramus, NIHIL) ? NAV_CAPUT : ZEPHYRUM);
 }
 
 /* album: grex per hospitem ("g<positio primi>"), res = index + 1
@@ -718,6 +726,169 @@ _paginam_movere (
 
 
 /* ==================================================
+ * Aperire per URL (N3.3)
+ * ================================================== */
+
+interior b32
+_notam_scribere (
+    NavigatorMontatio* m,
+               chorda  nota,
+              Piscina* p)
+{
+    constans character* tituli[I];
+    constans character* valores[I];
+
+    tituli[ZEPHYRUM]   = "nota";
+    valores[ZEPHYRUM]  = chorda_ut_cstr(nota, p);
+    redde _campos_scribere(m, tituli, valores, I);
+}
+
+/* finis petitionis: articulus apertus aut nota; ABRUPTA = petitio
+ * superata (vocans eam dimittendam iam posuit) */
+interior vacuum
+_petitio_finis (
+                               vacuum* datum,
+    constans NavigatorPetitioResultus* r)
+{
+    NavigatorMontatio*  m = (NavigatorMontatio*)datum;
+     NavigatorFigurae*  f = (NavigatorFigurae*)m->figurae_ctx;
+     NavigatorPetitio** d;
+               chorda   nota;
+
+    si (r->status == NAVIGATOR_PETITIO_ABRUPTA)
+    {
+        redde;
+    }
+    d = (NavigatorPetitio**)xar_addere(f->dimittendae);
+    si (d)
+    {
+        *d = f->petitio;
+    }
+    f->petitio = NIHIL;
+    f->mutatum = VERUM;
+    si (r->status == NAVIGATOR_PETITIO_SERVATA && r->articulus)
+    {
+        (vacuum)_articulum_aperire(m, r->articulus->identitas,
+            f->scheda);
+        redde;
+    }
+    si (r->status == NAVIGATOR_PETITIO_NON_INVENTA)
+    {
+        nota = chorda_ex_literis("Not found", f->scheda);
+    }
+    alioquin si (r->status == NAVIGATOR_PETITIO_IGNOTA)
+    {
+        nota = chorda_ex_literis("Unsupported site (Wikipedia only for "
+            "now)", f->scheda);
+    }
+    alioquin
+    {
+        nota = chorda_concatenare(chorda_ex_literis("Network: ",
+            f->scheda), r->descriptio, f->scheda);
+    }
+    (vacuum)_notam_scribere(m, nota, f->scheda);
+}
+
+/* URL: servatus -> statim; aliter petitio in reactore hospitis */
+interior b32
+_url_aperire (
+    NavigatorMontatio* m,
+               chorda  url,
+              Piscina* p)
+{
+               NavigatorFigurae*  f = (NavigatorFigurae*)m->figurae_ctx;
+                VicipaediaSedes   sedes;
+               NavigatorPetitio*  pendens;
+               NavigatorPetitio** d;
+                        Reactor*  reactor;
+    constans NavigatorArticulus*  a;
+
+    si (!chorda_continet(url, _litterae("://")))
+    {
+        redde _notam_scribere(m, chorda_ex_literis("Not a URL", p), p);
+    }
+    si (!vicipaedia_sedem_legere(url, &sedes, p))
+    {
+        redde _notam_scribere(m, chorda_ex_literis(
+            "Unsupported site (Wikipedia only for now)", p), p);
+    }
+    a = navigator_articulum_invenire(m->bibliotheca,
+        vicipaedia_url_articuli(&sedes, p));
+    si (a)
+    {
+        redde _articulum_aperire(m, a->identitas, p);
+    }
+    reactor = m->reactor ? m->reactor(m->reactor_ctx) : NIHIL;
+    si (!reactor)
+    {
+        redde _notam_scribere(m, chorda_ex_literis("Offline", p), p);
+    }
+    /* petitio nova pendentem abrumpit (finis ABRUPTA synchronus,
+     * _petitio_finis eam ignorat; hic dimittenda ponitur) */
+    pendens     = f->petitio;
+    f->petitio  = NIHIL;
+    si (pendens)
+    {
+        navigator_petitionem_abrumpere(pendens);
+        d = (NavigatorPetitio**)xar_addere(f->dimittendae);
+        si (d)
+        {
+            *d = pendens;
+        }
+    }
+    f->petitio = navigator_petere(reactor, m->bibliotheca, url,
+        _petitio_finis, m, m->optiones_petitionis);
+    si (!f->petitio)
+    {
+        redde _notam_scribere(m, chorda_ex_literis("Cannot fetch", p),
+            p);
+    }
+    redde _notam_scribere(m, chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("Fetching ", p), sedes.hospes, p),
+        chorda_concatenare(chorda_ex_literis("/wiki/", p),
+        sedes.titulus,
+        p), p), p);
+}
+
+b32
+navigator_pulsare (
+    vacuum* ctx)
+{
+    NavigatorMontatio* m = (NavigatorMontatio*)ctx;
+     NavigatorFigurae* f;
+                  b32  mutatum;
+                  i32  i;
+
+    f = m ? (NavigatorFigurae*)m->figurae_ctx : NIHIL;
+    si (!f)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(f->dimittendae); i++)
+    {
+        navigator_petitionem_dimittere(*(NavigatorPetitio**)
+            xar_obtinere(f->dimittendae, i));
+    }
+    xar_vacare(f->dimittendae);
+    mutatum     = f->mutatum;
+    f->mutatum  = FALSUM;
+    redde mutatum;
+}
+
+s32
+navigator_mora (
+    vacuum* ctx)
+{
+    NavigatorMontatio* m = (NavigatorMontatio*)ctx;
+     NavigatorFigurae* f;
+
+    f = m ? (NavigatorFigurae*)m->figurae_ctx : NIHIL;
+    redde f && (f->mutatum || xar_numerus(f->dimittendae) > ZEPHYRUM)
+        ? ZEPHYRUM : -I;
+}
+
+
+/* ==================================================
  * Praecepta
  * ================================================== */
 
@@ -877,7 +1048,21 @@ fac_ad_indicem (
     redde _campos_scribere(cp->m, tituli, valores, V);
 }
 
+/* o: prompta "url" aperitur (nota prior tollitur) */
+interior b32
+fac_promptam_aperire (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    (vacuum)_notam_scribere(cp->m, chorda_ex_literis("", cp->p), cp->p);
+    redde prompta_aperire(&cp->m->ramus, actio_navigatoris, "url",
+        chorda_ex_literis("", cp->p), cp->p);
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
+    { "navigator.url", "Open URL", "o", VISUS_INDICIS | VISUS_PAGINAE,
+        ZEPHYRUM, fac_promptam_aperire },
     { "navigator.proximus", "Next article", "j", VISUS_INDICIS,
         ZEPHYRUM, fac_proximum },
     { "navigator.prior", "Previous article", "k", VISUS_INDICIS,
@@ -923,6 +1108,23 @@ agere (
         redde FALSUM;
     }
     piscina_vacare(privatum->scheda);
+    si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+        && prompta_aperta(&m->ramus, NIHIL))
+    {
+               chorda textus;
+        PromptaExitus x;
+
+        x = prompta_clavem_agere(&m->ramus, actio_navigatoris, ev,
+            &textus, privatum->scheda);
+        si (x == PROMPTA_REDITUS)
+        {
+            (vacuum)prompta_claudere(&m->ramus, actio_navigatoris,
+                privatum->scheda);
+            redde _url_aperire(m, chorda_praecidere(textus),
+                privatum->scheda);
+        }
+        redde x != PROMPTA_NIHIL;
+    }
     si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
     {
         t = praecepta_ad_clavem(TABULA_PRAECEPTORUM, _visus(m), ev);
@@ -939,6 +1141,14 @@ agere (
             && ev->genus != EVENTUS_MUS_DUPLEX))
     {
         redde FALSUM;
+    }
+    si (   chorda_aequalis_literis(nodus->id, "aperire-url")
+        && ev->genus == EVENTUS_MUS_DEPRESSUS)
+    {
+        (vacuum)_notam_scribere(m, chorda_ex_literis("",
+            privatum->scheda), privatum->scheda);
+        redde prompta_aperire(&m->ramus, actio_navigatoris, "url",
+            chorda_ex_literis("", privatum->scheda), privatum->scheda);
     }
     gradus = chorda_aequalis_literis(nodus->id, "pagina-prior") ? -I
         : chorda_aequalis_literis(nodus->id, "pagina-proxima") ? I
@@ -1108,6 +1318,15 @@ _sagittam_pingere (
     }
 }
 
+/* petitio pendens? (nota "Fetching" obscura, non rubra) */
+interior b32
+_petens (
+    constans NavigatorMontatio* m)
+{
+    redde m->figurae_ctx
+        && ((constans NavigatorFigurae*)m->figurae_ctx)->petitio;
+}
+
 interior vacuum
 _indicem_pingere (
      NavigatorMontatio* m,
@@ -1160,6 +1379,24 @@ _indicem_pingere (
             _textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
                 chorda_ex_literis(textus, md->piscina), FONS_PARVUS,
                 COLOR_TEXT_DIM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "nota"))
+        {
+            /* linea sua: petitio obscura, error rubra */
+            _textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                _praecidere(_campus(m, "nota"), f->fines.latitudo
+                / NAV_LITTERA - I), FONS_PARVUS, _petens(m)
+                ? COLOR_TEXT_DIM : COLOR_ERROR);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "aperire-url"))
+        {
+            _textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis("Open URL...", md->piscina),
+                FONS_PARVUS, COLOR_TEXT);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "prompta"))
+        {
+            prompta_pingere(md, f->fines, "url:", &m->ramus);
         }
         alioquin si (   chorda_aequalis_literis(f->id, "index_paginae")
                      && n > I)
@@ -1237,6 +1474,11 @@ _paginam_pingere (
                     l->initium, l->finis), l->fons, COLOR_TEXT);
             }
         }
+        alioquin si (   chorda_aequalis_literis(x->id, "pes")
+                     && prompta_aperta(&m->ramus, NIHIL))
+        {
+            prompta_pingere(md, x->fines, "url:", &m->ramus);
+        }
         alioquin si (chorda_aequalis_literis(x->id, "pes"))
         {
             nota = _campus(m, "nota");
@@ -1254,7 +1496,8 @@ _paginam_pingere (
             }
             _centrum_pingere(md, x, nota.mensura
                 > ZEPHYRUM ? nota : pes,
-                nota.mensura > ZEPHYRUM ? COLOR_ERROR : COLOR_TEXT_DIM);
+                nota.mensura > ZEPHYRUM && !_petens(m) ? COLOR_ERROR
+                : COLOR_TEXT_DIM);
         }
         alioquin
         {
@@ -1321,10 +1564,12 @@ _figuras_registrare (
         "navigator_scheda", LXIV * M);
     contextus->arca                  = piscina_generare_dynamicum(
         "navigator_arca", CCLVI * M);
+    contextus->dimittendae           = xar_creare(m->piscina,
+        (i32)magnitudo(NavigatorPetitio*));
     contextus->latitudo_montationis  = (s32)latitudo;
     contextus->altitudo_montationis  = (s32)altitudo;
     m->figurae_ctx                   = contextus;
-    redde contextus->scheda && contextus->arca
+    redde contextus->scheda && contextus->arca && contextus->dimittendae
         && figura_registrare(m->figurae, PARTES_TABULA, ZEPHYRUM,
         figura_tabulae, contextus);
 }
@@ -1444,6 +1689,9 @@ _indicem_disponere (
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
     (vacuum)_componentem_locare(dp, linea, "caput", PARTES_INDEX,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
+    (vacuum)_componentem_locare(dp, linea, "aperire-url",
+        PARTES_BOTTONE,
+        DISPOSITIO_FIXA, XIII, DISPOSITIO_FIXA, NAV_CAPUT);
     (vacuum)_componentem_locare(dp, linea, "pagina-prior",
         PARTES_BOTTONE, DISPOSITIO_FIXA, III, DISPOSITIO_FIXA,
         NAV_CAPUT);
@@ -1453,8 +1701,20 @@ _indicem_disponere (
     (vacuum)_componentem_locare(dp, linea, "pagina-proxima",
         PARTES_BOTTONE, DISPOSITIO_FIXA, III, DISPOSITIO_FIXA,
         NAV_CAPUT);
+    si (_campus(m, "nota").mensura > ZEPHYRUM)
+    {
+        /* N3.3: nuntius (petitio, error) in linea sua */
+        (vacuum)_componentem_locare(dp, radix_d, "nota", PARTES_INDEX,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
+    }
     regio = _locum_addere(dp, radix_d, DISPOSITIO_COLUMNA,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
+    si (prompta_aperta(&m->ramus, NIHIL))
+    {
+        (vacuum)_componentem_locare(dp, radix_d, "prompta",
+            PARTES_INDEX,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
+    }
     ordo  = _ordo(m, piscina);
     l     = _album(m, ordo, piscina);
     si (!l || xar_numerus(ordo) == ZEPHYRUM)
@@ -1674,6 +1934,15 @@ navigator_argumentum_ponere (
     si (!m || !m->figurae_ctx)
     {
         redde FALSUM;
+    }
+    /* N3.3: $nav(URL) - servatus statim, aliter petitio */
+    si (argumentum && strstr(argumentum, "://"))
+    {
+        Piscina* scheda = ((NavigatorFigurae*)m->figurae_ctx)->scheda;
+
+        piscina_vacare(scheda);
+        redde _url_aperire(m, chorda_ex_literis(argumentum, scheda),
+            scheda);
     }
     /* URI aut cognomen manifesti ("" index, identitas nuda) */
     semita = semita_ex_argumento(_organa, m, "navigator", argumentum

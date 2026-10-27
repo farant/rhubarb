@@ -14,7 +14,16 @@
  * (articulus, versio, area).
  * NOTAE: locus "navigator/pagina/<articulus>?versio=<v>&pagina=3" -
  * versio in loco, ergo comes (Cmd+T) versionis suae est (spec V.11,
- * V.16); notae in pede ut lector (notas_habet hospitis). */
+ * V.16); notae in pede ut lector (notas_habet hospitis).
+ * APERIRE (N3.3): 'o' (index, pagina) aut globulus "Open URL..." in
+ * capite indicis promptam "url:" aperit; Enter: URL. $nav(URL) idem
+ * (argumentum cum "://"). Articulus iam servatus statim aperitur, sine
+ * rete (servatum, non vivum - spec I; renovatio N3.6). Aliter
+ * navigator_petere in reactore hospitis; dum petitur nota "Fetching
+ * <hospes/via>..." (obscura); SERVATA -> articulus apertus (versio
+ * fixa); NON_INVENTA "Not found", IGNOTA "Unsupported site", RETE causa
+ * - nota (rubra). Textus sine "://": "Not a URL". Petitio nova
+ * pendentem abrumpit. */
 
 #ifndef NAVIGATOR_H
 #define NAVIGATOR_H
@@ -30,6 +39,8 @@
 #include "dispensator.h"
 #include "organum_montatio.h"
 #include "navigator_bibliotheca.h"
+#include "navigator_petitio.h"
+#include "reactor.h"
 
 nomen structura {
               InsulaRamus  ramus;
@@ -41,6 +52,13 @@ nomen structura {
                    vacuum* figurae_ctx;   /* privatum: cache */
                       b32  (*notas_habet)(vacuum* ctx, chorda locus);
                    vacuum* notas_habet_ctx;
+    /* N3.3: reactor hospitis pro petitionibus (vicus: reactor vici);
+     * NIHIL aut redditum NIHIL = petere non potest ("offline") */
+                 Reactor* (*reactor)(vacuum* ctx);
+                   vacuum* reactor_ctx;
+    /* PROBATIONES: optiones petitionis (radix_fontis, agens); NIHIL =
+     * ordinariae (agens ex ~/.rhubarb/navigator/agens) */
+    constans NavigatorPetitioOptiones* optiones_petitionis;
 } NavigatorMontatio;
 
 /* montare in ramo <navigator id="..."> (manifestum infixum);
@@ -73,6 +91,18 @@ b32
 navigator_argumentum_ponere (
       NavigatorMontatio* m,
      constans character* argumentum);
+
+/* facies.pulsare: VERUM semel post petitionem finitam (vicus
+ * recomponit); ceterum FALSUM. Petitiones finitae hic dimittuntur. */
+b32
+navigator_pulsare (
+    vacuum* ctx);
+
+/* facies.mora: 0 si petitio finita pulsum exspectat, aliter -1
+ * (reactor fossas petitionis ipse vigilat) */
+s32
+navigator_mora (
+    vacuum* ctx);
 
 /* facies.semitam_secuta (historia, $via, restitutio) */
 b32
