@@ -859,6 +859,72 @@ _sectio_declarata (
         chorda_ex_literis("C:1", c->piscina));
 }
 
+/* sine acordis declaratis: bassus arpeggians fenestram non secat;
+ * nucleus (radix, tertia) a notis tentis aut basso */
+interior vacuum
+_sectio_bassus_fractus (
+    CredoContextus* c)
+{
+    constans character* partes[V];
+       constans Carmen* k;
+            Explicatio* e;
+
+    /* bassus alternans F C sub A C tentis: F */
+    partes[0]  = "o3 f2 c2";
+    partes[1]  = "o4 a1";
+    partes[2]  = "o5 c1";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "F:1");
+    /* bassus cessans (superiores tenent): F */
+    partes[0]  = "o3 f2 r2";
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "F:1");
+    /* nucleus: D F# A cum G B transeuntibus = D, non Gmaj9/D */
+    partes[0]  = "o3 d1";
+    partes[1]  = "o4 f#1";
+    partes[2]  = "o4 a1";
+    partes[3]  = "o5 f#12 g12 a12 b4 a4 f#4";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("D:1", c->piscina));
+    /* saltus bassi ad classem novam (A sub E G): fenestra nova */
+    partes[0]  = "o3 c2 <a2";
+    partes[1]  = "o4 e1";
+    partes[2]  = "o4 g1";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:2 ", c->piscina));
+    /* saltus ad classem sonantem, superiores mutati (C | G7): nova */
+    partes[0]  = "o3 c2 <g2";
+    partes[1]  = "o4 e2 d2";
+    partes[2]  = "o4 g2 b2";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:2 G", c->piscina));
+    /* tertia a melodia tenta: dyas manet (C E) */
+    partes[0]  = "o3 c1";
+    partes[1]  = "o5 e1";
+    partes[2]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "C(3):1");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "additae", _sectio_additae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tentae", _sectio_tentae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -866,6 +932,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "voces", _sectio_voces, NIHIL, NIHIL, NIHIL, NIHIL },
     { "declarata", _sectio_declarata, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arpeggians", _sectio_bassus_fractus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "fenestrae", _sectio_fenestrae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },

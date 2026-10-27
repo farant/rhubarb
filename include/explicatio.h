@@ -4,6 +4,12 @@
  * FENESTRA: dum bassus TENET - classis notae infimae sonantis
  * (partes non mutae, sine '@') eadem manet; linea mensurae fenestram
  * secat. Bassus per octavas saliens (E2 E3 E2 E3) fenestra una est.
+ * BASSUS ARPEGGIANS (extra acorda declarata): intra mensuram bassus
+ * SALTU (>= III semitonia; gradu = transiens) ad classem quae iam in
+ * fenestra sonat, nulla alia nota ibi incipiente (superiores tenent),
+ * fenestram non secat - bassus alternans F C sub A C tentis = F, non
+ * F F/C; inversio ex basso primo. Bassus ad classem novam aut gradu
+ * (C D E sub C E: transiens) aut cum superioribus mutatis ut ante.
  *
  * ACORDUM fenestrae: classes omnium notarum sonantium, notis
  * alienis remotis - pars minima notarum candidatarum (forma
@@ -15,7 +21,13 @@
  * remotionis ac nomina (radix in clave: [G# D] in a minor -> E7,
  * implicitum). Fenestra sine nomine: classes omnes praeter bassum
  * alienae (genus per formam) - nomen a tono addito non tento
- * reiectum non redit (acordum.h NOTA ADDITA).
+ * reiectum non redit (acordum.h NOTA ADDITA). NUCLEUS: si notae tentae
+ * (non candidatae, cum basso) iam acordum plenum nominant (trias aut
+ * septima), acordum MAIUS (septima aut toni additi) cuius radix aut
+ * tertia solum ex notis formae alienae venit reicitur et remotio
+ * pergit: D F# A cum G B transeuntibus = D, non Gmaj9/D. Tentae non
+ * plenae melodiam radicem dare sinunt (G# B sub C D E: E7/G#);
+ * triades et dyades non iudicantur (tertia ornata acordi est).
  *
  * ACORDA DECLARATA (Carmen.acorda, <acorda>): intra spatium acordi
  * declarati (non 'r') fenestrae ad mutationes eius et lineas

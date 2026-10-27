@@ -148,3 +148,25 @@ vic., was Gmaj9/D - park ...37ERWF #3/#4/#5 resolved where declared). New, by de
 held melody seventh over a declared triad (campus Bm with A, proelium Em/C/Am) now reads '?'
 against the declared chord - 2b's 'acorda' rule reports it. Plants 6/6 (the boundary plant had
 to remove both start and end points: a chord's end is the next chord's start).
+
+## 2026-10-27 - step 4: inference where nothing is declared - bass arpeggiation, chord core
+
+The last step of the declared-intent plan (park ...37ERWF #3, #5 for UNDECLARED music).
+- BASSUS FRACTUS (_bassus_fractus): within a bar, a bass LEAP (>= 3 semitones) to a pitch class
+  already sounding in the window, with nothing but the bass note itself starting there, does not
+  cut the window (alternating F C under held A C = F; a bass that stops under held chords too).
+  Two refinements found by the suites/house songs: (1) step motion is the passing-bass case (C D E
+  under C E kept three windows) - hence the leap; (2) "nothing else starts" must mean the bass
+  PITCH, not its class: campus's repeated G:2 A:2 bar had the arpeggio A4 and melody A5 start with
+  the new bass A2, and the G window swallowed the A chord.
+- NUCLEUS (_nucleus_tenetur): when the held notes (non-candidates, plus bass) already name a
+  complete chord (triad or seventh), a BIGGER reading whose root or third comes only from
+  candidate-shaped notes is rejected - D F# A held + passing G B = D, not Gmaj9/D. Refinements:
+  (1) first version judged every reading and broke C/G with an ornamented melody E and G(3) whose
+  B arrives as a suspension resolves - "candidate" is not "foreign"; (2) korobeiniki's E7/G#
+  (root E only in the melody over held G# B) is right - held notes that are NOT a complete chord
+  let the melody supply the root. A "big chords only" clause turned out redundant: held notes
+  cannot be removed, so with a complete held triad the only triad reading IS it (removed).
+House songs: all ten byte-identical (the rules only touch the textures they target). Lint:
+arpeggians -> fractus. Plants 6/6. Also: a scripted edit that did open(p,'w') before reading the
+file emptied lib/explicatio.c once - restored from the step's backup and reapplied.

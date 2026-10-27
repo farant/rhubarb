@@ -170,6 +170,46 @@ _additae_tenentur (
     redde (a & h->classes & ~tentae) == ZEPHYRUM;
 }
 
+/* NUCLEUS: si notae tentae (cum basso) iam acordum plenum nominant
+ * (trias aut septima), acordum MAIUS (septima aut toni additi) cuius
+ * radix aut tertia solum a notis formae alienae venit reicitur - D F#
+ * A tentae cum G B transeuntibus = D, non Gmaj9/D. Tentae non plenae
+ * (G# B sub C D E: E7/G#) melodiam radicem dare sinunt; triades et
+ * dyades non iudicantur */
+interior b32
+_nucleus_tenetur (
+    constans Acordum* h,
+                 i32  tentae,
+                 i32  bassus,
+                 i32  classes)
+{
+        s32 tertia  = acordum_proprietates(h->genus)->tertia;
+        i32 r       = h->radix;
+    Acordum t      = acordum_ex_classibus((classes & tentae)
+                                          | _bit(bassus), bassus);
+
+    /* tentae non plenae: nihil iudicatur (triades eo ipso: notae tentae
+     * removeri nequeunt, trias tenta est lectio sola) */
+    si (!_nominatum(&t) || acordum_proprietates(t.genus)->gradus < III)
+    {
+        redde VERUM;
+    }
+    si (r != bassus && !(tentae & _bit(r)))
+    {
+        redde FALSUM;
+    }
+    si (tertia >= ZEPHYRUM)
+    {
+        i32 t = (r + (i32)tertia) % XII;
+
+        si (t != bassus && !(tentae & _bit(t)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* classis in scala clavis ad pulsum (signatura; minor = relativa) */
 interior b32
 _diatonica (
@@ -478,7 +518,10 @@ _acordum (
                 b32 implicata = FALSUM;
 
                 h = acordum_ex_classibus(classes & ~s, bassus);
-                si (_nominatum(&h) && !_additae_tenentur(&h, tentae))
+                si (   _nominatum(&h)
+                    && (   !_additae_tenentur(&h, tentae)
+                        || !_nucleus_tenetur(&h, tentae, bassus,
+                                             classes)))
                 {
                     h.genus = ACORDUM_IGNOTA;
                 }
@@ -644,6 +687,44 @@ _genus_alienum (
     redde EXPLICATIO_IGNOTA;
 }
 
+/* BASSUS ARPEGGIANS: bassus novus (altitudo infima, classis b) ad
+ * pulsum t SALTU a priore (gradu = transiens), classis quae in
+ * fenestra [a, t) iam sonat, nulla alia nota ad t incipiente (bassus
+ * ipse solus) */
+interior b32
+_bassus_fractus (
+    constans Locata* locatae,
+                i32  n,
+                s64  a,
+                s64  t,
+                i32  b,
+                s32  infima,
+                s32  saltus)
+{
+    b32 sonat = FALSUM;
+    i32 j;
+
+    si (b >= XII || (saltus < III && saltus > -III))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans Locata* l = &locatae[j];
+                    i32  c = (i32)l->nota->nota % XII;
+
+        si (l->initium < t && l->finis > a && c == b)
+        {
+            sonat = VERUM;
+        }
+        si (l->initium == t && (s32)l->nota->nota != infima)
+        {
+            redde FALSUM;
+        }
+    }
+    redde sonat;
+}
+
 /* acordum declaratum (Carmen.acorda, non 'r') sonans ad pulsum t:
  * index; -I nullum */
 interior s32
@@ -676,6 +757,7 @@ explicatio_carminis (
                              s64* puncta;
                              i32* infimae;
                              s32* declarata;
+                             s32  infima_prior = -I;
               ExplicatioFenestra* fenestrae;
              ExplicatioSegmentum* segmenta;
                 AcordumFenestrae* acorda;
@@ -856,7 +938,11 @@ explicatio_carminis (
             && _declaratum(carmen, puncta[i]) == declarata[nf - I]
             && (   declarata[nf - I] >= ZEPHYRUM
                 || (i32)fenestrae[nf - I].harmonia.bassus
-                   == infimae[i]))
+                   == infimae[i]
+                || _bassus_fractus(locatae, n, fenestrae[nf
+                    - I].initium,
+                               puncta[i], infimae[i], infima,
+                               infima - infima_prior)))
         {
             fenestrae[nf - I].finis = puncta[i + I];
         }
@@ -876,6 +962,7 @@ explicatio_carminis (
                                                           puncta[i]);
             nf++;
         }
+        infima_prior = infima;
     }
 
     /* segmenta: nota x fenestra; 'fenestra' ad tempus index locatae
