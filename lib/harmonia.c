@@ -95,6 +95,8 @@ _classem_scribere (
     n.offset = ZEPHYRUM;
     n.illapsus = ZEPHYRUM;
     n.continuatur = FALSUM;
+    n.vox = ZEPHYRUM;
+    n.acordi = FALSUM;
     o = partitura_orthographia(carmen, &n, pulsus);
     bene = chorda_aedificator_appendere_character(textus, o.littera);
     per (k = ZEPHYRUM; k < o.alteratio; k++)

@@ -25,7 +25,11 @@
  *
  * SEGMENTUM: nota in fenestra una (nota per fenestras plures sonans
  * segmenta plura habet - suspensio sic videtur). Genus per motum in
- * parte sua (nota prior, proxima; pausa motum frangit):
+ * VOCE sua (pars et CarmenNota.vox: comitatus voces suas dat - '[1 2
+ * 3 4]' quattuor lineae, non una; textus scriptus vox una; nota
+ * prior, proxima eiusdem vocis; pausa motum frangit). Nota generata
+ * (CarmenNota.acordi) candidata numquam est: acordo declarato sumpta
+ * (lilia: F6 vocibus D tenet):
  *   acordi       classis in acordo
  *   septima      septima acordi; resoluta = proxima gradu descendit,
  *                aut transiens sursum (C D E super E7: gradu intrat

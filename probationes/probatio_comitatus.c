@@ -699,6 +699,16 @@ _sectio_radix_sonans (
                               &AMBITUS, &e, &n, &v));
     CREDO_AEQUALIS_I32 (_classes(e, I, n),
                         ((i32)I << IV) | ((i32)I << VIII));
+    /* vox notae: 0 'B' et 'Q', superiores 1..k */
+    CREDO_NECESSE (_componere(c, "B:4 [1 2 3] Q", "C", TERTIA_QUARTA,
+                              &AMBITUS, &e, &n, &v));
+    CREDO_NECESSE (n == V);
+    CREDO_AEQUALIS_I32 (e[0].vox, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (((i32)I << e[1].vox) | ((i32)I << e[2].vox)
+                        | ((i32)I << e[3].vox),
+                        ((i32)I << I) | ((i32)I << II) | ((i32)I
+                            << III));
+    CREDO_AEQUALIS_I32 (e[4].vox, ZEPHYRUM);
     /* ComitatusFigura.bassus: vox 'B' in figura */
     {
         ComitatusFigura f;

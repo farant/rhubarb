@@ -886,6 +886,9 @@ comitatus_componere (
                 e->lucrum     = g->lucrum;
                 e->littera    = a->acordum.litterae[(i32)nota % XII];
                 e->offset     = g->offset;
+                e->vox        = (vox == COMITATUS_VOX_BASSI
+                                 || vox == COMITATUS_VOX_QUINTAE)
+                              ? ZEPHYRUM : (i32)vox;
                 n++;
             }
         }

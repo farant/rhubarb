@@ -111,3 +111,22 @@ CarmenNota. First attempt matched on the segment's `fenestra` field (the locata 
 segment building) and found nothing: the second pass overwrites that field with the WINDOW
 index as it goes. The note pointer is stable and unique within a part, so no part check is
 needed. House songs byte-identical (censura too). Plant 1/1.
+
+## 2026-10-27 - voice tracking (step 1 of the declared-intent plan): a pad is four lines, and its notes are chord tones
+
+Found composing (park ...37ERWF #2): explicatio linked each note to the previous/next note IN ITS PART, but
+a comitatus '[1 2 3 4]' pad is one part with four simultaneous voices - "neighbours" were other
+chord members. Now CarmenNota.vox (0 = the line of a written MML part or comitatus 'B'/'Q';
+1..9 = comitatus upper voice, set by comitatus_componere) and the linking loop keeps one
+`prior` per (part, voice); rests still break a line.
+Gain: sevenths resolve in their own voice (Dm7 -> G7: C4 -> B3 reads plain 'Dm7:1', was 'C4
+sept.!'); oppidum 58 -> 43 censura monita. Regression found on the way: with real voices an
+accompaniment voice moves by step / repeats, so its ADDED tones looked like passing notes
+(lilia F6 -> "F (D4 ?)", C9 -> C7, ...). The earlier good readings relied on the wrong
+neighbour model (chord members = leaps = non-candidates). Fix (Fran approved): CarmenNota.acordi -
+a generated note comes FROM the declared chord, so it is never a candidate. lilia identical
+to HEAD again. Known debt for step 2 (declared harmony splits windows): a bar with two declared
+chords over one held bass (proelium bar 16 B7sus4:2 B7:2, oppidum bar 4 C7sus4:2 C7:2) is now
+unnamed - before it named the second chord only because the sus tone looked like a passing
+note. Side observation: comitatus matches voices BY RANK, so G7 -> C moves the seventh F up
+to G, not down to E (voice-leading quality, not analysis). Plants 5/5.

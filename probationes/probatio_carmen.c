@@ -1449,6 +1449,10 @@ _sectio_comitatus (
     CREDO_AEQUALIS_I32 (p->frusta[0].notae[VII].nota, XLIII);
     CREDO_AEQUALIS_S64 (p->frusta[0].notae[VII].pulsus, M3);
     CREDO_VERUM (p->frusta[0].notae[I].littera == 'c');
+    /* vox notae generatae: bassus 0, superiores 1..3 */
+    CREDO_AEQUALIS_I32 (p->frusta[0].notae[0].vox, ZEPHYRUM);
+    CREDO_VERUM (   p->frusta[0].notae[I].vox >= I
+                 && p->frusta[0].notae[I].vox <= III);
     CREDO_AEQUALIS_I32 (p->frusta[0].numerus_linearum, ZEPHYRUM);
     CREDO_CHORDA_AEQUALIS_LITERIS (p->frusta[0].textus,
         "B:4 [1 2 3] [1 2 3] | Q:4 [1 2 3] [1 2 3]");

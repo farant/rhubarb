@@ -532,6 +532,8 @@ _frustum_legere (
         n->offset       = k.notae[i].offset;
         n->illapsus     = k.notae[i].illapsus;
         n->continuatur  = k.notae[i].continuatur;
+        n->vox          = ZEPHYRUM;
+        n->acordi       = FALSUM;
     }
     frustum->numerus           = k.numerus;
     frustum->longitudo         = k.pulsus;
@@ -789,6 +791,8 @@ _comitatum_legere (
         n->offset       = notae[i].offset;
         n->illapsus     = ZEPHYRUM;
         n->continuatur  = FALSUM;
+        n->vox          = notae[i].vox;
+        n->acordi       = VERUM;
     }
     frustum->pulsus     = ab;
     frustum->textus     = figura->textus;

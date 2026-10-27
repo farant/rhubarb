@@ -164,6 +164,12 @@ nomen structura {
           s64 illapsus;      /* pulsus glissandi IN hanc notam (nota
                                * priore '/', cantus.h); 0 = nullum */
           b32 continuatur;   /* '/': vox in notam proximam pergit */
+          i32 vox;           /* vox intra partem: 0 linea (textus
+                               * scriptus; comitatus 'B' 'Q'), 1..9
+                               * vox superior comitatus */
+          b32 acordi;        /* nota generata ex acordo declarato
+                               * (comitatus): acordi est, numquam
+                               * aliena (explicatio) */
 } CarmenNota;
 
 nomen structura {

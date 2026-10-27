@@ -720,11 +720,52 @@ _sectio_suspensio_ordo (
         chorda_ex_literis("G(3):1 (C5 susp.)", c->piscina));
 }
 
+/* pars acordorum (comitatus '[1 2 3 4]') voces quattuor habet, non
+ * lineam unam: septima Dm7 (C4) in voce sua ad B3 resolvitur; nota
+ * generata acordi est */
+interior vacuum
+_sectio_voces (
+    CredoContextus* c)
+{
+    constans Carmen* k;
+         Explicatio* e;
+
+    k = _carmen(c, "<carmina><carmen titulus=\"v\" metrum=\"4/4\">"
+        "<figura titulus=\"tab\" textus=\"[1 2 3 4]:1\"/>"
+        "<acorda mensura=\"1\" textus=\"Dm7 | G7 | C\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 d1 | o2 g1 | o3 c1</textus>"
+        "</frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\">"
+        "<comitatus figura=\"tab\" mensura=\"1\" ambitus=\"55..74\"/>"
+        "</pars></carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "Dm7:1");
+    /* nota generata acordi est: F -> F6 in valsa (voces gradu
+     * moventur, D tamen tenetur) */
+    k = _carmen(c, "<carmina><carmen titulus=\"w\" metrum=\"3/4\" "
+        "clavis=\"f maior\">"
+        "<figura titulus=\"pah\" "
+        "textus=\"r:4 [1 2 3 4]:4 [1 2 3 4]:4\"/>"
+        "<acorda mensura=\"1\" textus=\"F | F6\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 f2. | f2.</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\">"
+        "<comitatus figura=\"pah\" mensura=\"1\" ambitus=\"53..72\"/>"
+        "</pars></carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("F6:2.", c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "additae", _sectio_additae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tentae", _sectio_tentae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "suspensio_ordo", _sectio_suspensio_ordo, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "voces", _sectio_voces, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fenestrae", _sectio_fenestrae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },

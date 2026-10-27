@@ -435,8 +435,10 @@ _acordum (
         i32 l = (i32)segmenta[i].fenestra;   /* index locatae */
 
         classes |= _bit(c);
-        si (!_candidata(locatae, l,
-                        segmenta[i].initium > segmenta[i].pulsus))
+        /* nota generata (acordo declarato sumpta) numquam candidata */
+        si (   segmenta[i].nota->acordi
+            || !_candidata(locatae, l,
+                           segmenta[i].initium > segmenta[i].pulsus))
         {
             non_cand |= _bit(c);
         }
@@ -709,8 +711,14 @@ explicatio_carminis (
     n = ZEPHYRUM;
     per (i = ZEPHYRUM; i < carmen->numerus_partium; i++)
     {
-        s32 prior = -I;
+        /* nota prior per vocem partis (comitatus voces dat; textus
+         * scriptus vox 0) */
+        s32 prior[X];
 
+        per (j = ZEPHYRUM; j < X; j++)
+        {
+            prior[j] = -I;
+        }
         si (!_sonans(&carmen->partes[i], solus))
         {
             perge;
@@ -721,27 +729,29 @@ explicatio_carminis (
 
             per (j = ZEPHYRUM; j < fr->numerus; j++)
             {
-                constans CarmenNota* nota  = &fr->notae[j];
-                             Locata* l     = &locatae[n];
+                 constans CarmenNota* nota  = &fr->notae[j];
+                              Locata* l     = &locatae[n];
+                                 i32  v     = nota->vox < X ? nota->vox
+                                                           : IX;
 
                 si (nota->praeparatum.mensura > ZEPHYRUM)
                 {
-                    prior = -I;
+                    prior[v] = -I;
                     perge;
                 }
                 l->nota     = nota;
                 l->pars     = i;
                 l->initium  = fr->pulsus + nota->pulsus;
                 l->finis    = l->initium + nota->longitudo;
-                l->prior    = prior >= ZEPHYRUM
-                           && locatae[prior].finis == l->initium
-                           ? prior : -I;
+                l->prior    = prior[v] >= ZEPHYRUM
+                           && locatae[prior[v]].finis == l->initium
+                           ? prior[v] : -I;
                 l->proxima  = -I;
                 si (l->prior >= ZEPHYRUM)
                 {
                     locatae[l->prior].proxima = (s32)n;
                 }
-                prior         = (s32)n;
+                prior[v]      = (s32)n;
                 puncta[np++]  = l->initium;
                 puncta[np++]  = l->finis;
                 n++;

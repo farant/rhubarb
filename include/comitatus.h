@@ -119,6 +119,7 @@ nomen structura {
           f32 lucrum;
     character littera;    /* 'a'..'g' */
           i32 offset;     /* gradus, in textu figurae */
+          i32 vox;        /* 0 bassus ('B' 'Q'), 1..9 superior */
 } ComitatusNota;
 
 nomen structura {
