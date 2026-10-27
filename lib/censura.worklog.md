@@ -221,3 +221,30 @@ laudes: its one hidden fifth (bar 2 fermata -> bar 3, bass G2 -> G3) removed by 
 bass on G2; with stylus choralis: 0. errata.py: crossing, spacing, hidden octaves now caught,
 plus the old bass as an 11th case. Still no rule: doubled leading tone, unresolved leading tone
 in an outer voice, rising chordal seventh (part 2 - needs the per-chord leading tone).
+
+## 2026-10-27 - resolution rules: duplicata, sensibilis, septima (chorale study, part 2)
+
+- Leading tone per window from functio: dominant = V or VII without alteration, or applied
+  (V/x, viio/x); never subV. Major-third chord -> its third; diminished (o, o7, h7) -> root. So
+  laudes' A7 (V7/V) has C#, not the key's F#. censura now runs functio_carminis (in its own
+  piscina, after explicatio) only when duplicata or sensibilis is on.
+- duplicata: two chord-tone LT notes sounding together in a dominant window, once per window.
+- sensibilis: outer voices only; the LT note's next note in the same voice (same part + vox,
+  contiguous - a rest breaks motion), when it lands in a window that is not a dominant with the
+  same LT and whose chord contains LT+1, must be LT+1. Repeated note: the later one is judged.
+  Fermata on the LT note frees it (laudes bar 4: F#4 at the half cadence, then B4). Two dead
+  checks found by surviving plants, both removed: "next note in the same window" and "next
+  window a dominant with the same LT" - every dominant shape lacks LT+1 (G7 G9 G7b9 G13 Bo7 have
+  no C), so the resolution-tone check already frees them. Third survivor was a weak test: subV
+  -> I has applicata 0 and was never a dominant anyway; only subV/x (Eb7 -> Dm, applicata ii)
+  exercises the substituta exclusion - test now uses that.
+- septima: explicatio's SEPTIMA !resoluta on every beat, judged at the note's LAST segment (a 7th
+  held across G7 G7/B is one finding), repeated note judged later, fermata frees it. dissonantia
+  hands its "septima non resoluta" cause over when septima is on (one finding, not two).
+  dissonantia alone still flags a repeated-then-resolved 7th and a 7th under a fermata - it
+  knows neither; noted, not changed.
+- errata.py: doubled LT and soprano LT leap now caught. The rising 7th (B4 C5 D5 over D7 -> G)
+  is NOT: explicatio's "transiens sursum" counts any step-in/step-out-upward 7th as resolved,
+  even when the next note is already in the next chord. Open design question for Fran:
+  restrict "transiens sursum" to motion within the same chord (C D E over E7, the documented
+  example).

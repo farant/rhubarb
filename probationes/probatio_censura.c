@@ -109,6 +109,9 @@ _sectio_ordinaria (
     CREDO_FALSUM (f.activae[CENSURA_OCCULTAE]);
     CREDO_FALSUM (f.activae[CENSURA_DECUSSATIO]);
     CREDO_FALSUM (f.activae[CENSURA_SPATIUM]);
+    CREDO_FALSUM (f.activae[CENSURA_DUPLICATA]);
+    CREDO_FALSUM (f.activae[CENSURA_SENSIBILIS]);
+    CREDO_FALSUM (f.activae[CENSURA_SEPTIMA]);
     CREDO_FALSUM (f.intentiones_liberae);
     CREDO_AEQUALIS_I32 (f.saltus_maximus, ZEPHYRUM);
     CREDO_VERUM (f.ambitus == NIHIL);
@@ -1407,6 +1410,153 @@ _sectio_spatium (
         "(frustum 0, offset 16)\n");
 }
 
+#define VOCES_IV(s, a, t, b) \
+    "<pars titulus=\"superius\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>" s "</textus></frustum></pars>" \
+    "<pars titulus=\"altus\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>" a "</textus></frustum></pars>" \
+    "<pars titulus=\"tenor\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>" t "</textus></frustum></pars>" \
+    "<pars titulus=\"bassus\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>" b "</textus></frustum></pars>"
+
+/* duplicata (C maior): m1 G7 B4 et B3 (sic); m2 B in duabus vocibus
+ * non simul (non); m3 I tertia duplicata - non dominans (non); m4
+ * A7 = V7/ii, C# duplicata (sic); m5 Eb7 = subV7/ii ante Dm, G
+ * duplicata (non: substituta sensibilem non habet); m7 Bb = bVII, D
+ * duplicata (non); m8 Bdim7 = viio7, radix B duplicata (sic) */
+interior vacuum
+_sectio_duplicata (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"d\">"
+        "<acorda mensura=\"1\" "
+        "textus=\"G7 | G7 | C | A7 | Eb7 | Dm | Bb | Bdim7\"/>"
+        VOCES_IV("o5 f1 | f1 | e1 | c#1 | g1 | f1 | d1 | o4 b1",
+                 "o4 b1 | b2 o5 d2 | o4 g1 | g1 | g1 | f1 | d1 | f1",
+                 "o3 b1 | g2 b2 | o4 e1 | c#1 | d-1 | o3 a1 | f1 | "
+                 "o4 d1",
+                 "o2 g1 | g1 | o3 c1 | o2 a1 | o3 e-1 | d1 | o2 b-1 | "
+                 "b1")
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_DUPLICATA);
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == III);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, I);
+    CREDO_AEQUALIS_I32 (inv[I].mensura, IV);
+    CREDO_AEQUALIS_I32 (inv[II].mensura, VIII);
+    CREDO_AEQUALIS_I32 (inv[II].nota->nota % XII, XI);
+    CREDO_AEQUALIS_I32 (inv[I].nota->nota % XII, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 1 altus/tenor: G7: sensibilis duplicata B4 / B3 "
+        "(frustum 0, offset 3)\n");
+}
+
+/* sensibilis (C maior, voces extremae): m1 B4 C5 (non); m2 B4 G4
+ * (sic); m3 altus B4 G4 - vox media (non); m4 B4 sub fermata (non);
+ * m5 V -> ii6 sine C (non); m6 A7 C#5 D5 (non); m7 C#5 A4 (sic); m8
+ * bassus B2 C3 (non); m9 B4 repetita in C, deinde C5 (non); m10 G
+ * -> G7 (eadem sensibilis): B4 F5, deinde E5 (non); m12 B4 pausa G4
+ * (non: motus fractus) */
+interior vacuum
+_sectio_sensibilis (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"s\">"
+        "<acorda mensura=\"1\" textus=\"G:2 C:2 | G:2 C:2 | G:2 C:2 | "
+        "G:2 C:2 | G:2 Dm/F:2 | A7:2 Dm:2 | A7:2 Dm:2 | G/B:2 C:2 | "
+        "G:2 C:2 | G:2 G7:2 | C | G:2 C:2\"/>"
+        "<fermata mensura=\"4\"/>"
+        VOCES_IV("o4 b2 o5 c2 | o4 b2 g2 | o5 d2 c2 | o4 b2 g2 | "
+                 "b2 a2 | o5 c#2 d2 | c#2 o4 a2 | o5 d2 e2 | "
+                 "o4 b2 b4 o5 c4 | o4 b2 o5 f2 | e1 | o4 b4 r4 g2",
+                 "o4 d2 e2 | d2 e2 | b2 g2 | d2 e2 | d2 d2 | g2 f2 | "
+                 "g2 f2 | g2 g2 | d2 e2 | d2 d2 | c1 | d2 e2",
+                 "o3 g2 g2 | g2 o4 c2 | o3 g2 o4 e2 | o3 g2 g2 | "
+                 "g2 f2 | e2 a2 | e2 a2 | g2 g2 | g2 g2 | g2 b2 | "
+                 "o4 c1 | o3 g2 g2",
+                 "o2 g2 o3 c2 | o2 g2 o3 c2 | o2 g2 o3 c2 | "
+                 "o2 g2 o3 c2 | o2 g2 f2 | a2 o3 d2 | o2 a2 o3 d2 | "
+                 "o2 b2 o3 c2 | o2 g2 o3 c2 | o2 g2 g2 | o3 c1 | "
+                 "o2 g2 o3 c2")
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_SENSIBILIS);
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, II);
+    CREDO_AEQUALIS_I32 (inv[I].mensura, VII);
+    CREDO_AEQUALIS_I32 (inv[I].nota->nota, LXXIII);
+    CREDO_AEQUALIS_I32 (inv[I].nota_altera->nota, LXIX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 superius: G: sensibilis B4 non resoluta (-> G4) "
+        "(frustum 0, offset 17)\n");
+}
+
+/* septima (C maior): m1 F5 in tempore debili ascendit (sic); m2 F5
+ * repetita, deinde E5 (non); m3 D5 super E7 transiens sursum (non);
+ * m4 F5 in tempore forti saltu exit (sic; E5 F5 G5 transiens sursum
+ * resoluta esset); m5 F5 sub fermata, pausa
+ * (non); m6 F5 per G7 G7/B tenta, deinde G5 - semel (sic). Cum
+ * dissonantia: septima sola, dissonantia tacet; dissonantia sola: m4
+ * nominat */
+interior vacuum
+_sectio_septima (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"s\">"
+        "<acorda mensura=\"1\" "
+        "textus=\"G7 | G7:2 C:2 | E7 | G7:2 C:2 | G7 | G7:2 G7/B:2 | "
+        "C\"/>"
+        "<fermata mensura=\"5\"/>"
+        VOCES_IV("o5 d4 f4 g4 g4 | f4 f4 e2 | c4 d4 e2 | f2 a2 | "
+                 "f2 r2 | f1 | g1",
+                 "o4 b1 | b2 o5 c2 | o4 g#1 | b2 o5 c2 | o4 b1 | "
+                 "b1 | o5 c1",
+                 "o4 d1 | d2 e2 | o3 b1 | o4 d2 e2 | d1 | d1 | e1",
+                 "o3 g1 | g2 c2 | e1 | g2 c2 | g1 | g2 o2 b2 | o3 c1")
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f = _sola(CENSURA_SEPTIMA);
+                i32 n;
+                i32 i;
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == III);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, I);
+    CREDO_AEQUALIS_I32 (inv[I].mensura, IV);
+    CREDO_AEQUALIS_I32 (inv[II].mensura, VI);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 1 +960 superius: G7: septima F5 non resoluta "
+        "(-> G5) (frustum 0, offset 6)\n");
+    f.activae[CENSURA_DISSONANTIA] = VERUM;
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == III);
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        CREDO_VERUM (inv[i].regula == CENSURA_SEPTIMA);
+    }
+    /* dissonantia sola m4 nominat (et m2, m5: repetitionem et
+     * fermatam non novit) */
+    f = _sola(CENSURA_DISSONANTIA);
+    n = censura_iudicare(k, &f, inv, CAPACITAS);
+    CREDO_NECESSE (n >= I && n <= CAPACITAS);
+    {
+        b32 quarta = FALSUM;
+
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            quarta = quarta || inv[i].mensura == IV;
+        }
+        CREDO_VERUM (quarta);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1423,6 +1573,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "decussatio", _sectio_decussatio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "spatium", _sectio_spatium, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "duplicata", _sectio_duplicata, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "septima", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tertia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stili", _sectio_stili, NIHIL, NIHIL, NIHIL, NIHIL },

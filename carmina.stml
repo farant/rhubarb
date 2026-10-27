@@ -74,11 +74,12 @@
   <stylus titulus="iazz" basis="popularis" intentiones="liberae"
       regulae="+evitanda"/>
 
-  <!-- choralis: classicus cum regulis vocum - parallelae, saltus,
-       tertia, occultae, decussatio, spatium (partes ordine vocum:
-       superius altus tenor bassus) -->
+  <!-- choralis: classicus cum regulis vocum et resolutionum -
+       parallelae, saltus, tertia, occultae, decussatio, spatium,
+       duplicata, sensibilis, septima (partes ordine vocum: superius
+       altus tenor bassus) -->
   <stylus titulus="choralis"
-      regulae="+parallelae,+saltus,+tertia,+occultae,+decussatio,+spatium"/>
+      regulae="+parallelae,+saltus,+tertia,+occultae,+decussatio,+spatium,+duplicata,+sensibilis,+septima"/>
 
   <figura titulus="valsa"
       textus="v100 B:4 v60 [1 2 3] [1 2 3] | v100 Q:4 v60 [1 2 3] [1 2 3]"/>

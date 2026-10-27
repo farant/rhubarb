@@ -20,7 +20,8 @@
 hic_manens constans character* TITULI[CENSURA_REGULAE] = {
     "lineae", "clavis", "ambitus", "dissonantia", "parallelae",
         "saltus",
-    "tertia", "acorda", "evitanda", "occultae", "decussatio", "spatium"
+    "tertia", "acorda", "evitanda", "occultae", "decussatio", "spatium",
+    "duplicata", "sensibilis", "septima"
 };
 
 nomen structura {
@@ -63,6 +64,8 @@ nomen structura {
                          i32  numerus;
          constans Explicatio* explicatio;   /* dissonantia; NIHIL =
                                              * omnes inventae */
+             constans Functio* functio;     /* duplicata, sensibilis;
+                                             * NIHIL = nulla */
 } Iudex;
 
 /* nota cum frusto suo */
@@ -846,7 +849,9 @@ _culpa_notae (
     {
         redde NIHIL;
     }
-    redde _culpa(s, iudex->forma->septimae_liberae);
+    /* regula septima eam omni tempore nominat: dissonantia tacet */
+    redde _culpa(s, iudex->forma->septimae_liberae
+                    || iudex->forma->activae[CENSURA_SEPTIMA]);
 }
 
 interior b32
@@ -1450,6 +1455,287 @@ _frustum_notae (
     redde -I;
 }
 
+
+/* ==================================================
+ * Resolutiones: duplicata, sensibilis, septima
+ * ================================================== */
+
+/* sensibilis fenestrae (classis) - functio.h: dominans = V aut VII
+ * sine alteratione, aut applicata; non substituta. Tertia maior:
+ * tertia; diminutum: radix. -1 nulla */
+interior s32
+_sensibilis (
+    constans Iudex* iudex,
+               i32  fenestra)
+{
+              constans FunctioGradus* g;
+                    constans Acordum* h;
+        constans AcordumProprietates* p;
+                                 i32  i;
+
+    si (iudex->functio == NIHIL)
+    {
+        redde -I;
+    }
+    g = NIHIL;
+    per (i = ZEPHYRUM; i < iudex->functio->numerus; i++)
+    {
+        si (iudex->functio->gradus[i].fenestra == fenestra)
+        {
+            g = &iudex->functio->gradus[i];
+        }
+    }
+    si (   g == NIHIL || g->substituta
+        || !(   g->applicata > ZEPHYRUM
+             || (   (g->gradus == V || g->gradus == VII)
+                 && g->alteratio == ZEPHYRUM)))
+    {
+        redde -I;
+    }
+    h = &iudex->explicatio->fenestrae[fenestra].harmonia;
+    p = acordum_proprietates(h->genus);
+    si (p == NIHIL)
+    {
+        redde -I;
+    }
+    si (p->tertia == IV)
+    {
+        redde (s32)((h->radix + IV) % XII);
+    }
+    si (p->tertia == III && p->quinta == VI)
+    {
+        redde (s32)h->radix;
+    }
+    redde -I;
+}
+
+/* nota sub fermata (corona initium eius tegit): finis phrasis */
+interior b32
+_sub_corona (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_coronarum; i++)
+    {
+        si (   carmen->coronae[i].pulsus <= pulsus
+            && pulsus < carmen->coronae[i].finis)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* nota proxima eiusdem vocis (pars, CarmenNota.vox) post notam
+ * segmenti; nota NIHIL si nulla aut post pausam (motus fractus) */
+interior NotaLocata
+_proxima_vocis (
+                  constans Carmen* carmen,
+     constans ExplicatioSegmentum* s)
+{
+     constans CarmenPars* p = &carmen->partes[s->pars];
+              NotaLocata  electa;
+                     s64  finis = s->pulsus + s->nota->longitudo;
+                     i32  f;
+                     i32  j;
+
+    electa.nota     = NIHIL;
+    electa.frustum  = -I;
+    electa.initium  = ZEPHYRUM;
+    per (f = ZEPHYRUM; f < p->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &p->frusta[f];
+
+        per (j = ZEPHYRUM; j < fr->numerus; j++)
+        {
+            constans CarmenNota* x   = &fr->notae[j];
+                            s64  ab  = fr->pulsus + x->pulsus;
+
+            si (   !_percussio(x) && x->vox == s->nota->vox
+                && ab > s->pulsus
+                && (electa.nota == NIHIL || ab < electa.initium))
+            {
+                electa.nota     = x;
+                electa.frustum  = (s32)f;
+                electa.initium  = ab;
+            }
+        }
+    }
+    si (electa.nota != NIHIL && electa.initium > finis)
+    {
+        electa.nota = NIHIL;
+    }
+    redde electa;
+}
+
+/* duplicata: notae acordi classis sensibilis simul duae; semel per
+ * fenestram */
+interior vacuum
+_duplicata (
+    Iudex* iudex)
+{
+        constans Carmen* k = iudex->carmen;
+    constans Explicatio* e = iudex->explicatio;
+                    i32  f;
+                    i32  i;
+                    i32  j;
+
+    per (f = ZEPHYRUM; f < e->numerus_fenestrarum; f++)
+    {
+        s32 l         = _sensibilis(iudex, f);
+        b32 inventum  = FALSUM;
+
+        per (i = ZEPHYRUM; l >= ZEPHYRUM && !inventum
+                           && i < e->numerus_segmentorum; i++)
+        {
+            constans ExplicatioSegmentum* a = &e->segmenta[i];
+
+            si (   a->fenestra != f || a->genus != EXPLICATIO_ACORDI
+                || (s32)(a->nota->nota % XII) != l)
+            {
+                perge;
+            }
+            per (j = ZEPHYRUM; !inventum && j < e->numerus_segmentorum;
+                 j++)
+            {
+                constans ExplicatioSegmentum* b = &e->segmenta[j];
+                                         i32  n = iudex->numerus;
+
+                si (   j == i || b->fenestra != f
+                    || b->genus != EXPLICATIO_ACORDI
+                    || (s32)(b->nota->nota % XII) != l
+                    || b->initium > a->initium
+                    || b->pulsus + b->nota->longitudo <= a->initium)
+                {
+                    perge;
+                }
+                _addere(iudex, CENSURA_DUPLICATA, &k->partes[a->pars],
+                    _frustum_notae(&k->partes[a->pars], a->nota),
+                    a->initium, a->nota->offset, a->nota,
+                    &k->partes[b->pars], b->nota, NIHIL, NIHIL);
+                si (n < iudex->capacitas)
+                {
+                    iudex->inventa[n].sonans = e->fenestrae[f].harmonia;
+                }
+                inventum = VERUM;
+            }
+        }
+    }
+}
+
+/* sensibilis vocis extremae: proxima in fenestra alia (non dominante
+ * eiusdem sensibilis) cuius acordum tonum resolutionis habet,
+ * semitonio supra non stat */
+interior vacuum
+_sensibilis_regula (
+    Iudex* iudex)
+{
+        constans Carmen* k       = iudex->carmen;
+    constans Explicatio* e       = iudex->explicatio;
+                    s32  summa   = _vox_proxima(k, -I);
+                    s32  ultima  = summa;
+                    s32  v;
+                    i32  i;
+
+    per (v = summa; v >= ZEPHYRUM; v = _vox_proxima(k, v))
+    {
+        ultima = v;
+    }
+    per (i = ZEPHYRUM; summa >= ZEPHYRUM && i < e->numerus_segmentorum;
+         i++)
+    {
+        constans ExplicatioSegmentum* s = &e->segmenta[i];
+                                 s32  l;
+                                 s32  f2;
+                          NotaLocata  y;
+                                 i32  n = iudex->numerus;
+
+        si (   ((s32)s->pars != summa && (s32)s->pars != ultima)
+            || s->genus != EXPLICATIO_ACORDI || s->initium != s->pulsus
+            || _sub_corona(k, s->pulsus))
+        {
+            perge;
+        }
+        l = _sensibilis(iudex, s->fenestra);
+        si (l < ZEPHYRUM || (s32)(s->nota->nota % XII) != l)
+        {
+            perge;
+        }
+        y = _proxima_vocis(k, s);
+        si (y.nota == NIHIL || y.nota->nota == s->nota->nota)
+        {
+            perge;
+        }
+        f2 = _fenestra_ad_pulsum(iudex, y.initium);
+        /* dominans eiusdem sensibilis tonum resolutionis numquam
+         * habet (G7 G9 G13 Bo7: C nusquam) - sic libera */
+        si (   f2 < ZEPHYRUM
+            || !(e->fenestrae[f2].harmonia.classes
+                 & ((i32)I << ((l + I) % XII)))
+            || y.nota->nota == s->nota->nota + I)
+        {
+            perge;
+        }
+        _addere(iudex, CENSURA_SENSIBILIS, &k->partes[s->pars],
+            _frustum_notae(&k->partes[s->pars], s->nota), s->pulsus,
+            s->nota->offset, s->nota, NIHIL, y.nota, NIHIL, NIHIL);
+        si (n < iudex->capacitas)
+        {
+            iudex->inventa[n].sonans =
+                e->fenestrae[s->fenestra].harmonia;
+        }
+    }
+}
+
+/* septima non resoluta omni tempore: segmentum ultimum notae (septima
+ * ubi desinit), non sub fermata; nota repetita proximam iudicat */
+interior vacuum
+_septima_regula (
+    Iudex* iudex)
+{
+        constans Carmen* k = iudex->carmen;
+    constans Explicatio* e = iudex->explicatio;
+                    i32  i;
+                    i32  j;
+
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        constans ExplicatioSegmentum* s        = &e->segmenta[i];
+                                 b32  ultimum  = VERUM;
+                          NotaLocata  y;
+                                 i32  n = iudex->numerus;
+
+        si (   s->genus != EXPLICATIO_SEPTIMA || s->resoluta
+            || _sub_corona(k, s->pulsus))
+        {
+            perge;
+        }
+        per (j = i + I; j < e->numerus_segmentorum; j++)
+        {
+            si (e->segmenta[j].nota == s->nota)
+            {
+                ultimum = FALSUM;
+            }
+        }
+        y = _proxima_vocis(k, s);
+        si (   !ultimum
+            || (y.nota != NIHIL && y.nota->nota == s->nota->nota))
+        {
+            perge;
+        }
+        _addere(iudex, CENSURA_SEPTIMA, &k->partes[s->pars],
+            _frustum_notae(&k->partes[s->pars], s->nota), s->pulsus,
+            s->nota->offset, s->nota, NIHIL, y.nota, NIHIL, NIHIL);
+        si (n < iudex->capacitas)
+        {
+            iudex->inventa[n].sonans =
+                e->fenestrae[s->fenestra].harmonia;
+        }
+    }
+}
+
 /* acorda: fenestra declarata cum nota sine forma extra acordum, aut
  * radice / tertia declarata nusquam sonante - semel per fenestram */
 interior vacuum
@@ -1595,6 +1881,7 @@ censura_iudicare (
     CensuraForma  ordinaria;
            Iudex  iudex;
       Explicatio  explicatio;
+         Functio  functio;
          Piscina* piscina = NIHIL;
              i32  x;
              i32  y;
@@ -1610,11 +1897,15 @@ censura_iudicare (
     iudex.capacitas   = capacitas;
     iudex.numerus     = ZEPHYRUM;
     iudex.explicatio  = NIHIL;
+    iudex.functio     = NIHIL;
     si (   forma->activae[CENSURA_DISSONANTIA]
         || forma->activae[CENSURA_CLAVIS]
         || forma->activae[CENSURA_TERTIA]
         || forma->activae[CENSURA_ACORDA]
-        || forma->activae[CENSURA_EVITANDA])
+        || forma->activae[CENSURA_EVITANDA]
+        || forma->activae[CENSURA_DUPLICATA]
+        || forma->activae[CENSURA_SENSIBILIS]
+        || forma->activae[CENSURA_SEPTIMA])
     {
         /* explicatio in piscina propria: inventa notas carminis et
          * causas staticas tenent, nihil ex ea (clavis: tertia
@@ -1624,6 +1915,14 @@ censura_iudicare (
             && explicatio_carminis(carmen, piscina, &explicatio))
         {
             iudex.explicatio = &explicatio;
+            /* functio: sensibilis per fenestras (dominantes) */
+            si (   (   forma->activae[CENSURA_DUPLICATA]
+                    || forma->activae[CENSURA_SENSIBILIS])
+                && functio_carminis(carmen, &explicatio, piscina,
+                                    &functio))
+            {
+                iudex.functio = &functio;
+            }
         }
     }
     si (forma->activae[CENSURA_LINEAE])
@@ -1673,6 +1972,18 @@ censura_iudicare (
     si (forma->activae[CENSURA_SPATIUM])
     {
         _voces_iudicare(&iudex, CENSURA_SPATIUM);
+    }
+    si (forma->activae[CENSURA_DUPLICATA] && iudex.functio != NIHIL)
+    {
+        _duplicata(&iudex);
+    }
+    si (forma->activae[CENSURA_SENSIBILIS] && iudex.functio != NIHIL)
+    {
+        _sensibilis_regula(&iudex);
+    }
+    si (forma->activae[CENSURA_SEPTIMA] && iudex.explicatio != NIHIL)
+    {
+        _septima_regula(&iudex);
     }
     /* ordinatio stabilis (insertio) per mensuram, pulsum */
     x = iudex.numerus < capacitas ? iudex.numerus : capacitas;
@@ -1865,6 +2176,39 @@ censura_inventum_scribere (
                 (s32)x->nota->nota - (s32)x->nota_altera->nota) && bene;
             bene = chorda_aedificator_appendere_literis(textus,
                 " semitonia") && bene;
+            frange;
+        casus CENSURA_DUPLICATA:
+            bene = harmonia_scribere(carmen, &x->sonans, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                ": sensibilis duplicata ") && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
+            bene = chorda_aedificator_appendere_literis(textus, " / ")
+                && bene;
+            bene = partitura_notam_scribere(carmen, x->nota_altera,
+                pulsus, textus) && bene;
+            frange;
+        casus CENSURA_SENSIBILIS:
+        casus CENSURA_SEPTIMA:
+            bene = harmonia_scribere(carmen, &x->sonans, pulsus, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                x->regula == CENSURA_SEPTIMA ? ": septima "
+                                             : ": sensibilis ") && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                " non resoluta") && bene;
+            si (x->nota_altera != NIHIL)
+            {
+                bene = chorda_aedificator_appendere_literis(textus,
+                    " (-> ") && bene;
+                bene = partitura_notam_scribere(carmen, x->nota_altera,
+                    pulsus, textus) && bene;
+                bene = chorda_aedificator_appendere_character(textus,
+                    ')') && bene;
+            }
             frange;
         casus CENSURA_SALTUS:
         {

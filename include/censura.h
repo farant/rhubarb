@@ -70,11 +70,38 @@
  *                distant (infima superioris - summa inferioris >
  *                XII); vox ima cum proxima libera (bassus et tenor
  *                late licet); semel per spatium                   -
+ *   duplicata    sensibilis duplicata: in fenestra DOMINANTIS
+ *                (SENSIBILIS infra) notae acordi (explicatio.h)
+ *                duae aut plures classis sensibilis simul sonant
+ *                (D7: F#3 et F#4); semel per fenestram            -
+ *   sensibilis   sensibilis vocis extremae (VOCES: prima, ultima)
+ *                non resoluta: nota acordi sensibilis cuius
+ *                proxima eiusdem vocis, in fenestra alia (non
+ *                dominante eiusdem sensibilis), semitonio supra
+ *                non stat - ubi acordum eius tonum resolutionis
+ *                habet (V -> ii6: liber); nota repetita proximam
+ *                iudicat; vox media libera (sensibilis frustrata:
+ *                F#4 -> D4 in V7 I)                               -
+ *   septima      septima acordi non resoluta (explicatio.h septima,
+ *                resoluta: proxima gradu descendit aut transiens
+ *                sursum) OMNI tempore; nota repetita proximam
+ *                iudicat. Dissonantia eam in tempore forti solum
+ *                nominat - regula hac activa ibi tacet (inventum
+ *                unum)                                            -
  *
- * VOCES (occultae, decussatio, spatium): partes ordine libri, summa
- * prima; partes sine notis aut solum percussionis ('@') omissae.
- * Carmen quod has regulas accendit partes sic ordinat (choralis:
- * superius altus tenor bassus).
+ * VOCES (occultae, decussatio, spatium, sensibilis): partes ordine
+ * libri, summa prima; partes sine notis aut solum percussionis ('@')
+ * omissae. Carmen quod has regulas accendit partes sic ordinat
+ * (choralis: superius altus tenor bassus).
+ *
+ * SENSIBILIS fenestrae (functio.h): dominans = gradus V aut VII sine
+ * alteratione, aut applicata (V/x, viio/x); substituta (subV) non.
+ * Acordum tertiae maioris: tertia eius (D7 F#; A7 = V7/V: C#);
+ * diminutum (o, o7, h7): radix (viio7 in C: B). Tonus resolutionis
+ * semitonio supra.
+ * FINIS PHRASIS (sensibilis, septima): nota sub fermata (corona
+ * initium eius tegit) libera - phrasis nova ab initio (semicadentia
+ * laudium: F#4 sub fermata, deinde B4).
  *
  * STYLUS (censura_carminis_forma, carmen.h <stylus>): forma ordinaria
  * (classicus), deinde stylus carminis per catenam basium (basis prior:
@@ -129,6 +156,9 @@ nomen enumeratio {
     CENSURA_OCCULTAE,
     CENSURA_DECUSSATIO,
     CENSURA_SPATIUM,
+    CENSURA_DUPLICATA,
+    CENSURA_SENSIBILIS,
+    CENSURA_SEPTIMA,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -152,7 +182,8 @@ nomen structura {
                  chorda pars;
                  chorda pars_altera;   /* dissonantia, parallelae,
                                          * occultae, decussatio,
-                                         * spatium (vox inferior) */
+                                         * spatium (vox inferior),
+                                         * duplicata */
                     i32 mensura;       /* 1 = prima */
                     s64 pulsus;        /* intra mensuram */
                     s32 frustum;       /* index in parte; -1 = nullum */
@@ -160,7 +191,9 @@ nomen structura {
                                          * '|') */
     constans CarmenNota* nota;          /* in carmine (tertia: infima
                                          * sonantium); NIHIL: lineae */
-    constans CarmenNota* nota_altera;   /* partis alterius */
+    /* partis alterius; duplicata: sensibilis altera; sensibilis,
+     * septima: nota proxima eiusdem vocis (NIHIL: pausa) */
+    constans CarmenNota* nota_altera;
     /* parallelae, occultae: notae initii prioris (par primum);
      * saltus: nota prior partis; acorda: nota aliena altera; NIHIL
      * aliter */
@@ -169,7 +202,8 @@ nomen structura {
     /* dissonantia: cur non explicata (statica); acorda: "radix
      * deest" / "tertia deest" (NIHIL: notae alienae); NIHIL aliter */
     constans character* causa;
-    /* acorda: harmonia SONANS fenestrae (litteralis, classes omnes) */
+    /* acorda: harmonia SONANS fenestrae (litteralis, classes omnes);
+     * duplicata, sensibilis, septima: acordum fenestrae */
                 Acordum sonans;
 } CensuraInventum;
 
