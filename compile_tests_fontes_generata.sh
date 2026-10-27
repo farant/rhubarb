@@ -75,6 +75,7 @@ declare -a SOURCE_FILES=(
     "lib/conspectus_canon.c"
     "lib/conspectus_dies.c"
     "lib/conspectus_infixa.c"
+    "lib/contractio.c"
     "lib/copia_terminalis.c"
     "lib/credentialia.c"
     "lib/credo.c"

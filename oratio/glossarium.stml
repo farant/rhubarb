@@ -415,6 +415,14 @@
     <forma textus="interpolatione" casus="ablativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
   <vocabulum lemma="lagrange" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J.-L. Lagrange (interpolatio Lagrange, polynomium per puncta; lib/interpolatio.c)"/>
+  <vocabulum lemma="tensor" lingua="latina" classis="substantivum" nota="Latina posterior: tensor, -oris m., qui tendit (tendo); mathematica: tabula multilinearis super indices (lib/contractio.c)">
+    <forma textus="tensor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="tensorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="tensoribus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
   <vocabulum lemma="exhaustivus" lingua="latina" classis="adiectivum"
     nota="Latinitas nova (exhaurire): exhaustive - vox domus (cellae.h: activatio_exhaustiva, quaestio per omnes copias); WORDS caret">

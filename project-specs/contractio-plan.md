@@ -382,6 +382,15 @@ Fran's go-ahead.
   in the test; saturation at a network whose apex exceeds 2^64;
   refusals (repeated index, third use of an index, mutation after
   ordinare, open network).
+  *(2026-10-27: landed. API as planned plus three read-only inspection
+  calls (`contractio_ordo_gradus_numerus`, `contractio_ordo_gradus`,
+  `contractio_ordo_sedes`). Officina = slab only; refused when the slab
+  or the multiplication count saturates, which also bounds every step
+  to ≤ 63 nontrivial indices, so T3's odometer fits a stack array.
+  Outer-product fallback stated in the key (all pairs, same key).
+  12 credo sections, 89,235 checks, 0.04 s; 300 random networks
+  against an independent count; 19 plants red. Glossary: tensor. See
+  lib/contractio.worklog.md.)*
 - **T3. contractio execution.** Hot tier with the two-word kernel and
   the officina; reference tier with per-step scratch.
   Credo: small networks against brute-force summation over all index
