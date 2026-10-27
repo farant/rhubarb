@@ -31,7 +31,11 @@
 #include <sys/wait.h>
 #include <sys/ioctl.h>
 #include <termios.h>
-#include <util.h>
+#ifdef __APPLE__
+#include <util.h>     /* openpty: macOS */
+#else
+#include <pty.h>      /* openpty: glibc, musl */
+#endif
 #include <poll.h>
 #include <fcntl.h>
 #include <signal.h>
@@ -315,7 +319,12 @@ infantem_agere (
     {
         d.gradus           = GRADUS_DIRECTORIUM;
         d.numerus_erroris  = errno;
-        (vacuum)write(fistula, &d, magnitudo(d));
+        /* gcc (vacuum) ad warn_unused_result non honorat; filius
+         * statim exit, ergo nihil agendum si scriptio fallit */
+        si (write(fistula, &d, magnitudo(d)) < ZEPHYRUM)
+        {
+            _exit(CXXVII);
+        }
         _exit(CXXVII);
     }
     /* "NOMEN=valor" ponit, "NOMEN" tollit; titulus longior omittitur */
@@ -345,7 +354,10 @@ infantem_agere (
     (vacuum)execvp(cfg->argumenta[ZEPHYRUM], u.m);
     d.gradus           = GRADUS_EXEC;
     d.numerus_erroris  = errno;
-    (vacuum)write(fistula, &d, magnitudo(d));
+    si (write(fistula, &d, magnitudo(d)) < ZEPHYRUM)
+    {
+        _exit(CXXVII);
+    }
     _exit(CXXVII);
 }
 

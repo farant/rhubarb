@@ -45,6 +45,7 @@ source "$(dirname "$0")/compile_tests_fontes_generata.sh"
 declare -a VENDOR_SOURCES=(
     "vendor/sqlite3.c"
     "vendor/bearssl_amalgama.c"
+    "vendor/stb_imago.c"
 )
 declare -a VENDOR_FLAGS=(
     "-O2"

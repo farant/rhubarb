@@ -4,35 +4,17 @@
  * Utitur stb_image.h pro caricare imagines.
  * stb_image est detailium implementationis, non exponitur in API.
  *
- * NOTA: stb_image.h DEBET esse ANTE latina.h propter conflictus macros
- * (fac, L, FILE, etc.)
+ * NOTA: stb_imago.h DEBET esse ANTE latina.h propter conflictus macros
+ * (fac, L, FILE, etc.). Corpus stb in vendor/stb_imago.c vivit.
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/* Configuratio stb_image */
-#define STB_IMAGE_IMPLEMENTATION
-#define STBI_NO_THREAD_LOCALS
-
-/* Disable warnings for stb_image */
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wcomment"
-#pragma clang diagnostic ignored "-Wcast-qual"
-#pragma clang diagnostic ignored "-Wconversion"
-#pragma clang diagnostic ignored "-Wsign-conversion"
-#pragma clang diagnostic ignored "-Wdouble-promotion"
-#pragma clang diagnostic ignored "-Wunused-function"
-#pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
-#endif
-
-#include "../vendor/stb_image.h"
-
-#ifdef __clang__
-#pragma clang diagnostic pop
-#endif
+/* stb_image in obiecto suo (vendor/stb_imago.c, vexillis laxis);
+ * hic declarationes solae, C89 mundae */
+#include "../vendor/stb_imago.h"
 
 
 /* ============================================================

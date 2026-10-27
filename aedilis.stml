@@ -116,6 +116,11 @@
     <fons via="vendor/bearssl_amalgama.c">
       <vexillum! (>-O2
     </fons>
+    <!-- stb_image (imago): '//' quae gcc -std=c89 non legit - corpus
+         in obiecto suo, vexillis laxis (vendor/stb_imago.h) -->
+    <fons via="vendor/stb_imago.c">
+      <vexillum! (>-O2
+    </fons>
   </vendor>
   <!-- compilatio: vexilla per fontem nostrum, nomine obiecti lata
        (lib__sigillum__O2.o). sigillum -O2 (fabrica T8, mensuratum):

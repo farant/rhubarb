@@ -32,16 +32,19 @@ _generare_randomos (
     arc4random_buf(bytes, (memoriae_index)mensura);
 #else
     /* Linux/Unix: usus /dev/urandom */
-    FILE* urandom;
-    i32   i;
+              FILE* urandom;
+    memoriae_index  lecta;
+               i32  i;
 
+    lecta   = ZEPHYRUM;
     urandom = lectiones_fopen("/dev/urandom", "rb");
     si (urandom)
     {
-        fread(bytes, I, (memoriae_index)mensura, urandom);
+        lecta = fread(bytes, I, (memoriae_index)mensura, urandom);
         fclose(urandom);
     }
-    alioquin
+    /* lectio brevis = bytes reliqui indefiniti; fallback eos implet */
+    si (lecta != (memoriae_index)mensura)
     {
         /* Fallback: usus rand() (non cryptographice securus!) */
         per (i = ZEPHYRUM; i < mensura; i++)

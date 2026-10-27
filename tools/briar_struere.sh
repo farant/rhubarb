@@ -64,11 +64,15 @@ const char briar_aedificatio_commissum[] = "$AED_COMMISSUM";
 AEDIFICATIO
 
 # decodificator (stb_image per lib/imago.c) SOLUM in binario (spec par.
-# 4.8 A1): nulla porta briar eum nectit, ergo obiectum RADICIS sumitur
-if [ ! -f build/imago.o ]; then
-    echo "briar_struere: build/imago.o abest - ./compile_tests.sh prius" >&2
-    exit 1
-fi
+# 4.8 A1): nulla porta briar eum nectit, ergo obiectum RADICIS sumitur.
+# Corpus stb in obiecto suo venditorio (vendor/stb_imago.c, 2026-10-27:
+# gcc -std=c89 '//' stb non legit) - ambo obiecta necessaria.
+for o in build/imago.o build/stb_imago.o; do
+    if [ ! -f "$o" ]; then
+        echo "briar_struere: $o abest - ./compile_tests.sh prius" >&2
+        exit 1
+    fi
+done
 
 # obiecta: omnia briar/build/*.o praeter probationes (obiecta
 # probationum ibi non cadunt, sed custodia eadem quae silex_struere)
@@ -88,7 +92,7 @@ clang "${GCC_FLAGS[@]}" -Iinclude -Imateria/fontes -Imd/fontes \
     tools/briar.c lib/provenientia.c "$PROV_OBJ" build/capsula_corpus_silicis.c \
     build/capsula_icon_briar.c build/capsula_mutationes_briar.c \
     build/briar_aedificatio.c \
-    build/imago.o $OBJ \
+    build/imago.o build/stb_imago.o $OBJ \
     -o bin/briar || exit 1
 echo "aedificatum: bin/briar"
 
