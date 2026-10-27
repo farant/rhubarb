@@ -76,3 +76,14 @@ chord: classes + septima); it became AcordumFenestrae first, or the rename colli
 
 The test sections exemplaria / radices / sine_tertia moved to probatio_acordum.c with
 their helpers; probatio_harmonia keeps nomina, sonantes, linea, orthographia (4/4).
+
+## 2026-10-27 - step 2c: the 'acorda' line (declared harmony as a lead sheet)
+
+D03TB part 2. harmonia_acorda_lineam_scribere prints the declared chords (Carmen.acorda) per bar
+as written ("C#m:2 B7:2" - author's spelling, "-:2 A:2" when a declared span starts mid-bar,
+'r' for a declared rest, '-' outside any span), next to the literal 'harmonia' line, so a
+disagreement between what was declared and what sounds is visible at a glance (proelium bar
+16: acorda "B7sus4:2 B7:2", harmonia "E(5)/B:2 B(3):2"). An explicit nullum branch was redundant
+- a declared 'r' is an empty Acordum and harmonia_scribere already writes "r" (plant survived,
+branch removed). auditio: `-partitura -acorda` (line order acorda, harmonia, explicatio,
+functio = PARTITURA_ADDITAE IV, all four fit). Plants 4/4.

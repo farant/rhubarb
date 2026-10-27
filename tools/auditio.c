@@ -40,7 +40,9 @@
  *   auditio -carmen T -partitura       partitura ut textus
  *       [-mensurae 9-12] [-pars P]     (partitura.h), sine sono; -pars
  *       [-harmonia] [-explicatio]      hic = sola pars; -harmonia:
- *       [-functio]                     linea acordorum (harmonia.h);
+ *       [-functio] [-acorda]           linea acordorum (harmonia.h);
+ *                                      -acorda: acorda declarata
+ *                                      (<acorda>) ut scripta;
  *                                      -explicatio: acorda per
  *                                      fenestras bassi, notae alienae
  *                                      (explicatio.h); -functio: gradus
@@ -961,6 +963,7 @@ _partituram_scribere (
                    i32  prima,
                    i32  ultima,
     constans character* pars,
+                   b32  acorda,
                    b32  harmonia,
                    b32  explicare,
                    b32  functionem,
@@ -981,7 +984,14 @@ _partituram_scribere (
         fprintf(stderr, "auditio: explicatio: memoria deest\n");
         redde FALSUM;
     }
-    /* lineae additae ordine: harmonia, explicatio, functio */
+    /* lineae additae ordine: acorda (declarata), harmonia, explicatio,
+     * functio */
+    si (acorda)
+    {
+        forma.additae[n].titulus   = "acorda";
+        forma.additae[n].scribere  = harmonia_acorda_lineam_scribere;
+        n++;
+    }
     si (harmonia)
     {
         forma.additae[n].titulus   = "harmonia";
@@ -1671,6 +1681,7 @@ principale (
       constans character* liber           = NIHIL;
                      b32  partitura       = FALSUM;
                      b32  harmonia        = FALSUM;
+                     b32  acorda          = FALSUM;
                      b32  explicare       = FALSUM;
                      b32  functionem      = FALSUM;
                      b32  censura         = FALSUM;
@@ -1789,6 +1800,10 @@ principale (
         {
             explicare = VERUM;
         }
+        alioquin si (strcmp(argv[k], "-acorda") == ZEPHYRUM)
+        {
+            acorda = VERUM;
+        }
         alioquin si (strcmp(argv[k], "-functio") == ZEPHYRUM)
         {
             functionem = VERUM;
@@ -1896,7 +1911,8 @@ principale (
                 "-carmen (-iterare non cum -via)\n");
         redde II;
     }
-    si (   (   (mensurae_datae || harmonia || explicare || functionem)
+    si (   (   (   mensurae_datae || harmonia || acorda || explicare
+                || functionem)
             && !partitura)
         || (partitura && (iterare || via != NIHIL))
         || (regulae != NIHIL && !censura && !recensio)
@@ -1952,7 +1968,7 @@ principale (
                   "| -cantilena T | -carmina | -instrumenta "
                   "| -carmen T [-iterare] "
                   "[-pars P] [-via x.wav] [-partitura [-mensurae N-M] "
-                  "[-harmonia]] "
+                  "[-harmonia] [-acorda]] "
                   "[-censura [-regulae R,+R,-R]] [-auscultare] "
                   "[-recensio [-regulae ...] [-json]] "
                   "[-mensura P M | -ponere P M:T NOTA | "
@@ -2012,7 +2028,7 @@ principale (
         alioquin si (k != NIHIL && partitura)
         {
             bene = _partituram_scribere(k, prima, ultima, pars,
-                harmonia, explicare, functionem, piscina);
+                acorda, harmonia, explicare, functionem, piscina);
         }
         alioquin si (k != NIHIL)
         {

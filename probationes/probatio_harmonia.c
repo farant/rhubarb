@@ -336,10 +336,44 @@ _sectio_orthographia (
         chorda_ex_literis("C#m(3)", c->piscina));
 }
 
+/* linea 'acorda': declarata ut scripta per mensuram (C#m auctoris, non
+ * Dbm), 'r' nullum, '-' extra spatia */
+interior vacuum
+_sectio_acorda (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"a\" metrum=\"4/4\" "
+        "clavis=\"e maior\">"
+        "<acorda mensura=\"1\" ictus=\"3\" textus=\"A:2\"/>"
+        "<acorda mensura=\"2\" textus=\"C#m:2 B7:2 | r | E\"/>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1 | e1 | e1 | e1 | e1</textus>"
+        "</frustum></pars></carmen></carmina>");
+          ChordaAedificator* a;
+                        s64  M1 = (s64)MMMDCCCXL;
+                        i32  m;
+    constans character* constans sperata[V] = {
+        "-:2 A:2", "C#m:2 B7:2", "r:1", "E:1", "-:1"
+    };
+
+    CREDO_NECESSE (k != NIHIL);
+    per (m = ZEPHYRUM; m < V; m++)
+    {
+        a = chorda_aedificator_creare(c->piscina, LXIV);
+        CREDO_NECESSE (a != NIHIL
+            && harmonia_acorda_lineam_scribere(NIHIL,
+            k, (s64)m * M1, (s64)(m + I) * M1, a));
+        CREDO_CHORDA_AEQUALIS_LITERIS (chorda_aedificator_finire(a),
+            sperata[m]);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nomina", _sectio_nomina, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sonantes", _sectio_sonantes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

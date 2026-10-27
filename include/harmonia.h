@@ -62,4 +62,16 @@ harmonia_lineam_scribere (
                   s64  finis,
     ChordaAedificator* textus);
 
+/* linea addita 'acorda' (PartituraAddita.scribere, ctx ignoratur):
+ * acorda declarata (Carmen.acorda) ut scripta, per mensuram - "D:2
+ * G7:2", 'r' nullum, '-' extra spatia. Harmonia SONANS in linea
+ * 'harmonia' manet: discordia oculis patet */
+b32
+harmonia_acorda_lineam_scribere (
+               vacuum* ctx,
+      constans Carmen* carmen,
+                  s64  initium,
+                  s64  finis,
+    ChordaAedificator* textus);
+
 #endif /* HARMONIA_H */

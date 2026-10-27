@@ -237,3 +237,91 @@ harmonia_litteram_notare (
         h->litterae[c] = nota->littera;
     }
 }
+
+/* acordum declaratum (etiam 'r') quod pulsum t tegit; NIHIL nullum */
+interior constans ComitatusAcordum*
+_declaratum_ad (
+    constans Carmen* carmen,
+                s64  t)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_acordorum; i++)
+    {
+        constans ComitatusAcordum* a = &carmen->acorda[i];
+
+        si (a->pulsus <= t && t < a->pulsus + a->longitudo)
+        {
+            redde a;
+        }
+    }
+    redde NIHIL;
+}
+
+/* initium acordi declarati proximum post t; finis si nullum */
+interior s64
+_declaratum_proximum (
+    constans Carmen* carmen,
+                s64  t,
+                s64  finis)
+{
+    s64 p = finis;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_acordorum; i++)
+    {
+        si (   carmen->acorda[i].pulsus > t
+            && carmen->acorda[i].pulsus < p)
+        {
+            p = carmen->acorda[i].pulsus;
+        }
+    }
+    redde p;
+}
+
+b32
+harmonia_acorda_lineam_scribere (
+               vacuum* ctx,
+      constans Carmen* carmen,
+                  s64  initium,
+                  s64  finis,
+    ChordaAedificator* textus)
+{
+    s64 t       = initium;
+    b32 bene    = VERUM;
+    b32 primum  = VERUM;
+
+    (vacuum)ctx;
+    dum (t < finis)
+    {
+        constans ComitatusAcordum* a  = _declaratum_ad(carmen, t);
+                              s64  ad = a != NIHIL
+                                  ? a->pulsus + a->longitudo
+                                  : _declaratum_proximum(carmen, t,
+                                  finis);
+
+        ad = ad < finis ? ad : finis;
+        si (!primum)
+        {
+            bene = chorda_aedificator_appendere_character(textus, ' ')
+                && bene;
+        }
+        primum = FALSUM;
+        si (a == NIHIL)
+        {
+            bene = chorda_aedificator_appendere_character(textus, '-')
+                && bene;
+        }
+        alioquin
+        {
+            /* 'r' declaratum = acordum nullum: harmonia_scribere "r" */
+            bene = harmonia_scribere(carmen, &a->acordum, t, textus)
+                && bene;
+        }
+        bene = chorda_aedificator_appendere_character(textus, ':')
+            && bene;
+        bene  = partitura_valorem_scribere(ad - t, textus) && bene;
+        t     = ad;
+    }
+    redde bene;
+}
