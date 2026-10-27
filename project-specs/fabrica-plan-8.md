@@ -66,7 +66,7 @@ Test: probatio_fabrica_* with a fake sutura (shape, sort, absent file =
 'absens' entry); fumus stage: edit a tracked file -> in the list's diff,
 edit an untracked build file -> not.
 
-**T3 - mode `umbra`.** PART 1 DONE 2026-10-27 (comparison machinery): `_umbram_conferre`, `_debita_usurpata`, `vestigia_umbra.txt`, fact `fabrica.umbra_discordia`; fumus LXIX (a/b/d agree, c disagrees x2), 3 plants. Part 2 = gate wiring (Q2). Original scope: Then `silva.porta` sets `FABRICA_VESTIGIUM=umbra`
+**T3 - mode `umbra`.** PART 1 DONE 2026-10-27 (comparison machinery): `_umbram_conferre`, `_debita_usurpata`, `vestigia_umbra.txt`, fact `fabrica.umbra_discordia`; fumus LXIX (a/b/d agree, c disagrees x2), 3 plants. PART 2 DONE 2026-10-27: `_porta_per_gradum` (pythonica/silva.py) passes FABRICA_VESTIGIUM=umbra unless the caller set a mode (members never see it - basis env); probatio_silva asserts default umbra + explicit photographia kept; plant red. Detour on the way: lib/git could not read packed objects > 64 KB compressed (flatura never said INCOMPLETUS) - fixed 5d25bec8. Original scope: Then `silva.porta` sets `FABRICA_VESTIGIUM=umbra`
 for the composites (Q2). In `_membrum_agere`: take full AND tracked
 snapshots; compute both verdicts (footprint, debts set, invalidation
 bit); verdict = full; disagreements -> `vestigia_umbra.txt` + fact

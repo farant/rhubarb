@@ -3904,3 +3904,13 @@ lib/bib.c (agree - the tracked witness sees it), c raw extra.txt UNTRACKED
 outside the area (disagree: vestigium + invalidatio = 2 - the known blind
 spot, spec 8 T4's per-run walk), d clean. Three compiling plants (walk
 comparison off, S lines ignored, invalidation off) each red.
+
+## 2026-10-27 - gates run shadow mode (fabrica-plan-8 T3, part 2)
+
+`silva._porta_per_gradum` (every composite gate: radix, css, html,
+materia, md, saltuarius, toml, silva, veneni) now runs `bin/fabrica
+probare` with FABRICA_VESTIGIUM=umbra unless the caller already set a
+mode (`photographia` = explicit opt-out). Verdicts are unchanged; each
+member that RUNS leaves `<area>vestigia_umbra.txt` and a
+`fabrica.umbra_discordia` fact - evidence accumulates with every commit.
+Cost: the tracked snapshot twice per member that runs (~50 ms).

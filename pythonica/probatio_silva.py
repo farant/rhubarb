@@ -919,12 +919,14 @@ finally:
 # producentes fracti (SANATIO) ut fracturae nominata; exitus 2 aut PROBARE
 # absens -> via altera; filtrum -> via cruda
 _gradus_log = os.path.join(T, 'fabrica_gradus_argv.txt')
+_gradus_ambitus = os.path.join(T, 'fabrica_gradus_vestigium.txt')
 
 
 def _fabrica_gradus(modus):
     via = os.path.join(T, 'fabrica_gradus_%s' % modus)
     with open(via, 'w') as f:
         f.write('#!/bin/bash\necho "$*" >> %s\n' % _gradus_log)
+        f.write('echo "${FABRICA_VESTIGIUM-}" >> %s\n' % _gradus_ambitus)
         if modus == 'transit':
             f.write('printf "MEMBRUM\\tprobatio_a\\ttransiit\\t100\\t\\n"\n'
                     'printf "MEMBRUM\\tprobatio_b\\ttransiit\\t100\\t\\n"\n'
@@ -969,6 +971,23 @@ try:
     _argv_g = open(_gradus_log).read().splitlines()
     credo(_argv_g == ['probare -machina -vis -audit gradus_fictus'],
           'porta gradus: vis/auditus -> probare -vis -audit (%r)' % (_argv_g,))
+    # UMBRA (fabrica-plan-8 T3, decretum Q2): porta compositi umbram
+    # semper ponit nisi vocans modum expresse posuit
+    _vest_vetus = os.environ.pop('FABRICA_VESTIGIUM', None)
+    open(_gradus_ambitus, 'w').close()
+    pg = silva.porta('ficta-g')
+    _vest = open(_gradus_ambitus).read().splitlines()
+    os.environ['FABRICA_VESTIGIUM'] = 'photographia'
+    open(_gradus_ambitus, 'w').close()
+    pg = silva.porta('ficta-g')
+    _vest_expressum = open(_gradus_ambitus).read().splitlines()
+    if _vest_vetus is None:
+        del os.environ['FABRICA_VESTIGIUM']
+    else:
+        os.environ['FABRICA_VESTIGIUM'] = _vest_vetus
+    credo(_vest == ['umbra'] and _vest_expressum == ['photographia'],
+          'porta gradus: FABRICA_VESTIGIUM=umbra ordinarie, expressum '
+          'servatum (%r, %r)' % (_vest, _vest_expressum))
     silva.FABRICA_BIN = _fabrica_gradus('reusus')
     pg = silva.porta('ficta-g')
     credo(pg.sana and '[membra cursa 0/2' in pg.compendium
