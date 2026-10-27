@@ -685,6 +685,8 @@ _comitatum_legere (
                         b32  bassus_sonat,
                      chorda  titulus_partis,
                         s32  index,
+            ComitatusStatus* status,
+                        s64* finis_prior,
                     Piscina* piscina,
               CarmenFrustum* frustum,
              CarminisVitium* vitium)
@@ -776,11 +778,16 @@ _comitatum_legere (
         redde _vitium(vitium, carmen->titulus, titulus_partis, index,
             ZEPHYRUM, "piscina exhausta");
     }
+    /* contiguus priori comitatui partis: status continuatur */
+    si (ab != *finis_prior)
+    {
+        memset(status, ZEPHYRUM, magnitudo(*status));
+    }
     si (!comitatus_componere(&figura->figura, carmen->acorda,
                              carmen->numerus_acordorum, initia,
                              mensurae,
-                             &ambitus, bassus_sonat, piscina, &notae,
-                             &numerus, &cv))
+                             &ambitus, bassus_sonat, status, piscina,
+                             &notae, &numerus, &cv))
     {
         redde _vitium(vitium, carmen->titulus, titulus_partis, index,
             cv.offset, cv.causa);
@@ -813,6 +820,7 @@ _comitatum_legere (
         n->vox          = notae[i].vox;
         n->acordi       = VERUM;
     }
+    *finis_prior        = ad;
     frustum->pulsus     = ab;
     frustum->textus     = figura->textus;
     frustum->numerus    = numerus;
@@ -875,14 +883,19 @@ _partem_legere (
                  CarmenPars* pars,
              CarminisVitium* vitium)
 {
-    chorda* a;
-       f64  lucrum;
-       i32  numerus    = ZEPHYRUM;
-       i32  scripta    = ZEPHYRUM;
-       i32  comitatus  = ZEPHYRUM;
-       i32  i;
-       i32  j;
+             chorda* a;
+                f64  lucrum;
+                i32  numerus    = ZEPHYRUM;
+                i32  scripta    = ZEPHYRUM;
+                i32  comitatus  = ZEPHYRUM;
+                i32  i;
+                i32  j;
+                s64  finis_prior = -I;
+    ComitatusStatus  status;
 
+    /* status comitatus contigui; finis_prior = finis comitatus
+     * prioris (frustum scriptum inter: -1, status novus) */
+    memset(&status, ZEPHYRUM, magnitudo(status));
     a = stml_attributum_capere(nodus, "titulus");
     si (a == NIHIL || !_signum_validum(*a))
     {
@@ -975,7 +988,8 @@ _partem_legere (
         {
             si (!_comitatum_legere(l, carmen, figurae,
                 numerus_figurarum, bassus_sonat,
-                                   pars->titulus, (s32)j, piscina,
+                                   pars->titulus, (s32)j, &status,
+                                   &finis_prior, piscina,
                                    &pars->frusta[j], vitium))
             {
                 redde FALSUM;
@@ -989,6 +1003,7 @@ _partem_legere (
             {
                 redde FALSUM;
             }
+            finis_prior                = -I;
             pars->frusta[j].repetitio  = -I;
             pars->frusta[j].scriptum   = (s32)scripta++;
             pars->frusta[j].comitatus  = -I;

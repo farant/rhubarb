@@ -102,6 +102,9 @@
  *             [ambitus="55..76"] [bassus="36..57"]/> in parte: frustum
  *             GENERATUM [M, U) ex acordis declaratis (sine usque: finis
  *             acordorum); frusta non se tegunt (scripta et generata).
+ *             Comitatus contiguus (mensura = usque prioris in parte
+ *             eadem, nullo frusto scripto inter) positionem et bassum
+ *             continuat (comitatus.h STATUS); aliter ab initio.
  *             Textus frusti = figura, offset notae = gradus eius;
  *             lineae nullae. Repetitio ea ut scripta iterat
  *             (transposita); emendatio non mutat (fontem nominat)

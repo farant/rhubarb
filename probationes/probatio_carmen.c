@@ -1533,6 +1533,26 @@ _sectio_comitatus (
     CREDO_AEQUALIS_S32 (p->frusta[1].comitatus, -I);
     CREDO_AEQUALIS_I32 (p->frusta[1].numerus, XIV);
     CREDO_AEQUALIS_I32 (p->frusta[1].notae[0].nota, L);
+    /* comitatus contigui: positio continuatur (D post G: D2 38, prope
+     * G2 43); lacuna: ab initio (D3 50, medio ambitus proxima) */
+    CREDO_NECESSE (_legere(c, _liber_ternarius(c,
+        "<acorda mensura=\"1\" textus=\"G | D | D\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<comitatus figura=\"valsa\" mensura=\"1\" usque=\"2\"/>"
+        "<comitatus figura=\"valsa\" mensura=\"2\" usque=\"4\"/>"
+        "</pars>"), &liber));
+    p = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_NECESSE (p->numerus_frustorum == II);
+    CREDO_AEQUALIS_I32 (p->frusta[0].notae[0].nota, XLIII);
+    CREDO_AEQUALIS_I32 (p->frusta[1].notae[0].nota, XXXVIII);
+    CREDO_NECESSE (_legere(c, _liber_ternarius(c,
+        "<acorda mensura=\"1\" textus=\"G | D | D\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<comitatus figura=\"valsa\" mensura=\"1\" usque=\"2\"/>"
+        "<comitatus figura=\"valsa\" mensura=\"3\" usque=\"4\"/>"
+        "</pars>"), &liber));
+    p = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_AEQUALIS_I32 (p->frusta[1].notae[0].nota, L);
     /* figura positio="sine_radice": G7 B E F A */
     CREDO_NECESSE (_legere(c, _liber_ternarius(c,
         "<figura titulus=\"sr\" textus=\"[1 2 3 4]:2.\" "

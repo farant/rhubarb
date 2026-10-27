@@ -152,3 +152,20 @@ the last note is above the target, impossible when the target is the top of the 
 removed with a comment. "B:4 T Q A" on F7 | Bb7 | F7: F2 A2 C2 A2 | Bb2 D3 F2 E2 | F2 A2 C2 E2.
 Plants 7/7 (two needed new tests: C/E for "third differs from bass"; the 'ultima' plant had to
 keep the variable used or -Werror refused it).
+
+## 2026-10-27 - comitatus contiguus: ComitatusStatus carried across adjacent <comitatus>
+
+Found by converting ambulatio (C3): splitting a part into several <comitatus> (one-chord bars
+vs two-chord bars) restarted voice leading at every seam - the bass fell 11 semitones right
+after an 'A' that had correctly approached the predicted note (Db2 -> C3), the comping jumped
+back to the middle of the range. Fran chose option A: the internal Positio became the public
+ComitatusStatus (+ the figure settings that shaped it and the last bass-family note), and
+comitatus_componere takes an in/out status (NIHIL = fresh). carmen keeps one per part and
+continues it when a <comitatus> starts exactly where the previous one ended (finis_prior);
+a written frustum between, or a gap, resets it.
+Same chord but a different figure must still rebuild the positio (rootless vs closed, voice
+count, root allowed) - p.sine_radice / vox_maxima / radix_licet are part of the key. Test
+lesson: my first "figure changed" test changed all three at once, so each condition's plant
+survived alone; split into one-setting-at-a-time tests. Restoring `ultima` from the status is
+not planted: it only matters for an 'A' that is the first bass step of a composition, where
+every case I built was decided by range or tie instead. Plants 7/7 (+ that note).

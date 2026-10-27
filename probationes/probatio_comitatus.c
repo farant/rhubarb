@@ -94,7 +94,8 @@ _componere_basso (
         redde FALSUM;
     }
     redde comitatus_componere(&f, a, n, _initia(c, m, longitudo), m,
-                              ambitus, bassus_sonat, c->piscina, notae,
+                              ambitus, bassus_sonat, NIHIL, c->piscina,
+                              notae,
                               numerus, vitium);
 }
 
@@ -748,9 +749,8 @@ _sine_radice (
     }
     f.sine_radice = VERUM;
     redde comitatus_componere(&f, a, n, _initia(c, m, QUARTA_QUARTA), m,
-                              &AMBITUS, VERUM, c->piscina, notae,
-                              numerus,
-                              &v);
+                              &AMBITUS, VERUM, NIHIL, c->piscina, notae,
+                              numerus, &v);
 }
 
 /* positio sine radice: nona addita, XIII pro quinta (dominans), formae
@@ -883,12 +883,108 @@ _sectio_ambulans (
     CREDO_AEQUALIS_I32 (e[III].nota, XLI);
 }
 
+/* status inter compositiones contiguas: positio et bassus
+ * continuantur (Cmaj7 post Dm7 G7: B D E G, non D E G B ab initio);
+ * accessus ultimus (Db2) bassum proximum (C2) praedicit */
+interior vacuum
+_sectio_status (
+    CredoContextus* c)
+{
+    hic_manens constans s64 PRIMA[II] = { 0, MMMDCCCXL };
+    hic_manens constans s64 SECUNDA[II] = { MMMDCCCXL, VII * M
+        + DCLXXX };
+    hic_manens constans s64 TERTIA_[II]  = { VII * M + DCLXXX,
+                                             XI * M + DXX };
+     ComitatusStatus  status;
+    ComitatusAcordum* a;
+                 i32  na;
+     ComitatusFigura  f;
+     ComitatusFigura  b;
+       ComitatusNota* e;
+                 i32  n;
+     ComitatusVitium  v;
+
+    a = _acorda(c, "Dm7 | G7 | Cmaj7", QUARTA_QUARTA, &na, &v);
+    CREDO_NECESSE (a != NIHIL);
+    CREDO_NECESSE (comitatus_figuram_legere(
+        chorda_ex_literis("[1 2 3 4]:1", c->piscina), c->piscina, &f,
+        &v));
+    f.sine_radice = VERUM;
+    memset(&status, ZEPHYRUM, magnitudo(status));
+    CREDO_NECESSE (comitatus_componere(&f, a, na, PRIMA, I, &AMBITUS,
+        VERUM, &status, c->piscina, &e, &n, &v));
+    CREDO_NECESSE (comitatus_componere(&f, a, na, SECUNDA, I, &AMBITUS,
+        VERUM, &status, c->piscina, &e, &n, &v));
+    CREDO_NECESSE (comitatus_componere(&f, a, na, TERTIA_, I, &AMBITUS,
+        VERUM, &status, c->piscina, &e, &n, &v));
+    CREDO_NECESSE (n == IV);
+    CREDO_AEQUALIS_I32 (e[0].nota, LIX);
+    CREDO_AEQUALIS_I32 (e[3].nota, LXVII);
+    /* sine statu: ab initio (D E G B) */
+    CREDO_NECESSE (comitatus_componere(&f, a, na, TERTIA_, I, &AMBITUS,
+        VERUM, NIHIL, c->piscina, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (e[0].nota, LXII);
+    /* bassus: F7 ambulans, Cm7 accessu praedicto continuatur */
+    a = _acorda(c, "F7 | Cm7", QUARTA_QUARTA, &na, &v);
+    CREDO_NECESSE (a != NIHIL);
+    CREDO_NECESSE (comitatus_figuram_legere(
+        chorda_ex_literis("B:4 T Q A", c->piscina), c->piscina, &f,
+        &v));
+    CREDO_NECESSE (comitatus_figuram_legere(
+        chorda_ex_literis("B:4 A B A", c->piscina), c->piscina, &b,
+        &v));
+    memset(&status, ZEPHYRUM, magnitudo(status));
+    CREDO_NECESSE (comitatus_componere(&f, a, na, PRIMA, I, &AMBITUS,
+        FALSUM, &status, c->piscina, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (e[III].nota, XXXVII);
+    CREDO_NECESSE (comitatus_componere(&b, a, na, SECUNDA, I, &AMBITUS,
+        FALSUM, &status, c->piscina, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (e[0].nota, XXXVI);
+    /* sine statu: ab initio (C3, medio proxima) */
+    CREDO_NECESSE (comitatus_componere(&b, a, na, SECUNDA, I, &AMBITUS,
+        FALSUM, NIHIL, c->piscina, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (e[0].nota, XLVIII);
+    /* acordum idem, figura alia: positio renovatur - (1) positio sola
+     * (G B D F -> sine radice B E F A), (2) voces solae (sine radice
+     * tribus B F A -> quattuor B E F A) */
+    a = _acorda(c, "G7 | G7", QUARTA_QUARTA, &na, &v);
+    CREDO_NECESSE (a != NIHIL);
+    CREDO_NECESSE (comitatus_figuram_legere(
+        chorda_ex_literis("[1 2 3 4]:1", c->piscina), c->piscina, &f,
+        &v));
+    CREDO_NECESSE (comitatus_figuram_legere(
+        chorda_ex_literis("[1 2 3 4]:1", c->piscina), c->piscina, &b,
+        &v));
+    b.sine_radice = VERUM;
+    memset(&status, ZEPHYRUM, magnitudo(status));
+    CREDO_NECESSE (comitatus_componere(&f, a, na, PRIMA, I, &AMBITUS,
+        VERUM, &status, c->piscina, &e, &n, &v));
+    CREDO_NECESSE (comitatus_componere(&b, a, na, SECUNDA, I, &AMBITUS,
+        VERUM, &status, c->piscina, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        ((i32)I << XI) | ((i32)I << IV) | ((i32)I << V)
+        | ((i32)I << IX));
+    CREDO_NECESSE (comitatus_figuram_legere(
+        chorda_ex_literis("[1 2 3]:1", c->piscina), c->piscina, &f,
+        &v));
+    f.sine_radice = VERUM;
+    memset(&status, ZEPHYRUM, magnitudo(status));
+    CREDO_NECESSE (comitatus_componere(&f, a, na, PRIMA, I, &AMBITUS,
+        VERUM, &status, c->piscina, &e, &n, &v));
+    CREDO_NECESSE (comitatus_componere(&b, a, na, SECUNDA, I, &AMBITUS,
+        VERUM, &status, c->piscina, &e, &n, &v));
+    CREDO_AEQUALIS_I32 (_classes(e, ZEPHYRUM, n),
+        ((i32)I << XI) | ((i32)I << IV) | ((i32)I << V)
+        | ((i32)I << IX));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "radix_sonans", _sectio_radix_sonans, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "mensurae", _sectio_mensurae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_radice", _sectio_sine_radice, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambulans", _sectio_ambulans, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "status", _sectio_status, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda_vitia", _sectio_acorda_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },

@@ -497,18 +497,6 @@ comitatus_figuram_legere (
     redde VERUM;
 }
 
-/* positio sonans: acordum, bassus, quinta, tertia, voces clausae */
-nomen structura {
-        b32 sonat;
-    Acordum acordum;
-        s32 bassus;
-        s32 quinta;
-        s32 tertia;         /* 'T': sine tertia quinta */
-        s32 voces[XII];     /* positio clausa, ascendens */
-        i32 numerus;        /* k: classes acordi */
-        i32 adhibitae;      /* min(V, k) */
-} Positio;
-
 interior b32
 _acorda_aequalia (
     constans Acordum* a,
@@ -699,10 +687,10 @@ _littera_addita (
  * aequales infra; infra extra ambitum: supra */
 interior s32
 _accessum (
-    constans ComitatusAcordum* proximum,
-             constans Positio* p,
-    constans ComitatusAmbitus* ambitus,
-                          s32  ultima)
+            constans ComitatusAcordum* proximum,
+             constans ComitatusStatus* p,
+            constans ComitatusAmbitus* ambitus,
+                                  s32  ultima)
 {
     s32 scopus = p->bassus;
     s32 infra;
@@ -732,7 +720,7 @@ _accessum (
  * minimo */
 interior vacuum
 _positionem (
-                      Positio* p,
+                      ComitatusStatus* p,
              constans Acordum* a,
     constans ComitatusAmbitus* ambitus,
                           i32  vox_maxima,
@@ -938,10 +926,13 @@ _positionem (
     {
         memcpy(p->voces, optima, magnitudo(optima));
     }
-    p->numerus    = k;
-    p->adhibitae  = adhibitae;
-    p->acordum    = *a;
-    p->sonat      = VERUM;
+    p->numerus      = k;
+    p->adhibitae    = adhibitae;
+    p->acordum      = *a;
+    p->sonat        = VERUM;
+    p->sine_radice  = sine_radice;
+    p->vox_maxima   = vox_maxima;
+    p->radix_licet  = radix_licet;
 }
 
 b32
@@ -953,20 +944,22 @@ comitatus_componere (
                            i32   numerus_mensurarum,
      constans ComitatusAmbitus*  ambitus,
                           b32   bassus_sonat,
+              ComitatusStatus*   status,
                       Piscina*   piscina,
                 ComitatusNota**  notae,
                           i32*   numerus,
                ComitatusVitium*  vitium)
 {
-          Positio  p;
-    ComitatusNota* exitus;
-              i32  maxima = ZEPHYRUM;
-              i32  capacitas;
-              i32  mensura_figurae  = ZEPHYRUM;
-              i32  n                = ZEPHYRUM;
-              i32  m;
-              i32  k;
-              s32  ultima           = -I;   /* nota bassi ultima */
+          ComitatusStatus  p;
+            ComitatusNota* exitus;
+                      i32  maxima = ZEPHYRUM;
+                      i32  capacitas;
+                      i32  mensura_figurae  = ZEPHYRUM;
+                      i32  n                = ZEPHYRUM;
+                      i32  m;
+                      i32  k;
+                      s32  ultima           = -I;
+                      b32  radix_licet;
 
     si (   ambitus->summa > CXXVII || ambitus->bassi_summa > CXXVII
         || ambitus->infima > ambitus->summa
@@ -998,7 +991,14 @@ comitatus_componere (
     {
         redde _vitium(vitium, ZEPHYRUM, "memoria deest");
     }
+    /* status vocantis continuatur (comitatus contigui); NIHIL:
+     * initium; ultima = nota bassi ultima (B Q T A) */
     memset(&p, ZEPHYRUM, magnitudo(p));
+    si (status != NIHIL)
+    {
+        p       = *status;
+        ultima  = p.bassus_sonuit ? p.ultima : -I;
+    }
     per (m = ZEPHYRUM; m < numerus_mensurarum; m++)
     {
                               s64  longitudo;
@@ -1039,12 +1039,18 @@ comitatus_componere (
             {
                 perge;
             }
-            si (!p.sonat || !_acorda_aequalia(&p.acordum, &a->acordum))
+            /* positio nova: acordum alium, aut figura alia (voces,
+             * positio, radix licita) post statum continuatum */
+            radix_licet = (bassus_sonat || figura->bassus)
+                && a->acordum.bassus == a->acordum.radix;
+            si (   !p.sonat
+                || !_acorda_aequalia(&p.acordum, &a->acordum)
+                || p.sine_radice != figura->sine_radice
+                || p.vox_maxima  != figura->vox_maxima
+                || p.radix_licet != radix_licet)
             {
                 _positionem(&p, &a->acordum, ambitus,
-                    figura->vox_maxima,
-                    (bassus_sonat || figura->bassus)
-                        && a->acordum.bassus == a->acordum.radix,
+                    figura->vox_maxima, radix_licet,
                     figura->sine_radice);
             }
             per (j = ZEPHYRUM; j < g->numerus_vocum; j++)
@@ -1105,6 +1111,12 @@ comitatus_componere (
                 n++;
             }
         }
+    }
+    si (status != NIHIL)
+    {
+        p.ultima         = ultima;
+        p.bassus_sonuit  = ultima >= ZEPHYRUM;
+        *status          = p;
     }
     *notae    = exitus;
     *numerus  = n;

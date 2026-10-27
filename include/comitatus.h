@@ -181,11 +181,36 @@ comitatus_figuram_legere (
      ComitatusFigura* figura,
      ComitatusVitium* vitium);
 
+/* STATUS compositionis: positio sonans (acordum, bassus, quinta,
+ * tertia, voces clausae) et nota bassi ultima. Vocans inter
+ * compositiones CONTIGUAS servat (carmen: <comitatus> proximus ubi
+ * prior desinit, in parte eadem) - voces motu minimo et bassus
+ * proximitate continuantur, 'A' ultimus bassum compositionis proximae
+ * recte praedicit. memset ZEPHYRUM (aut NIHIL) = initium novum.
+ * Positio renovatur acordo alio aut figura alia (voces, positio,
+ * radix licita) */
+nomen structura {
+        b32 sonat;
+    Acordum acordum;
+        s32 bassus;
+        s32 quinta;
+        s32 tertia;         /* 'T': sine tertia quinta */
+        s32 voces[XII];     /* positio clausa, ascendens */
+        i32 numerus;        /* k: classes positionis */
+        i32 adhibitae;      /* min(V, k) */
+        b32 sine_radice;    /* figura positionis */
+        i32 vox_maxima;
+        b32 radix_licet;
+        b32 bassus_sonuit;  /* ultima valet */
+        s32 ultima;         /* nota bassi ultima (B Q T A) */
+} ComitatusStatus;
+
 /* notae spatii [ab, ad): acorda (ordine, non se tegentia; lacunae =
  * nullum), initia mensurarum carminis spatium tegentia (numerus + 1).
  * bassus_sonat: bassus in parte alia sonat (radicem omittere licet
- * etiam figura sine 'B'). FALSUM: mensura figurae non congruit,
- * ambitus < XII, memoria */
+ * etiam figura sine 'B'). status: NIHIL initium novum; aliter in
+ * initio legitur et in fine scribitur (STATUS). FALSUM: mensura
+ * figurae non congruit, ambitus < XII, memoria */
 b32
 comitatus_componere (
       constans ComitatusFigura*  figura,
@@ -195,6 +220,7 @@ comitatus_componere (
                            i32   numerus_mensurarum,
      constans ComitatusAmbitus*  ambitus,
                            b32   bassus_sonat,
+               ComitatusStatus*  status,
                        Piscina*  piscina,
                  ComitatusNota** notae,
                            i32*  numerus,
