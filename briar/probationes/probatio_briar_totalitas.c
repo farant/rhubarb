@@ -24,6 +24,7 @@
 #include "materia_scribere.h"
 #include "piscina.h"
 #include "sors.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -154,7 +155,7 @@ _fractum_scribere (
 
     sprintf(via, "%s/briar/build/totalitas_fractum.thistle",
         _radix_viae());
-    f = fopen(via, "wb");
+    f = lectiones_fopen(via, "wb");
     si (f == NIHIL)
     {
         redde;

@@ -2152,7 +2152,7 @@ briar_fabricam_scribere (
         si (   p->contentum.mensura > II
             && memcmp(p->contentum.datum, "#!", (size_t)II) == ZEPHYRUM)
         {
-            (vacuum)chmod(_texere(piscina, radix, "/",
+            (vacuum)filum_modum_ponere(_texere(piscina, radix, "/",
                 chorda_ut_cstr(p->via, piscina)), (mode_t)0755);
         }
     }

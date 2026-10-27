@@ -265,3 +265,16 @@ lectiones (fabrica would fingerprint it); per-site `<tolera>` "secretum
 servi", the custodia.c/horreum.c precedent (the write carries both 96
 and 97 in one comment). Built and linked in the scratchpad; the manual
 gate apps/forum/fumus.sh (runs the server) left for Fran.
+
+*Step 8, the small subsystems (2026-10-27):* briar, crusta, materia,
+oratio, tessera, ludus_tessera (css, html, md, toml, saltuarius,
+instrumenta, book_assets: nothing to rewrite; book_assets/capsula_libri.c
+is beyond examen's limits and holds no write calls). 15 sites in 14
+files, mostly write-mode fopen in tests and oracles; briar_fabrica's
+chmod. tessera's test runner gained lectiones (hand list); crusta's
+oracle debt paid. Suites: briar 20/20, crusta 20/20, oratio 19/19,
+materia 14/14, tessera 15/15, ludus_tessera 8/8.
+
+**The mechanical sweep is complete.** Next: the manual leftovers (calls
+inside CREDO_* macro arguments, mkdir with modes other than 0755, the
+few odd shapes the tool refused), then code 97 -> VIOLATIO with a plant.

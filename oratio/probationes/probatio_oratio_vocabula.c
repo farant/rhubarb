@@ -45,6 +45,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "tabula_dispersa.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -171,7 +172,7 @@ _copiam_scribere (
         }
     }
     xar_ordinare(verba, _chordae_comparare);
-    f = fopen(via, "w");
+    f = lectiones_fopen(via, "w");
     si (f == NIHIL)
     {
         redde;

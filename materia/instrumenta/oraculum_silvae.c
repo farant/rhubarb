@@ -53,6 +53,7 @@ nomen SilvaChorda  ChordaOraculi;
 #include "silva_arbor.h"
 #include "silva_c89_semantica.h"
 #include "silva_tabulae_c89.h"
+#include "lectiones.h"
 nomen Piscina PiscinaOraculi;
 nomen chorda  ChordaOraculi;
 #define piscina_oraculi_generare piscina_generare_dynamicum
@@ -373,7 +374,7 @@ _plagulam_iudicare (
 
         _viam_documenti(directorium_stml, via, via_documenti,
             magnitudo(via_documenti));
-        f = fopen(via_documenti, "wb");
+        f = lectiones_fopen(via_documenti, "wb");
         si (f == NIHIL)
         {
             fprintf(stderr, "oraculum_silvae: scribi non potest: %s\n",
