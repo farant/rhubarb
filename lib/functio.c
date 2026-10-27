@@ -443,9 +443,55 @@ _substitutam_legere (
     }
 }
 
-/* adventus: fenestra a linea mensurae ad finem eius; pars summa (notae
- * summae in initio) nullam notam in dimidia posteriore incipit.
- * *summa = altitudo notae summae in initio */
+/* nota summa fenestrae in initio eius: altitudo (-1 nulla), pars eius
+ * in *pars */
+interior s32
+_summa_initii (
+    constans Explicatio* e,
+                    i32  f,
+                    s64  initium,
+                    i32* pars)
+{
+    s32 altitudo = -I;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        constans ExplicatioSegmentum* s = &e->segmenta[i];
+
+        si (   (i32)s->fenestra == f && s->initium == initium
+            && (s32)s->nota->nota > altitudo)
+        {
+            altitudo  = (s32)s->nota->nota;
+            *pars     = s->pars;
+        }
+    }
+    redde altitudo;
+}
+
+/* fermata initium fenestrae tegit (finis phrasis signatus) */
+interior b32
+_sub_corona (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_coronarum; i++)
+    {
+        si (   carmen->coronae[i].pulsus <= pulsus
+            && pulsus < carmen->coronae[i].finis)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* adventus: fenestra cuius initium fermata tegit; aut a linea mensurae
+ * ad finem eius, pars summa (notae summae in initio) nullam notam in
+ * dimidia posteriore incipiente. *summa = altitudo notae summae in
+ * initio */
 interior b32
 _adventus (
          constans Carmen* carmen,
@@ -456,11 +502,18 @@ _adventus (
     constans ExplicatioFenestra* w = &e->fenestrae[f];
                             s64  initium;
                             s64  finis;
-                            s32  altitudo  = -I;
-                            i32  pars      = ZEPHYRUM;
-                            i32  m         = I;
+                            s32  altitudo;
+                            i32  pars  = ZEPHYRUM;
+                            i32  m     = I;
                             i32  i;
 
+    /* sub fermata nulla nota incipiens = fenestra tacens, quae nec
+     * clausulam nec Picardiam habet: summa -1 innocua */
+    si (_sub_corona(carmen, w->initium))
+    {
+        *summa = _summa_initii(e, f, w->initium, &pars);
+        redde VERUM;
+    }
     dum (carmen_pulsus_mensurae(carmen, m + I) <= w->initium)
     {
         m++;
@@ -472,18 +525,8 @@ _adventus (
     {
         redde FALSUM;
     }
-    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
-    {
-        constans ExplicatioSegmentum* s = &e->segmenta[i];
-
-        si (   (i32)s->fenestra == f && s->initium == initium
-            && (s32)s->nota->nota > altitudo)
-        {
-            altitudo  = (s32)s->nota->nota;
-            pars      = s->pars;
-        }
-    }
-    *summa = altitudo;
+    altitudo  = _summa_initii(e, f, initium, &pars);
+    *summa    = altitudo;
     si (altitudo < ZEPHYRUM)
     {
         redde FALSUM;

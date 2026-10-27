@@ -51,12 +51,15 @@
  * in C maior ante F maior manet I cum clausula sua; D post A7 in d
  * minor ante G maior Picardia est.
  *
- * CLAUSULA (cadentia; heuristica, sine signis formae): ADVENTUS =
- * fenestra quae in initio mensurae incipit et ad finem eius manet, et
- * pars summa (notae summae in initio) nullam notam in dimidia
- * posteriore mensurae incipit - tenet aut tacet (requies). Melodia
- * quartis currens (korobeiniki) sic non in omni mensura cadit. Genus
- * ex fenestra priore:
+ * CLAUSULA (cadentia): ADVENTUS = fenestra cuius initium FERMATA tegit
+ * (corona: finis phrasis ab auctore signatus - choralis: D A7 D sub
+ * fermata in tempore tertio), aut sine signo (heuristica): fenestra
+ * quae in initio mensurae incipit et ad finem eius manet, et pars
+ * summa (notae summae in initio) nullam notam in dimidia posteriore
+ * mensurae incipit - tenet aut tacet (requies). Melodia quartis
+ * currens (korobeiniki) sic non in omni mensura cadit. Summa = nota
+ * summa in initio fenestrae (perfecta: tonica); tertia Picardiae
+ * eodem adventu iudicatur. Genus ex fenestra priore:
  *   perfecta     V aut V7 (aut subV) radicalis -> I radicalis, summa
  *                (in initio adventus) tonica
  *   imperfecta   V(7), subV aut viio -> I aliter

@@ -154,3 +154,22 @@ House: ambulatio now in "f maior caerulea": I7 IV7 I7 v7-I7 ... turnarounds into
 are cadences [imperf.] (top note G4 in the comping, not F); censura 4 -> 0 (B2 = blue b5).
 Plants 8/9 (the survivor above). Note: tools/auditio.c has ~10 pre-existing lines over 72 -
 the commit gate does not catch them; not touched here.
+
+## 2026-10-27 - cadence arrivals under a fermata (modulation study, gap 1)
+
+The modulation study (peregrinatio, build/plantae_s4/modulatio/) showed that chorale cadences
+on beat 3 were never named: _adventus required the arrival window to start at a barline and
+last the bar. laudes had four unnamed cadences since it was written. Now a window whose start
+a fermata covers (corona.pulsus <= start < corona.finis) is an arrival - the author's own
+phrase-end mark - with the top note at its start as summa; the bar heuristic stays for
+unmarked music (pop, chip). Picardy uses the same arrival, so a major tonic under a mid-piece
+fermata after V counts (V/iv exclusion unchanged). _summa_initii factored out of _adventus.
+Book diff (functio lines + censura, 14 songs): only laudes changed - [imperf.] m2, [dimid.]
+m4 and m6, [perf.] m8; every other fermata is on a final chord that was already an arrival.
+peregrinatio m4 now [perf.].
+Plants 4: two caught; two survivors are observationally equivalent forms. (1) corona.pulsus <=
+start vs ==: a window starts at a note onset or a barline, and any onset ends the fermata - only
+a barline split of a held chord can start strictly inside, and its prior window is the same
+chord (never a cadence); kept <= (header: "initium FERMATA tegit"). (2) "summa >= 0" under a
+fermata: only a silent window has no note starting, and silence gets neither cadence nor
+Picardy - guard removed.

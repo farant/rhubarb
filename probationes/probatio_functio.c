@@ -355,6 +355,83 @@ _sectio_clausulae (
     CREDO_VERUM (functio_clausulae_titulus(FUNCTIO_NULLA) == NIHIL);
 }
 
+/* clausula fenestrae 'index' carminis trium vocum cum mutatione */
+interior FunctioClausula
+_clausula_mutata (
+          CredoContextus* c,
+      constans character* clavis,
+      constans character* mutatio,
+                     i32  index,
+      constans character* bassus,
+      constans character* media,
+      constans character* melodia)
+{
+    constans character* partes[IV];
+               Functio* f;
+
+    partes[0] = bassus;
+    partes[1] = media;
+    partes[2] = melodia;
+    partes[3] = NIHIL;
+    f = _functio(c, _carmen_mutatum(c, clavis, mutatio,
+        partes));
+    si (f == NIHIL || f->numerus <= index)
+    {
+        redde (FunctioClausula)XCIX;
+    }
+    redde f->gradus[index].clausula;
+}
+
+#define CORONA_III "<fermata mensura=\"1\" ictus=\"3\"/>"
+
+/* adventus per fermatam (functio.h CLAUSULA): G7 -> C in tempore
+ * III sub fermata perfecta (sine fermata nulla - _sectio_clausulae);
+ * fermata in V dimidia; in ii nulla; fermata vincit notam novam post
+ * dimidium; fenestra post fermatam non tegitur; Picardia sub fermata
+ * medio carmine */
+interior vacuum
+_sectio_clausulae_coronae (
+    CredoContextus* c)
+{
+    constans character* partes[IV];
+       constans Carmen* k;
+               Functio* f;
+
+    CREDO_AEQUALIS_I32 ((i32)_clausula_mutata(c, "c maior", CORONA_III,
+        I, "o2 g2 o3 c2", "o4 f2 e2", "o4 b2 >c2"),
+        (i32)FUNCTIO_PERFECTA);
+    CREDO_AEQUALIS_I32 ((i32)_clausula_mutata(c, "c maior", CORONA_III,
+        I, "o3 c2 <g2", "o4 e2 d2", "o4 g2 b2"), (i32)FUNCTIO_DIMIDIA);
+    CREDO_AEQUALIS_I32 ((i32)_clausula_mutata(c, "c maior", CORONA_III,
+        I, "o3 c2 d2", "o4 e2 f2", "o4 g2 a2"), (i32)FUNCTIO_NULLA);
+    CREDO_AEQUALIS_I32 ((i32)_clausula_mutata(c, "c maior",
+        "<fermata mensura=\"2\"/>", I, "o2 g1 | o3 c1", "o4 f1 | e1",
+        "o4 b1 | >c2. d4"), (i32)FUNCTIO_PERFECTA);
+    /* fenestra ubi fermata desinit (nota proxima) non tegitur: G sub
+     * fermata dimidia, C mensurae II dimidia tantum - nulla */
+    CREDO_AEQUALIS_I32 ((i32)_clausula_mutata(c, "c maior", CORONA_III,
+        II, "o3 c2 <g2 | >c2 f2", "o4 e2 d2 | e2 f2",
+        "o4 g2 b2 | >c2 c2"), (i32)FUNCTIO_NULLA);
+    /* d minor: Dm | A D(maior, sub fermata) | A | Dm - Picardia in
+     * fenestra II solum sub fermata */
+    partes[0] = "o3 d1 | a2 d2 | a1 | d1";
+    partes[1] = "o4 f1 | e2 f#2 | e1 | f1";
+    partes[2] = "o4 a1 | c#2 a2 | c#1 | a1";
+    partes[3] = NIHIL;
+    k = _carmen_mutatum(c, "d minor",
+        "<fermata mensura=\"2\" ictus=\"3\"/>",
+                        partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL
+        && f->explicatio->numerus_fenestrarum > III);
+    CREDO_VERUM (functio_tertia_picardiae(k, f->explicatio, II));
+    k = _carmen(c, "d minor", partes);
+    f = _functio(c, k);
+    CREDO_NECESSE (f != NIHIL
+        && f->explicatio->numerus_fenestrarum > III);
+    CREDO_FALSUM (functio_tertia_picardiae(k, f->explicatio, II));
+}
+
 interior vacuum
 _sectio_linea (
     CredoContextus* c)
@@ -936,6 +1013,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "deminutae", _sectio_deminutae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "binae", _sectio_binae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clausulae", _sectio_clausulae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "clausulae fermata", _sectio_clausulae_coronae, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modulatio", _sectio_modulatio, NIHIL, NIHIL, NIHIL, NIHIL },
