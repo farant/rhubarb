@@ -444,7 +444,9 @@ _uncinus_bibliothecae (
  * Sectiones
  * ================================================== */
 
-/* tempus per punctum: medium super k puncta (omega 2..k+1) */
+/* tempus per punctum: medium super k puncta (omega 2..k+1), primo
+ * 998244353 - NON primo primo driveris (4294967197), ut mutationes
+ * primi in cursu sequenti omnes numerentur */
 interior f64
 _tempus_puncti (
     LaqueusModulusVertex* mv,
@@ -458,7 +460,7 @@ _tempus_puncti (
     per (j = ZEPHYRUM; j < k; j++)
     {
         (vacuum)laqueus_modulus_vertex_aestimare(mv, j + II,
-            (i32)4294967197UL, &a, &v);
+            (i32)998244353UL, &a, &v);
     }
     redde _secundae(t0) / (f64)k;
 }
@@ -651,17 +653,25 @@ _metiri (
         * (f64)((limes + I + XXX) / XXXI + I);
     si (coniectura < limes_s)
     {
-         LaqueusModulusVertex* mv_cursus;
-                   Polynomium  uncinus;
-                          s32  e;
+        Polynomium uncinus;
+               i32 contractiones_ante;
+               i32 primi_ante;
+               s32 e;
 
+        /* structura sondae reutitur (aedificatio extra tempus et
+         * piscinam mensam); numeratores ut differentiae */
+        laqueus_modulus_vertex_vocationes(mv, &contractiones_ante,
+            &primi_ante);
         usus_ante  = piscina_summa_usus(piscina);
         t0         = clock();
-        si (_uncinus_bibliothecae(pd, c, piscina, &mv_cursus,
-            &contractiones, &primi, &uncinus))
+        si (laqueus_modulus_vertex_uncinus(mv, piscina, &uncinus))
         {
             totum  = _secundae(t0);
-            usus   = piscina_summa_usus(piscina) - usus_ante;
+            laqueus_modulus_vertex_vocationes(mv, &contractiones,
+                &primi);
+            contractiones  -= contractiones_ante;
+            primi          -= primi_ante;
+            usus           = piscina_summa_usus(piscina) - usus_ante;
             per (e = polynomium_gradus_imus(uncinus);
                  e <= polynomium_gradus_summus(uncinus); e++)
             {

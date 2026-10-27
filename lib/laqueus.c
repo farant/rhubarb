@@ -2125,7 +2125,7 @@ structura LaqueusModulusVertex {
                  i32  radix_i;            /* i^2 = -1 modulo primum */
                  i32  limes;              /* bita B (T5a) */
                Magnus limes_exactus;      /* B = min Pi gradus */
-                 i32  aestimationes;      /* vocationes aestimare */
+                 i32  aestimationes;      /* contractiones factae */
                  i32  mutationes_primi;   /* primi novi in aestimare */
 };
 
@@ -2796,7 +2796,6 @@ laqueus_modulus_vertex_aestimare (
     {
         redde INTERPOLATIO_ERRATUM;
     }
-    mv->aestimationes++;
     si (p != mv->primus)
     {
         /* primus PROBATUS ante quaestionem g: modulus compositus 3 | p
@@ -2869,6 +2868,7 @@ laqueus_modulus_vertex_aestimare (
                 mv->potentiae[e_max + t->exponens], p), p);
         }
     }
+    mv->aestimationes++;
     si (!contractio_exsequi_modulo(mv->rete, mv->ordo, mv->officina,
         (constans i32* constans*)mv->valores, p, &z))
     {

@@ -1231,9 +1231,11 @@ _probare_limitem_tabulae (
     }
 }
 
-/* clausurae tricarum fortuitae (3..6 fila, 21..81 transitus): Sigma
- * |c| <= B; et limes VERE in usu: primi = ceil((limes + 1)/31) + 1
- * (omnes primi > 2^31, unus additus), pauciores quam 2c poscit */
+/* clausurae tricarum fortuitae (3..6 fila, 8..82 transitus): Sigma
+ * |c| <= B; usque ad XVI transitus uncinus = summa statuum (oraculum
+ * alienum); limes VERE in usu: primi = ceil((limes + 1)/31) + 1
+ * (omnes primi > 2^31, unus additus), pauciores quam 2c poscit ubi
+ * c >= XL */
 interior vacuum
 _probare_limitem_tricarum (
     CredoContextus* c)
@@ -1247,7 +1249,7 @@ _probare_limitem_tricarum (
     {
         PiscinaNotatio  nota       = piscina_notare(piscina);
                    i32  fila       = III + sors_intra(&s, IV);
-                   i32  longitudo  = XXI + sors_intra(&s, LXI);
+                   i32  longitudo  = VIII + sors_intra(&s, LXXV);
                    s32* verbum;
                    i32* pd = NIHIL;
                    i32  conatus;
@@ -1283,7 +1285,12 @@ _probare_limitem_tricarum (
             limes = laqueus_modulus_vertex_limes(mv);
             laqueus_modulus_vertex_vocationes(mv, NIHIL, &primi);
             CREDO_AEQUALIS_I32(primi, (limes + I + XXX) / XXXI + I);
-            CREDO_VERUM(primi < (II * longitudo + I + XXX) / XXXI + I);
+            CREDO_VERUM(primi <= (II * longitudo + I + XXX) / XXXI + I);
+            si (longitudo >= XL)
+            {
+                CREDO_VERUM(primi < (II * longitudo + I + XXX) / XXXI
+                    + I);
+            }
             _limitem_probare(pd, longitudo, uncinus, ZEPHYRUM, ZEPHYRUM,
                 piscina);
             si (longitudo <= XVI)

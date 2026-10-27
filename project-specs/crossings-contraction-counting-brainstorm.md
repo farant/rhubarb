@@ -351,7 +351,21 @@ Largest coefficient at 201 crossings: 31–39 bits against a bound of 402.
 
 Projection for the original T5 target (12 strands, ~800 crossings, greedy apex 2^26–2^28 per the design review): ~40,000 contractions at minutes each, i.e. weeks of CPU with today's engine. Not attempted. Levers 1–3 together are what would make it hours.
 
-**Lever 2 taken (T5a, 2026-10-27).** The coefficient bound is now Σ|cₖ| ≤ τ(Tait graph) ≤ Π deg (signed Thistlethwaite expansion; contractio-plan §T5a), min over both colours. Same seeds: contractions and primes ~2.1–2.4× fewer (c = 800 sums 8.6 → 4.9 s; braids 8 × 201 43 → 21 s; 10 × 201 projected 77 → 34 min). Remaining slack ~4× on braids (limes ~150 vs ~35 bits used): cancellation, invisible to any counting bound.
+**Lever 2 taken (T5a, 2026-10-27).** The coefficient bound is now Σ|cₖ| ≤ τ(Tait graph) ≤ Π deg (signed Thistlethwaite expansion; contractio-plan §T5a), min over both colours. Same seeds: contractions and primes ~2.1–2.4× fewer (c = 800 sums 8.6 → 3.6 s like-for-like, arena 10 → 2.3 MB; braids 8 × 201 43 → 21 s; 10 × 201 projected 77 → 34 min). Remaining slack ~4× on braids (limes ~150 vs ~35 bits used): cancellation, invisible to any counting bound.
+
+**Ordering experiment (2026-10-27, scratch Python).** Same networks; widths in index counts (apex = 2^width). *Result rank* = largest intermediate (memory); *step rank* = largest union of a contraction step (time per step ~ 2^step). Treewidth lower bounds (minor-min-width on the line graph) came out 7–9 on braids: too weak to say anything.
+
+| network | greedy result / step | min-fill result / step |
+| --- | --- | --- |
+| table knots c = 13 (max of 8) | 6 / 9 | 8 / 9 |
+| braid 8 × 101 | 14 / 19 | 13 / 14 |
+| braid 10 × 201 | 20 / 27 | 21 / 22 |
+| braid 12 × 201 | 20 / 27 | 20 / 21 |
+| braid 6 × 201 | 14 / 19 | 17 / 18 |
+| 3-regular n = 400 | 77 / 106 | 104 / 105 |
+| 3-SAT n = 150, one copy tensor per variable | 498 / 652 | 661 / 662 |
+
+Readings: memory sits at ~2n on braids for every method (structural); the greedy key, which minimizes the result only, sometimes takes much costlier steps than min-fill (5–6 step-rank bits, 32–64× per point), sometimes not. Key variants (union-first, the classic size-reduction 2^r − 2^a − 2^b) each win somewhere and lose elsewhere; no single key matches min-fill. Table knots and sums: nothing to gain. 3-SAT: the encoding (one rank-k copy tensor per variable) dominates — chains of rank-3 copies first, ordering second (phase 2). Proposal: let `contractio` try several orders (greedy keys, min-fill, min-degree, seeded tie-breaks) and keep the cheapest by `sumptus.multiplicationes`, which is exact and costs milliseconds.
 
 **Incident.** The first braid run asked for 4 strands × 50 crossings, which cannot close to one component (an n-cycle needs word length ≡ n − 1 mod 2). The generator retried forever, allocating each time, and reached ~120 GB before macOS killed it; an RSS-based watcher did not see it (compressed pages). Fixed (parity, arena reset per attempt, 1,000-attempt cap), and long runs now go through `tools/custos.sh`, which kills on phys_footprint (compressed included).
 

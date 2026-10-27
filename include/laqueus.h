@@ -331,9 +331,9 @@ laqueus_modulus_vertex_uncinus (
                  Piscina* piscina,
               Polynomium* exitus);
 
-/* vocationes laqueus_modulus_vertex_aestimare (validae) et mutationes
- * primi ab creatione - ut probationes limitem in usu videant.
- * Exitus NIHIL licet. */
+/* contractiones factae (puncta in aestimare usque ad contractionem
+ * perducta) et mutationes primi ab creatione - ut probationes et
+ * mensurae limitem in usu videant. Exitus NIHIL licet. */
 vacuum
 laqueus_modulus_vertex_vocationes (
     constans LaqueusModulusVertex* mv,

@@ -556,3 +556,31 @@ arena 10 → 3.2 MB. Braids 6 × 201: 4.8 → 2.1 s; 8 × 201: 43 → 21 s;
 I (c = 12–24): 3 → 2 primes, all still equal to the state sum. The
 remaining gap (limes 121–171 vs actual 31–39 bits at 201 crossings) is
 cancellation, which no counting bound sees.
+
+## 2026-10-27 — T5a review (independent, after 7a2a8deb) and fixes
+
+Reviewer: suite under ASan/UBSan clean; a fuzz harness compared the
+library's exact B (Magnus, decimal) with an independent Python
+min-over-colours B as exact integers, limes = bits(B), Σ|c| ≤ τ ≤ B,
+τ(G) = τ(G*), primes used = ceil((limes+1)/31)+1, and the bracket
+against the state sum (c ≤ 16) or a scratch build of laqueus with the
+old 2c bound: ~5,900 small diagrams (table ≤ 7 and mirrors, 1,500
+kinked/mirrored/relabelled braid closures, 400 connected sums) and 135
+large ones (braids 3–8 strands × 17–120, sums of 3–10 knots): 0
+mismatches. Flush stress: T(2,±301) (other colour 2^300), 40 summed
+trefoils (B = 3^40 = Σ|c|, tight just under 2^64), a 122-bit mixed sum.
+Hand values recomputed independently. No H, no M.
+
+Fixed:
+- **L1** the random-braid section's state-sum comparison was dead (all
+  braids ≥ 21 crossings, branch at ≤ 16): lengths now 8–82, so the
+  short ones meet the oracle; the strict "fewer primes than 2c" check
+  applies from 40 crossings (below that both can need two primes).
+- **L2/L3/N1** the call counter counted every aestimare call (incl.
+  INUTILE and refused primes) and the tool built a second network inside
+  the timed window. The counter now counts contractions exactly
+  (incremented right before `contractio_exsequi_modulo`); the tool
+  reuses its probe network, reads counters as differences, and probes
+  on 998244353 so the driver's first prime is counted as a switch.
+  Like-for-like at c = 800: 8.6 → 3.6 s (2.4×), arena 10 → 2.3 MB (the
+  4.9 s in the T5a entry included building a second network).
