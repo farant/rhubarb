@@ -65,6 +65,7 @@ declare -a SOURCE_FILES=(
     "lib/coloratio.c"
     "lib/communio.c"
     "lib/communio_forma.c"
+    "lib/communio_servus.c"
     "lib/compilator.c"
     "lib/componens.c"
     "lib/concentus.c"

@@ -31,8 +31,8 @@ hex_minuscula (
 }
 
 /* Crockford base32 maiuscula, sine I L O U */
-interior b32
-replica_valida (
+b32
+communio_replica_valida (
     chorda replica)
 {
     i32 i;
@@ -244,7 +244,7 @@ communio_actum_validum (
     {
         redde causa_falsa(causa, "actum nullum", piscina);
     }
-    si (!replica_valida(actum->identitas.replica))
+    si (!communio_replica_valida(actum->identitas.replica))
     {
         redde causa_falsa(causa, "replica mala", piscina);
     }

@@ -49,6 +49,11 @@ communio_actum_legere (
           chorda* causa,
          Piscina* piscina);
 
+/* replica: XXVI signa Crockford base32 maiuscula (sine I L O U) */
+b32
+communio_replica_valida (
+    chorda replica);
+
 /* leges limini (supra); FALSUM et causa si actum recusandum est */
 b32
 communio_actum_validum (
