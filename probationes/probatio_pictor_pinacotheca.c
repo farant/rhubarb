@@ -174,6 +174,8 @@ aedificare (
     {
         redde FALSUM;
     }
+    /* ut apps/pictor/pictor.c: pictura ultima (D8) post aedificare */
+    (vacuum)pictor_picturam_restituere(app);
     app->montatio.compositio.elenchus_praesto = praesto;
     dispensator_recomponere(app->d);
     redde VERUM;
@@ -899,6 +901,75 @@ _sectio_absens (
     volumen_claudere(v);
 }
 
+/* recensio (Important 3, spec D11): pictor_applicatio_aedificare
+ * sola (via terminalis) picturam ultimam NON restituit;
+ * pictor_picturam_restituere (applicatio fenestrae) eam ponit */
+interior vacuum
+_sectio_terminalis (
+    CredoContextus* c)
+{
+     constans character* via;
+                Volumen* v;
+       PictorApplicatio  app;
+             ManusLudus* m;
+
+    via  = via_voluminis(c);
+    v    = volumen_aperire_aut_creare(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(aedificare(&app, v, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+    CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
+    CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
+    in_tabula_pingere(&app, m);
+    volumen_claudere(v);
+
+    CREDO_GRADUS("aedificare solum: radix (terminalis immutata)");
+    v = volumen_aperire(piscina, via);
+    CREDO_NECESSE_NON_NIHIL(v);
+    thema_initiare();
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, piscina, intern, v,
+        LATITUDO_TELEPHONI, ALTITUDO_TELEPHONI));
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
+        app.montatio.doc), ZEPHYRUM);
+
+    CREDO_GRADUS("restituere: pictura-1 cum ictu suo");
+    CREDO_VERUM(pictor_picturam_restituere(&app));
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
+        app.montatio.doc), I);
+    CREDO_VERUM(app.doc == app.montatio.doc);
+    CREDO_VERUM(app.montatio.actiones_ctx.doc == app.montatio.doc);
+    volumen_claudere(v);
+}
+
+/* recensio (Important 2): fons imaginum "pinax:..." memoriam
+ * picturae non consumit (pingitur per eventum) */
+interior vacuum
+_sectio_fons_sine_sumptu (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+           ManusLudus* m;
+               chorda  t;
+       memoriae_index  usus;
+                  i32  k;
+
+    vol = (Volumen*)c->datum;
+    picturas_facere(vol, II);
+    CREDO_NECESSE(aedificare(&app, vol, VERUM));
+    m = manus_ludus_creare(piscina, app.d);
+    CREDO_VERUM(pinacothecam_aperire(&app, m));
+    t = titulus_nodi(&app, "pinax.1");
+    CREDO_NON_NIHIL(pictor_imago_fons(t, &app.montatio.figurae_ctx));
+    usus = piscina_summa_usus(app.montatio.doc->piscina);
+    per (k = ZEPHYRUM; k < XIII; k++)
+    {
+        CREDO_NON_NIHIL(pictor_imago_fons(t,
+            &app.montatio.figurae_ctx));
+    }
+    CREDO_VERUM(piscina_summa_usus(app.montatio.doc->piscina) == usus);
+}
+
 /* ===== T7: imagines (spec II.6) ===== */
 
 /* quadratum coloris 'index' (lat x alt) in picturam apertam ad
@@ -1063,6 +1134,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "T6: pictura servata absens", _sectio_absens, _parare, _purgare,
         NIHIL, NIHIL },
+    { "recensio: terminalis non restituit", _sectio_terminalis,
+        _parare, _purgare, NIHIL, NIHIL },
+    { "recensio: fons sine sumptu", _sectio_fons_sine_sumptu, _parare,
+        _purgare, NIHIL, NIHIL },
     { "T7: imago telephoni CCXV x CDXIX", _sectio_imago_telephoni,
         _parare, _purgare, NIHIL, NIHIL },
     { "T7: imago tabellae DXII x CCC", _sectio_imago_tabellae, _parare,

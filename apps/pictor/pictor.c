@@ -67,6 +67,9 @@ applicatio_initium (
     {
         redde FALSUM;
     }
+    /* pinacotheca D8: pictura ultima (solum applicatio fenestrae;
+     * terminalis non - spec D11) */
+    (vacuum)pictor_picturam_restituere(app);
     /* L5: Cmd+V imaginem e clipboard (servitium testae) in stratum
      * novum glutinat */
     app->montatio.actiones_ctx.imago_capere  = a->imago_glutinata;

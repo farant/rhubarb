@@ -61,3 +61,18 @@ before. `app->doc` is assigned AFTER this (the audit trap: app->doc
 stays the old picture after ponere). The spatium is copied before
 ponere because ponere rewrites the field it was read from. Tests use a
 real file in `credo_area(c)` (volumen_temporarium deletes on close).
+
+## 2026-10-26 - restore moved out of aedificare (final review)
+
+The final review caught that putting the D8 restore inside
+`pictor_applicatio_aedificare` also changed the TERMINAL pictor
+(apps/pictor/pictor_terminalis.c calls aedificare and opens the same
+./pictor.volumen by default) - against spec D11. The restore is now
+`pictor_picturam_restituere(app)`, called only by apps/pictor/pictor.c
+after aedificare; it re-syncs app->doc/actiones/figurae itself.
+Test "recensio: terminalis non restituit" pins both halves.
+Same review: `pictor_imago_fons` allocated the picture's sigillum hex
+into the picture's long-lived arena BEFORE checking for "pinax:" - per
+thumbnail per repaint while the gallery is open. The "pinax:" branch
+now comes first (test "fons sine sumptu"); the canvas path keeps its
+pre-existing one-allocation-per-repaint (separate, untouched).

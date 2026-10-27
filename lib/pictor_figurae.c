@@ -409,16 +409,17 @@ pictor_imago_fons (
     {
         redde NIHIL;
     }
-    si (chorda_aequalis(provenientia,
-            pictor_documentum_sigillum_hex(pf->doc, pf->doc->piscina)))
-    {
-        redde pictor_documentum_proiectio(pf->doc);
-    }
-    /* pinacotheca D4: "pinax:..." -> pinax (factus si deest) */
+    /* pinacotheca D4: "pinax:..." -> pinax (factus si deest) - ANTE
+     * sigillum, quod in memoriam picturae allocat (recensio) */
     si (   pf->pinacotheca && provenientia.mensura > VI
         && memcmp(provenientia.datum, "pinax:", VI) == ZEPHYRUM)
     {
         redde pictor_pinacotheca_pinax(pf->pinacotheca, provenientia);
+    }
+    si (chorda_aequalis(provenientia,
+            pictor_documentum_sigillum_hex(pf->doc, pf->doc->piscina)))
+    {
+        redde pictor_documentum_proiectio(pf->doc);
     }
     /* glutinatio pendens: "glutinatio:<sigillum>" -> praevisio modi */
     si (   pf->doc->glutinatio.pendens && provenientia.mensura > XI

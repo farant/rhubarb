@@ -505,6 +505,43 @@ pictor_semitam_secuta (
 }
 
 b32
+pictor_picturam_restituere (
+    PictorApplicatio* app)
+{
+    chorda* ultima;
+    chorda  spatium;
+       Xar* l;
+
+    si (!app || !app->repo || !app->montatio.doc)
+    {
+        redde FALSUM;
+    }
+    ultima = insula_ramus_attributum(&app->montatio.ramus, "pictura");
+    si (ultima && ultima->mensura > ZEPHYRUM)
+    {
+        /* copia ante ponere: ponere campum ipsum rescribit */
+        spatium = chorda_ex_literis(chorda_ut_cstr(*ultima,
+            app->piscina), app->piscina);
+        si (!pictor_picturam_ponere(&app->montatio,
+                chorda_ut_cstr(spatium, app->piscina)))
+        {
+            l = pictor_documenta_recentia(app->volumen, app->piscina);
+            si (l && xar_numerus(l) > ZEPHYRUM)
+            {
+                (vacuum)pictor_picturam_ponere(&app->montatio,
+                    chorda_ut_cstr(((PictorPictura*)xar_obtinere(l,
+                        ZEPHYRUM))->spatium, app->piscina));
+            }
+        }
+    }
+    /* laqueus auditus: app->doc post picturam_ponere vetus esset */
+    app->doc       = app->montatio.doc;
+    app->actiones  = app->montatio.actiones;
+    app->figurae   = app->montatio.figurae;
+    redde VERUM;
+}
+
+b32
 pictor_applicatio_aedificare (
        PictorApplicatio* app,
                 Piscina* piscina,
@@ -542,33 +579,6 @@ pictor_applicatio_aedificare (
                app->repo, NIHIL, latitudo, altitudo, &systemata))
     {
         redde FALSUM;
-    }
-    /* pinacotheca D8: pictura ultima ex statu restituto (conservatio);
-     * absens e bibliotheca -> recentissima; vacua -> radix ut ante.
-     * app->doc POST hoc (laqueus: post picturam_ponere vetus esset) */
-    {
-        chorda* ultima;
-        chorda  spatium;
-           Xar* l;
-
-        ultima = insula_ramus_attributum(&app->montatio.ramus,
-            "pictura");
-        si (ultima && ultima->mensura > ZEPHYRUM)
-        {
-            spatium = chorda_ex_literis(chorda_ut_cstr(*ultima,
-                piscina), piscina);
-            si (!pictor_picturam_ponere(&app->montatio,
-                    chorda_ut_cstr(spatium, piscina)))
-            {
-                l = pictor_documenta_recentia(volumen, piscina);
-                si (l && xar_numerus(l) > ZEPHYRUM)
-                {
-                    (vacuum)pictor_picturam_ponere(&app->montatio,
-                        chorda_ut_cstr(((PictorPictura*)xar_obtinere(l,
-                            ZEPHYRUM))->spatium, piscina));
-                }
-            }
-        }
     }
     app->doc       = app->montatio.doc;
     app->actiones  = app->montatio.actiones;
