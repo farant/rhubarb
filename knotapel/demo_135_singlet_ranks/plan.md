@@ -234,6 +234,9 @@ at every λ.
   matrix of 8-byte entries + its residues), oracle ~1.3 GB. T2 caps:
   custos 2 GB (demo), 4 GB (oracle).
 - **T2. Registered run.** λ = 1 … 6, verdicts, findings.md, archive.
+  *Done 2026-10-27: every registered prediction HOLDS at λ ≤ 6 (133
+  checks; 270 ranks = oracle); findings.md; demo-snapshot.c
+  byte-identical to the live build.*
 - **T3. Review** (a reviewer with its own oracle, as for D132–D134).
 
 ## Design review (2026-10-27, consiliarius-d135, before any data)
