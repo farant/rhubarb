@@ -79,6 +79,9 @@ structura CommunioCliens {
              character  tessera[TESSERA_MAXIMA];
     CommunioAdvenerunt  advenerunt;
                 vacuum* ctx;
+      CommunioRecusata  recusata_functio;
+                vacuum* recusata_ctx;
+                   b32  recusata;
                    i32  mora;
                    b32  currit;
                    b32  ligatum;
@@ -233,14 +236,32 @@ _semita_hora (
 }
 
 /* defectus: error notatur, semita post REPETITIO_MS iterum */
+vacuum
+communio_cliens_sistere (
+    CommunioCliens* cliens);
+
 interior vacuum
 _defectus (
              Semita* s,
 constans character* quid,
                 i32  status)
 {
-    _errorem_ponere(s->cliens, quid, status, s);
+    CommunioCliens* c = s->cliens;
+
+    _errorem_ponere(c, quid, status, s);
     s->otiosa = FALSUM;
+    /* plan-5 T5: 401 = tessera recusata (revocatus) - desinere, semel
+     * nuntiare, numquam iterum */
+    si (status == CDI)
+    {
+        c->recusata = VERUM;
+        communio_cliens_sistere(c);
+        si (c->recusata_functio)
+        {
+            c->recusata_functio(c->recusata_ctx);
+        }
+        redde;
+    }
     _horam_ponere(s, REPETITIO_MS, _semita_hora);
 }
 
@@ -996,13 +1017,26 @@ vacuum
 communio_cliens_incipere (
     CommunioCliens* cliens)
 {
-    si (!cliens || cliens->currit)
+    si (!cliens || cliens->currit || cliens->recusata)
     {
         redde;
     }
     cliens->currit = VERUM;
     _semita_cyclus(&cliens->sursum);
     _semita_cyclus(&cliens->deorsum);
+}
+
+vacuum
+communio_cliens_recusationem_ponere (
+      CommunioCliens* cliens,
+    CommunioRecusata  functio,
+              vacuum* ctx)
+{
+    si (cliens)
+    {
+        cliens->recusata_functio  = functio;
+        cliens->recusata_ctx      = functio ? ctx : NIHIL;
+    }
 }
 
 vacuum
@@ -1087,6 +1121,7 @@ communio_cliens_status (
     s.missa          = cliens->missa;
     s.recepta        = cliens->recepta;
     s.connexus       = cliens->connexus;
+    s.recusata       = cliens->recusata;
     s.error.datum    = (i8*)cliens->error_ipse;
     s.error.mensura  = cliens->error_mensura;
     redde s;

@@ -50,8 +50,14 @@ nomen structura {
        i32 missa;        /* acta accepta a servo (summa) */
        i32 recepta;      /* acta importata (summa) */
        b32 connexus;     /* petitio ultima successit */
+       b32 recusata;     /* plan-5 T5: servus tesseram recusavit (401) -
+                          * cliens desiit; numquam iterum petit */
     chorda error;
 } CommunioStatus;
+
+/* plan-5 T5: semel vocatur cum servus tesseram recusat (401: apparatus
+ * revocatus) - cliens iam desiit */
+nomen vacuum (*CommunioRecusata)(vacuum* ctx);
 
 /* basis: "https://hospes" aut "http://127.0.0.1:portus" (sine '/'
  * finali); tessera XLIII signa (copiatur); veredarius = via HTTP
@@ -79,6 +85,13 @@ communio_cliens_moram_ponere (
 vacuum
 communio_cliens_incipere (
     CommunioCliens* cliens);
+
+/* plan-5 T5: nuntius recusationis (NIHIL licet) */
+vacuum
+communio_cliens_recusationem_ponere (
+      CommunioCliens* cliens,
+    CommunioRecusata  functio,
+              vacuum* ctx);
 
 /* nunc: ascensus acta nova quaerit; semita in mora (error aut tractio
  * sine exspectatione) statim pergit; otiosus deletur */

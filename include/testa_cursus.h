@@ -15,6 +15,8 @@
 #include "figura.h"
 #include "delineare_mandata.h"
 #include "ludus_fenestra.h"
+#include "reactor.h"
+#include "veredarius.h"
 
 /* clipboard: idem genus ac actiones_ctx.imago_capere pictoris */
 nomen ImagoFructus (*TestaImagoCapere)(vacuum* ctx, Piscina* piscina);
@@ -59,6 +61,15 @@ nomen structura {
      * pictor quadratum imaginis inde ostendit */
   TestaImaginemEligere  imaginem_eligere;
                 vacuum* imaginem_eligere_ctx;
+    /* communio-plan-5 T5 (C1): rete et ansa ab hospite. reactor testae
+     * est et ab ea agitur (macOS: in ansa fenestrae, omni excitatione;
+     * iOS: horologia sola); applicatio eum in forma.reactor reddit ut
+     * agatur. veredarius: macOS domesticus, iOS URLSession, Android
+     * NIHIL (nullum rete adhuc). machina: "Mac" | "iPhone" | "Android"
+     * - titulus apparatus in inscriptione. */
+               Reactor* reactor;
+            Veredarius* veredarius;
+    constans character* machina;
 } TestaAmbitus;
 
 /* quod applicatio testae reddit (testa eam ZEPHYRUM implet ante) */

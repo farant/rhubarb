@@ -254,6 +254,7 @@ declare -a SOURCE_FILES=(
     "lib/personae.c"
     "lib/pictor_actiones.c"
     "lib/pictor_applicatio.c"
+    "lib/pictor_communio.c"
     "lib/pictor_componentia.c"
     "lib/pictor_documentum.c"
     "lib/pictor_figurae.c"

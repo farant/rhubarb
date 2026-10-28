@@ -219,6 +219,23 @@ ludus_fenestra_quietem_ponere (
 interior Mora
 _moram_minuere (
     Mora a,
+    Mora b);
+
+vacuum
+ludus_fenestra_reactorem_ponere (
+    LudusFenestra* lf,
+          Reactor* reactor)
+{
+    si (lf && !lf->quies)
+    {
+        lf->reactor         = reactor;
+        lf->fossae_positae  = FALSUM;
+    }
+}
+
+interior Mora
+_moram_minuere (
+    Mora a,
     Mora b)
 {
     si (a < ZEPHYRUM)
@@ -244,7 +261,10 @@ ludus_fenestra_mora (
     }
     si (!lf->quies)
     {
-        redde (Mora)lf->d->quies_ms;
+        /* plan-5 T5: reactor sine quiete - hora eius proxima */
+        redde lf->reactor ? _moram_minuere((Mora)lf->d->quies_ms,
+            (Mora)reactor_mora_proxima(lf->reactor))
+            : (Mora)lf->d->quies_ms;
     }
     /* vicus quies T5: minimum debitorum, -1 si nihil */
     mora = (Mora)dispensator_mora_proxima(lf->d, fenestra_tempus_ms());
@@ -385,6 +405,11 @@ ludus_fenestra_currere (
         }
         fenestra_expectare_eventus(fenestra, mora);
         lf->mensurae.excitationes++;
+        /* plan-5 T5: reactor (communio) omni excitatione agitur */
+        si (lf->reactor)
+        {
+            (vacuum)reactor_poll(lf->reactor, ZEPHYRUM);
+        }
         nunc    = fenestra_tempus_ms();
         eventa  = FALSUM;
         dum (fenestra_obtinere_eventus(fenestra, &e))

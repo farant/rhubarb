@@ -12,18 +12,94 @@
 #include "volumen.h"
 #include "testa.h"
 #include "pictor_applicatio.h"
+#include "pictor_communio.h"
 #include <stdio.h>
+#include <string.h>
 
 #define PICTOR_LATITUDO   (DC + XL)
 #define PICTOR_ALTITUDO   CDLXXX
 /* pixelum nostrum = II puncta fenestrae (ut terminale) */
 #define SCALA             II
+/* communio-plan-5 C5: servus domus; -servus <url> pro probationibus */
+#define SERVUS_DOMUS      "https://exemplar.golden.earth"
+#define VIA_MAXIMA        DXII
+
+/* in piscina testae: vivit usque ad finem (R3) */
+nomen structura {
+              Volumen* volumen;
+          Dispensator* d;
+       PictorCommunio* communio;
+} PictorHospes;
 
 interior vacuum
 _pictorem_finire (
     vacuum* ctx)
 {
-    volumen_claudere((Volumen*)ctx);
+    PictorHospes* h = (PictorHospes*)ctx;
+
+    /* communio ante volumen (cliens in eo scribit) */
+    pictor_communionem_claudere(h->communio);
+    volumen_claudere(h->volumen);
+}
+
+/* picturae advectae, index apparatuum, inscriptio mutata */
+interior vacuum
+_communio_mutata (
+    vacuum* ctx)
+{
+    PictorHospes* h = (PictorHospes*)ctx;
+
+    si (h->d)
+    {
+        dispensator_recomponere(h->d);
+    }
+}
+
+/* argumentum post 'nomen' (aut praestitutum) */
+interior constans character*
+_optio (
+                   s32   argc,
+             character** argv,
+    constans character*  titulus,
+    constans character*  praestitutum)
+{
+    s32 i;
+
+    per (i = I; i + I < argc; i++)
+    {
+        si (strcmp(argv[i], titulus) == ZEPHYRUM)
+        {
+            redde argv[i + I];
+        }
+    }
+    redde praestitutum;
+}
+
+/* C4: tessera = via voluminis + ".tessera" (0600); fumus numquam
+ * communicat; sine veredario (Android) nulla communio */
+interior vacuum
+_communionem_aperire (
+    constans TestaAmbitus* a,
+             PictorHospes* h,
+                      b32  fumus)
+{
+             character  via[VIA_MAXIMA];
+    constans character* volumen;
+
+    si (fumus || !a->veredarius || !a->reactor)
+    {
+        redde;
+    }
+    volumen = _optio(a->argc, a->argv, "-volumen", "pictor.volumen");
+    si (strlen(volumen) + VIII >= VIA_MAXIMA)
+    {
+        redde;
+    }
+    sprintf(via, "%s.tessera", volumen);
+    h->communio = pictor_communionem_aperire(a->piscina, a->reactor,
+        a->veredarius, h->volumen, via, _optio(a->argc, a->argv,
+        "-servus", SERVUS_DOMUS), _communio_mutata, h);
+    pictor_communio_incipere(h->communio);
 }
 
 b32
@@ -34,6 +110,7 @@ applicatio_initium (
     InternamentumChorda* intern;
                 Volumen* vol;
        PictorApplicatio* app;
+           PictorHospes* h;
                     b32  fumus;
                     i32  latitudo;
                     i32  altitudo;
@@ -61,7 +138,9 @@ applicatio_initium (
      * initium vivit */
     app = (PictorApplicatio*)piscina_allocare(a->piscina,
         magnitudo(PictorApplicatio));
-    si (   !app
+    h = (PictorHospes*)piscina_allocare(a->piscina,
+        magnitudo(PictorHospes));
+    si (   !app || !h
         || !pictor_applicatio_aedificare(app, a->piscina, intern, vol,
                latitudo, altitudo))
     {
@@ -88,6 +167,11 @@ applicatio_initium (
     /* pinacotheca D1: quadratum ⋯ (menu picturarum) in applicatione
      * pictor ubique - vicus et terminalis id non ponunt */
     app->montatio.compositio.elenchus_praesto = VERUM;
+    /* communio-plan-5 T5: communio intra pictorem */
+    h->volumen   = vol;
+    h->d         = app->d;
+    h->communio  = NIHIL;
+    _communionem_aperire(a, h, fumus);
 
     forma->titulus    = "pictor";
     forma->latitudo   = latitudo;
@@ -98,8 +182,9 @@ applicatio_initium (
     forma->thema      = ZEPHYRUM;
     forma->fons       = pictor_imago_fons;
     forma->fons_ctx   = &app->montatio.figurae_ctx;
+    forma->reactor    = a->reactor;
     forma->finis      = _pictorem_finire;
-    forma->finis_ctx  = vol;
+    forma->finis_ctx  = h;
     redde VERUM;
 }
 

@@ -1900,6 +1900,12 @@
     <forma textus="epistularium" casus="accusativus" numerus="singularis" genus="masculinum"/>
     <forma textus="epistulario" casus="dativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="reactor" lingua="latina" classis="substantivum" nota="reactor, -oris m. (vox domus ex 'reagere', ut actor ex 'agere'): ansa eventuum quae fossas et horas exspectat et tractatoribus reddit (include/reactor.h); reactorem ponere = ansae reactorem tradere (ludus_fenestra_reactorem_ponere, communio-plan-5 T5)">
+    <forma textus="reactor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="reactoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="reactorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="reactori" casus="dativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="veredarius" lingua="latina" classis="substantivum" nota="veredarius, -i m. (Suet., Cod. Theod.): cursor cursus publici, qui litteras per mutationes fert - hic Veredarius, interfacies petitionis HTTP unius quam hospes praebet (include/veredarius.h, communio-plan-5 T1)">
     <forma textus="veredarius" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="veredarii" casus="genitivus" numerus="singularis" genus="masculinum"/>

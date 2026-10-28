@@ -175,4 +175,13 @@ ludus_fenestra_quietem_ponere (
               vacuum* ctx,
              Reactor* reactor);
 
+/* communio-plan-5 T5: reactor SINE quiete - ansa eum omni excitatione
+ * agit (reactor_poll 0) et non diutius quam usque ad horam eius
+ * proximam exspectat; fossae ansam non expergefaciunt (excitatio
+ * ordinaria, quies_ms dispensatoris, sufficit). NIHIL tollit. */
+vacuum
+ludus_fenestra_reactorem_ponere (
+    LudusFenestra* lf,
+          Reactor* reactor);
+
 #endif /* LUDUS_FENESTRA_H */
