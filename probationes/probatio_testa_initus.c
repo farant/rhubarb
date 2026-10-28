@@ -370,6 +370,18 @@ _sectio_quadrum (
     CREDO_GRADUS("fumus: statim donec quadra restant");
     p = _petere(VERUM, VERUM, FALSUM, FALSUM, FALSUM, CCC, FALSUM, III);
     CREDO_AEQUALIS_I32((i32)p.genus, (i32)TESTA_QUADRUM_STATIM);
+    CREDO_GRADUS("plan-5 T8: hora reactoris (CC) -> post CC");
+    p = _petere(VERUM, VERUM, FALSUM, FALSUM, FALSUM, CC, FALSUM,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)p.genus, (i32)TESTA_QUADRUM_POST);
+    CREDO_AEQUALIS_S64(p.post_ms, (s64)CC);
+    CREDO_GRADUS("plan-5 T8: nihil debitum (mora -1): nullum quadrum");
+    p = _petere(VERUM, VERUM, FALSUM, FALSUM, FALSUM, -I, FALSUM,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)p.genus, (i32)TESTA_QUADRUM_NULLUM);
+    p = _petere(VERUM, VERUM, FALSUM, FALSUM, VERUM, -I, FALSUM,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32((i32)p.genus, (i32)TESTA_QUADRUM_STATIM);
 }
 
 interior vacuum

@@ -942,6 +942,14 @@ pictor_instrumentum_eligere (
         redde mutare_ramum(&ramus, instrumentum_ponere,
             litterae_instrumenti(nomen_instrumenti));
     }
+    /* plan-5 T8: applicatio redit (iOS) - communio statim pergit */
+    si (   ev->genus == EVENTUS_RESUMPTIO && ctx
+        && ((PictorActiones*)ctx)->communio_excitare)
+    {
+        ((PictorActiones*)ctx)->communio_excitare(
+            ((PictorActiones*)ctx)->inscriptio_ctx);
+        redde FALSUM;
+    }
     /* C1b T1: depositio (radici venit - nec indicator nec focus) =
      * glutinatio imaginis depositae */
     si (ev->genus == EVENTUS_DEPOSITIO)

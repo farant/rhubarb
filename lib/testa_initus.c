@@ -375,6 +375,12 @@ testa_quadrum_petere (
     {
         redde p;
     }
+    /* plan-5 T8: nihil debitum (mora -1: nec dispensator nec reactor) -
+     * nullum quadrum; eventus aut hora nova iterum petunt */
+    si (s->mora < ZEPHYRUM && !s->pulsus)
+    {
+        redde p;
+    }
     p.genus    = TESTA_QUADRUM_POST;
     p.post_ms  = s->mora;
     si (s->pulsus && (s->mora == ZEPHYRUM || s->mora > MORA_PULSUS))

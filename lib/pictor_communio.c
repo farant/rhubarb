@@ -735,6 +735,13 @@ _abicere_ligatum (
     pictor_communio_inscriptionem_abicere((PictorCommunio*)ctx);
 }
 
+interior vacuum
+_excitare_ligatum (
+    vacuum* ctx)
+{
+    pictor_communio_excitare((PictorCommunio*)ctx);
+}
+
 vacuum
 pictor_communionem_ligare (
          PictorCommunio* pc,
@@ -763,6 +770,7 @@ pictor_communionem_ligare (
     montatio->actiones_ctx.inscriptionem_incipere = _incipere_ligatum;
     montatio->actiones_ctx.codicem_dare = _codicem_ligatum;
     montatio->actiones_ctx.inscriptionem_abicere = _abicere_ligatum;
+    montatio->actiones_ctx.communio_excitare = _excitare_ligatum;
     montatio->actiones_ctx.inscriptio_ctx = pc;
     pc->gradus_nuntiatus = pictor_communio_inscriptionis_gradus(pc);
 }

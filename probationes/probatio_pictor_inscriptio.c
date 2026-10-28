@@ -550,6 +550,31 @@ _sectio_nexu (
     CREDO_VERUM(nexum_premere(&o));
     CREDO_VERUM(donec_titulus(&o, &p, "inscriptio.titulus",
         "pagina:Signed in as Franciscus", M * V));
+
+    CREDO_GRADUS("plan-5 T8: EVENTUS_RESUMPTIO communionem excitat");
+    {
+        Eventus e;
+            i32 gyri;
+
+        CREDO_NECESSE(volumen_praesens_ponere(v,
+            lit("communio/apparatus"),
+            lit("")));
+        CREDO_AEQUALIS_I32(pictor_communio_persona(p.pc,
+            piscina).mensura,
+            ZEPHYRUM);
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus   = EVENTUS_RESUMPTIO;
+        e.tempus  = M * M;
+        dispensator_tractare(p.app.d, &e);
+        per (gyri = ZEPHYRUM; pictor_communio_persona(p.pc,
+            piscina).mensura
+             == ZEPHYRUM && gyri < D; gyri++)
+        {
+            (vacuum)reactor_poll(o.reactor, X);
+        }
+        CREDO_CHORDA_AEQUALIS_LITERIS(pictor_communio_persona(p.pc,
+            piscina), "Franciscus");
+    }
     pictor_communionem_claudere(p.pc);
     volumen_claudere(v);
     orbem_purgare(&o);

@@ -28,6 +28,9 @@
 #include "color.h"
 #include "chorda.h"
 #include "eventus.h"
+#include "reactor.h"
+#include "veredarius.h"
+#include "piscina.h"
 
 #ifndef TESTA_TITULUS
 #define TESTA_TITULUS "applicatio"   /* app.sh: -DTESTA_TITULUS="X" */
@@ -94,6 +97,248 @@ hic_manens CADisplayLink* _vinculum = nil;
 hic_manens UIViewController* _rector  = nil;
 hic_manens TestaElector*     _elector = nil;
 hic_manens b32               _eligens = FALSUM;
+
+/* ==================================================
+ * Veredarius per URLSession (communio-plan-5 T8, spec D11): rete
+ * Apple, nulla cryptographia in fasciculo. Sessio ephemera, cauda
+ * principalis (completio in filo principali - B1 D1); responsum in
+ * piscinam vocantis copiatur, deinde quadrum statim petitur ut reactor
+ * id tractet.
+ * ================================================== */
+
+#define VEREDARII_LOCI  LXIV
+
+nomen structura {
+                    b32  in_usu;
+                    b32  abrupta;
+                    i32  generatio;
+                 vacuum* opus;        /* NSURLSessionDataTask* (retentum) */
+        VeredariusFinis  finis;
+                 vacuum* ctx;
+                Piscina* piscina;
+} LocusVeredariiIOS;
+
+hic_manens NSURLSession*     _sessio = nil;
+hic_manens LocusVeredariiIOS _loci_veredarii[VEREDARII_LOCI];
+hic_manens Veredarius        _veredarius;
+
+interior vacuum
+_quadrum_statim_petere (
+    vacuum);
+
+interior vacuum
+_responsum_tradere (
+    LocusVeredariiIOS* l,
+                i32  generatio,
+            NSData* data,
+     NSURLResponse* responsum,
+           NSError* error)
+{
+    VeredariusResponsum r;
+        VeredariusFinis finis;
+                 vacuum* ctx;
+                    i8* octeti;
+              character  causa[XCVI];
+                    i32  n;
+
+    si (!l->in_usu || l->abrupta || l->generatio != generatio)
+    {
+        redde;
+    }
+    memset(&r, ZEPHYRUM, magnitudo(r));
+    si (error || ![responsum isKindOfClass:[NSHTTPURLResponse class]])
+    {
+        /* causa sine URL (NSError domain + codex solum) */
+        sprintf(causa, "rete: %.40s %ld", error
+            ? [[error domain] UTF8String] : "responsum", error
+            ? (long)[error code] : 0L);
+        r.causa = chorda_ex_literis(causa, l->piscina);
+    }
+    alioquin
+    {
+        r.successus  = VERUM;
+        r.status     = (i32)[(NSHTTPURLResponse*)responsum statusCode];
+        n            = data ? (i32)[data length] : ZEPHYRUM;
+        octeti       = n > ZEPHYRUM ? (i8*)piscina_allocare(l->piscina,
+            (memoriae_index)n) : NIHIL;
+        si (octeti)
+        {
+            memcpy(octeti, [data bytes], (size_t)n);
+            r.corpus.datum    = octeti;
+            r.corpus.mensura  = n;
+        }
+    }
+    finis      = l->finis;
+    ctx        = l->ctx;
+    l->in_usu  = FALSUM;
+    [(NSURLSessionDataTask*)l->opus release];
+    l->opus    = NIHIL;
+    finis(ctx, &r);
+    _quadrum_statim_petere();
+}
+
+interior b32
+_veredarium_petere (
+                        vacuum* sui,
+    constans VeredariusPetitio* p,
+                       Piscina* piscina,
+               VeredariusFinis  finis,
+                        vacuum* ctx,
+                           i32* signum)
+{
+          NSMutableURLRequest* rogatio;
+         NSURLSessionDataTask* opus;
+                       NSURL* url;
+            LocusVeredariiIOS* l;
+                          i32  i;
+                          i32  generatio;
+                      NSTimeInterval tempus;
+
+    (vacuum)sui;
+    si (!_sessio || !p || !p->url || !piscina || !finis)
+    {
+        redde FALSUM;
+    }
+    l = NIHIL;
+    per (i = ZEPHYRUM; i < VEREDARII_LOCI; i++)
+    {
+        si (!_loci_veredarii[i].in_usu)
+        {
+            l = &_loci_veredarii[i];
+            frange;
+        }
+    }
+    url = [NSURL URLWithString:[NSString stringWithUTF8String:p->url]];
+    si (!l || !url)
+    {
+        redde FALSUM;
+    }
+    /* tempus petitionis + XV s (URLSession tempus otii suum habet) */
+    tempus = (NSTimeInterval)(p->tempus_ms > ZEPHYRUM ? p->tempus_ms
+        : (i32)XXX * (i32)M) / 1000.0 + 15.0;
+    rogatio = [NSMutableURLRequest requestWithURL:url
+        cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+        timeoutInterval:tempus];
+    [rogatio setHTTPMethod:p->methodus == VEREDARIUS_POST ? @"POST"
+        : p->methodus == VEREDARIUS_PUT ? @"PUT" : @"GET"];
+    si (p->auctoritas)
+    {
+        [rogatio setValue:[NSString stringWithUTF8String:p->auctoritas]
+            forHTTPHeaderField:@"Authorization"];
+    }
+    si (p->corpus.mensura > ZEPHYRUM)
+    {
+        [rogatio setValue:[NSString stringWithUTF8String:p->mimen
+            ? p->mimen : "application/octet-stream"]
+            forHTTPHeaderField:@"Content-Type"];
+        [rogatio setHTTPBody:[NSData dataWithBytes:p->corpus.datum
+            length:(NSUInteger)p->corpus.mensura]];
+    }
+    l->generatio++;
+    generatio   = l->generatio;
+    l->in_usu   = VERUM;
+    l->abrupta  = FALSUM;
+    l->finis    = finis;
+    l->ctx      = ctx;
+    l->piscina  = piscina;
+    opus = [_sessio dataTaskWithRequest:rogatio
+        completionHandler:^(NSData* data, NSURLResponse* responsum,
+                            NSError* error) {
+        _responsum_tradere(l, generatio, data, responsum, error);
+    }];
+    si (!opus)
+    {
+        l->in_usu = FALSUM;
+        redde FALSUM;
+    }
+    l->opus = [opus retain];
+    si (signum)
+    {
+        *signum = (i32)(l - _loci_veredarii) + generatio
+            * (i32)VEREDARII_LOCI;
+    }
+    [opus resume];
+    redde VERUM;
+}
+
+interior vacuum
+_veredarium_abrumpere (
+    vacuum* sui,
+       i32  signum)
+{
+    LocusVeredariiIOS* l;
+
+    (vacuum)sui;
+    l = &_loci_veredarii[signum % (i32)VEREDARII_LOCI];
+    si (!l->in_usu || l->generatio != signum / (i32)VEREDARII_LOCI)
+    {
+        redde;
+    }
+    l->abrupta  = VERUM;
+    l->in_usu   = FALSUM;
+    si (l->opus)
+    {
+        [(NSURLSessionDataTask*)l->opus cancel];
+        [(NSURLSessionDataTask*)l->opus release];
+        l->opus = NIHIL;
+    }
+}
+
+interior Veredarius*
+_veredarium_parare (
+    vacuum)
+{
+    NSURLSessionConfiguration* forma;
+
+    si (!_sessio)
+    {
+        forma = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+        [forma setRequestCachePolicy:
+            NSURLRequestReloadIgnoringLocalCacheData];
+        _sessio = [[NSURLSession sessionWithConfiguration:forma
+            delegate:nil delegateQueue:[NSOperationQueue mainQueue]]
+            retain];
+    }
+    _veredarius.petere     = _veredarium_petere;
+    _veredarius.abrumpere  = _veredarium_abrumpere;
+    _veredarius.sui        = NIHIL;
+    redde _sessio ? &_veredarius : NIHIL;
+}
+
+/* -probare-rete <url>: GET unum per veredarium, status in stdout
+ * (probatio simulatri; nihil aliud) */
+interior vacuum
+_probationis_finis (
+                          vacuum* ctx,
+    constans VeredariusResponsum* r)
+{
+    (vacuum)ctx;
+    imprimere("testa: rete successus=%d status=%d\n", (int)r->successus,
+        (int)r->status);
+}
+
+interior vacuum
+_rete_probare (
+    vacuum)
+{
+    VeredariusPetitio p;
+                  s32 k;
+                  i32 signum;
+
+    per (k = I; k + I < _testa.argc; k++)
+    {
+        si (strcmp(_testa.argv[k], "-probare-rete") == ZEPHYRUM)
+        {
+            memset(&p, ZEPHYRUM, magnitudo(p));
+            p.methodus   = VEREDARIUS_GET;
+            p.url        = _testa.argv[k + I];
+            p.tempus_ms  = (i32)XV * (i32)M;
+            (vacuum)_veredarium_petere(NIHIL, &p, _testa.piscina,
+                _probationis_finis, NIHIL, &signum);
+            redde;
+        }
+    }
+}
 
 /* --- servitia et sedes --- */
 
@@ -341,6 +586,11 @@ _quadrum (
     si (!lf || !_testa.vivus || _testa.fracta || !_testa.alveus)
     {
         redde;
+    }
+    /* plan-5 T8: horae reactoris (communio) ante quadrum */
+    si (lf->reactor)
+    {
+        (vacuum)reactor_poll(lf->reactor, ZEPHYRUM);
     }
     si (_testa.fumus_quadra > ZEPHYRUM)
     {
@@ -607,6 +857,13 @@ _aream_aptare (
             _finire_fracte("ludus");
             redde;
         }
+        /* plan-5 T8: reactor applicationis in quadris agitur, mora
+         * quadri hora eius proxima finitur */
+        si (_testa.cursus.forma.reactor)
+        {
+            ludus_fenestra_reactorem_ponere(_testa.cursus.lf,
+                _testa.cursus.forma.reactor);
+        }
     }
     alioquin si (   area_latitudo != _testa.tabula->fenestra_latitudo
                  || area_altitudo != _testa.tabula->fenestra_altitudo)
@@ -676,6 +933,12 @@ _initium_facere (
     _testa.ambitus.imago_glutinata = _imaginem_nullam;
     /* C1b: electio imaginis - photographia ut depositio redit */
     _testa.ambitus.imaginem_eligere = _imaginem_eligere;
+    /* plan-5 T8: rete per URLSession; reactor horas solas tenet */
+    _testa.ambitus.machina     = "iPhone";
+    _testa.ambitus.reactor     = reactor_creare(_testa.piscina);
+    _testa.ambitus.veredarius  = _testa.ambitus.reactor
+        ? _veredarium_parare() : NIHIL;
+    _rete_probare();
     si (!testa_cursum_incipere(&_testa.cursus, &_testa.ambitus,
             applicatio_initium, &causa))
     {
@@ -831,6 +1094,15 @@ _quadrum_petere (
             target:_visus selector:@selector(quadrum_post:) userInfo:nil
             repeats:NO];
     }
+}
+
+/* plan-5 T8: responsum retis advenit - quadrum mox (reactor tractat) */
+interior vacuum
+_quadrum_statim_petere (
+    vacuum)
+{
+    _testa.debitum = VERUM;
+    _quadrum_petere();
 }
 
 @interface TestaRector : UIViewController

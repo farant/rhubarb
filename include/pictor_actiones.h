@@ -65,6 +65,8 @@ nomen structura {
                  chorda epistula);
              b32 (*codicem_dare)(vacuum* ctx, chorda codex);
           vacuum (*inscriptionem_abicere)(vacuum* ctx);
+    /* plan-5 T8: EVENTUS_RESUMPTIO -> communio excitatur (ctx idem) */
+          vacuum (*communio_excitare)(vacuum* ctx);
                 vacuum* inscriptio_ctx;
 TestaClaviaturamPonere  claviaturam_ponere;
                 vacuum* claviatura_ctx;

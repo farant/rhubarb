@@ -76,3 +76,32 @@
   names the cause if it is off), falls back to `productType`.
 - TestFlight's "iOS 26 SDK" requirement is now met by the installed Xcode;
   C2 step 0 (the upgrade) is done.
+
+## 2026-10-28 - URLSession veredarius, reactor timers (communio-plan-5 T8, quarta)
+
+The iOS shell hands the app `a->veredarius` backed by URLSession
+(ephemeral session, no cache, delegate queue = main queue so completions
+run on the main thread like everything else here), `a->reactor` (timers
+only - no sockets on iOS; networking is URLSession) and `a->machina =
+"iPhone"`. The pictor binary links no BearSSL, no house HTTP/TLS, no
+server (checked: 0 `_br_` symbols, no such objects).
+
+Request timeout = the request's tempus + 15 s (URLSession counts idle
+time itself). Responses are copied into the caller's pool; the finish
+callback runs, then the shell asks for a frame at once (`debitum`) so the
+reactor handles the deferred response without waiting for the 300 ms
+idle tick. Abort cancels the task and the cancellation completion is
+ignored (generation + `abrupta`), matching the veredarius contract.
+
+Each frame polls the app's reactor (timeout 0) before drawing; the shell
+hands the reactor to the window state with `ludus_fenestra_reactorem_ponere`
+so `ludus_fenestra_mora` (read for frame scheduling) is bounded by the
+reactor's next timer. `testa_quadrum_petere` now returns NO frame for
+mora -1 (nothing due) instead of a POST with a negative delay.
+
+`-probare-rete <url>`: one GET through the veredarius, prints `testa:
+rete successus=.. status=..` - for Simulator checks only.
+
+EVENTUS_RESUMPTIO (scene active again) reaches pictor's root handler,
+which calls `communio_excitare` (wired by pictor_communionem_ligare):
+lanes resume at once and the device list is refetched.
