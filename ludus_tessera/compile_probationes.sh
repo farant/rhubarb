@@ -278,16 +278,32 @@ for src in "$RADIX_DIR"/tessera/fontes/*.c \
     obj_files="$obj_files $obj"
 done
 
+# VENDICATA PER THESAURUM (budget B1 E7, 2026-10-28): fontes magni
+# communes (vendor/sqlite3.c ~IX.V MB, silva/amalgama/silva.c ~V MB) per
+# bin/compilator EX RADICE, argumentis iisdem ac compile_tests.sh: clavis
+# (cwd + argumenta sine -o + octeti fontis et capitum) congruit, ergo
+# obiectum radicis (aut suitae prioris) ex thesauro sumitur - in frigida
+# compilatio una pro IV. Compilator absens -> clang ipse.
+_vendicatum_compilare () {   # <obiectum> <argumenta clang, fons RADICI relativus>
+    local obiectum="$1"
+    shift
+    if [ -x "$RADIX_DIR/bin/compilator" ]; then
+        ( cd "$RADIX_DIR" && bin/compilator "$@" -o "$obiectum" )
+    else
+        ( cd "$RADIX_DIR" && clang "$@" -o "$obiectum" )
+    fi
+}
+
 # ---- 2b. vendicata (A4: volumen -> scrinium -> sqlite): obiectum
 #          RELAXATUM, vexilla eadem ac compile_tests.sh radicis ----
 src="$RADIX_DIR/vendor/sqlite3.c"
 obj="$BUILD_DIR/vendor_sqlite3.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
     echo "  [vendicatum] sqlite3.c"
-    if ! clang -O2 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0 \
+    if ! _vendicatum_compilare "$obj" -O2 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0 \
             -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 \
             -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_OMIT_DEPRECATED \
-            -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -c "$src" -o "$obj"; then
+            -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -c vendor/sqlite3.c; then
         echo "FRACTA: sqlite3.c" ; exit 1
     fi
 fi

@@ -128,3 +128,21 @@ the `-o` output; a miss compiles into the output as before (via = output). `via`
 set by compilare/compilare_in (the output path). fabrica uses it to link members directly from
 the cache; bin/compilator (--plures, compile_tests) keeps copying. Test: probatio_compilator
 section 'sine collocatione'.
+
+## 2026-10-28 — big vendored sources shared across suites (budget B1 E7)
+
+briar, gesta and ludus_tessera each compiled `vendor/sqlite3.c` (9.5 MB,
+~10 s idle) with plain clang into their own build dir; briar and officina
+each compiled `silva/amalgama/silva.c` (~5 MB). In a frigida run (fresh
+clone, everything cold) that is 3 redundant sqlite compiles + 1 redundant
+silva.c on top of radix's. They now call `_vendicatum_compilare`: run
+`bin/compilator` FROM THE RADIX with radix's exact argument order and the
+relative source path (`-c vendor/sqlite3.c`), so the key (cwd + args minus
+-o + source and header bytes) matches compile_tests.sh's line and the
+object comes out of the thesaurus. The suites' mtime fast path stays in
+front (warm runs never call it). Measured: hit 0.08 s vs ~10 s; all three
+sqlite objects byte-identical to radix's build/sqlite3.o; briar's and
+officina's silva.c objects identical (one compile served both). Key
+lesson: the key includes the source PATH SPELLING and cwd — the old
+scripts mixed `"$RADIX_DIR/vendor/sqlite3.c"` (absolute) with relative,
+which would never have hit even through compilator.

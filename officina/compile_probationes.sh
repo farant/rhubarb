@@ -132,12 +132,28 @@ for f in "${RADIX_FONTES[@]}"; do
     obj_files="$obj_files $obj"
 done
 
+# VENDICATA PER THESAURUM (budget B1 E7, 2026-10-28): fontes magni
+# communes (vendor/sqlite3.c ~IX.V MB, silva/amalgama/silva.c ~V MB) per
+# bin/compilator EX RADICE, argumentis iisdem ac compile_tests.sh: clavis
+# (cwd + argumenta sine -o + octeti fontis et capitum) congruit, ergo
+# obiectum radicis (aut suitae prioris) ex thesauro sumitur - in frigida
+# compilatio una pro IV. Compilator absens -> clang ipse.
+_vendicatum_compilare () {   # <obiectum> <argumenta clang, fons RADICI relativus>
+    local obiectum="$1"
+    shift
+    if [ -x "$RADIX_DIR/bin/compilator" ]; then
+        ( cd "$RADIX_DIR" && bin/compilator "$@" -o "$obiectum" )
+    else
+        ( cd "$RADIX_DIR" && clang "$@" -o "$obiectum" )
+    fi
+}
+
 # ---- 2. the silva amalgam as object (demissio's substrate) ----
 src="$RADIX_DIR/silva/amalgama/silva.c"
 obj="$BUILD_DIR/amalgama_silva.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
     echo "  [amalgama] silva.c"
-    if ! clang "${GCC_FLAGS[@]}" -c "$src" -o "$obj"; then
+    if ! _vendicatum_compilare "$obj" "${GCC_FLAGS[@]}" -c silva/amalgama/silva.c; then
         echo "FRACTA: amalgama silva" ; exit 1
     fi
 fi
