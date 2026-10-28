@@ -414,7 +414,23 @@ Readings (corrected by the T5b design review, which converted min-fill orders in
    - At e = 0.5, the term count decides. Expanding loses at g ≥ 3 and small λ. The singlet pieces break even near λ ≈ 18–20 (g = 3, 4). The eight-square pieces break even only at λ = 30 for g = 3, and not by λ = 30 for g = 4.
    - The saving is a small share of the total: about 5–7% of the plain bits at e = 1, because the side edges never get cheaper.
    - A cheap upper estimate is close. min(a, b) ≤ (a + b)/2 makes the term sum factor per rectangle, as \|R\|·log₂ Σ_i 2^(e·(c_row(i) + c_col(i))/2). It lands only 3–5 bits above the exact sum at every size tried, so it is good enough for sizing.
-   - **Reading.** At finite size, ANT's pieces are far from the best available. The exact singlet ranks roughly triple the one-level saving, with nothing else changed. That improves the paper's own accounting; it does not make a practical algorithm, since the term count and the brute-force table cost dominate at any size that can be run. Practical crossing-heavy networks with cheap groups, where rotated slicing would compete against the best single tree, are the open follow-on (12.1.3).
+   - **Reading.** At finite size, ANT's pieces are far from the best available. The exact singlet ranks roughly triple the one-level saving, with nothing else changed. That improves the paper's own accounting; it does not make a practical algorithm, since the term count and the brute-force table cost dominate at any size that can be run. Practical crossing-heavy networks with cheap groups, where rotated slicing would compete against the best single tree, are the open follow-on (12.1.3). *(10-28: answered negatively, item 5.)*
+5. **Rotated slicing against the best single tree (12.1.3, 2026-10-28).** Cost model only, in log₂ multiplications; nothing contracted (`optio2/mensura.py`, scratch). Binary edge indices; four quadrants TL, TR, BL, BR; crossing pairs are one TL–BR edge with one TR–BL edge. Best tree: greedy pairwise contraction, best of 24 random tie-breaks. Plain slicing: slice the rows cut, contract the halves. Rotated slicing: as in item 1, with the best h.
+   - Three families, with m edges per quadrant pair. A: four dense quadrant tensors joined by m-edge bundles between every pair (ANT's g = 2 instance). B: cheap groups (each quadrant a path of m nodes; aligned ladders across rows and columns; random diagonal matchings). C: like B, but every inter-quadrant matching random.
+
+   | family | m | best tree | plain rows slicing | rotated (first model) |
+   | --- | --- | --- | --- | --- |
+   | A | 6 | 31.0 | 31.0 | 28.7 |
+   | A | 12 | 61.0 | 61.0 | 57.1 |
+   | B | 16 | 30.9 | 73.9 | 69.0 |
+   | B | 32 | 52.5 | 138.9 | 130.4 |
+   | C | 16 | 43.5 | 76.7 | 71.6 |
+   | C | 32 | 78.1 | 145.3 | 136.3 |
+
+   - **Cheap groups (B, C): the single tree wins by 20–78 bits.** Rotated slicing beats plain slicing of the cut, but a good tree never pays a whole balanced cut at once.
+   - **The first model was too kind to rotated slicing.** It treated a rotated slice like fixing index values. Two of the four basis states per bit pair, \|00⟩ ± \|11⟩, fix nothing: they join the two quadrants of a half like an extra edge. Paying for those joins in family A, slicing tuple by tuple costs Σ_{d≤h} C(λ, d)·2^(λ−d)·4^d per outer slice, and comes out 0.6–5 bits *worse* than the tree for m = 2 … 12. Building each half as a dense table and rotating it with the fast per-bit transform costs exactly what plain contraction costs: the single-gadget objection (item 2) again.
+   - Both biases favour rotated slicing (greedy trees only improve; the first model is optimistic), so the negative result is robust for these families.
+   - **Reading.** The rank saving is real, but collecting it needs each side of the merge to be cheap to sum internally. In a tensor network those sides are dense tables whose cost is the full 4^λ, for any choice of pieces. ANT escapes by brute-forcing small groups inside the recursion, at the overhead of item 3, which is negligible only at astronomical size. So G3 points to a negative verdict for practical networks; the formal write-up of phase 3 has not been done. No D136 demo: the cost model decides it.
 
 ## 12. Experiment families *(rev. 10-27)*
 
@@ -424,7 +440,7 @@ The phases of 8 build tools; these are the questions the tools serve. Four famil
 
 1. **Finite-size cost curves.** For the singlet, eight-square and Appendix B pieces, exact ranks and real contraction work for λ = 1 … 30. Small λ already beats the asymptotic figure (§11: about 3.0 bits per bit at λ = 4 against 3.58); the λ at which a decomposition starts to pay is the most useful single number this program can produce. *(10-28: rank level done in D135; one level of ANT's recursion accounted in §11, "One gadget and one level"; the single-gadget table experiment is ill-posed, same place, item 2.)*
 2. **Sign-problem meter.** For each decomposition, Σ\|terms\| against \|result\|: how much of the answer is cancellation. Decides whether 4.6 (sampling terms) is hopeless or plausible. Needs no engine.
-3. **One tree versus many.** On expanders (§9), the best single contraction tree against a sum of networks each contracted in its own order. The Austrin–Kaski–Kubjas bound is about the single tree, so this is the most direct empirical test of the papers' central claim.
+3. **One tree versus many.** On expanders (§9), the best single contraction tree against a sum of networks each contracted in its own order. The Austrin–Kaski–Kubjas bound is about the single tree, so this is the most direct empirical test of the papers' central claim. *(10-28: cost model says no for the families tried, including ANT's g = 2 instance once rotated basis states are paid as bonds; §11, "One gadget and one level", item 5.)*
 
 ### 12.2 Better pieces than the papers'
 
