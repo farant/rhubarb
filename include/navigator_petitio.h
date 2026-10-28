@@ -75,6 +75,29 @@ navigator_petere (
                                vacuum* datum,
     constans NavigatorPetitioOptiones* optiones);
 
+/* N3.3b: quaestio Vicipaediae (vicipaedia_url_quaestionis, limes XX)
+ * eadem machina - agens, finis semel, abrumpere, dimittere. SERVATA =
+ * eventus dati (vacuum licet); responsum non JSON -> RETE; 404 ->
+ * NON_INVENTA. eventus in piscina PETITIONIS: copia ante dimittere. */
+nomen structura {
+    NavigatorPetitioStatus  status;
+                       Xar* eventus;     /* VicipaediaEventus */
+                    chorda  descriptio;
+} NavigatorQuaestioResultus;
+
+nomen vacuum (*NavigatorQuaestioFinis)(vacuum* datum,
+    constans NavigatorQuaestioResultus* resultus);
+
+/* NIHIL solum si argumenta NIHIL aut memoria deficit */
+NavigatorPetitio*
+navigator_quaerere (
+                              Reactor* reactor,
+                               chorda  hospes,
+                               chorda  verba,
+               NavigatorQuaestioFinis  finis,
+                               vacuum* datum,
+    constans NavigatorPetitioOptiones* optiones);
+
 /* idempotens, synchronus: finis (ABRUPTA) ANTE reditum */
 vacuum
 navigator_petitionem_abrumpere (

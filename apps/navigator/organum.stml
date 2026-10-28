@@ -20,6 +20,7 @@
             semita="ligatio" historia="impelle">
       <optio>index</optio>
       <optio>pagina</optio>
+      <optio>eventus</optio>
     </campus>
     <campus nomen="articulus" typus="textus" vita="persistens"
             scriptor="navigator.agere" semita="ligatio"
@@ -35,6 +36,15 @@
     <campus nomen="electus_articulus" typus="textus" vita="persistens"
             scriptor="navigator.agere"
             nota="ULID articuli electi in indice; absens = primus"/>
+    <campus nomen="quaestio" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            nota="N3.3b: verba quaestionis (restitutio eam iterat)"/>
+    <campus nomen="quaestio_hospes" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            nota="hospes quaestionis ('la.wikipedia.org')"/>
+    <campus nomen="electus_eventus" typus="numerus" vita="transiens"
+            scriptor="navigator.agere"
+            nota="eventus electus (ab 0); absens = primus"/>
     <campus nomen="nota" typus="textus" vita="transiens"
             scriptor="navigator.agere"
             nota="nuntius in linea ima ('article not found')"/>

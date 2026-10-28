@@ -16,6 +16,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "articulus.h"
+#include "xar.h"
 
 Articulus*
 vicipaedia_articulus (
@@ -57,5 +58,28 @@ chorda
 vicipaedia_url_fontis (
     constans VicipaediaSedes* sedes,
                      Piscina* piscina);
+
+/* quaestio (REST /w/rest.php/v1/search/page): eventus unus */
+nomen structura {
+    chorda titulus;      /* "Thomas Aquinas" (ostendendus) */
+    chorda clavis;       /* "Thomas_Aquinas" (titulus URL) */
+    chorda descriptio;   /* "Italian Dominican friar..."; vacua licet */
+} VicipaediaEventus;
+
+/* URL quaestionis: https://<hospes>/w/rest.php/v1/search/page?
+ * q=<verba codificata>&limit=<limes> */
+chorda
+vicipaedia_url_quaestionis (
+      chorda  hospes,
+      chorda  verba,
+         i32  limes,
+     Piscina* piscina);
+
+/* JSON responsi -> Xar de VicipaediaEventus (ordine relevantiae);
+ * NIHIL si JSON malum; vacuum si nulli */
+Xar*
+vicipaedia_eventus_legere (
+      chorda  json,
+     Piscina* piscina);
 
 #endif /* VICIPAEDIA_H */

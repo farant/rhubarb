@@ -17,6 +17,8 @@
 #include "html_registrum.h"
 #include "uri.h"
 #include "url.h"
+#include "json.h"
+#include <stdio.h>
 
 #include <string.h>
 
@@ -1614,4 +1616,81 @@ vicipaedia_url_fontis (
                      Piscina* piscina)
 {
     redde inscriptionem_construere(sedes, VIA_FONTIS, piscina);
+}
+
+
+/* ==================================================
+ * Quaestio (N3.3b)
+ * ================================================== */
+
+chorda
+vicipaedia_url_quaestionis (
+      chorda  hospes,
+      chorda  verba,
+         i32  limes,
+     Piscina* piscina)
+{
+       chorda r;
+    character numerus[XVI];
+
+    sprintf(numerus, "&limit=%u", (insignatus integer)limes);
+    r = chorda_concatenare(chorda_ex_literis("https://", piscina),
+        hospes,
+        piscina);
+    r = chorda_concatenare(r, chorda_ex_literis(
+        "/w/rest.php/v1/search/page?q=", piscina), piscina);
+    r = chorda_concatenare(r, url_codificare(verba, piscina), piscina);
+    redde chorda_concatenare(r, chorda_ex_literis(numerus, piscina),
+        piscina);
+}
+
+Xar*
+vicipaedia_eventus_legere (
+      chorda  json,
+     Piscina* piscina)
+{
+    JsonResultus  r;
+       JsonValor* paginae;
+             Xar* x;
+             i32  i;
+          chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    r              = json_legere(json, piscina);
+    si (!r.successus || !r.radix || !json_est_objectum(r.radix))
+    {
+        redde NIHIL;
+    }
+    paginae = json_objectum_capere(r.radix, "pages");
+    si (!paginae || !json_est_tabulatum(paginae))
+    {
+        redde NIHIL;
+    }
+    x = xar_creare(piscina, magnitudo(VicipaediaEventus));
+    per (i = ZEPHYRUM; x && i < json_tabulatum_numerus(paginae); i++)
+    {
+                JsonValor* p = json_tabulatum_obtinere(paginae, i);
+                   chorda  clavis;
+        VicipaediaEventus* e;
+
+        si (!p || !json_est_objectum(p))
+        {
+            perge;
+        }
+        clavis = json_capere_chorda(p, "key", vacua);
+        si (clavis.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        e = (VicipaediaEventus*)xar_addere(x);
+        si (!e)
+        {
+            frange;
+        }
+        e->clavis      = clavis;
+        e->titulus     = json_capere_chorda(p, "title", clavis);
+        e->descriptio  = json_capere_chorda(p, "description", vacua);
+    }
+    redde x;
 }

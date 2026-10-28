@@ -19,6 +19,8 @@
     "text/html; charset=utf-8; " \
     "profile=\"https://www.mediawiki.org/wiki/Specs/HTML/2.8.0\""
 #define VIA_AGENTIS        "/.rhubarb/navigator/agens"
+#define ACCEPT_QUAESTIONIS "application/json"
+#define LIMES_QUAESTIONIS  XX
 
 structura NavigatorPetitio {
                   Piscina* piscina;       /* propria */
@@ -29,10 +31,13 @@ structura NavigatorPetitio {
               HttpVocatio* vocatio;
           VicipaediaSedes  sedes;
  NavigatorPetitioResultus  resultus;
-           ReactorTimerId  mora;
-                      b32  mora_posita;
-                      b32  abrumpens;
-                      b32  finita;
+    /* N3.3b: quaestio (finis_quaestionis non NIHIL) - eadem machina */
+    NavigatorQuaestioFinis finis_quaestionis;
+ NavigatorQuaestioResultus resultus_quaestionis;
+            ReactorTimerId mora;
+                       b32 mora_posita;
+                       b32 abrumpens;
+                       b32 finita;
 };
 
 interior chorda
@@ -97,6 +102,13 @@ _finire (
     {
         (vacuum)reactor_timer_cancellare(np->reactor, np->mora);
         np->mora_posita = FALSUM;
+    }
+    si (np->finis_quaestionis)
+    {
+        np->resultus_quaestionis.status      = np->resultus.status;
+        np->resultus_quaestionis.descriptio  = np->resultus.descriptio;
+        np->finis_quaestionis(np->datum, &np->resultus_quaestionis);
+        redde;
     }
     np->finis(np->datum, &np->resultus);
 }
@@ -205,6 +217,19 @@ _vocatio_finis (
         _finire(np);
         redde;
     }
+    si (np->finis_quaestionis)
+    {
+        /* N3.3b: eventus in piscina petitionis */
+        np->resultus_quaestionis.eventus = vicipaedia_eventus_legere(
+            res.responsum->corpus, np->piscina);
+        np->resultus.status     = np->resultus_quaestionis.eventus
+            ? NAVIGATOR_PETITIO_SERVATA : NAVIGATOR_PETITIO_RETE;
+        np->resultus.descriptio = chorda_ex_literis(
+            np->resultus_quaestionis.eventus ? ""
+            : "responsum quaestionis non JSON", np->piscina);
+        _finire(np);
+        redde;
+    }
     ultima    = http_vocatio_url(vocatio);
     canonica  = _url_canonica(np, ultima);
     np->resultus.exitus = navigator_versionem_offerre(np->bibliotheca,
@@ -225,26 +250,15 @@ _vocatio_finis (
     _finire(np);
 }
 
-NavigatorPetitio*
-navigator_petere (
-                          Reactor* reactor,
-             NavigatorBibliotheca* bibliotheca,
-                           chorda  url,
-            NavigatorPetitioFinis  finis,
-                           vacuum* datum,
-    constans NavigatorPetitioOptiones* optiones)
+/* petitio nova in piscina propria; NIHIL si memoria deficit */
+interior NavigatorPetitio*
+_petitionem_creare (
+    Reactor* reactor,
+     vacuum* datum)
 {
-                Piscina* p;
-       NavigatorPetitio* np;
-                 chorda  fontis;
-                 chorda  agens;
-            HttpPetitio* petitio;
-    HttpVocatioOptiones  optiones_http;
+             Piscina* p;
+    NavigatorPetitio* np;
 
-    si (!reactor || !bibliotheca || !finis)
-    {
-        redde NIHIL;
-    }
     p = piscina_generare_dynamicum("navigator_petitio",
         ALVEUS_PETITIONIS);
     si (!p)
@@ -259,40 +273,45 @@ navigator_petere (
         redde NIHIL;
     }
     memset(np, ZEPHYRUM, magnitudo(NavigatorPetitio));
-    np->piscina      = p;
-    np->reactor      = reactor;
-    np->bibliotheca  = bibliotheca;
-    np->finis        = finis;
-    np->datum        = datum;
+    np->piscina  = p;
+    np->reactor  = reactor;
+    np->datum    = datum;
+    redde np;
+}
 
-    si (!vicipaedia_sedem_legere(url, &np->sedes, p))
-    {
-        _differre(np, NAVIGATOR_PETITIO_IGNOTA,
-            "situs non sustentus (v1: Vicipaedia sola)");
-        redde np;
-    }
-    fontis = vicipaedia_url_fontis(&np->sedes, p);
+/* vocatio GET url ("https://<hospes>..."; radix probationis loco
+ * "https://<hospes>"), User-Agent, Accept, redirectiones */
+interior vacuum
+_vocare (
+                     NavigatorPetitio* np,
+                               chorda  url,
+                               chorda  hospes,
+                   constans character* accept,
+    constans NavigatorPetitioOptiones* optiones)
+{
+                Piscina* p = np->piscina;
+                 chorda  agens;
+            HttpPetitio* petitio;
+    HttpVocatioOptiones  optiones_http;
+
     si (optiones && optiones->radix_fontis)
     {
-        /* "https://<hospes>" -> radix probationis */
-        fontis = chorda_concatenare(chorda_ex_literis(
-            optiones->radix_fontis, p), chorda_sectio(fontis,
-            (i32)strlen("https://") + np->sedes.hospes.mensura,
-            fontis.mensura), p);
+        url = chorda_concatenare(chorda_ex_literis(
+            optiones->radix_fontis, p), chorda_sectio(url,
+            (i32)strlen("https://") + hospes.mensura, url.mensura), p);
     }
-    petitio = http_petitio_creare(p, HTTP_GET, chorda_ut_cstr(fontis,
-        p));
+    petitio = http_petitio_creare(p, HTTP_GET, chorda_ut_cstr(url, p));
     si (!petitio)
     {
-        _differre(np, NAVIGATOR_PETITIO_RETE, "URL fontis invalida");
-        redde np;
+        _differre(np, NAVIGATOR_PETITIO_RETE, "URL invalida");
+        redde;
     }
     agens = (optiones && optiones->agens.mensura > ZEPHYRUM)
         ? optiones->agens
         : chorda_ex_literis(NAVIGATOR_AGENS_ORDINARIUS, p);
     http_petitio_caput_addere(petitio, "User-Agent",
         chorda_ut_cstr(agens, p));
-    http_petitio_caput_addere(petitio, "Accept", ACCEPT_FONTIS);
+    http_petitio_caput_addere(petitio, "Accept", accept);
     memset(&optiones_http, ZEPHYRUM, magnitudo(optiones_http));
     si (optiones && optiones->http)
     {
@@ -302,12 +321,71 @@ navigator_petere (
     {
         optiones_http.redirectiones_maximae = REDIRECTIONES;
     }
-    np->vocatio = http_vocare(reactor, petitio, NIHIL, NIHIL,
+    np->vocatio = http_vocare(np->reactor, petitio, NIHIL, NIHIL,
         _vocatio_finis, np, &optiones_http, p);
     si (!np->vocatio)
     {
         _differre(np, NAVIGATOR_PETITIO_RETE, "vocatio non incepit");
     }
+}
+
+NavigatorPetitio*
+navigator_petere (
+                          Reactor* reactor,
+             NavigatorBibliotheca* bibliotheca,
+                           chorda  url,
+            NavigatorPetitioFinis  finis,
+                           vacuum* datum,
+    constans NavigatorPetitioOptiones* optiones)
+{
+    NavigatorPetitio* np;
+
+    si (!reactor || !bibliotheca || !finis)
+    {
+        redde NIHIL;
+    }
+    np = _petitionem_creare(reactor, datum);
+    si (!np)
+    {
+        redde NIHIL;
+    }
+    np->bibliotheca  = bibliotheca;
+    np->finis        = finis;
+    si (!vicipaedia_sedem_legere(url, &np->sedes, np->piscina))
+    {
+        _differre(np, NAVIGATOR_PETITIO_IGNOTA,
+            "situs non sustentus (v1: Vicipaedia sola)");
+        redde np;
+    }
+    _vocare(np, vicipaedia_url_fontis(&np->sedes, np->piscina),
+        np->sedes.hospes, ACCEPT_FONTIS, optiones);
+    redde np;
+}
+
+NavigatorPetitio*
+navigator_quaerere (
+                              Reactor* reactor,
+                               chorda  hospes,
+                               chorda  verba,
+               NavigatorQuaestioFinis  finis,
+                               vacuum* datum,
+    constans NavigatorPetitioOptiones* optiones)
+{
+    NavigatorPetitio* np;
+
+    si (!reactor || !finis || hospes.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    np = _petitionem_creare(reactor, datum);
+    si (!np)
+    {
+        redde NIHIL;
+    }
+    np->finis_quaestionis = finis;
+    _vocare(np, vicipaedia_url_quaestionis(hospes, verba,
+        LIMES_QUAESTIONIS, np->piscina), hospes, ACCEPT_QUAESTIONIS,
+        optiones);
     redde np;
 }
 

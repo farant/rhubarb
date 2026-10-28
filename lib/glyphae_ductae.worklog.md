@@ -489,3 +489,17 @@ Drawn from ← and →: shaft across the full width on row 3, barbs at
 columns 1 and 4 on rows 2 and 4, so each tip is the cell edge (← and
 → keep column 0 empty; with two heads that left a stubby bar).
 Section XII, red before the entry.
+
+## 2026-10-27 - IPA batch 1 (U+014B, U+0250-02D1; secunda)
+
+Fran saw Wikipedia pronunciations as tofu in navigator ("ɔːˈɡʌɪ..."). 21
+glyphs: the English IPA set (ə ɐ ɑ ɒ ɔ ɛ ɜ ɪ ʊ ʌ ɡ ʃ ʒ ŋ ɹ ɾ ʔ) plus
+stress ˈ ˌ and length ː ˑ. Same grid as the base font's lowercase:
+columns 1-5, x-height rows 2-6, ascenders from row 0, descenders row 7.
+Turned/mirrored letters are DERIVED from the base font so they match it
+exactly: ə = e rotated 180, ɐ = a rotated, ʌ = v rotated, ɔ = c
+mirrored; ɡ = the base font's g (already single-storey). ɹ is r rotated
+without its foot serif (the serif would land on top). θ, ð, æ, ø, ç
+already existed (Greek table / Latin-1 in the font). Not yet: combining
+marks (U+0300-036F - a single-cell table cannot stack them), the rest of
+the IPA block (ɲ ʎ ʁ ɣ ɨ ʉ œ ...). Section XIII.

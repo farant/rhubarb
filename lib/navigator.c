@@ -32,6 +32,7 @@
 
 #define VISUS_INDICIS  I
 #define VISUS_PAGINAE  II
+#define VISUS_EVENTUUM IV       /* N3.3b: eventus quaestionis */
 #define REQUIRIT_ELECTUM  I
 
 hic_manens constans character actio_navigatoris[] = "navigator.agere";
@@ -60,6 +61,9 @@ nomen structura {
      NavigatorPetitio* petitio;
                   Xar* dimittendae;      /* NavigatorPetitio* */
                   b32  mutatum;          /* petitio finita: pingere */
+    /* N3.3b: eventus quaestionis ultimae (copia, arca sua) */
+              Piscina* arca_eventuum;
+                  Xar* eventus;          /* VicipaediaEventus */
 } NavigatorFigurae;
 
 
@@ -169,8 +173,11 @@ interior i32
 _visus (
     constans NavigatorMontatio* m)
 {
-    redde chorda_aequalis_literis(_campus(m, "visus"), "pagina")
-        ? VISUS_PAGINAE : VISUS_INDICIS;
+    chorda v = _campus(m, "visus");
+
+    redde chorda_aequalis_literis(v, "pagina") ? VISUS_PAGINAE
+        : chorda_aequalis_literis(v, "eventus") ? VISUS_EVENTUUM
+        : VISUS_INDICIS;
 }
 
 /* campus numerus (>= 0); -1 si abest aut malus */
@@ -789,6 +796,192 @@ _petitio_finis (
     (vacuum)_notam_scribere(m, nota, f->scheda);
 }
 
+
+/* ==================================================
+ * Quaestio (N3.3b)
+ * ================================================== */
+
+/* petitio pendens abrumpitur (finis ABRUPTA ignoratur) et dimittenda
+ * ponitur */
+interior vacuum
+_pendentem_abrumpere (
+    NavigatorFigurae* f)
+{
+     NavigatorPetitio*  pendens = f->petitio;
+     NavigatorPetitio** d;
+
+    f->petitio = NIHIL;
+    si (pendens)
+    {
+        navigator_petitionem_abrumpere(pendens);
+        d = (NavigatorPetitio**)xar_addere(f->dimittendae);
+        si (d)
+        {
+            *d = pendens;
+        }
+    }
+}
+
+/* finis quaestionis: eventus in arca_eventuum copiantur (petitio
+ * dimittetur), visus eventus; nulli: "No results" */
+interior vacuum
+_quaestio_finis (
+                                vacuum* datum,
+    constans NavigatorQuaestioResultus* r)
+{
+      NavigatorMontatio*  m = (NavigatorMontatio*)datum;
+       NavigatorFigurae*  f = (NavigatorFigurae*)m->figurae_ctx;
+       NavigatorPetitio** d;
+     constans character*  tituli[III];
+     constans character*  valores[III];
+                    i32   i;
+
+    si (r->status == NAVIGATOR_PETITIO_ABRUPTA)
+    {
+        redde;
+    }
+    d = (NavigatorPetitio**)xar_addere(f->dimittendae);
+    si (d)
+    {
+        *d = f->petitio;
+    }
+    f->petitio = NIHIL;
+    f->mutatum = VERUM;
+    si (r->status != NAVIGATOR_PETITIO_SERVATA || !r->eventus)
+    {
+        (vacuum)_notam_scribere(m, r->status
+            == NAVIGATOR_PETITIO_NON_INVENTA ? chorda_ex_literis(
+            "Not found", f->scheda) : chorda_concatenare(
+            chorda_ex_literis("Network: ", f->scheda), r->descriptio,
+            f->scheda), f->scheda);
+        redde;
+    }
+    piscina_vacare(f->arca_eventuum);
+    f->eventus = xar_creare(f->arca_eventuum,
+        (i32)magnitudo(VicipaediaEventus));
+    per (i = ZEPHYRUM; f->eventus && i < xar_numerus(r->eventus); i++)
+    {
+        constans VicipaediaEventus* e = (constans VicipaediaEventus*)
+            xar_obtinere(r->eventus, i);
+                 VicipaediaEventus* c = (VicipaediaEventus*)xar_addere(
+                     f->eventus);
+
+        si (c)
+        {
+            c->titulus    = chorda_transcribere(e->titulus,
+                f->arca_eventuum);
+            c->clavis     = chorda_transcribere(e->clavis,
+                f->arca_eventuum);
+            c->descriptio = chorda_transcribere(e->descriptio,
+                f->arca_eventuum);
+        }
+    }
+    si (!f->eventus || xar_numerus(f->eventus) == ZEPHYRUM)
+    {
+        (vacuum)_notam_scribere(m, chorda_ex_literis("No results",
+            f->scheda), f->scheda);
+        redde;
+    }
+    tituli[ZEPHYRUM]   = "visus";
+    valores[ZEPHYRUM]  = "eventus";
+    tituli[I]          = "electus_eventus";
+    valores[I]         = "0";
+    tituli[II]         = "nota";
+    valores[II]        = "";
+    (vacuum)_campos_scribere(m, tituli, valores, III);
+}
+
+/* quaestio in hospite dato incipit (pendens abrumpitur) */
+interior b32
+_quaestionem_incipere (
+    NavigatorMontatio* m,
+               chorda  hospes,
+               chorda  verba,
+              Piscina* p)
+{
+       NavigatorFigurae* f = (NavigatorFigurae*)m->figurae_ctx;
+                Reactor* reactor;
+     constans character* tituli[III];
+     constans character* valores[III];
+
+    reactor = m->reactor ? m->reactor(m->reactor_ctx) : NIHIL;
+    si (!reactor)
+    {
+        redde _notam_scribere(m, chorda_ex_literis("Offline", p), p);
+    }
+    _pendentem_abrumpere(f);
+    f->petitio = navigator_quaerere(reactor, hospes, verba,
+        _quaestio_finis, m, m->optiones_petitionis);
+    si (!f->petitio)
+    {
+        redde _notam_scribere(m, chorda_ex_literis("Cannot search", p),
+            p);
+    }
+    tituli[ZEPHYRUM]   = "quaestio";
+    valores[ZEPHYRUM]  = chorda_ut_cstr(verba, p);
+    tituli[I]          = "quaestio_hospes";
+    valores[I]         = chorda_ut_cstr(hospes, p);
+    tituli[II]         = "nota";
+    valores[II]        = chorda_ut_cstr(chorda_concatenare(
+        chorda_concatenare(chorda_concatenare(chorda_ex_literis(
+        "Searching ", p), hospes, p), chorda_ex_literis(" for '", p),
+        p),
+        chorda_concatenare(verba, chorda_ex_literis("'...", p), p), p),
+        p);
+    redde _campos_scribere(m, tituli, valores, III);
+}
+
+/* hospes ordinarius: articuli currentis (pagina), aliter en */
+interior chorda
+_hospes_currens (
+    constans NavigatorMontatio* m,
+                       Piscina* p)
+{
+    constans NavigatorArticulus* a;
+
+    a = _visus(m) == VISUS_PAGINAE ? _articulus_per_id(m, _campus(m,
+        "articulus")) : NIHIL;
+    redde a ? chorda_transcribere(_hospes(a->url), p)
+            : chorda_ex_literis("en.wikipedia.org", p);
+}
+
+/* "la: Roma" -> la.wikipedia.org, "Roma"; sine praefixo: hospes
+ * currens */
+interior b32
+_quaerere (
+    NavigatorMontatio* m,
+               chorda  textus,
+              Piscina* p)
+{
+    chorda hospes;
+    chorda verba;
+       i32 i;
+
+    verba = textus;
+    per (i = ZEPHYRUM; i < textus.mensura && i < XVI
+        && ((textus.datum[i] >= 'a' && textus.datum[i] <= 'z')
+            || textus.datum[i] == '-'); i++)
+    {
+    }
+    si (i >= II && i < textus.mensura && textus.datum[i] == ':')
+    {
+        hospes = chorda_concatenare(chorda_sectio(textus, ZEPHYRUM, i),
+            chorda_ex_literis(".wikipedia.org", p), p);
+        verba  = chorda_praecidere(chorda_sectio(textus, i + I,
+            textus.mensura));
+    }
+    alioquin
+    {
+        hospes = _hospes_currens(m, p);
+    }
+    si (verba.mensura == ZEPHYRUM)
+    {
+        redde _notam_scribere(m, chorda_ex_literis("Nothing to search",
+            p), p);
+    }
+    redde _quaestionem_incipere(m, hospes, verba, p);
+}
+
 /* URL: servatus -> statim; aliter petitio in reactore hospitis */
 interior b32
 _url_aperire (
@@ -805,7 +998,7 @@ _url_aperire (
 
     si (!chorda_continet(url, _litterae("://")))
     {
-        redde _notam_scribere(m, chorda_ex_literis("Not a URL", p), p);
+        redde _quaerere(m, url, p);   /* N3.3b: verba = quaestio */
     }
     si (!vicipaedia_sedem_legere(url, &sedes, p))
     {
@@ -924,6 +1117,11 @@ _contextum_parare (
     cp->l        = _album(m, cp->ordo, p);
     cp->electus  = _electus(m, cp->ordo);
 }
+
+/* N3.3b: contextus visus eventuum (album et electus sui) */
+interior vacuum
+_contextum_eventuum_parare (
+    ContextusPraecepti* cp);
 
 interior b32
 _electum_scribere (
@@ -1060,9 +1258,205 @@ fac_promptam_aperire (
         chorda_ex_literis("", cp->p), cp->p);
 }
 
+/* ===== eventus quaestionis (N3.3b) ===== */
+
+interior i32
+_numerus_eventuum (
+    constans NavigatorMontatio* m)
+{
+    constans NavigatorFigurae* f = (constans NavigatorFigurae*)
+        m->figurae_ctx;
+
+    redde f && f->eventus ? xar_numerus(f->eventus) : ZEPHYRUM;
+}
+
+/* album eventuum: res = index + 1, id "r<res>" */
+interior Album*
+_eventuum_album (
+    constans NavigatorMontatio* m,
+                       Piscina* p)
+{
+        Album* l;
+          i32  i;
+    character  id[XVI];
+
+    l = album_creare(p, _capacitas(m));
+    per (i = ZEPHYRUM; l && i < _numerus_eventuum(m); i++)
+    {
+        sprintf(id, "r%d", (integer)(i + I));
+        (vacuum)album_addere(l, id, ALBUM_RES, NAV_ORDO, (s32)(i + I));
+    }
+    redde l;
+}
+
+/* eventus electus (coactus); -1 si nulli */
+interior s32
+_electus_eventus (
+    constans NavigatorMontatio* m)
+{
+    i32 n = _numerus_eventuum(m);
+    s32 k;
+
+    si (n == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    k = _campus_numerus(m, "electus_eventus");
+    si (k < ZEPHYRUM)
+    {
+        k = ZEPHYRUM;
+    }
+    si ((i32)k >= n)
+    {
+        k = (s32)n - I;
+    }
+    redde k;
+}
+
+interior constans VicipaediaEventus*
+_eventus (
+    constans NavigatorMontatio* m,
+                           s32  k)
+{
+    redde (constans VicipaediaEventus*)xar_obtinere(
+        ((constans NavigatorFigurae*)m->figurae_ctx)->eventus, (i32)k);
+}
+
+interior b32
+_eventum_scribere (
+    ContextusPraecepti* cp,
+                   s32  k)
+{
+    constans character* tituli[I];
+    constans character* valores[I];
+             character  numerus[XVI];
+
+    si (k < ZEPHYRUM || (i32)k >= _numerus_eventuum(cp->m))
+    {
+        redde VERUM;
+    }
+    sprintf(numerus, "%d", (integer)k);
+    tituli[ZEPHYRUM]   = "electus_eventus";
+    valores[ZEPHYRUM]  = numerus;
+    redde _campos_scribere(cp->m, tituli, valores, I);
+}
+
+interior b32
+fac_eventum_proximum (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde _eventum_scribere(cp, cp->electus + I);
+}
+
+interior b32
+fac_eventum_priorem (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde _eventum_scribere(cp, cp->electus - I);
+}
+
+interior b32
+_eventus_vertere (
+    ContextusPraecepti* cp,
+                   s32  gradus)
+{
+    s32 k;
+    s32 res;
+
+    k = (cp->electus >= ZEPHYRUM ? album_pagina_rei(cp->l, cp->electus
+        + I, ZEPHYRUM) : ZEPHYRUM) + gradus;
+    si (k < ZEPHYRUM || k >= album_paginae(cp->l))
+    {
+        redde VERUM;
+    }
+    res = album_res_prima(cp->l, k);
+    redde res > ZEPHYRUM ? _eventum_scribere(cp, res - I) : VERUM;
+}
+
+interior b32
+fac_eventus_priores (
+    vacuum* ctx)
+{
+    redde _eventus_vertere((ContextusPraecepti*)ctx, -I);
+}
+
+interior b32
+fac_eventus_proximos (
+    vacuum* ctx)
+{
+    redde _eventus_vertere((ContextusPraecepti*)ctx, I);
+}
+
+/* Enter: articulus eventus per viam URL (servatus statim) */
+interior b32
+fac_eventum_aperire (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+       VicipaediaSedes  sedes;
+
+    si (cp->electus < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    sedes.hospes   = _campus(cp->m, "quaestio_hospes");
+    sedes.titulus  = _eventus(cp->m, cp->electus)->clavis;
+    sedes.ancora   = _vacua();
+    si (sedes.hospes.mensura == ZEPHYRUM)
+    {
+        sedes.hospes = chorda_ex_literis("en.wikipedia.org", cp->p);
+    }
+    redde _url_aperire(cp->m, vicipaedia_url_articuli(&sedes, cp->p),
+        cp->p);
+}
+
+/* Esc: ad paginam si articulus apertus, aliter ad indicem */
+interior b32
+fac_eventus_relinquere (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+    constans character* tituli[II];
+    constans character* valores[II];
+
+    tituli[ZEPHYRUM]   = "visus";
+    valores[ZEPHYRUM]  = _campus(cp->m, "articulus").mensura > ZEPHYRUM
+        ? "pagina" : "index";
+    tituli[I]   = "nota";
+    valores[I]  = "";
+    redde _campos_scribere(cp->m, tituli, valores, II);
+}
+
+interior vacuum
+_contextum_eventuum_parare (
+    ContextusPraecepti* cp)
+{
+    si (cp->visus == VISUS_EVENTUUM)
+    {
+        cp->l        = _eventuum_album(cp->m, cp->p);
+        cp->electus  = _electus_eventus(cp->m);
+    }
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
-    { "navigator.url", "Open URL", "o", VISUS_INDICIS | VISUS_PAGINAE,
-        ZEPHYRUM, fac_promptam_aperire },
+    { "navigator.url", "Open URL", "o", VISUS_INDICIS | VISUS_PAGINAE
+        | VISUS_EVENTUUM, ZEPHYRUM, fac_promptam_aperire },
+    { "navigator.eventus_proximus", "Next result", "j", VISUS_EVENTUUM,
+        ZEPHYRUM, fac_eventum_proximum },
+    { "navigator.eventus_prior", "Previous result", "k", VISUS_EVENTUUM,
+        ZEPHYRUM, fac_eventum_priorem },
+    { "navigator.eventus_priores", "Previous page", "[", VISUS_EVENTUUM,
+        ZEPHYRUM, fac_eventus_priores },
+    { "navigator.eventus_proximi", "Next page", "]", VISUS_EVENTUUM,
+        ZEPHYRUM, fac_eventus_proximos },
+    { "navigator.eventum_aperire", "Open", "Enter", VISUS_EVENTUUM,
+        REQUIRIT_ELECTUM, fac_eventum_aperire },
+    { "navigator.eventus_relinquere", "Back", "Esc", VISUS_EVENTUUM,
+        ZEPHYRUM, fac_eventus_relinquere },
     { "navigator.proximus", "Next article", "j", VISUS_INDICIS,
         ZEPHYRUM, fac_proximum },
     { "navigator.prior", "Previous article", "k", VISUS_INDICIS,
@@ -1133,6 +1527,7 @@ agere (
             redde FALSUM;
         }
         _contextum_parare(m, privatum->scheda, &cp);
+        _contextum_eventuum_parare(&cp);
         redde praecepta_status(t, cp.visus, _requisita, &cp)
             == PRAECEPTUM_PRAESTO && t->fn(&cp);
     }
@@ -1159,7 +1554,21 @@ agere (
             && _paginam_movere(m, gradus);
     }
     _contextum_parare(m, privatum->scheda, &cp);
+    _contextum_eventuum_parare(&cp);
     n = nodus->partes == PARTES_ITEM ? _id_numerus(nodus->id, 'r') : -I;
+    si (cp.visus == VISUS_EVENTUUM)
+    {
+        /* N3.3b: ictus eligit, duplex aperit, sagittae paginas */
+        si (n > ZEPHYRUM)
+        {
+            cp.electus = n - I;
+            redde ev->genus == EVENTUS_MUS_DUPLEX
+                ? fac_eventum_aperire(&cp) : _eventum_scribere(&cp, n
+                    - I);
+        }
+        redde gradus != ZEPHYRUM && ev->genus == EVENTUS_MUS_DEPRESSUS
+            && _eventus_vertere(&cp, gradus);
+    }
     si (n > ZEPHYRUM)
     {
         cp.electus = _positio_indicis(cp.ordo, (i32)(n - I));
@@ -1506,6 +1915,123 @@ _paginam_pingere (
     }
 }
 
+/* ordo eventus: "titulus - descriptio" (descriptio obscura); electus
+ * ut lector */
+interior vacuum
+_eventum_pingere (
+                       Mandata* md,
+            constans Componens* c,
+    constans VicipaediaEventus* e,
+                           b32  electus)
+{
+       chorda textus;
+          s32 columnae;
+          s32 n;
+      Punctum p;
+      Punctum q;
+
+    si (electus)
+    {
+        figura_ordinem_electum_pingere(md, c->fines);
+    }
+    alioquin
+    {
+        p.x = c->fines.x;
+        p.y = c->fines.y + c->fines.altitudo - I;
+        q.x = c->fines.x + c->fines.latitudo - I;
+        q.y = p.y;
+        mandata_linea(md, p, q, I, figura_color_thematis(
+            COLOR_SUPERFICIES));
+    }
+    columnae  = (c->fines.latitudo - VIII) / NAV_LITTERA;
+    textus    = _praecidere(e->titulus, columnae);
+    n         = _runae(textus);
+    _textum_pingere(md, c->fines.x + IV, c->fines.y + IV, textus,
+        FONS_PARVUS, electus ? COLOR_BACKGROUND : COLOR_TEXT);
+    si (e->descriptio.mensura > ZEPHYRUM && columnae - n > IV)
+    {
+        _textum_pingere(md, c->fines.x + IV + n * NAV_LITTERA,
+            c->fines.y + IV, _praecidere(chorda_concatenare(
+            chorda_ex_literis(" - ", md->piscina), e->descriptio,
+            md->piscina), columnae - n), FONS_PARVUS, electus
+            ? COLOR_BACKGROUND : COLOR_TEXT_DIM);
+    }
+}
+
+interior vacuum
+_eventus_pingere (
+     NavigatorMontatio* m,
+    constans Componens* c,
+               Mandata* md)
+{
+        Album* l;
+    Componens* f;
+          s32  e;
+          s32  k;
+          s32  n;
+          s32  r;
+          i32  i;
+    character  textus[XXXII];
+
+    l = _eventuum_album(m, md->piscina);
+    e = _electus_eventus(m);
+    k = e >= ZEPHYRUM ? album_pagina_rei(l, e + I, ZEPHYRUM) : ZEPHYRUM;
+    n = album_paginae(l);
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
+    {
+        f = componens_liberum(c, i);
+        r = f->partes == PARTES_ITEM ? _id_numerus(f->id, 'r') : -I;
+        si (r > ZEPHYRUM && (i32)r <= _numerus_eventuum(m))
+        {
+            _eventum_pingere(md, f, _eventus(m, r - I), r - I == e);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "titulus"))
+        {
+            _textum_pingere(md, f->fines.x + IV, f->fines.y + II,
+                chorda_ex_literis("Results", md->piscina), FONS_TITULI,
+                COLOR_TEXT);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "caput"))
+        {
+            sprintf(textus, _numerus_eventuum(m) == I ? "1 result: "
+                : "%u results: ", (insignatus integer)_numerus_eventuum(
+                m));
+            _textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                _praecidere(chorda_concatenare(chorda_concatenare(
+                chorda_ex_literis(textus, md->piscina), _campus(m,
+                "quaestio"), md->piscina), chorda_concatenare(
+                chorda_ex_literis(" (", md->piscina),
+                chorda_concatenare(
+                _campus(m, "quaestio_hospes"), chorda_ex_literis(")",
+                md->piscina), md->piscina), md->piscina), md->piscina),
+                f->fines.latitudo / NAV_LITTERA - I), FONS_PARVUS,
+                COLOR_TEXT_DIM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "nota"))
+        {
+            _textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                _praecidere(_campus(m, "nota"), f->fines.latitudo
+                / NAV_LITTERA - I), FONS_PARVUS, _petens(m)
+                ? COLOR_TEXT_DIM : COLOR_ERROR);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "prompta"))
+        {
+            prompta_pingere(md, f->fines, "url:", &m->ramus);
+        }
+        alioquin si (   chorda_aequalis_literis(f->id, "index_paginae")
+                     && n > I)
+        {
+            sprintf(textus, "%d/%d", (integer)(k + I), (integer)n);
+            _centrum_pingere(md, f, chorda_ex_literis(textus,
+                md->piscina), COLOR_TEXT_DIM);
+        }
+        alioquin
+        {
+            _sagittam_pingere(md, f, k, n);
+        }
+    }
+}
+
 interior vacuum
 figura_tabulae (
     constans Componens* c,
@@ -1538,6 +2064,10 @@ figura_tabulae (
     {
         _paginam_pingere(contextus->m, c, md);
     }
+    alioquin si (_visus(contextus->m) == VISUS_EVENTUUM)
+    {
+        _eventus_pingere(contextus->m, c, md);
+    }
     alioquin
     {
         _indicem_pingere(contextus->m, c, md);
@@ -1564,6 +2094,8 @@ _figuras_registrare (
         "navigator_scheda", LXIV * M);
     contextus->arca                  = piscina_generare_dynamicum(
         "navigator_arca", CCLVI * M);
+    contextus->arca_eventuum         = piscina_generare_dynamicum(
+        "navigator_eventus", LXIV * M);
     contextus->dimittendae           = xar_creare(m->piscina,
         (i32)magnitudo(NavigatorPetitio*));
     contextus->latitudo_montationis  = (s32)latitudo;
@@ -1744,6 +2276,70 @@ _indicem_disponere (
     }
 }
 
+/* eventus: titulus, caput (numerus, sagittae), nota, ordines,
+ * prompta - ut index */
+interior vacuum
+_eventus_disponere (
+    NavigatorMontatio* m,
+            Disponens* dp,
+                  s32  radix_d,
+              Piscina* piscina)
+{
+                  Album* l;
+     constans AlbumOrdo* o;
+                    s32  linea;
+                    s32  regio;
+                    s32  a;
+                    s32  b;
+                    s32  t;
+                    s32  e;
+                    s32  i;
+
+    (vacuum)_componentem_locare(dp, radix_d, "titulus", PARTES_TITULUS,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_TITULI);
+    linea = _locum_addere(dp, radix_d, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
+    (vacuum)_componentem_locare(dp, linea, "caput", PARTES_INDEX,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
+    (vacuum)_componentem_locare(dp, linea, "pagina-prior",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, III, DISPOSITIO_FIXA,
+        NAV_CAPUT);
+    (vacuum)_componentem_locare(dp, linea, "index_paginae",
+        PARTES_INDEX,
+        DISPOSITIO_FIXA, VII, DISPOSITIO_FIXA, NAV_CAPUT);
+    (vacuum)_componentem_locare(dp, linea, "pagina-proxima",
+        PARTES_BOTTONE, DISPOSITIO_FIXA, III, DISPOSITIO_FIXA,
+        NAV_CAPUT);
+    si (_campus(m, "nota").mensura > ZEPHYRUM)
+    {
+        (vacuum)_componentem_locare(dp, radix_d, "nota", PARTES_INDEX,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
+    }
+    regio = _locum_addere(dp, radix_d, DISPOSITIO_COLUMNA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
+    si (prompta_aperta(&m->ramus, NIHIL))
+    {
+        (vacuum)_componentem_locare(dp, radix_d, "prompta",
+            PARTES_INDEX,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, NAV_CAPUT);
+    }
+    l = _eventuum_album(m, piscina);
+    si (!l || album_numerus(l) == ZEPHYRUM)
+    {
+        redde;
+    }
+    e = _electus_eventus(m);
+    album_pagina(l, e >= ZEPHYRUM ? album_pagina_rei(l, e + I, ZEPHYRUM)
+        : ZEPHYRUM, &a, &b, &t);
+    per (i = a; i < b; i++)
+    {
+        o = album_ordo(l, (i32)i);
+        (vacuum)_componentem_locare(dp, regio, chorda_ut_cstr(o->id,
+            piscina), PARTES_ITEM, DISPOSITIO_CRESCENS, ZEPHYRUM,
+            DISPOSITIO_FIXA, o->altitudo);
+    }
+}
+
 /* pagina: margo superus, area textus (cf. _area), pes cum sagittis */
 interior vacuum
 _paginam_disponere (
@@ -1830,6 +2426,10 @@ navigator_componere (
     si (_visus(m) == VISUS_PAGINAE)
     {
         _paginam_disponere(m, &dp, radix_d);
+    }
+    alioquin si (_visus(m) == VISUS_EVENTUUM)
+    {
+        _eventus_disponere(m, &dp, radix_d, piscina);
     }
     alioquin
     {
@@ -1982,6 +2582,26 @@ navigator_semitam_secuta (
              character  numerus[XVI];
 
     m = (NavigatorMontatio*)ctx;
+    si (   m && m->figurae_ctx && _visus(m) == VISUS_EVENTUUM
+        && _numerus_eventuum(m) == ZEPHYRUM)
+    {
+        /* N3.3b: restitutio in eventibus - quaestio iteratur; sine
+         * quaestione ad indicem */
+        Piscina* scheda  = ((NavigatorFigurae*)m->figurae_ctx)->scheda;
+         chorda  h       = _campus(m, "quaestio_hospes");
+
+        piscina_vacare(scheda);
+        si (_campus(m, "quaestio").mensura > ZEPHYRUM)
+        {
+            redde _quaestionem_incipere(m, h.mensura > ZEPHYRUM ? h
+                : chorda_ex_literis("en.wikipedia.org", scheda),
+                chorda_transcribere(_campus(m, "quaestio"), scheda),
+                scheda);
+        }
+        tituli[ZEPHYRUM]   = "visus";
+        valores[ZEPHYRUM]  = "index";
+        redde _campos_scribere(m, tituli, valores, I);
+    }
     si (!m || !m->figurae_ctx || _visus(m) != VISUS_PAGINAE)
     {
         redde VERUM;
@@ -2051,6 +2671,19 @@ navigator_locus_titulus (
              character  numeri[XXIV];
 
     m = (NavigatorMontatio*)ctx;
+    si (m && _visus(m) == VISUS_EVENTUUM)
+    {
+        chorda r;
+
+        r = chorda_concatenare(chorda_ex_literis("Search: ", piscina),
+            _campus(m, "quaestio"), piscina);
+        r = chorda_concatenare(r, chorda_ex_literis(" (", piscina),
+            piscina);
+        r = chorda_concatenare(r, _campus(m, "quaestio_hospes"),
+            piscina);
+        redde chorda_concatenare(r, chorda_ex_literis(")", piscina),
+            piscina);
+    }
     f = m && _visus(m) == VISUS_PAGINAE ? _paginas_parare(m) : NIHIL;
     si (!f)
     {

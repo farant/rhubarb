@@ -444,10 +444,14 @@ _sectio_errores (
     CREDO_VERUM(pictum(w, "Unsupported site", c->piscina));
     CREDO_AEQUALIS_I32(s->acceptae, I);
 
-    CREDO_GRADUS("verba sine '://': 'Not a URL'");
+    CREDO_GRADUS("verba sine '://': quaestio; 404 -> 'Not found'");
     clavis(w, 'o');
     scribere(w, "rhabarbarum");
-    CREDO_VERUM(pictum(w, "Not a URL", c->piscina));
+    CREDO_VERUM(pictum(w,
+        "Searching en.wikipedia.org for 'rhabarbarum'",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Not found", c->piscina));
     servum_scriptum_claudere(s);
 }
 
@@ -512,6 +516,91 @@ _sectio_supersedere (
         IV);
     servum_scriptum_claudere(tardus);
     servum_scriptum_claudere(vivus);
+}
+
+/* N3.3b: quaestio - eventus, electio, apertio (servatus statim,
+ * alius petitur), mus, "No results", hospes ex articulo, Esc */
+interior vacuum
+_sectio_quaestio (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+    ServusScriptus* a;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti("{\"pages\":["
+        "{\"key\":\"Roma\",\"title\":\"Roma\","
+        "\"description\":\"Urbs aeterna\"},"
+        "{\"key\":\"Beta\",\"title\":\"Beta\","
+        "\"description\":\"Genus plantarum\"}]}", c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("'la: Roma': quaestio in la.wikipedia.org");
+    clavis(w, 'o');
+    scribere(w, "la: Roma");
+    CREDO_VERUM(pictum(w, "Searching la.wikipedia.org for 'Roma'",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(chorda_incipit(chorda_aedificator_spectare(s->petitio),
+        chorda_ex_literis("GET /w/rest.php/v1/search/page?q=Roma"
+        "&limit=20",
+        c->piscina)));
+
+    CREDO_GRADUS("eventus: titulus - descriptio, campi quaestionis");
+    CREDO_VERUM(campus_est(w, "visus", "eventus"));
+    CREDO_VERUM(campus_est(w, "quaestio", "Roma"));
+    CREDO_VERUM(campus_est(w, "quaestio_hospes", "la.wikipedia.org"));
+    CREDO_VERUM(pictum(w, "Urbs aeterna", c->piscina));
+    CREDO_VERUM(pictum(w, "Genus plantarum", c->piscina));
+
+    CREDO_GRADUS("j + Enter in 'Beta' (servatus): statim, sine rete");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus_eventus", "1"));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("in pagina (la): sine praefixo, hospes articuli");
+    clavis(w, 'o');
+    scribere(w, "Roma");
+    CREDO_VERUM(pictum(w, "Searching la.wikipedia.org for 'Roma'",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "eventus"));
+
+    CREDO_GRADUS("mus: duplex in 'Roma' (non servatus): petitur");
+    a = servum_ponere(w, responsum_ducenti(PAGINA("Roma",
+        "<p>Roma caput mundi.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_VERUM(ictus_in(w, "r1", VERUM, c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(pictum(w, "Roma caput mundi.", c->piscina));
+    servum_scriptum_claudere(a);
+
+    CREDO_GRADUS("Esc ex eventibus: ad paginam si articulus");
+    clavis(w, 'o');
+    servum_scriptum_claudere(s);
+    s = servum_ponere(w, responsum_ducenti("{\"pages\":[{\"key\":"
+        "\"X\",\"title\":\"X\"}]}", c->piscina), FALSUM);
+    scribere(w, "X");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "eventus"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    servum_scriptum_claudere(s);
+
+    CREDO_GRADUS("nulli eventus: 'No results', visus manet");
+    s = servum_ponere(w, responsum_ducenti("{\"pages\":[]}",
+        c->piscina), FALSUM);
+    clavis(w, 'o');
+    scribere(w, "nihil");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "No results", c->piscina));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    servum_scriptum_claudere(s);
 }
 
 interior vacuum
@@ -716,6 +805,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "aperire", _sectio_aperire, NIHIL, mundum_purgare, NIHIL, NIHIL },
     { "errores", _sectio_errores, NIHIL, mundum_purgare, NIHIL, NIHIL },
     { "supersedere", _sectio_supersedere, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "quaestio", _sectio_quaestio, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "index", _sectio_index, NIHIL, mundum_purgare, NIHIL,
         NIHIL },

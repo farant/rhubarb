@@ -22,8 +22,16 @@
  * navigator_petere in reactore hospitis; dum petitur nota "Fetching
  * <hospes/via>..." (obscura); SERVATA -> articulus apertus (versio
  * fixa); NON_INVENTA "Not found", IGNOTA "Unsupported site", RETE causa
- * - nota (rubra). Textus sine "://": "Not a URL". Petitio nova
- * pendentem abrumpit. */
+ * - nota (rubra). Petitio nova pendentem abrumpit.
+ * QUAESTIO (N3.3b): textus sine "://" in prompta = quaestio
+ * Vicipaediae (navigator_quaerere); "la: Roma" hospitem eligit
+ * (praefixum linguae), aliter hospes articuli currentis (pagina) aut
+ * en.wikipedia.org. Nota "Searching <hospes> for '<verba>'...";
+ * EVENTUS: linea per eventum (titulus - descriptio), claves j k [ ]
+ * Enter (articulus per viam URL: servatus statim, aliter petitur), Esc
+ * (ad paginam si articulus, aliter indicem); mus: ictus eligit, duplex
+ * aperit. Nulli: "No results". Restitutio in eventibus quaestionem
+ * iterat. */
 
 #ifndef NAVIGATOR_H
 #define NAVIGATOR_H

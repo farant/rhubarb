@@ -55,3 +55,18 @@ succeed and polls the reactor without pulsing - red without the cancel.
 
 Found on the way: probatio_vicus_quies is flaky under load (~1 in 3 at
 load 7.7), also with the committed vicus_applicatio - ledger …N8S6.
+
+## 2026-10-27 - N3.3b Wikipedia search
+
+Plain words in the url: prompt search Wikipedia (REST
+/w/rest.php/v1/search/page, limit 20) instead of "Not a URL". "la: Roma"
+picks the language; without a prefix the current article's host (page
+view) else en. navigator_quaerere shares the fetch machinery (handle,
+User-Agent, cancel, release) - navigator_petere was split into
+_petitionem_creare + _vocare. Results live in the FETCH's arena, so
+the pane copies them into its own `arca_eventuum` before the fetch is
+released on the next pulse. Results view `eventus` = album like the
+index; Enter goes through _url_aperire (saved opens offline). Esc goes
+back to the page if an article is open, else the index. A restart in
+the results view re-runs the stored search (results are not
+persisted).

@@ -535,11 +535,81 @@ _probare_sedes (
     CREDO_VERUM(circuitus("Rheum_(plant)", p));
 }
 
+/* N3.3b: quaestio - URL et responsum JSON (fixum verum: q=aquinas,
+ * limit=20, en.wikipedia.org 2026-10-27) */
+interior constans VicipaediaEventus*
+eventus (
+    Xar* x,
+    i32  i)
+{
+    redde (constans VicipaediaEventus*)xar_obtinere(x, i);
+}
+
+interior vacuum
+_probare_quaestio (
+    CredoContextus* c)
+{
+    Piscina* p = c->piscina;
+        Xar* x;
+
+    CREDO_GRADUS("URL quaestionis, verba codificata");
+    CREDO_CHORDA_AEQUALIS_LITERIS(vicipaedia_url_quaestionis(
+        chorda_ex_literis("en.wikipedia.org", p), chorda_ex_literis(
+        "Thomas Aquinas", p), XX, p),
+        "https://en.wikipedia.org/w/rest.php/v1/search/page?"
+        "q=Thomas%20Aquinas&limit=20");
+    CREDO_CHORDA_AEQUALIS_LITERIS(vicipaedia_url_quaestionis(
+        chorda_ex_literis("la.wikipedia.org", p),
+        chorda_ex_literis("C++",
+        p), V, p),
+        "https://la.wikipedia.org/w/rest.php/v1/search/page?"
+        "q=C%2B%2B&limit=5");
+
+    CREDO_GRADUS("fixum verum: XX eventus ordine relevantiae");
+    x = vicipaedia_eventus_legere(filum_legere_totum(
+        "probationes/fixa/vicipaedia/quaestio_aquinas.json", p), p);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_I32(xar_numerus(x), XX);
+    CREDO_CHORDA_AEQUALIS_LITERIS(eventus(x, ZEPHYRUM)->clavis,
+        "Thomas_Aquinas");
+    CREDO_CHORDA_AEQUALIS_LITERIS(eventus(x, ZEPHYRUM)->titulus,
+        "Thomas Aquinas");
+    CREDO_CHORDA_AEQUALIS_LITERIS(eventus(x, ZEPHYRUM)->descriptio,
+        "Italian Dominican friar and philosopher (1225\xE2\x80\x93"
+        "1274)");
+    CREDO_CHORDA_AEQUALIS_LITERIS(eventus(x, XI)->clavis, "Thomism");
+    CREDO_CHORDA_AEQUALIS_LITERIS(eventus(x, XIX)->clavis,
+        "Aquinas_College,_Stockport");
+
+    CREDO_GRADUS("JSON parvum: \\u, descriptio null, clavis vacua");
+    x = vicipaedia_eventus_legere(chorda_ex_literis(
+        "{\"pages\":[{\"key\":\"Caf\\u00e9\",\"title\":\"Caf\\u00e9\","
+        "\"description\":null},{\"key\":\"\",\"title\":\"X\"}]}", p),
+        p);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_I32(xar_numerus(x), I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(eventus(x, ZEPHYRUM)->titulus,
+        "Caf\xC3\xA9");
+    CREDO_AEQUALIS_I32((i32)eventus(x, ZEPHYRUM)->descriptio.mensura,
+        ZEPHYRUM);
+
+    CREDO_GRADUS("nulli eventus: vacuum; JSON malum: NIHIL");
+    x = vicipaedia_eventus_legere(chorda_ex_literis("{\"pages\":[]}",
+        p),
+        p);
+    CREDO_VERUM(x != NIHIL && xar_numerus(x) == ZEPHYRUM);
+    CREDO_VERUM(vicipaedia_eventus_legere(chorda_ex_literis("non json",
+        p), p) == NIHIL);
+    CREDO_VERUM(vicipaedia_eventus_legere(chorda_ex_literis("{\"x\":1}",
+        p), p) == NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "minimum", _probare_minimum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "rhubarb", _probare_rheum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aquinas", _probare_aquinas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sedes", _probare_sedes, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "quaestio", _probare_quaestio, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

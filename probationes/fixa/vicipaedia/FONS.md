@@ -16,3 +16,6 @@ Creative Commons Attribution-ShareAlike 4.0 License
 (https://creativecommons.org/licenses/by-sa/4.0/); authors listed in
 each article's history on en.wikipedia.org. Used here unchanged (apart
 from the trimming above) as test data.
+
+- `quaestio_aquinas.json` - https://en.wikipedia.org/w/rest.php/v1/search/page?q=aquinas&limit=20
+  (2026-10-27, 11,557 bytes; navigator N3.3b) - search response, unchanged.

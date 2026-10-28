@@ -765,6 +765,84 @@ _sectio_tertia_decima (
     CREDO_FALSUM(glyphae_ductae_est(0x2195));
 }
 
+/* XIII: IPA (Franus 2026-10-27: pronuntiationes Vicipaediae tofu in
+ * navigatore) - vocales et consonantes Anglicae, accentus, longa;
+ * litterae versae ex fonte ipso (e, a, v versa; c inversum) */
+nomen structura {
+                    s32  runa;
+     constans character* pictura[VIII];
+} PicturaPhonetica;
+
+interior vacuum
+_sectio_quarta_decima (
+    CredoContextus* c)
+{
+    PicturaPhonetica tabula[] = {
+        { 0x014B, { "......", "......", ".#.##.", ".##..#",
+            ".#...#", ".#...#", ".#...#", "...##." } },
+        { 0x0250, { "......", "......", ".####.", ".#...#",
+            ".####.", ".#....", "..###.", "......" } },
+        { 0x0251, { "......", "......", "..####", ".#...#",
+            ".#...#", ".#..##", "..##.#", "......" } },
+        { 0x0252, { "......", "......", ".#.##.", ".##..#",
+            ".#...#", ".#...#", ".####.", "......" } },
+        { 0x0254, { "......", "......", "..###.", ".#...#",
+            ".....#", ".#...#", "..###.", "......" } },
+        { 0x0259, { "......", "......", "..###.", ".....#",
+            ".#####", ".#...#", "..###.", "......" } },
+        { 0x025B, { "......", "......", "..####", ".#....",
+            "..###.", ".#....", "..####", "......" } },
+        { 0x025C, { "......", "......", ".####.", ".....#",
+            "..###.", ".....#", ".####.", "......" } },
+        { 0x0261, { "......", "......", "..##.#", ".#..##",
+            ".#...#", "..####", ".....#", "..###." } },
+        { 0x026A, { "......", "......", "..###.", "...#..",
+            "...#..", "...#..", "..###.", "......" } },
+        { 0x0279, { "......", "......", "....#.", "....#.",
+            "....#.", ".#..#.", "..##.#", "......" } },
+        { 0x027E, { "......", "......", "...##.", "..#...",
+            "..#...", "..#...", "..#...", "......" } },
+        { 0x0283, { "....##", "...#..", "...#..", "...#..",
+            "...#..", "...#..", "...#..", ".##..." } },
+        { 0x028A, { "......", "......", ".##.##", ".#...#",
+            ".#...#", ".#...#", "..###.", "......" } },
+        { 0x028C, { "......", "......", "...#..", "..#.#.",
+            ".#...#", ".#...#", ".#...#", "......" } },
+        { 0x0292, { "......", "......", ".#####", "....#.",
+            "...##.", ".....#", ".#...#", "..###." } },
+        { 0x0294, { "..###.", ".#...#", ".....#", "....#.",
+            "...#..", "...#..", "...#..", "......" } },
+        { 0x02C8, { "...#..", "...#..", "...#..", "......",
+            "......", "......", "......", "......" } },
+        { 0x02CC, { "......", "......", "......", "......",
+            "......", "...#..", "...#..", "...#.." } },
+        { 0x02D0, { "......", "......", "..###.", "...#..",
+            "......", "...#..", "..###.", "......" } },
+        { 0x02D1, { "......", "......", "..###.", "...#..",
+            "......", "......", "......", "......" } },
+        { ZEPHYRUM, { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL,
+            NIHIL } }
+    };
+                    i8 larva[MAXIMA + XVI];
+                   i32 i;
+                   i32 mala = ZEPHYRUM;
+
+    (vacuum)c;
+    per (i = ZEPHYRUM; tabula[i].runa; i++)
+    {
+        si (   !glyphae_ductae_est(tabula[i].runa)
+            || !pictura_est(tabula[i].runa, tabula[i].pictura, larva))
+        {
+            imprimere("  IPA U+%04X non pictum\n",
+                (insignatus integer)tabula[i].runa);
+            mala++;
+        }
+    }
+    CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
+    CREDO_FALSUM(glyphae_ductae_est(0x0258));   /* ɘ: nondum */
+    CREDO_FALSUM(glyphae_ductae_est(0x0253));   /* ɓ: nondum */
+}
+
 interior vacuum
 _sectio_prima (
     CredoContextus* c)
@@ -880,6 +958,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "XII: sagitta utrimque (U+2194)", _sectio_tertia_decima, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "XIII: IPA", _sectio_quarta_decima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

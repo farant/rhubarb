@@ -14,6 +14,7 @@
 #include "filum.h"
 #include "navigator_bibliotheca.h"
 #include "navigator_petitio.h"
+#include "vicipaedia.h"
 #include "servus_scriptus.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -430,6 +431,115 @@ _probare_abrumpere (
     CREDO_VERUM(_reactor_vacuus(m->reactor));
 }
 
+/* ===== N3.3b: quaestio ===== */
+
+nomen structura {
+                          i32 finis;
+    NavigatorQuaestioResultus resultus;
+                          s32 numerus;     /* -1: nulla lista */
+                       chorda primus;
+} ObservatioQuaestionis;
+
+interior vacuum
+_finis_quaestionis (
+                                vacuum* datum,
+    constans NavigatorQuaestioResultus* r)
+{
+    ObservatioQuaestionis* o = (ObservatioQuaestionis*)datum;
+
+    o->finis++;
+    o->resultus  = *r;
+    o->numerus   = r->eventus ? (s32)xar_numerus(r->eventus) : -I;
+    si (r->eventus && xar_numerus(r->eventus) > ZEPHYRUM)
+    {
+        o->primus = ((constans VicipaediaEventus*)xar_obtinere(
+            r->eventus, ZEPHYRUM))->titulus;
+    }
+}
+
+interior b32
+_quaerere (
+                      Mundus* m,
+                      chorda  verba,
+    NavigatorPetitioOptiones* opt,
+       ObservatioQuaestionis* o,
+                     Piscina* p)
+{
+    NavigatorPetitio* np;
+                 b32  intra;
+                 s64  initium;
+              chorda  primus;
+
+    memset(o, ZEPHYRUM, magnitudo(*o));
+    np = navigator_quaerere(m->reactor, chorda_ex_literis(
+        "la.wikipedia.org", p), verba, _finis_quaestionis, o, opt);
+    si (!np)
+    {
+        redde FALSUM;
+    }
+    intra    = (o->finis != ZEPHYRUM);
+    initium  = _ms_nunc();
+    dum (o->finis == ZEPHYRUM && _ms_nunc() - initium < III * M)
+    {
+        (vacuum)reactor_poll(m->reactor, XX);
+    }
+    /* copia ante dimittere (eventus in piscina petitionis) */
+    primus = chorda_transcribere(o->primus, p);
+    navigator_petitionem_dimittere(np);
+    o->primus = primus;
+    redde !intra && o->finis == I;
+}
+
+interior vacuum
+_probare_quaestio (
+    CredoContextus* c)
+{
+                      Mundus* m = (Mundus*)c->datum;
+              ServusScriptus* s;
+    NavigatorPetitioOptiones  opt;
+       ObservatioQuaestionis  o;
+                      chorda  petitio;
+
+    CREDO_NECESSE(m->reactor);
+    s = _servus(m->reactor, _responsum_ducenti("{\"pages\":["
+        "{\"key\":\"Roma\",\"title\":\"Roma\","
+        "\"description\":\"Urbs\"},"
+        "{\"key\":\"Roma_Antiqua\",\"title\":\"Roma Antiqua\"}]}",
+        c->piscina), FALSUM, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(s);
+    opt = _optiones(s, c->piscina);
+
+    CREDO_GRADUS("quaestio: SERVATA, eventus, finis semel non intra");
+    CREDO_VERUM(_quaerere(m, chorda_ex_literis("Roma aeterna",
+        c->piscina), &opt, &o, c->piscina));
+    CREDO_AEQUALIS_I32((i32)o.resultus.status,
+        (i32)NAVIGATOR_PETITIO_SERVATA);
+    CREDO_AEQUALIS_I32((i32)o.numerus, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(o.primus, "Roma");
+
+    CREDO_GRADUS("servus: via quaestionis, User-Agent");
+    petitio = chorda_aedificator_spectare(s->petitio);
+    CREDO_VERUM(chorda_incipit(petitio, chorda_ex_literis(
+        "GET /w/rest.php/v1/search/page?q=Roma%20aeterna&limit=20 "
+        "HTTP/1.1\r\n", c->piscina)));
+    CREDO_VERUM(_continet(petitio, "User-Agent: " AGENS "\r\n",
+        c->piscina));
+    servum_scriptum_claudere(s);
+
+    CREDO_GRADUS("responsum non JSON: RETE");
+    s = _servus(m->reactor, _responsum_ducenti("<html>nihil</html>",
+        c->piscina), FALSUM, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(s);
+    opt = _optiones(s, c->piscina);
+    CREDO_VERUM(_quaerere(m, chorda_ex_literis("Roma", c->piscina),
+        &opt,
+        &o, c->piscina));
+    CREDO_AEQUALIS_I32((i32)o.resultus.status,
+        (i32)NAVIGATOR_PETITIO_RETE);
+    servum_scriptum_claudere(s);
+    CREDO_VERUM(_reactor_vacuus(m->reactor));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "agens", _probare_agens, NIHIL, NIHIL, NIHIL, NIHIL },
     { "servata", _probare_servata, mundum_parare, mundum_purgare, NIHIL,
@@ -444,6 +554,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "abrumpere", _probare_abrumpere, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "quaestio", _probare_quaestio, mundum_parare, mundum_purgare,
+        NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
