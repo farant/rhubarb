@@ -226,6 +226,13 @@ at every λ.
     formula = table red, R4 green; 6 → R2b red, **R2 green**; 7 → R2 red
     (also R1 and the gauge: |A_i| no longer sums to the crossing; the
     plan was silent on R1), R3/R4 green. main.c restored byte-identical.
+  **Before T2 (2026-10-27): memory measured, nothing seen.** At Fran's
+  question (keep under 10-15 GB), the demo ran to λ ≤ 5 and the oracle
+  to λ ≤ 5 under `tools/custos.sh` with ALL output sent to /dev/null
+  (only the custos line read): demo peak 31 MB, oracle 79 MB. λ = 6
+  estimate from array sizes (16× per λ): demo ~200 MB (one 4096² piece
+  matrix of 8-byte entries + its residues), oracle ~1.3 GB. T2 caps:
+  custos 2 GB (demo), 4 GB (oracle).
 - **T2. Registered run.** λ = 1 … 6, verdicts, findings.md, archive.
 - **T3. Review** (a reviewer with its own oracle, as for D132–D134).
 
