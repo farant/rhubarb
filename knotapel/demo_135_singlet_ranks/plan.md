@@ -238,6 +238,8 @@ at every λ.
   checks; 270 ranks = oracle); findings.md; demo-snapshot.c
   byte-identical to the live build.*
 - **T3. Review** (a reviewer with its own oracle, as for D132–D134).
+  *Done 2026-10-27 (recensor-d135): no H; M1-M3 and L1-L7 fixed in
+  findings.md ("Review (T3)").*
 
 ## Design review (2026-10-27, consiliarius-d135, before any data)
 
