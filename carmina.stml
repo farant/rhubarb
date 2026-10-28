@@ -612,4 +612,27 @@
       <frustum mensura="1"><textus!>o2 a4 g#4 a4 f4 | f2 e2 | a4 o3 d4 d2 | o2 e2 a2 | o3 c4 f4 f2 | e1 | o2 a4 o3 f4 f4 f4 | e4 e4 o2 a2</textus></frustum>
     </pars>
   </carmen>
+
+  <!-- primus: cantus modi I (d dorius) sine textu, schola super ison
+       D. Initium D -> A (finalis -> repercussio), b molle (Bb) super
+       A, phrases in A, A, F, D cadunt; subtonium C ante finem. Studium
+       modorum (gradus I: clavis modalis). Generator:
+       build/plantae_s4/cantus/primus.py -->
+  <carmen titulus="primus" tempus="96" metrum="4/4" clavis="d dorius">
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <instrumentum titulus="ison_d" basis="schola" vocalis="o"
+        vox="bassus" amplitudo="0.5" ambitus="36..60"/>
+    <fermata mensura="4" ictus="2"/>
+    <fermata mensura="8"/>
+    <fermata mensura="12"/>
+    <fermata mensura="16"/>
+    <pars titulus="cantus" instrumentum="schola" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o4 d4 e4 f4 g4 | a4 a4 g4 a4 | b-4 a4 g4 f4 | g4 a2. | a4 o5 c4 d4 c4 | o4 a4 g4 a4 o5 c4 | o4 b4 a4 g4 a4 | a1 | f4 g4 a4 g4 | f4 e4 d4 e4 | f4 g4 f4 e4 | f1 | d4 e4 f4 g4 | f4 e4 d4 c4 | d4 e4 f4 e4 | d1</textus></frustum>
+    </pars>
+    <pars titulus="ison" instrumentum="ison_d" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1</textus></frustum>
+    </pars>
+  </carmen>
 </carmina>

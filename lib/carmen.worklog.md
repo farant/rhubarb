@@ -475,3 +475,12 @@ with caerulea; aeolius is NOT minor (no raised 6th/7th). Consumers:
 - partitura: key name = FINALES[letter][accidental] ("f#", "bb"), mode name; leading-tone
   spelling under the final (C# in d dorius) by the mode's letter offset.
 Book diff (15 songs): 0.
+
+## 2026-10-27 - house book: primus (first mode I chant)
+
+20th song: wordless mode I chant (clavis "d dorius") for schola over an ison drone on D sung by
+a song-level bass voice (ison_d: schola, vox bassus). D -> A opening, b molle Bb over A, four
+phrases ending A, A, F, D, subtonium C before the final; 4/4 with fermatas at phrase ends (free
+rhythm is a later step). censura 0 (Bb accepted as b molle). functio over melody + drone is
+meaningless (Isus4, iv43) - chant needs melodic mode analysis (next step). Generator:
+build/plantae_s4/cantus/primus.py.
