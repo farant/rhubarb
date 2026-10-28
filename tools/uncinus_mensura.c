@@ -12,6 +12,9 @@
  *   IV   clausurae tricarum n = 4 .. 12 filorum: latitudo, officina,
  *        tempus per punctum, contractiones et totum PRAEDICTA (totum
  *        cursum solum si coniectura < LX s)
+ *   V    (solum per -sectio V) trica una fortuita: -fila N
+ *        -longitudo L -limes S (cursus totus si coniectura < S
+ *        secundis) -semen K
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -23,7 +26,7 @@
  * Usus: ./bin/aedilis tools/uncinus_mensura.c && bash
  *   build/aedilis/uncinus_mensura/struere.sh &&
  *   ./build/aedilis/uncinus_mensura/uncinus_mensura [-machina]
- *   [-sectio I|II|III|IV]
+ *   [-sectio I|II|III|IV|V]
  *   -machina: lineae "MENSURA <sectio> clavis=valor ..."
  */
 #include "latina.h"
@@ -36,6 +39,7 @@
 #include "laqueus.h"
 #include "tabula_nodorum.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
@@ -698,13 +702,49 @@ _sectio_tricarum (vacuum)
     }
 }
 
+/* V: trica una fortuita, magnitudine data (nodi magni). Non in cursu
+ * ordinario - solum per -sectio V. */
+interior vacuum
+_sectio_singuli (
+    i32 fila,
+    i32 longitudo,
+    f64 limes_s,
+    i64 semen)
+{
+           Piscina* piscina = piscina_generare_dynamicum("mensura",
+               1048576);
+              Sors  s;
+         character  titulus[XXXII];
+      constans i32* pd;
+
+    sors_seminare(&s, semen, ZEPHYRUM);
+    _titulus_columnarum("V. trica una fortuita (titulus = fila)");
+    sprintf(titulus, "plexus%u", fila);
+    pd = _plexus_fortuitus(&s, fila, &longitudo, piscina);
+    si (pd == NIHIL)
+    {
+        imprimere("   %s L=%u: nullum verbum nodi post M conatus\n",
+            titulus, longitudo);
+    }
+    alioquin
+    {
+        _metiri("V", titulus, pd, longitudo, limes_s, piscina);
+    }
+    fflush(stdout);
+    piscina_destruere(piscina);
+}
+
 s32
 principale (
                s32  argc,
     constans character* constans* argv)
 {
-    constans character* sectio = NIHIL;
+    constans character* sectio    = NIHIL;
                    s32  i;
+                   i32  fila       = XII;
+                   i32  longitudo  = DCCC;
+                   f64  limes_s    = 60.0;
+                   i64  semen      = (i64)MMXXVIII;
 
     per (i = I; i < argc; i++)
     {
@@ -717,6 +757,36 @@ principale (
         {
             sectio = argv[++i];
         }
+        alioquin si (   strcmp(argv[i], "-fila") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            fila = (i32)strtoul(argv[++i], NIHIL, X);
+        }
+        alioquin si (   strcmp(argv[i], "-longitudo") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            longitudo = (i32)strtoul(argv[++i], NIHIL, X);
+        }
+        alioquin si (   strcmp(argv[i], "-limes") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            limes_s = strtod(argv[++i], NIHIL);
+        }
+        alioquin si (   strcmp(argv[i], "-semen") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            semen = (i64)strtoul(argv[++i], NIHIL, X);
+        }
+    }
+    si (sectio != NIHIL && strcmp(sectio, "V") == ZEPHYRUM)
+    {
+        si (fila < II || longitudo < I)
+        {
+            imprimere("-fila >= 2 et -longitudo >= 1 requiruntur\n");
+            redde I;
+        }
+        _sectio_singuli(fila, longitudo, limes_s, semen);
+        redde ZEPHYRUM;
     }
     si (sectio == NIHIL || strcmp(sectio, "I") == ZEPHYRUM)
     {
