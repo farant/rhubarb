@@ -481,3 +481,18 @@ spatium (no test - equal hybrid times across replicas need forged acts).
 `pictor_pinacem_facere`, so a foreign thumbnail is pixel-identical to the
 one its writer would draw (test). New pictures are named by
 `moneta_ulid` (D9/D12) instead of `pictura-<n>`; old names keep working.
+
+## 2026-10-27 - Edit a copy (communio-plan-5 T4, quarta)
+
+`pictor_exemplum_facere` (pictor_applicatio.c): opens the foreign
+picture in a throwaway pool, creates a NEW own picture exactly like New
+picture (ULID name, this device's canvas), fits the foreign composite
+with `pictor_imaginem_aptare` (contain + Atkinson, transparent kept) and
+inserts it as one layer above the top one - the same act a confirmed
+paste writes (`pictor_documentum_imaginem_inserere`), skipping the
+pending-paste UI. The origin is an attribute on the copy's own manifest,
+`<documentum ... origo="<replica>:<spatium>"/>`, written by re-saving the
+manifest (upsert -> one more `plagula-condita`, which also dates the copy
+first in My pictures). The test compares the copy's composite fingerprint
+with a reference picture built the same way, for a foreign picture both
+larger and smaller than the canvas.

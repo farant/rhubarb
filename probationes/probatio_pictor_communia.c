@@ -1,8 +1,12 @@
 /* probatio_pictor_communia.c - picturae communes (communio-plan-5
  * T3-T4): index picturarum aliarum machinarum (recentissima primum,
  * ex hora scriptoris), pinax picturae alienae, picturae veteres
- * "pictura-<n>" adhuc aperiuntur. Duo volumina per communio_transferre
+ * "pictura-<n>" adhuc aperiuntur; T4 "Edit a copy" (pictura propria ex
+ * aliena, originem memorans). Duo volumina per communio_transferre
  * (sine rete). */
+
+#define LATITUDO_TELEPHONI  CCXV
+#define ALTITUDO_TELEPHONI  CDXIX
 #include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
@@ -14,6 +18,7 @@
 #include "thema.h"
 #include "imago.h"
 #include "pictor_documentum.h"
+#include "pictor_applicatio.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -201,6 +206,147 @@ _sectio_pictura_vetus (
     volumen_claudere(a);
 }
 
+/* T4: exemplum B picturae in A - magnitudo A, compositum = alienum
+ * aptatum (ut referentia eadem via facta), origo memorata */
+interior b32
+exemplum_probare (
+                Volumen* a,
+                Volumen* b,
+    InternamentumChorda* intern,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+       PictorApplicatio  app;
+       PictorDocumentum* fons;
+       PictorDocumentum* copia;
+       PictorDocumentum* aliena;
+       PictorDocumentum* referentia;
+                Volumen* vr;
+                    Xar* propria;
+                     i8* indices;
+                    s32  x;
+                    s32  y;
+                    i32  lat;
+                    i32  alt;
+                    s64  cursor;
+                    i32  ictus_alieni;
+                 chorda  replica;
+                 chorda  spatium_alienum;
+              character  novum[XXVIII];
+
+    fons = pictor_documentum_creare(piscina, intern, b, spatium,
+        latitudo, altitudo, II);
+    si (   !fons || ictus(fons, latitudo / II, altitudo / II, II)
+               <= ZEPHYRUM
+        || ictus(fons, I, I, IX) <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    cursor = ZEPHYRUM;
+    si (!transferre(b, a, &cursor))
+    {
+        redde FALSUM;
+    }
+    si (!pictor_applicatio_aedificare(&app, piscina, intern, a,
+            LATITUDO_TELEPHONI, ALTITUDO_TELEPHONI))
+    {
+        redde FALSUM;
+    }
+    ictus_alieni = pictor_documentum_numerus_vivorum(
+        pictor_documentum_aperire_alienum(piscina, intern, a,
+        volumen_replica(b), spatium));
+    CREDO_VERUM(pictor_exemplum_facere(&app.montatio,
+        volumen_replica(b),
+        spatium, novum));
+    copia = app.montatio.doc;
+    CREDO_NECESSE_NON_NIHIL(copia);
+    CREDO_AEQUALIS_I32((i32)strlen(novum), XXVI);
+    /* magnitudo tabulae A (ut New picture) */
+    CREDO_VERUM(copia->latitudo != latitudo
+        || copia->altitudo != altitudo);
+    /* referentia: tabula eadem, alienum aptatum eadem via */
+    aliena = pictor_documentum_aperire_alienum(piscina, intern, a,
+        volumen_replica(b), spatium);
+    CREDO_NECESSE_NON_NIHIL(aliena);
+    indices =
+        pictor_imaginem_aptare(pictor_documentum_proiectio(aliena),
+        copia->latitudo, copia->altitudo, piscina, &x, &y, &lat, &alt);
+    CREDO_NECESSE_NON_NIHIL(indices);
+    CREDO_VERUM(lat <= copia->latitudo && alt <= copia->altitudo);
+    CREDO_VERUM(lat == copia->latitudo || alt == copia->altitudo);
+    vr = volumen_temporarium(piscina, "probatio_pictor_communia_r");
+    referentia = vr ? pictor_documentum_creare(piscina, intern, vr, "r",
+        copia->latitudo, copia->altitudo, LXIV) : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(referentia);
+    CREDO_NECESSE(pictor_documentum_imaginem_inserere(referentia,
+        indices,
+        lat, alt, x, y, pictor_documentum_stratum(referentia,
+        pictor_documentum_numerus_stratorum(referentia) - I)->id)
+        > ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS(pictor_documentum_sigillum_hex(copia,
+        piscina),
+        pictor_documentum_sigillum_hex(referentia, piscina));
+    /* in recentibus propriis primum */
+    propria = pictor_documenta_recentia(a, piscina);
+    CREDO_NECESSE(propria && xar_numerus(propria) > ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((PictorPictura*)xar_obtinere(propria,
+        ZEPHYRUM))->spatium, novum);
+    /* origo */
+    CREDO_VERUM(pictor_originem_legere(a, novum, piscina, &replica,
+        &spatium_alienum));
+    CREDO_CHORDA_AEQUALIS(replica, volumen_replica(b));
+    CREDO_CHORDA_AEQUALIS_LITERIS(spatium_alienum, spatium);
+    /* pingere in copia: actum appenditur; alienum intactum */
+    CREDO_VERUM(ictus(copia, V, V, IV) > ZEPHYRUM);
+    CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
+        pictor_documentum_aperire_alienum(piscina, intern, a,
+        volumen_replica(b), spatium)), ictus_alieni);
+    volumen_claudere(vr);
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_exemplum (
+    CredoContextus* c)
+{
+                Volumen* a;
+                Volumen* b;
+    InternamentumChorda* intern;
+       PictorApplicatio  app;
+              character  novum[XXVIII];
+                    i32  ante;
+                 chorda  replica;
+                 chorda  spatium;
+
+    (vacuum)c;
+    intern = internamentum_creare(piscina);
+    a = volumen_temporarium(piscina,
+        "probatio_pictor_communia_f");
+    b = volumen_temporarium(piscina,
+        "probatio_pictor_communia_g");
+    CREDO_NECESSE(intern && a && b);
+    CREDO_GRADUS("pictura maior quam tabula A");
+    CREDO_VERUM(exemplum_probare(a, b, intern, "magna", CCC, CC));
+    CREDO_GRADUS("pictura minor quam tabula A");
+    CREDO_VERUM(exemplum_probare(a, b, intern, "parva", XL, XXX));
+
+    CREDO_GRADUS("ignota: FALSUM, nihil creatum");
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, piscina, intern, a,
+        LATITUDO_TELEPHONI, ALTITUDO_TELEPHONI));
+    ante = (i32)xar_numerus(pictor_documenta_enumerare(a, piscina));
+    CREDO_FALSUM(pictor_exemplum_facere(&app.montatio,
+        volumen_replica(b), "nulla", novum));
+    CREDO_AEQUALIS_I32((i32)xar_numerus(pictor_documenta_enumerare(a,
+        piscina)), ante);
+
+    CREDO_GRADUS("pictura sine origine: FALSUM");
+    CREDO_FALSUM(pictor_originem_legere(a, "nulla", piscina, &replica,
+        &spatium));
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo: hora scriptoris", _sectio_ordo, _parare, _purgare, NIHIL,
         NIHIL },
@@ -208,6 +354,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "pictura vetus (D9)", _sectio_pictura_vetus, _parare, _purgare,
         NIHIL, NIHIL },
+    { "Edit a copy (T4)", _sectio_exemplum, _parare, _purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

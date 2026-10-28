@@ -2,6 +2,7 @@
  * pictor.c translatus; ratio in capite. */
 
 #include "pictor_applicatio.h"
+#include "moneta.h"
 #include "chorda.h"
 #include "filum.h"
 #include "stml.h"
@@ -390,6 +391,63 @@ pictor_picturam_condere (
             clavis_memoriae(spatium, p), doc);
     }
     redde pictor_picturam_ponere(m, spatium);
+}
+
+b32
+pictor_exemplum_facere (
+          PictorMontatio* m,
+                  chorda  replica,
+      constans character* spatium_alienum,
+               character  spatium_novum[XXVIII])
+{
+                Piscina* temporaria;
+       PictorDocumentum* aliena;
+       PictorDocumentum* copia;
+                     i8* indices;
+                    s32  x;
+                    s32  y;
+                    i32  lat;
+                    i32  alt;
+                    b32  bene;
+
+    si (   !m || !m->doc || !spatium_alienum || !spatium_novum
+        || replica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* alienum in piscina temporaria: post insertionem perit */
+    temporaria = piscina_generare_dynamicum("pictor_exemplum",
+        (memoriae_index)M * (memoriae_index)M);
+    si (!temporaria)
+    {
+        redde FALSUM;
+    }
+    aliena = pictor_documentum_aperire_alienum(temporaria,
+        m->doc->intern,
+        m->doc->volumen, replica, spatium_alienum);
+    bene = aliena != NIHIL;
+    si (bene)
+    {
+        moneta_ulid(spatium_novum);
+        bene = pictor_picturam_condere(m, spatium_novum);
+    }
+    copia    = bene ? m->doc : NIHIL;
+    indices  =
+        copia ? pictor_imaginem_aptare(pictor_documentum_proiectio(
+        aliena), copia->latitudo, copia->altitudo, copia->piscina, &x,
+        &y,
+        &lat, &alt) : NIHIL;
+    bene = indices
+        && pictor_documentum_imaginem_inserere(copia, indices, lat, alt,
+        x,
+               y, pictor_documentum_stratum(copia,
+               pictor_documentum_numerus_stratorum(copia) - I)->id)
+           > ZEPHYRUM
+        && pictor_originem_ponere(copia->volumen, spatium_novum,
+        replica,
+               spatium_alienum, temporaria);
+    piscina_destruere(temporaria);
+    redde bene;
 }
 
 /* semitae R4c: SemitaOrganum pro argumento - manifestum pictoris in

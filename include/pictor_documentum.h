@@ -232,6 +232,27 @@ pictor_aliena_recentia (
      Volumen* volumen,
      Piscina* piscina);
 
+/* plan-5 T4 (D4 "Edit a copy"): origo picturae propriae in manifesto
+ * suo (attributum origo="<replica>:<spatium>") - ponere manifestum
+ * iterum condit (actum plagula-condita); FALSUM si pictura ignota aut
+ * signa mala (", <, &). legere: FALSUM si pictura ignota aut sine
+ * origine; chordae in piscina. */
+b32
+pictor_originem_ponere (
+               Volumen* volumen,
+    constans character* spatium,
+                chorda  replica,
+    constans character* spatium_alienum,
+               Piscina* piscina);
+
+b32
+pictor_originem_legere (
+               Volumen* volumen,
+    constans character* spatium,
+               Piscina* piscina,
+                chorda* replica,
+                chorda* spatium_alienum);
+
 /* ex volumine exsistente: dimensiones ex plagula 'documentum',
  * proiectio ex checkpoint proximo + actis */
 PictorDocumentum*

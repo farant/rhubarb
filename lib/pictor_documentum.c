@@ -1483,6 +1483,122 @@ documentum_ex_manifesto (
         (i32)altitudo, (i32)intervallum);
 }
 
+/* signa quae manifestum (STML) frangerent */
+interior b32
+_signa_tuta (
+    chorda c)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < c.mensura; i++)
+    {
+        si (c.datum[i] == '"' || c.datum[i] == '<' || c.datum[i] == '&')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+pictor_originem_ponere (
+               Volumen* volumen,
+    constans character* spatium,
+                chorda  replica,
+    constans character* spatium_alienum,
+               Piscina* piscina)
+{
+    chorda via;
+    chorda manifestum;
+    chorda alienum;
+    chorda novum;
+       b32 inventum;
+       i32 finis;
+
+    si (   !volumen || !spatium || !spatium_alienum || !piscina
+        || replica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    alienum = chorda_ex_literis(spatium_alienum, piscina);
+    si (!_signa_tuta(replica) || !_signa_tuta(alienum))
+    {
+        redde FALSUM;
+    }
+    via         = clavis_manifesti(piscina, spatium);
+    manifestum  = volumen_plagulam_promere(volumen, via, piscina,
+        &inventum);
+    si (   !inventum || manifestum.mensura < II
+        || memcmp(manifestum.datum + manifestum.mensura - II, "/>", II)
+           != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    finis          = manifestum.mensura - II;
+    novum          = manifestum;
+    novum.mensura  = finis;
+    novum = chorda_concatenare(novum, chorda_ex_literis(" origo=\"",
+        piscina), piscina);
+    novum = chorda_concatenare(chorda_concatenare(chorda_concatenare(
+        novum, replica, piscina), chorda_ex_literis(":", piscina),
+        piscina), alienum, piscina);
+    novum = chorda_concatenare(novum, chorda_ex_literis("\"/>",
+        piscina), piscina);
+    redde volumen_plagulam_condere(volumen, via, novum,
+        "pictor:documentum");
+}
+
+b32
+pictor_originem_legere (
+               Volumen* volumen,
+    constans character* spatium,
+               Piscina* piscina,
+                chorda* replica,
+                chorda* spatium_alienum)
+{
+                 chorda  manifestum;
+                    b32  inventum;
+           StmlResultus  res;
+                 chorda* origo;
+    InternamentumChorda* intern;
+                    i32  i;
+
+    si (   !volumen || !spatium || !piscina || !replica
+        || !spatium_alienum)
+    {
+        redde FALSUM;
+    }
+    manifestum = volumen_plagulam_promere(volumen, clavis_manifesti(
+        piscina, spatium), piscina, &inventum);
+    intern = inventum ? internamentum_creare(piscina) : NIHIL;
+    si (!intern)
+    {
+        redde FALSUM;
+    }
+    res = stml_legere_ex_literis(chorda_ut_cstr(manifestum, piscina),
+        piscina, intern);
+    origo = (res.successus && res.elementum_radix)
+          ? stml_attributum_capere(res.elementum_radix,
+          "origo") : NIHIL;
+    si (!origo)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < origo->mensura
+        && origo->datum[i] != ':'; i++)
+    {
+    }
+    si (i == ZEPHYRUM || i >= origo->mensura)
+    {
+        redde FALSUM;
+    }
+    replica->datum            = origo->datum;
+    replica->mensura          = i;
+    spatium_alienum->datum    = origo->datum + i + I;
+    spatium_alienum->mensura  = origo->mensura - i - I;
+    redde VERUM;
+}
+
 PictorDocumentum*
 pictor_documentum_aperire (
                 Piscina* piscina,

@@ -79,6 +79,19 @@ pictor_picturam_condere (
          PictorMontatio* m,
      constans character* spatium);
 
+/* plan-5 T4 (D4 "Edit a copy"): picturam ALIENAM (replica, spatium) in
+ * picturam NOVAM propriam (spatium ULID in spatium_novum) vertere -
+ * tabula ut New picture, compositum alienum aptatum (contain,
+ * Atkinson) in stratum novum supra summum (ut glutinatio confirmata),
+ * origo memorata (pictor_originem_ponere), ostensa. Alienum non
+ * mutatur. FALSUM (nihil creatum) si aliena ignota. */
+b32
+pictor_exemplum_facere (
+          PictorMontatio* m,
+                  chorda  replica,
+      constans character* spatium_alienum,
+               character  spatium_novum[XXVIII]);
+
 /* semitae R4c: argumentum lateris - URI ("pictor/flores") picturam
  * EXSTANTEM ostendit (semita numquam condit); cognomen "<spatium>" ut
  * ante: exstans ostenditur, ignota conditur si condere (S3f,
