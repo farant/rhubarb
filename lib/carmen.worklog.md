@@ -514,3 +514,12 @@ e 78.3, i 65.7, o 74.8, u 68.8). F1 of e/o sits on f0=440 and the
 formant bank resonates. Invisible while one instrument = one vowel
 (amplitudo tuned per preset); audible now inside a sung line. Belongs
 in tibia (per-vowel gain compensation), filed as a wish.
+
+## 2026-10-28 — ave in the house book
+
+`ave`: primus's melody with the Ave Maria under it — the first song in the
+book with `<verba!>`. The generator (build/plantae_s4/cantus/ave.py) reads
+PHRASES out of primus.py, so the two can't drift apart. Melismas sit on
+"Ma-ri-a" and "ple-na" at the end of phrase 1, and "Do-mi-nus te-cum" is
+the melismatic phrase. censura 0; the render is byte-identical to the
+scratch version Fran listened to (before any vowel-loudness evening).

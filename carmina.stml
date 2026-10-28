@@ -635,4 +635,28 @@
       <frustum mensura="1"><textus!>o3 d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1</textus></frustum>
     </pars>
   </carmen>
+
+  <!-- ave: melodia primi (modus I, d dorius) cum verbis Ave Maria -
+       primum carmen cantatum (carmen.h VERBA). Syllabae notis ordine,
+       '_' melisma: "Ma-ri-a" et "ple-na" in fine phrasis primae,
+       "Do-mi-nus te-cum" melismaticum. Generator:
+       build/plantae_s4/cantus/ave.py -->
+  <carmen titulus="ave" tempus="96" metrum="4/4" clavis="d dorius">
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <instrumentum titulus="ison_d" basis="schola" vocalis="o"
+        vox="bassus" amplitudo="0.5" ambitus="36..60"/>
+    <fermata mensura="4" ictus="2"/>
+    <fermata mensura="8"/>
+    <fermata mensura="12"/>
+    <fermata mensura="16"/>
+    <pars titulus="cantus" instrumentum="schola" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o4 d4 e4 f4 g4 | a4 a4 g4 a4 | b-4 a4 g4 f4 | g4 a2. | a4 o5 c4 d4 c4 | o4 a4 g4 a4 o5 c4 | o4 b4 a4 g4 a4 | a1 | f4 g4 a4 g4 | f4 e4 d4 e4 | f4 g4 f4 e4 | f1 | d4 e4 f4 g4 | f4 e4 d4 c4 | d4 e4 f4 e4 | d1</textus>
+        <verba!>A-ve Ma-ri-a_ _ gra-ti-a ple-na_ _ Do-mi_ _ nus_ te_ _ _ cum_ _ be-ne-dic-ta tu in mu-li-e-ri-bus_ _ et be-ne-dic-tus fruc-tus ven-tris tu-i, Ie-sus.</verba></frustum>
+    </pars>
+    <pars titulus="ison" instrumentum="ison_d" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1 | d1</textus></frustum>
+    </pars>
+  </carmen>
 </carmina>
