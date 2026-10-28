@@ -222,6 +222,7 @@ _diatonica (
 {
     s32 q      = ZEPHYRUM;
     b32 minor  = FALSUM;
+    s32 modus  = ZEPHYRUM;
     s32 t;
     i32 i;
 
@@ -231,10 +232,12 @@ _diatonica (
         {
             q      = carmen->claves[i].quintae;
             minor  = carmen->claves[i].minor;
+            modus  = carmen->claves[i].modus;
         }
     }
     t         = _modulus(VII * q, XII);
-    *finalis  = minor ? _modulus(t + IX, XII) : t;
+    *finalis  = modus > ZEPHYRUM ? _modulus(t + SCALA[modus - I], XII)
+              : minor ? _modulus(t + IX, XII) : t;
     per (i = ZEPHYRUM; i < VII; i++)
     {
         si (_modulus(t + SCALA[i], XII) == classis)

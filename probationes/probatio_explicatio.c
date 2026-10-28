@@ -557,6 +557,13 @@ _sectio_sexta_aucta (
         FALSUM));
     CREDO_LITERAE_AEQUALES (explicatio_titulus(EXPLICATIO_SEXTA_AUCTA),
                             "sexta aucta");
+    /* septima implicita in modo: [A D#] in e phrygius - radices F et B
+     * ambae in collectione; B = quinta finalis E: B7 */
+    e = _explicare(c, _tres(c, "4/4", "e phrygius", "o3 a1", "-",
+                            "o4 d#1"));
+    CREDO_NECESSE (e != NIHIL && e->numerus_fenestrarum >= I);
+    CREDO_AEQUALIS_I32 (e->fenestrae[ZEPHYRUM].harmonia.radix, XI);
+    CREDO_VERUM (e->fenestrae[ZEPHYRUM].implicitum);
     /* linea: resoluta tacet, non resoluta "+6!" */
     {
         constans Carmen* k = _carmen(c, SEXTA_AUCTA("o4 d#2 e2", ""));

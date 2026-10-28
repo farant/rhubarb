@@ -129,10 +129,19 @@ _metrum_legere (
     redde VERUM;
 }
 
-/* "a minor", "f# maior", "bb minor", "f maior caerulea" -> quintae
- * (circulus quintarum, ut MusicXML 'fifths'): maior ex littera, '#'
- * +VII, 'b' -VII, minor -III; extra -VII..VII vitium; post modum
- * solum " caerulea" */
+/* modi ecclesiastici (CarmenClavis.modus 1..6) et quintae collectionis
+ * a quintis finalis ut maioris (dorius: collectio tono infra) */
+hic_manens constans character* MODI_ECCLESIASTICI[VI] = {
+    "ionius", "dorius", "phrygius", "lydius", "mixolydius", "aeolius"
+};
+hic_manens constans s32 QUINTAE_MODORUM[VI] = {
+    ZEPHYRUM, -II, -IV, I, -I, -III
+};
+
+/* "a minor", "f# maior", "bb minor", "f maior caerulea", "d dorius" ->
+ * quintae (circulus quintarum, ut MusicXML 'fifths'): maior ex
+ * littera, '#' +VII, 'b' -VII, minor -III, modus per QUINTAE_MODORUM;
+ * extra -VII..VII vitium; post maior/minor solum " caerulea" */
 interior b32
 _clavem_legere (
           chorda  valor,
@@ -172,7 +181,8 @@ _clavem_legere (
     {
         j++;
     }
-    clavis->caerulea = FALSUM;
+    clavis->caerulea  = FALSUM;
+    clavis->modus     = ZEPHYRUM;
     si (j < modus.mensura)
     {
         reliquum.datum    = modus.datum + j + I;
@@ -195,7 +205,22 @@ _clavem_legere (
     }
     alioquin
     {
-        redde FALSUM;
+        i32 m;
+
+        per (m = ZEPHYRUM; m < VI; m++)
+        {
+            si (chorda_aequalis_literis(modus, MODI_ECCLESIASTICI[m]))
+            {
+                frange;
+            }
+        }
+        si (m == VI || clavis->caerulea)
+        {
+            redde FALSUM;
+        }
+        q              += QUINTAE_MODORUM[m];
+        clavis->minor  = FALSUM;
+        clavis->modus  = (s32)(m + I);
     }
     si (q < -VII || q > VII)
     {
@@ -3092,6 +3117,7 @@ _carmen_legere (
     k->claves[ZEPHYRUM].quintae = ZEPHYRUM;
     k->claves[ZEPHYRUM].minor = FALSUM;
     k->claves[ZEPHYRUM].caerulea = FALSUM;
+    k->claves[ZEPHYRUM].modus = ZEPHYRUM;
     k->numerus_temporum_scriptorum = I;
     k->numerus_metrorum = I;
     k->numerus_clavium = I;

@@ -39,9 +39,15 @@
  *             0.99". Valet usque ad metrum proximum (sine agogica =
  *             aequale). K 2..XVI, pondera > 0, mensura in K partes
  *             pulsuum integras divisibilis
- *   clavis    littera [#|b] maior|minor [caerulea] (quintae -7..7, ut
- *             MusicXML; caerulea = blues: toni b3 b5 b7 tonicae in
- *             clave - censura.h, functio.h)
+ *   clavis    littera [#|b] (maior|minor [caerulea] | MODUS) (quintae
+ *             -7..7, ut MusicXML; caerulea = blues: toni b3 b5 b7
+ *             tonicae in clave - censura.h, functio.h). MODI
+ *             ecclesiastici (Glareanus): ionius, dorius, phrygius,
+ *             lydius, mixolydius, aeolius - littera = FINALIS, scala
+ *             = collectio diatonica rotata ("d dorius" = notae albae
+ *             super D; "g dorius" cum Bb; "e phrygius" albae super E).
+ *             Plagales (hypodorius ...) clavem eandem habent - ambitus
+ *             solum differt, non hic.
  *   tempus    20..400 quartae per minutum (ordinarium CXX); sine
  *             'usque' gradus; cum usque="M" clivus: a tempore vigente
  *             ad valorem, linearis in pulsibus, finis ad initium
@@ -251,6 +257,9 @@ nomen structura {
     s32 quintae;              /* -7 (7 b) .. 7 (7 #) */
     b32 minor;
     b32 caerulea;             /* modus caeruleus (blues) */
+    s32 modus;                /* 0 nullus (maior/minor tonales); 1
+                               * ionius 2 dorius 3 phrygius 4 lydius
+                               * 5 mixolydius 6 aeolius */
 } CarmenClavis;
 
 /* sectio nominata: [pulsus, usque) */

@@ -448,6 +448,11 @@ _in_clave (
             redde VERUM;
         }
     }
+    /* modus: b molle - septima collectionis demissa (Bb in albis) */
+    si (clavis->modus > ZEPHYRUM && classis == _modulus(basis + X, XII))
+    {
+        redde VERUM;
+    }
     /* minor: tonica = basis + IX; VI elevatus +IX, VII elevatus +XI */
     redde clavis->minor
         && (   classis == _modulus(basis + IX + IX, XII)

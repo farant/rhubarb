@@ -233,6 +233,44 @@ _sectio_legere (
     CREDO_VERUM (k->claves[I].minor);
     CREDO_VERUM (k->claves[I].caerulea);
 
+    CREDO_GRADUS ("modi ecclesiastici: finalis, collectio, modus");
+    {
+        hic_manens constans character* constans claves[] = {
+            "d dorius", "g dorius", "e phrygius", "f lydius",
+            "g mixolydius", "a aeolius", "c ionius", "f# phrygius",
+            "bb mixolydius", NIHIL };
+        hic_manens constans s32 quintae[] = {
+            ZEPHYRUM, -I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, II, -III };
+        hic_manens constans s32 modi[] = {
+            II, II, III, IV, V, VI, I, III, V };
+        i32 i;
+
+        per (i = ZEPHYRUM; claves[i] != NIHIL; i++)
+        {
+            character* s = (character*)piscina_allocare(c->piscina,
+                CXXVIII);
+
+            sprintf(s, " clavis=\"%s\"", claves[i]);
+            CREDO_NECESSE (_legere(c, _carmen(c, s,
+                "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+                "mensura=\"1\"><textus!>c1</textus></frustum></pars>"),
+                &liber));
+            k = &liber.carmina[ZEPHYRUM];
+            CREDO_AEQUALIS_S32 (k->claves[ZEPHYRUM].quintae,
+                quintae[i]);
+            CREDO_AEQUALIS_S32 (k->claves[ZEPHYRUM].modus, modi[i]);
+            CREDO_FALSUM (k->claves[ZEPHYRUM].minor);
+        }
+    }
+    /* clavis tonalis: modus nullus */
+    CREDO_NECESSE (_legere(c, _carmen(c, " clavis=\"d minor\"",
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1</textus></frustum></pars>"),
+        &liber));
+    CREDO_AEQUALIS_S32 (liber.carmina[ZEPHYRUM].claves[ZEPHYRUM].modus,
+                        ZEPHYRUM);
+
     CREDO_GRADUS ("clavis acuta, tempus mensura I, '@' cum t");
     CREDO_NECESSE (_legere(c, _carmen(c, " clavis=\"f# minor\"",
         "<tempus mensura=\"1\" valor=\"100\"/>"
@@ -292,6 +330,12 @@ _sectio_vitia (
     _vitium(c, _carmen(c, " clavis=\"f maior blues\"", pars_bona), "x",
             "", -I, ZEPHYRUM);
     _vitium(c, _carmen(c, " clavis=\"f caerulea\"", pars_bona), "x", "",
+            -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"d dorian\"", pars_bona), "x", "",
+            -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"d dorius caerulea\"", pars_bona),
+            "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"c# lydius\"", pars_bona), "x", "",
             -I, ZEPHYRUM);
     _vitium(c, _carmen(c, " clavis=\"f maior caerulea \"", pars_bona),
             "x", "", -I, ZEPHYRUM);

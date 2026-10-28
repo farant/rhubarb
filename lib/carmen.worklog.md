@@ -455,3 +455,23 @@ build/plantae_s4/choralis/chorus.py (idempotent), so the notes cannot drift unle
 version is edited - re-run the script after editing one. censura 0 each; apex 0.98 / 0.78 /
 0.84, no limiting. Correction to the lamentatio entry above: the D -> D# in phrase 1 is in the
 alto only (not "tenor... alto").
+
+## 2026-10-27 - church modes as keys (chant arc, step 1)
+
+clavis="d dorius" etc.: CarmenClavis.modus 1..6 (ionius dorius phrygius lydius mixolydius
+aeolius; 0 = tonal major/minor, so every existing key is untouched). The letter is the FINAL;
+quintae = the collection's signature = the final's major signature + QUINTAE_MODORUM (dorius
+-2, phrygius -4, lydius +1, mixolydius -1, aeolius -3): "d dorius" 0, "g dorius" -1 (Bb), "f#
+phrygius" +2, "bb mixolydius" -3, "c# lydius" +8 = out of range -> error. Modes don't combine
+with caerulea; aeolius is NOT minor (no raised 6th/7th). Consumers:
+- censura clavis: the collection (unchanged) + b molle (collection's 7th lowered: Bb among
+  the white notes). Raised 7th at cadences (ficta) not yet - chant is one line.
+- functio: MODI scale table + Clavis.modus; tonic = collection tonic + mode degree; _scala()
+  replaces every MAIOR/MINOR choice; key comparisons include the mode (d dorius -> d phrygius
+  is a key change); key label lowercase for minor-third modes (dorius, phrygius, aeolius); the
+  aug6 alteratio now reads the scale's 6th (dorius bVI -1, aeolius VI 0). Cadence rules stay
+  tonal - modal cadences (2-1 without a leading tone) are step 2.
+- explicatio: the implied-seventh final uses the mode's final.
+- partitura: key name = FINALES[letter][accidental] ("f#", "bb"), mode name; leading-tone
+  spelling under the final (C# in d dorius) by the mode's letter offset.
+Book diff (15 songs): 0.

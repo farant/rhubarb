@@ -681,6 +681,59 @@ _numeralia_iv (
     redde VERUM;
 }
 
+/* modus dorius (carmen.h): gradus a finali D per scalam modi - Dm i,
+ * C VII, Am v, G IV (B naturale), Gm iv (b molle) */
+interior vacuum
+_sectio_modi (
+    CredoContextus* c)
+{
+    hic_manens constans character* constans dorius[] = {
+        "i", "VII", "v", "IV", "iv", "i", NIHIL };
+
+    CREDO_VERUM (_numeralia_iv(c, "d dorius",
+        "o3 d1 | c1 | o2 a1 | g1 | g1 | o3 d1",
+        "o3 a1 | g1 | e1 | d1 | d1 | a1",
+        "o4 d1 | e1 | c1 | o3 b1 | b-1 | o4 d1",
+        "o4 f1 | c1 | a1 | g1 | g1 | f1", dorius));
+    /* mutatio solius modi (d dorius -> d phrygius): clavis nova
+     * nominatur, littera parva (tertia minor) */
+    {
+        constans character* partes[V];
+           constans Carmen* k;
+                   Functio* f;
+
+        partes[0] = "o3 d1 | d1";
+        partes[1] = "o3 a1 | a1";
+        partes[2] = "o4 d1 | d1";
+        partes[3] = "o4 f1 | f1";
+        partes[4] = NIHIL;
+        k = _carmen_mutatum(c, "d dorius",
+            "<clavis mensura=\"2\" valor=\"d phrygius\"/>", partes);
+        f = _functio(c, k);
+        CREDO_NECESSE (f != NIHIL && f->numerus == II);
+        CREDO_CHORDA_CONTINET (_linea_functionis(c, k, f),
+            chorda_ex_literis("  functio  d: i:1", c->piscina));
+        /* sexta aucta in modis: bVI in dorio (sexta maior), VI in
+         * aeolio */
+        partes[0]  = "o2 b-1 | a1";
+        partes[1]  = "o3 f1 | e1";
+        partes[2]  = "o4 d1 | c#1";
+        partes[3]  = "o4 g#1 | a1";
+        f          = _functio(c, _carmen(c, "d dorius", partes));
+        CREDO_NECESSE (f != NIHIL && f->numerus >= I);
+        CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "Ger+6");
+        CREDO_AEQUALIS_S32 (f->gradus[ZEPHYRUM].alteratio, -I);
+        partes[0]  = "o3 f1 | e1";
+        partes[1]  = "o4 c1 | b1";
+        partes[2]  = "o4 a1 | g#1";
+        partes[3]  = "o5 d#1 | e1";
+        f          = _functio(c, _carmen(c, "a aeolius", partes));
+        CREDO_NECESSE (f != NIHIL && f->numerus >= I);
+        CREDO_LITERAE_AEQUALES (f->gradus[ZEPHYRUM].numeralis, "Ger+6");
+        CREDO_AEQUALIS_S32 (f->gradus[ZEPHYRUM].alteratio, ZEPHYRUM);
+    }
+}
+
 /* sextae auctae (functio.h): a minor It+6 Fr+6 Ger+6 -> V; Ger+6 ->
  * i64; C maior Ger+6 (Ab C Eb F#) -> V; Eb scripta: subV7/V (meta V
  * maior in minore); bassus non VI: non sexta; V7/V in minore */
@@ -1273,6 +1326,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modulatio", _sectio_modulatio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "communis", _sectio_communis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sextae auctae", _sectio_sextae_auctae, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "modulatio_finalis", _sectio_modulatio_finalis, NIHIL, NIHIL,

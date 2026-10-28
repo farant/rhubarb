@@ -17,6 +17,15 @@
 /* gradus scalae a tonica */
 hic_manens constans s32 MAIOR[VII] = { 0, 2, 4, 5, 7, 9, 11 };
 hic_manens constans s32 MINOR[VII] = { 0, 2, 3, 5, 7, 8, 10 };
+/* modi ecclesiastici (CarmenClavis.modus 1..6): scala a finali */
+hic_manens constans s32 MODI[VI][VII] = {
+    { 0, 2, 4, 5, 7, 9, 11 },    /* ionius */
+    { 0, 2, 3, 5, 7, 9, 10 },    /* dorius */
+    { 0, 1, 3, 5, 7, 8, 10 },    /* phrygius */
+    { 0, 2, 4, 6, 7, 9, 11 },    /* lydius */
+    { 0, 2, 4, 5, 7, 9, 10 },    /* mixolydius */
+    { 0, 2, 3, 5, 7, 8, 10 }     /* aeolius */
+};
 
 hic_manens constans character* ROMANI[VIII] = {
     "", "I", "II", "III", "IV", "V", "VI", "VII"
@@ -43,6 +52,7 @@ nomen structura {
     s32 tonica;
     b32 minor;
     b32 caerulea;
+    s32 modus;      /* CarmenClavis.modus: 0 tonalis, 1..6 modi */
 } Clavis;
 
 interior Clavis
@@ -56,6 +66,7 @@ _clavis (
 
     c.minor     = FALSUM;
     c.caerulea  = FALSUM;
+    c.modus     = ZEPHYRUM;
     per (i = ZEPHYRUM; i < carmen->numerus_clavium; i++)
     {
         si (carmen->claves[i].pulsus <= pulsus)
@@ -63,14 +74,30 @@ _clavis (
             q           = carmen->claves[i].quintae;
             c.minor     = carmen->claves[i].minor;
             c.caerulea  = carmen->claves[i].caerulea;
+            c.modus     = carmen->claves[i].modus;
         }
     }
     c.tonica = _modulus(VII * q, XII);
-    si (c.minor)
+    si (c.modus > ZEPHYRUM)
+    {
+        /* finalis: gradus collectionis ubi modus stat */
+        c.tonica = _modulus(c.tonica + MODI[ZEPHYRUM][c.modus - I],
+            XII);
+    }
+    alioquin si (c.minor)
     {
         c.tonica = _modulus(c.tonica + IX, XII);
     }
     redde c;
+}
+
+/* scala clavis a tonica: modus, minor (naturalis), maior */
+interior constans s32*
+_scala (
+    constans Clavis* k)
+{
+    redde k->modus > ZEPHYRUM ? MODI[k->modus - I]
+         : k->minor ? MINOR : MAIOR;
 }
 
 /* forma dominantis: trias maior, septima, nonae, 13, 7#9, 7#11 (sine
@@ -144,7 +171,8 @@ _clavis_fenestrae (
         && (s32)e->fenestrae[f].harmonia.radix != k.tonica)
     {
         n = _clavis(carmen, e->fenestrae[g].initium);
-        si (   (n.tonica != k.tonica || n.minor != k.minor)
+        si (   (   n.tonica != k.tonica || n.minor != k.minor
+                || n.modus != k.modus)
             && _dominans_clavis(&n, &e->fenestrae[f].harmonia))
         {
             *praevia = VERUM;
@@ -165,7 +193,7 @@ _gradus (
 
     per (i = ZEPHYRUM; i < VII; i++)
     {
-        si ((k->minor ? MINOR[i] : MAIOR[i]) == intervallum)
+        si (_scala(k)[i] == intervallum)
         {
             redde i + I;
         }
@@ -207,7 +235,7 @@ _meta_idonea (
     constans Clavis* k,
                 s32  gradus)
 {
-    constans s32* s = k->minor ? MINOR : MAIOR;
+    constans s32* s = _scala(k);
              s32  r = s[gradus - I];
              s32  q = s[(gradus + III) % VII];
 
@@ -220,7 +248,7 @@ _meta_minor (
     constans Clavis* k,
                 s32  gradus)
 {
-    constans s32* s = k->minor ? MINOR : MAIOR;
+    constans s32* s = _scala(k);
 
     /* minor: V maior (VII elevatus), ut lectio ipsa */
     si (k->minor && gradus == V)
@@ -609,7 +637,7 @@ _sextam_auctam_legere (
         redde;
     }
     g->gradus      = VI;
-    g->alteratio   = k.minor ? ZEPHYRUM : -I;
+    g->alteratio   = _scala(&k)[V] == VIII ? ZEPHYRUM : -I;
     g->applicata   = ZEPHYRUM;
     g->substituta  = FALSUM;
 }
@@ -656,7 +684,8 @@ _claves_aequales (
     constans Clavis* a,
     constans Clavis* b)
 {
-    redde a->tonica == b->tonica && a->minor == b->minor;
+    redde a->tonica == b->tonica && a->minor == b->minor
+        && a->modus == b->modus;
 }
 
 /* mutationes clavis et acorda communia (functio.h MUTATIO CLAVIS) */
@@ -936,7 +965,8 @@ _clavem_scribere (
     k = &carmen->claves[index];
     t = partitura_clavis_littera(k);
     bene  = chorda_aedificator_appendere_character(textus,
-        k->minor ? t[ZEPHYRUM] : (character)(t[ZEPHYRUM] - 'a' + 'A'));
+        k->minor || k->modus == II || k->modus == III || k->modus == VI
+            ? t[ZEPHYRUM] : (character)(t[ZEPHYRUM] - 'a' + 'A'));
     bene  = chorda_aedificator_appendere_literis(textus, t + I) && bene;
     redde chorda_aedificator_appendere_literis(textus, ": ") && bene;
 }

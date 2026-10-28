@@ -328,6 +328,31 @@ _sectio_caerulea (
 }
 
 
+/* modus (carmen.h): d dorius - notae albae et b molle (Bb) in clave;
+ * F# et C# (saltu exeuntes, non ornamenta) extra */
+interior vacuum
+_sectio_modi (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"d\" clavis=\"d dorius\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 d8 e8 f8 g8 a8 b8 b-8 o5 c8 | "
+        "o4 f#4 c#4 a2</textus></frustum></pars>"
+        "</carmen></carmina>");
+       CensuraForma f = _sola(CENSURA_CLAVIS);
+    CensuraInventum inv[CAPACITAS];
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXVI);
+    CREDO_AEQUALIS_I32 (inv[I].nota->nota, LXI);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 m: F#4 extra clavem d dorius (frustum 0, "
+        "offset 36)\n");
+}
+
+
 /* ornamentum chromaticum: nota extra clavem quae transitus, vicinus
  * aut appoggiatura resoluta est et semitonio exit licet; gradu toto
  * exiens aut sine forma nominatur */
@@ -1622,6 +1647,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "caerulea", _sectio_caerulea, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chromatica", _sectio_chromatica, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },

@@ -31,6 +31,15 @@ hic_manens constans character* CLAVES_MINORES[XV] = {
     "ab", "eb", "bb", "f", "c", "g", "d", "a",
     "e", "b", "f#", "c#", "g#", "d#", "a#"
 };
+/* finales modorum: littera (C..B) x alteratio (b, nulla, #) */
+hic_manens constans character* FINALES[VII][III] = {
+    { "cb", "c", "c#" }, { "db", "d", "d#" }, { "eb", "e", "e#" },
+    { "fb", "f", "f#" }, { "gb", "g", "g#" }, { "ab", "a", "a#" },
+    { "bb", "b", "b#" }
+};
+hic_manens constans character* MODI_NOMINA[VI] = {
+    "ionius", "dorius", "phrygius", "lydius", "mixolydius", "aeolius"
+};
 /* pausae: valores maximi primum (punctati inclusi) */
 hic_manens constans s64 PAUSAE[XIV] = {
     5760, 3840, 2880, 1920, 1440, 960, 720, 480, 360, 240, 180, 120, 90,
@@ -150,7 +159,9 @@ partitura_orthographia (
     {
          constans CarmenClavis* k = _clavis(carmen, pulsus);
                            i32  t = (i32)_modulus(q * IV
-                                   + (k->minor ? V : ZEPHYRUM), VII);
+                                   + (k->modus > ZEPHYRUM
+                                      ? k->modus - I
+                                      : k->minor ? V : ZEPHYRUM), VII);
                            s32 finalis = _modulus((s32)SEMITONIA[t]
                                    + _signatura(q, t), XII);
                            i32 l = (t + VI) % VII;
@@ -231,6 +242,15 @@ constans character*
 partitura_clavis_littera (
     constans CarmenClavis* clavis)
 {
+    si (clavis->modus > ZEPHYRUM)
+    {
+        /* finalis: littera tonicae maioris (quintae x IV) + modus -
+         * 1 */
+        i32 l = (i32)_modulus(clavis->quintae * IV + clavis->modus - I,
+                              VII);
+
+        redde FINALES[l][_signatura(clavis->quintae, l) + I];
+    }
     redde clavis->minor ? CLAVES_MINORES[clavis->quintae + VII]
                         : CLAVES_MAIORES[clavis->quintae + VII];
 }
@@ -242,6 +262,10 @@ partitura_clavis_modus (
     si (clavis->caerulea)
     {
         redde clavis->minor ? "minor caerulea" : "maior caerulea";
+    }
+    si (clavis->modus > ZEPHYRUM)
+    {
+        redde MODI_NOMINA[clavis->modus - I];
     }
     redde clavis->minor ? "minor" : "maior";
 }
