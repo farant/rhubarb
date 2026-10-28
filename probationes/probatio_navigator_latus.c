@@ -641,6 +641,127 @@ _sectio_quaestio (
     servum_scriptum_claudere(s);
 }
 
+/* N3.4c: area lateris mutata (ut vicus superficiem nuntiat) */
+interior vacuum
+_superficiem_scribere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "superficies_latitudo",
+        (constans character*)ctx);
+}
+
+interior b32
+latitudinem_ponere (
+                 Mundus* w,
+     constans character* latitudo)
+{
+       b32 r;
+    chorda prior;
+
+    /* scriptor manifesti (organum_commune): dispensator */
+    prior = w->repo->scriptor;
+    insula_scriptorem_ponere(w->repo, chorda_ex_literis("dispensator",
+        w->p));
+    r = mutare_ramum(&w->m.ramus, _superficiem_scribere,
+        (vacuum*)(memoriae_index)latitudo);
+    insula_scriptorem_ponere(w->repo, prior);
+    dispensator_recomponere(w->d);
+    redde r;
+}
+
+/* positio servata articuli (offset; -1 si nulla) */
+interior s32
+offset_servatum (
+                 Mundus* w,
+     constans character* articulus,
+                Piscina* p)
+{
+    NavigatorPositio q;
+
+    redde navigator_positionem_legere(w->bibliotheca, chorda_ex_literis(
+        articulus, p), &q, p) ? (s32)q.offset : -I;
+}
+
+/* N3.4c: pagina memoratur - j servat, aperire restituit; nexus
+ * explicitus paginam suam tenet (nec servat); versio alia: pagina
+ * prima; index nexuum; area mutata: pagina offset continens */
+interior vacuum
+_sectio_positio (
+    CredoContextus* c)
+{
+               Mundus* w = mundus(c, VERUM);
+     NavigatorPositio  q;
+               chorda  ultima;
+                  s32  offset;
+                  s32  i;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("aperire servat; j j servat paginam III");
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_AEQUALIS_S32(offset_servatum(w, "1", c->piscina), ZEPHYRUM);
+    clavis(w, 'j');
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "pagina", "2"));
+    CREDO_VERUM(offset_servatum(w, "1", c->piscina) > ZEPHYRUM);
+
+    CREDO_GRADUS("Esc, Enter: pagina III restituta");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "2"));
+
+    CREDO_GRADUS("nexus cum pagina: pagina sua, positio non mutatur");
+    offset = offset_servatum(w, "1", c->piscina);
+    CREDO_VERUM(argumentum(w, "navigator/pagina/1?pagina=1"));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_AEQUALIS_S32(offset_servatum(w, "1", c->piscina), offset);
+
+    CREDO_GRADUS("argumentum nudum: restituit");
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "2"));
+
+    CREDO_GRADUS("area angustior: pagina offset continens");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    /* CL px: area textus CXXVI px (ex CCXL) - paginae fere duplices */
+    CREDO_VERUM(latitudinem_ponere(w, "150"));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_FALSUM(campus_est(w, "pagina", "2"));
+    CREDO_VERUM(offset_servatum(w, "1", c->piscina) <= offset);
+    clavis(w, 'j');
+    CREDO_VERUM(offset_servatum(w, "1", c->piscina) > offset);
+    CREDO_VERUM(latitudinem_ponere(w, "360"));
+
+    CREDO_GRADUS("index nexuum: pagina ultima restituitur");
+    per (i = ZEPHYRUM; i < C; i++)
+    {
+        clavis(w, 'j');
+    }
+    ultima = chorda_transcribere(*insula_ramus_attributum(&w->m.ramus,
+        "pagina"), c->piscina);
+    CREDO_VERUM(navigator_positionem_legere(w->bibliotheca,
+        chorda_ex_literis("1", c->piscina), &q, c->piscina)
+        && q.in_nexibus);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "pagina", chorda_ut_cstr(ultima,
+        c->piscina)));
+
+    CREDO_GRADUS("versio alia servata: pagina prima");
+    q.versio      = chorda_ex_literis("ALIA", c->piscina);
+    q.offset      = M;
+    q.in_nexibus  = FALSUM;
+    CREDO_VERUM(navigator_positionem_scribere(w->bibliotheca,
+        chorda_ex_literis("1", c->piscina), &q));
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    mundum_claudere(w);
+}
+
 /* N3.4: favores - b in pagina et in dominio, stella pedis (mus),
  * non favores absunt, dominium sine favoribus */
 interior vacuum
@@ -934,6 +1055,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "index", _sectio_index, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "favores", _sectio_favores, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "positio", _sectio_positio, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },

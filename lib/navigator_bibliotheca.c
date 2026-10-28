@@ -8,6 +8,7 @@
 #include "chorda_aedificator.h"
 #include "json.h"
 #include "sigillum.h"
+#include <stdio.h>
 #include <string.h>
 
 #define GENUS_ARTICULI   "navigator-articulus"
@@ -481,6 +482,90 @@ navigator_favorem_ponere (
         acta_legere(b);
     }
     redde bene;
+}
+
+/* clavis praesentiae: "navigator/positio/<ULID>" (ULID tutus in via) */
+interior chorda
+clavem_positionis (
+     chorda  articulus,
+    Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_ex_literis("navigator/positio/",
+        piscina), articulus, piscina);
+}
+
+b32
+navigator_positionem_scribere (
+              NavigatorBibliotheca* b,
+                            chorda  articulus,
+         constans NavigatorPositio* positio)
+{
+    ChordaAedificator* aed;
+              Piscina* tp;
+            character  numerus[XXIV];
+                  b32  bene;
+
+    si (!b || !positio || !articulum_per_id(b, articulus))
+    {
+        redde FALSUM;
+    }
+    tp = piscina_generare_dynamicum("navigator_positio", MXXIV);
+    si (!tp)
+    {
+        redde FALSUM;
+    }
+    aed = chorda_aedificator_creare(tp, CXXVIII);
+    chorda_aedificator_appendere_character(aed, '{');
+    campum_scribere(aed, "versio", positio->versio, VERUM);
+    sprintf(numerus, ",\"offset\":%u", (insignatus integer)
+        positio->offset);
+    chorda_aedificator_appendere_literis(aed, numerus);
+    chorda_aedificator_appendere_literis(aed, positio->in_nexibus
+        ? ",\"in_nexibus\":true}" : ",\"in_nexibus\":false}");
+    bene = volumen_praesens_ponere(b->volumen, clavem_positionis(
+        articulus, tp), chorda_aedificator_finire(aed));
+    piscina_destruere(tp);
+    redde bene;
+}
+
+b32
+navigator_positionem_legere (
+    NavigatorBibliotheca* b,
+                  chorda  articulus,
+        NavigatorPositio* positio,
+                 Piscina* piscina)
+{
+          chorda valor;
+             b32 inventum;
+    JsonResultus r;
+             s64 offset;
+
+    si (!b || !positio || !piscina || !articulum_per_id(b, articulus))
+    {
+        redde FALSUM;
+    }
+    valor = volumen_praesens_legere(b->volumen, clavem_positionis(
+        articulus, piscina), piscina, &inventum);
+    si (!inventum)
+    {
+        redde FALSUM;
+    }
+    r = json_legere(valor, piscina);
+    si (!r.successus || !r.radix)
+    {
+        redde FALSUM;
+    }
+    offset = json_capere_integer(r.radix, "offset", -I);
+    si (offset < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    positio->versio      = json_capere_chorda(r.radix, "versio",
+        vacua());
+    positio->offset      = (i32)offset;
+    positio->in_nexibus  = json_capere_boolean(r.radix, "in_nexibus",
+        FALSUM);
+    redde VERUM;
 }
 
 chorda

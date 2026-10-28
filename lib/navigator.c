@@ -478,6 +478,68 @@ _pagina_currens (
     redde k;
 }
 
+/* ===== positio lectionis (N3.4c) ===== */
+
+/* positio paginae k articuli currentis servatur: versio, octetus
+ * primus, in indice nexuum? */
+interior vacuum
+_positionem_servare (
+            NavigatorMontatio* m,
+    constans NavigatorFigurae* f,
+                          s32  k)
+{
+    NavigatorPositio q;
+
+    si (k < ZEPHYRUM || (i32)k >= xar_numerus(f->paginae))
+    {
+        redde;
+    }
+    q.versio      = f->versio_arcae;
+    q.offset      = ((constans LectorPagina*)xar_obtinere(f->paginae,
+        (i32)k))->initium;
+    q.in_nexibus  = (i32)k >= f->paginae_articuli;
+    (vacuum)navigator_positionem_scribere(m->bibliotheca,
+        f->articulus_arcae, &q);
+}
+
+/* pagina positionem servatam continens (initium <= offset, in parte
+ * sua: articulus aut index nexuum); versio alia aut nulla: 0 */
+interior s32
+_pagina_servata (
+            NavigatorMontatio* m,
+    constans NavigatorFigurae* f)
+{
+    NavigatorPositio q;
+                 i32 a;
+                 i32 b;
+                 i32 i;
+                 s32 k;
+
+    si (   !navigator_positionem_legere(m->bibliotheca,
+               f->articulus_arcae, &q, f->scheda)
+        || !chorda_aequalis(q.versio, f->versio_arcae))
+    {
+        redde ZEPHYRUM;
+    }
+    a = q.in_nexibus ? f->paginae_articuli : ZEPHYRUM;
+    b = q.in_nexibus ? xar_numerus(f->paginae) : f->paginae_articuli;
+    si (a >= b)
+    {
+        redde ZEPHYRUM;
+    }
+    k = (s32)a;
+    per (i = a + I; i < b; i++)
+    {
+        si (((constans LectorPagina*)xar_obtinere(f->paginae, i))
+            ->initium > q.offset)
+        {
+            frange;
+        }
+        k = (s32)i;
+    }
+    redde k;
+}
+
 
 /* ==================================================
  * Index (ordo, album, electus)
@@ -879,6 +941,35 @@ _id_numerus (
  * Motus
  * ================================================== */
 
+/* N3.4c: pagina servata articuli aperti scribitur et servatur
+ * (apertio prima: pagina 0) */
+interior b32
+_paginam_restituere (
+    NavigatorMontatio* m)
+{
+       NavigatorFigurae* f;
+                    s32  k;
+     constans character* tituli[I];
+     constans character* valores[I];
+              character  numerus[XVI];
+
+    f = _paginas_parare(m);
+    si (!f)
+    {
+        redde VERUM;
+    }
+    k = _pagina_servata(m, f);
+    _positionem_servare(m, f, k);
+    si (k == _campus_numerus(m, "pagina"))
+    {
+        redde VERUM;
+    }
+    sprintf(numerus, "%d", (integer)k);
+    tituli[ZEPHYRUM]   = "pagina";
+    valores[ZEPHYRUM]  = numerus;
+    redde _campos_scribere(m, tituli, valores, I);
+}
+
 interior b32
 _articulum_aperire (
     NavigatorMontatio* m,
@@ -904,7 +995,11 @@ _articulum_aperire (
     valores[IV]   = valores[I];
     tituli[V]     = "nota";
     valores[V]    = "";
-    redde _campos_scribere(m, tituli, valores, VI);
+    si (!_campos_scribere(m, tituli, valores, VI))
+    {
+        redde FALSUM;
+    }
+    redde _paginam_restituere(m);
 }
 
 /* pagina articuli proxima (gradus I) aut prior (-I), coacta */
@@ -932,6 +1027,7 @@ _paginam_movere (
     sprintf(numerus, "%d", (integer)k);
     tituli[ZEPHYRUM]   = "pagina";
     valores[ZEPHYRUM]  = numerus;
+    _positionem_servare(m, f, k);
     redde _campos_scribere(m, tituli, valores, I);
 }
 
@@ -3117,6 +3213,18 @@ navigator_argumentum_ponere (
     {
         redde FALSUM;
     }
+    /* N3.4c: articulus sine pagina nominata = ubi relictus - pagina
+     * prior (status) tollitur, semitam_secuta servatam restituit */
+    si (   articulus && articulus->mensura > ZEPHYRUM
+        && !stml_attributum_capere(semita, "pagina"))
+    {
+        constans character* tituli[I];
+        constans character* valores[I];
+
+        tituli[ZEPHYRUM]   = "pagina";
+        valores[ZEPHYRUM]  = "";
+        (vacuum)_campos_scribere(m, tituli, valores, I);
+    }
     redde navigator_semitam_secuta(m);
 }
 
@@ -3172,8 +3280,17 @@ navigator_semitam_secuta (
         valores[IV]        = "article not found";
         redde _campos_scribere(m, tituli, valores, V);
     }
-    /* pagina coacta; versio absens figitur (versio in arca = ultima) */
-    k = _pagina_currens(m, f);
+    /* pagina coacta; absens (argumentum nudum): servata (N3.4c), et
+     * servatur; versio absens figitur (versio in arca = ultima) */
+    si (_campus_numerus(m, "pagina") < ZEPHYRUM)
+    {
+        k = _pagina_servata(m, f);
+        _positionem_servare(m, f, k);
+    }
+    alioquin
+    {
+        k = _pagina_currens(m, f);
+    }
     si (   k == _campus_numerus(m, "pagina")
         && _campus(m, "versio").mensura > ZEPHYRUM)
     {

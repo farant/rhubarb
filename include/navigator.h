@@ -10,7 +10,7 @@
  * hospitem grex (titulus gregis in pagina continuationis iteratus),
  * linea per articulum - titulus versionis ultimae, "3 versions".
  * Claves: j k (electus), [ ] (paginae), Enter (articulus, versio
- * ultima, pagina prima), b (favor electi), Esc (ad radicem; in radice
+ * ultima, pagina servata), b (favor electi), Esc (ad radicem; in radice
  * latus per vicum). Dominium radicale = duo nomina ultima hospitis
  * (Vicipaedia recta; co.uk etc. Public Suffix List postea).
  * PAGINA: articulus paginatus (navigator_paginae.h + lector_paginare),
@@ -18,6 +18,12 @@
  * vertit). Claves: j k (pagina proxima / prior), b (favor), Esc (ad
  * indicem). Extractio et paginae in cache per
  * (articulus, versio, area).
+ * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
+ * (navigator_positionem_scribere: versio, octetus primus paginae,
+ * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,
+ * argumentum nudum) paginam eam continentem restituit - area mutata
+ * quoque; versio alia: pagina prima. Locus cum pagina (historia,
+ * comes, notae) paginam suam tenet nec positionem mutat.
  * NOTAE: locus "navigator/pagina/<articulus>?versio=<v>&pagina=3" -
  * versio in loco, ergo comes (Cmd+T) versionis suae est (spec V.11,
  * V.16); notae in pede ut lector (notas_habet hospitis).
@@ -100,7 +106,8 @@ navigator_componere (
                  vacuum* ctx);
 
 /* argumentum: URI semitae, identitas articuli nuda (-> versio ultima,
- * pagina prima), vacuum (index). Mala: FALSUM, nihil mutatum. */
+ * pagina servata - N3.4c), vacuum (index). Mala: FALSUM, nihil
+ * mutatum. */
 b32
 navigator_argumentum_ponere (
       NavigatorMontatio* m,

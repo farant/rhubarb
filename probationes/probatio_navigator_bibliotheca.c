@@ -445,6 +445,65 @@ _probare_favor (
     CREDO_VERUM(volumen_summa_actorum(m->volumen) == acta + II);
 }
 
+/* N3.4c: positio lectionis - praesentia, non acta; ultima vincit;
+ * bibliotheca secunda eam legit; articulus ignotus recusatur */
+interior vacuum
+_probare_positio (
+    CredoContextus* c)
+{
+                         Mundus* m = (Mundus*)c->datum;
+    constans NavigatorArticulus* a;
+           NavigatorBibliotheca* b2;
+               NavigatorPositio  q;
+               NavigatorPositio  r;
+                            s64  acta;
+
+    CREDO_NECESSE_NON_NIHIL(m->b);
+    CREDO_NECESSE(offerre(m, URL_RHEUM, H_PRIMA, NIHIL, c->piscina)
+        == NAVIGATOR_NOVUM);
+    a = navigator_articulus(m->b, ZEPHYRUM);
+
+    CREDO_GRADUS("nulla ante scripturam");
+    CREDO_FALSUM(navigator_positionem_legere(m->b, a->identitas, &r,
+        c->piscina));
+
+    CREDO_GRADUS("scribere: legitur, acta non crescunt");
+    acta          = volumen_summa_actorum(m->volumen);
+    q.versio      = lit("V1", c->piscina);
+    q.offset      = CCCXL;
+    q.in_nexibus  = FALSUM;
+    CREDO_VERUM(navigator_positionem_scribere(m->b, a->identitas, &q));
+    CREDO_VERUM(volumen_summa_actorum(m->volumen) == acta);
+    memset(&r, ZEPHYRUM, magnitudo(r));
+    CREDO_VERUM(navigator_positionem_legere(m->b, a->identitas, &r,
+        c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(r.versio, "V1");
+    CREDO_AEQUALIS_I32(r.offset, CCCXL);
+    CREDO_FALSUM(r.in_nexibus);
+
+    CREDO_GRADUS("ultima vincit; in_nexibus servatur");
+    q.offset      = XII;
+    q.in_nexibus  = VERUM;
+    CREDO_VERUM(navigator_positionem_scribere(m->b, a->identitas, &q));
+    CREDO_VERUM(navigator_positionem_legere(m->b, a->identitas, &r,
+        c->piscina));
+    CREDO_AEQUALIS_I32(r.offset, XII);
+    CREDO_VERUM(r.in_nexibus);
+
+    CREDO_GRADUS("bibliotheca secunda eandem legit");
+    b2 = navigator_bibliotheca_aperire(m->volumen, moneta_numerator,
+        &m->numerator, c->piscina);
+    CREDO_VERUM(navigator_positionem_legere(b2, a->identitas, &r,
+        c->piscina));
+    CREDO_AEQUALIS_I32(r.offset, XII);
+
+    CREDO_GRADUS("articulus ignotus: FALSUM, nihil scriptum");
+    CREDO_FALSUM(navigator_positionem_scribere(m->b, lit("ZZZ",
+        c->piscina), &q));
+    CREDO_FALSUM(navigator_positionem_legere(m->b, lit("ZZZ",
+        c->piscina), &r, c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "novum", _probare_novum, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -460,6 +519,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "vitium", _probare_vitium, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "positio", _probare_positio, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { "favor", _probare_favor, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

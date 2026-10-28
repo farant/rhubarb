@@ -100,6 +100,32 @@ navigator_favorem_ponere (
                   chorda  articulus,
                      b32  favor);
 
+/* positio lectionis (N3.4c): versio lecta et octetus primus paginae
+ * currentis - in textu articuli aut indicis nexuum. PRAESENTIA
+ * voluminis "navigator/positio/<ULID articuli>" (ultima vincit; EXTRA
+ * acta - motus crebri, nec diarium nec massas auget). Offset, non
+ * numerus paginae: area mutata paginas recomputat, positio manet */
+nomen structura {
+    chorda versio;       /* ULID versionis lectae */
+       i32 offset;       /* octetus in textu */
+       b32 in_nexibus;   /* in paginis indicis nexuum (N3.1b) */
+} NavigatorPositio;
+
+/* positionem servare; FALSUM si articulus ignotus */
+b32
+navigator_positionem_scribere (
+              NavigatorBibliotheca* b,
+                            chorda  articulus,
+         constans NavigatorPositio* positio);
+
+/* positio servata (chordae ex piscina); FALSUM si nulla */
+b32
+navigator_positionem_legere (
+    NavigatorBibliotheca* b,
+                  chorda  articulus,
+        NavigatorPositio* positio,
+                 Piscina* piscina);
+
 /* HTML versionis ex massa; vacua si massa abest */
 chorda
 navigator_versionis_html (

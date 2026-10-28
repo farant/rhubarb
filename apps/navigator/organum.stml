@@ -69,7 +69,7 @@
   </status>
 
   <!-- argumentum nudum: vacuum = index; ULID articuli = articulus,
-       versio ultima, pagina prima -->
+       versio ultima, pagina servata (N3.4c: ubi relictus) -->
   <cognomina>
     <cognomen semita="navigator/index"/>
     <cognomen typus="textus" semita="navigator/pagina/{}"/>

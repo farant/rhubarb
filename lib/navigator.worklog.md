@@ -121,3 +121,30 @@ U+2000-200A, 202F, 205F, 3000 to space (like NBSP); zero-width marks
 vicipaedia collector drops them, raw or via entities (&lrm;). ⓘ =
 new 6x8 glyph (circle as ◯, i inside). Saved articles benefit without
 a refetch: extraction runs on open from the stored HTML.
+
+## 2026-10-27 - N3.4c remember the page
+
+Reading position = {versio, offset of the page's first line, in the
+link index?} per article, stored as volume PRESENCE
+"navigator/positio/<ULID>" (JSON), not a plagula: lector's position
+plagula writes an act + massa on every page turn, presence is the
+last-writer-wins store made for this (outside the act log). Offset,
+not page number, so a resized pane re-cuts the pages and still lands
+on the page containing the offset (`_pagina_servata` searches only
+the right half: article pages [0, paginae_articuli) or link pages).
+Different version than the saved one -> page 0.
+
+Saved on: every j/k/arrow (`_paginam_movere`), every open without a
+named page (`_paginam_restituere` after `_articulum_aperire`; bare
+argument via semitam_secuta). NOT saved when a locus names its page
+(history, companion, notes) - those are "look at", not "read".
+
+Gotcha: a bare `$nav(<id>)` applied through semita_applicare left the
+previous `pagina` field in place (status fields absent from the semita
+are not cleared), so "no page named" was undetectable. Fix:
+navigator_argumentum_ponere clears pagina when the semita has none.
+
+Test gotcha: at 360 px the side margin is already capped, so 240 px
+narrows the text column only 240 -> 216 px and the same page index
+held the offset; 150 px (126 px column) actually re-cuts. Resize in
+tests = write superficies_latitudo with scriptor "dispensator".
