@@ -186,3 +186,39 @@ Side effect: a line with a link is now 2-3 text commands, so any test
 that matched a WHOLE line containing a link must match the pieces
 (probatio_navigator_latus 'argumentum' updated). New test helper
 x_picti checks the pieces are contiguous.
+
+## 2026-10-28 - N4.2 click a link
+
+`_nexus_ad_punctum` maps a click on the page's "textus" component to
+a link with the SAME geometry the painter uses: line by y (l->y,
+fons_altitudo), column by x from lateris*NAV_LITTERA + l->x divided by
+the line's font width, then walk that many runes from l->initium
+(skipping UTF-8 continuation bytes) to an offset, then the NEXUS note
+whose [initium, finis) holds it (article notes or link-index notes
+by page). The URL goes through _url_aperire, so saved = offline,
+Wikipedia = fetch, else the footer says "Unsupported site:
+<host/path>" (message changed from "(Wikipedia only for now)").
+
+Back: no new code - opening an article writes visus/articulus, which
+are historia="impelle" fields, so vicus history records it;
+probatio_vicus_navigator 'retro' pins that (URL open, Ctrl+O via
+manus_ludus -> previous article).
+
+Commit gate note: the N4.1 commit was refused once by the known
+vicus_admonitiones l.206 flake under load (ledger …PXFR, ictus
+logged); the retry passed.
+
+Follow-up same day (Fran: "clicking the link isn't doing anything"):
+the first version hit-tested with the RAW event point (ev->datum.mus)
+against child fines. Child fines are relative to the pane root, and in
+vicus the pane sits at an offset on screen, so nothing ever matched.
+The pane-only suite drives the pane at (0,0), where raw == local, so
+it passed. Fix: use `des->punctum_locale` (destinatio.c: point minus
+the hit component's own origin, after parent transforms); fallback
+ev - nodus->fines when des is absent. Pinned by
+probatio_vicus_navigator 'ictus nexus': clicks through manus_ludus at
+a real screen point (manus_ludus_ad_schirmum), red with screen coords.
+Test-harness trap there: drawing a sub-tree with the pane's own figure
+registry draws nothing inside vicus (registry keyed by spatium), so
+the test computes the point from the layout instead (title 16 px +
+gap 8 -> first paragraph line at y 24).

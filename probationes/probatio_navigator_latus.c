@@ -15,6 +15,7 @@
 #include "figura.h"
 #include "mandatum.h"
 #include "thema.h"
+#include "fons.h"
 #include "color.h"
 #include "coloratio.h"
 #include "volumen.h"
@@ -312,6 +313,53 @@ x_picti (
         }
     }
     redde -I;
+}
+
+/* N4.2: ictus in medio runae primae fragmenti (textus pictus) */
+interior b32
+ictus_in_textu (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+                Mandata* md;
+      constans Mandatum* x;
+                Eventus  e;
+                 chorda  f;
+                    s32  k;
+                    i32  i;
+                    i32  j;
+
+    md  = mandata_creare(p, w->intern);
+    f   = chorda_ex_literis(fragmentum, p);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        k = x->genus
+            == MANDATUM_TEXTUS ? chorda_invenire_index(x->textus,
+            f) : -I;
+        si (k < ZEPHYRUM)
+        {
+            perge;
+        }
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus        = EVENTUS_MUS_DEPRESSUS;
+        e.datum.mus.x  = x->fines.x + fons_latitudo(x->fons) / II;
+        per (j = ZEPHYRUM; j < (i32)k; j++)
+        {
+            si ((x->textus.datum[j] & 0xC0) != 0x80)
+            {
+                e.datum.mus.x += fons_latitudo(x->fons);
+            }
+        }
+        e.datum.mus.y       = x->fines.y + fons_altitudo(x->fons) / II;
+        e.datum.mus.botton  = MUS_SINISTER;
+        dispensator_tractare(w->d, &e);
+        dispensator_recomponere(w->d);
+        redde VERUM;
+    }
+    redde FALSUM;
 }
 
 /* N4.1: color nexuum vici (#rubricae in editore) */
@@ -738,6 +786,85 @@ _sectio_nexus (
         c->piscina));
     CREDO_VERUM(pictum_colore(w, "finis.", COLOR_TEXT, c->piscina));
     CREDO_VERUM(pictum_colore(w, "Initium", COLOR_TEXT, c->piscina));
+    mundum_claudere(w);
+}
+
+/* N4.2: ictus in nexu aperit - petitio (Vicipaedia), servatus
+ * statim, extra nexum nihil, situs alienus nuntiatur, index nexuum */
+interior vacuum
+_sectio_ictus_nexuum (
+    CredoContextus* c)
+{
+                         Mundus* w = mundus(c, VERUM);
+                 ServusScriptus* s;
+    constans NavigatorArticulus* a;
+                         chorda  numeri;
+                         chorda  planta;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Planta",
+        "<p>Planta viva est.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+    offerre(w, "https://la.wikipedia.org/wiki/Numeri",
+        chorda_ex_literis(
+        PAGINA("Numeri", "<p>Vide <a rel=\"mw:WikiLink\" "
+        "href=\"./Beta\">Betam</a> et <a rel=\"mw:ExtLink\" "
+        "href=\"https://example.org/x\">situm</a> alienum.</p>"),
+        c->piscina));
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Numeri", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    numeri = chorda_transcribere(a->identitas, c->piscina);
+
+    CREDO_GRADUS("ictus extra nexum: nihil");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(ictus_in_textu(w, "Rheum est", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+    CREDO_VERUM(campus_est(w, "nota", NIHIL));
+    CREDO_AEQUALIS_I32(s->acceptae, ZEPHYRUM);
+
+    CREDO_GRADUS("ictus in 'genus': Planta petitur et aperitur");
+    CREDO_VERUM(ictus_in_textu(w, "genus", c->piscina));
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Planta",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Planta viva est.", c->piscina));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Planta", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    planta = chorda_transcribere(a->identitas, c->piscina);
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(planta,
+        c->piscina)));
+
+    CREDO_GRADUS("nexus servatus (Betam): statim, sine rete");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(ictus_in_textu(w, "Betam", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("limes: spatium post nexum non aperit");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(ictus_in_textu(w, " et ", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(numeri,
+        c->piscina)));
+
+    CREDO_GRADUS("situs alienus: 'Unsupported site: example.org/x'");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(ictus_in_textu(w, "situm", c->piscina));
+    CREDO_VERUM(pictum(w, "Unsupported site: example.org/x",
+        c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(numeri,
+        c->piscina)));
+
+    CREDO_GRADUS("index nexuum: ictus in linea 'Planta' (servata)");
+    CREDO_VERUM(argumentum(w, "3"));
+    clavis(w, 'j');
+    CREDO_VERUM(ictus_in_textu(w, "Planta", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(planta,
+        c->piscina)));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+    servum_scriptum_claudere(s);
     mundum_claudere(w);
 }
 
@@ -1242,6 +1369,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "recentes", _sectio_recentes, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "nexus", _sectio_nexus, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "ictus nexuum", _sectio_ictus_nexuum, NIHIL, mundum_purgare,
+        NIHIL,
+        NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,

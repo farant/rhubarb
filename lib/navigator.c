@@ -1378,8 +1378,11 @@ _url_aperire (
     }
     si (!vicipaedia_sedem_legere(url, &sedes, p))
     {
-        redde _notam_scribere(m, chorda_ex_literis(
-            "Unsupported site (Wikipedia only for now)", p), p);
+        /* N4.2: URL sine schemate nominatur (nexus alienus) */
+        redde _notam_scribere(m, chorda_concatenare(chorda_ex_literis(
+            "Unsupported site: ", p), chorda_sectio(url, (i32)
+            chorda_invenire_index(url, _litterae("://")) + III,
+            url.mensura), p), p);
     }
     a = navigator_articulum_invenire(m->bibliotheca,
         vicipaedia_url_articuli(&sedes, p));
@@ -2074,6 +2077,81 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
+/* N4.2: nota NEXUS sub puncto (x, y) LOCALI componentis "textus"
+ * (ab origine eius - Destinatio.punctum_locale; latus in vico non in
+ * origine schirmi) paginae currentis: linea per y, columna per x
+ * (runae, fons lineae), offset, nota quae eum continet; NIHIL extra
+ * nexum */
+interior constans ArticulusNota*
+_nexus_ad_punctum (
+          NavigatorMontatio* m,
+                        s32  x,
+                        s32  y)
+{
+            NavigatorFigurae* f;
+       constans LectorPagina* g;
+        constans LectorLinea* l;
+      constans ArticulusNota* n;
+                      chorda  t;
+                         Xar* notae;
+                         s32  lateris;
+                         s32  supra;
+                         s32  k;
+                         s32  lx;
+                         s32  columna;
+                         i32  offset;
+                         i32  i;
+                         i32  j;
+
+    f = _paginas_parare(m);
+    si (!f)
+    {
+        redde NIHIL;
+    }
+    k = _pagina_currens(m, f);
+    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    t      = (i32)k < f->paginae_articuli ? f->textus->caput.textus
+        : f->textus->nexus.textus;
+    notae  = (i32)k < f->paginae_articuli ? f->textus->notae
+        : f->textus->notae_nexuum;
+    _margines(m, &lateris, &supra);
+    per (i = ZEPHYRUM; i < xar_numerus(g->lineae); i++)
+    {
+        l   = (constans LectorLinea*)xar_obtinere(g->lineae, i);
+        lx  = lateris * NAV_LITTERA + l->x;
+        si (   y < l->y || y >= l->y + fons_altitudo(l->fons)
+            || x < lx)
+        {
+            perge;
+        }
+        columna  = (x - lx) / fons_latitudo(l->fons);
+        offset   = l->initium;
+        dum (offset < l->finis && columna > ZEPHYRUM)
+        {
+            offset++;
+            si (offset >= l->finis || (t.datum[offset] & 0xC0) != 0x80)
+            {
+                columna--;
+            }
+        }
+        si (offset >= l->finis)
+        {
+            redde NIHIL;
+        }
+        per (j = ZEPHYRUM; notae && j < xar_numerus(notae); j++)
+        {
+            n = (constans ArticulusNota*)xar_obtinere(notae, j);
+            si (   n->genus == ARTICULUS_NEXUS && n->initium <= offset
+                && offset < n->finis)
+            {
+                redde n;
+            }
+        }
+        redde NIHIL;
+    }
+    redde NIHIL;
+}
+
 interior b32
 agere (
      InsulaRepositorium* repo,
@@ -2092,7 +2170,6 @@ agere (
 
     (vacuum)repo;
     (vacuum)motus;
-    (vacuum)des;
     m         = (NavigatorMontatio*)ctx;
     privatum  = (NavigatorFigurae*)m->figurae_ctx;
     si (!privatum)
@@ -2153,6 +2230,19 @@ agere (
         {
             redde _favorem_vertere(m, _articulus_per_id(m, _campus(m,
                 "articulus")), privatum->scheda);
+        }
+        si (   chorda_aequalis_literis(nodus->id, "textus")
+            && ev->genus == EVENTUS_MUS_DEPRESSUS)
+        {
+            /* N4.2: ictus in nexu per viam URL aperit */
+            /* punctum locale (des); aliter ex fine nodi */
+            constans ArticulusNota* n = _nexus_ad_punctum(m, des
+                ? des->punctum_locale.x : ev->datum.mus.x
+                - nodus->fines.x, des ? des->punctum_locale.y
+                : ev->datum.mus.y - nodus->fines.y);
+
+            redde n && _url_aperire(m, chorda_transcribere(n->scopus,
+                privatum->scheda), privatum->scheda);
         }
         redde gradus != ZEPHYRUM && ev->genus == EVENTUS_MUS_DEPRESSUS
             && _paginam_movere(m, gradus);

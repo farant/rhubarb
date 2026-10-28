@@ -25,7 +25,12 @@
  * in indice nexuum) colore nexuum vici pingitur (COLORATIO_LINK, idem
  * ac #rubricae in editore: thema_color_ex_indice_colorationis);
  * linea quaeque in segmenta per notas finditur, ergo nexus qui in
- * lineam sequentem fluit in utraque coloratur. Clavis et mus N4.2-3.
+ * lineam sequentem fluit in utraque coloratur.
+ * MUS IN NEXU (N4.2): ictus in nexu (articulus aut index nexuum) eum
+ * aperit per viam URL - servatus statim, Vicipaedia petitur, alienus
+ * "Unsupported site: <hospes/via>" in pede (rubrum). Ictus: linea ->
+ * columna (runae, fons lineae) -> offset -> nota NEXUS; extra nexum
+ * nihil. Historia vici (Ctrl+O) ad articulum priorem. Clavis N4.3.
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,

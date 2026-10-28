@@ -13,6 +13,8 @@
 #include "navigator_bibliotheca.h"
 #include "vicipaedia.h"
 #include "thema.h"
+#include "dispensator.h"
+#include "manus_ludus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,6 +24,11 @@
     "<html><head><title>Rheum</title></head><body>" \
     "<section data-mw-section-id=\"0\"><p>Rheum est genus plantarum." \
     "</p></section></body></html>"
+
+#define PAGINA_BETAE \
+    "<html><head><title>Beta</title></head><body>" \
+    "<section data-mw-section-id=\"0\"><p>Beta est olus.</p>" \
+    "</section></body></html>"
 
 nomen structura {
             Volumen* volumen;
@@ -187,10 +194,141 @@ _probare_articulus (
         c->piscina)));
 }
 
+/* N4.2: nexus secutus (via URL, ut ictus) historiam vici impellit -
+ * Ctrl+O ad articulum priorem */
+interior vacuum
+_probare_retro (
+    CredoContextus* c)
+{
+                         Mundus* x = (Mundus*)c->datum;
+                          Vicus* v;
+                     VicusLatus* l;
+              NavigatorMontatio* m;
+                     ManusLudus* manus;
+    constans NavigatorArticulus* beta;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "navigator", chorda_ut_cstr(
+        x->articulus, c->piscina)));
+    (vacuum)vicus_pulsare(v);
+    l = latus_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    m = (NavigatorMontatio*)l->montatio;
+    CREDO_VERUM(campus_est(m, "articulus", chorda_ut_cstr(x->articulus,
+        c->piscina)));
+    (vacuum)navigator_versionem_offerre(m->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Beta",
+        c->piscina), chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Beta", c->piscina), "vicipaedia",
+        chorda_ex_literis(PAGINA_BETAE, c->piscina),
+        vicipaedia_articulus, NIHIL);
+    beta = navigator_articulum_invenire(m->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Beta",
+        c->piscina));
+    CREDO_NECESSE_NON_NIHIL(beta);
+
+    CREDO_GRADUS("nexus ad Betam (servatam): aperitur");
+    CREDO_VERUM(navigator_argumentum_ponere(m,
+        "https://la.wikipedia.org/wiki/Beta"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(campus_est(m, "articulus", chorda_ut_cstr(
+        beta->identitas, c->piscina)));
+
+    CREDO_GRADUS("Ctrl+O: Rheum iterum");
+    manus = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(manus);
+    (vacuum)manus_ludus_clavem(manus, 'o', (i32)MOD_IMPERIUM);
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    CREDO_VERUM(campus_est(m, "articulus", chorda_ut_cstr(x->articulus,
+        c->piscina)));
+}
+
+#define PAGINA_NEXUS \
+    "<html><head><title>Nexus</title></head><body>" \
+    "<section data-mw-section-id=\"0\"><p>Vide <a " \
+    "rel=\"mw:WikiLink\" href=\"./Rheum\">Rheum</a> nunc.</p>" \
+    "</section></body></html>"
+
+/* N4.2 (Franus 2026-10-28: ictus in vico nihil faciebat): latus in
+ * vico non in origine schirmi - ictus in nexu per manum ad punctum
+ * schirmi (ex pictura lateris) Rheum aperit */
+interior vacuum
+_probare_ictus_nexus (
+    CredoContextus* c)
+{
+                         Mundus* x = (Mundus*)c->datum;
+                          Vicus* v;
+                     VicusLatus* l;
+              NavigatorMontatio* m;
+                     ManusLudus* manus;
+                      Componens* radix;
+                      Componens* textus;
+                        Punctum  locale;
+                        Punctum  schirmum;
+    constans NavigatorArticulus* nexus;
+                            s32  lateris;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "navigator", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    l = latus_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    m = (NavigatorMontatio*)l->montatio;
+    (vacuum)navigator_versionem_offerre(m->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Nexus",
+        c->piscina), chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Nexus", c->piscina),
+        "vicipaedia",
+        chorda_ex_literis(PAGINA_NEXUS, c->piscina),
+        vicipaedia_articulus, NIHIL);
+    nexus = navigator_articulum_invenire(m->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Nexus",
+        c->piscina));
+    CREDO_NECESSE_NON_NIHIL(nexus);
+    CREDO_VERUM(navigator_argumentum_ponere(m, chorda_ut_cstr(
+        nexus->identitas, c->piscina)));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+
+    CREDO_GRADUS("latus non in origine: ictus ad punctum nexus");
+    radix = componens_invenire_per_id(dispensator_arbor(x->app.d),
+        chorda_ex_literis("navigator", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(radix);
+    CREDO_VERUM(radix->fines.x > ZEPHYRUM || radix->fines.y > ZEPHYRUM);
+    /* punctum ex dispositione (pictura sola in vico per spatium
+     * lateris registratur): componens "textus", margo lateris ut
+     * _margines (columnae - XL) / II in [I, X]; linea paragraphi post
+     * titulum articuli (XVI px) et intervallum (VIII): y XXIV; nexus a
+     * columna V ("Vide ") */
+    textus = componens_invenire_per_id(radix,
+        chorda_ex_literis("textus",
+        c->piscina));
+    CREDO_NECESSE_NON_NIHIL(textus);
+    lateris   = (radix->fines.latitudo / VI - II - XL) / II;
+    lateris   = lateris > X ? X : lateris < I ? I : lateris;
+    locale.x  = textus->fines.x + lateris * VI + V * VI + III;
+    locale.y  = textus->fines.y + XXIV + IV;
+    manus     = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(manus);
+    schirmum = manus_ludus_ad_schirmum(manus, radix, locale);
+    CREDO_VERUM(manus_ludus_premere_ad(manus, schirmum.x, schirmum.y));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(campus_est(m, "articulus", chorda_ut_cstr(x->articulus,
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "articulus", _probare_articulus, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "retro", _probare_retro, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "ictus nexus", _probare_ictus_nexus, mundum_parare,
+        mundum_purgare,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
