@@ -173,48 +173,72 @@ constans character* via_tesserae,
     redde exitus;
 }
 
-#define INSCRIPTIO_GYRI ((i32)CDL)   /* II s quisque: XV minuta */
-
-/* inscriptio: codex in stdin aut nexus apertus, utrum prius */
+/* inscriptio (plan-5 T2): codex in stdin aut nexus apertus, utrum
+ * prius - CommunioInscriptio ut applicatio; stdin clauso reactor solus
+ * dormit usque ad inspectionem proximam */
 interior s32
 _inscribere (
             Piscina* p,
-constans character* servus,
-constans character* epistula,
-constans character* via_tesserae,
-constans character* titulus)
+ constans character* servus,
+ constans character* epistula,
+ constans character* via_tesserae,
+ constans character* titulus)
 {
-           Reactor* r;
-        Veredarius* ver;
-         character  aditus[MONETA_ULID_MENSURA];
-         character  apparatus[MONETA_ULID_MENSURA];
-         character  linea[LXIV];
-     structura pollfd  pf;
-               i32 gyri;
-               b32 stdin_apertum;
-               s32 rc;
+               Reactor* r;
+            Veredarius* ver;
+    CommunioInscriptio* ci;
+      InscriptioGradus  prior;
+      InscriptioGradus  g;
+             character  linea[LXIV];
+       structura pollfd  pf;
+                   b32 stdin_apertum;
 
     r    = reactor_creare(p);
     ver  = r ? veredarium_domesticum_creare(p, r) : NIHIL;
-    si (   !ver
-        || !communio_inscriptionem_petere(r, ver, servus,
-        chorda_ex_literis(
-            epistula, p), via_tesserae, chorda_ex_literis(titulus, p),
-            aditus, p))
+    ci   = ver ? communio_inscriptionem_incipere(p, r, ver, NIHIL,
+        servus,
+        chorda_ex_literis(epistula, p), via_tesserae, chorda_ex_literis(
+        titulus, p), NIHIL, NIHIL) : NIHIL;
+    si (!ci)
     {
+        fprintf(stderr, "communio: inscriptio incipi nequit (tessera"
+            " exsistens? dele %s ut novam cudas)\n", via_tesserae);
         redde I;
     }
-    printf("communio: epistula missa ad %s (si permissa est).\n"
-        "Codicem scribe (XXXX-XXXX) et Enter, aut nexum in epistula "
-        "aperi.\n", epistula);
-    fflush(stdout);
-    stdin_apertum = VERUM;
-    per (gyri = ZEPHYRUM; gyri < INSCRIPTIO_GYRI; gyri++)
+    stdin_apertum  = VERUM;
+    prior          = communio_inscriptionis_gradus(ci);
+    dum (VERUM)
     {
+        g = communio_inscriptionis_gradus(ci);
+        si (g != prior)
+        {
+            si (g == INSCRIPTIO_EXSPECTAT && prior == INSCRIPTIO_PETIT)
+            {
+                printf("communio: epistula missa ad %s (si permissa"
+                    " est).\nCodicem scribe (XXXX-XXXX) et Enter, aut"
+                    " nexum in epistula aperi.\n", epistula);
+            }
+            alioquin si (g == INSCRIPTIO_CODEX_FALSUS)
+            {
+                printf("communio: codex non valet - iterum scribe\n");
+            }
+            alioquin si (   g     == INSCRIPTIO_EXSPECTAT
+                         && prior == INSCRIPTIO_CONFIRMAT)
+            {
+                printf("communio: rete deficit - iterum tempta\n");
+            }
+            fflush(stdout);
+            prior = g;
+        }
+        si (   g == INSCRIPTIO_INSCRIPTA || g == INSCRIPTIO_EXPIRATA
+            || g == INSCRIPTIO_RETE)
+        {
+            frange;
+        }
         pf.fd       = ZEPHYRUM;
         pf.events   = POLLIN;
         pf.revents  = ZEPHYRUM;
-        si (stdin_apertum && poll(&pf, I, (integer)MM) > ZEPHYRUM)
+        si (stdin_apertum && poll(&pf, I, ZEPHYRUM) > ZEPHYRUM)
         {
             si (!fgets(linea, (integer)magnitudo(linea), stdin))
             {
@@ -223,48 +247,27 @@ constans character* titulus)
             alioquin
             {
                 linea[strcspn(linea, "\r\n")] = '\0';
-                si (linea[ZEPHYRUM])
+                si (   linea[ZEPHYRUM]
+                    && !communio_inscriptioni_codicem_dare(ci,
+                           chorda_ex_literis(linea, p)))
                 {
-                    rc = communio_inscriptionem_confirmare(r, ver,
-                        servus,
-                        chorda_ex_literis(aditus, p), chorda_ex_literis(
-                        linea, p), apparatus, p);
-                    si (rc == ZEPHYRUM)
-                    {
-                        printf("communio: apparatus inscriptus: %s\n",
-                            apparatus);
-                        reactor_destruere(r);
-                        redde ZEPHYRUM;
-                    }
-                    si (rc == -II)
-                    {
-                        printf("communio: rete deficit - iterum"
-                            " tempta\n");
-                    }
-                    alioquin
-                    {
-                        printf("communio: codex non valet - iterum"
-                            " scribe\n");
-                    }
+                    printf("communio: codex non valet (XXXX-XXXX)\n");
                     fflush(stdout);
                 }
             }
         }
-        alioquin si (!stdin_apertum)
-        {
-            /* recensio 4: reactor vacuus statim redit - dormire */
-            (vacuum)poll(NIHIL, ZEPHYRUM, (integer)MM);
-        }
-        si (communio_tessera_valet(r, ver, servus, via_tesserae, p))
-        {
-            printf("communio: apparatus inscriptus (per nexum)\n");
-            reactor_destruere(r);
-            redde ZEPHYRUM;
-        }
+        (vacuum)reactor_poll(r, stdin_apertum ? (i32)L : (i32)M);
     }
-    fprintf(stderr,
-        "communio: XV minuta transierunt - aditus expiravit\n");
+    communio_inscriptionem_abicere(ci);
     reactor_destruere(r);
+    si (g == INSCRIPTIO_INSCRIPTA)
+    {
+        printf("communio: apparatus inscriptus\n");
+        redde ZEPHYRUM;
+    }
+    fprintf(stderr, g == INSCRIPTIO_RETE
+        ? "communio: servus non attingitur\n"
+        : "communio: aditus expiravit (XV minuta aut V codices)\n");
     redde I;
 }
 

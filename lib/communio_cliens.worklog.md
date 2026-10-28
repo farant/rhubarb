@@ -108,3 +108,30 @@ timeout (`HttpVocatioOptiones.mora_otii_ms`, default 60 s). The house
 veredarius sets both from the request's `tempus_ms`, so "tempus" means
 what callers think. The client's longest request is the long-poll
 (mora 25 s + margin 15 s = 40 s), still above the 25 s answer time.
+
+## 2026-10-27 - `CommunioInscriptio`: sign-in that never blocks (communio-plan-5 T2, quarta)
+
+The three blocking plan-3 helpers (`communio_inscriptionem_petere`,
+`_confirmare`, `communio_tessera_valet`, which ran the reactor until the
+server answered) are gone; one object replaces them, used by the
+`communio inscribere` command and (T7) by pictor. States: PETIT ->
+EXSPECTAT -> (CONFIRMAT ->) INSCRIPTA, with CODEX_FALSUS (another code
+allowed), EXPIRATA and RETE as the failure ends. While waiting it checks
+the token (`GET /communio/apparatus`) every II s - that is how a clicked
+link is noticed - and a code can be given at any time (any in-flight
+check is aborted first; one request at a time). Responses are handled on
+the next reactor turn (the veredarius's pool must outlive the finish).
+
+Pending state lives in the volume's praesentia `communio/inscriptio` =
+`{"aditus","incepta_ms"}` - never the email address - so a killed app
+resumes (`communio_inscriptionem_resumere`). praesentia has no delete:
+"removed" = empty value. The command passes volume NIHIL (nothing kept).
+
+Decisions: after V wrong codes the client ends in EXPIRATA (the server
+has consumed the request; plan-3 deferred minor 9 - the CLI used to keep
+saying "wrong code"); a network failure while confirming does NOT count
+as a try - back to EXSPECTAT. Codes are normalised exactly like the
+server (`_codicem_normare`: drop '-' and spaces, upper-case, VIII
+Crockford), so malformed input never makes a request. Test hooks:
+`communio_inscriptionis_moram_ponere` (check interval) and
+`_vitam_ponere` (lifetime) - the suite runs at L ms / CCC ms.

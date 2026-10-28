@@ -131,45 +131,92 @@ communio_tesseram_legere (
 
 
 /* ==================================================
- * Inscriptio per epistulam (plan-3 T6) - auxilia SEMEL: petitio una,
- * reactor agitur donec respondetur (instrumentum, probationes)
+ * Inscriptio per epistulam (plan-5 T2) - NUMQUAM OBSTRUIT
+ *
+ * Apparatus tesseram suam cudit (filum novum 0600), servus epistulam
+ * cum nexu et codice mittit (si epistula permissa est - responsum
+ * idem utroque modo), deinde: nexus pressus (tessera inspicitur omni
+ * mora, ordinarie II s) aut codex datus. Pendens in praesentia
+ * voluminis "communio/inscriptio" = {aditus, incepta_ms} (numquam
+ * epistula): applicatio necata eam resumit. Omnia per reactorem;
+ * mutata in quaque mutatione gradus.
  * ================================================== */
 
-/* tesseram novam in via_tesserae cudit (communio_tesseram_scribere;
- * filum exsistens recusatur, nihil mutatur) et POST /communio/intrare
- * cum digesto eius; aditus_exitus = id. FALSUM (et filum tesserae
- * deletum) si servus non 202 respondet. Epistula ignota: VERUM idem -
- * servus nihil prodit. */
-b32
-communio_inscriptionem_petere (
-               Reactor* reactor,
-            Veredarius* veredarius,
-    constans character* basis,
-                chorda  epistula,
-    constans character* via_tesserae,
-                chorda  titulus,
-             character  aditus_exitus[MONETA_ULID_MENSURA],
-               Piscina* piscina);
+nomen enumeratio {
+    INSCRIPTIO_PETIT = ZEPHYRUM,  /* intrare in itinere */
+    INSCRIPTIO_EXSPECTAT,         /* epistula missa: nexus aut codex */
+    INSCRIPTIO_CONFIRMAT,         /* codex in itinere */
+    INSCRIPTIO_INSCRIPTA,         /* finis: tessera valet */
+    INSCRIPTIO_CODEX_FALSUS,      /* codex recusatus; alius licet */
+    INSCRIPTIO_EXPIRATA,          /* finis: XV min aut V conatus */
+    INSCRIPTIO_RETE               /* finis: servus non attingitur */
+} InscriptioGradus;
 
-/* codicem confirmare: 0 = inscriptus (apparatus_exitus), -1 =
- * recusatum (codex falsus, expiratus, frenum), -2 = rete */
-s32
-communio_inscriptionem_confirmare (
-               Reactor* reactor,
-            Veredarius* veredarius,
-    constans character* basis,
-                chorda  aditus,
-                chorda  codex,
-             character  apparatus_exitus[MONETA_ULID_MENSURA],
-               Piscina* piscina);
+nomen vacuum (*CommunioInscriptioMutata)(vacuum* ctx,
+    InscriptioGradus gradus);
 
-/* valetne tessera iam (nexus apertus)? petitio una cum tessera */
+nomen structura CommunioInscriptio CommunioInscriptio;
+
+/* tesseram in via_tesserae cudit (exsistens: NIHIL, filum intactum) et
+ * intrare mittit; volumen NIHIL = nihil servatur (instrumentum).
+ * Redit ante responsum (gradus PETIT). Finis irritus (EXPIRATA, RETE)
+ * filum tesserae et entrium delet. */
+CommunioInscriptio*
+communio_inscriptionem_incipere (
+                     Piscina* piscina,
+                     Reactor* reactor,
+                  Veredarius* veredarius,
+                     Volumen* volumen,
+          constans character* basis,
+                      chorda  epistula,
+          constans character* via_tesserae,
+                      chorda  titulus,
+    CommunioInscriptioMutata  mutata,
+                      vacuum* ctx);
+
+/* inscriptionem pendentem resumere (gradus EXSPECTAT). NIHIL si nihil
+ * pendet, filum tesserae abest aut XV minuta transierunt - tum filum
+ * et entrium purgantur. */
+CommunioInscriptio*
+communio_inscriptionem_resumere (
+                     Piscina* piscina,
+                     Reactor* reactor,
+                  Veredarius* veredarius,
+                     Volumen* volumen,
+          constans character* basis,
+          constans character* via_tesserae,
+    CommunioInscriptioMutata  mutata,
+                      vacuum* ctx);
+
+/* codex normatur (lineolae, spatia, minusculae); non VIII signa
+ * Crockford aut gradus nec EXSPECTAT nec CODEX_FALSUS -> FALSUM sine
+ * petitione */
 b32
-communio_tessera_valet (
-               Reactor* reactor,
-            Veredarius* veredarius,
-    constans character* basis,
-    constans character* via_tesserae,
-               Piscina* piscina);
+communio_inscriptioni_codicem_dare (
+    CommunioInscriptio* ci,
+                chorda  codex);
+
+InscriptioGradus
+communio_inscriptionis_gradus (
+    constans CommunioInscriptio* ci);
+
+/* inspectio tesserae omni 'ms' (ordinarie MM) */
+vacuum
+communio_inscriptionis_moram_ponere (
+    CommunioInscriptio* ci,
+                   i32  ms);
+
+/* vita in ms (ordinarie XV minuta = vita aditus servi; probationes
+ * breviorem ponunt) */
+vacuum
+communio_inscriptionis_vitam_ponere (
+    CommunioInscriptio* ci,
+                   i32  ms);
+
+/* petitiones abrumpit, horas cancellat; nisi INSCRIPTA, filum tesserae
+ * et entrium delet. Postea non adhibetur. */
+vacuum
+communio_inscriptionem_abicere (
+    CommunioInscriptio* ci);
 
 #endif /* COMMUNIO_CLIENS_H */
