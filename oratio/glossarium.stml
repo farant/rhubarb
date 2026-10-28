@@ -387,6 +387,12 @@
     <forma textus="reflexione" casus="ablativus" numerus="singularis" genus="femininum"/>
     <forma textus="reflexiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="responsio" lingua="latina" classis="substantivum" nota="respondere: responsio, -onis f. (Cicero); hic responsio coli H(e^jw) ad frequentiam (tibia aequatio)">
+    <forma textus="responsio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="responsionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="responsionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="responsione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="unimodularis" lingua="latina" classis="adiectivum" nota="Neolatina: unimodularis, matrix determinantis +-1 (matrix: certificata Hermite et Smith); WORDS caret">
     <forma textus="unimodularis" casus="nominativus" numerus="singularis"/>
     <forma textus="unimodulares" casus="nominativus" numerus="pluralis"/>

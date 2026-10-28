@@ -1073,6 +1073,117 @@ _sectio_schola (
 /* fistula: flatus = strepitus additus (residuum contra flatum 0)
  * mensura flatus, circa notam (plus ad f quam ad 6f);
  * deterministicum */
+/* schola pura ad aequationem: sine flatu, vibratu, unisono, colis;
+ * involucrum plenum statim */
+interior TibiaParametra
+_schola_pura (
+    f32 vox,
+    f32 vocalis)
+{
+    TibiaParametra q = *tibia_praeparatum("schola");
+
+    q.flatus              = 0.0f;
+    q.vibratus            = 0.0f;
+    q.unisonus            = 1.0f;
+    q.gravia              = 0.0f;
+    q.resonans            = 0.0f;
+    q.involucrum.impetus  = 0.0f;
+    q.involucrum.lapsus   = 0.0f;
+    q.involucrum.tenor    = 1.0f;
+    q.amplitudo           = 1.0f;
+    q.vox                 = vox;
+    q.vocalis             = vocalis;
+    redde q;
+}
+
+/* aequatio (tibia.h AEQUATIO): efficax 0.29 +/- 0.5 dB per vocem x
+ * vocalem x notam C2..D5 (error verus < 0.41 dB: serra sine limite
+ * bandae); x4 limes (tenor i ad D#7: x21 posceret);
+ * glissandum linealiter ad metam, saltus per V ms (240 exempla);
+ * genera cetera aequatio 1 */
+interior vacuum
+_sectio_aequatio (
+    CredoContextus* c)
+{
+    constans f32 notae[VII] = { 36.0f, 43.0f, 48.0f, 57.0f, 64.0f,
+                                69.0f, 74.0f };
+       TibiaParametra q;
+             TibiaVox v;
+             TibiaVox w;
+                  f32 g0;
+                  f32 g1;
+                  f32 prior;
+                  f32 gradus = 0.0f;
+                  i32 ordo;
+                  i32 vc;
+                  i32 n;
+                  i32 i;
+
+    (vacuum)c;
+    per (ordo = ZEPHYRUM; ordo < IV; ordo++)
+    {
+        per (vc = ZEPHYRUM; vc < V; vc++)
+        {
+            q = _schola_pura((f32)ordo, (f32)vc);
+            per (n = ZEPHYRUM; n < VII; n++)
+            {
+                f64 db;
+
+                _sonare(&q, notae[n], tabula_a, SECUNDA / IV);
+                db = 20.0 * log10(_efficax(tabula_a, SECUNDA / X,
+                    SECUNDA / X) / 0.29);
+                CREDO_VERUM (fabs(db) < 0.5);
+            }
+        }
+    }
+    /* limes: tenor i ad D#7 */
+    q = _schola_pura(0.0f, 2.0f);
+    tibia_vocem_parare(&v, &q, 99.0f);
+    CREDO_F32_PROXIMUS (v.aequatio, 4.0f, 0.0f);
+    _sonare(&q, 99.0f, tabula_a, SECUNDA / IV);
+    CREDO_VERUM (_efficax(tabula_a, SECUNDA / X, SECUNDA / X) < 0.145);
+    /* glissandum: tenor e, G3 (x0.73) -> A4 (x0.40) per 0.1 s */
+    q = _schola_pura(0.0f, 1.0f);
+    tibia_vocem_parare(&w, &q, 69.0f);
+    g1 = w.aequatio;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    g0 = v.aequatio;
+    CREDO_VERUM (g0 - g1 > 0.2f);
+    tibia_notam_ponere(&v, 69.0f, 4800);
+    prior = v.aequatio;
+    per (i = ZEPHYRUM; i < 4800; i++)
+    {
+        (vacuum)tibia_vocis_proximum(&v);
+        si (fabs(v.aequatio - prior) > gradus)
+        {
+            gradus = (f32)fabs(v.aequatio - prior);
+        }
+        prior = v.aequatio;
+        si (i == 2399)
+        {
+            CREDO_F32_PROXIMUS (v.aequatio, 0.5f * (g0 + g1), 0.001f);
+        }
+    }
+    CREDO_VERUM (v.aequatio == g1);
+    CREDO_VERUM (gradus <= 1.01f * (g0 - g1) / 4800.0f);
+    /* saltus: quadra 0 - altitudo statim, aequatio per 240 exempla */
+    tibia_vocem_parare(&v, &q, 57.0f);
+    tibia_notam_ponere(&v, 69.0f, ZEPHYRUM);
+    (vacuum)tibia_vocis_proximum(&v);
+    CREDO_VERUM (v.aequatio > g1 + 0.9f * (g0 - g1));
+    per (i = I; i < 240; i++)
+    {
+        (vacuum)tibia_vocis_proximum(&v);
+    }
+    CREDO_VERUM (v.aequatio == g1);
+    /* genera cetera */
+    tibia_vocem_parare(&v, tibia_praeparatum("aether"), 57.0f);
+    CREDO_VERUM (v.aequatio == 1.0f);
+    tibia_notam_ponere(&v, 69.0f, ZEPHYRUM);
+    (vacuum)tibia_vocis_proximum(&v);
+    CREDO_VERUM (v.aequatio == 1.0f);
+}
+
 /* voces (tibia.h FORMANTES): tabula per vocem - vocalis a: tenor F1
  * 650 (latitudo 80), bassus 600 (60), altus 800 (80), superius 800
  * (80); F3 superius -32 dB (altus -20) eas discernit; apex finitus per
@@ -1508,6 +1619,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "schola", _sectio_schola, _parare, NIHIL, NIHIL, NIHIL },
     { "voces", _sectio_voces, _parare, NIHIL, NIHIL, NIHIL },
+    { "aequatio", _sectio_aequatio, _parare, NIHIL, NIHIL, NIHIL },
     { "fistula", _sectio_fistula, _parare, NIHIL, NIHIL, NIHIL },
     { "nubes", _sectio_nubes, _parare, NIHIL, NIHIL, NIHIL },
     { "genus_coercitum", _sectio_genus_coercitum, _parare, NIHIL,

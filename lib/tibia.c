@@ -435,9 +435,91 @@ hic_manens constans TibiaVocalis VOCES[IV][V] = {
 
 /* lucrum formantium commune: serra per cola media angusta multum
  * attenuatur (efficax ~0.1 x amplitudo sine eo); 2.4 = efficax
- * ~0.25 x amplitudo, apex < 1.2 x amplitudo per C3..D5 (mensuratum,
- * vide worklog) */
+ * mediana 0.29 x amplitudo per voces, vocales, C3..D5. AEQUATIO
+ * (tibia.h) super id per notam: efficax 0.29 exacte, non ultra x4 */
 #define TIBIA_FORMANTIUM_LUCRUM 2.4f
+#define TIBIA_FORMANTIUM_EFFICAX 0.29
+#define TIBIA_AEQUATIO_MAXIMA 4.0
+/* saltus altitudinis (quadra 0): aequatio per V ms */
+#define TIBIA_AEQUATIO_SALTUS (SONUS_FREQUENTIA / CC)
+
+/* responsio coli ad e^jw (cos/sin w et 2w): H = (b0 + b1 z + b2 z^2)
+ * / (1 + a1 z + a2 z^2), z = e^-jw; pars realis et imaginaria additae
+ * cum lucro */
+interior vacuum
+_responsionem_addere (
+       constans SonusResonans* r,
+                          f64  lucrum,
+                 constans f64* cs,
+                          f64* re,
+                          f64* im)
+{
+    f64 nr = (f64)r->b0 + (f64)r->b1 * cs[ZEPHYRUM]
+        + (f64)r->b2 * cs[II];
+    f64 ni  = -((f64)r->b1 * cs[I] + (f64)r->b2 * cs[III]);
+    f64 dr  = 1.0 + (f64)r->a1 * cs[ZEPHYRUM] + (f64)r->a2 * cs[II];
+    f64 di  = -((f64)r->a1 * cs[I] + (f64)r->a2 * cs[III]);
+    f64 d   = dr * dr + di * di;
+
+    *re += lucrum * (nr * dr + ni * di) / d;
+    *im += lucrum * (ni * dr - nr * di) / d;
+}
+
+/* AEQUATIO: lucrum ut serra ad notam (harmonica k: 2 / (pi k)) per
+ * cola formantium (coefficientes ipsi, H(e^jw) exacte) efficacem
+ * TIBIA_FORMANTIUM_EFFICAX habeat; harmonicae usque ad Nyquist */
+interior f32
+_aequationem_computare (
+    constans TibiaVox* v,
+                  f32  nota)
+{
+    f64 f0        = (f64)sonus_notae_frequentia(nota);
+    f64 potentia  = 0.0;
+    f64 g;
+    i32 k;
+    i32 j;
+
+    si (f0 <= 0.0)
+    {
+        redde 1.0f;
+    }
+    per (k = I; (f64)k * f0 < (f64)SONUS_FREQUENTIA / 2.0; k++)
+    {
+        f64 w     = TIBIA_DUO_PI * (f64)k * f0 / (f64)SONUS_FREQUENTIA;
+        f64 cs[IV];
+        f64 re  = 0.0;
+        f64 im  = 0.0;
+        f64 a   = 2.0 / (TIBIA_DUO_PI / 2.0 * (f64)k);
+
+        /* cos w, sin w, cos 2w, sin 2w */
+        cs[ZEPHYRUM]  = cos(w);
+        cs[I]         = sin(w);
+        cs[II]        = cos(2.0 * w);
+        cs[III]       = sin(2.0 * w);
+        per (j = ZEPHYRUM; j < TIBIA_FORMANTES_NUMERUS; j++)
+        {
+            _responsionem_addere(&v->formantes[j],
+                (f64)v->lucra_formantium[j], cs, &re, &im);
+        }
+        potentia += a * a * (re * re + im * im) / 2.0;
+    }
+    g = potentia > 0.0 ? TIBIA_FORMANTIUM_EFFICAX / sqrt(potentia)
+                       : TIBIA_AEQUATIO_MAXIMA;
+    redde (f32)(g < TIBIA_AEQUATIO_MAXIMA ? g : TIBIA_AEQUATIO_MAXIMA);
+}
+
+/* AEQUATIO: ad metam per n exempla */
+interior vacuum
+_aequationem_ducere (
+    TibiaVox* v,
+         f32  nota,
+         i32  n)
+{
+    v->meta_aequationis     = _aequationem_computare(v, nota);
+    v->passus_aequationis   = (v->meta_aequationis - v->aequatio)
+                            / (f32)n;
+    v->reliqua_aequationis  = n;
+}
 
 /* FORMANTES: vocalis in [0, 4]; fractio inter vicinas linealiter
  * (frequentia, dB, latitudo) */
@@ -503,7 +585,15 @@ _formantium_proximum (
         y += v->lucra_formantium[k]
             * sonus_resonans_proximum(&v->formantes[k], x);
     }
-    redde y;
+    si (v->reliqua_aequationis > ZEPHYRUM)
+    {
+        v->reliqua_aequationis--;
+        /* ex meta, non summando (error f32 non colligitur);
+         * ultimo passu meta EXACTA */
+        v->aequatio = v->meta_aequationis - v->passus_aequationis
+                    * (f32)v->reliqua_aequationis;
+    }
+    redde y * v->aequatio;
 }
 
 /* FLATUS: colum medium circa notam (Q II); lucrum ut strepitus
@@ -610,9 +700,11 @@ tibia_vocem_parare (
                   * TIBIA_CIRCULUS;
     v->incrementum_vibrati = incrementum > 0.0 && incrementum
         < TIBIA_CIRCULUS ? (i32)incrementum : ZEPHYRUM;
-    v->nota    = nota;
-    v->meta    = nota;
-    v->aperta  = VERUM;
+    v->nota              = nota;
+    v->meta              = nota;
+    v->aperta            = VERUM;
+    v->aequatio          = 1.0f;
+    v->meta_aequationis  = 1.0f;
     _frequentiam_ponere(v, nota);
     si (v->genus == TIBIA_CHORDA)
     {
@@ -634,6 +726,7 @@ tibia_vocem_parare (
     alioquin si (v->genus == TIBIA_FORMANTES)
     {
         _formantes_parare(v, p);
+        v->aequatio = _aequationem_computare(v, nota);
     }
     v->flatus    = p->flatus < 0.0f ? 0.0f
                  : (p->flatus > 1.0f ? 1.0f : p->flatus);
@@ -661,6 +754,11 @@ tibia_notam_ponere (
          f32  nota,
          i32  quadra)
 {
+    si (v->genus == TIBIA_FORMANTES)
+    {
+        _aequationem_ducere(v, nota, quadra > ZEPHYRUM
+            ? quadra : TIBIA_AEQUATIO_SALTUS);
+    }
     si (quadra == ZEPHYRUM)
     {
         v->nota     = nota;
