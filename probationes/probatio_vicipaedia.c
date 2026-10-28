@@ -18,6 +18,8 @@
 /* spatium non frangens (U+00A0), spatium tenue (U+2009) */
 #define INSECABILE "\xC2\xA0"
 #define TENUE      "\xE2\x80\x89"
+/* nota sinistra-dextra (U+200E), latitudine nulla */
+#define NOTA_DIRECTIONIS "\xE2\x80\x8E"
 
 interior Articulus*
 articulum_legere (
@@ -604,12 +606,37 @@ _probare_quaestio (
         p), p) == NIHIL);
 }
 
+/* invisibilia latitudine nulla (U+200B-200F, U+2060, U+FEFF) -
+ * cruda et per entitatem - tolluntur; spatium tenue manet (fons id
+ * pingit) */
+interior vacuum
+_probare_invisibilia (
+    CredoContextus* c)
+{
+            Articulus* a;
+    ArticulusClausula* k;
+
+    a = vicipaedia_articulus(chorda_ex_literis(
+        "<html><head><title>T</title></head><body>"
+        "<section data-mw-section-id=\"0\"><p>lit." TENUE "'Thomas'"
+        NOTA_DIRECTIONIS " a&lrm;b\xE2\x80\x8B" "c\xEF\xBB\xBF"
+        "d\xE2\x81\xA0" "e"
+        "&#x200D;f</p></section></body></html>", c->piscina),
+        "https://en.wikipedia.org/wiki/T", c->piscina);
+    CREDO_NECESSE(a != NIHIL);
+    k = clausula(sectio(a, ZEPHYRUM)->clausulae, ZEPHYRUM);
+    CREDO_NECESSE(k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS(k->textus, "lit." TENUE "'Thomas' "
+        "abcdef");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "minimum", _probare_minimum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "rhubarb", _probare_rheum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "aquinas", _probare_aquinas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sedes", _probare_sedes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "quaestio", _probare_quaestio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "invisibilia", _probare_invisibilia, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

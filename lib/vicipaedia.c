@@ -402,6 +402,35 @@ lineam_novam (
     col->initium_lineae   = VERUM;
 }
 
+/* octeti characteris latitudine nullae ad i (U+200B-200F, U+2060,
+ * U+FEFF: E2 80 8B-8F, E2 81 A0, EF BB BF); 0 si aliud. Fons
+ * cellulas fixas habet - haec tolluntur, non pinguntur */
+interior s32
+invisibile (
+    constans i8* d,
+            s32  i,
+            s32  n)
+{
+    insignatus character a;
+    insignatus character b;
+    insignatus character e;
+
+    si (i + III > n)
+    {
+        redde ZEPHYRUM;
+    }
+    a = (insignatus character)d[i];
+    b = (insignatus character)d[i + I];
+    e = (insignatus character)d[i + II];
+    si (   (a == 0xE2 && b == 0x80 && e >= 0x8B && e <= 0x8F)
+        || (a == 0xE2 && b == 0x81 && e == 0xA0)
+        || (a == 0xEF && b == 0xBB && e == 0xBF))
+    {
+        redde III;
+    }
+    redde ZEPHYRUM;
+}
+
 interior vacuum
 textum_addere (
     Collector* col,
@@ -421,11 +450,20 @@ textum_addere (
                    textus.datum, i, (s32)textus.mensura, FALSUM,
                    exitus, &n, &post))
         {
-            per (k = ZEPHYRUM; k < n; k++)
+            /* &lrm; &zwj; ...: tolluntur ut cruda */
+            si (!invisibile((constans i8*)exitus, ZEPHYRUM, (s32)n))
             {
-                octetum_addere(col, (i8)exitus[k]);
+                per (k = ZEPHYRUM; k < n; k++)
+                {
+                    octetum_addere(col, (i8)exitus[k]);
+                }
             }
             i = post;
+            perge;
+        }
+        si (invisibile(textus.datum, i, (s32)textus.mensura) > ZEPHYRUM)
+        {
+            i += III;
             perge;
         }
         octetum_addere(col, textus.datum[i]);

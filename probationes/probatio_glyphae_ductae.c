@@ -933,6 +933,24 @@ _sectio_nona (
     graeca_probare(larva);
 }
 
+/* XIV: i in circulo U+24D8 (Franus 2026-10-27: nexus auditionis
+ * Vicipaediae, "/ə'kwaɪnəs/ ⓘ") - circulus ut ◯, i intus */
+interior vacuum
+_sectio_quinta_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* informatio[] = {
+        "..###.", ".#.#.#", ".#...#", ".#.#.#",
+        ".#.#.#", ".#.#.#", "..###.", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x24D8));
+    CREDO_VERUM(pictura_est(0x24D8, informatio, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x24D7));
+    CREDO_FALSUM(glyphae_ductae_est(0x24D9));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: lineae (Ghostty linesChar)", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -960,6 +978,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL },
     { "XIII: IPA", _sectio_quarta_decima,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIV: i in circulo (U+24D8)", _sectio_quinta_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

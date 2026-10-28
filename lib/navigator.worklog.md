@@ -109,3 +109,15 @@ article is listed.
 Migration note: articles saved before N3.4 have no favor act, so they
 don't appear in the index until bookmarked (they still open offline by
 URL/search). N3.4b (recent list) surfaces them.
+
+## 2026-10-27 - tofu on Thomas Aquinas: ⓘ, thin/hair spaces, LRM
+
+Fran's "blank" tofu were U+2009 (thin, 8x on the page) and U+200A
+(hair, 2x); the Claude Code paste flattened them to ASCII, so the
+real page was fetched to check. Also U+200E (LRM, 2x) and ⓘ U+24D8
+(the audio link after the IPA). Fix: lib/fons.c maps
+U+2000-200A, 202F, 205F, 3000 to space (like NBSP); zero-width marks
+(U+200B-200F, 2060, FEFF) can't be drawn in a fixed-cell font, so the
+vicipaedia collector drops them, raw or via entities (&lrm;). ⓘ =
+new 6x8 glyph (circle as ◯, i inside). Saved articles benefit without
+a refetch: extraction runs on open from the stored HTML.
