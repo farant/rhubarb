@@ -1,9 +1,13 @@
 # Demo 135: exact ranks of the singlet pieces (plan)
 
-Status: DRAFT (2026-10-27), for Fran and a design review before any
-data. Context: project-specs/crossings-contraction-counting-brainstorm.md
-§2.1 item 9 (ANT's one-bit form), §11 "Singlet pieces in closed form"
-(the derivation this demo checks), §12.1.1 (finite-size cost curves).
+Status: v2 (2026-10-27) after a DESIGN REVIEW before any data
+(consiliarius-d135; summarised in "Design review" at the end). v1 was
+approved by Fran (2026-10-27) with the defaults of its "Open for Fran":
+home `knotapel/demo_135_singlet_ranks/`, a design review before T0.
+v2 fixes Λ = 6 in advance (review M3). Context:
+project-specs/crossings-contraction-counting-brainstorm.md §2.1 item 9
+(ANT's one-bit form), §11 "Singlet pieces in closed form" (the
+derivation this demo checks), §12.1.1 (finite-size cost curves).
 
 ## Question
 
@@ -21,9 +25,9 @@ closed form:
 If that is right, the whole cost curve (§11 item 6) is known for every
 λ without building a matrix, and the next experiment (real tables) can
 be designed against exact numbers. This demo checks the derivation
-exactly, in two independent ways, at sizes nobody has looked at, and
-tests a prediction the formula makes that floating point could never
-see: ranks mod small primes.
+exactly, in independent ways, at a size nobody has computed (λ = 6),
+and tests a prediction floating point could never see: ranks mod small
+primes.
 
 ## Definitions
 
@@ -33,7 +37,7 @@ Bits: x, y, u, v ∈ {0, 1}^λ; bit j of each is x_j, … .
   [u_j ≠ v_j](−1)^(u_j). The crossing per bit is E − S (ANT Appendix H;
   checked by brute force in §11).
 - Piece: A_i(x, y, u, v) = (−1)^i Σ_{T ⊆ {1..λ}, |T| = i} Π_{j∈T} S_j
-  Π_{j∉T} E_j. Integer valued. Σ_i A_i = the λ-bit crossing.
+  Π_{j∉T} E_j. Integer valued.
 - Rows matrix R_i: row index (x, u), column index (y, v). Columns
   matrix C_i: row index (x, y), column index (u, v). Both 4^λ × 4^λ.
   Index layout: per bit a pair (first, second) → 2·first + second, bit
@@ -42,7 +46,8 @@ Bits: x, y, u, v ∈ {0, 1}^λ; bit j of each is x_j, … .
 - Rows basis per bit: a = |00⟩ + |11⟩ (special); a⊥ = {|00⟩ − |11⟩,
   |01⟩, |10⟩}. Columns basis per bit: σ = |01⟩ − |10⟩ (special);
   σ⊥ = {|00⟩, |11⟩, |01⟩ + |10⟩}. A basis tensor b is a tensor product
-  of one vector per bit; d(b) = number of positions not special.
+  of one vector per bit, one for each of the 4^λ digit tuples; d(b) =
+  number of positions not special.
 - Predicted eigenvalues: rows μ_i(b) = (−1)^i·C(λ − d, i − d)·2^(λ−i)
   (0 if d > i); columns μ'_i(b) = (−1)^i·C(λ − d, i)·2^i (0 if
   d > λ − i).
@@ -57,30 +62,49 @@ Bits: x, y, u, v ∈ {0, 1}^λ; bit j of each is x_j, … .
   i) at λ ≤ 4, still in floating point (scratch `rangi.py`). So λ ≤ 4
   over Q is NOT a test; it is replication in exact arithmetic.
 - The mod-p tables below were computed from the formula alone
-  (scratch `praedictio.py`); no matrix was built mod any prime.
-- Nothing at λ ≥ 5 has been computed in any arithmetic.
+  (scratch `praedictio.py`).
+- (v2) The DESIGN REVIEWER computed, independently and exactly: R1 and
+  R2 at λ ≤ 4; ranks at λ ≤ 5, both cuts, every i, mod 3, 5, 7 and
+  2^31 − 1; and compared every entry of the registered table with its
+  own formula code. It reported match/mismatch only, never the numbers:
+  "MATCH at every case". So λ ≤ 5 is now seen-by-proxy (a confirmation
+  leaked, no value did). **λ = 6 is the only size nobody has computed**,
+  in any arithmetic.
 
 ## Registered predictions
 
-Λ = the largest λ the run reaches (T0 sets it; at least 5, 6 if
-feasible). "Holds" means every case matches exactly; one mismatch
-means the prediction falls, and the findings name the case.
+**Λ = 6, fixed now** (v2). T0 chooses only the METHOD per λ. A case at
+λ ≤ 6 that does not finish (crash, memory guard, abandoned) is reported
+as "not tested", never dropped. "Holds" means every case matches
+exactly; one mismatch means the prediction falls, and the findings name
+the case.
 
-- **R1 (pieces sum).** Σ_i A_i equals the λ-bit crossing at every
-  (x, y, u, v), for λ = 1 … Λ.
-- **R2 (diagonal).** For every λ ≤ Λ, every i, every basis tensor b:
+- **R1 (pieces sum).** Σ_i A_i(x, y, u, v) = [x = v][y = u] compared on
+  WHOLE λ-bit words (not against the product of per-bit E − S), at every
+  (x, y, u, v), for λ = 1 … 6.
+- **R2 (diagonal).** For every λ ≤ 6, every i, every basis tensor b:
   rows: R_i·b = μ_i(b)·S^⊗λ·b; columns: C_i·b = μ'_i(b)·b. Exact
-  integers. Since the basis matrix has determinant ±2^k ≠ 0, R2 alone
-  proves rank R_i = #{b: μ_i(b) ≠ 0} = F(λ, i) over Q, and the same mod
-  every odd prime with "≠ 0" read mod p.
-- **R3 (rank over Q, second route).** rank R_i = F(λ, i) and rank C_i =
-  F(λ, λ − i), by `matrix_gradus` over Z (exact Q rank) for λ ≤ 4 and
-  over Z/p for p = 2^31 − 1 (a lower bound on Q rank) for 5 ≤ λ ≤ Λ.
+  integers. R_i and C_i are built from the indicator definitions, never
+  from E/S matrix forms; μ is computed by a function separate from the
+  matrix builder.
+- **R2b (the basis is a basis).** From the SAME vector arrays R2 uses:
+  det of the per-bit rows basis matrix and of the columns basis matrix
+  are each ±2 (nonzero, odd primes invert it); the basis tensors are
+  enumerated over all 4^λ digit tuples (each tuple once). With R2, this
+  proves rank R_i = #{b: μ_i(b) ≠ 0} = F(λ, i) over Q and over every
+  odd prime with "≠ 0" read mod p. (Without R2b a duplicated basis
+  vector would leave R2 green and the argument empty: review H1.)
+- **R3 (ranks by elimination).** λ ≤ 4: rank over Z (= Q rank) by
+  `matrix_gradus` equals F(λ, i) rows, F(λ, λ − i) columns. 5 ≤ λ ≤ 6:
+  rank mod 2^31 − 1 equals F (a LOWER bound on Q rank; the Q equality
+  comes from R2 + R2b).
 - **R4 (small primes).** rank mod p of R_i and C_i, for p ∈ {3, 5, 7}
-  and λ ≤ Λ, equals the count of basis tensors with μ ≢ 0 (mod p):
-  rows Σ_{d≤i, p ∤ C(λ−d, i−d)} C(λ, d)·3^d, columns
-  Σ_{d≤λ−i, p ∤ C(λ−d, i)} C(λ, d)·3^d. Primes above λ predict no drop.
-  The cases with drops (λ ≤ 6) are:
+  and λ ≤ 6, equals the LITERAL table below (hard-coded in the demo;
+  measured ranks are compared with it). Separately the demo asserts its
+  formula code (rows Σ_{d≤i, p ∤ C(λ−d, i−d)} C(λ, d)·3^d; columns
+  Σ_{d≤λ−i, p ∤ C(λ−d, i)} C(λ, d)·3^d) reproduces the whole table,
+  including every no-drop case. Primes above λ predict no drop. The
+  cases with drops are:
 
   | λ | p | rows (i = 0 … λ) | Q value differs at |
   | --- | --- | --- | --- |
@@ -91,55 +115,95 @@ means the prediction falls, and the findings name the case.
   | 6 | 3 | 1, 18, 153, 694, 1233, 2826, 4096 | i = 1, 2, 4, 5 |
   | 6 | 5 | 1, 19, 135, 675, 1890, 3349, 4096 | i = 2 … 5 |
 
-  Columns are the rows reversed (i ↔ λ − i) in every case. p = 7 at
-  λ ≤ 6: no drop.
+  Every other (λ, p) at λ ≤ 6 with p ∈ {3, 5, 7}: the Q values
+  F(λ, i). Columns are the rows reversed (i ↔ λ − i) in every case.
+
+**Known blind spot (review M1):** every term of one entry of A_i has
+the same sign, (−1)^i·(−1)^(popcount(x ⊕ u)); for the rows cut it
+depends on the row only, for the columns cut it splits into row × column
+factors. So |A_i| has the same ranks as A_i: R3 and R4 cannot see signs
+(a wrong reduction of −1 mod p, or plant 1, is invisible to them). R1
+and R2 are the sign-sensitive checks. The demo also asserts that every
+residue lies in [0, p).
 
 **Descriptive (no prediction):** ranks mod 2 (the basis is singular
-there, so the derivation says nothing); the cost curve of §11 item 6,
-reprinted from F for λ ≤ 100 beside the verified range.
+there); the cost curve of §11 item 6, reprinted from F for λ ≤ 100
+beside the verified range; for the next experiment (review item 4):
+both cuts' factor matrices printed at λ ≤ 2 for hand reference, the
+denominators of the eigenbasis factorization (B⁻¹ = diag(½, ½, 1, 1)·Bᵀ,
+so entries lie in Z[½], up to 2^i rows, 2^(λ−i) columns), and the sign
+gauge A_i = ±D·N_i with N_i ≥ 0 counting the contributing T, checked
+at every λ.
 
 ## Method
 
 - One C file (`main.c`, K&R demo style, house headers allowed, frozen
-  with `knotapel/archive.sh` when done). Matrices built from the
-  indicator DEFINITIONS (loop over T), not from the E/S matrix forms.
-- R1, R2: direct integer loops (no library). R2 costs 4^λ basis
-  tensors × a 4^λ matrix-vector product per piece and direction:
-  about 2·(λ+1)·16^λ multiply-adds (λ = 6: 2^29, seconds).
-- R3, R4: `matrix_gradus` over `anulus` Z and Z/p. T0 measures it on
-  1024² and 4096²; if it is too slow at 4096², λ = 6 uses a plain mod-p
-  elimination in the demo (congruentia operations), cross-checked
-  against `matrix_gradus` at λ ≤ 5.
-- Oracle: `oracle_d135.py`, written independently: builds the
-  matrices from the indicator definitions and computes exact ranks mod
-  p by its own elimination (pure Python, λ ≤ 4; λ = 5 if it runs in
-  minutes), and Q ranks by fractions at λ ≤ 3. The demo's printed
-  ranks must equal the oracle's wherever both run.
-- Plants (each must turn a named prediction red):
-  1. S with the opposite sign (E + S) → R1;
-  2. rows eigenvalue C(λ − d, i) instead of C(λ − d, i − d) → R2, R4;
-  3. a⊥'s first vector |00⟩ + |11⟩ (basis singular) → R2;
-  4. rows and columns cuts swapped when building matrices → R3;
-  5. small-prime rule p ∤ C(λ, i) instead of p ∤ C(λ − d, i − d) → R4
-     at λ = 4, p = 3.
+  with `knotapel/archive.sh` when done).
+- R1, R2, R2b: direct integer loops (no library). R2 costs about
+  2·(λ+1)·16^λ multiply-adds (λ = 6: 2^29, seconds).
+- R3, R4: `matrix_gradus` over `anulus` Z and Z/p where T0 shows it is
+  fast enough. The review expects it is not at λ = 6: over Z/n it calls
+  `congruentia_inversa` on every Bareiss update (lib/anulus.c:656-666),
+  about 2·10^10 at 4096². Fallback: a plain mod-p row elimination in the
+  demo (one inverse per pivot, cost ~ n²·rank), cross-checked against
+  `matrix_gradus` at λ ≤ 5. One piece at a time, each λ = 6 run under
+  `tools/custos.sh`.
+- Oracle: `oracle_d135.py`, written in T1 independently of main.c:
+  numpy, vectorized row elimination mod p, matrices built from the
+  indicator definitions (Kronecker products of per-bit 4 × 4 matrices
+  allowed for λ ≥ 5, identical to the full indicator loop at λ ≤ 4).
+  Covers ranks mod 3, 5, 7, 2^31 − 1 at λ ≤ 6 (λ = 6: tens of minutes,
+  per the review). The demo's ranks must equal the oracle's everywhere.
+  (The reviewer's own scratch oracle stays a third route for T3.)
+- Plants (each must turn the named check red; expected results for the
+  others stated where they matter):
+  1. S with the opposite sign (E + S) → R1 and R2 red; R3/R4 green
+     (blind spot);
+  2. rows eigenvalue C(λ − d, i) instead of C(λ − d, i − d) → R2 red;
+  3. a⊥'s first vector replaced by |00⟩ + |11⟩ → R2 red, R2b red;
+  4. rows and columns cuts swapped when building matrices → R3 red;
+  5. small-prime rule p ∤ C(λ, i) instead of p ∤ C(λ − d, i − d) →
+     "formula code = table" red (R4 itself compares with the literal
+     table and stays green);
+  6. a⊥ = {|00⟩ − |11⟩, |01⟩, |01⟩} (duplicate) → R2 GREEN, R2b red;
+  7. |A_i| in place of A_i → R2 red; R3/R4 green (blind spot recorded).
+  Not planted: swapping the order inside every bit pair everywhere at
+  once (a symmetry: a, the set a⊥ and s ⊗ s are unchanged, σ flips
+  sign); a swap in one place only is already caught by R2.
 
 ## Tasks
 
-- **T0. Feasibility.** Time `matrix_gradus` on random integer 1024²
-  and 4096² matrices over Z/p, and over Z at 256²; set Λ and the
-  method per size; report. No piece matrix is built.
-- **T1. Build.** main.c with R1–R4 and the descriptive rows, the
+- **T0. Feasibility.** Time `matrix_gradus` on random full-rank integer
+  1024² and 4096² matrices over Z/p, and over Z at 256²; write the
+  method per λ into this plan as a dated amendment before T1. No piece
+  matrix is built.
+- **T1. Build.** main.c with R1–R4, R2b and the descriptive rows, the
   oracle, the plants. Checks run only at λ ≤ 2 (hand-checkable: λ = 1
-  pieces are 4 × 4) until the plants are red.
-- **T2. Registered run.** λ = 1 … Λ, verdicts, findings.md, archive.
+  pieces are 4 × 4) until the plants behave as stated.
+- **T2. Registered run.** λ = 1 … 6, verdicts, findings.md, archive.
 - **T3. Review** (a reviewer with its own oracle, as for D132–D134).
 
-## Open for Fran
+## Design review (2026-10-27, consiliarius-d135, before any data)
 
-1. Home: `knotapel/demo_135_singlet_ranks/` (the crossings program has
-   no demo folder of its own; D130–D134 already sit in knotapel).
-2. Λ: 5 at least, 6 if T0 says it is minutes, not hours.
-3. Design review before T0 (proposed: a short one; the risk here is a
-   circular check, e.g. R2 and the prediction sharing one formula
-   implementation, which the oracle and plants 2 and 5 are meant to
-   catch).
+Verdict: derivation right, design sound; independent exact check
+"MATCH at every case" (λ ≤ 5, four primes; numbers withheld). Findings
+and what v2 did:
+
+- H1: R2's rank argument needs the basis to be a basis; a duplicated
+  vector passes R2 → R2b and plant 6.
+- H2: the reviewer's computation made "nothing at λ ≥ 5 computed"
+  false → disclosure updated; λ = 6 is the unseen size.
+- M1: signs invisible to rank checks (no cancellation inside an entry,
+  sign gauge) → stated blind spot, plant 7, residues asserted in
+  [0, p), plant 1's expected results.
+- M2: R4's reference ambiguous → literal table hard-coded, separate
+  "formula = table" check (plant 5 targets it).
+- M3: "Λ = the largest λ reached" was decided after the run → Λ = 6
+  fixed now; unfinished cases reported "not tested".
+- M4: R3 at λ ≥ 5 is a lower bound → relabelled.
+- L1: R1 against whole-word equality; L2: the in-pair swap is a
+  symmetry, not a plant; L3: numpy oracle reaches λ = 6.
+- Item 4 (next experiment): factorization denominators (Z[½]), sign
+  gauge, λ ≤ 2 factor matrices → descriptive outputs.
+- Item 5: matrix_gradus over Z/n likely hours at 4096² → fallback
+  elimination planned, measured in T0.
