@@ -70,3 +70,42 @@ index; Enter goes through _url_aperire (saved opens offline). Esc goes
 back to the page if an article is open, else the index. A restart in
 the results view re-runs the stored search (results are not
 persisted).
+
+## 2026-10-27 - N3.4a bookmarks, Yahoo-style index
+
+The index now lists BOOKMARKS only, in two levels. Root ("Saved"): a
+"Bookmarks" group, one row per root domain with a count; Enter or
+double click goes down. Domain level: the old grouped-by-host list,
+filtered to bookmarked articles of that domain (`_ordo` filters on
+`a->favor` and `_radix_dominii(host) == dominium`). Root domain = last
+two host labels (co.uk etc. need the Public Suffix List later).
+
+The level is not a new `visus` value: `visus="index"` with an empty
+`dominium` field is mapped to an internal VISUS_RADICIS (VIII) by
+`_visus()`. So the manifest kept three visus options, the praecepta
+table can bind j k [ ] Enter separately per level, and Esc at the
+domain level (VISUS_INDICIS) goes to the root while Esc at the root is
+unbound (falls through to vicus). Root selection is its own field
+`electus` = "d:<domain>" (N3.4b will add "a:<ULID>" rows);
+domain-level selection still uses `electus_articulus`.
+
+`_album_indicis` hides the two-level difference from the layout code:
+returns the album, the selected item's page and the row count for
+whichever level is showing. Drawing is split (`_radicem_pingere` vs
+`_indicem_pingere`); the row painter was generalised into
+`_lineam_ordinis_pingere(left, right, selected)`.
+
+`b` toggles (page: the open article; domain level: the selected row),
+and the page footer has a star button (bright COLOR_WARNING if
+bookmarked, dim otherwise; ☆ has no glyph so the dim ★ stands in).
+Toggling changes the library, not the branch, so `_favorem_vertere`
+sets `mutatum` for a repaint. The id is copied before
+navigator_favorem_ponere because the acts are re-read.
+
+Esc from a page goes to the article's domain IF that domain still has
+bookmarks, else the root (`_dominium_reditus`), so you land where the
+article is listed.
+
+Migration note: articles saved before N3.4 have no favor act, so they
+don't appear in the index until bookmarked (they still open offline by
+URL/search). N3.4b (recent list) surfaces them.

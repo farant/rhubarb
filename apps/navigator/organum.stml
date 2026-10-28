@@ -33,6 +33,14 @@
     <campus nomen="pagina" typus="numerus" vita="persistens"
             scriptor="navigator.agere" semita="status"
             ambitus="ligatio" nota="pagina in articulo (ab 0)"/>
+    <campus nomen="dominium" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            nota="N3.4: gradus indicis - vacuum = radix (dominia
+                  favorum), 'wikipedia.org' = favores eius per hospitem"/>
+    <campus nomen="electus" typus="textus" vita="persistens"
+            scriptor="navigator.agere"
+            nota="N3.4: ordo electus in radice ('d:wikipedia.org';
+                  N3.4b 'a:ULID' recentium); absens = primus"/>
     <campus nomen="electus_articulus" typus="textus" vita="persistens"
             scriptor="navigator.agere"
             nota="ULID articuli electi in indice; absens = primus"/>

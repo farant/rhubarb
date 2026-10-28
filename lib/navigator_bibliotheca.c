@@ -12,6 +12,7 @@
 
 #define GENUS_ARTICULI   "navigator-articulus"
 #define GENUS_VERSIONIS  "navigator-versio"
+#define GENUS_FAVORIS    "navigator-favor"     /* N3.4 */
 #define ALVEUS_EXTRACTIONIS ((memoriae_index)(IV * M * M))
 
 structura NavigatorBibliotheca {
@@ -69,6 +70,17 @@ actum_applicare (
     {
         redde;
     }
+    si (chorda_aequalis_literis(actum->genus, GENUS_FAVORIS))
+    {
+        /* N3.4: favor articuli - actum ultimum vincit */
+        a = articulum_per_id(b, json_capere_chorda(r.radix, "articulus",
+            vacua()));
+        si (a)
+        {
+            a->favor = json_capere_boolean(r.radix, "favor", FALSUM);
+        }
+        redde;
+    }
     identitas = json_capere_chorda(r.radix, "id", vacua());
     si (identitas.mensura == ZEPHYRUM)
     {
@@ -90,6 +102,7 @@ actum_applicare (
         a->situs      = json_capere_chorda(r.radix, "situs", vacua());
         a->versiones = xar_creare(b->piscina,
             magnitudo(NavigatorVersio));
+        a->favor      = FALSUM;
         redde;
     }
     a = articulum_per_id(b, json_capere_chorda(r.radix, "articulus",
@@ -115,14 +128,15 @@ interior vacuum
 acta_legere (
     NavigatorBibliotheca* b)
 {
-     constans character* genera[III];
+     constans character* genera[IV];
                  chorda  replica;
                     Xar* acta;
                     i32  i;
 
     genera[ZEPHYRUM]  = GENUS_ARTICULI;
     genera[I]         = GENUS_VERSIONIS;
-    genera[II]        = NIHIL;
+    genera[II]        = GENUS_FAVORIS;
+    genera[III]       = NIHIL;
     replica           = volumen_replica(b->volumen);
     acta = replica.mensura > ZEPHYRUM
         ? volumen_acta_generum_replicae_legere(b->volumen, replica,
@@ -426,6 +440,47 @@ navigator_versionem_offerre (
         *versio = versio_ultima(navigator_articulum_invenire(b, url));
     }
     redde exitus;
+}
+
+b32
+navigator_favorem_ponere (
+    NavigatorBibliotheca* b,
+                  chorda  articulus,
+                     b32  favor)
+{
+    NavigatorArticulus* a;
+     ChordaAedificator* aed;
+               Piscina* tp;
+                   b32  bene;
+
+    a = b ? articulum_per_id(b, articulus) : NIHIL;
+    si (!a)
+    {
+        redde FALSUM;
+    }
+    favor = favor != FALSUM;
+    si (a->favor == favor)
+    {
+        redde VERUM;   /* status idem: nihil scriptum */
+    }
+    tp = piscina_generare_dynamicum("navigator_favor", MXXIV);
+    si (!tp)
+    {
+        redde FALSUM;
+    }
+    aed = chorda_aedificator_creare(tp, CXXVIII);
+    chorda_aedificator_appendere_character(aed, '{');
+    campum_scribere(aed, "articulus", a->identitas, VERUM);
+    chorda_aedificator_appendere_literis(aed, favor ? ",\"favor\":true}"
+        : ",\"favor\":false}");
+    bene = volumen_actum_appendere(b->volumen, GENUS_FAVORIS,
+        chorda_aedificator_finire(aed)) > ZEPHYRUM;
+    piscina_destruere(tp);
+    si (bene)
+    {
+        acta_legere(b);
+    }
+    redde bene;
 }
 
 chorda

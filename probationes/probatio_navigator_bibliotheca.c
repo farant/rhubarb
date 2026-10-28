@@ -397,6 +397,54 @@ _probare_vitium (
         ZEPHYRUM)->versiones), I);
 }
 
+/* N3.4: favores - actum unum per mutationem, status idem nihil,
+ * refectio ex actis */
+interior vacuum
+_probare_favor (
+    CredoContextus* c)
+{
+                         Mundus* m = (Mundus*)c->datum;
+    constans NavigatorArticulus* a;
+           NavigatorBibliotheca* b2;
+                            s64  acta;
+
+    CREDO_NECESSE_NON_NIHIL(m->b);
+    CREDO_NECESSE(offerre(m, URL_RHEUM, H_PRIMA, NIHIL, c->piscina)
+        == NAVIGATOR_NOVUM);
+    a = navigator_articulus(m->b, ZEPHYRUM);
+
+    CREDO_GRADUS("articulus novus non favor");
+    CREDO_FALSUM(a->favor);
+
+    CREDO_GRADUS("ponere: actum unum, favor VERUM");
+    acta = volumen_summa_actorum(m->volumen);
+    CREDO_VERUM(navigator_favorem_ponere(m->b, a->identitas, VERUM));
+    CREDO_VERUM(a->favor);
+    CREDO_VERUM(volumen_summa_actorum(m->volumen) == acta + I);
+
+    CREDO_GRADUS("iterum ponere: nihil scriptum");
+    CREDO_VERUM(navigator_favorem_ponere(m->b, a->identitas, VERUM));
+    CREDO_VERUM(volumen_summa_actorum(m->volumen) == acta + I);
+
+    CREDO_GRADUS("bibliotheca secunda: favor ex actis");
+    b2 = navigator_bibliotheca_aperire(m->volumen, moneta_numerator,
+        &m->numerator, c->piscina);
+    CREDO_VERUM(navigator_articulus(b2, ZEPHYRUM)->favor);
+
+    CREDO_GRADUS("tollere: actum alterum, favor FALSUM, refectio idem");
+    CREDO_VERUM(navigator_favorem_ponere(m->b, a->identitas, FALSUM));
+    CREDO_FALSUM(a->favor);
+    CREDO_VERUM(volumen_summa_actorum(m->volumen) == acta + II);
+    b2 = navigator_bibliotheca_aperire(m->volumen, moneta_numerator,
+        &m->numerator, c->piscina);
+    CREDO_FALSUM(navigator_articulus(b2, ZEPHYRUM)->favor);
+
+    CREDO_GRADUS("articulus ignotus: FALSUM, nihil scriptum");
+    CREDO_FALSUM(navigator_favorem_ponere(m->b, lit("ZZZ", c->piscina),
+        VERUM));
+    CREDO_VERUM(volumen_summa_actorum(m->volumen) == acta + II);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "novum", _probare_novum, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -411,6 +459,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "reficere", _probare_reficere, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "vitium", _probare_vitium, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "favor", _probare_favor, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

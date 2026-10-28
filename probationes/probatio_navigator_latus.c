@@ -118,6 +118,13 @@ mundus (
             "<p>Beta est planta.</p>"), c->piscina));
         offerre(w, URL_BETA, chorda_ex_literis(PAGINA("Beta",
             "<p>Beta vulgaris est olus.</p>"), c->piscina));
+        /* N3.4: index favores solos monstrat - omnes tres favores */
+        (vacuum)navigator_favorem_ponere(w->bibliotheca,
+            chorda_ex_literis("1", c->piscina), VERUM);
+        (vacuum)navigator_favorem_ponere(w->bibliotheca,
+            chorda_ex_literis("3", c->piscina), VERUM);
+        (vacuum)navigator_favorem_ponere(w->bibliotheca,
+            chorda_ex_literis("5", c->piscina), VERUM);
     }
     w->repo = insula_repositorium_creare(c->piscina, w->intern,
         "<hospes/>");
@@ -229,6 +236,37 @@ pictum (
     {
         x = (constans Mandatum*)xar_obtinere(md->elementa, i);
         si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* textus continens fragmentum colore thematis pictus? */
+interior b32
+pictum_colore (
+                  Mundus* w,
+      constans character* fragmentum,
+              ColorThema  color,
+                 Piscina* p)
+{
+                Mandata* md;
+      constans Mandatum* x;
+           ColorMandati  quaesitus;
+                    i32  i;
+
+    quaesitus  = figura_color_thematis(color);
+    md         = mandata_creare(p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus       == MANDATUM_TEXTUS
+            && x->color.genus == quaesitus.genus
+            && x->color.valor == quaesitus.valor
             && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
                 p)))
         {
@@ -603,6 +641,66 @@ _sectio_quaestio (
     servum_scriptum_claudere(s);
 }
 
+/* N3.4: favores - b in pagina et in dominio, stella pedis (mus),
+ * non favores absunt, dominium sine favoribus */
+interior vacuum
+_sectio_favores (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("b in pagina: favor tollitur; stella flava, obscura");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    CREDO_VERUM(pictum_colore(w, "\342\230\205", COLOR_WARNING,
+        c->piscina));
+    clavis(w, 'b');
+    CREDO_FALSUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    CREDO_VERUM(pictum_colore(w, "\342\230\205", COLOR_TEXT_DIM,
+        c->piscina));
+    CREDO_FALSUM(pictum_colore(w, "\342\230\205", COLOR_WARNING,
+        c->piscina));
+
+    CREDO_GRADUS("ictus in stella: favor iterum; b iterum tollit");
+    CREDO_VERUM(ictus_in(w, "favor", FALSUM, c->piscina));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    clavis(w, 'b');
+
+    CREDO_GRADUS("Esc: dominium; non favor (Rheum) abest");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "Beta", c->piscina));
+    CREDO_FALSUM(pictum(w, "Rheum", c->piscina));
+
+    CREDO_GRADUS("b in electo (Rhubarb, primus): tollitur ex indice");
+    clavis(w, 'b');
+    CREDO_FALSUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "Beta", c->piscina));
+
+    CREDO_GRADUS("ultimus tollitur: radix sine favoribus");
+    clavis(w, 'b');
+    CREDO_FALSUM(pictum(w, "Beta", c->piscina));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "No bookmarks yet", c->piscina));
+    CREDO_AEQUALIS_I32(navigator_articulorum_numerus(w->bibliotheca),
+        III);
+
+    CREDO_GRADUS("Esc ex pagina, dominio sine favoribus: radix");
+    CREDO_VERUM(argumentum(w, "3"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    mundum_claudere(w);
+}
+
 interior vacuum
 _sectio_index (
     CredoContextus* c)
@@ -611,9 +709,21 @@ _sectio_index (
 
     CREDO_NECESSE_NON_NIHIL(w);
 
-    CREDO_GRADUS("latus novum: index per hospitem");
+    CREDO_GRADUS("N3.4 radix: 'Saved', 'Bookmarks', dominium, numerus");
     CREDO_VERUM(campus_est(w, "visus", "index"));
-    CREDO_VERUM(pictum(w, "Saved articles", c->piscina));
+    CREDO_VERUM(pictum(w, "Saved", c->piscina));
+    CREDO_VERUM(pictum(w, "Bookmarks", c->piscina));
+    CREDO_VERUM(pictum(w, "wikipedia.org", c->piscina));
+    CREDO_VERUM(pictum(w, "3 bookmarks", c->piscina));
+    CREDO_FALSUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
+        c->piscina), "Saved");
+
+    CREDO_GRADUS("Enter in dominio: descendit; favores per hospitem");
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
+        c->piscina), "Saved - wikipedia.org");
     CREDO_VERUM(pictum(w, "en.wikipedia.org", c->piscina));
     CREDO_VERUM(pictum(w, "la.wikipedia.org", c->piscina));
     CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
@@ -651,6 +761,18 @@ _sectio_index (
     CREDO_VERUM(campus_est(w, "articulus", "5"));
     CREDO_VERUM(campus_est(w, "pagina", "0"));
     CREDO_VERUM(campus_est(w, "versio", "7"));
+
+    CREDO_GRADUS("Esc ex pagina: dominium manet; Esc iterum: radix");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "Bookmarks", c->piscina));
+
+    CREDO_GRADUS("mus: duplex in dominio descendit");
+    CREDO_VERUM(ictus_in(w, "d1", VERUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
     mundum_claudere(w);
 }
 
@@ -661,6 +783,7 @@ _sectio_pagina (
     Mundus* w = mundus(c, VERUM);
 
     CREDO_NECESSE_NON_NIHIL(w);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);   /* in dominium */
     clavis_nominata(w, CLAVIS_REDITUS, XIII);
 
     CREDO_GRADUS("Rhubarb: titulus, textus, pes (hospes, paginae)");
@@ -736,7 +859,7 @@ _sectio_versio (
     CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
         c->piscina), "Beta - la.wikipedia.org - 1/1");
 
-    CREDO_GRADUS("index: locus sine articulo; 'Saved articles'");
+    CREDO_GRADUS("index: locus sine articulo; dominium articuli");
     clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
     locus = navigator_locus(&w->m, c->piscina);
     CREDO_FALSUM(chorda_continet(locus, chorda_ex_literis("versio",
@@ -744,7 +867,7 @@ _sectio_versio (
     CREDO_FALSUM(chorda_continet(locus, chorda_ex_literis("/5",
         c->piscina)));
     CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
-        c->piscina), "Saved articles");
+        c->piscina), "Saved - wikipedia.org");
     mundum_claudere(w);
 }
 
@@ -795,7 +918,7 @@ _sectio_vacua (
 
     CREDO_NECESSE_NON_NIHIL(w);
     CREDO_GRADUS("bibliotheca vacua: nuntius, Enter nihil");
-    CREDO_VERUM(pictum(w, "No saved articles", c->piscina));
+    CREDO_VERUM(pictum(w, "No bookmarks yet", c->piscina));
     clavis_nominata(w, CLAVIS_REDITUS, XIII);
     CREDO_VERUM(campus_est(w, "visus", "index"));
     mundum_claudere(w);
@@ -809,6 +932,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "quaestio", _sectio_quaestio, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "index", _sectio_index, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "favores", _sectio_favores, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },

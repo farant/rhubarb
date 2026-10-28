@@ -41,6 +41,7 @@ nomen structura {
                          * (vicipaedia_url_articuli) */
     chorda  situs;       /* "vicipaedia" */
        Xar* versiones;   /* NavigatorVersio, vetustissima prima */
+       b32  favor;       /* N3.4: favor (actum ultimum vincit) */
 } NavigatorArticulus;
 
 /* adaptator situs: HTML -> Articulus (vicipaedia_articulus) */
@@ -90,6 +91,14 @@ navigator_versionem_offerre (
                             chorda   html,
                 NavigatorExtrahere   extrahere,
           constans NavigatorVersio** versio);
+
+/* favor ponere/tollere: actum "navigator-favor" {articulus, favor};
+ * status idem = nihil scriptum. FALSUM si articulus ignotus */
+b32
+navigator_favorem_ponere (
+    NavigatorBibliotheca* b,
+                  chorda  articulus,
+                     b32  favor);
 
 /* HTML versionis ex massa; vacua si massa abest */
 chorda

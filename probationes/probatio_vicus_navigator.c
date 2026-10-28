@@ -140,7 +140,7 @@ _probare_latera (
     CREDO_VERUM(l->facies.mora(l->facies.pulsare_ctx) == -I);
     CREDO_VERUM(prima->reactor != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS(vicus_latus_locus_titulus(v, l,
-        c->piscina), "Saved articles");
+        c->piscina), "Saved");
 
     CREDO_NECESSE(vicus_activam_ponere(v, "2"));
     CREDO_VERUM(vicus_acervo_aperire(v, "navigator", NIHIL));

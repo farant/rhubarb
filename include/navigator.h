@@ -4,13 +4,19 @@
  * per ligamen a parente, communis omnibus lateribus; status visus in
  * ramo.
  *
- * INDEX: articuli servati per hospitem grex (titulus gregis in pagina
- * continuationis iteratus), linea per articulum - titulus versionis
- * ultimae, "3 versions". Claves: j k (electus), [ ] (paginae), Enter
- * (articulus, versio ultima, pagina prima), Esc (latus per vicum).
+ * INDEX (N3.4: FAVORES solum, more Yahoo): RADIX "Saved" - grex
+ * "Bookmarks", linea per dominium radicale ("wikipedia.org", numerus
+ * favorum); Enter (aut duplex) descendit. DOMINIUM: favores eius per
+ * hospitem grex (titulus gregis in pagina continuationis iteratus),
+ * linea per articulum - titulus versionis ultimae, "3 versions".
+ * Claves: j k (electus), [ ] (paginae), Enter (articulus, versio
+ * ultima, pagina prima), b (favor electi), Esc (ad radicem; in radice
+ * latus per vicum). Dominium radicale = duo nomina ultima hospitis
+ * (Vicipaedia recta; co.uk etc. Public Suffix List postea).
  * PAGINA: articulus paginatus (navigator_paginae.h + lector_paginare),
- * in linea ima titulus, hospes, "3/7". Claves: j k (pagina proxima /
- * prior), Esc (ad indicem). Extractio et paginae in cache per
+ * in linea ima titulus, hospes, "3/7", stella (clara si favor; ictus
+ * vertit). Claves: j k (pagina proxima / prior), b (favor), Esc (ad
+ * indicem). Extractio et paginae in cache per
  * (articulus, versio, area).
  * NOTAE: locus "navigator/pagina/<articulus>?versio=<v>&pagina=3" -
  * versio in loco, ergo comes (Cmd+T) versionis suae est (spec V.11,
@@ -123,7 +129,8 @@ navigator_locus (
      vacuum* ctx,
     Piscina* piscina);
 
-/* "Rhubarb - en.wikipedia.org - 3/7"; index: "Saved articles" */
+/* "Rhubarb - en.wikipedia.org - 3/7"; index: "Saved" (radix), "Saved -
+ * wikipedia.org" (dominium) */
 chorda
 navigator_locus_titulus (
      vacuum* ctx,
