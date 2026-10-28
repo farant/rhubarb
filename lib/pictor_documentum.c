@@ -1604,6 +1604,175 @@ pictor_documenta_aliena_enumerare (
     redde l;
 }
 
+/* clavis indicis: "<replica>\n<genus>" */
+interior chorda
+_clavis_alieni (
+     chorda  replica,
+     chorda  genus,
+    Piscina* piscina)
+{
+    redde chorda_concatenare(chorda_concatenare(replica,
+        chorda_ex_literis("\n", piscina), piscina), genus, piscina);
+}
+
+/* ordo: hora descendens; aequales replica, deinde spatium */
+interior b32
+_aliena_prior (
+    constans PictorPicturaAliena* a,
+    constans PictorPicturaAliena* b)
+{
+    s32 c;
+
+    si (a->hora != b->hora)
+    {
+        redde a->hora > b->hora;
+    }
+    c = chorda_comparare(a->replica, b->replica);
+    si (c != ZEPHYRUM)
+    {
+        redde c < ZEPHYRUM;
+    }
+    redde chorda_comparare(a->spatium, b->spatium) < ZEPHYRUM;
+}
+
+Xar*
+pictor_aliena_recentia (
+     Volumen* volumen,
+     Piscina* piscina)
+{
+                     Xar*  l;
+                     Xar*  acta;
+          TabulaDispersa*  index;
+     PictorPicturaAliena*  p;
+     PictorPicturaAliena*  q;
+     PictorPicturaAliena   t;
+            VolumenActum*  a;
+      constans character** genera;
+      constans character*  g[IV];
+                  chorda   s;
+            JsonResultus   r;
+                  vacuum*  v;
+                     i32   n;
+                     i32   i;
+                     i32   j;
+                     i32   k;
+                     i32   m;
+
+    l = pictor_documenta_aliena_enumerare(volumen, piscina);
+    si (!l)
+    {
+        redde NIHIL;
+    }
+    n      = xar_numerus(l);
+    index  = tabula_dispersa_creare_chorda(piscina, n * IV + XVI);
+    genera = (constans character**)piscina_allocare(piscina,
+        magnitudo(character*) * (memoriae_index)(n * IV + II));
+    si (!index || !genera)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        p        = (PictorPicturaAliena*)xar_obtinere(l, i);
+        p->hora  = ZEPHYRUM;
+        historia_genera(piscina, chorda_ut_cstr(p->spatium, piscina),
+            GENUS_ICTUUM, g);
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            (vacuum)tabula_dispersa_inserere(index, _clavis_alieni(
+                p->replica, chorda_ex_literis(g[j], piscina), piscina),
+                p);
+        }
+    }
+    /* replica quaeque semel: genera picturarum suarum, acta sua */
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        p = (PictorPicturaAliena*)xar_obtinere(l, i);
+        per (j = ZEPHYRUM; j < i; j++)
+        {
+            si (chorda_aequalis(((PictorPicturaAliena*)xar_obtinere(l,
+                    j))->replica, p->replica))
+            {
+                frange;
+            }
+        }
+        si (j < i)
+        {
+            perge;
+        }
+        m = ZEPHYRUM;
+        per (j = i; j < n; j++)
+        {
+            q = (PictorPicturaAliena*)xar_obtinere(l, j);
+            si (!chorda_aequalis(q->replica, p->replica))
+            {
+                perge;
+            }
+            historia_genera(piscina, chorda_ut_cstr(q->spatium,
+                piscina),
+                GENUS_ICTUUM, g);
+            per (k = ZEPHYRUM; k < IV; k++)
+            {
+                genera[m++] = g[k];
+            }
+        }
+        genera[m++]  = "plagula-condita";
+        genera[m]    = NIHIL;
+        acta = volumen_acta_generum_replicae_legere(volumen, p->replica,
+            ZEPHYRUM, genera, piscina);
+        per (k = ZEPHYRUM; acta && k < xar_numerus(acta); k++)
+        {
+            a = (VolumenActum*)xar_obtinere(acta, k);
+            q = NIHIL;
+            si (chorda_aequalis_literis(a->genus, "plagula-condita"))
+            {
+                r = json_legere(a->datum, piscina);
+                si (   r.successus
+                    && spatium_documenti(json_capere_chorda(r.radix,
+                           "via", chorda_ex_literis("", piscina)), &s))
+                {
+                    per (j = i; j < n && !q; j++)
+                    {
+                        PictorPicturaAliena* c =
+                            (PictorPicturaAliena*)xar_obtinere(l, j);
+
+                        si (   chorda_aequalis(c->replica, p->replica)
+                            && chorda_aequalis(c->spatium, s))
+                        {
+                            q = c;
+                        }
+                    }
+                }
+            }
+            alioquin si (tabula_dispersa_invenire(index, _clavis_alieni(
+                         p->replica, a->genus, piscina), &v))
+            {
+                q = (PictorPicturaAliena*)v;
+            }
+            si (q && a->identitas.hora > q->hora)
+            {
+                q->hora = a->identitas.hora;
+            }
+        }
+    }
+    /* insertio stabilis (C7) */
+    per (i = I; i < n; i++)
+    {
+        t = *(PictorPicturaAliena*)xar_obtinere(l, i);
+        j = i;
+        dum (   j > ZEPHYRUM
+             && _aliena_prior(&t, (PictorPicturaAliena*)xar_obtinere(l,
+                    j - I)))
+        {
+            *(PictorPicturaAliena*)xar_obtinere(l, j) =
+                *(PictorPicturaAliena*)xar_obtinere(l, j - I);
+            j--;
+        }
+        *(PictorPicturaAliena*)xar_obtinere(l, j) = t;
+    }
+    redde l;
+}
+
 
 /* ==================================================
  * Acta, revocare, reficere (historia)
@@ -1780,17 +1949,15 @@ pictor_imaginem_aptare (
     redde df.indices;
 }
 
-b32
-pictor_pinacem_facere (
-                Volumen* volumen,
-    InternamentumChorda* intern,
-     constans character* spatium,
-                    i32  latitudo,
-                    i32  altitudo,
-                Piscina* piscina,
-                  Imago* exitus)
+/* pinax ex documento aperto (proprio aut alieno) */
+interior b32
+_pinacem_ex_documento (
+    PictorDocumentum* doc,
+                 i32  latitudo,
+                 i32  altitudo,
+             Piscina* piscina,
+               Imago* exitus)
 {
-    PictorDocumentum* doc;
                   i8* indices;
                  s32  x;
                  s32  y;
@@ -1800,13 +1967,6 @@ pictor_pinacem_facere (
                  i32  i;
                  i32  j;
 
-    si (   !volumen || !intern || !spatium || !piscina || !exitus
-        || latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
-    {
-        redde FALSUM;
-    }
-    /* apertura in scheda vocantis: memoria cum ea perit */
-    doc = pictor_documentum_aperire(piscina, intern, volumen, spatium);
     si (!doc)
     {
         redde FALSUM;
@@ -1842,6 +2002,49 @@ pictor_pinacem_facere (
         }
     }
     redde VERUM;
+}
+
+b32
+pictor_pinacem_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus)
+{
+    si (   !volumen || !intern || !spatium || !piscina || !exitus
+        || latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* apertura in scheda vocantis: memoria cum ea perit */
+    redde _pinacem_ex_documento(pictor_documentum_aperire(piscina,
+        intern,
+        volumen, spatium), latitudo, altitudo, piscina, exitus);
+}
+
+b32
+pictor_pinacem_alienum_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+                 chorda  replica,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus)
+{
+    si (   !volumen || !intern || !spatium || !piscina || !exitus
+        || latitudo        == ZEPHYRUM || altitudo == ZEPHYRUM
+        || replica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde _pinacem_ex_documento(pictor_documentum_aperire_alienum(
+        piscina, intern, volumen, replica, spatium), latitudo, altitudo,
+        piscina, exitus);
 }
 
 b32

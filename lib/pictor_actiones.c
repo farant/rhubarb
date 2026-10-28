@@ -3,6 +3,7 @@
 #include "pictor_actiones.h"
 #include "pictor_componentia.h"
 #include "elenchus.h"
+#include "moneta.h"
 #include "xar.h"
 #include "exemplaria.h"
 
@@ -1044,49 +1045,14 @@ pictor_imaginem_eligere (
     redde pa->imaginem_eligere(pa->imaginem_eligere_ctx);
 }
 
-/* pinacotheca D6: spatium picturae novae "pictura-<n>", n = I +
- * maximum numerorum exstantium (nomen internum, numquam ostensum) */
+/* plan-5 T3 (communio D9/D12): spatium picturae novae = ULID - unicum
+ * sine coordinatione inter machinas, ordine temporis; picturae
+ * veteres "pictura-<n>" nomen suum servant */
 interior vacuum
 spatium_novum (
-      Volumen* volumen,
-      Piscina* piscina,
-    character  exitus[XXXII])
+    character exitus[XXXII])
 {
-       Xar* l;
-    chorda  s;
-       i32  i;
-       i32  j;
-       i32  n;
-       i32  maximum;
-       b32  numeri;
-
-    maximum  = ZEPHYRUM;
-    l        = pictor_documenta_enumerare(volumen, piscina);
-    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
-    {
-        s = *(chorda*)xar_obtinere(l, i);
-        si (   s.mensura <= VIII || s.mensura > VIII + IX
-            || memcmp(s.datum, "pictura-", VIII) != ZEPHYRUM)
-        {
-            perge;
-        }
-        n       = ZEPHYRUM;
-        numeri  = VERUM;
-        per (j = VIII; j < s.mensura; j++)
-        {
-            si (s.datum[j] < '0' || s.datum[j] > '9')
-            {
-                numeri = FALSUM;
-                frange;
-            }
-            n = n * X + (i32)(s.datum[j] - '0');
-        }
-        si (numeri && n > maximum)
-        {
-            maximum = n;
-        }
-    }
-    sprintf(exitus, "pictura-%lu", (insignatus longus)(maximum + I));
+    moneta_ulid(exitus);
 }
 
 /* campus 'palette' sub nomine domini (palette.aperire) - res menu
@@ -1207,7 +1173,7 @@ pictor_elenchum_agere (
         {
             redde FALSUM;
         }
-        spatium_novum(pa->doc->volumen, pa->doc->piscina, spatium);
+        spatium_novum(spatium);
         redde pa->picturam_condere(pa->montatio, spatium);
     }
     redde pa->imaginem_eligere

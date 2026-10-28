@@ -214,10 +214,21 @@ pictor_documentum_sequi (
 nomen structura {
     chorda replica;
     chorda spatium;   /* "" = radix illius machinae */
+       s64 hora;      /* plan-5 T3: hora scriptoris actus ultimi (0 =
+                       * ignota; solum pictor_aliena_recentia implet) */
 } PictorPicturaAliena;
 
 Xar*   /* de PictorPicturaAliena */
 pictor_documenta_aliena_enumerare (
+     Volumen* volumen,
+     Piscina* piscina);
+
+/* plan-5 T3: picturae aliae machinarum ("Shared pictures"), hora
+ * actus ultimi SCRIPTORIS descendente (aequales: replica, deinde
+ * spatium); actus "plagula-condita" picturam vacuam datat. Propriae
+ * numquam. Xar de PictorPicturaAliena (hora impleta) */
+Xar*
+pictor_aliena_recentia (
      Volumen* volumen,
      Piscina* piscina);
 
@@ -297,6 +308,20 @@ b32
 pictor_pinacem_facere (
                 Volumen* volumen,
     InternamentumChorda* intern,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus);
+
+/* plan-5 T3: pinax picturae ALIENAE (replica, spatium) - idem ac
+ * pictor_pinacem_facere apud scriptorem. FALSUM si ignota (aut
+ * replica propria) */
+b32
+pictor_pinacem_alienum_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+                 chorda  replica,
      constans character* spatium,
                     i32  latitudo,
                     i32  altitudo,

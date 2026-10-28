@@ -463,3 +463,21 @@ the local listings matched ANY `<x>/documentum`, so a foreign picture
 `aliena/<R>/p` - `spatium_documenti` now refuses the `aliena/` prefix
 (covers pictor_documenta_enumerare and _recentia). Opening shares
 `documentum_ex_manifesto` with the local open.
+
+## 2026-10-27 - Shared list, foreign thumbnails, ULID names (communio-plan-5 T3, quarta)
+
+`pictor_aliena_recentia` = the "Shared pictures" list: every foreign
+picture (`aliena/<replica>/...` manifests), newest first by the WRITER's
+time (`identitas.hora`) of its latest act - not by local seq, which is
+only arrival order on this device. Same mechanism as
+`pictor_documenta_recentia` (act kinds from `historia_genera`, plus
+`plagula-condita` to date an empty picture), but keyed `replica\ngenus`
+and read once per foreign replica with
+`volumen_acta_generum_replicae_legere` (the own-replica rule in the other
+direction: a picture's acts are its writer's). Ties: replica, then
+spatium (no test - equal hybrid times across replicas need forged acts).
+
+`pictor_pinacem_alienum_facere` shares `_pinacem_ex_documento` with
+`pictor_pinacem_facere`, so a foreign thumbnail is pixel-identical to the
+one its writer would draw (test). New pictures are named by
+`moneta_ulid` (D9/D12) instead of `pictura-<n>`; old names keep working.
