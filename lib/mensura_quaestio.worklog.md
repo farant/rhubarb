@@ -55,3 +55,25 @@ tree, a running fusio with a commit started during it); mensor_cursus_fumus
 XIX end to end through incipere/finire. Plants: commit-before-fusio rule and
 child ordering, each red. Note: a root run's tree comes from cwd -
 MENSOR_ARBOR is inherited by children only.
+
+## 2026-10-27 — budget B9 2b: `mensor interventio notare`
+
+Marks a performance intervention as an `interventio` cursus: commissum =
+full sha of the marked commit, nota = "titulus [rubrica]", acta = the
+sorted, deduped set of affected titles (LEGENS titles from
+`bin/fabrica legentes` over the commit's diff against its FIRST parent,
+plus "porta:<name>" for every gate `tools/portae_debitae.sh` owes on that
+diff). `-scopus a,b` narrows by prefix. The affected set is a snapshot at
+marking time on purpose: closures drift, and the cohort question later
+("did titles X get faster after this commit?") wants what was true then.
+
+Real history (scratch diary): piscina commit 7c071b73 -> 677 affected,
+.DS_Store 0ac92e25 -> 145, fabrica T1 ec8f4d64 -> 68. Unaffected titles
+form the control group for 2c.
+
+Test trap: the first fixture marked HEAD, so a plant that stored the
+*context* commissum (mensura_contextum_parare already fills it with HEAD)
+instead of the resolved sha stayed green. The fixture now has three
+commits and marks HEAD~1; the plant goes red. General rule: when the
+thing under test and the ambient default can coincide, make the fixture
+pull them apart.

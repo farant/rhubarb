@@ -34,6 +34,7 @@
 #include "mensura.h"
 #include "machina.h"
 #include "processus.h"
+#include "git.h"
 #include "volumen.h"
 #include "mensura_contextus.h"
 #include "tabula_dispersa.h"
@@ -1187,6 +1188,328 @@ _cursum_finire (
     si (getenv("MENSOR_PARENS") == NIHIL && _curatio_debita(piscina))
     {
         _curare_separatim(argv[ZEPHYRUM]);
+    }
+    redde ZEPHYRUM;
+}
+
+/* INTERVENTIO (budget B9 2b): 'interventio notare -commissum C -titulus
+ * T [-budget B] [-scopus a,b] [-fabrica BIN] [-portae SCRIPTUM]
+ * [-machina]' - nota mutationis quae perficientiam mutare debet. Viae
+ * mutatae = commissum contra parentem PRIMUM (lib/git); tituli affecti =
+ * 'fabrica legentes' (membra per clausuram, actiones per vestigium) +
+ * 'porta:' + portae debitae; -scopus angustat (titulus aequalis aut
+ * praefixo incipiens). Cursus 'interventio' (commissum PLENUM, nota
+ * 'T [B]', corpus = tituli ordinati) - cohortes eos legunt. */
+interior s32
+_affecti_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(*(constans chorda*)a, *(constans chorda*)b);
+}
+
+/* lineas effusionis cuius campus primus 'genus' est legere: campus
+ * 'index' (praefixo addito) in affecti */
+interior vacuum
+_affectos_colligere (
+             chorda  effusio,
+ constans character* genus,
+                i32  index,
+ constans character* praefixum,
+                Xar* affecti,
+            Piscina* piscina)
+{
+    i32 initium = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k <= effusio.mensura; k++)
+    {
+        chorda linea;
+        chorda campus;
+           i32 c;
+           i32 a;
+           i32 n;
+
+        si (k < effusio.mensura && effusio.datum[k] != '\n')
+        {
+            perge;
+        }
+        linea    = chorda_sectio(effusio, initium, k);
+        initium  = k + I;
+        si (!chorda_incipit(linea, chorda_ex_literis(genus, piscina)))
+        {
+            perge;
+        }
+        campus.datum    = NIHIL;
+        campus.mensura  = ZEPHYRUM;
+        n               = ZEPHYRUM;
+        a               = ZEPHYRUM;
+        per (c = ZEPHYRUM; c <= linea.mensura; c++)
+        {
+            si (c < linea.mensura && linea.datum[c] != '\t')
+            {
+                perge;
+            }
+            si (n == index)
+            {
+                campus = chorda_sectio(linea, a, c);
+                frange;
+            }
+            n++;
+            a = c + I;
+        }
+        si (campus.mensura > ZEPHYRUM)
+        {
+            *(chorda*)xar_addere(affecti) = chorda_concatenare(
+                chorda_ex_literis(praefixum, piscina), campus, piscina);
+        }
+    }
+}
+
+interior chorda
+_effusio_mandati (
+    constans character* primum,
+    constans character* secundum,
+    constans character* tertium,
+          constans Xar* viae,
+               Piscina* piscina,
+                   b32* bene)
+{
+      constans character** argumenta;
+       ProcessusResultus   r;
+                     i32   n = ZEPHYRUM;
+                     i32   k;
+
+    argumenta = (constans character**)piscina_allocare(piscina,
+        (memoriae_index)(xar_numerus(viae)
+            + V) * magnitudo(character*));
+    *bene = FALSUM;
+    si (argumenta == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    argumenta[n++] = primum;
+    si (secundum != NIHIL)
+    {
+        argumenta[n++] = secundum;
+    }
+    si (tertium != NIHIL)
+    {
+        argumenta[n++] = tertium;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+    {
+        argumenta[n++] = chorda_ut_cstr(*(constans chorda*)xar_obtinere(
+            viae, k), piscina);
+    }
+    argumenta[n]  = NIHIL;
+    r             = processus_exsequi(argumenta, (i32)600000, piscina);
+    *bene         = r.successus && r.codex_exitus == ZEPHYRUM;
+    redde r.effusio;
+}
+
+interior integer
+_interventum_notare (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+      constans character* commissum  = _arg(argc, argv, "-commissum");
+      constans character* titulus    = _arg(argc, argv, "-titulus");
+      constans character* rubrica    = _arg(argc, argv, "-budget");
+      constans character* scopus     = _arg(argc, argv, "-scopus");
+      constans character* fabrica    = _arg(argc, argv, "-fabrica");
+      constans character* portae     = _arg(argc, argv, "-portae");
+                     b32  machina = _vexillum(argc, argv,
+                         "-machina");
+         GitRepositorium* repositorium;
+               character  sha[GIT_SHA_HEX_MENSURA];
+            GitCommissum  novum;
+            GitCommissum  vetus;
+                     Xar* mutatae;
+                     Xar* viae;
+                     Xar* affecti;
+                     Xar* servati;
+           CursusInitium  initium;
+             CursusFinis  finis;
+       ChordaAedificator* corpus;
+                  chorda  nota;
+                     b32  bene;
+                     i32  k;
+
+    si (   commissum         == NIHIL || titulus == NIHIL
+        || titulus[ZEPHYRUM] == '\0')
+    {
+        fprintf(stderr, "usus: mensor interventio notare -commissum C "
+            "-titulus T [-budget B] [-scopus a,b] [-machina]\n");
+        redde 2;
+    }
+    repositorium = git_aperire(piscina, ".");
+    si (   repositorium == NIHIL
+        || !git_ref_resolvere(repositorium, commissum, sha))
+    {
+        fprintf(stderr, "mensor interventio: commissum ignotum: %s\n",
+            commissum);
+        redde I;
+    }
+    novum = git_commissum_legere(repositorium, sha, piscina);
+    si (   !novum.successus || novum.parentes == NIHIL
+        || xar_numerus(novum.parentes) == ZEPHYRUM)
+    {
+        fprintf(stderr, "mensor interventio: %s illegibile aut sine "
+            "parente\n", sha);
+        redde I;
+    }
+    vetus = git_commissum_legere(repositorium, chorda_ut_cstr(
+        *(chorda*)xar_obtinere(novum.parentes, ZEPHYRUM), piscina),
+        piscina);
+    mutatae = vetus.successus ? git_arbores_differre(repositorium,
+        chorda_ut_cstr(vetus.arbor, piscina),
+        chorda_ut_cstr(novum.arbor,
+        piscina), piscina) : NIHIL;
+    viae = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (mutatae == NIHIL || viae == NIHIL)
+    {
+        fprintf(stderr,
+            "mensor interventio: arbores conferri nequeunt\n");
+        redde I;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(mutatae); k++)
+    {
+        *(chorda*)xar_addere(viae) = ((constans GitViaMutata*)
+            xar_obtinere(mutatae, k))->via;
+    }
+    affecti = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (affecti == NIHIL)
+    {
+        redde I;
+    }
+    si (xar_numerus(viae) > ZEPHYRUM)
+    {
+        chorda e = _effusio_mandati(fabrica != NIHIL ? fabrica
+            : "bin/fabrica", "legentes", "-machina", viae, piscina,
+            &bene);
+
+        si (!bene)
+        {
+            fprintf(stderr, "mensor interventio: fabrica legentes "
+                "fracta\n");
+            redde I;
+        }
+        _affectos_colligere(e, "LEGENS\t", I, "", affecti, piscina);
+        e = _effusio_mandati(portae != NIHIL ? portae
+            : "tools/portae_debitae.sh", "-machina", NIHIL, viae,
+            piscina, &bene);
+        si (!bene)
+        {
+            fprintf(stderr, "mensor interventio: portae debitae "
+                "fractae\n");
+            redde I;
+        }
+        _affectos_colligere(e, "DEBITUM\t", I, "porta:", affecti,
+            piscina);
+    }
+    /* scopus angustat; deinde ordinati, sine duplicibus */
+    xar_ordinare(affecti, _affecti_comparare);
+    servati = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (k = ZEPHYRUM; servati != NIHIL
+        && k < xar_numerus(affecti); k++)
+    {
+        chorda t         = *(chorda*)xar_obtinere(affecti, k);
+           b32 tenendus  = (scopus == NIHIL);
+
+        si (   k > ZEPHYRUM
+            && chorda_aequalis(t, *(chorda*)xar_obtinere(affecti, k
+                - I)))
+        {
+            perge;
+        }
+        si (scopus != NIHIL)
+        {
+            chorda s = chorda_ex_literis(scopus, piscina);
+               i32 a = ZEPHYRUM;
+               i32 c;
+
+            per (c = ZEPHYRUM; c <= s.mensura && !tenendus; c++)
+            {
+                si (c < s.mensura && s.datum[c] != ',')
+                {
+                    perge;
+                }
+                si (c > a && chorda_incipit(t, chorda_sectio(s, a, c)))
+                {
+                    tenendus = VERUM;
+                }
+                a = c + I;
+            }
+        }
+        si (tenendus)
+        {
+            *(chorda*)xar_addere(servati) = t;
+        }
+    }
+    corpus = chorda_aedificator_creare(piscina, CCLVI);
+    per (k = ZEPHYRUM; servati != NIHIL
+        && k < xar_numerus(servati); k++)
+    {
+        chorda_aedificator_appendere_chorda(corpus,
+            *(chorda*)xar_obtinere(servati, k));
+        chorda_aedificator_appendere_character(corpus, '\n');
+    }
+    nota = chorda_ex_literis(titulus, piscina);
+    si (rubrica != NIHIL && rubrica[ZEPHYRUM] != '\0')
+    {
+        nota = chorda_concatenare(nota, chorda_concatenare(
+            chorda_ex_literis(" [", piscina), chorda_concatenare(
+            chorda_ex_literis(rubrica, piscina), chorda_ex_literis("]",
+            piscina), piscina), piscina), piscina);
+    }
+    memset(&initium, ZEPHYRUM, magnitudo(initium));
+    mensura_contextum_parare(&initium, piscina);
+    initium.titulus  = chorda_ex_literis("interventio", piscina);
+    initium.argv     = chorda_ex_literis("", piscina);
+    initium.commissum  = chorda_transcribere(chorda_ex_literis(sha,
+        piscina), piscina);
+    initium.sordidum  = FALSUM;
+    initium.id        = mensura_id_novum(piscina);
+    initium.initium   = mensura_momentum_nunc();
+    memset(&finis, ZEPHYRUM, magnitudo(finis));
+    finis.id        = initium.id;
+    finis.momentum  = initium.initium;
+    finis.nota      = nota;
+    finis.acta      = _corpus_ponere(finis.id, initium.titulus, FALSUM,
+        chorda_aedificator_finire(corpus), piscina,
+        &finis.acta_mensura);
+    si (   !mensura_cursum_incipere(mensura_diarium_cursuum(piscina),
+               &initium, piscina)
+        || !mensura_cursum_finire(mensura_diarium_cursuum(piscina),
+               &finis, piscina))
+    {
+        fprintf(stderr, "mensor interventio: non annotata\n");
+        redde I;
+    }
+    si (machina)
+    {
+        imprimere("INTERVENTIO\t%.*s\t%s\t%.*s\n",
+            (integer)initium.id.mensura,
+            (constans character*)initium.id.datum, sha,
+            (integer)nota.mensura, (constans character*)nota.datum);
+        per (k = ZEPHYRUM; k < xar_numerus(servati); k++)
+        {
+            chorda t = *(chorda*)xar_obtinere(servati, k);
+
+            imprimere("AFFECTUM\t%.*s\n", (integer)t.mensura,
+                (constans character*)t.datum);
+        }
+    }
+    alioquin
+    {
+        imprimere("interventio %.*s: %.8s '%.*s' - %d viae mutatae, %d "
+            "tituli affecti%s\n", (integer)initium.id.mensura,
+            (constans character*)initium.id.datum, sha,
+            (integer)nota.mensura, (constans character*)nota.datum,
+            (integer)xar_numerus(viae), (integer)xar_numerus(servati),
+            scopus != NIHIL ? " (scopus)" : "");
     }
     redde ZEPHYRUM;
 }
@@ -3615,6 +3938,11 @@ main (
     alioquin si (strcmp(argv[I], "memoria") == 0)
     {
         codex = _memoria(argc, argv);
+    }
+    alioquin si (   strcmp(argv[I], "interventio") == 0 && argc >= III
+                 && strcmp(argv[II], "notare")     == 0)
+    {
+        codex = _interventum_notare(piscina, argc, argv);
     }
     alioquin
     {
