@@ -77,3 +77,36 @@ instead of the resolved sha stayed green. The fixture now has three
 commits and marks HEAD~1; the plant goes red. General rule: when the
 thing under test and the ambient default can coincide, make the fixture
 pull them apart.
+
+## 2026-10-27 — budget B9 2c: `cursus_quaerere_cohortes` / `mensor quaestio cohortes`
+
+Splits a title's passing runs by which marked interventions their code
+CONTAINS (git ancestry via a caller callback — `git_continet` in mensor, a
+fake linear table in the test), not by time. Decisions worth keeping:
+
+- **What "the code of a run" is.** Inside a passing commit attempt the run
+  tested the commit it produced, but `initium.commissum` is the parent and
+  the commissio nota only has an 8-char sha (lib/git can't resolve short
+  shas). So: contains(I) = I starts with the short sha, OR parent contains
+  I. Clean run = its HEAD. Dirty run outside a commit = unknown code,
+  omitted and counted (`sordidi`) — those are mostly WIP runs of the very
+  change being measured, and would poison the "before" cohort.
+- **Base for delta** = the earlier cohort whose mask is the largest proper
+  subset. On linear history that's just the previous cohort; on diverged
+  worktrees it avoids comparing against an unrelated branch's cohort.
+- **Control ("moderatio")** = for the latest intervention, leaf titles (no
+  child runs — commissio/fusio contain affected gates) touched by NO
+  marked intervention, ≥3 runs each side; median of per-title
+  (after−before)/before. Reported as a change so it reads against the
+  cohort deltas directly.
+- Ancestry answers are memoized per (commit, intervention); the test
+  counts callback calls so losing the cache goes red.
+- Mask is i64 with bit 63 unused (cap LXIII interventions per query).
+- **xar is segmented** — `xar_obtinere(x, 0)` is NOT a flat array. First
+  draft sorted it as one; copy into a piscina array first
+  (`_mediana_xar`).
+
+Real data (copy of the live volume, piscina 7c071b73 marked):
+probatio_piscina 159 ms → 20 ms (−87%), control +2.6% over 79 titles;
+19 dirty runs omitted. ~2.5–5 s per query (reads every run, as the other
+queries do).

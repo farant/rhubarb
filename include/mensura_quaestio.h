@@ -163,6 +163,86 @@ cursus_quaerere_fusio (
                     Piscina* piscina,
                 CursusFusio* exitus);
 
+/* COHORTES (budget B9 2c, 2026-10-27): duratio tituli per COHORTEM
+ * interventionum. Interventio = cursus 'interventio' (mensor
+ * interventio notare): commissum PLENUM + corpus titulorum affectorum
+ * (linea quaeque titulus; 'X' afficit 'X' et 'X#sectio').
+ *
+ * Cursus transiens tituli filtrati in cohortem cadit per ANTECESSIONEM,
+ * non per tempus: mascula = interventiones titulum eius afficientes
+ * quas codex cursus continet. Codex cursus: intra commissionem
+ * transeuntem = commissum partum (continet I si sha I nota commissionis
+ * - sha breve - incipit, aut si parens initium.commissum I continet);
+ * arbor munda = initium.commissum; sordidus extra commissionem = codex
+ * ignotus, omittitur (sordidi). Antecessionem vocator dat (mensor:
+ * git_continet; probationes: tabula ficta) - functio pura.
+ *
+ * Cohortes ordine numeri interventionum contentarum, deinde cursus
+ * primi. Basis = cohors prior cuius mascula subcopia PROPRIA est,
+ * maxima; delta = (mediana - mediana basis) per mille basis.
+ *
+ * MODERATIO (grex comparationis): interventio ULTIMA (notatione
+ * recentissima) titulos filtratos afficiens; tituli FOLII (cursus sine
+ * filiis; filtra arbor, ramus, post servata) quos NON afficit, saltem
+ * III cursibus transeuntibus utrimque (ante/post per antecessionem):
+ * mediana mutationum (post - ante) per mille ante. Onus machinae et
+ * tempus commune ostendit - delta cohortis ei comparanda. */
+
+/* *continet = VERUM si 'prius' in historia 'posterius'; FALSUM =
+ * ignotum (commissum illegibile) - cursus omittitur (ignoti) */
+nomen b32 (*CursusAntecessio)(
+    vacuum* contextus,
+     chorda posterius,
+     chorda prius,
+       b32* continet);
+
+nomen structura {
+    constans Cursus* cursus;    /* titulus 'interventio' */
+             chorda  affecti;   /* corpus: titulus per lineam */
+} CursusInterventio;
+
+#define CURSUS_COHORTES_MAXIMAE LXIII  /* interventiones per quaestionem
+                                       * (bit LXIV = cursus omissus) */
+#define CURSUS_MODERATIO_MINIMI III    /* cursus utrimque per titulum */
+
+nomen structura {
+       i64 mascula;         /* bit k = interventiones[k] continetur */
+       i32 contentae;       /* bits in mascula */
+       s32 ultima;          /* index interventionis contentae maximus;
+                             * -I = ante omnes */
+       s32 basis;           /* index cohortis basis; -I = nulla */
+       i32 numerus;
+       s64 mediana_ms;      /* mediana inferior */
+       s64 p90_ms;          /* rang. proximus */
+       s64 primum;          /* initium cursus primi */
+       s32 delta_permille;  /* contra basim; ZEPHYRUM si basis -I */
+} CursusCohors;
+
+nomen structura {
+               Xar* interventiones; /* (constans CursusInterventio*)
+                                     * titulos filtratos afficientes,
+                                     * ordine notationis */
+               Xar* cohortes;       /* CursusCohors */
+               i32  sordidi;        /* codex ignotus: omissi */
+               i32  ignoti;         /* antecessio FALSUM: omissi */
+               i32  praeterita;     /* interventiones ultra maximas
+                                     * (antiquissimae) neglectae */
+               i32 moderatio_tituli;
+               s32 moderatio_permille; /* ZEPHYRUM si tituli nulli */
+} CursusCohortes;
+
+/* FALSUM si argumenta nulla aut memoria deficit; interventiones = Xar
+ * de CursusInterventio (ordo quilibet) */
+b32
+cursus_quaerere_cohortes (
+       constans CursusIndex* index,
+     constans CursusFiltrum* filtrum,
+               constans Xar* interventiones,
+           CursusAntecessio  antecessio,
+                     vacuum* contextus,
+                    Piscina* piscina,
+             CursusCohortes* exitus);
+
 /* STATISTICA: per titulum (cursus filtrati) - cursus, mediana et
  * maxima transeuntium, fracti; ordine medianae descendentis. Sectiones
  * membri = praefixum 'MEMBRUM#'. */

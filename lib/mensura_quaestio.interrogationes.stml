@@ -32,4 +32,23 @@
       before B0 have no 'fusio' run and are not found.</responsum>
   </interrogatio>
 
+  <interrogatio genus="quomodo">
+    <quaestio! (>did my performance change actually make test X faster?
+    <responsum symbolum="cursus_quaerere_cohortes CursusCohortes CursusAntecessio" imperium="bin/mensor quaestio">Mark
+      the commit first: bin/mensor interventio notare -commissum SHA
+      -titulus "what changed" [-budget B3] [-scopus a,b]. That records an
+      'interventio' run whose body is the titles the commit affects
+      (fabrica legentes + gates owed), snapshotted at marking time. Then
+      bin/mensor quaestio cohortes titulus=X [post=MS] [arbor=PATH]
+      [-machina], run inside the repository. Passing runs of X are split
+      by git ANCESTRY, not time: each run lands in the cohort of the
+      interventions (affecting X) that its code contains. A run inside a
+      commit attempt counts the commit it produced; a dirty run outside
+      a commit is omitted (unknown code). Each cohort shows n, median,
+      p90 and delta against the largest earlier cohort it extends. The
+      'moderatio' line is the control: the median change across the
+      latest intervention for leaf titles NO intervention touches - if
+      it moved too, the machine got slower or faster, not your code.</responsum>
+  </interrogatio>
+
 </interrogationes>

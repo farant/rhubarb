@@ -46,6 +46,8 @@
 #        notam ultimam scribit, se ut cursum 'mensor:curare' notat;
 #        iteratum intra diem non purgat; cursus summus cum limite
 #        minimo curationem SEPARATAM excitat (apparet intra X s)
+#   XX   interventio notare (budget B9 2b); XXI quaestio cohortes (B9
+#        2c): cohortes per antecessionem git, moderatio
 #   XVIII graves (credo memoria T3): facta credo.* sectionis -> 'quaestio
 #        graves' (-machina octeti, homini MiB), titulus membri
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
@@ -473,6 +475,37 @@ a20s=$("$RADIX/bin/mensor" cursus acta "$i20s" 2>/dev/null | tr '\n' ' ')
 credo $? "XX   interventio notare: commissum plenum, nota cum budget, tituli affecti ex legentibus et portis, scopus angustat, commissum ignotum exitus non 0"
 [ "$fracta" -eq 0 ] || { echo "      o: $o20"; echo "      a: $a20 | s: $a20s"; }
 
+# XXI quaestio cohortes (budget B9 2c): cursus FICTI in diario (lineae
+# initium/finis, durationes exactae) super repositorium XX: probatio_a
+# ad commissum primum C x III, ad caput L x III (ambae interventiones XX
+# in HEAD~1 continentur -> cohors '0,1', delta -D); cursus ad commissum
+# primum tempore POST caput adhuc 'ante'; sordidus ad caput
+# omittitur; probatio_z (non affecta) CC -> CCXX = moderatio +C
+H21a=$(cd "$R20" && git rev-parse HEAD~2); H21c=$(cd "$R20" && git rev-parse HEAD)
+linea21 () {   # <id> <titulus> <commissum> <sordidum> <initium> <duratio>
+    printf 'cursus\tinitium\t%s\t\ts21\t%s\t\thomo\t%s\t%s\tmain\t%s\tm\t%s\n' "$1" "$2" "$3" "$4" "$R20" "$5" >> "$MENSOR_DIARIUM"
+    printf 'cursus\tfinis\t%s\t%s\t%s\t0\t0\t0\t0\t\t0\t\n' "$1" "$(($5 + $6))" "$6" >> "$MENSOR_DIARIUM"
+}
+for k in 1 2 3; do
+    linea21 "a1$k" probationes_t/probatio_a "$H21a" 0 "170000000000$k" 100
+    linea21 "a3$k" probationes_t/probatio_a "$H21c" 0 "170000001000$k" 50
+    linea21 "z1$k" probationes_t/probatio_z "$H21a" 0 "170000000010$k" 200
+    linea21 "z3$k" probationes_t/probatio_z "$H21c" 0 "170000001010$k" 220
+done
+linea21 a39 probationes_t/probatio_a "$H21c" 1 1700000002000 9
+# commissum primum TEMPORE ultimum: cohors per antecessionem 'ante' manet
+linea21 a19 probationes_t/probatio_a "$H21a" 0 1700000003000 100
+o21=$(cd "$R20" && "$RADIX/bin/mensor" quaestio cohortes titulus=probationes_t/probatio_a -machina 2>&1); rc21=$?
+c21=$(echo "$o21" | awk -F'\t' '$1 == "COHORS" { print $2 "|" $3 "|" $4 "|" $5 "|" $6 "|" $7 "|" $9 }' | tr '\n' ' ')
+[ "$rc21" -eq 0 ] \
+  && [ "$c21" = "0||-1|-1|4|100|0 1|0,1|1|0|3|50|-500 " ] \
+  && echo "$o21" | grep -q "^OMISSI	1	0	0	0$" \
+  && echo "$o21" | grep -q "^MODERATIO	1	100$" \
+  && [ "$(echo "$o21" | grep -c '^INTERVENTIO')" -eq 2 ] \
+  && ! (cd "$R20" && "$RADIX/bin/mensor" quaestio cohortes > /dev/null 2>&1)
+credo $? "XXI  quaestio cohortes: cohors per antecessionem git (non tempus), delta contra basim, sordidus omissus, moderatio tituli non affecti, titulus necessarius"
+[ "$fracta" -eq 0 ] || echo "      o21: $o21"
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XX/XX)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XXI/XXI)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

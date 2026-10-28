@@ -6,7 +6,8 @@
  * (IV), scripta numquam cursa (V), filtra historiae (VI), tentamina
  * commissionis cum culpa (VII, Franus 10-13), octeti per titulum
  * (VIII), tituli similes cum quaestio vacua (XII), sectiones memoria
- * gravissimae (XV, credo memoria T3).
+ * gravissimae (XV, credo memoria T3), cohortes interventionum per
+ * antecessionem (XVII, budget B9 2c).
  * Quaestio VI (corpus fracti ultimi) per CLI in mensor fumus probatur.
  */
 #include "latina.h"
@@ -1164,6 +1165,207 @@ _sectio_fusio (
     CREDO_FALSUM(cursus_quaerere_fusio(index, &f, c->piscina, &fu));
 }
 
+/* XVII. cohortes (budget B9 2c): historia ficta linearis c0..c4;
+ * interventio I1 = c2 (X, Y), I2 = c4 (X), I0 = c1 (W solum) */
+hic_manens constans character* HISTORIA_FICTA[] = {
+    "c0", "c1", "c2", "c3", "c4", NIHIL
+};
+
+interior s32
+_locus_historiae (
+    chorda sha)
+{
+    s32 k;
+
+    per (k = ZEPHYRUM; HISTORIA_FICTA[k] != NIHIL; k++)
+    {
+        si (chorda_aequalis_literis(sha, HISTORIA_FICTA[k]))
+        {
+            redde k;
+        }
+    }
+    redde -I;
+}
+
+interior b32
+_antecessio_ficta (
+     vacuum* contextus,
+     chorda  posterius,
+     chorda  prius,
+        b32* continet)
+{
+    s32 p = _locus_historiae(posterius);
+    s32 q = _locus_historiae(prius);
+
+    (*(i32*)contextus)++;
+    si (p < ZEPHYRUM || q < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *continet = (p >= q);
+    redde VERUM;
+}
+
+interior Cursus*
+_cursus_in (
+                   Xar* omnes,
+    constans character* id,
+    constans character* parens,
+    constans character* titulus,
+                   s64  initium,
+                   s64  duratio,
+    constans character* commissum,
+               Piscina* piscina)
+{
+    Cursus* k = _cursus(omnes, id, parens, titulus, initium, duratio,
+        CURSUS_TRANSIIT, "", piscina);
+
+    k->initium.commissum = chorda_ex_literis(commissum, piscina);
+    redde k;
+}
+
+interior vacuum
+_sectio_cohortes (
+    CredoContextus* c)
+{
+                Xar* omnes = _omnes(c->piscina);
+                Xar* interventiones;
+        CursusIndex* index;
+      CursusFiltrum  f = _filtrum();
+     CursusCohortes  ch;
+       CursusCohors* h;
+  CursusInterventio* v;
+             Cursus* k;
+                i32  vocationes = ZEPHYRUM;
+             Cursus* i0;
+             Cursus* i1;
+             Cursus* i2;
+
+    i0 = _cursus_in(omnes, "i0", "", "interventio", C, ZEPHYRUM, "c1",
+        c->piscina);
+    i1 = _cursus_in(omnes, "i1", "", "interventio", D, ZEPHYRUM, "c2",
+        c->piscina);
+    i2 = _cursus_in(omnes, "i2", "", "interventio", CM, ZEPHYRUM, "c4",
+        c->piscina);
+    /* X: ante omnes (c0) C, CX, CXX; fractus non numeratur */
+    (vacuum)_cursus_in(omnes, "x1", "", "X", X, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "x2", "", "X", XI, CX, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "x3", "", "X", XII, CXX, "c0",
+        c->piscina);
+    k = _cursus(omnes, "x4", "", "X", XIII, MM, CURSUS_FRACTUS, "",
+        c->piscina);
+    /* post I1 (c3): LXXX, XC; sectio 'X#s' eadem cohors */
+    (vacuum)_cursus_in(omnes, "x5", "", "X", DC, XC, "c3", c->piscina);
+    (vacuum)_cursus_in(omnes, "x6", "", "X", DCI, LXXX, "c3",
+        c->piscina);
+    /* commissio quae c4 (= I2) PEPERIT: filius sordidus super c3 -> I1
+     * et I2 continet */
+    k = _cursus_in(omnes, "cm", "", "commissio", DCCC, M, "c3",
+        c->piscina);
+    k->finis.nota = chorda_ex_literis("commissum c4", c->piscina);
+    k = _cursus_in(omnes, "x7", "cm", "X", DCCCI, L, "c3", c->piscina);
+    k->initium.sordidum = VERUM;
+    (vacuum)_cursus_in(omnes, "x8", "", "X", CMX, LX, "c4", c->piscina);
+    /* sordidus extra commissionem; commissum ignotum */
+    k = _cursus_in(omnes, "x9", "", "X", CMXX, V, "c4", c->piscina);
+    k->initium.sordidum = VERUM;
+    (vacuum)_cursus_in(omnes, "xa", "", "X", CMXXX, V, "cX",
+        c->piscina);
+    /* moderatio: Z non affectus (ante I2 C x III, post CX x III); Y ab
+     * I1 affectus; Q post I2 bis solum; W ab I0 */
+    (vacuum)_cursus_in(omnes, "z1", "", "Z", XX, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "z2", "", "Z", XXI, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "z3", "", "Z", DCX, C, "c3", c->piscina);
+    (vacuum)_cursus_in(omnes, "z4", "", "Z", CML, CX, "c4", c->piscina);
+    (vacuum)_cursus_in(omnes, "z5", "", "Z", CMLI, CX, "c4",
+        c->piscina);
+    (vacuum)_cursus_in(omnes, "z6", "", "Z", CMLII, CX, "c4",
+        c->piscina);
+    (vacuum)_cursus_in(omnes, "y1", "", "Y", XXX, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "y2", "", "Y", XXXI, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "y3", "", "Y", XXXII, C, "c0",
+        c->piscina);
+    (vacuum)_cursus_in(omnes, "y4", "", "Y", CMLX, CMXC, "c4",
+        c->piscina);
+    (vacuum)_cursus_in(omnes, "y5", "", "Y", CMLXI, CMXC, "c4",
+        c->piscina);
+    (vacuum)_cursus_in(omnes, "y6", "", "Y", CMLXII, CMXC, "c4",
+        c->piscina);
+    (vacuum)_cursus_in(omnes, "q1", "", "Q", XL, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "q2", "", "Q", XLI, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "q3", "", "Q", XLII, C, "c0", c->piscina);
+    (vacuum)_cursus_in(omnes, "q4", "", "Q", CMLXX, D, "c4",
+        c->piscina);
+    (vacuum)_cursus_in(omnes, "q5", "", "Q", CMLXXI, D, "c4",
+        c->piscina);
+    index = cursus_indicem_struere(omnes, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(index);
+
+    interventiones = xar_creare(c->piscina,
+        (i32)magnitudo(CursusInterventio));
+    /* ordo datus non notationis: functio ordinat */
+    v           = (CursusInterventio*)xar_addere(interventiones);
+    v->cursus   = i2;
+    v->affecti  = chorda_ex_literis("X\n", c->piscina);
+    v           = (CursusInterventio*)xar_addere(interventiones);
+    v->cursus   = i0;
+    v->affecti  = chorda_ex_literis("W\n", c->piscina);
+    v           = (CursusInterventio*)xar_addere(interventiones);
+    v->cursus   = i1;
+    v->affecti  = chorda_ex_literis("Y\nX\n", c->piscina);
+
+    f.titulus = chorda_ex_literis("X", c->piscina);
+    CREDO_NECESSE(cursus_quaerere_cohortes(index, &f, interventiones,
+        _antecessio_ficta, &vocationes, c->piscina, &ch));
+    CREDO_AEQUALIS_I32(xar_numerus(ch.interventiones), II);
+    CREDO_VERUM((*(constans CursusInterventio**)xar_obtinere(
+        ch.interventiones, ZEPHYRUM))->cursus == i1);
+    CREDO_AEQUALIS_I32(ch.sordidi, I);
+    CREDO_AEQUALIS_I32(ch.ignoti, I);
+    CREDO_NECESSE(xar_numerus(ch.cohortes) == III);
+
+    h = (CursusCohors*)xar_obtinere(ch.cohortes, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(h->contentae, ZEPHYRUM);
+    CREDO_VERUM(h->ultima == -I && h->basis == -I);
+    CREDO_AEQUALIS_I32(h->numerus, III);
+    CREDO_AEQUALIS_S64(h->mediana_ms, (s64)CX);
+    CREDO_AEQUALIS_S64(h->p90_ms, (s64)CXX);
+
+    h = (CursusCohors*)xar_obtinere(ch.cohortes, I);
+    CREDO_VERUM(h->mascula == (i64)I && h->ultima == ZEPHYRUM);
+    CREDO_VERUM(h->basis == ZEPHYRUM);
+    CREDO_AEQUALIS_I32(h->numerus, II);
+    CREDO_AEQUALIS_S64(h->mediana_ms, (s64)LXXX);
+    CREDO_VERUM(h->delta_permille == -CCLXXII);  /* (80-110)/110 */
+
+    /* commissio partum + c4 mundum: I1 et I2 */
+    h = (CursusCohors*)xar_obtinere(ch.cohortes, II);
+    CREDO_VERUM(h->mascula == (i64)III && h->ultima == I);
+    CREDO_VERUM(h->basis == I);
+    CREDO_AEQUALIS_I32(h->numerus, II);
+    CREDO_AEQUALIS_S64(h->mediana_ms, (s64)L);
+    CREDO_AEQUALIS_S64(h->p90_ms, (s64)LX);
+    CREDO_VERUM(h->delta_permille == -CCCLXXV);  /* (50-80)/80 */
+
+    /* moderatio contra I2: Z solus (+C per mille); Y, W affecti, Q
+     * pauci, commissio non folium */
+    CREDO_AEQUALIS_I32(ch.moderatio_tituli, I);
+    CREDO_VERUM(ch.moderatio_permille == C);
+
+    /* memoria antecessionis: semel per (commissum, interventionem) -
+     * X: c0, c3 (x2), c4 (I1; I2 per praefixum), cX (x2); Z c0 c3 c4,
+     * Q c0 c4 contra I2 - non per cursum */
+    CREDO_VERUM(vocationes <= XII);
+
+    /* titulus nullius interventionis: cohors una, moderatio nulla */
+    f.titulus = chorda_ex_literis("Z", c->piscina);
+    CREDO_NECESSE(cursus_quaerere_cohortes(index, &f, interventiones,
+        _antecessio_ficta, &vocationes, c->piscina, &ch));
+    CREDO_AEQUALIS_I32(xar_numerus(ch.interventiones), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(xar_numerus(ch.cohortes), I);
+    CREDO_AEQUALIS_I32(ch.moderatio_tituli, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I quo tempus ivit", _sectio_filii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "II regenerationes iudicis", _sectio_iudicia, NIHIL, NIHIL, NIHIL,
@@ -1195,6 +1397,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "XIV linea currentis", _sectio_linea, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "XV graves", _sectio_graves, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XVII cohortes interventionum", _sectio_cohortes, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
