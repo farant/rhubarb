@@ -549,3 +549,15 @@ agogica"), comitatus (figures are per bar). Printing: partitura / recensio (text
 -carmina say "liberum" instead of "0/8"; partitura skips per-bar "metrum" notes for free entries.
 All 21 book songs render byte-identical (none is free yet). Plants: 15, all red (trailing `|` case
 added to the test first — nothing covered it).
+
+## 2026-10-28 — primus and ave in free rhythm
+
+Both converted in place (their 4/4 was always a stand-in). Solesmes-style rhythm: punctum = eighth,
+the note before a minor divisio is a quarter, before a major one a dotted quarter + r8 breath, the
+last note d2. Incises follow the Ave Maria text: Ave Maria | gratia plena, Dominus | tecum,
+benedicta | tu in mulieribus, et benedictus fructus | ventris tui | Iesus — 9 bars instead of 16,
+lengths in eighths [8 10] [7 10] [5 12] [8 5 7]. Fermatas dropped (the breaths do that job); tonus
+still reads "I, clausulae A A F D", now from the rests. The ison holds one D per phrase, tied
+across incises, re-sounding with each phrase; generator writes the ties from the incise lengths.
+tempus 80 (punctum 160/min), 27 s. primus.py is now importable and ave.py builds from it, so the
+melody lives in one place. Old generators kept as *.py.metrica under build/plantae_s4/cantus.
