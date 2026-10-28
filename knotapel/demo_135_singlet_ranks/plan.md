@@ -177,6 +177,30 @@ at every λ.
   1024² and 4096² matrices over Z/p, and over Z at 256²; write the
   method per λ into this plan as a dated amendment before T1. No piece
   matrix is built.
+  **T0 amendment (2026-10-27, measured; no piece matrix built).**
+  Random full-rank matrices (the worst case), this Mac, -O2, scratch
+  program `d135_t0/tempora.c`, each run under `tools/custos.sh`:
+
+  | method | n | time | peak memory |
+  | --- | --- | --- | --- |
+  | `matrix_gradus` over Z, entries in [−20, 20] | 64 / 128 / 256 | 0.02 / 0.33 / 8.6 s | 10 MB |
+  | `matrix_gradus` over Z/(2^31 − 1) | 256 / 512 / 1024 | 0.34 / 3.0 / 22.4 s | 17 MB |
+  | plain mod-p elimination (one inverse per pivot) | 512 / 1024 / 4096 | 0.09 / 0.71 / 43.2 s | 65 MB |
+
+  `matrix_gradus` mod p grows ~n³ (about 27 min per 4096² matrix,
+  extrapolated; ~25 h for λ = 6's 56 matrices), as the review expected.
+  Method per λ, therefore:
+  - λ ≤ 4: R3 over Z by `matrix_gradus` (≤ 10 matrices of 256², under
+    ~1.5 min); R3/R4 mod p by BOTH `matrix_gradus` and the plain
+    elimination, which must agree on every matrix (the cross-check);
+  - λ = 5: plain elimination for every prime; `matrix_gradus` also at
+    p = 2^31 − 1 for all 12 matrices (cross-check, ≤ ~4.5 min);
+  - λ = 6: plain elimination only (56 matrices of 4096², ≤ ~40 min worst
+    case, less for low-rank pieces since cost ~ n²·rank), one matrix at
+    a time, the run detached and under `tools/custos.sh`.
+  The plain elimination is the demo's own code; its agreement with
+  `matrix_gradus` at λ ≤ 5 and with the numpy oracle at λ ≤ 6 is what
+  makes the λ = 6 ranks trustworthy. Λ stays 6.
 - **T1. Build.** main.c with R1–R4, R2b and the descriptive rows, the
   oracle, the plants. Checks run only at λ ≤ 2 (hand-checkable: λ = 1
   pieces are 4 × 4) until the plants behave as stated.
