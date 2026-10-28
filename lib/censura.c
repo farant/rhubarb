@@ -561,6 +561,36 @@ _declarati_nota (
                 && _intentio(&a->acordum, c)));
 }
 
+/* nota acordi fenestrae cum sexta aucta (censura.h clavis): fenestra
+ * ad initium notae segmentum sextae auctae habet et classis notae in
+ * acordo eius */
+interior b32
+_sextae_auctae_nota (
+                  Iudex* iudex,
+    constans CarmenNota* nota,
+                    s64  pulsus)
+{
+    constans Explicatio* e = iudex->explicatio;
+                    s32  f = _fenestra_ad_pulsum(iudex, pulsus);
+                    i32  i;
+
+    si (   f < ZEPHYRUM
+        || !(e->fenestrae[f].harmonia.classes
+             & ((i32)I << (nota->nota % XII))))
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        si (   (s32)e->segmenta[i].fenestra == f
+            && e->segmenta[i].genus         == EXPLICATIO_SEXTA_AUCTA)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 /* ORNAMENTUM CHROMATICUM (censura.h clavis): segmentum notae ad
  * initium eius transitus, vicinus aut appoggiatura (semper gradu
  * exit - explicatio.h), semitonio exiens */
@@ -617,6 +647,7 @@ _clavis_regula (
                     && !_in_clave(_clavis(k, pulsus), (s32)n->nota)
                     && !_picardiae_nota(iudex, n, pulsus)
                     && !_declarati_nota(iudex, n, pulsus)
+                    && !_sextae_auctae_nota(iudex, n, pulsus)
                     && !_ornamentum_chromaticum(iudex, n))
                 {
                     _addere(iudex, CENSURA_CLAVIS, p, (s32)f, pulsus,
@@ -804,6 +835,7 @@ _explicat (
         casus EXPLICATIO_SUSPENSIO:
         casus EXPLICATIO_RETARDATIO:
         casus EXPLICATIO_SEPTIMA:
+        casus EXPLICATIO_SEXTA_AUCTA:
             redde s->resoluta;
         ordinarius:
             redde FALSUM;
@@ -827,6 +859,8 @@ _culpa (
         casus EXPLICATIO_SEPTIMA:
             /* stylus popularis: septima tonus acordi est */
             redde septimae_liberae ? NIHIL : "septima non resoluta";
+        casus EXPLICATIO_SEXTA_AUCTA:
+            redde "sexta aucta non resoluta";
         ordinarius:
             redde NIHIL;
     }

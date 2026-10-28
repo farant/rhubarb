@@ -516,6 +516,99 @@ _sectio_septima_sursum (
 }
 
 
+#define SEXTA_AUCTA(a, mut) \
+    "<carmina><carmen titulus=\"p\" clavis=\"a minor\">" mut \
+    "<pars titulus=\"s\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>o4 a2 g#2</textus></frustum></pars>" \
+    "<pars titulus=\"a\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>" a "</textus></frustum></pars>" \
+    "<pars titulus=\"t\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>o3 a2 b2</textus></frustum></pars>" \
+    "<pars titulus=\"b\" instrumentum=\"aether\"><frustum " \
+    "mensura=\"1\"><textus!>o2 f2 e2</textus></frustum></pars>" \
+    "</carmen></carmina>"
+
+/* sexta aucta (explicatio.h): F A D# (It+6) -> E: D# sexta aucta
+ * resoluta (semitonio ascendit); D# -> D non resoluta; Eb scripta
+ * septima manet; acordum F7 declaratum (litterae nominis: Eb)
+ * septima */
+interior vacuum
+_sectio_sexta_aucta (
+    CredoContextus* c)
+{
+    Explicatio* e;
+
+    e = _explicare(c, _carmen(c, SEXTA_AUCTA("o4 d#2 e2", "")));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, ZEPHYRUM, EXPLICATIO_SEXTA_AUCTA,
+        VERUM));
+    e = _explicare(c, _carmen(c, SEXTA_AUCTA("o4 d#2 d2", "")));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, ZEPHYRUM, EXPLICATIO_SEXTA_AUCTA,
+        FALSUM));
+    e = _explicare(c, _carmen(c, SEXTA_AUCTA("o4 e-2 d2", "")));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        VERUM));
+    e = _explicare(c, _carmen(c, SEXTA_AUCTA("o4 d#2 e2",
+        "<acorda mensura=\"1\" textus=\"F7:2 E:2\"/>")));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        FALSUM));
+    CREDO_LITERAE_AEQUALES (explicatio_titulus(EXPLICATIO_SEXTA_AUCTA),
+                            "sexta aucta");
+    /* linea: resoluta tacet, non resoluta "+6!" */
+    {
+        constans Carmen* k = _carmen(c, SEXTA_AUCTA("o4 d#2 e2", ""));
+
+        e = _explicare(c, k);
+        CREDO_NECESSE (e != NIHIL);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, ZEPHYRUM),
+            "F7:2 E:2");
+        k = _carmen(c, SEXTA_AUCTA("o4 d#2 d2", ""));
+        e = _explicare(c, k);
+        CREDO_NECESSE (e != NIHIL);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, ZEPHYRUM),
+            "F7:2 (D#4 +6!) E7:2 (D4 sept.!)");
+    }
+    /* D# -> F (gradu toto): non resoluta (semitonio solum) */
+    e = _explicare(c, _carmen(c, SEXTA_AUCTA("o4 d#2 f2", "")));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, ZEPHYRUM, EXPLICATIO_SEXTA_AUCTA,
+        FALSUM));
+    /* Fr+6 (F7#11 tenuis): D# sexta aucta */
+    e = _explicare(c, _carmen(c,
+        "<carmina><carmen titulus=\"p\" clavis=\"a minor\">"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 d#2 e2</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a2 g#2</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 b2 b2</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 f2 e2</textus></frustum></pars>"
+        "</carmen></carmina>"));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, ZEPHYRUM, ZEPHYRUM,
+        EXPLICATIO_SEXTA_AUCTA, VERUM));
+    /* Cm7 cum A# (forma non dominantis): septima manet */
+    e = _explicare(c, _carmen(c,
+        "<carmina><carmen titulus=\"p\">"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g2 g2</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a#2 b2</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e-2 d2</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c2 g2</textus></frustum></pars>"
+        "</carmen></carmina>"));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        FALSUM));
+}
+
+
 /* ==================================================
  * Linea partiturae
  * ================================================== */
@@ -1024,6 +1117,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "septima", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "septima sursum", _sectio_septima_sursum, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "sexta aucta", _sectio_sexta_aucta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tituli", _sectio_tituli, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

@@ -190,3 +190,14 @@ a first-window praevia differs from the song's key). peregrinatio reads identica
 Simplification: "x > b" became "x >= 0" (x == b leaves p unset). Book diff: campus only -
 "E: I" at its bar-25 transposed repeat (D -> E direct, bar 24 D(5) is not in E: no pivot). My
 "no house song changes key" was stale (that note predates campus).
+
+## 2026-10-27 - It+6 / Fr+6 / Ger+6 by spelling; minor-key targets "/V"
+
+_sextam_auctam_legere (after substitutae, before communia): a window with a sexta aucta segment
+(explicatio) and bass = tonic + 8 (VI in minor, bVI in major) reads It+6 {0,4,10}, Fr+6
+{0,4,6,10}, Ger+6 {0,4,7,10} (classes relative to the bass); gradus VI, alteratio -1 in major,
+0 in minor; never applied/substituta. An Eb-spelled F7 -> E stays subV7/V; a D#-spelled one
+over a non-VI bass stays as before. lamentatio before: subV7/v, subV7#11/v, VI7 -> now It+6,
+Fr+6, Ger+6. Separate bug: _meta_minor judged the target triad from the natural-minor scale, so
+every applied/substitute target V in minor printed "/v" while the chord itself reads V (raised
+VII) - now V is major in minor. No house song had one (book diff empty).

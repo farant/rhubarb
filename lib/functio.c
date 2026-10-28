@@ -222,6 +222,11 @@ _meta_minor (
 {
     constans s32* s = k->minor ? MINOR : MAIOR;
 
+    /* minor: V maior (VII elevatus), ut lectio ipsa */
+    si (k->minor && gradus == V)
+    {
+        redde FALSUM;
+    }
     redde _modulus(s[(gradus + I) % VII] - s[gradus - I], XII) == III;
 }
 
@@ -546,6 +551,69 @@ _adventus (
 
 /* V (trias, septima, nona, 13, 7#9, 7#11, dyas tertiae) sine
  * applicatione */
+/* sexta aucta (functio.h SEXTAE AUCTAE): fenestra cum segmento sextae
+ * auctae et basso in VI minoris / bVI maioris (tonica + VIII) - It
+ * {0,4,10}, Fr {0,4,6,10}, Ger {0,4,7,10} a basso */
+interior vacuum
+_sextam_auctam_legere (
+        constans Carmen* carmen,
+    constans Explicatio* e,
+                    i32  f,
+          FunctioGradus* g)
+{
+     constans Acordum* h = &e->fenestrae[f].harmonia;
+               Clavis  k;
+                  b32  praevia;
+                  i32  rel    = ZEPHYRUM;
+                  b32  aucta  = FALSUM;
+                  i32  i;
+                  s32  c;
+
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        si (   (i32)e->segmenta[i].fenestra == f
+            && e->segmenta[i].genus         == EXPLICATIO_SEXTA_AUCTA)
+        {
+            aucta = VERUM;
+        }
+    }
+    k = _clavis_fenestrae(carmen, e, f, &praevia);
+    si (   !aucta
+        || _modulus((s32)h->bassus - k.tonica, XII) != VIII)
+    {
+        redde;
+    }
+    per (c = ZEPHYRUM; c < XII; c++)
+    {
+        si (h->classes & ((i32)I << c))
+        {
+            rel |= (i32)I << _modulus(c - (s32)h->bassus, XII);
+        }
+    }
+    si (rel == ((i32)I | ((i32)I << IV) | ((i32)I << X)))
+    {
+        strcpy(g->numeralis, "It+6");
+    }
+    alioquin si (rel == ((i32)I | ((i32)I << IV) | ((i32)I << VI)
+                         | ((i32)I << X)))
+    {
+        strcpy(g->numeralis, "Fr+6");
+    }
+    alioquin si (rel == ((i32)I | ((i32)I << IV) | ((i32)I << VII)
+                         | ((i32)I << X)))
+    {
+        strcpy(g->numeralis, "Ger+6");
+    }
+    alioquin
+    {
+        redde;
+    }
+    g->gradus      = VI;
+    g->alteratio   = k.minor ? ZEPHYRUM : -I;
+    g->applicata   = ZEPHYRUM;
+    g->substituta  = FALSUM;
+}
+
 /* index in Carmen.claves clavis ad pulsum; -1 nulla */
 interior s32
 _index_clavis (
@@ -776,6 +844,11 @@ functio_carminis (
     per (f = ZEPHYRUM; f < e->numerus_fenestrarum; f++)
     {
         _substitutam_legere(carmen, e, f, &functio->gradus[f]);
+    }
+    /* sextae auctae: post substitutas (F7 cum D# -> E non subV) */
+    per (f = ZEPHYRUM; f < e->numerus_fenestrarum; f++)
+    {
+        _sextam_auctam_legere(carmen, e, f, &functio->gradus[f]);
     }
     _communia(carmen, e, functio);
     /* clausulae: adventus et fenestra prior (fenestrae semper

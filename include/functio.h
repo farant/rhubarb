@@ -11,7 +11,8 @@
  * aut nona dominantis (9, 7b9) extra clavem cuius radix quinta supra
  * gradum diatonicum (non diminutum, non tonicum) -> "V/V", "V7/ii";
  * diminuta aut diminuta septima extra clavem semitonio infra ->
- * "viio7/V".
+ * "viio7/V". Meta in minore ut lectio ipsa: V maior (VII elevatus) -
+ * "V7/V", "subV7/V", non "/v".
  * Dyas: gradus cum qualitate dyadis ("I(5)", "ii(3)"); classis una
  * "(I)"; ignotum "?"; silentium "-". Sextae augmentatae et cetera
  * chromatica: nondum. Toni additi (6, 9): figura inversionis nulla.
@@ -50,6 +51,13 @@
  * clavis veteris (radix = tonica: I, i, Picardia) numquam praevia: C
  * in C maior ante F maior manet I cum clausula sua; D post A7 in d
  * minor ante G maior Picardia est.
+ *
+ * SEXTAE AUCTAE: fenestra cum sexta aucta (explicatio.h) cuius bassus
+ * gradus VI minoris aut bVI maioris est - "It+6" (classes tres: F A
+ * D# in a minor), "Fr+6" (cum gradu II: F A B D#), "Ger+6" (cum gradu
+ * III: F A C D#); praedominans: gradus VI, non applicata, non
+ * substituta. Alio basso, aut septima littera sua scripta (F7 cum
+ * Eb): ut ante (subV7/V, VI7).
  *
  * MUTATIO CLAVIS: fenestra cuius clavis lectionis (tonica, modus) alia
  * est ac fenestrae sonantis prioris (prima: clavis carminis) clavem

@@ -1557,6 +1557,66 @@ _sectio_septima (
     }
 }
 
+/* sexta aucta (censura.h clavis, dissonantia): a minor F A D# -> E -
+ * D# acordi sextae auctae (clavis licet), resoluta (dissonantia
+ * nulla, septima nulla); D# -> D: dissonantia "sexta aucta non
+ * resoluta", clavis licet; C maior Ab C Eb F# -> G: Ab Eb F# licent */
+interior vacuum
+_sectio_sexta_aucta (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"a minor\">"
+        VOCES_IV("o4 a2 g#2", "o4 d#2 e2", "o3 a2 b2", "o2 f2 e2")
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f;
+                i32 n;
+
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    f = _sola(CENSURA_DISSONANTIA);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    f = _sola(CENSURA_SEPTIMA);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"a minor\">"
+        VOCES_IV("o4 a2 g#2", "o4 d#2 d2", "o3 a2 b2", "o2 f2 e2")
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_DISSONANTIA);
+    n = censura_iudicare(k, &f, inv, CAPACITAS);
+    CREDO_NECESSE (n >= I && n <= CAPACITAS);
+    CREDO_LITERAE_AEQUALES (inv[ZEPHYRUM].causa,
+                            "sexta aucta non resoluta");
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\">"
+        VOCES_IV("o4 f#2 g2", "o4 c2 b2", "o3 e-2 d2", "o2 a-2 g2")
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    /* in fenestra sextae auctae (Ger+6 in C, Ab7 cum F#) nota extra
+     * acordum (Bb4 transiens, gradu toto exiens) non licet */
+    k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\">"
+        VOCES_IV("o5 c8 o4 b-8 a-4 g2", "o4 f#2 g2", "o3 e-2 d2",
+                 "o2 a-2 g2")
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota % XII, X);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1576,6 +1636,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "duplicata", _sectio_duplicata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "septima", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sexta aucta", _sectio_sexta_aucta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tertia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stili", _sectio_stili, NIHIL, NIHIL, NIHIL, NIHIL },

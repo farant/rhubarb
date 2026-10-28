@@ -17,7 +17,9 @@
  *                declarati ad initium suum licet (dominans
  *                applicata scripta: D7 in F, F#); intentionibus
  *                liberis etiam intentio eius (A7b9 in F: F#,
- *                XIII; F7: Ab, #9)                                ORD.
+ *                XIII; F7: Ab, #9); notae acordi fenestrae cum
+ *                sexta aucta (explicatio.h) licent (D# in a minor;
+ *                Ab Eb F# in C maior)                             ORD.
  *   ambitus      nota extra ambitum instrumenti (ordinarius:
  *                aether 36..96, quadrans 48..96, triangulum
  *                24..72, chorda 28..88, campana 48..96; ignotum
@@ -27,10 +29,11 @@
  *                tempus forte, NISI explicata (explicatio.h): nota
  *                par aliena explicata (transitus, vicinus, innixa,
  *                anticipatio, effugiens), suspensio / retardatio /
- *                septima resoluta, aut ambae acordi nominati (G#dim
- *                tritonus suus). Causa nominatur: nota sine
- *                explicatione, suspensio / retardatio / septima non
- *                resoluta, acordum sine nomine                    ORD.
+ *                septima / sexta aucta resoluta, aut ambae acordi
+ *                nominati (G#dim tritonus suus). Causa nominatur:
+ *                nota sine explicatione, suspensio / retardatio /
+ *                septima / sexta aucta non resoluta, acordum sine
+ *                nomine                                           ORD.
  *   parallelae   quintae aut octavae parallelae inter duas partes:
  *                initia sequentia, ambae motae, eodem sensu       -
  *   saltus       saltus melodicus > saltus_maximus semitonia (XII
