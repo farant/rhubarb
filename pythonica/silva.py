@@ -2527,6 +2527,63 @@ def opus_claudere(opus, hash_commissi, nuntius, actor='claude'):
     return effectus
 
 
+# INTERVENTIO (budget B9, 2026-10-27): commissio mutationem perficientiae
+# notat ('mensor interventio notare') ut cohortes ('mensor quaestio
+# cohortes') eam inveniant. Substituibilis in probationibus (porta
+# pythonica NUMQUAM in annales vivos scribat).
+MENSOR_IMPERIUM = ['bin/mensor']
+
+
+class SilvaInterventioError(SilvaError):
+    """COMMISSUM FACTUM EST, sed interventio notari non potuit. .hash =
+    commissum. Numquam causa commissionis iterandae - nota manu."""
+
+    def __init__(self, hash_commissi, nuntius):
+        SilvaError.__init__(self, nuntius)
+        self.hash = hash_commissi
+
+
+def interventio_praeiudicare(interventio, budget):
+    """causae cur interventio notari non possit ([] = licet). Ante
+    portas: mensor absens post commissum demum apparens = mutatio sine
+    nota (cohors eius cum vicina confunditur, tacite)."""
+    causae = []
+    if interventio is None:
+        if budget is not None:
+            causae.append("budget='%s' sine interventio= - budget"
+                          " interventionis titulum non fert" % budget)
+        return causae
+    if not str(interventio).strip():
+        causae.append('interventio titulum poscit (quid mutatum est?) -'
+                      ' nihil cursum')
+    via = MENSOR_IMPERIUM[0]
+    if not os.access(_absoluta(via), os.X_OK):
+        causae.append('interventio: %s absens - ./tools/mensor_struere.sh'
+                      ' (commissum sine nota cohortes confunderet)' % via)
+    return causae
+
+
+def interventio_notare(hash_commissi, interventio, budget=None):
+    """'mensor interventio notare' super commissum (sha PLENUM - lib/git
+    sha breve non resolvit). Reddit lineam ultimam mensoris. Defectus:
+    SilvaInterventioError CLARE cum imperio pasta-parato."""
+    args = list(MENSOR_IMPERIUM) + ['interventio', 'notare', '-commissum',
+                                    hash_commissi, '-titulus', interventio]
+    if budget:
+        args += ['-budget', budget]
+    r = _curre(args)
+    if r.returncode != 0:
+        imperium = ' '.join(a if re.match(r'^[A-Za-z0-9_./:~-]+$', a)
+                            else '"%s"' % a.replace('"', '\\"')
+                            for a in args)
+        raise SilvaInterventioError(hash_commissi,
+            'COMMISSUM %s FACTUM EST et stat - NOLI iterare. Sed interventio'
+            ' notari non potuit (rc=%d):\n%s\nAd notandum manu:\n  %s'
+            % (hash_commissi[:8], r.returncode,
+               (r.stderr or r.stdout).strip()[-600:], imperium))
+    lineae = [l for l in r.stdout.splitlines() if l.strip()]
+    return lineae[-1] if lineae else 'interventio notata'
+
 
 def _sigilla_viarum(viae):
     """{via: hash blob praesentis (None si absens)} - plagulae
@@ -3720,7 +3777,8 @@ def _portas_currere(portae, genera, viae, recepta=True, pergere=False):
 def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
               opus=None, actor='claude', sine_debitis=None,
               sine_fabrica=None, excusatae=None, _debitae_additae=False,
-              _fabrica_facta=False, plena=False, _dilatae=None):
+              _fabrica_facta=False, plena=False, _dilatae=None,
+              interventio=None, budget=None):
     """gate, deinde commissio - uno vocamine, in Pythone (crusta 'set -e'
     non honorat; pipestatus fallit). portae: nomina aut (nomen,
     filtrum) aut via recepti umbrae (.json); OMNES sanae esse debent
@@ -3740,6 +3798,11 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     POST commissionem successam 'effectus' + status 'perfectum' per
     viam frigidam scribuntur (actor). Clausura fracta = SilvaOpusError
     cum .hash - commissum STAT, numquam iterandum.
+    interventio='titulus' [budget='B3'] (budget B9): commissum ut
+    mutationem perficientiae notat (mensor interventio notare, sha
+    plenum) - cohortes ('mensor quaestio cohortes titulus=X') eo
+    dividuntur. ANTE portas praeiudicatur (titulus, bin/mensor); nota
+    fracta = SilvaInterventioError cum .hash, POST clausuram operis.
     CAUSAE PRAEVIAE OMNES SIMUL (viae vetitae OMNES + opus), ne
     vocans unam sanet et altera statim obstetur.
     PORTAE DEBITAE (project-specs/portae-debitae-spec.md): portae quas
@@ -3766,6 +3829,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
                           ' numquam agens - e viis remove' % v)
     if opus:
         causae.extend(opus_praeiudicare(opus))
+    causae.extend(interventio_praeiudicare(interventio, budget))
     if sine_debitis is not None and not str(sine_debitis).strip():
         causae.append('sine_debitis causam poscit (ut --no-verify): cur'
                       ' portae debitae omittuntur? - nihil cursum')
@@ -3848,9 +3912,19 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     _debita_fusionis_purgare(h, virides)
     _debita_fusionis_scribere(h, dilatae)
     recepta_viva_delere()
+    defectus = None
+    if interventio is not None:
+        plenum = _curre(['git', 'rev-parse', 'HEAD']).stdout.strip()
+        try:
+            print(interventio_notare(plenum, interventio, budget))
+        except SilvaInterventioError as ex:
+            print(str(ex))
+            defectus = ex
     if opus:
         print('opus %s: perfectum - %s'
               % (opus, opus_claudere(opus, h, nuntius, actor)))
+    if defectus is not None:
+        raise defectus
     return h
 
 

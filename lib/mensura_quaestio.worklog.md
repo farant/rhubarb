@@ -110,3 +110,17 @@ Real data (copy of the live volume, piscina 7c071b73 marked):
 probatio_piscina 159 ms → 20 ms (−87%), control +2.6% over 79 titles;
 19 dirty runs omitted. ~2.5–5 s per query (reads every run, as the other
 queries do).
+
+## 2026-10-27 — budget B9 hook: `silva.commissio(interventio=…, budget=…)`
+
+Marking now happens in the same call as the commit. Mirrors `opus=`:
+pre-checked BEFORE gates (non-empty title, `bin/mensor` executable,
+`budget=` without `interventio=` refused), run after `git commit` with
+the FULL sha (`commissio` returns a short one and lib/git can't resolve
+short shas). Failure → `SilvaInterventioError` (.hash, paste-ready
+command), raised only AFTER `opus` closes so a failed mark never leaves
+an opus open. The interventio run is a child of the commissio run
+(inherited MENSOR_PARENS) — harmless: cohort queries filter by title,
+and commissio was never a leaf. Not covered by a test: the 8 lines of
+wiring inside commissio itself (no e2e commit test exists for opus
+either); the first real B1 commit with interventio= exercises it.
