@@ -26,6 +26,8 @@
  *   @punctum:8 percussio (praeparatum notae)
  *   mutationes metri, clavis (ad initium mensurae) et temporis (intra
  *   mensuram: 'tempus 90 (+960)' pulsibus ab initio) in titulo mensurae
+ *   metrum liberum (carmen.h): 'liberum' loco N/D in titulo carminis;
+ *   mensurae = incisa, sine mutationibus metri
  *
  * ORTHOGRAPHIA: littera notae (CarmenNota.littera, ab auctore - MML eam
  * semper scribit) vincit; aliter ex clave currente: gradus scalae

@@ -1900,6 +1900,97 @@ _sectio_verba (
     CREDO_VERUM (pars->frusta[I].notae[ZEPHYRUM].vocalis == -1.0f);
 }
 
+#define LIBERUM_CARMEN(cantus, cetera) \
+    "<carmina>" FIGURA_TERNARIA "<carmen titulus=\"l\" " \
+    "metrum=\"liberum\" clavis=\"d dorius\"><pars titulus=\"c\" " \
+    "instrumentum=\"schola\"><frustum mensura=\"1\"><textus!>" \
+    cantus "</textus></frustum></pars>" cetera "</carmen></carmina>"
+
+/* metrum liberum (carmen.h): mensurae ex '|' partis primae, longitudo
+ * scripta; ultra ultimam longitudo ultima; tempus mensurae octava;
+ * pars altera et fermata per mensuram liberam; '|' initialis, finalis
+ * et '||' mensuram vacuam non faciunt; sine '|' mensura una; vitia */
+interior vacuum
+_sectio_liberum (
+    CredoContextus* c)
+{
+    constans s64  longitudines[III]  = { 2880, 3360, 2880 };
+    constans s64  initia[IV]         = { 0, 2880, 6240, 9120 };
+         Carmina  liber;
+ constans Carmen* k;
+             i32  i;
+
+    CREDO_NECESSE (_legere(c, LIBERUM_CARMEN(
+        "o4 l8 d e f g a4 | a8 g f e d4. | f8 g a2",
+        "<pars titulus=\"o\" instrumentum=\"schola\"><frustum "
+        "mensura=\"2\"><textus!>o3 d4.</textus></frustum></pars>"
+        "<fermata mensura=\"3\"/>"), &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_metrorum == III);
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        CREDO_VERUM (k->metra[i].liberum);
+        CREDO_AEQUALIS_S64 (k->metra[i].longitudo, longitudines[i]);
+        CREDO_AEQUALIS_I32 (k->metra[i].numerus_ponderum, ZEPHYRUM);
+    }
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        CREDO_AEQUALIS_S64 (carmen_pulsus_mensurae(k, i + I),
+                            initia[i]);
+    }
+    CREDO_AEQUALIS_S64 (carmen_tempus_mensurae(k, 3000), (s64)CDLXXX);
+    CREDO_AEQUALIS_S64 (k->partes[I].frusta[ZEPHYRUM].pulsus,
+                        (s64)MMDCCCLXXX);
+    CREDO_AEQUALIS_S64 (k->coronae[ZEPHYRUM].pulsus, (s64)6240);
+    /* '|' initialis, '||', '|' finalis */
+    CREDO_NECESSE (_legere(c, LIBERUM_CARMEN("| o4 d4 e4 || f4 g4 |",
+        ""),
+                           &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_metrorum == II);
+    CREDO_AEQUALIS_S64 (k->metra[I].pulsus, (s64)MCMXX);
+    CREDO_AEQUALIS_S64 (k->metra[I].longitudo, (s64)MCMXX);
+    /* sine '|': mensura una, partis tota */
+    CREDO_NECESSE (_legere(c, LIBERUM_CARMEN("o4 d4 e4 f2.", ""),
+                           &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_metrorum == I);
+    CREDO_AEQUALIS_S64 (k->metra[ZEPHYRUM].longitudo, (s64)4800);
+    /* vitia */
+    CREDO_VERUM (_causa_est(c, LIBERUM_CARMEN("o4 d4 | e4",
+        "<metrum mensura=\"2\" valor=\"3/4\"/>"),
+        "metrum liberum: sine <metrum> et agogica"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\" "
+        "agogica=\"vindobonensis\"><pars titulus=\"c\" "
+        "instrumentum=\"schola\"><frustum mensura=\"1\"><textus!>"
+        "o4 d4</textus></frustum></pars></carmen></carmina>",
+        "metrum liberum: sine <metrum> et agogica"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\">"
+        "<pars titulus=\"c\" instrumentum=\"schola\"><frustum "
+        "mensura=\"2\"><textus!>o4 d4</textus></frustum></pars>"
+        "</carmen></carmina>",
+        "metrum liberum: pars prima frustum unum ad mensuram 1"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\">"
+        "<pars titulus=\"c\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4</textus></frustum><frustum "
+        "mensura=\"3\"><textus!>o4 d4</textus></frustum></pars>"
+        "</carmen></carmina>",
+        "metrum liberum: pars prima frustum unum ad mensuram 1"));
+    CREDO_VERUM (_causa_est(c, LIBERUM_CARMEN("o4 d4 | e4",
+        "<acorda mensura=\"1\" textus=\"C | C\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<comitatus figura=\"valsa\" mensura=\"1\"/></pars>"),
+        "comitatus cum metro libero (figurae per mensuram)"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liber\"><pars "
+        "titulus=\"c\" instrumentum=\"schola\"><frustum mensura="
+        "\"1\"><textus!>o4 d4</textus></frustum></pars></carmen>"
+        "</carmina>", "metrum non N/D (D potentia II)"));
+}
+
 interior vacuum
 _sectio_comitatus_vitia (
     CredoContextus* c)
@@ -2312,6 +2403,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "comitatus", _sectio_comitatus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "bina", _sectio_bina, NIHIL, NIHIL, NIHIL, NIHIL },
     { "verba", _sectio_verba, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "liberum", _sectio_liberum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus_vitia", _sectio_comitatus_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "instrumenta", _sectio_instrumenta, NIHIL, NIHIL, NIHIL, NIHIL },

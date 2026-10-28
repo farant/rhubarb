@@ -328,11 +328,12 @@ _carmen_monstrare (
     constans Carmen* k,
            Piscina* piscina)
 {
-     constans character* clavis       = "c";
-     constans character* modus        = "maior";
-                    i32  numerator    = IV;
-                    i32  denominator  = IV;
-                    i32  i;
+      constans character* clavis       = "c";
+      constans character* modus        = "maior";
+                     i32  numerator    = IV;
+                     i32  denominator  = IV;
+               character  metrum[XVI];
+                     i32  i;
 
     si (k->numerus_clavium > ZEPHYRUM)
     {
@@ -344,10 +345,18 @@ _carmen_monstrare (
         numerator    = k->metra[ZEPHYRUM].numerator;
         denominator  = k->metra[ZEPHYRUM].denominator;
     }
-    imprimere("%.*s: %s %s, %u/%u, %u quartae/min, %u mensurae, "
+    si (k->numerus_metrorum > ZEPHYRUM && k->metra[ZEPHYRUM].liberum)
+    {
+        strcpy(metrum, "liberum");
+    }
+    alioquin
+    {
+        sprintf(metrum, "%u/%u", numerator, denominator);
+    }
+    imprimere("%.*s: %s %s, %s, %u quartae/min, %u mensurae, "
               "%.3f s\n", (integer)k->titulus.mensura,
               (constans character*)k->titulus.datum, clavis,
-              modus, numerator, denominator,
+              modus, metrum,
               k->tempora_scripta[ZEPHYRUM].tempus, _mensurae(k),
               (duplex)cantus_quadrum_pulsus(k->tempora,
                   k->numerus_temporum, k->pulsus)

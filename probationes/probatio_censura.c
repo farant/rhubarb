@@ -265,6 +265,32 @@ _sectio_lineae (
         "(frustum 0, offset 24)\n");
 }
 
+/* metrum liberum: '|' partis primae mensuras facit (numquam vitium);
+ * partis alterius '|' extra incisum notatur (mensura 2 +960) */
+interior vacuum
+_sectio_lineae_liberae (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\">"
+        "<textus!>o4 l8 c d e f g a | b4 c2 | c4</textus></frustum>"
+        "</pars>"
+        "<pars titulus=\"n\" instrumentum=\"aether\"><frustum "
+        "mensura=\"2\">"
+        "<textus!>o4 g4 | e2 | c4</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, NIHIL, inv, CAPACITAS) == I);
+    CREDO_VERUM (inv[ZEPHYRUM].regula == CENSURA_LINEAE);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, II);
+    CREDO_AEQUALIS_S64 (inv[ZEPHYRUM].pulsus, (s64)CMLX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (inv[ZEPHYRUM].pars, "n");
+}
+
 
     /* ==================================================
      * CLAVIS: minor VI et VII elevati licent; clavis mutata; percussio
@@ -1684,6 +1710,8 @@ _sectio_sexta_aucta (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lineae_liberae", _sectio_lineae_liberae, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "caerulea", _sectio_caerulea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },

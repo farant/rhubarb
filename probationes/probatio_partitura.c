@@ -795,6 +795,29 @@ _sectio_verba (
         "  verba  _ gi na qui\n  o      D3:1\n", c->piscina));
 }
 
+/* metrum liberum: 'liberum' in titulo carminis, mensurae incisa sine
+ * notis metri */
+interior vacuum
+_sectio_liberum (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\" "
+        "clavis=\"d dorius\" tempus=\"96\"><pars titulus=\"c\" "
+        "instrumentum=\"schola\"><frustum mensura=\"1\"><textus!>"
+        "o4 l8 d e f g a4 | a8 g f e d4.</textus></frustum></pars>"
+        "</carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen l: d dorius, liberum, 96\n"
+        "  pars c: schola, lucrum 1.00\n"
+        "mensura 1\n"
+        "  c  D4:8 E4:8 F4:8 G4:8 A4:4\n"
+        "mensura 2\n"
+        "  c  A4:8 G4:8 F4:8 E4:8 D4:4.\n");
+}
+
 /* ligatura trans lineam: nota una, '~' ad lineam; trioli '8t' */
 interior vacuum
 _sectio_ligatura (
@@ -855,6 +878,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
     { "verba", _sectio_verba, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "liberum", _sectio_liberum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "valores", _sectio_valores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligaturae", _sectio_ligaturae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },

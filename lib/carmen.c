@@ -263,6 +263,10 @@ interior s64
 _longitudo_mensurae (
     constans CarmenMetrum* m)
 {
+    si (m->liberum)
+    {
+        redde m->longitudo;
+    }
     redde (s64)CANTUS_PULSUS_INTEGRAE * (s64)m->numerator
         / (s64)m->denominator;
 }
@@ -1290,6 +1294,13 @@ _partem_legere (
         }
         si (_elementum_est(l, "comitatus"))
         {
+            si (carmen->metra[ZEPHYRUM].liberum)
+            {
+                redde _vitium(vitium, carmen->titulus, pars->titulus,
+                    (s32)summa, ZEPHYRUM,
+                    "comitatus cum metro libero (figurae per "
+                    "mensuram)");
+            }
             si (!_comitatum_legere(l, carmen, figurae,
                                    numerus_figurarum, bassus_sonat,
                                    pars->titulus, (s32)summa, &status,
@@ -2566,6 +2577,115 @@ _gradum_addere (
     t->quadrum     = ZEPHYRUM;
 }
 
+/* metrum liberum (carmen.h): mensurae ex lineis '|' frusti unici
+ * partis primae ad mensuram 1 - praelectio textus ante mappam metri
+ * (tempus, clavis, positiones ea egent). '|' ad initium, ad finem aut
+ * iterata ('||') mensuram vacuam non faciunt */
+interior b32
+_mensuras_liberas_legere (
+          StmlNodus* nodus,
+             Carmen* k,
+            Piscina* piscina,
+     CarminisVitium* vitium)
+{
+    constans character* causa = "metrum liberum: pars prima frustum "
+                                "unum ad mensuram 1";
+           StmlNodus* pars     = NIHIL;
+           StmlNodus* frustum  = NIHIL;
+           StmlNodus* textus   = NIHIL;
+              chorda* a;
+              chorda  titulus = _vacua();
+           Cantilena  c;
+        CantusVitium  cv;
+                 s64  initium  = ZEPHYRUM;
+                 i32  frusta   = ZEPHYRUM;
+                 i32  n        = ZEPHYRUM;
+                 i32  i;
+
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus) && !pars; i++)
+    {
+        StmlNodus* x = stml_liberum_ad_indicem(nodus, i);
+
+        si (   x->genus == STML_NODUS_ELEMENTUM
+            && _elementum_est(x, "pars"))
+        {
+            pars = x;
+        }
+    }
+    si (pars != NIHIL)
+    {
+        a        = stml_attributum_capere(pars, "titulus");
+        titulus  = a != NIHIL ? *a : _vacua();
+        per (i = ZEPHYRUM; i < stml_numerus_liberorum(pars); i++)
+        {
+            StmlNodus* x = stml_liberum_ad_indicem(pars, i);
+
+            si (   x->genus == STML_NODUS_ELEMENTUM
+                && (   _elementum_est(x, "frustum")
+                    || _elementum_est(x, "comitatus")))
+            {
+                frusta++;
+                frustum = frustum != NIHIL ? frustum : x;
+            }
+        }
+    }
+    a = frustum != NIHIL ? stml_attributum_capere(frustum, "mensura")
+                         : NIHIL;
+    si (   frusta != I || !_elementum_est(frustum, "frustum")
+        || a      == NIHIL || !chorda_aequalis_literis(*a, "1"))
+    {
+        redde _vitium(vitium, k->titulus, titulus, -I, ZEPHYRUM, causa);
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(frustum); i++)
+    {
+        StmlNodus* x = stml_liberum_ad_indicem(frustum, i);
+
+        si (   x->genus == STML_NODUS_ELEMENTUM
+            && _elementum_est(x, "textus"))
+        {
+            textus = x;
+        }
+    }
+    c.pulsus            = ZEPHYRUM;
+    c.numerus_linearum  = ZEPHYRUM;
+    /* sine textu: lectio frusti vitium nominat */
+    si (   textus != NIHIL
+        && !cantus_legere(stml_textus_valor(textus, piscina), piscina,
+                          &c, &cv))
+    {
+        redde _vitium(vitium, k->titulus, titulus, ZEPHYRUM, cv.offset,
+            cv.causa);
+    }
+    k->metra = (CarmenMetrum*)piscina_allocare(piscina,
+        (memoriae_index)(c.numerus_linearum + I)
+        * magnitudo(CarmenMetrum));
+    si (k->metra == NIHIL)
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
+    per (i = ZEPHYRUM; i <= c.numerus_linearum; i++)
+    {
+        s64 p = i < c.numerus_linearum ? c.lineae[i].pulsus : c.pulsus;
+
+        si (i < c.numerus_linearum && (p <= initium || p >= c.pulsus))
+        {
+            perge;
+        }
+        memset(&k->metra[n], ZEPHYRUM, magnitudo(CarmenMetrum));
+        k->metra[n].pulsus       = initium;
+        k->metra[n].liberum      = VERUM;
+        k->metra[n].denominator  = VIII;
+        /* carmen sine notis: lectio frusti vitium nominat */
+        k->metra[n].longitudo    = p > initium ? p - initium
+                                               : CANTUS_PULSUS_INTEGRAE;
+        n++;
+        initium = p;
+    }
+    k->numerus_metrorum = n;
+    redde VERUM;
+}
+
 /* longitudo mensurae metri et finis spatii eius in carmine */
 interior s64
 _finis_metri (
@@ -3267,7 +3387,9 @@ _carmen_legere (
         redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
             "piscina exhausta");
     }
-    /* initialia */
+    /* initialia; metra nulla (liberum FALSUM, mutationes quoque) */
+    memset(k->metra, ZEPHYRUM, (size_t)(_numerare(nodus, "metrum") + I)
+        * magnitudo(CarmenMetrum));
     k->tempora_scripta[ZEPHYRUM].pulsus = ZEPHYRUM;
     k->tempora_scripta[ZEPHYRUM].tempus = CARMEN_TEMPUS_ORDINARIUM;
     k->tempora_scripta[ZEPHYRUM].usque = ZEPHYRUM;
@@ -3289,15 +3411,32 @@ _carmen_legere (
             "tempus extra 20..400");
     }
     a = stml_attributum_capere(nodus, "metrum");
-    si (a && !_metrum_legere(*a, &k->metra[ZEPHYRUM]))
+    si (a && chorda_aequalis_literis(*a, "liberum"))
     {
-        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
-            "metrum non N/D (D potentia II)");
+        si (   stml_attributum_habet(nodus, "agogica")
+            || _numerare(nodus, "metrum") > ZEPHYRUM)
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                "metrum liberum: sine <metrum> et agogica");
+        }
+        si (!_mensuras_liberas_legere(nodus, k, piscina, vitium))
+        {
+            redde FALSUM;
+        }
     }
-    si (!_inaequalitatem_attributi(nodus, &k->metra[ZEPHYRUM], &causa))
+    alioquin
     {
-        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
-            causa);
+        si (a && !_metrum_legere(*a, &k->metra[ZEPHYRUM]))
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                "metrum non N/D (D potentia II)");
+        }
+        si (!_inaequalitatem_attributi(nodus, &k->metra[ZEPHYRUM],
+                                       &causa))
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                causa);
+        }
     }
     a = stml_attributum_capere(nodus, "clavis");
     si (a && !_clavem_legere(*a, &k->claves[ZEPHYRUM]))

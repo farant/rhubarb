@@ -701,7 +701,7 @@ _titulum_mensurae (
     {
         constans CarmenMetrum* m = &carmen->metra[i];
 
-        si (m->pulsus >= initium && m->pulsus < finis)
+        si (!m->liberum && m->pulsus >= initium && m->pulsus < finis)
         {
             _litterae(s, "  metrum ");
             _numerus(s, (s64)m->numerator);
@@ -963,10 +963,17 @@ partitura_scribere (
     _litterae(&s, ": ");
     _clavem_scribere(&s, &carmen->claves[ZEPHYRUM]);
     _litterae(&s, ", ");
-    _numerus(&s, (s64)carmen->metra[ZEPHYRUM].numerator);
-    _character(&s, '/');
-    _numerus(&s, (s64)carmen->metra[ZEPHYRUM].denominator);
-    _inaequalitatem_scribere(&s, &carmen->metra[ZEPHYRUM]);
+    si (carmen->metra[ZEPHYRUM].liberum)
+    {
+        _litterae(&s, "liberum");
+    }
+    alioquin
+    {
+        _numerus(&s, (s64)carmen->metra[ZEPHYRUM].numerator);
+        _character(&s, '/');
+        _numerus(&s, (s64)carmen->metra[ZEPHYRUM].denominator);
+        _inaequalitatem_scribere(&s, &carmen->metra[ZEPHYRUM]);
+    }
     _litterae(&s, ", ");
     _numerus(&s, (s64)carmen->tempora_scripta[ZEPHYRUM].tempus);
     _character(&s, '\n');

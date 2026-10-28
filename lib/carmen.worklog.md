@@ -523,3 +523,29 @@ PHRASES out of primus.py, so the two can't drift apart. Melismas sit on
 "Ma-ri-a" and "ple-na" at the end of phrase 1, and "Do-mi-nus te-cum" is
 the melismatic phrase. censura 0; the render is byte-identical to the
 scratch version Fran listened to (before any vowel-loudness evening).
+
+## 2026-10-28 — metrum="liberum" (chant step 4, free rhythm)
+
+A free carmen is one CarmenMetrum per incise: `liberum` set, `longitudo` = written length,
+numerator 0 / denominator VIII. `_longitudo_mensurae` returns `longitudo` for those, so
+`_pulsus_mensurae` (and every mensura/ictus/M:T position built on it) works unchanged — each entry
+spans exactly one bar, and bars past the last repeat its length. Lucky consequences of 0/8:
+`carmen_tempus_mensurae` already answers the eighth (punctum), and censura `_fortia` gives only
+the incise start as a strong beat, both without new code.
+
+Reading order problem: tempo, key, fermata and part positions all need the metre map, but in free
+rhythm the map comes from the first part's `|` marks. `_mensuras_liberas_legere` pre-reads just
+that one frustum's text with `cantus_legere` (lineae + total pulsus) before anything else. It
+requires exactly one frustum (comitatus counted) at mensura="1". `|` at the start, at the end, or
+repeated (`||`) makes no empty bar.
+
+Bug found on the way: `piscina_allocare` doesn't zero, and the initial metre setup only wrote
+pulsus/numerator/denominator, so the new `liberum` field held garbage — metered songs with a
+comitatus suddenly reported "comitatus cum metro libero". The whole metra array is now memset
+after allocation. Planted (memset size 0) and the suite goes red.
+
+Refused with liberum: `<metrum>` changes, agogica (one error: "metrum liberum: sine <metrum> et
+agogica"), comitatus (figures are per bar). Printing: partitura / recensio (text + JSON) / auditio
+-carmina say "liberum" instead of "0/8"; partitura skips per-bar "metrum" notes for free entries.
+All 21 book songs render byte-identical (none is free yet). Plants: 15, all red (trailing `|` case
+added to the test first — nothing covered it).

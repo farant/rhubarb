@@ -30,7 +30,13 @@
  *             clavis, fermata): tempus N mensurae (1 = initium;
  *             unitas = carmen_tempus_mensurae, ut locus 'M:T' - in 6/8
  *             octavae tres)
- *   metrum    N/D, D potentia II (1..64), N 1..64
+ *   metrum    N/D, D potentia II (1..64), N 1..64; aut "liberum"
+ *             (cantus liber): mensurae ex lineis '|' partis primae
+ *             (frustum unum ad mensuram 1) - quodque incisum mensura
+ *             sua, longitudine scripta; post lineam ultimam mensura
+ *             usque ad finem partis. Tempus mensurae (ictus, M:T):
+ *             octava (punctum). Liberum solum in carmine: <metrum>,
+ *             agogica, comitatus cum libero vitia.
  *   agogica   in carmine (metro initiali) aut in <metrum>: pondera
  *             K partium aequalium mensurae ("0.86 1.15 0.99" in 3/4;
  *             "2 1 2 1 2 1 2 1" = octavae inaequales in 4/4), normata
@@ -268,6 +274,9 @@ nomen structura {
        i32 numerus_ponderum;                 /* 0 = aequale */
     chorda inaequalitas;                     /* 'agogica' ut scripta;
                                               * vacua */
+       b32 liberum;     /* mensura ex inciso scripto (numerator 0,
+                         * denominator VIII: tempus octava) */
+       s64 longitudo;   /* liberum: pulsus mensurae */
 } CarmenMetrum;
 
 nomen structura {
