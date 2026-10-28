@@ -55,17 +55,14 @@ declare -a RADIX_FONTES=(
 )
 # capita mutata sine recompilo = corruptio ABI (classis excubitoris;
 # custos tesserae aequatus - desideratum 01KY2P5X)
-newest_header () {
-    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" \
-        "$RADIX_DIR/materia/fontes" "$SILVA_DIR/instrumenta" \
-        -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include" "$SILVA_DIR/fontes" "$RADIX_DIR/materia/fontes" "$SILVA_DIR/instrumenta"
 
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -76,7 +73,7 @@ done
 # nectit, ergo materia_token.o quoque (T13a)
 src="$RADIX_DIR/materia/fontes/materia_token.c"
 obj="$BUILD_DIR/materia_token.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
     echo "  [materia] materia_token.c"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -84,7 +81,7 @@ obj_files="$obj_files $obj"
 for f in "silva_token" "silva_lexema"; do
     src="$SILVA_DIR/fontes/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [silva] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

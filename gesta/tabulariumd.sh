@@ -33,9 +33,8 @@ declare -a VENDOR_FLAGS=(
     "-DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1"
 )
 
-newest_header () {
-    find "$RADIX_DIR/include" "$GESTA_DIR/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include" "$GESTA_DIR/fontes"
 
 # ── clausura vera inclusionum (01KXZYFVER; exemplar tabularium.sh) ──
 FONTES_OMNES=()
@@ -59,7 +58,7 @@ fons_stalus () {    # $1 = basis, $2 = scopus; exitus 0 = recompilandum
     if [ -n "$DEPENDENTIAE" ]; then
         [ -n "$(deps_obiecti "$1" | recentius_ex "$2")" ]
     else
-        [ -n "$(newest_header "$2")" ]
+        caput_recentius "$2"
     fi
 }
 

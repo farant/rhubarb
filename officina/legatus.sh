@@ -52,11 +52,8 @@ source "$OFF_DIR/legatus_fontes_generata.sh"
 # 'legatus' bis exsistit (instrumenta/ + principalia/) - lineae
 # congruae plures = unio dependentiarum, superset tutum. Si -MM
 # cadit: newest_header = glob superset (garrulum, numquam caecum).
-newest_header () {
-    find "$RADIX_DIR/include" "$RADIX_DIR/silva/amalgama" \
-         "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" "$OFF_DIR/instrumenta" \
-         "$RADIX_DIR/materia/fontes" -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include" "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" "$OFF_DIR/instrumenta" "$RADIX_DIR/materia/fontes"
 FONTES_OMNES=()
 for f in "${RADIX_FONTES[@]}"; do FONTES_OMNES+=("$RADIX_DIR/lib/$f.c"); done
 FONTES_OMNES+=("$RADIX_DIR/silva/amalgama/silva.c")
@@ -83,7 +80,7 @@ fons_stalus () {    # $1 = basis, $2 = scopus; exitus 0 = recompilandum
     if [ -n "$DEPENDENTIAE" ]; then
         [ -n "$(deps_obiecti "$1" | recentius_ex "$2")" ]
     else
-        [ -n "$(newest_header "$2")" ]
+        caput_recentius "$2"
     fi
 }
 
