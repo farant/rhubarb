@@ -821,6 +821,70 @@ _additae (
     redde n;
 }
 
+/* verba: pars notam cum syllaba (vocalis >= 0) habet? */
+interior b32
+_verba_habet (
+    constans CarmenPars* pars)
+{
+    i32 f;
+    i32 j;
+
+    per (f = ZEPHYRUM; f < pars->numerus_frustorum; f++)
+    {
+        per (j = ZEPHYRUM; j < pars->frusta[f].numerus; j++)
+        {
+            si (pars->frusta[f].notae[j].vocalis >= 0.0f)
+            {
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+/* verba: syllabae notarum in [initium, finis) incipientium, '_'
+ * melisma; notae sine verbis omittuntur (partitura.h VERBA) */
+interior vacuum
+_verba_scribere (
+               Scriptor* s,
+    constans CarmenPars* pars,
+                    s64  initium,
+                    s64  finis)
+{
+    b32 primum = VERUM;
+    i32 f;
+    i32 j;
+
+    per (f = ZEPHYRUM; f < pars->numerus_frustorum; f++)
+    {
+        constans CarmenFrustum* fr = &pars->frusta[f];
+
+        per (j = ZEPHYRUM; j < fr->numerus; j++)
+        {
+            constans CarmenNota* n   = &fr->notae[j];
+                            s64  ab  = fr->pulsus + n->pulsus;
+
+            si (n->vocalis < 0.0f || ab < initium || ab >= finis)
+            {
+                perge;
+            }
+            si (!primum)
+            {
+                _character(s, ' ');
+            }
+            primum = FALSUM;
+            si (n->syllaba.mensura > ZEPHYRUM)
+            {
+                _chorda(s, n->syllaba);
+            }
+            alioquin
+            {
+                _character(s, '_');
+            }
+        }
+    }
+}
+
 interior b32
 _monstranda (
         constans CarmenPars* pars,
@@ -871,6 +935,11 @@ partitura_scribere (
             si (carmen->partes[i].titulus.mensura > latitudo)
             {
                 latitudo = carmen->partes[i].titulus.mensura;
+            }
+            si (   _verba_habet(&carmen->partes[i])
+                && (i32)strlen("verba") > latitudo)
+            {
+                latitudo = (i32)strlen("verba");
             }
         }
     }
@@ -948,6 +1017,15 @@ partitura_scribere (
                 latitudo - p->titulus.mensura + II) && s.bene;
             _partem_scribere(&s, carmen, p, initium, finis);
             _character(&s, '\n');
+            si (_verba_habet(p))
+            {
+                _litterae(&s, "  verba");
+                s.bene = chorda_aedificator_appendere_repetita(textus,
+                    ' ', latitudo - (i32)strlen("verba") + II)
+                    && s.bene;
+                _verba_scribere(&s, p, initium, finis);
+                _character(&s, '\n');
+            }
         }
         per (i = ZEPHYRUM; i < _additae(forma); i++)
         {

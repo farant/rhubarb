@@ -124,6 +124,20 @@
  *             (transposita); emendatio non mutat (fontem nominat)
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
+ *   verba     <frustum mensura="M"><textus!>...</textus>
+ *             [<verba!>Sal-ve Re-gi-na, ma-ter_ mi-se-ri-cor-di-ae
+ *             </verba>]</frustum>
+ *             VERBA (cantus cum textu): syllabae notis ordine
+ *             adsignantur (pausae omissae; nota ligata una): spatium
+ *             aut '-' syllabas dividit; '_' notam proximam syllabae
+ *             priori addit (melisma); interpunctio , . ; : ! ? omissa.
+ *             Syllabae plures quam notae: vitium; notae post ultimam
+ *             syllabam vocalem eius servant.
+ *             VOCALIS syllabae (Latina ecclesiastica): ae, oe -> e; au
+ *             -> a; y -> i; u post q aut g ante vocalem, et i initialis
+ *             ante vocalem (consonantes: "qui", "Ie-sus") omittuntur;
+ *             deinde vocalis prima (litterae majusculae ut minusculae);
+ *             syllaba sine vocali vocalem priorem servat.
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
  *             -1..1 (0, potentia constans); reverberatio 0..1 (0:
  *             missio ad aulam); mutus, solus (attributa sine valore);
@@ -206,6 +220,10 @@ nomen structura {
           b32 acordi;        /* nota generata ex acordo declarato
                                * (comitatus): acordi est, numquam
                                * aliena (explicatio) */
+          f32 vocalis;       /* verba: 0..4 (a e i o u); -1 =
+                               * instrumenti */
+       chorda syllaba;       /* verba: syllaba ut scripta (nota prima
+                               * eius; melisma vacua) */
 } CarmenNota;
 
 nomen structura {

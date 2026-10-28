@@ -770,6 +770,31 @@ _sectio_modi (
     }
 }
 
+/* verba (partitura.h): linea "verba" sub parte - syllaba per notam,
+ * melisma '_'; pars sine verbis nullam habet */
+interior vacuum
+_sectio_verba (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"v\" clavis=\"d dorius\">"
+        "<pars titulus=\"c\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4 e4 f4 r4 | g4 a4 b4 a4</textus>"
+        "<verba!>Sal-ve Re_ gi-na qui</verba></frustum></pars>"
+        "<pars titulus=\"o\" instrumentum=\"organum\"><frustum "
+        "mensura=\"1\"><textus!>o3 d1 | d1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    chorda t;
+
+    CREDO_NECESSE (k != NIHIL);
+    t = _scribere(c, k, NIHIL);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  c      D4:4 E4:4 F4:4 r:4\n  verba  Sal ve Re\n",
+        c->piscina));
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  verba  _ gi na qui\n  o      D3:1\n", c->piscina));
+}
+
 /* ligatura trans lineam: nota una, '~' ad lineam; trioli '8t' */
 interior vacuum
 _sectio_ligatura (
@@ -829,6 +854,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "verba", _sectio_verba, NIHIL, NIHIL, NIHIL, NIHIL },
     { "valores", _sectio_valores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligaturae", _sectio_ligaturae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },

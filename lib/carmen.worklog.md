@@ -484,3 +484,33 @@ phrases ending A, A, F, D, subtonium C before the final; 4/4 with fermatas at ph
 rhythm is a later step). censura 0 (Bb accepted as b molle). functio over melody + drone is
 meaningless (Isus4, iv43) - chant needs melodic mode analysis (next step). Generator:
 build/plantae_s4/cantus/primus.py.
+
+## 2026-10-27 — sung text: `<verba!>` (chant step 3)
+
+A frustum may carry `<verba!>` beside `<textus!>`. Syllables go to the
+frustum's notes in order (rests are not notes, so they are skipped for
+free). Space or `-` splits; `_` ends the syllable and gives the NEXT
+note to the previous syllable (melisma, empty `syllaba`, same vowel);
+punctuation `, . ; : ! ?` just ends a syllable. Notes after the last
+syllable keep its vowel (a trailing melisma without writing `_`s).
+`syllaba` points into the STML text node — same piscina as the carmen,
+so no copy.
+
+Vowel rules (ecclesiastical Latin) live in `_vocalis_syllabae`: case is
+folded on the current, previous and next letter (plants on each fold
+survived until the test had "A-ve", "Quo", "CAE"); `y` -> i; `ae`/`oe`
+-> e; initial `i` before a vowel and `u` after q/g before a vowel are
+consonants ("Ie-sus", "qui", "san-gui-nis" but "an-gus"); a syllable
+with no vowel keeps the previous one (header line added 10-27).
+
+cantor: `vocalis >= 0` overrides the instrument's tibia vowel for that
+note's TIBIAM iussum only — instrument presets untouched, so every book
+song renders byte-identical (no book song has verba yet). partitura: a
+`verba` line under each part that has any sung note; widens the label
+column to 5.
+
+Finding (not fixed here): on A4 the schola vowels span 12.6 dB (a 68.3,
+e 78.3, i 65.7, o 74.8, u 68.8). F1 of e/o sits on f0=440 and the
+formant bank resonates. Invisible while one instrument = one vowel
+(amplitudo tuned per preset); audible now inside a sung line. Belongs
+in tibia (per-vowel gain compensation), filed as a wish.
