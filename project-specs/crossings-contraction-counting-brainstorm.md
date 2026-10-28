@@ -299,11 +299,11 @@ The main risk is that the papers' savings are real only asymptotically; the phas
 
 At λ = 4 the worst piece costs about 3.03 bits per bit in the two directions together, against 4 for the crossing; the asymptotic figure is log₂ 12 ≈ 3.58, so small λ does better than the bound. Ranks were computed in floating point (numpy) on integer matrices; an exact recheck with `matrix` belongs to phase 1.
 
-**Read on 2026-10-27:** ANT §1–2 and Appendices E–H; OAI §1–2; ANT-L `README.md`, `Challenge.lean`, `Solution.lean`, `MainResults.lean` (as printed in ANT Appendix E), `comparator.json`; OAI-L `Computation.lean` (`PrimitiveMachine`) and `SqrtLog/StatementCanonical.lean`, the Comparator config; the headers of `polynomium`, `laqueus`, `congruentia`.
+**Read on 2026-10-27:** ANT §1–2 and Appendices E–H; OAI §1–2; ANT-L `README.md`, `Challenge.lean`, `Solution.lean`, `MainResults.lean` (as printed in ANT Appendix E), `comparator.json`; OAI-L `Computation.lean` (`PrimitiveMachine`) and `SqrtLog/StatementCanonical.lean`, the Comparator config; the headers of `polynomium`, `laqueus`, `congruentia`. *(Later on 10-27: ANT §2–5, the recursion and its cost accounting; summarized in "One gadget and one level" below.)*
 
 **AUDIENDA (not verified):**
 
-- ANT §3–6 and Appendices A–D (the recursion, balancing, sparsification, the Appendix B pieces) and OAI §3–6 and Appendices A–D: not read in full; nothing here checks either proof.
+- ANT §3–6 and Appendices A–D (the recursion, balancing, sparsification, the Appendix B pieces) and OAI §3–6 and Appendices A–D: not read in full; nothing here checks either proof. *(10-27: ANT §3–5 read for the cost structure, not checked as a proof; ANT §6–8 and Appendices A–D still unread.)*
 - Neither Lean development was built; each needs elan and a downloaded Mathlib cache of several GB (ANT-L: about 8 minutes on 24 CPUs, 7 GB peak).
 - That `MainResults.lean` and `StatementCanonical.lean` say what the papers say: read once by Claude, not by a person.
 - The 12^λ bound beyond λ = 4, and whether the pieces' rank factorizations are computable with integer entries of polynomial size. *(Derived 10-27 for the singlet pieces: closed form, tight, explicit integer factorization; see "Singlet pieces in closed form" below. Exact check: D135.)*
@@ -379,7 +379,42 @@ Readings (corrected by the T5b design review, which converted min-fill orders in
 4. **Explicit factorization.** A_i = ±S^⊗λ · B^⊗λ · D_i · (B⁻¹)^⊗λ, with B the integer basis matrix above (determinant ±2 per bit) and D_i diagonal. Integer up to powers of 2, which odd primes invert (as 4.2 requires).
 5. **Mod p.** For odd p, B is invertible and rank counts eigenvalues not ≡ 0 (mod p). The binomials vanish mod p only when p ≤ λ (Lucas), so every prime above λ, which includes every prime the engine uses, sees the full rank. Small-prime drops (e.g. λ = 4, i = 2, p = 3: 54 instead of 67) are registered in D135 before any matrix is built. p = 2 is left descriptive: B is singular there.
 6. **Cost curve (rank level, one gadget).** The crossing costs 4^λ in either direction; the pieces, each in its cheaper direction, cost Σ_i min(F(λ, i), F(λ, λ − i)): λ = 1: 2^2 vs 2^1 (2×) · λ = 10: 2^20 vs 2^17.0 (8×) · λ = 20: 2^40 vs 2^34.6 (42×) · λ = 30: 2^60 vs 2^52.3 (200×). The saving is positive at every λ, so the rank-level form of the kill criterion (10) cannot fire.
-7. **What it does not settle.** Ranks are not table sizes. The surviving states (at most i positions in a⊥, after a per-bit rotation) are a sector of a rotated product space, not a product of indices; a dense tensor pays the full 4^λ. Realizing F(λ, i) needs the sector-labelled tensors of 4.7, with d as the label. The overhead of that is the next experiment (a λ-bit gadget with real tables, after D135); 12.1.1 now asks it, not whether savings exist.
+7. **What it does not settle.** Ranks are not table sizes. The surviving states (at most i positions in a⊥, after a per-bit rotation) are a sector of a rotated product space, not a product of indices; a dense tensor pays the full 4^λ. Realizing F(λ, i) needs the sector-labelled tensors of 4.7, with d as the label. The overhead of that is the next experiment (a λ-bit gadget with real tables, after D135); 12.1.1 now asks it, not whether savings exist. *(10-28: the single gadget is ill-posed; see "One gadget and one level" below.)*
+
+**One gadget and one level (2026-10-28).** After D135, and after reading ANT §2–5. Scratch Python, not committed (`gadget/toy.py`, `gadget/nivellus.py`).
+
+1. **Rotated slicing works.** Split the pieces into a rows group Σ_{i≤h} A_i and a columns group Σ_{i>h} A_i. Each group is diagonal in its own rotated product basis (a / a⊥ per bit for rows, σ / σ⊥ for columns; Gram matrices diag(2, 2, 1, 1) and diag(2, 1, 1, 2)). So the crossing can be sliced over the basis tensors whose summed eigenvalue is nonzero: F(λ, h) + F(λ, λ − h − 1) slices at the best h, against 4^λ for plain slicing (λ = 10: 2^16.65 vs 2^20, 10×; λ = 20: 56×; λ = 30: 280×). Exact against brute force on 2×2 gadgets with random tables mod 1,000,003, λ ≤ 3. At other h some summed eigenvalues cancel and fewer slices survive than the formula says (λ = 3, h = 2: 28 rows slices, not 37).
+2. **A single gadget cannot show the saving.** Two costs fall outside the rank count. A rotated slice fixes no index value, so each slice contracts the rest of the network against a basis tensor, an overhead a plain slice does not pay. And building the interface tensor that gets sliced already costs 4^λ entries. With one crossing and nothing else, plain contraction is the cheapest route. The saving can only appear when many crossings share the same terms, which is ANT's setting (next item). 12.1.1's "λ-bit gadget with real tables" is withdrawn as posed.
+3. **ANT, one level of the recursion (§2–5).** The instance is a (K, λ)-clique (Def. 3). One level places K = g² nodes on a g × g grid; the crossings are the rectangles R, \|R\| = C(g, 2)².
+   - Lemma 2: t = ⌈λ/3⌉. Piece i of a rectangle costs c_row(i) = min(2λ, 4t + 3i) bits with rows merged and c_col(i) = min(2λ, 7t − 3i) with columns merged (sum 11t).
+   - A term ι picks one piece per rectangle, so there are (t + 1)^\|R\| terms. The merge direction is chosen **once per term for the whole grid**: a term costs 2^min(Σ c_row, Σ c_col) on the diagonal bits. On top of that come the side edges, g·C(g, 2)·λ bits, which no expansion touches.
+   - Inside a term, a piece is evaluated as the coefficient of τ^i in Π_j(R_j + τC_j): evaluate and interpolate, OAI's move inside ANT.
+   - Each level also pays for evaluating every group's settings by brute force, 2^(2gP/K) in Lemma 1's notation. That cost is negligible only at huge K. The paper beats brute force only for n > 10^10000 (K₀ = 64, K₁ ≈ 9·2^96).
+4. **One level at finite size.** The edge-bit factor of one level, in log₂, with bits counted once. Plain = e·(side + 2λ\|R\|). Expanded = e·side + log₂ Σ_ι 2^(e·min(Σ c_row, Σ c_col)), summed over all terms.
+   - e is the weight of one cut bit: e = 1 is table size; e = 0.5 makes each bit cost √2 while terms are still paid in full.
+   - Singlet pieces use D135's exact ranks, log₂ F(λ, i) and log₂ F(λ, λ − i), in place of c_row and c_col. No separate naming term is added, because the rank already contains it. Eight-square pieces use Lemma 2's bit counts; they were not built as tensors.
+   - The sum over terms is a dynamic program over Σ c_row − Σ c_col, checked against enumeration (λ ∈ {3, 4}, \|R\| ≤ 3).
+   - The brute-force table cost of item 3 is excluded, so these gains are an upper limit on what one level buys.
+
+   | e | g | \|R\| | λ | plain | eight-square gain | singlet gain |
+   | --- | --- | --- | --- | --- | --- | --- |
+   | 1 | 2 | 1 | 30 | 120 | +4.6 | +7.7 |
+   | 1 | 3 | 9 | 9 | 243 | +2.9 | +15.2 |
+   | 1 | 3 | 9 | 30 | 810 | +27.2 | +54.5 |
+   | 1 | 4 | 36 | 18 | 1,728 | +40.5 | +119.0 |
+   | 1 | 4 | 36 | 30 | 2,880 | +99.4 | +208.4 |
+   | 1 | 5 | 100 | 18 | 4,500 | +106.2 | +323.7 |
+   | 0.5 | 3 | 9 | 9 | 121.5 | −6.6 | −4.8 |
+   | 0.5 | 3 | 9 | 24 | 324 | −2.1 | +6.4 |
+   | 0.5 | 4 | 36 | 18 | 864 | −25.2 | −1.4 |
+   | 0.5 | 4 | 36 | 30 | 1,440 | −4.4 | +37.1 |
+   | 0.5 | 5 | 100 | 18 | 2,250 | −75.2 | −10.1 |
+
+   - At e = 1, expanding pays at every size tried, for both kinds of piece. The singlet pieces save 1.7–5× more bits (about 3× at λ = 18 for g ≥ 4; the ratio is smallest at g = 2). The eight-square pieces gain little at small λ, because the rounding in t and the 2λ cap eat their margin.
+   - At e = 0.5, the term count decides. Expanding loses at g ≥ 3 and small λ. The singlet pieces break even near λ ≈ 18–20 (g = 3, 4). The eight-square pieces break even only at λ = 30 for g = 3, and not by λ = 30 for g = 4.
+   - The saving is a small share of the total: about 5–7% of the plain bits at e = 1, because the side edges never get cheaper.
+   - A cheap upper estimate is close. min(a, b) ≤ (a + b)/2 makes the term sum factor per rectangle, as \|R\|·log₂ Σ_i 2^(e·(c_row(i) + c_col(i))/2). It lands only 3–5 bits above the exact sum at every size tried, so it is good enough for sizing.
+   - **Reading.** At finite size, ANT's pieces are far from the best available. The exact singlet ranks roughly triple the one-level saving, with nothing else changed. That improves the paper's own accounting; it does not make a practical algorithm, since the term count and the brute-force table cost dominate at any size that can be run. Practical crossing-heavy networks with cheap groups, where rotated slicing would compete against the best single tree, are the open follow-on (12.1.3).
 
 ## 12. Experiment families *(rev. 10-27)*
 
@@ -387,7 +422,7 @@ The phases of 8 build tools; these are the questions the tools serve. Four famil
 
 ### 12.1 Does the cancellation survive at human scale?
 
-1. **Finite-size cost curves.** For the singlet, eight-square and Appendix B pieces, exact ranks and real contraction work for λ = 1 … 30. Small λ already beats the asymptotic figure (§11: about 3.0 bits per bit at λ = 4 against 3.58); the λ at which a decomposition starts to pay is the most useful single number this program can produce.
+1. **Finite-size cost curves.** For the singlet, eight-square and Appendix B pieces, exact ranks and real contraction work for λ = 1 … 30. Small λ already beats the asymptotic figure (§11: about 3.0 bits per bit at λ = 4 against 3.58); the λ at which a decomposition starts to pay is the most useful single number this program can produce. *(10-28: rank level done in D135; one level of ANT's recursion accounted in §11, "One gadget and one level"; the single-gadget table experiment is ill-posed, same place, item 2.)*
 2. **Sign-problem meter.** For each decomposition, Σ\|terms\| against \|result\|: how much of the answer is cancellation. Decides whether 4.6 (sampling terms) is hopeless or plausible. Needs no engine.
 3. **One tree versus many.** On expanders (§9), the best single contraction tree against a sum of networks each contracted in its own order. The Austrin–Kaski–Kubjas bound is about the single tree, so this is the most direct empirical test of the papers' central claim.
 
