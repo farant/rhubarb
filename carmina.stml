@@ -653,4 +653,20 @@
       <frustum mensura="1"><textus!>o3 d1 & | d1 & d4 | d2. & d8 & | d1 & d4 | d2 & d8 & | d1 & d2 | d1 & | d2 & d8 & | d2. & d8</textus></frustum>
     </pars>
   </carmen>
+
+  <!-- salve: Salve Regina, tonus simplex (modus V, f lydius cum b
+       molle: clavis c4, do = F). Fons: Liber Usualis (1961) p. 279,
+       GregoBase 2435 (transcriptio Andrew Hinkley). Rhythmus
+       Solesmensis: punctum octava, mora x2, episema x1.5, nota ante
+       quilisma x1.5, unisoni ligati; divisiones '|' cum spiritu (minor
+       r16, maior r8). Schola sola. Generator:
+       build/plantae_s4/cantus/salve.py -->
+  <carmen titulus="salve" tempus="80" metrum="liberum" clavis="f lydius">
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <pars titulus="cantus" instrumentum="schola" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 f8 a8 o4 c8 d8 c4 d8 f8 e8 d8 c8 d8 c8 c4 r16 | f8 c8 d8 o3 b-4 g4 r16 | a8 b-8 o4 c8 o3 a8 a8 g8 f4 r8 | o4 c8 d8 e8 f8 c4 r16 | d8 e8 f8 e8 d8 c8 d8 c4 r8 | f8 c8 d8 o3 b-8 g8 a8. r16 | a8 o4 c8 d8 f8 d8 c8. r16 | d8 c8 o3 b-8 a8 g8 a8 g8 f4 r8 | o4 c8 d8 e8 f8. c8 d8 f8 e8 d8 c4 r16 | f8 c8 d8 o3 b-8. g8 a8 b-8 o4 c8 o3 b-8 o4 d8 c8 c8. r16 | o3 b-8 a8 g8 a8 g8 f4 r8 | o4 c8 d8 e8 f4 e8 c8 d8 c8 c8 d8 f8 e8 d8 c4 r16 | o3 f8 o4 c8. d8 f8 e8 d8 c8 o3 a8. b-8 a8 g8 f4 r8 | a8. b-8 o4 c8 o3 a4 f4 r8 | o4 c8. d8 e8 f8 e8 d8 c8 c4 r8 | f4. c8 d8 o3 b-4 g8 a8 b-8 o4 c8. r16 | o3 f8 b-8 a8 g8 f8 f4</textus>
+        <verba!>Sal-ve Re-gi-na ma-ter mi-se-ri-cor-di-ae Vi-ta dul-ce-do et spes no-stra sal _-ve Ad te cla-ma-mus ex-su-les fi-li-i He-vae Ad te sus-pi-ra-mus ge-men-tes et flen-tes in hac la-cri-ma-rum val-le E-ia er-go Ad-vo-ca-ta no-stra il-los tu-os mi-se-ri-cor-des o-cu-los ad nos con-ver _-te Et Je _-sum be-ne-di-ctum fru-ctum ven-tris tu-i no-bis post hoc ex-si-li-um os-ten _-de O _ _ cle-mens O _ _ _ _ pi _-a O _ _ _ _ dul _-cis Vir-go Ma-ri _-a</verba></frustum>
+    </pars>
+  </carmen>
 </carmina>

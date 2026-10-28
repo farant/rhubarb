@@ -561,3 +561,22 @@ still reads "I, clausulae A A F D", now from the rests. The ison holds one D per
 across incises, re-sounding with each phrase; generator writes the ties from the incise lengths.
 tempus 80 (punctum 160/min), 27 s. primus.py is now importable and ave.py builds from it, so the
 melody lives in one place. Old generators kept as *.py.metrica under build/plantae_s4/cantus.
+
+## 2026-10-28 — salve: Salve Regina (simple tone) from gabc
+
+Source: GregoBase 2435 = Liber Usualis (1961) p. 279, Solesmes edition, gabc by Andrew Hinkley.
+Not from memory. build/plantae_s4/cantus/salve.py converts gabc -> MML + verba + incises:
+c4 clef with do = F (mode V, fa = Bb, so clavis "f lydius" + b molle); punctum = eighth, '.'
+mora x2, '_' episema x1.5, the note before a quilisma x1.5, repeated pitches inside a syllable
+held as one (bivirga / tristropha / pressus); ',' ';' '`' -> '|' + r16, ':' '::' -> '|' + r8;
+accents stripped from the text (our vowel reader is ASCII-only — wish filed).
+
+Cross-check: three independent GregoBase transcriptions (13136 LU + Liber antiphonarius 1960,
+18969 Antiphonale Monasticum 1934, 18655 Antiphonale monasticum 2005) give the identical 139-pitch
+sequence. Durations match exactly for the two classic Solesmes editions; the 2005 edition differs
+in 23 notes, as expected (it drops the Solesmes rhythm signs). Divisio count varies by edition
+(15/17/20); ours follows the Liber (17 incises).
+
+Analysis agrees with the book: tonus "V (lydius authenticus): finalis F, ambitus F3-F4, tenor C";
+censura 0; recensio 0 monita, apex -7.7 dBFS. Unaccompanied schola (no ison — the Salve is
+sung without one). 66 s at tempus 80, same pulse as primus/ave.
