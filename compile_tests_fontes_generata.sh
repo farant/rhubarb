@@ -357,6 +357,7 @@ declare -a SOURCE_FILES=(
     "lib/tls13_recordum.c"
     "lib/tls_bearssl.c"
     "lib/tls_tls13.c"
+    "lib/tonus.c"
     "lib/tractator.c"
     "lib/unitates.c"
     "lib/uri.c"

@@ -112,6 +112,7 @@ _sectio_ordinaria (
     CREDO_FALSUM (f.activae[CENSURA_DUPLICATA]);
     CREDO_FALSUM (f.activae[CENSURA_SENSIBILIS]);
     CREDO_FALSUM (f.activae[CENSURA_SEPTIMA]);
+    CREDO_VERUM (f.activae[CENSURA_FINALIS]);
     CREDO_FALSUM (f.intentiones_liberae);
     CREDO_AEQUALIS_I32 (f.saltus_maximus, ZEPHYRUM);
     CREDO_VERUM (f.ambitus == NIHIL);
@@ -350,6 +351,44 @@ _sectio_modi (
     CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
         "mensura 2 m: F#4 extra clavem d dorius (frustum 0, "
         "offset 36)\n");
+}
+
+
+/* finalis (censura.h, tonus.h): cantus in d dorius in A desinens
+ * nominatur; in D nihil; clavis tonalis nihil */
+interior vacuum
+_sectio_finalis (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"f\" clavis=\"d dorius\">"
+        "<pars titulus=\"cantus\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4 e4 f4 g4 | a1</textus></frustum>"
+        "</pars></carmen></carmina>");
+       CensuraForma f = _sola(CENSURA_FINALIS);
+    CensuraInventum inv[CAPACITAS];
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 cantus: linea in A4 desinit, non in finali D "
+        "(frustum 0, offset 17)\n");
+    k = _carmen(c,
+        "<carmina><carmen titulus=\"f\" clavis=\"d dorius\">"
+        "<pars titulus=\"cantus\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 a4 g4 f4 e4 | d1</textus></frustum>"
+        "</pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    k = _carmen(c,
+        "<carmina><carmen titulus=\"f\" clavis=\"d minor\">"
+        "<pars titulus=\"cantus\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4 e4 f4 g4 | a1</textus></frustum>"
+        "</pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
 }
 
 
@@ -1648,6 +1687,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "caerulea", _sectio_caerulea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "finalis", _sectio_finalis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chromatica", _sectio_chromatica, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },

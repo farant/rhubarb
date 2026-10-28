@@ -47,6 +47,9 @@
  *                                      fenestras bassi, notae alienae
  *                                      (explicatio.h); -functio: gradus
  *                                      Romani et cadentiae (functio.h)
+ *   auditio -carmen T -tonus           tonus partium monodicarum in
+ *                                      clave modali (tonus.h): linea
+ *                                      per partem
  *   auditio -carmen T -censura         regulae musicae (censura.h):
  *       [-regulae +dissonantia,-ambitus]  ordinariae mutatae, aut
  *       [-regulae parallelae,lineae]      hae solae; exitus 3 si
@@ -120,6 +123,7 @@
 #include "concentus_auditus.h"
 #include "partitura.h"
 #include "censura.h"
+#include "tonus.h"
 #include "auscultatio.h"
 #include "harmonia.h"
 #include "explicatio.h"
@@ -831,6 +835,48 @@ _formam_censurae (
         redde FALSUM;
     }
     redde VERUM;
+}
+
+/* tonus in stdout: "tonus pars: I (dorius authenticus): ..." per partem
+ * monodicam in clave modali; nulla: linea una. Exitus 0, 1 memoria */
+interior integer
+_tonum_scribere (
+    constans Carmen* k,
+            Piscina* piscina)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, M);
+                  i32  i;
+                  i32  n = ZEPHYRUM;
+               chorda  t;
+
+    si (a == NIHIL)
+    {
+        redde I;
+    }
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        Tonus x;
+
+        si (!tonus_partis(k, i, &x))
+        {
+            perge;
+        }
+        (vacuum)chorda_aedificator_appendere_literis(a, "tonus ");
+        (vacuum)chorda_aedificator_appendere_chorda(a,
+            k->partes[i].titulus);
+        (vacuum)chorda_aedificator_appendere_literis(a, ": ");
+        (vacuum)tonus_scribere(k, &x, a);
+        (vacuum)chorda_aedificator_appendere_character(a, '\n');
+        n++;
+    }
+    si (n == ZEPHYRUM)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a,
+            "tonus: nulla pars monodica in clave modali\n");
+    }
+    t = chorda_aedificator_finire(a);
+    fwrite(t.datum, I, (size_t)t.mensura, stdout);
+    redde ZEPHYRUM;
 }
 
 /* censura in stdout: linea per inventum, deinde summa. Exitus 0 nulla,
@@ -1666,6 +1712,7 @@ principale (
                      b32  explicare       = FALSUM;
                      b32  functionem      = FALSUM;
                      b32  censura         = FALSUM;
+                     b32  tonum           = FALSUM;
                      b32  auscultare      = FALSUM;
                      b32  recensio        = FALSUM;
                      b32  forma_json      = FALSUM;
@@ -1767,6 +1814,10 @@ principale (
         alioquin si (strcmp(argv[k], "-censura") == ZEPHYRUM)
         {
             censura = VERUM;
+        }
+        alioquin si (strcmp(argv[k], "-tonus") == ZEPHYRUM)
+        {
+            tonum = VERUM;
         }
         alioquin si (   strcmp(argv[k], "-regulae") == ZEPHYRUM
                      && k + I < argc)
@@ -1988,6 +2039,12 @@ principale (
         alioquin si (k != NIHIL && auscultare)
         {
             k_exitus = _auscultare(k, piscina);
+            piscina_destruere(piscina);
+            redde k_exitus;
+        }
+        alioquin si (k != NIHIL && tonum)
+        {
+            k_exitus = _tonum_scribere(k, piscina);
             piscina_destruere(piscina);
             redde k_exitus;
         }

@@ -92,6 +92,10 @@
  *                nominat - regula hac activa ibi tacet (inventum
  *                unum)                                            -
  *
+ *   finalis      linea monodica in clave modali (tonus.h) quae non
+ *                in finali desinit: "linea in A4 desinit, non in
+ *                finali D"                                        ORD.
+ *
  * VOCES (occultae, decussatio, spatium, sensibilis): partes ordine
  * libri, summa prima; partes sine notis aut solum percussionis ('@')
  * omissae. Carmen quod has regulas accendit partes sic ordinat
@@ -162,6 +166,7 @@ nomen enumeratio {
     CENSURA_DUPLICATA,
     CENSURA_SENSIBILIS,
     CENSURA_SEPTIMA,
+    CENSURA_FINALIS,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -210,8 +215,8 @@ nomen structura {
                 Acordum sonans;
 } CensuraInventum;
 
-/* ORD. activae (lineae, clavis, ambitus, dissonantia), ambitus
- * ordinarius */
+/* ORD. activae (lineae, clavis, ambitus, dissonantia, acorda,
+ * finalis), ambitus ordinarius */
 vacuum
 censura_ordinaria (
     CensuraForma* forma);

@@ -14,6 +14,7 @@
 #include "partitura.h"
 #include "explicatio.h"
 #include "functio.h"
+#include "tonus.h"
 #include "piscina.h"
 #include <string.h>
 
@@ -21,7 +22,7 @@ hic_manens constans character* TITULI[CENSURA_REGULAE] = {
     "lineae", "clavis", "ambitus", "dissonantia", "parallelae",
         "saltus",
     "tertia", "acorda", "evitanda", "occultae", "decussatio", "spatium",
-    "duplicata", "sensibilis", "septima"
+    "duplicata", "sensibilis", "septima", "finalis"
 };
 
 nomen structura {
@@ -93,6 +94,7 @@ censura_ordinaria (
     forma->activae[CENSURA_AMBITUS]      = VERUM;
     forma->activae[CENSURA_DISSONANTIA]  = VERUM;
     forma->activae[CENSURA_ACORDA]       = VERUM;
+    forma->activae[CENSURA_FINALIS]      = VERUM;
 }
 
 constans character*
@@ -1775,6 +1777,28 @@ _septima_regula (
     }
 }
 
+/* finalis: linea monodica in clave modali non in finali desinens
+ * (tonus.h) */
+interior vacuum
+_finalis_regula (
+    Iudex* iudex)
+{
+    constans Carmen* k = iudex->carmen;
+                i32  i;
+
+    per (i = ZEPHYRUM; i < k->numerus_partium; i++)
+    {
+        Tonus t;
+
+        si (tonus_partis(k, i, &t) && !t.in_finali)
+        {
+            _addere(iudex, CENSURA_FINALIS, &k->partes[i],
+                t.frustum_ultimae, t.pulsus_ultimae, t.ultima->offset,
+                t.ultima, NIHIL, NIHIL, NIHIL, NIHIL);
+        }
+    }
+}
+
 /* acorda: fenestra declarata cum nota sine forma extra acordum, aut
  * radice / tertia declarata nusquam sonante - semel per fenestram */
 interior vacuum
@@ -2024,6 +2048,10 @@ censura_iudicare (
     {
         _septima_regula(&iudex);
     }
+    si (forma->activae[CENSURA_FINALIS])
+    {
+        _finalis_regula(&iudex);
+    }
     /* ordinatio stabilis (insertio) per mensuram, pulsum */
     x = iudex.numerus < capacitas ? iudex.numerus : capacitas;
     per (y = I; y < x; y++)
@@ -2216,6 +2244,23 @@ censura_inventum_scribere (
             bene = chorda_aedificator_appendere_literis(textus,
                 " semitonia") && bene;
             frange;
+        casus CENSURA_FINALIS:
+        {
+            constans CarmenClavis* k = _clavis(carmen, pulsus);
+               constans character* t = partitura_clavis_littera(k);
+
+            bene = chorda_aedificator_appendere_literis(textus,
+                "linea in ") && bene;
+            bene = partitura_notam_scribere(carmen, x->nota, pulsus,
+                textus) && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                " desinit, non in finali ") && bene;
+            bene = chorda_aedificator_appendere_character(textus,
+                (character)(t[ZEPHYRUM] - 'a' + 'A')) && bene;
+            bene = chorda_aedificator_appendere_literis(textus, t + I)
+                && bene;
+            frange;
+        }
         casus CENSURA_DUPLICATA:
             bene = harmonia_scribere(carmen, &x->sonans, pulsus, textus)
                 && bene;
