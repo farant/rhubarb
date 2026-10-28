@@ -1049,6 +1049,117 @@ _sectio_sarcina_magna (
             == ZEPHYRUM);
 }
 
+/* ANTECESSIO (budget B9): git_continet contra oraculum 'git merge-base
+ * --is-ancestor' (git ipsum) - paria ex historia vera: fusio ultima
+ * (parentes ambo: via per parentem SECUNDUM), antecessor profundior,
+ * paria inversa, idem commissum. Exspectationes ab oraculo, ergo
+ * probatio in omni arbore operis valet. */
+interior chorda
+_git_linea (
+    constans character* a0,
+    constans character* a1,
+    constans character* a2,
+    constans character* a3,
+               Piscina* piscina)
+{
+     constans character* argumenta[VI];
+      ProcessusResultus  r;
+                    i32  n;
+
+    argumenta[ZEPHYRUM] = "git";
+    argumenta[I] = a0;
+    argumenta[II] = a1;
+    argumenta[III] = a2;
+    argumenta[IV] = a3;
+    argumenta[V] = NIHIL;
+    r = processus_exsequi(argumenta, (i32)10000, piscina);
+    si (!r.successus || r.codex_exitus != ZEPHYRUM)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    n = r.effusio.mensura;
+    dum (n > ZEPHYRUM && (r.effusio.datum[n - I] == '\n'))
+    {
+        n--;
+    }
+    redde chorda_sectio(r.effusio, ZEPHYRUM, n);
+}
+
+interior vacuum
+_sectio_antecessio (
+    CredoContextus* c)
+{
+    constans MundusGit* m        = (constans MundusGit*)c->suita;
+               Piscina* piscina  = c->piscina;
+                chorda  fusio;
+    constans character* shas[VI];
+                   i32  i;
+                   i32  j;
+                   i32  paria = ZEPHYRUM;
+
+    fusio = _git_linea("rev-list", "--merges", "-n1", "HEAD", piscina);
+    CREDO_NECESSE(fusio.mensura == XL);
+    shas[ZEPHYRUM]  = m->caput;
+    shas[I]         = chorda_ut_cstr(fusio, piscina);
+    shas[II]        = chorda_ut_cstr(_git_linea("rev-parse",
+        _serere(piscina, shas[I], "^1", ""), NIHIL, NIHIL, piscina),
+        piscina);
+    shas[III]       = chorda_ut_cstr(_git_linea("rev-parse",
+        _serere(piscina, shas[I], "^2", ""), NIHIL, NIHIL, piscina),
+        piscina);
+    shas[IV]        = chorda_ut_cstr(_git_linea("rev-parse",
+        _serere(piscina, shas[I], "^2~3", ""), NIHIL, NIHIL, piscina),
+        piscina);
+    shas[V]         = chorda_ut_cstr(_git_linea("rev-parse",
+        _serere(piscina, shas[I], "~6", ""), NIHIL, NIHIL, piscina),
+        piscina);
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        CREDO_NECESSE(strlen(shas[i]) == XL);
+    }
+    per (i = ZEPHYRUM; i < VI; i++)
+    {
+        per (j = ZEPHYRUM; j < VI; j++)
+        {
+             constans character* argumenta[VI];
+              ProcessusResultus  r;
+                            b32  continet = FALSUM;
+                            b32  oraculum;
+
+            argumenta[ZEPHYRUM] = "git";
+            argumenta[I] = "merge-base";
+            argumenta[II] = "--is-ancestor";
+            argumenta[III] = shas[j];
+            argumenta[IV] = shas[i];
+            argumenta[V] = NIHIL;
+            r = processus_exsequi(argumenta, (i32)10000, piscina);
+            CREDO_NECESSE(r.successus
+                && (r.codex_exitus == ZEPHYRUM || r.codex_exitus == I));
+            oraculum = r.codex_exitus == ZEPHYRUM;
+            /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
+            CREDO_VERUM(git_continet(m->repositorium, shas[i], shas[j],
+                piscina, &continet));
+            si (continet != oraculum)
+            {
+                imprimere("  continet(%s, %s) = %d, git %d\n", shas[i],
+                    shas[j], (integer)continet, (integer)oraculum);
+            }
+            CREDO_VERUM(continet == oraculum);
+            paria++;
+        }
+    }
+    CREDO_AEQUALIS_I32(paria, XXXVI);
+    {
+        b32 continet = VERUM;
+
+        /* commissum ignotum: lectio fracta, non 'non continet' */
+        /* <tolera codex="CREDO_SUITA_MUTATA" (>idem: arena repositorii (parcum ...TA47) */
+        CREDO_FALSUM(git_continet(m->repositorium, m->caput,
+            "0123456789abcdef0123456789abcdef01234567", piscina,
+            &continet));
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "apertionem", _sectio_apertio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "resolutionem refum", _sectio_resolutio, NIHIL, NIHIL, NIHIL,
@@ -1057,6 +1168,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _sectio_arbor_operis,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "commissum", _sectio_commissum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "antecessionem (oraculum git merge-base --is-ancestor)",
+      _sectio_antecessio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sarcinam magnam (compressa > LXIV K)", _sectio_sarcina_magna,
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "indicem (oraculum git ls-files -s)", _sectio_index, NIHIL,

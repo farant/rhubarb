@@ -180,6 +180,23 @@ git_arbores_differre (
                Piscina* piscina);
 
 
+/* ANTECESSIO (budget B9, 2026-10-27): *continet = VERUM si commissum
+ * 'prius' in historia 'posterius' est - idem commissum aut antecessor
+ * per parentes, fusionibus inclusis ('git merge-base --is-ancestor
+ * prius posterius'). Ambulatio latitudine prima cum visis; commissa
+ * quorum tempus commissoris ante (tempus prioris - unus dies) est non
+ * expanduntur (responsum 'non' historiam totam non ambulat; horologia
+ * ultra diem distorta limes sunt). FALSUM = commissum illegibile (sha
+ * ignotum aut historia fracta) - non 'non continet'. */
+b32
+git_continet (
+       GitRepositorium* repositorium,
+    constans character* posterius,
+    constans character* prius,
+               Piscina* piscina,
+                   b32* continet);
+
+
 /* ==================================================
  * INDEX (fabrica-plan-8 G2) - '<via_git>/index': plagulae quas
  * arbor laborans sequitur (arbor operis: index SUUS, in gitdir

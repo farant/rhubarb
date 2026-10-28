@@ -163,3 +163,21 @@ one, stages 1-3, TREE extension, refusals: v4, bad trailer, count past
 the body, wrong signature; a synthetic worktree whose gitdir index is
 read). Plants: trailer check skipped, v4 accepted, v3 extra bytes not
 skipped - each red at its own assertion.
+
+## 2026-10-27 - ancestry (budget B9)
+
+`git_continet(repo, posterius, prius, piscina, &continet)`: is `prius` in
+`posterius`'s history (same commit or an ancestor through ANY parent) - the
+question `git merge-base --is-ancestor prius posterius` answers. Breadth-
+first over parents with a visited set; a commit older than `prius`'s
+committer time minus one day is not expanded, so a "no" does not walk the
+whole history (limit: clocks skewed by more than a day). An unreadable
+commit (unknown sha, broken history) returns FALSUM - an error, never a
+quiet "not contained". Used by mensor's intervention cohorts: a run belongs
+to "after intervention k" exactly when its commit contains k's commit,
+which is fair across worktrees in a way timestamps are not.
+
+Test: 36 ordered pairs from real history (latest merge, both its parents, a
+deeper second-parent ancestor, an older first-parent commit, HEAD) against
+`git merge-base --is-ancestor` itself; unknown sha -> FALSUM. Plants: only
+the first parent followed; unreadable treated as "no" - each red.
