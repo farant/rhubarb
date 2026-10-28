@@ -445,3 +445,13 @@ voicing errors of mine (parallel 8ves S/A m5, parallel 5ths S/A m7) - re-voiced.
 aug6 work: 6 false findings (D# out of key, "F7 septima D# non resoluta"), functio subV7/v,
 subV7#11/v, VI7. After 411f8b6e: 0 findings; It+6, Fr+6, Ger+6. Generator:
 build/plantae_s4/sexta_aucta/lamentatio.py.
+
+## 2026-10-27 - house book: choir versions of the three chorales
+
+laudes_chorus, peregrinatio_chorus, lamentatio_chorus (songs 17-19): the same notes sung by
+superius / altus / tenor / bassus (833a8952 voice tables) at S 0.5, A 0.55, T 0.6, B 0.7; the
+organ versions stay (Fran: keep both). Derived from the organ blocks in the book by
+build/plantae_s4/choralis/chorus.py (idempotent), so the notes cannot drift unless the organ
+version is edited - re-run the script after editing one. censura 0 each; apex 0.98 / 0.78 /
+0.84, no limiting. Correction to the lamentatio entry above: the D -> D# in phrase 1 is in the
+alto only (not "tenor... alto").
