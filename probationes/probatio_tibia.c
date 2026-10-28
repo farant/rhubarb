@@ -1073,6 +1073,78 @@ _sectio_schola (
 /* fistula: flatus = strepitus additus (residuum contra flatum 0)
  * mensura flatus, circa notam (plus ad f quam ad 6f);
  * deterministicum */
+/* voces (tibia.h FORMANTES): tabula per vocem - vocalis a: tenor F1
+ * 650 (latitudo 80), bassus 600 (60), altus 800 (80), superius 800
+ * (80); F3 superius -32 dB (altus -20) eas discernit; apex finitus per
+ * ambitum cuiusque vocis; tenor ordinarius (vox 0) */
+interior vacuum
+_sectio_voces (
+    CredoContextus* c)
+{
+    constans TibiaParametra* p = tibia_praeparatum("schola");
+             TibiaParametra  q;
+                   TibiaVox  v;
+              SonusResonans  r;
+                        i32  k;
+                        i32  n;
+               constans f32  ambitus[IV][III] = {
+                  { 48.0f, 58.0f, 69.0f }, { 40.0f, 52.0f, 64.0f },
+                  { 53.0f, 65.0f, 77.0f }, { 60.0f, 72.0f, 84.0f } };
+              constans f32 f1[IV] = { 650.0f, 600.0f, 800.0f,
+                                        800.0f };
+              constans f32 l1[IV] = { 80.0f, 60.0f, 80.0f, 80.0f };
+
+    (vacuum)c;
+    CREDO_NECESSE (p != NIHIL);
+    CREDO_VERUM (p->vox == 0.0f);
+    q           = *p;
+    q.flatus    = 0.0f;
+    q.vibratus  = 0.0f;
+    q.vocalis   = 0.0f;
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        q.vox = (f32)k;
+        tibia_vocem_parare(&v, &q, 57.0f);
+        sonus_resonans_parare(&r, SONUS_RESONANS_MEDIA, f1[k],
+                              f1[k] / l1[k]);
+        CREDO_VERUM (   v.formantes[ZEPHYRUM].b0 == r.b0
+                     && v.formantes[ZEPHYRUM].a1 == r.a1
+                     && v.formantes[ZEPHYRUM].a2 == r.a2);
+        per (n = ZEPHYRUM; n < III; n++)
+        {
+            _sonare(&q, ambitus[k][n], tabula_a, SECUNDA);
+            CREDO_VERUM (_apex(tabula_a, ZEPHYRUM, SECUNDA)
+                         < 1.2f * q.amplitudo);
+            CREDO_VERUM (_efficax(tabula_a, SECUNDA / II, SECUNDA / IV)
+                         > 0.05 * (f64)q.amplitudo);
+        }
+    }
+    /* F3: superius 2900 -32 dB, altus 2800 -20 dB (ad F1) */
+    q.vox = 3.0f;
+    tibia_vocem_parare(&v, &q, 69.0f);
+    CREDO_F32_PROXIMUS (v.lucra_formantium[II]
+        / v.lucra_formantium[ZEPHYRUM], 0.025119f, 0.0001f);
+    q.vox = 2.0f;
+    tibia_vocem_parare(&v, &q, 69.0f);
+    CREDO_F32_PROXIMUS (v.lucra_formantium[II]
+        / v.lucra_formantium[ZEPHYRUM], 0.1f, 0.0001f);
+    /* vox extra 0..3 coercetur (API): 9 = superius, -2 = tenor */
+    q.vox = 9.0f;
+    tibia_vocem_parare(&v, &q, 69.0f);
+    CREDO_F32_PROXIMUS (v.lucra_formantium[II]
+        / v.lucra_formantium[ZEPHYRUM], 0.025119f, 0.0001f);
+    q.vox = -2.0f;
+    tibia_vocem_parare(&v, &q, 57.0f);
+    sonus_resonans_parare(&r, SONUS_RESONANS_MEDIA, 650.0f, 650.0f
+        / 80.0f);
+    CREDO_VERUM (v.formantes[ZEPHYRUM].b0 == r.b0);
+    /* bassus F2 1040 -7 dB */
+    q.vox = 1.0f;
+    tibia_vocem_parare(&v, &q, 45.0f);
+    CREDO_F32_PROXIMUS (v.lucra_formantium[I]
+        / v.lucra_formantium[ZEPHYRUM], 0.446684f, 0.0001f);
+}
+
 interior vacuum
 _sectio_fistula (
     CredoContextus* c)
@@ -1435,6 +1507,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "partiales_nulli", _sectio_partiales_nulli, _parare, NIHIL,
         NIHIL, NIHIL },
     { "schola", _sectio_schola, _parare, NIHIL, NIHIL, NIHIL },
+    { "voces", _sectio_voces, _parare, NIHIL, NIHIL, NIHIL },
     { "fistula", _sectio_fistula, _parare, NIHIL, NIHIL, NIHIL },
     { "nubes", _sectio_nubes, _parare, NIHIL, NIHIL, NIHIL },
     { "genus_coercitum", _sectio_genus_coercitum, _parare, NIHIL,

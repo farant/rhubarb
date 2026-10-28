@@ -614,7 +614,7 @@ _sectio_instrumenta (
     b = carmina_invenire(&liber, _ch(c, "b"));
     CREDO_NECESSE (a != NIHIL && b != NIHIL);
     /* sine instrumentario ordinario (XI, sub libro) */
-    CREDO_AEQUALIS_I32 (a->numerus_instrumentarii, XI);
+    CREDO_AEQUALIS_I32 (a->numerus_instrumentarii, XIII);
     CREDO_AEQUALIS_I32 (a->numerus_instrumentorum
                         - a->numerus_instrumentarii, VIII);
     CREDO_AEQUALIS_I32 (b->numerus_instrumentorum
@@ -865,6 +865,10 @@ hic_manens constans character LIBER_FORMANTIUM[] =
     " vocalis=\"1.5\" flatus=\"0.2\"/>"
     "<instrumentum titulus=\"pad\" forma=\"serra\" resonans=\"800\""
     " acumen=\"6\" motus=\"-12\"/>"
+    "<instrumentum titulus=\"bassus_x\" basis=\"schola\""
+    " vox=\"bassus\"/>"
+    "<instrumentum titulus=\"superius_x\" basis=\"bassus_x\""
+    " vox=\"superius\"/>"
     "<carmen titulus=\"a\"><pars titulus=\"p\" "
     "instrumentum=\"schola_u\">"
     "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
@@ -898,6 +902,12 @@ _sectio_formantes (
                  && x->parametra.acumen == 6.0f
                  && x->parametra.motus == -12.0f
                  && x->parametra.forma == (f32)SONUS_UNDA_SERRA);
+    x = carmen_instrumentum(a, _ch(c, "bassus_x"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (x->parametra.vox == 1.0f);
+    x = carmen_instrumentum(a, _ch(c, "superius_x"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (x->parametra.vox == 3.0f);
 }
 
 interior vacuum
@@ -909,6 +919,10 @@ _sectio_formantes_vitia (
 
     CREDO_VERUM (_instrumentum_recusat(c,
         "<instrumentum titulus=\"x\" vocalis=\"y\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" vox=\"soprano\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" vox=\"1\"/>", causa));
     CREDO_VERUM (_instrumentum_recusat(c,
         "<instrumentum titulus=\"x\" vocalis=\"5\"/>", causa));
     CREDO_VERUM (_instrumentum_recusat(c,
@@ -971,10 +985,10 @@ _sectio_instrumentarium (
                             b32  ambitus = VERUM;
 
     memset(&v, ZEPHYRUM, magnitudo(v));
-    CREDO_GRADUS ("ordinarium: XI instrumenta, ambitus omnibus");
+    CREDO_GRADUS ("ordinarium: XIII instrumenta, ambitus omnibus");
     CREDO_NECESSE (instrumentarium_ordinarium(c->piscina, &domus, &n,
                                               &v));
-    CREDO_AEQUALIS_I32 (n, XI);
+    CREDO_AEQUALIS_I32 (n, XIII);
     per (i = ZEPHYRUM; i < n; i++)
     {
         ambitus = ambitus && (domus[i].infima > ZEPHYRUM
@@ -1001,8 +1015,18 @@ _sectio_instrumentarium (
     CREDO_VERUM (   domus[VII].parametra.genus == 4.0f
                  && domus[VII].parametra.vocalis == 0.0f
                  && domus[VII].infima == XLVIII);
+    CREDO_VERUM (domus[VII].parametra.vox == 0.0f);
     CREDO_CHORDA_AEQUALIS_LITERIS (domus[VIII].titulus, "superius");
-    CREDO_VERUM (domus[VIII].parametra.vocalis == 3.0f);
+    CREDO_VERUM (   domus[VIII].parametra.vocalis == 3.0f
+                 && domus[VIII].parametra.vox == 3.0f);
+    CREDO_CHORDA_AEQUALIS_LITERIS (domus[XI].titulus, "altus");
+    CREDO_VERUM (   domus[XI].parametra.vox == 2.0f
+                 && domus[XI].infima == LIII
+                 && domus[XI].summa == LXXVII);
+    CREDO_CHORDA_AEQUALIS_LITERIS (domus[XII].titulus, "bassus");
+    CREDO_VERUM (   domus[XII].parametra.vox == 1.0f
+                 && domus[XII].infima == XL
+                 && domus[XII].summa == LXIV);
     CREDO_CHORDA_AEQUALIS_LITERIS (domus[IX].titulus, "cornu");
     CREDO_VERUM (domus[IX].parametra.motus == 18.0f);
     CREDO_CHORDA_AEQUALIS_LITERIS (domus[X].titulus, "clarinetum");
@@ -1049,8 +1073,8 @@ _sectio_instrumentarium (
     CREDO_NECESSE (_legere(c, LIBER_DOMUS, &liber));
     k = carmina_invenire(&liber, _ch(c, "k"));
     CREDO_NECESSE (k != NIHIL);
-    CREDO_AEQUALIS_I32 (k->numerus_instrumentarii, XI);
-    CREDO_AEQUALIS_I32 (k->numerus_instrumentorum, XII);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentarii, XIII);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentorum, XIV);
     x = carmen_instrumentum(k, _ch(c, "cembalo_mollis"));
     CREDO_VERUM (   x != NIHIL && x->parametra.claritas == 0.5f
                  && x->parametra.decrementum == 1.2f

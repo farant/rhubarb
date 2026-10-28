@@ -169,3 +169,18 @@ before writing one.
 Instruments built on this (instrumentarium.stml): chordae (serra x5, +/-7 cents, mora
 0.35), harpa, tenor, superius, cornu, clarinetum - first guesses, to tune by ear. Demos
 build/rampa/theatrum.wav and valse_theatri.wav (sexta, not committed).
+
+## 2026-10-27 - formant table per voice (TibiaParametra.vox): tenor, bassus, altus, superius
+
+Every FORMANTES voice used the Csound tenor table, so superius sang as a falsetto tenor and a
+bass would have been a transposed tenor. Now four tables (Csound "Formant Values": bass,
+tenor, alto, soprano - values entered from memory of that appendix; first formant of 'a': bass
+600, tenor 650, alto/soprano 800) selected by `vox` (0 tenor = default, 1 bassus, 2 altus, 3
+superius; clamped 0..3 for API callers). Presets got one more trailing 0.0f
+(-Wmissing-field-initializers). TIBIA_FORMANTIUM_LUCRUM unchanged: every voice stays under the
+existing apex bound (< 1.2 x amplitudo) and above 0.05 x amplitudo efficax across its own range
+(bassus 40..64, altus 53..77, superius 60..84) - measured in probatio_tibia _sectio_voces. Old
+renders byte-identical (completorium schola/ison, lilia, vesperae, laudes vs ~/.bin/auditio).
+House voices: instrumentarium altus + bassus (appended - indices kept), superius vox="superius"
+(no house song used it), tenor vox="tenor" explicit. laudes as a choir (S 0.5, A 0.55, T 0.6, B
+0.7) balances within 1.7 dB rms, apex 0.98.

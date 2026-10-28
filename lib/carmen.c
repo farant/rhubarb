@@ -2600,7 +2600,7 @@ nomen structura {
                     f32  summa;
 } CampusInstrumenti;
 
-#define CAMPI_NUMERUS XXIII
+#define CAMPI_NUMERUS XXIV
 
 hic_manens constans CampusInstrumenti CAMPI[CAMPI_NUMERUS] = {
     { "officium",    0.0f, 1.0f     },
@@ -2625,11 +2625,16 @@ hic_manens constans CampusInstrumenti CAMPI[CAMPI_NUMERUS] = {
     { "motus",     -48.0f, 48.0f    },
     { "unisonus",    1.0f, 7.0f     },
     { "dispersio",   0.0f, 100.0f   },
-    { "mora",        0.0f, 10.0f    }   /* vibrati */
+    { "mora",        0.0f, 10.0f    },  /* vibrati */
+    { "vox",         0.0f, 0.0f     }   /* verbum */
 };
 
 hic_manens constans character* VOCALES[V] = {
     "a", "e", "i", "o", "u"
+};
+/* ordine TibiaParametra.vox */
+hic_manens constans character* VOCES_CHORI[IV] = {
+    "tenor", "bassus", "altus", "superius"
 };
 hic_manens constans character* FORMAE[IV] = {
     "pulsus", "serra", "triangulum", "sinus"
@@ -2666,6 +2671,7 @@ _campus (
     campi[20]  = &p->unisonus;
     campi[21]  = &p->dispersio;
     campi[22]  = &p->mora_vibrati;
+    campi[23]  = &p->vox;
     redde campi[k];
 }
 
@@ -2931,10 +2937,11 @@ _instrumentum_legere (
             *_campus(&x->parametra, k) = (f32)w;
             perge;
         }
-        si (k == XIII || k == XIV)
+        si (k == XIII || k == XIV || k == XXIII)
         {
             w = k == XIII ? _genus_verbi(*t->valor)
-                          : _verbum(*t->valor, FORMAE, IV);
+                : k == XIV  ? _verbum(*t->valor, FORMAE, IV)
+                          : _verbum(*t->valor, VOCES_CHORI, IV);
             si (w < ZEPHYRUM)
             {
                 redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,

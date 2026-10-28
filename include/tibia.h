@@ -36,7 +36,12 @@
  *             formantes vocalis (tabula tenoris Csound: a e i o u);
  *             vocalis fracta formantes inter vicinas linealiter ducit.
  *             Formantes fixi (vocalis), non notam sequuntur - vox
- *             cantans (schola)
+ *             cantans (schola). Tabula formantium per VOCEM (Csound
+ *             "Formant Values"): tenor (ordinaria), bassus, altus,
+ *             superius (soprano) - vocis gravioris formantes
+ *             humiliores (a: bassus 600, tenor 650, altus et superius
+ *             800 cycli/s); vocalis intra tabulam vocis fractionem
+ *             servat.
  * UNISONUS (UNDA, FORMANTES): unda in 'unisonus' exemplaria (I..VII)
  * per 'dispersio' centesimas semitonii aequaliter dispersa (+/-
  * dimidium), phasis initii 0 omnibus (phases dispersae fundamentalem
@@ -120,6 +125,9 @@ nomen structura {
                                       * semitonii (+/- dimidium) */
                     f32 mora_vibrati; /* secundae ad vibratum plenum (0
                                        * = statim) */
+                    f32 vox;         /* FORMANTES: tabula vocis - 0
+                                      * tenor (ordinaria), 1 bassus,
+                                      * 2 altus, 3 superius */
 } TibiaParametra;
 
 nomen enumeratio {
