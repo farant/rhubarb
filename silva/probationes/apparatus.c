@@ -198,8 +198,14 @@ apparatus_clausuram_petere (
         FILE* tubus;
 
     _clausuram_vacuare(clausura);
+    /* THESAURUS (budget B1 A1, 2026-10-28): extractio per contentum
+     * servata (clavis = binarium aedilis + aedilis.stml + octeti
+     * plagulae; silva sine IO, ergo sana) - eadem quam generatores
+     * fragmentorum adhibent. Calide ~III s pro ~XV s parsurae silvae
+     * totius corporis; effusio octetim eadem. */
     sprintf(mandatum,
-        "cd '%s' && ./bin/aedilis '%s' --partes 2>/dev/null",
+        "cd '%s' && ./bin/aedilis '%s' --partes"
+        " --thesaurus build/aedilis/obiecta 2>/dev/null",
         radix, via_relativa);
     tubus = popen(mandatum, "r");
     si (tubus == NIHIL)
@@ -238,7 +244,8 @@ apparatus_clausuras_petere (
         redde NIHIL;
     }
     sprintf(mandatum,
-        "cd '%s' && ./bin/aedilis --corpus '%s' --partes 2>/dev/null",
+        "cd '%s' && ./bin/aedilis --corpus '%s' --partes"
+        " --thesaurus build/aedilis/obiecta 2>/dev/null",
         radix, directorium);
     tubus = popen(mandatum, "r");
     si (tubus == NIHIL)
