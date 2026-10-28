@@ -49,6 +49,15 @@ nomen structura {
                                     constans character* spatium);
     /* pinacotheca T5: apertio eam parat (scheda, picturae) */
     PictorPinacotheca* pinacotheca;
+    /* communio-plan-5 T6: Shared pictures et spectator - compositio
+     * (structura PictorCompositio, pictor_componentia.h: condiciones
+     * menu) legitur; exemplum per montationem (Edit a copy); origo
+     * tractus imaginis (coordinatae locales) */
+       PictorCommunia* communia;
+    constans structura PictorCompositio* compositio;
+             b32 (*exemplum_facere)(vacuum* montatio, chorda replica,
+                                    constans character* spatium);
+             Punctum origo_tractus;
 } PictorActiones;
 
 vacuum
@@ -139,6 +148,28 @@ pictor_spongia_ictus (
  * FALSUM, nihil. Registratur ut 'imago.eligere'. */
 b32
 pictor_imaginem_eligere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> plan-5 T6 Shared pictures: pinax spectatorem aperit,
+ * prior/posterior paginam, X claudit. 'communia.agere'. */
+b32
+pictor_communia_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> plan-5 T6 spectator: tractus (circulariter), ‹ ›, Edit a
+ * copy, X / ictus extra imaginem ad rete. 'spectator.agere'. */
+b32
+pictor_spectatorem_agere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

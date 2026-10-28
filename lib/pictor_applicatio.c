@@ -115,6 +115,19 @@ picturam_ponere_per_montationem (
     redde pictor_picturam_ponere((PictorMontatio*)montatio, spatium);
 }
 
+/* plan-5 T6: Edit a copy per montationem */
+interior b32
+exemplum_per_montationem (
+                  vacuum* montatio,
+                  chorda  replica,
+      constans character* spatium)
+{
+    character novum[XXVIII];
+
+    redde pictor_exemplum_facere((PictorMontatio*)montatio, replica,
+        spatium, novum);
+}
+
 b32
 pictor_montare (
          PictorMontatio* m,
@@ -235,12 +248,20 @@ pictor_montare (
     m->pinacotheca.volumen       = volumen;
     m->pinacotheca.intern        = intern;
     m->actiones_ctx.pinacotheca  = &m->pinacotheca;
+    /* plan-5 T6: Shared pictures, condiciones menu, Edit a copy */
+    m->communia.volumen              = volumen;
+    m->communia.intern               = intern;
+    m->actiones_ctx.communia         = &m->communia;
+    m->actiones_ctx.compositio       = &m->compositio;
+    m->actiones_ctx.exemplum_facere  = exemplum_per_montationem;
     pictor_actiones_registrare(m->actiones, &m->actiones_ctx);
     m->figurae                       = figura_registrum_creare(piscina);
     m->figurae_ctx.doc               = m->doc;
     m->figurae_ctx.cellula_latitudo  = CELLULA_LATITUDO;
     m->figurae_ctx.cellula_altitudo  = CELLULA_ALTITUDO;
     m->figurae_ctx.pinacotheca       = &m->pinacotheca;
+    m->figurae_ctx.communia          = &m->communia;
+    m->figurae_ctx.compositio        = &m->compositio;
     pictor_figurae_registrare(m->figurae, ZEPHYRUM, &m->figurae_ctx);
     m->compositio.fenestra_latitudo  = latitudo;
     m->compositio.fenestra_altitudo  = altitudo;
@@ -250,6 +271,7 @@ pictor_montare (
     m->compositio.ramus              = m->ramus;
     m->compositio.doc                = m->doc;
     m->compositio.pinacotheca        = &m->pinacotheca;
+    m->compositio.communia           = &m->communia;
     redde VERUM;
 }
 

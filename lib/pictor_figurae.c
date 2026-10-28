@@ -416,6 +416,12 @@ pictor_imago_fons (
     {
         redde pictor_pinacotheca_pinax(pf->pinacotheca, provenientia);
     }
+    /* plan-5 T6: "alienus:..." -> pinax picturae alienae */
+    si (   pf->communia && provenientia.mensura > VIII
+        && memcmp(provenientia.datum, "alienus:", VIII) == ZEPHYRUM)
+    {
+        redde pictor_communia_pinax(pf->communia, provenientia);
+    }
     si (chorda_aequalis(provenientia,
             pictor_documentum_sigillum_hex(pf->doc, pf->doc->piscina)))
     {
@@ -689,7 +695,9 @@ figura_quadrati (
     }
     /* pinacotheca D4: pinax - imago (fons "pinax:..." sine
      * ':electum') intra marginem II; margo accentus si aperta */
-    si (t.mensura > VI && memcmp(t.datum, "pinax:", VI) == ZEPHYRUM)
+    si (   (t.mensura > VI && memcmp(t.datum, "pinax:", VI) == ZEPHYRUM)
+        || (t.mensura > VIII
+            && memcmp(t.datum, "alienus:", VIII) == ZEPHYRUM))
     {
         Fines g;
 
@@ -1008,11 +1016,13 @@ figura_palettae (
      * communi, importare ex numero liberorum (II aut III) */
     si (chorda_aequalis_literis(c->id, "elenchus"))
     {
-           Elenchus e;
-        ElenchusRes res[III];
+                         Elenchus  e;
+                      ElenchusRes  res[V];
+           constans PictorFigurae* pf = (constans PictorFigurae*)ctx;
+         PictorElenchiCondiciones  k;
 
-        pictor_elenchum_parare(c->liberi
-            && xar_numerus(c->liberi) == III, res, &e);
+        k = pictor_elenchi_condiciones(pf ? pf->compositio : NIHIL);
+        pictor_elenchum_parare(&k, res, &e);
         elenchus_figura(c, m, thema, &e);
         redde;
     }

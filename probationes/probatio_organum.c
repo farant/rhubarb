@@ -760,10 +760,13 @@ _probare_pictorem_vivum (
         vetus = scriptor_domini(ante, chorda_ut_cstr(*a, c->piscina));
         /* S5c: palette dominum NOVUM habet (olim sine domino);
          * glutinatio (2026-10-13) et pagina_pinacothecae (pinacotheca
-         * T5, 2026-10-26) campi novi post S2 */
+         * T5, 2026-10-26), pagina_communium et spectata
+         * (communio-plan-5 T6, 2026-10-28) campi novi post S2 */
         si (   chorda_aequalis_literis(*a, "palette")
             || chorda_aequalis_literis(*a, "glutinatio")
-            || chorda_aequalis_literis(*a, "pagina_pinacothecae"))
+            || chorda_aequalis_literis(*a, "pagina_pinacothecae")
+            || chorda_aequalis_literis(*a, "pagina_communium")
+            || chorda_aequalis_literis(*a, "spectata"))
         {
             CREDO_NIHIL(vetus);
             novi++;
@@ -777,7 +780,7 @@ _probare_pictorem_vivum (
         }
         novi++;
     }
-    CREDO_AEQUALIS_S32(novi, XIX);
+    CREDO_AEQUALIS_S32(novi, XXI);
 
     /* vetus sine novo: soli mortui */
     absentes = ZEPHYRUM;

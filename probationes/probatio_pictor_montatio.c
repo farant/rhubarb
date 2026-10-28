@@ -248,8 +248,9 @@ _probare_initium (
             c->piscina), chorda_ut_cstr(k->absens, c->piscina)));
         numerati++;
     }
-    /* XI: pinacotheca T5 pagina_pinacothecae (absens 0) */
-    CREDO_AEQUALIS_S32(numerati, XI);
+    /* XI: pinacotheca T5 pagina_pinacothecae (absens 0); XII:
+     * communio-plan-5 T6 pagina_communium (absens 0) */
+    CREDO_AEQUALIS_S32(numerati, XII);
     CREDO_VERUM(valor_est(&app, "instrumentum", "penicillus"));
     CREDO_VERUM(valor_est(&app, "focus", "tabula"));
     volumen_claudere(vol);

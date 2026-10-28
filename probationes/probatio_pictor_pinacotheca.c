@@ -218,19 +218,20 @@ interior vacuum
 _sectio_elenchus (
     CredoContextus* c)
 {
-              Volumen* vol;
-     PictorApplicatio  app;
-           ManusLudus* m;
-            Componens* q;
-            Componens* s;
-            Componens* e;
-             Elenchus  el;
-          ElenchusRes  res[III];
-                  s32  x_q;
-                  s32  y_q;
-                  s32  x_e;
-                  s32  y_e;
-                  i32  electiones;
+                     Volumen* vol;
+            PictorApplicatio  app;
+                  ManusLudus* m;
+                   Componens* q;
+                   Componens* s;
+                   Componens* e;
+                    Elenchus  el;
+                 ElenchusRes  res[V];
+    PictorElenchiCondiciones  k;
+                         s32  x_q;
+                         s32  y_q;
+                         s32  x_e;
+                         s32  y_e;
+                         i32  electiones;
 
     electiones  = ZEPHYRUM;
     vol         = (Volumen*)c->datum;
@@ -270,7 +271,9 @@ _sectio_elenchus (
     CREDO_VERUM(x_e + e->fines.latitudo <= LATITUDO_TELEPHONI);
 
     CREDO_GRADUS("res et textus (spec D2)");
-    pictor_elenchum_parare(VERUM, res, &el);
+    memset(&k, ZEPHYRUM, magnitudo(k));
+    k.importare = VERUM;
+    pictor_elenchum_parare(&k, res, &el);
     CREDO_AEQUALIS_I32(el.numerus, III);
     CREDO_VERUM(strcmp(el.res[ZEPHYRUM].titulus, "pinacotheca.aperire")
         == ZEPHYRUM);
@@ -278,11 +281,12 @@ _sectio_elenchus (
     CREDO_VERUM(strcmp(el.res[II].titulus, "imago.eligere")
         == ZEPHYRUM);
     CREDO_VERUM(strcmp(el.res[ZEPHYRUM].textus,
-        "Open picture\xE2\x80\xA6") == ZEPHYRUM);
+        "My pictures\xE2\x80\xA6") == ZEPHYRUM);
     CREDO_VERUM(strcmp(el.res[I].textus, "New picture") == ZEPHYRUM);
     CREDO_VERUM(strcmp(el.res[II].textus, "Import image\xE2\x80\xA6")
         == ZEPHYRUM);
-    pictor_elenchum_parare(FALSUM, res, &el);
+    k.importare = FALSUM;
+    pictor_elenchum_parare(&k, res, &el);
     CREDO_AEQUALIS_I32(el.numerus, II);
 
     CREDO_GRADUS("cum servitio: tres res");

@@ -106,9 +106,11 @@ _sectio_prima (
      * (focus, focus_acervus, superficies_*: dispensator). Olim
      * XVIII: cursus, gradus (mortui) abierunt. Durabilis: olim I
      * (sigillum, numquam scriptum), nunc nullus. XIX: pinacotheca T5
-     * pagina_pinacothecae (dominus pinacotheca.agere). */
+     * pagina_pinacothecae (dominus pinacotheca.agere). XXI:
+     * communio-plan-5 T6 pagina_communium (communia.agere), spectata
+     * (spectator.agere). */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo,
-                                             domini), XIX);
+                                             domini), XXI);
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("zoom.ponere", piscina));
     CREDO_FALSUM(insula_mutare(repo, ponere_zoom, NIHIL));

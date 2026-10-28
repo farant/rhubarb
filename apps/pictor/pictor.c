@@ -28,6 +28,7 @@
 nomen structura {
               Volumen* volumen;
           Dispensator* d;
+       PictorMontatio* montatio;
        PictorCommunio* communio;
 } PictorHospes;
 
@@ -42,13 +43,36 @@ _pictorem_finire (
     volumen_claudere(h->volumen);
 }
 
-/* picturae advectae, index apparatuum, inscriptio mutata */
+/* plan-5 T6: attributio "Persona · Titulus" per communionem */
+interior chorda
+_auctor (
+    vacuum* ctx,
+    chorda  replica,
+   Piscina* piscina)
+{
+    redde pictor_communio_auctor(((PictorHospes*)ctx)->communio,
+        replica,
+        piscina);
+}
+
+/* picturae advectae, index apparatuum, inscriptio mutata: status
+ * inscriptionis in compositione, Shared pictures renovatae (si iam
+ * apertae), recompositio */
 interior vacuum
 _communio_mutata (
     vacuum* ctx)
 {
     PictorHospes* h = (PictorHospes*)ctx;
 
+    si (h->montatio)
+    {
+        h->montatio->compositio.inscripta =
+            pictor_communio_inscripta(h->communio);
+        si (h->montatio->communia.scheda)
+        {
+            (vacuum)pictor_communia_parare(&h->montatio->communia);
+        }
+    }
     si (h->d)
     {
         dispensator_recomponere(h->d);
@@ -100,6 +124,15 @@ _communionem_aperire (
         a->veredarius, h->volumen, via, _optio(a->argc, a->argv,
         "-servus", SERVUS_DOMUS), _communio_mutata, h);
     pictor_communio_incipere(h->communio);
+    /* plan-5 T6: menu (Shared pictures, Sign in) et attributiones */
+    si (h->communio && h->montatio)
+    {
+        h->montatio->compositio.communio_praesto  = VERUM;
+        h->montatio->compositio.inscripta         =
+            pictor_communio_inscripta(h->communio);
+        h->montatio->compositio.auctor      = _auctor;
+        h->montatio->compositio.auctor_ctx  = h;
+    }
 }
 
 b32
@@ -170,6 +203,7 @@ applicatio_initium (
     /* communio-plan-5 T5: communio intra pictorem */
     h->volumen   = vol;
     h->d         = app->d;
+    h->montatio  = &app->montatio;
     h->communio  = NIHIL;
     _communionem_aperire(a, h, fumus);
 

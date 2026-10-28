@@ -367,6 +367,38 @@ b32
 pictor_pinacothecam_parare (
     PictorPinacotheca* p);
 
+/* communio-plan-5 T6: "Shared pictures" - status ut pinacotheca
+ * (dum aperta, in montatione): picturae aliae machinarum
+ * (pictor_aliena_recentia) et pinaces earum in scheda */
+nomen structura {
+                Volumen* volumen;
+    InternamentumChorda* intern;
+                Piscina* scheda;     /* NIHIL donec prima apertio */
+                    Xar* picturae;   /* PictorPicturaAliena, recentia */
+         TabulaDispersa* pinaces;    /* provenientia -> Imago* */
+} PictorCommunia;
+
+/* apertio aut renovatio (acta advecta): scheda vacatur, picturae
+ * relegitur, pinaces vacui. FALSUM si memoria */
+b32
+pictor_communia_parare (
+    PictorCommunia* p);
+
+/* provenientia "alienus:<lat>x<alt>:<hora>:<replica>:<spatium>" ->
+ * pinax picturae alienae (hora in clave: pictura mutata pinacem novum
+ * habet). NIHIL si forma mala, ignota, aut ante parare. */
+constans Imago*
+pictor_communia_pinax (
+     PictorCommunia* p,
+             chorda  provenientia);
+
+/* index picturae (replica, spatium) in p->picturae; -1 si abest */
+s32
+pictor_communia_index (
+    constans PictorCommunia* p,
+                     chorda  replica,
+                     chorda  spatium);
+
 /* provenientia "pinax:<lat>x<alt>:<seq>:<spatium>" -> pinax (in
  * scheda factus si nondum; seq in clave, ergo pictura mutata pinacem
  * novum habet). NIHIL si forma mala, pictura ignota, aut ante

@@ -33,7 +33,19 @@
 #include "pictor_documentum.h"
 #include "elenchus.h"
 
-nomen structura {
+/* communio-plan-5 T6: condiciones menu ⋯ (spec IX.3) - compositio,
+ * figura et actio eandem tabulam ex eis faciunt */
+nomen structura PictorElenchiCondiciones {
+    b32 importare;   /* hospes imaginem eligere sinit */
+    b32 communio;    /* hospes rete praebet (non Android) */
+    b32 inscripta;   /* apparatus inscriptus */
+} PictorElenchiCondiciones;
+
+/* attributio "Persona · Titulus" replicae; "" si ignota */
+nomen chorda (*PictorAuctor)(vacuum* ctx, chorda replica,
+    Piscina* piscina);
+
+nomen structura PictorCompositio {
     /* superficies si superficies_* absunt (ante nuntium glutini
      * primum) */
             i32 fenestra_latitudo;
@@ -60,17 +72,32 @@ nomen structura {
     /* pinacotheca D3: palette "pinacotheca" rete pinacum ex
      * picturae (ordo recentiae) componit; NIHIL = nulla */
     constans PictorPinacotheca* pinacotheca;
+    /* communio-plan-5 T6: hospes communionem praebet (veredarius);
+     * apparatus inscriptus; palette "communia" (rete) et "spectator"
+     * ex 'communia'; attributiones per 'auctor' (NIHIL = nullae) */
+                           b32  communio_praesto;
+                           b32  inscripta;
+       constans PictorCommunia* communia;
+                  PictorAuctor  auctor;
+                        vacuum* auctor_ctx;
 } PictorCompositio;
 
-/* menu ⋯ (pinacotheca D2): tabula rerum UNA quam compositio, figura
- * et actio legunt - res[0] "pinacotheca.aperire" ("Open picture…"),
- * res[I] "pictura.nova" ("New picture"), res[II] "imago.eligere"
- * ("Import image…", solum si importare). e->res = res, electa -1. */
+/* condiciones menu ex compositione (importare = imago_eligibilis) */
+PictorElenchiCondiciones
+pictor_elenchi_condiciones (
+    constans PictorCompositio* cfg);
+
+/* menu ⋯ (spec IX.3): tabula rerum UNA quam compositio, figura et
+ * actio legunt - "pinacotheca.aperire" ("My pictures…"),
+ * "communia.aperire" ("Shared pictures…", si communio), "pictura.nova"
+ * ("New picture"), "imago.eligere" ("Import image…", si importare),
+ * "inscriptio.aperire" ("Sign in…", si communio et non inscripta).
+ * e->res = res, electa -1. */
 vacuum
 pictor_elenchum_parare (
-            b32  importare,
-    ElenchusRes  res[III],
-       Elenchus* e);
+     constans PictorElenchiCondiciones* c,
+                           ElenchusRes  res[V],
+                              Elenchus* e);
 
 /* "penicillus" -> "penicillus.ictus"; ignotum -> "" */
 constans character*

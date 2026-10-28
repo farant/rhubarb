@@ -45,6 +45,8 @@ nomen structura {
                                        * (picturae iam ostensae) */
         StatusSystemata systemata;   /* S5b: relatio ad ligationem
                                        * novam (picturam_ponere) */
+         PictorCommunia communia;    /* plan-5 T6: Shared pictures -
+                                       * compositio, actiones, figurae */
       PictorPinacotheca pinacotheca; /* T5: compositio, actiones,
                                        * figurae in eam monstrant */
 } PictorMontatio;

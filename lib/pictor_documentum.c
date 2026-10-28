@@ -2263,6 +2263,128 @@ pictor_pinacotheca_pinax (
     redde pinax;
 }
 
+b32
+pictor_communia_parare (
+    PictorCommunia* p)
+{
+    si (!p || !p->volumen || !p->intern)
+    {
+        redde FALSUM;
+    }
+    si (!p->scheda)
+    {
+        p->scheda = piscina_generare_dynamicum("communia",
+            (memoriae_index)LXIV * (memoriae_index)M);
+    }
+    alioquin
+    {
+        piscina_vacare(p->scheda);
+    }
+    si (!p->scheda)
+    {
+        redde FALSUM;
+    }
+    p->picturae  = pictor_aliena_recentia(p->volumen, p->scheda);
+    p->pinaces   = tabula_dispersa_creare_chorda(p->scheda, XVI);
+    redde p->picturae && p->pinaces;
+}
+
+/* pars usque ad ':' (consumitur); FALSUM si ':' abest */
+interior b32
+_partem_legere (
+    chorda* c,
+    chorda* pars)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < c->mensura && c->datum[k] != ':'; k++)
+    {
+    }
+    si (k >= c->mensura)
+    {
+        redde FALSUM;
+    }
+    pars->datum    = c->datum;
+    pars->mensura  = k;
+    c->datum       += k + I;
+    c->mensura     -= k + I;
+    redde VERUM;
+}
+
+constans Imago*
+pictor_communia_pinax (
+     PictorCommunia* p,
+             chorda  provenientia)
+{
+     vacuum* valor;
+      Imago* pinax;
+     chorda  reliquum;
+     chorda  hora;
+     chorda  replica;
+     chorda  clavis;
+        i32  latitudo;
+        i32  altitudo;
+
+    si (!p || !p->scheda || !p->pinaces)
+    {
+        redde NIHIL;
+    }
+    si (tabula_dispersa_invenire(p->pinaces, provenientia, &valor))
+    {
+        redde (constans Imago*)valor;
+    }
+    si (   provenientia.mensura < VIII
+        || memcmp(provenientia.datum, "alienus:", VIII) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    reliquum.datum    = provenientia.datum + VIII;
+    reliquum.mensura  = provenientia.mensura - VIII;
+    si (   !numerum_legere(&reliquum, &latitudo, 'x')
+        || !numerum_legere(&reliquum, &altitudo, ':')
+        || !_partem_legere(&reliquum, &hora)
+        || !_partem_legere(&reliquum, &replica))
+    {
+        redde NIHIL;
+    }
+    pinax = (Imago*)piscina_allocare(p->scheda, magnitudo(Imago));
+    si (   !pinax
+        || !pictor_pinacem_alienum_facere(p->volumen, p->intern,
+               chorda_ex_literis(chorda_ut_cstr(replica, p->scheda),
+               p->scheda), chorda_ut_cstr(reliquum, p->scheda),
+               latitudo,
+               altitudo, p->scheda, pinax))
+    {
+        redde NIHIL;
+    }
+    clavis = chorda_ex_literis(chorda_ut_cstr(provenientia, p->scheda),
+        p->scheda);
+    (vacuum)tabula_dispersa_inserere(p->pinaces, clavis, pinax);
+    redde pinax;
+}
+
+s32
+pictor_communia_index (
+    constans PictorCommunia* p,
+                     chorda  replica,
+                     chorda  spatium)
+{
+    PictorPicturaAliena* a;
+                    i32  i;
+
+    per (i = ZEPHYRUM; p && p->picturae && i < xar_numerus(p->picturae);
+         i++)
+    {
+        a = (PictorPicturaAliena*)xar_obtinere(p->picturae, i);
+        si (   chorda_aequalis(a->replica, replica)
+            && chorda_aequalis(a->spatium, spatium))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
 s32
 pictor_documentum_imaginem_inserere (
      PictorDocumentum* doc,

@@ -82,24 +82,35 @@ nodus (
  * rete = ordines crescentes, cellulae crescentes (intervallum I).
  * Pinax: "pinax:<lat>x<alt>:<seq>:<spatium>[:electum]" (imago intra
  * marginem II) */
+/* titulus pinacis k (latitudo x altitudo imaginis) - rete commune
+ * pinacothecae et communium (plan-5 T6) */
+nomen chorda (*TitulusPinacis)(constans vacuum* ctx, s32 k,
+    s32 latitudo, s32 altitudo, Piscina* piscina);
+
+/* rete XII pinacum: dialogus 'nomen', nodi "<praefixum><k>", bullae
+ * "<nomen>.prior|pagina|posterior|claudere", actio "<nomen>.agere";
+ * numerus 0 et 'vacua' -> textus "<nomen>.vacua" in medio */
 interior Componens*
-pinacothecam_componere (
-                       Piscina* piscina,
-           InternamentumChorda* intern,
-    constans PictorPinacotheca* pc,
-          constans InsulaRamus* ramus,
-                         Fines  fp,
-                           s32  latitudo_superficiei,
-                           s32  altitudo_superficiei,
-                           s32  cw,
-                           s32  ch)
+rete_componere (
+                        Piscina* piscina,
+            InternamentumChorda* intern,
+             constans character* titulus_dialogi,
+             constans character* praefixum,
+                            s32  numerus,
+                            s32  pagina,
+                 TitulusPinacis  titulus_pinacis,
+                constans vacuum* ctx,
+             constans character* vacua,
+                          Fines  fp,
+                            s32  latitudo_superficiei,
+                            s32  altitudo_superficiei,
+                            s32  cw,
+                            s32  ch)
 {
            Componens* dialogus;
            Componens* n;
           Dispositio* d;
      DispositioForma  forma;
-       PictorPictura* p;
-              chorda  aperta;
                  s32  columnae;
                  s32  ordines;
                  s32  d_radix;
@@ -111,21 +122,16 @@ pinacothecam_componere (
                  s32  d_pagina;
                  s32  d_posterior;
                  s32  d_claudere;
-                 s32  numerus;
                  s32  paginae;
-                 s32  pagina;
                  s32  k;
                  s32  r;
                  s32  i;
                Fines  f;
-           character  id[XVI];
+           character  id[LXIV];
            character  t[CXXVIII];
 
-    numerus  = (pc && pc->picturae) ? (s32)xar_numerus(pc->picturae)
-                                    : ZEPHYRUM;
     paginae  = numerus > ZEPHYRUM ? (numerus + XI) / PINACES_PAGINAE
                                   : I;
-    pagina   = attributum_s32(ramus, "pagina_pinacothecae", ZEPHYRUM);
     si (pagina < ZEPHYRUM)
     {
         pagina = ZEPHYRUM;
@@ -134,7 +140,6 @@ pinacothecam_componere (
     {
         pagina = paginae - I;
     }
-    aperta = attributum_chorda(ramus, "pictura");
     /* forma superficiei, non platforma (spec D3) */
     columnae  = latitudo_superficiei > altitudo_superficiei ? IV : III;
     ordines   = PINACES_PAGINAE / columnae;
@@ -203,8 +208,9 @@ pinacothecam_componere (
     dispositio_computare(d, fp.latitudo / cw, fp.altitudo / ch, NIHIL,
         NIHIL);
 
-    dialogus = nodus(piscina, intern, "pinacotheca", PARTES_DIALOGUS,
+    dialogus = nodus(piscina, intern, titulus_dialogi, PARTES_DIALOGUS,
         fp.x, fp.y, fp.latitudo, fp.altitudo);
+    sprintf(t, "%s.agere", titulus_dialogi);
     per (i = ZEPHYRUM; i < PINACES_PAGINAE; i++)
     {
         k = pagina * PINACES_PAGINAE + i;
@@ -212,28 +218,35 @@ pinacothecam_componere (
         {
             frange;
         }
-        p = (PictorPictura*)xar_obtinere(pc->picturae, (i32)k);
         f = dispositio_ad_pixela(dispositio_fines(d, d_cellula[i]),
             fp.latitudo / cw, fp.altitudo / ch, fp.latitudo,
             fp.altitudo, cw, ch);
-        sprintf(id, "pinax.%lu", (insignatus longus)i);
+        sprintf(id, "%s%lu", praefixum, (insignatus longus)i);
         n = nodus(piscina, intern, id, PARTES_BOTTONE, f.x, f.y,
             f.latitudo, f.altitudo);
         /* imago intra marginem II (figura quadrati) */
-        sprintf(t, "pinax:%ldx%ld:%ld:", (longus)(f.latitudo - IV),
-            (longus)(f.altitudo - IV), (longus)p->seq);
+        componens_ponere_titulum(n, chorda_ut_cstr(titulus_pinacis(ctx,
+            k,
+            f.latitudo - IV, f.altitudo - IV, piscina), piscina));
+        componens_ponere_actio(n, t);
+        componens_addere_liberum(dialogus, n);
+    }
+    si (numerus == ZEPHYRUM && vacua)
+    {
+        f = dispositio_ad_pixela(dispositio_fines(d, d_rete),
+            fp.latitudo / cw, fp.altitudo / ch, fp.latitudo,
+            fp.altitudo, cw, ch);
+        sprintf(id, "%s.vacua", titulus_dialogi);
+        n = nodus(piscina, intern, id, PARTES_BOTTONE, f.x, f.y,
+            f.latitudo, f.altitudo);
         componens_ponere_titulum(n, chorda_ut_cstr(chorda_concatenare(
-            chorda_concatenare(chorda_ex_literis(t, piscina),
-                p->spatium, piscina),
-            chorda_ex_literis(chorda_aequalis(p->spatium, aperta)
-                ? ":electum" : "", piscina), piscina), piscina));
-        componens_ponere_actio(n, "pinacotheca.agere");
+            chorda_ex_literis("pagina:", piscina), chorda_ex_literis(
+            vacua, piscina), piscina), piscina));
         componens_addere_liberum(dialogus, n);
     }
     {
         hic_manens constans character* ID[IV] = {
-            "pinacotheca.prior", "pinacotheca.pagina",
-            "pinacotheca.posterior", "pinacotheca.claudere"
+            "prior", "pagina", "posterior", "claudere"
         };
         s32 indices[IV];
 
@@ -250,20 +263,23 @@ pinacothecam_componere (
             f = dispositio_ad_pixela(dispositio_fines(d, indices[i]),
                 fp.latitudo / cw, fp.altitudo / ch, fp.latitudo,
                 fp.altitudo, cw, ch);
-            n = nodus(piscina, intern, ID[i], PARTES_BOTTONE, f.x, f.y,
+            sprintf(id, "%s.%s", titulus_dialogi, ID[i]);
+            n = nodus(piscina, intern, id, PARTES_BOTTONE, f.x, f.y,
                 f.latitudo, f.altitudo);
             si (i == I)
             {
-                sprintf(t, "pagina:%ld / %ld", (longus)(pagina + I),
+                character pg[XXXII];
+
+                sprintf(pg, "pagina:%ld / %ld", (longus)(pagina + I),
                     (longus)paginae);
-                componens_ponere_titulum(n, t);
+                componens_ponere_titulum(n, pg);
             }
             alioquin
             {
                 componens_ponere_titulum(n, i == ZEPHYRUM
                     ? "sagitta:sinistra" : i == II ? "sagitta:dextra"
                     : "textus:X");
-                componens_ponere_actio(n, "pinacotheca.agere");
+                componens_ponere_actio(n, t);
             }
             componens_addere_liberum(dialogus, n);
         }
@@ -271,33 +287,333 @@ pinacothecam_componere (
     redde dialogus;
 }
 
+/* pinacotheca: pinax "pinax:<lat>x<alt>:<seq>:<spatium>[:electum]" */
+nomen structura {
+    constans PictorPinacotheca* pc;
+                        chorda  aperta;
+} TitulusPinacothecae;
+
+interior chorda
+_titulus_pinacothecae (
+    constans vacuum* ctx,
+                s32  k,
+                s32  latitudo,
+                s32  altitudo,
+            Piscina* piscina)
+{
+    constans TitulusPinacothecae* tp =
+        (constans TitulusPinacothecae*)ctx;
+                   PictorPictura* p;
+                       character  t[LXIV];
+
+    p = (PictorPictura*)xar_obtinere(tp->pc->picturae, (i32)k);
+    sprintf(t, "pinax:%ldx%ld:%ld:", (longus)latitudo, (longus)altitudo,
+        (longus)p->seq);
+    redde chorda_concatenare(chorda_concatenare(chorda_ex_literis(t,
+        piscina), p->spatium, piscina), chorda_ex_literis(
+        chorda_aequalis(p->spatium, tp->aperta) ? ":electum" : "",
+        piscina), piscina);
+}
+
+interior Componens*
+pinacothecam_componere (
+                       Piscina* piscina,
+           InternamentumChorda* intern,
+    constans PictorPinacotheca* pc,
+          constans InsulaRamus* ramus,
+                         Fines  fp,
+                           s32  latitudo_superficiei,
+                           s32  altitudo_superficiei,
+                           s32  cw,
+                           s32  ch)
+{
+    TitulusPinacothecae tp;
+
+    tp.pc      = pc;
+    tp.aperta  = attributum_chorda(ramus, "pictura");
+    redde rete_componere(piscina, intern, "pinacotheca", "pinax.",
+        (pc
+            && pc->picturae) ? (s32)xar_numerus(pc->picturae) : ZEPHYRUM,
+        attributum_s32(ramus, "pagina_pinacothecae", ZEPHYRUM),
+        _titulus_pinacothecae, &tp, NIHIL, fp, latitudo_superficiei,
+        altitudo_superficiei, cw, ch);
+}
+
+/* communia: "alienus:<lat>x<alt>:<hora>:<replica>:<spatium>" */
+interior chorda
+_titulus_alieni (
+    constans PictorPicturaAliena* a,
+                             s32  latitudo,
+                             s32  altitudo,
+                         Piscina* piscina)
+{
+    character t[LXIV];
+
+    sprintf(t, "alienus:%ldx%ld:%ld:", (longus)latitudo,
+        (longus)altitudo, (longus)a->hora);
+    redde chorda_concatenare(chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis(t, piscina), a->replica, piscina),
+        chorda_ex_literis(":", piscina), piscina), a->spatium, piscina);
+}
+
+interior chorda
+_titulus_communium (
+    constans vacuum* ctx,
+                s32  k,
+                s32  latitudo,
+                s32  altitudo,
+            Piscina* piscina)
+{
+    constans PictorCommunia* pc = (constans PictorCommunia*)ctx;
+
+    redde _titulus_alieni((PictorPicturaAliena*)xar_obtinere(
+        pc->picturae, (i32)k), latitudo, altitudo, piscina);
+}
+
+/* "replica:spatium" -> partes (ULID sine ':') */
+interior b32
+_spectatam_partire (
+    chorda  spectata,
+    chorda* replica,
+    chorda* spatium)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < spectata.mensura && spectata.datum[i] != ':';
+         i++)
+    {
+    }
+    si (i == ZEPHYRUM || i >= spectata.mensura)
+    {
+        redde FALSUM;
+    }
+    replica->datum    = spectata.datum;
+    replica->mensura  = i;
+    spatium->datum    = spectata.datum + i + I;
+    spatium->mensura  = spectata.mensura - i - I;
+    redde VERUM;
+}
+
+/* spec IX.6: spectator - pictura aliena lectione sola, linea "by
+ * Persona · Titulus", infra ‹ "Edit a copy" › X. Imago (nodus
+ * "spectator.imago") tractus sinister/dexter fert (actio); dialogus
+ * ipse ictum extra imaginem capit (claudit ad rete). NIHIL si
+ * spectata abest (vocans rete componit). */
+interior Componens*
+spectatorem_componere (
+                      Piscina* piscina,
+          InternamentumChorda* intern,
+    constans PictorCompositio* cfg,
+         constans InsulaRamus* ramus,
+                        Fines  fp,
+                          s32  cw,
+                          s32  ch)
+{
+                Componens* dialogus;
+                Componens* n;
+               Dispositio* d;
+          DispositioForma  forma;
+      PictorPicturaAliena* a;
+                   chorda  replica;
+                   chorda  spatium;
+                   chorda  auctor;
+                      s32  index;
+                      s32  d_radix;
+                      s32  d_imago;
+                      s32  d_auctor;
+                      s32  d_linea;
+                      s32  d_bullae[IV];
+                      s32  i;
+                    Fines  f;
+
+    si (   !cfg->communia
+        || !_spectatam_partire(attributum_chorda(ramus,
+            "spectata"), &replica, &spatium))
+    {
+        redde NIHIL;
+    }
+    index = pictor_communia_index(cfg->communia, replica, spatium);
+    si (index < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    a = (PictorPicturaAliena*)xar_obtinere(cfg->communia->picturae,
+        (i32)index);
+    d = dispositio_creare(piscina);
+    dispositio_formam_initiare(&forma);
+    forma.directio           = DISPOSITIO_COLUMNA;
+    forma.latitudo.genus     = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus     = DISPOSITIO_CRESCENS;
+    forma.spatium_sinistrum  = I;
+    forma.spatium_dextrum    = I;
+    forma.spatium_superum    = I;
+    forma.spatium_inferum    = I;
+    forma.intervallum        = I;
+    d_radix                  = dispositio_addere(d, -I, &forma);
+    dispositio_formam_initiare(&forma);
+    forma.latitudo.genus  = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus  = DISPOSITIO_CRESCENS;
+    d_imago               = dispositio_addere(d, d_radix, &forma);
+    dispositio_formam_initiare(&forma);
+    forma.latitudo.genus  = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus  = DISPOSITIO_FIXA;
+    forma.altitudo.valor  = II;
+    d_auctor              = dispositio_addere(d, d_radix, &forma);
+    dispositio_formam_initiare(&forma);
+    forma.directio        = DISPOSITIO_LINEA;
+    forma.latitudo.genus  = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus  = DISPOSITIO_FIXA;
+    forma.altitudo.valor  = III;
+    forma.intervallum     = I;
+    d_linea               = dispositio_addere(d, d_radix, &forma);
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        dispositio_formam_initiare(&forma);
+        forma.altitudo.genus = DISPOSITIO_FIXA;
+        forma.altitudo.valor = III;
+        si (i == I)
+        {
+            forma.latitudo.genus = DISPOSITIO_CRESCENS;
+        }
+        alioquin
+        {
+            forma.latitudo.genus = DISPOSITIO_FIXA;
+            forma.latitudo.valor = IV;
+        }
+        d_bullae[i] = dispositio_addere(d, d_linea, &forma);
+    }
+    dispositio_computare(d, fp.latitudo / cw, fp.altitudo / ch, NIHIL,
+        NIHIL);
+    dialogus = nodus(piscina, intern, "spectator", PARTES_DIALOGUS,
+        fp.x,
+        fp.y, fp.latitudo, fp.altitudo);
+    componens_ponere_actio(dialogus, "spectator.agere");
+    f = dispositio_ad_pixela(dispositio_fines(d, d_imago), fp.latitudo
+        / cw, fp.altitudo / ch, fp.latitudo, fp.altitudo, cw, ch);
+    n = nodus(piscina, intern, "spectator.imago", PARTES_BOTTONE, f.x,
+        f.y,
+        f.latitudo, f.altitudo);
+    componens_ponere_titulum(n, chorda_ut_cstr(_titulus_alieni(a,
+        f.latitudo - IV, f.altitudo - IV, piscina), piscina));
+    componens_ponere_actio(n, "spectator.agere");
+    componens_addere_liberum(dialogus, n);
+    auctor = cfg->auctor ? cfg->auctor(cfg->auctor_ctx, a->replica,
+        piscina) : chorda_ex_literis("", piscina);
+    si (auctor.mensura > ZEPHYRUM)
+    {
+        f = dispositio_ad_pixela(dispositio_fines(d, d_auctor),
+            fp.latitudo / cw, fp.altitudo / ch, fp.latitudo,
+            fp.altitudo,
+            cw, ch);
+        n = nodus(piscina, intern, "spectator.auctor", PARTES_BOTTONE,
+            f.x, f.y, f.latitudo, f.altitudo);
+        componens_ponere_titulum(n, chorda_ut_cstr(chorda_concatenare(
+            chorda_ex_literis("pagina:by ", piscina), auctor, piscina),
+            piscina));
+        componens_addere_liberum(dialogus, n);
+    }
+    {
+        hic_manens constans character* ID[IV] = {
+            "spectator.prior", "spectator.exemplum",
+            "spectator.posterior", "spectator.claudere"
+        };
+        hic_manens constans character* TITULI[IV] = {
+            "sagitta:sinistra", "textus:Edit a copy", "sagitta:dextra",
+            "textus:X"
+        };
+
+        per (i = ZEPHYRUM; i < IV; i++)
+        {
+            f = dispositio_ad_pixela(dispositio_fines(d, d_bullae[i]),
+                fp.latitudo / cw, fp.altitudo / ch, fp.latitudo,
+                fp.altitudo, cw, ch);
+            n = nodus(piscina, intern, ID[i], PARTES_BOTTONE, f.x, f.y,
+                f.latitudo, f.altitudo);
+            componens_ponere_titulum(n, TITULI[i]);
+            componens_ponere_actio(n, "spectator.agere");
+            componens_addere_liberum(dialogus, n);
+        }
+    }
+    redde dialogus;
+}
+
+/* communia (spec IX.5): rete picturarum alienarum, vacuum -> textus */
+interior Componens*
+communia_componere (
+                      Piscina* piscina,
+          InternamentumChorda* intern,
+    constans PictorCompositio* cfg,
+         constans InsulaRamus* ramus,
+                        Fines  fp,
+                          s32  latitudo_superficiei,
+                          s32  altitudo_superficiei,
+                          s32  cw,
+                          s32  ch)
+{
+    constans PictorCommunia* pc = cfg->communia;
+
+    redde rete_componere(piscina, intern, "communia", "communia.pinax.",
+        (pc
+            && pc->picturae) ? (s32)xar_numerus(pc->picturae) : ZEPHYRUM,
+        attributum_s32(ramus, "pagina_communium", ZEPHYRUM),
+        _titulus_communium, pc, cfg->inscripta
+        ? "No shared pictures yet." : "Sign in to see shared pictures.",
+        fp, latitudo_superficiei, altitudo_superficiei, cw, ch);
+}
+
+PictorElenchiCondiciones
+pictor_elenchi_condiciones (
+    constans PictorCompositio* cfg)
+{
+    PictorElenchiCondiciones k;
+
+    memset(&k, ZEPHYRUM, magnitudo(k));
+    si (cfg)
+    {
+        k.importare  = cfg->imago_eligibilis;
+        k.communio   = cfg->communio_praesto;
+        k.inscripta  = cfg->inscripta;
+    }
+    redde k;
+}
+
 vacuum
 pictor_elenchum_parare (
-            b32  importare,
-    ElenchusRes  res[III],
-       Elenchus* e)
+     constans PictorElenchiCondiciones* c,
+                           ElenchusRes  res[V],
+                              Elenchus* e)
 {
-    hic_manens constans character* TITULI[III] = {
-        "pinacotheca.aperire", "pictura.nova", "imago.eligere"
-    };
-    hic_manens constans character* TEXTUS[III] = {
-        "Open picture\xE2\x80\xA6", "New picture",
-        "Import image\xE2\x80\xA6"
-    };
-    i32 k;
+    i32 n;
 
-    memset(res, ZEPHYRUM, magnitudo(ElenchusRes) * III);
-    per (k = ZEPHYRUM; k < III; k++)
+    memset(res, ZEPHYRUM, magnitudo(ElenchusRes) * V);
+    n                = ZEPHYRUM;
+    res[n].titulus   = "pinacotheca.aperire";
+    res[n++].textus  = "My pictures\xE2\x80\xA6";
+    si (c && c->communio)
     {
-        res[k].titulus  = TITULI[k];
-        res[k].textus   = TEXTUS[k];
-        res[k].clavis   = NIHIL;
-        res[k].habilis  = VERUM;
-        res[k].divisor  = FALSUM;
+        res[n].titulus   = "communia.aperire";
+        res[n++].textus  = "Shared pictures\xE2\x80\xA6";
     }
-    e->res      = res;
-    e->numerus  = importare ? III : II;
-    e->electa   = -I;
+    res[n].titulus   = "pictura.nova";
+    res[n++].textus  = "New picture";
+    si (c && c->importare)
+    {
+        res[n].titulus   = "imago.eligere";
+        res[n++].textus  = "Import image\xE2\x80\xA6";
+    }
+    si (c && c->communio && !c->inscripta)
+    {
+        res[n].titulus   = "inscriptio.aperire";
+        res[n++].textus  = "Sign in\xE2\x80\xA6";
+    }
+    per (e->numerus = ZEPHYRUM; e->numerus < (i32)n; e->numerus++)
+    {
+        res[e->numerus].clavis   = NIHIL;
+        res[e->numerus].habilis  = VERUM;
+        res[e->numerus].divisor  = FALSUM;
+    }
+    e->res     = res;
+    e->electa  = -I;
 }
 
 constans character*
@@ -1104,13 +1420,15 @@ pictor_componere (
         si (   chorda_aequalis_literis(palette, "elenchus")
             && quadratum_elenchi)
         {
-               Elenchus  e;
-            ElenchusRes  res[III];
-                Punctum  ancora;
-                  Fines  area;
-              Componens* menu;
+                    Elenchus  e;
+                 ElenchusRes  res[V];
+                     Punctum  ancora;
+                       Fines  area;
+                   Componens* menu;
+    PictorElenchiCondiciones  k;
 
-            pictor_elenchum_parare(cfg->imago_eligibilis, res, &e);
+            k = pictor_elenchi_condiciones(cfg);
+            pictor_elenchum_parare(&k, res, &e);
             ancora.x       = quadratum_elenchi->fines.x;
             ancora.y       = quadratum_elenchi->fines.y - II;
             area.x         = ZEPHYRUM;
@@ -1119,11 +1437,29 @@ pictor_componere (
             area.altitudo  = ancora.y;
             menu = elenchus_componere(&e, elenchus_fines(&e, ancora,
                 area), "elenchus.agere", piscina, intern);
-            si (   menu && menu->liberi
-                && xar_numerus(menu->liberi) > ZEPHYRUM)
+            /* res quae palettam aliam aperiunt (My pictures, Shared
+             * pictures, Sign in) non claudunt: dimissio eam aliter post
+             * actionem tolleret (plan-5 T6) */
             {
-                (*(Componens**)xar_obtinere(menu->liberi, ZEPHYRUM))
-                    ->claudit = FALSUM;
+                i32 r;
+
+                per (r = ZEPHYRUM; menu && menu->liberi
+                     && r < xar_numerus(menu->liberi)
+                     && r < e.numerus; r++)
+                {
+                    si (   strcmp(e.res[r].titulus,
+                        "pinacotheca.aperire")
+                           == ZEPHYRUM
+                        || strcmp(e.res[r].titulus, "communia.aperire")
+                           == ZEPHYRUM
+                        || strcmp(e.res[r].titulus,
+                        "inscriptio.aperire")
+                           == ZEPHYRUM)
+                    {
+                        (*(Componens**)xar_obtinere(menu->liberi, r))
+                            ->claudit = FALSUM;
+                    }
+                }
             }
             si (menu)
             {
@@ -1137,6 +1473,25 @@ pictor_componere (
             componens_addere_liberum(radix, pinacothecam_componere(
                 piscina, intern, cfg->pinacotheca, &ramus, fp, latitudo,
                 altitudo, cw, ch));
+        }
+        /* plan-5 T6: Shared pictures; spectator (spectata absens ->
+         * rete) */
+        si (   (   chorda_aequalis_literis(palette, "communia")
+                || chorda_aequalis_literis(palette, "spectator"))
+            && cfg->communia)
+        {
+            Componens* sp;
+
+            sp = chorda_aequalis_literis(palette, "spectator")
+                ? spectatorem_componere(piscina, intern, cfg, &ramus,
+                fp,
+                cw,
+                     ch) : NIHIL;
+            componens_addere_liberum(radix,
+                sp ? sp : communia_componere(
+                piscina, intern, cfg, &ramus, fp, latitudo, altitudo,
+                cw,
+                ch));
         }
         /* L3: palette stratorum (margine dextro ad quadratum) */
         si (chorda_aequalis_literis(palette, "strata") && cfg->doc)
