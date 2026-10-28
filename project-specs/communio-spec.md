@@ -342,3 +342,36 @@ scratch device was revoked and its token then got 401. Not yet: iPhone
 and Amanda (phase 5), email sign-in (phase 3), backups (phase 4),
 background sync. Deferred minors: see the plan-2 ledger note on desideratum
 ...GRTKH (lane quarantine is the one to watch).
+
+## VIII. Phase 3 built (2026-10-27, quarta -> main d6884bbf)
+
+Plan `project-specs/communio-plan-3.md`, tasks T1-T7 + final review
+(fable: 1 critical, 4 important, all fixed in d4dbe8bb). A device signs
+in by email: the device mints its token as before and sends only the
+digest with `POST /communio/intrare`; the server mails a one-time link
+plus an 8-character code (15 minutes, 5 tries) from
+`communio@golden.earth` via Resend (`lib/epistula`, with a fake provider
+for tests); `communio inscribere` takes the code from stdin or notices
+the link was clicked, whichever comes first. Only allowlisted addresses
+get mail (allowlist = email -> person, admin tools
+`communio_epistulam_permittere/_revocare`, `communio_permissos_enumerare`),
+but every request answers 202 after the same 250 ms floor, so the
+answer never tells whether an address is known. Mail budgets are counted
+in the database (3 per address per hour, 30 per server per day), not in
+an evictable memory table. The link opens a page with a button; only the
+POST registers the device (mail scanners prefetch links). Server keys
+live locally in `~/.rhubarb/<name>.clavis` and go up with
+`tools/secretum_mittere.sh` (ssh stdin, hash compare, no overwrite
+unless asked to rotate). `oceanus` learned MX priority.
+
+Live (Task 8, 2026-10-27, with Fran): golden.earth verified at Resend
+(DKIM, `send`/`rsend` CNAMEs, DMARC p=none via oceanus; the AUDIENDA
+item on Resend DNS is settled); `resend.clavis` copied up (match);
+deployed d4dbe8bb from quarta under the worktree-deploy rule (backups
+`*.ante-epistulae`); both addresses allowlisted (`amanda` created); Fran
+signed a device in by clicking the link, and it was then revoked (the
+hand-registered "Macintosh" stays). Finding: DigitalOcean stores CNAME
+targets without the trailing dot, so oceanus reports them as changed on
+every run (ledgered). Deferred minors: the plan-3 ledger's list, filed
+in tabularium. Next: phase 5 (iPhone + pictor), phase 4 (backups),
+3b (device adoption).
