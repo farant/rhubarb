@@ -31,3 +31,28 @@ binary has 0 `_br_` symbols).
 
 Test trap: "A received everything B has" must count B's COMMUNICATED
 acts (non-derived), not all its acts - checkpoints never travel (8 vs 6).
+
+## 2026-10-28 - sign-in inside pictor (communio-plan-5 T7, quarta)
+
+`PictorCommunio` now owns the app's `CommunioInscriptio` and one wiring
+call, `pictor_communionem_ligare(pc, montatio, d, machina)`, used by both
+apps/pictor/pictor.c and the suites: composition gets communio_praesto,
+inscripta, auctor, persona and the sign-in state (callbacks, ctx = pc);
+actions get incipere / codicem_dare / abicere callbacks. `_nuntiare`
+refreshes the bound montatio (inscripta, Shared pictures, keyboard hidden
+when the state becomes INSCRIPTA) before recomposing.
+
+Bug found by the resume test: with a sign-in PENDING the token file
+already exists but is not registered yet. Treating it as "signed in"
+started the client, which got 401, which (T5 rule) deleted the token -
+killing the very sign-in being resumed. Now: `pictor_communio_inscripta`
+is FALSE and `pictor_communio_incipere` does nothing while a sign-in is
+pending; INSCRIPTA starts the client (a client stopped by an earlier 401
+is replaced).
+
+The device list only lists devices whose replica is bound, and the
+client binds AFTER the first list request - so "Signed in as" had no
+name. If our own replica is missing, the list is fetched again after 1 s
+(V tries). `pictor_communionem_claudere` leaves a pending sign-in in place
+(`communio_inscriptionem_relinquere`: stop, keep token + praesentia) so
+the next launch resumes it.

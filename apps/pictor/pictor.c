@@ -43,42 +43,6 @@ _pictorem_finire (
     volumen_claudere(h->volumen);
 }
 
-/* plan-5 T6: attributio "Persona · Titulus" per communionem */
-interior chorda
-_auctor (
-    vacuum* ctx,
-    chorda  replica,
-   Piscina* piscina)
-{
-    redde pictor_communio_auctor(((PictorHospes*)ctx)->communio,
-        replica,
-        piscina);
-}
-
-/* picturae advectae, index apparatuum, inscriptio mutata: status
- * inscriptionis in compositione, Shared pictures renovatae (si iam
- * apertae), recompositio */
-interior vacuum
-_communio_mutata (
-    vacuum* ctx)
-{
-    PictorHospes* h = (PictorHospes*)ctx;
-
-    si (h->montatio)
-    {
-        h->montatio->compositio.inscripta =
-            pictor_communio_inscripta(h->communio);
-        si (h->montatio->communia.scheda)
-        {
-            (vacuum)pictor_communia_parare(&h->montatio->communia);
-        }
-    }
-    si (h->d)
-    {
-        dispensator_recomponere(h->d);
-    }
-}
-
 /* argumentum post 'nomen' (aut praestitutum) */
 interior constans character*
 _optio (
@@ -122,17 +86,21 @@ _communionem_aperire (
     sprintf(via, "%s.tessera", volumen);
     h->communio = pictor_communionem_aperire(a->piscina, a->reactor,
         a->veredarius, h->volumen, via, _optio(a->argc, a->argv,
-        "-servus", SERVUS_DOMUS), _communio_mutata, h);
-    pictor_communio_incipere(h->communio);
-    /* plan-5 T6: menu (Shared pictures, Sign in) et attributiones */
-    si (h->communio && h->montatio)
+        "-servus", SERVUS_DOMUS), NIHIL, NIHIL);
+    si (!h->communio || !h->montatio)
     {
-        h->montatio->compositio.communio_praesto  = VERUM;
-        h->montatio->compositio.inscripta         =
-            pictor_communio_inscripta(h->communio);
-        h->montatio->compositio.auctor      = _auctor;
-        h->montatio->compositio.auctor_ctx  = h;
+        redde;
     }
+    /* plan-5 T6/T7: menu, Shared pictures, attributiones, inscriptio;
+     * claviatura systematis (iOS) */
+    h->montatio->actiones_ctx.claviaturam_ponere =
+        a->claviaturam_ponere;
+    h->montatio->actiones_ctx.claviatura_ctx = a->claviatura_ctx;
+    pictor_communionem_ligare(h->communio, h->montatio, h->d,
+        a->machina);
+    (vacuum)pictor_communio_inscriptionem_resumere(h->communio);
+    pictor_communio_incipere(h->communio);
+    (vacuum)pictor_salutationem_ponere(h->montatio);
 }
 
 b32

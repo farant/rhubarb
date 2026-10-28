@@ -16,6 +16,7 @@
 #include "pictor_documentum.h"
 #include "xar.h"
 #include "imago.h"
+#include "claviatura.h"
 
 nomen structura {
     PictorDocumentum* doc;
@@ -58,6 +59,15 @@ nomen structura {
              b32 (*exemplum_facere)(vacuum* montatio, chorda replica,
                                     constans character* spatium);
              Punctum origo_tractus;
+    /* communio-plan-5 T7: inscriptio per hospitem (pictor_communio
+     * ligat; NIHIL = nulla) et claviatura systematis (testa) */
+             b32 (*inscriptionem_incipere)(vacuum* ctx,
+                 chorda epistula);
+             b32 (*codicem_dare)(vacuum* ctx, chorda codex);
+          vacuum (*inscriptionem_abicere)(vacuum* ctx);
+                vacuum* inscriptio_ctx;
+TestaClaviaturamPonere  claviaturam_ponere;
+                vacuum* claviatura_ctx;
 } PictorActiones;
 
 vacuum
@@ -170,6 +180,36 @@ pictor_communia_agere (
  * copy, X / ictus extra imaginem ad rete. 'spectator.agere'. */
 b32
 pictor_spectatorem_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* plan-5 T7: salutatio prima (communio praesto, nondum visa, non
+ * inscriptus) aut inscriptio pendens -> palette "salutatio" /
+ * "inscriptio". VERUM si posita. */
+b32
+pictor_salutationem_ponere_in (
+    InsulaRepositorium* repo,
+        PictorActiones* pa);
+
+/* <tractator/> plan-5 T7 salutatio: Sign in… / Draw without signing in.
+ * 'salutatio.agere'. */
+b32
+pictor_salutationem_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> plan-5 T7 inscriptio: Send, Cancel, OK, campus.
+ * 'inscriptio.agere'. */
+b32
+pictor_inscriptionem_agere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,

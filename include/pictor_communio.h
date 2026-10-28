@@ -18,6 +18,7 @@
 #include "reactor.h"
 #include "volumen.h"
 #include "veredarius.h"
+#include "pictor_applicatio.h"
 
 /* picturae advectae, index apparatuum, status inscriptionis mutatus */
 nomen vacuum (*PictorCommunioMutata)(vacuum* ctx);
@@ -73,9 +74,64 @@ pictor_communio_moram_ponere (
     PictorCommunio* pc,
                i32  secundae);
 
-/* petitiones abrumpit, tesseram e memoria delet */
+/* petitiones abrumpit, tesseram e memoria delet; inscriptio pendens
+ * RELINQUITUR (filum et entrium manent: applicatio proxima resumit) */
 vacuum
 pictor_communionem_claudere (
     PictorCommunio* pc);
+
+
+/* ==================================================
+ * plan-5 T7: inscriptio per pictorem (CommunioInscriptio)
+ * ================================================== */
+
+/* incipit (prior non inscripta abicitur); FALSUM si tessera exstat aut
+ * argumenta mala. Inscripta -> cliens incipit, mutata. */
+b32
+pictor_communio_inscriptionem_incipere (
+        PictorCommunio* pc,
+                chorda  epistula,
+    constans character* titulus);
+
+/* FALSUM (sine petitione) si codex non VIII Crockford aut nulla
+ * inscriptio exspectans */
+b32
+pictor_communio_codicem_dare (
+     PictorCommunio* pc,
+             chorda  codex);
+
+/* -1 nulla; aliter InscriptioGradus */
+s32
+pictor_communio_inscriptionis_gradus (
+    constans PictorCommunio* pc);
+
+/* Cancel (aut post INSCRIPTA: dimittere) */
+vacuum
+pictor_communio_inscriptionem_abicere (
+    PictorCommunio* pc);
+
+/* pendens in volumine resumitur; VERUM si resumpta */
+b32
+pictor_communio_inscriptionem_resumere (
+    PictorCommunio* pc);
+
+/* probationes: mora inspectionis et vita (ms; 0 = ordinaria) */
+vacuum
+pictor_communio_inscriptionis_ponere (
+    PictorCommunio* pc,
+               i32  mora_ms,
+               i32  vita_ms);
+
+/* montationi pictoris ligare (apps/pictor/pictor.c et probationes):
+ * compositio (communio_praesto, inscripta, auctor, persona, gradus
+ * inscriptionis), actiones (inscriptio), mutata -> inscripta
+ * renovata, Shared pictures renovatae, claviatura celata cum
+ * inscripta, recompositio. machina = titulus apparatus. */
+vacuum
+pictor_communionem_ligare (
+         PictorCommunio* pc,
+         PictorMontatio* montatio,
+            Dispensator* d,
+     constans character* machina);
 
 #endif /* PICTOR_COMMUNIO_H */

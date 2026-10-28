@@ -1863,3 +1863,19 @@ communio_inscriptionem_abicere (
     piscina_destruere(ci->scheda);
     ci->scheda = NIHIL;
 }
+
+vacuum
+communio_inscriptionem_relinquere (
+    CommunioInscriptio* ci)
+{
+    si (!ci || ci->abiecta)
+    {
+        redde;
+    }
+    _inscriptionis_horam_tollere(ci);
+    _petitionem_tollere(ci);
+    memset(ci->tessera, ZEPHYRUM, magnitudo(ci->tessera));
+    ci->abiecta = VERUM;
+    piscina_destruere(ci->scheda);
+    ci->scheda = NIHIL;
+}

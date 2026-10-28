@@ -1,6 +1,7 @@
 /* pictor_componentia.c - componere pictoris */
 
 #include "pictor_componentia.h"
+#include "communio_cliens.h"
 #include "xar.h"
 #include "dispositio.h"
 #include "pictor_documentum.h"
@@ -559,6 +560,257 @@ communia_componere (
         _titulus_communium, pc, cfg->inscripta
         ? "No shared pictures yet." : "Sign in to see shared pictures.",
         fp, latitudo_superficiei, altitudo_superficiei, cw, ch);
+}
+
+/* plan-5 T7: dialogus formae columnae - lineae fixae (altitudines in
+ * cellulis) deinde spatium crescens; nodi per ordinem in 'fines' */
+#define LINEAE_DIALOGI  X
+
+interior i32
+_dialogum_disponere (
+    constans s32* altitudines,
+             i32  numerus,
+           Fines  fp,
+             s32  cw,
+             s32  ch,
+         Piscina* piscina,
+           Fines* fines)
+{
+         Dispositio* d;
+    DispositioForma  forma;
+                s32  d_radix;
+                s32  indices[LINEAE_DIALOGI];
+                i32  i;
+
+    d = dispositio_creare(piscina);
+    dispositio_formam_initiare(&forma);
+    forma.directio           = DISPOSITIO_COLUMNA;
+    forma.latitudo.genus     = DISPOSITIO_CRESCENS;
+    forma.altitudo.genus     = DISPOSITIO_CRESCENS;
+    forma.spatium_sinistrum  = I;
+    forma.spatium_dextrum    = I;
+    forma.spatium_superum    = II;
+    forma.spatium_inferum    = I;
+    forma.intervallum        = I;
+    d_radix                  = dispositio_addere(d, -I, &forma);
+    per (i = ZEPHYRUM; i < numerus && i < LINEAE_DIALOGI; i++)
+    {
+        dispositio_formam_initiare(&forma);
+        forma.latitudo.genus = DISPOSITIO_CRESCENS;
+        si (altitudines[i] > ZEPHYRUM)
+        {
+            forma.altitudo.genus = DISPOSITIO_FIXA;
+            forma.altitudo.valor = altitudines[i];
+        }
+        alioquin
+        {
+            forma.altitudo.genus = DISPOSITIO_CRESCENS;
+        }
+        indices[i] = dispositio_addere(d, d_radix, &forma);
+    }
+    dispositio_computare(d, fp.latitudo / cw, fp.altitudo / ch, NIHIL,
+        NIHIL);
+    per (i = ZEPHYRUM; i < numerus && i < LINEAE_DIALOGI; i++)
+    {
+        fines[i] = dispositio_ad_pixela(dispositio_fines(d, indices[i]),
+            fp.latitudo / cw, fp.altitudo / ch, fp.latitudo,
+            fp.altitudo,
+            cw, ch);
+    }
+    redde numerus;
+}
+
+interior Componens*
+_nodum_addere (
+               Piscina* piscina,
+   InternamentumChorda* intern,
+             Componens* dialogus,
+    constans character* id,
+                 Fines  f,
+    constans character* titulus,
+    constans character* actio)
+{
+    Componens* n;
+
+    n = nodus(piscina, intern, id, PARTES_BOTTONE, f.x, f.y, f.latitudo,
+        f.altitudo);
+    componens_ponere_titulum(n, titulus);
+    si (actio)
+    {
+        componens_ponere_actio(n, actio);
+    }
+    componens_addere_liberum(dialogus, n);
+    redde n;
+}
+
+/* linea bullarum: duae bullae dimidiae in f */
+interior vacuum
+_bullas_duas_addere (
+               Piscina* piscina,
+   InternamentumChorda* intern,
+             Componens* dialogus,
+                 Fines  f,
+    constans character* id_a,
+    constans character* titulus_a,
+    constans character* id_b,
+    constans character* titulus_b,
+    constans character* actio,
+                   s32  cw)
+{
+    Fines a;
+    Fines b;
+
+    a           = f;
+    a.latitudo  = (f.latitudo - cw) / II;
+    b           = a;
+    b.x         = f.x + a.latitudo + cw;
+    (vacuum)_nodum_addere(piscina, intern, dialogus, id_a, a, titulus_a,
+        actio);
+    (vacuum)_nodum_addere(piscina, intern, dialogus, id_b, b, titulus_b,
+        actio);
+}
+
+/* spec IX.1: salutatio prima - "pictor", Sign in…, Draw without
+ * signing in */
+interior Componens*
+salutationem_componere (
+               Piscina* piscina,
+   InternamentumChorda* intern,
+                 Fines  fp,
+                   s32  cw,
+                   s32  ch)
+{
+    hic_manens constans s32 ALTITUDINES[V] = { III, ZEPHYRUM, III, III,
+        ZEPHYRUM };
+     Componens* dialogus;
+         Fines  f[V];
+
+    (vacuum)_dialogum_disponere(ALTITUDINES, V, fp, cw, ch, piscina, f);
+    dialogus = nodus(piscina, intern, "salutatio", PARTES_DIALOGUS,
+        fp.x,
+        fp.y, fp.latitudo, fp.altitudo);
+    (vacuum)_nodum_addere(piscina, intern, dialogus,
+        "salutatio.titulus",
+        f[ZEPHYRUM], "pagina:pictor", NIHIL);
+    (vacuum)_nodum_addere(piscina, intern, dialogus,
+        "salutatio.inscribere",
+        f[II], "textus:Sign in\xE2\x80\xA6", "salutatio.agere");
+    (vacuum)_nodum_addere(piscina, intern, dialogus,
+        "salutatio.pingere",
+        f[III], "textus:Draw without signing in", "salutatio.agere");
+    redde dialogus;
+}
+
+/* spec IX.2: inscriptio - gradus ex hospite (-1 nulla): I epistula
+ * (cum errore RETE/EXPIRATA), II codex (exspectans; codex falsus), III
+ * "Signed in as ..." + OK. Campus "campus:<textus>" (inscriptio_textus);
+ * error localis 'inscriptio_error' = "codex". */
+interior Componens*
+inscriptionem_componere (
+                      Piscina* piscina,
+          InternamentumChorda* intern,
+    constans PictorCompositio* cfg,
+         constans InsulaRamus* ramus,
+                        Fines  fp,
+                          s32  cw,
+                          s32  ch)
+{
+    hic_manens constans s32 PRIMUS[VI] = { II, III, II, III, ZEPHYRUM,
+        ZEPHYRUM };
+    hic_manens constans s32 SECUNDUS[VIII] = { II, II, II, II, III, II,
+        III, ZEPHYRUM };
+    hic_manens constans s32  TERTIUS[III] = { II, III, ZEPHYRUM };
+                  Componens* dialogus;
+                      Fines  f[VIII];
+                        s32  g;
+                     chorda  textus;
+                     chorda  error;
+                     chorda  persona;
+         constans character* nuntius;
+
+    g = cfg->inscriptionis_gradus ? cfg->inscriptionis_gradus(
+        cfg->auctor_ctx) : -I;
+    textus  = attributum_chorda(ramus, "inscriptio_textus");
+    error   = attributum_chorda(ramus, "inscriptio_error");
+    dialogus = nodus(piscina, intern, "inscriptio", PARTES_DIALOGUS,
+        fp.x,
+        fp.y, fp.latitudo, fp.altitudo);
+    si (g == (s32)INSCRIPTIO_INSCRIPTA)
+    {
+        (vacuum)_dialogum_disponere(TERTIUS, III, fp, cw, ch, piscina,
+            f);
+        persona = cfg->persona ? cfg->persona(cfg->auctor_ctx, piscina)
+                               : chorda_ex_literis("", piscina);
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.titulus", f[ZEPHYRUM], chorda_ut_cstr(
+            persona.mensura > ZEPHYRUM ? chorda_concatenare(
+            chorda_ex_literis("pagina:Signed in as ", piscina), persona,
+            piscina) : chorda_ex_literis("pagina:Signed in", piscina),
+            piscina), NIHIL);
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.confirmata", f[I], "textus:OK",
+            "inscriptio.agere");
+        redde dialogus;
+    }
+    si (   g == (s32)INSCRIPTIO_PETIT || g == (s32)INSCRIPTIO_EXSPECTAT
+        || g == (s32)INSCRIPTIO_CONFIRMAT
+        || g == (s32)INSCRIPTIO_CODEX_FALSUS)
+    {
+        (vacuum)_dialogum_disponere(SECUNDUS, VIII, fp, cw, ch, piscina,
+            f);
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.titulus", f[ZEPHYRUM],
+            "pagina:Check your email",
+            NIHIL);
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.nota",
+            f[I], "pagina:Tap the link we sent,", NIHIL);
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.nota_altera", f[II], "pagina:or type the code"
+            " here.", NIHIL);
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.signum", f[III], "pagina:Code", NIHIL);
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.campus", f[IV],
+            chorda_ut_cstr(chorda_concatenare(
+            chorda_ex_literis("campus:", piscina), textus, piscina),
+            piscina), "inscriptio.agere");
+        si (   g == (s32)INSCRIPTIO_CODEX_FALSUS
+            || chorda_aequalis_literis(error, "codex"))
+        {
+            (vacuum)_nodum_addere(piscina, intern, dialogus,
+                "inscriptio.error", f[V],
+                "pagina:That code isn't right.",
+                NIHIL);
+        }
+        _bullas_duas_addere(piscina, intern, dialogus, f[VI],
+            "inscriptio.abicere", "textus:Cancel", "inscriptio.mittere",
+            "textus:Send", "inscriptio.agere", cw);
+        redde dialogus;
+    }
+    (vacuum)_dialogum_disponere(PRIMUS, VI, fp, cw, ch, piscina, f);
+    (vacuum)_nodum_addere(piscina, intern, dialogus,
+        "inscriptio.titulus",
+        f[ZEPHYRUM], "pagina:Email address", NIHIL);
+    (vacuum)_nodum_addere(piscina, intern, dialogus,
+        "inscriptio.campus",
+        f[I], chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        "campus:", piscina), textus, piscina), piscina),
+        "inscriptio.agere");
+    nuntius = g == (s32)INSCRIPTIO_RETE
+            ? "pagina:Can't reach the server. Try again."
+            : g == (s32)INSCRIPTIO_EXPIRATA
+            ? "pagina:This sign-in expired. Start again." : NIHIL;
+    si (nuntius)
+    {
+        (vacuum)_nodum_addere(piscina, intern, dialogus,
+            "inscriptio.error",
+            f[II], nuntius, NIHIL);
+    }
+    _bullas_duas_addere(piscina, intern, dialogus, f[III],
+        "inscriptio.abicere", "textus:Cancel", "inscriptio.mittere",
+        "textus:Send", "inscriptio.agere", cw);
+    redde dialogus;
 }
 
 PictorElenchiCondiciones
@@ -1492,6 +1744,17 @@ pictor_componere (
                 piscina, intern, cfg, &ramus, fp, latitudo, altitudo,
                 cw,
                 ch));
+        }
+        /* plan-5 T7: salutatio et inscriptio */
+        si (chorda_aequalis_literis(palette, "salutatio"))
+        {
+            componens_addere_liberum(radix, salutationem_componere(
+                piscina, intern, fp, cw, ch));
+        }
+        si (chorda_aequalis_literis(palette, "inscriptio"))
+        {
+            componens_addere_liberum(radix, inscriptionem_componere(
+                piscina, intern, cfg, &ramus, fp, cw, ch));
         }
         /* L3: palette stratorum (margine dextro ad quadratum) */
         si (chorda_aequalis_literis(palette, "strata") && cfg->doc)

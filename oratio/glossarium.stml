@@ -1900,6 +1900,11 @@
     <forma textus="epistularium" casus="accusativus" numerus="singularis" genus="masculinum"/>
     <forma textus="epistulario" casus="dativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="claviatura" lingua="latina" classis="substantivum" nota="claviatura, -ae f. (Latinitas recens, ex clavis; Lexicon recentis Latinitatis 'claviatura' = clavium series): claviatura systematis quam testa telephoni ostendit aut celat (include/claviatura.h, communio-plan-5 T7)">
+    <forma textus="claviatura" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="claviaturae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="claviaturam" casus="accusativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="reactor" lingua="latina" classis="substantivum" nota="reactor, -oris m. (vox domus ex 'reagere', ut actor ex 'agere'): ansa eventuum quae fossas et horas exspectat et tractatoribus reddit (include/reactor.h); reactorem ponere = ansae reactorem tradere (ludus_fenestra_reactorem_ponere, communio-plan-5 T5)">
     <forma textus="reactor" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="reactoris" casus="genitivus" numerus="singularis" genus="masculinum"/>

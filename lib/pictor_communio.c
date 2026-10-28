@@ -6,6 +6,8 @@
 #include "json.h"
 #include "xar.h"
 #include "filum.h"
+#include "dispensator.h"
+#include "claviatura.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -15,6 +17,7 @@
 #define TESSERA_MAXIMA      XLIV
 #define TEMPUS_INDICIS      ((i32)XXX * (i32)M)
 #define CLAVIS_APPARATUUM   "communio/apparatus"
+#define INDEX_MORA_MS       ((i32)M)
 
 structura PictorCommunio {
                  Piscina* piscina;
@@ -40,13 +43,64 @@ structura PictorCommunio {
      VeredariusResponsum responsum;
           ReactorTimerId hora;
                      b32 hora_viva;
+    /* plan-5 T7: inscriptio et ligatio ad montationem */
+      CommunioInscriptio* inscriptio;
+                     i32  inscriptio_mora;
+                     i32  inscriptio_vita;
+          PictorMontatio* montatio;
+             Dispensator* d;
+               character  machina[XXXII];
+                     s32  gradus_nuntiatus;
+    /* index sine apparatu proprio (nondum ligatus): iterum post moram */
+                     i32 index_conatus;
+          ReactorTimerId hora_indicis;
+                     b32 hora_indicis_viva;
 };
 
+s32
+pictor_communio_inscriptionis_gradus (
+    constans PictorCommunio* pc);
+
+b32
+pictor_communio_inscripta (
+    constans PictorCommunio* pc);
+
+/* mutatio: montatio ligata renovatur (inscripta, Shared pictures,
+ * claviatura cum inscripta celata), deinde recompositio et mutata */
 interior vacuum
 _nuntiare (
     PictorCommunio* pc)
 {
-    si (pc->mutata && !pc->clausa)
+    s32 g;
+
+    si (pc->clausa)
+    {
+        redde;
+    }
+    si (pc->montatio)
+    {
+        pc->montatio->compositio.inscripta =
+            pictor_communio_inscripta(pc);
+        si (pc->montatio->communia.scheda)
+        {
+            (vacuum)pictor_communia_parare(&pc->montatio->communia);
+        }
+        g = pictor_communio_inscriptionis_gradus(pc);
+        si (   g != pc->gradus_nuntiatus
+            && g == (s32)INSCRIPTIO_INSCRIPTA
+            && pc->montatio->actiones_ctx.claviaturam_ponere)
+        {
+            pc->montatio->actiones_ctx.claviaturam_ponere(
+                pc->montatio->actiones_ctx.claviatura_ctx,
+                (i32)TESTA_CLAVIATURA_NULLA);
+        }
+        pc->gradus_nuntiatus = g;
+    }
+    si (pc->d)
+    {
+        dispensator_recomponere(pc->d);
+    }
+    si (pc->mutata)
     {
         pc->mutata(pc->ctx);
     }
@@ -135,6 +189,26 @@ _indicem_petere (
 }
 
 interior vacuum
+_indicem_petere (
+    PictorCommunio* pc);
+
+interior JsonValor*
+_apparatus_invenire (
+    constans PictorCommunio* pc,
+                     chorda  replica,
+                    Piscina* piscina);
+
+interior vacuum
+_index_iterum (
+    vacuum* datum)
+{
+    PictorCommunio* pc = (PictorCommunio*)datum;
+
+    pc->hora_indicis_viva = FALSUM;
+    _indicem_petere(pc);
+}
+
+interior vacuum
 _index_progredi (
     vacuum* datum)
 {
@@ -158,6 +232,19 @@ _index_progredi (
     {
         (vacuum)volumen_praesens_ponere(pc->volumen, chorda_ex_literis(
             CLAVIS_APPARATUUM, pc->scheda), pc->responsum.corpus);
+        /* plan-5 T7: apparatus proprius nondum in indice (ligatio
+         * clientis post petitionem) - iterum post moram, V ad summum,
+         * ut "Signed in as" personam habeat */
+        si (   !_apparatus_invenire(pc, volumen_replica(pc->volumen),
+                pc->scheda)
+            && pc->index_conatus < V && !pc->hora_indicis_viva)
+        {
+            pc->index_conatus++;
+            pc->hora_indicis = reactor_timer_adicere(pc->reactor,
+                INDEX_MORA_MS, FALSUM, _index_iterum, pc);
+            pc->hora_indicis_viva = pc->hora_indicis
+                != (ReactorTimerId)-I;
+        }
         _nuntiare(pc);
     }
     si (pc->index_iterum)
@@ -293,6 +380,14 @@ pictor_communio_inscripta (
     {
         redde FALSUM;
     }
+    /* plan-5 T7: inscriptio pendens - filum tesserae exstat sed nondum
+     * inscriptum */
+    si (   pc->inscriptio
+        && communio_inscriptionis_gradus(pc->inscriptio)
+           != INSCRIPTIO_INSCRIPTA)
+    {
+        redde FALSUM;
+    }
     si (pc->tessera[ZEPHYRUM] != '\0')
     {
         redde VERUM;
@@ -310,6 +405,20 @@ pictor_communio_incipere (
     si (!pc || pc->clausa)
     {
         redde;
+    }
+    /* plan-5 T7: inscriptio pendens - tessera nondum valet (cliens eam
+     * recusatam videret et deleret) */
+    si (   pc->inscriptio
+        && communio_inscriptionis_gradus(pc->inscriptio)
+           != INSCRIPTIO_INSCRIPTA)
+    {
+        redde;
+    }
+    /* plan-5 T7: post recusationem cliens vetus desiit - novus */
+    si (pc->cliens && pc->recusata)
+    {
+        communio_clientem_destruere(pc->cliens);
+        pc->cliens = NIHIL;
     }
     si (pc->cliens)
     {
@@ -424,6 +533,11 @@ pictor_communionem_claudere (
         redde;
     }
     pc->clausa = VERUM;
+    si (pc->hora_indicis_viva)
+    {
+        (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora_indicis);
+        pc->hora_indicis_viva = FALSUM;
+    }
     si (pc->hora_viva)
     {
         (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora);
@@ -439,7 +553,216 @@ pictor_communionem_claudere (
         communio_clientem_destruere(pc->cliens);
         pc->cliens = NIHIL;
     }
+    si (pc->inscriptio)
+    {
+        communio_inscriptionem_relinquere(pc->inscriptio);
+        pc->inscriptio = NIHIL;
+    }
     memset(pc->tessera, ZEPHYRUM, magnitudo(pc->tessera));
     piscina_destruere(pc->scheda);
     pc->scheda = NIHIL;
+}
+
+
+/* ==================================================
+ * plan-5 T7: inscriptio
+ * ================================================== */
+
+interior vacuum
+_inscriptio_mutata (
+              vacuum* ctx,
+    InscriptioGradus  gradus)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+
+    si (gradus == INSCRIPTIO_INSCRIPTA)
+    {
+        pc->recusata = FALSUM;
+        pictor_communio_incipere(pc);
+    }
+    _nuntiare(pc);
+}
+
+interior vacuum
+_inscriptionem_temperare (
+    PictorCommunio* pc)
+{
+    si (pc->inscriptio && pc->inscriptio_mora > ZEPHYRUM)
+    {
+        communio_inscriptionis_moram_ponere(pc->inscriptio,
+            pc->inscriptio_mora);
+    }
+    si (pc->inscriptio && pc->inscriptio_vita > ZEPHYRUM)
+    {
+        communio_inscriptionis_vitam_ponere(pc->inscriptio,
+            pc->inscriptio_vita);
+    }
+}
+
+b32
+pictor_communio_inscriptionem_incipere (
+        PictorCommunio* pc,
+                chorda  epistula,
+    constans character* titulus)
+{
+    si (!pc || pc->clausa || !titulus || pictor_communio_inscripta(pc))
+    {
+        redde FALSUM;
+    }
+    si (pc->inscriptio)
+    {
+        communio_inscriptionem_abicere(pc->inscriptio);
+        pc->inscriptio = NIHIL;
+    }
+    pc->inscriptio = communio_inscriptionem_incipere(pc->piscina,
+        pc->reactor, pc->veredarius, pc->volumen, pc->basis, epistula,
+        pc->via, chorda_ex_literis(titulus, pc->piscina),
+        _inscriptio_mutata, pc);
+    _inscriptionem_temperare(pc);
+    _nuntiare(pc);
+    redde pc->inscriptio != NIHIL;
+}
+
+b32
+pictor_communio_codicem_dare (
+     PictorCommunio* pc,
+             chorda  codex)
+{
+    redde pc && pc->inscriptio
+        && communio_inscriptioni_codicem_dare(pc->inscriptio, codex);
+}
+
+s32
+pictor_communio_inscriptionis_gradus (
+    constans PictorCommunio* pc)
+{
+    redde (pc && pc->inscriptio)
+        ? (s32)communio_inscriptionis_gradus(pc->inscriptio) : -I;
+}
+
+vacuum
+pictor_communio_inscriptionem_abicere (
+    PictorCommunio* pc)
+{
+    si (!pc || !pc->inscriptio)
+    {
+        redde;
+    }
+    communio_inscriptionem_abicere(pc->inscriptio);
+    pc->inscriptio = NIHIL;
+    _nuntiare(pc);
+}
+
+b32
+pictor_communio_inscriptionem_resumere (
+    PictorCommunio* pc)
+{
+    si (!pc || pc->clausa || pc->inscriptio)
+    {
+        redde FALSUM;
+    }
+    pc->inscriptio = communio_inscriptionem_resumere(pc->piscina,
+        pc->reactor, pc->veredarius, pc->volumen, pc->basis, pc->via,
+        _inscriptio_mutata, pc);
+    _inscriptionem_temperare(pc);
+    redde pc->inscriptio != NIHIL;
+}
+
+vacuum
+pictor_communio_inscriptionis_ponere (
+    PictorCommunio* pc,
+               i32  mora_ms,
+               i32  vita_ms)
+{
+    si (!pc)
+    {
+        redde;
+    }
+    pc->inscriptio_mora = mora_ms;
+    pc->inscriptio_vita = vita_ms;
+    _inscriptionem_temperare(pc);
+}
+
+/* ligatio: functiones pro compositione et actionibus (ctx = pc) */
+interior chorda
+_auctor_ligatum (
+    vacuum* ctx,
+    chorda  replica,
+   Piscina* piscina)
+{
+    redde pictor_communio_auctor((PictorCommunio*)ctx, replica,
+        piscina);
+}
+
+interior chorda
+_persona_ligata (
+    vacuum* ctx,
+   Piscina* piscina)
+{
+    redde pictor_communio_persona((PictorCommunio*)ctx, piscina);
+}
+
+interior s32
+_gradus_ligatus (
+    vacuum* ctx)
+{
+    redde pictor_communio_inscriptionis_gradus((PictorCommunio*)ctx);
+}
+
+interior b32
+_incipere_ligatum (
+    vacuum* ctx,
+    chorda  epistula)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+
+    redde pictor_communio_inscriptionem_incipere(pc, epistula,
+        pc->machina[ZEPHYRUM] ? pc->machina : "Mac");
+}
+
+interior b32
+_codicem_ligatum (
+    vacuum* ctx,
+    chorda  codex)
+{
+    redde pictor_communio_codicem_dare((PictorCommunio*)ctx, codex);
+}
+
+interior vacuum
+_abicere_ligatum (
+    vacuum* ctx)
+{
+    pictor_communio_inscriptionem_abicere((PictorCommunio*)ctx);
+}
+
+vacuum
+pictor_communionem_ligare (
+         PictorCommunio* pc,
+         PictorMontatio* montatio,
+            Dispensator* d,
+     constans character* machina)
+{
+    si (!pc || !montatio)
+    {
+        redde;
+    }
+    pc->montatio           = montatio;
+    pc->d                  = d;
+    pc->machina[ZEPHYRUM]  = '\0';
+    si (machina && strlen(machina) < magnitudo(pc->machina))
+    {
+        strcpy(pc->machina, machina);
+    }
+    montatio->compositio.communio_praesto      = VERUM;
+    montatio->compositio.inscripta             =
+        pictor_communio_inscripta(pc);
+    montatio->compositio.auctor = _auctor_ligatum;
+    montatio->compositio.persona = _persona_ligata;
+    montatio->compositio.inscriptionis_gradus = _gradus_ligatus;
+    montatio->compositio.auctor_ctx = pc;
+    montatio->actiones_ctx.inscriptionem_incipere = _incipere_ligatum;
+    montatio->actiones_ctx.codicem_dare = _codicem_ligatum;
+    montatio->actiones_ctx.inscriptionem_abicere = _abicere_ligatum;
+    montatio->actiones_ctx.inscriptio_ctx = pc;
+    pc->gradus_nuntiatus = pictor_communio_inscriptionis_gradus(pc);
 }

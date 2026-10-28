@@ -43,6 +43,9 @@
     <!-- communio-plan-5 T6: Shared pictures, spectator -->
     <actio nomen="communia.agere"/>
     <actio nomen="spectator.agere"/>
+    <!-- communio-plan-5 T7: salutatio, inscriptio -->
+    <actio nomen="salutatio.agere"/>
+    <actio nomen="inscriptio.agere"/>
     <actio nomen="motus" systema="verum"/>
   </actiones>
 
@@ -110,6 +113,13 @@
             scriptor="spectator.agere"
             nota="plan-5 T6: pictura spectata 'replica:spatium'; absens
                   = nulla"/>
+    <campus nomen="inscriptio_textus" typus="textus" vita="transiens"
+            scriptor="inscriptio.agere"
+            nota="plan-5 T7: textus campi inscriptionis (epistula aut
+                  codex); absens = vacuus"/>
+    <campus nomen="inscriptio_error" typus="nomen" vita="transiens"
+            scriptor="inscriptio.agere"
+            nota="plan-5 T7: error localis ('codex' = codex malus)"/>
     <campus nomen="glutinatio" typus="nomen" vita="transiens"
             scriptor="glutinatio.agere"
             nota="glutinatio pendens: A (Atkinson) | B (exemplaria); absens =

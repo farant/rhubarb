@@ -115,6 +115,14 @@ picturam_ponere_per_montationem (
     redde pictor_picturam_ponere((PictorMontatio*)montatio, spatium);
 }
 
+b32
+pictor_salutationem_ponere (
+    PictorMontatio* m)
+{
+    redde m && pictor_salutationem_ponere_in(m->ramus.repo,
+        &m->actiones_ctx);
+}
+
 /* plan-5 T6: Edit a copy per montationem */
 interior b32
 exemplum_per_montationem (

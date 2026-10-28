@@ -654,6 +654,32 @@ figura_quadrati (
         iconem_pingere(m, icon_lineae, II, II);
         redde;
     }
+    /* plan-5 T7: campus textus "campus:<textus>" - sinistrorsum, cauda
+     * si longior, cursor post textum */
+    si (t.mensura >= VII && memcmp(t.datum, "campus:", VII) == ZEPHYRUM)
+    {
+          s32 capacitas;
+        Fines k;
+
+        reliquum.datum    = t.datum + VII;
+        reliquum.mensura  = t.mensura - VII;
+        capacitas         = (c->fines.latitudo - XII) / VI;
+        capacitas         = capacitas < I ? I : capacitas;
+        si ((s32)reliquum.mensura > capacitas)
+        {
+            reliquum.datum    += reliquum.mensura - (i32)capacitas;
+            reliquum.mensura  = (i32)capacitas;
+        }
+        mandata_textus(m, IV, (c->fines.altitudo - VIII) / II, reliquum,
+            ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
+        k.x         = IV + VI * (s32)reliquum.mensura;
+        k.y         = (c->fines.altitudo - VIII) / II;
+        k.latitudo  = I;
+        k.altitudo  = VIII;
+        mandata_rectangulum(m, k, figura_color_thematis(COLOR_TEXT),
+            VERUM);
+        redde;
+    }
     /* glutinatio pendens: "textus:<litterae>" centrata (A, B, OK, X) */
     si (t.mensura > VII && memcmp(t.datum, "textus:", VII) == ZEPHYRUM)
     {

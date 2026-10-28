@@ -45,6 +45,11 @@ nomen structura PictorElenchiCondiciones {
 nomen chorda (*PictorAuctor)(vacuum* ctx, chorda replica,
     Piscina* piscina);
 
+/* plan-5 T7: persona huius apparatus ("Amanda"); gradus inscriptionis
+ * (-1 nulla, aliter InscriptioGradus communio_cliens.h) */
+nomen chorda (*PictorPersona)(vacuum* ctx, Piscina* piscina);
+nomen s32 (*PictorGradusInscriptionis)(vacuum* ctx);
+
 nomen structura PictorCompositio {
     /* superficies si superficies_* absunt (ante nuntium glutini
      * primum) */
@@ -80,6 +85,9 @@ nomen structura PictorCompositio {
        constans PictorCommunia* communia;
                   PictorAuctor  auctor;
                         vacuum* auctor_ctx;
+    /* plan-5 T7: palettae "salutatio" et "inscriptio" (ctx auctor_ctx) */
+                 PictorPersona persona;
+     PictorGradusInscriptionis inscriptionis_gradus;
 } PictorCompositio;
 
 /* condiciones menu ex compositione (importare = imago_eligibilis) */

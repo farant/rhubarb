@@ -17,6 +17,7 @@
 #include "ludus_fenestra.h"
 #include "reactor.h"
 #include "veredarius.h"
+#include "claviatura.h"
 
 /* clipboard: idem genus ac actiones_ctx.imago_capere pictoris */
 nomen ImagoFructus (*TestaImagoCapere)(vacuum* ctx, Piscina* piscina);
@@ -70,6 +71,9 @@ nomen structura {
                Reactor* reactor;
             Veredarius* veredarius;
     constans character* machina;
+    /* plan-5 T7/T9: claviatura systematis (iOS); NIHIL = physica */
+TestaClaviaturamPonere  claviaturam_ponere;
+                vacuum* claviatura_ctx;
 } TestaAmbitus;
 
 /* quod applicatio testae reddit (testa eam ZEPHYRUM implet ante) */

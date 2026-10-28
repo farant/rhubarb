@@ -94,6 +94,13 @@ pictor_exemplum_facere (
       constans character* spatium_alienum,
                character  spatium_novum[XXVIII]);
 
+/* plan-5 T7 (spec IX.1): salutatio prima aut inscriptio pendens
+ * ostenditur (communio praesto: pictor_communionem_ligare); post
+ * aedificare et ligationem vocatur. VERUM si dialogus positus. */
+b32
+pictor_salutationem_ponere (
+    PictorMontatio* m);
+
 /* semitae R4c: argumentum lateris - URI ("pictor/flores") picturam
  * EXSTANTEM ostendit (semita numquam condit); cognomen "<spatium>" ut
  * ante: exstans ostenditur, ignota conditur si condere (S3f,

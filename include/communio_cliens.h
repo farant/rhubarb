@@ -232,4 +232,11 @@ vacuum
 communio_inscriptionem_abicere (
     CommunioInscriptio* ci);
 
+/* plan-5 T7: applicatio finitur medio - petitiones et horae sistuntur,
+ * filum tesserae et entrium MANENT (resumere postea). Postea non
+ * adhibetur. */
+vacuum
+communio_inscriptionem_relinquere (
+    CommunioInscriptio* ci);
+
 #endif /* COMMUNIO_CLIENS_H */

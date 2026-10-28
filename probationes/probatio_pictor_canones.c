@@ -108,9 +108,10 @@ _sectio_prima (
      * (sigillum, numquam scriptum), nunc nullus. XIX: pinacotheca T5
      * pagina_pinacothecae (dominus pinacotheca.agere). XXI:
      * communio-plan-5 T6 pagina_communium (communia.agere), spectata
-     * (spectator.agere). */
+     * (spectator.agere). XXIII: plan-5 T7 inscriptio_textus,
+     * inscriptio_error (inscriptio.agere). */
     CREDO_AEQUALIS_I32(insula_dominos_legere(repo,
-                                             domini), XXI);
+                                             domini), XXIII);
     insula_scriptorem_ponere(repo,
         chorda_ex_literis("zoom.ponere", piscina));
     CREDO_FALSUM(insula_mutare(repo, ponere_zoom, NIHIL));
