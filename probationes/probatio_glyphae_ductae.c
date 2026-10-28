@@ -951,6 +951,50 @@ _sectio_quinta_decima (
     CREDO_FALSUM(glyphae_ductae_est(0x24D9));
 }
 
+/* XV: tecta U+2308/2309 (Franus 2026-10-28, tofu in navigatore) -
+ * '[' et ']' fontis ipsius sine linea ima */
+interior vacuum
+_sectio_sexta_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* sinistrum[] = {
+        ".###..", ".#....", ".#....", ".#....",
+        ".#....", ".#....", ".#....", "......" };
+    constans character* dextrum[] = {
+        ".###..", "...#..", "...#..", "...#..",
+        "...#..", "...#..", "...#..", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2308));
+    CREDO_VERUM(pictura_est(0x2308, sinistrum, larva));
+    CREDO_VERUM(glyphae_ductae_est(0x2309));
+    CREDO_VERUM(pictura_est(0x2309, dextrum, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x230A));
+}
+
+/* XVI: anguli mathematici U+27E8/27E9 (Franus 2026-10-28) - alti et
+ * tenues, apex in ordine III, ordines eosdem ac tecta */
+interior vacuum
+_sectio_septima_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* sinister[] = {
+        "...#..", "..#...", "..#...", ".#....",
+        "..#...", "..#...", "...#..", "......" };
+    constans character* dexter[] = {
+        "..#...", "...#..", "...#..", "....#.",
+        "...#..", "...#..", "..#...", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x27E8));
+    CREDO_VERUM(pictura_est(0x27E8, sinister, larva));
+    CREDO_VERUM(glyphae_ductae_est(0x27E9));
+    CREDO_VERUM(pictura_est(0x27E9, dexter, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x27EA));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: lineae (Ghostty linesChar)", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -980,6 +1024,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "XIV: i in circulo (U+24D8)", _sectio_quinta_decima, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "XV: tecta (U+2308, U+2309)", _sectio_sexta_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XVI: anguli (U+27E8, U+27E9)", _sectio_septima_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
