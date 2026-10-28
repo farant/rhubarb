@@ -179,4 +179,33 @@ git_arbores_differre (
     constans character* sha_arboris_novum,
                Piscina* piscina);
 
+
+/* ==================================================
+ * INDEX (fabrica-plan-8 G2) - '<via_git>/index': plagulae quas
+ * arbor laborans sequitur (arbor operis: index SUUS, in gitdir
+ * proprio). Versiones II et III (III: introitus cum vexillis
+ * extensis, e.g. 'git add -N'); IV (viae praefixo compressae)
+ * RECUSATUR - numquam male legitur. Extensiones (TREE, REUC, ...)
+ * praetereuntur; trailer SHA-1 verificatur.
+ * ================================================== */
+
+nomen structura {
+             chorda via;      /* relativa ad radicem arboris */
+                i32 modus;    /* 0100644, 0100755, 0120000 (nexus),
+                                * 0160000 (submodulus) */
+                i32 gradus;   /* 0; 1-3 in conflictu fusionis */
+                s64 mensura;  /* octeti ut in indice (XXXII bita) */
+                s64 tempus_ns;   /* mtime ut in indice */
+          character sha[GIT_SHA_HEX_MENSURA];
+} GitIndexIntroitus;
+
+/* Xar de GitIndexIntroitus, ordine indicis (= ordine viarum, ut
+ * 'git ls-files -s'). Index absens (repositorium novum): Xar vacuum.
+ * NIHIL = recusatum: signum non DIRC, versio ignota aut IV, introitus
+ * truncatus aut ultra finem, trailer SHA-1 falsus. */
+Xar*
+git_indicem_legere (
+    constans GitRepositorium* repositorium,
+                     Piscina* piscina);
+
 #endif /* GIT_H */

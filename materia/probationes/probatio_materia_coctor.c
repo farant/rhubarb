@@ -19,6 +19,7 @@
 #include "materia_nodus.h"
 #include "chorda.h"
 #include "piscina.h"
+#include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -523,10 +524,10 @@ _plagulas_generatas_probare (
          * inveniret - cursus plenus 2026-09-15 id docuit) */
         sprintf(via, "%s/materia/build/proba_registrum_coctum.h",
             radix);
-        remove(via);
+        (vacuum)filum_delere(via);
         sprintf(via, "%s/materia/build/proba_registrum_coctum.c",
             radix);
-        remove(via);
+        (vacuum)filum_delere(via);
         CREDO_VERUM (materia_registrum_recens(piscina, radix,
             "materia/build/proba.registrum.stml", &rancor));
         CREDO_FALSUM (rancor.recens);

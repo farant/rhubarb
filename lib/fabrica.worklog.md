@@ -3825,3 +3825,92 @@ lib/fabrica_sanare.c in the live tree WHILE fusio ran (03:03-03:05Z) - the oracl
 file (87083 vs 89086 bytes). instrumenta (03:04-03:07Z) overlapped too and passed against the edited
 file. Both read lib/fabrica_sanare.c, so the fix commit owes them again and the next fusio reruns
 them on committed code. Freeze rule: drafts go to the scratchpad as patches while ANY gates run.
+
+## 2026-10-27 - .DS_Store is not an input (wish …P98RY)
+
+Finder writes `.DS_Store` into any folder you open. Two effects in fabrica:
+(1) a `D` lectio (directory enumerated) is fingerprinted as the hash of ALL
+names (`_enumerare` -> lib/fabrica.c LECTIO_ENUMERAVIT), so a new `.DS_Store`
+broke the trace fast path - regenerated artifacts fell to "regeneratio
+congruit", and trace-judged verdicts (test suites) would go STALUM and rerun;
+aedilis notes `D` for every include root, so opening include/ in Finder could
+stale every compile member. (2) the before/after tree snapshot
+(`_arborem_photographare`) saw a `.DS_Store` written WHILE an action ran as
+"scripsit extra vestigium" -> FRACTUM.
+
+Fix: `directorium_titulus_systematis` in iter_directoria (one list, exact
+match, only ".DS_Store" for now - add ._* AppleDouble there if non-APFS
+volumes ever matter), called at fabrica's enumeration sites only (Fran's
+call: other tools still see the file): `_enumerare`, the tree snapshot, the
+~/ snapshot, and the bin/ undeclared-binary count. fabrica-fumus LXVI pins
+both effects (relative `d` in the D line: an ABSOLUTE path under a temp root
+is ambient, never an input, so the trace never congruent there); hand plants
+on the two fabrica sites each red at LXVI.
+
+## 2026-10-27 - snapshot time in mensor (fabrica-plan-8 T1)
+
+The before/after tree walks of a member run were measured nowhere (my
+first figure came from `sample`: ~0.42 s per snapshot, inflated by other
+sessions' load). Now `_membrum_agere` times both walks through two new
+sutura hooks - `momentum_ms` (the core keeps no clock; fake suturae
+leave it NIHIL) and `photographiam_notare(titulus, ms)` - and the
+memory layer writes fact `fabrica.photographia` (ms) under the member's
+run in the annals (`_photographiam_annalibus_inscribere`, the same
+attach-to-run pattern as credo memory facts). First real reading
+(`probare -vis probationes_toml`, 13 members): median 452 ms per member
+= ~0.23 s per snapshot (min 449, first member 1196 - cold), 7.3 s of
+the run. Query: grep fabrica.photographia ~/.rhubarb/mensurae.diarium
+(column 5 = ms, column 3 = the member run's id).
+
+## 2026-10-27 - tracked-file snapshot (fabrica-plan-8 T2)
+
+`secuta_capere` (tools/fabrica_sutura.c): the tracked paths come from
+the git index through `lib/git` (`git_indicem_legere`, G2 - no `git
+ls-files`), read ONCE per fabrica process, NUL-terminated for lstat;
+conflict stages collapse to one path; residents' locations skipped for
+parity with the walk (none is tracked today). Capture = `_vestigium_addere`
+per path (lstat; absent omitted, so a deleted source shows as a vanished
+path exactly as in the full walk), sorted with the walk's comparator -
+same shape, so the comparers take it unchanged in T3. Wired ONLY under
+FABRICA_VESTIGIUM=umbra|liber; the default run is untouched.
+`photographiam_notare` now carries both times (-1 = not taken); facts
+`fabrica.photographia` and `fabrica.secuta` per member run.
+
+Measured (umbra, `probare -vis probationes_toml`, 13 members, both
+snapshots per member): tracked median 49 ms (43-58), full walk 636 ms
+(529-1284, other sessions active) - ~13x cheaper.
+
+Plant lesson (again): my first plant set the hook to NIHIL, which left
+`_secuta_capere` unused -> -Werror build failed silently behind
+`>/dev/null` -> the gate ran the OLD binary and stayed green. A plant
+must compile; check the build line, not just the gate.
+
+## 2026-10-27 - shadow mode: two verdicts per member (fabrica-plan-8 T3, part 1)
+
+Under FABRICA_VESTIGIUM=umbra `_membrum_agere` keeps the real verdict
+(full walk) and also judges the member the trace way - its S lines plus
+the tracked snapshot (T2) - for all three jobs, writing every
+disagreement to `<area>/vestigia_umbra.txt` (`_umbram_conferre`):
+`vestigium photographia|secuta <via>` (outside the footprint, seen by one
+witness only - a walk-only path NAMED by the member's own S lines is not a
+disagreement: the S check applies in both modes), `debitum ...` (debt used
+per one side only) and `invalidatio photographia=X secuta=Y`. Count ->
+fact `fabrica.umbra_discordia` (third value on photographiam_notare).
+`_debita_notare` was split: `_debita_usurpata` (pure: which debts a
+before/after pair + the trace used) + the writer - XLIII unchanged.
+
+fumus LXIX: a raw x.txt + own S line (agree), b raw append to TRACKED
+lib/bib.c (agree - the tracked witness sees it), c raw extra.txt UNTRACKED
+outside the area (disagree: vestigium + invalidatio = 2 - the known blind
+spot, spec 8 T4's per-run walk), d clean. Three compiling plants (walk
+comparison off, S lines ignored, invalidation off) each red.
+
+## 2026-10-27 - gates run shadow mode (fabrica-plan-8 T3, part 2)
+
+`silva._porta_per_gradum` (every composite gate: radix, css, html,
+materia, md, saltuarius, toml, silva, veneni) now runs `bin/fabrica
+probare` with FABRICA_VESTIGIUM=umbra unless the caller already set a
+mode (`photographia` = explicit opt-out). Verdicts are unchanged; each
+member that RUNS leaves `<area>vestigia_umbra.txt` and a
+`fabrica.umbra_discordia` fact - evidence accumulates with every commit.
+Cost: the tracked snapshot twice per member that runs (~50 ms).

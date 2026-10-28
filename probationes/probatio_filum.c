@@ -1299,6 +1299,9 @@ _sectio_tricesima (
             "/tmp/test_rhubarb_arbor/sub/subsub/c.txt", "c"));
         CREDO_VERUM(filum_directorium_creare_cum_parentibus(aliena));
         CREDO_VERUM(filum_scribere_literis(testis, "testis"));
+        /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio fili
+         * nexus symbolicus ut fixtura, extra filum consulto (filum
+         * nexum non creat; probatio filum non per filum parat) */
         CREDO_VERUM(symlink(aliena, "/tmp/test_rhubarb_arbor/nexus")
                     == ZEPHYRUM);
 

@@ -16,7 +16,7 @@
 #        (silva_lexicon.h/.c) examen renectunt
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="nexus-instrumentorum" gradus="fusio" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh" currit="silva/instrumenta/principalia/selecta.c" legit="include/* silva/fontes/* silva/instrumenta/*"/>
+# <porta titulus="nexus-instrumentorum" gradus="fusio" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh silva/transformare.sh" currit="silva/instrumenta/principalia/selecta.c" legit="include/* silva/fontes/* silva/instrumenta/*"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -53,6 +53,7 @@ INVOLUCRA=(
     "silva/percursus.sh|silva/build/percursus|$S/percursus.c|@T/radix|rc"
     "silva/quaestio.sh|silva/build/quaestio|$S/quaestio.c||"
     "silva/renominare.sh|silva/build/renominare|$S/renominare.c||"
+    "silva/transformare.sh|silva/build/transformare|$S/transformare.c|-census f @T/parva.c|"
     "officina/fusor.sh|officina/build/fusor|$O/fusor.c|@T/radix|rc"
     "officina/cursor.sh|officina/build/cursor|$O/cursor.c||solum"
     "officina/interpretare.sh|officina/build/interpretare|$O/interpretare.c||solum"

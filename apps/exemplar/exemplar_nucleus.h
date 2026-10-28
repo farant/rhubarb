@@ -25,6 +25,7 @@
 #include "reactor.h"
 #include "hospitium.h"
 #include "chorda.h"
+#include "epistula.h"
 
 nomen structura {
     constans character* via_datorum;      /* --data (creatur 0700) */
@@ -42,6 +43,10 @@ nomen structura {
                    b32 sonda;
                 vacuum (*sonda_scriptor)(vacuum* datum, chorda linea);
                 vacuum* sonda_datum;
+    /* communio plan-3 T5: provisor epistularum aditus - NIHIL =
+     * "resend" (clavis <data>/resend.clavis, 0600; deest = epistulae
+     * non mittuntur); probationes "fictus" */
+    constans character* provisor_epistulae;
 } ExemplarConfiguratio;
 
 nomen structura Exemplar Exemplar;
@@ -55,6 +60,12 @@ exemplar_creare (
 
 Hospitium*
 exemplar_hospitium (
+    Exemplar* exemplar);
+
+/* epistularius aditus (NIHIL si clavis deest) - probationes epistulas
+ * fictas legunt */
+Epistularius*
+exemplar_epistularius (
     Exemplar* exemplar);
 
 Reactor*

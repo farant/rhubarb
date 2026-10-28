@@ -34,7 +34,7 @@ declare -a INCLUDE_FLAGS=(
 # ---- 1. dependency objects (mechanism runtime) ----
 declare -a MECHANISMI_FONTES=(
     "piscina" "chorda" "chorda_aedificator" "xar" "tabula_dispersa"
-    "friatio"
+    "friatio" "lectiones"
 )
 # capita mutata sine recompilo = corruptio ABI (classis excubitoris;
 # custos tesserae aequatus - desideratum 01KY2P5X)

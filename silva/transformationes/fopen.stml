@@ -1,0 +1,61 @@
+<!-- silva/transformationes/fopen.stml - fopen modo SCRIBENTI -> lectiones_fopen
+     (codex 97, fabrica-8). Eadem forma (via, modus) et idem valor (FILE*),
+     ergo vocatio ipsa rescribitur, quicumque consumens. Modus ut
+     litterale solum: modus variabilis aut legens (codex 96, debitum
+     canalis) recusatur. lectiones_fopen lineam S in libro scribit.
+     NUMQUAM secretum (clavis API) per lectiones: tales sedes <tolera>. -->
+<transformatio functio="fopen" codex="97">
+  <inclusio>lectiones.h</inclusio>
+  <regula>
+    <si! (>fopen($via, "w")
+    <fac! (>lectiones_fopen($via, "w")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "wb")
+    <fac! (>lectiones_fopen($via, "wb")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "a")
+    <fac! (>lectiones_fopen($via, "a")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "ab")
+    <fac! (>lectiones_fopen($via, "ab")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "w+")
+    <fac! (>lectiones_fopen($via, "w+")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "w+b")
+    <fac! (>lectiones_fopen($via, "w+b")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "wb+")
+    <fac! (>lectiones_fopen($via, "wb+")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "a+")
+    <fac! (>lectiones_fopen($via, "a+")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "a+b")
+    <fac! (>lectiones_fopen($via, "a+b")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "ab+")
+    <fac! (>lectiones_fopen($via, "ab+")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "r+")
+    <fac! (>lectiones_fopen($via, "r+")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "r+b")
+    <fac! (>lectiones_fopen($via, "r+b")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "rb+")
+    <fac! (>lectiones_fopen($via, "rb+")
+  </regula>
+</transformatio>

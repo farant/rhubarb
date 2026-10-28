@@ -919,12 +919,14 @@ finally:
 # producentes fracti (SANATIO) ut fracturae nominata; exitus 2 aut PROBARE
 # absens -> via altera; filtrum -> via cruda
 _gradus_log = os.path.join(T, 'fabrica_gradus_argv.txt')
+_gradus_ambitus = os.path.join(T, 'fabrica_gradus_vestigium.txt')
 
 
 def _fabrica_gradus(modus):
     via = os.path.join(T, 'fabrica_gradus_%s' % modus)
     with open(via, 'w') as f:
         f.write('#!/bin/bash\necho "$*" >> %s\n' % _gradus_log)
+        f.write('echo "${FABRICA_VESTIGIUM-}" >> %s\n' % _gradus_ambitus)
         if modus == 'transit':
             f.write('printf "MEMBRUM\\tprobatio_a\\ttransiit\\t100\\t\\n"\n'
                     'printf "MEMBRUM\\tprobatio_b\\ttransiit\\t100\\t\\n"\n'
@@ -969,6 +971,23 @@ try:
     _argv_g = open(_gradus_log).read().splitlines()
     credo(_argv_g == ['probare -machina -vis -audit gradus_fictus'],
           'porta gradus: vis/auditus -> probare -vis -audit (%r)' % (_argv_g,))
+    # UMBRA (fabrica-plan-8 T3, decretum Q2): porta compositi umbram
+    # semper ponit nisi vocans modum expresse posuit
+    _vest_vetus = os.environ.pop('FABRICA_VESTIGIUM', None)
+    open(_gradus_ambitus, 'w').close()
+    pg = silva.porta('ficta-g')
+    _vest = open(_gradus_ambitus).read().splitlines()
+    os.environ['FABRICA_VESTIGIUM'] = 'photographia'
+    open(_gradus_ambitus, 'w').close()
+    pg = silva.porta('ficta-g')
+    _vest_expressum = open(_gradus_ambitus).read().splitlines()
+    if _vest_vetus is None:
+        del os.environ['FABRICA_VESTIGIUM']
+    else:
+        os.environ['FABRICA_VESTIGIUM'] = _vest_vetus
+    credo(_vest == ['umbra'] and _vest_expressum == ['photographia'],
+          'porta gradus: FABRICA_VESTIGIUM=umbra ordinarie, expressum '
+          'servatum (%r, %r)' % (_vest, _vest_expressum))
     silva.FABRICA_BIN = _fabrica_gradus('reusus')
     pg = silva.porta('ficta-g')
     credo(pg.sana and '[membra cursa 0/2' in pg.compendium
@@ -3505,6 +3524,90 @@ finally:
     for _n in ('ficta-umbra-v', 'ficta-umbra-r'):
         silva.receptum_delere(silva._receptum_vivum_via(_n))
     os.environ.pop('PYTHONICA_PORTAE_FICTAE', None)
+
+_grex('transformare: census, consilium, scriptio custodita')
+via_tr = os.path.join(T, 'transformare.c')
+FONS_TR = ('#include "latina.h"\n'
+           '#include <stdio.h>\n'
+           'interior b32 nova(constans character* v)\n'
+           '{\n'
+           '    (vacuum)v;\n'
+           '    redde VERUM;\n'
+           '}\n'
+           'interior vacuum f(constans character* v)\n'
+           '{\n'
+           '    remove(v);\n'
+           '    si (remove(v) != ZEPHYRUM) { redde; }\n'
+           '    (vacuum)nova(v);\n'
+           '}\n'
+           'vacuum g(constans character* v);\n'
+           'vacuum g(constans character* v) { f(v); }\n')
+open(via_tr, 'w').write(FONS_TR)
+c = silva.census('remove', [via_tr])
+credo([(x.genus, x.linea) for x in c.situs] == [('situs', 10), ('situs', 11)]
+      and c.situs[1].scriptura == 'remove($1) != ZEPHYRUM' and not c.fractae,
+      'census: duo situs, scriptura auctoris', causa=repr(c))
+via_reg = os.path.join(T, 'remove.stml')
+REGULA_I = ('  <regula>\n    <si! (>remove($v);\n'
+            '    <fac! (>(vacuum)nova($v);\n  </regula>\n')
+REGULA_II = ('  <regula>\n    <si! (>remove($v) != ZEPHYRUM\n'
+             '    <fac! (>!nova($v)\n  </regula>\n')
+open(via_reg, 'w').write('<transformatio functio="remove" codex="97">\n'
+                         + REGULA_I + '</transformatio>\n')
+t = silva.transformare(via_reg, [via_tr])
+credo(t.rc == 1 and [x.genus for x in t.rescriptiones] == ['facta', 'recusata']
+      and t.rescriptiones[1].causa == 'nulla regula congruit'
+      and open(via_tr).read() == FONS_TR,
+      'consilium: recusatus nominatus, nihil scriptum', causa=t.nuntii)
+open(via_reg, 'w').write('<transformatio functio="remove" codex="97">\n'
+                         + REGULA_I + REGULA_II + '</transformatio>\n')
+t = silva.transformare(via_reg, [via_tr], scribere=True)
+credo(t.rc == 0 and 'SCRIPTA (2 rescriptiones; codex 97 2 -> 0' in t.nuntii
+      and open(via_tr).read() == FONS_TR.replace(
+          '    remove(v);\n', '    (vacuum)nova(v);\n').replace(
+          'si (remove(v) != ZEPHYRUM)', 'si (!nova(v))'),
+      'scribere: custodia et scriptio', causa=t.nuntii)
+# <inclusio>: caput deest -> linea additur; GENERATUM numquam rescribitur
+FONS_TR_II = ('#include "latina.h"\n'
+              '#include <stdio.h>\n'
+              'interior vacuum f(constans character* v)\n'
+              '{\n'
+              '    remove(v);\n'
+              '}\n'
+              'vacuum g(constans character* v);\n'
+              'vacuum g(constans character* v) { f(v); }\n')
+via_tr2 = os.path.join(T, 'transformare_caput.c')
+via_gen = os.path.join(T, 'transformare_generata.c')
+open(via_tr2, 'w').write(FONS_TR_II)
+open(via_gen, 'w').write('/* GENERATUM AB AEDILE */\n' + FONS_TR_II)
+open(via_reg, 'w').write('<transformatio functio="remove" codex="97">\n'
+                         '  <inclusio>filum.h</inclusio>\n'
+                         '  <regula>\n    <si! (>remove($v);\n'
+                         '    <fac! (>(vacuum)filum_delere($v);\n'
+                         '  </regula>\n</transformatio>\n')
+t = silva.transformare(via_reg, [via_tr2, via_gen], scribere=True)
+credo(t.rc == 0 and open(via_tr2).read() == FONS_TR_II.replace(
+          '#include "latina.h"\n', '#include "latina.h"\n#include "filum.h"\n')
+      .replace('    remove(v);', '    (vacuum)filum_delere(v);')
+      and 'GENERATUM - non rescribitur' in t.nuntii
+      and open(via_gen).read().endswith(FONS_TR_II)
+      and all(x.via != via_gen for x in t.rescriptiones),
+      'inclusio addita; GENERATUM intacta', causa=t.nuntii)
+# inclusio ultima cum commentario plurium linearum (gesta/fontes/
+# tabularium.c, 2026-10-26): linea nova POST finem commentarii, numquam
+# intra eum (aliter caput non includitur et custodia recusat)
+FONS_TR_III = FONS_TR_II.replace(
+    '#include "latina.h"\n',
+    '#include "latina.h"   /* commentarium quod\n'
+    '                       * in lineam alteram it */\n')
+via_tr3 = os.path.join(T, 'transformare_commentarium.c')
+open(via_tr3, 'w').write(FONS_TR_III)
+t = silva.transformare(via_reg, [via_tr3], scribere=True)
+credo(t.rc == 0 and open(via_tr3).read() == FONS_TR_III.replace(
+          '* in lineam alteram it */\n',
+          '* in lineam alteram it */\n#include "filum.h"\n')
+      .replace('    remove(v);', '    (vacuum)filum_delere(v);'),
+      'inclusio post commentarium plurium linearum', causa=t.nuntii)
 
 print()
 if fracta:

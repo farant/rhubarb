@@ -273,6 +273,12 @@
     <forma textus="ordinationem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="ordinationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="exundatio" lingua="latina" classis="substantivum" nota="Latina classica (Plinius: exundatio fluminis); domus: exundatio mensurae insignatae (summa circumit) - lib/piscina.c, parcum …1Q6158 (2026-10-27)">
+    <forma textus="exundatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="orientatio" lingua="latina" classis="substantivum" nota="Neolatina: orientatio (situs orientationis, praedicata geometrica); WORDS caret">
     <forma textus="orientatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="orientationis" casus="genitivus" numerus="singularis" genus="femininum"/>
@@ -1103,6 +1109,7 @@
   <vocabulum lemma="uint64" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint64_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
   <vocabulum lemma="rsa" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RSA (Rivest-Shamir-Adleman) - algorithmus clavis publicae; folia probationis TLS et vectura BearSSL (tls-bearssl T2 R12, 2026-10-15)"/>
   <vocabulum lemma="securetransport" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SecureTransport (Apple, Security.framework) - nomen proprium; vectura TLS vetus (tls-bearssl T3, 2026-10-15)"/>
+  <vocabulum lemma="be16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="big-endian XVI bita - lib/git.c _be16 (index git, fabrica-plan-8 G2); frater be32 in copia tolerata"/>
   <vocabulum lemma="bearssl" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BearSSL (Thomas Pornin) - nomen proprium; vectura TLS (vendor/bearssl, tls-bearssl T3, 2026-10-15)"/>
   <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>
   <vocabulum lemma="rfc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC (Request for Comments, IETF) - abbreviatio; textus normarum ut oracula (tls13 T1, 2026-10-16)"/>
@@ -1883,11 +1890,26 @@
     <forma textus="acordum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="acordi" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="acorda" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="acordorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
   <vocabulum lemma="instrumentarium" lingua="latina" classis="substantivum" nota="vox domus (-ium, -ii n., ut armamentarium, sanctuarium): locus instrumentorum - instrumenta musica domus ut data (instrumentarium.stml, include/carmen.h); WORDS caret">
     <forma textus="instrumentarium" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="unisonus" lingua="latina" classis="adiectivum" nota="Latina media (Boethius, theorici musicae: unisonus, -a, -um = eiusdem soni; unisonus = vox eadem altitudine): hic exemplaria undae paulo dispersa (sectio chordarum, include/tibia.h)"><forma textus="unisonus"/><forma textus="unisoni"/><forma textus="unisonos"/><forma textus="unisonorum"/></vocabulum>
+  <vocabulum lemma="picardia" lingua="latina" classis="substantivum" nota="Latina media (Picardia, -ae f.: regio Galliae septentrionalis): tertia Picardiae = acordum tonicae maius in clave minore (tierce de Picardie), include/functio.h"><forma textus="picardia"/><forma textus="picardiae"/></vocabulum>
+  <vocabulum lemma="limitator" lingua="latina" classis="substantivum" nota="limitator, -oris m. (Latinitas posterior, L&amp;S: qui limites ponit): hic limitator summae mixturae (apices supra tectum statim deprimit, include/mixtura.h)">
+    <forma textus="limitator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <!-- transformare T4 (2026-10-26): rescriptio vocationum per regulas (silva/fontes/silva_forma.h) -->
+  <vocabulum lemma="rescriptio" lingua="latina" classis="substantivum" nota="Latinum serum (rescriptio, -onis f., a rescribere: responsum scriptum; Du Cange): hic rescriptio codicis - situs vocationis per regulam transformationis rescriptus (silva_rescriptiones_parare, transformare T4); WORDS caret">
+    <forma textus="rescriptio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="rescriptiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
   <vocabulum lemma="cryptographia" lingua="latina" classis="substantivum" nota="Latina nova (cryptographia, -ae f.; Graece kryptos + graphein, ut 'Cryptographia' Wilkins/Schott saec. XVII): ars scripturae occultae - hic cifrae in clausura applicationis (nundinae_apple_cryptographia, ITSAppUsesNonExemptEncryption); WORDS caret">
     <forma textus="cryptographia" casus="nominativus" numerus="singularis" genus="femininum"/>
@@ -1901,6 +1923,21 @@
     <forma textus="pinace" casus="ablativus" numerus="singularis" genus="masculinum"/>
     <forma textus="pinaces" casus="nominativus" numerus="pluralis" genus="masculinum"/>
     <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+
+  <vocabulum lemma="epistularius" lingua="latina" classis="substantivum" nota="epistularius, -i m. (ex epistula; cf. 'ab epistulis', scriba epistularum): qui epistulas mittit - hic Epistularius, missor epistularum electronicarum per provisorem (lib/epistula.c, communio-plan-3 T2)">
+    <forma textus="epistularius" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistularii" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistularium" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistulario" casus="dativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="resend" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Resend, provisor epistularum (api.resend.com; epistula_resend_corpus, communio D7)"/>
+  <vocabulum lemma="replica" lingua="latina" classis="substantivum" nota="replica, -ae f. (ex replicare, 'iterum plicare'; Latinitas recentior): exemplar documenti quod scriptor proprium tenet - hic volumen ut scriptor actuum (communio D2b, volumen_replica); WORDS caret">
+    <forma textus="replica" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicae" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicam" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="replicarum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="replicas" casus="accusativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
 </glossarium>

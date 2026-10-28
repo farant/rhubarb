@@ -22,6 +22,7 @@
 #include "ianua.h"
 #include "mcp_servus_canalis.h"
 #include "exemplar_nucleus.h"
+#include "communio_servus.h"
 
 #define EXEMPLAR_PETITIO_MAXIMA  (LXIV * MXXIV * MXXIV)
 #define EXEMPLAR_TEXTUS_MAXIMUS  (XVI * MXXIV)
@@ -67,6 +68,11 @@ structura Exemplar {
      * canalis T4): servus alter, numquam in /mcp */
                 McpServus* administratio;
                McpCanalis* canalis;
+    /* communio plan-2 T7: servus actorum (volumen proprium, C1) */
+                  Volumen* communio_volumen;
+           CommunioServus* communio;
+    /* plan-3 T5: epistulae aditus (NIHIL = non mittuntur) */
+             Epistularius* epistularius;
 };
 
 

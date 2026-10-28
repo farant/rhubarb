@@ -472,7 +472,8 @@ _binaria_sine_declaratione (
 
         si (   introitus->genus == INTROITUS_DIRECTORIUM
             || chorda_aequalis_literis(introitus->titulus, ".")
-            || chorda_aequalis_literis(introitus->titulus, ".."))
+            || chorda_aequalis_literis(introitus->titulus, "..")
+            || directorium_titulus_systematis(introitus->titulus))
         {
             perge;
         }

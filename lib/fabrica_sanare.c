@@ -373,32 +373,34 @@ _mutata_photographiarum (
  * quas membrum USURPAVIT - photographiae ante/post mutatas ostendunt
  * aut liber lectionum nominat (fabrica_debitum_iudicare eam legit).
  * Sine photographia nihil scribitur (IGNOTUM). */
-interior vacuum
-_debita_notare (
+/* DEBITA USURPATA (fabrica-plan-8 T3, ex _debita_notare extractum):
+ * viae debitorum actionis quas membrum usurpavit - inter 'ante' et
+ * 'post' mutatas aut in libro lectionum nominatas. Xar de chorda
+ * (debitum->via); vacuum sine debitis; NIHIL si memoria deficit.
+ * Umbra par alterum (photographia secutorum) eidem dat. */
+interior Xar*
+_debita_usurpata (
     constans FabricaSutura* sutura,
      constans FabricaActio* actio,
-                    chorda  area,
               constans Xar* ante,
               constans Xar* post,
-                       b32  transiit,
                    Piscina* piscina)
 {
-    ChordaAedificator* a;
-                  Xar* mutata;
-               chorda  contentum;
-                  i32  i;
-                  i32  d;
+    Xar* usurpata;
+    Xar* mutata;
+    i32  i;
+    i32  d;
 
-    si (   actio->debita              == NIHIL
+    usurpata = fabricae_xar_chordarum(piscina);
+    si (   usurpata                   == NIHIL || actio->debita == NIHIL
         || xar_numerus(actio->debita) == ZEPHYRUM)
     {
-        redde;
+        redde usurpata;
     }
-    mutata  = _mutata_photographiarum(ante, post, piscina);
-    a       = chorda_aedificator_creare(piscina, CCLVI);
-    si (mutata == NIHIL || a == NIHIL)
+    mutata = _mutata_photographiarum(ante, post, piscina);
+    si (mutata == NIHIL)
     {
-        redde;
+        redde NIHIL;
     }
     /* LIBER LECTIONUM quoque (fabrica-7 T4): scriptura TRANSIENS
      * (creata et deleta intra cursum - sqlite, sera, scripta ficta)
@@ -445,8 +447,6 @@ _debita_notare (
             }
         }
     }
-    (vacuum)chorda_aedificator_appendere_literis(a, transiit
-        ? "cursus\ttransiit\n" : "cursus\tfractus\n");
     per (d = ZEPHYRUM; d < xar_numerus(actio->debita); d++)
     {
         constans FabricaDebitum* debitum = (constans FabricaDebitum*)
@@ -457,7 +457,7 @@ _debita_notare (
         locus = xar_creare(piscina, (i32)magnitudo(FabricaLocus));
         si (locus == NIHIL)
         {
-            redde;
+            redde NIHIL;
         }
         fabricae_locum_debiti_addere(locus, debitum, piscina);
         per (i = ZEPHYRUM; i < xar_numerus(mutata) && !scriptum; i++)
@@ -467,10 +467,45 @@ _debita_notare (
         }
         si (scriptum)
         {
-            (vacuum)chorda_aedificator_appendere_chorda(a,
-                debitum->via);
-            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+            fabricae_chordam_addere(usurpata, debitum->via);
         }
+    }
+    redde usurpata;
+}
+
+interior vacuum
+_debita_notare (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+                       b32  transiit,
+                   Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  Xar* usurpata;
+               chorda  contentum;
+                  i32  i;
+
+    si (   actio->debita              == NIHIL
+        || xar_numerus(actio->debita) == ZEPHYRUM)
+    {
+        redde;
+    }
+    usurpata  = _debita_usurpata(sutura, actio, ante, post, piscina);
+    a         = chorda_aedificator_creare(piscina, CCLVI);
+    si (usurpata == NIHIL || a == NIHIL)
+    {
+        redde;
+    }
+    (vacuum)chorda_aedificator_appendere_literis(a, transiit
+        ? "cursus\ttransiit\n" : "cursus\tfractus\n");
+    per (i = ZEPHYRUM; i < xar_numerus(usurpata); i++)
+    {
+        (vacuum)chorda_aedificator_appendere_chorda(a,
+            *(chorda*)xar_obtinere(usurpata, i));
+        (vacuum)chorda_aedificator_appendere_character(a, '\n');
     }
     contentum = chorda_aedificator_finire(a);
     (vacuum)sutura->verdictum_ponere(sutura->datum, chorda_ut_cstr(
@@ -668,6 +703,129 @@ _vestigia_conferre (
         piscina), &contentum);
 }
 
+/* UMBRA (fabrica-plan-8 T3): iudicium PHOTOGRAPHIARUM (ambulatio
+ * arboris, verdictum verum) et iudicium LIBRI (lineae S + photographia
+ * secutorum) per membrum conferuntur - verdictum non mutatur.
+ * <area>vestigia_umbra.txt: 'cursus', deinde discordiae:
+ *   vestigium\tphotographia\t<via>  extra vestigium: ambulatio sola
+ *                                   (nec secuta nec liber nominat)
+ *   vestigium\tsecuta\t<via>        extra vestigium: secuta sola
+ *   debitum\tphotographia|secuta\t<via>  usurpatum ab uno solo
+ *   invalidatio\tphotographia=X\tsecuta=Y  (X, Y: intra | extra)
+ * Lineae S communes sunt (_scripturam_alienam utrique iudicio): via
+ * quam liber nominat discordia non est. Reddit numerum discordiarum;
+ * -I si memoria deficit (nihil scriptum). */
+interior s32
+_umbram_conferre (
+    constans FabricaSutura* sutura,
+     constans FabricaActio* actio,
+                    chorda  area,
+              constans Xar* ante,
+              constans Xar* post,
+              constans Xar* ante_secuta,
+              constans Xar* post_secuta,
+                   Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  Xar* extra_p;
+                  Xar* extra_s;
+                  Xar* notatae;
+                  Xar* debita_p;
+                  Xar* debita_s;
+               chorda  contentum;
+                  s32  discordiae;
+                  i32  k;
+                  b32  intra_p;
+                  b32  intra_s;
+
+    extra_p   = fabrica_vestigia_comparare(actio, ante, post, piscina);
+    extra_s   = fabrica_vestigia_comparare(actio, ante_secuta,
+        post_secuta, piscina);
+    notatae   = _scripturas_notatas(sutura, chorda_ut_cstr(
+        fabrica_liber_via(actio->titulus, piscina), piscina), piscina);
+    debita_p  = _debita_usurpata(sutura, actio, ante, post, piscina);
+    debita_s  = _debita_usurpata(sutura, actio, ante_secuta,
+        post_secuta, piscina);
+    a         = chorda_aedificator_creare(piscina, CCLVI);
+    si (   extra_p  == NIHIL || extra_s == NIHIL || notatae == NIHIL
+        || debita_p == NIHIL || debita_s == NIHIL || a == NIHIL)
+    {
+        redde -I;
+    }
+    discordiae = ZEPHYRUM;
+    (vacuum)chorda_aedificator_appendere_literis(a, "cursus\n");
+    per (k = ZEPHYRUM; k < xar_numerus(extra_p); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(extra_p, k);
+
+        si (   !_viam_continet(extra_s, via)
+            && !_viam_continet(notatae, via))
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                "vestigium\tphotographia\t");
+            (vacuum)chorda_aedificator_appendere_chorda(a, via);
+            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+            discordiae++;
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(extra_s); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(extra_s, k);
+
+        si (!_viam_continet(extra_p, via))
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                "vestigium\tsecuta\t");
+            (vacuum)chorda_aedificator_appendere_chorda(a, via);
+            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+            discordiae++;
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(debita_p); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(debita_p, k);
+
+        si (!_viam_continet(debita_s, via))
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                "debitum\tphotographia\t");
+            (vacuum)chorda_aedificator_appendere_chorda(a, via);
+            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+            discordiae++;
+        }
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(debita_s); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(debita_s, k);
+
+        si (!_viam_continet(debita_p, via))
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                "debitum\tsecuta\t");
+            (vacuum)chorda_aedificator_appendere_chorda(a, via);
+            (vacuum)chorda_aedificator_appendere_character(a, '\n');
+            discordiae++;
+        }
+    }
+    intra_p = fabrica_mutata_intra_locum(sutura, actio, area, ante,
+        post,
+        piscina);
+    intra_s = fabrica_mutata_intra_locum(sutura, actio, area,
+        ante_secuta, post_secuta, piscina);
+    si (intra_p != intra_s)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a, intra_p
+            ? "invalidatio\tphotographia=intra\tsecuta=extra\n"
+            : "invalidatio\tphotographia=extra\tsecuta=intra\n");
+        discordiae++;
+    }
+    contentum = chorda_aedificator_finire(a);
+    (vacuum)sutura->verdictum_ponere(sutura->datum, chorda_ut_cstr(
+        fabricae_iungere(piscina, "", area, "vestigia_umbra.txt"),
+        piscina), &contentum);
+    redde discordiae;
+}
+
 /* MEMBRUM AGERE (T5): verdictum vetus deletum, area parata et vacua,
  * ambitus basis, genus gradus agit; deinde scriptura extra vestigium,
  * ambitus non declaratus -> FALSUM nominatum; transitus -> verdictum
@@ -682,6 +840,15 @@ _scripturam_alienam (
      constans FabricaActio* actio,
               constans Xar* notatae,
                    Piscina* piscina);
+
+/* horologium suturae (ms); ZEPHYRUM sine eo (sutura ficta) */
+interior s64
+_momentum_ms (
+    constans FabricaSutura* sutura)
+{
+    redde sutura->momentum_ms != NIHIL
+        ? sutura->momentum_ms(sutura->datum) : (s64)ZEPHYRUM;
+}
 
 interior b32
 _membrum_agere (
@@ -701,6 +868,12 @@ _membrum_agere (
                        Xar* alieni;
                        b32  incepit;
                  character  numerus[XXXII];
+                       s64  photographia_ms;
+                       s64  secuta_ms;
+                       s64  t0;
+                       Xar* ante_secuta;
+                       Xar* post_secuta;
+                       s32  discordiae;
 
     *duratio_out = ZEPHYRUM;
     si (   actio->gradus == NIHIL || actio->gradus->agere == NIHIL
@@ -734,11 +907,25 @@ _membrum_agere (
             piscina);
         redde FALSUM;
     }
-    ante = NIHIL;
-    post = NIHIL;
+    ante             = NIHIL;
+    post             = NIHIL;
+    ante_secuta      = NIHIL;
+    post_secuta      = NIHIL;
+    photographia_ms  = ZEPHYRUM;
+    secuta_ms        = ZEPHYRUM;
     si (sutura->vestigium_capere != NIHIL)
     {
+        t0 = _momentum_ms(sutura);
         (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
+        photographia_ms += _momentum_ms(sutura) - t0;
+    }
+    /* T2: testis secutorum (T3 eum in umbra confert) */
+    si (sutura->secuta_capere != NIHIL)
+    {
+        t0 = _momentum_ms(sutura);
+        (vacuum)sutura->secuta_capere(sutura->datum, piscina,
+            &ante_secuta);
+        secuta_ms += _momentum_ms(sutura) - t0;
     }
     actum.codex       = -I;
     actum.duratio_ms  = ZEPHYRUM;
@@ -755,10 +942,38 @@ _membrum_agere (
     }
     /* photographia post STATIM (fabrica-7 T3): debita notantur etiam
      * cursu fracto (fractura debitum mortuum non probat) */
+    t0 = _momentum_ms(sutura);
     si (   ante != NIHIL
         && !sutura->vestigium_capere(sutura->datum, piscina, &post))
     {
         post = NIHIL;
+    }
+    photographia_ms += _momentum_ms(sutura) - t0;
+    si (ante_secuta != NIHIL)
+    {
+        t0 = _momentum_ms(sutura);
+        si (!sutura->secuta_capere(sutura->datum, piscina,
+                &post_secuta))
+        {
+            post_secuta = NIHIL;
+        }
+        secuta_ms += _momentum_ms(sutura) - t0;
+    }
+    /* UMBRA (T3): ambo testes adsunt - iudicia conferuntur */
+    discordiae = -I;
+    si (   ante        != NIHIL && post != NIHIL && ante_secuta != NIHIL
+        && post_secuta != NIHIL)
+    {
+        discordiae = _umbram_conferre(sutura, actio, area, ante, post,
+            ante_secuta, post_secuta, piscina);
+    }
+    si (   (ante != NIHIL || ante_secuta != NIHIL)
+        && sutura->momentum_ms          != NIHIL
+        && sutura->photographiam_notare != NIHIL)
+    {
+        sutura->photographiam_notare(sutura->datum, actio->titulus,
+            ante != NIHIL ? (s32)photographia_ms : -I,
+            ante_secuta != NIHIL ? (s32)secuta_ms : -I, discordiae);
     }
     si (sutura->vestigia_conferre && post != NIHIL)
     {

@@ -335,3 +335,45 @@ suspends through the volumen directly (grants untouched) -> bearer 401;
 restore -> 200 again. Red before; plant (status check made always-true)
 -> red. Also makes a silently empty `admissio_concessiones` list (prepare
 failure) harmless.
+
+## 2026-10-27 - communio server mounted (communio plan-2 T7)
+
+exemplar opens a SECOND volume, `<data>/communio.volumen` (durabilitas plena),
+for the sync act store (plan C1: imported acts never mix with notes/users, and
+`_replicare` - which reads every act of exemplar.volumen - needs no change). The
+communio server checks persons through `ianua_cives(e->ianua)` (cives live in
+exemplar.volumen). Routes mount under /communio/ - nginx's `location /` already
+proxies them, so no vhost change.
+
+Order matters at shutdown: `communio_servum_destruere` BEFORE
+`hospitium_destruere` (it cancels long-poll timers that would otherwise fire
+into a destroyed hospitium); both volumes get `wal_checkpoint(TRUNCATE)` so a
+plain `cp` after stop is consistent.
+
+Admin channel: 4 new tools (now XI): communio_membrum_addere {spatium, nomen},
+communio_apparatum_addere {nomen, spatium, titulus, digestum} -> {id},
+communio_apparatum_revocare {id}, communio_apparatus_enumerare. They take the
+person's HANDLE (what Fran types) rather than the civis ULID, and only ever the
+token's DIGEST - the device mints its token (`communio tessera`), so no secret
+crosses the channel or reaches Claude's context.
+
+## 2026-10-27 - sign-in mail wiring (communio plan-3 T5)
+
+exemplar reads `<data>/resend.clavis` (put there by tools/secretum_mittere.sh:
+owner exemplar, 0600) with the oceanus-style reader (O_NOFOLLOW, regular file,
+mode not wider than 0600, trailing whitespace trimmed, buffer zeroed after the
+Epistularius copied it; only the open() carries the CANALIS_PRAETERITUS tolera).
+A missing key is not fatal: one stderr line "resend.clavis deest - epistulae non
+mittuntur" and sign-in requests still answer 202. The Epistularius is wired
+AFTER e->basis is known (mail links use the public base), with sender
+communio@golden.earth and exemplar's Custodia for throttling; it is closed before
+the communio server and the hospitium. `ExemplarConfiguratio.provisor_epistulae`
+(NIHIL = "resend") lets tests use "fictus"; `exemplar_epistularius()` exposes it.
+
+Admin tools now XIV: communio_epistulam_permittere {epistula, nomen, titulus,
+spatium} creates the person when the handle is free (cives_creare in an
+exemplar.volumen transaction; titulus required for a new person), then adds the
+membership and the entry (communio.volumen - two volumes, so person first; a
+re-run is idempotent); communio_epistulam_revocare {epistula};
+communio_permissos_enumerare (shows the addresses - this is the admin's own
+list, never written to the repository).

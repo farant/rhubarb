@@ -60,6 +60,9 @@ nomen structura {
                       s64  progressus_ultimus; /* ms lineae progressus
                                                 * ultimae (colloquia T8c,
                                                 * strangulatio) */
+           TabulaDispersa* photographiae;   /* titulus actionis -> i32*
+                                             * ms ambulationum (plan-8
+                                             * T1); usque ad annales */
 } Memoria;
 
 /* mandata (fabrica.c) */

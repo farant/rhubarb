@@ -373,10 +373,10 @@ _sectio_vitia (
     _vitium(c, "x", ZEPHYRUM);
     _vitium(c, "c d x", IV);
     _vitium(c, "#c", ZEPHYRUM);
-    _vitium(c, "c3", I);
+    _vitium(c, "c7", I);
     _vitium(c, "c0", I);
     _vitium(c, "c128", I);
-    _vitium(c, "r3", I);
+    _vitium(c, "r9", I);
     _vitium(c, "c4...", IV);
     _vitium(c, "o9", I);
     _vitium(c, "oc", I);
@@ -388,6 +388,160 @@ _sectio_vitia (
     _vitium(c, "@ c", I);
     _vitium(c, "o8 > g#", V);
     _vitium(c, "o0 < c-", V);
+}
+
+
+    /* ==================================================
+     * LIGATURA: '&' notam proximam eiusdem altitudinis continuat
+     * ================================================== */
+
+interior vacuum
+_sectio_ligatura (
+    CredoContextus* c)
+{
+    Cantilena k;
+
+    /* duae semibreves: nota una, longitudo integra, II s ad CXX */
+    CREDO_NECESSE (_legere(c, "c2&c2 d4", &k));
+    CREDO_NECESSE (k.numerus == II);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo,
+                        (s64)MMMDCCCXL);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].longitudo, (s64)(XCVI * M));
+    CREDO_AEQUALIS_S64 (k.notae[I].pulsus, (s64)MMMDCCCXL);
+    /* nota post ligaturam: quadrum II s (positio segmenti procedit) */
+    CREDO_AEQUALIS_S64 (k.notae[I].initium, (s64)(XCVI * M));
+    CREDO_AEQUALIS_I32 (k.notae[I].offset, VI);
+    /* trans lineam: linea servatur, nota una */
+    CREDO_NECESSE (_legere(c, "c2. & | c2.", &k));
+    CREDO_NECESSE (k.numerus == I && k.numerus_linearum == I);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo,
+                        (s64)MMMDCCCXL + MCMXX);
+    CREDO_AEQUALIS_S64 (k.lineae[ZEPHYRUM].pulsus, (s64)MMDCCCLXXX);
+    /* trans mandata octavae: altitudo eadem */
+    CREDO_NECESSE (_legere(c, "o4 c2 & o5 < c2", &k));
+    CREDO_NECESSE (k.numerus == I);
+    CREDO_AEQUALIS_I32 (k.notae[ZEPHYRUM].nota, LX);
+    /* catena; deinde nota alia */
+    CREDO_NECESSE (_legere(c, "c4&c4&c4 d4", &k));
+    CREDO_NECESSE (k.numerus == II);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo,
+                        (s64)MMDCCCLXXX);
+    CREDO_NECESSE (_legere(c, "e4 & e8 g8", &k));
+    CREDO_NECESSE (k.numerus == II);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo,
+                        (s64)MCDXL);
+    /* enharmonica: altitudo MIDI eadem; littera primae */
+    CREDO_NECESSE (_legere(c, "c#4&d-4", &k));
+    CREDO_NECESSE (k.numerus == I);
+    CREDO_VERUM (k.notae[ZEPHYRUM].littera == 'c');
+    /* vitia: altitudo alia, pausa, finis, '&&', nulla nota prior,
+     * mandata alia inter */
+    _vitium(c, "c4&d4", III);
+    _vitium(c, "c4&r4", III);
+    _vitium(c, "c4&", III);
+    _vitium(c, "c4&&c4", III);
+    _vitium(c, "&c4", ZEPHYRUM);
+    _vitium(c, "r4&c4", II);
+    _vitium(c, "c4 & l8 c", V);
+    _vitium(c, "c4 & v50 c4", V);
+}
+
+
+/* portamentum: '/' [longitudo] - nota continuatur, proxima glissandum
+ * suum fert (ordinarium sedecima, nota proxima non longius) */
+interior vacuum
+_sectio_illapsus (
+    CredoContextus* c)
+{
+    Cantilena k;
+
+    CREDO_NECESSE (_legere(c, "c4 e4", &k));
+    CREDO_VERUM (   !k.notae[ZEPHYRUM].continuatur
+                 && k.notae[I].illapsus == ZEPHYRUM);
+    CREDO_NECESSE (_legere(c, "e4/ g4", &k));
+    CREDO_NECESSE (k.numerus == II);
+    CREDO_VERUM (k.notae[ZEPHYRUM].continuatur);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].illapsus, ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CCXL);
+    CREDO_FALSUM (k.notae[I].continuatur);
+    /* longitudo data, puncta; nota proxima brevior: tota */
+    CREDO_NECESSE (_legere(c, "e4/8 g4", &k));
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CDLXXX);
+    CREDO_NECESSE (_legere(c, "e4/8. g2", &k));
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, DCCXX);
+    CREDO_NECESSE (_legere(c, "e4/2 g8", &k));
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CDLXXX);
+    /* catena; ligatura ante; trans lineam et mandata */
+    CREDO_NECESSE (_legere(c, "c4/ e4 g4", &k));
+    CREDO_AEQUALIS_S64 (k.notae[II].illapsus, ZEPHYRUM);
+    CREDO_NECESSE (_legere(c, "c4/ e4/ g4", &k));
+    CREDO_VERUM (   k.notae[I].continuatur
+                 && k.notae[I].illapsus == CCXL
+                 && k.notae[II].illapsus == CCXL);
+    CREDO_NECESSE (_legere(c, "c4&c4/ e4", &k));
+    CREDO_NECESSE (k.numerus == II);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo, MCMXX);
+    CREDO_VERUM (k.notae[ZEPHYRUM].continuatur);
+    CREDO_NECESSE (_legere(c, "e4 / | o5 v50 c4", &k));
+    CREDO_AEQUALIS_I32 (k.notae[I].nota, LXXII);
+    CREDO_AEQUALIS_S64 (k.notae[I].illapsus, CCXL);
+    CREDO_F32_PROXIMUS (k.notae[I].lucrum, 0.5f, 0.0001f);
+    /* vitia: sine nota priore, ante pausam, ad finem, altitudo eadem,
+     * '&/', '//', longitudo mala, post mandatum */
+    _vitium(c, "/c4", ZEPHYRUM);
+    _vitium(c, "r4/ c4", II);
+    _vitium(c, "c4/ r4 e4", II);
+    _vitium(c, "c4/", II);
+    _vitium(c, "c4/ c4", IV);
+    _vitium(c, "c4&/ c4", III);
+    _vitium(c, "c4// e4", III);
+    _vitium(c, "c4/65 e4", III);
+    _vitium(c, "c4 v50 / e4", VII);
+}
+
+
+    /* ==================================================
+     * TRIOLI: longitudo divisor integrae 1..64
+     * ================================================== */
+
+interior vacuum
+_sectio_ternarii (
+    CredoContextus* c)
+{
+    hic_manens constans i32 LICITAE[XIX] = {
+        1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 16, 20, 24, 30, 32, 40, 48,
+        60, 64
+    };
+       Cantilena k;
+    CantusVitium v;
+       character textus[VIII];
+             i32 i;
+             b32 bene = VERUM;
+
+    CREDO_NECESSE (_legere(c, "c12 d12 e12 f4", &k));
+    CREDO_NECESSE (k.numerus == IV);
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo,
+                        (s64)CCCXX);
+    CREDO_AEQUALIS_S64 (k.notae[III].pulsus, (s64)CMLX);
+    per (i = ZEPHYRUM; i < XIX; i++)
+    {
+        sprintf(textus, "c%u", LICITAE[i]);
+        bene = bene && cantus_legere(chorda_ex_literis(textus,
+            c->piscina), c->piscina, &k, &v)
+            && k.notae[ZEPHYRUM].pulsus_longitudo
+               == (s64)MMMDCCCXL / (s64)LICITAE[i];
+    }
+    CREDO_VERUM (bene);
+    _vitium(c, "c9", I);
+    _vitium(c, "c11", I);
+    _vitium(c, "c25", I);
+    /* longitudo ordinaria et puncta */
+    CREDO_NECESSE (_legere(c, "l12 c d e", &k));
+    CREDO_AEQUALIS_S64 (k.notae[II].pulsus, (s64)DCXL);
+    CREDO_NECESSE (_legere(c, "c12. c6..", &k));
+    CREDO_AEQUALIS_S64 (k.notae[ZEPHYRUM].pulsus_longitudo,
+                        (s64)CDLXXX);
+    CREDO_AEQUALIS_S64 (k.notae[I].pulsus_longitudo, (s64)MCXX);
 }
 
 
@@ -785,11 +939,14 @@ _sectio_pulsus (
     CREDO_NECESSE (k.numerus_temporum == I);
     CREDO_AEQUALIS_S64 (k.tempora[ZEPHYRUM].pulsus, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (k.tempora[ZEPHYRUM].tempus, CXX);
+    CREDO_AEQUALIS_I32 (k.tempora[ZEPHYRUM].millesimae, CXX * M);
     CREDO_AEQUALIS_S64 (k.tempora[ZEPHYRUM].quadrum, ZEPHYRUM);
     CREDO_NECESSE (_legere(c, "t120 c t60 d", &k));
     CREDO_NECESSE (k.numerus_temporum == II);
     CREDO_AEQUALIS_S64 (k.tempora[I].pulsus, (s64)CMLX);
     CREDO_AEQUALIS_I32 (k.tempora[I].tempus, LX);
+    CREDO_AEQUALIS_I32 (k.tempora[I].millesimae, LX * M);
+    CREDO_AEQUALIS_I32 (k.tempora[ZEPHYRUM].millesimae, CXX * M);
     /* quarta ad t120 = 0.5 s = XXIV milia quadra */
     CREDO_AEQUALIS_S64 (k.tempora[I].quadrum, (s64)(XXIV * M));
     /* 't' initio: segmentum primum, non duo */
@@ -805,12 +962,15 @@ _sectio_pulsus (
     }
 
     CREDO_GRADUS ("computare: mappa manu scripta");
-    mappa[ZEPHYRUM].pulsus  = ZEPHYRUM;
-    mappa[ZEPHYRUM].tempus  = CXX;
-    mappa[I].pulsus         = (s64)CMLX * IV;
-    mappa[I].tempus         = LX;
-    mappa[II].pulsus        = (s64)CMLX * VI;
-    mappa[II].tempus        = CCXL;
+    mappa[ZEPHYRUM].pulsus      = ZEPHYRUM;
+    mappa[ZEPHYRUM].tempus      = CXX;
+    mappa[ZEPHYRUM].millesimae  = CXX * M;
+    mappa[I].pulsus             = (s64)CMLX * IV;
+    mappa[I].tempus             = LX;
+    mappa[I].millesimae         = LX * M;
+    mappa[II].pulsus            = (s64)CMLX * VI;
+    mappa[II].tempus            = CCXL;
+    mappa[II].millesimae        = CCXL * M;
     cantus_tempora_computare(mappa, III);
     CREDO_AEQUALIS_S64 (mappa[ZEPHYRUM].quadrum, ZEPHYRUM);
     CREDO_AEQUALIS_S64 (mappa[I].quadrum, (s64)(XCVI * M));
@@ -821,6 +981,33 @@ _sectio_pulsus (
     /* mappa vacua: CXX */
     CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(NIHIL, ZEPHYRUM,
         (s64)CMLX), (s64)(XXIV * M));
+
+    /* millesimae: quarta ad 90.5 = 0.662983 s = 31823.2 quadra;
+     * computatio millesimas legit, non tempus */
+    {
+        CantusTempus fracta[II];
+
+        fracta[ZEPHYRUM].pulsus      = ZEPHYRUM;
+        fracta[ZEPHYRUM].tempus      = XC;
+        fracta[ZEPHYRUM].millesimae  = XC * M + D;
+        fracta[I].pulsus             = (s64)CMLX;
+        fracta[I].tempus             = XC;
+        fracta[I].millesimae         = XC * M;
+        cantus_tempora_computare(fracta, II);
+        CREDO_AEQUALIS_S64 (fracta[I].quadrum, (s64)XXXI * M
+                            + DCCCXXIII);
+        CREDO_AEQUALIS_S64 (cantus_pulsus_quadri(fracta, II,
+            fracta[I].quadrum), (s64)CMLX);
+        /* inversa INTRA segmentum 90.5 (non in termino) */
+        CREDO_AEQUALIS_S64 (cantus_pulsus_quadri(fracta, II,
+            cantus_quadrum_pulsus(fracta, II, (s64)CDLXXX)),
+            (s64)CDLXXX);
+        /* longum: IV M D quartae ad 90.5 (fere L minuta) in segmento
+         * uno */
+        CREDO_AEQUALIS_S64 (cantus_quadrum_pulsus(fracta, I,
+            (s64)CMLX * (M * IV + D)), (s64)M * M * CXLIII
+            + (s64)M * CCIV + (s64)CDXX);
+    }
 
     CREDO_GRADUS ("pulsus quadri: inversa, limites segmentorum");
     CREDO_AEQUALIS_S64 (cantus_pulsus_quadri(mappa, III, ZEPHYRUM),
@@ -990,6 +1177,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mandata", _sectio_mandata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _sectio_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ligatura", _sectio_ligatura, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ternarii", _sectio_ternarii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "iussa", _sectio_iussa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "praeparata", _sectio_praeparata, NIHIL, NIHIL, NIHIL, NIHIL },

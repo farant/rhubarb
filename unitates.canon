@@ -59,8 +59,8 @@
 
   <elementum nomen="munus"
     nota="regula muneris plagulae intra unitatem suam; prima congruens
-          vincit. Sine segmento et extensionibus = regula vacua
-          (lector recusat)">
+          vincit. Sine segmento, extensionibus et plagula = regula
+          vacua (lector recusat)">
     <attributum nomen="titulus"     genus="nomen"  necessarium="verum"/>
     <attributum nomen="segmentum"   genus="textus"
       nota="nomen directorii ullo loco viae (fixa, probationes)"/>
@@ -69,6 +69,9 @@
             lib/mensa_assets, tools/silex_assets)"/>
     <attributum nomen="extensiones" genus="textus"
       nota="index spatiis separatus (.c .m)"/>
+    <attributum nomen="plagula"     genus="textus"
+      nota="nomen plagulae EXACTUM (demo-snapshot.c: imago congelata
+            knotapel, munus testimonium - decretum 2026-10-26)"/>
   </elementum>
 
   <elementum nomen="usus"

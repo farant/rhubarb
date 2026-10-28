@@ -14,7 +14,8 @@
  *
  * CUSTODIA (petitio Franis): textus emendatus ANTE scriptionem
  * iudicatur - 85 evanescere debet, NULLUS codex crescere, REICE non
- * induci. Verificatio fracta = nihil scribitur, exitus I. */
+ * induci (silva_emendatio, communis cum transformare 2026-10-26).
+ * Verificatio fracta = nihil scribitur, exitus I. */
 
 #include "latina.h"
 #include "piscina.h"
@@ -25,6 +26,8 @@
 #include "silva_parsare.h"
 #include "silva_c89_semantica.h"
 #include "silva_iudicium.h"
+#include "silva_emendatio.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -54,37 +57,6 @@ _numeros_colligere (
             numeri[d->codex]++;
         }
     }
-}
-
-interior b32
-_reice_est (
-    constans IudiciumFructus* fr)
-{
-    i32 i;
-    i32 m;
-
-    si (   fr->parsura != NIHIL && fr->parsura->numerus_errorum
-        > ZEPHYRUM)
-    {
-        redde VERUM;
-    }
-    si (fr->sem == NIHIL)
-    {
-        redde FALSUM;
-    }
-    m = (i32)silva_c89_diagnostica_numerus(fr->sem);
-    per (i = ZEPHYRUM; i < m; i++)
-    {
-        constans SemanticaDiagnosticum* d =
-            silva_c89_diagnosticum_per_indicem(fr->sem, i);
-
-        si (   d != NIHIL && d->severitas == EXAMEN_VIOLATIO
-            && !d->provisionale)
-        {
-            redde VERUM;
-        }
-    }
-    redde FALSUM;
 }
 
 interior constans character*
@@ -177,7 +149,7 @@ _plagulam_emendare (
 {
             Piscina* opus;
     IudiciumFructus  ante;
-    IudiciumFructus  post;
+ EmendatioVerdictum  verdictum;
           character* fons;
                 i32  mensura = ZEPHYRUM;
           character* novum;
@@ -185,9 +157,6 @@ _plagulam_emendare (
                 i32  linea_m = (i32)strlen(LINEA_POSTULATORUM);
                 s32  ancora;
                 i32  numeri_ante[EXAMEN_CODEX_NUMERUS];
-                i32  numeri_post[EXAMEN_CODEX_NUMERUS];
-                b32  bene = VERUM;
-                s32  c;
 
     opus = piscina_generare_dynamicum("emendare_opus", 268435456);
     si (opus == NIHIL)
@@ -243,44 +212,22 @@ _plagulam_emendare (
         (memoriae_index)((s32)mensura - ancora));
     novum[mensura_novi] = '\0';
 
-    si (!silva_iudicium_iudicare(app, opus, via, novum, mensura_novi,
-            &post))
+    verdictum = silva_emendationem_iudicare(app, opus, via, &ante,
+        novum,
+        mensura_novi, (s32)EXAMEN_CODEX_POSTULATA_DESUNT,
+        EMENDATIO_AD_NIHIL);
+    si (!verdictum.bene)
     {
-        imprimere("%s: NON SANAT (iudicium post fractum)\n", via);
-        piscina_destruere(opus);
-        redde FALSUM;
-    }
-    _numeros_colligere(post.sem, numeri_post);
-    si (numeri_post[EXAMEN_CODEX_POSTULATA_DESUNT] != ZEPHYRUM)
-    {
-        imprimere("%s: NON SANAT (85 manet post insertionem)\n",
-            via);
-        bene = FALSUM;
-    }
-    per (c = ZEPHYRUM; c < (s32)EXAMEN_CODEX_NUMERUS; c++)
-    {
-        si (numeri_post[c] > numeri_ante[c])
-        {
-            imprimere("%s: NON SANAT (codex %d crevit %d -> %d)\n",
-                via, (int)c, (int)numeri_ante[c],
-                (int)numeri_post[c]);
-            bene = FALSUM;
-        }
-    }
-    si (!_reice_est(&ante) && _reice_est(&post))
-    {
-        imprimere("%s: NON SANAT (REICE inductum)\n", via);
-        bene = FALSUM;
-    }
-    si (!bene)
-    {
+        imprimere("%s: NON SANAT (%.*s)\n", via,
+            (integer)verdictum.causa.mensura,
+            (constans character*)verdictum.causa.datum);
         piscina_destruere(opus);
         redde FALSUM;
     }
 
     si (scribere_volo)
     {
-        FILE* pl = fopen(via, "wb");
+        FILE* pl = lectiones_fopen(via, "wb");
 
         si (   pl == NIHIL
             || fwrite(novum, I, (memoriae_index)mensura_novi, pl)

@@ -1095,6 +1095,7 @@ conspectus_renovare (
                     i32  i;
                     i32  k;
                     i32  j;
+                    s64  ultimum;
 
     r = repertorium;
     si (!r || !r->paratum)
@@ -1103,12 +1104,18 @@ conspectus_renovare (
     }
     /* nihil novum (casus frequentissimus: lectiones multae per
      * picturam) - quaestio una indicata, sine lectione actorum */
-    si (volumen_seq_ultimum(r->volumen) <= r->cursor)
+    ultimum = volumen_seq_ultimum(r->volumen);
+    si (ultimum <= r->cursor)
     {
         piscina_vacare(r->tempus);
         redde r->cursor;
     }
-    acta = volumen_acta_legere(r->volumen, r->cursor, r->tempus);
+    /* communio plan-2 T1: acta sola huius replicae statum localem
+     * derivant - aliena (importata) eiusdem generis aut viae
+     * conspectum localem non irritant; cursor tamen ad finem */
+    acta = volumen_replica(r->volumen).mensura > ZEPHYRUM
+         ? volumen_acta_propria_legere(r->volumen, r->cursor, r->tempus)
+         : volumen_acta_legere(r->volumen, r->cursor, r->tempus);
     per (i = ZEPHYRUM; acta && i < xar_numerus(acta); i++)
     {
         VolumenActum* a = (VolumenActum*)xar_obtinere(acta, i);
@@ -1153,6 +1160,10 @@ conspectus_renovare (
                 }
             }
         }
+    }
+    si (acta)
+    {
+        r->cursor = ultimum;
     }
     per (k = ZEPHYRUM; k < xar_numerus(r->declarationes); k++)
     {

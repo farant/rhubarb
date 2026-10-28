@@ -26,6 +26,7 @@
 #include "utf8.h"
 #include "folium_pagina.h"
 #include "credo.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -588,7 +589,7 @@ _picturam_probare (
 
                     sprintf(via_plena, "%s/%s",
                         radix != NIHIL ? radix : "..", via_auri);
-                    f = fopen(via_plena, "wb");
+                    f = lectiones_fopen(via_plena, "wb");
                     CREDO_NON_NIHIL (f);
                     si (f != NIHIL)
                     {

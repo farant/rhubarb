@@ -36,6 +36,7 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>   /* instrumentum solum - macOS/POSIX */
@@ -487,7 +488,7 @@ _plagulam_inspicere (
             }
             si (pl == NIHIL)
             {
-                pl = fopen(via_tu, "wb");
+                pl = lectiones_fopen(via_tu, "wb");
                 si (pl == NIHIL)
                 {
                     frange;
@@ -503,7 +504,7 @@ _plagulam_inspicere (
         {
             si (pl == NIHIL)
             {
-                pl = fopen(via_tu, "wb");
+                pl = lectiones_fopen(via_tu, "wb");
                 si (pl == NIHIL)
                 {
                     frange;
@@ -597,7 +598,7 @@ _plagulam_inspicere (
             }
             si (pl == NIHIL)
             {
-                pl = fopen(via_tu, "wb");
+                pl = lectiones_fopen(via_tu, "wb");
                 si (pl == NIHIL)
                 {
                     frange;

@@ -19,6 +19,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "sessio.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -331,7 +332,7 @@ principale (
                 textus_servandus = strictum
                     ? sessio_documentum_strictum(sessio, piscina)
                     : sessio_documentum(sessio, piscina);
-                pl = fopen(via, "wb");
+                pl = lectiones_fopen(via, "wb");
                 si (pl == NIHIL)
                 {
                     imprimere("serva: %s non scribitur\n", via);

@@ -66,3 +66,19 @@ written. Its `mora` 0.10 only matters when it plays alone; `cantus` with
 fixed-pitch fields, not the timbre values, which stay free to retune
 by ear. Fran chose a preset here over a colour local to `auditio`, so
 `auditio`, vicus and a jingle Claude writes can all say `@tonus`.
+
+## 2026-10-27 - P1: percussion presets for music (eight table rows, no code)
+
+cymbalum (ride wash), cymbalum_clausum (hi-hat), cymbalum_pedis (foot chick), scopae (brush
+swish), laqueus (snare), quassatio (shaker), tympanum_grave (kick), baculum (cross-stick).
+KEY FACT for anyone writing drum parts: in a carmen the NOTE sets frequentia (cantor overwrites
+it with sonus_notae_frequentia), so a noise preset's brightness comes from the written pitch -
+the old "@passus c4" is dark because of C4. Write cymbals o7-o8, brushes/snare/stick o6, kick
+o3; the table frequentia only matters for a sonitus played alone.
+Measured dry (auditio -cantus "@x oN c1" -intactus; without -intactus every tail is the ~2 s
+reverb, which fooled the first measurement): ride 0.86 s to -40 dB, centroid 11.4 kHz; hat 50
+ms; chick 35 ms; brushes 260 ms (slow attack), snare 140 ms, shaker 70 ms, kick 235 ms with 99%
+of energy under 200 Hz, stick 35 ms. Limitation: one voice has no inharmonic partials, so the
+ride is a wash, not a metallic ping (would need a second detuned voice or ring modulation).
+Tests check structure (family, decay windows and ordering, filters, kick sweep). Plants 7/7.
+Pre-existing formatter debts in sonitus.c/.h/probatio untouched (counts equal to HEAD).

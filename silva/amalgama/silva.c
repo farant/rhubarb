@@ -6875,6 +6875,12 @@ silva_chorda_transcribere (
          SilvaChorda  s,
         SilvaPiscina* piscina);
 
+static SilvaChorda
+silva_chorda_concatenare (
+         SilvaChorda  a,
+         SilvaChorda  b,
+        SilvaPiscina* piscina);
+
 
 /* ==================================================
  * Divisio
@@ -14591,9 +14597,9 @@ nomen structura {
  * ('$' sine nomine, '$...' sine nomine), fragmentum non parsatur
  * (errores), genus non congruit (EXPRESSIO intra 'redde ...;' parsatur:
  * sententia data ut EXPRESSIO non parsatur; SENTENTIA non una). Textus
- * non NUL-terminatus licet. LIMES: SENTENTIA 'f($x);' nuda ambigua est
- * (declaratio sine prototypo) - vocatio nuda forma EXPRESSIO 'f($x)'
- * scribitur et contra expressionem sententiae congruit. */
+ * non NUL-terminatus licet. SENTENTIA 'f($x);' nuda ambigua est
+ * (declaratio sine prototypo): politica X8 lectionem expressionis
+ * canonicam facit et forma->nodus est lectio canonica (T4). */
 SilvaForma*
 silva_formam_parsare (
                 SilvaPiscina* piscina,
@@ -14616,6 +14622,12 @@ constans SilvaValor*
 silva_nodi_locus (
     constans SilvaNodus* nodus,
      constans character* titulus);
+
+/* Lectio canonica nodi 'ambiguus' (per loca 'interpretationes' et
+ * 'canonica', iterata); nodus non ambiguus ipse redditur */
+constans SilvaNodus*
+silva_nodus_canonicus (
+    constans SilvaNodus* nodus);
 
 /* Nomen generis nodi (registrum C89); "" si ignotum */
 constans character*
@@ -14658,6 +14670,140 @@ b32
 silva_nodi_aequales (
     constans SilvaNodus* a,
     constans SilvaNodus* b);
+
+
+/* ==================================================
+ * Situs (transformare T3)
+ * ================================================== */
+
+/* situs: vocatio functionis cuius nomen in plagula principali ipsa
+ * scribitur (radix lexematis in fonte principali). in_macro:
+ * parentheses vocationis ex expansione macro veniunt - vocatio a macro
+ * facta,
+ * numquam rescribitur (consumens NIHIL, macro = macro exterior in
+ * plagula invocatus). Alioquin consumens = primus usor valoris:
+ * ascensus per parentheses, ambigua et conversionem '(vacuum)'
+ * (valorem abicit, non adhibet); declarator initiatus -> declaratio
+ * tota. linea/columna = sedes nominis functionis (1-basatae). */
+nomen structura {
+    constans SilvaNodus* vocatio;
+    constans SilvaNodus* consumens;
+                    b32  in_macro;
+                 SilvaChorda  macro;
+                    i32  linea;
+                    i32  columna;
+} SilvaSitus;
+
+/* Omnes vocationes 'functio' (valor nominis POST expansionem) in
+ * spina canonica arboris (ambigua per lectionem canonicam), ordine
+ * fontis. Xar de SilvaSitus (vacua licet); NIHIL = apparatus
+ * (memoria). Vocationes in plagulis aliis (capita inclusa) omissae. */
+SilvaXar*
+silva_situs_invenire (
+                   SilvaPiscina* piscina,
+     constans SilvaParsura* parsura,
+                    SilvaChorda  functio);
+
+/* Forma situs (non in_macro). clavis = genus consumentis + valores
+ * lexematum post expansionem spatio separati, argumenta vocationis ->
+ * $1..$n, corpora sententiarum (si/dum/per/fac/commutatio) -> '...':
+ * clavis aequalis = eadem rescriptio. scriptura = consumens ut in
+ * plagula scriptus (orthographia auctoris: si, ZEPHYRUM), eisdem
+ * substitutionibus, commentaria omissa, spatia in unum contracta.
+ * fons/mensura = textus plagulae principalis. FALSUM si situs
+ * in_macro aut extentum ignotum. LIMES: invocatio macro functionalis
+ * in FINE consumentis extentum ante ')' suam finit (expansio ')'
+ * invocationis non fert). */
+b32
+silva_situs_forma (
+                  SilvaPiscina* piscina,
+    constans SilvaParsura* parsura,
+      constans SilvaSitus* situs,
+       constans character* fons,
+                      i32  mensura,
+                   SilvaChorda* clavis_out,
+                   SilvaChorda* scriptura_out);
+
+
+/* ==================================================
+ * Regulae et rescriptio (transformare T4)
+ * ================================================== */
+
+/* regula: forma 'si' -> textus 'fac'. Genus ex textu 'si': ';' aut
+ * '}' ultimum = SENTENTIA, aliter EXPRESSIO. 'fac' eodem genere
+ * parsatur (syntaxis probata) et lacunas solum formae 'si' adhibet. */
+nomen structura {
+     SilvaForma* forma;
+         SilvaChorda  substitutio;
+         SilvaChorda  titulus;   /* textus 'si' (pro nuntiis) */
+} SilvaRegula;
+
+/* NIHIL + causa nominata ('si: ...', 'fac: ...', lacuna ignota) */
+SilvaRegula*
+silva_regulam_parare (
+    SilvaPiscina* piscina,
+     SilvaChorda  textus_formae,
+     SilvaChorda  textus_substitutionis,
+     SilvaChorda* causa_out);
+
+nomen enumeratio {
+    SILVA_RESCRIPTIO_FACTA = ZEPHYRUM,  /* regula applicatur */
+    SILVA_RESCRIPTIO_IN_MACRO,          /* vocatio a macro facta */
+    SILVA_RESCRIPTIO_SINE_REGULA,       /* nulla regula congruit */
+    SILVA_RESCRIPTIO_NON_FIDA,          /* textus inter lexemata non
+                                         * captus (macro, extentum) */
+    SILVA_RESCRIPTIO_TRIVIA,            /* commentarium aut directiva
+                                         * extra capturas periret */
+    SILVA_RESCRIPTIO_CONFLICTUS,        /* octeti rescriptionis aliae */
+    SILVA_RESCRIPTIO_RECURSIO           /* substitutio functionem
+                                         * continentem vocaret (e.g.
+                                         * remove -> filum_delere intra
+                                         * filum_delere ipsam) */
+} SilvaRescriptioVerdictum;
+
+nomen structura {
+                  SilvaSitus situs;
+    SilvaRescriptioVerdictum verdictum;
+                         s32 regula;    /* index regulae congruentis;
+                                          * -1 si nulla */
+                         s32 initium;   /* octeti [initium, finis) */
+                         s32 finis;
+                      SilvaChorda textus;    /* substitutio (FACTA) */
+                         b32 iterata;   /* eadem ac prior: semel
+                                          * applicatur */
+} SilvaRescriptio;
+
+/* Per situm functionis (silva_situs_invenire): regulae ORDINE, et pro
+ * regula quaque nodi a vocatione ipsa usque ad sententiam continentem
+ * (proximus vincit); regula prima congruens applicatur. Nodus
+ * congruens per lexemata et capturas ambulatur: inter partes
+ * consecutivas fons spatia sola ferre debet (commentarium/directiva =
+ * TRIVIA, alia = NON_FIDA, e.g. 'remove(VIA(v))' ubi 'VIA(' in arbore
+ * non est). Substitutio = 'fac' lacunis octetis fontis capturarum
+ * impletis ('$...r' vacuum comma praecedens quoque tollit). regulae =
+ * Xar de SilvaRegula*. Reddit Xar de SilvaRescriptio ordine situum;
+ * NIHIL = memoria. */
+SilvaXar*
+silva_rescriptiones_parare (
+                  SilvaPiscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* fons,
+                      i32  mensura,
+                   SilvaChorda  functio,
+             constans SilvaXar* regulae);
+
+/* Textus novus: rescriptiones FACTAE (non iteratae) applicatae */
+SilvaChorda
+silva_rescriptiones_applicare (
+               SilvaPiscina* piscina,
+    constans character* fons,
+                   i32  mensura,
+          constans SilvaXar* rescriptiones);
+
+/* causa verdicti (nuntius brevis) */
+constans character*
+silva_rescriptionis_causa (
+    SilvaRescriptioVerdictum verdictum);
 
 #endif /* SILVA_FORMA_H */
 
@@ -14712,13 +14858,40 @@ structura SilvaPiscina {
  * ADIUTORES INTERNI
  * =========================================================== */
 
-interior memoriae_index
-_proxima_ordinatio (
-        memoriae_index ptr,
-        memoriae_index ordinatio)
+#define MEMORIAE_INDEX_MAXIMUS \
+    ((memoriae_index)~(memoriae_index)ZEPHYRUM)
+
+/* Sedes allocationis in alveo: offset ad ordinationem promotus
+ * (*ordinatus) et finis allocationis (*necessaria). FALSUM si
+ * ordinatio nulla aut summa circumiret (parcum …1Q6158) - vocans ut
+ * defectum tractat, nihil mutatum. Probatio per spatium RELIQUUM
+ * (a > MAXIMUS - b), numquam per summam: summa insignata tacite
+ * circumit et 'capit' falso dicit (offset retro, allocatio proxima
+ * vivam superponebat). */
+interior b32
+_sedem_computare (
+    memoriae_index  offset,
+    memoriae_index  ordinatio,
+    memoriae_index  mensura,
+    memoriae_index* ordinatus,
+    memoriae_index* necessaria)
 {
-    memoriae_index ordinatus = ptr + (ordinatio - I);
-    redde ordinatus - (ordinatus % ordinatio);
+    memoriae_index promotus;
+
+    si (   ordinatio == ZEPHYRUM
+        || ordinatio - I > MEMORIAE_INDEX_MAXIMUS - offset)
+    {
+        redde FALSUM;
+    }
+    promotus = offset + (ordinatio - I);
+    promotus -= promotus % ordinatio;
+    si (mensura > MEMORIAE_INDEX_MAXIMUS - promotus)
+    {
+        redde FALSUM;
+    }
+    *ordinatus   = promotus;
+    *necessaria  = promotus + mensura;
+    redde VERUM;
 }
 
 interior vacuum
@@ -14799,6 +14972,25 @@ _catena_alveus_vacare (
  * ALLOCATIO FUNDAMENTALIS LOGICA
  * =========================================================== */
 
+/* petitio quae circumiret (aut ordinatio nulla): ut defectus -
+ * fatalis exit, conari NIHIL; piscina intacta */
+interior vacuum*
+_exundatio (
+    constans SilvaPiscina* piscina,
+      memoriae_index  mensura,
+                 b32  fatalis)
+{
+    si (fatalis)
+    {
+        imprimere("ALLOCATIO PISCINAE FRACTA: %s (exundatio: mensura"
+                  " %lu aut ordinatio nulla)\n",
+                  piscina->titulus ? piscina->titulus : "nemo",
+                  (insignatus longus)mensura);
+        exire(I);
+    }
+    redde NIHIL;
+}
+
 interior vacuum*
 _allocare_interna (
                SilvaPiscina* piscina,
@@ -14812,9 +15004,11 @@ _allocare_interna (
 
     si (!piscina || mensura == ZEPHYRUM) redde NIHIL;
 
-    ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
-        ordinatio);
-    necessaria = ordinatus_offset + mensura;
+    si (!_sedem_computare(piscina->nunc->offset, ordinatio, mensura,
+        &ordinatus_offset, &necessaria))
+    {
+        redde _exundatio(piscina, mensura, fatalis);
+    }
 
     /* Si allocatio in alveum nunc non capit, invenire vel generare alveum novum */
     dum (necessaria > piscina->nunc->capacitas)
@@ -14823,9 +15017,11 @@ _allocare_interna (
         {
             /* Transire ad alveum sequentem */
             piscina->nunc = piscina->nunc->sequens;
-            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
-                ordinatio);
-            necessaria = ordinatus_offset + mensura;
+            si (!_sedem_computare(piscina->nunc->offset, ordinatio,
+                mensura, &ordinatus_offset, &necessaria))
+            {
+                redde _exundatio(piscina, mensura, fatalis);
+            }
         }
         alioquin si (piscina->est_dynamicum)
         {
@@ -14833,7 +15029,10 @@ _allocare_interna (
 
             /* Generare alveum novum */
             memoriae_index capacitas_nova =
-                piscina->mensura_alvei_initia * II;
+                piscina->mensura_alvei_initia
+                    > MEMORIAE_INDEX_MAXIMUS / II
+                ? piscina->mensura_alvei_initia
+                : piscina->mensura_alvei_initia * II;
 
             /* Petitio maior quam duplum: alveus ad mensuram petitionis
              * (+ basis), BASIS INTACTA. Olim basis ad hanc mensuram
@@ -14842,6 +15041,15 @@ _allocare_interna (
              * XXXIX% otiosum (RP §6, 2026-09-02). */
             si (necessaria > capacitas_nova)
             {
+                /* necessaria + basis circumiret: petitio numquam
+                 * satisfieri potest - refutatur ANTE malloc (olim
+                 * alveus minimus et gyrus sine fine; sub ASan malloc
+                 * immanis abortat) */
+                si (   necessaria > MEMORIAE_INDEX_MAXIMUS
+                                    - piscina->mensura_alvei_initia)
+                {
+                    redde _exundatio(piscina, mensura, fatalis);
+                }
                 capacitas_nova = necessaria
                     + piscina->mensura_alvei_initia;
             }
@@ -14861,9 +15069,10 @@ _allocare_interna (
             piscina->nunc->sequens  = alveus_novum;
             piscina->nunc           = alveus_novum;
 
-            ordinatus_offset = _proxima_ordinatio(piscina->nunc->offset,
-                ordinatio);
-            necessaria = ordinatus_offset + mensura;
+            /* alveus novus vacuus: capacitas >= necessaria prior >=
+             * ordinatio - I + mensura, ergo sedes semper computatur */
+            (vacuum)_sedem_computare(piscina->nunc->offset, ordinatio,
+                mensura, &ordinatus_offset, &necessaria);
 
             _debug_imprimere(
                     piscina->titulus ? piscina->titulus : "nemo",
@@ -15051,7 +15260,7 @@ silva_piscina_conari_ampliare (
     }
 
     /* I. in loco */
-    si (alveus->offset + incrementum <= alveus->capacitas)
+    si (incrementum <= alveus->capacitas - alveus->offset)
     {
         alveus->offset += incrementum;
         _usum_augere(piscina, incrementum);
@@ -15316,6 +15525,53 @@ silva_chorda_transcribere (
     memcpy(allocatus, s.datum, s.mensura);
 
     fructus.mensura  = s.mensura;
+    fructus.datum    = allocatus;
+
+    redde fructus;
+}
+
+static SilvaChorda
+silva_chorda_concatenare (
+     SilvaChorda  a,
+     SilvaChorda  b,
+    SilvaPiscina* piscina)
+{
+    SilvaChorda  fructus;
+        i8* allocatus;
+       i32  mensura_totalis;
+
+    si (!piscina)
+    {
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
+        redde fructus;
+    }
+
+    /* Si a vacuus est, redde transcriptionem b */
+    si (a.mensura == ZEPHYRUM || !a.datum)
+    {
+        redde silva_chorda_transcribere(b, piscina);
+    }
+
+    /* Si b vacuus est, redde transcriptionem a */
+    si (b.mensura == ZEPHYRUM || !b.datum)
+    {
+        redde silva_chorda_transcribere(a, piscina);
+    }
+
+    mensura_totalis  = a.mensura + b.mensura;
+    allocatus        = (i8*)silva_piscina_allocare(piscina, mensura_totalis);
+    si (!allocatus)
+    {
+        fructus.mensura  = ZEPHYRUM;
+        fructus.datum    = NIHIL;
+        redde fructus;
+    }
+
+    memcpy(allocatus,             a.datum, (memoriae_index)a.mensura);
+    memcpy(allocatus + a.mensura, b.datum, (memoriae_index)b.mensura);
+
+    fructus.mensura  = mensura_totalis;
     fructus.datum    = allocatus;
 
     redde fructus;
@@ -89918,7 +90174,7 @@ interior constans ExamenCodexInformatio _codices[] = {
     { "vocatio IO cruda extra canalem lectionum (filum) - fabrica"
       " ingressum non videt", EXAMEN_VIOLATIO },
     { "scriptura cruda extra canalem lectionum (filum) - fabrica"
-      " scripturam non videt", EXAMEN_DOMESTICUM }
+      " scripturam non videt", EXAMEN_VIOLATIO }
 };
 
 /* prototypa: sedes 89 (typus alienus, acies flexibilis) ante
@@ -90583,7 +90839,8 @@ _macros_domestica_in_alienis_examinare (
  * ================================================== */
 
 nomen structura {
-    i32 linea;          /* commentarii ipsius */
+    i32 linea;          /* commentarii ipsius (initium) */
+    i32 linea_finis;    /* commentarii finis (plurium linearum) */
     s32 fons_index;
     s32 codex;          /* -I = ignotus -> IRRITUM */
     b32 habet_causam;
@@ -90747,7 +91004,15 @@ _toleram_ex_elemento (
         {
             redde;
         }
-        e->linea         = a->linea;
+        e->linea        = a->linea;
+        e->linea_finis  = a->linea;
+        per (k = ZEPHYRUM; k < a->crudum.mensura; k++)
+        {
+            si (a->crudum.datum[k] == '\n')
+            {
+                e->linea_finis++;
+            }
+        }
         e->fons_index    = a->fons_index;
         e->codex         = codex;
         e->habet_causam  = causam;
@@ -90835,7 +91100,10 @@ _toleras_colligere (
 }
 
 /* suppressio per SEDEM: TOLERA cum causa, codice congruente, in
- * fonte eodem, linea firing aut praecedente. Absorbens usum notat.
+ * fonte eodem, linea firing aut praecedente - aut linea STATIM post
+ * finem commentarii sui (commentarium plurium linearum supra
+ * sententiam eam tegit: codices duo eidem sedi, 2026-10-26).
+ * Absorbens usum notat.
  * Congruentia semper per lineam fuit - nodus sedem solum dabat;
  * inventa sine nodo (EXTENSIO_COMPILATORIS, T17b) hic directe
  * intrant (porta quam familia portabilitatis nominat). */
@@ -90860,7 +91128,8 @@ _tolera_absorbere_sedem (
 
         si (   e != NIHIL && e->codex == codex && e->habet_causam
             && e->fons_index == fons_index
-            && (e->linea == linea || e->linea + I == linea))
+            && (   e->linea == linea || e->linea + I == linea
+                || e->linea_finis + I == linea))
         {
             e->usus = VERUM;
             redde VERUM;
@@ -96766,6 +97035,71 @@ _modus_scribens (
     redde FALSUM;
 }
 
+/* functiones quarum emendatio mechanica in silva/transformationes/
+ * <functio>.stml stat (transformare T6; nuntius 97 eam nominat) */
+interior b32
+_regulae_mechanicae (
+    SilvaChorda titulus)
+{
+    redde silva_chorda_aequalis_literis(titulus, "remove")
+        || silva_chorda_aequalis_literis(titulus, "unlink")
+        || silva_chorda_aequalis_literis(titulus, "rmdir")
+        || silva_chorda_aequalis_literis(titulus, "rename")
+        || silva_chorda_aequalis_literis(titulus, "chmod")
+        || silva_chorda_aequalis_literis(titulus, "mkdir")
+        || silva_chorda_aequalis_literis(titulus, "fopen");
+}
+
+/* nomen DECLARATUM, non vocatum (codices 96/97, 2026-10-27): lexema
+ * praecedens (stellis '*' transitis) specificator est - verbum typi,
+ * classis memoriae, aut identificator (typus nominatus). 'int remove
+ * (...)' in capite systematis (systema_c89.h) vocatio non est; vocatio
+ * post identificatorem aut verbum typi in C stare nequit. LIMES:
+ * multiplicatio per valorem vocationis ('n * remove(v)') ut declaratio
+ * legitur - in codice vero nulla. */
+interior b32
+_declaratum_est (
+     SilvaXar* fluxus,
+     i32  i)
+{
+     SilvaToken* prae  = NIHIL;
+            i32  k     = i;
+
+    dum (k > ZEPHYRUM)
+    {
+        k--;
+        prae = *(SilvaToken**)silva_xar_obtinere(fluxus, k);
+        si (prae == NIHIL || prae->genus != SILVA_LEX_STAR)
+        {
+            frange;
+        }
+    }
+    si (prae == NIHIL || k == i)
+    {
+        redde FALSUM;
+    }
+    commutatio (prae->genus)
+    {
+        casus SILVA_LEX_IDENTIFICATOR:
+        casus SILVA_LEX_VOID:
+        casus SILVA_LEX_CHAR:
+        casus SILVA_LEX_SHORT:
+        casus SILVA_LEX_INT:
+        casus SILVA_LEX_LONG:
+        casus SILVA_LEX_FLOAT_KW:
+        casus SILVA_LEX_DOUBLE:
+        casus SILVA_LEX_SIGNED:
+        casus SILVA_LEX_UNSIGNED:
+        casus SILVA_LEX_CONST:
+        casus SILVA_LEX_VOLATILE:
+        casus SILVA_LEX_EXTERN:
+        casus SILVA_LEX_STATIC:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
 interior vacuum
 _canalem_examinare (
            SilvaSemantica* sem,
@@ -96839,6 +97173,10 @@ _canalem_examinare (
         {
             perge;
         }
+        si (_declaratum_est(fluxus, i))
+        {
+            perge;
+        }
         per (k = ZEPHYRUM; k + I < silva_xar_numerus(visa); k += II)
         {
             si (   *(i32*)silva_xar_obtinere(visa, k)     == t->linea
@@ -96868,8 +97206,8 @@ _canalem_examinare (
             perge;
         }
         nuntius = (character*)silva_piscina_allocare(sem->piscina,
-            (memoriae_index)t0->valor.mensura
-            + (memoriae_index)gp->pro.mensura + (memoriae_index)CCLVI);
+            (memoriae_index)II * t0->valor.mensura
+            + (memoriae_index)gp->pro.mensura + (memoriae_index)DXII);
         si (nuntius == NIHIL)
         {
             perge;
@@ -96888,6 +97226,17 @@ _canalem_examinare (
                 gp->scriptura ? (int)gp->pro.mensura : ZEPHYRUM,
                 (constans character*)gp->pro.datum,
                 gp->scriptura && gp->pro.mensura > ZEPHYRUM ? "'" : "");
+            /* N4 (transformare): emendatio mechanica nominata -
+             * regulae silva/transformationes/<functio>.stml */
+            si (_regulae_mechanicae(t0->valor))
+            {
+                sprintf(nuntius + strlen(nuntius),
+                    "; emendatio mechanica:"
+                    " ./silva/transformare.sh -regulae"
+                    " silva/transformationes/%.*s.stml <viae>",
+                    (int)t0->valor.mensura,
+                    (constans character*)t0->valor.datum);
+            }
         }
         alioquin
         {
@@ -119169,6 +119518,43 @@ _nodus_loci (
         ? v->datum.nodus : NIHIL;
 }
 
+constans SilvaNodus*
+silva_nodus_canonicus (
+    constans SilvaNodus* nodus)
+{
+    i32 gradus = ZEPHYRUM;
+
+    dum (   nodus != NIHIL && gradus < C
+         && strcmp(silva_nodi_genus_titulus(nodus), "ambiguus")
+             == ZEPHYRUM)
+    {
+        constans SilvaValor* interpretationes = silva_nodi_locus(nodus,
+            "interpretationes");
+        constans SilvaValor* canonica = silva_nodi_locus(nodus,
+            "canonica");
+        constans SilvaValor* lectio;
+
+        si (   interpretationes        == NIHIL || canonica == NIHIL
+            || interpretationes->genus != SILVA_VALOR_LISTA
+            || canonica->genus         != SILVA_VALOR_INDEX
+            || canonica->datum.index < ZEPHYRUM
+            || (i32)canonica->datum.index
+                >= silva_materia_valor_lista_numerus(*interpretationes))
+        {
+            redde nodus;
+        }
+        lectio = silva_materia_valor_lista_obtinere(*interpretationes,
+            (i32)canonica->datum.index);
+        si (lectio == NIHIL || lectio->genus != SILVA_VALOR_NODUS)
+        {
+            redde nodus;
+        }
+        nodus = lectio->datum.nodus;
+        gradus++;
+    }
+    redde nodus;
+}
+
 
 /* ==================================================
  * Lacunae
@@ -119522,7 +119908,9 @@ silva_formam_parsare (
     forma->genus    = genus;
     forma->parsura  = parsura;
     forma->lacunae  = lacunae;
-    forma->nodus    = sententia;
+    /* 'f($x);' nudum: ambiguum superstes, politica X8 expressionem
+     * canonicam facit - forma est lectio canonica */
+    forma->nodus    = silva_nodus_canonicus(sententia);
     si (genus == SILVA_FORMA_EXPRESSIO)
     {
         si (strcmp(silva_nodi_genus_titulus(sententia), "redde")
@@ -119755,9 +120143,13 @@ _valores_congruunt (
                 forma_modus);
         casus SILVA_VALOR_NODUS:
         {
-            constans SilvaNodus* a = forma->datum.nodus;
-            constans SilvaNodus* b = fons->datum.nodus;
-                            i32  k;
+            /* ambigua per lectionem canonicam utrimque: forma
+             * 'f($x);' superstes manet, fons saepe collapsus */
+            constans SilvaNodus* a = silva_nodus_canonicus(
+                forma->datum.nodus);
+            constans SilvaNodus* b = silva_nodus_canonicus(
+                fons->datum.nodus);
+                            i32 k;
 
             si (a == NIHIL || b == NIHIL)
             {
@@ -119843,4 +120235,1627 @@ silva_nodi_aequales (
     p = _valor_nodi(a);
     f = _valor_nodi(b);
     redde _valores_congruunt(NIHIL, &p, &f, NIHIL, FALSUM);
+}
+
+
+/* ==================================================
+ * Situs (transformare T3)
+ * ================================================== */
+
+/* lectio canonica nodi ambigui (NIHIL si forma deformis) */
+interior constans SilvaValor*
+_situs_lectio_canonica (
+    constans SilvaCommissio* commissio,
+        constans SilvaNodus* nodus)
+{
+    constans SilvaValor* interpretationes;
+    constans SilvaValor* canonica;
+
+    si (   commissio->locus_interpretationum >= nodus->numerus_locorum
+        || commissio->locus_canonicae        >= nodus->numerus_locorum)
+    {
+        redde NIHIL;
+    }
+    interpretationes  = &nodus->loci[commissio->locus_interpretationum];
+    canonica          = &nodus->loci[commissio->locus_canonicae];
+    si (   interpretationes->genus != SILVA_VALOR_LISTA
+        || canonica->genus         != SILVA_VALOR_INDEX
+        || canonica->datum.index < ZEPHYRUM
+        || (i32)canonica->datum.index
+            >= silva_materia_valor_lista_numerus(*interpretationes))
+    {
+        redde NIHIL;
+    }
+    redde silva_materia_valor_lista_obtinere(*interpretationes,
+        (i32)canonica->datum.index);
+}
+
+interior b32
+_est_ambiguus (
+    constans SilvaCommissio* commissio,
+        constans SilvaNodus* nodus)
+{
+    redde commissio != NIHIL && nodus != NIHIL
+        && nodus->genus == commissio->genus_ambigui;
+}
+
+/* lexema loci (NIHIL si locus absens aut non TOKEN) */
+interior SilvaToken*
+_lexema_loci (
+    constans SilvaNodus* nodus,
+     constans character* titulus)
+{
+    constans SilvaValor* v = silva_nodi_locus(nodus, titulus);
+
+    redde (v != NIHIL && v->genus == SILVA_VALOR_TOKEN)
+        ? v->datum.token : NIHIL;
+}
+
+/* lexema scriptum in plagula principali ipsa (stratum 0) */
+interior b32
+_fons_principis (
+    SilvaToken* lex,
+           s32  princeps)
+{
+    redde lex != NIHIL && silva_token_est_fons(lex)
+        && lex->fons_index == princeps && lex->byte_offset >= ZEPHYRUM;
+}
+
+/* macro exterior: catena originis usque ad lexema fontis */
+interior SilvaChorda
+_macrum_exterius (
+    SilvaToken* lex)
+{
+         SilvaChorda  titulus;
+     SilvaToken* t       = lex;
+            i32  gradus  = ZEPHYRUM;   /* custodia contra cyclos */
+
+    titulus.mensura  = ZEPHYRUM;
+    titulus.datum    = NIHIL;
+    dum (t != NIHIL && gradus < M)
+    {
+        SilvaOrigo* o = silva_token_origo(t);
+            SilvaChorda* n = NIHIL;
+
+        si (o == NIHIL)
+        {
+            frange;
+        }
+        commutatio (o->genus)
+        {
+            casus SILVA_ORIGO_EXPANSIO:
+                n  = o->datum.expansio.nomen_macro;
+                t  = o->datum.expansio.invocatio;
+                frange;
+            casus SILVA_ORIGO_PASTA:
+                n  = o->datum.pasta.nomen_macro;
+                t  = o->datum.pasta.invocatio;
+                frange;
+            casus SILVA_ORIGO_CHORDA:
+                n  = o->datum.stringificatio.nomen_macro;
+                t  = o->datum.stringificatio.primus;
+                frange;
+            ordinarius:
+                t = NIHIL;
+                frange;
+        }
+        si (n != NIHIL)
+        {
+            titulus = *n;
+        }
+        gradus++;
+    }
+    redde titulus;
+}
+
+/* lexemata valoris numerare (spina canonica), primum servare */
+interior vacuum
+_lexemata_numerare (
+    constans SilvaCommissio*  commissio,
+        constans SilvaValor*  v,
+                        i32*  numerus,
+                 SilvaToken** primum)
+{
+    i32 k;
+
+    si (v == NIHIL)
+    {
+        redde;
+    }
+    si (v->genus == SILVA_VALOR_TOKEN && v->datum.token != NIHIL)
+    {
+        si (*numerus == ZEPHYRUM)
+        {
+            *primum = v->datum.token;
+        }
+        (*numerus)++;
+        redde;
+    }
+    si (v->genus == SILVA_VALOR_LISTA)
+    {
+        per (k = ZEPHYRUM; k < silva_materia_valor_lista_numerus(*v); k++)
+        {
+            _lexemata_numerare(commissio,
+                silva_materia_valor_lista_obtinere(*v, k), numerus, primum);
+        }
+        redde;
+    }
+    si (v->genus != SILVA_VALOR_NODUS || v->datum.nodus == NIHIL)
+    {
+        redde;
+    }
+    si (_est_ambiguus(commissio, v->datum.nodus))
+    {
+        _lexemata_numerare(commissio,
+            _situs_lectio_canonica(commissio, v->datum.nodus), numerus,
+            primum);
+        redde;
+    }
+    per (k = ZEPHYRUM; k < v->datum.nodus->numerus_locorum; k++)
+    {
+        _lexemata_numerare(commissio, &v->datum.nodus->loci[k],
+            numerus, primum);
+    }
+}
+
+/* nodus quem valor vocationis transit sine usu: parentheses, ambigua,
+ * conversio '(vacuum)' (valorem abicit) */
+interior b32
+_valorem_non_adhibet (
+    constans SilvaCommissio* commissio,
+        constans SilvaNodus* nodus)
+{
+    constans character* g = silva_nodi_genus_titulus(nodus);
+
+    si (   _est_ambiguus(commissio, nodus)
+        || strcmp(g, "parenthesis") == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (strcmp(g, "conversio") == ZEPHYRUM)
+    {
+                i32  numerus  = ZEPHYRUM;
+         SilvaToken* primum   = NIHIL;
+
+        _lexemata_numerare(commissio, silva_nodi_locus(nodus, "typus"),
+            &numerus, &primum);
+        redde numerus == I && primum != NIHIL
+            && silva_chorda_aequalis_literis(primum->valor, "void");
+    }
+    redde FALSUM;
+}
+
+interior constans SilvaNodus*
+_consumentem_invenire (
+    constans SilvaCommissio* commissio,
+        constans SilvaNodus* vocatio)
+{
+    constans SilvaNodus* p = vocatio->pater;
+
+    dum (p != NIHIL && _valorem_non_adhibet(commissio, p))
+    {
+        p = p->pater;
+    }
+    si (   p != NIHIL
+        && strcmp(silva_nodi_genus_titulus(p), "declarator-initiatus")
+            == ZEPHYRUM)
+    {
+        constans SilvaNodus* d = p->pater;
+
+        dum (   d != NIHIL
+             && strcmp(silva_nodi_genus_titulus(d), "declaratio")
+                 != ZEPHYRUM)
+        {
+            d = d->pater;
+        }
+        si (d != NIHIL)
+        {
+            p = d;
+        }
+    }
+    redde p;
+}
+
+nomen structura {
+    constans SilvaParsura* parsura;
+                   SilvaChorda  functio;
+                      SilvaXar* situs;
+} SitusInventio;
+
+interior vacuum
+_vocationem_probare (
+           SitusInventio* inv,
+     constans SilvaNodus* n)
+{
+    constans SilvaNodus* functio   = _nodus_loci(n, "functio");
+                    s32  princeps  = inv->parsura->fons_princeps;
+             SilvaToken* lex;
+             SilvaToken* radix;
+             SilvaToken* apertum;
+             SilvaToken* clausum;
+             SilvaSitus* s;
+
+    si (   functio == NIHIL
+        || strcmp(silva_nodi_genus_titulus(functio),
+               "folium-identificator") != ZEPHYRUM)
+    {
+        redde;
+    }
+    lex = _lexema_loci(functio, "tok_valor");
+    si (lex == NIHIL || !silva_chorda_aequalis(lex->valor, inv->functio))
+    {
+        redde;
+    }
+    radix = silva_token_radix(lex);
+    si (   radix == NIHIL || radix->fons_index != princeps
+        || radix->byte_offset < ZEPHYRUM)
+    {
+        redde;
+    }
+    s = (SilvaSitus*)silva_xar_addere(inv->situs);
+    si (s == NIHIL)
+    {
+        redde;
+    }
+    s->vocatio        = n;
+    s->consumens      = NIHIL;
+    s->in_macro       = FALSUM;
+    s->macro.mensura  = ZEPHYRUM;
+    s->macro.datum    = NIHIL;
+    s->linea          = radix->linea;
+    s->columna        = radix->columna;
+    apertum           = _lexema_loci(n, "tok_apertum");
+    clausum           = _lexema_loci(n, "tok_clausum");
+    si (   !_fons_principis(apertum, princeps)
+        || !_fons_principis(clausum, princeps))
+    {
+        s->in_macro  = VERUM;
+        s->macro     = _macrum_exterius(
+            _fons_principis(apertum, princeps) ? clausum : apertum);
+        redde;
+    }
+    s->consumens = _consumentem_invenire(inv->parsura->commissio, n);
+}
+
+interior vacuum
+_situs_ambulare (
+          SitusInventio* inv,
+    constans SilvaValor* v)
+{
+    constans SilvaNodus* n;
+                    i32  k;
+
+    si (v == NIHIL)
+    {
+        redde;
+    }
+    si (v->genus == SILVA_VALOR_LISTA)
+    {
+        per (k = ZEPHYRUM; k < silva_materia_valor_lista_numerus(*v); k++)
+        {
+            _situs_ambulare(inv, silva_materia_valor_lista_obtinere(*v, k));
+        }
+        redde;
+    }
+    si (v->genus != SILVA_VALOR_NODUS || v->datum.nodus == NIHIL)
+    {
+        redde;
+    }
+    n = v->datum.nodus;
+    si (_est_ambiguus(inv->parsura->commissio, n))
+    {
+        _situs_ambulare(inv,
+            _situs_lectio_canonica(inv->parsura->commissio, n));
+        redde;
+    }
+    si (strcmp(silva_nodi_genus_titulus(n), "vocatio") == ZEPHYRUM)
+    {
+        _vocationem_probare(inv, n);
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        _situs_ambulare(inv, &n->loci[k]);
+    }
+}
+
+SilvaXar*
+silva_situs_invenire (
+                   SilvaPiscina* piscina,
+     constans SilvaParsura* parsura,
+                    SilvaChorda  functio)
+{
+    SitusInventio inv;
+
+    si (   piscina            == NIHIL || parsura == NIHIL
+        || parsura->commissio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    inv.parsura  = parsura;
+    inv.functio  = functio;
+    inv.situs    = silva_xar_creare(piscina, (i32)magnitudo(SilvaSitus));
+    si (inv.situs == NIHIL)
+    {
+        redde NIHIL;
+    }
+    _situs_ambulare(&inv, &parsura->commissio->radix);
+    redde inv.situs;
+}
+
+/* substitutio scripturae: octeti [initium, finis) -> textus */
+nomen structura {
+                    s32  initium;
+                    s32  finis;
+     constans character* substitutio;
+} FormaeSubstitutio;
+
+nomen structura {
+     constans SilvaCommissio* commissio;
+         constans SilvaNodus* vocatio;
+           SilvaChordaAedificator* clavis;
+                         SilvaXar* substitutiones;
+                     SilvaPiscina* piscina;
+                         s32  princeps;
+                         i32  lacunae;
+                         b32  corpus_ultimum;  /* '...' contiguum */
+} FormaeScriptor;
+
+interior constans character*
+_loci_titulus (
+    constans SilvaNodus* nodus,
+                    i32  k)
+{
+    constans SilvaTabGenus* g;
+
+    si (   nodus->genus < ZEPHYRUM
+        || nodus->genus >= (s32)SILVA_C89_REGISTRUM.numerus_generum)
+    {
+        redde "";
+    }
+    g = &SILVA_C89_REGISTRUM.genera[nodus->genus];
+    si (k >= g->loci_numerus)
+    {
+        redde "";
+    }
+    redde SILVA_C89_REGISTRUM.loci[g->loci_offset + k].titulus;
+}
+
+/* locus corporis sententiae compositae (in forma '...') */
+interior b32
+_locus_corporis (
+    constans SilvaNodus* nodus,
+                    i32  k)
+{
+    constans character* g = silva_nodi_genus_titulus(nodus);
+    constans character* l;
+
+    si (   strcmp(g, "si")         != ZEPHYRUM
+        && strcmp(g, "dum")        != ZEPHYRUM
+        && strcmp(g, "per")        != ZEPHYRUM
+        && strcmp(g, "fac-dum")    != ZEPHYRUM
+        && strcmp(g, "commutatio") != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    l = _loci_titulus(nodus, k);
+    redde strcmp(l, "consequens") == ZEPHYRUM
+        || strcmp(l, "tok_alioquin") == ZEPHYRUM
+        || strcmp(l, "alioquin") == ZEPHYRUM
+        || strcmp(l, "corpus") == ZEPHYRUM;
+}
+
+interior vacuum
+_clavi_addere (
+          FormaeScriptor* fs,
+      constans character* textus,
+                     i32  mensura)
+{
+    SilvaChorda iam = silva_chorda_aedificator_spectare(fs->clavis);
+       i32 k;
+
+    /* 'genus|lex lex ...': spatium inter lexemata, non post '|' */
+    si (iam.mensura > ZEPHYRUM && iam.datum[iam.mensura - I] != '|')
+    {
+        (vacuum)silva_chorda_aedificator_appendere_character(fs->clavis, ' ');
+    }
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        (vacuum)silva_chorda_aedificator_appendere_character(fs->clavis,
+            textus[k]);
+    }
+}
+
+/* substitutionem notare (extentum ignotum = scriptura cruda) */
+interior vacuum
+_substitutionem_notare (
+          FormaeScriptor* fs,
+     constans SilvaValor* v,
+      constans character* substitutio,
+                     b32  extendere)
+{
+    FormaeSubstitutio* o;
+                  s32  min = -I;
+                  s32  max = ZEPHYRUM;
+
+    silva_valor_extensionem(*v, fs->princeps, &min, &max);
+    si (min < ZEPHYRUM)
+    {
+        redde;
+    }
+    si (extendere && silva_xar_numerus(fs->substitutiones) > ZEPHYRUM)
+    {
+        o = (FormaeSubstitutio*)silva_xar_obtinere(fs->substitutiones,
+            silva_xar_numerus(fs->substitutiones) - I);
+        si (o != NIHIL && max > o->finis)
+        {
+            o->finis = max;
+        }
+        redde;
+    }
+    o = (FormaeSubstitutio*)silva_xar_addere(fs->substitutiones);
+    si (o != NIHIL)
+    {
+        o->initium      = min;
+        o->finis        = max;
+        o->substitutio  = substitutio;
+    }
+}
+
+interior constans character*
+_lacunae_titulus (
+    SilvaPiscina* piscina,
+        i32  numerus)
+{
+    character  inversa[XII];
+    character* t = (character*)silva_piscina_allocare(piscina, XVI);
+          i32  n = ZEPHYRUM;
+          i32  k = ZEPHYRUM;
+
+    si (t == NIHIL)
+    {
+        redde "$?";
+    }
+    fac
+    {
+        inversa[n++]  = (character)('0' + (integer)(numerus % X));
+        numerus       /= X;
+    } dum (numerus > ZEPHYRUM && n < XII);
+    t[k++] = '$';
+    dum (n > ZEPHYRUM)
+    {
+        t[k++] = inversa[--n];
+    }
+    t[k] = '\0';
+    redde t;
+}
+
+interior vacuum
+_formam_ambulare (
+          FormaeScriptor* fs,
+     constans SilvaValor* v);
+
+/* argumentum vocationis scopi: lacuna in clave et scriptura */
+interior vacuum
+_argumentum_scribere (
+          FormaeScriptor* fs,
+     constans SilvaValor* v)
+{
+    constans character* t;
+
+    si (v->genus != SILVA_VALOR_NODUS)
+    {
+        _formam_ambulare(fs, v);   /* comma */
+        redde;
+    }
+    fs->lacunae++;
+    t = _lacunae_titulus(fs->piscina, fs->lacunae);
+    _clavi_addere(fs, t, (i32)strlen(t));
+    fs->corpus_ultimum = FALSUM;
+    _substitutionem_notare(fs, v, t, FALSUM);
+}
+
+interior vacuum
+_formam_ambulare (
+          FormaeScriptor* fs,
+     constans SilvaValor* v)
+{
+    constans SilvaNodus* n;
+                    i32  k;
+
+    si (v == NIHIL)
+    {
+        redde;
+    }
+    si (v->genus == SILVA_VALOR_TOKEN)
+    {
+        si (v->datum.token != NIHIL)
+        {
+            _clavi_addere(fs,
+                (constans character*)v->datum.token->valor.datum,
+                v->datum.token->valor.mensura);
+            fs->corpus_ultimum = FALSUM;
+        }
+        redde;
+    }
+    si (v->genus == SILVA_VALOR_LISTA)
+    {
+        per (k = ZEPHYRUM; k < silva_materia_valor_lista_numerus(*v); k++)
+        {
+            _formam_ambulare(fs, silva_materia_valor_lista_obtinere(*v, k));
+        }
+        redde;
+    }
+    si (v->genus != SILVA_VALOR_NODUS || v->datum.nodus == NIHIL)
+    {
+        redde;
+    }
+    n = v->datum.nodus;
+    si (_est_ambiguus(fs->commissio, n))
+    {
+        _formam_ambulare(fs, _situs_lectio_canonica(fs->commissio, n));
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        constans SilvaValor* l = &n->loci[k];
+
+        si (   n                                        == fs->vocatio
+            && strcmp(_loci_titulus(n, k), "argumenta") == ZEPHYRUM)
+        {
+            si (l->genus == SILVA_VALOR_LISTA)
+            {
+                i32 m;
+
+                per (m = ZEPHYRUM; m < silva_materia_valor_lista_numerus(*l);
+                     m++)
+                {
+                    _argumentum_scribere(fs,
+                        silva_materia_valor_lista_obtinere(*l, m));
+                }
+            }
+            alioquin si (l->genus == SILVA_VALOR_NODUS)
+            {
+                _argumentum_scribere(fs, l);
+            }
+            perge;
+        }
+        si (_locus_corporis(n, k))
+        {
+            si (l->genus == SILVA_VALOR_NIHIL)
+            {
+                perge;
+            }
+            si (!fs->corpus_ultimum)
+            {
+                _clavi_addere(fs, "...", III);
+            }
+            _substitutionem_notare(fs, l, "...", fs->corpus_ultimum);
+            fs->corpus_ultimum = VERUM;
+            perge;
+        }
+        _formam_ambulare(fs, l);
+    }
+}
+
+interior b32
+_scripturae_spatium_est (
+    character c)
+{
+    redde c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f'
+        || c == '\v';
+}
+
+/* scriptura: octeti [a, b) fontis, substitutionibus factis,
+ * commentariis omissis, spatiis contractis; litterae intactae */
+interior vacuum
+_scripturam_scribere (
+      SilvaChordaAedificator* s,
+     constans character* fons,
+                    s32  a,
+                    s32  b,
+                    SilvaXar* series)
+{
+    s32 i         = a;
+    i32 j         = ZEPHYRUM;
+    b32 spatium   = FALSUM;
+    b32 scriptum  = FALSUM;
+
+    dum (i < b)
+    {
+          constans FormaeSubstitutio* o = NIHIL;
+                           character  c = fons[i];
+
+        dum (j < silva_xar_numerus(series))
+        {
+            o = (constans FormaeSubstitutio*)silva_xar_obtinere(series, j);
+            si (o->initium >= i)
+            {
+                frange;
+            }
+            j++;
+            o = NIHIL;
+        }
+        si (o != NIHIL && o->initium == i)
+        {
+            si (spatium && scriptum)
+            {
+                (vacuum)silva_chorda_aedificator_appendere_character(s, ' ');
+            }
+            (vacuum)silva_chorda_aedificator_appendere_literis(s,
+                o->substitutio);
+            scriptum  = VERUM;
+            spatium   = FALSUM;
+            i         = o->finis > i ? o->finis : i + I;
+            j++;
+            perge;
+        }
+        si (   _scripturae_spatium_est(c) || (c == '\\' && i + I < b
+            && fons[i + I] == '\n'))
+        {
+            spatium = VERUM;
+            i++;
+            perge;
+        }
+        si (c == '/' && i + I < b && fons[i + I] == '*')
+        {
+            i += II;
+            dum (i + I < b && !(fons[i] == '*' && fons[i + I] == '/'))
+            {
+                i++;
+            }
+            i        += II;
+            spatium  = VERUM;
+            perge;
+        }
+        si (c == '/' && i + I < b && fons[i + I] == '/')
+        {
+            dum (i < b && fons[i] != '\n')
+            {
+                i++;
+            }
+            spatium = VERUM;
+            perge;
+        }
+        si (spatium && scriptum)
+        {
+            (vacuum)silva_chorda_aedificator_appendere_character(s, ' ');
+        }
+        spatium   = FALSUM;
+        scriptum  = VERUM;
+        (vacuum)silva_chorda_aedificator_appendere_character(s, c);
+        i++;
+        si (c == '"' || c == '\'')
+        {
+            dum (i < b && fons[i] != c && fons[i] != '\n')
+            {
+                si (fons[i] == '\\' && i + I < b)
+                {
+                    (vacuum)silva_chorda_aedificator_appendere_character(s,
+                        fons[i]);
+                    i++;
+                }
+                (vacuum)silva_chorda_aedificator_appendere_character(s,
+                    fons[i]);
+                i++;
+            }
+            si (i < b && fons[i] == c)
+            {
+                (vacuum)silva_chorda_aedificator_appendere_character(s, c);
+                i++;
+            }
+        }
+    }
+}
+
+b32
+silva_situs_forma (
+                  SilvaPiscina* piscina,
+    constans SilvaParsura* parsura,
+      constans SilvaSitus* situs,
+       constans character* fons,
+                      i32  mensura,
+                   SilvaChorda* clavis_out,
+                   SilvaChorda* scriptura_out)
+{
+       FormaeScriptor  fs;
+    SilvaChordaAedificator* scriptura;
+         SilvaValor  radix;
+                  s32  min = -I;
+                  s32  max = ZEPHYRUM;
+                  i32  i;
+                  i32  k;
+
+    si (   situs            == NIHIL || situs->in_macro
+        || situs->consumens == NIHIL
+        || parsura          == NIHIL || fons == NIHIL)
+    {
+        redde FALSUM;
+    }
+    silva_nodus_extensionem(situs->consumens, parsura->fons_princeps,
+        &min, &max);
+    si (min < ZEPHYRUM || max > (s32)mensura)
+    {
+        redde FALSUM;
+    }
+    fs.commissio       = parsura->commissio;
+    fs.vocatio         = situs->vocatio;
+    fs.piscina         = piscina;
+    fs.princeps        = parsura->fons_princeps;
+    fs.lacunae         = ZEPHYRUM;
+    fs.corpus_ultimum  = FALSUM;
+    fs.clavis          = silva_chorda_aedificator_creare(piscina, CXXVIII);
+    fs.substitutiones = silva_xar_creare(piscina,
+        (i32)magnitudo(FormaeSubstitutio));
+    scriptura = silva_chorda_aedificator_creare(piscina, CXXVIII);
+    si (   fs.clavis == NIHIL || fs.substitutiones == NIHIL
+        || scriptura == NIHIL)
+    {
+        redde FALSUM;
+    }
+    (vacuum)silva_chorda_aedificator_appendere_literis(fs.clavis,
+        silva_nodi_genus_titulus(situs->consumens));
+    (vacuum)silva_chorda_aedificator_appendere_character(fs.clavis, '|');
+    radix = _valor_nodi(situs->consumens);
+    _formam_ambulare(&fs, &radix);
+
+    /* substitutiones ordine fontis (insertio simplex: paucae) */
+    per (i = I; i < silva_xar_numerus(fs.substitutiones); i++)
+    {
+        FormaeSubstitutio o =
+            *(FormaeSubstitutio*)silva_xar_obtinere(fs.substitutiones,
+            i);
+
+        k = i;
+        dum (   k > ZEPHYRUM
+             && ((FormaeSubstitutio*)silva_xar_obtinere(fs.substitutiones, k
+                 - I))
+                    ->initium > o.initium)
+        {
+            *(FormaeSubstitutio*)silva_xar_obtinere(fs.substitutiones, k) =
+                *(FormaeSubstitutio*)silva_xar_obtinere(fs.substitutiones, k
+                    - I);
+            k--;
+        }
+        *(FormaeSubstitutio*)silva_xar_obtinere(fs.substitutiones, k) = o;
+    }
+    _scripturam_scribere(scriptura, fons, min, max, fs.substitutiones);
+
+    *clavis_out     = silva_chorda_aedificator_finire(fs.clavis);
+    *scriptura_out  = silva_chorda_aedificator_finire(scriptura);
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Regulae et rescriptio (transformare T4)
+ * ================================================== */
+
+interior SilvaFormaGenus
+_genus_ex_textu (
+    SilvaChorda textus)
+{
+    i32 k = textus.mensura;
+
+    dum (   k > ZEPHYRUM
+         && _scripturae_spatium_est((character)textus.datum[k - I]))
+    {
+        k--;
+    }
+    si (   k > ZEPHYRUM
+        && (textus.datum[k - I] == ';' || textus.datum[k - I] == '}'))
+    {
+        redde SILVA_FORMA_SENTENTIA;
+    }
+    redde SILVA_FORMA_EXPRESSIO;
+}
+
+interior b32
+_causam_praefigere (
+                 SilvaChorda* causa_out,
+                SilvaPiscina* piscina,
+     constans character* praefixum,
+                 SilvaChorda  causa)
+{
+    si (causa_out != NIHIL)
+    {
+        *causa_out = silva_chorda_concatenare(silva_chorda_ex_literis(praefixum,
+            piscina), causa, piscina);
+    }
+    redde FALSUM;
+}
+
+SilvaRegula*
+silva_regulam_parare (
+    SilvaPiscina* piscina,
+     SilvaChorda  textus_formae,
+     SilvaChorda  textus_substitutionis,
+     SilvaChorda* causa_out)
+{
+        SilvaFormaGenus  genus  = _genus_ex_textu(textus_formae);
+                 SilvaChorda  causa;
+             SilvaForma* forma_regulae;
+             SilvaForma* forma_substituta;
+            SilvaRegula* regula;
+                    i32  i;
+                    i32  j;
+
+    causa = silva_chorda_ex_literis("", piscina);
+    forma_regulae = silva_formam_parsare(piscina,
+        (constans character*)textus_formae.datum, textus_formae.mensura,
+        genus, &causa);
+    si (forma_regulae == NIHIL)
+    {
+        _causam_praefigere(causa_out, piscina, "si: ", causa);
+        redde NIHIL;
+    }
+    forma_substituta = silva_formam_parsare(piscina,
+        (constans character*)textus_substitutionis.datum,
+        textus_substitutionis.mensura, genus, &causa);
+    si (forma_substituta == NIHIL)
+    {
+        _causam_praefigere(causa_out, piscina, "fac: ", causa);
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(forma_substituta->lacunae); i++)
+    {
+        constans SilvaLacuna* l = (constans SilvaLacuna*)silva_xar_obtinere(
+            forma_substituta->lacunae, i);
+                         b32 inventa = FALSUM;
+
+        per (j = ZEPHYRUM; j < silva_xar_numerus(forma_regulae->lacunae); j++)
+        {
+            constans SilvaLacuna* m =
+                (constans SilvaLacuna*)silva_xar_obtinere(
+                forma_regulae->lacunae, j);
+
+            si (   silva_chorda_aequalis(l->titulus, m->titulus)
+                && l->reliquum == m->reliquum)
+            {
+                inventa = VERUM;
+            }
+        }
+        si (!inventa)
+        {
+            _causam_praefigere(causa_out, piscina,
+                "fac: lacuna non in si: $", l->titulus);
+            redde NIHIL;
+        }
+    }
+    regula = (SilvaRegula*)silva_piscina_allocare(piscina,
+        (memoriae_index)magnitudo(SilvaRegula));
+    si (regula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    regula->forma        = forma_regulae;
+    regula->substitutio  = textus_substitutionis;
+    regula->titulus      = textus_formae;
+    redde regula;
+}
+
+constans character*
+silva_rescriptionis_causa (
+    SilvaRescriptioVerdictum verdictum)
+{
+    commutatio (verdictum)
+    {
+        casus SILVA_RESCRIPTIO_FACTA:
+            redde "rescribitur";
+        casus SILVA_RESCRIPTIO_IN_MACRO:
+            redde "in macro (non rescribitur)";
+        casus SILVA_RESCRIPTIO_SINE_REGULA:
+            redde "nulla regula congruit";
+        casus SILVA_RESCRIPTIO_NON_FIDA:
+            redde "geometria non fida (textus non captus)";
+        casus SILVA_RESCRIPTIO_TRIVIA:
+            redde "commentarium aut directiva extra capturas periret";
+        casus SILVA_RESCRIPTIO_CONFLICTUS:
+            redde "rescriptio alia eosdem octetos tangit";
+        casus SILVA_RESCRIPTIO_RECURSIO:
+            redde "recursio: functionem continentem vocaret";
+        ordinarius:
+            frange;
+    }
+    redde "verdictum ignotum";
+}
+
+/* sententia: ascensus regularum hic finit (nodus ipse probatur) */
+interior b32
+_sententia_est (
+    constans SilvaNodus* nodus)
+{
+    constans character* g = silva_nodi_genus_titulus(nodus);
+
+    redde strcmp(g, "sententia-expressionis") == ZEPHYRUM
+        || strcmp(g, "declaratio") == ZEPHYRUM
+        || strcmp(g, "redde") == ZEPHYRUM
+        || strcmp(g, "si") == ZEPHYRUM
+        || strcmp(g, "dum") == ZEPHYRUM
+        || strcmp(g, "per") == ZEPHYRUM
+        || strcmp(g, "fac-dum") == ZEPHYRUM
+        || strcmp(g, "commutatio") == ZEPHYRUM;
+}
+
+/* substitutio functionem continentem vocat? (nomen ut identificator
+ * integrum, '(' sequente) */
+interior b32
+_recursio_est (
+    constans SilvaNodus* vocatio,
+                 SilvaChorda  textus)
+{
+    constans SilvaNodus* n = vocatio;
+             SilvaToken* titulus;
+                    i32  k;
+
+    dum (   n != NIHIL
+         && strcmp(silva_nodi_genus_titulus(n), "definitio-functionis")
+             != ZEPHYRUM)
+    {
+        n = n->pater;
+    }
+    si (n == NIHIL)
+    {
+        redde FALSUM;
+    }
+    titulus = silva_c89_declaratoris_titulus(_nodus_loci(n,
+        "declarator"));
+    si (titulus == NIHIL || titulus->valor.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k + titulus->valor.mensura
+        <= textus.mensura; k++)
+    {
+        i32 post = k + titulus->valor.mensura;
+
+        si (   memcmp(textus.datum + k, titulus->valor.datum,
+                   (size_t)titulus->valor.mensura) != ZEPHYRUM
+            || (k > ZEPHYRUM
+                && _pars_nominis((character)textus.datum[k - I])))
+        {
+            perge;
+        }
+        dum (   post < textus.mensura
+             && _scripturae_spatium_est((character)textus.datum[post]))
+        {
+            post++;
+        }
+        si (post < textus.mensura && textus.datum[post] == '(')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* extentum capturae in fonte; vacuum = '$...' sine elementis */
+nomen structura {
+    s32 initium;
+    s32 finis;
+    b32 nullum;
+} CapturaeExtentum;
+
+/* ambulatio nodi congruentis per partes (lexemata et capturas) */
+nomen structura {
+    constans character* fons;
+                   s32  princeps;
+                   SilvaXar* capturae;    /* SilvaCaptura */
+                   SilvaXar* extenta;     /* CapturaeExtentum, parallela */
+                   s32  initium;
+                   s32  finis;
+                   b32  prima;
+            SilvaToken* radix_prior;
+
+    SilvaRescriptioVerdictum verdictum;
+} PartiumAmbulatio;
+
+/* hiatus inter partes: spatia sola licent */
+interior SilvaRescriptioVerdictum
+_hiatum_iudicare (
+    constans character* fons,
+                   s32  a,
+                   s32  b)
+{
+    s32 i;
+
+    per (i = a; i < b; i++)
+    {
+        character c = fons[i];
+
+        si (_scripturae_spatium_est(c))
+        {
+            perge;
+        }
+        si (c == '\\' && i + I < b && fons[i + I] == '\n')
+        {
+            i++;
+            perge;
+        }
+        si (   c == '#'
+            || (c == '/' && i + I < b
+                && (fons[i + I] == '*' || fons[i + I] == '/')))
+        {
+            redde SILVA_RESCRIPTIO_TRIVIA;
+        }
+        redde SILVA_RESCRIPTIO_NON_FIDA;
+    }
+    redde SILVA_RESCRIPTIO_FACTA;
+}
+
+interior vacuum
+_partem_notare (
+    PartiumAmbulatio* pa,
+                 s32  a,
+                 s32  b)
+{
+    si (pa->verdictum != SILVA_RESCRIPTIO_FACTA)
+    {
+        redde;
+    }
+    si (pa->prima)
+    {
+        pa->initium  = a;
+        pa->prima    = FALSUM;
+    }
+    alioquin si (a < pa->finis)
+    {
+        pa->verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+        redde;
+    }
+    alioquin
+    {
+        pa->verdictum = _hiatum_iudicare(pa->fons, pa->finis, a);
+    }
+    pa->finis = b;
+}
+
+/* index capturae cuius nodus est n (-1 si nulla) */
+interior s32
+_captura_nodi (
+    constans PartiumAmbulatio* pa,
+          constans SilvaNodus* n)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < silva_xar_numerus(pa->capturae); k++)
+    {
+        constans SilvaCaptura* c = (constans SilvaCaptura*)silva_xar_obtinere(
+            pa->capturae, k);
+
+        si (!c->reliquum && c->nodus == n)
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+/* index capturae reliqui cuius elementum primum est n (-1 si nulla) */
+interior s32
+_reliquum_nodi (
+    constans PartiumAmbulatio* pa,
+          constans SilvaNodus* n)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < silva_xar_numerus(pa->capturae); k++)
+    {
+        constans SilvaCaptura* c = (constans SilvaCaptura*)silva_xar_obtinere(
+            pa->capturae, k);
+        constans SilvaValor* e;
+
+        si (   !c->reliquum || c->elementa == NIHIL
+            || silva_xar_numerus(c->elementa) == ZEPHYRUM)
+        {
+            perge;
+        }
+        e = (constans SilvaValor*)silva_xar_obtinere(c->elementa, ZEPHYRUM);
+        si (e->genus == SILVA_VALOR_NODUS && e->datum.nodus == n)
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+interior vacuum
+_capturam_notare (
+    PartiumAmbulatio* pa,
+                 s32  k)
+{
+    constans CapturaeExtentum* e = (constans CapturaeExtentum*)
+        silva_xar_obtinere(pa->extenta, (i32)k);
+
+    si (e->nullum)
+    {
+        redde;
+    }
+    si (e->initium < ZEPHYRUM)
+    {
+        pa->verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+        redde;
+    }
+    _partem_notare(pa, e->initium, e->finis);
+    pa->radix_prior = NIHIL;
+}
+
+interior vacuum
+_partes_ambulare (
+       PartiumAmbulatio* pa,
+    constans SilvaValor* v)
+{
+    i32 k;
+    s32 c;
+
+    si (v == NIHIL || pa->verdictum != SILVA_RESCRIPTIO_FACTA)
+    {
+        redde;
+    }
+    si (v->genus == SILVA_VALOR_TOKEN && v->datum.token != NIHIL)
+    {
+        SilvaToken* radix = silva_token_radix(v->datum.token);
+
+        si (   radix == NIHIL || radix->fons_index != pa->princeps
+            || radix->byte_offset < ZEPHYRUM)
+        {
+            pa->verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+            redde;
+        }
+        si (radix == pa->radix_prior)
+        {
+            redde;   /* expansio 1:N (NIHIL) - sedes una */
+        }
+        pa->radix_prior = radix;
+        _partem_notare(pa, radix->byte_offset, radix->byte_offset
+            + (s32)silva_token_longitudo(radix));
+        redde;
+    }
+    si (v->genus == SILVA_VALOR_LISTA)
+    {
+        per (k = ZEPHYRUM; k < silva_materia_valor_lista_numerus(*v); k++)
+        {
+            constans SilvaValor* e = silva_materia_valor_lista_obtinere(*v,
+                k);
+
+            si (   e->genus == SILVA_VALOR_NODUS
+                && (c = _reliquum_nodi(pa, e->datum.nodus)) >= ZEPHYRUM)
+            {
+                _capturam_notare(pa, c);
+                redde;   /* reliquum usque ad finem listae */
+            }
+            _partes_ambulare(pa, e);
+        }
+        redde;
+    }
+    si (v->genus != SILVA_VALOR_NODUS || v->datum.nodus == NIHIL)
+    {
+        redde;
+    }
+    {
+        constans SilvaNodus* n = v->datum.nodus;
+
+        c = _captura_nodi(pa, n);
+        si (c < ZEPHYRUM)
+        {
+            n = silva_nodus_canonicus(n);
+            c = _captura_nodi(pa, n);
+        }
+        si (c >= ZEPHYRUM)
+        {
+            _capturam_notare(pa, c);
+            redde;
+        }
+        per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+        {
+            _partes_ambulare(pa, &n->loci[k]);
+        }
+    }
+}
+
+/* octeti capturae in aedificatorem; '$...r' vacuum: comma
+ * praecedens cum spatiis tollitur */
+interior vacuum
+_capturam_appendere (
+            SilvaChordaAedificator* a,
+           constans character* fons,
+    constans CapturaeExtentum* e)
+{
+    s32 j;
+
+    si (!e->nullum)
+    {
+        per (j = e->initium; j < e->finis; j++)
+        {
+            (vacuum)silva_chorda_aedificator_appendere_character(a, fons[j]);
+        }
+        redde;
+    }
+    {
+        SilvaChorda iam  = silva_chorda_aedificator_spectare(a);
+           i32 m    = iam.mensura;
+
+        dum (   m > ZEPHYRUM && _scripturae_spatium_est(
+                 (character)iam.datum[m - I]))
+        {
+            m--;
+        }
+        si (m > ZEPHYRUM && iam.datum[m - I] == ',')
+        {
+            silva_chorda_aedificator_truncare(a, (memoriae_index)(m - I));
+        }
+    }
+}
+
+/* textus 'fac' cum lacunis impletis */
+interior b32
+_substitutionem_struere (
+                      SilvaPiscina* piscina,
+    constans PartiumAmbulatio* pa,
+                       SilvaChorda  exemplar,
+                       SilvaChorda* textus_out)
+{
+    SilvaChordaAedificator* a = silva_chorda_aedificator_creare(piscina,
+        (memoriae_index)(exemplar.mensura + LXIV));
+                   i32 i = ZEPHYRUM;
+
+    si (a == NIHIL)
+    {
+        redde FALSUM;
+    }
+    dum (i < exemplar.mensura)
+    {
+        character c = (character)exemplar.datum[i];
+
+        si (c == '"' || c == '\'')
+        {
+            (vacuum)silva_chorda_aedificator_appendere_character(a, c);
+            i++;
+            dum (   i < exemplar.mensura
+                 && (character)exemplar.datum[i] != c)
+            {
+                si (   (character)exemplar.datum[i] == '\\'
+                    && i + I < exemplar.mensura)
+                {
+                    (vacuum)silva_chorda_aedificator_appendere_character(a,
+                        (character)exemplar.datum[i]);
+                    i++;
+                }
+                (vacuum)silva_chorda_aedificator_appendere_character(a,
+                    (character)exemplar.datum[i]);
+                i++;
+            }
+            si (i < exemplar.mensura)
+            {
+                (vacuum)silva_chorda_aedificator_appendere_character(a, c);
+                i++;
+            }
+            perge;
+        }
+        si (c == '$')
+        {
+               b32 reliquum = FALSUM;
+               i32 ab;
+            SilvaChorda titulus;
+               i32 k;
+               b32 inventa = FALSUM;
+
+            i++;
+            si (   i + II < exemplar.mensura && exemplar.datum[i] == '.'
+                && exemplar.datum[i + I]  == '.'
+                && exemplar.datum[i + II] == '.')
+            {
+                reliquum  = VERUM;
+                i         += III;
+            }
+            ab = i;
+            dum (   i < exemplar.mensura
+                 && _pars_nominis((character)exemplar.datum[i]))
+            {
+                i++;
+            }
+            titulus = silva_chorda_sectio(exemplar, ab, i);
+            per (k = ZEPHYRUM; k < silva_xar_numerus(pa->capturae); k++)
+            {
+                constans SilvaCaptura* cap = (constans SilvaCaptura*)
+                    silva_xar_obtinere(pa->capturae, k);
+                constans CapturaeExtentum* e =
+                    (constans CapturaeExtentum*)
+                    silva_xar_obtinere(pa->extenta, k);
+
+                si (   cap->reliquum != reliquum
+                    || !silva_chorda_aequalis(cap->titulus, titulus))
+                {
+                    perge;
+                }
+                inventa = VERUM;
+                _capturam_appendere(a, pa->fons, e);
+                frange;
+            }
+            si (!inventa)
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
+        (vacuum)silva_chorda_aedificator_appendere_character(a, c);
+        i++;
+    }
+    *textus_out = silva_chorda_aedificator_finire(a);
+    redde VERUM;
+}
+
+interior vacuum
+_rescriptionem_struere (
+                  SilvaPiscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* fons,
+      constans SilvaNodus* nodus,
+                      SilvaXar* capturae,
+                   SilvaChorda  substitutio,
+          SilvaRescriptio* r)
+{
+    PartiumAmbulatio pa;
+        SilvaValor radix;
+                 i32 k;
+
+    pa.fons      = fons;
+    pa.princeps  = parsura->fons_princeps;
+    pa.capturae  = capturae;
+    pa.extenta = silva_xar_creare(piscina,
+        (i32)magnitudo(CapturaeExtentum));
+    pa.initium      = ZEPHYRUM;
+    pa.finis        = ZEPHYRUM;
+    pa.prima        = VERUM;
+    pa.radix_prior  = NIHIL;
+    pa.verdictum    = SILVA_RESCRIPTIO_FACTA;
+    si (pa.extenta == NIHIL)
+    {
+        r->verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+        redde;
+    }
+    per (k = ZEPHYRUM; k < silva_xar_numerus(capturae); k++)
+    {
+        constans SilvaCaptura* c = (constans SilvaCaptura*)silva_xar_obtinere(
+            capturae, k);
+          CapturaeExtentum* e =
+              (CapturaeExtentum*)silva_xar_addere(pa.extenta);
+                       s32 min = -I;
+                       s32 max = ZEPHYRUM;
+
+        si (e == NIHIL)
+        {
+            r->verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+            redde;
+        }
+        e->nullum = FALSUM;
+        si (c->reliquum)
+        {
+            i32 m;
+
+            e->nullum = c->elementa == NIHIL
+                || silva_xar_numerus(c->elementa) == ZEPHYRUM;
+            per (m = ZEPHYRUM; !e->nullum
+                && m < silva_xar_numerus(c->elementa);
+                 m++)
+            {
+                silva_valor_extensionem(
+                    *(constans SilvaValor*)silva_xar_obtinere(c->elementa,
+                    m),
+                    pa.princeps, &min, &max);
+            }
+        }
+        alioquin
+        {
+            silva_nodus_extensionem(c->nodus, pa.princeps, &min, &max);
+        }
+        e->initium  = min;
+        e->finis    = max;
+    }
+    radix = _valor_nodi(nodus);
+    _partes_ambulare(&pa, &radix);
+    si (pa.verdictum == SILVA_RESCRIPTIO_FACTA && pa.prima)
+    {
+        pa.verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+    }
+    r->verdictum  = pa.verdictum;
+    r->initium    = pa.initium;
+    r->finis      = pa.finis;
+    si (   pa.verdictum == SILVA_RESCRIPTIO_FACTA
+        && !_substitutionem_struere(piscina, &pa, substitutio,
+        &r->textus))
+    {
+        r->verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+    }
+}
+
+SilvaXar*
+silva_rescriptiones_parare (
+                  SilvaPiscina* piscina,
+    constans SilvaParsura* parsura,
+       constans character* fons,
+                      i32  mensura,
+                   SilvaChorda  functio,
+             constans SilvaXar* regulae)
+{
+    SilvaXar* situs;
+    SilvaXar* exitus;
+    SilvaXar* capturae;
+    i32  i;
+
+    si (parsura == NIHIL || fons == NIHIL || regulae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    situs     = silva_situs_invenire(piscina, parsura, functio);
+    exitus    = silva_xar_creare(piscina, (i32)magnitudo(SilvaRescriptio));
+    capturae  = silva_xar_creare(piscina, (i32)magnitudo(SilvaCaptura));
+    si (situs == NIHIL || exitus == NIHIL || capturae == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < silva_xar_numerus(situs); i++)
+    {
+        constans SilvaSitus* s =
+            (constans SilvaSitus*)silva_xar_obtinere(situs,
+            i);
+            SilvaRescriptio* r = (SilvaRescriptio*)silva_xar_addere(exitus);
+        constans SilvaNodus* congruens = NIHIL;
+                        i32  k;
+                        i32  j;
+
+        si (r == NIHIL)
+        {
+            redde NIHIL;
+        }
+        r->situs      = *s;
+        r->verdictum  = SILVA_RESCRIPTIO_SINE_REGULA;
+        r->regula     = -I;
+        r->initium    = ZEPHYRUM;
+        r->finis      = ZEPHYRUM;
+        r->textus     = silva_chorda_ex_literis("", piscina);
+        r->iterata    = FALSUM;
+        si (s->in_macro)
+        {
+            r->verdictum = SILVA_RESCRIPTIO_IN_MACRO;
+            perge;
+        }
+        per (k = ZEPHYRUM; congruens == NIHIL
+            && k < silva_xar_numerus(regulae);
+             k++)
+        {
+            constans SilvaRegula* regula = *(SilvaRegula* constans*)
+                silva_xar_obtinere(regulae, k);
+            constans SilvaNodus* n = s->vocatio;
+
+            dum (n != NIHIL)
+            {
+                constans character* g = silva_nodi_genus_titulus(n);
+
+                si (   strcmp(g, "corpus")               == ZEPHYRUM
+                    || strcmp(g, "definitio-functionis") == ZEPHYRUM)
+                {
+                    frange;
+                }
+                si (   strcmp(g, "ambiguus") != ZEPHYRUM
+                    && silva_forma_congruit(piscina, regula->forma, n,
+                           capturae))
+                {
+                    congruens = n;
+                    r->regula = (s32)k;
+                    frange;
+                }
+                si (_sententia_est(n))
+                {
+                    frange;
+                }
+                n = n->pater;
+            }
+        }
+        si (congruens == NIHIL)
+        {
+            perge;
+        }
+        _rescriptionem_struere(piscina, parsura, fons, congruens,
+            capturae,
+            (*(SilvaRegula* constans*)silva_xar_obtinere(regulae,
+                (i32)r->regula))->substitutio, r);
+        si (r->verdictum != SILVA_RESCRIPTIO_FACTA)
+        {
+            perge;
+        }
+        si (r->finis > (s32)mensura)
+        {
+            r->verdictum = SILVA_RESCRIPTIO_NON_FIDA;
+            perge;
+        }
+        si (_recursio_est(s->vocatio, r->textus))
+        {
+            r->verdictum = SILVA_RESCRIPTIO_RECURSIO;
+            perge;
+        }
+        /* conflictus cum rescriptionibus prioribus */
+        per (j = ZEPHYRUM; j < i; j++)
+        {
+            constans SilvaRescriptio* p = (constans SilvaRescriptio*)
+                silva_xar_obtinere(exitus, j);
+
+            si (   p->verdictum != SILVA_RESCRIPTIO_FACTA
+                || p->finis     <= r->initium || r->finis <= p->initium)
+            {
+                perge;
+            }
+            si (   p->initium == r->initium && p->finis == r->finis
+                && silva_chorda_aequalis(p->textus, r->textus))
+            {
+                r->iterata = VERUM;
+            }
+            alioquin
+            {
+                r->verdictum = SILVA_RESCRIPTIO_CONFLICTUS;
+            }
+            frange;
+        }
+    }
+    redde exitus;
+}
+
+SilvaChorda
+silva_rescriptiones_applicare (
+               SilvaPiscina* piscina,
+    constans character* fons,
+                   i32  mensura,
+          constans SilvaXar* rescriptiones)
+{
+    SilvaChordaAedificator* a = silva_chorda_aedificator_creare(piscina,
+        (memoriae_index)mensura + CCLVI);
+    constans SilvaRescriptio** ordo;
+                         i32   n = ZEPHYRUM;
+                         i32   k;
+                         i32   m;
+                         s32   locus = ZEPHYRUM;
+                      SilvaChorda   vacua;
+
+    vacua.mensura  = ZEPHYRUM;
+    vacua.datum    = NIHIL;
+    ordo = (constans SilvaRescriptio**)silva_piscina_allocare(piscina,
+        (memoriae_index)(silva_xar_numerus(rescriptiones) + I)
+        * magnitudo(SilvaRescriptio*));
+    si (a == NIHIL || ordo == NIHIL)
+    {
+        redde vacua;
+    }
+    per (k = ZEPHYRUM; k < silva_xar_numerus(rescriptiones); k++)
+    {
+        constans SilvaRescriptio* r = (constans SilvaRescriptio*)
+            silva_xar_obtinere(rescriptiones, k);
+
+        si (r->verdictum != SILVA_RESCRIPTIO_FACTA || r->iterata)
+        {
+            perge;
+        }
+        m = n;
+        dum (m > ZEPHYRUM && ordo[m - I]->initium > r->initium)
+        {
+            ordo[m] = ordo[m - I];
+            m--;
+        }
+        ordo[m] = r;
+        n++;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        s32 j;
+
+        per (j = locus; j < ordo[k]->initium; j++)
+        {
+            (vacuum)silva_chorda_aedificator_appendere_character(a, fons[j]);
+        }
+        (vacuum)silva_chorda_aedificator_appendere_chorda(a, ordo[k]->textus);
+        locus = ordo[k]->finis;
+    }
+    per (; locus < (s32)mensura; locus++)
+    {
+        (vacuum)silva_chorda_aedificator_appendere_character(a, fons[locus]);
+    }
+    redde silva_chorda_aedificator_finire(a);
 }

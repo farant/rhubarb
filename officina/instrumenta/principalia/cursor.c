@@ -28,6 +28,8 @@
 #include "officina_machinula.h"
 #include "officina_medulla_textus.h"
 #include "tabula_dispersa.h"
+#include "filum.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -844,10 +846,10 @@ principale (
              long  effusiones_exclusae     = 0L;
 
         /* directorium capturarum (stdout interpretatum per suitem) */
-        (vacuum)mkdir("officina/build/capturae", 0755);
+        (vacuum)filum_directorium_creare("officina/build/capturae");
         si (census_petita)
         {
-            (vacuum)mkdir("officina/build/census", 0755);
+            (vacuum)filum_directorium_creare("officina/build/census");
         }
 
         si (dir == NIHIL)
@@ -951,8 +953,14 @@ principale (
 
                     _vias_effusionis(suites[i], via_capturae,
                         via_aurei);
+                    lectiones_notare(LECTIO_SCRIPSIT, via_capturae);
+                    /* <tolera codex="SCRIPTURA_PRAETERITA" (>captura stdout
+                     * freopen involucrum in lectionibus non habet - notatur
+                     * supra */
                     si (freopen(via_capturae, "w", stdout) == NIHIL)
                     {
+                        /* <tolera codex="SCRIPTURA_PRAETERITA" (>machina
+                         * /dev/null: lectiones machinas numquam notant */
                         (vacuum)freopen("/dev/null", "w", stdout);
                     }
                 }
@@ -1039,7 +1047,7 @@ principale (
                         "officina/build/census/%.*s.census",
                         (int)(strlen(suites[i] + XII) - II),
                         suites[i] + XII);
-                    pc = fopen(via_census, "w");
+                    pc = lectiones_fopen(via_census, "w");
                     si (pc != NIHIL)
                     {
                         s32 op_c;

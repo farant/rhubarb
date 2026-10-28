@@ -151,7 +151,9 @@ _statum_secutum_implere (
     memcpy(via_plena + longitudo_basis + I, iterator->buffer_nominis,
         (size_t)longitudo_nominis);
     via_plena[longitudo_basis + I + longitudo_nominis] = '\0';
-    /* lectiones: notatur */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * per directorium_iterator_aperire (ENUMERAVIT)
+     * lectiones: notatur */
     si (stat(via_plena, &status) == 0)
     {
         iterator->introitus_nunc.genus =
@@ -217,7 +219,9 @@ directorium_iterator_aperire (
         redde NIHIL;
     }
 #else
-    /* lectiones: notatur */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * directorium_iterator_aperire notat ABSENS/ENUMERAVIT
+     * lectiones: notatur */
     descriptum = opendir(via);
     si (descriptum == NIHIL)
     {
@@ -392,7 +396,9 @@ directorium_iterator_proximum (
             memcpy(via_plena + longitudo_basis + I,
                 iterator->buffer_nominis, (size_t)longitudo_nominis);
             via_plena[longitudo_basis + I + longitudo_nominis] = '\0';
-            /* lectiones: notatur */
+            /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+             * per directorium_iterator_aperire (ENUMERAVIT)
+             * lectiones: notatur */
             si (lstat(via_plena, &status_proprius) == 0)
             {
                 iterator->introitus_nunc.est_nexus =
@@ -526,6 +532,26 @@ _congruit_recursivum (
     redde FALSUM;
 }
 
+hic_manens constans character* constans _tituli_systematis[] = {
+    ".DS_Store", NIHIL
+};
+
+b32
+directorium_titulus_systematis (
+    chorda titulus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; _tituli_systematis[k] != NIHIL; k++)
+    {
+        si (chorda_aequalis_literis(titulus, _tituli_systematis[k]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 b32
 directorium_titulus_congruit (
     chorda titulus,
@@ -569,7 +595,9 @@ directorium_existit (
         redde FALSUM;
     }
 
-    /* lectiones: notatur */
+    /* <tolera codex="CANALIS_PRAETERITUS" (>canalis ipse
+     * directorium_existit notat ABSENS/EXSTAT
+     * lectiones: notatur */
     si (stat(via, &status) != 0)
     {
         lectiones_notare(LECTIO_ABSENS, via);
