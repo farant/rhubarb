@@ -154,3 +154,31 @@ the usus delta; path II disabled -> red in the builder's pool-size check.
 - oratio_canon / oratio_stml over their ceilings: pre-existing on the
   branch (HEAD 885 / 4096 MiB; with this change 755 / 3871). Parks
   01M5GH4FA11PP0GGZ9TZ5E2Y7J and 01M5GKMDGSVZEKPXA54Y0VC87H.
+
+## 2026-10-27 - size overflow near 2^64 (park …1Q6158, found by tertia's contractio review)
+
+`_allocare_interna` computed `necessaria = ordinatus_offset + mensura` with no
+check. `piscina_conari_allocare(p, (size_t)-16)` wrapped to a small number, the
+"fits?" test passed, the call RETURNED A POINTER and moved the block's offset
+BACKWARDS - the next allocation overlapped a live one. Same shape in four more
+spots: `necessaria + mensura_alvei_initia` (wrapped to a tiny block -> the grow
+loop created tiny blocks forever), `mensura_alvei_initia * II`, the alignment
+helper's `ptr + (ordinatio - 1)` (and `% ordinatio` with ordinatio 0 = division
+by zero; on arm64 udiv-by-0 returns 0 silently, still UB), and
+`piscina_conari_ampliare`'s `offset + incrementum <= capacitas`.
+
+Fix: `_sedem_computare` replaces `_proxima_ordinatio` - computes aligned offset
+AND end, refusing ordinatio 0 or any wrap; every check compares against the
+HEADROOM (`a > MAXIMUS - b`), never a sum. Overflow = allocation failure
+(`_exundatio`: conari -> NIHIL, fatal -> message + exit(1)), arena untouched.
+A request whose base-padded block size would wrap is refused BEFORE malloc (it
+is unsatisfiable, and a near-2^64 malloc aborts under ASan / venenum).
+
+Test `exundatio mensurae` (probatio_piscina): body runs first in a child under
+CREDO_NON_PENDET (the old code hangs or divides by zero - a named failure, not
+a dead suite), then in the parent. Four plants, one per guard, each red at its
+own line. Lesson from the plants: three cases first passed by ACCIDENT - the
+zero-alignment check only matters at offset 0 (elsewhere `ordinatio - 1` =
+MAX trips the headroom clause), the base-padding check needs offset + mensura
+to fit while + base wraps, and ampliare's wrap needs the allocation to start
+past offset 0. Write overflow tests from the arithmetic, then plant each guard.

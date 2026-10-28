@@ -2111,9 +2111,15 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
     residua = PORTAE_RESIDUA.get(nomen, [])
     residua_facta = [(g, _curre(cmd), signum) for g, cmd, signum in residua
                      if g == 'prae']
+    # UMBRA (fabrica-plan-8 T3, decretum Franis Q2): membra in duobus
+    # iudiciis (photographiae verum + libri/secutorum) iudicantur,
+    # discordiae in <area>vestigia_umbra.txt - verdictum non mutatur.
+    # Modus expressus vocantis (e.g. 'photographia') servatur.
+    ambitus = dict(os.environ)
+    ambitus.setdefault('FABRICA_VESTIGIUM', 'umbra')
     r = _curre([FABRICA_BIN, 'probare', '-machina']
                + (['-vis'] if vis else []) + (['-audit'] if auditus else [])
-               + [compositum])
+               + [compositum], env=ambitus)
     if r.returncode == 2:
         print('porta %s: fabrica probare %s nequit (exitus 2) - via altera'
               % (nomen, compositum))

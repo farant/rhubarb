@@ -532,6 +532,26 @@ _congruit_recursivum (
     redde FALSUM;
 }
 
+hic_manens constans character* constans _tituli_systematis[] = {
+    ".DS_Store", NIHIL
+};
+
+b32
+directorium_titulus_systematis (
+    chorda titulus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; _tituli_systematis[k] != NIHIL; k++)
+    {
+        si (chorda_aequalis_literis(titulus, _tituli_systematis[k]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 b32
 directorium_titulus_congruit (
     chorda titulus,

@@ -437,6 +437,76 @@ _sectio_decima_tertia (
  * PRINCIPALE
  * ======================================================================== */
 
+/* TRUNCATIO = INCOMPLETUS (2026-10-27): fluxus truncatus INCOMPLETUS
+ * reddere debet, non fracturam datorum - lector lib/git fenestram
+ * crescentem in sarcinis legit (LXIV K, deinde quadruplicata) et SOLUM
+ * INCOMPLETUS eam crescere facit; olim lector in fine vacuus bits
+ * nullos addebat et distantia "invalida" reddebatur, ergo obiectum
+ * compressum > LXIV K in sarcina numquam legebatur. Fractura vera
+ * (genus blocki III reservatum) fractura manet. */
+interior vacuum
+_sectio_fluxus_brevis (
+    CredoContextus* c)
+{
+                               Piscina* piscina = c->piscina;
+                                    i8* originalis;
+                                   i32  mensura  = (i32)CC * (i32)MXXIV;
+                                   i32  semen    = (i32)12345;
+                                   i32  k;
+                                   i32  n;
+                        FlaturaFructus  compressa;
+                        FlaturaFructus  fructus;
+                                    i8  reservatum[IV];
+    constans FlaturaCompressioNivellus  modi[II] = {
+        FLATURA_COMPRESSIO_ORDINARIA, FLATURA_COMPRESSIO_NULLA };
+
+    originalis = (i8*)piscina_allocare(piscina,
+        (memoriae_index)mensura);
+    CREDO_NECESSE_NON_NIHIL(originalis);
+    /* verba pseudo-fortuita: compressio partialis, blocki multi */
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        semen = semen * (i32)1103515245 + (i32)12345;
+        originalis[k] = (i8)((semen >> XVI) % VII == ZEPHYRUM
+            ? ' ' : 'a' + (character)((semen >> XVIII) % XXVI));
+    }
+    per (n = ZEPHYRUM; n < II; n++)
+    {
+        compressa = flatura_deflare(originalis, mensura, modi[n],
+            piscina);
+        CREDO_NECESSE((i32)compressa.status == (i32)FLATURA_STATUS_OK);
+        fructus = flatura_inflare(compressa.datum, compressa.mensura,
+            piscina);
+        CREDO_AEQUALIS_I32((i32)fructus.status, (i32)FLATURA_STATUS_OK);
+        CREDO_AEQUALIS_I32(fructus.mensura, mensura);
+        per (k = I; k <= VIII; k++)
+        {
+            i32 longitudo = k < VIII ? compressa.mensura * k / VIII
+                : compressa.mensura - I;
+
+            fructus = flatura_inflare(compressa.datum, longitudo,
+                piscina);
+            si ((i32)fructus.status != (i32)FLATURA_STATUS_INCOMPLETUS)
+            {
+                printf("  nivellus %d, longitudo %d/%d: status %d\n",
+                    (integer)modi[n], (integer)longitudo,
+                    (integer)compressa.mensura,
+                    (integer)fructus.status);
+            }
+            CREDO_AEQUALIS_I32((i32)fructus.status,
+                (i32)FLATURA_STATUS_INCOMPLETUS);
+        }
+    }
+    /* BFINAL=1, BTYPE=11 (reservatum): fractura, non INCOMPLETUS */
+    reservatum[ZEPHYRUM]  = (i8)0x07;
+    reservatum[I]         = (i8)0;
+    reservatum[II]        = (i8)0;
+    reservatum[III]       = (i8)0;
+    fructus               = flatura_inflare(reservatum, IV, piscina);
+    CREDO_VERUM((i32)fructus.status != (i32)FLATURA_STATUS_OK
+        && (i32)fructus.status != (i32)FLATURA_STATUS_INCOMPLETUS);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "CRC-32 vector", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "CRC-32 vacuus", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -455,6 +525,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "maxima magnitudo", _sectio_decima_secunda, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "compressio repetitiva", _sectio_decima_tertia, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "truncatio = INCOMPLETUS", _sectio_fluxus_brevis, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

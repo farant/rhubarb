@@ -379,8 +379,11 @@ _enumerare (
     {
         chorda* locus;
 
+        /* .DS_Store (Finder): non ingressus - sigillum 'D' aliter
+         * mutaretur cum directorium in Finder aperitur (…P98RY) */
         si (   chorda_aequalis_literis(introitus->titulus, ".")
-            || chorda_aequalis_literis(introitus->titulus, ".."))
+            || chorda_aequalis_literis(introitus->titulus, "..")
+            || directorium_titulus_systematis(introitus->titulus))
         {
             perge;
         }
@@ -1242,8 +1245,11 @@ _arborem_photographare (
     {
         chorda via;
 
+        /* .DS_Store: Finder eam QUOVIS tempore scribit - non
+         * scriptura actionis ('scripsit extra vestigium' falsum) */
         si (   chorda_aequalis_literis(introitus->titulus, ".")
             || chorda_aequalis_literis(introitus->titulus, "..")
+            || directorium_titulus_systematis(introitus->titulus)
             || (   directorium.mensura == 0
                 && chorda_aequalis_literis(introitus->titulus, ".git")))
         {
@@ -1338,7 +1344,8 @@ _directorium_extra_photographare (
         chorda pars;
 
         si (   chorda_aequalis_literis(introitus->titulus, ".")
-            || chorda_aequalis_literis(introitus->titulus, ".."))
+            || chorda_aequalis_literis(introitus->titulus, "..")
+            || directorium_titulus_systematis(introitus->titulus))
         {
             perge;
         }
@@ -1479,6 +1486,97 @@ _directoria_extra_colligere (
     redde directoria;
 }
 
+/* PHOTOGRAPHIA SECUTORUM (fabrica-plan-8 T2): viae quas index git
+ * sequitur, semel per processum lectae (lib/git, git_indicem_legere -
+ * nullum 'git ls-files'), NUL terminatae ut lstat eas accipiat. Gradus
+ * conflictus (1-3) viam eandem repetunt: semel. Loci residentium
+ * (gesta/annales, tabularium.db*, forum.db* in radice) praetermittuntur
+ * ut in ambulatione (_arborem_photographare) - hodie nullus sequitur. */
+hic_manens Xar* _secuta_viae = NIHIL;
+
+interior b32
+_secuta_legere (
+    Piscina* piscina)
+{
+    GitRepositorium* repositorium;
+                Xar* index;
+                i32  i;
+
+    repositorium = git_aperire(piscina, ".");
+    index = repositorium != NIHIL
+        ? git_indicem_legere(repositorium, piscina) : NIHIL;
+    si (index == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _secuta_viae = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (_secuta_viae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(index); i++)
+    {
+        constans GitIndexIntroitus* e = (constans GitIndexIntroitus*)
+            xar_obtinere(index, i);
+                           chorda* locus;
+
+        si (   (   i > ZEPHYRUM
+                && chorda_aequalis(e->via,
+                ((constans GitIndexIntroitus*)
+                       xar_obtinere(index, i - I))->via))
+            || _incipit_literis(e->via, "gesta/annales/")
+            || _incipit_literis(e->via, "tabularium.db")
+            || _incipit_literis(e->via, "forum.db"))
+        {
+            perge;
+        }
+        locus = (chorda*)xar_addere(_secuta_viae);
+        si (locus == NIHIL)
+        {
+            redde FALSUM;
+        }
+        locus->datum = (i8*)piscina_allocare(piscina,
+            (memoriae_index)e->via.mensura + I);
+        si (locus->datum == NIHIL)
+        {
+            redde FALSUM;
+        }
+        memcpy(locus->datum, e->via.datum,
+            (memoriae_index)e->via.mensura);
+        locus->datum[e->via.mensura]  = '\0';
+        locus->mensura                = e->via.mensura;
+    }
+    redde VERUM;
+}
+
+interior b32
+_secuta_capere (
+     vacuum*  datum,
+    Piscina*  piscina,
+        Xar** vestigia_out)
+{
+    Xar* vestigia;
+    i32  i;
+
+    (vacuum)datum;
+    vestigia = xar_creare(piscina, (i32)magnitudo(FabricaVestigium));
+    si (vestigia == NIHIL || _secuta_viae == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(_secuta_viae); i++)
+    {
+        chorda via = *(chorda*)xar_obtinere(_secuta_viae, i);
+
+        /* absens omittitur (_vestigium_addere): deletio = via evanida */
+        _vestigium_addere(vestigia, via,
+            (constans character*)via.datum);
+    }
+    xar_ordinare(vestigia, _vestigia_ordinare);
+    *vestigia_out = vestigia;
+    redde VERUM;
+}
+
 /* AGENS (sanare, fabrica-6 H4): agere et photographia; fila (plan 2
  * T6) - tutae simul si fila > I et non siccum, I = seriatim, via vetus;
  * directoria extra arborem ex actionibus */
@@ -1498,4 +1596,17 @@ suturae_agentem_addere (
         sutura->currere_simul  = suturae_currere_simul;
     }
     _directoria_extra = _directoria_extra_colligere(actiones, piscina);
+    /* FABRICA_VESTIGIUM (fabrica-plan-8): 'umbra' et 'liber' testem
+     * secutorum capiunt; ordinarie (photographia) nihil mutatur */
+    {
+        constans character* modus = getenv("FABRICA_VESTIGIUM");
+
+        si (   modus != NIHIL
+            && (   strcmp(modus, "umbra") == ZEPHYRUM
+                || strcmp(modus, "liber") == ZEPHYRUM)
+            && (_secuta_viae != NIHIL || _secuta_legere(piscina)))
+        {
+            sutura->secuta_capere = _secuta_capere;
+        }
+    }
 }

@@ -135,6 +135,22 @@
 #   LXV  digestum lectores iudicis habet: actio cum ingressu
 #        identitas_clang LXIV hex (olim 'sutura sine
 #        identitate clang', exitus 1 - bearssl_amalgama 2026-10-17)
+#   LXVI .DS_Store (desideratum …P98RY): Finder eam in directorio
+#        enumerato scribit -> 'lectiones congruunt' manet (olim
+#        sigillum 'D' mutatum, regeneratio; verdictum stalum);
+#        plagula vera addita -> STALUM; scripta DURANTE actionem ->
+#        SANATUM (olim 'scripsit extra vestigium')
+#   LXVII tempus photographiae (fabrica-plan-8 T1): cursus membri
+#        quisque (transiens et fractus) factum fabrica.photographia (ms)
+#        habet - ambulationes arboris ante + post
+#   LXVIII photographia secutorum (fabrica-plan-8 T2): sub
+#        FABRICA_VESTIGIUM=umbra in repositorio git factum
+#        fabrica.secuta (ms) per cursum membri; ordinarie nullum
+#   LXIX umbra (fabrica-plan-8 T3): iudicium photographiae et iudicium
+#        libri + secutorum per membrum conferuntur, discordia in
+#        vestigia_umbra.txt: scriptura cruda in plagulam NON secutam
+#        extra aream (c) = discordia vestigii et invalidationis; libro
+#        nominata (a), secuta (b), nulla (d) = concordia
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # PARS PURA (2026-10-23, desideratum …VXWK8): casus arborem VIVAM
@@ -1219,6 +1235,102 @@ printf '<aedificatio>\n  <actio titulus="gc" genus="generator">\n    <mandatum>\
 (cd "$T/r" && "$F" digestum gc) > "$T/lxi" 2>&1; rc=$?
 if [ "$rc" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxi"; then echo "  LXV  digestum actionis cum identitate clang: LXIV hex OK"; else echo "  LXV  FRACTUM (rc=$rc)"; sed 's/^/      /' "$T/lxi" | head -3; fracta=1; fi
 
+# LXVI (2026-10-27, desideratum …P98RY): .DS_STORE - Finder eam in omni
+# directorio aperto scribit. Sigillum 'D' (directorium enumeratum) nomina
+# omnia hashabat: actio quae directorium enumeravit viam vestigii amittebat
+# (regeneratio; verdictum probationis STALUM, suita iterum currenda), et
+# scripta dum actio currit 'scripsit extra vestigium' FRACTUM faciebat.
+# directorium_titulus_systematis (iter_directoria) in enumeratione et
+# photographia arboris praetermittitur. Via 'd' RELATIVA (ut actiones
+# verae): absoluta sub radice temporaria (mktemp) ambitus est, non
+# ingressus - vestigium numquam congrueret.
+radix '<fabrica titulus="t"><subsystema via="."/></fabrica>'
+mkdir -p "$T/r/d" "$T/r/d2"; printf 'x\n' > "$T/r/d/x.c"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; [ -n "${FABRICA_LECTIONES:-}" ] && printf "D\\td\\n" >> "$FABRICA_LECTIONES"; ls d > "$D/b"\n' > "$T/r/gen_b.sh"
+printf '<aedificatio>\n  <actio titulus="g" genus="generator" lectiones="verum">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_b.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="gen_b.sh"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" sanare) > "$T/lxvi_s" 2>&1; rcs=$?
+: > "$T/r/d/.DS_Store"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/lxvi_1" 2>&1; rc1=$?
+printf 'y\n' > "$T/r/d/y.c"
+(cd "$T/r" && "$F" iudicare -plenus -omnia) > "$T/lxvi_2" 2>&1; rc2=$?
+rm -f "$T/r/d/y.c"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; [ -z "${FABRICA_SCRIPTURA:-}" ] && : > d2/.DS_Store; { ls d; echo II; } > "$D/b"\n' > "$T/r/gen_b.sh"
+(cd "$T/r" && "$F" sanare) > "$T/lxvi_3" 2>&1; rc3=$?
+if [ "$rcs" -eq 0 ] && [ "$rc1" -eq 0 ] && grep -q '^RECENS b - lectiones congruunt (vestigium)' "$T/lxvi_1" \
+   && [ "$rc2" -eq 1 ] && grep -q '^STALUM b ' "$T/lxvi_2" \
+   && [ "$rc3" -eq 0 ] && grep -q '^SANATUM *g ' "$T/lxvi_3" && [ -e "$T/r/d2/.DS_Store" ]; then echo "  LXVI .DS_Store: vestigium manet, plagula vera STALUM, scripta durante SANATUM OK"; else echo "  LXVI FRACTUM (sanare rc=$rcs, DS rc=$rc1, y.c rc=$rc2, durante rc=$rc3)"; sed 's/^/      /' "$T/lxvi_1" "$T/lxvi_2" "$T/lxvi_3" | grep -E 'RECENS|STALUM|SANATUM|FRACTUM' | head -6; fracta=1; fi
+
+# LXVII (2026-10-27, fabrica-plan-8 T1): TEMPUS PHOTOGRAPHIAE - ambulationes
+# arboris (ante + post) membri olim nusquam mensae (sample solum): factum
+# fabrica.photographia (ms) cursui membri adhaerens, etiam membro fracto
+# (photographia post statim capitur).
+radix_c
+printf 'int main(void) { return 1; }\n' > "$T/r/t/probatio_d.c"
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lxvii MENSOR_COMMISSUM=commissum-lxvii MENSOR_SESSIO=sessio-lxvii \
+    MENSOR_ARBOR="$RP" "$F" probare -vis probationes_t) > "$T/lxvii.e" 2>&1
+awk -F'\t' -v p=fumus-lxvii '$1 == "cursus" && $2 == "initium" && $4 == p && $6 ~ /probatio_[ad]$/ { t[$3] = $6 }
+    $1 != "cursus" && $4 == "fabrica.photographia" && $6 == "ms" && $5 >= 0 { f[$3] = 1 }
+    END { for (i in t) print t[i] "\t" ((i in f) ? "photographia" : "nulla") }' \
+    "$MENSOR_DIARIUM" 2>/dev/null | sort > "$T/lxvii"
+printf 'probationes_t/probatio_a\tphotographia\nprobationes_t/probatio_d\tphotographia\n' > "$T/lxvii.exp"
+if cmp -s "$T/lxvii" "$T/lxvii.exp"; then echo "  LXVII tempus photographiae: factum fabrica.photographia (ms) per cursum membri, fracto quoque OK"; else echo "  LXVII FRACTUM"; sed 's/^/      lectum: /' "$T/lxvii"; fracta=1; fi
+
+# LXVIII (2026-10-27, fabrica-plan-8 T2): PHOTOGRAPHIA SECUTORUM - index
+# git (lib/git, git_indicem_legere) + lstat viarum sequendarum. Radix fumi
+# repositorium fit (git init + add: index solus, nullum commissum).
+# FABRICA_VESTIGIUM=umbra: factum fabrica.secuta per cursum membri;
+# sine variabili: nullum (cursus ordinarius immutatus).
+radix_c
+printf 'int main(void) { return 1; }\n' > "$T/r/t/probatio_d.c"
+(cd "$T/r" && git init -q . && git add -A) > "$T/lxviii.g" 2>&1
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lxviii MENSOR_SESSIO=sessio-lxviii MENSOR_ARBOR="$RP" \
+    FABRICA_VESTIGIUM=umbra "$F" probare -vis probationes_t) > "$T/lxviii.e" 2>&1
+(cd "$T/r" && MENSOR_PARENS=fumus-lxviii-0 MENSOR_SESSIO=sessio-lxviii MENSOR_ARBOR="$RP" \
+    "$F" probare -vis probationes_t) > "$T/lxviii0.e" 2>&1
+lxviii () {   # $1 parens -> "<membrum>\t<secuta|nulla>" ordinata
+    awk -F'\t' -v p="$1" '$1 == "cursus" && $2 == "initium" && $4 == p && $6 ~ /probatio_[ad]$/ { t[$3] = $6 }
+        $1 != "cursus" && $4 == "fabrica.secuta" && $6 == "ms" && $5 >= 0 { f[$3] = 1 }
+        END { for (i in t) print t[i] "\t" ((i in f) ? "secuta" : "nulla") }' \
+        "$MENSOR_DIARIUM" 2>/dev/null | sort
+}
+lxviii fumus-lxviii > "$T/lxviii"; lxviii fumus-lxviii-0 > "$T/lxviii0"
+printf 'probationes_t/probatio_a\tsecuta\nprobationes_t/probatio_d\tsecuta\n' > "$T/lxviii.exp"
+printf 'probationes_t/probatio_a\tnulla\nprobationes_t/probatio_d\tnulla\n' > "$T/lxviii0.exp"
+if cmp -s "$T/lxviii" "$T/lxviii.exp" && cmp -s "$T/lxviii0" "$T/lxviii0.exp"; then echo "  LXVIII photographia secutorum: sub umbra factum per membrum, ordinarie nullum OK"; else echo "  LXVIII FRACTUM"; sed 's/^/      umbra: /' "$T/lxviii"; sed 's/^/      ordinarie: /' "$T/lxviii0"; fracta=1; fi
+
+# LXIX (2026-10-27, fabrica-plan-8 T3): UMBRA - FABRICA_VESTIGIUM=umbra:
+# verdictum ex photographiis ut semper; iudicium libri (lineae S) +
+# photographiae secutorum (index git) quoque computatur et discordia
+# scribitur. a: scriptura cruda x.txt sed linea S sua (liber eam nominat);
+# b: scriptura cruda in lib/bib.c (SECUTA - testis secutorum videt);
+# c: scriptura cruda in extra.txt (non secuta, extra aream): solum
+# ambulatio videt - discordia vestigii et invalidationis (caecitas nota,
+# spec 8 T4); d: nihil. Factum fabrica.umbra_discordia per membrum.
+radix_c
+rm -f "$T/r/t/probatio_"*.c
+printf '#include <stdio.h>\n#include <stdlib.h>\nint main(void) { FILE* f = fopen("x.txt", "w"); const char* l = getenv("FABRICA_LECTIONES"); if (f) { fputs("x\\n", f); fclose(f); } if (l) { f = fopen(l, "a"); if (f) { fputs("S\\tx.txt\\n", f); fclose(f); } } return 0; }\n' > "$T/r/t/probatio_a.c"
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("lib/bib.c", "a"); if (f) { fputs("/* b */\\n", f); fclose(f); } return 0; }\n' > "$T/r/t/probatio_b.c"
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("extra.txt", "w"); if (f) { fputs("c\\n", f); fclose(f); } return 0; }\n' > "$T/r/t/probatio_c.c"
+printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_d.c"
+(cd "$T/r" && git init -q . && git add -A) > "$T/lxix.g" 2>&1
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lxix MENSOR_SESSIO=sessio-lxix MENSOR_ARBOR="$RP" \
+    FABRICA_VESTIGIUM=umbra "$F" probare -vis probationes_t) > "$T/lxix.e" 2>&1
+A="$T/r/build/fabrica/area/probationes_t"
+lxix_ok=1
+for m in a b d; do
+    [ "$(grep -cv '^cursus$' "$A/probatio_$m/vestigia_umbra.txt" 2>/dev/null)" = "0" ] || lxix_ok=0
+done
+grep -qx "vestigium	photographia	extra.txt" "$A/probatio_c/vestigia_umbra.txt" 2>/dev/null || lxix_ok=0
+grep -q "^invalidatio	" "$A/probatio_c/vestigia_umbra.txt" 2>/dev/null || lxix_ok=0
+lxix_d=$(awk -F'\t' -v p=fumus-lxix '$1 == "cursus" && $2 == "initium" && $4 == p && $6 ~ /probatio_c$/ { c = $3 }
+    $1 != "cursus" && $4 == "fabrica.umbra_discordia" { v[$3] = $5 }
+    END { print (c in v) ? int(v[c]) : "nulla" }' "$MENSOR_DIARIUM" 2>/dev/null)
+[ "$lxix_d" = "2" ] || lxix_ok=0
+if [ "$lxix_ok" -eq 1 ]; then echo "  LXIX umbra: a/b/d concordes, c discordia vestigii et invalidationis (factum 2) OK"; else echo "  LXIX FRACTUM (factum c: $lxix_d)"; for m in a b c d; do sed "s/^/      $m: /" "$A/probatio_$m/vestigia_umbra.txt" 2>/dev/null || echo "      $m: (nulla plagula)"; done; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (pars pura: casus LIX; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
+echo "fumus fabricae: sanum (pars pura: casus LXIII; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
 exit 0
