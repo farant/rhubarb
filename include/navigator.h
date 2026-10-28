@@ -30,7 +30,14 @@
  * aperit per viam URL - servatus statim, Vicipaedia petitur, alienus
  * "Unsupported site: <hospes/via>" in pede (rubrum). Ictus: linea ->
  * columna (runae, fons lineae) -> offset -> nota NEXUS; extra nexum
- * nihil. Historia vici (Ctrl+O) ad articulum priorem. Clavis N4.3.
+ * nihil. Historia vici (Ctrl+O) ad articulum priorem.
+ * CLAVIS IN NEXIBUS (N4.3): Tab nexum proximum paginae eligit (nullo
+ * electo primum; post ultimum primum paginae sequentis), S-Tab
+ * priorem (ante primum ultimum praecedentis); electus inversus
+ * pingitur (fundus colore nexuum), pes "-> <hospes/via>" monstrat.
+ * Enter electum aperit (ut ictus); Esc electionem tollit (nulla
+ * electione: ad indicem). Motus paginae (j k, sagittae) et articulus
+ * apertus eam tollunt. Campus "nexus" transiens (initium nexus).
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,

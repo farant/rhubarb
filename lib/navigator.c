@@ -1052,8 +1052,8 @@ _articulum_aperire (
                chorda  identitas,
               Piscina* p)
 {
-    constans character* tituli[VI];
-    constans character* valores[VI];
+    constans character* tituli[VII];
+    constans character* valores[VII];
 
     tituli[ZEPHYRUM]   = "visus";
     valores[ZEPHYRUM]  = "pagina";
@@ -1071,7 +1071,9 @@ _articulum_aperire (
     valores[IV]   = valores[I];
     tituli[V]     = "nota";
     valores[V]    = "";
-    si (!_campos_scribere(m, tituli, valores, VI))
+    tituli[VI]    = "nexus";          /* N4.3: electio tollitur */
+    valores[VI]   = "";
+    si (!_campos_scribere(m, tituli, valores, VII))
     {
         redde FALSUM;
     }
@@ -1086,8 +1088,8 @@ _paginam_movere (
 {
         NavigatorFigurae* f;
                      s32  k;
-      constans character* tituli[I];
-      constans character* valores[I];
+      constans character* tituli[II];
+      constans character* valores[II];
                character  numerus[XVI];
 
     f = _paginas_parare(m);
@@ -1103,8 +1105,163 @@ _paginam_movere (
     sprintf(numerus, "%d", (integer)k);
     tituli[ZEPHYRUM]   = "pagina";
     valores[ZEPHYRUM]  = numerus;
+    tituli[I]          = "nexus";     /* N4.3: electio tollitur */
+    valores[I]         = "";
     _positionem_servare(m, f, k);
-    redde _campos_scribere(m, tituli, valores, I);
+    redde _campos_scribere(m, tituli, valores, II);
+}
+
+/* ===== nexus per claves (N4.3) ===== */
+
+/* textus et notae paginae k (articulus aut index nexuum) */
+interior chorda
+_textus_paginae (
+    constans NavigatorFigurae* f,
+                          s32  k)
+{
+    redde (i32)k < f->paginae_articuli ? f->textus->caput.textus
+                                       : f->textus->nexus.textus;
+}
+
+interior Xar*
+_notae_paginae (
+    constans NavigatorFigurae* f,
+                          s32  k)
+{
+    redde (i32)k < f->paginae_articuli ? f->textus->notae
+                                       : f->textus->notae_nexuum;
+}
+
+/* nexus qui in pagina k INCIPIT: gradus I - initium minimum > ab
+ * (ab < 0: primus), gradus -I - maximum < ab (ab < 0: ultimus);
+ * -1 si nullus */
+interior s32
+_nexum_in_pagina (
+    constans NavigatorFigurae* f,
+                          s32  k,
+                          s32  ab,
+                          s32  gradus)
+{
+     constans LectorPagina* g;
+    constans ArticulusNota* n;
+                       Xar* notae;
+                       s32  a;
+                       s32  b;
+                       s32  r;
+                       i32  i;
+
+    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    si (!g || xar_numerus(g->lineae) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    a      = (s32)((constans LectorLinea*)xar_obtinere(g->lineae,
+        ZEPHYRUM))->initium;
+    b      = (s32)((constans LectorLinea*)xar_obtinere(g->lineae,
+        xar_numerus(g->lineae) - I))->finis;
+    notae  = _notae_paginae(f, k);
+    r      = -I;
+    per (i = ZEPHYRUM; notae && i < xar_numerus(notae); i++)
+    {
+        n = (constans ArticulusNota*)xar_obtinere(notae, i);
+        si (   n->genus        != ARTICULUS_NEXUS || (s32)n->initium < a
+            || (s32)n->initium >= b)
+        {
+            perge;
+        }
+        si (gradus > ZEPHYRUM && (ab < ZEPHYRUM || (s32)n->initium > ab)
+            && (r < ZEPHYRUM || (s32)n->initium < r))
+        {
+            r = (s32)n->initium;
+        }
+        si (gradus < ZEPHYRUM && (ab < ZEPHYRUM || (s32)n->initium < ab)
+            && (r < ZEPHYRUM || (s32)n->initium > r))
+        {
+            r = (s32)n->initium;
+        }
+    }
+    redde r;
+}
+
+/* nota nexus electi (campus "nexus") in pagina currente; NIHIL si
+ * nullus aut non iam in pagina */
+interior constans ArticulusNota*
+_nexus_electus (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f)
+{
+    constans ArticulusNota* n;
+                       Xar* notae;
+                       s32  e;
+                       s32  k;
+                       i32  i;
+
+    e = _campus_numerus(m, "nexus");
+    si (!f || e < ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    k = _pagina_currens(m, f);
+    si (   _nexum_in_pagina(f, k, e - I, I) != e)
+    {
+        redde NIHIL;
+    }
+    notae = _notae_paginae(f, k);
+    per (i = ZEPHYRUM; notae && i < xar_numerus(notae); i++)
+    {
+        n = (constans ArticulusNota*)xar_obtinere(notae, i);
+        si (n->genus == ARTICULUS_NEXUS && (s32)n->initium == e)
+        {
+            redde n;
+        }
+    }
+    redde NIHIL;
+}
+
+/* Tab (gradus I) / S-Tab (-I): nexus proximus in pagina, aliter
+ * primus (ultimus) paginae sequentis (prioris) quae nexum habet -
+ * pagina et electus actu uno, positio servatur. Nullus: nihil */
+interior b32
+_nexum_eligere (
+    NavigatorMontatio* m,
+                  s32  gradus)
+{
+       NavigatorFigurae* f;
+                    s32  k;
+                    s32  r;
+     constans character* tituli[II];
+     constans character* valores[II];
+              character  pagina[XVI];
+              character  nexus[XVI];
+
+    f = _paginas_parare(m);
+    si (!f)
+    {
+        redde VERUM;
+    }
+    k = _pagina_currens(m, f);
+    r = _nexum_in_pagina(f, k, _nexus_electus(m, f) ? _campus_numerus(m,
+        "nexus") : -I, gradus);
+    dum (r < ZEPHYRUM)
+    {
+        k += gradus;
+        si (k < ZEPHYRUM || (i32)k >= xar_numerus(f->paginae))
+        {
+            redde VERUM;
+        }
+        r = _nexum_in_pagina(f, k, -I, gradus);
+    }
+    sprintf(pagina, "%d", (integer)k);
+    sprintf(nexus, "%d", (integer)r);
+    tituli[ZEPHYRUM]   = "pagina";
+    valores[ZEPHYRUM]  = pagina;
+    tituli[I]          = "nexus";
+    valores[I]         = nexus;
+    si (k != _pagina_currens(m, f))
+    {
+        _positionem_servare(m, f, k);
+    }
+    redde _campos_scribere(m, tituli, valores, II);
 }
 
 
@@ -1358,6 +1515,17 @@ _quaerere (
     redde _quaestionem_incipere(m, hospes, verba, p);
 }
 
+/* URL sine schemate ("https://a.org/x" -> "a.org/x") */
+interior chorda
+_sine_schemate (
+    chorda url)
+{
+    s32 i = chorda_invenire_index(url, _litterae("://"));
+
+    redde i < ZEPHYRUM ? url : chorda_sectio(url, (i32)i + III,
+        url.mensura);
+}
+
 /* URL: servatus -> statim; aliter petitio in reactore hospitis */
 interior b32
 _url_aperire (
@@ -1380,9 +1548,7 @@ _url_aperire (
     {
         /* N4.2: URL sine schemate nominatur (nexus alienus) */
         redde _notam_scribere(m, chorda_concatenare(chorda_ex_literis(
-            "Unsupported site: ", p), chorda_sectio(url, (i32)
-            chorda_invenire_index(url, _litterae("://")) + III,
-            url.mensura), p), p);
+            "Unsupported site: ", p), _sine_schemate(url), p), p);
     }
     a = navigator_articulum_invenire(m->bibliotheca,
         vicipaedia_url_articuli(&sedes, p));
@@ -1653,6 +1819,13 @@ fac_ad_indicem (
     constans character* tituli[VI];
     constans character* valores[VI];
 
+    /* N4.3: nexus electus prius tollitur */
+    si (_campus_numerus(cp->m, "nexus") >= ZEPHYRUM)
+    {
+        tituli[ZEPHYRUM]   = "nexus";
+        valores[ZEPHYRUM]  = "";
+        redde _campos_scribere(cp->m, tituli, valores, I);
+    }
     tituli[ZEPHYRUM]   = "visus";
     valores[ZEPHYRUM]  = "index";
     tituli[I]          = "articulus";
@@ -1830,6 +2003,33 @@ fac_favorem_vertere (
     redde cp->electus >= ZEPHYRUM && _favorem_vertere(cp->m,
         navigator_articulus(cp->m->bibliotheca, _index_ordinis(cp->ordo,
         cp->electus)), cp->p);
+}
+
+interior b32
+fac_nexum_proximum (
+    vacuum* ctx)
+{
+    redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, I);
+}
+
+interior b32
+fac_nexum_priorem (
+    vacuum* ctx)
+{
+    redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, -I);
+}
+
+/* Enter in pagina: nexus electus aperitur (ut ictus); nullo: nihil */
+interior b32
+fac_nexum_aperire (
+    vacuum* ctx)
+{
+          ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+      constans ArticulusNota* n;
+
+    n = _nexus_electus(cp->m, _paginas_parare(cp->m));
+    redde !n || _url_aperire(cp->m, chorda_transcribere(n->scopus,
+        cp->p), cp->p);
 }
 
 /* o: prompta "url" aperitur (nota prior tollitur) */
@@ -2068,6 +2268,12 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_indicem_proximum },
     { "navigator.aperire", "Read", "Enter", VISUS_INDICIS,
         REQUIRIT_ELECTUM, fac_aperire },
+    { "navigator.nexus_proximus", "Next link", "Tab", VISUS_PAGINAE,
+        ZEPHYRUM, fac_nexum_proximum },
+    { "navigator.nexus_prior", "Previous link", "S-Tab", VISUS_PAGINAE,
+        ZEPHYRUM, fac_nexum_priorem },
+    { "navigator.nexum_aperire", "Open link", "Enter", VISUS_PAGINAE,
+        ZEPHYRUM, fac_nexum_aperire },
     { "navigator.pagina_proxima", "Next page", "j", VISUS_PAGINAE,
         ZEPHYRUM, fac_paginam_proximam },
     { "navigator.pagina_prior", "Previous page", "k", VISUS_PAGINAE,
@@ -2108,12 +2314,10 @@ _nexus_ad_punctum (
     {
         redde NIHIL;
     }
-    k = _pagina_currens(m, f);
-    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
-    t      = (i32)k < f->paginae_articuli ? f->textus->caput.textus
-        : f->textus->nexus.textus;
-    notae  = (i32)k < f->paginae_articuli ? f->textus->notae
-        : f->textus->notae_nexuum;
+    k      = _pagina_currens(m, f);
+    g      = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    t      = _textus_paginae(f, k);
+    notae  = _notae_paginae(f, k);
     _margines(m, &lateris, &supra);
     per (i = ZEPHYRUM; i < xar_numerus(g->lineae); i++)
     {
@@ -2701,13 +2905,15 @@ _lineam_textus_pingere (
                        s32  y,
                     chorda  textus,
       constans LectorLinea* l,
-                       Xar* notae)
+                       Xar* notae,
+                       s32  electus)
 {
     constans ArticulusNota* n;
                        i32  a;
                        i32  b;
                        i32  i;
                        s32  latitudo;
+                     Fines  fundus;
 
     latitudo  = fons_latitudo(l->fons);
     a         = l->initium;
@@ -2729,8 +2935,20 @@ _lineam_textus_pingere (
             x += _runae(chorda_sectio(textus, a, b)) * latitudo;
         }
         a = n->finis < l->finis ? n->finis : l->finis;
+        si ((s32)n->initium == electus)
+        {
+            /* N4.3: electus inversus - fundus colore nexuum */
+            fundus.x = x;
+            fundus.y = y;
+            fundus.latitudo  = _runae(chorda_sectio(textus, b, a))
+                * latitudo;
+            fundus.altitudo  = fons_altitudo(l->fons);
+            mandata_rectangulum(md, fundus, _color_nexus(), VERUM);
+        }
         mandata_textus(md, x, y, chorda_transcribere(chorda_sectio(
-            textus, b, a), md->piscina), l->fons, _color_nexus());
+            textus, b, a), md->piscina), l->fons, (s32)n->initium
+            == electus ? figura_color_thematis(COLOR_BACKGROUND)
+            : _color_nexus());
         x += _runae(chorda_sectio(textus, b, a)) * latitudo;
     }
     si (a < l->finis)
@@ -2792,10 +3010,9 @@ _paginam_pingere (
                 l = (constans LectorLinea*)xar_obtinere(g->lineae, j);
                 _lineam_textus_pingere(md, x->fines.x + lateris
                     * NAV_LITTERA + l->x, x->fines.y + l->y,
-                    (i32)k < f->paginae_articuli
-                    ? f->textus->caput.textus : f->textus->nexus.textus,
-                    l, (i32)k < f->paginae_articuli ? f->textus->notae
-                    : f->textus->notae_nexuum);
+                    _textus_paginae(f, k), l, _notae_paginae(f, k),
+                    _nexus_electus(m, f) ? _campus_numerus(m, "nexus")
+                    : -I);
             }
         }
         alioquin si (   chorda_aequalis_literis(x->id, "pes")
@@ -2817,6 +3034,13 @@ _paginam_pingere (
             {
                 pes = chorda_concatenare(pes, chorda_ex_literis(
                     " \302\266", md->piscina), md->piscina);
+            }
+            si (nota.mensura == ZEPHYRUM && _nexus_electus(m, f))
+            {
+                /* N4.3: scopus nexus electi */
+                pes = chorda_concatenare(chorda_ex_literis(
+                    "\342\206\222 ", md->piscina), _sine_schemate(
+                    _nexus_electus(m, f)->scopus), md->piscina);
             }
             _centrum_pingere(md, x, nota.mensura
                 > ZEPHYRUM ? nota : pes,

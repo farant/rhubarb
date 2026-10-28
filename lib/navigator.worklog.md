@@ -222,3 +222,26 @@ Test-harness trap there: drawing a sub-tree with the pane's own figure
 registry draws nothing inside vicus (registry keyed by spatium), so
 the test computes the point from the layout instead (title 16 px +
 gap 8 -> first paragraph line at y 24).
+
+## 2026-10-28 - N4.3 keyboard links (Tab / Shift+Tab / Enter)
+
+membrum__praecepta learned "Tab" and "S-Tab" (CLAVIS_TABULA, Shift
+decides, never with Cmd); no other praecepta table used those names,
+so nothing else changed. Selection = transient field `nexus` = start
+offset of the selected NEXUS note in the current page's text. Only
+links that START on a page are Tab stops there (a link continuing
+from the previous page is selectable on that page), so crossing pages
+never re-selects the same link. Tab past the last link moves to the
+next page that has a link (pagina + nexus in one write, position
+saved); none ahead -> nothing. Esc clears the selection before
+leaving the page; j/k/arrows and opening an article clear it.
+Painter draws the selected piece inverted (filled rect in the link
+color, text COLOR_BACKGROUND); footer shows "→ host/path".
+
+vicus finding (vicus-level test 'tabula nexus'): Tab only reaches the
+navigator when the navigator has FOCUS; unfocused, the dispatcher's
+built-in Tab moves focus (within the pane's own space). In the test,
+vicus_focum_ponere needs a vicus_pulsare + dispensator_recomponere
+before the dispatcher focus follows - without the recompose the key
+went to the vicus root only (traced with temporary prints in
+dispensator mittere, removed; dispensator.c unchanged).

@@ -320,6 +320,60 @@ _probare_ictus_nexus (
         c->piscina)));
 }
 
+/* N4.3: latere focato (ut j k) Tab per manum in vico nexum eligit -
+ * focum non movet - Enter Rheum aperit. (Latere non focato Tab focum
+ * vici movet - Tab innatus dispensatoris.) */
+interior vacuum
+_probare_tabula_nexus (
+    CredoContextus* c)
+{
+                         Mundus* x = (Mundus*)c->datum;
+                          Vicus* v;
+                     VicusLatus* l;
+              NavigatorMontatio* m;
+                     ManusLudus* manus;
+    constans NavigatorArticulus* nexus;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "navigator", NIHIL));
+    (vacuum)vicus_pulsare(v);
+    l = latus_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    m = (NavigatorMontatio*)l->montatio;
+    (vacuum)navigator_versionem_offerre(m->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Nexus",
+        c->piscina), chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Nexus", c->piscina),
+        "vicipaedia",
+        chorda_ex_literis(PAGINA_NEXUS, c->piscina),
+        vicipaedia_articulus, NIHIL);
+    nexus = navigator_articulum_invenire(m->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Nexus",
+        c->piscina));
+    CREDO_NECESSE_NON_NIHIL(nexus);
+    CREDO_VERUM(navigator_argumentum_ponere(m, chorda_ut_cstr(
+        nexus->identitas, c->piscina)));
+    (vacuum)vicus_pulsare(v);
+    manus = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(manus);
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+
+    CREDO_GRADUS("Tab: nexus electus (latus focum tenet)");
+    (vacuum)manus_ludus_clavem(manus, '\t', ZEPHYRUM);
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(insula_ramus_attributum(&m->ramus, "nexus") != NIHIL);
+    CREDO_VERUM(latus_frontale(v) == l);
+
+    CREDO_GRADUS("Enter: Rheum aperitur");
+    (vacuum)manus_ludus_clavem(manus, '\r', ZEPHYRUM);
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(campus_est(m, "articulus", chorda_ut_cstr(x->articulus,
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -328,8 +382,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "retro", _probare_retro, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "ictus nexus", _probare_ictus_nexus, mundum_parare,
-        mundum_purgare,
-        NIHIL, NIHIL },
+        mundum_purgare, NIHIL, NIHIL },
+    { "tabula nexus", _probare_tabula_nexus, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

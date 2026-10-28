@@ -53,6 +53,10 @@
     <campus nomen="electus_eventus" typus="numerus" vita="transiens"
             scriptor="navigator.agere"
             nota="eventus electus (ab 0); absens = primus"/>
+    <campus nomen="nexus" typus="numerus" vita="transiens"
+            scriptor="navigator.agere"
+            nota="N4.3: initium nexus electi (offset in textu paginae
+                  currentis); absens = nullus"/>
     <campus nomen="nota" typus="textus" vita="transiens"
             scriptor="navigator.agere"
             nota="nuntius in linea ima ('article not found')"/>

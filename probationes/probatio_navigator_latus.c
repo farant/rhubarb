@@ -206,6 +206,24 @@ clavis_nominata (
     dispensator_recomponere(w->d);
 }
 
+/* N4.3: Tab (cum Shift si retro) */
+interior vacuum
+tabula (
+     Mundus* w,
+        b32  retro)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis        = CLAVIS_TABULA;
+    e.datum.clavis.producta      = IX;
+    e.datum.clavis.runa          = IX;
+    e.datum.clavis.modificantes  = retro ? (i32)MOD_SHIFT : ZEPHYRUM;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
 interior b32
 campus_est (
                  Mundus* w,
@@ -868,6 +886,90 @@ _sectio_ictus_nexuum (
     mundum_claudere(w);
 }
 
+/* N4.3: Tab / S-Tab eligunt (trans paginas), electus inversus et pes
+ * scopum monstrat, Enter aperit, Esc tollit deinde ad indicem, j
+ * tollit */
+interior vacuum
+_sectio_clavis_nexuum (
+    CredoContextus* c)
+{
+                         Mundus* w = mundus(c, VERUM);
+    constans NavigatorArticulus* a;
+                         chorda  numeri;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    offerre(w, "https://la.wikipedia.org/wiki/Numeri",
+        chorda_ex_literis(
+        PAGINA("Numeri", "<p>Vide <a rel=\"mw:WikiLink\" "
+        "href=\"./Beta\">Betam</a> et <a rel=\"mw:ExtLink\" "
+        "href=\"https://example.org/x\">situm</a> alienum.</p>"),
+        c->piscina));
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Numeri", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    numeri = chorda_transcribere(a->identitas, c->piscina);
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("Tab: primus (Betam) electus, inversus, pes scopum");
+    tabula(w, FALSUM);
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 la.wikipedia.org/wiki/Beta",
+        c->piscina));
+
+    CREDO_GRADUS("Tab: situm; S-Tab: Betam iterum");
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "situm", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_FALSUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 example.org/x", c->piscina));
+    tabula(w, VERUM);
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("Esc: electio tollitur, pagina manet; Esc: index");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+
+    CREDO_GRADUS("Tab, Enter: Beta aperitur (ut ictus)");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    tabula(w, FALSUM);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("trans paginas: genus (I), Tab -> Planta (indicis)");
+    CREDO_VERUM(argumentum(w, "3"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "genus", COLOR_BACKGROUND,
+        c->piscina));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_VERUM(pictum_colore(w, "Planta", COLOR_BACKGROUND,
+        c->piscina));
+    tabula(w, VERUM);
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_VERUM(pictum_colore(w, "genus", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("j: electio tollitur");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("sine nexibus (Beta): Tab nihil eligit");
+    CREDO_VERUM(argumentum(w, "5"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    mundum_claudere(w);
+}
+
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
  * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
  * habet */
@@ -1370,8 +1472,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "nexus", _sectio_nexus, NIHIL, mundum_purgare, NIHIL, NIHIL },
     { "ictus nexuum", _sectio_ictus_nexuum, NIHIL, mundum_purgare,
-        NIHIL,
-        NIHIL },
+        NIHIL, NIHIL },
+    { "clavis nexuum", _sectio_clavis_nexuum, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,
