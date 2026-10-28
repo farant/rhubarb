@@ -2696,6 +2696,17 @@ try:
         credo('FUSIO PARATA' in eff and 'git merge --ff-only' in eff
               and not os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: viridis - debita purgata, ritus impressus', causa=repr(eff[-300:]))
+        # CURSUS FUSIONIS (budget B0): fusio = arbor cursuum ut commissio -
+        # phases et portae filii eius (olim portae sine parente: tabula
+        # fusionis tres quaestiones et SQL poscebat)
+        _lc = _cursus_lineae()
+        _fus = [l for l in _lc if l[3] == 'fusio']
+        _ff = set(l[3] for l in _lc if _fus and l[2] == _fus[-1][1])
+        credo(_fus and _fus[-1][4] == 'transiit'
+              and {'phasis:portae debitae', 'porta:ficta-prae-c',
+                   'porta:ficta-prob-2'} <= _ff,
+              'cursus: fusio notata (transiit), phases et portae filii eius',
+              causa=repr((_fus[-1][3:5] if _fus else None, sorted(_ff))))
         # M. rubrum: porta debiti nominata cum commissione (bisectio); debita servata
         with contextlib.redirect_stdout(io.StringIO()):
             silva._debita_fusionis_scribere('c0ffee1', {'ficta-prob-1': 'z.c tegit'})
@@ -2705,6 +2716,11 @@ try:
         credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio: c0ffee1' in err
               and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: rubra - commissio debens nominata, debita servata', causa=repr(err))
+        _fus = [l for l in _cursus_lineae() if l[3] == 'fusio']
+        credo(_fus and _fus[-1][4] == 'fractus'
+              and _fus[-1][14].startswith('SilvaError: '),
+              'cursus: fusio rubra notata (fractus, nota = refusio)',
+              causa=repr(_fus[-1][3:5] + [_fus[-1][14][:80]] if _fus else None))
         # M2. PERGIT (…CECATG): duae probationes rubrae + viridis inter eas - OMNES
         # cursae, ambae nominatae cum commissionibus suis, tabula una; commissio
         # (B supra) adhuc prima rubra sistit

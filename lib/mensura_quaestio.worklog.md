@@ -32,3 +32,26 @@ NIHIL (it was read at the exit; not every branch assigns it). `mensor
 quaestio` without a name, or with an unknown one, prints a usage table: each
 query's question, the parameters (`n=` vs `limes=`), and the title shapes.
 Spec analytica §V gained worked examples ("how to ask").
+
+## 2026-10-27 - `quaestio fusio` (budget B0)
+
+Fran wanted the merge's three tables (merge commit phases + gates, fusio
+gates, timeline) in one command. The gap was upstream: `silva.fusio_probare`
+never opened a run, so its ~50 gates were parentless top-level runs found
+only by tree + commit + time window (and my first gate query, capped at 80
+rows, silently dropped eight). Fix in two parts: (1) pythonica -
+`fusio_probare` is `@_cursu_notatum('fusio')`, so its phases and gates nest
+under it like the commit's; (2) `cursus_quaerere_fusio`: the latest `fusio`
+of the tree and the latest `commissio` of the same tree that STARTED before
+it (a commit made in the tree while the fusio runs is not the merge commit),
+children longest first. `mensor quaestio fusio [arbor=] [-machina]` prints
+the commit block, the fusio block (a run without an end: time so far, and
+'currit' only if its keeper process is alive - judged by the same
+`_vitam_iudicare` as `currentes`) and a timeline. The library stays pure:
+running time is computed in tools/mensor.c from the clock.
+
+Tests: probatio_mensura_quaestio XVI (older/later commits, a fusio in another
+tree, a running fusio with a commit started during it); mensor_cursus_fumus
+XIX end to end through incipere/finire. Plants: commit-before-fusio rule and
+child ordering, each red. Note: a root run's tree comes from cwd -
+MENSOR_ARBOR is inherited by children only.

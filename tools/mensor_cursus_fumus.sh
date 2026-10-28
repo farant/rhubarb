@@ -412,6 +412,37 @@ v18=$("$RADIX/bin/mensor" quaestio graves titulus=fumus/alius -machina 2>&1)
 credo $? "XVIII graves: facta credo.* per sectionem, octeti machinae, MiB homini, titulus membri sectiones eius"
 [ "$fracta" -eq 0 ] || { echo "      g: $g18"; echo "      h: $h18"; echo "      v: $v18"; }
 
+# XIX fusio (budget B0): commissio fusionis (filii II) deinde fusio
+# (portae II) sub arbore ficta - 'quaestio fusio' commissionem ANTE
+# fusionem et filios ordine durationis reddit; fusio altera sine fine
+# (custos = hoc scriptum, vivum) 'currit'. Arbor radicis ex cwd computatur
+# (MENSOR_ARBOR solum filiis hereditatur) - quaestio arborem quam
+# commissio notavit accipit; diarium fumi proprium est
+incipe_xix () { env $(cat "$1" 2>/dev/null | tr '\n' ' ') "$RADIX/bin/mensor" cursus incipere -titulus "$2"; }
+id_de () { sed -n 's/^MENSOR_PARENS=//p' "$1"; }
+incipe_xix /dev/null commissio > "$T/x19c"
+A19=$(sed -n 's/^MENSOR_ARBOR=//p' "$T/x19c")
+incipe_xix "$T/x19c" phasis:forma > "$T/x19c1"; incipe_xix "$T/x19c" porta:a > "$T/x19c2"
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19c1")" -exitus 0 -duratio_ms 10 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19c2")" -exitus 0 -duratio_ms 50 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19c")" -exitus 0 -duratio_ms 60 -nota "commissum fumus"
+incipe_xix /dev/null fusio > "$T/x19f"
+incipe_xix "$T/x19f" porta:c > "$T/x19f1"; incipe_xix "$T/x19f" porta:b > "$T/x19f2"
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19f1")" -exitus 0 -duratio_ms 80 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19f2")" -exitus 0 -duratio_ms 200 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19f")" -exitus 0 -duratio_ms 300 -nota "fusio viridis: 2 portae"
+q19=$("$RADIX/bin/mensor" quaestio fusio arbor="$A19" -machina 2>&1)
+f19=$(echo "$q19" | awk -F'\t' '$1 == "FUSIO_FILIUS" { printf "%s:%s:%s ", $2, $3, $5 }')
+s19=$(echo "$q19" | awk -F'\t' '$1 == "FUSIO" { print $3 "|" $5 "|" $6 } $1 == "FUSIO_COMMISSIO" { print "C|" $5 "|" $6 }' | tr '\n' ' ')
+incipe_xix /dev/null fusio > "$T/x19g"
+q19b=$("$RADIX/bin/mensor" quaestio fusio arbor="$A19" -machina 2>&1)
+[ "$f19" = "commissio:porta:a:50 commissio:phasis:forma:10 fusio:porta:b:200 fusio:porta:c:80 " ] \
+  && [ "$s19" = "C|60|commissum fumus transiit|300|fusio viridis: 2 portae " ] \
+  && echo "$q19b" | awk -F'\t' '$1 == "FUSIO" { exit ($3 == "currit") ? 0 : 1 }' \
+  && ! "$RADIX/bin/mensor" quaestio fusio arbor=/fumus/nulla > /dev/null 2>&1
+credo $? "XIX  fusio: commissio ante fusionem, filii ordine durationis, fusio sine fine currit, arbor sine fusione exitus 1"
+[ "$fracta" -eq 0 ] || { echo "      q: $q19"; echo "      b: $q19b"; }
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XVIII/XVIII)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XIX/XIX)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

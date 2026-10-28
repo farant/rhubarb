@@ -3963,6 +3963,9 @@ def _producentes_fusionis_sanare():
                  _consilium_fracturae(acta_c, err_c)))
 
 
+@_cursu_notatum(lambda *a, **k: 'fusio',
+                lambda r: (0, 'fusio viridis: %d portae' % len(r or [])),
+                'fusio')
 def fusio_probare(basis='main', frigida=True, recepta=True):
     """FUSIO (gradus-portarum T4, spec §III): ramus ante fusionem in basis.
     1. basis antecessor HEAD esse debet ('merge main first'), arbor munda

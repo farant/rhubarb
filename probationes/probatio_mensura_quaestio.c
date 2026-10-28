@@ -1083,6 +1083,87 @@ _sectio_graves (
         c->piscina));
 }
 
+/* XVI. fusio (budget B0): fusio ULTIMA arboris filtratae et commissio
+ * ultima eiusdem arboris ANTE eam (commissio fusionis); filii
+ * utriusque ordine durationis descendentis. Fusio currens (sine fine)
+ * ultima est; commissio POST fusionem non eligitur; arbor alia non. */
+interior vacuum
+_sectio_fusio (
+    CredoContextus* c)
+{
+            Xar* omnes = _omnes(c->piscina);
+    CursusIndex* index;
+  CursusFiltrum  f = _filtrum();
+    CursusFusio  fu;
+         Cursus* alia;
+
+    (vacuum)_cursus(omnes, "c0", "", "commissio", I, V, CURSUS_TRANSIIT,
+        "commissum vetus", c->piscina);
+    (vacuum)_cursus(omnes, "c1", "", "commissio", X, C, CURSUS_TRANSIIT,
+        "commissum abc", c->piscina);
+    (vacuum)_cursus(omnes, "c1f", "c1", "phasis:forma", XI, V,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "c1r", "c1", "porta:radix", XII, LX,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "c1g", "c1", "phasis:git commit", LXXX, XX,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "f1", "", "fusio", CXX, CCC, CURSUS_TRANSIIT,
+        "fusio viridis: 2 portae", c->piscina);
+    (vacuum)_cursus(omnes, "f1m", "f1", "porta:md", CXXI, XL,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "f1s", "f1", "porta:silva", CLXI, CC,
+        CURSUS_TRANSIIT, "", c->piscina);
+    (vacuum)_cursus(omnes, "f1q", "f1", "phasis:frigida", CCCLXI, L,
+        CURSUS_TRANSIIT, "", c->piscina);
+    /* arbor alia: fusio recentior, non eligitur sub filtro */
+    alia = _cursus(omnes, "fa", "", "fusio", CD, X, CURSUS_TRANSIIT, "",
+        c->piscina);
+    alia->initium.arbor  = chorda_ex_literis("/alia", c->piscina);
+    f.arbor              = chorda_ex_literis("/arbor", c->piscina);
+    index                = cursus_indicem_struere(omnes, c->piscina);
+    CREDO_NECESSE(cursus_quaerere_fusio(index, &f, c->piscina, &fu));
+    CREDO_CHORDA_AEQUALIS(fu.fusio->initium.id,
+        chorda_ex_literis("f1", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(fu.commissio);
+    CREDO_CHORDA_AEQUALIS(fu.commissio->initium.id,
+        chorda_ex_literis("c1", c->piscina));
+    CREDO_NECESSE(xar_numerus(fu.filii_fusionis) == III);
+    CREDO_CHORDA_AEQUALIS((*(constans Cursus**)xar_obtinere(
+        fu.filii_fusionis, ZEPHYRUM))->initium.titulus,
+        chorda_ex_literis("porta:silva", c->piscina));
+    CREDO_CHORDA_AEQUALIS((*(constans Cursus**)xar_obtinere(
+        fu.filii_fusionis, II))->initium.titulus,
+        chorda_ex_literis("porta:md", c->piscina));
+    CREDO_NECESSE(xar_numerus(fu.filii_commissionis) == III);
+    CREDO_CHORDA_AEQUALIS((*(constans Cursus**)xar_obtinere(
+        fu.filii_commissionis, ZEPHYRUM))->initium.titulus,
+        chorda_ex_literis("porta:radix", c->piscina));
+
+    /* commissio post fusionem + fusio currens recentior: haec ultima,
+     * commissio eius = ea quae eam praecedit */
+    (vacuum)_cursus(omnes, "c9", "", "commissio", D, L, CURSUS_TRANSIIT,
+        "commissum def", c->piscina);
+    (vacuum)_cursus(omnes, "f2", "", "fusio", CM, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    (vacuum)_cursus(omnes, "f2x", "f2", "porta:x", CMI, ZEPHYRUM,
+        CURSUS_INTERRUPTUS, "", c->piscina);
+    /* commissio arboris eiusdem DUM fusio currit: non eligitur */
+    (vacuum)_cursus(omnes, "c10", "", "commissio", CML, X,
+        CURSUS_TRANSIIT, "commissum interim", c->piscina);
+    index = cursus_indicem_struere(omnes, c->piscina);
+    CREDO_NECESSE(cursus_quaerere_fusio(index, &f, c->piscina, &fu));
+    CREDO_CHORDA_AEQUALIS(fu.fusio->initium.id,
+        chorda_ex_literis("f2", c->piscina));
+    CREDO_VERUM(fu.fusio->status == CURSUS_INTERRUPTUS);
+    CREDO_CHORDA_AEQUALIS(fu.commissio->initium.id,
+        chorda_ex_literis("c9", c->piscina));
+    CREDO_AEQUALIS_I32(xar_numerus(fu.filii_fusionis), I);
+
+    /* nulla fusio in arbore: FALSUM */
+    f.arbor = chorda_ex_literis("/nulla", c->piscina);
+    CREDO_FALSUM(cursus_quaerere_fusio(index, &f, c->piscina, &fu));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I quo tempus ivit", _sectio_filii, NIHIL, NIHIL, NIHIL, NIHIL },
     { "II regenerationes iudicis", _sectio_iudicia, NIHIL, NIHIL, NIHIL,
@@ -1094,6 +1175,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "V numquam cursa", _sectio_numquam, NIHIL, NIHIL, NIHIL, NIHIL },
     { "VI filtra historiae", _sectio_filtra, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "XVI fusio: commissio fusionis, portae, currens", _sectio_fusio,
+      NIHIL, NIHIL, NIHIL, NIHIL },
     { "VII commissiones et culpa", _sectio_commissiones, NIHIL, NIHIL,
       NIHIL, NIHIL },
     { "VIII discus", _sectio_discus, NIHIL, NIHIL, NIHIL, NIHIL },

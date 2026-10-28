@@ -15,7 +15,7 @@
 
 <p>Each unit declares the questions it answers in <code>lib/S.interrogationes.stml</code> (canon <code>interrogationes.canon</code>). Every answer is anchored to a symbol, a path or a command, and the gate <code>interrogationes</code> turns red when an anchor dies. From the terminal: <code>bin/fabrica quid -interrogationes -quaere "how do I ..."</code>, or <code>-symbolum xar_addere</code> for the questions that name a symbol.</p>
 
-<p class="nota">827 questions in 98 units · quomodo 371 · possumne 232 · quid 131 · cur 93</p>
+<p class="nota">828 questions in 98 units · quomodo 372 · possumne 232 · quid 131 · cur 93</p>
 <ul>
 <li><a href="#actio">actio</a> <span class="nota">6</span></li>
 <li><a href="#aedilis">aedilis</a> <span class="nota">11</span></li>
@@ -64,7 +64,7 @@
 <li><a href="#manus_ludus">manus_ludus</a> <span class="nota">8</span></li>
 <li><a href="#matrix">matrix</a> <span class="nota">10</span></li>
 <li><a href="#mensura">mensura</a> <span class="nota">10</span></li>
-<li><a href="#mensura_quaestio">mensura_quaestio</a> <span class="nota">1</span></li>
+<li><a href="#mensura_quaestio">mensura_quaestio</a> <span class="nota">2</span></li>
 <li><a href="#modulus">modulus</a> <span class="nota">6</span></li>
 <li><a href="#motus">motus</a> <span class="nota">8</span></li>
 <li><a href="#norma">norma</a> <span class="nota">12</span></li>
@@ -1211,6 +1211,8 @@
 <ol class="quaestiones">
 <li id="mensura_quaestio-1"><span class="status">quomodo</span>which test sections use the most memory?
 <div class="responsum">bin/mensor quaestio graves [n=N] [titulus=MEMBRUM] [-machina]. Every section that fabrica ran with a current credo leaves three facts on its own run, in octets: credo.arena_apex (peak use of the section's piscina), credo.apex_auctus (how much the process's lifetime peak rose while it ran) and credo.vestigium (footprint at its end). cursus_quaerere_graves takes the maximum of each across runs per section title and orders by the larger of the first two, the number a section's memory ceiling judges. titulus= without '#' means the sections of that member; n defaults to XX in mensor. Sections run outside fabrica, or by a credo older than the fourteen-field SECTIO line, have no facts and do not appear.<br><span class="nota">symbolum <code>cursus_quaerere_graves</code> <code>CursusGravis</code> · imperium <code>bin/mensor quaestio</code></span></div></li>
+<li id="mensura_quaestio-2"><span class="status">quomodo</span>how long did the last merge take, and where did the time go?
+<div class="responsum">bin/mensor quaestio fusio [arbor=PATH] [-machina]. Since budget B0 (2026-10-27) silva.fusio_probare is a run of its own, title 'fusio', so its phases and gates are its children. cursus_quaerere_fusio picks the latest 'fusio' run of the tree (default: the current one) and the latest 'commissio' of the same tree that STARTED before it - the merge commit - and lists both runs' children longest first. The human view prints the commit block, the fusio block (a run with no end shows time so far and 'currit' when its keeper process is alive) and a timeline: commit, gap, fusio, total. Merges from before B0 have no 'fusio' run and are not found.<br><span class="nota">symbolum <code>cursus_quaerere_fusio</code> <code>CursusFusio</code> · imperium <code>bin/mensor quaestio</code></span></div></li>
 </ol>
 
 <h2 id="modulus">modulus</h2>

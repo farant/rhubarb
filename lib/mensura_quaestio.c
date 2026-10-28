@@ -880,6 +880,87 @@ cursus_quaerere_commissiones (
     redde ordines;
 }
 
+/* filii (gradus unus) cursus c ordine durationis descendentis; c
+ * NIHIL aut sine filiis = Xar vacuum */
+interior Xar*
+_filios_ordinatos (
+    constans CursusIndex* index,
+         constans Cursus* c,
+                 Piscina* piscina)
+{
+     Xar* filii = xar_creare(piscina, (i32)magnitudo(constans Cursus*));
+  vacuum* locus = NIHIL;
+     i32  k;
+
+    si (   filii == NIHIL || c == NIHIL
+        || !tabula_dispersa_invenire(index->filii, c->initium.id,
+        &locus))
+    {
+        redde filii;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus((Xar*)locus); k++)
+    {
+        constans Cursus** cella = (constans Cursus**)xar_addere(filii);
+
+        si (cella != NIHIL)
+        {
+            *cella = *(constans Cursus**)xar_obtinere((Xar*)locus, k);
+        }
+    }
+    xar_ordinare(filii, _duratio_descendens);
+    redde filii;
+}
+
+b32
+cursus_quaerere_fusio (
+       constans CursusIndex* index,
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina,
+                CursusFusio* exitus)
+{
+       CursusFiltrum  f;
+    OrdinandumCursus* tabula;
+                 i32  n;
+                 i32  k;
+
+    si (index == NIHIL || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(CursusFusio));
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    si (filtrum != NIHIL)
+    {
+        f.arbor = filtrum->arbor;
+        f.ramus = filtrum->ramus;
+    }
+    f.titulus  = chorda_ex_literis("fusio", piscina);
+    tabula     = _colligere(index, &f, VERUM, piscina, &n);
+    si (tabula == NIHIL || n == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    exitus->fusio  = tabula[ZEPHYRUM].cursus;
+    f.titulus      = chorda_ex_literis("commissio", piscina);
+    tabula         = _colligere(index, &f, VERUM, piscina, &n);
+    per (k = ZEPHYRUM; tabula != NIHIL && k < n; k++)
+    {
+        si (tabula[k].cursus->initium.initium
+            < exitus->fusio->initium.initium)
+        {
+            exitus->commissio = tabula[k].cursus;
+            frange;
+        }
+    }
+    exitus->filii_fusionis      = _filios_ordinatos(index,
+        exitus->fusio,
+        piscina);
+    exitus->filii_commissionis  = _filios_ordinatos(index,
+        exitus->commissio, piscina);
+    redde exitus->filii_fusionis != NIHIL
+        && exitus->filii_commissionis != NIHIL;
+}
+
 /* argv primum verbum (usque ad spatium) */
 interior chorda
 _argv_primum (

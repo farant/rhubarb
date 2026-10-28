@@ -142,6 +142,27 @@ cursus_quaerere_commissiones (
      constans CursusFiltrum* filtrum,
                     Piscina* piscina);
 
+/* FUSIO (budget B0, 2026-10-27): fusio ULTIMA (titulus 'fusio';
+ * filtrum: arbor) et commissio ultima eiusdem arboris quae ANTE eam
+ * incipit (commissio fusionis main in ramum). Filii utriusque (gradus
+ * unus: phases et portae) ordine durationis descendentis. Fusio sine
+ * fine (status INTERRUPTUS) = currens aut interrupta - tempus currens
+ * vocans ex horologio computat (functio pura, nullum horologium).
+ * FALSUM si nulla fusio congruit. */
+nomen structura {
+    constans Cursus* fusio;
+    constans Cursus* commissio;          /* NIHIL si nulla ante */
+                Xar* filii_fusionis;     /* Xar de (constans Cursus*) */
+                Xar* filii_commissionis; /* vacuum si commissio NIHIL */
+} CursusFusio;
+
+b32
+cursus_quaerere_fusio (
+       constans CursusIndex* index,
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina,
+                CursusFusio* exitus);
+
 /* STATISTICA: per titulum (cursus filtrati) - cursus, mediana et
  * maxima transeuntium, fracti; ordine medianae descendentis. Sectiones
  * membri = praefixum 'MEMBRUM#'. */

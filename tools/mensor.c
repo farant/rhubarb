@@ -1986,6 +1986,193 @@ _currentes_imprimere (
     redde ZEPHYRUM;
 }
 
+/* FUSIO (budget B0, 2026-10-27): tabula una fusionis ultimae arboris
+ * (ordinarie arboris currentis) - commissio fusionis (filii: phases et
+ * portae), fusio (filii; sine fine: tempus usque nunc, vita custodis
+ * per currentes), linea temporum. Olim tres quaestiones et SQL. */
+interior s64
+_ms_cursus (
+    constans Cursus* c,
+                s64  nunc)
+{
+    redde c->status == CURSUS_INTERRUPTUS
+        ? nunc - c->initium.initium : c->finis.duratio_ms;
+}
+
+interior vacuum
+_filios_fusionis_imprimere (
+       constans Xar* filii,
+ constans character* genus,
+                s64  nunc,
+                b32  machina,
+                s64* summa_out)
+{
+    i32 k;
+
+    *summa_out = ZEPHYRUM;
+    per (k = ZEPHYRUM; filii != NIHIL && k < xar_numerus(filii); k++)
+    {
+        constans Cursus* f = *(constans Cursus* constans*)xar_obtinere(
+            filii, k);
+                     s64 ms = _ms_cursus(f, nunc);
+
+        *summa_out += ms;
+        si (machina)
+        {
+            imprimere("FUSIO_FILIUS\t%s\t%.*s\t%s\t%ld\t%d\n", genus,
+                (integer)f->initium.titulus.mensura,
+                (constans character*)f->initium.titulus.datum,
+                _statum(f->status), (longus)ms,
+                (integer)(f->status == CURSUS_INTERRUPTUS));
+        }
+        alioquin
+        {
+            imprimere("   %6.1f min  %.*s%s\n", (duplex)ms / 60000.0,
+                (integer)f->initium.titulus.mensura,
+                (constans character*)f->initium.titulus.datum,
+                f->status == CURSUS_FRACTUS ? "  [fractus]"
+                : f->status
+                    == CURSUS_INTERRUPTUS ? "  [sine fine]" : "");
+        }
+    }
+}
+
+interior integer
+_tabulam_fusionis_imprimere (
+    constans CursusIndex* index,
+            constans Xar* mensurae,
+           CursusFiltrum  filtrum,
+                     b32  machina,
+                 Piscina* piscina)
+{
+           CursusFusio  fu;
+                   s64  nunc = mensura_momentum_nunc();
+                   s64  ms_c = ZEPHYRUM;
+                   s64  ms_f;
+                   s64  summa_c      = ZEPHYRUM;
+                   s64  summa_f      = ZEPHYRUM;
+                   s64  intervallum  = ZEPHYRUM;
+            CursusVita  vita         = CURSUS_VITA_IGNOTA;
+                   i32  k;
+             character  tempus[XXXII];
+    constans character* vita_titulus;
+
+    si (filtrum.arbor.mensura == ZEPHYRUM)
+    {
+        CursusInitium contextus;
+
+        memset(&contextus, ZEPHYRUM, magnitudo(contextus));
+        mensura_contextum_parare(&contextus, piscina);
+        filtrum.arbor = contextus.arbor;
+    }
+    si (!cursus_quaerere_fusio(index, &filtrum, piscina, &fu))
+    {
+        fprintf(stderr, "mensor quaestio fusio: nulla fusio in arbore "
+            "%.*s\n", (integer)filtrum.arbor.mensura,
+            (constans character*)filtrum.arbor.datum);
+        redde I;
+    }
+    /* sine fine: vivane? (custos per currentes, ut 'currentes') */
+    si (fu.fusio->status == CURSUS_INTERRUPTUS)
+    {
+        Xar* currentes = cursus_quaerere_currentes(index, mensurae,
+            &filtrum, piscina);
+
+        per (k = ZEPHYRUM; currentes != NIHIL
+             && k < xar_numerus(currentes); k++)
+        {
+            constans CursusCurrens* r = (constans CursusCurrens*)
+                xar_obtinere(currentes, k);
+
+            si (   r->profunditas == ZEPHYRUM
+                && chorda_aequalis(r->cursus->initium.id,
+                       fu.fusio->initium.id))
+            {
+                vita = _vitam_iudicare(r, piscina);
+            }
+        }
+    }
+    vita_titulus = fu.fusio->status != CURSUS_INTERRUPTUS
+        ? _statum(fu.fusio->status)
+        : vita == CURSUS_VITA_VIVA ? "currit"
+        : vita == CURSUS_VITA_MORTUA ? "interruptus" : "sine fine";
+    ms_f = _ms_cursus(fu.fusio, nunc);
+    si (fu.commissio != NIHIL)
+    {
+        ms_c = _ms_cursus(fu.commissio, nunc);
+        intervallum = fu.fusio->initium.initium
+            - (fu.commissio->initium.initium + ms_c);
+        _tempus_iso(fu.commissio->initium.initium, tempus);
+        si (machina)
+        {
+            imprimere("FUSIO_COMMISSIO\t%.*s\t%s\t%ld\t%ld\t%.*s\n",
+                (integer)fu.commissio->initium.id.mensura,
+                (constans character*)fu.commissio->initium.id.datum,
+                _statum(fu.commissio->status),
+                (longus)fu.commissio->initium.initium, (longus)ms_c,
+                (integer)fu.commissio->finis.nota.mensura,
+                (constans character*)fu.commissio->finis.nota.datum);
+        }
+        alioquin
+        {
+            imprimere("COMMISSIO FUSIONIS  %.1f min  %s  %s  %.*s\n",
+                (duplex)ms_c / 60000.0, _statum(fu.commissio->status),
+                tempus, (integer)fu.commissio->finis.nota.mensura,
+                (constans character*)fu.commissio->finis.nota.datum);
+        }
+        _filios_fusionis_imprimere(fu.filii_commissionis, "commissio",
+            nunc, machina, &summa_c);
+        si (!machina)
+        {
+            imprimere("   %6.1f min  sumptus (extra filios)\n",
+                (duplex)(ms_c - summa_c) / 60000.0);
+        }
+    }
+    _tempus_iso(fu.fusio->initium.initium, tempus);
+    si (machina)
+    {
+        imprimere("FUSIO\t%.*s\t%s\t%ld\t%ld\t%.*s\n",
+            (integer)fu.fusio->initium.id.mensura,
+            (constans character*)fu.fusio->initium.id.datum,
+            vita_titulus,
+            (longus)fu.fusio->initium.initium, (longus)ms_f,
+            (integer)fu.fusio->finis.nota.mensura,
+            (constans character*)fu.fusio->finis.nota.datum);
+    }
+    alioquin
+    {
+        imprimere("\nFUSIO  %.1f min  %s  %s  %.*s\n",
+            (duplex)ms_f / 60000.0, vita_titulus, tempus,
+            (integer)fu.fusio->finis.nota.mensura,
+            (constans character*)fu.fusio->finis.nota.datum);
+    }
+    _filios_fusionis_imprimere(fu.filii_fusionis, "fusio", nunc,
+        machina,
+        &summa_f);
+    si (machina)
+    {
+        imprimere("FUSIO_LINEA\t%ld\t%ld\t%ld\t%ld\n", (longus)ms_c,
+            (longus)intervallum, (longus)ms_f,
+            (longus)(ms_c + intervallum + ms_f));
+    }
+    alioquin
+    {
+        imprimere("   %6.1f min  sumptus (extra filios)\n",
+            (duplex)(ms_f - summa_f) / 60000.0);
+        imprimere("\nLINEA TEMPORUM\n");
+        imprimere("   %6.1f min  commissio fusionis\n",
+            (duplex)ms_c / 60000.0);
+        imprimere("   %6.1f min  intervallum\n",
+            (duplex)intervallum / 60000.0);
+        imprimere("   %6.1f min  fusio%s\n", (duplex)ms_f / 60000.0,
+            fu.fusio->status
+                == CURSUS_INTERRUPTUS ? " (usque nunc)" : "");
+        imprimere("   %6.1f min  SUMMA\n",
+            (duplex)(ms_c + intervallum + ms_f) / 60000.0);
+    }
+    redde ZEPHYRUM;
+}
+
 /* GRAVES (credo memoria T3): homini MiB cum decima, machinae octeti */
 interior vacuum
 _graves_imprimere (
@@ -2053,6 +2240,8 @@ _quaestionum_usum_imprimere (
         "                apex auctus; n=XX nisi datum)\n"
         "  iudicia       regenerationes iudicis fabricae\n"
         "  commissiones  commissiones cum portis suis\n"
+        "  fusio         fusio ultima arboris: commissio fusionis, portae,\n"
+        "                linea temporum (arbor= ; ordinarie currens)\n"
         "  currentes     quid NUNC currit (cursus aperti, custos vivus)\n"
         "  numquam       scripta declarata numquam cursa\n"
         "  discus        quod in diurna spatium tenet\n"
@@ -2191,6 +2380,15 @@ _quaestio (
             mensura_mensuras_legere(volumen, chorda_ex_literis("",
             piscina), piscina), &par.filtrum, par.colloquium, machina,
             piscina);
+
+        volumen_claudere(volumen);
+        redde codex;
+    }
+    si (strcmp(nomen_q, "fusio") == ZEPHYRUM)
+    {
+        integer codex = _tabulam_fusionis_imprimere(index,
+            mensura_mensuras_legere(volumen, chorda_ex_literis("",
+            piscina), piscina), par.filtrum, machina, piscina);
 
         volumen_claudere(volumen);
         redde codex;
