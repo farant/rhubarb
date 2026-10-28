@@ -5,11 +5,9 @@
 #include "communio_cliens.h"
 #include "communio.h"
 #include "communio_forma.h"
-#include "http.h"
-#include "http_vocatio.h"
+#include "veredarius.h"
 #include "json.h"
 #include "xar.h"
-#include "communio_servus.h"
 #include "filum.h"
 
 #include <string.h>
@@ -46,11 +44,16 @@ nomen structura {
     structura CommunioCliens* cliens;
                          b32  ascendens;
                      Piscina* piscina;       /* cyclus unus */
-                 HttpVocatio* vocatio;
-                      Gradus  gradus;
-              ReactorTimerId  hora;
-                         b32  hora_viva;
-                         b32  otiosa;
+    /* plan-5 T1: petitio per veredarium - in_itinere a missione usque
+     * ad responsum tractatum; respondit = finis venit */
+                         b32 in_itinere;
+                         b32 respondit;
+                         i32 signum;
+         VeredariusResponsum responsum;
+                      Gradus gradus;
+              ReactorTimerId hora;
+                         b32 hora_viva;
+                         b32 otiosa;
     /* ascensus */
                          Xar* fasciculus;         /* VolumenActum */
                          s64  finis_fasciculi;
@@ -69,6 +72,7 @@ nomen structura {
 structura CommunioCliens {
                Piscina* piscina;
                Reactor* reactor;
+            Veredarius* veredarius;
                Volumen* volumen;
              character  basis[BASIS_MAXIMA];
              character  tessera[TESSERA_MAXIMA];
@@ -245,12 +249,13 @@ _progredi_hora (
 
 interior vacuum
 _finis (
-         vacuum* datum,
-    HttpVocatio* vocatio)
+                          vacuum* datum,
+    constans VeredariusResponsum* r)
 {
     Semita* s = (Semita*)datum;
 
-    (vacuum)vocatio;
+    s->responsum = *r;
+    s->respondit = VERUM;
     si (!s->cliens->currit)
     {
         redde;
@@ -264,42 +269,40 @@ _finis (
 interior b32
 _mittere (
                   Semita* s,
-            HttpMethodus  methodus,
+      VeredariusMethodus  methodus,
       constans character* via,
                   chorda  corpus,
       constans character* mimen,
                      i32  tempus_ms)
 {
-    CommunioCliens* c;
-       HttpPetitio* pet;
-         character  url[BASIS_MAXIMA + VIA_MAXIMA];
-         character  auctoritas[LXIV];
+       CommunioCliens* c;
+    VeredariusPetitio  p;
+            character  url[BASIS_MAXIMA + VIA_MAXIMA];
+            character  auctoritas[LXIV];
+                  b32  missa;
 
     c = s->cliens;
     sprintf(url, "%s%s", c->basis, via);
-    pet = http_petitio_creare(s->piscina, methodus, url);
-    si (!pet)
-    {
-        redde FALSUM;
-    }
     sprintf(auctoritas, "Bearer %s", c->tessera);
-    http_petitio_caput_addere(pet, "Authorization", auctoritas);
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    p.methodus    = methodus;
+    p.url         = url;
+    p.auctoritas  = auctoritas;
+    p.corpus      = corpus;
+    p.mimen       = mimen;
+    p.tempus_ms   = tempus_ms;
+    s->respondit  = FALSUM;
+    missa = c->veredarius->petere(c->veredarius->sui, &p, s->piscina,
+        _finis, s, &s->signum);
     memset(auctoritas, ZEPHYRUM, magnitudo(auctoritas));
-    si (corpus.mensura > ZEPHYRUM)
-    {
-        http_petitio_caput_addere(pet, "Content-Type", mimen);
-        http_petitio_corpus_ponere_chorda(pet, corpus);
-    }
-    http_petitio_tempus_ponere(pet, (MoraAngusta)tempus_ms);
-    s->vocatio = http_vocare(c->reactor, pet, NIHIL, NIHIL, _finis, s,
-        NIHIL, s->piscina);
-    redde s->vocatio != NIHIL;
+    s->in_itinere = missa;
+    redde missa;
 }
 
 interior vacuum
 _mittere_aut_deficere (
                   Semita* s,
-            HttpMethodus  methodus,
+      VeredariusMethodus  methodus,
       constans character* via,
                   chorda  corpus,
       constans character* mimen,
@@ -373,7 +376,7 @@ _acta_mittere (
     Semita* s)
 {
     s->gradus = GRADUS_ACTA_MITTIT;
-    _mittere_aut_deficere(s, HTTP_POST, "/communio/acta",
+    _mittere_aut_deficere(s, VEREDARIUS_POST, "/communio/acta",
         communio_acta_scribere(s->fasciculus, s->piscina),
         "application/json",
         TEMPUS_PETITIONIS);
@@ -419,7 +422,7 @@ _massam_mittere_proximam (
     sprintf(via, "/communio/massae/%.64s",
         (constans character*)hex.datum);
     s->gradus = GRADUS_MASSAM_MITTIT;
-    _mittere_aut_deficere(s, HTTP_PUT, via, contentum,
+    _mittere_aut_deficere(s, VEREDARIUS_PUT, via, contentum,
         "application/octet-stream", TEMPUS_PETITIONIS);
 }
 
@@ -451,7 +454,7 @@ _ascensum_cyclus (
         sprintf(corpus, "{\"replica\":\"%.26s\"}",
             (constans character*)volumen_replica(c->volumen).datum);
         s->gradus = GRADUS_LIGAT;
-        _mittere_aut_deficere(s, HTTP_POST, "/communio/apparatus",
+        _mittere_aut_deficere(s, VEREDARIUS_POST, "/communio/apparatus",
             chorda_ex_literis(corpus, s->piscina), "application/json",
             TEMPUS_PETITIONIS);
         redde;
@@ -551,7 +554,7 @@ _ascensum_cyclus (
     }
     json_objectum_ponere(o, "massae", t);
     s->gradus = GRADUS_DESUNT;
-    _mittere_aut_deficere(s, HTTP_POST, "/communio/massae/desunt",
+    _mittere_aut_deficere(s, VEREDARIUS_POST, "/communio/massae/desunt",
         json_scribere(o, s->piscina), "application/json",
         TEMPUS_PETITIONIS);
 }
@@ -578,7 +581,7 @@ _descensum_cyclus (
         (longus)c->descensus,
         (integer)c->mora);
     s->gradus = GRADUS_TRAHIT;
-    _mittere_aut_deficere(s, HTTP_GET, via, _vacua(), NIHIL,
+    _mittere_aut_deficere(s, VEREDARIUS_GET, via, _vacua(), NIHIL,
         (c->mora + MORA_MARGO_S) * (i32)M);
 }
 
@@ -657,7 +660,7 @@ _massam_petere_proximam (
     sprintf(via, "/communio/massae/%.64s",
         (constans character*)hex.datum);
     s->gradus = GRADUS_MASSAM_PETIT;
-    _mittere_aut_deficere(s, HTTP_GET, via, _vacua(), NIHIL,
+    _mittere_aut_deficere(s, VEREDARIUS_GET, via, _vacua(), NIHIL,
         TEMPUS_PETITIONIS);
 }
 
@@ -763,8 +766,7 @@ _progredi_hora (
     vacuum* datum)
 {
               Semita* s;
-         HttpVocatio* v;
-        HttpResultus  res;
+                 b32  respondit;
                  i32  status;
               chorda  corpus;
            character  novum[SIGILLUM_HEX_MENSURA];
@@ -773,11 +775,12 @@ _progredi_hora (
         JsonResultus  r;
                  i32  i;
 
-    s             = (Semita*)datum;
-    s->hora_viva  = FALSUM;
-    v             = s->vocatio;
-    s->vocatio    = NIHIL;
-    si (!v || !s->cliens->currit)
+    s              = (Semita*)datum;
+    s->hora_viva   = FALSUM;
+    respondit      = s->in_itinere && s->respondit;
+    s->in_itinere  = FALSUM;
+    s->respondit   = FALSUM;
+    si (!respondit || !s->cliens->currit)
     {
         redde;
     }
@@ -787,11 +790,8 @@ _progredi_hora (
         _semita_cyclus(s);
         redde;
     }
-    res     = http_vocatio_resultus(v);
-    status  = (res.successus && res.responsum) ? res.responsum->status
-                                               : ZEPHYRUM;
-    corpus  = (res.successus && res.responsum) ? res.responsum->corpus
-                                               : _vacua();
+    status = s->responsum.successus ? s->responsum.status : ZEPHYRUM;
+    corpus = s->responsum.successus ? s->responsum.corpus : _vacua();
     commutatio (s->gradus)
     {
         casus GRADUS_LIGAT:
@@ -882,7 +882,7 @@ interior vacuum
 _semita_cyclus (
     Semita* s)
 {
-    si (!s->cliens->currit || s->vocatio)
+    si (!s->cliens->currit || s->in_itinere)
     {
         redde;
     }
@@ -920,6 +920,7 @@ CommunioCliens*
 communio_clientem_creare (
                Piscina* piscina,
                Reactor* reactor,
+            Veredarius* veredarius,
                Volumen* volumen,
     constans character* basis,
                 chorda  tessera,
@@ -928,7 +929,7 @@ communio_clientem_creare (
 {
     CommunioCliens* c;
 
-    si (   !piscina || !reactor || !volumen || !basis
+    si (   !piscina || !reactor || !veredarius || !volumen || !basis
         || strlen(basis) >= BASIS_MAXIMA || !tessera.datum
         || tessera.mensura <= ZEPHYRUM
         || tessera.mensura >= TESSERA_MAXIMA
@@ -945,6 +946,7 @@ communio_clientem_creare (
     memset(c, ZEPHYRUM, magnitudo(*c));
     c->piscina     = piscina;
     c->reactor     = reactor;
+    c->veredarius  = veredarius;
     c->volumen     = volumen;
     c->advenerunt  = advenerunt;
     c->ctx         = ctx;
@@ -1020,15 +1022,16 @@ interior vacuum
 _semitam_sistere (
     Semita* s)
 {
-    HttpVocatio* v;
+    Veredarius* v;
 
     _horam_tollere(s);
-    v           = s->vocatio;
-    s->vocatio  = NIHIL;
-    si (v)
+    v = s->cliens->veredarius;
+    si (s->in_itinere && !s->respondit)
     {
-        http_vocationem_abrumpere(v);
+        v->abrumpere(v->sui, s->signum);
     }
+    s->in_itinere  = FALSUM;
+    s->respondit   = FALSUM;
     _horam_tollere(s);
 }
 
@@ -1094,7 +1097,7 @@ communio_cliens_otiosus (
 {
     redde cliens && cliens->currit
         && cliens->sursum.otiosa && cliens->deorsum.otiosa
-        && !cliens->sursum.vocatio && !cliens->deorsum.vocatio;
+        && !cliens->sursum.in_itinere && !cliens->deorsum.in_itinere;
 }
 
 
@@ -1197,77 +1200,82 @@ communio_tesseram_legere (
  * Inscriptio per epistulam (plan-3 T6)
  * ================================================== */
 
+/* petitio una sincrona: finis hic notatur */
+nomen structura {
+                    b32 finita;
+    VeredariusResponsum responsum;
+} Semel;
+
 interior vacuum
 _finis_semel (
-         vacuum* datum,
-    HttpVocatio* vocatio)
+                          vacuum* datum,
+    constans VeredariusResponsum* r)
 {
-    (vacuum)vocatio;
-    *(b32*)datum = VERUM;
+    Semel* m = (Semel*)datum;
+
+    m->responsum  = *r;
+    m->finita     = VERUM;
 }
 
-/* petitio una sincrona (C7: secunda functio HTTP clientis - phase 5
- * eam cum _mittere substituet); status 0 = rete aut tempus */
+/* petitio una sincrona per veredarium (instrumentum; plan-5 T2 eam
+ * removet); status 0 = rete aut tempus */
 interior i32
 _vocare_semel (
                Reactor* reactor,
-          HttpMethodus  methodus,
+            Veredarius* veredarius,
+    VeredariusMethodus  methodus,
     constans character* url,
     constans character* tessera,
                 chorda  corpus,
                 chorda* responsum,
                Piscina* piscina)
 {
-     HttpPetitio* pet;
-     HttpVocatio* v;
-    HttpResultus  res;
-       character  auctoritas[LXIV];
-             b32  finita;
-             i32  gyri;
+    VeredariusPetitio p;
+                Semel m;
+            character auctoritas[LXIV];
+                  i32 signum;
+                  i32 gyri;
+                  b32 missa;
 
     responsum->datum    = NIHIL;
     responsum->mensura  = ZEPHYRUM;
-    pet                 = http_petitio_creare(piscina, methodus, url);
-    si (!pet)
-    {
-        redde ZEPHYRUM;
-    }
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    memset(&m, ZEPHYRUM, magnitudo(m));
+    p.methodus   = methodus;
+    p.url        = url;
+    p.tempus_ms  = TEMPUS_PETITIONIS;
     si (tessera)
     {
         sprintf(auctoritas, "Bearer %.43s", tessera);
-        http_petitio_caput_addere(pet, "Authorization", auctoritas);
-        memset(auctoritas, ZEPHYRUM, magnitudo(auctoritas));
+        p.auctoritas = auctoritas;
     }
     si (corpus.mensura > ZEPHYRUM)
     {
-        http_petitio_caput_addere(pet, "Content-Type",
-            "application/json");
-        http_petitio_corpus_ponere_chorda(pet, corpus);
+        p.corpus  = corpus;
+        p.mimen   = "application/json";
     }
-    http_petitio_tempus_ponere(pet, (MoraAngusta)TEMPUS_PETITIONIS);
-    finita = FALSUM;
-    v = http_vocare(reactor, pet, NIHIL, NIHIL, _finis_semel, &finita,
-        NIHIL, piscina);
-    per (gyri = ZEPHYRUM; v && !finita && gyri < (i32)MMM; gyri++)
+    missa = veredarius->petere(veredarius->sui, &p, piscina,
+        _finis_semel, &m, &signum);
+    memset(auctoritas, ZEPHYRUM, magnitudo(auctoritas));
+    per (gyri = ZEPHYRUM; missa && !m.finita && gyri < (i32)MMM; gyri++)
     {
         (vacuum)reactor_poll(reactor, X);
     }
-    si (!v)
+    si (!missa)
     {
         redde ZEPHYRUM;
     }
-    si (!finita)
+    si (!m.finita)
     {
-        http_vocationem_abrumpere(v);
+        veredarius->abrumpere(veredarius->sui, signum);
         redde ZEPHYRUM;
     }
-    res = http_vocatio_resultus(v);
-    si (!res.successus || !res.responsum)
+    si (!m.responsum.successus)
     {
         redde ZEPHYRUM;
     }
-    *responsum = res.responsum->corpus;
-    redde res.responsum->status;
+    *responsum = m.responsum.corpus;
+    redde m.responsum.status;
 }
 
 /* campus chordae ex corpore JSON in buffer (mensura exacta) */
@@ -1300,6 +1308,7 @@ _campum_copiare (
 b32
 communio_inscriptionem_petere (
                Reactor* reactor,
+            Veredarius* veredarius,
     constans character* basis,
                 chorda  epistula,
     constans character* via_tesserae,
@@ -1313,7 +1322,8 @@ communio_inscriptionem_petere (
         chorda  responsum;
            i32  status;
 
-    si (   !reactor || !basis || !via_tesserae || !aditus_exitus
+    si (   !reactor || !veredarius || !basis || !via_tesserae
+        || !aditus_exitus
         || strlen(basis) >= BASIS_MAXIMA)
     {
         redde FALSUM;
@@ -1336,7 +1346,8 @@ communio_inscriptionem_petere (
     json_objectum_ponere(o, "titulus", json_chorda_creare(piscina,
         titulus));
     sprintf(url, "%s/communio/intrare", basis);
-    status = _vocare_semel(reactor, HTTP_POST, url, NIHIL,
+    status = _vocare_semel(reactor, veredarius, VEREDARIUS_POST, url,
+        NIHIL,
         json_scribere(o,
         piscina), &responsum, piscina);
     si (   status != CCII
@@ -1355,6 +1366,7 @@ communio_inscriptionem_petere (
 s32
 communio_inscriptionem_confirmare (
                Reactor* reactor,
+            Veredarius* veredarius,
     constans character* basis,
                 chorda  aditus,
                 chorda  codex,
@@ -1366,7 +1378,7 @@ communio_inscriptionem_confirmare (
         chorda  responsum;
            i32  status;
 
-    si (   !reactor || !basis || !apparatus_exitus
+    si (   !reactor || !veredarius || !basis || !apparatus_exitus
         || strlen(basis) >= BASIS_MAXIMA)
     {
         redde -I;
@@ -1381,7 +1393,8 @@ communio_inscriptionem_confirmare (
     json_objectum_ponere(o, "codex", json_chorda_creare(piscina,
         codex));
     sprintf(url, "%s/communio/confirmare", basis);
-    status = _vocare_semel(reactor, HTTP_POST, url, NIHIL,
+    status = _vocare_semel(reactor, veredarius, VEREDARIUS_POST, url,
+        NIHIL,
         json_scribere(o,
         piscina), &responsum, piscina);
     si (status == ZEPHYRUM)
@@ -1400,6 +1413,7 @@ communio_inscriptionem_confirmare (
 b32
 communio_tessera_valet (
                Reactor* reactor,
+            Veredarius* veredarius,
     constans character* basis,
     constans character* via_tesserae,
                Piscina* piscina)
@@ -1410,7 +1424,8 @@ communio_tessera_valet (
        chorda vacua;
           i32 status;
 
-    si (   !reactor || !basis || strlen(basis) >= BASIS_MAXIMA
+    si (   !reactor || !veredarius || !basis
+        || strlen(basis) >= BASIS_MAXIMA
         || !communio_tesseram_legere(via_tesserae, tessera))
     {
         redde FALSUM;
@@ -1418,7 +1433,8 @@ communio_tessera_valet (
     vacua.datum    = NIHIL;
     vacua.mensura  = ZEPHYRUM;
     sprintf(url, "%s/communio/apparatus", basis);
-    status = _vocare_semel(reactor, HTTP_GET, url, tessera, vacua,
+    status = _vocare_semel(reactor, veredarius, VEREDARIUS_GET, url,
+        tessera, vacua,
         &responsum, piscina);
     memset(tessera, ZEPHYRUM, magnitudo(tessera));
     redde status == CC;

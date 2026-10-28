@@ -15,7 +15,6 @@
 #include <sys/time.h>
 
 #define DIGESTUM_LONGITUDO   LXIV
-#define TESSERA_OCTETI       XXXII
 
 #define EXSPECTANTES_MAXIMI  LXIV
 #define MORA_MAXIMA_S        XXV
@@ -721,33 +720,6 @@ communio_replicam_ligare (
     }
     piscina_reficere(servus->tempus, nota);
     redde bene ? ZEPHYRUM : -I;
-}
-
-b32
-communio_tesseram_facere (
-    character exitus[XLIV],
-    character digestum[LXV])
-{
-        i8 octeti[TESSERA_OCTETI];
-       i32 n;
-    chorda t;
-
-    si (   !exitus || !digestum || !moneta_octeti_fortuiti(octeti,
-            TESSERA_OCTETI))
-    {
-        redde FALSUM;
-    }
-    n = base64url_scribere(octeti, TESSERA_OCTETI, exitus, XLIV);
-    memset(octeti, ZEPHYRUM, magnitudo(octeti));
-    si (n != COMMUNIO_TESSERA_MENSURA)
-    {
-        redde FALSUM;
-    }
-    exitus[n]  = '\0';
-    t.datum    = (i8*)exitus;
-    t.mensura  = n;
-    _digestum(t, digestum);
-    redde VERUM;
 }
 
 

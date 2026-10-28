@@ -38,8 +38,7 @@
 #include "moneta.h"
 #include "epistula.h"
 #include "custodia.h"
-
-#define COMMUNIO_TESSERA_MENSURA XLIII
+#include "communio_forma.h"   /* COMMUNIO_TESSERA_MENSURA */
 
 nomen structura CommunioServus CommunioServus;
 
@@ -127,13 +126,8 @@ communio_replicam_ligare (
             chorda  id,
             chorda  replica);
 
-/* pro apparatu (instrumentum, probationes): tesseram novam cudere -
- * exitus XLIII signa + NUL, digestum LXIV hex + NUL. FALSUM si fons
- * fortuitus deficit. */
-b32
-communio_tesseram_facere (
-    character exitus[XLIV],
-    character digestum[LXV]);
+/* communio_tesseram_facere: in communio_forma.h (plan-5 T1 - cliens
+ * eam sine servo cudit) */
 
 
 /* ==================================================

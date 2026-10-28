@@ -35,6 +35,7 @@
 #include "volumen.h"
 #include "reactor.h"
 #include "moneta.h"
+#include "veredarius.h"
 
 nomen structura CommunioCliens CommunioCliens;
 
@@ -53,11 +54,15 @@ nomen structura {
 } CommunioStatus;
 
 /* basis: "https://hospes" aut "http://127.0.0.1:portus" (sine '/'
- * finali); tessera XLIII signa (copiatur). NIHIL si argumenta mala. */
+ * finali); tessera XLIII signa (copiatur); veredarius = via HTTP
+ * unica (plan-5 T1: hospes eum praebet - veredarius_domesticus in
+ * macOS et instrumentis, URLSession in iOS). NIHIL si argumenta
+ * mala. */
 CommunioCliens*
 communio_clientem_creare (
                Piscina* piscina,
                Reactor* reactor,
+            Veredarius* veredarius,
                Volumen* volumen,
     constans character* basis,
                 chorda  tessera,
@@ -138,6 +143,7 @@ communio_tesseram_legere (
 b32
 communio_inscriptionem_petere (
                Reactor* reactor,
+            Veredarius* veredarius,
     constans character* basis,
                 chorda  epistula,
     constans character* via_tesserae,
@@ -150,6 +156,7 @@ communio_inscriptionem_petere (
 s32
 communio_inscriptionem_confirmare (
                Reactor* reactor,
+            Veredarius* veredarius,
     constans character* basis,
                 chorda  aditus,
                 chorda  codex,
@@ -160,6 +167,7 @@ communio_inscriptionem_confirmare (
 b32
 communio_tessera_valet (
                Reactor* reactor,
+            Veredarius* veredarius,
     constans character* basis,
     constans character* via_tesserae,
                Piscina* piscina);

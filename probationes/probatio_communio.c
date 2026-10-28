@@ -20,6 +20,7 @@
 #include "http_vocatio.h"
 #include "communio_servus.h"
 #include "communio_cliens.h"
+#include "veredarius_domesticus.h"
 #include "communio_forma.h"
 #include "epistula.h"
 #include "sigillum.h"
@@ -688,6 +689,7 @@ nomen structura {
               Cives* cives;
      CommunioServus* servus;
             Reactor* reactor;
+         Veredarius* veredarius;
           Hospitium* hospitium;
                 i32  portus;
           character  basis[LXIV];
@@ -776,7 +778,9 @@ orbem_parare (
     o->servus = communio_servum_creare(piscina, o->vs, o->cives,
         NIHIL);
     o->reactor = reactor_creare(piscina);
-    redde o->servus && o->reactor && hospitium_aperire(o)
+    o->veredarius = o->reactor ? veredarium_domesticum_creare(piscina,
+        o->reactor) : NIHIL;
+    redde o->servus && o->veredarius && hospitium_aperire(o)
         && (o->civis_primus = primus, o->civis_secunda = amanda, VERUM)
         && apparatum_dare(o, primus, o->ta)
         && apparatum_dare(o, amanda, o->tb);
@@ -808,7 +812,9 @@ clientem (
     constans character* tessera,
               Adventus* adventus)
 {
-    redde communio_clientem_creare(piscina, o->reactor, v, o->basis,
+    redde communio_clientem_creare(piscina, o->reactor, o->veredarius,
+        v,
+        o->basis,
         chorda_ex_literis(tessera, piscina), adventus ? advenerunt
                                                       : NIHIL,
                                                       adventus);
@@ -1674,11 +1680,13 @@ _sectio_inscribere_codice (
     e = inscriptionem_parare(&o);
     CREDO_NECESSE_NON_NIHIL(e);
     via_tesserae_facere(via);
-    CREDO_NECESSE(communio_inscriptionem_petere(o.reactor, o.basis,
+    CREDO_NECESSE(communio_inscriptionem_petere(o.reactor, o.veredarius,
+        o.basis,
         chorda_ex_literis("fran@example.org", piscina), via,
         chorda_ex_literis("Macintosh", piscina), aditus, piscina));
     CREDO_AEQUALIS_I32((i32)strlen(aditus), XXVI);
-    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.veredarius,
+        o.basis, via,
         piscina));
     per (gyri = ZEPHYRUM; epistularius_fictus_numerus(e) == ZEPHYRUM
          && gyri < C; gyri++)
@@ -1688,10 +1696,12 @@ _sectio_inscribere_codice (
     CREDO_NECESSE(epistularius_fictus_nuntius(e, ZEPHYRUM, &n));
     codex = post_signum_textus(n.textus, "Code: ");
     CREDO_AEQUALIS_S64((s64)communio_inscriptionem_confirmare(o.reactor,
+        o.veredarius,
         o.basis, chorda_ex_literis(aditus, piscina), codex, apparatus,
         piscina), ZEPHYRUM);
     CREDO_AEQUALIS_I32((i32)strlen(apparatus), XXVI);
-    CREDO_VERUM(communio_tessera_valet(o.reactor, o.basis, via,
+    CREDO_VERUM(communio_tessera_valet(o.reactor, o.veredarius, o.basis,
+        via,
         piscina));
 
     CREDO_GRADUS("tessera nova cliente communicat");
@@ -1712,6 +1722,7 @@ _sectio_inscribere_codice (
 
     CREDO_GRADUS("codex falsus: -1");
     CREDO_AEQUALIS_S64((s64)communio_inscriptionem_confirmare(o.reactor,
+        o.veredarius,
         o.basis, chorda_ex_literis(aditus, piscina), chorda_ex_literis(
         "ZZZZ-ZZZZ", piscina), apparatus, piscina), -I);
     communio_clientem_destruere(ca);
@@ -1737,7 +1748,8 @@ _sectio_inscribere_nexu (
     e = inscriptionem_parare(&o);
     CREDO_NECESSE_NON_NIHIL(e);
     via_tesserae_facere(via);
-    CREDO_NECESSE(communio_inscriptionem_petere(o.reactor, o.basis,
+    CREDO_NECESSE(communio_inscriptionem_petere(o.reactor, o.veredarius,
+        o.basis,
         chorda_ex_literis("fran@example.org", piscina), via,
         chorda_ex_literis("iPhone", piscina), aditus, piscina));
     per (gyri = ZEPHYRUM; epistularius_fictus_numerus(e) == ZEPHYRUM
@@ -1749,14 +1761,17 @@ _sectio_inscribere_nexu (
     nexus = post_signum_textus(n.textus,
         "Open this link to confirm:\n");
     CREDO_NECESSE(nexus.mensura > ZEPHYRUM);
-    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.veredarius,
+        o.basis, via,
         piscina));
     CREDO_AEQUALIS_I32(aperire_nexum(&o, nexus, FALSUM), CC);
     /* recensio 3: pagina sola nihil mutat (scrutatores epistularum) */
-    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.veredarius,
+        o.basis, via,
         piscina));
     CREDO_AEQUALIS_I32(aperire_nexum(&o, nexus, VERUM), CC);
-    CREDO_VERUM(communio_tessera_valet(o.reactor, o.basis, via,
+    CREDO_VERUM(communio_tessera_valet(o.reactor, o.veredarius, o.basis,
+        via,
         piscina));
     (vacuum)filum_delere(via);
     orbem_purgare(&o);
@@ -1779,7 +1794,8 @@ _sectio_inscribere_ignota (
     e = inscriptionem_parare(&o);
     CREDO_NECESSE_NON_NIHIL(e);
     via_tesserae_facere(via);
-    CREDO_VERUM(communio_inscriptionem_petere(o.reactor, o.basis,
+    CREDO_VERUM(communio_inscriptionem_petere(o.reactor, o.veredarius,
+        o.basis,
         chorda_ex_literis("ignota@example.org", piscina), via,
         chorda_ex_literis("x", piscina), aditus, piscina));
     per (gyri = ZEPHYRUM; gyri < XX; gyri++)
@@ -1787,18 +1803,113 @@ _sectio_inscribere_ignota (
         (vacuum)reactor_poll(o.reactor, X);
     }
     CREDO_AEQUALIS_I32(epistularius_fictus_numerus(e), ZEPHYRUM);
-    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.basis, via,
+    CREDO_FALSUM(communio_tessera_valet(o.reactor, o.veredarius,
+        o.basis, via,
         piscina));
 
     CREDO_GRADUS("tessera exsistens: recusatur, filum intactum");
     CREDO_NECESSE(communio_tesseram_legere(via, ante));
-    CREDO_FALSUM(communio_inscriptionem_petere(o.reactor, o.basis,
+    CREDO_FALSUM(communio_inscriptionem_petere(o.reactor, o.veredarius,
+        o.basis,
         chorda_ex_literis("fran@example.org", piscina), via,
         chorda_ex_literis("x", piscina), aditus, piscina));
     CREDO_NECESSE(communio_tesseram_legere(via, post));
     CREDO_AEQUALIS_I32((i32)memcmp(ante, post, (size_t)XLIII),
         ZEPHYRUM);
     (vacuum)filum_delere(via);
+    orbem_purgare(&o);
+}
+
+/* plan-5 T1: veredarius notans - omnis petitio clientis per eum */
+nomen structura {
+    Veredarius  v;
+    Veredarius* fundus;
+           i32  posts;
+           i32  gets;
+           i32  puts;
+} VeredariusNotans;
+
+interior b32
+_notans_petere (
+                        vacuum* sui,
+    constans VeredariusPetitio* p,
+                       Piscina* pi,
+               VeredariusFinis  finis,
+                        vacuum* ctx,
+                           i32* signum)
+{
+    VeredariusNotans* n = (VeredariusNotans*)sui;
+
+    si (p->methodus == VEREDARIUS_POST)
+    {
+        n->posts++;
+    }
+    alioquin si (p->methodus == VEREDARIUS_PUT)
+    {
+        n->puts++;
+    }
+    alioquin
+    {
+        n->gets++;
+    }
+    redde n->fundus->petere(n->fundus->sui, p, pi, finis, ctx,
+        signum);
+}
+
+interior vacuum
+_notans_abrumpere (
+    vacuum* sui,
+       i32  signum)
+{
+    VeredariusNotans* n = (VeredariusNotans*)sui;
+
+    n->fundus->abrumpere(n->fundus->sui, signum);
+}
+
+interior vacuum
+_sectio_per_veredarium (
+    CredoContextus* c)
+{
+                Orbis  o;
+              Volumen* va;
+              Volumen* vb;
+       CommunioCliens* ca;
+       CommunioCliens* cb;
+     VeredariusNotans  notans;
+                  i32  k;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    memset(&notans, ZEPHYRUM, magnitudo(notans));
+    notans.v.petere = _notans_petere;
+    notans.v.abrumpere = _notans_abrumpere;
+    notans.v.sui = &notans;
+    notans.fundus = o.veredarius;
+    va = volumen_temporarium(piscina, "probatio_communio_va");
+    vb = volumen_temporarium(piscina, "probatio_communio_vb");
+    CREDO_NECESSE(va && vb);
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        CREDO_NECESSE(actum_addere(va, "x/actum", "{}") > ZEPHYRUM);
+    }
+    ca = communio_clientem_creare(piscina, o.reactor, &notans.v, va,
+        o.basis, chorda_ex_literis(o.ta, piscina), NIHIL, NIHIL);
+    cb = communio_clientem_creare(piscina, o.reactor, &notans.v, vb,
+        o.basis, chorda_ex_literis(o.tb, piscina), NIHIL, NIHIL);
+    CREDO_NECESSE(ca && cb);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    communio_cliens_incipere(cb);
+    CREDO_NECESSE(synchronizare(&o, ca, cb));
+    CREDO_AEQUALIS_I32(acta_replicae(vb, volumen_replica(va)),
+        acta_communicanda(va));
+    CREDO_VERUM(notans.posts > ZEPHYRUM);
+    CREDO_VERUM(notans.gets > ZEPHYRUM);
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
     orbem_purgare(&o);
 }
 
@@ -1818,6 +1929,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _parare, _purgare, NIHIL, NIHIL },
     { "mensura: D ictus", _sectio_mensura, _parare, _purgare, NIHIL,
         NIHIL },
+    { "per veredarium notantem (plan-5 T1)", _sectio_per_veredarium,
+        _parare, _purgare, NIHIL, NIHIL },
     { "per servum (plan-2 T6)", _sectio_per_servum, _parare, _purgare,
         NIHIL, NIHIL },
     { "vivum: tractio dilata", _sectio_vivum, _parare, _purgare, NIHIL,

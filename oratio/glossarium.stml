@@ -1900,6 +1900,12 @@
     <forma textus="epistularium" casus="accusativus" numerus="singularis" genus="masculinum"/>
     <forma textus="epistulario" casus="dativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="veredarius" lingua="latina" classis="substantivum" nota="veredarius, -i m. (Suet., Cod. Theod.): cursor cursus publici, qui litteras per mutationes fert - hic Veredarius, interfacies petitionis HTTP unius quam hospes praebet (include/veredarius.h, communio-plan-5 T1)">
+    <forma textus="veredarius" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="veredarii" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="veredarium" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="veredario" casus="dativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="resend" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Resend, provisor epistularum (api.resend.com; epistula_resend_corpus, communio D7)"/>
   <vocabulum lemma="replica" lingua="latina" classis="substantivum" nota="replica, -ae f. (ex replicare, 'iterum plicare'; Latinitas recentior): exemplar documenti quod scriptor proprium tenet - hic volumen ut scriptor actuum (communio D2b, volumen_replica); WORDS caret">
     <forma textus="replica" casus="nominativus" numerus="singularis" genus="femininum"/>

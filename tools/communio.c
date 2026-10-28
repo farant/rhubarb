@@ -30,6 +30,7 @@
 #include "volumen.h"
 #include "reactor.h"
 #include "communio_cliens.h"
+#include "veredarius_domesticus.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -111,6 +112,7 @@ constans character* via_tesserae,
                 b32  semel)
 {
            Reactor* r;
+        Veredarius* ver;
     CommunioCliens* c;
          character  tessera[XLIV];
     CommunioStatus  prior;
@@ -122,9 +124,10 @@ constans character* via_tesserae,
     {
         redde I;
     }
-    r = reactor_creare(p);
-    c = r ? communio_clientem_creare(p, r, v, servus, chorda_ex_literis(
-            tessera, p), NIHIL, NIHIL) : NIHIL;
+    r    = reactor_creare(p);
+    ver  = r ? veredarium_domesticum_creare(p, r) : NIHIL;
+    c    = ver ? communio_clientem_creare(p, r, ver, v, servus,
+        chorda_ex_literis(tessera, p), NIHIL, NIHIL) : NIHIL;
     memset(tessera, ZEPHYRUM, magnitudo(tessera));
     si (!c)
     {
@@ -182,6 +185,7 @@ constans character* via_tesserae,
 constans character* titulus)
 {
            Reactor* r;
+        Veredarius* ver;
          character  aditus[MONETA_ULID_MENSURA];
          character  apparatus[MONETA_ULID_MENSURA];
          character  linea[LXIV];
@@ -190,9 +194,11 @@ constans character* titulus)
                b32 stdin_apertum;
                s32 rc;
 
-    r = reactor_creare(p);
-    si (   !r
-        || !communio_inscriptionem_petere(r, servus, chorda_ex_literis(
+    r    = reactor_creare(p);
+    ver  = r ? veredarium_domesticum_creare(p, r) : NIHIL;
+    si (   !ver
+        || !communio_inscriptionem_petere(r, ver, servus,
+        chorda_ex_literis(
             epistula, p), via_tesserae, chorda_ex_literis(titulus, p),
             aditus, p))
     {
@@ -219,7 +225,8 @@ constans character* titulus)
                 linea[strcspn(linea, "\r\n")] = '\0';
                 si (linea[ZEPHYRUM])
                 {
-                    rc = communio_inscriptionem_confirmare(r, servus,
+                    rc = communio_inscriptionem_confirmare(r, ver,
+                        servus,
                         chorda_ex_literis(aditus, p), chorda_ex_literis(
                         linea, p), apparatus, p);
                     si (rc == ZEPHYRUM)
@@ -248,7 +255,7 @@ constans character* titulus)
             /* recensio 4: reactor vacuus statim redit - dormire */
             (vacuum)poll(NIHIL, ZEPHYRUM, (integer)MM);
         }
-        si (communio_tessera_valet(r, servus, via_tesserae, p))
+        si (communio_tessera_valet(r, ver, servus, via_tesserae, p))
         {
             printf("communio: apparatus inscriptus (per nexum)\n");
             reactor_destruere(r);
