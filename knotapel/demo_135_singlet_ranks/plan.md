@@ -204,6 +204,28 @@ at every λ.
 - **T1. Build.** main.c with R1–R4, R2b and the descriptive rows, the
   oracle, the plants. Checks run only at λ ≤ 2 (hand-checkable: λ = 1
   pieces are 4 × 4) until the plants behave as stated.
+  **T1 amendment (2026-10-27, built; runs at λ ≤ 2 only).**
+  - Correction to Method: R2's cost is not 2·(λ+1)·16^λ. Checking all
+    4^λ basis tensors with dense matrix-vector products is 64^λ (about
+    7·10^10 per piece at λ = 6). main.c exploits that each basis tensor
+    has at most 2^λ nonzeros (average about 1.5^λ): about 16^λ·1.5^λ per
+    piece, seconds at λ = 6. The check itself is unchanged.
+  - main.c: R1, R2, R2b, R3, R4, formula = table, cross-check
+    (plain elimination against `matrix_gradus` where both run), residues
+    in [0, p), sign gauge (descriptive), ranks mod 2, cost curve, factor
+    matrices. `D135_LAMBDA=2`: 51 checks pass; the λ = 1 matrices were
+    checked by hand against the definitions (rows piece 0 = ones where
+    x = u and y = v; rows piece 1 = the signed anti-diagonal −S).
+  - oracle_d135.py (numpy; per-bit products on a 4-D array, plain index
+    order): at λ ≤ 2 all 50 demo ranks agree (all five primes), its own
+    R1 passes.
+  - Plants (silva.planta, gate = rebuild + run at λ ≤ 2; driver and log
+    in build/plantae_d135/, not committed), all seven as stated:
+    1 → R1, R2 (+ sign gauge) red, R3/R4 green; 2 → R2 red, R3/R4/
+    formula green; 3 → R2, R2b red; 4 → R3 red (also R2, R4); 5 →
+    formula = table red, R4 green; 6 → R2b red, **R2 green**; 7 → R2 red
+    (also R1 and the gauge: |A_i| no longer sums to the crossing; the
+    plan was silent on R1), R3/R4 green. main.c restored byte-identical.
 - **T2. Registered run.** λ = 1 … 6, verdicts, findings.md, archive.
 - **T3. Review** (a reviewer with its own oracle, as for D132–D134).
 
