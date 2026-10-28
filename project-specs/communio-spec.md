@@ -1,6 +1,6 @@
 # communio: shared data across devices and people (milestone 1: pictor)
 
-**Status: APPROBATUM 2026-10-26** (Fran: "yes ... we can continue with
+**Status: APPROBATUM 2026-10-26; IX (phase 5) APPROBATUM 2026-10-27** (Fran: "yes ... we can continue with
 the implementation plan") - designed in conversation with Fran
 (2026-10-26), grounded by a three-part recon of the volume layer, the
 server/identity side and the app side (scratchpad sync_recon_map.md;
@@ -375,3 +375,167 @@ targets without the trailing dot, so oceanus reports them as changed on
 every run (ledgered). Deferred minors: the plan-3 ledger's list, filed
 in tabularium. Next: phase 5 (iPhone + pictor), phase 4 (backups),
 3b (device adoption).
+
+## IX. Phase 5 design: iPhone + pictor (Fran 2026-10-27)
+
+*Fran 2026-10-27: "open up the gallery, go to the readonly section (this
+possibly could even be two galleries, like 'my pictures' and 'shared
+pictures' as two items on the pop-up menu). then just pick one and be
+able to swipe through the gallery (with looping around to the beginning
+if you swipe past the end)"; "shared pictures could be on grid newest
+first but as time goes on i could see having controls for more
+filtering/sorting/grouping"; sign-in = a welcome screen with "Sign
+in..." and "draw without signing in" ("yes, that sounds great");
+"read only after reinstall is okay for now" (adoption, 3b, stays
+later - it only moves up if app updates trigger it, and they do not).*
+
+**Intent.** This phase is the visible payoff of milestone 1: Fran and
+Amanda open pictor on their phones and see each other's drawings. It
+completes "done" items 1, 2, 3 and 6 (section III) on real devices.
+
+### What the person sees
+
+1. **First launch (once per install): a welcome screen** with two
+   choices: **Sign in...** and **Draw without signing in**. Either way
+   it never shows again. Someone who skipped it signs in later from the
+   ⋯ menu; the flow is the same. Fran's existing phone shows it once
+   after the update; his pictures stay where they are and start
+   syncing once he is signed in.
+2. **Sign in:** type the email address -> "Check your
+   email" with a box for the 8-character code -> tap the link in Mail
+   (Safari opens our page, tap its button) or type the code, whichever
+   comes first -> switch back to pictor, which has noticed on its own
+   and says "Signed in as Amanda". An address that is not on the list
+   sees the same "Check your email" (the server reveals nothing); a
+   wrong code says so (5 tries); after 15 minutes or 5 tries the person
+   starts again. No app-links in this phase (the link opens Safari, not
+   the app; AUDIENDA stays open).
+3. **The ⋯ menu** (in order): **My pictures...** (today's "Open
+   picture...", renamed), **Shared pictures...**, **New picture**,
+   **Import image...** (where the platform offers it), and **Sign
+   in...** only while not signed in.
+4. **My pictures:** exactly today's gallery (pinacotheca D3-D9): this
+   device's pictures, 12 per page, newest edit first, tap to draw.
+5. **Shared pictures:** the same grid, pages and controls, holding the
+   pictures of every OTHER device in the household (Amanda's phone,
+   Fran's Mac, ...), one mixed list, newest edit first. Not signed in
+   or nothing received yet: the grid says so in one line. Filtering,
+   sorting and grouping are later (Fran) - the list must be built so
+   they can be added without a rewrite.
+6. **The viewer:** tapping a shared thumbnail shows that picture on the
+   canvas, read-only, with one line naming who and where ("by Amanda ·
+   iPhone"). **Swipe left/right** goes to the next/previous shared
+   picture in the grid's order and **loops** past either end. Because
+   nothing can be drawn here, a swipe cannot be a line (this is why
+   swiping exists only here). **Edit a copy** (D4) makes a new picture
+   in My pictures, fitted to this device like an imported image,
+   remembering the picture it came from, and opens it for drawing. A
+   tap outside the picture or × closes the viewer back to the Shared
+   grid on the page it came from. A picture that receives strokes while
+   shown updates in place. On the Mac (no swipe): ← → keys and clicking
+   ‹ › do the same.
+7. **Live:** while pictor is open, new pictures and strokes from other
+   devices arrive within a minute (long-poll) and both grids and the
+   viewer refresh. Sync runs only while the app is open (no background
+   sync - AUDIENDA accepted for milestone 1).
+
+### What gets built (modules first, pictor as the client)
+
+- **Platform HTTP (D11).** One house HTTP-request interface that the
+  communio client uses for everything (today `_mittere` and
+  `_vocare_semel`). On the Mac and the VPS it is the existing house
+  client on the reactor; on iOS it is a shell host service backed by
+  URLSession (the `TestaAmbitus` pattern of the photo picker), so the
+  app bundles no cryptography and keeps the "exempt" export answer.
+  Long-poll (25 s) must survive URLSession's own timeouts.
+- **Timers on iOS.** The iOS shell does not run the app's reactor today
+  (`forma.reactor` is pumped only by the macOS window loop). The
+  client's retry and idle timers need it: the iOS shell runs the
+  reactor's timers (no sockets there - networking is the host service).
+- **Text entry on the phone (my call).** The iOS shell has no keyboard
+  support. pictor draws its own text field in house style (as dialogs
+  do on the Mac); the shell gains "show / hide the keyboard" (email
+  keyboard for the address, plain for the code, paste allowed) and
+  delivers typed characters and backspace as ordinary key events. This
+  is the general piece every later phone app needs; the alternative (a
+  native iOS prompt) was rejected as not ours.
+- **Sign-in without blocking.** The phase-3 helpers
+  (`communio_inscriptionem_petere/_confirmare`, `communio_tessera_valet`)
+  run the reactor until answered - fine for the command, not for an app.
+  They get non-blocking versions with a completion callback; the
+  command keeps working.
+- **Sync inside pictor (iPhone AND Mac).** pictor starts a communio
+  client when it has a device token; imported acts call
+  `pictor_documentum_sequi` and refresh the galleries. The token is a
+  file in the app's PRIVATE data (never a user-visible folder; on iOS
+  not under Documents if Documents is exposed), 0600, never logged. The
+  household server's address is built in (`https://exemplar.golden.earth`)
+  with an override for tests. The Mac's existing hand-registered device
+  ("Macintosh", main checkout's `pictor.volumen`) keeps its token: the
+  Mac pictor finds it where the plan puts it (moving the file is a T8
+  step; the token is never read or printed).
+- **Credits.** "by Amanda · iPhone" comes from the server's device list
+  (`GET /communio/apparatus`: replica -> device title, person),
+  fetched after sign-in and on each reconnect, cached in the volume.
+  New devices are titled by kind ("iPhone", "Mac") at sign-in.
+- **Global picture ids (D9/D12).** New pictures get ULID spatia;
+  existing `pictura-<n>` pictures keep working and are addressed by
+  device + spatium when shared. "Edit a copy" records its origin as
+  (replica, spatium).
+- **Amanda's phone.** She is already on the App Store Connect team, in
+  the internal TestFlight group "Familia", and was invited to pictor 1.0
+  (5) (testa-ios-divulgatio spec D2, 2026-10-25) - no Apple beta review.
+  The live step checks her status (`nundinae_apple -testatores pictor`)
+  and re-invites only if needed (`-invitare`, address typed by Fran at
+  run time, never in the repo); on Apple's side create what is missing,
+  never revoke or delete. Publishing stays main-only, so the live step
+  is: merge to main, publish, check/invite, both phones sign in.
+- **Revoked devices (my call).** A revoked device's pictures stay in
+  everyone's Shared pictures, credited as before (the server keeps
+  serving its past acts; nothing changes there). This is what makes
+  "read only after reinstall" true. Before the phones sign in, the live
+  step lists the devices and confirms the test devices of phases 2-3
+  pushed nothing a person would see; `communio.volumen` is NOT reset
+  (that would drop the hand-registered "Macintosh").
+- **Android (my call).** pictor's Android build has no platform HTTP
+  yet (D10/D11 later): the welcome screen, "Sign in..." and "Shared
+  pictures..." are hidden wherever the shell offers no HTTP service
+  (the way "Import image..." already depends on the platform), and the
+  Android build links no networking.
+
+### Done (phase 5)
+
+1. Fran draws on his iPhone; within a minute the picture is in Shared
+   pictures on Amanda's iPhone and on the Mac, "by Fran · iPhone",
+   read-only, and further strokes keep arriving; the same from
+   Amanda's phone to Fran's.
+2. Airplane mode on one phone, draw, turn it off: everything arrives
+   both ways, nothing duplicated (proven before in tests; now on
+   devices).
+3. Swipe loops through Shared pictures; Edit a copy lands in My
+   pictures, opens for drawing, and records its origin.
+4. Amanda signs in by tapping the link; an update installed over a
+   signed-in app (TestFlight build N+1) keeps the sign-in and My
+   pictures.
+5. Headless screenshots (`-imago`) of the welcome screen, sign-in
+   screens, Shared grid and viewer, as for the gallery.
+
+### Not in this phase
+
+Notifications and a "share" action that triggers one (Fran: later);
+filtering/sorting/grouping of Shared pictures; device adoption (3b);
+background sync; app-links from the email; sign out (an admin revokes
+a device); deleting or renaming pictures; Android tablets; backups
+(phase 4).
+
+### Left to the builder
+
+- How the viewer, welcome and sign-in screens are drawn (house style,
+  the gallery's dialog idiom), swipe thresholds, and the look of the
+  credit line.
+- Whether the reactor on iOS is pumped by the display link or by its
+  own timer, as long as an idle app does not spin.
+- Where exactly the token file and the cached device list live in the
+  volume / app data, within the rules above.
+- The shape of the platform HTTP interface (it must cover the bodies,
+  headers, statuses and timeouts the client already uses).
