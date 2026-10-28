@@ -148,3 +148,25 @@ Test gotcha: at 360 px the side margin is already capped, so 240 px
 narrows the text column only 240 -> 216 px and the same page index
 held the offset; 150 px (126 px column) actually re-cuts. Resize in
 tests = write superficies_latitudo with scriptor "dispensator".
+
+## 2026-10-27 - N3.4b recent list
+
+Presence "navigator/recentes" = article ULIDs, one per line, newest
+first, unique, cap 20 (NAVIGATOR_RECENTES_MAXIMI); unknown ids are
+skipped on read. Noted on every OPEN (the same two places that restore
+the reading position: `_paginam_restituere` and the bare-argument
+branch of semitam_secuta), not on page turns.
+
+Root = one list of entries: bookmark domains [0, nd) then recents
+[nd, nd+nr) - `RadixIndicis` holds both, the album gives domains
+"d<k>" (res k) and recents "a<k>" (res nd+k), selection field
+`electus` = "d:<domain>" / "a:<ULID>". The N3.4a domain-only helpers
+were generalised and renamed (_radicem_eligere, fac_radicis_*,
+_radicis_album, _electum_radicis). Enter on a recent row opens it; b
+toggles its bookmark (b on a domain row does nothing). With recents
+but no bookmarks the "Bookmarks" group carries a dim "No bookmarks
+yet" title row ("g2") so the hint survives.
+
+Bug on the way: the first `lineam_proximam` reassigned `valor` before
+testing for the '\n', never advanced past it and hung the suite -
+stopped the run, killed the binary, fixed (keep the end index b).

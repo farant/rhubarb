@@ -14,6 +14,7 @@
 #include "vicipaedia.h"
 #include "navigator_bibliotheca.h"
 #include "credo.h"
+#include <stdio.h>
 #include <string.h>
 
 #define PAGINA(titulus, corpus) \
@@ -504,6 +505,90 @@ _probare_positio (
         c->piscina), &r, c->piscina));
 }
 
+/* N3.4b: recentes - ordo, duplices, limes XX, praesentia (acta non
+ * crescunt), bibliotheca secunda, ignotus */
+interior constans NavigatorArticulus*
+recens (
+    Xar* l,
+    i32  k)
+{
+    redde *(constans NavigatorArticulus**)xar_obtinere(l, k);
+}
+
+interior vacuum
+_probare_recentes (
+    CredoContextus* c)
+{
+                         Mundus* m = (Mundus*)c->datum;
+    constans NavigatorArticulus* a;
+    constans NavigatorArticulus* b;
+           NavigatorBibliotheca* b2;
+                            Xar* l;
+                            s64  acta;
+                            i32  i;
+                      character  url[LXIV];
+
+    CREDO_NECESSE_NON_NIHIL(m->b);
+    CREDO_NECESSE(offerre(m, URL_RHEUM, H_PRIMA, NIHIL, c->piscina)
+        == NAVIGATOR_NOVUM);
+    CREDO_NECESSE(offerre(m, URL_BETA, H_BETA, NIHIL, c->piscina)
+        == NAVIGATOR_NOVUM);
+    a = navigator_articulus(m->b, ZEPHYRUM);
+    b = navigator_articulus(m->b, I);
+
+    CREDO_GRADUS("nulli ante notationem");
+    l = navigator_recentes(m->b, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), ZEPHYRUM);
+
+    CREDO_GRADUS("recentissimus primus; acta non crescunt");
+    acta = volumen_summa_actorum(m->volumen);
+    CREDO_VERUM(navigator_recentem_notare(m->b, a->identitas));
+    CREDO_VERUM(navigator_recentem_notare(m->b, b->identitas));
+    CREDO_VERUM(volumen_summa_actorum(m->volumen) == acta);
+    l = navigator_recentes(m->b, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), II);
+    CREDO_VERUM(recens(l, ZEPHYRUM) == b);
+    CREDO_VERUM(recens(l, I) == a);
+
+    CREDO_GRADUS("iterum notatus ad caput movetur, sine duplice");
+    CREDO_VERUM(navigator_recentem_notare(m->b, a->identitas));
+    l = navigator_recentes(m->b, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), II);
+    CREDO_VERUM(recens(l, ZEPHYRUM) == a);
+    CREDO_VERUM(recens(l, I) == b);
+
+    CREDO_GRADUS("bibliotheca secunda eosdem legit");
+    b2 = navigator_bibliotheca_aperire(m->volumen, moneta_numerator,
+        &m->numerator, c->piscina);
+    l = navigator_recentes(b2, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), II);
+    CREDO_CHORDA_AEQUALIS(recens(l, ZEPHYRUM)->identitas, a->identitas);
+
+    CREDO_GRADUS("ignotus: FALSUM, ordo immutatus");
+    CREDO_FALSUM(navigator_recentem_notare(m->b, lit("ZZZ",
+        c->piscina)));
+    l = navigator_recentes(m->b, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), II);
+
+    CREDO_GRADUS("limes XX: vetustissimus cadit");
+    per (i = ZEPHYRUM; i < XX; i++)
+    {
+        sprintf(url, "https://la.wikipedia.org/wiki/T%u",
+            (insignatus integer)i);
+        CREDO_NECESSE(offerre(m, url, H_BETA, NIHIL, c->piscina)
+            == NAVIGATOR_NOVUM);
+        CREDO_VERUM(navigator_recentem_notare(m->b, navigator_articulus(
+            m->b, navigator_articulorum_numerus(m->b) - I)->identitas));
+    }
+    l = navigator_recentes(m->b, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), NAVIGATOR_RECENTES_MAXIMI);
+    per (i = ZEPHYRUM; i < xar_numerus(l); i++)
+    {
+        CREDO_VERUM(recens(l, i) != a && recens(l, i) != b);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "novum", _probare_novum, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -520,6 +605,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vitium", _probare_vitium, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "positio", _probare_positio, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "recentes", _probare_recentes, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "favor", _probare_favor, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },

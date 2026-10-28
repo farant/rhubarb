@@ -568,6 +568,111 @@ navigator_positionem_legere (
     redde VERUM;
 }
 
+#define CLAVIS_RECENTIUM "navigator/recentes"
+
+/* linea proxima ab *i in valore ('\n' separat); *i post '\n'
+ * promovetur (semper progreditur dum *i < mensura) */
+interior chorda
+lineam_proximam (
+    chorda  valor,
+       i32* i)
+{
+    i32 a;
+    i32 b;
+
+    a = *i;
+    dum (*i < valor.mensura && valor.datum[*i] != '\n')
+    {
+        (*i)++;
+    }
+    b = *i;
+    si (*i < valor.mensura)
+    {
+        (*i)++;   /* '\n' praeteritur */
+    }
+    redde chorda_sectio(valor, a, b);
+}
+
+b32
+navigator_recentem_notare (
+    NavigatorBibliotheca* b,
+                  chorda  articulus)
+{
+    ChordaAedificator* aed;
+              Piscina* tp;
+               chorda  vetus;
+               chorda  id;
+                  b32  inventum;
+                  b32  bene;
+                  i32  i;
+                  i32  n;
+
+    si (!b || !articulum_per_id(b, articulus))
+    {
+        redde FALSUM;
+    }
+    tp = piscina_generare_dynamicum("navigator_recentes", MMXLVIII);
+    si (!tp)
+    {
+        redde FALSUM;
+    }
+    vetus = volumen_praesens_legere(b->volumen, chorda_ex_literis(
+        CLAVIS_RECENTIUM, tp), tp, &inventum);
+    aed = chorda_aedificator_creare(tp, DXII);
+    chorda_aedificator_appendere_chorda(aed, articulus);
+    n = I;
+    i = ZEPHYRUM;
+    dum (inventum && i < vetus.mensura && n < NAVIGATOR_RECENTES_MAXIMI)
+    {
+        id = lineam_proximam(vetus, &i);
+        si (id.mensura > ZEPHYRUM && !chorda_aequalis(id, articulus))
+        {
+            chorda_aedificator_appendere_character(aed, '\n');
+            chorda_aedificator_appendere_chorda(aed, id);
+            n++;
+        }
+    }
+    bene = volumen_praesens_ponere(b->volumen, chorda_ex_literis(
+        CLAVIS_RECENTIUM, tp), chorda_aedificator_finire(aed));
+    piscina_destruere(tp);
+    redde bene;
+}
+
+Xar*
+navigator_recentes (
+    NavigatorBibliotheca* b,
+                 Piscina* piscina)
+{
+                            Xar*  l;
+                         chorda   valor;
+                         chorda   id;
+                            b32   inventum;
+                            i32   i;
+    constans NavigatorArticulus** e;
+    constans NavigatorArticulus*  a;
+
+    l = piscina ? xar_creare(piscina,
+        (i32)magnitudo(constans NavigatorArticulus*)) : NIHIL;
+    si (!l || !b)
+    {
+        redde l;
+    }
+    valor = volumen_praesens_legere(b->volumen, chorda_ex_literis(
+        CLAVIS_RECENTIUM, piscina), piscina, &inventum);
+    i = ZEPHYRUM;
+    dum (inventum && i < valor.mensura)
+    {
+        id  = lineam_proximam(valor, &i);
+        a   = id.mensura > ZEPHYRUM ? articulum_per_id(b, id) : NIHIL;
+        e   = a ? (constans NavigatorArticulus**)xar_addere(l) : NIHIL;
+        si (e)
+        {
+            *e = a;
+        }
+    }
+    redde l;
+}
+
 chorda
 navigator_versionis_html (
            NavigatorBibliotheca* b,

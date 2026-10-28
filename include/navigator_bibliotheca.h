@@ -126,6 +126,24 @@ navigator_positionem_legere (
         NavigatorPositio* positio,
                  Piscina* piscina);
 
+/* recentes (N3.4b): articuli nuper aperti, recentissimus primus, sine
+ * duplicibus, NAVIGATOR_RECENTES_MAXIMI summum. PRAESENTIA
+ * "navigator/recentes" (identitates linea per lineam; extra acta). */
+#define NAVIGATOR_RECENTES_MAXIMI XX
+
+/* articulum ad caput recentium movere; FALSUM si ignotus */
+b32
+navigator_recentem_notare (
+    NavigatorBibliotheca* b,
+                  chorda  articulus);
+
+/* Xar de constans NavigatorArticulus*, recentissimus primus; ignoti
+ * (identitas non iam in bibliotheca) omittuntur. Vacua si nulli */
+Xar*
+navigator_recentes (
+    NavigatorBibliotheca* b,
+                 Piscina* piscina);
+
 /* HTML versionis ex massa; vacua si massa abest */
 chorda
 navigator_versionis_html (

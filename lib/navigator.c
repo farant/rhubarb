@@ -828,55 +828,124 @@ _dominium (
     redde (constans DominiumFavorum*)xar_obtinere(dominia, (i32)k);
 }
 
-/* album radicis: grex "Bookmarks" ("g0"), res = positio + 1
- * ("d<res>") */
-interior Album*
-_dominiorum_album (
+/* radix (N3.4b): ordines = dominia favorum, deinde recentes; positio
+ * e in [0, dominia) dominium, in [dominia, summa) recens */
+nomen structura {
+    Xar* dominia;    /* DominiumFavorum */
+    Xar* recentes;   /* constans NavigatorArticulus* */
+} RadixIndicis;
+
+interior vacuum
+_radicem_parare (
     constans NavigatorMontatio* m,
-                           Xar* dominia,
-                       Piscina* p)
+                       Piscina* p,
+                  RadixIndicis* r)
+{
+    r->dominia   = _dominia(m, p);
+    r->recentes  = navigator_recentes(m->bibliotheca, p);
+}
+
+interior i32
+_radicis_numerus (
+    constans RadixIndicis* r)
+{
+    redde (r->dominia ? xar_numerus(r->dominia) : ZEPHYRUM)
+        + (r->recentes ? xar_numerus(r->recentes) : ZEPHYRUM);
+}
+
+/* recens k (ab 0) */
+interior constans NavigatorArticulus*
+_recens (
+    constans RadixIndicis* r,
+                      s32  k)
+{
+    redde *(constans NavigatorArticulus**)xar_obtinere(r->recentes,
+        (i32)k);
+}
+
+/* album radicis: grex "Bookmarks" ("g0"; sine favoribus sed cum
+ * recentibus nuntius "g2"), "d<k+1>"; grex "Recent" ("g1"),
+ * "a<k+1>"; res = positio + 1 */
+interior Album*
+_radicis_album (
+       constans NavigatorMontatio* m,
+            constans RadixIndicis* r,
+                          Piscina* p)
 {
      Album* l;
        i32  k;
+       i32  n;
  character  id[XVI];
 
     l = album_creare(p, _capacitas(m));
-    si (l && xar_numerus(dominia) > ZEPHYRUM)
+    n = xar_numerus(r->dominia);
+    si (l && (n > ZEPHYRUM || xar_numerus(r->recentes) > ZEPHYRUM))
     {
         (vacuum)album_addere(l, "g0", ALBUM_TITULUS, NAV_ORDO,
             ZEPHYRUM);
     }
-    per (k = ZEPHYRUM; l && k < xar_numerus(dominia); k++)
+    si (l && n == ZEPHYRUM && xar_numerus(r->recentes) > ZEPHYRUM)
+    {
+        (vacuum)album_addere(l, "g2", ALBUM_TITULUS, NAV_ORDO,
+            ZEPHYRUM);
+    }
+    per (k = ZEPHYRUM; l && k < n; k++)
     {
         sprintf(id, "d%d", (integer)(k + I));
         (vacuum)album_addere(l, id, ALBUM_RES, NAV_ORDO, (s32)(k + I));
     }
+    si (l && xar_numerus(r->recentes) > ZEPHYRUM)
+    {
+        (vacuum)album_addere(l, "g1", ALBUM_TITULUS, NAV_ORDO,
+            ZEPHYRUM);
+    }
+    per (k = ZEPHYRUM; l && k < xar_numerus(r->recentes); k++)
+    {
+        sprintf(id, "a%d", (integer)(k + I));
+        (vacuum)album_addere(l, id, ALBUM_RES, NAV_ORDO, (s32)(n + k
+            + I));
+    }
     redde l;
 }
 
-/* dominium electum (campus "electus" = "d:<dominium>"); primum si
- * abest; -1 si nulla */
+/* positio electa (campus "electus" = "d:<dominium>" aut "a:<ULID>");
+ * prima si abest; -1 si nulla */
 interior s32
-_electum_dominium (
-    constans NavigatorMontatio* m,
-                           Xar* dominia)
+_electum_radicis (
+       constans NavigatorMontatio* m,
+            constans RadixIndicis* r)
 {
     chorda e;
        i32 k;
+       i32 n;
 
-    si (xar_numerus(dominia) == ZEPHYRUM)
+    si (_radicis_numerus(r) == ZEPHYRUM)
     {
         redde -I;
     }
     e = _campus(m, "electus");
-    si (e.mensura > II && e.datum[ZEPHYRUM] == 'd' && e.datum[I] == ':')
+    n = xar_numerus(r->dominia);
+    si (e.mensura > II && e.datum[I] == ':' && e.datum[ZEPHYRUM] == 'd')
     {
         e = chorda_sectio(e, II, e.mensura);
-        per (k = ZEPHYRUM; k < xar_numerus(dominia); k++)
+        per (k = ZEPHYRUM; k < n; k++)
         {
-            si (chorda_aequalis(_dominium(dominia, (s32)k)->titulus, e))
+            si (chorda_aequalis(_dominium(r->dominia, (s32)k)->titulus,
+                e))
             {
                 redde (s32)k;
+            }
+        }
+    }
+    alioquin si (   e.mensura > II && e.datum[I] == ':'
+                 && e.datum[ZEPHYRUM] == 'a')
+    {
+        e = chorda_sectio(e, II, e.mensura);
+        per (k = ZEPHYRUM; k < xar_numerus(r->recentes); k++)
+        {
+            si (chorda_aequalis(_recens(r, (s32)k)->identitas, e))
+            {
+                redde (s32)(n + k);
             }
         }
     }
@@ -898,20 +967,23 @@ _album_indicis (
 
     si (_visus(m) == VISUS_RADICIS)
     {
-        o = _dominia(m, p);
-        l = _dominiorum_album(m, o, p);
-        e = _electum_dominium(m, o);
-        *pagina   = l && e >= ZEPHYRUM ? album_pagina_rei(l, e + I,
+        RadixIndicis r;
+
+        _radicem_parare(m, p, &r);
+        l = _radicis_album(m, &r, p);
+        e = _electum_radicis(m, &r);
+        *pagina    = l && e >= ZEPHYRUM ? album_pagina_rei(l, e + I,
             ZEPHYRUM) : ZEPHYRUM;
+        *numerus   = _radicis_numerus(&r);
     }
     alioquin
     {
         o = _ordo(m, p);
         l = _album(m, o, p);
-        *pagina  = l ? _pagina_indicis(l, o, _electus(m,
+        *pagina    = l ? _pagina_indicis(l, o, _electus(m,
             o)) : ZEPHYRUM;
+        *numerus   = o ? xar_numerus(o) : ZEPHYRUM;
     }
-    *numerus = o ? xar_numerus(o) : ZEPHYRUM;
     si (*pagina < ZEPHYRUM)
     {
         *pagina = ZEPHYRUM;
@@ -960,6 +1032,8 @@ _paginam_restituere (
     }
     k = _pagina_servata(m, f);
     _positionem_servare(m, f, k);
+    (vacuum)navigator_recentem_notare(m->bibliotheca,
+        f->articulus_arcae);
     si (k == _campus_numerus(m, "pagina"))
     {
         redde VERUM;
@@ -1390,7 +1464,7 @@ nomen structura {
               Piscina* p;
                 Album* l;
                   Xar* ordo;
-                  Xar* dominia;     /* N3.4: radix */
+         RadixIndicis  radix;     /* N3.4: radix (dominia, recentes) */
                   s32  electus;     /* positio in ordine (dominiis) */
                   i32  visus;
 } ContextusPraecepti;
@@ -1411,16 +1485,17 @@ _contextum_parare (
                Piscina* p,
     ContextusPraecepti* cp)
 {
-    cp->m        = m;
-    cp->p        = p;
-    cp->visus    = _visus(m);
-    cp->ordo     = _ordo(m, p);
-    cp->dominia  = NIHIL;
+    cp->m               = m;
+    cp->p               = p;
+    cp->visus           = _visus(m);
+    cp->ordo            = _ordo(m, p);
+    cp->radix.dominia   = NIHIL;
+    cp->radix.recentes  = NIHIL;
     si (cp->visus == VISUS_RADICIS)
     {
-        cp->dominia  = _dominia(m, p);
-        cp->l        = _dominiorum_album(m, cp->dominia, p);
-        cp->electus  = _electum_dominium(m, cp->dominia);
+        _radicem_parare(m, p, &cp->radix);
+        cp->l        = _radicis_album(m, &cp->radix, p);
+        cp->electus  = _electum_radicis(m, &cp->radix);
         redde;
     }
     cp->l        = _album(m, cp->ordo, p);
@@ -1590,45 +1665,50 @@ fac_ad_indicem (
 
 /* ===== radix et favores (N3.4) ===== */
 
+/* positio e radicis eligitur: "d:<dominium>" aut "a:<ULID>" */
 interior b32
-_dominium_scribere (
+_radicem_eligere (
     ContextusPraecepti* cp,
-                   s32  k)
+                   s32  e)
 {
-    constans character* tituli[I];
-    constans character* valores[I];
+     constans character* tituli[I];
+     constans character* valores[I];
+                    i32  n;
 
-    si (k < ZEPHYRUM || (i32)k >= xar_numerus(cp->dominia))
+    n = xar_numerus(cp->radix.dominia);
+    si (e < ZEPHYRUM || (i32)e >= _radicis_numerus(&cp->radix))
     {
         redde VERUM;
     }
     tituli[ZEPHYRUM]   = "electus";
-    valores[ZEPHYRUM]  = chorda_ut_cstr(chorda_concatenare(
-        chorda_ex_literis("d:", cp->p), _dominium(cp->dominia, k)
-        ->titulus, cp->p), cp->p);
+    valores[ZEPHYRUM]  = chorda_ut_cstr((i32)e < n
+        ? chorda_concatenare(chorda_ex_literis("d:", cp->p), _dominium(
+            cp->radix.dominia, e)->titulus, cp->p)
+        : chorda_concatenare(chorda_ex_literis("a:", cp->p), _recens(
+            &cp->radix, e - (s32)n)->identitas, cp->p), cp->p);
     redde _campos_scribere(cp->m, tituli, valores, I);
 }
 
 interior b32
-fac_dominium_proximum (
+fac_radicis_proximum (
     vacuum* ctx)
 {
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
 
-    redde _dominium_scribere(cp, cp->electus + I);
+    redde _radicem_eligere(cp, cp->electus + I);
 }
 
 interior b32
-fac_dominium_prius (
+fac_radicis_prius (
     vacuum* ctx)
 {
     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
 
-    redde _dominium_scribere(cp, cp->electus - I);
+    redde _radicem_eligere(cp, cp->electus - I);
 }
 
 interior b32
-_dominia_vertere (
+_radicem_vertere (
     ContextusPraecepti* cp,
                    s32  gradus)
 {
@@ -1642,38 +1722,46 @@ _dominia_vertere (
         redde VERUM;
     }
     res = album_res_prima(cp->l, k);
-    redde res > ZEPHYRUM ? _dominium_scribere(cp, res - I) : VERUM;
+    redde res > ZEPHYRUM ? _radicem_eligere(cp, res - I) : VERUM;
 }
 
 interior b32
-fac_dominia_priora (
+fac_radicis_priora (
     vacuum* ctx)
 {
-    redde _dominia_vertere((ContextusPraecepti*)ctx, -I);
+    redde _radicem_vertere((ContextusPraecepti*)ctx, -I);
 }
 
 interior b32
-fac_dominia_proxima (
+fac_radicis_proxima (
     vacuum* ctx)
 {
-    redde _dominia_vertere((ContextusPraecepti*)ctx, I);
+    redde _radicem_vertere((ContextusPraecepti*)ctx, I);
 }
 
-/* Enter in radice: descendit in dominium electum */
+/* Enter in radice: in dominium descendit, aut articulum recentem
+ * aperit */
 interior b32
-fac_dominium_intrare (
+fac_radicis_aperire (
     vacuum* ctx)
 {
-    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-    constans character* tituli[I];
-    constans character* valores[I];
+     ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+     constans character* tituli[I];
+     constans character* valores[I];
+                    i32  n;
 
+    n = xar_numerus(cp->radix.dominia);
     si (cp->electus < ZEPHYRUM)
     {
         redde VERUM;
     }
+    si ((i32)cp->electus >= n)
+    {
+        redde _articulum_aperire(cp->m, _recens(&cp->radix, cp->electus
+            - (s32)n)->identitas, cp->p);
+    }
     tituli[ZEPHYRUM]   = "dominium";
-    valores[ZEPHYRUM]  = chorda_ut_cstr(_dominium(cp->dominia,
+    valores[ZEPHYRUM]  = chorda_ut_cstr(_dominium(cp->radix.dominia,
         cp->electus)->titulus, cp->p);
     redde _campos_scribere(cp->m, tituli, valores, I);
 }
@@ -1726,6 +1814,13 @@ fac_favorem_vertere (
     {
         redde _favorem_vertere(cp->m, _articulus_per_id(cp->m, _campus(
             cp->m, "articulus")), cp->p);
+    }
+    si (cp->visus == VISUS_RADICIS)
+    {
+        /* N3.4b: in ordine recenti solum (dominium non vertitur) */
+        redde cp->electus < (s32)xar_numerus(cp->radix.dominia)
+            || _favorem_vertere(cp->m, _recens(&cp->radix, cp->electus
+            - (s32)xar_numerus(cp->radix.dominia)), cp->p);
     }
     redde cp->electus >= ZEPHYRUM && _favorem_vertere(cp->m,
         navigator_articulus(cp->m->bibliotheca, _index_ordinis(cp->ordo,
@@ -1932,20 +2027,20 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "navigator.url", "Open URL", "o", VISUS_INDICIS | VISUS_PAGINAE
         | VISUS_EVENTUUM | VISUS_RADICIS, ZEPHYRUM,
             fac_promptam_aperire },
-    { "navigator.dominium_proximum", "Next site", "j", VISUS_RADICIS,
-        ZEPHYRUM, fac_dominium_proximum },
-    { "navigator.dominium_prius", "Previous site", "k", VISUS_RADICIS,
-        ZEPHYRUM, fac_dominium_prius },
-    { "navigator.dominia_priora", "Previous page", "[", VISUS_RADICIS,
-        ZEPHYRUM, fac_dominia_priora },
-    { "navigator.dominia_proxima", "Next page", "]", VISUS_RADICIS,
-        ZEPHYRUM, fac_dominia_proxima },
-    { "navigator.dominium_intrare", "Open", "Enter", VISUS_RADICIS,
-        REQUIRIT_ELECTUM, fac_dominium_intrare },
+    { "navigator.radix_proxima", "Next", "j", VISUS_RADICIS, ZEPHYRUM,
+        fac_radicis_proximum },
+    { "navigator.radix_prior", "Previous", "k", VISUS_RADICIS, ZEPHYRUM,
+        fac_radicis_prius },
+    { "navigator.radix_priora", "Previous page", "[", VISUS_RADICIS,
+        ZEPHYRUM, fac_radicis_priora },
+    { "navigator.radix_proxima_pagina", "Next page", "]", VISUS_RADICIS,
+        ZEPHYRUM, fac_radicis_proxima },
+    { "navigator.radix_aperire", "Open", "Enter", VISUS_RADICIS,
+        REQUIRIT_ELECTUM, fac_radicis_aperire },
     { "navigator.ad_radicem", "Saved", "Esc", VISUS_INDICIS, ZEPHYRUM,
         fac_ad_radicem },
-    { "navigator.favor", "Bookmark", "b", VISUS_INDICIS | VISUS_PAGINAE,
-        ZEPHYRUM, fac_favorem_vertere },
+    { "navigator.favor", "Bookmark", "b", VISUS_INDICIS | VISUS_PAGINAE
+        | VISUS_RADICIS, ZEPHYRUM, fac_favorem_vertere },
     { "navigator.eventus_proximus", "Next result", "j", VISUS_EVENTUUM,
         ZEPHYRUM, fac_eventum_proximum },
     { "navigator.eventus_prior", "Previous result", "k", VISUS_EVENTUUM,
@@ -2064,18 +2159,25 @@ agere (
     _contextum_eventuum_parare(&cp);
     si (cp.visus == VISUS_RADICIS)
     {
-        /* N3.4: ictus eligit, duplex descendit, sagittae paginas */
+        /* N3.4: ictus eligit, duplex aperit (dominium aut recens),
+         * sagittae paginas; "a<k>" post dominia */
         n = nodus->partes == PARTES_ITEM ? _id_numerus(nodus->id, 'd')
             : -I;
+        si (nodus->partes == PARTES_ITEM && _id_numerus(nodus->id, 'a')
+            > ZEPHYRUM)
+        {
+            n = _id_numerus(nodus->id, 'a') + (s32)xar_numerus(
+                cp.radix.dominia);
+        }
         si (n > ZEPHYRUM)
         {
             cp.electus = n - I;
             redde ev->genus == EVENTUS_MUS_DUPLEX
-                ? fac_dominium_intrare(&cp) : _dominium_scribere(&cp, n
+                ? fac_radicis_aperire(&cp) : _radicem_eligere(&cp, n
                     - I);
         }
         redde gradus != ZEPHYRUM && ev->genus == EVENTUS_MUS_DEPRESSUS
-            && _dominia_vertere(&cp, gradus);
+            && _radicem_vertere(&cp, gradus);
     }
     n = nodus->partes == PARTES_ITEM ? _id_numerus(nodus->id, 'r') : -I;
     si (cp.visus == VISUS_EVENTUUM)
@@ -2379,36 +2481,56 @@ _radicem_pingere (
     constans Componens* c,
                Mandata* md)
 {
-        Album* l;
-          Xar* dominia;
-    Componens* f;
-          s32  e;
-          s32  k;
-          s32  n;
-          s32  r;
-          i32  numerus;
-          i32  summa;
-          i32  i;
-    character  textus[XXXII];
+           Album* l;
+    RadixIndicis  radix;
+       Componens* f;
+             s32  e;
+             s32  k;
+             s32  n;
+             s32  r;
+             i32  numerus;
+             i32  summa;
+             i32  nd;
+             i32  i;
+       character  textus[XXXII];
 
-    dominia  = _dominia(m, md->piscina);
-    l        = _album_indicis(m, md->piscina, &k, &numerus);
-    e        = _electum_dominium(m, dominia);
-    n        = l ? album_paginae(l) : ZEPHYRUM;
-    summa    = ZEPHYRUM;
-    per (i = ZEPHYRUM; i < xar_numerus(dominia); i++)
+    _radicem_parare(m, md->piscina, &radix);
+    l      = _album_indicis(m, md->piscina, &k, &numerus);
+    e      = _electum_radicis(m, &radix);
+    n      = l ? album_paginae(l) : ZEPHYRUM;
+    nd     = xar_numerus(radix.dominia);
+    summa  = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < nd; i++)
     {
-        summa += _dominium(dominia, (s32)i)->numerus;
+        summa += _dominium(radix.dominia, (s32)i)->numerus;
     }
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
     {
         f = componens_liberum(c, i);
         r = f->partes == PARTES_ITEM ? _id_numerus(f->id, 'd') : -I;
-        si (r > ZEPHYRUM && (i32)r <= xar_numerus(dominia))
+        si (r > ZEPHYRUM && (i32)r <= nd)
         {
-            _lineam_ordinis_pingere(md, f, _dominium(dominia, r - I)
-                ->titulus, _favores_numerati(_dominium(dominia, r - I)
-                ->numerus, md->piscina), r - I == e);
+            _lineam_ordinis_pingere(md, f, _dominium(radix.dominia, r
+                - I)->titulus, _favores_numerati(_dominium(
+                radix.dominia, r - I)->numerus, md->piscina), r - I
+                == e);
+            perge;
+        }
+        r = f->partes == PARTES_ITEM ? _id_numerus(f->id, 'a') : -I;
+        si (r > ZEPHYRUM && (i32)r <= xar_numerus(radix.recentes))
+        {
+            /* N3.4b: recens - titulus, hospes obscurus */
+            _lineam_ordinis_pingere(md, f, _titulus_articuli(_recens(
+                &radix, r - I)), _hospes(_recens(&radix, r - I)->url),
+                r - I + (s32)nd == e);
+        }
+        alioquin si (   chorda_aequalis_literis(f->id, "g1")
+                     || chorda_aequalis_literis(f->id, "g2"))
+        {
+            _textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                chorda_ex_literis(chorda_aequalis_literis(f->id, "g1")
+                ? "Recent" : "No bookmarks yet", md->piscina),
+                FONS_PARVUS, COLOR_TEXT_DIM);
         }
         alioquin si (chorda_aequalis_literis(f->id, "g0"))
         {
@@ -3286,6 +3408,8 @@ navigator_semitam_secuta (
     {
         k = _pagina_servata(m, f);
         _positionem_servare(m, f, k);
+        (vacuum)navigator_recentem_notare(m->bibliotheca,
+            f->articulus_arcae);
     }
     alioquin
     {

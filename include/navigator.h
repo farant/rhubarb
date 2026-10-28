@@ -6,7 +6,10 @@
  *
  * INDEX (N3.4: FAVORES solum, more Yahoo): RADIX "Saved" - grex
  * "Bookmarks", linea per dominium radicale ("wikipedia.org", numerus
- * favorum); Enter (aut duplex) descendit. DOMINIUM: favores eius per
+ * favorum); Enter (aut duplex) descendit. Sub eo grex "Recent"
+ * (N3.4b): articuli nuper aperti (navigator_recentes), titulus et
+ * hospes; Enter aperit, b favorem vertit; sine favoribus "Bookmarks"
+ * nuntium "No bookmarks yet" habet. DOMINIUM: favores eius per
  * hospitem grex (titulus gregis in pagina continuationis iteratus),
  * linea per articulum - titulus versionis ultimae, "3 versions".
  * Claves: j k (electus), [ ] (paginae), Enter (articulus, versio

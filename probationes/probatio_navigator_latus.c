@@ -641,6 +641,84 @@ _sectio_quaestio (
     servum_scriptum_claudere(s);
 }
 
+/* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
+ * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
+ * habet */
+interior vacuum
+_sectio_recentes (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+       Xar* l;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("initio nulli: grex 'Recent' abest");
+    CREDO_FALSUM(pictum(w, "Recent", c->piscina));
+
+    CREDO_GRADUS("apertio notat: Rheum, deinde Rhubarb (primus)");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(argumentum(w, "1"));
+    l = navigator_recentes(w->bibliotheca, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS((*(constans NavigatorArticulus**)
+        xar_obtinere(l, ZEPHYRUM))->identitas, "1");
+
+    CREDO_GRADUS("radix: grex 'Recent' cum titulis et hospite");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "Bookmarks", c->piscina));
+    CREDO_VERUM(pictum(w, "Recent", c->piscina));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "Rheum", c->piscina));
+    CREDO_VERUM(pictum(w, "la.wikipedia.org", c->piscina));
+
+    CREDO_GRADUS("j post dominia: recentes; Enter aperit");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus", "a:1"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus", "a:3"));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+
+    CREDO_GRADUS("b in ordine recenti: favor vertitur, ordo manet");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus", "a:3"));
+    clavis(w, 'b');
+    CREDO_FALSUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    CREDO_VERUM(pictum(w, "Rheum", c->piscina));
+    clavis(w, 'b');
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+
+    CREDO_GRADUS("mus: ictus eligit, duplex aperit (a2 = Rhubarb)");
+    CREDO_VERUM(ictus_in(w, "a2", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "electus", "a:1"));
+    CREDO_VERUM(ictus_in(w, "a2", VERUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "1"));
+
+    CREDO_GRADUS("favores nulli, recentes adsunt: nuntius in grege");
+    (vacuum)navigator_favorem_ponere(w->bibliotheca, chorda_ex_literis(
+        "1", c->piscina), FALSUM);
+    (vacuum)navigator_favorem_ponere(w->bibliotheca, chorda_ex_literis(
+        "3", c->piscina), FALSUM);
+    (vacuum)navigator_favorem_ponere(w->bibliotheca, chorda_ex_literis(
+        "5", c->piscina), FALSUM);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "No bookmarks yet", c->piscina));
+    CREDO_VERUM(pictum(w, "Recent", c->piscina));
+    CREDO_FALSUM(ictus_in(w, "d1", FALSUM, c->piscina));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "1"));
+    mundum_claudere(w);
+}
+
 /* N3.4c: area lateris mutata (ut vicus superficiem nuntiat) */
 interior vacuum
 _superficiem_scribere (
@@ -1057,6 +1135,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "favores", _sectio_favores, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "positio", _sectio_positio, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "recentes", _sectio_recentes, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
