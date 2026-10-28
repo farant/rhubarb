@@ -13,6 +13,8 @@
 #include "dispositio.h"
 #include "fons.h"
 #include "thema.h"
+#include "color.h"
+#include "coloratio.h"
 #include "motus.h"
 #include "lector_paginae.h"
 #include "navigator_paginae.h"
@@ -2588,6 +2590,67 @@ _radicem_pingere (
     }
 }
 
+/* N4.1: color nexuum vici (#rubricae in editore) */
+interior ColorMandati
+_color_nexus (vacuum)
+{
+    ColorMandati c;
+
+    c.genus  = COLOR_MANDATI_RGBA;
+    c.valor  = color_ad_pixelum(thema_color_ex_indice_colorationis(
+        COLORATIO_LINK));
+    redde c;
+}
+
+/* linea textus per segmenta: partes intra notam NEXUS colore nexuum,
+ * ceterae COLOR_TEXT. notae ordine textus (navigator_paginae.h) */
+interior vacuum
+_lineam_textus_pingere (
+                   Mandata* md,
+                       s32  x,
+                       s32  y,
+                    chorda  textus,
+      constans LectorLinea* l,
+                       Xar* notae)
+{
+    constans ArticulusNota* n;
+                       i32  a;
+                       i32  b;
+                       i32  i;
+                       s32  latitudo;
+
+    latitudo  = fons_latitudo(l->fons);
+    a         = l->initium;
+    per (i = ZEPHYRUM; notae && i < xar_numerus(notae) && a < l->finis;
+         i++)
+    {
+        n = (constans ArticulusNota*)xar_obtinere(notae, i);
+        si (   n->genus   != ARTICULUS_NEXUS || n->finis <= a
+            || n->initium >= l->finis)
+        {
+            perge;
+        }
+        b = n->initium > a ? n->initium : a;
+        si (b > a)
+        {
+            mandata_textus(md, x, y, chorda_transcribere(chorda_sectio(
+                textus, a, b), md->piscina), l->fons,
+                figura_color_thematis(COLOR_TEXT));
+            x += _runae(chorda_sectio(textus, a, b)) * latitudo;
+        }
+        a = n->finis < l->finis ? n->finis : l->finis;
+        mandata_textus(md, x, y, chorda_transcribere(chorda_sectio(
+            textus, b, a), md->piscina), l->fons, _color_nexus());
+        x += _runae(chorda_sectio(textus, b, a)) * latitudo;
+    }
+    si (a < l->finis)
+    {
+        mandata_textus(md, x, y, chorda_transcribere(chorda_sectio(
+            textus, a, l->finis), md->piscina), l->fons,
+            figura_color_thematis(COLOR_TEXT));
+    }
+}
+
 /* L5 (ut lector): locus currens notas habet (hospes)? */
 interior b32
 _notae_loci (
@@ -2637,11 +2700,12 @@ _paginam_pingere (
             per (j = ZEPHYRUM; j < xar_numerus(g->lineae); j++)
             {
                 l = (constans LectorLinea*)xar_obtinere(g->lineae, j);
-                _textum_pingere(md, x->fines.x + lateris * NAV_LITTERA
-                    + l->x, x->fines.y + l->y, chorda_sectio(
+                _lineam_textus_pingere(md, x->fines.x + lateris
+                    * NAV_LITTERA + l->x, x->fines.y + l->y,
                     (i32)k < f->paginae_articuli
                     ? f->textus->caput.textus : f->textus->nexus.textus,
-                    l->initium, l->finis), l->fons, COLOR_TEXT);
+                    l, (i32)k < f->paginae_articuli ? f->textus->notae
+                    : f->textus->notae_nexuum);
             }
         }
         alioquin si (   chorda_aequalis_literis(x->id, "pes")

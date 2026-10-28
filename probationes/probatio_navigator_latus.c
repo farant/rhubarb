@@ -15,6 +15,8 @@
 #include "figura.h"
 #include "mandatum.h"
 #include "thema.h"
+#include "color.h"
+#include "coloratio.h"
 #include "volumen.h"
 #include "moneta.h"
 #include "filum.h"
@@ -245,20 +247,18 @@ pictum (
     redde FALSUM;
 }
 
-/* textus continens fragmentum colore thematis pictus? */
+/* textus continens fragmentum colore dato pictus? */
 interior b32
-pictum_colore (
+pictum_colore_mandati (
                   Mundus* w,
       constans character* fragmentum,
-              ColorThema  color,
+            ColorMandati  quaesitus,
                  Piscina* p)
 {
                 Mandata* md;
       constans Mandatum* x;
-           ColorMandati  quaesitus;
                     i32  i;
 
-    quaesitus  = figura_color_thematis(color);
     md         = mandata_creare(p, w->intern);
     pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
     per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
@@ -274,6 +274,56 @@ pictum_colore (
         }
     }
     redde FALSUM;
+}
+
+/* textus continens fragmentum colore thematis pictus? */
+interior b32
+pictum_colore (
+                  Mundus* w,
+      constans character* fragmentum,
+              ColorThema  color,
+                 Piscina* p)
+{
+    redde pictum_colore_mandati(w, fragmentum, figura_color_thematis(
+        color), p);
+}
+
+/* x (px) textus primi qui fragmentum continet; -1 si nullum */
+interior s32
+x_picti (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* x;
+                   i32  i;
+
+    md = mandata_creare(p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde x->fines.x;
+        }
+    }
+    redde -I;
+}
+
+/* N4.1: color nexuum vici (#rubricae in editore) */
+interior ColorMandati
+color_nexus (vacuum)
+{
+    ColorMandati c;
+
+    c.genus  = COLOR_MANDATI_RGBA;
+    c.valor  = color_ad_pixelum(thema_color_ex_indice_colorationis(
+        COLORATIO_LINK));
+    redde c;
 }
 
 /* ictus (aut duplex) in medio componentis id */
@@ -639,6 +689,56 @@ _sectio_quaestio (
     CREDO_VERUM(pictum(w, "No results", c->piscina));
     CREDO_VERUM(campus_est(w, "visus", "pagina"));
     servum_scriptum_claudere(s);
+}
+
+/* N4.1: nexus colore nexuum pinguntur - in articulo (segmentum
+ * lineae), in indice nexuum, et nexus in lineam sequentem fluens */
+interior vacuum
+_sectio_nexus (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("Rheum: 'genus' nexus, cetera textus");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(pictum_colore_mandati(w, "genus", color_nexus(),
+        c->piscina));
+    CREDO_FALSUM(pictum_colore_mandati(w, "Rheum est", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore(w, "Rheum est", COLOR_TEXT, c->piscina));
+    CREDO_VERUM(pictum_colore(w, "plantarum.", COLOR_TEXT, c->piscina));
+    CREDO_FALSUM(pictum_colore(w, "genus", COLOR_TEXT, c->piscina));
+
+    CREDO_GRADUS("segmenta contigua: x per runas (VI px)");
+    CREDO_AEQUALIS_S32(x_picti(w, "genus", c->piscina), x_picti(w,
+        "Rheum est", c->piscina) + X * VI);
+    CREDO_AEQUALIS_S32(x_picti(w, "plantarum", c->piscina), x_picti(w,
+        "genus", c->piscina) + V * VI);
+
+    CREDO_GRADUS("index nexuum: linea 'Planta' nexus, titulus non");
+    clavis(w, 'j');
+    CREDO_VERUM(pictum_colore_mandati(w, "Planta", color_nexus(),
+        c->piscina));
+    CREDO_FALSUM(pictum_colore_mandati(w, "Links", color_nexus(),
+        c->piscina));
+
+    CREDO_GRADUS("nexus in lineas duas fluens: utraque coloratur, "
+        "textus post eum non");
+    offerre(w, "https://la.wikipedia.org/wiki/Numeri",
+        chorda_ex_literis(
+        PAGINA("Numeri", "<p>Initium <a rel=\"mw:WikiLink\" "
+        "href=\"./Numeri\">unus duo tres quattuor quinque sex septem "
+        "octo novem decem</a> finis.</p>"), c->piscina));
+    CREDO_VERUM(argumentum(w, "8"));
+    CREDO_VERUM(pictum_colore_mandati(w, "unus", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore_mandati(w, "decem", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore(w, "finis.", COLOR_TEXT, c->piscina));
+    CREDO_VERUM(pictum_colore(w, "Initium", COLOR_TEXT, c->piscina));
+    mundum_claudere(w);
 }
 
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
@@ -1082,7 +1182,10 @@ _sectio_argumentum (
     CREDO_VERUM(argumentum(w, "3"));
     CREDO_VERUM(campus_est(w, "visus", "pagina"));
     CREDO_VERUM(campus_est(w, "articulus", "3"));
-    CREDO_VERUM(pictum(w, "Rheum est genus plantarum.", c->piscina));
+    /* N4.1: linea per segmenta (nexus 'genus' suo colore) */
+    CREDO_VERUM(pictum(w, "Rheum est ", c->piscina));
+    CREDO_VERUM(pictum(w, "genus", c->piscina));
+    CREDO_VERUM(pictum(w, " plantarum.", c->piscina));
 
     CREDO_GRADUS("index nexuum: pagina nova post articulum (N3.1b)");
     CREDO_VERUM(pictum(w, "Rheum - la.wikipedia.org - 1/2",
@@ -1138,6 +1241,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "recentes", _sectio_recentes, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
+    { "nexus", _sectio_nexus, NIHIL, mundum_purgare, NIHIL, NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,

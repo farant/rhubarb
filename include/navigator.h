@@ -21,6 +21,11 @@
  * vertit). Claves: j k (pagina proxima / prior), b (favor), Esc (ad
  * indicem). Extractio et paginae in cache per
  * (articulus, versio, area).
+ * NEXUS (N4.1): textus nexuum (notae ARTICULUS_NEXUS - in articulo et
+ * in indice nexuum) colore nexuum vici pingitur (COLORATIO_LINK, idem
+ * ac #rubricae in editore: thema_color_ex_indice_colorationis);
+ * linea quaeque in segmenta per notas finditur, ergo nexus qui in
+ * lineam sequentem fluit in utraque coloratur. Clavis et mus N4.2-3.
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,

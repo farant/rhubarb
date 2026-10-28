@@ -170,3 +170,19 @@ yet" title row ("g2") so the hint survives.
 Bug on the way: the first `lineam_proximam` reassigned `valor` before
 testing for the '\n', never advanced past it and hung the suite -
 stopped the run, killed the binary, fixed (keep the end index b).
+
+## 2026-10-28 - N4.1 links drawn in the link color
+
+Link color = the editor's hashtag color: COLORATIO_LINK through
+thema_color_ex_indice_colorationis -> color_ad_pixelum as an RGBA
+ColorMandati (same path as pagina.c), so links follow the theme like
+#tags do. `_lineam_textus_pingere` cuts each laid-out line at the
+NEXUS notes (notes are in text order; article pages use
+textus->notae, link-index pages textus->notae_nexuum) and advances x
+by runes * fons_latitudo(l->fons) per piece. A link that wraps is just
+two overlaps, one per line - no special case.
+
+Side effect: a line with a link is now 2-3 text commands, so any test
+that matched a WHOLE line containing a link must match the pieces
+(probatio_navigator_latus 'argumentum' updated). New test helper
+x_picti checks the pieces are contiguous.
