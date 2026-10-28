@@ -507,4 +507,33 @@
       <frustum mensura="1"><textus!>o3 d4 c#4 d4 o2 g4 | f#4 e4 a4 b4 | g4 f#4 e4 a4 | o3 d4 o2 a4 o3 d2 | d4 o2 g4 f#4 b4 | e4 a4 f#4 o3 c#4 | d4 d4 e4 e4 | o2 a1 | a4 g4 f#4 g4 | f#4 e4 a4 b4 | g4 g4 a4 a4 | o3 d1</textus></frustum>
     </pars>
   </carmen>
+
+  <!-- lamentatio: choralis IV vocum organo in a minor, studium sextarum
+       auctarum. i V6 i iv6 -> sexta Italica (D -> D# in tenore) -> V;
+       Neapolitana Bb/D -> V7 -> i (Bb -> G# in superiore); sexta
+       Gallica (D D# E in superiore) -> V; sexta Germanica -> i64 ->
+       V7 -> I (tertia Picardiae; i64 quintas Mozartianas vitat).
+       Sextae auctae non declaratae ('r'). Stylus choralis. Generator:
+       build/plantae_s4/sexta_aucta/lamentatio.py -->
+  <carmen titulus="lamentatio" stylus="choralis" tempus="60"
+          metrum="4/4" clavis="a minor">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <acorda mensura="1" textus="Am E/G# Am Dm/F | r:2 E:2 | Am Dm Bb/D:2 | E7:2 Am:2 | Am/C Dm/F r:2 | E | Am F Dm/F r | Am/E E7 A:2"/>
+    <fermata mensura="2" ictus="3"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="6"/>
+    <fermata mensura="8" ictus="3"/>
+    <pars titulus="superius" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o5 c4 o4 b4 a4 a4 | a2 g#2 | o5 c4 d4 o4 b-2 | g#2 a2 | o5 e4 d4 d#2 | e1 | e4 c4 d4 c4 | c4 o4 b4 a2</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 e4 e4 e4 d4 | d#2 e2 | e4 f4 d2 | d2 c2 | e4 f4 a2 | g#1 | a4 a4 d4 d#4 | e4 d4 c#2</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o3 a4 b4 o4 c4 o3 a4 | a2 b2 | a4 a4 f2 | e2 e2 | a4 a4 b2 | b1 | o4 c4 c4 o3 a4 a4 | a4 g#4 a2</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o2 a4 g#4 a4 f4 | f2 e2 | a4 o3 d4 d2 | o2 e2 a2 | o3 c4 f4 f2 | e1 | o2 a4 o3 f4 f4 f4 | e4 e4 o2 a2</textus></frustum>
+    </pars>
+  </carmen>
 </carmina>

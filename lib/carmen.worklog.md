@@ -434,3 +434,14 @@ fermata arrivals (d97a231d), key labels + pivot "vi=A: ii" / "I=D: V" (ae44723d)
 <clavis> everything reads in D (m8 = half cadence) - analysis follows what is declared;
 undeclared-modulation warning is a possible later rule. Generator:
 build/plantae_s4/modulatio/peregrinatio.py (clavis positions as arguments).
+
+## 2026-10-27 - house book: lamentatio (augmented-sixth study)
+
+16th house song: SATB chorale on organ in A minor, 8 bars, stylus choralis, tempo 60. i V6 i
+iv6 -> It+6 (tenor... alto D -> D#) -> V; Neapolitan Bb/D -> V7 -> i (soprano Bb -> G#); Fr+6
+(soprano D D# E) -> V; Ger+6 -> i64 -> V7 -> I (Picardy; the 6/4 avoids Mozart fifths). The
+three augmented sixths are undeclared ('r') so the spelling is the notes'. censura caught two
+voicing errors of mine (parallel 8ves S/A m5, parallel 5ths S/A m7) - re-voiced. Before the
+aug6 work: 6 false findings (D# out of key, "F7 septima D# non resoluta"), functio subV7/v,
+subV7#11/v, VI7. After 411f8b6e: 0 findings; It+6, Fr+6, Ger+6. Generator:
+build/plantae_s4/sexta_aucta/lamentatio.py.
