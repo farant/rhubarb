@@ -16440,7 +16440,8 @@ _invenire_slotum_literis (
         si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
         {
             si (   tabula->sloti[positus].hash_cachatum == friatum
-                && _aequalis_literis_chorda(cstr, tabula->sloti[positus].clavis))
+                && _aequalis_literis_chorda(cstr,
+                tabula->sloti[positus].clavis))
             {
                 *inventum = VERUM;
                 redde positus;
@@ -16518,15 +16519,40 @@ _tabula_dispersa_crescere (
     tabula->collisiones_totales  = ZEPHYRUM;
     tabula->distantia_maxima     = ZEPHYRUM;
 
+    /* REPOSITIO PER FRIATUM SERVATUM (budget B1 C4, 2026-10-28):
+     * olim tabula_dispersa_inserere per slotum veterem - friatio
+     * iterum (functio per indicem), factor oneris, comparationes
+     * clavium (37-41% insertionis totius in profilis silvae erat
+     * crescentia). Tabula nova claves DISTINCTAS et nullos tumulos
+     * habet: inserere solum ab friato & larva per slotos occupatos ad
+     * vacuum primum ambulat (collisiones et distantia numeratae) -
+     * idem hic sine friatione et comparatione. Slotus idem electus,
+     * ergo ordo iterationis et statistica octetim eadem (probatum:
+     * CC M insertiones cum deletionibus, CLXXIV M lineae eaedem). */
     per (i = ZEPHYRUM; i < capacitas_vetus; i++)
     {
-        si (sloti_veteres[i].status == SLOT_OCCUPATUM)
+        i32 positus;
+        i32 distantia;
+
+        si (sloti_veteres[i].status != SLOT_OCCUPATUM)
         {
-            silva_tabula_dispersa_inserere(
-                tabula,
-                sloti_veteres[i].clavis,
-                sloti_veteres[i].valor);
+            perge;
         }
+        positus =
+            sloti_veteres[i].hash_cachatum & tabula->capacitas_mask;
+        distantia = ZEPHYRUM;
+        dum (tabula->sloti[positus].status != SLOT_VACUUM)
+        {
+            tabula->collisiones_totales++;
+            positus = (positus + I) & tabula->capacitas_mask;
+            distantia++;
+            si (distantia > tabula->distantia_maxima)
+            {
+                tabula->distantia_maxima = distantia;
+            }
+        }
+        tabula->sloti[positus] = sloti_veteres[i];
+        tabula->numerus++;
     }
 
     redde VERUM;
@@ -16623,8 +16649,10 @@ silva_tabula_dispersa_inserere (
     }
 
     /* Confer factores oneris */
-    si (   silva_tabula_dispersa_factor_oneris(tabula) > tabula->factor_maximus
-        || silva_tabula_dispersa_factor_deletorum(tabula) > tabula->factor_deletorum_maximus)
+    si (   silva_tabula_dispersa_factor_oneris(tabula)
+        > tabula->factor_maximus
+        || silva_tabula_dispersa_factor_deletorum(tabula)
+            > tabula->factor_deletorum_maximus)
     {
         si (!_tabula_dispersa_crescere(tabula))
         {
@@ -16719,7 +16747,8 @@ silva_tabula_dispersa_invenire_literis (
     friatum = _friare_literis(cstr);
 
     /* Invenire slotum (comparare literis directe) */
-    positus = _invenire_slotum_literis(tabula, cstr, friatum, &inventum);
+    positus = _invenire_slotum_literis(tabula, cstr, friatum,
+        &inventum);
 
     si (inventum)
     {
