@@ -163,6 +163,33 @@ testa_facultates_tactus (
 
 
 /* ==================================================
+ * Claviatura systematis (communio-plan-5 T9; claviatura.h)
+ * ================================================== */
+
+/* textus a claviatura (iOS insertText, UTF-8) -> eventus: pars inter
+ * '\n' = EVENTUS_TEXTUS COMMISSUM (origo SCRIPTA; contentum VISUS in
+ * 'octeti' - vivant donec eventus tractati), '\n' = CLAVIS_DEPRESSUS
+ * REDITUS. Redde numerum impletum (<= maximus; reliqua omittuntur);
+ * mensura 0 -> 0. */
+i32
+testa_textum_eventus (
+         i8* octeti,
+        i32  mensura,
+        s64  tempus,
+    Eventus* eventus,
+        i32  maximus);
+
+/* clavis imperans sola (iOS deleteBackward -> CLAVIS_RETRORSUM):
+ * CLAVIS_DEPRESSUS, actio PRESSA, codex physicus ubi notus (REDITUS,
+ * RETRORSUM), aliter IGNOTUS */
+vacuum
+testa_clavem_eventus (
+    clavis_t  clavis,
+         s64  tempus,
+     Eventus* ev);
+
+
+/* ==================================================
  * Decisio quadri (R4: ansam macOS imitatur)
  * ================================================== */
 

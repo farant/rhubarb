@@ -105,3 +105,26 @@ rete successus=.. status=..` - for Simulator checks only.
 EVENTUS_RESUMPTIO (scene active again) reaches pictor's root handler,
 which calls `communio_excitare` (wired by pictor_communionem_ligare):
 lanes resume at once and the device list is refetched.
+
+## 2026-10-28 — communio plan-5 T9: system keyboard
+
+TestaVisus itself adopts UIKeyInput + UITextInputTraits (no hidden
+UITextField): pictor draws its own field, the shell only shows the
+keyboard and turns keystrokes into events. canBecomeFirstResponder is
+TRUE only while the app asked for a keyboard (`_testa.claviatura` !=
+NULLA), so touches never pop it up by accident.
+
+- insertText -> NSData (UTF-8) -> mutableCopy -> `testa_textum_eventus`
+  (pure, in testa_initus; tested). The mutable copy matters: the TEXTUS
+  chorda is a VIEW and chorda.datum is `i8*`, so a `const char*` from
+  UTF8String would need a cast that -Wcast-qual rejects. Events are
+  dispatched synchronously (ludus_fenestra_tractare), so the autoreleased
+  buffer outlives them.
+- '\n' (Return/Send/Go) -> CLAVIS_DEPRESSUS REDITUS, deleteBackward ->
+  RETRORSUM (`testa_clavem_eventus`). hasText is always YES so Backspace
+  arrives even when pictor's field is empty (pictor decides).
+- Traits are getters reading `_testa.claviatura`; switching EPISTULA ->
+  CODEX while the keyboard is up calls reloadInputViews so the new
+  keyboard type takes effect without hiding it.
+- No pressesBegan handler exists, so a hardware keyboard (Simulator,
+  iPad) also arrives through insertText — no double delivery.

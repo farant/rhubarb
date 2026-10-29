@@ -348,6 +348,79 @@ testa_facultates_tactus (
     ev->datum.facultates.pressio       = FALSUM;
 }
 
+vacuum
+testa_clavem_eventus (
+    clavis_t  clavis,
+         s64  tempus,
+     Eventus* ev)
+{
+    memset(ev, ZEPHYRUM, magnitudo(Eventus));
+    ev->genus                = EVENTUS_CLAVIS_DEPRESSUS;
+    ev->tempus               = tempus;
+    ev->datum.clavis.clavis  = clavis;
+    ev->datum.clavis.actio   = EVENTUS_ACTIO_PRESSA;
+    ev->datum.clavis.codex  = clavis == CLAVIS_REDITUS
+        ? EVENTUS_CODEX_REDITUS : clavis == CLAVIS_RETRORSUM
+        ? EVENTUS_CODEX_RETRORSUM : EVENTUS_CODEX_IGNOTUS;
+}
+
+/* pars [initium, finis) octetorum ut TEXTUS COMMISSUM */
+interior vacuum
+_textum_ponere (
+         i8* octeti,
+        i32  initium,
+        i32  finis,
+        s64  tempus,
+    Eventus* ev)
+{
+    memset(ev, ZEPHYRUM, magnitudo(Eventus));
+    ev->genus                           = EVENTUS_TEXTUS;
+    ev->tempus                          = tempus;
+    ev->datum.textus.contentum.datum    = octeti + initium;
+    ev->datum.textus.contentum.mensura  = finis - initium;
+    ev->datum.textus.genus              = EVENTUS_TEXTUS_COMMISSUM;
+    ev->datum.textus.origo              = EVENTUS_ORIGO_SCRIPTA;
+}
+
+i32
+testa_textum_eventus (
+         i8* octeti,
+        i32  mensura,
+        s64  tempus,
+    Eventus* eventus,
+        i32  maximus)
+{
+    i32 n;
+    i32 i;
+    i32 initium;
+
+    n        = ZEPHYRUM;
+    initium  = ZEPHYRUM;
+    si (!octeti || !eventus)
+    {
+        redde ZEPHYRUM;
+    }
+    per (i = ZEPHYRUM; i <= mensura && n < maximus; i++)
+    {
+        si (i < mensura && octeti[i] != '\n')
+        {
+            perge;
+        }
+        si (i > initium)
+        {
+            _textum_ponere(octeti, initium, i, tempus, &eventus[n]);
+            n++;
+        }
+        si (i < mensura && n < maximus)
+        {
+            testa_clavem_eventus(CLAVIS_REDITUS, tempus, &eventus[n]);
+            n++;
+        }
+        initium = i + I;
+    }
+    redde n;
+}
+
 TestaQuadriPetitio
 testa_quadrum_petere (
     constans TestaQuadriStatus* s)

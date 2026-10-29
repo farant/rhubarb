@@ -80,6 +80,7 @@ nomen structura {
                    i32  alveus_latitudo;
                    i32  alveus_altitudo;
                    i32  scala_schirmi;    /* pixela per punctum (II, III) */
+                   i32  claviatura;       /* TestaClaviaturaGenus (T9) */
              character  sedes[DXII];      /* Documents */
 } TestaIOS;
 
@@ -125,6 +126,11 @@ hic_manens Veredarius        _veredarius;
 interior vacuum
 _quadrum_statim_petere (
     vacuum);
+
+interior vacuum
+_claviaturam_ponere (
+    vacuum* ctx,
+       i32  genus);
 
 interior vacuum
 _responsum_tradere (
@@ -935,6 +941,9 @@ _initium_facere (
     _testa.ambitus.imaginem_eligere = _imaginem_eligere;
     /* plan-5 T8: rete per URLSession; reactor horas solas tenet */
     _testa.ambitus.machina     = "iPhone";
+    /* T9: claviatura systematis (TestaVisus UIKeyInput) */
+    _testa.ambitus.claviaturam_ponere = _claviaturam_ponere;
+    _testa.ambitus.claviatura_ctx     = NIHIL;
     _testa.ambitus.reactor     = reactor_creare(_testa.piscina);
     _testa.ambitus.veredarius  = _testa.ambitus.reactor
         ? _veredarium_parare() : NIHIL;
@@ -983,10 +992,76 @@ _scaenam_finire (
 
 
 /* ==================================================
+ * Claviatura systematis (communio-plan-5 T9): TestaVisus ipse
+ * UIKeyInput est - applicatio campum suum pingit, testa claviaturam
+ * ostendit et litteras ut eventus reddit (testa_textum_eventus)
+ * ================================================== */
+
+#define CLAVIATURAE_EVENTUS  XVI   /* per insertText; reliqua omittuntur */
+
+interior vacuum
+_textum_tradere (
+    i8* octeti,
+    i32 mensura)
+{
+    Eventus ev[CLAVIATURAE_EVENTUS];
+        i32 n;
+        i32 i;
+
+    n = testa_textum_eventus(octeti, mensura, fenestra_tempus_ms(), ev,
+        CLAVIATURAE_EVENTUS);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        _tradere(&ev[i]);
+    }
+    _quadrum_petere();
+}
+
+interior vacuum
+_retrorsum_tradere (
+    vacuum)
+{
+    Eventus e;
+
+    testa_clavem_eventus(CLAVIS_RETRORSUM, fenestra_tempus_ms(), &e);
+    _tradere(&e);
+    _quadrum_petere();
+}
+
+/* TestaAmbitus.claviaturam_ponere: NULLA celat; genus mutatum dum
+ * claviatura ostenditur -> reloadInputViews (proprietates novae) */
+interior vacuum
+_claviaturam_ponere (
+    vacuum* ctx,
+       i32  genus)
+{
+    UIView* v;
+
+    (vacuum)ctx;
+    v = (UIView*)_visus;
+    _testa.claviatura = genus;
+    si (!v)
+    {
+        redde;
+    }
+    si (genus == (i32)TESTA_CLAVIATURA_NULLA)
+    {
+        (vacuum)[v resignFirstResponder];
+        redde;
+    }
+    si ([v isFirstResponder])
+    {
+        [v reloadInputViews];
+        redde;
+    }
+    (vacuum)[v becomeFirstResponder];
+}
+
+/* ==================================================
  * Classes UIKit
  * ================================================== */
 
-@interface TestaVisus : UIView
+@interface TestaVisus : UIView <UIKeyInput, UITextInputTraits>
 - (void)quadrum_statim:(CADisplayLink*)vinculum;
 - (void)quadrum_post:(NSTimer*)horologium;
 @end
@@ -1043,6 +1118,64 @@ _scaenam_finire (
     {
         _tactum_unum(t, eventum);
     }
+}
+
+/* T9: UIKeyInput - responsor primus solum dum applicatio claviaturam
+ * petit */
+- (BOOL)canBecomeFirstResponder {
+    redde _testa.claviatura != (i32)TESTA_CLAVIATURA_NULLA;
+}
+
+/* VERUM semper: deleteBackward etiam campo vacuo venit (applicatio
+ * iudicat) */
+- (BOOL)hasText {
+    redde YES;
+}
+
+- (void)insertText:(NSString*)textus {
+    NSMutableData* d;
+
+    d = [[[textus dataUsingEncoding:NSUTF8StringEncoding] mutableCopy]
+        autorelease];
+    si (d && [d length] > 0)
+    {
+        _textum_tradere((i8*)[d mutableBytes], (i32)[d length]);
+    }
+}
+
+- (void)deleteBackward {
+    _retrorsum_tradere();
+}
+
+/* UITextInputTraits: EPISTULA = claviatura epistulae sine correctione;
+ * CODEX = ASCII, maiusculae omnes, codex unius usus (oneTimeCode) */
+- (UIKeyboardType)keyboardType {
+    redde _testa.claviatura == (i32)TESTA_CLAVIATURA_CODEX
+        ? UIKeyboardTypeASCIICapable : UIKeyboardTypeEmailAddress;
+}
+
+- (UITextAutocapitalizationType)autocapitalizationType {
+    redde _testa.claviatura == (i32)TESTA_CLAVIATURA_CODEX
+        ? UITextAutocapitalizationTypeAllCharacters
+        : UITextAutocapitalizationTypeNone;
+}
+
+- (UITextAutocorrectionType)autocorrectionType {
+    redde UITextAutocorrectionTypeNo;
+}
+
+- (UITextSpellCheckingType)spellCheckingType {
+    redde UITextSpellCheckingTypeNo;
+}
+
+- (UITextContentType)textContentType {
+    redde _testa.claviatura == (i32)TESTA_CLAVIATURA_CODEX
+        ? UITextContentTypeOneTimeCode : UITextContentTypeEmailAddress;
+}
+
+- (UIReturnKeyType)returnKeyType {
+    redde _testa.claviatura == (i32)TESTA_CLAVIATURA_CODEX
+        ? UIReturnKeyGo : UIReturnKeySend;
 }
 
 /* STATIM: vinculum unum quadrum currit, deinde iterum pausatur */

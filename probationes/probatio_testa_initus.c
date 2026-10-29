@@ -560,6 +560,70 @@ _sectio_mensurae (
     CREDO_FALSUM(testa_mensuras_aptare(X, X, ZEPHYRUM, &l, &a));
 }
 
+/* plan-5 T9: claviatura systematis (iOS insertText / deleteBackward)
+ * -> Eventus: textus inter '\n' = TEXTUS COMMISSUM (visus in octetos
+ * vocantis), '\n' = REDITUS depressus */
+interior vacuum
+_sectio_textus (
+    CredoContextus* c)
+{
+    Eventus ev[IV];
+         i8 a[]         = { 'a' };
+         i8 ab[]        = { 'a', 'b', '\n' };
+         i8 e_acutum[]  = { (i8)0xC3, (i8)0xA9 };
+         i8 multa[]     = { 'a', '\n', 'b', '\n', 'c' };
+        i32 n;
+
+    (vacuum)c;
+    CREDO_GRADUS("\"a\" -> TEXTUS unum");
+    n = testa_textum_eventus(a, I, C, ev, IV);
+    CREDO_AEQUALIS_I32(n, I);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].genus, (s32)EVENTUS_TEXTUS);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].datum.textus.genus,
+        (s32)EVENTUS_TEXTUS_COMMISSUM);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].datum.textus.origo,
+        (s32)EVENTUS_ORIGO_SCRIPTA);
+    CREDO_AEQUALIS_I32(ev[ZEPHYRUM].datum.textus.contentum.mensura, I);
+    CREDO_VERUM(ev[ZEPHYRUM].datum.textus.contentum.datum == a);
+    CREDO_VERUM(ev[ZEPHYRUM].tempus == C);
+    CREDO_GRADUS("\"ab\\n\" -> TEXTUS \"ab\" + REDITUS");
+    n = testa_textum_eventus(ab, III, C, ev, IV);
+    CREDO_AEQUALIS_I32(n, II);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].genus, (s32)EVENTUS_TEXTUS);
+    CREDO_AEQUALIS_I32(ev[ZEPHYRUM].datum.textus.contentum.mensura, II);
+    CREDO_AEQUALIS_S32((s32)ev[I].genus, (s32)EVENTUS_CLAVIS_DEPRESSUS);
+    CREDO_AEQUALIS_S32((s32)ev[I].datum.clavis.clavis,
+        (s32)CLAVIS_REDITUS);
+    CREDO_AEQUALIS_S32((s32)ev[I].datum.clavis.codex,
+        (s32)EVENTUS_CODEX_REDITUS);
+    CREDO_VERUM(ev[I].tempus == C);
+    CREDO_GRADUS("\"\" -> nihil");
+    CREDO_AEQUALIS_I32(testa_textum_eventus(a, ZEPHYRUM, C, ev, IV),
+        ZEPHYRUM);
+    CREDO_GRADUS("UTF-8 multi-octetus integer");
+    n = testa_textum_eventus(e_acutum, II, C, ev, IV);
+    CREDO_AEQUALIS_I32(n, I);
+    CREDO_AEQUALIS_I32(ev[ZEPHYRUM].datum.textus.contentum.mensura, II);
+    CREDO_VERUM((i32)(insignatus character)
+        ev[ZEPHYRUM].datum.textus.contentum.datum[I] == 0xA9);
+    CREDO_GRADUS("numerus ad maximum secatur");
+    n = testa_textum_eventus(multa, V, C, ev, II);
+    CREDO_AEQUALIS_I32(n, II);
+    CREDO_AEQUALIS_S32((s32)ev[I].genus, (s32)EVENTUS_CLAVIS_DEPRESSUS);
+    CREDO_AEQUALIS_I32(testa_textum_eventus(multa, V, C, ev, ZEPHYRUM),
+        ZEPHYRUM);
+    CREDO_GRADUS("deleteBackward -> RETRORSUM");
+    testa_clavem_eventus(CLAVIS_RETRORSUM, C, &ev[ZEPHYRUM]);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].genus,
+        (s32)EVENTUS_CLAVIS_DEPRESSUS);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].datum.clavis.clavis,
+        (s32)CLAVIS_RETRORSUM);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].datum.clavis.codex,
+        (s32)EVENTUS_CODEX_RETRORSUM);
+    CREDO_AEQUALIS_S32((s32)ev[ZEPHYRUM].datum.clavis.actio,
+        (s32)EVENTUS_ACTIO_PRESSA);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "geometria", _sectio_geometria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "margo", _sectio_margo, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -575,6 +639,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "mensurae imaginis", _sectio_mensurae, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "textus", _sectio_textus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
