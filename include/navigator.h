@@ -51,6 +51,15 @@
  * cache cum paginis. Claves: j k (sententia proxima / prior; positio
  * servatur), s et Esc (ad paginam sententiam continentem). Mus:
  * sagittae pedis, stella. Campus "sententia" = initium sententiae.
+ * SENTENTIA - LOCUS (N6.2): locus visus sententiae
+ * "navigator/sententia/<articulus>?versio=<v>&sententia=<offset>" -
+ * versio figitur ut in pagina (comes versionis suae); restitutio
+ * (vicus renatus, comes Cmd+T, historia) sententiam eandem aperit,
+ * offset ad sententiam continentem coactus; articulus amissus: ad
+ * indicem cum nota. Argumentum "navigator/sententia/<art>" sine
+ * sententia: positio servata (N3.4c) -> sententia eam continens. Ex
+ * sententia ad paginam positio NON servatur (offset sententiae
+ * subtilior). Pes pilcrow si locus notas habet, ut pagina.
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,

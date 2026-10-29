@@ -273,3 +273,22 @@ sentence move saves the N3.4c position (offset = sentence start), so
 leaving to the page view lands on the containing page. Restoration
 into sentence view via semita returns early for now (N6.2 polishes:
 location form, restart, companions).
+
+## 2026-10-29 - N6.2 sentence view location / restore / companions
+
+Most of it was free: `sententia` is a status field with ambitus
+"ligatio", `visus` is the path segment, so the generic semita code
+already produced and applied "navigator/sententia/<art>?versio=&
+sententia=" (cognomen added for the bare form). Added in the pane:
+_sententiam_restituere in semitam_secuta (coerce a mid-sentence offset
+to the sentence start, pin versio, bare form -> saved N3.4c position
+if same version and not in the link index), bare-argument clearing of
+a stale `sententia` (like `pagina` in N3.4c), pilcrow in the footer.
+
+Two behaviours worth knowing: (1) ambitus-ligatio fields are already
+reset when visus or articulus change, so the stale-sentence clear only
+matters for a bare argument while ALREADY in sentence view of the same
+article - the test sets the saved position directly to reach it. (2)
+Leaving sentence view for the page used to save the PAGE start as the
+position, throwing away the finer sentence offset; removed - the
+sentence offset finds the same page anyway.

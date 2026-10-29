@@ -1242,6 +1242,56 @@ _sententiam_ex_pagina (
     redde _sententiam_scribere(m, f, _sententiae_index(f, a));
 }
 
+/* N6.2: restitutio visus sententiae - sententia absens: positio
+ * servata (eadem versio, non index nexuum), aliter prima; offset ad
+ * initium sententiae continentis coactus; versio figitur */
+interior b32
+_sententiam_restituere (
+            NavigatorMontatio* m,
+    constans NavigatorFigurae* f)
+{
+       NavigatorPositio  q;
+                    s32  k;
+                    s32  offset;
+     constans character* tituli[II];
+     constans character* valores[II];
+              character  numerus[XVI];
+
+    si (_numerus_sententiarum(f) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    offset = _campus_numerus(m, "sententia");
+    si (offset < ZEPHYRUM)
+    {
+        offset = ZEPHYRUM;
+        si (   navigator_positionem_legere(m->bibliotheca,
+                   f->articulus_arcae, &q, f->scheda)
+            && chorda_aequalis(q.versio, f->versio_arcae)
+            && !q.in_nexibus)
+        {
+            offset = (s32)q.offset;
+        }
+        k = _sententiae_index(f, offset);
+        (vacuum)navigator_recentem_notare(m->bibliotheca,
+            f->articulus_arcae);
+        redde _sententiam_scribere(m, f, k);
+    }
+    k = _sententiae_index(f, offset);
+    si (   (s32)_sententia(f, k)->initium == offset
+        && _campus(m, "versio").mensura > ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    sprintf(numerus, "%u", (insignatus integer)_sententia(f, k)
+        ->initium);
+    tituli[ZEPHYRUM]   = "sententia";
+    valores[ZEPHYRUM]  = numerus;
+    tituli[I]          = "versio";
+    valores[I]         = chorda_ut_cstr(f->versio_arcae, f->scheda);
+    redde _campos_scribere(m, tituli, valores, II);
+}
+
 /* s / Esc in sententia: pagina articuli sententiam continens */
 interior b32
 _paginam_ex_sententia (
@@ -1271,7 +1321,8 @@ _paginam_ex_sententia (
         }
         k = (s32)i;
     }
-    _positionem_servare(m, f, k);
+    /* positio NON servatur: offset sententiae (iam servatum) subtilior
+     * est quam initium paginae et paginam eandem invenit (N6.2) */
     sprintf(numerus, "%d", (integer)k);
     tituli[ZEPHYRUM]   = "visus";
     valores[ZEPHYRUM]  = "pagina";
@@ -3398,8 +3449,9 @@ _sententiam_pingere (
         alioquin si (chorda_aequalis_literis(x->id, "pes"))
         {
             nota = _campus(m, "nota");
-            sprintf(textus, "sentence %d/%d%s", (integer)(k + I),
-                (integer)n, praecisa ? " ..." : "");
+            sprintf(textus, "sentence %d/%d%s%s", (integer)(k + I),
+                (integer)n, praecisa ? " ..." : "", _notae_loci(m,
+                md->piscina) ? " \302\266" : "");
             _centrum_pingere(md, x, nota.mensura > ZEPHYRUM ? nota
                 : chorda_ex_literis(textus, md->piscina),
                 nota.mensura > ZEPHYRUM && !_petens(m) ? COLOR_ERROR
@@ -4076,15 +4128,30 @@ navigator_argumentum_ponere (
     }
     /* N3.4c: articulus sine pagina nominata = ubi relictus - pagina
      * prior (status) tollitur, semitam_secuta servatam restituit */
-    si (   articulus && articulus->mensura > ZEPHYRUM
-        && !stml_attributum_capere(semita, "pagina"))
+    si (articulus && articulus->mensura > ZEPHYRUM)
     {
-        constans character* tituli[I];
-        constans character* valores[I];
+        /* N6.2: sententia quoque - nuda = ubi relictus */
+         constans character* tituli[II];
+         constans character* valores[II];
+                        i32  n;
 
-        tituli[ZEPHYRUM]   = "pagina";
-        valores[ZEPHYRUM]  = "";
-        (vacuum)_campos_scribere(m, tituli, valores, I);
+        n = ZEPHYRUM;
+        si (!stml_attributum_capere(semita, "pagina"))
+        {
+            tituli[n]   = "pagina";
+            valores[n]  = "";
+            n++;
+        }
+        si (!stml_attributum_capere(semita, "sententia"))
+        {
+            tituli[n]   = "sententia";
+            valores[n]  = "";
+            n++;
+        }
+        si (n > ZEPHYRUM)
+        {
+            (vacuum)_campos_scribere(m, tituli, valores, n);
+        }
     }
     redde navigator_semitam_secuta(m);
 }
@@ -4145,7 +4212,7 @@ navigator_semitam_secuta (
     }
     si (_visus(m) == VISUS_SENTENTIAE)
     {
-        redde VERUM;   /* N6.2: restitutio sententiae expolitur */
+        redde _sententiam_restituere(m, f);
     }
     /* pagina coacta; absens (argumentum nudum): servata (N3.4c), et
      * servatur; versio absens figitur (versio in arca = ultima) */

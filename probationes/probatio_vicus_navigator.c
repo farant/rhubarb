@@ -15,6 +15,9 @@
 #include "thema.h"
 #include "dispensator.h"
 #include "manus_ludus.h"
+#include "scriba_applicatio.h"
+#include "scriba_documentum.h"
+#include "tabula_characterum.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -420,6 +423,91 @@ _probare_nexus_celati (
         "nexus_occulti", "1"));
 }
 
+/* N6.2: visus sententiae in vico - renascitur in sententia eadem;
+ * comes (Cmd+T) notas loci sententiae scribit, sententia alia sine */
+interior vacuum
+_probare_sententia_vicus (
+    CredoContextus* c)
+{
+                   Mundus* x = (Mundus*)c->datum;
+                    Vicus* v;
+               VicusLatus* l;
+        NavigatorMontatio* m;
+               ManusLudus* manus;
+          VicusApplicatio  altera;
+                   chorda  sententia;
+               VicusLatus* sinister;
+           ScribaMontatio* sm;
+        TabulaCharacterum  folium;
+                   chorda* a;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "navigator", chorda_ut_cstr(
+        chorda_concatenare(chorda_ex_literis("navigator/sententia/",
+        c->piscina), x->articulus, c->piscina), c->piscina)));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    l = latus_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    m = (NavigatorMontatio*)l->montatio;
+    CREDO_VERUM(campus_est(m, "visus", "sententia"));
+    manus = manus_ludus_creare(c->piscina, x->app.d);
+    (vacuum)manus_ludus_clavem(manus, 'j', ZEPHYRUM);
+    (vacuum)vicus_pulsare(v);
+    a = insula_ramus_attributum(&m->ramus, "sententia");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_FALSUM(chorda_aequalis_literis(*a, "0"));
+    sententia = chorda_transcribere(*a, c->piscina);
+
+    CREDO_GRADUS("comes (Cmd+T) in sententia: notae loci, sententia "
+        "alia sine");
+    CREDO_FALSUM(m->notas_habet(m->notas_habet_ctx, navigator_locus(m,
+        c->piscina)));
+    CREDO_VERUM(vicus_comitem_commutare(v));
+    (vacuum)vicus_pulsare(v);
+    sinister  = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
+    sm        = sinister ? (ScribaMontatio*)sinister->montatio : NIHIL;
+    CREDO_NECESSE(sm && sm->doc);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        sm->doc->latitudo, sm->doc->altitudo, "nota");
+    CREDO_VERUM(scriba_documentum_committere(sm->doc, &folium)
+        > ZEPHYRUM);
+    CREDO_VERUM(m->notas_habet(m->notas_habet_ctx, navigator_locus(m,
+        c->piscina)));
+    CREDO_VERUM(navigator_argumentum_ponere(m, chorda_ut_cstr(
+        chorda_concatenare(chorda_ex_literis("navigator/sententia/",
+        c->piscina), chorda_concatenare(x->articulus, chorda_ex_literis(
+        "?sententia=0", c->piscina), c->piscina), c->piscina),
+        c->piscina)));
+    CREDO_FALSUM(m->notas_habet(m->notas_habet_ctx, navigator_locus(m,
+        c->piscina)));
+    CREDO_VERUM(navigator_argumentum_ponere(m, chorda_ut_cstr(
+        chorda_concatenare(chorda_ex_literis("navigator/sententia/",
+        c->piscina), chorda_concatenare(x->articulus,
+        chorda_concatenare(
+        chorda_ex_literis("?sententia=", c->piscina), sententia,
+        c->piscina), c->piscina), c->piscina), c->piscina)));
+    (vacuum)vicus_pulsare(v);
+
+    CREDO_GRADUS("vicus renatus: visus sententiae, sententia eadem");
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    x->app = altera;
+    (vacuum)vicus_pulsare(x->app.vicus);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    l = latus_frontale(x->app.vicus);
+    CREDO_NECESSE_NON_NIHIL(l);
+    m = (NavigatorMontatio*)l->montatio;
+    CREDO_VERUM(campus_est(m, "visus", "sententia"));
+    CREDO_VERUM(campus_est(m, "sententia", chorda_ut_cstr(sententia,
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -432,6 +520,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tabula nexus", _probare_tabula_nexus, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "nexus celati", _probare_nexus_celati, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "sententia vicus", _probare_sententia_vicus, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

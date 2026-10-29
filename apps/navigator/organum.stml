@@ -87,6 +87,7 @@
   <cognomina>
     <cognomen semita="navigator/index"/>
     <cognomen typus="textus" semita="navigator/pagina/{}"/>
+    <cognomen typus="textus" semita="navigator/sententia/{}"/>
   </cognomina>
 
   <basis genus="organum_commune"/>

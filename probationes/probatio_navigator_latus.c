@@ -1079,6 +1079,84 @@ _sectio_sententia (
     mundum_claudere(w);
 }
 
+/* N6.2: locus visus sententiae nominat articulum, versionem,
+ * sententiam; applicatus eandem aperit; offset medius ad initium
+ * coactus; nudus positionem servatam sequitur; pilcrow notarum */
+interior vacuum
+_sectio_sententia_locus (
+    CredoContextus* c)
+{
+     Mundus* w = mundus(c, VERUM);
+     chorda  locus;
+        s32  secunda;
+  character  via[CXXVIII];
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w, "1"));
+    clavis(w, 's');
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    secunda = (s32)-I;
+    CREDO_VERUM(chorda_ut_s32(*insula_ramus_attributum(&w->m.ramus,
+        "sententia"), &secunda));
+
+    CREDO_GRADUS("locus: navigator/sententia/1, versio, sententia");
+    locus = chorda_transcribere(navigator_locus(&w->m, c->piscina),
+        c->piscina);
+    CREDO_VERUM(chorda_incipit(locus, chorda_ex_literis(
+        "navigator/sententia/1", c->piscina)));
+    CREDO_VERUM(chorda_continet(locus, chorda_ex_literis("versio=2",
+        c->piscina)));
+    sprintf(via, "sententia=%d", (integer)secunda);
+    CREDO_VERUM(chorda_continet(locus, chorda_ex_literis(via,
+        c->piscina)));
+
+    CREDO_GRADUS("locus applicatus (post indicem): sententia eadem");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+
+    CREDO_GRADUS("offset medius: ad initium sententiae coactus");
+    sprintf(via, "navigator/sententia/1?sententia=%d",
+        (integer)(secunda + III));
+    CREDO_VERUM(argumentum(w, via));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    sprintf(via, "%d", (integer)secunda);
+    CREDO_VERUM(campus_est(w, "sententia", via));
+    CREDO_VERUM(campus_est(w, "versio", "2"));
+
+    CREDO_GRADUS("nudus: positio servata (sententia II)");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(argumentum(w, "navigator/sententia/1"));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+
+    CREDO_GRADUS("nudus in visu sententiae eodem: campus vetus (II) "
+        "non manet, positio servata (sententia I) vincit");
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    {
+        NavigatorPositio q;
+
+        q.versio      = chorda_ex_literis("2", c->piscina);
+        q.offset      = ZEPHYRUM;
+        q.in_nexibus  = FALSUM;
+        CREDO_VERUM(navigator_positionem_scribere(w->bibliotheca,
+            chorda_ex_literis("1", c->piscina), &q));
+    }
+    CREDO_VERUM(argumentum(w, "navigator/sententia/1"));
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+
+    CREDO_GRADUS("notae: pilcrow in pede sententiae");
+    CREDO_FALSUM(pictum(w, "\302\266", c->piscina));
+    w->notae = VERUM;
+    CREDO_VERUM(pictum(w, "\302\266", c->piscina));
+    mundum_claudere(w);
+}
+
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
  * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
  * habet */
@@ -1588,6 +1666,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "sententia", _sectio_sententia, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
+    { "sententia locus", _sectio_sententia_locus, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,
