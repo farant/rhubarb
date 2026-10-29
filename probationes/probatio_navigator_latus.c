@@ -1012,6 +1012,73 @@ _sectio_nexus_celati (
     mundum_claudere(w);
 }
 
+/* N6.1: visus sententiae - s ex pagina (sententia prima paginae), j k
+ * per sententias, s / Esc ad paginam continentem, index nexuum sine
+ * sententiis, sagittae pedis */
+interior vacuum
+_sectio_sententia (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+       s32  prima;
+       s32  altera;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w, "1"));
+
+    CREDO_GRADUS("s in pagina I: sententia I, titulus, 'sentence 1/'");
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    prima = (s32)-I;
+    CREDO_VERUM(chorda_ut_s32(*insula_ramus_attributum(&w->m.ramus,
+        "sententia"), &prima));
+
+    CREDO_GRADUS("j: sententia II (offset maior); k: I iterum");
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    altera = (s32)-I;
+    CREDO_VERUM(chorda_ut_s32(*insula_ramus_attributum(&w->m.ramus,
+        "sententia"), &altera));
+    CREDO_VERUM(altera > prima);
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+
+    CREDO_GRADUS("mus: sagitta proxima -> sententia II");
+    CREDO_VERUM(ictus_in(w, "pagina-proxima", FALSUM, c->piscina));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+
+    CREDO_GRADUS("s: ad paginam I (continentem)");
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+
+    CREDO_GRADUS("ex pagina II: sententia eius prima; Esc ad II");
+    clavis(w, 'j');
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_FALSUM(pictum(w, "sentence 1/", c->piscina));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+
+    CREDO_GRADUS("index nexuum: s nihil");
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM; i < C; i++)
+        {
+            clavis(w, 'j');
+        }
+    }
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    mundum_claudere(w);
+}
+
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
  * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
  * habet */
@@ -1519,6 +1586,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "nexus celati", _sectio_nexus_celati, NIHIL, mundum_purgare,
         NIHIL, NIHIL },
+    { "sententia", _sectio_sententia, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,

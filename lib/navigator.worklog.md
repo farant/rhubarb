@@ -258,3 +258,18 @@ Toggling clears the selection. Persistence pinned by
 probatio_vicus_navigator 'nexus celati' (vicus rebuilt over the same
 volume); planted by flipping the manifest field to transiens +
 re-embedding, red, restored.
+
+## 2026-10-28 - N6.1 sentence view
+
+Reuses lector's shared pieces unchanged: codex_sententiae over the
+article's CodexCaput (computed once in _paginas_parare, next to the
+pages, in the same arca - link-index text is not read) and
+lector_sententiam_disponere for the centered single-sentence layout
+(FONS_TITULI if it fits). Layout = the page layout (title in the top
+margin component, sentence in "textus", footer + arrows + star).
+Field `sententia` = start offset of the current sentence (like
+lector); `visus` gained "sententia" -> VISUS_SENTENTIAE (XVI). Every
+sentence move saves the N3.4c position (offset = sentence start), so
+leaving to the page view lands on the containing page. Restoration
+into sentence view via semita returns early for now (N6.2 polishes:
+location form, restart, companions).

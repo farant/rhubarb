@@ -36,6 +36,7 @@
 #define VISUS_PAGINAE  II
 #define VISUS_EVENTUUM IV       /* N3.3b: eventus quaestionis */
 #define VISUS_RADICIS  VIII     /* N3.4: index sine dominio (radix) */
+#define VISUS_SENTENTIAE XVI    /* N6.1: sententia sola */
 #define REQUIRIT_ELECTUM  I
 
 hic_manens constans character actio_navigatoris[] = "navigator.agere";
@@ -67,6 +68,8 @@ nomen structura {
     /* N3.3b: eventus quaestionis ultimae (copia, arca sua) */
               Piscina* arca_eventuum;
                   Xar* eventus;          /* VicipaediaEventus */
+    /* N6.1: sententiae textus articuli (CodexSententia), in arca */
+                  Xar* sententiae;
 } NavigatorFigurae;
 
 
@@ -180,6 +183,7 @@ _visus (
 
     redde chorda_aequalis_literis(v, "pagina") ? VISUS_PAGINAE
         : chorda_aequalis_literis(v, "eventus") ? VISUS_EVENTUUM
+        : chorda_aequalis_literis(v, "sententia") ? VISUS_SENTENTIAE
         : _campus(m, "dominium").mensura == ZEPHYRUM ? VISUS_RADICIS
         : VISUS_INDICIS;
 }
@@ -418,9 +422,10 @@ _paginas_parare (
         redde f;
     }
     piscina_vacare(f->arca);
-    f->textus   = NIHIL;
-    f->paginae  = NIHIL;
-    html        = navigator_versionis_html(m->bibliotheca, v, f->arca);
+    f->textus = NIHIL;
+    f->paginae = NIHIL;
+    f->sententiae = NIHIL;
+    html = navigator_versionis_html(m->bibliotheca, v, f->arca);
     articulus = html.mensura > ZEPHYRUM ? _extrahere(a->situs, html, a,
         f->arca) : NIHIL;
     f->textus = articulus ? navigator_textum_facere(articulus, f->arca)
@@ -434,6 +439,9 @@ _paginas_parare (
     }
     /* index nexuum (N3.1b): paginae novae post articulum */
     f->paginae_articuli = xar_numerus(f->paginae);
+    /* N6.1: sententiae articuli (index nexuum non legitur) */
+    f->sententiae = codex_sententiae(&f->textus->caput, NIHIL, ZEPHYRUM,
+        f->arca);
     si (f->textus->nexus.textus.mensura > ZEPHYRUM)
     {
         Xar* nexus = lector_paginare(&f->textus->nexus, (i32)latitudo,
@@ -1109,6 +1117,189 @@ _paginam_movere (
     valores[I]         = "";
     _positionem_servare(m, f, k);
     redde _campos_scribere(m, tituli, valores, II);
+}
+
+/* ===== sententiae (N6.1) ===== */
+
+interior i32
+_numerus_sententiarum (
+    constans NavigatorFigurae* f)
+{
+    redde f && f->sententiae ? xar_numerus(f->sententiae) : ZEPHYRUM;
+}
+
+interior constans CodexSententia*
+_sententia (
+    constans NavigatorFigurae* f,
+                          s32  k)
+{
+    redde (constans CodexSententia*)xar_obtinere(f->sententiae,
+        (i32)k);
+}
+
+/* index sententiae offset continentis (ultima cuius initium <=
+ * offset); 0 si ante primam; -1 si nullae */
+interior s32
+_sententiae_index (
+    constans NavigatorFigurae* f,
+                          s32  offset)
+{
+    i32 i;
+    s32 k;
+
+    si (_numerus_sententiarum(f) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    k = ZEPHYRUM;
+    per (i = I; i < _numerus_sententiarum(f); i++)
+    {
+        si ((s32)_sententia(f, (s32)i)->initium > offset)
+        {
+            frange;
+        }
+        k = (s32)i;
+    }
+    redde k;
+}
+
+/* sententia currens (campus "sententia", coactus) */
+interior s32
+_sententia_currens (
+     constans NavigatorMontatio* m,
+      constans NavigatorFigurae* f)
+{
+    s32 offset = _campus_numerus(m, "sententia");
+
+    redde _sententiae_index(f, offset < ZEPHYRUM ? ZEPHYRUM : offset);
+}
+
+/* sententia k scribitur (visus sententiae) et positio servatur */
+interior b32
+_sententiam_scribere (
+            NavigatorMontatio* m,
+    constans NavigatorFigurae* f,
+                          s32  k)
+{
+     constans character* tituli[III];
+     constans character* valores[III];
+              character  numerus[XVI];
+       NavigatorPositio  q;
+
+    sprintf(numerus, "%u", (insignatus integer)_sententia(f, k)
+        ->initium);
+    q.versio      = f->versio_arcae;
+    q.offset      = _sententia(f, k)->initium;
+    q.in_nexibus  = FALSUM;
+    (vacuum)navigator_positionem_scribere(m->bibliotheca,
+        f->articulus_arcae, &q);
+    tituli[ZEPHYRUM]   = "visus";
+    valores[ZEPHYRUM]  = "sententia";
+    tituli[I]          = "sententia";
+    valores[I]         = numerus;
+    tituli[II]         = "nexus";
+    valores[II]        = "";
+    redde _campos_scribere(m, tituli, valores, III);
+}
+
+/* s in pagina articuli: sententia prima quae in pagina incipit,
+ * aliter quae initium paginae continet; index nexuum: nihil */
+interior b32
+_sententiam_ex_pagina (
+    NavigatorMontatio* m)
+{
+         NavigatorFigurae* f;
+    constans LectorPagina* g;
+                      s32  k;
+                      s32  a;
+                      s32  b;
+                      i32  i;
+
+    f = _paginas_parare(m);
+    k = f ? _pagina_currens(m, f) : -I;
+    si (   !f || (i32)k >= f->paginae_articuli
+        || _numerus_sententiarum(f) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    si (xar_numerus(g->lineae) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    a = (s32)((constans LectorLinea*)xar_obtinere(g->lineae, ZEPHYRUM))
+        ->initium;
+    b = (s32)((constans LectorLinea*)xar_obtinere(g->lineae,
+        xar_numerus(g->lineae) - I))->finis;
+    per (i = ZEPHYRUM; i < _numerus_sententiarum(f); i++)
+    {
+        si (   (s32)_sententia(f, (s32)i)->initium >= a
+            && (s32)_sententia(f, (s32)i)->initium < b)
+        {
+            redde _sententiam_scribere(m, f, (s32)i);
+        }
+    }
+    redde _sententiam_scribere(m, f, _sententiae_index(f, a));
+}
+
+/* s / Esc in sententia: pagina articuli sententiam continens */
+interior b32
+_paginam_ex_sententia (
+    NavigatorMontatio* m)
+{
+         NavigatorFigurae* f;
+                      s32  offset;
+                      s32  k;
+                      i32  i;
+       constans character* tituli[II];
+       constans character* valores[II];
+                character  numerus[XVI];
+
+    f = _paginas_parare(m);
+    si (!f || _numerus_sententiarum(f) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    offset  = (s32)_sententia(f, _sententia_currens(m, f))->initium;
+    k       = ZEPHYRUM;
+    per (i = I; i < f->paginae_articuli; i++)
+    {
+        si ((s32)((constans LectorPagina*)xar_obtinere(f->paginae, i))
+            ->initium > offset)
+        {
+            frange;
+        }
+        k = (s32)i;
+    }
+    _positionem_servare(m, f, k);
+    sprintf(numerus, "%d", (integer)k);
+    tituli[ZEPHYRUM]   = "visus";
+    valores[ZEPHYRUM]  = "pagina";
+    tituli[I]          = "pagina";
+    valores[I]         = numerus;
+    redde _campos_scribere(m, tituli, valores, II);
+}
+
+/* j k in sententia: proxima / prior, coacta */
+interior b32
+_sententiam_movere (
+    NavigatorMontatio* m,
+                  s32  gradus)
+{
+    NavigatorFigurae* f;
+                 s32  k;
+
+    f = _paginas_parare(m);
+    si (!f || _numerus_sententiarum(f) == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    k = _sententia_currens(m, f) + gradus;
+    si (k < ZEPHYRUM || (i32)k >= _numerus_sententiarum(f))
+    {
+        redde VERUM;
+    }
+    redde _sententiam_scribere(m, f, k);
 }
 
 /* ===== nexus per claves (N4.3) ===== */
@@ -2033,6 +2224,34 @@ fac_nexum_priorem (
     redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, -I);
 }
 
+interior b32
+fac_sententiam_ex_pagina (
+    vacuum* ctx)
+{
+    redde _sententiam_ex_pagina(((ContextusPraecepti*)ctx)->m);
+}
+
+interior b32
+fac_paginam_ex_sententia (
+    vacuum* ctx)
+{
+    redde _paginam_ex_sententia(((ContextusPraecepti*)ctx)->m);
+}
+
+interior b32
+fac_sententiam_proximam (
+    vacuum* ctx)
+{
+    redde _sententiam_movere(((ContextusPraecepti*)ctx)->m, I);
+}
+
+interior b32
+fac_sententiam_priorem (
+    vacuum* ctx)
+{
+    redde _sententiam_movere(((ContextusPraecepti*)ctx)->m, -I);
+}
+
 /* N4.5: ~ nexus textus articuli celat / monstrat; electio tollitur */
 interior b32
 fac_nexus_vertere (
@@ -2261,7 +2480,7 @@ _contextum_eventuum_parare (
 
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "navigator.url", "Open URL", "o", VISUS_INDICIS | VISUS_PAGINAE
-        | VISUS_EVENTUUM | VISUS_RADICIS, ZEPHYRUM,
+        | VISUS_EVENTUUM | VISUS_RADICIS | VISUS_SENTENTIAE, ZEPHYRUM,
             fac_promptam_aperire },
     { "navigator.radix_proxima", "Next", "j", VISUS_RADICIS, ZEPHYRUM,
         fac_radicis_proximum },
@@ -2307,6 +2526,16 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_nexum_aperire },
     { "navigator.nexus_vertere", "Hide links", "~", VISUS_PAGINAE,
         ZEPHYRUM, fac_nexus_vertere },
+    { "navigator.sententia", "Sentence view", "s", VISUS_PAGINAE,
+        ZEPHYRUM, fac_sententiam_ex_pagina },
+    { "navigator.sententia_proxima", "Next sentence", "j",
+        VISUS_SENTENTIAE, ZEPHYRUM, fac_sententiam_proximam },
+    { "navigator.sententia_prior", "Previous sentence", "k",
+        VISUS_SENTENTIAE, ZEPHYRUM, fac_sententiam_priorem },
+    { "navigator.ad_paginam", "Page view", "s", VISUS_SENTENTIAE,
+        ZEPHYRUM, fac_paginam_ex_sententia },
+    { "navigator.sententia_redire", "Page view", "Esc",
+        VISUS_SENTENTIAE, ZEPHYRUM, fac_paginam_ex_sententia },
     { "navigator.pagina_proxima", "Next page", "j", VISUS_PAGINAE,
         ZEPHYRUM, fac_paginam_proximam },
     { "navigator.pagina_prior", "Previous page", "k", VISUS_PAGINAE,
@@ -2460,6 +2689,18 @@ agere (
     gradus = chorda_aequalis_literis(nodus->id, "pagina-prior") ? -I
         : chorda_aequalis_literis(nodus->id, "pagina-proxima") ? I
         : ZEPHYRUM;
+    si (_visus(m) == VISUS_SENTENTIAE)
+    {
+        /* N6.1: sagittae pedis per sententias; stella ut in pagina */
+        si (   chorda_aequalis_literis(nodus->id, "favor")
+            && ev->genus == EVENTUS_MUS_DEPRESSUS)
+        {
+            redde _favorem_vertere(m, _articulus_per_id(m, _campus(m,
+                "articulus")), privatum->scheda);
+        }
+        redde gradus != ZEPHYRUM && ev->genus == EVENTUS_MUS_DEPRESSUS
+            && _sententiam_movere(m, gradus);
+    }
     si (_visus(m) == VISUS_PAGINAE)
     {
         si (   chorda_aequalis_literis(nodus->id, "favor")
@@ -3097,6 +3338,89 @@ _paginam_pingere (
     }
 }
 
+/* N6.1 sententia: sola in medio areae (lector_sententiam_disponere);
+ * titulus articuli supra; infra "sentence k/n" (" ..." si praecisa);
+ * stella et sagittae ut pagina */
+interior vacuum
+_sententiam_pingere (
+     NavigatorMontatio* m,
+    constans Componens* c,
+               Mandata* md)
+{
+           NavigatorFigurae* f;
+    constans CodexSententia* t;
+       constans LectorLinea* l;
+                  Componens* x;
+                        Xar* lineae;
+                     chorda  nota;
+                        s32  k;
+                        s32  n;
+                        s32  lateris;
+                        s32  supra;
+                        s32  latitudo;
+                        s32  altitudo;
+                        b32  praecisa;
+                        i32  i;
+                        i32  j;
+                  character  textus[XLVIII];
+
+    f = _paginas_parare(m);
+    si (!f || _numerus_sententiarum(f) == ZEPHYRUM)
+    {
+        redde;
+    }
+    k         = _sententia_currens(m, f);
+    n         = (s32)_numerus_sententiarum(f);
+    t         = _sententia(f, k);
+    praecisa  = FALSUM;
+    _margines(m, &lateris, &supra);
+    _area(m, &latitudo, &altitudo);
+    lineae = lector_sententiam_disponere(&f->textus->caput, t,
+        (i32)latitudo, (i32)altitudo, &praecisa, md->piscina);
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
+    {
+        x = componens_liberum(c, i);
+        si (chorda_aequalis_literis(x->id, "textus"))
+        {
+            per (j = ZEPHYRUM; lineae && j < xar_numerus(lineae); j++)
+            {
+                l = (constans LectorLinea*)xar_obtinere(lineae, j);
+                _textum_pingere(md, x->fines.x + lateris * NAV_LITTERA
+                    + l->x, x->fines.y + l->y, chorda_sectio(
+                    f->textus->caput.textus, l->initium, l->finis),
+                    (i32)l->fons, COLOR_TEXT);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(x->id, "caput_paginae"))
+        {
+            _centrum_pingere(md, x, f->titulus, COLOR_TEXT_DIM);
+        }
+        alioquin si (chorda_aequalis_literis(x->id, "pes"))
+        {
+            nota = _campus(m, "nota");
+            sprintf(textus, "sentence %d/%d%s", (integer)(k + I),
+                (integer)n, praecisa ? " ..." : "");
+            _centrum_pingere(md, x, nota.mensura > ZEPHYRUM ? nota
+                : chorda_ex_literis(textus, md->piscina),
+                nota.mensura > ZEPHYRUM && !_petens(m) ? COLOR_ERROR
+                : COLOR_TEXT_DIM);
+        }
+        alioquin si (chorda_aequalis_literis(x->id, "favor"))
+        {
+            constans NavigatorArticulus* a = _articulus_per_id(m,
+                _campus(m, "articulus"));
+
+            _centrum_pingere(md, x, chorda_ex_literis("\342\230\205",
+                md->piscina), a && a->favor ? COLOR_WARNING
+                : COLOR_TEXT_DIM);
+        }
+        alioquin
+        {
+            _sagittam_pingere(md, x, k, n);
+        }
+    }
+}
+
 /* ordo eventus: "titulus - descriptio" (descriptio obscura); electus
  * ut lector */
 interior vacuum
@@ -3245,6 +3569,10 @@ figura_tabulae (
     si (_visus(contextus->m) == VISUS_PAGINAE)
     {
         _paginam_pingere(contextus->m, c, md);
+    }
+    alioquin si (_visus(contextus->m) == VISUS_SENTENTIAE)
+    {
+        _sententiam_pingere(contextus->m, c, md);
     }
     alioquin si (_visus(contextus->m) == VISUS_EVENTUUM)
     {
@@ -3601,7 +3929,7 @@ navigator_componere (
     forma.spatium_superum    = I;
     forma.spatium_inferum    = I;
     radix_d                  = dispositio_addere(dp.d, -I, &forma);
-    si (_visus(m) == VISUS_PAGINAE)
+    si (_visus(m) == VISUS_PAGINAE || _visus(m) == VISUS_SENTENTIAE)
     {
         _paginam_disponere(m, &dp, radix_d);
     }
@@ -3793,7 +4121,9 @@ navigator_semitam_secuta (
         valores[ZEPHYRUM]  = "index";
         redde _campos_scribere(m, tituli, valores, I);
     }
-    si (!m || !m->figurae_ctx || _visus(m) != VISUS_PAGINAE)
+    si (   !m || !m->figurae_ctx
+        || (_visus(m) != VISUS_PAGINAE
+            && _visus(m) != VISUS_SENTENTIAE))
     {
         redde VERUM;
     }
@@ -3812,6 +4142,10 @@ navigator_semitam_secuta (
         tituli[IV]         = "nota";
         valores[IV]        = "article not found";
         redde _campos_scribere(m, tituli, valores, V);
+    }
+    si (_visus(m) == VISUS_SENTENTIAE)
+    {
+        redde VERUM;   /* N6.2: restitutio sententiae expolitur */
     }
     /* pagina coacta; absens (argumentum nudum): servata (N3.4c), et
      * servatur; versio absens figitur (versio in arca = ultima) */
@@ -3885,6 +4219,19 @@ navigator_locus_titulus (
             piscina);
         redde chorda_concatenare(r, chorda_ex_literis(")", piscina),
             piscina);
+    }
+    si (m && _visus(m) == VISUS_SENTENTIAE)
+    {
+        /* N6.1: "Rhubarb - sentence 12/153" */
+        f = _paginas_parare(m);
+        si (f && _numerus_sententiarum(f) > ZEPHYRUM)
+        {
+            sprintf(numeri, " - sentence %d/%u", (integer)(
+                _sententia_currens(m, f) + I), (insignatus integer)
+                _numerus_sententiarum(f));
+            redde chorda_concatenare(f->titulus, chorda_ex_literis(
+                numeri, piscina), piscina);
+        }
     }
     f = m && _visus(m) == VISUS_PAGINAE ? _paginas_parare(m) : NIHIL;
     si (!f)

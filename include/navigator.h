@@ -42,6 +42,15 @@
  * ordinarius pinguntur, ictus et Tab eos praetereunt; index nexuum
  * (paginae ultimae) semper coloratus et activus. Campus
  * "nexus_occulti" persistens per latus (restitutio servat).
+ * SENTENTIA (N6.1, ut lector L4): s in pagina articuli sententiam
+ * primam quae in pagina incipit (nulla: quae initium paginae
+ * continet) sola in medio monstrat (lector_sententiam_disponere:
+ * FONS_TITULI si tota capit); titulus articuli supra, "sentence
+ * 12/153" infra (" ..." si praecisa). Sententiae ex codex_sententiae
+ * super textum ARTICULI (index nexuum non legitur; s in eo nihil), in
+ * cache cum paginis. Claves: j k (sententia proxima / prior; positio
+ * servatur), s et Esc (ad paginam sententiam continentem). Mus:
+ * sagittae pedis, stella. Campus "sententia" = initium sententiae.
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,
