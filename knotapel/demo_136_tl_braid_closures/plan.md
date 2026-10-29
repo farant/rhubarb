@@ -279,6 +279,39 @@ images; R1 and R5's stabilization factor are not.
     decide where the det check runs; it may NOT move any R0–R6
     threshold. If T0 shows R6 will fail, that is recorded as a predicted
     failure, not a re-registration.
+
+  **T0 amendment (2026-10-28, measured; no bracket computed).** Scratch
+  program `d136_t0/tempora.c` (not committed), this Mac, -O2, every run
+  under `tools/custos.sh`. Braids drawn per R0 (fresh seed 2028 per
+  (n, L), the generator copied verbatim).
+
+  | measurement | result |
+  | --- | --- |
+  | link states, n = 1 … 16 | every d_{n,j} = formula; Σ d² = Catalan(n); 12,870 states at n = 16 in 0.1 ms, 206 KB |
+  | row-gather kernel, two buffers, ~¼ of rows zero (case d) | d = 297: 0.98 ns · d = 1,001: 1.06 ns · d = 3,640: 1.12 ns per multiply-add |
+  | `laqueus_alexander_ex_pd`, 8 strands | c = 51: 0.003 s · 101: 0.06 s · 201: 0.40 s · 401: 13.9 s · 801: > 600 s (stopped by custos) |
+  | colouring-matrix determinant mod one prime ((c−1) minor, arcs from the PD code) | ≤ 0.007 s at c = 801, 8 and 12 strands |
+
+  Decisions (within T0's remit; no threshold moves):
+  - **R4's det check runs at every test size, including 12 × 801**, by
+    two routes:
+    - c ≤ 401: |Δ(−1)| from `laqueus_alexander_ex_pd` (≤ 14 s);
+    - every c: the demo's own colouring-matrix determinant, the
+      (c−1) minor mod primes plus CRT, with the Hadamard bound
+      6^((c−1)/2) (~35 primes at c = 801, well under a second).
+    The two routes must agree wherever both run. At c = 801 only the
+    colouring route runs; it shares nothing with the TL code or the
+    vertex model. This route was not in v1/v2 ("from `laqueus`"); it is
+    added because `laqueus` does not finish at 801.
+  - Cost model, recorded only (the R6 thresholds stand as registered):
+    - at ~1 ns per multiply-add a 12 × 801 point is ≤ 3.3·10⁸
+      operations, ≤ 0.35 s against the vertex model's 210 s;
+    - the full exact 12 × 801 bracket is ~13,000 × 0.35 s ≈ 1.3 h,
+      against v2's 2.4 h at an assumed 2 ns.
+  - T4 reach, recorded for later: a 14 × 801 point ≈ 4.6 s (full
+    bracket ~17 h); a 16 × 801 point ≈ 63 s (full bracket ~9.5 days,
+    so points only, unless the number of primes or points falls,
+    brainstorm §11 lever 2).
 - **T1. Build.** main.c (link states, e_i tables, trace at a point,
   full bracket); R0 gate; R2 and R3; conv0 on σ₁³ against the state sum
   directly and the one-strand trivial braid against 1; R1 on n ≤ 6
