@@ -128,3 +128,20 @@ NULLA), so touches never pop it up by accident.
   keyboard type takes effect without hiding it.
 - No pressesBegan handler exists, so a hardware keyboard (Simulator,
   iPad) also arrives through insertText — no double delivery.
+
+### 2026-10-29 — T9 Simulator check
+
+- Xcode 27 has no Simulator.app; the device window is DeviceHub.app, and
+  it does NOT forward clicks or swipes to the device (not even the home
+  swipe). app.sh -currere now falls back to opening DeviceHub, but hands-on
+  testing has to happen on a phone.
+- Verified instead with a temporary (uncommitted) driver: a synthetic tap
+  through `_crudum_tradere` plus `_textum_tradere` calls on timers. Email
+  keyboard appeared after Sign in…, text showed in pictor's field, Send
+  switched to the code keyboard (Return = "go"), wrong code -> "That code
+  isn't right." Time screenshots from log lines, not from launch: the app
+  takes ~3 s to start in the Simulator, and fixed sleeps looked like a
+  one-step render lag that wasn't there.
+- UIKeyInput without UITextInput cannot auto-capitalize (the keys show
+  lowercase even with AllCharacters). Harmless: client and server both
+  upper-case the code before comparing.
