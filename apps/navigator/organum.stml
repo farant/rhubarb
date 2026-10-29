@@ -53,6 +53,10 @@
     <campus nomen="electus_eventus" typus="numerus" vita="transiens"
             scriptor="navigator.agere"
             nota="eventus electus (ab 0); absens = primus"/>
+    <campus nomen="nexus_occulti" typus="numerus" vita="persistens"
+            scriptor="navigator.agere"
+            nota="N4.5: 1 = nexus in textu articuli celati (lectio
+                  munda); index nexuum semper nexus"/>
     <campus nomen="nexus" typus="numerus" vita="transiens"
             scriptor="navigator.agere"
             nota="N4.3: initium nexus electi (offset in textu paginae

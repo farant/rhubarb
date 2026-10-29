@@ -1132,15 +1132,28 @@ _notae_paginae (
                                        : f->textus->notae_nexuum;
 }
 
+/* N4.5: notae nexuum ACTIVAE paginae k - nexus celati (~): paginae
+ * articuli nullas habent (index nexuum semper) */
+interior Xar*
+_notae_activae (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f,
+                           s32  k)
+{
+    redde _campus_numerus(m, "nexus_occulti") == I
+        && (i32)k < f->paginae_articuli ? NIHIL : _notae_paginae(f, k);
+}
+
 /* nexus qui in pagina k INCIPIT: gradus I - initium minimum > ab
  * (ab < 0: primus), gradus -I - maximum < ab (ab < 0: ultimus);
  * -1 si nullus */
 interior s32
 _nexum_in_pagina (
-    constans NavigatorFigurae* f,
-                          s32  k,
-                          s32  ab,
-                          s32  gradus)
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f,
+                           s32  k,
+                           s32  ab,
+                           s32  gradus)
 {
      constans LectorPagina* g;
     constans ArticulusNota* n;
@@ -1159,7 +1172,7 @@ _nexum_in_pagina (
         ZEPHYRUM))->initium;
     b      = (s32)((constans LectorLinea*)xar_obtinere(g->lineae,
         xar_numerus(g->lineae) - I))->finis;
-    notae  = _notae_paginae(f, k);
+    notae  = _notae_activae(m, f, k);
     r      = -I;
     per (i = ZEPHYRUM; notae && i < xar_numerus(notae); i++)
     {
@@ -1202,11 +1215,11 @@ _nexus_electus (
         redde NIHIL;
     }
     k = _pagina_currens(m, f);
-    si (   _nexum_in_pagina(f, k, e - I, I) != e)
+    si (   _nexum_in_pagina(m, f, k, e - I, I) != e)
     {
         redde NIHIL;
     }
-    notae = _notae_paginae(f, k);
+    notae = _notae_activae(m, f, k);
     per (i = ZEPHYRUM; notae && i < xar_numerus(notae); i++)
     {
         n = (constans ArticulusNota*)xar_obtinere(notae, i);
@@ -1240,7 +1253,8 @@ _nexum_eligere (
         redde VERUM;
     }
     k = _pagina_currens(m, f);
-    r = _nexum_in_pagina(f, k, _nexus_electus(m, f) ? _campus_numerus(m,
+    r = _nexum_in_pagina(m, f, k, _nexus_electus(m,
+        f) ? _campus_numerus(m,
         "nexus") : -I, gradus);
     dum (r < ZEPHYRUM)
     {
@@ -1249,7 +1263,7 @@ _nexum_eligere (
         {
             redde VERUM;
         }
-        r = _nexum_in_pagina(f, k, -I, gradus);
+        r = _nexum_in_pagina(m, f, k, -I, gradus);
     }
     sprintf(pagina, "%d", (integer)k);
     sprintf(nexus, "%d", (integer)r);
@@ -2019,6 +2033,23 @@ fac_nexum_priorem (
     redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, -I);
 }
 
+/* N4.5: ~ nexus textus articuli celat / monstrat; electio tollitur */
+interior b32
+fac_nexus_vertere (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+    constans character* tituli[II];
+    constans character* valores[II];
+
+    tituli[ZEPHYRUM]   = "nexus_occulti";
+    valores[ZEPHYRUM]  = _campus_numerus(cp->m, "nexus_occulti") == I
+        ? "" : "1";
+    tituli[I]   = "nexus";
+    valores[I]  = "";
+    redde _campos_scribere(cp->m, tituli, valores, II);
+}
+
 /* Enter in pagina: nexus electus aperitur (ut ictus); nullo: nihil */
 interior b32
 fac_nexum_aperire (
@@ -2274,6 +2305,8 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_nexum_priorem },
     { "navigator.nexum_aperire", "Open link", "Enter", VISUS_PAGINAE,
         ZEPHYRUM, fac_nexum_aperire },
+    { "navigator.nexus_vertere", "Hide links", "~", VISUS_PAGINAE,
+        ZEPHYRUM, fac_nexus_vertere },
     { "navigator.pagina_proxima", "Next page", "j", VISUS_PAGINAE,
         ZEPHYRUM, fac_paginam_proximam },
     { "navigator.pagina_prior", "Previous page", "k", VISUS_PAGINAE,
@@ -2317,7 +2350,7 @@ _nexus_ad_punctum (
     k      = _pagina_currens(m, f);
     g      = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
     t      = _textus_paginae(f, k);
-    notae  = _notae_paginae(f, k);
+    notae  = _notae_activae(m, f, k);
     _margines(m, &lateris, &supra);
     per (i = ZEPHYRUM; i < xar_numerus(g->lineae); i++)
     {
@@ -3010,7 +3043,7 @@ _paginam_pingere (
                 l = (constans LectorLinea*)xar_obtinere(g->lineae, j);
                 _lineam_textus_pingere(md, x->fines.x + lateris
                     * NAV_LITTERA + l->x, x->fines.y + l->y,
-                    _textus_paginae(f, k), l, _notae_paginae(f, k),
+                    _textus_paginae(f, k), l, _notae_activae(m, f, k),
                     _nexus_electus(m, f) ? _campus_numerus(m, "nexus")
                     : -I);
             }

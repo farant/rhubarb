@@ -38,6 +38,10 @@
  * Enter electum aperit (ut ictus); Esc electionem tollit (nulla
  * electione: ad indicem). Motus paginae (j k, sagittae) et articulus
  * apertus eam tollunt. Campus "nexus" transiens (initium nexus).
+ * NEXUS CELATI (N4.5): ~ vertit - nexus in textu ARTICULI ut textus
+ * ordinarius pinguntur, ictus et Tab eos praetereunt; index nexuum
+ * (paginae ultimae) semper coloratus et activus. Campus
+ * "nexus_occulti" persistens per latus (restitutio servat).
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,

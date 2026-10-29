@@ -374,6 +374,52 @@ _probare_tabula_nexus (
         c->piscina)));
 }
 
+/* N4.5: ~ (latere focato) nexus celat; vicus renatus super idem
+ * volumen campum persistentem restituit */
+interior vacuum
+_probare_nexus_celati (
+    CredoContextus* c)
+{
+                   Mundus* x = (Mundus*)c->datum;
+                    Vicus* v;
+               VicusLatus* l;
+        NavigatorMontatio* m;
+               ManusLudus* manus;
+          VicusApplicatio  altera;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "navigator", chorda_ut_cstr(
+        x->articulus, c->piscina)));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    l = latus_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    m      = (NavigatorMontatio*)l->montatio;
+    manus  = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(manus);
+
+    CREDO_GRADUS("~: nexus celati");
+    (vacuum)manus_ludus_clavem(manus, '~', (i32)MOD_SHIFT);
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(campus_est(m, "nexus_occulti", "1"));
+
+    CREDO_GRADUS("vicus renatus: campus restitutus");
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    x->app = altera;
+    (vacuum)vicus_pulsare(x->app.vicus);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    l = latus_frontale(x->app.vicus);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(campus_est((NavigatorMontatio*)l->montatio,
+        "nexus_occulti", "1"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -384,6 +430,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ictus nexus", _probare_ictus_nexus, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "tabula nexus", _probare_tabula_nexus, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "nexus celati", _probare_nexus_celati, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -970,6 +970,48 @@ _sectio_clavis_nexuum (
     mundum_claudere(w);
 }
 
+/* N4.5: ~ nexus textus articuli celat - color textus, ictus et Tab
+ * eos praetereunt; index nexuum activus; electio tollitur; ~
+ * restituit */
+interior vacuum
+_sectio_nexus_celati (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w, "3"));
+    tabula(w, FALSUM);
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("~: celati, electio tollitur, 'genus' ut textus");
+    clavis(w, '~');
+    CREDO_VERUM(campus_est(w, "nexus_occulti", "1"));
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(pictum_colore(w, "genus", COLOR_TEXT, c->piscina));
+    CREDO_FALSUM(pictum_colore_mandati(w, "genus", color_nexus(),
+        c->piscina));
+
+    CREDO_GRADUS("ictus in 'genus': nihil");
+    CREDO_VERUM(ictus_in_textu(w, "genus", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+    CREDO_VERUM(campus_est(w, "nota", NIHIL));
+
+    CREDO_GRADUS("Tab: statim index nexuum (Planta), ibi activus");
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_VERUM(pictum_colore(w, "Planta", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("~ iterum: nexus redeunt");
+    clavis(w, 'k');
+    clavis(w, '~');
+    CREDO_VERUM(campus_est(w, "nexus_occulti", NIHIL));
+    CREDO_VERUM(pictum_colore_mandati(w, "genus", color_nexus(),
+        c->piscina));
+    mundum_claudere(w);
+}
+
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
  * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
  * habet */
@@ -1474,6 +1516,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ictus nexuum", _sectio_ictus_nexuum, NIHIL, mundum_purgare,
         NIHIL, NIHIL },
     { "clavis nexuum", _sectio_clavis_nexuum, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "nexus celati", _sectio_nexus_celati, NIHIL, mundum_purgare,
         NIHIL, NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },

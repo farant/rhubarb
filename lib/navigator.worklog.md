@@ -245,3 +245,16 @@ vicus_focum_ponere needs a vicus_pulsare + dispensator_recomponere
 before the dispatcher focus follows - without the recompose the key
 went to the vicus root only (traced with temporary prints in
 dispensator mittere, removed; dispensator.c unchanged).
+
+## 2026-10-28 - N4.5 hide body links (~)
+
+Fran: a clean-reading toggle. Key `~` (not `l`: spec item 13 keeps
+h/l for the page grid / infobox side column). Persistent per-pane
+field `nexus_occulti`. One gate, `_notae_activae(m, f, k)`, returns
+no notes for ARTICLE pages while hidden (link-index pages always keep
+theirs) and every consumer goes through it - painter, click hit test,
+Tab stops, selected-link lookup - so the three behaviours can't drift.
+Toggling clears the selection. Persistence pinned by
+probatio_vicus_navigator 'nexus celati' (vicus rebuilt over the same
+volume); planted by flipping the manifest field to transiens +
+re-embedding, red, restored.
