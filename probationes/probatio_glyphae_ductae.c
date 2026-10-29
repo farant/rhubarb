@@ -654,7 +654,8 @@ graeca_probare (
     CREDO_FALSUM(glyphae_ductae_est(0x0391));
     CREDO_FALSUM(glyphae_ductae_est(0x03BF));
     CREDO_FALSUM(glyphae_ductae_est(0x03A2));
-    CREDO_FALSUM(glyphae_ductae_est(0x03CA));
+    /* 0x03CA (iota cum diaeresi) nunc composita (XVII) */
+    CREDO_FALSUM(glyphae_ductae_est(0x03D0));
     CREDO_FALSUM(glyphae_ductae_est(0x208A));
     CREDO_FALSUM(glyphae_ductae_est(0x221C));
 }
@@ -995,6 +996,95 @@ _sectio_septima_decima (
     CREDO_FALSUM(glyphae_ductae_est(0x27EA));
 }
 
+/* XVII: litterae notatae compositae (Franus 2026-10-28: macron et
+ * accentus Graeci in Vicipaedia) - basis (fons aut pictura nostra) et
+ * notae in ordinibus 0-1; maiusculae ad corpus (ordines II-VI)
+ * contractae; iota subscriptum in ordine VII */
+interior vacuum
+_sectio_duodevicesima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+                    i8  alpha[MAXIMA + XVI];
+    constans character* e_macron[] = {
+        "......", ".####.", "..###.", ".#...#",
+        ".#####", ".#....", "..###.", "......" };
+    constans character* i_macron[] = {
+        "......", ".####.", "...##.", "....#.",
+        "....#.", "....#.", "...###", "......" };
+    constans character* E_macron[] = {
+        "......", ".####.", ".#####", ".#....",
+        ".####.", ".#....", ".#####", "......" };
+    constans character* o_tono[] = {
+        "....#.", "...#..", "..###.", ".#...#",
+        ".#...#", ".#...#", "..###.", "......" };
+    constans character* o_aspero[] = {
+        "..##..", "..#...", "..###.", ".#...#",
+        ".#...#", ".#...#", "..###.", "......" };
+    constans character* o_aspero_acuto[] = {
+        "##...#", "#...#.", "..###.", ".#...#",
+        ".#...#", ".#...#", "..###.", "......" };
+    constans character* gamma_latina[] = {
+        "......", "......", ".#...#", ".#...#",
+        "..#.#.", "...#..", "..#.#.", "...#.." };
+             s32 r;
+             i32 numerus;
+             i32 i;
+
+    (vacuum)c;
+    CREDO_GRADUS("Latina: e et i (punctum demptum) cum macron, E "
+        "contracta");
+    CREDO_VERUM(pictura_est(0x0113, e_macron, larva));
+    CREDO_VERUM(pictura_est(0x012B, i_macron, larva));
+    CREDO_VERUM(pictura_est(0x0112, E_macron, larva));
+
+    CREDO_GRADUS("Graeca: tonos, spiritus asper, asper + acutus");
+    CREDO_VERUM(pictura_est(0x03CC, o_tono, larva));
+    CREDO_VERUM(pictura_est(0x1F41, o_aspero, larva));
+    CREDO_VERUM(pictura_est(0x1F45, o_aspero_acuto, larva));
+
+    CREDO_GRADUS("iota subscriptum: alpha (ordines 0-VI) + ordo VII");
+    CREDO_VERUM(glyphae_ductae_pingere(0x1FB3, LAT, ALT, larva));
+    CREDO_VERUM(glyphae_ductae_pingere(0x03B1, LAT, ALT, alpha));
+    CREDO_VERUM(memcmp(larva, alpha, (memoriae_index)(VII * LAT))
+        == ZEPHYRUM);
+    CREDO_VERUM(larva[VII * LAT + II] != ZEPHYRUM);
+
+    CREDO_GRADUS("gamma Latina (IPA) U+0263");
+    CREDO_VERUM(pictura_est(0x0263, gamma_latina, larva));
+
+    CREDO_GRADUS("ambitus: Graeca extensa CCXVII, tonos XX, Latina "
+        "XXII; koronis (sine littera) non");
+    numerus = ZEPHYRUM;
+    per (r = 0x1F00; r <= 0x1FFF; r++)
+    {
+        si (glyphae_ductae_est(r))
+        {
+            numerus++;
+            CREDO_VERUM(glyphae_ductae_pingere(r, LAT, ALT, larva));
+        }
+    }
+    CREDO_AEQUALIS_I32(numerus, CCXVII);
+    numerus = ZEPHYRUM;
+    per (r = 0x0386; r <= 0x03CE; r++)
+    {
+        numerus += glyphae_ductae_est(r) ? I : ZEPHYRUM;
+    }
+    CREDO_VERUM(numerus >= XX);
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < XXII; i++)
+    {
+        constans s32 latina[] = { 0x0100, 0x0101, 0x0102, 0x0103,
+            0x0112, 0x0113, 0x0114, 0x0115, 0x012A, 0x012B, 0x012C,
+            0x012D, 0x014C, 0x014D, 0x014E, 0x014F, 0x016A, 0x016B,
+            0x016C, 0x016D, 0x0232, 0x0233 };
+
+        numerus += glyphae_ductae_est(latina[i]) ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32(numerus, XXII);
+    CREDO_FALSUM(glyphae_ductae_est(0x1FBD));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: lineae (Ghostty linesChar)", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -1028,6 +1118,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "XVI: anguli (U+27E8, U+27E9)", _sectio_septima_decima, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "XVII: litterae notatae", _sectio_duodevicesima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

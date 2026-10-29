@@ -503,3 +503,29 @@ without its foot serif (the serif would land on top). θ, ð, æ, ø, ç
 already existed (Greek table / Latin-1 in the font). Not yet: combining
 marks (U+0300-036F - a single-cell table cannot stack them), the rest of
 the IPA block (ɲ ʎ ʁ ɣ ɨ ʉ œ ...). Section XIII.
+
+## 2026-10-28 - v3 accented letters composed (macrons, Greek accents)
+
+Fran (navigator / Wikipedia): ɣ ē ό ὁ were tofu; asked for the whole
+macron and Greek-accent families. Instead of hand-drawing hundreds of
+pictures, a composer: base letter + marks. Table `compositae` (259)
+was written ONCE by a scratch script from Python's unicodedata 15.0
+NFD (same practice as symbola.py): Latin Ext-A macron/breve vowels,
+Greek tonos U+0386-03CE, Greek Extended U+1F00-1FFF whose marks are
+all in {macron, breve, acute, grave, perispomeni, diaeresis, psili,
+dasia, ypogegrammeni} and whose base is a letter (koronis etc. are
+spacing marks - skipped). Bases come from our own pictures (α η ι ρ
+υ ω Ω ...) or straight from fons_6x8 (Latin; Greek capitals and
+omicron via their Latin look-alikes) - fons_6x8.h is header data
+(static), so no link dependency on fons.c was added.
+
+Layout: lowercase body rows 2-6, marks in rows 0-1 (rows 0-1 cleared
+first - dotless i). Capitals with marks are SQUEEZED to rows 2-6
+(drop a row equal to its successor, searching from the middle; none ->
+the middle row) so they get the same two mark rows; the header first
+said "one row like the font's É" - changed so breathings stay
+distinguishable. Breathing + accent: breathing in cols 0-1, accent in
+3-5; diaeresis (row 1) + accent (row 0); iota subscript = row 7 col 2.
+Perispomeni drawn as a circumflex-like cap in both positions.
+Old test VIII asserted ϊ (U+03CA) was NOT ours; it is now - the
+"unassigned neighbour" check moved to ϐ (U+03D0).
