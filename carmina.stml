@@ -669,4 +669,44 @@
         <verba!>Sal-ve Re-gi-na ma-ter mi-se-ri-cor-di-ae Vi-ta dul-ce-do et spes no-stra sal _-ve Ad te cla-ma-mus ex-su-les fi-li-i He-vae Ad te sus-pi-ra-mus ge-men-tes et flen-tes in hac la-cri-ma-rum val-le E-ia er-go Ad-vo-ca-ta no-stra il-los tu-os mi-se-ri-cor-des o-cu-los ad nos con-ver _-te Et Je _-sum be-ne-di-ctum fru-ctum ven-tris tu-i no-bis post hoc ex-si-li-um os-ten _-de O _ _ cle-mens O _ _ _ _ pi _-a O _ _ _ _ dul _-cis Vir-go Ma-ri _-a</verba></frustum>
     </pars>
   </carmen>
+
+  <!-- nata_lux: Thomas Tallis, O nata lux de lumine (hymnus ad Laudes
+       in Transfiguratione; Cantiones sacrae 1575), V voces SATTB a
+       cappella. Fons: editio Andrew Sims (CPDL #80317, 2024, sine
+       lineis mensurae, licentia CPDL), MusicXML. Incisa = versus
+       hymni; versus ultimi (Nos membra ... corporis) repetuntur ut in
+       editione. Finis in G maiore (B naturalis alti: tertia
+       Picardiae). Generator: musica/fontes/nata_lux.py -->
+  <carmen titulus="nata_lux" tempus="72" metrum="liberum" clavis="g dorius">
+    <instrumentum titulus="altus" basis="schola" vox="altus"/>
+    <instrumentum titulus="bassus" basis="schola" vox="bassus"/>
+    <instrumentum titulus="superius" basis="schola" vox="superius"/>
+    <instrumentum titulus="tenor" basis="schola" vox="tenor"/>
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <pars titulus="superius" instrumentum="superius" lucrum="0.75" positio="-0.3"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o5 d4 e-4 c4 d2. o4 a4 b-4 g4 a2 | o5 e4 f4 d4 e2 c4 d4 o4 b-4 a2 g2 r4 | o5 d4 c4 o4 a4 b-2. b-4 a4 a4 g4. f8 g8 | a8 b-4 o5 c4 c4 d2. o4 b-4 o5 c4 c4 d2 r4 | f4 e-4 c4 d2. d4 c4 o4 a4 b-2. | a4 g4 e4 a2. o5 d4 d4 c+4 d2 r4 | o4 a4 a4 g4 a2. a4 a4 g4 a2. | o5 d4 o4 a4 b-4 a2 g4 g2 f+4 g2. | a4 a4 g4 a2. a4 a4 g4 a2. | o5 d4 o4 a4 b-4 a2 g4 g2 f+4 g2.</textus>
+        <verba!>O na-ta lux de lu-mi-ne Je-su re-demp-tor sae-cu _ li di-gna-re cle-mens sup-pli-cum _ _ lau _ des pre-ces que su-me-re Qui car-ne quon-dam con-te-gi di-gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris</verba></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="altus" lucrum="0.75" positio="0.3"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o4 g4 g4 g4 f4. e8 d4 d4 d4 d4 e4. d8 | c+4 o5 c4 o4 b-4 b-4 a2 a4 g2 f+4 g2 r4 | d4 e4 f4 g2. d4 f4 f4 e-2 & e-8 & | e-8 o3 b-4 o4 e-4 e-4 d4. e-8 f4 g4 g4 c4 f2 r4 | f4 g4 a4 b-2. f4 a4 a4 g2. | d4 e4 e4 f4. e8 f8 g8 a4 g4 e4 f+2 r4 | f4 f4 d4 f2. f4 f4 d4 f2. | f4 f4 d4 f2 e-2 d4 d4 o3 b2. | o4 f4 f4 d4 f2. f4 f4 d4 f2. | f4 f4 d4 f2 e-2 d4 d4 o3 b2.</textus>
+        <verba!>O na-ta lux _ _ de lu-mi-ne _ _ Je-su re-demp-tor sae-cu-li di-gna-re cle-mens sup-pli-cum lau-des pre-ces _ _ que su-me-re Qui car-ne quon-dam con-te-gi di-gna-tus es _ _ pro _ per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris</verba></frustum>
+    </pars>
+    <pars titulus="tenor_primus" instrumentum="tenor" lucrum="0.75" positio="-0.1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 b-4 o4 c4 o3 g4 a4. g8 f4 f4 d4 o4 d4 c+4. o3 b8 | a2 o4 f4 g4 e4 f2 o3 b-4 o4 d4 d4 d2 r4 | o3 b-4 a4 a4 g2. b-4 o4 c4 d4 o3 g4. a8 b-8 & | b-8 b-4 b-4 a4 b-2. b-4 o4 e-4 e-4 d2 r4 | d4 c4 c4 o3 b-4. o4 c8 d4. e-8 f4 f4 d2. | o3 a4 b4 o4 c+4 d2. d4 e4 e4 d2 r4 | d4 d4 d4 d2. d4 d4 d4 d2. | d4 d4 o3 b-4 o4 d4. c8 o3 b-4 o4 c4 o3 a4 a4 g2. | o4 d4 d4 d4 d2. d4 d4 d4 d2. | d4 d4 o3 b-4 o4 d4. c8 o3 b-4 o4 c4 o3 a4 a4 g2.</textus>
+        <verba!>O na-ta lux _ _ de lu-mi-ne _ _ Je-su re-demp-tor sae-cu-li di-gna-re cle-mens sup-pli-cum _ _ lau-des pre-ces que su-me-re Qui car-ne quon-dam _ con _ te-gi di-gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti _ cor _ po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti _ cor _ po-ris</verba></frustum>
+    </pars>
+    <pars titulus="tenor_secundus" instrumentum="tenor" lucrum="0.75" positio="0.1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 g4 g4 c4 f4. g8 a4 a4 g4 g4 e2 | r4 o4 c4 d4 o3 b-4 o4 c2 o3 a4 o4 d4. c8 o3 a4 b2 r4 | g4 g4 f4 d2 g2 a4 f4 b-4. a8 g8 & | g8 f4 e-4 c4 f2 f4 b-2 a4 b-2 r4 | b-4 a4 a4 f2 b-2 o4 c4 d4 o3 b-4. a8 b-8 o4 c8 | d4 o3 g4 g4 a2. a4 b-4 o4 c4 o3 a2 r4 | a4 a4 b-4 a2. a4 a4 b-4 a2. | a4 a4 g4 f2 g4 e-4 f4. e-8 d2. | a4 a4 b-4 a2. a4 a4 b-4 a2. | a4 a4 g4 f2 g4 e-4 f4. e-8 d2.</textus>
+        <verba!>O na-ta lux _ _ de lu-mi-ne Je-su re-demp-tor sae-cu _ li di-gna-re cle-mens sup-pli-cum _ _ lau-des pre-ces que su-me-re Qui car-ne quon-dam con-te-gi _ _ di _ gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris</verba></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="bassus" lucrum="0.75" positio="0"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 g4 c4 e-4 d2. d4 o2 g4 b-4 a2 & | a4 o3 a4 b-4 g4 a2 f4 g4 d2 o2 g2 r4 | b-4 o3 c4 d4 o2 g2 g4 o3 g4 f4 d4 e-2 & e-8 & | e-8 d4 c4 c4 o2 b-4. o3 c8 d4 e-4 c4 c4 o2 b-2 r4 | o3 d4 e-4 f4 o2 b-2 b-4 o3 b-4 a4 f4 g2. | f4 e4 e4 d2. f4 g4 a4 d2 r4 | d4 f4 g4 d2. d4 f4 g4 d2. | d4 d4 g4 d2 e-4 c4 d4 d4 o2 g2. | o3 d4 f4 g4 d2. d4 f4 g4 d2. | d4 d4 g4 d2 e-4 c4 d4 d4 o2 g2.</textus>
+        <verba!>O na-ta lux de lu-mi-ne Je-su re-demp-tor sae-cu-li di-gna-re cle-mens sup _ pli-cum lau-des pre-ces _ _ que su-me-re Qui car-ne quon-dam con _ te-gi di-gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris</verba></frustum>
+    </pars>
+  </carmen>
 </carmina>
