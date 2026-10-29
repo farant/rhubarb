@@ -316,6 +316,61 @@ images; R1 and R5's stabilization factor are not.
   full bracket); R0 gate; R2 and R3; conv0 on σ₁³ against the state sum
   directly and the one-strand trivial braid against 1; R1 on n ≤ 6
   short braids; p* for R1p; plants 1–8.
+  **T1 amendment (2026-10-29, built and planted; registered test set not
+  yet run).** `main.c` as planned. Runs under `tools/custos.sh`:
+  - `D136_MODUS=t1` (the small set): 217 PASS, 0 FAIL, 6 MB peak.
+    - R0: all four fingerprints exact.
+    - R2 and R3: every n ≤ 16.
+    - conv0 came out as predicted: σ_i^{+1} ↦ A·1 + A⁻¹·e_i matches the
+      state sum on σ₁³ at 8 points, so `laqueus` uses the standard
+      bracket. The one-strand trivial braid gives 1.
+    - R1: the named knots and n = 3 … 6 at lengths 20 and 50 equal the
+      state sum (c ≤ 24) and the vertex model.
+    - R4: both det routes.
+    - R5: every move.
+    - R1p: smoke only, at 8 × 101 (not a registered size).
+  - `D136_MODUS=p8` (t1 plus 10 × 401): 231 PASS, 2 min 8 s CPU, 49 MB.
+    The TL bracket at 10 × 401 took 27 s (3,324 evaluations); largest
+    coefficient 82 bits against a bound of 334.
+
+  Plants (harness `build/d136/plantae.py`, `silva.planta`, not
+  committed): every expected red went red and every expected green
+  stayed green. Extra reds beyond the registered minimum are listed:
+
+  | plant | red | registered red |
+  | --- | --- | --- |
+  | 1 case (c) → 0 | R1, R3, R4, R5 | R1, R3, R5 |
+  | 2 Δ recurrence with + | R1, R4, R5, conv0 | R1, R5 |
+  | 3 σ⁻¹ given σ⁺'s image | R1, R4, R5 (4_1 red) | R1, 4_1 included |
+  | 3b global swap | R1, R4, R5, conv0 (4_1 green) | R1, R5, conv0; 4_1 green |
+  | 4 /δ dropped | R1, conv0 | R1 |
+  | 5 enclosed defects admitted | R2 | R2 |
+  | 6 one coefficient + 1 | R4 | R4 |
+  | 7 conjugating pair not inverted | R5 | R5 |
+  | 8 value negated (p8 mode) | R1p, R4 | R1p, R4; R1 green |
+
+  Deviations from v2, decided in T1 (no threshold moved):
+  - **Plant 8's trigger** is "n ≥ 10 and c > 300", not "c > 401".
+    R1 compares 8 × 801 in full, so a trigger at c > 401 would have
+    turned R1 red, contradicting the registered "R1 green". The new
+    trigger touches only 10 × 401, 12 × 401 and 12 × 801, where R1 does
+    not run in full.
+  - **Link states** are indexed by binary search over sorted 2-bit
+    encodings, not by `tabula_dispersa`.
+  - **The generator copy** has one added output parameter (the word),
+    so the TL route reads the braid itself. R0 shows the braids are the
+    projection run's.
+  - **R5's "every point of one prime"** is (summus − imus)/4 + 3
+    points of p* per braid: the interpolation's K + 2 useful points.
+  - p* = 1,073,741,789 (the largest prime ≡ 1 mod 4 below 2^30).
+    Interpolation primes lie near 2^32, and each run asserts the lowest
+    one it used is above p*.
+  - Incident: in the first harness run, plant 8's restored run was
+    killed (rc 137) with no output. The same code run directly in p8
+    mode was green in 2 min 8 s at 49 MB, and a rerun of plant 8 alone
+    behaved as registered. The likely cause is the guard's 30-minute
+    wall-clock limit during a machine sleep; that is not verified.
+
 - **T2. Runs.** The test set; R1, R1p, R4, R5, R6; findings.md;
   archive.
 - **T3. Review.** An independent reviewer with its own oracle; it does
