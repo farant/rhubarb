@@ -618,7 +618,7 @@
        divisionem longior, spiritus r8 in fine phrasis). Initium D -> A
        (finalis -> repercussio), b molle (Bb) super A, phrases in A, A,
        F, D cadunt; subtonium C ante finem. Generator:
-       build/plantae_s4/cantus/primus.py -->
+       musica/fontes/primus.py -->
   <carmen titulus="primus" tempus="80" metrum="liberum" clavis="d dorius">
     <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
     <instrumentum titulus="ison_d" basis="schola" vocalis="o"
@@ -638,7 +638,7 @@
        Incisa: Ave Maria | gratia plena, Dominus | tecum, benedicta |
        tu in mulieribus, et benedictus fructus | ventris tui | Iesus.
        Melismata in "Ma-ri-a", "ple-na", "Do-mi-nus te-cum".
-       Generator: build/plantae_s4/cantus/ave.py -->
+       Generator: musica/fontes/ave.py -->
   <carmen titulus="ave" tempus="80" metrum="liberum" clavis="d dorius">
     <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
     <instrumentum titulus="ison_d" basis="schola" vocalis="o"
@@ -660,7 +660,7 @@
        Solesmensis: punctum octava, mora x2, episema x1.5, nota ante
        quilisma x1.5, unisoni ligati; divisiones '|' cum spiritu (minor
        r16, maior r8). Schola sola. Generator:
-       build/plantae_s4/cantus/salve.py -->
+       musica/fontes/salve.py -->
   <carmen titulus="salve" tempus="80" metrum="liberum" clavis="f lydius">
     <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
     <pars titulus="cantus" instrumentum="schola" lucrum="1"
