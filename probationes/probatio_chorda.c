@@ -1835,6 +1835,51 @@ _sectio_quinquagesima (
     }
 }
 
+
+    /* ==================================================
+     * Probare chorda_aequalis_literis (budget B1 C3: olim nulla
+     * probatio; forma nova comparat dum legit)
+     * ================================================== */
+
+interior vacuum
+_sectio_quinquagesima_prima (
+    CredoContextus* c)
+{
+       chorda s;
+       chorda vacua;
+       chorda nulla;
+    character tres[III];
+
+    s = chorda_ex_literis("PERGE", c->piscina);
+    CREDO_VERUM(chorda_aequalis_literis(s, "PERGE"));
+    /* praefixum utrimque: literae breviores et longiores */
+    CREDO_FALSUM(chorda_aequalis_literis(s, "PER"));
+    s = chorda_ex_literis("PER", c->piscina);
+    CREDO_FALSUM(chorda_aequalis_literis(s, "PERGE"));
+    CREDO_VERUM(chorda_aequalis_literis(s, "PER"));
+    /* discrimen in littera ultima */
+    CREDO_FALSUM(chorda_aequalis_literis(s, "PEX"));
+    /* NUL intra chordam: literae ibi finiuntur, chorda non */
+    tres[ZEPHYRUM]  = 'a';
+    tres[I]         = '\0';
+    tres[II]        = 'b';
+    s.datum         = (i8*)tres;
+    s.mensura       = III;
+    CREDO_FALSUM(chorda_aequalis_literis(s, "a"));
+    CREDO_FALSUM(chorda_aequalis_literis(s, "a b"));
+    /* vacua */
+    vacua = chorda_ex_literis("", c->piscina);
+    CREDO_VERUM(chorda_aequalis_literis(vacua, ""));
+    CREDO_FALSUM(chorda_aequalis_literis(vacua, "a"));
+    nulla.datum    = NIHIL;
+    nulla.mensura  = ZEPHYRUM;
+    CREDO_VERUM(chorda_aequalis_literis(nulla, ""));
+    CREDO_FALSUM(chorda_aequalis_literis(nulla, "a"));
+    /* literae NIHIL */
+    CREDO_FALSUM(chorda_aequalis_literis(s, NIHIL));
+    CREDO_FALSUM(chorda_aequalis_literis(vacua, NIHIL));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "chorda_ex_literis", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chorda_aequalis", _sectio_secunda, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1928,6 +1973,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "chorda_ex_f64_exacta", _sectio_quinquagesima, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "chorda_aequalis_literis", _sectio_quinquagesima_prima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
