@@ -182,3 +182,23 @@ zero-alignment check only matters at offset 0 (elsewhere `ordinatio - 1` =
 MAX trips the headroom clause), the base-padding check needs offset + mensura
 to fit while + base wraps, and ampliare's wrap needs the allocation to start
 past offset 0. Write overflow tests from the arithmetic, then plant each guard.
+
+## 2026-10-28 — allocation fast path (budget B1 C2)
+
+`_allocare_interna` was one big function: every allocation paid a 64-bit
+`udiv` (`promotus % ordinatio` in `_sedem_computare`) and a 12-register
+prologue, because the rare new-alveus path lived in the same body
+(_allocare_interna self 4–7% of busy samples in the silva corpus suites).
+Now: the old body is `_allocare_tarde` (verbatim, `noinline` under a GNU
+guard — examen tolera EXTENSIO_COMPILATORIS), and a small
+`_allocare_interna` handles the common case — current alveus fits,
+ordinatio a power of two (every house caller), not PISCINA_DEBUG — with a
+mask, explicit wrap checks (promotus >= offset, necessaria >= promotus)
+and the SAME bookkeeping (usus_currens delta, maximus_usus,
+numerus_allocationum). Anything else → slow path, which refuses or grows
+exactly as before, so computus golds don't move. Batch C bench: 10.4 →
+4.0 ns per allocation. The mask alone (no split) gave nothing — the
+prologue and the divide together were the cost. probatio_piscina 20/20;
+plants: drop numerus_allocationum in the fast path → :614 red; align to 4
+instead of ordinatio → :231 (16-byte alignment) red. Amalgams (silva,
+tessera, officina) regenerated.
