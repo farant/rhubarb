@@ -338,7 +338,27 @@ P1	0	1	60	C	0	0	-
 - [ ] **Step 6: Regenerate** `./tools/compile_tests_fontes_generare.sh`;
   green; plant (`silva.planta`) — break the LCM to max → divisiones
   test red, restore.
-- [ ] **Step 7: Commit** (gate `radix`).
+- [x] **Step 7: Commit** (gate `radix`).
+
+**Executed 2026-10-30.** Measured first: the Tallis file is MusicXML
+2.0 (public DTD, never fetched), divisions 480 everywhere, no
+`<forward>`, `<chord>`, `<tie>` or `<backup>` (the "forward" hits are
+repeat directions), measures numbered from 0 — so the hand fixtures
+carry the coverage. `lib/musicxml.c` (two passes as planned) and a
+minimal `lib/musicxml_ordo.c` (written order, one pass per measure —
+the header's aedilis tag requires the file to exist; P6 replaces the
+body). The suite went green on first build (11 sections, 159
+assertions), so the plants mattered: **the LCM plant (`max` instead
+of LCM) SURVIVED** — the fixture's divisions 2, 3, 6 have LCM = max =
+6. Fixed the fixture (P2 changes to 4 mid-measure → LCM 12, max 4);
+then all three plants (LCM, chord onset, shared timeline) went red.
+Details fixed here: the TSV header line is tab-separated like the
+rows; a `<chord/>` whose previous note (document order, same measure)
+is in another voice — or after a `<backup>`/`<forward>` — is
+ACORDUM_PRIMUM and becomes a plain note; a pitch without a legible
+step or octave becomes a rest with a monitum (time kept); the reader
+keeps going after every monitum. `score-timewise` and `.mxl` bytes are
+named vitia until P5 / P3 replace them.
 
 ---
 

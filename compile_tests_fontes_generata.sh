@@ -221,6 +221,8 @@ declare -a SOURCE_FILES=(
     "lib/multipart.c"
     "lib/multipartita.c"
     "lib/multiplexor.c"
+    "lib/musicxml.c"
+    "lib/musicxml_ordo.c"
     "lib/natura.c"
     "lib/navigator_entitatum.c"
     "lib/nervus.c"

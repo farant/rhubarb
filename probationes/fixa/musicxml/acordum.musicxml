@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- acordum: post backup, C4 (dur 2) + chord E4 (dur 1) + chord G4 eodem initio; D4 sequens ad 2 (cursor per notam primam acordi) -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Organum</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>2</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>B</step><octave>4</octave></pitch><duration>4</duration><voice>1</voice></note>
+      <backup><duration>4</duration></backup>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration><voice>2</voice></note>
+      <note><chord/><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration><voice>2</voice></note>
+      <note><chord/><pitch><step>G</step><octave>4</octave></pitch><duration>2</duration><voice>2</voice></note>
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration><voice>2</voice></note>
+    </measure>
+  </part>
+</score-partwise>
