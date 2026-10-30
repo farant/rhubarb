@@ -328,35 +328,29 @@ chorda_aequalis_literis (
                 chorda  s,
     constans character* cstr)
 {
-    i32 len;
     i32 i;
 
-    si (!cstr)
+    si (!cstr || (s.datum == NIHIL && s.mensura > ZEPHYRUM))
     {
         redde FALSUM;
     }
 
-    /* Mensura literarum */
-    len = ZEPHYRUM;
-    dum (cstr[len] != '\0')
+    /* COMPARATIO DUM LEGITUR (budget B1 C3, 2026-10-28): olim strlen
+     * literarum totum ANTE comparationem - catenae 'si (... "EXEMPLAR")
+     * alioquin si (... "PER") ...' quamque litteram plene metiebantur
+     * pro discrimine in octeto primo. Nunc exitus ad discrimen primum
+     * aut ad finem literarum; aequalitas = literae ibi finiuntur ubi
+     * chorda. NUL intra chordam: literae ibi finiuntur, chorda non ->
+     * FALSUM (ut olim). */
+    per (i = ZEPHYRUM; i < s.mensura; i++)
     {
-        len++;
-    }
-
-    si (s.mensura != len)
-    {
-        redde FALSUM;
-    }
-
-    per (i = ZEPHYRUM; i < len; i++)
-    {
-        si ((character)s.datum[i] != cstr[i])
+        si (cstr[i] == '\0' || (character)s.datum[i] != cstr[i])
         {
             redde FALSUM;
         }
     }
 
-    redde VERUM;
+    redde cstr[s.mensura] == '\0';
 }
 
 b32

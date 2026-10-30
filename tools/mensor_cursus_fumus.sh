@@ -46,6 +46,8 @@
 #        notam ultimam scribit, se ut cursum 'mensor:curare' notat;
 #        iteratum intra diem non purgat; cursus summus cum limite
 #        minimo curationem SEPARATAM excitat (apparet intra X s)
+#   XX   interventio notare (budget B9 2b); XXI quaestio cohortes (B9
+#        2c): cohortes per antecessionem git, moderatio
 #   XVIII graves (credo memoria T3): facta credo.* sectionis -> 'quaestio
 #        graves' (-machina octeti, homini MiB), titulus membri
 #   VIII extra omne repositorium (contextus vacuus) -> cursus notatus,
@@ -412,6 +414,98 @@ v18=$("$RADIX/bin/mensor" quaestio graves titulus=fumus/alius -machina 2>&1)
 credo $? "XVIII graves: facta credo.* per sectionem, octeti machinae, MiB homini, titulus membri sectiones eius"
 [ "$fracta" -eq 0 ] || { echo "      g: $g18"; echo "      h: $h18"; echo "      v: $v18"; }
 
+# XIX fusio (budget B0): commissio fusionis (filii II) deinde fusio
+# (portae II) sub arbore ficta - 'quaestio fusio' commissionem ANTE
+# fusionem et filios ordine durationis reddit; fusio altera sine fine
+# (custos = hoc scriptum, vivum) 'currit'. Arbor radicis ex cwd computatur
+# (MENSOR_ARBOR solum filiis hereditatur) - quaestio arborem quam
+# commissio notavit accipit; diarium fumi proprium est
+incipe_xix () { env $(cat "$1" 2>/dev/null | tr '\n' ' ') "$RADIX/bin/mensor" cursus incipere -titulus "$2"; }
+id_de () { sed -n 's/^MENSOR_PARENS=//p' "$1"; }
+incipe_xix /dev/null commissio > "$T/x19c"
+A19=$(sed -n 's/^MENSOR_ARBOR=//p' "$T/x19c")
+incipe_xix "$T/x19c" phasis:forma > "$T/x19c1"; incipe_xix "$T/x19c" porta:a > "$T/x19c2"
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19c1")" -exitus 0 -duratio_ms 10 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19c2")" -exitus 0 -duratio_ms 50 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19c")" -exitus 0 -duratio_ms 60 -nota "commissum fumus"
+incipe_xix /dev/null fusio > "$T/x19f"
+incipe_xix "$T/x19f" porta:c > "$T/x19f1"; incipe_xix "$T/x19f" porta:b > "$T/x19f2"
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19f1")" -exitus 0 -duratio_ms 80 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19f2")" -exitus 0 -duratio_ms 200 -nota ""
+"$RADIX/bin/mensor" cursus finire -id "$(id_de "$T/x19f")" -exitus 0 -duratio_ms 300 -nota "fusio viridis: 2 portae"
+q19=$("$RADIX/bin/mensor" quaestio fusio arbor="$A19" -machina 2>&1)
+f19=$(echo "$q19" | awk -F'\t' '$1 == "FUSIO_FILIUS" { printf "%s:%s:%s ", $2, $3, $5 }')
+s19=$(echo "$q19" | awk -F'\t' '$1 == "FUSIO" { print $3 "|" $5 "|" $6 } $1 == "FUSIO_COMMISSIO" { print "C|" $5 "|" $6 }' | tr '\n' ' ')
+incipe_xix /dev/null fusio > "$T/x19g"
+q19b=$("$RADIX/bin/mensor" quaestio fusio arbor="$A19" -machina 2>&1)
+[ "$f19" = "commissio:porta:a:50 commissio:phasis:forma:10 fusio:porta:b:200 fusio:porta:c:80 " ] \
+  && [ "$s19" = "C|60|commissum fumus transiit|300|fusio viridis: 2 portae " ] \
+  && echo "$q19b" | awk -F'\t' '$1 == "FUSIO" { exit ($3 == "currit") ? 0 : 1 }' \
+  && ! "$RADIX/bin/mensor" quaestio fusio arbor=/fumus/nulla > /dev/null 2>&1
+credo $? "XIX  fusio: commissio ante fusionem, filii ordine durationis, fusio sine fine currit, arbor sine fusione exitus 1"
+[ "$fracta" -eq 0 ] || { echo "      q: $q19"; echo "      b: $q19b"; }
+
+# XX interventio notare (budget B9 2b): repositorium parvum (commissa III;
+# notatum HEAD~1: a.c mutatum, b.c additum - non caput, ut commissum
+# notatum a contextu discernatur); fabrica legentes et portae debitae FICTAE
+# (titulus per viam) - cursus 'interventio' commissum PLENUM, nota
+# 'titulus [budget]', corpus = tituli affecti ordinati; -scopus angustat
+R20="$T/repo20"; mkdir -p "$R20"
+( cd "$R20" && git init -q . && printf 'a\n' > a.c && git add a.c \
+  && git -c user.name=f -c user.email=f@f commit -qm unus \
+  && printf 'a2\n' > a.c && printf 'b\n' > b.c && git add a.c b.c \
+  && git -c user.name=f -c user.email=f@f commit -qm duo \
+  && printf 'c\n' > c.c && git add c.c \
+  && git -c user.name=f -c user.email=f@f commit -qm tres ) > /dev/null 2>&1
+printf '#!/bin/sh\nshift; shift\nfor v in "$@"; do printf "LEGENS\\tprobationes_t/probatio_%%s\\tingressus:fasciculus\\t%%s\\n" "${v%%.c}" "$v"; done\n' > "$T/ff20.sh"
+printf '#!/bin/sh\nshift\nprintf "DEBITUM\\tradix\\t0\\t%%s\\n" "$1"\n' > "$T/fp20.sh"
+chmod +x "$T/ff20.sh" "$T/fp20.sh"
+H20=$(cd "$R20" && git rev-parse HEAD~1)   # NON caput: commissum notatum, non contextus
+o20=$(cd "$R20" && "$RADIX/bin/mensor" interventio notare -commissum HEAD~1 -titulus "B5 velocior" -budget B5 -fabrica "$T/ff20.sh" -portae "$T/fp20.sh" 2>&1); rc20=$?
+o20s=$(cd "$R20" && "$RADIX/bin/mensor" interventio notare -commissum HEAD~1 -titulus "solum a" -scopus probationes_t/probatio_a -fabrica "$T/ff20.sh" -portae "$T/fp20.sh" 2>&1)
+r20=$(legere)
+i20=$(echo "$r20" | awk -F'\t' -v h="$H20" '$4 == "interventio" && $8 == h && $15 == "B5 velocior [B5]" { print $2 }' | head -1)
+i20s=$(echo "$r20" | awk -F'\t' '$4 == "interventio" && $15 == "solum a" { print $2 }' | head -1)
+a20=$("$RADIX/bin/mensor" cursus acta "$i20" 2>/dev/null | tr '\n' ' ')
+a20s=$("$RADIX/bin/mensor" cursus acta "$i20s" 2>/dev/null | tr '\n' ' ')
+[ "$rc20" -eq 0 ] && [ -n "$i20" ] \
+  && [ "$a20" = "porta:radix probationes_t/probatio_a probationes_t/probatio_b " ] \
+  && [ "$a20s" = "probationes_t/probatio_a " ] \
+  && ! (cd "$R20" && "$RADIX/bin/mensor" interventio notare -commissum nullum -titulus x -fabrica "$T/ff20.sh" -portae "$T/fp20.sh" > /dev/null 2>&1)
+credo $? "XX   interventio notare: commissum plenum, nota cum budget, tituli affecti ex legentibus et portis, scopus angustat, commissum ignotum exitus non 0"
+[ "$fracta" -eq 0 ] || { echo "      o: $o20"; echo "      a: $a20 | s: $a20s"; }
+
+# XXI quaestio cohortes (budget B9 2c): cursus FICTI in diario (lineae
+# initium/finis, durationes exactae) super repositorium XX: probatio_a
+# ad commissum primum C x III, ad caput L x III (ambae interventiones XX
+# in HEAD~1 continentur -> cohors '0,1', delta -D); cursus ad commissum
+# primum tempore POST caput adhuc 'ante'; sordidus ad caput
+# omittitur; probatio_z (non affecta) CC -> CCXX = moderatio +C
+H21a=$(cd "$R20" && git rev-parse HEAD~2); H21c=$(cd "$R20" && git rev-parse HEAD)
+linea21 () {   # <id> <titulus> <commissum> <sordidum> <initium> <duratio>
+    printf 'cursus\tinitium\t%s\t\ts21\t%s\t\thomo\t%s\t%s\tmain\t%s\tm\t%s\n' "$1" "$2" "$3" "$4" "$R20" "$5" >> "$MENSOR_DIARIUM"
+    printf 'cursus\tfinis\t%s\t%s\t%s\t0\t0\t0\t0\t\t0\t\n' "$1" "$(($5 + $6))" "$6" >> "$MENSOR_DIARIUM"
+}
+for k in 1 2 3; do
+    linea21 "a1$k" probationes_t/probatio_a "$H21a" 0 "170000000000$k" 100
+    linea21 "a3$k" probationes_t/probatio_a "$H21c" 0 "170000001000$k" 50
+    linea21 "z1$k" probationes_t/probatio_z "$H21a" 0 "170000000010$k" 200
+    linea21 "z3$k" probationes_t/probatio_z "$H21c" 0 "170000001010$k" 220
+done
+linea21 a39 probationes_t/probatio_a "$H21c" 1 1700000002000 9
+# commissum primum TEMPORE ultimum: cohors per antecessionem 'ante' manet
+linea21 a19 probationes_t/probatio_a "$H21a" 0 1700000003000 100
+o21=$(cd "$R20" && "$RADIX/bin/mensor" quaestio cohortes titulus=probationes_t/probatio_a -machina 2>&1); rc21=$?
+c21=$(echo "$o21" | awk -F'\t' '$1 == "COHORS" { print $2 "|" $3 "|" $4 "|" $5 "|" $6 "|" $7 "|" $9 }' | tr '\n' ' ')
+[ "$rc21" -eq 0 ] \
+  && [ "$c21" = "0||-1|-1|4|100|0 1|0,1|1|0|3|50|-500 " ] \
+  && echo "$o21" | grep -q "^OMISSI	1	0	0	0$" \
+  && echo "$o21" | grep -q "^MODERATIO	1	100$" \
+  && [ "$(echo "$o21" | grep -c '^INTERVENTIO')" -eq 2 ] \
+  && ! (cd "$R20" && "$RADIX/bin/mensor" quaestio cohortes > /dev/null 2>&1)
+credo $? "XXI  quaestio cohortes: cohors per antecessionem git (non tempus), delta contra basim, sordidus omissus, moderatio tituli non affecti, titulus necessarius"
+[ "$fracta" -eq 0 ] || echo "      o21: $o21"
+
 echo
-if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XVIII/XVIII)"; exit 0; fi
+if [ "$fracta" -eq 0 ]; then echo "fumus mensor_cursus: sanum (XXI/XXI)"; exit 0; fi
 echo "fumus mensor_cursus: FRACTUM ($fracta)"; exit 1

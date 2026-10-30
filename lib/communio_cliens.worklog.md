@@ -59,3 +59,28 @@ installed from a worktree).
 - Blobs above COMMUNIO_MASSA_MAXIMA are refused BEFORE sending (size via the
   massa reader, not by loading it) with a visible error on the writing device.
 - Errors are owned per lane: a successful pull no longer wipes a push error.
+
+## 2026-10-27 - sign-in by email, device side (plan-3 T6)
+
+`communio_inscriptionem_petere` mints the token file (refusing an existing one,
+nothing changed) and POSTs /communio/intrare with its digest; if the server does
+not answer 202 the new token file is deleted again so a retry starts clean.
+`communio_inscriptionem_confirmare` (code) and `communio_tessera_valet` (does the
+token work yet? = the link was opened) complete it. These are ONE-SHOT helpers:
+one request, the reactor is pumped until it answers (MMM turns of X ms) - the CLI
+and the tests use them; the sync lanes are untouched. That makes `_vocare_semel` a
+second HTTP function in the client (plan C7 said one): phase 5's URLSession swap
+covers both.
+
+`communio inscribere -servus URL -email ADDR -tessera FILE -titulus NAME` polls
+stdin (2 s) for a typed code and checks the token after each wait, whichever
+comes first; 15 minutes then exit 1. EOF on stdin just stops reading (the link
+path keeps working).
+
+## 2026-10-27 - correction (plan-3 final review)
+
+The T6 entry said EOF on stdin "just stops reading (the link path keeps
+working)": it did not - reactor_poll returns at once when nothing is registered,
+so the loop raced through its 450 turns in seconds. With stdin closed the CLI now
+sleeps 2 s (poll with no fds) between token checks. The link path also now needs
+the page's button press (server change, see communio_servus worklog).

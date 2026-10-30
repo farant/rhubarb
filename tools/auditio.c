@@ -40,7 +40,9 @@
  *   auditio -carmen T -partitura       partitura ut textus
  *       [-mensurae 9-12] [-pars P]     (partitura.h), sine sono; -pars
  *       [-harmonia] [-explicatio]      hic = sola pars; -harmonia:
- *       [-functio]                     linea acordorum (harmonia.h);
+ *       [-functio] [-acorda]           linea acordorum (harmonia.h);
+ *                                      -acorda: acorda declarata
+ *                                      (<acorda>) ut scripta;
  *                                      -explicatio: acorda per
  *                                      fenestras bassi, notae alienae
  *                                      (explicatio.h); -functio: gradus
@@ -323,7 +325,7 @@ _carmen_monstrare (
            Piscina* piscina)
 {
      constans character* clavis       = "c";
-                    b32  minor        = FALSUM;
+     constans character* modus        = "maior";
                     i32  numerator    = IV;
                     i32  denominator  = IV;
                     i32  i;
@@ -331,7 +333,7 @@ _carmen_monstrare (
     si (k->numerus_clavium > ZEPHYRUM)
     {
         clavis  = partitura_clavis_littera(&k->claves[ZEPHYRUM]);
-        minor   = k->claves[ZEPHYRUM].minor;
+        modus   = partitura_clavis_modus(&k->claves[ZEPHYRUM]);
     }
     si (k->numerus_metrorum > ZEPHYRUM)
     {
@@ -341,8 +343,8 @@ _carmen_monstrare (
     imprimere("%.*s: %s %s, %u/%u, %u quartae/min, %u mensurae, "
               "%.3f s\n", (integer)k->titulus.mensura,
               (constans character*)k->titulus.datum, clavis,
-              minor ? "minor" : "maior", numerator, denominator,
-              k->tempora[ZEPHYRUM].tempus, _mensurae(k),
+              modus, numerator, denominator,
+              k->tempora_scripta[ZEPHYRUM].tempus, _mensurae(k),
               (duplex)cantus_quadrum_pulsus(k->tempora,
                   k->numerus_temporum, k->pulsus)
                   / (duplex)SONUS_FREQUENTIA);
@@ -731,6 +733,7 @@ _auscultare (
 {
     AuscultatioSummarium  s;
     AuscultatioSummarium  p;
+           MixturaCensus  census;
                      f32* exempla;
                      i32  quadra;
                      i32* tacitae;
@@ -738,19 +741,28 @@ _auscultare (
                      i32  i;
                      i32  t = ZEPHYRUM;
 
-    si (   !auscultatio_reddere(k, NIHIL, piscina, &exempla, &quadra)
+    si (   !auscultatio_reddere_censum(k, NIHIL, piscina, &exempla,
+                                      &quadra, &census)
         || !auscultatio_metiri(k, exempla, quadra, piscina, &s))
     {
         fprintf(stderr, "auditio: memoria deest\n");
         redde I;
     }
     imprimere("auscultatio %.*s: %.3f s, apex %.3f (%.1f dBFS), "
-              "tonsa %u, rms %.3f (%.1f dBFS)\n",
+              "tonsa %u, rms %.3f (%.1f dBFS)",
               (integer)k->titulus.mensura,
               (constans character*)k->titulus.datum,
               (duplex)quadra / (duplex)SONUS_FREQUENTIA, (duplex)s.apex,
               _gradus_soni(s.apex), s.tonsa, (duplex)s.rms,
               _gradus_soni(s.rms));
+    /* limitator summae (mixtura.h): apex verus mixturae et reductio */
+    si (census.limitata > ZEPHYRUM)
+    {
+        imprimere(", limitator %u quadra (%.1f dB; mixtura %.1f dBFS)",
+                  census.limitata, _gradus_soni(census.reductio),
+                  _gradus_soni(census.apex));
+    }
+    imprimere("\n");
     per (i = ZEPHYRUM; i < k->numerus_partium; i++)
     {
         si (!auscultatio_partem(k, i, NIHIL, piscina, &p))
@@ -779,62 +791,44 @@ _auscultare (
 }
 
 
-/* "-regulae": "+a,-b" ordinarias mutat; "a,b" (sine signis) hae solae.
- * FALSUM: regula ignota (monstrata) */
+/* forma censurae: carminis (ordinaria, stylus, <censura regulae>;
+ * censura.h STYLUS), deinde "-regulae" vocantis ("+a,-b" mutat, "a,b"
+ * hae solae). FALSUM: regula ignota (monstrata) */
 interior b32
-_regulas_legere (
+_formam_censurae (
+       constans Carmen* k,
     constans character* index,
           CensuraForma* forma,
                Piscina* piscina)
 {
-     constans character* p = index;
-                    b32  solae = index[ZEPHYRUM] != '+'
-                        && index[ZEPHYRUM] != '-';
+    chorda ignota;
 
-    censura_ordinaria(forma);
-    si (solae)
+    si (!censura_carminis_forma(k, forma, &ignota))
     {
-        memset(forma->activae, ZEPHYRUM, magnitudo(forma->activae));
+        fprintf(stderr,
+            "auditio: regula ignota '%.*s' in stylo carminis\n",
+                (integer)ignota.mensura,
+                (constans character*)ignota.datum);
+        redde FALSUM;
     }
-    dum (*p != '\0')
+    si (   index != NIHIL
+        && !censura_regulas_legere(chorda_ex_literis(index, piscina),
+        forma,
+                                   &ignota))
     {
-         constans character* q          = p;
-                        b32  accendere  = VERUM;
-              CensuraRegula  r;
-                     chorda  t;
+        CensuraRegula g;
 
-        si (*q == '+' || *q == '-')
+        fprintf(stderr, "auditio: regula ignota '%.*s' (",
+                (integer)ignota.mensura,
+                (constans character*)ignota.datum);
+        per (g = CENSURA_LINEAE; g < CENSURA_REGULAE;
+             g = (CensuraRegula)(g + I))
         {
-            accendere = *q == '+';
-            q++;
+            fprintf(stderr, "%s%s", g == CENSURA_LINEAE ? "" : ", ",
+                    censura_titulus(g));
         }
-        p = q;
-        dum (*p != '\0' && *p != ',')
-        {
-            p++;
-        }
-        t          = chorda_ex_literis(q, piscina);
-        t.mensura  = (i32)(p - q);
-        si (!censura_regulam_invenire(t, &r))
-        {
-            CensuraRegula g;
-
-            fprintf(stderr, "auditio: regula ignota '%.*s' (",
-                    (integer)t.mensura, (constans character*)t.datum);
-            per (g = CENSURA_LINEAE; g < CENSURA_REGULAE;
-                 g = (CensuraRegula)(g + I))
-            {
-                fprintf(stderr, "%s%s", g == CENSURA_LINEAE ? "" : ", ",
-                        censura_titulus(g));
-            }
-            fprintf(stderr, ")\n");
-            redde FALSUM;
-        }
-        forma->activae[r] = accendere;
-        si (*p == ',')
-        {
-            p++;
-        }
+        fprintf(stderr, ")\n");
+        redde FALSUM;
     }
     redde VERUM;
 }
@@ -906,8 +900,7 @@ _recensere (
               chorda t;
 
     recensio_carminis_ordinaria(&f);
-    si (   regulae != NIHIL && !_regulas_legere(regulae, &f.censura,
-                                             piscina))
+    si (!_formam_censurae(k, regulae, &f.censura, piscina))
     {
         redde II;
     }
@@ -951,6 +944,7 @@ _partituram_scribere (
                    i32  prima,
                    i32  ultima,
     constans character* pars,
+                   b32  acorda,
                    b32  harmonia,
                    b32  explicare,
                    b32  functionem,
@@ -971,7 +965,14 @@ _partituram_scribere (
         fprintf(stderr, "auditio: explicatio: memoria deest\n");
         redde FALSUM;
     }
-    /* lineae additae ordine: harmonia, explicatio, functio */
+    /* lineae additae ordine: acorda (declarata), harmonia, explicatio,
+     * functio */
+    si (acorda)
+    {
+        forma.additae[n].titulus   = "acorda";
+        forma.additae[n].scribere  = harmonia_acorda_lineam_scribere;
+        n++;
+    }
     si (harmonia)
     {
         forma.additae[n].titulus   = "harmonia";
@@ -1661,6 +1662,7 @@ principale (
       constans character* liber           = NIHIL;
                      b32  partitura       = FALSUM;
                      b32  harmonia        = FALSUM;
+                     b32  acorda          = FALSUM;
                      b32  explicare       = FALSUM;
                      b32  functionem      = FALSUM;
                      b32  censura         = FALSUM;
@@ -1779,6 +1781,10 @@ principale (
         {
             explicare = VERUM;
         }
+        alioquin si (strcmp(argv[k], "-acorda") == ZEPHYRUM)
+        {
+            acorda = VERUM;
+        }
         alioquin si (strcmp(argv[k], "-functio") == ZEPHYRUM)
         {
             functionem = VERUM;
@@ -1886,7 +1892,8 @@ principale (
                 "-carmen (-iterare non cum -via)\n");
         redde II;
     }
-    si (   (   (mensurae_datae || harmonia || explicare || functionem)
+    si (   (   (   mensurae_datae || harmonia || acorda || explicare
+                || functionem)
             && !partitura)
         || (partitura && (iterare || via != NIHIL))
         || (regulae != NIHIL && !censura && !recensio)
@@ -1942,7 +1949,7 @@ principale (
                   "| -cantilena T | -carmina | -instrumenta "
                   "| -carmen T [-iterare] "
                   "[-pars P] [-via x.wav] [-partitura [-mensurae N-M] "
-                  "[-harmonia]] "
+                  "[-harmonia] [-acorda]] "
                   "[-censura [-regulae R,+R,-R]] [-auscultare] "
                   "[-recensio [-regulae ...] [-json]] "
                   "[-mensura P M | -ponere P M:T NOTA | "
@@ -1988,9 +1995,7 @@ principale (
         {
             CensuraForma forma;
 
-            censura_ordinaria(&forma);
-            si (   regulae != NIHIL && !_regulas_legere(regulae, &forma,
-                                                     piscina))
+            si (!_formam_censurae(k, regulae, &forma, piscina))
             {
                 piscina_destruere(piscina);
                 redde II;
@@ -2002,7 +2007,7 @@ principale (
         alioquin si (k != NIHIL && partitura)
         {
             bene = _partituram_scribere(k, prima, ultima, pars,
-                harmonia, explicare, functionem, piscina);
+                acorda, harmonia, explicare, functionem, piscina);
         }
         alioquin si (k != NIHIL)
         {

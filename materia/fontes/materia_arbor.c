@@ -2601,6 +2601,8 @@ structura MateriaArborLector {
     /* referentiae: ArborReferentiaPendens, PIGRE in lectione */
                             Xar* referentiae;
                             s32  fons_ordinarius;
+    /* tag mangulatum -> genus + I, PIGRE (budget B1 A4) */
+                 TabulaDispersa* genera_per_tag;
 };
 
 Piscina*
@@ -2938,6 +2940,79 @@ _elementum_proximum (
  * Trivia - lentes speciei INVERTUNTUR
  * ================================================== */
 
+/* GENUS EX TAG PER INDICEM (budget B1 A4, 2026-10-28): quaesitio
+ * linearis materia_arbor_lexema_ex_tag omne genus per lexema iterum
+ * mangulabat (15.7% probationis arbor_plagula). Index tag -> genus semel
+ * per lectorem, ex EADEM mangulatione antrorsa (materia_arbor_lexema_tag)
+ * - directiones divergere non possunt; introitus primus vincit, ut
+ * quaesitio linearis. Index creari nequit -> quaesitio linearis. */
+interior s32
+_genus_ex_tag (
+    MateriaArborLector* lector,
+       constans chorda* titulus)
+{
+    constans MateriaLexiconRatum* lex = lector->consilium->lexicon;
+                             s32  n =
+                                 (s32)lex->lexicon->numerus_generum;
+                          vacuum* locus = NIHIL;
+                             s32  i;
+
+    si (lector->genera_per_tag == NIHIL)
+    {
+        character  buffer[MATERIA_ARBOR_TAG_CAPACITAS];
+               i8* octeti;
+              i32  summa = ZEPHYRUM;
+              i32  sedes = ZEPHYRUM;
+
+        /* claves omnes in ALVEO UNO (allocationes paucae: computus
+         * aurum allocationes arboris pinnat) - transitus I mensurat */
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            summa += materia_arbor_lexema_tag(lex, i, buffer,
+                (i32)magnitudo(buffer));
+        }
+        octeti = (summa > ZEPHYRUM) ? (i8*)piscina_allocare(
+            lector->piscina, (memoriae_index)summa) : NIHIL;
+        lector->genera_per_tag = (octeti != NIHIL)
+            ? tabula_dispersa_creare_chorda(lector->piscina,
+            (i32)(II * n + I)) : NIHIL;
+        per (i = ZEPHYRUM; lector->genera_per_tag != NIHIL
+            && i < n; i++)
+        {
+               i32 longitudo = materia_arbor_lexema_tag(lex, i, buffer,
+                   (i32)magnitudo(buffer));
+            chorda clavis;
+
+            si (longitudo == ZEPHYRUM || sedes + longitudo > summa)
+            {
+                perge;
+            }
+            memcpy(octeti + sedes, buffer, (size_t)longitudo);
+            clavis.datum    = octeti + sedes;
+            clavis.mensura  = longitudo;
+            sedes           += longitudo;
+            si (!tabula_dispersa_continet(lector->genera_per_tag,
+                clavis))
+            {
+                (vacuum)tabula_dispersa_inserere(lector->genera_per_tag,
+                    clavis, (vacuum*)(memoriae_index)(i + I));
+            }
+        }
+    }
+    si (lector->genera_per_tag == NIHIL)
+    {
+        redde materia_arbor_lexema_ex_tag(lex,
+            (constans character*)titulus->datum, titulus->mensura);
+    }
+    si (   titulus->mensura == ZEPHYRUM
+        || !tabula_dispersa_invenire(lector->genera_per_tag, *titulus,
+               &locus))
+    {
+        redde n;
+    }
+    redde (s32)((memoriae_index)locus - I);
+}
+
 interior MateriaToken*
 _trivium_legere (
     MateriaArborLector* lector,
@@ -2956,9 +3031,7 @@ _trivium_legere (
             elementum->linea);
         redde NIHIL;
     }
-    genus = materia_arbor_lexema_ex_tag(lex,
-        (constans character*)elementum->titulus->datum,
-        elementum->titulus->mensura);
+    genus = _genus_ex_tag(lector, elementum->titulus);
     si (genus == (s32)lex->lexicon->numerus_generum)
     {
         materia_arbor_lector_recusare(lector,
@@ -3184,9 +3257,7 @@ _lexema_legere (
         redde NIHIL;
     }
 
-    genus = materia_arbor_lexema_ex_tag(lex,
-        (constans character*)elementum->titulus->datum,
-        elementum->titulus->mensura);
+    genus = _genus_ex_tag(lector, elementum->titulus);
     si (genus == (s32)lex->lexicon->numerus_generum)
     {
         materia_arbor_lector_recusare(lector,
@@ -4162,6 +4233,7 @@ materia_arbor_lector_creare (
     lector->ancorae          = NIHIL;   /* pigre */
     lector->referentiae      = NIHIL;
     lector->fons_ordinarius  = ZEPHYRUM;
+    lector->genera_per_tag   = NIHIL;   /* pigre */
     lector->fragmenta = tabula_dispersa_creare_chorda(piscina,
         64);
     si (intern == NIHIL || lector->fragmenta == NIHIL)
@@ -4364,6 +4436,7 @@ materia_arbor_legere (
     lector.ancorae          = NIHIL;
     lector.referentiae      = NIHIL;
     lector.fons_ordinarius  = ZEPHYRUM;
+    lector.genera_per_tag   = NIHIL;   /* pigre */
 
     si (   piscina               == NIHIL || consilium == NIHIL
         || consilium->tabularium == NIHIL || consilium->lexicon == NIHIL

@@ -26,9 +26,96 @@
  *
  *   positio   mensura="N" (1 = prima, ex mappa metri) aut pulsus="N" -
  *             altera sola
+ *   ictus     cum mensura, ubi pulsus admittitur (frustum, tempus,
+ *             clavis, fermata): tempus N mensurae (1 = initium;
+ *             unitas = carmen_tempus_mensurae, ut locus 'M:T' - in 6/8
+ *             octavae tres)
  *   metrum    N/D, D potentia II (1..64), N 1..64
- *   clavis    littera [#|b] maior|minor (quintae -7..7, ut MusicXML)
- *   tempus    20..400 quartae per minutum (ordinarium CXX)
+ *   agogica   in carmine (metro initiali) aut in <metrum>: pondera
+ *             K partium aequalium mensurae ("0.86 1.15 0.99" in 3/4;
+ *             "2 1 2 1 2 1 2 1" = octavae inaequales in 4/4), normata
+ *             ad summam K - mensura longitudine sua, partes intra eam
+ *             longius aut brevius sonant; 'vindobonensis' = "0.86 1.15
+ *             0.99". Valet usque ad metrum proximum (sine agogica =
+ *             aequale). K 2..XVI, pondera > 0, mensura in K partes
+ *             pulsuum integras divisibilis
+ *   clavis    littera [#|b] maior|minor [caerulea] (quintae -7..7, ut
+ *             MusicXML; caerulea = blues: toni b3 b5 b7 tonicae in
+ *             clave - censura.h, functio.h)
+ *   tempus    20..400 quartae per minutum (ordinarium CXX); sine
+ *             'usque' gradus; cum usque="M" clivus: a tempore vigente
+ *             ad valorem, linearis in pulsibus, finis ad initium
+ *             mensurae M (nulla mutatio intra clivum)
+ *   fermata   <fermata mensura="16" factor="2"/>: sonus a positione
+ *             usque ad initium notae proximae (pars qualibet; finis
+ *             carminis si nulla) factor-plo longior (1..4, ord. 2);
+ *             fermatae non se tegunt
+ *   dynamica  <dynamica [pars="P"] mensura="M" [ictus] valor="mf"
+ *             [usque="U"]/>: lucrum partis (aut carminis totius sine
+ *             pars) a positione - gradus, aut clivus (crescendo /
+ *             diminuendo, aequalis in dB) ad initium mensurae U.
+ *             valor pp p mp mf f ff (0.2 0.32 0.45 0.6 0.8 1) aut
+ *             numerus 0..1; ordinarium 1. Lucrum notae = nota ('v') x
+ *             pars x dynamica partis x dynamica carminis ad initium
+ *             notae; notae sonantes clivum per tempora sequuntur.
+ *             Clivus cum fine 0: linearis (dB nulla). Ordine
+ *             positionis per partem; clivus eadem positione qua gradus
+ *             prior eum servat; nulla mutatio intra clivum
+ *   sectio    <sectio titulus="T" mensura="M" usque="U"/>: mensurae
+ *             M..U-1 nominantur - notae SCRIPTAE partium quae ibi
+ *             incipiunt
+ *   repetitio <repetitio sectio="T" mensura="M" [ictus] [semitonia="S"]
+ *             [partes="a b"]/>: notae sectionis iterum ad positionem,
+ *             transpositae per S semitonia (-24..24; litterae: S
+ *             octavarum (S % 12 = 0) servantur, aliter ex clave -
+ *             <clavis> novam auctor scribit), partes omnes sectionis
+ *             aut nominatae; partes ibi vacuae (frusta non se tegunt);
+ *             nota sectionis finem transiens (ligatura) ad finem
+ *             sectionis truncatur.
+ *             Fons = frusta scripta solum. Tempus, clavis, dynamica,
+ *             fermata NON iterantur. Frusta iterata ordine pulsus inter
+ *             scripta stant (repetitio >= 0, scriptum -1): emendatio ea
+ *             non mutat, fontem nominat
+ *   acorda    <acorda mensura="M" [ictus] textus="C | G7 | C"/>:
+ *             harmonia declarata (grammatica comitatus.h) a mensura
+ *             M; elementa plura non se tegunt (Carmen.acorda ordine
+ *             pulsus). NON iteratur (ut clavis)
+ *   stylus    <stylus titulus="popularis" [basis="classicus"]
+ *             [regulae="-parallelae,+tertia"]
+ *             [septimae="liberae"|"resolvendae"]
+ *             [intentiones="liberae"|"vetitae"]/> in libro aut
+ *             carmine (carminis vincit, ut figurae): praesettum
+ *             censurae nominatum; basis catena (classicus = forma
+ *             ordinaria, semper notus, non redefinitur), attributa
+ *             absentia a basi. <carmen stylus="T">: stylus carminis
+ *             (ordinarius classicus). <censura regulae="..."/> in
+ *             carmine (semel): regulae super stylum. Vitia lectionis:
+ *             stylus aut basis ignota, catena circularis, valor
+ *             septimae aut intentionum ignotus (nomina regularum
+ *             censura iudicat -
+ *             carmen eam non novit)
+ *   figura    <figura titulus="valsa" textus="B:4 [1 2 3] [1 2 3]"
+ *             [positio="clausa"|"sine_radice"]/> in libro aut carmine
+ *             (carminis vincit); titulus [a-z0-9_]+; positio
+ *             comitatus.h (ordinaria clausa)
+ *   comitatus <comitatus figura="T" [bina="T2"] mensura="M"
+ *             [usque="U"] [ambitus="55..76"] [bassus="36..57"]/> in
+ *             parte: frustum GENERATUM [M, U) ex acordis declaratis
+ *             (sine usque: finis acordorum); frusta non se tegunt
+ *             (scripta et generata).
+ *             BINA: figura mensurarum DIVISARUM - ubi acordum
+ *             scriptum (non 'r') intra mensuram incipit, non ad
+ *             initium eius ("Gm7:2 C7:2"); ceterae figuram. Mensurae
+ *             eiusdem generis contiguae frustum unum faciunt (textus
+ *             = figura sua; comitatus idem): figura="bossa"
+ *             bina="bossa_bina" idem sonat ac comitatus contigui manu
+ *             alternati. Sine bina: figura ubique.
+ *             Comitatus contiguus (mensura = usque prioris in parte
+ *             eadem, nullo frusto scripto inter) positionem et bassum
+ *             continuat (comitatus.h STATUS); aliter ab initio.
+ *             Textus frusti = figura, offset notae = gradus eius;
+ *             lineae nullae. Repetitio ea ut scripta iterat
+ *             (transposita); emendatio non mutat (fontem nominat)
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
@@ -59,13 +146,22 @@
  *                 lapsus, tenor, remissio, vibratus, celeritas, gravia,
  *                 amplitudo, decrementum, claritas, ratio, index,
  *                 partiales="r:a:d ...", vocalis (a|e|i|o|u aut 0..4),
- *                 flatus, resonans, acumen, motus (-48..48);
+ *                 flatus, resonans, acumen, motus (-48..48),
+ *                 unisonus (1..7), dispersio (centesimae 0..100),
+ *                 mora (vibrati, secundae);
  *                 ambitus="N..M" (MIDI, censurae). Ordo quaerendi:
  *                 carminis, libri, instrumentarii (instrumentarium.stml
  *                 infixus, carmina_legere), praeparata - titulus
  *                 inferior redefinitus vincit. Vitia: attributum
  *                 ignotum, numerus malus aut extra fines, basis
  *                 ignota, titulus iteratus in eodem gradu.
+ *
+ * MAPPA SONANDI: Carmen.tempora = gradus soli (clivi per
+ * CARMEN_GRADUS_TEMPORIS pulsus - tricesima secunda - tempore medii
+ * gradus; fermatae: tempus vigens / factor intra spatium suum;
+ * agogica: pars mensurae tempore vigenti / pondere);
+ * scripta in tempora_scripta et fermatae (partitura ea nominat).
+ * Analysis tempus SCRIPTUM iudicat (pulsus), numquam sonandi.
  *
  * TOTUS LIBER IN LECTIONE IUDICATUR: vitium cum carmine, parte, frusto
  * et offset in textu frusti - numquam carmen semi-lectum.
@@ -79,6 +175,10 @@
 #include "piscina.h"
 #include "cantus.h"
 #include "tibia.h"
+#include "comitatus.h"
+
+/* gradus mappae sonandi in clivo: tricesima secunda (pulsus) */
+#define CARMEN_GRADUS_TEMPORIS CXX
 
 nomen structura {
           s64 pulsus;        /* intra frustum */
@@ -90,6 +190,15 @@ nomen structura {
        chorda praeparatum;   /* '@' (percussio: sonitus pro nota);
                                * vacua = instrumentum partis */
           i32 offset;        /* in textu frusti */
+          s64 illapsus;      /* pulsus glissandi IN hanc notam (nota
+                               * priore '/', cantus.h); 0 = nullum */
+          b32 continuatur;   /* '/': vox in notam proximam pergit */
+          i32 vox;           /* vox intra partem: 0 linea (textus
+                               * scriptus; comitatus 'B' 'Q'), 1..9
+                               * vox superior comitatus */
+          b32 acordi;        /* nota generata ex acordo declarato
+                               * (comitatus): acordi est, numquam
+                               * aliena (explicatio) */
 } CarmenNota;
 
 nomen structura {
@@ -101,6 +210,14 @@ nomen structura {
     CantusLinea* lineae;      /* '|' scripta, pulsus intra frustum (ex
                                * cantilena lecta, eadem piscina) */
             i32 numerus_linearum;
+            s32 repetitio;    /* index in Carmen.repetitiones; -1 =
+                               * scriptum */
+            s32 scriptum;     /* index inter frusta SCRIPTA partis (ordo
+                               * STML - emendatio); -1 = iteratum aut
+                               * generatum */
+            s32 comitatus;    /* index <comitatus> in parte (frusta
+                               * plura eiusdem si bina); -1 =
+                               * scriptum aut iteratum */
 } CarmenFrustum;
 
 nomen structura {
@@ -115,17 +232,64 @@ nomen structura {
                i32  numerus_frustorum;
 } CarmenPars;
 
+#define CARMEN_PONDERA_MAXIMA XVI
+
 nomen structura {
-    s64 pulsus;
-    i32 numerator;
-    i32 denominator;
+       s64 pulsus;
+       i32 numerator;
+       i32 denominator;
+       f32 pondera[CARMEN_PONDERA_MAXIMA];  /* agogica, summa =
+                                              * numerus_ponderum */
+       i32 numerus_ponderum;                 /* 0 = aequale */
+    chorda inaequalitas;                     /* 'agogica' ut scripta;
+                                              * vacua */
 } CarmenMetrum;
 
 nomen structura {
     s64 pulsus;
     s32 quintae;              /* -7 (7 b) .. 7 (7 #) */
     b32 minor;
+    b32 caerulea;             /* modus caeruleus (blues) */
 } CarmenClavis;
+
+/* sectio nominata: [pulsus, usque) */
+nomen structura {
+    chorda titulus;
+       s64 pulsus;
+       s64 usque;
+} CarmenSectio;
+
+/* repetitio sectionis ad positionem, transposita */
+nomen structura {
+       s32 sectio;      /* index in Carmen.sectiones */
+       s64 pulsus;      /* initium iterati */
+       s32 semitonia;   /* -24..24 */
+} CarmenRepetitio;
+
+/* dynamica SCRIPTA (<dynamica>; intensio, nomen Latinum): gradus
+ * (usque 0) aut clivus aequalis in dB */
+nomen structura {
+       s32 pars;       /* index partis; -1 = carmen totum */
+       s64 pulsus;     /* initium */
+       f32 valor;      /* 0..1 (finis clivi) */
+       s64 usque;      /* finis clivi, pulsus; 0 = gradus */
+    chorda textus;     /* valor ut scriptus ('mf', '0.4') */
+} CarmenIntensio;
+
+/* fermata SCRIPTA (<fermata>; corona, nomen signi Latinum): spatium
+ * [pulsus, finis) factor-plo longius */
+nomen structura {
+    s64 pulsus;     /* initium */
+    s64 finis;      /* nota proxima aut finis carminis (derivatum) */
+    f32 factor;     /* 1..4 */
+} CarmenCorona;
+
+/* mutatio temporis SCRIPTA: gradus (usque 0) aut clivus */
+nomen structura {
+    s64 pulsus;     /* initium */
+    i32 tempus;     /* valor scriptus (finis clivi) */
+    s64 usque;      /* finis clivi, pulsus; 0 = gradus */
+} CarmenTempus;
 
 nomen structura {
             chorda titulus;
@@ -134,10 +298,34 @@ nomen structura {
                i32 summa;
 } CarmenInstrumentum;
 
+/* <stylus>: praesettum censurae (censura.h interpretatur) */
+nomen structura {
+    chorda titulus;
+    chorda basis;      /* vacua = classicus */
+    chorda regulae;    /* "-parallelae,+tertia"; vacua */
+       s32 septimae;   /* -1 a basi, 0 resolvendae, 1 liberae */
+       s32 intentiones;  /* -1 a basi, 0 vetitae, 1 liberae */
+} CarmenStylus;
+
 nomen structura {
            chorda  titulus;
-     CantusTempus* tempora;           /* quadra computata */
+     CantusTempus* tempora;           /* mappa SONANDI (clivi in
+                                       * gradus), quadra computata */
               i32  numerus_temporum;
+     CarmenTempus* tempora_scripta;   /* ut in libro; primum = tempus
+                                       * carminis ad pulsum 0 */
+              i32  numerus_temporum_scriptorum;
+     CarmenCorona* coronae;          /* ordine pulsus */
+              i32  numerus_coronarum;
+   CarmenIntensio* intensiones;      /* <dynamica>, ordine libri */
+              i32  numerus_intensionum;
+     CarmenSectio* sectiones;        /* <sectio>, ordine libri */
+              i32  numerus_sectionum;
+  CarmenRepetitio* repetitiones;     /* <repetitio>, ordine libri */
+              i32  numerus_repetitionum;
+ ComitatusAcordum* acorda;           /* <acorda>, pulsus carminis,
+                                      * ordine */
+              i32  numerus_acordorum;
      CarmenMetrum* metra;
               i32  numerus_metrorum;
      CarmenClavis* claves;
@@ -154,6 +342,11 @@ nomen structura {
     SonusReverberatioForma reverberatio;      /* aula carminis */
                        f32 lucrum_reverberationis;  /* reditus; 0 =
                                                      * nulla */
+     CarmenStylus* stili;            /* carminis, deinde libri */
+              i32  numerus_stilorum;
+           chorda  stylus;           /* <carmen stylus>; vacua =
+                                     * classicus */
+           chorda censura_regulae;  /* <censura regulae>; vacua */
 } Carmen;
 
 nomen structura {
@@ -237,6 +430,15 @@ carmen_pulsus_mensurae (
 s64
 carmen_tempus_mensurae (
     constans Carmen* carmen,
+                s64  pulsus);
+
+/* lucrum dynamicae ad pulsum: partis 'pars' x carminis totius (1 sine
+ * <dynamica>); clivus aequalis in dB inter valorem priorem et suum
+ * (linearis si alter 0). pars extra partes: carminis solum */
+f32
+carmen_intensio (
+    constans Carmen* carmen,
+                s32  pars,
                 s64  pulsus);
 
 /* NIHIL si nec carmen nec liber definit (praeparata non hic) */

@@ -67,6 +67,29 @@ _tres (
     redde _carmen(c, s);
 }
 
+/* carmen partium datarum (NIHIL finit), 4/4, clavis c maior */
+interior Carmen*
+_partes (
+          CredoContextus*  c,
+      constans character** partes)
+{
+    character* s = (character*)piscina_allocare(c->piscina, M * IV);
+          i32  n;
+          i32  i;
+
+    n = (i32)sprintf(s, "<carmina><carmen titulus=\"p\" metrum=\"4/4\" "
+                     "clavis=\"c maior\">");
+    per (i = ZEPHYRUM; partes[i] != NIHIL; i++)
+    {
+        n += (i32)sprintf(s + n,
+            "<pars titulus=\"p%u\" instrumentum=\"aether\"><frustum "
+            "mensura=\"1\"><textus!>%s</textus></frustum></pars>", i,
+            partes[i]);
+    }
+    sprintf(s + n, "</carmen></carmina>");
+    redde _carmen(c, s);
+}
+
 interior Explicatio*
 _explicare (
       CredoContextus* c,
@@ -237,7 +260,7 @@ _sectio_fenestrae (
     CREDO_AEQUALIS_I32 (e->fenestrae[ZEPHYRUM].harmonia.bassus, IV);
     CREDO_AEQUALIS_I32 (e->fenestrae[III].harmonia.bassus, VII);
     CREDO_AEQUALIS_I32 ((i32)e->fenestrae[VI].harmonia.genus,
-                        (i32)HARMONIA_NULLA);
+                        (i32)ACORDUM_NULLA);
     /* segmenta ordine (initium, pars); muta et '@' nulla */
     per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
     {
@@ -314,7 +337,9 @@ _sectio_acorda (
     CREDO_CHORDA_AEQUALIS_LITERIS (_acordum(c, k, e, ZEPHYRUM),
         "E7/G#");
     CREDO_VERUM (e->fenestrae[ZEPHYRUM].implicitum);
-    k = _tres(c, "4/4", "bb maior", "o2 g#1", "-", "o5 d1");
+    /* bassus ut A- scriptus (littera auctoris vincit; radix implicita
+     * Bb ex clave) */
+    k = _tres(c, "4/4", "bb maior", "o2 a-1", "-", "o5 d1");
     e = _explicare(c, k);
     CREDO_NECESSE (e != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS (_acordum(c, k, e, ZEPHYRUM),
@@ -442,6 +467,55 @@ _sectio_septima (
 }
 
 
+/* septima sursum (explicatio.h): transiens sursum resoluta solum intra
+ * acordum idem - E5 F5 G5 super G7 -> C (proxima in C) non; idem
+ * acordum in fenestra proxima (E7 -> E7/G#) resoluta; V43 -> I6 (F4
+ * G4 super D3 E3) resoluta etiam sine nota priore; bassus descendens
+ * (D3 C3) non; V65 -> I (G7/B -> C, F4 G4 super B2 C3) non - solum
+ * inversio secunda */
+interior vacuum
+_sectio_septima_sursum (
+    CredoContextus* c)
+{
+            Explicatio* e;
+    constans character* transiens[] = {
+        "o2 g2 o3 c2", "o3 b2 o4 c2", "o4 d2 e2", "o5 d8 e8 f4 g2",
+        NIHIL };
+    constans character* v43[] = {
+        "o3 d2 e2", "o3 g2 g2", "o3 b2 o4 c2", "o4 f2 g2", NIHIL };
+    constans character* v43_descendens[] = {
+        "o3 d2 c2", "o3 g2 g2", "o3 b2 o4 c2", "o4 f2 g2", NIHIL };
+    constans character* v65[] = {
+        "o2 b2 o3 c2", "o3 g2 g2", "o4 d2 e2", "o4 f2 g2", NIHIL };
+
+    e = _explicare(c, _partes(c, transiens));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, CMLX, EXPLICATIO_SEPTIMA, FALSUM));
+    e = _explicare(c, _carmen(c,
+        "<carmina><carmen titulus=\"p\" clavis=\"a minor\">"
+        "<acorda mensura=\"1\" textus=\"E7:2 E7/G#:2\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 e2 g#2</textus></frustum></pars>"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c4 d4 e2</textus></frustum></pars>"
+        "</carmen></carmina>"));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, I, CMLX, EXPLICATIO_SEPTIMA, VERUM));
+    e = _explicare(c, _partes(c, v43));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        VERUM));
+    e = _explicare(c, _partes(c, v43_descendens));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        FALSUM));
+    e = _explicare(c, _partes(c, v65));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, III, ZEPHYRUM, EXPLICATIO_SEPTIMA,
+        FALSUM));
+}
+
+
 /* ==================================================
  * Linea partiturae
  * ================================================== */
@@ -458,6 +532,18 @@ _sectio_linea (
     CREDO_NECESSE (e != NIHIL);
     CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I),
         "C7:2. (A5 tr.)");
+    /* orthographia auctoris in fenestra: C#+E in D minor = C#m(3) */
+    k = _tres(c, "4/4", "d minor", "o4 c#1", "-", "o4 e1");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C#m(3)", c->piscina));
+    /* G#+B: G# non sensibilis - solum littera scripta */
+    k = _tres(c, "4/4", "d minor", "o4 g#1", "-", "o4 b1");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("G#m(3)", c->piscina));
     /* implicita, septima sine resolutione */
     k = _tres(c, "4/4", "a minor", "o2 g#1", "-", "o5 d1");
     e = _explicare(c, k);
@@ -500,12 +586,444 @@ _sectio_tituli (
                             "ignota");
 }
 
+/* nota addita: A transiens super C E G manet transitus, A tenta C6;
+ * nona tenta G9 */
+interior vacuum
+_sectio_additae (
+    CredoContextus* c)
+{
+    constans Carmen* k;
+         Explicatio* e;
+
+    k = _tres(c, "4/4", "c maior", "o3 c1", "o4 e1", "o4 g4 a4 g2");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "C:1 (A4 vic.)");
+    k = _carmen(c, "<carmina><carmen titulus=\"s\" metrum=\"4/4\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"d\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g1</textus></frustum></pars>"
+        "<pars titulus=\"e\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "C6:1");
+    k = _carmen(c, "<carmina><carmen titulus=\"s\" metrum=\"4/4\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 g1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 b1</textus></frustum></pars>"
+        "<pars titulus=\"d\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f1</textus></frustum></pars>"
+        "<pars titulus=\"e\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I),
+        "G9:1 (F4 sept.!)");
+    /* quinta aucta vicina super C7: C7, non C7#5 */
+    k = _carmen(c, "<carmina><carmen titulus=\"s\" metrum=\"4/4\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"d\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 b-1</textus></frustum></pars>"
+        "<pars titulus=\"e\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 a4 g#4 a2</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C7:1", c->piscina));
+    /* nona transiens super C7: C7 cum transitu, non C9 */
+    k = _carmen(c, "<carmina><carmen titulus=\"s\" metrum=\"4/4\">"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"d\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 b-1</textus></frustum></pars>"
+        "<pars titulus=\"e\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c4 d4 e2</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C7:1", c->piscina));
+}
+
+/* tenta = nota non candidata AUT fenestram totam sonans (D per
+ * mensuram super F A C: F6, deinde functio ii65); 7sus4 omnes praeter
+ * radicem tenendos postulat; nomen reiectum in fallback non redit;
+ * additae ad radicem rotantur (G) */
+interior vacuum
+_sectio_tentae (
+    CredoContextus* c)
+{
+    constans character* partes[VI];
+       constans Carmen* k;
+            Explicatio* e;
+
+    partes[0]  = "o3 c1 | f1 | g1 | c1";
+    partes[1]  = "o4 c1 | c1 | b1 | c1";
+    partes[2]  = "o4 g1 | a1 | g1 | g1";
+    partes[3]  = "o5 e1 | d1 | d1 | c1";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, II), "F6:1");
+    /* A cum fenestra incipiens sed brevis (ad G gradu): non tenta */
+    partes[0]  = "o3 c1";
+    partes[1]  = "o4 e1";
+    partes[2]  = "o4 g1";
+    partes[3]  = "o5 a4 g4 e2";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:1", c->piscina));
+    /* C/G cum F vicino, D transeunte: non G7sus4 */
+    partes[0]  = "o3 g1";
+    partes[1]  = "o4 c1";
+    partes[2]  = "o5 e4 f4 e4 d4";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C/G:1", c->piscina));
+    /* 7sus4 tentum totum: nomen manet */
+    partes[0]  = "o3 g1";
+    partes[1]  = "o4 c1";
+    partes[2]  = "o4 d1";
+    partes[3]  = "o4 f1";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I),
+        "G7sus4:1 (F4 sept.!)");
+    /* fallback: suspensio C (praeparata, ad B resoluta) super G D F -
+     * nulla pars nominatur, G7sus4 reiectum non redit */
+    partes[0]  = "o3 c1 | g1 | g1 | c1";
+    partes[1]  = "r1 | o4 d1 | r1 | r1";
+    partes[2]  = "r1 | o4 f1 | r1 | r1";
+    partes[3]  = "o5 e2 c1. o4 b2 o5 c1";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("[", c->piscina));
+    /* rotatio ad radicem G: E vicinus et A transiens super G B D */
+    partes[0]  = "o3 g1";
+    partes[1]  = "o3 b1";
+    partes[2]  = "o4 d1";
+    partes[3]  = "o4 d4 e4 d2";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "G:1 (E4 vic.)");
+    partes[3]  = "o4 g4 a4 b2";
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "G:1 (A4 tr.)");
+}
+
+/* suspensio partium ordine non pendet: C5 tentum super G (praeparatum,
+ * ad B resolutum), F4 transiens in alto - soprano primo aut ultimo */
+interior vacuum
+_sectio_suspensio_ordo (
+    CredoContextus* c)
+{
+    constans character* partes[IV];
+       constans Carmen* k;
+            Explicatio* e;
+
+    partes[0]  = "o5 c1. o4 b2 o5 c1";
+    partes[1]  = "o3 c1 | g1 | c1";
+    partes[2]  = "o4 e2 e4 f4 | g1 | g1";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("G(3):1 (C5 susp.)", c->piscina));
+    partes[0]  = "o3 c1 | g1 | c1";
+    partes[1]  = "o4 e2 e4 f4 | g1 | g1";
+    partes[2]  = "o5 c1. o4 b2 o5 c1";
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("G(3):1 (C5 susp.)", c->piscina));
+}
+
+/* pars acordorum (comitatus '[1 2 3 4]') voces quattuor habet, non
+ * lineam unam: septima Dm7 (C4) in voce sua ad B3 resolvitur; nota
+ * generata acordi est */
+interior vacuum
+_sectio_voces (
+    CredoContextus* c)
+{
+    constans Carmen* k;
+         Explicatio* e;
+
+    k = _carmen(c, "<carmina><carmen titulus=\"v\" metrum=\"4/4\">"
+        "<figura titulus=\"tab\" textus=\"[1 2 3 4]:1\"/>"
+        "<acorda mensura=\"1\" textus=\"Dm7 | G7 | C\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 d1 | o2 g1 | o3 c1</textus>"
+        "</frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\">"
+        "<comitatus figura=\"tab\" mensura=\"1\" ambitus=\"55..74\"/>"
+        "</pars></carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "Dm7:1");
+    /* nota generata acordi est: F -> F6 in valsa (voces gradu
+     * moventur, D tamen tenetur) */
+    k = _carmen(c, "<carmina><carmen titulus=\"w\" metrum=\"3/4\" "
+        "clavis=\"f maior\">"
+        "<figura titulus=\"pah\" "
+        "textus=\"r:4 [1 2 3 4]:4 [1 2 3 4]:4\"/>"
+        "<acorda mensura=\"1\" textus=\"F | F6\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o2 f2. | f2.</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\">"
+        "<comitatus figura=\"pah\" mensura=\"1\" ambitus=\"53..72\"/>"
+        "</pars></carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, II),
+        chorda_ex_literis("F6:2.", c->piscina));
+}
+
+/* acorda declarata: fenestrae ad mutationes declaratas, non ad bassum;
+ * acordum declaratum nominatur, notae ad id iudicantur */
+interior vacuum
+_sectio_declarata (
+    CredoContextus* c)
+{
+    constans Carmen* k;
+         Explicatio* e;
+
+    /* bassus alternans sub F: fenestra una, F (non F F/C) */
+    k = _carmen(c, "<carmina><carmen titulus=\"a\" metrum=\"4/4\">"
+        "<acorda mensura=\"1\" textus=\"F\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 f2 c2</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL && e->numerus_fenestrarum >= I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "F:1");
+    CREDO_VERUM (e->fenestrae[ZEPHYRUM].declaratum);
+    /* duo declarata super bassum tentum: C7sus4 deinde C7 */
+    k = _carmen(c, "<carmina><carmen titulus=\"b\" metrum=\"4/4\">"
+        "<figura titulus=\"tab\" textus=\"[1 2 3 4]:2 [1 2 3 4]:2\"/>"
+        "<acorda mensura=\"1\" textus=\"C7sus4:2 C7:2\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\">"
+        "<comitatus figura=\"tab\" mensura=\"1\" ambitus=\"53..74\"/>"
+        "</pars></carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C7sus4:2", c->piscina));
+    CREDO_CHORDA_CONTINET (_linea(c, k, e, I),
+        chorda_ex_literis(" C7:2", c->piscina));
+    /* D declaratum, G B transeuntes in melodia: D, non Gmaj9/D */
+    k = _carmen(c, "<carmina><carmen titulus=\"d\" metrum=\"4/4\" "
+        "clavis=\"e minor\">"
+        "<acorda mensura=\"1\" textus=\"D\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 d1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 f#1</textus></frustum></pars>"
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 a1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 f#12 g12 a12 b4 a4 f#4</textus>"
+        "</frustum></pars></carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("D:1", c->piscina));
+    /* mutatio declarata sine nota incipiente (notae tentae) secat */
+    k = _carmen(c, "<carmina><carmen titulus=\"m\" metrum=\"4/4\">"
+        "<acorda mensura=\"1\" textus=\"C:2 C7:2\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 c1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 e1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:2 C7:2", c->piscina));
+    /* bassus sonans in classibus: inversio (C super E = C/E) */
+    k = _carmen(c, "<carmina><carmen titulus=\"i\" metrum=\"4/4\">"
+        "<acorda mensura=\"1\" textus=\"C\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 e1</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 c1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C/E:1", c->piscina));
+    /* bassus extra classes (D sub C declarato): bassus declaratus */
+    k = _carmen(c, "<carmina><carmen titulus=\"x\" metrum=\"4/4\">"
+        "<acorda mensura=\"1\" textus=\"C\"/>"
+        "<pars titulus=\"b\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o3 d4 c4 c2</textus></frustum></pars>"
+        "<pars titulus=\"t\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 g1</textus></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o5 e1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    e = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:1", c->piscina));
+}
+
+/* sine acordis declaratis: bassus arpeggians fenestram non secat;
+ * nucleus (radix, tertia) a notis tentis aut basso */
+interior vacuum
+_sectio_bassus_fractus (
+    CredoContextus* c)
+{
+    constans character* partes[V];
+       constans Carmen* k;
+            Explicatio* e;
+
+    /* bassus alternans F C sub A C tentis: F */
+    partes[0]  = "o3 f2 c2";
+    partes[1]  = "o4 a1";
+    partes[2]  = "o5 c1";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "F:1");
+    /* bassus cessans (superiores tenent): F */
+    partes[0]  = "o3 f2 r2";
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "F:1");
+    /* nucleus: D F# A cum G B transeuntibus = D, non Gmaj9/D */
+    partes[0]  = "o3 d1";
+    partes[1]  = "o4 f#1";
+    partes[2]  = "o4 a1";
+    partes[3]  = "o5 f#12 g12 a12 b4 a4 f#4";
+    partes[4]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("D:1", c->piscina));
+    /* saltus bassi ad classem novam (A sub E G): fenestra nova */
+    partes[0]  = "o3 c2 <a2";
+    partes[1]  = "o4 e1";
+    partes[2]  = "o4 g1";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:2 ", c->piscina));
+    /* saltus ad classem sonantem, superiores mutati (C | G7): nova */
+    partes[0]  = "o3 c2 <g2";
+    partes[1]  = "o4 e2 d2";
+    partes[2]  = "o4 g2 b2";
+    partes[3]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_INCIPIT (_linea(c, k, e, I),
+        chorda_ex_literis("C:2 G", c->piscina));
+    /* tertia a melodia tenta: dyas manet (C E) */
+    partes[0]  = "o3 c1";
+    partes[1]  = "o5 e1";
+    partes[2]  = NIHIL;
+    k          = _partes(c, partes);
+    e          = _explicare(c, k);
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, e, I), "C(3):1");
+}
+
+/* semitonium: nota proxima vocis semitonio unico distat (C C# D: C et
+ * C# sic, D ad E non; A Bb C: Bb non; ultima nota non) */
+interior vacuum
+_sectio_semitonium (
+    CredoContextus* c)
+{
+                      Explicatio* e;
+    constans ExplicatioSegmentum* s;
+
+    e = _explicare(c, _tres(c, "4/4", "c maior", "o3 c1", "o4 e1",
+                            "o5 c4 c#4 d4 e4"));
+    CREDO_NECESSE (e != NIHIL);
+    CREDO_VERUM (_genus_est(e, II, CMLX, EXPLICATIO_TRANSITUS, FALSUM));
+    s = _segmentum(e, II, CMLX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_VERUM (s->semitonium);
+    s = _segmentum(e, II, ZEPHYRUM);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_VERUM (s->semitonium);
+    s = _segmentum(e, II, MCMXX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_FALSUM (s->semitonium);
+    s = _segmentum(e, II, MMDCCCLXXX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_FALSUM (s->semitonium);
+    e = _explicare(c, _tres(c, "4/4", "c maior", "o3 c1", "o4 e1",
+                            "o5 a4 b-4 >c4 <g4"));
+    CREDO_NECESSE (e != NIHIL);
+    s = _segmentum(e, II, CMLX);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_FALSUM (s->semitonium);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "additae", _sectio_additae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tentae", _sectio_tentae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "suspensio_ordo", _sectio_suspensio_ordo, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "voces", _sectio_voces, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "declarata", _sectio_declarata, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arpeggians", _sectio_bassus_fractus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "fenestrae", _sectio_fenestrae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "suspensio", _sectio_suspensio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "semitonium", _sectio_semitonium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "septima", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "septima sursum", _sectio_septima_sursum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { "linea", _sectio_linea, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tituli", _sectio_tituli, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

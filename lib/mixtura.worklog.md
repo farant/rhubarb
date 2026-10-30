@@ -109,3 +109,30 @@ on their own.
 
 mixtura_iussum_parare didn't zero tibia/nota (older) and now zeroes the reverb form
 explicitly (aula 0).
+
+## 2026-10-24 - master limiter (headroom, desideratum ...WH53)
+
+A zero-latency, stereo-linked peak limiter after the master gain, before output. It
+covers everything on the mixer (songs, theremin, notification sounds, WAV export, live
+output). The peak a = max(|l|,|r|). If a x current gain > ceiling, the gain drops AT
+that sample (no lookahead, so no delay, and no sample moves), then recovers with a
+120 ms time constant. Both channels get the same gain. The output is clamped to the
+ceiling as well, against rounding a hair above it.
+
+Default ceiling 1.0 (0 dBFS), not the 0.97 first proposed: full scale is legal (three
+existing tests produce exactly 1.0, e.g. a unit voice panned hard left). Below the
+ceiling the gain is exactly 1, so every render that never went over is byte-identical.
+MIXTURA_IUSSUM_LIMITATOREM_PONERE (lucrum = ceiling, 0 = off).
+
+BUG FOUND BY THE RECOVERY TEST: storing the GAIN and recovering with g = 1 - (1-g)*c
+STALLS in f32 near 1. When (1-g)(1-c) < half an ulp of 1.0 (~3e-8), rounding returns
+the same g forever, about 0.99983 here (the mix left ~0.0015 dB quiet for good). The
+state is now the reduction x = 1 - g, decayed x *= c, snapped to 0 under 1e-7. A
+shrinking small number never stalls.
+
+Census: apex = mix peak BEFORE the limiter (the truth: "this would have clipped"),
+limitata = samples where the limiter actually cut the gain (overs; recovery samples NOT
+counted - the first version counted them and reported 374794 for a song with 27 overs),
+reductio = lowest gain since the previous census. The "fragor" preset peaks above 1.0;
+probatio_mixtura determinismus switches the limiter off (its apex == output-peak check
+is about determinism).

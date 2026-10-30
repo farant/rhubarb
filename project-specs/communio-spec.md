@@ -269,6 +269,25 @@ export answer (D11); backups in Cloudflare R2 (D8); encrypted with
 envelope keys, trusted-server model (D8b); soft deletes, crypto-shredding
 for real deletes (D8c).
 
+## Resolved with Fran (2026-10-27, before phase 3)
+
+- **Allowlist = email -> person (Fran: "yes").** An entry pairs an
+  address with a person (civis); the admin tool creates the person in
+  the same step when the handle does not exist yet (Amanda has no
+  exemplar account). Milestone 1 allowlist: Fran's address -> `fran`,
+  Amanda's address -> `amanda` (the addresses themselves are entered
+  on the server through the admin channel only, never written into the
+  repository). The same allowlist later carries guests (D6).
+- **Sender: `communio@golden.earth`.**
+- **Server secrets are kept locally and copied up by a tool (Fran's
+  idea).** Keys live where the others do (`~/.rhubarb/<provider>.clavis`,
+  0600; `resend.clavis` created by Fran 2026-10-27); a small tool streams
+  one to `/var/lib/<app>/<name>` on the host (owner = the app's user,
+  0600) through ssh stdin - never in argv, a temp file or any output;
+  confirms by comparing hashes on both ends and printing only
+  match/mismatch; refuses to overwrite unless asked to rotate. General
+  for every later server key (R2, push).
+
 ## AUDIENDA (not verified while writing)
 
 - iOS app-links (associated domains) for a self-signed-up developer
@@ -296,3 +315,30 @@ checkpoints; local listings must skip `aliena/`; a manifest change
 needs its blob first (`VOLUMEN_MASSA_DEEST`). Next: phase 2 (server act
 store + protocol).
 
+
+## VII. Phase 2 built (2026-10-27, quarta -> main f7fcba7f)
+
+Plan `project-specs/communio-plan-2.md`, tasks T1-T7 + final review
+(fable: 0 critical, 6 important, all fixed). The household server is
+exemplar with a second volume `<data>/communio.volumen` (imported acts
+never mix with notes and users); routes under `/communio/` (nginx
+`location /` already forwards them); every route requires a device
+token. Devices MINT their own token (`communio tessera`), the admin
+registers only its SHA-256 over the admin channel (handle + space +
+title + digest) - no secret ever crosses the channel or a chat. The
+server announces its volume's replica: a replaced or restored server
+makes clients reset their cursors and re-sync (deleting
+`communio.volumen` is a safe reset). One blob limit on both sides
+(16 MB). Client: two lanes (push, long-poll pull) on the reactor,
+cursors in the volume's praesentia, all HTTP in one function (phase 5
+swaps in URLSession).
+
+Live (Task 8, 2026-10-27, with Fran): deployed (backup
+`exemplar.volumen.ante-communio`); Fran in "familia"; device
+"Macintosh" (main checkout's `pictor.volumen`: one picture, 11 strokes)
+pushed 13 acts over HTTPS; a scratch device pulled them and the
+picture's composite fingerprint matched exactly (02aad7f4...); the
+scratch device was revoked and its token then got 401. Not yet: iPhone
+and Amanda (phase 5), email sign-in (phase 3), backups (phase 4),
+background sync. Deferred minors: see the plan-2 ledger note on desideratum
+...GRTKH (lane quarantine is the one to watch).

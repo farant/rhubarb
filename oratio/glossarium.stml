@@ -302,6 +302,20 @@
     <forma textus="ordinationem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="ordinationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="exundatio" lingua="latina" classis="substantivum" nota="Latina classica (Plinius: exundatio fluminis); domus: exundatio mensurae insignatae (summa circumit) - lib/piscina.c, parcum …1Q6158 (2026-10-27)">
+    <forma textus="exundatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="exundationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="interventio" lingua="latina" classis="substantivum" nota="Latina posterior (Tertullianus, ius: interventio = intercessio, mediatio; ab intervenire); domus: mutatio perficientiae notata - mensor interventio notare, cohortes (budget B9, 2026-10-27)">
+    <forma textus="interventio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="interventionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="orientatio" lingua="latina" classis="substantivum" nota="Neolatina: orientatio (situs orientationis, praedicata geometrica); WORDS caret">
     <forma textus="orientatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="orientationis" casus="genitivus" numerus="singularis" genus="femininum"/>
@@ -437,6 +451,37 @@
   <vocabulum lemma="srgb" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: spatium colorum sRGB (IEC 61966-2-1; color_srgb_ad_linearem, lib/color.c)"/>
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
   <vocabulum lemma="montgomery" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: P. L. Montgomery (reductio Montgomery, 1985; lib/agmen.c)"/>
+  <vocabulum lemma="interpolatio" lingua="latina" classis="substantivum" nota="Latina classica (Plinius): interpolatio, -onis f., renovatio; mathematica: polynomium ex valoribus in punctis (lib/interpolatio.c)">
+    <forma textus="interpolatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="lagrange" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J.-L. Lagrange (interpolatio Lagrange, polynomium per puncta; lib/interpolatio.c)"/>
+  <vocabulum lemma="tensor" lingua="latina" classis="substantivum" nota="Latina posterior: tensor, -oris m., qui tendit (tendo); mathematica: tabula multilinearis super indices (lib/contractio.c)">
+    <forma textus="tensor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="tensorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="tensoribus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="plexus" lingua="latina" classis="substantivum" nota="Latina (plecto): plexus, -us m., implicatio, textura; mathematica: trica (braid), grex braidarum B_n (lib/plexus.c; laqueus_pd_ex_plexu)">
+    <forma textus="plexus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexui" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexu" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexuum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="plexibus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="gyratio" lingua="latina" classis="substantivum" nota="Latina posterior: gyratio, -onis f., circumactio (gyrus, gyrare); mathematica: summa conversionum (quartarum) curvae in plano, numerus gyrationis (lib/laqueus.c, modulus vertex)">
+    <forma textus="gyratio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="gyrationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="gyrationibus" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
   <vocabulum lemma="exhaustivus" lingua="latina" classis="adiectivum"
     nota="Latinitas nova (exhaurire): exhaustive - vox domus (cellae.h: activatio_exhaustiva, quaestio per omnes copias); WORDS caret">
@@ -1101,6 +1146,7 @@
   <vocabulum lemma="uint64" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="uint64_t stdint.h (C99 latitudo exacta); systema_posix.h 2026-10-15 pro vendor/bearssl_amalgama.h (tls-bearssl T1 R3)"/>
   <vocabulum lemma="rsa" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RSA (Rivest-Shamir-Adleman) - algorithmus clavis publicae; folia probationis TLS et vectura BearSSL (tls-bearssl T2 R12, 2026-10-15)"/>
   <vocabulum lemma="securetransport" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="SecureTransport (Apple, Security.framework) - nomen proprium; vectura TLS vetus (tls-bearssl T3, 2026-10-15)"/>
+  <vocabulum lemma="be16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="big-endian XVI bita - lib/git.c _be16 (index git, fabrica-plan-8 G2); frater be32 in copia tolerata"/>
   <vocabulum lemma="bearssl" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BearSSL (Thomas Pornin) - nomen proprium; vectura TLS (vendor/bearssl, tls-bearssl T3, 2026-10-15)"/>
   <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>
   <vocabulum lemma="rfc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC (Request for Comments, IETF) - abbreviatio; textus normarum ut oracula (tls13 T1, 2026-10-16)"/>
@@ -1881,11 +1927,19 @@
     <forma textus="acordum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="acordi" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="acorda" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="acordorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
   <vocabulum lemma="instrumentarium" lingua="latina" classis="substantivum" nota="vox domus (-ium, -ii n., ut armamentarium, sanctuarium): locus instrumentorum - instrumenta musica domus ut data (instrumentarium.stml, include/carmen.h); WORDS caret">
     <forma textus="instrumentarium" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentarii" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="instrumentario" casus="ablativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+  <vocabulum lemma="unisonus" lingua="latina" classis="adiectivum" nota="Latina media (Boethius, theorici musicae: unisonus, -a, -um = eiusdem soni; unisonus = vox eadem altitudine): hic exemplaria undae paulo dispersa (sectio chordarum, include/tibia.h)"><forma textus="unisonus"/><forma textus="unisoni"/><forma textus="unisonos"/><forma textus="unisonorum"/></vocabulum>
+  <vocabulum lemma="picardia" lingua="latina" classis="substantivum" nota="Latina media (Picardia, -ae f.: regio Galliae septentrionalis): tertia Picardiae = acordum tonicae maius in clave minore (tierce de Picardie), include/functio.h"><forma textus="picardia"/><forma textus="picardiae"/></vocabulum>
+  <vocabulum lemma="limitator" lingua="latina" classis="substantivum" nota="limitator, -oris m. (Latinitas posterior, L&amp;S: qui limites ponit): hic limitator summae mixturae (apices supra tectum statim deprimit, include/mixtura.h)">
+    <forma textus="limitator" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="limitatorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
   <!-- transformare T4 (2026-10-26): rescriptio vocationum per regulas (silva/fontes/silva_forma.h) -->
   <vocabulum lemma="rescriptio" lingua="latina" classis="substantivum" nota="Latinum serum (rescriptio, -onis f., a rescribere: responsum scriptum; Du Cange): hic rescriptio codicis - situs vocationis per regulam transformationis rescriptus (silva_rescriptiones_parare, transformare T4); WORDS caret">
@@ -1908,6 +1962,13 @@
     <forma textus="pinacum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
   </vocabulum>
 
+  <vocabulum lemma="epistularius" lingua="latina" classis="substantivum" nota="epistularius, -i m. (ex epistula; cf. 'ab epistulis', scriba epistularum): qui epistulas mittit - hic Epistularius, missor epistularum electronicarum per provisorem (lib/epistula.c, communio-plan-3 T2)">
+    <forma textus="epistularius" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistularii" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistularium" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="epistulario" casus="dativus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="resend" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Resend, provisor epistularum (api.resend.com; epistula_resend_corpus, communio D7)"/>
   <vocabulum lemma="replica" lingua="latina" classis="substantivum" nota="replica, -ae f. (ex replicare, 'iterum plicare'; Latinitas recentior): exemplar documenti quod scriptor proprium tenet - hic volumen ut scriptor actuum (communio D2b, volumen_replica); WORDS caret">
     <forma textus="replica" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="replicae" casus="genitivus" numerus="singularis" genus="femininum"/>

@@ -10,9 +10,14 @@
  * PROSPECTUS: omni pulsu notae quae intra CANTOR_PROSPECTUS ms
  * incipiunt iubentur - TIBIAM ad quadrum initii exactum,
  * PORTAM_CLAUDERE ad finem; nota '@praeparatum' = sonitus unicus
- * (percussio). Lucrum = nota x pars; mutus omittitur, solus (si quis)
- * alios tacet. Prioritas II: cantilenae (I) voces musicae non
- * surripiunt.
+ * (percussio). Lucrum = nota x pars x carmen_intensio (dynamica ad
+ * initium notae); voces tibiae sonantes dynamicam sequuntur:
+ * VOCEM_PONERE per octavas (et ad mutationes) intra prospectum,
+ * numquam praeiussa - iussa pendentia finita manent. Gradus et clivus
+ * eadem positione: gradus primum (evanescentia), clivus ab eius fine
+ * (pp deinde crescendo: saltus non perit). Mutus omittitur,
+ * solus (si quis) alios tacet. Prioritas II: cantilenae (I) voces
+ * musicae non surripiunt.
  *
  * REGIO: [initium, finis) pulsuum; ad finem iterans basis exacte
  * longitudine regionis in quadris promovetur - sine hiatu, sine
@@ -22,6 +27,25 @@
  * suas meminit (ansa, initium, finis): sonans per evanescentiam V ms ab
  * nunc, nondum incepta SISTERE ad initium suum (clivo 0: nullum
  * exemplum sonat).
+ *
+ * TENET exitum (concentus_tenere) dum notas iubendas habet - ab
+ * incipere / quaerere usque ad finem regionis sine iteratione aut
+ * cantor_sistere: pausa longa exitum non claudit. Cantor sonans sine
+ * cantor_sistere relictus exitum apertum tenet.
+ *
+ * PORTAMENTUM: nota 'continuatur' portam non claudit; nota proxima
+ * vocem eius (pars eadem, finis = initium suum, transitus idem) per
+ * NOTAM_PONERE ad initium suum glissat (clivus = portamentum in
+ * quadris); lucrum ad initium suum (nota x pars x dynamica ibi) per
+ * evanescentiam si ab eo quod vox tenet differt (lucrum notae aut
+ * gradus dynamicae ibi); puncta dynamicae notae prioris ante initium
+ * novum prius iubentur (eodem prospectu non pereunt); portam ad finem
+ * suum claudit (nisi ipsa continuatur). Vox non inventa (quaerere,
+ * iteratio, prior tacita) = nota ut solet incipit. Nota continuata ad
+ * finem regionis (proxima extra) portam ut solet claudit - vox numquam
+ * pendet: post prospectum quemque vox continuata cuius proxima non
+ * venit (pars muta, exemplar mutatum, '@') ad finem suum clauditur.
+ * Sonitus ('@') non glissant.
  *
  * Instrumenta: primum carminis ipsius (carmen_instrumentum: carminis,
  * libri), deinde per resolutorem (CantorResolutor): instrumentum partis
@@ -53,6 +77,9 @@
 #define CANTOR_VOCES      LXIV
 /* evanescentia sistendi, quadra (V ms) */
 #define CANTOR_EVANESCENTIA CCXL
+
+/* gradus dynamicae vocis sonantis: octava (pulsus) */
+#define CANTOR_GRADUS_INTENSIONIS CDLXXX
 /* iterationes regionis per pulsum maximae: regio brevissima pulsum
  * vici non sistit - reliqua pulsu proximo, sine hiatu */
 #define CANTOR_ITERATIONES XVI

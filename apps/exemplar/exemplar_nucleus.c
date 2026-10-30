@@ -25,6 +25,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <time.h>
 
 
@@ -1131,6 +1134,7 @@ _creatio_fracta (
     Exemplar* e)
 {
     mcp_canalis_claudere(e->canalis);
+    epistularium_claudere(e->epistularius);
     communio_servum_destruere(e->communio);
     si (e->hospitium)
     {
@@ -1150,6 +1154,93 @@ _creatio_fracta (
     }
     filum_seram_liberare(e->sera);
     redde NIHIL;
+}
+
+/* clavis provisoris epistularum (forma oceanus): filum regulare, non
+ * nexus, modus non latior quam 0600; FALSUM tacite si deest (vocator
+ * nuntiat), cum causa si malum. Clavis numquam imprimitur. */
+interior b32
+_clavem_epistularum_legere (
+     constans character* via,
+              character* exitus,
+                    i32* mensura)
+{
+    structura stat st;
+         integer fd;
+         ssize_t n;
+
+    *mensura = ZEPHYRUM;
+    /* <tolera codex="CANALIS_PRAETERITUS" (>clavis Resend secreta */
+    fd = open(via, O_RDONLY | O_NOFOLLOW);
+    si (fd < 0)
+    {
+        redde FALSUM;
+    }
+    si (   fstat(fd, &st)     != ZEPHYRUM || !S_ISREG(st.st_mode)
+        || (st.st_mode & 077) != ZEPHYRUM)
+    {
+        (vacuum)close(fd);
+        fprintf(stderr, "exemplar: %s non filum 0600 - epistulae non "
+            "mittuntur\n", via);
+        redde FALSUM;
+    }
+    n = read(fd, exitus, (size_t)(CCLVI - I));
+    (vacuum)close(fd);
+    dum (n > ZEPHYRUM && (exitus[n - I] == '\n' || exitus[n - I] == '\r'
+                          || exitus[n - I] == ' '))
+    {
+        n--;
+    }
+    si (n <= ZEPHYRUM)
+    {
+        memset(exitus, ZEPHYRUM, (size_t)CCLVI);
+        redde FALSUM;
+    }
+    *mensura = (i32)n;
+    redde VERUM;
+}
+
+/* epistularius aditus et frenum servo communionis dantur */
+interior vacuum
+_epistularium_parare (
+                          Exemplar* e,
+     constans ExemplarConfiguratio* configuratio,
+                           Piscina* piscina)
+{
+     constans character* provisor;
+              character  via[EXEMPLAR_VIA_MAXIMA];
+              character  clavis[CCLVI];
+                 chorda  c;
+                    i32  n;
+
+    provisor = configuratio->provisor_epistulae
+             ? configuratio->provisor_epistulae : "resend";
+    c.datum    = (i8*)clavis;
+    c.mensura  = ZEPHYRUM;
+    si (strcmp(provisor, "resend") == ZEPHYRUM)
+    {
+        si (   _via(via, configuratio->via_datorum, "resend.clavis")
+            && _clavem_epistularum_legere(via, clavis, &n))
+        {
+            c.mensura = n;
+            e->epistularius = epistularium_aperire(piscina, e->reactor,
+                provisor, c, NIHIL);
+        }
+        alioquin
+        {
+            fprintf(stderr, "exemplar: resend.clavis deest - epistulae "
+                "non mittuntur\n");
+        }
+    }
+    alioquin
+    {
+        e->epistularius = epistularium_aperire(piscina, e->reactor,
+            provisor, c, NIHIL);
+    }
+    memset(clavis, ZEPHYRUM, magnitudo(clavis));
+    communio_servum_epistularium_ponere(e->communio, e->epistularius,
+        "communio@golden.earth", e->basis);
+    communio_servum_custodiam_ponere(e->communio, e->custodia);
 }
 
 Exemplar*
@@ -1301,6 +1392,8 @@ exemplar_creare (
             ? configuratio->hospes : "127.0.0.1",
             (insignatus integer)hospitium_portus(e->hospitium));
     }
+    /* communio plan-3 T5: epistulae aditus et frenum (basis nota) */
+    _epistularium_parare(e, configuratio, piscina);
     (vacuum)hospitium_praebere(e->hospitium, HTTP_GET, "/applicationes",
         _applicationes_get, e);
     (vacuum)hospitium_praebere(e->hospitium, HTTP_POST,
@@ -1340,6 +1433,13 @@ exemplar_creare (
     redde e;
 }
 
+Epistularius*
+exemplar_epistularius (
+    Exemplar* exemplar)
+{
+    redde exemplar ? exemplar->epistularius : NIHIL;
+}
+
 Hospitium*
 exemplar_hospitium (
     Exemplar* exemplar)
@@ -1363,7 +1463,8 @@ exemplar_claudere (
         redde;
     }
     mcp_canalis_claudere(exemplar->canalis);
-    /* ANTE hospitium: horae exspectantium cancellandae */
+    /* ANTE hospitium: horae exspectantium et missiones epistularum */
+    epistularium_claudere(exemplar->epistularius);
     communio_servum_destruere(exemplar->communio);
     hospitium_destruere(exemplar->hospitium);
     /* WAL in plagulam principalem: copia (cp) post clausuram integra */

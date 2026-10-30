@@ -20,3 +20,16 @@
 - **assecurare is idempotent:** one GET of all records, then create /
   PUT / nothing; IDEM sends no write (the fake counts writes). Two
   matching records = ambiguous -> error, nothing changed.
+
+## 2026-10-27 - MX priority (communio plan-3 T7)
+
+DigitalOcean requires `priority` on MX records and Resend asks for an MX on its
+sending subdomain, so `OceanusRegistrum` gained `prioritas` (0 = not sent, read
+back from the API's `priority`, null -> 0) and `oceanus_assecurare_prioritate`
+(IDEM only when data, ttl AND priority match); `oceanus_assecurare` is now the
+prioritas-0 wrapper, so every existing caller is unchanged. CLI: `assecurare
+<dominium> <genus> <titulus> <data> [ttl] [prioritas]`. The fake API in
+probatio_oceanus stores priority and a 500-byte data field so a ~420-character
+DKIM TXT value round-trips (created once, IDEM after). Real DO TXT quoting is
+still unverified (spec AUDIENDA) - the live step will show whether a second run
+says IDEM.

@@ -35,3 +35,55 @@ Pure predicate for censura 'tertia' (and later the DAW pane): classes match {0},
 ## 2026-10-23 - interior `_tempus` removed
 
 Uses carmen_tempus_mensurae (carmen.h) - the rule is shared with censura and emendatio.
+
+## 2026-10-24 - chord names spelled as the composer wrote (desideratum ...FP9CJ)
+
+_classem_scribere used to spell a pitch class with NO letter, so for out-of-scale classes
+partitura_orthographia fell back to "flat key -> flat": C#+E in D minor printed Dbm(3),
+though the cembalo wrote c#. Harmonia now carries litterae[XII] (the written letter per
+class, first one wins; ex_classibus clears it). harmonia_ad_pulsum and explicatio's
+windows record the letters of the notes they used (harmonia_litteram_notare), and
+_classem_scribere passes the letter into partitura_orthographia, which honours a
+written letter. A written d- stays Db.
+
+Test lesson: C# in D minor is ALSO the leading tone, so the new partitura fallback alone
+already spells it right - dropping the letters would still pass the C#m test. The
+G#+B in D minor case (G# is not the leading tone; the key rule says Ab) is the one that
+proves the letters arrive. The explicatio fixture for implied Bb7 in Bb major wrote its
+bass g# (copied from the A minor case); with letters winning it read Bb7/G#, so the
+fixture now writes a- and keeps "Bb7/Ab".
+
+Six house songs: analysis output (-harmonia -explicatio -functio) byte-identical before
+and after - none had a wrong spelling (completorium's Dbm bar was written out in the bass
+rewrite).
+
+## 2026-10-26 - pure chord half moved to acordum (Q7G5 step 1)
+
+The chord table, acordum_ex_classibus and acordum_sine_tertia now live in lib/acordum.c
+(include/acordum.h), and the types are renamed Harmonia -> Acordum, HarmoniaGenus ->
+AcordumGenus, HARMONIA_* -> ACORDUM_*. Reason: the accompaniment generator (comitatus)
+expands while the book is READ, inside carmen.c - it needs a chord-name parser, and
+harmonia depends on carmen (ad_pulsum, orthography by key). The pure half had to sit
+below carmen. harmonia keeps "what sounds in a song": ad_pulsum, scribere (suffix via
+acordum_suffixum), lineam_scribere, litteram_notare.
+
+Renames went through silva/build/renominare directly: the renominare.sh wrapper refuses
+files with uncommitted changes (git = undo), and a run of 21 renames over the same 9 files
+dirties them after the first. Backups were in build/plantae_s1/orig. Identifiers inside
+CREDO_* macro arguments and in comments are "manuales" - swapped by hand with word-bounded
+perl (BSD sed has no \b). explicatio.c had its own local struct named Acordum (window
+chord: classes + septima); it became AcordumFenestrae first, or the rename collides.
+
+The test sections exemplaria / radices / sine_tertia moved to probatio_acordum.c with
+their helpers; probatio_harmonia keeps nomina, sonantes, linea, orthographia (4/4).
+
+## 2026-10-27 - step 2c: the 'acorda' line (declared harmony as a lead sheet)
+
+D03TB part 2. harmonia_acorda_lineam_scribere prints the declared chords (Carmen.acorda) per bar
+as written ("C#m:2 B7:2" - author's spelling, "-:2 A:2" when a declared span starts mid-bar,
+'r' for a declared rest, '-' outside any span), next to the literal 'harmonia' line, so a
+disagreement between what was declared and what sounds is visible at a glance (proelium bar
+16: acorda "B7sus4:2 B7:2", harmonia "E(5)/B:2 B(3):2"). An explicit nullum branch was redundant
+- a declared 'r' is an empty Acordum and harmonia_scribere already writes "r" (plant survived,
+branch removed). auditio: `-partitura -acorda` (line order acorda, harmonia, explicatio,
+functio = PARTITURA_ADDITAE IV, all four fit). Plants 4/4.

@@ -7,7 +7,12 @@
  * stereo intertextus. REVERBERATIO: voces x missio (mono) in aulam
  * communem (sonus.h), cuius exitus stereo in summam ante lucrum
  * summae additur - mutus summae eam quoque tacet; mutus gregis non
- * (cauda in aula communi vivit).
+ * (cauda in aula communi vivit). LIMITATOR SUMMAE: post lucrum summae,
+ * ante exitum - apex canalium ambo (stereo iunctum) supra 'tectum':
+ * lucrum STATIM reducitur ut |exitus| tectum non excedat (sine
+ * prospectu: nulla mora), deinde redit exponentialiter (remissio ~120
+ * ms). Infra tectum lucrum 1 exactum: exempla octetim eadem.
+ * Ordinarium tectum 1.0 (0 dBFS: plenum licitum intactum).
  *
  * DUAE PARTES, quia auditus (S3) eas in filis duobus ponet:
  *   Mixtura        - status vocum; iubere / reddere / nuntium_legere.
@@ -96,9 +101,11 @@ nomen enumeratio {
     MIXTURA_IUSSUM_PORTAM_CLAUDERE, /* tibia: remissio, deinde
                                    * VOX_FINITA naturalis; vox alia:
                                    * irritum */
-    MIXTURA_IUSSUM_REVERBERATIONEM_PONERE /* aula: forma (statim, sine
+    MIXTURA_IUSSUM_REVERBERATIONEM_PONERE, /* aula: forma (statim, sine
                                    * memoria reposita) et lucrum
                                    * reditus (cum clivo) */
+    MIXTURA_IUSSUM_LIMITATOREM_PONERE /* lucrum = tectum limitatoris
+                                   * summae (0 = nullus) */
 } MixturaIussumGenus;
 
 /* Campi plani (non unio): quisque genus suos legit, ceteros ignorat.
@@ -171,7 +178,13 @@ nomen structura {
     i32 nuntii_amissi;    /* agmen nuntiorum plenum - sedes et tabulae
                            * tunc a rectore non liberantur: capacitatem
                            * >= II x voces pone */
-    f32 apex;             /* |exemplum| maximum summae */
+    f32 apex;             /* |exemplum| maximum summae ANTE
+                           * limitatorem (mixtura vera) */
+    i32 limitata;         /* quadra supra tectum quae lucrum
+                           * limitatoris demiserunt (ictus; remissio
+                           * non numeratur) */
+    f32 reductio;         /* lucrum minimum limitatoris ab censu
+                           * priore (1 = numquam) */
 } MixturaCensus;
 
 nomen structura {

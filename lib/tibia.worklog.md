@@ -131,3 +131,41 @@ Enumeration for tools (auditio -instrumenta) and one home for genus words (carme
 parser and auditio's listing used to keep their own tables, and auditio printed
 "unda" for partiales before 984564ed). The table of words lives in the function, as
 `constans character* constans`.
+
+## 2026-10-24 - unisonus, dispersio, mora vibrati (desideratum ...J8Q9H)
+
+UNISONUS (UNDA and FORMANTES only): the oscillator runs as N copies (1..7, 0 = 1) spread
+evenly over +/- dispersio/2 cents; sum / N keeps "apex <= amplitudo". N = 1 is exactly
+the old path (offset +0, divide by 1) - all old sounds byte-identical (stella, pastorale,
+completorium WAVs compared). The genus guard matters for FM too: its carrier IS v->unda,
+so a dispersion offset would shift the bell's pitch (test: campana with unisonus 5 equals
+without).
+
+Start phases: ALL ZERO. The proposal said fixed phases k/N; I then tried golden-ratio
+phases (k x 0.618) - both are well-spread, and well-spread phases CANCEL the fundamental:
+5 saws at the same pitch summed to < 0.3 of one. Phase 0 gives a full, coherent attack and
+the detune spreads the copies within a fraction of a second (classic "phase sync"
+unison). Deterministic either way.
+
+First run bug: the main dispatcher in tibia_vocis_proximum still called
+sonus_unda_proximum(&v->unda) for UNDA; only FORMANTES used the new sum - the beating test
+showed no beats at all.
+
+MORA VIBRATI: vibrato depth ramps 0 -> full linearly over mora_vibrati seconds from note
+start (players and singers vibrate after the tone is established); 0 = immediate (old).
+Attribute name in <instrumentum>: "mora".
+
+Plants 12/12 red after two rounds. Three survived first and showed weak tests: "dispersio
+ten times smaller" and "copies not detuned" still beat, just slower, and the 0.2 s window
+still reached one null - the test now pins the beat RATE (first null 15..25 ms at 100
+cents); "formants use only the first copy" stayed green because flatus noise is seeded
+from the note, so the comparison renders differed anyway - flatus 0 in that test.
+
+Also: I wrote a _rms helper in probatio_tibia.c and then renamed it to _efficax for the
+lint - the file already HAD _efficax(x, initium, numerus). Mine was deleted; all my calls
+started at 0, so they mean the same with the existing one. Grep the test file for helpers
+before writing one.
+
+Instruments built on this (instrumentarium.stml): chordae (serra x5, +/-7 cents, mora
+0.35), harpa, tenor, superius, cornu, clarinetum - first guesses, to tune by ear. Demos
+build/rampa/theatrum.wav and valse_theatri.wav (sexta, not committed).

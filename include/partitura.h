@@ -21,6 +21,8 @@
  *   [C4 E4]:4  notae simul: eodem pulsu et longitudine, gradu ordinatae
  *   E5:2~      nota trans lineam mensurae; mensura proxima incipit
  *              '~:4' (residuum)
+ *   E5:4/      portamentum: vox in notam proximam glissat (cantus.h
+ *              '/'; signum ubi nota desinit)
  *   @punctum:8 percussio (praeparatum notae)
  *   mutationes metri, clavis (ad initium mensurae) et temporis (intra
  *   mensuram: 'tempus 90 (+960)' pulsibus ab initio) in titulo mensurae
@@ -120,6 +122,12 @@ partitura_ambitus (
  * (maior / minor) in clavis->minor. Statica */
 constans character*
 partitura_clavis_littera (
+    constans CarmenClavis* clavis);
+
+/* modus clavis ut scribitur: "maior", "minor", "maior caerulea",
+ * "minor caerulea". Statica */
+constans character*
+partitura_clavis_modus (
     constans CarmenClavis* clavis);
 
 /* ':valor' partiturae (sine ':'): 1..64, '.' punctata, 't' trioli,

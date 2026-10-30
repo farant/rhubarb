@@ -8,7 +8,16 @@
  * REGULAE (titulus; ORD. = in forma ordinaria):
  *   lineae       '|' scripta non in linea mensurae (mappa metri)  ORD.
  *   clavis       nota extra clavem; in minore VI et VII elevati
- *                licent (harmonica, melodica)                     ORD.
+ *                licent (harmonica, melodica); clavis caerulea: toni
+ *                caerulei (b3 b5 b7 tonicae) in clave (F: Ab, B,
+ *                Eb); ORNAMENTUM CHROMATICUM licet: nota extra
+ *                clavem quae transitus, vicinus aut appoggiatura
+ *                est et SEMITONIO exit (C C# D, G F# G, D# E,
+ *                accessus bassi C#3 -> C3); nota acordi
+ *                declarati ad initium suum licet (dominans
+ *                applicata scripta: D7 in F, F#); intentionibus
+ *                liberis etiam intentio eius (A7b9 in F: F#,
+ *                XIII; F7: Ab, #9)                                ORD.
  *   ambitus      nota extra ambitum instrumenti (ordinarius:
  *                aether 36..96, quadrans 48..96, triangulum
  *                24..72, chorda 28..88, campana 48..96; ignotum
@@ -31,9 +40,83 @@
  *                VII, ad XIX), ergo non ORD.                      -
  *   tertia       ad tempus forte >= III notae sonantes (partes
  *                omnes) quarum classes acordum sine tertia faciunt
- *                (harmonia_sine_tertia: D3 A4 D5, A2 G4 E5); semel
+ *                (acordum_sine_tertia: D3 A4 D5, A2 G4 E5); semel
  *                per sonum - nota aliqua post tempus forte prius
- *                incipiat (acordum sustentum non iteratur)         -
+ *                incipiat (acordum sustentum non iteratur); NON si
+ *                fenestra explicationis cui tempus pertinet acordum
+ *                cum tertia nominat (arpeggium E2 E3 B3, G4: Em)  -
+ *   acorda       harmonia declarata (<acorda>) et sonans discordant
+ *                (fenestra declarata, explicatio.h): nota sine forma
+ *                alienae extra acordum declaratum, aut radix /
+ *                tertia declarata nusquam in fenestra sonans. Semel
+ *                per fenestram: "D declaratum, sonat Gmaj9/D (G5
+ *                B5)"                                             ORD.
+ *   evitanda     nota evitanda ("avoid note", acordum.h evitandae)
+ *                acordi fenestrae tenta (sine forma alienae): 11
+ *                super maiorem aut dominantem, tertia super
+ *                suspensam; transiens licet. "Fmaj7: nota evitanda
+ *                Bb4 (11)"                                        -
+ *   occultae     quintae aut octavae occultae inter voces extremas
+ *                (VOCES infra: prima et ultima): ambae eodem sensu
+ *                motae ad quintam aut octavam non ex ea (ex ea:
+ *                parallelae), superior SALTU (> II semitonia);
+ *                gradu licet (B4 C5 super G3 C3). Initia sequentia
+ *                ut parallelae; superior nota summa, inferior
+ *                infima partis                                    -
+ *   decussatio   voces proximae se transeunt: nota infima vocis
+ *                superioris infra summam inferioris sonat; semel
+ *                per decussationem (ubi incipit)                  -
+ *   spatium      voces superiores proximae plus quam octavam
+ *                distant (infima superioris - summa inferioris >
+ *                XII); vox ima cum proxima libera (bassus et tenor
+ *                late licet); semel per spatium                   -
+ *   duplicata    sensibilis duplicata: in fenestra DOMINANTIS
+ *                (SENSIBILIS infra) notae acordi (explicatio.h)
+ *                duae aut plures classis sensibilis simul sonant
+ *                (D7: F#3 et F#4); semel per fenestram            -
+ *   sensibilis   sensibilis vocis extremae (VOCES: prima, ultima)
+ *                non resoluta: nota acordi sensibilis cuius
+ *                proxima eiusdem vocis, in fenestra alia (non
+ *                dominante eiusdem sensibilis), semitonio supra
+ *                non stat - ubi acordum eius tonum resolutionis
+ *                habet (V -> ii6: liber); nota repetita proximam
+ *                iudicat; vox media libera (sensibilis frustrata:
+ *                F#4 -> D4 in V7 I)                               -
+ *   septima      septima acordi non resoluta (explicatio.h septima,
+ *                resoluta: proxima gradu descendit aut transiens
+ *                sursum) OMNI tempore; nota repetita proximam
+ *                iudicat. Dissonantia eam in tempore forti solum
+ *                nominat - regula hac activa ibi tacet (inventum
+ *                unum)                                            -
+ *
+ * VOCES (occultae, decussatio, spatium, sensibilis): partes ordine
+ * libri, summa prima; partes sine notis aut solum percussionis ('@')
+ * omissae. Carmen quod has regulas accendit partes sic ordinat
+ * (choralis: superius altus tenor bassus).
+ *
+ * SENSIBILIS fenestrae (functio.h): dominans = gradus V aut VII sine
+ * alteratione, aut applicata (V/x, viio/x); substituta (subV) non.
+ * Acordum tertiae maioris: tertia eius (D7 F#; A7 = V7/V: C#);
+ * diminutum (o, o7, h7): radix (viio7 in C: B). Tonus resolutionis
+ * semitonio supra.
+ * FINIS PHRASIS (sensibilis, septima): nota sub fermata (corona
+ * initium eius tegit) libera - phrasis nova ab initio (semicadentia
+ * laudium: F#4 sub fermata, deinde B4).
+ *
+ * STYLUS (censura_carminis_forma, carmen.h <stylus>): forma ordinaria
+ * (classicus), deinde stylus carminis per catenam basium (basis prior:
+ * regulae, septimae), deinde <censura regulae> carminis; vocans
+ * (auditio -regulae) postremo (censura_regulas_legere). REGULAE:
+ * "+a,-b" formam datam mutat; "a,b" (sine signis) hae solae.
+ * septimae_liberae: septima acordi nominati (et nona, sexta - toni
+ * acordi) resolutionem non postulat (dissonantia: causa 'septima non
+ * resoluta' tacet); dissonantia notarum alienarum manet.
+ * intentiones_liberae (stylus iazzicus): tonus tensionis licitae acordi
+ * fenestrae (declarati aut nominati; acordum.h intentiones) acordi est,
+ * quacumque figura (suspensio, appoggiatura non resolutae) -
+ * dissonantia et acorda eum non nominant. clavis intentionem acordi
+ * DECLARATI ad initium notae admittit. Notae evitandae intentiones non
+ * sunt: resolvendae manent.
  *
  * TEMPUS FORTE: initium mensurae; in 4/x etiam medium; in metris
  * compositis (6/8, 9/8, 12/8) omnis tertia octava. Percussio ('@')
@@ -68,6 +151,14 @@ nomen enumeratio {
     CENSURA_PARALLELAE,
     CENSURA_SALTUS,
     CENSURA_TERTIA,
+    CENSURA_ACORDA,
+    CENSURA_EVITANDA,
+    CENSURA_OCCULTAE,
+    CENSURA_DECUSSATIO,
+    CENSURA_SPATIUM,
+    CENSURA_DUPLICATA,
+    CENSURA_SENSIBILIS,
+    CENSURA_SEPTIMA,
     CENSURA_REGULAE
 } CensuraRegula;
 
@@ -80,12 +171,19 @@ nomen structura {
     vacuum* ctx;
     /* saltus maximus licitus, semitonia; 0 = XII (octava) */
     i32 saltus_maximus;
+    /* septima acordi resolutionem non postulat (stylus popularis) */
+    b32 septimae_liberae;
+    /* tensiones licitae acordi toni acordi sunt (stylus iazzicus) */
+    b32 intentiones_liberae;
 } CensuraForma;
 
 nomen structura {
           CensuraRegula regula;
                  chorda pars;
-                 chorda pars_altera;   /* dissonantia, parallelae */
+                 chorda pars_altera;   /* dissonantia, parallelae,
+                                         * occultae, decussatio,
+                                         * spatium (vox inferior),
+                                         * duplicata */
                     i32 mensura;       /* 1 = prima */
                     s64 pulsus;        /* intra mensuram */
                     s32 frustum;       /* index in parte; -1 = nullum */
@@ -93,13 +191,20 @@ nomen structura {
                                          * '|') */
     constans CarmenNota* nota;          /* in carmine (tertia: infima
                                          * sonantium); NIHIL: lineae */
-    constans CarmenNota* nota_altera;   /* partis alterius */
-    /* parallelae: notae initii prioris (par primum); saltus: nota
-     * prior partis; NIHIL aliter */
+    /* partis alterius; duplicata: sensibilis altera; sensibilis,
+     * septima: nota proxima eiusdem vocis (NIHIL: pausa) */
+    constans CarmenNota* nota_altera;
+    /* parallelae, occultae: notae initii prioris (par primum);
+     * saltus: nota prior partis; acorda: nota aliena altera; NIHIL
+     * aliter */
     constans CarmenNota* nota_prior;
     constans CarmenNota* nota_altera_prior;
-    /* dissonantia: cur non explicata (statica); NIHIL aliter */
+    /* dissonantia: cur non explicata (statica); acorda: "radix
+     * deest" / "tertia deest" (NIHIL: notae alienae); NIHIL aliter */
     constans character* causa;
+    /* acorda: harmonia SONANS fenestrae (litteralis, classes omnes);
+     * duplicata, sensibilis, septima: acordum fenestrae */
+                Acordum sonans;
 } CensuraInventum;
 
 /* ORD. activae (lineae, clavis, ambitus, dissonantia), ambitus
@@ -117,6 +222,22 @@ b32
 censura_regulam_invenire (
            chorda  titulus,
     CensuraRegula* regula);
+
+/* regulae "+a,-b" (formam mutat) aut "a,b" (hae solae). FALSUM:
+ * regula ignota (*ignota = titulus eius, forma partim mutata) */
+b32
+censura_regulas_legere (
+          chorda  regulae,
+    CensuraForma* forma,
+          chorda* ignota);
+
+/* forma carminis: ordinaria, stylus (catena basium), <censura
+ * regulae>. FALSUM: regula ignota in stylo aut carmine (*ignota) */
+b32
+censura_carminis_forma (
+    constans Carmen* carmen,
+       CensuraForma* forma,
+             chorda* ignota);
 
 /* tabula ordinaria; ctx non adhibetur */
 b32

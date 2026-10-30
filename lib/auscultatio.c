@@ -21,7 +21,9 @@
 #define AUSCULTATIO_PULSUS_QUADRA (SONUS_FREQUENTIA / C)
 
 nomen structura {
-    Mixtura* mixtura;
+           Mixtura* mixtura;
+     MixturaCensus  census;          /* ultimus nuntius CENSUS */
+               b32  census_lectus;
 } Scriptura;
 
 interior b32
@@ -72,7 +74,17 @@ _nuntium_legere (
 {
     Scriptura* s = (Scriptura*)ctx;
 
-    redde s->mixtura && mixtura_nuntium_legere(s->mixtura, nuntius);
+    /* CENSUS hic capitur (concentus eum ignoraret), ceteri traduntur */
+    dum (s->mixtura && mixtura_nuntium_legere(s->mixtura, nuntius))
+    {
+        si (nuntius->genus != MIXTURA_NUNTIUS_CENSUS)
+        {
+            redde VERUM;
+        }
+        s->census         = nuntius->census;
+        s->census_lectus  = VERUM;
+    }
+    redde FALSUM;
 }
 
 interior s64
@@ -101,11 +113,25 @@ _mensurae (
 
 b32
 auscultatio_reddere (
+             constans Carmen*  carmen,
+    constans CantorResolutor*  resolutor,
+                     Piscina*  piscina,
+                         f32** exempla,
+                         i32*  quadra)
+{
+    redde auscultatio_reddere_censum(carmen, resolutor, piscina,
+        exempla,
+                                     quadra, NIHIL);
+}
+
+b32
+auscultatio_reddere_censum (
              constans Carmen* carmen,
     constans CantorResolutor* resolutor,
                      Piscina* piscina,
                          f32** exempla,
-                         i32* quadra)
+                         i32* quadra,
+               MixturaCensus* census)
 {
        MixturaForma  forma;
     ConcentusExitus  exitus;
@@ -119,20 +145,21 @@ auscultatio_reddere (
                 s64  scripta  = ZEPHYRUM;
                 s64  nunc     = ZEPHYRUM;
 
-    *exempla               = NIHIL;
-    *quadra                = ZEPHYRUM;
-    forma.voces            = LXIV;
-    forma.iussa            = CCLVI;
-    forma.nuntii           = CXXVIII;
-    scriptura.mixtura      = NIHIL;
-    exitus.aperire         = _aperire;
-    exitus.claudere        = _claudere;
-    exitus.momentum        = _momentum;
-    exitus.mora            = _mora;
-    exitus.iubere          = _iubere;
-    exitus.nuntium_legere  = _nuntium_legere;
-    exitus.ctx             = &scriptura;
-    concentus              = concentus_creare(piscina, &forma, &exitus);
+    *exempla = NIHIL;
+    *quadra = ZEPHYRUM;
+    forma.voces = LXIV;
+    forma.iussa = CCLVI;
+    forma.nuntii = CXXVIII;
+    scriptura.mixtura = NIHIL;
+    scriptura.census_lectus = FALSUM;
+    exitus.aperire = _aperire;
+    exitus.claudere = _claudere;
+    exitus.momentum = _momentum;
+    exitus.mora = _mora;
+    exitus.iubere = _iubere;
+    exitus.nuntium_legere = _nuntium_legere;
+    exitus.ctx = &scriptura;
+    concentus = concentus_creare(piscina, &forma, &exitus);
     cantor = concentus != NIHIL ? cantor_creare(piscina, concentus,
         resolutor) : NIHIL;
     si (cantor == NIHIL || !concentus_aperire(concentus))
@@ -189,6 +216,26 @@ auscultatio_reddere (
         scripta  += AUSCULTATIO_PULSUS_QUADRA;
         nunc     += AUSCULTATIO_PULSUS_MS;
     }
+    /* census in fine: iussum, pulsus unus redditus (ultra exempla),
+     * nuntius per _nuntium_legere captus */
+    si (census != NIHIL)
+    {
+        MixturaIussum i;
+                  f32 vacua[II * AUSCULTATIO_PULSUS_QUADRA];
+
+        memset(census, ZEPHYRUM, magnitudo(MixturaCensus));
+        census->reductio = 1.0f;
+        mixtura_iussum_parare(&i, MIXTURA_IUSSUM_CENSUM_PETERE,
+                              mixtura_momentum(scriptura.mixtura));
+        (vacuum)concentus_iubere(concentus, &i);
+        mixtura_reddere(scriptura.mixtura, vacua,
+                        AUSCULTATIO_PULSUS_QUADRA);
+        (vacuum)concentus_agere(concentus, nunc);
+        si (scriptura.census_lectus)
+        {
+            *census = scriptura.census;
+        }
+    }
     concentus_destruere(concentus);
     si (scripta > basis)
     {
@@ -227,7 +274,7 @@ auscultatio_metiri (
         f32 v = exempla[i] < 0.0f ? -exempla[i] : exempla[i];
 
         summarium->apex = v > summarium->apex ? v : summarium->apex;
-        si (v >= 1.0f)
+        si (v > 1.0f)
         {
             summarium->tonsa++;
         }
@@ -357,6 +404,45 @@ auscultatio_tacitae (
                 && _sonat(p, ab, ad);
         }
         si (debet)
+        {
+            si (n < capacitas)
+            {
+                mensurae[n] = m;
+            }
+            n++;
+        }
+    }
+    redde n;
+}
+
+i32
+auscultatio_partis_tacitae (
+                  constans Carmen* carmen,
+                              i32  pars,
+    constans AuscultatioSummarium* summarium,
+                              i32* mensurae,
+                              i32  capacitas)
+{
+    constans CarmenPars* p;
+                    i32  n = ZEPHYRUM;
+                    i32  m;
+
+    si (pars >= carmen->numerus_partium)
+    {
+        redde ZEPHYRUM;
+    }
+    p = &carmen->partes[pars];
+    si (p->mutus)
+    {
+        redde ZEPHYRUM;
+    }
+    per (m = I; m <= summarium->numerus; m++)
+    {
+        s64 ab = carmen_pulsus_mensurae(carmen, m);
+        s64 ad = carmen_pulsus_mensurae(carmen, m + I);
+
+        si (   summarium->mensurae[m - I] < AUSCULTATIO_TACITUM
+            && _sonat(p, ab, ad))
         {
             si (n < capacitas)
             {

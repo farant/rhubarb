@@ -40,17 +40,14 @@ declare -a MECHANISMI_FONTES=(
 )
 # capita mutata sine recompilo = corruptio ABI (excubitor: mech_*
 # stala post latina.h - eadem classis mixturae)
-newest_header () {
-    find "$RADIX_DIR/include" "$SILVA_DIR/fontes" "$RADIX_DIR/materia/fontes" \
-        "$SILVA_DIR/instrumenta" \
-        -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include" "$SILVA_DIR/fontes" "$RADIX_DIR/materia/fontes" "$SILVA_DIR/instrumenta"
 
 obj_files=""
 for f in "${MECHANISMI_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/mech_$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -59,7 +56,7 @@ done
 for f in "silva_token" "silva_lexema"; do
     src="$SILVA_DIR/fontes/$f.c"
     obj="$BUILD_DIR/mech_$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [silva] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -69,7 +66,7 @@ done
 # mechanismi materia_token nectere debet
 src="$RADIX_DIR/materia/fontes/materia_token.c"
 obj="$BUILD_DIR/mech_materia_token.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
     echo "  [materia] materia_token.c"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
@@ -82,7 +79,7 @@ obj_files="$obj_files $obj"
 for m in $(mechanismus_silvae_fontes); do
     src="$RADIX_DIR/$m"
     obj="$BUILD_DIR/mech_$(basename "$m" .c).o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [silva] $(basename "$m") (mechanismus)"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

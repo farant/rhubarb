@@ -689,6 +689,11 @@ polynomium_contentum (
     per (k = ZEPHYRUM; k < p.numerus; k++)
     {
         g = magnus_divisor_communis(g, p.coefficientes[k], piscina);
+        /* gcd(I, x) = I: reliqui nihil mutant (budget B1 D3) */
+        si (g.membra == NIHIL && g.parvus == I)
+        {
+            frange;
+        }
     }
     redde g;
 }

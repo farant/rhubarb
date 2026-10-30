@@ -103,11 +103,27 @@ newest_header () {
     fi
 }
 
+# VENDICATA PER THESAURUM (budget B1 E7, 2026-10-28): fontes magni
+# communes (vendor/sqlite3.c ~IX.V MB, silva/amalgama/silva.c ~V MB) per
+# bin/compilator EX RADICE, argumentis iisdem ac compile_tests.sh: clavis
+# (cwd + argumenta sine -o + octeti fontis et capitum) congruit, ergo
+# obiectum radicis (aut suitae prioris) ex thesauro sumitur - in frigida
+# compilatio una pro IV. Compilator absens -> clang ipse.
+_vendicatum_compilare () {   # <obiectum> <argumenta clang, fons RADICI relativus>
+    local obiectum="$1"
+    shift
+    if [ -x "$RADIX_DIR/bin/compilator" ]; then
+        ( cd "$RADIX_DIR" && bin/compilator "$@" -o "$obiectum" )
+    else
+        ( cd "$RADIX_DIR" && clang "$@" -o "$obiectum" )
+    fi
+}
+
 # ---- 0. vendor sqlite3.o (laxum; source-newer solum) ----
 sqlite_obj="$BUILD_DIR/sqlite3.o"
 if [ ! -f "$sqlite_obj" ] || ! [ "$sqlite_obj" -nt "$RADIX_DIR/vendor/sqlite3.c" ]; then
     echo "  [vendor] sqlite3.c (laxum)"
-    if ! clang -c "${VENDOR_FLAGS[@]}" "$RADIX_DIR/vendor/sqlite3.c" -o "$sqlite_obj"; then
+    if ! _vendicatum_compilare "$sqlite_obj" "${VENDOR_FLAGS[@]}" -c vendor/sqlite3.c; then
         echo "FRACTA: vendor/sqlite3.c" ; exit 1
     fi
 fi

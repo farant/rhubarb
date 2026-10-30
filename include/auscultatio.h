@@ -37,8 +37,9 @@
 #define AUSCULTATIO_CAUDA_MAXIMA (XX * SONUS_FREQUENTIA)
 
 nomen structura {
-     f32  apex;       /* |exemplum| maximum */
-     i32  tonsa;      /* exempla |x| >= 1.0 (tonsura) */
+     f32 apex;       /* |exemplum| maximum */
+     i32 tonsa;      /* exempla |x| > 1.0 (tonsura; 1.0 ipsum licitum,
+                       * ubi limitator summae apices ponit) */
      f32  rms;        /* totius */
      f32* mensurae;   /* rms per mensuram (e piscina); [m - 1] */
      i32  numerus;    /* mensurae carminis */
@@ -55,6 +56,18 @@ auscultatio_reddere (
                      Piscina*  piscina,
                          f32** exempla,
                          i32*  quadra);
+
+/* ut auscultatio_reddere, et census mixturae in fine redditionis
+ * (apex ante limitatorem, limitata, reductio - limitator summae,
+ * mixtura.h); census NIHIL = non petitur */
+b32
+auscultatio_reddere_censum (
+             constans Carmen*  carmen,
+    constans CantorResolutor*  resolutor,
+                     Piscina*  piscina,
+                         f32** exempla,
+                         i32*  quadra,
+               MixturaCensus*  census);
 
 /* purum: exempla (stereo, quadra) in mensuras carminis (mappa temporis
  * et metri) secantur; mensura ultra exempla = 0. FALSUM: memoria
@@ -83,6 +96,18 @@ auscultatio_partem (
 i32
 auscultatio_tacitae (
                   constans Carmen* carmen,
+    constans AuscultatioSummarium* summarium,
+                              i32* mensurae,
+                              i32  capacitas);
+
+/* ut auscultatio_tacitae, sed pro parte UNA: mensurae in quibus notae
+ * partis 'pars' (non mutae) sonant sed summarium partis solius
+ * (auscultatio_partem) tacet - instrumentum non inventum, lucrum 0.
+ * Pars extra partes: 0 */
+i32
+auscultatio_partis_tacitae (
+                  constans Carmen* carmen,
+                              i32  pars,
     constans AuscultatioSummarium* summarium,
                               i32* mensurae,
                               i32  capacitas);

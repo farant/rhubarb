@@ -233,3 +233,9 @@ c = 1. Same API and results (the Taylor tests at 7 shifts plus the
 inverse round trip pass; plants S2 "c always 1" and S3 "j > i" are red).
 For radices' VCA at degree 89 it cut isolation from 4.1 s to 0.92 s (see
 radices.worklog.md).
+
+## 2026-10-29 — polynomium_contentum stops at gcd 1 (budget B1 D3)
+
+gcd(1, x) = 1, so once the running content is 1 the remaining
+coefficients cannot change it — return early. Same result, public
+function unchanged. (6.6% of probatio_cellae under ASan, whole run.)

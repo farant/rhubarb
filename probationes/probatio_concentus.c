@@ -525,6 +525,102 @@ _sectio_cauda (
     CREDO_FALSUM (concentus_agere(k, _nunc(&f)));
 }
 
+/* tenere: dum tenetur quies non numeratur; demissio quietem ab nunc
+ * numerat; tenentes duo; numquam infra 0; quiescere tenentes non
+ * curat */
+interior vacuum
+_sectio_tenere (
+    CredoContextus* c)
+{
+       ExitusFictus  f;
+    ConcentusExitus  exitus;
+          Concentus* k = _parare(c, &f, &exitus, VIII);
+
+    CREDO_NECESSE (k != NIHIL && concentus_aperire(k));
+    concentus_tenere(k, VERUM);
+    _currere(k, &f, (s64)CONCENTUS_QUIES + V * M);
+    CREDO_VERUM (concentus_apertum(k));
+    concentus_tenere(k, FALSUM);
+    _currere(k, &f, (s64)CONCENTUS_QUIES - M);
+    CREDO_VERUM (concentus_apertum(k));
+    _currere(k, &f, MD);
+    CREDO_FALSUM (concentus_apertum(k));
+    /* duo tenentes: unus demissus, alter tenet */
+    CREDO_VERUM (concentus_aperire(k));
+    concentus_tenere(k, VERUM);
+    concentus_tenere(k, VERUM);
+    concentus_tenere(k, FALSUM);
+    _currere(k, &f, (s64)CONCENTUS_QUIES + C);
+    CREDO_VERUM (concentus_apertum(k));
+    concentus_tenere(k, FALSUM);
+    _currere(k, &f, (s64)CONCENTUS_QUIES + C);
+    CREDO_FALSUM (concentus_apertum(k));
+    /* demissio sine tenente: numerus non infra 0 */
+    CREDO_VERUM (concentus_aperire(k));
+    concentus_tenere(k, FALSUM);
+    concentus_tenere(k, VERUM);
+    _currere(k, &f, (s64)CONCENTUS_QUIES + C);
+    CREDO_VERUM (concentus_apertum(k));
+    /* quies ante tenere non numeratur post demissionem: XX s quietis,
+     * tenere XX s, demittere - XV s post adhuc apertum */
+    CREDO_VERUM (concentus_aperire(k));
+    concentus_tenere(k, FALSUM);
+    _currere(k, &f, XX * M);
+    concentus_tenere(k, VERUM);
+    _currere(k, &f, XX * M);
+    concentus_tenere(k, FALSUM);
+    _currere(k, &f, XV * M);
+    CREDO_VERUM (concentus_apertum(k));
+    _currere(k, &f, XVI * M);
+    CREDO_FALSUM (concentus_apertum(k));
+    /* concentus in memoria sordida: piscina_reficere octetos veteres
+     * relinquit (piscina_vacare autem delet) - post notare, 0xFF,
+     * reficere tenentes ab 0 incipiunt: quies XXX s eum claudit */
+    {
+        Piscina* q = piscina_generare_dynamicum("tenere_sordida",
+                                                M * LXIV);
+         PiscinaNotatio  nota;
+                 vacuum* sordes;
+           ExitusFictus  g;
+        ConcentusExitus  e;
+           MixturaForma  forma;
+              Concentus* nova;
+
+        CREDO_NECESSE (q != NIHIL);
+        nota    = piscina_notare(q);
+        sordes  = piscina_allocare(q, M * XXXII);
+        CREDO_NECESSE (sordes != NIHIL);
+        memset(sordes, 0xFF, M * XXXII);
+        piscina_reficere(q, nota);
+        memset(&g, ZEPHYRUM, magnitudo(g));
+        g.mora            = AGMEN;
+        e.aperire         = _aperire;
+        e.claudere        = _claudere;
+        e.momentum        = _momentum;
+        e.mora            = _mora;
+        e.iubere          = _iubere;
+        e.nuntium_legere  = _nuntium_legere;
+        e.ctx             = &g;
+        forma.voces       = VIII;
+        forma.iussa       = XXXII;
+        forma.nuntii      = XVI;
+        nova              = concentus_creare(q, &forma, &e);
+        CREDO_NECESSE (nova != NIHIL && concentus_aperire(nova));
+        _currere(nova, &g, (s64)CONCENTUS_QUIES + C);
+        CREDO_FALSUM (concentus_apertum(nova));
+        concentus_destruere(nova);
+        piscina_destruere(q);
+    }
+    /* quiescere: tenens non obstat (apertum, tenetur, deinde mutus) */
+    CREDO_VERUM (concentus_aperire(k));
+    concentus_tenere(k, VERUM);
+    _currere(k, &f, C);
+    CREDO_VERUM (concentus_apertum(k));
+    concentus_quiescere(k);
+    _currere(k, &f, V);
+    CREDO_FALSUM (concentus_apertum(k));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio", _sectio_creatio, _parare_agmen, NIHIL, NIHIL, NIHIL },
     { "aperire", _sectio_aperire, _parare_agmen, NIHIL, NIHIL, NIHIL },
@@ -539,6 +635,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "destruere", _sectio_destruere, _parare_agmen, NIHIL, NIHIL,
         NIHIL },
     { "cauda", _sectio_cauda, _parare_agmen, NIHIL, NIHIL, NIHIL },
+    { "tenere", _sectio_tenere, _parare_agmen, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

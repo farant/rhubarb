@@ -51,7 +51,13 @@ hic_manens constans SonitusCampus CAMPI[XX] = {
  * valores octetim portati, ordine camporum. Nomina Latina: blip
  * punctum, step passus, whoosh susurrus, thump fragor, wind ventus,
  * laser radius, crackle crepitus, water rivus. Ultimum, tonus, NOSTRUM
- * est (non solarii): vox cantus, altitudine fixa (cantus.h). */
+ * est (non solarii): vox cantus, altitudine fixa (cantus.h).
+ * PERCUSSIO (nostra, musicae): cymbalum (ride), cymbalum_clausum
+ * (hi-hat), cymbalum_pedis (chick), scopae (brushes), laqueus (snare),
+ * quassatio (shaker), tympanum_grave (kick), baculum (cross-stick).
+ * In carmine altitudo a NOTA scripta venit (cantor frequentiam ponit):
+ * strepitus nota acuta clarior (cymbala o7-o8, scopae laqueus baculum
+ * o6, tympanum_grave o3); frequentia tabulae solum sonitui solo. */
 nomen structura {
      constans character* titulus;
        SonitusParametra  p;
@@ -92,7 +98,41 @@ hic_manens constans SonitusPraeparatum PRAEPARATA[] = {
      * (tenere) ponitur */
     { "tonus",    { 0.0f, 0.003f, 0.10f, 0.0f, 0.06f,  440.0f, 0.0f,
         0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 0.0f,    0.0f,
-            0.0f, 0.0f, 0.35f, 0.0f } }
+            0.0f, 0.0f, 0.35f, 0.0f } },
+    /* PERCUSSIO. cymbalum: strepitus acutus, remissio longa (unda
+     * cymbali, non tinnitus metallicus - vox una partes inharmonicas
+     * non habet) */
+    { "cymbalum", { 4.0f, 0.001f, 0.01f, 0.3f, 0.9f,  6000.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 14000.0f, 5000.0f,
+            0.0f, 0.0f, 0.16f, 0.15f } },
+    /* cymbalum clausum: ictus brevissimus, acutior */
+    { "cymbalum_clausum", { 4.0f, 0.001f, 0.005f, 0.4f, 0.045f, 8000.0f,
+        0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.0f, 16000.0f,
+            7000.0f, 0.0f, 0.0f, 0.18f, 0.3f } },
+    /* cymbalum pedis: "chick" in II et IV, surdius */
+    { "cymbalum_pedis", { 4.0f, 0.002f, 0.004f, 0.2f, 0.03f, 4000.0f,
+        0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.0f, 9000.0f,
+            3000.0f, 0.0f, 0.0f, 0.14f, 0.3f } },
+    /* scopae: impetus lentus - verritur, non pulsatur */
+    { "scopae",   { 4.0f, 0.06f, 0.06f,  0.0f, 0.16f, 3000.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 6000.0f, 1500.0f,
+            0.0f, 0.0f, 0.12f, 0.4f } },
+    /* laqueus: strepitus medius cum ictu */
+    { "laqueus",  { 4.0f, 0.001f, 0.01f, 0.5f, 0.14f, 3000.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 7000.0f, 600.0f,
+            0.0f, 0.0f, 0.30f, 0.25f } },
+    /* quassatio: granum molle, breve, acutum */
+    { "quassatio", { 4.0f, 0.012f, 0.01f, 0.0f, 0.05f, 7000.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 12000.0f, 4500.0f,
+            0.0f, 0.0f, 0.10f, 0.4f } },
+    /* tympanum grave: sinus clivo celeri deorsum, gravia transmittit */
+    { "tympanum_grave", { 3.0f, 0.001f, 0.02f, 0.5f, 0.22f, 110.0f,
+        -5.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.0f, 400.0f, 0.0f,
+            0.0f, 0.0f, 0.70f, 0.1f } },
+    /* baculum: pulsus brevissimus - lignum in margine */
+    { "baculum",  { 0.0f, 0.0f,  0.004f, 0.6f, 0.03f, 900.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  0.5f, 0.0f, 6000.0f, 700.0f,
+            0.0f, 0.0f, 0.25f, 0.15f } }
 };
 
 #define SONITUS_PRAEPARATORUM \

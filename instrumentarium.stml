@@ -18,7 +18,22 @@
      CAMPANAE_TUBULARES: partiales modorum IV-VII laminae liberae
      ((2n+1)^2: 2.0 2.99 4.17 5.56 ad notam) - nota percepta est
      fundamentalis ABSENS harmonicorum 2:3:4 (tonus ictus); modus III
-     (1.21) debilis. Approximatio, auribus iudicanda. -->
+     (1.21) debilis. Approximatio, auribus iudicanda.
+
+     Instrumenta theatri (desideratum ...J8Q9H, 2026-10-24; omnia
+     auribus temperanda):
+
+     CHORDAE: sectio chordarum - serra in V exemplaria (+/- VII
+     centesimae: unisonus), impetus arcus 0.25 s, colum gravium ~4.5
+     milia, vibratus post moram (fidicines post sonum vibrant).
+     HARPA: chorda clara, longe sonans, post portam etiam sonat.
+     TENOR, SUPERIUS: vox sola (formantes, vocalis a / o), vibratus
+     cantoris post moram, flatus parvus; superius = vox summa (cantus
+     Renascentiae).
+     CORNU: serra per colum resonans quod involucro aperitur (aes
+     tumescens), impetus brevis.
+     CLARINETUM: pulsus dimidius (harmonici impares), colum mollis,
+     flatus, vibratus serus. -->
 <instrumentarium>
 
   <instrumentum titulus="cembalo" basis="chorda" claritas="0.95"
@@ -40,5 +55,33 @@
   <instrumentum titulus="campanae_tubulares" genus="partiales"
       partiales="1.21:0.3:1.0 2.0:1.0:4.0 2.99:0.8:3.0 4.17:0.6:2.5 5.56:0.3:1.5"
       impetus="0.001" remissio="2.0" amplitudo="0.5" ambitus="60..77"/>
+
+  <instrumentum titulus="chordae" basis="aether" forma="serra"
+      unisonus="5" dispersio="14" impetus="0.25" lapsus="0.3"
+      tenor="0.85" remissio="0.4" vibratus="0.12" celeritas="5.5"
+      mora="0.35" gravia="4500" amplitudo="0.55" ambitus="28..100"/>
+
+  <instrumentum titulus="harpa" basis="chorda" claritas="0.7"
+      decrementum="3.0" remissio="1.5" amplitudo="0.75"
+      ambitus="24..103"/>
+
+  <instrumentum titulus="tenor" basis="schola" vocalis="a"
+      vibratus="0.25" celeritas="5.8" mora="0.3" impetus="0.08"
+      flatus="0.05" amplitudo="0.55" ambitus="48..69"/>
+
+  <instrumentum titulus="superius" basis="schola" vocalis="o"
+      vibratus="0.25" celeritas="5.8" mora="0.3" impetus="0.08"
+      flatus="0.05" amplitudo="0.5" ambitus="60..84"/>
+
+  <instrumentum titulus="cornu" basis="aether" forma="serra"
+      impetus="0.06" lapsus="0.2" tenor="0.8" remissio="0.25"
+      vibratus="0.03" celeritas="5" gravia="2000" resonans="900"
+      acumen="1.5" motus="18" flatus="0.02" amplitudo="0.45"
+      ambitus="34..77"/>
+
+  <instrumentum titulus="clarinetum" basis="aether" forma="pulsus"
+      officium="0.5" impetus="0.04" lapsus="0.1" tenor="0.9"
+      remissio="0.12" vibratus="0.04" celeritas="5" mora="0.4"
+      gravia="3500" flatus="0.06" amplitudo="0.4" ambitus="50..94"/>
 
 </instrumentarium>

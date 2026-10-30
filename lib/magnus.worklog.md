@@ -207,3 +207,26 @@ Added for `extensio` E2b, which needs log2 bounds (root-separation depth,
 the zero certificate's bisection count) and must not read the private
 limbs. Tested at 2^k and 2^k - 1 for k = 1..200 (crossing limb
 boundaries), negatives, S64_MIN (64 bits) and S64_MAX (63).
+
+## 2026-10-29 — Magnus is 16 bytes; inline gcd fast path (budget B1 D1, D2)
+
+Root cause found by batch D: on arm64 (AAPCS64) a struct larger than 16
+bytes is passed and returned through memory, and every by-value copy of
+the 24-byte Magnus became an `llvm.memcpy` — which ASan turns into a CALL
+to `__asan_memcpy`. That was ~35% of probatio_cellae under the venenum
+gate (plus ~8% memmove inside it). Now `{ s64 parvus; i32* membra; }`:
+inline values unchanged (membra == NIHIL, value in parvus); big values
+store signum × longitudo in parvus (GMP's _mp_size trick), read through
+`_signum_membrorum` / `_longitudo_membrorum`. 16 bytes → x0/x1, no copy.
+Only magnus.c and probatio_magnus.c's white-box `_canonicus` read the
+fields (adapted). Plus D2: `magnus_divisor_communis` runs Euclid in i64
+when both operands are inline (cellae's Q(√5)/Q(ζ) coordinates nearly
+always are); `_ex_signo_et_modulo` already covers gcd(S64_MIN, 0) = 2^63.
+
+Measured (venenum gate, ASan, same machine, load ~7.5): probatio_laqueus
+48–77 s → 16.6 s; probatio_cellae 212–318 s → 175 s (its biggest section,
+`lentus`, is float work the copies never touched — batch D's D3/D4/split
+are the rest). Math suites (magnus, fractio, polynomium, extensio,
+matrix, quaternio, radices, cellae, laqueus) green; venenum 17/17.
+Plants: big values stored without sign → :558 red; gcd returns the wrong
+variable → probatio_fractio :591 red.

@@ -18,6 +18,7 @@ structura Concentus {
                 b32  quiescens;    /* claudere cum primum nulla vox */
                 b32  quies_nota;   /* quies_ab valet */
                 s64  quies_ab;     /* ms: ex quo nulla vox */
+                i32  tenentes;     /* clientes notas futuras habentes */
 };
 
 Concentus*
@@ -46,6 +47,7 @@ concentus_creare (
     c->quiescens   = FALSUM;
     c->quies_nota  = FALSUM;
     c->quies_ab    = ZEPHYRUM;
+    c->tenentes    = ZEPHYRUM;
     si (c->mixtura == NIHIL || c->rector == NIHIL)
     {
         redde NIHIL;
@@ -159,6 +161,12 @@ concentus_agere (
         _claudere(c);
         redde FALSUM;
     }
+    /* tenetur: quies non numeratur (ab demissione numerabitur) */
+    si (c->tenentes > ZEPHYRUM)
+    {
+        c->quies_nota = FALSUM;
+        redde VERUM;
+    }
     si (!c->quies_nota)
     {
         c->quies_nota  = VERUM;
@@ -186,6 +194,21 @@ concentus_quiescere (
     si (c->apertum)
     {
         c->quiescens = VERUM;
+    }
+}
+
+vacuum
+concentus_tenere (
+    Concentus* c,
+          b32  tenere)
+{
+    si (tenere)
+    {
+        c->tenentes++;
+    }
+    alioquin si (c->tenentes > ZEPHYRUM)
+    {
+        c->tenentes--;
     }
 }
 

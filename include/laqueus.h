@@ -32,6 +32,7 @@
 #include "fractio.h"
 #include "situs.h"
 #include "polynomium.h"
+#include "contractio.h"
 
 /* transitus plures uncinus per summam statuum (2^c) non computat */
 #define LAQUEUS_TRANSITUS_MAXIMI XXIV
@@ -254,6 +255,120 @@ laqueus_alexander_ex_pd (
          Piscina* piscina,
       Polynomium* exitus);
 
+
+/* ==================================================
+ * Uncinus per modulum vertex et contractionem (sine limite 2^c)
+ *
+ * Spin +-1 per os (index dimensionis 2), gyrationes ossium ex arbore
+ * dualis (facies externa +4, ceterae -4), tensor per transitum; rete
+ * per contractio (ordo avidus, officina una) modulo primos 1 mod 4 ad
+ * puncta A = i omega^2 aestimatur, uncinus per interpolatio
+ * restituitur EXACTE (limes probatus per arbores extensas graphorum
+ * Tait, numquam > 2c bitorum; fenestra
+ * Kauffman in classe 3w modulo 4, passus 4). Nullus limes transituum
+ * praeter octeti_maximi (officina). Vide
+ * project-specs/contractio-plan.md.
+ * ================================================== */
+
+nomen structura LaqueusModulusVertex LaqueusModulusVertex; /* opacum */
+
+/* structura semel: gyrationes, rete, ordo, officina (<= octeti_maximi
+ * octeti). Validatio eadem ac laqueus_uncinus_ex_pd; NIHIL etiam si
+ * transitus < 2 aut officina refutata. Memoria in piscina. */
+LaqueusModulusVertex*
+laqueus_modulus_vertex_creare (
+    constans i32* pd,
+             i32  transitus,
+             i64  octeti_maximi,
+         Piscina* piscina);
+
+/* uncinus <D> in puncto: A = i omega^2 (i = g^((p-1)/4), g non
+ * residuum quadraticum minimum), valor = <D>(A) modulo p.
+ * INTERPOLATIO_UTILE (punctum = A); INTERPOLATIO_INUTILE si omega = 0
+ * aut d = omega^4 + omega^-4 = 0 (A^4 = -1); INTERPOLATIO_ERRATUM si
+ * p < 5, p non 1 modulo 4, aut p non primus (Miller-Rabin
+ * deterministicus, congruentia_est_primus). Nihil
+ * allocat (officina reutitur); primus mutatus i recomputat. */
+s32
+laqueus_modulus_vertex_aestimare (
+    LaqueusModulusVertex* mv,
+                     i32  omega,
+                     i32  p,
+                     i32* punctum,
+                     i32* valor);
+
+/* gyrationes (quartae) per os 0..2c-1, directione a primo occursu in
+ * codice ad secundum; memoria structurae */
+constans s32*
+laqueus_modulus_vertex_gyrationes (
+    constans LaqueusModulusVertex* mv);
+
+ContractioSumptus
+laqueus_modulus_vertex_sumptus (
+    constans LaqueusModulusVertex* mv);
+
+/* ordo contractionis retis (CONTRACTIO_OPTIMUS: contractio_ordo_
+ * candidatus et _candidati legi possunt); NIHIL si mv NIHIL */
+constans ContractioOrdo*
+laqueus_modulus_vertex_ordo (
+    constans LaqueusModulusVertex* mv);
+
+/* limes coefficientium uncinus (contractio-plan T5a): B = minimum
+ * super duos graphos Tait (regiones unius coloris, arcus per
+ * transitum) producti Pi_{v != r} gradus(v) (ansis exclusis, r vertex
+ * gradus maximi). Sigma_k |c_k| <= arbores extensae <= B (expansio
+ * Thistlethwaite signata), ergo |c_k| < 2^limes. _limes = bita(B)
+ * (0 si mv NIHIL; numquam > 2c); _limes_exactus = B ipse. */
+i32
+laqueus_modulus_vertex_limes (
+    constans LaqueusModulusVertex* mv);
+
+b32
+laqueus_modulus_vertex_limes_exactus (
+    constans LaqueusModulusVertex* mv,
+                           Magnus* exitus);
+
+/* uncinus exactus in structura iam aedificata (ut
+ * laqueus_uncinus_ex_pd_rete, sine aedificatione iterata). FALSUM si
+ * restitutio refutat (exitus non tangitur). */
+b32
+laqueus_modulus_vertex_uncinus (
+    LaqueusModulusVertex* mv,
+                 Piscina* piscina,
+              Polynomium* exitus);
+
+/* contractiones factae (puncta in aestimare usque ad contractionem
+ * perducta) et mutationes primi ab creatione - ut probationes et
+ * mensurae limitem in usu videant. Exitus NIHIL licet. */
+vacuum
+laqueus_modulus_vertex_vocationes (
+    constans LaqueusModulusVertex* mv,
+                              i32* aestimationes,
+                              i32* primi);
+
+/* uncinus Kauffman et Jones ex codice PD per modulum vertex; codex ut
+ * laqueus_uncinus_ex_pd (transitus 0 -> 1; transitus unus refutatur).
+ * sumptus NIHIL licet (aliter sumptus contractionis; 0 pro transitu
+ * 0). FALSUM si codex invalidus aut officina > octeti_maximi (exitus
+ * non tangitur). */
+b32
+laqueus_uncinus_ex_pd_rete (
+         constans i32* pd,
+                  i32  transitus,
+                  i64  octeti_maximi,
+              Piscina* piscina,
+           Polynomium* exitus,
+    ContractioSumptus* sumptus);
+
+b32
+laqueus_jones_ex_pd_rete (
+         constans i32* pd,
+                  i32  transitus,
+                  i64  octeti_maximi,
+              Piscina* piscina,
+           Polynomium* exitus,
+    ContractioSumptus* sumptus);
+
 /* codex PD per motus Reidemeister I et II simplificatus: dum motus
  * aliquis applicari potest, transitus removentur (R1: ansa - transitus
  * cuius duo ora vicina idem sunt; R2: duo transitus duo ora
@@ -272,6 +387,30 @@ b32
 laqueus_pd_simplificare (
     constans i32*  pd,
              i32   transitus,
+         Piscina*  piscina,
+             i32** pd_exitus,
+             i32*  transitus_exitus);
+
+/* codex PD clausurae tricae (plexus): verbum[k] = +-i (1 <= i < fila)
+ * = sigma_i^(+-1). Conventio: sigma_i^(+1) transitum POSITIVUM dat
+ * (scriptura +1), ergo clausura sigma_1^3 = trifolium dextrum (3_1
+ * tabulae), (sigma_1 .. sigma_(p-1))^q = T(p, q) dextrum. Ora 1..2c per
+ * percursum renumerantur, transitus [infra intrans, contra horologium]
+ * ut in diagramma_pd; transitus k = littera k verbi. Codex reddendus
+ * per _pd_legere probatur (c >= 2). fila 1 et verbum vacuum: nodus
+ * trivialis (transitus 0, pd_exitus NIHIL). FALSUM (exitus non tacti)
+ * si fila 0, littera 0 aut |littera| >= fila, verbum vacuum cum fila >= 2,
+ * filum quod nulla littera tangit, aut clausura plures componentes
+ * habet (permutatio verbi non cyclus fila: e.g. longitudo et fila
+ * eiusdem paritatis non possunt nodum dare). Memoria in piscina.
+ * Litterae eaedem ac Plexus (plexus.h): vocans plexum tenens
+ * laqueus_pd_ex_plexu(p.litterae, p.longitudo, p.fila, ...) vocat -
+ * caput plexus.h hic non includitur (eius dependentiae graves). */
+b32
+laqueus_pd_ex_plexu (
+    constans s32*  verbum,
+             i32   longitudo,
+             i32   fila,
          Piscina*  piscina,
              i32** pd_exitus,
              i32*  transitus_exitus);
