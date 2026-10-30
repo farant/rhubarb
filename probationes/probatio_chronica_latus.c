@@ -3,7 +3,9 @@
  * cum eventis, j k per paginas anni, descriptio longa fluit, positio
  * in praesentia (restituta; prima: annus hodie proximus), mutatio
  * dum aperta, vacua, mus (sagittae pedis, dimidia paginae), locus et
- * titulus loci, argumentum malum. */
+ * titulus loci, argumentum malum. C3b: visus fluminis (ordinarius) -
+ * anni continui, columnae, annus iteratus in pagina sequenti, h l ad
+ * paginas annorum, positio, v vertit, mus. */
 
 #include "latina.h"
 #include "piscina.h"
@@ -302,7 +304,8 @@ _probare_annum (
 {
     Mundus* w = mundum_creare(c);
 
-    CREDO_NECESSE(w && tres_annos(w) && montare(w, NIHIL));
+    CREDO_NECESSE(w && tres_annos(w)
+        && montare(w, "chronica/annus"));
 
     CREDO_GRADUS("prima apertio: annus hodie proximus");
     CREDO_VERUM(pictum(w, "AD 1274"));
@@ -310,7 +313,8 @@ _probare_annum (
     CREDO_VERUM(titulus_est(w, "Timeline - AD 1274 - 1/1"));
 
     CREDO_GRADUS("ante Christum");
-    CREDO_VERUM(chronica_argumentum_ponere(&w->m, "-1446"));
+    CREDO_VERUM(chronica_argumentum_ponere(&w->m,
+        "chronica/annus/-1446"));
     dispensator_recomponere(w->d);
     CREDO_VERUM(pictum(w, "1446 BC"));
     CREDO_VERUM(pictum(w, "Exodus"));
@@ -324,7 +328,8 @@ _probare_annos (
 {
     Mundus* w = mundum_creare(c);
 
-    CREDO_NECESSE(w && tres_annos(w) && montare(w, "1225"));
+    CREDO_NECESSE(w && tres_annos(w)
+        && montare(w, "chronica/annus/1225"));
     CREDO_VERUM(pictum(w, "AD 1225"));
 
     CREDO_GRADUS("l: annus proximus cum eventis");
@@ -369,7 +374,7 @@ _probare_paginas (
             (insignatus integer)(i + I));
     }
     CREDO_NECESSE(paginam_scribere(w, "historia", textus)
-        && montare(w, NIHIL));
+        && montare(w, "chronica/annus"));
     CREDO_VERUM(pictum(w, "Eventus 01"));
     CREDO_FALSUM(pictum(w, "Eventus 12"));
     CREDO_VERUM(chorda_continet(chronica_locus_titulus(&w->m, w->p),
@@ -415,7 +420,7 @@ _probare_descriptionem_longam (
     }
     strcat(textus, "TERMINUS</event>");
     CREDO_NECESSE(paginam_scribere(w, "historia", textus)
-        && montare(w, NIHIL));
+        && montare(w, "chronica/annus"));
     CREDO_VERUM(pictum(w, "PRINCIPIUM"));
     CREDO_FALSUM(pictum(w, "TERMINUS"));
     per (i = ZEPHYRUM; i < X; i++)
@@ -434,17 +439,18 @@ _probare_positionem (
 {
     Mundus* w = mundum_creare(c);
 
-    CREDO_NECESSE(w && tres_annos(w) && montare(w, NIHIL));
+    CREDO_NECESSE(w && tres_annos(w)
+        && montare(w, "chronica/annus"));
     clavis(w, 'h');
     CREDO_VERUM(campus_est(w, "annus", "1225"));
 
     CREDO_GRADUS("iterum montatum: annus servatus");
-    CREDO_NECESSE(montare(w, NIHIL));
+    CREDO_NECESSE(montare(w, "chronica/annus"));
     CREDO_VERUM(pictum(w, "AD 1225"));
 
     CREDO_GRADUS("argumentum vacuum: positio servata");
     clavis(w, 'h');
-    CREDO_NECESSE(montare(w, ""));
+    CREDO_NECESSE(montare(w, "chronica/annus"));
     CREDO_VERUM(pictum(w, "1446 BC"));
 }
 
@@ -459,9 +465,10 @@ _probare_hodie (
         "<event year=\"1230\">B</event>\n"
         "<event year=\"1300\">C</event>"));
     w->hodie = MCCXXV;
-    CREDO_NECESSE(montare(w, NIHIL));
+    CREDO_NECESSE(montare(w, "chronica/annus"));
     CREDO_VERUM(pictum(w, "AD 1220"));
-    CREDO_VERUM(chronica_argumentum_ponere(&w->m, "1229"));
+    CREDO_VERUM(chronica_argumentum_ponere(&w->m,
+        "chronica/annus/1229"));
     dispensator_recomponere(w->d);
     CREDO_VERUM(pictum(w, "AD 1230"));
 }
@@ -473,7 +480,8 @@ _probare_mutationem (
 {
     Mundus* w = mundum_creare(c);
 
-    CREDO_NECESSE(w && tres_annos(w) && montare(w, "1225"));
+    CREDO_NECESSE(w && tres_annos(w)
+        && montare(w, "chronica/annus/1225"));
     CREDO_VERUM(pictum(w, "Thomas nascitur"));
     CREDO_VERUM(paginam_scribere(w, "historia",
         "<event year=\"-1446\">Exodus</event>\n"
@@ -492,7 +500,7 @@ _probare_vacuam (
 {
     Mundus* w = mundum_creare(c);
 
-    CREDO_NECESSE(w && montare(w, NIHIL));
+    CREDO_NECESSE(w && montare(w, "chronica/annus"));
     CREDO_VERUM(pictum(w, "Write <event year=\"1274\">...</event> in a "
         "note"));
     CREDO_VERUM(titulus_est(w, "Timeline"));
@@ -513,7 +521,7 @@ _probare_lineam_parvam (
         "people=\"Thomas; Bonaventura\" place=\"Lyon\">"
         "Bonaventura moritur</event>\n"
         "<event year=\"1274\" month=\"3\">Mense solo</event>")
-        && montare(w, NIHIL));
+        && montare(w, "chronica/annus"));
     CREDO_VERUM(pictum(w,
         "15 Jul \302\267 death \302\267 Thomas, Bonaventura \302\267 "
         "Lyon"));
@@ -536,7 +544,7 @@ _probare_murem (
             "longa est ut lineas duas impleat.</event>\n");
     }
     CREDO_NECESSE(paginam_scribere(w, "historia", textus)
-        && montare(w, "1225"));
+        && montare(w, "chronica/annus/1225"));
 
     CREDO_GRADUS("sagittae pedis");
     CREDO_VERUM(ictus_in(w, "sagitta_proxima"));
@@ -558,7 +566,8 @@ _probare_locum (
 {
     Mundus* w = mundum_creare(c);
 
-    CREDO_NECESSE(w && tres_annos(w) && montare(w, NIHIL));
+    CREDO_NECESSE(w && tres_annos(w)
+        && montare(w, "chronica/annus"));
     CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
         "chronica/annus/1274");
     CREDO_VERUM(chronica_argumentum_ponere(&w->m,
@@ -571,6 +580,223 @@ _probare_locum (
     CREDO_FALSUM(chronica_argumentum_ponere(&w->m, "0"));
     CREDO_FALSUM(chronica_argumentum_ponere(&w->m, "abc"));
     CREDO_VERUM(campus_est(w, "annus", "-1446"));
+}
+
+/* x (px) textus primi qui fragmentum continet; -1 si nullum */
+interior s32
+x_picti (
+                 Mundus* w,
+     constans character* fragmentum)
+{
+               Mandata* md;
+     constans Mandatum* x;
+                   i32  i;
+
+    md = mandata_creare(w->p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, lit(fragmentum, w->p)))
+        {
+            redde x->fines.x;
+        }
+    }
+    redde -I;
+}
+
+/* textus pictus AEQUALIS (non solum continens: pes annos quoque
+ * nominat) */
+interior b32
+pictum_exactum (
+                 Mundus* w,
+     constans character* textus)
+{
+               Mandata* md;
+     constans Mandatum* x;
+                   i32  i;
+
+    md = mandata_creare(w->p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_aequalis_literis(x->textus, textus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* 1220 (unum), 1250 (XII longa: paginae plures), 1290 (unum) */
+interior b32
+annos_fluminis (
+    Mundus* w)
+{
+    character textus[IV * M];
+          i32 i;
+
+    strcpy(textus, "<event year=\"1220\">Annus primus</event>\n");
+    per (i = ZEPHYRUM; i < XII; i++)
+    {
+        sprintf(textus + strlen(textus),
+            "<event year=\"1250\">Eventus %02u: haec descriptio satis "
+            "longa est ut lineas duas impleat.</event>\n",
+            (insignatus integer)(i + I));
+    }
+    strcat(textus, "<event year=\"1290\">Annus ultimus</event>");
+    redde paginam_scribere(w, "historia", textus);
+}
+
+/* visus ordinarius: flumen - anni omnes in pagina, annus in columna
+ * sinistra, descriptiones in dextra */
+interior vacuum
+_probare_flumen (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && tres_annos(w) && montare(w, NIHIL));
+    CREDO_VERUM(pictum(w, "1446 BC"));
+    CREDO_VERUM(pictum(w, "AD 1225"));
+    CREDO_VERUM(pictum(w, "AD 1274"));
+    CREDO_VERUM(pictum(w, "Exodus"));
+    CREDO_VERUM(pictum(w, "Thomas moritur"));
+    CREDO_VERUM(titulus_est(w, "Timeline \302\267 1446 BC \342\200\223 "
+        "AD 1274 \302\267 1/1"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
+        "chronica/flumen/-1446");
+
+    CREDO_GRADUS("columnae: annus sinister, descriptio dextra");
+    CREDO_VERUM(x_picti(w, "1446 BC") >= ZEPHYRUM);
+    CREDO_VERUM(x_picti(w, "1446 BC") < x_picti(w, "Exodus"));
+    CREDO_VERUM(x_picti(w, "Exodus") >= LATITUDO / V);
+    CREDO_AEQUALIS_S32(x_picti(w, "AD 1225"), x_picti(w, "1446 BC"));
+
+    CREDO_GRADUS("argumentum numerus: flumen ad annum");
+    CREDO_VERUM(chronica_argumentum_ponere(&w->m, "1225"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
+        "chronica/flumen/-1446");
+}
+
+/* paginae plenae; annus in paginam sequentem fluens iteratur */
+interior vacuum
+_probare_flumen_paginas (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && annos_fluminis(w));
+    w->hodie = MCCXX;
+    CREDO_NECESSE(montare(w, NIHIL));
+    CREDO_VERUM(pictum_exactum(w, "AD 1220"));
+    CREDO_VERUM(pictum(w, "Annus primus"));
+    CREDO_VERUM(pictum_exactum(w, "AD 1250"));
+    CREDO_VERUM(pictum(w, "Eventus 01"));
+    CREDO_FALSUM(titulus_est(w,
+        "Timeline \302\267 AD 1220 \342\200\223 "
+        "AD 1250 \302\267 1/1"));
+
+    CREDO_GRADUS("j: pagina secunda, annus iteratus in summo");
+    clavis(w, 'j');
+    CREDO_FALSUM(pictum(w, "Annus primus"));
+    CREDO_FALSUM(pictum(w, "AD 1220"));
+    CREDO_VERUM(pictum_exactum(w, "AD 1250"));
+    CREDO_VERUM(chorda_continet(chronica_locus_titulus(&w->m, w->p),
+        lit("Timeline \302\267 AD 1250 \302\267 2/", w->p)));
+    CREDO_VERUM(campus_est(w, "annus", "1250"));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+
+    CREDO_GRADUS("k: prima");
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "Annus primus"));
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "Annus primus"));
+}
+
+/* h / l: ad paginam ubi annus prior / proximus incipit */
+interior vacuum
+_probare_flumen_annos (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && annos_fluminis(w));
+    w->hodie = MCCXX;
+    CREDO_NECESSE(montare(w, NIHIL));
+
+    CREDO_GRADUS("l: annus 1250 in eadem pagina incipit - ad 1290");
+    clavis(w, 'l');
+    CREDO_VERUM(pictum(w, "Annus ultimus"));
+    CREDO_FALSUM(pictum(w, "Annus primus"));
+    clavis(w, 'l');
+    CREDO_VERUM(pictum(w, "Annus ultimus"));
+
+    CREDO_GRADUS("h: ad paginam ubi annus summus incipit");
+    clavis(w, 'h');
+    CREDO_VERUM(pictum(w, "Annus primus"));
+    clavis(w, 'h');
+    CREDO_VERUM(pictum(w, "Annus primus"));
+}
+
+/* positio: annus summus et pagina inter paginas eius */
+interior vacuum
+_probare_flumen_positionem (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && annos_fluminis(w));
+    w->hodie = MCCXX;
+    CREDO_NECESSE(montare(w, NIHIL));
+    clavis(w, 'j');
+    CREDO_NECESSE(montare(w, NIHIL));
+    CREDO_VERUM(chorda_continet(chronica_locus_titulus(&w->m, w->p),
+        lit(" 2/", w->p)));
+    CREDO_FALSUM(pictum(w, "Annus primus"));
+}
+
+/* v: flumen <-> annus; annus summus communis */
+interior vacuum
+_probare_vertere (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && tres_annos(w) && montare(w, NIHIL));
+    clavis(w, 'v');
+    CREDO_VERUM(campus_est(w, "visus", "annus"));
+    CREDO_VERUM(pictum(w, "1446 BC"));
+    CREDO_FALSUM(pictum(w, "Thomas"));
+    CREDO_VERUM(titulus_est(w, "Timeline - 1446 BC - 1/1"));
+    clavis(w, 'l');
+    clavis(w, 'v');
+    CREDO_VERUM(campus_est(w, "visus", "flumen"));
+    CREDO_VERUM(pictum(w, "Thomas moritur"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
+        "chronica/flumen/-1446");
+}
+
+interior vacuum
+_probare_flumen_murem (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && annos_fluminis(w));
+    w->hodie = MCCXX;
+    CREDO_NECESSE(montare(w, NIHIL));
+    CREDO_VERUM(ictus_in(w, "infra"));
+    CREDO_FALSUM(pictum(w, "Annus primus"));
+    CREDO_VERUM(ictus_in(w, "supra"));
+    CREDO_VERUM(pictum(w, "Annus primus"));
+    CREDO_VERUM(ictus_in(w, "sagitta_proxima"));
+    CREDO_VERUM(pictum(w, "Annus ultimus"));
+    CREDO_VERUM(ictus_in(w, "sagitta_prior"));
+    CREDO_VERUM(pictum(w, "Annus primus"));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -595,6 +821,18 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mus",          _probare_murem,                NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { "locus",        _probare_locum,                NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "flumen",       _probare_flumen,               NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "flumen paginae", _probare_flumen_paginas,     NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "flumen anni",  _probare_flumen_annos,         NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "flumen positio", _probare_flumen_positionem,  NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "vertere",      _probare_vertere,              NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "flumen mus",   _probare_flumen_murem,         NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

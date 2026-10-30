@@ -127,7 +127,8 @@ _probare_latus (
 
     CREDO_NECESSE(aedificare(x, c));
     v = x->app.vicus;
-    CREDO_VERUM(vicus_acervo_aperire(v, "chronica", "1225"));
+    CREDO_VERUM(vicus_acervo_aperire(v, "chronica",
+        "chronica/annus/1225"));
     (vacuum)vicus_pulsare(v);
     m = chronica_frontalis(v);
     CREDO_NECESSE_NON_NIHIL(m);
@@ -136,6 +137,12 @@ _probare_latus (
         "chronica/annus/1225");
     CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus_titulus(m, c->piscina),
         "Timeline - AD 1225 - 1/1");
+
+    CREDO_GRADUS("argumentum nudum: flumen");
+    CREDO_VERUM(chronica_argumentum_ponere(m, "1274"));
+    CREDO_VERUM(campus_est(m, "visus", "flumen"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(m, c->piscina),
+        "chronica/flumen/1225");
 }
 
 /* ictus ad punctum schirmi: sagitta dextra pedis -> annus proximus */
@@ -154,7 +161,8 @@ _probare_ictum (
 
     CREDO_NECESSE(aedificare(x, c));
     v = x->app.vicus;
-    CREDO_VERUM(vicus_acervo_aperire(v, "chronica", "1225"));
+    CREDO_VERUM(vicus_acervo_aperire(v, "chronica",
+        "chronica/annus/1225"));
     (vacuum)vicus_pulsare(v);
     dispensator_recomponere(x->app.d);
     m = chronica_frontalis(v);

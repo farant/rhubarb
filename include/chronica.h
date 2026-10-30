@@ -24,8 +24,20 @@
  * mutatione eadem, nihil reaedificatur).
  * VACUA: nulla eventa - "Write <event year=\"1274\">...</event> in a
  * note"; pes "Timeline".
- * LOCUS: "chronica/annus/1274", "chronica/annus/-1446"; titulus loci
- * "Timeline - AD 1274 - 1/2". Comes (Cmd+T) anni sui est.
+ * VISUS FLUMINIS (C3b; ORDINARIUS): eventa omnium annorum in ordine
+ * continuo, paginae plenae (sine fractione inter annos). Columna
+ * sinistra (quinta pars) annum magnum monstrat ad lineam primam
+ * eventus primi anni; annus in paginam sequentem fluens in summo eius
+ * iteratur. Columna dextra (quattuor quintae) descriptiones et
+ * lineas parvas. j / k paginae; h / l ad paginam ubi annus prior /
+ * proximus incipit (annus proximus in eadem pagina incipiens
+ * praeteritur). Positio: annus in summo paginae (communis cum visu
+ * anni) et pagina inter paginas ab anno eius incipientes. Pes
+ * "Timeline · 1446 BC – AD 1274 · 1/9" (annus unus: "Timeline · AD
+ * 1250 · 2/9"). v visum vertit (flumen <-> annus).
+ * LOCUS: "chronica/flumen/1274", "chronica/annus/-1446"; titulus loci
+ * ut pes. Comes (Cmd+T) anni sui est. Argumentum nudum ("1274", "")
+ * flumen aperit.
  * (C4: electio et Enter domum; C5: visus personae et loci.) */
 
 #ifndef CHRONICA_H
@@ -85,8 +97,9 @@ chronica_componere (
                  vacuum* ctx);
 
 /* argumentum: "" = positio servata; "1274", "-1446" (annus; sine
- * eventis: proximus); semita "chronica/annus/<n>". Malum (0, non
- * numerus): FALSUM, nihil mutatum. */
+ * eventis: proximus) - visus fluminis; semita "chronica/annus/<n>",
+ * "chronica/flumen/<n>". Malum (0, non numerus): FALSUM, nihil
+ * mutatum. */
 b32
 chronica_argumentum_ponere (
        ChronicaMontatio* m,

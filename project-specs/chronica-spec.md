@@ -193,6 +193,10 @@ jump home; Esc / Ctrl+O back (house history rules).
 - **C3** pane: year view, h/l years, j/k pages, footer, position.
   **DONE 2026-10-30** (`lib/chronica.c`, `$timeline`; 11 + 2 vicus
   sections, 8 plants; heading on every page, h/l no history).
+- **C3b** continuous view (Fran 2026-10-30, after looking at C3): all
+  years flow on full pages, year in the left fifth beside its first
+  event and repeated atop a continued page; `v` toggles; DEFAULT view
+  (`$timeline`). **DONE 2026-10-30** (17 + 2 sections, 8 plants).
 - **C4** selection (reuse navigator unit code) + jump home (line plumbing through vicus + scriba, XII).
 - **C5** person / place views.
 - **C6** scriba colouring of good / bad event tags.
