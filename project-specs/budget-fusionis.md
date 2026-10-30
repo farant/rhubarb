@@ -57,25 +57,25 @@ oraculum-silvae 1.0).
 
 | id | Idea | min | eff | Status |
 |---|---|---|---|---|
-| E2 | silva/*.sh and 38 other wrappers: ONE newest-header `find` per call, not one per object (~330 wrapper calls per merge commit; test runners already do "CAPUT RECENTISSIMUM SEMEL") | 1.5-3 | S-M | CANDIDATUM |
-| D1-6 | Magnus 24 → 16 B (arm64 passes >16 B structs via memory; ASan makes every copy a call), i64 Euclid when inline, extensio normalisation shortcuts, hoisted axis norms, piscina churn; split `lentus` into its own suite | 2.4-2.9 | S-M | CANDIDATUM |
-| A1 | `silva/probationes/apparatus.c`: pass `--thesaurus build/aedilis/obiecta` to aedilis (store exists; 15 s → 3 s, byte-identical) | 1.35-1.6 | S | IN CURSU — 93.1 G → 9.5 G instructions per aedilis call, output identical |
+| E2 | silva/*.sh and 38 other wrappers: ONE newest-header `find` per call, not one per object (~330 wrapper calls per merge commit; test runners already do "CAPUT RECENTISSIMUM SEMEL") | 1.5-3 | S-M | LUCRUM 9c92a730 |
+| D1-6 | Magnus 24 → 16 B (arm64 passes >16 B structs via memory; ASan makes every copy a call), i64 Euclid when inline, extensio normalisation shortcuts, hoisted axis norms, piscina churn; split `lentus` into its own suite | 2.4-2.9 | S-M | D1+D2 LUCRUM e8dcabb6, D3 e8be2b15, D5 1272c226; D4 + lentus split CANDIDATUM |
+| A1 | `silva/probationes/apparatus.c`: pass `--thesaurus build/aedilis/obiecta` to aedilis (store exists; 15 s → 3 s, byte-identical) | 1.35-1.6 | S | LUCRUM cf6834d6 — 93.1 G → 9.5 G instructions per aedilis call |
 | E3 | raw-clang suites (briar, oratio, ludus_tessera, tessera, gesta, officina, ...) → `bin/compilator --plures` (warm ludus_tessera rebuilt 152/155 objects after a header touch) | 1.5-3 | L | CANDIDATUM |
-| B3-14 | stml internals: capture pass skips untouched parents, tokenizer scans runs, `_lineae_contenti` early exit, transparency set as array, parser intern cache, one-append indentation, writer tag cache, ... | ~1 | S-M | CANDIDATUM |
-| A3 | `tools/amalgama_excludenda_generare.sh`: `-fsyntax-only` (diagnostics byte-identical, 1.96 → 0.79 s per round) + one-pass awk classification | 0.55-1.1 | S | CANDIDATUM |
-| E7 | `vendor/sqlite3.c` and `silva/amalgama/silva.c` compiled once (normalised path via compilator) | 0.5-1 | S | CANDIDATUM |
-| C1 | xar: header `static __inline__` fast paths for obtinere/numerus/addere behind same-name macros (4.7 → 2.1 ns) | 0.5-0.8 | S-M | CANDIDATUM — check examen/legati/renominare/amalgamators first |
-| A2 | skip the second semantic analysis when `silva_recanonicare` changed nothing (4 re-canonicalisations in the whole corpus) | 0.6-0.8 | S-M | CANDIDATUM — purity check first |
-| E6 | `--memoria-oraculi` on the derivation calls in `tools/aedilis_porta.sh` and `tools/instrumenta_fumus.sh` (190 `clang -MM` runs for 8 distinct `.m` files) | 0.7-0.8 | S | IN CURSU |
-| E8 | `bin/compilator --plures`: compile misses in FILA chunks (serial since 2026-10-23) | 0.5-0.75 | S-M | CANDIDATUM |
-| A4 | `materia_arbor_lexema_ex_tag`: tag → genus table built once per reader (15.7% of arbor_plagula) | 0.45-0.6 | S | CANDIDATUM |
-| C2 | piscina allocation fast path (no udiv, no 12-register prologue; 10.4 → 4.0 ns) | 0.3-0.45 | S | CANDIDATUM |
+| B3-14 | stml internals: capture pass skips untouched parents, tokenizer scans runs, `_lineae_contenti` early exit, transparency set as array, parser intern cache, one-append indentation, writer tag cache, ... | ~1 | S-M | B5+B9 LUCRUM 20bd074d; B3/B6 deferred (move computus golds again); rest CANDIDATUM |
+| A3 | `tools/amalgama_excludenda_generare.sh`: `-fsyntax-only` (diagnostics byte-identical, 1.96 → 0.79 s per round) + one-pass awk classification | 0.55-1.1 | S | LUCRUM c9c9a0ae — silva 12 → 6.2 s |
+| E7 | `vendor/sqlite3.c` and `silva/amalgama/silva.c` compiled once (normalised path via compilator) | 0.5-1 | S | LUCRUM b3a306e9 |
+| C1 | xar: header `static __inline__` fast paths for obtinere/numerus/addere behind same-name macros (4.7 → 2.1 ns) | 0.5-0.8 | S-M | REIECTUM (for now) — silva amalgamator breaks on header-inline helpers; needs tooling work; ThinLTO alternative |
+| A2 | skip the second semantic analysis when `silva_recanonicare` changed nothing (4 re-canonicalisations in the whole corpus) | 0.6-0.8 | S-M | REIECTUM — purity fails: +3 typations corpus-wide on unchanged trees (ledger) |
+| E6 | `--memoria-oraculi` on the derivation calls in `tools/aedilis_porta.sh` and `tools/instrumenta_fumus.sh` (190 `clang -MM` runs for 8 distinct `.m` files) | 0.7-0.8 | S | LUCRUM cfc28972 |
+| E8 | `bin/compilator --plures`: compile misses in FILA chunks (serial since 2026-10-23) | 0.5-0.75 | S-M | LUCRUM 72a5f370 — 414 misses 70.5 → 29.2 s |
+| A4 | `materia_arbor_lexema_ex_tag`: tag → genus table built once per reader (15.7% of arbor_plagula) | 0.45-0.6 | S | LUCRUM d55701b0 (+7 computus golds: allocationes_arboris +3/doc) |
+| C2 | piscina allocation fast path (no udiv, no 12-register prologue; 10.4 → 4.0 ns) | 0.3-0.45 | S | LUCRUM 76d45eb5 (macro fix 20bd074d) |
 | E10 | instrumenta: skip relink when up to date; constant provenientia stamp in fumus | 0.3-0.5 | M | CANDIDATUM |
 | A6 | oraculum-silvae: cache the PINNED oracle's output by content | 0.3-0.4 | M | CANDIDATUM |
-| C3 | `chorda_aequalis_literis` compares while scanning (zero tests today — add first) | 0.25-0.35 | S | CANDIDATUM |
-| C4 | hash-table growth re-places with the cached hash | 0.15-0.25 | S | CANDIDATUM |
-| C5-7 | aedificator byte path, `invenire_literis` one strlen, internare single probe | 0.1-0.2 | S | CANDIDATUM |
-| A7 | canon_corpus `_involucrum_numerare` single scan | 0.1 | S | CANDIDATUM |
+| C3 | `chorda_aequalis_literis` compares while scanning (zero tests today — add first) | 0.25-0.35 | S | LUCRUM 3f011d2a (first tests of the function) |
+| C4 | hash-table growth re-places with the cached hash | 0.15-0.25 | S | LUCRUM c87ab9cb (174k-line differential identical) |
+| C5-7 | aedificator byte path, `invenire_literis` one strlen, internare single probe | 0.1-0.2 | S | C5+C6 LUCRUM e6d18854; C7 skipped (API addition) |
+| A7 | canon_corpus `_involucrum_numerare` single scan | 0.1 | S | LUCRUM 20bd074d |
 
 Sum 13.0-19.7; ~15% overlap discount → **≈ 11-17 min**.
 
@@ -109,6 +109,25 @@ A7 = B7; B10+B12 ≈ C3; E7/E8 partly fold into E4; E5 shrinks to
 
 | id | Commit | Cohort delta | Note |
 |---|---|---|---|
+| A1 | cf6834d6 | pending | aedilis --thesaurus in silva apparatus |
+| E6 | cfc28972 | pending | --memoria-oraculi in aedilis/instrumenta gates |
+| E2 | 9c92a730 | pending | tools/caput_recens.sh; nexus gate stage VI |
+| A3 | c9c9a0ae | pending | excludenda -fsyntax-only + map |
+| A4 | d55701b0 | pending | arbor reader tag index |
+| E7 | b3a306e9 | pending | vendored sources via compilator |
+| C2 | 76d45eb5 | pending | piscina fast path |
+| C3 | 3f011d2a | pending | chorda_aequalis_literis |
+| C4 | c87ab9cb | pending | hash growth by cached hash |
+| C5+C6 | e6d18854 | pending | aedificator byte path; literal length once |
+| A7+B5+B9 | 20bd074d | pending | canon single scan; stml line count + indentation |
+| D1+D2 | e8dcabb6 | ASan laqueus 48-77 → 16.6 s | Magnus 16 B; i64 Euclid |
+| D3 | e8be2b15 | pending | extensio normalisation shortcuts |
+| E8 | 72a5f370 | pending | radix libs in FILA parallel parts |
+| D5 | 1272c226 | ASan cellae 212-318 → 120-133 s (D1-D5) | 4 KB temp pools |
+
+Lessons (2026-10-28/30): deferred fusio-tier gates hid a C2 regression
+for 4 commits (canon_corpus: empty macro) — run touched deferred suites
+before committing; computus golds pin allocation counts (A4 re-gold).
 
 ## AUDIENDA (not verified)
 
