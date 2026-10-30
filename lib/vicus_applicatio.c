@@ -20,6 +20,7 @@
 #include "indagatio.h"
 #include "indagatio_genera.h"
 #include "chronica_fontes.h"
+#include "chronica.h"
 #include "indagatio_visus.h"
 #include "multiplexor.h"
 #include "fenestra_tempus.h"
@@ -4921,6 +4922,86 @@ navigatorem_describere (
 
 
 /* ==================================================
+ * Chronica (chronica C3)
+ * ================================================== */
+
+/* tabula temporum super fontes registri communis (pigre, ut
+ * indagatio); hodie ex horologio vici */
+interior b32
+chronicam_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusKalendarii* ck;
+       ChronicaMontatio* m;
+
+    ck  = (ContextusKalendarii*)ctx;
+    m   = (ChronicaMontatio*)sedes;
+    si (!ck)
+    {
+        redde FALSUM;
+    }
+    agendam_et_registrum_parare(ck);
+    si (   !ck->chronica
+        || !chronica_montare(m, piscina, intern, repo, id, ck->chronica,
+               volumen, latitudo, altitudo, ck->systemata))
+    {
+        redde FALSUM;
+    }
+    m->hodie      = hodie_vici;
+    m->hodie_ctx  = ck->vicus;
+    /* annus aut semita; mala: positio servata manet */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)chronica_argumentum_ponere(m, argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+chronicae_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde chronica_argumentum_ponere((ChronicaMontatio*)ctx,
+        argumentum);
+}
+
+interior vacuum
+chronicam_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    ChronicaMontatio* m;
+
+    m                         = (ChronicaMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = chronica_componere;
+    f->componere_ctx          = m;
+    f->ramus                  = &m->ramus;
+    f->effugium_redit         = VERUM;
+    f->argumentum_ponere      = chronicae_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->semitam_secuta         = chronica_semitam_secuta;
+    f->semitam_secuta_ctx     = m;
+    /* comites: liber notarum per annum */
+    f->locus              = chronica_locus;
+    f->locus_ctx          = m;
+    f->locus_titulus      = chronica_locus_titulus;
+    f->locus_titulus_ctx  = m;
+}
+
+
+/* ==================================================
  * Indagatio (genera-datorum D5, S3b)
  * ================================================== */
 
@@ -5413,6 +5494,9 @@ ContextusNomenclatoris* cn;
         || !navigatoris
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "nav",
                "navigator", NIHIL, piscina)
+        /* chronica C3: $timeline (annus servatus), $timeline(1274) */
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "timeline",
+               "chronica", NIHIL, piscina)
         || !ci
         || !via_registrare(cs->iussa, app->vicus, piscina, intern,
                &ci->via)
@@ -5467,6 +5551,9 @@ ContextusNomenclatoris* cn;
                magnitudo(NavigatorMontatio),
                navigatorem_montare_in_vico,
                navigatorem_describere, navigatoris)
+        || !vicus_genus_addere(app->vicus, "chronica",
+               magnitudo(ChronicaMontatio), chronicam_montare_in_vico,
+               chronicam_describere, ck)
         || !vicus_genus_addere(app->vicus, "colloquia",
                magnitudo(ColloquiorumMontatio),
                colloquia_montare_in_vico,

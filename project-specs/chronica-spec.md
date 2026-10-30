@@ -191,6 +191,8 @@ jump home; Esc / Ctrl+O back (house history rules).
   state in opaque `ChronicaFontes`; names `eventa_comitis` /
   `eventa_libri`; long loci computed directly - see worklog).
 - **C3** pane: year view, h/l years, j/k pages, footer, position.
+  **DONE 2026-10-30** (`lib/chronica.c`, `$timeline`; 11 + 2 vicus
+  sections, 8 plants; heading on every page, h/l no history).
 - **C4** selection (reuse navigator unit code) + jump home (line plumbing through vicus + scriba, XII).
 - **C5** person / place views.
 - **C6** scriba colouring of good / bad event tags.

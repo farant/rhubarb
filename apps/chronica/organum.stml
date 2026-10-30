@@ -1,0 +1,34 @@
+<!-- organum.stml - manifestum chronicae (genus "chronica"; chronica
+     C3, spec project-specs/chronica-spec.md): tabula temporum ex
+     eventis notarum (<event year=...>), annus per paginam. Fontes
+     (chronica_fontes.h) a vico dati - hic solum status visus. Annus
+     in loco: comes (Cmd+T) anni sui est. -->
+<organum genus="chronica" versio="1">
+
+  <actiones>
+    <actio nomen="chronica.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="annus" scriptor="chronica.agere"
+            semita="ligatio" historia="impelle">
+      <optio>annus</optio>
+    </campus>
+    <campus nomen="annus" typus="numerus" vita="persistens"
+            scriptor="chronica.agere" semita="ligatio"
+            nota="annus visus (negativus = a.C.n.)"/>
+    <campus nomen="pagina" typus="numerus" vita="persistens"
+            scriptor="chronica.agere" semita="status"
+            ambitus="ligatio" nota="pagina in anno (ab 0)"/>
+  </status>
+
+  <!-- argumentum nudum: vacuum = positio servata; numerus = annus -->
+  <cognomina>
+    <cognomen semita="chronica/annus"/>
+    <cognomen typus="numerus" semita="chronica/annus/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>
