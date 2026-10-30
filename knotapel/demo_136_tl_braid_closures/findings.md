@@ -3,7 +3,8 @@
 Plan: `plan.md` (v1 approved by Fran 2026-10-28; v2 after a DESIGN
 REVIEW before any data, consiliarius-d136; T0 and T1 amendments).
 Context: project-specs/crossings-contraction-counting-brainstorm.md §12.3
-(invariants of large knots), §11 lever 2 (fewer primes or points);
+(invariants of large knots), §11 levers (lever 2, fewer primes, was
+taken in contractio T5a: the Tait-graph bound);
 tools/uncinus_mensura.c section V (the vertex model's projections:
 12 × 801 ≈ 32 days).
 
@@ -46,8 +47,10 @@ than the vertex model there (registered: ≥ 100×), and 86× at 12 × 401
    at 0.227 s per point alone, 0.363 s (2.2 ns) as T2's bracket mean, and
    0.527 s in T2's R1p timing. At ~13,000 points and the quiet figure, a
    full 14 × 801 bracket is ~12 h and 16 × 801 ~6.5 days; that is T4
-   territory, and lever 2 (fewer points or primes) is what would bring 16
-   strands in.
+   territory. Stopping early when the answer looks stable is excluded by
+   the exactness rule (brainstorm §11), so the levers left are the
+   kernel (the in-place normalized update, a division-free modular
+   multiply) and spreading the points over processes.
 3. **The vertex model is faster on short braids with many strands**
    [observed]. Full brackets, TL against vertex (T2):
    - c ≈ 200: 8 × 201 0.41 s vs 21.8 s; 9 × 202 1.89 vs 16.0; 10 × 201
@@ -67,7 +70,10 @@ than the vertex model there (registered: ≥ 100×), and 86× at 12 × 401
    paid for (no early stop); a tighter a-priori bound would cut the
    primes, not the points, by at most that factor: 175 bits plus sign is
    6 primes against 23 at 12 × 801. No rigorous a-priori bound will be
-   that tight, so this is a ceiling.
+   that tight, so this is a ceiling: the slack left after T5a's
+   Tait-graph bound is cancellation, which no counting bound can see
+   (brainstorm §11). The TL entries themselves barely cancel (Result 5),
+   a contrast for §12.1.2's sign-problem meter.
 5. **Exact arithmetic without primes stays small** [measured;
    descriptive]. Carrying the traces over Z[A²] (each letter scaled by
    A³ so entries stay integer polynomials), the largest intermediate
