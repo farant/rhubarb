@@ -191,11 +191,15 @@ _exundatio (
  * et in vocatores inseratur. */
 #if defined(__clang__) || defined(__GNUC__)
 /* <tolera codex="EXTENSIO_COMPILATORIS" (>noinline, custodia GNU */
-#define PISCINA_EXTRA_LINEAM __attribute__((noinline))
+#define PISCINA_TARDA_GENUS __attribute__((noinline)) vacuum*
 #else
-#define PISCINA_EXTRA_LINEAM
+#define PISCINA_TARDA_GENUS vacuum*
 #endif
-interior PISCINA_EXTRA_LINEAM vacuum*
+/* Macro genus reditus portat, numquam VACUA (probatio_silva_canon_
+ * corpus asserit corpus nullam invocationem ZERO lexematum ferre -
+ * silva ramum non-GNU legit); 'interior' visibile manet (amalgamator
+ * 'static' addit functionibus sine eo). */
+interior PISCINA_TARDA_GENUS
 _allocare_tarde (
                Piscina* piscina,
         memoriae_index  mensura,

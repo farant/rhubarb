@@ -1678,3 +1678,17 @@ Size guard ("magnitudo nodi") is now "size == field sum rounded up to pointer al
 hilarius projection pool 72,069 -> 67,435 KiB (16 B x nodes). Today's total: 86.1 -> 65.9 MiB (-23%).
 
 The oratio allocation golden moved by +1 on cicero.txt (`allocationes_arboris` 1186508 -> 1186509), its only change. Controlled experiment (probe build/sonda_partes/sonda_oratio_alloc.c): the same code at 128 B gives 1186509, padded to 144 B gives 1186508. So it is size-dependent arena-boundary drift, the same mechanism as html adversarius_2 (html_arbor.worklog.md 2026-10-22). Golden moved by exactly that number.
+
+## 2026-10-29 — writer: early-exit line count, one-append indentation (budget B1 B5, B9)
+
+`_lineae_contenti` counted every newline of an element's whole content
+only so the pretty printer could compare with STML_CLAUSURA_TACITA_LINEAE
+(30) — O(content × depth). Now `_lineae_excedunt(aed, initium, limes)`
+stops at line limes+1. `_scribere_indentatio` appended "  " once per level
+(strlen + memcpy each); now 2×nivel bytes from a 64-space buffer in
+chunks. Test gap closed: an off-by-one plant on the limit stayed green —
+nothing exercised the boundary. probatio_stml_pulchrum section III now
+finds the boundary (<a> with 20..40 <c/> children) and pins it: 29
+children → '</>', 30 → named; identical with the old stml.c. Plants:
+limit off-by-one → III red; nivel instead of 2×nivel → eventus_stml and
+norma_stml round-trips red.

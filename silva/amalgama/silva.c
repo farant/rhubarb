@@ -14996,11 +14996,15 @@ _exundatio (
  * et in vocatores inseratur. */
 #if defined(__clang__) || defined(__GNUC__)
 /* <tolera codex="EXTENSIO_COMPILATORIS" (>noinline, custodia GNU */
-#define PISCINA_EXTRA_LINEAM __attribute__((noinline))
+#define PISCINA_TARDA_GENUS __attribute__((noinline)) vacuum*
 #else
-#define PISCINA_EXTRA_LINEAM
+#define PISCINA_TARDA_GENUS vacuum*
 #endif
-interior PISCINA_EXTRA_LINEAM vacuum*
+/* Macro genus reditus portat, numquam VACUA (probatio_silva_canon_
+ * corpus asserit corpus nullam invocationem ZERO lexematum ferre -
+ * silva ramum non-GNU legit); 'interior' visibile manet (amalgamator
+ * 'static' addit functionibus sine eo). */
+interior PISCINA_TARDA_GENUS
 _allocare_tarde (
                SilvaPiscina* piscina,
         memoriae_index  mensura,
@@ -22565,10 +22569,15 @@ silva_stml_textus_internus (
  * PUNCTUM FIXUM: forma clausurae ('</>' an '</nomen>') numerum
  * linearum NON mutat - utraque in eadem linea sedet - ergo decisio
  * per scriptiones iteratas stabilis manet et oscillare nequit. */
-interior i32
-_lineae_contenti (
+/* VERUM si plus quam 'limes' lineae ab initio. EXITUS AD LINEAM
+ * limes + I (budget B1 B5, 2026-10-28): olim omnes lineae contenti
+ * numerabantur ut cum limite conferrentur - contentum totum per
+ * elementum, O(contentum x profunditas). Solum comparatio utitur. */
+interior b32
+_lineae_excedunt (
     SilvaChordaAedificator* aedificator,
-       memoriae_index  initium)
+       memoriae_index  initium,
+                  i32  limes)
 {
             SilvaChorda vista;
     memoriae_index k;
@@ -22579,15 +22588,16 @@ _lineae_contenti (
 
     per (k = initium; k < (memoriae_index)vista.mensura; k++)
     {
-        character c;
-
-        c = (character)vista.datum[k];
-        si (c == '\n')
+        si ((character)vista.datum[k] == '\n')
         {
             lineae++;
+            si (lineae > limes)
+            {
+                redde VERUM;
+            }
         }
     }
-    redde lineae;
+    redde FALSUM;
 }
 
 /* prototypum (definitio in sectione scriptionis) */
@@ -23240,15 +23250,26 @@ silva_stml_textum_addere (
  * Public API - Serialization
  * ================================================== */
 
+/* SPATIA UNA APPENDICE (budget B1 B9, 2026-10-28): olim "  " per
+ * gradum (strlen + memcpy per appendicem; arbor profunda XX-XL gradus);
+ * nunc II x nivel octeti ex alveo spatiorum, frustis LXIV. */
+hic_manens character STML_SPATIA[LXIV + I] =
+    "                                                                ";
+
 interior vacuum
 _scribere_indentatio (
     SilvaChordaAedificator* aed,
                   i32  nivel)
 {
-    i32 i;
-    per (i = ZEPHYRUM; i < nivel; i++)
+    SilvaChorda frustum;
+       i32 restans = II * nivel;
+
+    frustum.datum = (i8*)STML_SPATIA;
+    dum (restans > ZEPHYRUM)
     {
-        silva_chorda_aedificator_appendere_literis(aed, "  ");
+        frustum.mensura = (restans > LXIV) ? LXIV : restans;
+        silva_chorda_aedificator_appendere_chorda(aed, frustum);
+        restans -= frustum.mensura;
     }
 }
 
@@ -25633,11 +25654,9 @@ _scribere_nucleus (
                     clausura_tacita = nodus->clausura_anonyma;
                     si (pulchrum && !nodus->crudus)
                     {
-                        clausura_tacita =
-                            (_lineae_contenti(aedificator,
-                            initium_contenti)
-                                <= STML_CLAUSURA_TACITA_LINEAE)
-                            ? VERUM : FALSUM;
+                        clausura_tacita = !_lineae_excedunt(aedificator,
+                            initium_contenti,
+                            STML_CLAUSURA_TACITA_LINEAE);
                     }
                     /* Elementum attributi clausuram nominatam
                      * numquam habet ('</@>' non lexatur) - '</>'

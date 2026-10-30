@@ -202,3 +202,19 @@ prologue and the divide together were the cost. probatio_piscina 20/20;
 plants: drop numerus_allocationum in the fast path → :614 red; align to 4
 instead of ordinatio → :231 (16-byte alignment) red. Amalgams (silva,
 tessera, officina) regenerated.
+
+## 2026-10-29 — C2 follow-up: the noinline macro must never be empty
+
+C2 broke probatio_silva_canon_corpus (silva gate, deferred to fusio, so it
+surfaced 4 commits later): `#define PISCINA_EXTRA_LINEAM` was EMPTY in the
+non-GNU branch, silva parses that branch, and canon_corpus asserts the
+real corpus contains ZERO zero-token macro invocations (an announced gap
+that must stay visible). First fix — macro = `interior __attribute__...`
+/ `interior` — broke the silva amalgam: the amalgamator adds `static` to
+any function definition whose storage class it cannot SEE, so `static
+PISCINA_EXTRA_LINEAM` became duplicate static and bin/fabrica (built from
+the amalgam) failed to build; recovered by restoring the committed amalgam,
+rebuilding fabrica, regenerating. Final form: `interior PISCINA_TARDA_GENUS
+_allocare_tarde (` with the macro carrying the RETURN TYPE
+(`__attribute__((noinline)) vacuum*` / `vacuum*`) — never empty, storage
+class visible. Silva suite 57/57.
