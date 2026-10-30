@@ -1664,8 +1664,12 @@ _unitas_currens (
     constans NavigatorMontatio* m,
      constans NavigatorFigurae* f)
 {
-    redde _in_sententiis(m) ? _sententia_currens(m, f)
-                            : _pagina_currens(m, f);
+    s32 c = _columna_currens(m, f);
+
+    /* N3.5b: in columna laterali unitas = pagina columnae */
+    redde c >= ZEPHYRUM ? _columnae_pagina(m, f, c)
+        : _in_sententiis(m) ? _sententia_currens(m, f)
+        : _pagina_currens(m, f);
 }
 
 interior s32
@@ -1673,7 +1677,10 @@ _unitates_numerus (
     constans NavigatorMontatio* m,
      constans NavigatorFigurae* f)
 {
-    redde (s32)(_in_sententiis(m) ? _numerus_sententiarum(f)
+    s32 c = _columna_currens(m, f);
+
+    redde c >= ZEPHYRUM ? (s32)xar_numerus(_columnae_paginae(f, c))
+        : (s32)(_in_sententiis(m) ? _numerus_sententiarum(f)
                                   : xar_numerus(f->paginae));
 }
 
@@ -1683,8 +1690,11 @@ _notae_unitatis (
      constans NavigatorFigurae* f,
                            s32  k)
 {
-    redde _in_sententiis(m) ? _notae_articuli_activae(m, f)
-                            : _notae_activae(m, f, k);
+    s32 c = _columna_currens(m, f);
+
+    redde c >= ZEPHYRUM ? _columnae_notae(m, f, c)
+        : _in_sententiis(m) ? _notae_articuli_activae(m, f)
+        : _notae_activae(m, f, k);
 }
 
 /* nexus qui in unitate k incipit (vide _nexum_in_ambitu) */
@@ -1710,7 +1720,10 @@ _nexum_in_unitate (
             (s32)t->initium,
             (s32)t->finis, ab, gradus);
     }
-    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    g = _columna_currens(m, f) >= ZEPHYRUM
+        ? (constans LectorPagina*)xar_obtinere(_columnae_paginae(f,
+            _columna_currens(m, f)), (i32)k)
+        : (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
     si (!g || xar_numerus(g->lineae) == ZEPHYRUM)
     {
         redde -I;
@@ -1792,7 +1805,13 @@ _nexum_eligere (
         r = _nexum_in_unitate(m, f, k, -I, gradus);
     }
     sprintf(nexus, "%d", (integer)r);
-    si (_in_sententiis(m))
+    si (_columna_currens(m, f) >= ZEPHYRUM)
+    {
+        /* N3.5b: pagina columnae; positio non servatur */
+        sprintf(unitas, "%d", (integer)k);
+        tituli[ZEPHYRUM] = "columna";
+    }
+    alioquin si (_in_sententiis(m))
     {
         sprintf(unitas, "%u", (insignatus integer)_sententia(f, k)
             ->initium);
@@ -2571,21 +2590,14 @@ interior b32
 fac_nexum_proximum (
     vacuum* ctx)
 {
-    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-
-    /* N3.5: Tab in columna laterali postea - nunc nihil */
-    redde _columna_currens(cp->m, _paginas_parare(cp->m)) >= ZEPHYRUM
-        || _nexum_eligere(cp->m, I);
+    redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, I);
 }
 
 interior b32
 fac_nexum_priorem (
     vacuum* ctx)
 {
-    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
-
-    redde _columna_currens(cp->m, _paginas_parare(cp->m)) >= ZEPHYRUM
-        || _nexum_eligere(cp->m, -I);
+    redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, -I);
 }
 
 interior b32
@@ -3756,8 +3768,8 @@ _paginam_pingere (
                 _lineam_textus_pingere(md, x->fines.x + lateris
                     * NAV_LITTERA + l->x, x->fines.y + l->y,
                     _columna(f, col)->caput.textus, l,
-                    _columnae_notae(m,
-                    f, col), -I);
+                    _columnae_notae(m, f, col), _nexus_electus(m, f)
+                    ? _campus_numerus(m, "nexus") : -I);
             }
         }
         alioquin si (chorda_aequalis_literis(x->id, "textus"))

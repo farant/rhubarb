@@ -338,3 +338,20 @@ pane title "Rhubarb - side 1/2".
 Test notes: at the default size the taxobox fits one page - the j/k
 test shrinks the HEIGHT (new altitudinem_ponere); at 150 px the footer
 is too narrow for "side 1/", so that step checks the field.
+
+## 2026-10-29 - N3.5b Tab in the side column
+
+Third kind of link "unit": a page of the side column. _unitas_currens
+/ _unitates_numerus / _notae_unitatis / _nexum_in_unitate check
+_columna_currens first; _nexum_eligere writes `columna` + `nexus` in
+the column (no position save) and never leaves it (units = the
+column's pages only). The temporary "Tab does nothing in the column"
+guards are gone; painter passes the selection; footer target comes
+from the shared code.
+
+Two test lessons: (1) pictum_colore("") never matched - chorda_continet
+with an empty needle is false - so the helper now treats "" as "any
+text" (used to assert "something is drawn inverted" when the first
+infobox link's text isn't known). (2) The plant "column unit ignored"
+stayed green while column page == article page == 0; the case that
+exposes it is Tab on the column's SECOND page.

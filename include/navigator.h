@@ -74,7 +74,9 @@
  * habet (sagitta; ictus intrat). l intrat (pagina prima columnae), j
  * k et sagittae pedis intra eam, h / Esc / signum sinistrum ad
  * paginam possessoris redeunt (pagina non mutatur). Nexus colorati
- * et ictu aperiuntur (Tab in columna postea - nunc nihil); ~ eos
+ * et ictu aperiuntur; Tab / S-Tab (N3.5b) nexus columnae eligunt
+ * trans paginas eius, numquam extra (unitas = pagina columnae), Enter
+ * aperit, Esc electionem prius tollit; ~ eos
  * quoque celat. Pes et titulus loci "Rhubarb - side 1/2". Campus
  * "columna" (pagina in columna; absens = principalis) in loco;
  * motus paginae principalis eum tollit. Positio non servatur.

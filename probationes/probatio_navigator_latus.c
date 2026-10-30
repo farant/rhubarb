@@ -286,8 +286,9 @@ pictum_colore_mandati (
         si (   x->genus       == MANDATUM_TEXTUS
             && x->color.genus == quaesitus.genus
             && x->color.valor == quaesitus.valor
-            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
-                p)))
+            && (   fragmentum[ZEPHYRUM] == '\0'   /* "": ullus */
+                || chorda_continet(x->textus, chorda_ex_literis(
+                       fragmentum, p))))
         {
             redde VERUM;
         }
@@ -1382,6 +1383,93 @@ _sectio_columna (
     mundum_claudere(w);
 }
 
+/* N3.5b: Tab in columna laterali - nexus columnae (trans paginas
+ * eius, numquam extra), pes scopum, Enter aperit, Esc bis */
+interior vacuum
+_sectio_columna_tabula (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+               i32  i;
+               b32  extra;
+               b32  secunda;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Plant",
+        "<p>Plantae.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_VERUM(argumentum(w, "1"));
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+
+    CREDO_GRADUS("Tab: nexus columnae electus (inversus), pes scopum");
+    CREDO_FALSUM(pictum_colore(w, "", COLOR_BACKGROUND, c->piscina));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "", COLOR_BACKGROUND, c->piscina));
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(pictum(w, "\342\206\222 en.wikipedia.org/wiki/",
+        c->piscina));
+
+    CREDO_GRADUS("Esc: electio tollitur, columna manet; Esc: pagina");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+
+    CREDO_GRADUS("Enter: nexus columnae aperitur (petitio)");
+    clavis(w, 'l');
+    tabula(w, FALSUM);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(pictum(w, "Fetching en.wikipedia.org/wiki/",
+        c->piscina));
+
+    CREDO_GRADUS("area humilis: Tab in paginam columnae secundam, "
+        "numquam extra columnam; S-Tab redit");
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(altitudinem_ponere(w, "200"));
+    clavis(w, 'l');
+    extra    = FALSUM;
+    secunda  = FALSUM;
+    per (i = ZEPHYRUM; i < CC; i++)
+    {
+        tabula(w, FALSUM);
+        si (   campus_est(w, "columna", NIHIL)
+            || !campus_est(w, "pagina", "0"))
+        {
+            extra = VERUM;
+        }
+        si (campus_est(w, "columna", "1"))
+        {
+            secunda = VERUM;
+        }
+    }
+    CREDO_FALSUM(extra);
+    CREDO_VERUM(secunda);
+    per (i = ZEPHYRUM; i < CC; i++)
+    {
+        tabula(w, VERUM);
+    }
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("in pagina columnae II (j) Tab nexum eius eligit, non "
+        "paginae I columnae");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "columna", "1"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "columna", "1"));
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(altitudinem_ponere(w, "472"));
+    servum_scriptum_claudere(s);
+    mundum_claudere(w);
+}
+
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
  * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
  * habet */
@@ -1926,6 +2014,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sententia nexus", _sectio_sententia_nexus, NIHIL, mundum_purgare,
         NIHIL, NIHIL },
     { "columna", _sectio_columna, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "columna tabula", _sectio_columna_tabula, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,
