@@ -59,6 +59,7 @@ declare -a SOURCE_FILES=(
     "lib/censura.c"
     "lib/chorda.c"
     "lib/chorda_aedificator.c"
+    "lib/chronica_eventus.c"
     "lib/circulus.c"
     "lib/cives.c"
     "lib/claves_physicae.c"
