@@ -35,7 +35,10 @@
  *   ./bin/aedilis knotapel/demo_136_tl_braid_closures/main.c &&
  *   bash build/aedilis/main/struere.sh && ./build/aedilis/main/main
  * D136_MODUS=t1 runs the small set (T1; prints PARTIAL RUN); =p8 adds
- * 10 x 401 (R1p, R4: plant 8); default = the registered test set (T2).
+ * 10 x 401 (R1p, R4: plant 8); default = the registered test set (T2);
+ * =desc runs the descriptive measurements (no predictions; D136_PARS =
+ * times | spans | integers | polynomials picks one). Times print only
+ * with D136_TEMPORA=1 (except in desc), so archived output is stable.
  * Run under tools/custos.sh.
  */
 
@@ -1371,6 +1374,16 @@ part_conv (Piscina *piscina)
 /* ---------- one braid through R1, R4, R5 (and R1p, R6) ---------- */
 
 static res pstar = 0;
+static int show_times = 0;                   /* D136_TEMPORA=1 */
+
+/* span of V = span of the bracket in A over 4 (t = A^-4) */
+static void
+print_span (const Braid *b, Polynomium tl)
+{
+    int span = (int)((polynomium_gradus_summus(tl) - polynomium_gradus_imus(tl)) / 4);
+
+    printf("  span of V %d (c - span = %d)\n", span, b->len - span);
+}
 
 static int
 vertex_full_allowed (const Braid *b)
@@ -1395,14 +1408,18 @@ run_braid (
     printf("\n%s (n = %d, c = %d, window [%d, %d], bound %u bits)\n", b->name, b->n, b->len,
         b->imus, b->summus, b->limes);
     have_tl = tl_bracket(b, piscina, &tl, &ctx);
-    printf("  TL bracket: %s, %.2f s, %ld evaluations\n", have_tl ? "ok" : "REFUSED",
-        seconds_since(t0), ctx.evaluations);
+    if (show_times)
+        printf("  TL bracket: %s, %.2f s, %ld evaluations\n", have_tl ? "ok" : "REFUSED",
+            seconds_since(t0), ctx.evaluations);
+    else
+        printf("  TL bracket: %s, %ld evaluations\n", have_tl ? "ok" : "REFUSED", ctx.evaluations);
     if (!have_tl) {
         sprintf(msg, "%s: TL bracket by interpolation", b->name);
         check(P_R1, msg, 0);
         return;
     }
     printf("  largest coefficient %u bits (bound %u)\n", max_coeff_bits(tl), b->limes);
+    print_span(b, tl);
     if (b->len <= 24) {
         if (laqueus_uncinus_ex_pd(b->pd, (i32)b->len, piscina, &ref)) {
             sprintf(msg, "%s: TL bracket == state sum", b->name);
@@ -1415,7 +1432,11 @@ run_braid (
     if (vertex_full_allowed(b)) {
         t0 = clock();
         if (laqueus_modulus_vertex_uncinus(b->mv, piscina, &ref)) {
-            sprintf(msg, "%s: TL bracket == vertex-model bracket (vertex %.2f s)", b->name, seconds_since(t0));
+            if (show_times)
+                sprintf(msg, "%s: TL bracket == vertex-model bracket (vertex %.2f s)", b->name,
+                    seconds_since(t0));
+            else
+                sprintf(msg, "%s: TL bracket == vertex-model bracket", b->name);
             check(P_R1, msg, polynomium_aequalis(tl, ref));
         } else {
             sprintf(msg, "%s: vertex-model bracket refused", b->name);
@@ -1427,7 +1448,7 @@ run_braid (
     check_r5(b, pstar, r5_points);
     if (r1p_points > 0) {
         check_r1p(b, tl, pstar, ctx.min_p, r1p_points, &t_tl, &t_vx);
-        printf("  R1p timing: TL %.4f s, vertex %.4f s over %d points (ratio %.1f)\n", t_tl, t_vx,
+        if (show_times) printf("  R1p timing: TL %.4f s, vertex %.4f s over %d points (ratio %.1f)\n", t_tl, t_vx,
             r1p_points, t_tl > 0 ? t_vx / t_tl : 0.0);
         if (r6 > 0) {
             sprintf(msg, "%s: TL per point >= %dx faster than the vertex model (measured %.1fx)",
@@ -1467,6 +1488,330 @@ part_r0 (void)
         }
         piscina_destruere(pisc);
     }
+}
+
+/* ---------- descriptive (no prediction): plan.md "Descriptive" ---------- */
+
+/* Spans: the TL bracket of every test braid, span of V against c. */
+static void
+desc_spans (void)
+{
+    static const int lens[4] = { 20, 50, 101, 201 };
+    static const int big[5][2] = { { 8, 401 }, { 8, 801 }, { 10, 401 }, { 12, 401 }, { 12, 801 } };
+    int n, k;
+
+    printf("\nDescriptive: span of V against c (reduced alternating iff c - span = 0)\n");
+    for (k = 0; k < 4 * 10 + 5; k++) {
+        Piscina *pisc = piscina_generare_dynamicum("d136_span", 1048576);
+        Braid b;
+        Polynomium tl;
+        TLContext ctx;
+        int len;
+
+        n = k < 40 ? 3 + k / 4 : big[k - 40][0];
+        len = k < 40 ? lens[k % 4] : big[k - 40][1];
+        if (!random_braid(&b, n, len, pisc) || !tl_bracket(&b, pisc, &tl, &ctx))
+            printf("%d x %d: REFUSED\n", n, len);
+        else {
+            printf("%s: largest coefficient %u bits (bound %u)\n", b.name, max_coeff_bits(tl), b.limes);
+            print_span(&b, tl);
+        }
+        fflush(stdout);
+        piscina_destruere(pisc);
+    }
+}
+
+/* Per-point time at c = 801, n = 4 ... 16 (seed 2028 per n, as R0). */
+static void
+desc_times (void)
+{
+    int n;
+
+    printf("\nDescriptive: TL time per point at c = 801 (3 points of p*)\n");
+    for (n = 4; n <= NMAX; n++) {
+        Piscina *pisc = piscina_generare_dynamicum("d136_times", 1048576);
+        Sors s;
+        i32 len = 801;
+        s32 *w32 = NULL;
+        int *word;
+        PrimeCache pc;
+        double secs = 0;
+        long catalan = binom(2 * n, n) / (n + 1), dmax = 0;
+        int k, j, ok, pts = 0;
+
+        sors_seminare(&s, (i64)2028, 0);
+        if (_plexus_fortuitus(&s, (i32)n, &len, pisc, &w32) == NULL) {
+            printf("  n = %2d: no knot\n", n);
+            piscina_destruere(pisc);
+            continue;
+        }
+        word = (int *)piscina_allocare(pisc, (memoriae_index)len * sizeof(int));
+        for (k = 0; k < (int)len; k++) word[k] = w32[k];
+        ensure_modules(n);
+        for (j = n % 2; j <= n; j += 2)
+            if (modules[n][j].d > dmax) dmax = modules[n][j].d;
+        memset(&pc, 0, sizeof(pc));
+        for (k = 0; k < 3; k++) {
+            res A = 0;
+            clock_t t0;
+
+            if (choose_point(&pc, pstar, (res)(k + 2), &A) != INTERPOLATIO_UTILE) continue;
+            t0 = clock();
+            (void)tl_value(n, word, (int)len, A, pstar, &ok);
+            secs += seconds_since(t0);
+            pts++;
+        }
+        if (pts > 0) secs /= pts;
+        printf("  n = %2d  c = %u  Catalan %9ld  largest module %5ld  %9.3f s per point  (%.2f ns per c x Catalan)\n",
+            n, len, catalan, dmax, secs, secs * 1e9 / ((double)len * (double)catalan));
+        fflush(stdout);
+        piscina_destruere(pisc);
+    }
+}
+
+/* Exact traces over Z[x], x = A^2, with no primes. Each letter is scaled
+ * by A^3 so every entry stays an integer polynomial:
+ *   A^3 sigma = x^2 1 + E~,   A^3 sigma^-1 = x 1 + x E~,
+ *   E~ = A^2 e: coefficient x (re-pair, moved defect), -(x^2 + 1) (loop).
+ * The degree rises by at most 3 per letter, so 3c + 1 coefficients.
+ * terms == 1: the same at the single point A = 2 (x = 4), entries in Z;
+ * there the scaling adds up to 3c bits (8^c), in Z[x] it is a shift. */
+
+static const s64 ex_id_pos[4] = { 0, 0, 1, 0 };
+static const s64 ex_id_neg[4] = { 0, 1, 0, 0 };
+static const s64 ex_e_pos[3][4] = { { 0, 0, 0, 0 }, { 0, 1, 0, 0 }, { -1, 0, -1, 0 } };
+static const s64 ex_e_neg[3][4] = { { 0, 0, 0, 0 }, { 0, 0, 1, 0 }, { 0, -1, 0, -1 } };
+
+typedef struct {
+    int            terms;
+    i32            max_bits;     /* every intermediate entry, every module */
+    i32            mark_bits[4]; /* after c/4, c/2, 3c/4, c letters */
+    memoriae_index arena_peak;
+    long           ops;
+} ExactStats;
+
+/* dst += f src, f a polynomial in x of degree <= 3 (point mode: f(4)).
+ * magnus_adde and _multiplica always allocate the result in pisc, so
+ * nothing in dst shares storage with src. */
+static void
+ex_axpy (
+    Magnus       *dst,
+    const Magnus *src,
+    const s64    *f,
+    int           terms,
+    int           hi,
+    Piscina      *pisc,
+    long         *ops)
+{
+    int k, e;
+
+    if (terms == 1) {
+        s64 v = f[0] + 4 * f[1] + 16 * f[2] + 64 * f[3];
+
+        if (v == 0 || magnus_signum(src[0]) == 0) return;
+        dst[0] = magnus_adde(dst[0], magnus_multiplica(src[0], magnus_ex_s64(v), pisc), pisc);
+        (*ops)++;
+        return;
+    }
+    for (k = 0; k < 4; k++) {
+        if (f[k] == 0) continue;
+        for (e = 0; e <= hi; e++) {
+            if (magnus_signum(src[e]) == 0) continue;
+            if (e + k >= terms) fatal("exact trace: degree bound exceeded");
+            if (f[k] == 1) dst[e + k] = magnus_adde(dst[e + k], src[e], pisc);
+            else dst[e + k] = magnus_subtrahe(dst[e + k], src[e], pisc);
+            (*ops)++;
+        }
+    }
+}
+
+/* tr[j] = the trace of A^(3c) rho_j(word), terms coefficients, in keep */
+static void
+exact_traces (
+    int         n,
+    const int  *word,
+    int         len,
+    Magnus    **tr,
+    Piscina    *keep,
+    ExactStats *st)
+{
+    Piscina *ar[2];
+    int terms = st->terms, j, q;
+
+    ar[0] = piscina_generare_dynamicum("d136_exact_a", 1048576);
+    ar[1] = piscina_generare_dynamicum("d136_exact_b", 1048576);
+    ensure_modules(n);
+    for (j = n % 2; j <= n; j += 2) {
+        const Module *m = &modules[n][j];
+        long d = m->d, cells = d * d * terms, e, s, r, c;
+        Magnus *mat = (Magnus *)malloc((size_t)cells * sizeof(Magnus));
+        Magnus *nb = (Magnus *)malloc((size_t)cells * sizeof(Magnus));
+        Magnus *swap, zero = magnus_ex_s64(0);
+        int k, hi = 0, step = 0;
+
+        if (mat == NULL || nb == NULL) fatal("out of memory (exact trace)");
+        for (e = 0; e < cells; e++) mat[e] = zero;
+        for (s = 0; s < d; s++) mat[(s * d + s) * terms] = magnus_ex_s64(1);
+        for (k = len - 1; k >= 0; k--, step++) {
+            int letter = word[k];
+            int i = (letter > 0 ? letter : -letter) - 1;
+            const int *img = m->image + (long)i * d;
+            const unsigned char *tg = m->tag + (long)i * d;
+            const s64 *fid = letter > 0 ? ex_id_pos : ex_id_neg;
+            int nhi = terms == 1 ? 0 : hi + (letter > 0 ? 2 : 3);
+            Piscina *t = ar[step % 2];
+            i32 b = 0;
+
+            if (nhi >= terms) nhi = terms - 1;
+            piscina_vacare(t);
+            for (e = 0; e < cells; e++) nb[e] = zero;
+            for (r = 0; r < d * d; r++) ex_axpy(nb + r * terms, mat + r * terms, fid, terms, hi, t, &st->ops);
+            for (s = 0; s < d; s++) {
+                const s64 *fe;
+
+                if (tg[s] == 0) continue;
+                fe = letter > 0 ? ex_e_pos[tg[s]] : ex_e_neg[tg[s]];
+                for (c = 0; c < d; c++)
+                    ex_axpy(nb + ((long)img[s] * d + c) * terms, mat + (s * d + c) * terms, fe, terms,
+                        hi, t, &st->ops);
+            }
+            hi = nhi;
+            swap = mat;
+            mat = nb;
+            nb = swap;
+            for (e = 0; e < cells; e++) {
+                i32 x = magnus_bitorum(mat[e]);
+
+                if (x > b) b = x;
+            }
+            if (b > st->max_bits) st->max_bits = b;
+            for (q = 0; q < 4; q++)
+                if (step + 1 == (len * (q + 1)) / 4 && b > st->mark_bits[q]) st->mark_bits[q] = b;
+        }
+        tr[j] = (Magnus *)piscina_allocare(keep, (memoriae_index)terms * sizeof(Magnus));
+        for (e = 0; e < terms; e++) {
+            Magnus acc = zero;
+
+            for (s = 0; s < d; s++) acc = magnus_adde(acc, mat[(s * d + s) * terms + e], keep);
+            tr[j][e] = acc;
+        }
+        free(mat);
+        free(nb);
+    }
+    st->arena_peak = piscina_summa_apex_usus(ar[0]) + piscina_summa_apex_usus(ar[1]);
+    piscina_destruere(ar[0]);
+    piscina_destruere(ar[1]);
+}
+
+/* the bracket at A = 2 mod p from the exact traces */
+static res
+exact_at_two (
+    int      n,
+    int      len,
+    Magnus **tr,
+    int      terms,
+    res      p)
+{
+    res Ainv = invm(2, p);
+    res delta = subm(0, addm(4, mulm(Ainv, Ainv, p), p), p);
+    res Dl[NMAX + 3], total = 0;
+    int j, e;
+
+    Dl[0] = 1;
+    Dl[1] = delta;
+    for (j = 1; j + 1 <= n; j++) Dl[j + 1] = subm(mulm(delta, Dl[j], p), Dl[j - 1], p);
+    for (j = n % 2; j <= n; j += 2) {
+        res v = 0, xe = 1;
+
+        for (e = 0; e < terms; e++) {
+            v = addm(v, mulm(magnus_residuum_parvum(tr[j][e], p), xe, p), p);
+            xe = mulm(xe, 4, p);
+        }
+        total = addm(total, mulm(Dl[j], v, p), p);
+    }
+    total = mulm(total, powm(Ainv, 3ULL * (ull)len, p), p);
+    return mulm(total, invm(delta, p), p);
+}
+
+static void
+desc_exact (int n, int len_req, int poly)
+{
+    Piscina *pisc = piscina_generare_dynamicum("d136_exact", 1048576);
+    Braid b;
+    Magnus *tr[NMAX + 1];
+    ExactStats st;
+    clock_t t0;
+    i32 trbits = 0;
+    res mine, ref;
+    int j, e, ok;
+
+    if (!random_braid(&b, n, len_req, pisc)) {
+        printf("  %d x %d: REFUSED\n", n, len_req);
+        piscina_destruere(pisc);
+        return;
+    }
+    memset(&st, 0, sizeof(st));
+    st.terms = poly ? 3 * b.len + 1 : 1;
+    t0 = clock();
+    exact_traces(n, b.word, b.len, tr, pisc, &st);
+    for (j = n % 2; j <= n; j += 2)
+        for (e = 0; e < st.terms; e++) {
+            i32 x = magnus_bitorum(tr[j][e]);
+
+            if (x > trbits) trbits = x;
+        }
+    mine = exact_at_two(n, b.len, tr, st.terms, pstar);
+    ref = tl_value(n, b.word, b.len, 2, pstar, &ok);
+    printf("  %s: entries <= %u bits (after c/4, c/2, 3c/4, c: %u, %u, %u, %u); traces %u bits\n",
+        b.name, st.max_bits, st.mark_bits[0], st.mark_bits[1], st.mark_bits[2], st.mark_bits[3], trbits);
+    printf("    %ld big-number operations, arenas peak %.1f MB, %.1f s; at A = 2 mod p*: %s\n",
+        st.ops, (double)st.arena_peak / 1048576.0, seconds_since(t0),
+        ok && mine == ref ? "agrees with the modular route" : "DISAGREES");
+    if (poly) {
+        Polynomium tl;
+        TLContext ctx;
+
+        if (tl_bracket(&b, pisc, &tl, &ctx))
+            printf("    bracket coefficients %u bits (bound %u)\n", max_coeff_bits(tl), b.limes);
+    } else printf("    (scaling 8^c adds up to %d bits)\n", 3 * b.len);
+    fflush(stdout);
+    piscina_destruere(pisc);
+}
+
+static void
+desc_integers (void)
+{
+    static const int set[7][2] = { { 4, 201 }, { 8, 201 }, { 12, 201 }, { 8, 401 }, { 8, 801 }, { 12, 401 }, { 12, 801 } };
+    int k;
+
+    printf("\nDescriptive: largest entry over Z at A = 2 (no primes)\n");
+    for (k = 0; k < 7; k++) desc_exact(set[k][0], set[k][1], 0);
+}
+
+static void
+desc_polynomials (void)
+{
+    /* the last two go past the plan's c <= 201 (cheap at 8 strands) */
+    static const int set[15][2] = {
+        { 4, 50 }, { 4, 101 }, { 4, 201 }, { 6, 50 }, { 6, 101 }, { 6, 201 },
+        { 8, 50 }, { 8, 101 }, { 8, 201 }, { 10, 50 }, { 10, 101 }, { 12, 101 }, { 12, 201 },
+        { 8, 401 }, { 8, 801 }
+    };
+    int k;
+
+    printf("\nDescriptive: largest coefficient over Z[A] (no primes), c <= 201 (+ 8 x 401, 8 x 801)\n");
+    for (k = 0; k < 15; k++) desc_exact(set[k][0], set[k][1], 1);
+}
+
+static void
+run_descriptive (const char *pars)
+{
+    int all = pars == NULL;
+
+    if (all || strcmp(pars, "times") == 0) desc_times();
+    if (all || strcmp(pars, "spans") == 0) desc_spans();
+    if (all || strcmp(pars, "integers") == 0) desc_integers();
+    if (all || strcmp(pars, "polynomials") == 0) desc_polynomials();
 }
 
 /* ---------- main ---------- */
@@ -1509,6 +1854,7 @@ main (void)
     static int t34[8], t45[15];
     const char *modus = getenv("D136_MODUS");
     int full = modus == NULL || strcmp(modus, "plene") == 0;
+    int desc = modus != NULL && strcmp(modus, "desc") == 0;
     int p8 = modus != NULL && strcmp(modus, "p8") == 0;
     Piscina *pisc = piscina_generare_dynamicum("d136_main", 1048576);
     int k, n, pred;
@@ -1516,11 +1862,18 @@ main (void)
     for (k = 0; k < 8; k++) t34[k] = k % 2 + 1;
     for (k = 0; k < 15; k++) t45[k] = k % 3 + 1;
     printf("KNOTAPEL DEMO 136: brackets of braid closures through TL standard modules\n");
-    printf("mode: %s\n", full ? "registered test set (plan.md v2)" : (p8 ? "p8 (t1 + 10 x 401)" : "t1 (PARTIAL RUN)"));
+    printf("mode: %s\n", full ? "registered test set (plan.md v2)" : desc ? "descriptive (no predictions)" :
+        (p8 ? "p8 (t1 + 10 x 401)" : "t1 (PARTIAL RUN)"));
+    show_times = getenv("D136_TEMPORA") != NULL;
 
     pstar = 1U << 30;
     do pstar = congruentia_primus_infra(pstar); while (pstar % 4 != 1);
     printf("p* = %u (largest prime = 1 mod 4 below 2^30)\n", pstar);
+    if (desc) {
+        run_descriptive(getenv("D136_PARS"));
+        piscina_destruere(pisc);
+        return 0;
+    }
 
     part_r2();
     part_r3();

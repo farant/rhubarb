@@ -373,6 +373,13 @@ images; R1 and R5's stabilization factor are not.
 
 - **T2. Runs.** The test set; R1, R1p, R4, R5, R6; findings.md;
   archive.
+  **T2 note (2026-10-30, run).** 692 PASS, 0 FAIL: every prediction
+  holds (findings.md). The descriptive items were added after the run,
+  as a separate mode (`D136_MODUS=desc`), so they are not in the 692;
+  the polynomial route went past "c ≤ 201" to 8 × 401 and 8 × 801
+  (cheap at 8 strands). Timings now print only with `D136_TEMPORA=1`
+  (or in desc mode), so the archived t1 output is byte-stable; run_braid
+  prints the span of V.
 - **T3. Review.** An independent reviewer with its own oracle; it does
   not build in the live tree.
 - **T4 (Fran's call).** Promote the evaluator into `laqueus` (e.g.
