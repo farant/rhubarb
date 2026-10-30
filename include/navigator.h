@@ -69,6 +69,15 @@
  * aperit, Esc electionem prius tollit (deinde ad paginam). Motus
  * sententiae electionem tollit. Campus "nexus" idem ac paginae;
  * "unitas" nexuum = pagina aut sententia, codice communi.
+ * COLUMNA LATERALIS (N3.5; spec V.18): pagina cum columna (infobox
+ * sectionis eius, navigator_paginae.h) signum in margine supero dextro
+ * habet (sagitta; ictus intrat). l intrat (pagina prima columnae), j
+ * k et sagittae pedis intra eam, h / Esc / signum sinistrum ad
+ * paginam possessoris redeunt (pagina non mutatur). Nexus colorati
+ * et ictu aperiuntur (Tab in columna postea - nunc nihil); ~ eos
+ * quoque celat. Pes et titulus loci "Rhubarb - side 1/2". Campus
+ * "columna" (pagina in columna; absens = principalis) in loco;
+ * motus paginae principalis eum tollit. Positio non servatur.
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,

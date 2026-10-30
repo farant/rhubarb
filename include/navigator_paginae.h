@@ -5,7 +5,7 @@
  * sectiones paginas novas NON incipiunt:
  *   titulus articuli, tituli sectionum, TITULUS -> CODEX_TITULUS
  *   PARAGRAPHUS, CITATIO                       -> CODEX_PARAGRAPHUS
- *   INDEX gradu g -> CODEX_PARAGRAPHUS, praefixum 2(g-1) spatia + "• "
+ *   INDEX gradu g -> CODEX_PARAGRAPHUS, 2(g-1) spatia + "• "
  *   FIGURA        -> omittitur (imagines N5)
  *   adiuncta      -> NON in columna principali (columna lateralis N3.5)
  * Notae (nexus, emphasis, fortis) in offsets textus capitis
@@ -23,6 +23,19 @@
 #include "codex.h"
 #include "articulus.h"
 
+/* COLUMNA LATERALIS (N3.5; spec V.13-14, V.18): contentum ancillare
+ * paginae affixum - nunc adiuncta (infobox) sectionis. Columna = caput
+ * suum (titulus adiuncti, tituli interni, linea per par "Clavis:
+ * valor", paragraphi; nexus servati) et ancora = offset clausulae
+ * primae sectionis in caput.textus articuli (pagina possessoris = quae
+ * eum continet). Columna una per sectionem cum adiunctis. Instrumentum
+ * generale: tabulae, figurae postea. */
+nomen structura {
+           i32  ancora;
+    CodexCaput  caput;
+           Xar* notae;          /* ArticulusNota in caput.textus */
+} NavigatorColumna;
+
 nomen structura {
     CodexCaput caput;          /* articulus: textus + clausulae
                                  * (lector_paginare) */
@@ -37,6 +50,7 @@ nomen structura {
      * prima apparitionis). Nullis nexibus: nexus.textus vacuus. */
     CodexCaput  nexus;
            Xar* notae_nexuum;    /* ArticulusNota in nexus.textus */
+           Xar* columnae;        /* NavigatorColumna, ordine textus */
 } NavigatorTextus;
 
 /* NIHIL solum memoria deficiente */

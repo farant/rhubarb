@@ -312,3 +312,29 @@ footer, page-lines-in-sentence hit test, raw screen coords in vicus)
 showed each piece is caught. The vicus test recomputes the centered
 sentence layout (area from the pane size like _margines/_area +
 lector_sententiam_disponere) to click a link at a real screen point.
+
+## 2026-10-29 - N3.5 infobox side column (grid tool, first use)
+
+Library (navigator_paginae): NavigatorTextus.columnae - one
+NavigatorColumna {ancora, caput, notae} per section that has adjuncta
+(Rhubarb: taxobox in the lead, nutrition box under "Uses"). The
+Scriptor now targets any (caput, notae) pair, so the same writer
+builds the column: adjunct caption as title, inner titles, each PAR
+as a paragraph "Key: value" (value's link notes shifted past the
+prefix), paragraphs/lists; figures skipped. ancora = initium of the
+section's first clausula (its title if it has one).
+
+Pane: each column paginated with the same area; owner = the article
+page whose start <= ancora. Field `columna` (status, ambitus
+ligatio). l / h / Esc / top-margin markers (columna-intrare right,
+columna-redire left, in a new caput row line so the text area is
+unchanged); j/k and footer arrows move inside the column via a hook
+at the top of _paginam_movere; main-column moves clear `columna` (a
+location like pagina=3&columna=0 where page 3 has no column would
+otherwise drop you into page 1's column later). Tab/Enter/s are no-ops
+in the column for now (no selection on the hidden page). Footer and
+pane title "Rhubarb - side 1/2".
+
+Test notes: at the default size the taxobox fits one page - the j/k
+test shrinks the HEIGHT (new altitudinem_ponere); at 150 px the footer
+is too narrow for "side 1/", so that step checks the field.

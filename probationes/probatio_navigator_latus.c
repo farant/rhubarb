@@ -1240,6 +1240,148 @@ _sectio_sententia_nexus (
     mundum_claudere(w);
 }
 
+interior b32
+latitudinem_ponere (
+                 Mundus* w,
+     constans character* latitudo);
+
+interior b32
+altitudinem_ponere (
+                 Mundus* w,
+     constans character* altitudo);
+
+/* N3.5: componens id datum in arbore? */
+interior b32
+componens_est (
+                 Mundus* w,
+     constans character* id,
+                Piscina* p)
+{
+    redde componens_invenire_per_id(dispensator_arbor(w->d),
+        chorda_ex_literis(id, p)) != NIHIL;
+}
+
+/* N3.5: columna lateralis (infobox) - signum, l / h / Esc, j k intra,
+ * mus, locus, nexus, pagina sine columna */
+interior vacuum
+_sectio_columna (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+            chorda  locus;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Plant",
+        "<p>Plantae.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("pagina I Rhubarb: signum columnae; Rheum: nullum");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_FALSUM(componens_est(w, "columna-intrare", c->piscina));
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(componens_est(w, "columna-intrare", c->piscina));
+
+    CREDO_GRADUS("l: columna (infobox taxi), pes 'side 1/'");
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(pictum(w, "Rhubarb (culinary hybrid)", c->piscina));
+    CREDO_VERUM(pictum(w, "Kingdom: ", c->piscina));
+    CREDO_VERUM(pictum(w, "side 1/", c->piscina));
+    CREDO_VERUM(componens_est(w, "columna-redire", c->piscina));
+
+    CREDO_GRADUS("locus columnam nominat; applicatus restituit");
+    locus = chorda_transcribere(navigator_locus(&w->m, c->piscina),
+        c->piscina);
+    CREDO_VERUM(chorda_continet(locus, chorda_ex_literis("columna=0",
+        c->piscina)));
+
+    CREDO_GRADUS("h: ad paginam possessoris (I), columna absens");
+    clavis(w, 'h');
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_FALSUM(pictum(w, "side 1/", c->piscina));
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+
+    CREDO_GRADUS("Esc in columna: ad paginam (non indicem)");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+
+    CREDO_GRADUS("mus: signum dextrum intrat, sinistrum redit");
+    CREDO_VERUM(ictus_in(w, "columna-intrare", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(ictus_in(w, "columna-redire", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+
+    CREDO_GRADUS("area humilis (CC px): j k intra columnam (paginae "
+        "plures), pagina principalis manet");
+    CREDO_VERUM(altitudinem_ponere(w, "200"));
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "columna", "1"));
+    CREDO_VERUM(pictum(w, "side 2/", c->piscina));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis(w, 'h');
+    CREDO_VERUM(altitudinem_ponere(w, "472"));
+
+    CREDO_GRADUS("titulus loci in columna: 'Rhubarb - side 1/'");
+    clavis(w, 'l');
+    CREDO_VERUM(chorda_incipit(navigator_locus_titulus(&w->m,
+        c->piscina), chorda_ex_literis("Rhubarb - side 1/",
+        c->piscina)));
+    clavis(w, 'h');
+
+    CREDO_GRADUS("columnae duae: pagina I et 'Uses' (posterior)");
+    {
+        i32 i;
+        i32 signa      = ZEPHYRUM;
+        i32 posterior  = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < XXX; i++)
+        {
+            si (componens_est(w, "columna-intrare", c->piscina))
+            {
+                signa++;
+                si (!campus_est(w, "pagina", "0"))
+                {
+                    posterior = I;
+                    clavis(w, 'l');
+                    CREDO_VERUM(pictum(w, "Rhubarb, raw", c->piscina));
+                    clavis(w, 'h');
+                }
+            }
+            clavis(w, 'j');
+        }
+        CREDO_AEQUALIS_I32(signa, II);
+        CREDO_VERUM(posterior == I);
+    }
+
+    CREDO_GRADUS("columna in pagina sine columna non manet: k ad "
+        "paginam I - non in columna");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/1?pagina=1&columna=0"));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_FALSUM(pictum(w, "side 1/", c->piscina));
+
+    CREDO_GRADUS("nexus in columna: ictus petit (servus scriptus)");
+    clavis(w, 'l');
+    CREDO_VERUM(ictus_in_textu(w, "Plantae", c->piscina));
+    CREDO_VERUM(pictum(w, "Fetching", c->piscina));
+    servum_scriptum_claudere(s);
+    mundum_claudere(w);
+}
+
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
  * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
  * habet */
@@ -1344,6 +1486,36 @@ latitudinem_ponere (
         w->p));
     r = mutare_ramum(&w->m.ramus, _superficiem_scribere,
         (vacuum*)(memoriae_index)latitudo);
+    insula_scriptorem_ponere(w->repo, prior);
+    dispensator_recomponere(w->d);
+    redde r;
+}
+
+interior vacuum
+_altitudinem_scribere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "superficies_altitudo",
+        (constans character*)ctx);
+}
+
+/* N3.5: altitudo lateris (ut latitudinem_ponere) */
+interior b32
+altitudinem_ponere (
+                 Mundus* w,
+     constans character* altitudo)
+{
+       b32 r;
+    chorda prior;
+
+    prior = w->repo->scriptor;
+    insula_scriptorem_ponere(w->repo, chorda_ex_literis("dispensator",
+        w->p));
+    r = mutare_ramum(&w->m.ramus, _altitudinem_scribere,
+        (vacuum*)(memoriae_index)altitudo);
     insula_scriptorem_ponere(w->repo, prior);
     dispensator_recomponere(w->d);
     redde r;
@@ -1753,6 +1925,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "sententia nexus", _sectio_sententia_nexus, NIHIL, mundum_purgare,
         NIHIL, NIHIL },
+    { "columna", _sectio_columna, NIHIL, mundum_purgare, NIHIL, NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,

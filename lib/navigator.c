@@ -70,6 +70,10 @@ nomen structura {
                   Xar* eventus;          /* VicipaediaEventus */
     /* N6.1: sententiae textus articuli (CodexSententia), in arca */
                   Xar* sententiae;
+    /* N3.5: columnae laterales - paginae (Xar* LectorPagina) et pagina
+     * possessoris (s32) per columnam textus->columnae, in arca */
+                  Xar* columnae_paginae;
+                  Xar* columnae_possessores;
 } NavigatorFigurae;
 
 
@@ -425,6 +429,8 @@ _paginas_parare (
     f->textus = NIHIL;
     f->paginae = NIHIL;
     f->sententiae = NIHIL;
+    f->columnae_paginae = NIHIL;
+    f->columnae_possessores = NIHIL;
     html = navigator_versionis_html(m->bibliotheca, v, f->arca);
     articulus = html.mensura > ZEPHYRUM ? _extrahere(a->situs, html, a,
         f->arca) : NIHIL;
@@ -442,6 +448,46 @@ _paginas_parare (
     /* N6.1: sententiae articuli (index nexuum non legitur) */
     f->sententiae = codex_sententiae(&f->textus->caput, NIHIL, ZEPHYRUM,
         f->arca);
+    /* N3.5: columnae laterales eadem area paginatae; possessor =
+     * pagina articuli quae ancoram continet */
+    f->columnae_paginae = xar_creare(f->arca,
+        (i32)magnitudo(Xar*));
+    f->columnae_possessores = xar_creare(f->arca, (i32)magnitudo(s32));
+    {
+        i32 c;
+        i32 q;
+
+        per (c = ZEPHYRUM; f->textus->columnae && f->columnae_paginae
+            && f->columnae_possessores
+            && c < xar_numerus(f->textus->columnae); c++)
+        {
+            constans NavigatorColumna* col =
+                (constans NavigatorColumna*)
+                xar_obtinere(f->textus->columnae, c);
+                                Xar** pg  = (Xar**)xar_addere(
+                                    f->columnae_paginae);
+                                 s32* pos = (s32*)xar_addere(
+                                     f->columnae_possessores);
+
+            si (!pg || !pos)
+            {
+                frange;
+            }
+            *pg   = lector_paginare(&col->caput, (i32)latitudo,
+                (i32)altitudo, f->arca);
+            *pos  = ZEPHYRUM;
+            per (q = I; q < f->paginae_articuli; q++)
+            {
+                si (((constans LectorPagina*)xar_obtinere(f->paginae,
+                    q))
+                    ->initium > col->ancora)
+                {
+                    frange;
+                }
+                *pos = (s32)q;
+            }
+        }
+    }
     si (f->textus->nexus.textus.mensura > ZEPHYRUM)
     {
         Xar* nexus = lector_paginare(&f->textus->nexus, (i32)latitudo,
@@ -1088,6 +1134,13 @@ _articulum_aperire (
     redde _paginam_restituere(m);
 }
 
+/* N3.5: definitur infra (columnae laterales) */
+interior b32
+_in_columna_movere (
+    NavigatorMontatio* m,
+                  s32  gradus,
+                  b32* motum);
+
 /* pagina articuli proxima (gradus I) aut prior (-I), coacta */
 interior b32
 _paginam_movere (
@@ -1096,14 +1149,24 @@ _paginam_movere (
 {
         NavigatorFigurae* f;
                      s32  k;
-      constans character* tituli[II];
-      constans character* valores[II];
+      constans character* tituli[III];
+      constans character* valores[III];
                character  numerus[XVI];
 
     f = _paginas_parare(m);
     si (!f)
     {
         redde VERUM;
+    }
+    {
+        /* N3.5: in columna laterali j k intra eam */
+        b32 in_columna;
+        b32 r = _in_columna_movere(m, gradus, &in_columna);
+
+        si (in_columna)
+        {
+            redde r;
+        }
     }
     k = _pagina_currens(m, f) + gradus;
     si (k < ZEPHYRUM || (i32)k >= xar_numerus(f->paginae))
@@ -1115,8 +1178,10 @@ _paginam_movere (
     valores[ZEPHYRUM]  = numerus;
     tituli[I]          = "nexus";     /* N4.3: electio tollitur */
     valores[I]         = "";
+    tituli[II]         = "columna";   /* N3.5: alterius paginae */
+    valores[II]        = "";
     _positionem_servare(m, f, k);
-    redde _campos_scribere(m, tituli, valores, II);
+    redde _campos_scribere(m, tituli, valores, III);
 }
 
 /* ===== sententiae (N6.1) ===== */
@@ -1351,6 +1416,157 @@ _sententiam_movere (
         redde VERUM;
     }
     redde _sententiam_scribere(m, f, k);
+}
+
+/* ===== columnae laterales (N3.5) ===== */
+
+/* columna possessa a pagina k (prima); -1 si nulla */
+interior s32
+_columna_paginae (
+    constans NavigatorFigurae* f,
+                          s32  k)
+{
+    i32 c;
+
+    per (c = ZEPHYRUM; f->columnae_possessores
+        && c < xar_numerus(f->columnae_possessores); c++)
+    {
+        si (*(constans s32*)xar_obtinere(f->columnae_possessores, c)
+            == k)
+        {
+            redde (s32)c;
+        }
+    }
+    redde -I;
+}
+
+interior Xar*
+_columnae_paginae (
+    constans NavigatorFigurae* f,
+                          s32  c)
+{
+    redde *(Xar**)xar_obtinere(f->columnae_paginae, (i32)c);
+}
+
+interior constans NavigatorColumna*
+_columna (
+    constans NavigatorFigurae* f,
+                          s32  c)
+{
+    redde (constans NavigatorColumna*)xar_obtinere(f->textus->columnae,
+        (i32)c);
+}
+
+/* columna currens (campus "columna" et columna paginae currentis in
+ * visu paginae); -1 si in columna principali */
+interior s32
+_columna_currens (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f)
+{
+    s32 c;
+
+    si (   !f || _visus(m) != VISUS_PAGINAE
+        || _campus_numerus(m, "columna") < ZEPHYRUM)
+    {
+        redde -I;
+    }
+    c = _columna_paginae(f, _pagina_currens(m, f));
+    redde c >= ZEPHYRUM && _columnae_paginae(f, c) ? c : -I;
+}
+
+/* pagina in columna c coacta */
+interior s32
+_columnae_pagina (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f,
+                           s32  c)
+{
+    s32 k = _campus_numerus(m, "columna");
+    s32 n = (s32)xar_numerus(_columnae_paginae(f, c));
+
+    redde k < ZEPHYRUM ? ZEPHYRUM : k >= n ? n - I : k;
+}
+
+/* notae columnae activae (~ celat ut textum articuli) */
+interior Xar*
+_columnae_notae (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f,
+                           s32  c)
+{
+    redde _campus_numerus(m, "nexus_occulti") == I ? NIHIL
+        : _columna(f, c)->notae;
+}
+
+/* columna intratur (pagina k) aut relinquitur (k < 0); electio nexus
+ * tollitur */
+interior b32
+_columnam_scribere (
+    NavigatorMontatio* m,
+                  s32  k)
+{
+    constans character* tituli[II];
+    constans character* valores[II];
+             character  numerus[XVI];
+
+    sprintf(numerus, "%d", (integer)k);
+    tituli[ZEPHYRUM]   = "columna";
+    valores[ZEPHYRUM]  = k < ZEPHYRUM ? "" : numerus;
+    tituli[I]          = "nexus";
+    valores[I]         = "";
+    redde _campos_scribere(m, tituli, valores, II);
+}
+
+/* l: columnam paginae intrare (nulla: nihil) */
+interior b32
+_columnam_intrare (
+    NavigatorMontatio* m)
+{
+    NavigatorFigurae* f = _paginas_parare(m);
+
+    si (   !f || _columna_currens(m, f) >= ZEPHYRUM
+        || _columna_paginae(f, _pagina_currens(m, f)) < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde _columnam_scribere(m, ZEPHYRUM);
+}
+
+/* h / Esc: ad paginam possessoris (pagina non mutatur) */
+interior b32
+_columnam_relinquere (
+    NavigatorMontatio* m)
+{
+    redde _columna_currens(m, _paginas_parare(m)) < ZEPHYRUM ? VERUM
+        : _columnam_scribere(m, -I);
+}
+
+/* j k in columna: *motum VERUM si in columna (vocans aliter paginam
+ * movet) */
+interior b32
+_in_columna_movere (
+    NavigatorMontatio* m,
+                  s32  gradus,
+                  b32* motum)
+{
+    NavigatorFigurae* f = _paginas_parare(m);
+                 s32  c;
+                 s32  k;
+
+    *motum  = FALSUM;
+    c       = _columna_currens(m, f);
+    si (c < ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    *motum  = VERUM;
+    k       = _columnae_pagina(m, f, c) + gradus;
+    si (k < ZEPHYRUM || (i32)k >= xar_numerus(_columnae_paginae(f, c)))
+    {
+        redde VERUM;
+    }
+    redde _columnam_scribere(m, k);
 }
 
 /* ===== nexus per claves (N4.3) ===== */
@@ -2167,6 +2383,11 @@ fac_ad_indicem (
         valores[ZEPHYRUM]  = "";
         redde _campos_scribere(cp->m, tituli, valores, I);
     }
+    /* N3.5: ex columna laterali ad paginam, non ad indicem */
+    si (_columna_currens(cp->m, _paginas_parare(cp->m)) >= ZEPHYRUM)
+    {
+        redde _columnam_relinquere(cp->m);
+    }
     tituli[ZEPHYRUM]   = "visus";
     valores[ZEPHYRUM]  = "index";
     tituli[I]          = "articulus";
@@ -2350,21 +2571,46 @@ interior b32
 fac_nexum_proximum (
     vacuum* ctx)
 {
-    redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, I);
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    /* N3.5: Tab in columna laterali postea - nunc nihil */
+    redde _columna_currens(cp->m, _paginas_parare(cp->m)) >= ZEPHYRUM
+        || _nexum_eligere(cp->m, I);
 }
 
 interior b32
 fac_nexum_priorem (
     vacuum* ctx)
 {
-    redde _nexum_eligere(((ContextusPraecepti*)ctx)->m, -I);
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    redde _columna_currens(cp->m, _paginas_parare(cp->m)) >= ZEPHYRUM
+        || _nexum_eligere(cp->m, -I);
 }
 
 interior b32
 fac_sententiam_ex_pagina (
     vacuum* ctx)
 {
-    redde _sententiam_ex_pagina(((ContextusPraecepti*)ctx)->m);
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+
+    /* N3.5: in columna laterali nihil */
+    redde _columna_currens(cp->m, _paginas_parare(cp->m)) >= ZEPHYRUM
+        || _sententiam_ex_pagina(cp->m);
+}
+
+interior b32
+fac_columnam_intrare (
+    vacuum* ctx)
+{
+    redde _columnam_intrare(((ContextusPraecepti*)ctx)->m);
+}
+
+interior b32
+fac_columnam_relinquere (
+    vacuum* ctx)
+{
+    redde _columnam_relinquere(((ContextusPraecepti*)ctx)->m);
 }
 
 interior b32
@@ -2683,6 +2929,10 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_nexus_vertere },
     { "navigator.sententia", "Sentence view", "s", VISUS_PAGINAE,
         ZEPHYRUM, fac_sententiam_ex_pagina },
+    { "navigator.columna_intrare", "Side column", "l", VISUS_PAGINAE,
+        ZEPHYRUM, fac_columnam_intrare },
+    { "navigator.columna_relinquere", "Back to page", "h",
+        VISUS_PAGINAE, ZEPHYRUM, fac_columnam_relinquere },
     { "navigator.sententia_proxima", "Next sentence", "j",
         VISUS_SENTENTIAE, ZEPHYRUM, fac_sententiam_proximam },
     { "navigator.sententia_prior", "Previous sentence", "k",
@@ -2749,6 +2999,17 @@ _nexus_ad_punctum (
             (i32)altitudo, &praecisa, f->scheda);
         t      = f->textus->caput.textus;
         notae  = _notae_articuli_activae(m, f);
+    }
+    alioquin si (_columna_currens(m, f) >= ZEPHYRUM)
+    {
+        /* N3.5: lineae paginae columnae lateralis */
+        s32 c = _columna_currens(m, f);
+
+        lineae  = ((constans LectorPagina*)xar_obtinere(
+            _columnae_paginae(f, c), (i32)_columnae_pagina(m, f, c)))
+            ->lineae;
+        t      = _columna(f, c)->caput.textus;
+        notae  = _columnae_notae(m, f, c);
     }
     alioquin
     {
@@ -2897,6 +3158,17 @@ agere (
         {
             redde _favorem_vertere(m, _articulus_per_id(m, _campus(m,
                 "articulus")), privatum->scheda);
+        }
+        /* N3.5: signa columnae lateralis */
+        si (   chorda_aequalis_literis(nodus->id, "columna-intrare")
+            && ev->genus == EVENTUS_MUS_DEPRESSUS)
+        {
+            redde _columnam_intrare(m);
+        }
+        si (   chorda_aequalis_literis(nodus->id, "columna-redire")
+            && ev->genus == EVENTUS_MUS_DEPRESSUS)
+        {
+            redde _columnam_relinquere(m);
         }
         si (   chorda_aequalis_literis(nodus->id, "textus")
             && ev->genus == EVENTUS_MUS_DEPRESSUS)
@@ -3448,6 +3720,7 @@ _paginam_pingere (
                     chorda  pes;
                        s32  k;
                        s32  n;
+                       s32  col;
                        s32  lateris;
                        s32  supra;
                        i32  i;
@@ -3459,14 +3732,35 @@ _paginam_pingere (
     {
         redde;
     }
-    k = _pagina_currens(m, f);
-    n = (s32)xar_numerus(f->paginae);
-    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    k    = _pagina_currens(m, f);
+    n    = (s32)xar_numerus(f->paginae);
+    g    = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    col  = _columna_currens(m, f);
+    si (col >= ZEPHYRUM)
+    {
+        /* N3.5: columna lateralis - pagina eius, numeri eius */
+        k = _columnae_pagina(m, f, col);
+        n = (s32)xar_numerus(_columnae_paginae(f, col));
+        g = (constans LectorPagina*)xar_obtinere(_columnae_paginae(f,
+            col), (i32)k);
+    }
     _margines(m, &lateris, &supra);
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(c); i++)
     {
         x = componens_liberum(c, i);
-        si (chorda_aequalis_literis(x->id, "textus"))
+        si (chorda_aequalis_literis(x->id, "textus") && col >= ZEPHYRUM)
+        {
+            per (j = ZEPHYRUM; j < xar_numerus(g->lineae); j++)
+            {
+                l = (constans LectorLinea*)xar_obtinere(g->lineae, j);
+                _lineam_textus_pingere(md, x->fines.x + lateris
+                    * NAV_LITTERA + l->x, x->fines.y + l->y,
+                    _columna(f, col)->caput.textus, l,
+                    _columnae_notae(m,
+                    f, col), -I);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(x->id, "textus"))
         {
             per (j = ZEPHYRUM; j < xar_numerus(g->lineae); j++)
             {
@@ -3477,6 +3771,14 @@ _paginam_pingere (
                     _nexus_electus(m, f) ? _campus_numerus(m, "nexus")
                     : -I);
             }
+        }
+        alioquin si (chorda_aequalis_literis(x->id, "columna-intrare"))
+        {
+            figura_sagittam_pingere(md, x->fines, I, ZEPHYRUM);
+        }
+        alioquin si (chorda_aequalis_literis(x->id, "columna-redire"))
+        {
+            figura_sagittam_pingere(md, x->fines, -I, ZEPHYRUM);
         }
         alioquin si (   chorda_aequalis_literis(x->id, "pes")
                      && prompta_aperta(&m->ramus, NIHIL))
@@ -3493,6 +3795,14 @@ _paginam_pingere (
                 f->hospes, md->piscina), md->piscina),
                 chorda_ex_literis(
                 numeri, md->piscina), md->piscina);
+            si (col >= ZEPHYRUM)
+            {
+                /* N3.5: "Rhubarb - side 1/2" */
+                sprintf(numeri, " - side %d/%d", (integer)(k + I),
+                    (integer)n);
+                pes = chorda_concatenare(f->titulus, chorda_ex_literis(
+                    numeri, md->piscina), md->piscina);
+            }
             si (_notae_loci(m, md->piscina))
             {
                 pes = chorda_concatenare(pes, chorda_ex_literis(
@@ -4042,14 +4352,32 @@ _paginam_disponere (
             Disponens* dp,
                   s32  radix_d)
 {
-    s32 lateris;
-    s32 supra;
-    s32 linea;
+                 s32  lateris;
+                 s32  supra;
+                 s32  linea;
+    NavigatorFigurae* f;
 
     _margines(m, &lateris, &supra);
-    (vacuum)_componentem_locare(dp, radix_d, "caput_paginae",
+    /* margo superus: [<- columna] caput [columna ->] (N3.5) */
+    linea = _locum_addere(dp, radix_d, DISPOSITIO_LINEA,
+        DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA, supra);
+    f = _visus(m) == VISUS_PAGINAE ? _paginas_parare(m) : NIHIL;
+    si (f && _columna_currens(m, f) >= ZEPHYRUM)
+    {
+        (vacuum)_componentem_locare(dp, linea, "columna-redire",
+            PARTES_BOTTONE, DISPOSITIO_FIXA, III, DISPOSITIO_FIXA,
+            supra);
+    }
+    (vacuum)_componentem_locare(dp, linea, "caput_paginae",
         PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_FIXA,
         supra);
+    si (   f && _columna_currens(m, f) < ZEPHYRUM
+        && _columna_paginae(f, _pagina_currens(m, f)) >= ZEPHYRUM)
+    {
+        (vacuum)_componentem_locare(dp, linea, "columna-intrare",
+            PARTES_BOTTONE, DISPOSITIO_FIXA, III, DISPOSITIO_FIXA,
+            supra);
+    }
     (vacuum)_componentem_locare(dp, radix_d, "textus", PARTES_INDEX,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
     /* pes: [sagitta] pes [stella favoris] [sagitta] */
@@ -4457,6 +4785,17 @@ navigator_locus_titulus (
             ? chorda_ex_literis("Saved", piscina) : chorda_concatenare(
             chorda_ex_literis("Saved - ", piscina), _campus(m,
             "dominium"), piscina);
+    }
+    si (_columna_currens(m, f) >= ZEPHYRUM)
+    {
+        /* N3.5: "Rhubarb - side 1/2" */
+        sprintf(numeri, " - side %d/%u", (integer)(_columnae_pagina(m,
+            f,
+            _columna_currens(m, f)) + I),
+            (insignatus integer)xar_numerus(
+            _columnae_paginae(f, _columna_currens(m, f))));
+        redde chorda_concatenare(f->titulus, chorda_ex_literis(numeri,
+            piscina), piscina);
     }
     sprintf(numeri, " - %d/%u", (integer)(_pagina_currens(m, f) + I),
         (insignatus integer)xar_numerus(f->paginae));

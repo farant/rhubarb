@@ -10,8 +10,10 @@
 
 #define PUNCTUM "\xE2\x80\xA2 "   /* U+2022 + spatium */
 
+/* scriptor in caput datum (articulus aut columna, N3.5) */
 nomen structura {
-    NavigatorTextus* t;
+         CodexCaput* caput;
+                Xar* notae;      /* ArticulusNota in caput.textus */
   ChordaAedificator* aed;
                 i32  mensura;    /* octeti scripti */
             Piscina* piscina;
@@ -68,7 +70,7 @@ clausulam_scribere (
         }
         octetos_addere(s, &c, I);
     }
-    k = (CodexClausula*)xar_addere(s->t->caput.clausulae);
+    k = (CodexClausula*)xar_addere(s->caput->clausulae);
     si (k)
     {
         k->genus    = genus;
@@ -85,7 +87,7 @@ clausulam_scribere (
         {
             perge;
         }
-        m = (ArticulusNota*)xar_addere(s->t->notae);
+        m = (ArticulusNota*)xar_addere(s->notae);
         si (m)
         {
             *m          = *n;
@@ -300,6 +302,86 @@ indicem_nexuum_facere (
     }
 }
 
+/* N3.5: columna lateralis ex adiunctis sectionis - titulus adiuncti,
+ * tituli interni, par "Clavis: valor" (nexus valoris translati),
+ * paragraphi et indices; figurae (N5) omittuntur */
+interior vacuum
+columnam_addere (
+              NavigatorTextus* t,
+     constans ArticulusSectio* sectio,
+                          i32  ancora,
+                      Piscina* piscina)
+{
+     NavigatorColumna* k;
+             Scriptor  c;
+                  i32  i;
+                  i32  j;
+
+    k = (NavigatorColumna*)xar_addere(t->columnae);
+    si (!k)
+    {
+        redde;
+    }
+    k->ancora           = ancora;
+    k->caput.titulus    = sectio->titulus;
+    k->caput.clausulae  = xar_creare(piscina, magnitudo(CodexClausula));
+    k->notae            = xar_creare(piscina, magnitudo(ArticulusNota));
+    c.caput             = &k->caput;
+    c.notae             = k->notae;
+    c.aed               = chorda_aedificator_creare(piscina, MXXIV);
+    c.mensura           = ZEPHYRUM;
+    c.piscina           = piscina;
+    si (!k->caput.clausulae || !k->notae || !c.aed)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sectio->adiuncta); i++)
+    {
+        constans ArticulusAdiunctum* ad = (constans ArticulusAdiunctum*)
+            xar_obtinere(sectio->adiuncta, i);
+
+        clausulam_scribere(&c, CODEX_TITULUS, "", ad->titulus, NIHIL);
+        per (j = ZEPHYRUM; ad->clausulae
+            && j < xar_numerus(ad->clausulae);
+             j++)
+        {
+            constans ArticulusClausula* q =
+                (constans ArticulusClausula*)
+                xar_obtinere(ad->clausulae, j);
+
+            commutatio (q->genus)
+            {
+                casus ARTICULUS_PAR:
+                    clausulam_scribere(&c, CODEX_PARAGRAPHUS,
+                        chorda_ut_cstr(
+                        chorda_concatenare(q->clavis, chorda_ex_literis(
+                        ": ", piscina), piscina), piscina), q->textus,
+                        q->notae);
+                    frange;
+                casus ARTICULUS_TITULUS:
+                    clausulam_scribere(&c, CODEX_TITULUS, "", q->textus,
+                        q->notae);
+                    frange;
+                casus ARTICULUS_PARAGRAPHUS:
+                casus ARTICULUS_CITATIO:
+                    clausulam_scribere(&c, CODEX_PARAGRAPHUS, "",
+                        q->textus,
+                        q->notae);
+                    frange;
+                casus ARTICULUS_INDEX:
+                    clausulam_scribere(&c, CODEX_PARAGRAPHUS,
+                        praefixum_indicis(q->gradus, piscina),
+                        q->textus,
+                        q->notae);
+                    frange;
+                ordinarius:
+                    frange;   /* FIGURA (N5) */
+            }
+        }
+    }
+    k->caput.textus = chorda_aedificator_finire(c.aed);
+}
+
 NavigatorTextus*
 navigator_textum_facere (
     constans Articulus* articulus,
@@ -320,7 +402,10 @@ navigator_textum_facere (
         : chorda_ex_literis("", piscina);
     t->caput.clausulae  = xar_creare(piscina, magnitudo(CodexClausula));
     t->notae            = xar_creare(piscina, magnitudo(ArticulusNota));
-    s.t                 = t;
+    t->columnae = xar_creare(piscina,
+        magnitudo(NavigatorColumna));
+    s.caput = &t->caput;
+    s.notae = t->notae;
     s.aed     = chorda_aedificator_creare(piscina, (memoriae_index)
         (XVI * MXXIV));
     s.mensura = ZEPHYRUM;
@@ -339,6 +424,8 @@ navigator_textum_facere (
             constans ArticulusSectio* sectio =
                 (constans ArticulusSectio*)
                 xar_obtinere(articulus->sectiones, i);
+                                  i32 ante = xar_numerus(
+                                      t->caput.clausulae);
 
             clausulam_scribere(&s, CODEX_TITULUS, "", sectio->titulus,
                 NIHIL);
@@ -368,6 +455,18 @@ navigator_textum_facere (
                     ordinarius:
                         frange;   /* FIGURA (N5), PAR (adiuncta) */
                 }
+            }
+            /* N3.5: adiuncta -> columna, ancora = clausula prima
+             * sectionis (aliter finis textus) */
+            si (   sectio->adiuncta
+                && xar_numerus(sectio->adiuncta) > ZEPHYRUM
+                && t->columnae)
+            {
+                columnam_addere(t, sectio,
+                    xar_numerus(t->caput.clausulae)
+                    > ante ? ((constans CodexClausula*)xar_obtinere(
+                    t->caput.clausulae, ante))->initium : s.mensura,
+                    piscina);
             }
         }
     }

@@ -34,6 +34,11 @@
     <campus nomen="pagina" typus="numerus" vita="persistens"
             scriptor="navigator.agere" semita="status"
             ambitus="ligatio" nota="pagina in articulo (ab 0)"/>
+    <campus nomen="columna" typus="numerus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            ambitus="ligatio"
+            nota="N3.5: pagina in columna laterali paginae currentis
+                  (infobox); absens = columna principalis"/>
     <campus nomen="sententia" typus="numerus" vita="persistens"
             scriptor="navigator.agere" semita="status"
             ambitus="ligatio"

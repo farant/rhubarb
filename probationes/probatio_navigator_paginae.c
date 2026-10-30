@@ -496,8 +496,86 @@ _probare_rheum (
     CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
 }
 
+/* N3.5: columnae laterales ex adiunctis - Rhubarb: taxi (prooemium)
+ * et nutritionis (Uses), ancorae in sectionibus suis, "Clavis: valor",
+ * nexus intra columnam */
+interior vacuum
+_probare_columnae (
+    CredoContextus* c)
+{
+              chorda  html;
+           Articulus* a;
+     NavigatorTextus* t;
+    NavigatorColumna* k;
+    NavigatorColumna* n;
+                 s32  usus;
+                 i32  i;
+                 i32  mala = ZEPHYRUM;
+
+    html =
+        filum_legere_totum("probationes/fixa/vicipaedia/rhubarb.html",
+        c->piscina);
+    a = vicipaedia_articulus(html,
+        "https://en.wikipedia.org/wiki/Rhubarb",
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(a);
+    t = navigator_textum_facere(a, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(t);
+
+    CREDO_GRADUS("columnae duae (prooemium, Uses), ordine textus");
+    CREDO_NECESSE(t->columnae && xar_numerus(t->columnae) == II);
+    k = (NavigatorColumna*)xar_obtinere(t->columnae, ZEPHYRUM);
+    n = (NavigatorColumna*)xar_obtinere(t->columnae, I);
+    CREDO_VERUM(k->ancora < n->ancora);
+
+    CREDO_GRADUS("ancora: clausula prima sectionis (prooemium post "
+        "titulum articuli; Uses = titulus eius)");
+    CREDO_VERUM(k->ancora > ZEPHYRUM);
+    usus = chorda_invenire_index(t->caput.textus, chorda_ex_literis(
+        "\n\nUses\n", c->piscina));
+    CREDO_VERUM(usus < ZEPHYRUM || (s32)n->ancora <= usus + II + IV);
+    CREDO_VERUM(chorda_incipit(chorda_sectio(t->caput.textus, n->ancora,
+        t->caput.textus.mensura), chorda_ex_literis("Uses",
+        c->piscina)));
+
+    CREDO_GRADUS("taxi: titulus, 'Kingdom: Plantae'; nutritio: "
+        "'Dietary fiber: 1.8 g'");
+    CREDO_VERUM(chorda_incipit(k->caput.textus, chorda_ex_literis(
+        "Rhubarb (culinary hybrid)", c->piscina)));
+    CREDO_VERUM(chorda_continet(k->caput.textus, chorda_ex_literis(
+        "Kingdom: Plantae", c->piscina)));
+    CREDO_VERUM(chorda_continet(k->caput.textus, chorda_ex_literis(
+        "Scientific classification", c->piscina)));
+    CREDO_VERUM(chorda_continet(n->caput.textus, chorda_ex_literis(
+        "Dietary fiber: 1.8 g", c->piscina)));
+    CREDO_FALSUM(chorda_continet(t->caput.textus, chorda_ex_literis(
+        "Kingdom: Plantae", c->piscina)));
+
+    CREDO_GRADUS("nexus columnae intra textum eius; paginatur");
+    CREDO_VERUM(xar_numerus(k->notae) > ZEPHYRUM);
+    per (i = ZEPHYRUM; i < xar_numerus(k->notae); i++)
+    {
+        constans ArticulusNota* q = (constans ArticulusNota*)
+            xar_obtinere(k->notae, i);
+
+        si (   q->initium >= q->finis
+            || q->finis > k->caput.textus.mensura)
+        {
+            mala++;
+        }
+    }
+    CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
+    CREDO_VERUM(lector_paginare(&k->caput, D, DC, c->piscina) != NIHIL);
+
+    CREDO_GRADUS("articulus sine adiunctis: columnae nullae");
+    CREDO_VERUM(navigator_textum_facere(NIHIL, c->piscina)->columnae
+        == NIHIL || xar_numerus(navigator_textum_facere(NIHIL,
+        c->piscina)->columnae) == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "textus", _probare_textus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "columnae", _probare_columnae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "notae", _probare_notae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "omissa", _probare_omissa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "nexus", _probare_nexus, NIHIL, NIHIL, NIHIL, NIHIL },
