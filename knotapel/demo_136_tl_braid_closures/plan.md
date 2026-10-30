@@ -344,7 +344,7 @@ images; R1 and R5's stabilization factor are not.
   | 3 σ⁻¹ given σ⁺'s image | R1, R4, R5 (4_1 red) | R1, 4_1 included |
   | 3b global swap | R1, R4, R5, conv0 (4_1 green) | R1, R5, conv0; 4_1 green |
   | 4 /δ dropped | R1, conv0 | R1 |
-  | 5 enclosed defects admitted | R2 | R2 |
+  | 5 enclosed defects admitted | R2 (run killed, rc 137; complete rerun after T3: R1, R2, R4, R5) | R2 |
   | 6 one coefficient + 1 | R4 | R4 |
   | 7 conjugating pair not inverted | R5 | R5 |
   | 8 value negated (p8 mode) | R1p, R4 | R1p, R4; R1 green |
@@ -382,6 +382,26 @@ images; R1 and R5's stabilization factor are not.
   prints the span of V.
 - **T3. Review.** An independent reviewer with its own oracle; it does
   not build in the live tree.
+  **T3 note (2026-10-30, recensor-d136).** No verdict changes; details
+  in findings.md "Review (T3)". Corrections to this plan's record:
+  - **Plant 8's fault** was substituted in T1 and not listed among the
+    deviations: v2's "one letter skipped" makes the interpolation refuse
+    (the writhe class flips), so its registered "R1 green" was
+    impossible; the harness planted "value negated" (n ≥ 10 and
+    c > 300). Added to the blind-spot note: faults that break the
+    interpolation's consistency (class, bound, letter count) surface as
+    refusals booked under R1 at every length; R1p and R4 catch faults
+    that keep the values consistent.
+  - **Plant 5's first run was killed** (rc 137) and scored as a success
+    by the harness; the table row above is corrected, the harness now
+    treats a killed run as inconclusive, and plant 5 was rerun.
+  - **R0** records its checks and does not stop the demo as v2 said.
+  - **The generator** is a copy with the one-line wrapper `_plexus_pd`
+    inlined and one output parameter added, not verbatim; behaviour is
+    identical (R0).
+  - R5's index flip, like conjugation, follows from trace cyclicity
+    (it is conjugation by the half twist), so it is a smoke test; the
+    stabilizations carry R5.
 - **T4 (Fran's call).** Promote the evaluator into `laqueus` (e.g.
   `laqueus_uncinus_ex_plexu`) with a probatio; then 14 and 16 strands,
   and track A (Jones statistics on random braid closures).

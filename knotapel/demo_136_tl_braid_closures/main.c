@@ -606,7 +606,8 @@ _fenestra (
     *summus  -= (s32)_modulo_quattuor((s64)*summus - (s64)classis);
 }
 
-/* R0 generator: verbatim copy of _plexus_fortuitus, plus one output
+/* R0 generator: copy of _plexus_fortuitus with its one-line wrapper
+ * _plexus_pd inlined, plus one output
  * parameter (the word) so the TL route can read the braid itself. */
 static i32*
 _plexus_fortuitus (
@@ -1492,17 +1493,41 @@ part_r0 (void)
 
 /* ---------- descriptive (no prediction): plan.md "Descriptive" ---------- */
 
-/* Spans: the TL bracket of every test braid, span of V against c. */
+/* one line per bracket: name, writhe, lowest exponent, coefficients */
+static void
+write_bracket (FILE *out, const Braid *b, Polynomium tl, Piscina *pisc)
+{
+    s32 e, lo = polynomium_gradus_imus(tl), hi = polynomium_gradus_summus(tl);
+
+    fprintf(out, "%s | n %d | c %d | writhe %d | A^%d ..", b->name, b->n, b->len,
+        word_writhe(b->word, b->len), (int)lo);
+    for (e = lo; e <= hi; e++) {
+        chorda t = magnus_ad_chordam(polynomium_coefficiens(tl, e), pisc);
+
+        fprintf(out, " %.*s", (int)t.mensura, (const char *)t.datum);
+    }
+    fprintf(out, "\n");
+    fflush(out);
+}
+
+/* Spans: the TL bracket of every test braid, span of V against c.
+ * D136_UNCINI=path also writes every exact bracket there;
+ * D136_SOLUM="n,c" runs only that braid (c as requested). */
 static void
 desc_spans (void)
 {
     static const int lens[4] = { 20, 50, 101, 201 };
     static const int big[5][2] = { { 8, 401 }, { 8, 801 }, { 10, 401 }, { 12, 401 }, { 12, 801 } };
-    int n, k;
+    const char *path = getenv("D136_UNCINI");
+    const char *solum = getenv("D136_SOLUM");
+    FILE *out = path != NULL ? fopen(path, "w") : NULL;
+    int n, k, solum_n = 0, solum_c = 0;
 
+    if (path != NULL && out == NULL) fatal("cannot open D136_UNCINI");
+    if (solum != NULL && sscanf(solum, "%d,%d", &solum_n, &solum_c) != 2) fatal("D136_SOLUM is n,c");
     printf("\nDescriptive: span of V against c (reduced alternating iff c - span = 0)\n");
     for (k = 0; k < 4 * 10 + 5; k++) {
-        Piscina *pisc = piscina_generare_dynamicum("d136_span", 1048576);
+        Piscina *pisc;
         Braid b;
         Polynomium tl;
         TLContext ctx;
@@ -1510,15 +1535,19 @@ desc_spans (void)
 
         n = k < 40 ? 3 + k / 4 : big[k - 40][0];
         len = k < 40 ? lens[k % 4] : big[k - 40][1];
+        if (solum != NULL && (n != solum_n || len != solum_c)) continue;
+        pisc = piscina_generare_dynamicum("d136_span", 1048576);
         if (!random_braid(&b, n, len, pisc) || !tl_bracket(&b, pisc, &tl, &ctx))
             printf("%d x %d: REFUSED\n", n, len);
         else {
             printf("%s: largest coefficient %u bits (bound %u)\n", b.name, max_coeff_bits(tl), b.limes);
             print_span(&b, tl);
+            if (out != NULL) write_bracket(out, &b, tl, pisc);
         }
         fflush(stdout);
         piscina_destruere(pisc);
     }
+    if (out != NULL) fclose(out);
 }
 
 /* Per-point time at c = 801, n = 4 ... 16 (seed 2028 per n, as R0). */
