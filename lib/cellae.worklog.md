@@ -1076,3 +1076,14 @@ cells) stay as notes.
 crash1 and own_crash exit 0; ovf.in ASan/UBSan clean). The full batches (12 catalog runs x
 D82/D94, 8 random-point runs; ~47k weight sets) also show 0
 disagreements.
+
+## 2026-10-29 — temporary pools start at 4 KB (budget B1 D5)
+
+Temporary piscinae created and destroyed per call in hot paths
+(radices `_piscina_temporaria` — radix_compara, _separa_positivas, ...;
+cellae `activatio_iudica`) started at 64 KB. Under ASan (venenum gate)
+every create/destroy pays malloc, quarantine put/recycle and malloc-fill,
+which scale with size (~8% of probatio_cellae's ASan profile, more in
+"imago sine iactura"). Now 4 KB first alveus; dynamic piscinae grow when a
+call needs more. Behaviour unchanged (no plant possible — sizing only);
+radices, cellae, quaternio green.
