@@ -45,6 +45,8 @@ declare -a GCC_FLAGS=("${VEXILLA_C89[@]}")
 
 declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
+    "-I$RADIX_DIR/materia/fontes"
+    "-I$RADIX_DIR/xml/fontes"
     "-I$RADIX_DIR/tessera/fontes"
     "-I$RADIX_DIR/tessera/instrumenta/musivum"
     "-I$LT_DIR/fontes"
@@ -152,7 +154,7 @@ declare -a RADIX_FONTES=(
     "lector_paginae"
     "codex"
     "sarcina"
-    "xml"
+    "excerptum"         # codex -> xml/fontes (2026-10-30): materia_pictor
     "html_lexema"
     "entitates_html"
     "entitates_html_tabula"
@@ -239,7 +241,7 @@ while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
-done < <(find "$RADIX_DIR/include" "$LT_DIR/fontes" "$RADIX_DIR/tessera/fontes" "$RADIX_DIR/tessera/instrumenta/musivum" -name '*.h' 2>/dev/null)
+done < <(find "$RADIX_DIR/include" "$RADIX_DIR/materia/fontes" "$RADIX_DIR/xml/fontes" "$LT_DIR/fontes" "$RADIX_DIR/tessera/fontes" "$RADIX_DIR/tessera/instrumenta/musivum" -name '*.h' 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
     echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
 fi
@@ -259,6 +261,28 @@ for f in "${RADIX_FONTES[@]}"; do
         echo "  [dep] $f.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $f.c" ; exit 1
+        fi
+    fi
+    obj_files="$obj_files $obj"
+done
+
+# ---- 1b. clientes materiae: codex legit per xml/fontes (2026-10-30;
+#          clausura: bin/aedilis lib/codex.c --partes) ----
+for src in materia/fontes/materia_lexicon materia/fontes/materia_token \
+           materia/fontes/materia_nodus materia/fontes/materia_arbor \
+           materia/fontes/materia_arbor_aequalitas \
+           materia/fontes/materia_pictor materia/fontes/materia_diagnostica \
+           materia/fontes/materia_annotationes \
+           materia/fontes/materia_exemplaria materia/fontes/materia_excusatio \
+           xml/fontes/xml_registrum_coctum xml/fontes/xml_lexicon \
+           xml/fontes/xml_nomina xml/fontes/xml_lector xml/fontes/xml_arbor \
+           xml/fontes/xml_coctum xml/fontes/xml_documentum; do
+    base="$(basename "$src")"
+    obj="$BUILD_DIR/$base.o"
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$RADIX_DIR/$src.c" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [cliens] $base.c"
+        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$RADIX_DIR/$src.c" -o "$obj"; then
+            echo "FRACTA: $base.c" ; exit 1
         fi
     fi
     obj_files="$obj_files $obj"

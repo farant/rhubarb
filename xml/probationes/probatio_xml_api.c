@@ -124,7 +124,7 @@ _attributa_probare (
     CREDO_VERUM (_aequat(v, "2"));
     CREDO_VERUM (xml_attributum(r, "v", &v));
     CREDO_VERUM (_aequat(v, "praest"));
-    CREDO_VERUM (xml_textus_internus(r, c->piscina, &v));
+    CREDO_VERUM (xml_textus_totus(r, c->piscina, &v));
     CREDO_VERUM (_aequat(v, "tuv"));
 }
 
@@ -163,7 +163,7 @@ _extrema_probare (
     CREDO_VERUM (xml_documentum_successus(d));
     CREDO_AEQUALIS_I32 (xml_liberorum_numerus(xml_documentum_radix(d)),
         ZEPHYRUM);
-    CREDO_VERUM (xml_textus_internus(xml_documentum_radix(d),
+    CREDO_VERUM (xml_textus_totus(xml_documentum_radix(d),
         c->piscina,
         &v));
     CREDO_AEQUALIS_I32 (v.mensura, ZEPHYRUM);
@@ -179,11 +179,71 @@ _extrema_probare (
     CREDO_AEQUALIS_I32 (xml_liberorum_numerus(NIHIL), ZEPHYRUM);
     CREDO_FALSUM (xml_attributum(NIHIL, "a", &v));
     CREDO_FALSUM (xml_attributum_spatii(NIHIL, "", "a", &v));
-    CREDO_FALSUM (xml_textus_internus(NIHIL, c->piscina, &v));
+    CREDO_FALSUM (xml_textus_totus(NIHIL, c->piscina, &v));
     CREDO_AEQUALIS_I32 (xml_titulus(NIHIL).mensura, ZEPHYRUM);
     /* index extra fines */
     d = _legere(c->piscina, "<a>x</a>");
     CREDO_NIHIL (xml_liberum(xml_documentum_radix(d), (i32)V));
+}
+
+/* casus domus ex probatio_xml.c veteris (P15) servati:
+ * (a) referentiae SEMEL decodificantur - "&amp;#67;" textus "&#67;"
+ *     manet (recensio horrei I3); &#13; CR verum, non normatur;
+ * (b) attributum vacuum (xmlns="", alt='') validum - OPF EPUB
+ *     mercatorium id fert; valor vacuus, attributa sequentia leguntur;
+ * (c) DOCTYPE Apple per lineas plures, pars interna cum entitate:
+ *     vetus parsator eam RECUSABAT, novus legit et expandit;
+ * (d) referentia mala (&#; &#xZZ; &#1114112;) iam erratum est, non
+ *     textus litteralis. */
+interior vacuum
+_casus_domus_probare (
+    CredoContextus* c)
+{
+         XmlDocumentum* d;
+    constans XmlCoctus* r;
+                 chorda  v;
+
+    d = _legere(c->piscina,
+        "<d a=\"&#65;&#x42;&amp;#67;&#13;\">&#65;&#x42;&amp;#67;"
+        "&#x1234;&#13;|</d>");
+    CREDO_NECESSE (xml_documentum_successus(d));
+    r = xml_documentum_radix(d);
+    CREDO_VERUM (xml_textus_totus(r, c->piscina, &v));
+    CREDO_VERUM (_aequat(v, "AB&#67;\xE1\x88\xB4\r|"));
+    CREDO_VERUM (xml_attributum(r, "a", &v));
+    CREDO_VERUM (_aequat(v, "AB&#67;\r"));
+
+    d = _legere(c->piscina,
+        "<meta xmlns=\"\" alt='' name=\"cover\" content=\"c\"/>");
+    CREDO_NECESSE (xml_documentum_successus(d));
+    r = xml_documentum_radix(d);
+    CREDO_VERUM (xml_attributum(r, "alt", &v));
+    CREDO_AEQUALIS_I32 (v.mensura, ZEPHYRUM);
+    CREDO_VERUM (xml_attributum(r, "content", &v));
+    CREDO_VERUM (_aequat(v, "c"));
+    CREDO_AEQUALIS_I32 (xml_elementi_spatium(r).mensura, ZEPHYRUM);
+
+    d = _legere(c->piscina,
+        "<!DOCTYPE plist PUBLIC\n"
+        "  \"-//Apple//DTD PLIST 1.0//EN\"\n"
+        "  \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n"
+        "<plist version=\"1.0\"><array/></plist>");
+    CREDO_VERUM (xml_documentum_successus(d));
+    CREDO_VERUM (_aequat(xml_titulus(xml_documentum_radix(d)),
+        "plist"));
+    d = _legere(c->piscina, "<!DOCTYPE x [ <!ENTITY a \"b\"> ]>\n"
+        "<x>&a;</x>");
+    CREDO_VERUM (xml_documentum_successus(d));
+    CREDO_VERUM (xml_textus_totus(xml_documentum_radix(d), c->piscina,
+        &v));
+    CREDO_VERUM (_aequat(v, "b"));
+
+    CREDO_FALSUM (xml_documentum_successus(_legere(c->piscina,
+        "<d>&#;</d>")));
+    CREDO_FALSUM (xml_documentum_successus(_legere(c->piscina,
+        "<d>&#xZZ;</d>")));
+    CREDO_FALSUM (xml_documentum_successus(_legere(c->piscina,
+        "<d>&#1114112;</d>")));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -195,6 +255,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "extrema et NIHIL", _extrema_probare, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "casus domus (ex probatio_xml veteris)", _casus_domus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

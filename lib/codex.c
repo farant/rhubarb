@@ -1,7 +1,7 @@
 /* codex.c - liber EPUB (include/codex.h) */
 #include "codex.h"
 #include "sarcina.h"
-#include "xml.h"
+#include "xml_documentum.h"
 #include "chorda_aedificator.h"
 #include "html_lexema.h"
 #include "entitates_html.h"
@@ -110,30 +110,92 @@ membrum_legere (
 }
 
 /* XML membri (in piscina data: capita in piscina vocantis, non libri);
- * NIHIL et vitium si non legitur */
-interior XmlNodus*
+ * NIHIL et vitium si non legitur aut non bene formatum (xml_arbor:
+ * XML 1.0 + Namespaces 1.0 stricte, xml-arbor P15) */
+interior constans XmlCoctus*
 xml_membri (
      constans Codex* c,
              chorda  via,
             Piscina* piscina,
              chorda* vitium)
 {
-         chorda datum;
-    XmlResultus r;
+           chorda datum;
+    XmlDocumentum* d;
 
     si (!membrum_legere(c, via, piscina, &datum, vitium))
     {
         redde NIHIL;
     }
-    r = xml_legere(datum, piscina, c->intern);
-    si (!r.successus || !r.radix)
+    d = xml_documentum_legere(datum, piscina);
+    si (!xml_documentum_successus(d) || !xml_documentum_radix(d))
     {
         *vitium =
             chorda_concatenare(chorda_ex_literis("malformed XML: ",
             piscina), via, piscina);
         redde NIHIL;
     }
-    redde r.radix;
+    redde xml_documentum_radix(d);
+}
+
+/* attributum ut monstrator (vocantes veteres *a legunt); NIHIL si
+ * abest */
+interior chorda*
+_attributum (
+               Piscina* piscina,
+    constans XmlCoctus* n,
+    constans character* titulus)
+{
+     chorda  v;
+     chorda* exitus;
+
+    si (!xml_attributum(n, titulus, &v))
+    {
+        redde NIHIL;
+    }
+    exitus = (chorda*)piscina_allocare(piscina, magnitudo(chorda));
+    si (exitus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    *exitus = v;
+    redde exitus;
+}
+
+/* filii elementa titulo dato, ordine (Xar de constans XmlCoctus*) */
+interior Xar*
+_filii (
+               Piscina* piscina,
+    constans XmlCoctus* e,
+    constans character* titulus)
+{
+                   Xar* x = xar_creare(piscina,
+                               (i32)magnitudo(constans XmlCoctus*));
+    constans XmlCoctus* f;
+
+    si (x == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (f = xml_filius(e, titulus); f; f = xml_frater(f, titulus))
+    {
+        *(constans XmlCoctus**)xar_addere(x) = f;
+    }
+    redde x;
+}
+
+/* textus internus purgatus; vacuus si nodus abest */
+interior chorda
+_textus (
+               Piscina* piscina,
+    constans XmlCoctus* n)
+{
+    chorda t;
+
+    si (!n || !xml_textus_totus(n, piscina, &t))
+    {
+        redde vacua();
+    }
+    redde purgare(t);
 }
 
 /* lexemata membri (html_lexema: totalis, numquam frangit); NIHIL et
@@ -164,14 +226,11 @@ lexemata_membri (
 /* textus primi liberi cum titulo (purgatus); vacuus si abest */
 interior chorda
 textus_liberi (
-    constans Codex* c,
-          XmlNodus* parens,
-constans character* titulus)
+     constans Codex* c,
+ constans XmlCoctus* parens,
+ constans character* titulus)
 {
-    XmlNodus* n;
-
-    n = parens ? xml_invenire_liberum(parens, titulus) : NIHIL;
-    redde n ? purgare(xml_textus_internus(n, c->piscina)) : vacua();
+    redde _textus(c->piscina, xml_filius(parens, titulus));
 }
 
 /* valor hexadecimalis litterae; -1 si non */
@@ -315,24 +374,23 @@ spatia_contrahere (
     redde c;
 }
 
-/* textus omnium descendentium (xml_textus_internus solum liberos
- * directos reddit: navLabel > text) in aedificatorem */
+/* textus omnium descendentium (navLabel > text) in aedificatorem */
 interior vacuum
 textum_colligere (
-             XmlNodus* n,
+   constans XmlCoctus* n,
     ChordaAedificator* aed)
 {
-    XmlNodus* l;
-         i32  i;
+    constans XmlCoctus* l;
+                   i32  i;
 
-    per (i = ZEPHYRUM; n && i < xml_numerus_liberorum(n); i++)
+    per (i = ZEPHYRUM; n && i < xml_liberorum_numerus(n); i++)
     {
-        l = xml_liberum_ad_indicem(n, i);
-        si (l && l->genus == XML_NODUS_TEXTUS && l->valor)
+        l = xml_liberum(n, i);
+        si (xml_nodi_genus(l) == XML_COCTUS_TEXTUS)
         {
-            chorda_aedificator_appendere_chorda(aed, *l->valor);
+            chorda_aedificator_appendere_chorda(aed, xml_textus(l));
         }
-        alioquin si (l && l->genus == XML_NODUS_ELEMENTUM)
+        alioquin si (xml_nodi_genus(l) == XML_COCTUS_ELEMENTUM)
         {
             textum_colligere(l, aed);
         }
@@ -342,8 +400,8 @@ textum_colligere (
 /* titulus indicis: textus totus, spatia contracta */
 interior chorda
 titulum_legere (
-    constans Codex* c,
-          XmlNodus* n)
+     constans Codex* c,
+ constans XmlCoctus* n)
 {
     ChordaAedificator* aed;
 
@@ -358,33 +416,33 @@ titulum_legere (
 
 interior b32
 elementum_est (
-              XmlNodus* n,
+    constans XmlCoctus* n,
     constans character* titulus)
 {
-    redde n && n->genus == XML_NODUS_ELEMENTUM && n->titulus
-        && chorda_aequalis_literis(*n->titulus, titulus);
+    redde n && xml_nodi_genus(n) == XML_COCTUS_ELEMENTUM
+        && chorda_aequalis_literis(xml_titulus(n), titulus);
 }
 
 /* descendentes cum titulo ordine documenti (praeordine) */
 interior vacuum
 descendentes_colligere (
-              XmlNodus* n,
+    constans XmlCoctus* n,
     constans character* titulus,
                    Xar* exitus)
 {
-    XmlNodus* l;
-         i32  i;
+    constans XmlCoctus* l;
+                   i32  i;
 
-    per (i = ZEPHYRUM; n && i < xml_numerus_liberorum(n); i++)
+    per (i = ZEPHYRUM; n && i < xml_liberorum_numerus(n); i++)
     {
-        l = xml_liberum_ad_indicem(n, i);
-        si (!l || l->genus != XML_NODUS_ELEMENTUM)
+        l = xml_liberum(n, i);
+        si (!l || xml_nodi_genus(l) != XML_COCTUS_ELEMENTUM)
         {
             perge;
         }
         si (elementum_est(l, titulus))
         {
-            *(XmlNodus**)xar_addere(exitus) = l;
+            *(constans XmlCoctus**)xar_addere(exitus) = l;
         }
         descendentes_colligere(l, titulus, exitus);
     }
@@ -1041,24 +1099,25 @@ interior vacuum
 capita_struere (
     Codex* c)
 {
-    constans ResManifesti* res;
-                 XmlNodus* radix;
-                 XmlNodus* nav;
-                 XmlNodus* n;
-                      Xar* nodi;
-                   chorda* a;
-                   chorda  basis;
-                   chorda  vitium;
-                   chorda  titulus;
-            CaputInternum* primum;
-            CaputInternum  prooemium;
-                      i32  i;
-                      b32  inventa;
-                      b32  textus;
+              constans ResManifesti* res;
+                 constans XmlCoctus* radix;
+                 constans XmlCoctus* nav;
+                 constans XmlCoctus* n;
+                                Xar* nodi;
+                             chorda* a;
+                             chorda  basis;
+                             chorda  vitium;
+                             chorda  titulus;
+                      CaputInternum* primum;
+                      CaputInternum  prooemium;
+                                i32  i;
+                                b32  inventa;
+                                b32  textus;
 
-    c->capita  = xar_creare(c->piscina, (i32)magnitudo(CaputInternum));
-    nodi       = xar_creare(c->piscina, (i32)magnitudo(XmlNodus*));
-    res        = rem_quaerere(c, "nav", NIHIL);
+    c->capita = xar_creare(c->piscina, (i32)magnitudo(CaputInternum));
+    nodi = xar_creare(c->piscina,
+        (i32)magnitudo(constans XmlCoctus*));
+    res = rem_quaerere(c, "nav", NIHIL);
     radix = res ? xml_membri(c, res->via, c->piscina,
         &vitium) : NIHIL;
     si (radix)
@@ -1068,8 +1127,8 @@ capita_struere (
         nav = NIHIL;
         per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
         {
-            n = *(XmlNodus**)xar_obtinere(nodi, i);
-            a = xml_attributum_capere(n, "epub:type");
+            n = *(constans XmlCoctus**)xar_obtinere(nodi, i);
+            a = _attributum(c->piscina, n, "epub:type");
             si (   !nav
                 || (a && chorda_continet(*a, chorda_ex_literis("toc",
                     c->piscina))))
@@ -1077,12 +1136,13 @@ capita_struere (
                 nav = n;
             }
         }
-        nodi = xar_creare(c->piscina, (i32)magnitudo(XmlNodus*));
+        nodi = xar_creare(c->piscina,
+            (i32)magnitudo(constans XmlCoctus*));
         descendentes_colligere(nav, "a", nodi);
         per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
         {
-            n = *(XmlNodus**)xar_obtinere(nodi, i);
-            a = xml_attributum_capere(n, "href");
+            n = *(constans XmlCoctus**)xar_obtinere(nodi, i);
+            a = _attributum(c->piscina, n, "href");
             si (a)
             {
                 introitum_addere(c, titulum_legere(c, n),
@@ -1102,11 +1162,11 @@ capita_struere (
         descendentes_colligere(radix, "navPoint", nodi);
         per (i = ZEPHYRUM; i < xar_numerus(nodi); i++)
         {
-            n        = *(XmlNodus**)xar_obtinere(nodi, i);
-            titulus  = titulum_legere(c, xml_invenire_liberum(n,
+            n        = *(constans XmlCoctus**)xar_obtinere(nodi, i);
+            titulus  = titulum_legere(c, xml_filius(n,
                 "navLabel"));
-            a = xml_invenire_liberum(n, "content")
-                ? xml_attributum_capere(xml_invenire_liberum(n,
+            a = xml_filius(n, "content")
+                ? _attributum(c->piscina, xml_filius(n,
                 "content"),
                 "src") : NIHIL;
             si (a)
@@ -1164,19 +1224,19 @@ codex_aperire (
     InternamentumChorda* intern,
                  chorda* vitium)
 {
-           Codex* c;
-        XmlNodus* radix;
-        XmlNodus* n;
-        XmlNodus* descriptio;
-        XmlNodus* manifestum;
-        XmlNodus* spina;
-          chorda* via_descriptionis;
-          chorda* unicum;
-          chorda* a;
-             Xar* omnes;
-    ResManifesti* res;
-             i32  i;
-             i32  k;
+                     Codex* c;
+        constans XmlCoctus* radix;
+        constans XmlCoctus* n;
+        constans XmlCoctus* descriptio;
+        constans XmlCoctus* manifestum;
+        constans XmlCoctus* spina;
+                    chorda* via_descriptionis;
+                    chorda* unicum;
+                    chorda* a;
+                       Xar* omnes;
+              ResManifesti* res;
+                       i32  i;
+                       i32  k;
 
     si (!piscina || !intern)
     {
@@ -1202,9 +1262,9 @@ codex_aperire (
     {
         redde NIHIL;
     }
-    n = xml_invenire_liberum(radix, "rootfiles");
-    n = n ? xml_invenire_liberum(n, "rootfile") : NIHIL;
-    via_descriptionis = n ? xml_attributum_capere(n,
+    n = xml_filius(radix, "rootfiles");
+    n = n ? xml_filius(n, "rootfile") : NIHIL;
+    via_descriptionis = n ? _attributum(c->piscina, n,
         "full-path") : NIHIL;
     si (!via_descriptionis || via_descriptionis->mensura == ZEPHYRUM)
     {
@@ -1226,66 +1286,67 @@ codex_aperire (
     {
         redde NIHIL;
     }
-    descriptio  = xml_invenire_liberum(radix, "metadata");
-    manifestum  = xml_invenire_liberum(radix, "manifest");
-    spina       = xml_invenire_liberum(radix, "spine");
+    descriptio  = xml_filius(radix, "metadata");
+    manifestum  = xml_filius(radix, "manifest");
+    spina       = xml_filius(radix, "spine");
     si (!descriptio || !manifestum || !spina)
     {
         redde recusare("package lacks descriptio, manifest or spine",
             piscina, vitium);
     }
     /* identitas: dc:identifier cuius id = unique-identifier */
-    unicum  = xml_attributum_capere(radix, "unique-identifier");
-    omnes   = xml_invenire_omnes_liberos(descriptio, "dc:identifier",
-        piscina);
+    unicum  = _attributum(c->piscina, radix, "unique-identifier");
+    omnes   = _filii(c->piscina, descriptio, "dc:identifier");
     per (i = ZEPHYRUM; omnes && i < xar_numerus(omnes); i++)
     {
-        n = *(XmlNodus**)xar_obtinere(omnes, i);
-        a = xml_attributum_capere(n, "id");
+        n = *(constans XmlCoctus**)xar_obtinere(omnes, i);
+        a = _attributum(c->piscina, n, "id");
         si (   i == ZEPHYRUM
             || (unicum && a && chorda_aequalis(*a, *unicum)))
         {
-            c->identitas = purgare(xml_textus_internus(n, piscina));
+            c->identitas = _textus(c->piscina, n);
         }
     }
     c->titulus  = textus_liberi(c, descriptio, "dc:title");
     c->auctor   = textus_liberi(c, descriptio, "dc:creator");
     c->lingua   = textus_liberi(c, descriptio, "dc:language");
     /* manifestum */
-    c->manifestum = xar_creare(piscina, (i32)magnitudo(ResManifesti));
-    omnes = xml_invenire_omnes_liberos(manifestum, "item", piscina);
+    c->manifestum  = xar_creare(piscina, (i32)magnitudo(ResManifesti));
+    omnes          = _filii(c->piscina, manifestum, "item");
     per (i = ZEPHYRUM; omnes && i < xar_numerus(omnes); i++)
     {
-        n = *(XmlNodus**)xar_obtinere(omnes, i);
-        a = xml_attributum_capere(n, "href");
-        si (!a || !xml_attributum_capere(n, "id"))
+        n = *(constans XmlCoctus**)xar_obtinere(omnes, i);
+        a = _attributum(c->piscina, n, "href");
+        si (!a || !_attributum(c->piscina, n, "id"))
         {
             perge;
         }
         res = (ResManifesti*)xar_addere(c->manifestum);
         memset(res, ZEPHYRUM, magnitudo(ResManifesti));
-        res->id   = *xml_attributum_capere(n, "id");
+        res->id   = *_attributum(c->piscina, n, "id");
         res->via  = viam_resolvere(c, c->directorium, *a);
-        si (xml_attributum_capere(n, "media-type"))
+        si (_attributum(c->piscina, n, "media-type"))
         {
-            res->genus = *xml_attributum_capere(n, "media-type");
+            res->genus = *_attributum(c->piscina, n, "media-type");
         }
-        si (xml_attributum_capere(n, "properties"))
+        si (_attributum(c->piscina, n, "properties"))
         {
-            res->proprietates = *xml_attributum_capere(n, "properties");
+            res->proprietates = *_attributum(c->piscina, n,
+                "properties");
         }
     }
     /* spina: idref -> via */
-    a = xml_attributum_capere(spina, "toc");
+    a = _attributum(c->piscina, spina, "toc");
     si (a)
     {
         c->index_toc = *a;
     }
     c->ordo  = xar_creare(piscina, (i32)magnitudo(chorda));
-    omnes    = xml_invenire_omnes_liberos(spina, "itemref", piscina);
+    omnes    = _filii(c->piscina, spina, "itemref");
     per (i = ZEPHYRUM; omnes && i < xar_numerus(omnes); i++)
     {
-        a = xml_attributum_capere(*(XmlNodus**)xar_obtinere(omnes, i),
+        a = _attributum(c->piscina,
+            *(constans XmlCoctus**)xar_obtinere(omnes, i),
             "idref");
         per (k = ZEPHYRUM; a && k < xar_numerus(c->manifestum); k++)
         {

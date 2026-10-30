@@ -346,7 +346,7 @@ xml_attributum_spatii (
 }
 
 b32
-xml_textus_internus (
+xml_textus_totus (
     constans XmlCoctus* elementum,
                Piscina* piscina,
                 chorda* textus)

@@ -379,7 +379,6 @@ declare -a SOURCE_FILES=(
     "lib/volumen.c"
     "lib/widget.c"
     "lib/xar.c"
-    "lib/xml.c"
     "materia/fontes/materia_annotationes.c"
     "materia/fontes/materia_arbor.c"
     "materia/fontes/materia_arbor_aequalitas.c"
@@ -408,6 +407,13 @@ declare -a SOURCE_FILES=(
     "toml/fontes/toml_lexicon.c"
     "toml/fontes/toml_registrum_coctum.c"
     "toml/fontes/toml_scalaris.c"
+    "xml/fontes/xml_arbor.c"
+    "xml/fontes/xml_coctum.c"
+    "xml/fontes/xml_documentum.c"
+    "xml/fontes/xml_lector.c"
+    "xml/fontes/xml_lexicon.c"
+    "xml/fontes/xml_nomina.c"
+    "xml/fontes/xml_registrum_coctum.c"
 )
 declare -a OBJC_SOURCES=(
     "lib/clipboard_platform_macos.m"

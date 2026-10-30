@@ -705,6 +705,42 @@ in two homes, toml §X).
   uses; delete; `bin/fabrica sanare` every producer whose closure
   changed; aedilis gate proves the closures.
 
+**Executed 2026-10-30 (overnight, Fran asleep — decisions flagged).**
+All consumers moved in ONE commit, not one per consumer (Step 3
+deviation): the library deletion needs all of them, and each commit
+costs a full gate cycle. Each consumer was still proven alone first:
+codex 76/76, horreum 5/5, pecunia generator `-probare` → recens
+(byte-identical output), plist green with plutil.
+Step 1 (strictness on real inputs): 255 OPF + 132 NCX + 188/189 nav
+files from the EPUB library well-formed (the one bad nav is an archived
+Lapide output; codex falls back to the NCX); 609 text plists on this
+machine (apps, frameworks, preferences, launch agents) → 607 read, the
+two refusals are plist-level and identical under the old reader
+(`version` ≠ 1.0, unparsable integer); the one NEW refusal (Aseprite
+Info.plist, NUL padding after `</plist>`, which plutil accepts) got a
+plist-local leniency: trailing NULs are dropped before XML. horreum's
+S3 bodies are well-formed by construction; the one edge (C0 keys as
+`&#x1;`) is in lib/horreum.worklog.md.
+Step 2 (decided alone, FLAGGED for Fran): **plist writes directly**
+(spec §I option a). `_valorem_scribere` reproduces the old pretty
+writer byte for byte — `cmp` over a scratch program linked against
+old and new objects. plist also gained `PLIST_PROFUNDITAS_MAXIMA`
+(512) on read and write (old: 30 000 levels fine, a self-containing
+list SIGSEGV), interned string/key text, and a rendered diagnostic as
+PLIST_ERROR_XML's causa.
+Step 4: the 12 `sondae_auditus/xml_*` probes (not 6 — six more did not
+include xml.h directly) deleted with their parks (01M5AJYGJ2KP,
+01M56KR98E6K) per the probes' README; one examen exclusion row and two
+`pinna.tsv` rows went with them. `probatio_xml.c` retired; its two
+house cases (decode-once, empty attributes) plus the DOCTYPE and
+bad-reference cases live in `probatio_xml_api.c`.
+Step 5: `lib/xml.c`, `include/xml.h` deleted; `compile_tests_fontes_
+generata.sh` regenerated (+7 xml/fontes, −lib/xml.c); stale
+`build/xml.o` removed. NOT done: the docs book's library page
+(`docs/bibliothecae/xml.html`) is generated from the shared ledger
+inventory, which main still needs while main has lib/xml.c — update
+the inventory row and regenerate at merge time.
+
 ## Task P16: briar exposure
 
 Transcribe toml Q13: the corpus lists the library, the header shows,

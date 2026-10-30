@@ -154,7 +154,7 @@ xml_attributum_spatii (
 /* textus omnis descendentium ordine documenti (commentaria et
  * instructiones praeteruntur); FALSUM = memoria deficit */
 b32
-xml_textus_internus (
+xml_textus_totus (
     constans XmlCoctus* elementum,
                Piscina* piscina,
                 chorda* textus);

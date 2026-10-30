@@ -5,8 +5,9 @@
 XML 1.0 (Fifth Edition) + Namespaces 1.0 as a materia client (the
 eighth). Spec: `project-specs/xml-arbor-spec.md` (decisions X1–X12).
 Plan: `project-specs/xml-arbor-plan.md` (P1–P17, one task per turn
-with Fran). Ledger: parcum 01M65252W1DKBJE10VX0NBQDJH. It will replace
-`lib/xml.c` / `include/xml.h` (P15).
+with Fran). Ledger: parcum 01M65252W1DKBJE10VX0NBQDJH. It replaced
+`lib/xml.c` / `include/xml.h` (deleted in P15); the only XML library in
+the tree is this one.
 
 ## Status
 
@@ -35,8 +36,19 @@ with Fran). Ledger: parcum 01M65252W1DKBJE10VX0NBQDJH. It will replace
   4 libxml2 with us, 0 unnamed.
 - **P13 done**: public API `fontes/xml_documentum.h` (opaque
   `XmlDocumentum`; `xml_filius`/`xml_frater`/`xml_attributum`/
-  `xml_textus_internus` …). Use THIS, not `xml_coctum.h` internals, in
+  `xml_textus_totus` …). Use THIS, not `xml_coctum.h` internals, in
   consumers. Header awaiting Fran's review (written overnight).
+- **P14 done**: totality (mutations, truncations, random, extremes:
+  0 failures) and `computus` (counts tool over the cooked view).
+- **P15 done**: every consumer migrated — codex, horreum (+
+  `probationes/horreum_simulacrum.h`), the pecunia generator (output
+  byte-identical, `-probare` says recens), plist. plist now WRITES
+  directly (no XML tree; old pretty format kept byte for byte — empty
+  leaf `<t/>`, blank last line) and READS the cooked view; it gained
+  `PLIST_PROFUNDITAS_MAXIMA` (512) for reader and writer, which also
+  refuses self-containing lists. Old `probatio_xml.c` retired (its two
+  house cases live in `probatio_xml_api.c`); the 12 `sondae_auditus/
+  xml_*` probes deleted with their parks.
 
 ## The shape (P2, read before P4/P5)
 
