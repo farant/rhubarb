@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- timewise: eadem musica ac mensurae_inaequales.musicxml in forma score-timewise - exemplar idem (tabulae aequales) -->
+<score-timewise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Superius</part-name></score-part>
+    <score-part id="P2"><part-name>Bassus</part-name></score-part>
+  </part-list>
+  <measure number="1">
+    <part id="P1">
+      <attributes><divisions>1</divisions>
+        <time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>F</step><octave>5</octave></pitch><duration>1</duration></note>
+    </part>
+    <part id="P2">
+      <attributes><divisions>1</divisions>
+        <time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>3</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>D</step><octave>3</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>E</step><octave>3</octave></pitch><duration>1</duration></note>
+    </part>
+  </measure>
+  <measure number="2">
+    <part id="P1">
+      <note><pitch><step>G</step><octave>5</octave></pitch><duration>4</duration></note>
+    </part>
+    <part id="P2">
+      <note><pitch><step>C</step><octave>3</octave></pitch><duration>4</duration></note>
+    </part>
+  </measure>
+</score-timewise>

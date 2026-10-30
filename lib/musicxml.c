@@ -359,11 +359,12 @@ _divisiones_colligere (
      constans XmlCoctus* d;
                     s64  multiplex = I;
 
-    per (p = xml_filius(radix, "part"); p != NIHIL;
-         p = xml_frater(p, "part"))
+    /* partwise: part/measure; timewise: measure/part */
+    per (p = xml_filius(radix, NIHIL); p != NIHIL;
+         p = xml_frater(p, NIHIL))
     {
-        per (m = xml_filius(p, "measure"); m != NIHIL;
-             m = xml_frater(m, "measure"))
+        per (m = xml_filius(p, NIHIL); m != NIHIL;
+             m = xml_frater(m, NIHIL))
         {
             per (a = xml_filius(m, "attributes"); a != NIHIL;
                  a = xml_frater(a, "attributes"))
@@ -1007,6 +1008,131 @@ _verba_legere (
     }
 }
 
+/* signa notarum (notations): genus et titulus elementi; tied et
+ * tuplet praetereuntur (ligatura ex <tie>, tempus ex duratione) */
+interior vacuum
+_signum_addere (
+                  Lector* l,
+                     Xar* signa,
+     MusicxmlSignumGenus  genus,
+      constans XmlCoctus* x)
+{
+    MusicxmlSignum* g = (MusicxmlSignum*)xar_addere(signa);
+            chorda  t;
+               s64  v;
+
+    si (g == NIHIL)
+    {
+        redde;
+    }
+    memset(g, ZEPHYRUM, magnitudo(MusicxmlSignum));
+    g->genus    = genus;
+    g->titulus  = xml_titulus(x);
+    si (   chorda_aequalis_literis(g->titulus, "other-dynamics")
+        && xml_textus_totus(x, l->piscina, &t))
+    {
+        g->titulus = _praecidere(t);
+    }
+    si (genus == MUSICXML_SIGNUM_ARCUS)
+    {
+        g->numerus = I;
+        si (_integer(_attributum(x, "number"), &v) && v > ZEPHYRUM)
+        {
+            g->numerus = (i32)v;
+        }
+        t           = _attributum(x, "type");
+        g->initium  = chorda_aequalis_literis(t, "start");
+        g->finis    = chorda_aequalis_literis(t, "stop");
+    }
+}
+
+interior vacuum
+_signa_legere (
+                 Lector* l,
+     constans XmlCoctus* e,
+           MusicxmlNota* n)
+{
+     constans XmlCoctus* nt;
+     constans XmlCoctus* x;
+     constans XmlCoctus* y;
+                    Xar* signa;
+
+    si (xml_filius(e, "notations") == NIHIL)
+    {
+        redde;
+    }
+    signa = xar_creare(l->piscina, (i32)magnitudo(MusicxmlSignum));
+    si (signa == NIHIL)
+    {
+        redde;
+    }
+    per (nt = xml_filius(e, "notations"); nt != NIHIL;
+         nt = xml_frater(nt, "notations"))
+    {
+        per (x = xml_filius(nt, NIHIL); x != NIHIL;
+             x = xml_frater(x, NIHIL))
+        {
+                         chorda titulus  = xml_titulus(x);
+            MusicxmlSignumGenus genus    = MUSICXML_SIGNUM_ALIUD;
+                            b32 grex     = FALSUM;
+
+            si (   chorda_aequalis_literis(titulus, "tied")
+                || chorda_aequalis_literis(titulus, "tuplet"))
+            {
+                perge;
+            }
+            si (chorda_aequalis_literis(titulus, "fermata"))
+            {
+                genus = MUSICXML_SIGNUM_CORONA;
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "slur"))
+            {
+                genus = MUSICXML_SIGNUM_ARCUS;
+            }
+            alioquin si (   chorda_aequalis_literis(titulus,
+                         "arpeggiate")
+                         || chorda_aequalis_literis(titulus,
+                                "non-arpeggiate"))
+            {
+                genus = MUSICXML_SIGNUM_ACORDUM_FRACTUM;
+            }
+            alioquin si (chorda_aequalis_literis(titulus,
+                         "articulations"))
+            {
+                genus  = MUSICXML_SIGNUM_ARTICULATIO;
+                grex   = VERUM;
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "ornaments"))
+            {
+                genus  = MUSICXML_SIGNUM_ORNAMENTUM;
+                grex   = VERUM;
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "technical"))
+            {
+                genus  = MUSICXML_SIGNUM_TECHNICUM;
+                grex   = VERUM;
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "dynamics"))
+            {
+                genus  = MUSICXML_SIGNUM_DYNAMICA;
+                grex   = VERUM;
+            }
+            si (!grex)
+            {
+                _signum_addere(l, signa, genus, x);
+                perge;
+            }
+            per (y = xml_filius(x, NIHIL); y != NIHIL;
+                 y = xml_frater(y, NIHIL))
+            {
+                _signum_addere(l, signa, genus, y);
+            }
+        }
+    }
+    n->signa = (MusicxmlSignum*)_tabula(l, signa,
+        (i32)magnitudo(MusicxmlSignum), &n->numerus_signorum);
+}
+
 /* VERUM = nota addenda in *n */
 interior b32
 _notam_legere (
@@ -1139,6 +1265,7 @@ _notam_legere (
         }
     }
     _verba_legere(l, e, n);
+    _signa_legere(l, e, n);
     _sonantem_computare(sp, l->concentus, n);
 
     si (   acordum && sm->prior_adest && chorda_aequalis(sm->prior_vox,
@@ -1184,6 +1311,515 @@ _notam_legere (
 
 
 /* ==================================================
+ * Directiones et lineae mensurae
+ * ================================================== */
+
+interior MusicxmlDirectio*
+_directionem_addere (
+                   Lector* l,
+                      Xar* directiones,
+    MusicxmlDirectioGenus  genus,
+                      s64  positio,
+       constans XmlCoctus* e,
+                   chorda  vox,
+                      i32  baculum)
+{
+    MusicxmlDirectio* d = (MusicxmlDirectio*)xar_addere(directiones);
+
+    si (d == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(d, ZEPHYRUM, magnitudo(MusicxmlDirectio));
+    d->genus    = genus;
+    d->positio  = positio;
+    d->vox      = vox;
+    d->baculum  = baculum;
+    (vacuum)xml_locus(e, &d->linea, &d->columna);
+    (vacuum)l;
+    redde d;
+}
+
+/* directio generis dati inter [prima, finem); NIHIL si nulla */
+interior MusicxmlDirectio*
+_directionem_invenire (
+                      Xar* directiones,
+                      i32  prima,
+    MusicxmlDirectioGenus  genus)
+{
+    i32 i;
+
+    per (i = prima; i < xar_numerus(directiones); i++)
+    {
+        MusicxmlDirectio* d = (MusicxmlDirectio*)xar_obtinere(
+            directiones, i);
+
+        si (d->genus == genus)
+        {
+            redde d;
+        }
+    }
+    redde NIHIL;
+}
+
+/* sonus (sound): tempus, dynamica, saltus - directionibus eiusdem
+ * <direction> (ab indice prima) adiungitur aut novas facit; sonus
+ * VERUM (saltus intellectus, non verba sola) */
+interior vacuum
+_sonum_legere (
+                 Lector* l,
+     constans XmlCoctus* so,
+                    Xar* directiones,
+                    i32  prima,
+                    s64  positio,
+                 chorda  vox,
+                    i32  baculum)
+{
+                  chorda  v;
+                     f64  x;
+        MusicxmlDirectio* d;
+
+    v = _attributum(so, "tempo");
+    si (v.mensura > ZEPHYRUM)
+    {
+        si (_decimalis(v, &x) && x > 0.0)
+        {
+            d = _directionem_invenire(directiones, prima,
+                MUSICXML_DIRECTIO_TEMPUS);
+            si (d == NIHIL)
+            {
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_TEMPUS, positio, so, vox,
+                    baculum);
+            }
+            si (d != NIHIL)
+            {
+                d->valor_adest  = VERUM;
+                d->valor        = x;
+                d->sonus        = VERUM;
+            }
+        }
+        alioquin
+        {
+            _vitium(l, MUSICXML_MONITUM, MUSICXML_NUMERUS_MALUS, so,
+                "sound tempo illegibile: ", v);
+        }
+    }
+    v = _attributum(so, "dynamics");
+    si (v.mensura > ZEPHYRUM && _decimalis(v, &x))
+    {
+        d = _directionem_invenire(directiones, prima,
+            MUSICXML_DIRECTIO_DYNAMICA);
+        si (d == NIHIL)
+        {
+            d = _directionem_addere(l, directiones,
+                MUSICXML_DIRECTIO_DYNAMICA, positio, so, vox, baculum);
+        }
+        si (d != NIHIL)
+        {
+            d->valor_adest  = VERUM;
+            d->valor        = x;
+            d->sonus        = VERUM;
+        }
+    }
+    si (chorda_aequalis_literis(_attributum(so, "dacapo"), "yes"))
+    {
+        d = _directionem_addere(l, directiones,
+            MUSICXML_DIRECTIO_A_CAPITE,
+            positio, so, vox, baculum);
+        si (d != NIHIL)
+        {
+            d->sonus = VERUM;
+        }
+    }
+    {
+           constans character* attributa[V];
+        MusicxmlDirectioGenus  genera[V];
+                          b32  iungere[V];
+                          i32  i;
+
+        attributa[ZEPHYRUM]  = "dalsegno";
+        genera[ZEPHYRUM]     = MUSICXML_DIRECTIO_A_SIGNO;
+        iungere[ZEPHYRUM]    = FALSUM;
+        attributa[I]         = "tocoda";
+        genera[I]            = MUSICXML_DIRECTIO_AD_CAUDAM;
+        iungere[I]           = FALSUM;
+        attributa[II]        = "fine";
+        genera[II]           = MUSICXML_DIRECTIO_FINIS;
+        iungere[II]          = FALSUM;
+        attributa[III]       = "segno";
+        genera[III]          = MUSICXML_DIRECTIO_SIGNUM;
+        iungere[III]         = VERUM;
+        attributa[IV]        = "coda";
+        genera[IV]           = MUSICXML_DIRECTIO_CAUDA;
+        iungere[IV]          = VERUM;
+        per (i = ZEPHYRUM; i < V; i++)
+        {
+            si (!xml_attributum(so, attributa[i], &v))
+            {
+                perge;
+            }
+            d = iungere[i] ? _directionem_invenire(directiones, prima,
+                                 genera[i])
+                           : NIHIL;
+            si (d == NIHIL)
+            {
+                d = _directionem_addere(l, directiones, genera[i],
+                    positio, so, vox, baculum);
+            }
+            si (d != NIHIL)
+            {
+                d->textus  = _praecidere(v);
+                d->sonus   = VERUM;
+            }
+        }
+    }
+}
+
+/* beat-unit in quartis (puncta: x 1.5, 1.75 ...); 0 si ignota */
+interior f64
+_unitas_quartarum (
+    chorda unitas)
+{
+    si (chorda_aequalis_literis(unitas, "long"))    redde 16.0;
+    si (chorda_aequalis_literis(unitas, "breve"))   redde 8.0;
+    si (chorda_aequalis_literis(unitas, "whole"))   redde 4.0;
+    si (chorda_aequalis_literis(unitas, "half"))    redde 2.0;
+    si (chorda_aequalis_literis(unitas, "quarter")) redde 1.0;
+    si (chorda_aequalis_literis(unitas, "eighth"))  redde 0.5;
+    si (chorda_aequalis_literis(unitas, "16th"))    redde 0.25;
+    si (chorda_aequalis_literis(unitas, "32nd"))    redde 0.125;
+    si (chorda_aequalis_literis(unitas, "64th"))    redde 0.0625;
+    redde 0.0;
+}
+
+interior b32
+_directionem_legere (
+                 Lector* l,
+     constans XmlCoctus* e,
+           StatusPartis* sp,
+                    s64  cursor,
+                    Xar* directiones)
+{
+     constans XmlCoctus* dt;
+     constans XmlCoctus* x;
+     constans XmlCoctus* f;
+                 chorda  vox;
+                 chorda  t;
+                    i32  baculum = ZEPHYRUM;
+                    s64  positio = cursor;
+                    s64  v;
+                    f64  q;
+                    i32  prima = xar_numerus(directiones);
+
+    (vacuum)_textus_filii(l, e, "voice", &vox);
+    si (_integer_filii(l, e, "staff", &v) && v > ZEPHYRUM)
+    {
+        baculum = (i32)v;
+    }
+    f = xml_filius(e, "offset");
+    si (   f != NIHIL
+        && chorda_aequalis_literis(_attributum(f, "sound"), "yes")
+        && xml_textus_totus(f, l->piscina, &t) && _decimalis(t, &q))
+    {
+        positio = cursor + (s64)(q * (f64)sp->factor
+                                 + (q < 0.0 ? -0.5 : 0.5));
+        si (positio < ZEPHYRUM)
+        {
+            positio = ZEPHYRUM;
+        }
+    }
+    per (dt = xml_filius(e, "direction-type"); dt != NIHIL;
+         dt = xml_frater(dt, "direction-type"))
+    {
+        per (x = xml_filius(dt, NIHIL); x != NIHIL;
+             x = xml_frater(x, NIHIL))
+        {
+                       chorda  titulus = xml_titulus(x);
+             MusicxmlDirectio* d;
+
+            si (chorda_aequalis_literis(titulus, "words"))
+            {
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_VERBA, positio, e, vox, baculum);
+                si (d != NIHIL && xml_textus_totus(x, l->piscina, &t))
+                {
+                    d->textus = _praecidere(t);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "rehearsal"))
+            {
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_EXERCITIUM, positio, e, vox,
+                    baculum);
+                si (d != NIHIL && xml_textus_totus(x, l->piscina, &t))
+                {
+                    d->textus = _praecidere(t);
+                }
+            }
+            alioquin si (   chorda_aequalis_literis(titulus, "segno")
+                         || chorda_aequalis_literis(titulus, "coda"))
+            {
+                d = _directionem_addere(l, directiones,
+                    chorda_aequalis_literis(titulus, "segno")
+                        ? MUSICXML_DIRECTIO_SIGNUM
+                        : MUSICXML_DIRECTIO_CAUDA,
+                    positio, e, vox, baculum);
+                si (d != NIHIL)
+                {
+                    d->textus = _attributum(x, "id");
+                }
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "dynamics"))
+            {
+                constans XmlCoctus* y = xml_filius(x, NIHIL);
+
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_DYNAMICA, positio, e, vox,
+                    baculum);
+                si (d != NIHIL && y != NIHIL)
+                {
+                    d->textus = xml_titulus(y);
+                    si (   chorda_aequalis_literis(d->textus,
+                               "other-dynamics")
+                        && xml_textus_totus(y, l->piscina, &t))
+                    {
+                        d->textus = _praecidere(t);
+                    }
+                }
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "wedge"))
+            {
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_CUNEUS, positio, e, vox, baculum);
+                si (d == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                t           = _attributum(x, "type");
+                d->textus   = t;
+                d->numerus  = I;
+                si (   _integer(_attributum(x, "number"), &v)
+                    && v > ZEPHYRUM)
+                {
+                    d->numerus = (i32)v;
+                }
+                si (chorda_aequalis_literis(t, "crescendo"))
+                {
+                    d->cuneus = MUSICXML_CUNEUS_CRESCENDO;
+                }
+                alioquin si (chorda_aequalis_literis(t, "diminuendo"))
+                {
+                    d->cuneus = MUSICXML_CUNEUS_DIMINUENDO;
+                }
+                alioquin si (chorda_aequalis_literis(t, "stop"))
+                {
+                    d->cuneus = MUSICXML_CUNEUS_FINIS;
+                }
+                alioquin si (!chorda_aequalis_literis(t, "continue"))
+                {
+                    d->cuneus = MUSICXML_CUNEUS_IGNOTUS;
+                    _vitium(l, MUSICXML_MONITUM, MUSICXML_VALOR_IGNOTUS,
+                        x,
+                        "wedge type ignotum: ", t);
+                }
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "metronome"))
+            {
+                 constans XmlCoctus* y;
+                                f64  unitas    = 0.0;
+                                f64  addendum  = 0.0;
+                                i32  unitates  = ZEPHYRUM;
+
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_TEMPUS, positio, e, vox, baculum);
+                si (d == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                per (y = xml_filius(x, NIHIL); y != NIHIL;
+                     y = xml_frater(y, NIHIL))
+                {
+                    si (chorda_aequalis_literis(xml_titulus(y),
+                            "beat-unit"))
+                    {
+                        (vacuum)xml_textus_totus(y, l->piscina, &t);
+                        unitas    = _unitas_quartarum(_praecidere(t));
+                        addendum  = unitas / 2.0;
+                        unitates++;
+                    }
+                    alioquin si (chorda_aequalis_literis(xml_titulus(y),
+                                     "beat-unit-dot"))
+                    {
+                        unitas    += addendum;
+                        addendum  /= 2.0;
+                    }
+                }
+                si (   _textus_filii(l, x, "per-minute", &t)
+                    && unitates == I && unitas > 0.0)
+                {
+                    d->textus = t;
+                    si (_decimalis(t, &q) && q > 0.0)
+                    {
+                        d->valor_adest  = VERUM;
+                        d->valor        = q * unitas;
+                    }
+                }
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "pedal"))
+            {
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_PEDALE, positio, e, vox, baculum);
+                si (d != NIHIL)
+                {
+                    d->textus = _attributum(x, "type");
+                }
+            }
+            alioquin si (chorda_aequalis_literis(titulus,
+                         "octave-shift"))
+            {
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_OCTAVA, positio, e, vox, baculum);
+                si (d != NIHIL)
+                {
+                    d->textus   = _attributum(x, "type");
+                    d->numerus  = VIII;
+                    si (   _integer(_attributum(x, "size"), &v)
+                        && v > ZEPHYRUM)
+                    {
+                        d->numerus = (i32)v;
+                    }
+                }
+            }
+            alioquin
+            {
+                /* other-direction et cetera: textus aut titulus */
+                d = _directionem_addere(l, directiones,
+                    MUSICXML_DIRECTIO_ALIA, positio, e, vox, baculum);
+                si (d != NIHIL)
+                {
+                    d->textus = titulus;
+                    si (   xml_textus_totus(x, l->piscina, &t)
+                        && _praecidere(t).mensura > ZEPHYRUM)
+                    {
+                        d->textus = _praecidere(t);
+                    }
+                }
+            }
+        }
+    }
+    f = xml_filius(e, "sound");
+    si (f != NIHIL)
+    {
+        _sonum_legere(l, f, directiones, prima, positio, vox, baculum);
+    }
+    redde VERUM;
+}
+
+interior b32
+_lineam_legere (
+                     Lector* l,
+         constans XmlCoctus* e,
+      MusicxmlLineaMensurae* b)
+{
+     constans XmlCoctus* f;
+                 chorda  t;
+                    s64  v;
+                    Xar* numeri;
+
+    memset(b, ZEPHYRUM, magnitudo(MusicxmlLineaMensurae));
+    (vacuum)xml_locus(e, &b->linea, &b->columna);
+    t = _attributum(e, "location");
+    b->locus = chorda_aequalis_literis(t, "left")
+                   ? MUSICXML_LOCUS_SINISTER
+                   : chorda_aequalis_literis(t, "middle")
+                         ? MUSICXML_LOCUS_MEDIUS : MUSICXML_LOCUS_DEXTER;
+    (vacuum)_textus_filii(l, e, "bar-style", &b->stilus);
+    b->corona  = xml_filius(e, "fermata") != NIHIL;
+    f          = xml_filius(e, "repeat");
+    si (f != NIHIL)
+    {
+        t = _attributum(f, "direction");
+        si (chorda_aequalis_literis(t, "forward"))
+        {
+            b->repetitio = MUSICXML_REPETITIO_PRORSUM;
+        }
+        alioquin si (chorda_aequalis_literis(t, "backward"))
+        {
+            b->repetitio = MUSICXML_REPETITIO_RETRORSUM;
+        }
+        alioquin
+        {
+            _vitium(l, MUSICXML_MONITUM, MUSICXML_VALOR_IGNOTUS, f,
+                "repeat direction ignota: ", t);
+        }
+        si (_integer(_attributum(f, "times"), &v) && v > ZEPHYRUM)
+        {
+            b->vices = (i32)v;
+        }
+    }
+    f = xml_filius(e, "ending");
+    si (f != NIHIL)
+    {
+        i32 i;
+        s32 initium = -I;
+
+        t = _attributum(f, "type");
+        si (chorda_aequalis_literis(t, "start"))
+        {
+            b->conclusio = MUSICXML_CONCLUSIO_INITIUM;
+        }
+        alioquin si (chorda_aequalis_literis(t, "stop"))
+        {
+            b->conclusio = MUSICXML_CONCLUSIO_FINIS;
+        }
+        alioquin si (chorda_aequalis_literis(t, "discontinue"))
+        {
+            b->conclusio = MUSICXML_CONCLUSIO_INTERRUPTA;
+        }
+        alioquin
+        {
+            _vitium(l, MUSICXML_MONITUM, MUSICXML_VALOR_IGNOTUS, f,
+                "ending type ignotum: ", t);
+        }
+        b->conclusionum_textus = _attributum(f, "number");
+        numeri = xar_creare(l->piscina, (i32)magnitudo(i32));
+        si (numeri == NIHIL)
+        {
+            redde FALSUM;
+        }
+        /* "1, 2" aut "1 2": numeri commatibus aut spatiis separati */
+        t = b->conclusionum_textus;
+        per (i = ZEPHYRUM; i <= t.mensura; i++)
+        {
+            b32 digitus = i < t.mensura && t.datum[i] >= '0'
+                        && t.datum[i] <= '9';
+
+            si (digitus && initium < ZEPHYRUM)
+            {
+                initium = (s32)i;
+            }
+            alioquin si (!digitus && initium >= ZEPHYRUM)
+            {
+                i32* n = (i32*)xar_addere(numeri);
+
+                si (n == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                (vacuum)_integer(chorda_sectio(t, (i32)initium, i), &v);
+                *n       = (i32)v;
+                initium  = -I;
+            }
+        }
+        b->conclusiones = (i32*)_tabula(l, numeri, (i32)magnitudo(i32),
+            &b->numerus_conclusionum);
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Mensurae et partes
  * ================================================== */
 
@@ -1191,6 +1827,7 @@ interior b32
 _mensuram_legere (
                  Lector* l,
      constans XmlCoctus* me,
+     constans XmlCoctus* contentum,
            StatusPartis* sp,
         MusicxmlMensura* m)
 {
@@ -1198,6 +1835,8 @@ _mensuram_legere (
          StatusMensurae  sm;
                     Xar* notae;
                     Xar* attributa;
+                    Xar* directiones;
+                    Xar* lineae;
 
     memset(m, ZEPHYRUM, magnitudo(MusicxmlMensura));
     memset(&sm, ZEPHYRUM, magnitudo(StatusMensurae));
@@ -1205,15 +1844,21 @@ _mensuram_legere (
     m->numerus    = _attributum(me, "number");
     m->implicita  = chorda_aequalis_literis(_attributum(me, "implicit"),
                         "yes");
-    notae      = xar_creare(l->piscina, (i32)magnitudo(MusicxmlNota));
-    attributa  = xar_creare(l->piscina,
-                     (i32)magnitudo(MusicxmlAttributa));
-    si (notae == NIHIL || attributa == NIHIL)
+    notae        = xar_creare(l->piscina, (i32)magnitudo(MusicxmlNota));
+    attributa    = xar_creare(l->piscina,
+                       (i32)magnitudo(MusicxmlAttributa));
+    directiones  = xar_creare(l->piscina,
+                       (i32)magnitudo(MusicxmlDirectio));
+    lineae       = xar_creare(l->piscina,
+                       (i32)magnitudo(MusicxmlLineaMensurae));
+    si (   notae  == NIHIL || attributa == NIHIL || directiones == NIHIL
+        || lineae == NIHIL)
     {
         redde FALSUM;
     }
-    per (f = xml_filius(me, NIHIL); f != NIHIL; f = xml_frater(f,
-        NIHIL))
+    /* timewise: pars in mensura absens = mensura vacua */
+    per (f = contentum != NIHIL ? xml_filius(contentum, NIHIL) : NIHIL;
+         f != NIHIL; f = xml_frater(f, NIHIL))
     {
         chorda titulus = xml_titulus(f);
            s64 d;
@@ -1278,8 +1923,34 @@ _mensuram_legere (
                 redde FALSUM;
             }
         }
-        /* cetera (direction, barline, print, harmony ...) plan P5 */
+        alioquin si (chorda_aequalis_literis(titulus, "direction"))
+        {
+            si (!_directionem_legere(l, f, sp, sm.cursor, directiones))
+            {
+                redde FALSUM;
+            }
+        }
+        alioquin si (chorda_aequalis_literis(titulus, "sound"))
+        {
+            _sonum_legere(l, f, directiones, xar_numerus(directiones),
+                sm.cursor, _vacua(), ZEPHYRUM);
+        }
+        alioquin si (chorda_aequalis_literis(titulus, "barline"))
+        {
+            MusicxmlLineaMensurae* b = (MusicxmlLineaMensurae*)
+                xar_addere(lineae);
+
+            si (b == NIHIL || !_lineam_legere(l, f, b))
+            {
+                redde FALSUM;
+            }
+        }
+        /* cetera (print, harmony, figured-bass ...) praetereuntur */
     }
+    m->directiones = (MusicxmlDirectio*)_tabula(l, directiones,
+        (i32)magnitudo(MusicxmlDirectio), &m->numerus_directionum);
+    m->lineae = (MusicxmlLineaMensurae*)_tabula(l, lineae,
+        (i32)magnitudo(MusicxmlLineaMensurae), &m->numerus_linearum);
     m->longitudo  = sm.maximum;
     m->notae      = (MusicxmlNota*)_tabula(l, notae,
                         (i32)magnitudo(MusicxmlNota),
@@ -1294,6 +1965,7 @@ interior b32
 _partem_legere (
                  Lector* l,
      constans XmlCoctus* pe,
+     constans XmlCoctus* radix_temporum,
            MusicxmlPars* p)
 {
      constans XmlCoctus* me;
@@ -1313,12 +1985,28 @@ _partem_legere (
     {
         redde FALSUM;
     }
-    per (me = xml_filius(pe, "measure"); me != NIHIL;
-         me = xml_frater(me, "measure"))
+    /* partwise: <measure> partis; timewise: <measure> radicis, cum
+     * <part> eius id (contentum) */
+    per (me = xml_filius(radix_temporum != NIHIL ? radix_temporum : pe,
+             "measure");
+         me != NIHIL; me = xml_frater(me, "measure"))
     {
-        MusicxmlMensura* m = (MusicxmlMensura*)xar_addere(mensurae);
+           MusicxmlMensura* m = (MusicxmlMensura*)xar_addere(mensurae);
+        constans XmlCoctus* contentum = me;
 
-        si (m == NIHIL || !_mensuram_legere(l, me, &sp, m))
+        si (radix_temporum != NIHIL)
+        {
+            per (contentum = xml_filius(me, "part"); contentum != NIHIL;
+                 contentum = xml_frater(contentum, "part"))
+            {
+                si (chorda_aequalis(_attributum(contentum, "id"),
+                    p->id))
+                {
+                    frange;
+                }
+            }
+        }
+        si (m == NIHIL || !_mensuram_legere(l, me, contentum, &sp, m))
         {
             redde FALSUM;
         }
@@ -1455,66 +2143,115 @@ _indicem_legere (
     redde VERUM;
 }
 
-/* partes ordine indicis; <part> sine indice post eas, ordine
- * documenti (M: index partium discors - monitum utrimque) */
+/* elementum partis: partwise <part>; timewise id quaeque ordine primae
+ * apparitionis (nodus = <part> primus eius) */
+nomen structura {
+                 chorda  id;
+     constans XmlCoctus* nodus;
+                    b32  usus;
+} ElementumPartis;
+
+interior b32
+_elementa_partium (
+     constans XmlCoctus* radix,
+                    b32  temporum,
+                    Xar* elementa)
+{
+     constans XmlCoctus* me;
+     constans XmlCoctus* pe;
+                    i32  i;
+
+    per (me = temporum ? xml_filius(radix, "measure") : radix; me
+        != NIHIL;
+         me = temporum ? xml_frater(me, "measure") : NIHIL)
+    {
+        per (pe = xml_filius(me, "part"); pe != NIHIL;
+             pe = xml_frater(pe, "part"))
+        {
+                     chorda  id = _attributum(pe, "id");
+            ElementumPartis* x;
+                        b32  iteratum = FALSUM;
+
+            per (i = ZEPHYRUM; temporum
+                && i < xar_numerus(elementa); i++)
+            {
+                si (chorda_aequalis(((ElementumPartis*)xar_obtinere(
+                        elementa, i))->id, id))
+                {
+                    iteratum = VERUM;
+                    frange;
+                }
+            }
+            si (iteratum)
+            {
+                perge;
+            }
+            x = (ElementumPartis*)xar_addere(elementa);
+            si (x == NIHIL)
+            {
+                redde FALSUM;
+            }
+            x->id     = id;
+            x->nodus  = pe;
+            x->usus   = FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* partes ordine indicis; partes sine indice post eas, ordine
+ * documenti (index partium discors - monitum utrimque) */
 interior b32
 _partes_legere (
                  Lector* l,
      constans XmlCoctus* radix,
+                    b32  temporum,
            MusicxmlOpus* opus)
 {
-                    Xar* index;
-                    Xar* partes;
-     constans XmlCoctus* pe;
-                    i32  numerus_elementorum;
-                    b32* usa;
-                    i32  i;
-                    i32  k;
+     Xar* index;
+     Xar* partes;
+     Xar* elementa;
+     i32  i;
+     i32  k;
 
-    index   = xar_creare(l->piscina, (i32)magnitudo(IndexPartis));
-    partes  = xar_creare(l->piscina, (i32)magnitudo(MusicxmlPars));
-    si (   index == NIHIL || partes == NIHIL
-        || !_indicem_legere(l, radix, index))
+    index     = xar_creare(l->piscina, (i32)magnitudo(IndexPartis));
+    partes    = xar_creare(l->piscina, (i32)magnitudo(MusicxmlPars));
+    elementa  = xar_creare(l->piscina, (i32)magnitudo(ElementumPartis));
+    si (   index == NIHIL || partes == NIHIL || elementa == NIHIL
+        || !_indicem_legere(l, radix, index)
+        || !_elementa_partium(radix, temporum, elementa))
     {
         redde FALSUM;
     }
-    numerus_elementorum = xml_filiorum_numerus(radix, "part");
-    usa = (b32*)piscina_allocare(l->piscina,
-        (memoriae_index)((numerus_elementorum
-            + I) * (i32)magnitudo(b32)));
-    si (usa == NIHIL)
-    {
-        redde FALSUM;
-    }
-    memset(usa, ZEPHYRUM,
-        (size_t)(numerus_elementorum + I) * magnitudo(b32));
-
     per (i = ZEPHYRUM; i < xar_numerus(index); i++)
     {
          IndexPartis* x        = (IndexPartis*)xar_obtinere(index, i);
                  b32  inventa  = FALSUM;
 
-        per (pe = xml_filius(radix, "part"), k = ZEPHYRUM; pe != NIHIL;
-             pe = xml_frater(pe, "part"), k++)
+        per (k = ZEPHYRUM; k < xar_numerus(elementa); k++)
         {
-            si (   !usa[k] && chorda_aequalis(_attributum(pe, "id"),
-                    x->pars.id))
-            {
-                MusicxmlPars* p = (MusicxmlPars*)xar_addere(partes);
+            ElementumPartis* e = (ElementumPartis*)xar_obtinere(
+                elementa, k);
+            MusicxmlPars* p;
 
-                si (p == NIHIL)
-                {
-                    redde FALSUM;
-                }
-                *p       = x->pars;
-                usa[k]   = VERUM;
-                inventa  = VERUM;
-                si (!_partem_legere(l, pe, p))
-                {
-                    redde FALSUM;
-                }
-                frange;
+            si (e->usus || !chorda_aequalis(e->id, x->pars.id))
+            {
+                perge;
             }
+            p = (MusicxmlPars*)xar_addere(partes);
+            si (p == NIHIL)
+            {
+                redde FALSUM;
+            }
+            *p       = x->pars;
+            e->usus  = VERUM;
+            inventa  = VERUM;
+            si (!_partem_legere(l, e->nodus, temporum ? radix : NIHIL,
+                p))
+            {
+                redde FALSUM;
+            }
+            frange;
         }
         si (!inventa)
         {
@@ -1523,12 +2260,13 @@ _partes_legere (
                 "pars in indice sine <part> (omissa): ", x->pars.id);
         }
     }
-    per (pe = xml_filius(radix, "part"), k = ZEPHYRUM; pe != NIHIL;
-         pe = xml_frater(pe, "part"), k++)
+    per (k = ZEPHYRUM; k < xar_numerus(elementa); k++)
     {
-        MusicxmlPars* p;
+        ElementumPartis* e = (ElementumPartis*)xar_obtinere(elementa,
+            k);
+           MusicxmlPars* p;
 
-        si (usa[k])
+        si (e->usus)
         {
             perge;
         }
@@ -1538,11 +2276,11 @@ _partes_legere (
             redde FALSUM;
         }
         memset(p, ZEPHYRUM, magnitudo(MusicxmlPars));
-        p->id       = _attributum(pe, "id");
-        p->titulus  = p->id;
-        _vitium(l, MUSICXML_MONITUM, MUSICXML_PARS_DISCORS, pe,
-            "<part> sine indice (servata): ", p->id);
-        si (!_partem_legere(l, pe, p))
+        p->id       = e->id;
+        p->titulus  = e->id;
+        _vitium(l, MUSICXML_MONITUM, MUSICXML_PARS_DISCORS, e->nodus,
+            "<part> sine indice (servata): ", e->id);
+        si (!_partem_legere(l, e->nodus, temporum ? radix : NIHIL, p))
         {
             redde FALSUM;
         }
@@ -1782,11 +2520,14 @@ _documentum_legere (
             _vacua());
         redde VERUM;
     }
+    alioquin si (chorda_aequalis_literis(titulus, "score-timewise"))
+    {
+        opus->forma = MUSICXML_FORMA_TEMPORUM;
+    }
     alioquin
     {
-        /* score-timewise: plan P5 */
         _vitium(l, MUSICXML_VITIUM, MUSICXML_NON_MUSICXML, radix,
-            "radix non score-partwise: ", titulus);
+            "radix nec score-partwise nec score-timewise: ", titulus);
         redde VERUM;
     }
     opus->versio     = _attributum(radix, "version");
@@ -1799,7 +2540,8 @@ _documentum_legere (
         redde VERUM;
     }
     opus->divisiones = l->divisiones;
-    si (!_partes_legere(l, radix, opus))
+    si (!_partes_legere(l, radix,
+            opus->forma == MUSICXML_FORMA_TEMPORUM, opus))
     {
         redde FALSUM;
     }

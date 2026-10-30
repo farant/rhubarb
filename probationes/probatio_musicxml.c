@@ -731,6 +731,234 @@ _percussio_probare (
     CREDO_VERUM (_continet(_tabula(c, o), "P1\t0\t1\t38\tC\t"));
 }
 
+/* directio k-ta generis dati in mensura; NIHIL si abest */
+interior constans MusicxmlDirectio*
+_directio (
+    constans MusicxmlMensura* m,
+       MusicxmlDirectioGenus  genus,
+                         i32  k)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < m->numerus_directionum; i++)
+    {
+        si (m->directiones[i].genus == genus)
+        {
+            si (k == ZEPHYRUM)
+            {
+                redde &m->directiones[i];
+            }
+            k--;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_directiones_probare (
+    CredoContextus* c)
+{
+            MusicxmlOpus* o = _legere_fixum(c, "directiones.musicxml");
+    constans MusicxmlMensura* m;
+    constans MusicxmlDirectio* d;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_AEQUALIS_I32 (o->numerus_vitiorum, ZEPHYRUM);
+    m = &o->partes[ZEPHYRUM].mensurae[ZEPHYRUM];
+    CREDO_AEQUALIS_I32 (m->numerus_directionum, (i32)IX);
+    /* metronome solum: quarta punctata = 60 -> 90 quartae */
+    d = _directio(m, MUSICXML_DIRECTIO_TEMPUS, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_AEQUALIS_S64 (d->positio, (s64)ZEPHYRUM);
+    CREDO_VERUM (d->valor_adest);
+    CREDO_F64_PROXIMUS (d->valor, 90.0, 1e-9);
+    CREDO_FALSUM (d->sonus);
+    d = _directio(m, MUSICXML_DIRECTIO_TEMPUS, I);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_AEQUALIS_S64 (d->positio, (s64)II);
+    CREDO_F64_PROXIMUS (d->valor, 72.5, 1e-9);
+    CREDO_VERUM (d->sonus);
+    d = _directio(m, MUSICXML_DIRECTIO_DYNAMICA, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_VERUM (_aequat(d->textus, "mf"));
+    CREDO_VERUM (d->valor_adest);
+    CREDO_F64_PROXIMUS (d->valor, 70.0, 1e-9);
+    d = _directio(m, MUSICXML_DIRECTIO_DYNAMICA, I);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_VERUM (_aequat(d->textus, "sfz"));
+    CREDO_AEQUALIS_S64 (d->positio, (s64)VI);
+    CREDO_FALSUM (d->valor_adest);
+    d = _directio(m, MUSICXML_DIRECTIO_CUNEUS, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_AEQUALIS_S32 ((s32)d->cuneus, (s32)MUSICXML_CUNEUS_CRESCENDO);
+    CREDO_AEQUALIS_S64 (d->positio, (s64)II);
+    CREDO_AEQUALIS_I32 (d->numerus, (i32)I);
+    d = _directio(m, MUSICXML_DIRECTIO_CUNEUS, I);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_AEQUALIS_S32 ((s32)d->cuneus, (s32)MUSICXML_CUNEUS_FINIS);
+    CREDO_AEQUALIS_S64 (d->positio, (s64)VI);
+    /* offset sound="yes" movet; offset solum non movet */
+    d = _directio(m, MUSICXML_DIRECTIO_EXERCITIUM, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_VERUM (_aequat(d->textus, "A"));
+    CREDO_AEQUALIS_S64 (d->positio, (s64)I);
+    d = _directio(m, MUSICXML_DIRECTIO_VERBA, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_VERUM (_aequat(d->textus, "dolce"));
+    CREDO_AEQUALIS_S64 (d->positio, (s64)ZEPHYRUM);
+    CREDO_VERUM (_aequat(d->vox, "1"));
+    CREDO_AEQUALIS_I32 (d->baculum, (i32)I);
+    CREDO_VERUM (_aequat(_directio(m, MUSICXML_DIRECTIO_VERBA,
+        I)->textus,
+        "rit."));
+
+    m = &o->partes[ZEPHYRUM].mensurae[I];
+    CREDO_AEQUALIS_I32 (m->numerus_directionum, (i32)XV);
+    d = _directio(m, MUSICXML_DIRECTIO_TEMPUS, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_F64_PROXIMUS (d->valor, 100.0, 1e-9);
+    CREDO_VERUM (d->sonus);
+    d = _directio(m, MUSICXML_DIRECTIO_SIGNUM, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_FALSUM (d->sonus);
+    CREDO_VERUM (_directio(m, MUSICXML_DIRECTIO_FINIS,
+        ZEPHYRUM)->sonus);
+    CREDO_VERUM (_directio(m, MUSICXML_DIRECTIO_A_CAPITE,
+        ZEPHYRUM)->sonus);
+    CREDO_NIHIL (_directio(m, MUSICXML_DIRECTIO_A_CAPITE, I));
+    d = _directio(m, MUSICXML_DIRECTIO_CAUDA, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_VERUM (_aequat(d->textus, "c1"));
+    CREDO_VERUM (d->sonus);
+    CREDO_NIHIL (_directio(m, MUSICXML_DIRECTIO_CAUDA, I));
+    CREDO_VERUM (_aequat(_directio(m, MUSICXML_DIRECTIO_AD_CAUDAM,
+        ZEPHYRUM)->textus, "c1"));
+    CREDO_VERUM (_aequat(_directio(m, MUSICXML_DIRECTIO_A_SIGNO,
+        ZEPHYRUM)->textus, "s1"));
+    CREDO_VERUM (_aequat(_directio(m, MUSICXML_DIRECTIO_VERBA,
+        I)->textus,
+        "D.C."));
+    CREDO_VERUM (_aequat(_directio(m, MUSICXML_DIRECTIO_PEDALE,
+        ZEPHYRUM)->textus, "start"));
+    d = _directio(m, MUSICXML_DIRECTIO_OCTAVA, ZEPHYRUM);
+    CREDO_NECESSE (d != NIHIL);
+    CREDO_VERUM (_aequat(d->textus, "down"));
+    CREDO_AEQUALIS_I32 (d->numerus, (i32)VIII);
+    CREDO_VERUM (_aequat(_directio(m, MUSICXML_DIRECTIO_ALIA,
+        ZEPHYRUM)->textus, "senza vibrato"));
+}
+
+interior vacuum
+_notae_signa_probare (
+    CredoContextus* c)
+{
+             MusicxmlOpus* o = _legere_fixum(c, "directiones.musicxml");
+    constans MusicxmlNota* n;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    n = o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].notae;
+    CREDO_NECESSE (n[ZEPHYRUM].numerus_signorum == IV);
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].signa[ZEPHYRUM].genus,
+        (s32)MUSICXML_SIGNUM_CORONA);
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].signa[I].genus,
+        (s32)MUSICXML_SIGNUM_ARTICULATIO);
+    CREDO_VERUM (_aequat(n[ZEPHYRUM].signa[I].titulus, "staccato"));
+    CREDO_VERUM (_aequat(n[ZEPHYRUM].signa[II].titulus, "accent"));
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].signa[III].genus,
+        (s32)MUSICXML_SIGNUM_ARCUS);
+    CREDO_VERUM (n[ZEPHYRUM].signa[III].initium);
+    CREDO_AEQUALIS_I32 (n[ZEPHYRUM].signa[III].numerus, (i32)I);
+    CREDO_NECESSE (n[I].numerus_signorum == III);
+    CREDO_AEQUALIS_S32 ((s32)n[I].signa[ZEPHYRUM].genus,
+        (s32)MUSICXML_SIGNUM_ORNAMENTUM);
+    CREDO_VERUM (_aequat(n[I].signa[ZEPHYRUM].titulus, "trill-mark"));
+    CREDO_VERUM (n[I].signa[I].finis);
+    CREDO_AEQUALIS_S32 ((s32)n[I].signa[II].genus,
+        (s32)MUSICXML_SIGNUM_ACORDUM_FRACTUM);
+    CREDO_NECESSE (n[II].numerus_signorum == II);
+    CREDO_AEQUALIS_S32 ((s32)n[II].signa[ZEPHYRUM].genus,
+        (s32)MUSICXML_SIGNUM_TECHNICUM);
+    CREDO_AEQUALIS_S32 ((s32)n[II].signa[I].genus,
+        (s32)MUSICXML_SIGNUM_DYNAMICA);
+    CREDO_VERUM (_aequat(n[II].signa[I].titulus, "sfz"));
+    CREDO_AEQUALIS_I32 (n[III].numerus_signorum, ZEPHYRUM);
+}
+
+interior vacuum
+_lineae_probare (
+    CredoContextus* c)
+{
+         MusicxmlOpus* o = _legere_fixum(c, "lineae_mensurae.musicxml");
+    constans MusicxmlMensura* m;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    m = o->partes[ZEPHYRUM].mensurae;
+    CREDO_NECESSE (m[ZEPHYRUM].numerus_linearum == I);
+    CREDO_AEQUALIS_S32 ((s32)m[ZEPHYRUM].lineae[ZEPHYRUM].locus,
+        (s32)MUSICXML_LOCUS_SINISTER);
+    CREDO_AEQUALIS_S32 ((s32)m[ZEPHYRUM].lineae[ZEPHYRUM].repetitio,
+        (s32)MUSICXML_REPETITIO_PRORSUM);
+    CREDO_VERUM (_aequat(m[ZEPHYRUM].lineae[ZEPHYRUM].stilus,
+        "heavy-light"));
+    CREDO_NECESSE (m[I].numerus_linearum == II);
+    CREDO_AEQUALIS_S32 ((s32)m[I].lineae[ZEPHYRUM].conclusio,
+        (s32)MUSICXML_CONCLUSIO_INITIUM);
+    CREDO_VERUM (_aequat(m[I].lineae[ZEPHYRUM].conclusionum_textus,
+        "1, 2"));
+    CREDO_NECESSE (m[I].lineae[ZEPHYRUM].numerus_conclusionum == II);
+    CREDO_AEQUALIS_I32 (m[I].lineae[ZEPHYRUM].conclusiones[ZEPHYRUM],
+        (i32)I);
+    CREDO_AEQUALIS_I32 (m[I].lineae[ZEPHYRUM].conclusiones[I], (i32)II);
+    CREDO_AEQUALIS_S32 ((s32)m[I].lineae[I].locus,
+        (s32)MUSICXML_LOCUS_DEXTER);
+    CREDO_AEQUALIS_S32 ((s32)m[I].lineae[I].conclusio,
+        (s32)MUSICXML_CONCLUSIO_FINIS);
+    CREDO_AEQUALIS_S32 ((s32)m[I].lineae[I].repetitio,
+        (s32)MUSICXML_REPETITIO_RETRORSUM);
+    CREDO_AEQUALIS_I32 (m[I].lineae[I].vices, (i32)III);
+    CREDO_NECESSE (m[II].numerus_linearum == II);
+    CREDO_AEQUALIS_I32 (m[II].lineae[ZEPHYRUM].conclusiones[ZEPHYRUM],
+        (i32)III);
+    CREDO_AEQUALIS_S32 ((s32)m[II].lineae[I].conclusio,
+        (s32)MUSICXML_CONCLUSIO_INTERRUPTA);
+    CREDO_VERUM (m[II].lineae[I].corona);
+    CREDO_NECESSE (m[III].numerus_linearum == I);
+    CREDO_AEQUALIS_S32 ((s32)m[III].lineae[ZEPHYRUM].repetitio,
+        (s32)MUSICXML_REPETITIO_NULLA);
+}
+
+interior vacuum
+_forma_temporum_probare (
+    CredoContextus* c)
+{
+    MusicxmlOpus* p = _legere_fixum(c, "mensurae_inaequales.musicxml");
+    MusicxmlOpus* t = _legere_fixum(c, "timewise.musicxml");
+
+    CREDO_NECESSE (p != NIHIL && t != NIHIL);
+    CREDO_VERUM (musicxml_successus(t));
+    CREDO_AEQUALIS_S32 ((s32)t->forma, (s32)MUSICXML_FORMA_TEMPORUM);
+    CREDO_AEQUALIS_I32 (t->numerus_partium, (i32)II);
+    CREDO_AEQUALIS_I32 (t->numerus_mensurarum, (i32)II);
+    CREDO_VERUM (_aequat(t->partes[I].titulus, "Bassus"));
+    CREDO_VERUM (_aequat(t->partes[ZEPHYRUM].mensurae[I].numerus, "2"));
+    CREDO_AEQUALIS_I32 (_vitia_generis(t, MUSICXML_MENSURA_BREVIOR),
+        (i32)I);
+    CREDO_VERUM (chorda_aequalis(_tabula(c, p), _tabula(c, t)));
+}
+
+interior vacuum
+_versio_nulla_probare (
+    CredoContextus* c)
+{
+    MusicxmlOpus* o = _legere_fixum(c, "versio_nulla.musicxml");
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_AEQUALIS_I32 (o->versio.mensura, ZEPHYRUM);
+    CREDO_VERUM (_aequat(o->titulus_motus, "Probatio vetus"));
+    CREDO_AEQUALIS_S32 (o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].notae[I]
+        .nota, (s32)LXVI);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nota una: exemplar et tabula", _nota_una_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
@@ -773,6 +1001,16 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "concert-score: numquam bis", _partitura_concentus_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "percussio et instrumenta", _percussio_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "directiones: tempus, dynamica, cunei, verba, saltus",
+        _directiones_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "signa notarum", _notae_signa_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lineae mensurae: repetitiones, conclusiones", _lineae_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "timewise: exemplar idem", _forma_temporum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "versio absens (1.0)", _versio_nulla_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

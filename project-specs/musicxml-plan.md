@@ -508,7 +508,29 @@ Lint: `tupli` refused in a test name → `_rationes_temporis_probare`.
 - [ ] **Step 2: Implement**; timewise: transpose the measure/part
   nesting into the same per-part walk (one code path after that).
 - [ ] **Step 3: Green; plant** (drop `<offset>`) → red; restore.
-- [ ] **Step 4: Commit** (gate `radix`).
+- [x] **Step 4: Commit** (gate `radix`).
+
+**Executed 2026-10-30.** Decisions fixed here: every child of a
+`<direction-type>` becomes one `MusicxmlDirectio` (unknown kinds →
+`_ALIA` with the element's text or name); a `<sound>` inside a
+`<direction>` MERGES into that direction's tempo / dynamics / segno /
+coda entry (sound tempo wins over the metronome's value) and ADDS
+da capo / dal segno / to coda / fine entries, all with `sonus` VERUM;
+a standalone `<sound>` in a measure makes its own entries; words-only
+"D.C." stays a `_VERBA` entry for P6 to interpret. `<offset>` moves a
+direction only with `sound="yes"`. Metronome tempo = per-minute ×
+beat-unit in quarters (dots add half, quarter …); a metric
+modulation (two beat-units) gives no tempo value. Ending numbers
+"1, 2" / "1 2" both parse. Timewise: `_mensuram_legere` takes the
+measure (number, implicit, position) and a separate content element
+(the matching `<part>` inside it; absent = empty measure); parts are
+enumerated by id in order of first appearance, then matched against
+the part list exactly like partwise. The timewise fixture is the twin
+of `mensurae_inaequales` (two parts, two measures, the M15 monitum)
+rather than `voces` — a stronger equality. Plants (offset inverted;
+timewise always the first part; metronome dot ignored; sound coda not
+merged) all red. Lint renames: `_timewise_probare` →
+`_forma_temporum_probare`, `cifra` → `digitus`.
 
 ---
 
