@@ -304,14 +304,24 @@ xml_runa_tituli (s32 runa)` (`NameChar`), `b32 xml_runa_pubid
 (s32 runa)` (`PubidChar`), `b32 xml_spatium (s32 runa)` (`S`). Pure,
 total, no allocation.
 
-- [ ] **Step 1: Measure** — transcribe the ranges from XML 1.0 5th ed.
+- [x] **Step 1: Measure** — transcribe the ranges from XML 1.0 5th ed.
   §2.2 and §2.3 into the test first, each range's both ends and both
   neighbours outside (e.g. `#xC0` in, `#xD7` out, `#x2070`..`#x218F`).
-- [ ] **Step 2: Red, then the tables** (sorted range arrays, binary
+- [x] **Step 2: Red, then the tables** (sorted range arrays, binary
   search), green.
-- [ ] **Step 3: Plants** — one range end off by one → red at that
+- [x] **Step 3: Plants** — one range end off by one → red at that
   boundary.
-- [ ] **Step 4: Commit** (porta `xml`).
+- [x] **Step 4: Commit** (porta `xml`).
+
+**Executed 2026-10-30.** `xml_nomina.{h,c}`: Char, NameStartChar,
+NameChar, PubidChar, S, plus `xml_titulum_metiri` (byte length of a
+Name or Nmtoken at a position, over `utf8_decodere`; invalid UTF-8
+ends the name) — the lexer's one entry point. Test: 72 code points at
+every range end and outside neighbour, transcribed from the spec text
+separately from the table. Plants (all red): a NameStartChar range end
++1, a NameChar range end +1, Char upper bound +1, the first-rune rule
+removed. Lint: `pubid`, `nmtoken` entered in the glossary as XML
+terms; the second table is `SEQUENTES`.
 
 ---
 

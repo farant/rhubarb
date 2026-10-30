@@ -1901,4 +1901,6 @@
     <forma textus="replicas" casus="accusativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
+  <vocabulum lemma="pubid" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus XML 1.0 (par. 2.3): PubidChar, characteres identificatoris publici (xml/fontes/xml_nomina.c)"/>
+  <vocabulum lemma="nmtoken" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus XML 1.0 (par. 2.3): Nmtoken, signum nominis quodvis NameChar incipiens (xml/fontes/xml_nomina.c)"/>
 </glossarium>
