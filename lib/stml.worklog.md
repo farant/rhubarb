@@ -1708,3 +1708,23 @@ round trip with more than one line, so "runs stop only at '<'" (prefix
 lost after '\n') passed every stml suite. Added a case to probatio_stml
 section E (`<code!\>` with three lines and a '<' mid-line). The plant
 is now FRACTA there.
+
+## 2026-10-30 — tokenizer moves the cursor by runs (budget B1 B4)
+
+`_tok_legere_textus`, the name loop in `_tok_legere_nomen` and
+`_tok_praeterire_spatium` each called `_tok_aspicere` + `_tok_progredi(1)`
+per byte: two bounds checks and a newline/column branch per byte. Now:
+- text finds the next '<' with memchr;
+- names (never contain '\n') add the run length to the column;
+- whitespace scans to the end of the run.
+All three then call `_tok_saltare(ctx, finis)`, which counts newlines
+with memchr and sets the column from the last newline (1 + bytes
+after it), or adds the run length if there was none. Same tokens,
+lines and columns.
+
+Coverage gap found by the plant: nothing checked token columns after a
+run that crosses newlines ("column += span even after a newline"
+passed every stml suite). Added probatio_stml XIV.F: for every lexema
+of a document whose text and in-tag whitespace cross newlines, line
+and column are recomputed byte by byte from its offset, as a second
+oracle. The plant is now FRACTA there.

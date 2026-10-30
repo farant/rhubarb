@@ -367,15 +367,58 @@ _tok_progredi (
     }
 }
 
+/* Cursorem ad 'finis' movere cum linea et columna (budget B1 B4):
+ * idem ac _tok_progredi per octetum, sed lineae novae per memchr
+ * numerantur et columna ex linea nova ultima computatur - nulla
+ * probatio finium per octetum. finis <= input.mensura. */
+interior vacuum
+_tok_saltare (
+    StmlTokenContext* ctx,
+                 i32  finis)
+{
+    constans i8* p;
+    constans i8* f;
+    constans i8* nl;
+    constans i8* ultima;
+
+    p       = ctx->input.datum + ctx->positus;
+    f       = ctx->input.datum + finis;
+    ultima  = NIHIL;
+    dum (p < f)
+    {
+        nl = (constans i8*)memchr(p, '\n', (memoriae_index)(f - p));
+        si (nl == NIHIL)
+        {
+            frange;
+        }
+        ctx->linea++;
+        ultima  = nl;
+        p       = nl + I;
+    }
+    si (ultima != NIHIL)
+    {
+        ctx->columna = I + (i32)(f - (ultima + I));
+    }
+    alioquin
+    {
+        ctx->columna += finis - ctx->positus;
+    }
+    ctx->positus = finis;
+}
+
 interior vacuum
 _tok_praeterire_spatium (
     StmlTokenContext* ctx)
 {
-    dum (   ctx->positus < ctx->input.mensura
-         && _est_spatium(_tok_aspicere(ctx, ZEPHYRUM)))
+    i32 finis;
+
+    finis = ctx->positus;
+    dum (   finis < ctx->input.mensura
+         && _est_spatium((character)ctx->input.datum[finis]))
     {
-        _tok_progredi(ctx, I);
+        finis++;
     }
+    _tok_saltare(ctx, finis);
 }
 
 /* Nomen vacuum coram charactere non-structurali = initium tituli
@@ -450,10 +493,18 @@ _tok_legere_nomen (
         redde result;
     }
 
-    dum (   ctx->positus < ctx->input.mensura
-         && _est_nomen_character(_tok_aspicere(ctx, ZEPHYRUM)))
+    /* nomen lineam novam numquam continet: columna += longitudo */
     {
-        _tok_progredi(ctx, I);
+        i32 finis;
+
+        finis = ctx->positus;
+        dum (   finis < ctx->input.mensura
+             && _est_nomen_character((character)ctx->input.datum[finis]))
+        {
+            finis++;
+        }
+        ctx->columna += finis - ctx->positus;
+        ctx->positus = finis;
     }
 
     result.datum    = ctx->input.datum + initium;
@@ -1836,10 +1887,14 @@ _tok_legere_textus (
     initium_linea    = ctx->linea;
     initium_columna  = ctx->columna;
 
-    dum (   ctx->positus < ctx->input.mensura
-         && _tok_aspicere(ctx, ZEPHYRUM) != '<')
+    si (ctx->positus < ctx->input.mensura)
     {
-        _tok_progredi(ctx, I);
+        constans i8* lt;
+
+        lt = (constans i8*)memchr(ctx->input.datum + ctx->positus, '<',
+            (memoriae_index)(ctx->input.mensura - ctx->positus));
+        _tok_saltare(ctx, lt != NIHIL
+            ? (i32)(lt - ctx->input.datum) : ctx->input.mensura);
     }
 
     token.genus                      = STML_TOKEN_TEXTUS;

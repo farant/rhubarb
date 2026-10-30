@@ -5436,6 +5436,50 @@ _probare_scripturam_pulchram_contenti_mixti (
             "-> NIHIL\n");
     }
 
+    {
+        /* F. LINEA ET COLUMNA: omnis lexematis (linea, columna) ex
+         * initio eius per octetum recomputata (oraculum alterum) -
+         * textus et spatia intra tagum lineas novas transeunt
+         * (cursor per saltus, budget B1 B4) */
+            chorda  ingressus;
+               Xar* fluxus;
+               i32  k;
+               i32  j;
+               i32  linea;
+               i32  columna;
+        StmlLexema* lx;
+
+        ingressus = chorda_ex_literis(
+            "<a>\nab\n  cd<b x=\"1\"\n   y=\"2\"/>\n  ef\n</a>",
+            piscina);
+        fluxus = stml_lexemata_colligere(ingressus, piscina, intern);
+        CREDO_VERUM(fluxus != NIHIL);
+        CREDO_VERUM(xar_numerus(fluxus) >= V);
+        per (k = ZEPHYRUM; k < xar_numerus(fluxus); k++)
+        {
+            lx       = (StmlLexema*)xar_obtinere(fluxus, k);
+            linea    = I;
+            columna  = I;
+            per (j = ZEPHYRUM; j < lx->initium; j++)
+            {
+                si ((character)ingressus.datum[j] == '\n')
+                {
+                    linea++;
+                    columna = I;
+                }
+                alioquin
+                {
+                    columna++;
+                }
+            }
+            CREDO_AEQUALIS_I32(lx->linea, linea);
+            CREDO_AEQUALIS_I32(lx->columna, columna);
+        }
+
+        imprimere("  F linea et columna: %d lexemata contra oraculum\n",
+            (integer)xar_numerus(fluxus));
+    }
+
 
     /* ==================================================
      * XV. EXTENSIONES NODORUM (positus_initium/finis)
