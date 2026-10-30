@@ -2204,9 +2204,15 @@ aedilis_scriptum_scribere_ad (
     _compilationem_scribere(s, configuratio, fructus->scopus, piscina);
     chorda_aedificator_appendere_literis(s, "\n");
 
-    /* nexus */
+    /* nexus. NEXUS SERVATUS (budget B1 E10): sub
+     * AEDILIS_NEXUS_SERVARE (portae instrumenta et aedilis, binaria
+     * omni cursu iterum nectebant) binarium non renectitur si signum
+     * nexus idem est: vexilla + identitas (inode, mtime, mensura)
+     * omnium obiectorum et binarii ipsius. Identitas, non -nt:
+     * obiectum ex thesauro restitutum mtime veterem ferre potest.
+     * Sine variabili: semper nectit, ut antea. */
     chorda_aedificator_appendere_literis(s,
-        "clang $VEXILLA \\\n    \"$OBIECTA_DIR/");
+        "NEXUS_OBIECTA=(\n    \"$OBIECTA_DIR/");
     chorda_aedificator_appendere_chorda(s,
         _obiecti_nomen_sub_regula(configuratio, fructus->scopus,
             piscina));
@@ -2238,6 +2244,7 @@ aedilis_scriptum_scribere_ad (
             _obiecti_nomen(vendor->fons, piscina));
         chorda_aedificator_appendere_literis(s, "\" \\\n");
     }
+    chorda_aedificator_appendere_literis(s, ")\nNEXUS_VEXILLA=\"");
     /* vexilla nexus deduplicata (regulae) + annotata */
     {
         Xar* nexus_vexilla;
@@ -2245,18 +2252,33 @@ aedilis_scriptum_scribere_ad (
         nexus_vexilla = aedilis_vexilla_nexus(fructus, piscina);
         si (xar_numerus(nexus_vexilla) > 0)
         {
-            chorda_aedificator_appendere_literis(s, "    ");
             _scriptum_vexilla_iungere(s, nexus_vexilla);
-            chorda_aedificator_appendere_literis(s, " \\\n");
         }
     }
     chorda_aedificator_appendere_literis(s,
-        "    -o \"$EXITUS_DIR/");
+        "\"\nEXITUS=\"$EXITUS_DIR/");
     chorda_aedificator_appendere_chorda(s, basis);
     chorda_aedificator_appendere_literis(s,
-        "\" || exit 1\necho \"AEDILIS STRUCTUM: $EXITUS_DIR/");
-    chorda_aedificator_appendere_chorda(s, basis);
-    chorda_aedificator_appendere_literis(s, "\"\n");
+        "\"\n"
+        "nexus_signum () {\n"
+        "    echo \"$VEXILLA | $NEXUS_VEXILLA\"\n"
+        "    stat -f '%N %i %m %z' \"${NEXUS_OBIECTA[@]}\" \"$EXITUS\""
+        " 2>/dev/null\n"
+        "}\n"
+        "if [ -n \"${AEDILIS_NEXUS_SERVARE:-}\" ] && [ -f \"$EXITUS\" ]"
+        " \\\n"
+        "    && [ \"$(nexus_signum)\" = \"$(cat \"$EXITUS.nexus\""
+        " 2>/dev/null)\" ]; then\n"
+        "    echo \"  [nexus servatus] $EXITUS\"\n"
+        "else\n"
+        "    rm -f \"$EXITUS.nexus\"\n"
+        "    clang $VEXILLA \"${NEXUS_OBIECTA[@]}\" $NEXUS_VEXILLA"
+        " -o \"$EXITUS\" || exit 1\n"
+        "    if [ -n \"${AEDILIS_NEXUS_SERVARE:-}\" ]; then\n"
+        "        nexus_signum > \"$EXITUS.nexus\"\n"
+        "    fi\n"
+        "fi\n"
+        "echo \"AEDILIS STRUCTUM: $EXITUS\"\n");
 
     redde chorda_aedificator_finire(s);
 }

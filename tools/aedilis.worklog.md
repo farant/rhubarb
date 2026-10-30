@@ -944,3 +944,37 @@ Next layer (profile of the batch): silva lexing (`silva_lexare_cruda`), hash-tab
   "clang". A rule missing `varians` or `mandatum` refuses the whole config
   (fixture `probationes/fixa/aedilis_oraculum_mancum/`); a plant that
   skipped it instead went red.
+
+## 2026-10-30 — link kept when its signature is unchanged (budget B1 E10)
+
+The aedilis gate (446 tests) and the instrumenta gate (161 programs)
+re-ran every generated `struere.sh` in full, and the final `clang ...
+-o` always relinked, even when nothing had changed. The generated
+script now carries the link inputs as `NEXUS_OBIECTA=( ... )` plus
+`NEXUS_VEXILLA`. When `AEDILIS_NEXUS_SERVARE` is set, the link is
+skipped if `nexus_signum` (the compile and link flags, plus `stat -f
+'%N %i %m %z'` of every object and of the binary) matches
+`<binary>.nexus`, written right after the last successful link.
+
+Why identity and not `-nt`: aedilis restores objects from its
+thesaurus, so an object can come back with an OLD mtime while holding
+different bytes than what was linked. `-nt` would keep a stale binary.
+The inode changes on any replacement. Planted: dropping `%i` makes
+the gate's "same mtime, new inode" check reuse the binary (1110 instead
+of 1010).
+
+Opt-in on purpose. Only the two gates export the variable. Real tool
+builds (struere actions, installers) link every time, exactly as
+before, and never write a `.nexus` file. The script also regenerates
+on every gate run (timestamp in the header), so "binary newer than
+script" could never work; that's why the signature file exists.
+
+Not done: the constant provenance stamp from the E10 idea. The stamp
+source (`build/fabrica/provenientia/<prog>.c`) is rewritten only by
+real builds (`tools/provenientia_scribere.sh`), not by the smoke test,
+so it only recompiles programs whose real binary was rebuilt. Real
+provenance stays covered by probatio_provenientia.c and fabrica-fumus
+X.
+
+Measured (load ~10): instrumenta 76 → 59 s, aedilis 162 → 108-128 s
+(second runs).

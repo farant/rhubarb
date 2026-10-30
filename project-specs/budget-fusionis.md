@@ -70,7 +70,7 @@ oraculum-silvae 1.0).
 | E8 | `bin/compilator --plures`: compile misses in FILA chunks (serial since 2026-10-23) | 0.5-0.75 | S-M | LUCRUM 72a5f370 — 414 misses 70.5 → 29.2 s |
 | A4 | `materia_arbor_lexema_ex_tag`: tag → genus table built once per reader (15.7% of arbor_plagula) | 0.45-0.6 | S | LUCRUM d55701b0 (+7 computus golds: allocationes_arboris +3/doc) |
 | C2 | piscina allocation fast path (no udiv, no 12-register prologue; 10.4 → 4.0 ns) | 0.3-0.45 | S | LUCRUM 76d45eb5 (macro fix 20bd074d) |
-| E10 | instrumenta: skip relink when up to date; constant provenientia stamp in fumus | 0.3-0.5 | M | CANDIDATUM |
+| E10 | instrumenta: skip relink when up to date; constant provenientia stamp in fumus | 0.3-0.5 | M | LUCRUM (see V) — link skip only (stamp not needed); aedilis gate too |
 | A6 | oraculum-silvae: cache the PINNED oracle's output by content | 0.3-0.4 | M | LUCRUM (see V) — warm gate 91 → 42-45 s |
 | C3 | `chorda_aequalis_literis` compares while scanning (zero tests today — add first) | 0.25-0.35 | S | LUCRUM 3f011d2a (first tests of the function) |
 | C4 | hash-table growth re-places with the cached hash | 0.15-0.25 | S | LUCRUM c87ab9cb (174k-line differential identical) |
@@ -126,7 +126,8 @@ A7 = B7; B10+B12 ≈ C3; E7/E8 partly fold into E4; E5 shrinks to
 | D5 | 1272c226 | ASan cellae 212-318 → 120-133 s (D1-D5) | 4 KB temp pools |
 | D8 | cb5547a7 | pending | lentus section in its own suite (parallel) |
 | E1 | 4a938445 | pending | receipts sealed on content; PORTAE_CAPUT keep HEAD |
-| A6 | (this commit) | warm 91 → 42-45 s (load 13) | pignus cache keyed on objects + file sha |
+| A6 | 056c1b7e | warm 91 → 42-45 s (load 13) | pignus cache keyed on objects + file sha |
+| E10 | (this commit) | instrumenta 76 → 59 s, aedilis 162 → 108-128 s | link signature (flags + object identity), opt-in by gates |
 
 First measured merge after tier I (2026-10-30, quinta ff 0a2b4879;
 ONE sample, sexta committing concurrently; `mensor quaestio fusio`):
