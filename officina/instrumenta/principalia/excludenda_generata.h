@@ -97,7 +97,6 @@ interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
 
 interior constans character* constans EXCLUDENDA_TABULAE[] = {
     "_aequalis_literis_chorda",
-    "_friare_literis",
     "_invenire_slotum_literis",
     "tabula_dispersa_continet",
     "tabula_dispersa_continet_literis",

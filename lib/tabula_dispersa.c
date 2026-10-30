@@ -16,24 +16,15 @@ tabula_friare_fnv1a (
     redde friatio_fnv1a(clavis);
 }
 
-/* Friare literis C directe (pro evitare const cast) */
-interior i32
-_friare_literis (
-    constans character* cstr)
-{
-    redde friatio_fnv1a_literis(cstr, (i32)strlen(cstr));
-}
-
-/* Comparare literis C cum chorda */
+/* Comparare literis C cum chorda; mensura literarum a vocante SEMEL
+ * computata (budget B1 C6: olim strlen per slotum congruentem) */
 interior b32
 _aequalis_literis_chorda (
     constans character* cstr,
+                   i32  mensura_cstr,
                 chorda  clavis)
 {
-    i32 mensura_cstr;
     i32 i;
-
-    mensura_cstr = (i32)strlen(cstr);
 
     si (mensura_cstr != clavis.mensura)
     {
@@ -152,6 +143,7 @@ interior i32
 _invenire_slotum_literis (
         TabulaDispersa* tabula,
     constans character* cstr,
+                   i32  mensura_cstr,
                    i32  friatum,
                    b32* inventum)
 {
@@ -169,7 +161,7 @@ _invenire_slotum_literis (
         si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
         {
             si (   tabula->sloti[positus].hash_cachatum == friatum
-                && _aequalis_literis_chorda(cstr,
+                && _aequalis_literis_chorda(cstr, mensura_cstr,
                 tabula->sloti[positus].clavis))
             {
                 *inventum = VERUM;
@@ -463,6 +455,7 @@ tabula_dispersa_invenire_literis (
     constans character*  cstr,
                 vacuum** valor_out)
 {
+    i32 mensura;
     i32 friatum;
     i32 positus;
     b32 inventum;
@@ -472,11 +465,12 @@ tabula_dispersa_invenire_literis (
         redde FALSUM;
     }
 
-    /* Friare literis directe */
-    friatum = _friare_literis(cstr);
+    /* Friare literis directe - mensura SEMEL (budget B1 C6) */
+    mensura = (i32)strlen(cstr);
+    friatum = friatio_fnv1a_literis(cstr, mensura);
 
     /* Invenire slotum (comparare literis directe) */
-    positus = _invenire_slotum_literis(tabula, cstr, friatum,
+    positus = _invenire_slotum_literis(tabula, cstr, mensura, friatum,
         &inventum);
 
     si (inventum)

@@ -16,3 +16,12 @@ bench is cache-miss bound and barely moves; the win is the skipped
 hashing/compares visible in the profiles. probatio_tabula_dispersa 22/22,
 probatio_internamentum 9/9; plant (hash ^ 1 during re-placement) → :277
 lookup red. Amalgams regenerated.
+
+## 2026-10-28 — literal lookup measures the literal once (budget B1 C6)
+
+`tabula_dispersa_invenire_literis` hashed via `_friare_literis` (strlen)
+and then `_aequalis_literis_chorda` did strlen AGAIN on every slot whose
+cached hash matched. Now the length is computed once in
+invenire_literis, hashed with `friatio_fnv1a_literis(cstr, mensura)`, and
+passed down; `_friare_literis` is gone (officina's excludenda list
+regenerated accordingly). Plant (mensura + 1 passed down) → :816 red.

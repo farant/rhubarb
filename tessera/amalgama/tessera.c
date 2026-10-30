@@ -7054,6 +7054,19 @@ tessera_chorda_aedificator_appendere_character (
             character  c)
 {
     i8 ch = (i8)c;
+
+    /* VIA RAPIDA (budget B1 C5, 2026-10-28): octetus unus cum spatium
+     * adest - scriptio directa, non memcpy unius octeti per stubum
+     * (444 ex 1940 exemplis _appendere_interna in arbor_plagula).
+     * Spatium deest aut aedificator vacuus -> via communis (crescentia,
+     * appendix sui). */
+    si (   aedificator != NIHIL && aedificator->buffer != NIHIL
+        && aedificator->offset < aedificator->capacitas)
+    {
+        aedificator->buffer[aedificator->offset]  = ch;
+        aedificator->offset                       += I;
+        redde VERUM;
+    }
     redde _appendere_interna(aedificator, &ch, I);
 }
 
