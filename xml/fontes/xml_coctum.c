@@ -1873,40 +1873,58 @@ _parametrum_tractare (
             "entitas parametri se ipsam refert (WFC: No Recursion)");
         redde;
     }
-    si (profunditas >= (i32)XML_PROFUNDITAS_ENTITATUM)
+    /* X4: profunditas ET summa (parameter laughs: latitudo, non
+     * profunditas - 10^24 referentiae intra LXIV gradus) */
+    si (   c->limes_excessus
+        || profunditas >= (i32)XML_PROFUNDITAS_ENTITATUM
+        || c->summa_expansa + (memoriae_index)e->valor.mensura
+            > XML_SUMMA_EXPANSA)
     {
-        _culpa(c, t, NIHIL, XML_CODEX_LIMES,
-            "expansio entitatum limitem excedit (spec X4)");
+        si (!c->limes_excessus)
+        {
+            _culpa(c, t, NIHIL, XML_CODEX_LIMES,
+                "expansio entitatum limitem excedit (spec X4)");
+        }
+        c->limes_excessus = VERUM;
         redde;
     }
+    c->summa_expansa += (memoriae_index)e->valor.mensura;
     {
-          XmlParsura r;
-        MateriaNodus* fragmentum;
         constans MateriaToken* ancora = c->ancora;
 
-        fragmentum = xml_arbor_parsare_fragmentum(c->piscina,
-            (constans character*)e->valor.datum, (s32)e->valor.mensura,
-            XML_FRAGMENTUM_PARS_INTERNA, &r);
-        si (fragmentum == NIHIL)
-        {
-            c->memoria_defecit = VERUM;
-            redde;
-        }
         si (c->ancora == NIHIL)
         {
             c->ancora = t;
         }
-        si (!r.sana)
+        si (e->fragmentum == NIHIL)
         {
-            _culpa(c, t, NIHIL, XML_CODEX_CONTENTUM_ENTITATIS,
-                "textus substitutionis entitatis parametri"
-                " declarationes integras non fert");
+            /* parsatio SEMEL per entitatem */
+            XmlParsura r;
+
+            e->fragmentum = xml_arbor_parsare_fragmentum(c->piscina,
+                (constans character*)e->valor.datum,
+                (s32)e->valor.mensura, XML_FRAGMENTUM_PARS_INTERNA, &r);
+            si (e->fragmentum == NIHIL)
+            {
+                c->memoria_defecit = VERUM;
+                redde;
+            }
+            e->fragmentum_sanum = r.sana;
+            si (!r.sana)
+            {
+                _culpa(c, t, NIHIL, XML_CODEX_CONTENTUM_ENTITATIS,
+                    "textus substitutionis entitatis parametri"
+                    " declarationes integras non fert");
+            }
+            _lexemata_iudicare(c, e->fragmentum);
         }
-        _lexemata_iudicare(c, fragmentum);
-        e->in_expansione = VERUM;
-        _partem_iudicare(c, fragmentum, profunditas + I);
-        e->in_expansione  = FALSUM;
-        c->ancora         = ancora;
+        si (e->fragmentum_sanum)
+        {
+            e->in_expansione = VERUM;
+            _partem_iudicare(c, e->fragmentum, profunditas + I);
+            e->in_expansione = FALSUM;
+        }
+        c->ancora = ancora;
     }
 }
 
@@ -2038,6 +2056,7 @@ _coctus (
             c->memoria_defecit = VERUM;
             redde x;
         }
+        x->index = xar_numerus(parens->liberi);
         *(XmlCoctus**)xar_addere(parens->liberi) = x;
     }
     redde x;
@@ -3046,7 +3065,24 @@ xml_coquere (
     derivata = materia_diagnostica_derivare(piscina, arbor,
         &XML_REGISTRUM, &XML_DIAGNOSTICA, NIHIL, r.diagnostica);
 
-    /* II: lexemata, declaratio XML */
+    /* II: lexemata, declaratio XML; UTF-16 nominatur (X8): BOM, aut
+     * sine BOM '<?' in UTF-16 (XML 1.0 Appendix F: 3C 00 3F 00, 00 3C
+     * 00 3F) */
+    si (mensura >= IV)
+    {
+        insignatus character b0 = (insignatus character)fons[ZEPHYRUM];
+        insignatus character b1 = (insignatus character)fons[I];
+        insignatus character b2 = (insignatus character)fons[II];
+        insignatus character b3 = (insignatus character)fons[III];
+
+        si (   (b0 == 0xFF && b1 == 0xFE) || (b0 == 0xFE && b1 == 0xFF)
+            || (b0 == 0x3C && b1 == 0x00 && b2 == 0x3F && b3 == 0x00)
+            || (b0 == 0x00 && b1 == 0x3C && b2 == 0x00 && b3 == 0x3F))
+        {
+            _culpa(&c, NIHIL, arbor, XML_CODEX_CODIFICATIO,
+                "UTF-16 non sustinetur (spec X8)");
+        }
+    }
     _lexemata_iudicare(&c, arbor);
     n = _numerus(arbor, (i32)XML_DOCUMENTUM_LIBERI);
     per (k = ZEPHYRUM; k < n; k++)

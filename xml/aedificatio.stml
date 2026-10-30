@@ -7,8 +7,26 @@
      xml per 'bin/fabrica probare probationes_xml'. Planum xml-arbor
      P2. -->
 <aedificatio>
+  <!-- aurum oraculorum differentialium (planum P12): expat et libxml2
+       super silvestria, ex plagulis VIVIS regeneratum (manifestum eas
+       sigillo figit), numquam commissum; python et xmllint extra
+       repositorium per instrumenta declarata (exemplar
+       toml_aurum_silvestre) -->
+  <actio titulus="xml_aurum_silvestre" genus="generator">
+    <mandatum>
+      <verbum! (>./xml/aurum_silvestre.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="xml/aurum_silvestre.sh"/>
+    <ingressus genus="fasciculus" via="xml/instrumenta/expat_aurum.py"/>
+    <ingressus genus="fasciculus" via="xml/instrumenta/expat_canonicum.py"/>
+    <ingressus genus="fasciculus" via="xml/probationes/fixa/silvestria.manifestum"/>
+    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
+    <ingressus genus="instrumentum" via="/usr/bin/xmllint"/>
+    <exitus via="xml/build/aurum_silvestre.tsv" provenientia="regeneratio"/>
+  </actio>
   <actio titulus="probationes_xml" genus="iudicium">
     <probationes_c exemplar="xml/probationes/probatio_*.c"/>
+    <post actio="xml_aurum_silvestre"/>
     <!-- oraculum W3C: fracturae omnes / casus unus (manu) -->
     <ambitus variabilis="XMLTS_OMNIA"/>
     <ambitus variabilis="XMLTS_CASUS"/>

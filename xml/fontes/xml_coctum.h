@@ -90,6 +90,7 @@ structura XmlCoctus {
                        Xar* attributa; /* XmlAttributumCoctum, ordine */
                        Xar* liberi;    /* XmlCoctus*, ordine */
                  XmlCoctus* parens;
+                       i32  index;    /* locus in liberis parentis */
      constans MateriaNodus* nodus;    /* nodus arboris (NIHIL ex
                                        * entitate: nodus referentiae) */
 };

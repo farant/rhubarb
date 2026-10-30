@@ -615,6 +615,42 @@ collide with `include/xml.h` while that lives — e.g.
 
 **After P13 the MusicXML spec can start in parallel with P15.**
 
+**Executed 2026-10-30 (P12 and P13, one commit).** P12: golden
+`xml/build/aurum_silvestre.tsv` (never committed) written by
+`xml/aurum_silvestre.sh` → `xml/instrumenta/expat_aurum.py` as fabrica
+action `xml_aurum_silvestre` (python + xmllint declared as instruments;
+~90 s, regenerated only when its inputs change): per wild file, expat's
+verdict and the SHA-256 of its canonical form, and libxml2's verdict
+(storing the canonical forms themselves would have been the whole 333 MB
+corpus again). Gate `probatio_xml_differentia.c`: verdict vs expat, and
+canonical SHA vs expat's when both accept. Named divergences by CAUSE:
+`codificatio` (X8: non-UTF-8 or UTF-16 — now also BOM-less UTF-16 by the
+Appendix F signatures) and `libxml2` (expat disagrees, libxml2 sides
+with us; the spec decides where the oracles split — e.g. expat in NEVER
+mode never expands internal PEs, so it misses PE recursion). **Result:
+7,799 agree (canonical form included), 114 codificatio, 4 libxml2 with
+us, 0 unnamed discordances (pinned).** Found on the way: the first run
+did not finish in 10 minutes — `lol_param.xml` (parameter-entity
+billion laughs, width not depth) took 12 s and more: PE expansion had a
+depth limit only; it now counts against the X4 size budget and each
+PE's fragment is parsed once (as general entities already were).
+P13: `xml_documentum.{h,c}` — opaque `XmlDocumentum`
+(`xml_documentum_legere/successus/diagnostica/diagnostica_scribere/
+radix/coctum`) and accessors over `XmlCoctus` (`xml_nodi_genus,
+xml_titulus, xml_elementi_localis/spatium, xml_textus,
+xml_liberorum_numerus, xml_liberum, xml_filius, xml_frater` — O(1)
+sibling step via a new `XmlCoctus.index` — `xml_filiorum_numerus,
+xml_attributum, xml_attributum_spatii, xml_textus_internus`); names
+chosen not to collide with the old `include/xml.h`. **Header written
+without Fran's review (he was asleep and asked for continuous work):
+flagged for review.** Gate `probatio_xml_api.c` (walking, attributes,
+rendered diagnostics `x.xml:2:3`, extremes, NIHIL). Plants (all red):
+attribute namespace not compared, inner text without descendants, BOM-less
+UTF-16 not named, sibling name not compared (survived first — every
+sibling in the test shared the name; a mixed-sibling case added).
+
+---
+
 ## Task P14: Totality and the computus twin
 
 Transcribe toml Q11: generated fuzz cases (truncations, byte flips,

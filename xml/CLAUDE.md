@@ -29,6 +29,15 @@ with Fran). Ledger: parcum 01M65252W1DKBJE10VX0NBQDJH. It will replace
   (`probatio_xml_oraculum`, pinned; `XMLTS_CASUS=<ID>` prints one case's
   diagnostics, `XMLTS_OMNIA=1` every failure).
 
+- **P12 done**: differential vs expat/libxml2 over the wild corpus
+  (`probatio_xml_differentia`; golden `xml/build/aurum_silvestre.tsv` by
+  fabrica action `xml_aurum_silvestre`): 7,799 agree, 114 codificatio,
+  4 libxml2 with us, 0 unnamed.
+- **P13 done**: public API `fontes/xml_documentum.h` (opaque
+  `XmlDocumentum`; `xml_filius`/`xml_frater`/`xml_attributum`/
+  `xml_textus_internus` …). Use THIS, not `xml_coctum.h` internals, in
+  consumers. Header awaiting Fran's review (written overnight).
+
 ## The shape (P2, read before P4/P5)
 
 Borrowed from html: `<titulus` and `</titulus` are single tokens; `>`
