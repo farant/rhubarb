@@ -1,0 +1,13 @@
+<!-- xml/aedificatio.stml - declarationes aedificationis xml (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Exemplar html/aedificatio.stml: suita xml ut compositum
+     probationes_xml - quaeque probatio actio sua (clausura aedilis,
+     thesaurus, area, ambitus basis, vestigium suum), verdictum
+     clavatum iis quae legit. Ianua xml/compile_probationes.sh et porta
+     xml per 'bin/fabrica probare probationes_xml'. Planum xml-arbor
+     P2. -->
+<aedificatio>
+  <actio titulus="probationes_xml" genus="iudicium">
+    <probationes_c exemplar="xml/probationes/probatio_*.c"/>
+  </actio>
+</aedificatio>

@@ -1198,6 +1198,21 @@
     <exitus via="toml/fontes/toml_registrum_coctum.c" provenientia="regeneratio"/>
     <exitus via="toml/fontes/toml_registrum_coctum.h" provenientia="regeneratio"/>
   </actio>
+  <actio titulus="registrum_xml" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>xml/grammatica/xml.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
+    <ingressus genus="fasciculus" via="xml/grammatica/xml.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="xml/fontes/xml_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="xml/fontes/xml_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
   <actio titulus="capsula_assets" genus="generator">
     <mandatum>
       <verbum! (>./tools/capsula_regenerare.sh

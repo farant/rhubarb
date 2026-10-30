@@ -149,14 +149,14 @@ test in the named task.
 - Produces: the canonical-form contract every later oracle uses
   (spec §I, read from the suite's `out/` files in Step 2).
 
-- [ ] **Step 1: The fetcher** — `xmlts_arcessere.sh`: curl the tarball
+- [x] **Step 1: The fetcher** — `xmlts_arcessere.sh`: curl the tarball
   from the URL in spec §I into `xml/build/`, refuse unless sha256
   matches, unpack into `xml/build/xmlts/` (fresh directory each
   time), write nothing else. Manifest = `shasum -a 256` over every
   unpacked file, sorted by path; `PROVENIENTIA.md` records URL, date,
   tarball sha256, file count, and the licence finding with James
   Clark's sentence quoted.
-- [ ] **Step 2: The catalogue reader** — port the throwaway counter
+- [x] **Step 2: The catalogue reader** — port the throwaway counter
   (scratchpad `xmlts_scripta/catalogus.py`) into
   `xmlts_catalogus.py`: resolve the 21 sub-catalogues by their entity
   declarations, wrap fragment catalogues (sun) in a root, apply the
@@ -165,24 +165,24 @@ test in the named task.
   error 27; 387 outputs). Read five `out/` files of each form and
   write the canonical-form rules into PROVENIENTIA (attribute order,
   escapes, what is dropped, the NOTATION DOCTYPE of the second form).
-- [ ] **Step 3: The expat harness** — `expat_canonicum.py <via>`:
+- [x] **Step 3: The expat harness** — `expat_canonicum.py <via>`:
   pyexpat with `SetParamEntityParsing(XML_PARAM_ENTITY_PARSING_NEVER)`
   and no external entity handler; on success print the canonical
   form, on error `INVALIDUM: <line>:<col> <msg>` and exit 1.
   `xmllint --noout --nonet <via>` gives libxml2's verdict.
-- [ ] **Step 4: Measure the oracles against the suite** — over the
+- [x] **Step 4: Measure the oracles against the suite** — over the
   selection: expat's and libxml2's accept/reject against each case's
   TYPE, expat's canonical output against each `out/` file. Record
   both agreement rates and every disagreement in PROVENIENTIA — the
   credibility of oracle 2, measured before we depend on it.
-- [ ] **Step 5: The wild corpus** — find `*.xml *.svg *.plist *.xhtml
+- [x] **Step 5: The wild corpus** — find `*.xml *.svg *.plist *.xhtml
   *.xsd *.xsl` under `~/Documents/projects` (excluding `build/`,
   `node_modules/`, worktree duplicates by hash) and `/opt/homebrew`,
   plus text plists under `/System/Library/CoreServices`; keep files
   that start (after an optional BOM) with `<`; deduplicate by sha256.
   Record count, bytes, largest, and **how many are not UTF-8** (spec
   AUDIENDA, X8). Manifest = `sha256  path`.
-- [ ] **Step 6: Commit** (no C yet).
+- [x] **Step 6: Commit** (no C yet).
 
 ```python
 silva.commissio("xml: materia oraculi - xmlts20130923 per arcessitorem (sha256; licentia non sinit redistributionem: manifestum solum), selectio MMI casuum (XML 1.0 ed. V, NS 1.0), generator formae canonicae per expat, concordia expat/libxml2 mensurata; corpus silvestre (manifestum)\n\nCo-Authored-By: ...",
@@ -191,6 +191,21 @@ silva.commissio("xml: materia oraculi - xmlts20130923 per arcessitorem (sha256; 
      "xml/instrumenta/xmlts_catalogus.py", "xml/instrumenta/expat_canonicum.py",
      "xml/probationes/fixa/silvestria.manifestum", "xml/CLAUDE.md"], [])
 ```
+
+**Executed 2026-10-30 (615a5ee8).** Selection 2,001 as predicted;
+exclusions by cause in `selectio.tsv` (codificatio 51, sine-spatiis 9,
+entitas-externa 60, exitus-externus 67) → 1,861 verdicts + 308 outputs
+judged. Deviations: the selection TSV is COMMITTED as data under
+`fixa/xmlts/` (IDs and paths only, no suite content) so the C gate
+needs no Python; every data file carries `DATA` on line 1, not
+`GENERATUM` (the generata gate would demand a producing action, and
+these depend on a download or on this machine's disk); manifest
+hashing batched in one `shasum` (one per file took minutes). Oracle
+credibility: expat 1,548/1,861 — all misses its editions 1–4 name
+rules; libxml2 1,837/1,861 — namespace errors not fatal, plus one
+external-entity case; expat canonical output 308/308 after placing the
+second form's DOCTYPE at its document position. Wild corpus 7,931
+unique files (333 MB, 123 not UTF-8); the manifest is 2.0 MB.
 
 ---
 
@@ -206,10 +221,10 @@ silva.commissio("xml: materia oraculi - xmlts20130923 per arcessitorem (sha256; 
 - Modify: `pythonica/silva.py` (`PORTAE['xml']`, `FORMAE['xml']`,
   `SUITAE['xml']`), `xml/CLAUDE.md`
 
-- [ ] **Step 1: Measure the vocabulary against spec §IV** — every
+- [x] **Step 1: Measure the vocabulary against spec §IV** — every
   production of XML 1.0 §2–§4 that the suite's not-wf cases exercise
   has a home; a genus is added only with a cause in the commit.
-- [ ] **Step 2: The declaration** — genera in this order, loci in
+- [x] **Step 2: The declaration** — genera in this order, loci in
   byte order (final Latin names checked by the lint first):
   `documentum` (liberi, cauda) · `declaratio-xml` (tok_apertura,
   pseudo-attributa, tok_clausura) · `doctype` (titulus, id_externum,
@@ -223,9 +238,9 @@ silva.commissio("xml: materia oraculi - xmlts20130923 per arcessitorem (sha256; 
   (partes: text and references, quotes) · `textus` · `referentia` ·
   `cdata` · `commentarium` · `instructio` · `malum`. `absentia=`
   messages for missing `>`, `=`, a value, an end tag.
-- [ ] **Step 3: Generate**, recens check, read the generated header.
-- [ ] **Step 4: Slot enums** (`xml_registrum.h`), one per genus.
-- [ ] **Step 5: The lexicon** — token genera by mode (spec §III):
+- [x] **Step 3: Generate**, recens check, read the generated header.
+- [x] **Step 4: Slot enums** (`xml_registrum.h`), one per genus.
+- [x] **Step 5: The lexicon** — token genera by mode (spec §III):
   content (`TEXTUS`, `REFERENTIA_ENTITATIS`, `REFERENTIA_DECIMALIS`,
   `REFERENTIA_HEXADECIMALIS`, `CDATA`, `COMMENTUM`, `INSTRUCTIO`),
   tag (`TAG_APERTURA` `<`, `TAG_FINIS_APERTURA` `</`, `TITULUS`,
@@ -234,16 +249,47 @@ silva.commissio("xml: materia oraculi - xmlts20130923 per arcessitorem (sha256; 
   `DECLARATIO_APERTURA` per keyword, `REFERENTIA_PARAMETRI`,
   `SUBSETUM_APERTURA`/`CLAUSURA`, keywords and literals), trivia
   (`SPATIUM` in tags and declarations only, `LINEA`), `IGNOTUM`.
-- [ ] **Step 6: The runner** — copy toml's, rename; `RADIX_FONTES`
+- [x] **Step 6: The runner** — copy toml's, rename; `RADIX_FONTES`
   gains `utf8`.
-- [ ] **Step 7: The failing registrum probatio** — transcribe
+- [x] **Step 7: The failing registrum probatio** — transcribe
   `probatio_toml_registrum.c` (lexicon order, genus order, recens
   gate, loci contiguity, slot enums against titles, munus facts, one
   minimal tree `<a/>` through writer → reader → writer byte-equal).
-- [ ] **Step 8: Register in pythonica now.**
-- [ ] **Step 9: Red, then green; plants** (two lexicon rows swapped;
+- [x] **Step 8: Register in pythonica now.**
+- [x] **Step 9: Red, then green; plants** (two lexicon rows swapped;
   one generated byte).
-- [ ] **Step 10: Words, format, commit** (portae `xml`, `pythonica`).
+- [x] **Step 10: Words, format, commit** (portae `xml`, `pythonica`).
+
+**Executed 2026-10-30.** Vocabulary re-cut against html's client, which
+already solved XML-shaped markup: `<titulus` and `</titulus` are ONE
+token each (XML forbids space after `<`), `>` and `/>` their own; the
+`elementum` genus carries tok_apertura · attributa · tok_finis · liberi
+· tok_clausura · tok_clausura_finis (html's shape) — no separate tag
+genera, and NO `absentia` on the end tag: an empty element (`/>`)
+legitimately has none, so a missing or mismatched end tag is the
+builder's diagnostic (WFC: Element Type Match), not a derived one.
+DTD declarations are ONE genus `declaratio` (opening token + list of
+part tokens + `>`); `xml_dtd` reads their meaning (X2). Whitespace in
+content AND in prolog/epilog is `textus` (the lexer never tracks depth;
+cooking skips whitespace-only top-level text and refuses the rest);
+trivia = `SPATIA` only, inside tags and declarations; comments and PIs
+are content. Result: **15 genera, 33 loci; 25 token genera** (prefix
+`xml-`; one REFERENTIA for `&name;`/`&#N;`/`&#xH;`, html's choice;
+munus LINEA absent). Wiring found by reading toml/html as built, not
+the toml plan (the runner world moved since): `aedilis.stml` gains
+`xml/fontes` NOW (each probatio is a `bin/fabrica` action with an
+aedilis closure), `fabrica.stml` gains `<subsystema via="xml"/>`, the
+root `aedificatio.stml` gains action `registrum_xml`, `xml/
+aedificatio.stml` declares `probationes_xml`, pythonica gains PORTAE /
+FORMAE / PORTAE_GRADUUM / SUITAE / mensor prefix. `bin/fabrica` had to
+be rebuilt in-tree first (`./tools/fabrica_struere.sh` — build only,
+no install). Gate green first run: 236 assertions. Plants: two lexicon
+rows swapped → red; COMMENTARIUM made trivium → red; a byte in the
+generated table → **stayed green, by design**: `bin/fabrica` regenerates
+the table from its declaration (`SANATUM registrum_xml`) before the test
+runs, so the rancor check now guards declaration/commit drift and the
+plant moved to the DECLARATION (a slot renamed → red on the named-slot
+table); all reverted green, tables recens.
 
 ---
 

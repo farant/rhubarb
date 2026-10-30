@@ -10,7 +10,25 @@ with Fran). Ledger: parcum 01M65252W1DKBJE10VX0NBQDJH. It will replace
 
 ## Status
 
-- **P1 (oracle material) done.** No C yet.
+- **P1 (oracle material) done.**
+- **P2 (scaffold) done**: declaration `grammatica/xml.registrum.stml`
+  → GENERATED `fontes/xml_registrum_coctum.{h,c}` (15 genera, 33 loci;
+  `bin/fabrica` regenerates them itself, action `registrum_xml`); slot
+  enums by hand in `fontes/xml_registrum.h`; lexicon (25 token genera,
+  prefix `xml-`) in `fontes/xml_lexicon.{h,c}`; runner
+  `./xml/compile_probationes.sh [filtrum]` (thin door to `bin/fabrica
+  probare probationes_xml`); gate `xml` in pythonica.
+
+## The shape (P2, read before P4/P5)
+
+Borrowed from html: `<titulus` and `</titulus` are single tokens; `>`
+and `/>` their own. `elementum` = tok_apertura · attributa · tok_finis
+· liberi · tok_clausura · tok_clausura_finis; an empty element stops
+after tok_finis `/>`. End-tag errors are the builder's (no `absentia`).
+Whitespace in content and in prolog/epilog is `textus`; trivia
+(`SPATIA`) only inside tags and declarations; comments and PIs are
+content. DTD declarations: one genus `declaratio` (opening token, part
+tokens, `>`), meaning read by `xml_dtd` (P8).
 
 ## Oracles (P1)
 
