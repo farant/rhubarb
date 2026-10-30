@@ -421,6 +421,7 @@
     <forma textus="interpolatione" casus="ablativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
   <vocabulum lemma="lagrange" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J.-L. Lagrange (interpolatio Lagrange, polynomium per puncta; lib/interpolatio.c)"/>
+  <vocabulum lemma="temperley" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: H. N. V. Temperley (algebra Temperley-Lieb TL_n, moduli standard; lib/temperley.c)"/>
   <vocabulum lemma="tensor" lingua="latina" classis="substantivum" nota="Latina posterior: tensor, -oris m., qui tendit (tendo); mathematica: tabula multilinearis super indices (lib/contractio.c)">
     <forma textus="tensor" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="tensoris" casus="genitivus" numerus="singularis" genus="masculinum"/>

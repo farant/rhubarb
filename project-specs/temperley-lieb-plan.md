@@ -1,6 +1,6 @@
 # temperley and the TL bracket in laqueus: plan (D136 T4, step 1)
 
-Status: v2 after design review (2026-10-30), awaiting Fran's approval.
+Status: v2 APPROVED by Fran (2026-10-30); T1 under way.
 v1 (ca3b3fee) was approved by Fran on the API's shape, the library
 split, the name and the strand cap. The review (verdict "approve after
 fixes": H1–H2, X1, M1–M2, Q1–Q6) is at the end, with what each finding

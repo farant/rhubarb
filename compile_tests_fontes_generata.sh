@@ -342,6 +342,7 @@ declare -a SOURCE_FILES=(
     "lib/tabula_nodorum.c"
     "lib/tabula_nodorum_data.c"
     "lib/tcp_posix.c"
+    "lib/temperley.c"
     "lib/tempestivum.c"
     "lib/tempus.c"
     "lib/terminale.c"
