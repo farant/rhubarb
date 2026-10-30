@@ -168,6 +168,25 @@ ranked by how much it bears on KC 47.
   Corrected in place: the header's grades, 60.2.2 (1.32, pinned),
   60.5.obj.1.1 (answered). No address removed or renumbered.
 
+- **D134 (2026-10-20).** Appended 61 to Part XI: umbra width and
+  depth of D131's toy world, extended to six words; competition makes
+  the garden paths (registered U2a holds), retrieval does not "add
+  nothing" (U2b fails: interfered genitives are misread less), Latin
+  keeps under two thirds of the ideal's retrieval (U1 fails narrowly).
+  The demo's own review is task T4, after these nodes were written.
+
+- **D134 review (T4, 2026-10-20).** The reviewer's own oracle (C,
+  trees first) reproduced every pinned total and counted the six-word
+  population exhaustively; no wrong verdict; no H. Marked [falls] with
+  corrected children: 61.5.1.1 (61.5.1.3: the genitive reversal is R_P's
+  fallback on strings with no projective analysis), 61.8 (61.8.1).
+  Appended: 61.3.2.1 (head-first depth 0 is a theorem), 61.5.1.3,
+  61.6.1.2 (the five-word U1 is reading-dependent), 61.8.1. Corrected in
+  place: the header's grades, 61.3.2 (its grade note), 61.4.1 (the
+  strata named), 61.5.1.2 (answered), 61.6.1 (22.81, 17.49), 61.6.1.1
+  (82.93%, 55.45%; the syncretism clause marked as interpretation). No
+  address removed or renumbered.
+
 ## Part I. Definitions
 
 ```text
@@ -1820,4 +1839,157 @@ ranked by how much it bears on KC 47.
 60.6.2. Would a registered test of the gap case, on data whose
         annotation does not follow nearest agreement, confirm it?
         [open] (a successor demo)
+61. What does a left-to-right reader carry in D131's toy world, and
+    what makes a displaced word misread: a nearer word its endings also
+    fit (COMPETITION), or an arriving word that cannot single out its
+    partner among the open ones (RETRIEVAL)? (D134, proposal N17;
+    brainstorm XV. D131's world (58) copied and extended to six words:
+    816,286,080 pairs, every one counted. Grades: [exact] up to five
+    words = pinned from D134's independent oracle, oracle_d134.py,
+    exhaustive; [exact] at six words = the demo's exhaustive count, of
+    which the oracle re-derives a fixed 1/128 subset of the bags, and
+    which the T4 review's own oracle (rec.c, trees first) re-derives
+    EXHAUSTIVELY, every compared number agreeing. Registered verdicts at
+    six words, on the pairs of exactly six words)
+61.1. An UMBRA is an arc whose earlier endpoint promised it: DANGLING
+      (dependent first), SLOT (head first, relation nsubj, obj or
+      iobj), ROOT (opened at boundary 0, closed at the verb). An
+      optional dependent after its head is a BACKWARD ATTACHMENT, not
+      an umbra. WIDTH: the most umbrae open at one boundary. DEPTH of an
+      umbra: the umbrae opened strictly inside its span that outlive
+      it. [definition]
+61.2. On a displaced arc (58.1): COMPETED iff some word other than the
+      head, outside d's own subtree, at least as near as the head, fits
+      d by its endings; RETRIEVED iff, when the later end arrives, no
+      open dangling umbra other than those it closes (dependent first),
+      or no earlier word other than the head (head first), could take
+      the arc. B is D131's garden-path share of R_P (58.4). [definition]
+61.3. How many umbrae does a reader carry?
+61.3.1. At most six at once up to six words (five on a crossed pair);
+        depth at most 3. Six-word pairs: mean width 3.25 projective,
+        3.41 crossed; 18.39% of umbrae have depth >= 1. Width and depth
+        are the same at every morphology level. [exact] (D134 Part B)
+61.3.2. A head-first displaced word costs no depth: every umbra of a
+        pair whose displaced arcs are all head first has depth 0; where
+        some arc is dependent first, 27.6-42.1% of umbrae have depth
+        >= 1. [exact] (D134 Part B; a theorem, 61.3.2.1)
+61.3.2.1. Every crossing of two umbrae involves a dependent-first
+          displaced arc, so all depth - the root's included - comes from
+          dependent-first displacement. Two crossing tree arcs (the root
+          arc as (0, verb)) always include one non-projective by the
+          per-arc test; in this world that is an amod or nmod arc
+          (58.2); head first it is a backward attachment, not an umbra;
+          so the crossing umbra is a dangling, dependent-first displaced
+          arc. [proved] (T4 review L1; 0 of 230,068,224 all-head-first
+          six-word pairs has depth >= 1)
+61.3.3. Exactly half the displaced arcs are dependent first. [proved]
+        (reversing a string keeps the pair, its displaced arcs and their
+        kind, and swaps the directions; checked to six words)
+61.4. Do garden paths follow competition?
+61.4.1. Yes: in every testable stratum competed pairs are misread far
+        more often than clear ones, +16.04 to +77.26 points (adjectives
+        only, dependent or head first, +45.19; genitives only +77.26). Registered U2a HOLDS (8
+        testable strata, 5 independent: each dependent-first stratum
+        and its head-first mirror carry the same numbers, since
+        competition and B are reversal-invariant). [exact] (D134 Part B)
+61.4.1.obj.1. Objection: U2a is near-tautological - a nearer fitting
+              word is exactly what a projective alternative attaches
+              to.
+61.4.1.obj.1.1. Reply: granted; it was registered as a positive
+                control, partly implied by the definitions (61.7), and
+                is not evidence for a mechanism. Its use is that a
+                failure would have shown the labels wrong.
+61.4.2. For adjectives the endings do the sorting: a morphology-blind
+        label (any noun as near competes) calls almost every
+        adjectives-only pair competed and those are misread 12.65%,
+        the real competed ones 46.22%. For genitives the two labels
+        nearly coincide (82.53% against 82.38%): a genitive's ending
+        names no head (58.4.4). [exact] (D134 Part B, descriptive)
+61.5. Does retrieval add nothing once competition is fixed?
+61.5.1. No. Registered U2b FAILS on its two counting cells: displaced
+        adjectives, competed, interfered 49.75% against retrieved
+        45.89% (+3.86, inside the bound); displaced genitives,
+        competed, interfered 73.83% of 27,986,240 against retrieved
+        84.13% of 136,687,296 (-10.30). [exact] (D134 Part B)
+61.5.1.1. Interference PROTECTS a displaced genitive: the gap has the
+          same sign at the ideal level (62.87% against 83.02%, -20.15),
+          so it is not syncretism; up to five words it is -8.05, while
+          adjectives (+10.03) and mixed pairs (+35.44) go the predicted
+          way. [exact] (D134 Part B, descriptive) [falls: the numbers
+          stand, "protects" does not; see 61.5.1.3]
+61.5.1.2. Why? An untested guess: the extra open noun is the one a
+          nesting reader would hang the genitive on, and its being still
+          unattached blocks the projective alternative. [open] (answered
+          by 61.5.1.3: wrong in its first clause, right in its second)
+61.5.1.3. A configuration effect of R_P's fallback, not retrieval. Of
+          the 27,986,240 interfered genitive pairs, 7,578,272 have a
+          GENITIVE interferer that no projective alternative uses
+          (neither hanging d on it nor it on h): misread 5.95%, because
+          94.05% have no projective analysis at all - genitives
+          interleaved cross-serially and stranded across the verb
+          (donorum amat regis puella donum), where R_P cannot misread.
+          The other 20,407,968 are misread 99.04%, MORE than the
+          retrieved pairs (84.13%), as interference predicts; where a
+          projective alternative hangs d on an interferer (16,484,368),
+          always. Up to five words: 3.30% of 23,296, 98.35% of 70,016,
+          retrieved 82.67%. [exact] (D134 Part B since the T4 fixes,
+          pinned from the T4 review's own oracle; T4 review M1)
+61.6. Do Latin's endings keep most of the ideal's retrieval?
+61.6.1. Not two thirds: over the 193,351,680 displaced adjective arcs of
+        six-word crossed pairs, the share RETRIEVED is L1 94.86%, L0
+        83.45%, L2 62.72%; Latin keeps 64.5% of the gap between ideal
+        and case-stripped. Registered U1 FAILS (20.73 points against
+        the 22.81 required; the 5-point floor holds). Up to five words
+        it holds (19.09 against 17.49; see 61.6.1.2). [exact] (D134
+        Part B; 22.81 and 17.49 corrected from differences of rounded
+        shares in T4, now printed by the demo)
+61.6.1.1. By direction: dependent first Latin keeps 82.93%, head first
+          55.45%. [exact] (D134 Part B, printed since the T4 fixes;
+          corrected from 83.0% and 55.5%) (an adjective arriving after
+          its head may fail by its own syncretism: [interpretation],
+          not decomposed - T4 review L3)
+61.6.1.2. The five-word "holds" depends on reading U1 over all crossed
+          pairs (fixed in T2, disclosed). Over the registered population
+          (L0 |F| >= 2, the same arcs labelled at each level) U1 fails at
+          both lengths: 15.72 against 27.56 up to five words, 19.96
+          against 25.07 at six. The six-word verdict holds either way.
+          [exact] (D134 Part B since the T4 fixes, pinned from the T4
+          review's own oracle; T4 review M2)
+61.6.2. Head-first genitives are almost never retrieved (3.21% at L0,
+        3.71% at L1): some earlier noun nearly always could take them.
+        Dependent first, 88.37%. [exact] (D134 Part B)
+61.6.3. Retrieval can fail through the subject: -ae is nominative
+        plural and genitive singular, so an open plural subject is a
+        candidate for every noun arriving before the verb (bonum
+        puellae dominum amant). [exact] (D134 hand sentence 9; the
+        four-word string by oracle_d134.py's functions)
+61.7. Is every misread pair whose projective alternative moves a
+      displaced word to a word as near as its head COMPETED? (the plan's
+      re-check M1)
+61.7.1. No: 1,536 pairs up to five words, 560,472 at six, are CLEAR.
+        Every one is a reversed dependency (domini dominorum amant
+        domini dominos: the alternative hangs dominorum on domini), the
+        nearer word lying in d's own subtree, which competition excludes
+        because attaching there in the true tree closes a cycle. [exact]
+        (D134 Part B)
+61.7.2. True instead: covered from outside d's own subtree => COMPETED.
+        [proved] (the alternative's readings satisfy the relation, so
+        the endings fit; checked on every pair, 0 exceptions)
+61.7.3. 99.81% of the misread six-word pairs are covered (0.29% by a
+        reversed dependency); the CLEAR misreads are mostly reversed
+        dependencies (560,472) and role changes that keep every
+        displaced word on its head (423,370). [exact] (D134 Part B)
+61.8. So in this world garden paths follow competition, and the endings
+      matter for adjectives because they decide who competes; retrieval,
+      the memory side, matters with opposite signs by kind, and the umbra
+      stack is shallow (depth at most 3). [interpretation] [falls:
+      "opposite signs by kind" rests on 61.5.1.1; see 61.8.1]
+61.8.1. So in this world garden paths follow competition, and the endings
+        matter for adjectives because they decide who competes; where a
+        projective alternative exists, interference raises misreading
+        for genitives as for adjectives (61.5.1.3), and the apparent
+        protection is R_P's fallback on strings with none. The umbra
+        stack is shallow (depth at most 3), and only dependent-first
+        displacement deepens it (61.3.2.1). [interpretation] (T4 review
+        M1, L1)
 ```

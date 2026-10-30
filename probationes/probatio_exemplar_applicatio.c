@@ -29,6 +29,7 @@
 #include "exemplar_nucleus.h"
 #include "custodia.h"
 #include "communio_servus.h"
+#include "epistula.h"
 #include "cives.h"
 #include "admissio.h"
 #include "scrinium.h"
@@ -2953,6 +2954,170 @@ _sectio_communio (CredoContextus* c)
     _finire(e, &locus);
 }
 
+/* communio plan-3 T5: exemplar cum provisore epistularum ficto -
+ * administrator epistulam permittit (persona nova creatur), apparatus
+ * per epistulam inscribitur; sine clave Resend servus tamen incipit */
+interior Exemplar*
+_exemplar_epistulae (
+             CredoContextus* c,
+                      Locus* locus,
+         constans character* provisor)
+{
+    ExemplarConfiguratio cfg;
+                Exemplar* e;
+               character  n[MONETA_NANOID_PLAGULAE_MENSURA];
+
+    (vacuum)moneta_nanoid_plagulae(n);
+    sprintf(locus->via, "/tmp/exemplar_%s", n);
+    memset(&cfg, ZEPHYRUM, magnitudo(cfg));
+    cfg.via_datorum         = locus->via;
+    cfg.provisor_epistulae  = provisor;
+    e                       = exemplar_creare(&cfg, c->piscina);
+    si (e)
+    {
+        sprintf(locus->origo, "Origin: http://127.0.0.1:%u\r\n",
+            (insignatus integer)hospitium_portus(
+            exemplar_hospitium(e)));
+    }
+    redde e;
+}
+
+/* chorda post signum usque ad finem lineae */
+interior chorda
+_post_signum (
+                chorda  textus,
+    constans character* signum)
+{
+    chorda r;
+       i32 n;
+       i32 i;
+       i32 j;
+
+    r.datum    = NIHIL;
+    r.mensura  = ZEPHYRUM;
+    n          = (i32)strlen(signum);
+    per (i = ZEPHYRUM; i + n <= textus.mensura; i++)
+    {
+        si (memcmp(textus.datum + i, signum, (size_t)n) == ZEPHYRUM)
+        {
+            j = i + n;
+            dum (j < textus.mensura && textus.datum[j] != '\n')
+            {
+                j++;
+            }
+            r.datum    = textus.datum + i + n;
+            r.mensura  = j - (i + n);
+            redde r;
+        }
+    }
+    redde r;
+}
+
+interior vacuum
+_sectio_inscriptio (CredoContextus* c)
+{
+            Piscina* p = c->piscina;
+              Locus  locus;
+           Exemplar* e = _exemplar_epistulae(c, &locus, "fictus");
+             Lector  l;
+          JsonValor* r;
+       Epistularius* ep;
+    EpistulaNuntius  n;
+          character  tessera[XLIV];
+          character  digestum[LXV];
+          character  corpus[CCCLXXXIV];
+          character  caput[CXXVIII];
+             chorda  id;
+             chorda  codex;
+                i32  k;
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_GRADUS("permittere: persona nova creatur");
+    r = _administrare(e, &locus, "communio_epistulam_permittere",
+        "{\"epistula\":\"Amanda@Example.org\",\"nomen\":\"amanda\","
+        "\"titulus\":\"Amanda\",\"spatium\":\"familia\"}", p);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(_vitium_administrationis(r));
+    r = _administrare(e, &locus, "cives_enumerare", "{}", p);
+    CREDO_VERUM(chorda_continet(_textus_administrationis(r),
+        chorda_ex_literis("amanda", p)));
+    r = _administrare(e, &locus, "communio_permissos_enumerare", "{}",
+        p);
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(_structura(r),
+        "permissi.0.epistula")), "amanda@example.org");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(_structura(r),
+        "permissi.0.nomen")), "amanda");
+
+    CREDO_GRADUS("intrare: 202 et epistula ficta");
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    sprintf(corpus, "{\"epistula\":\"amanda@example.org\",\"digestum\":"
+        "\"%s\",\"titulus\":\"iPhone\"}", digestum);
+    CREDO_VERUM(_rogare_et_legere(e, p, "POST /communio/intrare",
+        "Content-Type: application/json\r\n", corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CCII);
+    id = json_ad_chorda(json_via(_json_corporis(&l, p), "aditus"));
+    CREDO_AEQUALIS_I32(id.mensura, XXVI);
+    ep = exemplar_epistularius(e);
+    CREDO_NECESSE_NON_NIHIL(ep);
+    per (k = ZEPHYRUM; epistularius_fictus_numerus(ep) == ZEPHYRUM
+        && k < C;
+         k++)
+    {
+        _pumpare(e, I);
+    }
+    CREDO_NECESSE(epistularius_fictus_nuntius(ep, ZEPHYRUM, &n));
+    CREDO_CHORDA_AEQUALIS_LITERIS(n.a, "communio@golden.earth");
+    CREDO_CHORDA_AEQUALIS_LITERIS(n.ad, "amanda@example.org");
+    codex = _post_signum(n.textus, "Code: ");
+    CREDO_AEQUALIS_I32(codex.mensura, IX);
+
+    CREDO_GRADUS("confirmare; tessera valet");
+    sprintf(corpus, "{\"aditus\":\"%.*s\",\"codex\":\"%.*s\"}",
+        (integer)id.mensura, (constans character*)id.datum,
+        (integer)codex.mensura, (constans character*)codex.datum);
+    CREDO_VERUM(_rogare_et_legere(e, p, "POST /communio/confirmare",
+        "Content-Type: application/json\r\n", corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+    sprintf(caput, "Authorization: Bearer %s\r\n", tessera);
+    CREDO_VERUM(_rogare_et_legere(e, p, "GET /communio/acta?post=0",
+        caput,
+        NIHIL, &l));
+    CREDO_AEQUALIS_I32(l.status, CC);
+
+    CREDO_GRADUS("revocare");
+    CREDO_FALSUM(_vitium_administrationis(_administrare(e, &locus,
+        "communio_epistulam_revocare",
+        "{\"epistula\":\"amanda@example.org\"}", p)));
+    CREDO_VERUM(_vitium_administrationis(_administrare(e, &locus,
+        "communio_epistulam_revocare",
+        "{\"epistula\":\"nemo@example.org\"}",
+        p)));
+    _finire(e, &locus);
+}
+
+interior vacuum
+_sectio_sine_clave (CredoContextus* c)
+{
+     Piscina* p = c->piscina;
+       Locus  locus;
+    Exemplar* e = _exemplar_epistulae(c, &locus, NIHIL);
+      Lector  l;
+   character  tessera[XLIV];
+   character  digestum[LXV];
+   character  corpus[CCLVI];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_NIHIL(exemplar_epistularius(e));
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    sprintf(corpus,
+        "{\"epistula\":\"x@example.org\",\"digestum\":\"%s\","
+        "\"titulus\":\"x\"}", digestum);
+    CREDO_VERUM(_rogare_et_legere(e, p, "POST /communio/intrare",
+        "Content-Type: application/json\r\n", corpus, &l));
+    CREDO_AEQUALIS_I32(l.status, CCII);
+    _finire(e, &locus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_invitatione", _sectio_sine_invitatione, NIHIL, NIHIL, NIHIL,
@@ -2990,6 +3155,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "adm_status", _sectio_administratio_status, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "communio", _sectio_communio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "communio_inscriptio", _sectio_inscriptio, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "communio_sine_clave", _sectio_sine_clave, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "adm_invitare", _sectio_administratio_invitare, NIHIL, NIHIL,
         NIHIL,
         NIHIL },

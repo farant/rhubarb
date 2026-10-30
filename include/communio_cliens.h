@@ -34,6 +34,7 @@
 #include "chorda.h"
 #include "volumen.h"
 #include "reactor.h"
+#include "moneta.h"
 
 nomen structura CommunioCliens CommunioCliens;
 
@@ -122,5 +123,45 @@ b32
 communio_tesseram_legere (
      constans character* via,
               character  exitus[XLIV]);
+
+
+/* ==================================================
+ * Inscriptio per epistulam (plan-3 T6) - auxilia SEMEL: petitio una,
+ * reactor agitur donec respondetur (instrumentum, probationes)
+ * ================================================== */
+
+/* tesseram novam in via_tesserae cudit (communio_tesseram_scribere;
+ * filum exsistens recusatur, nihil mutatur) et POST /communio/intrare
+ * cum digesto eius; aditus_exitus = id. FALSUM (et filum tesserae
+ * deletum) si servus non 202 respondet. Epistula ignota: VERUM idem -
+ * servus nihil prodit. */
+b32
+communio_inscriptionem_petere (
+               Reactor* reactor,
+    constans character* basis,
+                chorda  epistula,
+    constans character* via_tesserae,
+                chorda  titulus,
+             character  aditus_exitus[MONETA_ULID_MENSURA],
+               Piscina* piscina);
+
+/* codicem confirmare: 0 = inscriptus (apparatus_exitus), -1 =
+ * recusatum (codex falsus, expiratus, frenum), -2 = rete */
+s32
+communio_inscriptionem_confirmare (
+               Reactor* reactor,
+    constans character* basis,
+                chorda  aditus,
+                chorda  codex,
+             character  apparatus_exitus[MONETA_ULID_MENSURA],
+               Piscina* piscina);
+
+/* valetne tessera iam (nexus apertus)? petitio una cum tessera */
+b32
+communio_tessera_valet (
+               Reactor* reactor,
+    constans character* basis,
+    constans character* via_tesserae,
+               Piscina* piscina);
 
 #endif /* COMMUNIO_CLIENS_H */

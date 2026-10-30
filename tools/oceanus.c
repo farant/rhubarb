@@ -4,7 +4,7 @@
  *
  *   oceanus [-clavis VIA] [-basis URL] registra <dominium>
  *   oceanus [-clavis VIA] [-basis URL] assecurare <dominium> <genus>
- *           <titulus> <data> [ttl]
+ *           <titulus> <data> [ttl] [prioritas]  (prioritas: MX)
  *
  * registra: "id genus titulus data ttl" per lineam (tabulatoribus).
  * assecurare: IDEM | CREATUM | MUTATUM; error = exitus I cum causa.
@@ -24,7 +24,8 @@ _usus (vacuum)
 {
     fprintf(stderr, "usus: oceanus [-clavis VIA] [-basis URL] registra "
         "<dominium>\n       oceanus [-clavis VIA] [-basis URL] "
-        "assecurare <dominium> <genus> <titulus> <data> [ttl]\n");
+        "assecurare <dominium> <genus> <titulus> <data> [ttl]"
+        " [prioritas]\n");
     redde II;
 }
 
@@ -93,17 +94,23 @@ principale (
         }
     }
     alioquin si (   strcmp(argv[k], "assecurare") == ZEPHYRUM
-                 && (k + V == argc || k + VI == argc))
+                 && (k + V == argc || k + VI == argc
+                 || k + VII == argc))
     {
-                  i32 tempus_vitae = MMMDC;
+                  i32 tempus_vitae  = MMMDC;
+                  i32 prioritas     = ZEPHYRUM;
         OceanusExitus r;
 
-        si (k + VI == argc)
+        si (k + VI <= argc)
         {
             tempus_vitae = (i32)atoi(argv[k + V]);
         }
-        r = oceanus_assecurare(o, argv[k + I], argv[k + II],
-            argv[k + III], argv[k + IV], tempus_vitae);
+        si (k + VII == argc)
+        {
+            prioritas = (i32)atoi(argv[k + VI]);
+        }
+        r = oceanus_assecurare_prioritate(o, argv[k + I], argv[k + II],
+            argv[k + III], argv[k + IV], tempus_vitae, prioritas);
 
         si (r == OCEANUS_ERROR)
         {

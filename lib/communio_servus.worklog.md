@@ -85,3 +85,71 @@ timer cancellation in destruere turned red.
 - Server identity: bind + pull responses carry "servus" (this volume's replica)
   so clients can tell a replaced/restored communio.volumen from the same one.
 - One blob limit: COMMUNIO_MASSA_MAXIMA (16 MB = http lector cap) -> PUT 413.
+
+## 2026-10-27 - allowlist and sign-in requests (plan-3 T3, spec D6)
+
+- `communio_permissi`: the ONLY place an address is stored in clear (needed to
+  send mail), plus its SHA-256 (`digestum`, UNIQUE). Sign-in requests
+  (`communio_aditus`) and every act carry only the digest - the act log is kept
+  forever and backed up, so it stays free of personal data. Addresses are
+  normalised (outer whitespace trimmed, ASCII lowercased, exactly one '@' not at
+  either end, no inner spaces/control characters).
+- `communio_aditum_petere` ALWAYS returns an id; only an allowlisted address of an
+  active member, with a valid unused device digest and a title, stores a request
+  and fills the code/link token. The caller cannot tell the difference from the
+  return value alone - T4 must keep the HTTP answer identical too.
+- Code: 8 Crockford base32 characters from 40 random bits (case and dashes
+  ignored on input); link token: 32 random bytes base64url. Only SHA-256 of each
+  is stored. A request lives 15 minutes, allows 5 wrong secrets (a wrong code OR
+  a wrong link token counts), and is single-use: confirming again with the right
+  secret returns 1 and the same device id (a double click is harmless).
+- At confirmation the allowlist entry (by digest, same person + space) and the
+  person's status are checked AGAIN - revoking an address or suspending a person
+  between request and confirmation stops the sign-in.
+- Requests expired more than a day ago are deleted on each new request.
+
+Plants (radix): attempt limit off, allowlist re-check off, expiry off - all red.
+
+## 2026-10-27 - sign-in routes (plan-3 T4)
+
+Three routes WITHOUT the bearer check (the device has no token yet):
+`POST /communio/intrare` (always 202 {"aditus"} for any well-formed address -
+allowlisted or not; 400 only for a malformed body/address), `POST
+/communio/confirmare` (code), `GET /communio/confirmare` (the mail's link; a
+small HTML page). Calls:
+
+- Throttling through exemplar's Custodia (`custodia_frenum`, setter
+  `communio_servum_custodiam_ponere`; absent = no throttling): `intrare` per
+  NORMALISED ADDRESS (allowlisted or not, so 429 reveals nothing; caps mails per
+  address); confirmation per client IP (`colloquium_cliens`) on top of the
+  database's 5-attempt limit per request. A delay answer from custodia
+  (>0 ms) is treated as 429 - a device just retries later. Not per IP on
+  `intrare`: in-process tests share 127.0.0.1, and the per-address cap is what
+  bounds mail volume (unknown addresses cost nothing).
+- The mail (English): subject "Sign in to golden.earth", the device title, the
+  link `<basis>/communio/confirmare?aditus=<id>&signum=<token>`, "Code:
+  XXXX-XXXX", 15 minutes, once, "ignore if not you". Idempotency-Key = request id.
+  The title is HTML-escaped in the mail's HTML and the confirmation page (it is
+  user input). The text buffers holding the code and token are zeroed right
+  after the message is handed to the Epistularius (which copies what it needs).
+- No Epistularius set: `intrare` still 202, one stderr line, nothing else.
+
+## 2026-10-27 - final review fixes (plan-3)
+
+- CORRECTION of the T4 entry: per-address throttling in custodia is NOT a mail
+  cap - its table (1024 slots) evicts the oldest key, so junk addresses flush a
+  real address's counter. The cap now comes from the database: at most
+  COMMUNIO_EPISTULAE_PER_HORAM (III) sign-in requests per address per hour and
+  COMMUNIO_EPISTULAE_PER_DIEM (XXX) per server per day are stored (= mailed);
+  beyond that intrare still answers 202 and one stderr line notes it. Rows of
+  unknown addresses are never stored, so they cannot fill the budget.
+- intrare answers after a fixed floor (COMMUNIO_INTRARE_MORA_MS, 250 ms from the
+  request start) through a deferred response in 16 fixed slots, so an
+  allowlisted address (DB write + fsync + mail setup) and an unknown one take
+  the same time. Tests set 0 via communio_servum_moram_intrandi_ponere.
+- The mail's link no longer signs in on GET (mail scanners prefetch links): GET
+  shows "Sign in the device <title>?" with a form button; only the form POST to
+  /communio/confirmare (aditus + signum) registers the device. The token also
+  leaves the state-changing URL.
+- Device titles: 1..64 bytes, no control characters (no newlines in the mail
+  from our domain) - otherwise 400, the same for known and unknown addresses.

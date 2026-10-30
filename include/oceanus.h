@@ -29,6 +29,7 @@ nomen structura {
     chorda titulus;    /* "exemplar" ("@" = dominium ipsum) */
     chorda data;       /* "165.227.210.190" */
        i32 ttl;        /* secundae */
+       i32 prioritas;  /* MX (communio plan-3 T7); 0 = nulla */
 } OceanusRegistrum;
 
 nomen structura Oceanus Oceanus;
@@ -86,6 +87,18 @@ oceanus_assecurare (
     constans character* titulus,
     constans character* data,
                    i32  ttl);
+
+/* ut oceanus_assecurare, cum prioritate (MX: DigitalOcean eam poscit;
+ * 0 = non mittitur). IDEM solum si data, ttl ET prioritas aequales. */
+OceanusExitus
+oceanus_assecurare_prioritate (
+               Oceanus* oceanus,
+    constans character* dominium,
+    constans character* genus,
+    constans character* titulus,
+    constans character* data,
+                   i32  ttl,
+                   i32  prioritas);
 
 /* causa ultima (numquam clavem continet); "" si nulla */
 constans character*
