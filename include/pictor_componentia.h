@@ -88,6 +88,9 @@ nomen structura PictorCompositio {
     /* plan-5 T7: palettae "salutatio" et "inscriptio" (ctx auctor_ctx) */
                  PictorPersona persona;
      PictorGradusInscriptionis inscriptionis_gradus;
+    /* Franus 2026-10-30: epistula inscriptionis exspectantis ("Sent
+     * to ..."; NIHIL aut "" = textus generalis) */
+                 PictorPersona epistula_missa;
 } PictorCompositio;
 
 /* condiciones menu ex compositione (importare = imago_eligibilis) */

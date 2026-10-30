@@ -2163,6 +2163,110 @@ pictor_pinacem_alienum_facere (
         piscina, exitus);
 }
 
+i32
+pictor_spectaculi_divisor (
+    i32 pictura_latitudo,
+    i32 pictura_altitudo,
+    i32 latitudo,
+    i32 altitudo)
+{
+    i32 k;
+    i32 k_alt;
+
+    si (   pictura_latitudo == ZEPHYRUM || pictura_altitudo == ZEPHYRUM
+        || latitudo         == ZEPHYRUM || altitudo == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    k      = (pictura_latitudo + latitudo - I) / latitudo;
+    k_alt  = (pictura_altitudo + altitudo - I) / altitudo;
+    redde k_alt > k ? k_alt : k;
+}
+
+/* spectaculum ex documento aperto: pixelum quodque k-tum, centratum */
+interior b32
+_spectaculum_ex_documento (
+    PictorDocumentum* doc,
+                 i32  latitudo,
+                 i32  altitudo,
+             Piscina* piscina,
+               Imago* exitus)
+{
+     constans Imago* fons;
+        constans i8* a;
+                 i8* b;
+                i32  k;
+                i32  lat;
+                i32  alt;
+                i32  x0;
+                i32  y0;
+                i32  pixelum;
+                i32  i;
+                i32  j;
+
+    fons = doc ? pictor_documentum_proiectio(doc) : NIHIL;
+    k    = fons ? pictor_spectaculi_divisor(fons->latitudo,
+        fons->altitudo, latitudo, altitudo) : ZEPHYRUM;
+    si (k == ZEPHYRUM || !fons->pixela)
+    {
+        redde FALSUM;
+    }
+    exitus->pixela = (i8*)piscina_allocare(piscina,
+        (memoriae_index)latitudo * (memoriae_index)altitudo * IV);
+    si (!exitus->pixela)
+    {
+        redde FALSUM;
+    }
+    exitus->latitudo  = latitudo;
+    exitus->altitudo  = altitudo;
+    pixelum           = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    per (i = ZEPHYRUM; i < latitudo * altitudo; i++)
+    {
+        memcpy(exitus->pixela + i * IV, &pixelum, IV);
+    }
+    lat  = (fons->latitudo + k - I) / k;
+    alt  = (fons->altitudo + k - I) / k;
+    x0   = (latitudo - lat) / II;
+    y0   = (altitudo - alt) / II;
+    per (j = ZEPHYRUM; j < alt; j++)
+    {
+        per (i = ZEPHYRUM; i < lat; i++)
+        {
+            a = fons->pixela + ((j * k) * fons->latitudo + i * k) * IV;
+            si (a[III] < CXXVIII)
+            {
+                perge;
+            }
+            b = exitus->pixela + ((y0 + j) * latitudo + x0 + i) * IV;
+            memcpy(b, a, III);
+            b[III] = (i8)CCLV;
+        }
+    }
+    redde VERUM;
+}
+
+b32
+pictor_spectaculum_alienum_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+                 chorda  replica,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus)
+{
+    si (   !volumen || !intern || !spatium || !piscina || !exitus
+        || latitudo        == ZEPHYRUM || altitudo == ZEPHYRUM
+        || replica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde _spectaculum_ex_documento(pictor_documentum_aperire_alienum(
+        piscina, intern, volumen, replica, spatium), latitudo, altitudo,
+        piscina, exitus);
+}
+
 b32
 pictor_pinacothecam_parare (
     PictorPinacotheca* p)
@@ -2324,6 +2428,9 @@ pictor_communia_pinax (
      chorda  clavis;
         i32  latitudo;
         i32  altitudo;
+        b32  spectatus;
+        b32  factum;
+        i32  praefixum;
 
     si (!p || !p->scheda || !p->pinaces)
     {
@@ -2333,13 +2440,19 @@ pictor_communia_pinax (
     {
         redde (constans Imago*)valor;
     }
-    si (   provenientia.mensura < VIII
-        || memcmp(provenientia.datum, "alienus:", VIII) != ZEPHYRUM)
+    /* "spectatus:" (spectator 1:1) aut "alienus:" (pinax aptatus) */
+    spectatus = provenientia.mensura > X
+        && memcmp(provenientia.datum, "spectatus:", X) == ZEPHYRUM;
+    si (   !spectatus
+        && (   provenientia.mensura < VIII
+            || memcmp(provenientia.datum, "alienus:", VIII)
+               != ZEPHYRUM))
     {
         redde NIHIL;
     }
-    reliquum.datum    = provenientia.datum + VIII;
-    reliquum.mensura  = provenientia.mensura - VIII;
+    praefixum         = spectatus ? X : VIII;
+    reliquum.datum    = provenientia.datum + praefixum;
+    reliquum.mensura  = provenientia.mensura - praefixum;
     si (   !numerum_legere(&reliquum, &latitudo, 'x')
         || !numerum_legere(&reliquum, &altitudo, ':')
         || !_partem_legere(&reliquum, &hora)
@@ -2348,12 +2461,20 @@ pictor_communia_pinax (
         redde NIHIL;
     }
     pinax = (Imago*)piscina_allocare(p->scheda, magnitudo(Imago));
-    si (   !pinax
-        || !pictor_pinacem_alienum_facere(p->volumen, p->intern,
-               chorda_ex_literis(chorda_ut_cstr(replica, p->scheda),
-               p->scheda), chorda_ut_cstr(reliquum, p->scheda),
-               latitudo,
-               altitudo, p->scheda, pinax))
+    si (!pinax)
+    {
+        redde NIHIL;
+    }
+    replica = chorda_ex_literis(chorda_ut_cstr(replica, p->scheda),
+        p->scheda);
+    factum = spectatus
+        ? pictor_spectaculum_alienum_facere(p->volumen, p->intern,
+              replica, chorda_ut_cstr(reliquum, p->scheda), latitudo,
+              altitudo, p->scheda, pinax)
+        : pictor_pinacem_alienum_facere(p->volumen, p->intern, replica,
+              chorda_ut_cstr(reliquum, p->scheda), latitudo, altitudo,
+              p->scheda, pinax);
+    si (!factum)
     {
         redde NIHIL;
     }

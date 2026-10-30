@@ -499,8 +499,13 @@ _sectio_codice (
     CREDO_VERUM(premere_nodum(&p, "inscriptio.mittere"));
     CREDO_VERUM(donec_titulus(&o, &p, "inscriptio.titulus",
         "pagina:Check your email", M * V));
+    /* Franus 2026-10-30: epistula nominatur (error typographicus
+     * visibilis) - in memoria sola, numquam in volumine */
     CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&p, "inscriptio.nota"),
-        "pagina:Tap the link we sent,");
+        "pagina:Sent to fran@example.org");
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&p,
+        "inscriptio.nota_altera"),
+        "pagina:Tap the link, or type the code.");
     CREDO_AEQUALIS_I32(claviatura_genus, (i32)TESTA_CLAVIATURA_CODEX);
     CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&p, "inscriptio.campus"),
         "campus:");
@@ -709,6 +714,9 @@ _sectio_resumptio (
     CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&q,
         "inscriptio.titulus"),
         "pagina:Check your email");
+    /* resumpta: epistula ignota (numquam servata) - textus generalis */
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_nodi(&q, "inscriptio.nota"),
+        "pagina:Tap the link we sent,");
     CREDO_VERUM(nexum_premere(&o));
     CREDO_VERUM(donec_titulus(&o, &q, "inscriptio.titulus",
         "pagina:Signed in as Franciscus", M * V));
