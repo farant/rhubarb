@@ -19853,7 +19853,52 @@ nomen structura {
            i32 linea_erroris;
            i32 columna_erroris;
         SilvaChorda error;
+
+    /* TRIVIA PER MEMORIAM (budget B1 B8): trivia arboris pulchrae
+     * fere solum '\n' et cursus spatiorum sunt - punctatores
+     * internati pigre servati (idem quem chorda_internare redderet) */
+       SilvaChorda* trivia_spatia[LXIV];
+       SilvaChorda* trivia_nl;
 } StmlParserContext;
+
+/* trivia internare: '\n' aut spatia sola (< LXIV) ex memoria
+ * parva (pigre per chorda_internare impleta - punctator canonicus
+ * idem), cetera per chorda_internare */
+interior SilvaChorda*
+_trivia_internare (
+    StmlParserContext* ctx,
+               SilvaChorda  s)
+{
+      SilvaChorda** cella;
+         i32   i;
+
+    cella = NIHIL;
+    si (s.mensura == I && s.datum[ZEPHYRUM] == (i8)'\n')
+    {
+        cella = &ctx->trivia_nl;
+    }
+    alioquin si (s.mensura > ZEPHYRUM && s.mensura < LXIV)
+    {
+        i = ZEPHYRUM;
+        dum (i < s.mensura && s.datum[i] == (i8)' ')
+        {
+            i++;
+        }
+        si (i == s.mensura)
+        {
+            cella = &ctx->trivia_spatia[s.mensura];
+        }
+    }
+    si (cella == NIHIL)
+    {
+        redde silva_chorda_internare(ctx->intern, s);
+    }
+    si (*cella == NIHIL)
+    {
+        *cella = silva_chorda_internare(ctx->intern, s);
+    }
+    redde *cella;
+}
 
 /* prototypum (definitio statim infra) - progressio eo utitur */
 interior vacuum
@@ -20632,7 +20677,7 @@ _spatia_apponere (
     }
     si (*campus == NIHIL)
     {
-        *campus = silva_chorda_internare(ctx->intern, addendum);
+        *campus = _trivia_internare(ctx, addendum);
     }
     alioquin
     {
@@ -20828,11 +20873,11 @@ _textum_tractare (
     nodus->valor = silva_chorda_internare(ctx->intern, unescaped);
     si (ante_mea.mensura > ZEPHYRUM)
     {
-        nodus->spatia_ante = silva_chorda_internare(ctx->intern, ante_mea);
+        nodus->spatia_ante = _trivia_internare(ctx, ante_mea);
     }
     si (post_mea.mensura > ZEPHYRUM)
     {
-        nodus->spatia_post = silva_chorda_internare(ctx->intern, post_mea);
+        nodus->spatia_post = _trivia_internare(ctx, post_mea);
     }
 
     _parser_progredi(ctx);
@@ -20885,7 +20930,7 @@ _liberos_legere (
             si (liberum != NIHIL && pendens.mensura > ZEPHYRUM)
             {
                 liberum->spatia_ante =
-                    silva_chorda_internare(ctx->intern, pendens);
+                    _trivia_internare(ctx, pendens);
                 pendens.datum    = NIHIL;
                 pendens.mensura  = ZEPHYRUM;
             }
@@ -22288,6 +22333,8 @@ silva_stml_legere (
     ctx.current.captio_numerus   = ZEPHYRUM;
     ctx.current.habet_captus     = FALSUM;
     ctx.finis_ultimus            = ZEPHYRUM;
+    ctx.trivia_nl                = NIHIL;
+    memset(ctx.trivia_spatia, ZEPHYRUM, magnitudo(ctx.trivia_spatia));
 
     /* Create document node */
     documentum = _parser_creare_nodus(&ctx, STML_NODUS_DOCUMENTUM);

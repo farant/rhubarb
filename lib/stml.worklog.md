@@ -1728,3 +1728,22 @@ passed every stml suite). Added probatio_stml XIV.F: for every lexema
 of a document whose text and in-tag whitespace cross newlines, line
 and column are recomputed byte by byte from its offset, as a second
 oracle. The plant is now FRACTA there.
+
+## 2026-10-30 — parser trivia interned through a small cache (budget B1 B8)
+
+Pretty-printed arbor STML trivia are almost all "\n" or runs of k
+spaces, and each one paid fnv1a, a probe and a compare in
+`chorda_internare`. `_trivia_internare(ctx, s)` returns a pointer kept
+in `StmlParserContext` (`trivia_nl`, `trivia_spatia[LXIV]`), filled
+lazily through `chorda_internare`, so it is the same canonical pointer
+and the same allocations. Anything else goes straight to
+`chorda_internare`. Used for text spatia_ante/post, the pending
+spatia_ante handed to the next element, and `_spatia_apponere`'s
+first assignment.
+
+Plant note: the idea file suggested "index the cache by len-1". That is
+an EQUIVALENT mutant: the slot is still unique per length, so output
+never changes, and it rightly passed. The meaningful plant drops the
+"spaces only" predicate, so every short trivia of length L shares a
+slot ("\n  " vs "   "). That fails probatio_stml_aurea (fidelity) and
+probatio_stml_pulchrum (fixed point).
