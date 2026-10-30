@@ -453,7 +453,23 @@ rootfile; UTF-16 check off).
   by `diatonic` (+ octave-change·7), alter chosen so that MIDI moves
   by `chromatic` (+12·octave-change).
 - [ ] **Step 3: Green; plant** (ignore `<concert-score>`) → red; restore.
-- [ ] **Step 4: Commit** (gate `radix`).
+- [x] **Step 4: Commit** (gate `radix`).
+
+**Executed 2026-10-30.** Six fixtures as planned; ties needed no new
+code (P2's tie bookkeeping and the TSV merge already held, and the
+`ligaturae` section passed before any P4 code). Decisions fixed here:
+a `<lyric>` without `number` is verse 1, a non-integer number is verse
+0; syllables are stored in verse order (stable — the fixture writes
+verse 2 before verse 1 on purpose); `<extend>` marks the last syllable
+of its own lyric; transposition is part state from the `<transpose>`
+onward, sounding letter = written letter moved by diatonic (+7 per
+octave-change), MIDI moved by chromatic (+12 per octave-change),
+sounding alter = whatever remains; `<concert-score/>` is read from
+`<defaults>` and disables it; an unpitched note's MIDI comes from its
+`<instrument>`'s `midi-unpitched` − 1 (or the part's only
+instrument), else from the display pitch. Plants (concert-score
+ignored; verse sort off; alter without the natural interval) all red.
+Lint: `tupli` refused in a test name → `_rationes_temporis_probare`.
 
 ---
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- transpositio: clarinettum in B (diatonic -1, chromatic -2): D5 scriptum sonat C5, F#5 sonat E5; cithara (octave-change -1): E4 sonat E3 -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Clarinet in Bb</part-name></score-part>
+    <score-part id="P2"><part-name>Guitar</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time>
+        <transpose><diatonic>-1</diatonic><chromatic>-2</chromatic></transpose></attributes>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>F</step><alter>1</alter><octave>5</octave></pitch><duration>1</duration></note>
+    </measure>
+  </part>
+  <part id="P2">
+    <measure number="1">
+      <attributes><divisions>1</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time>
+        <transpose><diatonic>0</diatonic><chromatic>0</chromatic><octave-change>-1</octave-change></transpose></attributes>
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+  </part>
+</score-partwise>

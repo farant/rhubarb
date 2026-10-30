@@ -536,6 +536,201 @@ _nata_lux_probare (
         .metrum.liberum);
 }
 
+interior chorda
+_tabula (
+           CredoContextus* c,
+    constans MusicxmlOpus* o)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(c->piscina, MXXIV);
+
+    (vacuum)musicxml_tabulam_scribere(o, NIHIL, a);
+    redde chorda_aedificator_finire(a);
+}
+
+interior vacuum
+_verba_probare (
+    CredoContextus* c)
+{
+             MusicxmlOpus* o = _legere_fixum(c, "verba.musicxml");
+    constans MusicxmlNota* n;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    n = o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].notae;
+    CREDO_NECESSE (n[ZEPHYRUM].numerus_syllabarum == II);
+    CREDO_AEQUALIS_I32 (n[ZEPHYRUM].syllabae[ZEPHYRUM].versus, (i32)I);
+    CREDO_VERUM (_aequat(n[ZEPHYRUM].syllabae[ZEPHYRUM].versus_textus,
+        "1"));
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].syllabae[ZEPHYRUM].locus,
+        (s32)MUSICXML_SYLLABA_INITIUM);
+    CREDO_VERUM (_aequat(n[ZEPHYRUM].syllabae[ZEPHYRUM].textus, "Glo"));
+    CREDO_AEQUALIS_I32 (n[ZEPHYRUM].syllabae[I].versus, (i32)II);
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].syllabae[I].locus,
+        (s32)MUSICXML_SYLLABA_SINGULA);
+    CREDO_NECESSE (n[I].numerus_syllabarum == I);
+    CREDO_AEQUALIS_S32 ((s32)n[I].syllabae[ZEPHYRUM].locus,
+        (s32)MUSICXML_SYLLABA_MEDIA);
+    /* elisio: duae syllabae versus I, deinde versus II (ordine
+     * versuum, quamvis versus II prior scriptus) */
+    CREDO_NECESSE (n[II].numerus_syllabarum == III);
+    CREDO_VERUM (_aequat(n[II].syllabae[ZEPHYRUM].textus, "a"));
+    CREDO_FALSUM (n[II].syllabae[ZEPHYRUM].iuncta);
+    CREDO_VERUM (_aequat(n[II].syllabae[I].textus, "in"));
+    CREDO_VERUM (n[II].syllabae[I].iuncta);
+    CREDO_AEQUALIS_S32 ((s32)n[II].syllabae[I].locus,
+        (s32)MUSICXML_SYLLABA_INITIUM);
+    CREDO_AEQUALIS_I32 (n[II].syllabae[II].versus, (i32)II);
+    CREDO_VERUM (n[III].syllabae[ZEPHYRUM].extensio);
+    CREDO_AEQUALIS_I32 (o->partes[ZEPHYRUM].mensurae[I].notae[ZEPHYRUM]
+        .numerus_syllabarum, ZEPHYRUM);
+    CREDO_VERUM (_continet(_tabula(c, o),
+        "\t1:end:a|1:begin:in|2:single:et\n"));
+}
+
+interior vacuum
+_ligaturae_probare (
+    CredoContextus* c)
+{
+         MusicxmlOpus* o = _legere_fixum(c, "ligaturae_tupli.musicxml");
+    constans MusicxmlPars* p;
+                   chorda  t;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_AEQUALIS_I32 (o->numerus_vitiorum, ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (o->divisiones, (s64)XXI);
+    p = &o->partes[ZEPHYRUM];
+    CREDO_VERUM (p->mensurae[ZEPHYRUM].notae[III].ligatura_initium);
+    CREDO_VERUM (p->mensurae[I].notae[ZEPHYRUM].ligatura_finis);
+    /* tied sine tie non ligat */
+    CREDO_FALSUM (p->mensurae[I].notae[I].ligatura_initium);
+    CREDO_FALSUM (p->mensurae[II].notae[ZEPHYRUM].ligatura_finis);
+    t = _tabula(c, o);
+    CREDO_VERUM (_continet(t, "P1\t1\t2\t79\tG\t"));
+    CREDO_VERUM (_continet(t, "P1\t3\t1\t81\tA\t"));
+    CREDO_VERUM (_continet(t, "P1\t4\t2\t81\tA\t"));
+}
+
+interior vacuum
+_rationes_temporis_probare (
+    CredoContextus* c)
+{
+         MusicxmlOpus* o = _legere_fixum(c, "ligaturae_tupli.musicxml");
+    constans MusicxmlNota* n;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    n = o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].notae;
+    CREDO_AEQUALIS_S64 (n[ZEPHYRUM].longitudo, (s64)VII);
+    CREDO_AEQUALIS_I32 (n[ZEPHYRUM].ratio_notarum, (i32)III);
+    CREDO_AEQUALIS_I32 (n[ZEPHYRUM].ratio_spatii, (i32)II);
+    CREDO_AEQUALIS_S64 (n[III].positio, (s64)XXI);
+    n = o->partes[I].mensurae[ZEPHYRUM].notae;
+    CREDO_AEQUALIS_S64 (n[VI].positio, (s64)XVIII);
+    CREDO_AEQUALIS_S64 (n[VI].longitudo, (s64)III);
+    CREDO_AEQUALIS_I32 (n[VI].ratio_notarum, (i32)VII);
+    CREDO_AEQUALIS_I32 (n[VI].ratio_spatii, (i32)IV);
+    CREDO_VERUM (_continet(_tabula(c, o), "P2\t6/7\t1/7\t59\tB\t"));
+}
+
+interior vacuum
+_gratiae_probare (
+    CredoContextus* c)
+{
+                MusicxmlOpus* o = _legere_fixum(c, "gratiae.musicxml");
+    constans MusicxmlMensura* m;
+       constans MusicxmlNota* n;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_AEQUALIS_I32 (o->numerus_vitiorum, ZEPHYRUM);
+    m = &o->partes[ZEPHYRUM].mensurae[ZEPHYRUM];
+    n = m->notae;
+    CREDO_NECESSE (m->numerus_notarum == VI);
+    CREDO_VERUM (n[ZEPHYRUM].gratia);
+    CREDO_VERUM (n[ZEPHYRUM].gratia_obliqua);
+    CREDO_AEQUALIS_S64 (n[ZEPHYRUM].longitudo, (s64)ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (n[ZEPHYRUM].positio, (s64)ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (n[I].positio, (s64)ZEPHYRUM);
+    CREDO_VERUM (n[II].gratia);
+    CREDO_FALSUM (n[II].gratia_obliqua);
+    CREDO_AEQUALIS_S32 (n[II].furtum_prioris, (s32)XX);
+    CREDO_AEQUALIS_S64 (n[II].tempus_factum, (s64)I);
+    CREDO_AEQUALIS_S64 (n[II].positio, (s64)II);
+    CREDO_AEQUALIS_S64 (n[III].positio, (s64)II);
+    CREDO_VERUM (n[IV].parva);
+    CREDO_AEQUALIS_S64 (n[IV].longitudo, (s64)II);
+    CREDO_AEQUALIS_S64 (n[V].positio, (s64)VI);
+    CREDO_AEQUALIS_S64 (m->longitudo, (s64)VIII);
+    CREDO_VERUM (_continet(_tabula(c, o),
+        "P1\t0\t0\t72\tC\t0\t1\t-\n"));
+}
+
+interior vacuum
+_transpositio_probare (
+    CredoContextus* c)
+{
+         MusicxmlOpus* o = _legere_fixum(c, "transpositio.musicxml");
+    constans MusicxmlNota* n;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_FALSUM (o->concentus);
+    n = o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].notae;
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].littera, (s32)'D');
+    CREDO_AEQUALIS_S32 (n[ZEPHYRUM].octava, (s32)V);
+    CREDO_AEQUALIS_S32 (n[ZEPHYRUM].nota, (s32)LXXII);
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].littera_sonans, (s32)'C');
+    CREDO_AEQUALIS_S32 (n[ZEPHYRUM].octava_sonans, (s32)V);
+    CREDO_F64_PROXIMUS (n[ZEPHYRUM].alteratio_sonans, 0.0, 1e-9);
+    CREDO_AEQUALIS_S32 (n[I].nota, (s32)LXXVI);
+    CREDO_AEQUALIS_S32 ((s32)n[I].littera_sonans, (s32)'E');
+    CREDO_F64_PROXIMUS (n[I].alteratio_sonans, 0.0, 1e-9);
+    n = o->partes[I].mensurae[ZEPHYRUM].notae;
+    CREDO_AEQUALIS_S32 (n[ZEPHYRUM].nota, (s32)LII);
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].littera_sonans, (s32)'E');
+    CREDO_AEQUALIS_S32 (n[ZEPHYRUM].octava_sonans, (s32)III);
+}
+
+interior vacuum
+_partitura_concentus_probare (
+    CredoContextus* c)
+{
+         MusicxmlOpus* o = _legere_fixum(c,
+                               "partitura_concentus.musicxml");
+    constans MusicxmlNota* n;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_VERUM (o->concentus);
+    n = o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].notae;
+    CREDO_AEQUALIS_S32 (n[ZEPHYRUM].nota, (s32)LXXIV);
+    CREDO_AEQUALIS_S32 ((s32)n[ZEPHYRUM].littera_sonans, (s32)'D');
+}
+
+interior vacuum
+_percussio_probare (
+    CredoContextus* c)
+{
+         MusicxmlOpus* o = _legere_fixum(c, "percussio.musicxml");
+    constans MusicxmlPars* p;
+    constans MusicxmlMensura* m;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    p = &o->partes[ZEPHYRUM];
+    CREDO_NECESSE (p->numerus_instrumentorum == II);
+    CREDO_VERUM (_aequat(p->instrumenta[I].id, "P1-I38"));
+    CREDO_VERUM (_aequat(p->instrumenta[I].titulus, "Snare"));
+    CREDO_AEQUALIS_I32 (p->instrumenta[I].canalis, (i32)X);
+    CREDO_AEQUALIS_I32 (p->instrumenta[I].percussio, (i32)XXXIX);
+    CREDO_F64_PROXIMUS (p->instrumenta[I].volumen, 80.0, 1e-9);
+    CREDO_F64_PROXIMUS (p->instrumenta[I].positio, -45.0, 1e-9);
+    m = &p->mensurae[ZEPHYRUM];
+    CREDO_AEQUALIS_S32 ((s32)m->attributa[ZEPHYRUM].claviculae[ZEPHYRUM]
+        .signum, (s32)'P');
+    CREDO_AEQUALIS_S32 ((s32)m->notae[ZEPHYRUM].genus,
+        (s32)MUSICXML_NOTA_PERCUSSA);
+    CREDO_VERUM (_aequat(m->notae[ZEPHYRUM].instrumentum, "P1-I38"));
+    CREDO_AEQUALIS_S32 (m->notae[ZEPHYRUM].nota, (s32)XXXVIII);
+    /* instrumentum ignotum: nota ex display (E4) */
+    CREDO_AEQUALIS_S32 (m->notae[I].nota, (s32)LXIV);
+    CREDO_VERUM (_continet(_tabula(c, o), "P1\t0\t1\t38\tC\t"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nota una: exemplar et tabula", _nota_una_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
@@ -564,6 +759,20 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { ".mxl varia: mimetype, directorium, opus, mala, UTF-16",
         _arcae_variae_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "nata lux (fons verus)", _nata_lux_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "verba: versus, syllabica, elisio, extensio", _verba_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ligaturae: tie (non tied)", _ligaturae_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "tupli: 3:2, 7:4", _rationes_temporis_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "gratiae et notae parvae", _gratiae_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "transpositio: sonans derivatum", _transpositio_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "concert-score: numquam bis", _partitura_concentus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "percussio et instrumenta", _percussio_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

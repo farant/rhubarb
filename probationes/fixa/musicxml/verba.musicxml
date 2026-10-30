@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- verba: versus duo; syllabic begin/middle/end/single; elision (duae syllabae in nota una); extend; nota sine verbis -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions>
+        <time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration>
+        <lyric number="1"><syllabic>begin</syllabic><text>Glo</text></lyric>
+        <lyric number="2"><syllabic>single</syllabic><text>Lux</text></lyric></note>
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>1</duration>
+        <lyric number="1"><syllabic>middle</syllabic><text>ri</text></lyric></note>
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration>
+        <lyric number="2"><syllabic>single</syllabic><text>et</text></lyric>
+        <lyric number="1"><syllabic>end</syllabic><text>a</text><elision/><syllabic>begin</syllabic><text>in</text></lyric></note>
+      <note><pitch><step>F</step><octave>4</octave></pitch><duration>1</duration>
+        <lyric number="1"><syllabic>end</syllabic><text>ex</text><extend/></lyric></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>G</step><octave>4</octave></pitch><duration>4</duration></note>
+    </measure>
+  </part>
+</score-partwise>

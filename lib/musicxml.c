@@ -27,6 +27,7 @@ nomen structura {
     Piscina* piscina;
         Xar* vitia;          /* MusicxmlVitium */
         s64  divisiones;     /* divisio operis */
+        b32  concentus;      /* concert-score: numquam transponitur */
 } Lector;
 
 interior vacuum
@@ -412,8 +413,13 @@ nomen structura {
 } LigaturaAperta;
 
 nomen structura {
-     s64  factor;          /* divisio operis / divisiones scriptae */
-     Xar* ligaturae;       /* LigaturaAperta, per partem */
+                         s64 factor;     /* divisio operis /
+                                           * divisiones scriptae */
+                          Xar* ligaturae;  /* LigaturaAperta */
+                          b32  transpositio_adest;
+         MusicxmlTranspositio  transpositio;   /* vigens */
+constans MusicxmlInstrumentum* instrumenta;   /* partis (percussio) */
+                          i32  numerus_instrumentorum;
 } StatusPartis;
 
 interior vacuum
@@ -676,7 +682,9 @@ _attributa_legere (
         {
             t->transpositio.octava_mutata = (s32)v;
         }
-        t->transpositio.duplicata = xml_filius(f, "double") != NIHIL;
+        t->transpositio.duplicata  = xml_filius(f, "double") != NIHIL;
+        sp->transpositio_adest     = VERUM;
+        sp->transpositio           = t->transpositio;
     }
     redde VERUM;
 }
@@ -766,6 +774,236 @@ _ligaturam_tractare (
             a->nota   = n->nota;
             a->nodus  = e;
         }
+    }
+}
+
+/* steal-time: centesimae (decimales rotundatae); 0 si absens */
+interior s32
+_centesimae (
+    chorda c)
+{
+    f64 v;
+
+    si (c.mensura == ZEPHYRUM || !_decimalis(c, &v))
+    {
+        redde ZEPHYRUM;
+    }
+    redde (s32)(v < 0.0 ? v - 0.5 : v + 0.5);
+}
+
+/* index litterae in "CDEFGAB"; -I si non littera */
+interior s32
+_ordo_litterae (
+    character littera)
+{
+     constans character* litterae = "CDEFGAB";
+                    s32  i;
+
+    per (i = ZEPHYRUM; i < VII; i++)
+    {
+        si (litterae[i] == littera)
+        {
+            redde i;
+        }
+    }
+    redde -I;
+}
+
+/* sonans ex scripta: littera movetur per diatonic (+ VII octavae),
+ * nota MIDI per chromatic (+ XII octavae); alteratio sonans = quod
+ * reliquum est. concert-score: notae iam sonantes (numquam bis).
+ * Percussa: nota ex instrumento (midi-unpitched - I) si notum. */
+interior vacuum
+_sonantem_computare (
+    constans StatusPartis* sp,
+                      b32  concentus,
+             MusicxmlNota* n)
+{
+    s32 diatonica;
+    s32 chromatica;
+    s32 summa;
+    s32 octava;
+    s32 ordo;
+    s32 naturale;
+    i32 i;
+
+    n->littera_sonans    = n->littera;
+    n->alteratio_sonans  = n->alteratio;
+    n->octava_sonans     = n->octava;
+    si (n->littera == '\0' || n->genus == MUSICXML_NOTA_PAUSA)
+    {
+        redde;
+    }
+    si (n->genus == MUSICXML_NOTA_PERCUSSA)
+    {
+        n->nota = _notam_computare(n->littera, n->alteratio, n->octava);
+        per (i = ZEPHYRUM; i < sp->numerus_instrumentorum; i++)
+        {
+            constans MusicxmlInstrumentum* x = &sp->instrumenta[i];
+
+            si (   x->percussio > ZEPHYRUM
+                && (chorda_aequalis(x->id, n->instrumentum)
+                    || (n->instrumentum.mensura == ZEPHYRUM
+                        && sp->numerus_instrumentorum == I)))
+            {
+                n->nota = (s32)x->percussio - I;
+                frange;
+            }
+        }
+        redde;
+    }
+    si (concentus || !sp->transpositio_adest)
+    {
+        n->nota = _notam_computare(n->littera, n->alteratio, n->octava);
+        redde;
+    }
+    diatonica   = sp->transpositio.diatonica
+                  + VII * sp->transpositio.octava_mutata;
+    chromatica  = sp->transpositio.chromatica
+                  + XII * sp->transpositio.octava_mutata;
+    summa = n->octava * VII + _ordo_litterae(n->littera) + diatonica;
+    octava = summa >= ZEPHYRUM ? summa / VII : -((VI - summa) / VII);
+    ordo = summa - VII * octava;
+    n->littera_sonans = "CDEFGAB"[ordo];
+    n->octava_sonans = octava;
+    naturale = (XII * octava + _gradus(n->littera_sonans))
+               - (XII * n->octava + _gradus(n->littera));
+    n->alteratio_sonans = n->alteratio + (f64)(chromatica - naturale);
+    n->nota = _notam_computare(n->littera_sonans, n->alteratio_sonans,
+        n->octava_sonans);
+}
+
+interior MusicxmlLocusSyllabae
+_locum_syllabae_legere (
+                 Lector* l,
+     constans XmlCoctus* f)
+{
+    chorda t;
+
+    (vacuum)xml_textus_totus(f, l->piscina, &t);
+    t = _praecidere(t);
+    si (chorda_aequalis_literis(t, "single"))
+    {
+        redde MUSICXML_SYLLABA_SINGULA;
+    }
+    si (chorda_aequalis_literis(t, "begin"))
+    {
+        redde MUSICXML_SYLLABA_INITIUM;
+    }
+    si (chorda_aequalis_literis(t, "middle"))
+    {
+        redde MUSICXML_SYLLABA_MEDIA;
+    }
+    si (chorda_aequalis_literis(t, "end"))
+    {
+        redde MUSICXML_SYLLABA_FINIS;
+    }
+    _vitium(l, MUSICXML_MONITUM, MUSICXML_VALOR_IGNOTUS, f,
+        "syllabic ignotum: ", t);
+    redde MUSICXML_SYLLABA_IGNOTA;
+}
+
+/* verba (lyric): syllaba per <text>; <elision> iungit sequentem in
+ * eadem nota; <extend> ultimam notat. Versus absens = I;
+ * illegibilis = 0.
+ * Ordo: versus (stabilis - ordo documenti intra versum). */
+interior vacuum
+_verba_legere (
+                 Lector* l,
+     constans XmlCoctus* e,
+           MusicxmlNota* n)
+{
+     constans XmlCoctus* ly;
+     constans XmlCoctus* f;
+                    Xar* syllabae;
+                    i32  i;
+                    i32  j;
+
+    si (xml_filius(e, "lyric") == NIHIL)
+    {
+        redde;
+    }
+    syllabae = xar_creare(l->piscina, (i32)magnitudo(MusicxmlSyllaba));
+    si (syllabae == NIHIL)
+    {
+        redde;
+    }
+    per (ly = xml_filius(e, "lyric"); ly != NIHIL;
+         ly = xml_frater(ly, "lyric"))
+    {
+                   chorda numerus  = _attributum(ly, "number");
+                      i32 versus   = I;
+                      s64 v;
+    MusicxmlLocusSyllabae locus   = MUSICXML_SYLLABA_SINGULA;
+                      b32 iuncta  = FALSUM;
+                      s32 ultima  = -I;
+
+        si (numerus.mensura > ZEPHYRUM)
+        {
+            versus = (_integer(numerus, &v) && v > ZEPHYRUM) ? (i32)v
+                                                            : ZEPHYRUM;
+        }
+        per (f = xml_filius(ly, NIHIL); f != NIHIL;
+             f = xml_frater(f, NIHIL))
+        {
+            chorda titulus = xml_titulus(f);
+
+            si (chorda_aequalis_literis(titulus, "syllabic"))
+            {
+                locus = _locum_syllabae_legere(l, f);
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "text"))
+            {
+                MusicxmlSyllaba* y = (MusicxmlSyllaba*)xar_addere(
+                    syllabae);
+
+                si (y == NIHIL)
+                {
+                    redde;
+                }
+                memset(y, ZEPHYRUM, magnitudo(MusicxmlSyllaba));
+                y->versus         = versus;
+                y->versus_textus  = numerus.mensura > ZEPHYRUM
+                                        ? numerus
+                                        : chorda_ex_literis("1",
+                                              l->piscina);
+                y->locus   = locus;
+                y->iuncta  = iuncta;
+                si (!xml_textus_totus(f, l->piscina, &y->textus))
+                {
+                    y->textus = _vacua();
+                }
+                y->textus  = _praecidere(y->textus);
+                ultima     = (s32)xar_numerus(syllabae) - I;
+                locus      = MUSICXML_SYLLABA_SINGULA;
+                iuncta     = FALSUM;
+            }
+            alioquin si (chorda_aequalis_literis(titulus, "elision"))
+            {
+                iuncta = VERUM;
+            }
+            alioquin si (   chorda_aequalis_literis(titulus, "extend")
+                         && ultima >= ZEPHYRUM)
+            {
+                ((MusicxmlSyllaba*)xar_obtinere(syllabae,
+                    (i32)ultima))->extensio = VERUM;
+            }
+        }
+    }
+    n->syllabae = (MusicxmlSyllaba*)_tabula(l, syllabae,
+        (i32)magnitudo(MusicxmlSyllaba), &n->numerus_syllabarum);
+    /* ordo versuum stabilis (insertio) */
+    per (i = I; i < n->numerus_syllabarum; i++)
+    {
+        MusicxmlSyllaba y = n->syllabae[i];
+
+        per (j = i; j > ZEPHYRUM
+            && n->syllabae[j - I].versus > y.versus;
+             j--)
+        {
+            n->syllabae[j] = n->syllabae[j - I];
+        }
+        n->syllabae[j] = y;
     }
 }
 
@@ -874,14 +1112,34 @@ _notam_legere (
         }
     }
     n->longitudo = d;
-
-    si (n->genus != MUSICXML_NOTA_PAUSA && n->littera != '\0')
+    si (n->gratia)
     {
-        n->nota = _notam_computare(n->littera, n->alteratio, n->octava);
+        f = xml_filius(e, "grace");
+        n->gratia_obliqua = chorda_aequalis_literis(
+            _attributum(f, "slash"), "yes");
+        n->furtum_prioris    = _centesimae(_attributum(f,
+                                   "steal-time-previous"));
+        n->furtum_sequentis  = _centesimae(_attributum(f,
+                                   "steal-time-following"));
+        si (_integer(_attributum(f, "make-time"), &v) && v > ZEPHYRUM)
+        {
+            n->tempus_factum = v * sp->factor;
+        }
     }
-    n->littera_sonans    = n->littera;
-    n->alteratio_sonans  = n->alteratio;
-    n->octava_sonans     = n->octava;
+    f = xml_filius(e, "time-modification");
+    si (f != NIHIL)
+    {
+        si (_integer_filii(l, f, "actual-notes", &v) && v > ZEPHYRUM)
+        {
+            n->ratio_notarum = (i32)v;
+        }
+        si (_integer_filii(l, f, "normal-notes", &v) && v > ZEPHYRUM)
+        {
+            n->ratio_spatii = (i32)v;
+        }
+    }
+    _verba_legere(l, e, n);
+    _sonantem_computare(sp, l->concentus, n);
 
     si (   acordum && sm->prior_adest && chorda_aequalis(sm->prior_vox,
             n->vox))
@@ -1043,7 +1301,10 @@ _partem_legere (
                     Xar* mensurae;
                     i32  i;
 
-    sp.factor     = l->divisiones;
+    memset(&sp, ZEPHYRUM, magnitudo(StatusPartis));
+    sp.factor                  = l->divisiones;
+    sp.instrumenta             = p->instrumenta;
+    sp.numerus_instrumentorum  = p->numerus_instrumentorum;
     sp.ligaturae  = xar_creare(l->piscina,
                         (i32)magnitudo(LigaturaAperta));
     mensurae      = xar_creare(l->piscina,
@@ -1528,7 +1789,10 @@ _documentum_legere (
             "radix non score-partwise: ", titulus);
         redde VERUM;
     }
-    opus->versio = _attributum(radix, "version");
+    opus->versio     = _attributum(radix, "version");
+    opus->concentus  = xml_filius(xml_filius(radix, "defaults"),
+                           "concert-score") != NIHIL;
+    l->concentus     = opus->concentus;
     _identificationem_legere(l, radix, opus);
     si (!_divisiones_colligere(l, radix))
     {
@@ -1666,6 +1930,7 @@ musicxml_legere (
     memset(opus, ZEPHYRUM, magnitudo(MusicxmlOpus));
     l.piscina     = piscina;
     l.divisiones  = I;
+    l.concentus   = FALSUM;
     l.vitia       = xar_creare(piscina, (i32)magnitudo(MusicxmlVitium));
     si (l.vitia == NIHIL)
     {
