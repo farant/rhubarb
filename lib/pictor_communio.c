@@ -449,15 +449,25 @@ pictor_communio_incipere (
     _indicem_petere(pc);
 }
 
+/* review finalis II: applicatio resumpta - inscriptio pendens statim
+ * inspicit; cliens petitiones fortasse mortuas abrumpit et renovat */
 vacuum
 pictor_communio_excitare (
     PictorCommunio* pc)
 {
-    si (!pc || pc->clausa || pc->recusata || !pc->cliens)
+    si (!pc || pc->clausa)
     {
         redde;
     }
-    communio_cliens_excitare(pc->cliens);
+    si (pc->inscriptio)
+    {
+        communio_inscriptionem_excitare(pc->inscriptio);
+    }
+    si (pc->recusata || !pc->cliens)
+    {
+        redde;
+    }
+    communio_cliens_renovare(pc->cliens);
     _indicem_petere(pc);
 }
 
@@ -575,9 +585,10 @@ _inscriptio_mutata (
 {
     PictorCommunio* pc = (PictorCommunio*)ctx;
 
+    /* recusata manet: incipere clientem a 401 sistitum agnoscit et
+     * novum creat (review finalis I) */
     si (gradus == INSCRIPTIO_INSCRIPTA)
     {
-        pc->recusata = FALSUM;
         pictor_communio_incipere(pc);
     }
     _nuntiare(pc);

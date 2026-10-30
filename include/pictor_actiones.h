@@ -70,6 +70,8 @@ nomen structura {
                 vacuum* inscriptio_ctx;
 TestaClaviaturamPonere  claviaturam_ponere;
                 vacuum* claviatura_ctx;
+    /* genus ultimo petitum (TestaClaviaturaGenus; ZEPHYRUM = NULLA) */
+                   i32 claviatura_genus;
 } PictorActiones;
 
 vacuum
@@ -314,6 +316,14 @@ pictor_instrumentum_eligere (
    constans Destinatio* destinatio,
              Componens* nodus,
       constans Eventus* ev,
+                vacuum* ctx);
+
+/* review finalis plan-5: post dimissionem (Esc, ictus extra dialogum)
+ * claviatura systematis celatur si dialogus inscriptionis non iam
+ * apertus est (dimissio pictorem non certiorem facit) */
+vacuum
+pictor_claviaturam_conformare (
+    InsulaRepositorium* repo,
                 vacuum* ctx);
 
 #endif /* PICTOR_ACTIONES_H */

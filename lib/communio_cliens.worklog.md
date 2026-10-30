@@ -135,3 +135,14 @@ server (`_codicem_normare`: drop '-' and spaces, upper-case, VIII
 Crockford), so malformed input never makes a request. Test hooks:
 `communio_inscriptionis_moram_ponere` (check interval) and
 `_vitam_ponere` (lifetime) - the suite runs at L ms / CCC ms.
+
+## 2026-10-29 — renovare, inscriptionem_excitare (plan-5 final review)
+
+`communio_cliens_renovare` = sistere + incipere: aborts whatever is in
+flight (the long-poll may be dead after an iOS sleep) and runs both lane
+cycles now. Safe for duplicates: the descending cursor and idempotent import
+mean a re-fetched batch imports nothing twice; an aborted upload is re-sent.
+`communio_inscriptionem_excitare` only acts in EXSPECTAT / CODEX_FALSUS: an
+INSPICERE still in flight is aborted, the timer dropped, and `_inspicere`
+runs now. A response that already arrived (respondit, 1 ms timer armed) and
+INTRARE/CONFIRMARE requests are left alone.

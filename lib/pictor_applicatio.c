@@ -629,6 +629,72 @@ pictor_picturam_restituere (
     redde VERUM;
 }
 
+/* review finalis plan-5: hami dimissionis involuti - post dimissionem
+ * (ante consumens) aut actionem claudentem (post) claviatura systematis
+ * conformatur (dialogus inscriptionis clausus -> celatur) */
+nomen structura {
+       DispensatorAnte  ante;
+       DispensatorPost  post;
+                vacuum* ctx;
+    InsulaRepositorium* repo;
+        PictorActiones* actiones;
+} PictorMedium;
+
+interior b32
+_medium_ante (
+                 vacuum* ctx,
+            Dispensator* d,
+    constans Destinatio* des,
+       constans Eventus* e)
+{
+    PictorMedium* m = (PictorMedium*)ctx;
+             b32  consumptus;
+
+    consumptus = m->ante ? m->ante(m->ctx, d, des, e) : FALSUM;
+    si (consumptus)
+    {
+        pictor_claviaturam_conformare(m->repo, m->actiones);
+    }
+    redde consumptus;
+}
+
+interior vacuum
+_medium_post (
+                 vacuum* ctx,
+            Dispensator* d,
+     constans Componens* actor,
+       constans Eventus* e)
+{
+    PictorMedium* m = (PictorMedium*)ctx;
+
+    si (m->post)
+    {
+        m->post(m->ctx, d, actor, e);
+    }
+    pictor_claviaturam_conformare(m->repo, m->actiones);
+}
+
+interior vacuum
+_medium_involvere (
+    PictorApplicatio* app,
+             Piscina* piscina)
+{
+    PictorMedium* m;
+
+    m = (PictorMedium*)piscina_allocare(piscina,
+        magnitudo(PictorMedium));
+    si (!m || !app->d)
+    {
+        redde;
+    }
+    m->ante      = app->d->ante;
+    m->post      = app->d->post;
+    m->ctx       = app->d->medium_ctx;
+    m->repo      = app->repo;
+    m->actiones  = &app->montatio.actiones_ctx;
+    dispensator_medium_ponere(app->d, _medium_ante, _medium_post, m);
+}
+
 b32
 pictor_applicatio_aedificare (
        PictorApplicatio* app,
@@ -676,5 +742,6 @@ pictor_applicatio_aedificare (
         &app->montatio.compositio, CCC);
     /* S5c: dimissio in via eventus */
     dimissio_dispensatori_ligare(systemata.dimissio, app->d);
+    _medium_involvere(app, piscina);
     redde app->d ? VERUM : FALSUM;
 }

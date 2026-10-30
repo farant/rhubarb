@@ -56,3 +56,22 @@ name. If our own replica is missing, the list is fetched again after 1 s
 (V tries). `pictor_communionem_claudere` leaves a pending sign-in in place
 (`communio_inscriptionem_relinquere`: stop, keep token + praesentia) so
 the next launch resumes it.
+
+## 2026-10-29 — final review fixes (plan-5)
+
+- **Re-sign-in after 401 now restarts sync.** `_inscriptio_mutata` used to
+  clear `recusata` before calling `pictor_communio_incipere`, so incipere's
+  "client stopped by 401 -> replace it" branch never fired: it fell into
+  `excitare` on a stopped client and nothing synced (UI still said "Signed in
+  as …"). Now `recusata` stays set until incipere has read the new token and
+  built a new client. Test: pictor_inscriptio "revocatus, iterum inscriptus"
+  (a SECOND revocation must reach pictor = the new client is live).
+- **excitare = "the app just came back".** It now (1) nudges a pending
+  sign-in to check the server at once (`communio_inscriptionem_excitare`),
+  even while `recusata` is set (re-sign-in after a revoke), and (2) calls
+  `communio_cliens_renovare`, which aborts in-flight requests and restarts
+  both lanes. On iOS a long-poll begun before sleep can sit in URLSession
+  until its 55 s timeout; plain excitare returned early on `in_itinere`.
+  Only RESUMPTIO calls it (and incipere on an existing client), so the
+  abort never happens per stroke. Tests: pictor_communio "somnus",
+  pictor_inscriptio "excitata e Mail".

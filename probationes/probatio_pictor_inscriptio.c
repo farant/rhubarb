@@ -717,6 +717,156 @@ _sectio_resumptio (
     orbem_purgare(&o);
 }
 
+/* apparatus omnes servi revocare (administrator) */
+interior vacuum
+apparatus_revocare (
+    Orbis* o)
+{
+                  Xar* a;
+    CommunioApparatus* ap;
+                  i32  i;
+
+    a = communio_apparatus_enumerare(o->servus, piscina);
+    per (i = ZEPHYRUM; a && i < xar_numerus(a); i++)
+    {
+        ap = (CommunioApparatus*)xar_obtinere(a, i);
+        si (ap && !ap->revocatus)
+        {
+            (vacuum)communio_apparatum_revocare(o->servus, ap->id);
+        }
+    }
+}
+
+/* revocatio ad pictorem pervenit (cliens vivus): FALSUM si post II s
+ * adhuc inscriptus */
+interior b32
+revocatus_advenit (
+     Orbis* o,
+    Pictor* p)
+{
+    i32 k;
+
+    apparatus_revocare(o);
+    pictor_communio_excitare(p->pc);
+    per (k = ZEPHYRUM; k < CC && pictor_communio_inscripta(p->pc); k++)
+    {
+        (vacuum)reactor_poll(o->reactor, X);
+    }
+    redde !pictor_communio_inscripta(p->pc);
+}
+
+/* inscriptio per nexum ex palette aperta usque ad "Signed in as" */
+interior b32
+inscribere_per_nexum (
+     Orbis* o,
+    Pictor* p)
+{
+    redde manus_ludus_scribere(p->m, "fran@example.org")
+        && premere_nodum(p, "inscriptio.mittere")
+        && donec_gradus(o, p, (s32)INSCRIPTIO_EXSPECTAT, M * V)
+        && nexum_premere(o)
+        && donec_titulus(o, p, "inscriptio.titulus",
+               "pagina:Signed in as Franciscus", M * V);
+}
+
+/* review finalis I: apparatus revocatus, deinde "Sign in…" iterum in
+ * eadem sessione - cliens novus currit (revocatio secunda pervenit) */
+interior vacuum
+_sectio_iterum (
+    CredoContextus* c)
+{
+     Orbis  o;
+   Volumen* v;
+    Pictor  p;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    v = volumen_temporarium(piscina, "probatio_pictor_inscriptio_h");
+    CREDO_NECESSE(v && pictorem_aedificare(&p, &o, v, NIHIL));
+    CREDO_VERUM(premere_nodum(&p, "salutatio.inscribere"));
+    CREDO_NECESSE(inscribere_per_nexum(&o, &p));
+    CREDO_VERUM(premere_nodum(&p, "inscriptio.confirmata"));
+    CREDO_GRADUS("revocatus: Sign in… redit");
+    CREDO_VERUM(revocatus_advenit(&o, &p));
+    CREDO_VERUM(premere_nodum(&p, "quadratum.elenchus"));
+    CREDO_VERUM(premere_nodum(&p, "elenchus.3"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera(&p, "palette"),
+        "inscriptio");
+    CREDO_GRADUS("iterum inscriptus: cliens novus vivit");
+    CREDO_NECESSE(inscribere_per_nexum(&o, &p));
+    CREDO_VERUM(pictor_communio_inscripta(p.pc));
+    CREDO_VERUM(revocatus_advenit(&o, &p));
+    pictor_communionem_claudere(p.pc);
+    volumen_claudere(v);
+    orbem_purgare(&o);
+}
+
+/* review finalis II: e Mail reversa (RESUMPTIO) inscriptio statim
+ * inspicit, non post moram */
+interior vacuum
+_sectio_excitata (
+    CredoContextus* c)
+{
+     Orbis  o;
+   Volumen* v;
+    Pictor  p;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    v = volumen_temporarium(piscina, "probatio_pictor_inscriptio_i");
+    CREDO_NECESSE(v && pictorem_aedificare(&p, &o, v, NIHIL));
+    pictor_communio_inscriptionis_ponere(p.pc, M * LX, ZEPHYRUM);
+    CREDO_VERUM(premere_nodum(&p, "salutatio.inscribere"));
+    CREDO_VERUM(manus_ludus_scribere(p.m, "fran@example.org"));
+    CREDO_VERUM(premere_nodum(&p, "inscriptio.mittere"));
+    CREDO_NECESSE(donec_gradus(&o, &p, (s32)INSCRIPTIO_EXSPECTAT,
+        M * V));
+    CREDO_NECESSE(nexum_premere(&o));
+    CREDO_FALSUM(donec_gradus(&o, &p, (s32)INSCRIPTIO_INSCRIPTA, CCC));
+    pictor_communio_excitare(p.pc);
+    CREDO_VERUM(donec_gradus(&o, &p, (s32)INSCRIPTIO_INSCRIPTA, M));
+    pictor_communionem_claudere(p.pc);
+    volumen_claudere(v);
+    orbem_purgare(&o);
+}
+
+/* review finalis (minor IV, gradu auctus): dialogus per dimissionem
+ * clausus (Esc, ictus extra) claviaturam celat */
+interior vacuum
+_sectio_dimissa (
+    CredoContextus* c)
+{
+     Orbis  o;
+   Volumen* v;
+    Pictor  p;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    v = volumen_temporarium(piscina, "probatio_pictor_inscriptio_j");
+    CREDO_NECESSE(v && pictorem_aedificare(&p, &o, v, NIHIL));
+    CREDO_GRADUS("Esc");
+    CREDO_VERUM(premere_nodum(&p, "salutatio.inscribere"));
+    CREDO_AEQUALIS_I32(claviatura_genus,
+        (i32)TESTA_CLAVIATURA_EPISTULA);
+    CREDO_VERUM(manus_ludus_clavem(p.m, (character)CLAVIS_EFFUGIUM,
+        ZEPHYRUM));
+    dispensator_recomponere(p.app.d);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera(&p, "palette"), "");
+    CREDO_AEQUALIS_I32(claviatura_genus, (i32)TESTA_CLAVIATURA_NULLA);
+    CREDO_GRADUS("ictus extra dialogum");
+    CREDO_VERUM(premere_nodum(&p, "quadratum.elenchus"));
+    CREDO_VERUM(premere_nodum(&p, "elenchus.3"));
+    CREDO_AEQUALIS_I32(claviatura_genus,
+        (i32)TESTA_CLAVIATURA_EPISTULA);
+    CREDO_VERUM(premere_nodum(&p, "quadratum.elenchus"));
+    CREDO_FALSUM(chorda_aequalis_literis(ephemera(&p, "palette"),
+        "inscriptio"));
+    CREDO_AEQUALIS_I32(claviatura_genus, (i32)TESTA_CLAVIATURA_NULLA);
+    pictor_communionem_claudere(p.pc);
+    volumen_claudere(v);
+    orbem_purgare(&o);
+}
+
 /* salutatio, inscriptio (I, II) sine fenestra; PNG si
  * PINACOTHECA_IMAGINES */
 interior vacuum
@@ -782,6 +932,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "resumptio applicationis", _sectio_resumptio, _parare, _purgare,
         NIHIL, NIHIL },
     { "imagines", _sectio_imagines, _parare, _purgare, NIHIL, NIHIL },
+    { "revocatus, iterum inscriptus", _sectio_iterum, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "excitata e Mail", _sectio_excitata, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "dimissa: claviatura celatur", _sectio_dimissa, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

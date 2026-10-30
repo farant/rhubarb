@@ -1040,6 +1040,18 @@ communio_cliens_recusationem_ponere (
 }
 
 vacuum
+communio_cliens_renovare (
+    CommunioCliens* cliens)
+{
+    si (!cliens || !cliens->currit || cliens->recusata)
+    {
+        redde;
+    }
+    communio_cliens_sistere(cliens);
+    communio_cliens_incipere(cliens);
+}
+
+vacuum
 communio_cliens_excitare (
     CommunioCliens* cliens)
 {
@@ -1841,6 +1853,28 @@ communio_inscriptionis_gradus (
     constans CommunioInscriptio* ci)
 {
     redde ci ? ci->gradus : INSCRIPTIO_RETE;
+}
+
+vacuum
+communio_inscriptionem_excitare (
+    CommunioInscriptio* ci)
+{
+    si (   !ci || ci->abiecta
+        || (   ci->gradus != INSCRIPTIO_EXSPECTAT
+            && ci->gradus != INSCRIPTIO_CODEX_FALSUS))
+    {
+        redde;
+    }
+    si (ci->petitio == PETITIO_INSPICERE && !ci->respondit)
+    {
+        _petitionem_tollere(ci);
+    }
+    si (ci->petitio != PETITIO_NULLA)
+    {
+        redde;
+    }
+    _inscriptionis_horam_tollere(ci);
+    _inspicere(ci);
 }
 
 vacuum

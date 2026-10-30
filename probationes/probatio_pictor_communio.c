@@ -59,6 +59,7 @@ nomen structura {
     Veredarius  v;
     Veredarius* fundus;
            i32  petitiones;
+           i32  abrumptiones;
 } VeredariusNotans;
 
 interior b32
@@ -83,6 +84,7 @@ _notans_abrumpere (
 {
     VeredariusNotans* n = (VeredariusNotans*)sui;
 
+    n->abrumptiones++;
     n->fundus->abrumpere(n->fundus->sui, signum);
 }
 
@@ -467,6 +469,39 @@ _sectio_resumptio (
     orbem_purgare(&o);
 }
 
+/* review finalis II: post somnum (iOS) tractio longa in itinere fortasse
+ * mortua est - excitare eam abrumpit et statim novam petit */
+interior vacuum
+_sectio_somnus (
+    CredoContextus* c)
+{
+              Orbis  o;
+            Volumen* va;
+     PictorCommunio* pa;
+                i32  abruptae;
+                i32  petitiones;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    va = volumen_temporarium(piscina, "probatio_pictor_communio_g");
+    CREDO_NECESSE_NON_NIHIL(va);
+    pa = communionem(&o, va, o.via_a);
+    CREDO_NECESSE_NON_NIHIL(pa);
+    pictor_communio_moram_ponere(pa, XXV);
+    pictor_communio_incipere(pa);
+    agere(&o, CCC);
+    abruptae    = o.notans.abrumptiones;
+    petitiones  = o.notans.petitiones;
+    pictor_communio_excitare(pa);
+    CREDO_VERUM(o.notans.abrumptiones > abruptae);
+    CREDO_VERUM(o.notans.petitiones > petitiones);
+    agere(&o, CC);
+    CREDO_VERUM(pictor_communio_inscripta(pa));
+    pictor_communionem_claudere(pa);
+    volumen_claudere(va);
+    orbem_purgare(&o);
+}
+
 /* revocatus: 401 semel, desinit, tessera deleta */
 interior vacuum
 _sectio_revocatus (
@@ -513,6 +548,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _purgare, NIHIL, NIHIL },
     { "resumptio", _sectio_resumptio, _parare, _purgare, NIHIL, NIHIL },
     { "revocatus", _sectio_revocatus, _parare, _purgare, NIHIL, NIHIL },
+    { "somnus", _sectio_somnus, _parare, _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -1358,10 +1358,35 @@ claviaturam_ponere (
     PictorActiones* pa,
                i32  genus)
 {
+    pa->claviatura_genus = genus;
     si (pa->claviaturam_ponere)
     {
         pa->claviaturam_ponere(pa->claviatura_ctx, genus);
     }
+}
+
+vacuum
+pictor_claviaturam_conformare (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+       InsulaRamus  r;
+            chorda* palette;
+
+    pa = (PictorActiones*)ctx;
+    si (   !pa || !repo
+        || pa->claviatura_genus == (i32)TESTA_CLAVIATURA_NULLA)
+    {
+        redde;
+    }
+    r        = ramus_pictoris(repo, ctx);
+    palette  = insula_ramus_attributum(&r, "palette");
+    si (palette && chorda_aequalis_literis(*palette, "inscriptio"))
+    {
+        redde;
+    }
+    claviaturam_ponere(pa, (i32)TESTA_CLAVIATURA_NULLA);
 }
 
 /* claviatura secundum gradum: epistula, codex, aut nulla (inscripta) */

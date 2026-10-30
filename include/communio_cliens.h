@@ -93,6 +93,14 @@ communio_cliens_recusationem_ponere (
     CommunioRecusata  functio,
               vacuum* ctx);
 
+/* post somnum (applicatio resumpta, iOS): petitiones in itinere
+ * fortasse mortuae sunt (tractio longa) - abrumpuntur, ambae semitae
+ * statim iterum incipiunt. Acta bis non importantur (cursor). Nihil si
+ * non currit aut recusata. */
+vacuum
+communio_cliens_renovare (
+    CommunioCliens* cliens);
+
 /* nunc: ascensus acta nova quaerit; semita in mora (error aut tractio
  * sine exspectatione) statim pergit; otiosus deletur */
 vacuum
@@ -225,6 +233,14 @@ vacuum
 communio_inscriptionis_vitam_ponere (
     CommunioInscriptio* ci,
                    i32  ms);
+
+/* applicatio resumpta (e.g. e Mail, nexu presso): EXSPECTAT aut
+ * CODEX_FALSUS statim inspicit - inspectio in itinere abrumpitur, hora
+ * tollitur. Responsum iam advectum et petitiones INTRARE/CONFIRMARE
+ * manent. */
+vacuum
+communio_inscriptionem_excitare (
+    CommunioInscriptio* ci);
 
 /* petitiones abrumpit, horas cancellat; nisi INSCRIPTA, filum tesserae
  * et entrium delet. Postea non adhibetur. */

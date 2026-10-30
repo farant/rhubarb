@@ -49,7 +49,9 @@ vacuum
 pictor_communio_incipere (
     PictorCommunio* pc);
 
-/* resumptio (applicatio redit, rete redit): semitae statim pergunt */
+/* resumptio (applicatio redit, rete redit): inscriptio pendens statim
+ * inspicit; petitiones clientis in itinere (fortasse post somnum
+ * mortuae) abrumpuntur et semitae statim iterum incipiunt */
 vacuum
 pictor_communio_excitare (
     PictorCommunio* pc);

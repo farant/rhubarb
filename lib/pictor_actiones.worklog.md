@@ -223,3 +223,16 @@ Generated file: new organum fields/actions need `bin/fabrica sanare
 lib/organa_infixa.c` (the manifest is compiled in). A `"` inside an
 organum `nota="..."` breaks the whole manifest silently (app fails to
 build its montatio) - use single quotes inside notes.
+
+## 2026-10-29 — keyboard follows dismissal (plan-5 final review)
+
+The dimissio system (S5c) closes palettes by writing `palette` itself, so
+pictor never learned that the sign-in dialog closed on Esc or a tap outside,
+and the iOS keyboard stayed up over ~40% of the canvas. PictorActiones now
+remembers the last keyboard kind it asked for (`claviatura_genus`), and
+`pictor_claviaturam_conformare` hides it when `palette` is no longer
+"inscriptio". pictor_applicatio wraps dimissio's ante/post hooks
+(`PictorMedium`) and calls conformare after a consuming ante and after every
+post — cheap, since it returns at once while no keyboard is up. The wrapper
+lives only in pictor_applicatio_aedificare (vicus's pane never asks for a
+keyboard). Test: pictor_inscriptio "dimissa: claviatura celatur".
