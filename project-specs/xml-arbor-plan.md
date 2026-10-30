@@ -435,6 +435,25 @@ Transcribe toml Q5: write, read, write; comparator on the re-read
 tree; the `cr` attribute for CR bytes; every hand case and the
 selection. Commit.
 
+**Executed 2026-10-30.** `probatio_xml_stml.c` transcribed from toml's
+(two cycles, structural + fidelity comparator, reread tree emits the
+source, sedes verified, separation pin). First run: every wild file
+round-tripped, but 10 W3C not-wf cases were REFUSED by the substrate
+writer ("valor lexematis textui non tutus (mixtum)"): an unclosed
+literal in a DOCTYPE/DTD declaration runs to EOF and ends in a newline;
+a value with newline-bearing edge whitespace can only be written raw,
+and a token carrying trivia cannot be raw. Fix in the BUILDER, not the
+substrate: the ligator now hangs pending trivia AFTER the prior token
+when the next token's value is unsafe (`_tutus`, mirroring
+`materia_arbor.c _textus_tutus`) — 2,001/2,001 W3C, 7,682/7,682 wild.
+Cost: the full 1 MB-capped run took 525 s and 1.9 GB of STML, so wild
+files above 128 KB are skipped WITH COUNT (239; 97% of the wild corpus
+kept; the W3C suite is never capped); 122 s, section marked `gravis
+lentus`. Plant: the post-trivia rule removed → the ten refusals return
+(red).
+
+---
+
 ## Task P7: `xml.canon` — hand-written, drift-guarded, seal pinned
 
 Transcribe toml Q6. Commit.

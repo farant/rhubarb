@@ -49,6 +49,7 @@ nomen structura {
         XmlLector  lector;
               Xar* gradus;      /* Gradus */
               Xar* pendentia;   /* MateriaToken* trivia */
+     MateriaToken* prior;       /* lexema non trivium ultimum */
      MateriaNodus* documentum;
        XmlParsura* relatio;
               Xar* diagnostica;
@@ -314,7 +315,62 @@ _cumulare (
     *sedes = t;
 }
 
-/* trivia pendentia omnia ANTE sequentis */
+/* valor quem scriptor STML cum triviis ferre nequit (materia_arbor.c
+ * _textus_tutus): NUL, album solum, aut margo alba cum linea nova */
+interior b32
+_tutus (
+    chorda v)
+{
+    s32 primus   = (s32)-I;
+    s32 ultimus  = (s32)-I;
+    i32 i;
+
+    si (v.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    per (i = ZEPHYRUM; i < v.mensura; i++)
+    {
+        character c = (character)v.datum[i];
+
+        si (c == '\0')
+        {
+            redde FALSUM;
+        }
+        si (   c != ' ' && c != '\t' && c != '\n' && c != '\r'
+            && c != '\f' && c != '\v')
+        {
+            si (primus < ZEPHYRUM)
+            {
+                primus = (s32)i;
+            }
+            ultimus = (s32)i;
+        }
+    }
+    si (primus < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < (i32)primus; i++)
+    {
+        si (v.datum[i] == '\n')
+        {
+            redde FALSUM;
+        }
+    }
+    per (i = (i32)ultimus + I; i < v.mensura; i++)
+    {
+        si (v.datum[i] == '\n')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* trivia pendentia omnia ANTE sequentis - nisi valor sequentis STML
+ * cum triviis non fert (valor citatus apertus usque ad finem fontis,
+ * linea nova in margine): tum POST prioris (si prior tutus est) */
 interior vacuum
 _solvere (
      Aedificatio* p,
@@ -341,8 +397,18 @@ _solvere (
     {
         plana[j] = *(MateriaToken**)xar_obtinere(p->pendentia, j);
     }
-    si (!materia_token_trivia_ante_ponere(sequens, p->piscina, plana,
-        numerus))
+    si (   !_tutus(sequens->valor) && p->prior != NIHIL
+        && _tutus(p->prior->valor)
+        && p->prior->numerus_post == ZEPHYRUM)
+    {
+        si (!materia_token_trivia_post_ponere(p->prior, p->piscina,
+            plana, numerus))
+        {
+            p->memoria_defecit = VERUM;
+        }
+    }
+    alioquin si (!materia_token_trivia_ante_ponere(sequens, p->piscina,
+                 plana, numerus))
     {
         p->memoria_defecit = VERUM;
     }
@@ -965,6 +1031,7 @@ xml_arbor_parsare (
             perge;
         }
         _solvere(&p, t);
+        p.prior = t;
         _tractare(&p, t);
         si (t->genus == (s32)XML_LEX_FINIS)
         {
