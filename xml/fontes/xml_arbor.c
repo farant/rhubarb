@@ -16,7 +16,7 @@
 
 
 /* ==================================================
- * Gradus
+ * GradusArboris
  * ================================================== */
 
 nomen enumeratio {
@@ -42,12 +42,12 @@ nomen structura {
      MateriaNodus* attributum;   /* pendens (TAG, DECLARATIO_XML) */
      MateriaNodus* malum;        /* malum apertum huius loci */
               i32  status;
-} Gradus;
+} GradusArboris;
 
 nomen structura {
           Piscina* piscina;
         XmlLector  lector;
-              Xar* gradus;      /* Gradus */
+              Xar* gradus;      /* GradusArboris */
               Xar* pendentia;   /* MateriaToken* trivia */
      MateriaToken* prior;       /* lexema non trivium ultimum */
      MateriaNodus* documentum;
@@ -58,13 +58,13 @@ nomen structura {
               b32  fragmentum_partis; /* gradus imus PARS_INTERNA */
 } Aedificatio;
 
-interior Gradus*
+interior GradusArboris*
 _vertex (
     Aedificatio* p)
 {
     i32 n = xar_numerus(p->gradus);
 
-    redde n > ZEPHYRUM ? (Gradus*)xar_obtinere(p->gradus, n
+    redde n > ZEPHYRUM ? (GradusArboris*)xar_obtinere(p->gradus, n
         - I) : NIHIL;
 }
 
@@ -167,8 +167,8 @@ _impellere (
     MateriaNodus* nodus,
              i32  status)
 {
-     Gradus* g = (Gradus*)xar_addere(p->gradus);
-        i32  n;
+     GradusArboris* g = (GradusArboris*)xar_addere(p->gradus);
+               i32  n;
 
     si (g == NIHIL)
     {
@@ -190,7 +190,7 @@ _impellere (
 /* lexema in locum liberorum gradus (malum apertum aut novum) */
 interior i32
 _locus_liberorum (
-    constans Gradus* g)
+    constans GradusArboris* g)
 {
     commutatio (g->genus)
     {
@@ -212,9 +212,9 @@ _locus_liberorum (
 /* nodus in liberos gradus; malum apertum clauditur */
 interior vacuum
 _liberum (
-    Aedificatio* p,
-         Gradus* g,
-   MateriaNodus* filius)
+           Aedificatio* p,
+         GradusArboris* g,
+          MateriaNodus* filius)
 {
     i32 locus = _locus_liberorum(g);
 
@@ -230,9 +230,9 @@ _liberum (
 /* lexema in malum loci gradus (contigua in malum unum) */
 interior vacuum
 _malum (
-    Aedificatio* p,
-         Gradus* g,
-   MateriaToken* t)
+           Aedificatio* p,
+         GradusArboris* g,
+          MateriaToken* t)
 {
     si (g->malum == NIHIL)
     {
@@ -247,10 +247,10 @@ _malum (
 
 interior vacuum
 _lexema_solum (
-     Aedificatio* p,
-          Gradus* g,
-        XmlGenus  genus,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+               XmlGenus  genus,
+           MateriaToken* t)
 {
     MateriaNodus* n = _nodus(p, genus);
 
@@ -451,7 +451,7 @@ _titulus_aequat (
 
 
 /* ==================================================
- * Gradus per genus
+ * GradusArboris per genus
  * ================================================== */
 
 /* lexema tractatum (VERUM) aut gradus clausus et lexema gradui infra
@@ -459,9 +459,9 @@ _titulus_aequat (
 
 interior b32
 _contentum (
-     Aedificatio* p,
-          Gradus* g,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+           MateriaToken* t)
 {
     commutatio (t->genus)
     {
@@ -505,7 +505,8 @@ _contentum (
             per (k = (s32)xar_numerus(p->gradus) - I; k
                 >= ZEPHYRUM; k--)
             {
-                Gradus* h = (Gradus*)xar_obtinere(p->gradus, (i32)k);
+                GradusArboris* h =
+                    (GradusArboris*)xar_obtinere(p->gradus, (i32)k);
 
                 si (h->genus != GRADUS_CONTENTUM)
                 {
@@ -532,7 +533,7 @@ _contentum (
             /* elementa intermedia sine tag finali */
             dum ((s32)xar_numerus(p->gradus) - I > k)
             {
-                Gradus* h = _vertex(p);
+                GradusArboris* h = _vertex(p);
 
                 _culpa(p, h->nodus->loci[XML_ELEMENTUM_TOK_APERTURA]
                     .datum.token, h->nodus, XML_CODEX_TAG_FINALIS_DEEST,
@@ -585,9 +586,9 @@ _contentum (
 /* attributa (TAG et DECLARATIO_XML) */
 interior b32
 _attributa (
-     Aedificatio* p,
-          Gradus* g,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+           MateriaToken* t)
 {
     commutatio (t->genus)
     {
@@ -671,9 +672,9 @@ _attributa (
 
 interior b32
 _tag_finalis (
-     Aedificatio* p,
-          Gradus* g,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+           MateriaToken* t)
 {
     si (t->genus == (s32)XML_LEX_TAG_FINIS)
     {
@@ -691,9 +692,9 @@ _tag_finalis (
 
 interior b32
 _malum_tag (
-     Aedificatio* p,
-          Gradus* g,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+           MateriaToken* t)
 {
     commutatio (t->genus)
     {
@@ -715,9 +716,9 @@ _malum_tag (
 
 interior b32
 _doctype (
-     Aedificatio* p,
-          Gradus* g,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+           MateriaToken* t)
 {
     commutatio (t->genus)
     {
@@ -773,9 +774,9 @@ _doctype (
 
 interior b32
 _pars_interna (
-     Aedificatio* p,
-          Gradus* g,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+           MateriaToken* t)
 {
     commutatio (t->genus)
     {
@@ -815,9 +816,9 @@ _pars_interna (
 
 interior b32
 _declaratio (
-     Aedificatio* p,
-          Gradus* g,
-    MateriaToken* t)
+            Aedificatio* p,
+          GradusArboris* g,
+           MateriaToken* t)
 {
     commutatio (t->genus)
     {
@@ -846,8 +847,8 @@ _tractare (
 {
     dum (!p->memoria_defecit)
     {
-         Gradus* g = _vertex(p);
-            b32  tractatum;
+         GradusArboris* g = _vertex(p);
+                   b32  tractatum;
 
         si (g == NIHIL)
         {
@@ -1004,7 +1005,7 @@ _parsare (
     }
     p.piscina    = piscina;
     p.relatio    = relatio;
-    p.gradus     = xar_creare(piscina, (i32)magnitudo(Gradus));
+    p.gradus     = xar_creare(piscina, (i32)magnitudo(GradusArboris));
     p.pendentia  = xar_creare(piscina, (i32)magnitudo(MateriaToken*));
     p.diagnostica = xar_creare(piscina,
         (i32)magnitudo(MateriaDiagnosticum));

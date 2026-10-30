@@ -258,8 +258,9 @@ _sectio_prima (
                 n++;
             }
         }
-        CREDO_AEQUALIS_I32 (n, II);
-        CREDO_NIHIL (SILEX_RADICES_CLIENTIUM[II]);
+        /* materia, toml, xml (xml_arbor P16) */
+        CREDO_AEQUALIS_I32 (n, III);
+        CREDO_NIHIL (SILEX_RADICES_CLIENTIUM[III]);
     }
 }
 

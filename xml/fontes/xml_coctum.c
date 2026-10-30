@@ -43,7 +43,7 @@ nomen structura {
                        b32  in_expansione; /* recursio */
               MateriaNodus* fragmentum;    /* parsatus SEMEL */
                        b32  fragmentum_sanum;
-} Entitas;
+} Ens;
 
 nomen structura {
                     chorda elementum;
@@ -1090,7 +1090,7 @@ _valorem_entitatis (
     redde VERUM;
 }
 
-interior Entitas*
+interior Ens*
 _entitas (
     Coctor* c,
        b32  parametri,
@@ -1102,7 +1102,7 @@ _entitas (
 
     si (tabula_dispersa_invenire(tabula, titulus, &v))
     {
-        redde (Entitas*)v;
+        redde (Ens*)v;
     }
     redde NIHIL;
 }
@@ -1140,7 +1140,7 @@ _valorem_normare (
                i32  longitudo  = ZEPHYRUM;
                s32  runa;
             chorda  titulus;
-           Entitas* e;
+               Ens* e;
 
             si (crudus.mensura > i + I && crudus.datum[i + I] == '#')
             {
@@ -1612,7 +1612,7 @@ _declaratio_entitatis (
 {
     constans MateriaToken* t = _capere_post_spatium(u);
     constans MateriaToken* titulus;
-                  Entitas  e;
+                      Ens  e;
                       b32  parametri = FALSUM;
 
     memset(&e, ZEPHYRUM, magnitudo(e));
@@ -1690,8 +1690,8 @@ _declaratio_entitatis (
     }
     si (!c->cessatum && _entitas(c, parametri, titulus->valor) == NIHIL)
     {
-        Entitas* nova = (Entitas*)piscina_allocare(c->piscina,
-                            (memoriae_index)magnitudo(Entitas));
+        Ens* nova = (Ens*)piscina_allocare(c->piscina,
+                            (memoriae_index)magnitudo(Ens));
 
         si (nova == NIHIL)
         {
@@ -1843,7 +1843,7 @@ _parametrum_tractare (
                       i32  profunditas)
 {
        chorda  titulus = _sectio(t->valor, I, t->valor.mensura - I);
-      Entitas* e;
+          Ens* e;
 
     c->referentiae_parametri  = VERUM;
     e                         = _entitas(c, VERUM, titulus);
@@ -2010,7 +2010,7 @@ nomen structura {
                       i32  locus;     /* locus liberorum */
                       i32  index;
                 XmlCoctus* coctus;    /* parens coctus */
-                  Entitas* entitas;   /* expansio (in_expansione) */
+                      Ens* entitas;   /* expansio (in_expansione) */
     constans MateriaToken* ancora;    /* ancora priori restituenda */
                       b32  radix;     /* gradus documenti */
                       b32  fragmentum; /* intra textum substitutionis:
@@ -2294,7 +2294,7 @@ _impellere_coctionem (
     constans MateriaNodus* nodus,
                       i32  locus,
                 XmlCoctus* coctus,
-                  Entitas* entitas,
+                      Ens* entitas,
                       b32  radix,
                       b32  fragmentum)
 {
@@ -2328,7 +2328,7 @@ _referentiam_coquere (
          s32  runa;
          i32  longitudo = ZEPHYRUM;
       chorda  titulus;
-     Entitas* e;
+         Ens* e;
 
     si (r.mensura > I && r.datum[I] == '#')
     {

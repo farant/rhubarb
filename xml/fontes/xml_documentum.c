@@ -354,30 +354,31 @@ xml_textus_totus (
     nomen structura {
         constans XmlCoctus* x;
                        i32  index;
-    } Gradus;
+    } GradusTextus;
 
     ChordaAedificator* a;
                   Xar* acervus;
-               Gradus* g;
+               GradusTextus* g;
 
     si (elementum == NIHIL || piscina == NIHIL || textus == NIHIL)
     {
         redde FALSUM;
     }
     a        = chorda_aedificator_creare(piscina, LXIV);
-    acervus  = xar_creare(piscina, (i32)magnitudo(Gradus));
+    acervus  = xar_creare(piscina, (i32)magnitudo(GradusTextus));
     si (a == NIHIL || acervus == NIHIL)
     {
         redde FALSUM;
     }
-    g         = (Gradus*)xar_addere(acervus);
+    g         = (GradusTextus*)xar_addere(acervus);
     g->x      = elementum;
     g->index  = ZEPHYRUM;
     dum (xar_numerus(acervus) > ZEPHYRUM)
     {
         constans XmlCoctus* f;
 
-        g = (Gradus*)xar_obtinere(acervus, xar_numerus(acervus) - I);
+        g = (GradusTextus*)xar_obtinere(acervus, xar_numerus(acervus)
+            - I);
         si (g->index >= xml_liberorum_numerus(g->x))
         {
             xar_removere_ultimum(acervus);
@@ -391,7 +392,7 @@ xml_textus_totus (
         }
         alioquin si (f->genus == XML_COCTUS_ELEMENTUM)
         {
-            Gradus* h = (Gradus*)xar_addere(acervus);
+            GradusTextus* h = (GradusTextus*)xar_addere(acervus);
 
             si (h == NIHIL)
             {

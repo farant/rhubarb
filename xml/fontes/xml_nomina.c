@@ -11,9 +11,9 @@
 nomen structura {
     s32 ab;
     s32 ad;   /* inclusivum */
-} Intervallum;
+} IntervallumRunarum;
 
-hic_manens constans Intervallum INITIALES[] = {
+hic_manens constans IntervallumRunarum INITIALES[] = {
     { 0x3A, 0x3A },         /* ':' */
     { 0x41, 0x5A },         /* A-Z */
     { 0x5F, 0x5F },         /* '_' */
@@ -33,7 +33,7 @@ hic_manens constans Intervallum INITIALES[] = {
 };
 
 /* NameChar praeter NameStartChar */
-hic_manens constans Intervallum SEQUENTES[] = {
+hic_manens constans IntervallumRunarum SEQUENTES[] = {
     { 0x2D, 0x2E },         /* '-' '.' */
     { 0x30, 0x39 },         /* 0-9 */
     { 0xB7, 0xB7 },
@@ -43,9 +43,9 @@ hic_manens constans Intervallum SEQUENTES[] = {
 
 interior b32
 _in (
-    constans Intervallum* tabula,
-                     s32  numerus,
-                     s32  runa)
+    constans IntervallumRunarum* tabula,
+                            s32  numerus,
+                            s32  runa)
 {
     s32 infra = ZEPHYRUM;
     s32 supra = numerus - I;

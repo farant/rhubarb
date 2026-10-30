@@ -121,23 +121,24 @@ _nodum_scribere (
     nomen structura {
         constans XmlCoctus* x;
                        i32  index;
-    } Gradus;
+    } GradusCanonici;
 
-    Xar* acervus = xar_creare(piscina, (i32)magnitudo(Gradus));
-    Gradus* g;
+    Xar* acervus = xar_creare(piscina, (i32)magnitudo(GradusCanonici));
+    GradusCanonici* g;
 
     si (acervus == NIHIL)
     {
         redde;
     }
-    g         = (Gradus*)xar_addere(acervus);
+    g         = (GradusCanonici*)xar_addere(acervus);
     g->x      = radix;
     g->index  = (i32)-I;
     dum (xar_numerus(acervus) > ZEPHYRUM)
     {
         constans XmlCoctus* x;
 
-        g = (Gradus*)xar_obtinere(acervus, xar_numerus(acervus) - I);
+        g = (GradusCanonici*)xar_obtinere(acervus, xar_numerus(acervus)
+            - I);
         x = g->x;
         si (g->index == (i32)-I)
         {
@@ -170,7 +171,7 @@ _nodum_scribere (
         g->index++;
         si (x->liberi != NIHIL && g->index < xar_numerus(x->liberi))
         {
-            Gradus* h = (Gradus*)xar_addere(acervus);
+            GradusCanonici* h = (GradusCanonici*)xar_addere(acervus);
 
             si (h == NIHIL)
             {

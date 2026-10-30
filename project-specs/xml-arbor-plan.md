@@ -746,6 +746,37 @@ the inventory row and regenerate at merge time.
 Transcribe toml Q13: the corpus lists the library, the header shows,
 changelog line marked FRANGIT with the replacement calls. Commit.
 
+**Executed 2026-10-30 (overnight).** Measured first: (1) ambiguity —
+no public/public collision between `xml/fontes` headers and the
+corpus; three PRIVATE/public ones, toml's `Gradus` class: file-local
+typedefs `Gradus` (xml_arbor, xml_documentum inside a function,
+xml_oraculum), `Entitas` (xml_coctum), `Intervallum` (xml_nomina) equal
+public names → `GradusArboris`/`GradusTextus`/`GradusCanonici`, `Ens`
+(the longer `EntitasDeclarata` broke the formatter's alignment),
+`IntervallumRunarum`. `silva/renominare.sh` could not do it: it binds
+every file-local `Gradus` in the tree as one symbol (133 splices in 8
+files; ictus on quaestio 01M3DEYG), so plain per-file word replacement.
+(2) The root list has FOUR homes, not two: `SILEX_RADICES_CLIENTIUM`
+(lib/silex.c), `RADICES_CLIENTIUM` (tools/corpus_infixum.sh), the
+`corpus_silicis` action's `ingressus` (aedificatio.stml) — and a hand
+list of shadow directories (`materia toml`) inside corpus_infixum.sh
+itself, which made the judge regenerate the capsule 19 files short
+("regeneratio differt", whole file). The shadow list is now derived
+from `RADICES_CLIENTIUM`. (3) briar's binary links its suite's objects
+(`briar/compile_probationes.sh --obiecta` first).
+Done: `xml/fontes` the third client root (both lists + ingressus,
+probatio_silex count III); `briar -bibliothecae` lists the ten xml
+libraries, `-bibliotheca xml_documentum -functiones` the 19
+signatures; fixture `briar/probationes/fixa/thistle/xml_partitura.thistle`
+(MusicXML-shaped score walked by part, a DTD entity expanded, a
+mismatched end tag located at `partitura.xml:2:`) in the fabrica suite
+(section "xml: cliens materiae derivatum") and fumus stage XXV (run,
+-probatio, -amalgama compiled ALONE and run — 62,587 lines,
+-bibliothecae, -functiones); MUTATIONES `## inedita` FRANGIT line (old
+call → new) + corpus line; briar/CLAUDE.md names the four homes.
+Gates run by hand: briar suite 20/20, fabrica fixture, fumus sanum,
+probatio_silex, xml 12/12.
+
 ## Task P17: Closure — records, ledger, memory
 
 As-built §X in the spec (deltas, numbers, AUDIENDA answered),

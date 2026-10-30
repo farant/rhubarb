@@ -25,8 +25,12 @@ Findings: `fontes/briar.worklog.md`.
   flags.
 - **Library docs (no plagula):** `briar -bibliothecae` lists the
   corpus's `include/*.h`, then each CLIENT ROOT's headers
-  (`SILEX_RADICES_CLIENTIUM`: `materia/fontes`, `toml/fontes` — header
-  and source side by side) (name, `h c m` sources, the header's
+  (`SILEX_RADICES_CLIENTIUM`: `materia/fontes`, `toml/fontes`,
+  `xml/fontes` — header and source side by side; FOUR homes must agree:
+  that C list, `RADICES_CLIENTIUM` in `tools/corpus_infixum.sh` (the
+  judge's shadow root is derived from it), the `corpus_silicis`
+  action's `ingressus` in `aedificatio.stml`, and probatio_silex's
+  count) (name, `h c m` sources, the header's
   first-line description; last line counts those WITHOUT one = doc
   debt); `briar -bibliotheca <nomen> [-fons]` prints the header (+ its
   `lib/` sources, or the `.c` beside it in a root). Same corpus precedence as a run. Descriptions come from the
@@ -181,7 +185,8 @@ Findings: `fontes/briar.worklog.md`.
   `briar_silvam_solvere` frees); `briar_nexus_linea_silvae` maps lines.
   **Includes are DERIVED** (house headers only — `include/` AND the
   client roots, so a script using `toml_chorda` gets `toml.h`, fixture
-  `toml_config.thistle`, fumus XXI): pass one collects
+  `toml_config.thistle`, fumus XXI; `xml_documentum.h` the same way,
+  `xml_partitura.thistle`, fumus XXV): pass one collects
   implicit symbols + unknown types, `corpus.symbola.tsv` (baked from
   the identifier index by `tools/corpus_infixum.sh`; the runner
   regenerates it) maps them to headers, pass two parses with them;

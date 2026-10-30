@@ -50,6 +50,14 @@ the tree is this one.
   house cases live in `probatio_xml_api.c`); the 12 `sondae_auditus/
   xml_*` probes deleted with their parks.
 
+- **P16 done**: `xml/fontes` is briar's third client root — a
+  `.thistle` uses `xml_documentum.h` with no `#include` (fixture
+  `briar/probationes/fixa/thistle/xml_partitura.thistle`, fumus XXV).
+  Adding a root means FOUR homes (see briar/CLAUDE.md). File-local
+  type names in xml sources must not equal public names (the amalgam
+  renames by rule and skips public ones) — hence `GradusArboris`,
+  `Ens`, `IntervallumRunarum`.
+
 ## The shape (P2, read before P4/P5)
 
 Borrowed from html: `<titulus` and `</titulus` are single tokens; `>`
