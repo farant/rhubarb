@@ -125,6 +125,22 @@ A7 = B7; B10+B12 ≈ C3; E7/E8 partly fold into E4; E5 shrinks to
 | E8 | 72a5f370 | pending | radix libs in FILA parallel parts |
 | D5 | 1272c226 | ASan cellae 212-318 → 120-133 s (D1-D5) | 4 KB temp pools |
 
+First measured merge after tier I (2026-10-30, quinta ff 0a2b4879;
+ONE sample, sexta committing concurrently; `mensor quaestio fusio`):
+
+| Part | Typical before | 0a2b4879 |
+|---|---|---|
+| merge commit | ~17 min | 5.9 min (owed load varies - least trustworthy) |
+| fusio gates (excl. frigida) | ~52 min | 41.4 min |
+| frigida | ~21 min | 16.3 min |
+| **total** | **~90** | **~64 (−26, ~28%)** |
+
+Per gate (before = last 3-5 runs): venenum 264-413 → 46 s (D1-D5);
+silva 375-428 → 205 s while running 21/57 members vs 4-5 (A1, A3);
+frigida:silva 253-293 → 188 s; frigida:oratio 81-130 → 74 s; flat:
+aedilis, instrumenta, pythonica, oratio, examen-corpus, frigida:radix.
+Re-check with `mensor quaestio cohortes` after 2-3 more merges.
+
 Lessons (2026-10-28/30): deferred fusio-tier gates hid a C2 regression
 for 4 commits (canon_corpus: empty macro) — run touched deferred suites
 before committing; computus golds pin allocation counts (A4 re-gold).

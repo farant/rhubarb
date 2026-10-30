@@ -1087,3 +1087,24 @@ which scale with size (~8% of probatio_cellae's ASan profile, more in
 "imago sine iactura"). Now 4 KB first alveus; dynamic piscinae grow when a
 call needs more. Behaviour unchanged (no plant possible — sizing only);
 radices, cellae, quaternio green.
+
+## 2026-10-30 — lentus split into its own suite (budget B1 D8)
+
+The "iudicium contra D119 lentum" section (n = V, VI against the frozen
+D119 tables, ~177k subsets per catalogue and function) was ~40% of
+probatio_cellae's time in both the root and venenum gates. Both gates
+run suites in parallel, so one long suite set the wall time. It now
+lives in `probationes/probatio_cellae_lenta.c` (suite `cellae_lenta`,
+still tagged `lentus`). The tables, the zeta_8/2I catalogue builders,
+the concurrence oracle and `_contra_d119` moved to
+`probationes/cellae_d119.h`, which both files include. No check was
+removed.
+
+Membership: the root gate picks the file up by its `probatio_*.c`
+glob (Fran: stays in the root gate, not merge-only). venenum lists
+members by name in `aedificatio.stml` and its `tegit` in
+`tools/venenum_probare.sh`. Nothing checks that list against the
+files, so a new cellae-style suite has to be added by hand. Plant: a
+D119 n=V regula count off by one → cellae_lenta FRACTA at
+cellae_d119.h:358. venenum sana with both (under load 20: cellae
+107 s, lenta 69 s).
