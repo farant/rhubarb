@@ -375,10 +375,10 @@ tag not recovered. Glossary: `xmlts`.
 **Files:** Create `xml/fontes/xml_arbor.{h,c}`,
 `xml/probationes/probatio_xml_arbor.c`
 
-- [ ] **Step 1: Measure** — run the lexer over the selection and
+- [x] **Step 1: Measure** — run the lexer over the selection and
   count the token sequences the builder must place (top-level
   misc, DOCTYPE positions, element nesting depth max, CDATA, PIs).
-- [ ] **Step 2: The builder** — iterative over an explicit stack
+- [x] **Step 2: The builder** — iterative over an explicit stack
   (toml_arbor's shape): prolog (declaration only at byte 0, DOCTYPE
   at most once before the root, misc), one root element, end-tag
   matching (mismatch → the `WFC: Element Type Match` diagnostic with
@@ -386,16 +386,46 @@ tag not recovered. Glossary: `xmlts`.
   element if any), the DOCTYPE and internal subset as STRUCTURE only
   (declarations are typed nodes; their meaning is P8), `malum` for
   the rest.
-- [ ] **Step 3: Byte law** — `emit(parse(x)) == x` for every
+- [x] **Step 3: Byte law** — `emit(parse(x)) == x` for every
   hand case, every selected suite file (well-formed or not) and
   every wild file. Totality: no byte outside a token, no token
   outside a node.
-- [ ] **Step 4: Absent-slot rows** — unclosed tag, missing `=`,
+- [x] **Step 4: Absent-slot rows** — unclosed tag, missing `=`,
   missing end tag at EOF, second root element: each a named
   diagnostic at the right offset.
-- [ ] **Step 5: Plants** — end-tag matching disabled; one token
+- [x] **Step 5: Plants** — end-tag matching disabled; one token
   dropped by the builder → red (byte law names the file).
-- [ ] **Step 6: Commit.**
+- [x] **Step 6: Commit.**
+
+**Executed 2026-10-30.** `xml_arbor.{h,c}`: iterative frame stack
+(DOCUMENTUM, TAG, CONTENTUM, TAG_FINALIS, DECLARATIO_XML, DOCTYPE,
+PARS_INTERNA, DECLARATIO, MALUM_TAG); nodes appended to their parent at
+creation; a frame that cannot take a token closes and hands it down
+("slot-order law": a token arriving after a later slot is filled closes
+the node and lands in the parent, so emission stays in byte order);
+contiguous unplaceable tokens merge into one `malum`. End tags search
+the contiguous run of open elements: top = end tag, deeper = the
+intermediates close with `elementum/tag-finalis-deest`, none = stray
+end tag in a malum (`elementum/tag-finalis-solus`) swallowing to its
+`>`. An unclosed start tag leaves the element OPEN (the `>` absence is
+derived from the declaration). Document order judged after building
+(`documentum/radix-deest|radix-altera|doctype|textus|contentum`).
+Diagnostics the builder emits go in `XmlParsura.diagnostica`
+(MateriaDiagnosticum, for `materia_diagnostica_derivare`'s `emissa`).
+Ligator: all SPATIA attach BEFORE the next token. Gate: 18 structure
+cases (children, mala, emitted codes, sana), element details, the byte
+law over 61 inline + 2,001 W3C + 7,917 wild files — **zero failures
+on the first run** — and 100,000-deep nesting parsed (10,000 emitted).
+Measured on the way: the tree costs 13–36× the source for typical
+files (2× for expat's 10 MB single-construct stress files), but
+douay-rheims.usfx.xml costs 60× (16.7 MB → 1.0 GB) — over the 1 GiB
+section ceiling; the byte-law gate skips files above 12 MB BY NAME
+(four today; the lexer gate still reads them) and P14's computus owns
+the per-byte cost. Plants (all red): end-tag name not compared, trivia
+not attached, a stray-end-tag token dropped, second root not reported,
+intermediates not closed — the last survived first (the code was
+checked, not the element it named) and the test now asserts the
+diagnostic's offset and which element took the end tag.
 
 ---
 
