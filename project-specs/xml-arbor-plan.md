@@ -458,6 +458,19 @@ lentus`. Plant: the post-trivia rule removed → the ten refusals return
 
 Transcribe toml Q6. Commit.
 
+**Executed 2026-10-30.** `xml/grammatica/xml.canon` (76 rules: the
+involucrum, two trivia, 15 genera, 33 slots, 25 token kinds) — first
+form written by a throwaway script from the registry and the builder's
+allowed children per slot, then maintained by hand like toml's; the
+seal pinned is the live `86121710`. `probatio_xml_canon.c` transcribed
+(drift guard both ways, seal pin, judgment of every inline case, all
+2,001 W3C cases and the wild files up to 128 KB — 239 larger skipped
+with count, as in P6): **zero violations on the first judged run**
+(the only miss was the placeholder seal). 39 s; corpus section `gravis
+lentus`. Plants (all red): a token rule renamed, the pinned seal
+changed, an allowed child of `documentum/liberi` renamed, `xml-valor`
+removed from `doctype/id_externum`.
+
 ---
 
 ## Task P8: `xml_dtd` — the internal subset as tables
