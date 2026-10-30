@@ -187,6 +187,9 @@ jump home; Esc / Ctrl+O back (house history rules).
   plants; extra cause "dies invalidus").
 - **C2** gathering (two per-book declarations, XII): all companion books + common book -> events with origin (book,
   page, line); updates when a page changes.
+  **DONE 2026-10-30** (`lib/chronica_fontes.c`, 9 sections, 7 plants;
+  state in opaque `ChronicaFontes`; names `eventa_comitis` /
+  `eventa_libri`; long loci computed directly - see worklog).
 - **C3** pane: year view, h/l years, j/k pages, footer, position.
 - **C4** selection (reuse navigator unit code) + jump home (line plumbing through vicus + scriba, XII).
 - **C5** person / place views.

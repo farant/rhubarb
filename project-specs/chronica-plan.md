@@ -188,28 +188,28 @@ scriba_liber, organum/insula manifests, vicus panes, lector_paginare.
       Xar* anni;     /* s32 distincti, ascendentes */
   } ChronicaTabula;
 
-  nomen structura {
-      Volumen*             volumen;
-      InternamentumChorda* intern;
-  } ChronicaFontes;
-
+  /* AS BUILT (2026-10-30, header approved by Fran): state lives in
+   * an opaque ChronicaFontes - the registry is opaque and had no room
+   * for the cached table or the stale flag */
+  nomen structura ChronicaFontes ChronicaFontes;   /* opacum */
+  ChronicaFontes* chronica_fontes_creare (Piscina*,
+      InternamentumChorda*, Volumen*);
   b32 chronica_registrare (ConspectusRegistrum*, ChronicaFontes*,
                            Xar** vitia);
-  /* tabula recens: aedificatur solum si auditor clavem stalam
-   * nuntiavit post aedificationem priorem (aliter eadem redditur) */
-  constans ChronicaTabula* chronica_tabula (ConspectusRegistrum*);
-  /* res personae / loci (nomen exactum post tonsuram), ordine tabulae */
-  Xar* chronica_res_personae (constans ChronicaTabula*, chorda nomen,
-                              Piscina*);
-  Xar* chronica_res_loci (constans ChronicaTabula*, chorda nomen,
+  constans ChronicaTabula* chronica_tabula (ChronicaFontes*);
+  Xar* chronica_res_personae (constans ChronicaTabula*,
+                              chorda titulus, Piscina*);
+  Xar* chronica_res_loci (constans ChronicaTabula*, chorda titulus,
                           Piscina*);
+  vacuum chronica_fontes_destruere (ChronicaFontes*);
   ```
-  Declarations: `<conspectus nomen="eventa-comitis" versio="1"><clavis
-  typus="textus"/><fons spatium="comes/{clavis}/paginae"/></conspectus>`
-  and `eventa-libri` with `<fons spatium="paginae/{clavis}"/>` (as
-  `lib/conspectus_liber.stml`). Enumerations follow
-  `comites_enumerare` (`lib/indagatio_genera.c:570`) and the `liber`
-  genus. Invalidation via `conspectus_auditorem_ponere`.
+  Declarations (AS BUILT): `eventa_comitis` (`comes/{clavis}/paginae`)
+  and `eventa_libri` (`paginae/{clavis}`) - underscores, because
+  tools/conspectus_infigere.sh makes a C identifier from the file
+  key. Not quaerenda, so chronica enumerates books itself (plagula
+  scan as `comites_enumerare` + `scriba_liber_nomina_legere`).
+  Invalidation via `conspectus_auditorem_ponere`. Keys too long for
+  conspectus's 256-byte inscription are computed directly.
 
 - [ ] **Step 0: Header text to Fran** (both headers + declarations).
 - [ ] **Step 1: Failing tests** (temporary volume, pages written with

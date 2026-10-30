@@ -19,6 +19,7 @@
 #include "lectiones.h"
 #include "indagatio.h"
 #include "indagatio_genera.h"
+#include "chronica_fontes.h"
 #include "indagatio_visus.h"
 #include "multiplexor.h"
 #include "fenestra_tempus.h"
@@ -2303,6 +2304,8 @@ nomen structura {
              DiesFontes  diei;
         IndagatioFontes  quaerendi;
     ConspectusRegistrum* conspectus;
+    /* chronica C2: eventa librorum omnium, in eodem registro */
+         ChronicaFontes* chronica;
  ContextusNomenclatoris* nomenclatoris;
               Indagatio* index;
     /* D5 S4: corpus sanctorum (genus quaerendum 'sancti'), pigre per
@@ -2354,15 +2357,20 @@ conspectum_communem_parare (
     ck->diei.intern    = ck->intern;
     ck->conspectus     = conspectus_registrum_creare(ck->piscina,
         ck->intern, ck->volumen, ZEPHYRUM);
+    ck->chronica       = chronica_fontes_creare(ck->piscina, ck->intern,
+        ck->volumen);
     si (   ck->conspectus
         && (   !conspectus_dies_registrare(ck->conspectus, &ck->diei,
                    &vitia)
             || !indagatio_genera_registrare(ck->conspectus,
                    &ck->quaerendi, &vitia)
+            || !chronica_registrare(ck->conspectus, ck->chronica,
+                   &vitia)
             || !conspectus_parare(ck->conspectus, &vitia)))
     {
         conspectus_registrum_destruere(ck->conspectus);
-        ck->conspectus = NIHIL;
+        ck->conspectus  = NIHIL;
+        ck->chronica    = NIHIL;
     }
 }
 
