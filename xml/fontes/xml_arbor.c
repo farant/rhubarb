@@ -55,6 +55,7 @@ nomen structura {
               Xar* diagnostica;
               b32  memoria_defecit;
               i32  mala;
+              b32  fragmentum_partis; /* gradus imus PARS_INTERNA */
 } Aedificatio;
 
 interior Gradus*
@@ -803,7 +804,8 @@ _pars_interna (
             _extollere(p);
             redde VERUM;
         casus XML_LEX_FINIS:
-            redde FALSUM;
+            /* fragmentum partis internae: gradus imus FINIS accipit */
+            redde p->fragmentum_partis && xar_numerus(p->gradus) == I;
         ordinarius:
             frange;
     }
@@ -983,14 +985,17 @@ _ordinem_iudicare (
  * Publica
  * ================================================== */
 
-MateriaNodus*
-xml_arbor_parsare (
+/* fragmentum: -I documentum; aliter XmlFragmentum */
+interior MateriaNodus*
+_parsare (
                Piscina* piscina,
     constans character* fons,
                    s32  mensura,
+                   s32  fragmentum,
             XmlParsura* relatio)
 {
     Aedificatio p;
+            b32 lector_bonus;
 
     memset(&p, ZEPHYRUM, magnitudo(p));
     si (piscina == NIHIL)
@@ -1007,14 +1012,27 @@ xml_arbor_parsare (
     {
         memset(relatio, ZEPHYRUM, magnitudo(*relatio));
     }
+    lector_bonus = fragmentum < ZEPHYRUM
+        ? xml_lector_incipere(&p.lector, piscina, fons, mensura)
+        : xml_lector_incipere_fragmentum(&p.lector, piscina, fons,
+            mensura, fragmentum == (s32)XML_FRAGMENTUM_PARS_INTERNA
+                ? XML_MODUS_PARS_INTERNA : XML_MODUS_CONTENTUM);
     si (   p.gradus      == NIHIL || p.pendentia == NIHIL
-        || p.diagnostica == NIHIL
-        || !xml_lector_incipere(&p.lector, piscina, fons, mensura))
+        || p.diagnostica == NIHIL || !lector_bonus)
     {
         redde NIHIL;
     }
-    p.documentum = _nodus(&p, XML_GENUS_DOCUMENTUM);
-    _impellere(&p, GRADUS_DOCUMENTUM, p.documentum, ZEPHYRUM);
+    si (fragmentum == (s32)XML_FRAGMENTUM_PARS_INTERNA)
+    {
+        p.fragmentum_partis  = VERUM;
+        p.documentum         = _nodus(&p, XML_GENUS_PARS_INTERNA);
+        _impellere(&p, GRADUS_PARS_INTERNA, p.documentum, ZEPHYRUM);
+    }
+    alioquin
+    {
+        p.documentum = _nodus(&p, XML_GENUS_DOCUMENTUM);
+        _impellere(&p, GRADUS_DOCUMENTUM, p.documentum, ZEPHYRUM);
+    }
 
     dum (!p.memoria_defecit)
     {
@@ -1042,7 +1060,10 @@ xml_arbor_parsare (
     {
         redde NIHIL;
     }
-    _ordinem_iudicare(&p);
+    si (fragmentum < ZEPHYRUM)
+    {
+        _ordinem_iudicare(&p);
+    }
     si (relatio != NIHIL)
     {
         relatio->diagnostica  = p.diagnostica;
@@ -1051,4 +1072,25 @@ xml_arbor_parsare (
             && xar_numerus(p.diagnostica) == ZEPHYRUM;
     }
     redde p.memoria_defecit ? NIHIL : p.documentum;
+}
+
+MateriaNodus*
+xml_arbor_parsare (
+               Piscina* piscina,
+    constans character* fons,
+                   s32  mensura,
+            XmlParsura* relatio)
+{
+    redde _parsare(piscina, fons, mensura, (s32)-I, relatio);
+}
+
+MateriaNodus*
+xml_arbor_parsare_fragmentum (
+                Piscina* piscina,
+     constans character* fons,
+                    s32  mensura,
+          XmlFragmentum  genus,
+             XmlParsura* relatio)
+{
+    redde _parsare(piscina, fons, mensura, (s32)genus, relatio);
 }

@@ -272,7 +272,8 @@ _contentum (
     s32 n;
     s32 j;
 
-    si (   i == ZEPHYRUM && c == 0xEF && _octetus(l, I) == 0xBB
+    si (   !l->fragmentum && i == ZEPHYRUM && c == 0xEF
+        && _octetus(l, I)  == 0xBB
         && _octetus(l, II) == 0xBF)
     {
         redde _facere(l, (s32)XML_LEX_SIGNUM_ORDINIS, III);
@@ -292,7 +293,7 @@ _contentum (
             l->modus = XML_MODUS_DOCTYPE;
             redde _facere(l, (s32)XML_LEX_DOCTYPE, i + IX);
         }
-        si (   _incipit(l, i, "<?xml")
+        si (   !l->fragmentum && _incipit(l, i, "<?xml")
             && (i == ZEPHYRUM || (i == (s32)III
                 && _octetus(l, ZEPHYRUM) == 0xEF
                 && _octetus(l, I) == 0xBB && _octetus(l, II) == 0xBF))
@@ -589,7 +590,25 @@ xml_lector_incipere (
     lector->linea                 = I;
     lector->linea_initium         = ZEPHYRUM;
     lector->modus                 = XML_MODUS_CONTENTUM;
+    lector->fragmentum            = FALSUM;
     lector->forma.mensura_caudae  = ZEPHYRUM;
+    redde VERUM;
+}
+
+b32
+xml_lector_incipere_fragmentum (
+              XmlLector* lector,
+                Piscina* piscina,
+     constans character* fons,
+                    s32  mensura,
+               XmlModus  modus)
+{
+    si (!xml_lector_incipere(lector, piscina, fons, mensura))
+    {
+        redde FALSUM;
+    }
+    lector->modus       = modus;
+    lector->fragmentum  = VERUM;
     redde VERUM;
 }
 

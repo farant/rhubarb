@@ -1904,4 +1904,5 @@
   <vocabulum lemma="pubid" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus XML 1.0 (par. 2.3): PubidChar, characteres identificatoris publici (xml/fontes/xml_nomina.c)"/>
   <vocabulum lemma="nmtoken" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus XML 1.0 (par. 2.3): Nmtoken, signum nominis quodvis NameChar incipiens (xml/fontes/xml_nomina.c)"/>
   <vocabulum lemma="xmlts" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: XML W3C Conformance Test Suite (xmlts20130923), oraculum clientis xml (xml/xmlts_arcessere.sh)"/>
+  <vocabulum lemma="qname" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus Namespaces in XML 1.0: QName, titulus qualificatus (praefixum ':' pars localis; xml/fontes/xml_coctum.c)"/>
 </glossarium>

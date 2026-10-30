@@ -71,6 +71,7 @@ nomen structura {
                     i32  linea;
                     s32  linea_initium;
                XmlModus  modus;
+                    b32  fragmentum;  /* BOM, <?xml non agnoscuntur */
       MateriaTokenForma  forma;
 } XmlLector;
 
@@ -82,6 +83,16 @@ xml_lector_incipere (
                Piscina* piscina,
     constans character* fons,
                    s32  mensura);
+
+/* Fragmentum (textus substitutionis entitatis): modo dato incipit
+ * (CONTENTUM aut PARS_INTERNA), BOM et '<?xml' non agnoscuntur. */
+b32
+xml_lector_incipere_fragmentum (
+              XmlLector* lector,
+                Piscina* piscina,
+     constans character* fons,
+                    s32  mensura,
+               XmlModus  modus);
 
 /* Lexema proximum; FINIS (vacuum) in fine, iterum et iterum. NIHIL =
  * memoria deficit. */

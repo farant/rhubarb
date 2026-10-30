@@ -9,5 +9,8 @@
 <aedificatio>
   <actio titulus="probationes_xml" genus="iudicium">
     <probationes_c exemplar="xml/probationes/probatio_*.c"/>
+    <!-- oraculum W3C: fracturae omnes / casus unus (manu) -->
+    <ambitus variabilis="XMLTS_OMNIA"/>
+    <ambitus variabilis="XMLTS_CASUS"/>
   </actio>
 </aedificatio>

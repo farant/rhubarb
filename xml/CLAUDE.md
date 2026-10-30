@@ -19,6 +19,16 @@ with Fran). Ledger: parcum 01M65252W1DKBJE10VX0NBQDJH. It will replace
   `./xml/compile_probationes.sh [filtrum]` (thin door to `bin/fabrica
   probare probationes_xml`); gate `xml` in pythonica.
 
+- **P3–P7 done**: `xml_nomina` (Char/Name tables), `xml_lector` (six
+  self-chosen modes), `xml_arbor` (iterative builder, byte law holds on
+  every corpus; fragment entry for entity text), STML round trip,
+  `grammatica/xml.canon` (76 rules, seal pinned).
+- **P8–P11 done as one slice**: `xml_coctum` (cooked view: DTD, entities,
+  attributes, namespaces, every WFC), `xml_oraculum` (canonical forms).
+  **W3C: not-wf 922/922, valid+invalid 948/948, outputs 309/309**
+  (`probatio_xml_oraculum`, pinned; `XMLTS_CASUS=<ID>` prints one case's
+  diagnostics, `XMLTS_OMNIA=1` every failure).
+
 ## The shape (P2, read before P4/P5)
 
 Borrowed from html: `<titulus` and `</titulus` are single tokens; `>`

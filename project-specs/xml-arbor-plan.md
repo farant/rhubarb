@@ -558,6 +558,39 @@ node.
   seven tasks).
 - [ ] **Step 4: Commit** per climb.
 
+**Executed 2026-10-30 — P8, P9, P10 and P11 as ONE slice (re-slice,
+recorded here).** The four are not separable in practice: the W3C count
+only means something once the DTD, cooking, namespaces and the
+canonical writer all exist, and the cheapest feedback loop was the
+oracle itself. Modules: `xml_coctum.{h,c}` (one coctor: token checks,
+XML declaration, DOCTYPE, the four DTD declaration grammars with a
+token cursor and byte-gap whitespace checks, entity tables with the
+§5.1 stop rule, content cooking with entity expansion through
+`xml_arbor_parsare_fragmentum` — new: content and internal-subset
+fragment modes in lexer and builder — attribute normalization, defaults,
+namespaces; every walk iterative), `xml_oraculum.{h,c}` (both canonical
+forms; DTD PIs become document children before `locus_typi`), gates
+`probatio_xml_oraculum.c` (pinned rising) and `probatio_xml_coctum.c`
+(what the suite does not stress). **First oracle run: 921/922 not-wf
+rejected, 939/939 accepted, 304/308 outputs.** Causes fixed one by one:
+replacement text must NOT be line-normalized again (a CR from `&#13;`
+in an entity value); PIs in the internal subset are output before the
+DOCTYPE; a colon in a notation name (NS 1.0); `locus_typi` was `i32` —
+unsigned in this house, so the `-1` sentinel never compared below zero.
+The 9 `sine-spatiis` cases are now JUDGED with namespaces off
+(`xml_coquere(…, FALSUM)`) instead of excluded. **Result, pinned:
+not-wf 922/922, valid+invalid 948/948, outputs 309/309**; excluded only
+44 non-UTF-8 (X8) and 60 errors hidden in unread external entities (X3).
+The cooking test found the billion-laughs cost: each expansion parsed a
+fresh fragment tree (2.3 GB) — each entity's fragment is now parsed ONCE
+and cached; limits X4 = 64 levels, 16 MiB expanded text. Plants (all
+red): `--` in comments, duplicate attributes, the §5.1 rule, WFC Entity
+Declared, CR LF collapse in attribute values, undeclared prefixes,
+canonical CR escape, fragment text re-normalized, ELEMENT grammar
+switched off. Glossary: `qname`.
+
+---
+
 ## Task P12: The expat/libxml2 differential and the wild corpus
 
 - [ ] Over the selection and the wild corpus: our verdict vs expat

@@ -60,6 +60,30 @@ nomen structura {
     b32 sana;                 /* nulla emissa, nulla mala */
 } XmlParsura;
 
+/* Fragmenta (textus substitutionis entitatum, spec par. V):
+ *   XML_FRAGMENTUM_CONTENTUM      entitas generalis in contento:
+ *                                 documentum cuius liberi contentum
+ *                                 sunt; ordo documenti NON iudicatur
+ *                                 (textus et elementa plura licent);
+ *                                 tag finalis solus aut tag non clausus
+ *                                 = contentum non aequilibratum
+ *   XML_FRAGMENTUM_PARS_INTERNA   entitas parametri inter
+ *                                 declarationes: nodus pars-interna
+ *                                 (sine '[' et ']') cuius liberi
+ *                                 declarationes sunt */
+nomen enumeratio {
+    XML_FRAGMENTUM_CONTENTUM = 0,
+    XML_FRAGMENTUM_PARS_INTERNA
+} XmlFragmentum;
+
+MateriaNodus*
+xml_arbor_parsare_fragmentum (
+                Piscina* piscina,
+     constans character* fons,
+                    s32  mensura,
+          XmlFragmentum  genus,
+             XmlParsura* relatio);
+
 /* fons NON copiatur (lexemata in eum monstrant); relatio NIHIL licet.
  * NIHIL = memoria deficit. */
 MateriaNodus*
