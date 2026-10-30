@@ -292,3 +292,23 @@ article - the test sets the saved position directly to reach it. (2)
 Leaving sentence view for the page used to save the PAGE start as the
 position, throwing away the finer sentence offset; removed - the
 sentence offset finds the same page anyway.
+
+## 2026-10-29 - N6.3 links in sentence view
+
+Refactor: the link machinery now works on a "unit" = the page (page
+view) or the sentence (sentence view): _unitas_currens /
+_unitates_numerus / _notae_unitatis / _nexum_in_unitate on top of a
+range-only core `_nexum_in_ambitu(notae, a, b, ab, gradus)`.
+_nexus_electus and _nexum_eligere (Tab crossing units; sentence
+crossing writes sententia + nexus and saves the position) are shared,
+so page and sentence behaviour can't drift. The click hit test takes
+its lines from lector_sententiam_disponere in sentence view (same
+call the painter makes, same area) and from the page otherwise. `~`
+applies: _notae_articuli_activae.
+
+Process slip: this time the code was written before its tests; the
+tests came right after and 7 plants (colors, Tab crossing, ~, Esc,
+footer, page-lines-in-sentence hit test, raw screen coords in vicus)
+showed each piece is caught. The vicus test recomputes the centered
+sentence layout (area from the pane size like _margines/_area +
+lector_sententiam_disponere) to click a link at a real screen point.

@@ -1386,36 +1386,32 @@ _notae_activae (
         && (i32)k < f->paginae_articuli ? NIHIL : _notae_paginae(f, k);
 }
 
-/* nexus qui in pagina k INCIPIT: gradus I - initium minimum > ab
- * (ab < 0: primus), gradus -I - maximum < ab (ab < 0: ultimus);
- * -1 si nullus */
-interior s32
-_nexum_in_pagina (
+/* N6.3: notae nexuum activae textus articuli (visus sententiae) */
+interior Xar*
+_notae_articuli_activae (
     constans NavigatorMontatio* m,
-     constans NavigatorFigurae* f,
-                           s32  k,
-                           s32  ab,
-                           s32  gradus)
+     constans NavigatorFigurae* f)
 {
-     constans LectorPagina* g;
+    redde _campus_numerus(m, "nexus_occulti") == I ? NIHIL
+        : f->textus->notae;
+}
+
+/* nexus qui in [a, b) INCIPIT: gradus I - initium minimum > ab (ab <
+ * 0: primus), gradus -I - maximum < ab (ab < 0: ultimus); -1 si
+ * nullus */
+interior s32
+_nexum_in_ambitu (
+    Xar* notae,
+    s32  a,
+    s32  b,
+    s32  ab,
+    s32  gradus)
+{
     constans ArticulusNota* n;
-                       Xar* notae;
-                       s32  a;
-                       s32  b;
                        s32  r;
                        i32  i;
 
-    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
-    si (!g || xar_numerus(g->lineae) == ZEPHYRUM)
-    {
-        redde -I;
-    }
-    a      = (s32)((constans LectorLinea*)xar_obtinere(g->lineae,
-        ZEPHYRUM))->initium;
-    b      = (s32)((constans LectorLinea*)xar_obtinere(g->lineae,
-        xar_numerus(g->lineae) - I))->finis;
-    notae  = _notae_activae(m, f, k);
-    r      = -I;
+    r = -I;
     per (i = ZEPHYRUM; notae && i < xar_numerus(notae); i++)
     {
         n = (constans ArticulusNota*)xar_obtinere(notae, i);
@@ -1438,8 +1434,79 @@ _nexum_in_pagina (
     redde r;
 }
 
-/* nota nexus electi (campus "nexus") in pagina currente; NIHIL si
- * nullus aut non iam in pagina */
+/* N6.3: unitas nexuum = pagina (visus paginae) aut sententia (visus
+ * sententiae) */
+interior b32
+_in_sententiis (
+    constans NavigatorMontatio* m)
+{
+    redde _visus(m) == VISUS_SENTENTIAE;
+}
+
+interior s32
+_unitas_currens (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f)
+{
+    redde _in_sententiis(m) ? _sententia_currens(m, f)
+                            : _pagina_currens(m, f);
+}
+
+interior s32
+_unitates_numerus (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f)
+{
+    redde (s32)(_in_sententiis(m) ? _numerus_sententiarum(f)
+                                  : xar_numerus(f->paginae));
+}
+
+interior Xar*
+_notae_unitatis (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f,
+                           s32  k)
+{
+    redde _in_sententiis(m) ? _notae_articuli_activae(m, f)
+                            : _notae_activae(m, f, k);
+}
+
+/* nexus qui in unitate k incipit (vide _nexum_in_ambitu) */
+interior s32
+_nexum_in_unitate (
+    constans NavigatorMontatio* m,
+     constans NavigatorFigurae* f,
+                           s32  k,
+                           s32  ab,
+                           s32  gradus)
+{
+       constans LectorPagina* g;
+     constans CodexSententia* t;
+
+    si (_in_sententiis(m))
+    {
+        si (k < ZEPHYRUM || (i32)k >= _numerus_sententiarum(f))
+        {
+            redde -I;
+        }
+        t = _sententia(f, k);
+        redde _nexum_in_ambitu(_notae_unitatis(m, f, k),
+            (s32)t->initium,
+            (s32)t->finis, ab, gradus);
+    }
+    g = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
+    si (!g || xar_numerus(g->lineae) == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    redde _nexum_in_ambitu(_notae_unitatis(m, f, k), (s32)((constans
+        LectorLinea*)xar_obtinere(g->lineae, ZEPHYRUM))->initium,
+        (s32)((constans LectorLinea*)xar_obtinere(g->lineae,
+        xar_numerus(g->lineae) - I))->finis, ab, gradus);
+}
+
+/* nota nexus electi (campus "nexus") in unitate currente; NIHIL si
+ * nullus aut non iam in ea */
 interior constans ArticulusNota*
 _nexus_electus (
     constans NavigatorMontatio* m,
@@ -1452,16 +1519,16 @@ _nexus_electus (
                        i32  i;
 
     e = _campus_numerus(m, "nexus");
-    si (!f || e < ZEPHYRUM)
+    si (!f || e < ZEPHYRUM || _unitates_numerus(m, f) == ZEPHYRUM)
     {
         redde NIHIL;
     }
-    k = _pagina_currens(m, f);
-    si (   _nexum_in_pagina(m, f, k, e - I, I) != e)
+    k = _unitas_currens(m, f);
+    si (_nexum_in_unitate(m, f, k, e - I, I) != e)
     {
         redde NIHIL;
     }
-    notae = _notae_activae(m, f, k);
+    notae = _notae_unitatis(m, f, k);
     per (i = ZEPHYRUM; notae && i < xar_numerus(notae); i++)
     {
         n = (constans ArticulusNota*)xar_obtinere(notae, i);
@@ -1473,9 +1540,10 @@ _nexus_electus (
     redde NIHIL;
 }
 
-/* Tab (gradus I) / S-Tab (-I): nexus proximus in pagina, aliter
- * primus (ultimus) paginae sequentis (prioris) quae nexum habet -
- * pagina et electus actu uno, positio servatur. Nullus: nihil */
+/* Tab (gradus I) / S-Tab (-I): nexus proximus in unitate (pagina aut
+ * sententia), aliter primus (ultimus) unitatis sequentis (prioris)
+ * quae nexum habet - unitas et electus actu uno, positio servatur.
+ * Nullus: nihil */
 interior b32
 _nexum_eligere (
     NavigatorMontatio* m,
@@ -1484,39 +1552,56 @@ _nexum_eligere (
        NavigatorFigurae* f;
                     s32  k;
                     s32  r;
+       NavigatorPositio  q;
      constans character* tituli[II];
      constans character* valores[II];
-              character  pagina[XVI];
+              character  unitas[XVI];
               character  nexus[XVI];
 
     f = _paginas_parare(m);
-    si (!f)
+    si (!f || _unitates_numerus(m, f) == ZEPHYRUM)
     {
         redde VERUM;
     }
-    k = _pagina_currens(m, f);
-    r = _nexum_in_pagina(m, f, k, _nexus_electus(m,
-        f) ? _campus_numerus(m,
-        "nexus") : -I, gradus);
+    k = _unitas_currens(m, f);
+    r = _nexum_in_unitate(m, f, k, _nexus_electus(m, f)
+        ? _campus_numerus(m, "nexus") : -I, gradus);
     dum (r < ZEPHYRUM)
     {
         k += gradus;
-        si (k < ZEPHYRUM || (i32)k >= xar_numerus(f->paginae))
+        si (k < ZEPHYRUM || k >= _unitates_numerus(m, f))
         {
             redde VERUM;
         }
-        r = _nexum_in_pagina(m, f, k, -I, gradus);
+        r = _nexum_in_unitate(m, f, k, -I, gradus);
     }
-    sprintf(pagina, "%d", (integer)k);
     sprintf(nexus, "%d", (integer)r);
-    tituli[ZEPHYRUM]   = "pagina";
-    valores[ZEPHYRUM]  = pagina;
+    si (_in_sententiis(m))
+    {
+        sprintf(unitas, "%u", (insignatus integer)_sententia(f, k)
+            ->initium);
+        tituli[ZEPHYRUM] = "sententia";
+        si (k != _sententia_currens(m, f))
+        {
+            q.versio      = f->versio_arcae;
+            q.offset      = _sententia(f, k)->initium;
+            q.in_nexibus  = FALSUM;
+            (vacuum)navigator_positionem_scribere(m->bibliotheca,
+                f->articulus_arcae, &q);
+        }
+    }
+    alioquin
+    {
+        sprintf(unitas, "%d", (integer)k);
+        tituli[ZEPHYRUM] = "pagina";
+        si (k != _pagina_currens(m, f))
+        {
+            _positionem_servare(m, f, k);
+        }
+    }
+    valores[ZEPHYRUM]  = unitas;
     tituli[I]          = "nexus";
     valores[I]         = nexus;
-    si (k != _pagina_currens(m, f))
-    {
-        _positionem_servare(m, f, k);
-    }
     redde _campos_scribere(m, tituli, valores, II);
 }
 
@@ -2289,6 +2374,25 @@ fac_paginam_ex_sententia (
     redde _paginam_ex_sententia(((ContextusPraecepti*)ctx)->m);
 }
 
+/* Esc in sententia: nexus electus prius tollitur (N6.3), deinde ad
+ * paginam */
+interior b32
+fac_sententia_redire (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+    constans character* tituli[I];
+    constans character* valores[I];
+
+    si (_campus_numerus(cp->m, "nexus") >= ZEPHYRUM)
+    {
+        tituli[ZEPHYRUM]   = "nexus";
+        valores[ZEPHYRUM]  = "";
+        redde _campos_scribere(cp->m, tituli, valores, I);
+    }
+    redde _paginam_ex_sententia(cp->m);
+}
+
 interior b32
 fac_sententiam_proximam (
     vacuum* ctx)
@@ -2569,12 +2673,12 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_indicem_proximum },
     { "navigator.aperire", "Read", "Enter", VISUS_INDICIS,
         REQUIRIT_ELECTUM, fac_aperire },
-    { "navigator.nexus_proximus", "Next link", "Tab", VISUS_PAGINAE,
-        ZEPHYRUM, fac_nexum_proximum },
-    { "navigator.nexus_prior", "Previous link", "S-Tab", VISUS_PAGINAE,
-        ZEPHYRUM, fac_nexum_priorem },
-    { "navigator.nexum_aperire", "Open link", "Enter", VISUS_PAGINAE,
-        ZEPHYRUM, fac_nexum_aperire },
+    { "navigator.nexus_proximus", "Next link", "Tab", VISUS_PAGINAE
+        | VISUS_SENTENTIAE, ZEPHYRUM, fac_nexum_proximum },
+    { "navigator.nexus_prior", "Previous link", "S-Tab", VISUS_PAGINAE
+        | VISUS_SENTENTIAE, ZEPHYRUM, fac_nexum_priorem },
+    { "navigator.nexum_aperire", "Open link", "Enter", VISUS_PAGINAE
+        | VISUS_SENTENTIAE, ZEPHYRUM, fac_nexum_aperire },
     { "navigator.nexus_vertere", "Hide links", "~", VISUS_PAGINAE,
         ZEPHYRUM, fac_nexus_vertere },
     { "navigator.sententia", "Sentence view", "s", VISUS_PAGINAE,
@@ -2586,7 +2690,7 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "navigator.ad_paginam", "Page view", "s", VISUS_SENTENTIAE,
         ZEPHYRUM, fac_paginam_ex_sententia },
     { "navigator.sententia_redire", "Page view", "Esc",
-        VISUS_SENTENTIAE, ZEPHYRUM, fac_paginam_ex_sententia },
+        VISUS_SENTENTIAE, ZEPHYRUM, fac_sententia_redire },
     { "navigator.pagina_proxima", "Next page", "j", VISUS_PAGINAE,
         ZEPHYRUM, fac_paginam_proximam },
     { "navigator.pagina_prior", "Previous page", "k", VISUS_PAGINAE,
@@ -2608,11 +2712,11 @@ _nexus_ad_punctum (
                         s32  y)
 {
             NavigatorFigurae* f;
-       constans LectorPagina* g;
         constans LectorLinea* l;
       constans ArticulusNota* n;
                       chorda  t;
                          Xar* notae;
+                         Xar* lineae;
                          s32  lateris;
                          s32  supra;
                          s32  k;
@@ -2627,14 +2731,36 @@ _nexus_ad_punctum (
     {
         redde NIHIL;
     }
-    k      = _pagina_currens(m, f);
-    g      = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)k);
-    t      = _textus_paginae(f, k);
-    notae  = _notae_activae(m, f, k);
     _margines(m, &lateris, &supra);
-    per (i = ZEPHYRUM; i < xar_numerus(g->lineae); i++)
+    si (_in_sententiis(m))
     {
-        l   = (constans LectorLinea*)xar_obtinere(g->lineae, i);
+        /* N6.3: lineae dispositionis sententiae (eadem ac pictura) */
+        s32 latitudo;
+        s32 altitudo;
+        b32 praecisa;
+
+        si (_numerus_sententiarum(f) == ZEPHYRUM)
+        {
+            redde NIHIL;
+        }
+        _area(m, &latitudo, &altitudo);
+        lineae = lector_sententiam_disponere(&f->textus->caput,
+            _sententia(f, _sententia_currens(m, f)), (i32)latitudo,
+            (i32)altitudo, &praecisa, f->scheda);
+        t      = f->textus->caput.textus;
+        notae  = _notae_articuli_activae(m, f);
+    }
+    alioquin
+    {
+        k       = _pagina_currens(m, f);
+        lineae  = ((constans LectorPagina*)xar_obtinere(f->paginae,
+            (i32)k))->lineae;
+        t      = _textus_paginae(f, k);
+        notae  = _notae_activae(m, f, k);
+    }
+    per (i = ZEPHYRUM; lineae && i < xar_numerus(lineae); i++)
+    {
+        l   = (constans LectorLinea*)xar_obtinere(lineae, i);
         lx  = lateris * NAV_LITTERA + l->x;
         si (   y < l->y || y >= l->y + fons_altitudo(l->fons)
             || x < lx)
@@ -2748,6 +2874,18 @@ agere (
         {
             redde _favorem_vertere(m, _articulus_per_id(m, _campus(m,
                 "articulus")), privatum->scheda);
+        }
+        si (   chorda_aequalis_literis(nodus->id, "textus")
+            && ev->genus == EVENTUS_MUS_DEPRESSUS)
+        {
+            /* N6.3: ictus in nexu sententiae (punctum locale) */
+            constans ArticulusNota* n = _nexus_ad_punctum(m, des
+                ? des->punctum_locale.x : ev->datum.mus.x
+                - nodus->fines.x, des ? des->punctum_locale.y
+                : ev->datum.mus.y - nodus->fines.y);
+
+            redde n && _url_aperire(m, chorda_transcribere(n->scopus,
+                privatum->scheda), privatum->scheda);
         }
         redde gradus != ZEPHYRUM && ev->genus == EVENTUS_MUS_DEPRESSUS
             && _sententiam_movere(m, gradus);
@@ -3436,10 +3574,12 @@ _sententiam_pingere (
             per (j = ZEPHYRUM; lineae && j < xar_numerus(lineae); j++)
             {
                 l = (constans LectorLinea*)xar_obtinere(lineae, j);
-                _textum_pingere(md, x->fines.x + lateris * NAV_LITTERA
-                    + l->x, x->fines.y + l->y, chorda_sectio(
-                    f->textus->caput.textus, l->initium, l->finis),
-                    (i32)l->fons, COLOR_TEXT);
+                /* N6.3: nexus colorati, electus inversus */
+                _lineam_textus_pingere(md, x->fines.x + lateris
+                    * NAV_LITTERA + l->x, x->fines.y + l->y,
+                    f->textus->caput.textus, l,
+                    _notae_articuli_activae(m, f), _nexus_electus(m, f)
+                    ? _campus_numerus(m, "nexus") : -I);
             }
         }
         alioquin si (chorda_aequalis_literis(x->id, "caput_paginae"))
@@ -3449,6 +3589,15 @@ _sententiam_pingere (
         alioquin si (chorda_aequalis_literis(x->id, "pes"))
         {
             nota = _campus(m, "nota");
+            si (nota.mensura == ZEPHYRUM && _nexus_electus(m, f))
+            {
+                /* N6.3: scopus nexus electi */
+                nota = chorda_concatenare(chorda_ex_literis(
+                    "\342\206\222 ", md->piscina), _sine_schemate(
+                    _nexus_electus(m, f)->scopus), md->piscina);
+                _centrum_pingere(md, x, nota, COLOR_TEXT_DIM);
+                perge;
+            }
             sprintf(textus, "sentence %d/%d%s%s", (integer)(k + I),
                 (integer)n, praecisa ? " ..." : "", _notae_loci(m,
                 md->piscina) ? " \302\266" : "");

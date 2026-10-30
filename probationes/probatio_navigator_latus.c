@@ -1157,6 +1157,89 @@ _sectio_sententia_locus (
     mundum_claudere(w);
 }
 
+/* N6.3: nexus in visu sententiae - color, ictus, Tab trans
+ * sententias, electus et pes, Enter, Esc, j tollit, ~ celat */
+interior vacuum
+_sectio_sententia_nexus (
+    CredoContextus* c)
+{
+                         Mundus* w = mundus(c, VERUM);
+    constans NavigatorArticulus* a;
+                         chorda  duae;
+                         chorda  locus;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    offerre(w, "https://la.wikipedia.org/wiki/Duae", chorda_ex_literis(
+        PAGINA("Duae", "<p>Vide <a rel=\"mw:WikiLink\" "
+        "href=\"./Beta\">Betam</a> hodie. Et <a rel=\"mw:ExtLink\" "
+        "href=\"https://example.org/x\">situm</a> alienum.</p>"),
+        c->piscina));
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Duae", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    duae = chorda_transcribere(a->identitas, c->piscina);
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(duae, c->piscina)));
+    clavis(w, 's');
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    locus = chorda_transcribere(navigator_locus(&w->m, c->piscina),
+        c->piscina);
+
+    CREDO_GRADUS("color: 'Betam' nexus, 'Vide' textus");
+    CREDO_VERUM(pictum_colore_mandati(w, "Betam", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore(w, "Vide", COLOR_TEXT, c->piscina));
+
+    CREDO_GRADUS("ictus in 'Betam': Beta (servata) aperitur");
+    CREDO_VERUM(ictus_in_textu(w, "Betam", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+
+    CREDO_GRADUS("Tab: Betam electus, pes scopum; Tab: sententia III, "
+        "situm; S-Tab: Betam");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 la.wikipedia.org/wiki/Beta",
+        c->piscina));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum_colore(w, "situm", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 example.org/x", c->piscina));
+    tabula(w, VERUM);
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("Esc: electio tollitur, visus manet; Esc: pagina");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+
+    CREDO_GRADUS("Tab, Enter: aperit; j tollit electionem");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    tabula(w, FALSUM);
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    clavis(w, 'k');
+    tabula(w, FALSUM);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+
+    CREDO_GRADUS("~ (in pagina) etiam sententiam afficit");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(duae, c->piscina)));
+    clavis(w, '~');
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_TEXT, c->piscina));
+    CREDO_VERUM(ictus_in_textu(w, "Betam", c->piscina));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    mundum_claudere(w);
+}
+
 /* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
  * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
  * habet */
@@ -1667,6 +1750,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sententia", _sectio_sententia, NIHIL, mundum_purgare, NIHIL,
         NIHIL },
     { "sententia locus", _sectio_sententia_locus, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "sententia nexus", _sectio_sententia_nexus, NIHIL, mundum_purgare,
         NIHIL, NIHIL },
     { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
         NIHIL },

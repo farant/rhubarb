@@ -60,6 +60,15 @@
  * sententia: positio servata (N3.4c) -> sententia eam continens. Ex
  * sententia ad paginam positio NON servatur (offset sententiae
  * subtilior). Pes pilcrow si locus notas habet, ut pagina.
+ * SENTENTIA - NEXUS (N6.3): in visu sententiae nexus ut in pagina -
+ * colore nexuum picti (~ celat: notae activae), ictus aperit (punctum
+ * locale -> linea dispositionis sententiae -> columna -> offset ->
+ * nota), Tab / S-Tab nexum sententiae eligunt (post ultimum primus
+ * sententiae sequentis quae nexum habet, ante primum ultimus
+ * praecedentis), electus inversus, pes "-> <hospes/via>", Enter
+ * aperit, Esc electionem prius tollit (deinde ad paginam). Motus
+ * sententiae electionem tollit. Campus "nexus" idem ac paginae;
+ * "unitas" nexuum = pagina aut sententia, codice communi.
  * POSITIO (N3.4c): omnis motus paginae et apertio positionem servat
  * (navigator_positionem_scribere: versio, octetus primus paginae,
  * index nexuum?). Apertio sine pagina nominata (index, URL, quaestio,
