@@ -172,9 +172,14 @@ _amalgamatorem_struere() {
 _amalgama_compilare_admonens() {
     local inclusa_extra=""
     [ "$PROIECTUM" = "officina" ] && inclusa_extra="-Isilva/amalgama"
+    # -fsyntax-only (budget B1 A3, 2026-10-28): obiectum numquam legitur,
+    # solae admonitiones - generatio codicis (~60% compilationis) vana.
+    # Admonitiones octetim eaedem omnibus VI gyris silvae (et "is not
+    # needed and will not be emitted" et declaratio implicita): Sema,
+    # non codegen.
     # shellcheck disable=SC2086
     clang "${VEXILLA_SINE_WERROR[@]}" $inclusa_extra \
-        -c "$STATIO/amalgama_messis.c" -o "$STATIO/amalgama_messis.o" \
+        -fsyntax-only "$STATIO/amalgama_messis.c" \
         2> "$STATIO/admonitiones.txt"
 }
 
@@ -194,17 +199,32 @@ _corpora_socia() {
     fi
 }
 
+# TABULA DEFINITIONUM (budget B1 A3, 2026-10-28): nomen -> basis PRIMA
+# cuius plagula "^nomen[ ]*(" definit - semel per cursum (plagulae inter
+# gyros non mutantur), awk uno pro grep per nomen per basem (CLXIX
+# nomina x XVII bases). Ordo BASES servatur: introitus primus vincit,
+# ut olim ansa 'for b in $BASES' prima congruens reddebat.
+_tabulam_definitionum_struere() {
+    local b
+    : > "$STATIO/definitiones.tsv"
+    for b in $BASES; do
+        # shellcheck disable=SC2046
+        for f in "lib/$b.c" "materia/fontes/$b.c" $(_corpora_socia "$b"); do
+            [ -f "$f" ] || continue
+            awk -v b="$b" '/^[A-Za-z_][A-Za-z0-9_]*[ ]*\(/ {
+                n = $0; sub(/[ ]*\(.*/, "", n); print n "\t" b }' "$f"
+        done
+    done | awk -F'\t' '!($1 in visa) { visa[$1] = 1; print }' \
+        > "$STATIO/definitiones.tsv"
+}
+
 _classificare() {
     local nomen="$1" b optimum="" optimum_mensura=0
     # sedes basium: lib/ (bibliothecae domus) aut materia/fontes/
     # (substratum materiae vendicatum, silva-migratio T13b)
-    for b in $BASES; do
-        # shellcheck disable=SC2046
-        if grep -q "^${nomen}[ ]*(" "lib/$b.c" "materia/fontes/$b.c" \
-                $(_corpora_socia "$b") 2>/dev/null; then
-            echo "$b"; return 0
-        fi
-    done
+    b="$(awk -F'\t' -v n="$nomen" '$1 == n { print $2; exit }' \
+        "$STATIO/definitiones.tsv")"
+    if [ -n "$b" ]; then echo "$b"; return 0; fi
     for b in $BASES; do
         case "$nomen" in
             "${b}_"*)
@@ -273,6 +293,9 @@ _nomen_originale() {
 }
 : > "$STATIO/renominationes.tsv"
 
+_tabulam_definitionum_struere
+PROTECTA_SPATIATA=" $(echo $PROTECTA) "
+
 GYRUS=0
 dum_finis=0
 while [ $dum_finis -eq 0 ]; do
@@ -329,7 +352,7 @@ while [ $dum_finis -eq 0 ]; do
     while IFS= read -r renominata; do
         [ -n "$renominata" ] || continue
         nomen="$(_nomen_originale "$renominata")"
-        case " $(echo $PROTECTA) " in
+        case "$PROTECTA_SPATIATA" in
             *" $nomen "*)
                 si_fracta "signum functionem PROTECTAM demittere vult: $nomen (gyrus $GYRUS) - catena viva callee amisit; vide $STATIO/admonitiones.txt"
                 ;;

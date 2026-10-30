@@ -1191,3 +1191,235 @@ communio_tesseram_legere (
     exitus[n] = '\0';
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Inscriptio per epistulam (plan-3 T6)
+ * ================================================== */
+
+interior vacuum
+_finis_semel (
+         vacuum* datum,
+    HttpVocatio* vocatio)
+{
+    (vacuum)vocatio;
+    *(b32*)datum = VERUM;
+}
+
+/* petitio una sincrona (C7: secunda functio HTTP clientis - phase 5
+ * eam cum _mittere substituet); status 0 = rete aut tempus */
+interior i32
+_vocare_semel (
+               Reactor* reactor,
+          HttpMethodus  methodus,
+    constans character* url,
+    constans character* tessera,
+                chorda  corpus,
+                chorda* responsum,
+               Piscina* piscina)
+{
+     HttpPetitio* pet;
+     HttpVocatio* v;
+    HttpResultus  res;
+       character  auctoritas[LXIV];
+             b32  finita;
+             i32  gyri;
+
+    responsum->datum    = NIHIL;
+    responsum->mensura  = ZEPHYRUM;
+    pet                 = http_petitio_creare(piscina, methodus, url);
+    si (!pet)
+    {
+        redde ZEPHYRUM;
+    }
+    si (tessera)
+    {
+        sprintf(auctoritas, "Bearer %.43s", tessera);
+        http_petitio_caput_addere(pet, "Authorization", auctoritas);
+        memset(auctoritas, ZEPHYRUM, magnitudo(auctoritas));
+    }
+    si (corpus.mensura > ZEPHYRUM)
+    {
+        http_petitio_caput_addere(pet, "Content-Type",
+            "application/json");
+        http_petitio_corpus_ponere_chorda(pet, corpus);
+    }
+    http_petitio_tempus_ponere(pet, (MoraAngusta)TEMPUS_PETITIONIS);
+    finita = FALSUM;
+    v = http_vocare(reactor, pet, NIHIL, NIHIL, _finis_semel, &finita,
+        NIHIL, piscina);
+    per (gyri = ZEPHYRUM; v && !finita && gyri < (i32)MMM; gyri++)
+    {
+        (vacuum)reactor_poll(reactor, X);
+    }
+    si (!v)
+    {
+        redde ZEPHYRUM;
+    }
+    si (!finita)
+    {
+        http_vocationem_abrumpere(v);
+        redde ZEPHYRUM;
+    }
+    res = http_vocatio_resultus(v);
+    si (!res.successus || !res.responsum)
+    {
+        redde ZEPHYRUM;
+    }
+    *responsum = res.responsum->corpus;
+    redde res.responsum->status;
+}
+
+/* campus chordae ex corpore JSON in buffer (mensura exacta) */
+interior b32
+_campum_copiare (
+                chorda  corpus,
+    constans character* clavis,
+                   i32  mensura,
+             character* exitus,
+               Piscina* piscina)
+{
+    JsonResultus r;
+          chorda c;
+          chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    r              = json_legere(corpus, piscina);
+    c = r.successus ? json_capere_chorda(r.radix, clavis,
+        vacua) : vacua;
+    si (c.mensura != mensura)
+    {
+        redde FALSUM;
+    }
+    memcpy(exitus, c.datum, (size_t)mensura);
+    exitus[mensura] = '\0';
+    redde VERUM;
+}
+
+b32
+communio_inscriptionem_petere (
+               Reactor* reactor,
+    constans character* basis,
+                chorda  epistula,
+    constans character* via_tesserae,
+                chorda  titulus,
+             character  aditus_exitus[MONETA_ULID_MENSURA],
+               Piscina* piscina)
+{
+     JsonValor* o;
+     character  digestum[LXV];
+     character  url[BASIS_MAXIMA + VIA_MAXIMA];
+        chorda  responsum;
+           i32  status;
+
+    si (   !reactor || !basis || !via_tesserae || !aditus_exitus
+        || strlen(basis) >= BASIS_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    si (!communio_tesseram_scribere(via_tesserae, digestum))
+    {
+        redde FALSUM;
+    }
+    o = json_objectum_creare(piscina);
+    si (!o)
+    {
+        (vacuum)filum_delere(via_tesserae);
+        redde FALSUM;
+    }
+    json_objectum_ponere(o, "epistula", json_chorda_creare(piscina,
+        epistula));
+    json_objectum_ponere(o, "digestum",
+        json_chorda_creare_literis(piscina,
+        digestum));
+    json_objectum_ponere(o, "titulus", json_chorda_creare(piscina,
+        titulus));
+    sprintf(url, "%s/communio/intrare", basis);
+    status = _vocare_semel(reactor, HTTP_POST, url, NIHIL,
+        json_scribere(o,
+        piscina), &responsum, piscina);
+    si (   status != CCII
+        || !_campum_copiare(responsum, "aditus", XXVI, aditus_exitus,
+               piscina))
+    {
+        (vacuum)filum_delere(via_tesserae);
+        fprintf(stderr,
+            "communio: inscriptio petita deficit (HTTP %d)\n",
+            (integer)status);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+s32
+communio_inscriptionem_confirmare (
+               Reactor* reactor,
+    constans character* basis,
+                chorda  aditus,
+                chorda  codex,
+             character  apparatus_exitus[MONETA_ULID_MENSURA],
+               Piscina* piscina)
+{
+     JsonValor* o;
+     character  url[BASIS_MAXIMA + VIA_MAXIMA];
+        chorda  responsum;
+           i32  status;
+
+    si (   !reactor || !basis || !apparatus_exitus
+        || strlen(basis) >= BASIS_MAXIMA)
+    {
+        redde -I;
+    }
+    o = json_objectum_creare(piscina);
+    si (!o)
+    {
+        redde -I;
+    }
+    json_objectum_ponere(o, "aditus", json_chorda_creare(piscina,
+        aditus));
+    json_objectum_ponere(o, "codex", json_chorda_creare(piscina,
+        codex));
+    sprintf(url, "%s/communio/confirmare", basis);
+    status = _vocare_semel(reactor, HTTP_POST, url, NIHIL,
+        json_scribere(o,
+        piscina), &responsum, piscina);
+    si (status == ZEPHYRUM)
+    {
+        redde -II;
+    }
+    si (   status != CC
+        || !_campum_copiare(responsum, "apparatus", XXVI,
+               apparatus_exitus, piscina))
+    {
+        redde -I;
+    }
+    redde ZEPHYRUM;
+}
+
+b32
+communio_tessera_valet (
+               Reactor* reactor,
+    constans character* basis,
+    constans character* via_tesserae,
+               Piscina* piscina)
+{
+    character tessera[XLIV];
+    character url[BASIS_MAXIMA + VIA_MAXIMA];
+       chorda responsum;
+       chorda vacua;
+          i32 status;
+
+    si (   !reactor || !basis || strlen(basis) >= BASIS_MAXIMA
+        || !communio_tesseram_legere(via_tesserae, tessera))
+    {
+        redde FALSUM;
+    }
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    sprintf(url, "%s/communio/apparatus", basis);
+    status = _vocare_semel(reactor, HTTP_GET, url, tessera, vacua,
+        &responsum, piscina);
+    memset(tessera, ZEPHYRUM, magnitudo(tessera));
+    redde status == CC;
+}

@@ -269,6 +269,25 @@ export answer (D11); backups in Cloudflare R2 (D8); encrypted with
 envelope keys, trusted-server model (D8b); soft deletes, crypto-shredding
 for real deletes (D8c).
 
+## Resolved with Fran (2026-10-27, before phase 3)
+
+- **Allowlist = email -> person (Fran: "yes").** An entry pairs an
+  address with a person (civis); the admin tool creates the person in
+  the same step when the handle does not exist yet (Amanda has no
+  exemplar account). Milestone 1 allowlist: Fran's address -> `fran`,
+  Amanda's address -> `amanda` (the addresses themselves are entered
+  on the server through the admin channel only, never written into the
+  repository). The same allowlist later carries guests (D6).
+- **Sender: `communio@golden.earth`.**
+- **Server secrets are kept locally and copied up by a tool (Fran's
+  idea).** Keys live where the others do (`~/.rhubarb/<provider>.clavis`,
+  0600; `resend.clavis` created by Fran 2026-10-27); a small tool streams
+  one to `/var/lib/<app>/<name>` on the host (owner = the app's user,
+  0600) through ssh stdin - never in argv, a temp file or any output;
+  confirms by comparing hashes on both ends and printing only
+  match/mismatch; refuses to overwrite unless asked to rotate. General
+  for every later server key (R2, push).
+
 ## AUDIENDA (not verified while writing)
 
 - iOS app-links (associated domains) for a self-signed-up developer

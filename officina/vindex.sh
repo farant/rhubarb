@@ -35,19 +35,14 @@ source "$OFF_DIR/vindex_fontes_generata.sh"
 # vindex_onerator.o/amalgama_officina.o stala post silva.h v0.2 -
 # mixtura corrumpens in proximo cursu; auditus prior hanc plagulam
 # per COMMENTARIUM "silva.h" falso exoneravit)
-newest_header () {
-    find "$RADIX_DIR/include" "$OFF_DIR/instrumenta" \
-        "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" \
-        "$RADIX_DIR/tessera/amalgama" \
-        "$OFF_DIR/amalgama" \
-        -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include" "$OFF_DIR/instrumenta" "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" "$RADIX_DIR/tessera/amalgama" "$OFF_DIR/amalgama"
 
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [dep] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -80,7 +75,7 @@ done
 src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
 obj="$BUILD_DIR/silva_lexicon.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || [ -n "$(newest_header "$obj")" ]; then
+    || caput_recentius "$obj"; then
     echo "  [lexicon] silva_lexicon.c"
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" "-I$RADIX_DIR/materia/fontes" -c "$src" -o "$obj" || exit 1
 fi
@@ -90,7 +85,7 @@ for f in "praeparator" "vindex_onerator" "vindex_visum"; do
     src="$OFF_DIR/instrumenta/$f.c"
     obj="$BUILD_DIR/$f.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-        || [ -n "$(newest_header "$obj")" ]; then
+        || caput_recentius "$obj"; then
         echo "  [vindex] $f.c"
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

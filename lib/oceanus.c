@@ -306,7 +306,8 @@ _scheda_legere (
         o->piscina);
     r->data = _copia(json_capere_chorda(v, "data", vacua),
         o->piscina);
-    r->ttl = (i32)json_capere_integer(v, "ttl", 0);
+    r->ttl        = (i32)json_capere_integer(v, "ttl", 0);
+    r->prioritas  = (i32)json_capere_integer(v, "priority", 0);
 }
 
 interior chorda
@@ -320,6 +321,11 @@ _corpus_schedae (
     json_objectum_ponere(o, "name", json_chorda_creare(p, s->titulus));
     json_objectum_ponere(o, "data", json_chorda_creare(p, s->data));
     json_objectum_ponere(o, "ttl", json_integer_creare(p, (s64)s->ttl));
+    si (s->prioritas > ZEPHYRUM)
+    {
+        json_objectum_ponere(o, "priority", json_integer_creare(p,
+            (s64)s->prioritas));
+    }
     redde json_scribere(o, p);
 }
 
@@ -501,6 +507,21 @@ oceanus_assecurare (
     constans character* data,
                    i32  ttl)
 {
+    redde oceanus_assecurare_prioritate(oceanus, dominium, genus,
+        titulus,
+        data, ttl, ZEPHYRUM);
+}
+
+OceanusExitus
+oceanus_assecurare_prioritate (
+               Oceanus* oceanus,
+    constans character* dominium,
+    constans character* genus,
+    constans character* titulus,
+    constans character* data,
+                   i32  ttl,
+                   i32  prioritas)
+{
              Piscina* p;
                  Xar* x;
     OceanusRegistrum* inventum = NIHIL;
@@ -531,11 +552,12 @@ oceanus_assecurare (
             inventum = r;
         }
     }
-    novum.id       = 0;
-    novum.genus    = chorda_ex_literis(genus, p);
-    novum.titulus  = chorda_ex_literis(titulus, p);
-    novum.data     = chorda_ex_literis(data, p);
-    novum.ttl      = ttl;
+    novum.id         = 0;
+    novum.genus      = chorda_ex_literis(genus, p);
+    novum.titulus    = chorda_ex_literis(titulus, p);
+    novum.data       = chorda_ex_literis(data, p);
+    novum.ttl        = ttl;
+    novum.prioritas  = prioritas;
     si (congruentia > I)
     {
         (vacuum)_errare(oceanus, "plura registra eiusdem generis et "
@@ -548,7 +570,8 @@ oceanus_assecurare (
             NIHIL) ? OCEANUS_CREATUM : OCEANUS_ERROR;
     }
     alioquin si (   chorda_aequalis_literis(inventum->data, data)
-                 && inventum->ttl == ttl)
+                 && inventum->ttl       == ttl
+                 && inventum->prioritas == prioritas)
     {
         fructus = OCEANUS_IDEM;   /* nulla scriptio */
     }

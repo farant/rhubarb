@@ -35,6 +35,9 @@
 #include "volumen.h"
 #include "cives.h"
 #include "hospitium.h"
+#include "moneta.h"
+#include "epistula.h"
+#include "custodia.h"
 
 #define COMMUNIO_TESSERA_MENSURA XLIII
 
@@ -168,5 +171,146 @@ b32
 communio_servum_montare (
     CommunioServus* servus,
          Hospitium* hospitium);
+
+
+/* ==================================================
+ * Index permissorum et aditus per epistulam (plan-3 T3; spec D6)
+ * ==================================================
+ *
+ * Index permissorum (radix accessus): epistula -> persona + spatium.
+ * Epistula normata (spatia extrema sublata, ASCII minusculae);
+ * clara solum in ordine communio_permissi (necessaria ad mittendum);
+ * acta et aditus solum SHA-256 eius ferunt.
+ *
+ * Aditus: apparatus petit (digestum tesserae suae + titulus); si
+ * epistula permissa est, codex (VIII signa Crockford) et signum (XXXII
+ * octeti, base64url) cuduntur, solum SHA-256 eorum servatur; aditus
+ * XV minuta vivit, semel valet, V conatus codicis admittit. Epistula
+ * ignota: id fortuitum redditur, nihil servatur - responsum idem.
+ */
+
+#define COMMUNIO_ADITUS_VITA_MS  ((s64)XV * (s64)LX * (s64)M)
+#define COMMUNIO_ADITUS_CONATUS  V
+#define COMMUNIO_CODEX_MENSURA   VIII
+#define COMMUNIO_EPISTULA_MAXIMA CCLIV
+
+/* recensio 1: limites epistularum aditus ex ordinibus communio_aditus
+ * (non ex memoria evincibili): per epistulam per horam, servo toto per
+ * diem (sub quota provisoris). Supra: aditus non servatur, epistula
+ * non mittitur, responsum idem (202). */
+#define COMMUNIO_EPISTULAE_PER_HORAM III
+#define COMMUNIO_EPISTULAE_PER_DIEM  XXX
+
+/* recensio 2: intrare respondet post hanc moram ab initio petitionis
+ * (permissa et ignota idem tempus) */
+#define COMMUNIO_INTRARE_MORA_MS     CCL
+
+/* chordae in piscina vocantis */
+nomen structura {
+    chorda epistula;
+    chorda civis;
+    chorda spatium;
+       b32 revocatus;
+} CommunioPermissus;
+
+/* exitus petitionis: codex et signum CLARA solum hic (pro epistula
+ * mittenda) - vocator ea post missionem delet (memset) */
+nomen structura {
+    character id[MONETA_ULID_MENSURA];
+    character codex[X];
+    character signum[XLIV];
+          b32 permissus;
+    character epistula[COMMUNIO_EPISTULA_MAXIMA + I];
+} CommunioAditus;
+
+/* epistulam permittere (aut iterum, post revocationem): persona activa
+ * et membrum spatii esse debet; FALSUM si epistula mala */
+b32
+communio_epistulam_permittere (
+    CommunioServus* servus,
+            chorda  epistula,
+            chorda  civis,
+            chorda  spatium);
+
+/* aditus novi recusantur; apparatus iam inscripti manent (separatim
+ * revocandi). FALSUM si epistula non in indice. */
+b32
+communio_epistulam_revocare (
+    CommunioServus* servus,
+            chorda  epistula);
+
+/* Xar de CommunioPermissus, ordine inscriptionis */
+Xar*
+communio_permissos_enumerare (
+    CommunioServus* servus,
+           Piscina* piscina);
+
+/* aditum petere: SEMPER id implet et VERUM (nisi argumenta NIHIL);
+ * permissus VERUM (aditus servatus, codex/signum impleta) solum si
+ * epistula permissa, persona activa, digestum validum et nondum usum,
+ * titulus non vacuus */
+b32
+communio_aditum_petere (
+    CommunioServus* servus,
+            chorda  epistula,
+            chorda  digestum,
+            chorda  titulus,
+    CommunioAditus* exitus);
+
+/* aditum confirmare per codicem (litterae quaevis, lineola ignorata)
+ * AUT per signum (unum vacuum): 0 = apparatus nunc inscriptus, 1 = iam
+ * confirmatus (idem apparatus redditur), -1 = recusatum (ignotus,
+ * expiratus, secretum falsum, conatus nimii, epistula revocata,
+ * persona non activa). apparatus_exitus >= MONETA_ULID_MENSURA. */
+s32
+communio_aditum_confirmare (
+    CommunioServus* servus,
+            chorda  id,
+            chorda  codex,
+            chorda  signum,
+         character* apparatus_exitus);
+
+
+/* ==================================================
+ * Viae aditus (plan-3 T4) - SINE tessera (apparatus nondum inscriptus)
+ * ==================================================
+ *
+ * POST /communio/intrare {"epistula","digestum","titulus"} -> SEMPER
+ *      202 {"aditus":id} (permissa an ignota: idem); 400 corpus malum
+ *      aut epistula non forma epistulae; 429 frenum (per epistulam
+ *      normatam - permissa et ignota eodem modo). Permissa: epistula
+ *      cum nexu et codice mittitur (Idempotency-Key = id).
+ * POST /communio/confirmare {"aditus","codex"} -> 200 {"apparatus"};
+ *      403 {"error":"aditus"}; 429 frenum (per IP).
+ * GET  /communio/confirmare?aditus=&signum= -> pagina HTML 200 cum
+ *      bulla "Sign in" (forma POST) - NIHIL mutat (recensio 3:
+ *      scrutatores epistularum nexus aperiunt); 403 si aditus ignotus.
+ * POST /communio/confirmare (forma: aditus, signum) -> pagina HTML 200
+ *      ("Signed in: <titulus>") aut 403. Titulus apparatus: LXIV octeti
+ *      ad plurimum, sine signis moderantibus (aliter intrare 400).
+ */
+
+/* epistularius (NIHIL = epistulae non mittuntur, nuntiatur in stderr),
+ * mittens ("communio@golden.earth"), basis publica nexuum
+ * ("https://exemplar.golden.earth"); copiae */
+vacuum
+communio_servum_epistularium_ponere (
+         CommunioServus* servus,
+           Epistularius* epistularius,
+     constans character* a,
+     constans character* basis);
+
+/* mora fixa responsi intrare in ms (ordinarie COMMUNIO_INTRARE_MORA_MS;
+ * 0 = statim - probationes) */
+vacuum
+communio_servum_moram_intrandi_ponere (
+    CommunioServus* servus,
+               i32  ms);
+
+/* custodia (frenum) - NIHIL = sine freno */
+vacuum
+communio_servum_custodiam_ponere (
+    CommunioServus* servus,
+          Custodia* custodia);
 
 #endif /* COMMUNIO_SERVUS_H */

@@ -2486,3 +2486,254 @@ git_arbores_differre (
     xar_ordinare(exitus, _viae_mutatae_comparare);
     redde exitus;
 }
+
+
+/* ==================================================
+ * ANTECESSIO (budget B9) - vide git.h
+ * ================================================== */
+
+#define GIT_ANTECESSIO_LAXITAS  ((s64)LXXXVI * (s64)M + (s64)CD)
+
+b32
+git_continet (
+       GitRepositorium* repositorium,
+    constans character* posterius,
+    constans character* prius,
+               Piscina* piscina,
+                   b32* continet)
+{
+      GitCommissum  basis;
+    TabulaDispersa* visa;
+               Xar* agmen;
+               i32  caput = ZEPHYRUM;
+               s64  limes;
+
+    *continet = FALSUM;
+    si (   repositorium == NIHIL || posterius == NIHIL || prius == NIHIL
+        || piscina      == NIHIL)
+    {
+        redde FALSUM;
+    }
+    basis = git_commissum_legere(repositorium, prius, piscina);
+    si (!basis.successus)
+    {
+        redde FALSUM;
+    }
+    si (strcmp(posterius, prius) == ZEPHYRUM)
+    {
+        *continet = VERUM;
+        redde VERUM;
+    }
+    limes  = basis.tempus - GIT_ANTECESSIO_LAXITAS;
+    visa   = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    agmen  = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (visa == NIHIL || agmen == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *(chorda*)xar_addere(agmen) = chorda_transcribere(chorda_ex_literis(
+        posterius, piscina), piscina);
+    dum (caput < xar_numerus(agmen))
+    {
+              chorda sha = *(chorda*)xar_obtinere(agmen, caput);
+        GitCommissum c;
+                 i32 k;
+
+        caput++;
+        si (tabula_dispersa_continet(visa, sha))
+        {
+            perge;
+        }
+        (vacuum)tabula_dispersa_inserere(visa, sha, NIHIL);
+        si (chorda_aequalis_literis(sha, prius))
+        {
+            *continet = VERUM;
+            redde VERUM;
+        }
+        c = git_commissum_legere(repositorium, chorda_ut_cstr(sha,
+            piscina), piscina);
+        si (!c.successus)
+        {
+            redde FALSUM;
+        }
+        si (c.tempus < limes)
+        {
+            perge;   /* vetustius quam prius: non expanditur */
+        }
+        per (k = ZEPHYRUM; c.parentes != NIHIL
+             && k < xar_numerus(c.parentes); k++)
+        {
+            chorda* cella = (chorda*)xar_addere(agmen);
+
+            si (cella != NIHIL)
+            {
+                *cella = *(chorda*)xar_obtinere(c.parentes, k);
+            }
+        }
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * INDEX (fabrica-plan-8 G2) - vide git.h
+ *
+ * Forma (Documentation/gitformat-index.txt): caput XII octeti
+ * ("DIRC", versio, numerus), introitus, extensiones, trailer SHA-1
+ * (XX octeti) super omnia praecedentia. Introitus: ctime (VIII), mtime
+ * (VIII), dev ino modus uid gid mensura (IV quisque), sha (XX), vexilla
+ * (II: bit 0x4000 extensus, 0x3000 gradus, 0x0FFF longitudo viae aut
+ * 0xFFF si longior); versio III+ et extensus: II octeti plus; via
+ * terminata NUL; introitus ad multiplum VIII NUL impletur:
+ * (offsetum viae + longitudo + VIII) & ~VII.
+ * ================================================== */
+
+#define GIT_INDEX_CAPUT        XII
+#define GIT_INDEX_INTROITUS    LXII    /* ante viam, sine extensis */
+
+interior i32
+_be16 (
+    constans i8* p)
+{
+    redde ((i32)p[0] << 8) | (i32)p[1];
+}
+
+Xar*
+git_indicem_legere (
+    constans GitRepositorium* repositorium,
+                     Piscina* piscina)
+{
+                 chorda  datum;
+                    Xar* index;
+                     i8  digestum[XX];
+                    i32  versio;
+                    i32  numerus;
+                    i32  positus;
+                    i32  finis;
+                    i32  n;
+     constans character* via;
+
+    si (repositorium == NIHIL || repositorium->via_git == NIHIL)
+    {
+        redde NIHIL;
+    }
+    index = xar_creare(piscina, (i32)magnitudo(GitIndexIntroitus));
+    si (index == NIHIL)
+    {
+        redde NIHIL;
+    }
+    via = _viam_serere(piscina, repositorium->via_git, "/index");
+    si (!filum_existit(via))
+    {
+        redde index;   /* repositorium novum: nihil sequitur */
+    }
+    datum = filum_legere_totum(via, piscina);
+    si (   datum.datum                     == NIHIL
+        || datum.mensura < GIT_INDEX_CAPUT + XX
+        || memcmp(datum.datum, "DIRC", IV) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    /* trailer: SHA-1 omnium octetorum ante eum */
+    finis = datum.mensura - XX;
+    _sha1(datum.datum, (memoriae_index)finis, digestum);
+    si (memcmp(digestum, datum.datum + finis, XX) != ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    versio   = _be32(datum.datum + IV);
+    numerus  = _be32(datum.datum + VIII);
+    si (versio != II && versio != III)
+    {
+        redde NIHIL;   /* IV: viae compressae - recusatur, non coniectatur */
+    }
+    positus = GIT_INDEX_CAPUT;
+    per (n = ZEPHYRUM; n < numerus; n++)
+    {
+         GitIndexIntroitus* e;
+               constans i8* p;
+                       i32  vexilla;
+                       i32  offsetum_viae;
+                       i32  longitudo;
+                       i32  magnitudo_introitus;
+
+        si (positus + GIT_INDEX_INTROITUS > finis)
+        {
+            redde NIHIL;
+        }
+        p              = datum.datum + positus;
+        vexilla        = _be16(p + LX);
+        offsetum_viae  = GIT_INDEX_INTROITUS;
+        si ((vexilla & (i32)0x4000) != ZEPHYRUM)
+        {
+            si (versio < III)
+            {
+                redde NIHIL;   /* vexillum extensum in II: corruptum */
+            }
+            offsetum_viae += II;
+        }
+        si (positus + offsetum_viae > finis)
+        {
+            redde NIHIL;
+        }
+        longitudo = vexilla & (i32)0x0FFF;
+        si (longitudo == (i32)0x0FFF)
+        {
+            /* via longior: usque ad NUL */
+            longitudo = ZEPHYRUM;
+            dum (   positus + offsetum_viae + longitudo < finis
+                 && p[offsetum_viae + longitudo] != 0)
+            {
+                longitudo++;
+            }
+        }
+        magnitudo_introitus = (offsetum_viae + longitudo + VIII)
+            & ~(i32)VII;
+        si (   longitudo                           == ZEPHYRUM
+            || positus + offsetum_viae + longitudo >= finis
+            || positus + magnitudo_introitus > finis
+            || p[offsetum_viae + longitudo]        != 0)
+        {
+            redde NIHIL;
+        }
+        e = (GitIndexIntroitus*)xar_addere(index);
+        si (e == NIHIL)
+        {
+            redde NIHIL;
+        }
+        e->via.datum = (i8*)piscina_allocare(piscina,
+            (memoriae_index)longitudo);
+        si (e->via.datum == NIHIL)
+        {
+            redde NIHIL;
+        }
+        memcpy(e->via.datum, p + offsetum_viae,
+            (memoriae_index)longitudo);
+        e->via.mensura  = longitudo;
+        e->modus        = _be32(p + XXIV);
+        e->gradus       = (vexilla >> XII) & (i32)III;
+        e->mensura      = (s64)_be32(p + XXXVI);
+        e->tempus_ns  = (s64)_be32(p + VIII) * (s64)1000000000
+            + (s64)_be32(p + XII);
+        _bin_ad_hex(p + XL, XX, e->sha);
+        positus += magnitudo_introitus;
+    }
+    /* extensiones (signum IV + mensura IV + data) usque ad trailer:
+     * praetereuntur, sed forma verificatur */
+    dum (positus < finis)
+    {
+        i32 mensura_extensionis;
+
+        si (positus + VIII > finis)
+        {
+            redde NIHIL;
+        }
+        mensura_extensionis = _be32(datum.datum + positus + IV);
+        si (mensura_extensionis > (i32)(finis - positus - VIII))
+        {
+            redde NIHIL;
+        }
+        positus += VIII + mensura_extensionis;
+    }
+    redde index;
+}

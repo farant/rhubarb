@@ -3438,8 +3438,9 @@ activatio_iudica (
     {
         redde FALSUM;
     }
+    /* alveus primus IV KB (budget B1 D5): iudicium per vocationem */
     opus = piscina_generare_dynamicum("cellae_iudicium",
-        (memoriae_index)65536);
+        (memoriae_index)4096);
     si (opus == NIHIL)
     {
         redde FALSUM;

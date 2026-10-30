@@ -152,6 +152,12 @@ nomen structura {
             i32  positus;
             i32  bit_buffer;
             i32  bits_in_buffer;
+    /* EXHAUSTUS (2026-10-27): lector ultra finem datorum legere
+     * conatus est (aut symbolum Huffman bits plures poscebat quam
+     * restabant) - fractura quae sequitur TRUNCATIO est, non
+     * corruptio: flatura_inflare INCOMPLETUS reddit (lib/git fenestram
+     * sarcinae tunc auget) */
+            b32 exhaustus;
 } FlaturaLector;
 
 
@@ -166,6 +172,7 @@ _flatura_lector_initium (
     lector->positus         = 0;
     lector->bit_buffer      = 0;
     lector->bits_in_buffer  = 0;
+    lector->exhaustus       = FALSUM;
 }
 
 /* <contractus reditus="-1,65535"/> */
@@ -181,6 +188,7 @@ _flatura_legere_bits (
     {
         si (lector->positus >= lector->mensura)
         {
+            lector->exhaustus = VERUM;
             redde -1; /* Non satis datum */
         }
         lector->bit_buffer |= ((i32)lector->datum[lector->positus]
@@ -487,6 +495,7 @@ _flatura_huffman_legere (
 #if FLATURA_DEBUG
         printf("  [HUFFMAN] No bits available\n");
 #endif
+        lector->exhaustus = VERUM;
         redde -1;
     }
 
@@ -539,6 +548,7 @@ _flatura_huffman_legere (
         printf("  [HUFFMAN] Not enough bits for symbol: needed=%d, had=%d\n",
                longitudo, bits_disponibiles);
 #endif
+        lector->exhaustus = VERUM;
         redde -1;
     }
 
@@ -1226,7 +1236,19 @@ flatura_inflare (
 
     _flatura_lector_initium(&lector, datum, mensura);
 
-    redde _flatura_inflare_internus(&lector, piscina);
+    {
+        FlaturaFructus fructus = _flatura_inflare_internus(&lector,
+            piscina);
+
+        /* fractura post datum exhaustum = fluxus truncatus */
+        si (fructus.status != FLATURA_STATUS_OK && lector.exhaustus)
+        {
+            fructus.status   = FLATURA_STATUS_INCOMPLETUS;
+            fructus.datum    = NIHIL;
+            fructus.mensura  = 0;
+        }
+        redde fructus;
+    }
 }
 
 

@@ -6,6 +6,10 @@
 #include <stdio.h>
 
 static Piscina* pp;
+/* Magnus XVI octetorum (budget B1 D1, 2026-10-29): membra != NIHIL ->
+ * parvus = signum x longitudo; inline -> signum/longitudo 0 ut olim */
+static int SIGNUM_M(Magnus m) { return m.membra ? (m.parvus < 0 ? -1 : 1) : 0; }
+static unsigned LONGITUDO_M(Magnus m) { return m.membra ? (unsigned)(m.parvus < 0 ? -m.parvus : m.parvus) : 0U; }
 static Fractio P(const char* s) { Fractio f = fractio_ex_s64(4242); if (!fractio_ex_chorda(chorda_ex_literis(s, pp), pp, &f)) printf("PARSE FAIL %s\n", s); return f; }
 static void raw(const char* tag, Fractio f)
 {
@@ -13,8 +17,8 @@ static void raw(const char* tag, Fractio f)
     chorda t = fractio_ad_chordam(f, pp);
     printf("%-22s %-8.*s num{parvus=%lld signum=%d long=%u membra=%s} den{parvus=%lld signum=%d long=%u membra=%s}\n", tag,
         (int)t.mensura, (const char*)t.datum,
-        (long long)n.parvus, (int)n.signum, (unsigned)n.longitudo, n.membra ? "P" : "0",
-        (long long)d.parvus, (int)d.signum, (unsigned)d.longitudo, d.membra ? "P" : "0");
+        (long long)n.parvus, SIGNUM_M(n), LONGITUDO_M(n), n.membra ? "P" : "0",
+        (long long)d.parvus, SIGNUM_M(d), LONGITUDO_M(d), d.membra ? "P" : "0");
 }
 static void prm(const char* tag, Magnus m)
 {

@@ -36,8 +36,9 @@ nomen structura {
           i64 id;
     character genus[XVI];
     character titulus[LXIV];
-    character data[LXIV];
+    character data[D];          /* plan-3 T7: TXT DKIM ~CDXX */
           i32 ttl;
+          i32 prioritas;        /* 0 = null (non MX) */
           b32 vivum;
 } Scheda;
 
@@ -83,9 +84,19 @@ _scheda_json (
     chorda_aedificator_appendere_literis(a, s->titulus);
     chorda_aedificator_appendere_literis(a, "\",\"data\":\"");
     chorda_aedificator_appendere_literis(a, s->data);
-    sprintf(n, "\",\"priority\":null,\"port\":null,\"ttl\":%u,"
-        "\"weight\":null,\"flags\":null,\"tag\":null}",
-        (insignatus integer)s->ttl);
+    si (s->prioritas > ZEPHYRUM)
+    {
+        sprintf(n, "\",\"priority\":%u,\"port\":null,\"ttl\":%u,"
+            "\"weight\":null,\"flags\":null,\"tag\":null}",
+            (insignatus integer)s->prioritas,
+            (insignatus integer)s->ttl);
+    }
+    alioquin
+    {
+        sprintf(n, "\",\"priority\":null,\"port\":null,\"ttl\":%u,"
+            "\"weight\":null,\"flags\":null,\"tag\":null}",
+            (insignatus integer)s->ttl);
+    }
     chorda_aedificator_appendere_literis(a, n);
 }
 
@@ -176,6 +187,8 @@ _ex_corpore (
     sprintf(s->data, "%.*s", (int)v.mensura,
         (constans character*)v.datum);
     s->ttl = (i32)json_capere_integer(r.radix, "ttl", MDCCC);
+    s->prioritas = (i32)json_capere_integer(r.radix, "priority",
+        ZEPHYRUM);
 }
 
 interior vacuum
@@ -538,6 +551,70 @@ _sectio_assecurare (CredoContextus* c)
     (vacuum)filum_delere(clavis);
 }
 
+/* communio plan-3 T7: MX cum prioritate (DigitalOcean eam poscit)
+ * et TXT longum (DKIM) - creare, IDEM, MUTATUM */
+interior vacuum
+_sectio_mx_txt (CredoContextus* c)
+{
+                Fictus  f;
+                Servus  s;
+               Oceanus* o;
+                   Xar* x;
+             character  longum[CDXXI];
+                   i32  k;
+                   i32  prioritas;
+    constans character* clavis = _clavis_scribere(c->piscina,
+                               CLAVIS_FICTA, 0600);
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    f.id_proximum = M;
+    CREDO_NECESSE(_fictum_incipere(c, &f, &s));
+    o = oceanus_creare(clavis, s.basis, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(o);
+    CREDO_AEQUALIS_I32((i32)oceanus_assecurare_prioritate(o,
+        "golden.earth", "MX", "send", "feedback-smtp.example.com",
+        MMMDC, X), (i32)OCEANUS_CREATUM);
+    x = xar_creare(c->piscina, (i32)magnitudo(OceanusRegistrum));
+    CREDO_NECESSE(oceanus_registra(o, "golden.earth", x));
+    prioritas = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < (i32)xar_numerus(x); k++)
+    {
+        OceanusRegistrum* r = (OceanusRegistrum*)xar_obtinere(x, k);
+
+        si (chorda_aequalis_literis(r->genus, "MX"))
+        {
+            prioritas = r->prioritas;
+        }
+    }
+    CREDO_AEQUALIS_I32(prioritas, X);
+    CREDO_AEQUALIS_I32((i32)oceanus_assecurare_prioritate(o,
+        "golden.earth", "MX", "send", "feedback-smtp.example.com",
+        MMMDC, X), (i32)OCEANUS_IDEM);
+    CREDO_AEQUALIS_I32(_scripta_numerare(&s, c->piscina), I);
+    CREDO_AEQUALIS_I32((i32)oceanus_assecurare_prioritate(o,
+        "golden.earth", "MX", "send", "feedback-smtp.example.com",
+        MMMDC, XX), (i32)OCEANUS_MUTATUM);
+    CREDO_AEQUALIS_I32(_scripta_numerare(&s, c->piscina), II);
+
+    CREDO_GRADUS("TXT longum (DKIM)");
+    memcpy(longum, "p=", II);
+    per (k = II; k < CDXX; k++)
+    {
+        longum[k] =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+            "0123456789+/"[k % LXIV];
+    }
+    longum[CDXX] = '\0';
+    CREDO_AEQUALIS_I32((i32)oceanus_assecurare(o, "golden.earth", "TXT",
+        "resend._domainkey", longum, MMMDC), (i32)OCEANUS_CREATUM);
+    CREDO_AEQUALIS_I32((i32)oceanus_assecurare(o, "golden.earth", "TXT",
+        "resend._domainkey", longum, MMMDC), (i32)OCEANUS_IDEM);
+    CREDO_AEQUALIS_I32(_scripta_numerare(&s, c->piscina), III);
+    oceanus_claudere(o);
+    _fictum_sistere(&s);
+    (vacuum)filum_delere(clavis);
+}
+
 /* 401: error nominat, clavis NUSQUAM (error, stderr) */
 interior vacuum
 _sectio_auctoritas (CredoContextus* c)
@@ -659,6 +736,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "registra", _sectio_registra, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cyclus", _sectio_cyclus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "assecurare", _sectio_assecurare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mx et txt longum (plan-3)", _sectio_mx_txt, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "auctoritas", _sectio_auctoritas, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pagina_aliena", _sectio_pagina_aliena, NIHIL, NIHIL, NIHIL,
         NIHIL },

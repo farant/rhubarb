@@ -143,3 +143,41 @@ officina and tessera amalgams regenerated together; the oracle's pinned
 side now transplants today's latina (materia/instrumenta/
 oraculum_silvae.worklog.md). probatio_git's `git show HEAD:` oracle
 from 09-24 is what let the commit through its own gate.
+
+## 2026-10-27 - index reader (fabrica-plan-8 G2)
+
+`git_indicem_legere` reads `<via_git>/index` - in a worktree that is the
+worktree's OWN gitdir (G1's split, already in place since 059fe759), so
+fabrica gets the tracked set of the tree it is judging without running
+`git ls-files`. Versions 2 and 3 only: v3 adds two flag bytes when bit
+0x4000 is set (`git add -N`); v4 prefix-compresses paths and is REFUSED
+(NIHIL) rather than half-understood. The SHA-1 trailer is verified with
+the file's own `_sha1`; entry size = (path offset + length + 8) & ~7;
+extensions (TREE, REUC, ...) are skipped but their sizes are bounds-
+checked. Absent index (fresh repository) = empty list, not NIHIL.
+
+Oracle: `git ls-files -s -z` over the real index (12.5k entries in
+quinta), every "<mode> <sha> <stage>\t<path>" equal and in order - plus
+hand-built indexes (v2 fields, v3 extended entry followed by a normal
+one, stages 1-3, TREE extension, refusals: v4, bad trailer, count past
+the body, wrong signature; a synthetic worktree whose gitdir index is
+read). Plants: trailer check skipped, v4 accepted, v3 extra bytes not
+skipped - each red at its own assertion.
+
+## 2026-10-27 - ancestry (budget B9)
+
+`git_continet(repo, posterius, prius, piscina, &continet)`: is `prius` in
+`posterius`'s history (same commit or an ancestor through ANY parent) - the
+question `git merge-base --is-ancestor prius posterius` answers. Breadth-
+first over parents with a visited set; a commit older than `prius`'s
+committer time minus one day is not expanded, so a "no" does not walk the
+whole history (limit: clocks skewed by more than a day). An unreadable
+commit (unknown sha, broken history) returns FALSUM - an error, never a
+quiet "not contained". Used by mensor's intervention cohorts: a run belongs
+to "after intervention k" exactly when its commit contains k's commit,
+which is fair across worktrees in a way timestamps are not.
+
+Test: 36 ordered pairs from real history (latest merge, both its parents, a
+deeper second-parent ancestor, an older first-parent commit, HEAD) against
+`git merge-base --is-ancestor` itself; unknown sha -> FALSUM. Plants: only
+the first parent followed; unreadable treated as "no" - each red.

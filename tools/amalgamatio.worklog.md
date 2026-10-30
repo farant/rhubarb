@@ -272,3 +272,20 @@ named. Plant (empty table = old reversal): "nomen exclusum rediit:
 stilus_terminalis_applicare (… gyrus 2)". Lesson in the house shape: "no
 new names" was a proxy for "no warnings"; the proxy forgave a name that
 never matched.
+
+## 2026-10-28 — excludenda generator: `-fsyntax-only` + one definitions map (budget B1 A3)
+
+`tools/amalgama_excludenda_generare.sh` compiled the 5 MB amalgam with
+`-c -o amalgama_messis.o` every round, but only the warnings file is ever
+read: now `-fsyntax-only` (diagnostics byte-identical over all 6 silva
+rounds — unused-function, "is not needed and will not be emitted" and the
+implicit-declaration error are all Sema). Classification grepped every
+base's files once per name (169 names × 17 bases); now one awk builds
+`definitiones.tsv` (name → FIRST base in BASES order that defines
+`^name *(`) once per run, and `_classificare` looks it up, keeping the
+longest-prefix fallback. PROTECTA padded once instead of `$(echo ...)`
+per name. `-probare` silva/tessera/officina all "recens"; silva 12 s →
+6.2 s at load 13 (gate runs are colder and slower). Plants: dropping
+materia/fontes from the map → "nomen inclassificabile" (good); reversing
+BASES order → still recens, because no silva name is defined under two
+bases today — the first-wins rule is preserved but currently untestable.

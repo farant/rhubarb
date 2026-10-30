@@ -307,3 +307,14 @@ N = 4 already got imago 11.2 → 7.1 s; N = 16 and N = 64 are the same (5.2 s), 
 - Disabling the exact-number fallthrough stays GREEN in both radices and cellae. That is expected: the old path also handles a number made exact by bisection (bisecting an exact number is a no-op, and the other interval narrows until disjoint or until it too hits the rational). The fallthrough only routes that case to the cheaper linear-polynomial branch. It is a shortcut, not a guard.
 
 **Not touched:** "iudicium contra D119 lentum" (20 s) is about 1.06 M judgments of the float prefilter (`_vector_parare` loop over XII–XIII axes, ~17 µs per judgment). No bignums there.
+
+## 2026-10-29 — temporary pools start at 4 KB (budget B1 D5)
+
+Temporary piscinae created and destroyed per call in hot paths
+(radices `_piscina_temporaria` — radix_compara, _separa_positivas, ...;
+cellae `activatio_iudica`) started at 64 KB. Under ASan (venenum gate)
+every create/destroy pays malloc, quarantine put/recycle and malloc-fill,
+which scale with size (~8% of probatio_cellae's ASan profile, more in
+"imago sine iactura"). Now 4 KB first alveus; dynamic piscinae grow when a
+call needs more. Behaviour unchanged (no plant possible — sizing only);
+radices, cellae, quaternio green.

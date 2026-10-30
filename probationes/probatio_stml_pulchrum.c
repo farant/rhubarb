@@ -24,10 +24,12 @@
 #include "xar.h"
 #include "internamentum.h"
 #include "lectiones.h"
+#include "chorda_aedificator.h"
 #include <stdio.h>
 #include <string.h>
 
 #define AUREUM_VIA "probationes/fixa/stml_aurea/internus.aurum"
+#define LIMES_TACITAE_LIBERI XXIX   /* sectio III: limes pinnatus */
 
 /* Litterae authoratae - casus dispositionis interessantes; quisque
  * hodie parsat. */
@@ -778,10 +780,55 @@ _sectio_secunda (
     }
 }
 
+/* III. LIMES CLAUSURAE TACITAE (budget B1 B5, 2026-10-28): '</>' si
+ * contentum <= STML_CLAUSURA_TACITA_LINEAE lineae, aliter nomen.
+ * Limes per liberos <c/> quaeritur (XX..XL) et PINNATUR - mutatio
+ * unius lineae in regula (vitium off-by-one) limitem movet. Olim nulla
+ * probatio limitem attingebat. */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+    InternamentumChorda* intern  = internamentum_creare(c->piscina);
+                    i32  limes   = ZEPHYRUM;
+                    i32  k;
+
+    CREDO_NECESSE_NON_NIHIL(intern);
+    per (k = XX; k <= XL; k++)
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(c->piscina,
+            (memoriae_index)MXXIV);
+             StmlResultus r;
+                   chorda p;
+                      i32 j;
+
+        chorda_aedificator_appendere_literis(a, "<a>");
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            chorda_aedificator_appendere_literis(a, "<c/>");
+        }
+        chorda_aedificator_appendere_literis(a, "</a>");
+        r = stml_legere(chorda_aedificator_finire(a), c->piscina,
+            intern);
+        CREDO_NECESSE(r.successus);
+        p = stml_scribere(r.radix, c->piscina, VERUM);
+        si (   p.mensura >= III
+            && memcmp(p.datum + p.mensura - III, "</>", III)
+                == ZEPHYRUM)
+        {
+            limes = k;
+        }
+    }
+    imprimere("  limes clausurae tacitae: %d liberi\n", (integer)limes);
+    CREDO_AEQUALIS_I32(limes, LIMES_TACITAE_LIBERI);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "litteras (portae A + B)", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "corpus (portae A + B)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "limes clausurae tacitae", _sectio_tertia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

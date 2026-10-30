@@ -34,6 +34,7 @@
 #include "mensura.h"
 #include "machina.h"
 #include "processus.h"
+#include "git.h"
 #include "volumen.h"
 #include "mensura_contextus.h"
 #include "tabula_dispersa.h"
@@ -1191,6 +1192,328 @@ _cursum_finire (
     redde ZEPHYRUM;
 }
 
+/* INTERVENTIO (budget B9 2b): 'interventio notare -commissum C -titulus
+ * T [-budget B] [-scopus a,b] [-fabrica BIN] [-portae SCRIPTUM]
+ * [-machina]' - nota mutationis quae perficientiam mutare debet. Viae
+ * mutatae = commissum contra parentem PRIMUM (lib/git); tituli affecti =
+ * 'fabrica legentes' (membra per clausuram, actiones per vestigium) +
+ * 'porta:' + portae debitae; -scopus angustat (titulus aequalis aut
+ * praefixo incipiens). Cursus 'interventio' (commissum PLENUM, nota
+ * 'T [B]', corpus = tituli ordinati) - cohortes eos legunt. */
+interior s32
+_affecti_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chorda_comparare(*(constans chorda*)a, *(constans chorda*)b);
+}
+
+/* lineas effusionis cuius campus primus 'genus' est legere: campus
+ * 'index' (praefixo addito) in affecti */
+interior vacuum
+_affectos_colligere (
+             chorda  effusio,
+ constans character* genus,
+                i32  index,
+ constans character* praefixum,
+                Xar* affecti,
+            Piscina* piscina)
+{
+    i32 initium = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k <= effusio.mensura; k++)
+    {
+        chorda linea;
+        chorda campus;
+           i32 c;
+           i32 a;
+           i32 n;
+
+        si (k < effusio.mensura && effusio.datum[k] != '\n')
+        {
+            perge;
+        }
+        linea    = chorda_sectio(effusio, initium, k);
+        initium  = k + I;
+        si (!chorda_incipit(linea, chorda_ex_literis(genus, piscina)))
+        {
+            perge;
+        }
+        campus.datum    = NIHIL;
+        campus.mensura  = ZEPHYRUM;
+        n               = ZEPHYRUM;
+        a               = ZEPHYRUM;
+        per (c = ZEPHYRUM; c <= linea.mensura; c++)
+        {
+            si (c < linea.mensura && linea.datum[c] != '\t')
+            {
+                perge;
+            }
+            si (n == index)
+            {
+                campus = chorda_sectio(linea, a, c);
+                frange;
+            }
+            n++;
+            a = c + I;
+        }
+        si (campus.mensura > ZEPHYRUM)
+        {
+            *(chorda*)xar_addere(affecti) = chorda_concatenare(
+                chorda_ex_literis(praefixum, piscina), campus, piscina);
+        }
+    }
+}
+
+interior chorda
+_effusio_mandati (
+    constans character* primum,
+    constans character* secundum,
+    constans character* tertium,
+          constans Xar* viae,
+               Piscina* piscina,
+                   b32* bene)
+{
+      constans character** argumenta;
+       ProcessusResultus   r;
+                     i32   n = ZEPHYRUM;
+                     i32   k;
+
+    argumenta = (constans character**)piscina_allocare(piscina,
+        (memoriae_index)(xar_numerus(viae)
+            + V) * magnitudo(character*));
+    *bene = FALSUM;
+    si (argumenta == NIHIL)
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    argumenta[n++] = primum;
+    si (secundum != NIHIL)
+    {
+        argumenta[n++] = secundum;
+    }
+    si (tertium != NIHIL)
+    {
+        argumenta[n++] = tertium;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+    {
+        argumenta[n++] = chorda_ut_cstr(*(constans chorda*)xar_obtinere(
+            viae, k), piscina);
+    }
+    argumenta[n]  = NIHIL;
+    r             = processus_exsequi(argumenta, (i32)600000, piscina);
+    *bene         = r.successus && r.codex_exitus == ZEPHYRUM;
+    redde r.effusio;
+}
+
+interior integer
+_interventum_notare (
+      Piscina*  piscina,
+      integer   argc,
+    character** argv)
+{
+      constans character* commissum  = _arg(argc, argv, "-commissum");
+      constans character* titulus    = _arg(argc, argv, "-titulus");
+      constans character* rubrica    = _arg(argc, argv, "-budget");
+      constans character* scopus     = _arg(argc, argv, "-scopus");
+      constans character* fabrica    = _arg(argc, argv, "-fabrica");
+      constans character* portae     = _arg(argc, argv, "-portae");
+                     b32  machina = _vexillum(argc, argv,
+                         "-machina");
+         GitRepositorium* repositorium;
+               character  sha[GIT_SHA_HEX_MENSURA];
+            GitCommissum  novum;
+            GitCommissum  vetus;
+                     Xar* mutatae;
+                     Xar* viae;
+                     Xar* affecti;
+                     Xar* servati;
+           CursusInitium  initium;
+             CursusFinis  finis;
+       ChordaAedificator* corpus;
+                  chorda  nota;
+                     b32  bene;
+                     i32  k;
+
+    si (   commissum         == NIHIL || titulus == NIHIL
+        || titulus[ZEPHYRUM] == '\0')
+    {
+        fprintf(stderr, "usus: mensor interventio notare -commissum C "
+            "-titulus T [-budget B] [-scopus a,b] [-machina]\n");
+        redde 2;
+    }
+    repositorium = git_aperire(piscina, ".");
+    si (   repositorium == NIHIL
+        || !git_ref_resolvere(repositorium, commissum, sha))
+    {
+        fprintf(stderr, "mensor interventio: commissum ignotum: %s\n",
+            commissum);
+        redde I;
+    }
+    novum = git_commissum_legere(repositorium, sha, piscina);
+    si (   !novum.successus || novum.parentes == NIHIL
+        || xar_numerus(novum.parentes) == ZEPHYRUM)
+    {
+        fprintf(stderr, "mensor interventio: %s illegibile aut sine "
+            "parente\n", sha);
+        redde I;
+    }
+    vetus = git_commissum_legere(repositorium, chorda_ut_cstr(
+        *(chorda*)xar_obtinere(novum.parentes, ZEPHYRUM), piscina),
+        piscina);
+    mutatae = vetus.successus ? git_arbores_differre(repositorium,
+        chorda_ut_cstr(vetus.arbor, piscina),
+        chorda_ut_cstr(novum.arbor,
+        piscina), piscina) : NIHIL;
+    viae = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (mutatae == NIHIL || viae == NIHIL)
+    {
+        fprintf(stderr,
+            "mensor interventio: arbores conferri nequeunt\n");
+        redde I;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(mutatae); k++)
+    {
+        *(chorda*)xar_addere(viae) = ((constans GitViaMutata*)
+            xar_obtinere(mutatae, k))->via;
+    }
+    affecti = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (affecti == NIHIL)
+    {
+        redde I;
+    }
+    si (xar_numerus(viae) > ZEPHYRUM)
+    {
+        chorda e = _effusio_mandati(fabrica != NIHIL ? fabrica
+            : "bin/fabrica", "legentes", "-machina", viae, piscina,
+            &bene);
+
+        si (!bene)
+        {
+            fprintf(stderr, "mensor interventio: fabrica legentes "
+                "fracta\n");
+            redde I;
+        }
+        _affectos_colligere(e, "LEGENS\t", I, "", affecti, piscina);
+        e = _effusio_mandati(portae != NIHIL ? portae
+            : "tools/portae_debitae.sh", "-machina", NIHIL, viae,
+            piscina, &bene);
+        si (!bene)
+        {
+            fprintf(stderr, "mensor interventio: portae debitae "
+                "fractae\n");
+            redde I;
+        }
+        _affectos_colligere(e, "DEBITUM\t", I, "porta:", affecti,
+            piscina);
+    }
+    /* scopus angustat; deinde ordinati, sine duplicibus */
+    xar_ordinare(affecti, _affecti_comparare);
+    servati = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (k = ZEPHYRUM; servati != NIHIL
+        && k < xar_numerus(affecti); k++)
+    {
+        chorda t         = *(chorda*)xar_obtinere(affecti, k);
+           b32 tenendus  = (scopus == NIHIL);
+
+        si (   k > ZEPHYRUM
+            && chorda_aequalis(t, *(chorda*)xar_obtinere(affecti, k
+                - I)))
+        {
+            perge;
+        }
+        si (scopus != NIHIL)
+        {
+            chorda s = chorda_ex_literis(scopus, piscina);
+               i32 a = ZEPHYRUM;
+               i32 c;
+
+            per (c = ZEPHYRUM; c <= s.mensura && !tenendus; c++)
+            {
+                si (c < s.mensura && s.datum[c] != ',')
+                {
+                    perge;
+                }
+                si (c > a && chorda_incipit(t, chorda_sectio(s, a, c)))
+                {
+                    tenendus = VERUM;
+                }
+                a = c + I;
+            }
+        }
+        si (tenendus)
+        {
+            *(chorda*)xar_addere(servati) = t;
+        }
+    }
+    corpus = chorda_aedificator_creare(piscina, CCLVI);
+    per (k = ZEPHYRUM; servati != NIHIL
+        && k < xar_numerus(servati); k++)
+    {
+        chorda_aedificator_appendere_chorda(corpus,
+            *(chorda*)xar_obtinere(servati, k));
+        chorda_aedificator_appendere_character(corpus, '\n');
+    }
+    nota = chorda_ex_literis(titulus, piscina);
+    si (rubrica != NIHIL && rubrica[ZEPHYRUM] != '\0')
+    {
+        nota = chorda_concatenare(nota, chorda_concatenare(
+            chorda_ex_literis(" [", piscina), chorda_concatenare(
+            chorda_ex_literis(rubrica, piscina), chorda_ex_literis("]",
+            piscina), piscina), piscina), piscina);
+    }
+    memset(&initium, ZEPHYRUM, magnitudo(initium));
+    mensura_contextum_parare(&initium, piscina);
+    initium.titulus  = chorda_ex_literis("interventio", piscina);
+    initium.argv     = chorda_ex_literis("", piscina);
+    initium.commissum  = chorda_transcribere(chorda_ex_literis(sha,
+        piscina), piscina);
+    initium.sordidum  = FALSUM;
+    initium.id        = mensura_id_novum(piscina);
+    initium.initium   = mensura_momentum_nunc();
+    memset(&finis, ZEPHYRUM, magnitudo(finis));
+    finis.id        = initium.id;
+    finis.momentum  = initium.initium;
+    finis.nota      = nota;
+    finis.acta      = _corpus_ponere(finis.id, initium.titulus, FALSUM,
+        chorda_aedificator_finire(corpus), piscina,
+        &finis.acta_mensura);
+    si (   !mensura_cursum_incipere(mensura_diarium_cursuum(piscina),
+               &initium, piscina)
+        || !mensura_cursum_finire(mensura_diarium_cursuum(piscina),
+               &finis, piscina))
+    {
+        fprintf(stderr, "mensor interventio: non annotata\n");
+        redde I;
+    }
+    si (machina)
+    {
+        imprimere("INTERVENTIO\t%.*s\t%s\t%.*s\n",
+            (integer)initium.id.mensura,
+            (constans character*)initium.id.datum, sha,
+            (integer)nota.mensura, (constans character*)nota.datum);
+        per (k = ZEPHYRUM; k < xar_numerus(servati); k++)
+        {
+            chorda t = *(chorda*)xar_obtinere(servati, k);
+
+            imprimere("AFFECTUM\t%.*s\n", (integer)t.mensura,
+                (constans character*)t.datum);
+        }
+    }
+    alioquin
+    {
+        imprimere("interventio %.*s: %.8s '%.*s' - %d viae mutatae, %d "
+            "tituli affecti%s\n", (integer)initium.id.mensura,
+            (constans character*)initium.id.datum, sha,
+            (integer)nota.mensura, (constans character*)nota.datum,
+            (integer)xar_numerus(viae), (integer)xar_numerus(servati),
+            scopus != NIHIL ? " (scopus)" : "");
+    }
+    redde ZEPHYRUM;
+}
+
 /* ACTA: 'cursus acta <id>' - corpus cursus ex diurna; exitus 1 cum
  * statu nominato (ignotum, deletum, corruptum) */
 interior integer
@@ -1986,6 +2309,442 @@ _currentes_imprimere (
     redde ZEPHYRUM;
 }
 
+/* FUSIO (budget B0, 2026-10-27): tabula una fusionis ultimae arboris
+ * (ordinarie arboris currentis) - commissio fusionis (filii: phases et
+ * portae), fusio (filii; sine fine: tempus usque nunc, vita custodis
+ * per currentes), linea temporum. Olim tres quaestiones et SQL. */
+interior s64
+_ms_cursus (
+    constans Cursus* c,
+                s64  nunc)
+{
+    redde c->status == CURSUS_INTERRUPTUS
+        ? nunc - c->initium.initium : c->finis.duratio_ms;
+}
+
+interior vacuum
+_filios_fusionis_imprimere (
+       constans Xar* filii,
+ constans character* genus,
+                s64  nunc,
+                b32  machina,
+                s64* summa_out)
+{
+    i32 k;
+
+    *summa_out = ZEPHYRUM;
+    per (k = ZEPHYRUM; filii != NIHIL && k < xar_numerus(filii); k++)
+    {
+        constans Cursus* f = *(constans Cursus* constans*)xar_obtinere(
+            filii, k);
+                     s64 ms = _ms_cursus(f, nunc);
+
+        *summa_out += ms;
+        si (machina)
+        {
+            imprimere("FUSIO_FILIUS\t%s\t%.*s\t%s\t%ld\t%d\n", genus,
+                (integer)f->initium.titulus.mensura,
+                (constans character*)f->initium.titulus.datum,
+                _statum(f->status), (longus)ms,
+                (integer)(f->status == CURSUS_INTERRUPTUS));
+        }
+        alioquin
+        {
+            imprimere("   %6.1f min  %.*s%s\n", (duplex)ms / 60000.0,
+                (integer)f->initium.titulus.mensura,
+                (constans character*)f->initium.titulus.datum,
+                f->status == CURSUS_FRACTUS ? "  [fractus]"
+                : f->status
+                    == CURSUS_INTERRUPTUS ? "  [sine fine]" : "");
+        }
+    }
+}
+
+/* COHORTES (budget B9 2c): 'quaestio cohortes titulus=X' - cursus X per
+ * cohortem interventionum (mensor interventio notare), antecessione
+ * per lib/git (repositorium cwd; arbores operis obiecta communia
+ * habent). Interventiones = cursus 'interventio' transeuntes, corpora
+ * ex diurna; corpus absens (purgatum) = interventio neglecta, numerata. */
+nomen structura {
+    GitRepositorium* repositorium;
+            Piscina* piscina;
+} AntecessioGit;
+
+interior vacuum
+_nihil_congruit_nominare (
+       constans CursusIndex* index,
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina);
+
+interior b32
+_antecessio_git (
+     vacuum* contextus,
+     chorda  posterius,
+     chorda  prius,
+        b32* continet)
+{
+    AntecessioGit* a = (AntecessioGit*)contextus;
+
+    si (posterius.mensura == ZEPHYRUM || prius.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde git_continet(a->repositorium, chorda_ut_cstr(posterius,
+        a->piscina), chorda_ut_cstr(prius, a->piscina), a->piscina,
+        continet);
+}
+
+/* permille signatum ut '+12.5%' */
+interior vacuum
+_permille_scribere (
+          s32  permille,
+    character* exitus)
+{
+    s32 absolutum = permille < ZEPHYRUM ? -permille : permille;
+
+    sprintf(exitus, "%c%d.%d%%", permille < ZEPHYRUM ? '-' : '+',
+        (integer)(absolutum / X), (integer)(absolutum % X));
+}
+
+/* titulus cohortis: 'ante omnes' aut 'post SHA8 nota' (+ ceterae si
+ * mascula non praefixum ordinis) */
+interior vacuum
+_cohortem_nominare (
+    constans CursusCohortes* ch,
+      constans CursusCohors* h,
+                  character* exitus,
+                        i32  mensura)
+{
+    constans CursusInterventio* u;
+                           i64  praefixum;
+
+    si (h->ultima < ZEPHYRUM)
+    {
+        sprintf(exitus, "ante omnes");
+        redde;
+    }
+    u = *(constans CursusInterventio**)xar_obtinere(ch->interventiones,
+        (i32)h->ultima);
+    praefixum = (h->ultima >= LXIII) ? ~(i64)ZEPHYRUM
+        : (((i64)I << (h->ultima + I)) - (i64)I);
+    snprintf(exitus, (size_t)mensura, "post %.8s %.*s%s",
+        (constans character*)u->cursus->initium.commissum.datum,
+        (integer)u->cursus->finis.nota.mensura,
+        (constans character*)u->cursus->finis.nota.datum,
+        h->mascula == praefixum ? "" : " (non omnes priores)");
+}
+
+interior integer
+_cohortes_imprimere (
+    constans CursusIndex* index,
+  constans CursusFiltrum* filtrum,
+                     b32  machina,
+                 Piscina* piscina)
+{
+          CursusFiltrum  fi;
+                    Xar* notae;
+                    Xar* interventiones;
+                 Diurna* diurna;
+          AntecessioGit  a;
+         CursusCohortes  ch;
+                    i32  absentes = ZEPHYRUM;
+                    i32  k;
+
+    si (   filtrum->titulus.mensura   == ZEPHYRUM
+        && filtrum->praefixum.mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "mensor quaestio cohortes: titulus= aut "
+            "praefixum= necessarium\n");
+        redde 2;
+    }
+    a.piscina       = piscina;
+    a.repositorium  = git_aperire(piscina, ".");
+    si (a.repositorium == NIHIL)
+    {
+        fprintf(stderr, "mensor quaestio cohortes: non in repositorio"
+            " git\n");
+        redde I;
+    }
+    memset(&fi, ZEPHYRUM, magnitudo(fi));
+    fi.titulus  = chorda_ex_literis("interventio", piscina);
+    fi.status   = CURSUS_MASCULA_TRANSIIT;
+    notae       = cursus_quaerere_historia(index, &fi, piscina);
+    interventiones  = xar_creare(piscina,
+        (i32)magnitudo(CursusInterventio));
+    diurna          = mensura_diurna_aperire(piscina);
+    per (k = ZEPHYRUM; notae != NIHIL && interventiones != NIHIL
+         && k < xar_numerus(notae); k++)
+    {
+        constans Cursus* c = *(constans Cursus**)xar_obtinere(notae, k);
+            DiurnaStatus  st = DIURNA_IGNOTUM;
+                  chorda  corpus;
+       CursusInterventio* v;
+
+        corpus = diurna != NIHIL ? diurna_legere(diurna, c->initium.id,
+            piscina, &st) : c->initium.id;
+        si (st != DIURNA_ADEST)
+        {
+            absentes++;
+            perge;
+        }
+        v = (CursusInterventio*)xar_addere(interventiones);
+        si (v != NIHIL)
+        {
+            v->cursus   = c;
+            v->affecti  = corpus;
+        }
+    }
+    si (   interventiones == NIHIL
+        || !cursus_quaerere_cohortes(index, filtrum, interventiones,
+               _antecessio_git, &a, piscina, &ch))
+    {
+        fprintf(stderr, "mensor quaestio cohortes: quaestio fracta\n");
+        redde I;
+    }
+    si (machina)
+    {
+        per (k = ZEPHYRUM; k < xar_numerus(ch.interventiones); k++)
+        {
+            constans CursusInterventio* u = *(constans
+                CursusInterventio**)xar_obtinere(ch.interventiones, k);
+
+            imprimere("INTERVENTIO\t%d\t%.*s\t%.*s\n", (integer)k,
+                (integer)u->cursus->initium.commissum.mensura,
+                (constans character*)u->cursus->initium.commissum.datum,
+                (integer)u->cursus->finis.nota.mensura,
+                (constans character*)u->cursus->finis.nota.datum);
+        }
+    }
+    alioquin
+    {
+        imprimere("cohortes %.*s (transeuntes; %d interventiones "
+            "afficiunt)\n",
+            (integer)(filtrum->titulus.mensura > ZEPHYRUM
+                ? filtrum->titulus.mensura : filtrum->praefixum.mensura),
+            (constans character*)(filtrum->titulus.mensura > ZEPHYRUM
+                ? filtrum->titulus.datum : filtrum->praefixum.datum),
+            (integer)xar_numerus(ch.interventiones));
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(ch.cohortes); k++)
+    {
+        constans CursusCohors* h = (constans CursusCohors*)xar_obtinere(
+            ch.cohortes, k);
+                    character titulus[CCLVI];
+                    character delta[XXXII];
+                          i32 b;
+
+        si (machina)
+        {
+            imprimere("COHORS\t%d\t", (integer)k);
+            per (b = ZEPHYRUM; b < LXIII; b++)
+            {
+                si ((h->mascula >> b) & (i64)I)
+                {
+                    imprimere("%s%d", ((h->mascula & (((i64)I << b)
+                        - (i64)I)) != (i64)ZEPHYRUM) ? "," : "",
+                        (integer)b);
+                }
+            }
+            imprimere("\t%d\t%d\t%d\t%ld\t%ld\t%d\t%ld\n",
+                (integer)h->ultima, (integer)h->basis,
+                (integer)h->numerus, (longus)h->mediana_ms,
+                (longus)h->p90_ms, (integer)h->delta_permille,
+                (longus)h->primum);
+            perge;
+        }
+        _cohortem_nominare(&ch, h, titulus, (i32)magnitudo(titulus));
+        imprimere("  [%d] %-52s n=%-4d mediana %6ld ms  p90 %6ld ms",
+            (integer)k, titulus, (integer)h->numerus,
+            (longus)h->mediana_ms, (longus)h->p90_ms);
+        si (h->basis >= ZEPHYRUM)
+        {
+            _permille_scribere(h->delta_permille, delta);
+            imprimere("  %s contra [%d]", delta, (integer)h->basis);
+        }
+        imprimere("\n");
+    }
+    si (!machina && xar_numerus(ch.cohortes) == ZEPHYRUM)
+    {
+        _nihil_congruit_nominare(index, filtrum, piscina);
+    }
+    si (machina)
+    {
+        imprimere("OMISSI\t%d\t%d\t%d\t%d\n", (integer)ch.sordidi,
+            (integer)ch.ignoti, (integer)ch.praeterita,
+            (integer)absentes);
+        imprimere("MODERATIO\t%d\t%d\n", (integer)ch.moderatio_tituli,
+            (integer)ch.moderatio_permille);
+        redde ZEPHYRUM;
+    }
+    si (ch.sordidi + ch.ignoti + ch.praeterita + absentes > ZEPHYRUM)
+    {
+        imprimere("omissi: %d sordidi (codex ignotus), %d ignoti "
+            "(commissum illegibile), %d interventiones antiquiores, %d "
+            "sine corpore\n", (integer)ch.sordidi, (integer)ch.ignoti,
+            (integer)ch.praeterita, (integer)absentes);
+    }
+    si (xar_numerus(ch.interventiones) > ZEPHYRUM)
+    {
+        constans CursusInterventio* u = *(constans CursusInterventio**)
+            xar_obtinere(ch.interventiones,
+            (i32)xar_numerus(ch.interventiones) - I);
+                         character delta[XXXII];
+
+        si (ch.moderatio_tituli == ZEPHYRUM)
+        {
+            imprimere("moderatio: nulli tituli non affecti cum %d+ "
+                "cursibus utrimque %.8s\n",
+                (integer)CURSUS_MODERATIO_MINIMI,
+                (constans character*)u->cursus->initium.commissum.datum);
+        }
+        alioquin
+        {
+            _permille_scribere(ch.moderatio_permille, delta);
+            imprimere("moderatio: %d tituli non affecti, mutatio mediana "
+                "trans %.8s: %s\n", (integer)ch.moderatio_tituli,
+                (constans character*)u->cursus->initium.commissum.datum,
+                delta);
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+interior integer
+_tabulam_fusionis_imprimere (
+    constans CursusIndex* index,
+            constans Xar* mensurae,
+           CursusFiltrum  filtrum,
+                     b32  machina,
+                 Piscina* piscina)
+{
+           CursusFusio  fu;
+                   s64  nunc = mensura_momentum_nunc();
+                   s64  ms_c = ZEPHYRUM;
+                   s64  ms_f;
+                   s64  summa_c      = ZEPHYRUM;
+                   s64  summa_f      = ZEPHYRUM;
+                   s64  intervallum  = ZEPHYRUM;
+            CursusVita  vita         = CURSUS_VITA_IGNOTA;
+                   i32  k;
+             character  tempus[XXXII];
+    constans character* vita_titulus;
+
+    si (filtrum.arbor.mensura == ZEPHYRUM)
+    {
+        CursusInitium contextus;
+
+        memset(&contextus, ZEPHYRUM, magnitudo(contextus));
+        mensura_contextum_parare(&contextus, piscina);
+        filtrum.arbor = contextus.arbor;
+    }
+    si (!cursus_quaerere_fusio(index, &filtrum, piscina, &fu))
+    {
+        fprintf(stderr, "mensor quaestio fusio: nulla fusio in arbore "
+            "%.*s\n", (integer)filtrum.arbor.mensura,
+            (constans character*)filtrum.arbor.datum);
+        redde I;
+    }
+    /* sine fine: vivane? (custos per currentes, ut 'currentes') */
+    si (fu.fusio->status == CURSUS_INTERRUPTUS)
+    {
+        Xar* currentes = cursus_quaerere_currentes(index, mensurae,
+            &filtrum, piscina);
+
+        per (k = ZEPHYRUM; currentes != NIHIL
+             && k < xar_numerus(currentes); k++)
+        {
+            constans CursusCurrens* r = (constans CursusCurrens*)
+                xar_obtinere(currentes, k);
+
+            si (   r->profunditas == ZEPHYRUM
+                && chorda_aequalis(r->cursus->initium.id,
+                       fu.fusio->initium.id))
+            {
+                vita = _vitam_iudicare(r, piscina);
+            }
+        }
+    }
+    vita_titulus = fu.fusio->status != CURSUS_INTERRUPTUS
+        ? _statum(fu.fusio->status)
+        : vita == CURSUS_VITA_VIVA ? "currit"
+        : vita == CURSUS_VITA_MORTUA ? "interruptus" : "sine fine";
+    ms_f = _ms_cursus(fu.fusio, nunc);
+    si (fu.commissio != NIHIL)
+    {
+        ms_c = _ms_cursus(fu.commissio, nunc);
+        intervallum = fu.fusio->initium.initium
+            - (fu.commissio->initium.initium + ms_c);
+        _tempus_iso(fu.commissio->initium.initium, tempus);
+        si (machina)
+        {
+            imprimere("FUSIO_COMMISSIO\t%.*s\t%s\t%ld\t%ld\t%.*s\n",
+                (integer)fu.commissio->initium.id.mensura,
+                (constans character*)fu.commissio->initium.id.datum,
+                _statum(fu.commissio->status),
+                (longus)fu.commissio->initium.initium, (longus)ms_c,
+                (integer)fu.commissio->finis.nota.mensura,
+                (constans character*)fu.commissio->finis.nota.datum);
+        }
+        alioquin
+        {
+            imprimere("COMMISSIO FUSIONIS  %.1f min  %s  %s  %.*s\n",
+                (duplex)ms_c / 60000.0, _statum(fu.commissio->status),
+                tempus, (integer)fu.commissio->finis.nota.mensura,
+                (constans character*)fu.commissio->finis.nota.datum);
+        }
+        _filios_fusionis_imprimere(fu.filii_commissionis, "commissio",
+            nunc, machina, &summa_c);
+        si (!machina)
+        {
+            imprimere("   %6.1f min  sumptus (extra filios)\n",
+                (duplex)(ms_c - summa_c) / 60000.0);
+        }
+    }
+    _tempus_iso(fu.fusio->initium.initium, tempus);
+    si (machina)
+    {
+        imprimere("FUSIO\t%.*s\t%s\t%ld\t%ld\t%.*s\n",
+            (integer)fu.fusio->initium.id.mensura,
+            (constans character*)fu.fusio->initium.id.datum,
+            vita_titulus,
+            (longus)fu.fusio->initium.initium, (longus)ms_f,
+            (integer)fu.fusio->finis.nota.mensura,
+            (constans character*)fu.fusio->finis.nota.datum);
+    }
+    alioquin
+    {
+        imprimere("\nFUSIO  %.1f min  %s  %s  %.*s\n",
+            (duplex)ms_f / 60000.0, vita_titulus, tempus,
+            (integer)fu.fusio->finis.nota.mensura,
+            (constans character*)fu.fusio->finis.nota.datum);
+    }
+    _filios_fusionis_imprimere(fu.filii_fusionis, "fusio", nunc,
+        machina,
+        &summa_f);
+    si (machina)
+    {
+        imprimere("FUSIO_LINEA\t%ld\t%ld\t%ld\t%ld\n", (longus)ms_c,
+            (longus)intervallum, (longus)ms_f,
+            (longus)(ms_c + intervallum + ms_f));
+    }
+    alioquin
+    {
+        imprimere("   %6.1f min  sumptus (extra filios)\n",
+            (duplex)(ms_f - summa_f) / 60000.0);
+        imprimere("\nLINEA TEMPORUM\n");
+        imprimere("   %6.1f min  commissio fusionis\n",
+            (duplex)ms_c / 60000.0);
+        imprimere("   %6.1f min  intervallum\n",
+            (duplex)intervallum / 60000.0);
+        imprimere("   %6.1f min  fusio%s\n", (duplex)ms_f / 60000.0,
+            fu.fusio->status
+                == CURSUS_INTERRUPTUS ? " (usque nunc)" : "");
+        imprimere("   %6.1f min  SUMMA\n",
+            (duplex)(ms_c + intervallum + ms_f) / 60000.0);
+    }
+    redde ZEPHYRUM;
+}
+
 /* GRAVES (credo memoria T3): homini MiB cum decima, machinae octeti */
 interior vacuum
 _graves_imprimere (
@@ -2053,6 +2812,11 @@ _quaestionum_usum_imprimere (
         "                apex auctus; n=XX nisi datum)\n"
         "  iudicia       regenerationes iudicis fabricae\n"
         "  commissiones  commissiones cum portis suis\n"
+        "  fusio         fusio ultima arboris: commissio fusionis, portae,\n"
+        "                linea temporum (arbor= ; ordinarie currens)\n"
+        "  cohortes      titulus per cohortem interventionum (mensor\n"
+        "                interventio notare; antecessio git): n,\n"
+        "                mediana, p90, delta, moderatio\n"
         "  currentes     quid NUNC currit (cursus aperti, custos vivus)\n"
         "  numquam       scripta declarata numquam cursa\n"
         "  discus        quod in diurna spatium tenet\n"
@@ -2191,6 +2955,24 @@ _quaestio (
             mensura_mensuras_legere(volumen, chorda_ex_literis("",
             piscina), piscina), &par.filtrum, par.colloquium, machina,
             piscina);
+
+        volumen_claudere(volumen);
+        redde codex;
+    }
+    si (strcmp(nomen_q, "cohortes") == ZEPHYRUM)
+    {
+        integer codex = _cohortes_imprimere(index, &par.filtrum,
+            machina,
+            piscina);
+
+        volumen_claudere(volumen);
+        redde codex;
+    }
+    si (strcmp(nomen_q, "fusio") == ZEPHYRUM)
+    {
+        integer codex = _tabulam_fusionis_imprimere(index,
+            mensura_mensuras_legere(volumen, chorda_ex_literis("",
+            piscina), piscina), par.filtrum, machina, piscina);
 
         volumen_claudere(volumen);
         redde codex;
@@ -3417,6 +4199,11 @@ main (
     alioquin si (strcmp(argv[I], "memoria") == 0)
     {
         codex = _memoria(argc, argv);
+    }
+    alioquin si (   strcmp(argv[I], "interventio") == 0 && argc >= III
+                 && strcmp(argv[II], "notare")     == 0)
+    {
+        codex = _interventum_notare(piscina, argc, argv);
     }
     alioquin
     {

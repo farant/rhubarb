@@ -372,6 +372,15 @@ Porta natalis: `./pythonica/probare.sh` (probatio_silva.py).
   Launcher strepitum in stdout mittit (`  [nexus] ...`): lector lineas
   `[`-incipientes praeterit et genus/statum ex FINE lineae primae sumit
   (titulus parentheses ferre potest).
+- **`interventio='titulus'` [`budget='B3'`]** (budget B9, 2026-10-27) —
+  commissum ut mutationem perficientiae notat: post `git commit`
+  `bin/mensor interventio notare -commissum <sha PLENUM>` (lib/git sha
+  breve non resolvit), ut `mensor quaestio cohortes titulus=X` cursus X
+  ante/post eam dividat. Praeiudicium ANTE portas (titulus non vacuus,
+  `bin/mensor` adest, budget sine interventione recusatur). Nota fracta
+  = **`SilvaInterventioError`** (`.hash`, `NOLI iterare`, imperium
+  pasta-paratum) - POST clausuram operis, ut opus tamen claudatur.
+  `silva.MENSOR_IMPERIUM` substituibile (porta stipulam adhibet).
 - **Linea auctoris SEMEL** (`_nuntium_cum_trailer`): nuntius
   `Co-Authored-By:` iam ferens intactus manet. Olim commissio suam caece
   appendebat; quinque commissa 2026-09-21 lineas DUAS acceperunt, unum

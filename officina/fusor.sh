@@ -25,17 +25,14 @@ declare -a INCLUDE_FLAGS=(
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$OFF_DIR/fusor_fontes_generata.sh"
 
-newest_header () {
-    find "$RADIX_DIR/include" "$OFF_DIR/fontes" \
-        "$RADIX_DIR/silva/amalgama" \
-        -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include" "$OFF_DIR/fontes" "$RADIX_DIR/silva/amalgama"
 
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
     src="$RADIX_DIR/lib/$f.c"
     obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [dep] $f.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi
@@ -53,7 +50,7 @@ obj_files="$obj_files $obj"
 for src in "$OFF_DIR"/fontes/*.c; do
     base="$(basename "$src" .c)"
     obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [officina] $base.c" >&2
         clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
     fi

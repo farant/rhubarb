@@ -170,3 +170,39 @@ memoized runs are unchanged. To be confirmed by measurement after T2.
   session, not re-measured under macOS 27.
 - Saving estimate (V) assumes walk cost dominates the per-member
   overhead; area preparation and liber handling were not timed.
+
+## VIII. Step 0 - baseline after T1 (2026-10-27, quinta)
+
+T1 shipped as fabrica-8 step 3 (code 97 SCRIPTURA_PRAETERITA = VIOLATIO,
+transformare + sweeps I-VIII, in main ff 7273f73a). Not "no debts" as IV
+proposed: the channel itself, credo's own area handling, machinula (notes
+first), utime-only test sites and the forum secret keep per-site TOLERA
+(~48 sites). Of those, only credo (5) and the secret (3) write without an
+S line - credo's land inside the member area (to verify in step 2).
+
+`bin/fabrica probare -vis -conferre` over all nine composites, 587 members:
+
+| composite | members | snapshot saw, trace didn't | trace saw, snapshot didn't |
+|---|---|---|---|
+| css html materia md saltuarius toml silva | 135 | 0 | 0 |
+| radix | 436 | 2 paths, 1 member (both declared debts) | 1350 paths, 8 members |
+| veneni | 16 | 4 paths, 2 members (~/.bin, foreign install) | 0 |
+
+- radix: `probatio_lectiones` points FABRICA_LECTIONES at its own files
+  by design (`<debitum_scripturae>` x2). The 10-24 real miss
+  (`natura_glossae` raw fopen write) is GONE.
+- veneni: ~/.bin/mensor, briar, briar-spectator, silex replaced at
+  14:56-14:58 by another session's main install while cellae and plexus
+  ran - the "written by no traced member" class (IV T4, per-run walk).
+  Both members FRACTUM on it today; no trace gap.
+- trace-only: transients the snapshots cannot see (probatio_thesaurus
+  1135 store blobs, probatio_silex 179, vigilia 24, ...).
+
+Snapshot cost re-measured (`sample` on `probare -vis probationes_toml`):
+the before/after `_arborem_photographare` = ~1/3 of the run, ~0.42 s per
+snapshot (other sessions active - upper bound; spec I said ~190 ms).
+The walk sees ~49k entries (store parts excluded; the tree is ~352k).
+fabrica records no snapshot timing - add a mensor fact in step 2.
+
+Conclusion: the trace is complete for every member that executes no
+foreign program; step 2 (T3 behind a flag, cross-checked) may start.

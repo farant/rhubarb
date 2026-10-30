@@ -17,4 +17,38 @@
       appear.</responsum>
   </interrogatio>
 
+  <interrogatio genus="quomodo">
+    <quaestio! (>how long did the last merge take, and where did the time go?
+    <responsum symbolum="cursus_quaerere_fusio CursusFusio" imperium="bin/mensor quaestio">bin/mensor
+      quaestio fusio [arbor=PATH] [-machina]. Since budget B0 (2026-10-27)
+      silva.fusio_probare is a run of its own, title 'fusio', so its
+      phases and gates are its children. cursus_quaerere_fusio picks the
+      latest 'fusio' run of the tree (default: the current one) and the
+      latest 'commissio' of the same tree that STARTED before it - the
+      merge commit - and lists both runs' children longest first. The
+      human view prints the commit block, the fusio block (a run with no
+      end shows time so far and 'currit' when its keeper process is
+      alive) and a timeline: commit, gap, fusio, total. Merges from
+      before B0 have no 'fusio' run and are not found.</responsum>
+  </interrogatio>
+
+  <interrogatio genus="quomodo">
+    <quaestio! (>did my performance change actually make test X faster?
+    <responsum symbolum="cursus_quaerere_cohortes CursusCohortes CursusAntecessio" imperium="bin/mensor quaestio">Mark
+      the commit first: bin/mensor interventio notare -commissum SHA
+      -titulus "what changed" [-budget B3] [-scopus a,b]. That records an
+      'interventio' run whose body is the titles the commit affects
+      (fabrica legentes + gates owed), snapshotted at marking time. Then
+      bin/mensor quaestio cohortes titulus=X [post=MS] [arbor=PATH]
+      [-machina], run inside the repository. Passing runs of X are split
+      by git ANCESTRY, not time: each run lands in the cohort of the
+      interventions (affecting X) that its code contains. A run inside a
+      commit attempt counts the commit it produced; a dirty run outside
+      a commit is omitted (unknown code). Each cohort shows n, median,
+      p90 and delta against the largest earlier cohort it extends. The
+      'moderatio' line is the control: the median change across the
+      latest intervention for leaf titles NO intervention touches - if
+      it moved too, the machine got slower or faster, not your code.</responsum>
+  </interrogatio>
+
 </interrogationes>
