@@ -354,3 +354,60 @@ counts (2,585 cases; 2,001 selected), the two output forms.
 - The X4 limits (depth, expansion size) — set from measurement.
 - Whether any materia substrate change is needed (toml and html: none;
   crusta: one). Recorded as found.
+
+---
+
+## X. As built (2026-10-30)
+
+Built P1–P17 in sexta, 2026-10-29..30 (P8–P11 and P12–P13 as merged
+slices; P14–P17 overnight while Fran slept — the decisions taken
+alone are marked **FLAGGED**). Build history: the plan's "Executed"
+notes. Orientation: `xml/CLAUDE.md`.
+
+**Numbers.**
+
+| measure | result |
+|---|---|
+| W3C not-wf (selected) | 922/922 rejected |
+| W3C valid + invalid (selected) | 948/948 accepted |
+| W3C canonical outputs | 309/309 byte-equal |
+| W3C exclusions | 44 non-UTF-8 (X8), 60 errors only inside external entities (X3) — named in `selectio.tsv` |
+| expat differential, wild corpus (7,931 files) | 7,799 agree (canonical form included), 114 encoding (X8), 4 where libxml2 sides with us, **0 unnamed** |
+| byte law (tree → emitter == source) | every corpus, every file |
+| totality | 19,990 truncated/mutated W3C files + random + extremes (100,000 open elements, 5,000 attributes, entity chains, NUL): 0 crashes |
+| speed | Vulgate USFX 4.65 MB: parse 22 ms, cook 123 ms; tree 10.5×, cooking 28.8× source bytes |
+| registry | 15 genera, 33 slots; lexicon 25 token genera, six self-chosen modes |
+| STML round trip | 2,001/2,001 W3C, 7,682/7,682 wild (files > 128 KB skipped with count) |
+| canon | 76 rules, seal pinned |
+| suites | 12 under gate `xml` |
+
+**Deltas from the spec.**
+
+- **API names (§V sketch → `xml_documentum.h`).** `xml_documentum_legere(textus, piscina)` — no `via`; the path is given when rendering (`xml_documentum_diagnostica_scribere(doc, via, aedificator)`). One node type `XmlCoctus` for elements, text, comments and PIs (not `XmlElementum`), read through `xml_nodi_genus`. `xml_titulus` = QName as written, plus `xml_elementi_localis`/`xml_elementi_spatium`. `xml_filius_primus` became `xml_filius(e, titulus|NIHIL)` + `xml_frater(x, titulus|NIHIL)` (the loop every consumer wanted). `xml_textus_internus` became **`xml_textus_totus`**: the old library exported the same name and the two collided at link time during migration. Attributes keep `praestitutum` (defaulted from `<!ATTLIST>`) in `XmlAttributumCoctum`. **Header FLAGGED for Fran's review.**
+- **X4 limits (measured):** 64 levels of entity nesting, 16 MiB of expanded text, for general AND parameter entities. Entity replacement text is parsed once and cached: the billion-laughs file first took 2.3 GB; the parameter-entity bomb first took 12 s+ (PE expansion did not count against the budget).
+- **WFC: Entity Declared** applies exactly when the spec says (no DTD; or no external subset and no PE references; or `standalone="yes"`) — otherwise an undeclared reference is kept as an unexpanded node.
+- **UTF-16** is refused as X8 including Appendix F's BOM-less signatures, not only by BOM.
+- **Canonical form, second edition:** NOTATIONs at the DOCTYPE position; DTD PIs printed before the DOCTYPE header (`locus_typi`).
+- **plist writes directly** (§I option a) — **FLAGGED**. `_valorem_scribere` prints the old pretty writer's bytes exactly; proven with `cmp` over a program linked against old and new objects.
+- **plist leniency**: NUL bytes after `</plist>` are dropped before XML (Aseprite's Info.plist; `plutil` accepts it). The XML library itself stayed strict.
+- **plist depth**: `PLIST_PROFUNDITAS_MAXIMA` (512) on read and write — not in the spec, found by the old audit parks the migration closed.
+- **Migration was one commit**, not one per consumer (plan P15 Step 3), because the deletion needed all of them; each consumer was proven alone first.
+- **briar (P16):** `xml/fontes` is the third client root. The root list
+  turned out to live in FOUR places (silex.c, corpus_infixum.sh,
+  aedificatio.stml, plus a hand list of shadow directories inside
+  corpus_infixum.sh, now derived). Five file-local type names equal to
+  public names were renamed (`GradusArboris`, `GradusTextus`,
+  `GradusCanonici`, `Ens`, `IntervallumRunarum`).
+- **Twelve** `sondae_auditus/xml_*` probes, not six (six more reached xml.h through a shared header) — deleted with their parks.
+
+**AUDIENDA answered.**
+
+- *Non-UTF-8 wild files:* 114 of 7,931 (all named `codificatio` in the differential golden); none is a consumer input (plists, EPUB packages, MusicXML are UTF-8).
+- *X4 limits:* above.
+- *Substrate changes:* none. materia was used as it stood. The one
+  surprise (P6: the substrate writer refused ten not-wf files whose
+  token values cannot carry trivia) was fixed in xml's ligator, which
+  hangs pending trivia after the prior token when the next value is
+  not STML-safe (mirroring materia's `_textus_tutus`).
+
+**Left open (named).** Docs book page `docs/bibliothecae/xml.html` is generated from the shared ledger inventory, which main needs while main still has `lib/xml.c`: update the inventory row at merge. Everything in §IX stays a future; MusicXML is next.

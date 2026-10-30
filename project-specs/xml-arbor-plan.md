@@ -784,6 +784,13 @@ As-built §X in the spec (deltas, numbers, AUDIENDA answered),
 ledger: the MusicXML desideratum unblocked, a closed desideratum for
 this library, memory pointer. Commit.
 
+**Executed 2026-10-30 (overnight).** Spec §X "As built" (numbers,
+deltas incl. the API renames and the FLAGGED decisions, AUDIENDA
+answered); `xml/CLAUDE.md` gained a consumer section and the closed
+status; `materia/phase-log.md` RELATIO; ledger: desideratum
+01M299JPS0 impletum, parcum 01M65252W1 clausum, MusicXML desideratum
+01M64ZZYQ5 unblocked; memory `xml-arbor-project.md` + index pointer.
+
 ---
 
 ## Self-Review (2026-10-29, before execution)

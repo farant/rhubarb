@@ -9,7 +9,33 @@ with Fran). Ledger: parcum 01M65252W1DKBJE10VX0NBQDJH. It replaced
 `lib/xml.c` / `include/xml.h` (deleted in P15); the only XML library in
 the tree is this one.
 
+## Using it (consumers)
+
+```c
+#include "xml_documentum.h"      /* the ONLY header a consumer needs */
+
+XmlDocumentum* d = xml_documentum_legere(textus, piscina);
+si (!xml_documentum_successus(d)) {
+    xml_documentum_diagnostica_scribere(d, "a.xml", aedificator);
+}                                 /* every error: via:linea:columna */
+radix = xml_documentum_radix(d);
+per (p = xml_filius(radix, "part"); p; p = xml_frater(p, "part")) {
+    xml_attributum(p, "id", &id);           /* FALSUM if absent */
+    xml_textus_totus(p, piscina, &textus);  /* all descendant text */
+}
+```
+
+Titles are QNames as written; namespaces via `xml_elementi_spatium` /
+`xml_attributum_spatii`. `xml_liberum` walks ALL children (whitespace
+text is kept — byte law), `xml_filius`/`xml_frater` elements only.
+External entities are never fetched (X3); only UTF-8 (X8). Live
+examples: `lib/codex.c` (EPUB), `lib/horreum.c` (S3), `lib/plist.c`,
+`briar/probationes/fixa/thistle/xml_partitura.thistle`.
+
 ## Status
+
+**Closed 2026-10-30 (P17).** As built: spec §X. Next: the MusicXML
+reader (desideratum 01M64ZZYQ59DY0G0104SRTK439), on this API.
 
 - **P1 (oracle material) done.**
 - **P2 (scaffold) done**: declaration `grammatica/xml.registrum.stml`

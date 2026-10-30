@@ -3595,3 +3595,39 @@ measure time at depth, not survival; assert "carries a diagnostic",
 not "not sana"; retiring a library means finding what VENDORS it
 (silex projects, briar's corpus); private names in a client must not
 equal public house names (the amalgam collision class).
+
+## 2026-10-30 — the xml client closed (P1–P17 RELATIO)
+
+RELATIO: materia's eighth client, XML 1.0 (5th ed.) + Namespaces 1.0,
+built in two days in sexta on toml's shape (spec
+`project-specs/xml-arbor-spec.md`, §X as built; plan P1–P17, P8–P11 and
+P12–P13 as merged slices; P14–P17 overnight with Fran asleep, decisions
+FLAGGED). Born from a MusicXML file (Tallis, O nata lux) — the MusicXML
+reader is the first consumer still to be written. Numbers: W3C suite
+not-wf 922/922 rejected, valid+invalid 948/948 accepted, canonical
+outputs 309/309 (exclusions named: 44 non-UTF-8, 60 errors only inside
+external entities); expat differential over 7,931 wild files 0
+unnamed disagreements; byte law everywhere; STML 2,001/2,001 W3C and
+7,682/7,682 wild; canon 76 rules; totality 19,990 mutated cases, 0
+crashes; the Vulgate (4.65 MB) parses in 22 ms and cooks in 123 ms.
+Entity bombs survived only after measurement (billion laughs first
+took 2.3 GB, the parameter-entity bomb 12 s+): fragments parsed once
+and cached, PE expansion charged to the size budget.
+Consumers: codex, horreum, plist, the pecunia generator migrated;
+`lib/xml.c` and `include/xml.h` deleted (815ed0ea), two audit parks
+closed with them. plist now writes its own text (old bytes exactly)
+and gained a depth limit; its only leniency (trailing NULs, Apple
+accepts them) lives in plist, not in the parser. briar exposes the
+library (c34fe870, FRANGIT line in MUTATIONES).
+
+Substrate: **no change**, again. The P6 surprise (the STML writer
+refusing token values that cannot carry trivia) was fixed in the
+client's ligator, mirroring materia's own `_textus_tutus`.
+
+Lessons for the next client: retiring a library means finding every
+HAND-WRITTEN source list (briar and ludus_tessera named lib/xml.c —
+the briar gate caught it, nothing else did); a client root lives in
+four places, not two; `silva/renominare.sh` cannot rename a file-local
+typedef that shares its name with others (quaestio 01M3DEYG); never
+build a binary while a fabrica suite runs (false "scripsit extra
+vestigium" reds).
