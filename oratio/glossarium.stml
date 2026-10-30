@@ -1075,6 +1075,7 @@
   <vocabulum lemma="pcg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen algorithmi (sors, 2026-09-23)"/>
   <vocabulum lemma="splitmix" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen algorithmi (sors, 2026-09-23)"/>
   <vocabulum lemma="plist" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae Apple (tabula proprietatum), ut xml / json; bibliotheca plist 2026-09-11"/>
+  <vocabulum lemma="musicxml" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (partitura MusicXML, .xml/.mxl), ut plist / xml; bibliotheca musicxml 2026-10-30"/>
   <vocabulum lemma="lstat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (status nexus IPSIUS, non destinationis); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
   <vocabulum lemma="rmdir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (directorium vacuum delere); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
   <vocabulum lemma="kqueue" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis BSD/Darwin (cauda notitiarum nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>

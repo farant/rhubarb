@@ -2044,6 +2044,7 @@ _coctus (
     x->genus   = genus;
     x->parens  = parens;
     x->nodus   = nodus;
+    x->ancora  = c->ancora;
     si (parens != NIHIL)
     {
         si (parens->liberi == NIHIL)

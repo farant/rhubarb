@@ -246,7 +246,42 @@ _casus_domus_probare (
         "<d>&#1114112;</d>")));
 }
 
+/* xml_locus: sedes fontis nodi cocti (linea, columna I-basatae);
+ * nodus ex entitate sedem referentiae reddit */
+interior vacuum
+_locus_probare (
+    CredoContextus* c)
+{
+    XmlDocumentum* d = _legere(c->piscina,
+        "<a>\n  <b x=\"1\"/>\n</a>");
+    constans XmlCoctus* r;
+    constans XmlCoctus* e;
+                   i32  linea    = ZEPHYRUM;
+                   i32  columna  = ZEPHYRUM;
+
+    CREDO_NECESSE (xml_documentum_successus(d));
+    r = xml_documentum_radix(d);
+    CREDO_VERUM (xml_locus(r, &linea, &columna));
+    CREDO_AEQUALIS_I32 (linea, (i32)I);
+    CREDO_AEQUALIS_I32 (columna, (i32)I);
+    CREDO_VERUM (xml_locus(xml_filius(r, "b"), &linea, &columna));
+    CREDO_AEQUALIS_I32 (linea, (i32)II);
+    CREDO_AEQUALIS_I32 (columna, (i32)III);
+    CREDO_FALSUM (xml_locus(NIHIL, &linea, &columna));
+
+    d = _legere(c->piscina, "<!DOCTYPE x [ <!ENTITY a \"<e/>\"> ]>\n"
+        "<x>\n  &a;</x>");
+    CREDO_NECESSE (xml_documentum_successus(d));
+    e = xml_filius(xml_documentum_radix(d), "e");
+    CREDO_NON_NIHIL (e);
+    CREDO_VERUM (xml_locus(e, &linea, &columna));
+    CREDO_AEQUALIS_I32 (linea, (i32)III);
+    CREDO_AEQUALIS_I32 (columna, (i32)III);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
+    { "xml_locus: sedes fontis, entitas -> referentia", _locus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambulatio: filius, frater, liberum", _ambulatio_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "attributa: QName, spatium, praestitutum, textus internus",

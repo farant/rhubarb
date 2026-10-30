@@ -202,8 +202,43 @@ b32 musicxml_tabulam_scribere (constans MusicxmlOpus* opus,
   the header needed); `./oratio/quaere.sh musicxml` finds it.
 - [ ] **Step 6: STOP — show Fran the header and `xml_locus`.** Record
   his changes in the Executed note; later tasks use those names.
-- [ ] **Step 7: Commit** (gates `xml`): header, xml_documentum.{h,c},
+- [x] **Step 7: Commit** (gates `xml`): header, xml_documentum.{h,c},
   probatio_xml_api.c, glossarium.
+
+**Executed 2026-10-30 (Fran approved the header as drafted).**
+`xml_locus` needed one more field than planned: a node cooked from an
+entity's replacement text carries positions INSIDE that text (an
+element from `<!ENTITY a "<e/>">` reported 1:1), so `XmlCoctus` gained
+`ancora` (the outermost `&a;` token, set from the cooker's existing
+`c->ancora`); `xml_locus` prefers it, else `materia_tractus_nodi(NIHIL,
+nodus)`, else walks up `parens`. Final names differ from the sketch
+above — later tasks use THESE:
+- forms `MUSICXML_FORMA_PARTIUM` / `MUSICXML_FORMA_TEMPORUM`; vitia
+  `MUSICXML_ARCA_MALA` (was MXL_MALUM), `MUSICXML_NON_UTF8` (was
+  CODIFICATIO), plus `MUSICXML_SALTUS_SINE_SONO` (D.C./D.S. in words
+  only); `MusicxmlVitium` has `linea`/`columna` 0 for archive errors.
+- key `MusicxmlClavis`, clef `MusicxmlClavicula`; `MusicxmlAttributa`
+  flags `clavis_adest`, `metrum_adest`, `transpositio_adest`; additive
+  time = `MusicxmlMetrum.partes[]` of `MusicxmlMetriPars {pulsus
+  ("3+2"), summa, unitas}`.
+- barline `MusicxmlLineaMensurae`: `repetitio` (`MUSICXML_REPETITIO_
+  PRORSUM` forward / `_RETRORSUM` backward), `vices`, ending =
+  `conclusio` (`MusicxmlConclusio`: `_NULLA/_INITIUM/_FINIS/
+  _INTERRUPTA`), `conclusionum_textus`, `conclusiones[]`, fermata =
+  `corona`.
+- directions `MusicxmlDirectio` in `MusicxmlMensura.directiones`
+  (`MUSICXML_DIRECTIO_TEMPUS … _SIGNUM` segno, `_CAUDA` coda, `_FINIS`
+  fine, `_A_CAPITE`, `_A_SIGNO`, `_AD_CAUDAM`, `_PEDALE`, `_OCTAVA`,
+  `_ALIA`; `valor_adest`/`valor`, `cuneus`, `sonus` = from `<sound>`).
+- note marks `MusicxmlSignum` (`MUSICXML_SIGNUM_CORONA`, `_ACORDUM_
+  FRACTUM` for arpeggiate, …); syllables `MusicxmlSyllaba {versus,
+  versus_textus, locus (MusicxmlLocusSyllabae), textus, extensio,
+  iuncta}`; note MIDI = `nota` (as carmen), tuplet = `ratio_notarum` /
+  `ratio_spatii`, ties `ligatura_initium`/`ligatura_finis`.
+- `musicxml_vitia_scribere(opus, ordo, via, exitus)` (ordo NIHIL
+  allowed); `MusicxmlOrdo` carries its own `vitia` and `longitudo`.
+- Test and fixture names in P6 say "volta(e)"; use `conclusio` /
+  `conclusiones` in identifiers (fixture file names may stay).
 
 ---
 

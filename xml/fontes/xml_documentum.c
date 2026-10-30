@@ -405,3 +405,42 @@ xml_textus_totus (
     *textus = chorda_aedificator_finire(a);
     redde VERUM;
 }
+
+b32
+xml_locus (
+    constans XmlCoctus* nodus,
+                   i32* linea,
+                   i32* columna)
+{
+    constans XmlCoctus* x;
+        MateriaTractus  tractus;
+
+    /* in expansione: sedes referentiae (ancora); nodus sine sede
+     * (NIHIL) sedem maioris accipit */
+    per (x = nodus; x != NIHIL; x = x->parens)
+    {
+        si (x->ancora != NIHIL)
+        {
+            materia_tractus_lexematis(NIHIL, x->ancora, &tractus);
+        }
+        alioquin si (   x->nodus == NIHIL
+                     || !materia_tractus_nodi(NIHIL, x->nodus,
+                     &tractus))
+        {
+            perge;
+        }
+        si (tractus.initium >= ZEPHYRUM)
+        {
+            si (linea != NIHIL)
+            {
+                *linea = tractus.linea;
+            }
+            si (columna != NIHIL)
+            {
+                *columna = tractus.columna;
+            }
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}

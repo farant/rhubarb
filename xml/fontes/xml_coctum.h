@@ -93,6 +93,12 @@ structura XmlCoctus {
                        i32  index;    /* locus in liberis parentis */
      constans MateriaNodus* nodus;    /* nodus arboris (NIHIL ex
                                        * entitate: nodus referentiae) */
+     constans MateriaToken* ancora;   /* in expansione entitatis:
+                                       * lexema referentiae extimae
+                                       * ('&a;' in fonte) - sedes nodi,
+                                       * quia nodus fragmenti in textu
+                                       * substitutionis iacet; NIHIL =
+                                       * nodus in fonte */
 };
 
 nomen structura {

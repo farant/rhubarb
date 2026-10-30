@@ -159,4 +159,15 @@ xml_textus_totus (
                Piscina* piscina,
                 chorda* textus);
 
+/* sedes fontis nodi: linea et columna (I-basatae, columna octetis)
+ * initii eius. Nodus ex entitate expansa sedem non habet: sedes
+ * proximi maioris qui habet redditur (referentia '&a;' aut elementum
+ * continens). FALSUM = nodus NIHIL aut nulla sedes (linea, columna
+ * non mutantur). Clientes (musicxml) diagnostica sua ita locant. */
+b32
+xml_locus (
+    constans XmlCoctus* nodus,
+                   i32* linea,
+                   i32* columna);
+
 #endif /* XML_DOCUMENTUM_H */
