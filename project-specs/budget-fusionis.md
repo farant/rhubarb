@@ -58,7 +58,7 @@ oraculum-silvae 1.0).
 | id | Idea | min | eff | Status |
 |---|---|---|---|---|
 | E2 | silva/*.sh and 38 other wrappers: ONE newest-header `find` per call, not one per object (~330 wrapper calls per merge commit; test runners already do "CAPUT RECENTISSIMUM SEMEL") | 1.5-3 | S-M | LUCRUM 9c92a730 |
-| D1-6 | Magnus 24 → 16 B (arm64 passes >16 B structs via memory; ASan makes every copy a call), i64 Euclid when inline, extensio normalisation shortcuts, hoisted axis norms, piscina churn; split `lentus` into its own suite | 2.4-2.9 | S-M | D1+D2 LUCRUM e8dcabb6, D3 e8be2b15, D5 1272c226; D4 + lentus split CANDIDATUM |
+| D1-6 | Magnus 24 → 16 B (arm64 passes >16 B structs via memory; ASan makes every copy a call), i64 Euclid when inline, extensio normalisation shortcuts, hoisted axis norms, piscina churn; split `lentus` into its own suite | 2.4-2.9 | S-M | D1+D2 LUCRUM e8dcabb6, D3 e8be2b15, D5 1272c226; lentus split (D8) LUCRUM cb5547a7; D4 CANDIDATUM |
 | A1 | `silva/probationes/apparatus.c`: pass `--thesaurus build/aedilis/obiecta` to aedilis (store exists; 15 s → 3 s, byte-identical) | 1.35-1.6 | S | LUCRUM cf6834d6 — 93.1 G → 9.5 G instructions per aedilis call |
 | E3 | raw-clang suites (briar, oratio, ludus_tessera, tessera, gesta, officina, ...) → `bin/compilator --plures` (warm ludus_tessera rebuilt 152/155 objects after a header touch) | 1.5-3 | L | CANDIDATUM |
 | B3-14 | stml internals: capture pass skips untouched parents, tokenizer scans runs, `_lineae_contenti` early exit, transparency set as array, parser intern cache, one-append indentation, writer tag cache, ... | ~1 | S-M | B5+B9 LUCRUM 20bd074d; B3/B6 deferred (move computus golds again); rest CANDIDATUM |
@@ -87,7 +87,7 @@ A7 = B7; B10+B12 ≈ C3; E7/E8 partly fold into E4; E5 shrinks to
 
 | id | Idea | min | Question |
 |---|---|---|---|
-| E1 | content-keyed gate receipts survive the commit: fusio re-ran 18 gates already green in the commit on identical content (246 s) | 3-4 | Is fusio's re-run meant as a second proof / flake hunt? |
+| E1 | content-keyed gate receipts survive the commit: fusio re-ran 18 gates already green in the commit on identical content (246 s) | 3-4 | RULED 2026-10-30 (Fran: not a second proof) → LUCRUM (see V) |
 | E4 | persistent compile cache for frigida (fixed path, or `-fdebug-compilation-dir=.`) | 1-2 | Must frigida exercise the compiler, or is clone content + content-keyed cache + a periodic truly-cold run enough? |
 | A8 | one corpus parse shared by the silva suites | 1-1.5 | Worth losing per-suite failure isolation / silva-m3 selection? |
 | A-q | `excludenda_silva` runs twice (n=2) in frigida | 0-1.2 | Why twice? |
@@ -124,6 +124,8 @@ A7 = B7; B10+B12 ≈ C3; E7/E8 partly fold into E4; E5 shrinks to
 | D3 | e8be2b15 | pending | extensio normalisation shortcuts |
 | E8 | 72a5f370 | pending | radix libs in FILA parallel parts |
 | D5 | 1272c226 | ASan cellae 212-318 → 120-133 s (D1-D5) | 4 KB temp pools |
+| D8 | cb5547a7 | pending | lentus section in its own suite (parallel) |
+| E1 | (this commit) | pending | receipts sealed on content; PORTAE_CAPUT keep HEAD |
 
 First measured merge after tier I (2026-10-30, quinta ff 0a2b4879;
 ONE sample, sexta committing concurrently; `mensor quaestio fusio`):

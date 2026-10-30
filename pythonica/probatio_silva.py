@@ -537,6 +537,43 @@ finally:
     os.unlink(os.path.join(silva.RADIX, vet))
     silva.VETITAE = tuple(v for v in silva.VETITAE if v != vet)
 
+_grex('sigillum: contentum, non commissum (budget B1 E1)')
+import shutil  # noqa: E402
+import subprocess  # noqa: E402
+import tempfile  # noqa: E402
+rep_s = tempfile.mkdtemp(prefix='sigillum_rep.')
+try:
+    def _g(*a):
+        subprocess.run(['git', '-c', 'commit.gpgsign=false', '-c',
+                        'core.hooksPath=/dev/null'] + list(a), cwd=rep_s,
+                       capture_output=True, check=True)
+    _g('init', '-q')
+    _g('config', 'user.email', 'f@x')
+    _g('config', 'user.name', 'f')
+    open(os.path.join(rep_s, 'a.txt'), 'w').write('unus\n')
+    _g('add', 'a.txt')
+    _g('commit', '-q', '-m', 'i')
+    open(os.path.join(rep_s, 'a.txt'), 'w').write('duo\n')
+    s_ante = silva.sigillum_arboris(radix=rep_s)
+    u_ante = silva.sigillum_arboris('unci', radix=rep_s)
+    _g('commit', '-q', '-am', 'ii')
+    credo(silva.sigillum_arboris(radix=rep_s) == s_ante,
+          'sigillum: commissio contentum non mutat - receptum supersunt')
+    credo(silva.sigillum_arboris('unci', radix=rep_s) != u_ante,
+          'sigillum: porta PORTAE_CAPUT (unci) post commissionem rancida')
+    open(os.path.join(rep_s, 'a.txt'), 'w').write('tres\n')
+    credo(silva.sigillum_arboris(radix=rep_s) != s_ante,
+          'sigillum: contentum mutatum = rancidum')
+    open(os.path.join(rep_s, 'b.txt'), 'w').write('nova\n')
+    s_nova = silva.sigillum_arboris(radix=rep_s)
+    _g('add', 'b.txt')
+    _g('commit', '-q', '-am', 'iii')
+    credo(silva.sigillum_arboris(radix=rep_s) != s_nova,
+          'sigillum: plagula nova secuta = status secutorum mutatus'
+          ' (portae git ls-files legunt)')
+finally:
+    shutil.rmtree(rep_s, ignore_errors=True)
+
 _grex('metiri')
 # registrum coctum (2026-09-15): involucrum tenue instrumenti C89 -
 # declaratio orationis commissa RECENS (rc 0, viae ambae nominatae);

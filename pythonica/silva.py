@@ -2400,7 +2400,7 @@ def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True,
                          % (nomen, ', '.join(sorted(PORTAE))))
     imperium, signum = PORTAE[nomen]
     args = list(imperium) + ([filtrum] if filtrum else [])
-    sig = sigillum_arboris() if (radix is None and receptum) else None
+    sig = sigillum_arboris(nomen) if (radix is None and receptum) else None
     initium = time.time()
     r = _curre(args, cwd=radix)
     acta = _ANSI.sub('', r.stdout + r.stderr)
@@ -2411,7 +2411,7 @@ def _porta_cruda(nomen, filtrum=None, radix=None, receptum=True,
         and not re.search(r'FRACT|Fracti:\s*[1-9]|Failed:\s*[1-9]',
                           compendium)
     fr = [] if sana else fracturae(acta, nomen)
-    rancida = sig is not None and sig != sigillum_arboris()
+    rancida = sig is not None and sig != sigillum_arboris(nomen)
     p = Porta(nomen, cucurrit, sana, compendium, r.returncode, acta, fr,
               rancida)
     if notare:
@@ -3911,7 +3911,7 @@ def commissio(nuntius, viae, portae=(), verificare=True, recepta=True,
     h = _curre(['git', 'rev-parse', '--short', 'HEAD']).stdout.strip()
     _debita_fusionis_purgare(h, virides)
     _debita_fusionis_scribere(h, dilatae)
-    recepta_viva_delere()
+    recepta_viva_rancida_delere()
     defectus = None
     if interventio is not None:
         plenum = _curre(['git', 'rev-parse', 'HEAD']).stdout.strip()
@@ -4299,29 +4299,85 @@ def _umbram_post(umbra, nomen, f, secundae, cursa):
               % (nomen, str(ex).splitlines()[0][:200]))
 
 
-def sigillum_arboris():
-    """sigillum status arboris: HEAD + differentia plagularum tractarum
-    (index et arbor) + plagulae novae non ignoratae cum contentu.
-    Receptum portae huic sigillo ligatur - mutatio ulla = rancidum."""
+# Portae quae CAPUT (HEAD) aut metadata commissi legunt - verdictum
+# earum a commisso pendet, non a contentu solo; sigillum earum HEAD
+# servat (budget B1 E1, inspectio 2026-10-30): unci (git read-tree
+# HEAD), formator-delta (-delta HEAD super plagulam tractatam),
+# aequivalentia (git diff basis). Portae quae 'git ls-files' legunt
+# (vexilla, unitates, generata, sera, diagnostica) et fabrica (index:
+# viae secutae) per statum secutorum in sigillo ipso tectae sunt.
+PORTAE_CAPUT = frozenset(['unci', 'formator-delta', 'aequivalentia'])
+
+
+def _sigillum_contenti(radix=None):
+    """sigillum CONTENTI arboris operis: arbor git plagularum tractarum
+    ut nunc in disco (index temporarius = copia indicis veri, cache stat
+    servata; add -u, VETITAE exclusae; write-tree) + plagulae novae non
+    ignoratae cum contentu. HEAD NON intrat: commissio contentum non
+    mutat, ergo sigillum ante et post commissionem idem (budget B1 E1,
+    Franus 2026-10-30) - nisi commissio plagulas novas sequi incipit
+    (status secutorum in sigillo: portae 'git ls-files' legunt).
+    Index non scribilis (fusio media: conflictus) -> sigillum vetus
+    HEAD + differentia (tutum, numquam falso idem)."""
+    import shutil
+    cwd = radix or RADIX
+    idx = _curre(['git', 'rev-parse', '--git-path', 'index'],
+                 cwd=cwd).stdout.strip()
+    if not os.path.isabs(idx):
+        idx = os.path.join(cwd, idx)
     h = hashlib.sha256()
-    h.update(_curre(['git', 'rev-parse', 'HEAD']).stdout.encode())
-    # VETITAE (plagulae Frani in cursu, numquam commissae per hoc) non
-    # sigillantur: acta tabularii tracta sunt et per notas mutantur -
-    # sine hoc nota inter portam et commissionem receptum rancidum
-    # faciebat (2026-09-02)
-    h.update(_curre(['git', 'diff', 'HEAD', '--', '.']
-                    + [':(exclude)' + v for v in VETITAE]
-                    ).stdout.encode('utf-8', 'replace'))
+    arbor = None
+    fd, temp = tempfile.mkstemp(prefix='sigillum_index.')
+    os.close(fd)
+    try:
+        if os.path.exists(idx):
+            shutil.copyfile(idx, temp)
+        else:
+            os.unlink(temp)
+        env = dict(os.environ, GIT_INDEX_FILE=temp)
+        r = _curre(['git', 'add', '-u', '--', '.']
+                   + [':(exclude)' + v for v in VETITAE], cwd=cwd, env=env)
+        if r.returncode == 0:
+            w = _curre(['git', 'write-tree'], cwd=cwd, env=env)
+            if w.returncode == 0:
+                arbor = w.stdout.strip()
+    finally:
+        try:
+            os.unlink(temp)
+        except OSError:
+            pass
+    if arbor:
+        h.update(b'arbor ' + arbor.encode())
+    else:
+        h.update(b'caput ' + _curre(['git', 'rev-parse', 'HEAD'],
+                                    cwd=cwd).stdout.encode())
+        h.update(_curre(['git', 'diff', 'HEAD', '--', '.']
+                        + [':(exclude)' + v for v in VETITAE],
+                        cwd=cwd).stdout.encode('utf-8', 'replace'))
     novae = [v for v in _curre(['git', 'ls-files', '--others',
-                                '--exclude-standard']).stdout.split()
+                                '--exclude-standard'],
+                               cwd=cwd).stdout.split()
              if v not in VETITAE]
     for v in sorted(novae):
-        h.update(v.encode())
+        h.update(b'nova ' + v.encode())
         try:
-            with open(os.path.join(RADIX, v), 'rb') as f:
+            with open(os.path.join(cwd, v), 'rb') as f:
                 h.update(hashlib.sha256(f.read()).digest())
         except (IOError, OSError):
             h.update(b'?')
+    return h
+
+
+def sigillum_arboris(nomen=None, radix=None):
+    """sigillum status arboris cui receptum portae ligatur - mutatio
+    contenti ulla = rancidum. Contentum solum (_sigillum_contenti):
+    receptum commissionem supersunt, fusio_probare portas iam virides
+    in contentu eodem non iterum currit (budget B1 E1). Portae in
+    PORTAE_CAPUT (verdictum a HEAD pendet) HEAD quoque sigillant."""
+    h = _sigillum_contenti(radix)
+    if nomen is not None and nomen in PORTAE_CAPUT:
+        h.update(b'caput ' + _curre(['git', 'rev-parse', 'HEAD'],
+                                    cwd=radix).stdout.encode())
     return h.hexdigest()[:16]
 
 
@@ -4672,13 +4728,13 @@ def _umbra_currere(nomen, filtrum, via, via_operis=None, arbor=None,
              if via_operis else None)
     sig = '?'
     try:
-        sig = arbor if photo else sigillum_arboris()
+        sig = arbor if photo else sigillum_arboris(nomen)
         p = porta(nomen, filtrum or None, radix=via_operis, receptum=False)
         acta = p.acta
         d = {'nomen': nomen, 'filtrum': filtrum or None, 'sana': p.sana,
              'cucurrit': p.cucurrit, 'compendium': p.compendium,
              'rc': p.rc, 'sigillum': sig,
-             'rancida': False if photo else sig != sigillum_arboris(),
+             'rancida': False if photo else sig != sigillum_arboris(nomen),
              'finis': time.time(),
              'fracturae': [list(f) for f in (p.fracturae or [])],
              'photographia': photo}
@@ -4734,7 +4790,7 @@ def receptum_validum(via, viae=None):
             causa += ' [plagulae post photographiam mutatae aut extra eam:'
             causa += ' %s]' % ', '.join(mutatae[:5])
     else:
-        recens = r.sigillum == sigillum_arboris()
+        recens = r.sigillum == sigillum_arboris(r.nomen)
         if r.rancida:
             causa += ' [arbor mutata DUM currebat]'
         elif not recens:
@@ -4780,11 +4836,15 @@ def receptum_delere(via):
 # virides priores perdebat (ter 2026-09-07, ~XV min), et porta viridis
 # ante commissionem cursa (planta, porta manu) commissioni sufficit
 # dum arbor immota manet - ergo scripta ante portam ultimam. Sigillum
-# = arbor TOTA (HEAD + differentia tractarum + novae, VETITAE
-# exclusae): mutatio ulla rancidum facit. Lex honesta consulto: lint
-# orationis plagulas .c/.h omnes et corpora md legit, scopus per
-# portam declaratus mentiretur. Post commissionem HEAD mutatum est -
-# recepta viva omnia deleta.
+# = CONTENTUM arboris TOTUM (arbor git tractarum ut in disco + novae,
+# VETITAE exclusae): mutatio ulla rancidum facit. Lex honesta
+# consulto: lint orationis plagulas .c/.h omnes et corpora md legit,
+# scopus per portam declaratus mentiretur. HEAD NON intrat (budget B1
+# E1, Franus 2026-10-30): post commissionem contentum idem, recepta
+# manent et fusio_probare portas commissionis non iterum currit -
+# re-cursus fusionis non est probatio secunda. Exceptiones: portae
+# PORTAE_CAPUT (HEAD legunt) HEAD sigillant et post commissionem
+# deletur; commissio plagulas novas sequi incipiens sigillum mutat.
 
 
 def _receptum_vivum_via(nomen, filtrum=None):
@@ -4864,6 +4924,16 @@ def recepta_viva_delere():
         receptum_delere(via)
 
 
+def recepta_viva_rancida_delere():
+    """post commissionem: recepta viva quae non iam valent delere
+    (portae PORTAE_CAPUT - HEAD mutatum - et rancida). Cetera manent:
+    sigillum contenti commissionem supersunt, fusio_probare portas
+    iam virides in contentu eodem non iterum currit (budget B1 E1)"""
+    for via, p in recepta_viva():
+        if not p.sana:
+            receptum_delere(via)
+
+
 def exspectare(via, tectum=1800, intervallum=0.1):
     """receptum manere (secunda); SilvaError post tectum. Intervallum
     breve (profilum T9: II s -> XV exspectationes 30,1 s, operarii
@@ -4898,7 +4968,9 @@ def portae_pendentes():
             if r.photographia:
                 rancida = r.rancida or r.photographia.get('basis') != caput
             else:
-                rancida = r.rancida or r.sigillum != sig
+                rancida = r.rancida or r.sigillum != (
+                    sigillum_arboris(r.nomen) if r.nomen in PORTAE_CAPUT
+                    else sig)
             if rancida:
                 exitus.append((via, 'rancida'))
             else:
