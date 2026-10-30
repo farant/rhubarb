@@ -1692,3 +1692,19 @@ finds the boundary (<a> with 20..40 <c/> children) and pins it: 29
 children → '</>', 30 → named; identical with the old stml.c. Plants:
 limit off-by-one → III red; nivel instead of 2×nivel → eventus_stml and
 norma_stml round-trips red.
+
+## 2026-10-30 — raw and escaped writers append by runs (budget B1 B14)
+
+`_crudum_fugatum_scribere` made one 1-byte append and one
+`stml_crudi_sequentia_est` call per byte. `_scribere_evasus` made one
+append per byte. Both now append whole runs. The raw writer's run stops
+at '<' (only there can a closing sequence start) and at '\n' (only
+there does the indentation prefix apply). The escaped writer's run
+stops at `<`, `>` and `&`. Output is identical, and allocation counts
+too: all computus golds pass unchanged.
+
+Coverage gap found by the plant: nothing pinned a MULTILINE raw element
+round trip with more than one line, so "runs stop only at '<'" (prefix
+lost after '\n') passed every stml suite. Added a case to probatio_stml
+section E (`<code!\>` with three lines and a '<' mid-line). The plant
+is now FRACTA there.

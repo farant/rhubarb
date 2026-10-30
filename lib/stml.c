@@ -5206,13 +5206,36 @@ _crudum_fugatum_scribere (
             i = i + I + gradus;
             perge;
         }
-        chorda_aedificator_appendere_character(aed,
-            (character)valor.datum[i]);
-        si ((character)valor.datum[i] == '\n')
+        si (   (character)valor.datum[i] == '\n'
+            || (character)valor.datum[i] == '<')
         {
-            linea_nova = VERUM;
+            chorda_aedificator_appendere_character(aed,
+                (character)valor.datum[i]);
+            si ((character)valor.datum[i] == '\n')
+            {
+                linea_nova = VERUM;
+            }
+            i++;
+            perge;
         }
-        i++;
+        /* cursus sine '<' et '\n' appenditione una (budget B1 B14):
+         * sequentia solum ad '<' incipit, praefixum solum post '\n' */
+        {
+            chorda pars;
+               i32 finis;
+
+            finis = i + I;
+            dum (   finis < valor.mensura
+                 && (character)valor.datum[finis] != '<'
+                 && (character)valor.datum[finis] != '\n')
+            {
+                finis++;
+            }
+            pars.datum    = valor.datum + i;
+            pars.mensura  = finis - i;
+            chorda_aedificator_appendere_chorda(aed, pars);
+            i = finis;
+        }
     }
 }
 
@@ -6642,32 +6665,39 @@ _scribere_evasus (
                chorda* s)
 {
           i32 i;
+          i32 initium;
     character c;
+       chorda pars;
 
     si (!s)
     {
         redde;
     }
 
+    /* cursus inter signa evadenda appenditione una (budget B1 B14) */
+    initium = ZEPHYRUM;
     per (i = ZEPHYRUM; i < s->mensura; i++)
     {
         c = (character)s->datum[i];
-
-        commutatio (c)
+        si (c != '<' && c != '>' && c != '&')
         {
-            casus '<':
-                chorda_aedificator_appendere_literis(aed, "&lt;");
-                frange;
-            casus '>':
-                chorda_aedificator_appendere_literis(aed, "&gt;");
-                frange;
-            casus '&':
-                chorda_aedificator_appendere_literis(aed, "&amp;");
-                frange;
-            ordinarius:
-                chorda_aedificator_appendere_character(aed, c);
-                frange;
+            perge;
         }
+        si (i > initium)
+        {
+            pars.datum    = s->datum + initium;
+            pars.mensura  = i - initium;
+            chorda_aedificator_appendere_chorda(aed, pars);
+        }
+        chorda_aedificator_appendere_literis(aed, c == '<' ? "&lt;"
+            : c == '>' ? "&gt;" : "&amp;");
+        initium = i + I;
+    }
+    si (s->mensura > initium)
+    {
+        pars.datum    = s->datum + initium;
+        pars.mensura  = s->mensura - initium;
+        chorda_aedificator_appendere_chorda(aed, pars);
     }
 }
 

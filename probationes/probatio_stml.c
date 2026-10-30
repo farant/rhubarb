@@ -5853,6 +5853,17 @@ _probare_multilineam_tag (
         CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
             "<code!\\>\n  a < b && c > d\n</code>");
 
+        /* lineae plures: praefixum ante omnem lineam post '\n',
+         * etiam intra cursum sine '<' (scriptor per cursus, budget
+         * B1 B14) */
+        res = stml_legere_ex_literis(
+            "<code!\\>\n  a < b\n  c && d\n  e\n</code>", piscina,
+            intern);
+        CREDO_VERUM(res.successus);
+        scriptum = stml_scribere(res.radix, piscina, FALSUM);
+        CREDO_CHORDA_AEQUALIS_LITERIS(scriptum,
+            "<code!\\>\n  a < b\n  c && d\n  e\n</code>");
+
         imprimere("  E crudum multilinea: VERUM\n");
     }
 
