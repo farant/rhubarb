@@ -4490,6 +4490,29 @@ _processare_captiones (
         }
     }
 
+    /* Nullus liber captor (nec ANTE non crudus, nec RETRO, nec
+     * FARCIMEN) neque NIHIL: transitus secundus liberos eodem ordine
+     * transcriberet - liberi servantur, duo Xar non creantur (budget
+     * B1 B3) */
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (   liberum == NIHIL
+            || (   liberum->genus == STML_NODUS_ELEMENTUM
+                && (   (   liberum->captio_directio == STML_CAPTIO_ANTE
+                        && !liberum->crudus)
+                    || liberum->captio_directio == STML_CAPTIO_RETRO
+                    || liberum->captio_directio
+                        == STML_CAPTIO_FARCIMEN)))
+        {
+            frange;
+        }
+    }
+    si (i == num)
+    {
+        redde;
+    }
+
     /* Second pass: handle capture operators */
     novi_liberi = xar_creare(piscina, magnitudo(StmlNodus*));
 

@@ -1747,3 +1747,25 @@ never changes, and it rightly passed. The meaningful plant drops the
 "spaces only" predicate, so every short trivia of length L shares a
 slot ("\n  " vs "   "). That fails probatio_stml_aurea (fidelity) and
 probatio_stml_pulchrum (fixed point).
+
+## 2026-10-30 — capture pass keeps child lists without captures (budget B1 B3)
+
+`_processare_captiones` second pass allocated two new Xars per parent
+(`novi_liberi`, then `clean`) and copied every child pointer, whenever
+the document had any capture form at all. Arbor STML always does.
+After the recursive first pass we now scan the children once. If none
+is a capturing element (ANTE and not raw, RETRO, FARCIMEN) and none is
+NIHIL, the second pass would rewrite the same list in the same order,
+so we return and keep `liberi`. Byte-identical output.
+
+This one moves allocation counts DOWN by ~17-22% per document, so it
+carries Fran's single computus re-gold (ruling 2026-10-30). Seven golds
+were regenerated with COMPUTUS_SCRIBERE=1 (css, md, html, toml,
+crusta, briar, oratio; silva unchanged). Audited: only
+allocationes_arboris changed, every value lower, no other column or
+row touched. B13 (attribute-element check only on recorded parents)
+was deliberately left out: medium risk (first-error ordering after
+capture moves nodes) for ~0.05 min.
+
+Plant: predicate without RETRO → probatio_stml (captured NIHIL :678)
+and probatio_stml_aurea (:731) FRACTA.
