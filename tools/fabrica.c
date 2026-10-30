@@ -3534,6 +3534,202 @@ _censum (
 /* CAUSAE (plan 5 T1): cur actiones actae sunt - cursus per (titulus,
  * eventus, stalum), frequentissimae primum; titulus optionalis. Ordines
  * ante migrationem V causam non habent ('non notata'). */
+
+
+/* ==================================================
+ * legentes (budget B9 2a)
+ * ================================================== */
+
+/* titulum (cum causa et via) semel addere */
+interior vacuum
+_legentem_addere (
+               Xar* legentes,
+    TabulaDispersa* visi,
+            chorda  titulus,
+            chorda  causa,
+            chorda  via,
+           Piscina* piscina)
+{
+    chorda* t;
+
+    si (tabula_dispersa_continet(visi, titulus))
+    {
+        redde;
+    }
+    (vacuum)tabula_dispersa_inserere(visi, chorda_transcribere(titulus,
+        piscina), NIHIL);
+    t = (chorda*)xar_addere(legentes);
+    si (t == NIHIL)
+    {
+        redde;
+    }
+    t[ZEPHYRUM]  = chorda_transcribere(titulus, piscina);
+    t[I]         = causa;
+    t[II]        = via;
+}
+
+/* LEGENTES (budget B9): quae actiones viam legunt - membra gradus per
+ * CLAUSURAM (ingressus fasciculus quem expansio membri ponit) et
+ * ingressus declaratos (directorium = via sub eo), actiones per
+ * VESTIGIUM ultimum (fabrica.db lectiones: L, X, A in via; D in
+ * directorio parente). Cohortes interventionum titulos affectos ex eo
+ * sumunt. Linea per titulum (causa prima). Exitus 0 (etiam nullo),
+ * 2 si declarationes aut memoria legi nequeunt. */
+interior s32
+_legentes (
+          s32   argc,
+    character** argv,
+      Piscina*  piscina)
+{
+               Memoria  memoria;
+                   Xar* actiones;
+                   Xar* viae;
+                   Xar* legentes;
+        TabulaDispersa* visi;
+                   b32  machina = FALSUM;
+                   i32  a;
+                   i32  i;
+                   i32  j;
+                   i32  k;
+                chorda  radix;
+
+    viae = xar_creare(piscina, (i32)magnitudo(chorda));
+    per (a = II; viae != NIHIL && (s32)a < argc; a++)
+    {
+        si (strcmp(argv[a], "-machina") == ZEPHYRUM)
+        {
+            machina = VERUM;
+        }
+        alioquin
+        {
+            *(chorda*)xar_addere(viae) = chorda_ex_literis(argv[a],
+                piscina);
+        }
+    }
+    si (viae == NIHIL || xar_numerus(viae) == ZEPHYRUM)
+    {
+        _usus();
+        redde II;
+    }
+    actiones  = _declarationes_colligere(piscina, NIHIL, NIHIL);
+    legentes  = xar_creare(piscina, (i32)(III * magnitudo(chorda)));
+    visi      = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    si (actiones == NIHIL || legentes == NIHIL || visi == NIHIL)
+    {
+        redde II;
+    }
+    /* I. ingressus (clausurae membrorum inclusae) */
+    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    {
+        constans FabricaActio* actio = (constans FabricaActio*)
+            xar_obtinere(actiones, i);
+
+        per (j = ZEPHYRUM; actio->ingressus != NIHIL
+             && j < xar_numerus(actio->ingressus); j++)
+        {
+            constans FabricaIngressus* g = (constans FabricaIngressus*)
+                xar_obtinere(actio->ingressus, j);
+
+            per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+            {
+                chorda via = *(chorda*)xar_obtinere(viae, k);
+
+                si (   g->via.mensura > ZEPHYRUM
+                    && (   chorda_aequalis(g->via, via)
+                        || (   via.mensura > g->via.mensura
+                            && chorda_incipit(via, g->via)
+                            && via.datum[g->via.mensura] == '/')))
+                {
+                    _legentem_addere(legentes, visi, actio->titulus,
+                        chorda_concatenare(chorda_ex_literis("ingressus:",
+                        piscina), chorda_ex_literis(g->genus != NIHIL
+                        ? g->genus->titulus : "?", piscina), piscina),
+                        via, piscina);
+                }
+            }
+        }
+    }
+    /* II. vestigia (lectiones ultimae) - via relativa et absoluta */
+    radix = suturae_radix_absoluta(piscina);
+    si (!suturae_memoriam_aperire(&memoria, piscina))
+    {
+        redde II;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+    {
+                     chorda  via     = *(chorda*)xar_obtinere(viae, k);
+                     chorda  parens  = via;
+                     chorda  formae[IV];
+         ScriniumEnuntiatum* enuntiatum;
+                        i32  f;
+
+        dum (   parens.mensura > ZEPHYRUM
+             && parens.datum[parens.mensura - I] != '/')
+        {
+            parens.mensura--;
+        }
+        si (parens.mensura > ZEPHYRUM)
+        {
+            parens.mensura--;   /* sine '/' finali */
+        }
+        formae[ZEPHYRUM] = via;
+        formae[I] = chorda_concatenare(radix,
+            chorda_concatenare(chorda_ex_literis("/", piscina), via,
+            piscina), piscina);
+        formae[II] = parens.mensura > ZEPHYRUM ? parens
+            : chorda_ex_literis(".", piscina);
+        formae[III] = chorda_concatenare(radix,
+            parens.mensura > ZEPHYRUM ? chorda_concatenare(
+            chorda_ex_literis("/", piscina), parens, piscina)
+            : chorda_ex_literis("", piscina), piscina);
+        enuntiatum = scrinium_praeparare(memoria.scrinium,
+            "SELECT DISTINCT titulus, genus FROM lectiones WHERE"
+            " (genus IN ('L', 'X', 'A') AND via IN (?, ?))"
+            " OR (genus = 'D' AND via IN (?, ?)) ORDER BY titulus");
+        si (enuntiatum == NIHIL)
+        {
+            perge;
+        }
+        per (f = ZEPHYRUM; f < IV; f++)
+        {
+            (vacuum)scrinium_ligare_textum(enuntiatum, (integer)(f + I),
+                formae[f]);
+        }
+        dum (scrinium_gradi(enuntiatum) == SCRINIUM_ORDO)
+        {
+            chorda titulus = scrinium_columna_textus(enuntiatum,
+                ZEPHYRUM, piscina);
+            chorda genus = scrinium_columna_textus(enuntiatum, I,
+                piscina);
+
+            _legentem_addere(legentes, visi, titulus,
+                chorda_concatenare(chorda_ex_literis("lectio:",
+                piscina),
+                genus, piscina), via, piscina);
+        }
+        scrinium_finire(enuntiatum);
+    }
+    scrinium_claudere(memoria.scrinium);
+    per (i = ZEPHYRUM; i < xar_numerus(legentes); i++)
+    {
+        constans chorda* t = (constans chorda*)xar_obtinere(legentes,
+            i);
+
+        printf(machina ? "LEGENS\t%.*s\t%.*s\t%.*s\n"
+                       : "%-52.*s %-24.*s %.*s\n",
+            (s32)t[ZEPHYRUM].mensura,
+            (constans character*)t[ZEPHYRUM].datum, (s32)t[I].mensura,
+            (constans character*)t[I].datum, (s32)t[II].mensura,
+            (constans character*)t[II].datum);
+    }
+    si (!machina)
+    {
+        printf("fabrica legentes: %d actiones\n",
+            (integer)xar_numerus(legentes));
+    }
+    redde ZEPHYRUM;
+}
+
 interior s32
 _causae (
           s32   argc,
@@ -3608,6 +3804,7 @@ _usus (vacuum)
         "      bin/fabrica digestum TITULUS\n"
         "      bin/fabrica purgare [-verificare]\n"
         "      bin/fabrica causae [titulus]  (cur actae sunt)\n"
+        "      bin/fabrica legentes [-machina] VIA...  (quae actiones legunt)\n"
         "      bin/fabrica census  (genera chassis et proprietates)\n"
         "      bin/fabrica portae debitae [-machina] -portae TSV "
         "VIA...\n"
@@ -3690,6 +3887,10 @@ principale (
     alioquin si (strcmp(argv[1], "causae") == 0)
     {
         exitus = _causae(argc, argv, piscina);
+    }
+    alioquin si (strcmp(argv[1], "legentes") == 0)
+    {
+        exitus = _legentes(argc, argv, piscina);
     }
     alioquin si (strcmp(argv[1], "census") == 0)
     {

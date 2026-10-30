@@ -128,3 +128,37 @@ the `-o` output; a miss compiles into the output as before (via = output). `via`
 set by compilare/compilare_in (the output path). fabrica uses it to link members directly from
 the cache; bin/compilator (--plures, compile_tests) keeps copying. Test: probatio_compilator
 section 'sine collocatione'.
+
+## 2026-10-28 — big vendored sources shared across suites (budget B1 E7)
+
+briar, gesta and ludus_tessera each compiled `vendor/sqlite3.c` (9.5 MB,
+~10 s idle) with plain clang into their own build dir; briar and officina
+each compiled `silva/amalgama/silva.c` (~5 MB). In a frigida run (fresh
+clone, everything cold) that is 3 redundant sqlite compiles + 1 redundant
+silva.c on top of radix's. They now call `_vendicatum_compilare`: run
+`bin/compilator` FROM THE RADIX with radix's exact argument order and the
+relative source path (`-c vendor/sqlite3.c`), so the key (cwd + args minus
+-o + source and header bytes) matches compile_tests.sh's line and the
+object comes out of the thesaurus. The suites' mtime fast path stays in
+front (warm runs never call it). Measured: hit 0.08 s vs ~10 s; all three
+sqlite objects byte-identical to radix's build/sqlite3.o; briar's and
+officina's silva.c objects identical (one compile served both). Key
+lesson: the key includes the source PATH SPELLING and cwd — the old
+scripts mixed `"$RADIX_DIR/vendor/sqlite3.c"` (absolute) with relative,
+which would never have hit even through compilator.
+
+## 2026-10-29 — compile_tests.sh: --plures in FILA parallel parts (budget B1 E8)
+
+`bin/compilator --plures` (2026-10-23) made the all-hits case fast by
+doing everything in one process — and, as a side effect, compiled every
+MISS serially (before, `xargs -P FILA` ran one process per line). After a
+header change, or in frigida's cold clone, that was ~1–2 min of serial
+clang. compile_libraries now deals the vocationes lines round-robin into
+FILA parts and runs one `--plures` per part in parallel (shared thesaurus,
+as with xargs before); FILA = 1 keeps the single process. Measured on the
+414-line radix list with an empty thesaurus and redirected -o: 70.5 s →
+29.2 s cold, 0.49 → 0.29 s warm (4 P-cores), objects identical. Error
+propagation tested: `#error` in lib/via.c → "FAILED: bibliothecae", rc 2;
+plant ignoring the children's exit codes → rc 0 with the broken lib
+silently linked from a stale object (so the `wait ... || rc_bib=1` check
+is load-bearing).

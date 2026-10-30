@@ -14,6 +14,8 @@
 #        integrum post (nulla reliquia temporaria)
 #   V    ingressus secundarii: caput instrumentorum et fons additus
 #        (silva_lexicon.h/.c) examen renectunt
+#   VI   caput in directoriis vocantis (tools/caput_recens.sh) tactum:
+#        obiecta recompilantur et examen renectitur
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 # <porta titulus="nexus-instrumentorum" gradus="fusio" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh silva/transformare.sh" currit="silva/instrumenta/principalia/selecta.c" legit="include/* silva/fontes/* silva/instrumenta/*"/>
@@ -114,6 +116,20 @@ for ingressus in silva/instrumenta/silva_lexicon.h silva/instrumenta/silva_lexic
     post="$(sigillum silva/build/examen)"
     [ -n "$ante" ] && [ "$ante" != "$post" ]; credo $? "V examen: $ingressus tactus -> nectit ($ante -> $post)"
 done
+
+# VI CAPUT IN DIRECTORIIS VOCANTIS (budget B1 E2, tools/caput_recens.sh):
+#    caput sub silva/fontes (caput_recens_directoria examinis) tactum ->
+#    obiecta recompilantur ([dep]) et binarium renectitur. Tempus capitis
+#    post restituitur (touch -r): contentum idem, cascada nulla.
+CAPUT_VI="$(ls silva/fontes/*.h | head -1)"
+touch -r "$CAPUT_VI" "$T/caput_vi.tempus"
+./silva/examen.sh "$T/parva.c" > /dev/null 2>&1
+ante="$(sigillum silva/build/examen)"
+sleep 1; touch "$CAPUT_VI"
+dep="$(./silva/examen.sh "$T/parva.c" 2>&1 > /dev/null | grep -c '\[dep\]')"
+post="$(sigillum silva/build/examen)"
+touch -r "$T/caput_vi.tempus" "$CAPUT_VI"
+[ "$dep" -gt 0 ] && [ -n "$ante" ] && [ "$ante" != "$post" ]; credo $? "VI examen: $CAPUT_VI tactum -> recompilat ($dep [dep]) et nectit ($ante -> $post)"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus nexus: sanum"; exit 0; fi

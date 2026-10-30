@@ -47,7 +47,11 @@ for f in probationes/probatio_*.c; do
     esac
     numerus=$((numerus + 1))
 
-    if ! ./bin/aedilis "$f" --thesaurus build/aedilis/obiecta > /dev/null 2>"build/aedilis/porta_$basis.err"; then
+    # memoria oraculi etiam in derivatione (budget B1 E6, 2026-10-28):
+    # fontes .m numquam in thesauro conduntur, ergo clang -MM eorum per
+    # probationem iterum currebat (CXC vocationes pro VIII fontibus)
+    if ! ./bin/aedilis "$f" --memoria-oraculi "$MEMORIA_ORACULI" \
+            --thesaurus build/aedilis/obiecta > /dev/null 2>"build/aedilis/porta_$basis.err"; then
         echo "FRACTA (derivatio): $basis"
         head -3 "build/aedilis/porta_$basis.err"
         fracta="$fracta $basis(derivatio)"

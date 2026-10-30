@@ -24,9 +24,8 @@ declare -a INCLUDE_FLAGS=(
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$GESTA_DIR/fori_fontes_generata.sh"
 
-newest_header () {
-    find "$RADIX_DIR/include" -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include"
 
 # ── clausura vera inclusionum (exemplar tabularium.sh) ──────────
 FONTES_OMNES=()
@@ -49,7 +48,7 @@ fons_stalus () {
     if [ -n "$DEPENDENTIAE" ]; then
         [ -n "$(deps_obiecti "$1" | recentius_ex "$2")" ]
     else
-        [ -n "$(newest_header "$2")" ]
+        caput_recentius "$2"
     fi
 }
 

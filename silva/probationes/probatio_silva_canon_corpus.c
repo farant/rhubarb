@@ -89,31 +89,23 @@ nomen structura {
     i32 vidit_error;
 } CanonCensus;
 
-/* Quotiens litterae in chorda occurrant (non nullo terminata) */
+/* Quotiens litterae in chorda occurrant (non nullo terminata).
+ * TRANSITUS UNUS (budget B1 A7, 2026-10-28): olim VIII memcmp per
+ * octetum documenti totius (5.4% probationis). Litterae omnes '<'
+ * incipiunt nec '<' alterum habent, ergo occursus solum ad '<' incipit:
+ * memchr ad '<' proximum, ibi VIII comparationes - numeri iidem (et
+ * occursus superpositi). */
 interior i32
-_quot_occurrit (
+_occurrit_hic (
                  chorda  c,
+                    i32  i,
      constans character* litterae)
 {
-    i32 numerus;
-    i32 i;
-    i32 m;
+    i32 m = (i32)strlen(litterae);
 
-    numerus  = ZEPHYRUM;
-    m        = (i32)strlen(litterae);
-    si (c.datum == NIHIL || m == ZEPHYRUM || c.mensura < m)
-    {
-        redde ZEPHYRUM;
-    }
-    per (i = ZEPHYRUM; i + m <= c.mensura; i++)
-    {
-        si (memcmp(c.datum + i, litterae, (memoriae_index)m)
-            == ZEPHYRUM)
-        {
-            numerus++;
-        }
-    }
-    redde numerus;
+    redde (i + m <= c.mensura
+           && memcmp(c.datum + i, litterae, (memoriae_index)m)
+              == ZEPHYRUM) ? I : ZEPHYRUM;
 }
 
 interior vacuum
@@ -121,17 +113,38 @@ _involucrum_numerare (
          chorda  doc,
     CanonCensus* census)
 {
-    census->vidit_expansio  += _quot_occurrit(doc, "<expansio");
-    census->vidit_pasta     += _quot_occurrit(doc, "<pasta");
-    census->vidit_stringificatio  += _quot_occurrit(doc,
-                                         "<stringificatio");
-    census->vidit_extentum        += _quot_occurrit(doc, "<extentum");
-    census->vidit_invocatio_vacua += _quot_occurrit(doc,
-                                         "<invocatio-vacua");
-    census->vidit_scissura        += _quot_occurrit(doc, "<scissura");
-    census->vidit_conditionalis   += _quot_occurrit(doc,
-                                         "<conditionalis");
-    census->vidit_error           += _quot_occurrit(doc, "<error");
+    i32 i = ZEPHYRUM;
+
+    si (doc.datum == NIHIL)
+    {
+        redde;
+    }
+    dum (i < doc.mensura)
+    {
+        constans i8* lt = (constans i8*)memchr(doc.datum + i, '<',
+            (memoriae_index)(doc.mensura - i));
+
+        si (lt == NIHIL)
+        {
+            frange;
+        }
+        i                       = (i32)(lt - doc.datum);
+        census->vidit_expansio  += _occurrit_hic(doc, i, "<expansio");
+        census->vidit_pasta     += _occurrit_hic(doc, i, "<pasta");
+        census->vidit_stringificatio  += _occurrit_hic(doc, i,
+                                             "<stringificatio");
+        census->vidit_extentum        += _occurrit_hic(doc, i,
+                                             "<extentum");
+        census->vidit_invocatio_vacua += _occurrit_hic(doc, i,
+                                             "<invocatio-vacua");
+        census->vidit_scissura        += _occurrit_hic(doc, i,
+                                             "<scissura");
+        census->vidit_conditionalis   += _occurrit_hic(doc, i,
+                                             "<conditionalis");
+        census->vidit_error           += _occurrit_hic(doc, i,
+            "<error");
+        i++;
+    }
 }
 
 /* Documentum <parsura> ex plagula gignere. Chorda vacua = fractura

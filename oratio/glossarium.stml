@@ -279,6 +279,14 @@
     <forma textus="exundationem" casus="accusativus" numerus="singularis" genus="femininum"/>
     <forma textus="exundationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="interventio" lingua="latina" classis="substantivum" nota="Latina posterior (Tertullianus, ius: interventio = intercessio, mediatio; ab intervenire); domus: mutatio perficientiae notata - mensor interventio notare, cohortes (budget B9, 2026-10-27)">
+    <forma textus="interventio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventione" casus="ablativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interventiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="interventionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="orientatio" lingua="latina" classis="substantivum" nota="Neolatina: orientatio (situs orientationis, praedicata geometrica); WORDS caret">
     <forma textus="orientatio" casus="nominativus" numerus="singularis" genus="femininum"/>
     <forma textus="orientationis" casus="genitivus" numerus="singularis" genus="femininum"/>

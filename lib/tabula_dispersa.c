@@ -16,24 +16,15 @@ tabula_friare_fnv1a (
     redde friatio_fnv1a(clavis);
 }
 
-/* Friare literis C directe (pro evitare const cast) */
-interior i32
-_friare_literis (
-    constans character* cstr)
-{
-    redde friatio_fnv1a_literis(cstr, (i32)strlen(cstr));
-}
-
-/* Comparare literis C cum chorda */
+/* Comparare literis C cum chorda; mensura literarum a vocante SEMEL
+ * computata (budget B1 C6: olim strlen per slotum congruentem) */
 interior b32
 _aequalis_literis_chorda (
     constans character* cstr,
+                   i32  mensura_cstr,
                 chorda  clavis)
 {
-    i32 mensura_cstr;
     i32 i;
-
-    mensura_cstr = (i32)strlen(cstr);
 
     si (mensura_cstr != clavis.mensura)
     {
@@ -152,6 +143,7 @@ interior i32
 _invenire_slotum_literis (
         TabulaDispersa* tabula,
     constans character* cstr,
+                   i32  mensura_cstr,
                    i32  friatum,
                    b32* inventum)
 {
@@ -169,7 +161,8 @@ _invenire_slotum_literis (
         si (tabula->sloti[positus].status == SLOT_OCCUPATUM)
         {
             si (   tabula->sloti[positus].hash_cachatum == friatum
-                && _aequalis_literis_chorda(cstr, tabula->sloti[positus].clavis))
+                && _aequalis_literis_chorda(cstr, mensura_cstr,
+                tabula->sloti[positus].clavis))
             {
                 *inventum = VERUM;
                 redde positus;
@@ -247,15 +240,40 @@ _tabula_dispersa_crescere (
     tabula->collisiones_totales  = ZEPHYRUM;
     tabula->distantia_maxima     = ZEPHYRUM;
 
+    /* REPOSITIO PER FRIATUM SERVATUM (budget B1 C4, 2026-10-28):
+     * olim tabula_dispersa_inserere per slotum veterem - friatio
+     * iterum (functio per indicem), factor oneris, comparationes
+     * clavium (37-41% insertionis totius in profilis silvae erat
+     * crescentia). Tabula nova claves DISTINCTAS et nullos tumulos
+     * habet: inserere solum ab friato & larva per slotos occupatos ad
+     * vacuum primum ambulat (collisiones et distantia numeratae) -
+     * idem hic sine friatione et comparatione. Slotus idem electus,
+     * ergo ordo iterationis et statistica octetim eadem (probatum:
+     * CC M insertiones cum deletionibus, CLXXIV M lineae eaedem). */
     per (i = ZEPHYRUM; i < capacitas_vetus; i++)
     {
-        si (sloti_veteres[i].status == SLOT_OCCUPATUM)
+        i32 positus;
+        i32 distantia;
+
+        si (sloti_veteres[i].status != SLOT_OCCUPATUM)
         {
-            tabula_dispersa_inserere(
-                tabula,
-                sloti_veteres[i].clavis,
-                sloti_veteres[i].valor);
+            perge;
         }
+        positus =
+            sloti_veteres[i].hash_cachatum & tabula->capacitas_mask;
+        distantia = ZEPHYRUM;
+        dum (tabula->sloti[positus].status != SLOT_VACUUM)
+        {
+            tabula->collisiones_totales++;
+            positus = (positus + I) & tabula->capacitas_mask;
+            distantia++;
+            si (distantia > tabula->distantia_maxima)
+            {
+                tabula->distantia_maxima = distantia;
+            }
+        }
+        tabula->sloti[positus] = sloti_veteres[i];
+        tabula->numerus++;
     }
 
     redde VERUM;
@@ -352,8 +370,10 @@ tabula_dispersa_inserere (
     }
 
     /* Confer factores oneris */
-    si (   tabula_dispersa_factor_oneris(tabula) > tabula->factor_maximus
-        || tabula_dispersa_factor_deletorum(tabula) > tabula->factor_deletorum_maximus)
+    si (   tabula_dispersa_factor_oneris(tabula)
+        > tabula->factor_maximus
+        || tabula_dispersa_factor_deletorum(tabula)
+            > tabula->factor_deletorum_maximus)
     {
         si (!_tabula_dispersa_crescere(tabula))
         {
@@ -435,6 +455,7 @@ tabula_dispersa_invenire_literis (
     constans character*  cstr,
                 vacuum** valor_out)
 {
+    i32 mensura;
     i32 friatum;
     i32 positus;
     b32 inventum;
@@ -444,11 +465,13 @@ tabula_dispersa_invenire_literis (
         redde FALSUM;
     }
 
-    /* Friare literis directe */
-    friatum = _friare_literis(cstr);
+    /* Friare literis directe - mensura SEMEL (budget B1 C6) */
+    mensura = (i32)strlen(cstr);
+    friatum = friatio_fnv1a_literis(cstr, mensura);
 
     /* Invenire slotum (comparare literis directe) */
-    positus = _invenire_slotum_literis(tabula, cstr, friatum, &inventum);
+    positus = _invenire_slotum_literis(tabula, cstr, mensura, friatum,
+        &inventum);
 
     si (inventum)
     {
@@ -555,15 +578,18 @@ tabula_dispersa_iterator_proximum (
 
     dum (iter->positus_currens < iter->tabula->capacitas)
     {
-        si (iter->tabula->sloti[iter->positus_currens].status == SLOT_OCCUPATUM)
+        si (iter->tabula->sloti[iter->positus_currens].status
+            == SLOT_OCCUPATUM)
         {
             si (clavis_out)
             {
-                *clavis_out = iter->tabula->sloti[iter->positus_currens].clavis;
+                *clavis_out =
+                    iter->tabula->sloti[iter->positus_currens].clavis;
             }
             si (valor_out)
             {
-                *valor_out  = iter->tabula->sloti[iter->positus_currens].valor;
+                *valor_out  =
+                    iter->tabula->sloti[iter->positus_currens].valor;
             }
             iter->positus_currens++;
             redde VERUM;
@@ -622,9 +648,11 @@ tabula_dispersa_status_imprimere (
     imprimere("  Capacitas: %u\n", tabula->capacitas);
     imprimere("  Numerus: %u\n", tabula->numerus);
     imprimere("  Numerus deletorum: %u\n", tabula->numerus_deletorum);
-    imprimere("  Factor oneris: %.2f%%\n", tabula_dispersa_factor_oneris(tabula) * C);
+    imprimere("  Factor oneris: %.2f%%\n",
+        tabula_dispersa_factor_oneris(tabula) * C);
     imprimere("  Factor deletorum: %.2f%%\n",
                 tabula_dispersa_factor_deletorum(tabula) * C);
-    imprimere("  Collisiones totales: %u\n", tabula->collisiones_totales);
+    imprimere("  Collisiones totales: %u\n",
+        tabula->collisiones_totales);
     imprimere("  Distantia maxima: %u\n", tabula->distantia_maxima);
 }

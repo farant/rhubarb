@@ -2207,6 +2207,68 @@ finally:
     import shutil
     shutil.rmtree(_od, ignore_errors=True)
 
+_grex('interventio: commissio mutationem perficientiae notat (mensor FICTUS)')
+# mensor SUBSTITUITUR stipula argumenta notans: porta pythonica NUMQUAM
+# in annales vivos scribat (budget B9)
+_md = tempfile.mkdtemp(prefix='silva_interventio_')
+_mstip = os.path.join(_md, 'mensor_fictus.sh')
+_macta = os.path.join(_md, 'acta.txt')
+open(_mstip, 'w').write(
+    '#!/bin/bash\n'
+    'printf "%s\\n" "$*" >> "' + _macta + '"\n'
+    '[ -n "${FICTA_MENSOR_RC:-}" ] && { echo "commissum ignotum" >&2; exit "$FICTA_MENSOR_RC"; }\n'
+    'echo "interventio 01x: $4 \'$6\' - 2 viae mutatae, 3 tituli affecti"\n')
+os.chmod(_mstip, 0o755)
+_mi_vera = silva.MENSOR_IMPERIUM
+silva.MENSOR_IMPERIUM = [_mstip]
+try:
+    credo(silva.interventio_praeiudicare(None, None) == [], 'interventio nulla: nulla causa')
+    credo(silva.interventio_praeiudicare('B5 velocior', 'B5') == [], 'interventio cum titulo et mensore: licet')
+    c = silva.interventio_praeiudicare(None, 'B5')
+    credo(len(c) == 1 and 'sine interventio=' in c[0], 'budget sine interventione: causa')
+    c = silva.interventio_praeiudicare('  ', None)
+    credo(len(c) == 1 and 'titulum poscit' in c[0], 'titulus vacuus: causa')
+    silva.MENSOR_IMPERIUM = [os.path.join(_md, 'nusquam')]
+    c = silva.interventio_praeiudicare('x', None)
+    credo(len(c) == 1 and 'absens' in c[0] and 'mensor_struere' in c[0], 'mensor absens: causa ante portas')
+    # CAUSAE OMNES SIMUL: via vetita ET mensor absens, ANTE portam ullam
+    try:
+        silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'], portae=['ficta-quae-non-est'], interventio='x')
+        credo(False, 'commissio cum causis duabus (interventio)')
+    except silva.SilvaError as ex:
+        credo('(2 causae)' in str(ex) and 'VETITA' in str(ex) and 'absens' in str(ex),
+              'commissio: via vetita ET mensor absens SIMUL relata, nihil cursum')
+    silva.MENSOR_IMPERIUM = [_mstip]
+
+    # notatio: sha plenum, titulus, budget - argumenta recta
+    open(_macta, 'w').close()
+    _pl = 'a' * 40
+    lin = silva.interventio_notare(_pl, 'B5 velocior', 'B5')
+    credo(open(_macta).read().splitlines() == ['interventio notare -commissum %s -titulus B5 velocior -budget B5' % _pl],
+          'notatio: interventio notare -commissum PLENUM -titulus -budget')
+    credo(lin.startswith('interventio 01x:') and 'tituli affecti' in lin, 'notatio: linea ultima mensoris redditur')
+    open(_macta, 'w').close()
+    silva.interventio_notare(_pl, 'sine budget')
+    credo('-budget' not in open(_macta).read(), 'notatio sine budget: -budget non missum')
+
+    # notatio FRACTA: error CLARUS, hash fertur, NOLI iterare, imperium pasta-paratum
+    os.environ['FICTA_MENSOR_RC'] = '1'
+    try:
+        silva.interventio_notare(_pl, 'B5 velocior', 'B5')
+        credo(False, 'notatio fracta')
+    except silva.SilvaInterventioError as ex:
+        credo(ex.hash == _pl, 'SilvaInterventioError hash commissi fert')
+        credo('FACTUM EST' in str(ex) and 'NOLI iterare' in str(ex) and 'commissum ignotum' in str(ex),
+              'error dicit commissum STARE et causam mensoris dat')
+        credo(('-titulus "B5 velocior" -budget B5') in str(ex).split('Ad notandum manu:')[1],
+              'error imperium pasta-paratum dat (titulus citatus)')
+    del os.environ['FICTA_MENSOR_RC']
+finally:
+    silva.MENSOR_IMPERIUM = _mi_vera
+    os.environ.pop('FICTA_MENSOR_RC', None)
+    import shutil
+    shutil.rmtree(_md, ignore_errors=True)
+
 _grex('linea auctoris: SEMEL')
 _n1 = silva._nuntium_cum_trailer('titulus\n\ncorpus\n\nCo-Authored-By: Exemplar X <x@y>\n')
 credo(_n1.count('Co-Authored-By:') == 1 and 'Exemplar X' in _n1, 'nuntius lineam auctoris iam ferens: nulla altera appenditur')
@@ -2696,6 +2758,17 @@ try:
         credo('FUSIO PARATA' in eff and 'git merge --ff-only' in eff
               and not os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: viridis - debita purgata, ritus impressus', causa=repr(eff[-300:]))
+        # CURSUS FUSIONIS (budget B0): fusio = arbor cursuum ut commissio -
+        # phases et portae filii eius (olim portae sine parente: tabula
+        # fusionis tres quaestiones et SQL poscebat)
+        _lc = _cursus_lineae()
+        _fus = [l for l in _lc if l[3] == 'fusio']
+        _ff = set(l[3] for l in _lc if _fus and l[2] == _fus[-1][1])
+        credo(_fus and _fus[-1][4] == 'transiit'
+              and {'phasis:portae debitae', 'porta:ficta-prae-c',
+                   'porta:ficta-prob-2'} <= _ff,
+              'cursus: fusio notata (transiit), phases et portae filii eius',
+              causa=repr((_fus[-1][3:5] if _fus else None, sorted(_ff))))
         # M. rubrum: porta debiti nominata cum commissione (bisectio); debita servata
         with contextlib.redirect_stdout(io.StringIO()):
             silva._debita_fusionis_scribere('c0ffee1', {'ficta-prob-1': 'z.c tegit'})
@@ -2705,6 +2778,11 @@ try:
         credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio: c0ffee1' in err
               and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: rubra - commissio debens nominata, debita servata', causa=repr(err))
+        _fus = [l for l in _cursus_lineae() if l[3] == 'fusio']
+        credo(_fus and _fus[-1][4] == 'fractus'
+              and _fus[-1][14].startswith('SilvaError: '),
+              'cursus: fusio rubra notata (fractus, nota = refusio)',
+              causa=repr(_fus[-1][3:5] + [_fus[-1][14][:80]] if _fus else None))
         # M2. PERGIT (…CECATG): duae probationes rubrae + viridis inter eas - OMNES
         # cursae, ambae nominatae cum commissionibus suis, tabula una; commissio
         # (B supra) adhuc prima rubra sistit

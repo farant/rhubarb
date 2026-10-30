@@ -11,8 +11,8 @@
 #     bash secundas solum comparabat: aut nexus in omni vocatione
 #     iterabatur, aut mutatio eadem secunda latebat) (fontes,
 #     obiecta, tools/vexilla.sh, involucrum vocans ipsum - vexilla aut
-#     bibliothecae mutatae), aut caput recentius (newest_header vocantis,
-#     si definita);
+#     bibliothecae mutatae), aut caput recentius (caput_recentius
+#     vocantis - tools/caput_recens.sh - aut newest_header, si definita);
 #   - nexus in '<bin>.nexus.<pid>' deinde 'mv -f' - binarium currens
 #     numquam in loco rescribitur (inodus novus; exsecutio vetus integra).
 # Vocationes concurrentes stalae: quaeque suum temporarium nectit, ultima
@@ -49,8 +49,14 @@ instrumentum_nectere () {
                   -print -quit 2> /dev/null)" ]; then
         stalum=1
     fi
+    # caput recentius: caput_recentius (tools/caput_recens.sh, involucra
+    # instrumentorum - status sine subshell, budget B1 E2) aut
+    # newest_header (cursores probationum, forma vetus)
+    if [ "$stalum" -eq 0 ] && declare -F caput_recentius > /dev/null; then
+        # <tolera codex="lint:effectus-mandatum-ignotum" (>caput_recentius ab involucro vocante sourcatur (declare -F custodit)
+        caput_recentius "$bin" && stalum=1
     # <tolera codex="lint:effectus-mandatum-ignotum" (>newest_header ab involucro vocante definitur (declare -F custodit)
-    if [ "$stalum" -eq 0 ] && declare -F newest_header > /dev/null \
+    elif [ "$stalum" -eq 0 ] && declare -F newest_header > /dev/null \
         && [ -n "$(newest_header "$bin")" ]; then
         stalum=1
     fi

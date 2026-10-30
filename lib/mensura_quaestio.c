@@ -880,6 +880,686 @@ cursus_quaerere_commissiones (
     redde ordines;
 }
 
+/* filii (gradus unus) cursus c ordine durationis descendentis; c
+ * NIHIL aut sine filiis = Xar vacuum */
+interior Xar*
+_filios_ordinatos (
+    constans CursusIndex* index,
+         constans Cursus* c,
+                 Piscina* piscina)
+{
+     Xar* filii = xar_creare(piscina, (i32)magnitudo(constans Cursus*));
+  vacuum* locus = NIHIL;
+     i32  k;
+
+    si (   filii == NIHIL || c == NIHIL
+        || !tabula_dispersa_invenire(index->filii, c->initium.id,
+        &locus))
+    {
+        redde filii;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus((Xar*)locus); k++)
+    {
+        constans Cursus** cella = (constans Cursus**)xar_addere(filii);
+
+        si (cella != NIHIL)
+        {
+            *cella = *(constans Cursus**)xar_obtinere((Xar*)locus, k);
+        }
+    }
+    xar_ordinare(filii, _duratio_descendens);
+    redde filii;
+}
+
+b32
+cursus_quaerere_fusio (
+       constans CursusIndex* index,
+     constans CursusFiltrum* filtrum,
+                    Piscina* piscina,
+                CursusFusio* exitus)
+{
+       CursusFiltrum  f;
+    OrdinandumCursus* tabula;
+                 i32  n;
+                 i32  k;
+
+    si (index == NIHIL || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(CursusFusio));
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    si (filtrum != NIHIL)
+    {
+        f.arbor = filtrum->arbor;
+        f.ramus = filtrum->ramus;
+    }
+    f.titulus  = chorda_ex_literis("fusio", piscina);
+    tabula     = _colligere(index, &f, VERUM, piscina, &n);
+    si (tabula == NIHIL || n == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    exitus->fusio  = tabula[ZEPHYRUM].cursus;
+    f.titulus      = chorda_ex_literis("commissio", piscina);
+    tabula         = _colligere(index, &f, VERUM, piscina, &n);
+    per (k = ZEPHYRUM; tabula != NIHIL && k < n; k++)
+    {
+        si (tabula[k].cursus->initium.initium
+            < exitus->fusio->initium.initium)
+        {
+            exitus->commissio = tabula[k].cursus;
+            frange;
+        }
+    }
+    exitus->filii_fusionis      = _filios_ordinatos(index,
+        exitus->fusio,
+        piscina);
+    exitus->filii_commissionis  = _filios_ordinatos(index,
+        exitus->commissio, piscina);
+    redde exitus->filii_fusionis != NIHIL
+        && exitus->filii_commissionis != NIHIL;
+}
+
+
+/* ==================================================
+ * COHORTES (budget B9 2c; vide caput)
+ * ================================================== */
+
+/* 'titulus' a corpore affectorum tangitur: linea aequalis, aut linea +
+ * '#' praefixum (sectio membri) */
+interior b32
+_afficit (
+    chorda affecti,
+    chorda titulus)
+{
+    i32 initium = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k <= affecti.mensura; k++)
+    {
+        chorda linea;
+
+        si (k < affecti.mensura && affecti.datum[k] != '\n')
+        {
+            perge;
+        }
+        linea    = chorda_sectio(affecti, initium, k);
+        initium  = k + I;
+        si (linea.mensura == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (chorda_aequalis(linea, titulus))
+        {
+            redde VERUM;
+        }
+        si (   titulus.mensura > linea.mensura
+            && titulus.datum[linea.mensura] == '#'
+            && chorda_incipit(titulus, linea))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* antecessio cum memoria: per interventionem tabula posterius ->
+ * responsum (I non, II continet, III ignotum) */
+nomen structura {
+    CursusAntecessio   functio;
+              vacuum*  contextus;
+      TabulaDispersa** responsa;
+             Piscina*  piscina;
+} Antecessiones;
+
+nomen enumeratio {
+    CODEX_NOTUS = ZEPHYRUM,
+    CODEX_SORDIDUS,
+    CODEX_IGNOTUS
+} CodexCursus;
+
+/* continetne codex cursus c interventionem k? */
+interior CodexCursus
+_continet (
+            constans CursusIndex* index,
+                   Antecessiones* a,
+      constans CursusInterventio* interventio,
+                             i32  k,
+                 constans Cursus* c,
+                             b32* continet)
+{
+       b32  per_commissionem = FALSUM;
+    chorda  clavis;
+    chorda  prius      = interventio->cursus->initium.commissum;
+    vacuum* locus      = NIHIL;
+       b32  responsum  = FALSUM;
+
+    *continet  = FALSUM;
+    clavis     = _clavis_commissi(index, c, a->piscina,
+        &per_commissionem);
+    si (!per_commissionem && c->initium.sordidum)
+    {
+        redde CODEX_SORDIDUS;
+    }
+    /* commissum partum ipsa interventio (nota: sha breve) */
+    si (   per_commissionem && clavis.mensura > ZEPHYRUM
+        && chorda_incipit(prius, clavis))
+    {
+        *continet = VERUM;
+        redde CODEX_NOTUS;
+    }
+    si (tabula_dispersa_invenire(a->responsa[k], c->initium.commissum,
+            &locus))
+    {
+        memoriae_index r = (memoriae_index)locus;
+
+        si (r == (memoriae_index)III)
+        {
+            redde CODEX_IGNOTUS;
+        }
+        *continet = (r == (memoriae_index)II);
+        redde CODEX_NOTUS;
+    }
+    si (!a->functio(a->contextus, c->initium.commissum, prius,
+            &responsum))
+    {
+        (vacuum)tabula_dispersa_inserere(a->responsa[k],
+            c->initium.commissum, (vacuum*)(memoriae_index)III);
+        redde CODEX_IGNOTUS;
+    }
+    (vacuum)tabula_dispersa_inserere(a->responsa[k],
+        c->initium.commissum,
+        (vacuum*)(memoriae_index)(responsum ? II : I));
+    *continet = responsum;
+    redde CODEX_NOTUS;
+}
+
+interior s32
+_notatione_ascendens (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans CursusInterventio* x =
+        *(constans CursusInterventio* constans*)a;
+    constans CursusInterventio* y =
+        *(constans CursusInterventio* constans*)b;
+
+    redde (x->cursus->initium.initium < y->cursus->initium.initium) ? -I
+        : (x->cursus->initium.initium > y->cursus->initium.initium) ? I
+        : 0;
+}
+
+interior s32
+_cohors_ascendens (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    constans CursusCohors* x = (constans CursusCohors*)a;
+    constans CursusCohors* y = (constans CursusCohors*)b;
+
+    si (x->contentae != y->contentae)
+    {
+        redde (x->contentae < y->contentae) ? -I : I;
+    }
+    redde (x->primum < y->primum) ? -I : (x->primum
+        > y->primum) ? I : 0;
+}
+
+interior i32
+_bits (
+    i64 m)
+{
+    i32 n = ZEPHYRUM;
+
+    dum (m != (i64)ZEPHYRUM)
+    {
+        m &= m - (i64)I;
+        n++;
+    }
+    redde n;
+}
+
+/* durationes ordinare; mediana inferior et p90 (rang. proximus) */
+interior vacuum
+_mediana_et_cauda (
+    s64* durationes,
+    i32  m,
+    s64* mediana,
+    s64* p90)
+{
+    i32 r;
+
+    *mediana  = (s64)ZEPHYRUM;
+    *p90      = (s64)ZEPHYRUM;
+    si (m == ZEPHYRUM)
+    {
+        redde;
+    }
+    qsort(durationes, (size_t)m, magnitudo(s64), _s64_comparare);
+    r = (IX * m + IX) / X - I;
+    si (r >= m)
+    {
+        r = m - I;
+    }
+    *mediana  = durationes[(m - I) / II];
+    *p90      = durationes[r];
+}
+
+interior s32
+_delta_permille (
+    s64 novum,
+    s64 vetus)
+{
+    si (vetus <= (s64)ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    redde (s32)((novum - vetus) * (s64)M / vetus);
+}
+
+/* mediana Xar de s64 (segmenta non contigua: copia plana) */
+interior b32
+_mediana_xar (
+    constans Xar* durationes,
+         Piscina* piscina,
+             s64* mediana)
+{
+    i32  m = (i32)xar_numerus(durationes);
+    s64* plana = (s64*)piscina_allocare(piscina, (memoriae_index)(m + I)
+        * magnitudo(s64));
+    s64 nihil;
+    i32 k;
+
+    si (plana == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < m; k++)
+    {
+        plana[k] = *(constans s64*)xar_obtinere(durationes, k);
+    }
+    _mediana_et_cauda(plana, m, mediana, &nihil);
+    redde VERUM;
+}
+
+/* MODERATIO: tituli folii quos nulla interventio afficit, ante/post
+ * interventionem 'k' */
+interior b32
+_moderationem_computare (
+        constans CursusIndex* index,
+      constans CursusFiltrum* filtrum,
+                constans Xar* omnes,      /* (CursusInterventio*) */
+               Antecessiones* a,
+  constans CursusInterventio* ultima,
+                         i32  k,
+              CursusCohortes* exitus)
+{
+       CursusFiltrum  f;
+    OrdinandumCursus* tabula;
+      TabulaDispersa* per_titulum;
+                 Xar* greges;      /* Xar* paria: ante, post */
+                 s64* rationes;
+                 i32  n;
+                 i32  j;
+                 i32  r = ZEPHYRUM;
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    si (filtrum != NIHIL)
+    {
+        f.arbor    = filtrum->arbor;
+        f.ramus    = filtrum->ramus;
+        f.post_ms  = filtrum->post_ms;
+    }
+    f.status  = CURSUS_MASCULA_TRANSIIT;
+    tabula    = _colligere(index, &f, FALSUM, a->piscina, &n);
+    per_titulum = tabula_dispersa_creare_chorda(a->piscina,
+        (i32)CCLVI);
+    greges = xar_creare(a->piscina, (i32)magnitudo(Xar*));
+    si (tabula == NIHIL || per_titulum == NIHIL || greges == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+         constans Cursus*  c      = tabula[j].cursus;
+                  vacuum*  locus  = NIHIL;
+                     Xar** par;
+                     b32   continet;
+                     i32   g;
+
+        si (tabula_dispersa_continet(index->filii, c->initium.id))
+        {
+            perge;   /* non folium: tempus filiorum continet */
+        }
+        si (tabula_dispersa_invenire(per_titulum, c->initium.titulus,
+                &locus))
+        {
+            par = (Xar**)locus;
+        }
+        alioquin
+        {
+            b32 affectus = FALSUM;
+
+            per (g = ZEPHYRUM; g < xar_numerus(omnes) && !affectus; g++)
+            {
+                affectus = _afficit((*(constans CursusInterventio**)
+                    xar_obtinere(omnes, g))->affecti,
+                    c->initium.titulus);
+            }
+            par = NIHIL;
+            si (!affectus)
+            {
+                par = (Xar**)piscina_allocare(a->piscina,
+                    (memoriae_index)II * magnitudo(Xar*));
+                si (par == NIHIL)
+                {
+                    redde FALSUM;
+                }
+                par[ZEPHYRUM]  = xar_creare(a->piscina,
+                    (i32)magnitudo(s64));
+                par[I]         = xar_creare(a->piscina,
+                    (i32)magnitudo(s64));
+                *(Xar***)xar_addere(greges) = par;
+            }
+            (vacuum)tabula_dispersa_inserere(per_titulum,
+                c->initium.titulus, (vacuum*)par);
+        }
+        si (   par == NIHIL
+            || _continet(index, a, ultima, k, c, &continet)
+               != CODEX_NOTUS)
+        {
+            perge;
+        }
+        *(s64*)xar_addere(par[continet ? I : ZEPHYRUM]) =
+            c->finis.duratio_ms;
+    }
+    rationes = (s64*)piscina_allocare(a->piscina, (memoriae_index)(
+        xar_numerus(greges) + I) * magnitudo(s64));
+    si (rationes == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < xar_numerus(greges); j++)
+    {
+          Xar** par = *(Xar***)xar_obtinere(greges, j);
+          s64   ante;
+          s64   post;
+
+        si (   xar_numerus(par[ZEPHYRUM]) < CURSUS_MODERATIO_MINIMI
+            || xar_numerus(par[I]) < CURSUS_MODERATIO_MINIMI)
+        {
+            perge;
+        }
+        si (   !_mediana_xar(par[ZEPHYRUM], a->piscina, &ante)
+            || !_mediana_xar(par[I], a->piscina, &post))
+        {
+            redde FALSUM;
+        }
+        si (ante > (s64)ZEPHYRUM)
+        {
+            rationes[r++] = (s64)_delta_permille(post, ante);
+        }
+    }
+    exitus->moderatio_tituli = r;
+    si (r > ZEPHYRUM)
+    {
+        s64 nihil;
+
+        _mediana_et_cauda(rationes, r, &nihil, &nihil);
+        exitus->moderatio_permille = (s32)rationes[(r - I) / II];
+    }
+    redde VERUM;
+}
+
+b32
+cursus_quaerere_cohortes (
+       constans CursusIndex* index,
+     constans CursusFiltrum* filtrum,
+               constans Xar* interventiones,
+           CursusAntecessio  antecessio,
+                     vacuum* contextus,
+                    Piscina* piscina,
+             CursusCohortes* exitus)
+{
+          CursusFiltrum  f;
+       OrdinandumCursus* tabula;
+          Antecessiones  a;
+                    Xar* omnes;
+                    i64* masculae;
+                    i32  n;
+                    i32  j;
+                    i32  k;
+                    i32  g;
+
+    si (   index      == NIHIL || interventiones == NIHIL
+        || antecessio == NIHIL || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(CursusCohortes));
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    si (filtrum != NIHIL)
+    {
+        f = *filtrum;
+    }
+    f.status   = CURSUS_MASCULA_TRANSIIT;
+    f.numerus  = ZEPHYRUM;
+    tabula     = _colligere(index, &f, FALSUM, piscina, &n);
+    omnes      = xar_creare(piscina,
+        (i32)magnitudo(constans CursusInterventio*));
+    exitus->interventiones  = xar_creare(piscina,
+        (i32)magnitudo(constans CursusInterventio*));
+    exitus->cohortes        = xar_creare(piscina,
+        (i32)magnitudo(CursusCohors));
+    masculae = (i64*)piscina_allocare(piscina, (memoriae_index)(n + I)
+        * magnitudo(i64));
+    si (   tabula                 == NIHIL || omnes == NIHIL
+        || exitus->interventiones == NIHIL || exitus->cohortes == NIHIL
+        || masculae               == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(interventiones); k++)
+    {
+        *(constans CursusInterventio**)xar_addere(omnes) =
+            (constans CursusInterventio*)xar_obtinere(interventiones,
+            k);
+    }
+    xar_ordinare(omnes, _notatione_ascendens);
+
+    /* interventiones titulos filtratos afficientes, ultimae LXIII */
+    per (k = ZEPHYRUM; k < xar_numerus(omnes); k++)
+    {
+        constans CursusInterventio* v = *(constans CursusInterventio**)
+            xar_obtinere(omnes, k);
+                               b32 afficit = FALSUM;
+
+        per (j = ZEPHYRUM; j < n && !afficit; j++)
+        {
+            afficit = _afficit(v->affecti,
+                tabula[j].cursus->initium.titulus);
+        }
+        si (afficit)
+        {
+            *(constans CursusInterventio**)xar_addere(
+                exitus->interventiones) = v;
+        }
+    }
+    dum (xar_numerus(exitus->interventiones) > CURSUS_COHORTES_MAXIMAE)
+    {
+        Xar* reliquae = xar_creare(piscina,
+            (i32)magnitudo(constans CursusInterventio*));
+
+        si (reliquae == NIHIL)
+        {
+            redde FALSUM;
+        }
+        exitus->praeterita = (i32)xar_numerus(exitus->interventiones)
+            - CURSUS_COHORTES_MAXIMAE;
+        per (k = exitus->praeterita;
+             k < xar_numerus(exitus->interventiones); k++)
+        {
+            *(constans CursusInterventio**)xar_addere(reliquae) =
+                *(constans CursusInterventio**)xar_obtinere(
+                exitus->interventiones, k);
+        }
+        exitus->interventiones = reliquae;
+    }
+
+    a.functio    = antecessio;
+    a.contextus  = contextus;
+    a.piscina    = piscina;
+    a.responsa   = (TabulaDispersa**)piscina_allocare(piscina,
+        (memoriae_index)(xar_numerus(exitus->interventiones) + I)
+        * magnitudo(TabulaDispersa*));
+    si (a.responsa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(exitus->interventiones); k++)
+    {
+        a.responsa[k] = tabula_dispersa_creare_chorda(piscina,
+            (i32)CCLVI);
+        si (a.responsa[k] == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+
+    /* mascula per cursum; cohors per masculam */
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans Cursus* c       = tabula[j].cursus;
+            CodexCursus  codex   = CODEX_NOTUS;
+                    i64  m       = (i64)ZEPHYRUM;
+           CursusCohors* cohors  = NIHIL;
+
+        per (k = ZEPHYRUM; k < xar_numerus(exitus->interventiones)
+             && codex == CODEX_NOTUS; k++)
+        {
+            constans CursusInterventio* v = *(constans
+                CursusInterventio**)xar_obtinere(exitus->interventiones,
+                k);
+                               b32 continet = FALSUM;
+
+            si (!_afficit(v->affecti, c->initium.titulus))
+            {
+                perge;
+            }
+            codex = _continet(index, &a, v, k, c, &continet);
+            si (continet)
+            {
+                m |= (i64)I << k;
+            }
+        }
+        si (codex == CODEX_SORDIDUS)
+        {
+            exitus->sordidi++;
+            masculae[j] = ~(i64)ZEPHYRUM;
+            perge;
+        }
+        si (codex == CODEX_IGNOTUS)
+        {
+            exitus->ignoti++;
+            masculae[j] = ~(i64)ZEPHYRUM;
+            perge;
+        }
+        masculae[j] = m;
+        per (g = ZEPHYRUM; g < xar_numerus(exitus->cohortes); g++)
+        {
+            CursusCohors* h = (CursusCohors*)xar_obtinere(
+                exitus->cohortes, g);
+
+            si (h->mascula == m)
+            {
+                cohors = h;
+                frange;
+            }
+        }
+        si (cohors == NIHIL)
+        {
+            cohors = (CursusCohors*)xar_addere(exitus->cohortes);
+            si (cohors == NIHIL)
+            {
+                redde FALSUM;
+            }
+            memset(cohors, ZEPHYRUM, magnitudo(CursusCohors));
+            cohors->mascula    = m;
+            cohors->contentae  = _bits(m);
+            cohors->primum     = c->initium.initium;
+            cohors->ultima     = -I;
+            per (k = ZEPHYRUM; k < xar_numerus(exitus->interventiones);
+                 k++)
+            {
+                si ((m >> k) & (i64)I)
+                {
+                    cohors->ultima = (s32)k;
+                }
+            }
+        }
+        cohors->numerus++;
+    }
+    xar_ordinare(exitus->cohortes, _cohors_ascendens);
+
+    /* quantilia et basis */
+    per (g = ZEPHYRUM; g < xar_numerus(exitus->cohortes); g++)
+    {
+        CursusCohors* h = (CursusCohors*)xar_obtinere(exitus->cohortes,
+            g);
+                s64* durationes = (s64*)piscina_allocare(piscina,
+                    (memoriae_index)(h->numerus + I) * magnitudo(s64));
+                i32 m = ZEPHYRUM;
+
+        si (durationes == NIHIL)
+        {
+            redde FALSUM;
+        }
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            si (masculae[j] == h->mascula)
+            {
+                durationes[m++] = tabula[j].cursus->finis.duratio_ms;
+            }
+        }
+        _mediana_et_cauda(durationes, m, &h->mediana_ms, &h->p90_ms);
+        h->basis = -I;
+        per (k = ZEPHYRUM; k < g; k++)
+        {
+            CursusCohors* b = (CursusCohors*)xar_obtinere(
+                exitus->cohortes, k);
+
+            si (   b->mascula                 != h->mascula
+                && (b->mascula & ~h->mascula) == (i64)ZEPHYRUM
+                && (   h->basis < ZEPHYRUM
+                    || b->contentae > ((CursusCohors*)xar_obtinere(
+                           exitus->cohortes,
+                           (i32)h->basis))->contentae))
+            {
+                h->basis = (s32)k;
+            }
+        }
+        si (h->basis >= ZEPHYRUM)
+        {
+            h->delta_permille = _delta_permille(h->mediana_ms,
+                ((CursusCohors*)xar_obtinere(exitus->cohortes,
+                (i32)h->basis))->mediana_ms);
+        }
+    }
+
+    si (xar_numerus(exitus->interventiones) > ZEPHYRUM)
+    {
+        k = (i32)xar_numerus(exitus->interventiones) - I;
+        si (!_moderationem_computare(index, filtrum, omnes, &a,
+                *(constans CursusInterventio**)xar_obtinere(
+                exitus->interventiones, k), k, exitus))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* argv primum verbum (usque ad spatium) */
 interior chorda
 _argv_primum (

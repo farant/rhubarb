@@ -60,3 +60,23 @@ the formatter, so the commit carries many `cosmetica` rewraps of
 pre-existing long lines beside the four substantive functions. The
 baseline lint classes it does NOT fix (`vexillum-quinquaginta` banners
 at 49 columns, a few comment lines over 72) are older than this work.
+
+## 2026-10-28 — chorda_aequalis_literis compares while scanning (budget B1 C3)
+
+It strlen'd the whole literal before comparing a byte, and the hot
+callers are if-chains against literals (`_invariata_numerare`'s
+"EXEMPLAR" || "PER" || ... chains in the exemplaria tests,
+stml_macros `_liberum_expandere`, `_est_titulo`): 59% of its samples sat
+on the length loop. Now: per i < s.mensura, FALSE on a NUL in the literal
+or a mismatch; at the end the literal must stop exactly at s.mensura.
+Identical results incl. an embedded NUL in the chorda (literal ends,
+chorda doesn't → FALSE). New: a malformed chorda (datum NIHIL, mensura
+> 0) returns FALSE instead of possibly dereferencing NULL. Batch C bench
+8.0 → 3.1 ns on a 7-literal chain.
+
+probatio_chorda had NO test of this function (271 asserts passed against
+either version, proving nothing): new section "chorda_aequalis_literis"
+— exact, prefix both ways, last-byte mismatch, embedded NUL, empty vs ""
+and "a", NIHIL datum/0, NIHIL literal. Written first, green on the OLD
+implementation. Plant (end with `redde VERUM` — the prefix bug) → red at
+the new PERGE/PER assertion only.

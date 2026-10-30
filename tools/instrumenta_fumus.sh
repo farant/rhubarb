@@ -48,6 +48,11 @@ trap 'rm -rf "$T"' EXIT
 B="build/instrumenta_fumus"
 mkdir -p "$B" "$T/domus"
 export FABRICA_THESAURUS="$RADIX/build/aedilis/obiecta"
+# MEMORIA ORACULI (budget B1 E6, 2026-10-28): clang -MM fontium .m (numquam
+# in thesauro) semel per cursum, non per programma - arbor intra portam
+# gelata; directorium cum $T deletur (inter cursus vetus mentiretur)
+MEMORIA_ORACULI="$T/memoria_oraculi"
+mkdir -p "$MEMORIA_ORACULI"
 
 git ls-files -co --exclude-standard '*.c' '*.thistle' \
     | ./tools/iudex_unitatum.sh instrumenta > "$T/iudicatae" 2> "$T/iudex_err" \
@@ -67,7 +72,8 @@ fracta=0; notae=0; structa=0; probatae=0
 while IFS= read -r f; do
     D="$B/$(echo "$f" | sed 's|/|__|g; s|\.c$||')"
     mkdir -p "$D"
-    if ! bin/aedilis "$f" --exitus "$D" --obiecta "$B/obiecta" --thesaurus "$FABRICA_THESAURUS" > "$D/aedilis.log" 2>&1; then
+    if ! bin/aedilis "$f" --exitus "$D" --obiecta "$B/obiecta" --thesaurus "$FABRICA_THESAURUS" \
+            --memoria-oraculi "$MEMORIA_ORACULI" > "$D/aedilis.log" 2>&1; then
         echo "  FRACTUM $f - aedilis: $(grep -m1 -E 'RECUSAT|error' "$D/aedilis.log" | cut -c1-140)"
         fracta=$((fracta + 1)); continue
     fi

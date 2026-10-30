@@ -461,3 +461,19 @@ generator's image on every call (Gauss sum or Dickson). That is
 handle (an API change - ask Fran). Demo 119 keeps its own cached image.
 
 Suite 254.
+
+## 2026-10-29 — normalisation shortcuts that cannot change the result (budget B1 D3)
+
+The canonical form (numerator/denominator reduced, denominator > 0) is
+unique, so skipping work that provably leaves it unchanged is safe:
+- `_normalizare`: denominator == +1 → already canonical (gcd(x, 1) = 1,
+  sign positive); −1 still takes the common path, which fixes the sign.
+- `algebraicus_adde`: a zero operand returns the other (already canonical);
+  equal denominators → normalise (a.num + b.num) / d instead of two scalar
+  multiplications and d² (quaternio `_summa` starts every product at 0 + p).
+- `algebraicus_multiplica`: a zero factor → zero.
+Plus polynomium_contentum stops once the running gcd is 1 (polynomium
+worklog). Batch D's v3 prototype (with D1/D2): the cellae sections that
+finished took 0.33× under ASan. Math suites green; plants (equal-
+denominator path without _normalizare; zero shortcut returns the wrong
+operand) → probatio_extensio :596 red.

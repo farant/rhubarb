@@ -6519,8 +6519,21 @@ _exundatio (
     redde NIHIL;
 }
 
-interior vacuum*
-_allocare_interna (
+/* VIA TARDA: semantica tota (alvei sequentes, alveus novus, exundatio,
+ * refutatio). Extra lineam (noinline) ut via rapida infra parva maneat
+ * et in vocatores inseratur. */
+#if defined(__clang__) || defined(__GNUC__)
+/* <tolera codex="EXTENSIO_COMPILATORIS" (>noinline, custodia GNU */
+#define PISCINA_TARDA_GENUS __attribute__((noinline)) vacuum*
+#else
+#define PISCINA_TARDA_GENUS vacuum*
+#endif
+/* Macro genus reditus portat, numquam VACUA (probatio_silva_canon_
+ * corpus asserit corpus nullam invocationem ZERO lexematum ferre -
+ * silva ramum non-GNU legit); 'interior' visibile manet (amalgamator
+ * 'static' addit functionibus sine eo). */
+interior PISCINA_TARDA_GENUS
+_allocare_tarde (
                TesseraPiscina* piscina,
         memoriae_index  mensura,
         memoriae_index  ordinatio,
@@ -6640,6 +6653,51 @@ _allocare_interna (
         "allocare", mensura);
 
     redde ptr;
+}
+
+/* VIA RAPIDA (budget B1 C2, 2026-10-28): alveus nunc capit et
+ * ordinatio potentia binaria (omnes vocantes domus) - larva pro
+ * divisione (olim udiv per allocationem), prologus parvus (via tarda
+ * extra lineam). Eadem semantica: promotus = offset ad ordinationem;
+ * probationes circuitus explicitae (promotus >= offset, necessaria >=
+ * promotus). Circuitus, alveus plenus aut PISCINA_DEBUG -> via tarda,
+ * quae refutat aut alveum novum generat. Rationes (usus_currens,
+ * maximus_usus, numerus_allocationum) eaedem: aurum computi
+ * immutatum. 10.4 -> 4.0 ns per allocationem. */
+interior vacuum*
+_allocare_interna (
+               TesseraPiscina* piscina,
+        memoriae_index  mensura,
+        memoriae_index  ordinatio,
+                   b32  fatalis)
+{
+            Alveus* alveus;
+    memoriae_index  promotus;
+    memoriae_index  necessaria;
+
+    si (   !PISCINA_DEBUG && piscina != NIHIL && mensura != ZEPHYRUM
+        && ordinatio                     != ZEPHYRUM
+        && (ordinatio & (ordinatio - I)) == ZEPHYRUM)
+    {
+        alveus = piscina->nunc;
+        promotus = (alveus->offset + (ordinatio - I)) & ~(ordinatio
+            - I);
+        necessaria = promotus + mensura;
+        si (   promotus   >= alveus->offset
+            && necessaria >= promotus
+            && necessaria <= alveus->capacitas)
+        {
+            piscina->usus_currens  += necessaria - alveus->offset;
+            alveus->offset         = necessaria;
+            si (piscina->usus_currens > piscina->maximus_usus)
+            {
+                piscina->maximus_usus = piscina->usus_currens;
+            }
+            piscina->numerus_allocationum += I;
+            redde (character*)(alveus->buffer) + promotus;
+        }
+    }
+    redde _allocare_tarde(piscina, mensura, ordinatio, fatalis);
 }
 
 
@@ -7000,6 +7058,19 @@ tessera_chorda_aedificator_appendere_character (
             character  c)
 {
     i8 ch = (i8)c;
+
+    /* VIA RAPIDA (budget B1 C5, 2026-10-28): octetus unus cum spatium
+     * adest - scriptio directa, non memcpy unius octeti per stubum
+     * (444 ex 1940 exemplis _appendere_interna in arbor_plagula).
+     * Spatium deest aut aedificator vacuus -> via communis (crescentia,
+     * appendix sui). */
+    si (   aedificator != NIHIL && aedificator->buffer != NIHIL
+        && aedificator->offset < aedificator->capacitas)
+    {
+        aedificator->buffer[aedificator->offset]  = ch;
+        aedificator->offset                       += I;
+        redde VERUM;
+    }
     redde _appendere_interna(aedificator, &ch, I);
 }
 

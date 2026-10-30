@@ -312,11 +312,15 @@ nomen structura {
     PiscinaNotatio nota;           /* acervi, ante q et c huius operis */
 } Opus;
 
-/* piscina temporaria; NIHIL si memoria deest */
+/* piscina temporaria; NIHIL si memoria deest. Alveus primus IV KB
+ * (budget B1 D5, 2026-10-29): olim LXIV KB per vocationem
+ * (radix_compara, _separa_positivas bis per vocationem) - sub ASan
+ * malloc, quarantena et impletio cum mensura crescunt; piscina
+ * dynamica crescit si opus est. */
 interior Piscina*
 _piscina_temporaria (vacuum)
 {
-    redde piscina_generare_dynamicum("radices", (memoriae_index)65536);
+    redde piscina_generare_dynamicum("radices", (memoriae_index)4096);
 }
 
 /* apices piscinarum temporariarum (radices_interna.h): probationes

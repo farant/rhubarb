@@ -471,3 +471,36 @@ Quirk found: the second and later uses of a lexeme (line ~1283, "Usus secundus")
 Parsed STML is the opposite: leaf elements with attributes leave liberi empty (aedificatio 69%, glossarium 82%, gutenberg_index 49%). There full B gives about 8% vs 0–3% for attributa alone. Segment slack (not B): hilarius 1.6 MiB attributa + 3.9 MiB liberi.
 
 Fixed the same day: the transclusion is now built with `stml_transclusionem_creare`. hilarius pool 86,127 → 82,980 KiB (-3.1 MiB, as predicted), and lazy attributa now equals full B for oratio (8.6 MiB each). The bytes written are unchanged. All oratio round-trip assertions pass; the only red sections are the known memory ceilings (parks …E2Y7J, …C87H). Those read via process peak and swing 755–885 MiB run to run, so the probe's pool count is the measurement to trust. No computus golden moved: second uses of a lexeme only happen in oratio's ambiguity arms. The constructor dates from 08-26 and this line from 08-27, so it was a copy from the element path below, not something that predated the constructor.
+
+## 2026-10-28 — reader: tag → genus index per lector (budget B1 A4)
+
+`materia_arbor_lexema_ex_tag` (public) finds a lexeme's genus by mangling
+EVERY genus name (prefix + title, lowercase, `_`→`-`) and comparing — per
+lexeme and per trivium read. That was 15.7% of
+probatio_silva_arbor_plagula (two analyst batches found it independently).
+The reader now calls `_genus_ex_tag(lector, titulus)`: a `tabula_dispersa`
+built lazily once per lector from the SAME forward mangling
+(`materia_arbor_lexema_tag` for i = 0..n−1), first entry wins on a
+collision exactly like the linear scan; if the table can't be built it
+falls back to the linear function. The public function is unchanged.
+After: materia_arbor_lexema_tag drops out of the profile;
+silva_arbor_legere_parsuram 39.4% → 33.1% of arbor_plagula.
+
+Trap hit on the way: there are TWO places a reader is built — the heap
+constructor and a stack `MateriaArborLector lector;` in
+`materia_arbor_legere` that sets fields one by one. Forgetting the new
+field there left a garbage pointer → probatio_materia_arbor segfault
+(exit 139, "circuitus bis"). Any new MateriaArborLector field needs both.
+Plant: index stores genus i+1 → materia_arbor and arbor_plagula red.
+
+Computus golds (same day): the first commit attempt went red on porta
+css — probatio_css_computus pins `allocationes_arboris` per document and
+the index added one allocation per genus key (+29). Rewritten so all keys
+live in ONE piscina block (pass 1 sums the mangled lengths, pass 2 copies)
+→ the index costs exactly +3 allocations per document (key block + the
+table's two). Seven computus golds (css, md, html, toml, crusta, briar,
+oratio) were regenerated with COMPUTUS_SCRIBERE=1; audited diff: 27 rows,
+ONLY column allocationes_arboris, every delta exactly +3 — memory, nodes,
+lexemes, octets unchanged. silva's computus does not pin it. Any future
+change to how a reader allocates will move these golds the same way; the
+cause goes in the commit, as the gate's header asks.
