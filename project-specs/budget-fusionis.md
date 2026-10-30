@@ -60,8 +60,8 @@ oraculum-silvae 1.0).
 | E2 | silva/*.sh and 38 other wrappers: ONE newest-header `find` per call, not one per object (~330 wrapper calls per merge commit; test runners already do "CAPUT RECENTISSIMUM SEMEL") | 1.5-3 | S-M | LUCRUM 9c92a730 |
 | D1-6 | Magnus 24 → 16 B (arm64 passes >16 B structs via memory; ASan makes every copy a call), i64 Euclid when inline, extensio normalisation shortcuts, hoisted axis norms, piscina churn; split `lentus` into its own suite | 2.4-2.9 | S-M | D1+D2 LUCRUM e8dcabb6, D3 e8be2b15, D5 1272c226; lentus split (D8) LUCRUM cb5547a7; D4 CANDIDATUM |
 | A1 | `silva/probationes/apparatus.c`: pass `--thesaurus build/aedilis/obiecta` to aedilis (store exists; 15 s → 3 s, byte-identical) | 1.35-1.6 | S | LUCRUM cf6834d6 — 93.1 G → 9.5 G instructions per aedilis call |
-| E3 | raw-clang suites (briar, oratio, ludus_tessera, tessera, gesta, officina, ...) → `bin/compilator --plures` (warm ludus_tessera rebuilt 152/155 objects after a header touch) | 1.5-3 | L | CANDIDATUM |
-| B3-14 | stml internals: capture pass skips untouched parents, tokenizer scans runs, `_lineae_contenti` early exit, transparency set as array, parser intern cache, one-append indentation, writer tag cache, ... | ~1 | S-M | B5+B9 LUCRUM 20bd074d; B3/B6 deferred (move computus golds again); rest CANDIDATUM |
+| E3 | raw-clang suites (briar, oratio, ludus_tessera, tessera, gesta, officina, ...) → `bin/compilator --plures` (warm ludus_tessera rebuilt 152/155 objects after a header touch) | 1.5-3 | L | ludus_tessera LUCRUM (header touch 139 → 4 s); tessera, gesta, officina, briar, oratio CANDIDATUM |
+| B3-14 | stml internals: capture pass skips untouched parents, tokenizer scans runs, `_lineae_contenti` early exit, transparency set as array, parser intern cache, one-append indentation, writer tag cache, ... | ~1 | S-M | B5+B9 20bd074d, B14 67cd1d19, B4 6658d77c, B8 7b8ee375, B6 dbd049a9, B3 c568b6d4 (single computus re-gold) LUCRUM; B11 skipped (API addition); B13 deferred (medium risk) |
 | A3 | `tools/amalgama_excludenda_generare.sh`: `-fsyntax-only` (diagnostics byte-identical, 1.96 → 0.79 s per round) + one-pass awk classification | 0.55-1.1 | S | LUCRUM c9c9a0ae — silva 12 → 6.2 s |
 | E7 | `vendor/sqlite3.c` and `silva/amalgama/silva.c` compiled once (normalised path via compilator) | 0.5-1 | S | LUCRUM b3a306e9 |
 | C1 | xar: header `static __inline__` fast paths for obtinere/numerus/addere behind same-name macros (4.7 → 2.1 ns) | 0.5-0.8 | S-M | REIECTUM (for now) — silva amalgamator breaks on header-inline helpers; needs tooling work; ThinLTO alternative |
@@ -127,7 +127,13 @@ A7 = B7; B10+B12 ≈ C3; E7/E8 partly fold into E4; E5 shrinks to
 | D8 | cb5547a7 | pending | lentus section in its own suite (parallel) |
 | E1 | 4a938445 | pending | receipts sealed on content; PORTAE_CAPUT keep HEAD |
 | A6 | 056c1b7e | warm 91 → 42-45 s (load 13) | pignus cache keyed on objects + file sha |
-| E10 | (this commit) | instrumenta 76 → 59 s, aedilis 162 → 108-128 s | link signature (flags + object identity), opt-in by gates |
+| E10 | bc9ba4bc | instrumenta 76 → 59 s, aedilis 162 → 108-128 s | link signature (flags + object identity), opt-in by gates |
+| B14 | 67cd1d19 | pending | stml raw/escaped writers append runs |
+| B4 | 6658d77c | pending | stml tokenizer moves by runs (memchr) |
+| B8 | 7b8ee375 | pending | parser trivia intern cache |
+| B6 | dbd049a9 | pending | transparency set as inline array |
+| B3 | c568b6d4 | allocationes_arboris −17-22%/doc | capture pass keeps lists without captors (computus re-gold) |
+| E3 (ludus_tessera) | (this commit) | header touch 139 → 4 s | compilator --plures; excubitor call removed |
 
 First measured merge after tier I (2026-10-30, quinta ff 0a2b4879;
 ONE sample, sexta committing concurrently; `mensor quaestio fusio`):
