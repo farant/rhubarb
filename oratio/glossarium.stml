@@ -414,6 +414,37 @@
   <vocabulum lemma="srgb" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: spatium colorum sRGB (IEC 61966-2-1; color_srgb_ad_linearem, lib/color.c)"/>
   <vocabulum lemma="horner" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: W. G. Horner (aestimatio polynomii per multiplicationes nidificatas; lib/extensio.c)"/>
   <vocabulum lemma="montgomery" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: P. L. Montgomery (reductio Montgomery, 1985; lib/agmen.c)"/>
+  <vocabulum lemma="interpolatio" lingua="latina" classis="substantivum" nota="Latina classica (Plinius): interpolatio, -onis f., renovatio; mathematica: polynomium ex valoribus in punctis (lib/interpolatio.c)">
+    <forma textus="interpolatio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="interpolatione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="lagrange" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J.-L. Lagrange (interpolatio Lagrange, polynomium per puncta; lib/interpolatio.c)"/>
+  <vocabulum lemma="tensor" lingua="latina" classis="substantivum" nota="Latina posterior: tensor, -oris m., qui tendit (tendo); mathematica: tabula multilinearis super indices (lib/contractio.c)">
+    <forma textus="tensor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="tensores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="tensorum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="tensoribus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="plexus" lingua="latina" classis="substantivum" nota="Latina (plecto): plexus, -us m., implicatio, textura; mathematica: trica (braid), grex braidarum B_n (lib/plexus.c; laqueus_pd_ex_plexu)">
+    <forma textus="plexus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexui" casus="dativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexum" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexu" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="plexuum" casus="genitivus" numerus="pluralis" genus="masculinum"/>
+    <forma textus="plexibus" casus="ablativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
+  <vocabulum lemma="gyratio" lingua="latina" classis="substantivum" nota="Latina posterior: gyratio, -onis f., circumactio (gyrus, gyrare); mathematica: summa conversionum (quartarum) curvae in plano, numerus gyrationis (lib/laqueus.c, modulus vertex)">
+    <forma textus="gyratio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="gyrationes" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="gyrationum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+    <forma textus="gyrationibus" casus="ablativus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="vectorizare" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus technicus domus: ansam in instructiones vectoris (SIMD) vertere (lib/agmen.c, tools/agmen_vectorizatio.sh)"/>
   <vocabulum lemma="exhaustivus" lingua="latina" classis="adiectivum"
     nota="Latinitas nova (exhaurire): exhaustive - vox domus (cellae.h: activatio_exhaustiva, quaestio per omnes copias); WORDS caret">

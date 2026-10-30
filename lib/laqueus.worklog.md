@@ -368,3 +368,300 @@ Plants: E1 (planarity check skipped) red. E2 (faces traced with the slot
 BEFORE instead of after) survives, and that is correct: sigma^-1 alpha traces
 the faces of the mirrored rotation system, which has the same count. It is
 an equivalent implementation, not a bug.
+
+## 2026-10-27 — Kauffman bracket by vertex model and contraction (contractio-plan T4)
+
+New: `laqueus_uncinus_ex_pd_rete`, `laqueus_jones_ex_pd_rete`, and under
+them an opaque reusable `LaqueusModulusVertex` (`_creare`,
+`_aestimare(omega, p)`, `_gyrationes`, `_sumptus`). No crossing limit
+except the officina's byte ceiling; the state sum stays the oracle up to
+LAQUEUS_TRANSITUS_MAXIMI (24).
+
+**Model** (project-specs/contractio-plan.md, "The vertex model" and
+"Why it is correct"): one dimension-2 index per PD edge, spin +1 = the
+loop runs from the edge's first occurrence in the code (end a) to its
+second (end b). Turning numbers t (quarter turns, a → b) come from the
+face equations — face 0 = orbit of position 0, target +4; every other
+face −4; each corner −1 — solved by a BFS spanning tree of the dual
+graph, leaves first, non-tree edges m = 0. Crossing tensor = A·[(X0
+X1)(X2 X3)] + A⁻¹·[(X0 X3)(X1 X2)]; a pair is nonzero only if one end
+enters and the other leaves, with ω⁻¹ for arm p → p+1, else ω⁺¹; the
+edge factor ω^(σt) sits at end b. Contraction = d·⟨D⟩ with A = i·ω²,
+d = ω⁴ + ω⁻⁴ = −A² − A⁻².
+
+**Kinks (R1 loops):** an edge with both ends on one crossing is not an
+index; its spin is summed inside that crossing's tensor at build time.
+Each crossing's tensor is stored symbolically as ≤ 32 terms (entry,
+A^±1, ω exponent), so a point only fills numbers in: no allocation per
+point (ω powers in a table of size 2E + 1, E = max |exponent| ≥ 4).
+
+**Points:** ω = index + 2 (the interpolatio aestimator), A = i·ω² with
+i = g^((p−1)/4), g the least quadratic non-residue, cached per prime.
+INUTILE at ω ≡ 0 and at d = 0 (A⁴ = −1); ERRATUM for p < 5, p ≢ 1
+(mod 4), or i² ≠ −1 (p not prime). Duplicate y = ω⁸ among small ω are
+rare and the driver skips them.
+
+**Interpolation:** window [−c − 2|s_B| + 2, c + 2|s_A| − 2] rounded
+inward to the class 3w mod 4 (|s_A|, |s_B| = loops of the all-A / all-B
+states by union-find), passus 4, limes 2c bits (|coefficient| < 4^c),
+primes ≡ 1 mod 4, two extra points per prime. Jones from the bracket
+with the PD writhe and the existing `_jones_ex_uncino`.
+
+**Tests** (probationes/probatio_laqueus_rete.c, 9 sections, 55,960
+checks, 2.0 s): hand codes — both 2-crossing kinked unknots and the
+stabilized trefoil with its negative twin — against the state sum and
+the table; all 249 table knots of 3–10 crossings, bracket = state sum
+and every state-sum exponent ≡ 3w (mod 4); all 12,966 table knots'
+Jones; 200 table knots (2–9 crossings) with 1–3 random R1 kinks (4
+kinds), Jones = table, bracket = state sum, `laqueus_pd_simplificare`
+back to ≤ c; four 13-crossing knots with 15 kinks (28 crossings): the
+state sum refuses, the network gives the table's Jones; random polygonal
+knots (8–11 vertices in [−12, 12]³, 2–16 crossings, ≥ 50 tested) against
+`diagramma_jones`; every loop of 20 random states on 100 kinked table
+knots turns ±4 (computed from the PD and t alone — Umlaufsatz, not the
+solver's equations); single points equal the state sum evaluated at A
+mod p, a prime switch recomputes i, p = 17 with ω = 5 (A = 2) is
+INUTILE; refusals (c = 1, non-planar, bad labels, officina too small)
+leave exitus untouched; c = 0 → 1.
+
+R1 insertion (test helper): splitting edge e, labels > e shift by 2,
+the incoming occurrence of e becomes e + 2, and the new crossing is one
+of [e, e+2, e+1, e+1] (under first, positive), [e, e+1, e+1, e+2]
+(under, negative), [e+1, e+1, e+2, e] (over, positive), [e+1, e, e+2,
+e+1] (over, negative). All four are planar and accepted by
+`_pd_legere`.
+
+**Deviation from the plan's credo:** random R2 insertions were not
+written (a PD-level R2 needs the face structure to stay planar). Bigons
+are covered by the table diagrams (twist regions) and by the polygonal
+knots, whose generic projections are full of bigons and monogons.
+
+**Plants (radix/laqueus_rete), 17/17 red:** outer-face target sign;
+corner term dropped; basis without +2; tree solve sign; enter/leave at
+the wrong end; crossing turn sign; edge factor sign; kink not folded;
+imus off the 3w class; summus window too narrow; limes 2 bits; no
+division by d; A⁻¹ sign; d = 0 not INUTILE; i not recomputed on a prime
+change; class w instead of 3w; Jones writhe sign. Most are caught inside
+the driver (the extra points and extra prime refuse the inconsistent
+interpolant); the A⁻¹ and writhe plants by the oracle comparisons.
+
+## 2026-10-27 — T4 review (independent, after 62a02ef5) and fixes
+
+Reviewer, all in scratch under ASan/UBSan: every one of the 65,536
+label assignments at c = 2 (64 valid, including face 0 as a monogon,
+[[2,1,3,2],[4,3,1,4]], t = 5 there); 1.2M biased random codes at c =
+3–5 and 200k garbage codes — the network path accepts and refuses
+exactly what the state sum does, with identical bracket and Jones;
+10,000 relabeled / permuted / mirrored / reversed / kinked table knots;
+2,000 connected sums of 2–5 kinked, scrambled knots (to ~70 crossings);
+5,000 nugatory crossings; connected sums with Jones = product at c =
+36, 65, 207, 404, 803 and 1606 (122-bit coefficients at c = 207). A
+negative control (mirror without t → 1/t) failed 153 times, so the
+harness bites. The loops-turn-±4 check alone catches a solver plant (m
+= 0): 4,084 of 8,334 checks fail. No H.
+
+Fixed here:
+- **M1** `laqueus_modulus_vertex_aestimare` promised ERRATUM for a
+  non-prime p but did not deliver: a composite ≡ 1 (mod 4) divisible by
+  3 has no g with g^((p−1)/2) = −1, so the search ran ~p modpows (2^32 −
+  7 never returned); p = 85 was accepted (g = 13), and with gcd(ω, p) >
+  1 the ignored `congruentia_inversa` left w⁻¹ uninitialized; the i² =
+  −1 check was dead (true by construction). Now p is tested with
+  `congruentia_est_primus` (deterministic below 2^32) before the
+  search; ω without an inverse is INUTILE; the dead check is gone. The
+  search keeps its g < p bound as a guard. That bound matters: my first
+  version dropped it, and the plant that bypasses the primality test
+  then looped forever in the parent instead of failing. Only public-API
+  misuse reaches any of this — interpolatio passes primes.
+- **M2** nothing above 24 crossings had structure beyond R1 kinks
+  (which only multiply the bracket by −A^±3: coefficients stayed those
+  of ≤ 13-crossing knots, one prime's worth). New section "summae
+  connexae": 30 sums of 2–5 table knots plus one of 12 knots of 9–13
+  crossings (c ≥ 100), each piece mirrored at random, one kink, labels
+  rotated and crossings permuted; Jones = the product of the pieces'
+  Jones (t → 1/t for mirrors). The big sum must have a coefficient
+  wider than 31 bits, so CRT across primes is tested end to end.
+  Builder: K1's incoming occurrence of m1 → m1 + m2, K2's incoming
+  occurrence of m2 → m1, other K2 labels + m1.
+- **L2** coverage: mirror images (in the sums), face 0 as a monogon
+  (hand code u3), kinks at crossing 0 (labels rotated and crossings
+  permuted in the R1 section and the sums), composite p (85 →
+  ERRATUM; 2^32 − 7 returns, under CREDO_NON_PENDET). Plant R18
+  (primality test bypassed) red.
+
+Carried to T5 (plan): **M3** contractions per bracket grow as c² —
+(window/4 + 3) points per prime × (2c/31 + 2) primes ≈ c²/16. The
+reviewer measured 8.1 s at c = 803 and 68 s at c = 1606 on connected
+sums of apex 256, ~90% inside `contractio_exsequi_modulo`; at T5's
+braid apex 2^26–2^28 that is hours per knot. The 2c-bit bound is 2–3×
+loose in practice (122 of 414 bits at c = 207), costing 2–3× the
+primes. **L1** memory: the caller's arena grows superquadratically (11.5
+MB at c = 803, 78 MB at 1606), almost all of it interpolatio's
+scratch, which shares the caller's piscina with `exitus`.
+
+Tests now: 10 sections, 56,344 checks, 2.2 s.
+
+## 2026-10-27 — T5a: coefficient bound by spanning trees (fewer primes)
+
+`_uncinus_per_rete` now passes limes = bits(B) instead of 2c, where B =
+min over the two Tait graphs of Π_{v≠r} deg(v) (loops excluded, r a
+vertex of maximal degree). Σ|cₖ| ≤ τ(G) ≤ B by the signed
+Thistlethwaite expansion (smoothings are deletion/contraction in the
+Tait graph; bridges and loops collapse to −A^(±3); leaves = spanning
+trees) and the parent-edge injection. Proof, data and design review in
+project-specs/contractio-plan.md §T5a.
+
+**Colours by union-find, not a parity rule.** Region of corner (k, j)
+(between arms j and j+1) = `faciei[4k + (j+1) % 4]`, the face numbering
+`_gyrationes` already computes (now exported). Opposite corners (0~2,
+1~3) are joined; the two classes are the colours. `_limes_arborum`
+refuses unless there are exactly two classes and adjacent corners lie
+in different ones. Degrees need no colour: per crossing, if two
+opposite corners are different regions, each gets +1. Why: my first
+Python version assumed corners 0, 2 always share the global colour —
+false for non-alternating diagrams (which pair is "black" flips from
+crossing to crossing) — and the design review simulated that bug: only
+2 of 12,965 knots went red under a bits-only check.
+
+Products: factors multiply into a u64 (< 2^32 before, factor < 2^31)
+and flush into a Magnus only when the accumulator passes 2^32, so the
+arena sees ~c/30 Magnus multiplications instead of ~c/2.
+
+New API: `laqueus_modulus_vertex_limes` (bits), `_limes_exactus` (B as
+Magnus), `_vocationes` (aestimare calls and prime changes since
+creation), `_uncinus` (the bracket driver on a network the caller
+holds). The last two exist so a test can see the bound in use.
+
+**Tests** (probatio_laqueus_rete, 13 sections, 149,220 checks, 3.5 s):
+Σ|cₖ| ≤ B (exact Magnus) and limes < 2c for c ≥ 3 on every table knot,
+the kinked knots, the connected sums, and 40 random braid closures
+(3–6 strands × 21–82 crossings); exact hand values from the review,
+including the tight T(2,31) (B = 31 = Σ|c|, limes 5) and T(2,7) #
+T(2,−9) (B = 63 = Σ|c|, limes 6); wiring: primes used = ceil((limes +
+1)/31) + 1 and fewer than 2c would need. `_plexus_pd` (braid closure)
+now lives in the test as well as the tool.
+
+**Plants (radix/laqueus_rete), 6/6 red:** limes − 1; degree counted at
+one end only; two vertices excluded per colour; adjacent corners joined
+(the colouring fault: refused as one class); 2c passed instead of limes
+(caught only by the wiring test); last u64 flush dropped. First form of
+the flush plant did not compile (i64 → s64 conversion); rewritten with
+a cast.
+
+**Measured** (tools/uncinus_mensura, same seeds as f8563c60, now on the
+library driver): contractions and primes fall ~2.1–2.4×. Connected sums
+c = 800: 40,651 → 16,874 contractions, 53 → 22 primes, 8.6 → 4.9 s,
+arena 10 → 3.2 MB. Braids 6 × 201: 4.8 → 2.1 s; 8 × 201: 43 → 21 s;
+12 × 201 projected 215 → 99 s; 10 × 201 projected 77 → 34 min. Section
+I (c = 12–24): 3 → 2 primes, all still equal to the state sum. The
+remaining gap (limes 121–171 vs actual 31–39 bits at 201 crossings) is
+cancellation, which no counting bound sees.
+
+## 2026-10-27 — T5a review (independent, after 7a2a8deb) and fixes
+
+Reviewer: suite under ASan/UBSan clean; a fuzz harness compared the
+library's exact B (Magnus, decimal) with an independent Python
+min-over-colours B as exact integers, limes = bits(B), Σ|c| ≤ τ ≤ B,
+τ(G) = τ(G*), primes used = ceil((limes+1)/31)+1, and the bracket
+against the state sum (c ≤ 16) or a scratch build of laqueus with the
+old 2c bound: ~5,900 small diagrams (table ≤ 7 and mirrors, 1,500
+kinked/mirrored/relabelled braid closures, 400 connected sums) and 135
+large ones (braids 3–8 strands × 17–120, sums of 3–10 knots): 0
+mismatches. Flush stress: T(2,±301) (other colour 2^300), 40 summed
+trefoils (B = 3^40 = Σ|c|, tight just under 2^64), a 122-bit mixed sum.
+Hand values recomputed independently. No H, no M.
+
+Fixed:
+- **L1** the random-braid section's state-sum comparison was dead (all
+  braids ≥ 21 crossings, branch at ≤ 16): lengths now 8–82, so the
+  short ones meet the oracle; the strict "fewer primes than 2c" check
+  applies from 40 crossings (below that both can need two primes).
+- **L2/L3/N1** the call counter counted every aestimare call (incl.
+  INUTILE and refused primes) and the tool built a second network inside
+  the timed window. The counter now counts contractions exactly
+  (incremented right before `contractio_exsequi_modulo`); the tool
+  reuses its probe network, reads counters as differences, and probes
+  on 998244353 so the driver's first prime is counted as a switch.
+  Like-for-like at c = 800: 8.6 → 3.6 s (2.4×), arena 10 → 2.3 MB (the
+  4.9 s in the T5a entry included building a second network).
+
+## 2026-10-27 — laqueus_pd_ex_plexu: braid closure → PD (contractio-plan T5)
+
+Moves the braid-closure builder that lived twice (test, measurement
+tool) into the library. Word = s32 letters ±i (σ_i^±1), the same
+encoding as `Plexus` (plexus.h) — a caller holding a plexus passes
+`p.litterae, p.longitudo, p.fila`. plexus.h is deliberately NOT
+included: it pulls matrix, radices, cyclotomia and nervus into every
+binary that links laqueus, and tools/tabula_nodorum_generare.sh (a hand
+list, tabularium 01M5ZJ7X) has already broken twice on new laqueus
+dependencies today.
+
+**Convention, standard and now tested:** σ_i^(+1) gives a POSITIVE
+crossing (writhe +1): the closure of σ1³ is the right-handed trefoil,
+table 3_1, and (σ1…σ_{p−1})^q is the right-handed T(p, q). The test and
+tool copies had the opposite sign (their T(7,8) needed a mirror); with
+the library, T(7,8) equals the torus formula and NOT its mirror. Shape:
+strands run downward; at crossing k between positions i, i+1, a = upper
+left (goes to lower right), b = upper right; positive → [a, c', d', b]
+(a under, b over from X3 to X1), negative → [b, a, c', d']. Arms
+counterclockwise from the under-strand's entry. Edges relabelled 1..2c
+by traversal from edge 0; the result is validated by `_pd_legere`
+(c ≥ 2).
+
+Refusals (outputs untouched): fila 0, letter 0 or |letter| ≥ fila,
+empty word with fila ≥ 2, an untouched strand, a closure with several
+components (permutation not one fila-cycle — e.g. word length and
+fila of the same parity). fila 1 with the empty word = unknot
+(transitus 0, pd NIHIL); σ1 on 2 strands = the one-crossing kinked
+unknot (returned; laqueus' invariants refuse c = 1 as documented).
+
+**Tests** (new section "plexus"): σ1³ = table 3_1, σ1⁻³ = its mirror;
+40 random braids (3–6 strands, 10–41 crossings): Jones unchanged under
+conjugation g w g⁻¹, cyclic rotation, stabilization σ_n^(±1) on n + 1
+strands and σσ⁻¹ insertion; bracket = state sum up to 16 crossings;
+Hopf link, three-component, untouched-strand, out-of-range and empty
+words refused with outputs untouched. The test and the tool now call
+the library (thin `_plexus_pd` wrappers).
+
+**Plants 3/4 red:** forms swapped; closure identification dropped;
+empty word accepted. Survivor: the range check `>= fila` relaxed to
+`> fila` — the out-of-range word is still refused by later checks
+(after an out-of-bounds write into arena memory), so the check is
+defense in depth and a test cannot see it without undefined behaviour.
+
+## 2026-10-27 — laqueus_pd_ex_plexu review (independent, after 1ec50212) and fixes
+
+Reviewer (scratch, ASan/UBSan): an independent Temperley–Lieb oracle on
+the braid word itself (σ = A·1 + A⁻¹e) against
+`laqueus_jones_ex_pd_rete` on the PD — exhaustive over all words for
+fila 2 (length ≤ 10), 3 (≤ 6), 4 (≤ 5), 5 (≤ 4) with out-of-range
+letters mixed in: 23,420 cases, 6,531 accepted knots, 0 mismatches,
+acceptance exactly "permutation is one fila-cycle"; ~600 random knots
+to 200 crossings; all 78 torus T(p, q) (p ≤ 8, q ≤ 12) against the
+formula, mirror and swapped braid; R3, far commutation, mirror and
+reversal on 107 random pairs; σ1³'s PD equals KnotInfo's 3_1 crossing
+for crossing, σ1⁵ = table 5_1, σ1³σ2σ1⁻¹σ2 = table 5_2 (no mirror). No H.
+
+Fixed:
+- **M** `ossa = fila + 2c` wrapped in i32 for an absurd fila (2^32 − 1
+  with the word {1}): idem/caput got one element and `idem[cn]` wrote
+  ~16 GB out of bounds (BUS). Now refused up front when fila > c + 1 —
+  exact, since every strand must be touched and connected, so a knot
+  needs c ≥ fila − 1 — which also bounds ossa ≤ 3c + 1; and c ≤ 2^30 − 1
+  so 4c cannot wrap. The plant removing this bound was run under
+  `tools/custos.sh`: the test began touching a 16 GB array and the guard
+  killed it at 5.9 GB of footprint (effectively red, and the hazard
+  itself demonstrated); the kill left the planted line in place,
+  restored from the pre-plant copy.
+- **L** `(i32)-verbum[k]` negated an s32 — undefined for INT_MIN, inside
+  the guard meant to reject it. Both places now negate in unsigned
+  arithmetic ((i32)0 − (i32)letter).
+- **L** sign pinning rested on σ1 alone. Added: σ1⁵ = table 5_1 and
+  σ1³σ2σ1⁻¹σ2 = table 5_2 (mixed signs on σ2, no mirror); R3 and far
+  commutation on 20 random braids of 4–8 strands; the exact
+  one-crossing codes ([1,1,2,2] for σ1, [2,1,1,2] for σ1⁻¹); refusals of
+  fila 2^32 − 1, fila 5 with two letters, and an INT_MIN letter (outputs
+  untouched).
+
+Trap: `brevis` is the latina.h macro for `short` (test variable,
+renamed `angustum`).
