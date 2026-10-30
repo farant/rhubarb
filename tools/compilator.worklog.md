@@ -146,3 +146,19 @@ officina's silva.c objects identical (one compile served both). Key
 lesson: the key includes the source PATH SPELLING and cwd — the old
 scripts mixed `"$RADIX_DIR/vendor/sqlite3.c"` (absolute) with relative,
 which would never have hit even through compilator.
+
+## 2026-10-29 — compile_tests.sh: --plures in FILA parallel parts (budget B1 E8)
+
+`bin/compilator --plures` (2026-10-23) made the all-hits case fast by
+doing everything in one process — and, as a side effect, compiled every
+MISS serially (before, `xargs -P FILA` ran one process per line). After a
+header change, or in frigida's cold clone, that was ~1–2 min of serial
+clang. compile_libraries now deals the vocationes lines round-robin into
+FILA parts and runs one `--plures` per part in parallel (shared thesaurus,
+as with xargs before); FILA = 1 keeps the single process. Measured on the
+414-line radix list with an empty thesaurus and redirected -o: 70.5 s →
+29.2 s cold, 0.49 → 0.29 s warm (4 P-cores), objects identical. Error
+propagation tested: `#error` in lib/via.c → "FAILED: bibliothecae", rc 2;
+plant ignoring the children's exit codes → rc 0 with the broken lib
+silently linked from a stale object (so the `wait ... || rc_bib=1` check
+is load-bearing).
