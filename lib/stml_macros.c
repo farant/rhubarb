@@ -65,6 +65,11 @@ nomen structura {
      * exemplaribus nihil solvit */
                      Xar* relationes;     /* StmlExemplarRelatio */
                      Xar* transparentia;  /* chorda* (tagi internati) */
+    /* copia parva contigua (budget B1 B6): _est_perspicuum per
+     * omnem nodum bis vocatur - punctatores sine xar_obtinere
+     * conferuntur; numerus > XVI -> transparentia (xar) ipsa */
+                   chorda* transparentia_vector[XVI];
+                      i32  transparentia_numerus;
     /* Caecitas attributorum (TRANSPARENTIA attributa= - decretum
      * 2026-08-31): attributa formae his titulis constricta non
      * sunt. Necessarium ponti SINE: nodi capti provenientiam
@@ -3325,7 +3330,20 @@ _est_perspicuum (
     StmlMacroContextus* ctx,
        constans chorda* titulus)
 {
-    redde _titulus_in_copia(ctx->transparentia, titulus);
+    i32 i;
+
+    si (ctx->transparentia_numerus > XVI)
+    {
+        redde _titulus_in_copia(ctx->transparentia, titulus);
+    }
+    per (i = ZEPHYRUM; i < ctx->transparentia_numerus; i++)
+    {
+        si (ctx->transparentia_vector[i] == titulus)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 interior b32
@@ -3423,6 +3441,18 @@ _transparentiam_legere (
         _vitium_ponere(ctx, STML_EXPANSIO_TRANSPARENTIA_MALFORMATA,
                        nodus, NIHIL, NIHIL);
         redde FALSUM;
+    }
+    /* copia parva contigua renovata (budget B1 B6) */
+    ctx->transparentia_numerus = xar_numerus(ctx->transparentia);
+    si (ctx->transparentia_numerus <= XVI)
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM; i < ctx->transparentia_numerus; i++)
+        {
+            ctx->transparentia_vector[i] =
+                *(chorda**)xar_obtinere(ctx->transparentia, i);
+        }
     }
     /* attributa= (optionale): caecitas attributorum - tituli hic
      * scripti in formis littera congruentiae non fiunt (pons SINE
@@ -6850,6 +6880,7 @@ stml_expandere (
     ctx.relationes  = NIHIL;   /* pigre - documentum sine
                                    * exemplaribus nihil solvit */
     ctx.transparentia            = NIHIL;
+    ctx.transparentia_numerus    = ZEPHYRUM;
     ctx.transparentia_attributa  = NIHIL;
     ctx.aliasa                   = NIHIL;
     ctx.aliasa_constructa        = FALSUM;
