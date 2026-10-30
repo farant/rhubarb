@@ -71,7 +71,7 @@ oraculum-silvae 1.0).
 | A4 | `materia_arbor_lexema_ex_tag`: tag → genus table built once per reader (15.7% of arbor_plagula) | 0.45-0.6 | S | LUCRUM d55701b0 (+7 computus golds: allocationes_arboris +3/doc) |
 | C2 | piscina allocation fast path (no udiv, no 12-register prologue; 10.4 → 4.0 ns) | 0.3-0.45 | S | LUCRUM 76d45eb5 (macro fix 20bd074d) |
 | E10 | instrumenta: skip relink when up to date; constant provenientia stamp in fumus | 0.3-0.5 | M | CANDIDATUM |
-| A6 | oraculum-silvae: cache the PINNED oracle's output by content | 0.3-0.4 | M | CANDIDATUM |
+| A6 | oraculum-silvae: cache the PINNED oracle's output by content | 0.3-0.4 | M | LUCRUM (see V) — warm gate 91 → 42-45 s |
 | C3 | `chorda_aequalis_literis` compares while scanning (zero tests today — add first) | 0.25-0.35 | S | LUCRUM 3f011d2a (first tests of the function) |
 | C4 | hash-table growth re-places with the cached hash | 0.15-0.25 | S | LUCRUM c87ab9cb (174k-line differential identical) |
 | C5-7 | aedificator byte path, `invenire_literis` one strlen, internare single probe | 0.1-0.2 | S | C5+C6 LUCRUM e6d18854; C7 skipped (API addition) |
@@ -125,7 +125,8 @@ A7 = B7; B10+B12 ≈ C3; E7/E8 partly fold into E4; E5 shrinks to
 | E8 | 72a5f370 | pending | radix libs in FILA parallel parts |
 | D5 | 1272c226 | ASan cellae 212-318 → 120-133 s (D1-D5) | 4 KB temp pools |
 | D8 | cb5547a7 | pending | lentus section in its own suite (parallel) |
-| E1 | (this commit) | pending | receipts sealed on content; PORTAE_CAPUT keep HEAD |
+| E1 | 4a938445 | pending | receipts sealed on content; PORTAE_CAPUT keep HEAD |
+| A6 | (this commit) | warm 91 → 42-45 s (load 13) | pignus cache keyed on objects + file sha |
 
 First measured merge after tier I (2026-10-30, quinta ff 0a2b4879;
 ONE sample, sexta committing concurrently; `mensor quaestio fusio`):
