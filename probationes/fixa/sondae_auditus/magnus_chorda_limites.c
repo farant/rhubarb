@@ -8,16 +8,22 @@
 #include <stdio.h>
 #include <string.h>
 
+/* Magnus XVI octetorum (budget B1 D1, 2026-10-29): membra != NIHIL ->
+ * parvus = signum x longitudo */
 static int canon(Magnus m)
 {
+    int signum;
+    long long longitudo;
     if (m.membra == NULL) return 1;
-    if (m.signum != 1 && m.signum != -1) return 0;
-    if (m.longitudo < 2) return 0;
-    if (m.membra[m.longitudo - 1] == 0) return 0;
-    if (m.longitudo == 2) {
+    if (m.parvus == 0) return 0;
+    signum = m.parvus < 0 ? -1 : 1;
+    longitudo = m.parvus < 0 ? -m.parvus : m.parvus;
+    if (longitudo < 2) return 0;
+    if (m.membra[longitudo - 1] == 0) return 0;
+    if (longitudo == 2) {
         unsigned int top = m.membra[1];
-        if (m.signum > 0 && top < 0x80000000U) return 0;
-        if (m.signum < 0 && (top < 0x80000000U ||
+        if (signum > 0 && top < 0x80000000U) return 0;
+        if (signum < 0 && (top < 0x80000000U ||
             (top == 0x80000000U && m.membra[0] == 0))) return 0;
     }
     return 1;
@@ -27,7 +33,7 @@ static void casus_(Piscina* p, const char* tag, const char* buf, int len)
 {
     Magnus m;
     b32 ok;
-    m.parvus = 4242; m.signum = 7; m.longitudo = 99; m.membra = NULL;
+    m.parvus = 4242; m.membra = NULL;
     ok = magnus_ex_chorda(chorda_ex_buffer((i8*)buf, (i32)len), p, &m);
     if (ok) {
         chorda c = magnus_ad_chordam(m, p);
@@ -35,7 +41,7 @@ static void casus_(Piscina* p, const char* tag, const char* buf, int len)
             (const char*)c.datum, canon(m), m.membra == NULL);
     } else {
         printf("%s ok=0 untouched=%d\n", tag,
-            m.parvus == 4242 && m.signum == 7 && m.longitudo == 99);
+            m.parvus == 4242 && m.membra == NULL);
     }
 }
 
@@ -83,7 +89,7 @@ int main(void)
     /* datum NIHIL cum mensura > 0 */
     {
         Magnus m; b32 ok;
-        m.parvus = 4242; m.signum = 7; m.longitudo = 99; m.membra = NULL;
+        m.parvus = 4242; m.membra = NULL;
         ok = magnus_ex_chorda(chorda_ex_buffer(NULL, 5), p, &m);
         printf("nulldatum ok=%d untouched=%d\n", (int)ok, m.parvus == 4242);
     }
