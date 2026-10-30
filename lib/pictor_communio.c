@@ -55,6 +55,10 @@ structura PictorCommunio {
                      i32 index_conatus;
           ReactorTimerId hora_indicis;
                      b32 hora_indicis_viva;
+    /* Franus 2026-10-30: epistula inscriptionis currentis - IN MEMORIA
+     * SOLA ("Sent to ..."); numquam in volumine, vacua post
+     * resumptionem, abiectionem, inscriptionem, clausuram */
+               character epistula_missa[CCLVI];
 };
 
 s32
@@ -543,6 +547,7 @@ pictor_communionem_claudere (
         redde;
     }
     pc->clausa = VERUM;
+    memset(pc->epistula_missa, ZEPHYRUM, magnitudo(pc->epistula_missa));
     si (pc->hora_indicis_viva)
     {
         (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora_indicis);
@@ -589,6 +594,8 @@ _inscriptio_mutata (
      * novum creat (review finalis I) */
     si (gradus == INSCRIPTIO_INSCRIPTA)
     {
+        memset(pc->epistula_missa, ZEPHYRUM,
+            magnitudo(pc->epistula_missa));
         pictor_communio_incipere(pc);
     }
     _nuntiare(pc);
@@ -624,6 +631,12 @@ pictor_communio_inscriptionem_incipere (
     {
         communio_inscriptionem_abicere(pc->inscriptio);
         pc->inscriptio = NIHIL;
+    }
+    memset(pc->epistula_missa, ZEPHYRUM, magnitudo(pc->epistula_missa));
+    si (epistula.mensura < magnitudo(pc->epistula_missa))
+    {
+        memcpy(pc->epistula_missa, epistula.datum,
+            (size_t)epistula.mensura);
     }
     pc->inscriptio = communio_inscriptionem_incipere(pc->piscina,
         pc->reactor, pc->veredarius, pc->volumen, pc->basis, epistula,
@@ -661,6 +674,7 @@ pictor_communio_inscriptionem_abicere (
     }
     communio_inscriptionem_abicere(pc->inscriptio);
     pc->inscriptio = NIHIL;
+    memset(pc->epistula_missa, ZEPHYRUM, magnitudo(pc->epistula_missa));
     _nuntiare(pc);
 }
 
@@ -753,6 +767,34 @@ _excitare_ligatum (
     pictor_communio_excitare((PictorCommunio*)ctx);
 }
 
+chorda
+pictor_communio_epistula_missa (
+    constans PictorCommunio* pc,
+                    Piscina* piscina)
+{
+    s32 g;
+
+    g = pictor_communio_inscriptionis_gradus(pc);
+    si (   !pc || pc->epistula_missa[ZEPHYRUM] == '\0'
+        || (   g != (s32)INSCRIPTIO_PETIT
+            && g != (s32)INSCRIPTIO_EXSPECTAT
+            && g != (s32)INSCRIPTIO_CODEX_FALSUS
+            && g != (s32)INSCRIPTIO_CONFIRMAT))
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    redde chorda_ex_literis(pc->epistula_missa, piscina);
+}
+
+interior chorda
+_epistula_ligata (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    redde pictor_communio_epistula_missa((constans PictorCommunio*)ctx,
+        piscina);
+}
+
 vacuum
 pictor_communionem_ligare (
          PictorCommunio* pc,
@@ -777,6 +819,7 @@ pictor_communionem_ligare (
     montatio->compositio.auctor = _auctor_ligatum;
     montatio->compositio.persona = _persona_ligata;
     montatio->compositio.inscriptionis_gradus = _gradus_ligatus;
+    montatio->compositio.epistula_missa = _epistula_ligata;
     montatio->compositio.auctor_ctx = pc;
     montatio->actiones_ctx.inscriptionem_incipere = _incipere_ligatum;
     montatio->actiones_ctx.codicem_dare = _codicem_ligatum;

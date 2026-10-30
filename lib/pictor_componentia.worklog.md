@@ -204,3 +204,9 @@ image as data in the title, "pinax:<w>x<h>:<seq>:<spatium>[:electum]"
 picture gets a new thumbnail). The list comes from the shared
 PictorPinacotheca (montatio-owned; composer, actions and figures point
 at it) - read when the gallery opens, never in the composer.
+
+## 2026-10-30 - spectator full-screen, 1:1 (Fran, after the live TestFlight run)
+
+Fran on the phones: the Shared viewer resized pictures, partly because the paint controls (status line) took space. Now, when palette == "spectator" and the picture is found, `pictor_componere` returns early with just the canvas + the full-surface viewer: no status line, no quadrata, no ⋯. The image node covers the whole surface ("spectatus:<lat>x<alt>:..." -> 1:1 spectaculum); a bottom band in the status line's place holds an author row (II cells, only if known) and ‹ Edit a copy › X. A phone picture is surface-sized, so 1:1 needed the whole surface - any margin forced a ½ shrink.
+
+Gotchas: the band is `altitudo - fs.altitudo`, and fs absorbs the non-cellular remainder (419 = 52*8 + 3), so it is 27 px, not 24 - the test allows one extra cell. On a 215-px-wide phone surface the author text does not fit beside the buttons (it overlapped "Edit a copy" in the PNG), hence its own row. Tap-outside-closes is gone (no outside); X and the arrows close/move.

@@ -107,6 +107,14 @@ s32
 pictor_communio_inscriptionis_gradus (
     constans PictorCommunio* pc);
 
+/* Franus 2026-10-30: epistula ad quam codex missus est ("Sent to
+ * ..."), dum inscriptio exspectat - in memoria sola; "" post
+ * resumptionem (numquam servata), abiectionem, inscriptionem */
+chorda
+pictor_communio_epistula_missa (
+    constans PictorCommunio* pc,
+                    Piscina* piscina);
+
 /* Cancel (aut post INSCRIPTA: dimittere) */
 vacuum
 pictor_communio_inscriptionem_abicere (

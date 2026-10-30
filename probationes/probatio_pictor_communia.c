@@ -198,6 +198,111 @@ _sectio_pinax_alienus (
     volumen_claudere(b);
 }
 
+/* spectaculum: pixela fontis (gradu k) ad centrum tabulae s, colores
+ * exacti; perspicua fundus */
+interior b32
+spectaculum_congruit (
+    constans Imago* s,
+    constans Imago* fons,
+               i32  k,
+      constans  i8* fundus)
+{
+    constans i8* a;
+    constans i8* b;
+            i32  lat;
+            i32  alt;
+            i32  x0;
+            i32  y0;
+            i32  i;
+            i32  j;
+
+    lat  = (fons->latitudo + k - I) / k;
+    alt  = (fons->altitudo + k - I) / k;
+    x0   = (s->latitudo - lat) / II;
+    y0   = (s->altitudo - alt) / II;
+    per (j = ZEPHYRUM; j < alt; j++)
+    {
+        per (i = ZEPHYRUM; i < lat; i++)
+        {
+            a = fons->pixela + ((j * k) * fons->latitudo + i * k) * IV;
+            b = s->pixela + ((y0 + j) * s->latitudo + x0 + i) * IV;
+            si (a[III] >= CXXVIII ? memcmp(a, b, III) != ZEPHYRUM
+                                  : memcmp(fundus, b, IV) != ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+/* Franus 2026-10-30: spectator 1:1 - pictura sine scala si capit,
+ * aliter divisor integer minimus (pixelum proximum, sine dithering),
+ * centrata; extra picturam fundus thematis */
+interior vacuum
+_sectio_spectaculum (
+    CredoContextus* c)
+{
+                Volumen* a;
+                Volumen* b;
+    InternamentumChorda* intern;
+       PictorDocumentum* p;
+         constans Imago* fons;
+                  Imago  s;
+                    s64  cursor;
+                    i32  pixelum;
+                     i8  fundus[IV];
+
+    (vacuum)c;
+    intern = internamentum_creare(piscina);
+    a = volumen_temporarium(piscina, "probatio_pictor_communia_n");
+    b = volumen_temporarium(piscina, "probatio_pictor_communia_o");
+    CREDO_NECESSE(intern && a && b);
+    p = pictor_documentum_creare(piscina, intern, b, "p", C, LX, II);
+    CREDO_NECESSE(p && ictus(p, X, X, II) > ZEPHYRUM
+        && ictus(p, LX, XL, IX) > ZEPHYRUM);
+    cursor = ZEPHYRUM;
+    CREDO_NECESSE(transferre(b, a, &cursor));
+    fons = pictor_documentum_proiectio(p);
+    CREDO_NECESSE_NON_NIHIL(fons);
+    pixelum = color_ad_pixelum(thema_color(COLOR_BACKGROUND));
+    memcpy(fundus, &pixelum, IV);
+
+    CREDO_GRADUS("divisor: I si capit, aliter minimus integer");
+    CREDO_AEQUALIS_I32(pictor_spectaculi_divisor(C, LX, CC, CL), I);
+    CREDO_AEQUALIS_I32(pictor_spectaculi_divisor(C, LX, C, LX), I);
+    CREDO_AEQUALIS_I32(pictor_spectaculi_divisor(C, LX, XCIX, LX), II);
+    CREDO_AEQUALIS_I32(pictor_spectaculi_divisor(C, LX, XL, XL), III);
+    CREDO_AEQUALIS_I32(pictor_spectaculi_divisor(C, LX, ZEPHYRUM, LX),
+        ZEPHYRUM);
+
+    CREDO_GRADUS("capit: 1:1 centrata, colores exacti");
+    memset(&s, ZEPHYRUM, magnitudo(s));
+    CREDO_VERUM(pictor_spectaculum_alienum_facere(a, intern,
+        volumen_replica(b), "p", CC, CL, piscina, &s));
+    CREDO_AEQUALIS_I32(s.latitudo, CC);
+    CREDO_AEQUALIS_I32(s.altitudo, CL);
+    CREDO_VERUM(spectaculum_congruit(&s, fons, I, fundus));
+    CREDO_AEQUALIS_I32((i32)memcmp(s.pixela, fundus, IV), ZEPHYRUM);
+
+    CREDO_GRADUS("non capit: divisor III, pixelum proximum");
+    memset(&s, ZEPHYRUM, magnitudo(s));
+    CREDO_VERUM(pictor_spectaculum_alienum_facere(a, intern,
+        volumen_replica(b), "p", XL, XL, piscina, &s));
+    CREDO_AEQUALIS_I32(s.latitudo, XL);
+    CREDO_VERUM(spectaculum_congruit(&s, fons, III, fundus));
+
+    CREDO_GRADUS("ignota, propria, vacua: FALSUM");
+    CREDO_FALSUM(pictor_spectaculum_alienum_facere(a, intern,
+        volumen_replica(b), "nulla", CC, CL, piscina, &s));
+    CREDO_FALSUM(pictor_spectaculum_alienum_facere(a, intern,
+        volumen_replica(a), "p", CC, CL, piscina, &s));
+    CREDO_FALSUM(pictor_spectaculum_alienum_facere(a, intern,
+        volumen_replica(b), "p", ZEPHYRUM, CL, piscina, &s));
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
 /* D9: picturae veteres nomen suum servant */
 interior vacuum
 _sectio_pictura_vetus (
@@ -685,6 +790,8 @@ _sectio_spectator (
              chorda  spatium;
              chorda  titulus_prior;
    PictorDocumentum* p;
+                s32  x;
+                s32  y;
 
     (vacuum)c;
     intern_app = internamentum_creare(piscina);
@@ -710,6 +817,34 @@ _sectio_spectator (
         "pagina:by Amanda \xC2\xB7 iPhone");
     CREDO_VERUM(nodus_arboris(&app, "spectator.imago") != NIHIL);
     acta = acta_propria(a);
+
+    /* Franus 2026-10-30: lectio sola - quadrata pingendi absunt,
+     * spectator superficiem totam tenet, imago 1:1 ("spectatus:") */
+    CREDO_GRADUS("tota superficies: imago 1:1, sine quadratis pingendi");
+    n = nodus_arboris(&app, "spectator");
+    CREDO_NECESSE_NON_NIHIL(n);
+    origo(n, &x, &y);
+    CREDO_AEQUALIS_S32(x, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(y, ZEPHYRUM);
+    CREDO_AEQUALIS_S32(n->fines.latitudo, (s32)LATITUDO_TELEPHONI);
+    CREDO_AEQUALIS_S32(n->fines.altitudo, (s32)ALTITUDO_TELEPHONI);
+    n = nodus_arboris(&app, "spectator.imago");
+    CREDO_NECESSE_NON_NIHIL(n);
+    CREDO_AEQUALIS_S32(n->fines.latitudo, (s32)LATITUDO_TELEPHONI);
+    CREDO_AEQUALIS_S32(n->fines.altitudo, (s32)ALTITUDO_TELEPHONI);
+    CREDO_VERUM(n->titulus.mensura > XVIII
+        && memcmp(n->titulus.datum, "spectatus:215x419:", XVIII)
+           == ZEPHYRUM);
+    CREDO_VERUM(nodus_arboris(&app, "quadratum.instrumentum") == NIHIL);
+    CREDO_VERUM(nodus_arboris(&app, "quadratum.elenchus") == NIHIL);
+    n = nodus_arboris(&app, "spectator.claudere");
+    CREDO_NECESSE_NON_NIHIL(n);
+    origo(n, &x, &y);
+    /* fascia = locus lineae status (reliquum superficiei non
+     * cellularis ei additur: cellula una plus) */
+    CREDO_VERUM(y >= (s32)ALTITUDO_TELEPHONI
+        - (s32)((app.montatio.compositio.status_lineae + I)
+                * app.montatio.compositio.cellula_altitudo));
 
     CREDO_GRADUS("tractus sinister: proxima; circulus");
     CREDO_VERUM(trahere_nodum(&app, m, "spectator.imago", LXXX, X,
@@ -745,25 +880,25 @@ _sectio_spectator (
     CREDO_GRADUS("lectio sola: nullum actum");
     CREDO_AEQUALIS_I32(acta_propria(a), acta);
 
-    CREDO_GRADUS("X: rete, pagina eadem; ictus extra imaginem");
+    CREDO_GRADUS("X: rete, pagina eadem, quadrata redeunt");
     CREDO_VERUM(premere_nodum(&app, m, "spectator.claudere"));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
         "communia");
+    CREDO_VERUM(nodus_arboris(&app, "quadratum.instrumentum") != NIHIL);
     CREDO_VERUM(premere_nodum(&app, m, "communia.posterior"));
     CREDO_VERUM(premere_nodum(&app, m, "communia.pinax.0"));
     CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "spectata"),
         identitas_alieni(a, XII));
-    /* ictus extra imaginem: in margine dialogi (angulus) */
+    /* imago superficiem totam tegit: ictus in angulo spectatorem non
+     * claudit (solum X) */
     n = nodus_arboris(&app, "spectator");
     CREDO_NECESSE_NON_NIHIL(n);
-    {
-        s32 x;
-        s32 y;
-
-        origo(n, &x, &y);
-        (vacuum)manus_ludus_premere_ad(m, x + II, y + II);
-        dispensator_recomponere(app.d);
-    }
+    origo(n, &x, &y);
+    (vacuum)manus_ludus_premere_ad(m, x + II, y + II);
+    dispensator_recomponere(app.d);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+        "spectator");
+    CREDO_VERUM(premere_nodum(&app, m, "spectator.claudere"));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
         "communia");
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
@@ -865,6 +1000,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo: hora scriptoris", _sectio_ordo, _parare, _purgare, NIHIL,
         NIHIL },
     { "pinax alienus", _sectio_pinax_alienus, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "spectaculum 1:1", _sectio_spectaculum, _parare, _purgare, NIHIL,
         NIHIL },
     { "pictura vetus (D9)", _sectio_pictura_vetus, _parare, _purgare,
         NIHIL, NIHIL },

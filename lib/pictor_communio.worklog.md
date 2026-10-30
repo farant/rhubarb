@@ -75,3 +75,9 @@ the next launch resumes it.
   Only RESUMPTIO calls it (and incipere on an existing client), so the
   abort never happens per stroke. Tests: pictor_communio "somnus",
   pictor_inscriptio "excitata e Mail".
+
+## 2026-10-30 - "Sent to <address>" on the code step
+
+Amanda's first live sign-in: typo, then the right address; the code screen never named the address, so a typo was invisible (server answers 202 for unknown addresses and sends nothing). `epistula_missa[CCLVI]` holds the address IN MEMORY only, set in inscriptionem_incipere, wiped on abicere, INSCRIPTA and claudere; never in the volume (the pending record stays {aditus, incepta_ms}), so after a kill/resume the panel falls back to the generic text. Accessor answers during PETIT too - the panel is already "Check your email" while the request is in flight.
+
+Also learned live: 401s on GET /communio/apparatus while a sign-in waits are the link-check polling (`_inspicere`), not a fault.

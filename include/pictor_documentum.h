@@ -335,6 +335,34 @@ pictor_pinacem_facere (
                 Piscina* piscina,
                   Imago* exitus);
 
+/* spectator 1:1 (Franus 2026-10-30): divisor integer minimus k ut
+ * pictura (pictura_latitudo x pictura_altitudo) / k in tabulam
+ * (latitudo x altitudo) capiat - I si capit (numquam augetur); 0 si
+ * magnitudo nulla */
+i32
+pictor_spectaculi_divisor (
+    i32 pictura_latitudo,
+    i32 pictura_altitudo,
+    i32 latitudo,
+    i32 altitudo);
+
+/* spectaculum picturae ALIENAE: compositum (strata visibilia) in
+ * tabula latitudo x altitudo, RGBA, SINE scala si capit, aliter
+ * pixelum quodque k-tum (pictor_spectaculi_divisor; pixelum proximum,
+ * sine dithering) - colores picturae exacti, centratum; extra
+ * picturam et perspicua (alpha < CXXVIII) fundus thematis. Omnia in
+ * 'piscina'. FALSUM si ignota, replica propria aut magnitudo nulla */
+b32
+pictor_spectaculum_alienum_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+                 chorda  replica,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus);
+
 /* plan-5 T3: pinax picturae ALIENAE (replica, spatium) - idem ac
  * pictor_pinacem_facere apud scriptorem. FALSUM si ignota (aut
  * replica propria) */
@@ -386,7 +414,9 @@ pictor_communia_parare (
 
 /* provenientia "alienus:<lat>x<alt>:<hora>:<replica>:<spatium>" ->
  * pinax picturae alienae (hora in clave: pictura mutata pinacem novum
- * habet). NIHIL si forma mala, ignota, aut ante parare. */
+ * habet); "spectatus:..." eadem forma -> spectaculum 1:1
+ * (pictor_spectaculum_alienum_facere). NIHIL si forma mala, ignota,
+ * aut ante parare. */
 constans Imago*
 pictor_communia_pinax (
      PictorCommunia* p,

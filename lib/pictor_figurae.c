@@ -416,9 +416,15 @@ pictor_imago_fons (
     {
         redde pictor_pinacotheca_pinax(pf->pinacotheca, provenientia);
     }
-    /* plan-5 T6: "alienus:..." -> pinax picturae alienae */
-    si (   pf->communia && provenientia.mensura > VIII
-        && memcmp(provenientia.datum, "alienus:", VIII) == ZEPHYRUM)
+    /* plan-5 T6: "alienus:..." -> pinax picturae alienae;
+     * "spectatus:..." -> spectaculum 1:1 (Franus 2026-10-30) */
+    si (   pf->communia
+        && (   (   provenientia.mensura > VIII
+                && memcmp(provenientia.datum, "alienus:", VIII)
+                   == ZEPHYRUM)
+            || (   provenientia.mensura > X
+                && memcmp(provenientia.datum, "spectatus:", X)
+                   == ZEPHYRUM)))
     {
         redde pictor_communia_pinax(pf->communia, provenientia);
     }
@@ -585,6 +591,18 @@ figura_quadrati (
         mandata_rectangulum(m, f,
             figura_color_thematis(COLOR_ACCENT_PRIMARY),
             VERUM);
+        redde;
+    }
+    /* spectator 1:1 (Franus 2026-10-30): "spectatus:..." - imago
+     * nodum totum tegit, sine margine aut fundo quadrati */
+    si (   c->titulus.mensura > X
+        && memcmp(c->titulus.datum, "spectatus:", X) == ZEPHYRUM)
+    {
+        f.x         = ZEPHYRUM;
+        f.y         = ZEPHYRUM;
+        f.latitudo  = c->fines.latitudo;
+        f.altitudo  = c->fines.altitudo;
+        mandata_imago(m, c->titulus, f);
         redde;
     }
     /* pinacotheca D3: "pagina:p / n" - textus centratus sine margine */

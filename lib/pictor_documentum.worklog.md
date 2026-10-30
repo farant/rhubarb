@@ -496,3 +496,7 @@ manifest (upsert -> one more `plagula-condita`, which also dates the copy
 first in My pictures). The test compares the copy's composite fingerprint
 with a reference picture built the same way, for a foreign picture both
 larger and smaller than the canvas.
+
+## 2026-10-30 - spectaculum: 1:1 viewer image
+
+`pictor_spectaculum_alienum_facere` + `pictor_spectaculi_divisor`: the viewer no longer uses `pictor_imaginem_aptare` ("contain": area-down / bilinear-up + Atkinson), which softened pixel art and enlarged small pictures. k = smallest integer with picture/k inside the box (1 if it fits; never enlarged); every k-th projection pixel copied (nearest, no dithering), centred, alpha < 128 -> theme background. Known cost: at k >= 2 (phone picture on the Mac) 1-px strokes can drop out - accepted ("will have to resize somehow"). `pictor_communia_pinax` caches both "alienus:" (grid) and "spectatus:" keys in the same table.
