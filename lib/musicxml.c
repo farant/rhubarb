@@ -4,11 +4,13 @@
  * <divisions> colligit et divisionem operis computat (minimus
  * communis multiplex, M4); secundus partes per mensuras ambulat cum
  * cursore in divisionibus operis. Deinde linea temporis communis
- * (M15). Arcae .mxl: plan P3. Spec: project-specs/musicxml-spec.md.
+ * (M15). Arcae .mxl per sarcina.h (META-INF/container.xml, rootfile
+ * primus). Spec: project-specs/musicxml-spec.md.
  */
 
 #include "musicxml.h"
 #include "xml_documentum.h"
+#include "sarcina.h"
 #include "materia_diagnosticum.h"
 #include "xar.h"
 #include <stdlib.h>
@@ -1382,6 +1384,35 @@ _lineam_temporis_ponere (
  * Documentum
  * ================================================== */
 
+/* UTF-16 aut UTF-32: BOM (FE FF, FF FE) aut octetus nullus in duobus
+ * primis (M13: solum UTF-8) */
+interior b32
+_non_utf8 (
+    chorda datum)
+{
+    insignatus character a;
+    insignatus character b;
+
+    si (datum.mensura < II)
+    {
+        redde FALSUM;
+    }
+    a = (insignatus character)datum.datum[ZEPHYRUM];
+    b = (insignatus character)datum.datum[I];
+    redde (a == 0xFE && b == 0xFF) || (a == 0xFF && b == 0xFE)
+        || a == ZEPHYRUM || b == ZEPHYRUM;
+}
+
+/* 'PK\3\4': arca ZIP (.mxl) */
+interior b32
+_arca_signum (
+    chorda datum)
+{
+    redde datum.mensura >= IV && datum.datum[ZEPHYRUM] == 'P'
+        && datum.datum[I] == 'K' && datum.datum[II] == III
+        && datum.datum[III] == IV;
+}
+
 interior vacuum
 _identificationem_legere (
                  Lector* l,
@@ -1440,10 +1471,18 @@ _documentum_legere (
           chorda  datum,
     MusicxmlOpus* opus)
 {
-           XmlDocumentum* d = xml_documentum_legere(datum, l->piscina);
+           XmlDocumentum* d;
       constans XmlCoctus* radix;
                   chorda  titulus;
 
+    si (_non_utf8(datum))
+    {
+        _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_NON_UTF8, ZEPHYRUM,
+            ZEPHYRUM, "documentum non UTF-8 (UTF-16?) - solum UTF-8 "
+            "legitur", _vacua());
+        redde VERUM;
+    }
+    d = xml_documentum_legere(datum, l->piscina);
     si (d == NIHIL)
     {
         redde FALSUM;
@@ -1510,6 +1549,98 @@ _documentum_legere (
 }
 
 
+#define CONTINENS "META-INF/container.xml"
+
+/* .mxl: container.xml -> rootfile PRIMUS -> _documentum_legere. Vitia
+ * arcae sine sede (linea 0), nomen introitus in causa. */
+interior b32
+_arcam_legere (
+          Lector* l,
+          chorda  datum,
+    MusicxmlOpus* opus)
+{
+                       Sarcina* s;
+     constans SarcinaIntroitus* e;
+                        chorda  vitium;
+                        chorda  textus;
+                XmlDocumentum* d;
+          constans XmlCoctus* r;
+                       chorda  via;
+
+    vitium  = _vacua();
+    s       = sarcina_aperire(datum, l->piscina, &vitium);
+    si (s == NIHIL)
+    {
+        _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
+            ZEPHYRUM,
+            ZEPHYRUM, "arca ZIP mala: ", vitium);
+        redde VERUM;
+    }
+    e = sarcina_invenire(s, chorda_ex_literis(CONTINENS, l->piscina));
+    si (   e == NIHIL
+        || !sarcina_legere(s, e, l->piscina, &textus, &vitium))
+    {
+        _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
+            ZEPHYRUM,
+            ZEPHYRUM, CONTINENS " deest aut non legitur: ", vitium);
+        redde VERUM;
+    }
+    d = xml_documentum_legere(textus, l->piscina);
+    si (d == NIHIL)
+    {
+        redde FALSUM;
+    }
+    r = xml_documentum_radix(d);
+    si (!xml_documentum_successus(d) || r == NIHIL)
+    {
+        _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
+            ZEPHYRUM,
+            ZEPHYRUM, CONTINENS " non bene formatum", _vacua());
+        redde VERUM;
+    }
+    r = xml_filius(xml_filius(r, "rootfiles"), "rootfile");
+    si (   r           == NIHIL || !xml_attributum(r, "full-path", &via)
+        || via.mensura == ZEPHYRUM)
+    {
+        _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
+            ZEPHYRUM,
+            ZEPHYRUM, CONTINENS " sine rootfile full-path", _vacua());
+        redde VERUM;
+    }
+    e = sarcina_invenire(s, via);
+    si (   e == NIHIL
+        || !sarcina_legere(s, e, l->piscina, &textus, &vitium))
+    {
+        ChordaAedificator* a = chorda_aedificator_creare(l->piscina,
+            LXIV);
+
+        si (a == NIHIL)
+        {
+            redde FALSUM;
+        }
+        chorda_aedificator_appendere_chorda(a, via);
+        si (e != NIHIL && vitium.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a, " - ");
+            chorda_aedificator_appendere_chorda(a, vitium);
+        }
+        _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
+            ZEPHYRUM,
+            ZEPHYRUM, "radix arcae abest aut non legitur: ",
+            chorda_aedificator_finire(a));
+        redde VERUM;
+    }
+    si (_arca_signum(textus))
+    {
+        _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
+            ZEPHYRUM,
+            ZEPHYRUM, "arca in arca non legitur: ", via);
+        redde VERUM;
+    }
+    redde _documentum_legere(l, textus, opus);
+}
+
+
 /* ==================================================
  * API
  * ================================================== */
@@ -1541,15 +1672,8 @@ musicxml_legere (
         redde NIHIL;
     }
     opus->divisiones = I;
-    si (   datum.mensura    >= IV && datum.datum[ZEPHYRUM] == 'P'
-        && datum.datum[I]   == 'K' && datum.datum[II] == III
-        && datum.datum[III] == IV)
-    {
-        /* arca .mxl: plan P3 */
-        _vitium_locatum(&l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
-            ZEPHYRUM, ZEPHYRUM, "arca .mxl nondum legitur", _vacua());
-    }
-    alioquin si (!_documentum_legere(&l, datum, opus))
+    si (_arca_signum(datum) ? !_arcam_legere(&l, datum, opus)
+                            : !_documentum_legere(&l, datum, opus))
     {
         redde NIHIL;
     }

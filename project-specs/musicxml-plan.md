@@ -393,7 +393,20 @@ named vitia until P5 / P3 replace them.
   first `rootfile/@full-path`; read it; recurse into the XML path.
   `.mxl` inside `.mxl` is not followed (VITIUM).
 - [ ] **Step 4: Green; plant** (take the last rootfile) → red; restore.
-- [ ] **Step 5: Commit** (gate `radix`).
+- [x] **Step 5: Commit** (gate `radix`).
+
+**Executed 2026-10-30.** Measured: the Tallis `.mxl` has NO `mimetype`
+entry and a DEFLATE `container.xml` (rootfile with `media-type`) — the
+real file already pins two of the odd cases. Fixtures as planned plus
+`radix_absens.mxl` (rootfile names a missing entry); sources and the
+exact `zip -X` commands in `mxl_fontes/PROVENIENTIA.md`. The UTF-16
+check (BOM `FE FF`/`FF FE`, or a NUL in the first two bytes) runs at
+the top of the XML path, so plain UTF-16 XML is `MUSICXML_NON_UTF8`
+too, not an xml diagnostic. An archive inside an archive is refused
+by name. New section `nata lux (fons verus)`: the real file reads
+with NO diagnostics at all (5 parts × 4 measures, 373 notes,
+divisions 480, measure "0" free-time). Both plants red (second
+rootfile; UTF-16 check off).
 
 ---
 

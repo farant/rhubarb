@@ -422,6 +422,120 @@ _attributa_probare (
     CREDO_AEQUALIS_S64 (m->longitudo, (s64)XV);
 }
 
+/* .mxl: idem exemplar ac XML nudum (tabulae octetim aequales) */
+interior vacuum
+_arca_probare (
+    CredoContextus* c)
+{
+         MusicxmlOpus* x = _legere_fixum(c, "nota_una.musicxml");
+         MusicxmlOpus* z = _legere_fixum(c, "nota_una.mxl");
+    ChordaAedificator* a = chorda_aedificator_creare(c->piscina, CCLVI);
+    ChordaAedificator* b = chorda_aedificator_creare(c->piscina, CCLVI);
+
+    CREDO_NECESSE (x != NIHIL && z != NIHIL);
+    CREDO_VERUM (musicxml_successus(z));
+    CREDO_AEQUALIS_I32 (z->numerus_vitiorum, ZEPHYRUM);
+    CREDO_VERUM (_aequat(z->titulus_operis, "Probatio"));
+    CREDO_VERUM (musicxml_tabulam_scribere(x, NIHIL, a));
+    CREDO_VERUM (musicxml_tabulam_scribere(z, NIHIL, b));
+    CREDO_VERUM (chorda_aequalis(chorda_aedificator_finire(a),
+        chorda_aedificator_finire(b)));
+}
+
+/* Focus recensionis 4: arcae veteres et variae */
+interior vacuum
+_arcae_variae_probare (
+    CredoContextus* c)
+{
+               MusicxmlOpus* o;
+    constans MusicxmlVitium* v;
+
+    o = _legere_fixum(c, "sine_mimetype.mxl");
+    CREDO_NECESSE (o != NIHIL);
+    CREDO_VERUM (musicxml_successus(o));
+    CREDO_AEQUALIS_I32 (o->numerus_partium, (i32)I);
+
+    /* rootfile PRIMUS, in directorio, sine media-type */
+    o = _legere_fixum(c, "radix_in_directorio.mxl");
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_VERUM (_aequat(o->partes[ZEPHYRUM].titulus, "Cantus"));
+
+    o = _legere_fixum(c, "opus.mxl");
+    CREDO_NECESSE (o != NIHIL);
+    CREDO_FALSUM (musicxml_successus(o));
+    CREDO_NON_NIHIL (_vitium(o, MUSICXML_OPUS_RADIX));
+
+    o = _legere_fixum(c, "container_malum.mxl");
+    CREDO_NECESSE (o != NIHIL);
+    CREDO_FALSUM (musicxml_successus(o));
+    v = _vitium(o, MUSICXML_ARCA_MALA);
+    CREDO_NECESSE (v != NIHIL);
+    CREDO_VERUM (_continet(v->causa, "META-INF/container.xml"));
+    CREDO_AEQUALIS_I32 (v->linea, ZEPHYRUM);
+
+    o = _legere_fixum(c, "radix_absens.mxl");
+    CREDO_NECESSE (o != NIHIL);
+    v = _vitium(o, MUSICXML_ARCA_MALA);
+    CREDO_NECESSE (v != NIHIL);
+    CREDO_VERUM (_continet(v->causa, "nihil.musicxml"));
+
+    o = _legere_fixum(c, "utf16.mxl");
+    CREDO_NECESSE (o != NIHIL);
+    CREDO_FALSUM (musicxml_successus(o));
+    CREDO_NON_NIHIL (_vitium(o, MUSICXML_NON_UTF8));
+
+    /* signum ZIP cum octetis temerariis: vitium, non ruina */
+    o = musicxml_legere(chorda_ex_literis("PK\003\004\377\377junk-data",
+        c->piscina), c->piscina);
+    CREDO_NECESSE (o != NIHIL);
+    CREDO_FALSUM (musicxml_successus(o));
+    CREDO_NON_NIHIL (_vitium(o, MUSICXML_ARCA_MALA));
+
+    /* XML nudum UTF-16 quoque */
+    o =
+        musicxml_legere(chorda_ex_literis("\377\376<\000a\000/\000>\000",
+        c->piscina), c->piscina);
+    CREDO_NECESSE (o != NIHIL);
+    CREDO_NON_NIHIL (_vitium(o, MUSICXML_NON_UTF8));
+}
+
+/* fons verus: Tallis, O nata lux (CPDL #80317, MusicXML 2.0, .mxl sine
+ * mimetype, container DEFLATE) */
+interior vacuum
+_nata_lux_probare (
+    CredoContextus* c)
+{
+    MusicxmlOpus* o = musicxml_legere(filum_legere_totum(
+        "musica/fontes/nata_lux_80317.mxl", c->piscina), c->piscina);
+              i32 p;
+              i32 notae = ZEPHYRUM;
+
+    CREDO_NECESSE (o != NIHIL);
+    CREDO_VERUM (musicxml_successus(o));
+    CREDO_VERUM (_aequat(o->versio, "2.0"));
+    /* editio munda: ne monitum quidem */
+    CREDO_AEQUALIS_I32 (o->numerus_vitiorum, ZEPHYRUM);
+    CREDO_AEQUALIS_S64 (o->divisiones, (s64)CDLXXX);
+    CREDO_NECESSE (o->numerus_partium == V);
+    per (p = ZEPHYRUM; p < o->numerus_partium; p++)
+    {
+        i32 k;
+
+        CREDO_AEQUALIS_I32 (o->partes[p].numerus_mensurarum, (i32)IV);
+        per (k = ZEPHYRUM; k < o->partes[p].numerus_mensurarum; k++)
+        {
+            notae += o->partes[p].mensurae[k].numerus_notarum;
+        }
+    }
+    CREDO_AEQUALIS_I32 (notae, (i32)CCCLXXIII);
+    CREDO_VERUM (_aequat(o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].numerus,
+        "0"));
+    CREDO_NECESSE (o->partes[ZEPHYRUM].mensurae[ZEPHYRUM]
+        .numerus_attributorum >= I);
+    CREDO_VERUM (o->partes[ZEPHYRUM].mensurae[ZEPHYRUM].attributa[ZEPHYRUM]
+        .metrum.liberum);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nota una: exemplar et tabula", _nota_una_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
@@ -444,6 +558,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "non MusicXML, XML malum, vacuum", _non_musicxml_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "attributa: armatura, metrum, claviculae", _attributa_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { ".mxl: idem ac XML nudum", _arca_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { ".mxl varia: mimetype, directorium, opus, mala, UTF-16",
+        _arcae_variae_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nata lux (fons verus)", _nata_lux_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
