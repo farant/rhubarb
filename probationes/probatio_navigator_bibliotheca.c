@@ -13,6 +13,11 @@
 #include "articulus.h"
 #include "vicipaedia.h"
 #include "navigator_bibliotheca.h"
+#include "internamentum.h"
+#include "chorda_aedificator.h"
+#include "tabula_characterum.h"
+#include "scriba_documentum.h"
+#include "scriba_liber.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -589,6 +594,200 @@ _probare_recentes (
     }
 }
 
+/* comites: locus canonicus */
+interior vacuum
+_probare_locum_formare (
+    CredoContextus* c)
+{
+    (vacuum)c->datum;
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locum_formare(lit("1",
+        c->piscina), lit("2", c->piscina), FALSUM, III, -I, c->piscina),
+        "navigator/pagina/1?versio=2&pagina=3");
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locum_formare(lit("1",
+        c->piscina), lit("2", c->piscina), FALSUM, III, ZEPHYRUM,
+        c->piscina), "navigator/pagina/1?versio=2&pagina=3&columna=0");
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locum_formare(lit("1",
+        c->piscina), lit("2", c->piscina), VERUM, (s32)(XIX * M
+            + CLXXVI), V,
+        c->piscina), "navigator/sententia/1?versio=2&sententia=19176");
+}
+
+/* liber comitis cum pagina una (textus totus) */
+interior b32
+librum_scribere (
+                 Mundus* m,
+    InternamentumChorda* intern,
+     constans character* praefixum,
+     constans character* textus,
+                Piscina* p)
+{
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+
+    l = scriba_liber_aperire_in_spatio(p, intern, m->volumen,
+        praefixum, LXXX, XX);
+    d = l ? scriba_liber_pagina(l, lit("1", p)) : NIHIL;
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    tabula_ex_literis_cum_dimensionibus(&folium, p, d->latitudo,
+        d->altitudo, textus);
+    redde scriba_documentum_committere(d, &folium) > ZEPHYRUM;
+}
+
+/* plagulae sub praefixo + '/' */
+interior i32
+plagulae_sub (
+                 Mundus* m,
+     constans character* praefixum,
+                Piscina* p)
+{
+       Xar* plagulae;
+    chorda  pr;
+       i32  i;
+       i32  n;
+
+    pr        = chorda_concatenare(lit(praefixum, p), lit("/", p), p);
+    plagulae  = volumen_plagulas_enumerare(m->volumen, p);
+    n         = ZEPHYRUM;
+    per (i = ZEPHYRUM; plagulae && i < xar_numerus(plagulae); i++)
+    {
+        si (chorda_incipit(((VolumenPlagula*)xar_obtinere(plagulae,
+                i))->via, pr))
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* lineae paginae libri iunctae '\n' */
+interior chorda
+paginam_textus (
+                 Mundus* m,
+    InternamentumChorda* intern,
+     constans character* praefixum,
+                 chorda  pagina,
+                Piscina* p)
+{
+                  Xar* lineae;
+    ChordaAedificator* a;
+                  i32  i;
+
+    lineae  = xar_creare(p, (i32)magnitudo(chorda));
+    a       = chorda_aedificator_creare(p, (memoriae_index)CCLVI);
+    (vacuum)scriba_liber_paginam_legere_omnes(p, intern, m->volumen,
+        praefixum, pagina, lineae);
+    per (i = ZEPHYRUM; i < xar_numerus(lineae); i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(a, '\n');
+        }
+        chorda_aedificator_appendere_chorda(a,
+            *(chorda*)xar_obtinere(lineae, i));
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+#define LIBER_A "comes/navigator/pagina/1?versio=2&pagina=0&" \
+    "sententia=19176&dominium=wikipedia.org&quaestio=picard&" \
+    "quaestio_hospes=en.wikipedia.org"
+#define LIBER_B "comes/navigator/pagina/1?pagina=0&sententia=0&" \
+    "dominium=wikipedia.org&quaestio=picard&" \
+    "quaestio_hospes=en.wikipedia.org"
+#define LIBER_C "comes/navigator/pagina/1?versio=2&pagina=15"
+#define LIBER_D "comes/navigator/pagina/99?versio=7&pagina=0&" \
+    "quaestio=x"
+#define LIBER_E "comes/navigator/sententia/1?versio=2&pagina=4&" \
+    "sententia=120&quaestio=x"
+#define CANON_P "comes/navigator/pagina/1?versio=2&pagina=0"
+#define CANON_S "comes/navigator/sententia/1?versio=2&sententia=120"
+#define TEXTUS_A "Athanasius notae\n\n<event year=\"373\">" \
+    "Athanasius moritur</event>"
+#define TEXTUS_B "secunda nota"
+
+/* comites sanare: campi alieni et versio absens ad locum canonicum;
+ * duo libri eiusdem paginae iunguntur; canonici et ignoti intacti */
+interior vacuum
+_probare_comites_sanare (
+    CredoContextus* c)
+{
+                  Mundus* m = (Mundus*)c->datum;
+     InternamentumChorda* intern;
+                     Xar* nomina;
+                  chorda  t0;
+                  chorda  t1;
+                  chorda  titulus;
+                  chorda  semita;
+                     i32  translati;
+
+    CREDO_NECESSE(m && m->b);
+    intern = internamentum_creare(c->piscina);
+    CREDO_NECESSE(offerre(m, URL_RHEUM, H_PRIMA, NIHIL, c->piscina)
+        == NAVIGATOR_NOVUM);
+    CREDO_NECESSE(librum_scribere(m, intern, LIBER_A, TEXTUS_A,
+        c->piscina));
+    CREDO_NECESSE(scriba_liber_comitem_notare(m->volumen, intern,
+        LIBER_A, lit("Notes \302\267 Rheum", c->piscina),
+        lit("navigator/pagina/1?versio=2&pagina=0", c->piscina),
+        c->piscina));
+    CREDO_NECESSE(librum_scribere(m, intern, LIBER_B, TEXTUS_B,
+        c->piscina));
+    CREDO_NECESSE(librum_scribere(m, intern, LIBER_C, "pagina XVI",
+        c->piscina));
+    CREDO_NECESSE(librum_scribere(m, intern, LIBER_D, "ignotus",
+        c->piscina));
+    CREDO_NECESSE(librum_scribere(m, intern, LIBER_E, "sententia",
+        c->piscina));
+
+    CREDO_GRADUS("tres libri moti");
+    translati = ZEPHYRUM;
+    CREDO_VERUM(navigator_comites_sanare(m->b, intern, c->piscina,
+        &translati));
+    CREDO_AEQUALIS_I32(translati, III);
+
+    CREDO_GRADUS("pagina canonica: duae paginae, textus integri");
+    nomina = xar_creare(c->piscina, (i32)magnitudo(chorda));
+    CREDO_VERUM(scriba_liber_nomina_legere(c->piscina, intern,
+        m->volumen, CANON_P, nomina));
+    CREDO_NECESSE(xar_numerus(nomina) == II);
+    t0 = paginam_textus(m, intern, CANON_P,
+        *(chorda*)xar_obtinere(nomina, ZEPHYRUM), c->piscina);
+    t1 = paginam_textus(m, intern, CANON_P,
+        *(chorda*)xar_obtinere(nomina, I), c->piscina);
+    CREDO_VERUM(   (chorda_aequalis_literis(t0, TEXTUS_A)
+                    && chorda_aequalis_literis(t1, TEXTUS_B))
+                || (chorda_aequalis_literis(t0, TEXTUS_B)
+                    && chorda_aequalis_literis(t1, TEXTUS_A)));
+    CREDO_VERUM(scriba_liber_comitem_legere(c->piscina, intern,
+        m->volumen, CANON_P, &titulus, &semita));
+    CREDO_CHORDA_NON_VACUA(titulus);
+
+    CREDO_GRADUS("libri veteres remoti");
+    CREDO_AEQUALIS_I32(plagulae_sub(m, LIBER_A, c->piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(plagulae_sub(m, LIBER_B, c->piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32(plagulae_sub(m, LIBER_E, c->piscina), ZEPHYRUM);
+    CREDO_FALSUM(scriba_liber_exstat(m->volumen, LIBER_A, c->piscina));
+
+    CREDO_GRADUS("sententia: pagina aliena demitur");
+    CREDO_VERUM(scriba_liber_exstat(m->volumen, CANON_S, c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(paginam_textus(m, intern, CANON_S,
+        lit("1", c->piscina), c->piscina), "sententia");
+
+    CREDO_GRADUS("canonicus et ignotus intacti");
+    CREDO_CHORDA_AEQUALIS_LITERIS(paginam_textus(m, intern, LIBER_C,
+        lit("1", c->piscina), c->piscina), "pagina XVI");
+    CREDO_VERUM(scriba_liber_exstat(m->volumen, LIBER_D, c->piscina));
+
+    CREDO_GRADUS("iterum: nihil movetur");
+    CREDO_VERUM(navigator_comites_sanare(m->b, intern, c->piscina,
+        &translati));
+    CREDO_AEQUALIS_I32(translati, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "novum", _probare_novum, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -610,6 +809,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "favor", _probare_favor, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "locus formare", _probare_locum_formare, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "comites sanare", _probare_comites_sanare, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -355,3 +355,46 @@ text" (used to assert "something is drawn inverted" when the first
 infobox link's text isn't known). (2) The plant "column unit ignored"
 stayed green while column page == article page == 0; the case that
 exposes it is Tab on the column's SECOND page.
+
+## 2026-10-30 - companion locus: only the fields the view shows (Opus 5.5)
+
+**Bug (Fran):** notes in a Wikipedia page's companion "were not
+persisted" after leaving and coming back. The notes were saved, under
+a different key. navigator_locus was semita_ad_uri(semita_legere(...))
+and so carried EVERY semita field: quaestio / quaestio_hospes (last
+search), dominium (bookmark folder), a stale `sententia` in page view,
+and `versio` only when the field happened to be set. Fran's volume:
+Augustine, Basil and Athanasius each had their notes split over 2
+books; Athanasius's two were the same page of the same version
+(sententia=19176 vs 0, versio present vs absent).
+
+**Decision (Fran):** companions stay PER PAGE (per sentence in
+sentence view): the margin-notes design, as in lector. Only the
+foreign fields go. One canonical form, navigator_locum_formare (in
+navigator_bibliotheca, shared by the pane and the repair):
+`navigator/pagina/<art>?versio=<v>&pagina=<n>[&columna=<k>]` or
+`navigator/sententia/<art>?versio=<v>&sententia=<o>`. The version is
+always the pinned one (f->versio_arcae). Index and results views keep
+the semita form.
+
+**Repair:** navigator_comites_sanare, run once when vicus first opens
+the navigator library (idempotent). It moves each non-canonical
+`comes/navigator/...` book: if the canonical book is absent, it copies
+all pages by name; if present, it appends the non-empty pages as new
+ones. Pages are copied grid-to-grid (committere with the source
+tabula), so blank lines and columns survive. The companion note is
+copied if the canonical book has none: the first version copied it
+only when creating the book, and the test caught that, because books
+are processed in via order and the note-less one came first. Then
+every plagula under the old book is removed in one transaction, so a
+moved `<event>` never shows twice on the timeline. Unknown articles
+are left alone.
+
+**Test note:** a bare `navigator/pagina/5` on the SAME article keeps
+the pinned version (N3.2 rule). "No version = latest" can only be
+tested by opening another article.
+
+**Known, not fixed:** the page number depends on pane size, so after
+a resize "page 16" can be different text, and its notebook follows
+the number, not the text. Fixing that means anchoring by text offset
+(like positio N3.4c). Raise with Fran.

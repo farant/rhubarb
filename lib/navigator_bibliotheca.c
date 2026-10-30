@@ -8,6 +8,8 @@
 #include "chorda_aedificator.h"
 #include "json.h"
 #include "sigillum.h"
+#include "scriba_liber.h"
+#include "scriba_documentum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -689,4 +691,349 @@ navigator_versionis_html (
     html = volumen_massam_promere(b->volumen, versio->massa, piscina,
         &inventum);
     redde inventum ? html : vacua();
+}
+
+
+/* ==================================================
+ * Comites: locus canonicus et sanatio
+ * ================================================== */
+
+chorda
+navigator_locum_formare (
+      chorda  articulus,
+      chorda  versio,
+         b32  sententia,
+         s32  positio,
+         s32  columna,
+     Piscina* piscina)
+{
+    ChordaAedificator* a;
+
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CXXVIII);
+    chorda_aedificator_appendere_literis(a, sententia
+        ? "navigator/sententia/" : "navigator/pagina/");
+    chorda_aedificator_appendere_chorda(a, articulus);
+    chorda_aedificator_appendere_literis(a, "?versio=");
+    chorda_aedificator_appendere_chorda(a, versio);
+    chorda_aedificator_appendere_literis(a, sententia ? "&sententia="
+        : "&pagina=");
+    chorda_aedificator_appendere_s32(a, positio);
+    si (!sententia && columna >= ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, "&columna=");
+        chorda_aedificator_appendere_s32(a, columna);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+/* valor parametri in quaestione ("a=1&b=2"); FALSUM si abest */
+interior b32
+parametrum (
+                chorda  quaestio,
+    constans character* titulus,
+                chorda* valor)
+{
+    i32 i;
+    i32 n = (i32)strlen(titulus);
+
+    i = ZEPHYRUM;
+    dum (i < quaestio.mensura)
+    {
+        i32 finis = i;
+
+        dum (finis < quaestio.mensura && quaestio.datum[finis] != '&')
+        {
+            finis++;
+        }
+        si (   finis - i > n
+            && memcmp(quaestio.datum + i, titulus, (size_t)n)
+               == ZEPHYRUM
+            && quaestio.datum[i + n] == '=')
+        {
+            valor->datum    = quaestio.datum + i + n + I;
+            valor->mensura  = finis - i - n - I;
+            redde VERUM;
+        }
+        i = finis + I;
+    }
+    redde FALSUM;
+}
+
+interior s32
+parametrum_s32 (
+                chorda  quaestio,
+    constans character* titulus,
+                   s32  praestitutum)
+{
+    chorda v;
+       s32 n;
+
+    redde parametrum(quaestio, titulus, &v) && chorda_ut_s32(v, &n)
+        ? n : praestitutum;
+}
+
+/* locus canonicus loci veteris ("navigator/pagina/<art>?..."); vacua
+ * si forma ignota aut articulus ignotus */
+interior chorda
+locum_canonicum (
+    NavigatorBibliotheca* b,
+                  chorda  locus,
+                 Piscina* piscina)
+{
+    hic_manens constans character pagina[] = "navigator/pagina/";
+    hic_manens constans character sententia[] =
+        "navigator/sententia/";
+                               b32  in_sententia;
+                               i32  p;
+                               i32  q;
+                            chorda  articulus;
+                            chorda  quaestio;
+                            chorda  versio;
+                NavigatorArticulus* a;
+
+    p             = (i32)strlen(pagina);
+    in_sententia  = FALSUM;
+    si (   locus.mensura > (i32)strlen(sententia)
+        && memcmp(locus.datum, sententia, strlen(sententia))
+            == ZEPHYRUM)
+    {
+        p             = (i32)strlen(sententia);
+        in_sententia  = VERUM;
+    }
+    alioquin si (   locus.mensura                          <= p
+                 || memcmp(locus.datum, pagina, (size_t)p) != ZEPHYRUM)
+    {
+        redde vacua();
+    }
+    q = p;
+    dum (q < locus.mensura && locus.datum[q] != '?')
+    {
+        q++;
+    }
+    articulus.datum    = locus.datum + p;
+    articulus.mensura  = q - p;
+    quaestio.datum     = locus.datum + q + (q < locus.mensura ? I : 0);
+    quaestio.mensura   = q < locus.mensura ? locus.mensura - q - I
+                                           : ZEPHYRUM;
+    a = articulum_per_id(b, articulus);
+    si (!a || xar_numerus(a->versiones) == ZEPHYRUM)
+    {
+        redde vacua();
+    }
+    si (!parametrum(quaestio, "versio", &versio) || versio.mensura == 0)
+    {
+        versio = ((NavigatorVersio*)xar_obtinere(a->versiones,
+            xar_numerus(a->versiones) - I))->identitas;
+    }
+    redde navigator_locum_formare(articulus, versio, in_sententia,
+        parametrum_s32(quaestio, in_sententia ? "sententia" : "pagina",
+        ZEPHYRUM), in_sententia ? -I : parametrum_s32(quaestio,
+        "columna", -I), piscina);
+}
+
+/* liber vetus in canonicum: absens - paginae omnes (nomina, nota
+ * comitis); praesens - paginae non vacuae ad finem */
+interior b32
+librum_transferre (
+    NavigatorBibliotheca* b,
+     InternamentumChorda* intern,
+      constans character* vetus,
+      constans character* canon,
+                 Piscina* piscina)
+{
+         ScribaLiber* fons;
+         ScribaLiber* meta;
+                 Xar* nomina;
+                 b32  novus;
+              chorda  titulus;
+              chorda  semita;
+                 i32  i;
+
+    nomina = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (   !nomina
+        || !scriba_liber_nomina_legere(piscina, intern, b->volumen,
+               vetus, nomina))
+    {
+        redde FALSUM;
+    }
+    novus = !scriba_liber_exstat(b->volumen, canon, piscina);
+    fons  = scriba_liber_aperire_in_spatio(piscina, intern, b->volumen,
+        vetus, LXXX, XX);
+    meta  = NIHIL;
+    per (i = ZEPHYRUM; fons && i < xar_numerus(nomina); i++)
+    {
+                   chorda  titulus_paginae;
+         ScribaDocumentum* a;
+         ScribaDocumentum* d;
+                      Xar* lineae;
+
+        titulus_paginae  = *(chorda*)xar_obtinere(nomina, i);
+        a                = scriba_liber_pagina(fons, titulus_paginae);
+        lineae           = xar_creare(piscina, (i32)magnitudo(chorda));
+        si (!a || !lineae)
+        {
+            redde FALSUM;
+        }
+        (vacuum)scriba_liber_paginam_legere_omnes(piscina, intern,
+            b->volumen, vetus, titulus_paginae, lineae);
+        si (!novus && xar_numerus(lineae) == ZEPHYRUM)
+        {
+            perge;
+        }
+        si (!meta)
+        {
+            meta = scriba_liber_aperire_in_spatio(piscina, intern,
+                b->volumen, canon, a->latitudo, a->altitudo);
+            si (!meta)
+            {
+                redde FALSUM;
+            }
+        }
+        si (!novus)
+        {
+            chorda nova = scriba_liber_pagina_nova(meta);
+
+            d = nova.mensura > ZEPHYRUM ? scriba_liber_pagina(meta,
+                nova)
+                                        : NIHIL;
+        }
+        alioquin si (chorda_aequalis_literis(titulus_paginae, "1"))
+        {
+            d = scriba_liber_pagina(meta, titulus_paginae);
+        }
+        alioquin
+        {
+            d = scriba_liber_paginam_condere(meta, titulus_paginae);
+        }
+        si (   !d
+            || scriba_documentum_committere(d,
+                   scriba_documentum_tabula(a)) < ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    /* nota comitis: canonicus sine nota eam a vetere accipit */
+    si (   !scriba_liber_comitem_legere(piscina, intern, b->volumen,
+               canon, &titulus, &semita)
+        && scriba_liber_comitem_legere(piscina, intern, b->volumen,
+               vetus, &titulus, &semita))
+    {
+        (vacuum)scriba_liber_comitem_notare(b->volumen, intern, canon,
+            titulus, semita, piscina);
+    }
+    redde VERUM;
+}
+
+/* plagulae omnes sub "<praefixum>/" removere, transactione una */
+interior b32
+librum_removere (
+    NavigatorBibliotheca* b,
+                  chorda  praefixum,
+                 Piscina* piscina)
+{
+       Xar* plagulae;
+    chorda  sub;
+       b32  bene;
+       i32  i;
+
+    sub = chorda_concatenare(praefixum, chorda_ex_literis("/", piscina),
+        piscina);
+    plagulae = volumen_plagulas_enumerare(b->volumen, piscina);
+    si (!plagulae || !volumen_transactionem_incipere(b->volumen))
+    {
+        redde FALSUM;
+    }
+    bene = VERUM;
+    per (i = ZEPHYRUM; bene && i < xar_numerus(plagulae); i++)
+    {
+        chorda via = ((VolumenPlagula*)xar_obtinere(plagulae, i))->via;
+
+        si (chorda_incipit(via, sub))
+        {
+            bene = volumen_plagulam_removere(b->volumen, via);
+        }
+    }
+    redde bene ? volumen_transactionem_committere(b->volumen)
+               : (volumen_transactionem_revolvere(b->volumen), FALSUM);
+}
+
+b32
+navigator_comites_sanare (
+    NavigatorBibliotheca* b,
+     InternamentumChorda* intern,
+                 Piscina* piscina,
+                     i32* translati)
+{
+    hic_manens constans character  praefixum[]  = "comes/navigator/";
+    hic_manens constans character  cauda[]      = "/paginae";
+                          Piscina* tp;
+                              Xar* plagulae;
+                              Xar* loci;
+                              i32  i;
+                              i32  p;
+                              i32  c;
+                              b32  bene;
+
+    si (translati)
+    {
+        *translati = ZEPHYRUM;
+    }
+    si (!b || !intern || !piscina)
+    {
+        redde FALSUM;
+    }
+    tp = piscina_generare_dynamicum("navigator_comites", IV * MXXIV);
+    si (!tp)
+    {
+        redde FALSUM;
+    }
+    p         = (i32)strlen("comes/");
+    c         = (i32)strlen(cauda);
+    loci      = xar_creare(tp, (i32)magnitudo(chorda));
+    plagulae  = volumen_plagulas_enumerare(b->volumen, tp);
+    per (i = ZEPHYRUM; loci && plagulae && i < xar_numerus(plagulae);
+         i++)
+    {
+        chorda via = ((VolumenPlagula*)xar_obtinere(plagulae, i))->via;
+        chorda locus;
+
+        si (   via.mensura <= (i32)strlen(praefixum) + c
+            || memcmp(via.datum, praefixum, strlen(praefixum))
+               != ZEPHYRUM
+            || memcmp(via.datum + via.mensura - c, cauda, (size_t)c)
+               != ZEPHYRUM)
+        {
+            perge;
+        }
+        locus.datum                 = via.datum + p;
+        locus.mensura               = via.mensura - p - c;
+        *(chorda*)xar_addere(loci)  = chorda_transcribere(locus, tp);
+    }
+    bene = loci && plagulae;
+    per (i = ZEPHYRUM; bene && i < xar_numerus(loci); i++)
+    {
+        chorda locus = *(chorda*)xar_obtinere(loci, i);
+        chorda canon = locum_canonicum(b, locus, tp);
+        chorda vetus;
+
+        si (canon.mensura == ZEPHYRUM || chorda_aequalis(canon, locus))
+        {
+            perge;
+        }
+        vetus = chorda_concatenare(chorda_ex_literis("comes/", tp),
+            locus,
+            tp);
+        canon = chorda_concatenare(chorda_ex_literis("comes/", tp),
+            canon,
+            tp);
+        bene = librum_transferre(b, intern, chorda_ut_cstr(vetus, tp),
+                   chorda_ut_cstr(canon, tp), tp)
+            && librum_removere(b, vetus, tp);
+        si (bene && translati)
+        {
+            (*translati)++;
+        }
+    }
+    piscina_destruere(tp);
+    redde bene;
 }

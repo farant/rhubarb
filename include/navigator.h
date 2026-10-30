@@ -86,9 +86,16 @@
  * argumentum nudum) paginam eam continentem restituit - area mutata
  * quoque; versio alia: pagina prima. Locus cum pagina (historia,
  * comes, notae) paginam suam tenet nec positionem mutat.
- * NOTAE: locus "navigator/pagina/<articulus>?versio=<v>&pagina=3" -
- * versio in loco, ergo comes (Cmd+T) versionis suae est (spec V.11,
- * V.16); notae in pede ut lector (notas_habet hospitis).
+ * NOTAE ET COMITES: locus visus articuli = campi quos visus monstrat
+ * SOLI, versio semper nominata (fixa aut ultima):
+ *   pagina     "navigator/pagina/<art>?versio=<v>&pagina=<n>"
+ *              (+ "&columna=<k>" in columna laterali)
+ *   sententia  "navigator/sententia/<art>?versio=<v>&sententia=<o>"
+ * Campi alieni (quaestio, quaestio_hospes, dominium; sententia in
+ * pagina, pagina in sententia) numquam: comes paginae idem est
+ * quacumque via advenitur (quaestio, favor, recentes, historia).
+ * Index et eventus: semita ut prius. Notae in pede ut lector
+ * (notas_habet hospitis).
  * APERIRE (N3.3): 'o' (index, pagina) aut globulus "Open URL..." in
  * capite indicis promptam "url:" aperit; Enter: URL. $nav(URL) idem
  * (argumentum cum "://"). Articulus iam servatus statim aperitur, sine

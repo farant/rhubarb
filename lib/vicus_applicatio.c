@@ -4791,6 +4791,13 @@ bibliotheca_navigatoris (
     {
         cn->bibliotheca = navigator_bibliotheca_aperire(cn->volumen,
             NIHIL, NIHIL, cn->piscina);
+        /* comites sub locis vitiosis (campi alieni, versio absens) ad
+         * locum canonicum semel (Franus 2026-10-30; idempotens) */
+        si (cn->bibliotheca)
+        {
+            (vacuum)navigator_comites_sanare(cn->bibliotheca,
+                cn->intern, cn->piscina, NIHIL);
+        }
     }
     redde cn->bibliotheca;
 }

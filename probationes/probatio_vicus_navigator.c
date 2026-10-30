@@ -20,6 +20,7 @@
 #include "codex.h"
 #include "fons.h"
 #include "scriba_applicatio.h"
+#include "scriba_liber.h"
 #include "scriba_documentum.h"
 #include "tabula_characterum.h"
 #include "credo.h"
@@ -624,9 +625,107 @@ _probare_sententia_ictus (
         c->piscina)));
 }
 
+/* comites: notae per viam unam scriptae per aliam inveniuntur
+ * (quaestio, dominium, sententia vetus extra locum) */
+interior vacuum
+_probare_comes_via_alia (
+    CredoContextus* c)
+{
+                  Mundus* x = (Mundus*)c->datum;
+                   Vicus* v;
+              VicusLatus* l;
+              VicusLatus* sinister;
+       NavigatorMontatio* m;
+          ScribaMontatio* sm;
+       TabulaCharacterum  folium;
+                  chorda  via;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v    = x->app.vicus;
+    via  = chorda_concatenare(chorda_concatenare(chorda_ex_literis(
+        "navigator/pagina/", c->piscina), x->articulus, c->piscina),
+        chorda_ex_literis("?pagina=0&sententia=9&quaestio=picard&"
+        "dominium=wikipedia.org", c->piscina), c->piscina);
+    CREDO_VERUM(vicus_acervo_aperire(v, "navigator", chorda_ut_cstr(via,
+        c->piscina)));
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    (vacuum)vicus_pulsare(v);
+    l = latus_frontale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    m = (NavigatorMontatio*)l->montatio;
+    CREDO_VERUM(vicus_comitem_commutare(v));
+    (vacuum)vicus_pulsare(v);
+    sinister  = vicus_latus(vicus_activa(v), VICUS_SINISTRUM);
+    sm        = sinister ? (ScribaMontatio*)sinister->montatio : NIHIL;
+    CREDO_NECESSE(sm && sm->doc);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        sm->doc->latitudo, sm->doc->altitudo,
+        "<event year=\"373\">nota</event>");
+    CREDO_VERUM(scriba_documentum_committere(sm->doc, &folium)
+        > ZEPHYRUM);
+
+    CREDO_GRADUS("via alia (sine quaestione): notae eaedem");
+    via = chorda_concatenare(chorda_concatenare(chorda_ex_literis(
+        "navigator/pagina/", c->piscina), x->articulus, c->piscina),
+        chorda_ex_literis("?pagina=0", c->piscina), c->piscina);
+    CREDO_VERUM(navigator_argumentum_ponere(m, chorda_ut_cstr(via,
+        c->piscina)));
+    CREDO_VERUM(m->notas_habet(m->notas_habet_ctx, navigator_locus(m,
+        c->piscina)));
+}
+
+/* sanatio: liber comitis sub loco vitioso (ante vicum scriptus) ad
+ * locum canonicum transfertur cum navigator primum aperitur */
+interior vacuum
+_probare_sanatio (
+    CredoContextus* c)
+{
+                  Mundus* x = (Mundus*)c->datum;
+     InternamentumChorda* intern;
+             ScribaLiber* liber;
+        ScribaDocumentum* d;
+       TabulaCharacterum  folium;
+                  chorda  vetus;
+                  chorda  canon;
+
+    CREDO_NECESSE(x && x->volumen && x->articulus.mensura > ZEPHYRUM);
+    intern = internamentum_creare(c->piscina);
+    vetus = chorda_concatenare(chorda_concatenare(chorda_ex_literis(
+        "comes/navigator/pagina/", c->piscina), x->articulus,
+        c->piscina), chorda_ex_literis("?pagina=0&quaestio=picard",
+        c->piscina), c->piscina);
+    canon = chorda_concatenare(chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("comes/navigator/pagina/", c->piscina),
+        x->articulus, c->piscina), chorda_concatenare(
+        chorda_ex_literis("?versio=", c->piscina), x->versio,
+        c->piscina), c->piscina), chorda_ex_literis("&pagina=0",
+        c->piscina), c->piscina);
+    liber = scriba_liber_aperire_in_spatio(c->piscina, intern,
+        x->volumen, chorda_ut_cstr(vetus, c->piscina), LXXX, XX);
+    d = liber ? scriba_liber_pagina(liber, chorda_ex_literis("1",
+        c->piscina)) : NIHIL;
+    CREDO_NECESSE_NON_NIHIL(d);
+    tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
+        d->latitudo, d->altitudo, "nota vetus");
+    CREDO_NECESSE(scriba_documentum_committere(d, &folium) > ZEPHYRUM);
+    CREDO_NECESSE(aedificare(x, c));
+    CREDO_VERUM(vicus_acervo_aperire(x->app.vicus, "navigator", NIHIL));
+    (vacuum)vicus_pulsare(x->app.vicus);
+    CREDO_NECESSE_NON_NIHIL(latus_frontale(x->app.vicus));
+    CREDO_VERUM(scriba_liber_exstat(x->volumen, chorda_ut_cstr(canon,
+        c->piscina), c->piscina));
+    CREDO_FALSUM(scriba_liber_exstat(x->volumen, chorda_ut_cstr(vetus,
+        c->piscina), c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latera", _probare_latera, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "comes via alia", _probare_comes_via_alia, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "sanatio", _probare_sanatio, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { "articulus", _probare_articulus, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "retro", _probare_retro, mundum_parare, mundum_purgare, NIHIL,

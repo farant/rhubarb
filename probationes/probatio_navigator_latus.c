@@ -1917,6 +1917,19 @@ _sectio_versio (
     CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
         c->piscina), "Beta - la.wikipedia.org - 1/1");
 
+    CREDO_GRADUS("comites: campi alieni numquam in loco");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/5?versio=6&pagina=0&"
+        "sententia=7&dominium=wikipedia.org&quaestio=picard&"
+        "quaestio_hospes=en.wikipedia.org"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus(&w->m, c->piscina),
+        "navigator/pagina/5?versio=6&pagina=0");
+
+    CREDO_GRADUS("comites: articulus alius sine versione = ultima "
+        "nominata");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/3?quaestio=rheum"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus(&w->m, c->piscina),
+        "navigator/pagina/3?versio=4&pagina=0");
+
     CREDO_GRADUS("index: locus sine articulo; dominium articuli");
     clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
     locus = navigator_locus(&w->m, c->piscina);

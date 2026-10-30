@@ -20,6 +20,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "internamentum.h"
 #include "xar.h"
 #include "volumen.h"
 #include "moneta.h"
@@ -150,5 +151,33 @@ navigator_versionis_html (
            NavigatorBibliotheca* b,
        constans NavigatorVersio* versio,
                         Piscina* piscina);
+
+/* locus canonicus visus articuli (navigator_locus et sanatio eundem
+ * formant): sententia FALSUM = pagina (positio = pagina, columna -1 =
+ * nulla), VERUM = sententia (positio = offset; columna neglecta) */
+chorda
+navigator_locum_formare (
+      chorda  articulus,
+      chorda  versio,
+         b32  sententia,
+         s32  positio,
+         s32  columna,
+     Piscina* piscina);
+
+/* comites sanare (Franus 2026-10-30): libri comites articulorum
+ * ("comes/navigator/pagina|sententia/...") quorum locus canonicus non
+ * est (campi alieni, versio absens) ad locum canonicum transferuntur.
+ * Versio absens = versio ultima articuli. Liber canonicus absens:
+ * paginae omnes eo copiantur (nomina et nota comitis servata);
+ * praesens: paginae non vacuae ad finem additae (lineae vacuae
+ * servatae). Liber vetus deinde removetur (plagulae omnes eius,
+ * transactione una). Idempotens: loci canonici et articuli ignoti
+ * intacti. *translati = libri moti (NIHIL licet). */
+b32
+navigator_comites_sanare (
+    NavigatorBibliotheca* b,
+     InternamentumChorda* intern,
+                 Piscina* piscina,
+                     i32* translati);
 
 #endif /* NAVIGATOR_BIBLIOTHECA_H */

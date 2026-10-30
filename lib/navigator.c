@@ -4742,6 +4742,27 @@ navigator_locus (
     {
         redde _vacua();
     }
+    /* visus articuli: campi visus soli, versio nominata (comites per
+     * paginam, quacumque via advenitur) */
+    si (_visus(m) == VISUS_PAGINAE || _visus(m) == VISUS_SENTENTIAE)
+    {
+        NavigatorFigurae* f = _paginas_parare(m);
+
+        si (f && _visus(m) == VISUS_SENTENTIAE)
+        {
+            redde navigator_locum_formare(f->articulus_arcae,
+                f->versio_arcae, VERUM, (s32)_sententia(f,
+                _sententia_currens(m, f))->initium, -I, piscina);
+        }
+        si (f)
+        {
+            s32 c = _columna_currens(m, f);
+
+            redde navigator_locum_formare(f->articulus_arcae,
+                f->versio_arcae, FALSUM, _pagina_currens(m, f), c
+                >= ZEPHYRUM ? _columnae_pagina(m, f, c) : -I, piscina);
+        }
+    }
     semita = semita_legere(_organa, m, &m->ramus, "navigator", piscina,
         m->intern);
     si (!semita)
