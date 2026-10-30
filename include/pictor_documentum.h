@@ -214,12 +214,44 @@ pictor_documentum_sequi (
 nomen structura {
     chorda replica;
     chorda spatium;   /* "" = radix illius machinae */
+       s64 hora;      /* plan-5 T3: hora scriptoris actus ultimi (0 =
+                       * ignota; solum pictor_aliena_recentia implet) */
 } PictorPicturaAliena;
 
 Xar*   /* de PictorPicturaAliena */
 pictor_documenta_aliena_enumerare (
      Volumen* volumen,
      Piscina* piscina);
+
+/* plan-5 T3: picturae aliae machinarum ("Shared pictures"), hora
+ * actus ultimi SCRIPTORIS descendente (aequales: replica, deinde
+ * spatium); actus "plagula-condita" picturam vacuam datat. Propriae
+ * numquam. Xar de PictorPicturaAliena (hora impleta) */
+Xar*
+pictor_aliena_recentia (
+     Volumen* volumen,
+     Piscina* piscina);
+
+/* plan-5 T4 (D4 "Edit a copy"): origo picturae propriae in manifesto
+ * suo (attributum origo="<replica>:<spatium>") - ponere manifestum
+ * iterum condit (actum plagula-condita); FALSUM si pictura ignota aut
+ * signa mala (", <, &). legere: FALSUM si pictura ignota aut sine
+ * origine; chordae in piscina. */
+b32
+pictor_originem_ponere (
+               Volumen* volumen,
+    constans character* spatium,
+                chorda  replica,
+    constans character* spatium_alienum,
+               Piscina* piscina);
+
+b32
+pictor_originem_legere (
+               Volumen* volumen,
+    constans character* spatium,
+               Piscina* piscina,
+                chorda* replica,
+                chorda* spatium_alienum);
 
 /* ex volumine exsistente: dimensiones ex plagula 'documentum',
  * proiectio ex checkpoint proximo + actis */
@@ -303,6 +335,20 @@ pictor_pinacem_facere (
                 Piscina* piscina,
                   Imago* exitus);
 
+/* plan-5 T3: pinax picturae ALIENAE (replica, spatium) - idem ac
+ * pictor_pinacem_facere apud scriptorem. FALSUM si ignota (aut
+ * replica propria) */
+b32
+pictor_pinacem_alienum_facere (
+                Volumen* volumen,
+    InternamentumChorda* intern,
+                 chorda  replica,
+     constans character* spatium,
+                    i32  latitudo,
+                    i32  altitudo,
+                Piscina* piscina,
+                  Imago* exitus);
+
 /* PINACOTHECA (spec D3-D5): status dum aperta, in montatione
  * habitans; compositio, actiones et figurae eam per indicem legunt.
  * scheda VACATUR quaque apertione (memoria = sessio una), pinaces in
@@ -320,6 +366,38 @@ nomen structura {
 b32
 pictor_pinacothecam_parare (
     PictorPinacotheca* p);
+
+/* communio-plan-5 T6: "Shared pictures" - status ut pinacotheca
+ * (dum aperta, in montatione): picturae aliae machinarum
+ * (pictor_aliena_recentia) et pinaces earum in scheda */
+nomen structura {
+                Volumen* volumen;
+    InternamentumChorda* intern;
+                Piscina* scheda;     /* NIHIL donec prima apertio */
+                    Xar* picturae;   /* PictorPicturaAliena, recentia */
+         TabulaDispersa* pinaces;    /* provenientia -> Imago* */
+} PictorCommunia;
+
+/* apertio aut renovatio (acta advecta): scheda vacatur, picturae
+ * relegitur, pinaces vacui. FALSUM si memoria */
+b32
+pictor_communia_parare (
+    PictorCommunia* p);
+
+/* provenientia "alienus:<lat>x<alt>:<hora>:<replica>:<spatium>" ->
+ * pinax picturae alienae (hora in clave: pictura mutata pinacem novum
+ * habet). NIHIL si forma mala, ignota, aut ante parare. */
+constans Imago*
+pictor_communia_pinax (
+     PictorCommunia* p,
+             chorda  provenientia);
+
+/* index picturae (replica, spatium) in p->picturae; -1 si abest */
+s32
+pictor_communia_index (
+    constans PictorCommunia* p,
+                     chorda  replica,
+                     chorda  spatium);
 
 /* provenientia "pinax:<lat>x<alt>:<seq>:<spatium>" -> pinax (in
  * scheda factus si nondum; seq in clave, ergo pictura mutata pinacem

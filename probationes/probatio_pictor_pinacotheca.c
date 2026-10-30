@@ -4,7 +4,7 @@
  * Applicatio pictoris vera, superficies telephoni (CCXV x CDXIX),
  * volumen temporarium. T4: quadratum ⋯ (elenchus_praesto) et menu
  * (elenchus): ordo rerum, Import solum cum servitio, New picture
- * picturam novam "pictura-<n>" condit et ostendit, Open picture
+ * picturam novam (ULID, plan-5 T3) condit et ostendit, Open picture
  * pinacothecam aperit, ictus extra et Esc menu claudunt, sine
  * vexillo nihil. */
 #include "postulata_posix.h"
@@ -110,6 +110,38 @@ numerus_picturarum (
     redde l ? xar_numerus(l) : ZEPHYRUM;
 }
 
+/* plan-5 T3 (D9): spatium picturae novae = ULID (XXVI Crockford) */
+interior b32
+ulid_est (
+    chorda s)
+{
+    hic_manens constans character CROCKFORD[] =
+        "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+    i32 i;
+
+    si (s.mensura != XXVI)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < XXVI; i++)
+    {
+        si (!strchr(CROCKFORD, (integer)s.datum[i]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* copia campi (insula mutatur postea) */
+interior chorda
+pictura_ostensa (
+    PictorApplicatio* app)
+{
+    redde chorda_ex_literis(chorda_ut_cstr(ephemera_legere(app,
+        "pictura"), piscina), piscina);
+}
+
 interior b32
 pictura_est (
                Volumen* vol,
@@ -186,19 +218,20 @@ interior vacuum
 _sectio_elenchus (
     CredoContextus* c)
 {
-              Volumen* vol;
-     PictorApplicatio  app;
-           ManusLudus* m;
-            Componens* q;
-            Componens* s;
-            Componens* e;
-             Elenchus  el;
-          ElenchusRes  res[III];
-                  s32  x_q;
-                  s32  y_q;
-                  s32  x_e;
-                  s32  y_e;
-                  i32  electiones;
+                     Volumen* vol;
+            PictorApplicatio  app;
+                  ManusLudus* m;
+                   Componens* q;
+                   Componens* s;
+                   Componens* e;
+                    Elenchus  el;
+                 ElenchusRes  res[V];
+    PictorElenchiCondiciones  k;
+                         s32  x_q;
+                         s32  y_q;
+                         s32  x_e;
+                         s32  y_e;
+                         i32  electiones;
 
     electiones  = ZEPHYRUM;
     vol         = (Volumen*)c->datum;
@@ -238,7 +271,9 @@ _sectio_elenchus (
     CREDO_VERUM(x_e + e->fines.latitudo <= LATITUDO_TELEPHONI);
 
     CREDO_GRADUS("res et textus (spec D2)");
-    pictor_elenchum_parare(VERUM, res, &el);
+    memset(&k, ZEPHYRUM, magnitudo(k));
+    k.importare = VERUM;
+    pictor_elenchum_parare(&k, res, &el);
     CREDO_AEQUALIS_I32(el.numerus, III);
     CREDO_VERUM(strcmp(el.res[ZEPHYRUM].titulus, "pinacotheca.aperire")
         == ZEPHYRUM);
@@ -246,11 +281,12 @@ _sectio_elenchus (
     CREDO_VERUM(strcmp(el.res[II].titulus, "imago.eligere")
         == ZEPHYRUM);
     CREDO_VERUM(strcmp(el.res[ZEPHYRUM].textus,
-        "Open picture\xE2\x80\xA6") == ZEPHYRUM);
+        "My pictures\xE2\x80\xA6") == ZEPHYRUM);
     CREDO_VERUM(strcmp(el.res[I].textus, "New picture") == ZEPHYRUM);
     CREDO_VERUM(strcmp(el.res[II].textus, "Import image\xE2\x80\xA6")
         == ZEPHYRUM);
-    pictor_elenchum_parare(FALSUM, res, &el);
+    k.importare = FALSUM;
+    pictor_elenchum_parare(&k, res, &el);
     CREDO_AEQUALIS_I32(el.numerus, II);
 
     CREDO_GRADUS("cum servitio: tres res");
@@ -290,18 +326,19 @@ _sectio_elenchus (
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
 }
 
-/* T4 (spec D6): New picture - pictura nova vacua "pictura-<n>",
+/* T4 (spec D6; plan-5 D9): New picture - pictura nova vacua (ULID),
  * ostensa; Open picture - pinacotheca aperta */
 interior vacuum
 _sectio_nova (
     CredoContextus* c)
 {
-              Volumen* vol;
-     PictorApplicatio  app;
-           ManusLudus* m;
-     PictorDocumentum* radix;
-     PictorDocumentum* prima;
-                  i32  n;
+               Volumen* vol;
+      PictorApplicatio  app;
+            ManusLudus* m;
+      PictorDocumentum* radix;
+      PictorDocumentum* prima;
+                chorda  spatium_primum;
+                   i32  n;
 
     vol = (Volumen*)c->datum;
     CREDO_NECESSE(aedificare(&app, vol, VERUM));
@@ -309,25 +346,30 @@ _sectio_nova (
     radix  = app.montatio.doc;
     n      = numerus_picturarum(vol);
 
-    CREDO_GRADUS("New picture: pictura-1 ostensa");
+    CREDO_GRADUS("New picture: pictura nova (ULID) ostensa");
     CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
     CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
     CREDO_AEQUALIS_I32(numerus_picturarum(vol), n + I);
-    CREDO_VERUM(pictura_est(vol, "pictura-1"));
+    spatium_primum = pictura_ostensa(&app);
+    CREDO_VERUM(ulid_est(spatium_primum));
+    CREDO_VERUM(pictura_est(vol, chorda_ut_cstr(spatium_primum,
+        piscina)));
     prima = app.montatio.doc;
     CREDO_VERUM(prima != NIHIL && prima != radix);
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(prima),
         ZEPHYRUM);
     CREDO_VERUM(app.montatio.actiones_ctx.doc == prima);
-    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
-        "pictura-1");
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
 
-    CREDO_GRADUS("iterum: pictura-2");
+    CREDO_GRADUS("iterum: ULID alia");
     CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
     CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
     CREDO_AEQUALIS_I32(numerus_picturarum(vol), n + II);
-    CREDO_VERUM(pictura_est(vol, "pictura-2"));
+    CREDO_VERUM(ulid_est(pictura_ostensa(&app)));
+    CREDO_FALSUM(chorda_aequalis(pictura_ostensa(&app),
+        spatium_primum));
+    CREDO_VERUM(pictura_est(vol, chorda_ut_cstr(pictura_ostensa(&app),
+        piscina)));
     CREDO_VERUM(app.montatio.doc != prima);
 
     CREDO_GRADUS("Open picture: pinacotheca aperta");
@@ -799,6 +841,7 @@ _sectio_reditus (
        PictorApplicatio  app;
        PictorApplicatio  app_secunda;
              ManusLudus* m;
+                 chorda  spatium;
 
     via = via_voluminis(c);
     CREDO_NECESSE_NON_NIHIL(credo_area(c));
@@ -811,20 +854,19 @@ _sectio_reditus (
     CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
     CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
     in_tabula_pingere(&app, m);
-    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
-        "pictura-1");
+    spatium = pictura_ostensa(&app);
+    CREDO_VERUM(ulid_est(spatium));
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
         app.montatio.doc), I);
     volumen_claudere(v);
 
-    CREDO_GRADUS("sessio secunda: pictura-1 redit");
+    CREDO_GRADUS("sessio secunda: pictura eadem redit");
     v = volumen_aperire(piscina, via);
     CREDO_NECESSE_NON_NIHIL(v);
     CREDO_NECESSE(aedificare(&app_secunda, v, VERUM));
     m = manus_ludus_creare(piscina, app_secunda.d);
-    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app_secunda,
-        "pictura"),
-        "pictura-1");
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app_secunda, "pictura"),
+        spatium);
     CREDO_AEQUALIS_I32(pictor_documentum_numerus_vivorum(
         app_secunda.montatio.doc), I);
     CREDO_VERUM(app_secunda.doc == app_secunda.montatio.doc);
@@ -872,6 +914,8 @@ _sectio_absens (
                 Volumen* v;
        PictorApplicatio  app;
              ManusLudus* m;
+                 chorda  prima;
+                 chorda  secunda;
 
     via  = via_voluminis(c);
     v    = volumen_aperire_aut_creare(piscina, via);
@@ -880,23 +924,23 @@ _sectio_absens (
     m = manus_ludus_creare(piscina, app.d);
     CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
     CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
+    prima = pictura_ostensa(&app);
     CREDO_VERUM(premere_nodum(&app, m, "quadratum.elenchus"));
     CREDO_VERUM(premere_nodum(&app, m, "elenchus.1"));
-    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
-        "pictura-2");
+    secunda = pictura_ostensa(&app);
+    CREDO_VERUM(ulid_est(prima) && ulid_est(secunda));
     volumen_claudere(v);
-    /* pictura-2 e bibliotheca tollitur (nulla deletio in app: casus
+    /* pictura secunda e bibliotheca tollitur (nulla deletio in app: casus
      * corruptionis) */
     v = volumen_aperire(piscina, via);
     CREDO_NECESSE_NON_NIHIL(v);
-    CREDO_VERUM(volumen_plagulam_removere(v, chorda_ex_literis(
-        "pictura-2/documentum", piscina)));
+    CREDO_VERUM(volumen_plagulam_removere(v, chorda_concatenare(
+        secunda, chorda_ex_literis("/documentum", piscina), piscina)));
     volumen_claudere(v);
     v = volumen_aperire(piscina, via);
     CREDO_NECESSE_NON_NIHIL(v);
     CREDO_NECESSE(aedificare(&app, v, VERUM));
-    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "pictura"),
-        "pictura-1");
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "pictura"), prima);
     CREDO_VERUM(app.doc == app.montatio.doc);
     volumen_claudere(v);
 }

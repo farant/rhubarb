@@ -443,7 +443,11 @@ if [ "$CURRERE" = 1 ]; then
             || { tail -20 "$D/lanceatio.log" >&2; d8_diagnosis "$D/lanceatio.log" "devicectl launch"; }
         echo "currit: $INVOLUCRUM in $UBI (effusio: xcrun devicectl device process launch --console --device $IOS_TABULA $INVOLUCRUM)"
     else
-        open -a Simulator --args -CurrentDeviceUDID "$UDID" > /dev/null 2>&1
+        # Xcode 27: Simulator.app abest, DeviceHub.app fenestram monstrat
+        # (sed tactus non transmittit - probatio manualis in telephono)
+        open -a Simulator --args -CurrentDeviceUDID "$UDID" > /dev/null 2>&1 \
+            || open -a "$(xcode-select -p)/../Applications/DeviceHub.app" \
+                > /dev/null 2>&1
         xcrun simctl launch --terminate-running-process "$UDID" "$INVOLUCRUM" \
             > "$D/lanceatio.log" 2>&1 \
             || { cat "$D/lanceatio.log" >&2; apparatus "simctl launch fractum"; }

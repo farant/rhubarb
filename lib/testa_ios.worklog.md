@@ -76,3 +76,72 @@
   names the cause if it is off), falls back to `productType`.
 - TestFlight's "iOS 26 SDK" requirement is now met by the installed Xcode;
   C2 step 0 (the upgrade) is done.
+
+## 2026-10-28 - URLSession veredarius, reactor timers (communio-plan-5 T8, quarta)
+
+The iOS shell hands the app `a->veredarius` backed by URLSession
+(ephemeral session, no cache, delegate queue = main queue so completions
+run on the main thread like everything else here), `a->reactor` (timers
+only - no sockets on iOS; networking is URLSession) and `a->machina =
+"iPhone"`. The pictor binary links no BearSSL, no house HTTP/TLS, no
+server (checked: 0 `_br_` symbols, no such objects).
+
+Request timeout = the request's tempus + 15 s (URLSession counts idle
+time itself). Responses are copied into the caller's pool; the finish
+callback runs, then the shell asks for a frame at once (`debitum`) so the
+reactor handles the deferred response without waiting for the 300 ms
+idle tick. Abort cancels the task and the cancellation completion is
+ignored (generation + `abrupta`), matching the veredarius contract.
+
+Each frame polls the app's reactor (timeout 0) before drawing; the shell
+hands the reactor to the window state with `ludus_fenestra_reactorem_ponere`
+so `ludus_fenestra_mora` (read for frame scheduling) is bounded by the
+reactor's next timer. `testa_quadrum_petere` now returns NO frame for
+mora -1 (nothing due) instead of a POST with a negative delay.
+
+`-probare-rete <url>`: one GET through the veredarius, prints `testa:
+rete successus=.. status=..` - for Simulator checks only.
+
+EVENTUS_RESUMPTIO (scene active again) reaches pictor's root handler,
+which calls `communio_excitare` (wired by pictor_communionem_ligare):
+lanes resume at once and the device list is refetched.
+
+## 2026-10-28 — communio plan-5 T9: system keyboard
+
+TestaVisus itself adopts UIKeyInput + UITextInputTraits (no hidden
+UITextField): pictor draws its own field, the shell only shows the
+keyboard and turns keystrokes into events. canBecomeFirstResponder is
+TRUE only while the app asked for a keyboard (`_testa.claviatura` !=
+NULLA), so touches never pop it up by accident.
+
+- insertText -> NSData (UTF-8) -> mutableCopy -> `testa_textum_eventus`
+  (pure, in testa_initus; tested). The mutable copy matters: the TEXTUS
+  chorda is a VIEW and chorda.datum is `i8*`, so a `const char*` from
+  UTF8String would need a cast that -Wcast-qual rejects. Events are
+  dispatched synchronously (ludus_fenestra_tractare), so the autoreleased
+  buffer outlives them.
+- '\n' (Return/Send/Go) -> CLAVIS_DEPRESSUS REDITUS, deleteBackward ->
+  RETRORSUM (`testa_clavem_eventus`). hasText is always YES so Backspace
+  arrives even when pictor's field is empty (pictor decides).
+- Traits are getters reading `_testa.claviatura`; switching EPISTULA ->
+  CODEX while the keyboard is up calls reloadInputViews so the new
+  keyboard type takes effect without hiding it.
+- No pressesBegan handler exists, so a hardware keyboard (Simulator,
+  iPad) also arrives through insertText — no double delivery.
+
+### 2026-10-29 — T9 Simulator check
+
+- Xcode 27 has no Simulator.app; the device window is DeviceHub.app, and
+  it does NOT forward clicks or swipes to the device (not even the home
+  swipe). app.sh -currere now falls back to opening DeviceHub, but hands-on
+  testing has to happen on a phone.
+- Verified instead with a temporary (uncommitted) driver: a synthetic tap
+  through `_crudum_tradere` plus `_textum_tradere` calls on timers. Email
+  keyboard appeared after Sign in…, text showed in pictor's field, Send
+  switched to the code keyboard (Return = "go"), wrong code -> "That code
+  isn't right." Time screenshots from log lines, not from launch: the app
+  takes ~3 s to start in the Simulator, and fixed sleeps looked like a
+  one-step render lag that wasn't there.
+- UIKeyInput without UITextInput cannot auto-capitalize (the keys show
+  lowercase even with AllCharacters). Harmless: client and server both
+  upper-case the code before comparing.
