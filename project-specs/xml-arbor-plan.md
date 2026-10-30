@@ -657,6 +657,26 @@ Transcribe toml Q11: generated fuzz cases (truncations, byte flips,
 deep nests), depth pins, the billion laughs, the arena columns of
 the twin pinned against a golden. Commit.
 
+**Executed 2026-10-30.** Totality: `probatio_xml_totalitas.c` — 64
+random documents over an XML-heavy alphabet, every W3C file truncated at
+7 points and mutated at 3 (`<`, `&`, 0xFF; 19,990 cases), deep and
+hostile extremes (100,000 open elements, 200 nested content-model
+parentheses, 5,000 attributes, a 70-entity chain past the depth limit,
+NUL and control bytes): never a crash, byte law always, every rejected
+document carries a diagnostic and every accepted one a cooked root —
+**0 failures**, 4 s. Computus twin: `xml_computus.{h,c}`,
+`xml/instrumenta/computus.c` + `./xml/computus.sh <file>` (prints the
+tree's and cooking's bytes per source byte), `probatio_xml_computus.c`
+pinned against `fixa/computus/basis.tsv` — corpus INLINE (a
+MusicXML-shaped score, a DTD-heavy document, an invalid one), since the
+W3C suite may not live in the repo. Measured: Vulgate USFX 4.65 MB →
+parse 22 ms, cook 123 ms, tree 10.5×, cooking 28.8×. The test's DTD
+sample first had `(a|b|#PCDATA)*` — the parser rightly refused it
+(Mixed must start with #PCDATA). Plants (all red): list tokens not
+counted, well-formed document without a root, a stray-tag token
+dropped. Lessons again: `casus` (field), `??-` (trigraph), Roman
+numerals stop at 3999.
+
 ---
 
 ## Task P15: Migration — every consumer, then retire `lib/xml.c`

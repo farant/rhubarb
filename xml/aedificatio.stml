@@ -27,6 +27,9 @@
   <actio titulus="probationes_xml" genus="iudicium">
     <probationes_c exemplar="xml/probationes/probatio_*.c"/>
     <post actio="xml_aurum_silvestre"/>
+    <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
+    <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <debitum_scripturae membrum="probatio_xml_computus" via="xml/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
     <!-- oraculum W3C: fracturae omnes / casus unus (manu) -->
     <ambitus variabilis="XMLTS_OMNIA"/>
     <ambitus variabilis="XMLTS_CASUS"/>
