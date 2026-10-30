@@ -335,17 +335,38 @@ returning a materia token; the mode is internal state chosen by the
 lexer itself (X5); UTF-8 validated with `utf8.h`, a bad byte or a
 non-`Char` rune is an `IGNOTUM` token at its byte.
 
-- [ ] **Step 1: Measure** — list every mode transition of spec §III
+- [x] **Step 1: Measure** — list every mode transition of spec §III
   as a table in the test (from-mode, bytes, token, to-mode) before
   writing the lexer.
-- [ ] **Step 2: Hand cases** — one per transition, plus Review Focus 1
+- [x] **Step 2: Hand cases** — one per transition, plus Review Focus 1
   (`]]>`, `--`, `<?xml` placement, `<` in a value, BOM).
-- [ ] **Step 3: Byte coverage over the suite and wild corpus** — for
+- [x] **Step 3: Byte coverage over the suite and wild corpus** — for
   every file: tokens are contiguous, cover every byte, and their
   concatenation is the input. Suite absent → SKIP-WITH-COUNT.
-- [ ] **Step 4: Plants** (a mode that swallows one byte too many; the
+- [x] **Step 4: Plants** (a mode that swallows one byte too many; the
   `]]>` rule removed) → red.
-- [ ] **Step 5: Commit.**
+- [x] **Step 5: Commit.**
+
+**Executed 2026-10-30.** `xml_lector.{h,c}`: six modes (CONTENTUM, TAG,
+DECLARATIO_XML, DOCTYPE, PARS_INTERNA, DECLARATIO) chosen by the lexer
+itself; recovery = `<` in TAG/DECLARATIO_XML/DOCTYPE returns to content
+and relexes (unclosed tag), `<` or `]` in DECLARATIO returns to the
+internal subset; an unclosed attribute value stops before `<` (in DOCTYPE
+and DTD declarations it runs to the closing quote: entity values may
+carry `<`); comments, PIs, CDATA are whole tokens up to their closer or
+EOF. Character legality is NOT judged here (a later pass). Shared test
+helper `xml/probationes/xml_corpus_ambulare.{h,c}` (W3C selection +
+wild manifest, sha256-checked, skipped with count; `XML_CASUS` = 61
+inline cases incl. the 2026-10-18 audit cases). Gate: transition table
+(27 cases) + totality over 61 inline, 2,001 W3C and 7,921 wild files —
+49.4 M tokens, contiguous, every byte, line/column exact; 10 s. Found
+while running: an empty file lexes against a static `""` (pointer check
+skipped for empty input); keeping every token of the 35 MB expat test
+file blew the 256 MiB section ceiling → the test lexes into a scratch
+pool emptied every 4,096 tokens. `casus` and `L` are latina.h macros
+(renamed). Plants (all red): `]]>` rule removed, value not stopping at
+`<`, line counting removed, XML declaration accepted anywhere, unclosed
+tag not recovered. Glossary: `xmlts`.
 
 ---
 
