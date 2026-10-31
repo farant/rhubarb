@@ -109,6 +109,14 @@
     <forma textus="analysin" casus="accusativus" numerus="singularis"/>
   </vocabulum>
 
+  <vocabulum lemma="approximatio" lingua="latina" classis="substantivum"
+    nota="Latinum serum (approximare, Tertullianus): appropinquatio - conversor musicxml_carmen.h: mutatio soni aut cantus quam carmen exigit (spec musicxml M5); WORDS caret">
+    <sensus>approximation; a drawing near</sensus>
+    <forma textus="approximationis" casus="genitivus" numerus="singularis"/>
+    <forma textus="approximationes" casus="nominativus" numerus="pluralis"/>
+    <forma textus="approximationum" casus="genitivus" numerus="pluralis"/>
+  </vocabulum>
+
   <vocabulum lemma="indicator" lingua="latina" classis="substantivum"
     nota="Latinum serum: qui indicat - indicator muris/tactus (eventus.h); pluralis pro TESTA_INDICATORES_MAXIMI (testa B1 2026-10-23)">
     <forma textus="indicatores" casus="nominativus" numerus="pluralis"/>

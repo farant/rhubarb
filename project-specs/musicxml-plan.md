@@ -818,7 +818,24 @@ b32 musicxml_relationem_scribere (constans MusicxmlCarmenRelatio* r,
   output is read back by `carmina_legere` in the tests).
 - [ ] **Step 3: STOP — Fran reviews.** Record changes in the Executed
   note.
-- [ ] **Step 4: Commit** (no gate beyond lint).
+- [x] **Step 4: Commit** (no gate beyond lint).
+
+**Executed 2026-10-31 (Fran approved the header as drafted).**
+Measured: MML (cantus.h) allows ONE accidental (`#`/`+`/`-`), octaves
+`o0`–`o8` only (MIDI 12–119); carmen's `<verba!>` splits syllables at
+space, tab, `- _ , . ; : ! ?` — so the converter CLEANS syllable text
+(those characters and `<` removed; empty → `_`). House instruments: 13
+in instrumentarium.stml (four schola voices superius/altus/tenor/
+bassus) + 11 presets. Final names: prefix `MUSICXML_CARMEN_` for both
+enums (an abbreviation like `MXC` would be a new word for the lint);
+`MICROTONUS` → `ALTERATIO_FRACTA`; added kinds `EXTRA_AMBITUM`,
+`NOTAE_SE_TEGUNT`, `METRUM_IMPOSSIBILE`; marks `DYNAMICA_NOTAE`,
+`OCTAVA_SIGNATA`; `musicxml_carmen_formam_ordinariam`,
+`musicxml_carmen_scribere(opus, ordo NIHIL = computed, forma, piscina,
+exitus, relatio)`, `musicxml_relationem_scribere(relatio, via,
+exitus)`, two title functions. Instrument table in the header comment
+(voice words → part-name instrument words → GM family → aether).
+Glossarium: `approximatio` (Late Latin) with its forms.
 
 ---
 
