@@ -700,3 +700,47 @@ out zero, a loose bound only costs primes):
 Pitfall: linking a scratch program against every build/*.o drags in
 AppKit/WebKit/IOKit; `ar rcs` the objects into an archive and link that,
 so only needed members are pulled.
+
+## 2026-10-30 - T2b of project-specs/temperley-lieb-plan.md: the TL route
+
+laqueus_modulus_temperley_{creare, aestimare, uncinus, limes} and
+laqueus_temperley_sumptus: D136's evaluator in the library. Action
+tables copied from temperley once (modules built inside
+piscina_notare/reficere, so they never exist twice); two buffers of
+max d^2 via piscina_conari_allocare; nothing allocated per point
+(tested with piscina_numerus_allocationum).
+
+Shared with the vertex route, so the two are comparable point for point:
+_punctum_eligere (A = i omega^2, prime cache, INUTILE where delta =
+omega^4 + omega^-4 = 0, ERRATUM on bad primes; the vertex aestimare now
+calls it and its suite output is unchanged) and _quaestio_uncini (the
+interpolation settings). Window and bound via laqueus_pd_fenestra (T2a).
+
+Tests (7 sections in probatio_laqueus_rete): state sum (c <= 24), vertex
+bracket and bound (c to 100), points (status, punctum AND valor equal
+the vertex route at p, q, p; nothing allocated; p = 17, omega = 2 gives
+A = 1, which pins g minimal), Jones of 3_1, 4_1, 8_19 against the table
+and T(4,5) against the vertex route, D136's certified brackets (3 x 50,
+8 x 101, 8 x 201, with word fingerprints), Markov stabilization front
+and back plus inserted braid/R2 identities at points on 10 x 401 (11
+strands; first tried 12 x 101 on 13 strands, 12 s in the unoptimized
+test build, moved), refusals and the byte cap at its boundary.
+
+Plants (build/temperley/plantae_t2b.py) 7/7 UT DICTUM: Delta recurrence
+with +; /delta dropped (motus stays green: a stabilization identity
+scales both sides alike - only absolute oracles catch it); sigma^-1
+given sigma's image; byte cap > -> >=; TL limes - 1 (caught by the
+limes equality test, and by small knots where the bound becomes too
+small to interpolate); punctum reported as A^-1; outputs written before
+a refusal.
+
+Plan deviation: the plan's "g not minimal in the point choice" plant is
+moot once the point choice is one shared function (both routes would
+change together and agree); g minimality is pinned instead by the
+p = 17 test (A = 1), and the plant was replaced by "punctum reported as
+A^-1".
+
+Build lists: tools/tabula_nodorum_generare.sh and venenum_probare.sh
+name their library sources by hand; lib/temperley.c added to both
+(fabrica's heal step failed until then). Knot table regenerates
+byte-identical (-probare).

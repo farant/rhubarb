@@ -1,6 +1,6 @@
 # temperley and the TL bracket in laqueus: plan (D136 T4, step 1)
 
-Status: v2 APPROVED by Fran (2026-10-30); T1, T2a done, T2b next.
+Status: v2 APPROVED by Fran (2026-10-30); T1, T2a, T2b done, T3 next.
 v1 (ca3b3fee) was approved by Fran on the API's shape, the library
 split, the name and the strand cap. The review (verdict "approve after
 fixes": H1–H2, X1, M1–M2, Q1–Q6) is at the end, with what each finding
@@ -319,6 +319,15 @@ do not occur with real braids); the unreachable "image not found" and
 - **T2b. `laqueus_modulus_temperley_*`.** The shared point-choice
   function, creare, aestimare, uncinus, limes, `laqueus_temperley_sumptus`;
   probatio additions except the dispatcher; plants.
+  **T2b note (2026-10-30, done).** 6c1860f7: the TL route as specified;
+  `_punctum_eligere` and `_quaestio_uncini` shared with the vertex
+  route (its output unchanged); 7 test sections; plants 7/7
+  (worklog). Deviations: the "g not minimal" plant is moot with a
+  shared point choice (replaced by "punctum reported as A⁻¹"; g pinned
+  by the p = 17 test); stabilization tested on 10 × 401 (11 strands)
+  instead of 12 × 401 (13 strands too slow in the test build); the two
+  hand-written source lists (knot-table generator, venenum gate) gained
+  lib/temperley.c.
 - **T3. Dispatcher.** `laqueus_via_eligere`, `laqueus_uncinus_ex_plexu`,
   `laqueus_jones_ex_plexu`; measure planning cost at 12 × 801 first;
   probatio; `lib/laqueus.worklog.md` entry.
