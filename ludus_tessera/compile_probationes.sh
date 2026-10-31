@@ -279,7 +279,7 @@ done
 # ---- 2. tessera (fontes) + pars pura musivi ----
 for src in "$RADIX_DIR"/tessera/fontes/*.c \
            "$RADIX_DIR/tessera/instrumenta/musivum/musivum_pictura.c"; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     _vocationem_addere "$src" "$BUILD_DIR/tessera_$base.o"
     obj_files="$obj_files $BUILD_DIR/tessera_$base.o"
 done
@@ -318,7 +318,7 @@ obj_files="$obj_files $obj"
 # ---- 3. fontes ludus_tessera ----
 shopt -s nullglob
 for src in "$LT_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     _vocationem_addere "$src" "$BUILD_DIR/$base.o"
     obj_files="$obj_files $BUILD_DIR/$base.o"
 done

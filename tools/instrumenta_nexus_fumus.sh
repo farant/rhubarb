@@ -18,7 +18,7 @@
 #        obiecta recompilantur et examen renectitur
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="nexus-instrumentorum" gradus="fusio" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh silva/transformare.sh tools/cursor_communis.sh" currit="silva/instrumenta/principalia/selecta.c" legit="include/* silva/fontes/* silva/instrumenta/*"/>
+# <porta titulus="nexus-instrumentorum" gradus="fusio" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh silva/transformare.sh silva/materia_substratum.sh tools/cursor_communis.sh" currit="silva/instrumenta/principalia/selecta.c" legit="include/* silva/fontes/* silva/instrumenta/*"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -164,6 +164,19 @@ chmod +x "$T/compilator_fractus"
 cc_struere "$T/compilator_fractus" > /dev/null 2>&1; rc=$?
 [ "$rc" -ne 0 ] && [ ! -e "$CC_T/extenta" ]
 credo $? "VII cursor communis: compilator fractus -> FALSUM, nihil nexum (rc $rc)"
+
+# VIII CAPUT MATERIAE (budget B2 H4: caput recentissimum semel in
+#      silva/materia_substratum.sh): caput sub materia/fontes tactum ->
+#      examen obiecta materiae recompilat ([materia]). Tempus capitis
+#      post restituitur (touch -r). Olim nulla porta caput materiae
+#      tangebat.
+CAPUT_VIII="$(ls materia/fontes/*.h | head -1)"
+touch -r "$CAPUT_VIII" "$T/caput_viii.tempus"
+./silva/examen.sh "$T/parva.c" > /dev/null 2>&1
+sleep 1; touch "$CAPUT_VIII"
+materia_n="$(./silva/examen.sh "$T/parva.c" 2>&1 > /dev/null | grep -c '\[materia\]')"
+touch -r "$T/caput_viii.tempus" "$CAPUT_VIII"
+[ "$materia_n" -gt 0 ]; credo $? "VIII examen: $CAPUT_VIII tactum -> materia recompilata ($materia_n [materia])"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus nexus: sanum"; exit 0; fi
