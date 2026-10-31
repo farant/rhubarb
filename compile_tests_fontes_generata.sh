@@ -156,6 +156,8 @@ declare -a SOURCE_FILES=(
     "lib/horreum_probatio.c"
     "lib/horreum_vocatio.c"
     "lib/hospitium.c"
+    "lib/hpack.c"
+    "lib/hpack_huffman.c"
     "lib/html_lexema.c"
     "lib/http.c"
     "lib/http_vocatio.c"
