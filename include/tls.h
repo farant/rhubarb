@@ -83,6 +83,13 @@ nomen structura {
     /* PROBATIONES SOLUM (tls13-plan P5): conatus 1.3 omittitur quasi
      * hospes 1.2 respondisset - signum DOWNGRD servi 1.3 probatur */
     b32 descensus_coactus;
+    /* ALPN (RFC 7301): index protocollorum oblatorum ordine
+     * praelationis (e.g. {"h2", "http/1.1"}); NIHIL/0 = nulla
+     * extensio, mores ut antea. Index et chordae vivere debent dum
+     * pactio currit (vectura BearSSL eas copiat). SecureTransport:
+     * neglectum (http2-plan C7). Electum: tls_protocollum. */
+    constans character* constans* protocolla;
+                             i32 protocolla_numerus;
 } TlsOptiones;
 
 /* Certificatum hospitis (folium primum catenae).
@@ -130,6 +137,12 @@ tls_optiones_default (vacuum);
 
 /* vectura quam optiones (NIHIL licet) et ambitus RHUBARB_TLS eligunt -
  * numquam ORDINARIA. Per connexionem legitur (setenv vim habet). */
+/* ALPN a servo electum ("h2"); vacua si nullum, ante pactionem, aut
+ * vectura SecureTransport. Chorda in piscina connexionis. */
+chorda
+tls_protocollum (
+    TlsConnexio* connexio);
+
 TlsVectura
 tls_vecturam_eligere (
     constans TlsOptiones* optiones);

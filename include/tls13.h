@@ -59,6 +59,10 @@ nomen structura {
      * HRR; NIHIL = encodator */
            constans i8* salutationes_fixae[II];
                    i32  salutationes_fixae_n[II];
+    /* ALPN (RFC 7301): index oblatus; NIHIL/0 = nullus. Electum
+     * tls13_machina_protocollum reddit. */
+    constans character* constans* protocolla;
+                             i32 protocolla_numerus;
 } Tls13Optiones;
 
 /* status (tls13_machina_status), bits */
@@ -163,6 +167,12 @@ tls13_machina_error (
 /* 0x0304 post pactionem; 0 ante */
 i32
 tls13_machina_versio (
+    Tls13Machina* machina);
+
+/* ALPN a servo electum (EncryptedExtensions); vacua si nullum aut ante
+ * pactionem. Chorda in machina. */
+chorda
+tls13_machina_protocollum (
     Tls13Machina* machina);
 
 /* catena servi (folium primum), DER in piscina; NIHIL ante */

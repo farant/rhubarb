@@ -1120,6 +1120,7 @@
   <vocabulum lemma="be16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="big-endian XVI bita - lib/git.c _be16 (index git, fabrica-plan-8 G2); frater be32 in copia tolerata"/>
   <vocabulum lemma="bearssl" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="BearSSL (Thomas Pornin) - nomen proprium; vectura TLS (vendor/bearssl, tls-bearssl T3, 2026-10-15)"/>
   <vocabulum lemma="hpack" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HPACK - compressio capitum HTTP/2 (RFC 7541); bibliotheca hpack (http2-plan T1, 2026-10-30)"/>
+  <vocabulum lemma="alpn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ALPN - Application-Layer Protocol Negotiation (RFC 7301), extensio TLS; TlsOptiones.protocolla (http2-plan T7, 2026-10-31)"/>
   <vocabulum lemma="http2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HTTP/2 (RFC 9113) - nomen protocolli; bibliothecae http2_forma, http2, http2_nexus (http2-plan T4, 2026-10-31)"/>
   <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>
   <vocabulum lemma="rfc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="RFC (Request for Comments, IETF) - abbreviatio; textus normarum ut oracula (tls13 T1, 2026-10-16)"/>
@@ -1969,6 +1970,8 @@
     <forma textus="protocollum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="protocolli" casus="genitivus" numerus="singularis" genus="neutrum"/>
     <forma textus="protocollo" casus="ablativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="protocolla" casus="nominativus" numerus="pluralis" genus="neutrum"/>
+    <forma textus="protocollorum" casus="genitivus" numerus="pluralis" genus="neutrum"/>
   </vocabulum>
   <vocabulum lemma="replica" lingua="latina" classis="substantivum" nota="replica, -ae f. (ex replicare, 'iterum plicare'; Latinitas recentior): exemplar documenti quod scriptor proprium tenet - hic volumen ut scriptor actuum (communio D2b, volumen_replica); WORDS caret">
     <forma textus="replica" casus="nominativus" numerus="singularis" genus="femininum"/>
