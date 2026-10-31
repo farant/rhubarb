@@ -8,9 +8,11 @@
 
 #include <string.h>
 
-/* conspectus libri unius: Xar de ChronicaRes in piscina conspectus */
+/* conspectus libri unius: eventa (ChronicaRes) et declarationes
+ * (ChronicaNomenRes, C5a) in piscina conspectus */
 nomen structura {
     Xar* res;
+    Xar* declarationes;
 } EventaLibri;
 
 structura ChronicaFontes {
@@ -53,28 +55,46 @@ paginam_addere (
                  chorda  pagina,
                  chorda  titulus,
                 Piscina* piscina,
-                    Xar* res)
+            EventaLibri* v)
 {
     Xar* lineae;
     Xar* eventa;
+    Xar* declarationes;
     Xar* vitia;
     i32  i;
 
-    lineae  = xar_creare(piscina, (i32)magnitudo(chorda));
-    eventa  = xar_creare(piscina, (i32)magnitudo(ChronicaEventus));
-    vitia   = xar_creare(piscina, (i32)magnitudo(ChronicaVitium));
-    si (   !lineae || !eventa || !vitia
+    lineae = xar_creare(piscina, (i32)magnitudo(chorda));
+    eventa = xar_creare(piscina,
+        (i32)magnitudo(ChronicaEventus));
+    declarationes  = xar_creare(piscina,
+        (i32)magnitudo(ChronicaDeclaratio));
+    vitia          = xar_creare(piscina,
+        (i32)magnitudo(ChronicaVitium));
+    si (   !lineae || !eventa || !declarationes || !vitia
         || !scriba_liber_paginam_legere_omnes(piscina, f->intern,
                f->volumen, praefixum, pagina, lineae)
-        || !chronica_eventa_legere(lineae, piscina, eventa, vitia))
+        || !chronica_eventa_legere(lineae, piscina, eventa, vitia)
+        || !chronica_nomina_legere(lineae, piscina, f->intern,
+               declarationes, vitia))
     {
         redde;
     }
     per (i = ZEPHYRUM; i < xar_numerus(eventa); i++)
     {
-        ChronicaRes* r = (ChronicaRes*)xar_addere(res);
+        ChronicaRes* r = (ChronicaRes*)xar_addere(v->res);
 
         r->eventus        = *(ChronicaEventus*)xar_obtinere(eventa, i);
+        r->liber          = liber;
+        r->pagina         = pagina;
+        r->titulus_libri  = titulus;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(declarationes); i++)
+    {
+        ChronicaNomenRes* r = (ChronicaNomenRes*)xar_addere(
+            v->declarationes);
+
+        r->declaratio     = *(ChronicaDeclaratio*)xar_obtinere(
+            declarationes, i);
         r->liber          = liber;
         r->pagina         = pagina;
         r->titulus_libri  = titulus;
@@ -89,7 +109,9 @@ eventa_nova (
 
     v = (EventaLibri*)piscina_allocare(piscina, magnitudo(EventaLibri));
     v->res = xar_creare(piscina, (i32)magnitudo(ChronicaRes));
-    redde v->res ? v : NIHIL;
+    v->declarationes = xar_creare(piscina,
+        (i32)magnitudo(ChronicaNomenRes));
+    redde v->res && v->declarationes ? v : NIHIL;
 }
 
 /* liber comitis: clavis = locus; paginae ordine indicis */
@@ -129,7 +151,7 @@ comitem_computare (
     {
         paginam_addere(f, praefixum, liber,
             *(chorda*)xar_obtinere(nomina, i), titulus, piscina,
-            v->res);
+            v);
     }
     redde v;
 }
@@ -149,7 +171,7 @@ communem_computare (
         paginam_addere(f, NIHIL, vacua(),
             chorda_transcribere(clavis, piscina),
             chorda_ex_literis(titulus_communis, piscina), piscina,
-            v->res);
+            v);
     }
     redde v;
 }
@@ -229,6 +251,24 @@ eventa_codificare (
         chorda_aedificator_appendere_evasus_json(a, e->descriptio);
         chorda_aedificator_appendere_character(a, '\n');
     }
+    /* C5a: declarationes - "D <pagina> <linea> <genus> <titulus>" */
+    per (i = ZEPHYRUM; v && v->declarationes
+        && i < xar_numerus(v->declarationes); i++)
+    {
+        constans ChronicaNomenRes* r = (constans ChronicaNomenRes*)
+            xar_obtinere(v->declarationes, i);
+
+        chorda_aedificator_appendere_literis(a, "D ");
+        chorda_aedificator_appendere_chorda(a, r->pagina);
+        chorda_aedificator_appendere_character(a, ' ');
+        chorda_aedificator_appendere_s32(a, (s32)r->declaratio.linea);
+        chorda_aedificator_appendere_character(a, ' ');
+        chorda_aedificator_appendere_s32(a, (s32)r->declaratio.genus);
+        chorda_aedificator_appendere_character(a, ' ');
+        chorda_aedificator_appendere_evasus_json(a,
+            r->declaratio.titulus);
+        chorda_aedificator_appendere_character(a, '\n');
+    }
     redde chorda_aedificator_finire(a);
 }
 
@@ -260,11 +300,41 @@ interior vacuum
 res_copiare (
     constans EventaLibri* v,
                      Xar* exitus,
+                     Xar* declarationes,
                  Piscina* piscina)
 {
     i32 i;
     i32 k;
 
+    per (i = ZEPHYRUM; v && v->declarationes
+        && i < xar_numerus(v->declarationes); i++)
+    {
+        constans ChronicaNomenRes* r = (constans ChronicaNomenRes*)
+            xar_obtinere(v->declarationes, i);
+        ChronicaNomenRes* n = (ChronicaNomenRes*)xar_addere(
+            declarationes);
+
+        *n = *r;
+        n->declaratio.titulus = copiare(r->declaratio.titulus,
+            piscina);
+        n->liber          = copiare(r->liber, piscina);
+        n->pagina         = copiare(r->pagina, piscina);
+        n->titulus_libri  = copiare(r->titulus_libri, piscina);
+        n->declaratio.attributa = xar_creare(piscina,
+            (i32)magnitudo(ChronicaAttributum));
+        per (k = ZEPHYRUM; r->declaratio.attributa
+            && k < xar_numerus(r->declaratio.attributa); k++)
+        {
+            constans ChronicaAttributum* s =
+                (constans ChronicaAttributum*)
+                xar_obtinere(r->declaratio.attributa, k);
+            ChronicaAttributum* d = (ChronicaAttributum*)xar_addere(
+                n->declaratio.attributa);
+
+            d->titulus  = copiare(s->titulus, piscina);
+            d->valor    = copiare(s->valor, piscina);
+        }
+    }
     per (i = ZEPHYRUM; v && i < xar_numerus(v->res); i++)
     {
         constans ChronicaRes* r = (constans ChronicaRes*)xar_obtinere(
@@ -406,6 +476,106 @@ librum_legere (
         : communem_computare(f, clavis, tempus);
 }
 
+/* C5a: entitates ordine octetorum nominis */
+interior s32
+entitates_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde chordas_comparare(&((constans ChronicaEntitas*)a)->titulus,
+        &((constans ChronicaEntitas*)b)->titulus);
+}
+
+interior vacuum
+entitatem_addere (
+                     Xar* x,
+    ChronicaGenusNominis  genus,
+                  chorda  titulus,
+                     i32  eventa,
+                     i32  declarationes)
+{
+    ChronicaEntitas* e;
+
+    si (titulus.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    e                 = (ChronicaEntitas*)xar_addere(x);
+    e->genus          = genus;
+    e->titulus        = titulus;
+    e->eventa         = eventa;
+    e->declarationes  = declarationes;
+}
+
+/* nomina declarata et ex eventis (people= aut place=), iuncta:
+ * eventa et declarationes numerata; chordae iam in tabula */
+interior Xar*
+entitates_colligere (
+    constans ChronicaTabula* t,
+       ChronicaGenusNominis  genus,
+                    Piscina* piscina,
+                    Piscina* tempus)
+{
+    Xar* omnes;
+    Xar* exitus;
+    i32  i;
+    i32  k;
+
+    omnes   = xar_creare(tempus, (i32)magnitudo(ChronicaEntitas));
+    exitus  = xar_creare(piscina, (i32)magnitudo(ChronicaEntitas));
+    si (!omnes || !exitus)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(t->res); i++)
+    {
+        constans ChronicaEventus* e = &((constans ChronicaRes*)
+            xar_obtinere(t->res, i))->eventus;
+
+        si (genus == CHRONICA_LOCUS)
+        {
+            entitatem_addere(omnes, genus, e->locus, I, ZEPHYRUM);
+            perge;
+        }
+        per (k = ZEPHYRUM; e->personae && k < xar_numerus(e->personae);
+             k++)
+        {
+            entitatem_addere(omnes, genus, *(chorda*)xar_obtinere(
+                e->personae, k), I, ZEPHYRUM);
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(t->declarationes); i++)
+    {
+        constans ChronicaDeclaratio* d = &((constans ChronicaNomenRes*)
+            xar_obtinere(t->declarationes, i))->declaratio;
+
+        si (d->genus == genus)
+        {
+            entitatem_addere(omnes, genus, d->titulus, ZEPHYRUM, I);
+        }
+    }
+    xar_ordinare(omnes, entitates_comparare);
+    per (i = ZEPHYRUM; i < xar_numerus(omnes); i++)
+    {
+        constans ChronicaEntitas* e = (constans ChronicaEntitas*)
+            xar_obtinere(omnes, i);
+        ChronicaEntitas* u = xar_numerus(exitus) > ZEPHYRUM
+            ? (ChronicaEntitas*)xar_obtinere(exitus,
+                  xar_numerus(exitus) - I) : NIHIL;
+
+        si (u && chorda_aequalis(u->titulus, e->titulus))
+        {
+            u->eventa         += e->eventa;
+            u->declarationes  += e->declarationes;
+        }
+        alioquin
+        {
+            *(ChronicaEntitas*)xar_addere(exitus) = *e;
+        }
+    }
+    redde exitus;
+}
+
 interior ChronicaTabula*
 tabulam_aedificare (
     ChronicaFontes* f,
@@ -419,9 +589,12 @@ tabulam_aedificare (
 
     t = (ChronicaTabula*)piscina_allocare(piscina,
         magnitudo(ChronicaTabula));
-    t->res   = xar_creare(piscina, (i32)magnitudo(ChronicaRes));
+    t->res   = xar_creare(piscina,
+        (i32)magnitudo(ChronicaRes));
     t->anni  = xar_creare(piscina, (i32)magnitudo(s32));
-    si (!t->res || !t->anni)
+    t->declarationes  = xar_creare(piscina,
+        (i32)magnitudo(ChronicaNomenRes));
+    si (!t->res || !t->anni || !t->declarationes)
     {
         redde NIHIL;
     }
@@ -434,14 +607,15 @@ tabulam_aedificare (
         {
             res_copiare(librum_legere(f, titulus_libri,
                 *(chorda*)xar_obtinere(nomina, i), tempus), t->res,
-                piscina);
+                t->declarationes, piscina);
         }
     }
     loci = comites_enumerare(f, tempus);
     per (i = ZEPHYRUM; loci && i < xar_numerus(loci); i++)
     {
         res_copiare(librum_legere(f, titulus_comitis,
-            *(chorda*)xar_obtinere(loci, i), tempus), t->res, piscina);
+            *(chorda*)xar_obtinere(loci, i), tempus), t->res,
+            t->declarationes, piscina);
     }
     xar_ordinare(t->res, res_comparare);
     per (i = ZEPHYRUM; i < xar_numerus(t->res); i++)
@@ -456,7 +630,11 @@ tabulam_aedificare (
             *(s32*)xar_addere(t->anni) = annus;
         }
     }
-    redde t;
+    t->personae  = entitates_colligere(t, CHRONICA_PERSONA, piscina,
+        tempus);
+    t->loca      = entitates_colligere(t, CHRONICA_LOCUS, piscina,
+        tempus);
+    redde t->personae && t->loca ? t : NIHIL;
 }
 
 
@@ -649,6 +827,37 @@ chronica_res_loci (
                     Piscina* piscina)
 {
     redde res_quaerere(tabula, titulus, FALSUM, piscina);
+}
+
+Xar*
+chronica_declarationes (
+    constans ChronicaTabula* tabula,
+       ChronicaGenusNominis  genus,
+                     chorda  titulus,
+                    Piscina* piscina)
+{
+    Xar* exitus;
+    i32  i;
+
+    si (!tabula || !piscina)
+    {
+        redde NIHIL;
+    }
+    exitus   = xar_creare(piscina, (i32)magnitudo(ChronicaNomenRes));
+    titulus  = chorda_praecidere(titulus);
+    per (i = ZEPHYRUM; exitus && tabula->declarationes
+        && i < xar_numerus(tabula->declarationes); i++)
+    {
+        constans ChronicaNomenRes* r = (constans ChronicaNomenRes*)
+            xar_obtinere(tabula->declarationes, i);
+
+        si (   r->declaratio.genus == genus
+            && chorda_aequalis(r->declaratio.titulus, titulus))
+        {
+            *(ChronicaNomenRes*)xar_addere(exitus) = *r;
+        }
+    }
+    redde exitus;
 }
 
 vacuum

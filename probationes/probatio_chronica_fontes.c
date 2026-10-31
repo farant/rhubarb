@@ -489,6 +489,87 @@ _probare_lineas_omnes (
     CREDO_AEQUALIS_I32(xar_numerus(lineae), ZEPHYRUM);
 }
 
+/* C5a: declarationes (person, place) cum eventis unitae */
+interior constans ChronicaEntitas*
+entitas (
+                        Xar* x,
+         constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; x && i < xar_numerus(x); i++)
+    {
+        constans ChronicaEntitas* e = (constans ChronicaEntitas*)
+            xar_obtinere(x, i);
+
+        si (chorda_aequalis_literis(e->titulus, titulus))
+        {
+            redde e;
+        }
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_probare_nomina (
+    CredoContextus* c)
+{
+                     Mundus* m;
+    constans ChronicaTabula* t;
+                        Xar* d;
+
+    m = (Mundus*)c->datum;
+    CREDO_NECESSE(m && m->fontes);
+    CREDO_VERUM(paginam_scribere(m, NIHIL, "historia",
+        "<person>Moses</person>\n"
+        "<place>Sinai</place>\n"
+        "<event year=\"-1446\" people=\"Moses; Aaron\" "
+        "place=\"Egypt\">Exodus</event>"));
+    CREDO_VERUM(paginam_scribere(m, "comes/sancti/sanctus/1", "1",
+        "<person>\n  <>Moses</>\n  <>Miriam</>\n</>"));
+    t = chronica_tabula(m->fontes);
+    CREDO_NECESSE_NON_NIHIL(t);
+
+    CREDO_GRADUS("personae: declaratae et ex eventis, ordine");
+    CREDO_NECESSE(t->personae && xar_numerus(t->personae) == III);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans ChronicaEntitas*)
+        xar_obtinere(t->personae, ZEPHYRUM))->titulus, "Aaron");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans ChronicaEntitas*)
+        xar_obtinere(t->personae, I))->titulus, "Miriam");
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans ChronicaEntitas*)
+        xar_obtinere(t->personae, II))->titulus, "Moses");
+    CREDO_AEQUALIS_I32(entitas(t->personae, "Moses")->eventa, I);
+    CREDO_AEQUALIS_I32(entitas(t->personae, "Moses")->declarationes,
+        II);
+    CREDO_AEQUALIS_I32(entitas(t->personae, "Miriam")->eventa,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(entitas(t->personae, "Aaron")->declarationes,
+        ZEPHYRUM);
+
+    CREDO_GRADUS("loca");
+    CREDO_NECESSE(t->loca && xar_numerus(t->loca) == II);
+    CREDO_AEQUALIS_I32(entitas(t->loca, "Sinai")->declarationes, I);
+    CREDO_AEQUALIS_I32(entitas(t->loca, "Egypt")->eventa, I);
+
+    CREDO_GRADUS("declarationes nominis cum origine");
+    d = chronica_declarationes(t, CHRONICA_PERSONA, lit(" Moses ",
+        c->piscina), c->piscina);
+    CREDO_NECESSE(d && xar_numerus(d) == II);
+    CREDO_CHORDA_VACUA(((constans ChronicaNomenRes*)xar_obtinere(d,
+        ZEPHYRUM))->liber);
+    CREDO_CHORDA_AEQUALIS_LITERIS(((constans ChronicaNomenRes*)
+        xar_obtinere(d, I))->liber, "comes/sancti/sanctus/1");
+    CREDO_AEQUALIS_I32(((constans ChronicaNomenRes*)xar_obtinere(d, I))
+        ->declaratio.linea, I);
+
+    CREDO_GRADUS("mutatio: declaratio deleta abit");
+    CREDO_VERUM(paginam_scribere(m, "comes/sancti/sanctus/1", "1",
+        "nihil"));
+    t = chronica_tabula(m->fontes);
+    CREDO_NIHIL(entitas(t->personae, "Miriam"));
+    CREDO_AEQUALIS_I32(entitas(t->personae, "Moses")->declarationes, I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "comes",          _probare_comitem,        mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -507,6 +588,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vacua",          _probare_vacuam,         mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { "lineae omnes",   _probare_lineas_omnes,   mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "nomina",         _probare_nomina,         mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

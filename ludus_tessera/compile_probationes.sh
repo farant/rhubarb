@@ -135,6 +135,7 @@ declare -a RADIX_FONTES=(
     "indagatio"        # genera-datorum D5: quaestio per textum plenum
     "indagatio_genera" # D5 S2: genera quaerenda domus
     "chronica_eventus" # chronica C1: eventa ex lineis paginae
+    "chronica_nomina" # chronica C5a: declarationes personarum, locorum
     "chronica_fontes" # chronica C2: eventa librorum in tabulam
     "chronica"        # chronica C3: latus tabulae temporum
     "indagatio_visus"  # D5 S3b: latus indagationis in vico ($search)

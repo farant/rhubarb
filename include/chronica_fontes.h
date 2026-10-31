@@ -28,6 +28,7 @@
 #include "volumen.h"
 #include "conspectus.h"
 #include "chronica_eventus.h"
+#include "chronica_nomina.h"
 
 nomen structura {
     ChronicaEventus eventus;
@@ -43,9 +44,30 @@ nomen structura {
  * dies; dies absens ante diem 1), deinde ceterae ordine libri -
  * communis primum, comites ordine loci (octeti), paginae ordine
  * indicis, eventa ordine textus. */
+/* declaratio cum origine (ut ChronicaRes) */
 nomen structura {
-    Xar* res;    /* ChronicaRes */
-    Xar* anni;   /* s32 distincti, ascendentes */
+    ChronicaDeclaratio declaratio;
+                chorda liber;
+                chorda pagina;
+                chorda titulus_libri;
+} ChronicaNomenRes;
+
+/* persona aut locus: nomina declarata UNITA cum people= / place=
+ * eventuum (nomen exactum post tonsuram) */
+nomen structura {
+    ChronicaGenusNominis genus;
+                  chorda titulus;
+                     i32 eventa;         /* numerus eventuum */
+                     i32 declarationes;  /* numerus declarationum */
+} ChronicaEntitas;
+
+nomen structura {
+    Xar* res;            /* ChronicaRes */
+    Xar* anni;           /* s32 distincti, ascendentes */
+    Xar* declarationes;  /* ChronicaNomenRes, ordine libri/paginae/
+                          * lineae (C5a) */
+    Xar* personae;       /* ChronicaEntitas, ordine octetorum nominis */
+    Xar* loca;           /* idem */
 } ChronicaTabula;
 
 nomen structura ChronicaFontes ChronicaFontes;   /* opacum */
@@ -87,6 +109,15 @@ chronica_res_personae (
 Xar*
 chronica_res_loci (
     constans ChronicaTabula* tabula,
+                     chorda  titulus,
+                    Piscina* piscina);
+
+/* declarationes nominis dati (praecisum, exactum), ordine tabulae;
+ * Xar de ChronicaNomenRes in piscina data (chordae in tabula) */
+Xar*
+chronica_declarationes (
+    constans ChronicaTabula* tabula,
+       ChronicaGenusNominis  genus,
                      chorda  titulus,
                     Piscina* piscina);
 

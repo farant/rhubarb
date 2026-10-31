@@ -327,26 +327,71 @@ vicus-level, model `probatio_vicus_navigator.c`).
   common book replaces right pane), checks (+ `./compile_tests.sh
   indagatio` and comites suites), commit.
 
-### Task 6 (C5): person and place views
+### Task 6a (C5a): person and place declarations - scan and gather
 
-**Files:** Modify `lib/chronica.c`, `apps/chronica/organum.stml`; Test:
-`probationes/probatio_chronica_latus.c` (section "personae").
+**Files:** Create `include/chronica_nomina.h`, `lib/chronica_nomina.c`
+(the declaration scanner: region finding + STML chain); Modify
+`include/chronica_fontes.h`, `lib/chronica_fontes.c` (declarations in
+the per-book projections and the table; people / places lists);
+Tests: `probationes/probatio_chronica_nomina.c`,
+`probationes/probatio_chronica_fontes.c` (section "nomina").
 
-**Interfaces:** Consumes `chronica_res_personae` / `chronica_res_loci`
-(Task 2). Loci: "chronica/persona/<nomen>", "chronica/locus/<nomen>",
-name escaped as `lib/semita.c` escapes route segments (`/`, `?`).
+**Interfaces:**
+- Consumes: `stml_legere`, `stml_distribuere` (STML 18); lines as
+  `chronica_eventa_legere` takes them (C1).
+- Produces (names settled in the header step):
+  `chronica_nomina_legere(lineae, piscina, intern, declarationes,
+  vitia)` -> declarations {genus person|place, titulus, linea,
+  columna, linea_finis, columna_finis, attributa}; vitia as
+  ChronicaVitium. In the table: declarationes (with origin like
+  ChronicaRes) and sorted entity lists (name, genus, event count,
+  declared?).
 
 - [ ] **Step 0: Header text to Fran.**
-- [ ] **Step 1: Failing tests:** Enter on "Moses" opens his view: heading
-  "Moses", his events in order each with its year ("1446 BC  Moses leads
-  the Exodus"), j/k pages; Ctrl+O returns to the year view at the same
-  year and selection; "Tomás de Aquino" locus round-trips (Review
-  Focus 4); place view the same; Enter on an event there = jump home;
-  click on a name opens it.
+- [ ] **Step 1: Failing tests (scanner):** single `<person>Moses</person>`
+  and `</>`; wrapper with `<>` items; with `<(>` items; place forms;
+  wrapper attribute inherited and item override kept in attributa;
+  tag in the middle of prose (line / column); multi-line region;
+  `distributio MIXTA` -> vitium with range, the next tag still read;
+  never closed -> vitium "non clausum"; `<people>` / `<Person>` not
+  tags; prose `a < b & c` around a tag does not break it; accents
+  byte-exact.
+- [ ] **Step 1b (gather):** a person declared only (no events) appears
+  in the people list with count 0; declared AND in events -> one entry;
+  declaration edited away -> gone after rebuild; place the same.
+- [ ] **Steps 2-7:** RED, implement, GREEN, plants (wrapper not
+  distributed; capture items ignored; region end off by one; declared
+  name not trimmed), checks, commit.
+
+### Task 6b (C5b): people / places indexes and pages
+
+**Files:** Modify `lib/chronica.c`, `include/chronica.h`,
+`apps/chronica/organum.stml` (visus personae | loca | persona | locus,
+field `nomen`); Tests: `probatio_chronica_latus.c` (sections
+"personae", "persona", ...), `probatio_vicus_chronica.c`.
+
+**Interfaces:** Consumes the table lists (6a) and
+`chronica_res_personae` / `_loci` (C2); jump home through `m->aperire`
+(C4b). Loci `chronica/personae`, `chronica/loca`,
+`chronica/persona/<name>`, `chronica/locus/<name>` (name escaped as
+`lib/semita.c` escapes route segments).
+
+- [ ] **Step 0: Header text to Fran.**
+- [ ] **Step 1: Failing tests:** `p` opens the people index (names
+  alphabetical, counts, pages); Enter opens "Moses": heading,
+  "Declared in" lines, events with years; Enter on a declaration /
+  event jumps home (route with line); Enter on a selected person in the
+  timeline opens the page; Ctrl+O back to the timeline; "Tomás de
+  Aquino" locus round-trips; places the same; click on a name opens;
+  companion locus per person page.
 - [ ] **Steps 2-7:** RED, implement, GREEN, plants (name not escaped;
-  back loses the year), checks, commit.
+  index ignores declared-only names; back loses the year), checks,
+  commit.
 
 ### Task 7 (C6): event tags coloured in scriba
+
+*(After C5a: `<person>` / `<place>` regions coloured the same way -
+good in the accent colour, refused / unclosed as errors.)*
 
 **Files:** Modify `lib/scriba_figurae.c:241` (beside `nexus_colorare`);
 Test: the scriba figurae suite (`./compile_tests.sh scriba_figurae` -

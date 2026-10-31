@@ -205,7 +205,11 @@ jump home; Esc / Ctrl+O back (house history rules).
   opener; companion: paired view right, page at the line left, focus
   left; common book: timeline stays right; Ctrl+O on the right returns;
   6 plants).
-- **C5** person / place views.
+- **C5** person / place: **C5a** `<person>` / `<place>` declarations
+  scanned (region + STML chain) and gathered with the events; **C5b**
+  people / places indexes and person / place pages in the pane (XV).
+  **C5a DONE 2026-10-30** (lib/chronica_nomina: region + STML chain,
+  9 sections; gathering 'nomina'; 6 plants).
 - **C6** scriba colouring of good / bad event tags.
 - Mouse in each phase as it lands.
 
@@ -247,6 +251,67 @@ STML parser.
 2. **The common book counts too.** Jump home from a common-book
    event opens the note in the left pane and leaves the timeline in
    the right pane (no paired view to open).
+
+## XV. Person and place tags (Fran, 2026-10-30)
+
+*Added after C4b. Fran: "another way to declare people through
+common/companion book"; "for now it's declaring that they exist";
+aliases and extra properties come later.*
+
+**Syntax** - English tags, like `<event>`, in any companion page or the
+common book:
+
+```
+<person>Moses</person>              one, closed by name or </>
+<person>                            several: anonymous items are
+  <>John</>                         instances of the parent
+  <>Greg</>                         (STML DISTRIBUTIO, reference 18)
+  </>
+<person>                            same, with forward-capture items
+  <(>John
+  <(>Greg
+  </>
+<place born="..."> ... </place>     same forms; attributes on the
+                                    wrapper carry down, an item's own
+                                    wins (STML 18)
+```
+
+- Found the way C1 finds events: the tag region (from `<person` to
+  its matching close) is located in the page text, then THAT REGION
+  alone goes through the STML chain (`stml_legere` +
+  `stml_distribuere`). Prose around it is never parsed as STML (it
+  may hold `<`, `&`). Fran: "finding the person tag inside the page
+  makes sense".
+- Each resulting element = one declaration: the name is its text,
+  whitespace collapsed, trimmed. Attributes are read and kept but
+  not shown yet (v1: declaring existence).
+- A region STML refuses (e.g. `distributio MIXTA`: anonymous items
+  mixed with text or named children) or never closed is an error
+  with its range, like a bad event (coloured in C6).
+
+**Meaning** - a declaration says the person / place EXISTS, even with
+no events. A person is the union of declared names and names in event
+`people=`; a place likewise with `place=`. Same key as VII: the
+trimmed name, exact.
+
+**Views** (C5):
+- **People index** and **places index**: every name, alphabetical,
+  paginated, with its event count; Enter / click opens the page.
+- **Person / place page**: the name as heading; "Declared in" - one
+  line per declaration (book title, page), Enter jumps home to the
+  declaration's line; then the person's events in date order, each
+  with its year, Enter jumps home (C4b route).
+- Reached from: Enter on a selected person / place in the timeline
+  (C4a selection), the index keys in the pane (*Claude's call:* `p` =
+  people, `P` = places), routes `chronica/personae`, `chronica/loca`,
+  `chronica/persona/<name>`, `chronica/locus/<name>`.
+- Every view has a locus, so each person / place page has its own
+  companion notebook (VII) - Fran can write about Moses there.
+- View changes push history: Ctrl+O on the right returns.
+
+**Non-goals now:** aliases, properties shown on the page
+(born / died / coordinates), merging with contacts (personae),
+person tags nested inside `<event>` text.
 
 ## XIV. AUDIENDA
 
