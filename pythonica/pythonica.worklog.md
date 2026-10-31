@@ -1461,3 +1461,26 @@ fabrica's git reads:
 Test: temp repo. Commit keeps the seal; unci's seal changes; edited
 content changes it; a newly tracked file changes it. Plant: HEAD in
 every seal → "commissio contentum non mutat" FRACTUM.
+
+## 2026-10-30 — fusio_probare: heal producers BEFORE judging gate binaries (park …XPBJD)
+
+In the 20f603f1 merge check, briar-fumus refused to start ("bin/briar
+... non RECENS") although the pre-gate phase had just printed
+"instrumenta portarum: 23 recentia". The order was the bug:
+`fusio_probare` judged and healed the gate binaries first, then ran
+`_producentes_fusionis_sanare`, which regenerated
+build/capsula_corpus_silicis.c (in briar's closure) and with it made
+bin/briar stale again. A later gate happened to heal briar mid-run (the
+binaries were fresh again when the run ended). `commissio` already had
+the right order (producers in its fabrica phase, gate binaries after).
+Swapped the two phases in fusio_probare. Test L now records phase order.
+Plant: original order → "producentes PRIMUM, deinde instrumenta" FRACTUM.
+
+Correction to a first guess: name mapping is NOT a problem. lib/portae.c
+already adds the hyphen variant (tools/briar_spectator.c →
+bin/briar-spectator) as a second candidate.
+
+Tooling note: `silva.planta(..., tolerans='spatia')` on a multi-line
+Python anchor re-flowed the indentation and produced an IndentationError
+("signum absens"), which is not a valid plant. For Python files, hand-plant
+with an exact replace plus backup/restore.

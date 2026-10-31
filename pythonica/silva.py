@@ -4076,10 +4076,15 @@ def fusio_probare(basis='main', frigida=True, recepta=True):
     with _phasis('ordo portarum'):
         portae, genera, _gradus, _ = _portas_ordinare(portae,
                                                       recepta=recepta)
-    with _phasis('instrumenta portarum'):
-        _instrumenta_portarum_sanare(binaria)
+    # PRODUCENTES PRIMUM, deinde instrumenta portarum (parcum …XPBJD,
+    # 2026-10-30): producens sanatus (capsula corporis silicis) binarium
+    # iam 'recens' iudicatum (bin/briar) stalum reddebat - briar-fumus
+    # 'non RECENS' post 23 instrumenta recentia. Commissio ordinem hunc
+    # iam tenet (producentes in phasi fabricae).
     with _phasis('producentes'):
         _producentes_fusionis_sanare()
+    with _phasis('instrumenta portarum'):
+        _instrumenta_portarum_sanare(binaria)
     try:
         _portas_currere(portae, genera, viae, recepta, pergere=True)
     except PortaeFractae as ex:

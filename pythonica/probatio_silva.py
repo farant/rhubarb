@@ -2779,16 +2779,27 @@ try:
         silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
                                              ('ficta-prob-2', 'probatio', '9000', 'fusio')])
         _pfs = silva._producentes_fusionis_sanare
+        _ips = silva._instrumenta_portarum_sanare
         _pfs_vocata = []
-        silva._producentes_fusionis_sanare = lambda: _pfs_vocata.append(cursae_ante())
+        _ordo_phasium = []
+        silva._producentes_fusionis_sanare = lambda: (
+            _ordo_phasium.append('producentes'),
+            _pfs_vocata.append(cursae_ante()))
+        silva._instrumenta_portarum_sanare = lambda b: (
+            _ordo_phasium.append('instrumenta'))
         cursae_ante = lambda: (open(_olog).read().split() if os.path.exists(_olog) else [])
         try:
             eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
         finally:
             silva._producentes_fusionis_sanare = _pfs
+            silva._instrumenta_portarum_sanare = _ips
         credo(_pfs_vocata == [[]],
               'fusio: producentes sanantur SEMEL ANTE portas (parcum …J1AJ5V2)',
               causa=repr(_pfs_vocata))
+        credo(_ordo_phasium == ['producentes', 'instrumenta'],
+              'fusio: producentes PRIMUM, deinde instrumenta portarum'
+              ' (parcum …XPBJD: producens sanatus binarium recens stalum'
+              ' reddebat)', causa=repr(_ordo_phasium))
         credo(err is None and cursae == ['ficta-prae-c', 'ficta-prob-2']
               and 'DILATA' not in eff,
               'fusio: debita rami et viarum, gradus ambo cursi', causa=repr((err, cursae, eff[-400:])))
