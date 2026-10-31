@@ -134,6 +134,15 @@ scriba_paginam_ostendere_ad_lineam (
             chorda  titulus,
                i32  linea);
 
+/* chronica C6: cursor in cellula (linea, columna) - cellula = octetus
+ * (visibilis), ergo columna lectoris eventuum; extra paginam: 0 */
+b32
+scriba_paginam_ostendere_ad_cellulam (
+    ScribaMontatio* m,
+            chorda  titulus,
+               i32  linea,
+               i32  columna);
+
 /* portam ponere (vicus: latus sinistrum); NIHIL = campus 'liber'
  * neglegitur */
 vacuum

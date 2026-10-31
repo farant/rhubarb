@@ -361,6 +361,17 @@ scriba_paginam_ostendere_ad_lineam (
             chorda  titulus,
                i32  linea)
 {
+    redde scriba_paginam_ostendere_ad_cellulam(m, titulus, linea,
+        ZEPHYRUM);
+}
+
+b32
+scriba_paginam_ostendere_ad_cellulam (
+    ScribaMontatio* m,
+            chorda  titulus,
+               i32  linea,
+               i32  columna)
+{
     chorda prior;
        b32 ok;
 
@@ -373,8 +384,8 @@ scriba_paginam_ostendere_ad_lineam (
     prior = m->ramus.repo->scriptor;
     insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
         "pagina.clavis", m->ramus.repo->piscina));
-    ok = scriba_actiones_paginam_ostendere_ad_lineam(&m->ramus, NIHIL,
-        &m->actiones_ctx, titulus, linea);
+    ok = scriba_actiones_paginam_ostendere_ad_cellulam(&m->ramus, NIHIL,
+        &m->actiones_ctx, titulus, linea, columna);
     insula_scriptorem_ponere(m->ramus.repo, prior);
     si (!ok)
     {

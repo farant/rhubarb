@@ -12,7 +12,21 @@
  * (COLOR_STATUS_INSERT / _NORMAL - ut verbum modi in linea status;
  * COLOR_CURSOR = aurum inserendi in themate); character sub eo
  * colore chartae superpingitur. Selectio (visualis): lineae totae,
- * ut pagina vetus. */
+ * ut pagina vetus.
+ *
+ * TAGS CHRONICAE (chronica C6): in folio libri (sa->liber) <event>,
+ * <person>, <place> per chronica_eventa_legere et
+ * chronica_nomina_legere super lineas folii TOTIUS leguntur (eventa
+ * per lineas fluunt) et colorantur:
+ *   eventus bonus    tag aperiens ('<event ...>') et claudens
+ *                    ('</event>' / '</>') colore accentus secundi (ut
+ *                    #nexus); descriptio textu ordinario
+ *   declaratio bona  regio tota colore accentus secundi
+ *   vitium           ambitus totus colore erroris (annus deest, non
+ *                    clausum, distributio mixta, ...)
+ * Lineae selectae non colorantur (textus ibi colore chartae), ut
+ * iussa et nexus. Cellula = octetus (visibilis: extra 32-126 spatium),
+ * ergo columnae lectoris cellulae sunt. */
 
 #ifndef SCRIBA_FIGURAE_H
 #define SCRIBA_FIGURAE_H

@@ -4956,6 +4956,7 @@ comitem_inventum_aperire (
                    chorda  liber,
                    chorda  pagina,
                       i32  linea,
+                      i32  columna,
                   Piscina* scheda)
 {
       ScribaMontatio* m;
@@ -4982,7 +4983,8 @@ comitem_inventum_aperire (
         (vacuum)semitam_aperire(ci->via, semita, scheda, &vitium);
     }
     redde vicus_comitem_ostendere(ci->vicus, liber, titulus, semita)
-        && scriba_paginam_ostendere_ad_lineam(m, pagina, linea);
+        && scriba_paginam_ostendere_ad_cellulam(m, pagina, linea,
+               columna);
 }
 
 interior b32
@@ -4998,6 +5000,7 @@ inventum_aperire (
                    chorda  liber;
                       i32  i;
                       i32  linea;
+                      i32  columna;
 
     ci = (ContextusIndagationis*)ctx;
     si (!ci || !ci->via)
@@ -5017,6 +5020,7 @@ inventum_aperire (
         liber.datum    = NIHIL;
         liber.mensura  = ZEPHYRUM;
         linea          = ZEPHYRUM;
+        columna        = ZEPHYRUM;
         per (i = ZEPHYRUM; i < titulus.mensura; i++)
         {
             si (titulus.datum[i] == '?')
@@ -5047,6 +5051,28 @@ inventum_aperire (
                 liber.mensura--;
             }
         }
+        /* chronica C6: "columna=<n>&" post lineam (cellula eventus) */
+        si (   liber.mensura > VIII
+            && memcmp(liber.datum, "columna=", VIII) == ZEPHYRUM)
+        {
+            liber.datum    += VIII;
+            liber.mensura  -= VIII;
+            dum (   liber.mensura > ZEPHYRUM
+                 && liber.datum[ZEPHYRUM] >= '0'
+                 && liber.datum[ZEPHYRUM] <= '9')
+            {
+                columna = columna * X + (i32)(liber.datum[ZEPHYRUM]
+                    - '0');
+                liber.datum++;
+                liber.mensura--;
+            }
+            si (   liber.mensura > ZEPHYRUM
+                && liber.datum[ZEPHYRUM] == '&')
+            {
+                liber.datum++;
+                liber.mensura--;
+            }
+        }
         si (   liber.mensura > VI
             && memcmp(liber.datum, "liber=", VI) == ZEPHYRUM)
         {
@@ -5066,13 +5092,13 @@ inventum_aperire (
         si (liber.mensura > ZEPHYRUM)
         {
             redde comitem_inventum_aperire(ci, sinistrum, liber,
-                titulus, linea, scheda);
+                titulus, linea, columna, scheda);
         }
         si (   sinistrum && sinistrum->montata
             && chorda_aequalis_literis(sinistrum->genus, "scriba")
-            && scriba_paginam_ostendere_ad_lineam(
+            && scriba_paginam_ostendere_ad_cellulam(
                    (ScribaMontatio*)sinistrum->montatio, titulus,
-                   linea))
+                   linea, columna))
         {
             redde vicus_focum_ponere(ci->vicus, VICUS_SINISTRUM);
         }

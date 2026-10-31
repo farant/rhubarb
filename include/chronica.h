@@ -54,10 +54,12 @@
  * aut ictus in electo domum aperit; C5: visus personae et loci.)
  * DOMUM (C4b): Enter (aut ictus in eventu iam electo) eventum electum
  * domum aperit per m->aperire, semita:
- *   comes      "scriba/<pagina>?linea=<n>&liber=<liber>" - visus
- *              comitatus dexter, comes in sinistro ad paginam, cursor
- *              in linea eventus
- *   communis   "scriba/<pagina>?linea=<n>" - pagina in sinistro,
+ *   comes      "scriba/<pagina>?linea=<n>&columna=<c>&liber=<liber>"
+ *              - visus comitatus dexter, comes in sinistro ad
+ *              paginam, cursor in cellula eventus (C6: cellula =
+ *              octetus)
+ *   communis   "scriba/<pagina>?linea=<n>&columna=<c>" - pagina in
+ *              sinistro,
  *              chronica dextra manet (spec XIII.2)
  * Persona aut locus electus: paginam suam aperit (C5b).
  * PERSONAE ET LOCA (C5b): p indicem personarum, P locorum aperit

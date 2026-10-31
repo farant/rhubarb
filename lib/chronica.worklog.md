@@ -200,3 +200,32 @@ lands on the same year.
 **Own goal:** I named a parameter `nomen` (the typedef macro!), which
 gave a pile of "storage class" errors. Renamed to `appellatio`.
 CLAUDE.md warns about exactly this.
+
+## 2026-10-31 - C6 scriba colouring + exact-column jump (Opus 5.5)
+
+**Colouring lives in scriba_figurae.c** (chronicam_colorare), called
+once per paint after the text loop, only on book pages (sa->liber),
+like #tags. It rebuilds raw lines from the sheet (cellula_cruda: '\0',
+tab and continuation become a space; bytes >= 128 stay raw), runs
+both scanners, then draws overlays: good event = opening tag (scan
+from the start to the first '>' outside quotes) + closing tag (back
+from the end to the last '<'), accent secondary; good declaration =
+whole region, accent secondary; any vitium = whole range, COLOR_ERROR.
+Selected lines are skipped. No seal cache yet (one sheet <= ~60
+lines; STML sees only tag regions).
+
+**Cell = byte:** scriba's visibilis() draws bytes outside 32..126 as
+blanks, so each cell holds one byte and the scanners' byte columns ARE
+cell columns. That made the exact-column jump safe: routes now carry
+`&columna=<c>` after `linea`, vicus reads it, and the new
+scriba_paginam_ostendere_ad_cellulam / scriba_actiones_..._ad_cellulam
+place the cursor. The _ad_lineam functions stay as wrappers (column
+0). The vicus test puts the event after "Hodie: " and expects
+cursor_columna 7.
+
+**Pixel-test pitfalls:** (1) the vicus left page is narrow
+(folii_columnae of a 480 px window), so a 39-char test line was cut
+and the event REALLY was unclosed (it showed red); keep test lines
+short. (2) A glyph bleeds one pixel into the next cell ('>' into the
+description's first cell), so "no accent in the description" became
+"text pixels outnumber accent pixels, and the last cell has none".

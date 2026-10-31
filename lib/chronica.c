@@ -1587,6 +1587,7 @@ domum_aperire (
                       chorda  liber;
                       chorda  pagina;
                          i32  linea;
+                         i32  columna;
 
     si (index < ZEPHYRUM)
     {
@@ -1621,9 +1622,10 @@ domum_aperire (
         constans ChronicaNomenRes* d = (constans ChronicaNomenRes*)
             xar_obtinere(f->tabula->declarationes, x->res);
 
-        liber   = d->liber;
-        pagina  = d->pagina;
-        linea   = d->declaratio.linea;
+        liber    = d->liber;
+        pagina   = d->pagina;
+        linea    = d->declaratio.linea;
+        columna  = d->declaratio.columna;
     }
     alioquin
     {
@@ -1631,12 +1633,16 @@ domum_aperire (
         liber = r->liber;
         pagina = r->pagina;
         linea = r->eventus.linea;
+        columna = r->eventus.columna;
     }
     a = chorda_aedificator_creare(m->piscina, (memoriae_index)CXXVIII);
     chorda_aedificator_appendere_literis(a, "scriba/");
     chorda_aedificator_appendere_chorda(a, pagina);
     chorda_aedificator_appendere_literis(a, "?linea=");
     chorda_aedificator_appendere_s32(a, (s32)linea);
+    /* C6: cellula = octetus, ergo columna lectoris */
+    chorda_aedificator_appendere_literis(a, "&columna=");
+    chorda_aedificator_appendere_s32(a, (s32)columna);
     si (liber.mensura > ZEPHYRUM)
     {
         chorda_aedificator_appendere_literis(a, "&liber=");

@@ -1119,13 +1119,15 @@ _probare_domum (
     clavis_nominata(w, CLAVIS_REDITUS);
     CREDO_AEQUALIS_I32(w->aperiones, I);
     CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
-        "scriba/1?linea=0&liber=comes/calendarium/dies/2026-10-30");
+        "scriba/1?linea=0&columna=0&liber=comes/calendarium/dies/"
+        "2026-10-30");
 
     CREDO_GRADUS("eventus communis: pagina et linea");
     tabula(w, FALSUM);
     CREDO_VERUM(pictum_colore(w, "Communis", COLOR_BACKGROUND));
     clavis_nominata(w, CLAVIS_REDITUS);
-    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta, "scriba/historia?linea=1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
+        "scriba/historia?linea=1&columna=0");
 
     CREDO_GRADUS("persona electa: paginam suam aperit (C5b), porta "
         "nulla");
@@ -1145,7 +1147,8 @@ _probare_domum (
     CREDO_VERUM(ictus_in_textu(w, "Comitis"));
     CREDO_AEQUALIS_I32(w->aperiones, III);
     CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
-        "scriba/1?linea=0&liber=comes/calendarium/dies/2026-10-30");
+        "scriba/1?linea=0&columna=0&liber=comes/calendarium/dies/"
+        "2026-10-30");
 }
 
 /* C5b: personae et loca */
@@ -1216,13 +1219,15 @@ _probare_paginam_nominis (
     tabula(w, FALSUM);
     CREDO_VERUM(pictum(w, "-> note: Notebook"));
     clavis_nominata(w, CLAVIS_REDITUS);
-    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta, "scriba/historia?linea=3");
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
+        "scriba/historia?linea=3&columna=0");
 
     CREDO_GRADUS("eventus: domum ad lineam eventus");
     tabula(w, FALSUM);
     CREDO_VERUM(pictum_colore(w, "Exodus", COLOR_BACKGROUND));
     clavis_nominata(w, CLAVIS_REDITUS);
-    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta, "scriba/historia?linea=1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
+        "scriba/historia?linea=1&columna=0");
 }
 
 /* P: loca; locus Egypt */

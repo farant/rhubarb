@@ -251,7 +251,7 @@ comitem_parare (
     }
     tabula_ex_literis_cum_dimensionibus(&folium, c->piscina,
         d->latitudo, d->altitudo,
-        "Nota diei\n<event year=\"1100\">Comes diei</event>");
+        "Nota diei\nHodie: <event year=\"1100\">Comes diei</event>");
     redde scriba_documentum_committere(d, &folium) > ZEPHYRUM
         && scriba_liber_comitem_notare(x->volumen, intern,
                "comes/calendarium/dies/2026-10-30", chorda_ex_literis(
@@ -330,6 +330,7 @@ _probare_domum_comitis (
         "comes/calendarium/dies/2026-10-30");
     CREDO_VERUM(campus_scribae(sm, "pagina", "1"));
     CREDO_VERUM(campus_scribae(sm, "cursor_linea", "1"));
+    CREDO_VERUM(campus_scribae(sm, "cursor_columna", "7"));
 
     CREDO_GRADUS("focus dexter, Ctrl+O: chronica eodem anno");
     CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));

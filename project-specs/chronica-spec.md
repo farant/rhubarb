@@ -213,6 +213,9 @@ jump home; Esc / Ctrl+O back (house history rules).
   (p / P indexes, person / place pages, Enter on a selected name; 5 +
   1 vicus sections, 5 plants).
 - **C6** scriba colouring of good / bad event tags.
+  **DONE 2026-10-31** (event tags + person / place regions in accent,
+  errors red, book pages only; plus the exact-column jump: cell =
+  byte, routes carry `&columna=`; 6 plants).
 - Mouse in each phase as it lands.
 
 ## XI. Left to the builder
