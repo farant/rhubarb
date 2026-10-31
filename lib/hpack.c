@@ -398,3 +398,700 @@ hpack_staticum (
     valor->mensura    = t[III];
     redde VERUM;
 }
+
+
+/* ==================================================
+ * T2: tabula dynamica (4)
+ * ================================================== */
+
+/* 4.1: magnitudo entrii = titulus + valor + XXXII */
+#define ENTRIUM_SUPERFLUUM  XXXII
+
+nomen structura {
+    i32 initium;      /* in octeti */
+    i32 titulus_n;
+    i32 valor_n;
+} Entrium;
+
+/* entria vetustissimum ad 'primum'; octeti entriorum contigui, ordine
+ * eodem, in [primus_octetus, finis_octetus) - compactio cum finis
+ * capacitatem tangit. Umbrae: copiae pro restitutione codificatoris
+ * cum capacitas exitus deficit. */
+structura HpackTabula {
+             i8* octeti;
+             i8* umbra_octetorum;
+        Entrium* entria;
+        Entrium* umbra_entriorum;
+            i32  capacitas;
+            i32  entria_capacitas;
+            i32  primus_octetus;
+            i32  finis_octetus;
+            i32  primum;
+            i32  numerus;
+            i32  usa;            /* summa magnitudinum entriorum */
+            i32  maxima;         /* magnitudo maxima currens */
+            i32  limes;          /* decodator: renovatio maxima */
+            i32  petita;         /* codificator: renovatio finalis */
+            i32  petita_minima;  /* ... et minima intercedens */
+            b32  renovatio;
+   HpackHuffman  modus;
+};
+
+HpackTabula*
+hpack_tabulam_creare (
+    Piscina* piscina,
+        i32  mensura)
+{
+    HpackTabula* t;
+
+    si (!piscina)
+    {
+        redde NIHIL;
+    }
+    t = (HpackTabula*)piscina_allocare(piscina, magnitudo(HpackTabula));
+    si (!t)
+    {
+        redde NIHIL;
+    }
+    memset(t, ZEPHYRUM, magnitudo(HpackTabula));
+    t->capacitas         = mensura;
+    t->entria_capacitas  = mensura / ENTRIUM_SUPERFLUUM + I;
+    t->octeti            = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(mensura + I));
+    t->umbra_octetorum   = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(mensura + I));
+    t->entria            = (Entrium*)piscina_allocare(piscina,
+        (memoriae_index)t->entria_capacitas * magnitudo(Entrium));
+    t->umbra_entriorum   = (Entrium*)piscina_allocare(piscina,
+        (memoriae_index)t->entria_capacitas * magnitudo(Entrium));
+    si (   !t->octeti || !t->umbra_octetorum || !t->entria
+        || !t->umbra_entriorum)
+    {
+        redde NIHIL;
+    }
+    t->maxima  = mensura;
+    t->limes   = mensura;
+    t->modus   = HPACK_HUFFMAN_SI_BREVIOR;
+    redde t;
+}
+
+interior i32
+_pondus (
+    constans Entrium* e)
+{
+    redde e->titulus_n + e->valor_n + ENTRIUM_SUPERFLUUM;
+}
+
+interior vacuum
+_evincere (
+    HpackTabula* t)
+{
+    t->usa -= _pondus(&t->entria[t->primum]);
+    t->primum++;
+    t->numerus--;
+    si (t->numerus == ZEPHYRUM)
+    {
+        t->primum          = ZEPHYRUM;
+        t->primus_octetus  = ZEPHYRUM;
+        t->finis_octetus   = ZEPHYRUM;
+    }
+    alioquin
+    {
+        t->primus_octetus = t->entria[t->primum].initium;
+    }
+}
+
+interior vacuum
+_magnitudinem (
+    HpackTabula* t,
+            i32  maxima)
+{
+    t->maxima = maxima;
+    dum (t->numerus > ZEPHYRUM && t->usa > t->maxima)
+    {
+        _evincere(t);
+    }
+}
+
+/* 4.4: entrium maius maxima tabulam vacuat nec additur */
+interior vacuum
+_addere (
+    HpackTabula* t,
+         chorda  titulus,
+         chorda  valor)
+{
+    i32 m;
+    i32 octeti;
+    i32 i;
+
+    m = titulus.mensura + valor.mensura + ENTRIUM_SUPERFLUUM;
+    dum (t->numerus > ZEPHYRUM && t->usa + m > t->maxima)
+    {
+        _evincere(t);
+    }
+    si (m > t->maxima)
+    {
+        redde;
+    }
+    octeti = titulus.mensura + valor.mensura;
+    si (t->finis_octetus + octeti > t->capacitas)
+    {
+        memmove(t->octeti, t->octeti + t->primus_octetus,
+            (size_t)(t->finis_octetus - t->primus_octetus));
+        per (i = ZEPHYRUM; i < t->numerus; i++)
+        {
+            t->entria[t->primum + i].initium -= t->primus_octetus;
+        }
+        t->finis_octetus   -= t->primus_octetus;
+        t->primus_octetus  = ZEPHYRUM;
+    }
+    si (t->primum + t->numerus >= t->entria_capacitas)
+    {
+        memmove(t->entria, t->entria + t->primum,
+            (size_t)t->numerus * magnitudo(Entrium));
+        t->primum = ZEPHYRUM;
+    }
+    memcpy(t->octeti + t->finis_octetus, titulus.datum,
+        (size_t)titulus.mensura);
+    memcpy(t->octeti + t->finis_octetus + titulus.mensura, valor.datum,
+        (size_t)valor.mensura);
+    t->entria[t->primum + t->numerus].initium    = t->finis_octetus;
+    t->entria[t->primum + t->numerus].titulus_n  = titulus.mensura;
+    t->entria[t->primum + t->numerus].valor_n    = valor.mensura;
+    t->finis_octetus                             += octeti;
+    t->numerus++;
+    t->usa += m;
+}
+
+i32
+hpack_tabula_numerus (
+    constans HpackTabula* t)
+{
+    redde t ? t->numerus : ZEPHYRUM;
+}
+
+i32
+hpack_tabula_magnitudo (
+    constans HpackTabula* t)
+{
+    redde t ? t->usa : ZEPHYRUM;
+}
+
+b32
+hpack_tabula_obtinere (
+    constans HpackTabula* t,
+                     i32  i,
+                  chorda* titulus,
+                  chorda* valor)
+{
+    constans Entrium* e;
+
+    si (!t || !titulus || !valor || i < I || i > t->numerus)
+    {
+        redde FALSUM;
+    }
+    e                 = &t->entria[t->primum + t->numerus - i];
+    titulus->datum    = t->octeti + e->initium;
+    titulus->mensura  = e->titulus_n;
+    valor->datum      = t->octeti + e->initium + e->titulus_n;
+    valor->mensura    = e->valor_n;
+    redde VERUM;
+}
+
+/* spatium indicum commune (2.3.3): I..LXI statica, deinde dynamica */
+interior b32
+_indicatum (
+    constans HpackTabula* t,
+                     i32  index,
+                  chorda* titulus,
+                  chorda* valor)
+{
+    si (index <= HPACK_STATICA_NUMERUS)
+    {
+        redde hpack_staticum(index, titulus, valor);
+    }
+    redde hpack_tabula_obtinere(t, index - HPACK_STATICA_NUMERUS,
+        titulus, valor);
+}
+
+vacuum
+hpack_magnitudinem_ponere (
+    HpackTabula* t,
+            i32  mensura)
+{
+    i32 m;
+
+    si (!t)
+    {
+        redde;
+    }
+    m         = mensura < t->capacitas ? mensura : t->capacitas;
+    t->limes  = m;
+    si (!t->renovatio || m < t->petita_minima)
+    {
+        t->petita_minima = m;
+    }
+    t->petita = m;
+    si (m != t->maxima || t->petita_minima != t->maxima)
+    {
+        t->renovatio = VERUM;
+    }
+}
+
+vacuum
+hpack_huffman_ponere (
+     HpackTabula* t,
+    HpackHuffman  modus)
+{
+    si (t)
+    {
+        t->modus = modus;
+    }
+}
+
+
+/* ==================================================
+ * T2: decodator (6)
+ * ================================================== */
+
+interior chorda
+_copia (
+      chorda  s,
+     Piscina* piscina)
+{
+    chorda r;
+
+    r.mensura  = s.mensura;
+    r.datum    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(s.mensura + I));
+    si (r.datum && s.mensura > ZEPHYRUM)
+    {
+        memcpy(r.datum, s.datum, (size_t)s.mensura);
+    }
+    redde r;
+}
+
+/* integrum ad pos: truncatum (nullus octetus terminans) an nimium */
+interior HpackError
+_integrum (
+    constans i8* datum,
+            i32  n,
+            i32  pos,
+            i32  prefixum,
+            i32* valor,
+            i32* consumpti)
+{
+    i32 j;
+
+    si (pos >= n)
+    {
+        redde HPACK_ERROR_TRUNCATUM;
+    }
+    si (hpack_integrum_legere(datum + pos, n - pos, prefixum, valor,
+            consumpti))
+    {
+        redde HPACK_BENE;
+    }
+    per (j = pos + I; j < n; j++)
+    {
+        si (!(datum[j] & 0x80))
+        {
+            redde HPACK_ERROR_INTEGRUM;
+        }
+    }
+    redde HPACK_ERROR_TRUNCATUM;
+}
+
+/* chorda literalis (5.2) ad *pos, in piscina */
+interior HpackError
+_chordam_legere (
+    constans i8* datum,
+            i32  n,
+            i32* pos,
+        Piscina* piscina,
+         chorda* exitus)
+{
+    HpackError e;
+           b32 huffman;
+           i32 longitudo;
+           i32 k;
+
+    si (*pos >= n)
+    {
+        redde HPACK_ERROR_TRUNCATUM;
+    }
+    huffman  = (datum[*pos] & 0x80) != ZEPHYRUM;
+    e        = _integrum(datum, n, *pos, VII, &longitudo, &k);
+    si (e != HPACK_BENE)
+    {
+        redde e;
+    }
+    *pos += k;
+    si (longitudo > n - *pos)
+    {
+        redde HPACK_ERROR_TRUNCATUM;
+    }
+    si (huffman)
+    {
+        si (!hpack_huffman_legere(datum + *pos, longitudo, piscina,
+                exitus))
+        {
+            redde HPACK_ERROR_HUFFMAN;
+        }
+    }
+    alioquin
+    {
+        exitus->mensura  = longitudo;
+        exitus->datum    = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(longitudo + I));
+        si (!exitus->datum)
+        {
+            redde HPACK_ERROR_NIMIA;
+        }
+        memcpy(exitus->datum, datum + *pos, (size_t)longitudo);
+    }
+    *pos += longitudo;
+    redde HPACK_BENE;
+}
+
+HpackError
+hpack_decodere (
+    HpackTabula* t,
+    constans i8* datum,
+            i32  n,
+            i32  capita_maxima,
+        Piscina* piscina,
+            Xar* capita)
+{
+    HpackError  e;
+           i32  pos;
+           i32  k;
+           i32  index;
+           i32  prefixum;
+           b32  initium;
+           b32  indicare;
+           i64  summa;
+    HpackCaput  h;
+    HpackCaput* locus;
+
+    si (!t || (n > ZEPHYRUM && !datum) || !piscina || !capita)
+    {
+        redde HPACK_ERROR_TRUNCATUM;
+    }
+    pos      = ZEPHYRUM;
+    initium  = VERUM;
+    summa    = ZEPHYRUM;
+    dum (pos < n)
+    {
+        i32 b = datum[pos];
+
+        h.numquam  = FALSUM;
+        indicare   = FALSUM;
+        si (b & 0x80)
+        {
+            /* 6.1 indicatum */
+            e = _integrum(datum, n, pos, VII, &index, &k);
+            si (e != HPACK_BENE)
+            {
+                redde e;
+            }
+            pos += k;
+            si (   index == ZEPHYRUM
+                || !_indicatum(t, index, &h.titulus, &h.valor))
+            {
+                redde HPACK_ERROR_INDEX;
+            }
+            h.titulus  = _copia(h.titulus, piscina);
+            h.valor    = _copia(h.valor, piscina);
+        }
+        alioquin si ((b & 0xe0) == 0x20)
+        {
+            /* 6.3 renovatio magnitudinis: solum initio, intra limitem */
+            e = _integrum(datum, n, pos, V, &index, &k);
+            si (e != HPACK_BENE)
+            {
+                redde e;
+            }
+            pos += k;
+            si (!initium || index > t->limes)
+            {
+                redde HPACK_ERROR_MAGNITUDO;
+            }
+            _magnitudinem(t, index);
+            perge;
+        }
+        alioquin
+        {
+            /* 6.2 literalia: cum indice (01), sine (0000), numquam
+             * (0001) */
+            si ((b & 0xc0) == 0x40)
+            {
+                prefixum = VI;
+                indicare = VERUM;
+            }
+            alioquin
+            {
+                prefixum   = IV;
+                h.numquam  = (b & 0x10) != ZEPHYRUM;
+            }
+            e = _integrum(datum, n, pos, prefixum, &index, &k);
+            si (e != HPACK_BENE)
+            {
+                redde e;
+            }
+            pos += k;
+            si (index == ZEPHYRUM)
+            {
+                e = _chordam_legere(datum, n, &pos, piscina,
+                    &h.titulus);
+                si (e != HPACK_BENE)
+                {
+                    redde e;
+                }
+            }
+            alioquin
+            {
+                chorda ignotum;
+
+                si (!_indicatum(t, index, &h.titulus, &ignotum))
+                {
+                    redde HPACK_ERROR_INDEX;
+                }
+                h.titulus = _copia(h.titulus, piscina);
+            }
+            e = _chordam_legere(datum, n, &pos, piscina, &h.valor);
+            si (e != HPACK_BENE)
+            {
+                redde e;
+            }
+        }
+        initium  = FALSUM;
+        summa   += (i64)h.titulus.mensura + (i64)h.valor.mensura
+                 + (i64)ENTRIUM_SUPERFLUUM;
+        si (capita_maxima > ZEPHYRUM && summa > (i64)capita_maxima)
+        {
+            redde HPACK_ERROR_NIMIA;
+        }
+        locus = (HpackCaput*)xar_addere(capita);
+        si (!locus)
+        {
+            redde HPACK_ERROR_NIMIA;
+        }
+        *locus = h;
+        si (indicare)
+        {
+            _addere(t, h.titulus, h.valor);
+        }
+    }
+    redde HPACK_BENE;
+}
+
+
+/* ==================================================
+ * T2: codificator (http2-plan C2)
+ * ================================================== */
+
+interior b32
+_secretum (
+    constans HpackCaput* h)
+{
+    redde h->numquam
+        || chorda_aequalis_literis(h->titulus, "authorization")
+        || chorda_aequalis_literis(h->titulus, "proxy-authorization")
+        || (   chorda_aequalis_literis(h->titulus, "cookie")
+            && h->valor.mensura < XX);
+}
+
+/* index paris exacti (statica, deinde dynamica recentissima primum),
+ * aliter tituli; 0 nullum */
+interior i32
+_quaerere (
+    constans HpackTabula* t,
+                  chorda  titulus,
+                  chorda  valor,
+                     b32* exactum)
+{
+    chorda n;
+    chorda v;
+       i32 i;
+       i32 gradus;
+
+    *exactum = FALSUM;
+    per (gradus = ZEPHYRUM; gradus < II; gradus++)
+    {
+        per (i = I; i <= HPACK_STATICA_NUMERUS + t->numerus; i++)
+        {
+            (vacuum)_indicatum(t, i, &n, &v);
+            si (!chorda_aequalis(n, titulus))
+            {
+                perge;
+            }
+            si (gradus == I || chorda_aequalis(v, valor))
+            {
+                *exactum = gradus == ZEPHYRUM;
+                redde i;
+            }
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+interior b32
+_integrum_scribere (
+    i32  valor,
+    i32  prefixum,
+    i32  primus,
+     i8* exitus,
+    i32  capacitas,
+    i32* pos)
+{
+    i32 k;
+
+    k = hpack_integrum_scribere(valor, prefixum, primus, exitus + *pos,
+        capacitas - *pos);
+    *pos += k;
+    redde k > ZEPHYRUM;
+}
+
+interior b32
+_chordam_scribere (
+    constans HpackTabula* t,
+                  chorda  s,
+                      i8* exitus,
+                     i32  capacitas,
+                     i32* pos)
+{
+    i32 longitudo_h;
+    b32 huffman;
+
+    longitudo_h  = hpack_huffman_longitudo(s);
+    huffman      = t->modus == HPACK_HUFFMAN_SEMPER
+                || (t->modus == HPACK_HUFFMAN_SI_BREVIOR
+                    && longitudo_h < s.mensura);
+    si (!_integrum_scribere(huffman ? longitudo_h : s.mensura, VII,
+            huffman ? 0x80 : ZEPHYRUM, exitus, capacitas, pos))
+    {
+        redde FALSUM;
+    }
+    si (huffman)
+    {
+        si (longitudo_h > capacitas - *pos)
+        {
+            redde FALSUM;
+        }
+        (vacuum)hpack_huffman_scribere(s, exitus + *pos,
+            capacitas - *pos);
+        *pos += longitudo_h;
+        redde VERUM;
+    }
+    si (s.mensura > capacitas - *pos)
+    {
+        redde FALSUM;
+    }
+    memcpy(exitus + *pos, s.datum, (size_t)s.mensura);
+    *pos += s.mensura;
+    redde VERUM;
+}
+
+/* literale: praefixum/primus repraesentationis, titulus indicatus aut
+ * literalis, valor */
+interior b32
+_formam_scribere (
+    constans HpackTabula* t,
+     constans HpackCaput* h,
+                     i32  index,
+                     i32  prefixum,
+                     i32  primus,
+                      i8* exitus,
+                     i32  capacitas,
+                     i32* pos)
+{
+    redde _integrum_scribere(index, prefixum, primus, exitus,
+               capacitas, pos)
+        && (index != ZEPHYRUM
+            || _chordam_scribere(t, h->titulus, exitus, capacitas, pos))
+        && _chordam_scribere(t, h->valor, exitus, capacitas, pos);
+}
+
+i32
+hpack_codificare (
+            HpackTabula* t,
+    constans HpackCaput* capita,
+                    i32  numerus,
+                     i8* exitus,
+                    i32  capacitas)
+{
+    HpackTabula salva;
+            i32 pos;
+            i32 i;
+            i32 index;
+            b32 exactum;
+            b32 bene;
+
+    si (!t || (numerus > ZEPHYRUM && !capita) || !exitus)
+    {
+        redde ZEPHYRUM;
+    }
+    salva = *t;
+    memcpy(t->umbra_octetorum, t->octeti, (size_t)t->capacitas);
+    memcpy(t->umbra_entriorum, t->entria,
+        (size_t)t->entria_capacitas * magnitudo(Entrium));
+    pos   = ZEPHYRUM;
+    bene  = VERUM;
+    si (t->renovatio)
+    {
+        /* 4.2: minima intercedens prius, deinde finalis */
+        si (t->petita_minima < t->petita)
+        {
+            bene = _integrum_scribere(t->petita_minima, V, 0x20, exitus,
+                capacitas, &pos);
+            _magnitudinem(t, t->petita_minima);
+        }
+        bene = bene && _integrum_scribere(t->petita, V, 0x20, exitus,
+            capacitas, &pos);
+        _magnitudinem(t, t->petita);
+        t->renovatio = FALSUM;
+    }
+    per (i = ZEPHYRUM; bene && i < numerus; i++)
+    {
+        constans HpackCaput* h = &capita[i];
+
+        index = _quaerere(t, h->titulus, h->valor, &exactum);
+        si (_secretum(h))
+        {
+            bene = _formam_scribere(t, h, index, IV, 0x10, exitus,
+                capacitas,
+                &pos);
+        }
+        alioquin si (exactum)
+        {
+            bene = _integrum_scribere(index, VII, 0x80, exitus,
+                capacitas, &pos);
+        }
+        alioquin si (h->titulus.mensura + h->valor.mensura
+                     + ENTRIUM_SUPERFLUUM > t->maxima)
+        {
+            bene = _formam_scribere(t, h, index, IV, ZEPHYRUM, exitus,
+                capacitas, &pos);
+        }
+        alioquin
+        {
+            bene = _formam_scribere(t, h, index, VI, 0x40, exitus,
+                capacitas,
+                &pos);
+            si (bene)
+            {
+                _addere(t, h->titulus, h->valor);
+            }
+        }
+    }
+    si (!bene)
+    {
+        *t = salva;
+        memcpy(t->octeti, t->umbra_octetorum, (size_t)t->capacitas);
+        memcpy(t->entria, t->umbra_entriorum,
+            (size_t)t->entria_capacitas * magnitudo(Entrium));
+        redde ZEPHYRUM;
+    }
+    redde pos;
+}
