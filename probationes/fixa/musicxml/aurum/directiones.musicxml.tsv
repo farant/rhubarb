@@ -1,0 +1,13 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: sound dacapo/fine sumuntur (ordo P6); music21 expandRepeats recusat
+P1	0	1	72	C	0	0	-
+P1	1	1	74	D	0	0	-
+P1	2	1	76	E	0	0	-
+P1	3	1	77	F	0	0	-
+P1	4	4	79	G	0	0	-
+P1	8	1	72	C	0	0	-
+P1	9	1	74	D	0	0	-
+P1	10	1	76	E	0	0	-
+P1	11	1	77	F	0	0	-
+P1	12	4	79	G	0	0	-

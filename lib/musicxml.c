@@ -423,6 +423,8 @@ nomen structura {
          MusicxmlTranspositio  transpositio;   /* vigens */
 constans MusicxmlInstrumentum* instrumenta;   /* partis (percussio) */
                           i32  numerus_instrumentorum;
+            MusicxmlClavicula  claviculae[XVI];  /* vigentes per
+                                                  * baculum (I..XVI) */
 } StatusPartis;
 
 interior vacuum
@@ -666,6 +668,10 @@ _attributa_legere (
         {
             k->octava_mutata = (s32)v;
         }
+        si (k->baculum >= I && k->baculum <= XVI)
+        {
+            sp->claviculae[k->baculum - I] = *k;
+        }
     }
     t->claviculae = (MusicxmlClavicula*)_tabula(l, claviculae,
         (i32)magnitudo(MusicxmlClavicula), &t->numerus_clavicularum);
@@ -702,7 +708,6 @@ nomen structura {
      s64 maximum;
      b32 prior_adest;        /* nota prior (non acordi) in mensura */
      s64 prior_positio;
-  chorda prior_vox;
 } StatusMensurae;
 
 /* duratio in divisionibus operis; FALSUM si abest aut illegibilis */
@@ -1142,6 +1147,43 @@ _signa_legere (
         (i32)magnitudo(MusicxmlSignum), &n->numerus_signorum);
 }
 
+/* linea media baculi sub clavicula (unpitched sine display-step):
+ * G2 -> B4, F4 -> D3, C3 -> C4; percussio et nulla ut G2 */
+interior vacuum
+_lineam_mediam (
+    constans MusicxmlClavicula* k,
+                     character* littera,
+                           s32* octava)
+{
+    s32 ordo   = IV;          /* G */
+    s32 oct    = IV;
+    s32 linea  = II;
+    s32 summa;
+    s32 o;
+
+    si (k->signum == 'F')
+    {
+        ordo   = III;
+        oct    = III;
+        linea  = IV;
+    }
+    alioquin si (k->signum == 'C')
+    {
+        ordo   = ZEPHYRUM;
+        oct    = IV;
+        linea  = III;
+    }
+    si (k->linea > ZEPHYRUM && k->signum != 'P' && k->signum != 'N')
+    {
+        linea = (s32)k->linea;
+    }
+    summa = oct * VII + ordo + (III - linea) * II
+        + VII * k->octava_mutata;
+    o         = summa >= ZEPHYRUM ? summa / VII : -((VI - summa) / VII);
+    *littera  = "CDEFGAB"[summa - VII * o];
+    *octava   = o;
+}
+
 /* VERUM = nota addenda in *n */
 interior b32
 _notam_legere (
@@ -1225,6 +1267,13 @@ _notam_legere (
         {
             n->octava = (s32)v;
         }
+        si (n->littera == '\0')
+        {
+            /* sine display-step: linea media baculi (MusicXML) */
+            _lineam_mediam(&sp->claviculae[n->baculum >= I
+                && n->baculum <= XVI ? n->baculum - I : ZEPHYRUM],
+                &n->littera, &n->octava);
+        }
         si ((f = xml_filius(e, "instrument")) != NIHIL)
         {
             n->instrumentum = _attributum(f, "id");
@@ -1277,8 +1326,9 @@ _notam_legere (
     _signa_legere(l, e, n);
     _sonantem_computare(sp, l->concentus, n);
 
-    si (   acordum && sm->prior_adest && chorda_aequalis(sm->prior_vox,
-            n->vox))
+    /* chord: sonus additus notae PRIORI (MusicXML) - vox quaelibet
+     * (suita 21i: acordum per voces X et Y), etiam post backup */
+    si (acordum && sm->prior_adest)
     {
         n->acordum = VERUM;
         n->positio = sm->prior_positio;
@@ -1288,13 +1338,12 @@ _notam_legere (
         si (acordum)
         {
             _vitium(l, MUSICXML_MONITUM, MUSICXML_ACORDUM_PRIMUM, e,
-                "chord in nota prima vocis (nota plana facta)",
+                "chord in nota prima mensurae (nota plana facta)",
                 _vacua());
         }
         n->positio         = sm->cursor;
         sm->prior_adest    = VERUM;
         sm->prior_positio  = sm->cursor;
-        sm->prior_vox      = n->vox;
         sm->cursor         += d;
     }
     si (n->positio + d > sm->maximum)
@@ -1904,7 +1953,6 @@ _mensuram_legere (
                     _vacua());
                 sm.cursor = ZEPHYRUM;
             }
-            sm.prior_adest = FALSUM;
         }
         alioquin si (chorda_aequalis_literis(titulus, "forward"))
         {
@@ -1919,7 +1967,6 @@ _mensuram_legere (
             {
                 sm.maximum = sm.cursor;
             }
-            sm.prior_adest = FALSUM;
         }
         alioquin si (chorda_aequalis_literis(titulus, "attributes"))
         {

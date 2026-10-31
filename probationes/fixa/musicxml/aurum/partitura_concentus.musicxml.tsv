@@ -1,0 +1,4 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: concert-score (4.0): numquam bis transponitur; music21 iterum transponit
+P1	0	1	74	D	0	0	-

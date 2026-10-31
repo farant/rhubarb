@@ -89,7 +89,7 @@ nomen enumeratio {
     MUSICXML_REGRESSUS_NIMIUS,    /* regressus <backup> ante initium
                                    * mensurae (coercetur) */
     MUSICXML_LIGATURA_PENDENS,    /* tie start sine stop aut contra */
-    MUSICXML_ACORDUM_PRIMUM,      /* nota prima vocis cum <chord/> */
+    MUSICXML_ACORDUM_PRIMUM,      /* chord in nota prima mensurae */
     MUSICXML_MENSURA_BREVIOR,     /* pars mensuram breviorem habet
                                    * (M15) */
     MUSICXML_PARS_DISCORS,        /* index partium et <part>

@@ -1,0 +1,106 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 10.5.2 congruit (2026-10-30)
+P1	0	1	72	C	0	0	1:single:fermata|2:single:upright
+P1	1	1	72	C	0	0	1:single:fermata|2:single:inverted
+P1	2	1	72	C	0	0	1:single:normal|2:single:fermata
+P1	3	1	72	C	0	0	1:single:angled|2:single:fermata
+P1	4	1	72	C	0	0	1:single:square|2:single:fermata
+P1	5	1	72	C	0	0	1:single:arpeggio
+P1	5	1	76	E	0	0	-
+P1	5	1	79	G	0	0	-
+P1	6	1	72	C	0	0	1:single:non-|2:single:arpeggio
+P1	6	1	76	E	0	0	-
+P1	6	1	79	G	0	0	-
+P1	7	1	72	C	0	0	1:single:accidental|2:single:mark ↑
+P1	8	1	72	C	0	0	1:single:accent
+P1	9	1	72	C	0	0	1:single:strong|2:single:accent
+P1	10	1	72	C	0	0	1:single:staccato
+P1	11	1	72	C	0	0	1:single:tenuto
+P1	12	1	72	C	0	0	1:single:detached|2:single:legato
+P1	13	1	72	C	0	0	1:single:stacca-|2:single:tissimo
+P1	14	1	72	C	0	0	1:single:spiccato
+P1	15	1	72	C	0	0	1:single:scoop
+P1	16	1	72	C	0	0	1:single:plop
+P1	17	1	72	C	0	0	1:single:doit
+P1	18	1	72	C	0	0	1:single:falloff
+P1	19	1	72	C	0	0	1:single:breath|2:single:mark
+P1	20	1	72	C	0	0	1:single:caesura
+P1	21	1	72	C	0	0	1:single:stress
+P1	22	1	72	C	0	0	1:single:un-|2:single:stress
+P1	23	1	72	C	0	0	1:single:soft|2:single:accent
+P1	24	1	72	C	0	0	1:single:trill|2:single:mark
+P1	25	1	72	C	0	0	1:single:turn
+P1	26	1	72	C	0	0	1:single:delayed|2:single:turn
+P1	27	1	72	C	0	0	1:single:inverted|2:single:turn
+P1	28	1	72	C	0	0	1:single:delayed|2:single:inverted|3:single:turn
+P1	29	1	72	C	0	0	1:single:vertical|2:single:turn
+P1	30	1	72	C	0	0	1:single:inverted|2:single:vertical|3:single:turn
+P1	31	1	72	C	0	0	1:single:shake
+P1	32	1	72	C	0	0	1:begin:wa
+P1	33	1	72	C	0	0	1:middle:vy
+P1	34	1	72	C	0	0	1:end:line
+P1	35	1	72	C	0	0	1:single:mordent
+P1	36	1	72	C	0	0	1:single:inverted|2:single:mordent
+P1	37	1	72	C	0	0	1:single:schleifer
+P1	38	1	72	C	0	0	1:single:tremolo
+P1	39	1	72	C	0	0	1:single:haydn
+P1	40	1	72	C	0	0	1:single:turn + acc.|2:single:mark ↓
+P1	41	1	72	C	0	0	1:single:turn + acc.|2:single:marks ↑↓
+P1	42	1	72	C	0	0	1:single:turn + acc.|2:single:marks ↑[↑]
+P1	43	1	72	C	0	0	1:single:trill + acc.|2:single:mark ↑
+P1	44	1	72	C	0	0	1:single:up-|2:single:bow
+P1	45	1	72	C	0	0	1:single:down-|2:single:bow
+P1	46	1	79	G	0	0	1:single:harmonic
+P1	47	1	79	G	0	0	1:single:natural|2:single:harmonic
+P1	48	1	81	A	0	0	1:single:artificial|2:single:harmonic
+P1	49	1	55	G	0	0	1:single:natural|2:single:harmonic|3:single:(base+touch)
+P1	49	1	60	C	0	0	-
+P1	50	1	60	C	0	0	1:single:natural|2:single:harmonic|3:single:(touch)
+P1	51	1	60	C	0	0	1:single:natural|2:single:harmonic|3:single:(touch+sound)
+P1	51	1	79	G	0	0	-
+P1	52	1	55	G	0	0	1:single:nat. harm.|2:single:(base+touch|3:single:+sound)
+P1	52	1	60	C	0	0	-
+P1	52	1	79	G	0	0	-
+P1	53	1	57	A	0	0	1:single:artificial|2:single:harmonic|3:single:(base+touch)
+P1	53	1	62	D	0	0	-
+P1	54	1	57	A	0	0	1:single:art. harm.|2:single:(base+touch|3:single:+sound)
+P1	54	1	62	D	0	0	-
+P1	54	1	81	A	0	0	-
+P1	55	1	72	C	0	0	1:single:open|2:single:string
+P1	56	1	72	C	0	0	1:single:thumb-|2:single:position
+P1	57	1	72	C	0	0	1:single:fingering|2:single:1
+P1	58	1	72	C	0	0	1:single:fingering|2:single:2,3,4,5
+P1	58	1	74	D	0	0	-
+P1	58	1	76	E	0	0	-
+P1	58	1	77	F	0	0	-
+P1	59	1	72	C	0	0	1:single:fingering|2:single:0,1,2↑|3:single:3,4,5↓
+P1	60	1	72	C	0	0	1:single:fingering|2:single:2, subst. 3
+P1	61	1	72	C	0	0	1:single:fingering|2:single:2, alt. 3
+P1	62	1	72	C	0	0	1:single:pluck|2:single:a
+P1	63	1	72	C	0	0	1:single:pluck|2:single:a,m,i↓
+P1	64	1	72	C	0	0	1:single:double|2:single:tongue
+P1	65	1	72	C	0	0	1:single:triple|2:single:tongue
+P1	66	1	72	C	0	0	1:single:stopped
+P1	67	1	72	C	0	0	1:single:snap-|2:single:pizz.
+P1	68	1	72	C	0	0	1:single:fret|2:single:0
+P1	69	1	72	C	0	0	1:single:string|2:single:5
+P1	70	1	72	C	0	0	1:begin:hammer
+P1	71	1	72	C	0	0	1:end:on
+P1	72	1	72	C	0	0	1:begin:pull
+P1	73	1	72	C	0	0	1:end:off
+P1	74	1	72	C	0	0	1:single:bend 4
+P1	75	1	72	C	0	0	1:single:bend 3|2:single:with bar
+P1	76	1	72	C	0	0	1:single:bend -0.5|2:single:pre-bend
+P1	77	1	72	C	0	0	1:single:bend 3.5|2:single:release
+P1	78	1	72	C	0	0	1:single:tap
+P1	79	1	72	C	0	0	1:single:tap|2:single:T
+P1	80	1	72	C	0	0	1:single:heel
+P1	81	1	72	C	0	0	1:single:toe
+P1	82	1	72	C	0	0	1:single:heel-toe|2:single:subst.
+P1	83	1	72	C	0	0	1:single:finger-|2:single:nails
+P1	88	1	72	C	0	0	1:single:f
+P1	89	1	72	C	0	0	1:single:sfp
+P1	90	2	72	C	0	0	1:single:other|2:single:dynamics
+P1	92	1	67	G	0	0	1:single:strong ↑|2:single:stacc. ↑
+P1	93	1	67	G	0	0	1:single:acc. ↓|2:single:ten. ↓|3:single:stacc. ↑

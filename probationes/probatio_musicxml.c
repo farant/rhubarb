@@ -299,20 +299,21 @@ _vitia_musica_probare (
     CREDO_NECESSE (o != NIHIL);
     CREDO_VERUM (musicxml_successus(o));
     m = &o->partes[ZEPHYRUM].mensurae[ZEPHYRUM];
-    /* C4 sine duration omittitur */
+    /* chord in nota prima mensurae: plana; C4 sine duration omissa */
     CREDO_NECESSE (m->numerus_notarum == III);
-    CREDO_AEQUALIS_S32 ((s32)m->notae[ZEPHYRUM].littera, (s32)'D');
+    CREDO_AEQUALIS_S32 ((s32)m->notae[ZEPHYRUM].littera, (s32)'E');
     CREDO_AEQUALIS_S64 (m->notae[ZEPHYRUM].positio, (s64)ZEPHYRUM);
-    /* backup III ex I: coercitus ad 0; chord prima vocis: nota plana */
-    CREDO_AEQUALIS_S32 ((s32)m->notae[I].littera, (s32)'E');
-    CREDO_AEQUALIS_S64 (m->notae[I].positio, (s64)ZEPHYRUM);
-    CREDO_FALSUM (m->notae[I].acordum);
-    CREDO_AEQUALIS_S64 (m->notae[II].positio, (s64)I);
+    CREDO_FALSUM (m->notae[ZEPHYRUM].acordum);
+    CREDO_AEQUALIS_S32 ((s32)m->notae[I].littera, (s32)'D');
+    CREDO_AEQUALIS_S64 (m->notae[I].positio, (s64)I);
+    /* backup III ex II: coercitus ad 0 */
+    CREDO_AEQUALIS_S32 ((s32)m->notae[II].littera, (s32)'F');
+    CREDO_AEQUALIS_S64 (m->notae[II].positio, (s64)ZEPHYRUM);
 
     v = _vitium(o, MUSICXML_FILIUS_DEEST);
     CREDO_NECESSE (v != NIHIL);
     CREDO_AEQUALIS_S32 ((s32)v->gravitas, (s32)MUSICXML_MONITUM);
-    CREDO_AEQUALIS_I32 (v->linea, (i32)XI);
+    CREDO_AEQUALIS_I32 (v->linea, (i32)XII);
     CREDO_AEQUALIS_I32 (v->columna, (i32)VII);
     CREDO_AEQUALIS_I32 (_vitia_generis(o, MUSICXML_REGRESSUS_NIMIUS),
         (i32)I);
@@ -728,6 +729,11 @@ _percussio_probare (
     CREDO_AEQUALIS_S32 (m->notae[ZEPHYRUM].nota, (s32)XXXVIII);
     /* instrumentum ignotum: nota ex display (E4) */
     CREDO_AEQUALIS_S32 (m->notae[I].nota, (s32)LXIV);
+    /* sine display-step: linea media (clavicula percussionis ut G2:
+     * B4); instrumenta duo, nullum nominatum -> nota ex linea */
+    CREDO_AEQUALIS_S32 ((s32)m->notae[II].littera, (s32)'B');
+    CREDO_AEQUALIS_S32 (m->notae[II].octava, (s32)IV);
+    CREDO_AEQUALIS_S32 (m->notae[II].nota, (s32)LXXI);
     CREDO_VERUM (_continet(_tabula(c, o), "P1\t0\t1\t38\tC\t"));
 }
 
@@ -1078,8 +1084,8 @@ _repetitio_sine_initio_probare (
     CREDO_NECESSE (r != NIHIL);
     CREDO_VERUM (_aequat(_visitationes(c, r),
         "0:1 1:1 2:1 0:2 1:2 2:2 3:1"));
-    CREDO_AEQUALIS_I32 (_ordinis_vitia(r, MUSICXML_REPETITIO_APERTA),
-        (i32)I);
+    /* sine forward ab initio: mos communis, sine monito */
+    CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
 }
 
 interior vacuum

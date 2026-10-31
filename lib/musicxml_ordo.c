@@ -6,7 +6,8 @@
  * OMNIBUS partibus colligitur (unio). Mos communis:
  *   - repeat backward sine times: transitus tot quot numerus
  *     conclusionis maximus sequentis (minimum II); sine forward: ab
- *     repetitione priori aut ab initio (monitum);
+ *     repetitione priori aut ab initio (mos communis, sine monito);
+ *     conclusio (ending start) sine fine: monitum REPETITIO_APERTA;
  *   - conclusio (ending) sonat solum transitu suo;
  *   - D.C./D.S. semel quisque, in fine mensurae; post saltum
  *     repetitiones non iterantur, fine sistit, to coda ad codam salit
@@ -44,6 +45,11 @@ nomen structura {
      i32  columna;
      i32  linea_verborum;
      i32  columna_verborum;
+     s32  regio_initium;     /* conclusionis huius: mensura prima et
+                              * ultima; -I = non in conclusione */
+     s32 regio_finis;
+     s32 gubernator;        /* backward cuius transitus conclusionem
+                              * eligit; -I = nullus */
 } Informatio;
 
 nomen structura {
@@ -209,12 +215,32 @@ _directiones_colligere (
     }
 }
 
+/* regio conclusionis [a, f]: pars prima eam ponit (unio) */
+interior vacuum
+_regionem_ponere (
+    Informatio* x,
+           i32  a,
+           i32  f)
+{
+    i32 j;
+
+    per (j = a; j <= f; j++)
+    {
+        si (x[j].regio_initium < ZEPHYRUM)
+        {
+            x[j].regio_initium  = (s32)a;
+            x[j].regio_finis    = (s32)f;
+        }
+    }
+}
+
 /* informatio per mensuram, unio partium; conclusiones per regionem
  * (ab ending start usque ad stop/discontinue inclusive) */
 interior Informatio*
 _informationem_colligere (
     constans MusicxmlOpus* opus,
-                  Piscina* piscina)
+                  Piscina* piscina,
+                Ordinator* o)
 {
     Informatio* x;
            i32  n = opus->numerus_mensurarum;
@@ -229,9 +255,16 @@ _informationem_colligere (
         redde NIHIL;
     }
     memset(x, ZEPHYRUM, (size_t)(n + I) * magnitudo(Informatio));
+    per (k = ZEPHYRUM; k <= n; k++)
+    {
+        x[k].regio_initium  = -I;
+        x[k].regio_finis    = -I;
+        x[k].gubernator     = -I;
+    }
     per (p = ZEPHYRUM; p < opus->numerus_partium; p++)
     {
-        constans MusicxmlLineaMensurae* regio = NIHIL;
+         constans MusicxmlLineaMensurae* regio             = NIHIL;
+                                    s32  initium_regionis  = -I;
 
         per (k = ZEPHYRUM; k < opus->partes[p].numerus_mensurarum
             && k < n;
@@ -263,7 +296,8 @@ _informationem_colligere (
                 }
                 si (l->conclusio == MUSICXML_CONCLUSIO_INITIUM)
                 {
-                    regio = l;
+                    regio             = l;
+                    initium_regionis  = (s32)k;
                 }
                 si (   l->conclusio == MUSICXML_CONCLUSIO_FINIS
                     || l->conclusio == MUSICXML_CONCLUSIO_INTERRUPTA)
@@ -287,11 +321,46 @@ _informationem_colligere (
                     }
                 }
             }
+            si (claudit && initium_regionis >= ZEPHYRUM)
+            {
+                _regionem_ponere(x, (i32)initium_regionis, k);
+                initium_regionis = -I;
+            }
             si (claudit)
             {
                 regio = NIHIL;
             }
             _directiones_colligere(m, &x[k]);
+        }
+        si (initium_regionis >= ZEPHYRUM && n > ZEPHYRUM)
+        {
+            _regionem_ponere(x, (i32)initium_regionis, n - I);
+        }
+        si (regio != NIHIL)
+        {
+            _monitum(o, MUSICXML_REPETITIO_APERTA, regio->linea,
+                regio->columna,
+                "conclusio (ending start) sine stop aut discontinue");
+        }
+    }
+    /* gubernator: backward in fine regionis; aliter (conclusio ultima
+     * sine backward) gubernator regionis praecedentis contiguae */
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        s32 f = x[k].regio_finis;
+        s32 a = x[k].regio_initium;
+
+        si (a < ZEPHYRUM)
+        {
+            perge;
+        }
+        si (x[f].retrorsum)
+        {
+            x[k].gubernator = f;
+        }
+        alioquin si (a > ZEPHYRUM && x[a - I].regio_initium >= ZEPHYRUM)
+        {
+            x[k].gubernator = x[a - I].gubernator;
         }
     }
     redde x;
@@ -314,26 +383,54 @@ _in_conclusione (
     redde FALSUM;
 }
 
-/* initium repetitionis: forward retro quaesitum; repetitio prior
- * (backward) finem facit; nihil = ab initio (aperta) */
+/* initium repetitionis: forward eiusdem mensurae; intra conclusionem
+ * paria interiora (forward ... backward) praetereuntur (repetitio
+ * nidificata, suita 45i) et quaestio ante conclusionem pergit; deinde
+ * forward proximum, aut post backward priorem; nihil = ab initio
+ * (aperta) */
 interior i32
 _initium_repetitionis (
     constans Informatio* x,
                     i32  k,
                     b32* aperta)
 {
-    s32 j;
+    s32 j = (s32)k - I;
 
     *aperta = FALSUM;
-    per (j = (s32)k; j >= ZEPHYRUM; j--)
+    si (x[k].prorsum)
     {
+        redde k;
+    }
+    si (x[k].regio_initium >= ZEPHYRUM)
+    {
+        i32 profunditas = ZEPHYRUM;
+
+        per (; j >= x[k].regio_initium; j--)
+        {
+            si (x[j].retrorsum)
+            {
+                profunditas++;
+            }
+            si (x[j].prorsum)
+            {
+                si (profunditas == ZEPHYRUM)
+                {
+                    redde (i32)j;
+                }
+                profunditas--;
+            }
+        }
+        j = x[k].regio_initium - I;
+    }
+    per (; j >= ZEPHYRUM; j--)
+    {
+        si (x[j].retrorsum)
+        {
+            redde (i32)j + I;
+        }
         si (x[j].prorsum)
         {
             redde (i32)j;
-        }
-        si ((i32)j < k && x[j].retrorsum)
-        {
-            redde (i32)j + I;
         }
     }
     *aperta = VERUM;
@@ -354,6 +451,14 @@ _vices (
     si (x[k].vices > ZEPHYRUM)
     {
         redde x[k].vices;
+    }
+    /* ex conclusionibus solum si hic backward eas gubernat (finis
+     * regionis aut regio statim sequitur) - repetitio interior
+     * conclusionis II manet */
+    si (   x[k].regio_finis != (s32)k
+        && !(k + I < n && x[k + I].regio_initium == (s32)(k + I)))
+    {
+        redde maxima;
     }
     per (j = k; j < n; j++)
     {
@@ -421,6 +526,8 @@ musicxml_ordo (
              i32  limes;
              i32* iteratio;
              i32* visitata;
+             i32* adventus;    /* backward attactus (gubernator) */
+             i32  transitus_conclusionis;
              b32* capite;
              b32* signo;
              b32* caudam;
@@ -445,10 +552,12 @@ musicxml_ordo (
     o.vitia    = xar_creare(piscina, (i32)magnitudo(MusicxmlVitium));
     visitationes = xar_creare(piscina,
         (i32)magnitudo(MusicxmlVisitatio));
-    x = _informationem_colligere(opus, piscina);
+    x = _informationem_colligere(opus, piscina, &o);
     iteratio      = (i32*)piscina_allocare(piscina,
                         (memoriae_index)(n * (i32)magnitudo(i32)));
     visitata      = (i32*)piscina_allocare(piscina,
+                        (memoriae_index)(n * (i32)magnitudo(i32)));
+    adventus      = (i32*)piscina_allocare(piscina,
                         (memoriae_index)(n * (i32)magnitudo(i32)));
     capite        = (b32*)piscina_allocare(piscina,
                         (memoriae_index)(n * (i32)magnitudo(b32)));
@@ -458,12 +567,13 @@ musicxml_ordo (
                         (memoriae_index)(n * (i32)magnitudo(b32)));
     si (   o.vitia  == NIHIL || visitationes == NIHIL || x == NIHIL
         || iteratio == NIHIL || visitata == NIHIL || capite == NIHIL
-        || signo    == NIHIL || caudam == NIHIL)
+        || signo    == NIHIL || caudam == NIHIL || adventus == NIHIL)
     {
         redde NIHIL;
     }
     memset(iteratio, ZEPHYRUM, (size_t)n * magnitudo(i32));
     memset(visitata, ZEPHYRUM, (size_t)n * magnitudo(i32));
+    memset(adventus, ZEPHYRUM, (size_t)n * magnitudo(i32));
     memset(capite, ZEPHYRUM, (size_t)n * magnitudo(b32));
     memset(signo, ZEPHYRUM, (size_t)n * magnitudo(b32));
     memset(caudam, ZEPHYRUM, (size_t)n * magnitudo(b32));
@@ -488,9 +598,13 @@ musicxml_ordo (
             activa    = VERUM;
             perfecta  = FALSUM;
         }
+        /* conclusio: transitus repetitionis gubernantis (adventus eius
+         * + I), non r - repetitio interior r mutat (45i) */
+        transitus_conclusionis = y->gubernator >= ZEPHYRUM
+            ? adventus[y->gubernator] + I : (activa ? r : I);
         si (y->numerus_conclusionum > ZEPHYRUM)
         {
-            si (!_in_conclusione(y, activa ? r : I))
+            si (!_in_conclusione(y, transitus_conclusionis))
             {
                 k++;
                 reditus = FALSUM;
@@ -517,7 +631,14 @@ musicxml_ordo (
         }
         v->mensura    = k;
         v->transitus  = visitata[k];
-        si (activa && r > v->transitus)
+        si (y->numerus_conclusionum > ZEPHYRUM)
+        {
+            si (transitus_conclusionis > v->transitus)
+            {
+                v->transitus = transitus_conclusionis;
+            }
+        }
+        alioquin si (activa && r > v->transitus)
         {
             v->transitus = r;
         }
@@ -554,6 +675,7 @@ musicxml_ordo (
         {
             i32 vices = _vices(x, k, n);
 
+            adventus[k]++;
             si (iteratio[k] + I < vices)
             {
                 b32 aperta;
@@ -562,13 +684,8 @@ musicxml_ordo (
                 r       = iteratio[k] + I;
                 activa  = VERUM;
                 k       = _initium_repetitionis(x, k, &aperta);
-                /* monitum semel: saltu primo retro */
-                si (aperta && r == II)
-                {
-                    _monitum(&o, MUSICXML_REPETITIO_APERTA, y->linea,
-                        y->columna,
-                        "repeat backward sine forward: ab initio");
-                }
+                /* sine forward: ab initio - mos communis, non vitium */
+                (vacuum)aperta;
                 reditus = VERUM;
                 perge;
             }

@@ -1,0 +1,9 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 10.5.2 congruit (2026-10-30)
+P2	0	1	72	C	0	0	-
+P2	1	1	65	F	0	0	-
+P2	1	1	69	A	0	0	-
+P2	1	1	72	C	0	0	-
+P2	2	1	69	A	0	0	-
+P2	2	1	72	C	0	0	-

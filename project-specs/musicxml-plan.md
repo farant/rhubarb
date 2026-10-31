@@ -651,8 +651,37 @@ does, and the fixture follows from that.
   changed → red; restore.
 - [ ] **Step 5: Delete the venv** (`rm -rf build/musicxml/oraculum`)
   and re-run the gate: green without music21 (proves M11).
-- [ ] **Step 6: Commit** (gate `radix`; the suite files are data, so
+- [x] **Step 6: Commit** (gate `radix`; the suite files are data, so
   check `examen` ignores them — they are not `.c`).
+
+**Executed 2026-10-30.** Suite fetched at commit 77c19f7e (183 files,
+MIT, committed with `INDEX` + `PROVENIENTIA.md`; `tools/musicxml_
+arcessere.sh -suita` refetches and verifies). Dump tool decision: no
+separate binary — `probatio_musicxml_suite.c` writes our TSVs when
+`MUSICXML_TABULAS_SCRIBERE=<dir>` is set (like `COMPUTUS_SCRIBERE`),
+otherwise compares every source in `aurum/INDEX` against
+`aurum/<file>.tsv` ignoring `#` lines; goldens also carry the
+diagnostics as `!` lines. Golden set: 183 suite + 35 hand fixtures +
+nata_lux = 219. **Oracle run:** after fixing three HARNESS artefacts
+(music21 part ids / PartStaff split, chord lyrics merged, `<harmony>`
+as notes) 192/218 agreed; the rest were triaged into (a) four READER
+BUGS, fixed with hand tests — chord across voices (21i: `<chord/>`
+always joins the previous note, ACORDUM_PRIMUM only with no previous
+note in the measure; the P2 fixture `vitia_musica` was reordered),
+nested repeats in an ending (45i: inner pairs skipped, endings chosen
+by their governing backward's arrival count, not the inner repeat's
+pass), unpitched without display-step (34b: clef middle line), and the
+"repeat without forward" monitum (noise — common practice; the code
+now means an ending that never closes); (b) 26 divergences kept as
+ours with `# divergentia:` lines (full list in suite/PROVENIENTIA.md);
+(c) 4 fixtures music21 cannot read, 1 skipped (`times=10^8` took
+music21 to 1.4 GB — killed; every later run under `tools/custos.sh`).
+**AUDIENDA answered:** octave clefs agree (all 357 nata_lux rows equal;
+ours adds the measure-3 repeat music21 does not expand); grace notes
+zero length at the next onset on both sides; largest suite LCM 1024.
+venv deleted (246 MB), both gates green without it. Plant: one golden
+row changed → red with file/line/rows shown. **Still open:** a fixture
+for "repeats not retaken after D.C." (no suite file exercises it).
 
 ---
 

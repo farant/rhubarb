@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- vitia_musica: nota sine duration (omissa), backup nimius (coercitus), chord prima vocis, tie start pendens - monita, opus utile -->
+<!-- vitia_musica: chord in nota prima mensurae (plana), nota sine duration (omissa), backup nimius (coercitus), tie start pendens - monita, opus utile -->
 <score-partwise version="4.0">
   <part-list>
     <score-part id="P1"><part-name>Cantus</part-name></score-part>
@@ -8,10 +8,10 @@
     <measure number="1">
       <attributes><divisions>1</divisions>
         <time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><chord/><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration><voice>2</voice></note>
       <note><pitch><step>C</step><octave>4</octave></pitch><voice>1</voice></note>
       <note><pitch><step>D</step><octave>4</octave></pitch><duration>1</duration><voice>1</voice></note>
       <backup><duration>3</duration></backup>
-      <note><chord/><pitch><step>E</step><octave>4</octave></pitch><duration>1</duration><voice>2</voice></note>
       <note><pitch><step>F</step><octave>4</octave></pitch><duration>1</duration><tie type="start"/><voice>2</voice></note>
     </measure>
   </part>
