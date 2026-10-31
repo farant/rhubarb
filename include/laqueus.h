@@ -270,6 +270,23 @@ laqueus_alexander_ex_pd (
  * project-specs/contractio-plan.md.
  * ================================================== */
 
+/* fenestra uncinus et limes coefficientium ex codice PD nodi (c >= 2),
+ * sine rete: imus et summus = fenestra Kauffman [-c - 2|s_B| + 2, c +
+ * 2|s_A| - 2] ad classem 3w modulo 4 rotundata; limes = bita B (vide
+ * laqueus_modulus_vertex_limes), limes_exactus = B (NIHIL licet). Idem
+ * ac modulus vertex in eodem codice. Codex ut laqueus_uncinus_ex_pd;
+ * FALSUM si codex invalidus aut transitus < 2 (exitus non tacti).
+ * Memoria O(c) in piscina. */
+b32
+laqueus_pd_fenestra (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+             s32* imus,
+             s32* summus,
+             i32* limes,
+          Magnus* limes_exactus);
+
 nomen structura LaqueusModulusVertex LaqueusModulusVertex; /* opacum */
 
 /* structura semel: gyrationes, rete, ordo, officina (<= octeti_maximi

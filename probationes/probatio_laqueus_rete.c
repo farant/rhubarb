@@ -1683,6 +1683,292 @@ _probare_plexum (
 
 
 /* ==================================================
+ * Fenestra et limes aurei (temperley-lieb-plan T2a)
+ *
+ * Valores capti ex codice ANTE refactionem (be6be402: fenestra et
+ * limes ex structura moduli vertex lecti, lib/laqueus.c inclusa in
+ * programmate scabro); laqueus_pd_fenestra eosdem reddere debet. Tricae
+ * magnae = tricae D136 (semen MMXXVIII, paritas aucta, generator R0),
+ * fenestrae et limites ut in effusione D136.
+ * ================================================== */
+
+interior i32
+_misce (
+    i32 h,
+    s32 v)
+{
+    i32 u = (i32)v;
+    i32 b;
+
+    per (b = ZEPHYRUM; b < IV; b++)
+    {
+        h ^= (u >> (VIII * b)) & (i32)0xFFUL;
+        h *= (i32)16777619UL;
+    }
+    redde h;
+}
+
+/* generator R0 (tools/uncinus_mensura.c, _plexus_fortuitus) */
+interior i32*
+_plexus_aureus (
+        Sors*  s,
+         i32   fila,
+         i32*  longitudo,
+     Piscina*  piscina,
+         s32** verbum_exitus)
+{
+    s32* verbum;
+    i32  conatus;
+
+    si ((*longitudo + fila - I) % II != ZEPHYRUM)
+    {
+        (*longitudo)++;
+    }
+    verbum = (s32*)piscina_allocare(piscina, (memoriae_index)*longitudo
+        * magnitudo(s32));
+    per (conatus = ZEPHYRUM; conatus < M; conatus++)
+    {
+        PiscinaNotatio  nota = piscina_notare(piscina);
+                   i32* pd;
+                   i32  transitus;
+                   i32  k;
+
+        per (k = ZEPHYRUM; k < *longitudo; k++)
+        {
+            s32 g = (s32)(I + sors_intra(s, fila - I));
+
+            verbum[k] = sors_intra(s, II) == ZEPHYRUM ? g : -g;
+        }
+        si (laqueus_pd_ex_plexu(verbum, *longitudo, fila, piscina, &pd,
+            &transitus))
+        {
+            *verbum_exitus = verbum;
+            redde pd;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    redde NIHIL;
+}
+
+nomen structura {
+    constans character* titulus;
+                   s32  imus;
+                   s32  summus;
+                   i32  limes;
+                   s64  exactus;
+} FenestraAurea;
+
+nomen structura {
+    i32 fila;
+    i32 longitudo;          /* petita; paritas augetur */
+    i32 vestigium_verbi;    /* FNV verbi, ne sors mutata tricam mutet */
+    s32 imus;
+    s32 summus;
+    i32 limes;
+    i32 exactus_modulo;     /* B modulo 4294967291 */
+} TricaAurea;
+
+interior vacuum
+_probare_fenestram_auream (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans FenestraAurea  nodi[] = {
+        { "3_1", -VII, V, II, III },
+        { "4_1", -VIII, VIII, III, VI },
+        { "5_1", -XIII, VII, III, V },
+        { "5_2", -IX, XI, IV, VIII },
+        { "6_1", -X, XIV, IV, X },
+        { "6_2", -XIV, X, IV, XII },
+        { "6_3", -XII, XII, V, XVIII },
+        { "7_1", -XIX, IX, III, VII },
+        { "7_4", -XI, XVII, V, XVI },
+        { "7_7", -XV, XIII, V, XXVII },
+        { "8_17", -XVI, XVI, VII, LXXII },
+        { "8_19", -XVI, XII, VI, XL },
+        { "8_20", -XIV, XIV, VI, LIV },
+        { "9_35", -XIII, XXIII, VI, XXXVI },
+        { "9_42", -XV, XVII, VII, LXXV },
+        { "10_124", -XXII, XIV, VI, LVI },
+        { "10_132", -XX, XVI, VII, XCVI },
+        { "10_161", -XIV, XVIII, VIII, CXCII },
+        { "13n_5108", -XXIX, XIX, X, (s64)864 },
+        { "13n_5109", -XXV, XXIII, XI, (s64)1125 },
+        { "13n_5110", -XVII, XXXI, IX, (s64)432 }
+    };
+    constans TricaAurea tricae[] = {
+        { VIII, CCI, (i32)3522731884UL, -(s32)283, (s32)273, (i32)166,
+          (i32)3487703463UL },
+        { XII, CCI, (i32)1771876111UL, -(s32)299, (s32)269, (i32)165,
+          (i32)3103119802UL },
+        { XII, CDI, (i32)96994982UL, -(s32)557, (s32)547, (i32)333,
+          (i32)2518497856UL },
+        { VIII, DCCCI, (i32)1632908588UL, -(s32)1125, (s32)1203,
+          (i32)642, (i32)3562495677UL },
+        { XII, DCCCI, (i32)964510034UL, -(s32)1109, (s32)1131,
+          (i32)654, (i32)2962172050UL }
+    };
+    i32 h        = (i32)2166136261UL;
+    i32 numerus  = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(nodi)
+        / magnitudo(nodi[ZEPHYRUM]));
+        k++)
+    {
+        constans NodusTabulae* n =
+            tabula_nodorum_quaere(nodi[k].titulus);
+                          s32 imus    = ZEPHYRUM;
+                          s32 summus  = ZEPHYRUM;
+                          i32 limes   = ZEPHYRUM;
+                       Magnus exactus;
+                          s64 b = ZEPHYRUM;
+
+        CREDO_NECESSE_NON_NIHIL(n);
+        CREDO_NECESSE(laqueus_pd_fenestra(tabula_nodorum_pd(n, piscina),
+            n->transitus, piscina, &imus, &summus, &limes, &exactus));
+        CREDO_AEQUALIS_S32(imus, nodi[k].imus);
+        CREDO_AEQUALIS_S32(summus, nodi[k].summus);
+        CREDO_AEQUALIS_I32(limes, nodi[k].limes);
+        CREDO_VERUM(magnus_ad_s64(exactus, &b));
+        CREDO_AEQUALIS_S64(b, nodi[k].exactus);
+    }
+
+    /* tabula tota: vestigium (imus, summus, limes, B mod p) */
+    per (k = ZEPHYRUM; k < tabula_nodorum_numerus(); k++)
+    {
+        constans NodusTabulae* n = tabula_nodorum_nodus(k);
+               PiscinaNotatio  nota;
+                          s32  imus;
+                          s32  summus;
+                          i32  limes;
+                       Magnus  exactus;
+
+        si (n->transitus < II)
+        {
+            perge;
+        }
+        nota = piscina_notare(piscina);
+        si (laqueus_pd_fenestra(tabula_nodorum_pd(n, piscina),
+            n->transitus, piscina, &imus, &summus, &limes, &exactus))
+        {
+            h = _misce(h, imus);
+            h = _misce(h, summus);
+            h = _misce(h, (s32)limes);
+            h = _misce(h, (s32)magnus_residuum_parvum(exactus,
+                (i32)4294967291UL));
+            numerus++;
+        }
+        piscina_reficere(piscina, nota);
+    }
+    CREDO_AEQUALIS_I32(numerus, (i32)12965UL);
+    CREDO_AEQUALIS_I32(h, (i32)655766105UL);
+
+    /* tricae D136 */
+    per (k = ZEPHYRUM; k < (i32)(magnitudo(tricae)
+        / magnitudo(tricae[ZEPHYRUM])); k++)
+    {
+        PiscinaNotatio  nota = piscina_notare(piscina);
+                  Sors  s;
+                   i32  longitudo  = tricae[k].longitudo;
+                   s32* verbum     = NIHIL;
+                   i32* pd;
+                   i32  v       = (i32)2166136261UL;
+                   s32  imus    = ZEPHYRUM;
+                   s32  summus  = ZEPHYRUM;
+                   i32  limes   = ZEPHYRUM;
+                Magnus  exactus;
+                   i32  j;
+
+        sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+        pd = _plexus_aureus(&s, tricae[k].fila, &longitudo, piscina,
+            &verbum);
+        CREDO_NECESSE_NON_NIHIL(pd);
+        per (j = ZEPHYRUM; j < longitudo; j++)
+        {
+            v = _misce(v, verbum[j]);
+        }
+        CREDO_AEQUALIS_I32(v, tricae[k].vestigium_verbi);
+        CREDO_NECESSE(laqueus_pd_fenestra(pd, longitudo, piscina, &imus,
+            &summus, &limes, &exactus));
+        CREDO_AEQUALIS_S32(imus, tricae[k].imus);
+        CREDO_AEQUALIS_S32(summus, tricae[k].summus);
+        CREDO_AEQUALIS_I32(limes, tricae[k].limes);
+        CREDO_AEQUALIS_I32(magnus_residuum_parvum(exactus,
+            (i32)4294967291UL), tricae[k].exactus_modulo);
+        piscina_reficere(piscina, nota);
+    }
+}
+
+/* laqueus_pd_fenestra = modulus vertex in eodem codice (limes et B);
+ * refutationes sine exitu tacto */
+interior vacuum
+_probare_fenestram_et_verticem (
+    CredoContextus* c)
+{
+                  Piscina* piscina = c->piscina;
+                     Sors  s;
+                      i32  t;
+    constans NodusTabulae* trifolium = tabula_nodorum_quaere("3_1");
+                      i32  malus[XII];
+                      s32  imus    = -(s32)DCCCLXXXVIII;
+                      s32  summus  = -(s32)DCCCLXXXVIII;
+                      i32  limes   = (i32)DCCCLXXXVIII;
+
+    sors_seminare(&s, (i64)MMXXXVIII, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < CC; t++)
+    {
+               PiscinaNotatio  nota = piscina_notare(piscina);
+        constans NodusTabulae* n = tabula_nodorum_nodus(sors_intra(&s,
+            tabula_nodorum_numerus()));
+                constans i32* pd;
+        LaqueusModulusVertex* mv;
+                         s32  infima;
+                         s32  summa;
+                         i32  bita;
+                      Magnus  exactus;
+                      Magnus  exactus_verticis;
+
+        si (n->transitus < II)
+        {
+            piscina_reficere(piscina, nota);
+            perge;
+        }
+        pd = tabula_nodorum_pd(n, piscina);
+        mv = laqueus_modulus_vertex_creare(pd, n->transitus,
+            OCTETI_MAXIMI, piscina);
+        CREDO_NECESSE_NON_NIHIL(mv);
+        CREDO_NECESSE(laqueus_pd_fenestra(pd, n->transitus, piscina,
+            &infima,
+            &summa, &bita, &exactus));
+        CREDO_AEQUALIS_I32(bita, laqueus_modulus_vertex_limes(mv));
+        CREDO_VERUM(laqueus_modulus_vertex_limes_exactus(mv,
+            &exactus_verticis));
+        CREDO_VERUM(magnus_aequalis(exactus, exactus_verticis));
+        piscina_reficere(piscina, nota);
+    }
+
+    /* refutationes: exitus non tacti */
+    CREDO_FALSUM(laqueus_pd_fenestra(NIHIL, III, piscina, &imus,
+        &summus,
+        &limes, NIHIL));
+    CREDO_FALSUM(laqueus_pd_fenestra(tabula_nodorum_pd(trifolium,
+        piscina), I, piscina, &imus, &summus, &limes, NIHIL));
+    per (t = ZEPHYRUM; t < XII; t++)
+    {
+        malus[t] = tabula_nodorum_pd(trifolium, piscina)[t];
+    }
+    malus[ZEPHYRUM] = XIII;                    /* os extra 1..2c */
+    CREDO_FALSUM(laqueus_pd_fenestra(malus, III, piscina, &imus,
+        &summus,
+        &limes, NIHIL));
+    CREDO_AEQUALIS_S32(imus, -(s32)DCCCLXXXVIII);
+    CREDO_AEQUALIS_S32(summus, -(s32)DCCCLXXXVIII);
+    CREDO_AEQUALIS_I32(limes, (i32)DCCCLXXXVIII);
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -1712,6 +1998,11 @@ interior constans CredoSectio SECTIONES[] = {
     { "torus T(7,8)", _probare_torum_septem_octo, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "plexus", _probare_plexum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fenestra aurea", _probare_fenestram_auream, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "fenestra et vertex", _probare_fenestram_et_verticem, NIHIL,
+        NIHIL,
+      NIHIL, NIHIL },
     { "tabula tota", _probare_tabulam_totam, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

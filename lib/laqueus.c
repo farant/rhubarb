@@ -2310,49 +2310,69 @@ _modulo_quattuor (
     redde r < ZEPHYRUM ? r + (s64)IV : r;
 }
 
-/* gyrationes t per os (a -> b) ex aequationibus facierum per arborem
- * dualem (BFS a facie 0, folia primum); *faciei_exitus = facies per
- * positionem (0..c+1, orbita sequentis). ora 0-basata, codex planus.
- * FALSUM si aequatio non integra aut residuum manet (codex non planus:
- * non accidit post _pd_legere). */
-interior b32
-_gyrationes (
+/* fines ossium: os l = ora[k] a positione finis_a[l] (primus occursus in
+ * codice) ad finis_b[l] */
+interior vacuum
+_fines (
     constans i32*  ora,
+             i32   c,
+         Piscina*  piscina,
+             i32** finis_a_exitus,
+             i32** finis_b_exitus)
+{
+    i32  m        = II * c;
+    i32* finis_a  = (i32*)piscina_allocare(piscina, (memoriae_index)m
+        * magnitudo(i32));
+    i32* finis_b  = (i32*)piscina_allocare(piscina, (memoriae_index)m
+        * magnitudo(i32));
+    i32 k;
+    i32 l;
+
+    per (l = ZEPHYRUM; l < m; l++)
+    {
+        finis_a[l] = IV * c;
+    }
+    per (k = ZEPHYRUM; k < IV * c; k++)
+    {
+        si (finis_a[ora[k]] == IV * c)
+        {
+            finis_a[ora[k]] = k;
+        }
+        alioquin
+        {
+            finis_b[ora[k]] = k;
+        }
+    }
+    *finis_a_exitus = finis_a;
+    *finis_b_exitus = finis_b;
+}
+
+/* facies per positionem (0..c+1, orbita sequentis per os alterum). FALSUM
+ * si numerus facierum non c + 2 (codex non planus: non accidit post
+ * _pd_legere). */
+interior b32
+_facies (
              i32   c,
     constans i32*  finis_a,
     constans i32*  finis_b,
          Piscina*  piscina,
-             s32*  gyrationes,
              i32** faciei_exitus)
 {
     i32  n = IV * c;
     i32  m = II * c;
-    i32* faciei = (i32*)piscina_allocare(piscina, (memoriae_index)n
+    i32* faciei  = (i32*)piscina_allocare(piscina, (memoriae_index)n
         * magnitudo(i32));
-    i32* alter  = (i32*)piscina_allocare(piscina, (memoriae_index)n
+    i32* alter   = (i32*)piscina_allocare(piscina, (memoriae_index)n
         * magnitudo(i32));
-    s64* residua;
-    s64* basis  = (s64*)piscina_allocare(piscina, (memoriae_index)m
-        * magnitudo(s64));
-    i32* initia;
-    i32* ossa_faciei;
-    i32* parens;
-    i32* ordo;
-    i32  facies = ZEPHYRUM;
-    i32  caput;
-    i32  cauda;
-    i32  d;
-    i32  l;
-    i32  f;
+    i32 facies  = ZEPHYRUM;
+    i32 d;
+    i32 l;
 
     *faciei_exitus = faciei;
     per (l = ZEPHYRUM; l < m; l++)
     {
         alter[finis_a[l]] = finis_b[l];
         alter[finis_b[l]] = finis_a[l];
-        basis[l]          = (s64)((finis_b[l] % IV + IV - finis_a[l]
-            % IV
-            + II) % IV);
     }
     per (d = ZEPHYRUM; d < n; d++)
     {
@@ -2374,9 +2394,42 @@ _gyrationes (
         }
         facies++;
     }
-    si (facies != c + II)
+    redde facies == c + II;
+}
+
+/* gyrationes t per os (a -> b) ex aequationibus facierum per arborem
+ * dualem (BFS a facie 0, folia primum); faciei ex _facies. ora 0-basata,
+ * codex planus. FALSUM si aequatio non integra aut residuum manet. */
+interior b32
+_gyrationes (
+    constans i32* ora,
+             i32  c,
+    constans i32* finis_a,
+    constans i32* finis_b,
+    constans i32* faciei,
+         Piscina* piscina,
+             s32* gyrationes)
+{
+    i32  n = IV * c;
+    i32  m = II * c;
+    s64* residua;
+    s64* basis  = (s64*)piscina_allocare(piscina, (memoriae_index)m
+        * magnitudo(s64));
+    i32* initia;
+    i32* ossa_faciei;
+    i32* parens;
+    i32* ordo;
+    i32  facies = c + II;
+    i32  caput;
+    i32  cauda;
+    i32  d;
+    i32  l;
+    i32  f;
+
+    per (l = ZEPHYRUM; l < m; l++)
     {
-        redde FALSUM;
+        basis[l] = (s64)((finis_b[l] % IV + IV - finis_a[l] % IV + II)
+            % IV);
     }
 
     /* R_f = scopus + longitudo - summa s basis; scopus +4 externa, -4
@@ -2747,8 +2800,145 @@ _terminos_transitus (
     redde scripti;
 }
 
-LaqueusModulusVertex*
-laqueus_modulus_vertex_creare (
+/* fenestra Kauffman [-c - 2|s_B| + 2, c + 2|s_A| - 2] ad classem 3w
+ * modulo 4 rotundata; |s_A|, |s_B| = ansae statuum omnium A et omnium B */
+interior vacuum
+_fenestra_uncini (
+    constans i32* ora,
+    constans s32* signa,
+             i32  c,
+         Piscina* piscina,
+             s32* imus,
+             s32* summus,
+             s32* scriptura)
+{
+    i32  m        = II * c;
+    i32* pater    = (i32*)piscina_allocare(piscina, (memoriae_index)m
+        * magnitudo(i32));
+    i32 ansae_a = ZEPHYRUM;
+    i32 ansae_b = ZEPHYRUM;
+    s32 classis;
+    i32 k;
+    i32 l;
+
+    per (l = ZEPHYRUM; l < m; l++)
+    {
+        pater[l] = l;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        constans i32* x = ora + IV * k;
+
+        pater[_radix(pater, x[ZEPHYRUM])]  = _radix(pater, x[I]);
+        pater[_radix(pater, x[II])]        = _radix(pater, x[III]);
+    }
+    per (l = ZEPHYRUM; l < m; l++)
+    {
+        si (_radix(pater, l) == l)
+        {
+            ansae_a++;
+        }
+        pater[l] = l;
+    }
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        constans i32* x = ora + IV * k;
+
+        pater[_radix(pater, x[ZEPHYRUM])]  = _radix(pater, x[III]);
+        pater[_radix(pater, x[I])]         = _radix(pater, x[II]);
+    }
+    per (l = ZEPHYRUM; l < m; l++)
+    {
+        si (_radix(pater, l) == l)
+        {
+            ansae_b++;
+        }
+    }
+    *scriptura = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < c; k++)
+    {
+        *scriptura += signa[k];
+    }
+    classis  = (s32)_modulo_quattuor((s64)III * (s64)*scriptura);
+    *imus    = -(s32)c - II * (s32)ansae_b + II;
+    *imus    += (s32)_modulo_quattuor((s64)classis - (s64)*imus);
+    *summus  = (s32)c + II * (s32)ansae_a - II;
+    *summus  -= (s32)_modulo_quattuor((s64)*summus - (s64)classis);
+}
+
+/* fenestra et limes ex oris lectis (c >= 2); fines et facies redduntur
+ * ut modulus vertex gyrationes inde computet. FALSUM si facies aut
+ * graphi Tait non ut in codice plano. */
+interior b32
+_fenestra_et_limes (
+    constans i32*  ora,
+    constans s32*  signa,
+             i32   c,
+         Piscina*  piscina,
+             i32** finis_a,
+             i32** finis_b,
+             i32** faciei,
+             s32*  imus,
+             s32*  summus,
+             s32*  scriptura,
+             i32*  limes,
+          Magnus*  limes_exactus)
+{
+    _fines(ora, c, piscina, finis_a, finis_b);
+    si (   !_facies(c, *finis_a, *finis_b, piscina, faciei)
+        || !_limes_arborum(*faciei, c, piscina, limes_exactus, limes))
+    {
+        redde FALSUM;
+    }
+    _fenestra_uncini(ora, signa, c, piscina, imus, summus, scriptura);
+    redde VERUM;
+}
+
+b32
+laqueus_pd_fenestra (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+             s32* imus,
+             s32* summus,
+             i32* limes,
+          Magnus* limes_exactus)
+{
+       i32* ora;
+       s32* signa;
+       i32* finis_a;
+       i32* finis_b;
+       i32* faciei;
+       s32  infima;
+       s32  summa;
+       s32  scriptura;
+       i32  bita;
+    Magnus  exactus;
+
+    si (   pd     == NIHIL || piscina == NIHIL || imus == NIHIL
+        || summus == NIHIL || limes == NIHIL || transitus < II
+        || !_pd_legere(pd, transitus, piscina, &ora, &signa)
+        || !_fenestra_et_limes(ora, signa, transitus, piscina, &finis_a,
+               &finis_b, &faciei, &infima, &summa, &scriptura, &bita,
+               &exactus))
+    {
+        redde FALSUM;
+    }
+    *imus    = infima;
+    *summus  = summa;
+    *limes   = bita;
+    si (limes_exactus != NIHIL)
+    {
+        *limes_exactus = exactus;
+    }
+    redde VERUM;
+}
+
+/* consilium moduli vertex SINE officina: gyrationes, rete, ordo,
+ * fenestra, limes - sumptus legi potest, nihil grave allocatum
+ * (temperley-lieb-plan H2). officina NIHIL. */
+interior LaqueusModulusVertex*
+_modulus_vertex_consilium (
     constans i32* pd,
              i32  transitus,
              i64  octeti_maximi,
@@ -2762,12 +2952,8 @@ laqueus_modulus_vertex_creare (
                      i32* finis_b;
                      i32* faciei;
                      i32* index_ossis;
-                     i32* pater;
                      i32  c = transitus;
                      i32  m;
-                     i32  ansae_a = ZEPHYRUM;
-                     i32  ansae_b = ZEPHYRUM;
-                     s32  classis;
                      s32  e_max = IV;
                      i32  k;
                      i32  l;
@@ -2780,37 +2966,20 @@ laqueus_modulus_vertex_creare (
     m      = II * c;
     mv     = (LaqueusModulusVertex*)piscina_allocare(piscina,
         magnitudo(LaqueusModulusVertex));
-    finis_a = (i32*)piscina_allocare(piscina, (memoriae_index)m
-        * magnitudo(i32));
-    finis_b = (i32*)piscina_allocare(piscina, (memoriae_index)m
-        * magnitudo(i32));
-    per (l = ZEPHYRUM; l < m; l++)
-    {
-        finis_a[l] = IV * c;
-    }
-    per (k = ZEPHYRUM; k < IV * c; k++)
-    {
-        si (finis_a[ora[k]] == IV * c)
-        {
-            finis_a[ora[k]] = k;
-        }
-        alioquin
-        {
-            finis_b[ora[k]] = k;
-        }
-    }
     mv->transitus         = c;
     mv->primus            = ZEPHYRUM;
     mv->radix_i           = ZEPHYRUM;
     mv->aestimationes     = ZEPHYRUM;
     mv->mutationes_primi  = ZEPHYRUM;
+    mv->officina          = NIHIL;
     mv->gyrationes  = (s32*)piscina_allocare(piscina, (memoriae_index)m
         * magnitudo(s32));
-    si (   !_gyrationes(ora, c, finis_a, finis_b, piscina,
-        mv->gyrationes,
-               &faciei)
-        || !_limes_arborum(faciei, c, piscina, &mv->limes_exactus,
-               &mv->limes))
+    si (   !_fenestra_et_limes(ora, signa, c, piscina, &finis_a,
+        &finis_b,
+               &faciei, &mv->imus, &mv->summus, &mv->scriptura,
+               &mv->limes, &mv->limes_exactus)
+        || !_gyrationes(ora, c, finis_a, finis_b, faciei, piscina,
+               mv->gyrationes))
     {
         redde NIHIL;
     }
@@ -2890,60 +3059,29 @@ laqueus_modulus_vertex_creare (
     {
         redde NIHIL;
     }
+    redde mv;
+}
+
+LaqueusModulusVertex*
+laqueus_modulus_vertex_creare (
+    constans i32* pd,
+             i32  transitus,
+             i64  octeti_maximi,
+         Piscina* piscina)
+{
+    LaqueusModulusVertex* mv = _modulus_vertex_consilium(pd, transitus,
+        octeti_maximi, piscina);
+
+    si (mv == NIHIL)
+    {
+        redde NIHIL;
+    }
     mv->officina = contractio_officina_creare(mv->ordo, octeti_maximi,
         piscina);
     si (mv->officina == NIHIL)
     {
         redde NIHIL;
     }
-
-    /* fenestra Kauffman [-c - 2|s_B| + 2, c + 2|s_A| - 2], ad classem
-     * 3w modulo 4 rotundata */
-    pater = (i32*)piscina_allocare(piscina, (memoriae_index)m
-        * magnitudo(i32));
-    per (l = ZEPHYRUM; l < m; l++)
-    {
-        pater[l] = l;
-    }
-    per (k = ZEPHYRUM; k < c; k++)
-    {
-        constans i32* x = ora + IV * k;
-
-        pater[_radix(pater, x[ZEPHYRUM])]  = _radix(pater, x[I]);
-        pater[_radix(pater, x[II])]        = _radix(pater, x[III]);
-    }
-    per (l = ZEPHYRUM; l < m; l++)
-    {
-        si (_radix(pater, l) == l)
-        {
-            ansae_a++;
-        }
-        pater[l] = l;
-    }
-    per (k = ZEPHYRUM; k < c; k++)
-    {
-        constans i32* x = ora + IV * k;
-
-        pater[_radix(pater, x[ZEPHYRUM])]  = _radix(pater, x[III]);
-        pater[_radix(pater, x[I])]         = _radix(pater, x[II]);
-    }
-    per (l = ZEPHYRUM; l < m; l++)
-    {
-        si (_radix(pater, l) == l)
-        {
-            ansae_b++;
-        }
-    }
-    mv->scriptura = ZEPHYRUM;
-    per (k = ZEPHYRUM; k < c; k++)
-    {
-        mv->scriptura += signa[k];
-    }
-    classis = (s32)_modulo_quattuor((s64)III * (s64)mv->scriptura);
-    mv->imus = -(s32)c - II * (s32)ansae_b + II;
-    mv->imus += (s32)_modulo_quattuor((s64)classis - (s64)mv->imus);
-    mv->summus = (s32)c + II * (s32)ansae_a - II;
-    mv->summus -= (s32)_modulo_quattuor((s64)mv->summus - (s64)classis);
     redde mv;
 }
 
