@@ -959,6 +959,194 @@ _versio_nulla_probare (
         .nota, (s32)LXVI);
 }
 
+/* visitationes ut "0:1 1:1 2:1" (mensura:transitus) */
+interior chorda
+_visitationes (
+           CredoContextus* c,
+    constans MusicxmlOrdo* ordo)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(c->piscina, CCLVI);
+                   i32 i;
+
+    per (i = ZEPHYRUM; i < ordo->numerus; i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(a, ' ');
+        }
+        chorda_aedificator_appendere_i32(a,
+            ordo->visitationes[i].mensura);
+        chorda_aedificator_appendere_character(a, ':');
+        chorda_aedificator_appendere_i32(a,
+            ordo->visitationes[i].transitus);
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+interior i32
+_ordinis_vitia (
+    constans MusicxmlOrdo* ordo,
+      MusicxmlVitiumGenus  genus)
+{
+    i32 i;
+    i32 n = ZEPHYRUM;
+
+    per (i = ZEPHYRUM; i < ordo->numerus_vitiorum; i++)
+    {
+        si (ordo->vitia[i].genus == genus)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+interior MusicxmlOrdo*
+_ordo_fixi (
+         CredoContextus* c,
+     constans character* titulus)
+{
+    MusicxmlOpus* o = _legere_fixum(c, titulus);
+
+    si (o == NIHIL || !musicxml_successus(o))
+    {
+        redde NIHIL;
+    }
+    redde musicxml_ordo(o, c->piscina);
+}
+
+interior vacuum
+_repetitiones_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "repetitiones.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 2:1 1:2 2:2 1:3 2:3 3:1"));
+    CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
+    /* initia in linea evoluta: quaeque mensura II quartae */
+    CREDO_AEQUALIS_S64 (r->visitationes[VII].initium, (s64)XIV);
+    CREDO_AEQUALIS_S64 (r->longitudo, (s64)XVI);
+}
+
+interior vacuum
+_conclusiones_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "conclusiones.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 2:1 1:2 2:2 1:3 3:3 4:1"));
+}
+
+interior vacuum
+_saltus_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "saltus.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 2:1 3:1 1:2 2:2 4:1"));
+    CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
+    r = _ordo_fixi(c, "saltus_finis.musicxml");
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 2:1 3:1 1:2 2:2"));
+}
+
+interior vacuum
+_saltus_verbis_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "saltus_verbis.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r), "0:1 1:1 2:1 0:2 1:2"));
+    CREDO_AEQUALIS_I32 (_ordinis_vitia(r, MUSICXML_SALTUS_SINE_SONO),
+        (i32)II);
+}
+
+interior vacuum
+_repetitio_sine_initio_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "repetitio_sine_initio.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 2:1 0:2 1:2 2:2 3:1"));
+    CREDO_AEQUALIS_I32 (_ordinis_vitia(r, MUSICXML_REPETITIO_APERTA),
+        (i32)I);
+}
+
+interior vacuum
+_saltus_circulus_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "saltus_circulus.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_MINOR_AUT_AEQUALIS_I32 (r->numerus, (i32)(M + XXIV + LXIV));
+    CREDO_MAIOR_I32 (r->numerus, (i32)C);
+    CREDO_AEQUALIS_I32 (_ordinis_vitia(r, MUSICXML_SALTUS_CIRCULUS),
+        (i32)I);
+}
+
+/* Focus recensionis 2: ligatura trans conclusionem */
+interior vacuum
+_ligatura_trans_conclusionem_probare (
+    CredoContextus* c)
+{
+          MusicxmlOpus* o = _legere_fixum(c, "ligatura_volta.musicxml");
+          MusicxmlOrdo* r;
+     ChordaAedificator* a;
+                chorda  t;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    /* tie stop scriptum ante initium: in fine partis iunguntur */
+    CREDO_AEQUALIS_I32 (_vitia_generis(o, MUSICXML_LIGATURA_PENDENS),
+        ZEPHYRUM);
+    r = musicxml_ordo(o, c->piscina);
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r), "0:1 1:1 0:2 2:2"));
+    a = chorda_aedificator_creare(c->piscina, MXXIV);
+    CREDO_VERUM (musicxml_tabulam_scribere(o, r, a));
+    t = chorda_aedificator_finire(a);
+    CREDO_VERUM (_continet(t, "P1\t0\t2\t67\tG\t"));
+    CREDO_VERUM (_continet(t, "P1\t3\t3\t67\tG\t"));
+    CREDO_VERUM (_continet(t, "P1\t6\t2\t72\tC\t"));
+
+    o = _legere_fixum(c, "ligatura_volta_discors.musicxml");
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_AEQUALIS_I32 (_vitia_generis(o, MUSICXML_LIGATURA_PENDENS),
+        (i32)I);
+    r = musicxml_ordo(o, c->piscina);
+    CREDO_NECESSE (r != NIHIL);
+    a = chorda_aedificator_creare(c->piscina, MXXIV);
+    CREDO_VERUM (musicxml_tabulam_scribere(o, r, a));
+    t = chorda_aedificator_finire(a);
+    CREDO_VERUM (_continet(t, "P1\t3\t1\t67\tG\t"));
+    CREDO_VERUM (_continet(t, "P1\t4\t2\t69\tA\t"));
+}
+
+interior vacuum
+_ordo_nata_lux_probare (
+    CredoContextus* c)
+{
+    MusicxmlOpus* o = musicxml_legere(filum_legere_totum(
+        "musica/fontes/nata_lux_80317.mxl", c->piscina), c->piscina);
+    MusicxmlOrdo* r;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    r = musicxml_ordo(o, c->piscina);
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r), "0:1 1:1 2:1 3:1 3:2"));
+    CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nota una: exemplar et tabula", _nota_una_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1011,6 +1199,23 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "timewise: exemplar idem", _forma_temporum_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "versio absens (1.0)", _versio_nulla_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: repetitiones cum times", _repetitiones_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: conclusiones per transitum", _conclusiones_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: D.S. al coda, al fine", _saltus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: saltus verbis solis", _saltus_verbis_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: repetitio sine initio", _repetitio_sine_initio_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: limes (times ingens)", _saltus_circulus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: ligatura trans conclusionem",
+        _ligatura_trans_conclusionem_probare, NIHIL, NIHIL, NIHIL,
+            NIHIL },
+    { "ordo: nata lux", _ordo_nata_lux_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

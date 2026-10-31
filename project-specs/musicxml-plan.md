@@ -581,7 +581,32 @@ merged) all red. Lint renames: `_timewise_probare` →
   jump: repeats not re-taken, the common practice music21 uses —
   verify in P7), loop guard on (measure, pass, jump state).
 - [ ] **Step 3: Green; plant** (ignore `times`) → red; restore.
-- [ ] **Step 4: Commit** (gate `radix`).
+- [x] **Step 4: Commit** (gate `radix`).
+
+**Executed 2026-10-30.** Rules as built (`lib/musicxml_ordo.c` head
+comment): per-measure facts are the UNION over all parts; a backward
+repeat without `times` plays as many passes as the highest ending
+number that follows it (minimum 2); without a forward it repeats from
+just after the previous backward repeat, else from the start (monitum
+once); an ending sounds only on its pass; D.C. / D.S. are each taken
+once, at the end of their measure; after a jump repeats are not
+retaken, fine stops, to coda jumps (once); `transitus` = max(visits
+of the measure, current repeat pass) — that is what gives `3:3` for
+the third ending and `4:1` after it. The loop guard is a visit cap
+(64 per measure + 1024) with SALTUS_CIRCULUS: with once-only jumps a
+true infinite loop cannot be written, so the realistic hazard — and
+the fixture — is a huge `times`. Words-only "D.C." / "D.S." / "Fine" /
+"To Coda" are honoured with one SALTUS_SINE_SONO monitum each.
+**Re-slice (reader):** a tie from ending 1 into the start of the
+repeat has its STOP written before its START, so the reader's
+written-order check raised two false monita; unmatched stops are now
+held to the end of the part and paired with unmatched starts of the
+same voice and pitch — only true leftovers are monita, and the TSV
+(performance order) merges the pair. Fixture names say `conclusiones`
+(not `voltae`). Plants red: ending skip, inferred times, the cap,
+fine after jump, tie pairing. **Not pinned:** "repeats not retaken
+after D.C." has no fixture yet — P7's oracle run settles what music21
+does, and the fixture follows from that.
 
 ---
 

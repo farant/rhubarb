@@ -417,6 +417,8 @@ nomen structura {
                          s64 factor;     /* divisio operis /
                                            * divisiones scriptae */
                           Xar* ligaturae;  /* LigaturaAperta */
+                          Xar* fines;      /* tie stop sine initio
+                                            * scripto prius */
                           b32  transpositio_adest;
          MusicxmlTranspositio  transpositio;   /* vigens */
 constans MusicxmlInstrumentum* instrumenta;   /* partis (percussio) */
@@ -729,7 +731,6 @@ _duratio (
 
 interior vacuum
 _ligaturam_tractare (
-                 Lector* l,
            StatusPartis* sp,
      constans XmlCoctus* e,
            MusicxmlNota* n)
@@ -761,8 +762,16 @@ _ligaturam_tractare (
         }
         si (!inventa)
         {
-            _vitium(l, MUSICXML_MONITUM, MUSICXML_LIGATURA_PENDENS, e,
-                "tie stop sine initio", _vacua());
+            /* fortasse initium post scriptum (conclusio ad initium
+             * repetitionis): in fine partis iudicatur */
+            LigaturaAperta* a = (LigaturaAperta*)xar_addere(sp->fines);
+
+            si (a != NIHIL)
+            {
+                a->vox    = n->vox;
+                a->nota   = n->nota;
+                a->nodus  = e;
+            }
         }
     }
     si (n->ligatura_initium)
@@ -1305,7 +1314,7 @@ _notam_legere (
             n->ligatura_finis = VERUM;
         }
     }
-    _ligaturam_tractare(l, sp, e, n);
+    _ligaturam_tractare(sp, e, n);
     redde VERUM;
 }
 
@@ -1979,9 +1988,11 @@ _partem_legere (
     sp.numerus_instrumentorum  = p->numerus_instrumentorum;
     sp.ligaturae  = xar_creare(l->piscina,
                         (i32)magnitudo(LigaturaAperta));
+    sp.fines      = xar_creare(l->piscina,
+                        (i32)magnitudo(LigaturaAperta));
     mensurae      = xar_creare(l->piscina,
                         (i32)magnitudo(MusicxmlMensura));
-    si (sp.ligaturae == NIHIL || mensurae == NIHIL)
+    si (sp.ligaturae == NIHIL || sp.fines == NIHIL || mensurae == NIHIL)
     {
         redde FALSUM;
     }
@@ -2011,14 +2022,44 @@ _partem_legere (
             redde FALSUM;
         }
     }
+    /* initia et fines reliqui eiusdem vocis et notae inter se
+     * iunguntur (ligatura per repetitionem, in ordine exsecutionis
+     * continua); reliqui monitum accipiunt */
     per (i = ZEPHYRUM; i < xar_numerus(sp.ligaturae); i++)
     {
         LigaturaAperta* a = (LigaturaAperta*)xar_obtinere(sp.ligaturae,
             i);
+                    i32 j;
+                    b32 iuncta = FALSUM;
 
-        _vitium(l, MUSICXML_MONITUM, MUSICXML_LIGATURA_PENDENS,
-            a->nodus,
-            "tie start sine fine", _vacua());
+        per (j = ZEPHYRUM; j < xar_numerus(sp.fines); j++)
+        {
+            LigaturaAperta* f = (LigaturaAperta*)xar_obtinere(sp.fines,
+                j);
+
+            si (   f->nodus != NIHIL && f->nota == a->nota
+                && chorda_aequalis(f->vox, a->vox))
+            {
+                f->nodus  = NIHIL;
+                iuncta    = VERUM;
+                frange;
+            }
+        }
+        si (!iuncta)
+        {
+            _vitium(l, MUSICXML_MONITUM, MUSICXML_LIGATURA_PENDENS,
+                a->nodus, "tie start sine fine", _vacua());
+        }
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(sp.fines); i++)
+    {
+        LigaturaAperta* f = (LigaturaAperta*)xar_obtinere(sp.fines, i);
+
+        si (f->nodus != NIHIL)
+        {
+            _vitium(l, MUSICXML_MONITUM, MUSICXML_LIGATURA_PENDENS,
+                f->nodus, "tie stop sine initio", _vacua());
+        }
     }
     p->mensurae = (MusicxmlMensura*)_tabula(l, mensurae,
         (i32)magnitudo(MusicxmlMensura), &p->numerus_mensurarum);
