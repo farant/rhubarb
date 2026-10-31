@@ -386,6 +386,76 @@ laqueus_jones_ex_pd_rete (
            Polynomium* exitus,
     ContractioSumptus* sumptus);
 
+
+/* ==================================================
+ * Uncinus clausurae tricae per modulos Temperley-Lieb
+ *
+ * <clausura(b)>_delta = Sigma_j Delta_j(delta) tr rho_j(b) in modulis
+ * standard W_{n,j} (temperley.h), <clausura(b)> = ille / delta;
+ * sigma_i^(+-1) -> A^(+-1) 1 + A^(-+1) e_i, delta = -A^2 - A^-2.
+ * Dimensiones summa d^2 = Catalan(n) pro ~2^(2n) statibus moduli
+ * vertex: celerior in tricis longis, tardior in brevibus multorum
+ * filorum (knotapel D136). Puncta, codices status, fenestra, limes et
+ * interpolatio EADEM ac modulus vertex (functiones interiores
+ * communes). Vide project-specs/temperley-lieb-plan.md.
+ * ================================================== */
+
+nomen structura LaqueusModulusTemperley LaqueusModulusTemperley; /* opacum */
+
+/* sumptus sine aedificatione (formae clausae): multiplicationes per
+ * punctum = longitudo x summa d_j^2; octeti = quae limes octeti_maximi
+ * numerat - duo alvei (2 x max d^2 x 4), tabulae actionis, structura -
+ * a filis solis pendentia. NON numerantur memoria O(c) (verbum, codex
+ * PD, fenestra, limes) nec interpolationis, ut in modulo vertex rete
+ * non numeratur. {0, 0} si fila 0 aut > XVI. */
+nomen structura {
+    i64 multiplicationes;
+    i64 octeti;
+} LaqueusTemperleySumptus;
+
+LaqueusTemperleySumptus
+laqueus_temperley_sumptus (
+    i32 fila,
+    i32 longitudo);
+
+/* structura semel: tabulae actionis (ex temperley copiatae), duo alvei,
+ * verbum copiatum, fenestra et limes (laqueus_pd_fenestra). Verbum ut
+ * laqueus_pd_ex_plexu. NIHIL si verbum refutatur, catena (componentes
+ * plures: fenestra et limes nodorum tantum), longitudo < 2, fila > XVI,
+ * octeti > octeti_maximi, aut alvei non allocati (piscina certae
+ * magnitudinis non abortat). */
+LaqueusModulusTemperley*
+laqueus_modulus_temperley_creare (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina);
+
+/* contractus idem ac laqueus_modulus_vertex_aestimare (puncta eadem,
+ * INUTILE ubi delta = 0, ERRATUM eadem); *punctum et *valor non tacti
+ * nisi UTILE. Nihil allocat. */
+s32
+laqueus_modulus_temperley_aestimare (
+    LaqueusModulusTemperley* mt,
+                        i32  omega,
+                        i32  p,
+                        i32* punctum,
+                        i32* valor);
+
+/* uncinus exactus per interpolatio (quaestio eadem ac vertex). FALSUM si
+ * restitutio refutat (exitus non tangitur). */
+b32
+laqueus_modulus_temperley_uncinus (
+    LaqueusModulusTemperley* mt,
+                    Piscina* piscina,
+                 Polynomium* exitus);
+
+/* bita limitis (idem ac laqueus_pd_fenestra); 0 si mt NIHIL */
+i32
+laqueus_modulus_temperley_limes (
+    constans LaqueusModulusTemperley* mt);
+
 /* codex PD per motus Reidemeister I et II simplificatus: dum motus
  * aliquis applicari potest, transitus removentur (R1: ansa - transitus
  * cuius duo ora vicina idem sunt; R2: duo transitus duo ora

@@ -1969,6 +1969,540 @@ _probare_fenestram_et_verticem (
 
 
 /* ==================================================
+ * Via Temperley-Lieb (temperley-lieb-plan T2b)
+ *
+ * Oracula: summa statuum (c <= XXIV), modulus vertex (uncinus et
+ * puncta: punctum ET valor), tabula nodorum (Jones), uncini D136 a
+ * recensore T3 certificati (oraculum regularis repraesentationis
+ * proprium), motus Markov et braid ad puncta ubi nullum aliud oraculum
+ * pervenit (10 x 401, XI fila).
+ * ================================================== */
+
+#define OCTETI_TEMPERLEY ((i64)0x40000000UL)
+
+interior LaqueusModulusTemperley*
+_temperley (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+         Piscina* piscina)
+{
+    redde laqueus_modulus_temperley_creare(verbum, longitudo, fila,
+        OCTETI_TEMPERLEY, piscina);
+}
+
+/* uncinus -> Jones: (-A^3)^-w <D>, A = t^(-1/4) */
+interior Polynomium
+_jones_ex_uncino_probationis (
+    Polynomium  uncinus,
+           s32  scriptura,
+       Piscina* piscina)
+{
+    Polynomium f = polynomium_nullum();
+    Polynomium g = polynomium_nullum();
+           s32 w = scriptura
+               < ZEPHYRUM ? -scriptura : scriptura;
+
+    CREDO_NECESSE(polynomium_translata(uncinus, -(s32)III * scriptura,
+        piscina, &f));
+    si (w % II != ZEPHYRUM)
+    {
+        f = polynomium_nega(f, piscina);
+    }
+    CREDO_NECESSE(polynomium_contrahe(f, -(s32)IV, piscina, &g));
+    redde g;
+}
+
+interior s32
+_scriptura_verbi (
+    constans s32* verbum,
+             i32  longitudo)
+{
+    s32 w = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        w += verbum[k] > ZEPHYRUM ? I : -(s32)I;
+    }
+    redde w;
+}
+
+interior vacuum
+_probare_temperley_statuum (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+
+    sors_seminare(&s, (i64)MMXL, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < XL; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+        i32 fila             = II + sors_intra(&s, VII);
+        i32 longitudo        = II + sors_intra(&s, XXI);
+        s32* verbum          = NIHIL;
+        i32* pd = _plexus_aureus(&s, fila, &longitudo, piscina,
+            &verbum);
+        LaqueusModulusTemperley* mt;
+                     Polynomium  tl      = polynomium_nullum();
+                     Polynomium  status  = polynomium_nullum();
+
+        si (pd == NIHIL || longitudo > XXIV)
+        {
+            piscina_reficere(piscina, nota);
+            perge;
+        }
+        mt = _temperley(verbum, longitudo, fila, piscina);
+        CREDO_NECESSE_NON_NIHIL(mt);
+        CREDO_NECESSE(laqueus_modulus_temperley_uncinus(mt, piscina,
+            &tl));
+        CREDO_NECESSE(laqueus_uncinus_ex_pd(pd, longitudo, piscina,
+            &status));
+        CREDO_VERUM(polynomium_aequalis(tl, status));
+        piscina_reficere(piscina, nota);
+    }
+}
+
+interior vacuum
+_probare_temperley_verticis (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+       Sors  s;
+        i32  t;
+
+    sors_seminare(&s, (i64)MMXLI, ZEPHYRUM);
+    per (t = ZEPHYRUM; t < XXX; t++)
+    {
+        PiscinaNotatio nota  = piscina_notare(piscina);
+        i32 fila             = III + sors_intra(&s, VI);
+        i32 longitudo        = XXV + sors_intra(&s, LXXV);
+        s32* verbum          = NIHIL;
+        i32* pd = _plexus_aureus(&s, fila, &longitudo, piscina,
+            &verbum);
+        LaqueusModulusTemperley* mt;
+           LaqueusModulusVertex* mv;
+                     Polynomium  tl = polynomium_nullum();
+                     Polynomium  uncinus_verticis = polynomium_nullum();
+
+        CREDO_NECESSE_NON_NIHIL(pd);
+        mt = _temperley(verbum, longitudo, fila, piscina);
+        mv = laqueus_modulus_vertex_creare(pd, longitudo, OCTETI_MAXIMI,
+            piscina);
+        CREDO_NECESSE_NON_NIHIL(mt);
+        CREDO_NECESSE_NON_NIHIL(mv);
+        CREDO_AEQUALIS_I32(laqueus_modulus_temperley_limes(mt),
+            laqueus_modulus_vertex_limes(mv));
+        CREDO_NECESSE(laqueus_modulus_temperley_uncinus(mt, piscina,
+            &tl));
+        CREDO_NECESSE(laqueus_modulus_vertex_uncinus(mv, piscina,
+            &uncinus_verticis));
+        CREDO_VERUM(polynomium_aequalis(tl, uncinus_verticis));
+        piscina_reficere(piscina, nota);
+    }
+}
+
+interior vacuum
+_probare_temperley_puncta (
+    CredoContextus* c)
+{
+    Piscina* piscina = c->piscina;
+    Sors s;
+    i32 longitudo  = CI;
+    s32* verbum    = NIHIL;
+    i32* pd;
+    LaqueusModulusTemperley* mt;
+    LaqueusModulusVertex* mv;
+    constans i32 primi[III] = { (i32)998244353UL, (i32)4294967029UL,
+        (i32)998244353UL };
+               i32 valores_primi[XL];
+               i32 a = (i32)0xDEADUL;
+               i32 v = (i32)0xDEADUL;
+               i32 q;
+               i32 omega;
+    memoriae_index numerus_ante;
+
+    sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+    pd = _plexus_aureus(&s, VIII, &longitudo, piscina, &verbum);
+    CREDO_NECESSE_NON_NIHIL(pd);
+    mt = _temperley(verbum, longitudo, VIII, piscina);
+    mv = laqueus_modulus_vertex_creare(pd, longitudo, OCTETI_MAXIMI,
+        piscina);
+    CREDO_NECESSE_NON_NIHIL(mt);
+    CREDO_NECESSE_NON_NIHIL(mv);
+
+    /* primus p, deinde q, deinde p: puncta et valores eadem ac vertex,
+     * valores p iterum idem; aestimare nihil allocat */
+    numerus_ante = piscina_numerus_allocationum(piscina);
+    per (q = ZEPHYRUM; q < III; q++)
+    {
+        per (omega = II; omega < XL; omega++)
+        {
+            i32 at = ZEPHYRUM;
+            i32 vt = ZEPHYRUM;
+            i32 av = ZEPHYRUM;
+            i32 vv = ZEPHYRUM;
+            s32 st = laqueus_modulus_temperley_aestimare(mt, omega,
+                primi[q], &at, &vt);
+            s32 sv = laqueus_modulus_vertex_aestimare(mv, omega,
+                primi[q],
+                &av, &vv);
+
+            CREDO_AEQUALIS_S32(st, sv);
+            CREDO_AEQUALIS_I32(at, av);
+            CREDO_AEQUALIS_I32(vt, vv);
+            si (q == ZEPHYRUM)
+            {
+                valores_primi[omega] = vt;
+            }
+            alioquin si (q == II)
+            {
+                CREDO_AEQUALIS_I32(vt, valores_primi[omega]);
+            }
+        }
+    }
+    CREDO_AEQUALIS_I64((i64)piscina_numerus_allocationum(piscina),
+        (i64)numerus_ante);
+
+    /* g minimus: p = 17, omega = 2 -> i = 3^4 = 13, A = 13 x 4 = 1 */
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II, XVII,
+        &a, &v), INTERPOLATIO_UTILE);
+    CREDO_AEQUALIS_I32(a, I);
+
+    /* custodes: exitus non tacti */
+    a = (i32)0xDEADUL;
+    v = (i32)0xDEADUL;
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, V, XVII,
+        &a, &v), INTERPOLATIO_INUTILE);
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, ZEPHYRUM,
+        primi[ZEPHYRUM], &a, &v), INTERPOLATIO_INUTILE);
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II, VII,
+        &a, &v), INTERPOLATIO_ERRATUM);
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II, XXI,
+        &a, &v), INTERPOLATIO_ERRATUM);
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, V, LXXXV,
+        &a, &v), INTERPOLATIO_ERRATUM);
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II,
+        (i32)4294967291UL, &a, &v), INTERPOLATIO_ERRATUM);
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(NIHIL, II,
+        primi[ZEPHYRUM], &a, &v), INTERPOLATIO_ERRATUM);
+    CREDO_AEQUALIS_I32(a, (i32)0xDEADUL);
+    CREDO_AEQUALIS_I32(v, (i32)0xDEADUL);
+}
+
+interior vacuum
+_probare_temperley_notos (
+    CredoContextus* c)
+{
+                    Piscina* piscina         = c->piscina;
+               constans s32  trifolium[III]  = { I, I, I };
+               constans s32  octo[IV] = { I, -(s32)II, I,
+                   -(s32)II };
+                        s32  torus_tria[VIII];
+                        s32  torus_quattuor[XV];
+         constans character* nomina[III] = { "3_1", "4_1", "8_19" };
+               constans s32* verba[III];
+                        i32  longitudines[III]  = { III, IV, VIII };
+                        i32  fila[III]          = { II, III, III };
+                        i32  k;
+    LaqueusModulusTemperley* mt;
+                 Polynomium  tl = polynomium_nullum();
+
+    per (k = ZEPHYRUM; k < VIII; k++)
+    {
+        torus_tria[k] = (s32)(k % II + I);
+    }
+    per (k = ZEPHYRUM; k < XV; k++)
+    {
+        torus_quattuor[k] = (s32)(k % III + I);
+    }
+    verba[ZEPHYRUM]  = trifolium;
+    verba[I]         = octo;
+    verba[II]        = torus_tria;
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        constans NodusTabulae* n = tabula_nodorum_quaere(nomina[k]);
+
+        CREDO_NECESSE_NON_NIHIL(n);
+        mt = _temperley(verba[k], longitudines[k], fila[k], piscina);
+        CREDO_NECESSE_NON_NIHIL(mt);
+        CREDO_NECESSE(laqueus_modulus_temperley_uncinus(mt, piscina,
+            &tl));
+        CREDO_VERUM(polynomium_aequalis(_jones_ex_uncino_probationis(tl,
+            _scriptura_verbi(verba[k], longitudines[k]), piscina),
+            _polynomium_textus(n->jones, piscina)));
+    }
+    /* T(4,5): XV transitus, extra tabulam - Jones = modulus vertex */
+    mt = _temperley(torus_quattuor, XV, IV, piscina);
+    CREDO_NECESSE_NON_NIHIL(mt);
+    CREDO_NECESSE(laqueus_modulus_temperley_uncinus(mt, piscina, &tl));
+    CREDO_VERUM(polynomium_aequalis(_jones_ex_uncino_probationis(tl, XV,
+        piscina), _jones_plexus(torus_quattuor, XV, IV, piscina)));
+}
+
+/* uncini D136 (knotapel/demo_136_tl_braid_closures/brackets.txt), a
+ * recensore T3 per oraculum proprium certificati: coefficientes A^(imus
+ * + 4k) */
+interior constans s64 UNCINUS_3_50[] = { -1, 3, -6, 11, -15, 21, -24,
+    25, -24, 20, -15, 10, -6, 3, -1 };
+interior constans s64 UNCINUS_8_101[] = { 1, -25, 239, -1382, 5594,
+    -16876, 38538, -63522, 56339, 63682, -412521, 1075781, -1985533,
+    2794618, -2850483, 1356335, 2284376, -8068156, 15140330, -21867198,
+    26274328, -26719418, 22535235, -14358472, 3978509, 6249031,
+    -14179663, 18524415, -19118989, 16765182, -12780037, 8482149,
+    -4818019, 2223823, -698096, -13976, 232973, -222484, 145361, -75684,
+    32646, -11729, 3464, -815, 144, -17, 1 };
+interior constans s64 UNCINUS_8_201[] = { 1, -32, 491, -4903, 36121,
+    -209888, 1001297, -4022751, 13829715, -41044537, 105356095,
+    -232222949, 429238763, -622129746, 540170191, 413673285,
+    -3183514275L, 8752266673L, -17287055302L, 26761300855L,
+    -31603595402L, 22529224755L, 11122222034L, -76064042165L,
+    168215278269L, -267944865861L, 341721283127L, -352339522502L,
+    275214787298L, -113489275101L, -96718295492L, 295843478580L,
+    -422670031046L, 438938651651L, -345131071952L, 179793018306L,
+    -2780427390L, -129475143256L, 185135612716L, -165405818488L,
+    97899493472L, -20050873397L, -38124297024L, 63805996604L,
+    -60911780461L, 42466229554L, -21690227404L, 6518673415L, 1172147008,
+    -3282376246L, 2674897030L, -1449232449, 546038561, -109663707,
+    -24979329, 34853559, -17334761, 4743282, -6942, -786723, 505111,
+    -207656, 64352, -15601, 2944, -416, 40, -2 };
+
+nomen structura {
+             i32  fila;
+             i32  longitudo;
+             i32  vestigium_verbi;
+             s32  imus;
+    constans s64* coefficientes;
+             i32  numerus;
+} UncinusCertus;
+
+interior vacuum
+_probare_temperley_certos (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans UncinusCertus  certi[III] = {
+        { III, L, (i32)2213358261UL, -(s32)XXII, UNCINUS_3_50,
+          (i32)(magnitudo(UNCINUS_3_50) / magnitudo(s64)) },
+        { VIII, CI, (i32)2594227919UL, -(s32)LXIX, UNCINUS_8_101,
+          (i32)(magnitudo(UNCINUS_8_101) / magnitudo(s64)) },
+        { VIII, CCI, (i32)3522731884UL, -(s32)CXXXV, UNCINUS_8_201,
+          (i32)(magnitudo(UNCINUS_8_201) / magnitudo(s64)) }
+    };
+    i32 k;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        PiscinaNotatio nota = piscina_notare(piscina);
+        Sors s;
+        i32 longitudo  = certi[k].longitudo;
+        s32* verbum    = NIHIL;
+        i32* pd;
+        i32 h        = (i32)2166136261UL;
+        i32 numerus  = IV * (certi[k].numerus - I) + I;
+        Magnus* coefficientes = (Magnus*)piscina_allocare(piscina,
+            (memoriae_index)numerus * magnitudo(Magnus));
+                     Polynomium  exspectatum  = polynomium_nullum();
+                     Polynomium  tl           = polynomium_nullum();
+        LaqueusModulusTemperley* mt;
+                            i32  j;
+
+        sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+        pd = _plexus_aureus(&s, certi[k].fila, &longitudo, piscina,
+            &verbum);
+        CREDO_NECESSE_NON_NIHIL(pd);
+        per (j = ZEPHYRUM; j < longitudo; j++)
+        {
+            h = _misce(h, verbum[j]);
+        }
+        CREDO_AEQUALIS_I32(h, certi[k].vestigium_verbi);
+        per (j = ZEPHYRUM; j < numerus; j++)
+        {
+            coefficientes[j] = magnus_ex_s64(j % IV == ZEPHYRUM
+                ? certi[k].coefficientes[j / IV] : ZEPHYRUM);
+        }
+        CREDO_NECESSE(polynomium_ex_coefficientibus(coefficientes,
+            numerus,
+            certi[k].imus, piscina, &exspectatum));
+        mt = _temperley(verbum, longitudo, certi[k].fila, piscina);
+        CREDO_NECESSE_NON_NIHIL(mt);
+        CREDO_NECESSE(laqueus_modulus_temperley_uncinus(mt, piscina,
+            &tl));
+        CREDO_VERUM(polynomium_aequalis(tl, exspectatum));
+        piscina_reficere(piscina, nota);
+    }
+}
+
+/* motus ad puncta in trica D136 10 x 401 (nullum aliud oraculum in
+ * suita pervenit): stabilizatio retro et ante in XI filis (x -A^(+-3)),
+ * relationes braid et R2 inserta (idem valor) */
+interior vacuum
+_probare_temperley_motus (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+                       Sors  s;
+                        i32  longitudo  = CDI;
+                        s32* verbum     = NIHIL;
+                        i32* pd;
+                        s32* retro;
+                        s32* ante;
+                        s32* insertum;
+    LaqueusModulusTemperley* mt;
+    LaqueusModulusTemperley* retro_structurae[II];
+    LaqueusModulusTemperley* ante_structurae[II];
+    LaqueusModulusTemperley* inserta_structura;
+                        i32  p = (i32)998244353UL;
+                        i32  signum;
+                        i32  omega;
+                        i32  j;
+
+    sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+    pd = _plexus_aureus(&s, X, &longitudo, piscina, &verbum);
+    CREDO_NECESSE_NON_NIHIL(pd);
+    {
+        i32 h = (i32)2166136261UL;
+
+        per (j = ZEPHYRUM; j < longitudo; j++)
+        {
+            h = _misce(h, verbum[j]);
+        }
+        CREDO_AEQUALIS_I32(h, (i32)2869638322UL);
+    }
+    mt = _temperley(verbum, longitudo, X, piscina);
+    CREDO_NECESSE_NON_NIHIL(mt);
+    retro = (s32*)piscina_allocare(piscina, (memoriae_index)(longitudo
+        + I) * magnitudo(s32));
+    ante = (s32*)piscina_allocare(piscina, (memoriae_index)(longitudo
+        + I) * magnitudo(s32));
+    per (signum = ZEPHYRUM; signum < II; signum++)
+    {
+        s32 littera = signum == ZEPHYRUM ? (s32)I : -(s32)I;
+
+        per (j = ZEPHYRUM; j < longitudo; j++)
+        {
+            retro[j] = verbum[j];
+            ante[j + I] = verbum[j] > ZEPHYRUM ? verbum[j] + I
+                : verbum[j] - I;
+        }
+        retro[longitudo]  = littera * (s32)X;
+        ante[ZEPHYRUM]    = littera;
+        retro_structurae[signum] = _temperley(retro, longitudo + I, XI,
+            piscina);
+        ante_structurae[signum] = _temperley(ante, longitudo + I, XI,
+            piscina);
+        CREDO_NECESSE_NON_NIHIL(retro_structurae[signum]);
+        CREDO_NECESSE_NON_NIHIL(ante_structurae[signum]);
+        /* nova structura pro signo quoque: verba copiantur */
+    }
+    /* sigma_1 sigma_2 sigma_1 sigma_2^-1 sigma_1^-1 sigma_2^-1 = 1 et
+     * sigma_5 sigma_5^-1 = 1, in medio verbo inserta */
+    insertum = (s32*)piscina_allocare(piscina,
+        (memoriae_index)(longitudo
+        + VIII) * magnitudo(s32));
+    per (j = ZEPHYRUM; j < longitudo + VIII; j++)
+    {
+        constans s32 inserta[VIII] = { I, II, I, -(s32)II, -(s32)I,
+            -(s32)II, V, -(s32)V };
+        i32 medium = longitudo / II;
+
+        insertum[j] = j < medium ? verbum[j] : (j < medium + VIII
+            ? inserta[j - medium] : verbum[j - VIII]);
+    }
+    inserta_structura = _temperley(insertum, longitudo + VIII, X,
+        piscina);
+    CREDO_NECESSE_NON_NIHIL(inserta_structura);
+
+    per (omega = II; omega < IV; omega++)
+    {
+        i32 a   = ZEPHYRUM;
+        i32 v   = ZEPHYRUM;
+        i32 at  = ZEPHYRUM;
+        i32 vt  = ZEPHYRUM;
+        i32 a_cubus;
+        i32 a_cubus_inversus;
+
+        CREDO_NECESSE(laqueus_modulus_temperley_aestimare(mt, omega, p,
+            &a, &v) == INTERPOLATIO_UTILE);
+        a_cubus = congruentia_multiplica(congruentia_multiplica(a, a,
+            p), a,
+            p);
+        (vacuum)congruentia_inversa(a_cubus, p, &a_cubus_inversus);
+        per (signum = ZEPHYRUM; signum < II; signum++)
+        {
+            /* <b sigma_n^(+-1)> = -A^(+-3) <b> */
+            i32 factor = congruentia_subtrahe(ZEPHYRUM, signum
+                == ZEPHYRUM
+                ? a_cubus : a_cubus_inversus, p);
+            i32 exspectatum = congruentia_multiplica(factor, v, p);
+
+            CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(
+                retro_structurae[signum], omega, p, &at, &vt),
+                INTERPOLATIO_UTILE);
+            CREDO_AEQUALIS_I32(at, a);
+            CREDO_AEQUALIS_I32(vt, exspectatum);
+            CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(
+                ante_structurae[signum], omega, p, &at, &vt),
+                INTERPOLATIO_UTILE);
+            CREDO_AEQUALIS_I32(vt, exspectatum);
+        }
+        CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(inserta_structura,
+            omega, p,
+            &at, &vt), INTERPOLATIO_UTILE);
+        CREDO_AEQUALIS_I32(vt, v);
+    }
+}
+
+interior vacuum
+_probare_temperley_refutationes (
+    CredoContextus* c)
+{
+                    Piscina* piscina         = c->piscina;
+               constans s32  hopf[II]        = { I, I };
+               constans s32  trifolium[III]  = { I, I, I };
+               constans s32  unum[I]         = { I };
+               constans s32  nullum[III]     = { I, ZEPHYRUM, I };
+               constans s32  nimium[III]     = { I, III, I };
+    LaqueusTemperleySumptus  sumptus;
+    LaqueusTemperleySumptus  vacuus;
+                 Polynomium  f = polynomium_nullum();
+
+    CREDO_NIHIL(_temperley(hopf, II, II, piscina));           /* catena */
+    CREDO_NIHIL(_temperley(trifolium, III, III, piscina));    /* filum intactum */
+    CREDO_NIHIL(_temperley(trifolium, ZEPHYRUM, II, piscina));
+    CREDO_NIHIL(_temperley(unum, I, II, piscina));            /* c = 1 */
+    CREDO_NIHIL(_temperley(nullum, III, II, piscina));
+    CREDO_NIHIL(_temperley(nimium, III, II, piscina));
+    CREDO_NIHIL(_temperley(trifolium, III, XVII, piscina));
+    CREDO_NIHIL(_temperley(NIHIL, III, II, piscina));
+    CREDO_NIHIL(laqueus_modulus_temperley_creare(trifolium, III, II,
+        OCTETI_TEMPERLEY, NIHIL));
+    CREDO_FALSUM(laqueus_modulus_temperley_uncinus(NIHIL, piscina, &f));
+    CREDO_AEQUALIS_I32(laqueus_modulus_temperley_limes(NIHIL),
+        ZEPHYRUM);
+
+    /* limes octetorum in margine: exactus accipitur, uno minus refutatur */
+    sumptus = laqueus_temperley_sumptus(II, III);
+    CREDO_VERUM(sumptus.octeti > ZEPHYRUM);
+    CREDO_NON_NIHIL(laqueus_modulus_temperley_creare(trifolium, III, II,
+        sumptus.octeti, piscina));
+    CREDO_NIHIL(laqueus_modulus_temperley_creare(trifolium, III, II,
+        sumptus.octeti - I, piscina));
+    /* sumptus: multiplicationes = longitudo x Catalan(fila) */
+    CREDO_AEQUALIS_I64(laqueus_temperley_sumptus(XII, DCCCI)
+        .multiplicationes, (i64)DCCCI * (i64)208012UL);
+    CREDO_AEQUALIS_I64(laqueus_temperley_sumptus(XVI, I)
+        .multiplicationes, (i64)35357670UL);
+    vacuus = laqueus_temperley_sumptus(XVII, X);
+    CREDO_AEQUALIS_I64(vacuus.octeti, (i64)ZEPHYRUM);
+    CREDO_AEQUALIS_I64(laqueus_temperley_sumptus(ZEPHYRUM, X).octeti,
+        (i64)ZEPHYRUM);
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -2003,6 +2537,21 @@ interior constans CredoSectio SECTIONES[] = {
     { "fenestra et vertex", _probare_fenestram_et_verticem, NIHIL,
         NIHIL,
       NIHIL, NIHIL },
+    { "temperley summa statuum", _probare_temperley_statuum, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "temperley vertex", _probare_temperley_verticis, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "temperley puncta", _probare_temperley_puncta, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "temperley nodi noti", _probare_temperley_notos, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "temperley uncini certi", _probare_temperley_certos, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "temperley motus", _probare_temperley_motus, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "temperley refutationes", _probare_temperley_refutationes, NIHIL,
+      NIHIL, NIHIL, NIHIL },
     { "tabula tota", _probare_tabulam_totam, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

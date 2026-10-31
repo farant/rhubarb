@@ -15,6 +15,7 @@
 #include "matrix.h"
 #include "congruentia.h"
 #include "interpolatio.h"
+#include "temperley.h"
 #include <string.h>
 
 
@@ -3085,31 +3086,36 @@ laqueus_modulus_vertex_creare (
     redde mv;
 }
 
-s32
-laqueus_modulus_vertex_aestimare (
-    LaqueusModulusVertex* mv,
-                    i32  omega,
-                    i32  p,
-                    i32* punctum,
-                    i32* valor)
+/* punctum A = i omega^2 modulo p, viis vertex et temperley COMMUNE (puncta
+ * eadem in utraque via). *primus, *radix_i: thesaurus primi (i =
+ * g^((p-1)/4) recomputatur si p novus; *mutationes crescit). UTILE:
+ * *w, *w_inversa, *a = A, *a_inversa = A^-1, *d = omega^4 + omega^-4 =
+ * -A^2 - A^-2 scripti; INUTILE si omega = 0 mod p aut d = 0 (A^4 = -1);
+ * ERRATUM si p < 5, p != 1 mod 4, aut p non primus. */
+interior s32
+_punctum_eligere (
+    i32  omega,
+    i32  p,
+    i32* primus,
+    i32* radix_i,
+    i32* mutationes,
+    i32* w_exitus,
+    i32* w_inversa_exitus,
+    i32* a,
+    i32* a_inversa,
+    i32* d)
 {
-    i32 a;
-    i32 a_inversa;
     i32 w;
     i32 w_inversa;
-    i32 d;
-    i32 d_inversa;
-    i32 z;
-    s32 e_max;
-    s32 j;
-    i32 k;
+    i32 quadratum;
+    i32 quadratum_inversum;
+    i32 summa;
 
-    si (   mv == NIHIL || punctum == NIHIL || valor == NIHIL || p < V
-        || p % IV != I)
+    si (p < V || p % IV != I)
     {
         redde INTERPOLATIO_ERRATUM;
     }
-    si (p != mv->primus)
+    si (p != *primus)
     {
         /* primus PROBATUS ante quaestionem g: modulus compositus 3 | p
          * nullum g habet (scansio ~p), alii falso accipiuntur */
@@ -3133,14 +3139,65 @@ laqueus_modulus_vertex_aestimare (
         {
             redde INTERPOLATIO_ERRATUM;
         }
-        mv->radix_i  = congruentia_potentia(g, (i64)((p - I) / IV), p);
-        mv->primus   = p;
-        mv->mutationes_primi++;
+        *radix_i  = congruentia_potentia(g, (i64)((p - I) / IV), p);
+        *primus   = p;
+        (*mutationes)++;
     }
     w = omega % p;
     si (w == ZEPHYRUM || !congruentia_inversa(w, p, &w_inversa))
     {
         redde INTERPOLATIO_INUTILE;
+    }
+    quadratum = congruentia_multiplica(w, w, p);
+    quadratum_inversum = congruentia_multiplica(w_inversa, w_inversa,
+        p);
+    summa = congruentia_adde(congruentia_multiplica(quadratum,
+        quadratum,
+        p), congruentia_multiplica(quadratum_inversum,
+        quadratum_inversum,
+        p), p);
+    si (summa == ZEPHYRUM)
+    {
+        redde INTERPOLATIO_INUTILE;
+    }
+    *w_exitus          = w;
+    *w_inversa_exitus  = w_inversa;
+    *a                 = congruentia_multiplica(*radix_i, quadratum, p);
+    *a_inversa         = congruentia_multiplica(p - *radix_i,
+        quadratum_inversum, p);
+    *d                 = summa;
+    redde INTERPOLATIO_UTILE;
+}
+
+s32
+laqueus_modulus_vertex_aestimare (
+    LaqueusModulusVertex* mv,
+                    i32  omega,
+                    i32  p,
+                    i32* punctum,
+                    i32* valor)
+{
+    i32 a;
+    i32 a_inversa;
+    i32 w;
+    i32 w_inversa;
+    i32 d;
+    i32 d_inversa;
+    i32 z;
+    s32 e_max;
+    s32 j;
+    i32 k;
+    s32 status;
+
+    si (mv == NIHIL || punctum == NIHIL || valor == NIHIL)
+    {
+        redde INTERPOLATIO_ERRATUM;
+    }
+    status = _punctum_eligere(omega, p, &mv->primus, &mv->radix_i,
+        &mv->mutationes_primi, &w, &w_inversa, &a, &a_inversa, &d);
+    si (status != INTERPOLATIO_UTILE)
+    {
+        redde status;
     }
 
     /* potentiae omega^j, j in [-E, E] */
@@ -3153,16 +3210,6 @@ laqueus_modulus_vertex_aestimare (
         mv->potentiae[e_max - j] = congruentia_multiplica(
             mv->potentiae[e_max - j + I], w_inversa, p);
     }
-    d = congruentia_adde(mv->potentiae[e_max + IV],
-        mv->potentiae[e_max - IV], p);
-    si (d == ZEPHYRUM)
-    {
-        redde INTERPOLATIO_INUTILE;
-    }
-    a = congruentia_multiplica(mv->radix_i, mv->potentiae[e_max + II],
-        p);
-    a_inversa = congruentia_multiplica(p - mv->radix_i,
-        mv->potentiae[e_max - II], p);
 
     per (k = ZEPHYRUM; k < mv->transitus; k++)
     {
@@ -3267,23 +3314,36 @@ _aestimator_verticis (
 /* uncinus exactus: puncta in classe 3w (passus 4), limes = bita
  * minimi Pi gradus super graphos Tait (T5a: Sigma |c_k| <= arbores
  * extensae <= Pi gradus; numquam > 2c), primi 1 modulo 4 */
+/* quaestio interpolationis uncinus, viis vertex et temperley communis:
+ * fenestra passu IV, limes probatus, primi 1 mod 4, duo puncta addita */
+interior InterpolatioQuaestio
+_quaestio_uncini (
+    s32 imus,
+    s32 summus,
+    i32 limes)
+{
+    InterpolatioQuaestio q = interpolatio_quaestio_ordinaria();
+
+    q.gradus_imus     = imus;
+    q.gradus_summus   = summus;
+    q.passus          = IV;
+    q.limes_bitorum   = limes;
+    q.residuum_primi  = I;
+    q.modulus_primi   = IV;
+    q.puncta_addita   = II;
+    q.conatus_maximi  = (i32)((summus - imus) / IV) + I + II + LXIV;
+    redde q;
+}
+
 interior b32
 _uncinus_per_rete (
     LaqueusModulusVertex* mv,
                  Piscina* piscina,
               Polynomium* exitus)
 {
-    InterpolatioQuaestio q = interpolatio_quaestio_ordinaria();
+    InterpolatioQuaestio q = _quaestio_uncini(mv->imus, mv->summus,
+        mv->limes);
 
-    q.gradus_imus     = mv->imus;
-    q.gradus_summus   = mv->summus;
-    q.passus          = IV;
-    q.limes_bitorum   = mv->limes;
-    q.residuum_primi  = I;
-    q.modulus_primi   = IV;
-    q.puncta_addita   = II;
-    q.conatus_maximi  = (i32)((mv->summus - mv->imus) / IV) + I + II
-        + LXIV;
     redde interpolatio_polynomium(_aestimator_verticis, mv, &q, piscina,
         exitus);
 }
@@ -3379,4 +3439,373 @@ laqueus_jones_ex_pd_rete (
         *sumptus = contractio_sumptus(mv->ordo);
     }
     redde VERUM;
+}
+
+
+/* ==================================================
+ * Uncinus per modulos Temperley-Lieb (temperley-lieb-plan T2b)
+ *
+ * Algorithmus ille knotapel D136 (tl_value): per modulum W_{n,j}
+ * matrix M (d x d, residua) ab identitate per verbum, litteris ab
+ * ultima ad primam: M <- c1 M + c2 (E_i M), ubi E_i M ordines colligit
+ * (ordo imago(s) += genus(s) x ordo s); deinde Sigma_j Delta_j tr M /
+ * delta. Duo alvei max d^2, nihil per punctum allocatum.
+ * ================================================== */
+
+structura LaqueusModulusTemperley {
+      i32   fila;
+      i32   longitudo;
+      s32*  verbum;              /* copia */
+      s32   imus;                /* fenestra (laqueus_pd_fenestra) */
+      s32   summus;
+      i32   limes;
+   Magnus   limes_exactus;
+      i32   moduli;              /* j = fila % 2, fila % 2 + 2, ..., fila */
+      i32*  dimensiones;         /* per modulum */
+      i32** imagines;            /* per modulum: (fila - 1) x d */
+       i8** genera;              /* idem: TEMPERLEY_NIHIL, _UNUM, _DELTA */
+      i32*  alveus_a;            /* max d^2 */
+      i32*  alveus_b;
+      i32   primus;              /* thesaurus _punctum_eligere */
+      i32   radix_i;
+      i32   mutationes_primi;
+      i32   aestimationes;
+};
+
+/* d_{n,j} = C(n, h) - C(n, h - 1), h = (n - j) / 2 */
+interior i64
+_dimensio_temperley (
+    i32 fila,
+    i32 defectus)
+{
+    i32 h         = (fila - defectus) / II;
+    i64 binomium  = I;
+    i64 prius     = ZEPHYRUM;
+    i32 t;
+
+    per (t = I; t <= h; t++)
+    {
+        prius     = binomium;
+        binomium  = binomium * (i64)(fila - t + I) / (i64)t;
+    }
+    redde binomium - prius;
+}
+
+LaqueusTemperleySumptus
+laqueus_temperley_sumptus (
+    i32 fila,
+    i32 longitudo)
+{
+    LaqueusTemperleySumptus sumptus;
+                        i64 quadrata  = ZEPHYRUM;
+                        i64 maxima    = ZEPHYRUM;
+                        i64 tabulae   = ZEPHYRUM;
+                        i32 moduli    = ZEPHYRUM;
+                        i32 j;
+
+    sumptus.multiplicationes  = ZEPHYRUM;
+    sumptus.octeti            = ZEPHYRUM;
+    si (fila == ZEPHYRUM || fila > TEMPERLEY_FILA_MAXIMA)
+    {
+        redde sumptus;
+    }
+    per (j = fila % II; j <= fila; j += II)
+    {
+        i64 d     = _dimensio_temperley(fila, j);
+        i64 loca  = (i64)(fila - I) * d;
+
+        quadrata += d * d;
+        si (d > maxima)
+        {
+            maxima = d;
+        }
+        tabulae += (loca > ZEPHYRUM ? loca : (i64)I)
+            * (i64)(magnitudo(i32) + magnitudo(i8));
+        moduli++;
+    }
+    sumptus.multiplicationes  = (i64)longitudo * quadrata;
+    sumptus.octeti            = (i64)II * maxima * maxima
+        * (i64)magnitudo(i32) + tabulae
+        + (i64)magnitudo(LaqueusModulusTemperley)
+        + (i64)moduli * (i64)(magnitudo(i32) + magnitudo(i32*)
+        + magnitudo(i8*));
+    redde sumptus;
+}
+
+LaqueusModulusTemperley*
+laqueus_modulus_temperley_creare (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina)
+{
+     LaqueusModulusTemperley* mt;
+     LaqueusTemperleySumptus  sumptus;
+              PiscinaNotatio  nota;
+                         i32* pd;
+                         i32  transitus;
+                         s32  imus;
+                         s32  summus;
+                         i32  limes;
+                      Magnus  exactus;
+                         i64  maxima = ZEPHYRUM;
+                         i32  k;
+                         i32  i;
+                         i32  s;
+
+    si (   verbum == NIHIL || piscina == NIHIL || longitudo < II
+        || fila   == ZEPHYRUM || fila > TEMPERLEY_FILA_MAXIMA)
+    {
+        redde NIHIL;
+    }
+    sumptus = laqueus_temperley_sumptus(fila, longitudo);
+    si (sumptus.octeti > octeti_maximi)
+    {
+        redde NIHIL;
+    }
+    si (   !laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina, &pd,
+               &transitus)
+        || transitus != longitudo
+        || !laqueus_pd_fenestra(pd, transitus, piscina, &imus, &summus,
+               &limes, &exactus))
+    {
+        redde NIHIL;
+    }
+
+    mt = (LaqueusModulusTemperley*)piscina_allocare(piscina,
+        magnitudo(LaqueusModulusTemperley));
+    mt->fila              = fila;
+    mt->longitudo         = longitudo;
+    mt->imus              = imus;
+    mt->summus            = summus;
+    mt->limes             = limes;
+    mt->limes_exactus     = exactus;
+    mt->primus            = ZEPHYRUM;
+    mt->radix_i           = ZEPHYRUM;
+    mt->mutationes_primi  = ZEPHYRUM;
+    mt->aestimationes     = ZEPHYRUM;
+    mt->verbum = (s32*)piscina_allocare(piscina,
+        (memoriae_index)longitudo
+        * magnitudo(s32));
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        mt->verbum[k] = verbum[k];
+    }
+
+    /* tabulae laquei PRIMUM, deinde moduli temperley intra notam */
+    mt->moduli       = fila / II + I;
+    mt->dimensiones  = (i32*)piscina_allocare(piscina,
+        (memoriae_index)mt->moduli * magnitudo(i32));
+    mt->imagines     = (i32**)piscina_allocare(piscina,
+        (memoriae_index)mt->moduli * magnitudo(i32*));
+    mt->genera       = (i8**)piscina_allocare(piscina,
+        (memoriae_index)mt->moduli * magnitudo(i8*));
+    per (k = ZEPHYRUM; k < mt->moduli; k++)
+    {
+        i64 d     = _dimensio_temperley(fila, fila % II + II * k);
+        i32 loca  = (fila - I) * (i32)d;
+
+        mt->dimensiones[k]  = (i32)d;
+        mt->imagines[k]     = (i32*)piscina_allocare(piscina,
+            (memoriae_index)(loca
+                > ZEPHYRUM ? loca : I) * magnitudo(i32));
+        mt->genera[k]       = (i8*)piscina_allocare(piscina,
+            (memoriae_index)(loca
+                > ZEPHYRUM ? loca : I) * magnitudo(i8));
+        si (d > maxima)
+        {
+            maxima = d;
+        }
+    }
+    mt->alveus_a = (i32*)piscina_conari_allocare(piscina,
+        (memoriae_index)(maxima * maxima) * magnitudo(i32));
+    mt->alveus_b = (i32*)piscina_conari_allocare(piscina,
+        (memoriae_index)(maxima * maxima) * magnitudo(i32));
+    si (mt->alveus_a == NIHIL || mt->alveus_b == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    nota = piscina_notare(piscina);
+    per (k = ZEPHYRUM; k < mt->moduli; k++)
+    {
+        TemperleyModulus* m = temperley_modulus_creare(fila, fila % II
+            + II * k, piscina);
+        i32 d = mt->dimensiones[k];
+
+        si (m == NIHIL || temperley_modulus_dimensio(m) != d)
+        {
+            piscina_reficere(piscina, nota);
+            redde NIHIL;
+        }
+        per (i = I; i < fila; i++)
+        {
+            per (s = ZEPHYRUM; s < d; s++)
+            {
+                i32 imago = ZEPHYRUM;
+                s32 genus = temperley_actio(m, i, s, &imago);
+
+                mt->imagines[k][(i - I) * d + s]  = imago;
+                mt->genera[k][(i - I) * d + s]    = (i8)genus;
+            }
+        }
+    }
+    piscina_reficere(piscina, nota);
+    redde mt;
+}
+
+s32
+laqueus_modulus_temperley_aestimare (
+    LaqueusModulusTemperley* mt,
+                        i32  omega,
+                        i32  p,
+                        i32* punctum,
+                        i32* valor)
+{
+    i32 a;
+    i32 a_inversa;
+    i32 w;
+    i32 w_inversa;
+    i32 delta;
+    i32 delta_inversa;
+    i32 pondera[TEMPERLEY_FILA_MAXIMA + III];
+    i32 summa = ZEPHYRUM;
+    i32 k;
+    i32 j;
+    s32 status;
+
+    si (mt == NIHIL || punctum == NIHIL || valor == NIHIL)
+    {
+        redde INTERPOLATIO_ERRATUM;
+    }
+    status = _punctum_eligere(omega, p, &mt->primus, &mt->radix_i,
+        &mt->mutationes_primi, &w, &w_inversa, &a, &a_inversa, &delta);
+    si (status != INTERPOLATIO_UTILE)
+    {
+        redde status;
+    }
+
+    /* Delta_0 = 1, Delta_1 = delta, Delta_(j+1) = delta Delta_j -
+     * Delta_(j-1) */
+    pondera[ZEPHYRUM]  = I;
+    pondera[I]         = delta;
+    per (j = I; j + I <= mt->fila; j++)
+    {
+        pondera[j + I] =
+            congruentia_subtrahe(congruentia_multiplica(delta,
+            pondera[j], p), pondera[j - I], p);
+    }
+    per (k = ZEPHYRUM; k < mt->moduli; k++)
+    {
+        i32  d          = mt->dimensiones[k];
+        i32  cellae     = d * d;
+        i32* matrix     = mt->alveus_a;
+        i32* nova       = mt->alveus_b;
+        i32  vestigium  = ZEPHYRUM;
+        i32  e;
+        i32  t;
+        s32  littera_index;
+
+        per (e = ZEPHYRUM; e < cellae; e++)
+        {
+            matrix[e] = ZEPHYRUM;
+        }
+        per (t = ZEPHYRUM; t < d; t++)
+        {
+            matrix[t * d + t] = I;
+        }
+        /* M = rho(w_1) ... rho(w_c): litterae ab ultima ad primam */
+        per (littera_index = (s32)mt->longitudo - I;
+             littera_index >= ZEPHYRUM; littera_index--)
+        {
+            s32 littera = mt->verbum[littera_index];
+            i32 i = (i32)(littera > ZEPHYRUM ? littera : -littera) - I;
+            constans i32* imagines = mt->imagines[k] + i * d;
+            constans i8* genera = mt->genera[k] + i * d;
+            i32 c1 = littera > ZEPHYRUM ? a : a_inversa;
+            i32 c2 = littera > ZEPHYRUM ? a_inversa : a;
+            i32* permutatio;
+
+            per (e = ZEPHYRUM; e < cellae; e++)
+            {
+                nova[e] = (i32)(((i64)c1 * (i64)matrix[e]) % (i64)p);
+            }
+            per (t = ZEPHYRUM; t < d; t++)
+            {
+                         i32  factor;
+                         i32* destinatio;
+                constans i32* fons;
+                         i32  columna;
+
+                si ((s32)genera[t] == TEMPERLEY_NIHIL)
+                {
+                    perge;
+                }
+                factor = (s32)genera[t] == TEMPERLEY_DELTA
+                    ? (i32)(((i64)c2 * (i64)delta) % (i64)p) : c2;
+                destinatio  = nova + imagines[t] * d;
+                fons        = matrix + t * d;
+                per (columna = ZEPHYRUM; columna < d; columna++)
+                {
+                    destinatio[columna] =
+                        (i32)(((i64)destinatio[columna]
+                        + (i64)factor * (i64)fons[columna]) % (i64)p);
+                }
+            }
+            permutatio  = matrix;
+            matrix      = nova;
+            nova        = permutatio;
+        }
+        per (t = ZEPHYRUM; t < d; t++)
+        {
+            vestigium = congruentia_adde(vestigium, matrix[t * d + t],
+                p);
+        }
+        summa = congruentia_adde(summa, congruentia_multiplica(
+            pondera[mt->fila % II + II * k], vestigium, p), p);
+    }
+    mt->aestimationes++;
+    (vacuum)congruentia_inversa(delta, p, &delta_inversa);
+    *punctum  = a;
+    *valor    = congruentia_multiplica(summa, delta_inversa, p);
+    redde INTERPOLATIO_UTILE;
+}
+
+interior s32
+_aestimator_temperley (
+     vacuum* contextus,
+        i32  index,
+        i32  p,
+        i32* punctum,
+        i32* valor)
+{
+    redde laqueus_modulus_temperley_aestimare(
+        (LaqueusModulusTemperley*)contextus, index + II, p, punctum,
+        valor);
+}
+
+b32
+laqueus_modulus_temperley_uncinus (
+    LaqueusModulusTemperley* mt,
+                    Piscina* piscina,
+                 Polynomium* exitus)
+{
+    InterpolatioQuaestio q;
+
+    si (mt == NIHIL || piscina == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    q = _quaestio_uncini(mt->imus, mt->summus, mt->limes);
+    redde interpolatio_polynomium(_aestimator_temperley, mt, &q,
+        piscina,
+        exitus);
+}
+
+i32
+laqueus_modulus_temperley_limes (
+    constans LaqueusModulusTemperley* mt)
+{
+    redde mt == NIHIL ? ZEPHYRUM : mt->limes;
 }
