@@ -86,6 +86,23 @@ _cursor_compilare () {
     "$COMPILATOR" "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"
 }
 
+# PLURES (budget B2 H5): vocatio in plagulam vocationum (linea una,
+# forma compile_tests.sh: viae et vexilla sine spatiis) + mandatum
+# notatum ordine eodem; _cursor_plures_currere processu UNO compilat
+# (olim processus per obiectum: ~32 ms incepti + thesaurus et identitas
+# clang per obiectum; XXI hits 0.68 s -> 0.07 s). Fractura: clang
+# fontem nominat, lineae ceterae curruntur, exitus 1.
+_cursor_vocationem_addere () {   # <vocationes> <fons> <obiectum>
+    printf '%s\t%s\n' "$3" "${GCC_FLAGS[*]} ${INCLUDE_FLAGS[*]} -c $2" \
+        >> "$CLAUSURAE_DIR/mandata.tsv"
+    echo "${GCC_FLAGS[*]} ${INCLUDE_FLAGS[*]} -c $2 -o $3" >> "$1"
+}
+
+_cursor_plures_currere () {   # <vocationes>
+    [ -s "$1" ] || return 0
+    "$COMPILATOR" --plures "$1"
+}
+
 cursor_fontes_compilare () {
     local fons numerus=0 gemina
     gemina="$(cat "$CLAUSURAE_DIR"/*.lst 2>/dev/null | sort -u \
@@ -94,15 +111,17 @@ cursor_fontes_compilare () {
         echo "FRACTA: bases geminae in clausuris (obiecta collidunt): $(echo $gemina)"
         return 1
     fi
+    : > "$CLAUSURAE_DIR/fontes.vocationes"
     while IFS= read -r fons; do
-        if ! _cursor_compilare "$RADIX_DIR/$fons" \
-                "$BUILD_DIR/$(basename "$fons" .c).o"; then
-            echo "FRACTA: $fons"
-            return 1
-        fi
+        _cursor_vocationem_addere "$CLAUSURAE_DIR/fontes.vocationes" \
+            "$RADIX_DIR/$fons" "$BUILD_DIR/$(basename "$fons" .c).o"
         numerus=$((numerus + 1))
     done < <(cat "$CLAUSURAE_DIR"/*.lst 2>/dev/null | sort -u)
-    echo "  fontes clausurarum: $numerus (per bin/compilator)"
+    if ! _cursor_plures_currere "$CLAUSURAE_DIR/fontes.vocationes"; then
+        echo "FRACTA: fontes clausurarum (fons a clang supra nominatus)"
+        return 1
+    fi
+    echo "  fontes clausurarum: $numerus (per bin/compilator --plures)"
     return 0
 }
 
@@ -137,13 +156,16 @@ cursor_instrumentum_struere () {
         return 1
     fi
     obj="$dir/$nomen.o"
-    _cursor_compilare "$main" "$obj" || return 1
+    : > "$dir/vocationes.lst"
+    _cursor_vocationem_addere "$dir/vocationes.lst" "$main" "$obj"
     objs="$obj"
     while IFS= read -r fons; do
         obj="$dir/$(basename "$fons" .c).o"
-        _cursor_compilare "$RADIX_DIR/$fons" "$obj" || return 1
+        _cursor_vocationem_addere "$dir/vocationes.lst" \
+            "$RADIX_DIR/$fons" "$obj"
         objs="$objs $obj"
     done < "$lista"
+    _cursor_plures_currere "$dir/vocationes.lst" || return 1
     # compilator obiectum identicum non rescribit: binarium recentius
     # omni obiecto = nihil mutatum
     recens=1

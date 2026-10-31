@@ -169,8 +169,8 @@ f1656a51), F6 overlaps I5.
 
 | id | Idea | min | eff | Note |
 |---|---|---|---|---|
-| H2 | excubitor.sh scans only the filter's build dir (3 whole-tree finds over 415k entries → 1 dir); 56-60 s → 1 s per call, byte-identical | 2.3-3.7 | S | LUCRUM (this commit): 51-56 → 0-1 s, byte-identical on 5 filters; new gate `excubitor` |
-| H5 | cursor_communis.sh compiles an instrument closure with one `compilator --plures` (28 wrappers); 0.8-1.1 → 0.1-0.2 s per call | 0.7-1.2 | S | also the bulk of pythonica Prosa/Oratio groups |
+| H2 | excubitor.sh scans only the filter's build dir (3 whole-tree finds over 415k entries → 1 dir); 56-60 s → 1 s per call, byte-identical | 2.3-3.7 | S | LUCRUM 729b7447: 51-56 → 0-1 s, byte-identical on 5 filters; new gate `excubitor` |
+| H5 | cursor_communis.sh compiles an instrument closure with one `compilator --plures` (28 wrappers); 0.8-1.1 → 0.1-0.2 s per call | 0.7-1.2 | S | LUCRUM (this commit): extenta.sh warm 0.18-0.21 s; pythonica 189 s at load 10; nexus fumus stage VII |
 | H4/J2 | silva wrapper preambles: no `basename` fork per source; materia_substratum.sh one newest-header scan (E2 missed it); hook calls binaries directly after one freshness call | 0.5-1.2 | S | also speeds every commit hook |
 | I1 | aedilis existence memo in `_existit_sub_radice` (book 3.8 M lines → 17.9 k unique); 28.3 → 4.6 G instr per `--corpus lib` | 0.4-0.7 | S | assumes tree frozen within one aedilis process (as fabrica's per-run memos) |
 | J9/E3 | the five remaining raw-clang runners (tessera, gesta, officina, briar, oratio) via compilator; also stop recompiling/relinking 84 test files every run | 0.4-0.5 | M | pattern = ludus_tessera 765f1f2e |
