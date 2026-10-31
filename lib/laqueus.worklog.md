@@ -665,3 +665,38 @@ Fixed:
 
 Trap: `brevis` is the latina.h macro for `short` (test variable,
 renamed `angustum`).
+
+## 2026-10-30 - T2a of project-specs/temperley-lieb-plan.md: window and bound factored out
+
+The Kauffman window and the Tait-graph bound were reachable only through
+the vertex structure (laqueus_modulus_vertex_creare builds the whole
+network and its workspace). Factored into interior helpers on the read
+PD code (_fines, _facies split out of _gyrationes, _fenestra_uncini,
+_fenestra_et_limes) and a public laqueus_pd_fenestra (O(c), no network).
+Vertex creation split into _modulus_vertex_consilium (order and cost,
+no workspace; for the T3 dispatcher, design review H2) plus the
+workspace.
+
+Acceptance, as the review asked (Q3: "vertex probatio byte-identical"
+cannot see a wider window or a looser bound - extra coefficients come
+out zero, a loose bound only costs primes):
+- golden values captured at be6be402 BEFORE touching the code, by a
+  scratch program that #includes lib/laqueus.c and reads mv->imus,
+  mv->summus, mv->limes, mv->limes_exactus: 21 explicit knots, an FNV
+  checksum over all 12,965 table knots with c >= 2, and D136's five big
+  braids (with an FNV fingerprint of each word, so a change in sors
+  cannot swap the braid); the big braids' windows and bounds equal
+  D136's printed ones (independent cross-check of the capture);
+- the same capture rerun against the refactored laqueus.c: identical;
+- laqueus_rete output identical apart from timings (150,422 checks),
+  then two new sections (fenestra aurea; fenestra et vertex: bound and
+  B equal to the vertex model's on 200 table knots, refusals leave
+  outputs untouched): 151,612 checks;
+- plants (build/temperley/plantae_t2a.py), all UT DICTUM: window 4
+  wider at the top -> ONLY 'fenestra aurea' red (the blind spot the
+  review predicted); bound one bit looser; bound from the larger Tait
+  graph; window class from w instead of 3w.
+
+Pitfall: linking a scratch program against every build/*.o drags in
+AppKit/WebKit/IOKit; `ar rcs` the objects into an archive and link that,
+so only needed members are pulled.

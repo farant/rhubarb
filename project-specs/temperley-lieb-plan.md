@@ -1,6 +1,6 @@
 # temperley and the TL bracket in laqueus: plan (D136 T4, step 1)
 
-Status: v2 APPROVED by Fran (2026-10-30); T1 done, T2a next.
+Status: v2 APPROVED by Fran (2026-10-30); T1, T2a done, T2b next.
 v1 (ca3b3fee) was approved by Fran on the API's shape, the library
 split, the name and the strand cap. The review (verdict "approve after
 fixes": H1–H2, X1, M1–M2, Q1–Q6) is at the end, with what each finding
@@ -311,6 +311,11 @@ do not occur with real braids); the unreachable "image not found" and
   then factor `laqueus_pd_fenestra` out (face tracing comes out of the
   gyration code, so the vertex brackets must stay equal too), and split
   vertex creation into planning and workspace steps.
+  **T2a note (2026-10-30, done).** 77c5f8f6: `laqueus_pd_fenestra`
+  public; `_modulus_vertex_consilium` (no workspace); golden values
+  captured at be6be402 and unchanged after the refactor (21 knots,
+  checksum over 12,965 table knots, D136's five braids); plants 4/4,
+  the wider window caught only by the golden section (worklog).
 - **T2b. `laqueus_modulus_temperley_*`.** The shared point-choice
   function, creare, aestimare, uncinus, limes, `laqueus_temperley_sumptus`;
   probatio additions except the dispatcher; plants.
