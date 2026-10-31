@@ -407,7 +407,9 @@ nomen structura LaqueusModulusTemperley LaqueusModulusTemperley; /* opacum */
  * numerat - duo alvei (2 x max d^2 x 4), tabulae actionis, structura -
  * a filis solis pendentia. NON numerantur memoria O(c) (verbum, codex
  * PD, fenestra, limes) nec interpolationis, ut in modulo vertex rete
- * non numeratur. {0, 0} si fila 0 aut > XVI. */
+ * non numeratur, nec apex transiens modulorum temperley in
+ * creatione (reficiuntur; ~1.2 MB ad XVI fila, ~1%). {0, 0} si fila 0
+ * aut > XVI. */
 nomen structura {
     i64 multiplicationes;
     i64 octeti;
@@ -422,8 +424,10 @@ laqueus_temperley_sumptus (
  * verbum copiatum, fenestra et limes (laqueus_pd_fenestra). Verbum ut
  * laqueus_pd_ex_plexu. NIHIL si verbum refutatur, catena (componentes
  * plures: fenestra et limes nodorum tantum), longitudo < 2, fila > XVI,
- * octeti > octeti_maximi, aut alvei non allocati (piscina certae
- * magnitudinis non abortat). */
+ * octeti > octeti_maximi, aut alvei non allocati (alvei soli per
+ * piscina_conari_allocare: tabulae et moduli piscina_allocare utuntur,
+ * ergo piscina certae magnitudinis ibi abortare potest). Refutatio post
+ * pretium nihil in piscina relinquit. */
 LaqueusModulusTemperley*
 laqueus_modulus_temperley_creare (
     constans s32* verbum,
@@ -471,7 +475,9 @@ nomen enumeratio {
  * pretium integrum (multiplicationes x CLXXXV vertex, x CL temperley:
  * ns per multiplicationem in D136, x C), saturatum; aequalitas ad
  * temperley. FALSUM si neutra eligibilis. sumptus_* NIHIL licent
- * (aliter scripti: nulli pro via NULLA aut non computata). Exitus non
+ * (aliter scripti: nulli pro via NULLA aut non computata;
+ * sumptus_vertex ordinem a consilio redditum describit etiam si officina
+ * eius limitem excedit - vertex tunc non eligibilis). Exitus non
  * tacti si FALSUM. */
 b32
 laqueus_via_eligere (

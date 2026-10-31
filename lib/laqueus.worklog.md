@@ -772,7 +772,13 @@ Two things the tests taught:
   (8 d_max^2 dominates TL's memory; a cheaper vertex route needs apex
   below about Catalan(n)), so such a cap excludes both. Tested instead:
   each route's own cap boundary (TL exact bytes / one less; vertex
-  descent). Observed over the measured braids, not proven.
+  descent). Observed over the measured braids, not proven. **[WRONG -
+  corrected 2026-10-31 by the T4 review (M1): the reviewer found 1,255
+  flips in 24,690 random braids, n = 7..14. A cheaper vertex route only
+  bounds its apex below ~Catalan(n) = 2.4-2.7 d_max^2, and its workspace
+  is 4 B x apex x buffers, so it can exceed TL's ~8 d_max^2. My sample
+  of braids was too small and too regular. The flip test is restored
+  with the reviewer's 7 x 32 braid.]**
 
 Plants (build/temperley/plantae_t3.py) 5/5 UT DICTUM: cost comparison
 inverted; closed-form sign of sigma^-1; vertex workspace cap ignored; TL
@@ -783,3 +789,19 @@ examen reports one "domesticum" (negative sentinel in an unsigned
 function) on `redde CONTRACTIO_SATURATUM` in _pretium: ~0 is the
 saturation maximum, not a sentinel; contractio.c's own saturating
 helpers carry the same two findings.
+
+## 2026-10-31 - T4 review (recensor-temperley) folded in
+
+No H. Fixes: flip test restored (M1, my T3 claim was false); the
+"pricing allocates nothing" check now reads the apex of a fresh piscina
+(M2: piscina_summa_usus is restored by reficere, so comparing it before
+and after pricing checks nothing - use piscina_summa_apex_usus on a
+fresh arena); 17-strand braid through the dispatcher (M3); creare rolls
+back on every refusal after pricing (L5); stabilization at 3 points;
+second-prime pin of A. Review faults A and B now caught by named tests
+(build/temperley/plantae_t4.py, both UT DICTUM). Full list in
+project-specs/temperley-lieb-plan.md, "Review (T4)".
+
+Lesson: a negative claim ("X cannot happen") drawn from a handful of
+measured cases needs a search, not a sample. The reviewer's random
+search found the counterexample in minutes.

@@ -2166,10 +2166,16 @@ _probare_temperley_puncta (
     CREDO_AEQUALIS_I64((i64)piscina_numerus_allocationum(piscina),
         (i64)numerus_ante);
 
-    /* g minimus: p = 17, omega = 2 -> i = 3^4 = 13, A = 13 x 4 = 1 */
+    /* radix i (signum ex g minimo) in duobus primis: p = 17, omega = 2 ->
+     * i = 3^4 = 13, A = 13 x 4 = 1; p = 998244353 -> g = 3, i =
+     * 911660635, A = 4 i = 651909481. (g ipse non figitur: non residua
+     * eiusdem signi idem i dant.) */
     CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II, XVII,
         &a, &v), INTERPOLATIO_UTILE);
     CREDO_AEQUALIS_I32(a, I);
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II,
+        (i32)998244353UL, &a, &v), INTERPOLATIO_UTILE);
+    CREDO_AEQUALIS_I32(a, (i32)651909481UL);
 
     /* custodes: exitus non tacti */
     a = (i32)0xDEADUL;
@@ -2415,7 +2421,7 @@ _probare_temperley_motus (
         piscina);
     CREDO_NECESSE_NON_NIHIL(inserta_structura);
 
-    per (omega = II; omega < IV; omega++)
+    per (omega = II; omega < V; omega++)
     {
         i32 a   = ZEPHYRUM;
         i32 v   = ZEPHYRUM;
@@ -2561,7 +2567,6 @@ _probare_viam_electam (
         { XII, DCCCI, (i32)964510034UL, LAQUEUS_VIA_TEMPERLEY }
     };
                i32 k;
-    memoriae_index ante;
 
     per (k = ZEPHYRUM; k < VIII; k++)
     {
@@ -2586,11 +2591,12 @@ _probare_viam_electam (
         piscina_reficere(piscina, nota);
     }
 
-    /* limites in margine: vertex (12 x 201: officina ipsa accipitur, uno
-     * minus refutatur - temperley quoque nimius) et temperley (8 x 201:
-     * octeti ipsi, deinde uno minus - vertex quoque nimius). In tricis
-     * mensis via vilior semper minorem memoriam poscit, ergo limes nullam
-     * electionem invertit, sed viam aut admittit aut omnes refutat. */
+    /* limites in margine: vertex (12 x 201: officina ipsa accipitur;
+     * infra eam ordo minor quaeritur, donec nullus capit - temperley
+     * quoque nimius) et temperley (8 x 201: octeti ipsi, deinde uno minus -
+     * vertex quoque nimius). Limes electionem invertere POTEST ubi vertex
+     * sine_limite plus memoriae poscit quam temperley: vide inversionem infra
+     * (recensio T4, M1). */
     {
         i32  longitudo = CCI;
         s32* verbum = _trica_certa(XII, &longitudo, (i32)1771876111UL,
@@ -2650,9 +2656,40 @@ _probare_viam_electam (
             st.octeti - I, piscina, &via, NIHIL, NIHIL));
     }
 
+    /* inversio per limitem (recensio T4, M1: in tricis fortuitis
+     * frequens, n = 7..14): 7 fila, 32 transitus, vertex sine_limite (9680
+     * contra 13728 multiplicationes) sed officina 5056 B contra 2818 B
+     * temperley; limes in [octeti temperley, officina) -> temperley, et
+     * uncinus idem */
+    {
+        constans s32 verbum[XXXII] = { -VI, -II, III, IV, -IV, -III, II,
+            VI, V, -III, -I, II, -VI, -IV, -IV, VI, -III, -VI, III, -VI,
+            III, IV, III, IV, -II, II, III, III, -III, I, -II, VI };
+                     LaqueusVia via = LAQUEUS_VIA_NULLA;
+              ContractioSumptus sv;
+        LaqueusTemperleySumptus st;
+                     Polynomium sine_limite  = polynomium_nullum();
+                     Polynomium limitatus    = polynomium_nullum();
+
+        CREDO_NECESSE(laqueus_via_eligere(verbum, XXXII, VII,
+            CONTRACTIO_SATURATUM, piscina, &via, &sv, &st));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
+        CREDO_VERUM(st.octeti < sv.octeti_officinae);
+        CREDO_NECESSE(laqueus_via_eligere(verbum, XXXII, VII, st.octeti,
+            piscina, &via, NIHIL, NIHIL));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, XXXII, VII,
+            CONTRACTIO_SATURATUM, piscina, &sine_limite, &via));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, XXXII, VII,
+            st.octeti, piscina, &limitatus, &via));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
+        CREDO_VERUM(polynomium_aequalis(sine_limite, limitatus));
+    }
+
     /* XVI fila (sigma_1 ... sigma_15: nodus trivialis, XV transitus):
-     * temperley octeti ~107 MB, vertex vilior; pretium nihil allocat
-     * grave (piscina post refectionem non crescit ultra notam) */
+     * temperley octeti ~107 MB, vertex sine_limite; limes infra octetos
+     * temperley vertex servat (via limitis temperley exercita) */
     {
                             s32 verbum[XV];
                      LaqueusVia via = LAQUEUS_VIA_NULLA;
@@ -2662,13 +2699,56 @@ _probare_viam_electam (
         {
             verbum[k] = (s32)(k + I);
         }
-        ante = piscina_summa_usus(piscina);
         CREDO_NECESSE(laqueus_via_eligere(verbum, XV, XVI,
             CONTRACTIO_SATURATUM, piscina, &via, NIHIL, &st));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
         CREDO_AEQUALIS_I64(st.multiplicationes, (i64)XV
             * (i64)35357670UL);
-        CREDO_AEQUALIS_I64((i64)piscina_summa_usus(piscina), (i64)ante);
+        via = LAQUEUS_VIA_NULLA;
+        CREDO_NECESSE(laqueus_via_eligere(verbum, XV, XVI, st.octeti
+            - I,
+            piscina, &via, NIHIL, NIHIL));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
+    }
+
+    /* XVII fila (sigma_1 ... sigma_16): temperley non eligibilis (fila >
+     * XVI, sumptus nullus) - vertex, numquam temperley pretio nullo */
+    {
+                            s32 verbum[XVI];
+                     LaqueusVia via = LAQUEUS_VIA_NULLA;
+        LaqueusTemperleySumptus st;
+
+        per (k = ZEPHYRUM; k < XVI; k++)
+        {
+            verbum[k] = (s32)(k + I);
+        }
+        CREDO_NECESSE(laqueus_via_eligere(verbum, XVI, XVII,
+            CONTRACTIO_SATURATUM, piscina, &via, NIHIL, &st));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
+        CREDO_AEQUALIS_I64(st.octeti, (i64)ZEPHYRUM);
+    }
+
+    /* pretium nullam officinam allocat: piscina RECENS, apex eius (non
+     * usus currens, quem reficere restituit) longe infra officinam
+     * vertex 12 x 801 (~557 MB) - recensio T4, M2 */
+    {
+        i32  longitudo = DCCCI;
+        s32* verbum = _trica_certa(XII, &longitudo, (i32)964510034UL,
+            piscina);
+        Piscina* recens = piscina_generare_dynamicum("via_pretium",
+            (memoriae_index)1048576UL);
+               LaqueusVia via = LAQUEUS_VIA_NULLA;
+        ContractioSumptus sv;
+
+        CREDO_NECESSE_NON_NIHIL(verbum);
+        CREDO_NECESSE_NON_NIHIL(recens);
+        CREDO_VERUM(laqueus_via_eligere(verbum, longitudo, XII,
+            CONTRACTIO_SATURATUM, recens, &via, &sv, NIHIL));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
+        CREDO_VERUM(sv.octeti_officinae > (i64)100000000UL);
+        CREDO_VERUM((i64)piscina_summa_apex_usus(recens)
+            < sv.octeti_officinae / (i64)C);
+        piscina_destruere(recens);
     }
 }
 
@@ -2773,6 +2853,25 @@ _probare_per_viam (
             longitudo, fila, piscina)));
         visae[(i32)via]++;
         piscina_reficere(piscina, nota);
+    }
+    /* XVII fila per viam: sigma_1 ... sigma_16 = nodus trivialis, uncinus
+     * (-A^3)^16 = A^48 */
+    {
+               s32 verbum[XVI];
+        Polynomium f            = polynomium_nullum();
+        Polynomium exspectatum  = polynomium_nullum();
+        LaqueusVia via          = LAQUEUS_VIA_NULLA;
+
+        per (t = ZEPHYRUM; t < XVI; t++)
+        {
+            verbum[t] = (s32)(t + I);
+        }
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, XVI, XVII,
+            CONTRACTIO_SATURATUM, piscina, &f, &via));
+        CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
+        CREDO_NECESSE(polynomium_monomium(magnus_ex_s64((s64)I), XLVIII,
+            piscina, &exspectatum));
+        CREDO_VERUM(polynomium_aequalis(f, exspectatum));
     }
     /* ambae viae exercitae */
     CREDO_VERUM(visae[LAQUEUS_VIA_VERTEX] > ZEPHYRUM);

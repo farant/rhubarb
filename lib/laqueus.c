@@ -3311,11 +3311,10 @@ _aestimator_verticis (
         valor);
 }
 
-/* uncinus exactus: puncta in classe 3w (passus 4), limes = bita
- * minimi Pi gradus super graphos Tait (T5a: Sigma |c_k| <= arbores
- * extensae <= Pi gradus; numquam > 2c), primi 1 modulo 4 */
 /* quaestio interpolationis uncinus, viis vertex et temperley communis:
- * fenestra passu IV, limes probatus, primi 1 mod 4, duo puncta addita */
+ * puncta in classe 3w (passus 4), limes = bita minimi Pi gradus super
+ * graphos Tait (T5a: Sigma |c_k| <= arbores extensae <= Pi gradus;
+ * numquam > 2c), primi 1 modulo 4, duo puncta addita */
 interior InterpolatioQuaestio
 _quaestio_uncini (
     s32 imus,
@@ -3542,6 +3541,7 @@ laqueus_modulus_temperley_creare (
 {
      LaqueusModulusTemperley* mt;
      LaqueusTemperleySumptus  sumptus;
+              PiscinaNotatio  initium;
               PiscinaNotatio  nota;
                          i32* pd;
                          i32  transitus;
@@ -3564,12 +3564,15 @@ laqueus_modulus_temperley_creare (
     {
         redde NIHIL;
     }
+    /* refutatio post hanc notam nihil in piscina relinquit */
+    initium = piscina_notare(piscina);
     si (   !laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina, &pd,
                &transitus)
         || transitus != longitudo
         || !laqueus_pd_fenestra(pd, transitus, piscina, &imus, &summus,
                &limes, &exactus))
     {
+        piscina_reficere(piscina, initium);
         redde NIHIL;
     }
 
@@ -3624,6 +3627,7 @@ laqueus_modulus_temperley_creare (
         (memoriae_index)(maxima * maxima) * magnitudo(i32));
     si (mt->alveus_a == NIHIL || mt->alveus_b == NIHIL)
     {
+        piscina_reficere(piscina, initium);
         redde NIHIL;
     }
 
@@ -3636,7 +3640,7 @@ laqueus_modulus_temperley_creare (
 
         si (m == NIHIL || temperley_modulus_dimensio(m) != d)
         {
-            piscina_reficere(piscina, nota);
+            piscina_reficere(piscina, initium);
             redde NIHIL;
         }
         per (i = I; i < fila; i++)

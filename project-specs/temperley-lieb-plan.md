@@ -1,6 +1,6 @@
 # temperley and the TL bracket in laqueus: plan (D136 T4, step 1)
 
-Status: v2 APPROVED by Fran (2026-10-30); T1-T3 done, T4 (review) next.
+Status: v2 APPROVED by Fran (2026-10-30); T1-T4 done (review folded in 2026-10-31).
 v1 (ca3b3fee) was approved by Fran on the API's shape, the library
 split, the name and the strand cap. The review (verdict "approve after
 fixes": H1–H2, X1, M1–M2, Q1–Q6) is at the end, with what each finding
@@ -334,14 +334,18 @@ do not occur with real braids); the unreachable "image not found" and
   **T3 note (2026-10-30, done).** 6b716f62: dispatcher as specified;
   planning the vertex route measured at <= 0.2 s (12 × 801); every
   registered choice as predicted; 3 test sections; plants 5/5
-  (worklog). Deviations: the "cap below the vertex workspace chooses
-  TL" test is replaced by each route's own cap boundary, because in the
-  measured braids a cheaper vertex route always also needs less memory
-  than TL (such a cap excludes both); the vertex boundary is a descent,
-  since a smaller cap makes the planner choose a smaller order.
+  (worklog). The vertex cap boundary is tested as a descent, since a
+  smaller cap makes the planner choose a smaller order. [Corrected
+  after T4 (M1): this note first said the "cap below the vertex
+  workspace chooses TL" test could not be built because a cheaper
+  vertex route always needs less memory than TL. That was FALSE - the
+  reviewer found 1,255 flips in 24,690 random braids, n = 7..14; the
+  12 × 201 braid I measured just sits on the other side. The test is
+  restored with the reviewer's 7 × 32 braid.]
 - **T4. Review.** Independent reviewer with its own oracle
   (recensor-d136's regular-representation oracle can serve as the
   reference), not building in the live tree.
+  **T4 note (2026-10-31, done).** See "Review (T4)" at the end.
 
 ## Questions for Fran (answered 2026-10-30: all three as recommended)
 
@@ -404,3 +408,64 @@ the name and the cap stand. Findings and where they went:
   rerun; braid words embedded.
 - **Q6** house constraints → no collisions; 1-based i tested; s32 for
   partners; i64 casts for products; glossary entries.
+
+## Review (T4, 2026-10-31, recensor-temperley)
+
+Verdict: approve; no H. Built from a scratch copy of 90e0b94d (both
+suites pass there). Own oracle (recensor-d136's regular-representation
+TL, composing all Catalan(n) diagrams directly; state sum; Burau):
+- exact brackets of random knot closures, n = 2..10, c <= 120, through
+  `laqueus_uncinus_ex_plexu`, the TL route and `laqueus_jones_ex_plexu`:
+  290 of 290 (dispatcher chose vertex 44 times, TL 246);
+- TL point values with the library's own punctum: 60 of 60 at 8 × 201
+  .. 12 × 801, 13 × 302, 14 × 151 (primes 998244353, 2147483497;
+  4294967029 at n <= 8);
+- all 80 `temperley` modules, n <= 16, against the reviewer's own model
+  (independent enumeration; action by gluing e_i onto half-diagrams, not
+  rules (a)-(d)): 420,082 checks, 0 errors;
+- T2a old vs new: be6be402's and HEAD's laqueus.c compiled side by side,
+  12,965 table knots plus 150 braids, window, bound, vertex bracket and
+  (status, punctum, valor) at 8 primes x 12 omegas: byte-identical
+  (13,265 lines), independent of the golden capture;
+- `laqueus_temperley_sumptus(...).octeti` against measured allocation:
+  within 4-80 bytes of alignment at every n = 2..16.
+
+Findings and where they went:
+- **M1** the T3 claim "a cap cannot flip the choice to TL" was false
+  (1,255 flips in 24,690 braids, n = 7..14) → plan T3 note and worklog
+  corrected; the test comment corrected; the flip test restored with
+  the reviewer's 7 × 32 braid (cap = TL bytes: TL chosen, bracket equal
+  to the uncapped vertex bracket).
+- **M2** the "pricing allocates nothing" assertion compared current
+  arena usage, which reficere restores unconditionally → replaced by the
+  apex of a FRESH piscina around pricing 12 × 801 (< 1% of its 557 MB
+  workspace). The reviewer's plant A (pricing builds the workspace)
+  now turns that assertion red (build/temperley/plantae_t4.py).
+- **M3** no braid above 16 strands went through the dispatcher; plant B
+  (TL eligible at zero cost above XVI) survived → σ1…σ16 on 17 strands
+  added to 'via electa' (vertex, TL bytes 0) and 'per viam' (bracket
+  A^48); plant B now red in both.
+- **M4** the plan's CREDO_NON_RUIT / NON_PENDET wrapping of heavy
+  sections was not done and not recorded → recorded deviation: credo
+  runs the wrapped expression in a forked child whose checks do not
+  return, so wrapping would run each heavy section twice; the harness
+  already counts a crashed or summary-less run as inconclusive, never
+  green.
+- **L1** the 16-strand TL cap path → cap = TL bytes − 1 added (vertex).
+- **L2** stabilization at 2 points → 3, as planned.
+- **L3** writhe absent from the golden values → recorded: the window's
+  class encodes it, the vertex Jones in 'tabula tota' covers it, and
+  the reviewer's old/new comparison shows it identical on 12,965 knots.
+- **L4** orphaned comment above `_quaestio_uncini` → merged.
+- **L5** what the TL cap does not count (transient module peak ~1.2 MB
+  at n = 16), and only the buffers are non-aborting → header says so;
+  creare now rolls the piscina back on every refusal after pricing (it
+  used to leave ~53 MB when the second buffer failed).
+- **L6** surviving low-value plants (price constants swapped; saturation
+  removed; modules not rolled back) and the untestable tie rule →
+  accepted as recorded.
+- **L7** "p = 17 pins g minimal" overstated (it pins the root i, i.e.
+  its sign, not g) → wording corrected; A pinned at a second prime
+  (998244353: A = 651909481).
+- Header note added: `sumptus_vertex` may describe an order whose
+  workspace exceeds the cap (vertex then ineligible).
