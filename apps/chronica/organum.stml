@@ -16,7 +16,14 @@
             semita="ligatio" historia="impelle">
       <optio>flumen</optio>
       <optio>annus</optio>
+      <optio>personae</optio>
+      <optio>loca</optio>
+      <optio>persona</optio>
+      <optio>locus</optio>
     </campus>
+    <campus nomen="nomen" typus="textus" vita="persistens"
+            scriptor="chronica.agere" semita="status" historia="impelle"
+            nota="persona aut locus visus (titulus exactus)"/>
     <campus nomen="annus" typus="numerus" vita="persistens"
             scriptor="chronica.agere" semita="ligatio"
             nota="annus visus (negativus = a.C.n.)"/>

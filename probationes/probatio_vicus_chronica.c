@@ -415,6 +415,58 @@ _probare_domum_ictu (
     CREDO_VERUM(campus_scribae(sm, "cursor_linea", "0"));
 }
 
+/* C5b: p index personarum, Ctrl+O redit ad annum; persona aperta
+ * locum suum habet (comes eius) */
+interior vacuum
+_probare_personas_historia (
+    CredoContextus* c)
+{
+              Mundus* x = (Mundus*)c->datum;
+               Vicus* v;
+          ManusLudus* manus;
+    ChronicaMontatio* m;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "chronica",
+        "chronica/annus/1274"));
+    (vacuum)vicus_pulsare(v);
+    manus = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(manus);
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    m = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(m);
+
+    CREDO_GRADUS("p: index personarum");
+    (vacuum)manus_ludus_clavem(manus, 'p', ZEPHYRUM);
+    (vacuum)vicus_pulsare(v);
+    CREDO_VERUM(campus_est(m, "visus", "personae"));
+
+    CREDO_GRADUS("Ctrl+O: visus anni, annus idem");
+    (vacuum)manus_ludus_clavem(manus, 'o', (i32)MOD_IMPERIUM);
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    m = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(m);
+    CREDO_VERUM(campus_est(m, "visus", "annus"));
+    CREDO_VERUM(campus_est(m, "annus", "1274"));
+
+    CREDO_GRADUS("persona: locus suus (comes)");
+    CREDO_VERUM(chronica_argumentum_ponere(m,
+        "chronica/persona/Tom%C3%A1s"));
+    (vacuum)vicus_pulsare(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(vicus_latus_locus(v, vicus_latus(
+        vicus_activa(v), VICUS_DEXTRUM), c->piscina),
+        "chronica/persona/Tom%C3%A1s");
+    (vacuum)manus_ludus_clavem(manus, 'o', (i32)MOD_IMPERIUM);
+    (vacuum)vicus_pulsare(v);
+    m = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(m);
+    CREDO_VERUM(campus_est(m, "visus", "annus"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latus", _probare_latus, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -428,6 +480,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "domum ictu", _probare_domum_ictu, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "personae historia", _probare_personas_historia, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -1127,11 +1127,16 @@ _probare_domum (
     clavis_nominata(w, CLAVIS_REDITUS);
     CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta, "scriba/historia?linea=1");
 
-    CREDO_GRADUS("persona electa: nihil (C5)");
+    CREDO_GRADUS("persona electa: paginam suam aperit (C5b), porta "
+        "nulla");
     tabula(w, FALSUM);
     CREDO_VERUM(electus_est(w, "#p0"));
     clavis_nominata(w, CLAVIS_REDITUS);
     CREDO_AEQUALIS_I32(w->aperiones, II);
+    CREDO_VERUM(campus_est(w, "visus", "persona"));
+    CREDO_VERUM(campus_est(w, "nomen", "Moses"));
+    CREDO_VERUM(chronica_argumentum_ponere(&w->m, ""));
+    dispensator_recomponere(w->d);
 
     CREDO_GRADUS("ictus in eventu electo aperit, in non electo eligit");
     CREDO_VERUM(ictus_in_textu(w, "Comitis"));
@@ -1141,6 +1146,152 @@ _probare_domum (
     CREDO_AEQUALIS_I32(w->aperiones, III);
     CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
         "scriba/1?linea=0&liber=comes/calendarium/dies/2026-10-30");
+}
+
+/* C5b: personae et loca */
+interior b32
+nomina_scribere (
+    Mundus* w)
+{
+    redde paginam_scribere(w, "historia",
+        "<person>Miriam</person>\n"
+        "<event year=\"-1446\" people=\"Moses; Aaron\" "
+        "place=\"Egypt\">Exodus</event>\n"
+        "<event year=\"-1406\" people=\"Moses\">Moses moritur</event>\n"
+        "<person>Moses</person>");
+}
+
+/* p: index personarum; Tab, Enter: pagina nominis */
+interior vacuum
+_probare_personas (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && nomina_scribere(w) && montare(w, NIHIL));
+    clavis(w, 'p');
+    CREDO_VERUM(campus_est(w, "visus", "personae"));
+    CREDO_VERUM(pictum_exactum(w, "People"));
+    CREDO_VERUM(pictum(w, "Aaron \302\267 1 event"));
+    CREDO_VERUM(pictum(w, "Miriam \302\267 declared 1"));
+    CREDO_VERUM(pictum(w,
+        "Moses \302\267 2 events \302\267 declared 1"));
+    CREDO_VERUM(titulus_est(w, "People - 1/1"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
+        "chronica/personae");
+
+    CREDO_GRADUS("Tab eligit, pes ad personam; Enter aperit");
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum(w, "-> person: Aaron"));
+    tabula(w, FALSUM);
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Moses", COLOR_BACKGROUND));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_VERUM(campus_est(w, "visus", "persona"));
+    CREDO_VERUM(campus_est(w, "nomen", "Moses"));
+    CREDO_AEQUALIS_I32(w->aperiones, ZEPHYRUM);
+}
+
+/* pagina nominis: declarationes, eventa; Enter domum ad lineam */
+interior vacuum
+_probare_paginam_nominis (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && nomina_scribere(w)
+        && montare(w, "chronica/persona/Moses"));
+    CREDO_VERUM(campus_est(w, "visus", "persona"));
+    CREDO_VERUM(pictum_exactum(w, "Moses"));
+    CREDO_VERUM(pictum(w, "Declared in"));
+    CREDO_VERUM(pictum(w, "Notebook, page historia"));
+    CREDO_VERUM(pictum(w, "1446 BC  Exodus"));
+    CREDO_VERUM(pictum(w, "1406 BC  Moses moritur"));
+    CREDO_FALSUM(pictum(w, "Miriam"));
+    CREDO_VERUM(titulus_est(w, "Moses - 1/1"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
+        "chronica/persona/Moses");
+
+    CREDO_GRADUS("declaratio: domum ad lineam declarationis");
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum(w, "-> note: Notebook"));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta, "scriba/historia?linea=3");
+
+    CREDO_GRADUS("eventus: domum ad lineam eventus");
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Exodus", COLOR_BACKGROUND));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta, "scriba/historia?linea=1");
+}
+
+/* P: loca; locus Egypt */
+interior vacuum
+_probare_loca (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && nomina_scribere(w) && montare(w, NIHIL));
+    clavis(w, 'P');
+    CREDO_VERUM(campus_est(w, "visus", "loca"));
+    CREDO_VERUM(pictum_exactum(w, "Places"));
+    CREDO_VERUM(pictum(w, "Egypt \302\267 1 event"));
+    CREDO_VERUM(titulus_est(w, "Places - 1/1"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum(w, "-> place: Egypt"));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_VERUM(campus_est(w, "visus", "locus"));
+    CREDO_VERUM(pictum(w, "1446 BC  Exodus"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
+        "chronica/locus/Egypt");
+}
+
+/* nomen effugitum in loco et argumento; persona ex chronica */
+interior vacuum
+_probare_nomen_effugitum (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && paginam_scribere(w, "historia",
+        "<event year=\"1274\" people=\"Tom\303\241s de Aquino\">"
+        "Moritur</event>") && montare(w, NIHIL));
+
+    CREDO_GRADUS("Enter in persona electa (flumen): pagina eius");
+    tabula(w, FALSUM);
+    tabula(w, FALSUM);
+    CREDO_VERUM(electus_est(w, "#p0"));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_VERUM(campus_est(w, "nomen", "Tom\303\241s de Aquino"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(chronica_locus(&w->m, w->p),
+        "chronica/persona/Tom%C3%A1s%20de%20Aquino");
+
+    CREDO_GRADUS("argumentum effugitum redit");
+    CREDO_VERUM(chronica_argumentum_ponere(&w->m, ""));
+    CREDO_VERUM(chronica_argumentum_ponere(&w->m,
+        "chronica/persona/Tom%C3%A1s%20de%20Aquino"));
+    dispensator_recomponere(w->d);
+    CREDO_VERUM(campus_est(w, "nomen", "Tom\303\241s de Aquino"));
+    CREDO_VERUM(pictum(w, "AD 1274  Moritur"));
+}
+
+/* mus in indice: ictus eligit, ictus in electo aperit */
+interior vacuum
+_probare_personas_mure (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && nomina_scribere(w)
+        && montare(w, "chronica/personae"));
+    CREDO_VERUM(campus_est(w, "visus", "personae"));
+    CREDO_VERUM(ictus_in_textu(w, "Miriam"));
+    CREDO_VERUM(pictum(w, "-> person: Miriam"));
+    CREDO_VERUM(ictus_in_textu(w, "Miriam"));
+    CREDO_VERUM(campus_est(w, "visus", "persona"));
+    CREDO_VERUM(campus_est(w, "nomen", "Miriam"));
+    CREDO_VERUM(pictum(w, "Notebook, page historia"));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
@@ -1189,6 +1340,16 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "electio mus",  _probare_electionem_muris,     NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { "domum",        _probare_domum,                NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "personae",     _probare_personas,             NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "pagina nominis", _probare_paginam_nominis,    NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "loca",         _probare_loca,                 NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "nomen effugitum", _probare_nomen_effugitum,   NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "personae mus", _probare_personas_mure,        NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

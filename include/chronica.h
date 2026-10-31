@@ -59,7 +59,25 @@
  *              in linea eventus
  *   communis   "scriba/<pagina>?linea=<n>" - pagina in sinistro,
  *              chronica dextra manet (spec XIII.2)
- * Persona aut locus electus: nihil adhuc (C5). */
+ * Persona aut locus electus: paginam suam aperit (C5b).
+ * PERSONAE ET LOCA (C5b): p indicem personarum, P locorum aperit
+ * (ex visu quovis): nomina omnia (declarata et ex eventis) ordine
+ * octetorum, linea quaeque "Moses · 3 events · declared 2" (partes
+ * nullae omissae); paginae j k; Tab / S-Tab / ictus eligunt, Enter
+ * (aut ictus in electo) paginam nominis aperit.
+ * PAGINA NOMINIS: nomen magnum in summo; "Declared in" - linea per
+ * declarationem ("Notes · Thomas Aquinas, page 1"), deinde eventa
+ * ordine tabulae ("1446 BC  Moses leads the Exodus"), paginae j k;
+ * Tab eligit, Enter in declaratione aut eventu domum aperit (C4b, ad
+ * lineam suam). Enter in persona / loco electo (visus anni, fluminis)
+ * paginam eius aperit. Visus et nomen historiam impellunt: Ctrl+O
+ * redit.
+ * LOCUS: "chronica/personae", "chronica/loca", "chronica/persona/<n>",
+ * "chronica/locus/<n>" (n effugitum ut semitae: %XX extra
+ * A-Z a-z 0-9 - _ . ~); titulus "People - 1/3", "Places - 1/1",
+ * "Moses - 1/2". Comes paginae nominis suus (spec VII). Argumentum
+ * "chronica/persona/<n>" manu legitur; semita canonica
+ * "chronica/persona?nomen=<n>" (nomen campus status, non ligatio). */
 
 #ifndef CHRONICA_H
 #define CHRONICA_H

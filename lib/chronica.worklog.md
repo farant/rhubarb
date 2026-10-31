@@ -164,3 +164,39 @@ known.
 nothing until the test called vicus_focum_ponere(VICUS_DEXTRUM) +
 pulse + recompose, as navigator's vicus test does. A freshly opened
 pane does not own the keyboard until then.
+
+## 2026-10-31 - C5b people / places indexes and pages (Opus 5.5)
+
+Four new views share the year view's layout (big heading,
+area_eventuum) and the C4a selection machinery: `personae` / `loca`
+(index: one clause + unit per ChronicaEntitas, "Moses · 2 events ·
+declared 1") and `persona` / `locus` (a name page: a dim "Declared
+in", one unit per matching declaration, then one unit per matching
+event, "1446 BC  Exodus"). Two new unit kinds: UNITAS_NOMEN (res =
+entity index in tabula->personae / loca, chosen by visus_arcae) and
+UNITAS_DECLARATIO (res = index in tabula->declarationes). Name-page
+units keep indices into the TABLE (not copies from
+chronica_res_personae), so keys and jump-home work unchanged.
+
+**Cache:** the one page cache gained visus_arcae + nomen_arcae; the
+year/flow builder checks visus_arcae instead of the old flumen flag,
+so switching views never serves stale pages.
+
+**Keys:** p / P open the indexes from any view; h / l / v stay
+time-view only (praecepta masks VISUS_TEMPORIS vs VISUS_OMNES).
+Enter / second click opens: NOMEN -> name page; timeline PERSONA /
+LOCUS -> name page; DECLARATIO / EVENTUS -> jump home via m->aperire.
+The C4b test step "Enter on a person does nothing" changed to "opens
+the person page, no opener call".
+
+**Routes:** `nomen` is a STATUS field (ligatio fields map by
+position, so "chronica/persona/Moses" would put Moses in the year
+slot). chronica_argumentum_ponere reads "chronica/persona/<n>" and
+"chronica/locus/<n>" by hand (percent-decoding); chronica_locus emits
+the same form, escaped exactly like lib/semita.c. History: visus and
+nomen push (historia="impelle"), verified in vicus: p then Ctrl+O
+lands on the same year.
+
+**Own goal:** I named a parameter `nomen` (the typedef macro!), which
+gave a pile of "storage class" errors. Renamed to `appellatio`.
+CLAUDE.md warns about exactly this.

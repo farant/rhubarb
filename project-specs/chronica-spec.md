@@ -209,7 +209,9 @@ jump home; Esc / Ctrl+O back (house history rules).
   scanned (region + STML chain) and gathered with the events; **C5b**
   people / places indexes and person / place pages in the pane (XV).
   **C5a DONE 2026-10-30** (lib/chronica_nomina: region + STML chain,
-  9 sections; gathering 'nomina'; 6 plants).
+  9 sections; gathering 'nomina'; 6 plants). **C5b DONE 2026-10-31**
+  (p / P indexes, person / place pages, Enter on a selected name; 5 +
+  1 vicus sections, 5 plants).
 - **C6** scriba colouring of good / bad event tags.
 - Mouse in each phase as it lands.
 
