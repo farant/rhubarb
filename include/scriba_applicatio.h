@@ -126,6 +126,14 @@ scriba_paginam_ostendere (
     ScribaMontatio* m,
             chorda  titulus);
 
+/* chronica C4b: ut scriba_paginam_ostendere, cursor in linea data
+ * (columna 0; linea ultra paginam: prima). FALSUM ut illa. */
+b32
+scriba_paginam_ostendere_ad_lineam (
+    ScribaMontatio* m,
+            chorda  titulus,
+               i32  linea);
+
 /* portam ponere (vicus: latus sinistrum); NIHIL = campus 'liber'
  * neglegitur */
 vacuum

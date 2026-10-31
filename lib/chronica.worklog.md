@@ -129,3 +129,38 @@ Plants C4a: 7, all red in the end. "Person span off by one" was
 green at first: in the test event the people were the FIRST part of
 the meta line, so the " · " offset was never exercised. The test now
 has a type before the people and checks the place is inverted too.
+
+## 2026-10-30 - C4b jump home (Opus 5.5)
+
+Enter (or a click on the already-selected event) builds
+`scriba/<pagina>?linea=<n>` and appends `&liber=<liber>` for a
+companion, then calls m->aperire. vicus wires that to
+inventum_aperire, the same opener search results use, so a companion
+event opens its paired view on the right and the companion page on
+the left, with the focus on the left (consistent with search; Fran
+agreed). Ctrl+O on the right pane returns to the timeline at the same
+year (vicus test 'domum comitis'); the selection is transient and
+does not come back.
+
+**`linea` before `liber`:** a book prefix can contain '?' and '&'
+(navigator's comes/navigator/pagina/<a>?versio=..&pagina=0), so
+liber stays LAST and everything after "liber=" is the prefix, as
+before. inventum_aperire peels an optional leading "linea=<digits>&".
+
+**Line, not column:** the scanner's columna is a byte offset and
+scriba's cursor is a grid cell, so the cursor goes to column 0 of the
+event's line. scriba already had paginam_ponere(..., linea, columna);
+the new public steps (scriba_actiones_paginam_ostendere_ad_lineam,
+scriba_paginam_ostendere_ad_lineam) just pass the line through, and
+the old functions call them with 0.
+
+**Context:** no new vicus struct after all. ContextusIndagationis
+already holds `kalendarii`, so the chronica genus registers with ci,
+reaching the sources via ci->kalendarii and the opener via ci.
+The chronica block moved below the indagatio section so the type is
+known.
+
+**Test pitfall:** keys sent through manus in a vicus test reached
+nothing until the test called vicus_focum_ponere(VICUS_DEXTRUM) +
+pulse + recompose, as navigator's vicus test does. A freshly opened
+pane does not own the keyboard until then.

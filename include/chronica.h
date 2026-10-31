@@ -51,7 +51,15 @@
  * MUS: ictus in textu eventus, personae aut loci eum eligit (punctum
  * locale -> linea -> columna -> offset); ictus extra textum in
  * dimidio superiore / inferiore paginam vertit ut prius. (C4b: Enter
- * aut ictus in electo domum aperit; C5: visus personae et loci.) */
+ * aut ictus in electo domum aperit; C5: visus personae et loci.)
+ * DOMUM (C4b): Enter (aut ictus in eventu iam electo) eventum electum
+ * domum aperit per m->aperire, semita:
+ *   comes      "scriba/<pagina>?linea=<n>&liber=<liber>" - visus
+ *              comitatus dexter, comes in sinistro ad paginam, cursor
+ *              in linea eventus
+ *   communis   "scriba/<pagina>?linea=<n>" - pagina in sinistro,
+ *              chronica dextra manet (spec XIII.2)
+ * Persona aut locus electus: nihil adhuc (C5). */
 
 #ifndef CHRONICA_H
 #define CHRONICA_H
@@ -83,6 +91,10 @@ nomen structura {
      * probationes fictum. NIHIL aut FALSUM = annus primus */
                      b32  (*hodie)(vacuum* ctx, Dies* hodie);
                   vacuum* hodie_ctx;
+    /* C4b: porta domum (vicus: porta indagationis, inventum_aperire);
+     * NIHIL = Enter nihil agit */
+                     b32  (*aperire)(vacuum* ctx, chorda semita);
+                  vacuum* aperire_ctx;
 } ChronicaMontatio;
 
 /* montare in ramo <chronica id="..."> (manifestum infixum);

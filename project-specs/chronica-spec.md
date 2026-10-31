@@ -200,7 +200,11 @@ jump home; Esc / Ctrl+O back (house history rules).
 - **C4** selection (reuse navigator unit code) + jump home (line plumbing through vicus + scriba, XII).
   **C4a DONE 2026-10-30** (selection in both views: Tab / S-Tab /
   Esc, inverted, footer target, click selects; 5 + 1 vicus sections,
-  7 plants). C4b (Enter = jump home) next.
+  7 plants). **C4b DONE 2026-10-30** (Enter / click on the selected
+  event -> `scriba/<p>?linea=<n>[&liber=<l>]` through the search
+  opener; companion: paired view right, page at the line left, focus
+  left; common book: timeline stays right; Ctrl+O on the right returns;
+  6 plants).
 - **C5** person / place views.
 - **C6** scriba colouring of good / bad event tags.
 - Mouse in each phase as it lands.

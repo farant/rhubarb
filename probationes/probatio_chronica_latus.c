@@ -51,6 +51,8 @@ nomen structura {
              Dispensator* d;
                  Piscina* p;
                      s32  hodie;      /* annus hodiernus fictus */
+                  chorda  aperta;     /* C4b: semita portae ultima */
+                     i32  aperiones;
 } Mundus;
 
 interior b32
@@ -59,6 +61,19 @@ hodie_ficta (
       Dies* hodie)
 {
     *hodie = fasti_dies(((Mundus*)ctx)->hodie, X, XXX);
+    redde VERUM;
+}
+
+/* C4b: porta domum ficta - semitam servat */
+interior b32
+aperire_fictum (
+    vacuum* ctx,
+    chorda  semita)
+{
+    Mundus* w = (Mundus*)ctx;
+
+    w->aperta = chorda_transcribere(semita, w->p);
+    w->aperiones++;
     redde VERUM;
 }
 
@@ -84,6 +99,29 @@ paginam_scribere (
     l = scriba_liber_aperire(w->p, w->intern, w->volumen, CXX, LX);
     d = l ? scriba_liber_paginam_condere(l, lit(titulus, w->p))
           : NIHIL;
+    si (!d)
+    {
+        redde FALSUM;
+    }
+    tabula_ex_literis_cum_dimensionibus(&folium, w->p, d->latitudo,
+        d->altitudo, textus);
+    redde scriba_documentum_committere(d, &folium) > ZEPHYRUM;
+}
+
+/* pagina "1" libri comitis cum textu toto */
+interior b32
+paginam_comitis_scribere (
+                 Mundus* w,
+     constans character* praefixum,
+     constans character* textus)
+{
+          ScribaLiber* l;
+     ScribaDocumentum* d;
+    TabulaCharacterum  folium;
+
+    l = scriba_liber_aperire_in_spatio(w->p, w->intern, w->volumen,
+        praefixum, CXX, LX);
+    d = l ? scriba_liber_pagina(l, lit("1", w->p)) : NIHIL;
     si (!d)
     {
         redde FALSUM;
@@ -141,8 +179,10 @@ montare (
     {
         redde FALSUM;
     }
-    w->m.hodie      = hodie_ficta;
-    w->m.hodie_ctx  = w;
+    w->m.hodie        = hodie_ficta;
+    w->m.hodie_ctx    = w;
+    w->m.aperire      = aperire_fictum;
+    w->m.aperire_ctx  = w;
     si (argumentum && !chronica_argumentum_ponere(&w->m, argumentum))
     {
         redde FALSUM;
@@ -1053,6 +1093,56 @@ _probare_electionem_muris (
     CREDO_VERUM(electus_est(w, ""));
 }
 
+/* C4b: Enter domum - semita libri communis et comitis cum linea;
+ * persona nihil; ictus in electo aperit */
+interior vacuum
+_probare_domum (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && paginam_scribere(w, "historia",
+        "Prima linea\n"
+        "<event year=\"1274\" people=\"Moses\">Communis</event>")
+        && paginam_comitis_scribere(w,
+        "comes/calendarium/dies/2026-10-30",
+        "<event year=\"1100\">Comitis</event>")
+        && montare(w, NIHIL));
+
+    CREDO_GRADUS("Enter sine electa: nihil");
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_AEQUALIS_I32(w->aperiones, ZEPHYRUM);
+
+    CREDO_GRADUS("eventus comitis: liber post lineam");
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Comitis", COLOR_BACKGROUND));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_AEQUALIS_I32(w->aperiones, I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
+        "scriba/1?linea=0&liber=comes/calendarium/dies/2026-10-30");
+
+    CREDO_GRADUS("eventus communis: pagina et linea");
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Communis", COLOR_BACKGROUND));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta, "scriba/historia?linea=1");
+
+    CREDO_GRADUS("persona electa: nihil (C5)");
+    tabula(w, FALSUM);
+    CREDO_VERUM(electus_est(w, "#p0"));
+    clavis_nominata(w, CLAVIS_REDITUS);
+    CREDO_AEQUALIS_I32(w->aperiones, II);
+
+    CREDO_GRADUS("ictus in eventu electo aperit, in non electo eligit");
+    CREDO_VERUM(ictus_in_textu(w, "Comitis"));
+    CREDO_AEQUALIS_I32(w->aperiones, II);
+    CREDO_VERUM(electus_est(w, ""));
+    CREDO_VERUM(ictus_in_textu(w, "Comitis"));
+    CREDO_AEQUALIS_I32(w->aperiones, III);
+    CREDO_CHORDA_AEQUALIS_LITERIS(w->aperta,
+        "scriba/1?linea=0&liber=comes/calendarium/dies/2026-10-30");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "annus",        _probare_annum,                NIHIL,
         mundum_purgare, NIHIL, NIHIL },
@@ -1097,6 +1187,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "electio mutatio", _probare_electionem_mutationis, NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { "electio mus",  _probare_electionem_muris,     NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "domum",        _probare_domum,                NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -727,6 +727,23 @@ scriba_actiones_paginam_ostendere (
     redde paginam_ponere(ramus, motus, sa, titulus, ZEPHYRUM, ZEPHYRUM);
 }
 
+b32
+scriba_actiones_paginam_ostendere_ad_lineam (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                  chorda  titulus,
+                     i32  linea)
+{
+    si (   !ramus || !sa || !sa->liber || !sa->doc
+        || scriba_liber_index(sa->liber, titulus) < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    redde paginam_ponere(ramus, motus, sa, titulus, (s32)linea,
+        ZEPHYRUM);
+}
+
 /* S2b: pagina proxima (gradus I) aut prior (-I) libri; ultra ultimam
  * nova, ante primam nihil; cursor ad 0,0 */
 interior vacuum

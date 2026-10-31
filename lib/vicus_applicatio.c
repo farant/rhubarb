@@ -4929,86 +4929,6 @@ navigatorem_describere (
 
 
 /* ==================================================
- * Chronica (chronica C3)
- * ================================================== */
-
-/* tabula temporum super fontes registri communis (pigre, ut
- * indagatio); hodie ex horologio vici */
-interior b32
-chronicam_montare_in_vico (
-                 vacuum* sedes,
-                Piscina* piscina,
-    InternamentumChorda* intern,
-                Volumen* volumen,
-     InsulaRepositorium* repo,
-     constans character* id,
-     constans character* argumentum,
-                    i32  latitudo,
-                    i32  altitudo,
-                 vacuum* ctx)
-{
-    ContextusKalendarii* ck;
-       ChronicaMontatio* m;
-
-    ck  = (ContextusKalendarii*)ctx;
-    m   = (ChronicaMontatio*)sedes;
-    si (!ck)
-    {
-        redde FALSUM;
-    }
-    agendam_et_registrum_parare(ck);
-    si (   !ck->chronica
-        || !chronica_montare(m, piscina, intern, repo, id, ck->chronica,
-               volumen, latitudo, altitudo, ck->systemata))
-    {
-        redde FALSUM;
-    }
-    m->hodie      = hodie_vici;
-    m->hodie_ctx  = ck->vicus;
-    /* annus aut semita; mala: positio servata manet */
-    si (argumentum && argumentum[ZEPHYRUM])
-    {
-        (vacuum)chronica_argumentum_ponere(m, argumentum);
-    }
-    redde VERUM;
-}
-
-interior b32
-chronicae_argumentum_ponere (
-                 vacuum* ctx,
-     constans character* argumentum)
-{
-    redde chronica_argumentum_ponere((ChronicaMontatio*)ctx,
-        argumentum);
-}
-
-interior vacuum
-chronicam_describere (
-         vacuum* montatio,
-    VicusFacies* f)
-{
-    ChronicaMontatio* m;
-
-    m                         = (ChronicaMontatio*)montatio;
-    f->actiones               = m->actiones;
-    f->figurae                = m->figurae;
-    f->componere              = chronica_componere;
-    f->componere_ctx          = m;
-    f->ramus                  = &m->ramus;
-    f->effugium_redit         = VERUM;
-    f->argumentum_ponere      = chronicae_argumentum_ponere;
-    f->argumentum_ponere_ctx  = m;
-    f->semitam_secuta         = chronica_semitam_secuta;
-    f->semitam_secuta_ctx     = m;
-    /* comites: liber notarum per annum */
-    f->locus              = chronica_locus;
-    f->locus_ctx          = m;
-    f->locus_titulus      = chronica_locus_titulus;
-    f->locus_titulus_ctx  = m;
-}
-
-
-/* ==================================================
  * Indagatio (genera-datorum D5, S3b)
  * ================================================== */
 
@@ -5035,6 +4955,7 @@ comitem_inventum_aperire (
                VicusLatus* sinistrum,
                    chorda  liber,
                    chorda  pagina,
+                      i32  linea,
                   Piscina* scheda)
 {
       ScribaMontatio* m;
@@ -5061,7 +4982,7 @@ comitem_inventum_aperire (
         (vacuum)semitam_aperire(ci->via, semita, scheda, &vitium);
     }
     redde vicus_comitem_ostendere(ci->vicus, liber, titulus, semita)
-        && scriba_paginam_ostendere(m, pagina);
+        && scriba_paginam_ostendere_ad_lineam(m, pagina, linea);
 }
 
 interior b32
@@ -5076,6 +4997,7 @@ inventum_aperire (
                    chorda  vitium;
                    chorda  liber;
                       i32  i;
+                      i32  linea;
 
     ci = (ContextusIndagationis*)ctx;
     si (!ci || !ci->via)
@@ -5089,9 +5011,12 @@ inventum_aperire (
     {
         titulus.datum    = semita.datum + VII;
         titulus.mensura  = semita.mensura - VII;
-        /* P5b: "?liber=<praefixum>" - pagina libri comitis */
+        /* P5b: "?liber=<praefixum>" - pagina libri comitis; chronica
+         * C4b: "?linea=<n>" ante (liber ultimus: praefixum '?' et '&'
+         * continere potest) */
         liber.datum    = NIHIL;
         liber.mensura  = ZEPHYRUM;
+        linea          = ZEPHYRUM;
         per (i = ZEPHYRUM; i < titulus.mensura; i++)
         {
             si (titulus.datum[i] == '?')
@@ -5100,6 +5025,26 @@ inventum_aperire (
                 liber.mensura    = titulus.mensura - i - I;
                 titulus.mensura  = i;
                 frange;
+            }
+        }
+        si (   liber.mensura > VI
+            && memcmp(liber.datum, "linea=", VI) == ZEPHYRUM)
+        {
+            liber.datum    += VI;
+            liber.mensura  -= VI;
+            dum (   liber.mensura > ZEPHYRUM
+                 && liber.datum[ZEPHYRUM] >= '0'
+                 && liber.datum[ZEPHYRUM] <= '9')
+            {
+                linea = linea * X + (i32)(liber.datum[ZEPHYRUM] - '0');
+                liber.datum++;
+                liber.mensura--;
+            }
+            si (   liber.mensura > ZEPHYRUM
+                && liber.datum[ZEPHYRUM] == '&')
+            {
+                liber.datum++;
+                liber.mensura--;
             }
         }
         si (   liber.mensura > VI
@@ -5121,13 +5066,13 @@ inventum_aperire (
         si (liber.mensura > ZEPHYRUM)
         {
             redde comitem_inventum_aperire(ci, sinistrum, liber,
-                titulus,
-                scheda);
+                titulus, linea, scheda);
         }
         si (   sinistrum && sinistrum->montata
             && chorda_aequalis_literis(sinistrum->genus, "scriba")
-            && scriba_paginam_ostendere(
-                   (ScribaMontatio*)sinistrum->montatio, titulus))
+            && scriba_paginam_ostendere_ad_lineam(
+                   (ScribaMontatio*)sinistrum->montatio, titulus,
+                   linea))
         {
             redde vicus_focum_ponere(ci->vicus, VICUS_SINISTRUM);
         }
@@ -5261,6 +5206,94 @@ quaerere_iussum (
     }
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Chronica (chronica C3)
+ * ================================================== */
+
+/* tabula temporum super fontes registri communis (pigre, ut
+ * indagatio); hodie ex horologio vici; ctx = ContextusIndagationis
+ * (kalendarii fontes, porta domum) */
+interior b32
+chronicam_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+  ContextusIndagationis* ci;
+    ContextusKalendarii* ck;
+       ChronicaMontatio* m;
+
+    ci  = (ContextusIndagationis*)ctx;
+    ck  = ci ? ci->kalendarii : NIHIL;
+    m   = (ChronicaMontatio*)sedes;
+    si (!ck)
+    {
+        redde FALSUM;
+    }
+    agendam_et_registrum_parare(ck);
+    si (   !ck->chronica
+        || !chronica_montare(m, piscina, intern, repo, id, ck->chronica,
+               volumen, latitudo, altitudo, ck->systemata))
+    {
+        redde FALSUM;
+    }
+    m->hodie      = hodie_vici;
+    m->hodie_ctx  = ck->vicus;
+    /* C4b: domum per portam indagationis (comes: visus comitatus;
+     * communis: pagina in sinistro) */
+    m->aperire      = inventum_aperire;
+    m->aperire_ctx  = ci;
+    /* annus aut semita; mala: positio servata manet */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)chronica_argumentum_ponere(m, argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+chronicae_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde chronica_argumentum_ponere((ChronicaMontatio*)ctx,
+        argumentum);
+}
+
+interior vacuum
+chronicam_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    ChronicaMontatio* m;
+
+    m                         = (ChronicaMontatio*)montatio;
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = chronica_componere;
+    f->componere_ctx          = m;
+    f->ramus                  = &m->ramus;
+    f->effugium_redit         = VERUM;
+    f->argumentum_ponere      = chronicae_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->semitam_secuta         = chronica_semitam_secuta;
+    f->semitam_secuta_ctx     = m;
+    /* comites: liber notarum per annum */
+    f->locus              = chronica_locus;
+    f->locus_ctx          = m;
+    f->locus_titulus      = chronica_locus_titulus;
+    f->locus_titulus_ctx  = m;
+}
+
 
 /* T4f (colloquia-plan): Cmd+] / Cmd+[ - domus -> admonitiones ->
  * colloquia -> agenda -> indagatio (D5) -> domus */
@@ -5560,7 +5593,7 @@ ContextusNomenclatoris* cn;
                navigatorem_describere, navigatoris)
         || !vicus_genus_addere(app->vicus, "chronica",
                magnitudo(ChronicaMontatio), chronicam_montare_in_vico,
-               chronicam_describere, ck)
+               chronicam_describere, ci)
         || !vicus_genus_addere(app->vicus, "colloquia",
                magnitudo(ColloquiorumMontatio),
                colloquia_montare_in_vico,

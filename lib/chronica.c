@@ -1233,6 +1233,57 @@ fac_effugere (
     redde campos_scribere(m, tituli, valores, I);
 }
 
+/* C4b: eventus domum per portam: "scriba/<pagina>?linea=<n>" et
+ * "&liber=<liber>" si comes; persona aut locus nihil (C5) */
+interior b32
+domum_aperire (
+    ChronicaMontatio* m,
+     ChronicaFigurae* f,
+                 s32  index)
+{
+    constans UnitasChronicae* x;
+        constans ChronicaRes* r;
+           ChordaAedificator* a;
+
+    si (index < ZEPHYRUM || !m->aperire)
+    {
+        redde VERUM;
+    }
+    x = (constans UnitasChronicae*)xar_obtinere(f->unitates,
+        (i32)index);
+    si (x->genus != UNITAS_EVENTUS)
+    {
+        redde VERUM;
+    }
+    r = (constans ChronicaRes*)xar_obtinere(f->tabula->res, x->res);
+    a = chorda_aedificator_creare(m->piscina, (memoriae_index)CXXVIII);
+    chorda_aedificator_appendere_literis(a, "scriba/");
+    chorda_aedificator_appendere_chorda(a, r->pagina);
+    chorda_aedificator_appendere_literis(a, "?linea=");
+    chorda_aedificator_appendere_s32(a, (s32)r->eventus.linea);
+    si (r->liber.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, "&liber=");
+        chorda_aedificator_appendere_chorda(a, r->liber);
+    }
+    redde m->aperire(m->aperire_ctx, chorda_aedificator_finire(a));
+}
+
+interior b32
+fac_domum (
+    vacuum* ctx)
+{
+    ChronicaMontatio* m = (ChronicaMontatio*)ctx;
+     ChronicaFigurae* f;
+                 s32  p;
+
+    si (!visum_currens(m, &f, &p))
+    {
+        redde VERUM;
+    }
+    redde domum_aperire(m, f, electa(m, f));
+}
+
 /* runae (UTF-8) in octetis [a, b) */
 interior i32
 runae (
@@ -1311,6 +1362,12 @@ ictum_eligere (
 
             si (off >= x->initium && off < x->finis)
             {
+                /* C4b: ictus in eventu iam electo domum aperit */
+                si (   x->genus     == UNITAS_EVENTUS
+                    && electa(m, f) == (s32)u)
+                {
+                    redde domum_aperire(m, f, (s32)u);
+                }
                 redde electum_scribere(m, f, (s32)u);
             }
         }
@@ -1457,6 +1514,8 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_electum_priorem },
     { "chronica.effugere", "Clear selection / back", "Esc",
         VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_effugere },
+    { "chronica.domum", "Open note", "Enter",
+        VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_domum },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
