@@ -1,6 +1,6 @@
 # temperley and the TL bracket in laqueus: plan (D136 T4, step 1)
 
-Status: v2 APPROVED by Fran (2026-10-30); T1 under way.
+Status: v2 APPROVED by Fran (2026-10-30); T1 done, T2a next.
 v1 (ca3b3fee) was approved by Fran on the API's shape, the library
 split, the name and the strand cap. The review (verdict "approve after
 fixes": H1–H2, X1, M1–M2, Q1–Q6) is at the end, with what each finding
@@ -300,6 +300,11 @@ do not occur with real braids); the unreachable "image not found" and
   in as v2; Fran approves v2.
 - **T1. `temperley`.** Header, source, probatio, glossary entries
   (`temperley`, `lieb`, and any word the lint flags), plants.
+  **T1 note (2026-10-30, done).** 49b08975: `temperley` as specified;
+  probatio 9 sections, 1,017 checks, 0.4 s. Plants 8/8 as registered
+  (lib/temperley.worklog.md). Deviations: braid relations are left to
+  T2b (they need coefficients; the TL relations imply them); glossary
+  needed only `temperley` (`lieb` appears in no identifier).
 - **T2a. Window and bound refactor.** Capture the golden values at the
   pre-refactor commit (window from `tools/uncinus_mensura.c`'s copy,
   limes from the vertex accessor; record the commit hash), embed them,

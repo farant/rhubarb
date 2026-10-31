@@ -24,3 +24,25 @@ therefore compares the stored pairing row exactly after the key lookup.
 
 Braid relations are not tested here (they need coefficients); they
 follow from the TL relations and are covered in laqueus (T2b).
+
+## 2026-10-30 - T1 plants
+
+Harness `build/temperley/plantae_t1.py` (not committed; literal
+(old, new) triples registered in the script before the run, each with
+the credo sections it must turn red; a run without a credo summary or
+verdict file counts as inconclusive, never red). All eight UT DICTUM:
+
+| plant | red sections |
+| --- | --- |
+| 1 case (c) gives 0 | oraculum actionis, exempla, relationes |
+| 2 every code NIHIL | oraculum actionis, exempla (relationes GREEN: e_i = 0 satisfies them) |
+| 3 enumeration tries defect first | all but refutationes |
+| 4 enclosed defects admitted | dimensiones, enumeratio, structura, oraculum, exempla, quaerere |
+| 5 key point 0 least significant (X1) | all eight others |
+| 6 quaerere skips exact pairing comparison | quaerere |
+| 7 actio writes imago for NIHIL | oraculum actionis, exempla |
+| 8 refusal i = fila off by one | refutationes |
+
+Plant 1's first anchor matched twice: `silva.planta` matches
+whitespace-tolerantly, so case (b)'s and case (c)'s `genus = UNUM` lines
+(different alignment) were the same anchor. Two-line anchor fixed it.
