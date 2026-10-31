@@ -1959,6 +1959,12 @@
     <forma textus="veredario" casus="dativus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
   <vocabulum lemma="resend" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Resend, provisor epistularum (api.resend.com; epistula_resend_corpus, communio D7)"/>
+  <vocabulum lemma="informativus" lingua="latina" classis="adiectivum" nota="informativus, -a, -um (Latinitas scholastica, ex informare): qui informat, non finit - responsum HTTP 1xx (status informativus, eventus informativa; http2.c, http2-plan T5)">
+    <forma textus="informativus" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="informativa" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="informativum" casus="nominativus" numerus="singularis" genus="neutrum"/>
+    <forma textus="informativi" casus="genitivus" numerus="singularis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="protocollum" lingua="latina" classis="substantivum" nota="protocollum, -i n. (Cod. Iust. Nov. 44; Graece protokollon, 'folium primum agglutinatum'): regula colloquii inter machinas - HTTP2_ERROR_PROTOCOLLI = PROTOCOL_ERROR (http2_forma.h, http2-plan T4)">
     <forma textus="protocollum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="protocolli" casus="genitivus" numerus="singularis" genus="neutrum"/>

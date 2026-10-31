@@ -160,6 +160,7 @@ declare -a SOURCE_FILES=(
     "lib/hpack_huffman.c"
     "lib/html_lexema.c"
     "lib/http.c"
+    "lib/http2.c"
     "lib/http2_forma.c"
     "lib/http_vocatio.c"
     "lib/ianua.c"
