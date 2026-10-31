@@ -1685,6 +1685,138 @@ _probare_vestigium_sanandi (
     CREDO_VERUM(mundi_continet(causa, "nusquam.out", piscina));
 }
 
+/* DIARIUM INSTITUTIONUM (parcum …5NQBP): scriptura '~/.bin' extra
+ * vestigium quam linea diarii DUM actio currit addita explicat =
+ * MONITUM (sanatum); sine linea aut via alia = FRACTUM ut antea */
+hic_manens i32    monita_numerus = ZEPHYRUM;
+hic_manens chorda monitum_ultimum;
+
+interior vacuum
+_monere_fictum (
+     vacuum* datum,
+     chorda  nuntius)
+{
+    (vacuum)datum;
+    monita_numerus++;
+    monitum_ultimum = nuntius;
+}
+
+/* PURGARE (credo examen 92-95): monita inter sectiones non manent */
+interior vacuum
+_monita_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    monita_numerus           = ZEPHYRUM;
+    monitum_ultimum.datum    = NIHIL;
+    monitum_ultimum.mensura  = ZEPHYRUM;
+}
+
+interior FabricaSanatio*
+_actio_cum_alia (
+       DiscusFictus* discus,
+      FabricaSutura* sutura,
+ constans character* alia,
+ constans character* diarium,
+            Piscina* piscina)
+{
+      FabricaActio* actiones[I];
+               Xar* ordo;
+               Xar* sanationes;
+            chorda  causa;
+    ScriptumFictum* scriptum;
+
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    mundi_discum_parare(discus, sutura, piscina);
+    mundi_memorias_parare(sutura, piscina);
+    sutura->vestigium_capere  = mundi_vestigium_capere;
+    sutura->monere            = _monere_fictum;
+    mundi_ponere(discus, "u", "u\n");
+    mundi_ponere(discus, "XU", "vetus\n");
+    mundi_ponere(discus, "~/.rhubarb/institutiones.tsv",
+        "100\t~/.bin/vetus\n");
+    mundi_scriptum_addere(discus, "gen_u", "XU", NIHIL, "nu\n", 0,
+        FALSUM);
+    scriptum = (ScriptumFictum*)xar_obtinere(discus->scripta,
+        ZEPHYRUM);
+    scriptum->alia     = alia;
+    scriptum->diarium  = diarium;
+    actiones[0] = mundi_actio_scripta(piscina, "U", "gen_u", "u", "XU",
+        "regeneratio");
+    ordo        = mundi_ordinare_fictas(piscina, actiones, I);
+    sanationes  = fabrica_sanare(sutura, ordo, NIHIL, FALSUM, piscina,
+        &causa);
+    redde sanationes != NIHIL ? mundi_sanatio_invenire(sanationes, "U")
+        : NIHIL;
+}
+
+interior vacuum
+_probare_diarium_institutionum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+         DiscusFictus  discus;
+        FabricaSutura  sutura;
+       FabricaSanatio* sanatio;
+
+        /* I. institutio aliena dum agitur explicat: SANATUM + MONITUM
+         * nominans viam (etiam '~/.bin/x.dSYM/...' sub ea) */
+        monita_numerus = ZEPHYRUM;
+        sanatio = _actio_cum_alia(&discus, &sutura, "~/.bin/x",
+            "200\t~/.bin/x\n", piscina);
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_SANATUM);
+        }
+        CREDO_AEQUALIS_I32(monita_numerus, I);
+        CREDO_VERUM(mundi_continet(monitum_ultimum, "~/.bin/x",
+            piscina));
+        CREDO_VERUM(mundi_continet(monitum_ultimum, "institutione",
+            piscina));
+
+        /* II. sine linea nova (diarium vetus solum): FRACTUM ut antea,
+         * nullum monitum */
+        monita_numerus = ZEPHYRUM;
+        sanatio = _actio_cum_alia(&discus, &sutura, "~/.bin/x", NIHIL,
+            piscina);
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+            CREDO_VERUM(mundi_continet(sanatio->causa,
+                "extra vestigium", piscina));
+        }
+        CREDO_AEQUALIS_I32(monita_numerus, ZEPHYRUM);
+
+        /* III. linea nova de binario ALIO: non explicat - FRACTUM */
+        sanatio = _actio_cum_alia(&discus, &sutura, "~/.bin/x",
+            "300\t~/.bin/xy\n", piscina);
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+        }
+
+        /* IV. scriptura in arbore (non '~/'): diarium numquam explicat */
+        sanatio = _actio_cum_alia(&discus, &sutura, "build/x",
+            "400\tbuild/x\n", piscina);
+        CREDO_NON_NIHIL(sanatio);
+        si (sanatio != NIHIL)
+        {
+            CREDO_AEQUALIS_I32((i32)sanatio->eventus,
+                (i32)FABRICA_FRACTUM);
+        }
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "sanare",
       _probare_sanare,
@@ -1707,6 +1839,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vestigium sanandi (AG7)",
       _probare_vestigium_sanandi,
       NIHIL, NIHIL, NIHIL, NIHIL },
+    { "diarium institutionum",
+      _probare_diarium_institutionum,
+      NIHIL, _monita_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
