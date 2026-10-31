@@ -19,3 +19,7 @@ Integers (RFC 7541 5.1), Huffman strings (5.2 + Appendix B), static table (Appen
 - **Size updates:** encoder remembers the smallest and the final requested size since its last block and emits min-then-final (4.2); decoder accepts updates only before the first header and only up to `limes`.
 - **Never-indexed** applies to `authorization`, `proxy-authorization`, `cookie` < 20 octets and any caller-flagged header; such headers are always literal (even with a static exact match) and never enter the table.
 - `magnitudo` is the house sizeof macro - it bit twice (a parameter name copied from the plan, a fixture struct field).
+
+## 2026-10-30 - T3: hpack-test-case corpus
+
+`probationes/probatio_hpack_corpus.c` against http2jp/hpack-test-case (MIT, commit 8a1406e7, licence copied into `probationes/fixa/hpack/corpus/ORIGO.txt`). Only story_00..07 of nghttp2, go-hpack, node-http2-hpack, nghttp2-change-table-size and raw-data are vendored (412 KiB of ~15 MB - the early stories are the small ones). 4 x 65 cases decode with one decoder per story (header_table_size applied as the new limit), 65 raw-data cases round-trip through our encoder + a fresh decoder and are never longer than the literal-without-indexing form. Passed first run - no decoder change needed. `casus` is the house `case` macro (variables renamed series/numerati).
