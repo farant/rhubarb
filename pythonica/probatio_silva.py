@@ -3587,6 +3587,7 @@ _tu_conatus = 'commissio:' + subprocess.run(
     cwd=RADIX).stdout.strip()[:12]
 try:
     os.environ['PORTAE_TRANSLATIO_UMBRA'] = '1'
+    os.environ['PORTAE_TRANSLATIO'] = 'umbra'
     silva._translationes_umbrae = _tu_fictum
     out, v, err = _tu_currere(['ficta-umbra-v'])
     rec_via = silva._translationis_receptum_via('ficta-umbra-v')
@@ -3611,6 +3612,35 @@ try:
           and '[scopus a: nullum - receptum conatus alius]' in out
           and _tu_acta()[-1][3:5] == ['portat', 'nullum'],
           'umbra: receptum traditum; scopus a nullum si conatus alius', causa=out)
+    # ACTIVA (A.3, Franus 2026-10-31): scopus a - receptum EIUSDEM conatus
+    # portatur (porta non cursa), auditus I ex N tamen currit, conatus
+    # alius currit
+    os.environ['PORTAE_TRANSLATIO'] = 'a'
+    os.environ['PORTAE_TRANSLATIO_AUDITUS'] = '0'
+    rec['conatus'] = _tu_conatus
+    json.dump(rec, open(rec_via, 'w'))
+    k = open(_tu_n).read().count('x')
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(v == ['ficta-umbra-v'] and open(_tu_n).read().count('x') == k
+          and 'non iterum cursa (translatio, scopus a)' in out
+          and '[translatum: 1 via mutata' in out
+          and _tu_acta()[-1][7] == '0',
+          'translatio activa: scopus a portatur, porta non cursa, viridis',
+          causa=out)
+    os.environ['PORTAE_TRANSLATIO_AUDITUS'] = '1'
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(open(_tu_n).read().count('x') == k + 1
+          and 'ficta-umbra-v auditur (I ex 1)' in out,
+          'translatio activa: auditus portationem tamen currit', causa=out)
+    os.environ['PORTAE_TRANSLATIO_AUDITUS'] = '0'
+    rec = json.load(open(rec_via))
+    rec['conatus'] = 'commissio:alius'
+    json.dump(rec, open(rec_via, 'w'))
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(open(_tu_n).read().count('x') == k + 2
+          and '(translatio, scopus a)' not in out,
+          'translatio activa: conatus alius (scopus b) currit', causa=out)
+    os.environ['PORTAE_TRANSLATIO'] = 'umbra'
     # rubra quae portaretur: DISSENSUS nominatus, actum, receptum nullum
     out, v, err = _tu_currere(['ficta-umbra-r'], pergere=True)
     credo(err is not None
@@ -3629,10 +3659,11 @@ try:
     def _tu_fractum(n, r):
         raise silva.SilvaError('fictum fractum')
     silva._translationes_umbrae = _tu_fractum
+    k = open(_tu_n).read().count('x')
     out, v, err = _tu_currere(['ficta-umbra-v'])
     credo(v == ['ficta-umbra-v']
           and 'MONITUM: umbra translationis omissa (fictum fractum)' in out
-          and open(_tu_n).read().count('x') == 3,
+          and open(_tu_n).read().count('x') == k + 1,
           'umbra: fractura sua = MONITUM, porta tamen cursa', causa=out)
     # clausa: nulla vocatio, nulla linea
     silva._translationes_umbrae = _tu_fictum
@@ -3644,6 +3675,8 @@ try:
           'umbra: PORTAE_TRANSLATIO_UMBRA=0 claudit', causa=out)
 finally:
     os.environ['PORTAE_TRANSLATIO_UMBRA'] = '0'
+    os.environ.pop('PORTAE_TRANSLATIO', None)
+    os.environ.pop('PORTAE_TRANSLATIO_AUDITUS', None)
     silva._translationes_umbrae = _tu_verum
     silva.TRANSLATIO_DIR, silva.TRANSLATIO_ACTA = _tu_dir, _tu_acta_via
     silva.FABRICA_BIN = _tu_fb

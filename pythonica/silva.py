@@ -3706,8 +3706,14 @@ def _portas_currere(portae, genera, viae, recepta=True, pergere=False):
             initium_umbrae = time.time()
             f = receptum_vivum(nomen, filtrum) if recepta else None
             cursa = not (f is not None and f.sana)
+            translata = (_translatio_activa(umbra, nomen)
+                         if cursa and filtrum is None else None)
             if f is not None and f.sana:
                 print('porta %s: %s - non iterum cursa' % (nomen, f.compendium))
+            elif translata is not None:
+                f, cursa = translata, False
+                print('porta %s: %s - non iterum cursa (translatio, scopus'
+                      ' a)' % (nomen, f.compendium))
             else:
                 audita = filtrum is None and _auditum_commissionis(nomen)
                 f = porta(nomen, filtrum, auditus=True if audita else None)
@@ -4233,9 +4239,16 @@ def _umbram_incipere(portae, pergere):
         return None
     portarentur = [n for n in nomina
                    if decisiones.get(n, ('',))[0] == 'portat']
-    print('umbra translationis (%s): %d ex %d portarentur, ceterae'
-          ' currerent - portae TAMEN omnes currunt'
-          % (conatus, len(portarentur), len(nomina)))
+    if os.environ.get('PORTAE_TRANSLATIO', 'a') == 'a':
+        print('translatio (%s): %d ex %d portarentur (scopus b);'
+              ' ACTIVA scopo a solo (receptum eiusdem conatus), auditus'
+              ' I ex %s' % (conatus, len(portarentur), len(nomina),
+                            os.environ.get('PORTAE_TRANSLATIO_AUDITUS',
+                                           TRANSLATIO_AUDITUS)))
+    else:
+        print('umbra translationis (%s): %d ex %d portarentur, ceterae'
+              ' currerent - portae TAMEN omnes currunt'
+              % (conatus, len(portarentur), len(nomina)))
     return {'conatus': conatus, 'sigillum': sig, 'arbor': arbor,
             'instrumenta': instrumenta, 'decisiones': decisiones,
             'recepta': recepta}
@@ -4264,6 +4277,41 @@ def _umbram_ante(umbra, nomen):
     else:
         print('umbra translationis: %s curreret (%s: %s)'
               % (nomen, genus, causa))
+
+
+# TRANSLATIO ACTIVA (A.3, Franus 2026-10-31; spec §IV-quater): scopus
+# (a) SOLUS - receptum EIUSDEM conatus (iterationes eiusdem commissionis;
+# transitus eiusdem fusionis: transitus primus fusionis recens manet,
+# nullum receptum conatus huius adhuc). Umbra hebdomadae (2026-10-24..31,
+# quinta): CXXV portationes scopi a, ~DXCIII s, DISSENSUS nullus. Auditus:
+# portatio una ex N tamen currit (PORTAE_TRANSLATIO_AUDITUS, ordinarie X;
+# 0 = nullus) - verdictum verum contra receptum, DISSENSUS clamat ut in
+# umbra. PORTAE_TRANSLATIO=umbra = modus prior (omnes currunt). Scopus
+# (b) (receptum conatus alius) umbra manet - decretum proprium.
+TRANSLATIO_AUDITUS = 10
+
+
+def _translatio_activa(umbra, nomen):
+    """Porta translata (sana, non cursa) aut None (currenda)"""
+    if umbra is None or os.environ.get('PORTAE_TRANSLATIO', 'a') != 'a':
+        return None
+    if nomen not in umbra['decisiones']:
+        return None
+    genus, a, causa = _umbrae_decisio(umbra, nomen)
+    r = umbra['recepta'].get(nomen)
+    if a != 'portat' or not r or r.get('conatus') != umbra['conatus']:
+        return None
+    try:
+        n = int(os.environ.get('PORTAE_TRANSLATIO_AUDITUS',
+                               TRANSLATIO_AUDITUS))
+    except ValueError:
+        n = TRANSLATIO_AUDITUS
+    if n > 0 and _alea() < 1.0 / n:
+        print('translatio: %s auditur (I ex %d) - porta tamen currit'
+              % (nomen, n))
+        return None
+    return Porta(nomen, True, True, '%s [translatum: %s]'
+                 % (r.get('compendium', 'sana'), causa), 0, '', [], False)
 
 
 def _umbram_post(umbra, nomen, f, secundae, cursa):
