@@ -5,6 +5,14 @@
 #              arcessit, sha256 probat, cum probationes/fixa/musicxml/suite/
 #              (INDEX) confert - fasciculi commissi iam adsunt; hoc
 #              provenientiam renovat aut probat.
+#   -silvestria  corpus silvestre (CC0): OpenScore Lieder et
+#              StringQuartets, solum .mxl, ad commissa fixa, in
+#              build/musicxml/silvestria/<repositorium>/<via>; manifestum
+#              commissum (probationes/fixa/musicxml/silvestria.manifestum:
+#              'sha256  repositorium/via') viam et sigillum dat - fasciculus
+#              discrepans = FRACTUM. Fasciculi NUMQUAM committuntur.
+#   -silvestria-novum  idem, sed index ex API GitHub et manifestum
+#              (re)scribitur (semel, aut cum commissa mutantur).
 #
 # Fasciculi externi = data non fida: directorium proprium, nihil
 # exsequitur. Exitus 0 sanum, 1 fractum, 2 usus.
@@ -35,7 +43,65 @@ suita () {
     fi
 }
 
+LIEDER_COMMISSUM=38c5db510224d9facdc4b08d741fc788cfb58ea8
+QUARTETA_COMMISSUM=2614b0b2958dd1ce3f52e172a43e5f4d0e29570f
+
+silvestria () {
+    local novum="$1"
+    python3 -I - "$RADIX" "$novum" "$LIEDER_COMMISSUM" "$QUARTETA_COMMISSUM" <<'PY'
+import sys, os, json, hashlib, urllib.request, urllib.parse
+from concurrent.futures import ThreadPoolExecutor
+radix, novum, lieder, quarteta = sys.argv[1], sys.argv[2] == '1', sys.argv[3], sys.argv[4]
+repos = {'Lieder': lieder, 'StringQuartets': quarteta}
+dest = os.path.join(radix, 'build/musicxml/silvestria')
+manifestum = os.path.join(radix, 'probationes/fixa/musicxml/silvestria.manifestum')
+def get(url):
+    with urllib.request.urlopen(url, timeout=120) as r:
+        return r.read()
+if novum:
+    items = []
+    for repo, sha in repos.items():
+        t = json.loads(get('https://api.github.com/repos/OpenScore/%s/git/trees/%s?recursive=1' % (repo, sha)))
+        assert not t.get('truncated'), 'arbor truncata'
+        items += [(repo, x['path'], None) for x in t['tree']
+                  if x['type'] == 'blob' and x['path'].endswith('.mxl')]
+else:
+    items = []
+    for line in open(manifestum):
+        if line.startswith(('DATA', '#')) or not line.strip():
+            continue
+        h, rel = line.rstrip('\n').split('  ', 1)
+        repo, path = rel.split('/', 1)
+        items.append((repo, path, h))
+def fetch(it):
+    repo, path, h = it
+    out = os.path.join(dest, repo, path)
+    if not (os.path.exists(out) and h and hashlib.sha256(open(out, 'rb').read()).hexdigest() == h):
+        url = 'https://raw.githubusercontent.com/OpenScore/%s/%s/%s' % (repo, repos[repo], urllib.parse.quote(path))
+        data = get(url)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        with open(out, 'wb') as f:
+            f.write(data)
+    d = hashlib.sha256(open(out, 'rb').read()).hexdigest()
+    return (repo + '/' + path, d, h is None or d == h)
+with ThreadPoolExecutor(max_workers=8) as ex:
+    res = list(ex.map(fetch, items))
+mala = [r for r in res if not r[2]]
+if novum:
+    with open(manifestum, 'w') as f:
+        f.write('DATA musicxml silvestria manifestum 1 (OpenScore Lieder %s, StringQuartets %s; CC0; sha256 et via; fasciculi in build/musicxml/silvestria/, numquam commissi)\n' % (lieder[:8], quarteta[:8]))
+        for rel, d, _ in sorted(res):
+            f.write('%s  %s\n' % (d, rel))
+print('MUSICXML ARCESSERE: silvestria %d fasciculi, %d discrepantes' % (len(res), len(mala)))
+for m in mala[:10]:
+    print('  DISCREPAT ' + m[0])
+sys.exit(1 if mala else 0)
+PY
+}
+
 case "${1:-}" in
     -suita) suita ;;
-    *) echo "usus: $0 -suita" >&2; exit 2 ;;
+    -silvestria) silvestria 0 ;;
+    -silvestria-novum) silvestria 1 ;;
+    *) echo "usus: $0 -suita | -silvestria | -silvestria-novum" >&2; exit 2 ;;
 esac

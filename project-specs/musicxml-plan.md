@@ -725,8 +725,36 @@ for "repeats not retaken after D.C." (no suite file exercises it).
   wrap the loop; plus `musicxml_ordo` on each result.
 - [ ] **Step 6: Plants** — one sigillum changed → FRACTA; corpus
   directory renamed → OMISSA; restore.
-- [ ] **Step 7: Commit** (gates `radix`, `pythonica`,
+- [x] **Step 7: Commit** (gates `radix`, `pythonica`,
   `musicxml-oraculum`).
+
+**Executed 2026-10-31.** Corpus: OpenScore Lieder (1,462) + String
+Quartets (196) `.mxl` at pinned commits, 60 MB, fetched in ~1 min
+(`-silvestria`). **Incident:** the first corpus run kept every file in
+the test section's single piscina and was started without custos —
+~75 GB (Fran saw it). Fixes: one piscina per file (helper + destroy),
+the gate script wraps custos at 10 GB (compressed memory counted),
+`CREDO_MEMORIA_MB=4096` for that section (largest score ~1.7 GB —
+desideratum …DC2DM0M8 to cut the ~105× factor); the runner hole
+(`compile_tests.sh <name>` runs a test uncapped; fabrica's 16 GiB cap
+applies only through fabrica) is desideratum …YJ0DNC3. Re-slices: no
+separate dump tool or C gate binary — `probatio_musicxml_suite.c`
+gained a corpus section (`MUSICXML_SILVESTRIA`, declared ambitus) and,
+without it, checks manifest/sigilla agreement in the root gate (an
+assertion-free section is VACUA = failed in credo). Oracle: music21
+over all 1,658 under custos (~4.5 h, resumable harness), 1,392/1,646
+exact; reader fixes from it (ties by voice then staff; U+00A0 trim;
+full TSV sort key; **multi-movement D.C./Fine** — D.C. to the movement
+start, Fine continues into the next movement only when the jump
+measure ends a movement); harness fixes (per-pitch chord ties — had
+faked a ~250-file "music21" class; sort key). Remaining 254 classified
+by signature and sampled (aurum_silvestre/PROVENIENTIA.md). Pins: 41
+full goldens (25 + 1 Lieder, 15 quartets — not 25: size), 1,617
+sha256. Totality: 3,249 cases (suite truncated/mutated, random, ZIP,
+4,000-measure repeat nest), 0 broken, ~3 s, under CREDO_NON_PENDET.
+Plants red: wrong sigillum → FRACTA; corpus renamed → OMISSA; NIHIL
+on 1-in-7 inputs → totality red; movement logic (two) → red. venv
+deleted.
 
 ---
 

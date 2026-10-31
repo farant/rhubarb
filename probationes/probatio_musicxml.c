@@ -1153,6 +1153,36 @@ _ordo_nata_lux_probare (
     CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
 }
 
+/* corpus silvestre: MuseScore vocem trans lineam mutat (V -> VI) */
+interior vacuum
+_ligatura_vox_mutata_probare (
+    CredoContextus* c)
+{
+     MusicxmlOpus* o = _legere_fixum(c, "ligatura_vox_mutata.musicxml");
+           chorda  t;
+
+    CREDO_NECESSE (o != NIHIL && musicxml_successus(o));
+    CREDO_AEQUALIS_I32 (_vitia_generis(o, MUSICXML_LIGATURA_PENDENS),
+        ZEPHYRUM);
+    t = _tabula(c, o);
+    CREDO_VERUM (_continet(t, "P1\t0\t4\t47\tB\t"));
+    CREDO_VERUM (_continet(t, "P1\t0\t4\t54\tF\t"));
+}
+
+/* plura opera in fasciculo (quartetum Haydn op. 74/2): D.C. ad initium
+ * motus, post fine motus sequens cum repetitionibus */
+interior vacuum
+_motus_plures_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "motus_plures.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 2:1 3:1 4:1 2:2 3:2 5:1 6:1 5:2 6:2"));
+    CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nota una: exemplar et tabula", _nota_una_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1223,6 +1253,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
             NIHIL },
     { "ordo: nata lux", _ordo_nata_lux_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ligatura: vox mutata, baculum idem",
+        _ligatura_vox_mutata_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: motus plures (D.C. ad initium motus)",
+        _motus_plures_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

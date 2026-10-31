@@ -1649,6 +1649,10 @@ PORTAE = {
     # porta sua ex clausura qr (2026-10-23)
     'qr-gyrus': (['./probationes/probatio_qr_gyrus.sh'],
                  r'QR GYRUS: (\d+/\d+ legibiles|\d+ ex \d+ FRACTAE)'),
+    # corpus silvestre musicxml (plan musicxml P8): OpenScore CC0 contra
+    # aurum commissum, sub custode X GB; corpus absens = OMISSA nominata
+    'musicxml-oraculum': (['./tools/musicxml_silvestria.sh'],
+                          r'MUSICXML SILVESTRIA: (sana|FRACTA|OMISSA)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],
                       r'aequivalentia: (sana|FRACTA)'),

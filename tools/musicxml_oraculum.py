@@ -42,6 +42,14 @@ def alteratio(p):
     return s
 
 
+def clavis_ordinis(pars, ortus, midi, dur, gratia, versus_textus):
+    # ordo canonicus = lector (_lineas_conferre): pars, initium, midi,
+    # longitudo, gratia, numerus syllabarum, textus syllabae primae
+    syl = [] if versus_textus == '-' else versus_textus.split('|')
+    prima = syl[0].split(':', 2)[2].encode('utf-8') if syl else b''
+    return (pars, ortus, midi, dur, gratia, len(syl), prima)
+
+
 def versus(n):
     partes = []
     for ly in sorted(n.lyrics, key=lambda y: (y.number or 0)):
@@ -118,8 +126,15 @@ def tabula(via):
                     soni = [(dp, el)]
                 else:
                     continue
-                tie = el.tie.type if el.tie is not None else None
                 for pp, src in soni:
+                    # ligatura PER SONUM: acordum ligaturam suam per notam
+                    # habet (el.tie acordi totius membra non ligata
+                    # falso iungebat - corpus silvestre 2026-10-31)
+                    if isinstance(el, chord.Chord):
+                        tt = el.getTie(pp)
+                    else:
+                        tt = el.tie
+                    tie = tt.type if tt is not None else None
                     midi = pp.midi
                     if tie in ('stop', 'continue'):
                         found = None
@@ -142,7 +157,8 @@ def tabula(via):
                                    'versus': versus(src) if src is not None else '-'})
                     if tie in ('start', 'continue'):
                         apertae.append(len(lineae) - 1)
-    lineae.sort(key=lambda L: (L['pars'], L['ortus'], L['midi']))
+    lineae.sort(key=lambda L: clavis_ordinis(L['pars'], L['ortus'], L['midi'],
+                                             L['dur'], L['gratia'], L['versus']))
     out = ['DATA musicxml tabula 1',
            '# pars\tinitium\tlongitudo\tmidi\tlittera\talteratio\tgratia\tversus']
     for L in lineae:
@@ -161,6 +177,9 @@ def main():
     mala = 0
     for via in sys.argv[2:]:
         nomen_fasciculi = os.path.basename(via) + '.tsv'
+        # iam scriptum: praetermittitur (cursus a custode occisus pergit)
+        if os.path.exists(os.path.join(exitus, nomen_fasciculi)):
+            continue
         try:
             t = tabula(via)
         except Exception as e:

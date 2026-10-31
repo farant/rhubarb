@@ -1291,6 +1291,10 @@
          scribit (discrimen cum oraculo, aurum renovandum), sine eo
          cum auro commisso confert -->
     <ambitus variabilis="MUSICXML_TABULAS_SCRIBERE"/>
+    <!-- corpus silvestre musicxml (plan P8): solum porta
+         musicxml-oraculum (tools/musicxml_silvestria.sh) id ponit -
+         sine eo sectio silvestris nihil agit -->
+    <ambitus variabilis="MUSICXML_SILVESTRIA"/>
     <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
     <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
     <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>

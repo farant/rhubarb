@@ -9,9 +9,12 @@
  *     repetitione priori aut ab initio (mos communis, sine monito);
  *     conclusio (ending start) sine fine: monitum REPETITIO_APERTA;
  *   - conclusio (ending) sonat solum transitu suo;
- *   - D.C./D.S. semel quisque, in fine mensurae; post saltum
- *     repetitiones non iterantur, fine sistit, to coda ad codam salit
- *     (semel);
+ *   - D.C./D.S. semel quisque, in fine mensurae; D.C. ad initium
+ *     MOTUS (numerus mensurae iterum "1"); post saltum repetitiones
+ *     non iterantur, to coda ad codam salit (semel); fine finis est,
+ *     nisi mensura post saltum motum novum incipit (menuetto D.C. al
+ *     Fine, deinde motus sequens) - tum ibi pergit; motus novus statum
+ *     saltus delet;
  *   - transitus = maximum (visitationes mensurae, transitus
  *     repetitionis vigentis): versus n transitu n.
  * Limes visitationum (LXIV per mensuram + MXXIV) ordinem sine fine
@@ -50,6 +53,8 @@ nomen structura {
      s32 regio_finis;
      s32 gubernator;        /* backward cuius transitus conclusionem
                               * eligit; -I = nullus */
+     b32 motus_initium;     /* motus novus (numerus mensurae "1" aut
+                              * "0" iterum - plura opera in fasciculo) */
 } Informatio;
 
 nomen structura {
@@ -343,6 +348,22 @@ _informationem_colligere (
                 "conclusio (ending start) sine stop aut discontinue");
         }
     }
+    /* motus: numerus partis primae iterum "1" (aut anacrusis "0"),
+     * mensura priore non "0" - quartetum Haydn op. 74/2 in fasciculo
+     * uno: D.C. menuetti ad initium MOTUS, non operis */
+    per (k = I; opus->numerus_partium > ZEPHYRUM && k < n
+         && k < opus->partes[ZEPHYRUM].numerus_mensurarum; k++)
+    {
+        chorda hic    = opus->partes[ZEPHYRUM].mensurae[k].numerus;
+        chorda prior  = opus->partes[ZEPHYRUM].mensurae[k - I].numerus;
+
+        si (   (chorda_aequalis_literis(hic, "1")
+                || chorda_aequalis_literis(hic, "0"))
+            && !chorda_aequalis_literis(prior, "0"))
+        {
+            x[k].motus_initium = VERUM;
+        }
+    }
     /* gubernator: backward in fine regionis; aliter (conclusio ultima
      * sine backward) gubernator regionis praecedentis contiguae */
     per (k = ZEPHYRUM; k < n; k++)
@@ -516,13 +537,14 @@ musicxml_ordo (
        Ordinator  o;
              Xar* visitationes;
              i32  n;
-             i32  k         = ZEPHYRUM;
-             i32  r         = I;        /* transitus repetitionis */
-             b32  activa    = FALSUM;   /* intra repetitionem */
-             b32  perfecta  = FALSUM;   /* backward ultimo transitu */
-             b32  reditus   = FALSUM;   /* advenit per saltum retro */
-             b32  saltus    = FALSUM;   /* D.C./D.S. factus */
-             s64  initium   = ZEPHYRUM;
+             i32  k             = ZEPHYRUM;
+             i32  r             = I;        /* transitus repetitionis */
+             b32  activa        = FALSUM;   /* intra repetitionem */
+             b32  perfecta      = FALSUM;   /* backward ultimo transitu */
+             b32  reditus       = FALSUM;   /* advenit per saltum retro */
+             b32  saltus        = FALSUM;   /* D.C./D.S. factus */
+             s32  origo_saltus  = -I;   /* mensura D.C./D.S. */
+             s64  initium       = ZEPHYRUM;
              i32  limes;
              i32* iteratio;
              i32* visitata;
@@ -654,11 +676,22 @@ musicxml_ordo (
             si (y->verbis)
             {
                 _monitum(&o, MUSICXML_SALTUS_SINE_SONO,
-                    y->linea_verborum,
-                    y->columna_verborum,
+                    y->linea_verborum, y->columna_verborum,
                     "saltus verbis solis intellectus (sine sound)");
             }
-            frange;
+            /* motus sequens post mensuram saltus (menuetto D.C. al Fine,
+             * deinde motus IV): ibi pergit; aliter fine finis est */
+            si (   origo_saltus < ZEPHYRUM || origo_saltus + I >= (s32)n
+                || !x[origo_saltus + I].motus_initium)
+            {
+                frange;
+            }
+            k             = (i32)origo_saltus + I;
+            saltus        = FALSUM;
+            origo_saltus  = -I;
+            activa        = FALSUM;
+            r             = I;
+            perge;
         }
         si (saltus && y->ad_caudam && !caudam[k])
         {
@@ -702,10 +735,15 @@ musicxml_ordo (
                     y->columna_verborum,
                     "saltus verbis solis intellectus (sine sound)");
             }
-            saltus  = VERUM;
-            activa  = FALSUM;
-            r       = I;
-            k       = ZEPHYRUM;
+            saltus        = VERUM;
+            origo_saltus  = (s32)k;
+            activa        = FALSUM;
+            r             = I;
+            /* ad initium motus (mensura k inclusa) */
+            dum (k > ZEPHYRUM && !x[k].motus_initium)
+            {
+                k--;
+            }
             perge;
         }
         si (y->a_signo && !signo[k])
@@ -721,14 +759,20 @@ musicxml_ordo (
                         y->linea_verborum, y->columna_verborum,
                         "saltus verbis solis intellectus (sine sound)");
                 }
-                saltus  = VERUM;
-                activa  = FALSUM;
-                r       = I;
-                k       = (i32)meta;
+                saltus        = VERUM;
+                origo_saltus  = (s32)k;
+                activa        = FALSUM;
+                r             = I;
+                k             = (i32)meta;
                 perge;
             }
         }
         k++;
+        si (k < n && x[k].motus_initium)
+        {
+            saltus        = FALSUM;
+            origo_saltus  = -I;
+        }
     }
     ordo->visitationes = (MusicxmlVisitatio*)piscina_allocare(piscina,
         (memoriae_index)((xar_numerus(visitationes) + I)

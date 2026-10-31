@@ -1,0 +1,14 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: D.C. menuetti ad initium motus (numeri iterum "1"), post fine motus III cum repetitione (0 1 2 3 4 2 3 5 6 5 6); music21 D.C. per sound non sumit
+P1	0	2	60	C	0	0	-
+P1	2	2	62	D	0	0	-
+P1	4	2	64	E	0	0	-
+P1	6	2	65	F	0	0	-
+P1	8	2	67	G	0	0	-
+P1	10	2	64	E	0	0	-
+P1	12	2	65	F	0	0	-
+P1	14	2	69	A	0	0	-
+P1	16	2	71	B	0	0	-
+P1	18	2	69	A	0	0	-
+P1	20	2	71	B	0	0	-

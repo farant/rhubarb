@@ -109,15 +109,45 @@ interior chorda
 _praecidere (
     chorda c)
 {
-    dum (c.mensura > ZEPHYRUM && _spatium((character)c.datum[ZEPHYRUM]))
+    /* spatia ASCII et NBSP (U+00A0, C2 A0 - verba corporis silvestris
+     * " shoots") */
+    dum (c.mensura > ZEPHYRUM)
     {
-        c.datum++;
-        c.mensura--;
+        si (_spatium((character)c.datum[ZEPHYRUM]))
+        {
+            c.datum++;
+            c.mensura--;
+        }
+        alioquin si (   c.mensura                               >= II
+                     && (insignatus character)c.datum[ZEPHYRUM] == 0xC2
+                     && (insignatus character)c.datum[I]        == 0xA0)
+        {
+            c.datum    += II;
+            c.mensura  -= II;
+        }
+        alioquin
+        {
+            frange;
+        }
     }
-    dum (   c.mensura > ZEPHYRUM
-         && _spatium((character)c.datum[c.mensura - I]))
+    dum (c.mensura > ZEPHYRUM)
     {
-        c.mensura--;
+        si (_spatium((character)c.datum[c.mensura - I]))
+        {
+            c.mensura--;
+        }
+        alioquin si (   c.mensura >= II
+                     && (insignatus character)c.datum[c.mensura - II]
+                        == 0xC2
+                     && (insignatus character)c.datum[c.mensura - I]
+                        == 0xA0)
+        {
+            c.mensura -= II;
+        }
+        alioquin
+        {
+            frange;
+        }
     }
     redde c;
 }
@@ -409,9 +439,25 @@ _divisiones_colligere (
 
 nomen structura {
                 chorda  vox;
+                   i32  baculum;
                    s32  nota;
     constans XmlCoctus* nodus;
 } LigaturaAperta;
+
+/* ligatura eandem lineam iungit: transitu 0 vox eadem; transitu I
+ * baculum idem (MuseScore vocem trans lineam mensurae mutat - corpus
+ * silvestre, vox V -> VI; nota eadem in baculo eodem ligatur) */
+interior b32
+_linea_eadem (
+    chorda vox_a,
+       i32 baculum_a,
+    chorda vox_b,
+       i32 baculum_b,
+       i32 transitus)
+{
+    redde transitus == ZEPHYRUM ? chorda_aequalis(vox_a, vox_b)
+                                : baculum_a == baculum_b;
+}
 
 nomen structura {
                          s64 factor;     /* divisio operis /
@@ -749,20 +795,26 @@ _ligaturam_tractare (
     si (n->ligatura_finis)
     {
         b32 inventa = FALSUM;
+        i32 t;
 
-        per (i = ZEPHYRUM; i < xar_numerus(sp->ligaturae); i++)
+        per (t = ZEPHYRUM; t < II && !inventa; t++)
         {
-            LigaturaAperta* a = (LigaturaAperta*)xar_obtinere(
-                sp->ligaturae, i);
-
-            si (a->nota == n->nota && chorda_aequalis(a->vox, n->vox))
+            per (i = ZEPHYRUM; i < xar_numerus(sp->ligaturae); i++)
             {
-                /* ultima in locum eius, deinde ultima tollitur */
-                *a = *(LigaturaAperta*)xar_obtinere(sp->ligaturae,
-                    xar_numerus(sp->ligaturae) - I);
-                (vacuum)xar_removere_ultimum(sp->ligaturae);
-                inventa = VERUM;
-                frange;
+                LigaturaAperta* a = (LigaturaAperta*)xar_obtinere(
+                    sp->ligaturae, i);
+
+                si (   a->nota == n->nota
+                    && _linea_eadem(a->vox, a->baculum, n->vox,
+                           n->baculum, t))
+                {
+                    /* ultima in locum eius, deinde ultima tollitur */
+                    *a = *(LigaturaAperta*)xar_obtinere(sp->ligaturae,
+                        xar_numerus(sp->ligaturae) - I);
+                    (vacuum)xar_removere_ultimum(sp->ligaturae);
+                    inventa = VERUM;
+                    frange;
+                }
             }
         }
         si (!inventa)
@@ -773,9 +825,10 @@ _ligaturam_tractare (
 
             si (a != NIHIL)
             {
-                a->vox    = n->vox;
-                a->nota   = n->nota;
-                a->nodus  = e;
+                a->vox      = n->vox;
+                a->baculum  = n->baculum;
+                a->nota     = n->nota;
+                a->nodus    = e;
             }
         }
     }
@@ -785,9 +838,10 @@ _ligaturam_tractare (
 
         si (a != NIHIL)
         {
-            a->vox    = n->vox;
-            a->nota   = n->nota;
-            a->nodus  = e;
+            a->vox      = n->vox;
+            a->baculum  = n->baculum;
+            a->nota     = n->nota;
+            a->nodus    = e;
         }
     }
 }
@@ -2077,19 +2131,24 @@ _partem_legere (
         LigaturaAperta* a = (LigaturaAperta*)xar_obtinere(sp.ligaturae,
             i);
                     i32 j;
+                    i32 t;
                     b32 iuncta = FALSUM;
 
-        per (j = ZEPHYRUM; j < xar_numerus(sp.fines); j++)
+        per (t = ZEPHYRUM; t < II && !iuncta; t++)
         {
-            LigaturaAperta* f = (LigaturaAperta*)xar_obtinere(sp.fines,
-                j);
-
-            si (   f->nodus != NIHIL && f->nota == a->nota
-                && chorda_aequalis(f->vox, a->vox))
+            per (j = ZEPHYRUM; j < xar_numerus(sp.fines); j++)
             {
-                f->nodus  = NIHIL;
-                iuncta    = VERUM;
-                frange;
+                LigaturaAperta* f = (LigaturaAperta*)xar_obtinere(
+                    sp.fines, j);
+
+                si (   f->nodus != NIHIL && f->nota == a->nota
+                    && _linea_eadem(f->vox, f->baculum, a->vox,
+                           a->baculum, t))
+                {
+                    f->nodus  = NIHIL;
+                    iuncta    = VERUM;
+                    frange;
+                }
             }
         }
         si (!iuncta)
@@ -2908,6 +2967,26 @@ _lineas_conferre (
     {
         redde x->nota->nota < y->nota->nota ? -I : I;
     }
+    /* clavis plena: unisoni vocum diversarum (eadem nota, eodem
+     * initio) ordine definito - corpus silvestre */
+    si (x->longitudo != y->longitudo)
+    {
+        redde x->longitudo < y->longitudo ? -I : I;
+    }
+    si (x->nota->gratia != y->nota->gratia)
+    {
+        redde x->nota->gratia ? I : -I;
+    }
+    si (x->nota->numerus_syllabarum != y->nota->numerus_syllabarum)
+    {
+        redde x->nota->numerus_syllabarum < y->nota->numerus_syllabarum
+            ? -I : I;
+    }
+    si (x->nota->numerus_syllabarum > ZEPHYRUM)
+    {
+        redde chorda_comparare(x->nota->syllabae[ZEPHYRUM].textus,
+            y->nota->syllabae[ZEPHYRUM].textus);
+    }
     redde ZEPHYRUM;
 }
 
@@ -3069,17 +3148,24 @@ musicxml_tabulam_scribere (
                 }
                 si (n->ligatura_finis)
                 {
-                    per (j = prima; j < xar_numerus(lineae); j++)
-                    {
-                        LineaTabulae* q = (LineaTabulae*)xar_obtinere(
-                            lineae, j);
+                    i32 t;
 
-                        si (   q->aperta && q->nota->nota == n->nota
-                            && chorda_aequalis(q->nota->vox, n->vox)
-                            && q->initium + q->longitudo == ortus)
+                    per (t = ZEPHYRUM; t < II && x == NIHIL; t++)
+                    {
+                        per (j = prima; j < xar_numerus(lineae); j++)
                         {
-                            x = q;
-                            frange;
+                            LineaTabulae* q = (LineaTabulae*)
+                                xar_obtinere(lineae, j);
+
+                            si (   q->aperta && q->nota->nota == n->nota
+                                && _linea_eadem(q->nota->vox,
+                                       q->nota->baculum, n->vox,
+                                       n->baculum, t)
+                                && q->initium + q->longitudo == ortus)
+                            {
+                                x = q;
+                                frange;
+                            }
                         }
                     }
                 }
