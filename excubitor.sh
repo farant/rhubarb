@@ -65,9 +65,11 @@ fi
 # -sine-renovatione = mores puri.
 # --------------------------------------------------
 if [ "$SANATIO" = "1" ]; then
-    RECENTIOR=$(find . \( -name '*.c' -o -name '*.h' \) \
-        -newer "$GRAPHUS" -not -path './build/*' \
-        -not -path '*/build/*' -not -path './.git/*' \
+    # PRUNE (budget B2 H2): '-not -path */build/*' omnes ~CDXV milia
+    # rerum sub build/ tamen statuebat (25-31 s per vocationem); -prune
+    # idem copiam eodem ordine reddit (nullus fons 'build' vocatur)
+    RECENTIOR=$(find . \( -name build -o -path ./.git \) -prune -o \
+        \( -name '*.c' -o -name '*.h' \) -newer "$GRAPHUS" -print \
         2>/dev/null | head -1)
     if [ -n "$RECENTIOR" ]; then
         if [ "$TACITUS" = "1" ]; then
@@ -109,12 +111,24 @@ trap 'rm -f "$FLUMEN"' EXIT
         \( -name '*.c' -o -name '*.h' -o -name '*.m' \) -print0 \
         2>/dev/null | xargs -0 stat -f 'M %m %N' 2>/dev/null
 
-    # obiecta sub omnibus directoriis build/
-    find . -type d -name build -not -path '*/node_modules/*' \
-        2>/dev/null | while read -r d; do
-        find "$d" -name '*.o' -print0 2>/dev/null \
+    # obiecta. FILTRUM finale '/' (canales scriptorum: 'gesta/build/')
+    # et directorium exstans: solum id scrutandum (budget B2 H2) -
+    # iudex sola obiecta quae congruit() (directe in eo) inspicit;
+    # obiecta alibi in mtempus intrabant sed verdictum alienum numquam
+    # tangebant (res fabricae fontes per lineas M legunt). Olim duae
+    # ambulationes totius build/ (~CDXV milia, ~45 s per vocationem).
+    if [ -n "$FILTRUM" ] && [ "${FILTRUM%/}" != "$FILTRUM" ] \
+            && [ -d "./${FILTRUM%/}" ]; then
+        find "./${FILTRUM%/}" -name '*.o' -print0 2>/dev/null \
             | xargs -0 stat -f 'O %m %N' 2>/dev/null
-    done
+    else
+        # obiecta sub omnibus directoriis build/
+        find . -type d -name build -not -path '*/node_modules/*' \
+            2>/dev/null | while read -r d; do
+            find "$d" -name '*.o' -print0 2>/dev/null \
+                | xargs -0 stat -f 'O %m %N' 2>/dev/null
+        done
+    fi
 
     # res fabricae exactae (generata/binaria: res + fontes plagulae)
     awk -F'\t' '!/^#/ && ($1=="generatum" || $1=="binarium") {

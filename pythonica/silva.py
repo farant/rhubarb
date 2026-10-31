@@ -1673,6 +1673,10 @@ PORTAE = {
     'silva-m3': (['./silva/m3_probare.sh'],
                  r'VERDICTUM: M3 (\d/6|NIHIL CURSUM)'),
     'sera': (['./tools/sera_fumus.sh'], r'fumus sera: (sanum|FRACTUM)'),
+    # custos staleness (budget B2 H2: via angusta filtri; olim nulla
+    # porta verdicta eius asserebat)
+    'excubitor': (['./tools/excubitor_fumus.sh'],
+                  r'fumus excubitoris: (sanum|FRACTUM)'),
     'frigida': (['./gesta/frigida_fumus.sh'],
                 r'fumus frigida: (sanum|FRACTUM)'),
     # sedes annalium (domus tota, non arbor): custos, genesis expressa,
