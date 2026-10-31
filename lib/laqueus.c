@@ -3809,3 +3809,221 @@ laqueus_modulus_temperley_limes (
 {
     redde mt == NIHIL ? ZEPHYRUM : mt->limes;
 }
+
+
+/* ==================================================
+ * Via vilior: vertex aut temperley (temperley-lieb-plan T3)
+ *
+ * Refutationes PRIMUM (verbum, catenae) ante pretium; c <= 1 forma
+ * clausa; deinde viae eligibiles (vertex: officina <= octeti_maximi;
+ * temperley: fila <= XVI et octeti <= octeti_maximi) et vilior per
+ * pretium integrum saturatum: vertex multiplicationes x CLXXXV contra
+ * temperley x CL (knotapel D136: ~1.85 et ~1.5 ns), aequalitas ad
+ * temperley. Pretium nullam officinam allocat (consilium vertex intra
+ * notam piscinae). Via electa si fallit, altera NON tentatur: ambae
+ * exactae, defectus vitium est quod iteratio celaret.
+ * ================================================== */
+
+interior i64
+_pretium (
+    i64 multiplicationes,
+    i64 factor)
+{
+    si (multiplicationes > CONTRACTIO_SATURATUM / factor)
+    {
+        redde CONTRACTIO_SATURATUM;
+    }
+    redde multiplicationes * factor;
+}
+
+b32
+laqueus_via_eligere (
+                constans s32* verbum,
+                         i32  longitudo,
+                         i32  fila,
+                         i64  octeti_maximi,
+                     Piscina* piscina,
+                  LaqueusVia* via,
+           ContractioSumptus* sumptus_vertex,
+     LaqueusTemperleySumptus* sumptus_temperley)
+{
+             PiscinaNotatio  nota;
+                        i32* pd;
+                        i32  transitus;
+          ContractioSumptus  sv;
+    LaqueusTemperleySumptus  st;
+                 LaqueusVia  electa;
+
+    si (   piscina == NIHIL || via == NIHIL || (verbum == NIHIL
+        && longitudo > ZEPHYRUM))
+    {
+        redde FALSUM;
+    }
+    sv                   = contractio_sumptus(NIHIL);
+    st.multiplicationes  = ZEPHYRUM;
+    st.octeti            = ZEPHYRUM;
+    nota                 = piscina_notare(piscina);
+    si (!laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina, &pd,
+        &transitus))
+    {
+        piscina_reficere(piscina, nota);
+        redde FALSUM;
+    }
+    si (transitus <= I)
+    {
+        electa = LAQUEUS_VIA_NULLA;
+    }
+    alioquin
+    {
+        LaqueusModulusVertex* mv = _modulus_vertex_consilium(pd,
+            transitus, octeti_maximi, piscina);
+        b32 vertex_licet;
+        b32 temperley_licet;
+
+        si (mv != NIHIL)
+        {
+            sv = contractio_sumptus(mv->ordo);
+        }
+        st               = laqueus_temperley_sumptus(fila, longitudo);
+        vertex_licet     = mv != NIHIL && sv.octeti_officinae
+            <= octeti_maximi;
+        temperley_licet  = st.octeti != ZEPHYRUM && st.octeti
+            <= octeti_maximi;
+        si (!vertex_licet && !temperley_licet)
+        {
+            piscina_reficere(piscina, nota);
+            redde FALSUM;
+        }
+        si (!vertex_licet)
+        {
+            electa = LAQUEUS_VIA_TEMPERLEY;
+        }
+        alioquin si (!temperley_licet)
+        {
+            electa = LAQUEUS_VIA_VERTEX;
+        }
+        alioquin
+        {
+            electa = _pretium(sv.multiplicationes, CLXXXV)
+                < _pretium(st.multiplicationes, CL)
+                ? LAQUEUS_VIA_VERTEX : LAQUEUS_VIA_TEMPERLEY;
+        }
+    }
+    piscina_reficere(piscina, nota);
+    *via = electa;
+    si (sumptus_vertex != NIHIL)
+    {
+        *sumptus_vertex = sv;
+    }
+    si (sumptus_temperley != NIHIL)
+    {
+        *sumptus_temperley = st;
+    }
+    redde VERUM;
+}
+
+b32
+laqueus_uncinus_ex_plexu (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina,
+      Polynomium* exitus,
+      LaqueusVia* via)
+{
+    LaqueusVia electa;
+    Polynomium uncinus = polynomium_nullum();
+           b32 bene;
+
+    si (   exitus == NIHIL
+        || !laqueus_via_eligere(verbum, longitudo, fila, octeti_maximi,
+               piscina, &electa, NIHIL, NIHIL))
+    {
+        redde FALSUM;
+    }
+    si (electa == LAQUEUS_VIA_NULLA)
+    {
+        /* c = 0: 1; c = 1 (sigma_1^(+-1), II fila): -A^(+-3) */
+        si (longitudo == ZEPHYRUM)
+        {
+            uncinus = polynomium_constans(magnus_ex_s64((s64)I),
+                piscina);
+            bene = VERUM;
+        }
+        alioquin
+        {
+            bene = polynomium_monomium(magnus_ex_s64(-(s64)I),
+                verbum[ZEPHYRUM] > ZEPHYRUM ? (s32)III : -(s32)III,
+                piscina,
+                &uncinus);
+        }
+    }
+    alioquin si (electa == LAQUEUS_VIA_VERTEX)
+    {
+        i32* pd;
+        i32  transitus;
+
+        bene = laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina,
+            &pd,
+            &transitus)
+            && laqueus_uncinus_ex_pd_rete(pd, transitus, octeti_maximi,
+            piscina, &uncinus, NIHIL);
+    }
+    alioquin
+    {
+        LaqueusModulusTemperley* mt = laqueus_modulus_temperley_creare(
+            verbum, longitudo, fila, octeti_maximi, piscina);
+
+        bene = mt != NIHIL && laqueus_modulus_temperley_uncinus(mt,
+            piscina, &uncinus);
+    }
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    *exitus = uncinus;
+    si (via != NIHIL)
+    {
+        *via = electa;
+    }
+    redde VERUM;
+}
+
+b32
+laqueus_jones_ex_plexu (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina,
+      Polynomium* exitus,
+      LaqueusVia* via)
+{
+    Polynomium uncinus;
+    Polynomium jones;
+    LaqueusVia electa;
+           s32 scriptura = ZEPHYRUM;
+           i32 k;
+
+    si (   exitus == NIHIL
+        || !laqueus_uncinus_ex_plexu(verbum, longitudo, fila,
+               octeti_maximi, piscina, &uncinus, &electa))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        scriptura += verbum[k] > ZEPHYRUM ? (s32)I : -(s32)I;
+    }
+    si (!_jones_ex_uncino(uncinus, scriptura, piscina, &jones))
+    {
+        redde FALSUM;
+    }
+    *exitus = jones;
+    si (via != NIHIL)
+    {
+        *via = electa;
+    }
+    redde VERUM;
+}

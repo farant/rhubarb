@@ -456,6 +456,59 @@ i32
 laqueus_modulus_temperley_limes (
     constans LaqueusModulusTemperley* mt);
 
+/* via per quam uncinus clausurae tricae computatur */
+nomen enumeratio {
+    LAQUEUS_VIA_NULLA = ZEPHYRUM,     /* c <= 1: forma clausa */
+    LAQUEUS_VIA_VERTEX = I,
+    LAQUEUS_VIA_TEMPERLEY = II
+} LaqueusVia;
+
+/* via vilior SINE aestimatione et sine officina allocata (memoria
+ * pretii reficitur). Refutationes primum: verbum ut laqueus_pd_ex_plexu
+ * (catenae, fila intacta, litterae extra ambitum) -> FALSUM. c <= 1 ->
+ * NULLA. Aliter viae eligibiles - vertex: officina <= octeti_maximi;
+ * temperley: fila <= XVI et octeti <= octeti_maximi - et vilior per
+ * pretium integrum (multiplicationes x CLXXXV vertex, x CL temperley:
+ * ns per multiplicationem in D136, x C), saturatum; aequalitas ad
+ * temperley. FALSUM si neutra eligibilis. sumptus_* NIHIL licent
+ * (aliter scripti: nulli pro via NULLA aut non computata). Exitus non
+ * tacti si FALSUM. */
+b32
+laqueus_via_eligere (
+                constans s32* verbum,
+                         i32  longitudo,
+                         i32  fila,
+                         i64  octeti_maximi,
+                     Piscina* piscina,
+                  LaqueusVia* via,
+           ContractioSumptus* sumptus_vertex,
+     LaqueusTemperleySumptus* sumptus_temperley);
+
+/* uncinus Kauffman (et Jones) clausurae tricae per viam electam
+ * (laqueus_via_eligere); c = 0 -> 1, c = 1 -> -A^(+-3) (Jones 1). Via
+ * electa si fallit, altera NON tentatur (ambae exactae: defectus vitium
+ * est). via NIHIL licet. FALSUM si verbum refutatur, neutra via
+ * eligibilis, aut restitutio refutat (exitus non tacti). */
+b32
+laqueus_uncinus_ex_plexu (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina,
+      Polynomium* exitus,
+      LaqueusVia* via);
+
+b32
+laqueus_jones_ex_plexu (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina,
+      Polynomium* exitus,
+      LaqueusVia* via);
+
 /* codex PD per motus Reidemeister I et II simplificatus: dum motus
  * aliquis applicari potest, transitus removentur (R1: ansa - transitus
  * cuius duo ora vicina idem sunt; R2: duo transitus duo ora
