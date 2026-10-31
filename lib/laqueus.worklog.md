@@ -805,3 +805,31 @@ project-specs/temperley-lieb-plan.md, "Review (T4)".
 Lesson: a negative claim ("X cannot happen") drawn from a handful of
 measured cases needs a search, not a sample. The reviewer's random
 search found the counterexample in minutes.
+
+## 2026-10-31 - celeritas T1: the in-place TL kernel
+
+sigma = A^e (1 + c E), A^w pulled out of the trace; only DELTA rows
+change: M[r] <- alpha M[r] + c S_r, alpha = -A^(-4e), c = A^(-2e), one
+buffer. The number of DELTA rows per letter is exactly d(n-2, j)
+(contract the arc: a bijection onto W_{n-2,j}), so the source lists are
+fixed-width tables (sources < fila) with a closed-form byte count; no
+per-state action tables are kept.
+
+Result against the registered prediction: P1 (>= 3.0x per point) FELL at
+all three sizes - 2.85x (12 x 801), 2.72x (14 x 801), 2.87x (16 x 801),
+A/B medians of 9 ABBA pairs, old value = new value at every point. The
+operation ratio was 6.7-6.9x; what survives is ~2.8x. Per updated
+element ~2 ns, dominated by two 64-bit `%` (primes near 2^32). P2 held
+(-47.1% bytes at 16 strands; figure = allocation within 17-73 bytes).
+P3 held (12 x 801 bracket byte-identical to D136's brackets.txt; 1,465 s
+CPU, descriptive, measured under load).
+
+The "source sum not reduced" plant is an equivalent mutant: S is a
+32-bit word, the wrap fix keeps it < 2^32 and congruent mod p, so
+(alpha M mod p) + c S < 2^64 for any p < 2^32. The x >= p step is kept
+(cheap) but is not what makes the kernel correct.
+
+The 7 x 32 cap-flip test braid stopped flipping in T1 (TL bytes up with
+the source tables); replaced by 9 x 74 (K* = 47.8). Memory-only flips
+become rare as TL gets cheaper: 254 with K* < 150 but 3 with K* < 60 in
+200,000 random braids.

@@ -1,6 +1,6 @@
 # temperley celeritas: speed pass for the TL route (D136 T4, step 2)
 
-Status: v2 APPROVED by Fran (2026-10-31); T0 done, T1 next.
+Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold), T2 next.
 v1 (4dfe7544) was approved by Fran in outline. The review (verdict
 "approve after fixes": H1–H3, M1–M6, L1–L5) is at the end, with what
 each finding changed.
@@ -242,6 +242,57 @@ recording old and new braids. T3 also recomputes the margins of the
 - **T1. In-place update.** Gather kernel with CSR, one buffer, A^w,
   S reduced, two reductions (primes near 2^32 kept); sumptus and header
   ("duo alvei" → one buffer + CSR); tests and plants; measure P1, P2, P3.
+  **T1 amendment (2026-10-31, measured).** 3a8487c3: the in-place
+  kernel. One implementation choice beyond the text: the source list is
+  NOT a variable-length CSR but a fixed-width table per DELTA row
+  (sources < fila), because the number of DELTA rows per letter is
+  exactly d(n−2, j) (contracting the arc is a bijection onto W_{n−2,j}),
+  which keeps the byte figure closed-form; per-state action tables are
+  no longer stored at all (the source tables are built from the modules
+  inside the piscina mark).
+  - **P1 FALLS.** A/B (tools/uncinus_mensura.c VI, 9 ABBA pairs,
+    p = 2,147,483,629, old value = new value at every point, load 6-8,
+    concurrent with the plant runs and the P3 bracket):
+
+    | n × c | old s/point | new s/point | median ratio | pair range | registered |
+    | --- | ---: | ---: | ---: | --- | --- |
+    | 12 × 801 | 0.284 | 0.094 | 2.85 | 2.49-3.58 | ≥ 3.0 |
+    | 14 × 801 | 3.367 | 1.236 | 2.72 | 2.60-3.16 | ≥ 3.0 |
+    | 16 × 801 | 65.94 | 22.30 | 2.87 | 2.38-3.17 | ≥ 3.0 |
+
+    The new kernel costs 0.56-0.79 ns per c × Catalan (old 1.6-2.3);
+    per updated DELTA element ~2 ns, dominated by its two `%`
+    reductions (primes near 2^32). Measured once, as the protocol says;
+    not rerun for a better number.
+  - **P2 holds.** 16 strands: 106,962,350 → 56,565,573 bytes (−47.1%,
+    ≥ 45%); the byte figure equals the measured allocation within
+    17-73 bytes at every n = 2..16.
+  - **P3 holds** (the identity; the time is descriptive). The full
+    12 × 801 bracket through the new kernel is byte-identical to
+    brackets.txt's line. CPU time 1,465.1 s (24.4 min) against T0's
+    2,958.9 s: 2.0×, below the 1,038 s that T0 / P1's ratio would
+    predict - this run shared the machine with the A/B runs and the
+    plant runs (load 6-8), which the A/B ratio absorbs and a lone timing
+    does not.
+  - **Next lever:** two `%` per DELTA element dominate; G1 (primes
+    below 2^31, one reduction) is the gate that addresses exactly that.
+  - Tests: all suites green. `temperley puncta` asserts w ≠ 0. The
+    7 × 32 cap-flip braid stopped flipping already in T1 (TL's byte
+    figure rose 2,818 → 3,117 with the source tables, so a vertex order
+    fits under the new cap), earlier than the plan expected (T3); it
+    is replaced by a 9 × 74 braid (K* = 47.8, from a search of 200,000
+    random braids: 254 flips with K* < 150 but only 3 with K* < 60 -
+    memory-only flips get rare as TL gets cheaper; T3 rechecks it
+    against the refitted constant).
+  - Plants (build/celeritas/plantae_t1.py): 4 of 4 real faults red as
+    registered (DELTA row among its own sources; α = 1 + c; c =
+    A^(+2ε); A^w dropped). The fifth, "source sum not reduced", stayed
+    green and is an EQUIVALENT mutant, not a missed fault: S lives in a
+    32-bit word and the wrap correction (x < previous → x −= p) keeps
+    S < 2^32 and S ≡ the true sum mod p, so (α M mod p) + c S < 2^64
+    holds for every p < 2^32 without the x ≥ p step. The review's H1
+    overflow concerned a 64-bit unreduced sum, which this design never
+    forms.
 - **T2. Reduction gates.** G1 (primes below 2^31, one reduction), then
   G2 (Montgomery) only if G1 adopted; each adopted change with its tests,
   plants, contract amendment and (for G2) registered prediction.
