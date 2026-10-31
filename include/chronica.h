@@ -38,7 +38,20 @@
  * LOCUS: "chronica/flumen/1274", "chronica/annus/-1446"; titulus loci
  * ut pes. Comes (Cmd+T) anni sui est. Argumentum nudum ("1274", "")
  * flumen aperit.
- * (C4: electio et Enter domum; C5: visus personae et loci.) */
+ * ELECTIO (C4a; visus ambo): Tab rem proximam paginae eligit -
+ * eventum (descriptio), deinde personas eius ordine, deinde locum;
+ * post ultimam paginae prima paginae sequentis (flumen: trans annos;
+ * visus anni: intra annum), S-Tab retro. Res ad paginam pertinet ubi
+ * initium eius stat. Electa inversa pingitur (etiam per lineas
+ * fluens); pes "-> note: Notes · Thomas Aquinas" (eventus: titulus
+ * libri), "-> person: Moses", "-> place: Egypt". Esc electionem
+ * tollit (nulla: latus prius per vicum). Motus paginae aut anni
+ * (j k h l, sagittae, ictus) eam tollit. Electa mutatione deleta =
+ * nulla (pes ordinarius).
+ * MUS: ictus in textu eventus, personae aut loci eum eligit (punctum
+ * locale -> linea -> columna -> offset); ictus extra textum in
+ * dimidio superiore / inferiore paginam vertit ut prius. (C4b: Enter
+ * aut ictus in electo domum aperit; C5: visus personae et loci.) */
 
 #ifndef CHRONICA_H
 #define CHRONICA_H

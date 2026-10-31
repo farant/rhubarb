@@ -198,6 +198,9 @@ jump home; Esc / Ctrl+O back (house history rules).
   event and repeated atop a continued page; `v` toggles; DEFAULT view
   (`$timeline`). **DONE 2026-10-30** (17 + 2 sections, 8 plants).
 - **C4** selection (reuse navigator unit code) + jump home (line plumbing through vicus + scriba, XII).
+  **C4a DONE 2026-10-30** (selection in both views: Tab / S-Tab /
+  Esc, inverted, footer target, click selects; 5 + 1 vicus sections,
+  7 plants). C4b (Enter = jump home) next.
 - **C5** person / place views.
 - **C6** scriba colouring of good / bad event tags.
 - Mouse in each phase as it lands.

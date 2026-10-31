@@ -93,3 +93,39 @@ the first run:
 - "v does not pass the year": aimed too narrowly. v also writes the
   presence year, which the year view resolves from. Re-aimed to drop
   both writes -> red.
+
+## 2026-10-30 - C4a selection (Opus 5.5)
+
+**Units, built with the pages.** paginas_parare now also fills
+`unitates`: one per event (the description clause), one per person
+and one for the place (byte spans inside the dim meta clause), each
+with the page it starts on. lineam_parvam reports the person and place
+spans (ParsParva) while it builds the line; " · " is 4 bytes (· is
+U+00B7, 2 bytes in UTF-8). One table drives everything: Tab order,
+inverted drawing (span intersected with each line, so a wrapped name
+inverts on both lines), the footer target and click hit-testing.
+
+**Key = origin, not position.** `electus` =
+"<liber>#<pagina>#<linea>.<columna>" + "#p<k>" | "#l". The column was
+added to the approved form (which had only the line) because two
+events can share a line of prose. electa() rebuilds unit keys to find
+the match; a key that matches nothing (event deleted by an edit) is
+simply "no selection", with no write needed.
+
+**Motion clears** by writing electus="" in annum_scribere,
+paginam_scribere, paginam_fluminis_scribere and the v toggle. So Tab
+crossing a page writes the page first (clearing) and then the new
+key.
+
+**Clicks:** supra/infra now first try ictum_eligere. The point is
+nodus->fines + des->punctum_locale (radix space), then line by y,
+rune index by x (fons width), byte offset, and the unit containing
+it. Only if no text is hit does the half flip the page as before. The
+pane harness helper ictus_in now clicks the bottom-right corner (blank
+margin) to keep meaning "flip". The vicus test clicks the first line
+at a layout-derived screen point (constants X/XII mirror
+CHRONICA_SINISTRUM and LIMBUS_Y + MARGO).
+Plants C4a: 7, all red in the end. "Person span off by one" was
+green at first: in the test event the people were the FIRST part of
+the meta line, so the " · " offset was never exercised. The test now
+has a type before the people and checks the place is inverted too.

@@ -184,11 +184,56 @@ _probare_ictum (
     CREDO_VERUM(campus_est(m, "annus", "1274"));
 }
 
+/* C4a: ictus in textu eventus ad punctum schirmi eum eligit. Punctum
+ * ex dispositione fluminis: columna eventuum post quintam partem
+ * areae (limbus VI + margo IV = X px a sinistro), linea prima XII px
+ * a summo (limbus VIII + margo IV) - lib/chronica.c */
+interior vacuum
+_probare_electionem_ictu (
+    CredoContextus* c)
+{
+              Mundus* x = (Mundus*)c->datum;
+               Vicus* v;
+    ChronicaMontatio* m;
+           Componens* radix;
+          ManusLudus* manus;
+             Punctum  locale;
+             Punctum  schirmum;
+              chorda* a;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    CREDO_VERUM(vicus_acervo_aperire(v, "chronica", "1225"));
+    (vacuum)vicus_pulsare(v);
+    dispensator_recomponere(x->app.d);
+    m = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(m);
+    radix = componens_invenire_per_id(dispensator_arbor(x->app.d),
+        chorda_ex_literis("chronica", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(radix);
+    locale.x  = X + (radix->fines.latitudo - XX) / V + III;
+    locale.y  = XII + III;
+    manus     = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(manus);
+    schirmum = manus_ludus_ad_schirmum(manus, radix, locale);
+    CREDO_VERUM(schirmum.x > locale.x);
+    CREDO_VERUM(manus_ludus_premere_ad(manus, schirmum.x, schirmum.y));
+    (vacuum)vicus_pulsare(v);
+    a = insula_ramus_attributum(&m->ramus, "electus");
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_VERUM(chorda_continet(*a, chorda_ex_literis("historia#",
+        c->piscina)));
+    CREDO_FALSUM(chorda_continet(*a, chorda_ex_literis("#p",
+        c->piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latus", _probare_latus, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "ictus", _probare_ictum, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "electio ictu", _probare_electionem_ictu, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

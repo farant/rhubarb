@@ -19,6 +19,7 @@
 #include "figura.h"
 #include "mandatum.h"
 #include "thema.h"
+#include "fons.h"
 #include "volumen.h"
 #include "fasti.h"
 #include "tabula_characterum.h"
@@ -257,7 +258,8 @@ titulus_est (
         titulus);
 }
 
-/* ictus in medio componentis id */
+/* ictus in angulo infero dextro componentis id (C4a: textus in
+ * medio paginae eventum eligit - margo vacuus paginam vertit) */
 interior b32
 ictus_in (
                  Mundus* w,
@@ -274,12 +276,129 @@ ictus_in (
     }
     memset(&e, ZEPHYRUM, magnitudo(Eventus));
     e.genus             = EVENTUS_MUS_DEPRESSUS;
-    e.datum.mus.x       = c->fines.x + c->fines.latitudo / II;
-    e.datum.mus.y       = c->fines.y + c->fines.altitudo / II;
+    e.datum.mus.x       = c->fines.x + c->fines.latitudo - II;
+    e.datum.mus.y       = c->fines.y + c->fines.altitudo - II;
     e.datum.mus.botton  = MUS_SINISTER;
     dispensator_tractare(w->d, &e);
     dispensator_recomponere(w->d);
     redde VERUM;
+}
+
+/* textus continens fragmentum colore thematis pictus? */
+interior b32
+pictum_colore (
+                 Mundus* w,
+     constans character* fragmentum,
+             ColorThema  color)
+{
+               Mandata* md;
+     constans Mandatum* x;
+          ColorMandati  q;
+                   i32  i;
+
+    q   = figura_color_thematis(color);
+    md  = mandata_creare(w->p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus       == MANDATUM_TEXTUS
+            && x->color.genus == q.genus && x->color.valor == q.valor
+            && chorda_continet(x->textus, lit(fragmentum, w->p)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* ictus in medio runae primae fragmenti (textus pictus) */
+interior b32
+ictus_in_textu (
+                 Mundus* w,
+     constans character* fragmentum)
+{
+                Mandata* md;
+      constans Mandatum* x;
+                Eventus  e;
+                    s32  k;
+                    i32  i;
+                    i32  j;
+
+    md = mandata_creare(w->p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        k = x->genus == MANDATUM_TEXTUS ? chorda_invenire_index(
+            x->textus, lit(fragmentum, w->p)) : -I;
+        si (k < ZEPHYRUM)
+        {
+            perge;
+        }
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus        = EVENTUS_MUS_DEPRESSUS;
+        e.datum.mus.x  = x->fines.x + fons_latitudo(x->fons) / II;
+        per (j = ZEPHYRUM; j < (i32)k; j++)
+        {
+            si ((x->textus.datum[j] & 0xC0) != 0x80)
+            {
+                e.datum.mus.x += fons_latitudo(x->fons);
+            }
+        }
+        e.datum.mus.y       = x->fines.y + fons_altitudo(x->fons) / II;
+        e.datum.mus.botton  = MUS_SINISTER;
+        dispensator_tractare(w->d, &e);
+        dispensator_recomponere(w->d);
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+tabula (
+    Mundus* w,
+       b32  retro)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis        = CLAVIS_TABULA;
+    e.datum.clavis.producta      = IX;
+    e.datum.clavis.runa          = IX;
+    e.datum.clavis.modificantes  = retro ? (i32)MOD_SHIFT : ZEPHYRUM;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+/* campus electus terminatur suffixo? (vacuum = eventus) */
+interior b32
+electus_est (
+                 Mundus* w,
+     constans character* cauda)
+{
+    chorda* a = insula_ramus_attributum(&w->m.ramus, "electus");
+
+    si (!a || a->mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (cauda[ZEPHYRUM] == '\0')
+    {
+        redde !chorda_continet(*a, lit("#p", w->p))
+            && !chorda_terminatur(*a, lit("#l", w->p));
+    }
+    redde chorda_terminatur(*a, lit(cauda, w->p));
+}
+
+interior b32
+electus_nullus (
+    Mundus* w)
+{
+    chorda* a = insula_ramus_attributum(&w->m.ramus, "electus");
+
+    redde !a || a->mensura == ZEPHYRUM;
 }
 
 /* tres anni: -1446, 1225, 1274 */
@@ -799,6 +918,141 @@ _probare_flumen_murem (
     CREDO_VERUM(pictum(w, "Annus primus"));
 }
 
+/* C4a: Tab per eventum, personas, locum; S-Tab; Esc; pes */
+interior vacuum
+_probare_electionem (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && paginam_scribere(w, "historia",
+        "<event year=\"1274\" type=\"concilium\" "
+        "people=\"Thomas; Bonaventura\" place=\"Lyon\">Concilium"
+        "</event>\n"
+        "<event year=\"1275\">Alterum</event>") && montare(w, NIHIL));
+    CREDO_VERUM(electus_nullus(w));
+
+    CREDO_GRADUS("Tab: eventus primus inversus, pes ad notam");
+    tabula(w, FALSUM);
+    CREDO_VERUM(electus_est(w, ""));
+    CREDO_VERUM(pictum_colore(w, "Concilium", COLOR_BACKGROUND));
+    CREDO_VERUM(pictum(w, "-> note: Notebook"));
+
+    CREDO_GRADUS("Tab: personae ordine, deinde locus");
+    tabula(w, FALSUM);
+    CREDO_VERUM(electus_est(w, "#p0"));
+    CREDO_VERUM(pictum_colore(w, "Thomas", COLOR_BACKGROUND));
+    CREDO_VERUM(pictum(w, "-> person: Thomas"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(electus_est(w, "#p1"));
+    CREDO_VERUM(pictum(w, "-> person: Bonaventura"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(electus_est(w, "#l"));
+    CREDO_VERUM(pictum(w, "-> place: Lyon"));
+    CREDO_VERUM(pictum_colore(w, "Lyon", COLOR_BACKGROUND));
+
+    CREDO_GRADUS("Tab: eventus sequens (annus alius); S-Tab retro");
+    tabula(w, FALSUM);
+    CREDO_VERUM(electus_est(w, ""));
+    CREDO_VERUM(pictum_colore(w, "Alterum", COLOR_BACKGROUND));
+    tabula(w, VERUM);
+    CREDO_VERUM(electus_est(w, "#l"));
+
+    CREDO_GRADUS("Esc: electio tollitur, pes ordinarius");
+    clavis_nominata(w, CLAVIS_EFFUGIUM);
+    CREDO_VERUM(electus_nullus(w));
+    CREDO_FALSUM(pictum(w, "-> "));
+    CREDO_VERUM(pictum(w, "Timeline"));
+}
+
+/* Tab trans paginas (flumen); S-Tab redit */
+interior vacuum
+_probare_electionem_paginarum (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+       i32  n;
+
+    CREDO_NECESSE(w && annos_fluminis(w));
+    w->hodie = MCCXX;
+    CREDO_NECESSE(montare(w, NIHIL));
+    per (n = ZEPHYRUM; n < XXX && chorda_continet(
+        chronica_locus_titulus(&w->m, w->p), lit(" 1/", w->p)); n++)
+    {
+        tabula(w, FALSUM);
+    }
+    CREDO_VERUM(chorda_continet(chronica_locus_titulus(&w->m, w->p),
+        lit(" 2/", w->p)));
+    CREDO_VERUM(electus_est(w, ""));
+    CREDO_VERUM(pictum_colore(w, "Eventus", COLOR_BACKGROUND));
+    tabula(w, VERUM);
+    CREDO_VERUM(chorda_continet(chronica_locus_titulus(&w->m, w->p),
+        lit(" 1/", w->p)));
+    CREDO_VERUM(electus_est(w, ""));
+}
+
+/* visus anni: Tab intra annum manet; motus anni electionem tollit */
+interior vacuum
+_probare_electionem_motus (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && tres_annos(w)
+        && montare(w, "chronica/annus/1225"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Thomas nascitur", COLOR_BACKGROUND));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Thomas nascitur", COLOR_BACKGROUND));
+    CREDO_VERUM(campus_est(w, "annus", "1225"));
+
+    CREDO_GRADUS("l: annus alius, electio nulla");
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "annus", "1274"));
+    CREDO_VERUM(electus_nullus(w));
+    CREDO_FALSUM(pictum(w, "-> "));
+}
+
+/* electa mutatione deleta = nulla */
+interior vacuum
+_probare_electionem_mutationis (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && paginam_scribere(w, "historia",
+        "<event year=\"1274\">Primum</event>\n"
+        "<event year=\"1275\">Delendum</event>") && montare(w, NIHIL));
+    tabula(w, FALSUM);
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Delendum", COLOR_BACKGROUND));
+    CREDO_VERUM(paginam_scribere(w, "historia",
+        "<event year=\"1274\">Primum</event>"));
+    dispensator_recomponere(w->d);
+    CREDO_FALSUM(pictum(w, "-> "));
+    CREDO_FALSUM(pictum_colore(w, "Primum", COLOR_BACKGROUND));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Primum", COLOR_BACKGROUND));
+}
+
+/* ictus in textu eligit; margo vacuus paginam vertit */
+interior vacuum
+_probare_electionem_muris (
+    CredoContextus* c)
+{
+    Mundus* w = mundum_creare(c);
+
+    CREDO_NECESSE(w && paginam_scribere(w, "historia",
+        "<event year=\"1274\" people=\"Thomas; Bonaventura\" "
+        "place=\"Lyon\">Concilium</event>") && montare(w, NIHIL));
+    CREDO_VERUM(ictus_in_textu(w, "Bonaventura"));
+    CREDO_VERUM(electus_est(w, "#p1"));
+    CREDO_VERUM(ictus_in_textu(w, "Lyon"));
+    CREDO_VERUM(electus_est(w, "#l"));
+    CREDO_VERUM(ictus_in_textu(w, "Concilium"));
+    CREDO_VERUM(electus_est(w, ""));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "annus",        _probare_annum,                NIHIL,
         mundum_purgare, NIHIL, NIHIL },
@@ -833,6 +1087,16 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vertere",      _probare_vertere,              NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { "flumen mus",   _probare_flumen_murem,         NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "electio",      _probare_electionem,           NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "electio paginae", _probare_electionem_paginarum, NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "electio motus", _probare_electionem_motus,    NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "electio mutatio", _probare_electionem_mutationis, NIHIL,
+        mundum_purgare, NIHIL, NIHIL },
+    { "electio mus",  _probare_electionem_muris,     NIHIL,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -25,6 +25,11 @@
             ambitus="ligatio"
             nota="annus: pagina in anno; flumen: pagina post eam ubi
                   annus incipit (ab 0)"/>
+    <campus nomen="electus" typus="textus" vita="transiens"
+            scriptor="chronica.agere"
+            nota="res electa: '<liber>#<pagina>#<linea>.<columna>'
+                  eventus; + '#p<k>' persona k, '#l' locus; absens =
+                  nulla"/>
   </status>
 
   <!-- argumentum nudum (visus fluminis): vacuum = positio servata;

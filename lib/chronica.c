@@ -59,7 +59,31 @@ nomen structura {
                  CodexCaput  caput;
                         Xar* notae;         /* NotaClausulae */
                         Xar* paginae;       /* LectorPagina */
+                        Xar* unitates;      /* UnitasChronicae */
 } ChronicaFigurae;
+
+/* res eligibilis (C4a): eventus (descriptio), persona k, locus -
+ * ambitus in textu capitis, pagina ubi incipit */
+#define UNITAS_EVENTUS  ZEPHYRUM
+#define UNITAS_PERSONA  I
+#define UNITAS_LOCUS    II
+
+nomen structura {
+    i32 res;       /* index in tabula->res */
+    i32 genus;
+    i32 k;         /* persona k */
+    i32 initium;
+    i32 finis;
+    s32 pagina;
+} UnitasChronicae;
+
+/* pars lineae parvae (persona, locus) - octeti in linea */
+nomen structura {
+    i32 genus;
+    i32 k;
+    i32 initium;
+    i32 finis;
+} ParsParva;
 
 /* per clausulam capitis: annus eventus, linea parva?, prima anni? */
 nomen structura {
@@ -209,8 +233,8 @@ annum_scribere (
     ChronicaMontatio* m,
                  s32  annus)
 {
-    constans character* tituli[II];
-    constans character* valores[II];
+    constans character* tituli[III];
+    constans character* valores[III];
              character  numerus[XVI];
 
     sprintf(numerus, "%d", (integer)annus);
@@ -218,8 +242,10 @@ annum_scribere (
     valores[ZEPHYRUM]  = numerus;
     tituli[I]          = "pagina";
     valores[I]         = "";
+    tituli[II]         = "electus";
+    valores[II]        = "";
     positionem_servare(m, annus, ZEPHYRUM);
-    redde campos_scribere(m, tituli, valores, II);
+    redde campos_scribere(m, tituli, valores, III);
 }
 
 interior b32
@@ -227,14 +253,16 @@ paginam_scribere (
     ChronicaMontatio* m,
                  s32  pagina)
 {
-    constans character* tituli[I];
-    constans character* valores[I];
+    constans character* tituli[II];
+    constans character* valores[II];
              character  numerus[XVI];
 
     sprintf(numerus, "%d", (integer)pagina);
     tituli[ZEPHYRUM]   = "pagina";
     valores[ZEPHYRUM]  = numerus;
-    redde campos_scribere(m, tituli, valores, I);
+    tituli[I]          = "electus";
+    valores[I]         = "";
+    redde campos_scribere(m, tituli, valores, II);
 }
 
 
@@ -461,12 +489,16 @@ partem_addere (
     *prima = FALSUM;
 }
 
-/* linea parva: dies, genus, personae, locus (vacua omissa) */
+/* linea parva: dies, genus, personae, locus (vacua omissa); partes
+ * (NIHIL licet) ambitus personarum et loci accipit */
 interior chorda
 lineam_parvam (
     constans ChronicaEventus* e,
+                         Xar* partes,
                      Piscina* piscina)
 {
+            ParsParva  pars;
+                  i32  basis;
     ChordaAedificator* a;
     ChordaAedificator* personae;
                   b32  prima;
@@ -487,16 +519,38 @@ lineam_parvam (
     partem_addere(a, &prima, chorda_ex_literis(dies, piscina));
     partem_addere(a, &prima, e->genus);
     personae = chorda_aedificator_creare(piscina, (memoriae_index)LXIV);
+    /* " · " = IV octeti ante partem non primam */
+    basis = (i32)chorda_aedificator_longitudo(a) + (prima ? ZEPHYRUM
+                                                          : IV);
     per (i = ZEPHYRUM; e->personae && i < xar_numerus(e->personae); i++)
     {
         si (i > ZEPHYRUM)
         {
             chorda_aedificator_appendere_literis(personae, ", ");
         }
+        pars.genus  = UNITAS_PERSONA;
+        pars.k      = i;
+        pars.initium  = basis + (i32)chorda_aedificator_longitudo(
+            personae);
         chorda_aedificator_appendere_chorda(personae,
             *(chorda*)xar_obtinere(e->personae, i));
+        pars.finis = basis
+            + (i32)chorda_aedificator_longitudo(personae);
+        si (partes)
+        {
+            *(ParsParva*)xar_addere(partes) = pars;
+        }
     }
     partem_addere(a, &prima, chorda_aedificator_finire(personae));
+    si (partes && e->locus.mensura > ZEPHYRUM)
+    {
+        pars.genus  = UNITAS_LOCUS;
+        pars.k      = ZEPHYRUM;
+        pars.initium  = (i32)chorda_aedificator_longitudo(a)
+                      + (prima ? ZEPHYRUM : IV);
+        pars.finis = pars.initium + e->locus.mensura;
+        *(ParsParva*)xar_addere(partes) = pars;
+    }
     partem_addere(a, &prima, e->locus);
     redde chorda_aedificator_finire(a);
 }
@@ -526,6 +580,32 @@ clausulam_addere (
     n.obscura = obscura;
     n.prima = prima;
     *(NotaClausulae*)xar_addere(f->notae) = n;
+}
+
+/* res eligibilis: ambitus relativus ad clausulam ULTIMAM (eventus:
+ * clausula tota) */
+interior vacuum
+unitatem_addere (
+    ChronicaFigurae* f,
+                i32  res,
+                i32  genus,
+                i32  k,
+                i32  initium,
+                i32  finis)
+{
+    constans CodexClausula* c = (constans CodexClausula*)xar_obtinere(
+        f->caput.clausulae, xar_numerus(f->caput.clausulae) - I);
+          UnitasChronicae u;
+
+    u.res    = res;
+    u.genus  = genus;
+    u.k      = k;
+    u.initium  = genus == UNITAS_EVENTUS ? c->initium
+                                         : c->initium + initium;
+    u.finis = genus == UNITAS_EVENTUS ? c->finis : c->initium
+        + finis;
+    u.pagina                                    = ZEPHYRUM;
+    *(UnitasChronicae*)xar_addere(f->unitates)  = u;
 }
 
 /* paginae in area (cache): anni dati, aut (flumen) omnium annorum in
@@ -562,14 +642,18 @@ paginas_parare (
     f->caput.clausulae    = xar_creare(f->scheda,
         (i32)magnitudo(CodexClausula));
     f->notae = xar_creare(f->scheda, (i32)magnitudo(NotaClausulae));
+    f->unitates = xar_creare(f->scheda,
+        (i32)magnitudo(UnitasChronicae));
     a = chorda_aedificator_creare(f->scheda, (memoriae_index)MXXIV);
     ultimus = ZEPHYRUM;
     per (i = ZEPHYRUM; i < xar_numerus(t->res); i++)
     {
         constans ChronicaRes* r = (constans ChronicaRes*)xar_obtinere(
             t->res, i);
-        chorda parva;
-           s32 a_r = r->eventus.annus;
+        chorda  parva;
+           s32  a_r = r->eventus.annus;
+           Xar* partes;
+           i32  q;
 
         si (!flumen && a_r != annus)
         {
@@ -577,16 +661,35 @@ paginas_parare (
         }
         clausulam_addere(f, a, r->eventus.descriptio, a_r, FALSUM,
             i == ZEPHYRUM || a_r != ultimus);
+        unitatem_addere(f, i, UNITAS_EVENTUS, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM);
         ultimus  = a_r;
-        parva    = lineam_parvam(&r->eventus, f->scheda);
+        partes   = xar_creare(f->scheda, (i32)magnitudo(ParsParva));
+        parva    = lineam_parvam(&r->eventus, partes, f->scheda);
         si (parva.mensura > ZEPHYRUM)
         {
             clausulam_addere(f, a, parva, a_r, VERUM, FALSUM);
+            per (q = ZEPHYRUM; partes && q < xar_numerus(partes); q++)
+            {
+                constans ParsParva* pp = (constans ParsParva*)
+                    xar_obtinere(partes, q);
+
+                unitatem_addere(f, i, pp->genus, pp->k, pp->initium,
+                    pp->finis);
+            }
         }
     }
     f->caput.textus  = chorda_aedificator_finire(a);
     f->paginae       = lector_paginare(&f->caput, (i32)area.latitudo,
         (i32)area.altitudo, f->scheda);
+    per (i = ZEPHYRUM; f->paginae && i < xar_numerus(f->unitates); i++)
+    {
+        UnitasChronicae* u = (UnitasChronicae*)xar_obtinere(f->unitates,
+            i);
+
+        u->pagina = (s32)lector_pagina_positionis(f->paginae,
+            u->initium);
+    }
     f->tabula    = t;
     f->flumen    = flumen;
     f->annus     = annus;
@@ -777,8 +880,8 @@ paginam_fluminis_scribere (
       ChronicaFigurae* f,
                   s32  p)
 {
-    constans character* tituli[II];
-    constans character* valores[II];
+    constans character* tituli[III];
+    constans character* valores[III];
              character  anni[XVI];
              character  paginae[XVI];
                    s32  annus;
@@ -790,8 +893,10 @@ paginam_fluminis_scribere (
     valores[ZEPHYRUM]  = anni;
     tituli[I]          = "pagina";
     valores[I]         = paginae;
+    tituli[II]         = "electus";
+    valores[II]        = "";
     positionem_servare(m, annus, p - pagina_initii(f, annus));
-    redde campos_scribere(m, tituli, valores, II);
+    redde campos_scribere(m, tituli, valores, III);
 }
 
 /* h / l: pagina ubi annus prior / proximus incipit (praeter
@@ -942,6 +1047,360 @@ fac_paginam_priorem (
     redde paginam_movere((ChronicaMontatio*)ctx, -I);
 }
 
+
+/* ==================================================
+ * Electio (C4a)
+ * ================================================== */
+
+/* visus currens: paginae et pagina visa; FALSUM si nulla eventa */
+interior b32
+visum_currens (
+    ChronicaMontatio*  m,
+     ChronicaFigurae** f,
+                 s32*  pagina)
+{
+    s32 annus;
+
+    si (visus_fluminis(m))
+    {
+        redde flumen_parare(m, f, pagina);
+    }
+    si (!visum_parare(m, &annus, f))
+    {
+        redde FALSUM;
+    }
+    *pagina = pagina_currens(m, *f);
+    redde VERUM;
+}
+
+/* clavis rei: "<liber>#<pagina>#<linea>.<columna>" [+ "#p<k>"|"#l"] */
+interior chorda
+clavis_unitatis (
+    constans ChronicaFigurae* f,
+    constans UnitasChronicae* u,
+                     Piscina* piscina)
+{
+    constans ChronicaRes* r = (constans ChronicaRes*)xar_obtinere(
+        f->tabula->res, u->res);
+       ChordaAedificator* a;
+
+    a = chorda_aedificator_creare(piscina, (memoriae_index)CXXVIII);
+    chorda_aedificator_appendere_chorda(a, r->liber);
+    chorda_aedificator_appendere_character(a, '#');
+    chorda_aedificator_appendere_chorda(a, r->pagina);
+    chorda_aedificator_appendere_character(a, '#');
+    chorda_aedificator_appendere_s32(a, (s32)r->eventus.linea);
+    chorda_aedificator_appendere_character(a, '.');
+    chorda_aedificator_appendere_s32(a, (s32)r->eventus.columna);
+    si (u->genus == UNITAS_PERSONA)
+    {
+        chorda_aedificator_appendere_literis(a, "#p");
+        chorda_aedificator_appendere_s32(a, (s32)u->k);
+    }
+    alioquin si (u->genus == UNITAS_LOCUS)
+    {
+        chorda_aedificator_appendere_literis(a, "#l");
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+/* index rei electae in f->unitates; -1 si nulla aut deleta */
+interior s32
+electa (
+    ChronicaMontatio* m,
+     ChronicaFigurae* f)
+{
+    chorda clavis = campus(m, "electus");
+       i32 i;
+
+    per (i = ZEPHYRUM; clavis.mensura > ZEPHYRUM
+        && i < xar_numerus(f->unitates); i++)
+    {
+        si (chorda_aequalis(clavis_unitatis(f,
+            (constans UnitasChronicae*)
+                xar_obtinere(f->unitates, i), m->piscina), clavis))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+interior b32
+electum_scribere (
+         ChronicaMontatio* m,
+          ChronicaFigurae* f,
+                      s32  index)
+{
+    constans character* tituli[I];
+    constans character* valores[I];
+
+    tituli[ZEPHYRUM]   = "electus";
+    valores[ZEPHYRUM]  = index < ZEPHYRUM ? "" : chorda_ut_cstr(
+        clavis_unitatis(f, (constans UnitasChronicae*)xar_obtinere(
+        f->unitates, (i32)index), m->piscina), m->piscina);
+    redde campos_scribere(m, tituli, valores, I);
+}
+
+/* Tab (+1) / S-Tab (-1): res proxima / prior; pagina sequitur */
+interior b32
+electum_movere (
+    ChronicaMontatio* m,
+                 s32  gradus)
+{
+              ChronicaFigurae* f;
+                          s32  p;
+                          s32  u;
+                          s32  n;
+                          s32  i;
+              UnitasChronicae* x;
+
+    si (!visum_currens(m, &f, &p))
+    {
+        redde VERUM;
+    }
+    n = (s32)xar_numerus(f->unitates);
+    u = electa(m, f);
+    si (u >= ZEPHYRUM)
+    {
+        u += gradus;
+    }
+    alioquin si (gradus > ZEPHYRUM)
+    {
+        per (u = ZEPHYRUM; u < n; u++)
+        {
+            si (((UnitasChronicae*)xar_obtinere(f->unitates, (i32)u))
+                ->pagina >= p)
+            {
+                frange;
+            }
+        }
+    }
+    alioquin
+    {
+        per (u = -I, i = ZEPHYRUM; i < n; i++)
+        {
+            si (((UnitasChronicae*)xar_obtinere(f->unitates, (i32)i))
+                ->pagina <= p)
+            {
+                u = i;
+            }
+        }
+    }
+    si (u < ZEPHYRUM || u >= n)
+    {
+        redde VERUM;
+    }
+    x = (UnitasChronicae*)xar_obtinere(f->unitates, (i32)u);
+    si (x->pagina != p)
+    {
+        (vacuum)(visus_fluminis(m)
+            ? paginam_fluminis_scribere(m, f, x->pagina)
+            : paginam_scribere(m, x->pagina));
+    }
+    redde electum_scribere(m, f, u);
+}
+
+interior b32
+fac_electum_proximum (
+    vacuum* ctx)
+{
+    redde electum_movere((ChronicaMontatio*)ctx, I);
+}
+
+interior b32
+fac_electum_priorem (
+    vacuum* ctx)
+{
+    redde electum_movere((ChronicaMontatio*)ctx, -I);
+}
+
+/* Esc: electio tollitur; nulla - latus prius (vicus) */
+interior b32
+fac_effugere (
+    vacuum* ctx)
+{
+      ChronicaMontatio* m = (ChronicaMontatio*)ctx;
+    constans character* tituli[I];
+    constans character* valores[I];
+
+    si (campus(m, "electus").mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    tituli[ZEPHYRUM]   = "electus";
+    valores[ZEPHYRUM]  = "";
+    redde campos_scribere(m, tituli, valores, I);
+}
+
+/* runae (UTF-8) in octetis [a, b) */
+interior i32
+runae (
+    chorda textus,
+       i32 a,
+       i32 b)
+{
+    i32 n = ZEPHYRUM;
+
+    per (; a < b && a < textus.mensura; a++)
+    {
+        si ((textus.datum[a] & 0xC0) != 0x80)
+        {
+            n++;
+        }
+    }
+    redde n;
+}
+
+/* ictus in punctum radicis: res sub eo eligitur; FALSUM si extra
+ * textum (pagina tum vertitur) */
+interior b32
+ictum_eligere (
+    ChronicaMontatio* m,
+             Punctum  q)
+{
+          ChronicaFigurae* f;
+    constans LectorPagina* pg;
+                    Fines  origo;
+                      s32  p;
+                      i32  i;
+                      i32  u;
+
+    si (!visum_currens(m, &f, &p))
+    {
+        redde FALSUM;
+    }
+    origo  = visus_fluminis(m) ? columna_fluminis(m) : area_eventuum(m);
+    pg     = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)p);
+    per (i = ZEPHYRUM; pg && i < xar_numerus(pg->lineae); i++)
+    {
+        constans LectorLinea* l = (constans LectorLinea*)xar_obtinere(
+            pg->lineae, i);
+                         s32 x0  = origo.x + l->x;
+                         s32 y0  = origo.y + l->y;
+                         s32 w   = fons_latitudo(l->fons);
+                         s32 k;
+                         i32 off;
+
+        si (   q.y < y0 || q.y >= y0 + fons_altitudo(l->fons)
+            || q.x < x0 || w <= ZEPHYRUM
+            || (q.x - x0) / w >= (s32)runae(f->caput.textus, l->initium,
+                   l->finis))
+        {
+            perge;
+        }
+        /* runa k -> octetus */
+        k    = (q.x - x0) / w;
+        off  = l->initium;
+        dum (off < l->finis)
+        {
+            si ((f->caput.textus.datum[off] & 0xC0) != 0x80)
+            {
+                si (k == ZEPHYRUM)
+                {
+                    frange;
+                }
+                k--;
+            }
+            off++;
+        }
+        per (u = ZEPHYRUM; u < xar_numerus(f->unitates); u++)
+        {
+            constans UnitasChronicae* x = (constans UnitasChronicae*)
+                xar_obtinere(f->unitates, u);
+
+            si (off >= x->initium && off < x->finis)
+            {
+                redde electum_scribere(m, f, (s32)u);
+            }
+        }
+        redde FALSUM;
+    }
+    redde FALSUM;
+}
+
+/* res electa inversa in pagina p (lineae quas ambitus tangit) */
+interior vacuum
+electam_pingere (
+     ChronicaMontatio* m,
+              Mandata* md,
+      ChronicaFigurae* f,
+                  s32  p,
+                Fines  origo)
+{
+       constans LectorPagina* pg;
+    constans UnitasChronicae* x;
+                         s32  u;
+                         i32  i;
+
+    u   = electa(m, f);
+    pg  = (constans LectorPagina*)xar_obtinere(f->paginae, (i32)p);
+    si (u < ZEPHYRUM || !pg)
+    {
+        redde;
+    }
+    x = (constans UnitasChronicae*)xar_obtinere(f->unitates, (i32)u);
+    per (i = ZEPHYRUM; i < xar_numerus(pg->lineae); i++)
+    {
+        constans LectorLinea* l = (constans LectorLinea*)xar_obtinere(
+            pg->lineae, i);
+                         i32 a = x->initium > l->initium ? x->initium
+                                                          : l->initium;
+                         i32 b = x->finis < l->finis ? x->finis
+                                                      : l->finis;
+                         s32 w = fons_latitudo(l->fons);
+                       Fines r;
+
+        si (a >= b)
+        {
+            perge;
+        }
+        r.x         = origo.x + l->x + (s32)runae(f->caput.textus,
+            l->initium, a) * w;
+        r.y         = origo.y + l->y;
+        r.latitudo  = (s32)runae(f->caput.textus, a, b) * w;
+        r.altitudo  = fons_altitudo(l->fons);
+        mandata_rectangulum(md, r, figura_color_thematis(COLOR_TEXT),
+            VERUM);
+        mandata_textus(md, r.x, r.y, chorda_sectio(f->caput.textus, a,
+            b), l->fons, figura_color_thematis(COLOR_BACKGROUND));
+    }
+}
+
+/* pes cum electa: "-> note: <titulus libri>", "-> person: <n>",
+ * "-> place: <n>"; sine: titulus loci */
+interior chorda
+pes_electae (
+     ChronicaMontatio* m,
+      ChronicaFigurae* f,
+               chorda  titulus,
+              Piscina* piscina)
+{
+    constans UnitasChronicae* x;
+        constans ChronicaRes* r;
+                         s32  u = electa(m, f);
+
+    si (u < ZEPHYRUM)
+    {
+        redde titulus;
+    }
+    x = (constans UnitasChronicae*)xar_obtinere(f->unitates, (i32)u);
+    r = (constans ChronicaRes*)xar_obtinere(f->tabula->res, x->res);
+    si (x->genus == UNITAS_PERSONA)
+    {
+        redde chorda_concatenare(chorda_ex_literis("-> person: ",
+            piscina), *(chorda*)xar_obtinere(r->eventus.personae, x->k),
+            piscina);
+    }
+    si (x->genus == UNITAS_LOCUS)
+    {
+        redde chorda_concatenare(chorda_ex_literis("-> place: ",
+            piscina), r->eventus.locus, piscina);
+    }
+    redde chorda_concatenare(chorda_ex_literis("-> note: ", piscina),
+        r->titulus_libri, piscina);
+}
+
 /* v: flumen -> annus (annus summus paginae); annus -> flumen (annus
  * servatus, pagina ubi incipit) */
 interior b32
@@ -950,8 +1409,8 @@ fac_visum_vertere (
 {
        ChronicaMontatio* m = (ChronicaMontatio*)ctx;
         ChronicaFigurae* f;
-     constans character* tituli[III];
-     constans character* valores[III];
+     constans character* tituli[IV];
+     constans character* valores[IV];
               character  anni[XVI];
                     s32  p;
                     s32  annus;
@@ -960,19 +1419,21 @@ fac_visum_vertere (
     valores[ZEPHYRUM]  = visus_fluminis(m) ? "annus" : "flumen";
     tituli[I]          = "pagina";
     valores[I]         = "";
+    tituli[II]         = "electus";
+    valores[II]        = "";
     si (visus_fluminis(m) && flumen_parare(m, &f, &p))
     {
         annus = annus_paginae(f, p);
     }
     alioquin si (visus_fluminis(m) || !visum_parare(m, &annus, &f))
     {
-        redde campos_scribere(m, tituli, valores, II);
+        redde campos_scribere(m, tituli, valores, III);
     }
     sprintf(anni, "%d", (integer)annus);
-    tituli[II]   = "annus";
-    valores[II]  = anni;
+    tituli[III]   = "annus";
+    valores[III]  = anni;
     positionem_servare(m, annus, ZEPHYRUM);
-    redde campos_scribere(m, tituli, valores, III);
+    redde campos_scribere(m, tituli, valores, IV);
 }
 
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
@@ -990,6 +1451,12 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_paginam_priorem },
     { "chronica.vertere", "Year / continuous", "v",
         VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_visum_vertere },
+    { "chronica.electum_proximum", "Next item", "Tab",
+        VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_electum_proximum },
+    { "chronica.electum_prius", "Previous item", "S-Tab",
+        VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_electum_priorem },
+    { "chronica.effugere", "Clear selection / back", "Esc",
+        VISUS_ANNI | VISUS_FLUMINIS, ZEPHYRUM, fac_effugere },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -1023,7 +1490,6 @@ agere (
 
     (vacuum)repo;
     (vacuum)motus;
-    (vacuum)des;
     si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
     {
         si (ev->datum.clavis.clavis == CLAVIS_SINISTER)
@@ -1051,6 +1517,24 @@ agere (
     si (chorda_aequalis_literis(nodus->id, "sagitta_proxima"))
     {
         redde annum_movere(m, I);
+    }
+    /* C4a: textus sub ictu eligitur (punctum locale: latus in vico
+     * non in 0,0); extra textum dimidia paginam vertunt */
+    si (   chorda_aequalis_literis(nodus->id, "supra")
+        || chorda_aequalis_literis(nodus->id, "infra"))
+    {
+        Punctum q;
+
+        q.x = nodus->fines.x + (des ? des->punctum_locale.x
+                                    : (s32)ev->datum.mus.x
+                                      - nodus->fines.x);
+        q.y = nodus->fines.y + (des ? des->punctum_locale.y
+                                    : (s32)ev->datum.mus.y
+                                      - nodus->fines.y);
+        si (ictum_eligere(m, q))
+        {
+            redde VERUM;
+        }
     }
     si (chorda_aequalis_literis(nodus->id, "supra"))
     {
@@ -1141,6 +1625,7 @@ flumen_pingere (
                 figura_color_thematis(COLOR_TEXT));
         }
     }
+    electam_pingere(m, md, f, p, columna);
 }
 
 interior vacuum
@@ -1185,7 +1670,9 @@ figura_chronicae (
     si (visus_fluminis(m) && flumen_parare(m, &f, &annus))
     {
         flumen_pingere(m, md, f, annus);
-        pedem_pingere(md, fines, titulus, y_pedis);
+        pedem_pingere(md, fines, pes_electae(m, f, titulus,
+            md->piscina),
+            y_pedis);
         redde;
     }
     si (visus_fluminis(m) || !visum_parare(m, &annus, &f))
@@ -1218,8 +1705,10 @@ figura_chronicae (
                 ? COLOR_TEXT_DIM : COLOR_TEXT));
         }
     }
+    electam_pingere(m, md, f, pagina_currens(m, f), area);
     /* pes: "<  Timeline - AD 1274 - 1/2  >" */
-    pedem_pingere(md, fines, titulus, y_pedis);
+    pedem_pingere(md, fines, pes_electae(m, f, titulus, md->piscina),
+        y_pedis);
 }
 
 
