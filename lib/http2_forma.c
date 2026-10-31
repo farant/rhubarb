@@ -192,6 +192,7 @@ http2_formam_legere (
         + V) & HTTP2_FENESTRA_SUPREMA;
     f->contentum    = datum + HTTP2_CAPUT_FORMAE;
     f->contentum_n  = longitudo;
+    f->longitudo    = longitudo;
     si (longitudo > forma_maxima)
     {
         _malum(j, HTTP2_ERROR_MAGNITUDO, VERUM);

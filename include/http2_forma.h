@@ -68,6 +68,8 @@ nomen structura {
              i32  rivus;
      constans i8* contentum;
              i32  contentum_n;
+             i32  longitudo;    /* onus totum cum impletione (6.9.1:
+                                 * fluxus DATA hoc numerat) */
 } Http2Forma;
 
 /* bona FALSUM: codex (Http2Error); connexionis VERUM = connexio tota

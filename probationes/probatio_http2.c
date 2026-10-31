@@ -10,6 +10,7 @@
 #include "http2_forma.h"
 #include "http2.h"
 #include "credo.h"
+#include <stdio.h>
 #include <string.h>
 
 #define FORMA_ORDINARIA   (MMXLVIII * VIII)
@@ -622,6 +623,386 @@ _sectio_errores (
     CREDO_VERUM(mortua_cum(&s, HTTP2_ERROR_PROTOCOLLI));
 }
 
+/* ===== T6: fluxus et concurrentia ===== */
+
+#define TRES_MIB  (III * 0x100000)
+
+/* exitus clientis summatus (sine copia formarum) */
+nomen structura {
+    i32 data;
+    b32 finis;
+    i32 fenestra_rivi;
+    i32 fenestra_connexionis;
+    i32 capita;
+    i32 rivi_capitum[XVI];
+    i32 abrogationes;
+    i32 codex_abrogationis;
+} Summa;
+
+interior b32
+summare (
+    Servus* s,
+       i32  rivus,
+     Summa* m)
+{
+    constans i8* d;
+            i32  n;
+            i32  pos;
+
+    memset(m, ZEPHYRUM, magnitudo(*m));
+    n    = http2_mittenda(s->c, &d);
+    pos  = ZEPHYRUM;
+    dum (pos < n)
+    {
+           Http2Forma f;
+        Http2Iudicium j;
+                  i32 k;
+
+        k = http2_formam_legere(d + pos, n - pos, FORMA_ORDINARIA, &f,
+            &j);
+        si (k == ZEPHYRUM || !j.bona)
+        {
+            redde FALSUM;
+        }
+        si (f.genus == HTTP2_DATA && f.rivus == rivus)
+        {
+            m->data += f.contentum_n;
+            si (f.vexilla & HTTP2_FINIS_RIVI)
+            {
+                m->finis = VERUM;
+            }
+        }
+        si (f.genus == HTTP2_FENESTRA)
+        {
+            i32 incrementum = http2_u32_legere(f.contentum)
+                            & HTTP2_FENESTRA_SUPREMA;
+
+            si (f.rivus == ZEPHYRUM)
+            {
+                m->fenestra_connexionis += incrementum;
+            }
+            alioquin si (f.rivus == rivus)
+            {
+                m->fenestra_rivi += incrementum;
+            }
+        }
+        si (f.genus == HTTP2_CAPITA && m->capita < XVI)
+        {
+            m->rivi_capitum[m->capita++] = f.rivus;
+        }
+        si (f.genus == HTTP2_ABROGATIO)
+        {
+            m->abrogationes++;
+            m->codex_abrogationis = http2_u32_legere(f.contentum);
+        }
+        pos += k;
+    }
+    http2_mittenda_consumere(s->c, n);
+    redde VERUM;
+}
+
+interior b32
+fundere_magnum (
+    Servus* s,
+       i32  vexilla,
+       i32  rivus,
+       i32  n)
+{
+     i8* forma;
+     i8* onus;
+    i32  m;
+
+    forma = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(HTTP2_CAPUT_FORMAE + n));
+    onus  = (i8*)piscina_allocare(piscina, (memoriae_index)(n + I));
+    si (!forma || !onus)
+    {
+        redde FALSUM;
+    }
+    memset(onus, 0x61, (size_t)n);
+    m = http2_formam_scribere(HTTP2_DATA, vexilla, rivus, onus, n,
+        forma,
+        HTTP2_CAPUT_FORMAE + n);
+    redde m > ZEPHYRUM && http2_recipere(s->c, forma, m);
+}
+
+/* servus cum positionibus suis (onus SETTINGS) */
+interior b32
+servum_parare_cum (
+                     Servus* s,
+    constans Http2Positiones* nostrae,
+              constans i8* positiones,
+                      i32  n)
+{
+    memset(s, ZEPHYRUM, magnitudo(*s));
+    s->c            = http2_connexionem_creare(HTTP2_CLIENS, nostrae,
+        piscina);
+    s->codificator  = hpack_tabulam_creare(piscina, TABULA_ORDINARIA);
+    s->decodator    = hpack_tabulam_creare(piscina, TABULA_ORDINARIA);
+    redde s->c && exitum_legere(s)
+        && fundere(s, HTTP2_POSITIONES, ZEPHYRUM, ZEPHYRUM, positiones,
+        n)
+        && fundere(s, HTTP2_POSITIONES, HTTP2_RECEPTUM, ZEPHYRUM, NIHIL,
+               ZEPHYRUM)
+        && exitum_legere(s);
+}
+
+interior i32
+petere_post (
+    Servus* s,
+       i32  octeti)
+{
+    HpackCaput h[IV];
+        chorda corpus;
+
+    h[ZEPHYRUM]     = caput(":method", "POST");
+    h[I]            = caput(":scheme", "https");
+    h[II]           = caput(":authority", "exemplum.example.org");
+    h[III]          = caput(":path", "/eco");
+    corpus.mensura  = octeti;
+    corpus.datum    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)octeti);
+    memset(corpus.datum, 0x78, (size_t)octeti);
+    redde http2_petere(s->c, h, IV, corpus);
+}
+
+interior b32
+fenestram_fundere (
+    Servus* s,
+       i32  rivus,
+       i32  incrementum)
+{
+    i8 g[IV];
+
+    http2_u32_scribere(incrementum, g);
+    redde fundere(s, HTTP2_FENESTRA, ZEPHYRUM, rivus, g, IV);
+}
+
+interior vacuum
+_sectio_fenestra_mittendi (
+    CredoContextus* c)
+{
+    Servus s;
+     Summa m;
+        i8 p[VI];
+
+    (vacuum)c;
+    CREDO_GRADUS("fenestra rivi C: corpus CCL per partes");
+    (vacuum)http2_positionem_scribere(HTTP2_POSITIO_FENESTRA, C, p);
+    CREDO_NECESSE(servum_parare_cum(&s, NIHIL, p, VI));
+    CREDO_AEQUALIS_I32(petere_post(&s, CCL), I);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.capita, I);
+    CREDO_AEQUALIS_I32(m.data, C);
+    CREDO_FALSUM(m.finis);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.data, ZEPHYRUM);
+    CREDO_VERUM(fenestram_fundere(&s, I, CL));
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.data, CL);
+    CREDO_VERUM(m.finis);
+
+    CREDO_GRADUS("fenestra connexionis 65535 omnes rivos sistit");
+    (vacuum)http2_positionem_scribere(HTTP2_POSITIO_FENESTRA, 0x11170,
+        p);
+    CREDO_NECESSE(servum_parare_cum(&s, NIHIL, p, VI));
+    CREDO_AEQUALIS_I32(petere_post(&s, 0x11170), I);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.data, 0xffff);
+    CREDO_FALSUM(m.finis);
+    CREDO_VERUM(fenestram_fundere(&s, ZEPHYRUM, M * X));
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.data, 0x11170 - 0xffff);
+    CREDO_VERUM(m.finis);
+}
+
+interior vacuum
+_sectio_fenestra_recipiendi (
+    CredoContextus* c)
+{
+             Servus s;
+              Summa m;
+       Http2Eventus ev;
+         HpackCaput h[I];
+    Http2Positiones p;
+                s64 servi_connexio;
+                s64 servi_rivus;
+                i32 missa;
+                i32 recepta;
+                b32 finis;
+
+    (vacuum)c;
+    CREDO_GRADUS("III MiB per formas XVI KiB, fenestrae renovatae");
+    CREDO_NECESSE(servum_parare(&s, NIHIL));
+    CREDO_AEQUALIS_I32(petere_get(&s, "/magnum"), I);
+    CREDO_VERUM(summare(&s, I, &m));
+    h[ZEPHYRUM] = caput(":status", "200");
+    CREDO_VERUM(capita_fundere(&s, I, h, I, ZEPHYRUM));
+    servi_connexio  = 0x1000000;
+    servi_rivus     = 0x100000;
+    missa           = ZEPHYRUM;
+    recepta         = ZEPHYRUM;
+    finis           = FALSUM;
+    dum (missa < TRES_MIB)
+    {
+        s64 pars = TRES_MIB - missa;
+
+        si (pars > FORMA_ORDINARIA)
+        {
+            pars = FORMA_ORDINARIA;
+        }
+        si (pars > servi_connexio)
+        {
+            pars = servi_connexio;
+        }
+        si (pars > servi_rivus)
+        {
+            pars = servi_rivus;
+        }
+        si (pars <= ZEPHYRUM)
+        {
+            imprimere("  sistitur: connexio %ld rivus %ld missa %u\n",
+                (longus)servi_connexio, (longus)servi_rivus,
+                (insignatus integer)missa);
+            frange;
+        }
+        CREDO_NECESSE(fundere_magnum(&s,
+            missa + (i32)pars == TRES_MIB ? HTTP2_FINIS_RIVI : ZEPHYRUM,
+            I,
+            (i32)pars));
+        servi_connexio  -= pars;
+        servi_rivus     -= pars;
+        missa           += (i32)pars;
+        CREDO_NECESSE(summare(&s, I, &m));
+        servi_connexio  += m.fenestra_connexionis;
+        servi_rivus     += m.fenestra_rivi;
+        dum (http2_eventum_capere(s.c, &ev, piscina))
+        {
+            si (ev.genus == HTTP2_EVENTUS_DATA)
+            {
+                recepta += ev.data.mensura;
+            }
+            si (ev.genus == HTTP2_EVENTUS_FINIS)
+            {
+                finis = VERUM;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32(missa, TRES_MIB);
+    CREDO_AEQUALIS_I32(recepta, TRES_MIB);
+    CREDO_VERUM(finis);
+    CREDO_VERUM(http2_viva(s.c));
+
+    CREDO_GRADUS("fenestra parva: renovatio post dimidium; excessus");
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    p.fenestra_initialis = C;
+    CREDO_NECESSE(servum_parare(&s, &p));
+    CREDO_AEQUALIS_I32(petere_get(&s, "/"), I);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_VERUM(capita_fundere(&s, I, h, I, ZEPHYRUM));
+    CREDO_VERUM(fundere_magnum(&s, ZEPHYRUM, I, LX));
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.fenestra_rivi, LX);
+    CREDO_VERUM(fundere_magnum(&s, ZEPHYRUM, I, CI));
+    CREDO_VERUM(eventum(&s, &ev, HTTP2_EVENTUS_CAPITA, I));
+    CREDO_VERUM(eventum(&s, &ev, HTTP2_EVENTUS_DATA, I));
+    CREDO_AEQUALIS_I32(ev.data.mensura, LX);
+    CREDO_VERUM(eventum(&s, &ev, HTTP2_EVENTUS_ABROGATUS, I));
+    CREDO_AEQUALIS_I32(ev.codex, HTTP2_ERROR_FLUXUS);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.abrogationes, I);
+    CREDO_AEQUALIS_I32(m.codex_abrogationis, HTTP2_ERROR_FLUXUS);
+    CREDO_VERUM(http2_viva(s.c));
+}
+
+interior vacuum
+_sectio_fenestra_mutata (
+    CredoContextus* c)
+{
+          Servus s;
+           Summa m;
+    Http2Eventus ev;
+              i8 p[VI];
+
+    (vacuum)c;
+    CREDO_GRADUS("INITIAL_WINDOW_SIZE minuitur: fenestra negativa (Review Focus 1)");
+    (vacuum)http2_positionem_scribere(HTTP2_POSITIO_FENESTRA, C, p);
+    CREDO_NECESSE(servum_parare_cum(&s, NIHIL, p, VI));
+    CREDO_AEQUALIS_I32(petere_post(&s, CCL), I);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.data, C);
+    (vacuum)http2_positionem_scribere(HTTP2_POSITIO_FENESTRA, XL, p);
+    CREDO_VERUM(fundere(&s, HTTP2_POSITIONES, ZEPHYRUM, ZEPHYRUM, p,
+        VI));
+    CREDO_VERUM(fenestram_fundere(&s, I, C));
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.data, XL);
+    CREDO_FALSUM(m.finis);
+    CREDO_VERUM(fenestram_fundere(&s, I, CX));
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.data, CX);
+    CREDO_VERUM(m.finis);
+
+    CREDO_GRADUS("WINDOW_UPDATE supra 2^31-1: rivus, deinde connexio");
+    CREDO_NECESSE(servum_parare(&s, NIHIL));
+    CREDO_AEQUALIS_I32(petere_get(&s, "/"), I);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_VERUM(fenestram_fundere(&s, I, HTTP2_FENESTRA_SUPREMA));
+    CREDO_VERUM(eventum(&s, &ev, HTTP2_EVENTUS_ABROGATUS, I));
+    CREDO_AEQUALIS_I32(ev.codex, HTTP2_ERROR_FLUXUS);
+    CREDO_FALSUM(fenestram_fundere(&s, ZEPHYRUM,
+        HTTP2_FENESTRA_SUPREMA));
+    CREDO_VERUM(mortua_cum(&s, HTTP2_ERROR_FLUXUS));
+
+    CREDO_GRADUS("SETTINGS fenestram rivi supra 2^31-1 ferens: connexio");
+    CREDO_NECESSE(servum_parare(&s, NIHIL));
+    CREDO_AEQUALIS_I32(petere_get(&s, "/"), I);
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_VERUM(fenestram_fundere(&s, I, X));
+    (vacuum)http2_positionem_scribere(HTTP2_POSITIO_FENESTRA,
+        HTTP2_FENESTRA_SUPREMA, p);
+    CREDO_FALSUM(fundere(&s, HTTP2_POSITIONES, ZEPHYRUM, ZEPHYRUM, p,
+        VI));
+    CREDO_VERUM(mortua_cum(&s, HTTP2_ERROR_FLUXUS));
+}
+
+interior vacuum
+_sectio_concurrentia (
+    CredoContextus* c)
+{
+          Servus s;
+           Summa m;
+    Http2Eventus ev;
+      HpackCaput h[I];
+              i8 p[VI];
+             i32 i;
+
+    (vacuum)c;
+    CREDO_GRADUS("MAX_CONCURRENT_STREAMS II: quinque petitiones ordine");
+    (vacuum)http2_positionem_scribere(HTTP2_POSITIO_RIVI, II, p);
+    CREDO_NECESSE(servum_parare_cum(&s, NIHIL, p, VI));
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        CREDO_AEQUALIS_I32(petere_get(&s, "/"), II * i + I);
+    }
+    CREDO_VERUM(summare(&s, I, &m));
+    CREDO_AEQUALIS_I32(m.capita, II);
+    CREDO_AEQUALIS_I32(m.rivi_capitum[ZEPHYRUM], I);
+    CREDO_AEQUALIS_I32(m.rivi_capitum[I], III);
+    h[ZEPHYRUM] = caput(":status", "204");
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        CREDO_VERUM(capita_fundere(&s, II * i + I, h, I,
+            HTTP2_FINIS_RIVI));
+        dum (http2_eventum_capere(s.c, &ev, piscina))
+        {
+        }
+        CREDO_VERUM(summare(&s, I, &m));
+        CREDO_AEQUALIS_I32(m.capita, I);
+        CREDO_AEQUALIS_I32(m.rivi_capitum[ZEPHYRUM], II * i + V);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "praefatio", _sectio_praefatio, _parare, _purgare, NIHIL, NIHIL },
     { "petitio", _sectio_petitio, _parare, _purgare, NIHIL, NIHIL },
@@ -633,6 +1014,15 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "continuatio", _sectio_continuatio, _parare, _purgare, NIHIL,
         NIHIL },
     { "errores", _sectio_errores, _parare, _purgare, NIHIL, NIHIL },
+    { "fenestra mittendi (T6)", _sectio_fenestra_mittendi, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "fenestra recipiendi (T6)", _sectio_fenestra_recipiendi, _parare,
+        _purgare, NIHIL, NIHIL },
+    { "fenestra mutata (T6)", _sectio_fenestra_mutata, _parare,
+        _purgare,
+        NIHIL, NIHIL },
+    { "concurrentia (T6)", _sectio_concurrentia, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

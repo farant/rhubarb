@@ -354,6 +354,20 @@ _data_mittere (
         {
             pars = c->forma_paris;
         }
+        /* 6.9: fenestrae connexionis et rivi */
+        si (   c->fenestra_mittendi <= ZEPHYRUM
+            || r->fenestra_mittendi <= ZEPHYRUM)
+        {
+            redde;
+        }
+        si ((s64)pars > c->fenestra_mittendi)
+        {
+            pars = (i32)c->fenestra_mittendi;
+        }
+        si ((s64)pars > r->fenestra_mittendi)
+        {
+            pars = (i32)r->fenestra_mittendi;
+        }
         si (pars > liberum)
         {
             pars = liberum;
@@ -362,7 +376,9 @@ _data_mittere (
         (vacuum)_formam_addere(c, HTTP2_DATA,
             ultima ? HTTP2_FINIS_RIVI : ZEPHYRUM, r->id,
             r->corpus.datum + r->missum, pars);
-        r->missum += pars;
+        r->missum             += pars;
+        c->fenestra_mittendi  -= (s64)pars;
+        r->fenestra_mittendi  -= (s64)pars;
         si (ultima)
         {
             r->status = RIVUS_DIMIDIATUS;
@@ -520,6 +536,35 @@ http2_connexionem_creare (
  * Receptio
  * ================================================== */
 
+/* 6.9.2: INITIAL_WINDOW_SIZE mutata omnes fenestras rivorum per
+ * differentiam movet (negativas quoque); supra 2^31-1 -> connexio */
+interior vacuum
+_fenestram_initialem_mutare (
+    Http2Connexio* c,
+              i32  valor)
+{
+    s64 differentia;
+    i32 i;
+
+    differentia        = (s64)valor - (s64)c->fenestra_paris;
+    c->fenestra_paris  = valor;
+    per (i = ZEPHYRUM; i < xar_numerus(c->rivi); i++)
+    {
+        Rivus* r = (Rivus*)xar_obtinere(c->rivi, i);
+
+        si (r->status == RIVUS_VACUUS)
+        {
+            perge;
+        }
+        r->fenestra_mittendi += differentia;
+        si (r->fenestra_mittendi > (s64)HTTP2_FENESTRA_SUPREMA)
+        {
+            _error_connexionis(c, HTTP2_ERROR_FLUXUS);
+            redde;
+        }
+    }
+}
+
 interior vacuum
 _positiones_applicare (
                Http2Connexio* c,
@@ -540,7 +585,7 @@ _positiones_applicare (
                 c->rivi_paris = valor;
                 frange;
             casus HTTP2_POSITIO_FENESTRA:
-                c->fenestra_paris = valor;
+                _fenestram_initialem_mutare(c, valor);
                 frange;
             casus HTTP2_POSITIO_FORMA:
                 c->forma_paris = valor;
@@ -664,6 +709,128 @@ _rivus_otiosus (
               i32  id)
 {
     redde (id & I) == ZEPHYRUM || id >= c->rivus_proximus;
+}
+
+/* 5.4.2: RST_STREAM cum codice, eventus ABROGATUS, rivus clausus */
+interior vacuum
+_errorem_rivi (
+    Http2Connexio* c,
+            Rivus* r,
+              i32  codex)
+{
+    Http2Eventus* ev;
+              i8  g[IV];
+
+    http2_u32_scribere(codex, g);
+    (vacuum)_formam_addere(c, HTTP2_ABROGATIO, ZEPHYRUM, r->id, g, IV);
+    ev = _eventum(c, HTTP2_EVENTUS_ABROGATUS, r->id);
+    si (ev)
+    {
+        ev->codex = codex;
+    }
+    _rivum_claudere(c, r);
+}
+
+/* 6.9.1: DATA (impletione inclusa) fenestras nostras minuit; supra
+ * fenestram -> FLOW_CONTROL_ERROR (connexio aut rivus); renovatio cum
+ * dimidium consumptum (http2-plan C4) */
+interior vacuum
+_data_tractare (
+               Http2Connexio* c,
+         constans Http2Forma* f)
+{
+           Rivus* r;
+    Http2Eventus* ev;
+              i8  g[IV];
+
+    c->fenestra_recipiendi -= (s64)f->longitudo;
+    si (c->fenestra_recipiendi < ZEPHYRUM)
+    {
+        _error_connexionis(c, HTTP2_ERROR_FLUXUS);
+        redde;
+    }
+    si (c->fenestra_recipiendi <= (s64)(FENESTRA_CONNEXIONIS / II))
+    {
+        http2_u32_scribere((i32)((s64)FENESTRA_CONNEXIONIS
+            - c->fenestra_recipiendi), g);
+        (vacuum)_formam_addere(c, HTTP2_FENESTRA, ZEPHYRUM, ZEPHYRUM, g,
+            IV);
+        c->fenestra_recipiendi = FENESTRA_CONNEXIONIS;
+    }
+    r = _rivum_invenire(c, f->rivus);
+    si (!r)
+    {
+        si (_rivus_otiosus(c, f->rivus))
+        {
+            _error_connexionis(c, HTTP2_ERROR_PROTOCOLLI);
+        }
+        redde;
+    }
+    r->fenestra_recipiendi -= (s64)f->longitudo;
+    si (r->fenestra_recipiendi < ZEPHYRUM)
+    {
+        _errorem_rivi(c, r, HTTP2_ERROR_FLUXUS);
+        redde;
+    }
+    si (f->contentum_n > ZEPHYRUM)
+    {
+        ev = _eventum(c, HTTP2_EVENTUS_DATA, r->id);
+        si (ev)
+        {
+            ev->data = _copia(f->contentum, f->contentum_n, c->scheda);
+        }
+    }
+    si (f->vexilla & HTTP2_FINIS_RIVI)
+    {
+        (vacuum)_eventum(c, HTTP2_EVENTUS_FINIS, r->id);
+        _rivum_claudere(c, r);
+        redde;
+    }
+    si (r->fenestra_recipiendi
+        <= (s64)(c->nostrae.fenestra_initialis / II))
+    {
+        http2_u32_scribere((i32)((s64)c->nostrae.fenestra_initialis
+            - r->fenestra_recipiendi), g);
+        (vacuum)_formam_addere(c, HTTP2_FENESTRA, ZEPHYRUM, r->id, g,
+            IV);
+        r->fenestra_recipiendi = c->nostrae.fenestra_initialis;
+    }
+}
+
+/* 6.9: WINDOW_UPDATE paris; supra 2^31-1 -> FLOW_CONTROL_ERROR */
+interior vacuum
+_fenestram_tractare (
+               Http2Connexio* c,
+         constans Http2Forma* f)
+{
+     Rivus* r;
+       s64  incrementum;
+
+    incrementum = (s64)(http2_u32_legere(f->contentum)
+                        & HTTP2_FENESTRA_SUPREMA);
+    si (f->rivus == ZEPHYRUM)
+    {
+        c->fenestra_mittendi += incrementum;
+        si (c->fenestra_mittendi > (s64)HTTP2_FENESTRA_SUPREMA)
+        {
+            _error_connexionis(c, HTTP2_ERROR_FLUXUS);
+        }
+        redde;
+    }
+    r = _rivum_invenire(c, f->rivus);
+    si (!r)
+    {
+        si (_rivus_otiosus(c, f->rivus))
+        {
+            _error_connexionis(c, HTTP2_ERROR_PROTOCOLLI);
+        }
+        redde;
+    }
+    r->fenestra_mittendi += incrementum;
+    si (r->fenestra_mittendi > (s64)HTTP2_FENESTRA_SUPREMA)
+    {
+        _errorem_rivi(c, r, HTTP2_ERROR_FLUXUS);
+    }
 }
 
 interior vacuum
@@ -803,36 +970,17 @@ _formam_tractare (
             }
             frange;
         casus HTTP2_DATA:
-            r = _rivum_invenire(c, f->rivus);
-            si (!r)
-            {
-                si (_rivus_otiosus(c, f->rivus))
-                {
-                    _error_connexionis(c, HTTP2_ERROR_PROTOCOLLI);
-                }
-                frange;
-            }
-            si (f->contentum_n > ZEPHYRUM)
-            {
-                ev = _eventum(c, HTTP2_EVENTUS_DATA, r->id);
-                si (ev)
-                {
-                    ev->data = _copia(f->contentum, f->contentum_n,
-                        c->scheda);
-                }
-            }
-            si (f->vexilla & HTTP2_FINIS_RIVI)
-            {
-                (vacuum)_eventum(c, HTTP2_EVENTUS_FINIS, r->id);
-                _rivum_claudere(c, r);
-            }
+            _data_tractare(c, f);
+            frange;
+        casus HTTP2_FENESTRA:
+            _fenestram_tractare(c, f);
             frange;
         casus HTTP2_PROMISSIO:
             /* ENABLE_PUSH 0 misimus */
             _error_connexionis(c, HTTP2_ERROR_PROTOCOLLI);
             frange;
         ordinarius:
-            /* PRIORITY neglecta; WINDOW_UPDATE: T6; ignota praetereunt */
+            /* PRIORITY neglecta; ignota praetereunt */
             frange;
     }
 }
