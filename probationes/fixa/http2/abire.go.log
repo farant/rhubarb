@@ -1,0 +1,28 @@
+2026/10/31 19:04:14 http: TLS handshake error from 127.0.0.1:53969: EOF
+2026/10/31 19:04:14 http2: server connection from 127.0.0.1:53971 on 0x140000e6000
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: wrote SETTINGS len=30, settings: MAX_FRAME_SIZE=1048576, MAX_CONCURRENT_STREAMS=250, MAX_HEADER_LIST_SIZE=1048896, HEADER_TABLE_SIZE=4096, INITIAL_WINDOW_SIZE=1048576
+2026/10/31 19:04:14 http2: server: client 127.0.0.1:53971 said hello
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: read SETTINGS len=24, settings: ENABLE_PUSH=0, HEADER_TABLE_SIZE=4096, INITIAL_WINDOW_SIZE=1048576, MAX_HEADER_LIST_SIZE=65536
+2026/10/31 19:04:14 http2: server read frame SETTINGS len=24, settings: ENABLE_PUSH=0, HEADER_TABLE_SIZE=4096, INITIAL_WINDOW_SIZE=1048576, MAX_HEADER_LIST_SIZE=65536
+2026/10/31 19:04:14 http2: server processing setting [ENABLE_PUSH = 0]
+2026/10/31 19:04:14 http2: server processing setting [HEADER_TABLE_SIZE = 4096]
+2026/10/31 19:04:14 http2: server processing setting [INITIAL_WINDOW_SIZE = 1048576]
+2026/10/31 19:04:14 http2: server processing setting [MAX_HEADER_LIST_SIZE = 65536]
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: wrote SETTINGS flags=ACK len=0
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: wrote WINDOW_UPDATE len=4 (conn) incr=983041
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: read WINDOW_UPDATE len=4 (conn) incr=16711681
+2026/10/31 19:04:14 http2: server read frame WINDOW_UPDATE len=4 (conn) incr=16711681
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: read HEADERS flags=END_STREAM|END_HEADERS stream=1 len=22
+2026/10/31 19:04:14 http2: decoded hpack field header field ":method" = "GET"
+2026/10/31 19:04:14 http2: decoded hpack field header field ":scheme" = "https"
+2026/10/31 19:04:14 http2: decoded hpack field header field ":authority" = "localhost:53967"
+2026/10/31 19:04:14 http2: decoded hpack field header field ":path" = "/abire"
+2026/10/31 19:04:14 http2: server read frame HEADERS flags=END_STREAM|END_HEADERS stream=1 len=22
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: read SETTINGS flags=ACK len=0
+2026/10/31 19:04:14 http2: server read frame SETTINGS flags=ACK len=0
+2026/10/31 19:04:14 http2: server encoding header ":status" = "200"
+2026/10/31 19:04:14 http2: server encoding header "content-type" = "text/plain; charset=utf-8"
+2026/10/31 19:04:14 http2: server encoding header "content-length" = "4"
+2026/10/31 19:04:14 http2: server encoding header "date" = "Sat, 31 Oct 2026 23:04:14 GMT"
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: wrote HEADERS flags=END_HEADERS stream=1 len=51
+2026/10/31 19:04:14 http2: Framer 0x140000d22a0: wrote DATA flags=END_STREAM stream=1 len=4 data="vale"

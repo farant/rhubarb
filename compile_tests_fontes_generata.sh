@@ -162,6 +162,7 @@ declare -a SOURCE_FILES=(
     "lib/http.c"
     "lib/http2.c"
     "lib/http2_forma.c"
+    "lib/http2_nexus.c"
     "lib/http_vocatio.c"
     "lib/ianua.c"
     "lib/icones.c"

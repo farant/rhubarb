@@ -1966,6 +1966,11 @@
     <forma textus="informativum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="informativi" casus="genitivus" numerus="singularis" genus="masculinum"/>
   </vocabulum>
+  <vocabulum lemma="retentabilis" lingua="latina" classis="adiectivum" nota="retentabilis, -e (vox domus ex retentare 'iterum temptare', ut tractabilis ex tractare): petitio quam servus certe non tractavit, tuto iteranda (GOAWAY, REFUSED_STREAM) - Http2Responsum.retentabilis (http2-plan T8)">
+    <forma textus="retentabilis" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="retentabilem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="retentabiles" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
   <vocabulum lemma="protocollum" lingua="latina" classis="substantivum" nota="protocollum, -i n. (Cod. Iust. Nov. 44; Graece protokollon, 'folium primum agglutinatum'): regula colloquii inter machinas - HTTP2_ERROR_PROTOCOLLI = PROTOCOL_ERROR (http2_forma.h, http2-plan T4)">
     <forma textus="protocollum" casus="nominativus" numerus="singularis" genus="neutrum"/>
     <forma textus="protocolli" casus="genitivus" numerus="singularis" genus="neutrum"/>
