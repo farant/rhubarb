@@ -1,6 +1,6 @@
 # temperley celeritas: speed pass for the TL route (D136 T4, step 2)
 
-Status: v2 APPROVED by Fran (2026-10-31); T0 next.
+Status: v2 APPROVED by Fran (2026-10-31); T0 done, T1 next.
 v1 (4dfe7544) was approved by Fran in outline. The review (verdict
 "approve after fixes": H1–H3, M1–M6, L1–L5) is at the end, with what
 each finding changed.
@@ -204,6 +204,41 @@ recording old and new braids. T3 also recomputes the margins of the
   times n = 8 … 16 at c = 801 and one full 12 × 801 bracket time
   (current library, 79e7fad9) for P3's expectation; a dated amendment
   with the numbers. No threshold moves.
+  **T0 amendment (2026-10-31/11-01, measured; no threshold moved).**
+  `tools/uncinus_mensura.c` sections VI (A/B: frozen 79e7fad9 kernel,
+  built on the public temperley API, against the library), VII (K*)
+  and VIII (full TL bracket). Built by aedilis (-O2), runs under
+  `caffeinate -i` and custos; load averages 4.5-15 during the runs.
+  - **A/A noise floor** (both sides still the same algorithm), p =
+    2,147,483,629, 9 ABBA pairs, old value = new value at every point:
+
+    | n × c | old s/point | median ratio | pair range |
+    | --- | ---: | ---: | --- |
+    | 12 × 801 | 0.329 | 0.998 | 0.564-1.385 |
+    | 13 × 802 | 1.268 | 0.884 | 0.734-1.241 |
+    | 14 × 801 | 3.797 | 0.985 | 0.770-1.138 |
+    | 15 × 802 | 13.55 | 1.018 | 0.972-1.108 |
+    | 16 × 801 | 36.74 | 0.979 | 0.880-1.070 |
+
+    (n = 8 … 11 also measured; at 8 strands a point is ~2 ms, near the
+    clock's resolution.) Medians sit within ~2% of 1 at the registered
+    sizes, single pairs within ±30-45%: P1's 3.0× is far outside the
+    noise, and a median of 9 pairs is the right statistic.
+  - **Old kernel cost**: 1.3-2.1 ns per c × Catalan under this load.
+  - **Full 12 × 801 bracket** (current library, `laqueus_modulus_
+    temperley_uncinus`): 2,958.9 s CPU (49 min; D136's demo build
+    measured 4,700 s), window A^[−501, 535], largest coefficient 175
+    bits, as in brackets.txt. P3's expected T1 time is 2,958.9 s / P1's
+    measured ratio (same 12,949 evaluations).
+  - **K\*** (flip constant: TL is chosen when its price constant falls
+    below K*): 12 × 101 0.99 and 12 × 201 17.85 (vertex choices: they
+    flip only beyond 150/17.85 = 8.4× and 150/0.99 = 152×); 7 × 32
+    130.45 (flips at any speed-up above 1.15×, as the review said: T3
+    replaces it); 16-strand σ1…σ15 ≈ 0 (vertex regardless); TL choices
+    8 × 201 10,074, 10 × 201 519, 10 × 401 47,358, 12 × 401 19,812,
+    8 × 801 24,545, 12 × 801 159,774 (cannot flip back to vertex by a
+    faster TL route).
+  - The G1/G2 microbenchmarks wait for T1's kernel, as v2 says.
 - **T1. In-place update.** Gather kernel with CSR, one buffer, A^w,
   S reduced, two reductions (primes near 2^32 kept); sumptus and header
   ("duo alvei" → one buffer + CSR); tests and plants; measure P1, P2, P3.
