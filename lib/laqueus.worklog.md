@@ -744,3 +744,42 @@ Build lists: tools/tabula_nodorum_generare.sh and venenum_probare.sh
 name their library sources by hand; lib/temperley.c added to both
 (fabrica's heal step failed until then). Knot table regenerates
 byte-identical (-probare).
+
+## 2026-10-30 - T3 of project-specs/temperley-lieb-plan.md: the dispatcher
+
+laqueus_via_eligere (choice without evaluation), laqueus_uncinus_ex_plexu
+and laqueus_jones_ex_plexu. Order: refusals (laqueus_pd_ex_plexu) before
+any pricing; c <= 1 closed form (LAQUEUS_VIA_NULLA: 1, -A^(+-3), Jones
+1); eligibility (vertex workspace <= cap; TL fila <= XVI and bytes <=
+cap); cheaper eligible route by integer saturating price (vertex mult x
+185 against TL mult x 150, D136's ns x 100); tie to TL; no retry. The
+vertex plan used for pricing lives inside piscina_notare/reficere.
+
+Measured first, as the plan asked (scratch, -O2): planning the vertex
+route takes <= 0.2 s even at 12 x 801 (0.03 s at c = 201), and every
+registered choice came out as predicted, margins 8x or more.
+
+Two things the tests taught:
+- **The cap does not just admit or refuse the vertex route**: with
+  CONTRACTIO_OPTIMUS, a cap below the chosen order's workspace makes the
+  planner pick another order that fits. The boundary test therefore
+  walks the cap down below each reported workspace until nothing fits
+  (then FALSUM, outputs untouched), checking every intermediate choice
+  reports workspace <= cap.
+- **The review's "cap just below the vertex workspace flips the choice
+  to TL" did not occur**: in every braid measured, when the vertex route
+  is cheaper its workspace is also smaller than TL's buffer bytes
+  (8 d_max^2 dominates TL's memory; a cheaper vertex route needs apex
+  below about Catalan(n)), so such a cap excludes both. Tested instead:
+  each route's own cap boundary (TL exact bytes / one less; vertex
+  descent). Observed over the measured braids, not proven.
+
+Plants (build/temperley/plantae_t3.py) 5/5 UT DICTUM: cost comparison
+inverted; closed-form sign of sigma^-1; vertex workspace cap ignored; TL
+byte cap ignored; Jones writhe sign. Untestable, recorded: the tie rule
+(equal integer prices do not occur with real braids).
+
+examen reports one "domesticum" (negative sentinel in an unsigned
+function) on `redde CONTRACTIO_SATURATUM` in _pretium: ~0 is the
+saturation maximum, not a sentinel; contractio.c's own saturating
+helpers carry the same two findings.

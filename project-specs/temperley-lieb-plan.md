@@ -1,6 +1,6 @@
 # temperley and the TL bracket in laqueus: plan (D136 T4, step 1)
 
-Status: v2 APPROVED by Fran (2026-10-30); T1, T2a, T2b done, T3 next.
+Status: v2 APPROVED by Fran (2026-10-30); T1-T3 done, T4 (review) next.
 v1 (ca3b3fee) was approved by Fran on the API's shape, the library
 split, the name and the strand cap. The review (verdict "approve after
 fixes": H1–H2, X1, M1–M2, Q1–Q6) is at the end, with what each finding
@@ -331,6 +331,14 @@ do not occur with real braids); the unreachable "image not found" and
 - **T3. Dispatcher.** `laqueus_via_eligere`, `laqueus_uncinus_ex_plexu`,
   `laqueus_jones_ex_plexu`; measure planning cost at 12 × 801 first;
   probatio; `lib/laqueus.worklog.md` entry.
+  **T3 note (2026-10-30, done).** 6b716f62: dispatcher as specified;
+  planning the vertex route measured at <= 0.2 s (12 × 801); every
+  registered choice as predicted; 3 test sections; plants 5/5
+  (worklog). Deviations: the "cap below the vertex workspace chooses
+  TL" test is replaced by each route's own cap boundary, because in the
+  measured braids a cheaper vertex route always also needs less memory
+  than TL (such a cap excludes both); the vertex boundary is a descent,
+  since a smaller cap makes the planner choose a smaller order.
 - **T4. Review.** Independent reviewer with its own oracle
   (recensor-d136's regular-representation oracle can serve as the
   reference), not building in the live tree.
