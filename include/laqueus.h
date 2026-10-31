@@ -397,15 +397,19 @@ laqueus_jones_ex_pd_rete (
  * vertex: celerior in tricis longis, tardior in brevibus multorum
  * filorum (knotapel D136). Puncta, codices status, fenestra, limes et
  * interpolatio EADEM ac modulus vertex (functiones interiores
- * communes). Vide project-specs/temperley-lieb-plan.md.
+ * communes). Vide project-specs/temperley-lieb-plan.md et
+ * temperley-celeritas-plan.md (nucleus in loco).
  * ================================================== */
 
 nomen structura LaqueusModulusTemperley LaqueusModulusTemperley; /* opacum */
 
 /* sumptus sine aedificatione (formae clausae): multiplicationes per
- * punctum = longitudo x summa d_j^2; octeti = quae limes octeti_maximi
- * numerat - duo alvei (2 x max d^2 x 4), tabulae actionis, structura -
- * a filis solis pendentia. NON numerantur memoria O(c) (verbum, codex
+ * punctum = longitudo x summa d_j^2 (nominales, pretio viae; nucleus in
+ * loco ~0.28 x summam per litteram vere tangit); octeti = quae limes
+ * octeti_maximi numerat - alveus unus (max d^2 x 4), ordo temporarius
+ * (max d x 4), tabulae ordinum DELTA cum fontibus ((fila - 1) x d(n-2,
+ * j) x (4 + 1 + 4 fila) per modulum), structura - a filis solis
+ * pendentia. NON numerantur memoria O(c) (verbum, codex
  * PD, fenestra, limes) nec interpolationis, ut in modulo vertex rete
  * non numeratur, nec apex transiens modulorum temperley in
  * creatione (reficiuntur; ~1.2 MB ad XVI fila, ~1%). {0, 0} si fila 0
@@ -420,12 +424,13 @@ laqueus_temperley_sumptus (
     i32 fila,
     i32 longitudo);
 
-/* structura semel: tabulae actionis (ex temperley copiatae), duo alvei,
- * verbum copiatum, fenestra et limes (laqueus_pd_fenestra). Verbum ut
+/* structura semel: tabulae ordinum DELTA et fontium (ex temperley),
+ * alveus unus et ordo temporarius, verbum copiatum et scriptura,
+ * fenestra et limes (laqueus_pd_fenestra). Verbum ut
  * laqueus_pd_ex_plexu. NIHIL si verbum refutatur, catena (componentes
  * plures: fenestra et limes nodorum tantum), longitudo < 2, fila > XVI,
- * octeti > octeti_maximi, aut alvei non allocati (alvei soli per
- * piscina_conari_allocare: tabulae et moduli piscina_allocare utuntur,
+ * octeti > octeti_maximi, aut alveus non allocatus (alveus et ordo soli
+ * per piscina_conari_allocare: tabulae et moduli piscina_allocare utuntur,
  * ergo piscina certae magnitudinis ibi abortare potest). Refutatio post
  * pretium nihil in piscina relinquit. */
 LaqueusModulusTemperley*

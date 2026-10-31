@@ -1259,7 +1259,10 @@ _sectio_uncini_tl (
     alioquin
     {
         s32 e;
-        i32 bita = ZEPHYRUM;
+        i32 bita       = ZEPHYRUM;
+        f64 secundae   = _secundae(t0);
+        s32 scriptura  = ZEPHYRUM;
+        i32 k;
 
         per (e = polynomium_gradus_imus(f); e
             <= polynomium_gradus_summus(f);
@@ -1274,9 +1277,28 @@ _sectio_uncini_tl (
         }
         imprimere("   n=%u c=%u: %.2f s processoris, A^[%d, %d], "
             "coefficiens maximus %u bita, limes %u\n", fila, longitudo,
-            _secundae(t0), polynomium_gradus_imus(f),
+            secundae, polynomium_gradus_imus(f),
             polynomium_gradus_summus(f), bita,
             laqueus_modulus_temperley_limes(mt));
+        /* linea forma brackets.txt (knotapel D136) ad comparationem */
+        per (k = ZEPHYRUM; k < longitudo; k++)
+        {
+            scriptura += verbum[k] > ZEPHYRUM ? (s32)I : -(s32)I;
+        }
+        imprimere("UNCINUS plexus%u x %u | n %u | c %u | writhe %d | A^%d ..",
+            fila, longitudo, fila, longitudo, scriptura,
+            polynomium_gradus_imus(f));
+        per (e = polynomium_gradus_imus(f); e
+            <= polynomium_gradus_summus(f);
+            e++)
+        {
+            chorda t = magnus_ad_chordam(polynomium_coefficiens(f, e),
+                piscina);
+
+            imprimere(" %.*s", (integer)t.mensura,
+                (constans character*)t.datum);
+        }
+        imprimere("\n");
     }
     fflush(stdout);
     piscina_destruere(piscina);

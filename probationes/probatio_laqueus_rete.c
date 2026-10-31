@@ -2127,6 +2127,8 @@ _probare_temperley_puncta (
     sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
     pd = _plexus_aureus(&s, VIII, &longitudo, piscina, &verbum);
     CREDO_NECESSE_NON_NIHIL(pd);
+    /* scriptura non nulla (celeritas H2: A^w omissum hic non lateat) */
+    CREDO_VERUM(_scriptura_verbi(verbum, longitudo) != ZEPHYRUM);
     mt = _temperley(verbum, longitudo, VIII, piscina);
     mv = laqueus_modulus_vertex_creare(pd, longitudo, OCTETI_MAXIMI,
         piscina);
@@ -2656,32 +2658,41 @@ _probare_viam_electam (
             st.octeti - I, piscina, &via, NIHIL, NIHIL));
     }
 
-    /* inversio per limitem (recensio T4, M1: in tricis fortuitis
-     * frequens, n = 7..14): 7 fila, 32 transitus, vertex sine_limite (9680
-     * contra 13728 multiplicationes) sed officina 5056 B contra 2818 B
-     * temperley; limes in [octeti temperley, officina) -> temperley, et
-     * uncinus idem */
+    /* inversio per limitem (recensio T4, M1): vertex pretio vilior sed
+     * officina maior quam octeti temperley; limes in [octeti temperley,
+     * officina) -> temperley, et uncinus idem. Trica 9 x 74 (celeritas
+     * T1: K* = 47.8, ergo vertex manet donec constans temperley > 47.8;
+     * prior 7 x 32, K* = 130.45, octetis temperley auctis non iam
+     * invertit) */
     {
-        constans s32 verbum[XXXII] = { -VI, -II, III, IV, -IV, -III, II,
-            VI, V, -III, -I, II, -VI, -IV, -IV, VI, -III, -VI, III, -VI,
-            III, IV, III, IV, -II, II, III, III, -III, I, -II, VI };
+        constans s32 verbum[LXXIV] = {
+            V, IV, -VI, -VII, VI, -II, -IV, VI, IV, -V, -V, -VIII, III,
+                VI,
+            IV, -IV, I, -VIII, -IV, II, VII, -VII, -VII, -IV, -II, -V,
+            -VII, VI, -III, II, VIII, IV, V, -VIII, III, VIII, V, -II,
+                I,
+            III, -II, -VII, VI, III, -II, -VI, -I, IV, -IV, VIII, -IV,
+                I,
+            -III, -V, VI, VII, -VIII, -V, -II, II, IV, -II, -III, III,
+                III,
+            -II, VII, -VIII, -IV, -V, I, III, -V, -IV };
                      LaqueusVia via = LAQUEUS_VIA_NULLA;
               ContractioSumptus sv;
         LaqueusTemperleySumptus st;
                      Polynomium sine_limite  = polynomium_nullum();
                      Polynomium limitatus    = polynomium_nullum();
 
-        CREDO_NECESSE(laqueus_via_eligere(verbum, XXXII, VII,
+        CREDO_NECESSE(laqueus_via_eligere(verbum, LXXIV, IX,
             CONTRACTIO_SATURATUM, piscina, &via, &sv, &st));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
         CREDO_VERUM(st.octeti < sv.octeti_officinae);
-        CREDO_NECESSE(laqueus_via_eligere(verbum, XXXII, VII, st.octeti,
+        CREDO_NECESSE(laqueus_via_eligere(verbum, LXXIV, IX, st.octeti,
             piscina, &via, NIHIL, NIHIL));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
-        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, XXXII, VII,
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, LXXIV, IX,
             CONTRACTIO_SATURATUM, piscina, &sine_limite, &via));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
-        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, XXXII, VII,
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, LXXIV, IX,
             st.octeti, piscina, &limitatus, &via));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
         CREDO_VERUM(polynomium_aequalis(sine_limite, limitatus));
