@@ -2567,19 +2567,15 @@ chronica_locus (
     }
     si (visus_nominum(m))
     {
-                      i32  v = visus_genus(m);
-        ChordaAedificator* a;
+        i32 v = visus_genus(m);
 
         si (v == VISUS_PERSONAE || v == VISUS_LOCA)
         {
             redde chorda_ex_literis(v == VISUS_PERSONAE
                 ? "chronica/personae" : "chronica/loca", piscina);
         }
-        a = chorda_aedificator_creare(piscina, (memoriae_index)LXIV);
-        chorda_aedificator_appendere_literis(a, v == VISUS_PERSONA
-            ? "chronica/persona/" : "chronica/locus/");
-        effugere(a, campus(m, "nomen"));
-        redde chorda_aedificator_finire(a);
+        redde chronica_locus_nominis(v == VISUS_PERSONA,
+            campus(m, "nomen"), piscina);
     }
     si (visus_fluminis(m))
     {
@@ -2603,6 +2599,21 @@ chronica_locus (
     sprintf(textus, "%s/%d", clavis_positionis,
         (integer)*(s32*)xar_obtinere(t->anni, (i32)k));
     redde chorda_ex_literis(textus, piscina);
+}
+
+chorda
+chronica_locus_nominis (
+         b32  persona,
+      chorda  titulus,
+     Piscina* piscina)
+{
+    ChordaAedificator* a;
+
+    a = chorda_aedificator_creare(piscina, (memoriae_index)LXIV);
+    chorda_aedificator_appendere_literis(a, persona
+        ? "chronica/persona/" : "chronica/locus/");
+    effugere(a, titulus);
+    redde chorda_aedificator_finire(a);
 }
 
 chorda

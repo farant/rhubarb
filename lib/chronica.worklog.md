@@ -229,3 +229,23 @@ and the event REALLY was unclosed (it showed red); keep test lines
 short. (2) A glyph bleeds one pixel into the next cell ('>' into the
 description's first cell), so "no accent in the description" became
 "text pixels outnumber accent pixels, and the last cell has none".
+
+## 2026-10-31 - $people / $places commands (Opus 5.5)
+
+`$people` / `$places` open the people / places index;
+`$people(Moses)` / `$places(Egypt)` open the name page. It is a small
+command function (nomina_iussum) in vicus, because aperiens_fixum
+ignores the typed argument when a fixed one is set. It uses
+vicus_acervo_mutare (like $search), so an open timeline pane is
+reused and the view change pushes history. Arguments split on commas
+are re-joined with ", ". The address comes from the new public
+chronica_locus_nominis(persona, titulus, piscina), the single place
+that builds `chronica/persona/<escaped name>`; chronica_locus uses it
+too.
+
+**Found while testing:** scriba DROPS non-ASCII characters typed
+through manus_ludus_scribere ("Tomás" arrived as "Toms"). That is a
+scriba input limitation, not chronica's; the vicus test uses "Thomas
+Aquinas" and accents stay covered by chronica_latus 'nomen effugitum'
+(route level). Worth telling Fran: typing accented names in scriba may
+not work today.

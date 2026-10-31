@@ -161,6 +161,15 @@ chronica_locus (
      vacuum* ctx,
     Piscina* piscina);
 
+/* C5b: locus paginae nominis - "chronica/persona/<n>" (persona
+ * VERUM) aut "chronica/locus/<n>", n effugitum ut semitae; vicus:
+ * $people(n), $places(n) */
+chorda
+chronica_locus_nominis (
+         b32  persona,
+      chorda  titulus,
+     Piscina* piscina);
+
 /* facies.locus_titulus */
 chorda
 chronica_locus_titulus (

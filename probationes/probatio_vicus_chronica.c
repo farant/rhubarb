@@ -468,6 +468,70 @@ _probare_personas_historia (
     CREDO_VERUM(campus_est(m, "visus", "annus"));
 }
 
+/* $people / $places: verbum in pagina scribae scriptum et ictum
+ * (ut '$agenda'): index aut pagina nominis in chronica */
+interior vacuum
+verbum_ferire (
+                Mundus* x,
+            ManusLudus* m,
+    constans character* verbum)
+{
+    (vacuum)manus_ludus_premere_ad(m, VI + III, VICUS_ALTITUDO_TABULARUM
+        + VIII + II * VIII + IV);
+    (vacuum)manus_ludus_scribere(m, "0d$i");
+    (vacuum)manus_ludus_scribere(m, verbum);
+    (vacuum)manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM);
+    (vacuum)manus_ludus_premere_ad(m, VI + III * VI + III,
+        VICUS_ALTITUDO_TABULARUM + VIII + II * VIII + IV);
+    (vacuum)vicus_pulsare(x->app.vicus);
+    (vacuum)vicus_pulsare(x->app.vicus);
+}
+
+interior vacuum
+_probare_verba_nominum (
+    CredoContextus* c)
+{
+              Mundus* x = (Mundus*)c->datum;
+               Vicus* v;
+          ManusLudus* m;
+    ChronicaMontatio* k;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(m);
+    CREDO_NECESSE(vicus_activam_ponere(v, "3"));
+    dispensator_recomponere(x->app.d);
+
+    CREDO_GRADUS("$people: index personarum");
+    verbum_ferire(x, m, "$people");
+    k = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(campus_est(k, "visus", "personae"));
+
+    /* scriba accentus inscriptos omittit (non chronica): nomen ASCII
+     * cum spatiis; accentus in chronica_latus 'nomen effugitum' */
+    CREDO_GRADUS("$people(Thomas Aquinas): pagina nominis");
+    verbum_ferire(x, m, "$people(Thomas Aquinas)");
+    k = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(campus_est(k, "visus", "persona"));
+    CREDO_VERUM(campus_est(k, "nomen", "Thomas Aquinas"));
+
+    CREDO_GRADUS("$places(Lyon): pagina loci");
+    verbum_ferire(x, m, "$places(Lyon)");
+    k = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(campus_est(k, "visus", "locus"));
+    CREDO_VERUM(campus_est(k, "nomen", "Lyon"));
+
+    CREDO_GRADUS("$places: index locorum");
+    verbum_ferire(x, m, "$places");
+    k = chronica_frontalis(v);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(campus_est(k, "visus", "loca"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "latus", _probare_latus, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -482,6 +546,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "domum ictu", _probare_domum_ictu, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
     { "personae historia", _probare_personas_historia, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "verba nominum", _probare_verba_nominum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -5321,6 +5321,74 @@ chronicam_describere (
 }
 
 
+/* chronica C5b: $people / $places (index), $people(Moses) /
+ * $places(Egypt) (pagina nominis, nomen effugitum) */
+nomen structura {
+    Vicus* vicus;
+      b32  personae;
+} ContextusNominum;
+
+interior b32
+nomina_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    ContextusNominum* cn;
+              chorda  titulus;
+              chorda  semita;
+                 i32  i;
+
+    cn = (ContextusNominum*)ctx;
+    si (iussum->numerus_argumentorum == ZEPHYRUM)
+    {
+        semita = chorda_ex_literis(cn->personae
+            ? "chronica/personae" : "chronica/loca", piscina);
+    }
+    alioquin
+    {
+        titulus = iussum->argumenta[ZEPHYRUM];
+        per (i = I; i < (i32)iussum->numerus_argumentorum; i++)
+        {
+            titulus = chorda_concatenare(chorda_concatenare(titulus,
+                chorda_ex_literis(", ", piscina), piscina),
+                iussum->argumenta[i], piscina);
+        }
+        semita = chronica_locus_nominis(cn->personae,
+            chorda_praecidere(titulus), piscina);
+    }
+    si (!vicus_acervo_mutare(cn->vicus, "chronica",
+            chorda_ut_cstr(semita, piscina)))
+    {
+        effectus->error = chorda_ex_literis(cn->personae
+            ? "people: aperiri non potest"
+            : "places: aperiri non potest", piscina);
+    }
+    redde VERUM;
+}
+
+interior b32
+nomina_registrare (
+        IussumRegistrum* r,
+                  Vicus* v,
+     constans character* verbum,
+                    b32  personae,
+                Piscina* piscina)
+{
+    ContextusNominum* cn;
+
+    cn = (ContextusNominum*)piscina_allocare(piscina,
+        magnitudo(ContextusNominum));
+    si (!cn)
+    {
+        redde FALSUM;
+    }
+    cn->vicus     = v;
+    cn->personae  = personae;
+    redde iussum_registrare(r, verbum, FALSUM, nomina_iussum, cn);
+}
+
 /* T4f (colloquia-plan): Cmd+] / Cmd+[ - domus -> admonitiones ->
  * colloquia -> agenda -> indagatio (D5) -> domus */
 hic_manens constans character* cyclus_dexter[] = {
@@ -5563,6 +5631,10 @@ ContextusNomenclatoris* cn;
         /* chronica C3: $timeline (annus servatus), $timeline(1274) */
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "timeline",
                "chronica", NIHIL, piscina)
+        || !nomina_registrare(cs->iussa, app->vicus, "people", VERUM,
+               piscina)
+        || !nomina_registrare(cs->iussa, app->vicus, "places", FALSUM,
+               piscina)
         || !ci
         || !via_registrare(cs->iussa, app->vicus, piscina, intern,
                &ci->via)
