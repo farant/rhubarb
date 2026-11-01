@@ -1,6 +1,14 @@
 # http2 - our own HTTP/2: hpack, frames, a sans-IO connection, ALPN (spec)
 
-**STATUS: PROPOSITUM 2026-10-30** (quarta; brainstorm with Fran the
+**STATUS: IMPLETUM 2026-10-31** (phase 1, client role, Mac) - plan
+`project-specs/http2-plan.md` T1-T12, commits 04bb7b8b..3262768c in
+quarta; final review (fable) found no Critical, two Important
+lifecycle gaps fixed with RED->GREEN tests (GOAWAY covering queued
+streams; `http2_connexionem_destruere`), ten Minors deferred to the
+tabularium. Rulings: lib/http2*.worklog.md, lib/apns.worklog.md.
+Server role, Linux, enabling push on pictor: the push-service project.
+
+*Earlier:* **PROPOSITUM 2026-10-30** (quarta; brainstorm with Fran the
 same evening, right after communio phase 5 went live; builder check
 done - D8, D9 and the D7/III.4 calls came out of it).
 
