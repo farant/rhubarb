@@ -10,6 +10,9 @@
 #include "chorda.h"
 #include "base64.h"
 #include "tessera_es256.h"
+#include "filum.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "nundinae_apple.h"
 #include "credo.h"
 #include <string.h>
@@ -241,10 +244,63 @@ _sectio_nundinae (
     CREDO_VERUM(signatura_valet(vetus, &publica));
 }
 
+/* T11: clavis ex plagula PEM PKCS#8 (modus 0600 necessarius) */
+interior vacuum
+_sectio_clavis (
+    CredoContextus* c)
+{
+    br_ec_public_key  publica;
+       unsigned char  capsa[BR_EC_KBUF_PUB_MAX_SIZE];
+                  i8* der;
+                  i8* lecta;
+                 i32  n;
+                 i32  m;
+              chorda  causa;
+           character  via[DXII];
+  constans character* tmp;
+
+    (vacuum)c;
+    der = _clavem_facere(&publica, capsa, &n);
+    tmp = getenv("TMPDIR");
+    CREDO_NECESSE(der && tmp && strlen(tmp) < CD);
+    sprintf(via, "%s/AuthKey_PROBA_ES256.p8", tmp);
+    CREDO_VERUM(filum_scribere(via,
+        chorda_concatenare(chorda_ex_literis(
+        "-----BEGIN PRIVATE KEY-----\n", piscina), chorda_concatenare(
+        base64_codificare(der, n, piscina), chorda_ex_literis(
+        "\n-----END PRIVATE KEY-----\n", piscina), piscina), piscina)));
+
+    CREDO_GRADUS("modus 0644: recusatio nominans 0600");
+    CREDO_VERUM(filum_modum_ponere(via, 0644));
+    CREDO_FALSUM(tessera_clavem_legere(via, &lecta, &m, &causa,
+        piscina));
+    CREDO_CHORDA_CONTINET(causa, chorda_ex_literis("0600", piscina));
+
+    CREDO_GRADUS("modus 0600: DER idem");
+    CREDO_VERUM(filum_modum_ponere(via, 0600));
+    CREDO_VERUM(tessera_clavem_legere(via, &lecta, &m, &causa,
+        piscina));
+    CREDO_AEQUALIS_I32(m, n);
+    CREDO_VERUM(memcmp(lecta, der, (size_t)n) == ZEPHYRUM);
+
+    CREDO_GRADUS("non PEM, absens: recusatio");
+    CREDO_VERUM(filum_scribere(via, chorda_ex_literis("nihil\n",
+        piscina)));
+    CREDO_VERUM(filum_modum_ponere(via, 0600));
+    CREDO_FALSUM(tessera_clavem_legere(via, &lecta, &m, &causa,
+        piscina));
+    (vacuum)filum_delere(via);
+    CREDO_FALSUM(tessera_clavem_legere(via, &lecta, &m, &causa,
+        piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nucleus", _sectio_nucleus, _parare, _purgare, NIHIL, NIHIL },
     { "APNs", _sectio_apns, _parare, _purgare, NIHIL, NIHIL },
     { "nundinae_apple idem", _sectio_nundinae, _parare, _purgare, NIHIL,
+        NIHIL },
+    { "clavis ex plagula (T11)", _sectio_clavis, _parare, _purgare,
+        NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

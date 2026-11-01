@@ -8,11 +8,17 @@
 // Usus: go run tools/oracula/http2_servus.go -portus N -cert C.pem -clavis C.key
 //
 // Viae:
-//   /salve          200 "salve"
-//   /eco            corpus POST redditum
-//   /magnum?n=N     N octeti ('a'..'z' iterati)
-//   /tarde?ms=N     post N ms "tarde"
-//   /abire          200 "vale", deinde Shutdown (GOAWAY omnibus)
+//
+//	/salve          200 "salve"
+//	/eco            corpus POST redditum
+//	/magnum?n=N     N octeti ('a'..'z' iterati)
+//	/tarde?ms=N     post N ms "tarde"
+//	/abire          200 "vale", deinde Shutdown (GOAWAY omnibus)
+//	/3/device/<s>   APNs fictum (http2-plan T11): capita accepta in
+//	                x-thema, x-genus, x-auctoritas redduntur; sine
+//	                "bearer " 403 MissingProviderToken; aliter 400
+//	                BadDeviceToken - cum -modus iterare signum nullum
+//	                400 DeviceTokenNotForTopic (regula iterandi)
 package main
 
 import (
@@ -23,6 +29,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -30,6 +37,7 @@ func main() {
 	portus := flag.Int("portus", 0, "portus auscultandi (127.0.0.1)")
 	cert := flag.String("cert", "", "certificatum PEM")
 	clavis := flag.String("clavis", "", "clavis PEM")
+	modus := flag.String("modus", "", "iterare: signum nullum -> DeviceTokenNotForTopic")
 	flag.Parse()
 
 	mux := http.NewServeMux()
@@ -67,6 +75,31 @@ func main() {
 			time.Sleep(50 * time.Millisecond)
 			servus.Shutdown(context.Background())
 		}()
+	})
+
+	mux.HandleFunc("/3/device/", func(w http.ResponseWriter, r *http.Request) {
+		signum := strings.TrimPrefix(r.URL.Path, "/3/device/")
+		auctoritas := r.Header.Get("authorization")
+		w.Header().Set("apns-id", "00000000-0000-0000-0000-000000000001")
+		w.Header().Set("x-thema", r.Header.Get("apns-topic"))
+		w.Header().Set("x-genus", r.Header.Get("apns-push-type"))
+		w.Header().Set("x-auctoritas", auctoritas)
+		w.Header().Set("content-type", "application/json")
+		io.Copy(io.Discard, r.Body)
+		switch {
+		case r.Method != http.MethodPost:
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			w.Write([]byte(`{"reason":"MethodNotAllowed"}`))
+		case !strings.HasPrefix(auctoritas, "bearer ") || len(auctoritas) == len("bearer "):
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte(`{"reason":"MissingProviderToken"}`))
+		case *modus == "iterare" && strings.Trim(signum, "0") == "":
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`{"reason":"DeviceTokenNotForTopic"}`))
+		default:
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(`{"reason":"BadDeviceToken"}`))
+		}
 	})
 
 	err := servus.ListenAndServeTLS(*cert, *clavis)

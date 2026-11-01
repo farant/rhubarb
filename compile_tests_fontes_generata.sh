@@ -25,6 +25,7 @@ declare -a SOURCE_FILES=(
     "lib/agenda.c"
     "lib/agmen.c"
     "lib/anulus.c"
+    "lib/apns.c"
     "lib/argon2id.c"
     "lib/argumenta.c"
     "lib/arx_caeli.c"

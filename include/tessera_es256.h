@@ -36,4 +36,16 @@ tessera_apns_facere (
             s64  nunc_s,
         Piscina* piscina);
 
+/* clavis PEM "PRIVATE KEY" (PKCS#8 P-256, ut Apple .p8) ex plagula:
+ * filum regulare (non nexus symbolicus), modus non latior quam 0600
+ * (aliter FALSUM, causa "0600" nominat), DER in piscina. Tamponi
+ * intermedii zephyrantur; causa clavem numquam continet. */
+b32
+tessera_clavem_legere (
+    constans character*  via,
+                    i8** der,
+                   i32*  mensura,
+                chorda*  causa,
+               Piscina*  piscina);
+
 #endif /* TESSERA_ES256_H */
