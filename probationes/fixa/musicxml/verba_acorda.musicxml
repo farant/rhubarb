@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- verba_acorda: syllaba in nota prima acordi solum; ligatura nota una (sine '_'); melisma sine extend ('_'); versus II omissus -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Soprano</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>1</duration>
+        <lyric number="1"><syllabic>single</syllabic><text>La</text></lyric>
+        <lyric number="2"><syllabic>single</syllabic><text>Lux</text></lyric></note>
+      <note><chord/><pitch><step>E</step><octave>5</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>1</duration><tie type="start"/>
+        <lyric number="1"><syllabic>begin</syllabic><text>da</text></lyric></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>1</duration><tie type="stop"/></note>
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>1</duration></note>
+    </measure>
+    <measure number="3">
+      <note><pitch><step>F</step><octave>5</octave></pitch><duration>2</duration>
+        <lyric number="1"><syllabic>end</syllabic><text>te.</text></lyric></note>
+    </measure>
+  </part>
+</score-partwise>

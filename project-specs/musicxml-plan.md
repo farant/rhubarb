@@ -928,6 +928,43 @@ Converter decisions this task fixes (spec leaves them open):
   restore.
 - [ ] **Step 4: Commit** (gate `radix`).
 
+**Executed 2026-10-31.** 16 sections green (the 14 planned + two from
+the corpus probe, built from inline scores so no new goldens were
+needed). Changes from the plan as written:
+- **Off-grid durations:** snapped per line and per bar to the 60-pulse
+  grid (a 64th) whenever a boundary is inexact or an interval can't be
+  written in MML; one EXTRA_RETICULUM per note (not "adjust the last
+  note"). Even a rounding that happens to give a writable length is
+  reported (`reticulum_tacitum`: divisions 11).
+- **Tempo** rounds half-up: 72.5 → `73` (+ TEMPUS_ROTUNDATUM).
+- **Verba:** `-` only between syllables of one word; `_` for each
+  later note without a syllable.
+- **Bars:** each bar's length is rounded to one a carmen meter can
+  express (N, D ≤ 64), its end aimed at the absolute 60-pulse grid so
+  drift is corrected at the next bar; EXTRA_RETICULUM per changed bar.
+  Notes past the last bar are cut.
+- **Song-level elements:** dynamics are collected per part, sorted
+  (step before ramp at one spot), and resolved: a step inside a ramp
+  becomes the ramp's target, a ramp inside a ramp is dropped (both
+  CLIVUS_MOTUS). Fermatas are sorted, and one that falls inside the
+  previous hold is dropped. Lines with no notes are removed before
+  naming. No sounding note at all → FALSUM, with a structural note.
+- New fixtures `longitudines`, `conversio_varia`, `verba_acorda`,
+  `signa_sola`, `reticulum_tacitum` (music21 agreed; goldens in
+  `aurum/`).
+
+**Corpus probe** (`build/musicxml/sonda_corpus_carmen.c`, ASan): all
+1,658 OpenScore files convert, and `carmina_legere` accepts every one
+of them (the first run rejected 1,246; causes and fixes in
+`lib/musicxml_carmen.worklog.md`).
+
+**Plants, all red then restored:** `_` melisma rule → nata_lux; strict
+ignoring grace notes → `strictus`; hyphen rule → `verba`; no inexact
+snapping → `reticulum`; plus, from the probe: no dynamics sort,
+no step-into-ramp, no fermata span, no meter-length rounding, no cut
+at the end, empty lines kept → `conflictus` / `mensura extra
+reticulum`.
+
 ---
 
 ## Task P11: `auditio -musicxml`, docs, closure
