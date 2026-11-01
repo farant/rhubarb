@@ -87,14 +87,45 @@ _causam_ponere (
     *causa_out = chorda_aedificator_finire(aedificator);
 }
 
+/* MEMORIA EXSTANTIAE PER DERIVATIONEM (budget B2 I1): via -> exstat,
+ * vita UNIUS aedilis_derivare (arbor intra derivationem immota: nihil
+ * eam scribit). Caput systematis quodque contra omnes radices -I
+ * probabatur, iterum pro omni fonte includente - quaeque probatio stat
+ * + linea libri lectionum (porta_aedilis: 3,8 M lineae, 17,9 milia
+ * unicae). Probatio prima statum facit et lineam scribit (fabrica
+ * copiam eandem ordine primo videt); sequentes ex memoria. Per
+ * derivationem, non per processum: fabrica configurationem unam per
+ * cursum tenet et clausuras pigre derivat, generatoribus capita
+ * inter derivationes creantibus - absentia vetus mentiretur. */
+hic_manens TabulaDispersa* _memoria_viarum = NIHIL;
+hic_manens        Piscina* _piscina_viarum = NIHIL;
+hic_manens       character _signum_exstat      = 'E';
+hic_manens       character _signum_absens      = 'A';
+
 interior b32
 _existit_sub_radice (
     constans AedilisConfiguratio* configuratio,
                           chorda  via,
                          Piscina* piscina)
 {
-    redde via_existit(
-        _iungere_binas(configuratio->radix, via, piscina));
+    chorda  plena;
+    vacuum* notum;
+       b32  exstat;
+
+    plena = _iungere_binas(configuratio->radix, via, piscina);
+    si (   _memoria_viarum != NIHIL
+        && tabula_dispersa_invenire(_memoria_viarum, plena, &notum))
+    {
+        redde notum == (vacuum*)&_signum_exstat;
+    }
+    exstat = via_existit(plena);
+    si (_memoria_viarum != NIHIL)
+    {
+        (vacuum)tabula_dispersa_inserere(_memoria_viarum,
+            chorda_transcribere(plena, _piscina_viarum),
+            exstat ? (vacuum*)&_signum_exstat : (vacuum*)&_signum_absens);
+    }
+    redde exstat;
 }
 
 /* Verbum primum (ad spatium) scindere; reliquum tersum reddere */
@@ -902,8 +933,8 @@ _irregulare_invenire (
     redde NIHIL;
 }
 
-AedilisFructus*
-aedilis_derivare (
+interior AedilisFructus*
+_derivare_interne (
                          Piscina* piscina,
     constans AedilisConfiguratio* configuratio,
               constans character* scopus,
@@ -1335,6 +1366,28 @@ aedilis_derivare (
         fructus->obiecta = purgata;
     }
 
+    redde fructus;
+}
+
+/* memoria exstantiae vitam derivationis unius tenet (vide supra) */
+AedilisFructus*
+aedilis_derivare (
+                         Piscina* piscina,
+    constans AedilisConfiguratio* configuratio,
+              constans character* scopus,
+              constans character* varians,
+                AedilisExtractor  extractor,
+                          vacuum* extractor_datum,
+                          chorda* causa_out)
+{
+    AedilisFructus* fructus;
+
+    _piscina_viarum = piscina;
+    _memoria_viarum = tabula_dispersa_creare_chorda(piscina, 1024);
+    fructus = _derivare_interne(piscina, configuratio, scopus, varians,
+        extractor, extractor_datum, causa_out);
+    _memoria_viarum = NIHIL;
+    _piscina_viarum = NIHIL;
     redde fructus;
 }
 

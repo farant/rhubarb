@@ -978,3 +978,34 @@ X.
 
 Measured (load ~10): instrumenta 76 → 59 s, aedilis 162 → 108-128 s
 (second runs).
+
+## 2026-10-31 — existence probes memoized per derivation (budget B2 I1)
+
+`_existit_sub_radice` resolved every include against every -I root, and
+again for each source that includes it. Each probe was a stat() plus a
+fabrica read-log line: porta_aedilis's book had 3.8 M lines for 17.9 k
+unique paths; each silva corpus book 730 k for 10.5 k. Now a
+via → exists table lives for ONE `aedilis_derivare` call (a thin public
+wrapper around the old body, renamed `_derivare_interne`). The first
+probe of a path still stats and still writes its book line, so fabrica,
+which dedupes by first occurrence, sees the same set in the same order.
+
+Scope decision: the analyst proposed per-PROCESS. That's wrong for
+fabrica, which keeps one configuration for its whole run, derives
+closures lazily, and lets generators create headers between derivations.
+A per-process cache would keep reporting a generated header as absent.
+Per-derivation is safe: nothing writes files during a single derivation.
+
+Measured (`--corpus lib --partes`, warm thesaurus): 28.4 → 11.3 G
+instructions, 5.35 → 2.8 s, book 721 k → 213 k lines; stdout IDENTICAL;
+the book's first-occurrence order is IDENTICAL once thesaurus record
+paths are excluded (their names include the aedilis binary hash, so the
+new binary misses once, cold).
+
+New test section "exstantia per derivationem" (probatio_aedilis, temp
+radix in the credo area): derive with fons/nusquam.h absent, create it,
+derive again; it must resolve. Plant: a long-lived per-process cache →
+FRACTA at the second derivation. (A first plant variant that never reset
+the cache crashed with SIGBUS instead, because it pointed into a freed
+section pool; that's red, but not the assertion, so it was redone with
+its own pool.)
