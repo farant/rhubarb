@@ -3457,7 +3457,8 @@ laqueus_jones_ex_pd_rete (
  * in tabula latitudinis fixae - octeti ergo forma clausa. S per ordinem
  * temporarium, REDUCTUM dum summatur (fontes usque ad fila/2: summa non
  * reducta 2^64 excederet); primi infra 2^31 (celeritas G1), ergo
- * alpha M + c S < 2^63 et reductio una.
+ * alpha M + c S < 2^63 et reductio una, Montgomery (R = 2^32 in
+ * constantibus, celeritas G2) sine divisione.
  * Deinde Sigma_j Delta_j tr M x A^w / delta. Nihil per punctum
  * allocatum.
  * ================================================== */
@@ -3749,6 +3750,22 @@ laqueus_modulus_temperley_creare (
     redde mt;
 }
 
+/* p' = -p^-1 modulo 2^32 (p impar) per Newton: x <- x (2 - p x), bita
+ * duplicantur ab 3 (p p = 1 mod 8) */
+interior i32
+_montgomery_inversa (
+    i32 p)
+{
+    i32 x = p;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        x = x * ((i32)II - p * x);
+    }
+    redde (i32)ZEPHYRUM - x;
+}
+
 s32
 laqueus_modulus_temperley_aestimare (
     LaqueusModulusTemperley* mt,
@@ -3764,6 +3781,9 @@ laqueus_modulus_temperley_aestimare (
     i32 delta;
     i32 delta_inversa;
     i32 alpha[II];          /* [0] littera positiva, [1] negativa */
+    i64 alpha_r[II];        /* x R modulo p (Montgomery) */
+    i64 factor_r[II];
+    i32 p_prima;
     i32 factor[II];
     i32 pondera[TEMPERLEY_FILA_MAXIMA + III];
     i32 summa = ZEPHYRUM;
@@ -3797,6 +3817,14 @@ laqueus_modulus_temperley_aestimare (
         p), p);
     alpha[I]            = congruentia_subtrahe(ZEPHYRUM,
         congruentia_multiplica(quadratum, quadratum, p), p);
+    /* Montgomery (celeritas G2): R = 2^32 in alpha et c inclusum, ergo
+     * REDC(alpha R M + c R S) = alpha M + c S mod p, matrix in forma
+     * normali */
+    alpha_r[ZEPHYRUM]   = ((i64)alpha[ZEPHYRUM] << XXXII) % (i64)p;
+    alpha_r[I]          = ((i64)alpha[I] << XXXII) % (i64)p;
+    factor_r[ZEPHYRUM]  = ((i64)factor[ZEPHYRUM] << XXXII) % (i64)p;
+    factor_r[I]         = ((i64)factor[I] << XXXII) % (i64)p;
+    p_prima             = _montgomery_inversa(p);
 
     /* Delta_0 = 1, Delta_1 = delta, Delta_(j+1) = delta Delta_j -
      * Delta_(j-1) */
@@ -3835,8 +3863,8 @@ laqueus_modulus_temperley_aestimare (
             s32 littera = mt->verbum[littera_index];
             i32 i = (i32)(littera > ZEPHYRUM ? littera : -littera) - I;
             i32 signum = littera > ZEPHYRUM ? ZEPHYRUM : I;
-            i64 al = (i64)alpha[signum];
-            i64 c = (i64)factor[signum];
+            i64 al = alpha_r[signum];
+            i64 c = factor_r[signum];
             constans i32* ordines = mt->ordines[k] + i * arcus;
             constans i8* numeri = mt->numeri_fontium[k] + i * arcus;
             constans i32* fontes = mt->fontes[k] + i * arcus * fila;
@@ -3866,13 +3894,18 @@ laqueus_modulus_temperley_aestimare (
                         linea[columna] = x >= p ? x - p : x;
                     }
                 }
-                /* p < 2^31: alpha M + c S < 2 (p - 1)^2 < 2^63, reductio
-                 * una (celeritas G1) */
+                /* p < 2^31 (celeritas G1): t = alpha R M + c R S < 2^63,
+                 * m p < 2^63, ergo t + m p < 2^64; REDC una, sine
+                 * divisione (celeritas G2) */
                 per (columna = ZEPHYRUM; columna < d; columna++)
                 {
-                    destinatio[columna] =
-                        (i32)((al * (i64)destinatio[columna]
-                        + c * (i64)linea[columna]) % (i64)p);
+                    i64 t = al * (i64)destinatio[columna] + c
+                        * (i64)linea[columna];
+                    i32 m = (i32)t * p_prima;
+                    i64 u = (t + (i64)m * (i64)p) >> XXXII;
+
+                    destinatio[columna] = (i32)(u >= (i64)p ? u - (i64)p
+                        : u);
                 }
             }
         }
