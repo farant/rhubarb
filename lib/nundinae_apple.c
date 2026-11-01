@@ -17,6 +17,7 @@
 #include "http.h"
 #include "filum.h"
 #include "nundinae_apple.h"
+#include "tessera_es256.h"
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -148,31 +149,15 @@ nundinae_apple_tesseram_facere (
             i32  duratio_s,
         Piscina* p)
 {
-    br_skey_decoder_context dc;
-          br_sha256_context h;
-              unsigned char digestum[XXXII];
-              unsigned char signatura[LXIV];
-                  character caput[CCLVI];
-                  character asserta[DXII];
-                     chorda vacua;
-                     chorda initium;
-                     chorda tessera;
-                     size_t n;
+    character caput[CCLVI];
+    character asserta[DXII];
+       chorda vacua;
 
     vacua.datum    = NIHIL;
     vacua.mensura  = ZEPHYRUM;
     si (   !clavis_der || mensura <= ZEPHYRUM || !_tutum(clavis_id)
         || !_tutum(emissor) || duratio_s <= ZEPHYRUM)
     {
-        redde vacua;
-    }
-    br_skey_decoder_init(&dc);
-    br_skey_decoder_push(&dc, clavis_der, (size_t)mensura);
-    si (   br_skey_decoder_last_error(&dc)    != ZEPHYRUM
-        || br_skey_decoder_key_type(&dc)      != BR_KEYTYPE_EC
-        || br_skey_decoder_get_ec(&dc)->curve != BR_EC_secp256r1)
-    {
-        memset(&dc, ZEPHYRUM, magnitudo(dc));
         redde vacua;
     }
     sprintf(caput,
@@ -182,25 +167,10 @@ nundinae_apple_tesseram_facere (
         "\"aud\":\"appstoreconnect-v1\"}", (int)emissor.mensura,
         (constans character*)emissor.datum, (longus)nunc_s,
         (longus)(nunc_s + (s64)duratio_s));
-    initium = chorda_concatenare(chorda_concatenare(
-        base64url_codificare((constans i8*)caput, (i32)strlen(caput),
-        p),
-        chorda_ex_literis(".", p), p), base64url_codificare(
-        (constans i8*)asserta, (i32)strlen(asserta), p), p);
-    br_sha256_init(&h);
-    br_sha256_update(&h, initium.datum, (size_t)initium.mensura);
-    br_sha256_out(&h, digestum);
-    n = br_ecdsa_i31_sign_raw(br_ec_get_default(), &br_sha256_vtable,
-        digestum, br_skey_decoder_get_ec(&dc), signatura);
-    memset(&dc, ZEPHYRUM, magnitudo(dc));
-    si (n != (size_t)LXIV)
-    {
-        redde vacua;
-    }
-    tessera = chorda_concatenare(chorda_concatenare(initium,
-        chorda_ex_literis(".", p), p), base64url_codificare(
-        (constans i8*)signatura, LXIV, p), p);
-    redde tessera;
+    /* http2-plan T10: signatura in nucleo communi (tessera_es256) -
+     * exitus byte pro byte idem (probatio_tessera_es256) */
+    redde tessera_es256_facere(clavis_der, mensura,
+        chorda_ex_literis(caput, p), chorda_ex_literis(asserta, p), p);
 }
 
 b32

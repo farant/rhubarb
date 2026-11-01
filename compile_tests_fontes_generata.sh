@@ -352,6 +352,7 @@ declare -a SOURCE_FILES=(
     "lib/tempus.c"
     "lib/terminale.c"
     "lib/tessellatio.c"
+    "lib/tessera_es256.c"
     "lib/testa_cursus.c"
     "lib/testa_initus.c"
     "lib/thema.c"
