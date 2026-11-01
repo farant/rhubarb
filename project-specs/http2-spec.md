@@ -4,6 +4,17 @@
 same evening, right after communio phase 5 went live; builder check
 done - D8, D9 and the D7/III.4 calls came out of it).
 
+**FINIS LINE MET 2026-10-31** (T11, live, Fran's sandbox key
+LA8Z282UYC, team Q5WC9FQ3J2, topic earth.golden.pictor): `apns -probare`
+-> api.sandbox.push.apple.com answered `:status 400, reason
+"BadDeviceToken"` (apns-id 930DF12F-C7C0-D46B-266E-ED7FCD20CB1F) - our
+hpack + frames + connection + ALPN over tls, our ES256 token, no
+library of theirs. Counter-check with `-clavis_id ZZZZZZZZZZ` -> `403
+InvalidProviderToken` (apns-id 6DCCB34B-205F-8159-5652-35C2C0D0A0F6), so
+Apple really did verify the signature. Pictor's App ID still has
+PUSH_NOTIFICATIONS off: the sandbox accepted the topic without it, so
+switching it on waits for the push-service project, on Fran's word.
+
 *Fran 2026-10-30, after TestFlight build 8: "what would be involved in
 notifications? ... i don't know if notifications is something that
 would be some kind of platform type thing" - then, on hearing that

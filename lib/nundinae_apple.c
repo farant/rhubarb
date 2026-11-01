@@ -1255,7 +1255,7 @@ nundinae_apple_capacitas (
         redde FALSUM;
     }
     r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
-        "/v1/bundleIds/%A/bundleIdCapabilities?limit=200", id, vac),
+        "/v1/bundleIds/%A/bundleIdCapabilities", id, vac),
         vac,
         p);
     si (!_vocatio_bona(r, causa))

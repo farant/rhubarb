@@ -9,3 +9,9 @@ Library (`include/apns.h`, `lib/apns.c`) + thin CLI (`tools/apns.c`): config fro
 - **Preflight** (`apns -praeparare`) only *looks* at the PUSH_NOTIFICATIONS capability through `nundinae_apple_capacitas(..., creare=FALSUM)`; switching it on is the separate create-only verb `nundinae_apple -capacitas <app> PUSH_NOTIFICATIONS`, run on Fran's word.
 - Local oracle: Go route `/3/device/` echoes the received apns-topic / apns-push-type / authorization in x-* response headers and answers like APNs (403 MissingProviderToken without "bearer ", 400 BadDeviceToken; `-modus iterare` makes the zero token answer DeviceTokenNotForTopic).
 - Smoke 2026-10-31: `apns -probare` with an openssl-generated P-256 `.p8` against the local Go server -> 400 BadDeviceToken, TRANSIT; same key at 0644 -> refused naming chmod 600.
+
+## 2026-10-31 - live: finish line met
+
+- `GET /v1/bundleIds/{id}/bundleIdCapabilities?limit=200` -> Apple 400 PARAMETER_ERROR.ILLEGAL ("This relationship does not support this parameter"). Relationship endpoints take no `limit`; dropped it. No offline test could have caught it (the fixture path never sees the URL) - the live preflight was the reproducer.
+- With PUSH_NOTIFICATIONS still **off** on earth.golden.pictor, the sandbox answered 400 BadDeviceToken to a zero token - token auth + topic check pass without the capability. The capability matters for the app's entitlement (aps-environment) and real delivery, not for this probe. Enabling it changes the App ID, which typically invalidates existing provisioning profiles -> do it when the push-service project needs it, then regenerate the pictor profile.
+- Wrong `kid` -> 403 InvalidProviderToken -> DEFECTUS, rc 1, as the rule says.
