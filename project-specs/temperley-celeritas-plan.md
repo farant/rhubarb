@@ -488,3 +488,23 @@ Findings and where they went:
 - **L7** wording ("matching" → "consistent with"; the 14 × 801
   estimate; G1's possible extra prime) → T3 note corrected.
 - **L8** header line overrun → rewrapped.
+
+## Headline: the full 14 × 801 bracket (2026-11-01)
+
+`mensura -sectio VIII -fila 14 -longitudo 801` (binary built at
+e5a9ed16, under custos and caffeinate; launched 21:09, done 23:15):
+7,281.81 s CPU (estimate ≈ 2.4 h; T0's kernel was ~12 h), 6 MB peak
+footprint. Window A^[-543, 557], 1,101 terms; largest coefficient
+195 bits against limes 662. Braid: the D136 generator's 14 × 801
+(seed 2028 per (n, L)), writhe -9. The line in brackets.txt format is
+in knotapel/demo_136_tl_braid_closures/uncinus_14x801.txt (kept apart
+from brackets.txt: no oracle point certifies it).
+
+Consistency checks (necessary conditions; the oracle cannot reach this
+size), all pass:
+- bracket at A = 1 is -1, and |<K>(1)| = 2^(c-1): one component (a knot);
+- every exponent ≡ 1 (mod 4), so V has integer powers of t
+  (t^-146 … t^129);
+- V(1) = 1 and V(e^(2πi/3)) = 1;
+- V(i) = -1, i.e. Arf = 1; independently, det = |V(-1)| (183 bits) is
+  odd and ≡ 5 (mod 8), which also gives Arf = 1 (Levine/Murasugi).

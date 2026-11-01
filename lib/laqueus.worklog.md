@@ -876,3 +876,14 @@ Fixes: boundary refusal test at 2147483693 (a raised threshold returned
 wrong values with the suite green); two defensive checks in creare (DELTA
 rows map to themselves; an UNUM image is a DELTA row of this letter).
 Full list in project-specs/temperley-celeritas-plan.md, "Review (T4)".
+
+## 2026-11-01 - the 14 x 801 bracket
+
+Full TL bracket of the D136 14 x 801 braid: 7,282 s CPU (T0 kernel ~12 h),
+6 MB, A^[-543, 557], largest coefficient 195 bits (limes 662). Not oracle-
+certified (too big); it passes knot-level checks: <K>(1) = -1 (one
+component), exponents all 1 mod 4, V(1) = V(omega) = 1, and V(i) = -1
+agreeing with det = 5 mod 8 (Arf 1 both ways). Cheap sanity script idea
+for any future big bracket: these four checks need only the coefficient
+list and the writhe. Record: project-specs/temperley-celeritas-plan.md
+"Headline", line in knotapel/demo_136_tl_braid_closures/uncinus_14x801.txt.
