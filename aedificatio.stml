@@ -1276,6 +1276,9 @@
          datum scribit (tools/http2_tabulare.sh) - sine eis nihil -->
     <ambitus variabilis="RHUBARB_RETE"/>
     <ambitus variabilis="HTTP2_TABULAE"/>
+    <!-- probatio_http2_reproductio: tabulae aliae (tools/http2_tabulare.sh
+         -conferre tabulas recentes sic iudicat); sine eo fixa -->
+    <ambitus variabilis="HTTP2_FIXA"/>
     <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
     <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
     <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>

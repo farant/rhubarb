@@ -17,6 +17,15 @@
 #   ./tools/http2_tabulare.sh             tabulas in fixis renovat
 #   ./tools/http2_tabulare.sh -directorium <dir>
 #                                         tabulat in <dir> (fixa intacta)
+#   ./tools/http2_tabulare.sh -conferre   tabulat in directorium
+#                                         temporarium et probatio_http2_
+#                                         reproductio in eo currit
+#                                         (HTTP2_FIXA): tabulae recentes
+#                                         idem probant ac fixa. Ordo
+#                                         formarum Go non stabilis (ACK et
+#                                         WINDOW_UPDATE permutantur), ergo
+#                                         iudicium per suitam, non per
+#                                         comparationem octetorum.
 # Exitus: 0 factum | 1 defectus | 2 NIHIL CURSUM (go aut binarium deest)
 set -u
 cd "$(dirname "${BASH_SOURCE[0]}")/.." || exit 2
@@ -25,11 +34,13 @@ CASUS="salve eco multae magnum abire"
 FIXA=probationes/fixa/http2
 BINARIUM=build/probationes/probatio_http2_nexus
 META=""
+CONFERRE=0
 
 case "${1:-}" in
     "") META="$FIXA" ;;
+    -conferre) CONFERRE=1; META=$(mktemp -d "${TMPDIR:-/tmp}/http2_conferre.XXXXXX") || exit 1 ;;
     -directorium) META="${2:-}"; [ -n "$META" ] || { echo "usus: $0 [-directorium <dir>]" >&2; exit 2; } ;;
-    *) echo "usus: $0 [-directorium <dir>]" >&2; exit 2 ;;
+    *) echo "usus: $0 [-directorium <dir> | -conferre]" >&2; exit 2 ;;
 esac
 
 GO=""
@@ -77,3 +88,19 @@ done
 } > "$META/ORIGO.txt"
 rm -rf "$TEMP"
 echo "http2_tabulare: $CASUS -> $META"
+
+if [ "$CONFERRE" = 1 ]; then
+    REPRODUCTIO=build/probationes/probatio_http2_reproductio
+    if [ ! -x "$REPRODUCTIO" ]; then
+        ./compile_tests.sh http2_reproductio > /dev/null 2>&1
+    fi
+    [ -x "$REPRODUCTIO" ] || { echo "http2_tabulare: $REPRODUCTIO deest" >&2; exit 2; }
+    if HTTP2_FIXA="$META" "$REPRODUCTIO" > "$META/reproductio.log" 2>&1; then
+        echo "http2_tabulare: -conferre - tabulae recentes probantur ($META)"
+        rm -rf "$META"
+        exit 0
+    fi
+    grep -E 'FRACTA|forma ' "$META/reproductio.log" | head -20 >&2
+    echo "http2_tabulare: -conferre FRACTUM - tabulae recentes discrepant ($META)" >&2
+    exit 1
+fi
