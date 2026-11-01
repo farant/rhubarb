@@ -10,6 +10,7 @@
 #include "http2_forma.h"
 #include "http2.h"
 #include "credo.h"
+#include "memoria_processus.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -1003,6 +1004,113 @@ _sectio_concurrentia (
     }
 }
 
+/* recensio finalis I: GOAWAY cuius ultimus rivos exspectantes tegit
+ * (nginx: 2^31-1, deinde GOAWAY secundum) - exspectantes numquam missi
+ * DISCESSUS accipiunt, non pendent */
+interior vacuum
+_sectio_discessus_exspectans (
+    CredoContextus* c)
+{
+          Servus s;
+    Http2Eventus ev;
+      HpackCaput h[I];
+              i8 g[VIII];
+              i8 p[VI];
+             b32 tertius;
+
+    (vacuum)c;
+    CREDO_GRADUS("MAX_CONCURRENT_STREAMS I: rivus III exspectat");
+    (vacuum)http2_positionem_scribere(HTTP2_POSITIO_RIVI, I, p);
+    CREDO_NECESSE(servum_parare_cum(&s, NIHIL, p, VI));
+    CREDO_AEQUALIS_I32(petere_get(&s, "/a"), I);
+    CREDO_AEQUALIS_I32(petere_get(&s, "/b"), III);
+    CREDO_VERUM(exitum_legere(&s));
+    CREDO_FALSUM(http2_rivus_exspectat(s.c, I));
+    CREDO_VERUM(http2_rivus_exspectat(s.c, III));
+
+    CREDO_GRADUS("GOAWAY ultimus 2^31-1: III DISCESSUS, I perficitur");
+    http2_u32_scribere(HTTP2_FENESTRA_SUPREMA, g);
+    http2_u32_scribere(HTTP2_ERROR_NULLUS, g + IV);
+    CREDO_VERUM(fundere(&s, HTTP2_DISCESSUS, ZEPHYRUM, ZEPHYRUM, g,
+        VIII));
+    tertius = FALSUM;
+    dum (http2_eventum_capere(s.c, &ev, piscina))
+    {
+        si (ev.genus == HTTP2_EVENTUS_DISCESSUS && ev.rivus == III)
+        {
+            tertius = VERUM;
+        }
+    }
+    CREDO_VERUM(tertius);
+    CREDO_FALSUM(http2_rivus_exspectat(s.c, III));
+    h[ZEPHYRUM] = caput(":status", "200");
+    CREDO_VERUM(capita_fundere(&s, I, h, I, HTTP2_FINIS_RIVI));
+    CREDO_VERUM(eventum(&s, &ev, HTTP2_EVENTUS_CAPITA, I));
+    CREDO_VERUM(eventum(&s, &ev, HTTP2_EVENTUS_FINIS, I));
+}
+
+/* recensio finalis II: connexio destruitur - scheda et piscinae rivorum
+ * liberatae; reconnexiones multae in eadem piscina non crescunt */
+interior vacuum
+_sectio_destructio (
+    CredoContextus* c)
+{
+             Piscina* area;
+       Http2Connexio* k;
+    MemoriaProcessus  ante;
+    MemoriaProcessus  post;
+        Http2Eventus  ev;
+          HpackCaput  h[IV];
+                 i32  i;
+                 s64  incrementum;
+
+    (vacuum)c;
+    h[ZEPHYRUM] = caput(":method", "POST");
+    h[I] = caput(":scheme", "https");
+    h[II] = caput(":authority", "exemplum.example.org");
+    h[III] = caput(":path", "/");
+    area = piscina_generare_dynamicum("destructio", MMXLVIII * CXXVIII);
+    CREDO_NECESSE_NON_NIHIL(area);
+
+    CREDO_GRADUS("destructa: mortua, petere 0, nullus eventus, iterum tuta");
+    k = http2_connexionem_creare(HTTP2_CLIENS, NIHIL, area);
+    CREDO_NECESSE_NON_NIHIL(k);
+    CREDO_VERUM(http2_petere(k, h, IV, chorda_ex_literis("corpus",
+        area)) == I);
+    http2_connexionem_destruere(k);
+    CREDO_FALSUM(http2_viva(k));
+    CREDO_AEQUALIS_I32(http2_petere(k, h, IV, chorda_ex_literis("x",
+        area)), ZEPHYRUM);
+    CREDO_FALSUM(http2_eventum_capere(k, &ev, area));
+    http2_connexionem_destruere(k);
+    http2_connexionem_destruere(NIHIL);
+
+    CREDO_GRADUS("MMM connexiones cum rivis apertis: vestigium < VIII MiB");
+    piscina_vacare(area);
+    CREDO_NECESSE(memoria_processus_legere(ZEPHYRUM, &ante));
+    per (i = ZEPHYRUM; i < MMM; i++)
+    {
+        piscina_vacare(area);
+        k = http2_connexionem_creare(HTTP2_CLIENS, NIHIL, area);
+        si (!k)
+        {
+            frange;
+        }
+        (vacuum)http2_petere(k, h, IV, chorda_ex_literis("corpus",
+            area));
+        (vacuum)http2_petere(k, h, IV, chorda_ex_literis("corpus",
+            area));
+        http2_connexionem_destruere(k);
+    }
+    CREDO_AEQUALIS_I32(i, MMM);
+    CREDO_NECESSE(memoria_processus_legere(ZEPHYRUM, &post));
+    incrementum = (s64)post.vestigium - (s64)ante.vestigium;
+    imprimere("  vestigium: %ld KiB incrementum post MMM connexiones\n",
+        (longus)(incrementum / (s64)MXXIV));
+    CREDO_VERUM(incrementum < (s64)MMXLVIII * (s64)MMXLVIII * (s64)II);
+    piscina_destruere(area);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "praefatio", _sectio_praefatio, _parare, _purgare, NIHIL, NIHIL },
     { "petitio", _sectio_petitio, _parare, _purgare, NIHIL, NIHIL },
@@ -1022,6 +1130,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _purgare,
         NIHIL, NIHIL },
     { "concurrentia (T6)", _sectio_concurrentia, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "discessus cum exspectante (recensio)",
+        _sectio_discessus_exspectans, _parare, _purgare, NIHIL, NIHIL },
+    { "destructio (recensio)", _sectio_destructio, _parare, _purgare,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

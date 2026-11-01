@@ -131,4 +131,18 @@ b32
 http2_viva (
     constans Http2Connexio* c);
 
+/* VERUM si rivus petitus adhuc exspectat (supra MAX_CONCURRENT_STREAMS
+ * paris), capita numquam missa: petitio tuto iterari potest */
+b32
+http2_rivus_exspectat (
+    constans Http2Connexio* c,
+                       i32  rivus);
+
+/* rivi omnes clausi, scheda et piscinae rivorum liberatae; connexio
+ * postea mortua (petere 0, nullus eventus). Iterum vocari tutum,
+ * NIHIL licet. Memoria in piscina vocantis manet (eius est). */
+vacuum
+http2_connexionem_destruere (
+    Http2Connexio* c);
+
 #endif /* HTTP2_H */

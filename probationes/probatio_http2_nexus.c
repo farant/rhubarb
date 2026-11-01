@@ -515,6 +515,60 @@ _sectio_abruptio (
     reactor_destruere(r);
 }
 
+/* recensio finalis I: connexio perit cum petitione supra
+ * MAX_CONCURRENT_STREAMS (Go: CCL) exspectante - ea numquam missa
+ * retentabilis redit, missae non */
+#define PETITIONES_PLENAE CCLI
+
+interior vacuum
+_sectio_abruptio_exspectans (
+    CredoContextus* c)
+{
+        Reactor* r;
+  ServusOraculi  s;
+     Http2Nexus* x;
+     Observatio  o;
+         Exitus* e;
+            i32  i;
+            i32  facta;
+
+    CREDO_GRADUS("CCLI petitiones, servus necatus: ultima retentabilis");
+    e = (Exitus*)piscina_allocare(c->piscina,
+        (memoriae_index)magnitudo(Exitus) * PETITIONES_PLENAE);
+    r = reactor_creare(c->piscina);
+    CREDO_NECESSE(e && r && servum_oraculi_incipere(c, &s,
+        "abruptio_exspectans"));
+    x = aperire(c, r, s.portus, &o, ZEPHYRUM, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_VERUM(donec(r, &o.vivi, X * M));
+    morari(r, CC);
+    per (i = ZEPHYRUM; i < PETITIONES_PLENAE; i++)
+    {
+        si (!get(c, x, "/tarde?ms=8000", &e[i]))
+        {
+            frange;
+        }
+    }
+    CREDO_AEQUALIS_I32(i, PETITIONES_PLENAE);
+    morari(r, D);
+    servum_oraculi_claudere(&s);
+    CREDO_VERUM(donec(r, &e[PETITIONES_PLENAE - I].facta, X * M));
+    morari(r, CC);
+    facta = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < PETITIONES_PLENAE; i++)
+    {
+        facta += e[i].facta;
+    }
+    CREDO_AEQUALIS_I32(facta, PETITIONES_PLENAE);
+    CREDO_FALSUM(e[ZEPHYRUM].successus);
+    CREDO_FALSUM(e[ZEPHYRUM].retentabilis);
+    CREDO_FALSUM(e[PETITIONES_PLENAE - II].retentabilis);
+    CREDO_FALSUM(e[PETITIONES_PLENAE - I].successus);
+    CREDO_VERUM(e[PETITIONES_PLENAE - I].retentabilis);
+    http2_nexum_claudere(x);
+    reactor_destruere(r);
+}
+
 interior vacuum
 _sectio_non_h2 (
     CredoContextus* c)
@@ -611,6 +665,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "magnum", _sectio_magnum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "abire", _sectio_abire, NIHIL, NIHIL, NIHIL, NIHIL },
     { "abruptio", _sectio_abruptio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "abruptio cum exspectante (recensio)",
+        _sectio_abruptio_exspectans,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { "non h2", _sectio_non_h2, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

@@ -321,7 +321,11 @@ _perire (
 
         si (p->occupata)
         {
-            _petitionem_finire(x, p, FALSUM, causa, FALSUM);
+            /* differenda causam suam servant; exspectans numquam missa
+             * (supra MAX_CONCURRENT_STREAMS) tuto iteratur */
+            _petitionem_finire(x, p, FALSUM, p->differenda ? p->causa
+                : causa, p->differenda ? p->retentabilis
+                : http2_rivus_exspectat(x->h2, p->rivus));
         }
     }
 }
@@ -894,6 +898,11 @@ http2_nexum_aperire (
     x->capsa       = (i8*)piscina_allocare(piscina, NEXUS_CAPSA);
     si (!x->h2 || !x->scheda || !x->petitiones || !x->capsa)
     {
+        http2_connexionem_destruere(x->h2);
+        si (x->scheda)
+        {
+            piscina_destruere(x->scheda);
+        }
         redde NIHIL;
     }
     si (optiones && optiones->tabula_via)
@@ -1053,6 +1062,7 @@ http2_nexum_claudere (
                 : _literae(x, "connexio clausa"), p->retentabilis);
         }
     }
+    http2_connexionem_destruere(x->h2);
     si (x->scheda)
     {
         piscina_destruere(x->scheda);

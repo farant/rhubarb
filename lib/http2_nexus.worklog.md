@@ -12,3 +12,7 @@ NOMINA -> CONNEXIO -> PACTIO (TLS with ALPN {"h2"} required) -> VIVUS -> CLAUSUS
 - **Tap** (`tabula_via`, tests only): decrypted octets each direction to `<via>.servus.bin` / `<via>.cliens.bin` via `filum_scriptor_*` (examen 97: no raw IO).
 - Go's server advertises MAX_FRAME_SIZE 1 MiB; our DATA frames are still bounded by free output space (256 KiB buffer) - fine.
 - Live: `RHUBARB_RETE=1 ./build/probationes/probatio_http2_nexus` fetches nghttp2.org and www.google.com over our own HTTP/2 + TLS 1.3 (2026-10-31: both 2xx/3xx).
+
+## 2026-10-31 - final review fixes
+
+`http2_nexum_claudere` now destroys the h2 connection (and the creation-failure path frees what it made); the header says claudere must be called even after death. `_perire` keeps a deferred request's own causa/retentabilis (as claudere already did) and marks never-sent requests (still queued above the peer's MAX_CONCURRENT_STREAMS) retryable. Test: 251 slow GETs against Go's default limit of 250, server killed -> the 251st comes back `retentabilis` VERUM, the others FALSUM. Go 1.23's stdlib can't lower MaxConcurrentStreams (http.Server.HTTP2 is 1.24), hence 251.

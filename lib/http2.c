@@ -686,7 +686,10 @@ _discessum_tractare (
     {
         Rivus* r = (Rivus*)xar_obtinere(c->rivi, i);
 
-        si (r->status != RIVUS_VACUUS && r->id > ultimus)
+        /* exspectantes numquam missi: non tractati, quicquid ultimus
+         * dicit (nginx 2^31-1 ante GOAWAY secundum) */
+        si (   r->status == RIVUS_EXSPECTANS
+            || (r->status != RIVUS_VACUUS && r->id > ultimus))
         {
             (vacuum)_eventum(c, HTTP2_EVENTUS_DISCESSUS, r->id);
             _rivum_claudere(c, r);
@@ -1086,7 +1089,7 @@ http2_eventum_capere (
     Http2Eventus* ev;
              i32  i;
 
-    si (!c || !eventus || !piscina)
+    si (!c || !eventus || !piscina || !c->scheda)
     {
         redde FALSUM;
     }
@@ -1245,4 +1248,61 @@ http2_viva (
     constans Http2Connexio* c)
 {
     redde c && c->viva;
+}
+
+b32
+http2_rivus_exspectat (
+    constans Http2Connexio* c,
+                       i32  rivus)
+{
+    i32 i;
+
+    si (!c || !c->rivi)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(c->rivi); i++)
+    {
+        constans Rivus* r = (constans Rivus*)xar_obtinere(c->rivi, i);
+
+        si (r->status == RIVUS_EXSPECTANS && r->id == rivus)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+vacuum
+http2_connexionem_destruere (
+    Http2Connexio* c)
+{
+    i32 i;
+
+    si (!c)
+    {
+        redde;
+    }
+    c->viva = FALSUM;
+    si (c->rivi)
+    {
+        per (i = ZEPHYRUM; i < xar_numerus(c->rivi); i++)
+        {
+            Rivus* r = (Rivus*)xar_obtinere(c->rivi, i);
+
+            si (r->status != RIVUS_VACUUS)
+            {
+                _rivum_claudere(c, r);
+            }
+        }
+    }
+    si (c->scheda)
+    {
+        piscina_destruere(c->scheda);
+        c->scheda = NIHIL;
+    }
+    c->eventus         = NIHIL;
+    c->eventus_lecti   = ZEPHYRUM;
+    c->exitus_initium  = ZEPHYRUM;
+    c->exitus_finis    = ZEPHYRUM;
 }

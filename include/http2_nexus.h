@@ -85,7 +85,10 @@ http2_nexus_petere (
                   Piscina* piscina);
 
 /* GOAWAY NO_ERROR (si vivus), connexio clausa; petitiones pendentes
- * finiuntur cum defectu ANTE reditum */
+ * finiuntur cum defectu ANTE reditum. SEMPER vocanda, etiam post
+ * mortem nuntiatam: memoriam dynamicam connexionis liberat. Structura
+ * ipsa in piscina vocantis manet - qui saepe reconnectit piscinam
+ * propriam per nexum det. */
 vacuum
 http2_nexum_claudere (
     Http2Nexus* x);
