@@ -1,6 +1,6 @@
 # temperley celeritas: speed pass for the TL route (D136 T4, step 2)
 
-Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2: G1 adopted (1.71-1.80x), G2 next.
+Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2: G1 adopted (1.71-1.80x), G2 adopted (1.32-1.45x), P4 registered.
 v1 (4dfe7544) was approved by Fran in outline. The review (verdict
 "approve after fixes": H1–H3, M1–M6, L1–L5) is at the end, with what
 each finding changed.
@@ -308,6 +308,20 @@ recording old and new braids. T3 also recomputes the margins of the
   4,294,967,029 while the vertex route still accepts it. Plants 2/2 red
   (refusal dropped; prime limit dropped). G2 (Montgomery) now gated on
   the adopted kernel.
+  **T2 note, G2 (2026-10-31, measured): ADOPTED.** Candidate in
+  tools/uncinus_mensura.c section X (Montgomery, R = 2^32 folded into
+  α and c so the matrix stays in normal form, p' by Newton, one REDC
+  per element: αRM + cRS < 2^63 and m·p < 2^63 for p < 2^31), A/B
+  against the G1 library kernel, 9 ABBA pairs, values equal at every
+  point: **1.45×** at 12 × 801 (1.23-2.07), **1.32×** at 16 × 801
+  (1.18-1.44); gate ≥ 1.20×. (The design review's microbenchmark had
+  Montgomery slower than `%`; on the real kernel shape it is faster -
+  the gate did its job.)
+  **P4 (registered 2026-10-31 BEFORE the library port is measured).**
+  The library with Montgomery, A/B against the G1 kernel (section IX's
+  candidate, which is the G1 kernel verbatim), median of 9 ABBA pairs at
+  p = 2,147,483,629: at least **1.15×** at 12 × 801, 14 × 801 and
+  16 × 801.
 - **T3. Acceptance and dispatcher.** All 45 D136 brackets recomputed
   through `laqueus_uncinus_ex_plexu` against brackets.txt; refit CL;
   replace the 7 × 32 test braid and recheck the margins (M5); worklog.

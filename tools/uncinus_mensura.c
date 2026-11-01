@@ -28,6 +28,8 @@
  *        tempus processoris
  *   IX   (solum per -sectio IX) porta G1: nucleus in loco reductione
  *        UNA (p < 2^31) contra bibliothecam (reductiones duae), A/B
+ *   X    (solum per -sectio X) porta G2: reductio Montgomery contra
+ *        bibliothecam (post G1: reductio una per %), A/B
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -39,7 +41,7 @@
  * Usus: ./bin/aedilis tools/uncinus_mensura.c && bash
  *   build/aedilis/uncinus_mensura/struere.sh &&
  *   ./build/aedilis/uncinus_mensura/uncinus_mensura [-machina]
- *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX]
+ *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X]
  *   -machina: lineae "MENSURA <sectio> clavis=valor ..."
  */
 #include "latina.h"
@@ -1685,6 +1687,281 @@ _sectio_g1 (
     _g1_metiri(XVI, longitudo, paria, p);
 }
 
+/* X: porta G2 (temperley-celeritas-plan T2) - reductio Montgomery (R =
+ * 2^32 in alpha et c inclusa, matrix in forma normali) contra
+ * bibliothecam (G1: reductio una per %), A/B in eodem binario */
+interior i32
+_montgomery_inversa (
+    i32 p)
+{
+    i32 x = p;          /* p x = 1 mod 8 pro p impari */
+    i32 k;
+
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        x = x * ((i32)II - p * x);
+    }
+    redde (i32)ZEPHYRUM - x;     /* p' = -p^-1 mod 2^32 */
+}
+
+interior i32
+_montgomery_valor (
+    NucleusUnus* nu,
+            i32  a,
+            i32  a_inversa,
+            i32  delta,
+            i32  p)
+{
+    i32 pondera[TEMPERLEY_FILA_MAXIMA + III];
+    i64 alpha_r[II];
+    i64 factor_r[II];
+    i32 quadratum = congruentia_multiplica(a, a, p);
+    i32 quadratum_inversum = congruentia_multiplica(a_inversa,
+        a_inversa,
+        p);
+    i32 p_prima  = _montgomery_inversa(p);
+    i32 summa    = ZEPHYRUM;
+    i32 delta_inversa;
+    i32 k;
+    i32 j;
+
+    factor_r[ZEPHYRUM]  = ((i64)quadratum_inversum << XXXII) % (i64)p;
+    factor_r[I]         = ((i64)quadratum << XXXII) % (i64)p;
+    alpha_r[ZEPHYRUM] = ((i64)congruentia_subtrahe(ZEPHYRUM,
+        congruentia_multiplica(quadratum_inversum, quadratum_inversum,
+        p),
+        p) << XXXII) % (i64)p;
+    alpha_r[I] = ((i64)congruentia_subtrahe(ZEPHYRUM,
+        congruentia_multiplica(
+        quadratum, quadratum, p), p) << XXXII) % (i64)p;
+    pondera[ZEPHYRUM]  = I;
+    pondera[I]         = delta;
+    per (j = I; j + I <= nu->fila; j++)
+    {
+        pondera[j + I] =
+            congruentia_subtrahe(congruentia_multiplica(delta,
+            pondera[j], p), pondera[j - I], p);
+    }
+    per (k = ZEPHYRUM; k < nu->moduli; k++)
+    {
+        i32  d          = nu->dimensiones[k];
+        i32  arcus      = nu->arcus[k];
+        i32  fila       = nu->fila;
+        i32* matrix     = nu->alveus;
+        i32* linea      = nu->linea;
+        i32  vestigium  = ZEPHYRUM;
+        i32  e;
+        i32  t;
+        s32  littera_index;
+
+        per (e = ZEPHYRUM; e < d * d; e++)
+        {
+            matrix[e] = ZEPHYRUM;
+        }
+        per (t = ZEPHYRUM; t < d; t++)
+        {
+            matrix[t * d + t] = I;
+        }
+        per (littera_index = (s32)nu->longitudo - I; littera_index
+            >= ZEPHYRUM; littera_index--)
+        {
+            s32 littera = nu->verbum[littera_index];
+            i32 i = (i32)(littera > ZEPHYRUM ? littera : -littera) - I;
+            i32 signum = littera > ZEPHYRUM ? ZEPHYRUM : I;
+            i64 al = alpha_r[signum];
+            i64 c = factor_r[signum];
+            constans i32* ordines = nu->ordines[k] + i * arcus;
+            constans i8* numeri = nu->numeri[k] + i * arcus;
+            constans i32* fontes = nu->fontes[k] + i * arcus * fila;
+            i32 r;
+
+            per (r = ZEPHYRUM; r < arcus; r++)
+            {
+                i32* destinatio  = matrix + ordines[r] * d;
+                i32  numerus     = (i32)numeri[r];
+                i32  q;
+                i32  columna;
+
+                per (columna = ZEPHYRUM; columna < d; columna++)
+                {
+                    linea[columna] = ZEPHYRUM;
+                }
+                per (q = ZEPHYRUM; q < numerus; q++)
+                {
+                    constans i32* fons = matrix + fontes[r * fila
+                        + q] * d;
+
+                    per (columna = ZEPHYRUM; columna < d; columna++)
+                    {
+                        i32 x = linea[columna] + fons[columna];
+
+                        linea[columna] = x >= p ? x - p : x;
+                    }
+                }
+                /* REDC(t), t = alpha R M + c R S < 2^63; t + m p < 2^64 */
+                per (columna = ZEPHYRUM; columna < d; columna++)
+                {
+                    i64 tt = al * (i64)destinatio[columna] + c
+                        * (i64)linea[columna];
+                    i32 m = (i32)tt * p_prima;
+                    i64 u = (tt + (i64)m * (i64)p) >> XXXII;
+
+                    destinatio[columna] = (i32)(u >= (i64)p ? u
+                        - (i64)p : u);
+                }
+            }
+        }
+        per (t = ZEPHYRUM; t < d; t++)
+        {
+            vestigium = congruentia_adde(vestigium, matrix[t * d + t],
+                p);
+        }
+        summa = congruentia_adde(summa, congruentia_multiplica(
+            pondera[nu->fila % II + II * k], vestigium, p), p);
+    }
+    summa = congruentia_multiplica(summa, nu->scriptura >= ZEPHYRUM
+        ? congruentia_potentia(a, (i64)nu->scriptura, p)
+        : congruentia_potentia(a_inversa, (i64)(-nu->scriptura), p), p);
+    (vacuum)congruentia_inversa(delta, p, &delta_inversa);
+    redde congruentia_multiplica(summa, delta_inversa, p);
+}
+
+interior vacuum
+_g2_metiri (
+    i32 fila,
+    i32 longitudo_petita,
+    i32 paria,
+    i32 p)
+{
+    Piscina* piscina = piscina_generare_dynamicum("mensura_g2",
+        1048576);
+                       Sors  s;
+                        i32  longitudo  = longitudo_petita;
+                        s32* verbum     = NIHIL;
+                NucleusUnus  nu;
+    LaqueusModulusTemperley* mt;
+                        f64  rationes[PARIA_MAXIMA];
+                        f64  tempora_bibliothecae[PARIA_MAXIMA];
+                        f64  tempora_montgomery[PARIA_MAXIMA];
+                        f64  r_min    = 0.0;
+                        f64  r_max    = 0.0;
+                        i32  errores  = ZEPHYRUM;
+                        i32  k;
+
+    sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+    mt = _plexus_fortuitus(&s, fila, &longitudo, piscina, &verbum)
+        == NIHIL
+        ? NIHIL : laqueus_modulus_temperley_creare(verbum, longitudo,
+        fila,
+        (i64)0x80000000UL, piscina);
+    si (mt == NIHIL || !_unus_creare(verbum, longitudo, fila, piscina,
+        &nu))
+    {
+        imprimere("   X n=%u c=%u: trica aut structura refutata\n",
+            fila,
+            longitudo);
+        piscina_destruere(piscina);
+        redde;
+    }
+    per (k = ZEPHYRUM; k < paria; k++)
+    {
+            i32 a                 = ZEPHYRUM;
+            i32 valor             = ZEPHYRUM;
+            i32 valor_montgomery  = ZEPHYRUM;
+            i32 a_inversa;
+            i32 delta;
+            f64 tb = 0.0;
+            f64 tm = 0.0;
+        clock_t t0;
+            i32 omega = (i32)(k + II);
+            i32 ordo;
+
+        si (laqueus_modulus_temperley_aestimare(mt, omega, p, &a,
+            &valor)
+            != INTERPOLATIO_UTILE)
+        {
+            errores++;
+            perge;
+        }
+        (vacuum)congruentia_inversa(a, p, &a_inversa);
+        delta = congruentia_subtrahe(ZEPHYRUM, congruentia_adde(
+            congruentia_multiplica(a, a, p), congruentia_multiplica(
+            a_inversa, a_inversa, p), p), p);
+        per (ordo = ZEPHYRUM; ordo < II; ordo++)
+        {
+            b32 bibliotheca_nunc = (k % II == ZEPHYRUM) == (ordo
+                == ZEPHYRUM);
+            i32 punctum  = ZEPHYRUM;
+            i32 v        = ZEPHYRUM;
+
+            t0 = clock();
+            si (bibliotheca_nunc)
+            {
+                (vacuum)laqueus_modulus_temperley_aestimare(mt, omega,
+                    p,
+                    &punctum, &v);
+                tb = _secundae(t0);
+                si (v != valor)
+                {
+                    errores++;
+                }
+            }
+            alioquin
+            {
+                valor_montgomery = _montgomery_valor(&nu, a, a_inversa,
+                    delta, p);
+                tm = _secundae(t0);
+            }
+        }
+        si (valor_montgomery != valor)
+        {
+            errores++;
+        }
+        tempora_bibliothecae[k]  = tb;
+        tempora_montgomery[k]    = tm;
+        rationes[k]              = tm > 0.0 ? tb / tm : 0.0;
+        si (k == ZEPHYRUM || rationes[k] < r_min)
+        {
+            r_min = rationes[k];
+        }
+        si (k == ZEPHYRUM || rationes[k] > r_max)
+        {
+            r_max = rationes[k];
+        }
+    }
+    imprimere("   n=%2u c=%u  bibliotheca (%%) %9.4f s  montgomery %9.4f s  "
+        "ratio %.3f [%.3f, %.3f]  %s\n", fila, longitudo,
+        _mediana(tempora_bibliothecae, paria),
+        _mediana(tempora_montgomery,
+        paria), _mediana(rationes, paria), r_min, r_max, errores
+        == ZEPHYRUM ? "valores aequales" : "VALORES DIFFERUNT");
+    fflush(stdout);
+    piscina_destruere(piscina);
+}
+
+interior vacuum
+_sectio_g2 (
+    i32 fila,
+    i32 longitudo,
+    i32 paria)
+{
+    i32 p = _primus_infra_2_31();
+
+    si (paria > PARIA_MAXIMA)
+    {
+        paria = PARIA_MAXIMA;
+    }
+    imprimere("\nX. porta G2: Montgomery contra bibliothecam (G1)\n");
+    imprimere("   p = %u, paria ABBA = %u\n", p, paria);
+    si (fila != ZEPHYRUM)
+    {
+        _g2_metiri(fila, longitudo, paria, p);
+        redde;
+    }
+    _g2_metiri(XII, longitudo, paria, p);
+    _g2_metiri(XVI, longitudo, paria, p);
+}
+
 s32
 principale (
                s32  argc,
@@ -1756,6 +2033,13 @@ principale (
     si (sectio != NIHIL && strcmp(sectio, "VII") == ZEPHYRUM)
     {
         _sectio_k();
+        redde ZEPHYRUM;
+    }
+    si (sectio != NIHIL && strcmp(sectio, "X") == ZEPHYRUM)
+    {
+        _sectio_g2(fila_data ? fila : ZEPHYRUM, longitudo
+            == DCCC ? DCCCI
+            : longitudo, paria < I ? I : paria);
         redde ZEPHYRUM;
     }
     si (sectio != NIHIL && strcmp(sectio, "IX") == ZEPHYRUM)
