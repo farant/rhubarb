@@ -833,3 +833,21 @@ The 7 x 32 cap-flip test braid stopped flipping in T1 (TL bytes up with
 the source tables); replaced by 9 x 74 (K* = 47.8). Memory-only flips
 become rare as TL gets cheaper: 254 with K* < 150 but 3 with K* < 60 in
 200,000 random braids.
+
+## 2026-10-31 - celeritas T2: one reduction (G1) and Montgomery (G2)
+
+G1: with the TL route restricted to primes below 2^31, alpha M + c S <
+2 (p-1)^2 < 2^63 needs one `%` instead of two: 1.80x (12 x 801) and
+1.71x (16 x 801) over the T1 kernel. Adopted: TL aestimare refuses
+p >= 2^31, its interpolation sets primus_limes = 2^31, step-1 rule 4
+amended (the vertex route keeps primes near 2^32).
+
+G2: Montgomery with R = 2^32 folded into the four constants (alpha R,
+c R mod p), so the matrix never leaves normal form and the identity
+stays 1; p' = -p^-1 mod 2^32 by four Newton steps from x = p (p x = 1
+mod 8, bits 3 -> 6 -> 12 -> 24 -> 48); one REDC per element (t + m p <
+2^64 because t < 2^63 and m p < 2^63 for p < 2^31). The design review's
+microbenchmark had Montgomery 0.76-0.87x of `%`; on the real kernel it
+is 1.32-1.45x (gate) and 1.34-1.36x (P4, registered before measuring).
+Microbenchmarks of an isolated operation did not predict the kernel;
+the gate on the real shape did.

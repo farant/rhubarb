@@ -1,6 +1,6 @@
 # temperley celeritas: speed pass for the TL route (D136 T4, step 2)
 
-Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2: G1 adopted (1.71-1.80x), G2 adopted (1.32-1.45x), P4 registered.
+Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2 done: G1 adopted (1.71-1.80x), G2 adopted, P4 HOLDS (1.34-1.36x); T3 next.
 v1 (4dfe7544) was approved by Fran in outline. The review (verdict
 "approve after fixes": H1–H3, M1–M6, L1–L5) is at the end, with what
 each finding changed.
@@ -322,6 +322,20 @@ recording old and new braids. T3 also recomputes the margins of the
   candidate, which is the G1 kernel verbatim), median of 9 ABBA pairs at
   p = 2,147,483,629: at least **1.15×** at 12 × 801, 14 × 801 and
   16 × 801.
+  **T2 result, P4 HOLDS (2026-10-31).** dd93b803 (Montgomery in the
+  library). A/B library against the frozen G1 kernel (section IX), 9
+  ABBA pairs, p = 2,147,483,629, values equal at every point:
+
+  | n × c | G1 s/point | library s/point | ratio G1/library | pair range | registered |
+  | --- | ---: | ---: | ---: | --- | --- |
+  | 12 × 801 | 0.0521 | 0.0377 | 1.34 | 1.32-1.42 | ≥ 1.15 |
+  | 14 × 801 | 0.8436 | 0.6447 | 1.36 | 1.21-1.56 | ≥ 1.15 |
+  | 16 × 801 | 12.33 | 9.03 | 1.36 | 1.20-1.58 | ≥ 1.15 |
+
+  Plants 2/2 red (constant not pre-scaled by R; p' from three Newton
+  steps). Stacked, the three changes give roughly 2.8 × 1.75 × 1.35 ≈
+  6.6× per point over the T0 kernel (a product of medians, not a
+  measurement; T3 measures the cumulative ratio directly).
 - **T3. Acceptance and dispatcher.** All 45 D136 brackets recomputed
   through `laqueus_uncinus_ex_plexu` against brackets.txt; refit CL;
   replace the 7 × 32 test braid and recheck the margins (M5); worklog.

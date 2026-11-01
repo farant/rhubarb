@@ -1309,8 +1309,10 @@ _sectio_uncini_tl (
 }
 
 /* IX: porta G1 (temperley-celeritas-plan T2) - nucleus in loco cum
- * reductione UNA (p < 2^31: alpha M + c S < 2^63) contra bibliothecam
- * (T1, reductiones duae), A/B in eodem binario */
+ * reductione UNA per % (p < 2^31: alpha M + c S < 2^63) contra
+ * bibliothecam, A/B in eodem binario. Cum mensus est, bibliotheca erat
+ * nucleus T1 (reductiones duae); post G1 et G2 bibliotheca Montgomery
+ * habet, et haec sectio P4 metitur (ratio = bibliotheca / G1). */
 nomen structura {
              i32   fila;
              i32   longitudo;
@@ -1655,8 +1657,8 @@ _g1_metiri (
             r_max = rationes[k];
         }
     }
-    imprimere("   n=%2u c=%u  bibliotheca (II reductiones) %9.4f s  unus %9.4f "
-        "s  ratio %.3f [%.3f, %.3f]  %s\n", fila, longitudo,
+    imprimere("   n=%2u c=%u  bibliotheca (nucleus currens) %9.4f s  unus (G1) "
+        "%9.4f s  ratio %.3f [%.3f, %.3f]  %s\n", fila, longitudo,
         _mediana(tempora_bibliothecae, paria), _mediana(tempora_unius,
         paria), _mediana(rationes, paria), r_min, r_max, errores
         == ZEPHYRUM ? "valores aequales" : "VALORES DIFFERUNT");
