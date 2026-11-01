@@ -3975,7 +3975,9 @@ laqueus_modulus_temperley_limes (
  * clausa; deinde viae eligibiles (vertex: officina <= octeti_maximi;
  * temperley: fila <= XVI et octeti <= octeti_maximi) et vilior per
  * pretium integrum saturatum: vertex multiplicationes x CLXXXV contra
- * temperley x CL (knotapel D136: ~1.85 et ~1.5 ns), aequalitas ad
+ * temperley x XXI (knotapel D136: ~1.85 et ~1.5 ns per multiplicationem
+ * nominalem; post nucleum in loco, reductionem unam et Montgomery
+ * temperley-celeritas-plan T3: 150 / 6.98, ratio A/B mediana), aequalitas ad
  * temperley. Pretium nullam officinam allocat (consilium vertex intra
  * notam piscinae). Via electa si fallit, altera NON tentatur: ambae
  * exactae, defectus vitium est quod iteratio celaret.
@@ -4062,7 +4064,7 @@ laqueus_via_eligere (
         alioquin
         {
             electa = _pretium(sv.multiplicationes, CLXXXV)
-                < _pretium(st.multiplicationes, CL)
+                < _pretium(st.multiplicationes, XXI)
                 ? LAQUEUS_VIA_VERTEX : LAQUEUS_VIA_TEMPERLEY;
         }
     }

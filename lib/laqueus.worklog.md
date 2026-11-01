@@ -851,3 +851,16 @@ microbenchmark had Montgomery 0.76-0.87x of `%`; on the real kernel it
 is 1.32-1.45x (gate) and 1.34-1.36x (P4, registered before measuring).
 Microbenchmarks of an isolated operation did not predict the kernel;
 the gate on the real shape did.
+
+## 2026-10-31 - celeritas T3: acceptance and dispatcher refit
+
+All 45 D136 brackets recomputed through laqueus_uncinus_ex_plexu are
+byte-identical to knotapel/demo_136_tl_braid_closures/brackets.txt.
+Cumulative per-point speed-up of the TL route over 79e7fad9: 6.82x /
+6.98x / 7.42x at 12 / 14 / 16 x 801 (A/B in one binary). TL price
+constant refitted 150 -> 21 (vertex constant 185 unchanged); the thinnest
+remaining margin is 12 x 201 (K* 17.85 against 21).
+
+Memory-only cap flips (vertex cheaper but bigger than TL's bytes) get
+rare as TL gets cheaper: none with K* < 30 among short braids; long
+braids (c = 130-200) still have them. Test braid now 11 x 134 (K* 15.7).

@@ -480,8 +480,10 @@ nomen enumeratio {
  * (catenae, fila intacta, litterae extra ambitum) -> FALSUM. c <= 1 ->
  * NULLA. Aliter viae eligibiles - vertex: officina <= octeti_maximi;
  * temperley: fila <= XVI et octeti <= octeti_maximi - et vilior per
- * pretium integrum (multiplicationes x CLXXXV vertex, x CL temperley:
- * ns per multiplicationem in D136, x C), saturatum; aequalitas ad
+ * pretium integrum (multiplicationes x CLXXXV vertex, x XXI temperley:
+ * ns per multiplicationem nominalem x C - D136 1.85 et 1.5, temperley
+ * deinde 6.98x celerior, temperley-celeritas-plan T3), saturatum;
+ * aequalitas ad
  * temperley. FALSUM si neutra eligibilis. sumptus_* NIHIL licent
  * (aliter scripti: nulli pro via NULLA aut non computata;
  * sumptus_vertex ordinem a consilio redditum describit etiam si officina

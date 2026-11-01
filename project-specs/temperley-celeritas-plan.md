@@ -1,6 +1,6 @@
 # temperley celeritas: speed pass for the TL route (D136 T4, step 2)
 
-Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2 done: G1 adopted (1.71-1.80x), G2 adopted, P4 HOLDS (1.34-1.36x); T3 next.
+Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2 done (G1, G2 adopted; P4 holds); T3 done (45/45 brackets identical; 6.8-7.4x cumulative; TL constant 21); T4 next.
 v1 (4dfe7544) was approved by Fran in outline. The review (verdict
 "approve after fixes": H1–H3, M1–M6, L1–L5) is at the end, with what
 each finding changed.
@@ -340,6 +340,31 @@ recording old and new braids. T3 also recomputes the margins of the
   through `laqueus_uncinus_ex_plexu` against brackets.txt; refit CL;
   replace the 7 × 32 test braid and recheck the margins (M5); worklog.
   Fran decides here whether to run a full 14 × 801 bracket.
+  **T3 note (2026-10-31, done).**
+  - **Acceptance:** all 45 D136 brackets recomputed through
+    `laqueus_uncinus_ex_plexu` (tools/uncinus_mensura.c section XI;
+    dispatcher took vertex 19 times, TL 26) are byte-identical to
+    brackets.txt (sha256 de53b6e5…). The 12 × 801 one: 780 s CPU
+    (descriptive, under load; T0 2,959 s).
+  - **Cumulative per-point ratio**, frozen 79e7fad9 kernel against the
+    library (section VI, 9 ABBA pairs, values equal): **6.82×**
+    (12 × 801), **6.98×** (14 × 801), **7.42×** (16 × 801) - matching
+    the product of the three steps' medians (~6.6×).
+  - **Dispatcher refit:** TL price constant 150 → **21** (150 / 6.98,
+    the median cumulative ratio; the vertex constant 185 untouched).
+    Registered choices unchanged: vertex at 12 × 101 (K* 0.99) and
+    12 × 201 (K* 17.85: margin 21 / 17.85 = 1.18×, the thinnest);
+    TL at every longer braid. The old 7 × 32 braid now goes TL on
+    price, as T0's K* predicted.
+  - **Cap-flip test braid** replaced again: 9 × 74 (K* 47.8) would flip
+    on price under 21. A search of 400,000 random braids (n ≤ 14,
+    c ≤ 200) found memory-only flips with K* < 30 only among long
+    braids (c = 130-200); the test now uses 11 × 134 (K* 15.7, vertex
+    workspace 198,912 B against TL 171,677 B). The dispatcher's
+    "comparison inverted" plant is still caught (via electa).
+  - The 14 × 801 headline: Fran's call (estimate ~1-2 h CPU at the new
+    speed: 14 × 801 per point ~0.67 s × ~13,000 points ≈ 2.4 h under
+    this week's load).
 - **T4. Review.** Independent reviewer, own oracle, not building in the
   live tree.
 

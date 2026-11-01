@@ -30,6 +30,8 @@
  *        UNA (p < 2^31) contra bibliothecam (reductiones duae), A/B
  *   X    (solum per -sectio X) porta G2: reductio Montgomery contra
  *        bibliothecam (post G1: reductio una per %), A/B
+ *   XI   (solum per -sectio XI) acceptatio: XLV uncini D136 per
+ *        laqueus_uncinus_ex_plexu, lineae formae brackets.txt
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -41,7 +43,7 @@
  * Usus: ./bin/aedilis tools/uncinus_mensura.c && bash
  *   build/aedilis/uncinus_mensura/struere.sh &&
  *   ./build/aedilis/uncinus_mensura/uncinus_mensura [-machina]
- *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X]
+ *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X|XI]
  *   -machina: lineae "MENSURA <sectio> clavis=valor ..."
  */
 #include "latina.h"
@@ -1964,6 +1966,79 @@ _sectio_g2 (
     _g2_metiri(XVI, longitudo, paria, p);
 }
 
+/* XI: acceptatio (temperley-celeritas-plan T3) - omnes XLV uncini
+ * D136 per laqueus_uncinus_ex_plexu (via electa), lineae formae
+ * brackets.txt (knotapel D136) ad comparationem integram */
+interior vacuum
+_sectio_probationis_finalis (vacuum)
+{
+    constans i32 longitudines[IV] = { XX, L, CI, CCI };
+    constans i32 magnae[V][II] = { { VIII, CDI }, { VIII, DCCCI },
+        { X, CDI }, { XII, CDI }, { XII, DCCCI } };
+    i32 k;
+
+    imprimere("\nXI. acceptatio: uncini D136 per viam electam\n");
+    per (k = ZEPHYRUM; k < XL + V; k++)
+    {
+        Piscina* piscina = piscina_generare_dynamicum("mensura_acc",
+            1048576);
+        Sors s;
+         i32 fila = k < XL ? III + k / IV : (i32)magnae[k
+             - XL][ZEPHYRUM];
+        i32 longitudo = k < XL ? longitudines[k % IV]
+            : (i32)magnae[k - XL][I];
+               s32* verbum = NIHIL;
+        Polynomium  f;
+        LaqueusVia  via = LAQUEUS_VIA_NULLA;
+           clock_t  t0;
+
+        sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+        si (_plexus_fortuitus(&s, fila, &longitudo, piscina, &verbum)
+            == NIHIL)
+        {
+            imprimere("   %u x %u: nullum verbum\n", fila, longitudo);
+            piscina_destruere(piscina);
+            perge;
+        }
+        t0 = clock();
+        si (!laqueus_uncinus_ex_plexu(verbum, longitudo, fila,
+            CONTRACTIO_SATURATUM, piscina, &f, &via))
+        {
+            imprimere("   %u x %u: REFUTATUM\n", fila, longitudo);
+        }
+        alioquin
+        {
+            s32 e;
+            s32 scriptura = ZEPHYRUM;
+            i32 j;
+
+            per (j = ZEPHYRUM; j < longitudo; j++)
+            {
+                scriptura += verbum[j] > ZEPHYRUM ? (s32)I : -(s32)I;
+            }
+            imprimere("   %u x %u: via %s, %.2f s\n", fila, longitudo,
+                via == LAQUEUS_VIA_VERTEX ? "vertex" : "temperley",
+                _secundae(t0));
+            imprimere("UNCINUS plexus%u x %u | n %u | c %u | writhe %d | "
+                "A^%d ..", fila, longitudo, fila, longitudo, scriptura,
+                polynomium_gradus_imus(f));
+            per (e = polynomium_gradus_imus(f); e
+                <= polynomium_gradus_summus(f); e++)
+            {
+                chorda t = magnus_ad_chordam(polynomium_coefficiens(f,
+                    e),
+                    piscina);
+
+                imprimere(" %.*s", (integer)t.mensura,
+                    (constans character*)t.datum);
+            }
+            imprimere("\n");
+        }
+        fflush(stdout);
+        piscina_destruere(piscina);
+    }
+}
+
 s32
 principale (
                s32  argc,
@@ -2035,6 +2110,11 @@ principale (
     si (sectio != NIHIL && strcmp(sectio, "VII") == ZEPHYRUM)
     {
         _sectio_k();
+        redde ZEPHYRUM;
+    }
+    si (sectio != NIHIL && strcmp(sectio, "XI") == ZEPHYRUM)
+    {
+        _sectio_probationis_finalis();
         redde ZEPHYRUM;
     }
     si (sectio != NIHIL && strcmp(sectio, "X") == ZEPHYRUM)

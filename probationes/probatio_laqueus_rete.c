@@ -2672,39 +2672,47 @@ _probare_viam_electam (
 
     /* inversio per limitem (recensio T4, M1): vertex pretio vilior sed
      * officina maior quam octeti temperley; limes in [octeti temperley,
-     * officina) -> temperley, et uncinus idem. Trica 9 x 74 (celeritas
-     * T1: K* = 47.8, ergo vertex manet donec constans temperley > 47.8;
-     * prior 7 x 32, K* = 130.45, octetis temperley auctis non iam
-     * invertit) */
+     * officina) -> temperley, et uncinus idem. Trica 11 x 134 (celeritas
+     * T3: K* = 15.7, infra constantem temperley refectam; inventa
+     * quaerendo 400.000 tricas usque ad 14 fila et 200 transitus -
+     * inversiones memoriae solae rarae fiunt quo via TL vilior est;
+     * priores 7 x 32 (K* 130.45) et 9 x 74 (K* 47.8) constanti refecta
+     * pretio iam invertuntur) */
     {
-        constans s32 verbum[LXXIV] = {
-            V, IV, -VI, -VII, VI, -II, -IV, VI, IV, -V, -V, -VIII, III,
-                VI,
-            IV, -IV, I, -VIII, -IV, II, VII, -VII, -VII, -IV, -II, -V,
-            -VII, VI, -III, II, VIII, IV, V, -VIII, III, VIII, V, -II,
+        constans s32 verbum[CXXXIV] = {
+            -V, -VIII, IX, VIII, VIII, -IV, IV, III, X, VII, -X, -VI,
+                -II,
+            III, -V, -IV, VII, -VI, -IX, -X, X, -IV, VII, VI, -IV, II,
                 I,
-            III, -II, -VII, VI, III, -II, -VI, -I, IV, -IV, VIII, -IV,
-                I,
-            -III, -V, VI, VII, -VIII, -V, -II, II, IV, -II, -III, III,
+            VII, I, VI, V, III, VIII, II, IV, -VI, -IV, -I, -II, -IV,
                 III,
-            -II, VII, -VIII, -IV, -V, I, III, -V, -IV };
+            V, -I, -V, IV, -X, X, II, IV, -I, VI, III, -II, -VI, -VIII,
+                V,
+            -VI, VI, -III, III, II, -II, VII, -V, -I, I, -VII, VIII, II,
+            VI, II, -VI, VIII, IX, VIII, -III, IX, -IV, -IX, IV, I, X,
+            -III, VIII, -III, VIII, I, IX, IX, VI, VIII, VIII, X, -I, V,
+            IV, -VI, II, -VI, VIII, -IX, -VIII, II, -I, -IV, V, IX,
+                VIII,
+            -IV, -I, III, X, V, -V, -VIII, -III, VII, I, V, IX, -VIII,
+            VIII, -VI, -IV, II, III, IV, II, VIII, -X, -I, IX, VIII,
+                -IV };
                      LaqueusVia via = LAQUEUS_VIA_NULLA;
               ContractioSumptus sv;
         LaqueusTemperleySumptus st;
                      Polynomium sine_limite  = polynomium_nullum();
                      Polynomium limitatus    = polynomium_nullum();
 
-        CREDO_NECESSE(laqueus_via_eligere(verbum, LXXIV, IX,
+        CREDO_NECESSE(laqueus_via_eligere(verbum, CXXXIV, XI,
             CONTRACTIO_SATURATUM, piscina, &via, &sv, &st));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
         CREDO_VERUM(st.octeti < sv.octeti_officinae);
-        CREDO_NECESSE(laqueus_via_eligere(verbum, LXXIV, IX, st.octeti,
+        CREDO_NECESSE(laqueus_via_eligere(verbum, CXXXIV, XI, st.octeti,
             piscina, &via, NIHIL, NIHIL));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
-        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, LXXIV, IX,
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, CXXXIV, XI,
             CONTRACTIO_SATURATUM, piscina, &sine_limite, &via));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_VERTEX);
-        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, LXXIV, IX,
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, CXXXIV, XI,
             st.octeti, piscina, &limitatus, &via));
         CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
         CREDO_VERUM(polynomium_aequalis(sine_limite, limitatus));
