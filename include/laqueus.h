@@ -395,9 +395,10 @@ laqueus_jones_ex_pd_rete (
  * sigma_i^(+-1) -> A^(+-1) 1 + A^(-+1) e_i, delta = -A^2 - A^-2.
  * Dimensiones summa d^2 = Catalan(n) pro ~2^(2n) statibus moduli
  * vertex: celerior in tricis longis, tardior in brevibus multorum
- * filorum (knotapel D136). Puncta, codices status, fenestra, limes et
- * interpolatio EADEM ac modulus vertex (functiones interiores
- * communes). Vide project-specs/temperley-lieb-plan.md et
+ * filorum (knotapel D136). Puncta, codices status, fenestra et limes
+ * EADEM ac modulus vertex (functiones interiores communes); primi
+ * tamen infra 2^31 tantum (temperley-celeritas-plan G1, 2026-10-31:
+ * reductio una in nucleo), ergo interpolatio primis infra 2^31. Vide project-specs/temperley-lieb-plan.md et
  * temperley-celeritas-plan.md (nucleus in loco).
  * ================================================== */
 
@@ -442,8 +443,9 @@ laqueus_modulus_temperley_creare (
          Piscina* piscina);
 
 /* contractus idem ac laqueus_modulus_vertex_aestimare (puncta eadem,
- * INUTILE ubi delta = 0, ERRATUM eadem); *punctum et *valor non tacti
- * nisi UTILE. Nihil allocat. */
+ * INUTILE ubi delta = 0, ERRATUM eadem) PRAETER p >= 2^31: ERRATUM
+ * (celeritas G1). *punctum et *valor non tacti nisi UTILE. Nihil
+ * allocat. */
 s32
 laqueus_modulus_temperley_aestimare (
     LaqueusModulusTemperley* mt,
@@ -452,7 +454,8 @@ laqueus_modulus_temperley_aestimare (
                         i32* punctum,
                         i32* valor);
 
-/* uncinus exactus per interpolatio (quaestio eadem ac vertex). FALSUM si
+/* uncinus exactus per interpolatio (quaestio vertex, primis infra 2^31).
+ * FALSUM si
  * restitutio refutat (exitus non tangitur). */
 b32
 laqueus_modulus_temperley_uncinus (

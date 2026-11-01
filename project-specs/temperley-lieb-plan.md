@@ -38,6 +38,12 @@ roots of unity) builds on a tested function instead of a demo.
    points (A = i·ω², one shared interior point-choice function), return
    codes, interpolation settings, window and bound, so the two routes
    are interchangeable and comparable at every point.
+   **[Amended 2026-10-31, temperley-celeritas-plan T2 gate G1:** the TL
+   route accepts only primes below 2^31 (ERRATUM otherwise) and its
+   interpolation uses primes below 2^31, so its kernel needs one
+   reduction per element (1.71-1.80× faster per point). Points,
+   return codes otherwise, window and bound stay shared; the two routes
+   remain comparable at every prime below 2^31.]
 5. **Pricing allocates nothing.** Choosing a route builds no workspace
    for the route not taken (H2).
 

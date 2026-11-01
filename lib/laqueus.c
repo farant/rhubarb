@@ -3456,7 +3456,8 @@ laqueus_jones_ex_pd_rete (
  * contrahere est bijectio in W_{n-2,j}), quisque cum fontibus (< fila)
  * in tabula latitudinis fixae - octeti ergo forma clausa. S per ordinem
  * temporarium, REDUCTUM dum summatur (fontes usque ad fila/2: summa non
- * reducta 2^64 excederet); (alpha M mod p) + c S < 2^64 pro p < 2^32.
+ * reducta 2^64 excederet); primi infra 2^31 (celeritas G1), ergo
+ * alpha M + c S < 2^63 et reductio una.
  * Deinde Sigma_j Delta_j tr M x A^w / delta. Nihil per punctum
  * allocatum.
  * ================================================== */
@@ -3772,7 +3773,10 @@ laqueus_modulus_temperley_aestimare (
     i32 j;
     s32 status;
 
-    si (mt == NIHIL || punctum == NIHIL || valor == NIHIL)
+    /* via TL primos infra 2^31 tantum accipit (celeritas G1: reductio
+     * una in nucleo) */
+    si (   mt == NIHIL || punctum == NIHIL || valor == NIHIL
+        || p  >= (i32)0x80000000UL)
     {
         redde INTERPOLATIO_ERRATUM;
     }
@@ -3859,20 +3863,16 @@ laqueus_modulus_temperley_aestimare (
                     {
                         i32 x = linea[columna] + fons[columna];
 
-                        si (x < linea[columna] || x >= p)
-                        {
-                            x -= p;
-                        }
-                        linea[columna] = x;
+                        linea[columna] = x >= p ? x - p : x;
                     }
                 }
+                /* p < 2^31: alpha M + c S < 2 (p - 1)^2 < 2^63, reductio
+                 * una (celeritas G1) */
                 per (columna = ZEPHYRUM; columna < d; columna++)
                 {
-                    i64 x = (al * (i64)destinatio[columna]) % (i64)p;
-
-                    destinatio[columna] = (i32)((x
-                        + c * (i64)linea[columna])
-                        % (i64)p);
+                    destinatio[columna] =
+                        (i32)((al * (i64)destinatio[columna]
+                        + c * (i64)linea[columna]) % (i64)p);
                 }
             }
         }
@@ -3920,7 +3920,8 @@ laqueus_modulus_temperley_uncinus (
     {
         redde FALSUM;
     }
-    q = _quaestio_uncini(mt->imus, mt->summus, mt->limes);
+    q               = _quaestio_uncini(mt->imus, mt->summus, mt->limes);
+    q.primus_limes  = (i32)0x80000000UL;          /* primi infra 2^31 */
     redde interpolatio_polynomium(_aestimator_temperley, mt, &q,
         piscina,
         exitus);

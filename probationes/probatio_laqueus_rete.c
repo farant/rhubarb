@@ -2115,7 +2115,7 @@ _probare_temperley_puncta (
     i32* pd;
     LaqueusModulusTemperley* mt;
     LaqueusModulusVertex* mv;
-    constans i32 primi[III] = { (i32)998244353UL, (i32)4294967029UL,
+    constans i32 primi[III] = { (i32)998244353UL, (i32)2147483629UL,
         (i32)998244353UL };
                i32 valores_primi[XL];
                i32 a = (i32)0xDEADUL;
@@ -2178,6 +2178,18 @@ _probare_temperley_puncta (
     CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II,
         (i32)998244353UL, &a, &v), INTERPOLATIO_UTILE);
     CREDO_AEQUALIS_I32(a, (i32)651909481UL);
+
+    /* celeritas G1: via TL primos >= 2^31 refutat (exitus non tacti),
+     * modulus vertex eos accipit; 2147483629 (primus maximus = 1 mod 4
+     * infra 2^31) culpam multiplicationis 32 bitorum adhuc capit */
+    a = (i32)0xDEADUL;
+    v = (i32)0xDEADUL;
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, VII,
+        (i32)4294967029UL, &a, &v), INTERPOLATIO_ERRATUM);
+    CREDO_AEQUALIS_I32(a, (i32)0xDEADUL);
+    CREDO_AEQUALIS_I32(v, (i32)0xDEADUL);
+    CREDO_AEQUALIS_S32(laqueus_modulus_vertex_aestimare(mv, VII,
+        (i32)4294967029UL, &a, &v), INTERPOLATIO_UTILE);
 
     /* custodes: exitus non tacti */
     a = (i32)0xDEADUL;

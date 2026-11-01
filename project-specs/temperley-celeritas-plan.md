@@ -1,6 +1,6 @@
 # temperley celeritas: speed pass for the TL route (D136 T4, step 2)
 
-Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold), T2 next.
+Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2: G1 adopted (1.71-1.80x), G2 next.
 v1 (4dfe7544) was approved by Fran in outline. The review (verdict
 "approve after fixes": H1–H3, M1–M6, L1–L5) is at the end, with what
 each finding changed.
@@ -296,6 +296,18 @@ recording old and new braids. T3 also recomputes the margins of the
 - **T2. Reduction gates.** G1 (primes below 2^31, one reduction), then
   G2 (Montgomery) only if G1 adopted; each adopted change with its tests,
   plants, contract amendment and (for G2) registered prediction.
+  **T2 note, G1 (2026-10-31, measured): ADOPTED.** Candidate kernel in
+  tools/uncinus_mensura.c section IX (one reduction, p < 2^31), A/B
+  against the T1 library kernel, 9 ABBA pairs, p = 2,147,483,629, values
+  equal at every point: **1.80×** at 12 × 801 (pairs 1.20-2.33) and
+  **1.71×** at 16 × 801 (1.41-1.86); gate ≥ 1.10×. Ported into the
+  library: the TL route refuses p ≥ 2^31 (ERRATUM, outputs untouched),
+  its interpolation uses primes below 2^31 (`primus_limes`), the kernel
+  reduces once; header contract and step-1 rule 4 amended; the TL point
+  test moved to 2,147,483,629, plus a check that the TL route refuses
+  4,294,967,029 while the vertex route still accepts it. Plants 2/2 red
+  (refusal dropped; prime limit dropped). G2 (Montgomery) now gated on
+  the adopted kernel.
 - **T3. Acceptance and dispatcher.** All 45 D136 brackets recomputed
   through `laqueus_uncinus_ex_plexu` against brackets.txt; refit CL;
   replace the 7 × 32 test braid and recheck the margins (M5); worklog.
