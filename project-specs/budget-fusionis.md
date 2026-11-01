@@ -172,7 +172,7 @@ f1656a51), F6 overlaps I5.
 | H2 | excubitor.sh scans only the filter's build dir (3 whole-tree finds over 415k entries → 1 dir); 56-60 s → 1 s per call, byte-identical | 2.3-3.7 | S | LUCRUM 729b7447: 51-56 → 0-1 s, byte-identical on 5 filters; new gate `excubitor` |
 | H5 | cursor_communis.sh compiles an instrument closure with one `compilator --plures` (28 wrappers); 0.8-1.1 → 0.1-0.2 s per call | 0.7-1.2 | S | LUCRUM 09b1cde9: extenta.sh warm 0.18-0.21 s; pythonica 189 s at load 10; nexus fumus stage VII |
 | H4/J2 | silva wrapper preambles: no `basename` fork per source; materia_substratum.sh one newest-header scan (E2 missed it); hook calls binaries directly after one freshness call | 0.5-1.2 | S | LUCRUM bf8731e5 (preambles + materia; hook-direct part of J2 not done): formator 0.137 → 0.083 s, examen 0.205 → 0.166 s |
-| I1 | aedilis existence memo in `_existit_sub_radice` (book 3.8 M lines → 17.9 k unique); 28.3 → 4.6 G instr per `--corpus lib` | 0.4-0.7 | S | LUCRUM (this commit), scoped PER DERIVATION (fabrica generates headers between derivations): 28.4 → 11.3 G, 5.35 → 2.8 s, book 721 k → 213 k |
+| I1 | aedilis existence memo in `_existit_sub_radice` (book 3.8 M lines → 17.9 k unique); 28.3 → 4.6 G instr per `--corpus lib` | 0.4-0.7 | S | LUCRUM 359f1934, scoped PER DERIVATION (fabrica generates headers between derivations): 28.4 → 11.3 G, 5.35 → 2.8 s, book 721 k → 213 k |
 | J9/E3 | the five remaining raw-clang runners (tessera, gesta, officina, briar, oratio) via compilator; also stop recompiling/relinking 84 test files every run | 0.4-0.5 | M | pattern = ludus_tessera 765f1f2e |
 | F1 | silva_annotationes `_affigere`: unit extents in one walk for all sources; obsoleta share 10.9% → 2.2% | 0.35-0.45 | S | add a two-source annotation fixture first (none today) |
 | J4 | content seal reused on a frozen tree, clean-tree fast path, seal once after commit (~260 seals/merge, 62 after one commit) | 0.3-0.5 | S-M | follow-up to E1 |
@@ -189,7 +189,7 @@ f1656a51), F6 overlaps I5.
 | F8 | haruspex: one `clang -fsyntax-only` over 563 TUs, fallback per TU | 0.15-0.2 | S | |
 | J8 | single-call compilator skips `clang -print-prog-name` (18 of 24 ms) | 0.15-0.25 | S | persistent memo variant = J8c (ruling) |
 | H1 | stml_macros laxa matcher memoizes effective children per query (−17% instr, RSS 223 → 133 MB) | 0.15-0.2 | M | check computus allocation counts |
-| I2 | lectiones per-process dedupe of book lines | 0.1-0.3 | S | probatio_lectiones III must vary paths |
+| I2 | lectiones per-process dedupe of book lines | 0.1-0.3 | S | LUCRUM (this commit): with I1, corpus lib 28.4 → 6.2 G, 5.35 → 2.1 s, book 721 k → 22 k |
 | F6+I5 | trivia cache also "\n"+k spaces; `_lineae_excedunt` via memchr | 0.15-0.3 | S | |
 | G3/G4/G5 | test wait cuts (exemplar pump-until-readable, hospitium 256 KB buffer, communio pump-until-error) | ~0.12 | S | soak under load before landing |
 | J11, G10, I6, G11, G12 | small items | ~0.3 | S-M | |

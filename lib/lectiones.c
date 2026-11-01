@@ -18,6 +18,94 @@
 hic_manens  integer  _descriptor = -I;
 hic_manens character _via_aperta[IV * MXXIV];
 
+/* MEMORIA LINEARUM (budget B2 I2): fabrica librum ut COPIAM legit
+ * (ordine primo); processus eandem lineam saepe iterum scribebat
+ * (aedilis per fontem: 1348 lineae / 724 unicae; capita systematis
+ * contra omnes radices). Tabula directe mappata (FNV-1a lineae ->
+ * locus): linea iam scripta in loco suo -> write() omittitur.
+ * Collisio solum rescribit, numquam lineam novam amittit. Vacatur cum
+ * descriptor clauditur aut reaperitur (liber absens aut alius). Post
+ * fork filius tabulam heredat - recte: quod pater notavit in
+ * descriptorem communem O_APPEND scriptum est. libc sola (lectiones
+ * sine dependentiis domus). LECTIONES_MEMORIA_LOCI (potentia binaria,
+ * ordinarie 16384): probationes collisiones cogunt. */
+#define LECTIONES_LOCI_ORDINARII 16384UL
+
+hic_manens      character** _memoria         = NIHIL;
+hic_manens insignatus longus _memoria_loci  = 0UL;
+
+interior vacuum
+_memoriam_vacare (vacuum)
+{
+    insignatus longus k;
+
+    si (_memoria == NIHIL)
+    {
+        redde;
+    }
+    per (k = 0UL; k < _memoria_loci; k++)
+    {
+        free(_memoria[k]);
+    }
+    /* tabula tota: proxima allocatio LECTIONES_MEMORIA_LOCI iterum
+     * legit (probationes in filio collisiones cogunt) */
+    free(_memoria);
+    _memoria       = NIHIL;
+    _memoria_loci  = 0UL;
+}
+
+/* VERUM si linea (n octeti) iam scripta est; aliter notatur (VERUM
+ * numquam pro linea nova) */
+interior b32
+_linea_iam_scripta (
+     constans character* linea,
+         memoriae_index  n)
+{
+    insignatus longus  h;
+       memoriae_index  k;
+            character* copia;
+
+    si (_memoria == NIHIL)
+    {
+        constans character* loci = getenv("LECTIONES_MEMORIA_LOCI");
+
+        _memoria_loci = (loci != NIHIL && loci[0] != '\0')
+            ? strtoul(loci, NIHIL, 10) : LECTIONES_LOCI_ORDINARII;
+        si (   _memoria_loci                           == 0UL
+            || (_memoria_loci & (_memoria_loci - 1UL)) != 0UL)
+        {
+            _memoria_loci = LECTIONES_LOCI_ORDINARII;
+        }
+        _memoria = (character**)calloc((memoriae_index)_memoria_loci,
+            magnitudo(character*));
+        si (_memoria == NIHIL)
+        {
+            redde FALSUM;
+        }
+    }
+    h = 2166136261UL;
+    per (k = 0; k < n; k++)
+    {
+        h ^= (insignatus longus)(insignatus character)linea[k];
+        h = (h * 16777619UL) & 0xFFFFFFFFUL;
+    }
+    h &= _memoria_loci - 1UL;
+    si (   _memoria[h] != NIHIL && strlen(_memoria[h]) == n
+        && memcmp(_memoria[h], linea, n) == 0)
+    {
+        redde VERUM;
+    }
+    copia = (character*)malloc(n + 1);
+    si (copia != NIHIL)
+    {
+        memcpy(copia, linea, n);
+        copia[n] = '\0';
+        free(_memoria[h]);
+        _memoria[h] = copia;
+    }
+    redde FALSUM;
+}
+
 interior character
 _littera (
     LectioGenus genus)
@@ -54,6 +142,7 @@ _lectionem_notare (
         {
             (vacuum)close(_descriptor);
             _descriptor = -I;
+            _memoriam_vacare();
         }
         redde;
     }
@@ -68,6 +157,7 @@ _lectionem_notare (
             (vacuum)close(_descriptor);
             _descriptor = -I;
         }
+        _memoriam_vacare();
         si (strlen(liber) >= magnitudo(_via_aperta))
         {
             redde;
@@ -94,6 +184,10 @@ _lectionem_notare (
     linea[I] = '\t';
     memcpy(linea + II, via, mensura_viae);
     linea[II + mensura_viae] = '\n';
+    si (_linea_iam_scripta(linea, mensura_viae + III))
+    {
+        redde;
+    }
     {
         /* optima conatio: defectus hic tractari nequit. Valor ad
          * variabilem, non (vacuum) solum: glibc cum _FORTIFY_SOURCE
