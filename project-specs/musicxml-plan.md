@@ -1004,3 +1004,36 @@ reticulum`.
   ledger closed; memory note.
 - [ ] **Step 6: Commit** (gates `radix`, plus whatever `fabrica`
   owes for `tools/auditio.c`).
+
+**Executed 2026-10-31.** Measured: `_ex_carminibus` read the book
+either from a file (`-liber`) or the built-in book; the smallest change
+was one more parameter, `chorda liber_datus`, used ahead of both.
+`_musicxml_convertere` reads, converts, prints the reader's monita and
+the conversion report on stderr, and reads the book back through
+`carmina_legere` (which also gives the default `-carmen` title). Flags
+`-musicxml`, `-strictus`, `-titulus`. They are refused (exit 2) with
+`-liber`, `-carmina`, editing modes, or other sources, and
+`-strictus`/`-titulus` are refused without `-musicxml`. By hand:
+
+    auditio -musicxml musica/fontes/nata_lux_80317.mxl -strictus
+      -> exit 0, <carmina> book; stderr: mark counts, instrument and
+         structure notes (title "musicxml": the file has no work title)
+    ... -strictus -censura     -> exit 3, censura findings (E4/C#4
+                                  outside bb major - ficta)
+    ... -titulus "Nata Lux"    -> <carmen titulus="nata_lux"
+    auditio -musicxml probationes/fixa/musicxml/gratiae.musicxml
+      -> exit 3; 2x gratia omissa, 1x nota parva omissa
+    ... -strictus              -> exit 1; ONE approximation line +
+                                  "conversio recusata (strictus)"
+    auditio -musicxml X -carmina / auditio -strictus -> exit 2
+
+**Bug found by the hand check:** the strict refusal also carried a
+"nulla nota sonans" structural note (strict collection stops early
+with the line list empty). Fixed with an early jump to the relatio;
+`strictus` now asserts no structural notes (plant red). Heal:
+`bin/auditio` rebuilt by `tools/auditio_struere.sh`; `fabrica sanare
+-siccum` now owes only `institutio_auditio`, the `~/.bin` install, which
+belongs to main after a merge, never to a worktree. Docs: spec §IX As
+built + AUDIENDA answered (wild versions measured here: 4.0 ×1,536, 3.1
+×122; largest LCM 9,240), `lib/musicxml.worklog.md` (reader) and the
+converter worklog.

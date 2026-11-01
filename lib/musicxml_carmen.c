@@ -2545,6 +2545,11 @@ musicxml_carmen_scribere (
     liberum = numerus_mensurarum > ZEPHYRUM
         && mensurae[ZEPHYRUM].liberum;
 
+    si (cv.fractus || cv.memoria_defecit)
+    {
+        salta relatio_scribenda;   /* strictus: approximatio sola */
+    }
+
     /* reticulum; lineae sine nota (gratiae omissae, eventus vacui)
      * tolluntur - carmen frustum sine notis reicit */
     {

@@ -388,7 +388,64 @@ percussion maps; gabc as a sibling importer (…96NQ); MIDI import.
 
 ---
 
+## IX. As built (2026-10-31, P1–P11 in sexta)
+
+**Files.** `include/musicxml.h` + `lib/musicxml.c`, `lib/musicxml_ordo.c`
+(reader, performance order); `include/musicxml_carmen.h` +
+`lib/musicxml_carmen.c` (converter); `tools/auditio.c` `-musicxml`;
+suites `probatio_musicxml` (reader), `probatio_musicxml_suite`
+(goldens + corpus), `probatio_musicxml_totalitas`,
+`probatio_musicxml_carmen` (16 sections, nata_lux acceptance);
+gate `musicxml-oraculum` (`tools/musicxml_silvestria.sh`); worklog
+`lib/musicxml_carmen.worklog.md`. Plan notes record every re-slice.
+
+**Oracles (music21 10.5.2, run once, venv deleted).**
+- W3C suite: 183 files committed (MIT); goldens for 183 suite + 42 hand
+  fixtures + nata_lux. 26 suite divergences kept as ours, each with a
+  `# divergentia:` line; 4 files music21 can't read.
+- Wild corpus: OpenScore Lieder 1,462 + String Quartets 196 = 1,658
+  `.mxl` (CC0, pinned, fetched, never committed); 1,536 are MusicXML
+  4.0, 122 are 3.1. music21 agreed exactly on 1,392 of 1,646; the 254
+  differences are classified in `aurum_silvestre/PROVENIENTIA.md`
+  (jumps 122, repeats/endings 85, split-bar rests 28, cross-staff
+  ties 15, other 4). Pins: 41 full goldens + 1,617 sha256.
+- Reader over the whole corpus: ~190 s, no VITIUM on any file, peak
+  ~2 GB under custos (one score alone ~1.7 GB, desideratum
+  …DC2DM0M8). Totality: 3,249 broken/random inputs, 0 crashes, ~3 s.
+- Largest division LCM: 1,024 in the suite, 9,240 in the wild corpus
+  (cap 2^31).
+
+**Converter.** All 1,658 corpus files convert, and `carmina_legere`
+accepts every result. The first run rejected 1,246; what carmen
+enforces and how the converter now respects it is in the worklog
+(dynamics inside hairpins, fermata spans, empty lines, bar lengths
+a meter can express). nata_lux strict = the book's nata_lux note for
+note in all five parts.
+
+**`auditio -musicxml VIA [-strictus] [-titulus T]`** (M12). On its own:
+the `<carmina>` book on stdout, reader monita + conversion report on
+stderr; exit 0 clean, 3 with approximations, 1 unreadable file, reader
+VITIUM, or strict refusal, 2 usage. With `-carmen`, `-censura`,
+`-partitura`, `-recensio`, `-auscultare`, `-tonus`, `-pars`, `-iterare`
+or `-via`: the converted book stands in for `-liber`, and `-carmen`
+defaults to the converted song's title. Not with `-liber`,
+`-carmina`, or the editing modes.
+
+**Still open:** a fixture for "repeats not retaken after D.C." (no
+suite file exercises it); the two desiderata above.
+
+---
+
 ## AUDIENDA (not verified when written)
+
+*Answered 2026-10-31 (§IX):* octave clefs — `<pitch>` is the written
+octave and `clef-octave-change` doesn't move it; music21 agrees on all
+357 nata_lux rows. LCM cap — the largest seen is 9,240. Versions —
+wild 4.0 ×1,536, 3.1 ×122. music21 and jumps — it mostly ignores
+`<sound>` jumps (122 corpus files differ, ours stand); grace notes —
+zero length at the next onset on both sides. Instrument table —
+drafted with the header (P9), voice words → part-name words → GM
+family → aether.
 
 - Whether MusicXML `<pitch>` under an octave clef (`clef-octave-change
   -1`, the nata_lux tenors) is the written or sounding octave: the

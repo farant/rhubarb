@@ -53,3 +53,14 @@ What carmen enforces that the first converter didn't respect:
   so number ≠ index.
 
 Plants for each of these are in the plan's P10 note.
+
+## 2026-10-31 — strict refusal must stay alone (found by auditio)
+
+`auditio -musicxml gratiae.musicxml -strictus` printed a second line,
+"nulla nota sonans". In strict mode `_lineas_colligere` returns at the
+first approximation with the line list still empty, and the new
+empty-lines check then added its structural note. The header promises
+that a strict refusal's relatio carries that one approximation and
+nothing else. Now the converter jumps to the relatio before the
+empty-lines check whenever `cv.fractus` is set; the `strictus` section
+asserts `numerus_structurarum == 0` (plant red).

@@ -439,6 +439,7 @@ _strictus_probare (
         (s32)MUSICXML_CARMEN_GRATIA_OMISSA);
     CREDO_AEQUALIS_I32 (v.relatio.approximationes[ZEPHYRUM].linea,
         (i32)XI);
+    CREDO_AEQUALIS_I32 (v.relatio.numerus_structurarum, ZEPHYRUM);
     v = _convertere(c, "gratiae.musicxml", FALSUM);
     CREDO_VERUM (v.successus && v.lectum);
     CREDO_AEQUALIS_I32 (_approximationes(&v.relatio,
