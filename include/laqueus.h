@@ -398,7 +398,8 @@ laqueus_jones_ex_pd_rete (
  * filorum (knotapel D136). Puncta, codices status, fenestra et limes
  * EADEM ac modulus vertex (functiones interiores communes); primi
  * tamen infra 2^31 tantum (temperley-celeritas-plan G1, 2026-10-31:
- * reductio una in nucleo), ergo interpolatio primis infra 2^31. Vide project-specs/temperley-lieb-plan.md et
+ * reductio una in nucleo), ergo interpolatio primis infra 2^31.
+ * Vide project-specs/temperley-lieb-plan.md et
  * temperley-celeritas-plan.md (nucleus in loco).
  * ================================================== */
 

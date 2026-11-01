@@ -3455,10 +3455,11 @@ laqueus_jones_ex_pd_rete (
  * Ordines DELTA litterae i in modulo W_{n,j}: exacte d(n-2, j) (arcum
  * contrahere est bijectio in W_{n-2,j}), quisque cum fontibus (< fila)
  * in tabula latitudinis fixae - octeti ergo forma clausa. S per ordinem
- * temporarium, REDUCTUM dum summatur (fontes usque ad fila/2: summa non
- * reducta 2^64 excederet); primi infra 2^31 (celeritas G1), ergo
- * alpha M + c S < 2^63 et reductio una, Montgomery (R = 2^32 in
- * constantibus, celeritas G2) sine divisione.
+ * temporarium, REDUCTUM dum summatur: NECESSARIUM (fontes usque ad
+ * fila/2, quisque < 2^31: summa non reducta verbum 32 bitorum
+ * incongruenter involveret, et S >= p limitem t + m p < 2^64 Montgomery
+ * frangeret). Primi infra 2^31 (celeritas G1), ergo t = alpha R M + c R
+ * S < 2^63 et REDC una (celeritas G2), sine divisione.
  * Deinde Sigma_j Delta_j tr M x A^w / delta. Nihil per punctum
  * allocatum.
  * ================================================== */
@@ -3711,7 +3712,9 @@ laqueus_modulus_temperley_creare (
 
                 si (temperley_actio(m, i, s, &imago) == TEMPERLEY_DELTA)
                 {
-                    si (numerus == arcus)
+                    /* ordo DELTA in se ipsum (structura moduli standard;
+                     * defensivum, recensio celeritas L2) */
+                    si (numerus == arcus || imago != s)
                     {
                         piscina_reficere(piscina, initium);
                         redde NIHIL;
@@ -3735,7 +3738,11 @@ laqueus_modulus_temperley_creare (
                 {
                     i32 e = locus[imago];
 
-                    si ((i32)numeri[e] >= fila)
+                    /* imago UNUM est ordo DELTA huius litterae (locus
+                     * alioquin non scriptus; defensivum, recensio L2) */
+                    si (   imago          >= d || e >= arcus
+                        || ordines[e]     != imago
+                        || (i32)numeri[e] >= fila)
                     {
                         piscina_reficere(piscina, initium);
                         redde NIHIL;

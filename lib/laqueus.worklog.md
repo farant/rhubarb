@@ -864,3 +864,15 @@ remaining margin is 12 x 201 (K* 17.85 against 21).
 Memory-only cap flips (vertex cheaper but bigger than TL's bytes) get
 rare as TL gets cheaper: none with K* < 30 among short braids; long
 braids (c = 130-200) still have them. Test braid now 11 x 134 (K* 15.7).
+
+## 2026-11-01 - celeritas T4 review (recensor-celeritas) folded in
+
+No H. Correction to the T1 entry above: the "source sum not reduced"
+plant was an equivalent mutant ONLY for the T1 code. Since G1/G2 the
+reduction `x >= p ? x - p : x` is load-bearing (unreduced, up to n/2
+sources wrap the 32-bit word incongruently, and S >= p breaks Montgomery's
+t + m p < 2^64); the plant is red against today's code. Do not remove it.
+Fixes: boundary refusal test at 2147483693 (a raised threshold returned
+wrong values with the suite green); two defensive checks in creare (DELTA
+rows map to themselves; an UNUM image is a DELTA row of this letter).
+Full list in project-specs/temperley-celeritas-plan.md, "Review (T4)".

@@ -2190,6 +2190,14 @@ _probare_temperley_puncta (
     CREDO_AEQUALIS_I32(v, (i32)0xDEADUL);
     CREDO_AEQUALIS_S32(laqueus_modulus_vertex_aestimare(mv, VII,
         (i32)4294967029UL, &a, &v), INTERPOLATIO_UTILE);
+    /* limes ipse (recensio celeritas M1): 2147483693, primus minimus = 1
+     * mod 4 supra 2^31, refutatur - limes altior valores falsos redderet */
+    a = (i32)0xDEADUL;
+    v = (i32)0xDEADUL;
+    CREDO_AEQUALIS_S32(laqueus_modulus_temperley_aestimare(mt, II,
+        (i32)2147483693UL, &a, &v), INTERPOLATIO_ERRATUM);
+    CREDO_AEQUALIS_I32(a, (i32)0xDEADUL);
+    CREDO_AEQUALIS_I32(v, (i32)0xDEADUL);
 
     /* custodes: exitus non tacti */
     a = (i32)0xDEADUL;

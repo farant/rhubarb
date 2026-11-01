@@ -1,6 +1,6 @@
 # temperley celeritas: speed pass for the TL route (D136 T4, step 2)
 
-Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2 done (G1, G2 adopted; P4 holds); T3 done (45/45 brackets identical; 6.8-7.4x cumulative; TL constant 21); T4 next.
+Status: v2 APPROVED by Fran (2026-10-31); T0, T1 done (P1 FALLS: 2.72-2.87x; P2, P3 hold); T2 done (G1, G2 adopted; P4 holds); T3 done (45/45 brackets identical; 6.8-7.4x cumulative; TL constant 21); T4 review done (no H; fixes folded in).
 v1 (4dfe7544) was approved by Fran in outline. The review (verdict
 "approve after fixes": H1–H3, M1–M6, L1–L5) is at the end, with what
 each finding changed.
@@ -242,7 +242,14 @@ recording old and new braids. T3 also recomputes the margins of the
 - **T1. In-place update.** Gather kernel with CSR, one buffer, A^w,
   S reduced, two reductions (primes near 2^32 kept); sumptus and header
   ("duo alvei" → one buffer + CSR); tests and plants; measure P1, P2, P3.
-  **T1 amendment (2026-10-31, measured).** 3a8487c3: the in-place
+  **T1 amendment (2026-10-31, measured).** [Correction after T4 (M2):
+  the "equivalent mutant" statement below was true for the T1 code
+  only. Since G1 (primes below 2^31, one reduction, the sum as
+  `x >= p ? x − p : x`) and G2 (Montgomery), reducing the source sum IS
+  load-bearing: unreduced, up to ⌊n/2⌋ sources wrap the 32-bit word
+  incongruently and S ≥ p breaks t + m·p < 2^64. The plant "S
+  unreduced" is red against the current code in 7 sections (reviewer's
+  run).] 3a8487c3: the in-place
   kernel. One implementation choice beyond the text: the source list is
   NOT a variable-length CSR but a fixed-width table per DELTA row
   (sources < fila), because the number of DELTA rows per letter is
@@ -348,10 +355,18 @@ recording old and new braids. T3 also recomputes the margins of the
     (descriptive, under load; T0 2,959 s).
   - **Cumulative per-point ratio**, frozen 79e7fad9 kernel against the
     library (section VI, 9 ABBA pairs, values equal): **6.82×**
-    (12 × 801), **6.98×** (14 × 801), **7.42×** (16 × 801) - matching
-    the product of the three steps' medians (~6.6×).
-  - **Dispatcher refit:** TL price constant 150 → **21** (150 / 6.98,
-    the median cumulative ratio; the vertex constant 185 untouched).
+    (12 × 801), **6.98×** (14 × 801), **7.42×** (16 × 801) - consistent
+    with the products of the three steps' medians (6.87× at 12 × 801,
+    6.67× at 16 × 801; 16 strands came out 11% above its product).
+  - **Dispatcher refit:** TL price constant 150 → **21** (⌊150 / 6.98⌋ =
+    ⌊21.49⌋, the median cumulative ratio scaling D136's calibration;
+    the vertex constant 185 untouched). [T4 review L4: timing both
+    routes per point in situ suggests ~26-30 (12 × 201: 26.4; 12 × 101:
+    28; 11 × 134: 29.7). No registered choice moves, since a higher
+    constant favours vertex; braids with K* in (21, ~28) go to TL where
+    vertex would be a little faster - speed, never correctness. Left
+    at 21 and recorded; a recalibration against in-situ timings is a
+    candidate for the next plan.]
     Registered choices unchanged: vertex at 12 × 101 (K* 0.99) and
     12 × 201 (K* 17.85: margin 21 / 17.85 = 1.18×, the thinnest);
     TL at every longer braid. The old 7 × 32 braid now goes TL on
@@ -362,9 +377,13 @@ recording old and new braids. T3 also recomputes the margins of the
     braids (c = 130-200); the test now uses 11 × 134 (K* 15.7, vertex
     workspace 198,912 B against TL 171,677 B). The dispatcher's
     "comparison inverted" plant is still caught (via electa).
-  - The 14 × 801 headline: Fran's call (estimate ~1-2 h CPU at the new
-    speed: 14 × 801 per point ~0.67 s × ~13,000 points ≈ 2.4 h under
-    this week's load).
+  - The 14 × 801 headline: Fran's call (estimate ≈ 2.4 h CPU under this
+    week's load: ~0.67 s per point × ~13,000 points). Fran: run it (see
+    the T4 note).
+  - G1 can add an interpolation prime in general (primes below 2^31
+    carry ⌊log2 p⌋ = 30 bits instead of 31, up to ~3% more
+    evaluations, which the per-point ratios do not show); at 12 × 801
+    the count is unchanged (23 primes).
 - **T4. Review.** Independent reviewer, own oracle, not building in the
   live tree.
 
@@ -416,3 +435,56 @@ Findings and where they went:
 - **L1** α = −A^(−4ε) noted (the tool asserts it); **L2** DELTA/UNUM
   naming used; **L3** column blocks recorded as a future lever; **L4**
   ≥ 9 pairs, caffeinate; **L5** bracket-from-points step confirmed.
+
+## Review (T4, 2026-11-01, recensor-celeritas)
+
+Verdict: approve; no H. Built from a scratch copy of the current code
+(laqueus_rete there: 28/28 sections, 152,833 checks). Own oracle
+(recensor-d136's regular-representation TL: all Catalan(n) diagrams,
+σ → A + A⁻¹e, no A^w trick, no cell modules):
+- TL point values 3,219 of 3,219 (n = 2..12, 11 primes including the
+  three largest admitted, 2147483629, 2147483549, 2147483497);
+- TL against the vertex route 500 of 500 (n = 10..16, c ≤ 140);
+- the forced TL route (not the dispatcher) on all 45 D136 words: 45 of 45
+  byte-identical to brackets.txt (T3's acceptance went through the
+  dispatcher, which sent 19 to the vertex route; this covers the new
+  kernel on all 45);
+- exact brackets 120 of 120 (n ≤ 8, c ≤ 60: dispatcher, TL, Jones);
+- structural claims exhaustive for n ≤ 16 (367,274 actions, 0
+  violations): DELTA rows per letter = d(n−2, j), DELTA rows map to
+  themselves, UNUM images are DELTA rows of the same letter, at most
+  ⌊n/2⌋ sources per DELTA row;
+- Montgomery bounds analytic and emulated (t ≤ 2(p−1)² < 2^63,
+  t + m·p < 2^64, u < 2p, p·p' ≡ −1 mod 2^32 after four Newton steps);
+- P2's allocation figure within 19-79 bytes, 56,565,573 at 16 strands;
+- the frozen 79e7fad9 kernel in section VI faithful; section IX the
+  G1 library verbatim; every recorded table matches its raw output;
+  G1 measured before its port, P4 committed before its measurement.
+
+Findings and where they went:
+- **M1** the TL refusal threshold was not pinned at its boundary: a
+  threshold raised to 0xC0000000 or 0xFF000000 kept the suite green
+  while returning wrong values just above 2^31 → `temperley puncta`
+  asserts ERRATUM at 2,147,483,693 (smallest p ≡ 1 mod 4 above 2^31);
+  the raised-threshold plant is now red (build/celeritas/plantae_t4.py).
+- **M2** the T1 "equivalent mutant / reduction not needed" record went
+  stale at G1 → corrected in the T1 amendment, the worklog and the
+  laqueus.c block comment (the reduction is necessary).
+- **L1** three true equivalent mutants (x > p, u > p, width check >)
+  confirmed against the oracle; noted.
+- **L2** two structural assumptions in creare were unchecked (a
+  violation would write out of bounds) → guards: DELTA rows map to
+  themselves; an UNUM image must be a DELTA row of the current letter;
+  both refuse (NIHIL, rolled back).
+- **L3** source table width n where ⌊n/2⌋ suffices (~3% of bytes at 16
+  strands) → noted, not changed (it would move the byte figure and the
+  cap-flip braid's numbers).
+- **L4** the TL constant's derivation and the in-situ evidence for
+  ~26-30 → recorded in the T3 note.
+- **L5** A/B timing bias < 0.03% and against the new kernel → noted.
+- **L6** raw outputs for the K* table and P2's allocation check →
+  saved (build/celeritas/t3_k.out, p2_octeti.out); mensura_p4_pre was
+  a binary built before the port and never run.
+- **L7** wording ("matching" → "consistent with"; the 14 × 801
+  estimate; G1's possible extra prime) → T3 note corrected.
+- **L8** header line overrun → rewrapped.
