@@ -901,3 +901,19 @@ on long braids: 7x202 14.5 s / 2.9 GB (ours 0.10 s TL), 12x201 16.2 s /
 8 GB (ours 0.18-7.9 s, MBs). So it is no oracle beyond our own (12x401) -
 14x801 stays unconfirmed. Our vertex route loses to Regina on short
 many-strand braids: worth a look (its tree decomposition vs our greedy order).
+
+## 2026-11-02 - why Regina wins on short many-strand braids
+
+Not ordering, mostly arithmetic shape. Regina's tree decomposition width on
+10x101 / 11x102 / 12x101 is 8 (13-15 on the c ~ 200 braids it can't
+finish). Our vertex route on 11x102 (-sectio V): width 12 (2^12 = 4096
+entries), 0.8 ms per point, but ~300 points (4 primes x ~75) -> 0.25 s;
+Regina does ONE symbolic pass (bracket updates are monomial shifts + adds,
+linear in degree) in 0.023 s. Evaluation/interpolation pays per point;
+its win is memory (one word per state), which is why it wins from c ~ 200
+up. Also: OPTIMUS never tried other candidates here (AVIDUS under the 2^20
+multiplication limen, cand 1), so width 12 vs a possible ~10 is unexamined
+but irrelevant at 0.25 s.
+The useful find: the coefficient bound is 3-5x loose (bits/limes 16/82,
+19/86, 24/85, 17/88; 14x801 195/662), so most primes are wasted. Ledger
+desideratum 01M6F2RT: early termination + random-point verification.
