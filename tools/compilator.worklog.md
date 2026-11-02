@@ -225,3 +225,25 @@ tests themselves, daemons and sqlite, dominate), header touch 54 -> 10 s.
 Plant: `!` on the first `_est` of gesta_inventarium_eventus_est -> 1
 object changed, 3/7 (probatio_gesta_inventarium and dependents), revert
 7/7.
+
+## 2026-11-02 — E3/J9 suite IV: officina
+
+officina had the most hand-written mtime rules: newest-header for most
+objects, per-object header lists for the instrumenta units, and the
+tessera amalgam on a source-only rule (header changes never rebuilt it).
+All 33 objects except the E7 vendored silva amalgam now go through one
+`--plures`; a local `_vocatio_addere <src> <obj> <include flags...>`
+keeps each unit's own include roots (tessera amalgam: include/ only;
+silva_lexicon: silva/fontes + materia/fontes). First run rewrote exactly
+1 object — consistent with the old header-blind amalgam rule. Measured:
+warm 16 -> 11 s, header touch 68 -> 11 s. Plant: punctum_tollere returns
+FALSUM after removing -> 1 object changed, 13/15; revert 15/15.
+
+Gate blind spot (bit the officina commit): the gesta commit ADDED
+tools/nexus_probationis.sh, whose comment named the flags array; the
+vexilla gate ("every script naming it sources vexilla.sh") scans tracked
+files only, and the new file was untracked while that commit's gates ran
+— so it passed, and the NEXT commit touching any .sh failed on it. Same
+shape as portae-declaratae needing `git add -N`. Fix here: the comment no
+longer names the array. Worth a ledger note: gates that enumerate scripts
+via git ls-files should include the commit's own new files.

@@ -11,8 +11,10 @@
 # (nexus_signum in struere.sh emisso).
 #
 # probationem_nectere <binarium> <vexilla nexus> <obiecta...>
-#   vexilla nexus: verbum UNUM (vexilla spatiis iuncta, ut "${GCC_FLAGS[*]}"),
-#   in signo et in vocatione clang (scissa). Signum: vexilla + 'stat -f
+#   vexilla nexus: verbum UNUM (vexilla compilationis vocatoris
+#   spatiis iuncta), in signo et in vocatione clang (scissa). NB nomen
+#   tabulae vexillorum hic non scribitur: porta vexilla omne scriptum
+#   id nominans vexilla.sh fontare poscit. Signum: vexilla + 'stat -f
 #   %N %i %m %z' omnium obiectorum et binarii; in <binarium>.nexus
 #   servatum post nexum. Signum mutatum aut binarium absens -> clang
 #   nectit. Obiectum remotum ex lista signum mutat (lista intrat).
