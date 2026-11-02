@@ -887,3 +887,17 @@ agreeing with det = 5 mod 8 (Arf 1 both ways). Cheap sanity script idea
 for any future big bracket: these four checks need only the coefficient
 list and the writhe. Record: project-specs/temperley-celeritas-plan.md
 "Headline", line in knotapel/demo_136_tl_braid_closures/uncinus_14x801.txt.
+
+## 2026-11-02 - Regina 7.4.1 as external cross-check (benchmark step 1)
+
+Regina (pip wheel, no deps, run under sandbox-exec, no network; build/regina/,
+uncommitted) Link.bracket(Treewidth, threads=1) on the D136 braids via
+PD from tools/uncinus_mensura -sectio XII words. Conventions matched first
+try (same bracket, same writhe). 32 of 45 braids finished, ALL IDEM with
+brackets.txt. Regina is competitive or faster up to ~100 crossings (11x102:
+0.023 s vs our 0.26 s vertex; 12x101 0.026 vs 0.07) but its memory explodes
+on long braids: 7x202 14.5 s / 2.9 GB (ours 0.10 s TL), 12x201 16.2 s /
+2.6 GB (ours 7.2 s vertex), and 8x201, 9x202, 10x201, 11x202 all exceed
+8 GB (ours 0.18-7.9 s, MBs). So it is no oracle beyond our own (12x401) -
+14x801 stays unconfirmed. Our vertex route loses to Regina on short
+many-strand braids: worth a look (its tree decomposition vs our greedy order).

@@ -32,6 +32,9 @@
  *        bibliothecam (post G1: reductio una per %), A/B
  *   XI   (solum per -sectio XI) acceptatio: XLV uncini D136 per
  *        laqueus_uncinus_ex_plexu, lineae formae brackets.txt
+ *   XII  (solum per -sectio XII) verba tricarum D136 ad comparationem
+ *        externam: "VERBUM n c | g1 g2 ..." (g > 0 = sigma_g
+ *        positivum), omnes XLV aut una per -fila N -longitudo L
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -43,7 +46,7 @@
  * Usus: ./bin/aedilis tools/uncinus_mensura.c && bash
  *   build/aedilis/uncinus_mensura/struere.sh &&
  *   ./build/aedilis/uncinus_mensura/uncinus_mensura [-machina]
- *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X|XI]
+ *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII]
  *   -machina: lineae "MENSURA <sectio> clavis=valor ..."
  */
 #include "latina.h"
@@ -1966,15 +1969,29 @@ _sectio_g2 (
     _g2_metiri(XVI, longitudo, paria, p);
 }
 
+/* trica k (0 .. XLIV) tabulae D136: XL parvae (III..XII fila x XX, L,
+ * CI, CCI) deinde V magnae */
+interior vacuum
+_trica_probationis (
+    i32  k,
+    i32* fila,
+    i32* longitudo)
+{
+    constans i32 longitudines[IV] = { XX, L, CI, CCI };
+    constans i32 magnae[V][II] = { { VIII, CDI }, { VIII, DCCCI },
+        { X, CDI }, { XII, CDI }, { XII, DCCCI } };
+
+    *fila = k < XL ? III + k / IV : (i32)magnae[k - XL][ZEPHYRUM];
+    *longitudo = k < XL ? longitudines[k % IV] : (i32)magnae[k
+        - XL][I];
+}
+
 /* XI: acceptatio (temperley-celeritas-plan T3) - omnes XLV uncini
  * D136 per laqueus_uncinus_ex_plexu (via electa), lineae formae
  * brackets.txt (knotapel D136) ad comparationem integram */
 interior vacuum
 _sectio_probationis_finalis (vacuum)
 {
-    constans i32 longitudines[IV] = { XX, L, CI, CCI };
-    constans i32 magnae[V][II] = { { VIII, CDI }, { VIII, DCCCI },
-        { X, CDI }, { XII, CDI }, { XII, DCCCI } };
     i32 k;
 
     imprimere("\nXI. acceptatio: uncini D136 per viam electam\n");
@@ -1982,16 +1999,15 @@ _sectio_probationis_finalis (vacuum)
     {
         Piscina* piscina = piscina_generare_dynamicum("mensura_acc",
             1048576);
-        Sors s;
-         i32 fila = k < XL ? III + k / IV : (i32)magnae[k
-             - XL][ZEPHYRUM];
-        i32 longitudo = k < XL ? longitudines[k % IV]
-            : (i32)magnae[k - XL][I];
+              Sors  s;
+               i32  fila;
+               i32  longitudo;
                s32* verbum = NIHIL;
         Polynomium  f;
         LaqueusVia  via = LAQUEUS_VIA_NULLA;
            clock_t  t0;
 
+        _trica_probationis(k, &fila, &longitudo);
         sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
         si (_plexus_fortuitus(&s, fila, &longitudo, piscina, &verbum)
             == NIHIL)
@@ -2035,6 +2051,49 @@ _sectio_probationis_finalis (vacuum)
             imprimere("\n");
         }
         fflush(stdout);
+        piscina_destruere(piscina);
+    }
+}
+
+/* XII: verba tricarum (generator idem ac VIII et XI: semen MMXXVIII
+ * per (n, L)) - instrumenta externa (Regina) eas ipsa in PD vertunt.
+ * fila == ZEPHYRUM: omnes XLV tricae D136; aliter una. */
+interior vacuum
+_sectio_verborum (
+    i32 fila_data,
+    i32 longitudo_data)
+{
+    i32 k;
+    i32 numerus = fila_data == ZEPHYRUM ? XL + V : I;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        Piscina* piscina = piscina_generare_dynamicum("mensura_verba",
+            1048576);
+            Sors  s;
+             i32  fila       = fila_data;
+             i32  longitudo  = longitudo_data;
+             s32* verbum     = NIHIL;
+             i32  j;
+
+        si (fila_data == ZEPHYRUM)
+        {
+            _trica_probationis(k, &fila, &longitudo);
+        }
+        sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+        si (_plexus_fortuitus(&s, fila, &longitudo, piscina, &verbum)
+            == NIHIL)
+        {
+            imprimere("   %u x %u: nullum verbum\n", fila, longitudo);
+            piscina_destruere(piscina);
+            perge;
+        }
+        imprimere("VERBUM %u %u |", fila, longitudo);
+        per (j = ZEPHYRUM; j < longitudo; j++)
+        {
+            imprimere(" %d", verbum[j]);
+        }
+        imprimere("\n");
         piscina_destruere(piscina);
     }
 }
@@ -2115,6 +2174,12 @@ principale (
     si (sectio != NIHIL && strcmp(sectio, "XI") == ZEPHYRUM)
     {
         _sectio_probationis_finalis();
+        redde ZEPHYRUM;
+    }
+    si (sectio != NIHIL && strcmp(sectio, "XII") == ZEPHYRUM)
+    {
+        _sectio_verborum(fila_data ? fila : ZEPHYRUM, longitudo
+            == DCCC ? DCCCI : longitudo);
         redde ZEPHYRUM;
     }
     si (sectio != NIHIL && strcmp(sectio, "X") == ZEPHYRUM)
