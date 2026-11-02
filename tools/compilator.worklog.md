@@ -267,3 +267,27 @@ It dominates briar's header-touch time now, old and new alike.
 
 Plant: `_digiti` accepts only 0-8 -> 1 object changed, 19/20
 (probatio_briar_dialectus); revert 20/20.
+
+## 2026-11-02 — E3/J9 suite VII: oratio (E3 complete)
+
+76 objects through one `--plures`. The post-build excubitor check was a
+real SAFETY gate here (stale -> exit 2, "custodia capitum caput
+ignoravit"), guarding the hand-written header index. With content-keyed
+compilation there is no header index left to guard, and keeping it would
+turn every header touch into a false STALA -> exit 2 (identical objects
+are not rewritten), so it is removed with that reasoning in the comment.
+Measured: no visible wall-time change — warm 66 -> 66 s (the tests are
+~60 s), header touch 112 -> 118 s with 0 recompiles (old: 76). The touch
+cost lives elsewhere:
+
+FINDING (not fixed, separate item): `silva/nexus.sh -renovare`, run by
+this runner before the tests, took 51 s after `touch include/chorda.h`
+(2 s on a second run). With briar's corpus_symbola pre-step (83 s) these
+are the two remaining header-touch hogs in the suites.
+
+Plant: initials accepted only A-I -> 1 object changed, 16/19
+(probatio_oratio_arbor "J. Smith came."); revert 19/19.
+
+E3/J9 summary (all six raw-clang runners now on the compilator):
+ludus_tessera 765f1f2e, tessera 1b7f5edc, gesta f3a54629, officina
+85629289, briar c6ab2020, oratio (this commit).
