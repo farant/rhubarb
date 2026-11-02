@@ -16,7 +16,10 @@ else
     EXITUS="$RADIX/$EXITUS"
 fi
 mkdir -p "$(dirname "$EXITUS")" || exit 1
-python3 -I "$RADIX/xml/instrumenta/expat_aurum.py" \
+# -B: expat_aurum.py expat_canonicum.py importat - sine -B python
+# __pycache__/ in arbore scriberet (clone novus: "scripsit extra
+# vestigium", actio FRACTA; arbor vetus .pyc iam habebat)
+python3 -I -B "$RADIX/xml/instrumenta/expat_aurum.py" \
     "$RADIX/xml/probationes/fixa/silvestria.manifestum" > "$EXITUS.novum" \
     || exit 1
 mv "$EXITUS.novum" "$EXITUS" || exit 1
