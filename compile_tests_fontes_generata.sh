@@ -279,6 +279,7 @@ declare -a SOURCE_FILES=(
     "lib/provenientia.c"
     "lib/pseudoterminale.c"
     "lib/pseudoterminale_posix.c"
+    "lib/pulsus_forma.c"
     "lib/qr.c"
     "lib/quadrans.c"
     "lib/quaerere.c"
