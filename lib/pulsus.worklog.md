@@ -18,3 +18,28 @@
   pins the exact octets of spec III.1.
 - Gotcha: a new lib/*.c needs `./tools/compile_tests_fontes_generare.sh`
   BEFORE its suite links (the plan listed it after PASS).
+
+## 2026-11-02 - T2 pulsus core
+
+- Time is pulled: `pulsus_maturos_mittere` sends every batch whose
+  `ultimus_ms + mora_ms <= nunc`; T3's reactor timer will only call it.
+  Tests drive a fake clock and call it directly - no sleeping.
+- A batch row is DELETED before its notifications go out. The fake (and
+  any synchronous) sender calls `finis` inside `mittere`, and a crash
+  mid-send must never resend: at most once beats at least once for a
+  "Fran shared 3 pictures" banner.
+- `PulsusFinis` hands the sender's copy of the message back (ruling vs
+  the plan), so pulsus knows which (apparatus, thema, token) finished
+  without allocating a context per message. MORTUUM deletes only when the
+  token still matches - a re-registration racing a 410 is not lost.
+- Recipients are computed from `communio_apparatus_enumerare` each send:
+  same space, other PERSON, person active, device not revoked. Revoked
+  devices' inscriptions are purged in that same pass (no hook into
+  communio_servus needed).
+- Notification title = last segment of the thema ("pictor"); the server
+  has no other source for the app's name.
+- Bug caught on review: `scrinium_gradi` returns SCRINIUM_ERROR (0) on
+  failure, not -1 - a `!= -I` test was always true.
+- Non-statim event with no ids is a no-op (it would otherwise announce
+  "0 pictures"); statim with no ids flushes a pending batch or does
+  nothing.

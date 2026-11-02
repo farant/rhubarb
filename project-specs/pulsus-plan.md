@@ -73,7 +73,8 @@
 - Produces:
   - `nomen enumeratio { PULSUS_TRADITUM = 0, PULSUS_SIGNUM_MORTUUM, PULSUS_DEFECTUS } PulsusExitus;`
   - `nomen structura { chorda signum; chorda ambitus; chorda thema; chorda corpus; chorda apparatus; } PulsusMissio;`
-  - `nomen vacuum (*PulsusFinis)(vacuum* ctx, PulsusExitus exitus, chorda ratio);`
+  - `nomen vacuum (*PulsusFinis)(vacuum* ctx, constans PulsusMissio* missio, PulsusExitus exitus, chorda ratio);` - the sender hands back its own copy of the message (T2 ruling: pulsus needs to know which token finished without a per-message allocation). A `PulsusMissio` is read only inside `mittere`; the sender copies what it keeps.
+  - `nomen structura { chorda apparatus; chorda thema; chorda tessera; chorda ambitus; s64 creatus_ms; s64 usus_ultimus_ms; } PulsusInscriptio;` (enumerare rows; tessera shortened)
   - `nomen b32 (*PulsusMittere)(vacuum* sui, constans PulsusMissio* m, PulsusFinis finis, vacuum* ctx);`
   - `Pulsus* pulsus_creare(Piscina* p, Volumen* v, CommunioServus* servus, Cives* cives, s64 (*nunc_ms)(vacuum));` - tables created if absent.
   - `vacuum pulsus_mittentem_ponere(Pulsus* p, PulsusMittere m, vacuum* sui);` (NIHIL = log "pulsus: apns absens - non mittitur")
