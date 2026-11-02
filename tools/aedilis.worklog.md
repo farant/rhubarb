@@ -1009,3 +1009,32 @@ FRACTA at the second derivation. (A first plant variant that never reset
 the cache crashed with SIGBUS instead, because it pointed into a freed
 section pool; that's red, but not the assertion, so it was redone with
 its own pool.)
+
+## 2026-11-02 — budget B2 J6: commissum once per process / from the gate
+
+`_commissum_obtinere` used to `system("git rev-parse --short HEAD")` twice
+per derivation (manifest + struere.sh), ~29 of ~39 ms, ~611 derivations
+per merge. Now: `AEDILIS_COMMISSUM` from the environment if non-empty,
+otherwise git once, memoized in a static buffer. The value only lands in
+comments (manifest `commissum=`, struere.sh header), never in a verdict.
+Measured on probatio_xar: 48 -> 7 ms per derivation with the variable set;
+outputs byte-identical apart from `generatum`.
+
+Gate trap worth remembering: fabrica's EFFECT analysis of a gate script
+(crusta/effectus.sh -clavis) decides whether the transit receipt can be
+saved. My first guard (a) `sed` on build/aedilis/probatio_xar/struere.sh
+-> "ingressus build/ sine domino", (b) `git rev-parse` in the script ->
+"index et obiecta .git" ignotum, (c) `env -u` -> "mandatum ignotum".
+Each silently costs the gate its receipt ("transitus non servatus") while
+staying green. Fix: the gate gets HEAD from ONE aedilis derivation
+written with `--exitus` into a mktemp dir (temp paths are skipped), sets
+`AEDILIS_COMMISSUM= ` (empty = unset in the C) instead of `env -u`.
+Check any gate-script edit with `crusta/effectus.sh -clavis <script> |
+grep '^ignotum\|^dominus'` — aedilis_porta.sh must stay at 0.
+instrumenta_fumus.sh already has 15 unknowns (never saves transits), so it
+just calls git once.
+
+Plant: env path copies a constant ("deadbeef") instead of the variable ->
+"FRACTA (commissum)". Possible follow-up: a light HEAD resolver in lib/git
+(git_aperire loads all pack indices eagerly today) so aedilis needs no git
+fork at all.

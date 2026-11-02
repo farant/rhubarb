@@ -38,11 +38,24 @@ MEMORIA_ORACULI="$(mktemp -d)"
 # THESAURUS (fabrica plan 2 T3): cursus portae = generatio una
 # (purgatio generationes ultimas servat, non processus aedilis)
 export THESAURUS_GENERATIO="${THESAURUS_GENERATIO:-$(date -u +%Y%m%dT%H%M%S)-porta-aedilis-$$}"
-trap 'rm -rf "$MEMORIA_ORACULI"' EXIT
+trap 'rm -rf "$MEMORIA_ORACULI" "${CT:-}"' EXIT
 # NEXUS SERVATUS (budget B1 E10): probatio cuius signum nexus (vexilla
 # + identitas obiectorum et binarii) idem est non renectitur - nexus
 # deterministicus; derivatio et compilatio tamen omni cursu currunt.
 export AEDILIS_NEXUS_SERVARE=1
+# COMMISSUM SEMEL (budget B2 J6): HEAD semel per portam (arbor gelata),
+# non 'git rev-parse' bis per derivationem (~29 ex 39 ms). Derivatio
+# una sine ambitu (aedilis git ipse vocat) in directorium temporarium;
+# valor eius exportatur - git hic non vocatur (effectus scripti: .git
+# legere = ignotum, transitus non servaretur)
+CT="$(mktemp -d)"
+_commissum_scripti () {
+    sed -n 's/^# generatum: [0-9]* | commissum: //p' "$CT/struere.sh"
+}
+AEDILIS_COMMISSUM= ./bin/aedilis probationes/probatio_xar.c \
+    --exitus "$CT" --thesaurus build/aedilis/obiecta > /dev/null 2>&1
+COMMISSUM_PORTAE="$(_commissum_scripti)"
+export AEDILIS_COMMISSUM="$COMMISSUM_PORTAE"
 
 for f in probationes/probatio_*.c; do
     basis="$(basename "$f" .c)"
@@ -144,6 +157,24 @@ if [ "$ns1$ns2$ns3$ns4" = "1010" ]; then
 else
     echo "FRACTA (nexus servatus): servatus per gradus $ns1$ns2$ns3$ns4, exspectatum 1010"
     fracta="$fracta nexus_servatus"
+fi
+
+# COMMISSUM (budget B2 J6): valor ex ambitu in commentum it (planta:
+# ambitus neglectus aut corruptus -> FRACTA); sine ambitu valor ex git
+# (supra) forma hex brevis
+AEDILIS_COMMISSUM=feedface ./bin/aedilis probationes/probatio_xar.c \
+    --exitus "$CT" --thesaurus build/aedilis/obiecta > /dev/null 2>&1
+cs1="$(_commissum_scripti)"
+rm -rf "$CT"
+case "$COMMISSUM_PORTAE" in
+    ""|*[!0-9a-f]*) cs2="" ;;
+    *) cs2="$COMMISSUM_PORTAE" ;;
+esac
+if [ "$cs1" = "feedface" ] && [ "${#cs2}" -ge 7 ]; then
+    echo "bona: commissum (ambitus feedface; sine ambitu HEAD $cs2)"
+else
+    echo "FRACTA (commissum): ambitus '$cs1' (feedface), git '$COMMISSUM_PORTAE'"
+    fracta="$fracta commissum"
 fi
 
 finis=$(date +%s)
