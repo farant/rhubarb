@@ -247,3 +247,23 @@ files only, and the new file was untracked while that commit's gates ran
 shape as portae-declaratae needing `git add -N`. Fix here: the comment no
 longer names the array. Worth a ledger note: gates that enumerate scripts
 via git ls-files should include the commit's own new files.
+
+## 2026-11-02 — E3/J9 suite V: briar
+
+82 objects (all but the E7 vendored sqlite and silva amalgam) through one
+`--plures`, including the generated build/capsula_facies_briar.c (its old
+rule was source-only); silva_lexicon keeps its private -Isilva/fontes.
+The old "custodia vetustatis / custodia capitum" blocks (same-second mtime
+equality, newest header) are gone — the content-keyed compilator makes
+them moot. `--obiecta` mode unchanged (objects at the same paths). Tests
+per `_cursor_compilare` + `probationem_nectere`; mensor_suitae timings
+kept around them. Measured: warm 12 -> 8 s; after a header touch the
+object phase is 6 s with 0 rewrites (old: 82 recompiles).
+
+FINDING (not fixed, separate item): the pre-step `corpus_symbola_generare`
+(tools/corpus_infixum.sh, "[symbola] corpus.symbola.tsv (nexus
+incrementalis)") took 83 s ALONE after `touch include/chorda.h` (load ~9).
+It dominates briar's header-touch time now, old and new alike.
+
+Plant: `_digiti` accepts only 0-8 -> 1 object changed, 19/20
+(probatio_briar_dialectus); revert 20/20.
