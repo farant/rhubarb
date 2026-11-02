@@ -1038,3 +1038,31 @@ Plant: env path copies a constant ("deadbeef") instead of the variable ->
 "FRACTA (commissum)". Possible follow-up: a light HEAD resolver in lib/git
 (git_aperire loads all pack indices eagerly today) so aedilis needs no git
 fork at all.
+
+## 2026-11-02 — budget B2 J7: emitted vetustum() compares the newest header once (lib/aedilis.c)
+
+The emitted struere.sh used to test every header in $CAPITA against
+every object (`for c in $CAPITA; do [ "$c" -nt "$obj" ]`): ~1 M `-nt`
+tests per aedilis gate in the all-fresh case (probatio_vicus_iussa: 153
+objects x 163 headers). Now the script finds the newest header ONCE at
+the top (`_recens`) and vetustum() makes one comparison. Equivalence
+('some header newer than obj' <=> 'newest header newer than obj'),
+including the edges: a missing header never becomes the newest unless
+all are missing (bash `-nt` is true when only the first file exists), and
+then `[ missing -nt obj ]` is false, as before; empty CAPITA is guarded
+by `[ -n "$_recens" ]`. probatio_vicus_iussa warm run: 150 -> 41 ms, same
+decisions (0 recompiles). No committed file carries this emitter output
+(the GENERATUM fontes_generata scripts come from a different emitter), so
+nothing to regenerate.
+
+New gate case in tools/aedilis_porta.sh: aedilis emits probatio_xar's
+script into a mktemp dir (--exitus/--obiecta), closure objects copied
+with `cp -p`; unchanged -> 0 recompiles, a missing header prepended and a
+fresh header appended to CAPITA -> all recompile. Plant `-ot` in the
+newest-header loop -> 0/7, FRACTA.
+
+Plant mechanics trap: bin/fabrica links lib/aedilis.c, so a plant there
+makes fabrica stale -> `fabrica sanare` refuses (exit 2) -> silva.porta
+falls back to the raw gate WITHOUT rebuilding bin/aedilis -> "porta cum
+planta VIRIDIS" (a false mute gate). Plant with a callable gate that runs
+./tools/aedilis_struere.sh and then silva._porta_cruda('aedilis').

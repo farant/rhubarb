@@ -38,7 +38,7 @@ MEMORIA_ORACULI="$(mktemp -d)"
 # THESAURUS (fabrica plan 2 T3): cursus portae = generatio una
 # (purgatio generationes ultimas servat, non processus aedilis)
 export THESAURUS_GENERATIO="${THESAURUS_GENERATIO:-$(date -u +%Y%m%dT%H%M%S)-porta-aedilis-$$}"
-trap 'rm -rf "$MEMORIA_ORACULI" "${CT:-}"' EXIT
+trap 'rm -rf "$MEMORIA_ORACULI" "${CT:-}" "${VR:-}"' EXIT
 # NEXUS SERVATUS (budget B1 E10): probatio cuius signum nexus (vexilla
 # + identitas obiectorum et binarii) idem est non renectitur - nexus
 # deterministicus; derivatio et compilatio tamen omni cursu currunt.
@@ -175,6 +175,34 @@ if [ "$cs1" = "feedface" ] && [ "${#cs2}" -ge 7 ]; then
 else
     echo "FRACTA (commissum): ambitus '$cs1' (feedface), git '$COMMISSUM_PORTAE'"
     fracta="$fracta commissum"
+fi
+
+# CAPUT RECENTISSIMUM (budget B2 J7): vetustum() caput recentissimum
+# semel computat. Scriptum probatio_xar in directorio temporario
+# (obiecta clausurae per 'cp -p', mtime servato): (1) nihil mutatum ->
+# nulla recompilatio; (2) caput absens in principio CAPITA et caput
+# RECENS in fine -> omnia obiecta recompilantur. Olim nulla porta caput
+# scriptorum aedilis tangebat.
+VR="$(mktemp -d)"
+mkdir -p "$VR/obiecta"
+./bin/aedilis probationes/probatio_xar.c --exitus "$VR" \
+    --obiecta "$VR/obiecta" --thesaurus build/aedilis/obiecta \
+    > /dev/null 2>&1
+for o in $(sed -n 's/^compilare "[^"]*" "\([^"]*\)".*/\1/p' "$VR/struere.sh"); do
+    cp -p "build/aedilis/obiecta/$o" "$VR/obiecta/$o"
+done
+vr_n=$(grep -c '^compilare "' "$VR/struere.sh")
+vr1=$(bash "$VR/struere.sh" 2>&1 | grep -c '\[obiectum\]')
+touch "$VR/recens.h"
+sed -i '' -e "s|^CAPITA=\"|CAPITA=\"$VR/absens.h |" \
+    -e "/^CAPITA=/s|\"\$| $VR/recens.h\"|" "$VR/struere.sh"
+vr2=$(bash "$VR/struere.sh" 2>&1 | grep -c '\[obiectum\]')
+rm -rf "$VR"
+if [ "$vr_n" -gt 0 ] && [ "$vr1" = 0 ] && [ "$vr2" = "$vr_n" ]; then
+    echo "bona: caput recentissimum (recens 0/$vr_n; caput tactum $vr2/$vr_n)"
+else
+    echo "FRACTA (caput recentissimum): recens $vr1 (0), caput tactum $vr2 ($vr_n)"
+    fracta="$fracta caput_recentissimum"
 fi
 
 finis=$(date +%s)

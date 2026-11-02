@@ -177,7 +177,7 @@ f1656a51), F6 overlaps I5.
 | F1 | silva_annotationes `_affigere`: unit extents in one walk for all sources; obsoleta share 10.9% → 2.2% | 0.35-0.45 | S | add a two-source annotation fixture first (none today) |
 | J4 | content seal reused on a frozen tree, clean-tree fast path, seal once after commit (~260 seals/merge, 62 after one commit) | 0.3-0.5 | S-M | follow-up to E1 |
 | J6 | aedilis derivation runs `git rev-parse` twice per call for a comment (~611 calls/merge) | 0.3 | S | LUCRUM (this commit): AEDILIS_COMMISSUM from the gate + per-process memo; 48 -> 7 ms per derivation; aedilis gate 130 -> 78 s (one run) |
-| J7 | aedilis struere.sh `vetustum()`: newest header once, not every header × every object (~1 M `-nt` per gate) | 0.3 | S-M | E10 neighbour |
+| J7 | aedilis struere.sh `vetustum()`: newest header once, not every header × every object (~1 M `-nt` per gate) | 0.3 | S-M | LUCRUM (this commit): vicus_iussa warm 150 -> 41 ms; new gate case "caput recentissimum" (no gate touched aedilis headers before) |
 | G6/J5a | radix tests link against an archive / their closure, not all 419 objects (18 MB → 130 KB binaries, ~6 GB less per frigida) | 0.2-0.5 | S-M | `.m` objects need `-ObjC` |
 | I4 | xar fast path via GNU `extern __inline__` (gnu_inline), guarded off in amalgams; both amalgamators reproduce committed files byte-for-byte | 0.25-0.4 | S-M | the C1 alternative; no API |
 | F9 | silva-m3 / nexus compile silva.c through the E7 compilator key (13.3 s per compile) | 0.2-0.45 | S | on merges touching silva.c |
