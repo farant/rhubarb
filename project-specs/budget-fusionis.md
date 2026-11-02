@@ -181,7 +181,7 @@ f1656a51), F6 overlaps I5.
 | G6/J5a | radix tests link against an archive / their closure, not all 419 objects (18 MB → 130 KB binaries, ~6 GB less per frigida) | 0.2-0.5 | S-M | `.m` objects need `-ObjC` |
 | I4 | xar fast path via GNU `extern __inline__` (gnu_inline), guarded off in amalgams; both amalgamators reproduce committed files byte-for-byte | 0.25-0.4 | S-M | the C1 alternative; no API |
 | F9 | silva-m3 / nexus compile silva.c through the E7 compilator key (13.3 s per compile) | 0.2-0.45 | S | on merges touching silva.c |
-| J10 | vexilla.sh sourcing ~16 ms × ~1 300 per merge | 0.2-0.3 | S | |
+| J10 | vexilla.sh sourcing ~16 ms × ~1 300 per merge | 0.2-0.3 | S | LUCRUM (this commit): cold 16.7 -> 9.6 ms, child (cached cksum) 5.8 ms (bash alone 5.3); new vexilla gate section VII (signature/touch, never tested before) |
 | F10+F11 | canon_iudicare element-lookup memo + per-document title index (49% of canon_corpus) | 0.2-0.3 | S-M | profile only |
 | G1 | radices bisection: cache left-end sign, defer exact-decimal check; −14% CPU -O2, −11% ASan | 0.15-0.2 | S | add a test for a negative root whose interval straddles 0 (plant survived) |
 | I3 | credo child-wait backoff 16 µs → doubling (fixed 1 ms today; toml_totalitas 8.8 of 14 s asleep) | 0.15-0.25 | S | add a 50 ms survival test (timeout ×1000 too short undetected today) |

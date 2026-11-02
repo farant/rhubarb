@@ -48,10 +48,32 @@ declare -a VEXILLA_C89=(
 # eam includit), ergo omnis cache mtime domus semel frigescit. Pretium
 # = una aedificatio frigida per mutationem vexillorum, non tacita
 # mendacia.
-_vexilla_radix="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-_vexilla_hash="$(printf '%s\n' "${VEXILLA_C89[@]}" | cksum | cut -d' ' -f1)"
+#
+# SINE PROCESSIBUS (budget B2 J10): fontatio ~1300 vicibus per fusionem
+# (cursores, involucra, probatio_una) ~11 ms pendebat - cd/dirname/pwd,
+# cksum|cut, cat. Nunc: (1) radix ex BASH_SOURCE absoluto per
+# substitutionem (relativum aut forma alia -> cd/pwd ut olim); (2)
+# sigillum per 'read' (aedificium); (3) cksum tabulae functio pura
+# tabulae est - VEXILLA_CKSUM (exportatum: 'hash TAB tabula') in filiis
+# reutitur si tabula eadem, aliter computatur. Forma plagulae (cksum)
+# et regula tactus IMMUTATAE.
+case "${BASH_SOURCE[0]}" in
+    /*/tools/vexilla.sh) _vexilla_radix="${BASH_SOURCE[0]%/tools/vexilla.sh}" ;;
+    *) _vexilla_radix="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" ;;
+esac
+_vexilla_tabula="${VEXILLA_C89[*]}"
+_vexilla_notum="${VEXILLA_CKSUM:-}"
+if [ -n "$_vexilla_notum" ] && [ "${_vexilla_notum#*$'\t'}" = "$_vexilla_tabula" ]; then
+    _vexilla_hash="${_vexilla_notum%%$'\t'*}"
+else
+    _vexilla_hash="$(printf '%s\n' "${VEXILLA_C89[@]}" | cksum)"
+    _vexilla_hash="${_vexilla_hash%% *}"
+    export VEXILLA_CKSUM="$_vexilla_hash"$'\t'"$_vexilla_tabula"
+fi
 _vexilla_sigillum="$_vexilla_radix/build/vexilla.sigillum"
-if [ ! -f "$_vexilla_sigillum" ] || [ "$(cat "$_vexilla_sigillum" 2>/dev/null)" != "$_vexilla_hash" ]; then
+_vexilla_lectum=""
+[ -f "$_vexilla_sigillum" ] && IFS= read -r _vexilla_lectum < "$_vexilla_sigillum"
+if [ ! -f "$_vexilla_sigillum" ] || [ "$_vexilla_lectum" != "$_vexilla_hash" ]; then
     mkdir -p "$_vexilla_radix/build"
     printf '%s\n' "$_vexilla_hash" > "$_vexilla_sigillum"
     touch "$_vexilla_radix/include/latina.h"
