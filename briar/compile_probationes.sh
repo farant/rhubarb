@@ -341,7 +341,7 @@ fi
 obj_files="$obj_files $obj"
 
 for src in "$BRIAR_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [briar] $base.c"
@@ -354,7 +354,7 @@ done
 
 # adiumenta probationum (probationes/*.c non probatio_*)
 for src in "$BRIAR_DIR"/probationes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     case "$base" in probatio_*) continue ;; esac
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then

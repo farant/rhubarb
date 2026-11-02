@@ -87,3 +87,7 @@
   (real values) alongside the fake HOME.
 - Never edit `divulgare.sh` while a publish runs: bash reads the script
   as it goes.
+
+## 2026-10-31 - ES256 signing moved to tessera_es256 (http2-plan T10)
+
+`nundinae_apple_tesseram_facere` keeps its identifier checks and its JSON (header with typ, claims with exp and aud) and calls `tessera_es256_facere` for the signing. BearSSL's ECDSA uses RFC 6979 deterministic nonces, so `probatio_tessera_es256` proves the token is byte-identical to the core called with the same JSON; this suite's own token test (parts, claims, signature verification, truncated key) passes unchanged. The new `tessera_apns_facere` builds Apple's push token ({"alg":"ES256","kid"} / {"iss","iat"}).

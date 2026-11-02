@@ -45,6 +45,8 @@ nomen structura {
                                        * (picturae iam ostensae) */
         StatusSystemata systemata;   /* S5b: relatio ad ligationem
                                        * novam (picturam_ponere) */
+         PictorCommunia communia;    /* plan-5 T6: Shared pictures -
+                                       * compositio, actiones, figurae */
       PictorPinacotheca pinacotheca; /* T5: compositio, actiones,
                                        * figurae in eam monstrant */
 } PictorMontatio;
@@ -78,6 +80,26 @@ b32
 pictor_picturam_condere (
          PictorMontatio* m,
      constans character* spatium);
+
+/* plan-5 T4 (D4 "Edit a copy"): picturam ALIENAM (replica, spatium) in
+ * picturam NOVAM propriam (spatium ULID in spatium_novum) vertere -
+ * tabula ut New picture, compositum alienum aptatum (contain,
+ * Atkinson) in stratum novum supra summum (ut glutinatio confirmata),
+ * origo memorata (pictor_originem_ponere), ostensa. Alienum non
+ * mutatur. FALSUM (nihil creatum) si aliena ignota. */
+b32
+pictor_exemplum_facere (
+          PictorMontatio* m,
+                  chorda  replica,
+      constans character* spatium_alienum,
+               character  spatium_novum[XXVIII]);
+
+/* plan-5 T7 (spec IX.1): salutatio prima aut inscriptio pendens
+ * ostenditur (communio praesto: pictor_communionem_ligare); post
+ * aedificare et ligationem vocatur. VERUM si dialogus positus. */
+b32
+pictor_salutationem_ponere (
+    PictorMontatio* m);
 
 /* semitae R4c: argumentum lateris - URI ("pictor/flores") picturam
  * EXSTANTEM ostendit (semita numquam condit); cognomen "<spatium>" ut

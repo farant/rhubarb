@@ -346,6 +346,20 @@ mundi_agere (
     {
         mundi_ponere(discus, scriptum->alia, "alia\n");
     }
+    si (scriptum->diarium != NIHIL)
+    {
+        FasciculusFictus* d;
+                  chorda  vetus;
+
+        d = mundi_fasciculum_invenire(discus,
+            "~/.rhubarb/institutiones.tsv");
+        vetus = d != NIHIL ? d->contentum : chorda_ex_literis("",
+            piscina);
+        mundi_ponere(discus, "~/.rhubarb/institutiones.tsv",
+            chorda_ut_cstr(chorda_concatenare(vetus,
+            chorda_ex_literis(scriptum->diarium, piscina), piscina),
+            piscina));
+    }
     si (scriptum->effusio != NIHIL)
     {
         mundi_ponere(discus, acta_via, scriptum->effusio);
@@ -902,6 +916,7 @@ mundi_scriptum_addere (
     scriptum->alia        = NIHIL;
     scriptum->scriptum_s  = NIHIL;
     scriptum->effusio     = NIHIL;
+    scriptum->diarium     = NIHIL;
 }
 
 /* actio cum generatore scripto, ingressu uno, exitu uno (scriptura =

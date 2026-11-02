@@ -16,6 +16,7 @@
 #include "pictor_documentum.h"
 #include "xar.h"
 #include "imago.h"
+#include "claviatura.h"
 
 nomen structura {
     PictorDocumentum* doc;
@@ -49,6 +50,28 @@ nomen structura {
                                     constans character* spatium);
     /* pinacotheca T5: apertio eam parat (scheda, picturae) */
     PictorPinacotheca* pinacotheca;
+    /* communio-plan-5 T6: Shared pictures et spectator - compositio
+     * (structura PictorCompositio, pictor_componentia.h: condiciones
+     * menu) legitur; exemplum per montationem (Edit a copy); origo
+     * tractus imaginis (coordinatae locales) */
+       PictorCommunia* communia;
+    constans structura PictorCompositio* compositio;
+             b32 (*exemplum_facere)(vacuum* montatio, chorda replica,
+                                    constans character* spatium);
+             Punctum origo_tractus;
+    /* communio-plan-5 T7: inscriptio per hospitem (pictor_communio
+     * ligat; NIHIL = nulla) et claviatura systematis (testa) */
+             b32 (*inscriptionem_incipere)(vacuum* ctx,
+                 chorda epistula);
+             b32 (*codicem_dare)(vacuum* ctx, chorda codex);
+          vacuum (*inscriptionem_abicere)(vacuum* ctx);
+    /* plan-5 T8: EVENTUS_RESUMPTIO -> communio excitatur (ctx idem) */
+          vacuum (*communio_excitare)(vacuum* ctx);
+                vacuum* inscriptio_ctx;
+TestaClaviaturamPonere  claviaturam_ponere;
+                vacuum* claviatura_ctx;
+    /* genus ultimo petitum (TestaClaviaturaGenus; ZEPHYRUM = NULLA) */
+                   i32 claviatura_genus;
 } PictorActiones;
 
 vacuum
@@ -139,6 +162,58 @@ pictor_spongia_ictus (
  * FALSUM, nihil. Registratur ut 'imago.eligere'. */
 b32
 pictor_imaginem_eligere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> plan-5 T6 Shared pictures: pinax spectatorem aperit,
+ * prior/posterior paginam, X claudit. 'communia.agere'. */
+b32
+pictor_communia_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> plan-5 T6 spectator: tractus (circulariter), ‹ ›, Edit a
+ * copy, X / ictus extra imaginem ad rete. 'spectator.agere'. */
+b32
+pictor_spectatorem_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* plan-5 T7: salutatio prima (communio praesto, nondum visa, non
+ * inscriptus) aut inscriptio pendens -> palette "salutatio" /
+ * "inscriptio". VERUM si posita. */
+b32
+pictor_salutationem_ponere_in (
+    InsulaRepositorium* repo,
+        PictorActiones* pa);
+
+/* <tractator/> plan-5 T7 salutatio: Sign in… / Draw without signing in.
+ * 'salutatio.agere'. */
+b32
+pictor_salutationem_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx);
+
+/* <tractator/> plan-5 T7 inscriptio: Send, Cancel, OK, campus.
+ * 'inscriptio.agere'. */
+b32
+pictor_inscriptionem_agere (
     InsulaRepositorium* repo,
                  Motus* motus,
    constans Destinatio* destinatio,
@@ -241,6 +316,14 @@ pictor_instrumentum_eligere (
    constans Destinatio* destinatio,
              Componens* nodus,
       constans Eventus* ev,
+                vacuum* ctx);
+
+/* review finalis plan-5: post dimissionem (Esc, ictus extra dialogum)
+ * claviatura systematis celatur si dialogus inscriptionis non iam
+ * apertus est (dimissio pictorem non certiorem facit) */
+vacuum
+pictor_claviaturam_conformare (
+    InsulaRepositorium* repo,
                 vacuum* ctx);
 
 #endif /* PICTOR_ACTIONES_H */

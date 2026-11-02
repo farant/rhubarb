@@ -17,6 +17,7 @@
 #include "http.h"
 #include "filum.h"
 #include "nundinae_apple.h"
+#include "tessera_es256.h"
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -148,31 +149,15 @@ nundinae_apple_tesseram_facere (
             i32  duratio_s,
         Piscina* p)
 {
-    br_skey_decoder_context dc;
-          br_sha256_context h;
-              unsigned char digestum[XXXII];
-              unsigned char signatura[LXIV];
-                  character caput[CCLVI];
-                  character asserta[DXII];
-                     chorda vacua;
-                     chorda initium;
-                     chorda tessera;
-                     size_t n;
+    character caput[CCLVI];
+    character asserta[DXII];
+       chorda vacua;
 
     vacua.datum    = NIHIL;
     vacua.mensura  = ZEPHYRUM;
     si (   !clavis_der || mensura <= ZEPHYRUM || !_tutum(clavis_id)
         || !_tutum(emissor) || duratio_s <= ZEPHYRUM)
     {
-        redde vacua;
-    }
-    br_skey_decoder_init(&dc);
-    br_skey_decoder_push(&dc, clavis_der, (size_t)mensura);
-    si (   br_skey_decoder_last_error(&dc)    != ZEPHYRUM
-        || br_skey_decoder_key_type(&dc)      != BR_KEYTYPE_EC
-        || br_skey_decoder_get_ec(&dc)->curve != BR_EC_secp256r1)
-    {
-        memset(&dc, ZEPHYRUM, magnitudo(dc));
         redde vacua;
     }
     sprintf(caput,
@@ -182,25 +167,10 @@ nundinae_apple_tesseram_facere (
         "\"aud\":\"appstoreconnect-v1\"}", (int)emissor.mensura,
         (constans character*)emissor.datum, (longus)nunc_s,
         (longus)(nunc_s + (s64)duratio_s));
-    initium = chorda_concatenare(chorda_concatenare(
-        base64url_codificare((constans i8*)caput, (i32)strlen(caput),
-        p),
-        chorda_ex_literis(".", p), p), base64url_codificare(
-        (constans i8*)asserta, (i32)strlen(asserta), p), p);
-    br_sha256_init(&h);
-    br_sha256_update(&h, initium.datum, (size_t)initium.mensura);
-    br_sha256_out(&h, digestum);
-    n = br_ecdsa_i31_sign_raw(br_ec_get_default(), &br_sha256_vtable,
-        digestum, br_skey_decoder_get_ec(&dc), signatura);
-    memset(&dc, ZEPHYRUM, magnitudo(dc));
-    si (n != (size_t)LXIV)
-    {
-        redde vacua;
-    }
-    tessera = chorda_concatenare(chorda_concatenare(initium,
-        chorda_ex_literis(".", p), p), base64url_codificare(
-        (constans i8*)signatura, LXIV, p), p);
-    redde tessera;
+    /* http2-plan T10: signatura in nucleo communi (tessera_es256) -
+     * exitus byte pro byte idem (probatio_tessera_es256) */
+    redde tessera_es256_facere(clavis_der, mensura,
+        chorda_ex_literis(caput, p), chorda_ex_literis(asserta, p), p);
 }
 
 b32
@@ -328,43 +298,6 @@ nundinae_apple_proxima (
  * Clavis (secretum)
  * ================================================== */
 
-/* PEM PKCS#8 -> signa base64 (sine spatiis); numerus aut -I */
-interior s32
-_signa_clavis (
-     constans character* textus_clavis,
-                    s32  n,
-              character* capsa,
-                    s32  capacitas)
-{
-    constans character* initium;
-    constans character* finis;
-                   s32  k;
-
-    initium  = strstr(textus_clavis, "-----BEGIN PRIVATE KEY-----");
-    finis    = strstr(textus_clavis, "-----END PRIVATE KEY-----");
-    (vacuum)n;
-    si (!initium || !finis || finis < initium)
-    {
-        redde -I;
-    }
-    initium  += strlen("-----BEGIN PRIVATE KEY-----");
-    k        = ZEPHYRUM;
-    dum (initium < finis)
-    {
-        si (   *initium != '\n' && *initium != '\r' && *initium != ' '
-            && *initium != '\t')
-        {
-            si (k >= capacitas)
-            {
-                redde -I;
-            }
-            capsa[k++] = *initium;
-        }
-        initium++;
-    }
-    redde k;
-}
-
 b32
 nundinae_apple_aperire (
                          NundinaeApple* n,
@@ -372,17 +305,10 @@ nundinae_apple_aperire (
                                 chorda* causa,
                                Piscina* p)
 {
-             integer fd;
-      structura stat  st;
-                    ssize_t lecta;
-                  character textus_clavis[CAPSA_CLAVIS];
-                  character signa[CAPSA_CLAVIS];
-                  character via[DXII];
-                        s32 k;
-                     chorda b64;
-              Base64Fructus der;
-    br_skey_decoder_context dc;
-                        b32 bona;
+    character  via[DXII];
+           i8* der_octeti;
+          i32  der_mensura;
+       chorda  interna;
 
     memset(n, ZEPHYRUM, magnitudo(NundinaeApple));
     n->configuratio  = *c;
@@ -397,74 +323,17 @@ nundinae_apple_aperire (
     }
     memcpy(via, c->via_clavis.datum, (size_t)c->via_clavis.mensura);
     via[c->via_clavis.mensura] = '\0';
-    /* <tolera codex="CANALIS_PRAETERITUS" (>clavis secreta Apple */
-    fd = open(via, O_RDONLY | O_NOFOLLOW);
-    si (fd < ZEPHYRUM)
+    /* http2-plan T11: lectio clavis in tessera_es256 (communis cum apns) */
+    si (!tessera_clavem_legere(via, &der_octeti, &der_mensura, &interna,
+            p))
     {
-        *causa = chorda_concatenare(chorda_ex_literis(
-            "nundinae_apple: clavis legi nequit: ", p),
-            chorda_ex_literis(via, p), p);
+        *causa =
+            chorda_concatenare(chorda_ex_literis("nundinae_apple: ",
+            p), interna, p);
         redde FALSUM;
     }
-    si (fstat(fd, &st) != ZEPHYRUM || !S_ISREG(st.st_mode))
-    {
-        close(fd);
-        *causa = chorda_ex_literis(
-            "nundinae_apple: clavis non filum regulare", p);
-        redde FALSUM;
-    }
-    si ((st.st_mode & 077) != ZEPHYRUM)
-    {
-        close(fd);
-        *causa = chorda_concatenare(chorda_ex_literis(
-            "nundinae_apple: clavis modus latior quam 0600 (chmod 600 ",
-            p), chorda_concatenare(chorda_ex_literis(via, p),
-            chorda_ex_literis(")", p), p), p);
-        redde FALSUM;
-    }
-    lecta = read(fd, textus_clavis, magnitudo(textus_clavis) - I);
-    close(fd);
-    si (lecta <= ZEPHYRUM)
-    {
-        *causa = chorda_ex_literis("nundinae_apple: clavis vacua", p);
-        redde FALSUM;
-    }
-    textus_clavis[lecta] = '\0';
-    k = _signa_clavis(textus_clavis, (s32)lecta, signa,
-        (s32)CAPSA_CLAVIS);
-    memset(textus_clavis, ZEPHYRUM, magnitudo(textus_clavis));
-    si (k <= ZEPHYRUM)
-    {
-        memset(signa, ZEPHYRUM, magnitudo(signa));
-        *causa = chorda_ex_literis(
-            "nundinae_apple: clavis non PEM 'PRIVATE KEY'", p);
-        redde FALSUM;
-    }
-    b64.datum    = (i8*)signa;
-    b64.mensura  = (i32)k;
-    der          = base64_decodificare(b64, p);
-    memset(signa, ZEPHYRUM, magnitudo(signa));
-    si (!der.datum || der.mensura <= ZEPHYRUM)
-    {
-        *causa = chorda_ex_literis("nundinae_apple: clavis base64 mala",
-            p);
-        redde FALSUM;
-    }
-    br_skey_decoder_init(&dc);
-    br_skey_decoder_push(&dc, der.datum, (size_t)der.mensura);
-    bona = br_skey_decoder_last_error(&dc) == ZEPHYRUM
-        && br_skey_decoder_key_type(&dc) == BR_KEYTYPE_EC
-        && br_skey_decoder_get_ec(&dc)->curve == BR_EC_secp256r1;
-    memset(&dc, ZEPHYRUM, magnitudo(dc));
-    si (!bona)
-    {
-        memset(der.datum, ZEPHYRUM, (size_t)der.mensura);
-        *causa = chorda_ex_literis(
-            "nundinae_apple: clavis non PKCS#8 P-256", p);
-        redde FALSUM;
-    }
-    n->clavis          = der.datum;
-    n->clavis_mensura  = der.mensura;
+    n->clavis          = der_octeti;
+    n->clavis_mensura  = der_mensura;
     redde VERUM;
 }
 
@@ -1310,6 +1179,112 @@ _vocatio_bona (
     {
         *causa = r.causa;
         redde FALSUM;
+    }
+    redde VERUM;
+}
+
+b32
+nundinae_apple_capacitas_inest (
+             JsonValor* corpus,
+    constans character* capacitas,
+               Piscina* p)
+{
+     JsonValor* data;
+        chorda  vac;
+           i32  i;
+
+    data = corpus ? json_objectum_capere(corpus, "data") : NIHIL;
+    si (!data || !json_est_tabulatum(data))
+    {
+        redde FALSUM;
+    }
+    vac = chorda_ex_literis("", p);
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(data); i++)
+    {
+        JsonValor* a =
+            json_objectum_capere(json_tabulatum_obtinere(data,
+            i), "attributes");
+
+        si (chorda_aequalis_literis(json_capere_chorda(a,
+            "capabilityType",
+                vac), capacitas))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+b32
+nundinae_apple_capacitas (
+          NundinaeApple* n,
+                 chorda  identificator,
+     constans character* capacitas,
+                    b32  creare,
+                    b32* inest,
+                    b32* creata,
+                 chorda* causa,
+                Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                 JsonValor* a;
+                 JsonValor* rel;
+                    chorda  vac;
+                    chorda  id;
+
+    vac     = chorda_ex_literis("", p);
+    *inest  = FALSUM;
+    si (creata)
+    {
+        *creata = FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/bundleIds?filter%5Bidentifier%5D=%A&limit=200",
+        _url_valor(identificator, p), vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    id = nundinae_apple_signum_invenire(r.corpus, identificator, p);
+    si (id.mensura == ZEPHYRUM)
+    {
+        *causa = chorda_concatenare(chorda_ex_literis(
+            "nundinae_apple: signum fasciculi absens: ", p),
+            identificator,
+            p);
+        redde FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/bundleIds/%A/bundleIdCapabilities", id, vac),
+        vac,
+        p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *inest = nundinae_apple_capacitas_inest(r.corpus, capacitas, p);
+    si (*inest || !creare)
+    {
+        redde VERUM;
+    }
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "capabilityType",
+        json_chorda_creare_literis(p,
+        capacitas));
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "bundleId", _relatio("bundleIds", id,
+        FALSUM,
+        p));
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/bundleIdCapabilities",
+        _corpus_rei("bundleIdCapabilities", a, rel, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *inest = VERUM;
+    si (creata)
+    {
+        *creata = VERUM;
     }
     redde VERUM;
 }

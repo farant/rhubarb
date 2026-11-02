@@ -84,3 +84,65 @@ working)": it did not - reactor_poll returns at once when nothing is registered,
 so the loop raced through its 450 turns in seconds. With stdin closed the CLI now
 sleeps 2 s (poll with no fds) between token checks. The link path also now needs
 the page's button press (server change, see communio_servus worklog).
+
+## 2026-10-27 - every request through `veredarius` (communio-plan-5 T1, quarta)
+
+The client's two HTTP users (`_mittere` for the lanes, `_vocare_semel`
+for sign-in) now go through `Veredarius` (`include/veredarius.h`): one
+request, a finish callback, abort. The host supplies it - the house one
+(`lib/veredarius_domesticus.c`, over `http_vocatio`) on the Mac and in
+tools; URLSession in the iOS shell (T8). `communio_cliens.c` includes
+neither `http.h`, `http_vocatio.h` nor `communio_servus.h` any more (a
+test reads the source and fails if `http_vocare` comes back), so an app
+linking the client does not link TLS or the server: the token-size
+constant and `communio_tesseram_facere` moved to `communio_forma`.
+
+A lane's in-flight state is now `in_itinere` (sent until the response
+is handled) + `respondit` (finish arrived) + the abort `signum`, where
+it used to be the `HttpVocatio*`. Stopping a lane aborts only a request
+that has not answered yet.
+
+Finding: `http_petitio_tempus_ponere` bounds only the CONNECT phase; a
+server that accepts and then stays silent is governed by the idle
+timeout (`HttpVocatioOptiones.mora_otii_ms`, default 60 s). The house
+veredarius sets both from the request's `tempus_ms`, so "tempus" means
+what callers think. The client's longest request is the long-poll
+(mora 25 s + margin 15 s = 40 s), still above the 25 s answer time.
+
+## 2026-10-27 - `CommunioInscriptio`: sign-in that never blocks (communio-plan-5 T2, quarta)
+
+The three blocking plan-3 helpers (`communio_inscriptionem_petere`,
+`_confirmare`, `communio_tessera_valet`, which ran the reactor until the
+server answered) are gone; one object replaces them, used by the
+`communio inscribere` command and (T7) by pictor. States: PETIT ->
+EXSPECTAT -> (CONFIRMAT ->) INSCRIPTA, with CODEX_FALSUS (another code
+allowed), EXPIRATA and RETE as the failure ends. While waiting it checks
+the token (`GET /communio/apparatus`) every II s - that is how a clicked
+link is noticed - and a code can be given at any time (any in-flight
+check is aborted first; one request at a time). Responses are handled on
+the next reactor turn (the veredarius's pool must outlive the finish).
+
+Pending state lives in the volume's praesentia `communio/inscriptio` =
+`{"aditus","incepta_ms"}` - never the email address - so a killed app
+resumes (`communio_inscriptionem_resumere`). praesentia has no delete:
+"removed" = empty value. The command passes volume NIHIL (nothing kept).
+
+Decisions: after V wrong codes the client ends in EXPIRATA (the server
+has consumed the request; plan-3 deferred minor 9 - the CLI used to keep
+saying "wrong code"); a network failure while confirming does NOT count
+as a try - back to EXSPECTAT. Codes are normalised exactly like the
+server (`_codicem_normare`: drop '-' and spaces, upper-case, VIII
+Crockford), so malformed input never makes a request. Test hooks:
+`communio_inscriptionis_moram_ponere` (check interval) and
+`_vitam_ponere` (lifetime) - the suite runs at L ms / CCC ms.
+
+## 2026-10-29 — renovare, inscriptionem_excitare (plan-5 final review)
+
+`communio_cliens_renovare` = sistere + incipere: aborts whatever is in
+flight (the long-poll may be dead after an iOS sleep) and runs both lane
+cycles now. Safe for duplicates: the descending cursor and idempotent import
+mean a re-fetched batch imports nothing twice; an aborted upload is re-sent.
+`communio_inscriptionem_excitare` only acts in EXSPECTAT / CODEX_FALSUS: an
+INSPICERE still in flight is aborted, the timer dropped, and `_inspicere`
+runs now. A response that already arrived (respondit, 1 ms timer armed) and
+INTRARE/CONFIRMARE requests are left alone.

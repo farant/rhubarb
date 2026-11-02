@@ -1295,6 +1295,15 @@
          musicxml-oraculum (tools/musicxml_silvestria.sh) id ponit -
          sine eo sectio silvestris nihil agit -->
     <ambitus variabilis="MUSICXML_SILVESTRIA"/>
+    <!-- HTTP/2 (http2-plan T8): RHUBARB_RETE=1 situs publicos per
+         probatio_http2_nexus addit (ut probatio_http_vocatio_rete);
+         HTTP2_TABULAE tabulas octetorum et formarum Go in directorium
+         datum scribit (tools/http2_tabulare.sh) - sine eis nihil -->
+    <ambitus variabilis="RHUBARB_RETE"/>
+    <ambitus variabilis="HTTP2_TABULAE"/>
+    <!-- probatio_http2_reproductio: tabulae aliae (tools/http2_tabulare.sh
+         -conferre tabulas recentes sic iudicat); sine eo fixa -->
+    <ambitus variabilis="HTTP2_FIXA"/>
     <debitum_scripturae membrum="probatio_generare" via="build/probatio_generare_instrumenta/" causa="instrumenta generata (scratch) in build/"/>
     <debitum_scripturae membrum="probatio_natura_canones" via="build/probatio_natura_canones/" causa="canones probationis (scratch)"/>
     <debitum_scripturae membrum="probatio_silex" via="build/probatio_silex_area/" causa="area silicis (scratch)"/>
@@ -1330,7 +1339,7 @@
        declarations: SDK sprintf notat solum sub sanitatoribus. -->
   <actio titulus="probationes_veneni" genus="iudicium">
     <probationes_c exemplar="probationes/probatio_*.c"
-        membra="probatio_piscina probatio_magnus probatio_fractio probatio_situs probatio_polynomium probatio_matrix probatio_laqueus probatio_extensio probatio_quaternio probatio_radices probatio_cellae probatio_reticulum probatio_plexus probatio_nervus probatio_dependentia probatio_chorda_aedificator probatio_contractio probatio_laqueus_rete probatio_communio_servus"
+        membra="probatio_piscina probatio_magnus probatio_fractio probatio_situs probatio_polynomium probatio_matrix probatio_laqueus probatio_extensio probatio_quaternio probatio_radices probatio_cellae probatio_cellae_lenta probatio_reticulum probatio_plexus probatio_nervus probatio_dependentia probatio_chorda_aedificator probatio_contractio probatio_laqueus_rete probatio_communio_servus"
         vexilla="-g -O1 -fsanitize=address,undefined -fno-sanitize-recover=all -Wno-deprecated-declarations -Wno-overlength-strings -DPISCINA_VENENUM=1"
         vexilla_nexus="-fsanitize=address,undefined"/>
   </actio>

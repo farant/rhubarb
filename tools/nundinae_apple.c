@@ -40,7 +40,8 @@ _usus (
         "-mittere <app> <ipa> <versio> <aedificatio> | "
         "-cryptographia < partes.tsv | -ultimum <app> | "
         "-distribuere <app> <aedificatio> -notae <plagula> | "
-        "-testatores <app> | -invitare <app> <email>\n");
+        "-testatores <app> | -invitare <app> <email> | "
+        "-capacitas <app> <CAPACITAS>\n");
     redde II;
 }
 
@@ -777,6 +778,34 @@ _testatores (
     redde _testatores_tractare(n, id_app, FALSUM, p);
 }
 
+/* -capacitas (http2-plan C9): capacitas signi fasciculi earth.golden.<app>
+ * (e.g. PUSH_NOTIFICATIONS) creatur si deest - numquam delet */
+interior s32
+_capacitas (
+          NundinaeApple* n,
+     constans character* app,
+     constans character* capacitas,
+                Piscina* p)
+{
+    chorda signum;
+    chorda causa;
+       b32 inest;
+       b32 creata;
+
+    signum = chorda_concatenare(chorda_ex_literis("earth.golden.", p),
+        chorda_ex_literis(app, p), p);
+    si (!nundinae_apple_capacitas(n, signum, capacitas, VERUM, &inest,
+            &creata, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    imprimere("capacitas %s in %.*s: %s\n", capacitas,
+        (int)signum.mensura,
+        (constans character*)signum.datum,
+        creata ? "CREATA" : "praesens");
+    redde ZEPHYRUM;
+}
+
 /* -invitare: invitatio (iterum) uni testatori gregis, per email */
 interior s32
 _invitare (
@@ -1028,6 +1057,11 @@ principale (
         exitus = _distribuere(&n, positiva[ZEPHYRUM], positiva[I],
             notae,
             p);
+    }
+    alioquin si (   strcmp(verbum, "-capacitas") == ZEPHYRUM
+                 && numerus_positivorum          == II)
+    {
+        exitus = _capacitas(&n, positiva[ZEPHYRUM], positiva[I], p);
     }
     alioquin si (strcmp(verbum, "-applicationes") == ZEPHYRUM)
     {

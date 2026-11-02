@@ -37,7 +37,7 @@ for f in "${RADIX_FONTES[@]}"; do
 done
 
 for src in "$SILVA_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/fons_$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [silva] $base.c" >&2

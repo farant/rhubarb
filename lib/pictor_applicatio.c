@@ -2,6 +2,7 @@
  * pictor.c translatus; ratio in capite. */
 
 #include "pictor_applicatio.h"
+#include "moneta.h"
 #include "chorda.h"
 #include "filum.h"
 #include "stml.h"
@@ -112,6 +113,27 @@ picturam_ponere_per_montationem (
      constans character* spatium)
 {
     redde pictor_picturam_ponere((PictorMontatio*)montatio, spatium);
+}
+
+b32
+pictor_salutationem_ponere (
+    PictorMontatio* m)
+{
+    redde m && pictor_salutationem_ponere_in(m->ramus.repo,
+        &m->actiones_ctx);
+}
+
+/* plan-5 T6: Edit a copy per montationem */
+interior b32
+exemplum_per_montationem (
+                  vacuum* montatio,
+                  chorda  replica,
+      constans character* spatium)
+{
+    character novum[XXVIII];
+
+    redde pictor_exemplum_facere((PictorMontatio*)montatio, replica,
+        spatium, novum);
 }
 
 b32
@@ -234,12 +256,20 @@ pictor_montare (
     m->pinacotheca.volumen       = volumen;
     m->pinacotheca.intern        = intern;
     m->actiones_ctx.pinacotheca  = &m->pinacotheca;
+    /* plan-5 T6: Shared pictures, condiciones menu, Edit a copy */
+    m->communia.volumen              = volumen;
+    m->communia.intern               = intern;
+    m->actiones_ctx.communia         = &m->communia;
+    m->actiones_ctx.compositio       = &m->compositio;
+    m->actiones_ctx.exemplum_facere  = exemplum_per_montationem;
     pictor_actiones_registrare(m->actiones, &m->actiones_ctx);
     m->figurae                       = figura_registrum_creare(piscina);
     m->figurae_ctx.doc               = m->doc;
     m->figurae_ctx.cellula_latitudo  = CELLULA_LATITUDO;
     m->figurae_ctx.cellula_altitudo  = CELLULA_ALTITUDO;
     m->figurae_ctx.pinacotheca       = &m->pinacotheca;
+    m->figurae_ctx.communia          = &m->communia;
+    m->figurae_ctx.compositio        = &m->compositio;
     pictor_figurae_registrare(m->figurae, ZEPHYRUM, &m->figurae_ctx);
     m->compositio.fenestra_latitudo  = latitudo;
     m->compositio.fenestra_altitudo  = altitudo;
@@ -249,6 +279,7 @@ pictor_montare (
     m->compositio.ramus              = m->ramus;
     m->compositio.doc                = m->doc;
     m->compositio.pinacotheca        = &m->pinacotheca;
+    m->compositio.communia           = &m->communia;
     redde VERUM;
 }
 
@@ -390,6 +421,63 @@ pictor_picturam_condere (
             clavis_memoriae(spatium, p), doc);
     }
     redde pictor_picturam_ponere(m, spatium);
+}
+
+b32
+pictor_exemplum_facere (
+          PictorMontatio* m,
+                  chorda  replica,
+      constans character* spatium_alienum,
+               character  spatium_novum[XXVIII])
+{
+                Piscina* temporaria;
+       PictorDocumentum* aliena;
+       PictorDocumentum* copia;
+                     i8* indices;
+                    s32  x;
+                    s32  y;
+                    i32  lat;
+                    i32  alt;
+                    b32  bene;
+
+    si (   !m || !m->doc || !spatium_alienum || !spatium_novum
+        || replica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* alienum in piscina temporaria: post insertionem perit */
+    temporaria = piscina_generare_dynamicum("pictor_exemplum",
+        (memoriae_index)M * (memoriae_index)M);
+    si (!temporaria)
+    {
+        redde FALSUM;
+    }
+    aliena = pictor_documentum_aperire_alienum(temporaria,
+        m->doc->intern,
+        m->doc->volumen, replica, spatium_alienum);
+    bene = aliena != NIHIL;
+    si (bene)
+    {
+        moneta_ulid(spatium_novum);
+        bene = pictor_picturam_condere(m, spatium_novum);
+    }
+    copia    = bene ? m->doc : NIHIL;
+    indices  =
+        copia ? pictor_imaginem_aptare(pictor_documentum_proiectio(
+        aliena), copia->latitudo, copia->altitudo, copia->piscina, &x,
+        &y,
+        &lat, &alt) : NIHIL;
+    bene = indices
+        && pictor_documentum_imaginem_inserere(copia, indices, lat, alt,
+        x,
+               y, pictor_documentum_stratum(copia,
+               pictor_documentum_numerus_stratorum(copia) - I)->id)
+           > ZEPHYRUM
+        && pictor_originem_ponere(copia->volumen, spatium_novum,
+        replica,
+               spatium_alienum, temporaria);
+    piscina_destruere(temporaria);
+    redde bene;
 }
 
 /* semitae R4c: SemitaOrganum pro argumento - manifestum pictoris in
@@ -541,6 +629,72 @@ pictor_picturam_restituere (
     redde VERUM;
 }
 
+/* review finalis plan-5: hami dimissionis involuti - post dimissionem
+ * (ante consumens) aut actionem claudentem (post) claviatura systematis
+ * conformatur (dialogus inscriptionis clausus -> celatur) */
+nomen structura {
+       DispensatorAnte  ante;
+       DispensatorPost  post;
+                vacuum* ctx;
+    InsulaRepositorium* repo;
+        PictorActiones* actiones;
+} PictorMedium;
+
+interior b32
+_medium_ante (
+                 vacuum* ctx,
+            Dispensator* d,
+    constans Destinatio* des,
+       constans Eventus* e)
+{
+    PictorMedium* m = (PictorMedium*)ctx;
+             b32  consumptus;
+
+    consumptus = m->ante ? m->ante(m->ctx, d, des, e) : FALSUM;
+    si (consumptus)
+    {
+        pictor_claviaturam_conformare(m->repo, m->actiones);
+    }
+    redde consumptus;
+}
+
+interior vacuum
+_medium_post (
+                 vacuum* ctx,
+            Dispensator* d,
+     constans Componens* actor,
+       constans Eventus* e)
+{
+    PictorMedium* m = (PictorMedium*)ctx;
+
+    si (m->post)
+    {
+        m->post(m->ctx, d, actor, e);
+    }
+    pictor_claviaturam_conformare(m->repo, m->actiones);
+}
+
+interior vacuum
+_medium_involvere (
+    PictorApplicatio* app,
+             Piscina* piscina)
+{
+    PictorMedium* m;
+
+    m = (PictorMedium*)piscina_allocare(piscina,
+        magnitudo(PictorMedium));
+    si (!m || !app->d)
+    {
+        redde;
+    }
+    m->ante      = app->d->ante;
+    m->post      = app->d->post;
+    m->ctx       = app->d->medium_ctx;
+    m->repo      = app->repo;
+    m->actiones  = &app->montatio.actiones_ctx;
+    dispensator_medium_ponere(app->d, _medium_ante, _medium_post, m);
+}
+
 b32
 pictor_applicatio_aedificare (
        PictorApplicatio* app,
@@ -588,5 +742,6 @@ pictor_applicatio_aedificare (
         &app->montatio.compositio, CCC);
     /* S5c: dimissio in via eventus */
     dimissio_dispensatori_ligare(systemata.dimissio, app->d);
+    _medium_involvere(app, piscina);
     redde app->d ? VERUM : FALSUM;
 }

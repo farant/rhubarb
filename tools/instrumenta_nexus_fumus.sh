@@ -18,7 +18,7 @@
 #        obiecta recompilantur et examen renectitur
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
-# <porta titulus="nexus-instrumentorum" gradus="fusio" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh silva/transformare.sh" currit="silva/instrumenta/principalia/selecta.c" legit="include/* silva/fontes/* silva/instrumenta/*"/>
+# <porta titulus="nexus-instrumentorum" gradus="fusio" tegit="officina/cursor.sh officina/fusor.sh officina/interpretare.sh silva/ambigua.sh silva/arbor.sh silva/censor.sh silva/computus.sh silva/differre.sh silva/emendare.sh silva/emitte.sh silva/formator.sh silva/impressor.sh silva/infidelis.sh silva/origo.sh silva/percursus.sh silva/quaestio.sh silva/renominare.sh silva/selecta.sh silva/transformare.sh silva/materia_substratum.sh tools/cursor_communis.sh" currit="silva/instrumenta/principalia/selecta.c" legit="include/* silva/fontes/* silva/instrumenta/*"/>
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
@@ -130,6 +130,53 @@ dep="$(./silva/examen.sh "$T/parva.c" 2>&1 > /dev/null | grep -c '\[dep\]')"
 post="$(sigillum silva/build/examen)"
 touch -r "$T/caput_vi.tempus" "$CAPUT_VI"
 [ "$dep" -gt 0 ] && [ -n "$ante" ] && [ "$ante" != "$post" ]; credo $? "VI examen: $CAPUT_VI tactum -> recompilat ($dep [dep]) et nectit ($ante -> $post)"
+
+# VII CURSOR COMMUNIS PER PLURES (budget B2 H5): instrumentum (md/
+#     instrumenta/extenta.c) per cursor_instrumentum_struere in
+#     directorio temporario struitur; vocatio iterata nihil renectit
+#     (binarium immotum); compilator fractus (FALSUM) -> functio
+#     FALSUM reddit et NIHIL nectit (olim fractura solum frigide
+#     videbatur: obiectum vetus tacite nexum)
+CC_T="$T/cursor_communis"
+cc_struere () {
+    ( RADIX_DIR="$RADIX" BUILD_DIR="$CC_T"
+      source "$RADIX/tools/cursor_communis.sh" || exit 2
+      cursor_instrumenta_parare > /dev/null || exit 2
+      [ -n "${1:-}" ] && COMPILATOR="$1"
+      cursor_instrumentum_struere "$RADIX/md/instrumenta/extenta.c" \
+          "$CC_T/extenta" )
+}
+cc_struere > /dev/null 2>&1; rc=$?
+[ "$rc" -eq 0 ] && [ -x "$CC_T/extenta" ] \
+    && [ -s "$CC_T/instrumenta/extenta/vocationes.lst" ]
+credo $? "VII cursor communis: instrumentum per --plures structum (rc $rc)"
+# secundus cursus aequalitatem secundi (bash -nt secundis: obiecta et
+# binarium eodem secundo = stalum, religatur semel) solvit; tertius
+# nihil nectere debet
+sleep 1; cc_struere > /dev/null 2>&1
+ante="$(sigillum "$CC_T/extenta")"
+cc_struere > /dev/null 2>&1
+[ "$(sigillum "$CC_T/extenta")" = "$ante" ]
+credo $? "VII cursor communis: vocatio iterata nihil renectit"
+rm -f "$CC_T/extenta"
+printf '#!/bin/sh\nexit 1\n' > "$T/compilator_fractus"
+chmod +x "$T/compilator_fractus"
+cc_struere "$T/compilator_fractus" > /dev/null 2>&1; rc=$?
+[ "$rc" -ne 0 ] && [ ! -e "$CC_T/extenta" ]
+credo $? "VII cursor communis: compilator fractus -> FALSUM, nihil nexum (rc $rc)"
+
+# VIII CAPUT MATERIAE (budget B2 H4: caput recentissimum semel in
+#      silva/materia_substratum.sh): caput sub materia/fontes tactum ->
+#      examen obiecta materiae recompilat ([materia]). Tempus capitis
+#      post restituitur (touch -r). Olim nulla porta caput materiae
+#      tangebat.
+CAPUT_VIII="$(ls materia/fontes/*.h | head -1)"
+touch -r "$CAPUT_VIII" "$T/caput_viii.tempus"
+./silva/examen.sh "$T/parva.c" > /dev/null 2>&1
+sleep 1; touch "$CAPUT_VIII"
+materia_n="$(./silva/examen.sh "$T/parva.c" 2>&1 > /dev/null | grep -c '\[materia\]')"
+touch -r "$T/caput_viii.tempus" "$CAPUT_VIII"
+[ "$materia_n" -gt 0 ]; credo $? "VIII examen: $CAPUT_VIII tactum -> materia recompilata ($materia_n [materia])"
 
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus nexus: sanum"; exit 0; fi

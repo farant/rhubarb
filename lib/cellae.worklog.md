@@ -1087,3 +1087,48 @@ which scale with size (~8% of probatio_cellae's ASan profile, more in
 "imago sine iactura"). Now 4 KB first alveus; dynamic piscinae grow when a
 call needs more. Behaviour unchanged (no plant possible — sizing only);
 radices, cellae, quaternio green.
+
+## 2026-10-30 — lentus split into its own suite (budget B1 D8)
+
+The "iudicium contra D119 lentum" section (n = V, VI against the frozen
+D119 tables, ~177k subsets per catalogue and function) was ~40% of
+probatio_cellae's time in both the root and venenum gates. Both gates
+run suites in parallel, so one long suite set the wall time. It now
+lives in `probationes/probatio_cellae_lenta.c` (suite `cellae_lenta`,
+still tagged `lentus`). The tables, the zeta_8/2I catalogue builders,
+the concurrence oracle and `_contra_d119` moved to
+`probationes/cellae_d119.h`, which both files include. No check was
+removed.
+
+Membership: the root gate picks the file up by its `probatio_*.c`
+glob (Fran: stays in the root gate, not merge-only). venenum lists
+members by name in `aedificatio.stml` and its `tegit` in
+`tools/venenum_probare.sh`. Nothing checks that list against the
+files, so a new cellae-style suite has to be added by hand. Plant: a
+D119 n=V regula count off by one → cellae_lenta FRACTA at
+cellae_d119.h:358. venenum sana with both (under load 20: cellae
+107 s, lenta 69 s).
+
+## 2026-10-31 — exact axis norms computed once per activation (budget B1 D4)
+
+`quaternio_proximi` recomputed |u_k|² (the exact vector-part norm of
+each axis) on every call. cellae calls it per punctum over the same
+46-476 axes, so that one line was ~9% of the run (5.6% under ASan;
+`quaternio_proximi` is 24% of probatio_cellae at -O2, batch G). Fran
+approved one public addition (2026-10-31):
+`quaternio_proximi_quadrata(v, directiones, quadrata, ...)`, where the
+caller supplies quadrata[k] (NIHIL = computed as before).
+`quaternio_proximi` is now a wrapper passing NIHIL.
+
+cellae computes `a->quadrata_axium` in `_quadrata_parare` right after
+the axes are fixed, in both activatio_creare paths. That has to happen
+AT CREATION: the activation pool is notatio/reficere'd around temporary
+work, so a lazy fill mid-call could be rewound away. Each norm =
+`quaternio_norma` of the vector part (real part = the ring's zero via
+quaternio_ex_partibus), which is the same `_summa` over the same
+operands as `_productum_scalare(u, u)`, so results are identical. The
+filtered candidate call gathers the matching subset next to `selectae`.
+
+Plant: norms shifted by one axis → probatio_cellae D119 regula/robusta/
+possibilis/ligata counts FRACTA. quaternio, cellae, cellae_lenta, venenum
+green.

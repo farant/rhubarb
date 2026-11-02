@@ -189,3 +189,50 @@ closed, then picturam_ponere through the montatio. Found: with a line
 half-drawn the line tool CAPTURES the next tap anywhere and abandons
 the line (existing linea rule) - so the first tap on ⋯ only cancels the
 line; a picture switch can never carry a pending line (pinned in test).
+
+## 2026-10-28 - menu, Shared pictures, viewer (communio-plan-5 T6, quarta)
+
+The ⋯ menu is built from ONE table (`pictor_elenchum_parare` over
+`PictorElenchiCondiciones {importare, communio, inscripta}`) that the
+composition, the menu figure and `elenchus.agere` all rebuild from the
+composition's state (`actiones_ctx.compositio`, `figurae_ctx.compositio`).
+The figure used to guess "Import image" from the number of children -
+with five conditional items that guess no longer works.
+
+Trap (again): a menu item that OPENS another palette must not be
+`claudit`, or dimissio removes the palette the action just wrote. It was
+done for item 0 only ("Open picture"); now every item whose titulus is
+`pinacotheca.aperire`, `communia.aperire` or `inscriptio.aperire`.
+
+Shared pictures reuse the gallery grid (`rete_componere`, generic over
+dialog name, node prefix and a title callback; empty list -> one
+"<name>.vacua" text node). The viewer is a dialog over the canvas:
+image node `spectator.imago` (title `alienus:<w>x<h>:<hora>:<replica>:
+<spatium>`, drawn like a thumbnail), credit line via the composition's
+`auctor` callback (pictor_componentia never links pictor_communio), and
+‹ "Edit a copy" › X. `spectata` stores the picture's IDENTITY
+(`replica:spatium`), so arrivals never shift it; a missing identity
+composes the grid instead. Swipe = `EVENTUS_TRACTUS_INCIPIT` (origin
+kept in `PictorActiones.origo_tractus`) + `_FINIT`, |dx| >= a quarter of
+the image width and |dx| > |dy|; ← → in the root key handler only while
+the palette is "spectator". The image node consumes plain presses so a
+tap on the picture does not close it; the dialog itself (tap outside the
+picture) closes back to the grid.
+
+Generated file: new organum fields/actions need `bin/fabrica sanare
+lib/organa_infixa.c` (the manifest is compiled in). A `"` inside an
+organum `nota="..."` breaks the whole manifest silently (app fails to
+build its montatio) - use single quotes inside notes.
+
+## 2026-10-29 — keyboard follows dismissal (plan-5 final review)
+
+The dimissio system (S5c) closes palettes by writing `palette` itself, so
+pictor never learned that the sign-in dialog closed on Esc or a tap outside,
+and the iOS keyboard stayed up over ~40% of the canvas. PictorActiones now
+remembers the last keyboard kind it asked for (`claviatura_genus`), and
+`pictor_claviaturam_conformare` hides it when `palette` is no longer
+"inscriptio". pictor_applicatio wraps dimissio's ante/post hooks
+(`PictorMedium`) and calls conformare after a consuming ante and after every
+post — cheap, since it returns at once while no keyboard is up. The wrapper
+lives only in pictor_applicatio_aedificare (vicus's pane never asks for a
+keyboard). Test: pictor_inscriptio "dimissa: claviatura celatur".

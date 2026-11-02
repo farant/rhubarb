@@ -1577,6 +1577,17 @@ _secuta_capere (
     redde VERUM;
 }
 
+/* MONITUM actionis (parcum …5NQBP): linea in stderr, non fractura */
+interior vacuum
+_monere (
+     vacuum* datum,
+     chorda  nuntius)
+{
+    (vacuum)datum;
+    fprintf(stderr, "fabrica: MONITUM %.*s\n", (integer)nuntius.mensura,
+        (constans character*)nuntius.datum);
+}
+
 /* AGENS (sanare, fabrica-6 H4): agere et photographia; fila (plan 2
  * T6) - tutae simul si fila > I et non siccum, I = seriatim, via vetus;
  * directoria extra arborem ex actionibus */
@@ -1589,6 +1600,7 @@ suturae_agentem_addere (
 {
     sutura->agere             = _agere;
     sutura->vestigium_capere  = _vestigium_capere;
+    sutura->monere            = _monere;
     suturae_fila_maxima       = suturae_fila_computare(piscina);
     si (suturae_fila_maxima > I && !siccum)
     {

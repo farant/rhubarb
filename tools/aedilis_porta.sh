@@ -39,6 +39,10 @@ MEMORIA_ORACULI="$(mktemp -d)"
 # (purgatio generationes ultimas servat, non processus aedilis)
 export THESAURUS_GENERATIO="${THESAURUS_GENERATIO:-$(date -u +%Y%m%dT%H%M%S)-porta-aedilis-$$}"
 trap 'rm -rf "$MEMORIA_ORACULI"' EXIT
+# NEXUS SERVATUS (budget B1 E10): probatio cuius signum nexus (vexilla
+# + identitas obiectorum et binarii) idem est non renectitur - nexus
+# deterministicus; derivatio et compilatio tamen omni cursu currunt.
+export AEDILIS_NEXUS_SERVARE=1
 
 for f in probationes/probatio_*.c; do
     basis="$(basename "$f" .c)"
@@ -122,6 +126,24 @@ rm -rf "$PLURES_D"
 if ! ./bin/aedilis --nexus-purus 2>&1; then
     echo "FRACTA (nexus purus)"
     fracta="$fracta nexus_purus"
+fi
+
+# NEXUS SERVATUS (budget B1 E10): scriptum probatio_xar (supra structum,
+# signum scriptum) iterum -> servatus; obiectum per copiam cum mtime
+# EODEM substitutum (inode novum, ut thesaurus restituit) -> renectitur;
+# sine AEDILIS_NEXUS_SERVARE -> semper nectit
+NS="build/aedilis/probatio_xar/struere.sh"
+NO="build/aedilis/obiecta/lib__xar.o"
+ns1=$(bash "$NS" 2>&1 | grep -c "nexus servatus")
+cp -p "$NO" "$NO.tmp" && mv "$NO.tmp" "$NO"
+ns2=$(bash "$NS" 2>&1 | grep -c "nexus servatus")
+ns3=$(bash "$NS" 2>&1 | grep -c "nexus servatus")
+ns4=$(AEDILIS_NEXUS_SERVARE= bash "$NS" 2>&1 | grep -c "nexus servatus")
+if [ "$ns1$ns2$ns3$ns4" = "1010" ]; then
+    echo "bona: nexus servatus (idem servatur; obiectum mtime eodem renectit; sine variabili nectit)"
+else
+    echo "FRACTA (nexus servatus): servatus per gradus $ns1$ns2$ns3$ns4, exspectatum 1010"
+    fracta="$fracta nexus_servatus"
 fi
 
 finis=$(date +%s)

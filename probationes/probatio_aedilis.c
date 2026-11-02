@@ -19,6 +19,7 @@
 #include "internamentum.h"
 #include "aedilis.h"
 #include "credo.h"
+#include "filum.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -87,6 +88,11 @@ _extractor_fixturarum (
         _formam_addere(*angulatae_out, FALSUM);
         _fix_addere(*directivae_out, "stdint.h", piscina);
         _formam_addere(*angulatae_out, VERUM);
+    }
+    alioquin si (strstr(via, "fons/nusquam.h") != NIHIL)
+    {
+        /* sectio exstantiae per derivationem: caput postea creatum,
+         * sine directivis */
     }
     alioquin si (strstr(via, "fons/scopus.c") != NIHIL)
     {
@@ -1246,6 +1252,95 @@ _sectio_decima_secunda (
     }
 }
 
+/* chorda in Xar chordarum? (NIHIL = non) */
+interior b32
+_continet_chordam (
+                   Xar* xar,
+    constans character* literae)
+{
+    i32 i;
+
+    si (xar == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(xar); i++)
+    {
+        si (chorda_aequalis_literis(*(chorda*)xar_obtinere(xar, i),
+                literae))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+
+    /* ==================================================
+     * PROBARE: memoria exstantiae per DERIVATIONEM (budget B2 I1).
+     * Fabrica configurationem unam per cursum tenet et clausuras
+     * pigre derivat, generatoribus capita inter derivationes
+     * creantibus: caput absens derivatione prima, creatum, derivatione
+     * secunda (processu eodem) resolvi DEBET. Memoria per processum
+     * absentiam veterem mentiretur. Radix temporaria (area credo).
+     * ================================================== */
+
+interior vacuum
+_sectio_exstantia_per_derivationem (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    {
+        AedilisConfiguratio* configuratio;
+             AedilisFructus* fructus;
+                     chorda  causa;
+                     chorda  radix;
+                     chorda  stml;
+
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        radix = chorda_concatenare(chorda_ex_literis(credo_area(c),
+            piscina), chorda_ex_literis("/aedilis_exstantia", piscina),
+            piscina);
+        CREDO_NECESSE(filum_directorium_creare_cum_parentibus(
+            chorda_ut_cstr(chorda_concatenare(radix,
+            chorda_ex_literis("/fons", piscina), piscina), piscina)));
+        stml =
+            filum_legere_totum("probationes/fixa/aedilis/aedilis.stml",
+            piscina);
+        CREDO_NECESSE(stml.mensura > ZEPHYRUM);
+        CREDO_NECESSE(filum_scribere(chorda_ut_cstr(chorda_concatenare(
+            radix, chorda_ex_literis("/aedilis.stml", piscina),
+            piscina),
+            piscina), stml));
+        configuratio = aedilis_configurationem_legere(piscina,
+            chorda_ut_cstr(chorda_concatenare(radix,
+            chorda_ex_literis("/aedilis.stml", piscina), piscina),
+            piscina), &causa);
+        CREDO_NECESSE_NON_NIHIL(configuratio);
+
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/citata.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NECESSE_NON_NIHIL(fructus);
+        CREDO_VERUM(_continet_chordam(fructus->inresolutae,
+            "nusquam.h"));
+
+        CREDO_NECESSE(filum_scribere(chorda_ut_cstr(chorda_concatenare(
+            radix, chorda_ex_literis("/fons/nusquam.h", piscina),
+            piscina), piscina), chorda_ex_literis("/* nova */\n",
+            piscina)));
+        fructus = aedilis_derivare(piscina, configuratio,
+            "fons/citata.c", NIHIL, _extractor_fixturarum, NIHIL,
+            &causa);
+        CREDO_NECESSE_NON_NIHIL(fructus);
+        CREDO_FALSUM(_continet_chordam(fructus->inresolutae,
+            "nusquam.h"));
+    }
+}
+
 
     /* ========================================================
      * PROBARE: nexus purus (eventus A1b) - <aedilis nexus="purus"/>
@@ -1521,6 +1616,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "manifestum", _sectio_decima_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "citatas inresolutas", _sectio_decima_secunda, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "exstantia per derivationem",
+      _sectio_exstantia_per_derivationem, NIHIL, NIHIL, NIHIL, NIHIL },
     { "nexum purum", _sectio_decima_tertia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "facultatem", _sectio_decima_quarta, NIHIL, NIHIL, NIHIL, NIHIL },

@@ -274,7 +274,7 @@ obj_files="$obj_files $obj"
 shopt -s nullglob
 for src in "$OFF_DIR"/fontes/*.c; do
     [ -f "$src" ] || continue
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [officina] $base.c"
