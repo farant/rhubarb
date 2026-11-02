@@ -162,3 +162,29 @@ propagation tested: `#error` in lib/via.c → "FAILED: bibliothecae", rc 2;
 plant ignoring the children's exit codes → rc 0 with the broken lib
 silently linked from a stale object (so the `wait ... || rc_bib=1` check
 is load-bearing).
+
+## 2026-10-30 — ludus_tessera runner through the compilator (budget B1 E3, suite 1)
+
+`ludus_tessera/compile_probationes.sh` compiled ~155 objects (root libs
++ tessera + musivum part + its own sources) with raw clang behind the
+"newest header" mtime rule. Touching any header in include/ or
+tessera recompiled everything (measured 139 s, 155 objects, after
+`touch include/chorda.h` with no content change). Now one vocationes
+file (one full clang argument line per object) goes through `bin/compilator
+--plures` in FILA parts (same pattern as compile_tests.sh E8). The cache
+keys on cwd + args + bytes of the source and its depfile headers, and
+identical objects are not rewritten. Measured: compile phase 2.6 s
+warm, whole suite 4 s after the same header touch. sqlite stays
+on `_vendicatum_compilare` (E7, radix-identical args).
+
+Also removed the trailing `excubitor.sh -tacitus ludus_tessera/build/`
+call, as compile_tests.sh did when it moved to the compilator. It
+judges objects by mtime, so after a header touch it falsely reported
+"STALA 126" (identical objects keep their old mtime) and spent ~40 s
+rebuilding its graph.
+
+Plant: changed escape sequence in lib/rivus_terminalis.c → recompiled
+via compilator, probatio_ludus_tessera_pons FRACTA (:157).
+
+Remaining E3 suites (tessera, gesta, officina, briar, oratio): not
+done in this pass.

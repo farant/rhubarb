@@ -230,6 +230,24 @@ quaternio_proximi (
                    i32* indices,
                    i32* numerus_proximorum);
 
+/* quaternio_proximi cum quadratis partium vectoriarum directionum a
+ * vocante datis: quadrata[k] = |u_k|^2 (elementum anuli directionum,
+ * e.g. quaternio_norma partis vectoriae directionis k). quadrata NIHIL
+ * aut quadrata[k] NIHIL = computatur ut in quaternio_proximi. Vocans
+ * qui directiones immutabiles per multas vocationes tenet normas semel
+ * computat (cellae: axes activationis). Contractus et responsum idem
+ * (budget B1 D4, Franus 2026-10-31). */
+b32
+quaternio_proximi_quadrata (
+                    Quaternio  v,
+           constans Quaternio* directiones,
+    constans vacuum* constans* quadrata,
+                          i32  numerus,
+                          b32  antipodes_idem,
+                      Piscina* piscina,
+                          i32* indices,
+                          i32* numerus_proximorum);
+
 
 /* ==================================================
  * Textus

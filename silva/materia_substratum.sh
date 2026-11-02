@@ -38,22 +38,27 @@ MATERIA_SUBSTRATUM=(
 materia_substratum_struere () {   # <directorium obiectorum> <vexilla...>
     local dir="$1"
     shift
-    local radix m src obj caput recens
+    local radix m src obj caput recens recentissimum
     radix="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
     MATERIA_OBIECTA=""
+    # CAPUT RECENTISSIMUM SEMEL (budget B2 H4): olim VII obiecta x ~CCC
+    # capita '-nt'; 'obiectum recentius omni capite' <=> 'recentius
+    # recentissimo' (aequalitas = recompila). Capita nulla: glob
+    # litteralis absens, '-nt' VERUM - recens manet ut olim.
+    recentissimum=""
+    for caput in "$radix"/include/*.h "$radix"/materia/fontes/*.h; do
+        # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
+        if [ -z "$recentissimum" ] || [ "$caput" -nt "$recentissimum" ]; then
+            recentissimum="$caput"
+        fi
+    done
     for m in "${MATERIA_SUBSTRATUM[@]}"; do
         src="$radix/materia/fontes/$m.c"
         obj="$dir/$m.o"
         recens=1
-        if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+        if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+                || ! [ "$obj" -nt "$recentissimum" ]; then
             recens=0
-        else
-            for caput in "$radix"/include/*.h "$radix"/materia/fontes/*.h; do
-                if ! [ "$obj" -nt "$caput" ]; then
-                    recens=0
-                    break
-                fi
-            done
         fi
         if [ "$recens" -eq 0 ]; then
             echo "  [materia] $m.c" >&2

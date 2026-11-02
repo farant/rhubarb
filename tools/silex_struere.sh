@@ -82,7 +82,7 @@ silva_recentior () {
 }
 silva_obiecta=""
 for src in silva/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="silva/build/fons_$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || \
        [ -n "$(silva_recentior "$obj")" ]; then

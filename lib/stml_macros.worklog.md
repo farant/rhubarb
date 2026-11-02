@@ -970,3 +970,16 @@ Planted faults, each red at its own fixture and green on revert:
 layout not cleared (indented list), children keep the original
 parent (multiline), `_ligamen_ponere` bypasses the copy (TRANSPARENTIA
 attributes), copy clears text values (raw-whitespace control).
+
+## 2026-10-30 — transparency set as a contiguous array (budget B1 B6)
+
+`_est_perspicuum` runs twice per node in `_exemplar_petere` (the node
+itself and the child filter). Each call scanned the TRANSPARENTIA set
+(7-8 interned tags) through `xar_obtinere`/`xar_numerus`, and most
+nodes are not transparent, so every call scanned the whole set. The
+context now keeps `transparentia_vector[XVI]` and
+`transparentia_numerus`, refreshed in `_transparentiam_legere`, and
+compares pointers inline. More than 16 tags fall back to the Xar scan.
+The array lives inside the context, so no allocation is added and the
+computus golds stay put. Plant: lookup skips the last entry →
+probatio_stml_exemplaria FRACTA (:257).

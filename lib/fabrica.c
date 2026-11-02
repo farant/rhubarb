@@ -137,6 +137,7 @@ fabrica_suturam_parare (
     sutura->rogare                = NIHIL;
     sutura->meminisse             = NIHIL;
     sutura->inscribere            = NIHIL;
+    sutura->monere                = NIHIL;
     sutura->sigilla               = NIHIL;
     sutura->momentum_ms           = NIHIL;
     sutura->photographiam_notare  = NIHIL;

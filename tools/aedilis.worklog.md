@@ -944,3 +944,68 @@ Next layer (profile of the batch): silva lexing (`silva_lexare_cruda`), hash-tab
   "clang". A rule missing `varians` or `mandatum` refuses the whole config
   (fixture `probationes/fixa/aedilis_oraculum_mancum/`); a plant that
   skipped it instead went red.
+
+## 2026-10-30 — link kept when its signature is unchanged (budget B1 E10)
+
+The aedilis gate (446 tests) and the instrumenta gate (161 programs)
+re-ran every generated `struere.sh` in full, and the final `clang ...
+-o` always relinked, even when nothing had changed. The generated
+script now carries the link inputs as `NEXUS_OBIECTA=( ... )` plus
+`NEXUS_VEXILLA`. When `AEDILIS_NEXUS_SERVARE` is set, the link is
+skipped if `nexus_signum` (the compile and link flags, plus `stat -f
+'%N %i %m %z'` of every object and of the binary) matches
+`<binary>.nexus`, written right after the last successful link.
+
+Why identity and not `-nt`: aedilis restores objects from its
+thesaurus, so an object can come back with an OLD mtime while holding
+different bytes than what was linked. `-nt` would keep a stale binary.
+The inode changes on any replacement. Planted: dropping `%i` makes
+the gate's "same mtime, new inode" check reuse the binary (1110 instead
+of 1010).
+
+Opt-in on purpose. Only the two gates export the variable. Real tool
+builds (struere actions, installers) link every time, exactly as
+before, and never write a `.nexus` file. The script also regenerates
+on every gate run (timestamp in the header), so "binary newer than
+script" could never work; that's why the signature file exists.
+
+Not done: the constant provenance stamp from the E10 idea. The stamp
+source (`build/fabrica/provenientia/<prog>.c`) is rewritten only by
+real builds (`tools/provenientia_scribere.sh`), not by the smoke test,
+so it only recompiles programs whose real binary was rebuilt. Real
+provenance stays covered by probatio_provenientia.c and fabrica-fumus
+X.
+
+Measured (load ~10): instrumenta 76 → 59 s, aedilis 162 → 108-128 s
+(second runs).
+
+## 2026-10-31 — existence probes memoized per derivation (budget B2 I1)
+
+`_existit_sub_radice` resolved every include against every -I root, and
+again for each source that includes it. Each probe was a stat() plus a
+fabrica read-log line: porta_aedilis's book had 3.8 M lines for 17.9 k
+unique paths; each silva corpus book 730 k for 10.5 k. Now a
+via → exists table lives for ONE `aedilis_derivare` call (a thin public
+wrapper around the old body, renamed `_derivare_interne`). The first
+probe of a path still stats and still writes its book line, so fabrica,
+which dedupes by first occurrence, sees the same set in the same order.
+
+Scope decision: the analyst proposed per-PROCESS. That's wrong for
+fabrica, which keeps one configuration for its whole run, derives
+closures lazily, and lets generators create headers between derivations.
+A per-process cache would keep reporting a generated header as absent.
+Per-derivation is safe: nothing writes files during a single derivation.
+
+Measured (`--corpus lib --partes`, warm thesaurus): 28.4 → 11.3 G
+instructions, 5.35 → 2.8 s, book 721 k → 213 k lines; stdout IDENTICAL;
+the book's first-occurrence order is IDENTICAL once thesaurus record
+paths are excluded (their names include the aedilis binary hash, so the
+new binary misses once, cold).
+
+New test section "exstantia per derivationem" (probatio_aedilis, temp
+radix in the credo area): derive with fons/nusquam.h absent, create it,
+derive again; it must resolve. Plant: a long-lived per-process cache →
+FRACTA at the second derivation. (A first plant variant that never reset
+the cache crashed with SIGBUS instead, because it pointed into a freed
+section pool; that's red, but not the assertion, so it was redone with
+its own pool.)

@@ -156,7 +156,7 @@ shopt -s nullglob
 for src in "$TESSERA_DIR"/fontes/*.c "$TESSERA_DIR"/instrumenta/folium/*.c \
            "$TESSERA_DIR"/instrumenta/effigies/*.c \
            "$TESSERA_DIR"/instrumenta/musivum/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [tessera] $base.c"
