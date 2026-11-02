@@ -119,6 +119,7 @@ fi
 # et capitum depfile; obiectum identicum non rescribitur), processu uno
 # (tools/cursor_communis.sh, exemplar ludus_tessera 765f1f2e).
 source "$RADIX_DIR/tools/cursor_communis.sh" || exit 1
+source "$RADIX_DIR/tools/nexus_probationis.sh"
 cursor_instrumenta_parare || exit 1
 : > "$CLAUSURAE_DIR/mandata.tsv"
 VOCATIONES="$BUILD_DIR/obiecta.vocationes"
@@ -148,9 +149,8 @@ echo "  obiecta: $(grep -c . "$VOCATIONES") per bin/compilator, $(comm -13 <(ech
 
 # ---- 3. discover, compile, run probationes ----
 # Probatio per compilatorem (obiectum in build/probationes/), nexus SOLUM
-# si signum nexus mutatum (vexilla + identitas obiectorum et binarii,
-# exemplar aedilis E10): olim omnis probatio omni cursu compilata et
-# nexa. Nexus deterministicus - binarium idem non renectitur.
+# si signum nexus mutatum (tools/nexus_probationis.sh): olim omnis
+# probatio omni cursu compilata et nexa.
 total=0 ; passed=0 ; failed_names=""
 for test_file in "$TESSERA_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"
@@ -168,17 +168,10 @@ for test_file in "$TESSERA_DIR"/probationes/probatio_*.c; do
         continue
     fi
     # shellcheck disable=SC2086 (obj_files: verba consulto scissa)
-    signum="$(echo "${GCC_FLAGS[*]}"; stat -f '%N %i %m %z' "$obj" $obj_files "$bin" 2>/dev/null)"
-    if ! [ -f "$bin" ] || [ "$signum" != "$(cat "$bin.nexus" 2>/dev/null)" ]; then
-        rm -f "$bin.nexus"
-        # shellcheck disable=SC2086
-        if ! clang "${GCC_FLAGS[@]}" "$obj" $obj_files -o "$bin"; then
-            echo "FRACTA (nexus): $name"
-            failed_names="$failed_names $name"
-            continue
-        fi
-        # shellcheck disable=SC2086
-        { echo "${GCC_FLAGS[*]}"; stat -f '%N %i %m %z' "$obj" $obj_files "$bin" 2>/dev/null; } > "$bin.nexus"
+    if ! probationem_nectere "$bin" "${GCC_FLAGS[*]}" "$obj" $obj_files; then
+        echo "FRACTA (nexus): $name"
+        failed_names="$failed_names $name"
+        continue
     fi
     if RHUBARB_RADIX="$RADIX_DIR" "$bin"; then
         passed=$((passed + 1))

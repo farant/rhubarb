@@ -211,3 +211,17 @@ recompiles) -> 1 s. Plant: inverted `tessera_stilus_aequalis` -> 1 object
 changed, tests relinked, 10/15 FRACTA; revert green. First plant attempt
 (dropping the `ornamenta` comparison) was an equivalent mutant: the test's
 a/b styles also differ in colour.
+
+## 2026-11-02 — E3/J9 suite III: gesta + shared tools/nexus_probationis.sh
+
+The test-link skip moved into tools/nexus_probationis.sh
+(`probationem_nectere <bin> "<flags>" <objects...>`), sourced by the
+runners only — a new file rather than cursor_communis.sh so the change
+does not fan out to every suite that sources the cursor. tessera now uses
+it too. gesta: sqlite stays on the E7 vendored path (source-newer rule);
+32 library + gesta objects through one `--plures`, tests per
+`_cursor_compilare`, excubitor call removed. Measured: warm 8 -> 7 s (the
+tests themselves, daemons and sqlite, dominate), header touch 54 -> 10 s.
+Plant: `!` on the first `_est` of gesta_inventarium_eventus_est -> 1
+object changed, 3/7 (probatio_gesta_inventarium and dependents), revert
+7/7.
