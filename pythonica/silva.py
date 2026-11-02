@@ -1679,6 +1679,10 @@ PORTAE = {
                   r'fumus excubitoris: (sanum|FRACTUM)'),
     'frigida': (['./gesta/frigida_fumus.sh'],
                 r'fumus frigida: (sanum|FRACTUM)'),
+    # percursus incrementalis nexus (budget B2 N1: caput tactum sine
+    # mutatione non re-iudicat; paritas contra plenum)
+    'nexus': (['./tools/nexus_fumus.sh'],
+              r'fumus nexus: (sanum|FRACTUM)'),
     # sedes annalium (domus tota, non arbor): custos, genesis expressa,
     # scriptores simul, restitutio - in sedibus temporariis solum
     'annales': (['./gesta/annales_fumus.sh'],

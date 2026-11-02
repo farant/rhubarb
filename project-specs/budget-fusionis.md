@@ -193,6 +193,7 @@ f1656a51), F6 overlaps I5.
 | F6+I5 | trivia cache also "\n"+k spaces; `_lineae_excedunt` via memchr | 0.15-0.3 | S | |
 | G3/G4/G5 | test wait cuts (exemplar pump-until-readable, hospitium 256 KB buffer, communio pump-until-error) | ~0.12 | S | soak under load before landing |
 | J11, G10, I6, G11, G12 | small items | ~0.3 | S-M | |
+| N1 (=N2) | nexus incremental sweep: content seals so a TOUCHED header (same bytes) seeds nothing; also cures briar corpus_symbola (83 s) and oratio -renovare (51 s) after header touches | ~1-1.5 | M | LUCRUM (this commit): touch 51 -> 1.7 s, briar symbola 83 -> 6 s; parity octetim; new gate `nexus` |
 
 ### Tier 2 (Fran's ruling)
 
