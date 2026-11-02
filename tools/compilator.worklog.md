@@ -188,3 +188,26 @@ via compilator, probatio_ludus_tessera_pons FRACTA (:157).
 
 Remaining E3 suites (tessera, gesta, officina, briar, oratio): not
 done in this pass.
+
+## 2026-11-02 — budget B2 E3/J9 suite II: tessera via the compilator + link skip
+
+tessera/compile_probationes.sh now goes through tools/cursor_communis.sh
+(H5 helpers): library + tessera sources as ONE `compilator --plures`
+(44 lines), each test object via `_cursor_compilare` (per-test failure
+semantics kept: one broken test = that test FRACTA, others run), and the
+test binary is relinked only when its link signature changes (flags +
+`stat -f '%N %i %m %z'` of the test object, every library object and the
+binary itself; stored in `<bin>.nexus`, as aedilis E10). The compilator
+never rewrites an identical object, so inode/mtime are stable across
+hits; a removed source changes the object list and therefore the
+signature. Excubitor call at the end removed (mtime verdict lies once
+identical objects are not rewritten), as ludus_tessera.
+
+Remember to reset `$CLAUSURAE_DIR/mandata.tsv` when not calling
+cursor_clausuras_derivare (it appends forever otherwise).
+
+Measured: warm 4 -> 1 s; after `touch include/chorda.h` 48 s (44
+recompiles) -> 1 s. Plant: inverted `tessera_stilus_aequalis` -> 1 object
+changed, tests relinked, 10/15 FRACTA; revert green. First plant attempt
+(dropping the `ornamenta` comparison) was an equivalent mutant: the test's
+a/b styles also differ in colour.
