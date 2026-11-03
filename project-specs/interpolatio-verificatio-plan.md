@@ -4,7 +4,8 @@ Status: DRAFT v3 (2026-11-02). Q1 DECIDED by Fran 2026-11-02 (accepted,
 with conditions). Design review done (consiliarius-verificatio, approve
 after fixes; every finding placed, see "Design review" at the end). Q2
 and Q3 DECIDED by Fran 2026-11-02 (s = 64; frozen-kernel checker for the
-14 × 801 headline). T0 DONE 2026-11-02 (see "T0 amendment"). Next: T1.
+14 × 801 headline). T0 DONE 2026-11-02 (see "T0 amendment"). T1 DONE
+2026-11-02 (see "T1 notes"). Next: T2.
 
 Agreed with Fran (2026-11-02): after the TL speed pass
 (temperley-celeritas-plan.md, done) and the Regina comparison
@@ -415,6 +416,33 @@ FORTUITUM seed and refuse if it fails.
 **Corrections to v3:** m computed exactly (Error bound); self-checks =
 k_true (P3, counting-checker test); bound vectors and a double-rounding
 plant (Tests). No threshold moved.
+
+## T1 notes (2026-11-02)
+
+Landed in lib/interpolatio (worklog 2026-11-02): `InterpolatioVerificator`,
+`InterpolatioRelatio` (with `InterpolatioTractus`), quaestio members
+`modus`, `bita_securitatis`, `semen`, `semen_origo`,
+`verificationis_imus/summus`; `interpolatio_polynomium_relatum`,
+`interpolatio_promovere`, `interpolatio_probationes_necessariae`.
+`interpolatio_polynomium` unchanged in behaviour (old 17 sections green).
+
+Decisions made while building (none moves a threshold):
+- **No extra checks at the bound.** A VERIFICATUM run reaching k_max is
+  PROBATUM (AD_LIMITEM). DISCORDIA = the verificator rejects the same
+  candidate twice after passed self-checks, or rejects a candidate equal
+  to the final proved result.
+- **Default-range N** is N_MIN = 2^24 for no filter or modulus 4 (T0
+  counts); other filters are refused. Narrowed (test) ranges count their
+  primes minus k_max + 1.
+- **Mirror test split:** at the interpolatio API with a test polynomial
+  (f(1/x), precondition f(2) ≠ f(1/2)); with laqueus evaluators in T2.
+- **Calibration** uses an adversarial P = small + p₁·(x−1)⋯(x−40), whose
+  stage-1 error has roots x = 1…40 for every q (a random wrong candidate
+  would almost never pass, so a naive test observes nothing). Observed
+  18/800 = 0.0225 (theory ≈ 0.018), formula ε = 0.089.
+
+Tests: 29/29 sections (12 new). Plants: build/verificatio/plantae_t1.py,
+12 of 12 red as registered (A–L); "laqueus always self-check" is T2.
 
 ## Tests
 

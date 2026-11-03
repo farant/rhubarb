@@ -14,6 +14,13 @@
  * arithmeticae, limitis aut fenestrae capiunt - non exemplar falsum
  * sed sibi constans, quod solum oraculum alienum capit.
  *
+ * VERIFICATIO (2026-11-02, principium 01M6FMVW). Auctoritas secunda,
+ * electione sola: VERIFICATUM sistit ubi candidatus probationes in
+ * punctis fortuitis modulo primis fortuitis transit, cum limite erroris
+ * DICTO (2^-s) - numquam quia responsum mutari desiit. Effectus semper
+ * genus suum, semen, verificatorem in relatione fert; PROBATUM manet
+ * ordinarium. Vide sectionem Verificatio infra.
+ *
  * PUNCTA. Aestimator punctum ipse ELIGIT (index -> punctum, valor):
  * ita puncta sine radice quadrata modulari enumerari possunt (uncinus
  * per modulum vertex: omega = k + 2, A = i omega^2). Aestimator tres
@@ -107,6 +114,19 @@ nomen structura {
                            * (0xFFFFFFFF) */
     i32 puncta_addita;    /* puncta probationis per primum (I) */
     i32 conatus_maximi;   /* indices per primum ante FALSUM (2^20) */
+    /* verificatio (interpolatio_polynomium_relatum solum; vide infra) */
+    i32 modus;            /* INTERPOLATIO_PROBATUM (ordinarium) aut
+                           * INTERPOLATIO_VERIFICATUM */
+    i32 bita_securitatis; /* s: limes erroris 2^-s (LXIV); 1 .. CCLVI */
+    i64 semen;            /* semen tractuum (0): a vocante, numquam ex
+                           * entropia bibliothecae */
+    i32 semen_origo;      /* INTERPOLATIO_SEMEN_DATUM (ordinarium) aut
+                           * _FORTUITUM - solum relatum, nihil mutat */
+    i32 verificationis_imus;   /* primi probationum in [imus, summus)
+                                * (2^30) */
+    i32 verificationis_summus; /* (2^31). Alia ambitus solum
+                                * probationibus: latitudo <= 2^24,
+                                * primi numerantur */
 } InterpolatioQuaestio;
 
 InterpolatioQuaestio
@@ -141,5 +161,157 @@ interpolatio_polynomium (
     constans InterpolatioQuaestio* quaestio,
                           Piscina* piscina,
                        Polynomium* exitus);
+
+
+/* ==================================================
+ * Verificatio: terminatio praecox cum probationibus fortuitis
+ * (project-specs/interpolatio-verificatio-plan.md; principium
+ * tabularii 01M6FMVW)
+ *
+ * Auctoritas effectus duplex. PROBATUM: primi per limitem probatum et
+ * additus (ut interpolatio_polynomium). VERIFICATUM: post quemque primum
+ * candidatus Q_k restituitur; (1) coefficiens >= 2^limes -> primus
+ * proximus sine probatione; (2) probatio SUI: aestimator principalis in
+ * puncto fortuito modulo primo fortuito; (3) si transit, m probationes
+ * CERTIFICANTES per verificatorem; omnes transeunt -> VERIFICATUM. Error
+ * acceptationis <= (k_max - 1) eps^m <= 2^-s, eps = c (K - 1) / (q_min -
+ * r) + floor((limes + 1) / floor(log2 q_min)) / N (vide
+ * interpolatio_probationes_necessariae). Ad k_max: primus additus ut
+ * hodie, genus PROBATUM (status AD_LIMITEM). Verificator qui eundem
+ * candidatum bis reicit (aut effectum probatum ad limitem) -> FALSUM,
+ * status DISCORDIA: bibliotheca nescit uter erret.
+ *
+ * TRACTUS (documentati, reproducibiles ex semine): sors_seminare(semen,
+ * 0); per probationem: primus q = imus + sors_intra(summus - imus)
+ * iteratum donec filtro residui quaestionis congruit, primus est, et
+ * inter primos iam usos non est; deinde index = sors_intra(q) iteratum
+ * dum INUTILE aut punctum 0 (usque ad LXIV). Ordo: probationes ordine
+ * quo fiunt (sui, deinde certificantes), primus ante indicem.
+ * ================================================== */
+
+#define INTERPOLATIO_PROBATUM     ZEPHYRUM
+#define INTERPOLATIO_VERIFICATUM  I
+
+#define INTERPOLATIO_SEMEN_DATUM      ZEPHYRUM  /* a vocante electum:
+                                                 * limes nullus in actis */
+#define INTERPOLATIO_SEMEN_FORTUITUM  I         /* ex entropia vocantis */
+
+/* status relationis */
+#define INTERPOLATIO_STATUS_NULLUS  ZEPHYRUM  /* FALSUM alia causa */
+#define INTERPOLATIO_ACCEPTUM       I         /* VERIFICATUM */
+#define INTERPOLATIO_AD_LIMITEM     II        /* PROBATUM (k_max + additus) */
+#define INTERPOLATIO_DISCORDIA      III       /* verificator discordat:
+                                               * FALSUM */
+#define INTERPOLATIO_PROMOTUM       IV        /* PROBATUM per promotionem */
+
+/* generator tractuum (probatio_sors vectores aureos tenet) */
+#define INTERPOLATIO_GENERATOR  "sors PCG32-XSH-RR/SplitMix64"
+
+/* verificator: aestimator (contractus idem ac InterpolatioAestimator,
+ * indices in [0, q)) et quae limes erroris ab eo poscit */
+nomen structura {
+    InterpolatioAestimator  aestimare;
+                    vacuum* contextus;
+                       i32  multiplicitas;    /* c: indices in [0, q) per
+                                               * valorem y = x^passus,
+                                               * maximus (>= 1) */
+                       i32 inutilia_maxima;  /* r: indices INUTILE (aut
+                                               * punctum 0) per primum,
+                                               * maximus */
+       constans character* titulus;          /* in relatione */
+       constans character* communia;         /* codex cum aestimatore
+                                               * principali communis */
+} InterpolatioVerificator;
+
+/* tractus unus (probatio una) */
+nomen structura {
+    i32 gradus;        /* primi restitutionis tunc (stadium k) */
+    i32 primus;        /* q */
+    i32 index;         /* index utilis (INUTILIA iterata non notantur) */
+    b32 certificans;   /* FALSUM = probatio sui */
+    b32 transiit;
+} InterpolatioTractus;
+
+/* relatio: omnia ex piscina vocationis */
+nomen structura {
+    InterpolatioQuaestio quaestio;          /* copia */
+                     i32 genus;             /* auctoritas: PROBATUM aut
+                                              * VERIFICATUM */
+                    i32  status;
+                    i32* primi;             /* restitutionis, sine
+                                              * addito */
+                    i32 numerus_primorum;
+                    i32 primus_additus;    /* 0 si nullus (ACCEPTUM) */
+                    i32 k_maximus;         /* per limitem probatum */
+                    i64 aestimationes;     /* vocationes aestimatoris
+                                              * principalis in primis
+                                              * (probationes non) */
+                    i32 probationes_sui;
+                    i32 probationes_certificantes;
+                    i32 probationes_requisitae;    /* m */
+                    i32 bita_erroris;      /* limes erroris 2^-bita
+                                              * (ACCEPTUM; aliter 0) */
+    InterpolatioTractus* tractus;
+                    i32  numerus_tractuum;
+     constans character* titulus_verificatoris;
+     constans character* communia;
+     constans character* generator;
+} InterpolatioRelatio;
+
+/* m minimus cum (k_maximus - 1) eps^m <= 2^-s, EXACTE (Magnus: eps = a /
+ * b, (k_maximus - 1) a^m 2^s <= b^m), et *bita_erroris = maximum beta cum
+ * (k_maximus - 1) a^m 2^beta <= b^m. K, limes, s, ambitus ex quaestione;
+ * c, r ex verificatore; N = 2^24 pro ambitu ordinario (primi 1 mod 4 in
+ * [2^30, 2^31) sunt 25348870, omnes 50697537; filtrum aliud quam nullum
+ * aut modulo IV refutatur), aliter primi ambitus numerati minus
+ * (k_maximus + 1). k_maximus <= 1: m = 0 (nullum stadium ante limitem).
+ * FALSUM si s extra 1 .. CCLVI, ambitus aut verificator invalidus, eps
+ * >= 1, aut m > CCLVI. */
+b32
+interpolatio_probationes_necessariae (
+       constans InterpolatioQuaestio* quaestio,
+    constans InterpolatioVerificator* verificator,
+                                 i32  k_maximus,
+                             Piscina* piscina,
+                                 i32* probationes,
+                                 i32* bita_erroris);
+
+/* ut interpolatio_polynomium, cum relatione. quaestio->modus
+ * PROBATUM: verificator neglegitur (NIHIL licet), effectus idem ac
+ * interpolatio_polynomium. VERIFICATUM: verificator requiritur (ad
+ * certificandum per se ipsum, vocans aestimatorem principalem in eo
+ * ponit, cum c et r suis). relatio
+ * NIHIL licet. FALSUM sine aestimatione si quaestio aut verificator
+ * invalidus; FALSUM (exitus non tangitur) si aestimator aut verificator
+ * ERRATUM reddit, conatus exhausti, aut DISCORDIA. */
+b32
+interpolatio_polynomium_relatum (
+              InterpolatioAestimator  aestimare,
+                              vacuum* contextus,
+    constans InterpolatioVerificator* verificator,
+       constans InterpolatioQuaestio* quaestio,
+                             Piscina* piscina,
+                          Polynomium* exitus,
+                 InterpolatioRelatio* relatio);
+
+/* VERIFICATUM -> PROBATUM: primi k (relatio->primi) cum serie quaestionis
+ * regenerata congruere debent; residua verificati in eis ex ipso
+ * computantur, primi k+1 .. k_max et additus aestimantur, restitutio
+ * tota verificatum EXACTE reddere debet. relatio: genus VERIFICATUM,
+ * status ACCEPTUM (aliter FALSUM). FALSUM (exitus non tangitur) si series
+ * discordat, verificatum extra fenestram, aestimatio deficit, aut
+ * restitutio aliud reddit (verificatum falsum: refutatio principii,
+ * referenda). relatio_nova: genus PROBATUM, status PROMOTUM; non eadem ac
+ * relatio. */
+b32
+interpolatio_promovere (
+           InterpolatioAestimator  aestimare,
+                           vacuum* contextus,
+    constans InterpolatioQuaestio* quaestio,
+     constans InterpolatioRelatio* relatio,
+              constans Polynomium* verificatum,
+                          Piscina* piscina,
+                       Polynomium* exitus,
+              InterpolatioRelatio* relatio_nova);
 
 #endif /* INTERPOLATIO_H */

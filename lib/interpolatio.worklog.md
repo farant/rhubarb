@@ -137,3 +137,20 @@ values not compared, P15 filter stepping by 1 instead of the modulus,
 P17 prime aptness ignored (first form `redde VERUM` left the parameters
 unused under -Werror; replanted as `... || VERUM`), P18 dense output
 exponent without the first-nonzero offset.
+
+## 2026-11-02 - verificatio (interpolatio-verificatio-plan T1)
+
+Added the second certificate kind: `interpolatio_polynomium_relatum` (PROBATUM or VERIFICATUM, with a report), `interpolatio_promovere` (VERIFICATUM -> PROBATUM by computing only the remaining primes) and `interpolatio_probationes_necessariae` (the exact error-bound function). `interpolatio_polynomium` keeps the old path byte for byte: it now calls the factored pieces (`_primos_enumerare`, `_restituere_ad_limitem`, `_polynomium_formare`) in the same order, and all 17 old sections pass unchanged.
+
+Design points worth remembering:
+- Two tiers per stage: the limes filter (a candidate coefficient >= 2^limes is wrong by the proved bound, no check), then one SELF-check with the main evaluator, and only if that passes, m certifying checks with the verificator. The bound comes from the certifying checks alone.
+- m is computed EXACTLY in Magnus: (k_max - 1) a^m 2^s <= b^m with eps = a/b. The review's floor/ceil recipe over-counts by one on 13 of 36 braids (T0); plant J proves the 3x50 vector catches it.
+- DISCORDIA: the verificator rejecting the same candidate twice (each time after a passed self-check), or rejecting a candidate equal to the final proved result, is FALSUM. There are NO extra certifying checks at the bound; a VERIFICATUM run that reaches k_max is just PROBATUM (status AD_LIMITEM).
+- Promotion needs no stored residues: the verified Q in the symmetric range of M_k IS the CRT residue, so the first k residue rows are Q mod p_j. It regenerates the prime prefix and refuses on any mismatch; a Q corrupted by +M_k passes ADDITUS and limes, so only the final R = Q comparison catches it (plant L).
+- N: the default range [2^30, 2^31) uses N_MIN = 2^24 for no filter or modulus 4 (T0 sieve: 25,348,870 / 25,348,667 / 50,697,537); any other filter is refused. Narrowed ranges (tests only, width <= 2^24) count their primes, minus k_max + 1.
+
+The calibration test needed an adversarial polynomial: a random wrong candidate almost never passes a random-point check (a random D has ~1 root mod q, not K - 1), so a naive calibration observes 0 passes and proves nothing. P = small + p1 T(x), T = (x-1)...(x-40) makes the stage-1 error exactly -p1 T(x), with roots x = 1..40 for EVERY q: the worst case the bound allows. Observed 18/800 = 0.0225 stage-1 self-check passes (theory ~0.018), formula eps = 0.089.
+
+The mirror test with laqueus evaluators moves to T2 (probatio_laqueus_rete); here the mirror checker evaluates f(1/x) of a test polynomial, with the precondition f(2) != f(1/2) asserted.
+
+Plants: build/verificatio/plantae_t1.py, 12 registered, 12 red as registered (A-L). Plant L first failed to plant at all: silva.planta refuses a multi-line anchor replaced by fewer lines (format guard); rewritten as `(FALSUM && ...)` with the same line count.
