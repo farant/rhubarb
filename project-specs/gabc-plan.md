@@ -360,10 +360,10 @@ Decisions made while implementing (worklog `lib/gabc.worklog.md`):
   the `cb` clefs. Dump letters: one letter per form bit, fixed
   order, documented in the test.
 
-- [ ] **Step 1: Measure** — tally which modifiers occur in
+- [x] **Step 1: Measure** — tally which modifiers occur in
   `salve_2435.gabc` (`'`, `.`, `_`, `[...]`); confirm the T1 rule
   record for accidental scope and pitch range.
-- [ ] **Step 2: Failing tests:**
+- [x] **Step 2: Failing tests:**
   - `_formas_probare` — one note per modifier, dump letters pinned;
     `gw` (quilisma) and `G` (inclinatum) and `-f` (initio debilis).
   - `_signa_rhythmica_probare` — `g.` `g..` `g_` `g_0` `g'` `g'1`
@@ -378,13 +378,44 @@ Decisions made while implementing (worklog `lib/gabc.worklog.md`):
     change resolved with the new clef (custos itself is T4 — here
     only that the custos note's `gradus` uses the next clef; if T4
     is needed first, move this assertion to T4 and say so).
-- [ ] **Step 3: Run** — red.
-- [ ] **Step 4: Implement.**
-- [ ] **Step 5: Run** — green. **Plants:** accidental scope ends at
+- [x] **Step 3: Run** — red.
+- [x] **Step 4: Implement.**
+- [x] **Step 5: Run** — green. **Plants:** accidental scope ends at
   the word but not the bar → `_alterationis_ambitum_probare`
   FRACTUM; `..` read as one mora → `_signa_rhythmica_probare`
   FRACTUM.
-- [ ] **Step 6: Commit** (gate `radix`).
+- [x] **Step 6: Commit** (gate `radix`).
+
+**Executed 2026-11-03.** Step 1 tally (shell, not the reader): the
+Salve uses `'` x39, `.` x14, `_` x8, `w` x2, `[oh:h]` x6, `[ll:1]` x3 -
+the four modifier counts are pinned in `_salve_legere_probare`. Scope
+rule as recorded in T1 (now also in the `lib/gabc.c` header). Red:
+four sections plus the Salve counts; green after Step 4. **Plants:**
+bar no longer ends an accidental's scope -> `_alterationis_ambitum_probare`
+FRACTUM; `..` read as one mora -> `_signa_rhythmica_probare` FRACTUM;
+both restored, green.
+Decisions:
+- **custos assertion moved to T4**: a custos keeps only its written
+  `positio` (the editor already writes it where the next note sits),
+  there is no `gradus` on an element to resolve - T4 pins that the
+  custos before a clef change is kept with its position;
+- clef changes inside a group are just clef tokens: `a(ghc3hg)` =
+  neume, clef, neume;
+- accidentals also reset at a clef change (positions change meaning);
+  soft `X` `Y` and parenthesised `x?` alter like plain signs (the
+  element keeps `molle` / `parenthesis` for drawing);
+- `cb`/`fb`: every note with `gradus` = 6 mod 7 (si) is flat unless a
+  sign at its position is in scope;
+- `vv` `vvv` `VV` `VVV` `ss` `sss`: a repeated `v`/`V`/`s` on a note that
+  already has that shape adds a new note at the same position (column
+  of the repeating letter), so `gvv` = 2 notes, `gsss` = 3;
+- a modifier with no open neume (after a space, clef, bar) is a VITIUM
+  `GABC_NOTA_IGNOTA` ("signum notae sine nota");
+- `r0` sets cavum and linea punctum; `r1`-`r5` bits in `signa`;
+  `r6`/`r7`/`r8` set `GABC_SIGNUM_FICTA` and the note's own alteratio
+  (-1/0/+1), untouched by scope;
+- found while checking: text may contain spaces (`mens :(c.)` is ONE
+  syllable "mens :"), which T2 already did right.
 
 ---
 
@@ -420,6 +451,10 @@ Decisions made while implementing (worklog `lib/gabc.worklog.md`):
     (nested `<b><i>…</i></b>`, `<sp>R/</sp>`, `<e>`, `[Lord]`,
     `{a}` range), `_signa_opaca_probare` (each attachment kept with
     exact source text; `(f|vi)` nabc kept).
+  - `_custodem_probare` (moved from T3, Review Focus 2) — a custos
+    `g+` before a clef change is kept as `GABC_EL_CUSTOS` with its
+    written position, and the notes after the clef resolve with the
+    new clef.
   - `_vitia_formae_probare` (Review Focus 4) — one assertion per
     file in `vitia_formae/`: kind + line:col; BOM and CRLF give zero
     diagnostics and the same dump as their clean twins.

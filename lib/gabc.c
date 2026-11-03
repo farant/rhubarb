@@ -7,10 +7,17 @@
  * fontis. Grammatica notarum = lexicon Gregorii
  * (gabc-notes-determination.l): omnia signa eius hic consumuntur.
  *
- * T2 (nucleus): notae, neumae, claves, divisiones, alterationes ut
- * elementa. Signa formae et rhythmi (T3), spatia, fractiones,
- * custodes, uncini, nabc (T4) consumuntur sed NONDUM servantur - G5
- * per T4 restituitur; donec, tabula ea non monstrat.
+ * T2-T3: notae cum formis, signis rhythmicis et signis supra notam
+ * (vv vvv VV VVV ss sss notas iterant), neumae, claves (cb), divisiones,
+ * alterationes ut elementa et in notis per ambitum. Spatia,
+ * fractiones, custodes, uncini, nabc (T4) consumuntur sed NONDUM
+ * servantur - G5 per T4 restituitur; donec, tabula ea non monstrat.
+ *
+ * AMBITUS ALTERATIONIS (regula Solesmensis, Gregorius nullam habet):
+ * signum in positione P notas sequentes in P SOLA (non octavam) alterat
+ * usque ad verbum novum (syllaba cum verbum_incipit), divisionem,
+ * clavem, aut signum aliud in P. Clavis cb/fb: si (gradus VI modulo
+ * VII) bemolle ubi signum nullum valet. Ficta r6-r8 notam solam.
  */
 
 #include "gabc.h"
@@ -21,6 +28,10 @@
  * positione VII (h) */
 #define DO_ORDINARIUM ((s32)VII)
 #define POSITIO_P     ((s32)XIV)
+#define POSITIONES    XV
+
+/* signum nullum in positione (ambitus alterationis) */
+#define ALTERATIO_NULLA ((s32)C)
 
 
 /* ==================================================
@@ -546,11 +557,19 @@ _notam_legere (
     nota->mora_locus   = -I;
     nota->ictus_locus  = -I;
     _locus(l, littera, &nota->linea, &nota->columna);
-    si (   ch          >= 'A' && ch <= 'P' && k < b
-        && l->datum[k] >= '0' && l->datum[k] <= '2')
+    si (ch >= 'A' && ch <= 'P')
     {
-        nota->directio = (s8)(l->datum[k] - '0');
-        k++;
+        nota->formae |= GABC_FORMA_INCLINATUM;
+        si (k < b && l->datum[k] >= '0' && l->datum[k] <= '2')
+        {
+            nota->directio = (s8)(l->datum[k] - '0');
+            k++;
+        }
+    }
+    si (initium < littera)
+    {
+        nota->formae |= l->datum[initium] == '-'
+            ? GABC_FORMA_INITIO_DEBILIS : GABC_FORMA_FUSIO;
     }
 
     si (*neuma >= ZEPHYRUM)
@@ -737,7 +756,7 @@ _spatii_longitudo (
     redde I;
 }
 
-/* signum modificans post notam (T3 servabit); longitudo, 0 si non */
+/* signum modificans post notam; longitudo, 0 si non */
 interior i32
 _modificatoris_longitudo (
     constans Lector* l,
@@ -768,6 +787,146 @@ _modificatoris_longitudo (
         ordinarius:
             redde ZEPHYRUM;
     }
+}
+
+/* vv vvv VV VVV ss sss: nota nova in eadem positione, forma data, in
+ * neuma aperta (locus = signi iterantis) */
+interior vacuum
+_notam_iterare (
+    Lector* l,
+       i32  j,
+       s32  neuma,
+       i32  forma)
+{
+          GabcNota  prior;
+          GabcNota* nota;
+     GabcElementum* el;
+
+    prior = *(GabcNota*)xar_obtinere(l->notae, xar_numerus(l->notae)
+        - I);
+    nota = (GabcNota*)xar_addere(l->notae);
+    si (nota == NIHIL)
+    {
+        l->deficit = VERUM;
+        redde;
+    }
+    memset(nota, ZEPHYRUM, magnitudo(GabcNota));
+    nota->positio      = prior.positio;
+    nota->formae       = forma | (prior.formae & GABC_FORMA_INCLINATUM);
+    nota->directio     = prior.directio;
+    nota->mora_locus   = -I;
+    nota->ictus_locus  = -I;
+    _locus(l, j, &nota->linea, &nota->columna);
+    el = (GabcElementum*)xar_obtinere(l->elementa, (i32)neuma);
+    el->numerus++;
+}
+
+/* signum modificans ad j in notam ultimam neumae apertae; longitudo
+ * (0 si non signum). Sine nota -> vitium, signum praeteritur. */
+interior i32
+_modificatorem_legere (
+    Lector* l,
+       i32  j,
+       i32  b,
+       s32  neuma)
+{
+          i32  lon = _modificatoris_longitudo(l, j, b);
+     GabcNota* nota;
+           i8  ch  = l->datum[j];
+          s32  cifra;
+          i32  forma;
+          i32  k;
+
+    si (lon == ZEPHYRUM)
+    {
+        redde ZEPHYRUM;
+    }
+    si (neuma < ZEPHYRUM)
+    {
+        _vitium(l, GABC_VITIUM, GABC_NOTA_IGNOTA, j,
+            "signum notae sine nota");
+        redde lon;
+    }
+    nota = (GabcNota*)xar_obtinere(l->notae, xar_numerus(l->notae) - I);
+    cifra = lon == II ? (s32)(l->datum[j + I] - '0') : -I;
+    commutatio (ch)
+    {
+        casus 'v': casus 'V': casus 's':
+            forma = ch == 'v' ? GABC_FORMA_VIRGA
+                : ch
+                    == 'V' ? GABC_FORMA_VIRGA_REVERSA : GABC_FORMA_STROPHA;
+            si ((nota->formae & forma) != ZEPHYRUM)
+            {
+                _notam_iterare(l, j, neuma, forma);
+            }
+            alioquin
+            {
+                nota->formae |= forma;
+            }
+            frange;
+        casus 'w': nota->formae |= GABC_FORMA_QUILISMA; frange;
+        casus 'W': nota->formae |= GABC_FORMA_QUILISMA_QUADRATUM; frange;
+        casus 'q': nota->formae |= GABC_FORMA_QUADRATUM; frange;
+        casus '=': nota->formae |= GABC_FORMA_LINEA; frange;
+        casus '~': nota->formae |= GABC_FORMA_LIQUESCENS; frange;
+        casus '<': nota->formae |= GABC_FORMA_AUCTA_ASCENDENS; frange;
+        casus '>': nota->formae |= GABC_FORMA_AUCTA_DESCENDENS; frange;
+        casus 'R': nota->formae |= GABC_FORMA_LINEA_PUNCTUM; frange;
+        casus 'o': casus 'O':
+            nota->formae |= ch == 'o' ? GABC_FORMA_ORISCUS
+                : GABC_FORMA_ORISCUS_SCAPUS;
+            si (cifra >= ZEPHYRUM)
+            {
+                nota->directio = (s8)cifra;
+            }
+            frange;
+        casus 'r':
+            si (cifra < ZEPHYRUM)
+            {
+                nota->formae |= GABC_FORMA_CAVUM;
+            }
+            alioquin si (cifra == ZEPHYRUM)
+            {
+                nota->formae |= GABC_FORMA_CAVUM
+                    | GABC_FORMA_LINEA_PUNCTUM;
+            }
+            alioquin si (cifra <= V)
+            {
+                nota->signa |= (i8)(I << (cifra - I));
+            }
+            alioquin
+            {
+                /* r6 bemolle, r7 naturale, r8 diesis: nota sola */
+                nota->signa      |= GABC_SIGNUM_FICTA;
+                nota->alteratio  = cifra - VII;
+            }
+            frange;
+        casus '\'':
+            nota->ictus = I;
+            si (cifra >= ZEPHYRUM)
+            {
+                nota->ictus_locus = (s8)cifra;
+            }
+            frange;
+        casus '.':
+            nota->mora++;
+            si (cifra >= ZEPHYRUM)
+            {
+                nota->mora_locus = (s8)cifra;
+            }
+            frange;
+        casus '_':
+            nota->episema |= GABC_EPISEMA_ADEST;
+            per (k = j + I; k < j + lon; k++)
+            {
+                nota->episema |= (i8)GABC_EPISEMA_NUMERUS(
+                    l->datum[k] - '0');
+            }
+            frange;
+        ordinarius:
+            frange;
+    }
+    redde lon;
 }
 
 /* notae inter '(' et ')': [a, b) -> elementa syllabae currentis */
@@ -935,7 +1094,7 @@ _notas_legere (
                     }
                     frange;
                 }
-                lon = _modificatoris_longitudo(l, j, b);
+                lon = _modificatorem_legere(l, j, b, neuma);
                 si (lon > ZEPHYRUM)
                 {
                     j += lon;
@@ -1059,34 +1218,94 @@ _corpus_legere (
     }
 }
 
-/* gradus a do: clavis in vigore ordine fontis (secunda non mutat) */
 interior vacuum
-_gradus_resolvere (
+_signa_purgare (
+    s32* signa)
+{
+    i32 p;
+
+    per (p = ZEPHYRUM; p < POSITIONES; p++)
+    {
+        signa[p] = ALTERATIO_NULLA;
+    }
+}
+
+/* gradus a do et alteratio notarum: clavis in vigore ordine fontis
+ * (secunda non mutat); ambitus alterationis ut in capite plagulae */
+interior vacuum
+_altitudinem_resolvere (
     GabcCantus* c)
 {
-                       s32  locus_do = DO_ORDINARIUM;
+                       s32  locus_do  = DO_ORDINARIUM;
+                       b32  bemolle   = FALSUM;
+                       s32  signa[POSITIONES];
                        i32  s;
                        i32  e;
                        i32  k;
+                       s32  gradus;
+                  GabcNota* nota;
     constans GabcElementum* el;
 
+    _signa_purgare(signa);
     per (s = ZEPHYRUM; s < c->numerus_syllabarum; s++)
     {
+        si (c->syllabae[s].verbum_incipit)
+        {
+            _signa_purgare(signa);
+        }
         per (e = ZEPHYRUM; e < c->syllabae[s].numerus_elementorum; e++)
         {
             el = &c->syllabae[s].elementa[e];
-            si (el->genus == GABC_EL_CLAVIS && !el->clavis_secunda)
+            commutatio (el->genus)
             {
-                locus_do = (s32)(II * (i32)el->clavis_linea + I)
-                    - (el->clavis == 'f' ? (s32)III : ZEPHYRUM);
-            }
-            alioquin si (el->genus == GABC_EL_NEUMA)
-            {
-                per (k = el->prima; k < el->prima + el->numerus; k++)
-                {
-                    c->notae[k].gradus = (s32)c->notae[k].positio
-                        - locus_do;
-                }
+                casus GABC_EL_CLAVIS:
+                    si (!el->clavis_secunda)
+                    {
+                        locus_do = (s32)(II * (i32)el->clavis_linea + I)
+                            - (el->clavis == 'f' ? (s32)III : ZEPHYRUM);
+                        bemolle = el->clavis_bemolle;
+                        _signa_purgare(signa);
+                    }
+                    frange;
+                casus GABC_EL_DIVISIO:
+                    _signa_purgare(signa);
+                    frange;
+                casus GABC_EL_ALTERATIO:
+                    si (   el->positio >= ZEPHYRUM
+                        && el->positio < (s32)POSITIONES)
+                    {
+                        signa[el->positio] =
+                            el->alteratio == GABC_ALTERATIO_BEMOLLE ? -I
+                            : el->alteratio == GABC_ALTERATIO_DIESIS ? I
+                            : ZEPHYRUM;
+                    }
+                    frange;
+                casus GABC_EL_NEUMA:
+                    per (k = el->prima; k < el->prima
+                        + el->numerus; k++)
+                    {
+                        nota          = &c->notae[k];
+                        gradus        = (s32)nota->positio - locus_do;
+                        nota->gradus  = gradus;
+                        si ((nota->signa & GABC_SIGNUM_FICTA)
+                            != ZEPHYRUM)
+                        {
+                            perge;
+                        }
+                        si (signa[nota->positio] != ALTERATIO_NULLA)
+                        {
+                            nota->alteratio = signa[nota->positio];
+                        }
+                        alioquin
+                        {
+                            nota->alteratio = (bemolle
+                                && ((gradus % VII) + VII) % VII == VI)
+                                ? -I : ZEPHYRUM;
+                        }
+                    }
+                    frange;
+                ordinarius:
+                    frange;
             }
         }
     }
@@ -1188,7 +1407,7 @@ gabc_legere (
     {
         redde NIHIL;
     }
-    _gradus_resolvere(c);
+    _altitudinem_resolvere(c);
     redde c;
 }
 

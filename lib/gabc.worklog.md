@@ -62,3 +62,29 @@ FRACTUM; restored, green.
 for a file links against `build/gabc.o piscina.o chorda.o
 chorda_aedificator.o xar.o filum.o lectiones.o` (session scratchpad
 `gabc_tabula.c`). Useful until `auditio -gabc` exists (T8).
+
+## 2026-11-03 — T3, shapes, rhythm signs, accidentals
+
+**Modifiers** apply to the last note of the OPEN neume (`neuma >= 0`);
+the last note globally is that note, so no extra index is kept. A
+modifier after a space/clef/bar is a VITIUM, not silently attached to
+some earlier note.
+
+**Shorthand expansion** (`gvv`, `gsss`, `GVV`) is done by the modifier
+itself: a `v`/`V`/`s` on a note that already carries that shape clones
+the note (same positio, directio, inclinatum bit) into the open neume.
+This also accepts `gv.v`, which Gregorio's lexer would not treat as a
+bivirga — harmless, and simpler than a lookahead pattern.
+
+**Accidental scope** lives in the resolution pass, not the lexer: a
+15-slot table (one per positio, sentinel `ALTERATIO_NULLA` = no sign),
+cleared at a syllable with `verbum_incipit`, a bar, and a clef. The
+clef's b-flat (`cb3`) is a fallback used only when the slot is empty,
+so a natural `y` on si overrides it within scope. Ficta notes
+(`r6`-`r8`) keep the alteratio the lexer gave them (`perge` inside the
+switch continues the note loop — correct, the switch is not a loop).
+
+**Measured:** Salve `'` 39, `.` 14, `_` 8, `w` 2 (shell) = reader.
+
+**Plants:** bar not clearing scope → alteration test red; `..` as one
+mora → rhythm test red.
