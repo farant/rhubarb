@@ -48,8 +48,12 @@
  *        -semen_verificationis X (aliter entropia moneta, impressa;
  *        -semen manet semen tricae sectionis V); -verificator
  *        automaticus|sui|via|congelatus (nucleus 79e7fad9 sectionis
- *        VI cum puncto proprio). -promovere VIA: paria UNCINUS + RELATIO
- *        promoventur (primi reliqui soli)
+ *        VI cum puncto proprio); valores ignoti refutantur. -tractus:
+ *        post RELATIO lineae TRACTUS (q, index omnes, ordine). Semen
+ *        DATUM: "bita nulla" (regula 4: limes nullus in actis).
+ *        -promovere VIA: paria UNCINUS + RELATIO promoventur (primi
+ *        reliqui soli; residua primorum usorum HEREDITARIA ex UNCINUS -
+ *        vide interpolatio.h, AUCTORITAS HEREDITARIA)
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -2732,6 +2736,7 @@ nomen structura {
     i32 semen_origo;       /* INTERPOLATIO_SEMEN_DATUM aut _FORTUITUM */
     i32 verificator;       /* LAQUEUS_VERIFICATOR_* */
     b32 congelatus;        /* nucleus 79e7fad9 (EXTERNUS) */
+    b32 tractus;           /* lineae TRACTUS post RELATIO */
 } ParametriVerificandi;
 
 /* verificator congelatus: nucleus VETUS (sectio VI) cum puncto PROPRIO
@@ -2882,14 +2887,42 @@ _relationem_imprimere (
         imprimere(" %u", r->primi[j]);
     }
     imprimere(" | k_max %u | additus %u | aestimationes %llu | sui %u | "
-        "certificantes %u | m %u | bita %u | semen %llu | origo %s | "
-        "generator %s | communia %s\n", r->k_maximus, r->primus_additus,
+        "certificantes %u | m %u | ", r->k_maximus, r->primus_additus,
         (unsigned long long)r->aestimationes, r->probationes_sui,
-        r->probationes_certificantes, r->probationes_requisitae,
-        r->bita_erroris, (unsigned long long)r->quaestio.semen,
+        r->probationes_certificantes, r->probationes_requisitae);
+    /* regula 4: semen DATUM limitem in actis non fert */
+    si (r->quaestio.semen_origo == INTERPOLATIO_SEMEN_FORTUITUM)
+    {
+        imprimere("bita %u", r->bita_erroris);
+    }
+    alioquin
+    {
+        imprimere("bita nulla");
+    }
+    imprimere(" | semen %llu | origo %s | generator %s | communia %s\n",
+        (unsigned long long)r->quaestio.semen,
         r->quaestio.semen_origo == INTERPOLATIO_SEMEN_FORTUITUM
         ? "FORTUITUM" : "DATUM", r->generator != NIHIL ? r->generator
         : "nullus", r->communia != NIHIL ? r->communia : "nulla");
+}
+
+/* lineae TRACTUS: probationes omnes ordine (recensio T4 L4) */
+interior vacuum
+_tractus_imprimere (
+                             i32  fila,
+                             i32  longitudo,
+    constans InterpolatioRelatio* r)
+{
+    i32 t;
+
+    per (t = ZEPHYRUM; t < r->numerus_tractuum; t++)
+    {
+        imprimere("TRACTUS plexus%u x %u | %u | gradus %u | %s | q %u | "
+            "index %u | %s\n", fila, longitudo, t, r->tractus[t].gradus,
+            r->tractus[t].certificans ? "certificans" : "sui",
+            r->tractus[t].primus, r->tractus[t].index,
+            r->tractus[t].transiit ? "transiit" : "reiecit");
+    }
 }
 
 /* uncinus VERIFICATUS unius tricae (semen tricae MMXXVIII): lineae
@@ -2965,6 +2998,10 @@ _uncinum_verificatum (
             _secundae(t0));
         _uncinum_imprimere(fila, longitudo, verbum, f, piscina);
         _relationem_imprimere(fila, longitudo, via, &r);
+        si (pv->tractus)
+        {
+            _tractus_imprimere(fila, longitudo, &r);
+        }
     }
     fflush(stdout);
     piscina_destruere(piscina);
@@ -3183,11 +3220,12 @@ _sectio_promotionis (
                 alioquin
                 {
                     imprimere("PROMOTUM plexus%u x %u | %s | primi %u ex "
-                        "%u novi | %.2f s\n", fila, longitudo,
+                        "%u novi | residua %u primorum hereditaria | "
+                        "%.2f s\n", fila, longitudo,
                         polynomium_aequalis(promotum, verificatum)
                         ? "IDEM" : "DIVERSUM", rn.numerus_primorum
                         - r.numerus_primorum, rn.numerus_primorum,
-                        _secundae(t0));
+                        r.numerus_primorum, _secundae(t0));
                     _uncinum_imprimere(fila, longitudo, verbum,
                         promotum,
                         piscina);
@@ -3226,6 +3264,7 @@ principale (
     pv.semen_origo  = INTERPOLATIO_SEMEN_DATUM;
     pv.verificator  = LAQUEUS_VERIFICATOR_AUTOMATICUS;
     pv.congelatus   = FALSUM;
+    pv.tractus      = FALSUM;
 
     per (i = I; i < argc; i++)
     {
@@ -3267,7 +3306,20 @@ principale (
         alioquin si (   strcmp(argv[i], "-modus") == ZEPHYRUM
                      && i + I < argc)
         {
-            pv.activa = strcmp(argv[++i], "verificatum") == ZEPHYRUM;
+            constans character* t = argv[++i];
+
+            si (   strcmp(t, "verificatum") != ZEPHYRUM
+                && strcmp(t, "probatum")    != ZEPHYRUM)
+            {
+                imprimere("-modus ignotus: %s (verificatum|probatum)\n",
+                    t);
+                redde I;
+            }
+            pv.activa = strcmp(t, "verificatum") == ZEPHYRUM;
+        }
+        alioquin si (strcmp(argv[i], "-tractus") == ZEPHYRUM)
+        {
+            pv.tractus = VERUM;
         }
         alioquin si (   strcmp(argv[i], "-semen_verificationis")
                      == ZEPHYRUM
@@ -3281,6 +3333,15 @@ principale (
         {
             constans character* t = argv[++i];
 
+            si (   strcmp(t, "automaticus") != ZEPHYRUM
+                && strcmp(t, "sui")         != ZEPHYRUM
+                && strcmp(t, "via")         != ZEPHYRUM
+                && strcmp(t, "congelatus")  != ZEPHYRUM)
+            {
+                imprimere("-verificator ignotus: %s "
+                    "(automaticus|sui|via|congelatus)\n", t);
+                redde I;
+            }
             pv.congelatus   = strcmp(t, "congelatus") == ZEPHYRUM;
             pv.verificator  = strcmp(t, "sui") == ZEPHYRUM
                 ? LAQUEUS_VERIFICATOR_SUI : strcmp(t, "via")

@@ -5,7 +5,10 @@ with conditions). Design review done (consiliarius-verificatio, approve
 after fixes; every finding placed, see "Design review" at the end). Q2
 and Q3 DECIDED by Fran 2026-11-02 (s = 64; frozen-kernel checker for the
 14 × 801 headline). T0 DONE 2026-11-02 (see "T0 amendment"). T1 DONE
-2026-11-02 (see "T1 notes"). T2 DONE 2026-11-02 (see "T2 notes"). Next: T3.
+2026-11-02 (see "T1 notes"). T2 DONE 2026-11-02 (see "T2 notes"). T3
+DONE 2026-11-03 (see "T3 results"). T4 review DONE 2026-11-03
+(recensor-verificatio, approve after fixes, no H; fixes folded in, see
+"Review (T4)" at the end).
 
 Agreed with Fran (2026-11-02): after the TL speed pass
 (temperley-celeritas-plan.md, done) and the Regina comparison
@@ -140,18 +143,28 @@ fewer primes than the bound asks for.
 
 ### Check primes and points (H1, H2)
 
-- **Check range:** primes ≡ 1 mod 4 in **[2^30, 2^31)**, uniform, minus the
-  primes used, for every route and every checker. Both routes accept these
+- **Check range:** primes in **[2^30, 2^31)** that pass the quaestio's
+  residue filter (laqueus: ≡ 1 mod 4), uniform, excluding the
+  interpolation primes used so far (0 … k − 1); check primes are drawn
+  WITH replacement (they may repeat within and across stages). This is
+  sound: each draw is uniform over ≥ N_MIN eligible primes whatever came
+  before, and the interpolation primes are among the ≤ ⌊(limes + 1)/30⌋
+  factors ε_b already counts (T4 review L2). For every route and every
+  checker. Both routes accept these
   primes (TL refuses q ≥ 2^31), and index + 2 cannot overflow.
 - **N** = 25,348,870 primes ≡ 1 mod 4 in [2^30, 2^31) (design review,
   segmented sieve; cross-check: 25,348,667 primes ≡ 3 mod 4, sum
   50,697,537 = π(2^31) − π(2^30)). T0 recounts it with a house sieve and
   records it. The code uses N_MIN = 2^24 (1.5× margin); this replaces the
   "citable bound" question.
-- **Draw procedure** (fixed, documented, reproducible): a pinned PRNG
-  (named in relatio) seeded from `semen`; q by rejection: uniform odd
-  value in [2^30, 2^31) until it is ≡ 1 mod 4, prime and unused; the index
-  uniform in [0, q) by rejection (no modulo bias). Redrawing on INUTILE is
+- **Draw procedure** (fixed, documented, reproducible; the header
+  interpolatio.h is canonical, T4 review L1/L3): sors PCG32-XSH-RR seeded
+  by `sors_seminare(semen, 0)`, i.e. pcg32_srandom_r with initstate = the
+  first SplitMix64 output of `semen` and initseq = 0; q = imus +
+  sors_intra(summus − imus) (any value, not only odd ones), redrawn until
+  it passes the residue filter, is prime and is not an interpolation
+  prime used so far; then index = sors_intra(q) (Lemire, no modulo bias),
+  redrawn on INUTILE or point 0, at most 64 times. Redrawing on INUTILE is
   safe because the INUTILE set depends only on q, not on D; redraws are
   capped (L1).
 - For tests only, the quaestio may narrow the check range (calibration
@@ -200,7 +213,12 @@ r = 9 (ω ≡ 0 or ω⁸ ≡ −1).
   4. Certifying mismatch after a self-pass: keep going; if the self-check
      passes again at a later stage with the same Q and the certifier fails
      again, stop: FALSUM, status DISCORDIA (a systematic disagreement; no
-     point burning a full proved run).
+     point burning a full proved run). Also DISCORDIA when the same Q
+     comes back and passes all m checks: the checker already rejected
+     it once, so either Q is wrong or the checker broke the warrant's
+     hypothesis, and the bound cannot be cited (T4 review M2; it matches
+     the limit rule, where one rejection of the proved result is
+     DISCORDIA).
   5. At k_max: evaluate ADDITUS as today; kind PROBATUM, status
      AD_LIMITEM, the checks reported as extra (M2).
   The bound comes from the certifying checks alone. Expensive evaluations
@@ -254,6 +272,18 @@ Q in the symmetric range of M_k already is the CRT residue mod M_k.
   Q by CRT, and must reproduce Q exactly: a different result is FALSUM,
   and it is the refutatio of the principle - reported and filed, never
   repaired silently.
+- **Inherited residues (T4 review M1).** The residues at primes 1 … k
+  are taken from Q, not recomputed. So PROMOTUM proves the result
+  relative to the verified run's own residues: it is a proof for the Q
+  that run produced. Accidents are caught (a truncated line, a wrong
+  UNCINUS/RELATIO pairing: the error is not a multiple of a ~500-bit
+  product). A deliberately forged Q is not: Q + (p_(k+1) ⋯ p_(k_max) ·
+  p_ADDITUS) on one coefficient, inside the limes, passes the prefix,
+  ADDITUS, limes and R = Q. Only recomputing the prefix would catch it,
+  which is the full proved run. Decided with Fran (2026-11-03): document,
+  do not bind. The header ("AUCTORITAS HEREDITARIA"), the tool's PROMOTUM
+  line ("residua k primorum hereditaria") and a test that pins the
+  behaviour (promotio: the forged Q IS accepted) all say so.
 - A PROBATUM-kind result is never promoted.
 - Evaluation counters count main-evaluator calls at interpolation primes
   only, apart from checks, so "evaluations = proved − verified" holds.
@@ -409,7 +439,8 @@ vectors, so the generator cannot drift silently. relatio names it
 
 **Entropy source:** `moneta_octeti_fortuiti` (lib/moneta.c; /dev/urandom,
 NO fallback: on failure it returns FALSUM and leaves the buffer
-untouched, and the caller refuses). That is exactly rule 4's contract,
+untouched, and the caller refuses). [T4 review L10: a short read can
+partly fill the buffer before FALSUM; harmless, the caller refuses.] That is exactly rule 4's contract,
 so no new function is needed; the tools read 8 bytes from it for a
 FORTUITUM seed and refuse if it fails.
 
@@ -540,14 +571,18 @@ ratio 3.827 (self-checks included); a likely cause, not measured, is
 that the proved run reconstructs across 23 primes and the verified run
 across 6.
 
-**P3 (overhead): holds, < 2%, but carried by the component estimate.**
+**P3 (overhead): passes by the registered residual rule; supported, not
+measured.** [Wording corrected by the T4 review, M4; was "holds, < 2%,
+but carried by the component estimate".]
 - Residual method as registered (B − 3378 × A/12949) / B per pair:
   +0.33%, −1.09%, −3.07%. All under 2%; the negative values show that
   under this load the residual resolves only about ±3%, so on its own
   it cannot certify 2%.
 - Component estimate (section VI, n = 12, celeritas T3, load 4):
   6 self-checks × 0.0450 s + 4 certifying × 0.2986 s (frozen) = 1.46 s
-  = 0.90% of the median B. The T1 worry (frozen kernel slower per point)
+  = 0.90% of the median B. It covers the checks only: the staged CRT,
+  part of P3 as first registered, was never timed, and the per-point
+  costs come from another day's runs, not from these. The T1 worry (frozen kernel slower per point)
   is real (6.6× per point) but m = 4 keeps it under 1%.
 
 **14 × 801 time (descriptive, as registered).** 3262 s verified against
@@ -665,7 +700,9 @@ INUTILE ≤ 9 indices, depending on q only); K_q is the a-priori window
 11 × 102 (m = 4 throughout; plan's 2^-18 holds, true ≈ 2^-17.6); k_true
 for all 45 and 14 × 801 from brackets.txt with real prime sequences;
 promotion sound within one route and quaestio (CRT uniqueness; R = Q plus
-ADDITUS catch a wrong Q). Literature: the scheme is the standard Monte
+ADDITUS catch a wrong Q). [T4 review M1: only a Q whose prefix residues
+are the run's own; a forged Q is accepted - see Promotion, "Inherited
+residues".] Literature: the scheme is the standard Monte
 Carlo pattern (random points and random primes, candidate fixed before
 its draws); promotion is its Las Vegas completion; Kaltofen–Lee early
 termination (JSC 2003) needs a degree bound, which here is the proved
@@ -719,3 +756,90 @@ Findings and where they went:
 Q2/Q3 recommendations recorded under "Open questions". Not checked by
 the review: exact K_q and limes for most braids, the PRNG's quality, the
 vertex workspace at 14 strands, any timing.
+
+## Review (T4, 2026-11-03, recensor-verificatio)
+
+Verdict: approve after fixes; no H. Built from a scratch copy of b7eff67c
+(`git archive`; the tertia tree only read). Full report saved as
+build/verificatio/recensio_t4.md (not committed). Own oracle (Python,
+written from the published algorithms, not from lib/sors.c):
+- PCG32 (O'Neill demo 6/6), SplitMix64 (2/2), sors goldens 18/18;
+- draws: 5 seeds × 8 braids × 3 checker modes = 120 runs, 645 (q, index)
+  pairs, 0 mismatches against the header's procedure (501 against the
+  plan's literal text - L1); interpolation prime prefixes 120/120;
+- the error bound re-derived (c = 8 from index → ω → A = iω² → y = A⁴,
+  r = 9 from ω ≡ 0 or ω⁸ ≡ −1, conditional per-check bound, union over
+  k_max − 1 stages, the self-check correctly outside the bound); m exact
+  for all 46 T0 rows; N recounted by its own sieve; bound vectors 12/12;
+- T3 records: 45/45 UNCINUS and RELATIO, bita exact 45/45 plus 14 × 801's
+  65; 16/16 lines reproduced byte for byte with the T3 seed; every
+  ABBA/residual/component figure; the protocol commit (00:11:40) before
+  the binary (00:11:46) and every output;
+- the frozen checker: `_vetus_valor` = 79e7fad9's kernel statement for
+  statement; temperley.c/.h and congruentia.c/.h unchanged since
+  79e7fad9, so the code it shares is frozen too; the cost rule predicts
+  exactly T3's 5 cross braids;
+- mutants: interpolatio 20 tried, 12 red, 8 survived; laqueus 5 built,
+  1 red, 4 survived.
+
+Findings and where they went:
+- **M1** promotion accepts a forged Q (prefix residues inherited from Q,
+  demonstrated) → documented, not bound (Fran, 2026-11-03): header
+  "AUCTORITAS HEREDITARIA", Promotion "Inherited residues", the design
+  review's "R = Q plus ADDITUS catch a wrong Q" annotated, tool PROMOTUM
+  line "residua k primorum hereditaria"; test `promotio` pins it (the
+  forged Q IS promoted; if promotion ever recomputes the prefix the test
+  goes red and the docs change with it).
+- **M2** a candidate the checker rejected once was accepted when it came
+  back and passed (demonstrated; inconsistent with the limit rule) →
+  `_verificatum` refuses with DISCORDIA when the candidate to accept
+  equals the last rejected one (the last one is enough: a stable Q
+  recurs at consecutive stages). Test `discors acceptatus` (checker
+  lies on its first call only); loop step 4 and the header reworded.
+- **M3** soundness ingredients untested → four sections:
+  `limes in stadio` (limes = Σ⌊log₂ p₁,₂⌋, main evaluator lying at p₁ by
+  the smallest δ that puts the stage-2 candidate above 2^limes; asserts
+  the stage is skipped without a self-check; note: step 1 never fires
+  with an honest main evaluator, so the test needs a lying one);
+  `inutilia certificantis` (checker INUTILE on index ≡ 0 mod 3, r 2732,
+  narrowed range with the 1 mod 4 filter, 8 seeds: reference draws incl.
+  filter and redraws, no certifying index ≡ 0 mod 3, redraws happened,
+  lying variant DISCORDIA - also covers L5); `mendax ad limitem`
+  (k_max = 2: only the limit path can refuse); `verificator mendax`
+  now asserts refusal at stage 2 (aestimationes = 2 × (K + 1)).
+- **M4** P3 wording → "passes by the registered residual rule;
+  supported, not measured", with the component estimate's gaps named.
+- **L1–L3** draw text, replacement, seeding → Design, "Check range" and
+  "Draw procedure"; header TRACTUS paragraph.
+- **L4** no (q, index) in records → tool `-tractus` prints TRACTUS lines;
+  checked against the reviewer's oracle: 15 runs, 78 pairs, 0
+  mismatches.
+- **L6** bita never asserted exactly → every bound vector asserts it
+  (values from a separate exact-fraction computation).
+- **L7** laqueus mutants → 8 × 51 added to `verificator automaticus`
+  (ratio 0.067: self under 5%, cross under 50% or without m); each
+  example asserts its m and the communia label. r = 9 → 0 left
+  untested at laqueus level: no numerical effect at q ≥ 2^30, and the
+  narrowed-range vectors cover r in interpolatio.
+- **L8** narrowed-range N without the k_max + 1 subtraction → vector
+  (K 7, limes 30, k_max 6, c 4, r 1, [4096, 8192), s 16): m = 4 (3
+  without), bita 22.
+- **L9** DATUM seeds printed a bound → RELATIO prints "bita nulla" for
+  DATUM (rule 4).
+- **L10** records → build/verificatio/t0_cribrum.out (section XIV) and
+  t0_m_exactum.py/.out (46/46 m by exact fractions) saved; Status line;
+  the moneta short-read note in T0.
+- **L11** unknown `-modus` / `-verificator` values → refused (exit 1).
+- **L12** the interpolatio.c header's "limes + 2" → limes + 1.
+
+Plants (build/verificatio/plantae_t4.py, written before the run): 11 of
+11 red as registered - M2 acceptance without the discors comparison;
+step 1 removed; step 1 at limes + 1; INUTILE counted as a pass; limit
+DISCORDIA removed; in-loop DISCORDIA removed; bita + 8; narrowed N
+unsubtracted; cost rule 50%; cost rule without m; communia swapped. T1's
+12 plants rerun: 12/12 red. T2's 4: A, C, D red; B's anchor had been
+re-wrapped by the formatter after T2 (planta refuses a two-line anchor
+replaced by one), so it was rerun with the current two-line text as an
+always-false comparison: red in the same two sections. Suites:
+interpolatio 33/33 sections (17,304 checks), laqueus_rete 33/33
+(152,937).

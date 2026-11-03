@@ -942,3 +942,9 @@ Tool (`uncinus_mensura`): `-modus verificatum` with sections VIII and XI, `-seme
 Latina traps hit in one task: `externus` (= extern) as a struct field, `casus` (= case) as an array name. Renamed alienus / exempla.
 
 Plants: build/verificatio/plantae_t2.py, 4 of 4 red as registered (always self-check; VIA_ALTERA ignored; cost rule without the 5% factor; external checker ignored).
+
+## 2026-11-03 - verificatio T4 review: cost-rule and label tests
+
+The 5% cost rule had no braid between the thresholds, so "5% -> 50%" and "rule ignores m" mutants survived. 8 x 51 (TL main, ratio m * price_vertex / ((k_max+1)(K+2) price_TL) = 0.067) sits above 1/20 but below both 1/2 and m/20, so it pins both; found by scanning T0's FUNDAMENTUM cost columns (build/verificatio/t0_fundamentum.out). Its word hash 2481405640 recomputed in Python from tools/uncinus_mensura -sectio XII words with the test's _misce (reproduces the three known hashes). The test now also asserts each example's m and the communia label (rule 2). r = 9 -> 0 remains untested at this level on purpose: no numerical effect at q >= 2^30.
+
+Plant note: T2 plant B's single-line anchor was re-wrapped by commissio's formatter after the T2 run; planta then refuses the replacement (format guard). Plant scripts kept in build/ go stale this way after their commit - rerun with the current text.

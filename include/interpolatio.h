@@ -177,16 +177,20 @@ interpolatio_polynomium (
  * acceptationis <= (k_max - 1) eps^m <= 2^-s, eps = c (K - 1) / (q_min -
  * r) + floor((limes + 1) / floor(log2 q_min)) / N (vide
  * interpolatio_probationes_necessariae). Ad k_max: primus additus ut
- * hodie, genus PROBATUM (status AD_LIMITEM). Verificator qui eundem
- * candidatum bis reicit (aut effectum probatum ad limitem) -> FALSUM,
- * status DISCORDIA: bibliotheca nescit uter erret.
+ * hodie, genus PROBATUM (status AD_LIMITEM). Verificator qui candidatum
+ * semel reiecit, si idem candidatus deinde acceptandus est, aut eundem
+ * bis reicit, aut effectum probatum ad limitem reicit -> FALSUM, status
+ * DISCORDIA: bibliotheca nescit uter erret.
  *
  * TRACTUS (documentati, reproducibiles ex semine): sors_seminare(semen,
- * 0); per probationem: primus q = imus + sors_intra(summus - imus)
- * iteratum donec filtro residui quaestionis congruit, primus est, et
- * inter primos iam usos non est; deinde index = sors_intra(q) iteratum
- * dum INUTILE aut punctum 0 (usque ad LXIV). Ordo: probationes ordine
- * quo fiunt (sui, deinde certificantes), primus ante indicem.
+ * 0), id est PCG32 (pcg32_srandom_r) cum initstate = effusio prima
+ * SplitMix64 ex semine, initseq = 0; per probationem: primus q = imus +
+ * sors_intra(summus - imus) (valor quilibet) iteratum donec filtro
+ * residui quaestionis congruit, primus est, et inter primos restitutionis
+ * iam usos (0 .. k - 1) non est - primi probationum iterari possunt
+ * (tractus cum repositione); deinde index = sors_intra(q) iteratum dum
+ * INUTILE aut punctum 0 (usque ad LXIV). Ordo: probationes ordine quo
+ * fiunt (sui, deinde certificantes), primus ante indicem.
  * ================================================== */
 
 #define INTERPOLATIO_PROBATUM     ZEPHYRUM
@@ -311,7 +315,15 @@ interpolatio_polynomium_relatum (
  * discordat, verificatum extra fenestram, aestimatio deficit, aut
  * restitutio aliud reddit (verificatum falsum: refutatio principii,
  * referenda). relatio_nova: genus PROBATUM, status PROMOTUM; non eadem ac
- * relatio. */
+ * relatio.
+ *
+ * AUCTORITAS HEREDITARIA: residua primorum 1 .. k ex verificato sumuntur,
+ * NON recomputantur. PROMOTUM igitur probat effectum relative ad residua
+ * cursus verificati: verificatum quod ille cursus reddidit. Mendum
+ * fortuitum (linea truncata, par UNCINUS/RELATIO falsum) deprehenditur;
+ * verificatum consulto fabricatum (Q + multiplum producti primorum k+1 ..
+ * k_max et additi, intra limitem) NON deprehenditur - recensio T4 M1.
+ * Auctoritas plena sine hereditate = PROBATUM directe. */
 b32
 interpolatio_promovere (
            InterpolatioAestimator  aestimare,

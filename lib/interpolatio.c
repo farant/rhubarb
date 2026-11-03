@@ -5,7 +5,7 @@
  * syntheticam M / (t - x_i): O(n^2) operationes, nulla matrix.
  * Restitutio per congruentia_restitue (Garner, symmetricus). Primi
  * PRIMUM enumerantur (filtro residui) donec summa floor(log2 p) >=
- * limes + 2, ita productum > 2^(limes + 1) certe; deinde unus
+ * limes + 1, ita productum >= 2^(limes + 1) > 2 max |c|; deinde unus
  * additus. Vide lib/interpolatio.worklog.md.
  */
 #include "interpolatio.h"
@@ -1103,6 +1103,13 @@ _verificatum (
             {
                 frange;
             }
+        }
+        si (   j == m && habet_discordem
+            && _coefficientes_aequales(discors, coefficientes,
+            numerus_coefficientium))
+        {
+            relatio->status = INTERPOLATIO_DISCORDIA;
+            redde FALSUM;           /* certificans hunc iam reiecit */
         }
         si (j == m)
         {

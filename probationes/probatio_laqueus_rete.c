@@ -3029,26 +3029,45 @@ nomen structura {
                    i32  vestigium_verbi;
             LaqueusVia  via;
     constans character* titulus;
+                   i32  probationes;     /* m */
 } ExemplumVerificandi;
+
+/* codex communis quem relatio nominat (regula 2): sui = omnia, via
+ * altera = puncti electio, congruentia, pd - textus laqueus.c iteratus */
+interior constans character*
+_communia_expectata (
+    constans character* titulus)
+{
+    redde titulus[ZEPHYRUM] == 's' ? "omnia (nucleus idem)"
+        : "_punctum_eligere (i, A, delta); congruentia; "
+          "laqueus_pd_ex_plexu";
+}
 
 /* verificator automaticus per regulam sumptus (T0, pretia viae): 9 x
  * 102 TL -> vertex (ratio 3.35 <= 3.70), 11 x 102 vertex -> TL (1.39 <=
- * 3.75), 8 x 101 sui (49 > 3.85). Effectus = probatus. Planta "laqueus
- * semper sui" hic rubet. */
+ * 3.75), 8 x 101 sui (49 > 3.85), 8 x 51 sui (m pretium alterum /
+ * (k_max + 1)(K + 2) pretium principale = 0.067: > 1/20, sed < 1/2 et
+ * < m/20 - recensio T4 L7). Effectus = probatus; communia nominata.
+ * Plantae "laqueus semper sui", "regula 50%", "regula sine m",
+ * "communia permutata" hic rubent. */
 interior vacuum
 _probare_verificator_automaticus (
     CredoContextus* c)
 {
                          Piscina* piscina = c->piscina;
-    constans ExemplumVerificandi  exempla[III] = {
-        { IX, CII, (i32)250855745UL, LAQUEUS_VIA_TEMPERLEY, "vertex" },
-        { XI, CII, (i32)1527719524UL, LAQUEUS_VIA_VERTEX, "temperley" },
+    constans ExemplumVerificandi  exempla[IV] = {
+        { IX, CII, (i32)250855745UL, LAQUEUS_VIA_TEMPERLEY, "vertex",
+          IV },
+        { XI, CII, (i32)1527719524UL, LAQUEUS_VIA_VERTEX, "temperley",
+          IV },
         { VIII, CI, (i32)2594227919UL, LAQUEUS_VIA_TEMPERLEY,
-          "sui:temperley" }
+          "sui:temperley", IV },
+        { VIII, LI, (i32)2481405640UL, LAQUEUS_VIA_TEMPERLEY,
+          "sui:temperley", III }
     };
     i32 k;
 
-    per (k = ZEPHYRUM; k < III; k++)
+    per (k = ZEPHYRUM; k < IV; k++)
     {
         PiscinaNotatio  nota       = piscina_notare(piscina);
                    i32  longitudo  = exempla[k].longitudo;
@@ -3074,7 +3093,10 @@ _probare_verificator_automaticus (
         CREDO_VERUM(_tituli_aequales(r.titulus_verificatoris,
             exempla[k].titulus));
         CREDO_AEQUALIS_I32(r.genus, INTERPOLATIO_VERIFICATUM);
-        CREDO_AEQUALIS_I32(r.probationes_requisitae, IV);
+        CREDO_AEQUALIS_I32(r.probationes_requisitae,
+            exempla[k].probationes);
+        CREDO_VERUM(_tituli_aequales(r.communia,
+            _communia_expectata(exempla[k].titulus)));
         piscina_reficere(piscina, nota);
     }
 }
