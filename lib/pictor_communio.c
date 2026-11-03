@@ -26,6 +26,8 @@
 #define PULSUS_PLURES       "{persona} shared {numerus} pictures"
 #define PULSUS_MORA         CCC
 #define AMBITUS_MAXIMUS     XVI
+/* pulsus-plan T10: tactus exspectat picturas nondum advectas */
+#define TACTUS_MORA_MS      ((i32)XV * (i32)M)
 
 structura PictorCommunio {
                  Piscina* piscina;
@@ -75,6 +77,12 @@ structura PictorCommunio {
                character  pulsus_tessera[PULSUS_TESSERA_MAXIMA + I];
                      b32  pulsus_armatus;
                      b32  pulsus_petitus;
+    /* pulsus-plan T10: tactus exspectans (ids nondum notae) */
+                 Piscina* tactus_scheda;
+                     Xar* tactus_res;    /* de chorda, in tactus_scheda */
+                     i32  tactus_mora;
+          ReactorTimerId  hora_tactus;
+                     b32  hora_tactus_viva;
 };
 
 s32
@@ -313,6 +321,169 @@ _apparatus_invenire (
     redde NIHIL;
 }
 
+
+/* ==================================================
+ * pulsus-plan T10: tactus notificationis
+ * ================================================== */
+
+interior vacuum
+_nuntiare (
+    PictorCommunio* pc);
+
+/* tactus exspectans finitur: hora, ids, "Loading" */
+interior vacuum
+_tactum_finire (
+    PictorCommunio* pc)
+{
+    si (pc->hora_tactus_viva)
+    {
+        (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora_tactus);
+        pc->hora_tactus_viva = FALSUM;
+    }
+    pc->tactus_res = NIHIL;
+    si (pc->tactus_scheda)
+    {
+        piscina_vacare(pc->tactus_scheda);
+    }
+    si (pc->montatio)
+    {
+        pc->montatio->communia.onerans = FALSUM;
+    }
+}
+
+/* communia parantur; omnes: grex solum si quaeque nota (aliter
+ * FALSUM, nihil mutatum); aliter pictor_gregem_aperire_in (notae aut
+ * rete). VERUM si spectator apertus. */
+interior b32
+_gregem_temptare (
+     PictorCommunio* pc,
+       constans Xar* res,
+                b32  solum_e_rete,
+                b32  omnes)
+{
+    PictorCommunia* c;
+
+    c = &pc->montatio->communia;
+    si (!pictor_communia_parare(c))
+    {
+        redde FALSUM;
+    }
+    si (omnes)
+    {
+        si (   !res || !pictor_communia_gregem_ponere(c, res)
+            || pictor_communia_gregis_numerus(c) != xar_numerus(res))
+        {
+            pictor_communia_gregem_tollere(c);
+            redde FALSUM;
+        }
+    }
+    redde pictor_gregem_aperire_in(pc->montatio->ramus.repo,
+        &pc->montatio->actiones_ctx, res, solum_e_rete);
+}
+
+/* post advenerunt: omnes nunc notae -> spectator (si rete adhuc
+ * apertum) */
+interior vacuum
+_tactum_iterare (
+    PictorCommunio* pc)
+{
+    si (!pc->tactus_res || !pc->montatio)
+    {
+        redde;
+    }
+    si (_gregem_temptare(pc, pc->tactus_res, VERUM, VERUM))
+    {
+        _tactum_finire(pc);
+        _nuntiare(pc);
+    }
+}
+
+/* mora transacta: notae aperiuntur, aliter rete (si adhuc apertum) */
+interior vacuum
+_tactus_hora (
+    vacuum* datum)
+{
+    PictorCommunio* pc = (PictorCommunio*)datum;
+
+    pc->hora_tactus_viva = FALSUM;
+    si (pc->tactus_res && pc->montatio && !pc->clausa)
+    {
+        pc->montatio->communia.onerans = FALSUM;
+        (vacuum)_gregem_temptare(pc, pc->tactus_res, VERUM, FALSUM);
+    }
+    _tactum_finire(pc);
+    _nuntiare(pc);
+}
+
+/* testa: notificatio pressa (corpus totum ut JSON) */
+interior vacuum
+_pulsus_tactus (
+    vacuum* ctx,
+    chorda  corpus_json)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+           Piscina* temporaria;
+      PulsusTactus  tactus;
+               i32  i;
+
+    si (pc->clausa || !pc->montatio || !pc->montatio->ramus.repo)
+    {
+        redde;
+    }
+    temporaria = piscina_generare_dynamicum("pictor_tactus",
+        (memoriae_index)XVI * (memoriae_index)M);
+    si (!temporaria)
+    {
+        redde;
+    }
+    si (   !pulsus_tactum_legere(corpus_json, temporaria, &tactus)
+        || !chorda_aequalis_literis(tactus.clavis, PULSUS_CLAVIS))
+    {
+        piscina_destruere(temporaria);
+        redde;
+    }
+    _tactum_finire(pc);
+    si (   tactus.plures || !tactus.res
+        || xar_numerus(tactus.res) == ZEPHYRUM)
+    {
+        (vacuum)_gregem_temptare(pc, NIHIL, FALSUM, FALSUM);
+    }
+    alioquin si (!_gregem_temptare(pc, tactus.res, FALSUM, VERUM))
+    {
+        /* nondum advectae: ids servantur, rete "Loading", communio
+         * statim trahit; iterum post advenerunt aut moram */
+        si (!pc->tactus_scheda)
+        {
+            pc->tactus_scheda = piscina_generare_dynamicum(
+                "pictor_tactus_res", (memoriae_index)IV
+                * (memoriae_index)M);
+        }
+        pc->tactus_res = pc->tactus_scheda ? xar_creare(
+            pc->tactus_scheda, (i32)magnitudo(chorda)) : NIHIL;
+        per (i = ZEPHYRUM; pc->tactus_res
+            && i < xar_numerus(tactus.res);
+             i++)
+        {
+            *(chorda*)xar_addere(pc->tactus_res) = chorda_ex_literis(
+                chorda_ut_cstr(*(chorda*)xar_obtinere(tactus.res, i),
+                pc->tactus_scheda), pc->tactus_scheda);
+        }
+        pc->montatio->communia.onerans = pc->tactus_res != NIHIL;
+        (vacuum)_gregem_temptare(pc, NIHIL, FALSUM, FALSUM);
+        si (pc->tactus_res)
+        {
+            pc->hora_tactus = reactor_timer_adicere(pc->reactor,
+                pc->tactus_mora > ZEPHYRUM ? pc->tactus_mora
+                : TACTUS_MORA_MS, FALSUM, _tactus_hora, pc);
+            pc->hora_tactus_viva = pc->hora_tactus
+                != (ReactorTimerId)-I;
+        }
+        pictor_communio_excitare(pc);
+    }
+    piscina_destruere(temporaria);
+    _nuntiare(pc);
+}
+
 /* acta advecta: nuntiare; apparatus novus (replica ignota) -> index */
 interior vacuum
 _advenerunt (
@@ -344,6 +515,7 @@ _advenerunt (
         piscina_destruere(temporaria);
     }
     _nuntiare(pc);
+    _tactum_iterare(pc);
 }
 
 /* pulsus-plan T9: eventus in caudam clientis; res = "<replica>:" +
@@ -470,8 +642,8 @@ _pulsum_petere (
         redde;
     }
     pc->pulsus_petitus = VERUM;
-    (vacuum)pc->pulsum_petere(pc->pulsus_sui, _pulsus_signum, NIHIL,
-        pc);
+    (vacuum)pc->pulsum_petere(pc->pulsus_sui, _pulsus_signum,
+        _pulsus_tactus, pc);
 }
 
 PictorCommunio*
@@ -691,6 +863,12 @@ pictor_communionem_claudere (
     si (!pc || pc->clausa)
     {
         redde;
+    }
+    _tactum_finire(pc);
+    si (pc->tactus_scheda)
+    {
+        piscina_destruere(pc->tactus_scheda);
+        pc->tactus_scheda = NIHIL;
     }
     pc->clausa = VERUM;
     memset(pc->epistula_missa, ZEPHYRUM, magnitudo(pc->epistula_missa));
@@ -1042,4 +1220,15 @@ pictor_communio_pulsum_statim (
     factum = l && _eventum_nuntiare(pc, l, VERUM, temporaria);
     piscina_destruere(temporaria);
     redde factum;
+}
+
+vacuum
+pictor_communio_tactus_moram_ponere (
+    PictorCommunio* pc,
+               i32  ms)
+{
+    si (pc)
+    {
+        pc->tactus_mora = ms;
+    }
 }

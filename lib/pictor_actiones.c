@@ -1325,6 +1325,33 @@ spectatam_movere (
     {
         redde FALSUM;
     }
+    /* pulsus-plan T10: grex - circulus intra eum solum (membra nunc
+     * ignota praetermissa) */
+    {
+        s32 g;
+        s32 locus;
+        s32 t;
+        s32 j;
+
+        g = (s32)pictor_communia_gregis_numerus(pa->communia);
+        locus = g
+            > ZEPHYRUM ? pictor_communia_gregis_locus(pa->communia,
+            k) : -I;
+        per (t = ZEPHYRUM; locus >= ZEPHYRUM && t < g; t++)
+        {
+            locus = ((locus + gradus) % g + g) % g;
+            j = pictor_communia_gregis_index(pa->communia, (i32)locus);
+            si (j >= ZEPHYRUM)
+            {
+                redde spectatam_scribere(repo, ctx, identitas_communis(
+                    pa->communia, j, pa->doc->piscina));
+            }
+        }
+        si (locus >= ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
     k = ((k + gradus) % n + n) % n;
     redde spectatam_scribere(repo, ctx, identitas_communis(pa->communia,
         k, pa->doc->piscina));
@@ -1605,6 +1632,49 @@ salutationem_notare (
     (vacuum)volumen_praesens_ponere(pa->doc->volumen, chorda_ex_literis(
         "pictor/salutatio", pa->doc->piscina), chorda_ex_literis("visa",
         pa->doc->piscina));
+}
+
+b32
+pictor_gregem_aperire_in (
+    InsulaRepositorium* repo,
+        PictorActiones* pa,
+          constans Xar* res,
+                   b32  solum_e_rete)
+{
+    hic_manens character  SPECTATOR[]  = "spectator";
+    hic_manens character  COMMUNIA[]   = "communia";
+             InsulaRamus  ramus;
+                  chorda* palette;
+                     s32  k;
+
+    si (!repo || !pa || !pa->doc || !pa->communia)
+    {
+        redde FALSUM;
+    }
+    si (solum_e_rete)
+    {
+        ramus    = ramus_pictoris(repo, pa);
+        palette  = insula_ramus_attributum(&ramus, "palette");
+        si (!palette || !chorda_aequalis_literis(*palette, COMMUNIA))
+        {
+            redde FALSUM;
+        }
+    }
+    si (res && pictor_communia_gregem_ponere(pa->communia, res))
+    {
+        k = pictor_communia_gregis_index(pa->communia, ZEPHYRUM);
+        si (k >= ZEPHYRUM)
+        {
+            (vacuum)spectatam_scribere(repo, pa, identitas_communis(
+                pa->communia, k, pa->doc->piscina));
+            redde palettam_scribere(repo, pa, SPECTATOR);
+        }
+    }
+    pictor_communia_gregem_tollere(pa->communia);
+    (vacuum)spectatam_scribere(repo, pa, NIHIL);
+    (vacuum)communium_paginam_scribere(repo, pa, ZEPHYRUM);
+    (vacuum)palettam_scribere(repo, pa, COMMUNIA);
+    redde FALSUM;
 }
 
 b32
@@ -1976,11 +2046,18 @@ pictor_spectatorem_agere (
         (vacuum)spectatam_scribere(repo, ctx, NIHIL);
         (vacuum)communium_paginam_scribere(repo, ctx, ZEPHYRUM);
         (vacuum)palettam_scribere(repo, ctx, NIHIL);
+        pictor_communia_gregem_tollere(pa->communia);
         redde pa->exemplum_facere(pa->montatio, a->replica,
             chorda_ut_cstr(a->spatium, pa->doc->piscina));
     }
-    /* X aut ictus extra imaginem (dialogus ipse): ad rete */
+    /* X aut ictus extra imaginem (dialogus ipse): ad rete; grex
+     * (pulsus-plan T10) tollitur et rete ad paginam 1 */
     (vacuum)spectatam_scribere(repo, ctx, NIHIL);
+    si (pictor_communia_gregis_numerus(pa->communia) > ZEPHYRUM)
+    {
+        pictor_communia_gregem_tollere(pa->communia);
+        (vacuum)communium_paginam_scribere(repo, ctx, ZEPHYRUM);
+    }
     redde palettam_scribere(repo, ctx, COMMUNIA);
 }
 

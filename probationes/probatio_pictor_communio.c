@@ -26,6 +26,9 @@
 #include "pulsus_forma.h"
 #include "testa_cursus.h"
 #include "veredarius_pulsus.h"
+#include "insula.h"
+#include "componens.h"
+#include "dispensator.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -34,6 +37,9 @@ hic_manens Piscina* piscina;
 hic_manens i32      mutationes;
 /* pulsus-plan T9: vocationes pulsum_petere fictae */
 hic_manens i32 pulsus_petitiones;
+/* pulsus-plan T10: tactus quem pictor testae dedit (tangere) */
+hic_manens TestaPulsusTactus tactus_captus;
+hic_manens vacuum*           tactus_ctx;
 
 interior vacuum
 _parare (
@@ -42,6 +48,8 @@ _parare (
     piscina            = c->piscina;
     mutationes         = ZEPHYRUM;
     pulsus_petitiones  = ZEPHYRUM;
+    tactus_captus      = NIHIL;
+    tactus_ctx         = NIHIL;
     thema_initiare();
 }
 
@@ -567,7 +575,8 @@ _pulsum_petere_fictum (
                vacuum* ctx)
 {
     (vacuum)sui;
-    (vacuum)tactus;
+    tactus_captus  = tactus;
+    tactus_ctx     = ctx;
     pulsus_petitiones++;
     signum(ctx, lit(TESSERA_FICTA), lit(""));
     redde VERUM;
@@ -726,6 +735,137 @@ _sectio_pulsus_eventus (
     orbem_purgare(&o);
 }
 
+/* pulsus-plan T10: notificatio pressa - corpus ut APNs tradit */
+interior vacuum
+tangere (
+    constans character* id,
+                   b32  plures)
+{
+    character corpus[DXII];
+
+    sprintf(corpus, "{\"aps\":{\"alert\":{\"title\":\"pictor\","
+        "\"body\":\"Amanda shared a picture\"}},\"pulsus\":{"
+        "\"clavis\":\"pictor.picturae\",\"res\":[%s%s%s],\"a\":"
+        "\"civis\"%s}}", id ? "\"" : "", id ? id : "", id ? "\"" : "",
+        plures ? ",\"plures\":true" : "");
+    tactus_captus(tactus_ctx, lit(corpus));
+}
+
+interior chorda
+attributum_app (
+    PictorApplicatio* app,
+  constans character* titulus)
+{
+    chorda* a;
+
+    a = insula_attributum(app->repo, titulus);
+    redde a ? chorda_ex_literis(chorda_ut_cstr(*a, piscina), piscina)
+            : lit("");
+}
+
+interior chorda
+titulus_app (
+    PictorApplicatio* app,
+  constans character* id)
+{
+    Componens* n;
+
+    dispensator_recomponere(app->d);
+    n = componens_invenire_per_id(dispensator_arbor(app->d), lit(id));
+    redde n ? chorda_ex_literis(chorda_ut_cstr(n->titulus, piscina),
+        piscina) : lit("");
+}
+
+interior vacuum
+_sectio_grex_tactus (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+       PictorApplicatio  app;
+         PictorCommunio* pa;
+         PictorCommunio* pb;
+       PictorDocumentum* p;
+           TestaAmbitus  a;
+              character  id[CXXVIII];
+              character  ignota[CXXVIII];
+                    i32  gyri;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    intern = internamentum_creare(piscina);
+    va = volumen_temporarium(piscina, "probatio_pictor_communio_j");
+    vb = volumen_temporarium(piscina, "probatio_pictor_communio_k");
+    CREDO_NECESSE(intern && va && vb);
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, piscina, intern,
+        va,
+        CCXV, CDXIX));
+    app.montatio.compositio.elenchus_praesto = VERUM;
+    pa = communionem(&o, va, o.via_a);
+    pb = communionem(&o, vb, o.via_b);
+    CREDO_NECESSE(pa && pb);
+    pictor_communionem_ligare(pa, &app.montatio, app.d, "Mac");
+    ambitum_fictum(&a);
+    pictor_communio_pulsum_parare(pa, &a);
+    CREDO_NECESSE(tactus_captus != NIHIL);
+    pictor_communio_incipere(pa);
+    pictor_communio_incipere(pb);
+    agere(&o, CC);
+    sprintf(id, "%s:p", chorda_ut_cstr(volumen_replica(vb), piscina));
+    sprintf(ignota, "%s:nulla", chorda_ut_cstr(volumen_replica(vb),
+        piscina));
+
+    CREDO_GRADUS("pictura nondum advecta: rete cum Loading");
+    tangere(id, FALSUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "communia");
+    CREDO_VERUM(app.montatio.communia.onerans);
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_app(&app, "communia.vacua"),
+        "pagina:Loading new pictures\xE2\x80\xA6");
+
+    CREDO_GRADUS("B pingit: post advenerunt spectator in p");
+    p = pictor_documentum_creare(piscina, intern, vb, "p", C, LX, II);
+    CREDO_NECESSE(p && ictus(p, X, II) > ZEPHYRUM);
+    pictor_communio_excitare(pb);
+    per (gyri = ZEPHYRUM; gyri < D && !chorda_aequalis_literis(
+             attributum_app(&app, "spectata"), id); gyri++)
+    {
+        (vacuum)reactor_poll(o.reactor, X);
+    }
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "spectata"), id);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "spectator");
+    CREDO_FALSUM(app.montatio.communia.onerans);
+
+    CREDO_GRADUS("pictura nota: spectator statim");
+    tangere(id, FALSUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "spectator");
+    CREDO_FALSUM(app.montatio.communia.onerans);
+
+    CREDO_GRADUS("plures: rete sine Loading");
+    tangere(id, VERUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "communia");
+    CREDO_FALSUM(app.montatio.communia.onerans);
+
+    CREDO_GRADUS("ignota: post moram rete, Loading tollitur");
+    pictor_communio_tactus_moram_ponere(pa, CC);
+    tangere(ignota, FALSUM);
+    CREDO_VERUM(app.montatio.communia.onerans);
+    agere(&o, CD);
+    CREDO_FALSUM(app.montatio.communia.onerans);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "communia");
+    pictor_communionem_claudere(pa);
+    pictor_communionem_claudere(pb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "advenit, auctor, index servatus", _sectio_advenit, _parare,
         _purgare, NIHIL, NIHIL },
@@ -736,6 +876,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "somnus", _sectio_somnus, _parare, _purgare, NIHIL, NIHIL },
     { "pulsus eventus", _sectio_pulsus_eventus, _parare, _purgare,
         NIHIL, NIHIL },
+    { "grex: tactus", _sectio_grex_tactus, _parare, _purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

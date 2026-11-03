@@ -2602,7 +2602,14 @@ _sectio_pulsus_inscriptio (
     CREDO_AEQUALIS_I32(f.numerus, I);
     CREDO_AEQUALIS_I32(communio_cliens_status(ca).error.mensura,
         ZEPHYRUM);
-    communio_cliens_excitare(ca);
+    /* pulsus-plan T10: excitare dum responsum 500 in itinere nihil agit
+     * (semita una petitio) - sub onere portae id accidit; ergo
+     * excitare iteratur donec petitio secunda (idempotens) */
+    per (k = ZEPHYRUM; f.numerus < II && k < C; k++)
+    {
+        communio_cliens_excitare(ca);
+        agere(&o, X);
+    }
     CREDO_VERUM(donec_pulsus(&o, &f, II));
     /* pulsus-plan T9: petitio missa != a servo scripta - sub onere L
      * ms non sufficiebant; exspectare donec servus scripsit (II s) */

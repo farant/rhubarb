@@ -174,4 +174,15 @@ pictor_communio_pulsum_statim (
          PictorCommunio* pc,
      constans character* spatium);
 
+/* pulsus-plan T10: notificatio pressa (tactus testae, post
+ * pulsum_parare): picturae omnes notae -> spectator in grege
+ * (pictor_gregem_aperire_in); aliter rete "Loading...", communio
+ * excitatur, grex iterum post omne advenerunt; mora transacta (ordinarie
+ * XV s) -> notae aperiuntur aut rete. plures -> rete. Probationes:
+ * mora in ms. */
+vacuum
+pictor_communio_tactus_moram_ponere (
+    PictorCommunio* pc,
+               i32  ms);
+
 #endif /* PICTOR_COMMUNIO_H */

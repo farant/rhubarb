@@ -90,3 +90,11 @@ Also learned live: 401s on GET /communio/apparatus while a sign-in waits are the
 - "Notify family now" (`pulsus.statim`) replaces "Sign in…" in the ⋯ menu once signed in, so the menu still fits V entries. The menu lives on the canvas, where a picture is always open, so it always sends the open picture's id; the spec's "disabled when nothing pending and nothing open" never arises there.
 - T9 passes NIHIL as the tap callback; a cold-launch tap the shell was holding is dropped until T10 wires it.
 - Tests: the suites' servers don't mount pulsus, so `probationes/veredarius_pulsus.h` wraps the veredarius, records /communio/pulsus/ requests and answers 204/202 itself.
+
+## 2026-11-03 - pulsus-plan T10: tap -> transient group
+
+- The tap handler (`_pulsus_tactus`, handed to the shell by `pulsum_petere`) reads the payload with `pulsus_tactum_legere` and ignores any clavis other than pictor.picturae. `plures` or no ids -> Shared grid page 1.
+- If every id already resolves, the viewer opens on the group at once. Otherwise the ids are copied into `tactus_scheda`, the grid shows "Loading new pictures…" (`PictorCommunia.onerans`, which also replaces the "1 / n" page label with "Loading…"), and `pictor_communio_excitare` restarts the pull. Each `advenerunt` retries, but it only opens once ALL ids resolve: a batch can arrive across several pulls, so opening on a partial set would drop pictures that are a second away. After 15 s (`TACTUS_MORA_MS`), it opens whatever resolves, or stays on the grid.
+- Deferred opens use `solum_e_rete`: if the person left the grid while waiting, a late sync does not yank them into the viewer.
+- The group lives in `PictorCommunia.grex` in its own piscina (`grex_scheda`) as replica/spatium pairs, not indices. `pictor_communia_parare` (run on every arrival) vacates the main scheda and reorders `picturae`, so movement re-resolves through `pictor_communia_index` each step.
+- In apps/pictor/pictor.c, `pulsum_parare` now runs after `pictor_salutationem_ponere`, because the shell delivers a held cold-launch tap inside `pulsum_petere` and that tap sets the palette.

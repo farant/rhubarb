@@ -999,6 +999,166 @@ _sectio_imagines (
     volumen_claudere(b);
 }
 
+
+/* ==================================================
+ * pulsus-plan T10: grex (tactus notificationis)
+ * ================================================== */
+
+/* "<replica B>:<spatium>" */
+interior chorda
+id_alieni (
+                Volumen* b,
+     constans character* spatium)
+{
+    redde chorda_concatenare(chorda_concatenare(volumen_replica(b),
+        chorda_ex_literis(":", piscina), piscina), chorda_ex_literis(
+        spatium, piscina), piscina);
+}
+
+/* Xar de chorda ex ids (NIHIL finit) */
+interior Xar*
+res_facere (
+    chorda a,
+    chorda b,
+    chorda c)
+{
+    Xar* l;
+
+    l = xar_creare(piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(l) = a;
+    si (b.datum)
+    {
+        *(chorda*)xar_addere(l) = b;
+    }
+    si (c.datum)
+    {
+        *(chorda*)xar_addere(l) = c;
+    }
+    redde l;
+}
+
+interior vacuum
+_sectio_grex (
+    CredoContextus* c)
+{
+            Volumen* a;
+            Volumen* b;
+   PictorApplicatio  app;
+         ManusLudus* m;
+                s64  cursor;
+             chorda  ib;
+             chorda  ia;
+             chorda  ix;
+
+    (vacuum)c;
+    intern_app = internamentum_creare(piscina);
+    a = volumen_temporarium(piscina, "probatio_pictor_communia_n");
+    b = volumen_temporarium(piscina, "probatio_pictor_communia_o");
+    CREDO_NECESSE(intern_app && a && b);
+    cursor = ZEPHYRUM;
+    CREDO_NECESSE(alienas_facere(a, b, intern_app, III, &cursor));
+    CREDO_NECESSE(app_communem(&app, a, VERUM));
+    m   = manus_ludus_creare(piscina, app.d);
+    ib  = id_alieni(b, "q02");
+    ia  = id_alieni(b, "q00");
+    ix  = id_alieni(b, "nulla");
+    CREDO_VERUM(pictor_communia_parare(&app.montatio.communia));
+    CREDO_VERUM(pictor_gregem_aperire_in(app.repo,
+        &app.montatio.actiones_ctx, res_facere(ib, ix, ia), FALSUM));
+    dispensator_recomponere(app.d);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+        "spectator");
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "spectata"), ib);
+    CREDO_AEQUALIS_I32(pictor_communia_gregis_numerus(
+        &app.montatio.communia), II);
+
+    CREDO_GRADUS("proxima A, deinde B (circulus), X praetermissa");
+    CREDO_VERUM(premere_nodum(&app, m, "spectator.posterior"));
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "spectata"), ia);
+    sagittam_premere(&app, (i32)CLAVIS_DEXTER);
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "spectata"), ib);
+    CREDO_VERUM(premere_nodum(&app, m, "spectator.prior"));
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "spectata"), ia);
+    CREDO_VERUM(trahere_nodum(&app, m, "spectator.imago", LXXX, X,
+        ZEPHYRUM));
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "spectata"), ib);
+
+    CREDO_GRADUS("X: rete pagina 1, grex sublatus");
+    CREDO_VERUM(premere_nodum(&app, m, "spectator.claudere"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+        "communia");
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app,
+        "pagina_communium"), "");
+    CREDO_AEQUALIS_I32(pictor_communia_gregis_numerus(
+        &app.montatio.communia), ZEPHYRUM);
+    CREDO_VERUM(premere_nodum(&app, m, "communia.pinax.0"));
+    CREDO_VERUM(premere_nodum(&app, m, "spectator.posterior"));
+    CREDO_CHORDA_AEQUALIS(ephemera_legere(&app, "spectata"),
+        identitas_alieni(a, I));
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
+/* Review Focus 4: ids ignotae, plures, duplices, rete clausum */
+interior vacuum
+_sectio_grex_incompletus (
+    CredoContextus* c)
+{
+            Volumen* a;
+            Volumen* b;
+   PictorApplicatio  app;
+                s64  cursor;
+             chorda  ia;
+             chorda  nulla;
+
+    (vacuum)c;
+    intern_app = internamentum_creare(piscina);
+    a = volumen_temporarium(piscina, "probatio_pictor_communia_p");
+    b = volumen_temporarium(piscina, "probatio_pictor_communia_q");
+    CREDO_NECESSE(intern_app && a && b);
+    cursor = ZEPHYRUM;
+    CREDO_NECESSE(alienas_facere(a, b, intern_app, II, &cursor));
+    CREDO_NECESSE(app_communem(&app, a, VERUM));
+    ia             = id_alieni(b, "q00");
+    nulla.datum    = NIHIL;
+    nulla.mensura  = ZEPHYRUM;
+    CREDO_VERUM(pictor_communia_parare(&app.montatio.communia));
+    CREDO_FALSUM(pictor_communia_gregem_ponere(&app.montatio.communia,
+        res_facere(id_alieni(b, "nulla"), chorda_ex_literis(
+        "sine-signo", piscina), id_alieni(a, "q00"))));
+    CREDO_AEQUALIS_I32(pictor_communia_gregis_numerus(
+        &app.montatio.communia), ZEPHYRUM);
+    CREDO_FALSUM(pictor_gregem_aperire_in(app.repo,
+        &app.montatio.actiones_ctx, res_facere(id_alieni(b, "nulla"),
+        nulla, nulla), FALSUM));
+    dispensator_recomponere(app.d);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+        "communia");
+
+    CREDO_GRADUS("plures (res NIHIL): rete");
+    CREDO_FALSUM(pictor_gregem_aperire_in(app.repo,
+        &app.montatio.actiones_ctx, NIHIL, FALSUM));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"),
+        "communia");
+
+    CREDO_GRADUS("duplices: semel");
+    CREDO_VERUM(pictor_communia_gregem_ponere(&app.montatio.communia,
+        res_facere(ia, ia, nulla)));
+    CREDO_AEQUALIS_I32(pictor_communia_gregis_numerus(
+        &app.montatio.communia), I);
+    pictor_communia_gregem_tollere(&app.montatio.communia);
+
+    CREDO_GRADUS("solum e rete: rete clausum -> nihil");
+    CREDO_VERUM(premere_nodum(&app, manus_ludus_creare(piscina, app.d),
+        "communia.claudere"));
+    CREDO_FALSUM(pictor_gregem_aperire_in(app.repo,
+        &app.montatio.actiones_ctx, res_facere(ia, nulla, nulla),
+        VERUM));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera_legere(&app, "palette"), "");
+    volumen_claudere(a);
+    volumen_claudere(b);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo: hora scriptoris", _sectio_ordo, _parare, _purgare, NIHIL,
         NIHIL },
@@ -1018,6 +1178,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "imagines (T6)", _sectio_imagines, _parare, _purgare, NIHIL,
         NIHIL },
+    { "grex", _sectio_grex, _parare, _purgare, NIHIL, NIHIL },
+    { "grex incompletus", _sectio_grex_incompletus, _parare, _purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
