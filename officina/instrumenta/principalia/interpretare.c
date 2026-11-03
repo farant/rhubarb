@@ -10,8 +10,11 @@
  * Involucrum TEXTUS est - inspectabile (-textus), reproducibile.
  *
  * Scopum (sim-1 C4): -plagulae a,b,c = TUs sub lib/ quorum titulus
- * substring continet (initium frigidum secundis, non minutis);
- * sine -plagulae = mundus totus lib/ (monitum honestum).
+ * substring continet (initium frigidum secundis, non minutis).
+ * Sine -plagulae (officina-bibliothecae T4): domus functionis ex
+ * build/nexus.tsv, clausura per aedilem (bibliothecae.h) - exacte
+ * illae plagulae. Ambigua aut recusata -> exitus 2 cum causa;
+ * functio in indice ignota -> mundus totus lib/ (monitum honestum).
  *
  * v0 (DECISUS #5): scalaria + literae chordarum; aggregata =
  * dilatio nominata. Argumenta per typum PARAMETRI evaluantur
@@ -31,6 +34,7 @@
 #include "officina_machinula.h"
 #include "officina_medulla_textus.h"
 #include "tabula_dispersa.h"
+#include "bibliothecae.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -333,6 +337,110 @@ _plagula_congruit (
     redde FALSUM;
 }
 
+/* plagulam demittere et in mundum addere (lineae parallelae) */
+hic_manens vacuum
+_modulum_addere (
+    constans SilvaContextus* ctx,
+         constans character* via)
+{
+     MedullaLineae* lineae   = NIHIL;
+    MedullaModulus* modulus  = _plagulam_demittere(ctx, via, &lineae);
+
+    si (modulus != NIHIL)
+    {
+        MedullaModulus** locellus    = xar_addere(moduli_mundi);
+         MedullaLineae** locellus_l  = xar_addere(lineae_mundi);
+
+        *locellus    = modulus;
+        *locellus_l  = lineae;
+    }
+}
+
+/* mundus ex indice + aedile: Xar viarum (chorda) quas functio
+ * eget. NIHIL: *ignota_out VERUM = functio in indice non inventa
+ * (lib/ totus sequitur); FALSUM = ambigua aut recusata (causa iam
+ * nuntiata, exitus II). */
+hic_manens Xar*
+_mundum_derivare (
+    constans character* titulus,
+                   b32* ignota_out)
+{
+               chorda via_sedis;
+               chorda causa;
+    BibliothecaeSedes sedes;
+         Bibliothecae* b;
+                  Xar* viae;
+
+    *ignota_out    = FALSUM;
+    causa.mensura  = ZEPHYRUM;
+    causa.datum    = NIHIL;
+    sedes = bibliothecae_sedem_quaerere("build/nexus.tsv", titulus,
+        piscina_officinae, &via_sedis, &causa);
+    si (sedes == BIBLIOTHECAE_SEDES_IGNOTA)
+    {
+        fprintf(stderr, "interpretare: %.*s - mundus totus lib/"
+            " (~30s)...\n", (int)causa.mensura,
+            (constans character*)causa.datum);
+        *ignota_out = VERUM;
+        redde NIHIL;
+    }
+    si (sedes == BIBLIOTHECAE_SEDES_AMBIGUA)
+    {
+        fprintf(stderr, "interpretare: %.*s - da -plagulae\n",
+            (int)causa.mensura, (constans character*)causa.datum);
+        redde NIHIL;
+    }
+    b = bibliothecae_creare(piscina_officinae, ".", &causa);
+    si (b == NIHIL)
+    {
+        fprintf(stderr, "interpretare: %.*s\n", (int)causa.mensura,
+            (constans character*)causa.datum);
+        redde NIHIL;
+    }
+    si (chorda_incipit(via_sedis, chorda_ex_literis("include/",
+            piscina_officinae)))
+    {
+        /* caput: #include syntheticum (clausura + corpora) */
+        character textus[1100];
+              i32 m = via_sedis.mensura - VIII;
+
+        si (m > M)
+        {
+            redde NIHIL;
+        }
+        sprintf(textus, "#include \"%.*s\"\n", (int)m,
+            (constans character*)via_sedis.datum + VIII);
+        viae = bibliothecae_ex_textu(b, chorda_ex_literis(textus,
+            piscina_officinae), piscina_officinae, &causa);
+    }
+    alioquin
+    {
+        viae = bibliothecae_ex_via(b, chorda_ut_cstr(via_sedis,
+            piscina_officinae), piscina_officinae, &causa);
+    }
+    si (viae == NIHIL)
+    {
+        fprintf(stderr, "interpretare: %.*s\n", (int)causa.mensura,
+            (constans character*)causa.datum);
+    }
+    redde viae;
+}
+
+hic_manens vacuum
+_vias_demittere (
+    constans SilvaContextus* ctx,
+                        Xar* viae)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(viae, k);
+
+        _modulum_addere(ctx, chorda_ut_cstr(via, piscina_officinae));
+    }
+}
+
 hic_manens vacuum
 _bibliothecam_demittere (
     constans SilvaContextus* ctx)
@@ -371,18 +479,7 @@ _bibliothecam_demittere (
         _comparare_vias);
     per (i = 0; i < numerus; i++)
     {
-         MedullaLineae* lineae = NIHIL;
-        MedullaModulus* modulus = _plagulam_demittere(ctx, viae[i],
-            &lineae);
-
-        si (modulus != NIHIL)
-        {
-            MedullaModulus** locellus    = xar_addere(moduli_mundi);
-             MedullaLineae** locellus_l  = xar_addere(lineae_mundi);
-
-            *locellus    = modulus;
-            *locellus_l  = lineae;
-        }
+        _modulum_addere(ctx, viae[i]);
     }
 }
 
@@ -602,10 +699,26 @@ principale (
 
     si (numerus_quaesitarum == ZEPHYRUM)
     {
-        fprintf(stderr, "interpretare: sine -plagulae = mundus"
-            " totus lib/ (~30s)...\n");
+        b32  ignota  = FALSUM;
+        Xar* viae    = _mundum_derivare(titulus_functionis, &ignota);
+
+        si (viae != NIHIL)
+        {
+            _vias_demittere(ctx, viae);
+        }
+        alioquin si (ignota)
+        {
+            _bibliothecam_demittere(ctx);
+        }
+        alioquin
+        {
+            redde II;
+        }
     }
-    _bibliothecam_demittere(ctx);
+    alioquin
+    {
+        _bibliothecam_demittere(ctx);
+    }
     fprintf(stderr, "mundus: %d moduli\n",
         (int)xar_numerus(moduli_mundi));
 
@@ -829,8 +942,8 @@ principale (
 
         /* lector -> conexio -> machinula */
         {
-                     chorda  textus_ch;
-                        i32  linea_erroris = ZEPHYRUM;
+                     chorda textus_ch;
+                        i32 linea_erroris = ZEPHYRUM;
              MedullaModulus* involucrum_modulus;
                       Regio* regio;
                     Conexio* conexio;
@@ -855,12 +968,22 @@ principale (
             conexio  = conexio_creare(piscina_ctx, regio);
             per (k = ZEPHYRUM; k < xar_numerus(moduli_mundi); k++)
             {
-                si (!conexio_modulum_addere(conexio,
-                        *(MedullaModulus**)xar_obtinere(
-                            moduli_mundi, k)))
+                MedullaModulus* modulus_k = *(MedullaModulus**)
+                    xar_obtinere(moduli_mundi, k);
+
+                si (!conexio_modulum_addere(conexio, modulus_k))
                 {
+                    constans chorda* symbolum =
+                        conexio_querela_symbolum(conexio);
+
                     fprintf(stderr, "interpretare: modulus non"
-                        " additus\n");
+                        " additus: %.*s (%.*s)\n",
+                        (int)modulus_k->titulus.mensura,
+                        (constans character*)modulus_k->titulus.datum,
+                        symbolum != NIHIL ? (int)symbolum->mensura : 0,
+                        symbolum != NIHIL
+                            ? (constans character*)symbolum->datum
+                            : "");
                     redde II;
                 }
             }

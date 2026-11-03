@@ -1,5 +1,11 @@
 # OFFICINA BIBLIOTHECAE — libraries found by #include
 
+**STATUS: IMPLETUM 2026-11-02** (secunda) — T1 7174cda5 (colloquium
+links again + launcher gate), T2 280e4f78 (bibliothecae resolver),
+T3 c5388bf2 (sessio #include turns load libraries), T4 (interpretare
+derives by default). Acceptance VI.1-6 all held; see officina/
+phase-log.md "OFFICINA BIBLIOTHECAE: RELATIO".
+
 *Designed with Fran 2026-11-02 (brainstorm in chat, secunda, after
 chronica C6). Fran's direction: build up evergreen toolchain pieces
 first (interpreter gaps, then aarch64), and try things like the vicus
@@ -173,6 +179,13 @@ page whose app re-runs on every edit), vindex on library code.
   so order should not matter; verify).
 
 ## AUDIENDA (not verified)
+
+*Answers (2026-11-02, after T4):* (1) VERIFIED - a library demitted
+mid-session links cleanly; every turn rebuilds the generation's link
+over all library modules ("#include medio"). (2) Held for every
+closure exercised (piscina, chorda, filum, fasti: all lowered); not
+swept corpus-wide. (3) Unchanged and harmless: praeparator walks the
+header as before; the resolver only adds .c modules.
 
 - That loading a library module MID-session links cleanly with
   generations already built (the module pool is separate, but the

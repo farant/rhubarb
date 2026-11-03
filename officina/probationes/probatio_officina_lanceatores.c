@@ -5,7 +5,8 @@
  * 01M4XR3Q) a 8bbf97f7 usque ad 2026-11-02 latuit.
  *
  * Probat: scriptum #! (fixum salutatio.scriptum) per colloquium.sh
- * - exitus 0, ambae lineae effusionis. */
+ * - exitus 0, ambae lineae effusionis; interpretare.sh sine
+ * -plagulae - mundus ex indice + aedile (officina-bibliothecae T4). */
 
 #include "latina.h"
 #include "piscina.h"
@@ -53,8 +54,69 @@ _sectio_colloquium (
         chorda_ex_literis("relectum: scriptum scripsit", piscina));
 }
 
+/* interpretare sine -plagulae: domus functionis ex indice
+ * (build/nexus.tsv), clausura per aedilem - piscina.h solum
+ * piscina.c onerat (olim: lib/ totus, ~30 s) */
+interior vacuum
+_sectio_interpretare (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+     ProcessusOptiones  optiones;
+     ProcessusResultus  r;
+    constans character* argumenta[] = {
+        "officina/interpretare.sh",
+        "piscina_generare_dynamicum",
+        "\"x\"",
+        "1024",
+        NIHIL
+    };
+
+    memset(&optiones, ZEPHYRUM, magnitudo(ProcessusOptiones));
+    optiones.directorium = _radix();
+    r = processus_exsequi_cum(argumenta, &optiones, MORA_AEDIFICATIONIS,
+        piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_CHORDA_CONTINET(r.erratum,
+        chorda_ex_literis("mundus: 1 moduli", piscina));
+    CREDO_CHORDA_CONTINET(r.erratum,
+        chorda_ex_literis("[BENE", piscina));
+}
+
+/* fasti_est_bissextilis: caput fasti.h -> fasti.c + clausura; sine
+ * monito mundi totius */
+interior vacuum
+_sectio_fasti (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+     ProcessusOptiones  optiones;
+     ProcessusResultus  r;
+    constans character* argumenta[] = {
+        "officina/interpretare.sh",
+        "fasti_est_bissextilis",
+        "2024",
+        NIHIL
+    };
+
+    memset(&optiones, ZEPHYRUM, magnitudo(ProcessusOptiones));
+    optiones.directorium = _radix();
+    r = processus_exsequi_cum(argumenta, &optiones, MORA_AEDIFICATIONIS,
+        piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_VERUM(chorda_aequalis_literis(r.effusio, "1\n"));
+    CREDO_FALSUM(chorda_continet(r.erratum,
+        chorda_ex_literis("mundus totus", piscina)));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "colloquium scriptum", _sectio_colloquium, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "interpretare sine plagulis", _sectio_interpretare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "interpretare fasti", _sectio_fasti, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
