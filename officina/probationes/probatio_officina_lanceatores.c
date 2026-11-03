@@ -37,10 +37,7 @@ _sectio_colloquium (
     constans character* argumenta[] = {
         "officina/colloquium.sh",
         "officina/probationes/fixa/sessio_scripta/salutatio.scriptum",
-        "-posix",
-        "-plagulae",
-        "lib/piscina.c,lib/chorda.c,lib/chorda_aedificator.c,"
-            "lib/lectiones.c,lib/filum.c",
+        "-posix",   /* bibliothecae ex #include scripti (T3) */
         NIHIL
     };
 
