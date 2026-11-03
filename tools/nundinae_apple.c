@@ -8,7 +8,9 @@
  * 'aedilis --partes' in stdin - sine clave); -ultimum <app>,
  * -distribuere <app> <aedificatio> -notae <plagula>, -testatores <app>,
  * -invitare <app> <email> (T5: commissum ultimum ex notis Apple, notae
- * "What to Test" + grex Familia + invitationes). Configuratio:
+ * "What to Test" + grex Familia + invitationes); -capacitas <app>
+ * <CAP> (http2 C9); -evolutio <app> (pulsus T11: diploma evolutionis
+ * proprium, push in telephono). Configuratio:
  * -configuratio <via>, aliter
  * $HOME/.rhubarb/ios/nundinae_apple.stml. Clavis secreta numquam
  * imprimitur. Exitus: 0 | 1 fractum (Apple aut rete) | 2 recusatio
@@ -28,7 +30,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
+
+interior s32
+_usus (
+    vacuum);
+
+/* " AAAA-MM-DD" (UTC) - nomina diplomatum novorum distinguit (vetus,
+ * capacitate mutata INVALID, nomen suum servat) */
+interior chorda
+_dies (
+    Piscina* p)
+{
+       time_t t;
+    structura tm* tm;
+    character b[XVI];
+
+    t   = time(NIHIL);
+    tm  = gmtime(&t);
+    si (!tm || strftime(b, magnitudo(b), " %Y-%m-%d", tm) == ZEPHYRUM)
+    {
+        redde chorda_ex_literis("", p);
+    }
+    redde chorda_ex_literis(b, p);
+}
 
 interior s32
 _usus (
@@ -41,7 +67,7 @@ _usus (
         "-cryptographia < partes.tsv | -ultimum <app> | "
         "-distribuere <app> <aedificatio> -notae <plagula> | "
         "-testatores <app> | -invitare <app> <email> | "
-        "-capacitas <app> <CAPACITAS>\n");
+        "-capacitas <app> <CAPACITAS> | -evolutio <app>\n");
     redde II;
 }
 
@@ -467,8 +493,8 @@ _parare (
             chorda_concatenare(
             chorda_concatenare(chorda_ex_literis("rhubarb ", p),
             chorda_ex_literis(app, p), p), chorda_concatenare(
-            chorda_ex_literis(" App Store ", p), cert.numerus_serialis,
-            p),
+            chorda_ex_literis(" App Store ", p), chorda_concatenare(
+            cert.numerus_serialis, _dies(p), p), p),
             p), &contentum, &creatum, &causa, p))
     {
         redde _fractum(causa, p);
@@ -778,6 +804,60 @@ _testatores (
     redde _testatores_tractare(n, id_app, FALSUM, p);
 }
 
+/* -evolutio (pulsus-plan T11): diploma IOS_APP_DEVELOPMENT signi
+ * earth.golden.<app> (repertum aut creatum) in
+ * ~/.rhubarb/ios/profila/earth.golden.<app>.evolutio.mobileprovision -
+ * app.sh -tabula id praefert (push: aps-environment) */
+interior s32
+_evolutio (
+          NundinaeApple* n,
+     constans character* app,
+                Piscina* p)
+{
+                 chorda  signum;
+                 chorda  id_signi;
+                 chorda  contentum;
+                 chorda  causa;
+                 chorda  d;
+                    b32  creatum;
+          Base64Fructus  diploma;
+     constans character* via;
+
+    signum = chorda_concatenare(chorda_ex_literis("earth.golden.", p),
+        chorda_ex_literis(app, p), p);
+    si (   !nundinae_apple_signum_fasciculi(n, signum,
+        chorda_concatenare(
+               chorda_ex_literis("rhubarb ", p), chorda_ex_literis(app,
+               p),
+               p), &id_signi, &creatum, &causa, p)
+        || !nundinae_apple_diploma_evolutionis(n, id_signi,
+               chorda_concatenare(chorda_concatenare(chorda_ex_literis(
+               "rhubarb ", p), chorda_ex_literis(app, p), p),
+               chorda_concatenare(chorda_ex_literis(" Development", p),
+               _dies(p), p), p), &contentum, &creatum, &causa, p))
+    {
+        redde _fractum(causa, p);
+    }
+    diploma    = base64_decodificare(contentum, p);
+    d.datum    = diploma.datum;
+    d.mensura  = diploma.mensura;
+    via = _sedes(chorda_ut_cstr(chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis("profila/", p), signum, p), chorda_ex_literis(
+        ".evolutio.mobileprovision", p), p), p), p);
+    si (   !diploma.datum
+        || !filum_directorium_creare_cum_parentibus(_sedes("profila",
+        p))
+        || !filum_scribere(via, d))
+    {
+        fprintf(stderr, "nundinae_apple: diploma scribi nequit (%s)\n",
+            via);
+        redde I;
+    }
+    imprimere("diploma evolutionis: %s %s\n", via, creatum ? "CREATUM"
+                                                          : "repertum");
+    redde ZEPHYRUM;
+}
+
 /* -capacitas (http2-plan C9): capacitas signi fasciculi earth.golden.<app>
  * (e.g. PUSH_NOTIFICATIONS) creatur si deest - numquam delet */
 interior s32
@@ -1062,6 +1142,11 @@ principale (
                  && numerus_positivorum          == II)
     {
         exitus = _capacitas(&n, positiva[ZEPHYRUM], positiva[I], p);
+    }
+    alioquin si (   strcmp(verbum, "-evolutio") == ZEPHYRUM
+                 && numerus_positivorum         == I)
+    {
+        exitus = _evolutio(&n, positiva[ZEPHYRUM], p);
     }
     alioquin si (strcmp(verbum, "-applicationes") == ZEPHYRUM)
     {

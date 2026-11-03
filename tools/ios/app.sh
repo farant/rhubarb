@@ -98,7 +98,11 @@ rm -rf "$D" && mkdir -p "$D/obiecta" "$APP" || apparatus "$D creari nequit"
 if [ "$SCOPUS" = tabula ]; then
     . tools/ios/communia.sh
     ios_tabulam_eligere
-    ios_profilum_eligere "$D"
+    # pulsus-plan T11: profilum proprium (push) praefertur, nisi
+    # IOS_PROFILUM datum
+    if [ -n "${IOS_PROFILUM:-}" ] || ! ios_profilum_proprium "$D" "$INVOLUCRUM"; then
+        ios_profilum_eligere "$D"
+    fi
     ios_identitatem_eligere
     echo "telephonum: $IOS_NOMEN ($IOS_MODELLUM, iOS $IOS_VERSIO); profilum $(basename "$IOS_PROFILUM"); $IOS_IDENTITAS_NOMEN"
 fi
@@ -267,6 +271,12 @@ elif [ "$SCOPUS" = tabula ]; then
     # D7: profilum inclusum + iura ex eo (turma.involucrum, debugging)
     cp "$IOS_PROFILUM" "$APP/embedded.mobileprovision" \
         || apparatus "profilum exscribi nequit"
+    # pulsus-plan T11: aps-environment ex profilo (proprium solum id fert;
+    # sine eo registerForRemoteNotifications deficit)
+    IURA_APS=""
+    APS=$(_ios_campus "$IOS_PROFILUM_PLIST" Entitlements.aps-environment) \
+        && IURA_APS="	<key>aps-environment</key>
+	<string>$APS</string>"
     cat > "$D/iura.plist" <<EOF_IURA
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -278,6 +288,7 @@ elif [ "$SCOPUS" = tabula ]; then
 	<string>$IOS_TURMA</string>
 	<key>get-task-allow</key>
 	<true/>
+$IURA_APS
 </dict>
 </plist>
 EOF_IURA

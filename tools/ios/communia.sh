@@ -146,6 +146,39 @@ ios_profilum_eligere () {
     apparatus "nullum profilum evolutionis '<turma>.*' validum pro $IOS_UDID${causae:+ (${causae#; })} - Xcode aut developer.apple.com renovat"
 }
 
+# pulsus-plan T11: profilum evolutionis PROPRIUM applicationis
+# (~/.rhubarb/ios/profila/<involucrum>.evolutio.mobileprovision, ex
+# 'nundinae_apple -evolutio <app>') - capacitates (push: aps-environment)
+# fert, quas '<turma>.*' non fert. Validum (application-identifier
+# <turma>.<involucrum>, get-task-allow, non exspiratum, telephonum
+# continet) -> IOS_PROFILUM, IOS_TURMA, IOS_PROFILUM_PLIST, 0; aliter 1
+# cum causa in stderr (ios_profilum_eligere sequitur: sine push).
+ios_profilum_proprium () {
+    local dir inv p f appid turma exspirat nunc
+    dir=$1
+    inv=$2
+    p="$HOME/.rhubarb/ios/profila/$inv.evolutio.mobileprovision"
+    [ -f "$p" ] || return 1
+    f="$dir/profilum.proprium.plist"
+    nunc=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+    security cms -D -i "$p" > "$f" 2>/dev/null \
+        || { echo "profilum proprium decodari nequit: $p" >&2; return 1; }
+    appid=$(_ios_campus "$f" Entitlements.application-identifier)
+    turma=$(_ios_campus "$f" TeamIdentifier.0)
+    exspirat=$(_ios_campus "$f" ExpirationDate)
+    [ "$appid" = "$turma.$inv" ] \
+        || { echo "profilum proprium pro '$appid', non $turma.$inv" >&2; return 1; }
+    [ "$(_ios_campus "$f" Entitlements.get-task-allow)" = true ] \
+        || { echo "profilum proprium non evolutionis (get-task-allow)" >&2; return 1; }
+    [[ "$exspirat" > "$nunc" ]] \
+        || { echo "profilum proprium exspiravit $exspirat - nundinae_apple -evolutio" >&2; return 1; }
+    _ios_profilum_continet "$f" "$IOS_UDID" \
+        || { echo "profilum proprium telephonum $IOS_UDID non continet - nundinae_apple -evolutio post apparatum novum" >&2; return 1; }
+    IOS_PROFILUM=$p; IOS_TURMA=$turma; IOS_PROFILUM_PLIST=$f
+    export IOS_PROFILUM IOS_TURMA IOS_PROFILUM_PLIST
+    return 0
+}
+
 # identitas signandi: certificatum profili (DeveloperCertificates) cuius
 # SHA-1 in claviario est (security find-identity) - signatura per SHA-1,
 # numquam per nomen (nomina similia). Ponit IOS_IDENTITAS (SHA-1) et
