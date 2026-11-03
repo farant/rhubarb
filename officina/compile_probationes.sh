@@ -76,6 +76,14 @@ declare -a RADIX_FONTES=(
     "lectiones"    # vigilia per librum legit (fabrica plan 5 T5a)
     "filum"        # probationes per filum delent (fabrica-8, 2026-10-27)
     "processus_posix"
+    # bibliothecae (officina-bibliothecae T2): clausura aedilis
+    "aedilis"
+    "aedilis_silva"
+    "via"
+    "stml"
+    "thesaurus"
+    "selectio"
+    "iter_directoria"
 )
 
 FILTER="${1:-}"
@@ -251,6 +259,20 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
         -c "$src" -o "$obj"; then
         echo "FRACTA: sessio" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# bibliothecae: #include -> plagulae (officina-bibliothecae T2)
+src="$OFF_DIR/instrumenta/bibliothecae.c"
+obj="$BUILD_DIR/bibliothecae.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/bibliothecae.h" ] \
+    || [ -n "$(newest_header "$obj")" ]; then
+    echo "  [bibliothecae] bibliothecae.c"
+    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
+        -c "$src" -o "$obj"; then
+        echo "FRACTA: bibliothecae" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"
