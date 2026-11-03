@@ -13,7 +13,7 @@
 #include "sigillum.h"
 #include "friatio.h"
 #include "base64.h"
-#include "xml.h"
+#include "xml_documentum.h"
 #include "internamentum.h"
 #include "chorda_aedificator.h"
 
@@ -2014,31 +2014,54 @@ horreum_praesignare (
 /* ===== lectio responsorum ===== */
 interior chorda
 _textus (
-              XmlNodus* parens,
+    constans XmlCoctus* parens,
     constans character* titulus,
                Piscina* p)
 {
-    XmlNodus* n = parens ? xml_invenire_liberum(parens,
-        titulus) : NIHIL;
+     constans XmlCoctus* n = xml_filius(parens, titulus);
+                 chorda  t;
 
-    si (!n)
+    /* visio cocta entitates et referentias numericas SEMEL decodificat
+     * (P15; iterum decodificare "&amp;#65;" in "A" verteret - recensio
+     * I3) */
+    si (!n || !xml_textus_totus(n, p, &t))
     {
         redde chorda_ex_buffer(NIHIL, ZEPHYRUM);
     }
-    /* xml.h entitates et referentias numericas SEMEL decodificat
-     * (P15; iterum decodificare "&amp;#65;" in "A" verteret - recensio
-     * I3) */
-    redde xml_textus_internus(n, p);
+    redde t;
 }
 
-interior XmlNodus*
+/* filii elementa titulo dato (Xar de constans XmlCoctus*) */
+interior Xar*
+_filii (
+               Piscina* p,
+    constans XmlCoctus* e,
+    constans character* titulus)
+{
+                   Xar* x = xar_creare(p,
+                               (i32)magnitudo(constans XmlCoctus*));
+    constans XmlCoctus* f;
+
+    si (x == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (f = xml_filius(e, titulus); f; f = xml_frater(f, titulus))
+    {
+        *(constans XmlCoctus**)xar_addere(x) = f;
+    }
+    redde x;
+}
+
+interior constans XmlCoctus*
 _radix (
                 chorda  corpus,
     constans character* titulus,
           HorreumError* e,
                Piscina* p)
 {
-    XmlResultus r;
+     XmlDocumentum* d;
+    constans XmlCoctus* radix;
 
     si (corpus.mensura == ZEPHYRUM)
     {
@@ -2046,21 +2069,22 @@ _radix (
             "horreum: XML vacuum", p);
         redde NIHIL;
     }
-    r = xml_legere(corpus, p, internamentum_creare(p));
-    si (!r.successus || !r.radix)
+    d      = xml_documentum_legere(corpus, p);
+    radix  = xml_documentum_radix(d);
+    si (!xml_documentum_successus(d) || !radix)
     {
         _errorem_ponere(e, HORREUM_MALUM, ZEPHYRUM,
             "horreum: XML malum", p);
         redde NIHIL;
     }
-    si (   titulus && (!r.radix->titulus
-            || !chorda_aequalis_literis(*r.radix->titulus, titulus)))
+    si (   titulus
+        && !chorda_aequalis_literis(xml_titulus(radix), titulus))
     {
         _errorem_ponere(e, HORREUM_MALUM, ZEPHYRUM,
             "horreum: XML radix inexpectata", p);
         redde NIHIL;
     }
-    redde r.radix;
+    redde radix;
 }
 
 /* tabula erroris (II.5) */
@@ -2198,19 +2222,19 @@ _corpus_successus_legere (
               HorreumError* e,
                    Piscina* p)
 {
-    HorreumError  ignotum;
-        XmlNodus* radix;
+              HorreumError  ignotum;
+        constans XmlCoctus* radix;
 
     si (r->corpus.mensura == ZEPHYRUM)
     {
         redde VERUM;
     }
     radix = _radix(r->corpus, NIHIL, &ignotum, p);
-    si (!radix || !radix->titulus)
+    si (!radix || xml_titulus(radix).mensura == ZEPHYRUM)
     {
         redde VERUM;
     }
-    si (chorda_aequalis_literis(*radix->titulus, "Error"))
+    si (chorda_aequalis_literis(xml_titulus(radix), "Error"))
     {
         si (ob)
         {
@@ -2227,12 +2251,12 @@ _corpus_successus_legere (
         }
         redde FALSUM;
     }
-    si (   ob && chorda_aequalis_literis(*radix->titulus,
+    si (   ob && chorda_aequalis_literis(xml_titulus(radix),
             "CompleteMultipartUploadResult"))
     {
         ob->etag = _sine_virgulis(_textus(radix, "ETag", p));
     }
-    si (   ob && chorda_aequalis_literis(*radix->titulus,
+    si (   ob && chorda_aequalis_literis(xml_titulus(radix),
             "CopyObjectResult"))
     {
         ob->etag     = _sine_virgulis(_textus(radix, "ETag", p));
@@ -2251,9 +2275,9 @@ horreum_responsum_legere (
             HorreumError* e,
                  Piscina* p)
 {
-     HttpResponsum* r = res.responsum;
-          XmlNodus* radix;
-      HorreumError  loc;
+               HttpResponsum* r = res.responsum;
+          constans XmlCoctus* radix;
+                HorreumError  loc;
 
     si (!e)
     {
@@ -2348,7 +2372,7 @@ horreum_paginam_legere (
      HorreumError* e,
           Piscina* p)
 {
-     XmlNodus* radix;
+     constans XmlCoctus* radix;
           Xar* contenta;
           Xar* praefixa;
           i32  i;
@@ -2359,8 +2383,8 @@ horreum_paginam_legere (
     {
         redde FALSUM;
     }
-    contenta = xml_invenire_omnes_liberos(radix, "Contents", p);
-    praefixa = xml_invenire_omnes_liberos(radix, "CommonPrefixes", p);
+    contenta = _filii(p, radix, "Contents");
+    praefixa = _filii(p, radix, "CommonPrefixes");
     pg->obiecta_numerus =
         contenta ? (i32)xar_numerus(contenta) : ZEPHYRUM;
     pg->praefixa_numerus =
@@ -2373,8 +2397,8 @@ horreum_paginam_legere (
             + I) * (i32)magnitudo(chorda)));
     per (i = ZEPHYRUM; i < pg->obiecta_numerus; i++)
     {
-               XmlNodus* n   =
-                   *(XmlNodus**)xar_obtinere(contenta, i);
+               constans XmlCoctus* n   =
+                   *(constans XmlCoctus**)xar_obtinere(contenta, i);
         HorreumObjectum* ob  = &pg->obiecta[i];
                     s64  m;
 
@@ -2387,7 +2411,8 @@ horreum_paginam_legere (
     }
     per (i = ZEPHYRUM; i < pg->praefixa_numerus; i++)
     {
-        XmlNodus* n = *(XmlNodus**)xar_obtinere(praefixa, i);
+        constans XmlCoctus* n =
+            *(constans XmlCoctus**)xar_obtinere(praefixa, i);
 
         pg->praefixa_communia[i] = _textus(n, "Prefix", p);
     }
@@ -2406,36 +2431,38 @@ horreum_deletiones_legere (
        HorreumError*  e,
             Piscina*  p)
 {
-          XmlNodus* radix = _radix(corpus, "DeleteResult", e, p);
-               i32  n;
-               i32  i;
-               i32  k = ZEPHYRUM;
-    HorreumDeletio* t;
+          constans XmlCoctus* radix = _radix(corpus, "DeleteResult", e,
+              p);
+                         i32  n;
+                         i32  i;
+                         i32  k = ZEPHYRUM;
+              HorreumDeletio* t;
 
     *numerus = ZEPHYRUM;
     si (!radix)
     {
         redde FALSUM;
     }
-    n = xml_numerus_liberorum(radix);
+    n = xml_liberorum_numerus(radix);
     t = (HorreumDeletio*)piscina_allocare(p,
             (memoriae_index)((n + I) * (i32)magnitudo(HorreumDeletio)));
     per (i = ZEPHYRUM; i < n; i++)
     {
-        XmlNodus* c = xml_liberum_ad_indicem(radix, i);
+        constans XmlCoctus* c = xml_liberum(radix, i);
 
-        si (!c || c->genus != XML_NODUS_ELEMENTUM || !c->titulus)
+        si (   !c || xml_nodi_genus(c) != XML_COCTUS_ELEMENTUM
+            || xml_titulus(c).mensura == ZEPHYRUM)
         {
             perge;
         }
         memset(&t[k], ZEPHYRUM, magnitudo(t[k]));
-        si (chorda_aequalis_literis(*c->titulus, "Deleted"))
+        si (chorda_aequalis_literis(xml_titulus(c), "Deleted"))
         {
             t[k].clavis   = _textus(c, "Key", p);
             t[k].deletum  = VERUM;
             k++;
         }
-        alioquin si (chorda_aequalis_literis(*c->titulus, "Error"))
+        alioquin si (chorda_aequalis_literis(xml_titulus(c), "Error"))
         {
             t[k].clavis         = _textus(c, "Key", p);
             t[k].error.codex    = _textus(c, "Code", p);
@@ -2457,7 +2484,8 @@ horreum_id_oneris_legere (
     HorreumError* e,
          Piscina* p)
 {
-    XmlNodus* radix = _radix(corpus, "InitiateMultipartUploadResult", e,
+    constans XmlCoctus* radix = _radix(corpus,
+        "InitiateMultipartUploadResult", e,
         p);
 
     si (!radix)
@@ -2482,7 +2510,8 @@ horreum_partes_legere (
     HorreumError*  e,
          Piscina*  p)
 {
-       XmlNodus* radix = _radix(corpus, "ListPartsResult", e, p);
+       constans XmlCoctus* radix = _radix(corpus, "ListPartsResult", e,
+           p);
             Xar* partes;
             i32  i;
     HorreumPars* t;
@@ -2492,15 +2521,16 @@ horreum_partes_legere (
     {
         redde FALSUM;
     }
-    partes    = xml_invenire_omnes_liberos(radix, "Part", p);
+    partes    = _filii(p, radix, "Part");
     *numerus  = partes ? (i32)xar_numerus(partes) : ZEPHYRUM;
     t = (HorreumPars*)piscina_allocare(p,
             (memoriae_index)((*numerus
                 + I) * (i32)magnitudo(HorreumPars)));
     per (i = ZEPHYRUM; i < *numerus; i++)
     {
-        XmlNodus* n = *(XmlNodus**)xar_obtinere(partes, i);
-             s64  v;
+        constans XmlCoctus* n =
+            *(constans XmlCoctus**)xar_obtinere(partes, i);
+                       s64 v;
 
         v             = _numerus(_textus(n, "PartNumber", p));
         t[i].numerus  = v > ZEPHYRUM ? (i32)v : ZEPHYRUM;
@@ -2520,7 +2550,8 @@ horreum_pendentes_legere (
            HorreumError*  e,
                 Piscina*  p)
 {
-    XmlNodus* radix = _radix(corpus, "ListMultipartUploadsResult", e,
+    constans XmlCoctus* radix = _radix(corpus,
+        "ListMultipartUploadsResult", e,
         p);
                    Xar* onera;
                    i32  i;
@@ -2531,14 +2562,15 @@ horreum_pendentes_legere (
     {
         redde FALSUM;
     }
-    onera     = xml_invenire_omnes_liberos(radix, "Upload", p);
+    onera     = _filii(p, radix, "Upload");
     *numerus  = onera ? (i32)xar_numerus(onera) : ZEPHYRUM;
     t = (HorreumOnusPendens*)piscina_allocare(p,
             (memoriae_index)((*numerus + I)
                 * (i32)magnitudo(HorreumOnusPendens)));
     per (i = ZEPHYRUM; i < *numerus; i++)
     {
-        XmlNodus* n = *(XmlNodus**)xar_obtinere(onera, i);
+        constans XmlCoctus* n =
+            *(constans XmlCoctus**)xar_obtinere(onera, i);
 
         t[i].clavis = _textus(n, "Key", p);
         t[i].id_oneris = _textus(n, "UploadId", p);
@@ -2555,13 +2587,13 @@ horreum_etag_perfecti_legere (
     HorreumError* e,
          Piscina* p)
 {
-    XmlNodus* radix = _radix(corpus, NIHIL, e, p);
+    constans XmlCoctus* radix = _radix(corpus, NIHIL, e, p);
 
-    si (!radix || !radix->titulus)
+    si (!radix || xml_titulus(radix).mensura == ZEPHYRUM)
     {
         redde FALSUM;
     }
-    si (chorda_aequalis_literis(*radix->titulus, "Error"))
+    si (chorda_aequalis_literis(xml_titulus(radix), "Error"))
     {
         _errorem_ponere(e, HORREUM_MALUM, CC, "", p);
         e->codex       = _textus(radix, "Code", p);
@@ -2570,7 +2602,7 @@ horreum_etag_perfecti_legere (
         e->genus       = _genus_erroris(CC, e->codex);
         redde FALSUM;
     }
-    si (!chorda_aequalis_literis(*radix->titulus,
+    si (!chorda_aequalis_literis(xml_titulus(radix),
             "CompleteMultipartUploadResult"))
     {
         _errorem_ponere(e, HORREUM_MALUM, ZEPHYRUM,

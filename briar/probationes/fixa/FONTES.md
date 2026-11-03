@@ -90,6 +90,15 @@ amalgama` cum causa nominata in commissione; inspectio manu ante.
   3:1`). Porta fabricae (derivatio, clausura, `-I` radicum) et fumus
   XXI (cursus, -probatio, -amalgama, -bibliothecae, -functiones).
 
+## xml (xml_arbor P16, 2026-10-30)
+
+- `thistle/xml_partitura.thistle` — cliens materiae xml SINE `#include`:
+  partitura parva (MusicXML forma: `score-partwise`, partes per
+  `xml_filius`/`xml_frater`, entitas DTD `&auctor;` -> `Tallis`,
+  numerus mensurarum), tag clausum alienum nominatum
+  (`partitura.xml:2:`). Porta fabricae (derivatio, clausura, `-I` radicum
+  usitatarum solum) et fumus XXV.
+
 ## prototypi probationis (round XIX, 2026-09-29)
 
 - `thistle/probatio_adiutor.thistle` — adiutor `auxilium` in regione

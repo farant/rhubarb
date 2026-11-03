@@ -668,6 +668,47 @@ scriba_liber_paginam_legere (
     redde VERUM;
 }
 
+b32
+scriba_liber_paginam_legere_omnes (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda  titulus,
+                    Xar* exitus)
+{
+                        chorda  index;
+                        chorda  spatium;
+              ScribaDocumentum* doc;
+    constans TabulaCharacterum* t;
+                           i32  linea;
+                           s32  ultima;
+
+    si (   !piscina || !intern || !volumen || !exitus
+        || titulus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    vias_libri(praefixum, piscina, &index, &spatium);
+    doc = scriba_documentum_aperire(piscina, intern, volumen,
+        chorda_ut_cstr(chorda_concatenare(spatium, titulus, piscina),
+        piscina));
+    t       = doc ? scriba_documentum_tabula(doc) : NIHIL;
+    ultima  = -I;
+    per (linea = ZEPHYRUM; t && linea < (i32)t->altitudo; linea++)
+    {
+        si (lineam_legere(t, linea, piscina).mensura > ZEPHYRUM)
+        {
+            ultima = (s32)linea;
+        }
+    }
+    per (linea = ZEPHYRUM; (s32)linea <= ultima; linea++)
+    {
+        *(chorda*)xar_addere(exitus) = lineam_legere(t, linea, piscina);
+    }
+    redde VERUM;
+}
+
 chorda
 scriba_liber_praefixum (
     constans ScribaLiber* l)

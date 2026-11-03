@@ -215,6 +215,173 @@ silva_annotationes_unitates (
     redde NIHIL;
 }
 
+/* EXTENSIONES PER FONTEM (budget B2 F1): olim per (annotationem x
+ * unitatem) silva_nodus_extensionem arborem unitatis TOTAM
+ * ambulabat (fons unus per ambulationem; ~XI% obsoletae, XIII%
+ * percursus -semantica). Nunc ambulatio UNA per unitatem omnes fontes
+ * colligit: triplae (fons, minimum, maximum) unitatis u in
+ * extensiones[initia[u] .. initia[u+1]) - plerumque I-III. Regula
+ * accumulatoris eadem ac silva_valor_extensionem (radix originis,
+ * byte_offset >= 0, minimum < 0 = nihil). */
+nomen structura {
+    s32 fons;
+    s32 minimum;
+    s32 maximum;
+} ExtensioFontis;
+
+interior vacuum
+_extensiones_valoris (
+    SilvaValor  v,
+           Xar* extensiones,
+           i32  initium);
+
+interior vacuum
+_extensiones_nodi (
+    constans SilvaNodus* n,
+                    Xar* extensiones,
+                    i32  initium)
+{
+    insignatus integer k;
+
+    si (n == NIHIL)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n->numerus_locorum; k++)
+    {
+        _extensiones_valoris(n->loci[k], extensiones, initium);
+    }
+}
+
+interior vacuum
+_extensionem_notare (
+    constans SilvaToken* radix_t,
+                    Xar* extensiones,
+                    i32  initium)
+{
+    ExtensioFontis* e = NIHIL;
+               s32  a;
+               s32  b;
+               i32  j;
+
+    a = (s32)radix_t->byte_offset;
+    b = a + (s32)silva_token_longitudo(radix_t);
+    per (j = initium; j < xar_numerus(extensiones); j++)
+    {
+        ExtensioFontis* f = (ExtensioFontis*)xar_obtinere(extensiones,
+            j);
+
+        si (f->fons == radix_t->fons_index)
+        {
+            e = f;
+            frange;
+        }
+    }
+    si (e == NIHIL)
+    {
+        e = (ExtensioFontis*)xar_addere(extensiones);
+        si (e == NIHIL)
+        {
+            redde;
+        }
+        e->fons     = radix_t->fons_index;
+        e->minimum  = -I;
+        e->maximum  = ZEPHYRUM;
+    }
+    si (e->minimum < ZEPHYRUM || a < e->minimum)
+    {
+        e->minimum = a;
+    }
+    si (b > e->maximum)
+    {
+        e->maximum = b;
+    }
+}
+
+interior vacuum
+_extensiones_valoris (
+    SilvaValor  v,
+           Xar* extensiones,
+           i32  initium)
+{
+    commutatio (v.genus)
+    {
+        casus SILVA_VALOR_TOKEN:
+            si (v.datum.token != NIHIL)
+            {
+                SilvaToken* radix_t = silva_token_radix(v.datum.token);
+
+                si (radix_t == NIHIL)
+                {
+                    radix_t = v.datum.token;
+                }
+                si (radix_t->byte_offset >= ZEPHYRUM)
+                {
+                    _extensionem_notare(radix_t, extensiones, initium);
+                }
+            }
+            frange;
+        casus SILVA_VALOR_NODUS:
+            _extensiones_nodi(v.datum.nodus, extensiones, initium);
+            frange;
+        casus SILVA_VALOR_LISTA:
+        {
+            insignatus integer m = silva_valor_lista_numerus(v);
+            insignatus integer k;
+
+            per (k = ZEPHYRUM; k < m; k++)
+            {
+                SilvaValor* elem = silva_valor_lista_obtinere(v, k);
+
+                si (elem != NIHIL)
+                {
+                    _extensiones_valoris(*elem, extensiones, initium);
+                }
+            }
+            frange;
+        }
+        ordinarius:
+            frange;
+    }
+}
+
+/* extensio unitatis u in fonte: ex tabula si structa, aliter
+ * ambulatio ut olim (allocatio fracta) */
+interior vacuum
+_extensio_unitatis (
+    constans SilvaNodus* unitas,
+           constans Xar* extensiones,
+           constans Xar* initia,
+                    i32  u,
+                    s32  fons,
+                    s32* minimum,
+                    s32* maximum)
+{
+    i32 j;
+    i32 finis;
+
+    *minimum = -I;
+    *maximum = ZEPHYRUM;
+    si (extensiones == NIHIL || initia == NIHIL)
+    {
+        silva_nodus_extensionem(unitas, fons, minimum, maximum);
+        redde;
+    }
+    finis = *(constans i32*)xar_obtinere(initia, u + I);
+    per (j = *(constans i32*)xar_obtinere(initia, u); j < finis; j++)
+    {
+        constans ExtensioFontis* e = (constans ExtensioFontis*)
+            xar_obtinere(extensiones, j);
+
+        si (e->fons == fons)
+        {
+            *minimum = e->minimum;
+            *maximum = e->maximum;
+            redde;
+        }
+    }
+}
+
 interior vacuum
 _affigere (
                   Piscina* piscina,
@@ -222,6 +389,8 @@ _affigere (
                       Xar* fructus)
 {
     Xar* unitates;
+    Xar* extensiones  = NIHIL;
+    Xar* initia       = NIHIL;
     i32  i;
 
     si (xar_numerus(fructus) == ZEPHYRUM)
@@ -229,6 +398,31 @@ _affigere (
         redde;
     }
     unitates = silva_annotationes_unitates(piscina, parsura);
+    si (unitates != NIHIL)
+    {
+        extensiones = xar_creare(piscina,
+            (i32)magnitudo(ExtensioFontis));
+        initia = xar_creare(piscina, (i32)magnitudo(i32));
+    }
+    si (extensiones != NIHIL && initia != NIHIL)
+    {
+        per (i = ZEPHYRUM; i <= xar_numerus(unitates); i++)
+        {
+            i32* locus = (i32*)xar_addere(initia);
+
+            si (locus == NIHIL)
+            {
+                initia = NIHIL;
+                frange;
+            }
+            *locus = xar_numerus(extensiones);
+            si (i < xar_numerus(unitates))
+            {
+                _extensiones_nodi(*(SilvaNodus**)xar_obtinere(unitates,
+                    i), extensiones, *locus);
+            }
+        }
+    }
     per (i = ZEPHYRUM; i < xar_numerus(fructus); i++)
     {
         SilvaAnnotatio* a = (SilvaAnnotatio*)xar_obtinere(
@@ -254,12 +448,8 @@ _affigere (
             {
                 perge;
             }
-            /* CONTRACTUS extensionis: VOCATOR initiat (accumulator
-             * est - minimum < 0, maximum 0; manet < 0 si nihil) */
-            minimum = -I;
-            maximum = ZEPHYRUM;
-            silva_nodus_extensionem(unitas, a->fons_index,
-                &minimum, &maximum);
+            _extensio_unitatis(unitas, extensiones, initia, u,
+                a->fons_index, &minimum, &maximum);
             si (minimum < ZEPHYRUM)
             {
                 perge;   /* unitas in hoc fonte absens */

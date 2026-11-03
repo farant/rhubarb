@@ -533,9 +533,192 @@ _sectio_sententia (
         ZEPHYRUM);
 }
 
+/* N3.4d (Franus 2026-10-27): fractiones paginarum. Linea textus VIII
+ * px, passus XVI; titulus XVI px, passus XVI; inter clausulas VIII.
+ * Verbum XXXIX litterarum in CCXL px = linea una (XL cellulae). */
+
+/* paragraphus n linearum: verba XXXIX litterarum, quodque linea sua;
+ * littera prima = signum (a, b, ...), deinde index */
+interior constans character*
+paragraphus_linearum (
+      Piscina* p,
+    character  signum,
+          i32  n)
+{
+    ChordaAedificator* a;
+                  i32  i;
+                  i32  j;
+
+    a = chorda_aedificator_creare(p, MXXIV);
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        si (i > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(a, ' ');
+        }
+        chorda_aedificator_appendere_character(a, signum);
+        chorda_aedificator_appendere_character(a, (character)('0'
+            + (character)(i % X)));
+        per (j = II; j < XXXIX; j++)
+        {
+            chorda_aedificator_appendere_character(a, 'x');
+        }
+    }
+    redde chorda_ut_cstr(chorda_aedificator_finire(a), p);
+}
+
+/* linea j paginae g incipit signo et indice? ("b0", "T") */
+interior b32
+incipit (
+    constans CodexCaput* k,
+                    Xar* paginae,
+                    i32  g,
+                    i32  j,
+     constans character* praefixum,
+                Piscina* p)
+{
+    si (   g >= xar_numerus(paginae)
+        || j >= numerus_linearum(paginae, g))
+    {
+        redde FALSUM;
+    }
+    redde chorda_incipit(textus_lineae(k, linea(paginae, g, j)),
+        chorda_ex_literis(praefixum, p));
+}
+
+interior vacuum
+_sectio_fractiones (
+    CredoContextus* c)
+{
+                 Piscina* p;
+              CodexCaput* k;
+                     Xar* x;
+     constans CodexGenus  pp[] = { CODEX_PARAGRAPHUS,
+        CODEX_PARAGRAPHUS };
+     constans CodexGenus p1[] = { CODEX_PARAGRAPHUS };
+     constans CodexGenus cum_titulo[] = { CODEX_PARAGRAPHUS,
+         CODEX_TITULUS,
+        CODEX_PARAGRAPHUS };
+     constans CodexGenus cum_titulis[] = { CODEX_PARAGRAPHUS,
+         CODEX_TITULUS,
+        CODEX_TITULUS, CODEX_PARAGRAPHUS };
+     constans CodexGenus ad_titulum[] = { CODEX_PARAGRAPHUS,
+         CODEX_TITULUS };
+     constans CodexGenus  vv[] = { CODEX_VERSUS };
+      constans character* textus[IV];
+
+    p = c->piscina;
+
+    CREDO_GRADUS("prima linea sola in imo non manet: paragraphus "
+        "totus in paginam novam (LXXX px: IV + I capiunt)");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', IV);
+    textus[I]         = paragraphus_linearum(p, 'b', VI);
+    k                 = caput_facere(p, pp, textus, II);
+    x                 = lector_paginare(k, CCXL, LXXX, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), IV);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "b0", p));
+
+    CREDO_GRADUS("ultima linea sola in summo non manet: duae transeunt "
+        "(VI in LXXII px: IV + II, non V + I)");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', VI);
+    k                 = caput_facere(p, p1, textus, I);
+    x                 = lector_paginare(k, CCXL, LXXII, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), II);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), IV);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, I), II);
+
+    CREDO_GRADUS("paginae plures: XI lineae in LXXII px = V, IV, II");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', XI);
+    k                 = caput_facere(p, p1, textus, I);
+    x                 = lector_paginare(k, CCXL, LXXII, p);
+    CREDO_AEQUALIS_I32(xar_numerus(x), III);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), V);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, I), IV);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, II), II);
+
+    CREDO_GRADUS("paragraphus III linearum non finditur (II capiunt: "
+        "totus transit)");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', III);
+    textus[I]         = paragraphus_linearum(p, 'b', III);
+    k                 = caput_facere(p, pp, textus, II);
+    x                 = lector_paginare(k, CCXL, LXXX, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), III);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, I), III);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "b0", p));
+
+    CREDO_GRADUS("titulus cum sequente: titulus capit, linea una "
+        "sequentis tantum - titulus transit");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', III);
+    textus[I]         = "Titulus";
+    textus[II]        = paragraphus_linearum(p, 'b', V);
+    k                 = caput_facere(p, cum_titulo, textus, III);
+    x                 = lector_paginare(k, CCXL, LXXXVIII, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), III);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "Titulus", p));
+    CREDO_VERUM(incipit(k, x, I, I, "b0", p));
+
+    CREDO_GRADUS("titulus cum paragrapho III linearum (non finditur): "
+        "II capiunt, III non - titulus transit");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', II);
+    textus[I]         = "Titulus";
+    textus[II]        = paragraphus_linearum(p, 'b', III);
+    k                 = caput_facere(p, cum_titulo, textus, III);
+    x                 = lector_paginare(k, CCXL, XCVI, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), II);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "Titulus", p));
+    CREDO_AEQUALIS_I32(numerus_linearum(x, I), IV);
+
+    CREDO_GRADUS("tituli duo in imo: ambo transeunt (non secundus "
+        "solus)");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', II);
+    textus[I]         = "Pars";
+    textus[II]        = "Caput";
+    textus[III]       = paragraphus_linearum(p, 'b', V);
+    k                 = caput_facere(p, cum_titulis, textus, IV);
+    x                 = lector_paginare(k, CCXL, XCVI, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), II);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "Pars", p));
+    CREDO_VERUM(incipit(k, x, I, I, "Caput", p));
+    CREDO_VERUM(incipit(k, x, I, II, "b0", p));
+
+    CREDO_GRADUS("titulus duarum linearum non finditur");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', IV);
+    textus[I]         = "Caput I\nDe Cranfordia";
+    k                 = caput_facere(p, ad_titulum, textus, II);
+    x                 = lector_paginare(k, CCXL, XCVI, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), IV);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "Caput I", p));
+    CREDO_VERUM(incipit(k, x, I, I, "De Cranfordia", p));
+
+    CREDO_GRADUS("grex nusquam capit (XLVIII px): titulus saltem "
+        "integer in paginam novam");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', I);
+    textus[I]         = "Caput I\nDe Cranfordia";
+    textus[II]        = paragraphus_linearum(p, 'b', IV);
+    k                 = caput_facere(p, cum_titulo, textus, III);
+    x                 = lector_paginare(k, CCXL, XLVIII, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), I);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "Caput I", p));
+    CREDO_VERUM(incipit(k, x, I, I, "De Cranfordia", p));
+
+    CREDO_GRADUS("versus: eaedem leges (VI in LXXII px: IV + II)");
+    textus[ZEPHYRUM]  = "v0\nv1\nv2\nv3\nv4\nv5";
+    k                 = caput_facere(p, vv, textus, I);
+    x                 = lector_paginare(k, CCXL, LXXII, p);
+    CREDO_AEQUALIS_I32(numerus_linearum(x, ZEPHYRUM), IV);
+    CREDO_VERUM(incipit(k, x, I, ZEPHYRUM, "v4", p));
+
+    CREDO_GRADUS("textus totus ordine in omnibus");
+    textus[ZEPHYRUM]  = paragraphus_linearum(p, 'a', XI);
+    k                 = caput_facere(p, p1, textus, I);
+    x                 = lector_paginare(k, CCXL, LXXII, p);
+    CREDO_VERUM(lineae_tegunt(k, x, CCXL, textus[ZEPHYRUM], p));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "paginae", _sectio_paginae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sententia", _sectio_sententia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fractiones", _sectio_fractiones, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ligaturae_tupli: tripla octavarum (3:2), ligatura trans lineam (tie), tied sine tie (non ligat); P2 septupla (7:4) -> divisio operis 21 -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Superius</part-name></score-part>
+    <score-part id="P2"><part-name>Bassus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>3</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>1</duration>
+        <time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification></note>
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>1</duration>
+        <time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification></note>
+      <note><pitch><step>F</step><octave>5</octave></pitch><duration>1</duration>
+        <time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification></note>
+      <note><pitch><step>G</step><octave>5</octave></pitch><duration>3</duration><tie type="start"/>
+        <notations><tied type="start"/></notations></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>G</step><octave>5</octave></pitch><duration>3</duration><tie type="stop"/>
+        <notations><tied type="stop"/></notations></note>
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>3</duration>
+        <notations><tied type="start"/></notations></note>
+    </measure>
+    <measure number="3">
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>6</duration>
+        <notations><tied type="stop"/></notations></note>
+    </measure>
+  </part>
+  <part id="P2">
+    <measure number="1">
+      <attributes><divisions>7</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>3</octave></pitch><duration>1</duration><time-modification><actual-notes>7</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>D</step><octave>3</octave></pitch><duration>1</duration><time-modification><actual-notes>7</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>E</step><octave>3</octave></pitch><duration>1</duration><time-modification><actual-notes>7</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>F</step><octave>3</octave></pitch><duration>1</duration><time-modification><actual-notes>7</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>G</step><octave>3</octave></pitch><duration>1</duration><time-modification><actual-notes>7</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>A</step><octave>3</octave></pitch><duration>1</duration><time-modification><actual-notes>7</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>B</step><octave>3</octave></pitch><duration>1</duration><time-modification><actual-notes>7</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><rest/><duration>7</duration></note>
+    </measure>
+    <measure number="2"><note><rest/><duration>14</duration></note></measure>
+    <measure number="3"><note><rest/><duration>14</duration></note></measure>
+  </part>
+</score-partwise>

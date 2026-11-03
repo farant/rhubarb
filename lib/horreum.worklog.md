@@ -244,3 +244,14 @@ was found without it. Two improvements followed:
   conditional create now sets `periculum_accipere` (the suite showed a
   1.7 GiB arena spike in `iam_nostrum` before the fix: the test ran on
   with an unbuilt opus - a reminder to CREDO_NECESSE the builder).
+
+## 2026-10-30 — on xml_documentum.h (xml_arbor P15)
+
+`_radix`/`_textus`/`_filii` now walk the cooked view of the new strict
+XML 1.0 parser (lib/xml.c is gone). Tests 5/5. One edge to know: S3
+answers a listing whose key holds a C0 control character with a
+reference like `&#x1;`, which XML 1.0 forbids — the strict parser
+refuses the whole response ("horreum: XML malum") where the old one let
+the raw text through. horreum's own keys never contain controls; if a
+foreign bucket ever does, the fix is `encoding-type=url` on
+ListObjectsV2 plus percent-decoding Key/Prefix, not leniency in XML.

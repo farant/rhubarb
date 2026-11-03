@@ -52,3 +52,40 @@ locale (checked by hand with `env -i`). The live test now unsets LANG,
 LC_ALL and LC_CTYPE in parare so a plain shell run reproduces the gate;
 plant "no -u" red. Debugging note: zsh does not word-split "$E" in
 `$E cmd` - use ${=E}.
+
+## 2026-10-27 - comites P7.3: multiplexor_panellos_incipere
+
+`list-panes -a` started without waiting, the twin of
+multiplexor_clientes_incipere (quies T2): the vicus terminalia system
+will start it next to list-clients so the companion key can be read
+from a cache instead of a blocking tmux call in the pulse (comites P7,
+desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4). Test with a fake tmux that
+prints its own arguments and the panelli.txt fixture. A given but
+absent `binarium` is not checked (same as the clients twin): the
+process starts and fails; NIHIL only when tmux must be searched for
+and is not found. Plant: list-clients instead of list-panes -> red.
+
+## 2026-10-27 — `multiplexor_configurationem_legere` + test servers no longer read ~/.tmux.conf
+
+`multiplexor_configurationem_legere` = `tmux source-file <via>` (comites
+P8: praeco's hook file goes live without restarting tmux). Live test
+`hami_praeconis`: hook file from praeconium_tmux_configuratio with a
+fake praeco script, sourced into the private server; select-window
+-> line naming the window's active pane, select-pane -> line naming
+the new pane. Plants: each hook dropped -> its own step red.
+
+Found on the way: the private test servers (here, comites_terminale,
+saltus) were started without `-f`, so tmux read Fran's ~/.tmux.conf.
+Two consequences: once praeco's hooks are installed, every test
+server would have written `tmux` events into the REAL event log; and
+the tests silently depended on Fran's `base-index 1` /
+`pane-base-index 1` (`alpha:2`, pane index 2) - with `-f /dev/null`
+the harness failed to start. All three harnesses now pass
+`-f probationes/fixa/multiplexor/servitor.conf` (just those two
+settings).
+
+## 2026-10-27 — `multiplexor_fenestram_eligere` (comites P9)
+
+`select-window -t =<sessio>:<index>` - exact session (a prefix does
+not match), missing window or session -> FALSUM. Section
+fenestram_eligere on the private server.

@@ -5097,3 +5097,58 @@ turned implementation into transcription; the 80/73 pins then
 verified the arithmetic. asperitates = zsh '===' equals-expansion
 bit AGAIN (known law) — res 01KYRCJ340 born so the ictus has a home.
 desiderata = nulla nova.
+
+## OFFICINA BIBLIOTHECAE: RELATIO (2026-11-02)
+
+Spec project-specs/officina-bibliothecae-spec.md, plan -plan.md (IV
+opera), secunda. `#include` is now the interpreter's library
+declaration: the closure comes from aedilis (the house build truth),
+never a hand list.
+
+- T1 (7174cda5): colloquium.sh linked again (nexus_ordines missing
+  since 8bbf97f7 - no gate ran the launcher) + probatio_officina_
+  lanceatores, the first gate that RUNS a launcher.
+- T2 (280e4f78): officina/instrumenta/bibliothecae.{h,c}. Text with
+  #include lines -> radix-relative .c paths via a throwaway scope
+  file (a header scope does not contain its own implementation);
+  derived twice (posix = what loads; default preference = mac-only
+  detection, ORIGO DERIVATUM rule after fenestra.h's corpus
+  annotation fooled the first cut). Loud refusals: .m-only header,
+  unknown header, vendor, absent object, > 4 MB (silva amalgam).
+  bibliothecae_sedem_quaerere streams the 193 MB nexus.tsv.
+- T3 (c5388bf2): sessio directive turns resolve + demit each path
+  once (oneratae; -plagulae now only an addition). Mid-session load
+  links fine (AUDIENDA 1). D2 + the launcher gate dropped their
+  five-file lists.
+- T4: interpretare without -plagulae finds the function's home in
+  the index and loads exactly its closure: fasti_est_bissextilis
+  2024 -> 1 in 0.4 s (4 modules) where the whole-lib path took ~30 s;
+  piscina_generare_dynamicum -> 1 module. Ambiguous / mac-only ->
+  exit 2 naming why. The shell -derivare experiment is gone.
+
+FOUND: the whole-lib fallback (function not in the index) has been
+broken for a while - "modulus non additus" with no name; now it says
+lib/fenestra_tempus_posix.c (fenestra_dormire): both tempus variants
+load and collide. Parked in the ledger; per-header variant choice is
+exactly what the resolver does, so the fallback could reuse it.
+
+BARS: officina 17/17 after each task; plants 6 (T2) + 3 (T3) + 1
+(T4), all red, all IDEM; examen ACCIPE, formator CONFORMIS / at
+baseline, vocabula NOVA 0 throughout.
+
+Instrumenta (debrief): adhibita = silva.planta (10 plants + reruns
+to read which sections broke), examen/formator/vocabula per file,
+fontes_generare.sh (x2, generated link lists), aedilis via its C API
+(the resolver itself), build/nexus.tsv, processus_exsequi_cum for
+launcher gates; Read/grep for orientation (should have reached for
+legati more). fructus = plants found two mute gates in T2 (per-
+resolver scope counter reused names; the origo rule) and proved the
+-plagulae seeding in T3 (the "oneratae ignored" plant broke B7 too);
+the planta acta file names the broken sections - worth reading every
+time, not just the verdict. asperitates = silva.Editio cannot edit
+.sh (shell lexing; fell back to Read+Edit); planta overwrites one
+acta file, so per-plant section lists need a rerun; examen REICEs a
+scratch copy of a tracked file (path-scoped tolerations) - compare
+baselines in place, not in scratch. desiderata = a test-visible
+count of sessio's library modules ("caput solum" can only assert
+acceptance, not that nothing loaded).

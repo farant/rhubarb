@@ -248,3 +248,13 @@ in an outer voice, rising chordal seventh (part 2 - needs the per-chord leading 
   even when the next note is already in the next chord. Open design question for Fran:
   restrict "transiens sursum" to motion within the same chord (C D E over E7, the documented
   example).
+
+## 2026-10-27 - augmented sixths: clavis and dissonantia
+
+lamentatio (a minor, It/Fr/Ger+6 undeclared) had 6 findings, all false: D# out of key x3 and
+"F7: septima D# non resoluta" x3. Now: clavis licenses the CHORD TONES of a window holding a
+sexta aucta segment (D# in minor; Ab Eb F# in major - per window, so the aug6's other
+chromatic tones are covered; a non-chord C#5 in the same window is still named); dissonantia
+explains a resolved sexta aucta like a resolved 7th, cause "sexta aucta non resoluta"
+otherwise; the septima rule judges SEPTIMA only, so it no longer sees the D#. lamentatio: 0.
+Whole book: censura byte-identical.

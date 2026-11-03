@@ -112,11 +112,11 @@ nomen structura {
     constans character* erratum;      /* si !successus: causa */
 } SilexNovumFructus;
 
-/* RADICES CLIENTIUM materiae ('materia/fontes/', 'toml/fontes/'; NIHIL
- * terminat): caput et implementatio in eodem directorio. Caput in
- * include/ primum, deinde hic ordine quaeritur. Idem index ac
- * RADICES_CLIENTIUM in tools/corpus_infixum.sh (probatio_silex
- * conferre cogit). */
+/* RADICES CLIENTIUM materiae ('materia/fontes/', 'toml/fontes/',
+ * 'xml/fontes/'; NIHIL terminat): caput et implementatio in eodem
+ * directorio. Caput in include/ primum, deinde hic ordine quaeritur.
+ * Idem index ac RADICES_CLIENTIUM in tools/corpus_infixum.sh
+ * (probatio_silex conferre cogit). */
 externus constans character* constans SILEX_RADICES_CLIENTIUM[];
 
 /* caput vendicatum ('include/x.h' aut radix clientis + 'x.h') -> nomen

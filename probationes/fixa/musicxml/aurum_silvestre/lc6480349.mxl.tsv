@@ -1,0 +1,114 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 10.5.2 congruit (2026-10-31, tools/musicxml_oraculum.py)
+P1	93/4	1/2	68	A	-1	0	1:single:O
+P1	24	3/2	73	D	-1	0	1:single:Sun,
+P1	51/2	1/2	65	F	0	0	1:single:that
+P1	26	1/2	67	G	0	0	1:begin:wak’n
+P1	53/2	1/2	70	B	-1	0	1:end:est
+P1	27	1/2	72	C	0	0	1:single:all
+P1	55/2	1/2	70	B	-1	0	1:single:to
+P1	30	3/2	70	B	-1	0	1:single:bliss
+P1	63/2	1/2	68	A	-1	0	1:single:or
+P1	32	1	68	A	-1	0	1:single:pain,
+P1	135/4	1/2	65	F	0	0	1:single:O
+P1	36	3/2	70	B	-1	0	1:single:moon,
+P1	75/2	1/2	65	F	0	0	1:single:that
+P1	38	1/2	66	G	-1	0	1:begin:lay
+P1	77/2	1/2	70	B	-1	0	1:end:est
+P1	39	1/2	72	C	0	0	1:single:all
+P1	79/2	1/2	70	B	-1	0	1:single:to
+P1	42	3/2	75	E	-1	0	1:single:sleep
+P1	87/2	1/2	68	A	-1	0	1:begin:a
+P1	44	2	68	A	-1	0	1:end:gain,
+P1	48	1	68	A	-1	0	1:single:Shine
+P1	49	1/2	70	B	-1	0	-
+P1	99/2	1/2	71	C	-1	0	-
+P1	50	1	75	E	-1	0	1:begin:sweet
+P1	51	1	73	D	-1	0	1:end:ly,
+P1	114	1	68	A	-1	0	1:single:Sing
+P1	115	1/2	70	B	-1	0	-
+P1	231/2	1/2	71	C	-1	0	-
+P1	116	1	75	E	-1	0	1:begin:sweet
+P1	117	1	73	D	-1	0	1:end:ly,
+P1	120	1	70	B	-1	0	1:single:sing
+P1	121	1/2	72	C	0	0	-
+P1	243/2	1/2	73	D	-1	0	-
+P1	122	1	77	F	0	0	1:begin:sweet
+P1	123	1	75	E	-1	0	1:end:ly:
+P1	186	1	72	C	0	0	1:single:flow’rs
+P1	187	2	75	E	-1	0	-
+P1	189	1	70	B	-1	0	1:single:that
+P1	192	1	72	C	0	0	1:begin:o
+P1	193	1	68	A	-1	0	1:end:pen
+P1	194	1	65	F	0	0	1:single:to
+P1	195	1/2	67	G	0	0	1:single:the
+P1	391/2	1/2	68	A	-1	0	-
+P1	198	3	70	B	-1	0	1:single:sun,
+P1	258	2	68	A	-1	0	1:single:me.
+P1	549/2	1	73	C	1	0	1:single:O
+P1	276	3/2	74	D	0	0	1:begin:tre
+P1	555/2	1/2	66	F	1	0	1:end:foil,
+P1	278	1/2	68	G	1	0	1:begin:spark
+P1	557/2	1/2	71	B	0	0	1:end:ling
+P1	279	1/2	73	C	1	0	1:single:on
+P1	559/2	1/2	71	B	0	0	1:single:the
+P1	336	4	65	F	0	0	1:single:me,
+P1	342	1	73	D	-1	0	1:single:thrice
+P1	343	2	77	F	0	0	-
+P2	0	6	37	D	-1	0	-
+P2	1/2	1/2	61	D	-1	0	-
+P2	1/2	1/2	65	F	0	0	-
+P2	1	1/2	56	A	-1	0	-
+P2	1	1/2	56	A	-1	0	-
+P2	3/2	1	55	G	0	0	-
+P2	2	1/2	61	D	-1	0	-
+P2	2	1/2	65	F	0	0	-
+P2	5/2	1/2	56	A	-1	0	-
+P2	5/2	1/2	56	A	-1	0	-
+P2	3	1	58	B	-1	0	-
+P2	7/2	1/2	61	D	-1	0	-
+P2	7/2	1/2	65	F	0	0	-
+P2	4	1/2	60	C	0	0	-
+P2	4	1/2	60	C	0	0	-
+P2	9/2	1	61	D	-1	0	-
+P2	5	1/2	65	F	0	0	-
+P2	5	1/2	68	A	-1	0	-
+P2	11/2	1/2	63	E	-1	0	-
+P2	11/2	1/2	63	E	-1	0	-
+P2	6	1	66	G	-1	0	-
+P2	13/2	1/2	68	A	-1	0	-
+P2	13/2	1/2	73	D	-1	0	-
+P2	7	1/2	65	F	0	0	-
+P2	7	1/2	65	F	0	0	-
+P2	15/2	1	66	G	-1	0	-
+P2	8	1/2	68	A	-1	0	-
+P2	8	1/2	73	D	-1	0	-
+P2	17/2	1/2	65	F	0	0	-
+P2	17/2	1/2	65	F	0	0	-
+P2	9	1	70	B	-1	0	-
+P2	19/2	1/2	73	D	-1	0	-
+P2	19/2	1/2	77	F	0	0	-
+P2	10	1/2	68	A	-1	0	-
+P2	10	1/2	68	A	-1	0	-
+P2	21/2	1	70	B	-1	0	-
+P2	11	1/2	73	D	-1	0	-
+P2	11	1/2	77	F	0	0	-
+P2	23/2	1/2	68	A	-1	0	-
+P2	23/2	1/2	68	A	-1	0	-
+!	monitum	13	117:5
+!	monitum	13	152:5
+!	monitum	13	243:5
+!	monitum	13	311:5
+!	monitum	13	402:5
+!	monitum	13	450:5
+!	monitum	13	599:5
+!	monitum	13	678:5
+!	monitum	13	830:5
+!	monitum	13	879:5
+!	monitum	13	958:5
+!	monitum	13	1045:5
+!	monitum	13	1075:5
+!	monitum	13	1113:5
+!	monitum	13	1271:5
+!	monitum	13	1286:5

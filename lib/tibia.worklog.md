@@ -169,3 +169,52 @@ before writing one.
 Instruments built on this (instrumentarium.stml): chordae (serra x5, +/-7 cents, mora
 0.35), harpa, tenor, superius, cornu, clarinetum - first guesses, to tune by ear. Demos
 build/rampa/theatrum.wav and valse_theatri.wav (sexta, not committed).
+
+## 2026-10-27 - formant table per voice (TibiaParametra.vox): tenor, bassus, altus, superius
+
+Every FORMANTES voice used the Csound tenor table, so superius sang as a falsetto tenor and a
+bass would have been a transposed tenor. Now four tables (Csound "Formant Values": bass,
+tenor, alto, soprano - values entered from memory of that appendix; first formant of 'a': bass
+600, tenor 650, alto/soprano 800) selected by `vox` (0 tenor = default, 1 bassus, 2 altus, 3
+superius; clamped 0..3 for API callers). Presets got one more trailing 0.0f
+(-Wmissing-field-initializers). TIBIA_FORMANTIUM_LUCRUM unchanged: every voice stays under the
+existing apex bound (< 1.2 x amplitudo) and above 0.05 x amplitudo efficax across its own range
+(bassus 40..64, altus 53..77, superius 60..84) - measured in probatio_tibia _sectio_voces. Old
+renders byte-identical (completorium schola/ison, lilia, vesperae, laudes vs ~/.bin/auditio).
+House voices: instrumentarium altus + bassus (appended - indices kept), superius vox="superius"
+(no house song used it), tenor vox="tenor" explicit. laudes as a choir (S 0.5, A 0.55, T 0.6, B
+0.7) balances within 1.7 dB rms, apex 0.98.
+
+## 2026-10-28 — AEQUATIO: per-note loudness evening for FORMANTES
+
+Found via sung text (carmen <verba!>): on A4 the schola vowels spanned 12.6 dB (a 68.3, e 78.3,
+i 65.7, o 74.8, u 68.8). A python model of the exact filter response (sawtooth harmonics 2/(pi k)
+through the five RBJ band-passes, complex sum, up to Nyquist) predicted that to 0.1 dB, and showed
+the real problem is wider: every formant voice swings about ±11 dB note to note over C3..D5,
+vowel fixed or not. Bandwidths are 40-80 Hz while harmonics are 130-590 Hz apart, so loudness is a
+lottery of whether a harmonic lands on a formant.
+
+Fix: at voice start, `_aequationem_computare` evaluates H(e^jw) from the voice's own f32
+coefficients (b0 b1 b2 a1 a2, so it is exactly what runs), sums power over harmonics, and sets
+`aequatio = 0.29 / rms`, capped at ×4 over the old common gain (2.4 kept as the base). 0.29 is the
+old median, so songs keep their overall level. `tibia_notam_ponere` steers aequatio to the new
+pitch: linearly over the glide's quadra, or over 240 samples (5 ms) on a jump. Vibrato is not
+followed (nominal pitch).
+
+Results: A4 vowel spread 12.6 -> 0.0 dB. Choir songs' within-song loudness sd (0.25 s windows)
+~2.2 -> ~0.6 dB, overall 1.3-2.6 dB quieter (their resonant notes had been pushing them above
+median), lower peaks. Only the six formant songs changed (completorium, laudes/peregrinatio/
+lamentatio _chorus, primus, ave); the other 15 are byte-identical. True error vs target is <0.41 dB
+over C2..D5 (aliasing of the non-band-limited sawtooth), so the test tolerance is ±0.5 dB — ±1 dB
+let a 0.26 target and a 10-harmonic truncation survive as plants.
+
+Ramp bug caught by the test: accumulating `aequatio += passus` in f32 over 4800 samples drifted,
+making the final snap-to-target step 1.6× the others. Now `aequatio = meta - passus * reliqua`, no
+accumulation.
+
+Equivalent mutant (not testable, by construction): flipping the sign of the numerator's imaginary
+part. For the band-pass every formant has b1 = 0, b2 = -b0, so each numerator is b0 × the same
+N(w); conjugating it conjugates a factor common to all five, and |sum| is unchanged.
+
+Caveat: this evens RMS, not perceived loudness — at equal RMS, e/i (energy at 2-3 kHz) will read a
+little brighter than u. A perceptual weighting could come later if it bothers the ear.

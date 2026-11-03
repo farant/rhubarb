@@ -33,13 +33,15 @@ nomen structura {
     s32 septima;      /* classis septimae; -I nulla */
 } AcordumFenestrae;
 
-hic_manens constans character* TITULI[X] = {
-    "acordi", "septima", "transitus", "vicinus", "appoggiatura",
+hic_manens constans character* TITULI[XI] = {
+    "acordi", "septima", "sexta aucta", "transitus", "vicinus",
+        "appoggiatura",
     "suspensio", "retardatio", "anticipatio", "escapata", "ignota"
 };
 
-hic_manens constans character* ABBREVIATA[X] = {
-    "", "sept.", "tr.", "vic.", "app.", "susp.", "ret.", "ant.", "esc.",
+hic_manens constans character* ABBREVIATA[XI] = {
+    "", "sept.", "+6", "tr.", "vic.", "app.", "susp.", "ret.", "ant.",
+        "esc.",
     "?"
 };
 
@@ -220,6 +222,7 @@ _diatonica (
 {
     s32 q      = ZEPHYRUM;
     b32 minor  = FALSUM;
+    s32 modus  = ZEPHYRUM;
     s32 t;
     i32 i;
 
@@ -229,10 +232,12 @@ _diatonica (
         {
             q      = carmen->claves[i].quintae;
             minor  = carmen->claves[i].minor;
+            modus  = carmen->claves[i].modus;
         }
     }
     t         = _modulus(VII * q, XII);
-    *finalis  = minor ? _modulus(t + IX, XII) : t;
+    *finalis  = modus > ZEPHYRUM ? _modulus(t + SCALA[modus - I], XII)
+              : minor ? _modulus(t + IX, XII) : t;
     per (i = ZEPHYRUM; i < VII; i++)
     {
         si (_modulus(t + SCALA[i], XII) == classis)
@@ -435,6 +440,42 @@ _secunda_ascendens (
     }
     d = (fenestrae[g].harmonia.bassus + XII - h->bassus) % XII;
     redde d == I || d == II;
+}
+
+/* littera -> gradus litterarum (c 0 .. b 6); -1 nulla */
+interior s32
+_gradus_litterae (
+    character littera)
+{
+    constans character* ordo = "cdefgab";
+                   s32  i;
+
+    per (i = ZEPHYRUM; i < VII; i++)
+    {
+        si (ordo[i] == littera)
+        {
+            redde i;
+        }
+    }
+    redde -I;
+}
+
+/* septima formae dominantis (7, 7 sine quinta, 7#11 tenuis) littera
+ * SEXTAE scripta: F7 cum D# (F + V litterae), non Eb */
+interior b32
+_sexta_aucta (
+    constans Acordum* h,
+                 i32  classis)
+{
+    s32 r = _gradus_litterae(h->litterae[h->radix]);
+    s32 l = _gradus_litterae(h->litterae[classis]);
+
+    si (   h->genus != ACORDUM_SEPTIMA
+        && h->genus != ACORDUM_UNDECIMA_AUCTA)
+    {
+        redde FALSUM;
+    }
+    redde r >= ZEPHYRUM && l >= ZEPHYRUM && (r + V) % VII == l;
 }
 
 /* candidata: gradus aut altitudo eadem ab altero latere */
@@ -1169,15 +1210,24 @@ explicatio_carminis (
                   s64 t  = m_.proxima
                       ? locatae[locatae[l].proxima].initium : ZEPHYRUM;
 
-                /* gradu descendit; transiens sursum intra acordum
-                 * idem (C D E super E7); sursum in V43 -> I6 */
-                s->genus     = EXPLICATIO_SEPTIMA;
-                s->resoluta  = m_.proxima && _gradus(m_.d2)
-                    && (   m_.d2 < ZEPHYRUM
-                        || (   m_.prior && _gradus(m_.d1)
-                            && m_.d1 > ZEPHYRUM
-                            && _acordum_idem(fenestrae, nf, f, t))
-                        || _secunda_ascendens(fenestrae, nf, f, t));
+                /* sexta aucta (littera sextae): semitonio ascendit */
+                si (_sexta_aucta(&fenestrae[f].harmonia, c))
+                {
+                    s->genus     = EXPLICATIO_SEXTA_AUCTA;
+                    s->resoluta  = m_.proxima && m_.d2 == I;
+                }
+                alioquin
+                {
+                    /* gradu descendit; transiens sursum intra acordum
+                     * idem (C D E super E7); sursum in V43 -> I6 */
+                    s->genus     = EXPLICATIO_SEPTIMA;
+                    s->resoluta  = m_.proxima && _gradus(m_.d2)
+                        && (   m_.d2 < ZEPHYRUM
+                            || (   m_.prior && _gradus(m_.d1)
+                                && m_.d1 > ZEPHYRUM
+                                && _acordum_idem(fenestrae, nf, f, t))
+                            || _secunda_ascendens(fenestrae, nf, f, t));
+                }
             }
             alioquin
             {
@@ -1218,7 +1268,7 @@ constans character*
 explicatio_titulus (
     ExplicatioGenus genus)
 {
-    redde (i32)genus < X ? TITULI[genus] : "?";
+    redde (i32)genus < XI ? TITULI[genus] : "?";
 }
 
 b32
@@ -1269,12 +1319,15 @@ explicatio_lineam_scribere (
                                      b32  irresoluta;
 
             si (   s->fenestra != f || s->genus == EXPLICATIO_ACORDI
-                || (s->genus == EXPLICATIO_SEPTIMA && s->resoluta))
+                || (   (   s->genus == EXPLICATIO_SEPTIMA
+                        || s->genus == EXPLICATIO_SEXTA_AUCTA)
+                    && s->resoluta))
             {
                 perge;
             }
             irresoluta = !s->resoluta
                 && (   s->genus == EXPLICATIO_SEPTIMA
+                    || s->genus == EXPLICATIO_SEXTA_AUCTA
                     || s->genus == EXPLICATIO_SUSPENSIO
                     || s->genus == EXPLICATIO_RETARDATIO
                     || s->genus == EXPLICATIO_INNIXA);

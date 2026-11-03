@@ -14,6 +14,7 @@
 
 #include "sessio.h"
 #include "praeparator.h"
+#include "bibliothecae.h"
 
 #include "latina.h"
 #include "xar.h"
@@ -76,6 +77,14 @@ structura Sessio {
     /* mundus (chunk B): bibliothecae perennes + generatio currens */
     Piscina* piscina_bibliothecarum;  /* moduli demissi semel */
         Xar* moduli_bibliothecarum;   /* MedullaModulus* */
+    /* #include = declaratio (officina-bibliothecae T3): resolutor
+     * pigre creatus primo turno directivo; oneratae = viae iam
+     * demissae (plagulae + inclusa) - semel quaeque; radix NIHIL =
+     * sine bibliothecis */
+     constans character* radix;
+           Bibliothecae* bibliothecae;
+         TabulaDispersa* oneratae;
+
     Piscina* piscina_generationis;    /* mundus currens - per
                                               * turnum demolitur */
         Regio* regio;
@@ -1554,6 +1563,72 @@ _bibliothecam_demittere (
     redde VERUM;
 }
 
+/* turnus directivus: bibliothecae quas #include eius declarat
+ * (clausura per aedilem) demittuntur, quaeque semel. FALSUM =
+ * recusatio aut demissio fracta; diagnosticum causam nominat.
+ * Viae ante fracturam demissae manent (moduli perennes) et notatae
+ * - iteratio nihil bis onerat. */
+interior b32
+_bibliothecas_inclusas_onerare (
+       Sessio* s,
+       chorda  textus,
+    Collectio* collectio)
+{
+    chorda  causa;
+       Xar* viae;
+       i32  k;
+
+    si (s->radix == NIHIL)
+    {
+        redde VERUM;   /* sine radice: directiva ut antea */
+    }
+    causa.mensura  = ZEPHYRUM;
+    causa.datum    = NIHIL;
+    si (s->bibliothecae == NIHIL)
+    {
+        s->bibliothecae = bibliothecae_creare(s->piscina, s->radix,
+            &causa);
+    }
+    viae = s->bibliothecae == NIHIL ? NIHIL
+        : bibliothecae_ex_textu(s->bibliothecae, textus, s->piscina,
+            &causa);
+    si (viae == NIHIL)
+    {
+        _diagnosticum_addere(collectio, s->piscina,
+            chorda_ex_literis(SESSIO_VIA_DOCUMENTI, s->piscina),
+            ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, -I, FALSUM, FALSUM, -I,
+            causa.datum != NIHIL
+                ? chorda_ut_cstr(causa, s->piscina)
+                : "bibliothecae resolvi nequeunt");
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(viae, k);
+
+        si (tabula_dispersa_continet(s->oneratae, via))
+        {
+            perge;
+        }
+        si (!_bibliothecam_demittere(s, s->radix,
+                chorda_ut_cstr(via, s->piscina)))
+        {
+            character nuntius[1100];
+
+            sprintf(nuntius, "bibliotheca demitti nequit: %.*s",
+                (integer)(via.mensura < M ? via.mensura : M),
+                (constans character*)via.datum);
+            _diagnosticum_addere(collectio, s->piscina,
+                chorda_ex_literis(SESSIO_VIA_DOCUMENTI, s->piscina),
+                ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, -I, FALSUM, FALSUM, -I,
+                nuntius);
+            redde FALSUM;
+        }
+        tabula_dispersa_inserere(s->oneratae, via, NIHIL);
+    }
+    redde VERUM;
+}
+
 
 /* ==================================================
  * API: creare / destruere
@@ -1601,8 +1676,10 @@ sessio_creare (
         "sessio_bibliothecae", 67108864);
     s->moduli_bibliothecarum = xar_creare(piscina,
         (i32)magnitudo(vacuum*));
+    s->oneratae = tabula_dispersa_creare_chorda(piscina, LXIV);
     si (   s->piscina_bibliothecarum == NIHIL
-        || s->moduli_bibliothecarum  == NIHIL)
+        || s->moduli_bibliothecarum  == NIHIL
+        || s->oneratae               == NIHIL)
     {
         redde NIHIL;
     }
@@ -1612,7 +1689,10 @@ sessio_creare (
             | MACHINULA_RECUSARE_TEMPUS | MACHINULA_RECUSARE_INITUM);
     si (cfg->radix != NIHIL)
     {
-        /* bibliothecae: demissae semel, moduli perennes */
+        s->radix = chorda_ut_cstr(chorda_ex_literis(cfg->radix,
+            piscina), piscina);
+        /* bibliothecae: demissae semel, moduli perennes; notatae ne
+         * #include idem iterum demittat */
         {
             s32 k;
 
@@ -1623,6 +1703,9 @@ sessio_creare (
                 {
                     redde NIHIL;
                 }
+                tabula_dispersa_inserere(s->oneratae,
+                    chorda_ex_literis(cfg->plagulae[k], piscina),
+                    NIHIL);
             }
         }
     }
@@ -2650,6 +2733,12 @@ sessio_turnum_offerre (
         candidatus  = _normalizare(s->piscina, initus, FALSUM);
         si (candidatus.datum == NIHIL)
         {
+            salta finis;
+        }
+        si (!_bibliothecas_inclusas_onerare(s, candidatus,
+                &collectio))
+        {
+            r.verdictum = SESSIO_REIECTUM;
             salta finis;
         }
     }

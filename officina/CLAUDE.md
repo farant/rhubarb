@@ -44,7 +44,7 @@ Do these IN ORDER before writing code:
    `./silva/nexus.sh machinula_currere` (who calls it, where) ·
    `./silva/emitte.sh officina/fontes/officina_machinula.c machinula_currere` ·
    `./silva/origo.sh lib/piscina.c 239:5` ('if' <- si) ·
-   `./officina/interpretare.sh -plagulae fasti fasti_est_bissextilis 2024` (→ 1).
+   `./officina/interpretare.sh fasti_est_bissextilis 2024` (→ 1).
    The symptom table (dolor → mandatum) is in MEMORY.md; censor runs
    itself (amalgamare gates + post-edit hook).
 
@@ -129,7 +129,10 @@ When narrowing scope: name the deferred use case and the path back.
 - ./officina/interpretare.sh [-plagulae a,b,c] [-textus] <functio>
   [args...] — run a corpus function in machinula (the
   quick-hypothesis loop; scalars + string literals; aggregates
-  refused by name). Silva-side read bench (censor/emitte/origo/
+  refused by name). No -plagulae = the function's home from
+  build/nexus.tsv + its aedilis closure (sub-second); ambiguous or
+  mac-only -> exit 2 naming why; not in the index -> whole lib/
+  (broken: both fenestra_tempus variants collide). Silva-side read bench (censor/emitte/origo/
   nexus): see silva/CLAUDE.md + the symptom table in MEMORY.md.
 - ./officina/vindex.sh <suita.c> [-plagulae a,b,c]
   [-imago via:linea | -imago functio] — THE DEBUGGER (M3): TUI

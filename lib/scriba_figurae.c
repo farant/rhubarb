@@ -3,6 +3,8 @@
 #include "scriba_figurae.h"
 #include "thema.h"
 #include "exemplaria.h"
+#include "chronica_eventus.h"
+#include "chronica_nomina.h"
 
 #include <string.h>
 
@@ -100,6 +102,193 @@ nexus_colorare (
         mandata_textus(m, i.initium * cw, l * ch, signum, ZEPHYRUM,
             figura_color_thematis(COLOR_ACCENT_SECONDARY));
         a = i.finis;
+    }
+}
+
+
+/* chronica C6: segmentum [(la, ca), (lb, cb)) colore dato, per
+ * lineas; lineae selectae [sel_a, sel_b] non */
+interior vacuum
+segmentum_colorare (
+                        Mandata* m,
+     constans TabulaCharacterum* t,
+                            s32  la,
+                            s32  ca,
+                            s32  lb,
+                            s32  cb,
+                            s32  sel_a,
+                            s32  sel_b,
+                            s32  cw,
+                            s32  ch,
+                     ColorThema  color)
+{
+    s32 l;
+
+    per (l = la; l <= lb && l < (s32)t->altitudo; l++)
+    {
+           s32 a = l == la ? ca : ZEPHYRUM;
+           s32 b = l == lb ? cb : (s32)t->latitudo;
+           s32 k;
+        chorda s;
+
+        si (l >= sel_a && l <= sel_b)
+        {
+            perge;
+        }
+        si (b > (s32)t->latitudo)
+        {
+            b = (s32)t->latitudo;
+        }
+        si (a >= b)
+        {
+            perge;
+        }
+        s.datum = (i8*)piscina_allocare(m->piscina,
+            (memoriae_index)(b - a));
+        s.mensura = (i32)(b - a);
+        per (k = a; k < b; k++)
+        {
+            s.datum[k - a] = (i8)visibilis(tabula_cellula(t, (i32)l,
+                (i32)k));
+        }
+        mandata_textus(m, a * cw, l * ch, s, ZEPHYRUM,
+            figura_color_thematis(color));
+    }
+}
+
+/* cellula (l, c) ut octetus crudus ('\0', tab, continuatio: spatium) */
+interior character
+cellula_cruda (
+    constans TabulaCharacterum* t,
+                           s32  l,
+                           s32  c)
+{
+    character x = tabula_cellula(t, (i32)l, (i32)c);
+
+    redde (x == '\0' || x == '\t' || x == TAB_CONTINUATIO) ? ' ' : x;
+}
+
+/* chronica C6: tags <event>, <person>, <place> folii totius - eventus
+ * bonus tags accentu, declaratio bona regio accentu, vitium errore */
+interior vacuum
+chronicam_colorare (
+                        Mandata* m,
+     constans TabulaCharacterum* t,
+                            s32  sel_a,
+                            s32  sel_b,
+                            s32  cw,
+                            s32  ch)
+{
+    Xar* lineae;
+    Xar* eventa;
+    Xar* declarationes;
+    Xar* vitia;
+    i32  i;
+    s32  l;
+
+    lineae         = xar_creare(m->piscina, (i32)magnitudo(chorda));
+    eventa         = xar_creare(m->piscina,
+        (i32)magnitudo(ChronicaEventus));
+    declarationes  = xar_creare(m->piscina,
+        (i32)magnitudo(ChronicaDeclaratio));
+    vitia          = xar_creare(m->piscina,
+        (i32)magnitudo(ChronicaVitium));
+    si (!lineae || !eventa || !declarationes || !vitia)
+    {
+        redde;
+    }
+    per (l = ZEPHYRUM; l < (s32)t->altitudo; l++)
+    {
+           s32 finis = (s32)t->latitudo;
+           s32 k;
+        chorda s;
+
+        dum (finis > ZEPHYRUM && cellula_cruda(t, l, finis - I) == ' ')
+        {
+            finis--;
+        }
+        s.datum    = (i8*)piscina_allocare(m->piscina,
+            (memoriae_index)finis + I);
+        s.mensura  = (i32)finis;
+        per (k = ZEPHYRUM; k < finis; k++)
+        {
+            s.datum[k] = (i8)cellula_cruda(t, l, k);
+        }
+        *(chorda*)xar_addere(lineae) = s;
+    }
+    (vacuum)chronica_eventa_legere(lineae, m->piscina, eventa, vitia);
+    (vacuum)chronica_nomina_legere(lineae, m->piscina, m->intern,
+        declarationes, vitia);
+    /* eventus bonus: '<event ...>' (ad '>' primum extra quotas) et
+     * clausura ('<' ultimum ante finem) */
+    per (i = ZEPHYRUM; i < xar_numerus(eventa); i++)
+    {
+        constans ChronicaEventus* e = (constans ChronicaEventus*)
+            xar_obtinere(eventa, i);
+        s32 la  = (s32)e->linea;
+        s32 ca  = (s32)e->columna;
+        s32 lb  = la;
+        s32 cb  = ca;
+        b32 q   = FALSUM;
+
+        dum (lb < (s32)t->altitudo)
+        {
+            constans chorda* s = (constans chorda*)xar_obtinere(lineae,
+                (i32)lb);
+
+            si (cb >= (s32)s->mensura)
+            {
+                lb++;
+                cb = ZEPHYRUM;
+                perge;
+            }
+            si (s->datum[cb] == '"')
+            {
+                q = !q;
+            }
+            alioquin si (s->datum[cb] == '>' && !q)
+            {
+                frange;
+            }
+            cb++;
+        }
+        segmentum_colorare(m, t, la, ca, lb, cb + I, sel_a, sel_b, cw,
+            ch, COLOR_ACCENT_SECONDARY);
+        la = (s32)e->linea_finis;
+        ca = (s32)e->columna_finis;
+        dum (ca > ZEPHYRUM)
+        {
+            constans chorda* s = (constans chorda*)xar_obtinere(lineae,
+                (i32)la);
+
+            ca--;
+            si (ca < (s32)s->mensura && s->datum[ca] == '<')
+            {
+                frange;
+            }
+        }
+        segmentum_colorare(m, t, la, ca, (s32)e->linea_finis,
+            (s32)e->columna_finis, sel_a, sel_b, cw, ch,
+            COLOR_ACCENT_SECONDARY);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(declarationes); i++)
+    {
+        constans ChronicaDeclaratio* d = (constans ChronicaDeclaratio*)
+            xar_obtinere(declarationes, i);
+
+        segmentum_colorare(m, t, (s32)d->regio_linea,
+            (s32)d->regio_columna, (s32)d->regio_linea_finis,
+            (s32)d->regio_columna_finis, sel_a, sel_b, cw, ch,
+            COLOR_ACCENT_SECONDARY);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(vitia); i++)
+    {
+        constans ChronicaVitium* v = (constans ChronicaVitium*)
+            xar_obtinere(vitia, i);
+
+        segmentum_colorare(m, t, (s32)v->linea, (s32)v->columna,
+            (s32)v->linea_finis, (s32)v->columna_finis, sel_a, sel_b,
+            cw, ch, COLOR_ERROR);
     }
 }
 
@@ -244,6 +433,12 @@ scriba_figura_folii (
         {
             nexus_colorare(m, t, l, linea, cw, ch);
         }
+    }
+
+    /* chronica C6: tags eventuum et nominum (solum cum libro) */
+    si (sf->sa->liber)
+    {
+        chronicam_colorare(m, t, sel_a, sel_b, cw, ch);
     }
 
     /* character sub cursore colore chartae */

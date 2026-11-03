@@ -571,6 +571,24 @@ try:
     credo(silva.sigillum_arboris(radix=rep_s) != s_nova,
           'sigillum: plagula nova secuta = status secutorum mutatus'
           ' (portae git ls-files legunt)')
+    # VIA MUNDA (budget B2 J4): status vacuus -> HEAD^{tree}; idem
+    # sigillum ac via plena - munda, nova non ignorata, mutatio in
+    # indice sola (index != HEAD, opus == index)
+    def _ambae():
+        return (silva._sigillum_contenti(rep_s).hexdigest(),
+                silva._sigillum_contenti(rep_s, celeriter=False).hexdigest())
+    m_cel, m_plena = _ambae()
+    credo(m_cel == m_plena, 'sigillum: via munda = via plena (arbor munda)')
+    open(os.path.join(rep_s, 'c.txt'), 'w').write('incognita\n')
+    n_cel, n_plena = _ambae()
+    credo(n_cel == n_plena and n_cel != m_cel,
+          'sigillum: plagula nova non ignorata - via munda non sumitur')
+    os.unlink(os.path.join(rep_s, 'c.txt'))
+    open(os.path.join(rep_s, 'a.txt'), 'w').write('quattuor\n')
+    _g('add', 'a.txt')
+    i_cel, i_plena = _ambae()
+    credo(i_cel == i_plena and i_cel != m_cel,
+          'sigillum: mutatio in indice sola - via munda non sumitur')
 finally:
     shutil.rmtree(rep_s, ignore_errors=True)
 
@@ -1166,11 +1184,17 @@ credo(pv.sana and not pv.rancida and pv.receptum == via_rv and os.path.exists(vi
 rv = silva.receptum_vivum('formator-intra')
 credo(rv is not None and rv.sana and 'receptum vivum' in rv.compendium and rv.receptum == via_rv,
       'receptum_vivum: sanum, sigillum idem (%s)' % (rv.compendium if rv else None))
+credo(any(v == via_rv and p.sana for v, p in silva.recepta_viva()),
+      'recepta_viva: sanum ante mutationem')
 open(novum, 'w').write('x')
 try:
     rv2 = silva.receptum_vivum('formator-intra')
     credo(rv2 is not None and not rv2.sana and 'POST cursum' in rv2.compendium,
           'receptum_vivum: arbor mutata post cursum = rancidum')
+    # SIGILLA PER LECTIONEM (budget B2 J4): lectio nova sigillat iterum
+    credo(not any(v == via_rv and p.sana for v, p in silva.recepta_viva()),
+          'recepta_viva: arbor mutata = rancidum (sigilla per lectionem,'
+          ' non trans lectiones)')
 finally:
     os.unlink(novum)
 credo(silva.receptum_vivum('formator-intra').sana, 'receptum_vivum: arbor restituta = sanum iterum (sigillum contentus, non temporis)')

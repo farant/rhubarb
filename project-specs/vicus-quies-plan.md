@@ -384,12 +384,19 @@ sound -> 16 while playing; $question http -> reactor (T4).
 
 ### Task 7: measure after, look, docs, commit
 
-- [ ] Same idle measurement as Task 1; table before/after in the
+- [x] Same idle measurement as Task 1; table before/after in the
   worklog. Fran: use vicus normally for a while (typing, terminal,
   lector, `$question`), report anything that feels slower; Activity
   Monitor's Energy tab.
-- [ ] Worklogs (ludus_fenestra, reactor, vicus), memory, ledger; lint;
+- [x] Worklogs (ludus_fenestra, reactor, vicus), memory, ledger; lint;
   commit on Fran's word.
+- Done 2026-10-27: 6e table (lib/vicus.worklog.md) + re-measure on
+  main fa6927d9 after the merge (idle 1 pulse/15 s, 0.0%; ~2.8% average
+  while sessions were active - chimes). Docs: ledger descriptions of
+  reactor, fenestra, ludus_fenestra, dispensator, pseudoterminale,
+  aemulator_hospes, vicus, vicus_applicatio extended; specula added
+  (group fundamenta); pages regenerated. Found: comites' tmux lookup
+  runs synchronously in the pulse (desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4).
 
 ## Open Questions (answered 2026-10-26)
 

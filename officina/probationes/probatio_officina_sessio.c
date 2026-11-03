@@ -848,12 +848,8 @@ _scriptum_probare (
                                Sessio* s;
                         SessioRelatum  r;
                    SessioConfiguratio  cfg_scripti;
-        /* filum + dependentiae: scriptum per canalem lectionum
-         * scribit/legit (examen 96 fopen crudum recusat) */
-                   constans character* plagulae_scripti[] = {
-            "lib/piscina.c", "lib/chorda.c", "lib/chorda_aedificator.c",
-            "lib/lectiones.c", "lib/filum.c"
-        };
+        /* bibliothecae ex #include scripti ipsius (filum.h ->
+         * filum.c + lectiones.c + ...) - nulla index manu */
         chorda scriptum;
            s32 recepti;
            s64 codex = -I;
@@ -862,8 +858,7 @@ _scriptum_probare (
         cfg_scripti.sine_capitibus = FALSUM;
         cfg_scripti.cum_posix = VERUM;
         cfg_scripti.sine_recusationibus = VERUM;
-        cfg_scripti.plagulae = plagulae_scripti;
-        cfg_scripti.plagulae_numerus = V;
+        cfg_scripti.plagulae_numerus = ZEPHYRUM;
         s = sessio_creare(piscina, &cfg_scripti);
         CREDO_NON_NIHIL(s);
 
@@ -1071,6 +1066,157 @@ _capita_probare (
     }
 }
 
+
+/* ==================================================
+ * PROBARE T3: #include = declaratio bibliothecarum
+ * (officina-bibliothecae) - nullae plagulae manu
+ * ================================================== */
+
+interior Sessio*
+_sessionem_inclusionum (
+    Piscina* piscina)
+{
+    SessioConfiguratio cfg;
+
+    _configurationem_parare(&cfg);
+    cfg.sine_capitibus    = FALSUM;
+    cfg.cum_posix         = VERUM;   /* piscina.c = mmap */
+    cfg.plagulae_numerus  = ZEPHYRUM;
+    redde sessio_creare(piscina, &cfg);
+}
+
+/* chorda.h inclusum, deinde piscina + chorda vere vocatae */
+interior vacuum
+_chordam_vocare (
+    CredoContextus* c,
+            Sessio* s)
+{
+          Piscina* piscina = c->piscina;
+    SessioRelatum  r;
+
+    r = sessio_turnum_offerre(s, _ch("#include \"chorda.h\"",
+        piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch(
+        "Piscina* p = piscina_generare_dynamicum(\"t\", 4096);",
+        piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch(
+        "chorda c = chorda_ex_literis(\"ave\", p);", piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch(
+        "printf(\"%.*s\", (int)c.mensura, "
+        "(constans character*)c.datum);", piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    CREDO_VERUM(chorda_aequalis_literis(r.effusio, "ave"));
+    r = sessio_turnum_offerre(s, _ch("c.mensura;", piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    CREDO_VERUM(r.valor_validus);
+    CREDO_VERUM(r.valor == (s64)III);
+}
+
+interior vacuum
+_inclusum_initio_probare (
+    CredoContextus* c)
+{
+    Sessio* s = _sessionem_inclusionum(c->piscina);
+
+    CREDO_NON_NIHIL(s);
+    _chordam_vocare(c, s);
+    sessio_destruere(s);
+}
+
+/* bibliotheca media in sessione: generatio sequens eam nectit */
+interior vacuum
+_inclusum_medio_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina  = c->piscina;
+           Sessio* s        = _sessionem_inclusionum(piscina);
+    SessioRelatum  r;
+
+    CREDO_NON_NIHIL(s);
+    r = sessio_turnum_offerre(s, _ch("int x = 2;", piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch("x + 1;", piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    CREDO_VERUM(r.valor == (s64)III);
+    _chordam_vocare(c, s);
+    sessio_destruere(s);
+}
+
+/* caput solum macOS: recusatio clamosa, fons nominatus */
+interior vacuum
+_inclusum_fenestrae_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina  = c->piscina;
+           Sessio* s        = _sessionem_inclusionum(piscina);
+    SessioRelatum  r;
+              s32  k;
+              b32  nominatum = FALSUM;
+
+    CREDO_NON_NIHIL(s);
+    r = sessio_turnum_offerre(s, _ch("#include \"fenestra.h\"",
+        piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_REIECTUM);
+    per (k = ZEPHYRUM; k < r.diagnostica_numerus; k++)
+    {
+        si (_chorda_continet(r.diagnostica[k].nuntius,
+                "lib/fenestra_macos.m"))
+        {
+            nominatum = VERUM;
+        }
+    }
+    CREDO_VERUM(nominatum);
+    sessio_destruere(s);
+}
+
+/* chorda.h et filum.h clausuram communem habent (chorda.c,
+ * piscina.c): semel onerata - aliter nexus duplicata recusaret */
+interior vacuum
+_clausuras_communes_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina  = c->piscina;
+           Sessio* s        = _sessionem_inclusionum(piscina);
+    SessioRelatum  r;
+
+    CREDO_NON_NIHIL(s);
+    r = sessio_turnum_offerre(s, _ch("#include \"chorda.h\"",
+        piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch("#include \"filum.h\"",
+        piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch("filum_existit(\"/\");",
+        piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    CREDO_VERUM(r.valor_validus);
+    CREDO_VERUM(r.valor == (s64)I);
+    sessio_destruere(s);
+}
+
+/* caput sine implementatione: nihil onerandum, turnus acceptus */
+interior vacuum
+_caput_solum_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina  = c->piscina;
+           Sessio* s        = _sessionem_inclusionum(piscina);
+    SessioRelatum  r;
+
+    CREDO_NON_NIHIL(s);
+    r = sessio_turnum_offerre(s, _ch("#include \"latina.h\"",
+        piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch("integer y = 4;", piscina));
+    CREDO_AEQUALIS_I32((i32)r.verdictum, (i32)SESSIO_ACCEPTUM);
+    r = sessio_turnum_offerre(s, _ch("y;", piscina));
+    CREDO_VERUM(r.valor == (s64)IV);
+    sessio_destruere(s);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creatio + initus_completus", _initum_probare, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -1108,6 +1254,16 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "#include per praebenda", _capita_probare, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "#include initio", _inclusum_initio_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "#include medio", _inclusum_medio_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "#include fenestra", _inclusum_fenestrae_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "clausurae communes", _clausuras_communes_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "caput solum", _caput_solum_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

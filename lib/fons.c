@@ -51,6 +51,17 @@ fons_codepoint_ad_glypham (
         redde 0x20;
     }
 
+    /* spatia typographica (en quad .. capillare, angustum non
+     * frangens, mathematicum, ideographicum) -> spatium ordinarium.
+     * Latitudine nulla (U+200B-200F, U+2060, U+FEFF) NON hic: cellula
+     * semper latitudinem habet - adaptatores ea tollunt */
+    si (   (codepoint >= 0x2000 && codepoint <= 0x200A)
+        || codepoint == 0x202F || codepoint == 0x205F
+        || codepoint == 0x3000)
+    {
+        redde 0x20;
+    }
+
     /* Latin-1 supplement (U+00A1-00FF) -> 0xA1-0xFF
      * Haec includit characteres accentuatos:
      * e-acutum (é), n-tilde (ñ), u-umlaut (ü), etc.

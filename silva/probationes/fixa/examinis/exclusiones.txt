@@ -10,6 +10,7 @@
 # 2026-10-19 (fusio quintae): LXII sondae auditus (probationes/fixa/sondae_auditus/,
 # b82d00df) et archivum/tools/glr_quaestio.c pinnatae - causa per lineam.
 # 2026-10-20 (fusio main -> quinta): IV demonstrationes knotapel 130-133 congelatae (demo-snapshot.c) pinnatae - causa per lineam.
+# 2026-11-03 (fusio main 68c86834 -> quinta): knotapel demo_136 main.c pinnatum - causa per lineam (fusio tertiae portam examen-corpus non currebat).
 # 2026-10-26 (quinta, decretum …0X3C2): illae IV et archivum/tools/glr_quaestio.c depinnatae - porta examen-corpus
 # nunc iudicem examen_corporis rogat (unitates.stml): testimonia (munus, plagula demo-snapshot.c) et
 # archivata extra iudicium verdicti; FRACTA tamen semper nominatur.
@@ -19,6 +20,7 @@
 ./briar/probationes/fixa/fabrica/salve_vitreum/fontes/salve_vitreum.c	generatum a briar: capsula_salve_vitreum symbolum est gradus infigendi (capsula) - in fonte non exsistit
 ./knotapel/demo_114_exact_audit/d112_export.c	demonstratio knotapel 114: harness #include "../demo_112_alexander_polynomial/main.c" (plagula .c textualiter inclusa) - examen per plagulam eam non componit, typi (Rat, StickKnot, BraidWord) ignoti; pinnatum 2026-10-07 in fusione main -> secunda (porta examen-corpus post knotapel 114 non currebat)
 ./knotapel/demo_114_exact_audit/d112_overflow_probe.c	demonstratio knotapel 114: harness #include "../demo_112_alexander_polynomial/main.c" (plagula .c textualiter inclusa) - examen per plagulam eam non componit, typi (Rat, StickKnot, BraidWord) ignoti; pinnatum 2026-10-07 in fusione main -> secunda (porta examen-corpus post knotapel 114 non currebat)
+./knotapel/demo_136_tl_braid_closures/main.c	demonstratio knotapel 136 (tertia, D136): fopen(getenv("D136_UNCINI"), "w") crudum (l.1523) - examen 96/97 VIOLATIO; plagula exploratoria (opus_explorationis), migratio ad lectiones_fopen arcae tertiae relicta; pinnatum 2026-11-03 in fusione main -> quinta
 ./officina/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis (AmalgamaPlagula/EXCLUDENDA_* apud includentem definita)
 ./oracula/clay/clay_vinculum.c	oraculum: glutinum dialecti alieni (clay.h ex ../clay externum, typi Clay_* extra arborem) - classis oracula/ alibi nomine exclusa; pinnata 2026-10-06 (fabrica-5 T5a: porta examen-corpus ab adventu eius non currebat)
 ./probationes/fixa/sondae_auditus/arbor2_expandere_r1.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): linea 16: 'fopen' canalem lectionum praeterit (liber lectionum vocationem non videt - fabrica ingressum nescit, transitus vetus servaretur) - pro eo '
@@ -85,7 +87,6 @@
 ./probationes/fixa/sondae_auditus/via_credo_schedae.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): linea 93: monstrator et integer mixti
 ./probationes/fixa/sondae_auditus/via_cwd_longus.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): mkdir et rmdir cruda - codex 97 VIOLATIO ab 2026-10-27
 ./probationes/fixa/sondae_auditus/via_existit_casus.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): linea 42: 'stat' canalem lectionum praeterit (liber lectionum vocationem non videt - fabrica ingressum nescit, transitus vetus servaretur) - pro eo 'l
-./probationes/fixa/sondae_auditus/xml_scribere_reditus.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): linea 14: 'fopen' canalem lectionum praeterit (liber lectionum vocationem non videt - fabrica ingressum nescit, transitus vetus servaretur) - pro eo '
 ./silva/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis
 ./silva/probationes/fixa/censoris/flagrationes.c	probatio: fixtura censoris consulto fracta (syntaxis + redeclarationes)
 ./tessera/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis

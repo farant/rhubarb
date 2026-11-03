@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- saltus: segno m1, to coda m2, D.S. m3, coda m4 (per sound) -> 0 1 2 3 1 2 4 -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <direction><direction-type><segno/></direction-type><sound segno="s"/></direction>
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="3">
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>2</duration></note>
+      <direction><direction-type><words>To Coda</words></direction-type><sound tocoda="c"/></direction>
+    </measure>
+    <measure number="4">
+      <note><pitch><step>F</step><octave>4</octave></pitch><duration>2</duration></note>
+      <direction><direction-type><words>D.S. al Coda</words></direction-type><sound dalsegno="s"/></direction>
+    </measure>
+    <measure number="5">
+      <direction><direction-type><coda/></direction-type><sound coda="c"/></direction>
+      <note><pitch><step>G</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+  </part>
+</score-partwise>

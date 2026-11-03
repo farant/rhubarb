@@ -73,6 +73,15 @@ praecepta_clavis_congruit (
     {
         redde ev->datum.clavis.clavis == CLAVIS_EFFUGIUM;
     }
+    /* N4.3: Tab sine Shift, S-Tab cum Shift; Imperium (focus) non */
+    si (   strcmp(forma, "Tab")   == ZEPHYRUM
+        || strcmp(forma, "S-Tab") == ZEPHYRUM)
+    {
+        redde ev->datum.clavis.clavis == CLAVIS_TABULA
+            && !(mod & (i32)(MOD_IMPERIUM | MOD_ALT | MOD_SUPER))
+            && ((mod & (i32)MOD_SHIFT) != ZEPHYRUM) == (forma[ZEPHYRUM]
+                == 'S');
+    }
     /* D5: sagittae sine modificatoribus */
     si (   strcmp(forma, "Up")   == ZEPHYRUM
         || strcmp(forma, "Down") == ZEPHYRUM)

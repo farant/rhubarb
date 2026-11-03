@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- gratiae: grace slash (longitudo 0, cursor non movetur), grace steal-time-previous 20 et make-time, nota parva (cue) cum duratione -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Tibia</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>2</divisions>
+        <time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><grace slash="yes"/><pitch><step>C</step><octave>5</octave></pitch><type>eighth</type></note>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>2</duration></note>
+      <note><grace steal-time-previous="20" make-time="1"/><pitch><step>E</step><octave>5</octave></pitch><type>16th</type></note>
+      <note><pitch><step>F</step><octave>5</octave></pitch><duration>2</duration></note>
+      <note><cue/><pitch><step>G</step><octave>5</octave></pitch><duration>2</duration></note>
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>2</duration></note>
+    </measure>
+  </part>
+</score-partwise>

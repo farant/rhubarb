@@ -11,7 +11,8 @@
  * aut nona dominantis (9, 7b9) extra clavem cuius radix quinta supra
  * gradum diatonicum (non diminutum, non tonicum) -> "V/V", "V7/ii";
  * diminuta aut diminuta septima extra clavem semitonio infra ->
- * "viio7/V".
+ * "viio7/V". Meta in minore ut lectio ipsa: V maior (VII elevatus) -
+ * "V7/V", "subV7/V", non "/v".
  * Dyas: gradus cum qualitate dyadis ("I(5)", "ii(3)"); classis una
  * "(I)"; ignotum "?"; silentium "-". Sextae augmentatae et cetera
  * chromatica: nondum. Toni additi (6, 9): figura inversionis nulla.
@@ -51,12 +52,40 @@
  * in C maior ante F maior manet I cum clausula sua; D post A7 in d
  * minor ante G maior Picardia est.
  *
- * CLAUSULA (cadentia; heuristica, sine signis formae): ADVENTUS =
- * fenestra quae in initio mensurae incipit et ad finem eius manet, et
- * pars summa (notae summae in initio) nullam notam in dimidia
- * posteriore mensurae incipit - tenet aut tacet (requies). Melodia
- * quartis currens (korobeiniki) sic non in omni mensura cadit. Genus
- * ex fenestra priore:
+ * SEXTAE AUCTAE: fenestra cum sexta aucta (explicatio.h) cuius bassus
+ * gradus VI minoris aut bVI maioris est - "It+6" (classes tres: F A
+ * D# in a minor), "Fr+6" (cum gradu II: F A B D#), "Ger+6" (cum gradu
+ * III: F A C D#); praedominans: gradus VI, non applicata, non
+ * substituta. Alio basso, aut septima littera sua scripta (F7 cum
+ * Eb): ut ante (subV7/V, VI7).
+ *
+ * MUTATIO CLAVIS: fenestra cuius clavis lectionis (tonica, modus) alia
+ * est ac fenestrae sonantis prioris (prima: clavis carminis) clavem
+ * novam incipit; linea eam
+ * nominat ("A: V:4"; praevia quoque: "G: V7:1").
+ * ACORDUM COMMUNE (pivot): a fenestra sonante ultima clavis veteris
+ * fenestrae percurruntur ad primam cuius acordum in clave vetere
+ * diatonicum non est (E in D maior: G#), non ultra mutationem
+ * proximam. Fenestra sonans ante eam - ultima clavis veteris aut post
+ * eam - si acordum eius in clave utraque diatonicum est, commune est:
+ * numeralis in clave lectionis suae manet (gradus, clausula, censura
+ * non mutantur); communis = numeralis in clave altera. Linea
+ * "vetus=Clavis: nova" et clavem ibi solum nominat: Bm in D -> A
+ * "vi=A: ii:4"; A in A -> D "I=D: V:4"; Am7 D7 | G in F "iii7=G:
+ * ii7:1 V7:1 | I:1". Locus <clavis> (ante aut post commune) lineam
+ * non mutat. Prima fenestra clavis novae iam extra veterem (ultima
+ * veteris aliena) aut nulla aliena ante mutationem proximam: nullum
+ * commune, clavis ad mutationem nominatur.
+ *
+ * CLAUSULA (cadentia): ADVENTUS = fenestra cuius initium FERMATA tegit
+ * (corona: finis phrasis ab auctore signatus - choralis: D A7 D sub
+ * fermata in tempore tertio), aut sine signo (heuristica): fenestra
+ * quae in initio mensurae incipit et ad finem eius manet, et pars
+ * summa (notae summae in initio) nullam notam in dimidia posteriore
+ * mensurae incipit - tenet aut tacet (requies). Melodia quartis
+ * currens (korobeiniki) sic non in omni mensura cadit. Summa = nota
+ * summa in initio fenestrae (perfecta: tonica); tertia Picardiae
+ * eodem adventu iudicatur. Genus ex fenestra priore:
  *   perfecta     V aut V7 (aut subV) radicalis -> I radicalis, summa
  *                (in initio adventus) tonica
  *   imperfecta   V(7), subV aut viio -> I aliter
@@ -96,6 +125,14 @@ nomen structura {
     FunctioClausula clausula;        /* in fenestra adventus */
                 b32 praevia;         /* in clave proxima lecta
                                        * (dominans praevia) */
+          character communis[XVI];   /* acordum commune: numeralis in
+                                       * clave altera; "" nullum */
+                b32 communis_vetus;  /* communis in clave VETERE
+                                       * (fenestra in nova lecta) */
+                s32 clavis_nova;     /* index in Carmen.claves clavis
+                                       * quam linea hic nominat
+                                       * (mutatio aut commune); -1
+                                       * nulla */
                 b32 substituta;      /* subV (tritonus substitutus);
                                        * applicata = meta (0: I) */
 } FunctioGradus;

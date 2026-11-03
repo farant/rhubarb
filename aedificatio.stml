@@ -263,11 +263,14 @@
     <!-- nexus silvae: cache arboris (incrementalis), alii quoque -->
     <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
     <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
+    <!-- sigilla contentus nexus incrementalis (budget B2 N1) -->
+    <vestigium via="build/nexus.sigilla.tsv" forma="plagula" communis="verum"/>
     <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
     <ingressus genus="plagulae" via="include" suffixa=".h"/>
     <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
     <ingressus genus="plagulae" via="toml/fontes" suffixa=".c .h"/>
+    <ingressus genus="plagulae" via="xml/fontes" suffixa=".c .h"/>
     <ingressus genus="plagulae" via="vendor"/>
     <ingressus genus="plagulae" via="natura/cocta" suffixa=".canon"/>
     <ingressus genus="plagulae" via="silva/grammatica" suffixa=".canon"/>
@@ -1206,6 +1209,21 @@
     <exitus via="toml/fontes/toml_registrum_coctum.c" provenientia="regeneratio"/>
     <exitus via="toml/fontes/toml_registrum_coctum.h" provenientia="regeneratio"/>
   </actio>
+  <actio titulus="registrum_xml" genus="generator">
+    <mandatum>
+      <verbum! (>./materia/coquere.sh
+      <verbum! (>xml/grammatica/xml.registrum.stml
+      <verbum! (>-scribere
+    </mandatum>
+    <vestigium via="materia/build/coctor" communis="verum"/>
+    <ingressus genus="fasciculus" via="xml/grammatica/xml.registrum.stml"/>
+    <ingressus genus="fasciculus" via="materia/grammatica/registrum.canon"/>
+    <ingressus genus="fasciculus" via="materia/coquere.sh"/>
+    <ingressus genus="fasciculus" via="materia/instrumenta/coctor.c"/>
+    <ingressus genus="plagulae" via="materia/fontes" suffixa=".c .h"/>
+    <exitus via="xml/fontes/xml_registrum_coctum.c" provenientia="regeneratio"/>
+    <exitus via="xml/fontes/xml_registrum_coctum.h" provenientia="regeneratio"/>
+  </actio>
   <actio titulus="capsula_assets" genus="generator">
     <mandatum>
       <verbum! (>./tools/capsula_regenerare.sh
@@ -1270,6 +1288,15 @@
          probatio_pictor_pinacotheca PNG in directorium datum scribit,
          sine eo rete in memoria solum pingitur et iudicatur -->
     <ambitus variabilis="PINACOTHECA_IMAGINES"/>
+    <!-- tabulae musicxml (plan musicxml P7): commutator manu -
+         probatio_musicxml_suite tabulas nostras in directorium datum
+         scribit (discrimen cum oraculo, aurum renovandum), sine eo
+         cum auro commisso confert -->
+    <ambitus variabilis="MUSICXML_TABULAS_SCRIBERE"/>
+    <!-- corpus silvestre musicxml (plan P8): solum porta
+         musicxml-oraculum (tools/musicxml_silvestria.sh) id ponit -
+         sine eo sectio silvestris nihil agit -->
+    <ambitus variabilis="MUSICXML_SILVESTRIA"/>
     <!-- HTTP/2 (http2-plan T8): RHUBARB_RETE=1 situs publicos per
          probatio_http2_nexus addit (ut probatio_http_vocatio_rete);
          HTTP2_TABULAE tabulas octetorum et formarum Go in directorium

@@ -1,0 +1,6 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: music21 notam sine <staff> in utrumque baculum duplicat (PartStaff); suita: in baculo superiore
+P1	0	1	72	C	0	0	-
+P1	1	4	52	E	0	0	-
+P1	1	4	69	A	0	0	-

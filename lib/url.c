@@ -67,7 +67,8 @@ url_codificare (
        i32  j;
         i8  c;
 
-    si (originalis.datum == NIHIL || originalis.mensura <= 0 || piscina == NIHIL)
+    si (   originalis.datum == NIHIL || originalis.mensura <= 0
+        || piscina          == NIHIL)
     {
         resultatus.datum    = NIHIL;
         resultatus.mensura  = 0;
@@ -118,9 +119,11 @@ url_codificare (
  * FUNCTIONES - DECODIFICATIO
  * ======================================================================== */
 
-chorda
-url_decodificare (
+/* plus_spatium: '+' -> ' ' (forma) aut '+' manet (via) */
+interior chorda
+decodificare (
      chorda  codificata,
+        b32  plus_spatium,
     Piscina* piscina)
 {
     chorda  resultatus;
@@ -131,7 +134,8 @@ url_decodificare (
        s32  high;
        s32  low;
 
-    si (codificata.datum == NIHIL || codificata.mensura <= 0 || piscina == NIHIL)
+    si (   codificata.datum == NIHIL || codificata.mensura <= 0
+        || piscina          == NIHIL)
     {
         resultatus.datum    = NIHIL;
         resultatus.mensura  = 0;
@@ -162,7 +166,7 @@ url_decodificare (
                 output[j++] = c;
             }
         }
-        alioquin si (c == '+')
+        alioquin si (c == '+' && plus_spatium)
         {
             /* Plus -> space (form encoding) */
             output[j++] = ' ';
@@ -177,6 +181,22 @@ url_decodificare (
     resultatus.mensura  = j;
 
     redde resultatus;
+}
+
+chorda
+url_decodificare (
+     chorda  codificata,
+    Piscina* piscina)
+{
+    redde decodificare(codificata, VERUM, piscina);
+}
+
+chorda
+url_viam_decodificare (
+     chorda  codificata,
+    Piscina* piscina)
+{
+    redde decodificare(codificata, FALSUM, piscina);
 }
 
 
@@ -200,7 +220,8 @@ url_params_construere (
        i32  j;
        i32  k;
 
-    si (claves == NIHIL || valores == NIHIL || numerus <= 0 || piscina == NIHIL)
+    si (   claves  == NIHIL || valores == NIHIL || numerus <= 0
+        || piscina == NIHIL)
     {
         resultatus.datum    = NIHIL;
         resultatus.mensura  = 0;
@@ -208,8 +229,10 @@ url_params_construere (
     }
 
     /* Encode omnes claves et valores */
-    claves_encoded = piscina_allocare(piscina, (i32)(magnitudo(chorda)) * numerus);
-    valores_encoded = piscina_allocare(piscina, (i32)(magnitudo(chorda)) * numerus);
+    claves_encoded = piscina_allocare(piscina,
+        (i32)(magnitudo(chorda)) * numerus);
+    valores_encoded = piscina_allocare(piscina,
+        (i32)(magnitudo(chorda)) * numerus);
 
     per (i = 0; i < numerus; i++)
     {
@@ -282,7 +305,8 @@ url_params_parse (
     resultatus.valores  = NIHIL;
     resultatus.numerus  = 0;
 
-    si (query_string.datum == NIHIL || query_string.mensura <= 0 || piscina == NIHIL)
+    si (   query_string.datum == NIHIL || query_string.mensura <= 0
+        || piscina            == NIHIL)
     {
         redde resultatus;
     }
@@ -297,8 +321,10 @@ url_params_parse (
         }
     }
 
-    resultatus.claves = piscina_allocare(piscina, (i32)(magnitudo(chorda)) * numerus_pairs);
-    resultatus.valores = piscina_allocare(piscina, (i32)(magnitudo(chorda)) * numerus_pairs);
+    resultatus.claves = piscina_allocare(piscina,
+        (i32)(magnitudo(chorda)) * numerus_pairs);
+    resultatus.valores = piscina_allocare(piscina,
+        (i32)(magnitudo(chorda)) * numerus_pairs);
 
     /* Parse pairs */
     j        = 0;

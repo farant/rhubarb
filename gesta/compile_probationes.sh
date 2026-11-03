@@ -82,27 +82,6 @@ if [ -n "$FILTER" ]; then
     fi
 fi
 
-# CAPUT RECENTISSIMUM SEMEL (exemplar radicis 2026-08-25): find
-# per obiectum retiratum - aequivalentia: aliquod caput recentius
-# obiecto <=> recentissimum recentius obiecto. Custos: nihil
-# inventum = viae find pravae = custodia capitum MORTUA - CLAMAT.
-CAPUT_RECENS=""
-while IFS= read -r caput_via; do
-    # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
-    if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
-        CAPUT_RECENS="$caput_via"
-    fi
-done < <(find "$RADIX_DIR/include" "$GESTA_DIR/fontes" -name '*.h' 2>/dev/null)
-if [ -z "$CAPUT_RECENS" ]; then
-    echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
-fi
-
-newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
-        echo "$CAPUT_RECENS"
-    fi
-}
-
 # VENDICATA PER THESAURUM (budget B1 E7, 2026-10-28): fontes magni
 # communes (vendor/sqlite3.c ~IX.V MB, silva/amalgama/silva.c ~V MB) per
 # bin/compilator EX RADICE, argumentis iisdem ac compile_tests.sh: clavis
@@ -129,34 +108,40 @@ if [ ! -f "$sqlite_obj" ] || ! [ "$sqlite_obj" -nt "$RADIX_DIR/vendor/sqlite3.c"
 fi
 obj_files="$sqlite_obj"
 
-# ---- 1. obiecta dependentiarum (incrementalia) ----
+# ---- 1-2. obiecta per compilatorem (budget B2 E3/J9) ----
+# Olim clang per obiectum sub regula 'caput recentissimum' (caput tactum
+# sine mutatione omnia recompilabat; caput mutatum quod regula non
+# videbat obiectum stalum relinquebat). Nunc bin/compilator --plures
+# processu uno (tools/cursor_communis.sh; clavis contenti, obiectum
+# identicum non rescribitur) - exemplar tessera 1b7f5edc.
+source "$RADIX_DIR/tools/cursor_communis.sh" || exit 1
+source "$RADIX_DIR/tools/nexus_probationis.sh"
+cursor_instrumenta_parare || exit 1
+: > "$CLAUSURAE_DIR/mandata.tsv"
+VOCATIONES="$BUILD_DIR/obiecta.vocationes"
+: > "$VOCATIONES"
 for f in "${RADIX_FONTES[@]}"; do
-    src="$RADIX_DIR/lib/$f.c"
-    obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [dep] $f.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $f.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
+    _cursor_vocationem_addere "$VOCATIONES" "$RADIX_DIR/lib/$f.c" \
+        "$BUILD_DIR/$f.o"
+    obj_files="$obj_files $BUILD_DIR/$f.o"
 done
-
-# ---- 2. fontes gestae ----
 shopt -s nullglob
 for src in "$GESTA_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
-    obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [gesta] $base.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $base.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
+    base="${src##*/}"; base="${base%.c}"
+    _cursor_vocationem_addere "$VOCATIONES" "$src" "$BUILD_DIR/$base.o"
+    obj_files="$obj_files $BUILD_DIR/$base.o"
 done
+ante="$(stat -f '%i %N' "$BUILD_DIR"/*.o 2>/dev/null)"
+if ! _cursor_plures_currere "$VOCATIONES"; then
+    echo "FRACTA: obiecta (fons a clang supra nominatus)" ; exit 1
+fi
+post="$(stat -f '%i %N' "$BUILD_DIR"/*.o 2>/dev/null)"
+echo "  obiecta: $(grep -c . "$VOCATIONES") per bin/compilator, $(comm -13 <(echo "$ante" | sort) <(echo "$post" | sort) | grep -c .) mutata"
 
 # ---- 3. probationes invenire, compilare, currere ----
+# Probatio per compilatorem (obiectum in build/probationes/), nexus SOLUM
+# si signum nexus mutatum (tools/nexus_probationis.sh): olim omnis
+# probatio omni cursu compilata et nexa.
 total=0 ; passed=0 ; failed_names=""
 for test_file in "$GESTA_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"
@@ -165,10 +150,17 @@ for test_file in "$GESTA_DIR"/probationes/probatio_*.c; do
     fi
     total=$((total + 1))
     bin="$BUILD_DIR/$name"
+    obj="$BUILD_DIR/probationes/$name.o"
     echo ""
     echo "=== $name ==="
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
+    if ! _cursor_compilare "$test_file" "$obj"; then
         echo "FRACTA (compilatio): $name"
+        failed_names="$failed_names $name"
+        continue
+    fi
+    # shellcheck disable=SC2086 (obj_files: verba consulto scissa)
+    if ! probationem_nectere "$bin" "${GCC_FLAGS[*]}" "$obj" $obj_files; then
+        echo "FRACTA (nexus): $name"
         failed_names="$failed_names $name"
         continue
     fi
@@ -196,6 +188,8 @@ if [ "$total" -eq 0 ]; then
     exit 2
 fi
 
-# canalis excubitoris: verdictum post-constructionem (tacet nisi stala)
-"$RADIX_DIR/excubitor.sh" -tacitus "gesta/build/" >&2 || true
+# canalis excubitoris remotus (budget B2 E3/J9): obiecta per
+# compilatorem (clavis contenti) - mtime iudicium excubitoris superfluum
+# et mendax (obiectum identicum non rescribitur: post caput tactum
+# 'STALA' falso clamaret), ut tessera et compile_tests.sh
 exit 0

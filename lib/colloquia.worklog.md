@@ -36,3 +36,20 @@ matched against the default server's panes.
 Plants red: explicit-vs-prompt comparison, pane map not updated, Stop
 first line, idle_prompt ignored, custom-title ignored, dead pane not
 closed, sort reversed, directory fallback.
+
+## 2026-10-27 - comites P7.2: colloquium_panelli
+
+Which Claude session is in a tmux pane, for the companion key
+`terminale/claude/<session id>` (spec project-specs/comites.md §XI).
+Pure over the list colloquia_status_legere gives (most recent first):
+the first session that is not CLAUSUM with the same pane id and the
+same server. After `/clear` the old session ends (SessionEnd ->
+CLAUSUM) and the new one is more recent, so the pane maps to the new
+id - Fran: a new conversation gets a new companion. Server
+equivalence: "-", empty, and any socket path whose last component is
+"default" all mean the default server (events carry the full socket
+path, a terminal's restore argument may carry "-").
+Trap: the local flag was first called `ordinarius` - a latina macro
+(`default`); clang's "expected ':' after 'default'" is the tell.
+Plants (silva.planta): drop the CLAUSUM check -> red on %6; ignore
+the server -> red on the unknown server. Both restored byte-identical.

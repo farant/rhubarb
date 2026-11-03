@@ -41,11 +41,14 @@ nomen structura {
           character  liber[CCLVI];      /* praeconium (vacuum) */
           character  vocationes[CCLVI]; /* liber tmux ficti */
           character  clientes[CCLVI];   /* effusio tmux ficti */
-          character  semita[CCLVI];     /* PATH prior */
-                b32  paratus;
+          character  deficit[CCLVI];    /* praesens: tmux fictus
+                                         * deficit (exitus I) */
+          character semita[CCLVI];     /* PATH prior */
+                b32 paratus;
 } Mundus;
 
-/* tmux fictus: vocationem notat, 'mora' dormit, clientes effundit */
+/* tmux fictus: vocationem notat, 'mora' dormit, clientes effundit
+ * (libro 'deficit' praesente exitus I - servitor non respondet) */
 interior b32
 tmux_fingere (
                  Mundus* s,
@@ -53,18 +56,21 @@ tmux_fingere (
      constans character* mora)
 {
     character via[CCLVI];
-    character scriptum[DCCLXVIII];
+    character scriptum[M * II];
     character bin[CCLVI];
 
     sprintf(bin, "%s/bin", area);
     sprintf(via, "%s/tmux", bin);
     sprintf(s->vocationes, "%s/vocationes", area);
     sprintf(s->clientes, "%s/clientes", area);
+    sprintf(s->deficit, "%s/deficit", area);
     sprintf(scriptum, "#!/bin/sh\n"
         "printf '%%s %%s\\n' \"$1\" \"$2\" >> '%s'\n"
         "/bin/sleep %s\n"
+        "[ -f '%s' ] && exit 1\n"
         "[ -f '%s' ] && /bin/cat '%s'\n"
-        "exit 0\n", s->vocationes, mora, s->clientes, s->clientes);
+        "exit 0\n", s->vocationes, mora, s->deficit, s->clientes,
+        s->clientes);
     redde filum_directorium_creare_si_necesse(bin)
         && filum_scribere_literis(via, scriptum)
         && filum_modum_ponere(via, 0755)
@@ -194,30 +200,51 @@ dormire_ms (
     (vacuum)nanosleep(&pausa, NIHIL);
 }
 
-/* lineae libri vocationum (0 si liber abest) */
+/* lineae libri vocationum continentes 'filtrum' (NIHIL: omnes; 0 si
+ * liber abest) */
 interior i32
-vocationes_numerare (
-     Mundus* s,
-    Piscina* p)
+vocationes_cum_filtro_numerare (
+                 Mundus* s,
+     constans character* filtrum,
+                Piscina* p)
 {
     chorda textus;
        i32 n;
        i32 i;
+       i32 initium;
 
     si (!filum_existit(s->vocationes))
     {
         redde ZEPHYRUM;
     }
-    textus  = filum_legere_totum(s->vocationes, p);
-    n       = ZEPHYRUM;
+    textus   = filum_legere_totum(s->vocationes, p);
+    n        = ZEPHYRUM;
+    initium  = ZEPHYRUM;
     per (i = ZEPHYRUM; i < textus.mensura; i++)
     {
-        si (textus.datum[i] == '\n')
+        si (textus.datum[i] != '\n')
+        {
+            perge;
+        }
+        si (   !filtrum
+            || chorda_continet(chorda_sectio(textus, initium, i),
+                   chorda_ex_literis(filtrum, p)))
         {
             n++;
         }
+        initium = i + I;
     }
     redde n;
+}
+
+/* quaestiones (comites P7: quaestio = list-clients + list-panes;
+ * numerantur list-clients) */
+interior i32
+vocationes_numerare (
+     Mundus* s,
+    Piscina* p)
+{
+    redde vocationes_cum_filtro_numerare(s, "list-clients", p);
 }
 
 /* sine latere terminali: nullus tmux; latere aperto: vocatio una
@@ -260,11 +287,14 @@ _probare_necessitatem (
         c->piscina), chorda_ex_literis("-u list-clients", c->piscina)));
 }
 
-/* tmux tardus (CD ms): nullus pulsus eum exspectat; resultus
- * (cliens = tty lateris) argumentum "tmux - beta" ponit. Mora ficta
- * sub termino duro quaestionis (multiplexor: M ms, excessus occiditur)
- * cum margine: olim DCCC ms - sub onere processus occisus, effusio
- * vacua, probatio fluxa (quies T6b, 2026-10-26) */
+/* tmux tardus (CC ms): nullus pulsus eum exspectat; resultus
+ * (cliens = tty lateris) argumentum "tmux - beta" ponit in pulsu
+ * POSTERIORE. Probatio STRUCTURALIS, non chronometrica: pulsus qui
+ * quaestionem incipit sine resultu redit (exspectans eum statim
+ * applicaret). Olim "pulsus maximus < CL ms" - sub onere (fork/exec,
+ * 2026-10-27) pulsus ipse tardus erat sine ulla exspectatione:
+ * fluctuatio. Mora ficta CC ms (olim CD, ante DCCC): margo contra
+ * terminum durum quaestionis (multiplexor: M ms, excessus occiditur) */
 interior vacuum
 _probare_sine_exspectatione (
     CredoContextus* c)
@@ -275,22 +305,15 @@ _probare_sine_exspectatione (
     TerminaleApplicatio* t;
                  chorda  tty;
               character  linea[CCLVI];
-                    s64  ante;
-                    s64  spatium;
-                    s64  maximum;
-                    i32  gradus;
+                    s64  finis;
 
     s = (Mundus*)c->datum;
     CREDO_NECESSE(s && s->paratus);
-    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0.4"));
+    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0.2"));
     v = s->app.vicus;
     CREDO_NECESSE(vicus_acervo_aperire(v, "terminale", NIHIL));
-    maximum  = ZEPHYRUM;
-    ante     = fenestra_tempus_ms();
     (vacuum)vicus_pulsare(v);
-    spatium  = fenestra_tempus_ms() - ante;
-    maximum  = spatium > maximum ? spatium : maximum;
-    l        = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+    l = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
     CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
         "terminale"));
     t    = (TerminaleApplicatio*)l->montatio;
@@ -301,24 +324,18 @@ _probare_sine_exspectatione (
         (constans character*)tty.datum);
     CREDO_NECESSE(filum_scribere_literis(s->clientes, linea));
 
-    CREDO_GRADUS("pulsus tmux tardum non exspectat");
-    per (gradus = ZEPHYRUM; gradus < CL
-                            && l->argumentum.mensura == ZEPHYRUM;
-         gradus++)
-    {
-        ante = fenestra_tempus_ms();
-        (vacuum)vicus_pulsare(v);
-        spatium = fenestra_tempus_ms() - ante;
-        maximum = spatium > maximum ? spatium : maximum;
-        dormire_ms(XX);
-    }
-    si (maximum >= CL)
-    {
-        imprimere("  pulsus maximus: %ld ms\n", (long)maximum);
-    }
-    CREDO_VERUM(maximum < CL);
+    CREDO_GRADUS("pulsus quaestionem incipit sed non exspectat");
+    (vacuum)vicus_pulsare(v);
+    CREDO_AEQUALIS_I32((i32)l->argumentum.mensura, ZEPHYRUM);
 
     CREDO_GRADUS("resultus in pulsu posteriore applicatur");
+    finis = fenestra_tempus_ms() + (s64)(VIII * M);
+    dum (   l->argumentum.mensura == ZEPHYRUM
+         && fenestra_tempus_ms() < finis)
+    {
+        (vacuum)vicus_pulsare(v);
+        dormire_ms(XX);
+    }
     CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
     CREDO_AEQUALIS_I32(vocationes_numerare(s, c->piscina), I);
 }
@@ -806,11 +823,11 @@ _probare_frontem (
     CREDO_GRADUS("programma incipit: quaestio; finit: quaestio");
     CREDO_AEQUALIS_I32(aemulator_hospes_scribere(t->hospes,
         (constans i8*)"sleep 1\n", VIII), VIII);
-    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, II * M, n + I),
+    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, VI * M, n + I),
         n + I);
-    /* finis programmatis et confirmationes */
-    CREDO_VERUM(pulsare_usque(s, c->piscina, III * M + D, ZEPHYRUM)
-                >= n + II);
+    /* finis programmatis et confirmationes (exspectatio usque ad metam:
+     * sub onere tempora fixa fluctuabant) */
+    CREDO_VERUM(pulsare_usque(s, c->piscina, VI * M, n + II) >= n + II);
 
     CREDO_GRADUS("tmux in fronte visibilis: quaestio per V s");
     tty = terminale_tty(t);
@@ -827,6 +844,178 @@ _probare_frontem (
     /* nulla frons mutata, nulla confirmatio: sola regula V s */
     CREDO_VERUM(pulsare_usque(s, c->piscina, VI * M + D, ZEPHYRUM)
                 >= n + I);
+}
+
+/* T2b (Franus 2026-10-27: tmux manu adhaesum non notatum, X latera
+ * terminalia): frons lateris PRIMI inter VI mutata quaestionem facit -
+ * signum frontium latera priora non amittit (olim signum * 2^20 per
+ * latus in i64: post IV latera posteriora latus prius totum excidit) */
+interior vacuum
+_probare_frontes_multas (
+    CredoContextus* c)
+{
+                 Mundus* s;
+             VicusLatus* l;
+    TerminaleApplicatio* prima;
+                    i32  n;
+                    i32  i;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0"));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    l = vicus_latus(vicus_activa(s->app.vicus), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "terminale"));
+    prima = (TerminaleApplicatio*)l->montatio;
+    /* identitas = genus + argumentum: argumenta distincta (non
+     * "tmux ...": concha plana) latera nova faciunt */
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        character argumentum[VIII];
+
+        sprintf(argumentum, "p%d", (integer)i);
+        CREDO_NECESSE(vicus_acervo_aperire(s->app.vicus, "terminale",
+            argumentum));
+        (vacuum)vicus_pulsare(s->app.vicus);
+    }
+    CREDO_AEQUALIS_I32(terminalia_numerare(s->app.vicus), VI);
+
+    CREDO_GRADUS("VI latera: conchae incipiunt, confirmatio - quiescant");
+    (vacuum)pulsare_usque(s, c->piscina, II * M, I);
+    n = pulsare_usque(s, c->piscina, III * M + D, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, II * M, ZEPHYRUM),
+        n);
+
+    CREDO_GRADUS("programma in latere PRIMO incipit: quaestio");
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(prima->hospes,
+        (constans i8*)"sleep 1\n", VIII), VIII);
+    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, VI * M, n + I),
+        n + I);
+}
+
+/* restitutio (Franus 2026-10-27: post vicum renovatum latus tmux
+ * concha pura redit - argumentum "tmux ..." ante finem amissum):
+ * quaestio tmux defecta (exitus non 0, mora excessa) NON est 'nullus
+ * cliens' - argumentum manet; solum responsum prosperum servitoris
+ * eius sine cliente (detachmentum) id tollit. Olim defectio id
+ * tollebat, et sine eo regula V s (tmux visibilis) cessabat: amissum
+ * usque ad finem vici */
+interior vacuum
+_probare_quaestionem_defectam (
+    CredoContextus* c)
+{
+                 Mundus* s;
+             VicusLatus* l;
+    TerminaleApplicatio* t;
+                 chorda  tty;
+              character  linea[CCLVI];
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0"));
+    (vacuum)vicus_pulsare(s->app.vicus);
+    l = vicus_latus(vicus_activa(s->app.vicus), VICUS_DEXTRUM);
+    CREDO_NECESSE(l && l->montata && chorda_aequalis_literis(l->genus,
+        "terminale"));
+    t    = (TerminaleApplicatio*)l->montatio;
+    tty  = terminale_tty(t);
+    CREDO_NECESSE(tty.mensura > ZEPHYRUM
+                  && tty.mensura < (i32)magnitudo(linea) - XVI);
+    sprintf(linea, "%.*s\tbeta\n", (integer)tty.mensura,
+        (constans character*)tty.datum);
+    CREDO_NECESSE(filum_scribere_literis(s->clientes, linea));
+
+    CREDO_GRADUS("cliens notatus: argumentum 'tmux - beta'");
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(t->hospes,
+        (constans i8*)"sleep 1\n", VIII), VIII);
+    (vacuum)pulsare_usque(s, c->piscina, III * M + D, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
+
+    CREDO_GRADUS("quaestiones defectae: argumentum manet");
+    CREDO_NECESSE(filum_scribere_literis(s->deficit, "\n"));
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(t->hospes,
+        (constans i8*)"sleep 1\n", VIII), VIII);
+    (vacuum)pulsare_usque(s, c->piscina, III * M + D, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(l->argumentum, "tmux - beta");
+
+    CREDO_GRADUS("responsum sine cliente (detachmentum): tollitur");
+    CREDO_NECESSE(filum_delere(s->deficit));
+    CREDO_NECESSE(filum_delere(s->clientes));
+    CREDO_AEQUALIS_I32(aemulator_hospes_scribere(t->hospes,
+        (constans i8*)"sleep 1\n", VIII), VIII);
+    (vacuum)pulsare_usque(s, c->piscina, III * M + D, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(l->argumentum.mensura, ZEPHYRUM);
+}
+
+/* comites P8: eventus "tmux" in libro (hamus tmux: fenestra aut
+ * panellus mutatus) quaestionem STATIM facit - concha in fronte, nulla
+ * regula V s: sine eventu numquam. Eventus alius (status) nullam */
+interior vacuum
+_probare_eventum_tmux (
+    CredoContextus* c)
+{
+    Mundus* s;
+       i32  n;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0"));
+    (vacuum)vicus_pulsare(s->app.vicus);
+
+    CREDO_GRADUS("latus apertum, confirmatio - quiescant");
+    (vacuum)pulsare_usque(s, c->piscina, II * M, I);
+    n = pulsare_usque(s, c->piscina, II * M + D, ZEPHYRUM);
+
+    CREDO_GRADUS("eventus 'status': nulla quaestio");
+    CREDO_NECESSE(filum_appendere_firmiter(s->liber, chorda_ex_literis(
+        "{\"tempus\":500,\"sessio\":\"\",\"eventus\":\"status\","
+        "\"panellus\":\"%1\",\"servitor\":\"\",\"via\":\"\","
+        "\"transcriptum\":\"\",\"genus\":\"\",\"nuntius\":\"x\"}\n",
+        c->piscina)));
+    CREDO_AEQUALIS_I32(pulsare_usque(s, c->piscina, M, ZEPHYRUM), n);
+
+    CREDO_GRADUS("eventus 'tmux': quaestio (sine eo numquam)");
+    CREDO_NECESSE(filum_appendere_firmiter(s->liber, chorda_ex_literis(
+        "{\"tempus\":600,\"sessio\":\"\",\"eventus\":\"tmux\","
+        "\"panellus\":\"%2\",\"servitor\":\"/x/s\",\"via\":\"\","
+        "\"transcriptum\":\"\",\"genus\":\"\",\"nuntius\":\"\"}\n",
+        c->piscina)));
+    CREDO_VERUM(pulsare_usque(s, c->piscina, IV * M, n + I) >= n + I);
+}
+
+/* comites P7 (desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4): comes
+ * terminalem sequens (comitem_sequi in omni pulsu) nullum tmux in
+ * pulsu incipit - locus ex memoria systematis terminalium; Cmd+T
+ * (locum_renovare) solum semel interrogat. Olim list-clients per M ms
+ * dum comes sequitur. */
+interior vacuum
+_probare_comitem_sine_processu (
+    CredoContextus* c)
+{
+     Mundus* s;
+        i32  n;
+
+    s = (Mundus*)c->datum;
+    CREDO_NECESSE(s && s->paratus);
+    CREDO_NECESSE(tmux_fingere(s, credo_area(c), "0"));
+    (vacuum)vicus_pulsare(s->app.vicus);
+
+    CREDO_GRADUS("latus apertum, confirmatio - quiescant");
+    (vacuum)pulsare_usque(s, c->piscina, II * M, I);
+    (vacuum)pulsare_usque(s, c->piscina, II * M + D, ZEPHYRUM);
+
+    CREDO_GRADUS("Cmd+T: comes terminalis (interrogatio una licet)");
+    CREDO_NECESSE(vicus_focum_ponere(s->app.vicus, VICUS_DEXTRUM));
+    CREDO_VERUM(vicus_comitem_commutare(s->app.vicus));
+    n = pulsare_usque(s, c->piscina, CC, ZEPHYRUM);
+
+    n = vocationes_cum_filtro_numerare(s, NIHIL, c->piscina);
+
+    CREDO_GRADUS("comes sequitur III s: nullus tmux in pulsu");
+    (vacuum)pulsare_usque(s, c->piscina, III * M + D, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(vocationes_cum_filtro_numerare(s, NIHIL,
+        c->piscina), n);
 }
 
 /* ===== T6c: liber praeconii per speculam - scriptura vicum
@@ -1049,6 +1238,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "scriba", _probare_scribam, mundum_parare, mundum_purgare, NIHIL,
       NIHIL },
     { "frons", _probare_frontem, mundum_terminalis_parare,
+      mundum_purgare, NIHIL, NIHIL },
+    { "frontes_multae", _probare_frontes_multas,
+      mundum_terminalis_parare, mundum_purgare, NIHIL, NIHIL },
+    { "comes_sine_processu", _probare_comitem_sine_processu,
+      mundum_terminalis_parare, mundum_purgare, NIHIL, NIHIL },
+    { "quaestio_defecta", _probare_quaestionem_defectam,
+      mundum_terminalis_parare, mundum_purgare, NIHIL, NIHIL },
+    { "eventus_tmux", _probare_eventum_tmux, mundum_terminalis_parare,
       mundum_purgare, NIHIL, NIHIL },
     { "praeconium", _probare_praeconium, mundum_parare, mundum_purgare,
       NIHIL, NIHIL },

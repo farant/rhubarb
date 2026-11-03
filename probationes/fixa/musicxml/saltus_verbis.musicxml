@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- saltus_verbis: "Fine" et "D.C. al Fine" verbis solis (sine sound) -> 0 1 2 0 1, monita -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration></note>
+      <direction><direction-type><words>Fine</words></direction-type></direction>
+    </measure>
+    <measure number="3">
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>2</duration></note>
+      <direction><direction-type><words>D.C. al Fine</words></direction-type></direction>
+    </measure>
+  </part>
+</score-partwise>

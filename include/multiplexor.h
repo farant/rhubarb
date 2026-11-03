@@ -95,6 +95,15 @@ multiplexor_clientes_incipere (
     constans Multiplexor* m,
                  Piscina* piscina);
 
+/* incipere sine exspectatione (comites P7): list-panes ut
+ * multiplexor_panelli, sed processus STATIM redditur - vocator
+ * pulsat, metit, effusionem per multiplexor_panellos_legere legit.
+ * NIHIL si tmux non invenitur */
+Processus*
+multiplexor_panellos_incipere (
+    constans Multiplexor* m,
+                 Piscina* piscina);
+
 /* panellus per id ("%17"); NIHIL si abest */
 constans MultiplexorPanellus*
 multiplexor_panellum_invenire (
@@ -130,6 +139,24 @@ constans character**
 multiplexor_argumenta_adhaerendi (
     constans Multiplexor* m,
                   chorda  sessio,
+                 Piscina* piscina);
+
+/* fenestram sessionis per indicem eligere (select-window -t
+ * =<sessio>:<index>): clientes sessioni adhaerentes eam monstrant;
+ * FALSUM si fenestra abest */
+b32
+multiplexor_fenestram_eligere (
+    constans Multiplexor* m,
+                  chorda  sessio,
+                     s32  index,
+                 Piscina* piscina);
+
+/* fasciculum configurationis in servitore legere (source-file): hami
+ * statim valent, servitor non renovatur */
+b32
+multiplexor_configurationem_legere (
+    constans Multiplexor* m,
+      constans character* via,
                  Piscina* piscina);
 
 #endif /* MULTIPLEXOR_H */

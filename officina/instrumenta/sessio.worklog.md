@@ -35,3 +35,31 @@ struct growth needs zero-init discipline at every consumer).
 
 Interpretare's role: the known-good differential. When two pipelines
 disagree on the same input, instrument the DELTA, not the symptom.
+
+## 2026-11-02 — officina-bibliothecae T3: #include turns load libraries
+
+A directive turn now runs `bibliothecae_ex_textu` (bibliothecae.c,
+aedilis closure) before anything else and demits every returned path
+not yet in `oneratae` (TabulaDispersa of radix-relative paths). cfg
+`plagulae` are recorded there too, so `-plagulae lib/piscina.c` +
+`#include "piscina.h"` loads piscina.c once (B7 guards this: the
+"oneratae ignored" plant broke B7, D2 and "clausurae communes").
+
+**AUDIENDA §1 answered: a library demitted mid-session links fine.**
+Modules live in `piscina_bibliothecarum`; every turn rebuilds the
+generation (`conexio` over all library modules + the document), so
+a module added by turn N is simply in the link from turn N on.
+"#include medio" (x defined, then chorda.h) proves it.
+
+Resolver is created lazily on the first directive turn (sessions
+that never include never read aedilis.stml). Refusal or a failed
+demission -> REIECTUM with the cause as the diagnostic (fenestra.h
+names lib/fenestra_macos.m). A failure halfway leaves the earlier
+paths demitted and recorded - modules never unload, and a retry
+loads nothing twice.
+
+Cost: unmeasurable at script scale - salutatio.scriptum (3 includes,
+5 libs) runs in ~0.8 s with or without -plagulae.
+
+Duplicate-load test uses `filum_existit("/")`, not a write: outside
+script mode the machinula refuses writes (MACHINULA_RECUSARE_SCRIPTURAS).

@@ -1154,8 +1154,6 @@ lf1
 lhs
 li
 lib
-lib1
-lib2
 libsystem
 lig
 light

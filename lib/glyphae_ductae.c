@@ -4,6 +4,7 @@
  * translati; tabula brachiorum ex box.zig generata (scriptum in
  * lib/glyphae_ductae.worklog.md). */
 #include "glyphae_ductae.h"
+#include "fons_6x8.h"
 #include <string.h>
 #include <math.h>
 
@@ -178,6 +179,72 @@ interior constans Symbolum symbola[] = {
     { 0x00B9,   /* ¹ superscript one */
         { "..#...", ".##...", "..#...", "..#...",
           ".###..", "......", "......", "......" } },
+    { 0x014B,   /* ŋ latin small letter eng (n cauda infra) */
+        { "......", "......", ".#.##.", ".##..#",
+          ".#...#", ".#...#", ".#...#", "...##." } },
+    { 0x0250,   /* ɐ latin small letter turned a (a versum) */
+        { "......", "......", ".####.", ".#...#",
+          ".####.", ".#....", "..###.", "......" } },
+    { 0x0251,   /* ɑ latin small letter alpha */
+        { "......", "......", "..####", ".#...#",
+          ".#...#", ".#..##", "..##.#", "......" } },
+    { 0x0252,   /* ɒ latin small letter turned alpha */
+        { "......", "......", ".#.##.", ".##..#",
+          ".#...#", ".#...#", ".####.", "......" } },
+    { 0x0254,   /* ɔ latin small letter open o (c inversum) */
+        { "......", "......", "..###.", ".#...#",
+          ".....#", ".#...#", "..###.", "......" } },
+    { 0x0259,   /* ə latin small letter schwa (e versum) */
+        { "......", "......", "..###.", ".....#",
+          ".#####", ".#...#", "..###.", "......" } },
+    { 0x025B,   /* ɛ latin small letter open e */
+        { "......", "......", "..####", ".#....",
+          "..###.", ".#....", "..####", "......" } },
+    { 0x025C,   /* ɜ latin small letter reversed open e */
+        { "......", "......", ".####.", ".....#",
+          "..###.", ".....#", ".####.", "......" } },
+    { 0x0261,   /* ɡ latin small letter script g (ut g fontis) */
+        { "......", "......", "..##.#", ".#..##",
+          ".#...#", "..####", ".....#", "..###." } },
+    { 0x0263,   /* ɣ latin small letter gamma (IPA) */
+        { "......", "......", ".#...#", ".#...#",
+          "..#.#.", "...#..", "..#.#.", "...#.." } },
+    { 0x026A,   /* ɪ latin letter small capital i */
+        { "......", "......", "..###.", "...#..",
+          "...#..", "...#..", "..###.", "......" } },
+    { 0x0279,   /* ɹ latin small letter turned r */
+        { "......", "......", "....#.", "....#.",
+          "....#.", ".#..#.", "..##.#", "......" } },
+    { 0x027E,   /* ɾ latin small letter r with fishhook */
+        { "......", "......", "...##.", "..#...",
+          "..#...", "..#...", "..#...", "......" } },
+    { 0x0283,   /* ʃ latin small letter esh */
+        { "....##", "...#..", "...#..", "...#..",
+          "...#..", "...#..", "...#..", ".##..." } },
+    { 0x028A,   /* ʊ latin small letter upsilon */
+        { "......", "......", ".##.##", ".#...#",
+          ".#...#", ".#...#", "..###.", "......" } },
+    { 0x028C,   /* ʌ latin small letter turned v */
+        { "......", "......", "...#..", "..#.#.",
+          ".#...#", ".#...#", ".#...#", "......" } },
+    { 0x0292,   /* ʒ latin small letter ezh */
+        { "......", "......", ".#####", "....#.",
+          "...##.", ".....#", ".#...#", "..###." } },
+    { 0x0294,   /* ʔ latin letter glottal stop */
+        { "..###.", ".#...#", ".....#", "....#.",
+          "...#..", "...#..", "...#..", "......" } },
+    { 0x02C8,   /* ˈ modifier letter vertical line (accentus primus) */
+        { "...#..", "...#..", "...#..", "......",
+          "......", "......", "......", "......" } },
+    { 0x02CC,   /* ˌ low vertical line (accentus secundus) */
+        { "......", "......", "......", "......",
+          "......", "...#..", "...#..", "...#.." } },
+    { 0x02D0,   /* ː modifier letter triangular colon (longa) */
+        { "......", "......", "..###.", "...#..",
+          "......", "...#..", "..###.", "......" } },
+    { 0x02D1,   /* ˑ half triangular colon (semilonga) */
+        { "......", "......", "..###.", "...#..",
+          "......", "......", "......", "......" } },
     { 0x0393,   /* Γ greek capital letter gamma */
         { ".#####", ".#....", ".#....", ".#....",
           ".#....", ".#....", ".#....", "......" } },
@@ -370,6 +437,9 @@ interior constans Symbolum symbola[] = {
     { 0x2193,   /* ↓ downwards arrow */
         { "...#..", "...#..", "...#..", "...#..",
           ".#.#.#", "..###.", "...#..", "......" } },
+    { 0x2194,   /* ↔ left right arrow */
+        { "......", "......", ".#..#.", "######",
+          ".#..#.", "......", "......", "......" } },
     { 0x21B5,   /* ↵ downwards arrow with corner leftwards */
         { "......", ".....#", ".....#", "..#..#",
           ".#####", "..#...", "......", "......" } },
@@ -385,6 +455,9 @@ interior constans Symbolum symbola[] = {
     { 0x221B,   /* ∛ cube root */
         { ".##..#", "..#..#", ".##.#.", "....#.",
           ".#.#..", "..##..", "...#..", "......" } },
+    { 0x2248,   /* ≈ almost equal to */
+        { "......", "..##.#", ".#..#.", "......",
+          "..##.#", ".#..#.", "......", "......" } },
     { 0x2261,   /* ≡ identical to */
         { "......", ".#####", "......", ".#####",
           "......", ".#####", "......", "......" } },
@@ -433,6 +506,12 @@ interior constans Symbolum symbola[] = {
     { 0x22EF,   /* ⋯ midline horizontal ellipsis */
         { "......", "......", "......", ".#.#.#",
           "......", "......", "......", "......" } },
+    { 0x2308,   /* ⌈ left ceiling */
+        { ".###..", ".#....", ".#....", ".#....",
+          ".#....", ".#....", ".#....", "......" } },
+    { 0x2309,   /* ⌉ right ceiling */
+        { ".###..", "...#..", "...#..", "...#..",
+          "...#..", "...#..", "...#..", "......" } },
     { 0x2318,   /* ⌘ place of interest sign */
         { "......", ".##.##", ".#####", "..#.#.",
           ".#####", ".##.##", "......", "......" } },
@@ -454,6 +533,9 @@ interior constans Symbolum symbola[] = {
     { 0x23FA,   /* ⏺ black circle for record */
         { "......", "..###.", ".#####", ".#####",
           ".#####", "..###.", "......", "......" } },
+    { 0x24D8,   /* ⓘ circled latin small letter i */
+        { "..###.", ".#.#.#", ".#...#", ".#.#.#",
+          ".#.#.#", ".#.#.#", "..###.", "......" } },
     { 0x25A0,   /* ■ black square */
         { "......", ".#####", ".#####", ".#####",
           ".#####", ".#####", "......", "......" } },
@@ -517,6 +599,9 @@ interior constans Symbolum symbola[] = {
     { 0x26A0,   /* ⚠ warning sign */
         { "...#..", "..###.", "..#.#.", ".##.##",
           ".#####", ".##.##", ".#####", "......" } },
+    { 0x2705,   /* ✅ white heavy check mark (ut ✔, sine quadrato) */
+        { "......", ".....#", "....##", ".#.##.",
+          ".###..", "..#...", "......", "......" } },
     { 0x2713,   /* ✓ check mark */
         { "......", "......", ".....#", "....#.",
           ".#.#..", "..#...", "......", "......" } },
@@ -556,6 +641,12 @@ interior constans Symbolum symbola[] = {
     { 0x276F,   /* ❯ heavy right-pointing angle quotation mark */
         { "......", ".##...", "..##..", "...##.",
           "..##..", ".##...", "......", "......" } },
+    { 0x27E8,   /* ⟨ mathematical left angle bracket */
+        { "...#..", "..#...", "..#...", ".#....",
+          "..#...", "..#...", "...#..", "......" } },
+    { 0x27E9,   /* ⟩ mathematical right angle bracket */
+        { "..#...", "...#..", "...#..", "....#.",
+          "...#..", "...#..", "..#...", "......" } },
     { 0x29C9,   /* ⧉ two joined squares */
         { "......", ".###..", ".#.###", ".###.#",
           "...#.#", "...###", "......", "......" } },
@@ -1439,6 +1530,549 @@ symbolum_ducere (
 
 
 /* ==================================================
+ * Litterae notatae (v3, Franus 2026-10-28)
+ * ================================================== */
+
+#define NOTA_MACRON       I
+#define NOTA_BREVE        II
+#define NOTA_ACUTUS       IV
+#define NOTA_GRAVIS       VIII
+#define NOTA_CIRCUMFLEXA  XVI
+#define NOTA_DIAERESIS    XXXII
+#define NOTA_LENIS        LXIV
+#define NOTA_ASPER        CXXVIII
+#define NOTA_IOTA         CCLVI
+
+nomen structura {
+    s32 runa;
+    s32 basis;      /* littera sine notis */
+    i32 notae;      /* NOTA_* */
+} Composita;
+
+/* ex decompositione Unicode (NFD, unicodedata 15.0) semel scripta,
+ * ordine runarum (quaestio bipartita): Latina Ext-A (macron, breve),
+ * Graeca cum tonis U+0386-03CE, Graeca extensa U+1F00-1FFF quorum
+ * notae omnes nobis notae et basis littera (worklog) */
+interior constans Composita compositae[] = {
+    { 0x0100, 0x0041, NOTA_MACRON },   /* Ā */
+    { 0x0101, 0x0061, NOTA_MACRON },   /* ā */
+    { 0x0102, 0x0041, NOTA_BREVE },   /* Ă */
+    { 0x0103, 0x0061, NOTA_BREVE },   /* ă */
+    { 0x0112, 0x0045, NOTA_MACRON },   /* Ē */
+    { 0x0113, 0x0065, NOTA_MACRON },   /* ē */
+    { 0x0114, 0x0045, NOTA_BREVE },   /* Ĕ */
+    { 0x0115, 0x0065, NOTA_BREVE },   /* ĕ */
+    { 0x012A, 0x0049, NOTA_MACRON },   /* Ī */
+    { 0x012B, 0x0069, NOTA_MACRON },   /* ī */
+    { 0x012C, 0x0049, NOTA_BREVE },   /* Ĭ */
+    { 0x012D, 0x0069, NOTA_BREVE },   /* ĭ */
+    { 0x014C, 0x004F, NOTA_MACRON },   /* Ō */
+    { 0x014D, 0x006F, NOTA_MACRON },   /* ō */
+    { 0x014E, 0x004F, NOTA_BREVE },   /* Ŏ */
+    { 0x014F, 0x006F, NOTA_BREVE },   /* ŏ */
+    { 0x016A, 0x0055, NOTA_MACRON },   /* Ū */
+    { 0x016B, 0x0075, NOTA_MACRON },   /* ū */
+    { 0x016C, 0x0055, NOTA_BREVE },   /* Ŭ */
+    { 0x016D, 0x0075, NOTA_BREVE },   /* ŭ */
+    { 0x0232, 0x0059, NOTA_MACRON },   /* Ȳ */
+    { 0x0233, 0x0079, NOTA_MACRON },   /* ȳ */
+    { 0x0386, 0x0391, NOTA_ACUTUS },   /* Ά */
+    { 0x0388, 0x0395, NOTA_ACUTUS },   /* Έ */
+    { 0x0389, 0x0397, NOTA_ACUTUS },   /* Ή */
+    { 0x038A, 0x0399, NOTA_ACUTUS },   /* Ί */
+    { 0x038C, 0x039F, NOTA_ACUTUS },   /* Ό */
+    { 0x038E, 0x03A5, NOTA_ACUTUS },   /* Ύ */
+    { 0x038F, 0x03A9, NOTA_ACUTUS },   /* Ώ */
+    { 0x0390, 0x03B9, NOTA_DIAERESIS | NOTA_ACUTUS },   /* ΐ */
+    { 0x03AA, 0x0399, NOTA_DIAERESIS },   /* Ϊ */
+    { 0x03AB, 0x03A5, NOTA_DIAERESIS },   /* Ϋ */
+    { 0x03AC, 0x03B1, NOTA_ACUTUS },   /* ά */
+    { 0x03AD, 0x03B5, NOTA_ACUTUS },   /* έ */
+    { 0x03AE, 0x03B7, NOTA_ACUTUS },   /* ή */
+    { 0x03AF, 0x03B9, NOTA_ACUTUS },   /* ί */
+    { 0x03B0, 0x03C5, NOTA_DIAERESIS | NOTA_ACUTUS },   /* ΰ */
+    { 0x03CA, 0x03B9, NOTA_DIAERESIS },   /* ϊ */
+    { 0x03CB, 0x03C5, NOTA_DIAERESIS },   /* ϋ */
+    { 0x03CC, 0x03BF, NOTA_ACUTUS },   /* ό */
+    { 0x03CD, 0x03C5, NOTA_ACUTUS },   /* ύ */
+    { 0x03CE, 0x03C9, NOTA_ACUTUS },   /* ώ */
+    { 0x1F00, 0x03B1, NOTA_LENIS },   /* ἀ */
+    { 0x1F01, 0x03B1, NOTA_ASPER },   /* ἁ */
+    { 0x1F02, 0x03B1, NOTA_LENIS | NOTA_GRAVIS },   /* ἂ */
+    { 0x1F03, 0x03B1, NOTA_ASPER | NOTA_GRAVIS },   /* ἃ */
+    { 0x1F04, 0x03B1, NOTA_LENIS | NOTA_ACUTUS },   /* ἄ */
+    { 0x1F05, 0x03B1, NOTA_ASPER | NOTA_ACUTUS },   /* ἅ */
+    { 0x1F06, 0x03B1, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* ἆ */
+    { 0x1F07, 0x03B1, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* ἇ */
+    { 0x1F08, 0x0391, NOTA_LENIS },   /* Ἀ */
+    { 0x1F09, 0x0391, NOTA_ASPER },   /* Ἁ */
+    { 0x1F0A, 0x0391, NOTA_LENIS | NOTA_GRAVIS },   /* Ἂ */
+    { 0x1F0B, 0x0391, NOTA_ASPER | NOTA_GRAVIS },   /* Ἃ */
+    { 0x1F0C, 0x0391, NOTA_LENIS | NOTA_ACUTUS },   /* Ἄ */
+    { 0x1F0D, 0x0391, NOTA_ASPER | NOTA_ACUTUS },   /* Ἅ */
+    { 0x1F0E, 0x0391, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* Ἆ */
+    { 0x1F0F, 0x0391, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* Ἇ */
+    { 0x1F10, 0x03B5, NOTA_LENIS },   /* ἐ */
+    { 0x1F11, 0x03B5, NOTA_ASPER },   /* ἑ */
+    { 0x1F12, 0x03B5, NOTA_LENIS | NOTA_GRAVIS },   /* ἒ */
+    { 0x1F13, 0x03B5, NOTA_ASPER | NOTA_GRAVIS },   /* ἓ */
+    { 0x1F14, 0x03B5, NOTA_LENIS | NOTA_ACUTUS },   /* ἔ */
+    { 0x1F15, 0x03B5, NOTA_ASPER | NOTA_ACUTUS },   /* ἕ */
+    { 0x1F18, 0x0395, NOTA_LENIS },   /* Ἐ */
+    { 0x1F19, 0x0395, NOTA_ASPER },   /* Ἑ */
+    { 0x1F1A, 0x0395, NOTA_LENIS | NOTA_GRAVIS },   /* Ἒ */
+    { 0x1F1B, 0x0395, NOTA_ASPER | NOTA_GRAVIS },   /* Ἓ */
+    { 0x1F1C, 0x0395, NOTA_LENIS | NOTA_ACUTUS },   /* Ἔ */
+    { 0x1F1D, 0x0395, NOTA_ASPER | NOTA_ACUTUS },   /* Ἕ */
+    { 0x1F20, 0x03B7, NOTA_LENIS },   /* ἠ */
+    { 0x1F21, 0x03B7, NOTA_ASPER },   /* ἡ */
+    { 0x1F22, 0x03B7, NOTA_LENIS | NOTA_GRAVIS },   /* ἢ */
+    { 0x1F23, 0x03B7, NOTA_ASPER | NOTA_GRAVIS },   /* ἣ */
+    { 0x1F24, 0x03B7, NOTA_LENIS | NOTA_ACUTUS },   /* ἤ */
+    { 0x1F25, 0x03B7, NOTA_ASPER | NOTA_ACUTUS },   /* ἥ */
+    { 0x1F26, 0x03B7, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* ἦ */
+    { 0x1F27, 0x03B7, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* ἧ */
+    { 0x1F28, 0x0397, NOTA_LENIS },   /* Ἠ */
+    { 0x1F29, 0x0397, NOTA_ASPER },   /* Ἡ */
+    { 0x1F2A, 0x0397, NOTA_LENIS | NOTA_GRAVIS },   /* Ἢ */
+    { 0x1F2B, 0x0397, NOTA_ASPER | NOTA_GRAVIS },   /* Ἣ */
+    { 0x1F2C, 0x0397, NOTA_LENIS | NOTA_ACUTUS },   /* Ἤ */
+    { 0x1F2D, 0x0397, NOTA_ASPER | NOTA_ACUTUS },   /* Ἥ */
+    { 0x1F2E, 0x0397, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* Ἦ */
+    { 0x1F2F, 0x0397, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* Ἧ */
+    { 0x1F30, 0x03B9, NOTA_LENIS },   /* ἰ */
+    { 0x1F31, 0x03B9, NOTA_ASPER },   /* ἱ */
+    { 0x1F32, 0x03B9, NOTA_LENIS | NOTA_GRAVIS },   /* ἲ */
+    { 0x1F33, 0x03B9, NOTA_ASPER | NOTA_GRAVIS },   /* ἳ */
+    { 0x1F34, 0x03B9, NOTA_LENIS | NOTA_ACUTUS },   /* ἴ */
+    { 0x1F35, 0x03B9, NOTA_ASPER | NOTA_ACUTUS },   /* ἵ */
+    { 0x1F36, 0x03B9, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* ἶ */
+    { 0x1F37, 0x03B9, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* ἷ */
+    { 0x1F38, 0x0399, NOTA_LENIS },   /* Ἰ */
+    { 0x1F39, 0x0399, NOTA_ASPER },   /* Ἱ */
+    { 0x1F3A, 0x0399, NOTA_LENIS | NOTA_GRAVIS },   /* Ἲ */
+    { 0x1F3B, 0x0399, NOTA_ASPER | NOTA_GRAVIS },   /* Ἳ */
+    { 0x1F3C, 0x0399, NOTA_LENIS | NOTA_ACUTUS },   /* Ἴ */
+    { 0x1F3D, 0x0399, NOTA_ASPER | NOTA_ACUTUS },   /* Ἵ */
+    { 0x1F3E, 0x0399, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* Ἶ */
+    { 0x1F3F, 0x0399, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* Ἷ */
+    { 0x1F40, 0x03BF, NOTA_LENIS },   /* ὀ */
+    { 0x1F41, 0x03BF, NOTA_ASPER },   /* ὁ */
+    { 0x1F42, 0x03BF, NOTA_LENIS | NOTA_GRAVIS },   /* ὂ */
+    { 0x1F43, 0x03BF, NOTA_ASPER | NOTA_GRAVIS },   /* ὃ */
+    { 0x1F44, 0x03BF, NOTA_LENIS | NOTA_ACUTUS },   /* ὄ */
+    { 0x1F45, 0x03BF, NOTA_ASPER | NOTA_ACUTUS },   /* ὅ */
+    { 0x1F48, 0x039F, NOTA_LENIS },   /* Ὀ */
+    { 0x1F49, 0x039F, NOTA_ASPER },   /* Ὁ */
+    { 0x1F4A, 0x039F, NOTA_LENIS | NOTA_GRAVIS },   /* Ὂ */
+    { 0x1F4B, 0x039F, NOTA_ASPER | NOTA_GRAVIS },   /* Ὃ */
+    { 0x1F4C, 0x039F, NOTA_LENIS | NOTA_ACUTUS },   /* Ὄ */
+    { 0x1F4D, 0x039F, NOTA_ASPER | NOTA_ACUTUS },   /* Ὅ */
+    { 0x1F50, 0x03C5, NOTA_LENIS },   /* ὐ */
+    { 0x1F51, 0x03C5, NOTA_ASPER },   /* ὑ */
+    { 0x1F52, 0x03C5, NOTA_LENIS | NOTA_GRAVIS },   /* ὒ */
+    { 0x1F53, 0x03C5, NOTA_ASPER | NOTA_GRAVIS },   /* ὓ */
+    { 0x1F54, 0x03C5, NOTA_LENIS | NOTA_ACUTUS },   /* ὔ */
+    { 0x1F55, 0x03C5, NOTA_ASPER | NOTA_ACUTUS },   /* ὕ */
+    { 0x1F56, 0x03C5, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* ὖ */
+    { 0x1F57, 0x03C5, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* ὗ */
+    { 0x1F59, 0x03A5, NOTA_ASPER },   /* Ὑ */
+    { 0x1F5B, 0x03A5, NOTA_ASPER | NOTA_GRAVIS },   /* Ὓ */
+    { 0x1F5D, 0x03A5, NOTA_ASPER | NOTA_ACUTUS },   /* Ὕ */
+    { 0x1F5F, 0x03A5, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* Ὗ */
+    { 0x1F60, 0x03C9, NOTA_LENIS },   /* ὠ */
+    { 0x1F61, 0x03C9, NOTA_ASPER },   /* ὡ */
+    { 0x1F62, 0x03C9, NOTA_LENIS | NOTA_GRAVIS },   /* ὢ */
+    { 0x1F63, 0x03C9, NOTA_ASPER | NOTA_GRAVIS },   /* ὣ */
+    { 0x1F64, 0x03C9, NOTA_LENIS | NOTA_ACUTUS },   /* ὤ */
+    { 0x1F65, 0x03C9, NOTA_ASPER | NOTA_ACUTUS },   /* ὥ */
+    { 0x1F66, 0x03C9, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* ὦ */
+    { 0x1F67, 0x03C9, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* ὧ */
+    { 0x1F68, 0x03A9, NOTA_LENIS },   /* Ὠ */
+    { 0x1F69, 0x03A9, NOTA_ASPER },   /* Ὡ */
+    { 0x1F6A, 0x03A9, NOTA_LENIS | NOTA_GRAVIS },   /* Ὢ */
+    { 0x1F6B, 0x03A9, NOTA_ASPER | NOTA_GRAVIS },   /* Ὣ */
+    { 0x1F6C, 0x03A9, NOTA_LENIS | NOTA_ACUTUS },   /* Ὤ */
+    { 0x1F6D, 0x03A9, NOTA_ASPER | NOTA_ACUTUS },   /* Ὥ */
+    { 0x1F6E, 0x03A9, NOTA_LENIS | NOTA_CIRCUMFLEXA },   /* Ὦ */
+    { 0x1F6F, 0x03A9, NOTA_ASPER | NOTA_CIRCUMFLEXA },   /* Ὧ */
+    { 0x1F70, 0x03B1, NOTA_GRAVIS },   /* ὰ */
+    { 0x1F71, 0x03B1, NOTA_ACUTUS },   /* ά */
+    { 0x1F72, 0x03B5, NOTA_GRAVIS },   /* ὲ */
+    { 0x1F73, 0x03B5, NOTA_ACUTUS },   /* έ */
+    { 0x1F74, 0x03B7, NOTA_GRAVIS },   /* ὴ */
+    { 0x1F75, 0x03B7, NOTA_ACUTUS },   /* ή */
+    { 0x1F76, 0x03B9, NOTA_GRAVIS },   /* ὶ */
+    { 0x1F77, 0x03B9, NOTA_ACUTUS },   /* ί */
+    { 0x1F78, 0x03BF, NOTA_GRAVIS },   /* ὸ */
+    { 0x1F79, 0x03BF, NOTA_ACUTUS },   /* ό */
+    { 0x1F7A, 0x03C5, NOTA_GRAVIS },   /* ὺ */
+    { 0x1F7B, 0x03C5, NOTA_ACUTUS },   /* ύ */
+    { 0x1F7C, 0x03C9, NOTA_GRAVIS },   /* ὼ */
+    { 0x1F7D, 0x03C9, NOTA_ACUTUS },   /* ώ */
+    { 0x1F80, 0x03B1, NOTA_LENIS | NOTA_IOTA },   /* ᾀ */
+    { 0x1F81, 0x03B1, NOTA_ASPER | NOTA_IOTA },   /* ᾁ */
+    { 0x1F82, 0x03B1, NOTA_LENIS | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F83, 0x03B1, NOTA_ASPER | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F84, 0x03B1, NOTA_LENIS | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F85, 0x03B1, NOTA_ASPER | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F86, 0x03B1, NOTA_LENIS | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1F87, 0x03B1, NOTA_ASPER | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1F88, 0x0391, NOTA_LENIS | NOTA_IOTA },   /* ᾈ */
+    { 0x1F89, 0x0391, NOTA_ASPER | NOTA_IOTA },   /* ᾉ */
+    { 0x1F8A, 0x0391, NOTA_LENIS | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F8B, 0x0391, NOTA_ASPER | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F8C, 0x0391, NOTA_LENIS | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F8D, 0x0391, NOTA_ASPER | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F8E, 0x0391, NOTA_LENIS | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1F8F, 0x0391, NOTA_ASPER | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1F90, 0x03B7, NOTA_LENIS | NOTA_IOTA },   /* ᾐ */
+    { 0x1F91, 0x03B7, NOTA_ASPER | NOTA_IOTA },   /* ᾑ */
+    { 0x1F92, 0x03B7, NOTA_LENIS | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F93, 0x03B7, NOTA_ASPER | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F94, 0x03B7, NOTA_LENIS | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F95, 0x03B7, NOTA_ASPER | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F96, 0x03B7, NOTA_LENIS | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1F97, 0x03B7, NOTA_ASPER | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1F98, 0x0397, NOTA_LENIS | NOTA_IOTA },   /* ᾘ */
+    { 0x1F99, 0x0397, NOTA_ASPER | NOTA_IOTA },   /* ᾙ */
+    { 0x1F9A, 0x0397, NOTA_LENIS | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F9B, 0x0397, NOTA_ASPER | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1F9C, 0x0397, NOTA_LENIS | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F9D, 0x0397, NOTA_ASPER | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1F9E, 0x0397, NOTA_LENIS | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1F9F, 0x0397, NOTA_ASPER | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1FA0, 0x03C9, NOTA_LENIS | NOTA_IOTA },   /* ᾠ */
+    { 0x1FA1, 0x03C9, NOTA_ASPER | NOTA_IOTA },   /* ᾡ */
+    { 0x1FA2, 0x03C9, NOTA_LENIS | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1FA3, 0x03C9, NOTA_ASPER | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1FA4, 0x03C9, NOTA_LENIS | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1FA5, 0x03C9, NOTA_ASPER | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1FA6, 0x03C9, NOTA_LENIS | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1FA7, 0x03C9, NOTA_ASPER | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1FA8, 0x03A9, NOTA_LENIS | NOTA_IOTA },   /* ᾨ */
+    { 0x1FA9, 0x03A9, NOTA_ASPER | NOTA_IOTA },   /* ᾩ */
+    { 0x1FAA, 0x03A9, NOTA_LENIS | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1FAB, 0x03A9, NOTA_ASPER | NOTA_GRAVIS | NOTA_IOTA },
+    { 0x1FAC, 0x03A9, NOTA_LENIS | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1FAD, 0x03A9, NOTA_ASPER | NOTA_ACUTUS | NOTA_IOTA },
+    { 0x1FAE, 0x03A9, NOTA_LENIS | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1FAF, 0x03A9, NOTA_ASPER | NOTA_CIRCUMFLEXA | NOTA_IOTA },
+    { 0x1FB0, 0x03B1, NOTA_BREVE },   /* ᾰ */
+    { 0x1FB1, 0x03B1, NOTA_MACRON },   /* ᾱ */
+    { 0x1FB2, 0x03B1, NOTA_GRAVIS | NOTA_IOTA },   /* ᾲ */
+    { 0x1FB3, 0x03B1, NOTA_IOTA },   /* ᾳ */
+    { 0x1FB4, 0x03B1, NOTA_ACUTUS | NOTA_IOTA },   /* ᾴ */
+    { 0x1FB6, 0x03B1, NOTA_CIRCUMFLEXA },   /* ᾶ */
+    { 0x1FB7, 0x03B1, NOTA_CIRCUMFLEXA | NOTA_IOTA },   /* ᾷ */
+    { 0x1FB8, 0x0391, NOTA_BREVE },   /* Ᾰ */
+    { 0x1FB9, 0x0391, NOTA_MACRON },   /* Ᾱ */
+    { 0x1FBA, 0x0391, NOTA_GRAVIS },   /* Ὰ */
+    { 0x1FBB, 0x0391, NOTA_ACUTUS },   /* Ά */
+    { 0x1FBC, 0x0391, NOTA_IOTA },   /* ᾼ */
+    { 0x1FC2, 0x03B7, NOTA_GRAVIS | NOTA_IOTA },   /* ῂ */
+    { 0x1FC3, 0x03B7, NOTA_IOTA },   /* ῃ */
+    { 0x1FC4, 0x03B7, NOTA_ACUTUS | NOTA_IOTA },   /* ῄ */
+    { 0x1FC6, 0x03B7, NOTA_CIRCUMFLEXA },   /* ῆ */
+    { 0x1FC7, 0x03B7, NOTA_CIRCUMFLEXA | NOTA_IOTA },   /* ῇ */
+    { 0x1FC8, 0x0395, NOTA_GRAVIS },   /* Ὲ */
+    { 0x1FC9, 0x0395, NOTA_ACUTUS },   /* Έ */
+    { 0x1FCA, 0x0397, NOTA_GRAVIS },   /* Ὴ */
+    { 0x1FCB, 0x0397, NOTA_ACUTUS },   /* Ή */
+    { 0x1FCC, 0x0397, NOTA_IOTA },   /* ῌ */
+    { 0x1FD0, 0x03B9, NOTA_BREVE },   /* ῐ */
+    { 0x1FD1, 0x03B9, NOTA_MACRON },   /* ῑ */
+    { 0x1FD2, 0x03B9, NOTA_DIAERESIS | NOTA_GRAVIS },   /* ῒ */
+    { 0x1FD3, 0x03B9, NOTA_DIAERESIS | NOTA_ACUTUS },   /* ΐ */
+    { 0x1FD6, 0x03B9, NOTA_CIRCUMFLEXA },   /* ῖ */
+    { 0x1FD7, 0x03B9, NOTA_DIAERESIS | NOTA_CIRCUMFLEXA },   /* ῗ */
+    { 0x1FD8, 0x0399, NOTA_BREVE },   /* Ῐ */
+    { 0x1FD9, 0x0399, NOTA_MACRON },   /* Ῑ */
+    { 0x1FDA, 0x0399, NOTA_GRAVIS },   /* Ὶ */
+    { 0x1FDB, 0x0399, NOTA_ACUTUS },   /* Ί */
+    { 0x1FE0, 0x03C5, NOTA_BREVE },   /* ῠ */
+    { 0x1FE1, 0x03C5, NOTA_MACRON },   /* ῡ */
+    { 0x1FE2, 0x03C5, NOTA_DIAERESIS | NOTA_GRAVIS },   /* ῢ */
+    { 0x1FE3, 0x03C5, NOTA_DIAERESIS | NOTA_ACUTUS },   /* ΰ */
+    { 0x1FE4, 0x03C1, NOTA_LENIS },   /* ῤ */
+    { 0x1FE5, 0x03C1, NOTA_ASPER },   /* ῥ */
+    { 0x1FE6, 0x03C5, NOTA_CIRCUMFLEXA },   /* ῦ */
+    { 0x1FE7, 0x03C5, NOTA_DIAERESIS | NOTA_CIRCUMFLEXA },   /* ῧ */
+    { 0x1FE8, 0x03A5, NOTA_BREVE },   /* Ῠ */
+    { 0x1FE9, 0x03A5, NOTA_MACRON },   /* Ῡ */
+    { 0x1FEA, 0x03A5, NOTA_GRAVIS },   /* Ὺ */
+    { 0x1FEB, 0x03A5, NOTA_ACUTUS },   /* Ύ */
+    { 0x1FEC, 0x03A1, NOTA_ASPER },   /* Ῥ */
+    { 0x1FF2, 0x03C9, NOTA_GRAVIS | NOTA_IOTA },   /* ῲ */
+    { 0x1FF3, 0x03C9, NOTA_IOTA },   /* ῳ */
+    { 0x1FF4, 0x03C9, NOTA_ACUTUS | NOTA_IOTA },   /* ῴ */
+    { 0x1FF6, 0x03C9, NOTA_CIRCUMFLEXA },   /* ῶ */
+    { 0x1FF7, 0x03C9, NOTA_CIRCUMFLEXA | NOTA_IOTA },   /* ῷ */
+    { 0x1FF8, 0x039F, NOTA_GRAVIS },   /* Ὸ */
+    { 0x1FF9, 0x039F, NOTA_ACUTUS },   /* Ό */
+    { 0x1FFA, 0x03A9, NOTA_GRAVIS },   /* Ὼ */
+    { 0x1FFB, 0x03A9, NOTA_ACUTUS },   /* Ώ */
+    { 0x1FFC, 0x03A9, NOTA_IOTA },   /* ῼ */
+};
+
+#define COMPOSITAE_NUMERUS  \
+    (magnitudo(compositae) / magnitudo(Composita))
+
+interior constans Composita*
+compositam_quaerere (
+    s32 runa)
+{
+    i32 imum;
+    i32 summum;
+    i32 medium;
+
+    imum    = ZEPHYRUM;
+    summum  = COMPOSITAE_NUMERUS;
+    dum (imum < summum)
+    {
+        medium = (imum + summum) / II;
+        si (compositae[medium].runa == runa)
+        {
+            redde &compositae[medium];
+        }
+        si (compositae[medium].runa < runa)
+        {
+            imum = medium + I;
+        }
+        alioquin
+        {
+            summum = medium;
+        }
+    }
+    redde NIHIL;
+}
+
+/* ordines VIII x VI ('#' plenum) cum terminatore */
+nomen character Ordines[VIII][VII];
+
+/* basis: pictura nostra (Graeca), aliter fons ipse (Latina; Graeca
+ * Latinis similes per litteras Latinas); FALSUM si ignota */
+interior b32
+basim_implere (
+        s32 basis,
+    Ordines ordines)
+{
+     constans Symbolum* s;
+                   i32  y;
+                   i32  x;
+                   s32  c;
+
+    s = symbolum_quaerere(basis);
+    si (s)
+    {
+        per (y = ZEPHYRUM; y < VIII; y++)
+        {
+            memcpy(ordines[y], s->ordines[y], VII);
+        }
+        redde VERUM;
+    }
+    commutatio (basis)
+    {
+        casus 0x0391: c = 'A'; frange;
+        casus 0x0395: c = 'E'; frange;
+        casus 0x0397: c = 'H'; frange;
+        casus 0x0399: c = 'I'; frange;
+        casus 0x039F: c = 'O'; frange;
+        casus 0x03A1: c = 'P'; frange;
+        casus 0x03A5: c = 'Y'; frange;
+        casus 0x03BF: c = 'o'; frange;
+        ordinarius:   c = basis; frange;
+    }
+    si (c < 0x20 || c > 0x7E)
+    {
+        redde FALSUM;
+    }
+    per (y = ZEPHYRUM; y < VIII; y++)
+    {
+        per (x = ZEPHYRUM; x < VI; x++)
+        {
+            ordines[y][x] = ((insignatus character)fons_6x8[c][y]
+                >> (VII - x)) & I ? '#' : '.';
+        }
+        ordines[y][VI] = '\0';
+    }
+    redde VERUM;
+}
+
+/* maiuscula (ordines 0-VI) ad corpus minusculae (II-VI) contrahitur:
+ * ordo aequalis sequenti demitur (a medio), aliter medius; ordines
+ * 0-I vacui */
+interior vacuum
+contrahere (
+    Ordines ordines)
+{
+    character r[VII][VII];
+          s32 n;
+          s32 i;
+          s32 d;
+          s32 k;
+
+    per (i = ZEPHYRUM; i < VII; i++)
+    {
+        memcpy(r[i], ordines[i], VII);
+    }
+    n = VII;
+    dum (n > V)
+    {
+        k = -I;
+        per (d = ZEPHYRUM; d < n && k < ZEPHYRUM; d++)
+        {
+            /* a medio: m, m+1, m-1, m+2, ... */
+            i = (n - II) / II + ((d % II) ? (d + I) / II : -(d / II));
+            si (   i                          >= I && i <= n - II
+                && memcmp(r[i], r[i + I], VI) == ZEPHYRUM)
+            {
+                k = i;
+            }
+        }
+        si (k < ZEPHYRUM)
+        {
+            k = n / II;
+        }
+        per (i = k; i < n - I; i++)
+        {
+            memcpy(r[i], r[i + I], VII);
+        }
+        n--;
+    }
+    per (i = ZEPHYRUM; i < II; i++)
+    {
+        memcpy(ordines[i], "......", VII);
+    }
+    per (i = ZEPHYRUM; i < V; i++)
+    {
+        memcpy(ordines[II + i], r[i], VII);
+    }
+}
+
+/* nota in ordines 0-1 (OR) */
+interior vacuum
+notam_addere (
+                Ordines  ordines,
+     constans character* supra,
+     constans character* infra)
+{
+    i32 x;
+
+    per (x = ZEPHYRUM; x < VI; x++)
+    {
+        si (supra[x] == '#')
+        {
+            ordines[ZEPHYRUM][x] = '#';
+        }
+        si (infra[x] == '#')
+        {
+            ordines[I][x] = '#';
+        }
+    }
+}
+
+/* notae supra: sola centrata; spiritus (sinistra) cum accentu
+ * (dextra); diaeresis (ordo I) cum accentu (ordo 0) */
+interior vacuum
+notas_ponere (
+    Ordines ordines,
+        i32 notae)
+{
+    i32 accentus;
+
+    accentus = notae & (NOTA_ACUTUS | NOTA_GRAVIS | NOTA_CIRCUMFLEXA);
+    si (notae & (NOTA_LENIS | NOTA_ASPER))
+    {
+        si (accentus == ZEPHYRUM)
+        {
+            notam_addere(ordines, "..##..", (notae & NOTA_LENIS)
+                ? "...#.." : "..#...");
+            redde;
+        }
+        notam_addere(ordines, "##....", (notae & NOTA_LENIS)
+            ? ".#...." : "#.....");
+        notam_addere(ordines, accentus == NOTA_ACUTUS ? ".....#"
+            : accentus == NOTA_GRAVIS ? "...#.." : "....#.",
+            accentus == NOTA_CIRCUMFLEXA ? "...#.#" : "....#.");
+        redde;
+    }
+    si (notae & NOTA_DIAERESIS)
+    {
+        notam_addere(ordines, accentus == NOTA_ACUTUS ? "...#.."
+            : accentus == NOTA_GRAVIS ? "..#..." : accentus
+            == NOTA_CIRCUMFLEXA ? "..##.." : "......", ".#..#.");
+        redde;
+    }
+    si (notae & NOTA_MACRON)
+    {
+        notam_addere(ordines, "......", ".####.");
+    }
+    alioquin si (notae & NOTA_BREVE)
+    {
+        notam_addere(ordines, ".#..#.", "..##..");
+    }
+    alioquin si (accentus == NOTA_ACUTUS)
+    {
+        notam_addere(ordines, "....#.", "...#..");
+    }
+    alioquin si (accentus == NOTA_GRAVIS)
+    {
+        notam_addere(ordines, "..#...", "...#..");
+    }
+    alioquin si (accentus == NOTA_CIRCUMFLEXA)
+    {
+        notam_addere(ordines, "..#...", ".#.#..");
+    }
+}
+
+/* littera notata: basis, maiuscula contracta (si notae supra),
+ * minuscula ordinibus 0-1 vacuatis (i sine puncto), notae, iota
+ * subscriptum in ordine VII; per symbolum_ducere scalatur */
+interior b32
+compositam_ducere (
+    constans Pictor* p,
+                s32  runa)
+{
+    constans Composita* c;
+               Ordines  ordines;
+              Symbolum  s;
+                   i32  y;
+
+    c = compositam_quaerere(runa);
+    si (!c || !basim_implere(c->basis, ordines))
+    {
+        redde FALSUM;
+    }
+    si (c->notae & ~(i32)NOTA_IOTA)
+    {
+        si (   (c->basis >= 'A' && c->basis <= 'Z')
+            || (c->basis >= 0x0391 && c->basis <= 0x03A9))
+        {
+            contrahere(ordines);
+        }
+        alioquin
+        {
+            memcpy(ordines[ZEPHYRUM], "......", VII);
+            memcpy(ordines[I], "......", VII);
+        }
+        notas_ponere(ordines, c->notae);
+    }
+    si (c->notae & NOTA_IOTA)
+    {
+        ordines[VII][II] = '#';
+    }
+    s.runa = runa;
+    per (y = ZEPHYRUM; y < VIII; y++)
+    {
+        s.ordines[y] = ordines[y];
+    }
+    symbolum_ducere(p, &s);
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Interfacies
  * ================================================== */
 
@@ -1448,7 +2082,8 @@ glyphae_ductae_est (
 {
     redde (runa >= 0x2500 && runa <= 0x259F)
         || (runa >= 0x2800 && runa <= 0x28FF)
-        || symbolum_quaerere(runa) != NIHIL;
+        || symbolum_quaerere(runa) != NIHIL
+        || compositam_quaerere(runa) != NIHIL;
 }
 
 b32
@@ -1478,6 +2113,10 @@ glyphae_ductae_pingere (
     si (symbolum_quaerere(runa))
     {
         symbolum_ducere(&p, symbolum_quaerere(runa));
+        redde VERUM;
+    }
+    si (compositam_ducere(&p, runa))
+    {
         redde VERUM;
     }
     si (runa >= 0x2800)

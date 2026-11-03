@@ -1,0 +1,537 @@
+<!--
+  xml.canon
+  MANU SERVATUM (exemplar toml.canon; planum xml-arbor P7). Forma prima
+  ex registro et aedificatore scripta (2026-10-30), deinde iudicio
+  corporum omnium probata.
+
+  Registrum ex xml.registrum.stml GENERATUR (xml_registrum_coctum.c),
+  canon manu: custos derivae (probatio_xml_canon) regulas huius
+  plagulae contra registrum generum (XV), locorum (XXXIII), lexicon
+  (XXV) et involucrum UTRIMQUE retinet (regula absens ET regula
+  rancida rubent); sigillum registri infra PINNATUM contra vivum
+  conferitur.
+
+  SPECIES LOCORUM ex aedificatore (xml_arbor.c) lectae et iudicio
+  corporum (casus inlinei, suite W3C MMI, silvestria) confirmatae:
+  aedificator mutatus canonem mutare debet - porta canonis id
+  falsificat. Liberi contenti: elementum, doctype (lexema '<!DOCTYPE'
+  ubique in contento nodum facit; ordo documenti eum iudicat), textus,
+  referentia, cdata, commentarium, instructio, malum. Malum lexemata
+  quaelibet praeter trivia fert.
+
+  ATTRIBUTA LEXEMATUM: 'cr' et 'nul' in lexematibus VERBATIM (valor CR
+  aut NUL ferens); lexemata FIXA nullum; terminatores nulli (XML lineas
+  logicas non habet). Involucrum positiones et 'linea-initium' fert.
+
+  INVOLUCRUM: <arbor>. Consulto NON in canones.registrum. Iudicium
+  manuale:
+    bin/canon_examen -canon xml/grammatica/xml.canon <doc.stml>
+
+  TRIVIA (#trivia): xml-spatia solum - in <ante> et <post> cuiusque
+  lexematis.
+-->
+<canon dialectus="xml" versio="1">
+
+  <!-- =============== FRAGMENTA =============== -->
+
+  <!-- trivia: ante/post lexematis cuiusque -->
+  <#trivia>
+    <liberum nomen="xml-spatia"/>
+  </#>
+
+  <!-- =============== INVOLUCRUM =============== -->
+
+  <elementum nomen="arbor" radix="verum"
+    nota="documentum subarboris (arbor M1): liberum unum, genus
+          quodlibet - documentum ex aedificatore, aliud ex proiectione
+          subarboris">
+    <attributum nomen="grammatica" genus="electio" necessarium="verum">
+      <optio>xml</optio>
+    </attributum>
+    <attributum nomen="registrum-sigillum" genus="electio"
+      necessarium="verum"
+      nota="PINNA: sigillum FNV-1a tabularum xml_registrum_coctum.c (ex
+            xml.registrum.stml; P2: XV genera, XXXIII loci). Declaratio
+            mutata sine hac optione mutata rubet in iudicio ET in
+            custode derivae (probatio_xml_canon optionem contra
+            materia_arbor_sigillum vivum confert). Manu movenda cum
+            causa.">
+      <optio>86121710</optio>
+    </attributum>
+    <attributum nomen="fons"    genus="numerus"/>
+    <attributum nomen="b"       genus="numerus"/>
+    <attributum nomen="linea"   genus="numerus"/>
+    <attributum nomen="columna" genus="numerus"/>
+    <attributum nomen="linea-initium" genus="electio"
+      nota="attributum NUDUM - stml praesentiam ut 'true' internat;
+            lexema primum lineam incipit">
+      <optio>true</optio>
+    </attributum>
+    <liberum nomen="documentum" maximum="1"/>
+    <liberum nomen="signum-ordinis" maximum="1"/>
+    <liberum nomen="declaratio-xml" maximum="1"/>
+    <liberum nomen="doctype" maximum="1"/>
+    <liberum nomen="pars-interna" maximum="1"/>
+    <liberum nomen="declaratio" maximum="1"/>
+    <liberum nomen="referentia-parametri" maximum="1"/>
+    <liberum nomen="elementum" maximum="1"/>
+    <liberum nomen="attributum" maximum="1"/>
+    <liberum nomen="textus" maximum="1"/>
+    <liberum nomen="referentia" maximum="1"/>
+    <liberum nomen="cdata" maximum="1"/>
+    <liberum nomen="commentarium" maximum="1"/>
+    <liberum nomen="instructio" maximum="1"/>
+    <liberum nomen="malum" maximum="1"/>
+  </elementum>
+
+  <!-- TRIVIA: unius domini semper (invariatum circuitus) -->
+
+  <elementum nomen="ante">
+    <<#trivia>>
+  </elementum>
+
+  <elementum nomen="post">
+    <<#trivia>>
+  </elementum>
+
+  <!-- =============== GENERA ET LOCI ===============
+       Ordo registri (xml.registrum.stml). Locus quisque SEMEL aut
+       nusquam: absentia canonica (locus NIHIL non scribitur; lista in
+       primo appendendo nascitur).
+       -->
+
+  <elementum nomen="documentum"
+    nota="radix: prologus, elementum radicis, epilogus, mala ordine octetorum + FINIS">
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="cauda" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="documentum">
+    <liberum nomen="signum-ordinis"/>
+    <liberum nomen="declaratio-xml"/>
+    <liberum nomen="elementum"/>
+    <liberum nomen="doctype"/>
+    <liberum nomen="textus"/>
+    <liberum nomen="referentia"/>
+    <liberum nomen="cdata"/>
+    <liberum nomen="commentarium"/>
+    <liberum nomen="instructio"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="cauda" intra="documentum">
+    <liberum nomen="xml-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="signum-ordinis"
+    nota="BOM UTF-8 ad octetum primum">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="signum-ordinis">
+    <liberum nomen="xml-signum-ordinis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="declaratio-xml"
+    nota="&lt;?xml ...?&gt; ad initium">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="attributa" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="declaratio-xml">
+    <liberum nomen="xml-declaratio-xml" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="attributa" intra="declaratio-xml">
+    <liberum nomen="attributum"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="declaratio-xml">
+    <liberum nomen="xml-instructio-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="doctype"
+    nota="&lt;!DOCTYPE titulus [id externum] [pars interna]&gt;">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="id_externum" maximum="1"/>
+    <liberum nomen="pars_interna" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="doctype">
+    <liberum nomen="xml-doctype" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="doctype">
+    <liberum nomen="xml-titulus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="id_externum" intra="doctype">
+    <liberum nomen="xml-titulus"/>
+    <liberum nomen="xml-valor"/>
+  </elementum>
+
+  <elementum nomen="pars_interna" intra="doctype">
+    <liberum nomen="pars-interna" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="doctype">
+    <liberum nomen="xml-tag-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="pars-interna"
+    nota="[ declarationes, referentiae parametri, commentaria, instructiones ]">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="pars-interna">
+    <liberum nomen="xml-pars-interna-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="pars-interna">
+    <liberum nomen="declaratio"/>
+    <liberum nomen="referentia-parametri"/>
+    <liberum nomen="commentarium"/>
+    <liberum nomen="instructio"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="pars-interna">
+    <liberum nomen="xml-pars-interna-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="declaratio"
+    nota="&lt;!ELEMENT|ATTLIST|ENTITY|NOTATION partes&gt;">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="partes" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="declaratio">
+    <liberum nomen="xml-declaratio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="partes" intra="declaratio">
+    <liberum nomen="xml-titulus"/>
+    <liberum nomen="xml-valor"/>
+    <liberum nomen="xml-delim"/>
+    <liberum nomen="xml-verbum-praedefinitum"/>
+    <liberum nomen="xml-referentia-parametri"/>
+    <liberum nomen="xml-ignotum"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="declaratio">
+    <liberum nomen="xml-tag-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="referentia-parametri"
+    nota="%titulus; inter declarationes">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="referentia-parametri">
+    <liberum nomen="xml-referentia-parametri" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="elementum"
+    nota="&lt;titulus attributa&gt; liberi &lt;/titulus&gt;, aut &lt;titulus attributa/&gt;">
+    <liberum nomen="tok_apertura" maximum="1"/>
+    <liberum nomen="attributa" maximum="1"/>
+    <liberum nomen="tok_finis" maximum="1"/>
+    <liberum nomen="liberi" maximum="1"/>
+    <liberum nomen="tok_clausura" maximum="1"/>
+    <liberum nomen="tok_clausura_finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_apertura" intra="elementum">
+    <liberum nomen="xml-tag-apertura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="attributa" intra="elementum">
+    <liberum nomen="attributum"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="tok_finis" intra="elementum">
+    <liberum nomen="xml-tag-finis" maximum="1"/>
+    <liberum nomen="xml-tag-finis-solus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="liberi" intra="elementum">
+    <liberum nomen="elementum"/>
+    <liberum nomen="doctype"/>
+    <liberum nomen="textus"/>
+    <liberum nomen="referentia"/>
+    <liberum nomen="cdata"/>
+    <liberum nomen="commentarium"/>
+    <liberum nomen="instructio"/>
+    <liberum nomen="malum"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura" intra="elementum">
+    <liberum nomen="xml-tag-clausura" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_clausura_finis" intra="elementum">
+    <liberum nomen="xml-tag-finis" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="attributum"
+    nota="titulus = 'valor'">
+    <liberum nomen="tok_titulus" maximum="1"/>
+    <liberum nomen="tok_aequale" maximum="1"/>
+    <liberum nomen="tok_valor" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_titulus" intra="attributum">
+    <liberum nomen="xml-titulus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_aequale" intra="attributum">
+    <liberum nomen="xml-aequale" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok_valor" intra="attributum">
+    <liberum nomen="xml-valor" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="textus"
+    nota="characteres contenti">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="textus">
+    <liberum nomen="xml-textus" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="referentia"
+    nota="&amp;titulus; &amp;#N; &amp;#xH;">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="referentia">
+    <liberum nomen="xml-referentia" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="cdata"
+    nota="&lt;![CDATA[ ... ]]&gt;">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="cdata">
+    <liberum nomen="xml-cdata" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="commentarium"
+    nota="&lt;!-- ... --&gt;">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="commentarium">
+    <liberum nomen="xml-commentarium" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="instructio"
+    nota="&lt;?scopus data?&gt;">
+    <liberum nomen="tok" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tok" intra="instructio">
+    <liberum nomen="xml-instructio" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="malum"
+    nota="lexemata quae grammatica ponere non potuit">
+    <liberum nomen="tokens" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="tokens" intra="malum">
+    <liberum nomen="xml-finis"/>
+    <liberum nomen="xml-signum-ordinis"/>
+    <liberum nomen="xml-textus"/>
+    <liberum nomen="xml-referentia"/>
+    <liberum nomen="xml-cdata"/>
+    <liberum nomen="xml-commentarium"/>
+    <liberum nomen="xml-instructio"/>
+    <liberum nomen="xml-declaratio-xml"/>
+    <liberum nomen="xml-instructio-finis"/>
+    <liberum nomen="xml-tag-apertura"/>
+    <liberum nomen="xml-tag-clausura"/>
+    <liberum nomen="xml-tag-finis"/>
+    <liberum nomen="xml-tag-finis-solus"/>
+    <liberum nomen="xml-titulus"/>
+    <liberum nomen="xml-aequale"/>
+    <liberum nomen="xml-valor"/>
+    <liberum nomen="xml-doctype"/>
+    <liberum nomen="xml-pars-interna-apertura"/>
+    <liberum nomen="xml-pars-interna-clausura"/>
+    <liberum nomen="xml-declaratio"/>
+    <liberum nomen="xml-referentia-parametri"/>
+    <liberum nomen="xml-verbum-praedefinitum"/>
+    <liberum nomen="xml-delim"/>
+    <liberum nomen="xml-ignotum"/>
+  </elementum>
+
+  <!-- =============== LEXEMATA =============== -->
+
+  <elementum nomen="xml-finis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-signum-ordinis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-textus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-referentia" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-cdata" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-commentarium" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-instructio" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-declaratio-xml">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-instructio-finis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-tag-apertura" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-tag-clausura" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-tag-finis">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-tag-finis-solus">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-titulus" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-aequale">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-valor" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-doctype">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-pars-interna-apertura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-pars-interna-clausura">
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-declaratio" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-referentia-parametri" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-verbum-praedefinitum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-delim" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-spatia" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+  <elementum nomen="xml-ignotum" textus="verum">
+    <attributum nomen="cr" genus="textus"/>
+    <attributum nomen="nul" genus="textus"/>
+    <liberum nomen="ante" maximum="1"/>
+    <liberum nomen="post" maximum="1"/>
+  </elementum>
+
+</canon>

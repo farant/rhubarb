@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- divisiones_mutatae: P1 divisions 2, P2 divisions 3 deinde 4 intra mensuram -> divisio operis 12, non maxima 4 (M4) -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Superius</part-name></score-part>
+    <score-part id="P2"><part-name>Bassus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>2</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>2</duration></note>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>2</duration></note>
+    </measure>
+  </part>
+  <part id="P2">
+    <measure number="1">
+      <attributes><divisions>3</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>E</step><octave>3</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>F</step><octave>3</octave></pitch><duration>1</duration></note>
+      <note><pitch><step>G</step><octave>3</octave></pitch><duration>1</duration></note>
+      <attributes><divisions>4</divisions></attributes>
+      <note><pitch><step>A</step><octave>3</octave></pitch><duration>4</duration></note>
+    </measure>
+  </part>
+</score-partwise>

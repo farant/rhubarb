@@ -109,6 +109,43 @@
     <forma textus="analysin" casus="accusativus" numerus="singularis"/>
   </vocabulum>
 
+  <vocabulum lemma="servitor" lingua="latina" classis="substantivum"
+    nota="WORDS servitor, servitoris N 3 M (servus, minister): vox domus pro servitore tmux (socket); formae obliquae pro PanellusServitoris, servitorem_quaerere (comites P7 2026-10-27)">
+    <forma textus="servitoris" casus="genitivus" numerus="singularis"/>
+    <forma textus="servitorem" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="vicipaedia" lingua="latina" classis="substantivum"
+    nota="Latinum recens: Vicipaedia = Wikipedia (nomen editionis Latinae ipsius); vox domus pro adaptatore lib/vicipaedia.c (navigator N1 2026-10-27)">
+    <forma textus="vicipaedia" casus="nominativus" numerus="singularis"/>
+    <forma textus="vicipaediae" casus="genitivus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="navigator" lingua="latina" classis="substantivum"
+    nota="WORDS navigator, navigatoris N 3 M (nauta): vox domus pro latere navigatoris paginarum interretis (lib/navigator.c, apps/navigator; navigator N3.2 2026-10-27); formae obliquae pro navigatorem_montare_in_vico, ContextusNavigatoris">
+    <forma textus="navigatorem" casus="accusativus" numerus="singularis"/>
+    <forma textus="navigatoris" casus="genitivus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="rheum" lingua="latina" classis="substantivum"
+    nota="Latinum botanicum (Gk. rheon): genus Rheum, rhabarbarum; nomen sectionis probatio_vicipaedia (_probare_rheum, fixum rhubarb.html; navigator N1 2026-10-27)">
+    <forma textus="rheum" casus="nominativus" numerus="singularis"/>
+    <forma textus="rhei" casus="genitivus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="insecabilis" lingua="latina" classis="adiectivum"
+    nota="Latinum classicum (Quint., Sen.): quod secari non potest; spatium insecabile = non-breaking space U+00A0 (INSECABILE in probatio_vicipaedia; navigator N1 2026-10-27)">
+    <forma textus="insecabile" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+
+  <vocabulum lemma="approximatio" lingua="latina" classis="substantivum"
+    nota="Latinum serum (approximare, Tertullianus): appropinquatio - conversor musicxml_carmen.h: mutatio soni aut cantus quam carmen exigit (spec musicxml M5); WORDS caret">
+    <sensus>approximation; a drawing near</sensus>
+    <forma textus="approximationis" casus="genitivus" numerus="singularis"/>
+    <forma textus="approximationes" casus="nominativus" numerus="pluralis"/>
+    <forma textus="approximationum" casus="genitivus" numerus="pluralis"/>
+  </vocabulum>
+
   <vocabulum lemma="indicator" lingua="latina" classis="substantivum"
     nota="Latinum serum: qui indicat - indicator muris/tactus (eventus.h); pluralis pro TESTA_INDICATORES_MAXIMI (testa B1 2026-10-23)">
     <forma textus="indicatores" casus="nominativus" numerus="pluralis"/>
@@ -401,6 +438,12 @@
     <forma textus="reflexione" casus="ablativus" numerus="singularis" genus="femininum"/>
     <forma textus="reflexiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="responsio" lingua="latina" classis="substantivum" nota="respondere: responsio, -onis f. (Cicero); hic responsio coli H(e^jw) ad frequentiam (tibia aequatio)">
+    <forma textus="responsio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="responsionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="responsionem" casus="accusativus" numerus="singularis" genus="femininum"/>
+    <forma textus="responsione" casus="ablativus" numerus="singularis" genus="femininum"/>
+  </vocabulum>
   <vocabulum lemma="unimodularis" lingua="latina" classis="adiectivum" nota="Neolatina: unimodularis, matrix determinantis +-1 (matrix: certificata Hermite et Smith); WORDS caret">
     <forma textus="unimodularis" casus="nominativus" numerus="singularis"/>
     <forma textus="unimodulares" casus="nominativus" numerus="pluralis"/>
@@ -429,6 +472,7 @@
     <forma textus="interpolatione" casus="ablativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
   <vocabulum lemma="lagrange" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J.-L. Lagrange (interpolatio Lagrange, polynomium per puncta; lib/interpolatio.c)"/>
+  <vocabulum lemma="temperley" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: H. N. V. Temperley (algebra Temperley-Lieb TL_n, moduli standard; lib/temperley.c)"/>
   <vocabulum lemma="tensor" lingua="latina" classis="substantivum" nota="Latina posterior: tensor, -oris m., qui tendit (tendo); mathematica: tabula multilinearis super indices (lib/contractio.c)">
     <forma textus="tensor" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="tensoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
@@ -1069,6 +1113,7 @@
   <vocabulum lemma="pcg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen algorithmi (sors, 2026-09-23)"/>
   <vocabulum lemma="splitmix" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen algorithmi (sors, 2026-09-23)"/>
   <vocabulum lemma="plist" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae Apple (tabula proprietatum), ut xml / json; bibliotheca plist 2026-09-11"/>
+  <vocabulum lemma="musicxml" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (partitura MusicXML, .xml/.mxl), ut plist / xml; bibliotheca musicxml 2026-10-30"/>
   <vocabulum lemma="lstat" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (status nexus IPSIUS, non destinationis); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
   <vocabulum lemma="rmdir" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX (directorium vacuum delere); systema_posix.h 2026-09-14 pro filum_arborem_delere"/>
   <vocabulum lemma="kqueue" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis BSD/Darwin (cauda notitiarum nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
@@ -1989,4 +2034,8 @@
     <forma textus="replicas" casus="accusativus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
 
+  <vocabulum lemma="pubid" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus XML 1.0 (par. 2.3): PubidChar, characteres identificatoris publici (xml/fontes/xml_nomina.c)"/>
+  <vocabulum lemma="nmtoken" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus XML 1.0 (par. 2.3): Nmtoken, signum nominis quodvis NameChar incipiens (xml/fontes/xml_nomina.c)"/>
+  <vocabulum lemma="xmlts" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: XML W3C Conformance Test Suite (xmlts20130923), oraculum clientis xml (xml/xmlts_arcessere.sh)"/>
+  <vocabulum lemma="qname" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus Namespaces in XML 1.0: QName, titulus qualificatus (praefixum ':' pars localis; xml/fontes/xml_coctum.c)"/>
 </glossarium>

@@ -492,6 +492,169 @@ constans character* via_fixi =
 }
 
 
+/* ---- G2b: XML plenum sub lectore (xml_documentum.h) ---- */
+interior vacuum
+_sectio_nona (
+    CredoContextus* c)
+{
+           PlistResultus  r;
+              PlistValor* v;
+             PlistStatus  status;
+                  chorda  octeti;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
+    /* CDATA, commentarium, instructio, referentia characteris,
+     * entitas interna DTD */
+    r = plist_legere(chorda_ex_literis(
+        "<?xml version=\"1.0\"?>\n"
+        "<!DOCTYPE plist [<!ENTITY auctor \"Novello\">]>\n"
+        "<plist version=\"1.0\"><dict>"
+        "<!-- nota --><key>a</key><?pi x?>"
+        "<string><![CDATA[x < y]]></string>"
+        "<key>&auctor;</key><string>&#x263A;</string>"
+        "</dict></plist>", piscina), piscina, intern);
+    CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_SUCCESSUS);
+    CREDO_AEQUALIS_I32(plist_numerus(r.radix), II);
+    v = plist_dictio_capere(r.radix, "a");
+    CREDO_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->textus, "x < y");
+    v = plist_dictio_capere(r.radix, "Novello");
+    CREDO_NON_NIHIL(v);
+    CREDO_CHORDA_AEQUALIS_LITERIS(v->textus, "\342\230\272");
+
+    /* octeti NUL post </plist> (Info.plist Aseprite, 10-30): plutil
+     * accipit, ergo plist eos tollit ante XML; NUL alibi manet malum */
+    {
+        character fons[] =
+            "<plist version=\"1.0\"><true/></plist>\n\0\0";
+        character medius[] =
+            "<plist version=\"1.0\"><true/>\0</plist>\n";
+
+        r = plist_legere(chorda_ex_buffer((i8*)fons,
+                             (i32)magnitudo(fons) - I), piscina,
+                             intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_SUCCESSUS);
+        r = plist_legere(chorda_ex_buffer((i8*)medius,
+                             (i32)magnitudo(medius) - I), piscina,
+                             intern);
+        CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_ERROR_XML);
+    }
+
+    /* XML malum: causa = diagnosticum redditum cum via 'plist' */
+    r = plist_legere(chorda_ex_literis(
+        "<plist version=\"1.0\"><dict></plist>", piscina), piscina,
+        intern);
+    CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_ERROR_XML);
+    CREDO_NIHIL(r.radix);
+    CREDO_CHORDA_INCIPIT(r.causa, chorda_ex_literis("plist:1:",
+                                                    piscina));
+
+    /* forma scriptoris octetim: folium vacuum '<t/>', linea vacua
+     * finalis */
+    v = plist_lista_creare(piscina);
+    plist_lista_addere(v, plist_chordam_creare(
+        chorda_ex_literis("", piscina), piscina), piscina);
+    plist_lista_addere(v, plist_dictio_creare(piscina), piscina);
+    octeti = plist_scribere(v, &status, piscina);
+    CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_SUCCESSUS);
+    CREDO_CHORDA_TERMINATUR(octeti, chorda_ex_literis(
+        "<plist version=\"1.0\">\n"
+        "  <array>\n"
+        "    <string/>\n"
+        "    <dict/>\n"
+        "  </array>\n"
+        "</plist>\n\n", piscina));
+}
+
+/* ---- G8: spatium servatur, profunditas limitata (auditus 10-18:
+ * parca 01M56KR98E6K, 01M5AJYGJ2KP) ---- */
+interior vacuum
+_sectio_decima (
+    CredoContextus* c)
+{
+           PlistResultus  r;
+              PlistValor* d;
+              PlistValor* v;
+             PlistStatus  status;
+                  chorda  octeti;
+       ChordaAedificator* aed;
+                     i32  i;
+                 Piscina* piscina;
+     InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+
+    /* spatium ducens, sequens, solum: iter reditus integrum */
+    d = plist_dictio_creare(piscina);
+    plist_dictio_ponere(d, chorda_ex_literis(" k ", piscina),
+        plist_chordam_creare(chorda_ex_literis("  ducens", piscina),
+                             piscina), piscina);
+    plist_dictio_ponere(d, chorda_ex_literis("solum", piscina),
+        plist_chordam_creare(chorda_ex_literis(" \n\t", piscina),
+                             piscina), piscina);
+    octeti = plist_scribere(d, &status, piscina);
+    CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_SUCCESSUS);
+    r = plist_legere(octeti, piscina, intern);
+    CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_SUCCESSUS);
+    CREDO_VERUM(plist_aequalis(d, r.radix));
+
+    /* lector: XXX milia nidorum recusantur, non ruunt */
+    aed = chorda_aedificator_creare(piscina, CCLVI * CCLVI);
+    chorda_aedificator_appendere_literis(aed,
+        "<plist version=\"1.0\">");
+    per (i = ZEPHYRUM; i < XXX * M; i++)
+    {
+        chorda_aedificator_appendere_literis(aed, "<array>");
+    }
+    per (i = ZEPHYRUM; i < XXX * M; i++)
+    {
+        chorda_aedificator_appendere_literis(aed, "</array>");
+    }
+    chorda_aedificator_appendere_literis(aed, "</plist>");
+    r = plist_legere(chorda_aedificator_finire(aed), piscina, intern);
+    CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_ERROR_STRUCTURA);
+    CREDO_NIHIL(r.radix);
+    CREDO_CHORDA_CONTINET(r.causa, chorda_ex_literis("profund",
+                                                     piscina));
+
+    /* scriptor: idem, et cyclus (lista se ipsam continens) */
+    v = plist_lista_creare(piscina);
+    per (i = ZEPHYRUM; i < XXX * M; i++)
+    {
+        PlistValor* exterior = plist_lista_creare(piscina);
+
+        plist_lista_addere(exterior, v, piscina);
+        v = exterior;
+    }
+    octeti = plist_scribere(v, &status, piscina);
+    CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_ERROR_STRUCTURA);
+    CREDO_CHORDA_VACUA(octeti);
+    v = plist_lista_creare(piscina);
+    plist_lista_addere(v, v, piscina);
+    octeti = plist_scribere(v, &status, piscina);
+    CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_ERROR_STRUCTURA);
+
+    /* limes ipse: PLIST_PROFUNDITAS_MAXIMA nidi legitimi */
+    v = plist_lista_creare(piscina);
+    per (i = I; i < PLIST_PROFUNDITAS_MAXIMA; i++)
+    {
+        PlistValor* exterior = plist_lista_creare(piscina);
+
+        plist_lista_addere(exterior, v, piscina);
+        v = exterior;
+    }
+    octeti = plist_scribere(v, &status, piscina);
+    CREDO_AEQUALIS_I32((i32)status, (i32)PLIST_SUCCESSUS);
+    r = plist_legere(octeti, piscina, intern);
+    CREDO_AEQUALIS_I32((i32)r.status, (i32)PLIST_SUCCESSUS);
+    CREDO_VERUM(plist_aequalis(v, r.radix));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "G1: modellum valoris", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -505,6 +668,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "G4: iter reditus", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "G5: iter reditus alienum", _sectio_octava, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "G2b: XML plenum", _sectio_nona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "G8: spatium et profunditas", _sectio_decima, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
