@@ -2,8 +2,9 @@
 
 Status: DRAFT v3 (2026-11-02). Q1 DECIDED by Fran 2026-11-02 (accepted,
 with conditions). Design review done (consiliarius-verificatio, approve
-after fixes; every finding placed, see "Design review" at the end). Waiting
-on Fran: Q2 and Q3 (recommendations given), then T0.
+after fixes; every finding placed, see "Design review" at the end). Q2
+and Q3 DECIDED by Fran 2026-11-02 (s = 64; frozen-kernel checker for the
+14 × 801 headline). Next: T0.
 
 Agreed with Fran (2026-11-02): after the TL speed pass
 (temperley-celeritas-plan.md, done) and the Regina comparison
@@ -374,11 +375,11 @@ through `interpolatio_polynomium_relatum`.
 ## Open questions for Fran
 
 - **Q1.** DECIDED 2026-11-02 (see "Q1 decision").
-- **Q2.** Default s = 64? Review recommends yes: with two tiers the
+- **Q2.** DECIDED 2026-11-02: s = 64 by default. Review's reasoning: with two tiers the
   certifying cost is m points (4 at 64, 8 at 128); the residual risk is
   set by the model's assumptions (checker correctness, PRNG, hardware
   faults PROBATUM shares) long before 2^-64. Allow up to 128 on request.
-- **Q3.** 14 × 801 headline checker: review recommends the frozen kernel
+- **Q3.** DECIDED 2026-11-02: the frozen kernel checks the 14 × 801 headline
   (~3.8 s/point, m = 4 ≈ 15 s; independent of everything new since
   celeritas, where a 14 × 801-specific fault would live). The vertex route
   at 14 × 801 is estimated at 2.2–9 GB and 20–80 min/point (extrapolated,
