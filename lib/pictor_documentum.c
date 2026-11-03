@@ -1336,6 +1336,90 @@ pictor_documenta_recentia (
     redde l;
 }
 
+Xar*
+pictor_spatia_actorum (
+                  Volumen* volumen,
+    constans VolumenActum* acta,
+                      i32  numerus,
+                  Piscina* piscina)
+{
+                     Xar* spatia;
+                     Xar* l;
+          TabulaDispersa* index;
+                  chorda* s;
+                  chorda  via;
+      constans character* g[IV];
+            JsonResultus  r;
+                  vacuum* v;
+                     i32  i;
+                     i32  j;
+                     i32  n;
+                     b32  novum;
+
+    si (!volumen || !piscina || (!acta && numerus > ZEPHYRUM))
+    {
+        redde NIHIL;
+    }
+    l       = xar_creare(piscina, (i32)magnitudo(chorda));
+    spatia  = pictor_documenta_enumerare(volumen, piscina);
+    si (!l || !spatia)
+    {
+        redde NIHIL;
+    }
+    n      = xar_numerus(spatia);
+    index  = tabula_dispersa_creare_chorda(piscina, n * IV + XVI);
+    si (!index)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        s = (chorda*)xar_obtinere(spatia, i);
+        historia_genera(piscina, chorda_ut_cstr(*s, piscina),
+            GENUS_ICTUUM, g);
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            (vacuum)tabula_dispersa_inserere(index,
+                chorda_ex_literis(g[j], piscina), s);
+        }
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        s = NIHIL;
+        si (chorda_aequalis_literis(acta[i].genus, "plagula-condita"))
+        {
+            r = json_legere(acta[i].datum, piscina);
+            si (   r.successus
+                && spatium_documenti(json_capere_chorda(r.radix, "via",
+                       chorda_ex_literis("", piscina)), &via))
+            {
+                per (j = ZEPHYRUM; j < n && !s; j++)
+                {
+                    si (chorda_aequalis(*(chorda*)xar_obtinere(spatia,
+                            j), via))
+                    {
+                        s = (chorda*)xar_obtinere(spatia, j);
+                    }
+                }
+            }
+        }
+        alioquin si (tabula_dispersa_invenire(index, acta[i].genus, &v))
+        {
+            s = (chorda*)v;
+        }
+        novum = s != NIHIL;
+        per (j = ZEPHYRUM; novum && j < xar_numerus(l); j++)
+        {
+            novum = !chorda_aequalis(*(chorda*)xar_obtinere(l, j), *s);
+        }
+        si (novum)
+        {
+            *(chorda*)xar_addere(l) = *s;
+        }
+    }
+    redde l;
+}
+
 /* clavis manifesti: "spatium/documentum" (spatium vacuum: nuda) */
 interior chorda
 clavis_manifesti (

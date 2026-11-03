@@ -1715,6 +1715,12 @@ pictor_elenchum_agere (
         redde palettam_scribere(repo, ctx, INSCRIPTIO);
     }
     (vacuum)palettam_scribere(repo, ctx, NIHIL);
+    /* pulsus-plan T9: menu in tabula vivit - pictura semper aperta */
+    si (strcmp(titulus, "pulsus.statim") == ZEPHYRUM)
+    {
+        redde pa->pulsum_statim && pa->pulsum_statim(pa->inscriptio_ctx,
+            pa->doc->historia ? pa->doc->historia->spatium : NIHIL);
+    }
     si (strcmp(titulus, "pictura.nova") == ZEPHYRUM)
     {
         si (!pa->picturam_condere)

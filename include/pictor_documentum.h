@@ -120,6 +120,18 @@ pictor_documenta_recentia (
      Volumen* volumen,
      Piscina* piscina);
 
+/* pulsus-plan T9: picturae propriae quas acta tangunt (genera historiae
+ * cuiusque picturae, aut "plagula-condita" cum via documenti), ordine
+ * primae apparitionis, sine duplicibus; acta aliena et non picturarum
+ * praetermittuntur. Xar de chorda (spatium; "" = radix), NIHIL si
+ * argumenta mala */
+Xar*
+pictor_spatia_actorum (
+                  Volumen* volumen,
+    constans VolumenActum* acta,
+                      i32  numerus,
+                  Piscina* piscina);
+
 /* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
  * determinatus ex (semen, i, k) per sors */
 vacuum

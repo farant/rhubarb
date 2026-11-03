@@ -851,6 +851,13 @@ pictor_elenchum_parare (
         res[n].titulus   = "inscriptio.aperire";
         res[n++].textus  = "Sign in\xE2\x80\xA6";
     }
+    /* pulsus-plan T9 (spec III.4): inscriptis solum - cum "Sign in…"
+     * numquam simul, ergo V res sufficiunt */
+    si (c && c->communio && c->inscripta)
+    {
+        res[n].titulus   = "pulsus.statim";
+        res[n++].textus  = "Notify family now";
+    }
     per (e->numerus = ZEPHYRUM; e->numerus < (i32)n; e->numerus++)
     {
         res[e->numerus].clavis   = NIHIL;

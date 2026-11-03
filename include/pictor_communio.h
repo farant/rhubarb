@@ -19,6 +19,7 @@
 #include "volumen.h"
 #include "veredarius.h"
 #include "pictor_applicatio.h"
+#include "testa_cursus.h"
 
 /* picturae advectae, index apparatuum, status inscriptionis mutatus */
 nomen vacuum (*PictorCommunioMutata)(vacuum* ctx);
@@ -143,5 +144,34 @@ pictor_communionem_ligare (
          PictorMontatio* montatio,
             Dispensator* d,
      constans character* machina);
+
+
+/* ==================================================
+ * pulsus-plan T9: notificationes (pulsus-spec III.4)
+ *
+ * Acta propria a servo accepta (CommunioMissa) -> eventus "pictor.
+ * picturae", res "<replica>:<spatium>" per picturam tactam, mora CCC,
+ * formae "{persona} shared a picture" / "{persona} shared {numerus}
+ * pictures" - SEMPER cum inscripta, etiam sine permissione in hoc
+ * apparatu (notificatio aliis est).
+ * ================================================== */
+
+/* testa pulsum praebet (iOS): permissio petitur nunc si inscripta, aut
+ * statim post inscriptionem - numquam ante; semel per processum.
+ * Tessera -> communio_cliens_pulsum_inscribere(.., ambitus testae,
+ * thema "earth.golden.pictor"), et iterum cum cliens novus (post
+ * revocationem). a->pulsum_petere NIHIL (macOS, Android): nihil. */
+vacuum
+pictor_communio_pulsum_parare (
+           PictorCommunio* pc,
+    constans TestaAmbitus* a);
+
+/* "Notify family now": eventus statim cum pictura propria 'spatium'
+ * (NIHIL = sine pictura: servus fasciculum pendentem statim mittit,
+ * aut nihil). FALSUM si non inscripta aut cliens nondum. */
+b32
+pictor_communio_pulsum_statim (
+         PictorCommunio* pc,
+     constans character* spatium);
 
 #endif /* PICTOR_COMMUNIO_H */

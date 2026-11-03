@@ -67,6 +67,10 @@ nomen structura {
           vacuum (*inscriptionem_abicere)(vacuum* ctx);
     /* plan-5 T8: EVENTUS_RESUMPTIO -> communio excitatur (ctx idem) */
           vacuum (*communio_excitare)(vacuum* ctx);
+    /* pulsus-plan T9: "Notify family now" - eventus statim cum
+     * pictura aperta (spatium; NIHIL = nulla) (ctx idem) */
+             b32 (*pulsum_statim)(vacuum* ctx,
+                 constans character* spatium);
                 vacuum* inscriptio_ctx;
 TestaClaviaturamPonere  claviaturam_ponere;
                 vacuum* claviatura_ctx;

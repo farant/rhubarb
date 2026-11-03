@@ -699,8 +699,11 @@ _sectio_menu (
     k.importare = VERUM;
     k.inscripta = VERUM;
     pictor_elenchum_parare(&k, res, &e);
-    CREDO_AEQUALIS_I32(e.numerus, IV);
+    /* pulsus-plan T9: + "Notify family now" (inscripta) */
+    CREDO_AEQUALIS_I32(e.numerus, V);
     CREDO_VERUM(strcmp(e.res[III].textus, "Import image\xE2\x80\xA6")
+        == ZEPHYRUM);
+    CREDO_VERUM(strcmp(e.res[IV].textus, "Notify family now")
         == ZEPHYRUM);
 
     CREDO_GRADUS("Android: sine communione");

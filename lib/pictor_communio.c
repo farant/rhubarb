@@ -8,6 +8,7 @@
 #include "filum.h"
 #include "dispensator.h"
 #include "claviatura.h"
+#include "pulsus_forma.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -18,6 +19,13 @@
 #define TEMPUS_INDICIS      ((i32)XXX * (i32)M)
 #define CLAVIS_APPARATUUM   "communio/apparatus"
 #define INDEX_MORA_MS       ((i32)M)
+/* pulsus-plan T9 (spec III.4) */
+#define PULSUS_THEMA        "earth.golden.pictor"
+#define PULSUS_CLAVIS       "pictor.picturae"
+#define PULSUS_UNUS         "{persona} shared a picture"
+#define PULSUS_PLURES       "{persona} shared {numerus} pictures"
+#define PULSUS_MORA         CCC
+#define AMBITUS_MAXIMUS     XVI
 
 structura PictorCommunio {
                  Piscina* piscina;
@@ -59,6 +67,14 @@ structura PictorCommunio {
      * SOLA ("Sent to ..."); numquam in volumine, vacua post
      * resumptionem, abiectionem, inscriptionem, clausuram */
                character epistula_missa[CCLVI];
+    /* pulsus-plan T9: testa (pulsum_parare), tessera apparatus hex (in
+     * memoria sola), petitio semel per processum */
+       TestaPulsumPetere  pulsum_petere;
+                  vacuum* pulsus_sui;
+               character  pulsus_ambitus[AMBITUS_MAXIMUS];
+               character  pulsus_tessera[PULSUS_TESSERA_MAXIMA + I];
+                     b32  pulsus_armatus;
+                     b32  pulsus_petitus;
 };
 
 s32
@@ -330,6 +346,134 @@ _advenerunt (
     _nuntiare(pc);
 }
 
+/* pulsus-plan T9: eventus in caudam clientis; res = "<replica>:" +
+ * spatium (C ad plurimum) */
+interior b32
+_eventum_nuntiare (
+       PictorCommunio* pc,
+         constans Xar* spatia,
+                  b32  statim,
+              Piscina* piscina)
+{
+    PulsusEventus ev;
+           chorda replica;
+           chorda id;
+              i32 i;
+
+    replica = volumen_replica(pc->volumen);
+    si (!pc->cliens || pc->recusata || replica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    memset(&ev, ZEPHYRUM, magnitudo(ev));
+    ev.clavis  = chorda_ex_literis(PULSUS_CLAVIS, piscina);
+    ev.thema   = chorda_ex_literis(PULSUS_THEMA, piscina);
+    ev.unus    = chorda_ex_literis(PULSUS_UNUS, piscina);
+    ev.plures  = chorda_ex_literis(PULSUS_PLURES, piscina);
+    ev.mora_s  = PULSUS_MORA;
+    ev.statim  = statim;
+    ev.res     = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (!ev.res)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; spatia && i < xar_numerus(spatia)
+         && i < PULSUS_RES_PER_PETITIONEM; i++)
+    {
+        id = chorda_concatenare(chorda_concatenare(replica,
+            chorda_ex_literis(":", piscina), piscina),
+            *(chorda*)xar_obtinere(spatia, i), piscina);
+        *(chorda*)xar_addere(ev.res) = id;
+    }
+    communio_cliens_pulsum_nuntiare(pc->cliens, &ev);
+    redde VERUM;
+}
+
+/* acta propria accepta -> eventus de picturis tactis (si quae) */
+interior vacuum
+_missa (
+                   vacuum* ctx,
+    constans VolumenActum* acta,
+                      i32  numerus)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+           Piscina* temporaria;
+               Xar* spatia;
+
+    temporaria = piscina_generare_dynamicum("pictor_communio_missa",
+        (memoriae_index)LXIV * (memoriae_index)M);
+    spatia = temporaria ? pictor_spatia_actorum(pc->volumen, acta,
+        numerus, temporaria) : NIHIL;
+    si (spatia && xar_numerus(spatia) > ZEPHYRUM)
+    {
+        (vacuum)_eventum_nuntiare(pc, spatia, FALSUM, temporaria);
+    }
+    si (temporaria)
+    {
+        piscina_destruere(temporaria);
+    }
+}
+
+/* tessera nota et cliens: inscribere (cliens copiat) */
+interior vacuum
+_pulsum_inscribere (
+    PictorCommunio* pc)
+{
+    si (   !pc->cliens || pc->recusata || pc->pulsus_tessera[ZEPHYRUM]
+        == '\0')
+    {
+        redde;
+    }
+    communio_cliens_pulsum_inscribere(pc->cliens, chorda_ex_literis(
+        pc->pulsus_tessera, pc->scheda), chorda_ex_literis(
+        pc->pulsus_ambitus, pc->scheda), chorda_ex_literis(PULSUS_THEMA,
+        pc->scheda));
+}
+
+/* testa: tessera (aut vacua + causa: negata, defectus). Tessera
+ * numquam in nuntio. */
+interior vacuum
+_pulsus_signum (
+    vacuum* ctx,
+    chorda  tessera_hex,
+    chorda  causa)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+
+    si (pc->clausa)
+    {
+        redde;
+    }
+    si (   tessera_hex.mensura == ZEPHYRUM
+        || tessera_hex.mensura > PULSUS_TESSERA_MAXIMA)
+    {
+        fprintf(stderr, "pictor: pulsus non inscriptus - %.*s\n",
+            (integer)(causa.mensura < CCLVI ? causa.mensura : CCLVI),
+            causa.datum ? (constans character*)causa.datum : "");
+        redde;
+    }
+    memcpy(pc->pulsus_tessera, tessera_hex.datum,
+        (size_t)tessera_hex.mensura);
+    pc->pulsus_tessera[tessera_hex.mensura] = '\0';
+    _pulsum_inscribere(pc);
+}
+
+/* armatus, inscripta, nondum petitum: testam rogare */
+interior vacuum
+_pulsum_petere (
+    PictorCommunio* pc)
+{
+    si (   !pc->pulsus_armatus || pc->pulsus_petitus
+        || !pc->pulsum_petere
+        || !pictor_communio_inscripta(pc))
+    {
+        redde;
+    }
+    pc->pulsus_petitus = VERUM;
+    (vacuum)pc->pulsum_petere(pc->pulsus_sui, _pulsus_signum, NIHIL,
+        pc);
+}
+
 PictorCommunio*
 pictor_communionem_aperire (
                Piscina* piscina,
@@ -445,6 +589,8 @@ pictor_communio_incipere (
         redde;
     }
     communio_cliens_recusationem_ponere(pc->cliens, _recusata, pc);
+    communio_cliens_missa_ponere(pc->cliens, _missa, pc);
+    _pulsum_inscribere(pc);
     si (pc->mora_posita)
     {
         communio_cliens_moram_ponere(pc->cliens, pc->mora);
@@ -548,6 +694,7 @@ pictor_communionem_claudere (
     }
     pc->clausa = VERUM;
     memset(pc->epistula_missa, ZEPHYRUM, magnitudo(pc->epistula_missa));
+    memset(pc->pulsus_tessera, ZEPHYRUM, magnitudo(pc->pulsus_tessera));
     si (pc->hora_indicis_viva)
     {
         (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora_indicis);
@@ -597,6 +744,8 @@ _inscriptio_mutata (
         memset(pc->epistula_missa, ZEPHYRUM,
             magnitudo(pc->epistula_missa));
         pictor_communio_incipere(pc);
+        /* pulsus-plan T9: statim post inscriptionem */
+        _pulsum_petere(pc);
     }
     _nuntiare(pc);
 }
@@ -795,6 +944,14 @@ _epistula_ligata (
         piscina);
 }
 
+interior b32
+_statim_ligatum (
+                 vacuum* ctx,
+     constans character* spatium)
+{
+    redde pictor_communio_pulsum_statim((PictorCommunio*)ctx, spatium);
+}
+
 vacuum
 pictor_communionem_ligare (
          PictorCommunio* pc,
@@ -825,6 +982,64 @@ pictor_communionem_ligare (
     montatio->actiones_ctx.codicem_dare = _codicem_ligatum;
     montatio->actiones_ctx.inscriptionem_abicere = _abicere_ligatum;
     montatio->actiones_ctx.communio_excitare = _excitare_ligatum;
+    montatio->actiones_ctx.pulsum_statim = _statim_ligatum;
     montatio->actiones_ctx.inscriptio_ctx = pc;
     pc->gradus_nuntiatus = pictor_communio_inscriptionis_gradus(pc);
+}
+
+
+/* ==================================================
+ * pulsus-plan T9
+ * ================================================== */
+
+vacuum
+pictor_communio_pulsum_parare (
+           PictorCommunio* pc,
+    constans TestaAmbitus* a)
+{
+    si (!pc || pc->clausa || !a || !a->pulsum_petere)
+    {
+        redde;
+    }
+    pc->pulsum_petere  = a->pulsum_petere;
+    pc->pulsus_sui     = a->pulsus_ctx;
+    strcpy(pc->pulsus_ambitus, "productio");
+    si (   a->pulsus_ambitus
+        && strlen(a->pulsus_ambitus) < magnitudo(pc->pulsus_ambitus))
+    {
+        strcpy(pc->pulsus_ambitus, a->pulsus_ambitus);
+    }
+    pc->pulsus_armatus = VERUM;
+    _pulsum_petere(pc);
+}
+
+b32
+pictor_communio_pulsum_statim (
+         PictorCommunio* pc,
+     constans character* spatium)
+{
+    Piscina* temporaria;
+        Xar* l;
+        b32  factum;
+
+    si (   !pc || pc->clausa || !pc->cliens
+        || !pictor_communio_inscripta(pc))
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("pictor_communio_statim",
+        (memoriae_index)IV * (memoriae_index)M);
+    si (!temporaria)
+    {
+        redde FALSUM;
+    }
+    l = xar_creare(temporaria, (i32)magnitudo(chorda));
+    si (l && spatium)
+    {
+        *(chorda*)xar_addere(l) = chorda_ex_literis(spatium,
+            temporaria);
+    }
+    factum = l && _eventum_nuntiare(pc, l, VERUM, temporaria);
+    piscina_destruere(temporaria);
+    redde factum;
 }

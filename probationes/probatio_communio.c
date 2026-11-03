@@ -2567,6 +2567,7 @@ _sectio_pulsus_inscriptio (
            Volumen* va;
     CommunioCliens* ca;
                Xar* l;
+               i32  k;
 
     (vacuum)c;
     CREDO_NECESSE(orbem_parare(&o));
@@ -2603,7 +2604,14 @@ _sectio_pulsus_inscriptio (
         ZEPHYRUM);
     communio_cliens_excitare(ca);
     CREDO_VERUM(donec_pulsus(&o, &f, II));
+    /* pulsus-plan T9: petitio missa != a servo scripta - sub onere L
+     * ms non sufficiebant; exspectare donec servus scripsit (II s) */
     l = pulsus_inscriptiones_enumerare(pulsus, piscina);
+    per (k = ZEPHYRUM; (!l || xar_numerus(l) < I) && k < CC; k++)
+    {
+        agere(&o, X);
+        l = pulsus_inscriptiones_enumerare(pulsus, piscina);
+    }
     CREDO_VERUM(l && xar_numerus(l) == I);
     communio_cliens_excitare(ca);
     agere(&o, CC);

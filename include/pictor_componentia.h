@@ -102,8 +102,9 @@ pictor_elenchi_condiciones (
  * actio legunt - "pinacotheca.aperire" ("My pictures…"),
  * "communia.aperire" ("Shared pictures…", si communio), "pictura.nova"
  * ("New picture"), "imago.eligere" ("Import image…", si importare),
- * "inscriptio.aperire" ("Sign in…", si communio et non inscripta).
- * e->res = res, electa -1. */
+ * "inscriptio.aperire" ("Sign in…", si communio et non inscripta),
+ * "pulsus.statim" ("Notify family now", si communio et inscripta -
+ * pulsus-plan T9). e->res = res, electa -1. */
 vacuum
 pictor_elenchum_parare (
      constans PictorElenchiCondiciones* c,
