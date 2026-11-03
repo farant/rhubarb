@@ -10,6 +10,9 @@
 #include "scrinium.h"
 #include "cives.h"
 #include "communio_servus.h"
+#include "reactor.h"
+#include "hospitium.h"
+#include "http.h"
 #include "pulsus_forma.h"
 #include "pulsus.h"
 #include <string.h>
@@ -23,10 +26,16 @@ structura Pulsus {
     CommunioServus* servus;
              Cives* cives;
                s64 (*nunc_ms)(vacuum);
-     PulsusMittere  mittere;
-            vacuum* sui;
-           Piscina* tempus;     /* vacatur post quamque vocationem */
+      PulsusMittere  mittere;
+             vacuum* sui;
+            Piscina* tempus;     /* vacatur post quamque vocationem */
+            Reactor* reactor;    /* hospitii (pulsus_montare) */
+     ReactorTimerId  hora;
+                b32  hora_viva;
 };
+
+/* hora longior non ponitur: ictus vacuus, deinde iterum */
+#define HORA_MAXIMA_MS ((s64)LX * LX * M)
 
 /* clavis gregis (chordae in tempore) */
 nomen structura {
@@ -520,11 +529,24 @@ vacuum
 pulsus_destruere (
     Pulsus* pulsus)
 {
+    si (pulsus && pulsus->hora_viva && pulsus->reactor)
+    {
+        (vacuum)reactor_timer_cancellare(pulsus->reactor, pulsus->hora);
+        pulsus->hora_viva = FALSUM;
+    }
     si (pulsus && pulsus->tempus)
     {
         piscina_destruere(pulsus->tempus);
         pulsus->tempus = NIHIL;
     }
+}
+
+memoriae_index
+pulsus_usus (
+    constans Pulsus* pulsus)
+{
+    redde pulsus && pulsus->tempus ? piscina_summa_usus(pulsus->tempus)
+                                   : (memoriae_index)ZEPHYRUM;
 }
 
 vacuum
@@ -877,5 +899,219 @@ pulsus_probare (
             corpus);
     }
     piscina_vacare(pulsus->tempus);
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Hora et viae (T3)
+ * ================================================== */
+
+interior vacuum
+_horam_ponere (
+    Pulsus* p);
+
+interior vacuum
+_ictus (
+    vacuum* datum)
+{
+    Pulsus* p;
+
+    p             = (Pulsus*)datum;
+    /* reactor horam unicam ante vocationem exstinxit */
+    p->hora_viva  = FALSUM;
+    (vacuum)pulsus_maturos_mittere(p);
+    _horam_ponere(p);
+}
+
+/* hora una ad gregem proximum (nulla si nullus grex) */
+interior vacuum
+_horam_ponere (
+    Pulsus* p)
+{
+    s64 proximum;
+    s64 mora;
+
+    si (!p->reactor)
+    {
+        redde;
+    }
+    si (p->hora_viva)
+    {
+        (vacuum)reactor_timer_cancellare(p->reactor, p->hora);
+        p->hora_viva = FALSUM;
+    }
+    proximum = pulsus_proximum_ms(p);
+    si (proximum < ZEPHYRUM)
+    {
+        redde;
+    }
+    mora = proximum - _nunc(p);
+    si (mora < (s64)I)
+    {
+        mora = (s64)I;
+    }
+    si (mora > HORA_MAXIMA_MS)
+    {
+        mora = HORA_MAXIMA_MS;
+    }
+    p->hora = reactor_timer_adicere(p->reactor, (i32)mora, FALSUM,
+        _ictus,
+        p);
+    p->hora_viva = p->hora != (ReactorTimerId)REACTOR_TIMER_ERROR;
+    si (!p->hora_viva)
+    {
+        fprintf(stderr, "pulsus: hora reactoris poni nequit\n");
+    }
+}
+
+interior vacuum
+_errare (
+    HospitiumColloquium* col,
+                    i32  status,
+                 chorda  causa)
+{
+      Piscina* q;
+    JsonValor* o;
+
+    q = colloquium_piscina(col);
+    o = json_objectum_creare(q);
+    json_objectum_ponere(o, "error", json_chorda_creare(q, causa));
+    colloquium_respondere(col, status, "application/json",
+        json_scribere(o, q));
+}
+
+/* "Bearer <tessera>" -> apparatus; aliter 401 missum, FALSUM */
+interior b32
+_admissus (
+    HospitiumColloquium* col,
+                 Pulsus* p,
+      CommunioApparatus* a)
+{
+    chorda h;
+    chorda t;
+
+    h = colloquium_caput(col, "Authorization");
+    si (   h.datum && h.mensura > VII
+        && memcmp(h.datum, "Bearer ", (size_t)VII) == ZEPHYRUM)
+    {
+        t.datum    = h.datum + VII;
+        t.mensura  = h.mensura - VII;
+        si (communio_apparatum_verificare(p->servus, t, a,
+                colloquium_piscina(col)))
+        {
+            redde VERUM;
+        }
+    }
+    colloquium_caput_addere(col, "WWW-Authenticate", "Bearer");
+    _errare(col, CDI, chorda_ex_literis("tessera",
+        colloquium_piscina(col)));
+    redde FALSUM;
+}
+
+/* corpus in memoria et intra limitem; aliter 400 missum, FALSUM */
+interior b32
+_corpus (
+    HospitiumColloquium* col,
+                 chorda* exitus)
+{
+    constans HttpPetitioServeri* q;
+
+    q = colloquium_petitio(col);
+    si (   !q || q->corpus_via
+        || q->corpus.mensura > (i32)PULSUS_PETITIO_MAXIMA)
+    {
+        _errare(col, CD, chorda_ex_literis("corpus",
+            colloquium_piscina(col)));
+        redde FALSUM;
+    }
+    *exitus = q->corpus;
+    redde VERUM;
+}
+
+interior vacuum
+_inscriptio_put (
+    HospitiumColloquium* col)
+{
+               Pulsus* p;
+    CommunioApparatus  a;
+               chorda  corpus;
+               chorda  tessera;
+               chorda  ambitus;
+               chorda  thema;
+               chorda  causa;
+
+    p = (Pulsus*)colloquium_datum(col);
+    si (!_admissus(col, p, &a) || !_corpus(col, &corpus))
+    {
+        redde;
+    }
+    si (!pulsus_inscriptionem_legere(corpus, colloquium_piscina(col),
+            &tessera, &ambitus, &thema, &causa))
+    {
+        _errare(col, CD, causa);
+        redde;
+    }
+    si (!pulsus_inscribere(p, a.id, tessera, ambitus, thema))
+    {
+        _errare(col, D, chorda_ex_literis("scriptura",
+            colloquium_piscina(col)));
+        redde;
+    }
+    colloquium_respondere(col, CCIV, "text/plain", chorda_ex_literis("",
+        colloquium_piscina(col)));
+}
+
+interior vacuum
+_eventus_post (
+    HospitiumColloquium* col)
+{
+               Pulsus* p;
+    CommunioApparatus  a;
+        PulsusEventus  eventus;
+               chorda  corpus;
+               chorda  causa;
+
+    p = (Pulsus*)colloquium_datum(col);
+    si (!_admissus(col, p, &a) || !_corpus(col, &corpus))
+    {
+        redde;
+    }
+    si (!pulsus_eventum_legere(corpus, colloquium_piscina(col),
+        &eventus,
+            &causa))
+    {
+        _errare(col, CD, causa);
+        redde;
+    }
+    si (!pulsus_eventum_addere(p, a.id, &eventus))
+    {
+        _errare(col, D, chorda_ex_literis("scriptura",
+            colloquium_piscina(col)));
+        redde;
+    }
+    _horam_ponere(p);
+    colloquium_respondere(col, CCII, "application/json",
+        chorda_ex_literis("{}", colloquium_piscina(col)));
+}
+
+b32
+pulsus_montare (
+       Pulsus* pulsus,
+    Hospitium* hospitium)
+{
+    si (!pulsus || !hospitium)
+    {
+        redde FALSUM;
+    }
+    pulsus->reactor = hospitium_reactor(hospitium);
+    si (   !hospitium_praebere(hospitium, HTTP_PUT,
+               "/communio/pulsus/inscriptio", _inscriptio_put, pulsus)
+        || !hospitium_praebere(hospitium, HTTP_POST,
+               "/communio/pulsus/eventus", _eventus_post, pulsus))
+    {
+        redde FALSUM;
+    }
+    _horam_ponere(pulsus);
     redde VERUM;
 }

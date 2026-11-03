@@ -37,10 +37,15 @@
 #include "volumen.h"
 #include "cives.h"
 #include "communio_servus.h"
+#include "hospitium.h"
 #include "pulsus_forma.h"
 
 /* res per gregem (ultra: omissae, numeratae) */
 #define PULSUS_RES_PER_GREGEM M
+
+/* corpus petitionis maximum (C res * CCLVI + formae + campi < XXVIII
+ * K); maius aut in filo temporario: 400 sine lectione */
+#define PULSUS_PETITIO_MAXIMA (LXIV * MXXIV)
 
 nomen enumeratio {
     PULSUS_TRADITUM = ZEPHYRUM,  /* Apple accepit (200) */
@@ -148,7 +153,25 @@ pulsus_probare (
      Pulsus* pulsus,
      chorda  civis);
 
-/* arenam propriam reddit; volumen manet */
+/* viae (T3), Bearer communionis (401), corpus malum aut nimium 400
+ * (nihil servatur):
+ *   PUT  /communio/pulsus/inscriptio  {tessera, ambitus, thema} -> 204
+ *   POST /communio/pulsus/eventus     PulsusEventus (JSON)      -> 202
+ * Hora UNA reactoris hospitii ad pulsus_proximum_ms ponitur post
+ * montationem (greges initii prioris), omnem eventum et omnem ictum.
+ * FALSUM si viae praeberi nequeunt. */
+b32
+pulsus_montare (
+       Pulsus* pulsus,
+    Hospitium* hospitium);
+
+/* memoria arenae propriae (probationes: petitiones non augent) */
+memoriae_index
+pulsus_usus (
+    constans Pulsus* pulsus);
+
+/* horam cancellat et arenam propriam reddit; volumen manet. ANTE
+ * reactorem hospitii destruendum vocandum. */
 vacuum
 pulsus_destruere (
     Pulsus* pulsus);

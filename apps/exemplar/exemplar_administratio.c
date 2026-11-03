@@ -11,6 +11,7 @@
 #include "invitationes.h"
 #include "admissio.h"
 #include "communio_servus.h"
+#include "pulsus.h"
 #include "moneta.h"
 
 #include <stdio.h>
@@ -738,6 +739,102 @@ _communio_permissos_enumerare (
     mcp_respondere_json(v, r);
 }
 
+/* ---- pulsus-plan T3 (C9): inscriptiones notificationum et
+ * probatio. Tessera APNs VIII signis solum (numquam tota). ---- */
+
+interior vacuum
+_pulsus_inscriptiones_enumerare (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+          Xar* l;
+          Xar* apparatus;
+    JsonValor* r;
+    JsonValor* t;
+          i32  i;
+          i32  j;
+
+    l          = pulsus_inscriptiones_enumerare(e->pulsus, p);
+    apparatus  = communio_apparatus_enumerare(e->communio, p);
+    si (!l)
+    {
+        _vitium(v, "inscriptiones legi nequeunt");
+        redde;
+    }
+    t = json_tabulatum_creare(p);
+    per (i = ZEPHYRUM; i < xar_numerus(l); i++)
+    {
+        PulsusInscriptio* x = (PulsusInscriptio*)xar_obtinere(l, i);
+               JsonValor* o = json_objectum_creare(p);
+
+        json_objectum_ponere(o, "apparatus", json_chorda_creare(p,
+            x->apparatus));
+        per (j = ZEPHYRUM; apparatus && j < xar_numerus(apparatus); j++)
+        {
+            CommunioApparatus* a = (CommunioApparatus*)xar_obtinere(
+                apparatus, j);
+                        Civis persona;
+
+            si (!chorda_aequalis(a->id, x->apparatus))
+            {
+                perge;
+            }
+            json_objectum_ponere(o, "titulus", json_chorda_creare(p,
+                a->titulus));
+            si (cives_per_id(ianua_cives(e->ianua), a->civis, &persona,
+                    p))
+            {
+                json_objectum_ponere(o, "nomen", json_chorda_creare(p,
+                    persona.nomen_usoris));
+            }
+            json_objectum_ponere(o, "revocatus", json_boolean_creare(p,
+                a->revocatus));
+        }
+        json_objectum_ponere(o, "thema", json_chorda_creare(p,
+            x->thema));
+        json_objectum_ponere(o, "ambitus", json_chorda_creare(p,
+            x->ambitus));
+        json_objectum_ponere(o, "tessera", json_chorda_creare(p,
+            x->tessera));
+        json_objectum_ponere(o, "creatus_ms", json_integer_creare(p,
+            x->creatus_ms));
+        json_objectum_ponere(o, "usus_ultimus_ms",
+            json_integer_creare(p,
+            x->usus_ultimus_ms));
+        json_tabulatum_addere(t, o);
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "inscriptiones", t);
+    mcp_respondere_json(v, r);
+}
+
+interior vacuum
+_pulsus_probare (
+    McpVocatio* v)
+{
+     Exemplar* e = _e(v);
+      Piscina* p = mcp_vocatio_piscina(v);
+        Civis  x;
+    JsonValor* r;
+
+    si (!_civem_invenire(v, &x))
+    {
+        redde;
+    }
+    si (!pulsus_probare(e->pulsus, x.id))
+    {
+        _vitium(v, "probatio mitti nequit");
+        redde;
+    }
+    r = json_objectum_creare(p);
+    json_objectum_ponere(r, "civis", json_chorda_creare(p, x.id));
+    json_objectum_ponere(r, "nomen", json_chorda_creare(p,
+        x.nomen_usoris));
+    json_objectum_ponere(r, "missa", json_boolean_creare(p, VERUM));
+    mcp_respondere_json(v, r);
+}
+
 /* ---- tabula ---- */
 
 hic_manens constans McpArgumentum ARG_INVITARE[] = {
@@ -850,7 +947,16 @@ hic_manens constans McpInstrumentum INSTRUMENTA_ADMINISTRATIONIS[] = {
     { "communio_permissos_enumerare", "Index permissorum: epistula,"
         " persona, spatium, revocatus.", NIHIL, ZEPHYRUM,
         SCOPUS_ADMINISTRATIONIS, VERUM, FALSUM,
-        _communio_permissos_enumerare }
+        _communio_permissos_enumerare },
+    { "pulsus_inscriptiones_enumerare", "Inscriptiones notificationum:"
+        " apparatus, persona, thema, ambitus, tessera VIII signis"
+        " (numquam tota), usus ultimus.", NIHIL, ZEPHYRUM,
+        SCOPUS_ADMINISTRATIONIS, VERUM, FALSUM,
+        _pulsus_inscriptiones_enumerare },
+    { "pulsus_probare", "Notificationem probationis ad omnes apparatus"
+        " (non revocatos) personae mittit; sine apns nihil mittitur.",
+        ARG_NOMEN, I, SCOPUS_ADMINISTRATIONIS, FALSUM, FALSUM,
+        _pulsus_probare }
 };
 
 McpServus*
@@ -870,9 +976,10 @@ exemplar_administrationem_creare (
     mc.instructiones  =
         "Administratio exemplaris per canalem localem (uid servi): "
         "status, invitationes, cives (suspendere, restituere), "
-        "communio (membra, apparatus, index permissorum).";
+        "communio (membra, apparatus, index permissorum), "
+        "pulsus (inscriptiones, probare).";
     mc.instrumenta  = INSTRUMENTA_ADMINISTRATIONIS;
-    mc.numerus      = XIV;
+    mc.numerus      = XVI;
     mc.datum        = e;
     redde mcp_servus_creare(&mc, piscina);
 }

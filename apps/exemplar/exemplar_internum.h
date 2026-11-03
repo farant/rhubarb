@@ -23,6 +23,7 @@
 #include "mcp_servus_canalis.h"
 #include "exemplar_nucleus.h"
 #include "communio_servus.h"
+#include "pulsus.h"
 
 #define EXEMPLAR_PETITIO_MAXIMA  (LXIV * MXXIV * MXXIV)
 #define EXEMPLAR_TEXTUS_MAXIMUS  (XVI * MXXIV)
@@ -71,6 +72,8 @@ structura Exemplar {
     /* communio plan-2 T7: servus actorum (volumen proprium, C1) */
                   Volumen* communio_volumen;
            CommunioServus* communio;
+    /* pulsus-plan T3: notificationes (in volumine communionis) */
+                   Pulsus* pulsus;
     /* plan-3 T5: epistulae aditus (NIHIL = non mittuntur) */
              Epistularius* epistularius;
 };

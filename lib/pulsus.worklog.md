@@ -43,3 +43,12 @@
 - Non-statim event with no ids is a no-op (it would otherwise announce
   "0 pictures"); statim with no ids flushes a pending batch or does
   nothing.
+
+## 2026-11-02 - T3: viae et hora reactoris
+
+- Two routes beside communio's, same Bearer as communio (`communio_apparatum_verificare`): `PUT /communio/pulsus/inscriptio` -> 204, `POST /communio/pulsus/eventus` -> 202. Readers are T1's `pulsus_*_legere`; their `causa` goes back as `{"error":causa}` with 400.
+- Body cap PULSUS_PETITIO_MAXIMA = 64 KiB, checked BEFORE parsing. Exemplar's hospitium allows 64 MB and spills bodies > 1 MB to a temp file (`corpus_via`), so without the cap a 2 MB junk body would be parsed in full. Spilled bodies are refused too.
+- One reactor timer, re-armed after mount (resumes batches from a previous run), after every event, and after every fire. One-shot timers are marked inactive by the reactor BEFORE the callback, so `_ictus` clears `hora_viva` first and may re-arm from inside. Delay clamped to [1 ms, 1 h]; a farther batch gets an empty fire and a re-arm.
+- `pulsus_destruere` cancels the timer, so it must run before the hospitium's reactor dies (exemplar: before `communio_servum_destruere`; tests: `rete_purgare` destroys pulsus first).
+- The HTTP test sections run pulsus on the REAL clock: with the fake clock the timer fires but `pulsus_maturos_mittere` still sees the fake "now" and sends nothing.
+- Exemplar logs `pulsus: apns absens - notificationes non mittuntur` at start until T5 gives it a sender.

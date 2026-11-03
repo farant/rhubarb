@@ -3118,6 +3118,97 @@ _sectio_sine_clave (CredoContextus* c)
     _finire(e, &locus);
 }
 
+/* pulsus-plan T3: pulsus in exemplare montatus. Sine apns nihil
+ * mittitur, viae tamen respondent; inscriptiones per canalem
+ * administrationis cum tessera APNs breviata (VIII signa) */
+#define SIGNUM_APNS \
+    "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+
+interior vacuum
+_sectio_pulsus (CredoContextus* c)
+{
+     Piscina* p = c->piscina;
+       Locus  locus;
+    Exemplar* e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+      Lector  l;
+   JsonValor* r;
+      chorda  textus;
+   character  tessera[XLIV];
+   character  digestum[LXV];
+   character  argumenta[CCCLXXXIV];
+   character  caput[CCLVI];
+   character  inscriptio[CCLVI];
+
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_NECESSE(_usor_novus(e, p, &locus, "fran")[ZEPHYRUM] != '\0');
+    r = _administrare(e, &locus, "communio_membrum_addere",
+        "{\"spatium\":\"familia\",\"nomen\":\"fran\"}", p);
+    CREDO_NECESSE(r && !_vitium_administrationis(r));
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    sprintf(argumenta, "{\"nomen\":\"fran\",\"spatium\":\"familia\","
+        "\"titulus\":\"iPhone\",\"digestum\":\"%s\"}", digestum);
+    r = _administrare(e, &locus, "communio_apparatum_addere", argumenta,
+        p);
+    CREDO_NECESSE(r && !_vitium_administrationis(r));
+    sprintf(inscriptio, "{\"tessera\":\"%s\",\"ambitus\":\"sandbox\","
+        "\"thema\":\"earth.golden.pictor\"}", SIGNUM_APNS);
+
+    CREDO_GRADUS("inscriptio: 401 sine tessera, 204 cum");
+    CREDO_VERUM(_rogare_et_legere(e, p,
+        "PUT /communio/pulsus/inscriptio",
+        "Content-Type: application/json\r\n", inscriptio, &l));
+    CREDO_AEQUALIS_I32(l.status, CDI);
+    sprintf(caput, "Authorization: Bearer %s\r\n"
+        "Content-Type: application/json\r\n", tessera);
+    CREDO_VERUM(_rogare_et_legere(e, p,
+        "PUT /communio/pulsus/inscriptio",
+        caput, inscriptio, &l));
+    CREDO_AEQUALIS_I32(l.status, CCIV);
+
+    CREDO_GRADUS("eventus statim: 202 (apns absens, nihil mittitur)");
+    CREDO_VERUM(_rogare_et_legere(e, p, "POST /communio/pulsus/eventus",
+        caput, "{\"clavis\":\"pictor.picturae\","
+        "\"thema\":\"earth.golden.pictor\",\"res\":[\"R:a\"],"
+        "\"unus\":\"{persona} shared a picture\","
+        "\"plures\":\"{persona} shared {numerus} pictures\","
+        "\"statim\":true}", &l));
+    CREDO_AEQUALIS_I32(l.status, CCII);
+    CREDO_VERUM(_rogare_et_legere(e, p, "POST /communio/pulsus/eventus",
+        caput, "{\"clavis\":\"a b\"}", &l));
+    CREDO_AEQUALIS_I32(l.status, CD);
+
+    CREDO_GRADUS("enumeratio: tessera breviata");
+    r = _administrare(e, &locus, "pulsus_inscriptiones_enumerare", "{}",
+        p);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(_vitium_administrationis(r));
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(_structura(r),
+        "inscriptiones.0.tessera")), "01234567");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(_structura(r),
+        "inscriptiones.0.titulus")), "iPhone");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(_structura(r),
+        "inscriptiones.0.nomen")), "fran");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_ad_chorda(json_via(_structura(r),
+        "inscriptiones.0.ambitus")), "sandbox");
+    textus = _textus_administrationis(r);
+    CREDO_FALSUM(chorda_continet(textus, chorda_ex_literis(SIGNUM_APNS,
+        p)));
+    CREDO_FALSUM(chorda_continet(textus, chorda_ex_literis(tessera,
+        p)));
+
+    CREDO_GRADUS("probare: persona nota, ignota nominata");
+    r = _administrare(e, &locus, "pulsus_probare",
+        "{\"nomen\":\"fran\"}", p);
+    CREDO_NECESSE_NON_NIHIL(r);
+    CREDO_FALSUM(_vitium_administrationis(r));
+    r = _administrare(e, &locus, "pulsus_probare",
+        "{\"nomen\":\"nemo\"}", p);
+    CREDO_VERUM(_vitium_administrationis(r));
+    CREDO_VERUM(chorda_continet(_textus_administrationis(r),
+        chorda_ex_literis("nemo", p)));
+    _finire(e, &locus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_invitatione", _sectio_sine_invitatione, NIHIL, NIHIL, NIHIL,
@@ -3159,6 +3250,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "communio_sine_clave", _sectio_sine_clave, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "pulsus", _sectio_pulsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "adm_invitare", _sectio_administratio_invitare, NIHIL, NIHIL,
         NIHIL,
         NIHIL },

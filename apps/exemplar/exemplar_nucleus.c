@@ -1135,6 +1135,7 @@ _creatio_fracta (
 {
     mcp_canalis_claudere(e->canalis);
     epistularium_claudere(e->epistularius);
+    pulsus_destruere(e->pulsus);
     communio_servum_destruere(e->communio);
     si (e->hospitium)
     {
@@ -1371,6 +1372,18 @@ exemplar_creare (
         fprintf(stderr, "exemplar: servus communionis deficit\n");
         redde _creatio_fracta(e);
     }
+    /* pulsus-plan T3: notificationes post servum communionis (cuius
+     * apparatus et volumen adhibet); mittens APNs nondum (T5) - greges
+     * consumuntur, nihil mittitur */
+    si (   !(e->pulsus = pulsus_creare(piscina, e->communio_volumen,
+               e->communio, ianua_cives(e->ianua), NIHIL))
+        || !pulsus_montare(e->pulsus, e->hospitium))
+    {
+        fprintf(stderr, "exemplar: pulsus deficit\n");
+        redde _creatio_fracta(e);
+    }
+    fprintf(stderr, "pulsus: apns absens - notificationes non"
+        " mittuntur\n");
     si (configuratio->basis)
     {
         si (strlen(configuratio->basis) >= EXEMPLAR_VIA_MAXIMA)
@@ -1465,6 +1478,7 @@ exemplar_claudere (
     mcp_canalis_claudere(exemplar->canalis);
     /* ANTE hospitium: horae exspectantium et missiones epistularum */
     epistularium_claudere(exemplar->epistularius);
+    pulsus_destruere(exemplar->pulsus);
     communio_servum_destruere(exemplar->communio);
     hospitium_destruere(exemplar->hospitium);
     /* WAL in plagulam principalem: copia (cp) post clausuram integra */
