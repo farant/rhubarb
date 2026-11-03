@@ -1122,6 +1122,7 @@
   <vocabulum lemma="hpack" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HPACK - compressio capitum HTTP/2 (RFC 7541); bibliotheca hpack (http2-plan T1, 2026-10-30)"/>
   <vocabulum lemma="alpn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ALPN - Application-Layer Protocol Negotiation (RFC 7301), extensio TLS; TlsOptiones.protocolla (http2-plan T7, 2026-10-31)"/>
   <vocabulum lemma="apns" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="APNs - Apple Push Notification service; tessera_apns_facere, tools/apns (http2-plan T10-T11, 2026-10-31)"/>
+  <vocabulum lemma="sandbox" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ambitus APNs Apple (api.sandbox.push.apple.com) - verbum Apple et valor filo ambitus pulsus; hospes_sandbox in ApnsConfiguratio et apns.stml (pulsus-plan C7, 2026-11-02)"/>
   <vocabulum lemma="es256" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ES256 - ECDSA P-256 cum SHA-256 (RFC 7518 3.4); bibliotheca tessera_es256 (http2-plan T10, 2026-10-31)"/>
   <vocabulum lemma="http2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HTTP/2 (RFC 9113) - nomen protocolli; bibliothecae http2_forma, http2, http2_nexus (http2-plan T4, 2026-10-31)"/>
   <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>

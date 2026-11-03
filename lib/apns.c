@@ -61,6 +61,7 @@ apns_configurationem_legere (
           StmlResultus  r;
                 chorda* portus;
                 chorda* ancora;
+                chorda* sandbox;
     constans character* domus;
 
     memset(c, ZEPHYRUM, magnitudo(ApnsConfiguratio));
@@ -105,6 +106,12 @@ apns_configurationem_legere (
     si (ancora)
     {
         c->ancora = *ancora;
+    }
+    sandbox = stml_attributum_capere(r.elementum_radix,
+        "hospes_sandbox");
+    si (sandbox)
+    {
+        c->hospes_sandbox = *sandbox;
     }
     domus = lectiones_ambitus("HOME");
     si (   domus && c->clavis_via.mensura >= II

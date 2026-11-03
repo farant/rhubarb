@@ -39,6 +39,7 @@
 #include "communio_servus.h"
 #include "hospitium.h"
 #include "pulsus_forma.h"
+#include "pulsus_missio.h"
 
 /* res per gregem (ultra: omissae, numeratae) */
 #define PULSUS_RES_PER_GREGEM M
@@ -46,38 +47,6 @@
 /* corpus petitionis maximum (C res * CCLVI + formae + campi < XXVIII
  * K); maius aut in filo temporario: 400 sine lectione */
 #define PULSUS_PETITIO_MAXIMA (LXIV * MXXIV)
-
-nomen enumeratio {
-    PULSUS_TRADITUM = ZEPHYRUM,  /* Apple accepit (200) */
-    PULSUS_SIGNUM_MORTUUM,       /* 410 / BadDeviceToken: inscriptio
-                                  * deletur */
-    PULSUS_DEFECTUS              /* mittens desiit (post iterationes) */
-} PulsusExitus;
-
-/* missio una: solum intra mittere legitur - mittens copiat quod
- * servat */
-nomen structura {
-    chorda signum;       /* tessera APNs apparatus (hex) */
-    chorda ambitus;      /* "productio" | "sandbox" */
-    chorda thema;        /* apns-topic */
-    chorda corpus;       /* JSON (pulsus_corpus_facere) */
-    chorda apparatus;    /* id apparatus destinatarii */
-} PulsusMissio;
-
-/* mittens copiam suam missionis reddit (pulsus scit quae finita) */
-nomen vacuum (*PulsusFinis)(
-                  vacuum* ctx,
-    constans PulsusMissio* missio,
-            PulsusExitus  exitus,
-                  chorda  ratio);
-
-/* VERUM = accepta (finis postea semel, fortasse statim); FALSUM =
- * non accepta (finis numquam) */
-nomen b32 (*PulsusMittere)(
-                  vacuum* sui,
-    constans PulsusMissio* missio,
-             PulsusFinis  finis,
-                  vacuum* ctx);
 
 /* ordo inscriptionis (chordae in piscina vocantis; tessera VIII
  * signis praefixis) */
