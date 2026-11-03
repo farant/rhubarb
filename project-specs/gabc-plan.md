@@ -443,10 +443,10 @@ Decisions:
   after `|`, with the source text and the note it follows; dump lines
   `spatium`, `fractio`, `custos`, `signum`.
 
-- [ ] **Step 1: Measure** — tally constructs in `salve_2435.gabc`
+- [x] **Step 1: Measure** — tally constructs in `salve_2435.gabc`
   that T2–T3 left unhandled (expect `{}`, `[ll:1]`, `[oh:h]`); none
   may remain after this task.
-- [ ] **Step 2: Failing tests:**
+- [x] **Step 2: Failing tests:**
   - `_spatia_probare`, `_fractiones_probare`, `_textum_ornatum_probare`
     (nested `<b><i>…</i></b>`, `<sp>R/</sp>`, `<e>`, `[Lord]`,
     `{a}` range), `_signa_opaca_probare` (each attachment kept with
@@ -462,15 +462,15 @@ Decisions:
     (truncate at each byte) and 2,000 seeded random single-byte
     mutations read without crash; `gabc_vitia_scribere` succeeds on
     each. Seeded with `sors` so failures repeat.
-- [ ] **Step 3: Run** — red.
-- [ ] **Step 4: Implement.** Unknown `<tag>` and unknown `[xx:]` →
+- [x] **Step 3: Run** — red.
+- [x] **Step 4: Implement.** Unknown `<tag>` and unknown `[xx:]` →
   opaque, with a monitum only when the tag is not on Gregorio's list.
-- [ ] **Step 5: Run** — green; also under ASan (`./tools/sonda.sh`
+- [x] **Step 5: Run** — green; also under ASan (`./tools/sonda.sh`
   on a tiny driver, or the suite's ASan mode if it has one).
   **Plants:** drop `[oh:...]` instead of keeping it →
   `_signa_opaca_probare` FRACTUM; stop scanning at a NUL →
   `_vitia_formae_probare` FRACTUM.
-- [ ] **Step 6: Commit** (gate `radix`).
+- [x] **Step 6: Commit** (gate `radix`).
 
 ---
 
@@ -706,3 +706,29 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
 ## Executed notes
 
 (appended per task)
+
+### T4 — executed 2026-11-03
+
+- Measured Salve (shell): `[ll:1]` 3, `[oh:h]` 6, `!` 2, `/` 1, `//` 1,
+  `{ia}` 1 → reader: 9 opaque marks, 4 spaces, 1 vocalis; still 0
+  diagnostics.
+- Syllable-text grammar taken from Gregorio's score lexer/grammar and the
+  `<sp>` table from `gregoriotex-symbols.tex` (fetched this session). Styles
+  `i b ul c sc tt` carry across syllables (Gregorio does); `e` does not.
+- Header gaps handled without a header change (flag for T6 review):
+  non-breaking spaces (`!/` `!//` `! ` `!/[n]`) = `nullum` + the space;
+  `<pr:N>` value → monitum. Unknown `<tag>` = literal text + monitum
+  (Gregorio prints it literally).
+- Also fixed from T2: lone `]` closing `@[` was a vitium; `$)` closed a
+  notes group; `%` inside syllable text was literal.
+- New: `GABC_POSITIO_EXTRA` (Gregorio's pitch ceiling), `GABC_NON_UTF8`,
+  `GABC_SEPARATOR_ITERATUS` now emitted. `claves_mutatae.gabc` gained
+  `staff-lines:5;`.
+- Tests: 19 sections green (8 new: spatia, fractiones, custos, textus
+  ornatus, signa opaca, vitia formae with 16 files, Salve counts,
+  totalitas 68,806 cases). Whole suite clean under `tools/sonda.sh`
+  (ASan + UBSan).
+- Plants: drop `[oh:` → `_signa_opaca_probare` red; cut at first NUL →
+  `_vitia_formae_probare` red; stray `]` → NIHIL → `_totalitatem_probare`
+  red (totality was born green on the already-total T3 reader). All
+  restored byte-identical.

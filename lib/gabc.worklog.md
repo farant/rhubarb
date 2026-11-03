@@ -88,3 +88,78 @@ switch continues the note loop — correct, the switch is not a loop).
 
 **Plants:** bar not clearing scope → alteration test red; `..` as one
 mora → rhythm test red.
+
+## 2026-11-03 — T4, typesetting content, opaque marks, malformed input, totality
+
+**Grammar sources, fetched this session** (scratchpad `gregorio_score/`):
+`gabc-score-determination.l` and `.y` (syllable text), `gregoriotex-symbols.tex`
+(the `<sp>` table, `\gresetspecial` lines 218-245). Facts that are easy to
+get wrong:
+- In syllable text `$` escapes any next byte; `%` starts a comment (to end of
+  line, newlines eaten) even mid-text; a newline plus following whitespace is
+  ONE space; `~` is the lyric tie (rendered U+203F, Gregorio's default
+  `\greundertie`).
+- `<v>` and `<alt>` are raw until their closing tag, which may lie past a `(`
+  (`<v>\foo(x)</v>` is one verbatim run). `<sp>` content cannot contain `<`
+  `{` `}`.
+- Styles `i b ul c sc tt` STAY OPEN across syllables (Gregorio's `styles`
+  bitmask, re-inserted at each syllable); `e` (elision) is not carried. We
+  close `e` at the syllable end with a vitium; a carried style still open at
+  EOF is a vitium located at its opening tag.
+- An unknown `<tag>` is literal text in Gregorio; we keep it as text and add
+  a monitum only when it has tag shape (`<` `/`? letters `>`).
+- Notes: a lone `]` ends an `@[` autofusion group (T2 flagged it as an
+  error); `{` `}` are TeX boxes; `<nlba>` may appear inside notes; `$)` does
+  not close a notes group (score lexer `(\$.|[^|\)])+`).
+- `!/0` and `!/!` lex as `/0` and `/!` (the `!` is absorbed); `!/` `!//`
+  `! ` `!/[n]` are the non-breaking variants. The approved header has no NB
+  flag, so the non-breaking forms are stored as two elements, `nullum` then
+  the space — mirrors the source tokens, nothing lost. Flagged to Fran.
+- Pitch ceiling = Gregorio `highest_pitch`; in our positions that is
+  `2*lines+4` (m on 4 lines, p on 5) → monitum `GABC_POSITIO_EXTRA` for
+  notes, custodes, accidentals. `claves_mutatae.gabc` gained
+  `staff-lines:5;` because its `n` is legitimately above a 4-line staff.
+
+**`<sp>` → UTF-8 choices**: R/ ℟, V/ ℣, 'ae ǽ, 'oe œ́ (œ + U+0301), ae æ, oe œ,
+`*` ✶ (StarSix glyph), `+` † (the glyph is "Dagger", not the Maltese cross),
+ut ‿, ot ⁀, dt ⁐ (U+2050 is the over-plus-under tie shape), A/ Ⱥ (no barred-A
+in Unicode; the stroke variant is the nearest). Unknown codes: raw text +
+monitum.
+
+**Text runs.** One run per (genus, stilus); a run's chorda points into the
+source when its bytes are contiguous there, otherwise it is copied into the
+piscina (sp output, `$` escapes, newline→space, braces removed). Translation
+runs are closed at `]` so `[a][b]` stays two runs; `[/]` is its own
+TRANSLATIO run "/". `vocalis_initium/finis` count bytes of the joined
+cantatus text. `verbum_incipit` now means "some cantatus byte" (markup-only
+or translation-only syllables are textless).
+
+**`<pr:N>` value** has no field in the approved header: the PROTRUSIO bit is
+set on the following text and the value gets a monitum ("valor protrusionis
+non servatur") — not silent. Expect ~0 occurrences in GregoBase; revisit if
+T9 finds any.
+
+**Quadratic guard**: an unclosed `<v>`/`<alt>` searches to EOF; a cache
+("no closing tag at or after offset X") makes repeated failures O(1), so a
+file of many unclosed `<v>` stays linear.
+
+**Dump**: new lines `textus` (only for "ornate" syllables: >1 run, non-cantatus
+genus, or any stilus), `vocalis`, `signa`; old expected dumps changed only by
+the new `spatium` lines.
+
+**Measured (shell)**: Salve `[ll:1]` 3, `[oh:h]` 6, `!` 2, `/` 1, `//` 1, `{ia}` 1
+(the syllable's whole text is `{ia}`) = reader (9 marks, 4 spaces, 1 vocalis).
+
+**Totality**: 68,806 cases (every prefix + 2,000 seeded single-byte mutations
+per fixture, half from a gabc-significant alphabet), each in an exact-size
+malloc so ASan sees overreads. Born GREEN on the T3 reader (it was already
+total), so its plant is a contract break: stray `]` in notes sets `deficit`
+→ NIHIL → fracti > 0. Whole suite under `tools/sonda.sh` (ASan+UBSan): clean.
+
+**Plants**: `[oh:` dropped → `_signa_opaca_probare` red; length cut at first
+NUL → `_vitia_formae_probare` red; stray `]` → NIHIL → `_totalitatem_probare`
+red. All restored byte-identical (cmp).
+
+**Bug caught by the formae dump**: the new `casus '<'` (for `<nlba>` in notes)
+shadowed `<` as the augmented-ascending modifier; a non-nlba `<` now falls to
+`_modificatorem_legere`.

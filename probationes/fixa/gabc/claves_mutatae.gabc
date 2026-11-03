@@ -1,4 +1,5 @@
 % claves mutatae: clavis intra syllabam; cb3 si bemolle usque ad clavem proximam
 name:claves;
+staff-lines:5;
 %%
 (c4) a(ghc3hg) (cb3) b(g n) c(gyg) (c4) d(g i)
