@@ -12240,10 +12240,10 @@ conexio_modulum_addere (
            Conexio* conexio,
     MedullaModulus* modulus)
 {
-               s32  modulus_index;
-               i32  numerus;
-               s32* translatio;
-               i32  i;
+               s32   modulus_index;
+               i32   numerus;
+               s32*  translatio;
+               i32   i;
     MedullaModulus** locellus;
                s32** locellus_translationis;
 
@@ -16920,9 +16920,9 @@ _signaturam_typi (
        constans TypusC89* typus_functionis,
         MedullaSignatura* signatura)
 {
-    constans TypusC89* reditus;
+      constans TypusC89* reditus;
     MedullaTypusLiminis* limen;
-                  i32  k;
+                    i32  k;
 
     typus_functionis = _exutus(typus_functionis);
     si (   typus_functionis        == NIHIL
@@ -17005,7 +17005,7 @@ _limen_parametri_ponere (
                Demissio* d,
     MedullaTypusLiminis  limen)
 {
-    i32 n = officina_xar_numerus(d->functio->parametra);
+                  i32  n = officina_xar_numerus(d->functio->parametra);
     MedullaParametrum* parametrum;
 
     si (n == ZEPHYRUM)
@@ -17562,8 +17562,8 @@ _datum_chordae_mensurae (
     constans SilvaNodus* nodus,
                     s32  mensura_data)
 {
-     SilvaChorda octeti;
-          OfficinaChorda titulus;
+     SilvaChorda  octeti;
+          OfficinaChorda  titulus;
     MedullaDatum* datum;
              s32  mensura;
           OfficinaChorda  visus;
