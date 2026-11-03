@@ -35,13 +35,14 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$RADIX_DIR/silva/amalgama"
     "-I$OFF_DIR/fontes"
+    "-I$OFF_DIR/instrumenta"
 )
 
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$OFF_DIR/cursor_fontes_generata.sh"
 
 source "$RADIX_DIR/tools/caput_recens.sh"
-caput_recens_directoria "$RADIX_DIR/include" "$OFF_DIR/fontes" "$RADIX_DIR/silva/amalgama"
+caput_recens_directoria "$RADIX_DIR/include" "$OFF_DIR/fontes" "$OFF_DIR/instrumenta" "$RADIX_DIR/silva/amalgama"
 
 obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
@@ -71,6 +72,15 @@ for src in "$OFF_DIR"/fontes/*.c; do
     fi
     obj_files="$obj_files $obj"
 done
+
+# bibliothecae (mundus totus per aedilem - M5 T0; olim lib/ totus)
+src="$OFF_DIR/instrumenta/bibliothecae.c"
+obj="$BUILD_DIR/bibliothecae.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
+    echo "  [bibliothecae] bibliothecae.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
 
 CURSOR_SRC="$OFF_DIR/instrumenta/principalia/cursor.c"
 CURSOR_BIN="$BUILD_DIR/cursor"

@@ -5152,3 +5152,49 @@ scratch copy of a tracked file (path-scoped tolerations) - compare
 baselines in place, not in scratch. desiderata = a test-visible
 count of sessio's library modules ("caput solum" can only assert
 acceptance, not that nothing loaded).
+
+## M5 — dorsum nativum aarch64 (secunda, 2026-11-03 →)
+
+INTENTIO: compile medulla to arm64 in memory, per function behind
+NATIVUM descriptors, inside machinula's own world (same region,
+pointers, layout); the interpreter stays the oracle. Grounding:
+project-specs/officina-m5-fundamenta.md; decisions:
+officina-m5-interrogatio.md; spec + plan: officina-m5-spec.md,
+officina-m5-plan.md (tasks 0-10). Ledger: parcum 01KXJ2NV, opera
+"M5 0" .. "M5 10".
+
+- T0: one whole-world resolver, bibliothecae_mundum_totum (posix
+  closure of every include/*.h; refused headers are collected as
+  omissa, never fatal; sorted, deduplicated; ~8 s, ~350 MiB of
+  aedilis parses, held in a throwaway pool). The cursor's world and
+  interpretare's IGNOTA fallback both use it (new flag -index <via>
+  forces that path in tests); interpretare -plagulae keeps its lib/
+  substring scan (explicit choice, fast). The cursor's two 256-entry
+  suite loops became one Xar enumerator, _suitas_colligere.
+  Result: 453 suites enumerated (was 256, silently), world 309
+  modules / 7485 functions / 541086 instructions, 0 nexus fracti
+  (was: every suite NEXUS FRACTUS on testa_principale). Omitted
+  headers: 127 (92 vendor sqlite in closure, 32 macOS-only .m, 3 too
+  large).
+
+FOUND: credo is not interpretable. With linking fixed, 452/453 suites
+halt DECIPULA: 442 on getpid in credo's own setup
+(_credo_aream_ponere), the rest fork/setenv/signal/opendir and two
+macOS-only libraries. credo v2 imports getpid, gettimeofday,
+setjmp/longjmp, fork, waitpid, kill, signal, opendir, setenv,
+nanosleep... - most cannot be bridged sensibly. The cursor's
+differential lane (79/93, 2026-07-24) has been dead since credo v2,
+independently of the link bug. Not fixed in T0 (M5's bar does not
+use the cursor; A2 put the cursor native lane in M5b): parcum
+"credo non interpretabilis" (01M6H28D), with the vendor-softening
+idea for mundum_totum noted there. captare re-bless skipped (every
+suite stops at getpid). Test "cursor sola" therefore asserts link +
+execution ("0 nexus fracti / 1 suites"), not PRAETERIIT.
+
+BARS (T0): bibliothecae 11/11, lanceatores 6/6; plants 3 (variant
+posix -> NIHIL, dedup disabled, enumerator re-capped at 256), all
+red, all IDEM; examen ACCIPE, formator CONFORMIS / under baseline
+(cursor.c 8 -> 7), vocabula NOVA 0. Correction to the header text:
+lib/testa.c is NOT in the world - it is the macOS window shell
+(includes fenestra.h, .m-only), so testa.h is rightly omitted; the
+section "mundus totus" carries signum gravis (350 MiB > 256 MiB).
