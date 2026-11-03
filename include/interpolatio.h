@@ -97,6 +97,27 @@ nomen s32 (*InterpolatioAestimator) (
        i32* punctum,
        i32* valor);
 
+/* fasciculus (puncta-parallela-plan): indices index_primus .. +
+ * numerus - 1 primi p simul. Pro omni j < numerus status[j] scribit
+ * (UTILE, INUTILE aut ERRATUM, sensu InterpolatioAestimator), et ubi
+ * UTILE puncta[j], valores[j]; bibliotheca ante vocationem puncta et
+ * valores nullos, status ERRATUM ponit. FALSUM = defectus totius
+ * (transitus, opifex mortuus): nihil numeratur, FALSUM redditur.
+ *
+ * PURITAS (contractus): effectus in (p, index) a nullo alio pendet -
+ * non a fasciculo, non a vicinis, non a numero vocationum, non ab ordine
+ * interno. Bibliotheca effectus ordine indicis consumit, ergo fasciculus
+ * purus eadem omnia reddit ac aestimator singulus idem in eisdem
+ * indicibus (puncta, relatio, tractus, numeri). */
+nomen b32 (*InterpolatioAestimatorFasciculi) (
+    vacuum* contextus,
+       i32  index_primus,
+       i32  numerus,
+       i32  p,
+       i32* puncta,
+       i32* valores,
+       s32* status);
+
 /* Membra a vocante post interpolatio_quaestio_ordinaria() posita:
  * membra futura ita valores ordinarios semper habebunt. */
 nomen structura {
@@ -247,9 +268,11 @@ nomen structura {
                     i32 numerus_primorum;
                     i32 primus_additus;    /* 0 si nullus (ACCEPTUM) */
                     i32 k_maximus;         /* per limitem probatum */
-                    i64 aestimationes;     /* vocationes aestimatoris
-                                              * principalis in primis
-                                              * (probationes non) */
+                    i64 aestimationes;     /* indices aestimatoris
+                                              * principalis CONSUMPTI in
+                                              * primis (= vocationes si
+                                              * singulus; probationes
+                                              * non) */
                     i32 probationes_sui;
                     i32 probationes_certificantes;
                     i32 probationes_requisitae;    /* m */
@@ -301,6 +324,28 @@ b32
 interpolatio_polynomium_relatum (
               InterpolatioAestimator  aestimare,
                               vacuum* contextus,
+    constans InterpolatioVerificator* verificator,
+       constans InterpolatioQuaestio* quaestio,
+                             Piscina* piscina,
+                          Polynomium* exitus,
+                 InterpolatioRelatio* relatio);
+
+/* ut interpolatio_polynomium_relatum, aestimatore principali per
+ * fasciculos (verificator manet singulus). capacitas = indices per
+ * petitionem maximi (0 = sine limite). Petitio: min(puncta quae desunt,
+ * capacitas, conatus_maximi - index); index quisque punctum unum ad
+ * summum addit, ergo nullus index petitur quem cursus singulus non
+ * attingeret. relatio->aestimationes = indices CONSUMPTI: in successu
+ * idem ac singulus; in refutatione intra fasciculum indices post
+ * refutantem aestimati sunt sed non numerantur (relatio eadem). Probatio
+ * sui = fasciculus unius indicis per tractum (series sortis eadem).
+ * Fasciculus purus (vide supra) -> exitus et relatio eadem ac
+ * interpolatio_polynomium_relatum cum aestimatore singulo eodem. */
+b32
+interpolatio_polynomium_relatum_fasciculis (
+     InterpolatioAestimatorFasciculi  fasciculus,
+                              vacuum* contextus,
+                                 i32  capacitas,
     constans InterpolatioVerificator* verificator,
        constans InterpolatioQuaestio* quaestio,
                              Piscina* piscina,

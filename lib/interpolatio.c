@@ -280,15 +280,82 @@ _g_ex_valore (
     redde VERUM;
 }
 
+/* fons aestimationum principalis (puncta-parallela-plan T1): aestimator
+ * singulus (capacitas I: vocationes eaedem, ordine eodem, ac semper) aut
+ * fasciculus (capacitas a vocante). Ansa una pro utroque. */
+nomen structura {
+             InterpolatioAestimator  aestimare;    /* NIHIL si fasciculus */
+    InterpolatioAestimatorFasciculi  fasciculus;   /* NIHIL si singulus */
+                             vacuum* contextus;
+                                i32  capacitas;    /* indices per petitionem
+                                                    * maximi, >= 1 */
+} FonsAestimationis;
+
+interior FonsAestimationis
+_fons_singulus (
+    InterpolatioAestimator  aestimare,
+                    vacuum* contextus)
+{
+    FonsAestimationis fons;
+
+    fons.aestimare   = aestimare;
+    fons.fasciculus  = NIHIL;
+    fons.contextus   = contextus;
+    fons.capacitas   = I;
+    redde fons;
+}
+
+/* indices index_primus .. + numerus - 1 in p. Puncta et valores ante
+ * vocationem nulli (ut vocatio singula semper habuit), status ERRATUM
+ * nisi scriptus. FALSUM = defectus fasciculi totius. */
+interior b32
+_fontem_vocare (
+    constans FonsAestimationis* fons,
+                           i32  index_primus,
+                           i32  numerus,
+                           i32  p,
+                           i32* puncta,
+                           i32* valores,
+                           s32* status)
+{
+    i32 j;
+
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        puncta[j]   = ZEPHYRUM;
+        valores[j]  = ZEPHYRUM;
+        status[j]   = INTERPOLATIO_ERRATUM;
+    }
+    si (fons->fasciculus != NIHIL)
+    {
+        redde fons->fasciculus(fons->contextus, index_primus, numerus,
+            p,
+            puncta, valores, status);
+    }
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        status[j] = fons->aestimare(fons->contextus, index_primus + j,
+            p,
+            &puncta[j], &valores[j]);
+    }
+    redde VERUM;
+}
+
 /* coefficientes g in y = x^passus pro uno primo: puncta colliguntur
  * (x == 0 et y iteratum omissa; y iteratum valorem eundem dare debet),
  * Lagrange in primis K, addita probantur. FALSUM si ERRATUM, punctum
- * aut valor >= p, conatus exhausti, allocatio deficit aut probatio
- * discordat. *vocationes += vocationes aestimatoris. */
+ * aut valor >= p, conatus exhausti, allocatio deficit, fasciculus
+ * deficit aut probatio discordat. *vocationes += indices CONSUMPTI
+ * (ordine indicis, ante iudicium, ut vocatio singula semper numerabat).
+ *
+ * Petitio: min(necessaria - collecta, capacitas, conatus_maximi -
+ * index). Index quisque punctum unum ad summum addit, ergo nulla petitio
+ * indicem petit quem cursus singulus non attingeret; in refutatione
+ * intra fasciculum indices post refutantem aestimati sed non numerati
+ * sunt (puncta-parallela-plan, regula 3). */
 interior b32
 _primum_aestimare (
-           InterpolatioAestimator  aestimare,
-                           vacuum* contextus,
+       constans FonsAestimationis* fons,
     constans InterpolatioQuaestio* q,
                               i32  numerus_coefficientium,
                               i32  p,
@@ -296,65 +363,96 @@ _primum_aestimare (
                               i32* coefficientes,
                               i64* vocationes)
 {
-    i32  necessaria = numerus_coefficientium + q->puncta_addita;
+    i32 necessaria = numerus_coefficientium + q->puncta_addita;
+    i32 latitudo   = fons->capacitas < necessaria ? fons->capacitas
+        : necessaria;
     i32* puncta_y   = (i32*)piscina_conari_allocare(piscina,
         (memoriae_index)necessaria * magnitudo(i32));
     i32* valores_g  = (i32*)piscina_conari_allocare(piscina,
         (memoriae_index)necessaria * magnitudo(i32));
-    i32 collecta   = ZEPHYRUM;
-    i32 index;
+    i32* puncta_f   = (i32*)piscina_conari_allocare(piscina,
+        (memoriae_index)latitudo * magnitudo(i32));
+    i32* valores_f  = (i32*)piscina_conari_allocare(piscina,
+        (memoriae_index)latitudo * magnitudo(i32));
+    s32* status_f   = (s32*)piscina_conari_allocare(piscina,
+        (memoriae_index)latitudo * magnitudo(s32));
+    i32 collecta  = ZEPHYRUM;
+    i32 index     = ZEPHYRUM;
+    i32 numerus;
+    i32 ordo;
     i32 j;
 
-    si (puncta_y == NIHIL || valores_g == NIHIL)
+    si (   puncta_y  == NIHIL || valores_g == NIHIL || puncta_f == NIHIL
+        || valores_f == NIHIL || status_f == NIHIL)
     {
         redde FALSUM;
     }
-    per (index = ZEPHYRUM; index < q->conatus_maximi && collecta
-        < necessaria; index++)
+    dum (collecta < necessaria && index < q->conatus_maximi)
     {
-        i32 punctum  = ZEPHYRUM;
-        i32 valor    = ZEPHYRUM;
-        s32 status   = aestimare(contextus, index, p, &punctum, &valor);
-        i32 y;
-        i32 g;
-        b32 iteratum = FALSUM;
+        numerus = necessaria - collecta;
+        si (numerus > latitudo)
+        {
+            numerus = latitudo;
+        }
+        si (numerus > q->conatus_maximi - index)
+        {
+            numerus = q->conatus_maximi - index;
+        }
+        si (!_fontem_vocare(fons, index, numerus, p, puncta_f,
+            valores_f,
+            status_f))
+        {
+            redde FALSUM;               /* defectus fasciculi: nihil numeratum */
+        }
+        per (ordo = ZEPHYRUM; ordo < numerus
+            && collecta < necessaria; ordo++)
+        {
+            i32 punctum  = puncta_f[ordo];
+            i32 valor    = valores_f[ordo];
+            s32 status   = status_f[ordo];
+            i32 y;
+            i32 g;
+            b32 iteratum = FALSUM;
 
-        (*vocationes)++;
-        si (status == INTERPOLATIO_INUTILE)
-        {
-            perge;
-        }
-        si (status != INTERPOLATIO_UTILE || punctum >= p || valor >= p)
-        {
-            redde FALSUM;
-        }
-        si (punctum == ZEPHYRUM)
-        {
-            perge;                  /* x^passus nihil distinguit */
-        }
-        y = congruentia_potentia(punctum, (i64)q->passus, p);
-        si (!_g_ex_valore(q, punctum, valor, p, &g))
-        {
-            redde FALSUM;
-        }
-        per (j = ZEPHYRUM; j < collecta; j++)
-        {
-            si (puncta_y[j] == y)
+            (*vocationes)++;
+            si (status == INTERPOLATIO_INUTILE)
             {
-                si (valores_g[j] != g)
-                {
-                    redde FALSUM;   /* passus aut fenestra falsa */
-                }
-                iteratum = VERUM;
+                perge;
             }
+            si (   status != INTERPOLATIO_UTILE || punctum >= p
+                || valor  >= p)
+            {
+                redde FALSUM;
+            }
+            si (punctum == ZEPHYRUM)
+            {
+                perge;                  /* x^passus nihil distinguit */
+            }
+            y = congruentia_potentia(punctum, (i64)q->passus, p);
+            si (!_g_ex_valore(q, punctum, valor, p, &g))
+            {
+                redde FALSUM;
+            }
+            per (j = ZEPHYRUM; j < collecta; j++)
+            {
+                si (puncta_y[j] == y)
+                {
+                    si (valores_g[j] != g)
+                    {
+                        redde FALSUM;   /* passus aut fenestra falsa */
+                    }
+                    iteratum = VERUM;
+                }
+            }
+            si (iteratum)
+            {
+                perge;
+            }
+            puncta_y[collecta]   = y;
+            valores_g[collecta]  = g;
+            collecta++;
         }
-        si (iteratum)
-        {
-            perge;
-        }
-        puncta_y[collecta]   = y;
-        valores_g[collecta]  = g;
-        collecta++;
+        index += numerus;
     }
     si (collecta < necessaria)
     {
@@ -604,8 +702,7 @@ _relatio_initium (
  * ordo et idem effectus ac ante verificationem) */
 interior b32
 _probatum (
-           InterpolatioAestimator  aestimare,
-                           vacuum* contextus,
+       constans FonsAestimationis* fons,
     constans InterpolatioQuaestio* q,
                           Piscina* piscina,
                        Polynomium* exitus,
@@ -636,7 +733,7 @@ _probatum (
     }
     per (j = ZEPHYRUM; j <= k_maximus; j++)
     {
-        si (!_primum_aestimare(aestimare, contextus, q,
+        si (!_primum_aestimare(fons, q,
             numerus_coefficientium, primi[j], piscina, residua
             + (memoriae_index)j * (memoriae_index)numerus_coefficientium,
             &relatio->aestimationes))
@@ -671,13 +768,14 @@ interpolatio_polynomium (
                        Polynomium* exitus)
 {
     InterpolatioRelatio relatio;
+      FonsAestimationis fons = _fons_singulus(aestimare, contextus);
 
     si (aestimare == NIHIL || !_quaestio_valida(q))
     {
         redde FALSUM;
     }
     _relatio_initium(&relatio, q, NIHIL);
-    redde _probatum(aestimare, contextus, q, piscina, exitus, &relatio);
+    redde _probatum(&fons, q, piscina, exitus, &relatio);
 }
 
 
@@ -886,13 +984,14 @@ _primus_exclusus (
 }
 
 /* probatio una, forma documentata in capite (primus, deinde index):
- * aestimator in (index, q), candidatus g(y) per Horner residuorum.
- * *tractus scribitur (primus, index, transiit). FALSUM si ERRATUM,
- * punctum aut valor >= q, aut conatus exhausti. */
+ * fons in (index, q) - petitio unius indicis per tractum, ergo series
+ * sortis eadem pro fasciculo et singulo -, candidatus g(y) per Horner
+ * residuorum. *tractus scribitur (primus, index, transiit). FALSUM si
+ * ERRATUM, punctum aut valor >= q, fasciculus deficit, aut conatus
+ * exhausti. */
 interior b32
 _probare_in_puncto (
-           InterpolatioAestimator  aestimare,
-                           vacuum* contextus,
+       constans FonsAestimationis* fons,
     constans InterpolatioQuaestio* q,
                   constans Magnus* coefficientes,
                               i32  numerus_coefficientium,
@@ -926,13 +1025,17 @@ _probare_in_puncto (
         i32 index    = sors_intra(sors, primus);
         i32 punctum  = ZEPHYRUM;
         i32 valor    = ZEPHYRUM;
-        s32 status   = aestimare(contextus, index, primus, &punctum,
-            &valor);
+        s32 status   = INTERPOLATIO_ERRATUM;
         i32 g;
         i32 y;
         i32 expectatum = ZEPHYRUM;
         i32 j;
 
+        si (!_fontem_vocare(fons, index, I, primus, &punctum, &valor,
+            &status))
+        {
+            redde FALSUM;
+        }
         si (status == INTERPOLATIO_INUTILE)
         {
             perge;
@@ -988,8 +1091,7 @@ _coefficientes_aequales (
  * ad limitem ut PROBATUM */
 interior b32
 _verificatum (
-              InterpolatioAestimator  aestimare,
-                              vacuum* contextus,
+          constans FonsAestimationis* fons,
     constans InterpolatioVerificator* verificator,
        constans InterpolatioQuaestio* q,
                              Piscina* piscina,
@@ -1000,18 +1102,19 @@ _verificatum (
            - (s64)q->gradus_imus) / (s64)q->passus + (s64)I);
        s64 necessaria = (s64)numerus_coefficientium
            + (s64)q->puncta_addita;
-       i32* primi;
-       i32  k_maximus;
-       i32  m;
-       i32  bita;
-       i32* residua;
-       i32* columna;
-    Magnus* coefficientes;
-    Magnus* discors;
-       b32  habet_discordem = FALSUM;
-      Sors  sors;
-       i32  k;
-       i32  j;
+                  i32* primi;
+                  i32  k_maximus;
+                  i32  m;
+                  i32  bita;
+                  i32* residua;
+                  i32* columna;
+               Magnus* coefficientes;
+               Magnus* discors;
+                  b32  habet_discordem = FALSUM;
+                 Sors  sors;
+    FonsAestimationis  certificans;
+                  i32  k;
+                  i32  j;
 
     si (   !_primos_enumerare(q, necessaria, piscina, &primi,
         &k_maximus)
@@ -1040,13 +1143,15 @@ _verificatum (
         (memoriae_index)(k_maximus + I) * (memoriae_index)(m + II)
         * magnitudo(InterpolatioTractus));
     sors_seminare(&sors, q->semen, ZEPHYRUM);
+    certificans = _fons_singulus(verificator->aestimare,
+        verificator->contextus);
 
     per (k = I; k < k_maximus; k++)
     {
         InterpolatioTractus* tractus;
                         b32  aptus = VERUM;
 
-        si (!_primum_aestimare(aestimare, contextus, q,
+        si (!_primum_aestimare(fons, q,
             numerus_coefficientium, primi[k - I], piscina, residua
             + (memoriae_index)(k - I)
             * (memoriae_index)numerus_coefficientium,
@@ -1075,7 +1180,7 @@ _verificatum (
         tractus = &relatio->tractus[relatio->numerus_tractuum];
         tractus->gradus = k;
         tractus->certificans = FALSUM;
-        si (!_probare_in_puncto(aestimare, contextus, q, coefficientes,
+        si (!_probare_in_puncto(fons, q, coefficientes,
             numerus_coefficientium, primi, k, &sors, tractus))
         {
             redde FALSUM;
@@ -1091,8 +1196,7 @@ _verificatum (
             tractus = &relatio->tractus[relatio->numerus_tractuum];
             tractus->gradus = k;
             tractus->certificans = VERUM;
-            si (!_probare_in_puncto(verificator->aestimare,
-                verificator->contextus, q, coefficientes,
+            si (!_probare_in_puncto(&certificans, q, coefficientes,
                 numerus_coefficientium, primi, k, &sors, tractus))
             {
                 redde FALSUM;
@@ -1141,7 +1245,7 @@ _verificatum (
     /* ad limitem: primus k_max et additus */
     per (j = k_maximus - I; j <= k_maximus; j++)
     {
-        si (!_primum_aestimare(aestimare, contextus, q,
+        si (!_primum_aestimare(fons, q,
             numerus_coefficientium, primi[j], piscina, residua
             + (memoriae_index)j * (memoriae_index)numerus_coefficientium,
             &relatio->aestimationes))
@@ -1172,10 +1276,10 @@ _verificatum (
     redde VERUM;
 }
 
-b32
-interpolatio_polynomium_relatum (
-              InterpolatioAestimator  aestimare,
-                              vacuum* contextus,
+/* corpus commune interpolatio_polynomium_relatum et _fasciculis */
+interior b32
+_relatum (
+          constans FonsAestimationis* fons,
     constans InterpolatioVerificator* verificator,
        constans InterpolatioQuaestio* q,
                              Piscina* piscina,
@@ -1191,13 +1295,14 @@ interpolatio_polynomium_relatum (
     }
     _relatio_initium(r, q, q->modus == INTERPOLATIO_VERIFICATUM
         ? verificator : NIHIL);
-    si (aestimare == NIHIL || !_quaestio_valida(q))
+    si (   (fons->aestimare == NIHIL && fons->fasciculus == NIHIL)
+        || !_quaestio_valida(q))
     {
         redde FALSUM;
     }
     si (q->modus == INTERPOLATIO_PROBATUM)
     {
-        redde _probatum(aestimare, contextus, q, piscina, exitus, r);
+        redde _probatum(fons, q, piscina, exitus, r);
     }
     si (   q->modus != INTERPOLATIO_VERIFICATUM || verificator == NIHIL
         || verificator->aestimare == NIHIL
@@ -1205,8 +1310,43 @@ interpolatio_polynomium_relatum (
     {
         redde FALSUM;
     }
-    redde _verificatum(aestimare, contextus, verificator, q, piscina,
-        exitus, r);
+    redde _verificatum(fons, verificator, q, piscina, exitus, r);
+}
+
+b32
+interpolatio_polynomium_relatum (
+              InterpolatioAestimator  aestimare,
+                              vacuum* contextus,
+    constans InterpolatioVerificator* verificator,
+       constans InterpolatioQuaestio* q,
+                             Piscina* piscina,
+                          Polynomium* exitus,
+                 InterpolatioRelatio* relatio)
+{
+    FonsAestimationis fons = _fons_singulus(aestimare, contextus);
+
+    redde _relatum(&fons, verificator, q, piscina, exitus, relatio);
+}
+
+b32
+interpolatio_polynomium_relatum_fasciculis (
+     InterpolatioAestimatorFasciculi  fasciculus,
+                              vacuum* contextus,
+                                 i32  capacitas,
+    constans InterpolatioVerificator* verificator,
+       constans InterpolatioQuaestio* q,
+                             Piscina* piscina,
+                          Polynomium* exitus,
+                 InterpolatioRelatio* relatio)
+{
+    FonsAestimationis fons;
+
+    fons.aestimare   = NIHIL;
+    fons.fasciculus  = fasciculus;
+    fons.contextus   = contextus;
+    fons.capacitas   = capacitas == ZEPHYRUM ? (i32)0x7FFFFFFFUL
+        : capacitas;
+    redde _relatum(&fons, verificator, q, piscina, exitus, relatio);
 }
 
 
@@ -1266,16 +1406,19 @@ interpolatio_promovere (
                        Polynomium* exitus,
               InterpolatioRelatio* relatio_nova)
 {
-       i32  numerus_coefficientium;
-       s64  necessaria;
-       i32* primi;
-       i32  k_maximus;
-       i32  k;
-       i32* residua;
-    Magnus* coefficientes;
-    Magnus* verificati;
-       i32  i;
-       i32  j;
+                    i32  numerus_coefficientium;
+                    s64  necessaria;
+                    i32* primi;
+                    i32  k_maximus;
+                    i32  k;
+                    i32* residua;
+                 Magnus* coefficientes;
+                 Magnus* verificati;
+                    i32  i;
+                    i32  j;
+      FonsAestimationis  fons_singulus = _fons_singulus(aestimare,
+          contextus);
+    constans FonsAestimationis* fons = &fons_singulus;
 
     si (   q == NIHIL || relatio == NIHIL || verificatum == NIHIL
         || relatio_nova == NIHIL || relatio_nova == relatio)
@@ -1338,7 +1481,7 @@ interpolatio_promovere (
     }
     per (j = k; j <= k_maximus; j++)
     {
-        si (!_primum_aestimare(aestimare, contextus, q,
+        si (!_primum_aestimare(fons, q,
             numerus_coefficientium, primi[j], piscina, residua
             + (memoriae_index)j * (memoriae_index)numerus_coefficientium,
             &relatio_nova->aestimationes))

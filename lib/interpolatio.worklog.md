@@ -171,3 +171,15 @@ No H; the bound and the draws survived an independent oracle. Two behaviours cha
 Non-obvious: **step 1 (reject candidates >= 2^limes) never fires with an honest main evaluator.** For |P| < 2^limes, either 2^limes <= M_k/2 and Q_k = P exactly, or M_k/2 < 2^limes and |Q_k| < M_k/2 < 2^limes. It only matters when the main evaluator is wrong, which is exactly when the bound needs |D| < 2^(limes+1). So the `limes in stadio` test lies at p1, with limes = floor(log2 p1) + floor(log2 p2) (so M_2/2 > 2^limes); a +1 lie did NOT reach the band (p1 - p2 = 12 makes the CRT unit for p1 only ~61 bits), so the test searches the smallest lie size delta whose stage-2 candidate exceeds 2^limes, and asserts that as a precondition.
 
 Plants: build/verificatio/plantae_t4.py, 11/11 red as registered; T1's 12 rerun red. Details in the plan's "Review (T4)".
+
+## 2026-11-03 - batch evaluator (puncta-parallela-plan T1)
+
+`interpolatio_polynomium_relatum_fasciculis` takes a batch main evaluator ("give me indices i..i+n-1 at p") for the parallel-points plan. Internally there is now ONE loop over an evaluator source {single | batch, capacity}; the old single-point API is a source of capacity 1.
+
+Why capacity exists (design review H1): a batch evaluates all its indices, so with an unbounded adapter the single-point API would keep calling the user's evaluator past a refusing index. `puncta vitiosa` (exactly II calls) and `defectus additi` would go red. Capacity 1 reproduces the serial call sequence exactly, including where it stops.
+
+Why RELATIO stays byte-identical: each index adds at most one point, so a request of min(deficit, capacity, conatus_maximi - next) never asks for an index the serial loop would not reach. Counting is at CONSUMPTION, in index order, before the checks (as the serial loop counted calls). On a refusal inside a batch the indices after the refusing one were evaluated but are neither consumed nor counted.
+
+Non-obvious (plant A): consuming a batch in the wrong order is INVISIBLE when no index refuses - every index is consumed and Lagrange is order-free. Only an index-pure refusal (ERRATUM keyed to the index, not the call number) shows it. Tests with call-number faults can't be reused for batch = serial at all (review M1): reordering moves the fault to a different index.
+
+The library presets status = ERRATUM and zeroes puncta/valores before each request, so a batch function that forgets an entry refuses rather than injecting a zero.

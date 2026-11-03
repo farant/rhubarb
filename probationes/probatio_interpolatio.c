@@ -54,6 +54,10 @@ nomen structura {
                b32 mendax_semel;         /* valor + 1 in vocatione prima
                                           * tantum */
                b32 inutile_tertia;       /* index % 3 == 0 INUTILE */
+               b32 erratum_indicis;      /* ERRATUM in index_erroris (in
+                                          * omni primo; purum, non per
+                                          * vocationem) */
+               i32 index_erroris;
 } Contextus;
 
 /* x^e mod p, e signatus (x != 0) */
@@ -140,6 +144,10 @@ _aestimator (
     si (c->inutile_tertia && index % III == ZEPHYRUM)
     {
         redde INTERPOLATIO_INUTILE;
+    }
+    si (c->erratum_indicis && index == c->index_erroris)
+    {
+        redde INTERPOLATIO_ERRATUM;
     }
     x = c->puncta_iterata ? index / II + I : index + I;
     si (c->oppositi)
@@ -228,6 +236,8 @@ _contextus_initium (
     c->speculum              = FALSUM;
     c->mendax_semel          = FALSUM;
     c->inutile_tertia        = FALSUM;
+    c->erratum_indicis       = FALSUM;
+    c->index_erroris         = ZEPHYRUM;
     per (j = ZEPHYRUM; j < XVI; j++)
     {
         c->primi_visi[j] = ZEPHYRUM;
@@ -2401,6 +2411,561 @@ _probare_verificationem_invalidam (
 
 
 /* ==================================================
+ * Fasciculi (puncta-parallela-plan T1)
+ * ================================================== */
+
+/* fasciculus probationis super _aestimator: ordine interno inverso si
+ * petitum, magnitudines petitionum notatae, ERRATUM per INDICEM (non per
+ * vocationem) et defectus totius in fasciculo dato */
+nomen structura {
+    Contextus* ctx;
+          b32  inversus;
+          i32  fasciculi;
+          i32  petita;
+          i32  magnitudines[CCLVI];
+          b32  erratum_activum;
+          i32  erratum_index;
+          i32  defectus_ad;        /* fasciculus (1-basatus) FALSUM, 0
+                                    * nullus */
+} FasciculusProbationis;
+
+interior vacuum
+_fasciculum_initium (
+    FasciculusProbationis* f,
+                Contextus* ctx,
+                      b32  inversus)
+{
+    i32 j;
+
+    f->ctx              = ctx;
+    f->inversus         = inversus;
+    f->fasciculi        = ZEPHYRUM;
+    f->petita           = ZEPHYRUM;
+    f->erratum_activum  = FALSUM;
+    f->erratum_index    = ZEPHYRUM;
+    f->defectus_ad      = ZEPHYRUM;
+    per (j = ZEPHYRUM; j < CCLVI; j++)
+    {
+        f->magnitudines[j] = ZEPHYRUM;
+    }
+}
+
+interior b32
+_fasciculus (
+    vacuum* contextus,
+       i32  index_primus,
+       i32  numerus,
+       i32  p,
+       i32* puncta,
+       i32* valores,
+       s32* status)
+{
+    FasciculusProbationis* f = (FasciculusProbationis*)contextus;
+                      i32  j;
+
+    f->fasciculi++;
+    si (f->fasciculi <= CCLVI)
+    {
+        f->magnitudines[f->fasciculi - I] = numerus;
+    }
+    f->petita += numerus;
+    si (f->defectus_ad != ZEPHYRUM && f->fasciculi == f->defectus_ad)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        i32 locus = f->inversus ? numerus - I - j : j;
+        i32 index = index_primus + locus;
+
+        si (f->erratum_activum && index == f->erratum_index)
+        {
+            status[locus] = INTERPOLATIO_ERRATUM;
+            perge;
+        }
+        status[locus] = _aestimator(f->ctx, index, p, &puncta[locus],
+            &valores[locus]);
+    }
+    redde VERUM;
+}
+
+/* relationes membro per membrum aequales (tractus et primi inclusi) */
+interior vacuum
+_relationes_aequales (
+    constans InterpolatioRelatio* a,
+    constans InterpolatioRelatio* b)
+{
+    i32 j;
+
+    CREDO_AEQUALIS_I32(a->genus, b->genus);
+    CREDO_AEQUALIS_I32(a->status, b->status);
+    CREDO_AEQUALIS_I32(a->numerus_primorum, b->numerus_primorum);
+    CREDO_AEQUALIS_I32(a->primus_additus, b->primus_additus);
+    CREDO_AEQUALIS_I32(a->k_maximus, b->k_maximus);
+    CREDO_VERUM(a->aestimationes == b->aestimationes);
+    CREDO_AEQUALIS_I32(a->probationes_sui, b->probationes_sui);
+    CREDO_AEQUALIS_I32(a->probationes_certificantes,
+        b->probationes_certificantes);
+    CREDO_AEQUALIS_I32(a->probationes_requisitae,
+        b->probationes_requisitae);
+    CREDO_AEQUALIS_I32(a->bita_erroris, b->bita_erroris);
+    CREDO_AEQUALIS_I32(a->numerus_tractuum, b->numerus_tractuum);
+    si (   a->numerus_tractuum == b->numerus_tractuum
+        && a->tractus          != NIHIL && b->tractus != NIHIL)
+    {
+        per (j = ZEPHYRUM; j < a->numerus_tractuum; j++)
+        {
+            CREDO_AEQUALIS_I32(a->tractus[j].gradus,
+                b->tractus[j].gradus);
+            CREDO_AEQUALIS_I32(a->tractus[j].primus,
+                b->tractus[j].primus);
+            CREDO_AEQUALIS_I32(a->tractus[j].index,
+                b->tractus[j].index);
+            CREDO_VERUM(a->tractus[j].certificans
+                == b->tractus[j].certificans);
+            CREDO_VERUM(a->tractus[j].transiit
+                == b->tractus[j].transiit);
+        }
+    }
+    si (   a->k_maximus == b->k_maximus && a->primi != NIHIL
+        && b->primi     != NIHIL)
+    {
+        per (j = ZEPHYRUM; j <= a->k_maximus; j++)
+        {
+            CREDO_AEQUALIS_I32(a->primi[j], b->primi[j]);
+        }
+    }
+}
+
+/* vitia PURA in (p, index), per t: 0 nullum, 1 INUTILE tertium, 2 puncta
+ * iterata, 3 opposita, 4 index 1 mendax in omni primo (refutatio post
+ * puncta omnia), 5 ERRATUM in indice 2 (refutatio intra fasciculum:
+ * ordo consumptionis numerum mutaret) */
+interior vacuum
+_vitia_pura (
+    Contextus* ctx,
+          i32  t)
+{
+    commutatio (t % VI)
+    {
+        casus V:
+            ctx->erratum_indicis  = VERUM;
+            ctx->index_erroris    = II;
+            frange;
+        casus I:
+            ctx->inutile_tertia = VERUM;
+            frange;
+        casus II:
+            ctx->puncta_iterata = VERUM;
+            frange;
+        casus III:
+            ctx->oppositi = VERUM;
+            frange;
+        casus IV:
+            ctx->mendax_index_activus  = VERUM;
+            ctx->mendax_index          = I;
+            frange;
+        ordinarius:
+            frange;
+    }
+}
+
+/* fasciculi = singuli: polynomia fortuita (passus 1, 2, 4), aestimatores
+ * PURI in (p, index) (_vitia_pura, refutationes per indicem inclusae),
+ * PROBATUM et VERIFICATUM, capacitas
+ * I, III et sine limite, ordine interno inverso: successus, exitus,
+ * relatio, tractus et vocationes verificatoris eadem; in successu
+ * vocationes et petita = vocationes singuli (nulla petitio ultra).
+ * Plantae "fasciculus inverse consumptus" et "y iteratum non probatum"
+ * hic rubent. */
+interior vacuum
+_probare_fasciculos_aequales (
+    CredoContextus* c)
+{
+         Piscina* piscina        = c->piscina;
+    constans i32  passus[]       = { 1U, 2U, 4U };
+    constans i32  capacitates[]  = { 1U, 3U, 0U };
+            Sors  s;
+             i32  t;
+
+    sors_seminare(&s, (i64)MMXXVI, IV);
+    per (t = ZEPHYRUM; t < XXIV; t++)
+    {
+          Notum  n;
+         Magnus* coef;
+            i32  bita = sors_intra(&s, CXX) + I;
+            i32  modus;
+            i32  ci;
+            i32  k;
+
+        n.numerus  = sors_intra(&s, XXX) + I;
+        n.imus     = sors_inter(&s, -XX, V);
+        n.passus   = passus[t % III];
+        coef = (Magnus*)piscina_allocare(piscina,
+            (memoriae_index)n.numerus * magnitudo(Magnus));
+        per (k = ZEPHYRUM; k < n.numerus; k++)
+        {
+            coef[k] = sors_intra(&s, V) == ZEPHYRUM
+                ? magnus_ex_s64(ZEPHYRUM) : _magnus_fortuitus(&s, bita,
+                piscina);
+        }
+        n.coefficientes = coef;
+        per (modus = ZEPHYRUM; modus < II; modus++)
+        {
+            per (ci = ZEPHYRUM; ci < III; ci++)
+            {
+                              Contextus ctx_s;
+                              Contextus ctx_vs;
+                              Contextus ctx_b;
+                              Contextus ctx_vb;
+                  FasciculusProbationis fasciculus;
+                InterpolatioVerificator v_s;
+                InterpolatioVerificator v_b;
+                   InterpolatioQuaestio q;
+                    InterpolatioRelatio r_s;
+                    InterpolatioRelatio r_b;
+                             Polynomium f_s;
+                             Polynomium f_b;
+                                    b32 bonum_s;
+                                    b32 bonum_b;
+
+                q = modus == ZEPHYRUM ? _quaestio_noti(&n, bita)
+                    : _quaestio_verificandi(&n, bita, (i64)t + (i64)I);
+                _contextus_initium(&ctx_s, &n);
+                _contextus_initium(&ctx_b, &n);
+                _contextus_initium(&ctx_vs, &n);
+                _contextus_initium(&ctx_vb, &n);
+                _vitia_pura(&ctx_s, t);
+                _vitia_pura(&ctx_b, t);
+                v_s = _verificator(&ctx_vs, n.passus);
+                v_b = _verificator(&ctx_vb, n.passus);
+                _fasciculum_initium(&fasciculus, &ctx_b, VERUM);
+                bonum_s = interpolatio_polynomium_relatum(_aestimator,
+                    &ctx_s, &v_s, &q, piscina, &f_s, &r_s);
+                bonum_b = interpolatio_polynomium_relatum_fasciculis(
+                    _fasciculus, &fasciculus, capacitates[ci], &v_b, &q,
+                    piscina, &f_b, &r_b);
+                CREDO_VERUM(bonum_b == bonum_s);
+                si (bonum_s && bonum_b)
+                {
+                    CREDO_VERUM(polynomium_aequalis(f_b, f_s));
+                    CREDO_AEQUALIS_I32(ctx_b.vocationes,
+                        ctx_s.vocationes);
+                    CREDO_AEQUALIS_I32(fasciculus.petita,
+                        ctx_s.vocationes);
+                }
+                _relationes_aequales(&r_b, &r_s);
+                CREDO_AEQUALIS_I32(ctx_vb.vocationes,
+                    ctx_vs.vocationes);
+            }
+        }
+    }
+}
+
+/* notum parvum fasciculorum: 4 t^-1 - 9 t (K = 3, necessaria 4) */
+interior vacuum
+_notum_fasciculorum (
+     Notum* n,
+    Magnus* coef)
+{
+    coef[ZEPHYRUM]    = magnus_ex_s64(IV);
+    coef[I]           = magnus_ex_s64(ZEPHYRUM);
+    coef[II]          = magnus_ex_s64(-IX);
+    n->coefficientes  = coef;
+    n->numerus        = III;
+    n->imus           = -I;
+    n->passus         = I;
+}
+
+/* capacitas I = cursus singulus exacte, etiam in refutatione per
+ * vocationem (puncta vitiosa: II vocationes, II fasciculi singuli);
+ * sine limite et ordine recto: fasciculus totus (IV) aestimatur, sed
+ * relatio duos consumptos numerat ut singulus. Planta "adaptator sine
+ * limite" rubet in "puncta vitiosa" et "defectus additi". */
+interior vacuum
+_probare_capacitatem (
+    CredoContextus* c)
+{
+                  Piscina* piscina = c->piscina;
+                   Magnus  coef[III];
+                    Notum  n;
+                Contextus  ctx;
+    FasciculusProbationis  fasciculus;
+     InterpolatioQuaestio  q;
+      InterpolatioRelatio  r;
+               Polynomium  f;
+               Polynomium  signum;
+                      i32  genus;
+
+    _notum_fasciculorum(&n, coef);
+    signum  = polynomium_constans(magnus_ex_s64(DCLXVI), piscina);
+    q       = _quaestio_noti(&n, VIII);
+    per (genus = I; genus <= III; genus++)
+    {
+        f = signum;
+        _contextus_initium(&ctx, &n);
+        ctx.vitium_ad     = II;
+        ctx.vitium_genus  = genus;
+        _fasciculum_initium(&fasciculus, &ctx, FALSUM);
+        CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(
+            _fasciculus, &fasciculus, I, NIHIL, &q, piscina, &f, &r));
+        CREDO_AEQUALIS_I32(ctx.vocationes, II);
+        CREDO_AEQUALIS_I32(fasciculus.fasciculi, II);
+        CREDO_AEQUALIS_I32(fasciculus.magnitudines[ZEPHYRUM], I);
+        CREDO_VERUM(r.aestimationes == (i64)II);
+        CREDO_VERUM(polynomium_aequalis(f, signum));
+
+        f = signum;
+        _contextus_initium(&ctx, &n);
+        ctx.vitium_ad     = II;
+        ctx.vitium_genus  = genus;
+        _fasciculum_initium(&fasciculus, &ctx, FALSUM);
+        CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(
+            _fasciculus, &fasciculus, ZEPHYRUM, NIHIL, &q, piscina, &f,
+            &r));
+        CREDO_AEQUALIS_I32(ctx.vocationes, IV);
+        CREDO_AEQUALIS_I32(fasciculus.fasciculi, I);
+        CREDO_VERUM(r.aestimationes == (i64)II);
+        CREDO_VERUM(polynomium_aequalis(f, signum));
+    }
+}
+
+/* fasciculi numerati: petitio prima = necessaria, deinde defectus exacte
+ * (INUTILE tertium: series ab hac probatione simulata); petita =
+ * consumpta = vocationes singuli; conatus_maximi petitionem coercet
+ * (primus additus INUTILE totus: restitutionis x III + XL, non plus).
+ * Plantae "petitio necessaria non defectus" et "conatus non coercitus"
+ * hic rubent. */
+interior vacuum
+_probare_fasciculos_numeratos (
+    CredoContextus* c)
+{
+                  Piscina* piscina = c->piscina;
+                   Magnus  coef[V];
+                   Magnus  coef_additi[II];
+                    Notum  n;
+                    Notum  n_additi;
+                Contextus  ctx;
+                Contextus  ctx_s;
+    FasciculusProbationis  fasciculus;
+     InterpolatioQuaestio  q;
+      InterpolatioRelatio  r;
+               Polynomium  f;
+               Polynomium  expectatum;
+                      i32  series[XVI];
+                      i32  longitudo  = ZEPHYRUM;
+                      i32  necessaria;
+                      i32  collecta  = ZEPHYRUM;
+                      i32  index     = ZEPHYRUM;
+                      i32  primi;
+                      i32  restitutionis;
+                      i32  j;
+                      i32  k;
+
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        coef[k] = magnus_ex_s64((s64)k * (s64)III - (s64)V);
+    }
+    n.coefficientes  = coef;
+    n.numerus        = V;
+    n.imus           = -II;
+    n.passus         = I;
+    CREDO_NECESSE(_notum_ad_polynomium(&n, piscina, &expectatum));
+    q           = _quaestio_noti(&n, VIII);
+    necessaria  = V + q.puncta_addita;
+
+    /* planus: petitio quaeque = necessaria, una per primum */
+    _contextus_initium(&ctx, &n);
+    _fasciculum_initium(&fasciculus, &ctx, VERUM);
+    CREDO_NECESSE(interpolatio_polynomium_relatum_fasciculis(_fasciculus,
+        &fasciculus, ZEPHYRUM, NIHIL, &q, piscina, &f, &r));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_AEQUALIS_I32(fasciculus.fasciculi, r.k_maximus + I);
+    per (j = ZEPHYRUM; j < fasciculus.fasciculi && j < CCLVI; j++)
+    {
+        CREDO_AEQUALIS_I32(fasciculus.magnitudines[j], necessaria);
+    }
+    CREDO_VERUM(r.aestimationes == (i64)fasciculus.petita);
+
+    /* INUTILE tertium: series petitionum simulata (index % 3 == 0) */
+    dum (collecta < necessaria && longitudo < XVI)
+    {
+        i32 numerus = necessaria - collecta;
+
+        series[longitudo] = numerus;
+        longitudo++;
+        per (j = index; j < index + numerus; j++)
+        {
+            si (j % III != ZEPHYRUM)
+            {
+                collecta++;
+            }
+        }
+        index += numerus;
+    }
+    _contextus_initium(&ctx_s, &n);
+    ctx_s.inutile_tertia = VERUM;
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx_s, &q,
+        piscina, &f));
+    _contextus_initium(&ctx, &n);
+    ctx.inutile_tertia = VERUM;
+    _fasciculum_initium(&fasciculus, &ctx, VERUM);
+    CREDO_NECESSE(interpolatio_polynomium_relatum_fasciculis(_fasciculus,
+        &fasciculus, ZEPHYRUM, NIHIL, &q, piscina, &f, &r));
+    CREDO_VERUM(polynomium_aequalis(f, expectatum));
+    CREDO_VERUM(longitudo > I);
+    CREDO_AEQUALIS_I32(fasciculus.fasciculi, (r.k_maximus
+        + I) * longitudo);
+    per (j = ZEPHYRUM; j < longitudo; j++)
+    {
+        CREDO_AEQUALIS_I32(fasciculus.magnitudines[j], series[j]);
+    }
+    CREDO_AEQUALIS_I32(fasciculus.petita, ctx_s.vocationes);
+    CREDO_VERUM(r.aestimationes == (i64)ctx_s.vocationes);
+
+    /* conatus coercet: primus additus INUTILE totus, conatus XL */
+    coef_additi[ZEPHYRUM]   = magnus_ex_s64(XIII);
+    coef_additi[I]          = magnus_ex_s64(-I);
+    n_additi.coefficientes  = coef_additi;
+    n_additi.numerus        = II;
+    n_additi.imus           = ZEPHYRUM;
+    n_additi.passus         = I;
+    q                       = _quaestio_noti(&n_additi, LXX);
+    q.conatus_maximi        = XL;
+    _contextus_initium(&ctx_s, &n_additi);
+    CREDO_NECESSE(interpolatio_polynomium(_aestimator, &ctx_s, &q,
+        piscina, &f));
+    primi          = ctx_s.numerus_primorum;
+    restitutionis  = primi - I;
+    _contextus_initium(&ctx, &n_additi);
+    ctx.inutile_a_primo = primi;
+    _fasciculum_initium(&fasciculus, &ctx, VERUM);
+    CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(_fasciculus,
+        &fasciculus, ZEPHYRUM, NIHIL, &q, piscina, &f, &r));
+    CREDO_AEQUALIS_I32(fasciculus.petita, restitutionis * III + XL);
+    CREDO_AEQUALIS_I32(ctx.vocationes, restitutionis * III + XL);
+    CREDO_VERUM(r.aestimationes == (i64)(restitutionis * III + XL));
+}
+
+/* ERRATUM per indicem intra fasciculum (ordine interno inverso: indices
+ * post refutantem iam aestimati): FALSUM, exitus non tactus, relatio
+ * numerat consumptos ut singulus (ERRATUM in vocatione III = index 2),
+ * PROBATUM et VERIFICATUM. Planta "ERRATUM ut INUTILE" hic rubet. */
+interior vacuum
+_probare_erratum_in_fasciculo (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+                     Magnus  coef[III];
+                      Notum  n;
+                  Contextus  ctx;
+                  Contextus  ctx_s;
+                  Contextus  ctx_v;
+      FasciculusProbationis  fasciculus;
+    InterpolatioVerificator  v;
+       InterpolatioQuaestio  q;
+        InterpolatioRelatio  r;
+        InterpolatioRelatio  r_s;
+                 Polynomium  f;
+                 Polynomium  signum;
+                        i32  modus;
+
+    _notum_fasciculorum(&n, coef);
+    signum = polynomium_constans(magnus_ex_s64(DCLXVI), piscina);
+    per (modus = ZEPHYRUM; modus < II; modus++)
+    {
+        q = modus == ZEPHYRUM ? _quaestio_noti(&n, VIII)
+            : _quaestio_verificandi(&n, VIII, (i64)III);
+        _contextus_initium(&ctx_v, &n);
+        v = _verificator(&ctx_v, I);
+        _contextus_initium(&ctx_s, &n);
+        ctx_s.erratum_ad = III;
+        CREDO_FALSUM(interpolatio_polynomium_relatum(_aestimator,
+            &ctx_s,
+            &v, &q, piscina, &f, &r_s));
+        f = signum;
+        _contextus_initium(&ctx, &n);
+        _fasciculum_initium(&fasciculus, &ctx, VERUM);
+        fasciculus.erratum_activum  = VERUM;
+        fasciculus.erratum_index    = II;
+        CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(
+            _fasciculus, &fasciculus, ZEPHYRUM, &v, &q, piscina, &f,
+            &r));
+        CREDO_VERUM(polynomium_aequalis(f, signum));
+        CREDO_VERUM(r_s.aestimationes == (i64)III);
+        _relationes_aequales(&r, &r_s);
+        CREDO_AEQUALIS_I32(fasciculus.petita, IV);       /* fasciculus totus */
+        CREDO_AEQUALIS_I32(ctx.vocationes, III);   /* indices 0, 1, 3 */
+    }
+}
+
+/* fasciculus FALSUM (transitus): FALSUM, nihil numeratum, exitus non
+ * tactus - in primo primo, in secundo, et in probatione sui (fasciculus
+ * unius indicis); fasciculus NIHIL: quaestio invalida, nulla vocatio */
+interior vacuum
+_probare_defectum_fasciculi (
+    CredoContextus* c)
+{
+                    Piscina* piscina = c->piscina;
+                     Magnus  coef[III];
+                     Magnus  coef_magni[VI];
+                      Notum  n;
+                  Contextus  ctx;
+                  Contextus  ctx_v;
+      FasciculusProbationis  fasciculus;
+    InterpolatioVerificator  v;
+       InterpolatioQuaestio  q;
+        InterpolatioRelatio  r;
+                 Polynomium  f;
+                 Polynomium  signum;
+
+    _notum_fasciculorum(&n, coef);
+    signum  = polynomium_constans(magnus_ex_s64(DCLXVI), piscina);
+    q       = _quaestio_noti(&n, VIII);
+
+    f = signum;
+    _contextus_initium(&ctx, &n);
+    _fasciculum_initium(&fasciculus, &ctx, VERUM);
+    fasciculus.defectus_ad = I;
+    CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(_fasciculus,
+        &fasciculus, ZEPHYRUM, NIHIL, &q, piscina, &f, &r));
+    CREDO_VERUM(r.aestimationes == (i64)ZEPHYRUM);
+    CREDO_AEQUALIS_I32(ctx.vocationes, ZEPHYRUM);
+    CREDO_VERUM(polynomium_aequalis(f, signum));
+
+    _contextus_initium(&ctx, &n);
+    _fasciculum_initium(&fasciculus, &ctx, VERUM);
+    fasciculus.defectus_ad = II;
+    CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(_fasciculus,
+        &fasciculus, ZEPHYRUM, NIHIL, &q, piscina, &f, &r));
+    CREDO_VERUM(r.aestimationes == (i64)IV);
+    CREDO_AEQUALIS_I32(ctx.vocationes, IV);
+    CREDO_VERUM(polynomium_aequalis(f, signum));
+
+    /* probatio sui stadii 1 = fasciculus II, unius indicis */
+    _notum_magnum(&n, coef_magni, piscina);
+    _contextus_initium(&ctx, &n);
+    _contextus_initium(&ctx_v, &n);
+    v = _verificator(&ctx_v, I);
+    q = _quaestio_verificandi(&n, CC, (i64)VII);
+    _fasciculum_initium(&fasciculus, &ctx, VERUM);
+    fasciculus.defectus_ad = II;
+    CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(_fasciculus,
+        &fasciculus, ZEPHYRUM, &v, &q, piscina, &f, &r));
+    CREDO_AEQUALIS_I32(fasciculus.magnitudines[I], I);
+    CREDO_VERUM(r.aestimationes == (i64)VII);
+    CREDO_AEQUALIS_I32(r.probationes_sui, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(ctx_v.vocationes, ZEPHYRUM);
+    CREDO_VERUM(polynomium_aequalis(f, signum));
+
+    _contextus_initium(&ctx, &n);
+    CREDO_FALSUM(interpolatio_polynomium_relatum_fasciculis(NIHIL, &ctx,
+        ZEPHYRUM, &v, &q, piscina, &f, &r));
+    CREDO_AEQUALIS_I32(ctx.vocationes, ZEPHYRUM);
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -2472,6 +3037,15 @@ interior constans CredoSectio SECTIONES[] = {
     { "inutilia certificantis", _probare_inutilia_certificantis, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { "mendax ad limitem", _probare_mendacem_ad_limitem, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "fasciculi aequales", _probare_fasciculos_aequales, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "capacitas", _probare_capacitatem, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasciculi numerati", _probare_fasciculos_numeratos, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "erratum in fasciculo", _probare_erratum_in_fasciculo, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "defectus fasciculi", _probare_defectum_fasciculi, NIHIL, NIHIL,
       NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -948,3 +948,23 @@ Plants: build/verificatio/plantae_t2.py, 4 of 4 red as registered (always self-c
 The 5% cost rule had no braid between the thresholds, so "5% -> 50%" and "rule ignores m" mutants survived. 8 x 51 (TL main, ratio m * price_vertex / ((k_max+1)(K+2) price_TL) = 0.067) sits above 1/20 but below both 1/2 and m/20, so it pins both; found by scanning T0's FUNDAMENTUM cost columns (build/verificatio/t0_fundamentum.out). Its word hash 2481405640 recomputed in Python from tools/uncinus_mensura -sectio XII words with the test's _misce (reproduces the three known hashes). The test now also asserts each example's m and the communia label (rule 2). r = 9 -> 0 remains untested at this level on purpose: no numerical effect at q >= 2^30.
 
 Plant note: T2 plant B's single-line anchor was re-wrapped by commissio's formatter after the T2 run; planta then refuses the replacement (format guard). Plant scripts kept in build/ go stale this way after their commit - rerun with the current text.
+
+## 2026-11-03 - TL kernel under concurrent copies (L3 groundwork)
+
+Experiment registered and run before drafting the L3 plan (predictions,
+results: build/verificatio/concurrentia_praedictio.md; driver in the
+session scratchpad, linking uncinus_mensura's objects). N = 1..8 copies
+of one-point TL evaluation at 12/14/16 x 801, CPU s/point per copy,
+12 strands as the cache-resident control.
+
+Memory bandwidth is NOT the limiter: beyond the control, 16 strands
+loses only ~10% at 4-6 copies and ~18% at 8 (predicted <= 15% / 30%).
+So column blocks stay deferred; at most they would recover that ~10-18%.
+14 strands loses 17% at 4 copies (predicted <= 10%), consistent with
+four ~4 MB module matrices sharing the 16 MB P-cluster L2.
+
+The larger effect is size-independent: even the control costs 1.35x per
+point at 2 copies and ~1.7x at 6-8. This machine is a fanless MacBook
+Air M2 (4P + 4E), other sessions pushed load to 75 during the run.
+Practical throughput at 16 strands: ~2.1-2.5x at 4-8 workers, not the 3x
+I had guessed. Use that for L3's registered threshold.
