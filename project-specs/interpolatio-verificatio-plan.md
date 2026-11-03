@@ -471,6 +471,35 @@ First tool check: 8 × 401 with the frozen checker stopped at 3 of 11
 primes, 837 evaluations (both T0's registered values), byte-identical to
 brackets.txt; `-promovere` computed the 8 remaining primes, IDEM.
 
+## T3 protocol (registered 2026-11-03, before any T3 run)
+
+- **Reference for PROBATUM:** brackets.txt (D136) and uncinus_14x801.txt.
+  The current kernel reproduced brackets.txt byte for byte in
+  temperley-celeritas T3 and in its T4 review (45/45 forced TL), so the
+  proved side is not rerun except inside P2t.
+- **Verified runs:** `uncinus_mensura -sectio XI -modus verificatum`
+  (automatic checker) and `-sectio VIII -fila 14 -longitudo 801 -modus
+  verificatum -verificator congelatus`, seeds from entropy (FORTUITUM,
+  printed). Both under custos and caffeinate, in parallel (no timing
+  claim from these two).
+- **Pass criteria:** every UNCINUS line byte-identical to its reference;
+  every RELATIO line's prime count = T0's k_true (P1, P4), k_max = T0's,
+  aestimationes = T0's "evals V" (P2 count).
+- **P2t:** 12 × 801, one binary, ≥ 3 ABBA pairs (A = section VIII
+  proved, B = section VIII verified with the frozen checker; pair k runs
+  AB if k is even, BA if odd), nothing else of ours running, load
+  average recorded before each run, median of per-pair ratios ≥ 2.5×.
+- **P3 method (made concrete):** overhead = (verified CPU − evals V ×
+  per-point CPU of the proved run) / verified CPU, i.e. everything a
+  verified run spends beyond its interpolation evaluations (self-checks,
+  certifying checks, per-stage CRT); the checks' share is estimated
+  separately as k_true × main point + m × frozen point (frozen point
+  time from the run's own B − A residual is not separable, so from
+  section VI's per-point figure at n = 12). Threshold < 2%, unchanged.
+  (T1 prediction note: the frozen kernel is slower per point than the
+  new one, so P3 may fail on the certifying checks alone; that is a
+  result, not a reason to change the threshold.)
+
 ## Tests
 
 - All existing suites green and unchanged (PROBATUM default).
