@@ -564,6 +564,22 @@ _typus_fluitans (
         || typus == (s32)MEDULLA_TYPUS_F64) ? VERUM : FALSUM;
 }
 
+/* promotio variadica integralis (C89): angustiora quam 32 -> s32;
+ * ceteri typi sui (argumentum printf typatum, B4) */
+hic_manens constans character*
+_typus_promotus (
+    s32 typus)
+{
+    si (   typus == (s32)MEDULLA_TYPUS_I8
+        || typus == (s32)MEDULLA_TYPUS_I16
+        || typus == (s32)MEDULLA_TYPUS_S8
+        || typus == (s32)MEDULLA_TYPUS_S16)
+    {
+        redde "s32";
+    }
+    redde medulla_typum_titulus(typus);
+}
+
 /* datum chordae: octeti hex in quaternionibus (exemplar goldens) */
 hic_manens i32
 _datum_chordae_scribere (
@@ -891,10 +907,13 @@ principale (
                           scopum->parametra, k)
                     : NIHIL;
 
+            /* typus argumenti (B4): chorda = i64 inscriptio;
+             * aliter typus parametri; sine parametro (variadica)
+             * f64 si punctum, s64 aliter */
             si (est_chorda)
             {
                 cursor += (i32)sprintf(involucrum + cursor,
-                    ", %%a%u", k);
+                    ", i64 %%a%u", k);
             }
             alioquin si (   parametrum                != NIHIL
                          && _typus_fluitans(parametrum->typus)
@@ -903,12 +922,20 @@ principale (
                 /* littera fluitans sine puncto: punctum addere
                  * (lector formam fluitantem postulat) */
                 cursor += (i32)sprintf(involucrum + cursor,
-                    ", %s.0", argumenta[k]);
+                    ", %s %s.0",
+                    medulla_typum_titulus(parametrum->typus),
+                    argumenta[k]);
             }
             alioquin
             {
+                constans character* typus_littera =
+                    (parametrum != NIHIL)
+                        ? medulla_typum_titulus(parametrum->typus)
+                        : (strchr(argumenta[k], '.') != NIHIL)
+                            ? "f64" : "s64";
+
                 cursor += (i32)sprintf(involucrum + cursor,
-                    ", %s", argumenta[k]);
+                    ", %s %s", typus_littera, argumenta[k]);
             }
         }
         cursor += (i32)sprintf(involucrum + cursor, "\n");
@@ -918,7 +945,7 @@ principale (
         {
             forma = "(vacuum)\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma\n");
+                "    vocare $printf, i64 $forma ...\n");
         }
         alioquin si (scopum->typus_reditus
                      == (s32)MEDULLA_TYPUS_F32)
@@ -930,27 +957,29 @@ principale (
              * denormale 5e-315 = inventum die natali) */
             cursor += (i32)sprintf(involucrum + cursor,
                 "    %%frd = dilatare.f32.f64 %%fr\n"
-                "    vocare $printf, $forma, %%frd\n");
+                "    vocare $printf, i64 $forma ... f64 %%frd\n");
         }
         alioquin si (scopum->typus_reditus
                      == (s32)MEDULLA_TYPUS_F64)
         {
             forma = "%g\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma, %%fr\n");
+                "    vocare $printf, i64 $forma ... f64 %%fr\n");
         }
         alioquin si (   scopum->typus_reditus >= (s32)MEDULLA_TYPUS_S8
                      && scopum->typus_reditus <= (s32)MEDULLA_TYPUS_S64)
         {
             forma = "%lld\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma, %%fr\n");
+                "    vocare $printf, i64 $forma ... %s %%fr\n",
+                _typus_promotus(scopum->typus_reditus));
         }
         alioquin
         {
             forma = "%llu\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma, %%fr\n");
+                "    vocare $printf, i64 $forma ... %s %%fr\n",
+                _typus_promotus(scopum->typus_reditus));
         }
         cursor += (i32)sprintf(involucrum + cursor,
             "    redde 0\n\n");

@@ -206,6 +206,78 @@ _operandum_scribere (
     }
 }
 
+/* typus liminis (B4): scalaris = nomen; aggregatum = aN | hKxT,
+ * %reditus = rN | rhKxT. typus NIHIL (ignotus) nihil scribit -
+ * vocans operandum nudum relinquit (forma ante M5, lector
+ * recusat). */
+interior b32
+_limen_scribere (
+               ChordaAedificator* aed,
+    constans MedullaTypusLiminis* limen)
+{
+    si (limen->typus == MEDULLA_TYPUS_AGGREGATUM)
+    {
+        si (limen->est_reditus)
+        {
+            chorda_aedificator_appendere_character(aed, 'r');
+        }
+        si (limen->hfa_typus >= ZEPHYRUM)
+        {
+            i32 basis = (limen->hfa_typus == (s32)MEDULLA_TYPUS_F32)
+                ? (i32)IV : (i32)VIII;
+
+            chorda_aedificator_appendere_character(aed, 'h');
+            chorda_aedificator_appendere_i32(aed,
+                limen->magnitudo_octetorum / basis);
+            chorda_aedificator_appendere_character(aed, 'x');
+            chorda_aedificator_appendere_literis(aed,
+                medulla_typum_titulus(limen->hfa_typus));
+        }
+        alioquin
+        {
+            si (!limen->est_reditus)
+            {
+                chorda_aedificator_appendere_character(aed, 'a');
+            }
+            chorda_aedificator_appendere_i32(aed,
+                limen->magnitudo_octetorum);
+        }
+        redde VERUM;
+    }
+    si (medulla_typum_titulus(limen->typus) == NIHIL)
+    {
+        redde FALSUM;
+    }
+    chorda_aedificator_appendere_literis(aed,
+        medulla_typum_titulus(limen->typus));
+    redde VERUM;
+}
+
+/* argumentum vocationis: "T operandum" (nudum si typus ignotus) */
+interior vacuum
+_argumentum_scribere (
+            ChordaAedificator* aed,
+      constans MedullaModulus* modulus,
+      constans MedullaFunctio* functio,
+                          s32  index)
+{
+    constans MedullaOperandum* argumentum =
+        (constans MedullaOperandum*)xar_obtinere_s(functio->operanda,
+            index);
+    constans MedullaTypusLiminis* typus =
+        (constans MedullaTypusLiminis*)xar_obtinere_s(
+            functio->operanda_typi, index);
+
+    si (typus != NIHIL && _limen_scribere(aed, typus))
+    {
+        chorda_aedificator_appendere_character(aed, ' ');
+    }
+    si (argumentum != NIHIL)
+    {
+        _operandum_scribere(aed, modulus, functio, argumentum);
+    }
+}
+
 interior vacuum
 _instructionem_scribere (
              ChordaAedificator* aed,
@@ -252,22 +324,29 @@ _instructionem_scribere (
     }
     alioquin si (instructio->op == (s32)MEDULLA_OP_VOCARE)
     {
+        /* fixa ", T x" singula; variadica post " ..." - prima
+         * spatio, ceterae ", " (B4) */
+        s32 fixa = (instructio->argumenta_fixa >= ZEPHYRUM)
+            ? instructio->argumenta_fixa : instructio->extra_numerus;
         s32 i;
 
         chorda_aedificator_appendere_character(aed, ' ');
         _operandum_scribere(aed, modulus, functio, &instructio->a);
-        per (i = ZEPHYRUM; i < instructio->extra_numerus; i++)
+        per (i = ZEPHYRUM; i < fixa; i++)
         {
-            constans MedullaOperandum* argumentum =
-                (constans MedullaOperandum*)xar_obtinere_s(
-                    functio->operanda,
-                    instructio->extra_index + i);
-
             chorda_aedificator_appendere_literis(aed, ", ");
-            si (argumentum != NIHIL)
+            _argumentum_scribere(aed, modulus, functio,
+                instructio->extra_index + i);
+        }
+        si (instructio->argumenta_fixa >= ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(aed, " ...");
+            per (i = fixa; i < instructio->extra_numerus; i++)
             {
-                _operandum_scribere(aed, modulus, functio,
-                    argumentum);
+                chorda_aedificator_appendere_literis(aed,
+                    (i == fixa) ? " " : ", ");
+                _argumentum_scribere(aed, modulus, functio,
+                    instructio->extra_index + i);
             }
         }
     }
@@ -319,8 +398,15 @@ _functionem_scribere (
         {
             chorda_aedificator_appendere_literis(aed, ", ");
         }
-        chorda_aedificator_appendere_literis(aed,
-            medulla_typum_titulus(parametrum->typus));
+        si (parametrum->limen.typus == MEDULLA_TYPUS_AGGREGATUM)
+        {
+            (vacuum)_limen_scribere(aed, &parametrum->limen);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_literis(aed,
+                medulla_typum_titulus(parametrum->typus));
+        }
         chorda_aedificator_appendere_literis(aed, " %");
         titulus = medulla_registrum_titulus(functio,
             parametrum->index);
@@ -429,6 +515,59 @@ _datum_scribere (
     }
 }
 
+/* externum $titulus (T, T, ...) -> T - symbola EXTERNA cum
+ * signatura, ordine symbolorum (B4) */
+interior vacuum
+_externa_scribere (
+          ChordaAedificator* aed,
+    constans MedullaModulus* modulus)
+{
+    i32 i;
+    i32 m = xar_numerus(modulus->symbola);
+
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans MedullaSymbolum* symbolum =
+            medulla_symbolum_obtinere(modulus, (s32)i);
+        constans MedullaSignatura* signatura;
+                              i32  j;
+                              i32  n;
+
+        si (   symbolum->genus != (s32)MEDULLA_SYMBOLUM_EXTERNUM
+            || symbolum->signatura < ZEPHYRUM)
+        {
+            perge;
+        }
+        signatura = (constans MedullaSignatura*)xar_obtinere(
+            modulus->signaturae, (i32)symbolum->signatura);
+        chorda_aedificator_appendere_literis(aed, "externum $");
+        chorda_aedificator_appendere_chorda(aed, symbolum->titulus);
+        chorda_aedificator_appendere_literis(aed, " (");
+        n = xar_numerus(signatura->parametra);
+        per (j = ZEPHYRUM; j < n; j++)
+        {
+            si (j > ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(aed, ", ");
+            }
+            (vacuum)_limen_scribere(aed,
+                (constans MedullaTypusLiminis*)xar_obtinere(
+                    signatura->parametra, j));
+        }
+        si (signatura->est_variadica)
+        {
+            chorda_aedificator_appendere_literis(aed,
+                (n > ZEPHYRUM) ? ", ..." : "...");
+        }
+        chorda_aedificator_appendere_literis(aed, ") -> ");
+        chorda_aedificator_appendere_literis(aed,
+            (signatura->typus_reditus == MEDULLA_TYPUS_NIHIL)
+                ? "vacuum"
+                : medulla_typum_titulus(signatura->typus_reditus));
+        chorda_aedificator_appendere_character(aed, '\n');
+    }
+}
+
 chorda
 medulla_textum_scribere (
                     Piscina* piscina,
@@ -454,6 +593,7 @@ medulla_textum_scribere (
     chorda_aedificator_appendere_literis(aed, "modulus \"");
     _chordam_evadere(aed, modulus->titulus);
     chorda_aedificator_appendere_literis(aed, "\"\n");
+    _externa_scribere(aed, modulus);
 
     m = xar_numerus(modulus->functiones);
     per (i = ZEPHYRUM; i < m; i++)
@@ -902,6 +1042,124 @@ _finis_lineae (
     redde cursor >= linea.mensura;
 }
 
+/* cifrae decimales ab initio usque ad finem aut non-cifram; FALSUM
+ * si nulla aut nimis magna */
+interior b32
+_digitos_legere (
+    chorda  verbum,
+       i32* k,
+       i32* valor_out)
+{
+    i32 valor = ZEPHYRUM;
+    b32 ullus = FALSUM;
+
+    dum (   *k < verbum.mensura
+         && _est_cifra((character)verbum.datum[*k]))
+    {
+        si (valor > 100000000)
+        {
+            redde FALSUM;
+        }
+        valor = valor * X + (i32)((character)verbum.datum[*k] - '0');
+        (*k)++;
+        ullus = VERUM;
+    }
+    *valor_out = valor;
+    redde ullus;
+}
+
+/* verbum typi liminis (B4): s32 | aN | hKxT | rN | rhKxT */
+interior b32
+_limen_ex_verbo (
+                 chorda  verbum,
+    MedullaTypusLiminis* limen)
+{
+    s32 scalaris  = _typum_invenire(verbum);
+    i32 k         = ZEPHYRUM;
+
+    limen->magnitudo_octetorum  = ZEPHYRUM;
+    limen->hfa_typus            = MEDULLA_TYPUS_NIHIL;
+    limen->est_reditus          = FALSUM;
+    si (scalaris >= ZEPHYRUM)
+    {
+        limen->typus = scalaris;
+        redde VERUM;
+    }
+    limen->typus = MEDULLA_TYPUS_AGGREGATUM;
+    si (verbum.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si ((character)verbum.datum[k] == 'r')
+    {
+        limen->est_reditus = VERUM;
+        k++;
+    }
+    si (k < verbum.mensura && (character)verbum.datum[k] == 'h')
+    {
+           i32 membra;
+        chorda nomen_basis;
+           s32 basis;
+
+        k++;
+        si (   !_digitos_legere(verbum, &k, &membra)
+            || membra < I || membra > IV
+            || k                          >= verbum.mensura
+            || (character)verbum.datum[k] != 'x')
+        {
+            redde FALSUM;
+        }
+        k++;
+        nomen_basis.datum    = verbum.datum + k;
+        nomen_basis.mensura  = verbum.mensura - k;
+        basis                = _typum_invenire(nomen_basis);
+        si (   basis != (s32)MEDULLA_TYPUS_F32
+            && basis != (s32)MEDULLA_TYPUS_F64)
+        {
+            redde FALSUM;
+        }
+        limen->hfa_typus = basis;
+        limen->magnitudo_octetorum = membra
+            * ((basis == (s32)MEDULLA_TYPUS_F32) ? (i32)IV
+                                                  : (i32)VIII);
+        redde VERUM;
+    }
+    si (!limen->est_reditus)
+    {
+        si ((character)verbum.datum[k] != 'a')
+        {
+            redde FALSUM;
+        }
+        k++;
+    }
+    redde _digitos_legere(verbum, &k, &limen->magnitudo_octetorum)
+        && k == verbum.mensura
+        && limen->magnitudo_octetorum > ZEPHYRUM;
+}
+
+/* "T operandum" -> in stivam typatam; -I in errore, aliter index */
+interior s32
+_argumentum_typatum_legere (
+    TextusLector* lector,
+          chorda  linea,
+             i32* cursor)
+{
+       MedullaOperandum argumentum;
+    MedullaTypusLiminis limen;
+                 chorda verbum;
+
+    _spatia_praeterire(linea, cursor);
+    verbum = _verbum_legere(linea, cursor);
+    si (   !_limen_ex_verbo(verbum, &limen)
+        || _aspicere(linea, *cursor) != ' '
+        || !_operandum_legere(lector, linea, cursor, &argumentum))
+    {
+        redde -I;   /* typus argumenti absens aut malus */
+    }
+    redde medulla_operanda_typata_addere(lector->functio, &argumentum,
+        &limen, I);
+}
+
 interior b32
 _instructionem_legere (
     TextusLector* lector,
@@ -916,6 +1174,7 @@ _instructionem_legere (
     instructio.typus_secundus  = MEDULLA_TYPUS_NIHIL;
     instructio.destinatio      = -I;
     instructio.extra_index     = -I;
+    instructio.argumenta_fixa  = -I;
     instructio.a               = medulla_op_nihil();
     instructio.b               = medulla_op_nihil();
     instructio.c               = medulla_op_nihil();
@@ -1041,21 +1300,51 @@ _instructionem_legere (
         {
             redde FALSUM;
         }
-        instructio.extra_numerus = ZEPHYRUM;
-        _spatia_praeterire(linea, &cursor);
-        dum (_aspicere(linea, cursor) == ',')
+        /* ", T x" fixa; " ..." semel; variadica: prima post
+         * spatium, ceterae post ", " (B4) */
+        instructio.extra_numerus   = ZEPHYRUM;
+        instructio.argumenta_fixa  = -I;
+        per (;;)
         {
-            MedullaOperandum argumentum;
-                         s32 index;
+            b32 legendum = FALSUM;
+            s32 index;
 
-            cursor++;
-            si (!_operandum_legere(lector, linea, &cursor,
-                    &argumentum))
+            _spatia_praeterire(linea, &cursor);
+            si (cursor >= linea.mensura)
+            {
+                frange;
+            }
+            si (_aspicere(linea, cursor) == ',')
+            {
+                si (   instructio.argumenta_fixa
+                       == instructio.extra_numerus)
+                {
+                    redde FALSUM;   /* " ... ," */
+                }
+                cursor++;
+                legendum = VERUM;
+            }
+            alioquin si (   _aspicere(linea, cursor)      == '.'
+                         && _aspicere(linea, cursor + I)  == '.'
+                         && _aspicere(linea, cursor + II) == '.'
+                         && instructio.argumenta_fixa < ZEPHYRUM)
+            {
+                cursor                     += III;
+                instructio.argumenta_fixa  = instructio.extra_numerus;
+                _spatia_praeterire(linea, &cursor);
+                si (   cursor                   >= linea.mensura
+                    || _aspicere(linea, cursor) == ',')
+                {
+                    perge;   /* finis aut "... ," (supra recusatur) */
+                }
+                legendum = VERUM;
+            }
+            si (!legendum)
             {
                 redde FALSUM;
             }
-            index = medulla_operanda_addere(lector->functio,
-                &argumentum, I);
+            index = _argumentum_typatum_legere(lector, linea,
+                &cursor);
             si (index < ZEPHYRUM)
             {
                 redde FALSUM;
@@ -1065,7 +1354,6 @@ _instructionem_legere (
                 instructio.extra_index = index;
             }
             instructio.extra_numerus++;
-            _spatia_praeterire(linea, &cursor);
         }
     }
     alioquin si (!_finis_lineae(linea, cursor))
@@ -1144,7 +1432,8 @@ _bloccos_praescandere (
 
             si (   _verbum_aequale(verbum, "functio")
                 || _verbum_aequale(verbum, "datum")
-                || _verbum_aequale(verbum, "modulus"))
+                || _verbum_aequale(verbum, "modulus")
+                || _verbum_aequale(verbum, "externum"))
             {
                 frange;
             }
@@ -1159,13 +1448,13 @@ _functionem_legere (
           chorda  linea,
              i32  cursor)
 {
-    chorda titulus;
-       s32 typi_parametrorum[XXXII];
-    chorda tituli_parametrorum[XXXII];
-       s32 numerus_parametrorum  = ZEPHYRUM;
-       b32 variadica             = FALSUM;
-       s32 typus_reditus;
-       s32 i;
+                 chorda titulus;
+    MedullaTypusLiminis typi_parametrorum[XXXII];
+                 chorda tituli_parametrorum[XXXII];
+                    s32 numerus_parametrorum  = ZEPHYRUM;
+                    b32 variadica             = FALSUM;
+                    s32 typus_reditus;
+                    s32 i;
 
     _spatia_praeterire(linea, &cursor);
     si (_aspicere(linea, cursor) != '$')
@@ -1212,10 +1501,10 @@ _functionem_legere (
             redde FALSUM;
         }
         {
-            chorda verbum  = _verbum_legere(linea, &cursor);
-               s32 typus   = _typum_invenire(verbum);
+            chorda verbum = _verbum_legere(linea, &cursor);
 
-            si (typus < ZEPHYRUM)
+            si (!_limen_ex_verbo(verbum,
+                    &typi_parametrorum[numerus_parametrorum]))
             {
                 redde FALSUM;
             }
@@ -1225,7 +1514,6 @@ _functionem_legere (
                 redde FALSUM;
             }
             cursor++;
-            typi_parametrorum[numerus_parametrorum] = typus;
             tituli_parametrorum[numerus_parametrorum] =
                 _verbum_legere(linea, &cursor);
             numerus_parametrorum++;
@@ -1272,14 +1560,135 @@ _functionem_legere (
     }
     per (i = ZEPHYRUM; i < numerus_parametrorum; i++)
     {
+        b32 aggregatum = typi_parametrorum[i].typus
+            == MEDULLA_TYPUS_AGGREGATUM;
+        MedullaParametrum* parametrum;
+
+        /* aggregatum: registrum inscriptionem (i64) tenet */
         si (medulla_parametrum_addere(lector->functio,
-                tituli_parametrorum[i], typi_parametrorum[i])
+                tituli_parametrorum[i],
+                aggregatum ? (s32)MEDULLA_TYPUS_I64
+                           : typi_parametrorum[i].typus)
             < ZEPHYRUM)
         {
             redde FALSUM;
         }
+        parametrum = (MedullaParametrum*)xar_obtinere(
+            lector->functio->parametra, (i32)i);
+        parametrum->limen = typi_parametrorum[i];
     }
     redde _bloccos_praescandere(lector);
+}
+
+/* externum $titulus (T, ...) -> T: post modulum, ante functionem
+ * datumve primum (B4); symbolum novum EXTERNUM, signatura semel */
+interior b32
+_externum_legere (
+    TextusLector* lector,
+          chorda  linea,
+             i32  cursor)
+{
+              chorda titulus;
+    MedullaSignatura signatura;
+                 s32 symbolum;
+
+    si (   xar_numerus(lector->modulus->functiones) > ZEPHYRUM
+        || xar_numerus(lector->modulus->data) > ZEPHYRUM)
+    {
+        redde FALSUM;   /* externum post functionem aut datum */
+    }
+    signatura.est_variadica = FALSUM;
+    signatura.parametra = xar_creare(lector->piscina,
+        (i32)magnitudo(MedullaTypusLiminis));
+    si (signatura.parametra == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _spatia_praeterire(linea, &cursor);
+    si (_aspicere(linea, cursor) != '$')
+    {
+        redde FALSUM;
+    }
+    cursor++;
+    titulus = _verbum_legere(linea, &cursor);
+    _spatia_praeterire(linea, &cursor);
+    si (_aspicere(linea, cursor) != '(')
+    {
+        redde FALSUM;
+    }
+    cursor++;
+    _spatia_praeterire(linea, &cursor);
+    dum (_aspicere(linea, cursor) != ')')
+    {
+        MedullaTypusLiminis* limen;
+
+        si (signatura.est_variadica)
+        {
+            redde FALSUM;   /* nihil post "..." */
+        }
+        si (xar_numerus(signatura.parametra) > ZEPHYRUM)
+        {
+            si (_aspicere(linea, cursor) != ',')
+            {
+                redde FALSUM;
+            }
+            cursor++;
+            _spatia_praeterire(linea, &cursor);
+        }
+        si (   _aspicere(linea, cursor)      == '.'
+            && _aspicere(linea, cursor + I)  == '.'
+            && _aspicere(linea, cursor + II) == '.')
+        {
+            cursor                   += III;
+            signatura.est_variadica  = VERUM;
+            _spatia_praeterire(linea, &cursor);
+            perge;
+        }
+        limen = (MedullaTypusLiminis*)xar_addere(signatura.parametra);
+        si (   limen == NIHIL
+            || !_limen_ex_verbo(_verbum_legere(linea, &cursor), limen))
+        {
+            redde FALSUM;
+        }
+        _spatia_praeterire(linea, &cursor);
+    }
+    cursor++;   /* ')' */
+    _spatia_praeterire(linea, &cursor);
+    si (   _aspicere(linea, cursor)     != '-'
+        || _aspicere(linea, cursor + I) != '>')
+    {
+        redde FALSUM;
+    }
+    cursor += II;
+    _spatia_praeterire(linea, &cursor);
+    {
+        chorda verbum = _verbum_legere(linea, &cursor);
+
+        si (_verbum_aequale(verbum, "vacuum"))
+        {
+            signatura.typus_reditus = MEDULLA_TYPUS_NIHIL;
+        }
+        alioquin
+        {
+            signatura.typus_reditus = _typum_invenire(verbum);
+            si (signatura.typus_reditus < ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    si (!_finis_lineae(linea, cursor))
+    {
+        redde FALSUM;
+    }
+    symbolum = medulla_symbolum_internare(lector->modulus, titulus);
+    si (symbolum < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* signatura iam posita (externum duplex) -> -I */
+    redde medulla_signaturam_ponere(lector->modulus, symbolum,
+        &signatura) >= ZEPHYRUM;
 }
 
 interior b32
@@ -1494,6 +1903,11 @@ _lineam_tractare (
         si (lector->modulus == NIHIL)
         {
             redde FALSUM;
+        }
+        si (_verbum_aequale(verbum, "externum"))
+        {
+            redde _externum_legere(lector, linea->textus,
+                cursor_verbi);
         }
         si (_verbum_aequale(verbum, "functio"))
         {

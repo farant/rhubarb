@@ -63,11 +63,12 @@ nomen structura {
     MedullaInstructio* instructiones;   /* contiguae; NON-constans:
                                          * puncta hoc exemplar
                                          * patchant (M3 chunk 4) */
-                          i32  numerus;
-                 constans i32* blocci_initia;
-                          i32  blocci_numerus;
-    constans MedullaOperandum* operanda;        /* acies plana */
-                          i32  operanda_numerus;
+                             i32  numerus;
+                    constans i32* blocci_initia;
+                             i32  blocci_numerus;
+       constans MedullaOperandum* operanda;        /* acies plana */
+    constans MedullaTypusLiminis* operanda_typi; /* parallela (B4) */
+                             i32  operanda_numerus;
 } FunctioPlana;
 
 nomen structura {
@@ -2140,6 +2141,24 @@ machinula_creare (Piscina* piscina, Conexio* conexio, Regio* regio)
                 (vacuum)xar_copiare_ad_tabulam(functio->operanda,
                     operanda, ZEPHYRUM, plana->operanda_numerus);
                 plana->operanda = operanda;
+                si (   functio->operanda_typi != NIHIL
+                    && xar_numerus(functio->operanda_typi)
+                        == plana->operanda_numerus)
+                {
+                    MedullaTypusLiminis* typi = piscina_allocare(
+                        piscina,
+                        (memoriae_index)plana->operanda_numerus
+                            * magnitudo(MedullaTypusLiminis));
+
+                    si (typi == NIHIL)
+                    {
+                        redde NIHIL;
+                    }
+                    (vacuum)xar_copiare_ad_tabulam(
+                        functio->operanda_typi, typi, ZEPHYRUM,
+                        plana->operanda_numerus);
+                    plana->operanda_typi = typi;
+                }
             }
         }
     }
@@ -3078,13 +3097,14 @@ machinula_gradus (Machinula* m)
                 frange;
             }
             {
-                /* signatura ante argumenta: argumentum per typum
-                 * PARAMETRI aestimatur ubi nota (litera f32 ut
-                 * IMMEDIATUM_F sub S64 figuram f64 pareret -
-                 * dimidium falsum in parametro f32; inventum
-                 * nuntium EXITUS-1). Ignota (aedificata/decipulae/
-                 * argumenta supra parametra) -> S64 ut ante
-                 * (promotiones variadicae: f64 recte). */
+                /* typus argumenti: LOCUS VOCATIONIS primum (B4 -
+                 * aggregata = inscriptio i64); typus ignotus
+                 * (fabrica vetus) -> PARAMETRI vocati ubi nota
+                 * (litera f32 ut IMMEDIATUM_F sub S64 figuram f64
+                 * pareret - dimidium falsum in parametro f32;
+                 * inventum nuntium EXITUS-1). Ignota (aedificata/
+                 * decipulae/argumenta supra parametra) -> S64 ut
+                 * ante (promotiones variadicae: f64 recte). */
                 constans MedullaFunctio* functio_nexae = NIHIL;
 
                 si (descriptor->signum
@@ -3099,10 +3119,22 @@ machinula_gradus (Machinula* m)
                         &plana->operanda[instructio->extra_index
                             + k];
                     s32 typus_argumenti = MEDULLA_TYPUS_S64;
+                    s32 typus_loci = (plana->operanda_typi != NIHIL)
+                        ? plana->operanda_typi[instructio->extra_index
+                              + k].typus
+                        : MEDULLA_TYPUS_NIHIL;
 
-                    si (   functio_nexae != NIHIL
-                        && k < (s32)xar_numerus(
-                               functio_nexae->parametra))
+                    si (typus_loci == MEDULLA_TYPUS_AGGREGATUM)
+                    {
+                        typus_argumenti = MEDULLA_TYPUS_I64;
+                    }
+                    alioquin si (typus_loci >= ZEPHYRUM)
+                    {
+                        typus_argumenti = typus_loci;
+                    }
+                    alioquin si (   functio_nexae != NIHIL
+                                 && k < (s32)xar_numerus(
+                                 functio_nexae->parametra))
                     {
                         typus_argumenti =
                             ((constans MedullaParametrum*)

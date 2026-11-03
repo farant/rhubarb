@@ -586,6 +586,249 @@ _titulum_symboli (
     }
 }
 
+
+/* ==================================================
+ * Limina vocationum (M5 B4): typi argumentorum, HFA, signaturae
+ * ================================================== */
+
+/* membra fluitantia homogenea (AAPCS64 HFA): basis F32/F64 et
+ * numerus membrorum; structura = summa, unio = maximum, acies =
+ * elementa x numerus. Campus (bitfield) aut membrum non fluitans
+ * -> FALSUM. */
+interior b32
+_hfa_colligere (
+               Demissio* d,
+      constans TypusC89* typus,
+                    s32* basis,
+                    i32* numerus)
+{
+    typus = _exutus(typus);
+    si (typus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    commutatio (typus->genus)
+    {
+        casus TYPUS_C89_PRIMITIVUS:
+        {
+            s32 mt = _typus_medullae(typus);
+
+            si (   mt != (s32)MEDULLA_TYPUS_F32
+                && mt != (s32)MEDULLA_TYPUS_F64)
+            {
+                redde FALSUM;
+            }
+            si (*basis != MEDULLA_TYPUS_NIHIL && *basis != mt)
+            {
+                redde FALSUM;
+            }
+            *basis    = mt;
+            *numerus  = I;
+            redde VERUM;
+        }
+        casus TYPUS_C89_ACIES:
+        {
+            i32 elementa = ZEPHYRUM;
+
+            si (   typus->datum.acies.numerus <= ZEPHYRUM
+                || !_hfa_colligere(d, typus->datum.acies.elementum,
+                       basis, &elementa))
+            {
+                redde FALSUM;
+            }
+            *numerus = elementa * (i32)typus->datum.acies.numerus;
+            redde VERUM;
+        }
+        casus TYPUS_C89_STRUCTURA:
+        casus TYPUS_C89_UNIO:
+        {
+            i32 summa = ZEPHYRUM;
+            i32 k;
+
+            si (   !typus->datum.tag.completa
+                || typus->datum.tag.habet_campos
+                || typus->datum.tag.numerus_membrorum == ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+            per (k = ZEPHYRUM; k < typus->datum.tag.numerus_membrorum;
+                 k++)
+            {
+                i32 membra = ZEPHYRUM;
+
+                si (!_hfa_colligere(d,
+                        typus->datum.tag.membra[k].typus, basis,
+                        &membra))
+                {
+                    redde FALSUM;
+                }
+                si (typus->genus == TYPUS_C89_STRUCTURA)
+                {
+                    summa += membra;
+                }
+                alioquin si (membra > summa)
+                {
+                    summa = membra;
+                }
+            }
+            *numerus = summa;
+            redde VERUM;
+        }
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* limen typi C: scalaris aut aggregatum (structura/unio valore);
+ * typus non scalaris nec aggregatus -> i64 (inscriptio) */
+interior MedullaTypusLiminis
+_limen_typi (
+               Demissio* d,
+      constans TypusC89* typus,
+                    b32  est_reditus)
+{
+    MedullaTypusLiminis  limen;
+      constans TypusC89* exutus  = _exutus(typus);
+                    s32  mt      = _typus_medullae(typus);
+
+    limen.typus                = (mt >= ZEPHYRUM) ? mt
+                                                  : MEDULLA_TYPUS_I64;
+    limen.magnitudo_octetorum  = ZEPHYRUM;
+    limen.hfa_typus            = MEDULLA_TYPUS_NIHIL;
+    limen.est_reditus          = FALSUM;
+    si (   exutus != NIHIL
+        && (exutus->genus == TYPUS_C89_STRUCTURA
+            || exutus->genus == TYPUS_C89_UNIO))
+    {
+        s32 basis    = MEDULLA_TYPUS_NIHIL;
+        i32 numerus  = ZEPHYRUM;
+        s32 mensura  = _mensura_typi(d, exutus);
+
+        limen.typus                = MEDULLA_TYPUS_AGGREGATUM;
+        limen.magnitudo_octetorum  = (mensura > ZEPHYRUM)
+            ? (i32)mensura : ZEPHYRUM;
+        limen.est_reditus          = est_reditus;
+        /* HFA: 1-4 membra, sine pulvillo (magnitudo = membra x
+         * basis) */
+        si (   _hfa_colligere(d, exutus, &basis, &numerus)
+            && numerus >= I && numerus <= IV
+            && mensura > ZEPHYRUM
+            && (i32)mensura == numerus
+                * ((basis == (s32)MEDULLA_TYPUS_F32) ? (i32)IV
+                                                      : (i32)VIII))
+        {
+            limen.hfa_typus = basis;
+        }
+    }
+    redde limen;
+}
+
+/* signatura ex typo functionis prototypato (FALSUM si sine
+ * prototypo - K&R / implicitum: nulla signatura). Reditus
+ * aggregatus = parametrum %reditus primum (C7). */
+interior b32
+_signaturam_typi (
+                Demissio* d,
+       constans TypusC89* typus_functionis,
+        MedullaSignatura* signatura)
+{
+      constans TypusC89* reditus;
+    MedullaTypusLiminis* limen;
+                    i32  k;
+
+    typus_functionis = _exutus(typus_functionis);
+    si (   typus_functionis        == NIHIL
+        || typus_functionis->genus != TYPUS_C89_FUNCTIO
+        || !typus_functionis->datum.functio.est_prototypata)
+    {
+        redde FALSUM;
+    }
+    reditus = _exutus(typus_functionis->datum.functio.reditus);
+    signatura->est_variadica =
+        typus_functionis->datum.functio.est_variadica;
+    signatura->typus_reditus = _typus_medullae(reditus);
+    signatura->parametra = xar_creare(d->piscina,
+        (i32)magnitudo(MedullaTypusLiminis));
+    si (signatura->parametra == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (   reditus != NIHIL
+        && (reditus->genus == TYPUS_C89_STRUCTURA
+            || reditus->genus == TYPUS_C89_UNIO))
+    {
+        signatura->typus_reditus = MEDULLA_TYPUS_NIHIL;
+        limen = (MedullaTypusLiminis*)xar_addere(signatura->parametra);
+        si (limen == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *limen = _limen_typi(d, reditus, VERUM);
+    }
+    alioquin si (signatura->typus_reditus < ZEPHYRUM)
+    {
+        signatura->typus_reditus = MEDULLA_TYPUS_NIHIL;   /* vacuum */
+    }
+    per (k = ZEPHYRUM;
+         k < typus_functionis->datum.functio.numerus_parametrorum;
+         k++)
+    {
+        limen = (MedullaTypusLiminis*)xar_addere(signatura->parametra);
+        si (limen == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *limen = _limen_typi(d,
+            typus_functionis->datum.functio.parametra[k], FALSUM);
+    }
+    redde VERUM;
+}
+
+/* internatio symboli semantici; functio prototypata signaturam
+ * accipit (semel - textus eam pro EXTERNIS scribit) */
+interior s32
+_symbolum_internare (
+                      Demissio* d,
+    constans SemanticaSymbolum* symbolum)
+{
+    s32 index = medulla_symbolum_internare(d->modulus,
+        _titulum_symboli(d, symbolum));
+    constans MedullaSymbolum* medullae;
+            MedullaSignatura  signatura;
+
+    si (index < ZEPHYRUM)
+    {
+        redde index;
+    }
+    medullae = medulla_symbolum_obtinere(d->modulus, index);
+    si (   medullae->signatura < ZEPHYRUM
+        && _signaturam_typi(d, symbolum->typus, &signatura))
+    {
+        (vacuum)medulla_signaturam_ponere(d->modulus, index,
+            &signatura);
+    }
+    redde index;
+}
+
+/* limen parametri ultimi additi (aggregata: medulla_parametrum_
+ * addere limen scalarem ex typo registri ponit) */
+interior vacuum
+_limen_parametri_ponere (
+               Demissio* d,
+    MedullaTypusLiminis  limen)
+{
+                  i32  n = xar_numerus(d->functio->parametra);
+    MedullaParametrum* parametrum;
+
+    si (n == ZEPHYRUM)
+    {
+        redde;
+    }
+    parametrum = (MedullaParametrum*)xar_obtinere(
+        d->functio->parametra, n - I);
+    parametrum->limen = limen;
+}
+
 interior b32
 _bloccus_vivus (
     constans Demissio* d)
@@ -1201,8 +1444,7 @@ _locum_staticum (
         {
             redde FALSUM;   /* localia non statice */
         }
-        *symbolum_fructus = medulla_symbolum_internare(d->modulus,
-            _titulum_symboli(d, symbolum));
+        *symbolum_fructus = _symbolum_internare(d, symbolum);
         *addendum_fructus = 0;
         redde *symbolum_fructus >= ZEPHYRUM;
     }
@@ -1744,8 +1986,7 @@ _identificatorem (
         redde _registrum_temporarium(d);
     }
     {
-        s32 index_symboli = medulla_symbolum_internare(d->modulus,
-            _titulum_symboli(d, symbolum));
+        s32 index_symboli = _symbolum_internare(d, symbolum);
         s32 inscriptio = _em(d, nodus, MEDULLA_OP_LOCUS,
             MEDULLA_TYPUS_NIHIL, MEDULLA_TYPUS_NIHIL,
             _registrum_temporarium(d),
@@ -2470,6 +2711,7 @@ _vocationem (
     constans TypusC89* reditus;
     MedullaOperandum vocatus;
     MedullaOperandum argumenta[LXIV];
+    MedullaTypusLiminis typi[LXIV];
     s32 numerus_argumentorum  = ZEPHYRUM;
     b32 reditus_aggregatus    = FALSUM;
     s32 arca_reditus          = -I;
@@ -2514,8 +2756,7 @@ _vocationem (
             && typus_symboli->genus == TYPUS_C89_FUNCTIO)
         {
             vocatus = medulla_op_symbolum(
-                medulla_symbolum_internare(d->modulus,
-                    _titulum_symboli(d, symbolum)));
+                _symbolum_internare(d, symbolum));
         }
     }
     si (vocatus.genus == (s32)MEDULLA_OPERANDUM_NIHIL)
@@ -2545,6 +2786,7 @@ _vocationem (
             medulla_op_nihil());
         argumenta[numerus_argumentorum] =
             medulla_op_registrum(arca_reditus);
+        typi[numerus_argumentorum] = _limen_typi(d, reditus, VERUM);
         numerus_argumentorum++;
     }
 
@@ -2600,11 +2842,17 @@ _vocationem (
                     medulla_op_immediatum((s64)mensura));
                 argumenta[numerus_argumentorum] =
                     medulla_op_registrum(temporaria);
+                typi[numerus_argumentorum] = _limen_typi(d,
+                    typus_argumenti, FALSUM);
             }
             alioquin
             {
+                /* typus post conversionem annotatam (promotiones
+                 * variadicae incluse) */
                 argumenta[numerus_argumentorum] = _ut_operandum(d,
                     argumentum);
+                typi[numerus_argumentorum] = _limen_typi(d,
+                    _typus_finalis(d, _canonicus(argumentum)), FALSUM);
             }
             numerus_argumentorum++;
         }
@@ -2631,9 +2879,22 @@ _vocationem (
         instructio.a               = vocatus;
         instructio.b               = medulla_op_nihil();
         instructio.c               = medulla_op_nihil();
-        instructio.extra_index = medulla_operanda_addere(d->functio,
-            argumenta, numerus_argumentorum);
+        instructio.extra_index = medulla_operanda_typata_addere(
+            d->functio, argumenta, typi, numerus_argumentorum);
         instructio.extra_numerus  = numerus_argumentorum;
+        /* variadica prototypata: fixa = parametra (+ %reditus);
+         * aliter -I (sine prototypo quoque) */
+        instructio.argumenta_fixa = -I;
+        si (   typus_vocati->datum.functio.est_prototypata
+            && typus_vocati->datum.functio.est_variadica)
+        {
+            s32 fixa = (s32)typus_vocati->datum.functio
+                .numerus_parametrorum
+                    + (reditus_aggregatus ? I : ZEPHYRUM);
+
+            instructio.argumenta_fixa = (fixa < numerus_argumentorum)
+                ? fixa : numerus_argumentorum;
+        }
         instructio.origo          = nodus;
         (vacuum)medulla_emittere(d->functio, d->bloccus,
             &instructio);
@@ -2991,8 +3252,7 @@ _ut_locum (
         }
         /* globale */
         {
-            s32 index_symboli = medulla_symbolum_internare(
-                d->modulus, _titulum_symboli(d, symbolum));
+            s32 index_symboli = _symbolum_internare(d, symbolum);
 
             locus.directum = FALSUM;
             locus.index = _em(d, nodus, MEDULLA_OP_LOCUS,
@@ -3395,10 +3655,10 @@ _staticum_locale (
            constans SilvaNodus* initiator)
 {
     character littera[CXXVIII];
-    chorda titulus;
-    i32 scriptum = ZEPHYRUM;
-    i32 caput_f;
-    i32 caput_s;
+       chorda titulus;
+          i32 scriptum = ZEPHYRUM;
+          i32 caput_f;
+          i32 caput_s;
     MedullaDatum* datum;
     s32 mensura = _mensura_completa(d, symbolum->typus, initiator);
     s32 index_symboli;
@@ -4440,6 +4700,7 @@ _functionem (
         d->reditus_index = medulla_parametrum_addere(d->functio,
             _ch_literis("reditus"), MEDULLA_TYPUS_I64);
         d->reditus_mensura = mensura;
+        _limen_parametri_ponere(d, _limen_typi(d, reditus, VERUM));
     }
 
     /* parametra: registra prima (ordo signaturae); symbola
@@ -4490,6 +4751,8 @@ _functionem (
                     index = medulla_parametrum_addere(d->functio,
                         _ch_de_silva(p_symbolum->titulus),
                         (mt >= ZEPHYRUM) ? mt : MEDULLA_TYPUS_I64);
+                    _limen_parametri_ponere(d, _limen_typi(d,
+                        p_symbolum->typus, FALSUM));
                     (vacuum)_sedem_creare(d, p_symbolum, index,
                         FALSUM);
                     sedes_p = (constans SemanticaSymbolum**)

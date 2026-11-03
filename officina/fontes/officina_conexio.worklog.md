@@ -49,3 +49,14 @@ hints, stb-image internals) — the linker face of the POSIX/stb
 sistere park (identifiers whose declarations live in regions
 semantica couldn't type; demissio's global fallback interned them).
 Named M2c classification row; harmless at link (fault-if-called).
+
+## 2026-11-03 — M5 T1: signature agreement (B4)
+
+Private side table ConexioSignaturaVisa (parallel to symbola, grown in
+_globale_internare) holds the first signature seen per global: either a
+typed EXTERNUM's MedullaSignatura or a definition (MedullaFunctio
+parameter limina). Every later one must agree field-for-field (reditus,
+variadica, count, each limen incl. signedness — narrow-int extension
+differs by sign on arm64, B6) or modulum_addere records the fractura
+"signaturae discordes symboli" naming the symbol. Kept out of the public
+ConexioSymbolum so officina.h's Conexio mirror did not change.

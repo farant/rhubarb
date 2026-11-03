@@ -1076,6 +1076,7 @@
   <vocabulum lemma="offsetum" lingua="latina" classis="substantivum" nota="offset Latinizatum, declinatio secunda (ut internamentum); entrium Anglicum 'offset' supra manet pro identificatoribus nudis (fasti_ex_iso, 2026-09-11)">
     <forma textus="offsetum" casus="nominativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="hfa" lingua="anglica" classis="ignotum-permissum" nota="AAPCS64 homogeneous floating-point aggregate (officina M5 B4: MedullaTypusLiminis.hfa_typus, 2026-11-03)"/>
   <vocabulum lemma="index" lingua="anglica" classis="ignotum-permissum" nota="sedes 3854"/>
   <vocabulum lemma="token" lingua="anglica" classis="ignotum-permissum" nota="sedes 3729">
     <forma textus="tokens"/>

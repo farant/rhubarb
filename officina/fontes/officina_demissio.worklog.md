@@ -288,3 +288,19 @@ instead of :11 (definition); ring showed credo_aperire walking
 lib/credo.c:73-76 line-by-line. First real data through
 machinula_lineas_praebere ever — the seam is now exercised on every
 cursor/interpretare run (DECISUS 9, always-on).
+
+## 2026-11-03 — M5 T1: limina (B4)
+
+- Argument types come from `_typus_finalis` (the annotated conversion),
+  so variadic promotions are already applied (7L -> s64, float -> f64).
+- argumenta_fixa = numerus_parametrorum (+1 for %reditus) only when the
+  callee type is prototyped AND variadic; clamped to the argument count
+  (a short call would otherwise make medulla_emittere refuse the
+  instruction and silently drop the call).
+- Signatures attach at `_symbolum_internare` (the four sites that intern
+  a semantica symbol: call, locus, static address, lvalue) — so function
+  addresses taken without a call (qsort comparators) carry signatures
+  too. Unprototyped / implicit declarations get none.
+- HFA: recursive (struct = sum, union = max, array = n x elem), no
+  bitfields, then size == count x base size (catches padding, e.g.
+  {double; float} = 16 bytes, 2 members, not HFA anyway by mixed base).

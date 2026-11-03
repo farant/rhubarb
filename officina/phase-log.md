@@ -5198,3 +5198,44 @@ red, all IDEM; examen ACCIPE, formator CONFORMIS / under baseline
 lib/testa.c is NOT in the world - it is the macOS window shell
 (includes fenestra.h, .m-only), so testa.h is rightly omitted; the
 section "mundus totus" carries signum gravis (350 MiB > 256 MiB).
+
+### T1 — typed call sites (B4) — 2026-11-03
+
+Header approved by Fran as presented (MEDULLA_TYPUS_AGGREGATUM =
+MEDULLA_TYPUS_NUMERUS kept). Medulla now carries, per call, every
+argument's limen type (MedullaFunctio.operanda_typi, parallel to the
+operand stack) and the fixed count of a prototyped variadic call
+(argumenta_fixa; -1 otherwise); parameters carry a limen (aggregate
+params stay i64 registers); EXTERNUM symbols carry a MedullaSignatura
+from semantica (prototyped declarations only). Text grammar (sealed
+vocabulary §IV-VI amended): `T operand` arguments, `aN` / `hKxT` /
+`rN` / `rhKxT` limen types, ` ...` split, `externum` lines after
+`modulus`. HFA detection recursive (struct sum / union max / arrays),
+size-checked. machinula reads the call-site type first (old param
+fallback kept for the untyped builder); conexio refuses discordant
+signatures (extern/extern or extern/definition), naming the symbol,
+via a private side table (public Conexio mirror untouched).
+interpretare's wrapper and hospes emit typed text; hospes calls both
+new rows (81/81).
+
+Deviations from the plan text: (1) the parser has no causa string, so
+the malformed-line test asserts NIHIL + line number (a causa needs a
+new out-param on medulla_textum_legere - public API, not in the
+header); (2) "argumenta_fixa 2 on $externa" contradicted the approved
+header (-1 = non-variadic) - the test follows the header; (3) no f32
+builtin exists (C89 has no sqrtf), so "f32 immediatum" calls an
+interpreted f32 function - meaningful because machinula now prefers
+the call-site type; (4) a fourth plant was added (conexio check
+disabled).
+
+World unchanged: 309 modules / 7485 functions / 541086 instructions,
+0 fractae; no signature conflicts across the corpus.
+
+BARS (T1): officina 18/18 suites, amalgamare VERIFICATUM (hospes
+81/81); goldens re-pinned (aggregata, statica changed; scalaria,
+fluxus identical) - diffs only vocare/functio/externum lines, read;
+plants 4 (dumper drops types -> textus; variadic split +1 ->
+demissio, caught first by the aggregata golden; f32 call-site type
+as raw bits -> machinula, caught first by the vocationes fixture;
+signature check off -> conexio), all red, all IDEM; examen ACCIPE on
+13 files; formator at or under baseline.
