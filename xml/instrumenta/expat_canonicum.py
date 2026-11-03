@@ -29,8 +29,13 @@ EFFUGIA = {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
            '\t': '&#9;', '\n': '&#10;', '\r': '&#13;'}
 
 
+# str.translate (C) pro characteribus singulis per generatorem
+# (budget B2 X1: ~CXCI milliones characterum per aurum silvestre, LX s)
+_TABULA_EFFUGIORUM = str.maketrans(EFFUGIA)
+
+
 def _effugere(t):
-    return ''.join(EFFUGIA.get(c, c) for c in t)
+    return t.translate(_TABULA_EFFUGIORUM)
 
 
 def _spatia_probare(octeti):

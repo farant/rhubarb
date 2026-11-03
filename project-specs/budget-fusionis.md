@@ -193,6 +193,7 @@ f1656a51), F6 overlaps I5.
 | F6+I5 | trivia cache also "\n"+k spaces; `_lineae_excedunt` via memchr | 0.15-0.3 | S | |
 | G3/G4/G5 | test wait cuts (exemplar pump-until-readable, hospitium 256 KB buffer, communio pump-until-error) | ~0.12 | S | soak under load before landing |
 | J11, G10, I6, G11, G12 | small items | ~0.3 | S-M | |
+| X1 | xml_aurum_silvestre (sexta P12, in main since b9a483c1): 7 930 live files, xmllint spawned per file sequentially (~12 ms each) + pure-Python per-char escaping; 46-119 s per run, run 4-6x per merge (generata + probationes_xml `post`) | ~2-4 | S | LUCRUM (this commit, after merge b3c74f05): (1) expat_canonicum `_effugere` via str.translate; (2) expat_aurum canonical form via ProcessPoolExecutor (children inherit -I -B, no __pycache__), xmllint via ThreadPoolExecutor, lines in manifest order; 69-76 -> 21-24 s at load 15, gold byte-identical 7 901 lines x2. fabrica sanare 23.0 s, re-judged RECENS; xml 12/12. Duplicate runs per merge = J1 territory |
 | N1 (=N2) | nexus incremental sweep: content seals so a TOUCHED header (same bytes) seeds nothing; also cures briar corpus_symbola (83 s) and oratio -renovare (51 s) after header touches | ~1-1.5 | M | LUCRUM (this commit): touch 51 -> 1.7 s, briar symbola 83 -> 6 s; parity octetim; new gate `nexus` |
 
 ### Tier 2 (Fran's ruling)
