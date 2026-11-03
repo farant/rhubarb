@@ -184,26 +184,59 @@ from do, `alteratio` -1/0/+1, `formae` bitmask, `mora` 0..2,
 (enum; `_IGNOTA` member). Arrays as pointer + `i32 numerus_*`
 (carmen's and musicxml's shape — consumers index directly).
 
-- [ ] **Step 0: Ledger** — desideratum …96NQ → tractum; parcum
+- [x] **Step 0: Ledger** — desideratum …96NQ → tractum; parcum
   "gabc" with opera T1–T10 (`addere`, `intra` the music region);
   `praeco status "gabc T1: header for fran"`.
-- [ ] **Step 1: Measure** — list every construct in
+- [x] **Step 1: Measure** — list every construct in
   `musica/fontes/salve_2435.gabc` and check each has a home in the
   draft structs; read the current Gregorio gabc reference (notes,
   text markup, header fields) and record in the Executed note: the
   pitch letter range (a–n, p?), the accidental-scope rule, and the
   `z`/`Z`/`z0`/`z+`/`z-` meanings. These pin T2–T4.
-- [ ] **Step 2: Draft `include/gabc.h`** — head comment with USUS
+- [x] **Step 2: Draft `include/gabc.h`** — head comment with USUS
   (legere → successus → walk syllables/elements/notes → figura), the
   totality promise, "nothing dropped silently" (G5), what `gradus`
   means (step from do; the clef places do), and that rhythm and
   absolute pitch are NOT here (G8, G9). Every field commented in
   Latin.
-- [ ] **Step 3: Glossarium** — `gabc` and rejected words;
+- [x] **Step 3: Glossarium** — `gabc` and rejected words;
   `./oratio/quaere.sh gabc` finds it.
-- [ ] **Step 4: STOP — show Fran the header.** Record his changes in
+- [x] **Step 4: STOP — show Fran the header.** Record his changes in
   the Executed note.
-- [ ] **Step 5: Commit** (no gates beyond lint): header, glossarium.
+- [x] **Step 5: Commit** (no gates beyond lint): header, glossarium.
+
+**Executed 2026-11-03 (Fran approved the header as drafted).**
+Grammar source = Gregorio's lexer `src/gabc/gabc-notes-determination.l`
+(master, read 2026-11-03), not only the docs. Facts that pin T2-T4:
+- pitch letters **a-n and p** (`o` is the oriscus; docs say a-m);
+  upper case = inclinatum with optional direction digit 0/1/2;
+- accidentals `x` `y` `#`, soft `X` `Y`, parenthesised `x?` `y?` `#?`;
+  musica ficta `r6` `r7` `r8` (note only); scope (Gregorio has none):
+  end of word, next bar, or another sign on the same position;
+- bars: `` ` `` `` `0 `` `` `? `` virgula, `^` `^0` divisio minimis,
+  `,` `,0` `,?` minima, `;` minor, `:` maior, `:?` maior punctata,
+  `::` finalis, `,1-8` `;1-8` dominican;
+- breaks `z` (justified) `Z` (ragged), `+`/`-` force/suppress custos;
+  `z0` custos inside a line; `g+` manual custos; `[nocustos]` opaque;
+- spaces `!` `/0` `/!` `/` `//` ` ` `/[n]` (n may be negative), `!/`
+  `!//` `!/[n]` unbreakable; `@` before a note = fusion;
+- shorthand `hvv` `hvvv` `hss` `hsss` (also with `<` `>`) expand to
+  2-3 notes; `=` linea; `r` cavum, `R` linea punctum, `r0` both,
+  `r1`-`r5` signs above;
+- `{` `}` (polyphony boxes), `[[` `]]`, `[cs:]` `[cn:]` `[ob:]` `[ub:]`
+  `[ocb:]` `[ocba:]` `[nm1-9]` `[gm]` `[em]` `[altm]` `[nv:]` `[gv:]`
+  `[ev:]` `[alt:]` `[oll:]` `[ull:]` `[shape:]` `[ou]slur:` `[ou]h:`
+  `[hl:0/1]` `[ll:0/1]` -> opaque marks (alt kept as text above too is
+  a T4 choice);
+- header values may span lines: omit `;`, end with `;;`; `staff-lines`
+  2-5 sets the highest legal pitch; `def-m0..9` macros (header only).
+Names as in the header: `GabcCantus`, `GabcSyllaba`, `GabcTextus`,
+`GabcElementum` (flat, per-kind fields), `GabcNota`, `GabcFigura`,
+`gabc_figurae_titulus`; no `%%` = whole text is body (monitum
+`GABC_SINE_CAPITE`). Gotcha: `<i>`-style tag names in C comments are
+parsed as STML annotations (examen "annotatio malformata") - the
+header writes "signum i". 17 glossary words added (chant terms, `gabc`,
+`nlba`).
 
 ---
 
