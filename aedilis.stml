@@ -98,6 +98,7 @@
       <vexillum! (>-framework CoreGraphics
       <vexillum! (>-framework Foundation
       <vexillum! (>-framework PhotosUI
+      <vexillum! (>-framework UserNotifications
     </regula>
   </nexus>
   <vendor>

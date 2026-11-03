@@ -122,7 +122,12 @@ fi
 vexilla_radices ""
 CC=(xcrun --sdk "$SDK" clang -target "$SCOPUS_CLANG")
 # .c et .m eisdem vexillis domus (ut fenestra_macos.m in aedilis)
-VEXILLA=("${VEXILLA_C89[@]}" "${RADICES_C89[@]}" "-DTESTA_TITULUS=\"$TITULUS\"")
+# pulsus-plan C8: ambitus APNs tesserarum - TestFlight (divulgatio)
+# productio, reliqua (signum evolutionis) sandbox
+PULSUS_AMBITUS=sandbox
+[ "$SCOPUS" = divulgatio ] && PULSUS_AMBITUS=productio
+VEXILLA=("${VEXILLA_C89[@]}" "${RADICES_C89[@]}" "-DTESTA_TITULUS=\"$TITULUS\""
+    "-DPULSUS_AMBITUS=\"$PULSUS_AMBITUS\"")
 VFLAGS=(-O2 -DBR_ENABLE_INTRINSICS=1 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0
     -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_OMIT_LOAD_EXTENSION
     -DSQLITE_OMIT_DEPRECATED -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1)
