@@ -47017,6 +47017,163 @@ _sumere (
     }
 }
 
+
+/* ==================================================
+ * Classes characterum + cursus celeres (budget silvae gradus III,
+ * 2026-11-03). Per characterem via effectiva ~III inspectiones
+ * laminae (cum lectionibus limitatis) et vocationem _progredi_crudum
+ * solvebat. Cursus celer characteres crudos classis datae directe
+ * sumit: NULLA classis '\\' continet, ergo cursus ubi lamina incipere
+ * posset cessat et via effectiva gradum unum facit - semantica eadem
+ * per constructionem (sine lamina character effectivus = crudus).
+ * ================================================== */
+
+#define CLASSIS_IDENTIFICATORIS  I       /* [A-Za-z0-9_] */
+#define CLASSIS_CIFRAE           II      /* [0-9] */
+#define CLASSIS_HEX              IV      /* [0-9a-fA-F] */
+#define CLASSIS_SPATII           VIII    /* ' ' */
+#define CLASSIS_TABULAE          XVI     /* '\t' */
+#define CLASSIS_CHORDAE          XXXII   /* corpus "..": non " \ \n \r */
+#define CLASSIS_CHARACTERIS      LXIV    /* corpus '..': non ' \ \n \r */
+#define CLASSIS_COMMENTI_CLAUSI  CXXVIII /* non * \ */
+#define CLASSIS_COMMENTI_LINEAE  CCLVI   /* non \n \r \ */
+
+hic_manens i32 _classes[CCLVI];
+hic_manens b32 _classes_paratae = FALSUM;
+
+/* Tabula ex praedicatis ipsis aedificatur (nulla classis manu
+ * scripta - praedicata et tabula discordare non possunt) */
+interior vacuum
+_classes_parare (vacuum)
+{
+          i32 i;
+          i32 k;
+    character c;
+
+    per (i = ZEPHYRUM; i < CCLVI; i++)
+    {
+        c = (character)i;
+        k = ZEPHYRUM;
+        si (_est_corpus_identificatoris(c))
+        {
+            k |= CLASSIS_IDENTIFICATORIS;
+        }
+        si (_est_cifra(c))
+        {
+            k |= CLASSIS_CIFRAE;
+        }
+        si (_est_cifra_hex(c))
+        {
+            k |= CLASSIS_HEX;
+        }
+        si (c == ' ')
+        {
+            k |= CLASSIS_SPATII;
+        }
+        si (c == '\t')
+        {
+            k |= CLASSIS_TABULAE;
+        }
+        si (c != '\\')
+        {
+            si (c != '"' && c != '\n' && c != '\r')
+            {
+                k |= CLASSIS_CHORDAE;
+            }
+            si (c != '\'' && c != '\n' && c != '\r')
+            {
+                k |= CLASSIS_CHARACTERIS;
+            }
+            si (c != '*')
+            {
+                k |= CLASSIS_COMMENTI_CLAUSI;
+            }
+            si (c != '\n' && c != '\r')
+            {
+                k |= CLASSIS_COMMENTI_LINEAE;
+            }
+        }
+        _classes[i] = k;
+    }
+    _classes_paratae = VERUM;
+}
+
+interior i32
+_classis_octeti (
+    character c)
+{
+    redde _classes[(insignatus character)c];
+}
+
+/* Cursus celer: characteres crudi classis datae sumuntur (linea et
+ * columna ut in _progredi_crudum); s NIHIL = trivia (effectivi non
+ * numerantur). Aequivalens iterationibus _sumere sine lamina. */
+interior vacuum
+_cursum_sumere (
+     SilvaLexator* lex,
+          Scansio* s,
+              i32  classis)
+{
+    i32 pos;
+    i32 initium;
+    i32 linea;
+    i32 columna;
+
+    pos      = lex->positus;
+    initium  = pos;
+    linea    = lex->linea;
+    columna  = lex->columna;
+    dum (   pos < lex->mensura
+         && (_classis_octeti(lex->fons[pos]) & classis) != 0)
+    {
+        si (lex->fons[pos] == '\n')
+        {
+            linea++;
+            columna = I;
+        }
+        alioquin
+        {
+            columna++;
+        }
+        pos++;
+    }
+    si (s != NIHIL)
+    {
+        s->effectivi = s->effectivi + (pos - initium);
+    }
+    lex->positus  = pos;
+    lex->linea    = linea;
+    lex->columna  = columna;
+}
+
+/* Sumere dum character EFFECTIVUS classis est: cursus celer, deinde
+ * via effectiva (laminae) gradu uno, iterum */
+interior vacuum
+_sumere_dum (
+     SilvaLexator* lex,
+          Scansio* s,
+              i32  classis)
+{
+    dum (VERUM)
+    {
+        _cursum_sumere(lex, s, classis);
+        /* cursus ad octetum non-'\\' cessavit: is ipse effectivus est
+         * et classem non habet - nulla lectio effectiva opus */
+        si (   lex->positus            >= lex->mensura
+            || lex->fons[lex->positus] != '\\')
+        {
+            redde;
+        }
+        si (   _finis_eff(lex)
+            || (_classis_octeti(_aspicere_eff(lex, ZEPHYRUM)) & classis)
+                == 0)
+        {
+            redde;
+        }
+        _sumere(lex, s);
+    }
+}
+
 interior vacuum
 _scansio_incipere (
     SilvaLexator* lex,
@@ -47187,7 +47344,25 @@ _trivia_proxima (
         redde NIHIL;
     }
 
-    c          = _aspicere_crudum(lex, ZEPHYRUM);
+    c = _aspicere_crudum(lex, ZEPHYRUM);
+
+    /* Trivia SOLUM ab his incipit: lamina ('\\'), spatia, tabulae,
+     * commentum ('/' crudum - lamina ante id iam supra reddita
+     * esset), nova linea. Ceteri statim NIHIL (olim ~VI lectiones
+     * effectivae ante quodque lexema verum - gradus III) */
+    commutatio (c)
+    {
+        casus '\\':
+        casus ' ':
+        casus '\t':
+        casus '/':
+        casus '\n':
+        casus '\r':
+            frange;
+        ordinarius:
+            redde NIHIL;
+    }
+
     c2         = _aspicere_crudum(lex, I);
     initium    = lex->positus;
     linea_i    = lex->linea;
@@ -47205,10 +47380,7 @@ _trivia_proxima (
     /* Spatia */
     si (c == ' ')
     {
-        dum (!_finis(lex) && _aspicere_crudum(lex, ZEPHYRUM) == ' ')
-        {
-            _progredi_crudum(lex, I);
-        }
+        _cursum_sumere(lex, NIHIL, CLASSIS_SPATII);
         redde _trivia_creare(lex, SILVA_LEX_SPATIA,
             initium, linea_i, columna_i);
     }
@@ -47216,10 +47388,7 @@ _trivia_proxima (
     /* Tabulae */
     si (c == '\t')
     {
-        dum (!_finis(lex) && _aspicere_crudum(lex, ZEPHYRUM) == '\t')
-        {
-            _progredi_crudum(lex, I);
-        }
+        _cursum_sumere(lex, NIHIL, CLASSIS_TABULAE);
         redde _trivia_creare(lex, SILVA_LEX_TABULAE,
             initium, linea_i, columna_i);
     }
@@ -47237,6 +47406,11 @@ _trivia_proxima (
         _sumere(lex, &s);  /* * */
         dum (!_finis_eff(lex))
         {
+            _cursum_sumere(lex, &s, CLASSIS_COMMENTI_CLAUSI);
+            si (_finis_eff(lex))
+            {
+                frange;
+            }
             si (   _aspicere_eff(lex, ZEPHYRUM) == '*'
                 && _aspicere_eff(lex, I)        == '/')
             {
@@ -47263,6 +47437,11 @@ _trivia_proxima (
         _sumere(lex, &s);
         dum (!_finis_eff(lex))
         {
+            _cursum_sumere(lex, &s, CLASSIS_COMMENTI_LINEAE);
+            si (_finis_eff(lex))
+            {
+                frange;
+            }
             ce = _aspicere_eff(lex, ZEPHYRUM);
             si (ce == '\n' || ce == '\r')
             {
@@ -47311,11 +47490,7 @@ _legere_identificatorem (
     SilvaLexemaGenus  genus;
 
     _scansio_incipere(lex, &s);
-    dum (   !_finis_eff(lex)
-         && _est_corpus_identificatoris(_aspicere_eff(lex, ZEPHYRUM)))
-    {
-        _sumere(lex, &s);
-    }
+    _sumere_dum(lex, &s, CLASSIS_IDENTIFICATORIS);
 
     valor = _valor_finire(lex, &s);
     genus = _quaerere_verbum_clausum(valor);
@@ -47352,11 +47527,7 @@ _legere_numerum (
     {
         est_fluitans = VERUM;
         _sumere(lex, &s);  /* . */
-        dum (   !_finis_eff(lex)
-             && _est_cifra(_aspicere_eff(lex, ZEPHYRUM)))
-        {
-            _sumere(lex, &s);
-        }
+        _sumere_dum(lex, &s, CLASSIS_CIFRAE);
     }
     alioquin si (   c == '0'
                  && (_aspicere_eff(lex, I) == 'x'
@@ -47365,21 +47536,13 @@ _legere_numerum (
         est_hex = VERUM;
         _sumere(lex, &s);
         _sumere(lex, &s);
-        dum (   !_finis_eff(lex)
-             && _est_cifra_hex(_aspicere_eff(lex, ZEPHYRUM)))
-        {
-            _sumere(lex, &s);
-        }
+        _sumere_dum(lex, &s, CLASSIS_HEX);
     }
     alioquin
     {
         /* decimales et octales: cifras omnes sumere (0-9; semantica
          * octalis posterioris curae est, lexema idem manet) */
-        dum (   !_finis_eff(lex)
-             && _est_cifra(_aspicere_eff(lex, ZEPHYRUM)))
-        {
-            _sumere(lex, &s);
-        }
+        _sumere_dum(lex, &s, CLASSIS_CIFRAE);
 
         /* pars fractionalis */
         si (   !_finis_eff(lex) && _aspicere_eff(lex, ZEPHYRUM) == '.'
@@ -47387,11 +47550,7 @@ _legere_numerum (
         {
             est_fluitans = VERUM;
             _sumere(lex, &s);
-            dum (   !_finis_eff(lex)
-                 && _est_cifra(_aspicere_eff(lex, ZEPHYRUM)))
-            {
-                _sumere(lex, &s);
-            }
+            _sumere_dum(lex, &s, CLASSIS_CIFRAE);
         }
         alioquin si (   !_finis_eff(lex)
                      && _aspicere_eff(lex, ZEPHYRUM) == '.'
@@ -47423,11 +47582,7 @@ _legere_numerum (
                 {
                     _sumere(lex, &s);
                 }
-                dum (   !_finis_eff(lex)
-                     && _est_cifra(_aspicere_eff(lex, ZEPHYRUM)))
-                {
-                    _sumere(lex, &s);
-                }
+                _sumere_dum(lex, &s, CLASSIS_CIFRAE);
             }
         }
     }
@@ -47479,6 +47634,13 @@ _legere_litteram (
     _sumere(lex, &s);  /* terminator aperiens */
     dum (!_finis_eff(lex))
     {
+        /* corpus purum (nec terminator, nec '\\', nec nova linea) */
+        _cursum_sumere(lex, &s, (terminator == '"')
+            ? CLASSIS_CHORDAE : CLASSIS_CHARACTERIS);
+        si (_finis_eff(lex))
+        {
+            frange;
+        }
         c = _aspicere_eff(lex, ZEPHYRUM);
         si (c == terminator)
         {
@@ -47506,7 +47668,11 @@ _legere_litteram (
         perfectum ? genus_perfectum : genus_imperfectum);
 }
 
-/* Interpunctio - munch maximalis, lectio effectiva */
+/* Interpunctio - munch maximalis, lectio effectiva.
+ * Gradus III: si nullus trium octetorum crudorum '\\' est, lectio
+ * effectiva crudam aequat (lamina nulla) - lectio et progressio
+ * directae; aliter via effectiva ut olim. Catena comparationum
+ * (~XL) commutatione per characterem primum substituta. */
 interior SilvaToken*
 _legere_interpunctionem (
     SilvaLexator* lex)
@@ -47517,166 +47683,205 @@ _legere_interpunctionem (
            character c3;
     SilvaLexemaGenus genus;
                  i32 n;
+                 b32 crudum;
+                 i32 k;
 
     _scansio_incipere(lex, &s);
-    c      = _aspicere_eff(lex, ZEPHYRUM);
-    c2     = _aspicere_eff(lex, I);
-    c3     = _aspicere_eff(lex, II);
+    crudum = VERUM;
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        si (_aspicere_crudum(lex, k) == '\\')
+        {
+            crudum = FALSUM;
+            frange;
+        }
+    }
+    si (crudum)
+    {
+        c   = _aspicere_crudum(lex, ZEPHYRUM);
+        c2  = _aspicere_crudum(lex, I);
+        c3  = _aspicere_crudum(lex, II);
+    }
+    alioquin
+    {
+        c   = _aspicere_eff(lex, ZEPHYRUM);
+        c2  = _aspicere_eff(lex, I);
+        c3  = _aspicere_eff(lex, II);
+    }
     n      = I;
     genus  = SILVA_LEX_OCTETUS_IGNOTUS;
 
-    /* tres characteres */
-    si (c == '.' && c2 == '.' && c3 == '.')
-    { genus = SILVA_LEX_ELLIPSIS; n = III;
-    }
-    alioquin si (c == '<' && c2 == '<' && c3 == '=')
-    { genus = SILVA_LEX_SINISTRORSUM_ASSIGNATIO; n = III;
-    }
-    alioquin si (c == '>' && c2 == '>' && c3 == '=')
-    { genus = SILVA_LEX_DEXTRORSUM_ASSIGNATIO; n = III;
-    }
-    /* duo characteres */
-    alioquin si (c == '+' && c2 == '+')
-    { genus = SILVA_LEX_INCREMENTUM; n = II;
-    }
-    alioquin si (c == '-' && c2 == '-')
-    { genus = SILVA_LEX_DECREMENTUM; n = II;
-    }
-    alioquin si (c == '-' && c2 == '>')
-    { genus = SILVA_LEX_SAGITTA; n = II;
-    }
-    alioquin si (c == '&' && c2 == '&')
-    { genus = SILVA_LEX_ET_ET; n = II;
-    }
-    alioquin si (c == '|' && c2 == '|')
-    { genus = SILVA_LEX_VEL_VEL; n = II;
-    }
-    alioquin si (c == '=' && c2 == '=')
-    { genus = SILVA_LEX_AEQUALIS_AEQUALIS; n = II;
-    }
-    alioquin si (c == '!' && c2 == '=')
-    { genus = SILVA_LEX_NON_AEQUALIS; n = II;
-    }
-    alioquin si (c == '<' && c2 == '=')
-    { genus = SILVA_LEX_MINOR_AEQUALIS; n = II;
-    }
-    alioquin si (c == '>' && c2 == '=')
-    { genus = SILVA_LEX_MAIOR_AEQUALIS; n = II;
-    }
-    alioquin si (c == '<' && c2 == '<')
-    { genus = SILVA_LEX_SINISTRORSUM; n = II;
-    }
-    alioquin si (c == '>' && c2 == '>')
-    { genus = SILVA_LEX_DEXTRORSUM; n = II;
-    }
-    alioquin si (c == '+' && c2 == '=')
-    { genus = SILVA_LEX_PLUS_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '-' && c2 == '=')
-    { genus = SILVA_LEX_MINUS_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '*' && c2 == '=')
-    { genus = SILVA_LEX_STAR_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '/' && c2 == '=')
-    { genus = SILVA_LEX_SOLIDUS_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '%' && c2 == '=')
-    { genus = SILVA_LEX_PERCENTUM_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '&' && c2 == '=')
-    { genus = SILVA_LEX_AMPERSAND_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '|' && c2 == '=')
-    { genus = SILVA_LEX_BARRA_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '^' && c2 == '=')
-    { genus = SILVA_LEX_CARET_ASSIGNATIO; n = II;
-    }
-    alioquin si (c == '#' && c2 == '#')
-    { genus = SILVA_LEX_CANCELLUM_CANCELLUM; n = II;
-    }
-    /* unus character */
-    alioquin si (c == '+')
-    { genus = SILVA_LEX_PLUS;
-    }
-    alioquin si (c == '-')
-    { genus = SILVA_LEX_MINUS;
-    }
-    alioquin si (c == '*')
-    { genus = SILVA_LEX_STAR;
-    }
-    alioquin si (c == '/')
-    { genus = SILVA_LEX_SOLIDUS;
-    }
-    alioquin si (c == '%')
-    { genus = SILVA_LEX_PERCENTUM;
-    }
-    alioquin si (c == '&')
-    { genus = SILVA_LEX_AMPERSAND;
-    }
-    alioquin si (c == '|')
-    { genus = SILVA_LEX_BARRA;
-    }
-    alioquin si (c == '^')
-    { genus = SILVA_LEX_CARET;
-    }
-    alioquin si (c == '~')
-    { genus = SILVA_LEX_TILDE;
-    }
-    alioquin si (c == '!')
-    { genus = SILVA_LEX_EXCLAMATIO;
-    }
-    alioquin si (c == '<')
-    { genus = SILVA_LEX_MINOR;
-    }
-    alioquin si (c == '>')
-    { genus = SILVA_LEX_MAIOR;
-    }
-    alioquin si (c == '=')
-    { genus = SILVA_LEX_ASSIGNATIO;
-    }
-    alioquin si (c == '.')
-    { genus = SILVA_LEX_PUNCTUM;
-    }
-    alioquin si (c == ',')
-    { genus = SILVA_LEX_COMMA;
-    }
-    alioquin si (c == ':')
-    { genus = SILVA_LEX_COLON;
-    }
-    alioquin si (c == ';')
-    { genus = SILVA_LEX_SEMICOLON;
-    }
-    alioquin si (c == '?')
-    { genus = SILVA_LEX_QUAESTIO;
-    }
-    alioquin si (c == '(')
-    { genus = SILVA_LEX_PAREN_APERTA;
-    }
-    alioquin si (c == ')')
-    { genus = SILVA_LEX_PAREN_CLAUSA;
-    }
-    alioquin si (c == '[')
-    { genus = SILVA_LEX_QUADRA_APERTA;
-    }
-    alioquin si (c == ']')
-    { genus = SILVA_LEX_QUADRA_CLAUSA;
-    }
-    alioquin si (c == '{')
-    { genus = SILVA_LEX_BRACE_APERTA;
-    }
-    alioquin si (c == '}')
-    { genus = SILVA_LEX_BRACE_CLAUSA;
-    }
-    alioquin si (c == '#')
-    { genus = SILVA_LEX_CANCELLUM;
-    }
-    /* aliter: octetus ignotus (garbage, NUL, ...) - UNUS octetus */
-
-    per (; n > ZEPHYRUM; n--)
+    commutatio (c)
     {
-        _sumere(lex, &s);
+        casus '.':
+            si (c2 == '.' && c3 == '.')
+            { genus = SILVA_LEX_ELLIPSIS; n = III;
+            }
+            alioquin
+            { genus = SILVA_LEX_PUNCTUM;
+            }
+            frange;
+        casus '<':
+            si (c2 == '<' && c3 == '=')
+            { genus = SILVA_LEX_SINISTRORSUM_ASSIGNATIO; n = III;
+            }
+            alioquin si (c2 == '=')
+            { genus = SILVA_LEX_MINOR_AEQUALIS; n = II;
+            }
+            alioquin si (c2 == '<')
+            { genus = SILVA_LEX_SINISTRORSUM; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_MINOR;
+            }
+            frange;
+        casus '>':
+            si (c2 == '>' && c3 == '=')
+            { genus = SILVA_LEX_DEXTRORSUM_ASSIGNATIO; n = III;
+            }
+            alioquin si (c2 == '=')
+            { genus = SILVA_LEX_MAIOR_AEQUALIS; n = II;
+            }
+            alioquin si (c2 == '>')
+            { genus = SILVA_LEX_DEXTRORSUM; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_MAIOR;
+            }
+            frange;
+        casus '+':
+            si (c2 == '+')
+            { genus = SILVA_LEX_INCREMENTUM; n = II;
+            }
+            alioquin si (c2 == '=')
+            { genus = SILVA_LEX_PLUS_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_PLUS;
+            }
+            frange;
+        casus '-':
+            si (c2 == '-')
+            { genus = SILVA_LEX_DECREMENTUM; n = II;
+            }
+            alioquin si (c2 == '>')
+            { genus = SILVA_LEX_SAGITTA; n = II;
+            }
+            alioquin si (c2 == '=')
+            { genus = SILVA_LEX_MINUS_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_MINUS;
+            }
+            frange;
+        casus '&':
+            si (c2 == '&')
+            { genus = SILVA_LEX_ET_ET; n = II;
+            }
+            alioquin si (c2 == '=')
+            { genus = SILVA_LEX_AMPERSAND_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_AMPERSAND;
+            }
+            frange;
+        casus '|':
+            si (c2 == '|')
+            { genus = SILVA_LEX_VEL_VEL; n = II;
+            }
+            alioquin si (c2 == '=')
+            { genus = SILVA_LEX_BARRA_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_BARRA;
+            }
+            frange;
+        casus '=':
+            si (c2 == '=')
+            { genus = SILVA_LEX_AEQUALIS_AEQUALIS; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_ASSIGNATIO;
+            }
+            frange;
+        casus '!':
+            si (c2 == '=')
+            { genus = SILVA_LEX_NON_AEQUALIS; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_EXCLAMATIO;
+            }
+            frange;
+        casus '*':
+            si (c2 == '=')
+            { genus = SILVA_LEX_STAR_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_STAR;
+            }
+            frange;
+        casus '/':
+            si (c2 == '=')
+            { genus = SILVA_LEX_SOLIDUS_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_SOLIDUS;
+            }
+            frange;
+        casus '%':
+            si (c2 == '=')
+            { genus = SILVA_LEX_PERCENTUM_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_PERCENTUM;
+            }
+            frange;
+        casus '^':
+            si (c2 == '=')
+            { genus = SILVA_LEX_CARET_ASSIGNATIO; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_CARET;
+            }
+            frange;
+        casus '#':
+            si (c2 == '#')
+            { genus = SILVA_LEX_CANCELLUM_CANCELLUM; n = II;
+            }
+            alioquin
+            { genus = SILVA_LEX_CANCELLUM;
+            }
+            frange;
+        casus '~': genus = SILVA_LEX_TILDE;         frange;
+        casus ',': genus = SILVA_LEX_COMMA;         frange;
+        casus ':': genus = SILVA_LEX_COLON;         frange;
+        casus ';': genus = SILVA_LEX_SEMICOLON;     frange;
+        casus '?': genus = SILVA_LEX_QUAESTIO;      frange;
+        casus '(': genus = SILVA_LEX_PAREN_APERTA;  frange;
+        casus ')': genus = SILVA_LEX_PAREN_CLAUSA;  frange;
+        casus '[': genus = SILVA_LEX_QUADRA_APERTA; frange;
+        casus ']': genus = SILVA_LEX_QUADRA_CLAUSA; frange;
+        casus '{': genus = SILVA_LEX_BRACE_APERTA;  frange;
+        casus '}': genus = SILVA_LEX_BRACE_CLAUSA;  frange;
+        ordinarius:
+            /* octetus ignotus (garbage, NUL, ...) - UNUS octetus */
+            frange;
+    }
+
+    /* crudum: n octeti nec '\\' nec nova linea (trivia ante nos
+     * redditur) - progressio directa; aliter via effectiva */
+    si (crudum && lex->positus + n <= lex->mensura)
+    {
+        lex->positus  = lex->positus + n;
+        lex->columna  = lex->columna + n;
+        s.effectivi   = n;
+    }
+    alioquin
+    {
+        per (; n > ZEPHYRUM; n--)
+        {
+            _sumere(lex, &s);
+        }
     }
 
     redde _lexema_finire(lex, &s, genus);
@@ -47701,8 +47906,18 @@ _lexema_proximum (
             lex->fons_index);
     }
 
-    c   = _aspicere_eff(lex, ZEPHYRUM);
-    c2  = _aspicere_eff(lex, I);
+    /* sine '\\' in duobus octetis crudis effectivi = crudi */
+    si (   _aspicere_crudum(lex, ZEPHYRUM) != '\\'
+        && _aspicere_crudum(lex, I)        != '\\')
+    {
+        c   = _aspicere_crudum(lex, ZEPHYRUM);
+        c2  = _aspicere_crudum(lex, I);
+    }
+    alioquin
+    {
+        c   = _aspicere_eff(lex, ZEPHYRUM);
+        c2  = _aspicere_eff(lex, I);
+    }
 
     si (_est_littera(c))
     {
@@ -47743,6 +47958,10 @@ silva_lexare_cruda (
       SilvaToken** locus;
              b32   in_initio_lineae;
 
+    si (!_classes_paratae)
+    {
+        _classes_parare();
+    }
     lex.fons        = fons;
     lex.mensura     = mensura;
     lex.positus     = ZEPHYRUM;
@@ -47842,60 +48061,73 @@ _trivia_tradere (
     }
 }
 
+/* Genera triviae (sex) */
+interior b32
+_est_trivia (
+    s32 genus)
+{
+    commutatio (genus)
+    {
+        casus SILVA_LEX_SPATIA:
+        casus SILVA_LEX_TABULAE:
+        casus SILVA_LEX_NOVA_LINEA:
+        casus SILVA_LEX_CONTINUATIO:
+        casus SILVA_LEX_COMMENTUM_CLAUSUM:
+        casus SILVA_LEX_COMMENTUM_LINEA:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+/* Pendentia = cruda[ab, i): trivia inter lexemata vera SEMPER
+ * contigua sunt in fluxu crudo, ergo intervallum indicum sufficit
+ * (budget silvae gradus III, 2026-11-03: olim Xar pendentium per
+ * appendicem, et Xar NOVUS post quodque lexema cum triviis - xar et
+ * allocatio ~LXXX% huius transitus) */
 SilvaXar*
 silva_spatia_attachere (
     SilvaPiscina* piscina,
         SilvaXar* cruda)
 {
            SilvaXar*  vera;
-           SilvaXar*  pendentia;
     SilvaToken*  token;
     SilvaToken*  prior;
     SilvaToken** locus;
            i32   i;
            i32   j;
            i32   n;
+           i32   ab;
            i32   divisio;
 
-    vera       = silva_xar_creare(piscina, magnitudo(SilvaToken*));
-    pendentia  = silva_xar_creare(piscina, magnitudo(SilvaToken*));
-    prior      = NIHIL;
+    vera   = silva_xar_creare(piscina, magnitudo(SilvaToken*));
+    prior  = NIHIL;
+    ab     = ZEPHYRUM;
 
     n = silva_xar_numerus(cruda);
     per (i = ZEPHYRUM; i < n; i++)
     {
         token = *(SilvaToken**)silva_xar_obtinere(cruda, i);
 
-        si (   token->genus == SILVA_LEX_SPATIA
-            || token->genus == SILVA_LEX_TABULAE
-            || token->genus == SILVA_LEX_NOVA_LINEA
-            || token->genus == SILVA_LEX_CONTINUATIO
-            || token->genus == SILVA_LEX_COMMENTUM_CLAUSUM
-            || token->genus == SILVA_LEX_COMMENTUM_LINEA)
+        si (_est_trivia(token->genus))
         {
-            locus = (SilvaToken**)silva_xar_addere(pendentia);
-            si (locus != NIHIL)
-            {
-                *locus = token;
-            }
             perge;
         }
 
-        /* Lexema verum: pendentia dividere */
-        si (silva_xar_numerus(pendentia) > ZEPHYRUM)
+        /* Lexema verum: pendentia [ab, i) dividere */
+        si (i > ab)
         {
             /* divisio = index post primam NOVA_LINEA (si prior est);
-             * aliter omnia ad leading (nihil trailing sine linea nova...
-             * immo: si prior NIHIL, omnia leading) */
-            divisio = ZEPHYRUM;
+             * aliter omnia trailing; si prior NIHIL, omnia leading */
+            divisio = ab;
             si (prior != NIHIL)
             {
-                divisio = silva_xar_numerus(pendentia);  /* omnia trailing si nulla nova linea */
-                per (j = ZEPHYRUM; j < silva_xar_numerus(pendentia); j++)
+                divisio = i;
+                per (j = ab; j < i; j++)
                 {
                     SilvaToken* t;
 
-                    t = *(SilvaToken**)silva_xar_obtinere(pendentia, j);
+                    t = *(SilvaToken**)silva_xar_obtinere(cruda, j);
                     si (t->genus == SILVA_LEX_NOVA_LINEA)
                     {
                         divisio = j + I;
@@ -47908,18 +48140,18 @@ silva_spatia_attachere (
              * seriem exactam copiat - pars pendentium in alveo contiguo
              * (acervus pro casu communi, piscina ultra). Latus totum
              * ponitur, ut olim Xar novus assignabatur. */
-            si (divisio > ZEPHYRUM && prior != NIHIL)
+            si (divisio > ab && prior != NIHIL)
             {
-                _trivia_tradere(piscina, prior, VERUM, pendentia,
-                    ZEPHYRUM, divisio);
+                _trivia_tradere(piscina, prior, VERUM, cruda, ab,
+                    divisio);
             }
-            si (divisio < silva_xar_numerus(pendentia))
+            si (divisio < i)
             {
-                _trivia_tradere(piscina, token, FALSUM, pendentia,
-                    divisio, silva_xar_numerus(pendentia));
+                _trivia_tradere(piscina, token, FALSUM, cruda, divisio,
+                    i);
             }
-            pendentia = silva_xar_creare(piscina, magnitudo(SilvaToken*));
         }
+        ab = i + I;
 
         locus = (SilvaToken**)silva_xar_addere(vera);
         si (locus != NIHIL)
