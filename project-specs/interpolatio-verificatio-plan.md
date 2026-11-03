@@ -1,7 +1,8 @@
 # interpolatio verificatio: early stopping on primes, with random-point verification
 
-Status: DRAFT v1 (2026-11-02), not yet reviewed. Open question Q1 (the
-principle) must be decided by Fran before T1.
+Status: DRAFT v2 (2026-11-02), not yet reviewed. Q1 DECIDED by Fran
+2026-11-02: accepted, with the conditions in "Q1 decision" below. Next:
+design review, with the error bound as its main subject.
 
 Agreed with Fran (2026-11-02): after the TL speed pass
 (temperley-celeritas-plan.md, done) and the Regina comparison
@@ -63,6 +64,34 @@ refused; a result's warrant is PROBATUM or VERIFICATUM, and says which"),
 with its refutatio (what would overturn it: a verified result found wrong,
 or a flaw in the error bound).
 
+### Q1 decision (Fran, 2026-11-02): accepted, with conditions
+
+Why it is consistent with rule 1: the rule forbids stopping on stability,
+a guess with no error bound. Verification is an independent test with a
+stated bound; it keeps the rule's reason and changes only its letter. The
+two warrants are strong in different places:
+
+| | modulus big enough | computation correct |
+| --- | --- | --- |
+| PROBATUM | certain | one extra prime only |
+| VERIFICATUM | ≥ 1 − 2^-s | independent evaluator, end to end |
+
+In scholastic terms: demonstration and moral certitude, each labelled.
+
+Conditions (each becomes a rule or design item below):
+
+1. PROBATUM stays the default everywhere (rule 1).
+2. **Records policy** (rule 7): anything recorded as a research result
+   (knotapel/claims.md, the certified brackets, demo results) is PROBATUM,
+   or carries the VERIFICATUM label and its relatio in the record itself.
+   VERIFICATUM is for exploration and large runs.
+3. **Upgrade path** (rule 8, "Promotion" below): a verified result can
+   be promoted to PROBATUM by computing only the remaining primes; no work
+   is lost. Proof deferred, not proof abandoned.
+4. The error bound is reviewed in the design review before T1; a wrong
+   bound makes the label lie, which is worse than no label.
+5. A ledger PRINCIPIUM with its refutatio.
+
 ## Governing rules
 
 1. **Proved stays the default.** Every existing caller and test gets
@@ -79,6 +108,11 @@ or a flaw in the error bound).
 5. **Registered before measured**, as in the speed plan.
 6. **Same answers.** All 45 D136 brackets and the 14 × 801 bracket come
    out byte-identical in both modes.
+7. **Records are proved or labelled.** A result written into a research
+   record (claims.md, certified brackets, demo results) is PROBATUM, or
+   carries kind, error bound, seed and evaluator next to it.
+8. **Promotion loses nothing.** VERIFICATUM uses a prefix of PROBATUM's
+   prime sequence, so promotion costs only the remaining primes.
 
 ## Design
 
@@ -108,6 +142,27 @@ or a flaw in the error bound).
 - Cost per check: one evaluation, plus a reduction of Q's coefficients
   mod q. At 14 × 801 a prime costs ~276 evaluations, so the checks are
   noise.
+
+### Promotion (VERIFICATUM → PROBATUM)
+
+The primes are a fixed descending sequence below primus_limes (residue
+filter included), so a verified run with k primes used exactly the first
+k primes of the proved run. A verified polynomial Q with coefficients in
+the symmetric range of M = p₁⋯p_k already is the CRT residue mod M; no
+stored residues are needed. Promotion evaluates only primes k+1 … k_max
+(plus the confirming prime), combines them with Q by CRT, and must
+reproduce Q exactly: a different result is FALSUM (the verified result
+was wrong, which is the refutatio of the principle; it must be reported
+and filed, not repaired silently).
+
+- API: `interpolatio_promovere(aestimare, contextus, quaestio, &exitus,
+  primi_facti, piscina, &relatio)`, where `exitus` holds Q on entry and
+  the proved result on return.
+- Tool: `uncinus_mensura -promovere VIA` reads an UNCINUS line plus its
+  RELATIO line and computes the rest. At 14 × 801: 16 of 23 primes, ~70%
+  of a proved run.
+- A test: verified, then promoted = PROBATUM directly, byte for byte, with
+  evaluation count = proved count − verified count (no prime recomputed).
 
 ### Error bound
 
@@ -190,7 +245,10 @@ each UNCINUS line: kind, primes, checks, bits, seed, evaluator.
     relatio); the same seed reproduces exactly;
   - the error-bound function against hand-computed values;
   - the bound fallback: with checks forced to fail, the result is
-    PROBATUM with today's prime count.
+    PROBATUM with today's prime count;
+  - **promotion**: verified then promoted = PROBATUM directly, byte for
+    byte; evaluations = proved − verified; a corrupted Q handed to
+    promotion → FALSUM.
 - probatio_laqueus_rete: verified = proved on the certified brackets
   (3 × 50, 8 × 101, 8 × 201) with the cross-route evaluator; a
   mirror-convention evaluator (A ↔ A⁻¹) as checker → FALSUM.
@@ -200,7 +258,9 @@ each UNCINUS line: kind, primes, checks, bits, seed, evaluator.
     passes) → undersized-modulus test red;
   - the seed ignored (fixed draws) → seeds test red;
   - the main evaluator used as checker → mirror test red;
-  - m computed one too small → bound-function test red.
+  - m computed one too small → bound-function test red;
+  - promotion restarting from prime 1 (recomputing) → promotion count
+    test red.
 
 ## Tasks
 
@@ -211,10 +271,11 @@ each UNCINUS line: kind, primes, checks, bits, seed, evaluator.
   small public function (e.g. in sors or a platform layer, from
   arc4random as uuid.c already does). A dated amendment; no threshold
   moves.
-- **T1. Interpolation.** API, staged loop, error-bound function, tests and
-  plants above.
+- **T1. Interpolation.** API, staged loop, error-bound function,
+  promotion, tests and plants above.
 - **T2. laqueus and tool.** The verified entry point, the cross-route
-  evaluator choice, tool flags and the RELATIO line, laqueus tests.
+  evaluator choice, tool flags (`-modus`, `-semen`, `-promovere`) and the
+  RELATIO line, laqueus tests.
 - **T3. Acceptance and measurement.** All 45 brackets in both modes,
   byte-identical; P1–P4; 14 × 801 recomputed in VERIFICATUM, with the
   most independent evaluator T0 found feasible (the headline: an
@@ -224,7 +285,8 @@ each UNCINUS line: kind, primes, checks, bits, seed, evaluator.
 
 ## Open questions for Fran
 
-- **Q1.** The principle (above). Nothing is built before it.
+- **Q1.** DECIDED 2026-11-02: accepted with conditions (see "Q1
+  decision").
 - **Q2.** Default s: 64 bits (proposed)? s only changes m (about 4 checks
   at 14 × 801).
 - **Q3.** For the 14 × 801 headline: use the vertex check even if it costs
