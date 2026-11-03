@@ -64,7 +64,11 @@
  *                                      liber '<carmina>' in stdout,
  *                                      monita et relatio in stderr;
  *                                      exitus 3 si approximationes, 1
- *                                      si VITIUM aut strictus recusat
+ *                                      si VITIUM aut strictus recusat;
+ *                                      sine titulo operis aut motus
+ *                                      titulus = nomen plagulae
+ *   auditio -musicxml x.mxl -sonare    convertit et sonat ut -carmen
+ *                                      (titulum scire non oportet)
  *   auditio -musicxml x.mxl -censura   cum -carmen, -censura,
  *       (-partitura, -recensio, ...)   -partitura, -recensio, -via ...:
  *                                      liber conversus pro -liber;
@@ -518,6 +522,30 @@ _vitium_carminis (
             (integer)vitium->frustum, vitium->offset, vitium->causa);
 }
 
+/* titulus ex via partiturae: nomen plagulae sine directorio et sine
+ * extensione ultima ('musica/nata_lux_80317.mxl' -> 'nata_lux_80317').
+ * Pro partitura sine titulo operis aut motus (aliter conversor
+ * 'musicxml' scriberet); conversor eum plicat */
+interior chorda
+_titulus_ex_via (
+    constans character* via,
+               Piscina* piscina)
+{
+     constans character* initium = strrchr(via, '/');
+     constans character* punctum;
+                 chorda  titulus;
+
+    initium = initium != NIHIL ? initium + I : via;
+    punctum = strrchr(initium, '.');
+    titulus = chorda_ex_literis(initium, piscina);
+    si (punctum != NIHIL && punctum > initium)
+    {
+        titulus = chorda_sectio(titulus, ZEPHYRUM,
+            (i32)(punctum - initium));
+    }
+    redde titulus;
+}
+
 /* -musicxml (M12): partitura (.xml/.mxl) -> liber '<carmina>' in
  * *liber, titulus carminis in *titulus_carminis. Monita lectoris et
  * relatio conversionis in stderr. Exitus 0 sine approximatione, 3 cum
@@ -568,6 +596,11 @@ _musicxml_convertere (
         si (titulus != NIHIL)
         {
             forma.titulus = chorda_ex_literis(titulus, piscina);
+        }
+        alioquin si (   opus->titulus_operis.mensura == ZEPHYRUM
+                     && opus->titulus_motus.mensura  == ZEPHYRUM)
+        {
+            forma.titulus = _titulus_ex_via(via, piscina);
         }
         scriptum = musicxml_carmen_scribere(opus, NIHIL, &forma,
             piscina,
@@ -1845,6 +1878,7 @@ principale (
                      b32  scribere        = FALSUM;
       constans character* musicxml        = NIHIL;
                      b32  strictus        = FALSUM;
+                     b32  sonare          = FALSUM;
       constans character* titulus_dandus  = NIHIL;
                   chorda  liber_conversus;
                      b32  bene            = VERUM;
@@ -2035,6 +2069,10 @@ principale (
         {
             strictus = VERUM;
         }
+        alioquin si (strcmp(argv[k], "-sonare") == ZEPHYRUM)
+        {
+            sonare = VERUM;
+        }
         alioquin si (   strcmp(argv[k], "-titulus") == ZEPHYRUM
                      && k + I < argc)
         {
@@ -2113,7 +2151,11 @@ principale (
                 "-ponere/-substituere et -liber\n");
         redde II;
     }
-    si (   ((strictus || titulus_dandus != NIHIL) && musicxml == NIHIL)
+    si (   ((strictus || sonare || titulus_dandus != NIHIL)
+            && musicxml == NIHIL)
+        || (sonare
+            && (   via != NIHIL || censura || partitura || recensio
+                || auscultare || tonum))
         || (musicxml != NIHIL
             && (   liber != NIHIL || modus != '\0' || carmina
                 || cantus != NIHIL || genus != NIHIL
@@ -2123,9 +2165,11 @@ principale (
     {
         fprintf(stderr,
             "auditio: -musicxml VIA [-strictus] [-titulus T] solum, aut "
-                "cum -carmen, -censura, -partitura, -recensio, "
-                "-auscultare, -tonus, -pars, -iterare, -via (non cum "
-                "-liber, -carmina, emendatione)\n");
+                "cum -sonare, -carmen, -censura, -partitura, "
+                "-recensio, -auscultare, -tonus, -pars, -iterare, -via "
+                "(non cum "
+                "-liber, -carmina, emendatione; -sonare non cum -via "
+                "aut analysi)\n");
         redde II;
     }
     si (instrumenta)
@@ -2156,7 +2200,7 @@ principale (
                   "-substituere P M MML | -copiare P M-N [Q:]K [+-g] "
                   "[-semitonia] [-repetere R]] [-scribere]] "
                   "[-liber via.stml]) | -musicxml VIA [-strictus] "
-                  "[-titulus T] [-carmen T ...]\n");
+                  "[-titulus T] [-sonare | -carmen T ...]\n");
         _praeparata_monstrare();
         redde ZEPHYRUM;
     }
@@ -2169,7 +2213,8 @@ principale (
     si (musicxml != NIHIL)
     {
         constans character* titulus_conversus = NIHIL;
-                       b32  solum = carmen == NIHIL && !censura
+                       b32  solum = carmen == NIHIL && !sonare
+                           && !censura
                            && !partitura && !recensio && !auscultare
                            && !tonum
                            && !iterare && pars == NIHIL && via == NIHIL;

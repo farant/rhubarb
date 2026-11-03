@@ -134,3 +134,27 @@ tibia_generis_titulus.
 ## 2026-10-24 - -auscultare names the limiter
 
 auscultatio_reddere_censum; the summary line adds ", limitator N quadra (-x.x dB; mixtura +y.y dBFS)" when the master limiter engaged. The un-hand-balanced vespera demo: mix +2.1 dBFS, 27 overs, WAV at full scale exactly, no clipping.
+
+## 2026-11-02 — `-musicxml -sonare` and the file-name title
+
+To hear a converted score you had to pass `-carmen <title>`, and you
+had to know the title first. A score with no work or movement title
+came out as "musicxml" (the converter's fallback; the library never
+sees the path). Now:
+
+- When `-titulus` is not given and the score has neither a work nor a
+  movement title, auditio passes the file name without its directory
+  or last extension as `forma.titulus`
+  (`musica/fontes/nata_lux_80317.mxl` → `nata_lux_80317`). The
+  converter normalizes it like any other title. A score that has a
+  title keeps it (the Brahms lied stays `9_lieder_and_songs_op_32`).
+- `-sonare` turns off "convert only" and plays the converted song,
+  like `-carmen`. Exit 2 without `-musicxml`, or with `-via` or an
+  analysis mode (`-censura`, `-partitura`, `-recensio`, `-auscultare`,
+  `-tonus`).
+
+Testing note: a stub `afplay` on PATH only catches `-via`-less renders
+of SOUNDS (`auditio radius`). Playing a SONG (`-carmen`, `-sonare`)
+goes through cantor straight to the audio device, so a stub does not
+silence it. A silent check for the song path still needs a way to
+stop playback (none yet).
