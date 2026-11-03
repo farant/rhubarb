@@ -33,6 +33,7 @@
 #include "situs.h"
 #include "polynomium.h"
 #include "contractio.h"
+#include "interpolatio.h"
 
 /* transitus plures uncinus per summam statuum (2^c) non computat */
 #define LAQUEUS_TRANSITUS_MAXIMI XXIV
@@ -525,6 +526,73 @@ laqueus_jones_ex_plexu (
          Piscina* piscina,
       Polynomium* exitus,
       LaqueusVia* via);
+
+
+/* ==================================================
+ * Verificatio (interpolatio-verificatio-plan T2): uncinus VERIFICATUM
+ * (terminatio praecox cum probationibus fortuitis, vide interpolatio.h)
+ * ================================================== */
+
+/* verificator electus */
+#define LAQUEUS_VERIFICATOR_AUTOMATICUS  ZEPHYRUM  /* via altera si regula
+                                                    * sumptus et officina
+                                                    * sinunt, aliter sui */
+#define LAQUEUS_VERIFICATOR_SUI     I         /* via electa ipsa */
+#define LAQUEUS_VERIFICATOR_VIA_ALTERA   II        /* via altera, aliter
+                                                    * FALSUM */
+#define LAQUEUS_VERIFICATOR_EXTERNUS     III       /* optiones->alienus */
+
+/* membra post laqueus_optiones_verificandi_ordinariae() posita */
+nomen structura {
+    i64 octeti_maximi;      /* officinae principalis ET verificatoris
+                             * simul (CONTRACTIO_SATURATUM: nullus limes) */
+    i64 semen;              /* semen tractuum (0), a vocante */
+    i32 semen_origo;        /* INTERPOLATIO_SEMEN_DATUM aut _FORTUITUM */
+    i32 bita_securitatis;   /* s (LXIV) */
+    i32 verificator;        /* LAQUEUS_VERIFICATOR_* (AUTOMATICUS) */
+    constans InterpolatioVerificator* alienus;  /* EXTERNUS solum (NIHIL) */
+} LaqueusOptionesVerificandi;
+
+LaqueusOptionesVerificandi
+laqueus_optiones_verificandi_ordinariae (
+    vacuum);
+
+/* uncinus clausurae tricae, quaestio VERIFICATUM (interpolatio_
+ * polynomium_relatum) per viam electam (laqueus_via_eligere). Verificator
+ * viae (c = 8: y = A^4 = omega^8; r = 9: omega = 0 aut A^4 = -1):
+ * AUTOMATICUS = via altera si m x pretium alterius <= (k_max + 1)(K + 2)
+ * x pretium principalis / 20 (5% cursus probati aestimati) et officinae
+ * ambae intra octeti_maximi, aliter sui; titulus relationis "vertex",
+ * "temperley", "sui:<via>" aut alieni. c <= 1: forma clausa,
+ * relatio PROBATUM sine primis. FALSUM (exitus non tangitur) si verbum
+ * refutatur, neutra via eligibilis, VIA_ALTERA impossibilis, EXTERNUS
+ * sine alieno, aut interpolatio refutat (DISCORDIA in relatione). */
+b32
+laqueus_uncinus_ex_plexu_verificatum (
+                           constans s32* verbum,
+                                    i32  longitudo,
+                                    i32  fila,
+    constans LaqueusOptionesVerificandi* optiones,
+                                Piscina* piscina,
+                             Polynomium* exitus,
+                             LaqueusVia* via,
+                    InterpolatioRelatio* relatio);
+
+/* promotio uncini VERIFICATI (interpolatio_promovere) per viam qua
+ * computatus est (VERTEX aut TEMPERLEY; aliter FALSUM): primi relationis
+ * cum serie viae congruere debent. */
+b32
+laqueus_uncinus_promovere (
+                    constans s32* verbum,
+                             i32  longitudo,
+                             i32  fila,
+                             i64  octeti_maximi,
+                      LaqueusVia  via,
+    constans InterpolatioRelatio* relatio,
+             constans Polynomium* verificatum,
+                         Piscina* piscina,
+                      Polynomium* exitus,
+             InterpolatioRelatio* relatio_nova);
 
 /* codex PD per motus Reidemeister I et II simplificatus: dum motus
  * aliquis applicari potest, transitus removentur (R1: ansa - transitus

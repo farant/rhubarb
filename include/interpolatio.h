@@ -276,6 +276,15 @@ interpolatio_probationes_necessariae (
                                  i32* probationes,
                                  i32* bita_erroris);
 
+/* k_max: primi restitutionis per limitem probatum (sine addito), ut
+ * interpolatio_polynomium eos enumerat; nihil aestimat. FALSUM si
+ * quaestio invalida aut primi desunt. */
+b32
+interpolatio_primi_probati (
+    constans InterpolatioQuaestio* quaestio,
+                          Piscina* piscina,
+                              i32* k_maximus);
+
 /* ut interpolatio_polynomium, cum relatione. quaestio->modus
  * PROBATUM: verificator neglegitur (NIHIL licet), effectus idem ac
  * interpolatio_polynomium. VERIFICATUM: verificator requiritur (ad

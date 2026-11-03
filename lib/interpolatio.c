@@ -848,6 +848,25 @@ interpolatio_probationes_necessariae (
     redde VERUM;
 }
 
+b32
+interpolatio_primi_probati (
+    constans InterpolatioQuaestio* q,
+                          Piscina* piscina,
+                              i32* k_maximus)
+{
+    i32* primi;
+    s64  necessaria;
+
+    si (   q == NIHIL || piscina == NIHIL || k_maximus == NIHIL
+        || !_quaestio_valida(q))
+    {
+        redde FALSUM;
+    }
+    necessaria = ((s64)q->gradus_summus - (s64)q->gradus_imus)
+        / (s64)q->passus + (s64)I + (s64)q->puncta_addita;
+    redde _primos_enumerare(q, necessaria, piscina, &primi, k_maximus);
+}
+
 interior b32
 _primus_exclusus (
     constans i32* exclusi,

@@ -42,6 +42,14 @@
  *        PROBATUM/VERIFICATUM, sumptus vertex; XLV + 14 x 801 aut una
  *   XIV  (solum per -sectio XIV) cribrum: primi in [2^30, 2^31) per
  *        residuum mod 4, summa contra pi(2^31) - pi(2^30)
+ *   VERIFICATIO (interpolatio-verificatio-plan T2): -modus verificatum
+ *        cum -sectio VIII aut XI: uncinus VERIFICATUS per
+ *        laqueus_uncinus_ex_plexu_verificatum, lineae UNCINUS et RELATIO;
+ *        -semen_verificationis X (aliter entropia moneta, impressa;
+ *        -semen manet semen tricae sectionis V); -verificator
+ *        automaticus|sui|via|congelatus (nucleus 79e7fad9 sectionis
+ *        VI cum puncto proprio). -promovere VIA: paria UNCINUS + RELATIO
+ *        promoventur (primi reliqui soli)
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -68,6 +76,7 @@
 #include "congruentia.h"
 #include "tabula_nodorum.h"
 #include "filum.h"
+#include "moneta.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -2711,6 +2720,488 @@ _sectio_cribri (vacuum)
     piscina_destruere(piscina);
 }
 
+
+/* ==================================================
+ * Verificatio (interpolatio-verificatio-plan T2): -modus verificatum
+ * in sectionibus VIII et XI, -promovere VIA
+ * ================================================== */
+
+nomen structura {
+    b32 activa;
+    i64 semen;
+    i32 semen_origo;       /* INTERPOLATIO_SEMEN_DATUM aut _FORTUITUM */
+    i32 verificator;       /* LAQUEUS_VERIFICATOR_* */
+    b32 congelatus;        /* nucleus 79e7fad9 (EXTERNUS) */
+} ParametriVerificandi;
+
+/* verificator congelatus: nucleus VETUS (sectio VI) cum puncto PROPRIO
+ * (recensio M7): omega = index + 2, A = i omega^2, i hic computatum, non
+ * per _punctum_eligere bibliothecae. c = 8, r = 9. */
+nomen structura {
+    NucleusVetus nv;
+             i32 primus;
+             i32 radix_i;
+} ContextusCongelatus;
+
+interior s32
+_aestimator_congelatus (
+    vacuum* contextus,
+       i32  index,
+       i32  p,
+       i32* punctum,
+       i32* valor)
+{
+    ContextusCongelatus* cc = (ContextusCongelatus*)contextus;
+                    i32  w;
+                    i32  quadratum;
+                    i32  a;
+                    i32  a_inversa;
+                    i32  delta;
+
+    si (p < V || p % IV != I || p >= (i32)0x80000000UL)
+    {
+        redde INTERPOLATIO_ERRATUM;
+    }
+    si (p != cc->primus)
+    {
+        i32 g = II;
+
+        si (!congruentia_est_primus(p))
+        {
+            redde INTERPOLATIO_ERRATUM;
+        }
+        dum (   g < p && congruentia_potentia(g, (i64)((p - I) / II), p)
+            != p - I)
+        {
+            g++;
+        }
+        si (g == p)
+        {
+            redde INTERPOLATIO_ERRATUM;
+        }
+        cc->radix_i  = congruentia_potentia(g, (i64)((p - I) / IV), p);
+        cc->primus   = p;
+    }
+    w = (i32)(((i64)index + (i64)II) % (i64)p);
+    si (w == ZEPHYRUM)
+    {
+        redde INTERPOLATIO_INUTILE;
+    }
+    quadratum  = congruentia_multiplica(w, w, p);
+    a          = congruentia_multiplica(cc->radix_i, quadratum, p);
+    (vacuum)congruentia_inversa(a, p, &a_inversa);
+    delta = congruentia_subtrahe(ZEPHYRUM, congruentia_adde(
+        congruentia_multiplica(a, a, p),
+        congruentia_multiplica(a_inversa,
+        a_inversa, p), p), p);
+    si (delta == ZEPHYRUM)
+    {
+        redde INTERPOLATIO_INUTILE;
+    }
+    *punctum  = a;
+    *valor    = _vetus_valor(&cc->nv, a, a_inversa, delta, p);
+    redde INTERPOLATIO_UTILE;
+}
+
+interior constans character*
+_genus_titulus (
+    i32 genus)
+{
+    redde genus
+        == INTERPOLATIO_VERIFICATUM ? "VERIFICATUM" : "PROBATUM";
+}
+
+interior constans character*
+_status_titulus (
+    i32 status)
+{
+    commutatio (status)
+    {
+        casus INTERPOLATIO_ACCEPTUM:   redde "ACCEPTUM";
+        casus INTERPOLATIO_AD_LIMITEM: redde "AD_LIMITEM";
+        casus INTERPOLATIO_DISCORDIA:  redde "DISCORDIA";
+        casus INTERPOLATIO_PROMOTUM:   redde "PROMOTUM";
+        ordinarius:                    redde "NULLUS";
+    }
+}
+
+/* linea UNCINUS (forma brackets.txt) */
+interior vacuum
+_uncinum_imprimere (
+              i32  fila,
+              i32  longitudo,
+     constans s32* verbum,
+       Polynomium  f,
+          Piscina* piscina)
+{
+    s32 scriptura = ZEPHYRUM;
+    s32 e;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        scriptura += verbum[k] > ZEPHYRUM ? (s32)I : -(s32)I;
+    }
+    imprimere("UNCINUS plexus%u x %u | n %u | c %u | writhe %d | A^%d ..",
+        fila, longitudo, fila, longitudo, scriptura,
+        polynomium_gradus_imus(f));
+    per (e = polynomium_gradus_imus(f); e
+        <= polynomium_gradus_summus(f);
+        e++)
+    {
+        chorda t = magnus_ad_chordam(polynomium_coefficiens(f, e),
+            piscina);
+
+        imprimere(" %.*s", (integer)t.mensura,
+            (constans character*)t.datum);
+    }
+    imprimere("\n");
+}
+
+/* linea RELATIO: genus, status, via, verificator, primi (k: p ...),
+ * k_max, additus, aestimationes, probationes, m, bita, semen, origo,
+ * generator, communia (ultima: spatia continere potest) */
+interior vacuum
+_relationem_imprimere (
+                             i32  fila,
+                             i32  longitudo,
+                      LaqueusVia  via,
+    constans InterpolatioRelatio* r)
+{
+    i32 j;
+
+    imprimere("RELATIO plexus%u x %u | genus %s | status %s | via %s | "
+        "verificator %s | primi %u:", fila, longitudo,
+        _genus_titulus(r->genus), _status_titulus(r->status),
+        via == LAQUEUS_VIA_VERTEX ? "vertex" : via
+            == LAQUEUS_VIA_TEMPERLEY
+        ? "temperley" : "nulla", r->titulus_verificatoris != NIHIL
+        ? r->titulus_verificatoris : "nullus", r->numerus_primorum);
+    per (j = ZEPHYRUM; j < r->numerus_primorum; j++)
+    {
+        imprimere(" %u", r->primi[j]);
+    }
+    imprimere(" | k_max %u | additus %u | aestimationes %llu | sui %u | "
+        "certificantes %u | m %u | bita %u | semen %llu | origo %s | "
+        "generator %s | communia %s\n", r->k_maximus, r->primus_additus,
+        (unsigned long long)r->aestimationes, r->probationes_sui,
+        r->probationes_certificantes, r->probationes_requisitae,
+        r->bita_erroris, (unsigned long long)r->quaestio.semen,
+        r->quaestio.semen_origo == INTERPOLATIO_SEMEN_FORTUITUM
+        ? "FORTUITUM" : "DATUM", r->generator != NIHIL ? r->generator
+        : "nullus", r->communia != NIHIL ? r->communia : "nulla");
+}
+
+/* uncinus VERIFICATUS unius tricae (semen tricae MMXXVIII): lineae
+ * tempus, UNCINUS, RELATIO */
+interior vacuum
+_uncinum_verificatum (
+                           i32  fila,
+                           i32  longitudo_data,
+    constans ParametriVerificandi* pv)
+{
+               Piscina* piscina = piscina_generare_dynamicum(
+                   "mensura_verificatum", 1048576);
+                          Sors  s;
+                           i32  longitudo  = longitudo_data;
+                           s32* verbum     = NIHIL;
+    LaqueusOptionesVerificandi  o =
+        laqueus_optiones_verificandi_ordinariae();
+       InterpolatioVerificator congelatus;
+           ContextusCongelatus cc;
+           InterpolatioRelatio r;
+                    Polynomium f    = polynomium_nullum();
+                    LaqueusVia via  = LAQUEUS_VIA_NULLA;
+                       clock_t t0;
+
+    sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+    si (_plexus_fortuitus(&s, fila, &longitudo, piscina, &verbum)
+        == NIHIL)
+    {
+        imprimere("   %u x %u: nullum verbum\n", fila, longitudo);
+        piscina_destruere(piscina);
+        redde;
+    }
+    o.octeti_maximi  = CONTRACTIO_SATURATUM;
+    o.semen          = pv->semen;
+    o.semen_origo    = pv->semen_origo;
+    o.verificator    = pv->verificator;
+    si (pv->congelatus)
+    {
+        si (!_vetus_creare(verbum, longitudo, fila, piscina, &cc.nv))
+        {
+            imprimere("   %u x %u: nucleus congelatus refutatus\n",
+                fila,
+                longitudo);
+            piscina_destruere(piscina);
+            redde;
+        }
+        cc.primus                   = ZEPHYRUM;
+        cc.radix_i                  = ZEPHYRUM;
+        congelatus.aestimare        = _aestimator_congelatus;
+        congelatus.contextus        = &cc;
+        congelatus.multiplicitas    = VIII;
+        congelatus.inutilia_maxima  = IX;
+        congelatus.titulus          = "congelatus:79e7fad9";
+        congelatus.communia         = "temperley_modulus_creare et "
+            "temperley_actio (tabulae), pondera modulorum, congruentia";
+        o.verificator  = LAQUEUS_VERIFICATOR_EXTERNUS;
+        o.alienus      = &congelatus;
+    }
+    t0 = clock();
+    si (!laqueus_uncinus_ex_plexu_verificatum(verbum, longitudo, fila,
+        &o,
+        piscina, &f, &via, &r))
+    {
+        imprimere("   %u x %u: REFUTATUM (status %s, %.2f s)\n", fila,
+            longitudo, _status_titulus(r.status), _secundae(t0));
+    }
+    alioquin
+    {
+        imprimere("   %u x %u: via %s, %s %s, primi %u ex %u, %.2f s\n",
+            fila, longitudo, via == LAQUEUS_VIA_VERTEX ? "vertex"
+            : "temperley", _genus_titulus(r.genus),
+            _status_titulus(r.status), r.numerus_primorum, r.k_maximus,
+            _secundae(t0));
+        _uncinum_imprimere(fila, longitudo, verbum, f, piscina);
+        _relationem_imprimere(fila, longitudo, via, &r);
+    }
+    fflush(stdout);
+    piscina_destruere(piscina);
+}
+
+/* numerus non signatus (i64) ex datis[*positio..] */
+interior b32
+_numerum_legere (
+     constans i8* data,
+             i32  finis,
+             i32* positio,
+             i64* valor)
+{
+    i64 v        = ZEPHYRUM;
+    i32 initium  = *positio;
+
+    dum (   *positio < finis && data[*positio] >= '0'
+         && data[*positio] <= '9')
+    {
+        v = v * (i64)X + (i64)(data[*positio] - '0');
+        (*positio)++;
+    }
+    *valor = v;
+    redde *positio > initium;
+}
+
+/* linea UNCINUS -> fila, longitudo, polynomium (coefficientes
+ * consecutivi ab A^imus) */
+interior b32
+_uncinum_legere (
+         i8* data,
+        i32  initium,
+        i32  terminus,
+        i32* fila,
+        i32* longitudo,
+    Piscina* piscina,
+ Polynomium* f)
+{
+       i32  k;
+       i64  n;
+       i64  c;
+       s32  imus;
+    Magnus* densa;
+       i32  numerus    = ZEPHYRUM;
+       i32  capacitas  = terminus - initium;
+
+    k = _quaerere_in_linea(data, initium, terminus, "plexus") + VI;
+    si (k > terminus || !_numerum_legere(data, terminus, &k, &n))
+    {
+        redde FALSUM;
+    }
+    k = _quaerere_in_linea(data, k, terminus, "x ") + II;
+    si (k > terminus || !_numerum_legere(data, terminus, &k, &c))
+    {
+        redde FALSUM;
+    }
+    k = _quaerere_in_linea(data, k, terminus, "A^") + II;
+    si (k > terminus || !_integrum_legere(data, terminus, &k, &imus))
+    {
+        redde FALSUM;
+    }
+    k = _quaerere_in_linea(data, k, terminus, "..") + II;
+    densa = (Magnus*)piscina_allocare(piscina, (memoriae_index)capacitas
+        * magnitudo(Magnus));
+    dum (k < terminus)
+    {
+        chorda signum_c;
+           i32 initium_signi;
+
+        dum (k < terminus && data[k] == ' ')
+        {
+            k++;
+        }
+        si (k >= terminus)
+        {
+            frange;
+        }
+        initium_signi = k;
+        dum (k < terminus && data[k] != ' ')
+        {
+            k++;
+        }
+        signum_c.datum    = data + initium_signi;
+        signum_c.mensura  = k - initium_signi;
+        si (!magnus_ex_chorda(signum_c, piscina, &densa[numerus]))
+        {
+            redde FALSUM;
+        }
+        numerus++;
+    }
+    *fila       = (i32)n;
+    *longitudo  = (i32)c;
+    redde numerus > ZEPHYRUM && polynomium_ex_coefficientibus(densa,
+        numerus, imus, piscina, f);
+}
+
+/* linea RELATIO -> relatio (genus, status, primi) et via */
+interior b32
+_relationem_legere (
+                     i8* data,
+                    i32  initium,
+                    i32  terminus,
+                Piscina* piscina,
+    InterpolatioRelatio* r,
+             LaqueusVia* via)
+{
+    i32 k;
+    i64 numerus;
+    i64 p;
+    i32 j;
+
+    r->genus = _quaerere_in_linea(data, initium, terminus,
+        "genus VERIFICATUM") < terminus ? INTERPOLATIO_VERIFICATUM
+        : INTERPOLATIO_PROBATUM;
+    r->status = _quaerere_in_linea(data, initium, terminus,
+        "status ACCEPTUM") < terminus ? INTERPOLATIO_ACCEPTUM
+        : INTERPOLATIO_STATUS_NULLUS;
+    *via = _quaerere_in_linea(data, initium, terminus, "via temperley")
+        < terminus ? LAQUEUS_VIA_TEMPERLEY : _quaerere_in_linea(data,
+        initium, terminus, "via vertex") < terminus ? LAQUEUS_VIA_VERTEX
+        : LAQUEUS_VIA_NULLA;
+    k = _quaerere_in_linea(data, initium, terminus, "primi ") + VI;
+    si (k > terminus || !_numerum_legere(data, terminus, &k, &numerus)
+        || k >= terminus || data[k] != ':' || numerus > (i64)CC)
+    {
+        redde FALSUM;
+    }
+    k++;
+    r->primi = (i32*)piscina_allocare(piscina, (memoriae_index)(numerus
+        + (i64)I) * magnitudo(i32));
+    per (j = ZEPHYRUM; (i64)j < numerus; j++)
+    {
+        dum (k < terminus && data[k] == ' ')
+        {
+            k++;
+        }
+        si (!_numerum_legere(data, terminus, &k, &p))
+        {
+            redde FALSUM;
+        }
+        r->primi[j] = (i32)p;
+    }
+    r->numerus_primorum = (i32)numerus;
+    redde VERUM;
+}
+
+/* -promovere VIA: paria linearum UNCINUS + RELATIO (effusio -modus
+ * verificatum); quaeque trica regeneratur (semen MMXXVIII) et promovetur
+ * per viam suam: lineae PROMOTUM, UNCINUS, RELATIO */
+interior vacuum
+_sectio_promotionis (
+    constans character* via_fili)
+{
+    Piscina* piscina = piscina_generare_dynamicum("mensura_promotio",
+        1048576);
+      chorda  textus         = filum_legere_totum(via_fili, piscina);
+          i8* data           = textus.datum;
+         i32  finis          = textus.mensura;
+         i32  initium        = ZEPHYRUM;
+         b32  habet_uncinum  = FALSUM;
+         i32  fila           = ZEPHYRUM;
+         i32  longitudo      = ZEPHYRUM;
+  Polynomium  verificatum    = polynomium_nullum();
+
+    imprimere("\npromotio ex %s (%u octeti)\n", via_fili,
+        textus.mensura);
+    dum (initium < finis)
+    {
+        i32 terminus = initium;
+
+        dum (terminus < finis && data[terminus] != '\n')
+        {
+            terminus++;
+        }
+        si (   terminus - initium > VIII
+            && memcmp(data + initium, "UNCINUS ", VIII) == ZEPHYRUM)
+        {
+            habet_uncinum = _uncinum_legere(data, initium, terminus,
+                &fila,
+                &longitudo, piscina, &verificatum);
+        }
+        alioquin si (   terminus - initium > VIII
+                     && memcmp(data + initium, "RELATIO ", VIII)
+                     == ZEPHYRUM && habet_uncinum)
+        {
+            InterpolatioRelatio  r;
+            InterpolatioRelatio  rn;
+                     LaqueusVia  via = LAQUEUS_VIA_NULLA;
+                           Sors  s;
+                            s32* verbum           = NIHIL;
+                            i32  longitudo_verbi  = longitudo;
+                     Polynomium  promotum         = polynomium_nullum();
+                        clock_t  t0;
+
+            sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+            si (   !_relationem_legere(data, initium, terminus, piscina,
+                   &r, &via)
+                || _plexus_fortuitus(&s, fila, &longitudo_verbi,
+                piscina,
+                   &verbum) == NIHIL || longitudo_verbi != longitudo)
+            {
+                imprimere("   %u x %u: relatio aut verbum refutatum\n",
+                    fila, longitudo);
+            }
+            alioquin
+            {
+                t0 = clock();
+                si (!laqueus_uncinus_promovere(verbum, longitudo, fila,
+                    CONTRACTIO_SATURATUM, via, &r, &verificatum,
+                    piscina,
+                    &promotum, &rn))
+                {
+                    imprimere("PROMOTUM plexus%u x %u | REFUTATUM (%.2f s)"
+                        "\n", fila, longitudo, _secundae(t0));
+                }
+                alioquin
+                {
+                    imprimere("PROMOTUM plexus%u x %u | %s | primi %u ex "
+                        "%u novi | %.2f s\n", fila, longitudo,
+                        polynomium_aequalis(promotum, verificatum)
+                        ? "IDEM" : "DIVERSUM", rn.numerus_primorum
+                        - r.numerus_primorum, rn.numerus_primorum,
+                        _secundae(t0));
+                    _uncinum_imprimere(fila, longitudo, verbum,
+                        promotum,
+                        piscina);
+                    _relationem_imprimere(fila, longitudo, via, &rn);
+                }
+            }
+            habet_uncinum = FALSUM;
+            fflush(stdout);
+        }
+        initium = terminus + I;
+    }
+    piscina_destruere(piscina);
+}
+
 s32
 principale (
                s32  argc,
@@ -2726,6 +3217,15 @@ principale (
                    b32  fila_data  = FALSUM;
     constans character* viae_uncinorum[TEXTUS_UNCINORUM_MAXIMI];
                    i32  numerus_viarum = ZEPHYRUM;
+    constans character* via_promovendi = NIHIL;
+  ParametriVerificandi  pv;
+                   b32  semen_datum = FALSUM;
+
+    pv.activa       = FALSUM;
+    pv.semen        = ZEPHYRUM;
+    pv.semen_origo  = INTERPOLATIO_SEMEN_DATUM;
+    pv.verificator  = LAQUEUS_VERIFICATOR_AUTOMATICUS;
+    pv.congelatus   = FALSUM;
 
     per (i = I; i < argc; i++)
     {
@@ -2764,12 +3264,92 @@ principale (
         {
             semen = (i64)strtoul(argv[++i], NIHIL, X);
         }
+        alioquin si (   strcmp(argv[i], "-modus") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            pv.activa = strcmp(argv[++i], "verificatum") == ZEPHYRUM;
+        }
+        alioquin si (   strcmp(argv[i], "-semen_verificationis")
+                     == ZEPHYRUM
+                     && i + I < argc)
+        {
+            pv.semen     = (i64)strtoul(argv[++i], NIHIL, X);
+            semen_datum  = VERUM;
+        }
+        alioquin si (   strcmp(argv[i], "-verificator") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            constans character* t = argv[++i];
+
+            pv.congelatus   = strcmp(t, "congelatus") == ZEPHYRUM;
+            pv.verificator  = strcmp(t, "sui") == ZEPHYRUM
+                ? LAQUEUS_VERIFICATOR_SUI : strcmp(t, "via")
+                == ZEPHYRUM ? LAQUEUS_VERIFICATOR_VIA_ALTERA
+                : LAQUEUS_VERIFICATOR_AUTOMATICUS;
+        }
+        alioquin si (   strcmp(argv[i], "-promovere") == ZEPHYRUM
+                     && i + I < argc)
+        {
+            via_promovendi = argv[++i];
+        }
         alioquin si (   strcmp(argv[i], "-uncini") == ZEPHYRUM
                      && i + I < argc
                      && numerus_viarum < TEXTUS_UNCINORUM_MAXIMI)
         {
             viae_uncinorum[numerus_viarum++] = argv[++i];
         }
+    }
+    si (via_promovendi != NIHIL)
+    {
+        _sectio_promotionis(via_promovendi);
+        redde ZEPHYRUM;
+    }
+    si (pv.activa && !semen_datum)
+    {
+         i8 octeti[VIII];
+        i32 j;
+
+        /* semen FORTUITUM ex entropia (moneta, SINE reservo): defectus
+         * -> refutatio, numquam semen divinabile */
+        si (!moneta_octeti_fortuiti(octeti, VIII))
+        {
+            imprimere("entropia deficit: -semen_verificationis X da\n");
+            redde I;
+        }
+        per (j = ZEPHYRUM; j < VIII; j++)
+        {
+            pv.semen = (pv.semen << VIII) | (i64)octeti[j];
+        }
+        pv.semen_origo = INTERPOLATIO_SEMEN_FORTUITUM;
+    }
+    si (   pv.activa && sectio != NIHIL
+        && strcmp(sectio, "VIII") == ZEPHYRUM)
+    {
+        imprimere("\nVIII. uncinus VERIFICATUS (semen %llu %s)\n",
+            (unsigned long long)pv.semen, pv.semen_origo
+            == INTERPOLATIO_SEMEN_FORTUITUM ? "FORTUITUM" : "DATUM");
+        _uncinum_verificatum(fila, longitudo
+            == DCCC ? DCCCI : longitudo,
+            &pv);
+        redde ZEPHYRUM;
+    }
+    si (   pv.activa && sectio != NIHIL
+        && strcmp(sectio, "XI") == ZEPHYRUM)
+    {
+        i32 k;
+
+        imprimere("\nXI. uncini D136 VERIFICATI (semen %llu %s)\n",
+            (unsigned long long)pv.semen, pv.semen_origo
+            == INTERPOLATIO_SEMEN_FORTUITUM ? "FORTUITUM" : "DATUM");
+        per (k = ZEPHYRUM; k < XL + V; k++)
+        {
+            i32 fila_k;
+            i32 longitudo_k;
+
+            _trica_probationis(k, &fila_k, &longitudo_k);
+            _uncinum_verificatum(fila_k, longitudo_k, &pv);
+        }
+        redde ZEPHYRUM;
     }
     si (sectio != NIHIL && strcmp(sectio, "V") == ZEPHYRUM)
     {

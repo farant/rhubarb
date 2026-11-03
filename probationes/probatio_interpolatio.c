@@ -1558,6 +1558,17 @@ _probare_polynomium_strictum (
     CREDO_AEQUALIS_I32(r.status, INTERPOLATIO_AD_LIMITEM);
     CREDO_AEQUALIS_I32(r.k_maximus, III);
     CREDO_AEQUALIS_I32(r.numerus_primorum, III);
+    {
+        i32 k_maximus = ZEPHYRUM;
+
+        CREDO_NECESSE(interpolatio_primi_probati(&q, piscina,
+            &k_maximus));
+        CREDO_AEQUALIS_I32(k_maximus, r.k_maximus);
+        q.passus = ZEPHYRUM;
+        CREDO_FALSUM(interpolatio_primi_probati(&q, piscina,
+            &k_maximus));
+        q.passus = I;
+    }
     _contextus_initium(&ctx, &n);
     q.modus = INTERPOLATIO_PROBATUM;
     CREDO_NECESSE(interpolatio_polynomium_relatum(_aestimator, &ctx, &v,

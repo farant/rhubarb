@@ -2919,6 +2919,326 @@ _probare_per_viam (
 
 
 /* ==================================================
+ * Verificatio (interpolatio-verificatio-plan T2)
+ *
+ * Uncinus VERIFICATUS per laqueus_uncinus_ex_plexu_verificatum: uncini
+ * certi, verificator automaticus (regula sumptus), speculum per modulum
+ * temperley (DISCORDIA), promotio, refutationes.
+ * ================================================== */
+
+interior b32
+_tituli_aequales (
+    constans character* a,
+    constans character* b)
+{
+    si (a == NIHIL || b == NIHIL)
+    {
+        redde a == b;
+    }
+    dum (*a != '\0' && *a == *b)
+    {
+        a++;
+        b++;
+    }
+    redde *a == *b;
+}
+
+/* uncinus certus ut polynomium densum (coefficientes A^(imus + 4k)) */
+interior Polynomium
+_uncinus_certus (
+    constans UncinusCertus* u,
+                   Piscina* piscina)
+{
+       i32  numerus = IV * (u->numerus - I) + I;
+    Magnus* densa   = (Magnus*)piscina_allocare(piscina,
+        (memoriae_index)numerus * magnitudo(Magnus));
+    Polynomium f = polynomium_nullum();
+           i32 j;
+
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        densa[j] = magnus_ex_s64(ZEPHYRUM);
+    }
+    per (j = ZEPHYRUM; j < u->numerus; j++)
+    {
+        densa[IV * j] = magnus_ex_s64(u->coefficientes[j]);
+    }
+    (vacuum)polynomium_ex_coefficientibus(densa, numerus, u->imus,
+        piscina,
+        &f);
+    redde f;
+}
+
+/* uncini certi VERIFICATI = certi: verificator automaticus (hic sui:
+ * vertex nimis carus) et via altera (vertex) imposita */
+interior vacuum
+_probare_verificatum_certum (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans UncinusCertus  certi[III] = {
+        { III, L, (i32)2213358261UL, -(s32)XXII, UNCINUS_3_50,
+          (i32)(magnitudo(UNCINUS_3_50) / magnitudo(s64)) },
+        { VIII, CI, (i32)2594227919UL, -(s32)LXIX, UNCINUS_8_101,
+          (i32)(magnitudo(UNCINUS_8_101) / magnitudo(s64)) },
+        { VIII, CCI, (i32)3522731884UL, -(s32)CXXXV, UNCINUS_8_201,
+          (i32)(magnitudo(UNCINUS_8_201) / magnitudo(s64)) }
+    };
+    i32 k;
+    i32 modus;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        per (modus = ZEPHYRUM; modus < II; modus++)
+        {
+            PiscinaNotatio  nota       = piscina_notare(piscina);
+                       i32  longitudo  = certi[k].longitudo;
+                       s32* verbum = _trica_certa(certi[k].fila,
+                           &longitudo, certi[k].vestigium_verbi,
+                           piscina);
+            LaqueusOptionesVerificandi o =
+                laqueus_optiones_verificandi_ordinariae();
+            InterpolatioRelatio r;
+                     Polynomium f    = polynomium_nullum();
+                     LaqueusVia via  = LAQUEUS_VIA_NULLA;
+
+            CREDO_NECESSE_NON_NIHIL(verbum);
+            o.octeti_maximi  = OCTETI_MAXIMI;
+            o.semen          = (i64)(k * II + modus + I);
+            o.verificator    = modus == ZEPHYRUM
+                ? LAQUEUS_VERIFICATOR_AUTOMATICUS
+                : LAQUEUS_VERIFICATOR_VIA_ALTERA;
+            CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(verbum,
+                longitudo, certi[k].fila, &o, piscina, &f, &via, &r));
+            CREDO_VERUM(polynomium_aequalis(f,
+                _uncinus_certus(&certi[k],
+                piscina)));
+            CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_TEMPERLEY);
+            CREDO_VERUM(_tituli_aequales(r.titulus_verificatoris,
+                modus == ZEPHYRUM ? "sui:temperley" : "vertex"));
+            CREDO_AEQUALIS_I32(r.genus, INTERPOLATIO_VERIFICATUM);
+            CREDO_VERUM(r.numerus_primorum < r.k_maximus);
+            piscina_reficere(piscina, nota);
+        }
+    }
+}
+
+nomen structura {
+                   i32  fila;
+                   i32  longitudo;
+                   i32  vestigium_verbi;
+            LaqueusVia  via;
+    constans character* titulus;
+} ExemplumVerificandi;
+
+/* verificator automaticus per regulam sumptus (T0, pretia viae): 9 x
+ * 102 TL -> vertex (ratio 3.35 <= 3.70), 11 x 102 vertex -> TL (1.39 <=
+ * 3.75), 8 x 101 sui (49 > 3.85). Effectus = probatus. Planta "laqueus
+ * semper sui" hic rubet. */
+interior vacuum
+_probare_verificator_automaticus (
+    CredoContextus* c)
+{
+                         Piscina* piscina = c->piscina;
+    constans ExemplumVerificandi  exempla[III] = {
+        { IX, CII, (i32)250855745UL, LAQUEUS_VIA_TEMPERLEY, "vertex" },
+        { XI, CII, (i32)1527719524UL, LAQUEUS_VIA_VERTEX, "temperley" },
+        { VIII, CI, (i32)2594227919UL, LAQUEUS_VIA_TEMPERLEY,
+          "sui:temperley" }
+    };
+    i32 k;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        PiscinaNotatio  nota       = piscina_notare(piscina);
+                   i32  longitudo  = exempla[k].longitudo;
+                   s32* verbum = _trica_certa(exempla[k].fila,
+                       &longitudo,
+                       exempla[k].vestigium_verbi, piscina);
+        LaqueusOptionesVerificandi o =
+            laqueus_optiones_verificandi_ordinariae();
+        InterpolatioRelatio r;
+                 Polynomium probatus  = polynomium_nullum();
+                 Polynomium f         = polynomium_nullum();
+                 LaqueusVia via       = LAQUEUS_VIA_NULLA;
+
+        CREDO_NECESSE_NON_NIHIL(verbum);
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, longitudo,
+            exempla[k].fila, CONTRACTIO_SATURATUM, piscina, &probatus,
+            NIHIL));
+        o.semen = (i64)(k + XXXI);
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(verbum,
+            longitudo, exempla[k].fila, &o, piscina, &f, &via, &r));
+        CREDO_VERUM(polynomium_aequalis(f, probatus));
+        CREDO_AEQUALIS_I32((i32)via, (i32)exempla[k].via);
+        CREDO_VERUM(_tituli_aequales(r.titulus_verificatoris,
+            exempla[k].titulus));
+        CREDO_AEQUALIS_I32(r.genus, INTERPOLATIO_VERIFICATUM);
+        CREDO_AEQUALIS_I32(r.probationes_requisitae, IV);
+        piscina_reficere(piscina, nota);
+    }
+}
+
+/* speculum: valorem <D>(A) in puncto A^-1 nuntiat (convention mirrored,
+ * A <-> A^-1) - modulo temperley eiusdem tricae */
+interior s32
+_aestimator_speculi (
+    vacuum* contextus,
+       i32  index,
+       i32  p,
+       i32* punctum,
+       i32* valor)
+{
+    i32 a = ZEPHYRUM;
+    i32 v = ZEPHYRUM;
+    i32 inversa;
+    s32 status = laqueus_modulus_temperley_aestimare(
+        (LaqueusModulusTemperley*)contextus, index + II, p, &a, &v);
+
+    si (status != INTERPOLATIO_UTILE)
+    {
+        redde status;
+    }
+    si (!congruentia_inversa(a, p, &inversa))
+    {
+        redde INTERPOLATIO_ERRATUM;
+    }
+    *punctum  = inversa;
+    *valor    = v;
+    redde INTERPOLATIO_UTILE;
+}
+
+/* verificator speculi per aestimatores laqueus (8 x 101): DISCORDIA.
+ * Praecondicio: uncinus non symmetricus (A <-> A^-1). */
+interior vacuum
+_probare_speculum_laquei (
+    CredoContextus* c)
+{
+                    Piscina* piscina    = c->piscina;
+                        i32  longitudo  = CI;
+                        s32* verbum = _trica_certa(VIII, &longitudo,
+                            (i32)2594227919UL, piscina);
+    LaqueusOptionesVerificandi o =
+        laqueus_optiones_verificandi_ordinariae();
+       InterpolatioVerificator v;
+           InterpolatioRelatio r;
+                    Polynomium probatus  = polynomium_nullum();
+                    Polynomium f         = polynomium_nullum();
+                           s32 e;
+                           b32 symmetricus = VERUM;
+
+    CREDO_NECESSE_NON_NIHIL(verbum);
+    CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, longitudo, VIII,
+        CONTRACTIO_SATURATUM, piscina, &probatus, NIHIL));
+    per (e = polynomium_gradus_imus(probatus);
+        e <= polynomium_gradus_summus(probatus); e++)
+    {
+        si (!magnus_aequalis(polynomium_coefficiens(probatus, e),
+            polynomium_coefficiens(probatus, -e)))
+        {
+            symmetricus = FALSUM;
+        }
+    }
+    CREDO_NECESSE(!symmetricus);
+    v.aestimare        = _aestimator_speculi;
+    v.contextus        = _temperley(verbum, longitudo, VIII, piscina);
+    v.multiplicitas    = VIII;
+    v.inutilia_maxima  = IX;
+    v.titulus          = "speculum";
+    v.communia         = "omnia";
+    CREDO_NECESSE_NON_NIHIL(v.contextus);
+    o.verificator  = LAQUEUS_VERIFICATOR_EXTERNUS;
+    o.alienus      = &v;
+    o.semen        = (i64)XLI;
+    CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum, longitudo,
+        VIII, &o, piscina, &f, NIHIL, &r));
+    CREDO_AEQUALIS_I32(r.status, INTERPOLATIO_DISCORDIA);
+}
+
+/* promotio per laqueus: 9 x 102 VERIFICATUM deinde promotum = probatum;
+ * via falsa (series vertex) refutatur */
+interior vacuum
+_probare_promotionem_laquei (
+    CredoContextus* c)
+{
+                    Piscina* piscina    = c->piscina;
+                        i32  longitudo  = CII;
+                        s32* verbum = _trica_certa(IX, &longitudo,
+                            (i32)250855745UL, piscina);
+    LaqueusOptionesVerificandi o =
+        laqueus_optiones_verificandi_ordinariae();
+           InterpolatioRelatio r;
+           InterpolatioRelatio rn;
+                    Polynomium probatus  = polynomium_nullum();
+                    Polynomium f         = polynomium_nullum();
+                    Polynomium g         = polynomium_nullum();
+                    LaqueusVia via       = LAQUEUS_VIA_NULLA;
+
+    CREDO_NECESSE_NON_NIHIL(verbum);
+    CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, longitudo, IX,
+        CONTRACTIO_SATURATUM, piscina, &probatus, NIHIL));
+    o.semen = (i64)XLIII;
+    CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(verbum,
+        longitudo,
+        IX, &o, piscina, &f, &via, &r));
+    CREDO_NECESSE(r.genus == INTERPOLATIO_VERIFICATUM);
+    CREDO_NECESSE(laqueus_uncinus_promovere(verbum, longitudo, IX,
+        CONTRACTIO_SATURATUM, via, &r, &f, piscina, &g, &rn));
+    CREDO_VERUM(polynomium_aequalis(g, probatus));
+    CREDO_AEQUALIS_I32(rn.status, INTERPOLATIO_PROMOTUM);
+    CREDO_AEQUALIS_I32(rn.numerus_primorum, r.k_maximus);
+    CREDO_FALSUM(laqueus_uncinus_promovere(verbum, longitudo, IX,
+        CONTRACTIO_SATURATUM, LAQUEUS_VIA_VERTEX, &r, &f, piscina, &g,
+        &rn));
+    CREDO_FALSUM(laqueus_uncinus_promovere(verbum, longitudo, IX,
+        CONTRACTIO_SATURATUM, LAQUEUS_VIA_NULLA, &r, &f, piscina, &g,
+        &rn));
+}
+
+/* refutationes: EXTERNUS sine alieno, verificator ignotus, via altera
+ * impossibilis (XVII fila: temperley nulla); forma clausa */
+interior vacuum
+_probare_verificationem_laquei_refutatam (
+    CredoContextus* c)
+{
+                       Piscina* piscina = c->piscina;
+                           s32  sedecim[XVI];
+    LaqueusOptionesVerificandi  o;
+           InterpolatioRelatio  r;
+                    Polynomium  f = polynomium_nullum();
+                           i32  t;
+
+    per (t = ZEPHYRUM; t < XVI; t++)
+    {
+        sedecim[t] = (s32)(t + I);
+    }
+    o              = laqueus_optiones_verificandi_ordinariae();
+    o.verificator  = LAQUEUS_VERIFICATOR_EXTERNUS;
+    CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(sedecim, XVI,
+        XVII,
+        &o, piscina, &f, NIHIL, &r));
+    o              = laqueus_optiones_verificandi_ordinariae();
+    o.verificator  = VII;
+    CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(sedecim, XVI,
+        XVII,
+        &o, piscina, &f, NIHIL, &r));
+    o              = laqueus_optiones_verificandi_ordinariae();
+    o.verificator  = LAQUEUS_VERIFICATOR_VIA_ALTERA;
+    CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(sedecim, XVI,
+        XVII,
+        &o, piscina, &f, NIHIL, &r));
+    o = laqueus_optiones_verificandi_ordinariae();
+    CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(NIHIL, ZEPHYRUM,
+        I, &o, piscina, &f, NIHIL, &r));
+    CREDO_VERUM(magnus_aequalis(polynomium_coefficiens(f, ZEPHYRUM),
+        magnus_ex_s64((s64)I)));
+    CREDO_AEQUALIS_I32(r.genus, INTERPOLATIO_PROBATUM);
+    CREDO_VERUM(_tituli_aequales(r.titulus_verificatoris,
+        "forma clausa"));
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -2973,6 +3293,18 @@ interior constans CredoSectio SECTIONES[] = {
     { "per viam", _probare_per_viam, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tabula tota", _probare_tabulam_totam, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "verificatum certum", _probare_verificatum_certum, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "verificator automaticus", _probare_verificator_automaticus,
+        NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "speculum laquei", _probare_speculum_laquei, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "promotio laquei", _probare_promotionem_laquei, NIHIL, NIHIL,
+        NIHIL,
+      NIHIL },
+    { "verificatio refutata", _probare_verificationem_laquei_refutatam,
+      NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

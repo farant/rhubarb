@@ -928,3 +928,17 @@ Finds:
 - 14 x 801: K_q = 561 (as 12 x 801), not ~540; vertex workspace 3.63 GiB (over the 2 GiB limit), 2.89e12 multiplications per point (~89 min at 1.85 ns).
 - The exact-product lever (desideratum 01M6FNZH) saves a prime on 5 of 46 braids.
 - An identifier trap I fell into: `duplex` (= double) and `M` (= 1000) are latina macros; the compile errors were obscure ("expected expression", "passing int to Magnus"). Renamed bis_maximus / productum.
+
+## 2026-11-02 - interpolatio-verificatio T2: verified brackets through laqueus and the tool
+
+`laqueus_uncinus_ex_plexu_verificatum` (options struct `LaqueusOptionesVerificandi`: octeti_maximi for main + checker together, semen, semen_origo, s, verificator AUTOMATICUS / SUI / VIA_ALTERA / EXTERNUS, alienus) and `laqueus_uncinus_promovere` (rebuilds the module of the recorded route; the prime prefix must match). Laqueus checkers declare c = 8, r = 9; the point map reduces omega mod p, so check indices up to q - 1 are safe.
+
+The automatic rule (cross route iff m x price_other <= (k_max + 1)(K + 2) x price_main / 20, and both workspaces fit) almost never picks the cross route: the dispatcher already chose the cheaper route, so the other one is only acceptable when the two cost about the same. On the D136 set it picks it for 9 x 102 (TL -> vertex, ratio 3.35 vs limit 3.70), 10 x 101, 11 x 102 (vertex -> TL, 1.39 vs 3.75), 11 x 202, 12 x 201; NOT for 8 x 101 (vertex 49x dearer) as plan v3 assumed, so the test uses 9 x 102 and 11 x 102 (word hashes 250855745, 1527719524) and checks 8 x 101 stays self.
+
+Mirror test with laqueus evaluators: a checker that reports <D>(A) at the point A^-1 (TL module of the same braid) -> DISCORDIA on 8 x 101 (precondition: bracket not symmetric under A <-> A^-1).
+
+Tool (`uncinus_mensura`): `-modus verificatum` with sections VIII and XI, `-semen_verificationis X` (else 8 bytes from `moneta_octeti_fortuiti`, printed, FORTUITUM; `-semen` stays the section V braid seed), `-verificator automaticus|sui|via|congelatus`, `-promovere VIA` (pairs of UNCINUS + RELATIO lines). The frozen checker wraps section VI's 79e7fad9 kernel with its own point code (own i via the smallest non-residue, own delta). First check: 8 x 401 with the frozen checker stopped at 3 of 11 primes (T0's k_true), 837 evaluations (T0's count), byte-identical to brackets.txt; promotion computed 8 primes and reproduced it.
+
+Latina traps hit in one task: `externus` (= extern) as a struct field, `casus` (= case) as an array name. Renamed alienus / exempla.
+
+Plants: build/verificatio/plantae_t2.py, 4 of 4 red as registered (always self-check; VIA_ALTERA ignored; cost rule without the 5% factor; external checker ignored).

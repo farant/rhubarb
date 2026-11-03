@@ -5,7 +5,7 @@ with conditions). Design review done (consiliarius-verificatio, approve
 after fixes; every finding placed, see "Design review" at the end). Q2
 and Q3 DECIDED by Fran 2026-11-02 (s = 64; frozen-kernel checker for the
 14 × 801 headline). T0 DONE 2026-11-02 (see "T0 amendment"). T1 DONE
-2026-11-02 (see "T1 notes"). Next: T2.
+2026-11-02 (see "T1 notes"). T2 DONE 2026-11-02 (see "T2 notes"). Next: T3.
 
 Agreed with Fran (2026-11-02): after the TL speed pass
 (temperley-celeritas-plan.md, done) and the Regina comparison
@@ -266,7 +266,7 @@ Callers unchanged (rule 1). A new entry
 `laqueus_uncinus_ex_plexu_verificatum(verbum, longitudo, fila,
 &optiones, piscina, &f, &via, &relatio)` with an options struct (semen,
 semen_origo, bita_securitatis, octeti_maximi, checker choice: AUTOMATICUS
-| SUIPSIUS | VIA_ALTERA). `octeti_maximi` bounds main and checker
+| SUI | VIA_ALTERA). `octeti_maximi` bounds main and checker
 workspaces together. AUTOMATICUS picks the cross route when it fits the
 cost rule and the workspace, else self-check. The existing
 `laqueus_uncinus_ex_plexu` is unchanged.
@@ -274,7 +274,7 @@ cost rule and the workspace, else self-check. The existing
 ### Tool
 
 `uncinus_mensura` sections VIII and XI gain `-modus verificatum`,
-`-semen X` (default: entropy, printed), `-verificator suipsius|via|
+`-semen X` (default: entropy, printed), `-verificator sui|via|
 congelatus`, `-promovere VIA` and `-verificare VIA` (post-hoc m checks of
 a given Q with a chosen checker, outside the loop), and print a RELATIO
 line after each UNCINUS line.
@@ -443,6 +443,33 @@ Decisions made while building (none moves a threshold):
 
 Tests: 29/29 sections (12 new). Plants: build/verificatio/plantae_t1.py,
 12 of 12 red as registered (A–L); "laqueus always self-check" is T2.
+
+## T2 notes (2026-11-02)
+
+Landed: `laqueus_uncinus_ex_plexu_verificatum` with
+`LaqueusOptionesVerificandi`, `laqueus_uncinus_promovere`; one small
+interpolatio helper `interpolatio_primi_probati` (k_max without
+evaluating, for the cost rule); tool flags in `uncinus_mensura`
+(sections VIII and XI) and the frozen checker. laqueus_rete 33/33
+(5 new), interpolatio 29/29; plants build/verificatio/plantae_t2.py 4 of
+4 red as registered.
+
+Deviations from v3 (none moves a threshold):
+- **Cross-route test braids:** the 5% rule picks the cross route only
+  where both routes cost about the same; 8 × 101 stays self (vertex 49×
+  dearer). The test uses 9 × 102 (TL → vertex) and 11 × 102 (vertex → TL)
+  and asserts 8 × 101 self.
+- **Tool flag names:** `-semen_verificationis` (not `-semen`, which
+  stays section V's braid seed); `-verificator
+  automaticus|sui|via|congelatus`.
+- **`-verificare` dropped:** it existed only for the post-hoc vertex
+  check, which Q3 + T0 ruled out (3.63 GiB > 2 GiB).
+- **Options field** `alienus` (the external checker); `externus` is a
+  latina macro.
+
+First tool check: 8 × 401 with the frozen checker stopped at 3 of 11
+primes, 837 evaluations (both T0's registered values), byte-identical to
+brackets.txt; `-promovere` computed the 8 remaining primes, IDEM.
 
 ## Tests
 
