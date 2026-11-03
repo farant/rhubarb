@@ -136,3 +136,37 @@ extenta_lecta is a separate list).
 - Plant: storing the ordinal (`xar_numerus(definitiones) - I`) instead of the position turns it red at the BETA check; restored, green.
 
 **Next in the same profile (not done):** the remaining sweep is flat. The largest item is value extents (`_extentum_valoris` + `silva_valor_extensionem`, ~13%), then `_nodum_processare` and Xar/hash appends.
+
+## 2026-11-03 — silva budget step 2: one name table with slots (no per-generation tables)
+
+**Profile (percursus parse-only, after 1b).** Expansion (`silva_expansio_expandere_reliqua`) was 11.5% of the run, and 65% of that was hash work: `tabula_dispersa_inserere` 39% (plus its growth), `tabula_dispersa_invenire` 25%. Cause: every generation created a FRESH TabulaDispersa (64 slots) and replayed every event of `acta` into it by name. latina.h alone defines thousands of macros (all the Roman numerals), so every generation of every file inserted thousands of keys into a table that grew from 64 by rehashing.
+
+**Change.**
+- `exp->sedes_macrorum`: one table per exp, title (chorda) -> `SilvaMacroSedes*`, created when the first event for that title is written. It replaces both `exp->macros` (the live table) and the per-generation tables.
+- `SilvaMacroSedes { def_viva; def_positionalis; signum; }`. The live state is `def_viva`. The positional table of a generation is `def_positionalis`, valid only when `signum` equals `exp->signum_activum`. A new generation takes a new stamp (`exp->signum_ultimum++`, 0 reserved for "live"), so every slot written by an older generation reads as absent: an empty table with no allocation.
+- `SilvaEventum.sedes`: each event carries its title's slot, so replay is two stores with no hashing.
+- `_eventum_scribere` is now the only writer of both `acta` and the live state; the three separate table writes (#define, #undef, API) are gone, so the two can't drift.
+- Nested generations (argument pre-expansion) pass stamp 0 and keep the enclosing stamp active, exactly as `tabula == NIHIL` kept `tabula_activa` before.
+- Public API unchanged: `silva_expansio_quaerere` keeps its signature, and `silva_expansio_macros_ad_lineam` still returns its own TabulaDispersa built from `acta`. SilvaExpansio and SilvaEventum are internal to the amalgam (silva.h only forward-declares SilvaExpansio); outside readers of `acta` read fields by name.
+
+**Bench** (`silva_mensura.sh`; baseline re-taken at 7dfcd325 in the same session; load rose 2.9 -> 4.7 between runs, so the ms columns are noisy and even the unchanged glr phase is +11%):
+
+| | before | after |
+|---|---|---|
+| percursus parse-only: instructions | 310.8 G | 306.1 G (-1.5%) |
+| percursus -semantica: instructions | 718.2 G | 713.1 G |
+| peak RSS parse / -semantica | 714 / 2579 MB | 660 / 2271 MB (-8% / -12%) |
+| computus usus per file | 41.4 MB (stml.c) | 39.6 MB |
+| profile: expansion share of run | 11.5% | 7.4% (subtree -36%) |
+
+Time fell more than instructions: the removed work was inserts into a table that grew and rehashed to thousands of entries each generation, i.e. cache misses rather than instructions (same pattern as 1a). Allocations per file rise slightly (one small slot per title instead of a few large tables per generation).
+
+**Equivalence.** aequivalentia -conferre vs a basis built from 7dfcd325: 482/483 byte-identical (silva_expandere.c itself changed).
+
+**Test.** New section in probatio_silva_compat_expansio.c, "status ad punctum per generationes": a later #define stays invisible at an earlier point in the SECOND generation (`A X ... #define X 3`, with A -> B -> 2 forcing two generations); argument pre-expansion sees the state at its own point (`F(F(2))` then `#undef F`); a three-generation chain ending in a deleted name. The new cases pass on the old code too (run with the old expander swapped in), so they pin existing semantics.
+
+**Plants** (silva.planta, all red on probatio_silva_compat_expansio): A stamp not renewed per generation; B nested generation switches to the live state; C deletions ignored in replay; D live state not cleared on #undef; E stamp not checked on lookup. B was GREEN at first with `F(G) ... #undef G ... F(G)`: the next generation's rescan is positional and re-expands G at its point, which hides the fault. It turned red only once the argument held the macro's own name, `F(F(2))`: the outer expansion paints F in its output, so the rescan can't recover it.
+
+**Computus golden.** Memory columns only (allocationes, apex, usus, otiosa; e.g. arrays.c allocations 4501 -> 4499: no per-generation table). Regenerated in the same commit.
+
+**What's left (not done).** Lookups are now ~40% of expansion: every generation rescans the WHOLE stream and hashes every identifier again. Two directions: (1) intern at lex time, so tokens carry a title id (changes SilvaToken/materia, an API change, outside steps 1-3); (2) stop rescanning unchanged stretches (a semantic redesign of the generation model, which `strata_out` exposes).
