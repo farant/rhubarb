@@ -307,17 +307,55 @@ _nodus_creare (
     {
         redde NIHIL;
     }
-    nodus->status  = status;
-    nodus->valor   = valor;
-    nodus->praedecessores = xar_creare(glr->piscina,
-        (i32)magnitudo(SilvaGSSNodus*));
-    nodus->lexema = lexema;
+    nodus->status                 = status;
+    nodus->valor                  = valor;
+    nodus->praedecessor_primus    = NIHIL;
+    nodus->praedecessores_ceteri  = NIHIL;
+    nodus->lexema                 = lexema;
     glr->nodi_creati++;
     redde nodus;
 }
 
+/* Numerus praedecessorum: primus (si adest) + ceteri */
+interior i32
+_praedecessorum_numerus (
+    constans SilvaGSSNodus* nodus)
+{
+    si (nodus->praedecessor_primus == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    si (nodus->praedecessores_ceteri == NIHIL)
+    {
+        redde I;
+    }
+    redde I + xar_numerus(nodus->praedecessores_ceteri);
+}
+
+/* Praedecessor i-tus ordine additionis (0 = primus); NIHIL extra */
+interior SilvaGSSNodus*
+_praedecessor (
+    constans SilvaGSSNodus* nodus,
+                       i32  i)
+{
+    SilvaGSSNodus** slot;
+
+    si (i == ZEPHYRUM)
+    {
+        redde nodus->praedecessor_primus;
+    }
+    si (nodus->praedecessores_ceteri == NIHIL)
+    {
+        redde NIHIL;
+    }
+    slot = (SilvaGSSNodus**)xar_obtinere(nodus->praedecessores_ceteri,
+        i - I);
+    redde (slot != NIHIL) ? *slot : NIHIL;
+}
+
 interior vacuum
 _praedecessorem_addere (
+         SilvaGLR* glr,
     SilvaGSSNodus* nodus,
     SilvaGSSNodus* praedecessor)
 {
@@ -329,18 +367,36 @@ _praedecessorem_addere (
     {
         redde;
     }
-    numerus = xar_numerus(nodus->praedecessores);
+    si (nodus->praedecessor_primus == NIHIL)
+    {
+        nodus->praedecessor_primus = praedecessor;
+        redde;
+    }
+    si (nodus->praedecessor_primus == praedecessor)
+    {
+        redde;  /* iam adest */
+    }
+    si (nodus->praedecessores_ceteri == NIHIL)
+    {
+        nodus->praedecessores_ceteri = xar_creare(glr->piscina,
+            (i32)magnitudo(SilvaGSSNodus*));
+        si (nodus->praedecessores_ceteri == NIHIL)
+        {
+            redde;
+        }
+    }
+    numerus = xar_numerus(nodus->praedecessores_ceteri);
     per (i = ZEPHYRUM; i < numerus; i++)
     {
-        SilvaGSSNodus** existens =
-            (SilvaGSSNodus**)xar_obtinere(nodus->praedecessores, i);
+        SilvaGSSNodus** existens = (SilvaGSSNodus**)xar_obtinere(
+            nodus->praedecessores_ceteri, i);
 
         si (existens != NIHIL && *existens == praedecessor)
         {
             redde;  /* iam adest */
         }
     }
-    slot = (SilvaGSSNodus**)xar_addere(nodus->praedecessores);
+    slot = (SilvaGSSNodus**)xar_addere(nodus->praedecessores_ceteri);
     si (slot != NIHIL)
     {
         *slot = praedecessor;
@@ -393,16 +449,14 @@ _vias_recursio (
         }
         partiales[idx] = nodus->valor;
 
-        numerus_praed = xar_numerus(nodus->praedecessores);
+        numerus_praed = _praedecessorum_numerus(nodus);
         per (pi = ZEPHYRUM; pi < numerus_praed; pi++)
         {
-            SilvaGSSNodus** praed =
-                (SilvaGSSNodus**)xar_obtinere(nodus->praedecessores,
-                pi);
+            SilvaGSSNodus* praed = _praedecessor(nodus, pi);
 
-            si (praed != NIHIL && *praed != NIHIL)
+            si (praed != NIHIL)
             {
-                _vias_recursio(*praed, profunditas + I, gradus,
+                _vias_recursio(praed, profunditas + I, gradus,
                     partiales, viae);
             }
         }
@@ -913,7 +967,7 @@ _nodum_processare (
             {
                 frange;
             }
-            _praedecessorem_addere(novus, nodus);
+            _praedecessorem_addere(glr, novus, nodus);
             slot = (SilvaGSSNodus**)xar_addere(passus->frons_nova);
             si (slot != NIHIL)
             {
@@ -987,7 +1041,7 @@ _nodum_processare (
                     {
                         perge;
                     }
-                    _praedecessorem_addere(novus, via->basis);
+                    _praedecessorem_addere(glr, novus, via->basis);
 
                     recens = (SilvaIndexIntroitus*)xar_addere(
                         passus->index);
@@ -1042,7 +1096,7 @@ _nodum_processare (
                     {
                         perge;
                     }
-                    _praedecessorem_addere(novus, via->basis);
+                    _praedecessorem_addere(glr, novus, via->basis);
                     recens = (SilvaIndexIntroitus*)xar_addere(
                         passus->index);
                     si (recens == NIHIL)
@@ -1125,17 +1179,15 @@ _frontem_compingere (
             si ((*slot_a)->status == (*slot_b)->status)
             {
                 i32 pi;
+                i32 numerus_praed = _praedecessorum_numerus(*slot_b);
 
-                per (pi = ZEPHYRUM;
-                     pi < xar_numerus((*slot_b)->praedecessores); pi++)
+                per (pi = ZEPHYRUM; pi < numerus_praed; pi++)
                 {
-                    SilvaGSSNodus** praed =
-                        (SilvaGSSNodus**)xar_obtinere(
-                        (*slot_b)->praedecessores, pi);
+                    SilvaGSSNodus* praed = _praedecessor(*slot_b, pi);
 
-                    si (praed != NIHIL && *praed != NIHIL)
+                    si (praed != NIHIL)
                     {
-                        _praedecessorem_addere(*slot_a, *praed);
+                        _praedecessorem_addere(glr, *slot_a, praed);
                     }
                 }
                 *slot_b = NIHIL;
@@ -1425,6 +1477,7 @@ silva_glr_parsare (
                 SilvaGSSNodus* acceptus =
                     *(SilvaGSSNodus**)xar_obtinere(acceptati, ai);
                 i32 pi;
+                i32 numerus_praed;
 
                 si (acceptus == NIHIL) perge;
                 si (   ai                    == ZEPHYRUM
@@ -1433,16 +1486,14 @@ silva_glr_parsare (
                     /* Lexema EOF translatum - trivia Phase 5 emittet */
                     fructus.lexema_finis = acceptus->valor.datum.token;
                 }
-                per (pi = ZEPHYRUM;
-                     pi < xar_numerus(acceptus->praedecessores); pi++)
+                numerus_praed = _praedecessorum_numerus(acceptus);
+                per (pi = ZEPHYRUM; pi < numerus_praed; pi++)
                 {
-                    SilvaGSSNodus** praed =
-                        (SilvaGSSNodus**)xar_obtinere(
-                        acceptus->praedecessores, pi);
-                    b32 novum = VERUM;
-                    i32 ri;
+                    SilvaGSSNodus* praed = _praedecessor(acceptus, pi);
+                              b32  novum = VERUM;
+                              i32  ri;
 
-                    si (praed == NIHIL || *praed == NIHIL) perge;
+                    si (praed == NIHIL) perge;
                     vias_acceptae++;
                     per (ri = ZEPHYRUM; ri < xar_numerus(radices); ri++)
                     {
@@ -1450,7 +1501,7 @@ silva_glr_parsare (
                             (SilvaValor*)xar_obtinere(radices, ri);
 
                         si (   r != NIHIL
-                            && _valores_aequales(*r, (*praed)->valor))
+                            && _valores_aequales(*r, praed->valor))
                         {
                             novum = FALSUM;
                             frange;
@@ -1463,7 +1514,7 @@ silva_glr_parsare (
 
                         si (slot != NIHIL)
                         {
-                            *slot = (*praed)->valor;
+                            *slot = praed->valor;
                         }
                     }
                 }
