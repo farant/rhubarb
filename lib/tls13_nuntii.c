@@ -343,6 +343,32 @@ tls13_salutatio_scribere (
     _scr_u16(&s, 0x0601);
     _scr_claudere(&s);
     _scr_claudere(&s);
+    /* ALPN (RFC 7301 3.1): solum si index datus - aliter salutatio
+     * byte pro byte ut antea */
+    si (sp->protocolla != NIHIL && sp->protocolla_numerus > ZEPHYRUM)
+    {
+        i32 k;
+
+        _scr_u16(&s, 0x0010);
+        _scr_aperire(&s, II);
+        _scr_aperire(&s, II);
+        per (k = ZEPHYRUM; k < sp->protocolla_numerus; k++)
+        {
+            size_t m = sp->protocolla[k] ? strlen(sp->protocolla[k])
+                                         : ZEPHYRUM;
+
+            si (m == ZEPHYRUM || m > CCLV)
+            {
+                s.fractus = VERUM;
+                frange;
+            }
+            _scr_aperire(&s, I);
+            _scr_octeti(&s, (constans i8*)sp->protocolla[k], (i32)m);
+            _scr_claudere(&s);
+        }
+        _scr_claudere(&s);
+        _scr_claudere(&s);
+    }
     /* supported_versions */
     _scr_u16(&s, 0x002b);
     _scr_aperire(&s, II);
@@ -489,12 +515,22 @@ tls13_responsum_legere (
 
 b32
 tls13_extensiones_legere (
-     constans i8* corpus,
-             i32  n)
+     constans i8*  corpus,
+             i32   n,
+     constans i8** protocollum,
+             i32*  protocollum_n)
 {
     Cursor c;
     Cursor v;
 
+    si (protocollum)
+    {
+        *protocollum = NIHIL;
+    }
+    si (protocollum_n)
+    {
+        *protocollum_n = ZEPHYRUM;
+    }
     _cursor(&c, corpus, n);
     v = _vector(&c, II);
     si (!_finitus(&c))
@@ -503,10 +539,53 @@ tls13_extensiones_legere (
     }
     dum (!v.fractus && v.locus < v.mensura)
     {
-        (vacuum)_u16(&v);
-        (vacuum)_vector(&v, II);
+           i32 genus;
+        Cursor e;
+
+        genus  = _u16(&v);
+        e      = _vector(&v, II);
+        si (genus == 0x0010 && !v.fractus)
+        {
+            /* RFC 7301 3.1: servus nomen UNUM reddit */
+            Cursor index    = _vector(&e, II);
+            Cursor titulus  = _vector(&index, I);
+
+            si (   !_finitus(&e) || !_finitus(&index)
+                || titulus.fractus || titulus.mensura == ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+            si (protocollum)
+            {
+                *protocollum = titulus.octeti;
+            }
+            si (protocollum_n)
+            {
+                *protocollum_n = titulus.mensura;
+            }
+        }
     }
     redde !v.fractus;
+}
+
+b32
+tls13_protocollum_oblatum (
+    constans character* constans* protocolla,
+                             i32  numerus,
+                    constans i8* electum,
+                             i32  n)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; protocolla && electum && k < numerus; k++)
+    {
+        si (   protocolla[k] && strlen(protocolla[k]) == (size_t)n
+            && memcmp(protocolla[k], electum, (size_t)n) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 b32

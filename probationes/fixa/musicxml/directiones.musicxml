@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- directiones: metronome solum (90), sound tempo 72.5, dynamica mf (+sound 70) et sfz, cuneus, verba, exercitium cum offset sound=yes, saltus; signa notarum (fermata, articulationes, arcus, ornamenta, arpeggiate, technicum, dynamica) -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Violino</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>2</divisions>
+        <time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <direction><direction-type><metronome><beat-unit>quarter</beat-unit><beat-unit-dot/><per-minute>60</per-minute></metronome></direction-type></direction>
+      <direction><direction-type><dynamics><mf/></dynamics></direction-type><sound dynamics="70"/></direction>
+      <direction><direction-type><rehearsal>A</rehearsal></direction-type><offset sound="yes">1</offset></direction>
+      <direction><direction-type><words>dolce</words></direction-type><offset>2</offset><voice>1</voice><staff>1</staff></direction>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>2</duration>
+        <notations><fermata type="upright"/><articulations><staccato/><accent/></articulations><slur type="start" number="1"/></notations></note>
+      <direction><direction-type><wedge type="crescendo" number="1"/></direction-type></direction>
+      <direction><direction-type><words>rit.</words></direction-type><sound tempo="72.5"/></direction>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>2</duration>
+        <notations><ornaments><trill-mark/></ornaments><slur type="stop" number="1"/><arpeggiate/></notations></note>
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>2</duration>
+        <notations><technical><up-bow/></technical><dynamics><sfz/></dynamics></notations></note>
+      <direction><direction-type><wedge type="stop" number="1"/></direction-type></direction>
+      <direction><direction-type><dynamics><sfz/></dynamics></direction-type></direction>
+      <note><pitch><step>F</step><octave>5</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <sound tempo="100"/>
+      <direction><direction-type><segno/></direction-type></direction>
+      <direction><direction-type><words>Fine</words></direction-type><sound fine="yes"/></direction>
+      <direction><direction-type><words>D.C.</words></direction-type></direction>
+      <direction><direction-type><words>Da Capo</words></direction-type><sound dacapo="yes"/></direction>
+      <direction><direction-type><coda/></direction-type><sound coda="c1"/></direction>
+      <direction><direction-type><words>To Coda</words></direction-type><sound tocoda="c1"/></direction>
+      <direction><direction-type><words>D.S.</words></direction-type><sound dalsegno="s1"/></direction>
+      <direction><direction-type><pedal type="start"/></direction-type></direction>
+      <direction><direction-type><octave-shift type="down" size="8"/></direction-type></direction>
+      <direction><direction-type><other-direction>senza vibrato</other-direction></direction-type></direction>
+      <note><pitch><step>G</step><octave>5</octave></pitch><duration>8</duration></note>
+    </measure>
+  </part>
+</score-partwise>

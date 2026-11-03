@@ -1,0 +1,35 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 10.5.2 congruit (2026-10-30)
+P1	0	1	72	C	0	0	1:single:augmented
+P1	1	1	72	C	0	0	1:single:augmented-|2:single:seventh
+P1	2	1	72	C	0	0	1:single:diminished
+P1	3	1	72	C	0	0	1:single:diminished-|2:single:seventh
+P1	4	1	72	C	0	0	1:single:dominant
+P1	5	1	72	C	0	0	1:single:dominant-|2:single:11th
+P1	6	1	72	C	0	0	1:single:dominant-|2:single:13th
+P1	7	1	72	C	0	0	1:single:dominant-|2:single:ninth
+P1	8	1	72	C	0	0	1:single:French
+P1	9	1	72	C	0	0	1:single:German
+P1	10	1	72	C	0	0	1:single:half-|2:single:diminished
+P1	11	1	72	C	0	0	1:single:Italian
+P1	12	1	72	C	0	0	1:single:major
+P1	13	1	72	C	0	0	1:single:major-|2:single:11th
+P1	14	1	72	C	0	0	1:single:major-|2:single:13th
+P1	15	1	72	C	0	0	1:single:major-|2:single:minor
+P1	16	1	72	C	0	0	1:single:major-|2:single:ninth
+P1	17	1	72	C	0	0	1:single:major-|2:single:seventh
+P1	18	1	72	C	0	0	1:single:major-|2:single:sixth
+P1	19	1	72	C	0	0	1:single:minor
+P1	20	1	72	C	0	0	1:single:minor-|2:single:11th
+P1	21	1	72	C	0	0	1:single:minor-|2:single:13th
+P1	22	1	72	C	0	0	1:single:minor-|2:single:ninth
+P1	23	1	72	C	0	0	1:single:minor-|2:single:seventh
+P1	24	1	72	C	0	0	1:single:minor-|2:single:sixth
+P1	25	1	72	C	0	0	1:single:Neapolitan
+P1	26	1	72	C	0	0	1:single:none
+P1	27	1	72	C	0	0	1:single:pedal
+P1	28	1	72	C	0	0	1:single:power
+P1	29	1	72	C	0	0	1:single:suspended-|2:single:fourth
+P1	30	1	72	C	0	0	1:single:suspended-|2:single:second
+P1	31	1	72	C	0	0	1:single:Tristan

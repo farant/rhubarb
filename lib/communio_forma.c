@@ -2,8 +2,14 @@
  * (communio-plan-2 T2) */
 
 #include "communio_forma.h"
+#include "moneta.h"
+#include "sigillum.h"
+#include "base64.h"
 
 #include <string.h>
+
+/* tessera apparatus: XXXII octeti fortuiti (plan-5 T1 ex servo huc) */
+#define TESSERA_FORMAE_OCTETI XXXII
 
 #define SIGILLUM_HEX_LONGITUDO  LXIV
 #define REPLICA_LONGITUDO       XXVI
@@ -407,4 +413,38 @@ communio_massas_nominatas (
         i = j;
     }
     redde l;
+}
+
+
+/* ==================================================
+ * Tessera apparatus (plan-5 T1: ex communio_servus.c)
+ * ================================================== */
+
+b32
+communio_tesseram_facere (
+    character exitus[XLIV],
+    character digestum[LXV])
+{
+          i8 octeti[TESSERA_FORMAE_OCTETI];
+         i32 n;
+      chorda t;
+    Sigillum g;
+
+    si (   !exitus || !digestum || !moneta_octeti_fortuiti(octeti,
+            TESSERA_FORMAE_OCTETI))
+    {
+        redde FALSUM;
+    }
+    n = base64url_scribere(octeti, TESSERA_FORMAE_OCTETI, exitus, XLIV);
+    memset(octeti, ZEPHYRUM, magnitudo(octeti));
+    si (n != COMMUNIO_TESSERA_MENSURA)
+    {
+        redde FALSUM;
+    }
+    exitus[n]  = '\0';
+    t.datum    = (i8*)exitus;
+    t.mensura  = n;
+    g          = sigillum_computare(t.datum, (memoriae_index)t.mensura);
+    sigillum_hex(&g, digestum);
+    redde VERUM;
 }

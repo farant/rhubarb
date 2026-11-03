@@ -42,6 +42,11 @@ nomen structura {
                    i32  clavis_n;        /* XXXII x25519, LXV P-256 */
            constans i8* crustulum;        /* cookie HRR; NIHIL nullum */
                    i32  crustulum_n;
+    /* ALPN (RFC 7301): index protocollorum ordine praelationis; NIHIL
+     * aut 0 = extensio omittitur (salutatio ut antea). Nomina I..CCLV
+     * octetorum, aliter salutatio non scribitur. */
+    constans character* constans* protocolla;
+                             i32 protocolla_numerus;
 } Tls13SalutatioParametri;
 
 /* ClientHello TOTUM (cum capite pactionis IV octetorum) in exitus:
@@ -82,11 +87,24 @@ tls13_responsum_legere (
     Tls13ResponsumServi* responsum);
 
 /* EncryptedExtensions: vector extensionum bene formatus (ignotae
- * praetereuntur) */
+ * praetereuntur). ALPN (0x0010) si adest: nomen unicum in
+ * *protocollum (visum in corpus), *protocollum_n; aliter n 0. Index
+ * non unius nominis aut nomen vacuum = mala forma (RFC 7301 3.1).
+ * protocollum NIHIL licet (CertificateRequest). */
 b32
 tls13_extensiones_legere (
-     constans i8* corpus,
-             i32  n);
+     constans i8*  corpus,
+             i32   n,
+     constans i8** protocollum,
+             i32*  protocollum_n);
+
+/* electum in indice oblato? (RFC 7301 3.2: aliter illegal_parameter) */
+b32
+tls13_protocollum_oblatum (
+    constans character* constans* protocolla,
+                             i32  numerus,
+                    constans i8* electum,
+                             i32  n);
 
 /* Certificate (RFC 8446 4.4.2): contextus vacuus, catena DER (folium
  * primum) in exitus; FALSUM si catena vacua aut plura quam maximum */

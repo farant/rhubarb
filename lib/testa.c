@@ -7,6 +7,7 @@
 #include "testa.h"
 #include "fenestra.h"
 #include "clipboard_platform.h"
+#include "veredarius_domesticus.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -68,6 +69,12 @@ testa_principale (
     a.sedes_datorum     = ".";
     a.imago_glutinata   = _imaginem_glutinatam;
     a.textum_exportare  = _textum_exportare;
+    /* plan-5 T5: reactor testae + veredarius domesticus (HTTP domus) */
+    a.machina = "Mac";
+    a.reactor = reactor_creare(piscina);
+    a.veredarius        =
+        a.reactor ? veredarium_domesticum_creare(piscina,
+        a.reactor) : NIHIL;
     /* R5: schirmus solum extra fumum (ut vicus olim): fumus magnitudine
      * fixa, imagines certae */
     si (   !o.fumus
@@ -138,6 +145,12 @@ testa_principale (
     {
         redde I;
     }
+    /* plan-5 T5: reactor quem applicatio reddit (sine quiete) in ansa
+     * agitur; quies (vicus) suum iam habet */
+    si (f->reactor && !f->mora_proxima)
+    {
+        ludus_fenestra_reactorem_ponere(cursus->lf, f->reactor);
+    }
 
     /* ansa publica (dispensator_finire + linea mensurarum intus) -
      * testa_cursum_finire solum testae Android (sine ansa propria) */
@@ -154,6 +167,10 @@ testa_principale (
     }
     fenestra_destruere(fenestra);
     testa_cursum_dimittere(cursus);
+    si (a.reactor)
+    {
+        reactor_destruere(a.reactor);
+    }
     piscina_destruere(piscina);
     redde exitus;
 }

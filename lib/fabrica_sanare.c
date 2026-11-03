@@ -228,6 +228,164 @@ _verdictum_ex_actis (
     redde VERUM;
 }
 
+/* DIARIUM INSTITUTIONUM (parcum …5NQBP, Franus 2026-10-31): omnis
+ * institutio in ~/.bin (tools/instituere.sh) lineam '<tempus>\t<via>'
+ * in diario addit. Diarium ante actionem et post legitur: lineae
+ * INTER ea additae institutiones sunt quae dum actio currebat factae
+ * sunt (main post fusionem 'sanare installata' - arbor altera numquam
+ * instituit). Scriptura '~/' extra vestigium quam talis linea explicat
+ * ab institutione aliena est, non ab actione: MONITUM, non fractura.
+ * Inexplicata manet FRACTA. Sine horologio: ordo lectionum fenestram
+ * definit. */
+#define FABRICA_DIARIUM_INSTITUTIONUM "~/.rhubarb/institutiones.tsv"
+
+interior chorda
+_diarium_legere (
+    constans FabricaSutura* sutura,
+                   Piscina* piscina)
+{
+    chorda contentum;
+
+    contentum.datum    = NIHIL;
+    contentum.mensura  = ZEPHYRUM;
+    si (   sutura->legere == NIHIL
+        || !sutura->legere(sutura->datum, FABRICA_DIARIUM_INSTITUTIONUM,
+               piscina, &contentum))
+    {
+        contentum.datum    = NIHIL;
+        contentum.mensura  = ZEPHYRUM;
+    }
+    redde contentum;
+}
+
+/* via mutata ab institutione nova explicata? 'novae' = lineae diarii
+ * post lectionem priorem additae; via aequalis aut sub ea ('x.dSYM',
+ * 'x/...') */
+interior b32
+_ab_institutione (
+    chorda novae,
+    chorda via)
+{
+    i32 i;
+    i32 initium;
+
+    si (via.mensura < II || via.datum[0] != '~' || via.datum[1] != '/')
+    {
+        redde FALSUM;
+    }
+    initium = ZEPHYRUM;
+    per (i = ZEPHYRUM; i <= novae.mensura; i++)
+    {
+        si (i == novae.mensura || novae.datum[i] == '\n')
+        {
+            i32 tab;
+
+            tab = initium;
+            dum (tab < i && novae.datum[tab] != '\t')
+            {
+                tab++;
+            }
+            si (tab < i)
+            {
+                chorda institutum;
+
+                institutum = chorda_sectio(novae, tab + I, i);
+                si (   institutum.mensura > ZEPHYRUM
+                    && institutum.mensura <= via.mensura
+                    && memcmp(institutum.datum, via.datum,
+                           (memoriae_index)institutum.mensura) == 0
+                    && (   institutum.mensura == via.mensura
+                        || via.datum[institutum.mensura] == '.'
+                        || via.datum[institutum.mensura] == '/'))
+                {
+                    redde VERUM;
+                }
+            }
+            initium = i + I;
+        }
+    }
+    redde FALSUM;
+}
+
+/* extra sine viis quas institutiones novae explicant; explicatae per
+ * sutura->monere nominantur. extra NIHIL aut vacuum: idem redditur */
+interior Xar*
+_extra_institutionibus_explicare (
+     constans FabricaSutura* sutura,
+      constans FabricaActio* actio,
+                        Xar* extra,
+                     chorda  diarium_ante,
+                    Piscina* piscina)
+{
+    chorda  post;
+    chorda  novae;
+       Xar* manent;
+    chorda  explicatae;
+       i32  k;
+       i32  numerus;
+
+    si (extra == NIHIL || xar_numerus(extra) == ZEPHYRUM)
+    {
+        redde extra;
+    }
+    post = _diarium_legere(sutura, piscina);
+    /* diarium appenditione sola crescit; rotatum (praefixum mutatum)
+     * nihil explicat - fractura manet, numquam transitus falsus */
+    si (   post.mensura <= diarium_ante.mensura
+        || (   diarium_ante.mensura > ZEPHYRUM
+            && memcmp(post.datum, diarium_ante.datum,
+                   (memoriae_index)diarium_ante.mensura) != 0))
+    {
+        redde extra;
+    }
+    novae = chorda_sectio(post, diarium_ante.mensura,
+        post.mensura);
+    manent      = fabricae_xar_chordarum(piscina);
+    explicatae  = chorda_ex_literis("", piscina);
+    numerus     = ZEPHYRUM;
+    si (manent == NIHIL)
+    {
+        redde extra;
+    }
+    per (k = ZEPHYRUM; k < xar_numerus(extra); k++)
+    {
+        chorda via;
+
+        via = *(chorda*)xar_obtinere(extra, k);
+        /* diarium ipsum crevit (lineae novae): mutatio eius explicata,
+         * non nominata (locus '~/.rhubarb' photographatur si actio
+         * exitum ibi declarat) */
+        si (chorda_aequalis_literis(via, FABRICA_DIARIUM_INSTITUTIONUM))
+        {
+            perge;
+        }
+        si (_ab_institutione(novae, via))
+        {
+            explicatae = fabricae_iungere(piscina, "", explicatae,
+                numerus > ZEPHYRUM ? ", " : "");
+            explicatae = chorda_concatenare(explicatae, via, piscina);
+            numerus++;
+        }
+        alioquin
+        {
+            fabricae_chordam_addere(manent, via);
+        }
+    }
+    si (numerus > ZEPHYRUM && sutura->monere != NIHIL)
+    {
+        chorda nuntius;
+
+        nuntius = fabricae_iungere(piscina, "",
+            actio != NIHIL ? actio->titulus
+                : chorda_ex_literis("unda", piscina),
+            ": scriptura extra vestigium ab institutione aliena"
+            " explicata (" FABRICA_DIARIUM_INSTITUTIONUM "): ");
+        nuntius = chorda_concatenare(nuntius, explicatae, piscina);
+        sutura->monere(sutura->datum, nuntius);
+    }
+    redde manent;
+}
+
 /* "scripsit extra vestigium: a, b, c +N" (III nominatae, ut
  * iudicia_coniungere) */
 interior chorda
@@ -874,6 +1032,7 @@ _membrum_agere (
                        Xar* ante_secuta;
                        Xar* post_secuta;
                        s32  discordiae;
+                    chorda  diarium_ante;
 
     *duratio_out = ZEPHYRUM;
     si (   actio->gradus == NIHIL || actio->gradus->agere == NIHIL
@@ -919,6 +1078,8 @@ _membrum_agere (
         (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
         photographia_ms += _momentum_ms(sutura) - t0;
     }
+    diarium_ante = ante != NIHIL ? _diarium_legere(sutura, piscina)
+        : chorda_ex_literis("", piscina);
     /* T2: testis secutorum (T3 eum in umbra confert) */
     si (sutura->secuta_capere != NIHIL)
     {
@@ -1005,7 +1166,9 @@ _membrum_agere (
     {
         Xar* extra;
 
-        extra = fabrica_vestigia_comparare(actio, ante, post, piscina);
+        extra = _extra_institutionibus_explicare(sutura, actio,
+            fabrica_vestigia_comparare(actio, ante, post, piscina),
+            diarium_ante, piscina);
         si (extra != NIHIL && xar_numerus(extra) > 0)
         {
             *causa_out = _extra_nominare(extra, piscina);
@@ -1083,6 +1246,7 @@ _actionem_agere (
        character  numerus[32];
              Xar* ante;
              Xar* post;
+          chorda  diarium_ante;
 
     /* membrum gradus (fabrica-6 T5): per genus gradus, in area */
     si (actio->membrum != NIHIL)
@@ -1121,6 +1285,8 @@ _actionem_agere (
     {
         (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
     }
+    diarium_ante = ante != NIHIL ? _diarium_legere(sutura, piscina)
+        : chorda_ex_literis("", piscina);
     incepit = sutura->agere(sutura->datum, actio,
         chorda_ut_cstr(fabricae_iungere(piscina, "build/fabrica/acta/",
             actio->titulus, ".log"), piscina), piscina, &actum);
@@ -1154,7 +1320,9 @@ _actionem_agere (
     {
         Xar* extra;
 
-        extra = fabrica_vestigia_comparare(actio, ante, post, piscina);
+        extra = _extra_institutionibus_explicare(sutura, actio,
+            fabrica_vestigia_comparare(actio, ante, post, piscina),
+            diarium_ante, piscina);
         si (extra != NIHIL && xar_numerus(extra) > 0)
         {
             *causa_out = fabricae_iungere(piscina, "",
@@ -2012,6 +2180,7 @@ nomen structura {
                         b32*  incepta;
                         Xar** notatae;     /* scripturae 'S' libri */
                         Xar*  ante;        /* photographia ante undam */
+                     chorda   diarium_ante; /* institutiones ante undam */
 } CursusUndae;
 
 /* membra ordine tituli (cursus et sanationes deterministice) */
@@ -2109,6 +2278,9 @@ _undam_currere (
         (vacuum)sutura->vestigium_capere(sutura->datum, c->piscina,
             &c->ante);
     }
+    c->diarium_ante = c->ante != NIHIL
+        ? _diarium_legere(sutura, c->piscina)
+        : chorda_ex_literis("", c->piscina);
     sutura->agere_simul(sutura->datum,
         (constans FabricaActio* constans*)c->actiones, c->n,
         (constans character* constans*)c->acta_viae,
@@ -2217,7 +2389,8 @@ _scripturas_ignotas (
     {
         redde NIHIL;
     }
-    extra = _extra_omnium(c, post);
+    extra = _extra_institutionibus_explicare(c->sutura, NIHIL,
+        _extra_omnium(c, post), c->diarium_ante, c->piscina);
     si (extra == NIHIL)
     {
         redde NIHIL;

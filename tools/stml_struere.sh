@@ -31,7 +31,7 @@ while IFS=$'\t' read -r genus pars; do
     # provenientia (T7): plagula generata seorsum compilatur - nomen
     # basis 'stml' cum obiecto lib/stml.c collideret
     case "$pars" in build/fabrica/provenientia/*) continue ;; esac
-    base="$(basename "$pars" .c)"
+    base="${pars##*/}"; base="${base%.c}"
     obj="build/$base.o"
     if [ ! -f "$obj" ]; then
         echo "stml_struere: $obj deest - suite prima curre" \

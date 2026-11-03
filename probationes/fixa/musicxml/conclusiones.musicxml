@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- conclusiones (voltae): |: m1 [1,2: m2 :| [3: m3] m4 - times ex numeris conclusionum (3) -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <barline location="left"><repeat direction="forward"/></barline>
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="3">
+      <barline location="left"><ending number="1, 2" type="start"/></barline>
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>2</duration></note>
+      <barline location="right"><bar-style>light-heavy</bar-style><ending number="1, 2" type="stop"/><repeat direction="backward"/></barline>
+    </measure>
+    <measure number="4">
+      <barline location="left"><ending number="3" type="start"/></barline>
+      <note><pitch><step>F</step><octave>4</octave></pitch><duration>2</duration></note>
+      <barline location="right"><ending number="3" type="discontinue"/></barline>
+    </measure>
+    <measure number="5">
+      <note><pitch><step>G</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+  </part>
+</score-partwise>

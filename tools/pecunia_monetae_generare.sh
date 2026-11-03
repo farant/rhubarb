@@ -4,7 +4,8 @@
 # lib/pecunia_monetae.c ex indicibus ISO 4217 fixis
 # (probationes/fixa/iso4217/<publicatum>/list-one.xml, list-three.xml)
 # et probationes/fixa/iso4217/supplementum.stml per
-# tools/pecunia_monetae_generare.c (aedilis struit: xml.h, stml.h).
+# tools/pecunia_monetae_generare.c (aedilis struit: xml_documentum.h,
+# stml.h).
 # Indicibus novis: directorium novum datatum, DATA infra muta, regenera,
 # differentiam recense (pecunia-spec II.9).
 #

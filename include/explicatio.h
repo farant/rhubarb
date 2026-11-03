@@ -58,6 +58,11 @@
  *                super E7: proxima in fenestra eadem), aut sursum in
  *                inversione secunda cum basso gradu ascendente (V43
  *                -> I6: F G super D E, decimae)
+ *   sexta aucta  septima formae dominantis (7, 7 sine quinta, 7#11
+ *                tenuis) LITTERA SEXTAE scripta (F7 cum D#, non Eb:
+ *                sexta aucta F-D#); resoluta = proxima semitonio
+ *                ASCENDIT (D# -> E). Acordum declaratum litteras
+ *                nominis habet (F7: Eb) - ibi septima manet
  *   transitus    gradu intrat, gradu exit, eadem directione
  *   vicinus      gradu exit, gradu redit ad eandem
  *   appoggiatura saltu intrat, gradu exit
@@ -88,6 +93,7 @@
 nomen enumeratio {
     EXPLICATIO_ACORDI,
     EXPLICATIO_SEPTIMA,
+    EXPLICATIO_SEXTA_AUCTA,
     EXPLICATIO_TRANSITUS,
     EXPLICATIO_VICINUS,
     EXPLICATIO_INNIXA,
@@ -113,7 +119,8 @@ nomen structura {
                     s64  initium;     /* segmenti (>= pulsus) */
                     i32  fenestra;
         ExplicatioGenus  genus;
-                    b32  resoluta;    /* septima, suspensio,
+                    b32  resoluta;    /* septima, sexta aucta,
+                                       * suspensio,
                                        * retardatio, appoggiatura */
                     b32 semitonium;  /* nota proxima eiusdem vocis
                                        * semitonio unico distat

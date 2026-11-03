@@ -567,7 +567,9 @@ structura Activatio {
                Piscina* piscina_combinationum;   /* ubi combinationes
                                           * habitant: piscina; iudica:
                                           * opus vocationis */
-            Intervallum* axes_intervalla;  /* (u, |u|^2) per axem */
+            Intervallum*  axes_intervalla;  /* (u, |u|^2) per axem */
+        constans vacuum** quadrata_axium;   /* |u|^2 exacta per axem
+                                          * (budget B1 D4) */
                     b32  axes_certae;
                  duplex* axes_unitae;      /* u / |u| (gradus I scrutinii) */
             Intervallum* valores_axium;    /* scrutinium: valor per axem */
@@ -852,6 +854,7 @@ _activatio_nova (
         (i32)MMXLVIII);
     a->piscina_combinationum  = piscina;
     a->axes_intervalla        = NIHIL;
+    a->quadrata_axium         = NIHIL;
     a->axes_certae            = FALSUM;
     a->axes_unitae            = NIHIL;
     a->valores_axium          = NIHIL;
@@ -976,6 +979,55 @@ activatio_ex_catalogo (
         axes_maximae, piscina, exitus);
 }
 
+/* QUADRATA AXIUM (budget B1 D4): |u_k|^2 exacta partis vectoriae
+ * cuiusque axis SEMEL ad creationem (piscina activationis, nulla
+ * notatio pendet) - quaternio_proximi_quadrata ea pro omni puncto
+ * legit (olim omni vocatione recomputata: ~IX% cursus). Axes post
+ * creationem immutabiles sunt. */
+interior b32
+_quadrata_parare (
+    Activatio* a)
+{
+     constans Anulus* anulus;
+              vacuum* nullum;
+                 i32  j;
+
+    a->quadrata_axium = NIHIL;
+    si (a->numerus_axium == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    anulus = quaternio_anulus(a->axes[ZEPHYRUM]);
+    a->quadrata_axium = (constans vacuum**)piscina_allocare(a->piscina,
+        (memoriae_index)a->numerus_axium * magnitudo(vacuum*));
+    nullum = piscina_allocare(a->piscina,
+        (memoriae_index)anulus->mensura);
+    si (a->quadrata_axium == NIHIL || nullum == NIHIL)
+    {
+        redde FALSUM;
+    }
+    anulus->nullum(anulus, nullum);
+    per (j = ZEPHYRUM; j < a->numerus_axium; j++)
+    {
+        Quaternio  vector;
+           vacuum* quadratum;
+
+        quadratum = piscina_allocare(a->piscina,
+            (memoriae_index)anulus->mensura);
+        si (   quadratum == NIHIL
+            || !quaternio_ex_partibus(anulus, nullum,
+                   quaternio_pars(a->axes[j], I),
+                   quaternio_pars(a->axes[j], II),
+                   quaternio_pars(a->axes[j], III), a->piscina, &vector)
+            || !quaternio_norma(vector, a->piscina, quadratum))
+        {
+            redde FALSUM;
+        }
+        a->quadrata_axium[j] = quadratum;
+    }
+    redde VERUM;
+}
+
 b32
 activatio_creare (
     constans Catalogus*  catalogus,
@@ -998,7 +1050,8 @@ activatio_creare (
     {
         si (   !_activatio_nova(catalogus, catalogus->numerus, cella,
                 piscina, &a)
-            || !_axes_proprii(a, axes_maximae))
+            || !_axes_proprii(a, axes_maximae)
+            || !_quadrata_parare(a))
         {
             redde FALSUM;
         }
@@ -1024,6 +1077,10 @@ activatio_creare (
         {
             redde FALSUM;
         }
+    }
+    si (!_quadrata_parare(a))
+    {
+        redde FALSUM;
     }
     *exitus = a;
     redde VERUM;
@@ -1252,8 +1309,10 @@ _punctum_novum (
             (memoriae_index)a->numerus_axium * magnitudo(i32));
         si (candidatae == NIHIL)
         {
-            si (!quaternio_proximi(s, a->axes, a->numerus_axium, VERUM,
-                labor, p->axes, &p->numerus_axium))
+            si (!quaternio_proximi_quadrata(s, a->axes,
+                a->quadrata_axium,
+                a->numerus_axium, VERUM, labor, p->axes,
+                &p->numerus_axium))
             {
                 redde NIHIL;
             }
@@ -1262,14 +1321,22 @@ _punctum_novum (
             /* filtrum ceteras axes certe inferiores probavit */
             Quaternio* selectae = (Quaternio*)piscina_allocare(labor,
                 (memoriae_index)numerus_candidatarum * magnitudo(Quaternio));
+            constans vacuum** quadrata_selecta = (constans vacuum**)
+                piscina_allocare(labor, (memoriae_index)
+                numerus_candidatarum * magnitudo(vacuum*));
                    i32 j;
 
             per (j = ZEPHYRUM; j < numerus_candidatarum; j++)
             {
                 selectae[j] = a->axes[candidatae[j]];
+                si (quadrata_selecta != NIHIL)
+                {
+                    quadrata_selecta[j] = a->quadrata_axium != NIHIL
+                        ? a->quadrata_axium[candidatae[j]] : NIHIL;
+                }
             }
-            si (!quaternio_proximi(s, selectae, numerus_candidatarum,
-                VERUM,
+            si (!quaternio_proximi_quadrata(s, selectae,
+                quadrata_selecta, numerus_candidatarum, VERUM,
                 labor, p->axes, &p->numerus_axium))
             {
                 redde NIHIL;

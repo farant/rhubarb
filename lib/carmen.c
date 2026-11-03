@@ -129,10 +129,19 @@ _metrum_legere (
     redde VERUM;
 }
 
-/* "a minor", "f# maior", "bb minor", "f maior caerulea" -> quintae
- * (circulus quintarum, ut MusicXML 'fifths'): maior ex littera, '#'
- * +VII, 'b' -VII, minor -III; extra -VII..VII vitium; post modum
- * solum " caerulea" */
+/* modi ecclesiastici (CarmenClavis.modus 1..6) et quintae collectionis
+ * a quintis finalis ut maioris (dorius: collectio tono infra) */
+hic_manens constans character* MODI_ECCLESIASTICI[VI] = {
+    "ionius", "dorius", "phrygius", "lydius", "mixolydius", "aeolius"
+};
+hic_manens constans s32 QUINTAE_MODORUM[VI] = {
+    ZEPHYRUM, -II, -IV, I, -I, -III
+};
+
+/* "a minor", "f# maior", "bb minor", "f maior caerulea", "d dorius" ->
+ * quintae (circulus quintarum, ut MusicXML 'fifths'): maior ex
+ * littera, '#' +VII, 'b' -VII, minor -III, modus per QUINTAE_MODORUM;
+ * extra -VII..VII vitium; post maior/minor solum " caerulea" */
 interior b32
 _clavem_legere (
           chorda  valor,
@@ -172,7 +181,8 @@ _clavem_legere (
     {
         j++;
     }
-    clavis->caerulea = FALSUM;
+    clavis->caerulea  = FALSUM;
+    clavis->modus     = ZEPHYRUM;
     si (j < modus.mensura)
     {
         reliquum.datum    = modus.datum + j + I;
@@ -195,7 +205,22 @@ _clavem_legere (
     }
     alioquin
     {
-        redde FALSUM;
+        i32 m;
+
+        per (m = ZEPHYRUM; m < VI; m++)
+        {
+            si (chorda_aequalis_literis(modus, MODI_ECCLESIASTICI[m]))
+            {
+                frange;
+            }
+        }
+        si (m == VI || clavis->caerulea)
+        {
+            redde FALSUM;
+        }
+        q              += QUINTAE_MODORUM[m];
+        clavis->minor  = FALSUM;
+        clavis->modus  = (s32)(m + I);
     }
     si (q < -VII || q > VII)
     {
@@ -238,6 +263,10 @@ interior s64
 _longitudo_mensurae (
     constans CarmenMetrum* m)
 {
+    si (m->liberum)
+    {
+        redde m->longitudo;
+    }
     redde (s64)CANTUS_PULSUS_INTEGRAE * (s64)m->numerator
         / (s64)m->denominator;
 }
@@ -470,6 +499,145 @@ _tempus_in_textu (
  * Partes
  * ================================================== */
 
+/* vocalis syllabae Latinae (carmen.h VERBA): 0..4 a e i o u; -1 nulla.
+ * ae oe -> e; au -> a; y -> i; i initialis ante vocalem et u post q
+ * aut g ante vocalem consonantes */
+interior s32
+_vocalis_syllabae (
+    chorda syllaba)
+{
+     constans character* vocales = "aeiou";
+                    i32  i;
+
+    per (i = ZEPHYRUM; i < syllaba.mensura; i++)
+    {
+        character c = (character)syllaba.datum[i];
+        character p = i > ZEPHYRUM ? (character)syllaba.datum[i - I]
+                                   : '\0';
+        character q = i + I < syllaba.mensura
+                    ? (character)syllaba.datum[i + I] : '\0';
+        b32 proxima_vocalis;
+        i32 v;
+
+        c = (c >= 'A' && c <= 'Z') ? (character)(c - 'A' + 'a') : c;
+        p = (p >= 'A' && p <= 'Z') ? (character)(p - 'A' + 'a') : p;
+        q = (q >= 'A' && q <= 'Z') ? (character)(q - 'A' + 'a') : q;
+        proxima_vocalis = q != '\0' && strchr("aeiouy", q) != NIHIL;
+        si (c == 'y')
+        {
+            redde II;
+        }
+        si (c == '\0' || strchr(vocales, c) == NIHIL)
+        {
+            perge;
+        }
+        /* consonantes: i initialis ante vocalem, u post q/g ante
+         * vocalem */
+        si (   (c == 'i' && i == ZEPHYRUM && proxima_vocalis)
+            || (c == 'u' && (p == 'q' || p == 'g') && proxima_vocalis))
+        {
+            perge;
+        }
+        si ((c == 'a' || c == 'o') && q == 'e')
+        {
+            redde I;
+        }
+        per (v = ZEPHYRUM; v < V; v++)
+        {
+            si (vocales[v] == c)
+            {
+                redde (s32)v;
+            }
+        }
+    }
+    redde -I;
+}
+
+/* syllaba verborum [initium, finis) notae n-tae; vocalis eius (aut
+ * prior si nulla) in *vocalis. FALSUM: notae exhaustae */
+interior b32
+_syllabam_ponere (
+         chorda  verba,
+            i32  initium,
+            i32  finis,
+     CarmenNota* notae,
+            i32  numerus,
+            i32* n,
+            f32* vocalis)
+{
+    chorda y;
+       s32 v;
+
+    si (*n >= numerus)
+    {
+        redde FALSUM;
+    }
+    y.datum            = verba.datum + initium;
+    y.mensura          = finis - initium;
+    v                  = _vocalis_syllabae(y);
+    *vocalis           = v >= ZEPHYRUM ? (f32)v : *vocalis;
+    notae[*n].syllaba  = y;
+    notae[*n].vocalis  = *vocalis;
+    (*n)++;
+    redde VERUM;
+}
+
+/* syllabae <verba> in notas frusti (carmen.h VERBA): spatium aut '-'
+ * dividit, '_' melisma, interpunctio omissa (syllabam finit). Causa
+ * NIHIL si bene */
+interior constans character*
+_verba_ponere (
+           chorda  verba,
+       CarmenNota* notae,
+              i32  numerus)
+{
+     constans character* plures = "verba: syllabae plures quam notae";
+                    i32  i;
+                    i32  n        = ZEPHYRUM;
+                    s32  initium  = -I;
+                    f32  vocalis  = -1.0f;
+
+    per (i = ZEPHYRUM; i <= verba.mensura; i++)
+    {
+        character c = i < verba.mensura ? (character)verba.datum[i]
+                                         : ' ';
+
+        si (strchr(" \t\n\r-_,.;:!?", c) == NIHIL)
+        {
+            si (initium < ZEPHYRUM)
+            {
+                initium = (s32)i;
+            }
+            perge;
+        }
+        si (   initium >= ZEPHYRUM
+            && !_syllabam_ponere(verba, (i32)initium, i, notae, numerus,
+                                 &n, &vocalis))
+        {
+            redde plures;
+        }
+        initium = -I;
+        si (c == '_')
+        {
+            si (n >= numerus)
+            {
+                redde plures;
+            }
+            notae[n++].vocalis = vocalis;
+        }
+    }
+    si (n == ZEPHYRUM)
+    {
+        redde "verba sine syllabis";
+    }
+    /* notae post ultimam syllabam vocalem eius servant */
+    per (; n < numerus; n++)
+    {
+        notae[n].vocalis = vocalis;
+    }
+    redde NIHIL;
+}
+
 interior b32
 _frustum_legere (
                StmlNodus* nodus,
@@ -480,7 +648,8 @@ _frustum_legere (
            CarmenFrustum* frustum,
           CarminisVitium* vitium)
 {
-          StmlNodus* textus = NIHIL;
+          StmlNodus* textus  = NIHIL;
+          StmlNodus* verba   = NIHIL;
           Cantilena  k;
        CantusVitium  cv;
  constans character* causa = NIHIL;
@@ -499,6 +668,11 @@ _frustum_legere (
 
         si (l->genus != STML_NODUS_ELEMENTUM)
         {
+            perge;
+        }
+        si (_elementum_est(l, "verba") && verba == NIHIL)
+        {
+            verba = l;
             perge;
         }
         si (!_elementum_est(l, "textus") || textus != NIHIL)
@@ -553,6 +727,20 @@ _frustum_legere (
         n->continuatur  = k.notae[i].continuatur;
         n->vox          = ZEPHYRUM;
         n->acordi       = FALSUM;
+        n->vocalis      = -1.0f;
+        n->syllaba      = _vacua();
+    }
+    si (verba != NIHIL)
+    {
+        constans character* c = _verba_ponere(
+            stml_textus_valor(verba, piscina), frustum->notae,
+            k.numerus);
+
+        si (c != NIHIL)
+        {
+            redde _vitium(vitium, carmen->titulus, titulus_partis,
+                index, ZEPHYRUM, c);
+        }
     }
     frustum->numerus           = k.numerus;
     frustum->longitudo         = k.pulsus;
@@ -757,6 +945,8 @@ _frustum_generare (
         n->continuatur  = FALSUM;
         n->vox          = notae[i].vox;
         n->acordi       = VERUM;
+        n->vocalis      = -1.0f;
+        n->syllaba      = _vacua();
     }
     frustum->pulsus     = ab;
     frustum->textus     = textus;
@@ -1104,6 +1294,13 @@ _partem_legere (
         }
         si (_elementum_est(l, "comitatus"))
         {
+            si (carmen->metra[ZEPHYRUM].liberum)
+            {
+                redde _vitium(vitium, carmen->titulus, pars->titulus,
+                    (s32)summa, ZEPHYRUM,
+                    "comitatus cum metro libero (figurae per "
+                    "mensuram)");
+            }
             si (!_comitatum_legere(l, carmen, figurae,
                                    numerus_figurarum, bassus_sonat,
                                    pars->titulus, (s32)summa, &status,
@@ -2380,6 +2577,115 @@ _gradum_addere (
     t->quadrum     = ZEPHYRUM;
 }
 
+/* metrum liberum (carmen.h): mensurae ex lineis '|' frusti unici
+ * partis primae ad mensuram 1 - praelectio textus ante mappam metri
+ * (tempus, clavis, positiones ea egent). '|' ad initium, ad finem aut
+ * iterata ('||') mensuram vacuam non faciunt */
+interior b32
+_mensuras_liberas_legere (
+          StmlNodus* nodus,
+             Carmen* k,
+            Piscina* piscina,
+     CarminisVitium* vitium)
+{
+    constans character* causa = "metrum liberum: pars prima frustum "
+                                "unum ad mensuram 1";
+           StmlNodus* pars     = NIHIL;
+           StmlNodus* frustum  = NIHIL;
+           StmlNodus* textus   = NIHIL;
+              chorda* a;
+              chorda  titulus = _vacua();
+           Cantilena  c;
+        CantusVitium  cv;
+                 s64  initium  = ZEPHYRUM;
+                 i32  frusta   = ZEPHYRUM;
+                 i32  n        = ZEPHYRUM;
+                 i32  i;
+
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(nodus) && !pars; i++)
+    {
+        StmlNodus* x = stml_liberum_ad_indicem(nodus, i);
+
+        si (   x->genus == STML_NODUS_ELEMENTUM
+            && _elementum_est(x, "pars"))
+        {
+            pars = x;
+        }
+    }
+    si (pars != NIHIL)
+    {
+        a        = stml_attributum_capere(pars, "titulus");
+        titulus  = a != NIHIL ? *a : _vacua();
+        per (i = ZEPHYRUM; i < stml_numerus_liberorum(pars); i++)
+        {
+            StmlNodus* x = stml_liberum_ad_indicem(pars, i);
+
+            si (   x->genus == STML_NODUS_ELEMENTUM
+                && (   _elementum_est(x, "frustum")
+                    || _elementum_est(x, "comitatus")))
+            {
+                frusta++;
+                frustum = frustum != NIHIL ? frustum : x;
+            }
+        }
+    }
+    a = frustum != NIHIL ? stml_attributum_capere(frustum, "mensura")
+                         : NIHIL;
+    si (   frusta != I || !_elementum_est(frustum, "frustum")
+        || a      == NIHIL || !chorda_aequalis_literis(*a, "1"))
+    {
+        redde _vitium(vitium, k->titulus, titulus, -I, ZEPHYRUM, causa);
+    }
+    per (i = ZEPHYRUM; i < stml_numerus_liberorum(frustum); i++)
+    {
+        StmlNodus* x = stml_liberum_ad_indicem(frustum, i);
+
+        si (   x->genus == STML_NODUS_ELEMENTUM
+            && _elementum_est(x, "textus"))
+        {
+            textus = x;
+        }
+    }
+    c.pulsus            = ZEPHYRUM;
+    c.numerus_linearum  = ZEPHYRUM;
+    /* sine textu: lectio frusti vitium nominat */
+    si (   textus != NIHIL
+        && !cantus_legere(stml_textus_valor(textus, piscina), piscina,
+                          &c, &cv))
+    {
+        redde _vitium(vitium, k->titulus, titulus, ZEPHYRUM, cv.offset,
+            cv.causa);
+    }
+    k->metra = (CarmenMetrum*)piscina_allocare(piscina,
+        (memoriae_index)(c.numerus_linearum + I)
+        * magnitudo(CarmenMetrum));
+    si (k->metra == NIHIL)
+    {
+        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+            "piscina exhausta");
+    }
+    per (i = ZEPHYRUM; i <= c.numerus_linearum; i++)
+    {
+        s64 p = i < c.numerus_linearum ? c.lineae[i].pulsus : c.pulsus;
+
+        si (i < c.numerus_linearum && (p <= initium || p >= c.pulsus))
+        {
+            perge;
+        }
+        memset(&k->metra[n], ZEPHYRUM, magnitudo(CarmenMetrum));
+        k->metra[n].pulsus       = initium;
+        k->metra[n].liberum      = VERUM;
+        k->metra[n].denominator  = VIII;
+        /* carmen sine notis: lectio frusti vitium nominat */
+        k->metra[n].longitudo    = p > initium ? p - initium
+                                               : CANTUS_PULSUS_INTEGRAE;
+        n++;
+        initium = p;
+    }
+    k->numerus_metrorum = n;
+    redde VERUM;
+}
+
 /* longitudo mensurae metri et finis spatii eius in carmine */
 interior s64
 _finis_metri (
@@ -2600,7 +2906,7 @@ nomen structura {
                     f32  summa;
 } CampusInstrumenti;
 
-#define CAMPI_NUMERUS XXIII
+#define CAMPI_NUMERUS XXIV
 
 hic_manens constans CampusInstrumenti CAMPI[CAMPI_NUMERUS] = {
     { "officium",    0.0f, 1.0f     },
@@ -2625,11 +2931,16 @@ hic_manens constans CampusInstrumenti CAMPI[CAMPI_NUMERUS] = {
     { "motus",     -48.0f, 48.0f    },
     { "unisonus",    1.0f, 7.0f     },
     { "dispersio",   0.0f, 100.0f   },
-    { "mora",        0.0f, 10.0f    }   /* vibrati */
+    { "mora",        0.0f, 10.0f    },  /* vibrati */
+    { "vox",         0.0f, 0.0f     }   /* verbum */
 };
 
 hic_manens constans character* VOCALES[V] = {
     "a", "e", "i", "o", "u"
+};
+/* ordine TibiaParametra.vox */
+hic_manens constans character* VOCES_CHORI[IV] = {
+    "tenor", "bassus", "altus", "superius"
 };
 hic_manens constans character* FORMAE[IV] = {
     "pulsus", "serra", "triangulum", "sinus"
@@ -2666,6 +2977,7 @@ _campus (
     campi[20]  = &p->unisonus;
     campi[21]  = &p->dispersio;
     campi[22]  = &p->mora_vibrati;
+    campi[23]  = &p->vox;
     redde campi[k];
 }
 
@@ -2931,10 +3243,11 @@ _instrumentum_legere (
             *_campus(&x->parametra, k) = (f32)w;
             perge;
         }
-        si (k == XIII || k == XIV)
+        si (k == XIII || k == XIV || k == XXIII)
         {
             w = k == XIII ? _genus_verbi(*t->valor)
-                          : _verbum(*t->valor, FORMAE, IV);
+                : k == XIV  ? _verbum(*t->valor, FORMAE, IV)
+                          : _verbum(*t->valor, VOCES_CHORI, IV);
             si (w < ZEPHYRUM)
             {
                 redde _vitium(vitium, carmen, _vacua(), -I, ZEPHYRUM,
@@ -3074,7 +3387,9 @@ _carmen_legere (
         redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
             "piscina exhausta");
     }
-    /* initialia */
+    /* initialia; metra nulla (liberum FALSUM, mutationes quoque) */
+    memset(k->metra, ZEPHYRUM, (size_t)(_numerare(nodus, "metrum") + I)
+        * magnitudo(CarmenMetrum));
     k->tempora_scripta[ZEPHYRUM].pulsus = ZEPHYRUM;
     k->tempora_scripta[ZEPHYRUM].tempus = CARMEN_TEMPUS_ORDINARIUM;
     k->tempora_scripta[ZEPHYRUM].usque = ZEPHYRUM;
@@ -3085,6 +3400,7 @@ _carmen_legere (
     k->claves[ZEPHYRUM].quintae = ZEPHYRUM;
     k->claves[ZEPHYRUM].minor = FALSUM;
     k->claves[ZEPHYRUM].caerulea = FALSUM;
+    k->claves[ZEPHYRUM].modus = ZEPHYRUM;
     k->numerus_temporum_scriptorum = I;
     k->numerus_metrorum = I;
     k->numerus_clavium = I;
@@ -3095,15 +3411,32 @@ _carmen_legere (
             "tempus extra 20..400");
     }
     a = stml_attributum_capere(nodus, "metrum");
-    si (a && !_metrum_legere(*a, &k->metra[ZEPHYRUM]))
+    si (a && chorda_aequalis_literis(*a, "liberum"))
     {
-        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
-            "metrum non N/D (D potentia II)");
+        si (   stml_attributum_habet(nodus, "agogica")
+            || _numerare(nodus, "metrum") > ZEPHYRUM)
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                "metrum liberum: sine <metrum> et agogica");
+        }
+        si (!_mensuras_liberas_legere(nodus, k, piscina, vitium))
+        {
+            redde FALSUM;
+        }
     }
-    si (!_inaequalitatem_attributi(nodus, &k->metra[ZEPHYRUM], &causa))
+    alioquin
     {
-        redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
-            causa);
+        si (a && !_metrum_legere(*a, &k->metra[ZEPHYRUM]))
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                "metrum non N/D (D potentia II)");
+        }
+        si (!_inaequalitatem_attributi(nodus, &k->metra[ZEPHYRUM],
+                                       &causa))
+        {
+            redde _vitium(vitium, k->titulus, _vacua(), -I, ZEPHYRUM,
+                causa);
+        }
     }
     a = stml_attributum_capere(nodus, "clavis");
     si (a && !_clavem_legere(*a, &k->claves[ZEPHYRUM]))

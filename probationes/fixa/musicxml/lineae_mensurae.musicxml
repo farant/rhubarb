@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- lineae_mensurae: repeat forward (m1), conclusio "1, 2" + repeat backward times 3 (m2), conclusio 3 discontinue cum fermata (m3), light-heavy (m4) -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <barline location="left"><bar-style>heavy-light</bar-style><repeat direction="forward"/></barline>
+      <attributes><divisions>1</divisions>
+        <time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <barline location="left"><ending number="1, 2" type="start">1., 2.</ending></barline>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>2</duration></note>
+      <barline location="right"><bar-style>light-heavy</bar-style><ending number="1, 2" type="stop"/><repeat direction="backward" times="3"/></barline>
+    </measure>
+    <measure number="3">
+      <barline location="left"><ending number="3" type="start"/></barline>
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>2</duration></note>
+      <barline location="right"><ending number="3" type="discontinue"/><fermata/></barline>
+    </measure>
+    <measure number="4">
+      <note><pitch><step>F</step><octave>5</octave></pitch><duration>2</duration></note>
+      <barline location="right"><bar-style>light-heavy</bar-style></barline>
+    </measure>
+  </part>
+</score-partwise>

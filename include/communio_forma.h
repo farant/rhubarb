@@ -33,11 +33,24 @@
 /* acta per petitionem (missio aut tractio) */
 #define COMMUNIO_ACTA_MAXIMA CC
 
+/* tessera apparatus: XLIII signa base64url (XXXII octeti fortuiti);
+ * plan-5 T1: hic, non in communio_servus.h - cliens servum non
+ * includit */
+#define COMMUNIO_TESSERA_MENSURA XLIII
+
 /* massa maxima communicabilis (recensio 5): HTTP_LECTOR_CORPUS_MAXIMUM
  * (http.h) - cliens massam maiorem trahere non potest, ergo servus eam
  * non accipit et cliens eam non mittit (error visibilis in apparatu
  * scribente, non silentium in omnibus aliis) */
 #define COMMUNIO_MASSA_MAXIMA ((i32)XVI * (i32)M * (i32)M)
+
+/* apparatus (cliens, instrumentum, probationes): tesseram novam cudere -
+ * exitus XLIII signa + NUL, digestum LXIV hex + NUL. FALSUM si fons
+ * fortuitus deficit. */
+b32
+communio_tesseram_facere (
+    character exitus[XLIV],
+    character digestum[LXV]);
 
 /* actum in obiectum JSON; NIHIL si memoria deficit */
 JsonValor*

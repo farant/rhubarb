@@ -1,0 +1,4 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: rootfile PRIMUS est partitura (spec MusicXML); music21 alium legit
+P1	0	1	60	C	0	0	-

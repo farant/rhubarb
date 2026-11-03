@@ -492,6 +492,11 @@ _notam_iubere (
         mixtura_iussum_parare(&i, MIXTURA_IUSSUM_TIBIAM, initium);
         i.tibia  = *tibia;
         i.nota   = (f32)n->nota;
+        /* verba: vocalis syllabae (cantor.h VERBA) */
+        si (n->vocalis >= 0.0f)
+        {
+            i.tibia.vocalis = n->vocalis;
+        }
     }
     i.ansa = a;
     i.grex = MIXTURA_GREX_MUSICA;

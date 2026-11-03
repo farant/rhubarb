@@ -198,7 +198,7 @@ done
 
 # md sub-fontes: porta corporis paragraphos markdown per arborem md legit (T3)
 for src in "$RADIX_DIR"/md/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [md] $base.c"
@@ -210,7 +210,7 @@ for src in "$RADIX_DIR"/md/fontes/*.c; do
 done
 
 for src in "$ORATIO_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [oratio] $base.c"
@@ -223,7 +223,7 @@ done
 
 # adiumenta probationum (probationes/*.c non probatio_*)
 for src in "$ORATIO_DIR"/probationes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     case "$base" in probatio_*) continue ;; esac
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then

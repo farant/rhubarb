@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- saltus_circulus: repeat times 100000000 - ordo secatur (limes), monitum, numquam mora -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <barline location="left"><repeat direction="forward"/></barline>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration></note>
+      <barline location="right"><bar-style>light-heavy</bar-style><repeat direction="backward" times="100000000"/></barline>
+    </measure>
+  </part>
+</score-partwise>

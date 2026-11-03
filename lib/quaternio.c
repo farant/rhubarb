@@ -790,21 +790,23 @@ _aestimatio (
     redde _summa_duorum(anulus, nullum, exitus, -I, piscina);
 }
 
-/* indices NIHIL: index primus solum; aliter omnes paritate maximi */
+/* indices NIHIL: index primus solum; aliter omnes paritate maximi.
+ * quadrata (NIHIL licet): |u_k|^2 a vocante (budget B1 D4) */
 interior b32
 _proximus (
-             Quaternio  v,
-    constans Quaternio* directiones,
-                   i32  numerus,
-                   b32  antipodes_idem,
-               Piscina* piscina,
-                   i32* index,
-                   i32* indices,
-                   i32* numerus_proximorum)
+                    Quaternio  v,
+           constans Quaternio* directiones,
+                          i32  numerus,
+                          b32  antipodes_idem,
+                      Piscina* piscina,
+                          i32* index,
+                          i32* indices,
+                          i32* numerus_proximorum,
+    constans vacuum* constans* quadrata)
 {
      constans Anulus* anulus             = v.anulus;
                   i8* scalare_optimum    = NIHIL;
-                  i8* quadratum_optimum  = NIHIL;
+         constans i8* quadratum_optimum  = NIHIL;
                  s32  signum_optimum     = ZEPHYRUM;
                  i32  optimum            = ZEPHYRUM;
                  i32  k;
@@ -817,9 +819,9 @@ _proximus (
     }
     per (k = ZEPHYRUM; k < numerus; k++)
     {
-         i8* scalare;
-         i8* quadratum;
-        s32  signum = ZEPHYRUM;
+                  i8* scalare;
+         constans i8* quadratum;
+                 s32  signum = ZEPHYRUM;
 
         si (   _communis(v, directiones[k]) == NIHIL
             || _partes_nullae(directiones[k], I))
@@ -828,8 +830,10 @@ _proximus (
         }
         scalare    = _productum_scalare(anulus, v, directiones[k],
             piscina);
-        quadratum  = _productum_scalare(anulus, directiones[k],
-            directiones[k], piscina);
+        quadratum  = (quadrata != NIHIL && quadrata[k] != NIHIL)
+            ? (constans i8*)quadrata[k]
+            : _productum_scalare(anulus, directiones[k], directiones[k],
+                piscina);
         si (   scalare == NIHIL || quadratum == NIHIL
             || !_signum(anulus, scalare, piscina, &signum))
         {
@@ -944,7 +948,7 @@ quaternio_proximus (
 {
     PiscinaNotatio nota  = piscina_notare(piscina);
                b32 bene  = _proximus(v, directiones, numerus,
-                   antipodes_idem, piscina, index, NIHIL, NIHIL);
+                   antipodes_idem, piscina, index, NIHIL, NIHIL, NIHIL);
 
     piscina_reficere(piscina, nota);
     redde bene;
@@ -959,6 +963,21 @@ quaternio_proximi (
                Piscina* piscina,
                    i32* indices,
                    i32* numerus_proximorum)
+{
+    redde quaternio_proximi_quadrata(v, directiones, NIHIL, numerus,
+        antipodes_idem, piscina, indices, numerus_proximorum);
+}
+
+b32
+quaternio_proximi_quadrata (
+                    Quaternio  v,
+           constans Quaternio* directiones,
+    constans vacuum* constans* quadrata,
+                          i32  numerus,
+                          b32  antipodes_idem,
+                      Piscina* piscina,
+                          i32* indices,
+                          i32* numerus_proximorum)
 {
     PiscinaNotatio  nota   = piscina_notare(piscina);
                i32  index  = ZEPHYRUM;
@@ -975,7 +994,7 @@ quaternio_proximi (
     operis = (i32*)piscina_allocare(piscina,
         (memoriae_index)numerus * magnitudo(i32));
     bene = _proximus(v, directiones, numerus, antipodes_idem, piscina,
-        &index, operis, &n);
+        &index, operis, &n, quadrata);
     si (bene)
     {
         per (k = ZEPHYRUM; k < n; k++)

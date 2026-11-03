@@ -67,7 +67,7 @@ fi
 obj_files="$obj_files $obj"
 
 for src in "$OFF_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; then
         echo "  [officina] $base.c" >&2

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- attributa: armatura -2 minor, metrum 6/8, claviculae G2 et F4 in baculis duobus; mensura 2: armatura non tradita (F# G#), metrum additivum 3+2/8 -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Clavicembalum</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>6</divisions>
+        <key><fifths>-2</fifths><mode>minor</mode></key>
+        <time><beats>6</beats><beat-type>8</beat-type></time>
+        <staves>2</staves>
+        <clef number="1"><sign>G</sign><line>2</line></clef>
+        <clef number="2"><sign>F</sign><line>4</line></clef>
+      </attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>18</duration><voice>1</voice><staff>1</staff></note>
+      <backup><duration>18</duration></backup>
+      <note><pitch><step>C</step><octave>3</octave></pitch><duration>18</duration><voice>5</voice><staff>2</staff></note>
+    </measure>
+    <measure number="2">
+      <attributes>
+        <key><key-step>F</key-step><key-alter>1</key-alter><key-step>G</key-step><key-alter>1</key-alter></key>
+        <time><beats>3+2</beats><beat-type>8</beat-type></time>
+      </attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>15</duration><voice>1</voice><staff>1</staff></note>
+    </measure>
+  </part>
+</score-partwise>

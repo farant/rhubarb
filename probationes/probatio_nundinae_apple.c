@@ -680,6 +680,31 @@ _sectio_distributio (
     }
 }
 
+/* http2-plan T11: capacitas (bundleIdCapabilities) praesens? */
+interior vacuum
+_sectio_capacitas (
+    CredoContextus* c)
+{
+     Piscina* p = c->piscina;
+   JsonValor* corpus;
+
+    corpus = _fixum(FIXA "capacitates.json", p);
+    CREDO_NECESSE_NON_NIHIL(corpus);
+    CREDO_GRADUS("GAME_CENTER praesens, PUSH_NOTIFICATIONS absens");
+    CREDO_VERUM(nundinae_apple_capacitas_inest(corpus, "GAME_CENTER",
+        p));
+    CREDO_VERUM(nundinae_apple_capacitas_inest(corpus,
+        "IN_APP_PURCHASE",
+        p));
+    CREDO_FALSUM(nundinae_apple_capacitas_inest(corpus,
+        "PUSH_NOTIFICATIONS", p));
+    CREDO_GRADUS("corpus malum aut vacuum: absens");
+    CREDO_FALSUM(nundinae_apple_capacitas_inest(NIHIL, "GAME_CENTER",
+        p));
+    CREDO_FALSUM(nundinae_apple_capacitas_inest(json_legere_literis(
+        "{\"data\":[]}", p).radix, "GAME_CENTER", p));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tessera", _sectio_tessera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "renovatio", _sectio_renovatio, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -694,6 +719,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "responsa", _sectio_responsa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "missio", _sectio_missio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "distributio", _sectio_distributio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "capacitas (http2 T11)", _sectio_capacitas, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -449,6 +449,29 @@ tls_vectura (
     redde connexio ? connexio->vectura : TLS_VECTURA_ORDINARIA;
 }
 
+chorda
+tls_protocollum (
+    TlsConnexio* connexio)
+{
+    chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (connexio == NIHIL)
+    {
+        redde vacua;
+    }
+    si (connexio->vectura == TLS_VECTURA_BEARSSL)
+    {
+        redde tls_bearssl_protocollum(connexio->bearssl);
+    }
+    si (connexio->vectura == TLS_VECTURA_TLS13)
+    {
+        redde tls_tls13_protocollum(connexio->tls13);
+    }
+    redde vacua;
+}
+
 i32
 tls_versio (
     TlsConnexio* connexio)

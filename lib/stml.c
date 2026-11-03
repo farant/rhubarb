@@ -367,15 +367,58 @@ _tok_progredi (
     }
 }
 
+/* Cursorem ad 'finis' movere cum linea et columna (budget B1 B4):
+ * idem ac _tok_progredi per octetum, sed lineae novae per memchr
+ * numerantur et columna ex linea nova ultima computatur - nulla
+ * probatio finium per octetum. finis <= input.mensura. */
+interior vacuum
+_tok_saltare (
+    StmlTokenContext* ctx,
+                 i32  finis)
+{
+    constans i8* p;
+    constans i8* f;
+    constans i8* nl;
+    constans i8* ultima;
+
+    p       = ctx->input.datum + ctx->positus;
+    f       = ctx->input.datum + finis;
+    ultima  = NIHIL;
+    dum (p < f)
+    {
+        nl = (constans i8*)memchr(p, '\n', (memoriae_index)(f - p));
+        si (nl == NIHIL)
+        {
+            frange;
+        }
+        ctx->linea++;
+        ultima  = nl;
+        p       = nl + I;
+    }
+    si (ultima != NIHIL)
+    {
+        ctx->columna = I + (i32)(f - (ultima + I));
+    }
+    alioquin
+    {
+        ctx->columna += finis - ctx->positus;
+    }
+    ctx->positus = finis;
+}
+
 interior vacuum
 _tok_praeterire_spatium (
     StmlTokenContext* ctx)
 {
-    dum (   ctx->positus < ctx->input.mensura
-         && _est_spatium(_tok_aspicere(ctx, ZEPHYRUM)))
+    i32 finis;
+
+    finis = ctx->positus;
+    dum (   finis < ctx->input.mensura
+         && _est_spatium((character)ctx->input.datum[finis]))
     {
-        _tok_progredi(ctx, I);
+        finis++;
     }
+    _tok_saltare(ctx, finis);
 }
 
 /* Nomen vacuum coram charactere non-structurali = initium tituli
@@ -450,10 +493,18 @@ _tok_legere_nomen (
         redde result;
     }
 
-    dum (   ctx->positus < ctx->input.mensura
-         && _est_nomen_character(_tok_aspicere(ctx, ZEPHYRUM)))
+    /* nomen lineam novam numquam continet: columna += longitudo */
     {
-        _tok_progredi(ctx, I);
+        i32 finis;
+
+        finis = ctx->positus;
+        dum (   finis < ctx->input.mensura
+             && _est_nomen_character((character)ctx->input.datum[finis]))
+        {
+            finis++;
+        }
+        ctx->columna += finis - ctx->positus;
+        ctx->positus = finis;
     }
 
     result.datum    = ctx->input.datum + initium;
@@ -1836,10 +1887,14 @@ _tok_legere_textus (
     initium_linea    = ctx->linea;
     initium_columna  = ctx->columna;
 
-    dum (   ctx->positus < ctx->input.mensura
-         && _tok_aspicere(ctx, ZEPHYRUM) != '<')
+    si (ctx->positus < ctx->input.mensura)
     {
-        _tok_progredi(ctx, I);
+        constans i8* lt;
+
+        lt = (constans i8*)memchr(ctx->input.datum + ctx->positus, '<',
+            (memoriae_index)(ctx->input.mensura - ctx->positus));
+        _tok_saltare(ctx, lt != NIHIL
+            ? (i32)(lt - ctx->input.datum) : ctx->input.mensura);
     }
 
     token.genus                      = STML_TOKEN_TEXTUS;
@@ -2210,7 +2265,52 @@ nomen structura {
            i32 linea_erroris;
            i32 columna_erroris;
         chorda error;
+
+    /* TRIVIA PER MEMORIAM (budget B1 B8): trivia arboris pulchrae
+     * fere solum '\n' et cursus spatiorum sunt - punctatores
+     * internati pigre servati (idem quem chorda_internare redderet) */
+       chorda* trivia_spatia[LXIV];
+       chorda* trivia_nl;
 } StmlParserContext;
+
+/* trivia internare: '\n' aut spatia sola (< LXIV) ex memoria
+ * parva (pigre per chorda_internare impleta - punctator canonicus
+ * idem), cetera per chorda_internare */
+interior chorda*
+_trivia_internare (
+    StmlParserContext* ctx,
+               chorda  s)
+{
+      chorda** cella;
+         i32   i;
+
+    cella = NIHIL;
+    si (s.mensura == I && s.datum[ZEPHYRUM] == (i8)'\n')
+    {
+        cella = &ctx->trivia_nl;
+    }
+    alioquin si (s.mensura > ZEPHYRUM && s.mensura < LXIV)
+    {
+        i = ZEPHYRUM;
+        dum (i < s.mensura && s.datum[i] == (i8)' ')
+        {
+            i++;
+        }
+        si (i == s.mensura)
+        {
+            cella = &ctx->trivia_spatia[s.mensura];
+        }
+    }
+    si (cella == NIHIL)
+    {
+        redde chorda_internare(ctx->intern, s);
+    }
+    si (*cella == NIHIL)
+    {
+        *cella = chorda_internare(ctx->intern, s);
+    }
+    redde *cella;
+}
 
 /* prototypum (definitio statim infra) - progressio eo utitur */
 interior vacuum
@@ -2989,7 +3089,7 @@ _spatia_apponere (
     }
     si (*campus == NIHIL)
     {
-        *campus = chorda_internare(ctx->intern, addendum);
+        *campus = _trivia_internare(ctx, addendum);
     }
     alioquin
     {
@@ -3185,11 +3285,11 @@ _textum_tractare (
     nodus->valor = chorda_internare(ctx->intern, unescaped);
     si (ante_mea.mensura > ZEPHYRUM)
     {
-        nodus->spatia_ante = chorda_internare(ctx->intern, ante_mea);
+        nodus->spatia_ante = _trivia_internare(ctx, ante_mea);
     }
     si (post_mea.mensura > ZEPHYRUM)
     {
-        nodus->spatia_post = chorda_internare(ctx->intern, post_mea);
+        nodus->spatia_post = _trivia_internare(ctx, post_mea);
     }
 
     _parser_progredi(ctx);
@@ -3242,7 +3342,7 @@ _liberos_legere (
             si (liberum != NIHIL && pendens.mensura > ZEPHYRUM)
             {
                 liberum->spatia_ante =
-                    chorda_internare(ctx->intern, pendens);
+                    _trivia_internare(ctx, pendens);
                 pendens.datum    = NIHIL;
                 pendens.mensura  = ZEPHYRUM;
             }
@@ -4390,6 +4490,29 @@ _processare_captiones (
         }
     }
 
+    /* Nullus liber captor (nec ANTE non crudus, nec RETRO, nec
+     * FARCIMEN) neque NIHIL: transitus secundus liberos eodem ordine
+     * transcriberet - liberi servantur, duo Xar non creantur (budget
+     * B1 B3) */
+    per (i = ZEPHYRUM; i < num; i++)
+    {
+        liberum = _xar_liberum_obtinere(nodus->liberi, i);
+        si (   liberum == NIHIL
+            || (   liberum->genus == STML_NODUS_ELEMENTUM
+                && (   (   liberum->captio_directio == STML_CAPTIO_ANTE
+                        && !liberum->crudus)
+                    || liberum->captio_directio == STML_CAPTIO_RETRO
+                    || liberum->captio_directio
+                        == STML_CAPTIO_FARCIMEN)))
+        {
+            frange;
+        }
+    }
+    si (i == num)
+    {
+        redde;
+    }
+
     /* Second pass: handle capture operators */
     novi_liberi = xar_creare(piscina, magnitudo(StmlNodus*));
 
@@ -4645,6 +4768,8 @@ stml_legere (
     ctx.current.captio_numerus   = ZEPHYRUM;
     ctx.current.habet_captus     = FALSUM;
     ctx.finis_ultimus            = ZEPHYRUM;
+    ctx.trivia_nl                = NIHIL;
+    memset(ctx.trivia_spatia, ZEPHYRUM, magnitudo(ctx.trivia_spatia));
 
     /* Create document node */
     documentum = _parser_creare_nodus(&ctx, STML_NODUS_DOCUMENTUM);
@@ -5206,13 +5331,36 @@ _crudum_fugatum_scribere (
             i = i + I + gradus;
             perge;
         }
-        chorda_aedificator_appendere_character(aed,
-            (character)valor.datum[i]);
-        si ((character)valor.datum[i] == '\n')
+        si (   (character)valor.datum[i] == '\n'
+            || (character)valor.datum[i] == '<')
         {
-            linea_nova = VERUM;
+            chorda_aedificator_appendere_character(aed,
+                (character)valor.datum[i]);
+            si ((character)valor.datum[i] == '\n')
+            {
+                linea_nova = VERUM;
+            }
+            i++;
+            perge;
         }
-        i++;
+        /* cursus sine '<' et '\n' appenditione una (budget B1 B14):
+         * sequentia solum ad '<' incipit, praefixum solum post '\n' */
+        {
+            chorda pars;
+               i32 finis;
+
+            finis = i + I;
+            dum (   finis < valor.mensura
+                 && (character)valor.datum[finis] != '<'
+                 && (character)valor.datum[finis] != '\n')
+            {
+                finis++;
+            }
+            pars.datum    = valor.datum + i;
+            pars.mensura  = finis - i;
+            chorda_aedificator_appendere_chorda(aed, pars);
+            i = finis;
+        }
     }
 }
 
@@ -6642,32 +6790,39 @@ _scribere_evasus (
                chorda* s)
 {
           i32 i;
+          i32 initium;
     character c;
+       chorda pars;
 
     si (!s)
     {
         redde;
     }
 
+    /* cursus inter signa evadenda appenditione una (budget B1 B14) */
+    initium = ZEPHYRUM;
     per (i = ZEPHYRUM; i < s->mensura; i++)
     {
         c = (character)s->datum[i];
-
-        commutatio (c)
+        si (c != '<' && c != '>' && c != '&')
         {
-            casus '<':
-                chorda_aedificator_appendere_literis(aed, "&lt;");
-                frange;
-            casus '>':
-                chorda_aedificator_appendere_literis(aed, "&gt;");
-                frange;
-            casus '&':
-                chorda_aedificator_appendere_literis(aed, "&amp;");
-                frange;
-            ordinarius:
-                chorda_aedificator_appendere_character(aed, c);
-                frange;
+            perge;
         }
+        si (i > initium)
+        {
+            pars.datum    = s->datum + initium;
+            pars.mensura  = i - initium;
+            chorda_aedificator_appendere_chorda(aed, pars);
+        }
+        chorda_aedificator_appendere_literis(aed, c == '<' ? "&lt;"
+            : c == '>' ? "&gt;" : "&amp;");
+        initium = i + I;
+    }
+    si (s->mensura > initium)
+    {
+        pars.datum    = s->datum + initium;
+        pars.mensura  = s->mensura - initium;
+        chorda_aedificator_appendere_chorda(aed, pars);
     }
 }
 

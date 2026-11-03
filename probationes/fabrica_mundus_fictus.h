@@ -120,6 +120,10 @@ nomen structura {
     constans character* effusio;    /* acta cursoris (plan 5 T3:
                                      * signum in eis quaeritur); NIHIL
                                      * = nulla */
+    constans character* diarium;    /* linea diario institutionum
+                                     * (~/.rhubarb/institutiones.tsv)
+                                     * DUM agitur addita - institutio
+                                     * aliena ficta (parcum …5NQBP) */
 } ScriptumFictum;
 
 /* memoria verificationum ficta (T6): tabula sqlite in memoria */

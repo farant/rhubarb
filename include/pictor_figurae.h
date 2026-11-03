@@ -24,6 +24,10 @@ nomen structura {
                  i32 cellula_altitudo;
     /* pinacotheca T5: fons pinacum ("pinax:..."); NIHIL = nulla */
     PictorPinacotheca* pinacotheca;
+    /* communio-plan-5 T6: fons pinacum alienorum ("alienus:...") et
+     * condiciones menu (structura PictorCompositio) */
+       PictorCommunia* communia;
+    constans structura PictorCompositio* compositio;
 } PictorFigurae;
 
 vacuum

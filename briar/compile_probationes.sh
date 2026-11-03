@@ -28,6 +28,7 @@ set -u
 BRIAR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MD_DIR="$(cd "$BRIAR_DIR/../md" && pwd)"
 MATERIA_DIR="$(cd "$BRIAR_DIR/../materia" && pwd)"
+XML_DIR="$(cd "$BRIAR_DIR/../xml" && pwd)"
 RADIX_DIR="$(cd "$BRIAR_DIR/.." && pwd)"
 BUILD_DIR="$BRIAR_DIR/build"
 # SERA cursoris (tools/sera.sh, 2026-09-07): cursus duo eiusdem suitae
@@ -62,6 +63,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$MATERIA_DIR/fontes"
     "-I$MD_DIR/fontes"
+    "-I$XML_DIR/fontes"
     "-I$BRIAR_DIR/fontes"
     "-I$BRIAR_DIR/probationes"
     "-I$RADIX_DIR/silva/amalgama"
@@ -112,9 +114,12 @@ declare -a RADIX_FONTES=(
     "machina_posix"
     "silex"
     # briar -app (spec par. 4.8): fasciculum et quae trahit
-    # (bin/aedilis lib/fasciculum.c --partes, 2026-09-14)
-    "xml"
+    # (bin/aedilis lib/fasciculum.c --partes, 2026-09-14; plist super
+    # xml/fontes ab 2026-10-30 - fontes xml et materiae infra)
     "base64"
+    "excerptum"
+    "runae"
+    "runae_tabulae"
     "plist"
     "fasciculum"
     # icones (opus IV): imago NON additur - nm: icones, imago_opus,
@@ -167,7 +172,7 @@ while IFS= read -r caput_via; do
     if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
         CAPUT_RECENS="$caput_via"
     fi
-done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$MD_DIR/fontes" "$BRIAR_DIR/fontes" "$BRIAR_DIR/probationes" "$RADIX_DIR/silva/amalgama" \
+done < <(find "$RADIX_DIR/include" "$MATERIA_DIR/fontes" "$MD_DIR/fontes" "$XML_DIR/fontes" "$BRIAR_DIR/fontes" "$BRIAR_DIR/probationes" "$RADIX_DIR/silva/amalgama" \
              "$RADIX_DIR/officina/instrumenta/compendium.h" \
              "$RADIX_DIR/silva/instrumenta/silva_conflatio.h" -name "*.h" 2>/dev/null)
 if [ -z "$CAPUT_RECENS" ]; then
@@ -282,14 +287,31 @@ obj_files="$obj_files $obj"
 
 shopt -s nullglob
 # materia sub-fontes: md eam CONSUMIT, non continet
+# (pictor ... excusatio: clausura xml, quam plist trahit)
 for m in materia_lexicon materia_token materia_nodus materia_scribere \
-         materia_arbor materia_arbor_aequalitas; do
+         materia_arbor materia_arbor_aequalitas materia_pictor \
+         materia_diagnostica materia_annotationes materia_exemplaria \
+         materia_excusatio; do
     src="$MATERIA_DIR/fontes/$m.c"
     obj="$BUILD_DIR/$m.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [materia] $m.c"
         if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
             echo "FRACTA: $m.c" ; exit 1
+        fi
+    fi
+    obj_files="$obj_files $obj"
+done
+
+# xml (cliens materiae octavus): plist eo legit (fasciculum -> plist)
+for base in xml_registrum_coctum xml_lexicon xml_nomina xml_lector \
+            xml_arbor xml_coctum xml_documentum; do
+    src="$XML_DIR/fontes/$base.c"
+    obj="$BUILD_DIR/$base.o"
+    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
+        echo "  [xml] $base.c"
+        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
+            echo "FRACTA: $base.c" ; exit 1
         fi
     fi
     obj_files="$obj_files $obj"
@@ -319,7 +341,7 @@ fi
 obj_files="$obj_files $obj"
 
 for src in "$BRIAR_DIR"/fontes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
         echo "  [briar] $base.c"
@@ -332,7 +354,7 @@ done
 
 # adiumenta probationum (probationes/*.c non probatio_*)
 for src in "$BRIAR_DIR"/probationes/*.c; do
-    base="$(basename "$src" .c)"
+    base="${src##*/}"; base="${base%.c}"
     case "$base" in probatio_*) continue ;; esac
     obj="$BUILD_DIR/$base.o"
     if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then

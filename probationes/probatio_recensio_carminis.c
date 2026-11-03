@@ -152,7 +152,8 @@ _sectio_munda (
     CREDO_CHORDA_CONTINET (t, chorda_ex_literis("\n  pars melodia ",
         c->piscina));
     CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  censura (lineae "
-        "clavis ambitus dissonantia acorda): 0 inventa\n", c->piscina));
+        "clavis ambitus dissonantia acorda finalis): 0 inventa\n",
+        c->piscina));
     CREDO_CHORDA_CONTINET (t, chorda_ex_literis("  tacitae: nullae\n",
         c->piscina));
 
@@ -187,7 +188,7 @@ _sectio_munda (
     regulae = json_objectum_capere(json_objectum_capere(j, "censura"),
         "regulae");
     CREDO_NECESSE (regulae != NIHIL
-                   && json_tabulatum_numerus(regulae) == V);
+                   && json_tabulatum_numerus(regulae) == VI);
     CREDO_CHORDA_AEQUALIS_LITERIS (json_ad_chorda(
         json_tabulatum_obtinere(regulae, ZEPHYRUM)), "lineae");
     CREDO_AEQUALIS_I32 (json_tabulatum_numerus(json_objectum_capere(
@@ -375,6 +376,35 @@ _sectio_calida (
     CREDO_AEQUALIS_I32 (recensio_carminis_monita(&r), I);
 }
 
+/* metrum liberum: titulus et JSON 'liberum' (non 0/8), mensurae
+ * incisa */
+interior vacuum
+_sectio_liberum (
+    CredoContextus* c)
+{
+            Carmina* liber;
+     CarminisVitium  vitium;
+      RecensioForma  f;
+   RecensioCarminis  r;
+          JsonValor* j;
+
+    liber = (Carmina*)piscina_allocare(c->piscina, magnitudo(Carmina));
+    CREDO_NECESSE (liber != NIHIL && carmina_legere(chorda_ex_literis(
+        "<carmina><carmen titulus=\"r\" tempus=\"100\" "
+        "metrum=\"liberum\"><pars titulus=\"m\" "
+        "instrumentum=\"aether\"><frustum mensura=\"1\"><textus!>"
+        "c4 d4 e4 | d4 c2</textus></frustum></pars></carmen>"
+        "</carmina>", c->piscina), c->piscina, liber, &vitium));
+    recensio_carminis_ordinaria(&f);
+    CREDO_NECESSE (recensio_carminis_facere(&liber->carmina[ZEPHYRUM],
+        &f, NIHIL, c->piscina, &r));
+    CREDO_CHORDA_INCIPIT (_textus(c, &r), chorda_ex_literis(
+        "recensio r: c maior, liberum, 100, 2 mensurae, ", c->piscina));
+    j = _json(c, &r);
+    CREDO_NECESSE (j != NIHIL);
+    CREDO_VERUM (_chorda_est(j, "metrum", "liberum"));
+}
+
 /* clivus ab initio (C -> LX per mensuram I: gradus primus XCIX):
  * titulus et JSON tempus SCRIPTUM (C) nominant, duratio mappa
  * sonandi (> 4.8 s ad C) */
@@ -481,6 +511,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "calida", _sectio_calida, NIHIL, NIHIL, NIHIL, NIHIL },
     { "partitura", _sectio_partitura, NIHIL, NIHIL, NIHIL, NIHIL },
     { "clivus", _sectio_clivus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "liberum", _sectio_liberum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pars_tacita", _sectio_pars_tacita, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

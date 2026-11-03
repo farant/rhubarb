@@ -278,6 +278,30 @@ nundinae_apple_digestum_sha1 (
  * creatum (NIHIL licet) = VERUM si hic creatum est.
  * ================================================== */
 
+/* http2-plan T11: capacitas (e.g. "PUSH_NOTIFICATIONS") in corpore
+ * (JSON lectum) GET /v1/bundleIds/{id}/bundleIdCapabilities? (purum;
+ * NIHIL = absens) */
+b32
+nundinae_apple_capacitas_inest (
+             JsonValor* corpus,
+    constans character* capacitas,
+               Piscina* p);
+
+/* capacitas signi fasciculi 'identificator' (quaeritur, NON creatur):
+ * *inest = praesens; si creare et absens, POST bundleIdCapabilities
+ * (*creata VERUM). NUMQUAM delet. FALSUM si signum absens aut Apple
+ * errat (causa). */
+b32
+nundinae_apple_capacitas (
+          NundinaeApple* n,
+                 chorda  identificator,
+     constans character* capacitas,
+                    b32  creare,
+                    b32* inest,
+                    b32* creata,
+                 chorda* causa,
+                Piscina* p);
+
 /* signum fasciculi (bundle ID) IOS */
 b32
 nundinae_apple_signum_fasciculi (

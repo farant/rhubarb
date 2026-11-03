@@ -45,6 +45,30 @@ else
 fi
 mkdir -p "$DEST" || exit 1
 T="$DEST/$(basename "$B")"
+# DIARIUM INSTITUTIONUM (parcum …5NQBP): fabrica scripturam '~/.bin'
+# extra vestigium membri quam linea hic addita explicat institutioni
+# alienae ascribit (MONITUM), non membro. Lineae duae (ante rm, post
+# cp): utraque fenestra lectionum fabricae institutionem tegit. Solum
+# ~/.bin verum (FABRICA_SCRIPTURA = directorium iudicis temporarium).
+DIARIUM=""
+if [ -z "${FABRICA_SCRIPTURA:-}" ]; then
+    mkdir -p "$HOME/.rhubarb" 2>/dev/null \
+        && DIARIUM="$HOME/.rhubarb/institutiones.tsv"
+fi
+_diarium () {
+    [ -n "$DIARIUM" ] && printf '%s\t~/.bin/%s\n' "$(date +%s)" \
+        "$(basename "$B")" >> "$DIARIUM"
+    return 0
+}
+# fabrica diarium bis per actionem legit: parvum maneat (> XXXII KB ->
+# lineae CC ultimae; rotatio inter lectiones = fenestra non explicata,
+# fractura rara et vera manet, numquam falsum transitum)
+if [ -n "$DIARIUM" ] && [ -f "$DIARIUM" ] \
+        && [ "$(wc -c < "$DIARIUM")" -gt 32768 ]; then
+    tail -n 200 "$DIARIUM" > "$DIARIUM.$$" && mv "$DIARIUM.$$" "$DIARIUM"
+fi
+_diarium
 rm -f "$T" || exit 1
 cp "$B" "$T" || { echo "instituere: copia fracta: $T" >&2; exit 1; }
+_diarium
 echo "institutum: $T"

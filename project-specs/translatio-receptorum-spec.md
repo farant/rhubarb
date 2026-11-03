@@ -229,6 +229,34 @@ makes them the first B targets.
   carried gates anyway and compare. That is the pattern of
   `AUDITUS_COMMISSIONIS` for fabrica memo hits.
 
+## IV-quinquies. A.3 switched on (Fran 2026-10-31): scope (a) only
+
+- **Evidence:** the shadow log in quinta, 2026-10-24..31: 2 076
+  decisions. 185 would carry (125 under scope a, ~593 s; 60 more under
+  scope b only, ~968 s), with **0 DISSENSUS**. The rest had to run:
+  1 049 owed (their own inputs changed), 629 `numquam` (the fabrica
+  authority keeps its per-member reuse), 129 tool binaries changed,
+  42 reads changed.
+- **What runs differently:** in `silva._portas_currere`, a gate whose
+  decision is PORTAT under scope (a) is not run. It needs a record of
+  the SAME attempt (`commissio:<HEAD>` = retries of one commit;
+  `fusio:<merge-base>` = passes of one merge attempt, so a merge's first
+  pass stays fresh). Its line reads `porta X: <compendium>
+  [translatum: <cause>] - non iterum cursa (translatio, scopus a)`, and
+  it counts as green.
+- **Audit:** 1 in `PORTAE_TRANSLATIO_AUDITUS` (default 10, 0 = none)
+  carried gates runs anyway ("translatio: X auditur"). Its real verdict
+  is logged, and a red one shouts DISSENSUS as in shadow and fails like
+  any red gate.
+- **Switches:** `PORTAE_TRANSLATIO=umbra` = the old behaviour (every gate
+  runs, decisions only logged). `PORTAE_TRANSLATIO_UMBRA=0` = translation
+  fully off.
+- **Scope (b)** (carrying a record from another attempt, i.e. across
+  commits) stays shadow-only and needs its own decision. The 60 cases /
+  ~968 s above are the evidence to weigh.
+- **Plant:** dropping the same-attempt check (scope b carried) turns
+  "translatio activa: conatus alius (scopus b) currit" red.
+
 ## V. AUDIENDA
 
 - Tracing can't see Python, plain-shell or raw-IO reads (class 3; also

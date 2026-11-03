@@ -1,0 +1,4 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: solum UTF-8 (M13): vitium; music21 UTF-16 legit
+!	vitium	5	0:0

@@ -909,6 +909,70 @@ _toml_probare (
 
 
 /* ==================================================
+ * PROBARE: xml: cliens materiae derivatum (xml_arbor P16)
+ * ================================================== */
+
+interior vacuum
+_xml_probare (
+    CredoContextus* c)
+{
+    constans FixuraFabricae* fx;
+                    Piscina* piscina = c->piscina;
+        InternamentumChorda* intern;
+         constans SilexFons* fons;
+
+    si (c->suita == NIHIL)
+    {
+        redde;
+    }
+    fx      = (constans FixuraFabricae*)c->suita;
+    intern  = fx->intern;
+    fons    = fx->fons;
+    {
+                        Xar* nexus;
+        BriarFabricaFructus  f = _fabricare(piscina, intern, fons,
+            "briar/probationes/fixa/thistle/xml_partitura.thistle",
+            &nexus);
+        constans BriarPlagula* caput;
+        constans BriarPlagula* aed;
+
+        si (!f.successus)
+        {
+            imprimere("  RECUSATIO: %.*s\n", (integer)f.causa.mensura,
+                (constans character*)f.causa.datum);
+        }
+        CREDO_VERUM (f.successus);
+        caput  = _genita(&f, "include/xml_partitura_regiones.h");
+        aed    = _genita(&f, "aedificare.sh");
+        CREDO_NON_NIHIL (caput);
+        CREDO_NON_NIHIL (aed);
+        si (caput != NIHIL && aed != NIHIL)
+        {
+            /* xml_documentum.h e radice clientis derivatum */
+            CREDO_VERUM (_continet(piscina, caput->contentum,
+                "#include \"xml_documentum.h\"\n"));
+            /* radices clientium USITATAE solum (toml non trahitur) */
+            CREDO_VERUM (_continet(piscina, aed->contentum,
+                "-Imateria/fontes -Ixml/fontes"));
+            CREDO_VERUM (_continet(piscina, aed->contentum,
+                "xml/fontes/xml_documentum.c"));
+        }
+        CREDO_VERUM (_clausura_habet(&f,
+            "xml/fontes/xml_documentum.h"));
+        CREDO_VERUM (_clausura_habet(&f,
+            "xml/fontes/xml_documentum.c"));
+        CREDO_VERUM (_clausura_habet(&f, "xml/fontes/xml_coctum.c"));
+        CREDO_VERUM (_clausura_habet(&f,
+            "materia/fontes/materia_nodus.c"));
+        /* oraculum et computus non trahuntur (nemo eos includit) */
+        CREDO_FALSUM (_clausura_habet(&f,
+            "xml/fontes/xml_oraculum.c"));
+        briar_silvam_solvere(nexus);
+    }
+}
+
+
+/* ==================================================
  * PROBARE: bibliothecam: membra in proiecto
  * ================================================== */
 
@@ -1418,6 +1482,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "derivatum: capita in caput genitum", _derivatum_probare, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "toml: cliens materiae derivatum", _toml_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "xml: cliens materiae derivatum", _xml_probare, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "bibliothecam: membra in proiecto", _bibliothecam_probare, NIHIL,
         NIHIL, NIHIL, NIHIL },

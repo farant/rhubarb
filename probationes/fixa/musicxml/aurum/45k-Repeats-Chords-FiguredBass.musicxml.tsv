@@ -1,0 +1,8 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: repeat et ending in duobus <barline> (suitae propositum): 1 2 1 3 4; music21 mensuram amittit
+P1	0	4	65	F	0	0	-
+P1	4	4	65	F	0	0	-
+P1	8	4	65	F	0	0	-
+P1	12	4	65	F	0	0	-
+P1	16	4	65	F	0	0	-

@@ -19,6 +19,28 @@ Leges chartae:
 
 ## inedita
 
+- FRANGIT: `xml` novum - cliens materiae XML 1.0 (ed. V) + Namespaces
+  1.0 (`xml/fontes/xml_documentum.h`; suite W3C integra), `lib/xml.c`
+  et `include/xml.h` vetera remota. Vetera -> nova:
+  `xml_legere(t, p, intern)` / `xml_legere_ex_literis` ->
+  `xml_documentum_legere(t, p)`; `r.successus` ->
+  `xml_documentum_successus(doc)`; `r.radix` ->
+  `xml_documentum_radix(doc)`; `*n->titulus` -> `xml_titulus(n)`;
+  `xml_attributum_capere(n, k)` -> `xml_attributum(n, k, &c)` (FALSUM
+  si abest); `xml_invenire_liberum(n, t)` -> `xml_filius(n, t)`;
+  `xml_invenire_omnes_liberos` -> `xml_filius` + `xml_frater` in
+  laqueo; `xml_textus_internus(n, p)` -> `xml_textus_totus(n, p, &c)`;
+  `xml_numerus_liberorum` / `xml_liberum_ad_indicem` ->
+  `xml_liberorum_numerus` / `xml_liberum`. Scriptor (`xml_scribere`,
+  `xml_elementum_creare` ...) remotus sine successore (futurum
+  nominatum). Novum: DOCTYPE et pars interna (entitates, attributa
+  praestituta), CDATA, spatia nominum (`xml_attributum_spatii`),
+  textus spatii solius servatur, omnia vitia cum `via:linea:columna`
+  (`xml_documentum_diagnostica_scribere`). Sine `#include`.
+- corpus: radix clientis tertia `xml/fontes` (post `materia/fontes`,
+  `toml/fontes`); `plist` nunc per eam legit et scriptor suus est
+  (forma octetim eadem), `PLIST_PROFUNDITAS_MAXIMA` (512) addita.
+
 - corpus: `sarcina` (arca ZIP solum legenda, lector L1) et `codex`
   (liber EPUB: capita, clausulae, sententiae, emendationes; lector L2)
   additae.

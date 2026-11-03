@@ -40,6 +40,12 @@
     <!-- menu ⋯ (pinacotheca D2): Open picture, New picture, Import image -->
     <actio nomen="elenchus.agere"/>
     <actio nomen="pinacotheca.agere"/>
+    <!-- communio-plan-5 T6: Shared pictures, spectator -->
+    <actio nomen="communia.agere"/>
+    <actio nomen="spectator.agere"/>
+    <!-- communio-plan-5 T7: salutatio, inscriptio -->
+    <actio nomen="salutatio.agere"/>
+    <actio nomen="inscriptio.agere"/>
     <actio nomen="motus" systema="verum"/>
   </actiones>
 
@@ -100,6 +106,20 @@
             absens="0" scriptor="pinacotheca.agere"
             nota="pagina pinacothecae apertae (0 = prima); absens cum
                   clauditur"/>
+    <campus nomen="pagina_communium" typus="numerus" vita="transiens"
+            absens="0" scriptor="communia.agere"
+            nota="plan-5 T6: pagina Shared pictures (0 = prima)"/>
+    <campus nomen="spectata" typus="textus" vita="transiens"
+            scriptor="spectator.agere"
+            nota="plan-5 T6: pictura spectata 'replica:spatium'; absens
+                  = nulla"/>
+    <campus nomen="inscriptio_textus" typus="textus" vita="transiens"
+            scriptor="inscriptio.agere"
+            nota="plan-5 T7: textus campi inscriptionis (epistula aut
+                  codex); absens = vacuus"/>
+    <campus nomen="inscriptio_error" typus="nomen" vita="transiens"
+            scriptor="inscriptio.agere"
+            nota="plan-5 T7: error localis ('codex' = codex malus)"/>
     <campus nomen="glutinatio" typus="nomen" vita="transiens"
             scriptor="glutinatio.agere"
             nota="glutinatio pendens: A (Atkinson) | B (exemplaria); absens =

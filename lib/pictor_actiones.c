@@ -3,6 +3,8 @@
 #include "pictor_actiones.h"
 #include "pictor_componentia.h"
 #include "elenchus.h"
+#include "moneta.h"
+#include "communio_cliens.h"
 #include "xar.h"
 #include "exemplaria.h"
 
@@ -894,6 +896,20 @@ litterae_instrumenti (
     redde litterae_penicillus;
 }
 
+/* plan-5 T7: campus inscriptionis per claves (definitio infra) */
+interior b32
+inscriptionis_clavem_tractare (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+      constans Eventus* ev);
+
+/* plan-5 T6: spectator per claves (definitio infra) */
+interior b32
+spectatam_movere (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+                   s32  gradus);
+
 /* <tractator/> */
 b32
 pictor_instrumentum_eligere (
@@ -926,11 +942,35 @@ pictor_instrumentum_eligere (
         redde mutare_ramum(&ramus, instrumentum_ponere,
             litterae_instrumenti(nomen_instrumenti));
     }
+    /* plan-5 T8: applicatio redit (iOS) - communio statim pergit */
+    si (   ev->genus == EVENTUS_RESUMPTIO && ctx
+        && ((PictorActiones*)ctx)->communio_excitare)
+    {
+        ((PictorActiones*)ctx)->communio_excitare(
+            ((PictorActiones*)ctx)->inscriptio_ctx);
+        redde FALSUM;
+    }
     /* C1b T1: depositio (radici venit - nec indicator nec focus) =
      * glutinatio imaginis depositae */
     si (ev->genus == EVENTUS_DEPOSITIO)
     {
         redde imaginem_depositam_glutinare(repo, ctx, ev);
+    }
+    /* plan-5 T7: dialogus inscriptionis apertus - textus et claves
+     * campi; claves ceterae consumuntur (nulla instrumenta dum
+     * scribitur), Esc ad dimissionem */
+    si (   ctx && (   ev->genus == EVENTUS_TEXTUS
+                   || ev->genus == EVENTUS_CLAVIS_DEPRESSUS))
+    {
+        InsulaRamus  r;
+             chorda* palette;
+
+        r        = ramus_pictoris(repo, ctx);
+        palette  = insula_ramus_attributum(&r, "palette");
+        si (palette && chorda_aequalis_literis(*palette, "inscriptio"))
+        {
+            redde inscriptionis_clavem_tractare(repo, ctx, ev);
+        }
     }
     si (ev->genus != EVENTUS_CLAVIS_DEPRESSUS)
     {
@@ -961,6 +1001,21 @@ pictor_instrumentum_eligere (
     si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
     {
         redde FALSUM;
+    }
+    /* plan-5 T6: spectator - ← → (Mac) ut tractus */
+    si (   ctx && (   ev->datum.clavis.clavis == CLAVIS_SINISTER
+                   || ev->datum.clavis.clavis == CLAVIS_DEXTER))
+    {
+        InsulaRamus  r;
+             chorda* palette;
+
+        r        = ramus_pictoris(repo, ctx);
+        palette  = insula_ramus_attributum(&r, "palette");
+        si (palette && chorda_aequalis_literis(*palette, "spectator"))
+        {
+            redde spectatam_movere(repo, ctx, ev->datum.clavis.clavis
+                == CLAVIS_DEXTER ? I : -I);
+        }
     }
     /* Cmd+Z revocat, Cmd+Shift+Z reficit (historia: gradus multi);
      * linea pendens (captura) abicitur solum */
@@ -1044,49 +1099,14 @@ pictor_imaginem_eligere (
     redde pa->imaginem_eligere(pa->imaginem_eligere_ctx);
 }
 
-/* pinacotheca D6: spatium picturae novae "pictura-<n>", n = I +
- * maximum numerorum exstantium (nomen internum, numquam ostensum) */
+/* plan-5 T3 (communio D9/D12): spatium picturae novae = ULID - unicum
+ * sine coordinatione inter machinas, ordine temporis; picturae
+ * veteres "pictura-<n>" nomen suum servant */
 interior vacuum
 spatium_novum (
-      Volumen* volumen,
-      Piscina* piscina,
-    character  exitus[XXXII])
+    character exitus[XXXII])
 {
-       Xar* l;
-    chorda  s;
-       i32  i;
-       i32  j;
-       i32  n;
-       i32  maximum;
-       b32  numeri;
-
-    maximum  = ZEPHYRUM;
-    l        = pictor_documenta_enumerare(volumen, piscina);
-    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
-    {
-        s = *(chorda*)xar_obtinere(l, i);
-        si (   s.mensura <= VIII || s.mensura > VIII + IX
-            || memcmp(s.datum, "pictura-", VIII) != ZEPHYRUM)
-        {
-            perge;
-        }
-        n       = ZEPHYRUM;
-        numeri  = VERUM;
-        per (j = VIII; j < s.mensura; j++)
-        {
-            si (s.datum[j] < '0' || s.datum[j] > '9')
-            {
-                numeri = FALSUM;
-                frange;
-            }
-            n = n * X + (i32)(s.datum[j] - '0');
-        }
-        si (numeri && n > maximum)
-        {
-            maximum = n;
-        }
-    }
-    sprintf(exitus, "pictura-%lu", (insignatus longus)(maximum + I));
+    moneta_ulid(exitus);
 }
 
 /* campus 'palette' sub nomine domini (palette.aperire) - res menu
@@ -1155,6 +1175,472 @@ paginam_scribere (
     redde scriptum;
 }
 
+/* plan-5 T6: campus 'pagina_communium' (dominus communia.agere) */
+interior vacuum
+paginam_communium_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+          s32 valor;
+    character t[XVI];
+
+    valor = ctx ? *(s32*)ctx : ZEPHYRUM;
+    si (valor <= ZEPHYRUM)
+    {
+        (vacuum)insula_attributum_tollere(radix, "pagina_communium");
+        redde;
+    }
+    sprintf(t, "%ld", (longus)valor);
+    insula_attributum_ponere(radix, p, in, "pagina_communium", t);
+}
+
+interior b32
+communium_paginam_scribere (
+     InsulaRepositorium* repo,
+                 vacuum* ctx,
+                    s32  valor)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+            chorda  prior;
+               b32  scriptum;
+
+    pa     = (PictorActiones*)ctx;
+    ramus  = ramus_pictoris(repo, ctx);
+    prior  = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("communia.agere",
+        pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, paginam_communium_mutator, &valor);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
+/* campus 'spectata' = "replica:spatium" (dominus spectator.agere);
+ * NIHIL tollit */
+interior vacuum
+spectatam_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    si (!ctx)
+    {
+        (vacuum)insula_attributum_tollere(radix, "spectata");
+        redde;
+    }
+    insula_attributum_ponere(radix, p, in, "spectata",
+        (constans character*)ctx);
+}
+
+interior b32
+spectatam_scribere (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+             character* valor)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+            chorda  prior;
+               b32  scriptum;
+
+    pa     = (PictorActiones*)ctx;
+    ramus  = ramus_pictoris(repo, ctx);
+    prior  = repo->scriptor;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("spectator.agere",
+        pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, spectatam_mutator, valor);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
+/* "replica:spatium" picturae k indicis communis (in piscina) */
+interior character*
+identitas_communis (
+    constans PictorCommunia* pc,
+                        s32  k,
+                    Piscina* piscina)
+{
+    PictorPicturaAliena* a;
+
+    a = (PictorPicturaAliena*)xar_obtinere(pc->picturae, (i32)k);
+    redde chorda_ut_cstr(chorda_concatenare(chorda_concatenare(a->replica,
+        chorda_ex_literis(":", piscina), piscina), a->spatium, piscina),
+        piscina);
+}
+
+/* index picturae spectatae in indice communi; -1 si abest */
+interior s32
+index_spectatae (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+       InsulaRamus  ramus;
+            chorda* s;
+            chorda  replica;
+            chorda  spatium;
+               i32  i;
+
+    pa     = (PictorActiones*)ctx;
+    ramus  = ramus_pictoris(repo, ctx);
+    s      = insula_ramus_attributum(&ramus, "spectata");
+    si (!s || !pa->communia)
+    {
+        redde -I;
+    }
+    per (i = ZEPHYRUM; i < s->mensura && s->datum[i] != ':'; i++)
+    {
+    }
+    si (i == ZEPHYRUM || i >= s->mensura)
+    {
+        redde -I;
+    }
+    replica.datum    = s->datum;
+    replica.mensura  = i;
+    spatium.datum    = s->datum + i + I;
+    spatium.mensura  = s->mensura - i - I;
+    redde pictor_communia_index(pa->communia, replica, spatium);
+}
+
+/* spectator: gradus +1 / -1 circulariter (spec IX.6: post ultimam
+ * prima) */
+interior b32
+spectatam_movere (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+                   s32  gradus)
+{
+    PictorActiones* pa;
+               s32  k;
+               s32  n;
+
+    pa  = (PictorActiones*)ctx;
+    k   = index_spectatae(repo, ctx);
+    n  = (pa->communia && pa->communia->picturae)
+        ? (s32)xar_numerus(pa->communia->picturae) : ZEPHYRUM;
+    si (k < ZEPHYRUM || n == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    k = ((k + gradus) % n + n) % n;
+    redde spectatam_scribere(repo, ctx, identitas_communis(pa->communia,
+        k, pa->doc->piscina));
+}
+
+/* ===== plan-5 T7: salutatio et inscriptio ===== */
+
+#define CAMPUS_MAXIMUS  CCLIV
+
+/* gradus inscriptionis per compositionem (-1 nulla) */
+interior s32
+gradus_inscriptionis (
+    constans PictorActiones* pa)
+{
+    redde (pa->compositio && pa->compositio->inscriptionis_gradus)
+        ? pa->compositio->inscriptionis_gradus(pa->compositio->auctor_ctx)
+        : -I;
+}
+
+interior b32
+gradus_exspectans (
+    s32 g)
+{
+    redde g == (s32)INSCRIPTIO_PETIT || g == (s32)INSCRIPTIO_EXSPECTAT
+        || g == (s32)INSCRIPTIO_CONFIRMAT
+        || g == (s32)INSCRIPTIO_CODEX_FALSUS;
+}
+
+interior vacuum
+claviaturam_ponere (
+    PictorActiones* pa,
+               i32  genus)
+{
+    pa->claviatura_genus = genus;
+    si (pa->claviaturam_ponere)
+    {
+        pa->claviaturam_ponere(pa->claviatura_ctx, genus);
+    }
+}
+
+vacuum
+pictor_claviaturam_conformare (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+       InsulaRamus  r;
+            chorda* palette;
+
+    pa = (PictorActiones*)ctx;
+    si (   !pa || !repo
+        || pa->claviatura_genus == (i32)TESTA_CLAVIATURA_NULLA)
+    {
+        redde;
+    }
+    r        = ramus_pictoris(repo, ctx);
+    palette  = insula_ramus_attributum(&r, "palette");
+    si (palette && chorda_aequalis_literis(*palette, "inscriptio"))
+    {
+        redde;
+    }
+    claviaturam_ponere(pa, (i32)TESTA_CLAVIATURA_NULLA);
+}
+
+/* claviatura secundum gradum: epistula, codex, aut nulla (inscripta) */
+interior vacuum
+claviaturam_gradui_ponere (
+    PictorActiones* pa)
+{
+    s32 g;
+
+    g = gradus_inscriptionis(pa);
+    claviaturam_ponere(pa, g == (s32)INSCRIPTIO_INSCRIPTA
+        ? (i32)TESTA_CLAVIATURA_NULLA : gradus_exspectans(g)
+        ? (i32)TESTA_CLAVIATURA_CODEX : (i32)TESTA_CLAVIATURA_EPISTULA);
+}
+
+/* campi 'inscriptio_textus' / 'inscriptio_error' (dominus
+ * inscriptio.agere); valor NIHIL tollit */
+nomen structura {
+    constans character* attributum;
+                chorda  valor;
+                   b32  tollere;
+} CampusInscriptionis;
+
+interior vacuum
+campum_inscriptionis_mutator (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    CampusInscriptionis* k = (CampusInscriptionis*)ctx;
+
+    si (k->tollere)
+    {
+        (vacuum)insula_attributum_tollere(radix, k->attributum);
+        redde;
+    }
+    insula_attributum_ponere(radix, p, in, k->attributum,
+        chorda_ut_cstr(k->valor, p));
+}
+
+interior b32
+campum_inscriptionis_scribere (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+    constans character* attributum,
+                chorda  valor,
+                   b32  tollere)
+{
+         PictorActiones* pa;
+            InsulaRamus  ramus;
+                 chorda  prior;
+                    b32  scriptum;
+    CampusInscriptionis  k;
+
+    pa            = (PictorActiones*)ctx;
+    ramus         = ramus_pictoris(repo, ctx);
+    prior         = repo->scriptor;
+    k.attributum  = attributum;
+    k.valor       = valor;
+    k.tollere     = tollere || valor.mensura == ZEPHYRUM;
+    insula_scriptorem_ponere(repo, chorda_ex_literis("inscriptio.agere",
+        pa->doc->piscina));
+    scriptum = mutare_ramum(&ramus, campum_inscriptionis_mutator, &k);
+    insula_scriptorem_ponere(repo, prior);
+    redde scriptum;
+}
+
+interior chorda
+textus_inscriptionis (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+               Piscina* piscina)
+{
+    InsulaRamus  r;
+         chorda* t;
+
+    r = ramus_pictoris(repo, ctx);
+    t = insula_ramus_attributum(&r, "inscriptio_textus");
+    redde t ? chorda_ex_literis(chorda_ut_cstr(*t, piscina), piscina)
+            : chorda_ex_literis("", piscina);
+}
+
+interior vacuum
+campos_inscriptionis_purgare (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    (vacuum)campum_inscriptionis_scribere(repo, ctx,
+        "inscriptio_textus",
+        vacua, VERUM);
+    (vacuum)campum_inscriptionis_scribere(repo, ctx, "inscriptio_error",
+        vacua, VERUM);
+}
+
+/* Send (aut REDITUS): gradus I epistulam mittit, gradus II codicem */
+interior b32
+inscriptionem_mittere (
+    InsulaRepositorium* repo,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+            chorda  textus;
+               s32  g;
+
+    pa      = (PictorActiones*)ctx;
+    textus  = textus_inscriptionis(repo, ctx, pa->doc->piscina);
+    g       = gradus_inscriptionis(pa);
+    /* epistula in itinere (CCL ms ad summum): nondum codex accipitur -
+     * nihil, sine errore */
+    si (g == (s32)INSCRIPTIO_PETIT || g == (s32)INSCRIPTIO_CONFIRMAT)
+    {
+        redde VERUM;
+    }
+    si (gradus_exspectans(g))
+    {
+        si (!pa->codicem_dare || !pa->codicem_dare(pa->inscriptio_ctx,
+                textus))
+        {
+            redde campum_inscriptionis_scribere(repo, ctx,
+                "inscriptio_error", chorda_ex_literis("codex",
+                pa->doc->piscina), FALSUM);
+        }
+        campos_inscriptionis_purgare(repo, ctx);
+        redde VERUM;
+    }
+    si (   g == (s32)INSCRIPTIO_INSCRIPTA || textus.mensura == ZEPHYRUM
+        || !pa->inscriptionem_incipere)
+    {
+        redde FALSUM;
+    }
+    si (!pa->inscriptionem_incipere(pa->inscriptio_ctx, textus))
+    {
+        redde FALSUM;
+    }
+    campos_inscriptionis_purgare(repo, ctx);
+    claviaturam_ponere(pa, (i32)TESTA_CLAVIATURA_CODEX);
+    redde VERUM;
+}
+
+/* textus commissus addit (ad CAMPUS_MAXIMUS), RETRORSUM signum ultimum
+ * (UTF-8 integrum) tollit, REDITUS mittit; ceterae claves consumuntur,
+ * Esc non (dimissio dialogum claudit) */
+interior b32
+inscriptionis_clavem_tractare (
+    InsulaRepositorium* repo,
+                vacuum* ctx,
+      constans Eventus* ev)
+{
+    PictorActiones* pa;
+            chorda  textus;
+            chorda  novum;
+               i32  n;
+
+    pa = (PictorActiones*)ctx;
+    si (ev->genus == EVENTUS_TEXTUS)
+    {
+        si (ev->datum.textus.genus != EVENTUS_TEXTUS_COMMISSUM)
+        {
+            redde VERUM;
+        }
+        textus  = textus_inscriptionis(repo, ctx, pa->doc->piscina);
+        n       = ev->datum.textus.contentum.mensura;
+        si (textus.mensura + n > CAMPUS_MAXIMUS)
+        {
+            n = CAMPUS_MAXIMUS > textus.mensura
+                ? CAMPUS_MAXIMUS - textus.mensura : ZEPHYRUM;
+        }
+        si (n == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        novum.datum    = ev->datum.textus.contentum.datum;
+        novum.mensura  = n;
+        redde campum_inscriptionis_scribere(repo, ctx,
+            "inscriptio_textus", chorda_concatenare(textus, novum,
+            pa->doc->piscina), FALSUM);
+    }
+    si (ev->datum.clavis.clavis == CLAVIS_EFFUGIUM)
+    {
+        redde FALSUM;
+    }
+    si (ev->datum.clavis.clavis == CLAVIS_RETRORSUM)
+    {
+        textus = textus_inscriptionis(repo, ctx, pa->doc->piscina);
+        si (textus.mensura == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+        n = textus.mensura - I;
+        dum (n > ZEPHYRUM && ((i8)textus.datum[n] & 0xC0) == 0x80)
+        {
+            n--;
+        }
+        textus.mensura = n;
+        redde campum_inscriptionis_scribere(repo, ctx,
+            "inscriptio_textus",
+            textus, FALSUM);
+    }
+    si (ev->datum.clavis.clavis == CLAVIS_REDITUS)
+    {
+        (vacuum)inscriptionem_mittere(repo, ctx);
+    }
+    redde VERUM;
+}
+
+/* praesentia "pictor/salutatio" = "visa" */
+interior vacuum
+salutationem_notare (
+    PictorActiones* pa)
+{
+    (vacuum)volumen_praesens_ponere(pa->doc->volumen, chorda_ex_literis(
+        "pictor/salutatio", pa->doc->piscina), chorda_ex_literis("visa",
+        pa->doc->piscina));
+}
+
+b32
+pictor_salutationem_ponere_in (
+    InsulaRepositorium* repo,
+        PictorActiones* pa)
+{
+    hic_manens character SALUTATIO[]   = "salutatio";
+    hic_manens character INSCRIPTIO[]  = "inscriptio";
+                  chorda visa;
+                     b32 inventum;
+                     s32 g;
+
+    si (   !repo || !pa || !pa->doc || !pa->compositio
+        || !pa->compositio->communio_praesto)
+    {
+        redde FALSUM;
+    }
+    /* inscriptio pendens (applicatio necata medio): dialogus redit */
+    g = gradus_inscriptionis(pa);
+    si (gradus_exspectans(g))
+    {
+        claviaturam_ponere(pa, (i32)TESTA_CLAVIATURA_CODEX);
+        redde palettam_scribere(repo, pa, INSCRIPTIO);
+    }
+    visa = volumen_praesens_legere(pa->doc->volumen, chorda_ex_literis(
+        "pictor/salutatio", pa->doc->piscina), pa->doc->piscina,
+        &inventum);
+    si (   pa->compositio->inscripta
+        || (inventum && chorda_aequalis_literis(visa, "visa")))
+    {
+        redde FALSUM;
+    }
+    redde palettam_scribere(repo, pa, SALUTATIO);
+}
+
 /* <tractator/> */
 b32
 pictor_elenchum_agere (
@@ -1165,12 +1651,13 @@ pictor_elenchum_agere (
       constans Eventus* ev,
                 vacuum* ctx)
 {
-         PictorActiones* pa;
-               Elenchus  e;
-            ElenchusRes  res[III];
-                    s32  k;
-     constans character* titulus;
-              character  spatium[XXXII];
+              PictorActiones* pa;
+                    Elenchus  e;
+                 ElenchusRes  res[V];
+    PictorElenchiCondiciones  condiciones;
+                         s32  k;
+          constans character* titulus;
+                   character  spatium[XXXII];
 
     (vacuum)motus;
     (vacuum)destinatio;
@@ -1180,7 +1667,14 @@ pictor_elenchum_agere (
     {
         redde FALSUM;
     }
-    pictor_elenchum_parare(pa->imaginem_eligere != NIHIL, res, &e);
+    /* plan-5 T6: condiciones ut compositio (sine ea: importare ex
+     * servitio, nulla communio) */
+    condiciones = pictor_elenchi_condiciones(pa->compositio);
+    si (!pa->compositio)
+    {
+        condiciones.importare = pa->imaginem_eligere != NIHIL;
+    }
+    pictor_elenchum_parare(&condiciones, res, &e);
     k = elenchus_index(nodus);
     si (k < ZEPHYRUM || k >= (s32)e.numerus)
     {
@@ -1200,6 +1694,26 @@ pictor_elenchum_agere (
         (vacuum)paginam_scribere(repo, ctx, ZEPHYRUM);
         redde palettam_scribere(repo, ctx, PINACOTHECA);
     }
+    /* plan-5 T6: Shared pictures (status paratur ante compositionem) */
+    si (strcmp(titulus, "communia.aperire") == ZEPHYRUM)
+    {
+        hic_manens character COMMUNIA[] = "communia";
+
+        si (pa->communia && !pictor_communia_parare(pa->communia))
+        {
+            redde FALSUM;
+        }
+        (vacuum)communium_paginam_scribere(repo, ctx, ZEPHYRUM);
+        redde palettam_scribere(repo, ctx, COMMUNIA);
+    }
+    /* plan-5 T6/T7: Sign in... - dialogus inscriptionis (T7 componit) */
+    si (strcmp(titulus, "inscriptio.aperire") == ZEPHYRUM)
+    {
+        hic_manens character INSCRIPTIO[] = "inscriptio";
+
+        claviaturam_gradui_ponere(pa);
+        redde palettam_scribere(repo, ctx, INSCRIPTIO);
+    }
     (vacuum)palettam_scribere(repo, ctx, NIHIL);
     si (strcmp(titulus, "pictura.nova") == ZEPHYRUM)
     {
@@ -1207,7 +1721,7 @@ pictor_elenchum_agere (
         {
             redde FALSUM;
         }
-        spatium_novum(pa->doc->volumen, pa->doc->piscina, spatium);
+        spatium_novum(spatium);
         redde pa->picturam_condere(pa->montatio, spatium);
     }
     redde pa->imaginem_eligere
@@ -1301,6 +1815,246 @@ pictor_pinacothecam_agere (
     {
         redde paginam_scribere(repo, ctx, pagina + I < paginae
             ? pagina + I : pagina);
+    }
+    redde FALSUM;
+}
+
+/* <tractator/> Shared pictures (spec IX.5): 'communia.pinax.<k>'
+ * spectatorem eius picturae aperit; prior / posterior paginam; X
+ * claudit */
+b32
+pictor_communia_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    hic_manens character  SPECTATOR[] = "spectator";
+          PictorActiones* pa;
+             InsulaRamus  ramus;
+                  chorda* a;
+                  chorda  k;
+                     s32  pagina;
+                     s32  paginae;
+                     s32  index;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    pa = (PictorActiones*)ctx;
+    si (   !repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS || !pa
+        || !pa->doc || !nodus || !pa->communia)
+    {
+        redde FALSUM;
+    }
+    ramus   = ramus_pictoris(repo, ctx);
+    a       = insula_ramus_attributum(&ramus, "pagina_communium");
+    pagina  = ZEPHYRUM;
+    si (a)
+    {
+        (vacuum)chorda_ut_s32(*a, &pagina);
+    }
+    paginae = pa->communia->picturae ? ((s32)xar_numerus(
+        pa->communia->picturae) + XI) / XII : I;
+    k = post_praefixum(nodus, "communia.pinax.");
+    si (k.mensura > ZEPHYRUM && chorda_ut_s32(k, &index))
+    {
+        index += pagina * XII;
+        si (   !pa->communia->picturae || index < ZEPHYRUM
+            || index >= (s32)xar_numerus(pa->communia->picturae))
+        {
+            redde FALSUM;
+        }
+        (vacuum)spectatam_scribere(repo, ctx, identitas_communis(
+            pa->communia, index, pa->doc->piscina));
+        redde palettam_scribere(repo, ctx, SPECTATOR);
+    }
+    si (chorda_aequalis_literis(nodus->id, "communia.claudere"))
+    {
+        (vacuum)communium_paginam_scribere(repo, ctx, ZEPHYRUM);
+        redde palettam_scribere(repo, ctx, NIHIL);
+    }
+    si (chorda_aequalis_literis(nodus->id, "communia.prior"))
+    {
+        redde communium_paginam_scribere(repo, ctx, pagina > ZEPHYRUM
+            ? pagina - I : ZEPHYRUM);
+    }
+    si (chorda_aequalis_literis(nodus->id, "communia.posterior"))
+    {
+        redde communium_paginam_scribere(repo, ctx, pagina + I < paginae
+            ? pagina + I : pagina);
+    }
+    redde FALSUM;
+}
+
+/* <tractator/> spectator (spec IX.6): tractus in 'spectator.imago'
+ * (|dx| >= quarta latitudinis, |dx| > |dy|) sinister proximam,
+ * dexter priorem; ‹ › idem; "Edit a copy" exemplum facit et ostendit;
+ * X aut ictus extra imaginem ad rete redit (pagina eadem). Lectio
+ * sola: nihil in documenta scribit. */
+b32
+pictor_spectatorem_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    hic_manens character  COMMUNIA[] = "communia";
+          PictorActiones* pa;
+                 Punctum  p;
+                     s32  dx;
+                     s32  dy;
+                     s32  k;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    pa = (PictorActiones*)ctx;
+    si (!repo || !ev || !pa || !pa->doc || !nodus)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(nodus->id, "spectator.imago"))
+    {
+        p.x  = (s32)ev->datum.mus.x;
+        p.y  = (s32)ev->datum.mus.y;
+        p    = destinatio_ad_locale(nodus, p);
+        si (ev->genus == EVENTUS_TRACTUS_INCIPIT)
+        {
+            pa->origo_tractus = p;
+            redde VERUM;
+        }
+        si (ev->genus == EVENTUS_TRACTUS_FINIT)
+        {
+            dx = p.x - pa->origo_tractus.x;
+            dy = p.y - pa->origo_tractus.y;
+            si (   (dx < ZEPHYRUM ? -dx : dx) * IV
+                < nodus->fines.latitudo
+                || (dx < ZEPHYRUM ? -dx : dx) <= (dy
+                    < ZEPHYRUM ? -dy : dy))
+            {
+                redde VERUM;
+            }
+            redde spectatam_movere(repo, ctx, dx < ZEPHYRUM ? I : -I);
+        }
+        /* pressio in imagine: consumitur (non claudit) */
+        redde ev->genus == EVENTUS_MUS_DEPRESSUS
+            || ev->genus == EVENTUS_MUS_LIBERATUS
+            || ev->genus == EVENTUS_TRACTUS;
+    }
+    si (ev->genus != EVENTUS_MUS_DEPRESSUS)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(nodus->id, "spectator.prior"))
+    {
+        redde spectatam_movere(repo, ctx, -I);
+    }
+    si (chorda_aequalis_literis(nodus->id, "spectator.posterior"))
+    {
+        redde spectatam_movere(repo, ctx, I);
+    }
+    si (chorda_aequalis_literis(nodus->id, "spectator.exemplum"))
+    {
+        PictorPicturaAliena* a;
+
+        k = index_spectatae(repo, ctx);
+        si (k < ZEPHYRUM || !pa->exemplum_facere)
+        {
+            redde FALSUM;
+        }
+        a = (PictorPicturaAliena*)xar_obtinere(pa->communia->picturae,
+            (i32)k);
+        (vacuum)spectatam_scribere(repo, ctx, NIHIL);
+        (vacuum)communium_paginam_scribere(repo, ctx, ZEPHYRUM);
+        (vacuum)palettam_scribere(repo, ctx, NIHIL);
+        redde pa->exemplum_facere(pa->montatio, a->replica,
+            chorda_ut_cstr(a->spatium, pa->doc->piscina));
+    }
+    /* X aut ictus extra imaginem (dialogus ipse): ad rete */
+    (vacuum)spectatam_scribere(repo, ctx, NIHIL);
+    redde palettam_scribere(repo, ctx, COMMUNIA);
+}
+
+/* <tractator/> salutatio (spec IX.1): Sign in… -> dialogus
+ * inscriptionis; Draw without signing in -> tabula. Utrumque
+ * salutationem notat (numquam iterum). */
+b32
+pictor_salutationem_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    hic_manens character  INSCRIPTIO[] = "inscriptio";
+          PictorActiones* pa;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    pa = (PictorActiones*)ctx;
+    si (   !repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS || !pa
+        || !pa->doc || !nodus)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(nodus->id, "salutatio.inscribere"))
+    {
+        salutationem_notare(pa);
+        claviaturam_gradui_ponere(pa);
+        redde palettam_scribere(repo, ctx, INSCRIPTIO);
+    }
+    si (chorda_aequalis_literis(nodus->id, "salutatio.pingere"))
+    {
+        salutationem_notare(pa);
+        redde palettam_scribere(repo, ctx, NIHIL);
+    }
+    redde FALSUM;
+}
+
+/* <tractator/> inscriptio (spec IX.2): Send, Cancel (abicit, tessera
+ * deleta), OK (post inscriptionem), campus (claviatura iterum) */
+b32
+pictor_inscriptionem_agere (
+    InsulaRepositorium* repo,
+                 Motus* motus,
+   constans Destinatio* destinatio,
+             Componens* nodus,
+      constans Eventus* ev,
+                vacuum* ctx)
+{
+    PictorActiones* pa;
+
+    (vacuum)motus;
+    (vacuum)destinatio;
+    pa = (PictorActiones*)ctx;
+    si (   !repo || !ev || ev->genus != EVENTUS_MUS_DEPRESSUS || !pa
+        || !pa->doc || !nodus)
+    {
+        redde FALSUM;
+    }
+    si (chorda_aequalis_literis(nodus->id, "inscriptio.mittere"))
+    {
+        redde inscriptionem_mittere(repo, ctx);
+    }
+    si (chorda_aequalis_literis(nodus->id, "inscriptio.campus"))
+    {
+        claviaturam_gradui_ponere(pa);
+        redde VERUM;
+    }
+    si (   chorda_aequalis_literis(nodus->id, "inscriptio.abicere")
+        || chorda_aequalis_literis(nodus->id, "inscriptio.confirmata"))
+    {
+        si (pa->inscriptionem_abicere)
+        {
+            pa->inscriptionem_abicere(pa->inscriptio_ctx);
+        }
+        campos_inscriptionis_purgare(repo, ctx);
+        claviaturam_ponere(pa, (i32)TESTA_CLAVIATURA_NULLA);
+        redde palettam_scribere(repo, ctx, NIHIL);
     }
     redde FALSUM;
 }
@@ -1810,5 +2564,13 @@ pictor_actiones_registrare (
     actio_registrare(reg, "elenchus.agere", pictor_elenchum_agere, ctx);
     actio_registrare(reg, "pinacotheca.agere",
         pictor_pinacothecam_agere,
+        ctx);
+    actio_registrare(reg, "communia.agere", pictor_communia_agere, ctx);
+    actio_registrare(reg, "spectator.agere", pictor_spectatorem_agere,
+        ctx);
+    actio_registrare(reg, "salutatio.agere", pictor_salutationem_agere,
+        ctx);
+    actio_registrare(reg, "inscriptio.agere",
+        pictor_inscriptionem_agere,
         ctx);
 }

@@ -139,7 +139,6 @@ lib/vitrea_servus.c	1	0	0
 lib/volumen.c	0	0	0
 lib/widget.c	0	0	0
 lib/xar.c	0	0	0
-lib/xml.c	0	0	0
 include/actor.h	0	0	0
 include/aedilis.h	0	0	0
 include/argumenta.h	0	0	0
@@ -280,4 +279,3 @@ include/vitrea_servus.h	0	0	0
 include/volumen.h	0	0	0
 include/widget.h	0	0	0
 include/xar.h	0	0	0
-include/xml.h	0	0	0

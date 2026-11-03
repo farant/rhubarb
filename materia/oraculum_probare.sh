@@ -79,9 +79,71 @@ DOC="$BASIS/documenta"
 rm -rf "$DOC"; mkdir -p "$DOC"
 CORPUS=()
 while IFS= read -r v; do CORPUS+=("$v"); done < "$BASIS/corpus.txt"
-( cd "$RADIX" && "$BASIS/$PIGNUS/oraculum" -stml "$DOC" "${CORPUS[@]}" ) \
-    > "$BASIS/pignus.txt" 2> "$BASIS/pignus.err"
-RC_P=$?
+# PIGNUS PER MEMORIAM (budget B1 A6): silva ad pignus pura est in
+# (binarium, via, octeti) - nullum IO praeter plagulam, contextus
+# latinus in binario - ergo linea et documentum plagulae immutatae
+# ex memoria veniunt; pignus solum in plagulas novas aut mutatas
+# currit. Clavis = sha256 obiectorum pignoris (oraculum.o + amalgama.o:
+# compilatio deterministica, nexus NON - binarium ipsum cursu quoque
+# alio sigillo nascitur) + sha256 plagulae + via (in linea et
+# documento). Documenta in $DOC per nexum durum (DLXX
+# MB, copia tempus caperet); $DOC quoque cursu proximo deletur, memoria
+# manet. Corpus ordinarium memoriam ad usus huius cursus putat.
+BIN_SHA=$(cat "$BASIS/$PIGNUS/oraculum.o" "$BASIS/$PIGNUS/amalgama.o" \
+          | shasum -a 256 | cut -c1-16)
+MEM="$BASIS/memoria/$BIN_SHA"
+NOVA="$BASIS/pignus_nova"
+mkdir -p "$MEM"
+rm -rf "$NOVA"; mkdir -p "$NOVA"
+( cd "$RADIX" && shasum -a 256 "${CORPUS[@]}" ) > "$BASIS/corpus.sha"
+DESUNT=()
+CLAVES=()
+while read -r sha via; do
+    k="$MEM/$sha.${via//\//%}"
+    CLAVES+=("$k")
+    [ -f "$k.linea" ] || DESUNT+=("$via")
+done < "$BASIS/corpus.sha"
+RC_P=0
+: > "$BASIS/pignus.err"
+if [ "${#DESUNT[@]}" -gt 0 ]; then
+    ( cd "$RADIX" && "$BASIS/$PIGNUS/oraculum" -stml "$NOVA" "${DESUNT[@]}" ) \
+        > "$BASIS/pignus_nova.txt" 2> "$BASIS/pignus.err"
+    RC_P=$?
+    if [ "$RC_P" -eq 0 ]; then
+        # linea pignoris -> clavis (sha ex corpus.sha, awk semel)
+        awk 'NR == FNR { sha[$2] = $1; next }
+             { split($0, c, "\t"); v = c[1]; n = v; gsub("/", "%", n)
+               print sha[v] "\t" n }' "$BASIS/corpus.sha" \
+            "$BASIS/pignus_nova.txt" > "$BASIS/pignus_nova.claves"
+        exec 3< "$BASIS/pignus_nova.claves"
+        while IFS= read -r linea; do
+            IFS=$'\t' read -r sha nom <&3
+            k="$MEM/$sha.$nom"
+            [ -f "$NOVA/$nom.stml" ] && mv "$NOVA/$nom.stml" "$k.stml"
+            printf '%s\n' "$linea" > "$k.linea.tmp" && mv "$k.linea.tmp" "$k.linea"
+        done < "$BASIS/pignus_nova.txt"
+        exec 3<&-
+    fi
+fi
+: > "$BASIS/pignus.txt"
+if [ "$RC_P" -eq 0 ]; then
+    LINEAE=()
+    for k in "${CLAVES[@]}"; do
+        [ -f "$k.linea" ] && LINEAE+=("$k.linea")
+        [ -f "$k.stml" ] && ln "$k.stml" "$DOC/${k#"$MEM"/*.}.stml"
+    done
+    [ "${#LINEAE[@]}" -gt 0 ] && cat "${LINEAE[@]}" > "$BASIS/pignus.txt"
+    if [ "$#" -eq 0 ]; then
+        printf '%s\n' "${CLAVES[@]}" | sed 's|$|.linea|' > "$BASIS/memoria.usae"
+        printf '%s\n' "${CLAVES[@]}" | sed 's|$|.stml|' >> "$BASIS/memoria.usae"
+        find "$MEM" -type f | sort > "$BASIS/memoria.omnes"
+        sort "$BASIS/memoria.usae" | comm -23 "$BASIS/memoria.omnes" - \
+            | while IFS= read -r v; do rm -f "$v"; done
+        find "$BASIS/memoria" -mindepth 1 -maxdepth 1 -type d \
+            ! -name "$BIN_SHA" -exec rm -rf {} +
+    fi
+fi
+echo "pignus: ex memoria $(( N - ${#DESUNT[@]} )), cursa ${#DESUNT[@]}"
 ( cd "$RADIX" && "$BASIS/vivum" -legere "$DOC" "${CORPUS[@]}" ) \
     > "$BASIS/vivum.txt" 2> "$BASIS/vivum.err"
 RC_V=$?

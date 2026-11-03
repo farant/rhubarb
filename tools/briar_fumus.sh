@@ -127,6 +127,12 @@
 #        salve_vitreum (vestis) et salve; BRIAR_VESTIGIUM=1 ictum
 #        celerem nominat, -iterum numquam (ramus probatus, non tempus;
 #        mensuratum manu: 0,75 s -> 0,00 s pro textu lapidis)
+#   XXV. cliens materiae xml (xml_arbor P16): ./xml_partitura.thistle
+#        sine #include -> 'auctor Tallis' (entitas DTD expansa) et
+#        'pars P2 mensurae 2'; -probatio viridis (locus erroris
+#        nominatus); -amalgama clang SOLA compilat et currit;
+#        -bibliothecae lineam xml_documentum fert; -functiones
+#        xml_frater nominat
 #
 # Usus:
 #   ./tools/briar_fumus.sh [-agere] [-servare]
@@ -190,7 +196,7 @@ done
 [ -f "$RADIX/probationes/fixa/icones/fons_256.png" ] \
     || { echo "FUMUS: fixum abest: probationes/fixa/icones/fons_256.png" >&2; exit 2; }
 FIXA="$RADIX/briar/probationes/fixa/thistle"
-for f in salve punctum derivatum fragmenta salve_vitreum toml_config condiciones adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
+for f in salve punctum derivatum fragmenta salve_vitreum toml_config xml_partitura condiciones adversa/probatio_rubra adversa/duo_principalia adversa/fragmentum_erratum; do
     [ -f "$FIXA/$f.thistle" ] || { echo "FUMUS: fixum abest: $f.thistle" >&2; exit 2; }
 done
 BIBL="$RADIX/briar/probationes/fixa/bibliotheca"
@@ -240,7 +246,8 @@ deficere () {
 
 cp "$FIXA/salve.thistle" "$FIXA/punctum.thistle" "$FIXA/derivatum.thistle" \
    "$FIXA/fragmenta.thistle" "$FIXA/salve_vitreum.thistle" \
-   "$FIXA/toml_config.thistle" "$FIXA/condiciones.thistle" \
+   "$FIXA/toml_config.thistle" "$FIXA/xml_partitura.thistle" \
+   "$FIXA/condiciones.thistle" \
    "$FIXA/adversa/probatio_rubra.thistle" "$FIXA/adversa/duo_principalia.thistle" \
    "$FIXA/adversa/fragmentum_erratum.thistle" \
    "$FIXA/adversa/fragmentum_circulus.thistle" \
@@ -714,8 +721,38 @@ grep -q 'ictus celer' "$AREA/plena.log" \
     && deficere "-iterum ictum celerem nominat (via plena praeterita)" "$AREA/plena.log"
 echo "FUMUS:    claves eaedem (radix, salve_vitreum, salve); ictus celer nominatus, -iterum viam plenam capit"
 
+# ---- XXV. cliens materiae xml (radices clientium, xml_arbor P16) ----
+echo "FUMUS: XXV. ./xml_partitura.thistle (xml derivatum), -probatio, -amalgama, -bibliothecae"
+( cd "$AREA" && ./xml_partitura.thistle ) > "$AREA/xml_cursus.log" 2>&1 \
+    || deficere "xml_partitura.thistle defecit" "$AREA/xml_cursus.log"
+grep -q '^auctor Tallis$' "$AREA/xml_cursus.log" \
+    && grep -q '^pars P2 mensurae 2$' "$AREA/xml_cursus.log" \
+    || deficere "xml_partitura: auctor aut partes non impressae" "$AREA/xml_cursus.log"
+( cd "$AREA" && ./xml_partitura.thistle -probatio ) > "$AREA/xml_probatio.log" 2>&1 \
+    && grep -q 'OMNIA PRAETERIERUNT' "$AREA/xml_probatio.log" \
+    || deficere "xml_partitura -probatio rubra" "$AREA/xml_probatio.log"
+( cd "$AREA" && ./xml_partitura.thistle -amalgama ) > "$AREA/xml_amalgama.log" 2>&1 \
+    || deficere "xml_partitura -amalgama defecit" "$AREA/xml_amalgama.log"
+for p in xml_partitura probatio_xml_partitura; do
+    ORDO="$(sed -n '2s/^ \* //p' "$AREA/$p.c")"
+    ( cd "$AREA" && eval "$ORDO" ) > "$AREA/${p}_clang.log" 2>&1 \
+        || deficere "amalgama $p.c clang sola non compilat" "$AREA/${p}_clang.log"
+done
+( cd "$AREA" && ./xml_partitura ) > "$AREA/xml_amalgama_cursus.log" 2>&1
+grep -q '^pars P2 mensurae 2$' "$AREA/xml_amalgama_cursus.log" \
+    || deficere "amalgama xml_partitura: 'pars P2 mensurae 2' non impressum" "$AREA/xml_amalgama_cursus.log"
+( cd "$AREA" && ./probatio_xml_partitura ) > "$AREA/xml_amalgama_probatio.log" 2>&1 \
+    || deficere "probatio amalgamae xml_partitura rubra" "$AREA/xml_amalgama_probatio.log"
+grep -q '^xml_documentum  *h c  *XML 1.0' "$AREA/bibl.log" \
+    || deficere "-bibliothecae: linea xml_documentum (h c + descriptio) deest" "$AREA/bibl.log"
+( cd "$AREA" && "$BRIAR" -bibliotheca xml_documentum -functiones ) > "$AREA/func_xml.log" 2>&1 \
+    && grep -q '^==== xml/fontes/xml_documentum.h (functiones [0-9]*) ====$' "$AREA/func_xml.log" \
+    && grep -q ' xml_frater (constans XmlCoctus\* nodus, constans character\* titulus);$' "$AREA/func_xml.log" \
+    || deficere "-bibliotheca xml_documentum -functiones: xml_frater deest" "$AREA/func_xml.log"
+echo "FUMUS:    xml: cursum, probatum, amalgamatum ($(wc -l < "$AREA/xml_partitura.c" | tr -d ' ') lineae), bibliotheca, functiones"
+
 if [ "$AGERE" = 0 ]; then
-    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml, membra, condiciones, ictus celer)"
+    echo "FUMUS: FACTUM (cursum, probatum, structum, recusatum, planta rubra, amalgamatum, contextum, #line verum, nativum ligatum, facies, spectator, fasciculus, bibliothecae, dialectus, functiones, mutationes, toml, membra, condiciones, ictus celer, xml)"
     echo "FUMUS: '-agere' addens fenestram quoque aperit et agitat"
     purgare
     echo "fumus briar: sanum"

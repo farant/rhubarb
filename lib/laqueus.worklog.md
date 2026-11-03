@@ -665,3 +665,255 @@ Fixed:
 
 Trap: `brevis` is the latina.h macro for `short` (test variable,
 renamed `angustum`).
+
+## 2026-10-30 - T2a of project-specs/temperley-lieb-plan.md: window and bound factored out
+
+The Kauffman window and the Tait-graph bound were reachable only through
+the vertex structure (laqueus_modulus_vertex_creare builds the whole
+network and its workspace). Factored into interior helpers on the read
+PD code (_fines, _facies split out of _gyrationes, _fenestra_uncini,
+_fenestra_et_limes) and a public laqueus_pd_fenestra (O(c), no network).
+Vertex creation split into _modulus_vertex_consilium (order and cost,
+no workspace; for the T3 dispatcher, design review H2) plus the
+workspace.
+
+Acceptance, as the review asked (Q3: "vertex probatio byte-identical"
+cannot see a wider window or a looser bound - extra coefficients come
+out zero, a loose bound only costs primes):
+- golden values captured at be6be402 BEFORE touching the code, by a
+  scratch program that #includes lib/laqueus.c and reads mv->imus,
+  mv->summus, mv->limes, mv->limes_exactus: 21 explicit knots, an FNV
+  checksum over all 12,965 table knots with c >= 2, and D136's five big
+  braids (with an FNV fingerprint of each word, so a change in sors
+  cannot swap the braid); the big braids' windows and bounds equal
+  D136's printed ones (independent cross-check of the capture);
+- the same capture rerun against the refactored laqueus.c: identical;
+- laqueus_rete output identical apart from timings (150,422 checks),
+  then two new sections (fenestra aurea; fenestra et vertex: bound and
+  B equal to the vertex model's on 200 table knots, refusals leave
+  outputs untouched): 151,612 checks;
+- plants (build/temperley/plantae_t2a.py), all UT DICTUM: window 4
+  wider at the top -> ONLY 'fenestra aurea' red (the blind spot the
+  review predicted); bound one bit looser; bound from the larger Tait
+  graph; window class from w instead of 3w.
+
+Pitfall: linking a scratch program against every build/*.o drags in
+AppKit/WebKit/IOKit; `ar rcs` the objects into an archive and link that,
+so only needed members are pulled.
+
+## 2026-10-30 - T2b of project-specs/temperley-lieb-plan.md: the TL route
+
+laqueus_modulus_temperley_{creare, aestimare, uncinus, limes} and
+laqueus_temperley_sumptus: D136's evaluator in the library. Action
+tables copied from temperley once (modules built inside
+piscina_notare/reficere, so they never exist twice); two buffers of
+max d^2 via piscina_conari_allocare; nothing allocated per point
+(tested with piscina_numerus_allocationum).
+
+Shared with the vertex route, so the two are comparable point for point:
+_punctum_eligere (A = i omega^2, prime cache, INUTILE where delta =
+omega^4 + omega^-4 = 0, ERRATUM on bad primes; the vertex aestimare now
+calls it and its suite output is unchanged) and _quaestio_uncini (the
+interpolation settings). Window and bound via laqueus_pd_fenestra (T2a).
+
+Tests (7 sections in probatio_laqueus_rete): state sum (c <= 24), vertex
+bracket and bound (c to 100), points (status, punctum AND valor equal
+the vertex route at p, q, p; nothing allocated; p = 17, omega = 2 gives
+A = 1, which pins g minimal), Jones of 3_1, 4_1, 8_19 against the table
+and T(4,5) against the vertex route, D136's certified brackets (3 x 50,
+8 x 101, 8 x 201, with word fingerprints), Markov stabilization front
+and back plus inserted braid/R2 identities at points on 10 x 401 (11
+strands; first tried 12 x 101 on 13 strands, 12 s in the unoptimized
+test build, moved), refusals and the byte cap at its boundary.
+
+Plants (build/temperley/plantae_t2b.py) 7/7 UT DICTUM: Delta recurrence
+with +; /delta dropped (motus stays green: a stabilization identity
+scales both sides alike - only absolute oracles catch it); sigma^-1
+given sigma's image; byte cap > -> >=; TL limes - 1 (caught by the
+limes equality test, and by small knots where the bound becomes too
+small to interpolate); punctum reported as A^-1; outputs written before
+a refusal.
+
+Plan deviation: the plan's "g not minimal in the point choice" plant is
+moot once the point choice is one shared function (both routes would
+change together and agree); g minimality is pinned instead by the
+p = 17 test (A = 1), and the plant was replaced by "punctum reported as
+A^-1".
+
+Build lists: tools/tabula_nodorum_generare.sh and venenum_probare.sh
+name their library sources by hand; lib/temperley.c added to both
+(fabrica's heal step failed until then). Knot table regenerates
+byte-identical (-probare).
+
+## 2026-10-30 - T3 of project-specs/temperley-lieb-plan.md: the dispatcher
+
+laqueus_via_eligere (choice without evaluation), laqueus_uncinus_ex_plexu
+and laqueus_jones_ex_plexu. Order: refusals (laqueus_pd_ex_plexu) before
+any pricing; c <= 1 closed form (LAQUEUS_VIA_NULLA: 1, -A^(+-3), Jones
+1); eligibility (vertex workspace <= cap; TL fila <= XVI and bytes <=
+cap); cheaper eligible route by integer saturating price (vertex mult x
+185 against TL mult x 150, D136's ns x 100); tie to TL; no retry. The
+vertex plan used for pricing lives inside piscina_notare/reficere.
+
+Measured first, as the plan asked (scratch, -O2): planning the vertex
+route takes <= 0.2 s even at 12 x 801 (0.03 s at c = 201), and every
+registered choice came out as predicted, margins 8x or more.
+
+Two things the tests taught:
+- **The cap does not just admit or refuse the vertex route**: with
+  CONTRACTIO_OPTIMUS, a cap below the chosen order's workspace makes the
+  planner pick another order that fits. The boundary test therefore
+  walks the cap down below each reported workspace until nothing fits
+  (then FALSUM, outputs untouched), checking every intermediate choice
+  reports workspace <= cap.
+- **The review's "cap just below the vertex workspace flips the choice
+  to TL" did not occur**: in every braid measured, when the vertex route
+  is cheaper its workspace is also smaller than TL's buffer bytes
+  (8 d_max^2 dominates TL's memory; a cheaper vertex route needs apex
+  below about Catalan(n)), so such a cap excludes both. Tested instead:
+  each route's own cap boundary (TL exact bytes / one less; vertex
+  descent). Observed over the measured braids, not proven. **[WRONG -
+  corrected 2026-10-31 by the T4 review (M1): the reviewer found 1,255
+  flips in 24,690 random braids, n = 7..14. A cheaper vertex route only
+  bounds its apex below ~Catalan(n) = 2.4-2.7 d_max^2, and its workspace
+  is 4 B x apex x buffers, so it can exceed TL's ~8 d_max^2. My sample
+  of braids was too small and too regular. The flip test is restored
+  with the reviewer's 7 x 32 braid.]**
+
+Plants (build/temperley/plantae_t3.py) 5/5 UT DICTUM: cost comparison
+inverted; closed-form sign of sigma^-1; vertex workspace cap ignored; TL
+byte cap ignored; Jones writhe sign. Untestable, recorded: the tie rule
+(equal integer prices do not occur with real braids).
+
+examen reports one "domesticum" (negative sentinel in an unsigned
+function) on `redde CONTRACTIO_SATURATUM` in _pretium: ~0 is the
+saturation maximum, not a sentinel; contractio.c's own saturating
+helpers carry the same two findings.
+
+## 2026-10-31 - T4 review (recensor-temperley) folded in
+
+No H. Fixes: flip test restored (M1, my T3 claim was false); the
+"pricing allocates nothing" check now reads the apex of a fresh piscina
+(M2: piscina_summa_usus is restored by reficere, so comparing it before
+and after pricing checks nothing - use piscina_summa_apex_usus on a
+fresh arena); 17-strand braid through the dispatcher (M3); creare rolls
+back on every refusal after pricing (L5); stabilization at 3 points;
+second-prime pin of A. Review faults A and B now caught by named tests
+(build/temperley/plantae_t4.py, both UT DICTUM). Full list in
+project-specs/temperley-lieb-plan.md, "Review (T4)".
+
+Lesson: a negative claim ("X cannot happen") drawn from a handful of
+measured cases needs a search, not a sample. The reviewer's random
+search found the counterexample in minutes.
+
+## 2026-10-31 - celeritas T1: the in-place TL kernel
+
+sigma = A^e (1 + c E), A^w pulled out of the trace; only DELTA rows
+change: M[r] <- alpha M[r] + c S_r, alpha = -A^(-4e), c = A^(-2e), one
+buffer. The number of DELTA rows per letter is exactly d(n-2, j)
+(contract the arc: a bijection onto W_{n-2,j}), so the source lists are
+fixed-width tables (sources < fila) with a closed-form byte count; no
+per-state action tables are kept.
+
+Result against the registered prediction: P1 (>= 3.0x per point) FELL at
+all three sizes - 2.85x (12 x 801), 2.72x (14 x 801), 2.87x (16 x 801),
+A/B medians of 9 ABBA pairs, old value = new value at every point. The
+operation ratio was 6.7-6.9x; what survives is ~2.8x. Per updated
+element ~2 ns, dominated by two 64-bit `%` (primes near 2^32). P2 held
+(-47.1% bytes at 16 strands; figure = allocation within 17-73 bytes).
+P3 held (12 x 801 bracket byte-identical to D136's brackets.txt; 1,465 s
+CPU, descriptive, measured under load).
+
+The "source sum not reduced" plant is an equivalent mutant: S is a
+32-bit word, the wrap fix keeps it < 2^32 and congruent mod p, so
+(alpha M mod p) + c S < 2^64 for any p < 2^32. The x >= p step is kept
+(cheap) but is not what makes the kernel correct.
+
+The 7 x 32 cap-flip test braid stopped flipping in T1 (TL bytes up with
+the source tables); replaced by 9 x 74 (K* = 47.8). Memory-only flips
+become rare as TL gets cheaper: 254 with K* < 150 but 3 with K* < 60 in
+200,000 random braids.
+
+## 2026-10-31 - celeritas T2: one reduction (G1) and Montgomery (G2)
+
+G1: with the TL route restricted to primes below 2^31, alpha M + c S <
+2 (p-1)^2 < 2^63 needs one `%` instead of two: 1.80x (12 x 801) and
+1.71x (16 x 801) over the T1 kernel. Adopted: TL aestimare refuses
+p >= 2^31, its interpolation sets primus_limes = 2^31, step-1 rule 4
+amended (the vertex route keeps primes near 2^32).
+
+G2: Montgomery with R = 2^32 folded into the four constants (alpha R,
+c R mod p), so the matrix never leaves normal form and the identity
+stays 1; p' = -p^-1 mod 2^32 by four Newton steps from x = p (p x = 1
+mod 8, bits 3 -> 6 -> 12 -> 24 -> 48); one REDC per element (t + m p <
+2^64 because t < 2^63 and m p < 2^63 for p < 2^31). The design review's
+microbenchmark had Montgomery 0.76-0.87x of `%`; on the real kernel it
+is 1.32-1.45x (gate) and 1.34-1.36x (P4, registered before measuring).
+Microbenchmarks of an isolated operation did not predict the kernel;
+the gate on the real shape did.
+
+## 2026-10-31 - celeritas T3: acceptance and dispatcher refit
+
+All 45 D136 brackets recomputed through laqueus_uncinus_ex_plexu are
+byte-identical to knotapel/demo_136_tl_braid_closures/brackets.txt.
+Cumulative per-point speed-up of the TL route over 79e7fad9: 6.82x /
+6.98x / 7.42x at 12 / 14 / 16 x 801 (A/B in one binary). TL price
+constant refitted 150 -> 21 (vertex constant 185 unchanged); the thinnest
+remaining margin is 12 x 201 (K* 17.85 against 21).
+
+Memory-only cap flips (vertex cheaper but bigger than TL's bytes) get
+rare as TL gets cheaper: none with K* < 30 among short braids; long
+braids (c = 130-200) still have them. Test braid now 11 x 134 (K* 15.7).
+
+## 2026-11-01 - celeritas T4 review (recensor-celeritas) folded in
+
+No H. Correction to the T1 entry above: the "source sum not reduced"
+plant was an equivalent mutant ONLY for the T1 code. Since G1/G2 the
+reduction `x >= p ? x - p : x` is load-bearing (unreduced, up to n/2
+sources wrap the 32-bit word incongruently, and S >= p breaks Montgomery's
+t + m p < 2^64); the plant is red against today's code. Do not remove it.
+Fixes: boundary refusal test at 2147483693 (a raised threshold returned
+wrong values with the suite green); two defensive checks in creare (DELTA
+rows map to themselves; an UNUM image is a DELTA row of this letter).
+Full list in project-specs/temperley-celeritas-plan.md, "Review (T4)".
+
+## 2026-11-01 - the 14 x 801 bracket
+
+Full TL bracket of the D136 14 x 801 braid: 7,282 s CPU (T0 kernel ~12 h),
+6 MB, A^[-543, 557], largest coefficient 195 bits (limes 662). Not oracle-
+certified (too big); it passes knot-level checks: <K>(1) = -1 (one
+component), exponents all 1 mod 4, V(1) = V(omega) = 1, and V(i) = -1
+agreeing with det = 5 mod 8 (Arf 1 both ways). Cheap sanity script idea
+for any future big bracket: these four checks need only the coefficient
+list and the writhe. Record: project-specs/temperley-celeritas-plan.md
+"Headline", line in knotapel/demo_136_tl_braid_closures/uncinus_14x801.txt.
+
+## 2026-11-02 - Regina 7.4.1 as external cross-check (benchmark step 1)
+
+Regina (pip wheel, no deps, run under sandbox-exec, no network; build/regina/,
+uncommitted) Link.bracket(Treewidth, threads=1) on the D136 braids via
+PD from tools/uncinus_mensura -sectio XII words. Conventions matched first
+try (same bracket, same writhe). 32 of 45 braids finished, ALL IDEM with
+brackets.txt. Regina is competitive or faster up to ~100 crossings (11x102:
+0.023 s vs our 0.26 s vertex; 12x101 0.026 vs 0.07) but its memory explodes
+on long braids: 7x202 14.5 s / 2.9 GB (ours 0.10 s TL), 12x201 16.2 s /
+2.6 GB (ours 7.2 s vertex), and 8x201, 9x202, 10x201, 11x202 all exceed
+8 GB (ours 0.18-7.9 s, MBs). So it is no oracle beyond our own (12x401) -
+14x801 stays unconfirmed. Our vertex route loses to Regina on short
+many-strand braids: worth a look (its tree decomposition vs our greedy order).
+
+## 2026-11-02 - why Regina wins on short many-strand braids
+
+Not ordering, mostly arithmetic shape. Regina's tree decomposition width on
+10x101 / 11x102 / 12x101 is 8 (13-15 on the c ~ 200 braids it can't
+finish). Our vertex route on 11x102 (-sectio V): width 12 (2^12 = 4096
+entries), 0.8 ms per point, but ~300 points (4 primes x ~75) -> 0.25 s;
+Regina does ONE symbolic pass (bracket updates are monomial shifts + adds,
+linear in degree) in 0.023 s. Evaluation/interpolation pays per point;
+its win is memory (one word per state), which is why it wins from c ~ 200
+up. Also: OPTIMUS never tried other candidates here (AVIDUS under the 2^20
+multiplication limen, cand 1), so width 12 vs a possible ~10 is unexamined
+but irrelevant at 0.25 s.
+The useful find: the coefficient bound is 3-5x loose (bits/limes 16/82,
+19/86, 24/85, 17/88; 14x801 195/662), so most primes are wasted. Ledger
+desideratum 01M6F2RT: early termination + random-point verification.

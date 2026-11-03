@@ -1,0 +1,27 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 10.5.2 congruit (2026-10-30)
+P1	0	1	69	A	0	0	1:single:normal
+P1	1	1	71	B	0	0	-
+P1	2	1	72	C	0	0	-
+P1	3	1	74	D	0	0	-
+P1	4	1	69	A	0	0	1:single:slashes,|2:single:no stem
+P1	5	1	71	B	0	0	-
+P1	6	1	72	C	0	0	-
+P1	7	1	74	D	0	0	-
+P1	8	1	69	A	0	0	1:single:slashes,|2:single:with stem
+P1	9	1	71	B	0	0	-
+P1	10	1	72	C	0	0	-
+P1	11	1	74	D	0	0	-
+P1	12	1	69	A	0	0	1:single:hidden|2:single:notes
+P1	13	1	71	B	0	0	-
+P1	14	1	72	C	0	0	-
+P1	15	1	74	D	0	0	-
+P1	16	1	69	A	0	0	1:single:hidden notes,|2:single:no staff lines
+P1	17	1	71	B	0	0	-
+P1	18	1	72	C	0	0	-
+P1	19	1	74	D	0	0	-
+P1	20	1	69	A	0	0	1:single:normal|2:single:settings|3:single:restored
+P1	21	1	71	B	0	0	-
+P1	22	1	72	C	0	0	-
+P1	23	1	74	D	0	0	-

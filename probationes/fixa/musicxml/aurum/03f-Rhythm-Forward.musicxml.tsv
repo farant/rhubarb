@@ -1,0 +1,6 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: <forward> ultimus mensuram implet (4/4); music21 forward finalem non numerat (13/4)
+P1	1	1	60	C	0	0	-
+P1	3	1/4	60	C	0	0	-
+P1	4	1	60	C	0	0	-

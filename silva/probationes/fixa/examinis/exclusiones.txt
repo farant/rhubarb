@@ -85,7 +85,6 @@
 ./probationes/fixa/sondae_auditus/via_credo_schedae.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): linea 93: monstrator et integer mixti
 ./probationes/fixa/sondae_auditus/via_cwd_longus.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): mkdir et rmdir cruda - codex 97 VIOLATIO ab 2026-10-27
 ./probationes/fixa/sondae_auditus/via_existit_casus.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): linea 42: 'stat' canalem lectionum praeterit (liber lectionum vocationem non videt - fabrica ingressum nescit, transitus vetus servaretur) - pro eo 'l
-./probationes/fixa/sondae_auditus/xml_scribere_reditus.c	sonda auditus 2026-10-18 (fixtura testimonii parci, sonda.sh structa - non codex domus; deletur cum parco): linea 14: 'fopen' canalem lectionum praeterit (liber lectionum vocationem non videt - fabrica ingressum nescit, transitus vetus servaretur) - pro eo '
 ./silva/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis
 ./silva/probationes/fixa/censoris/flagrationes.c	probatio: fixtura censoris consulto fracta (syntaxis + redeclarationes)
 ./tessera/instrumenta/principalia/fontes_generata.h	generatum: fragmentum listarum amalgamatoris sine contextu includentis

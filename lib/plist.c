@@ -1,12 +1,12 @@
 /* plist.c - tabulae proprietatum (contractus in capite).
  *
- * Scriptor arborem XmlNodus struit et xml_scribere vocat, ergo
- * escapatio UNO loco vivit (strato XML); prologus et declaratio
- * generis hic praefiguntur. Lector eandem arborem ambulat (opus V).
+ * Scriptor textum directe emittit (forma scriptoris XML veteris
+ * octetim servata); prologus et declaratio generis hic praefiguntur.
+ * Lector visionem coctam xml_documentum.h ambulat.
  */
 
 #include "plist.h"
-#include "xml.h"
+#include "xml_documentum.h"
 #include "base64.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
@@ -355,20 +355,96 @@ _signum_vetitum (
     redde FALSUM;
 }
 
-interior XmlNodus*
-_nodum_ex_valore (
-             PlistValor* v,
-                Piscina* piscina,
-    InternamentumChorda* intern,
-            PlistStatus* status)
+/* Scriptor directus: forma octetim eadem ac scriptor 'pulcher'
+ * include/xml.h veteris - gradus duo spatia, folium in linea una,
+ * folium vacuum '<t/>', textus & < > solum effugit. */
+interior vacuum
+_effugere (
+    ChordaAedificator* aed,
+               chorda  s)
 {
-    XmlNodus* nodus;
-         i32  i;
+    i32 i;
 
-    si (!v)
+    per (i = ZEPHYRUM; i < s.mensura; i++)
+    {
+        character c = (character)s.datum[i];
+
+        si (c == '<')
+        {
+            chorda_aedificator_appendere_literis(aed, "&lt;");
+        }
+        alioquin si (c == '>')
+        {
+            chorda_aedificator_appendere_literis(aed, "&gt;");
+        }
+        alioquin si (c == '&')
+        {
+            chorda_aedificator_appendere_literis(aed, "&amp;");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(aed, c);
+        }
+    }
+}
+
+interior vacuum
+_indentare (
+    ChordaAedificator* aed,
+                  i32  gradus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < gradus; i++)
+    {
+        chorda_aedificator_appendere_literis(aed, "  ");
+    }
+}
+
+/* '<titulus>textus</titulus>' in linea una; textus vacuus ->
+ * '<titulus/>' */
+interior vacuum
+_folium_scribere (
+     ChordaAedificator* aed,
+                   i32  gradus,
+    constans character* titulus,
+                chorda  textus)
+{
+    _indentare(aed, gradus);
+    chorda_aedificator_appendere_character(aed, '<');
+    chorda_aedificator_appendere_literis(aed, titulus);
+    si (textus.mensura == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(aed, "/>\n");
+        redde;
+    }
+    chorda_aedificator_appendere_character(aed, '>');
+    _effugere(aed, textus);
+    chorda_aedificator_appendere_literis(aed, "</");
+    chorda_aedificator_appendere_literis(aed, titulus);
+    chorda_aedificator_appendere_literis(aed, ">\n");
+}
+
+interior b32
+_valorem_scribere (
+           PlistValor* v,
+    ChordaAedificator* aed,
+                  i32  gradus,
+              Piscina* piscina,
+          PlistStatus* status)
+{
+                 chorda  vacua;
+                 chorda  textus;
+     constans character* titulus;
+                    i32  i;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    /* gradus I = radix sub <plist>; ultra limitem (aut cyclus) */
+    si (!v || gradus > PLIST_PROFUNDITAS_MAXIMA)
     {
         *status = PLIST_ERROR_STRUCTURA;
-        redde NIHIL;
+        redde FALSUM;
     }
     commutatio (v->genus)
     {
@@ -376,137 +452,96 @@ _nodum_ex_valore (
             si (_signum_vetitum(v->textus))
             {
                 *status = PLIST_ERROR_SIGNUM;
-                redde NIHIL;
+                redde FALSUM;
             }
-            nodus = xml_elementum_creare(piscina, intern, "string");
-            si (nodus)
-            {
-                xml_textum_addere(nodus, piscina, intern,
-                    chorda_ut_cstr(v->textus, piscina));
-            }
-            redde nodus;
+            _folium_scribere(aed, gradus, "string", v->textus);
+            redde VERUM;
 
         casus PLIST_VERITAS:
-            redde xml_elementum_creare(piscina, intern,
-                v->veritas ? "true" : "false");
+            _folium_scribere(aed, gradus, v->veritas ? "true" : "false",
+                             vacua);
+            redde VERUM;
 
         casus PLIST_INTEGER:
-            nodus = xml_elementum_creare(piscina, intern, "integer");
-            si (nodus)
-            {
-                xml_textum_addere(nodus, piscina, intern,
-                    chorda_ut_cstr(
-                        chorda_ex_s64(v->integrum, piscina), piscina));
-            }
-            redde nodus;
+            _folium_scribere(aed, gradus, "integer",
+                             chorda_ex_s64(v->integrum, piscina));
+            redde VERUM;
 
         casus PLIST_REALIS:
-            nodus = xml_elementum_creare(piscina, intern, "real");
-            si (nodus)
-            {
-                xml_textum_addere(nodus, piscina, intern,
-                    chorda_ut_cstr(
-                        chorda_ex_f64_exacta(v->realis, piscina),
-                        piscina));
-            }
-            redde nodus;
+            _folium_scribere(aed, gradus, "real",
+                             chorda_ex_f64_exacta(v->realis, piscina));
+            redde VERUM;
 
         casus PLIST_DIES:
-        {
-            chorda textus = fasti_ad_iso(v->dies, piscina);
-
+            textus = fasti_ad_iso(v->dies, piscina);
             si (chorda_vacua(textus))
             {
                 *status = PLIST_ERROR_DIES;
-                redde NIHIL;
+                redde FALSUM;
             }
-            nodus = xml_elementum_creare(piscina, intern, "date");
-            si (nodus)
-            {
-                xml_textum_addere(nodus, piscina, intern,
-                    chorda_ut_cstr(textus, piscina));
-            }
-            redde nodus;
-        }
+            _folium_scribere(aed, gradus, "date", textus);
+            redde VERUM;
 
         casus PLIST_DATA:
-            nodus = xml_elementum_creare(piscina, intern, "data");
-            si (nodus)
-            {
-                xml_textum_addere(nodus, piscina, intern,
-                    chorda_ut_cstr(
-                        base64_codificare(v->textus.datum,
-                            v->textus.mensura, piscina), piscina));
-            }
-            redde nodus;
+            _folium_scribere(aed, gradus, "data",
+                             base64_codificare(v->textus.datum,
+                                 v->textus.mensura, piscina));
+            redde VERUM;
 
         casus PLIST_LISTA:
-            nodus = xml_elementum_creare(piscina, intern, "array");
-            si (!nodus)
-            {
-                *status = PLIST_ERROR_MEMORIA;
-                redde NIHIL;
-            }
-            per (i = ZEPHYRUM; i < plist_numerus(v); i++)
-            {
-                XmlNodus* liberum = _nodum_ex_valore(
-                    plist_ad_indicem(v, i), piscina, intern, status);
-
-                si (!liberum)
-                {
-                    redde NIHIL;
-                }
-                xml_liberum_addere(nodus, liberum);
-            }
-            redde nodus;
-
         casus PLIST_DICTIO:
-            nodus = xml_elementum_creare(piscina, intern, "dict");
-            si (!nodus)
+            titulus = v->genus == PLIST_LISTA ? "array" : "dict";
+            si (plist_numerus(v) == ZEPHYRUM)
             {
-                *status = PLIST_ERROR_MEMORIA;
-                redde NIHIL;
+                _folium_scribere(aed, gradus, titulus, vacua);
+                redde VERUM;
             }
+            _indentare(aed, gradus);
+            chorda_aedificator_appendere_character(aed, '<');
+            chorda_aedificator_appendere_literis(aed, titulus);
+            chorda_aedificator_appendere_literis(aed, ">\n");
             per (i = ZEPHYRUM; i < plist_numerus(v); i++)
             {
-                PlistPar* par;
-                XmlNodus* clavis;
-                XmlNodus* liberum;
+                PlistValor* filius;
 
-                par = (PlistPar*)xar_obtinere(v->liberi, i);
-                si (!par)
+                si (v->genus == PLIST_LISTA)
                 {
-                    *status = PLIST_ERROR_STRUCTURA;
-                    redde NIHIL;
+                    filius = plist_ad_indicem(v, i);
                 }
-                si (_signum_vetitum(par->clavis))
+                alioquin
                 {
-                    *status = PLIST_ERROR_SIGNUM;
-                    redde NIHIL;
-                }
-                clavis = xml_elementum_creare(piscina, intern, "key");
-                si (!clavis)
-                {
-                    *status = PLIST_ERROR_MEMORIA;
-                    redde NIHIL;
-                }
-                xml_textum_addere(clavis, piscina, intern,
-                    chorda_ut_cstr(par->clavis, piscina));
-                xml_liberum_addere(nodus, clavis);
+                    PlistPar* par = (PlistPar*)xar_obtinere(v->liberi,
+                        i);
 
-                liberum = _nodum_ex_valore(par->valor, piscina, intern,
-                                           status);
-                si (!liberum)
-                {
-                    redde NIHIL;
+                    si (!par)
+                    {
+                        *status = PLIST_ERROR_STRUCTURA;
+                        redde FALSUM;
+                    }
+                    si (_signum_vetitum(par->clavis))
+                    {
+                        *status = PLIST_ERROR_SIGNUM;
+                        redde FALSUM;
+                    }
+                    _folium_scribere(aed, gradus + I, "key",
+                        par->clavis);
+                    filius = par->valor;
                 }
-                xml_liberum_addere(nodus, liberum);
+                si (!_valorem_scribere(filius, aed, gradus + I, piscina,
+                                       status))
+                {
+                    redde FALSUM;
+                }
             }
-            redde nodus;
+            _indentare(aed, gradus);
+            chorda_aedificator_appendere_literis(aed, "</");
+            chorda_aedificator_appendere_literis(aed, titulus);
+            chorda_aedificator_appendere_literis(aed, ">\n");
+            redde VERUM;
 
         ordinarius:
             *status = PLIST_ERROR_STRUCTURA;
-            redde NIHIL;
+            redde FALSUM;
     }
 }
 
@@ -516,13 +551,9 @@ plist_scribere (
     PlistStatus* status,
         Piscina* piscina)
 {
-                  chorda  vacua;
-                  chorda  corpus;
-                XmlNodus* nodus_plist;
-                XmlNodus* nodus_radix;
-     InternamentumChorda* intern;
-       ChordaAedificator* aed;
-             PlistStatus  interius = PLIST_SUCCESSUS;
+               chorda  vacua;
+    ChordaAedificator* aed;
+          PlistStatus  interius = PLIST_SUCCESSUS;
 
     vacua.datum    = NIHIL;
     vacua.mensura  = ZEPHYRUM;
@@ -537,45 +568,23 @@ plist_scribere (
         *status = PLIST_ERROR_STRUCTURA;
         redde vacua;
     }
-    intern = internamentum_creare(piscina);
-    si (!intern)
-    {
-        *status = PLIST_ERROR_MEMORIA;
-        redde vacua;
-    }
-    nodus_plist = xml_elementum_creare(piscina, intern, "plist");
-    si (   !nodus_plist
-        || !xml_attributum_addere(nodus_plist, piscina, intern,
-                                  "version", "1.0"))
-    {
-        *status = PLIST_ERROR_MEMORIA;
-        redde vacua;
-    }
-    nodus_radix = _nodum_ex_valore(radix, piscina, intern, &interius);
-    si (!nodus_radix)
-    {
-        *status = (interius == PLIST_SUCCESSUS)
-                ? PLIST_ERROR_STRUCTURA : interius;
-        redde vacua;
-    }
-    xml_liberum_addere(nodus_plist, nodus_radix);
-
-    corpus = xml_scribere(nodus_plist, piscina, VERUM);
-    si (chorda_vacua(corpus))
-    {
-        *status = PLIST_ERROR_MEMORIA;
-        redde vacua;
-    }
-    aed = chorda_aedificator_creare(piscina,
-        (memoriae_index)corpus.mensura + CCLVI);
+    aed = chorda_aedificator_creare(piscina, MXXIV);
     si (!aed)
     {
         *status = PLIST_ERROR_MEMORIA;
         redde vacua;
     }
     chorda_aedificator_appendere_literis(aed, PLIST_PROLOGUS);
-    chorda_aedificator_appendere_chorda(aed, corpus);
-    chorda_aedificator_appendere_literis(aed, "\n");
+    chorda_aedificator_appendere_literis(aed,
+        "<plist version=\"1.0\">\n");
+    si (!_valorem_scribere(radix, aed, I, piscina, &interius))
+    {
+        *status = (interius == PLIST_SUCCESSUS)
+                ? PLIST_ERROR_STRUCTURA : interius;
+        redde vacua;
+    }
+    /* linea vacua finalis: forma scriptoris veteris servatur */
+    chorda_aedificator_appendere_literis(aed, "</plist>\n\n");
     redde chorda_aedificator_finire(aed);
 }
 
@@ -600,8 +609,8 @@ plist_scribere_plagulam (
  * Legere
  * ================================================== */
 
-/* "basis/nomen" aut "basis/nomen[index]" - semita sedis, quia
- * XmlNodus lineam non fert */
+/* "basis/nomen" aut "basis/nomen[index]" - semita sedis (contractus
+ * plist.h) */
 interior chorda
 _semita_liberi (
                  chorda  basis,
@@ -692,34 +701,64 @@ _album_tollere (
 
 /* Liberum proximum quod ELEMENTUM est; textum album praeterit,
  * textum aliud VITIUM nominat (numquam tacite deicit). */
-interior XmlNodus*
+interior constans XmlCoctus*
 _elementum_proximum (
-    XmlNodus* parens,
-         i32* index,
-         b32* vitium)
+    constans XmlCoctus* parens,
+                   i32* index,
+                   b32* vitium)
 {
     *vitium = FALSUM;
-    dum (*index < xml_numerus_liberorum(parens))
+    dum (*index < xml_liberorum_numerus(parens))
     {
-        XmlNodus* liberum = xml_liberum_ad_indicem(parens, *index);
+        constans XmlCoctus* liberum = xml_liberum(parens, *index);
 
         (*index)++;
-        si (!liberum)
-        {
-            perge;
-        }
-        si (liberum->genus == XML_NODUS_ELEMENTUM)
+        si (xml_nodi_genus(liberum) == XML_COCTUS_ELEMENTUM)
         {
             redde liberum;
         }
-        si (   liberum->genus == XML_NODUS_TEXTUS && liberum->valor
-            && !_textus_albus(*liberum->valor))
+        si (   xml_nodi_genus(liberum) == XML_COCTUS_TEXTUS
+            && !_textus_albus(xml_textus(liberum)))
         {
             *vitium = VERUM;
             redde NIHIL;
         }
     }
     redde NIHIL;
+}
+
+/* textus omnis elementi; vacuus si memoria deficit */
+interior chorda
+_textus (
+    constans XmlCoctus* nodus,
+               Piscina* piscina)
+{
+    chorda textus;
+
+    si (!xml_textus_totus(nodus, piscina, &textus))
+    {
+        textus.datum    = NIHIL;
+        textus.mensura  = ZEPHYRUM;
+    }
+    redde textus;
+}
+
+/* textus in internamento: valores fontem non retinent */
+interior chorda
+_textus_internatus (
+     constans XmlCoctus* nodus,
+                Piscina* piscina,
+    InternamentumChorda* intern)
+{
+    chorda  textus = _textus(nodus, piscina);
+    chorda* internata;
+
+    si (textus.mensura == ZEPHYRUM)
+    {
+        redde textus;
+    }
+    internata = chorda_internare(intern, textus);
+    redde internata ? *internata : textus;
 }
 
 interior PlistValor*
@@ -738,40 +777,47 @@ _recusare (
 
 interior PlistValor*
 _valorem_ex_nodo (
-               XmlNodus* nodus,
+     constans XmlCoctus* nodus,
                  chorda  semita,
+                    i32  gradus,
                 Piscina* piscina,
     InternamentumChorda* intern,
           PlistResultus* r)
 {
          PlistValor* v;
              chorda  textus;
-                i32  index = ZEPHYRUM;
+             chorda  titulus  = xml_titulus(nodus);
+                i32  index    = ZEPHYRUM;
                 b32  vitium;
 
-    si (!nodus || !nodus->titulus)
+    si (!nodus)
     {
         redde _recusare(r, PLIST_ERROR_STRUCTURA, semita,
                         "nodus sine titulo", piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "string"))
+    si (gradus > PLIST_PROFUNDITAS_MAXIMA)
+    {
+        redde _recusare(r, PLIST_ERROR_STRUCTURA, semita,
+            "nidi nimis profundi (PLIST_PROFUNDITAS_MAXIMA)", piscina);
+    }
+    si (chorda_aequalis_literis(titulus, "string"))
     {
         redde plist_chordam_creare(
-            xml_textus_internus(nodus, piscina), piscina);
+            _textus_internatus(nodus, piscina, intern), piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "true"))
+    si (chorda_aequalis_literis(titulus, "true"))
     {
         redde plist_veritatem_creare(VERUM, piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "false"))
+    si (chorda_aequalis_literis(titulus, "false"))
     {
         redde plist_veritatem_creare(FALSUM, piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "integer"))
+    si (chorda_aequalis_literis(titulus, "integer"))
     {
         s64 numerus;
 
-        si (!chorda_ut_s64(xml_textus_internus(nodus, piscina),
+        si (!chorda_ut_s64(_textus(nodus, piscina),
                            &numerus))
         {
             redde _recusare(r, PLIST_ERROR_NUMERUS, semita,
@@ -779,11 +825,11 @@ _valorem_ex_nodo (
         }
         redde plist_integrum_creare(numerus, piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "real"))
+    si (chorda_aequalis_literis(titulus, "real"))
     {
         f64 numerus;
 
-        si (!chorda_ut_f64(xml_textus_internus(nodus, piscina),
+        si (!chorda_ut_f64(_textus(nodus, piscina),
                            &numerus))
         {
             redde _recusare(r, PLIST_ERROR_NUMERUS, semita,
@@ -791,11 +837,11 @@ _valorem_ex_nodo (
         }
         redde plist_realem_creare(numerus, piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "date"))
+    si (chorda_aequalis_literis(titulus, "date"))
     {
         DiesHora dh;
 
-        si (!fasti_ex_iso(xml_textus_internus(nodus, piscina), &dh))
+        si (!fasti_ex_iso(_textus(nodus, piscina), &dh))
         {
             redde _recusare(r, PLIST_ERROR_DIES, semita,
                             "date non est instans ISO-8601 UTC",
@@ -803,13 +849,13 @@ _valorem_ex_nodo (
         }
         redde plist_diem_creare(dh, piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "data"))
+    si (chorda_aequalis_literis(titulus, "data"))
     {
         Base64Fructus decocta;
                chorda purgata;
 
         purgata = _album_tollere(
-            xml_textus_internus(nodus, piscina), piscina);
+            _textus(nodus, piscina), piscina);
         /* data vacua licet (nulli octeti); decodificatorem de
          * ingressu vacuo non interrogamus */
         si (purgata.mensura == ZEPHYRUM)
@@ -828,7 +874,7 @@ _valorem_ex_nodo (
         textus.mensura  = decocta.mensura;
         redde plist_data_creare(textus, piscina);
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "array"))
+    si (chorda_aequalis_literis(titulus, "array"))
     {
         i32 ordo = ZEPHYRUM;
 
@@ -840,9 +886,9 @@ _valorem_ex_nodo (
         }
         per (;;)
         {
-            XmlNodus* liberum = _elementum_proximum(nodus, &index,
-                                                    &vitium);
-            PlistValor* filius;
+            constans XmlCoctus* liberum = _elementum_proximum(nodus,
+                                              &index, &vitium);
+                    PlistValor* filius;
 
             si (vitium)
             {
@@ -855,7 +901,7 @@ _valorem_ex_nodo (
             }
             filius = _valorem_ex_nodo(liberum,
                 _semita_liberi(semita, "array", ordo, VERUM, piscina),
-                piscina, intern, r);
+                gradus + I, piscina, intern, r);
             si (!filius)
             {
                 redde NIHIL;
@@ -865,7 +911,7 @@ _valorem_ex_nodo (
         }
         redde v;
     }
-    si (chorda_aequalis_literis(*nodus->titulus, "dict"))
+    si (chorda_aequalis_literis(titulus, "dict"))
     {
         i32 ordo = ZEPHYRUM;
 
@@ -877,10 +923,10 @@ _valorem_ex_nodo (
         }
         per (;;)
         {
-               XmlNodus* nodus_clavis;
-               XmlNodus* nodus_valoris;
-             PlistValor* filius;
-                 chorda  semita_clavis;
+    constans XmlCoctus* nodus_clavis;
+    constans XmlCoctus* nodus_valoris;
+            PlistValor* filius;
+                chorda  semita_clavis;
 
             nodus_clavis = _elementum_proximum(nodus, &index, &vitium);
             si (vitium)
@@ -894,9 +940,8 @@ _valorem_ex_nodo (
             }
             semita_clavis = _semita_liberi(semita, "key", ordo, VERUM,
                                            piscina);
-            si (   !nodus_clavis->titulus
-                || !chorda_aequalis_literis(*nodus_clavis->titulus,
-                                            "key"))
+            si (!chorda_aequalis_literis(xml_titulus(nodus_clavis),
+                                         "key"))
             {
                 redde _recusare(r, PLIST_ERROR_STRUCTURA,
                                 semita_clavis,
@@ -911,13 +956,14 @@ _valorem_ex_nodo (
                                 "clavis sine valore", piscina);
             }
             filius = _valorem_ex_nodo(nodus_valoris, semita_clavis,
-                                      piscina, intern, r);
+                                      gradus + I, piscina, intern, r);
             si (!filius)
             {
                 redde NIHIL;
             }
             plist_dictio_ponere(v,
-                xml_textus_internus(nodus_clavis, piscina), filius,
+                _textus_internatus(nodus_clavis, piscina, intern),
+                filius,
                 piscina);
             ordo++;
         }
@@ -925,7 +971,7 @@ _valorem_ex_nodo (
     }
     redde _recusare(r, PLIST_ERROR_STRUCTURA,
                     _semita_liberi(semita,
-                        chorda_ut_cstr(*nodus->titulus, piscina),
+                        chorda_ut_cstr(titulus, piscina),
                         ZEPHYRUM, FALSUM, piscina),
                     "elementum ignotum", piscina);
 }
@@ -936,14 +982,14 @@ plist_legere (
                 Piscina* piscina,
     InternamentumChorda* intern)
 {
-    PlistResultus  r;
-      XmlResultus  fructus_xml;
-         XmlNodus* radix_xml;
-           chorda* versio;
-         XmlNodus* unicum;
-         XmlNodus* superfluum;
-              i32  index = ZEPHYRUM;
-              b32  vitium;
+    PlistResultus r;
+          XmlDocumentum* documentum;
+    constans XmlCoctus* radix_xml;
+                 chorda  versio;
+    constans XmlCoctus* unicum;
+    constans XmlCoctus* superfluum;
+                    i32  index = ZEPHYRUM;
+                    b32  vitium;
 
     r.status         = PLIST_SUCCESSUS;
     r.radix          = NIHIL;
@@ -967,24 +1013,36 @@ plist_legere (
                           piscina);
         redde r;
     }
-    fructus_xml = xml_legere(textus, piscina, intern);
-    si (!fructus_xml.successus || !fructus_xml.radix)
+    /* NUL post finem (plagulae ad mensuram impletae): CFPropertyList
+     * et plutil accipiunt, XML non - sola lenitas plist propria */
+    dum (   textus.mensura > ZEPHYRUM
+         && textus.datum[textus.mensura - I] == (i8)ZEPHYRUM)
     {
-        r.status  = PLIST_ERROR_XML;
-        r.causa   = chorda_ex_s32((s32)fructus_xml.status,
-            piscina);
+        textus.mensura--;
+    }
+    documentum  = xml_documentum_legere(textus, piscina);
+    radix_xml   = xml_documentum_radix(documentum);
+    si (!xml_documentum_successus(documentum) || !radix_xml)
+    {
+        ChordaAedificator* aed = chorda_aedificator_creare(piscina,
+                                                           CCLVI);
+
+        r.status = PLIST_ERROR_XML;
+        si (   aed && xml_documentum_diagnostica_scribere(documentum,
+                                                       "plist", aed))
+        {
+            r.causa = chorda_aedificator_finire(aed);
+        }
         redde r;
     }
-    radix_xml = fructus_xml.radix;
-    si (   !radix_xml->titulus
-        || !chorda_aequalis_literis(*radix_xml->titulus, "plist"))
+    si (!chorda_aequalis_literis(xml_titulus(radix_xml), "plist"))
     {
         (vacuum)_recusare(&r, PLIST_ERROR_NON_PLIST, r.semita,
                           "radix non est plist", piscina);
         redde r;
     }
-    versio = xml_attributum_capere(radix_xml, "version");
-    si (versio && !chorda_aequalis_literis(*versio, "1.0"))
+    si (   xml_attributum(radix_xml, "version", &versio)
+        && !chorda_aequalis_literis(versio, "1.0"))
     {
         (vacuum)_recusare(&r, PLIST_ERROR_VERSIO, r.semita,
                           "versio praeter 1.0", piscina);
@@ -1004,7 +1062,8 @@ plist_legere (
                           "plist plus uno libero fert", piscina);
         redde r;
     }
-    r.radix = _valorem_ex_nodo(unicum, r.semita, piscina, intern, &r);
+    r.radix = _valorem_ex_nodo(unicum, r.semita, I, piscina, intern,
+                               &r);
     si (r.status != PLIST_SUCCESSUS)
     {
         r.radix = NIHIL;
