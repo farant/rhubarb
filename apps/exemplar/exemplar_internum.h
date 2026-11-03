@@ -24,6 +24,7 @@
 #include "exemplar_nucleus.h"
 #include "communio_servus.h"
 #include "pulsus.h"
+#include "apns_mittens.h"
 
 #define EXEMPLAR_PETITIO_MAXIMA  (LXIV * MXXIV * MXXIV)
 #define EXEMPLAR_TEXTUS_MAXIMUS  (XVI * MXXIV)
@@ -74,6 +75,10 @@ structura Exemplar {
            CommunioServus* communio;
     /* pulsus-plan T3: notificationes (in volumine communionis) */
                    Pulsus* pulsus;
+    /* pulsus-plan T5: mittens APNs (NIHIL = absens) et status eius
+     * ("paratus - hospes" | "absens - causa"; numquam secretum) */
+              ApnsMittens* apns;
+                character  apns_status[CCLVI];
     /* plan-3 T5: epistulae aditus (NIHIL = non mittuntur) */
              Epistularius* epistularius;
 };

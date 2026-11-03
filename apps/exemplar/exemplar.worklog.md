@@ -377,3 +377,13 @@ membership and the entry (communio.volumen - two volumes, so person first; a
 re-run is idempotent); communio_epistulam_revocare {epistula};
 communio_permissos_enumerare (shows the addresses - this is the admin's own
 list, never written to the repository).
+
+## 2026-11-02 - pulsus T5: exemplar sends push notifications
+
+At start-up, right after pulsus is created and mounted, `_apns_parare` reads `<data>/apns.stml` (no secret in it) and the key named by its `clavis_via` - relative to the data directory unless absolute, so the server file is just `clavis_via="apns.clavis"`. The key goes through `tessera_clavem_legere` (regular file, no symlink, mode 0600 or tighter), the DER is handed to `apns_mittentem_aperire` (which copies it) and zeroed at once. The sender runs on exemplar's own reactor and is set on pulsus with `pulsus_mittentem_ponere`.
+
+- **Anything missing or wrong leaves pulsus without a sender** (registrations and batches still work, nothing is sent) and records why in `e->apns_status`: `absens - apns.stml deest`, `absens - apns.stml: <field>`, `absens - clavis modus latior quam 0600 (chmod 600 <path>)`, `absens - tessera fieri non potest (...)`; on success `paratus - <hospes>[, sandbox <hospes_sandbox>]`. Same line on stderr (`pulsus: apns ...`). Paths and causes only - `tessera_clavem_legere` never puts key bytes in its causa.
+- **`status` (admin) now carries `"apns"`** with that line. Two reasons: the test suite has no stderr capture, and on the droplet `exemplar -administrare status` answers "is push live?" without reading journald.
+- **Close order**: `apns_mittentem_claudere` before `pulsus_destruere` (normal close and `_creatio_fracta`), because closing finishes pending messages through pulsus's finis callback.
+- Test "apns" (probatio_exemplar_applicatio): no stml -> absens naming apns.stml; key 0644 -> absens naming apns.clavis and 0600, nothing in the status looks like key material; key 0600 + Go oracle -> `paratus`, a device registered with a `c8...` token, `pulsus_probare fran` -> the oracle logged the POST with topic/push-type and `"title":"pictor"`, and the inscription's `usus_ultimus_ms` was set (TRADITUM came back through pulsus). Without Go the third part prints NIHIL CURSUM.
+- Deploying this changes nothing on the droplet until Fran copies the key there (T11): no `apns.stml` -> the same "absens" as before.

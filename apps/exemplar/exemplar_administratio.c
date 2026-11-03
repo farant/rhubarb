@@ -171,6 +171,8 @@ _status (
     json_objectum_ponere(r, "cives", n);
     json_objectum_ponere(r, "invitationes_vivae", json_integer_creare(p,
         vivae));
+    json_objectum_ponere(r, "apns", json_chorda_creare_literis(p,
+        e->apns_status));
     mcp_respondere_json(v, r);
 }
 
@@ -892,7 +894,8 @@ hic_manens constans McpArgumentum ARG_COMMUNIO_EPISTULA[] = {
 
 hic_manens constans McpInstrumentum INSTRUMENTA_ADMINISTRATIONIS[] = {
     { "status", "Salus servi, numerus actorum, cives per statum,"
-        " invitationes vivae.", NIHIL, ZEPHYRUM,
+        " invitationes vivae, apns (paratus | absens - causa).", NIHIL,
+            ZEPHYRUM,
             SCOPUS_ADMINISTRATIONIS,
         VERUM, FALSUM, _status },
     { "invitare", "Invitationem novam creat; codicem et nexum SEMEL"

@@ -21,6 +21,9 @@
 #include "chorda_aedificator.h"
 #include "xar.h"
 #include "sigillum.h"
+#include "apns.h"
+#include "apns_mittens.h"
+#include "tessera_es256.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -1135,6 +1138,7 @@ _creatio_fracta (
 {
     mcp_canalis_claudere(e->canalis);
     epistularium_claudere(e->epistularius);
+    apns_mittentem_claudere(e->apns);
     pulsus_destruere(e->pulsus);
     communio_servum_destruere(e->communio);
     si (e->hospitium)
@@ -1242,6 +1246,92 @@ _epistularium_parare (
     communio_servum_epistularium_ponere(e->communio, e->epistularius,
         "communio@golden.earth", e->basis);
     communio_servum_custodiam_ponere(e->communio, e->custodia);
+}
+
+/* pulsus sine mittente: causa in statu et stderr (via aut defectus,
+ * numquam contentum fili) */
+interior vacuum
+_apns_absens (
+     Exemplar* e,
+       chorda  causa)
+{
+    i32 n;
+
+    n = causa.mensura < (i32)(CCLVI - X) ? causa.mensura
+        : (i32)(CCLVI - X);
+    strcpy(e->apns_status, "absens - ");
+    memcpy(e->apns_status + IX, causa.datum, (size_t)n);
+    e->apns_status[IX + n] = '\0';
+    fprintf(stderr, "pulsus: apns %s - notificationes non mittuntur\n",
+        e->apns_status);
+}
+
+/* pulsus-plan T5 (C7): <data>/apns.stml (sine secreto) et clavis
+ * (clavis_via ad directorium datorum relativa, nisi absoluta; modus
+ * 0600 per tessera_clavem_legere) -> mittens in reactore servi, pulsus
+ * eum accipit. Quidvis deest aut malum: pulsus greges consumit, nihil
+ * mittit. DER post aperitionem zephyratur (mittens copiam tenet). */
+interior vacuum
+_apns_parare (
+                          Exemplar* e,
+     constans ExemplarConfiguratio* configuratio,
+                           Piscina* piscina)
+{
+           ApnsConfiguratio  c;
+                  character  via[EXEMPLAR_VIA_MAXIMA];
+                  character  via_clavis[EXEMPLAR_VIA_MAXIMA];
+                     chorda  causa;
+                         i8* der;
+                        i32  n;
+
+    si (   !_via(via, configuratio->via_datorum, "apns.stml")
+        || !filum_existit(via))
+    {
+        _apns_absens(e, chorda_ex_literis("apns.stml deest", piscina));
+        redde;
+    }
+    si (!apns_configurationem_legere(via, &c, &causa, piscina))
+    {
+        _apns_absens(e, chorda_concatenare(chorda_ex_literis(
+            "apns.stml: ", piscina), causa, piscina));
+        redde;
+    }
+    si (   c.clavis_via.mensura > ZEPHYRUM
+        && c.clavis_via.datum[ZEPHYRUM] == '/'
+        && c.clavis_via.mensura < EXEMPLAR_VIA_MAXIMA)
+    {
+        memcpy(via_clavis, c.clavis_via.datum,
+            (size_t)c.clavis_via.mensura);
+        via_clavis[c.clavis_via.mensura] = '\0';
+    }
+    alioquin si (!_via(via_clavis, configuratio->via_datorum,
+                 chorda_ut_cstr(c.clavis_via, piscina)))
+    {
+        _apns_absens(e, chorda_ex_literis("apns.stml: clavis_via nimis "
+            "longa", piscina));
+        redde;
+    }
+    si (!tessera_clavem_legere(via_clavis, &der, &n, &causa, piscina))
+    {
+        _apns_absens(e, causa);
+        redde;
+    }
+    e->apns = apns_mittentem_aperire(e->reactor, &c, der, n, NIHIL,
+        piscina);
+    memset(der, ZEPHYRUM, (size_t)n);
+    si (!e->apns)
+    {
+        _apns_absens(e, chorda_ex_literis("tessera fieri non potest "
+            "(clavis, clavis_id aut turma)", piscina));
+        redde;
+    }
+    pulsus_mittentem_ponere(e->pulsus, apns_mittens_mittere, e->apns);
+    sprintf(e->apns_status, "paratus - %.100s%s%.100s",
+        chorda_ut_cstr(c.hospes, piscina),
+        c.hospes_sandbox.mensura > ZEPHYRUM ? ", sandbox " : "",
+        c.hospes_sandbox.mensura > ZEPHYRUM
+        ? chorda_ut_cstr(c.hospes_sandbox, piscina) : "");
+    fprintf(stderr, "pulsus: apns %s\n", e->apns_status);
 }
 
 Exemplar*
@@ -1373,8 +1463,8 @@ exemplar_creare (
         redde _creatio_fracta(e);
     }
     /* pulsus-plan T3: notificationes post servum communionis (cuius
-     * apparatus et volumen adhibet); mittens APNs nondum (T5) - greges
-     * consumuntur, nihil mittitur */
+     * apparatus et volumen adhibet); T5: mittens APNs si apns.stml et
+     * clavis adsunt */
     si (   !(e->pulsus = pulsus_creare(piscina, e->communio_volumen,
                e->communio, ianua_cives(e->ianua), NIHIL))
         || !pulsus_montare(e->pulsus, e->hospitium))
@@ -1382,8 +1472,7 @@ exemplar_creare (
         fprintf(stderr, "exemplar: pulsus deficit\n");
         redde _creatio_fracta(e);
     }
-    fprintf(stderr, "pulsus: apns absens - notificationes non"
-        " mittuntur\n");
+    _apns_parare(e, configuratio, piscina);
     si (configuratio->basis)
     {
         si (strlen(configuratio->basis) >= EXEMPLAR_VIA_MAXIMA)
@@ -1478,6 +1567,8 @@ exemplar_claudere (
     mcp_canalis_claudere(exemplar->canalis);
     /* ANTE hospitium: horae exspectantium et missiones epistularum */
     epistularium_claudere(exemplar->epistularius);
+    /* mittens ANTE pulsus: claudere pendentes per fines pulsus finit */
+    apns_mittentem_claudere(exemplar->apns);
     pulsus_destruere(exemplar->pulsus);
     communio_servum_destruere(exemplar->communio);
     hospitium_destruere(exemplar->hospitium);

@@ -13,6 +13,7 @@
  * gyrum agit (~MCC gradus per hash), mora longior probationem
  * minutis extenderet (675 s cum XX ms). */
 #include "postulata_posix.h"
+#include "../vendor/bearssl_amalgama.h"
 #define EXEMPLAR_PROBATIO
 #define ADMISSIO_PROBATIO
 #include "latina.h"
@@ -37,6 +38,8 @@
 #include "url.h"
 #include "xar.h"
 #include "canalis.h"
+#include "base64.h"
+#include "servus_oraculi.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -3209,6 +3212,239 @@ _sectio_pulsus (CredoContextus* c)
     _finire(e, &locus);
 }
 
+/* ---- pulsus T5: apns.stml + apns.clavis -> mittens ---- */
+
+#define SIGNUM_APNS_BONUM \
+    "c800000000000000000000000000000000000000000000000000000000000000"
+
+/* clavis P-256 ex semine, PEM "PRIVATE KEY" (forma .p8 Apple) */
+interior chorda
+_clavis_textus (
+    Piscina* p)
+{
+    br_hmac_drbg_context  fors;
+       br_ec_private_key  privata;
+        br_ec_public_key  publica;
+           unsigned char  capsa_privata[BR_EC_KBUF_PRIV_MAX_SIZE];
+           unsigned char  capsa_publica[BR_EC_KBUF_PUB_MAX_SIZE];
+      constans character* semen = "exemplar apns semen";
+                  size_t  n;
+                      i8* der;
+                  chorda  b;
+                  chorda  textus;
+                     i32  i;
+
+    textus = chorda_ex_literis("", p);
+    br_hmac_drbg_init(&fors, &br_sha256_vtable, semen, strlen(semen));
+    si (   br_ec_keygen(&fors.vtable, br_ec_get_default(), &privata,
+            capsa_privata, BR_EC_secp256r1) == ZEPHYRUM
+        || br_ec_compute_pub(br_ec_get_default(), &publica,
+            capsa_publica, &privata) == ZEPHYRUM)
+    {
+        redde textus;
+    }
+    n    = br_encode_ec_pkcs8_der(NIHIL, &privata, &publica);
+    der  = (i8*)piscina_allocare(p, (memoriae_index)n);
+    si (!der || br_encode_ec_pkcs8_der(der, &privata, &publica) != n)
+    {
+        redde textus;
+    }
+    b       = base64_codificare(der, (i32)n, p);
+    textus  = chorda_ex_literis("-----BEGIN PRIVATE KEY-----\n", p);
+    per (i = ZEPHYRUM; i < b.mensura; i += LXIV)
+    {
+        textus = chorda_concatenare(textus, chorda_sectio(b, i, i + LXIV
+            < b.mensura ? i + LXIV : b.mensura), p);
+        textus = chorda_concatenare(textus, chorda_ex_literis("\n", p),
+            p);
+    }
+    redde chorda_concatenare(textus, chorda_ex_literis(
+        "-----END PRIVATE KEY-----\n", p), p);
+}
+
+/* directorium datorum novum cum apns.stml et apns.clavis (modus) */
+interior b32
+_apns_parare (
+                 Locus* locus,
+    constans character* hospes,
+                   i32  portus,
+    constans character* ancora,
+               integer  modus,
+               Piscina* p)
+{
+    character n[MONETA_NANOID_PLAGULAE_MENSURA];
+    character via[CCLVI];
+    character stml[MXXIV];
+
+    (vacuum)moneta_nanoid_plagulae(n);
+    sprintf(locus->via, "/tmp/exemplar_%s", n);
+    si (   strlen(hospes) + strlen(ancora) > DC
+        || !filum_directorium_creare_cum_modo(locus->via, 0700))
+    {
+        redde FALSUM;
+    }
+    sprintf(stml,
+        "<apns clavis_via=\"apns.clavis\" clavis_id=\"PROBA12345\""
+        " turma=\"TURMA12345\" thema=\"earth.golden.pictor\" hospes=\"%s\""
+        " portus=\"%u\" ancora=\"%s\"/>", hospes,
+        (insignatus integer)portus,
+        ancora);
+    sprintf(via, "%s/apns.stml", locus->via);
+    si (!filum_scribere(via, chorda_ex_literis(stml, p)))
+    {
+        redde FALSUM;
+    }
+    sprintf(via, "%s/apns.clavis", locus->via);
+    redde filum_scribere(via, _clavis_textus(p))
+        && filum_modum_ponere(via, modus);
+}
+
+interior chorda
+_apns_status (
+    Exemplar* e,
+       Locus* locus,
+     Piscina* p)
+{
+    JsonValor* r = _administrare(e, locus, "status", "{}", p);
+
+    redde r ? json_ad_chorda(json_via(_structura(r), "apns"))
+            : chorda_ex_literis("", p);
+}
+
+interior vacuum
+_sectio_apns (CredoContextus* c)
+{
+      Piscina* p = c->piscina;
+        Locus  locus;
+     Exemplar* e;
+       chorda  status;
+   JsonValor* r;
+ServusOraculi  sv;
+    character  dir[CXXVIII];
+    character  fixa[CCLVI];
+    character  ancora[CCLVI];
+    character  binarium[CCLVI];
+    character  tabula[CCLVI];
+    character  tessera[XLIV];
+    character  digestum[LXV];
+    character  argumenta[CCCLXXXIV];
+    character  caput[CCLVI];
+    character  inscriptio[CCLVI];
+   constans character* g[III];
+ProcessusResultus  pr;
+          s64  terminus;
+       chorda  acta;
+
+    CREDO_GRADUS("apns.stml deest: absens, nominata");
+    e = _exemplar(c, &locus, ZEPHYRUM, VERUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    status = _apns_status(e, &locus, p);
+    CREDO_CHORDA_INCIPIT(status, chorda_ex_literis("absens", p));
+    CREDO_CHORDA_CONTINET(status, chorda_ex_literis("apns.stml", p));
+    _finire(e, &locus);
+
+    CREDO_GRADUS("clavis 0644: apns.clavis et 0600 nominata, nihil mittitur");
+    CREDO_NECESSE(_apns_parare(&locus, "localhost", CDXLIII, "/nulla",
+        0644, p));
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    status = _apns_status(e, &locus, p);
+    CREDO_CHORDA_INCIPIT(status, chorda_ex_literis("absens", p));
+    CREDO_CHORDA_CONTINET(status, chorda_ex_literis("apns.clavis", p));
+    CREDO_CHORDA_CONTINET(status, chorda_ex_literis("0600", p));
+    CREDO_FALSUM(chorda_continet(status, chorda_ex_literis("PRIVATE",
+        p)));
+    _finire(e, &locus);
+
+    si (oraculi_via_quaerere() == NIHIL)
+    {
+        imprimere("NIHIL CURSUM: go deest - traditio ad oraculum non "
+            "probata\n");
+        redde;
+    }
+    CREDO_GRADUS("clavis 0600 + servus Go: paratus, probare traditur");
+    (vacuum)moneta_nanoid_plagulae(digestum);
+    sprintf(dir, "/tmp/exemplar_oraculum_%.12s", digestum);
+    CREDO_NECESSE(filum_directorium_creare_cum_modo(dir, 0700));
+    sprintf(fixa, "%s/certa", dir);
+    sprintf(ancora, "%s/ca.der", fixa);
+    sprintf(binarium, "%s/http2_servus", dir);
+    sprintf(tabula, "%s/servus.log", dir);
+    g[ZEPHYRUM]  = "probationes/fixa/tls/generare.sh";
+    g[I]         = fixa;
+    g[II]        = NIHIL;
+    pr           = processus_exsequi(g, XXX * M, p);
+    CREDO_NECESSE(pr.successus && pr.codex_exitus == ZEPHYRUM);
+    CREDO_NECESSE(servum_oraculi_construere(dir, binarium, p));
+    CREDO_NECESSE(servum_oraculi_incipere(&sv, binarium, fixa, tabula,
+        "",
+        p));
+    CREDO_NECESSE(_apns_parare(&locus, "localhost", sv.portus, ancora,
+        0600, p));
+    e = _exemplar(c, &locus, ZEPHYRUM, FALSUM);
+    CREDO_NECESSE_NON_NIHIL(e);
+    CREDO_CHORDA_INCIPIT(_apns_status(e, &locus, p), chorda_ex_literis(
+        "paratus", p));
+
+    CREDO_NECESSE(_usor_novus(e, p, &locus, "fran")[ZEPHYRUM] != '\0');
+    r = _administrare(e, &locus, "communio_membrum_addere",
+        "{\"spatium\":\"familia\",\"nomen\":\"fran\"}", p);
+    CREDO_NECESSE(r && !_vitium_administrationis(r));
+    CREDO_NECESSE(communio_tesseram_facere(tessera, digestum));
+    sprintf(argumenta, "{\"nomen\":\"fran\",\"spatium\":\"familia\","
+        "\"titulus\":\"iPhone\",\"digestum\":\"%s\"}", digestum);
+    r = _administrare(e, &locus, "communio_apparatum_addere", argumenta,
+        p);
+    CREDO_NECESSE(r && !_vitium_administrationis(r));
+    sprintf(inscriptio, "{\"tessera\":\"%s\",\"ambitus\":\"productio\","
+        "\"thema\":\"earth.golden.pictor\"}", SIGNUM_APNS_BONUM);
+    sprintf(caput, "Authorization: Bearer %s\r\n"
+        "Content-Type: application/json\r\n", tessera);
+    {
+        Lector l;
+
+        CREDO_VERUM(_rogare_et_legere(e, p,
+            "PUT /communio/pulsus/inscriptio", caput, inscriptio, &l));
+        CREDO_AEQUALIS_I32(l.status, CCIV);
+    }
+    r = _administrare(e, &locus, "pulsus_probare",
+        "{\"nomen\":\"fran\"}", p);
+    CREDO_NECESSE(r && !_vitium_administrationis(r));
+    acta      = chorda_ex_literis("", p);
+    terminus  = _nunc_verum_ms() + X * M;
+    dum (   !chorda_continet(acta, chorda_ex_literis("apns: signum=c8",
+        p))
+         && _nunc_verum_ms() < terminus)
+    {
+        (vacuum)reactor_poll(exemplar_reactor(e), XX);
+        acta = filum_legere_totum(tabula, p);
+    }
+    CREDO_CHORDA_CONTINET(acta, chorda_ex_literis("apns: signum="
+        SIGNUM_APNS_BONUM " thema=earth.golden.pictor genus=alert", p));
+    CREDO_CHORDA_CONTINET(acta,
+        chorda_ex_literis("\"title\":\"pictor\"",
+        p));
+    CREDO_GRADUS("TRADITUM: usus_ultimus_ms inscriptionis positus");
+    terminus = _nunc_verum_ms() + II * M;
+    dum (_nunc_verum_ms() < terminus)
+    {
+        (vacuum)reactor_poll(exemplar_reactor(e), XX);
+        r = _administrare(e, &locus, "pulsus_inscriptiones_enumerare",
+            "{}",
+            p);
+        si (   r && json_ad_integer(json_via(_structura(r),
+            "inscriptiones.0.usus_ultimus_ms")) > ZEPHYRUM)
+        {
+            frange;
+        }
+    }
+    CREDO_VERUM(r && json_ad_integer(json_via(_structura(r),
+        "inscriptiones.0.usus_ultimus_ms")) > ZEPHYRUM);
+    _finire(e, &locus);
+    servum_oraculi_claudere(&sv);
+    (vacuum)filum_arborem_delere(dir);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iter", _sectio_iter, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sine_invitatione", _sectio_sine_invitatione, NIHIL, NIHIL, NIHIL,
@@ -3251,6 +3487,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "communio_sine_clave", _sectio_sine_clave, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "pulsus", _sectio_pulsus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "apns", _sectio_apns, NIHIL, NIHIL, NIHIL, NIHIL },
     { "adm_invitare", _sectio_administratio_invitare, NIHIL, NIHIL,
         NIHIL,
         NIHIL },
