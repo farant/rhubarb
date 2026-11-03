@@ -178,7 +178,7 @@ f1656a51), F6 overlaps I5.
 | J4 | content seal reused on a frozen tree, clean-tree fast path, seal once after commit (~260 seals/merge, 62 after one commit) | 0.3-0.5 | S-M | LUCRUM (this commit): (a) seal once per receipt sweep (7 receipts 1.04 -> 0.20 s; ~8 s/commit at 62), (c) clean-tree fast path (identical seal, small gain), (d) index path cache; (b) cross-gate reuse NOT done (needs explicit threading) |
 | J6 | aedilis derivation runs `git rev-parse` twice per call for a comment (~611 calls/merge) | 0.3 | S | LUCRUM (this commit): AEDILIS_COMMISSUM from the gate + per-process memo; 48 -> 7 ms per derivation; aedilis gate 130 -> 78 s (one run) |
 | J7 | aedilis struere.sh `vetustum()`: newest header once, not every header × every object (~1 M `-nt` per gate) | 0.3 | S-M | LUCRUM (this commit): vicus_iussa warm 150 -> 41 ms; new gate case "caput recentissimum" (no gate touched aedilis headers before) |
-| G6/J5a | radix tests link against an archive / their closure, not all 419 objects (18 MB → 130 KB binaries, ~6 GB less per frigida) | 0.2-0.5 | S-M | `.m` objects need `-ObjC` |
+| G6/J5a | radix tests link against an archive / their closure, not all 419 objects (18 MB → 130 KB binaries, ~6 GB less per frigida) | 0.2-0.5 | S-M | LUCRUM (this commit): archive + -ObjC per test, ONE `-all_load` full link per run (J5b ruled by Fran); 18.4 MB -> 332 KB binaries, build/probationes 5.9 GB -> 752 MB, 434/434; plants: duplicate global and unresolved extern -> full link red |
 | I4 | xar fast path via GNU `extern __inline__` (gnu_inline), guarded off in amalgams; both amalgamators reproduce committed files byte-for-byte | 0.25-0.4 | S-M | the C1 alternative; no API |
 | F9 | silva-m3 / nexus compile silva.c through the E7 compilator key (13.3 s per compile) | 0.2-0.45 | S | on merges touching silva.c |
 | J10 | vexilla.sh sourcing ~16 ms × ~1 300 per merge | 0.2-0.3 | S | LUCRUM (this commit): cold 16.7 -> 9.6 ms, child (cached cksum) 5.8 ms (bash alone 5.3); new vexilla gate section VII (signature/touch, never tested before) |
@@ -206,7 +206,7 @@ f1656a51), F6 overlaps I5.
 | F-A5 | A5 again: `_relatum_alterum_expandere` still 22% of lint, 17% of obsoleta | 0.25-0.5 | as B1 A5 |
 | F3 | derived-type interning by hash (adds a field to SilvaSemantica in the header) | 0.2-0.3 | API (struct field) |
 | G7 | radices: reuse a scratch pool pair instead of create/destroy per call | 0.2-0.3 | gate strength (stale use shows as VENENUM fill, not ASan) |
-| J5b | frigida link semantics (closure vs all objects) | — | what must frigida prove about linking? |
+| J5b | frigida link semantics (closure vs all objects) | — | RULED 2026-11-02: archive per test + one all-objects link per run (decision 01M6FQ3GYV) |
 | H8 | probatio_oratio_stml: drop the second write→read circuit | 0.1 | test semantics |
 | H7 | mensor records system-sleep time per run (the crusta 431 s anomaly was clamshell sleep) | 0 (measurement) | schema change — RECOMMENDED: makes every future timing honest |
 | C7, G9, G13, G14 | interning single probe (private header), _termini memo, argon2 test params, hospitium timer | small | API / static state / config |
