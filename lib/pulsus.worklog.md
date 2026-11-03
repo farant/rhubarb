@@ -52,3 +52,13 @@
 - `pulsus_destruere` cancels the timer, so it must run before the hospitium's reactor dies (exemplar: before `communio_servum_destruere`; tests: `rete_purgare` destroys pulsus first).
 - The HTTP test sections run pulsus on the REAL clock: with the fake clock the timer fires but `pulsus_maturos_mittere` still sees the fake "now" and sends nothing.
 - Exemplar logs `pulsus: apns absens - notificationes non mittuntur` at start until T5 gives it a sender.
+
+## 2026-11-02 - T6: first Linux run of the push stack
+
+`./tools/linux/probatio.sh -musl hpack http2_forma http2 tessera_es256 pulsus_forma pulsus apns_mittens` (+ cives as a control) and `./tools/linux/aedificare.sh apps/exemplar/exemplar.c`. hpack/http2/tessera/pulsus/apns_mittens needed **no** source change for Linux - every failure was elsewhere:
+
+1. **Nothing compiled: `lib/credo.c:2057`** (gcc -Werror=format-overflow). `expressio[CCCLXXXIV]` got `"sectio '%.120s': ... %.200s (volumen_claudere deest)"` = up to 390 octets: a real overflow, not a gcc false alarm, in since 1d9b1756 (2026-10-23). clang on the Mac never warned, so every Linux suite run since then failed to compile. Buffer -> DXII. Same class in `probatio_apns_mittens.c` (`%s` of `signa[k]`, gcc cannot bound a 2-D row): `%.64s`, buffer DXII.
+2. **Every temp-volume suite failed at run time** (pulsus, and cives too - not ours): alpine containers have no `/etc/machine-id`, `machina_identitas` refuses (by design, "RECUSAT, NON DEGENERAT"), a volume without a machine cannot append acts, so `volumen_creare` returns NIHIL silently at its first act. Fix in the runner, not the library: `tools/linux/probatio.sh` makes `build/porta_linux/machine-id` once (random, stable per host) and mounts it read-only at `/etc/machine-id`. The droplet has its own machine-id - exemplar there was never affected. Found with a throwaway diagnostic printing scrinium/machina/volumen step by step (nothing in the volume path logs this failure - worth a line in volumen someday).
+3. **exemplar Linux build**: `_via` (`sprintf "%s/%s"` after a length check) - fine while every caller passed a literal, but T5's `_apns_parare` passes `clavis_via` from apns.stml and gcc cannot carry the check into the format. `_via` now memcpys under the same check.
+
+Result: 8/8 suites green under musl (Go-oracle sections print NIHIL CURSUM in the container; they ran on the Mac), `build/linux/exemplar` static x86-64; under `--platform linux/amd64` it starts, logs `pulsus: apns absens - apns.stml deest`, answers `/salus`.

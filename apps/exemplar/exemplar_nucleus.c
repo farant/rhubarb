@@ -907,12 +907,22 @@ _via (
      constans character* directorium,
      constans character* nomen_fili)
 {
-    si (strlen(directorium) + strlen(nomen_fili) + II
-        > EXEMPLAR_VIA_MAXIMA)
+    size_t a;
+    size_t b;
+
+    /* memcpy sub limite, non sprintf: gcc (Linux) longitudinem nominis
+     * non literalis (clavis_via ex apns.stml) ex probatione supra non
+     * colligit et format-overflow clamat */
+    a = strlen(directorium);
+    b = strlen(nomen_fili);
+    si (a + b + II > EXEMPLAR_VIA_MAXIMA)
     {
         redde FALSUM;
     }
-    sprintf(exitus, "%s/%s", directorium, nomen_fili);
+    memcpy(exitus, directorium, a);
+    exitus[a] = '/';
+    memcpy(exitus + a + I, nomen_fili, b);
+    exitus[a + I + b] = '\0';
     redde VERUM;
 }
 

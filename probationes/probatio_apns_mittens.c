@@ -892,7 +892,7 @@ _sectio_oraculum (
               ServusOraculi  sv;
                   character  via[MXXIV];
                   character  signa[V][LXV];
-                  character  acus[CCCLX];
+                  character  acus[DXII];
                      chorda  tabula;
                      chorda  post;
                         s64  terminus;
@@ -932,7 +932,7 @@ _sectio_oraculum (
     tabula = filum_legere_totum(via, piscina);
     per (k = ZEPHYRUM; k < V; k++)
     {
-        sprintf(acus, "apns: signum=%s thema=earth.golden.pictor"
+        sprintf(acus, "apns: signum=%.64s thema=earth.golden.pictor"
             " genus=alert prioritas=10 expiratio=", signa[k]);
         CREDO_AEQUALIS_I32(occursus(tabula, chorda_ex_literis(acus,
             piscina)), VICES[k]);
@@ -942,7 +942,7 @@ _sectio_oraculum (
         piscina)), XI);
 
     CREDO_GRADUS("apns-expiration = nunc + dies");
-    sprintf(acus, "apns: signum=%s thema=earth.golden.pictor"
+    sprintf(acus, "apns: signum=%.64s thema=earth.golden.pictor"
         " genus=alert prioritas=10 expiratio=", signa[ZEPHYRUM]);
     post      = chorda_ex_literis(acus, piscina);
     terminus  = -I;
