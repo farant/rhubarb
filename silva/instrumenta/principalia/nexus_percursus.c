@@ -1061,7 +1061,13 @@ _sigillum_plagulae (
             i32  k;
      constans character* digiti = "0123456789abcdef";
 
-    pl = lectiones_fopen(via, "rb");
+    /* <tolera codex="CANALIS_PRAETERITUS" (>sigillum = cura cache
+     * nexus communis (build/nexus.tsv), non ingressus actionis
+     * vocantis - canalis idem ac lectio parsurae (fopen crudum,
+     * debitum plagulae). Per lectiones_fopen custodia memorabilium
+     * corpus_silicis omnem plagulam arboris suspectam ut lectionem
+     * non declaratam negabat (2026-11-02, J8 sanatio) */
+    pl = fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde FALSUM;
@@ -1213,8 +1219,8 @@ _sigilla_complere (vacuum)
         }
         /* <tolera codex="CANALIS_PRAETERITUS" (>mtime solum ad
          * sigillum vetus ferendum (filum_status mtime non dat); via
-         * iam in ambulatione et praeparatione stat-ata, contentus per
-         * lectiones_fopen legitur */
+         * iam in ambulatione et praeparatione stat-ata, contentus in
+         * _sigillum_plagulae legitur */
         si (stat(v, &st) != ZEPHYRUM)
         {
             perge;

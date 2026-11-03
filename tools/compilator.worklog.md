@@ -291,3 +291,34 @@ Plant: initials accepted only A-I -> 1 object changed, 16/19
 E3/J9 summary (all six raw-clang runners now on the compilator):
 ludus_tessera 765f1f2e, tessera 1b7f5edc, gesta f3a54629, officina
 85629289, briar c6ab2020, oratio (this commit).
+
+## 2026-11-02 — budget B2 J8: clang's real path once per run
+
+Every single-call `bin/compilator` process ran `clang
+-print-prog-name=clang` to find the real toolchain binary behind the
+/usr/bin/clang trampoline (the identity is keyed on that binary's
+path + stat, memo in the thesaurus). The in-process memo (T3b) only
+helped `--plures` and fabrica; the ~650 single-call processes per merge
+(probatio_una, `_cursor_compilare`, the iudex_unitatum hook) each paid
+~11 ms.
+
+Now `compilator_clang_verum()` (new, public, lib/compilator.c; also used
+by tools/fabrica_sutura.c, which had a copy of the same resolver) reads
+`COMPILATOR_CLANG_VERUM="clang<TAB>/abs/path"` first. It is honored only
+when the key equals the clang name being resolved and the path exists;
+otherwise print-prog-name as before. Exporters, each a no-op if already
+set: `compilator_clang_exportare` in tools/cursor_communis.sh (called
+by cursor_instrumenta_parare, so every runner and the hook), and
+`silva._clang_verum()` inside `_cursu_notatum` (porta / commissio /
+fusio), restored when the run ends. Run-scoped, not machine-scoped: an
+Xcode switch mid-run would mis-key only the rest of that run, the same
+exposure the in-process memo already had (the J8c cross-process memo
+was NOT done; that needs Fran's ruling on what counts as "compiler
+changed").
+
+Measured: single-call hit 17.2 -> 6.8 ms min (median 30 -> 7).
+Compilator gate section XIII (fake clang first on PATH counting calls):
+exported real path -> hit with no clang exec; foreign key ("gcc") ->
+ignored; other path -> different identity, miss. Plants: key not
+compared -> XIII red at step 16; export ignored -> red at step 14;
+restored green.

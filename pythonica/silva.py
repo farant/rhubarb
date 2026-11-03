@@ -1975,13 +1975,46 @@ def cursus(nomen, **par):
             if '\t' in l]
 
 
+@contextlib.contextmanager
+def _clang_verum():
+    """VIA VERA CLANG per cursum (budget B2 J8): 'clang
+    -print-prog-name=clang' SEMEL, exportata ut COMPILATOR_CLANG_VERUM
+    ("clang" TAB via) - processus bin/compilator singuli portarum (~DCL
+    per fusionem, ~XI ms quisque) eam legunt (lib/compilator.c
+    compilator_clang_verum). Iam posita (cursus exterior) non
+    iteratur; post cursum restituitur (Xcode mutatum cursum proximum
+    non fallit). Fractura tacet: compilator ipse resolvit."""
+    if os.environ.get('COMPILATOR_CLANG_VERUM', '').startswith('clang\t/'):
+        yield
+        return
+    vetus = os.environ.get('COMPILATOR_CLANG_VERUM')
+    try:
+        via = subprocess.run(['clang', '-print-prog-name=clang'],
+                             capture_output=True, text=True,
+                             errors='replace').stdout.strip()
+    except OSError:
+        via = ''
+    if not via.startswith('/'):
+        yield
+        return
+    os.environ['COMPILATOR_CLANG_VERUM'] = 'clang\t' + via
+    try:
+        yield
+    finally:
+        if vetus is None:
+            os.environ.pop('COMPILATOR_CLANG_VERUM', None)
+        else:
+            os.environ['COMPILATOR_CLANG_VERUM'] = vetus
+
+
 def _cursu_notatum(titulus, exitus_ex, vocator_filiorum=None):
     """decorator: vocatio tota = cursus unus. titulus(*a, **k) -> nomen;
     exitus_ex(fructus) -> (exitus, nota) aut (exitus, nota, acta)"""
     def decorator(f):
         @functools.wraps(f)
         def involucrum(*a, **k):
-            with _cursus(titulus(*a, **k), vocator_filiorum) as c:
+            with _clang_verum(), \
+                    _cursus(titulus(*a, **k), vocator_filiorum) as c:
                 fructus = f(*a, **k)
                 e = exitus_ex(fructus)
                 c.exitus, c.nota = e[0], e[1]

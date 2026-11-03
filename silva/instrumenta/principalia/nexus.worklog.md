@@ -252,3 +252,28 @@ Fixture mtimes backdated and systema_c89.h copied with -p (a fresh
 systema mtime forces plenus). Plant: content check always "idem" ->
 IV and V FRACTUM; revert green. (A first plant, `memcmp >= 0`, was only
 true half the time — killed and replaced.)
+
+## 2026-11-02 — N1 follow-up: seal reads broke corpus_silicis's memo
+
+N1's `_sigillum_plagulae` read files through `lectiones_fopen`, so every
+mtime-suspect file the sweep sealed landed in fabrica's read book. The
+corpus_silicis action (corpus_infixum.sh runs `nexus.sh -renovare`)
+declares only lib/include/its client roots, so the heal reported
+"MEMORIA NEGATA - lectiones non declaratae:
+tessera/instrumenta/principalia/excludenda_generata.h" (a regenerated
+header, hence mtime-suspect). Not caught at N1 commit time because the
+capsula output was still fresh; J8's lib/compilator.c edit forced the
+regeneration.
+
+The gap is older than N1: the parse itself reads with raw `fopen`
+(file is on the canalis debt list), so re-judged files outside the
+declared roots were always unbooked. Ruling taken here: these reads are
+upkeep of the SHARED nexus cache (build/nexus.tsv), not inputs of the
+calling action (corpus symbols are filtered to lib/include/roots) —
+declaring the whole tree would re-judge the capsula on every C change.
+So the seal read now uses the same channel as the parse (raw fopen,
+`<tolera codex="CANALIS_PRAETERITUS">` with that reason), and
+build/nexus.sigilla.tsv is declared as a shared trace of corpus_silicis
+next to build/nexus.tsv. If the nexus refresh ever becomes its own
+fabrica action, its inputs would be the whole tree and both raw reads
+could move to lectiones.

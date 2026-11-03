@@ -187,7 +187,7 @@ f1656a51), F6 overlaps I5.
 | I3 | credo child-wait backoff 16 µs → doubling (fixed 1 ms today; toml_totalitas 8.8 of 14 s asleep) | 0.15-0.25 | S | add a 50 ms survival test (timeout ×1000 too short undetected today) |
 | F5 | _regionem_texere per-element extent cache (stack, no allocation) | 0.15-0.25 | S | run silva computus first |
 | F8 | haruspex: one `clang -fsyntax-only` over 563 TUs, fallback per TU | 0.15-0.2 | S | |
-| J8 | single-call compilator skips `clang -print-prog-name` (18 of 24 ms) | 0.15-0.25 | S | persistent memo variant = J8c (ruling) |
+| J8 | single-call compilator skips `clang -print-prog-name` (18 of 24 ms) | 0.15-0.25 | S | LUCRUM (this commit): run-scoped COMPILATOR_CLANG_VERUM (cursor_communis + silva run decorator), shared `compilator_clang_verum()` (sutura too); hit 17.2 -> 6.8 ms; compilator gate XIII; J8c (cross-run memo) NOT done, still a ruling |
 | H1 | stml_macros laxa matcher memoizes effective children per query (−17% instr, RSS 223 → 133 MB) | 0.15-0.2 | M | check computus allocation counts |
 | I2 | lectiones per-process dedupe of book lines | 0.1-0.3 | S | LUCRUM (this commit): with I1, corpus lib 28.4 → 6.2 G, 5.35 → 2.1 s, book 721 k → 22 k |
 | F6+I5 | trivia cache also "\n"+k spaces; `_lineae_excedunt` via memchr | 0.15-0.3 | S | |

@@ -42,6 +42,18 @@ compilator_aperire (
     constans character* radix_thesauri,
     constans character* clang);
 
+/* via vera binarii clang (/usr/bin/clang trampolinum est) in via_out:
+ * COMPILATOR_CLANG_VERUM ("<clang>\t<via>", a cursore semel
+ * exportatum) si clavis eius = clang et via exstat; aliter 'clang
+ * -print-prog-name=clang'. FALSUM si clang fractus aut via longior
+ * quam magnitudo_via (budget B2 J8; vocant compilator et fabrica). */
+b32
+compilator_clang_verum (
+    constans character* clang,
+             character* via_out,
+        memoriae_index  magnitudo_via,
+               Piscina* piscina);
+
 /* argumenta cacheabilia? '-c', '-o OBJ', fons unus .c/.m; non
  * -E/-S/-M* (illa clang ipse currat) */
 b32
