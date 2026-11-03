@@ -9,6 +9,8 @@
 #include "json.h"
 #include "xar.h"
 #include "filum.h"
+#include "scrinium.h"
+#include "pulsus_forma.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -37,13 +39,20 @@ nomen enumeratio {
     GRADUS_MASSAM_MITTIT,
     GRADUS_ACTA_MITTIT,
     GRADUS_TRAHIT,
-    GRADUS_MASSAM_PETIT
+    GRADUS_MASSAM_PETIT,
+    GRADUS_INSCRIBIT,       /* pulsus: PUT inscriptio */
+    GRADUS_NUNTIAT          /* pulsus: POST eventus (caput caudae) */
 } Gradus;
+
+#define PULSUS_TESSERA_MAXIMA  CCLVI
+#define PULSUS_THEMA_MAXIMUM   CXXVIII
+#define PULSUS_AMBITUS_MAXIMUS XVI
 
 /* semita una: petitio una in itinere ad plurimum */
 nomen structura {
     structura CommunioCliens* cliens;
                          b32  ascendens;
+                         b32  pulsus;        /* semita tertia (T7) */
                      Piscina* piscina;       /* cyclus unus */
     /* plan-5 T1: petitio per veredarium - in_itinere a missione usque
      * ad responsum tractatum; respondit = finis venit */
@@ -68,6 +77,8 @@ nomen structura {
                          b32  plura;
     /* recensio 3: epocha cycli - responsum epochae priori abicitur */
                          i32 epocha;
+    /* pulsus: id ordinis caudae in itinere */
+                         s64 cauda_id;
 } Semita;
 
 structura CommunioCliens {
@@ -101,6 +112,15 @@ structura CommunioCliens {
                    i32 epocha;
                 Semita sursum;
                 Semita deorsum;
+    /* pulsus-plan T7: semita tertia, hamus missorum, inscriptio in
+     * memoria (donec 204) */
+                Semita  nuntius;
+         CommunioMissa  missa_functio;
+                vacuum* missa_ctx;
+                   b32  inscribendum;
+             character  pulsus_tessera[PULSUS_TESSERA_MAXIMA + I];
+             character  pulsus_ambitus[PULSUS_AMBITUS_MAXIMUS + I];
+             character  pulsus_thema[PULSUS_THEMA_MAXIMUM + I];
 };
 
 
@@ -688,6 +708,187 @@ _massam_petere_proximam (
 
 
 /* ==================================================
+ * Pulsus (pulsus-plan T7): inscriptio, cauda eventuum
+ * ================================================== */
+
+#define CAUDA_SCHEMA \
+    "CREATE TABLE IF NOT EXISTS communio_pulsus_cauda" \
+    " (id INTEGER PRIMARY KEY AUTOINCREMENT, corpus TEXT NOT NULL)"
+
+/* servus recusat (non iterandum): 4xx praeter 401, 408, 429 */
+interior b32
+_recusatio_permanens (
+    i32 status)
+{
+    redde status >= CD && status < D && status != CDI
+        && status != CDVIII
+        && status != CDXXIX;
+}
+
+/* defectus semitae pulsus: status clientis (error, connexus) intactus
+ * - de synchronizatione loquitur; 401 ut ceterae */
+interior vacuum
+_pulsus_defectus (
+                Semita* s,
+    constans character* quid,
+                   i32  status)
+{
+    si (status == CDI)
+    {
+        _defectus(s, quid, status);
+        redde;
+    }
+    fprintf(stderr, "communio: pulsus %s: %s - iterum post XXX s\n",
+        quid,
+        status > ZEPHYRUM ? "HTTP" : "rete");
+    s->otiosa = FALSUM;
+    _horam_ponere(s, REPETITIO_MS, _semita_hora);
+}
+
+interior vacuum
+_pulsus_cyclus (
+    Semita* s)
+{
+        CommunioCliens* c = s->cliens;
+    ScriniumEnuntiatum* e;
+             JsonValor* o;
+                chorda  corpus;
+                   b32  inventum;
+
+    piscina_vacare(s->piscina);
+    s->epocha    = c->epocha;
+    s->cauda_id  = ZEPHYRUM;
+    si (c->inscribendum)
+    {
+        o = json_objectum_creare(s->piscina);
+        si (o)
+        {
+            json_objectum_ponere(o, "tessera",
+                json_chorda_creare_literis(
+                s->piscina, c->pulsus_tessera));
+            json_objectum_ponere(o, "ambitus",
+                json_chorda_creare_literis(
+                s->piscina, c->pulsus_ambitus));
+            json_objectum_ponere(o, "thema", json_chorda_creare_literis(
+                s->piscina, c->pulsus_thema));
+        }
+        s->otiosa = FALSUM;
+        s->gradus = GRADUS_INSCRIBIT;
+        si (   !o || !_mittere(s, VEREDARIUS_PUT,
+                "/communio/pulsus/inscriptio", json_scribere(o,
+                s->piscina), "application/json", TEMPUS_PETITIONIS))
+        {
+            _pulsus_defectus(s, "inscriptio", ZEPHYRUM);
+        }
+        redde;
+    }
+    inventum  = FALSUM;
+    corpus    = _vacua();
+    e = scrinium_praeparare(volumen_scrinium(c->volumen),
+        "SELECT id, corpus FROM communio_pulsus_cauda ORDER BY id"
+        " LIMIT 1");
+    si (e && scrinium_gradi(e) == SCRINIUM_ORDO)
+    {
+        s->cauda_id  = scrinium_columna_numerus(e, ZEPHYRUM);
+        corpus       = scrinium_columna_textus(e, I, s->piscina);
+        inventum     = VERUM;
+    }
+    si (e)
+    {
+        scrinium_finire(e);
+    }
+    si (!inventum)
+    {
+        s->otiosa = VERUM;
+        redde;
+    }
+    s->otiosa = FALSUM;
+    s->gradus = GRADUS_NUNTIAT;
+    si (!_mittere(s, VEREDARIUS_POST, "/communio/pulsus/eventus",
+        corpus,
+            "application/json", TEMPUS_PETITIONIS))
+    {
+        _pulsus_defectus(s, "eventus", ZEPHYRUM);
+    }
+}
+
+interior vacuum
+_caudam_delere (
+    CommunioCliens* c,
+               s64  id)
+{
+    ScriniumEnuntiatum* e;
+
+    e = scrinium_praeparare(volumen_scrinium(c->volumen),
+        "DELETE FROM communio_pulsus_cauda WHERE id = ?");
+    si (e)
+    {
+        scrinium_ligare_numerum(e, I, id);
+        (vacuum)scrinium_gradi(e);
+        scrinium_finire(e);
+    }
+}
+
+/* responsum semitae pulsus (gradus INSCRIBIT aut NUNTIAT) */
+interior vacuum
+_pulsus_responsum (
+    Semita* s,
+       i32  status)
+{
+    CommunioCliens* c = s->cliens;
+
+    si (s->gradus == GRADUS_INSCRIBIT)
+    {
+        si (status == CCIV || status == CC)
+        {
+            c->inscribendum = FALSUM;
+        }
+        alioquin si (_recusatio_permanens(status))
+        {
+            fprintf(stderr, "communio: pulsus inscriptio recusata (HTTP"
+                " %d) - omissa\n", (integer)status);
+            c->inscribendum = FALSUM;
+        }
+        alioquin
+        {
+            _pulsus_defectus(s, "inscriptio", status);
+            redde;
+        }
+        _pulsus_cyclus(s);
+        redde;
+    }
+    si (status == CCII || status == CC)
+    {
+        _caudam_delere(c, s->cauda_id);
+    }
+    alioquin si (_recusatio_permanens(status))
+    {
+        fprintf(stderr, "communio: pulsus eventus recusatus (HTTP %d) -"
+            " deletus\n", (integer)status);
+        _caudam_delere(c, s->cauda_id);
+    }
+    alioquin
+    {
+        _pulsus_defectus(s, "eventus", status);
+        redde;
+    }
+    _pulsus_cyclus(s);
+}
+
+/* semita pulsus otiosa (nec in itinere nec in mora): nunc pergit */
+interior vacuum
+_pulsum_excitare (
+    CommunioCliens* c)
+{
+    si (   c->currit && !c->recusata && !c->nuntius.in_itinere
+        && !c->nuntius.hora_viva)
+    {
+        _semita_cyclus(&c->nuntius);
+    }
+}
+
+
+/* ==================================================
  * Responsa
  * ================================================== */
 
@@ -741,6 +942,35 @@ _tractum_legere (
     _massam_petere_proximam(s);
 }
 
+/* pulsus-plan T7: acta propria accepta (primo 'accepta' fasciculi) ad
+ * applicationem - tabula contigua in piscina semitae, solum intra
+ * functionem valida */
+interior vacuum
+_missa_nuntiare (
+    CommunioCliens* c,
+            Semita* s,
+               i32  accepta)
+{
+    VolumenActum* acta;
+             i32  i;
+
+    si (!c->missa_functio || accepta <= ZEPHYRUM)
+    {
+        redde;
+    }
+    acta = (VolumenActum*)piscina_allocare(s->piscina,
+        (memoriae_index)accepta * magnitudo(VolumenActum));
+    si (!acta)
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < accepta; i++)
+    {
+        acta[i] = *(VolumenActum*)xar_obtinere(s->fasciculus, i);
+    }
+    c->missa_functio(c->missa_ctx, acta, accepta);
+}
+
 interior vacuum
 _acta_missa (
     Semita* s,
@@ -772,6 +1002,7 @@ _acta_missa (
             (i32)accepta - I))->seq;
     }
     _cursorem_scribere(c, "ascensus", c->ascensus, s->piscina);
+    _missa_nuntiare(c, s, (i32)accepta);
     si (refusum && refusum->genus == JSON_OBJECTUM)
     {
         _errorem_ponere(c, "refusum", ZEPHYRUM, s);
@@ -882,6 +1113,10 @@ _progredi_hora (
             }
             _tractum_legere(s, corpus);
             frange;
+        casus GRADUS_INSCRIBIT:
+        casus GRADUS_NUNTIAT:
+            _pulsus_responsum(s, status);
+            frange;
         casus GRADUS_MASSAM_PETIT:
             hex = *(chorda*)xar_obtinere(s->massae, s->index);
             si (   status                                 != CC
@@ -909,7 +1144,11 @@ _semita_cyclus (
         redde;
     }
     _horam_tollere(s);
-    si (s->ascendens)
+    si (s->pulsus)
+    {
+        _pulsus_cyclus(s);
+    }
+    alioquin si (s->ascendens)
     {
         _ascensum_cyclus(s);
     }
@@ -978,10 +1217,14 @@ communio_clientem_creare (
     memcpy(c->tessera, tessera.datum, (size_t)tessera.mensura);
     c->tessera[tessera.mensura] = '\0';
     si (   !_semitam_parare(c, &c->sursum, VERUM)
-        || !_semitam_parare(c, &c->deorsum, FALSUM))
+        || !_semitam_parare(c, &c->deorsum, FALSUM)
+        || !_semitam_parare(c, &c->nuntius, FALSUM))
     {
         redde NIHIL;
     }
+    c->nuntius.pulsus = VERUM;
+    /* cauda eventuum: tabula localis voluminis (numquam acta) */
+    (vacuum)scrinium_exsequi(volumen_scrinium(volumen), CAUDA_SCHEMA);
     c->ascensus   = _cursorem_legere(c, "ascensus");
     c->descensus  = _cursorem_legere(c, "descensus");
     {
@@ -1024,6 +1267,7 @@ communio_cliens_incipere (
     cliens->currit = VERUM;
     _semita_cyclus(&cliens->sursum);
     _semita_cyclus(&cliens->deorsum);
+    _semita_cyclus(&cliens->nuntius);
 }
 
 vacuum
@@ -1063,6 +1307,7 @@ communio_cliens_excitare (
     cliens->deorsum.otiosa  = FALSUM;
     _semita_cyclus(&cliens->sursum);
     _semita_cyclus(&cliens->deorsum);
+    _semita_cyclus(&cliens->nuntius);
 }
 
 interior vacuum
@@ -1093,6 +1338,7 @@ communio_cliens_sistere (
     cliens->currit = FALSUM;
     _semitam_sistere(&cliens->sursum);
     _semitam_sistere(&cliens->deorsum);
+    _semitam_sistere(&cliens->nuntius);
 }
 
 vacuum
@@ -1114,6 +1360,11 @@ communio_clientem_destruere (
     {
         piscina_destruere(cliens->deorsum.piscina);
         cliens->deorsum.piscina = NIHIL;
+    }
+    si (cliens->nuntius.piscina)
+    {
+        piscina_destruere(cliens->nuntius.piscina);
+        cliens->nuntius.piscina = NIHIL;
     }
 }
 
@@ -1145,7 +1396,100 @@ communio_cliens_otiosus (
 {
     redde cliens && cliens->currit
         && cliens->sursum.otiosa && cliens->deorsum.otiosa
-        && !cliens->sursum.in_itinere && !cliens->deorsum.in_itinere;
+        && cliens->nuntius.otiosa
+        && !cliens->sursum.in_itinere && !cliens->deorsum.in_itinere
+        && !cliens->nuntius.in_itinere;
+}
+
+vacuum
+communio_cliens_missa_ponere (
+    CommunioCliens* cliens,
+     CommunioMissa  functio,
+            vacuum* ctx)
+{
+    si (cliens)
+    {
+        cliens->missa_functio  = functio;
+        cliens->missa_ctx      = functio ? ctx : NIHIL;
+    }
+}
+
+interior b32
+_campum_ponere (
+     character* exitus,
+        chorda  valor,
+           i32  maximum)
+{
+    si (valor.mensura <= ZEPHYRUM || valor.mensura > maximum)
+    {
+        redde FALSUM;
+    }
+    memcpy(exitus, valor.datum, (size_t)valor.mensura);
+    exitus[valor.mensura] = '\0';
+    redde VERUM;
+}
+
+vacuum
+communio_cliens_pulsum_inscribere (
+    CommunioCliens* cliens,
+            chorda  tessera,
+            chorda  ambitus,
+            chorda  thema)
+{
+    si (!cliens)
+    {
+        redde;
+    }
+    si (   !_campum_ponere(cliens->pulsus_tessera, tessera,
+            PULSUS_TESSERA_MAXIMA)
+        || !_campum_ponere(cliens->pulsus_ambitus, ambitus,
+            PULSUS_AMBITUS_MAXIMUS)
+        || !_campum_ponere(cliens->pulsus_thema, thema,
+            PULSUS_THEMA_MAXIMUM))
+    {
+        fprintf(stderr, "communio: pulsus inscriptio mala - omissa\n");
+        cliens->inscribendum = FALSUM;
+        redde;
+    }
+    cliens->inscribendum = VERUM;
+    _pulsum_excitare(cliens);
+}
+
+vacuum
+communio_cliens_pulsum_nuntiare (
+              CommunioCliens* cliens,
+      constans PulsusEventus* eventus)
+{
+               Piscina* p;
+    ScriniumEnuntiatum* e;
+                chorda  corpus;
+
+    si (!cliens || !eventus)
+    {
+        redde;
+    }
+    p = piscina_generare_dynamicum("communio_pulsus",
+        (memoriae_index)XVI * (memoriae_index)M);
+    corpus = p ? pulsus_eventum_scribere(eventus, p) : _vacua();
+    e = corpus.mensura
+        > ZEPHYRUM ? scrinium_praeparare(volumen_scrinium(
+        cliens->volumen), "INSERT INTO communio_pulsus_cauda (corpus)"
+        " VALUES (?)") : NIHIL;
+    si (e)
+    {
+        scrinium_ligare_textum(e, I, corpus);
+        (vacuum)scrinium_gradi(e);
+        scrinium_finire(e);
+    }
+    alioquin
+    {
+        fprintf(stderr, "communio: pulsus eventus servari nequit\n");
+    }
+    si (p)
+    {
+        piscina_destruere(p);
+    }
+    _pulsum_excitare(cliens);
 }
 
 

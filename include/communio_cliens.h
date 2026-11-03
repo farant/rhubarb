@@ -36,6 +36,7 @@
 #include "reactor.h"
 #include "moneta.h"
 #include "veredarius.h"
+#include "pulsus_forma.h"
 
 nomen structura CommunioCliens CommunioCliens;
 
@@ -123,10 +124,59 @@ communio_cliens_status (
     constans CommunioCliens* cliens);
 
 /* nihil mittendum (quaestio ultima vacua) ET tractio ultima vacua sine
- * 'plura' - utrumque post excitare ultimum; nulla petitio in itinere */
+ * 'plura' ET nihil pulsus pendens - utrumque post excitare ultimum;
+ * nulla petitio in itinere */
 b32
 communio_cliens_otiosus (
     constans CommunioCliens* cliens);
+
+
+/* ==================================================
+ * Pulsus (pulsus-plan T7): semita tertia, independens
+ *
+ * Inscriptio et eventus per veredarium in semita sua (petitio una in
+ * itinere), ne ascensum aut descensum exspectent nec status eorum
+ * errore pulsus mutetur. Defectus (rete, 5xx, 408, 429): iterum post
+ * XXX s (aut excitare). 4xx aliud: servus recusat - eventus deletur,
+ * inscriptio omittitur, nuntius in stderr. 401: ut ceterae semitae
+ * (recusata, cliens desinit).
+ * ================================================== */
+
+/* post omnem POST /communio/acta: acta propria (non derivata) quae
+ * servus accepit, ordine - recusata numquam. acta solum intra
+ * functionem valent. Applicatio inde res suas colligit (pictor:
+ * picturas, <replica>:<spatium>). Numerus 0: non vocatur. */
+nomen vacuum (*CommunioMissa)(
+                  vacuum* ctx,
+    constans VolumenActum* acta,
+                     i32  numerus);
+
+vacuum
+communio_cliens_missa_ponere (
+    CommunioCliens* cliens,
+     CommunioMissa  functio,
+            vacuum* ctx);
+
+/* PUT /communio/pulsus/inscriptio {tessera, ambitus, thema}: nunc (si
+ * currit) et post omne incipere/renovare donec 204 - in memoria sola
+ * (applicatio in omni initio iterum vocat, et cum iOS tesseram novam
+ * dat). Chordae copiantur; vacua aut nimia (tessera > CCLVI, thema >
+ * CXXVIII): nihil. */
+vacuum
+communio_cliens_pulsum_inscribere (
+    CommunioCliens* cliens,
+            chorda  tessera,
+            chorda  ambitus,
+            chorda  thema);
+
+/* eventus in caudam voluminis (tabula communio_pulsus_cauda, locale,
+ * numquam communicatum) per pulsus_eventum_scribere; ordine mittuntur
+ * (POST /communio/pulsus/eventus), 202 -> deletus, defectus -> manet
+ * (iterum, et post initium proximum). */
+vacuum
+communio_cliens_pulsum_nuntiare (
+              CommunioCliens* cliens,
+      constans PulsusEventus* eventus);
 
 
 /* ==================================================

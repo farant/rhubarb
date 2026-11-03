@@ -146,3 +146,13 @@ mean a re-fetched batch imports nothing twice; an aborted upload is re-sent.
 INSPICERE still in flight is aborted, the timer dropped, and `_inspicere`
 runs now. A response that already arrived (respondit, 1 ms timer armed) and
 INTRARE/CONFIRMARE requests are left alone.
+
+## 2026-11-02 - pulsus-plan T7: third lane for push (register + event queue) and the "acts accepted" hook
+
+- **Third lane `nuntius`**, same machinery as ascensus/descensus (one request in flight, response handled on the next reactor turn, `_horam_ponere` for retries, epoch check). Each cycle: pending registration first (PUT `/communio/pulsus/inscriptio`), else the oldest queued event (POST `/communio/pulsus/eventus`), else idle with no timer - woken by `pulsum_inscribere`/`pulsum_nuntiare`, `incipere`, `renovare`, `excitare`. It never waits behind the 25 s long-poll or an upload.
+- **Push failures do not touch the sync status.** `_pulsus_defectus` logs to stderr and retries after XXX s but leaves `error`/`connexus` alone - a server without push routes (old exemplar, 404) must not make pictor's sync indicator red. Exception: 401 goes through `_defectus` (token revoked = the whole client stops, same as the other lanes).
+- **Permanent refusals**: any 4xx except 401/408/429 deletes the event (and drops a pending registration) with one log line; the plan said 400, but 404/413/422 are just as permanent and retrying them every 30 s forever helps nobody.
+- **Queue** = table `communio_pulsus_cauda (id AUTOINCREMENT, corpus TEXT)` in the client volume, created at client creation; local only, never an act. Rows hold the exact JSON from `pulsus_eventum_scribere`; deleted on 202/200 or permanent refusal; survive destroy/recreate (posted at the next `incipere`).
+- **Registration lives in memory only** until 204 - the app calls `pulsum_inscribere` at every launch and when iOS hands a new token, so nothing to persist.
+- **Hook gets the accepted acts, not "spatia"** (plan said spatia): a picture's space is pictor's notion (document path prefix), not communio's - the device's communio space is one per device and the client never needs it. `CommunioMissa(ctx, acta, numerus)` gets the first `accepta` acts of the batch (refused ones never), copied into a contiguous array in the lane's arena, valid only during the call. pictor (T9) maps them to `<replica>:<spatium>`.
+- Test trap: the partial-acceptance case must use the *second* device token - the first device's replica binding was already taken by the earlier volume in the same section (409 at bind, nothing uploaded, hook silent).
