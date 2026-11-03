@@ -28,6 +28,7 @@ set -u
 BRIAR_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MD_DIR="$(cd "$BRIAR_DIR/../md" && pwd)"
 MATERIA_DIR="$(cd "$BRIAR_DIR/../materia" && pwd)"
+XML_DIR="$(cd "$BRIAR_DIR/../xml" && pwd)"
 RADIX_DIR="$(cd "$BRIAR_DIR/.." && pwd)"
 BUILD_DIR="$BRIAR_DIR/build"
 # SERA cursoris (tools/sera.sh, 2026-09-07): cursus duo eiusdem suitae
@@ -62,6 +63,7 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/include"
     "-I$MATERIA_DIR/fontes"
     "-I$MD_DIR/fontes"
+    "-I$XML_DIR/fontes"
     "-I$BRIAR_DIR/fontes"
     "-I$BRIAR_DIR/probationes"
     "-I$RADIX_DIR/silva/amalgama"
@@ -112,9 +114,12 @@ declare -a RADIX_FONTES=(
     "machina_posix"
     "silex"
     # briar -app (spec par. 4.8): fasciculum et quae trahit
-    # (bin/aedilis lib/fasciculum.c --partes, 2026-09-14)
-    "xml"
+    # (bin/aedilis lib/fasciculum.c --partes, 2026-09-14; plist super
+    # xml/fontes ab 2026-10-30 - fontes xml et materiae infra)
     "base64"
+    "excerptum"
+    "runae"
+    "runae_tabulae"
     "plist"
     "fasciculum"
     # icones (opus IV): imago NON additur - nm: icones, imago_opus,
@@ -227,9 +232,19 @@ _vocatio_addere "$RADIX_DIR/silva/instrumenta/silva_conflatio.c" \
 _vocatio_addere "$RADIX_DIR/officina/instrumenta/compendium.c" \
     "$BUILD_DIR/compendium.o" "${INCLUDE_FLAGS[@]}"
 shopt -s nullglob
+# materia sub-fontes: md eam CONSUMIT, non continet
+# (pictor ... excusatio: clausura xml, quam plist trahit)
 for m in materia_lexicon materia_token materia_nodus materia_scribere \
-         materia_arbor materia_arbor_aequalitas; do
+         materia_arbor materia_arbor_aequalitas materia_pictor \
+         materia_diagnostica materia_annotationes materia_exemplaria \
+         materia_excusatio; do
     _vocatio_addere "$MATERIA_DIR/fontes/$m.c" "$BUILD_DIR/$m.o" \
+        "${INCLUDE_FLAGS[@]}"
+done
+# xml (cliens materiae octavus): plist eo legit (fasciculum -> plist)
+for base in xml_registrum_coctum xml_lexicon xml_nomina xml_lector \
+            xml_arbor xml_coctum xml_documentum; do
+    _vocatio_addere "$XML_DIR/fontes/$base.c" "$BUILD_DIR/$base.o" \
         "${INCLUDE_FLAGS[@]}"
 done
 for base in md_registrum_coctum md_lexicon md_lexema md_arbor md_inlinea \

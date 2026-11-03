@@ -185,3 +185,14 @@ chord" and by "bass moved" (d = 0), so neither helper checks it. The quinta < 0 
 unreachable today (no seventh genus lacks a fifth) - kept as a guard for future genera.
 Impact: whole house book censura + explicatio lines byte-identical before/after (no song uses
 a cross-chord rising 7th); chorale errata 11/11.
+
+## 2026-10-27 - genus "sexta aucta" (augmented-sixth study, lamentatio)
+
+The note at a dominant-shaped chord's seventh (7, 7 no 5th, thin 7#11) whose WRITTEN letter is
+the sixth above the root (F7 with D#: F + 5 letters = D) is EXPLICATIO_SEXTA_AUCTA, resolved =
+next note a semitone UP (D# -> E; D# -> F is not). Spelling comes from the window's harmonia
+litterae: the notes' letters for undeclared windows, the chord name's letters for declared ones
+(declared F7 = Eb - stays septima; an author declaring an aug6 cannot spell it yet). Inserted
+after SEPTIMA in the enum; TITULI/ABBREVIATA grew to XI ("+6"). Line: resolved +6 hidden like a
+resolved 7th, unresolved "D#4 +6!". Not a suspension preparation (a dissonance prepares
+nothing) - first draft added it to _motus' praeparata, unreachable, removed.

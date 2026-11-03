@@ -1,0 +1,6 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: nota percussa ex midi-unpitched instrumenti - I; music21 altitudinem display reddit
+P1	0	1	38	C	0	0	-
+P1	1	1	64	E	0	0	-
+P1	2	1	71	B	0	0	-

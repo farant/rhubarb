@@ -1,0 +1,37 @@
+<!-- xml/aedificatio.stml - declarationes aedificationis xml (dialectus
+     aedificatio, aedificatio.canon; bin/fabrica per fabrica.stml).
+     Exemplar html/aedificatio.stml: suita xml ut compositum
+     probationes_xml - quaeque probatio actio sua (clausura aedilis,
+     thesaurus, area, ambitus basis, vestigium suum), verdictum
+     clavatum iis quae legit. Ianua xml/compile_probationes.sh et porta
+     xml per 'bin/fabrica probare probationes_xml'. Planum xml-arbor
+     P2. -->
+<aedificatio>
+  <!-- aurum oraculorum differentialium (planum P12): expat et libxml2
+       super silvestria, ex plagulis VIVIS regeneratum (manifestum eas
+       sigillo figit), numquam commissum; python et xmllint extra
+       repositorium per instrumenta declarata (exemplar
+       toml_aurum_silvestre) -->
+  <actio titulus="xml_aurum_silvestre" genus="generator">
+    <mandatum>
+      <verbum! (>./xml/aurum_silvestre.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="xml/aurum_silvestre.sh"/>
+    <ingressus genus="fasciculus" via="xml/instrumenta/expat_aurum.py"/>
+    <ingressus genus="fasciculus" via="xml/instrumenta/expat_canonicum.py"/>
+    <ingressus genus="fasciculus" via="xml/probationes/fixa/silvestria.manifestum"/>
+    <ingressus genus="instrumentum" via="/opt/homebrew/bin/python3"/>
+    <ingressus genus="instrumentum" via="/usr/bin/xmllint"/>
+    <exitus via="xml/build/aurum_silvestre.tsv" provenientia="regeneratio"/>
+  </actio>
+  <actio titulus="probationes_xml" genus="iudicium">
+    <probationes_c exemplar="xml/probationes/probatio_*.c"/>
+    <post actio="xml_aurum_silvestre"/>
+    <!-- aurum computus rescribere (COMPUTUS_SCRIBERE=1 cum causa) -->
+    <ambitus variabilis="COMPUTUS_SCRIBERE"/>
+    <debitum_scripturae membrum="probatio_xml_computus" via="xml/probationes/fixa/computus/basis.tsv" causa="aurum computus (COMPUTUS_SCRIBERE=1)"/>
+    <!-- oraculum W3C: fracturae omnes / casus unus (manu) -->
+    <ambitus variabilis="XMLTS_OMNIA"/>
+    <ambitus variabilis="XMLTS_CASUS"/>
+  </actio>
+</aedificatio>

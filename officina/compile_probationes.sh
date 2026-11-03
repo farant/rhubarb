@@ -76,6 +76,14 @@ declare -a RADIX_FONTES=(
     "lectiones"    # vigilia per librum legit (fabrica plan 5 T5a)
     "filum"        # probationes per filum delent (fabrica-8, 2026-10-27)
     "processus_posix"
+    # bibliothecae (officina-bibliothecae T2): clausura aedilis
+    "aedilis"
+    "aedilis_silva"
+    "via"
+    "stml"
+    "thesaurus"
+    "selectio"
+    "iter_directoria"
 )
 
 FILTER="${1:-}"
@@ -166,8 +174,9 @@ _vocatio_addere "$RADIX_DIR/silva/instrumenta/silva_lexicon.c" \
     "$BUILD_DIR/silva_lexicon.o" "${INCLUDE_FLAGS[@]}" \
     "-I$RADIX_DIR/silva/fontes" "-I$RADIX_DIR/materia/fontes"
 # praeparator (unitas oneratorum communis), compendium capitis (communis
-# legato et briar), sessio, legatus
-for m in praeparator compendium sessio legatus; do
+# legato et briar), sessio, bibliothecae (#include -> plagulae,
+# officina-bibliothecae T2), legatus
+for m in praeparator compendium sessio bibliothecae legatus; do
     _vocatio_addere "$OFF_DIR/instrumenta/$m.c" "$BUILD_DIR/$m.o" \
         "${INCLUDE_FLAGS[@]}"
 done

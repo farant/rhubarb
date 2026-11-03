@@ -422,3 +422,161 @@ declared chord has a third); missed - no rule exists - hidden 5ths/8ves, voice c
 spacing > octave, doubled leading tone, unresolved leading tone in an outer voice, rising
 chordal seventh (a chord-tone 7th on a weak beat is never a dissonance). Three collateral
 finds from the edits were all real. No false positives. Organ x4 at lucrum 0.75: peak 0.73.
+
+## 2026-10-27 - house book: peregrinatio (modulation study)
+
+15th house song: SATB chorale on organ, D -> A -> D, 12 bars, stylus choralis. D: I-IV-V, PAC
+m4 (D A7 D under a fermata on beat 3); pivot Bm (vi in D = ii in A) at m5:4, E V, PAC in A via
+IV ii6 I64 V7 I (m8); return through A (I in A = V in D) and A7/G (V42, G natural) to a PAC in
+D (m12). m10 repeats m2's rising line. Voiced by hand; censura caught one error of mine
+(parallel 5ths alto/tenor into the m7 cadential 6/4) - re-voiced. Drove three functio fixes:
+fermata arrivals (d97a231d), key labels + pivot "vi=A: ii" / "I=D: V" (ae44723d). Without any
+<clavis> everything reads in D (m8 = half cadence) - analysis follows what is declared;
+undeclared-modulation warning is a possible later rule. Generator:
+build/plantae_s4/modulatio/peregrinatio.py (clavis positions as arguments).
+
+## 2026-10-27 - house book: lamentatio (augmented-sixth study)
+
+16th house song: SATB chorale on organ in A minor, 8 bars, stylus choralis, tempo 60. i V6 i
+iv6 -> It+6 (tenor... alto D -> D#) -> V; Neapolitan Bb/D -> V7 -> i (soprano Bb -> G#); Fr+6
+(soprano D D# E) -> V; Ger+6 -> i64 -> V7 -> I (Picardy; the 6/4 avoids Mozart fifths). The
+three augmented sixths are undeclared ('r') so the spelling is the notes'. censura caught two
+voicing errors of mine (parallel 8ves S/A m5, parallel 5ths S/A m7) - re-voiced. Before the
+aug6 work: 6 false findings (D# out of key, "F7 septima D# non resoluta"), functio subV7/v,
+subV7#11/v, VI7. After 411f8b6e: 0 findings; It+6, Fr+6, Ger+6. Generator:
+build/plantae_s4/sexta_aucta/lamentatio.py.
+
+## 2026-10-27 - house book: choir versions of the three chorales
+
+laudes_chorus, peregrinatio_chorus, lamentatio_chorus (songs 17-19): the same notes sung by
+superius / altus / tenor / bassus (833a8952 voice tables) at S 0.5, A 0.55, T 0.6, B 0.7; the
+organ versions stay (Fran: keep both). Derived from the organ blocks in the book by
+build/plantae_s4/choralis/chorus.py (idempotent), so the notes cannot drift unless the organ
+version is edited - re-run the script after editing one. censura 0 each; apex 0.98 / 0.78 /
+0.84, no limiting. Correction to the lamentatio entry above: the D -> D# in phrase 1 is in the
+alto only (not "tenor... alto").
+
+## 2026-10-27 - church modes as keys (chant arc, step 1)
+
+clavis="d dorius" etc.: CarmenClavis.modus 1..6 (ionius dorius phrygius lydius mixolydius
+aeolius; 0 = tonal major/minor, so every existing key is untouched). The letter is the FINAL;
+quintae = the collection's signature = the final's major signature + QUINTAE_MODORUM (dorius
+-2, phrygius -4, lydius +1, mixolydius -1, aeolius -3): "d dorius" 0, "g dorius" -1 (Bb), "f#
+phrygius" +2, "bb mixolydius" -3, "c# lydius" +8 = out of range -> error. Modes don't combine
+with caerulea; aeolius is NOT minor (no raised 6th/7th). Consumers:
+- censura clavis: the collection (unchanged) + b molle (collection's 7th lowered: Bb among
+  the white notes). Raised 7th at cadences (ficta) not yet - chant is one line.
+- functio: MODI scale table + Clavis.modus; tonic = collection tonic + mode degree; _scala()
+  replaces every MAIOR/MINOR choice; key comparisons include the mode (d dorius -> d phrygius
+  is a key change); key label lowercase for minor-third modes (dorius, phrygius, aeolius); the
+  aug6 alteratio now reads the scale's 6th (dorius bVI -1, aeolius VI 0). Cadence rules stay
+  tonal - modal cadences (2-1 without a leading tone) are step 2.
+- explicatio: the implied-seventh final uses the mode's final.
+- partitura: key name = FINALES[letter][accidental] ("f#", "bb"), mode name; leading-tone
+  spelling under the final (C# in d dorius) by the mode's letter offset.
+Book diff (15 songs): 0.
+
+## 2026-10-27 - house book: primus (first mode I chant)
+
+20th song: wordless mode I chant (clavis "d dorius") for schola over an ison drone on D sung by
+a song-level bass voice (ison_d: schola, vox bassus). D -> A opening, b molle Bb over A, four
+phrases ending A, A, F, D, subtonium C before the final; 4/4 with fermatas at phrase ends (free
+rhythm is a later step). censura 0 (Bb accepted as b molle). functio over melody + drone is
+meaningless (Isus4, iv43) - chant needs melodic mode analysis (next step). Generator:
+build/plantae_s4/cantus/primus.py.
+
+## 2026-10-27 — sung text: `<verba!>` (chant step 3)
+
+A frustum may carry `<verba!>` beside `<textus!>`. Syllables go to the
+frustum's notes in order (rests are not notes, so they are skipped for
+free). Space or `-` splits; `_` ends the syllable and gives the NEXT
+note to the previous syllable (melisma, empty `syllaba`, same vowel);
+punctuation `, . ; : ! ?` just ends a syllable. Notes after the last
+syllable keep its vowel (a trailing melisma without writing `_`s).
+`syllaba` points into the STML text node — same piscina as the carmen,
+so no copy.
+
+Vowel rules (ecclesiastical Latin) live in `_vocalis_syllabae`: case is
+folded on the current, previous and next letter (plants on each fold
+survived until the test had "A-ve", "Quo", "CAE"); `y` -> i; `ae`/`oe`
+-> e; initial `i` before a vowel and `u` after q/g before a vowel are
+consonants ("Ie-sus", "qui", "san-gui-nis" but "an-gus"); a syllable
+with no vowel keeps the previous one (header line added 10-27).
+
+cantor: `vocalis >= 0` overrides the instrument's tibia vowel for that
+note's TIBIAM iussum only — instrument presets untouched, so every book
+song renders byte-identical (no book song has verba yet). partitura: a
+`verba` line under each part that has any sung note; widens the label
+column to 5.
+
+Finding (not fixed here): on A4 the schola vowels span 12.6 dB (a 68.3,
+e 78.3, i 65.7, o 74.8, u 68.8). F1 of e/o sits on f0=440 and the
+formant bank resonates. Invisible while one instrument = one vowel
+(amplitudo tuned per preset); audible now inside a sung line. Belongs
+in tibia (per-vowel gain compensation), filed as a wish.
+
+## 2026-10-28 — ave in the house book
+
+`ave`: primus's melody with the Ave Maria under it — the first song in the
+book with `<verba!>`. The generator (build/plantae_s4/cantus/ave.py) reads
+PHRASES out of primus.py, so the two can't drift apart. Melismas sit on
+"Ma-ri-a" and "ple-na" at the end of phrase 1, and "Do-mi-nus te-cum" is
+the melismatic phrase. censura 0; the render is byte-identical to the
+scratch version Fran listened to (before any vowel-loudness evening).
+
+## 2026-10-28 — metrum="liberum" (chant step 4, free rhythm)
+
+A free carmen is one CarmenMetrum per incise: `liberum` set, `longitudo` = written length,
+numerator 0 / denominator VIII. `_longitudo_mensurae` returns `longitudo` for those, so
+`_pulsus_mensurae` (and every mensura/ictus/M:T position built on it) works unchanged — each entry
+spans exactly one bar, and bars past the last repeat its length. Lucky consequences of 0/8:
+`carmen_tempus_mensurae` already answers the eighth (punctum), and censura `_fortia` gives only
+the incise start as a strong beat, both without new code.
+
+Reading order problem: tempo, key, fermata and part positions all need the metre map, but in free
+rhythm the map comes from the first part's `|` marks. `_mensuras_liberas_legere` pre-reads just
+that one frustum's text with `cantus_legere` (lineae + total pulsus) before anything else. It
+requires exactly one frustum (comitatus counted) at mensura="1". `|` at the start, at the end, or
+repeated (`||`) makes no empty bar.
+
+Bug found on the way: `piscina_allocare` doesn't zero, and the initial metre setup only wrote
+pulsus/numerator/denominator, so the new `liberum` field held garbage — metered songs with a
+comitatus suddenly reported "comitatus cum metro libero". The whole metra array is now memset
+after allocation. Planted (memset size 0) and the suite goes red.
+
+Refused with liberum: `<metrum>` changes, agogica (one error: "metrum liberum: sine <metrum> et
+agogica"), comitatus (figures are per bar). Printing: partitura / recensio (text + JSON) / auditio
+-carmina say "liberum" instead of "0/8"; partitura skips per-bar "metrum" notes for free entries.
+All 21 book songs render byte-identical (none is free yet). Plants: 15, all red (trailing `|` case
+added to the test first — nothing covered it).
+
+## 2026-10-28 — primus and ave in free rhythm
+
+Both converted in place (their 4/4 was always a stand-in). Solesmes-style rhythm: punctum = eighth,
+the note before a minor divisio is a quarter, before a major one a dotted quarter + r8 breath, the
+last note d2. Incises follow the Ave Maria text: Ave Maria | gratia plena, Dominus | tecum,
+benedicta | tu in mulieribus, et benedictus fructus | ventris tui | Iesus — 9 bars instead of 16,
+lengths in eighths [8 10] [7 10] [5 12] [8 5 7]. Fermatas dropped (the breaths do that job); tonus
+still reads "I, clausulae A A F D", now from the rests. The ison holds one D per phrase, tied
+across incises, re-sounding with each phrase; generator writes the ties from the incise lengths.
+tempus 80 (punctum 160/min), 27 s. primus.py is now importable and ave.py builds from it, so the
+melody lives in one place. Old generators kept as *.py.metrica under build/plantae_s4/cantus.
+
+## 2026-10-28 — salve: Salve Regina (simple tone) from gabc
+
+Source: GregoBase 2435 = Liber Usualis (1961) p. 279, Solesmes edition, gabc by Andrew Hinkley.
+Not from memory. build/plantae_s4/cantus/salve.py converts gabc -> MML + verba + incises:
+c4 clef with do = F (mode V, fa = Bb, so clavis "f lydius" + b molle); punctum = eighth, '.'
+mora x2, '_' episema x1.5, the note before a quilisma x1.5, repeated pitches inside a syllable
+held as one (bivirga / tristropha / pressus); ',' ';' '`' -> '|' + r16, ':' '::' -> '|' + r8;
+accents stripped from the text (our vowel reader is ASCII-only — wish filed).
+
+Cross-check: three independent GregoBase transcriptions (13136 LU + Liber antiphonarius 1960,
+18969 Antiphonale Monasticum 1934, 18655 Antiphonale monasticum 2005) give the identical 139-pitch
+sequence. Durations match exactly for the two classic Solesmes editions; the 2005 edition differs
+in 23 notes, as expected (it drops the Solesmes rhythm signs). Divisio count varies by edition
+(15/17/20); ours follows the Liber (17 incises).
+
+Analysis agrees with the book: tonus "V (lydius authenticus): finalis F, ambitus F3-F4, tenor C";
+censura 0; recensio 0 monita, apex -7.7 dBFS. Unaccompanied schola (no ison — the Salve is
+sung without one). 66 s at tempus 80, same pulse as primus/ave.

@@ -49,7 +49,7 @@
 #include "sigillum.h"
 #include "base64.h"
 #include "url.h"
-#include "xml.h"
+#include "xml_documentum.h"
 #include "xar.h"
 #include "internamentum.h"
 #include "fasti.h"
@@ -738,7 +738,8 @@ _sim_praesignata_valida (
     redde r.successus && chorda_aequalis(r.signatura, q[k_sig].valor);
 }
 
-/* x-amz-checksum-*: comparatur cum corpore; VERUM si abest aut aequat */
+/* x-amz-checksum-*: comparatur cum corpore; VERUM si abest aut
+ * aequat */
 interior b32
 _sim_summae_validae (
     constans HttpPetitioVisus* v,
@@ -1049,6 +1050,53 @@ _sim_capere (
     redde _sim_bene(r);
 }
 
+/* XML petitionis (xml_documentum, P15): radix aut NIHIL si malum */
+interior constans XmlCoctus*
+_sim_xml_radix (
+      chorda  corpus,
+     Piscina* p)
+{
+    XmlDocumentum* d = xml_documentum_legere(corpus, p);
+
+    redde xml_documentum_successus(d) ? xml_documentum_radix(d) : NIHIL;
+}
+
+/* filii titulo dato (Xar de constans XmlCoctus*) */
+interior Xar*
+_sim_filii (
+               Piscina* p,
+    constans XmlCoctus* e,
+    constans character* titulus)
+{
+                   Xar* x = xar_creare(p,
+                               (i32)magnitudo(constans XmlCoctus*));
+    constans XmlCoctus* f;
+
+    si (x == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (f = xml_filius(e, titulus); f; f = xml_frater(f, titulus))
+    {
+        *(constans XmlCoctus**)xar_addere(x) = f;
+    }
+    redde x;
+}
+
+interior chorda
+_sim_textus (
+    constans XmlCoctus* n,
+               Piscina* p)
+{
+    chorda t;
+
+    si (!n || !xml_textus_totus(n, p, &t))
+    {
+        redde chorda_ex_buffer(NIHIL, ZEPHYRUM);
+    }
+    redde t;
+}
+
 interior HttpResultus
 _sim_delere_plura (
                    Simulacrum* s,
@@ -1056,7 +1104,7 @@ _sim_delere_plura (
                       Piscina* p)
 {
                 i8  md5[MD5_DIGEST_MENSURA];
-       XmlResultus  x;
+constans XmlCoctus* radix;
                Xar* obiecta;
                i32  i;
      HttpResponsum* r;
@@ -1068,21 +1116,20 @@ _sim_delere_plura (
     {
         redde _sim_error(s, CD, "BadDigest", ZEPHYRUM, p);
     }
-    x = xml_legere(v->corpus, p, internamentum_creare(p));
-    si (!x.successus || !x.radix)
+    radix = _sim_xml_radix(v->corpus, p);
+    si (!radix)
     {
         redde _sim_error(s, CD, "MalformedXML", ZEPHYRUM, p);
     }
-    obiecta  = xml_invenire_omnes_liberos(x.radix, "Object", p);
+    obiecta  = _sim_filii(p, radix, "Object");
     a        = chorda_aedificator_creare(p, MXXIV);
     chorda_aedificator_appendere_literis(a,
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<DeleteResult>");
     per (i = ZEPHYRUM; obiecta && i < (i32)xar_numerus(obiecta); i++)
     {
-               XmlNodus* n = *(XmlNodus**)xar_obtinere(obiecta, i);
-               XmlNodus* k = xml_invenire_liberum(n, "Key");
-                 chorda  clavis = k ? xml_textus_internus(k, p)
-                                    : chorda_ex_buffer(NIHIL, ZEPHYRUM);
+     constans XmlCoctus* n = *(constans XmlCoctus**)xar_obtinere(
+                                 obiecta, i);
+                 chorda  clavis = _sim_textus(xml_filius(n, "Key"), p);
        SimulacrumVitium* vi = _sim_vitium(s, HTTP_POST, clavis,
             NIHIL, ZEPHYRUM);
 
@@ -1445,7 +1492,7 @@ _sim_mp_perficere (
                    Piscina* p)
 {
        SimulacrumOnus* o = _sim_onus(s, q, nq, clavis);
-          XmlResultus  x;
+   constans XmlCoctus* radix;
                   Xar* partes;
                   i32  n;
                   i32  i;
@@ -1465,12 +1512,12 @@ _sim_mp_perficere (
     {
         redde _sim_error(s, CDIV, "NoSuchUpload", ZEPHYRUM, p);
     }
-    x = xml_legere(v->corpus, p, internamentum_creare(p));
-    si (!x.successus || !x.radix)
+    radix = _sim_xml_radix(v->corpus, p);
+    si (!radix)
     {
         redde _sim_error(s, CD, "MalformedXML", ZEPHYRUM, p);
     }
-    partes  = xml_invenire_omnes_liberos(x.radix, "Part", p);
+    partes  = _sim_filii(p, radix, "Part");
     n       = partes ? (i32)xar_numerus(partes) : ZEPHYRUM;
     si (n == ZEPHYRUM || n > SIMULACRUM_PARTES_MAXIMAE)
     {
@@ -1478,15 +1525,16 @@ _sim_mp_perficere (
     }
     per (i = ZEPHYRUM; i < n; i++)
     {
-              XmlNodus* nd = *(XmlNodus**)xar_obtinere(partes, i);
-              XmlNodus* pn = xml_invenire_liberum(nd, "PartNumber");
-              XmlNodus* pe = xml_invenire_liberum(nd, "ETag");
-                   s32  numerus = ZEPHYRUM;
+    constans XmlCoctus* nd = *(constans XmlCoctus**)xar_obtinere(partes,
+                                  i);
+    constans XmlCoctus* pn       = xml_filius(nd, "PartNumber");
+    constans XmlCoctus* pe       = xml_filius(nd, "ETag");
+                   s32  numerus  = ZEPHYRUM;
                 chorda  etag;
         SimulacrumPars* t;
 
         si (   !pn || !pe
-            || !chorda_ut_s32(xml_textus_internus(pn, p), &numerus))
+            || !chorda_ut_s32(_sim_textus(pn, p), &numerus))
         {
             redde _sim_error(s, CD, "MalformedXML", ZEPHYRUM, p);
         }
@@ -1495,7 +1543,7 @@ _sim_mp_perficere (
             redde _sim_error(s, CD, "InvalidPartOrder", ZEPHYRUM, p);
         }
         prior  = (i32)numerus;
-        etag   = xml_textus_internus(pe, p);
+        etag   = _sim_textus(pe, p);
         si (etag.mensura >= II && etag.datum[ZEPHYRUM] == '"')
         {
             etag = chorda_sectio(etag, I, etag.mensura - I);

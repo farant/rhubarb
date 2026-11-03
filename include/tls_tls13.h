@@ -83,6 +83,11 @@ i32
 tls_tls13_versio (
     TlsTls13* connexio);
 
+/* ALPN electum (vacua si nullum) */
+chorda
+tls_tls13_protocollum (
+    TlsTls13* connexio);
+
 b32
 tls_tls13_est_valida (
     TlsTls13* connexio);

@@ -1,0 +1,89 @@
+#!/usr/bin/env briar
+# Xml partitura
+
+The materia XML client from a script, the way the MusicXML reader will
+use it: walk the parts of a small score by name, read an attribute and
+the text of a child, and let a broken document name its own line and
+column. No `#include`: `xml_documentum.h` is derived from what the code
+uses, like any house header.
+
+<c!>
+constans character*
+partitura_exemplum (vacuum)
+{
+    redde "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        "<!DOCTYPE score-partwise [<!ENTITY auctor \"Tallis\">]>\n"
+        "<score-partwise version=\"4.0\">\n"
+        "  <identification><creator>&auctor;</creator></identification>\n"
+        "  <part id=\"P1\"><measure number=\"1\"/></part>\n"
+        "  <part id=\"P2\"><measure number=\"1\"/>"
+        "<measure number=\"2\"/></part>\n"
+        "</score-partwise>\n";
+}
+
+XmlDocumentum*
+partituram_legere (constans character* textus, Piscina* piscina)
+{
+    redde xml_documentum_legere(chorda_ex_literis(textus, piscina),
+        piscina);
+}
+
+s32
+principale (vacuum)
+{
+           Piscina* piscina = piscina_generare_dynamicum("xml_partitura",
+                                  65536);
+     XmlDocumentum* doc     = partituram_legere(partitura_exemplum(),
+                                  piscina);
+    constans XmlCoctus* radix = xml_documentum_radix(doc);
+    constans XmlCoctus* pars;
+                chorda  c;
+
+    si (xml_textus_totus(xml_filius(xml_filius(radix, "identification"),
+            "creator"), piscina, &c))
+    {
+        imprimere("auctor %.*s\n", (integer)c.mensura,
+            (character*)c.datum);
+    }
+    per (pars = xml_filius(radix, "part"); pars;
+         pars = xml_frater(pars, "part"))
+    {
+        si (xml_attributum(pars, "id", &c))
+        {
+            imprimere("pars %.*s mensurae %u\n", (integer)c.mensura,
+                (character*)c.datum,
+                (insignatus integer)xml_filiorum_numerus(pars,
+                    "measure"));
+        }
+    }
+    piscina_destruere(piscina);
+    redde ZEPHYRUM;
+}
+</c>
+
+<c! munus="probatio">
+s32
+principale (vacuum)
+{
+              Piscina* piscina = piscina_generare_dynamicum("probatio",
+                                     65536);
+        XmlDocumentum* doc;
+    ChordaAedificator* a;
+
+    credo_aperire(piscina);
+    doc = partituram_legere(partitura_exemplum(), piscina);
+    CREDO_VERUM(xml_documentum_successus(doc));
+    CREDO_AEQUALIS_I32(xml_filiorum_numerus(xml_documentum_radix(doc),
+        "part"), II);
+    /* tag clausum alienum: refutatur, locus nominatur */
+    doc = partituram_legere("<score>\n  <part></score>\n", piscina);
+    CREDO_FALSUM(xml_documentum_successus(doc));
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    CREDO_VERUM(xml_documentum_diagnostica_scribere(doc,
+        "partitura.xml", a));
+    CREDO_VERUM(chorda_continet(chorda_aedificator_finire(a),
+        chorda_ex_literis("partitura.xml:2:", piscina)));
+    credo_imprimere_compendium();
+    redde credo_omnia_praeterierunt() ? ZEPHYRUM : I;
+}
+</c>

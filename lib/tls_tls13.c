@@ -266,6 +266,11 @@ _creare (
                                 : VERUM;
     o.fiducia        = _fiducia;
     o.fiducia_datum  = c;
+    si (optiones)
+    {
+        o.protocolla          = optiones->protocolla;
+        o.protocolla_numerus  = optiones->protocolla_numerus;
+    }
     c->m             = tls13_machina_creare(&o, piscina);
     si (c->m == NIHIL)
     {
@@ -581,6 +586,21 @@ tls_tls13_versio (
 {
     redde c != NIHIL && c->m != NIHIL ? tls13_machina_versio(c->m)
                                        : ZEPHYRUM;
+}
+
+chorda
+tls_tls13_protocollum (
+    TlsTls13* c)
+{
+    chorda vacua;
+
+    si (c != NIHIL && c->m != NIHIL)
+    {
+        redde tls13_machina_protocollum(c->m);
+    }
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    redde vacua;
 }
 
 b32

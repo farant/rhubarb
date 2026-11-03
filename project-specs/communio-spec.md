@@ -539,3 +539,45 @@ a device); deleting or renaming pictures; Android tablets; backups
   volume / app data, within the rules above.
 - The shape of the platform HTTP interface (it must cover the bodies,
   headers, statuses and timeouts the client already uses).
+
+## X. Phase 5 built (2026-10-28/30, quarta -> main f0c95d36, bc76aff9)
+
+Plan `project-specs/communio-plan-5.md`, tasks T1-T10 + final review
+(fable: no critical, 3 important + 1 minor re-graded important, all
+fixed in 176bde79). The sync client moved out of the command line into
+pictor on every Apple platform: a platform HTTP interface
+(`veredarius`: the house client on the Mac, URLSession on iOS; Android
+links none and shows no sharing), a non-blocking sign-in object in
+`communio_cliens` (code or link, whichever comes first; the pending
+step survives the app being killed, never with the address), pictor
+integration (`pictor_communio`: token file `<volume>.tessera` 0600,
+device list cached in the volume, "Signed in as <person>"), the menu
+items My pictures / Shared pictures / Sign in, a Shared grid of other
+devices' pictures ("by Person · Device"), a read-only viewer with swipe
+and arrows, Edit a copy (origin recorded), globally unique picture ids
+(D9; old "pictura-<n>" names still open), a welcome screen, and the iOS
+system keyboard for the email and code fields (EmailAddress /
+oneTimeCode traits).
+
+Live (Task 10, 2026-10-30, with Fran): main fast-forwarded to f0c95d36
+after re-merging quinta's budget work; manual gates (pictor fumus, icon
+fumus) green; the Mac token was moved, unread, to
+`<main>/pictor.volumen.tessera` so the Mac stays "Macintosh"; a
+Mac-to-Mac idle check (second scratch pictor, revoked after) showed a
+picture arriving in an untouched window. pictor 1.0 (7) went to
+TestFlight (Familia: Amanda and Fran's team login; the first
+distribution call 404'd right after VALID and worked 30 s later -
+wish filed). Fran's iPhone signed in by link, Amanda's by code (her
+first try, a typo then the right address, was never confirmed); the
+server lists exactly Macintosh, Fran's iPhone, Amanda's iPhone. Done
+1-4 checked on the devices. Fran then asked for the viewer to show
+pictures at their own size: build 8 (bc76aff9) gives the viewer the
+whole screen with no paint controls, draws 1:1 when the picture fits
+and otherwise shrinks by a whole number (nearest pixel, no dithering),
+and the code screen says "Sent to <address>" (memory only). Build 8
+installed over 7 kept both sign-ins (Done 4, second half). Done 5:
+welcome, Shared grid and viewer render headless under
+`PINACOTHECA_IMAGINES` (probatio_pictor_inscriptio /
+probatio_pictor_communia). Rulings and deferred minors: the plan-5
+ledger's lists, filed in tabularium. Next: phase 4 (backups), 3b
+(device adoption), the "Sent to"-style polish items in tabularium.

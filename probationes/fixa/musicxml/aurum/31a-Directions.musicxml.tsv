@@ -1,0 +1,60 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 10.5.2 congruit (2026-10-30)
+P1	0	1	60	C	0	0	1:single:reh. A↓|2:single:(def=square)
+P1	1	1	60	C	0	0	1:single:reh. B↑|2:single:(none)
+P1	2	1	60	C	0	0	1:single:reh. Test|2:single:(rect.)
+P1	3	1	60	C	0	0	1:single:reh. Crc|2:single:(circle)
+P1	4	1	60	C	0	0	1:single:segno
+P1	5	1	60	C	0	0	1:single:coda
+P1	6	1	60	C	0	0	1:single:words↑|2:single:(oval)
+P1	7	1	60	C	0	0	1:single:symbol|2:single:("cClef")
+P1	8	1	60	C	0	0	1:single:p
+P1	9	1	60	C	0	0	1:single:pp
+P1	10	1	60	C	0	0	1:single:ppp
+P1	11	1	60	C	0	0	1:single:pppp
+P1	12	1	60	C	0	0	1:single:ppppp↓
+P1	13	1	60	C	0	0	1:single:pppppp↑
+P1	14	1	60	C	0	0	1:single:f
+P1	15	1	60	C	0	0	1:single:ff
+P1	16	1	60	C	0	0	1:single:fff
+P1	17	1	60	C	0	0	1:single:ffff
+P1	18	1	60	C	0	0	1:single:fffff↓
+P1	19	1	60	C	0	0	1:single:ffffff↑
+P1	20	1	60	C	0	0	1:single:mp
+P1	21	1	60	C	0	0	1:single:mf
+P1	22	1	60	C	0	0	1:single:sf
+P1	23	1	60	C	0	0	1:single:sfp
+P1	24	1	60	C	0	0	1:single:sfpp
+P1	25	1	60	C	0	0	1:single:fp
+P1	26	1	60	C	0	0	1:single:rf
+P1	27	1	60	C	0	0	1:single:rfz
+P1	28	1	60	C	0	0	1:single:sfz
+P1	29	1	60	C	0	0	1:single:sffz
+P1	30	1	60	C	0	0	1:single:fz
+P1	31	1	60	C	0	0	1:single:other dyn.|2:single:('ffz')
+P1	32	1	60	C	0	0	1:begin:hair|2:begin:(cre
+P1	33	1	60	C	0	0	1:end:pin|2:end:scendo)
+P1	34	1	60	C	0	0	1:begin:dash
+P1	35	1	60	C	0	0	1:end:es↓
+P1	36	1	60	C	0	0	1:begin:bra
+P1	37	1	60	C	0	0	1:end:cket↓
+P1	38	1	60	C	0	0	1:begin:oct.|2:single:(8
+P1	39	1	60	C	0	0	1:end:shift|2:single:up)
+P1	40	1	60	C	0	0	1:begin:pedal
+P1	41	1	60	C	0	0	1:middle:change
+P1	42	1	60	C	0	0	-
+P1	43	1	60	C	0	0	1:end:mark
+P1	44	1	60	C	0	0	1:single:metro-|2:single:nome
+P1	45	1	60	C	0	0	1:single:harp|2:single:pedal↓
+P1	46	1	60	C	0	0	1:single:damp↑
+P1	47	1	60	C	0	0	1:single:damp|2:single:all
+P1	48	1	60	C	0	0	1:single:accordion|2:single:register
+P1	49	1	60	C	0	0	1:single:string|2:single:mute on
+P1	50	1	60	C	0	0	1:single:string|2:single:mute off
+P1	51	1	60	C	0	0	1:single:eye-|2:single:glasses
+P1	52	1	60	C	0	0	1:single:perc.|2:single:(timpani)
+P1	53	1	60	C	0	0	1:single:staff-|2:single:divide
+P1	54	1	60	C	0	0	1:begin:principal|2:begin:(Haupt
+P1	55	1	60	C	0	0	1:end:voice|2:end:stimme)
+P1	56	4	60	C	0	0	1:single:image

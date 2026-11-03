@@ -33,23 +33,39 @@ _invenire_character (
     redde longitudo; /* Non invenitur */
 }
 
-/* Invenire sequentia ":/" in chorda, redde index vel longitudo si non invenitur */
+/* littera ASCII (sine ctype - locale) */
+interior b32
+_est_littera (
+    character c)
+{
+    redde (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
+}
+
+/* Invenire "://" post schema validum (praefixum); redde index ':' vel
+ * longitudo si non */
 interior i32
 _invenire_schema_separator (
     constans character* s,
                    i32  longitudo)
 {
     i32 i;
-    si (longitudo < 3)
+
+    /* schema = praefixum: ALPHA *(ALPHA / DIGIT / "+" / "-" / ".")
+     * (RFC 3986 3.1) - "://" alibi ("/proxy/http://x") non est
+     * schema */
+    si (longitudo < 3 || !_est_littera(s[0]))
     {
         redde longitudo;
     }
-    per (i = 0; i < longitudo - 2; i++)
+    per (i = 1; i < longitudo && (_est_littera(s[i])
+        || (s[i] >= '0' && s[i] <= '9') || s[i] == '+' || s[i] == '-'
+        || s[i] == '.'); i++)
     {
-        si (s[i] == ':' && s[i + 1] == '/' && s[i + 2] == '/')
-        {
-            redde i;
-        }
+    }
+    si (   i + 2 < longitudo && s[i] == ':' && s[i + 1] == '/'
+        && s[i + 2] == '/')
+    {
+        redde i;
     }
     redde longitudo;
 }
@@ -175,7 +191,8 @@ uri_parse (
     si (fragment_start < longitudo)
     {
         uri->fragmentum = _copiare_substring(cursor, fragment_start + 1,
-                                              longitudo - fragment_start - 1,
+                                              longitudo - fragment_start
+                                                  - 1,
                                               piscina);
         longitudo = fragment_start;
     }
@@ -198,9 +215,10 @@ uri_parse (
     schema_end = _invenire_schema_separator(cursor, longitudo);
     si (schema_end < longitudo)
     {
-        uri->schema = _copiare_substring(cursor, 0, schema_end, piscina);
-        uri->est_absoluta = VERUM;
-        authority_start = schema_end + 3; /* Post "://" */
+        uri->schema = _copiare_substring(cursor, 0, schema_end,
+            piscina);
+        uri->est_absoluta  = VERUM;
+        authority_start    = schema_end + 3; /* Post "://" */
     }
     alioquin si (longitudo >= 2 && cursor[0] == '/' && cursor[1] == '/')
     {
@@ -221,7 +239,8 @@ uri_parse (
      * ---------------------------------------------------------------- */
     /* Invenire finem authority (initium viae) */
     authority_end = _invenire_character(cursor + authority_start,
-                                         longitudo - authority_start, '/');
+                                         longitudo - authority_start,
+                                         '/');
     si (authority_end < longitudo - authority_start)
     {
         path_start     = authority_start + authority_end;
@@ -247,7 +266,8 @@ uri_parse (
         at_pos = _invenire_character(auth, auth_len, '@');
         si (at_pos < auth_len)
         {
-            uri->userinfo = _copiare_substring(auth, 0, at_pos, piscina);
+            uri->userinfo = _copiare_substring(auth, 0, at_pos,
+                piscina);
             host_start = at_pos + 1;
         }
         alioquin
@@ -259,18 +279,21 @@ uri_parse (
         si (host_start < auth_len && auth[host_start] == '[')
         {
             bracket_end = _invenire_character(auth + host_start,
-                                               auth_len - host_start, ']');
+                                               auth_len - host_start,
+                                               ']');
             si (bracket_end < auth_len - host_start)
             {
                 /* Hospes cum brackets */
                 host_end = host_start + bracket_end + 1;
                 uri->hospes = _copiare_substring(auth, host_start,
-                                                  host_end - host_start, piscina);
+                                                  host_end - host_start,
+                                                  piscina);
                 /* Portus post ] */
                 si (host_end < auth_len && auth[host_end] == ':')
                 {
                     uri->portus = _parse_numerum(auth + host_end + 1,
-                                                  auth_len - host_end - 1);
+                                                  auth_len - host_end
+                                                      - 1);
                 }
             }
             alioquin
@@ -283,12 +306,14 @@ uri_parse (
         {
             /* Hospes normale - invenire : pro portus */
             colon_pos = _invenire_character(auth + host_start,
-                                             auth_len - host_start, ':');
+                                             auth_len - host_start,
+                                             ':');
             si (colon_pos < auth_len - host_start)
             {
                 host_end = host_start + colon_pos;
                 uri->hospes = _copiare_substring(auth, host_start,
-                                                  host_end - host_start, piscina);
+                                                  host_end - host_start,
+                                                  piscina);
                 uri->portus = _parse_numerum(auth + host_end + 1,
                                               auth_len - host_end - 1);
             }
@@ -296,7 +321,8 @@ uri_parse (
             {
                 host_end = auth_len;
                 uri->hospes = _copiare_substring(auth, host_start,
-                                                  host_end - host_start, piscina);
+                                                  host_end - host_start,
+                                                  piscina);
             }
         }
     }
@@ -363,6 +389,108 @@ uri_via_normalizare (
     redde via_normalizare(uri->via, piscina);
 }
 
+/* segmentum ultimum exitus et "/" praecedens tollere (RFC 3986
+ * 5.2.4 C) */
+interior i32
+_segmentum_ultimum_tollere (
+    constans character* exitus,
+                   i32  m)
+{
+    dum (m > 0 && exitus[m - 1] != '/')
+    {
+        m--;
+    }
+    redde m > 0 ? m - 1 : 0;
+}
+
+/* remove_dot_segments (RFC 3986 5.2.4): "." et ".." solvuntur,
+ * solidi finales et segmenta vacua MANENT (via_normalizare - viarum
+ * plagularum - ea abicit, quod URL mutat: "g/" != "g") */
+interior chorda
+_puncta_removere (
+      chorda  via,
+     Piscina* piscina)
+{
+    chorda  r;
+ character* in;
+ character* ex;
+       i32  n;
+       i32  m;
+       i32  k;
+
+    r.datum    = NIHIL;
+    r.mensura  = 0;
+    si (via.mensura <= 0)
+    {
+        redde r;
+    }
+    in = (character*)piscina_allocare(piscina, via.mensura);
+    ex = (character*)piscina_allocare(piscina, via.mensura);
+    memcpy(in, via.datum, (memoriae_index)via.mensura);
+    n = via.mensura;
+    m = 0;
+    dum (n > 0)
+    {
+        si (n >= 3 && in[0] == '.' && in[1] == '.' && in[2] == '/')
+        {
+            in  += 3;                                     /* A */
+            n   -= 3;
+        }
+        alioquin si (n >= 2 && in[0] == '.' && in[1] == '/')
+        {
+            in  += 2;                                     /* A */
+            n   -= 2;
+        }
+        alioquin si (   n     >= 3 && in[0] == '/' && in[1] == '.'
+                     && in[2] == '/')
+        {
+            in  += 2;                                     /* B */
+            n   -= 2;
+        }
+        alioquin si (n == 2 && in[0] == '/' && in[1] == '.')
+        {
+            in     += 1;                                   /* B */
+            n      -= 1;
+            in[0]  = '/';
+        }
+        alioquin si (   n     >= 4 && in[0] == '/' && in[1] == '.'
+                     && in[2] == '.' && in[3] == '/')
+        {
+            in  += 3;                                     /* C */
+            n   -= 3;
+            m   = _segmentum_ultimum_tollere(ex, m);
+        }
+        alioquin si (   n     == 3 && in[0] == '/' && in[1] == '.'
+                     && in[2] == '.')
+        {
+            in     += 2;                                   /* C */
+            n      -= 2;
+            in[0]  = '/';
+            m      = _segmentum_ultimum_tollere(ex, m);
+        }
+        alioquin si (   (n == 1 && in[0] == '.')
+                     || (n == 2 && in[0] == '.' && in[1] == '.'))
+        {
+            n = 0;                                       /* D */
+        }
+        alioquin
+        {
+            k = (in[0] == '/') ? 1 : 0;                  /* E */
+            dum (k < n && in[k] != '/')
+            {
+                k++;
+            }
+            memcpy(ex + m, in, (memoriae_index)k);
+            m   += k;
+            in  += k;
+            n   -= k;
+        }
+    }
+    r.datum    = (i8*)ex;
+    r.mensura  = m;
+    redde r;
+}
+
 Uri*
 uri_resolvere (
         Uri* base,
@@ -378,19 +506,24 @@ uri_resolvere (
         redde NIHIL;
     }
 
-    si (relativum.datum == NIHIL || relativum.mensura == 0)
-    {
-        redde NIHIL;
-    }
-
     resultatus = piscina_allocare(piscina, (i32)magnitudo(Uri));
     _uri_initializare(resultatus);
+
+    /* referentia vacua = basis sine fragmento (RFC 3986 5.2.2) */
+    si (relativum.datum == NIHIL || relativum.mensura == 0)
+    {
+        *resultatus                     = *base;
+        resultatus->fragmentum.datum    = NIHIL;
+        resultatus->fragmentum.mensura  = 0;
+        redde resultatus;
+    }
 
     /* Parse relativum */
     {
         i8* temp;
         temp = piscina_allocare(piscina, relativum.mensura + 1);
-        memcpy(temp, relativum.datum, (memoriae_index)relativum.mensura);
+        memcpy(temp, relativum.datum,
+            (memoriae_index)relativum.mensura);
         temp[relativum.mensura] = '\0';
 
         si (!uri_parse((constans character*)temp, &rel_uri, piscina))
@@ -403,7 +536,19 @@ uri_resolvere (
     si (rel_uri.est_absoluta)
     {
         *resultatus      = rel_uri;
-        resultatus->via  = via_normalizare(rel_uri.via, piscina);
+        resultatus->via  = _puncta_removere(rel_uri.via, piscina);
+        redde resultatus;
+    }
+
+    /* Via retis ("//hospes/via", RFC 3986 5.2.2): auctoritas, via et
+     * quaestio ex relativo, schema solum ex base */
+    si (rel_uri.hospes.mensura > 0)
+    {
+        *resultatus               = rel_uri;
+        resultatus->schema        = base->schema;
+        resultatus->est_absoluta  = VERUM;
+        resultatus->via           = _puncta_removere(rel_uri.via,
+            piscina);
         redde resultatus;
     }
 
@@ -414,11 +559,22 @@ uri_resolvere (
     resultatus->userinfo      = base->userinfo;
     resultatus->est_absoluta  = VERUM;
 
-    /* Resolvere via */
-    si (rel_uri.via.mensura > 0 && rel_uri.via.datum[0] == '/')
+    /* Resolvere via (RFC 3986 5.2.2) */
+    resultatus->quaestio = rel_uri.quaestio;
+    si (rel_uri.via.mensura == 0)
+    {
+        /* via vacua ("?y", "#s"): via basis; quaestio basis nisi
+         * relativum suam habet */
+        resultatus->via = base->via;
+        si (rel_uri.quaestio.mensura == 0)
+        {
+            resultatus->quaestio = base->quaestio;
+        }
+    }
+    alioquin si (rel_uri.via.datum[0] == '/')
     {
         /* Via absolutum */
-        resultatus->via = via_normalizare(rel_uri.via, piscina);
+        resultatus->via = _puncta_removere(rel_uri.via, piscina);
     }
     alioquin
     {
@@ -457,11 +613,10 @@ uri_resolvere (
         chorda_aedificator_appendere_chorda(aed, rel_uri.via);
 
         nova_via         = chorda_aedificator_finire(aed);
-        resultatus->via  = via_normalizare(nova_via, piscina);
+        resultatus->via  = _puncta_removere(nova_via, piscina);
     }
 
-    /* Copiare quaestio et fragmentum ex relativum */
-    resultatus->quaestio    = rel_uri.quaestio;
+    /* fragmentum semper ex relativo */
     resultatus->fragmentum  = rel_uri.fragmentum;
 
     redde resultatus;

@@ -112,6 +112,7 @@ _sectio_ordinaria (
     CREDO_FALSUM (f.activae[CENSURA_DUPLICATA]);
     CREDO_FALSUM (f.activae[CENSURA_SENSIBILIS]);
     CREDO_FALSUM (f.activae[CENSURA_SEPTIMA]);
+    CREDO_VERUM (f.activae[CENSURA_FINALIS]);
     CREDO_FALSUM (f.intentiones_liberae);
     CREDO_AEQUALIS_I32 (f.saltus_maximus, ZEPHYRUM);
     CREDO_VERUM (f.ambitus == NIHIL);
@@ -264,6 +265,32 @@ _sectio_lineae (
         "(frustum 0, offset 24)\n");
 }
 
+/* metrum liberum: '|' partis primae mensuras facit (numquam vitium);
+ * partis alterius '|' extra incisum notatur (mensura 2 +960) */
+interior vacuum
+_sectio_lineae_liberae (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\">"
+        "<textus!>o4 l8 c d e f g a | b4 c2 | c4</textus></frustum>"
+        "</pars>"
+        "<pars titulus=\"n\" instrumentum=\"aether\"><frustum "
+        "mensura=\"2\">"
+        "<textus!>o4 g4 | e2 | c4</textus></frustum></pars>"
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, NIHIL, inv, CAPACITAS) == I);
+    CREDO_VERUM (inv[ZEPHYRUM].regula == CENSURA_LINEAE);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].mensura, II);
+    CREDO_AEQUALIS_S64 (inv[ZEPHYRUM].pulsus, (s64)CMLX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (inv[ZEPHYRUM].pars, "n");
+}
+
 
     /* ==================================================
      * CLAVIS: minor VI et VII elevati licent; clavis mutata; percussio
@@ -325,6 +352,69 @@ _sectio_caerulea (
      * non */
     CREDO_NECESSE (censura_iudicare(m, &f, inv, CAPACITAS) == I);
     CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXX);
+}
+
+
+/* modus (carmen.h): d dorius - notae albae et b molle (Bb) in clave;
+ * F# et C# (saltu exeuntes, non ornamenta) extra */
+interior vacuum
+_sectio_modi (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"d\" clavis=\"d dorius\">"
+        "<pars titulus=\"m\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>o4 d8 e8 f8 g8 a8 b8 b-8 o5 c8 | "
+        "o4 f#4 c#4 a2</textus></frustum></pars>"
+        "</carmen></carmina>");
+       CensuraForma f = _sola(CENSURA_CLAVIS);
+    CensuraInventum inv[CAPACITAS];
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == II);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota, LXVI);
+    CREDO_AEQUALIS_I32 (inv[I].nota->nota, LXI);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 m: F#4 extra clavem d dorius (frustum 0, "
+        "offset 36)\n");
+}
+
+
+/* finalis (censura.h, tonus.h): cantus in d dorius in A desinens
+ * nominatur; in D nihil; clavis tonalis nihil */
+interior vacuum
+_sectio_finalis (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"f\" clavis=\"d dorius\">"
+        "<pars titulus=\"cantus\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4 e4 f4 g4 | a1</textus></frustum>"
+        "</pars></carmen></carmina>");
+       CensuraForma f = _sola(CENSURA_FINALIS);
+    CensuraInventum inv[CAPACITAS];
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_linea(c, k, &inv[ZEPHYRUM]),
+        "mensura 2 cantus: linea in A4 desinit, non in finali D "
+        "(frustum 0, offset 17)\n");
+    k = _carmen(c,
+        "<carmina><carmen titulus=\"f\" clavis=\"d dorius\">"
+        "<pars titulus=\"cantus\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 a4 g4 f4 e4 | d1</textus></frustum>"
+        "</pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    k = _carmen(c,
+        "<carmina><carmen titulus=\"f\" clavis=\"d minor\">"
+        "<pars titulus=\"cantus\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4 e4 f4 g4 | a1</textus></frustum>"
+        "</pars></carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
 }
 
 
@@ -1557,11 +1647,75 @@ _sectio_septima (
     }
 }
 
+/* sexta aucta (censura.h clavis, dissonantia): a minor F A D# -> E -
+ * D# acordi sextae auctae (clavis licet), resoluta (dissonantia
+ * nulla, septima nulla); D# -> D: dissonantia "sexta aucta non
+ * resoluta", clavis licet; C maior Ab C Eb F# -> G: Ab Eb F# licent */
+interior vacuum
+_sectio_sexta_aucta (
+    CredoContextus* c)
+{
+    Carmen* k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"a minor\">"
+        VOCES_IV("o4 a2 g#2", "o4 d#2 e2", "o3 a2 b2", "o2 f2 e2")
+        "</carmen></carmina>");
+    CensuraInventum inv[CAPACITAS];
+       CensuraForma f;
+                i32 n;
+
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    f = _sola(CENSURA_DISSONANTIA);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    f = _sola(CENSURA_SEPTIMA);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\" clavis=\"a minor\">"
+        VOCES_IV("o4 a2 g#2", "o4 d#2 d2", "o3 a2 b2", "o2 f2 e2")
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_DISSONANTIA);
+    n = censura_iudicare(k, &f, inv, CAPACITAS);
+    CREDO_NECESSE (n >= I && n <= CAPACITAS);
+    CREDO_LITERAE_AEQUALES (inv[ZEPHYRUM].causa,
+                            "sexta aucta non resoluta");
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\">"
+        VOCES_IV("o4 f#2 g2", "o4 c2 b2", "o3 e-2 d2", "o2 a-2 g2")
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_AEQUALIS_I32 (censura_iudicare(k, &f, inv, CAPACITAS),
+        ZEPHYRUM);
+    /* in fenestra sextae auctae (Ger+6 in C, Ab7 cum F#) nota extra
+     * acordum (Bb4 transiens, gradu toto exiens) non licet */
+    k = (Carmen*)(vacuum*)_carmen(c,
+        "<carmina><carmen titulus=\"x\">"
+        VOCES_IV("o5 c8 o4 b-8 a-4 g2", "o4 f#2 g2", "o3 e-2 d2",
+                 "o2 a-2 g2")
+        "</carmen></carmina>");
+    CREDO_NECESSE (k != NIHIL);
+    f = _sola(CENSURA_CLAVIS);
+    CREDO_NECESSE (censura_iudicare(k, &f, inv, CAPACITAS) == I);
+    CREDO_AEQUALIS_I32 (inv[ZEPHYRUM].nota->nota % XII, X);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
     { "lineae", _sectio_lineae, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lineae_liberae", _sectio_lineae_liberae, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { "clavis", _sectio_clavis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "caerulea", _sectio_caerulea, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "finalis", _sectio_finalis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "chromatica", _sectio_chromatica, NIHIL, NIHIL, NIHIL, NIHIL },
     { "picardia", _sectio_picardia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambitus", _sectio_ambitus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1576,6 +1730,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "duplicata", _sectio_duplicata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "septima", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "sexta aucta", _sectio_sexta_aucta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tertia", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acorda", _sectio_acorda, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stili", _sectio_stili, NIHIL, NIHIL, NIHIL, NIHIL },

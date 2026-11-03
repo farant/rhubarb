@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- repetitiones: |: m1 m2 :| times 3 -> 0 1 2 1 2 1 2 3 -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <barline location="left"><repeat direction="forward"/></barline>
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="3">
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>2</duration></note>
+      <barline location="right"><bar-style>light-heavy</bar-style><repeat direction="backward" times="3"/></barline>
+    </measure>
+    <measure number="4">
+      <note><pitch><step>F</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+  </part>
+</score-partwise>

@@ -410,7 +410,13 @@ colloquia_visus_fontem_pulsare (
     si (novi && xar_numerus(novi) > ZEPHYRUM)
     {
         (vacuum)colloquia_status_applicare(f->status, novi);
-        mutatum = VERUM;
+        f->versio++;
+    }
+    /* comites P7: eventus etiam per fontem_legere applicati */
+    si (f->versio != f->versio_pulsata)
+    {
+        f->versio_pulsata  = f->versio;
+        mutatum            = VERUM;
     }
     si (   f->multiplexor
         && (!f->panelli
@@ -433,6 +439,35 @@ colloquia_visus_fontem_pulsare (
     redde mutatum;
 }
 
+
+b32
+colloquia_visus_fontem_legere (
+    ColloquiorumFons* f)
+{
+    Piscina* scheda;
+        Xar* novi;
+        b32  nova;
+
+    si (!f || !f->status || !f->via)
+    {
+        redde FALSUM;
+    }
+    scheda = piscina_generare_dynamicum("colloquia_legere", XVI * M);
+    si (!scheda)
+    {
+        redde FALSUM;
+    }
+    novi = praeconium_legere_ab(f->via, &f->positio, scheda);
+    nova = novi && xar_numerus(novi) > ZEPHYRUM;
+    si (nova)
+    {
+        /* status chordas in piscinam suam copiat (T5) */
+        (vacuum)colloquia_status_applicare(f->status, novi);
+        f->versio++;
+    }
+    piscina_destruere(scheda);
+    redde nova;
+}
 
 /* T10c: nomen cursus anglice (pagina anglica, ut ceterae) */
 interior chorda

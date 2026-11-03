@@ -717,6 +717,107 @@ _sectio_sensibilis (
     CREDO_VERUM (_aequat(&o, 'E', -I, IV));
 }
 
+/* modi: littera finalis et nomen modi; C# in d dorius (sensibilis
+ * finalis per musicam fictam) C#, non Db */
+interior vacuum
+_sectio_modi (
+    CredoContextus* c)
+{
+    hic_manens constans character* constans claves[] = {
+        "d dorius", "g dorius", "f# phrygius", "bb mixolydius",
+        "a aeolius", "f lydius", NIHIL };
+    hic_manens constans character* constans litterae[] = {
+        "d", "g", "f#", "bb", "a", "f" };
+    hic_manens constans character* constans modi[] = {
+        "dorius", "dorius", "phrygius", "mixolydius", "aeolius",
+        "lydius" };
+          CarmenNota n;
+       PartituraNota o;
+                 i32 i;
+
+    per (i = ZEPHYRUM; claves[i] != NIHIL; i++)
+    {
+              character* s;
+        constans Carmen* k;
+
+        s = (character*)piscina_allocare(c->piscina, CCLVI);
+
+        sprintf(s, "<carmina><carmen titulus=\"x\" clavis=\"%s\">"
+            "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+            "mensura=\"1\"><textus!>c</textus></frustum></pars>"
+            "</carmen></carmina>", claves[i]);
+        k = _carmen(c, s);
+        CREDO_NECESSE (k != NIHIL);
+        CREDO_LITERAE_AEQUALES (partitura_clavis_littera(&k->claves[0]),
+                                litterae[i]);
+        CREDO_LITERAE_AEQUALES (partitura_clavis_modus(&k->claves[0]),
+                                modi[i]);
+        si (i == ZEPHYRUM)
+        {
+            memset(&n, ZEPHYRUM, magnitudo(n));
+            n.nota  = LXI;
+            o       = partitura_orthographia(k, &n, ZEPHYRUM);
+            CREDO_VERUM (_aequat(&o, 'C', I, IV));
+        }
+        /* g dorius (signatura b): F# sub finali, non Gb */
+        si (i == I)
+        {
+            memset(&n, ZEPHYRUM, magnitudo(n));
+            n.nota  = LXVI;
+            o       = partitura_orthographia(k, &n, ZEPHYRUM);
+            CREDO_VERUM (_aequat(&o, 'F', I, IV));
+        }
+    }
+}
+
+/* verba (partitura.h): linea "verba" sub parte - syllaba per notam,
+ * melisma '_'; pars sine verbis nullam habet */
+interior vacuum
+_sectio_verba (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"v\" clavis=\"d dorius\">"
+        "<pars titulus=\"c\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4 e4 f4 r4 | g4 a4 b4 a4</textus>"
+        "<verba!>Sal-ve Re_ gi-na qui</verba></frustum></pars>"
+        "<pars titulus=\"o\" instrumentum=\"organum\"><frustum "
+        "mensura=\"1\"><textus!>o3 d1 | d1</textus></frustum></pars>"
+        "</carmen></carmina>");
+    chorda t;
+
+    CREDO_NECESSE (k != NIHIL);
+    t = _scribere(c, k, NIHIL);
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  c      D4:4 E4:4 F4:4 r:4\n  verba  Sal ve Re\n",
+        c->piscina));
+    CREDO_CHORDA_CONTINET (t, chorda_ex_literis(
+        "  verba  _ gi na qui\n  o      D3:1\n", c->piscina));
+}
+
+/* metrum liberum: 'liberum' in titulo carminis, mensurae incisa sine
+ * notis metri */
+interior vacuum
+_sectio_liberum (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\" "
+        "clavis=\"d dorius\" tempus=\"96\"><pars titulus=\"c\" "
+        "instrumentum=\"schola\"><frustum mensura=\"1\"><textus!>"
+        "o4 l8 d e f g a4 | a8 g f e d4.</textus></frustum></pars>"
+        "</carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_scribere(c, k, NIHIL),
+        "carmen l: d dorius, liberum, 96\n"
+        "  pars c: schola, lucrum 1.00\n"
+        "mensura 1\n"
+        "  c  D4:8 E4:8 F4:8 G4:8 A4:4\n"
+        "mensura 2\n"
+        "  c  A4:8 G4:8 F4:8 E4:8 D4:4.\n");
+}
+
 /* ligatura trans lineam: nota una, '~' ad lineam; trioli '8t' */
 interior vacuum
 _sectio_ligatura (
@@ -775,6 +876,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "orthographia", _sectio_orthographia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "sensibilis", _sectio_sensibilis, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "verba", _sectio_verba, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "liberum", _sectio_liberum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "valores", _sectio_valores, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ligaturae", _sectio_ligaturae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },

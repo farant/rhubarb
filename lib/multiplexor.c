@@ -4,6 +4,7 @@
 #include "filum.h"
 #include "processus.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -302,6 +303,24 @@ multiplexor_clientes_incipere (
         ? (i32)m->mora_ms : (i32)M, piscina);
 }
 
+Processus*
+multiplexor_panellos_incipere (
+    constans Multiplexor* m,
+                 Piscina* piscina)
+{
+    constans character* imperium[] = { "list-panes", "-a", "-F",
+        FORMA_PANELLORUM, NIHIL };
+    constans character** v;
+
+    v = vectorem_struere(m, piscina, imperium);
+    si (!v)
+    {
+        redde NIHIL;
+    }
+    redde processus_incipere(v, m && m->mora_ms > ZEPHYRUM
+        ? (i32)m->mora_ms : (i32)M, piscina);
+}
+
 constans MultiplexorPanellus*
 multiplexor_panellum_invenire (
        Xar* panelli,
@@ -388,4 +407,44 @@ multiplexor_argumenta_adhaerendi (
     imperium[II]        = sessio_exacta(sessio, piscina);
     imperium[III]       = NIHIL;
     redde imperium[II] ? vectorem_struere(m, piscina, imperium) : NIHIL;
+}
+
+b32
+multiplexor_fenestram_eligere (
+    constans Multiplexor* m,
+                  chorda  sessio,
+                     s32  index,
+                 Piscina* piscina)
+{
+    constans character* imperium[IV];
+             character* scopus;
+
+    scopus = (character*)piscina_allocare(piscina, (memoriae_index)
+        sessio.mensura + XXIV);
+    si (!scopus || sessio.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* "=sessio:index": scopus exactus (praefixum non congruit) */
+    sprintf(scopus, "=%.*s:%d", (integer)sessio.mensura,
+        (constans character*)sessio.datum, (integer)index);
+    imperium[ZEPHYRUM]  = "select-window";
+    imperium[I]         = "-t";
+    imperium[II]        = scopus;
+    imperium[III]       = NIHIL;
+    redde currere(m, piscina, imperium, NIHIL);
+}
+
+b32
+multiplexor_configurationem_legere (
+    constans Multiplexor* m,
+      constans character* via,
+                 Piscina* piscina)
+{
+    constans character* imperium[III];
+
+    imperium[ZEPHYRUM]  = "source-file";
+    imperium[I]         = via;
+    imperium[II]        = NIHIL;
+    redde via && currere(m, piscina, imperium, NIHIL);
 }

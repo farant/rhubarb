@@ -175,6 +175,18 @@ nomen structura {
      * (terminale: tmux iterum interrogatur). NIHIL = nihil. */
                  vacuum  (*locum_renovare)(vacuum* ctx);
               vacuum* locum_renovare_ctx;
+    /* comites P9: clavis quam latus ante destinationem sibi sumit
+     * (terminale cum tmux: Ctrl+1..9 fenestram eligit, non ad concham
+     * it). Rogatur latus FOCATUM; si non sumit et focus sinister est,
+     * frons dextra tabulae (Franus: in pagina cum terminali tmux
+     * dextro Ctrl+N etiam e scriba sinistra valet). agere FALSUM =
+     * quaestio sola, sine effectu: VERUM -> eventus (depressus et
+     * liberatus) ad radicem, non ad latus; agere VERUM = radix in
+     * depressione latus sumens vocat ut agat. NIHIL = nulla clavis
+     * sumitur */
+                 b32  (*clavem_sumere)(vacuum* ctx,
+                          constans Eventus* ev, b32 agere);
+              vacuum* clavem_sumere_ctx;
     /* comites P3b: ambitus historiae - historia lateris per ambitum
      * separatur (scriba: praefixum libri visi; liber quisque
      * historiam suam habet); mutatio ambitus locum non facit, historia

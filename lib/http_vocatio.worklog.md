@@ -85,3 +85,27 @@ ms, not at the stagger), omnes mortui (named timeout, nothing left).
 The mid-call check first expected 3 fds and saw 2: the client had sent
 before the server's accept callback ran - the assertion now counts the
 accepted client only if it exists.
+
+## 2026-10-27 - redirects (navigator N2.3, secunda)
+
+`HttpVocatioOptiones.redirectiones_maximae` (0 = off, the old behaviour)
+and `http_vocatio_url`. A finished 3xx with Location is caught in
+`_responsum_finitum` (both FINITUS paths in `_legere`: lector finished,
+and EOF-terminated body) BEFORE `_finire`; `_iterum_incipere` tears the
+connection down and restarts the state machine at NOMINA with a new
+petitio - callback still fires once, abort still works at any point.
+Same origin (https flag, host case-insensitive, port) reuses the already
+resolved addresses (tests with `addressus` options never hit DNS).
+Location is resolved with `uri_resolvere` against `v->url` - this is why
+N2.3a fixed the resolver first (trailing slash, "?q"-only refs).
+Header rules: Host never copied (serializer adds it); Content-Type and
+Content-Length dropped when the method turns into GET (303, or 301/302
+after non-GET/HEAD); Authorization and Cookie dropped across origins.
+The 3xx body never reaches the rivus because the lector streams 2xx only.
+Not done (ledger …HGZJR): refusing https -> http needs a TLS test server
+that sends 3xx. The blocking `http_exsequi_cum_redirectionibus` still
+forwards Authorization across hosts (ledger …FR4).
+Test trap: the scripted server keeps POINTERS to its ServusGradus and
+response text - a helper that returns before the server closes must
+allocate them from the piscina (static locals tripped examen's credo
+rule: state shared across sections).

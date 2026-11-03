@@ -5,9 +5,19 @@
  * (6x8); versus linea per lineam, continuatio II cellulis indentata;
  * lineae textus spatio duplici (VIII px vacui post quamque, non post
  * ultimam paginae); inter clausulas linea vacua VIII px addita (non in
- * summa pagina). Functio
- * pura magnitudinis: eadem area -> eaedem paginae. Pagina saltem
- * lineam unam habet; caput sine textu = pagina una vacua. */
+ * summa pagina).
+ * FRACTIONES (Franus 2026-10-27; navigator et EPUB): paragraphus aut
+ * versus finditur solum ubi II lineae saltem supra et infra manent -
+ * prima sola in imo non manet (tota transit), ultima sola in summo non
+ * manet (altera cum ea transit); III lineae aut pauciores numquam
+ * finduntur. Titulus (etiam linearum plurium) integer in pagina una;
+ * tituli consecutivi cum lineis servandis clausulae sequentis (II, aut
+ * omnes si III aut pauciores) grex unus - non capit: totus in paginam
+ * novam. Effugium: grex aut clausula pagina tota altior fluit (quot
+ * capiunt). Duobus passibus: lineae per clausulam mensae (latitudo
+ * sola), deinde positae. Functio pura magnitudinis: eadem area ->
+ * eaedem paginae. Pagina saltem lineam unam habet; caput sine textu =
+ * pagina una vacua. */
 
 #ifndef LECTOR_PAGINAE_H
 #define LECTOR_PAGINAE_H

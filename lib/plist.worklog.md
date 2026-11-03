@@ -159,3 +159,36 @@ gives it `plist_legere_plagulam`, `plist_scribere_plagulam` and
 `plist_aequalis` — the last exists precisely so a bundle writer can ask
 "does this Info.plist already say what I want?" and leave the file
 alone.
+
+## 2026-10-30 — moved off lib/xml.c (xml_arbor P15)
+
+lib/xml.c is gone; plist was the writer half's only user. Decision
+(spec option a): plist writes its text itself instead of building a
+tree for a generic writer. `_valorem_scribere` reproduces the old
+`xml_scribere(..., pulchrum)` output byte for byte — two-space indent,
+leaf on one line, EMPTY leaf as `<t/>` (so an empty string is
+`<string/>`, not `<string></string>`), text escapes only `& < >`, and
+the file ends `</plist>\n\n` (the old code appended "\n" after a body
+that already ended in one). Proven by a scratch program linked once
+against the old objects and once against the new: `cmp` identical over
+every value type, nesting, empty containers, escapes, UTF-8. G2b pins
+the empty-leaf and blank-last-line shape.
+
+Reader walks `xml_documentum.h`'s cooked view. What changed for free:
+CDATA, comments/PIs anywhere, internal-subset entities and character
+references all work; junk before/after the root, undefined entities,
+bare `&` and C0 bytes are now XML errors (several items of audit park
+01M5AJQS9J4Q). String and key text is interned (`chorda_internare`) so
+values never point into the caller's source buffer — the old parser
+interned too. PLIST_ERROR_XML's `causa` is now the rendered diagnostic
+(`plist:line:col: ...`) instead of a status number.
+
+Depth: the old reader and writer recursed without limit (30 000 nested
+arrays read fine but a list containing itself crashed the writer with
+SIGSEGV). Both now stop at PLIST_PROFUNDITAS_MAXIMA (512, roughly
+Apple's own tolerance) with PLIST_ERROR_STRUCTURA; the writer limit
+also catches cycles. G8 tests 30 000 levels both ways, the cycle, and
+that exactly 512 levels still round-trips.
+
+Still open from the plist audit (not XML's business): the writer emits
+`<data/>` for empty data, which `plutil -lint` warns about.

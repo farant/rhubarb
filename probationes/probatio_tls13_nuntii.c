@@ -237,7 +237,8 @@ _sectio_ee (CredoContextus* c)
         ZEPHYRUM, "EncryptedExtensions");
     i8 mala[VI];
 
-    CREDO_VERUM(tls13_extensiones_legere(ee.datum, ee.mensura));
+    CREDO_VERUM(tls13_extensiones_legere(ee.datum, ee.mensura, NIHIL,
+        NIHIL));
     /* extensio cuius longitudo vectorem excedit */
     mala[ZEPHYRUM]  = ZEPHYRUM;
     mala[I]         = IV;
@@ -245,7 +246,7 @@ _sectio_ee (CredoContextus* c)
     mala[III]       = ZEPHYRUM;
     mala[IV]        = ZEPHYRUM;
     mala[V]         = I;
-    CREDO_FALSUM(tls13_extensiones_legere(mala, VI));
+    CREDO_FALSUM(tls13_extensiones_legere(mala, VI, NIHIL, NIHIL));
 }
 
 /* extensio ClientHello exspectata: typus et corpus octetim */
@@ -554,7 +555,7 @@ _verrere (GenusVerrendi genus, constans i8* integrum, i32 n,
                 }
                 frange;
             casus VERRERE_EE:
-                acceptum = tls13_extensiones_legere(o, k);
+                acceptum = tls13_extensiones_legere(o, k, NIHIL, NIHIL);
                 frange;
             casus VERRERE_CERT:
                 acceptum = tls13_certificata_legere(o, k, catena, IV,

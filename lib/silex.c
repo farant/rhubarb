@@ -35,6 +35,7 @@ hic_manens b32 _monitiones_tacitae = FALSUM;
 constans character* constans SILEX_RADICES_CLIENTIUM[] = {
     "materia/fontes/",
     "toml/fontes/",
+    "xml/fontes/",
     NIHIL
 };
 

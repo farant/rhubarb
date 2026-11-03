@@ -68,6 +68,8 @@ structura Tls13Machina {
                          i8  salutatio[SALUTATIO_MAXIMA];
                         i32  salutatio_n;       /* CH in transcripto
                                                   * post ServerHello */
+                  character protocollum[CCLVI];  /* ALPN electum */
+                        i32 protocollum_n;
                          i8 sessio[XXXII];
                         i32 sessio_n;
                         b32 ccs_missa;
@@ -466,15 +468,17 @@ _hrr (
         Tls13SalutatioParametri p;
 
         memset(&p, ZEPHYRUM, magnitudo(p));
-        p.hospes          = m->opt.hospes;
-        p.temere          = m->temere;
-        p.sessio          = m->sessio;
-        p.sessio_n        = m->sessio_n;
-        p.grex            = m->grex_hrr;
-        p.clavis_publica  = publica;
-        p.clavis_n        = clavis_n;
-        p.crustulum       = r->crustulum;
-        p.crustulum_n     = r->crustulum_n;
+        p.hospes              = m->opt.hospes;
+        p.temere              = m->temere;
+        p.sessio              = m->sessio;
+        p.sessio_n            = m->sessio_n;
+        p.grex                = m->grex_hrr;
+        p.clavis_publica      = publica;
+        p.clavis_n            = clavis_n;
+        p.crustulum           = r->crustulum;
+        p.crustulum_n         = r->crustulum_n;
+        p.protocolla          = m->opt.protocolla;
+        p.protocolla_numerus  = m->opt.protocolla_numerus;
         n = tls13_salutatio_scribere(&p, m->salutatio,
             SALUTATIO_MAXIMA);
         si (n == ZEPHYRUM)
@@ -912,7 +916,8 @@ _petitionem (
             "certificate_request_context non vacuum");
         redde;
     }
-    si (n < I || !tls13_extensiones_legere(corpus + I, n - I))
+    si (   n < I || !tls13_extensiones_legere(corpus + I, n - I, NIHIL,
+            NIHIL))
     {
         _errorem(m, TLS13_ERROR_FORMA, ALERTA_FORMA,
             "CertificateRequest male formatum");
@@ -997,11 +1002,33 @@ _nuntius (
                 _inopinatum(m);
                 redde;
             }
-            si (!tls13_extensiones_legere(corpus, n))
             {
-                _errorem(m, TLS13_ERROR_FORMA, ALERTA_FORMA,
-                    "EncryptedExtensions male formatum");
-                redde;
+                constans i8* electum;
+                        i32  electum_n;
+
+                si (!tls13_extensiones_legere(corpus, n, &electum,
+                        &electum_n))
+                {
+                    _errorem(m, TLS13_ERROR_FORMA, ALERTA_FORMA,
+                        "EncryptedExtensions male formatum");
+                    redde;
+                }
+                /* RFC 7301 3.2: electum non oblatum -> illegal_parameter */
+                si (electum_n > ZEPHYRUM)
+                {
+                    si (   electum_n >= (i32)magnitudo(m->protocollum)
+                        || !tls13_protocollum_oblatum(m->opt.protocolla,
+                               m->opt.protocolla_numerus, electum,
+                               electum_n))
+                    {
+                        _errorem(m, TLS13_ERROR_PARAMETRUM,
+                            ALERTA_PARAMETRUM,
+                            "ALPN: protocollum non oblatum");
+                        redde;
+                    }
+                    memcpy(m->protocollum, electum, (size_t)electum_n);
+                    m->protocollum_n = electum_n;
+                }
             }
             tls13_transcriptum_addere(m->transcriptum, crudum, crudi_n);
             m->stadium = STADIUM_CERT;
@@ -1366,13 +1393,15 @@ tls13_machina_creare (
             redde NIHIL;
         }
         memset(&p, ZEPHYRUM, magnitudo(p));
-        p.hospes          = m->opt.hospes;
-        p.temere          = m->temere;
-        p.sessio          = m->sessio;
-        p.sessio_n        = XXXII;
-        p.grex            = TLS13_GREX_X25519;
-        p.clavis_publica  = publica;
-        p.clavis_n        = XXXII;
+        p.hospes              = m->opt.hospes;
+        p.temere              = m->temere;
+        p.sessio              = m->sessio;
+        p.sessio_n            = XXXII;
+        p.grex                = TLS13_GREX_X25519;
+        p.clavis_publica      = publica;
+        p.clavis_n            = XXXII;
+        p.protocolla          = m->opt.protocolla;
+        p.protocolla_numerus  = m->opt.protocolla_numerus;
         m->salutatio_n = tls13_salutatio_scribere(&p, m->salutatio,
             SALUTATIO_MAXIMA);
         si (m->salutatio_n == ZEPHYRUM)
@@ -1562,6 +1591,22 @@ tls13_machina_versio (
     Tls13Machina* m)
 {
     redde m->versio;
+}
+
+chorda
+tls13_machina_protocollum (
+    Tls13Machina* machina)
+{
+    chorda r;
+
+    r.datum    = NIHIL;
+    r.mensura  = ZEPHYRUM;
+    si (machina != NIHIL && machina->protocollum_n > ZEPHYRUM)
+    {
+        r.datum    = (i8*)machina->protocollum;
+        r.mensura  = machina->protocollum_n;
+    }
+    redde r;
 }
 
 constans FiduciaCertificatum*

@@ -153,6 +153,19 @@ scriba_liber_paginam_legere (
                  chorda  titulus,
                     Xar* exitus);
 
+/* chronica C2: lineae paginae unius OMNES, LECTIO SOLA - vacuae
+ * servatae (exitus[i] = linea i paginae, ut chronica_eventa_legere
+ * numerat), vacuae finales demptae; praefixum NIHIL = liber
+ * communis. Pagina absens = nullae lineae. */
+b32
+scriba_liber_paginam_legere_omnes (
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     constans character* praefixum,
+                 chorda  titulus,
+                    Xar* exitus);
+
 /* comites P2: praefixum libri ("comes/nomenclator/1"; liber in spatio
  * aperto, scriba_liber_aperire_in_spatio); liber communis (index
  * 'scriba/paginae'): vacuum */

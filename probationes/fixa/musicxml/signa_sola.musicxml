@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- signa_sola: arcus, staccato, verba "dolce", exercitium - signa non conversa, nulla approximatio (strictus transit) -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Flute</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <direction><direction-type><rehearsal>A</rehearsal></direction-type></direction>
+      <direction><direction-type><words>dolce</words></direction-type></direction>
+      <note><pitch><step>G</step><octave>4</octave></pitch><duration>1</duration><notations><slur type="start"/><articulations><staccato/></articulations></notations></note>
+      <note><pitch><step>A</step><octave>4</octave></pitch><duration>1</duration><notations><slur type="stop"/></notations></note>
+    </measure>
+  </part>
+</score-partwise>

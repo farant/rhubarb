@@ -17,6 +17,15 @@
 /* gradus scalae a tonica */
 hic_manens constans s32 MAIOR[VII] = { 0, 2, 4, 5, 7, 9, 11 };
 hic_manens constans s32 MINOR[VII] = { 0, 2, 3, 5, 7, 8, 10 };
+/* modi ecclesiastici (CarmenClavis.modus 1..6): scala a finali */
+hic_manens constans s32 MODI[VI][VII] = {
+    { 0, 2, 4, 5, 7, 9, 11 },    /* ionius */
+    { 0, 2, 3, 5, 7, 9, 10 },    /* dorius */
+    { 0, 1, 3, 5, 7, 8, 10 },    /* phrygius */
+    { 0, 2, 4, 6, 7, 9, 11 },    /* lydius */
+    { 0, 2, 4, 5, 7, 9, 10 },    /* mixolydius */
+    { 0, 2, 3, 5, 7, 8, 10 }     /* aeolius */
+};
 
 hic_manens constans character* ROMANI[VIII] = {
     "", "I", "II", "III", "IV", "V", "VI", "VII"
@@ -43,6 +52,7 @@ nomen structura {
     s32 tonica;
     b32 minor;
     b32 caerulea;
+    s32 modus;      /* CarmenClavis.modus: 0 tonalis, 1..6 modi */
 } Clavis;
 
 interior Clavis
@@ -56,6 +66,7 @@ _clavis (
 
     c.minor     = FALSUM;
     c.caerulea  = FALSUM;
+    c.modus     = ZEPHYRUM;
     per (i = ZEPHYRUM; i < carmen->numerus_clavium; i++)
     {
         si (carmen->claves[i].pulsus <= pulsus)
@@ -63,14 +74,30 @@ _clavis (
             q           = carmen->claves[i].quintae;
             c.minor     = carmen->claves[i].minor;
             c.caerulea  = carmen->claves[i].caerulea;
+            c.modus     = carmen->claves[i].modus;
         }
     }
     c.tonica = _modulus(VII * q, XII);
-    si (c.minor)
+    si (c.modus > ZEPHYRUM)
+    {
+        /* finalis: gradus collectionis ubi modus stat */
+        c.tonica = _modulus(c.tonica + MODI[ZEPHYRUM][c.modus - I],
+            XII);
+    }
+    alioquin si (c.minor)
     {
         c.tonica = _modulus(c.tonica + IX, XII);
     }
     redde c;
+}
+
+/* scala clavis a tonica: modus, minor (naturalis), maior */
+interior constans s32*
+_scala (
+    constans Clavis* k)
+{
+    redde k->modus > ZEPHYRUM ? MODI[k->modus - I]
+         : k->minor ? MINOR : MAIOR;
 }
 
 /* forma dominantis: trias maior, septima, nonae, 13, 7#9, 7#11 (sine
@@ -144,7 +171,8 @@ _clavis_fenestrae (
         && (s32)e->fenestrae[f].harmonia.radix != k.tonica)
     {
         n = _clavis(carmen, e->fenestrae[g].initium);
-        si (   (n.tonica != k.tonica || n.minor != k.minor)
+        si (   (   n.tonica != k.tonica || n.minor != k.minor
+                || n.modus != k.modus)
             && _dominans_clavis(&n, &e->fenestrae[f].harmonia))
         {
             *praevia = VERUM;
@@ -165,7 +193,7 @@ _gradus (
 
     per (i = ZEPHYRUM; i < VII; i++)
     {
-        si ((k->minor ? MINOR[i] : MAIOR[i]) == intervallum)
+        si (_scala(k)[i] == intervallum)
         {
             redde i + I;
         }
@@ -207,7 +235,7 @@ _meta_idonea (
     constans Clavis* k,
                 s32  gradus)
 {
-    constans s32* s = k->minor ? MINOR : MAIOR;
+    constans s32* s = _scala(k);
              s32  r = s[gradus - I];
              s32  q = s[(gradus + III) % VII];
 
@@ -220,8 +248,13 @@ _meta_minor (
     constans Clavis* k,
                 s32  gradus)
 {
-    constans s32* s = k->minor ? MINOR : MAIOR;
+    constans s32* s = _scala(k);
 
+    /* minor: V maior (VII elevatus), ut lectio ipsa */
+    si (k->minor && gradus == V)
+    {
+        redde FALSUM;
+    }
     redde _modulus(s[(gradus + I) % VII] - s[gradus - I], XII) == III;
 }
 
@@ -443,9 +476,55 @@ _substitutam_legere (
     }
 }
 
-/* adventus: fenestra a linea mensurae ad finem eius; pars summa (notae
- * summae in initio) nullam notam in dimidia posteriore incipit.
- * *summa = altitudo notae summae in initio */
+/* nota summa fenestrae in initio eius: altitudo (-1 nulla), pars eius
+ * in *pars */
+interior s32
+_summa_initii (
+    constans Explicatio* e,
+                    i32  f,
+                    s64  initium,
+                    i32* pars)
+{
+    s32 altitudo = -I;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        constans ExplicatioSegmentum* s = &e->segmenta[i];
+
+        si (   (i32)s->fenestra == f && s->initium == initium
+            && (s32)s->nota->nota > altitudo)
+        {
+            altitudo  = (s32)s->nota->nota;
+            *pars     = s->pars;
+        }
+    }
+    redde altitudo;
+}
+
+/* fermata initium fenestrae tegit (finis phrasis signatus) */
+interior b32
+_sub_corona (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_coronarum; i++)
+    {
+        si (   carmen->coronae[i].pulsus <= pulsus
+            && pulsus < carmen->coronae[i].finis)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* adventus: fenestra cuius initium fermata tegit; aut a linea mensurae
+ * ad finem eius, pars summa (notae summae in initio) nullam notam in
+ * dimidia posteriore incipiente. *summa = altitudo notae summae in
+ * initio */
 interior b32
 _adventus (
          constans Carmen* carmen,
@@ -456,11 +535,18 @@ _adventus (
     constans ExplicatioFenestra* w = &e->fenestrae[f];
                             s64  initium;
                             s64  finis;
-                            s32  altitudo  = -I;
-                            i32  pars      = ZEPHYRUM;
-                            i32  m         = I;
+                            s32  altitudo;
+                            i32  pars  = ZEPHYRUM;
+                            i32  m     = I;
                             i32  i;
 
+    /* sub fermata nulla nota incipiens = fenestra tacens, quae nec
+     * clausulam nec Picardiam habet: summa -1 innocua */
+    si (_sub_corona(carmen, w->initium))
+    {
+        *summa = _summa_initii(e, f, w->initium, &pars);
+        redde VERUM;
+    }
     dum (carmen_pulsus_mensurae(carmen, m + I) <= w->initium)
     {
         m++;
@@ -472,18 +558,8 @@ _adventus (
     {
         redde FALSUM;
     }
-    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
-    {
-        constans ExplicatioSegmentum* s = &e->segmenta[i];
-
-        si (   (i32)s->fenestra == f && s->initium == initium
-            && (s32)s->nota->nota > altitudo)
-        {
-            altitudo  = (s32)s->nota->nota;
-            pars      = s->pars;
-        }
-    }
-    *summa = altitudo;
+    altitudo  = _summa_initii(e, f, initium, &pars);
+    *summa    = altitudo;
     si (altitudo < ZEPHYRUM)
     {
         redde FALSUM;
@@ -503,6 +579,192 @@ _adventus (
 
 /* V (trias, septima, nona, 13, 7#9, 7#11, dyas tertiae) sine
  * applicatione */
+/* sexta aucta (functio.h SEXTAE AUCTAE): fenestra cum segmento sextae
+ * auctae et basso in VI minoris / bVI maioris (tonica + VIII) - It
+ * {0,4,10}, Fr {0,4,6,10}, Ger {0,4,7,10} a basso */
+interior vacuum
+_sextam_auctam_legere (
+        constans Carmen* carmen,
+    constans Explicatio* e,
+                    i32  f,
+          FunctioGradus* g)
+{
+     constans Acordum* h = &e->fenestrae[f].harmonia;
+               Clavis  k;
+                  b32  praevia;
+                  i32  rel    = ZEPHYRUM;
+                  b32  aucta  = FALSUM;
+                  i32  i;
+                  s32  c;
+
+    per (i = ZEPHYRUM; i < e->numerus_segmentorum; i++)
+    {
+        si (   (i32)e->segmenta[i].fenestra == f
+            && e->segmenta[i].genus         == EXPLICATIO_SEXTA_AUCTA)
+        {
+            aucta = VERUM;
+        }
+    }
+    k = _clavis_fenestrae(carmen, e, f, &praevia);
+    si (   !aucta
+        || _modulus((s32)h->bassus - k.tonica, XII) != VIII)
+    {
+        redde;
+    }
+    per (c = ZEPHYRUM; c < XII; c++)
+    {
+        si (h->classes & ((i32)I << c))
+        {
+            rel |= (i32)I << _modulus(c - (s32)h->bassus, XII);
+        }
+    }
+    si (rel == ((i32)I | ((i32)I << IV) | ((i32)I << X)))
+    {
+        strcpy(g->numeralis, "It+6");
+    }
+    alioquin si (rel == ((i32)I | ((i32)I << IV) | ((i32)I << VI)
+                         | ((i32)I << X)))
+    {
+        strcpy(g->numeralis, "Fr+6");
+    }
+    alioquin si (rel == ((i32)I | ((i32)I << IV) | ((i32)I << VII)
+                         | ((i32)I << X)))
+    {
+        strcpy(g->numeralis, "Ger+6");
+    }
+    alioquin
+    {
+        redde;
+    }
+    g->gradus      = VI;
+    g->alteratio   = _scala(&k)[V] == VIII ? ZEPHYRUM : -I;
+    g->applicata   = ZEPHYRUM;
+    g->substituta  = FALSUM;
+}
+
+/* index in Carmen.claves clavis ad pulsum; -1 nulla */
+interior s32
+_index_clavis (
+    constans Carmen* carmen,
+                s64  pulsus)
+{
+    s32 index = -I;
+    i32 i;
+
+    per (i = ZEPHYRUM; i < carmen->numerus_clavium; i++)
+    {
+        si (carmen->claves[i].pulsus <= pulsus)
+        {
+            index = (s32)i;
+        }
+    }
+    redde index;
+}
+
+/* clavis lectionis fenestrae et index eius in Carmen.claves (praevia:
+ * clavis fenestrae sonantis proximae) */
+interior Clavis
+_clavis_lectionis (
+        constans Carmen* carmen,
+    constans Explicatio* e,
+                    i32  f,
+                    s32* index)
+{
+       b32 praevia;
+    Clavis k = _clavis_fenestrae(carmen, e, f, &praevia);
+
+    *index = _index_clavis(carmen, praevia
+        ? e->fenestrae[_proxima_sonans(e, f)].initium
+        : e->fenestrae[f].initium);
+    redde k;
+}
+
+interior b32
+_claves_aequales (
+    constans Clavis* a,
+    constans Clavis* b)
+{
+    redde a->tonica == b->tonica && a->minor == b->minor
+        && a->modus == b->modus;
+}
+
+/* mutationes clavis et acorda communia (functio.h MUTATIO CLAVIS) */
+interior vacuum
+_communia (
+         constans Carmen* carmen,
+     constans Explicatio* e,
+                 Functio* functio)
+{
+    Clavis prior  = _clavis(carmen, ZEPHYRUM);
+       s32 b      = -I;
+       i32 f;
+
+    per (f = ZEPHYRUM; f < e->numerus_fenestrarum; f++)
+    {
+        Clavis k;
+           s32 index;
+           s32 x = -I;
+           s32 p = -I;
+           i32 j;
+
+        functio->gradus[f].clavis_nova = -I;
+        si (e->fenestrae[f].harmonia.genus == ACORDUM_NULLA)
+        {
+            perge;
+        }
+        k = _clavis_lectionis(carmen, e, f, &index);
+        si (!_claves_aequales(&k, &prior))
+        {
+            /* prima aliena clavis veteris ab ultima eius, non ultra
+             * mutationem proximam */
+            per (j = b >= ZEPHYRUM ? (i32)b : f;
+                 b >= ZEPHYRUM && j < e->numerus_fenestrarum; j++)
+            {
+                Clavis alia;
+                   s32 ij;
+
+                si (e->fenestrae[j].harmonia.genus == ACORDUM_NULLA)
+                {
+                    perge;
+                }
+                alia = _clavis_lectionis(carmen, e, j, &ij);
+                si (j >= f && !_claves_aequales(&alia, &k))
+                {
+                    frange;
+                }
+                si (!_diatonicum(&prior,
+                    e->fenestrae[j].harmonia.classes))
+                {
+                    x = (s32)j;
+                    frange;
+                }
+                p = (s32)j;
+            }
+            /* x prima aliena; p ante eam (ab ultima veteris), si x
+             * ultima veteris ipsa est p nullum */
+            si (   x >= ZEPHYRUM && p >= ZEPHYRUM
+                && _diatonicum(&k, e->fenestrae[p].harmonia.classes))
+            {
+                FunctioGradus  alter;
+                FunctioGradus* g = &functio->gradus[p];
+
+                memset(&alter, ZEPHYRUM, magnitudo(alter));
+                g->communis_vetus = p >= (s32)f;
+                _gradum_scribere(g->communis_vetus ? &prior : &k,
+                                 &e->fenestrae[p], &alter, FALSUM);
+                strcpy(g->communis, alter.numeralis);
+                g->clavis_nova = index;
+            }
+            alioquin
+            {
+                functio->gradus[f].clavis_nova = index;
+            }
+        }
+        prior  = k;
+        b      = (s32)f;
+    }
+}
+
 interior b32
 _dominans (
     constans FunctioGradus* g,
@@ -612,6 +874,12 @@ functio_carminis (
     {
         _substitutam_legere(carmen, e, f, &functio->gradus[f]);
     }
+    /* sextae auctae: post substitutas (F7 cum D# -> E non subV) */
+    per (f = ZEPHYRUM; f < e->numerus_fenestrarum; f++)
+    {
+        _sextam_auctam_legere(carmen, e, f, &functio->gradus[f]);
+    }
+    _communia(carmen, e, functio);
     /* clausulae: adventus et fenestra prior (fenestrae semper
      * contiguae) */
     per (f = I; f < e->numerus_fenestrarum; f++)
@@ -679,32 +947,26 @@ functio_clausulae_titulus (
     redde (i32)clausula < VI ? CLAUSULAE[clausula] : NIHIL;
 }
 
-/* "G: " / "e: " - clavis carminis ad pulsum, maior littera magna */
+/* "G: " / "e: " - clavis carminis indicis dati, maior littera magna */
 interior b32
 _clavem_scribere (
        constans Carmen* carmen,
-                   s64  pulsus,
+                   s32  index,
      ChordaAedificator* textus)
 {
-     constans CarmenClavis* k = NIHIL;
+     constans CarmenClavis* k;
         constans character* t;
-                       i32  i;
                        b32  bene;
 
-    per (i = ZEPHYRUM; i < carmen->numerus_clavium; i++)
-    {
-        si (carmen->claves[i].pulsus <= pulsus)
-        {
-            k = &carmen->claves[i];
-        }
-    }
-    si (k == NIHIL)
+    si (index < ZEPHYRUM || index >= (s32)carmen->numerus_clavium)
     {
         redde VERUM;
     }
-    t     = partitura_clavis_littera(k);
+    k = &carmen->claves[index];
+    t = partitura_clavis_littera(k);
     bene  = chorda_aedificator_appendere_character(textus,
-        k->minor ? t[ZEPHYRUM] : (character)(t[ZEPHYRUM] - 'a' + 'A'));
+        k->minor || k->modus == II || k->modus == III || k->modus == VI
+            ? t[ZEPHYRUM] : (character)(t[ZEPHYRUM] - 'a' + 'A'));
     bene  = chorda_aedificator_appendere_literis(textus, t + I) && bene;
     redde chorda_aedificator_appendere_literis(textus, ": ") && bene;
 }
@@ -739,16 +1001,25 @@ functio_lineam_scribere (
                 && bene;
         }
         primum  = FALSUM;
-        si (   g->praevia
-            && _proxima_sonans(fx->explicatio, f) < fx->numerus)
+        /* commune: "vetus=Clavis: nova"; mutatio: "Clavis: nova" */
+        si (g->communis[ZEPHYRUM] != '\0')
         {
-            bene = _clavem_scribere(carmen,
-                fx->explicatio->fenestrae[
-                    _proxima_sonans(fx->explicatio, f)].initium, textus)
+            bene = chorda_aedificator_appendere_literis(textus,
+                g->communis_vetus ? g->communis : g->numeralis) && bene;
+            bene = chorda_aedificator_appendere_character(textus, '=')
                 && bene;
+            bene = _clavem_scribere(carmen, g->clavis_nova, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                g->communis_vetus ? g->numeralis : g->communis) && bene;
         }
-        bene    = chorda_aedificator_appendere_literis(textus,
-            g->numeralis) && bene;
+        alioquin
+        {
+            bene = _clavem_scribere(carmen, g->clavis_nova, textus)
+                && bene;
+            bene = chorda_aedificator_appendere_literis(textus,
+                g->numeralis) && bene;
+        }
         bene = chorda_aedificator_appendere_character(textus, ':')
             && bene;
         bene = partitura_valorem_scribere(ad - w->initium, textus)

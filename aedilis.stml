@@ -35,6 +35,7 @@
     <via (>crusta/fontes
     <via (>oratio/fontes
     <via (>html/fontes
+    <via (>xml/fontes
   </inclusa>
   <vexilla>
     <vexillum! (>-std=c89

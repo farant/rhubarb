@@ -61,6 +61,16 @@ nomen structura {
                          i32  addressus_numerus;
     /* https: ancora TLS (TlsOptiones.ancora_via); NIHIL = systema */
          constans character* tls_ancora_via;
+    /* redirectiones sequendae (301, 302, 303, 307, 308 cum Location;
+     * Location relativa contra URL currentem solvitur); 0 = nullae -
+     * responsum 3xx redditur ut est (mos hodiernus). Ultra -> IRRITA,
+     * HTTP_ERROR_REDIRECTIO. 303, et 301/302 post methodum non
+     * GET/HEAD -> GET sine corpore; 307/308 methodum et corpus
+     * servant. Capita petitionis transeunt, nisi Authorization et
+     * Cookie ad originem aliam (schema, hospes, portus). Origo eadem
+     * = addressus iam resoluti iterum adhibentur. Corpus 3xx numquam
+     * in rivo (rivus solum 2xx). */
+                         i32 redirectiones_maximae;
 } HttpVocatioOptiones;
 
 /* vocatio incipit; optiones NIHIL = ordinariae. NIHIL solum si
@@ -88,6 +98,13 @@ http_vocatio_finita (
  * totum); aliter error + descriptio, responsum NIHIL (R7) */
 HttpResultus
 http_vocatio_resultus (
+    constans HttpVocatio* vocatio);
+
+/* URL petitionis currentis: post redirectiones ultimae, sine eis
+ * petitionis datae ("http[s]://hospes[:portus]/via?quaestio";
+ * portus ordinarius omittitur). Valet etiam ante finem. */
+chorda
+http_vocatio_url (
     constans HttpVocatio* vocatio);
 
 /* idempotens, synchronus: finis (ABRUPTA) ANTE reditum vocatur */

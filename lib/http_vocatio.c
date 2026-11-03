@@ -4,6 +4,9 @@
 #include "nomina.h"
 #include "tcp.h"
 #include "tls.h"
+#include "uri.h"
+#include "chorda_aedificator.h"
+#include <stdio.h>
 #include <string.h>
 
 #define HTTP_VOCATIO_CAPSA             (XVI * MXXIV)
@@ -54,6 +57,9 @@ structura HttpVocatio {
                chorda  descriptio_pendens;
          HttpResultus  resultus;
                   b32  finita;
+                  i32  redirectiones_maximae;
+                  i32  redirectiones;       /* secutae hactenus */
+               chorda  url;                 /* petitionis currentis */
 };
 
 interior vacuum
@@ -383,6 +389,195 @@ _mittere (
     _fossam_ponere(v, REACTOR_LEGERE);
 }
 
+/* "schema://hospes[:portus]via" - portus ordinarius omittitur */
+interior chorda
+_url_petitionis (
+    HttpPetitio* petitio,
+        Piscina* piscina)
+{
+    HttpPetitioVisus  vis = http_petitio_visus(petitio);
+   ChordaAedificator* aed = chorda_aedificator_creare(piscina, CXXVIII);
+            character  numerus[XVI];
+                  b32  https;
+
+    https = http_petitio_est_https(petitio);
+    chorda_aedificator_appendere_literis(aed, https ? "https://"
+        : "http://");
+    chorda_aedificator_appendere_chorda(aed, vis.hospes);
+    si (vis.portus != (https ? CDXLIII : LXXX))
+    {
+        sprintf(numerus, ":%u", (insignatus integer)vis.portus);
+        chorda_aedificator_appendere_literis(aed, numerus);
+    }
+    chorda_aedificator_appendere_chorda(aed, vis.via);
+    redde chorda_aedificator_finire(aed);
+}
+
+interior b32
+_titulus_est (
+                chorda  titulus,
+    constans character* nomen_capitis,
+               Piscina* piscina)
+{
+    redde chorda_aequalis_case_insensitivus(titulus,
+        chorda_ex_literis(nomen_capitis, piscina));
+}
+
+interior b32
+_origo_eadem (
+    HttpPetitio* a,
+    HttpPetitio* b,
+        Piscina* piscina)
+{
+    HttpPetitioVisus va = http_petitio_visus(a);
+    HttpPetitioVisus vb = http_petitio_visus(b);
+
+    (vacuum)piscina;
+    redde http_petitio_est_https(a) == http_petitio_est_https(b)
+        && va.portus == vb.portus
+        && chorda_aequalis_case_insensitivus(va.hospes, vb.hospes);
+}
+
+/* vocatio de novo incipit cum petitione nova (redirectio): connexio
+ * vetus dimittitur; origo eadem = addressus resoluti iterum */
+interior vacuum
+_iterum_incipere (
+    HttpVocatio* v,
+    HttpPetitio* nova,
+            b32  origo_eadem)
+{
+    chorda error = _vacua();
+
+    _connexionem_dimittere(v);
+    _moram_gradus_tollere(v);
+    v->petitio    = nova;
+    v->url        = _url_petitionis(nova, v->piscina);
+    v->est_https  = http_petitio_est_https(nova);
+    v->octeti     = http_petitio_octeti(nova);
+    v->missa      = ZEPHYRUM;
+    v->lector         = http_lector_creare(v->piscina,
+        http_petitio_methodus(nova), _rivus_custos, v);
+    v->error_ultimus  = _vacua();
+    v->status         = HTTP_VOCATIO_NOMINA;
+    _moram_ponere(v, v->mora_connexionis_ms);
+    si (origo_eadem && v->addressus_numerus > ZEPHYRUM)
+    {
+        v->addressus_index = ZEPHYRUM;
+        _moram_gradus_ponere(v, ZEPHYRUM);
+        redde;
+    }
+    v->addressus_numerus  = ZEPHYRUM;
+    v->addressus_index    = ZEPHYRUM;
+    v->quaestio = nomina_quaerere_incipere(v->reactor,
+        chorda_ex_literis(
+        http_petitio_hospes(nova), v->piscina),
+        http_petitio_portus(nova),
+        _nomina_finis, v, v->piscina, &error);
+    si (!v->quaestio)
+    {
+        _errorem_differre(v, HTTP_ERROR_CONNEXIO, error);
+    }
+}
+
+/* responsum finitum redirectio sequenda? VERUM = vocatio eam
+ * tractavit (iterum incepta aut errore finita); FALSUM = responsum
+ * reddendum ut est */
+interior b32
+_redirectionem_sequi (
+    HttpVocatio* v)
+{
+      HttpResponsum* r;
+             chorda  locus;
+                Uri  basis;
+                Uri* novus;
+             chorda  url_nova;
+        HttpPetitio* nova;
+   HttpPetitioVisus  vis;
+       HttpMethodus  methodus;
+                b32  in_get;
+                b32  origo_eadem;
+                i32  k;
+
+    r = http_lector_responsum(v->lector);
+    si (   v->redirectiones_maximae == ZEPHYRUM || !r
+        || !(r->status == CCCI || r->status == CCCII
+             || r->status == CCCIII || r->status == CCCVII
+             || r->status == CCCVIII))
+    {
+        redde FALSUM;
+    }
+    locus = http_responsum_caput(r, "Location");
+    si (locus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (v->redirectiones >= v->redirectiones_maximae)
+    {
+        _finire(v, HTTP_VOCATIO_IRRITA, HTTP_ERROR_REDIRECTIO,
+            chorda_ex_literis("nimis redirectiones", v->piscina));
+        redde VERUM;
+    }
+    novus = uri_parse(chorda_ut_cstr(v->url, v->piscina), &basis,
+        v->piscina) ? uri_resolvere(&basis, locus, v->piscina) : NIHIL;
+    url_nova  = novus ? uri_construere(novus, v->piscina) : _vacua();
+    vis       = http_petitio_visus(v->petitio);
+    methodus  = vis.methodus;
+    in_get   = r->status == CCCIII || ((r->status == CCCI
+        || r->status == CCCII) && methodus != HTTP_GET
+        && methodus != HTTP_HEAD);
+    si (in_get && methodus != HTTP_HEAD)
+    {
+        methodus = HTTP_GET;
+    }
+    nova = url_nova.mensura > ZEPHYRUM ? http_petitio_creare(v->piscina,
+        methodus, chorda_ut_cstr(url_nova, v->piscina)) : NIHIL;
+    si (!nova)
+    {
+        _finire(v, HTTP_VOCATIO_IRRITA, HTTP_ERROR_REDIRECTIO,
+            chorda_concatenare(chorda_ex_literis("Location invalida: ",
+            v->piscina), locus, v->piscina));
+        redde VERUM;
+    }
+    origo_eadem = _origo_eadem(v->petitio, nova, v->piscina);
+    per (k = ZEPHYRUM; k < vis.capita_numerus; k++)
+    {
+        chorda titulus = vis.capita[k].titulus;
+
+        si (   _titulus_est(titulus, "Host", v->piscina)
+            || (in_get && (_titulus_est(titulus, "Content-Type",
+                v->piscina) || _titulus_est(titulus, "Content-Length",
+                v->piscina)))
+            || (!origo_eadem && (_titulus_est(titulus, "Authorization",
+                v->piscina) || _titulus_est(titulus, "Cookie",
+                v->piscina))))
+        {
+            perge;
+        }
+        http_petitio_caput_addere(nova, chorda_ut_cstr(titulus,
+            v->piscina), chorda_ut_cstr(vis.capita[k].valor,
+            v->piscina));
+    }
+    si (!in_get && vis.corpus.mensura > ZEPHYRUM)
+    {
+        http_petitio_corpus_ponere_chorda(nova, vis.corpus);
+    }
+    http_petitio_tempus_ponere(nova, vis.tempus_ms);
+    v->redirectiones++;
+    _iterum_incipere(v, nova, origo_eadem);
+    redde VERUM;
+}
+
+/* responsum integrum: redirectio aut finis */
+interior vacuum
+_responsum_finitum (
+    HttpVocatio* v)
+{
+    si (!_redirectionem_sequi(v))
+    {
+        _finire(v, HTTP_VOCATIO_FINITA, HTTP_OK, _vacua());
+    }
+}
+
 /* legere USQUE AD ITERUM: SecureTransport octetos decryptos tenere
  * potest quos fossa iam non nuntiat */
 interior vacuum
@@ -406,7 +601,7 @@ _legere (
             }
             si (st == HTTP_LECTOR_FINITUS)
             {
-                _finire(v, HTTP_VOCATIO_FINITA, HTTP_OK, _vacua());
+                _responsum_finitum(v);
                 redde;
             }
             si (st == HTTP_LECTOR_ERROR)
@@ -426,7 +621,7 @@ _legere (
             st = http_lector_finire(v->lector);
             si (st == HTTP_LECTOR_FINITUS)
             {
-                _finire(v, HTTP_VOCATIO_FINITA, HTTP_OK, _vacua());
+                _responsum_finitum(v);
             }
             alioquin
             {
@@ -662,7 +857,10 @@ http_vocare (
             v->conatus[k].fossa = -I;
         }
     }
-    v->error_pendens   = HTTP_OK;
+    v->error_pendens  = HTTP_OK;
+    v->url            = _url_petitionis(petitio, piscina);
+    v->redirectiones_maximae = optiones
+        ? optiones->redirectiones_maximae : ZEPHYRUM;
     v->est_https       = http_petitio_est_https(petitio);
     v->tls_ancora_via  = optiones ? optiones->tls_ancora_via : NIHIL;
     tempus             = http_petitio_tempus(petitio);
@@ -746,4 +944,11 @@ http_vocationem_abrumpere (
     }
     _finire(v, HTTP_VOCATIO_ABRUPTA, HTTP_ERROR_IO, chorda_ex_literis(
         "abruptum", v->piscina));
+}
+
+chorda
+http_vocatio_url (
+    constans HttpVocatio* v)
+{
+    redde v ? v->url : _vacua();
 }

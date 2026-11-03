@@ -1,10 +1,10 @@
 /* plist.h - Tabulae proprietatum (XML property lists): legere,
  * scribere, conferre.
  *
- * Grammatica plist SOLA hic vivit. Stratum XML infra iam escapat et
- * entitates nominatas decodificat (lib/xml.c:564-615, :898-950), ergo
- * haec bibliotheca arborem XmlNodus struit ut scribat et eam ambulat
- * ut legat; prologus et declaratio generis duae lineae literales sunt.
+ * Grammatica plist SOLA hic vivit. Lector super xml_documentum.h
+ * (XML 1.0 plenum: entitates, CDATA, normatio linearum); scriptor
+ * textum directe emittit et & < > ipse effugit. Prologus et declaratio
+ * generis duae lineae literales sunt.
  *
  * Consumptores: fasciculum (Info.plist), postea iura et LaunchAgentes.
  * Specificatio: project-specs/plist-spec.md v1.
@@ -22,6 +22,11 @@
 #include "internamentum.h"
 #include "fasti.h"
 #include "xar.h"
+
+/* Nidi array/dict maximi (radix = I). Lector et scriptor ultra eum
+ * PLIST_ERROR_STRUCTURA reddunt, non ruunt; scriptor ita etiam cyclos
+ * (lista se ipsam continens) recusat. Apple ipse ~512 tolerat. */
+#define PLIST_PROFUNDITAS_MAXIMA DXII
 
 nomen enumeratio {
     PLIST_DICTIO,
@@ -186,8 +191,9 @@ plist_scribere_plagulam (
  * Legere
  * ================================================== */
 
-/* Recusationes SEDEM nominant, non lineam: XmlNodus positionem non
- * fert (include/xml.h:68), ergo semita ut "plist/dict/key[3]". */
+/* Recusationes grammaticae plist SEDEM nominant ut
+ * "plist/dict/key[3]". PLIST_ERROR_XML: causa = diagnostica XML
+ * reddita ('plist:linea:columna: ...'). */
 nomen structura {
      PlistStatus  status;
       PlistValor* radix;   /* NIHIL nisi PLIST_SUCCESSUS */

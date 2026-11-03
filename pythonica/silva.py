@@ -1563,6 +1563,8 @@ PORTAE = {
                r'CRUSTA PROBATIONES: \d+/\d+'),
     'toml': (['./toml/compile_probationes.sh'],
              r'probationes_toml: \d+/\d+ praeteritae'),
+    'xml': (['./xml/compile_probationes.sh'],
+            r'probationes_xml: \d+/\d+ praeteritae'),
     'briar': (['./briar/compile_probationes.sh'],
               r'BRIAR PROBATIONES: \d+/\d+'),
     'oratio': (['./oratio/compile_probationes.sh'],
@@ -1647,6 +1649,10 @@ PORTAE = {
     # porta sua ex clausura qr (2026-10-23)
     'qr-gyrus': (['./probationes/probatio_qr_gyrus.sh'],
                  r'QR GYRUS: (\d+/\d+ legibiles|\d+ ex \d+ FRACTAE)'),
+    # corpus silvestre musicxml (plan musicxml P8): OpenScore CC0 contra
+    # aurum commissum, sub custode X GB; corpus absens = OMISSA nominata
+    'musicxml-oraculum': (['./tools/musicxml_silvestria.sh'],
+                          r'MUSICXML SILVESTRIA: (sana|FRACTA|OMISSA)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],
                       r'aequivalentia: (sana|FRACTA)'),
@@ -1735,6 +1741,7 @@ _ANSI = re.compile(r'\x1b\[[0-9;]*m')
 FORMAE = {'radix': 'radix', 'silva': 'suita', 'css': 'suita',
           'materia': 'suita', 'md': 'suita', 'oratio': 'suita',
           'html': 'suita', 'crusta': 'suita', 'toml': 'suita',
+          'xml': 'suita',
           'briar': 'suita',
           'officina': 'suita', 'gesta': 'suita',
           'tessera': 'suita', 'saltuarius': 'suita',
@@ -2078,6 +2085,7 @@ def porta(nomen, filtrum=None, radix=None, receptum=True, vis=False,
 # umbra, bin/fabrica absens; cursor conversus = ianua tenuis ipsa 'bin/fabrica
 # probare' vocans (cursores ad gradus), oraculum tools/gradus_oraculum.sh.
 PORTAE_GRADUUM = {'toml': 'probationes_toml',
+                  'xml': 'probationes_xml',
                   'css': 'probationes_css',
                   'md': 'probationes_md',
                   'html': 'probationes_html',
@@ -5299,7 +5307,8 @@ def commissio_umbra(nuntius, viae, portae, verificare=True, tectum=1800,
             praef = {'radix': '', 'silva': 'silva.', 'css': 'css.',
                      'materia': 'materia.', 'md': 'md.', 'html': 'html.',
                      'briar': 'briar.', 'crusta': 'crusta.',
-                     'oratio': 'oratio.', 'toml': 'toml.'}.get(nomen)
+                     'oratio': 'oratio.', 'toml': 'toml.',
+                     'xml': 'xml.'}.get(nomen)
             if praef is not None:
                 ss = mensurae(praef, 1, plenae=False)
                 if ss and (time.time() - float(ss[0].mensurae.get('suita.tempus.totum', 0)) > 0):
@@ -5526,6 +5535,7 @@ SUITAE = {
     'html': ('html/probationes', 'html/build/%s'),
     'crusta': ('crusta/probationes', 'crusta/build/%s'),
     'toml': ('toml/probationes', 'toml/build/%s'),
+    'xml': ('xml/probationes', 'xml/build/%s'),
     'briar': ('briar/probationes', 'briar/build/%s'),
     'oratio': ('oratio/probationes', 'oratio/build/%s'),
     'officina': ('officina/probationes', 'officina/build/%s'),

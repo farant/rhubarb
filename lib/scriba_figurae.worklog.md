@@ -65,3 +65,11 @@ Pinned in the terminal replay (probatio_ludus_tessera_scriba): the
 sheet's first column is a space, the margin cells hold frame
 characters; the old placement fails exactly there. The S2 pixel test
 moved the frame check to x = 0 and asserts desk at the old x = 5.
+
+## 2026-10-31 - chronica C6 tag colouring (Opus 5.5)
+
+chronicam_colorare colours <event> / <person> / <place> on book pages
+(accent secondary for good tags, COLOR_ERROR for broken ranges),
+beside nexus_colorare. It scans the whole sheet per paint with
+chronica_eventa_legere + chronica_nomina_legere. Details and pixel-test
+pitfalls are in lib/chronica.worklog.md (2026-10-31).
