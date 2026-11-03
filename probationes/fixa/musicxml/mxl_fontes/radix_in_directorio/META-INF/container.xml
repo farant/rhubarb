@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container>
+  <rootfiles>
+    <rootfile full-path="score/x.musicxml"/>
+    <rootfile full-path="alia.musicxml" media-type="application/vnd.recordare.musicxml+xml"/>
+  </rootfiles>
+</container>

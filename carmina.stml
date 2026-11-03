@@ -477,4 +477,236 @@
       <frustum mensura="1"><textus!>o3 g4 d4 g4 f#4 | g4 d4 o2 g2 | g4 b4 o3 c4 e4 | c4 d4 d2 | o2 g4 e4 a4 o3 d4 | o2 g4 a4 o3 d2 | g8 f#8 e4 o2 b4 o3 c4 | d4 d4 o2 g2</textus></frustum>
     </pars>
   </carmen>
+
+  <!-- laudes_chorus: laudes a choro IV vocum cantatum (superius altus
+       tenor bassus, tabulae formantium vocum suarum); notae eaedem.
+       Generator: build/plantae_s4/choralis/chorus.py -->
+  <carmen titulus="laudes_chorus" stylus="choralis" tempus="69" metrum="4/4"
+          clavis="g maior">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <acorda mensura="1" textus="G D G D/F# | G D7 G:2 | G G/B C Em | Am/C G/D D:2 | G Em Am D | Em/G A7 D:2 | G Em G/B C | G/D D7 G:2"/>
+    <fermata mensura="2" ictus="3"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="6" ictus="3"/>
+    <fermata mensura="8" ictus="3"/>
+    <pars titulus="superius" instrumentum="superius" lucrum="0.5">
+      <frustum mensura="1"><textus!>o4 b4 a4 g4 a4 | b4 o5 c4 o4 b2 | o5 d4 d4 c4 o4 b4 | a4 g4 f#2 | b4 b4 o5 c4 d4 | e4 c#4 d2 | d4 e4 d4 c4 | o4 b4 a4 g2</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="altus" lucrum="0.55">
+      <frustum mensura="1"><textus!>o4 g4 f#4 d4 d4 | g4 f#4 g2 | g4 g4 g4 g8 f#8 | e4 d4 d2 | g4 g4 a4 a4 | b8 a8 g4 f#2 | g4 g4 g4 g4 | g4 f#4 d2</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="tenor" lucrum="0.6">
+      <frustum mensura="1"><textus!>o4 d4 d4 o3 b4 a4 | o4 d4 d4 d2 | o3 b8 o4 c8 d4 e4 e4 | o3 a4 b4 a2 | o4 d4 e4 e4 f#4 | e4 e4 d2 | o3 b4 b4 o4 d4 e4 | d4 c4 o3 b2</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="bassus" lucrum="0.7">
+      <frustum mensura="1"><textus!>o3 g4 d4 g4 f#4 | g4 d4 o2 g2 | g4 b4 o3 c4 e4 | c4 d4 d2 | o2 g4 e4 a4 o3 d4 | o2 g4 a4 o3 d2 | g8 f#8 e4 o2 b4 o3 c4 | d4 d4 o2 g2</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- peregrinatio: choralis IV vocum organo, studium modulationis. D
+       maior (I-IV-V, clausula perfecta m4) -> A maior per acordum
+       commune Bm (vi in D = ii in A, m5) -> E V -> clausula perfecta
+       in A (I64 V7 I, m8) -> D maior per A (I in A = V in D) et A7/G
+       (V42, G naturale) -> clausula perfecta in D (m12). m10 = m2
+       (ascensus iteratus). Stylus choralis. Generator:
+       build/plantae_s4/modulatio/peregrinatio.py -->
+  <carmen titulus="peregrinatio" stylus="choralis" tempus="72"
+          metrum="4/4" clavis="d maior">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <acorda mensura="1" textus="D A/C# D G | D/F# Em A Bm | G D/F# Em A | D A7 D:2 | D G D/F# Bm | E A F#m A/C# | D Bm/D A/E E7 | A | A A7/G D/F# G | D/F# Em A Bm | G Em/G D/A A7 | D"/>
+    <clavis mensura="5" ictus="4" valor="a maior"/>
+    <clavis mensura="9" ictus="2" valor="d maior"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="8"/>
+    <fermata mensura="12"/>
+    <pars titulus="superius" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 f#4 e4 f#4 g4 | a4 b4 o5 c#4 d4 | o4 b4 a4 g4 a4 | f#4 e4 d2 | a4 b4 a4 b4 | b4 o5 c#4 c#4 e4 | d4 o4 b4 o5 c#4 o4 b4 | a1 | o5 c#4 c#4 d4 o4 b4 | a4 b4 o5 c#4 d4 | o4 b4 b4 o5 d4 c#4 | d1</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 d4 o3 a4 o4 d4 d4 | d4 g4 e4 d4 | d4 d4 e4 e4 | d4 c#4 o3 a2 | o4 d4 d4 d4 d4 | e4 e4 f#4 e4 | f#4 f#4 a4 g#4 | e1 | e4 e4 d4 d4 | d4 g4 e4 d4 | d4 e4 f#4 e4 | d1</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o3 a4 e4 a4 b4 | a4 g4 a4 f#4 | g4 a4 b4 o4 c#4 | o3 a4 g4 f#2 | f#4 g4 a4 f#4 | g#4 a4 a4 a4 | a4 b4 o4 e4 d4 | c#1 | o3 a4 a4 a4 g4 | a4 g4 a4 f#4 | g4 b4 a4 g4 | f#1</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o3 d4 c#4 d4 o2 g4 | f#4 e4 a4 b4 | g4 f#4 e4 a4 | o3 d4 o2 a4 o3 d2 | d4 o2 g4 f#4 b4 | e4 a4 f#4 o3 c#4 | d4 d4 e4 e4 | o2 a1 | a4 g4 f#4 g4 | f#4 e4 a4 b4 | g4 g4 a4 a4 | o3 d1</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- peregrinatio_chorus: peregrinatio a choro IV vocum cantatum (superius altus
+       tenor bassus, tabulae formantium vocum suarum); notae eaedem.
+       Generator: build/plantae_s4/choralis/chorus.py -->
+  <carmen titulus="peregrinatio_chorus" stylus="choralis" tempus="72"
+          metrum="4/4" clavis="d maior">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <acorda mensura="1" textus="D A/C# D G | D/F# Em A Bm | G D/F# Em A | D A7 D:2 | D G D/F# Bm | E A F#m A/C# | D Bm/D A/E E7 | A | A A7/G D/F# G | D/F# Em A Bm | G Em/G D/A A7 | D"/>
+    <clavis mensura="5" ictus="4" valor="a maior"/>
+    <clavis mensura="9" ictus="2" valor="d maior"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="8"/>
+    <fermata mensura="12"/>
+    <pars titulus="superius" instrumentum="superius" lucrum="0.5">
+      <frustum mensura="1"><textus!>o4 f#4 e4 f#4 g4 | a4 b4 o5 c#4 d4 | o4 b4 a4 g4 a4 | f#4 e4 d2 | a4 b4 a4 b4 | b4 o5 c#4 c#4 e4 | d4 o4 b4 o5 c#4 o4 b4 | a1 | o5 c#4 c#4 d4 o4 b4 | a4 b4 o5 c#4 d4 | o4 b4 b4 o5 d4 c#4 | d1</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="altus" lucrum="0.55">
+      <frustum mensura="1"><textus!>o4 d4 o3 a4 o4 d4 d4 | d4 g4 e4 d4 | d4 d4 e4 e4 | d4 c#4 o3 a2 | o4 d4 d4 d4 d4 | e4 e4 f#4 e4 | f#4 f#4 a4 g#4 | e1 | e4 e4 d4 d4 | d4 g4 e4 d4 | d4 e4 f#4 e4 | d1</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="tenor" lucrum="0.6">
+      <frustum mensura="1"><textus!>o3 a4 e4 a4 b4 | a4 g4 a4 f#4 | g4 a4 b4 o4 c#4 | o3 a4 g4 f#2 | f#4 g4 a4 f#4 | g#4 a4 a4 a4 | a4 b4 o4 e4 d4 | c#1 | o3 a4 a4 a4 g4 | a4 g4 a4 f#4 | g4 b4 a4 g4 | f#1</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="bassus" lucrum="0.7">
+      <frustum mensura="1"><textus!>o3 d4 c#4 d4 o2 g4 | f#4 e4 a4 b4 | g4 f#4 e4 a4 | o3 d4 o2 a4 o3 d2 | d4 o2 g4 f#4 b4 | e4 a4 f#4 o3 c#4 | d4 d4 e4 e4 | o2 a1 | a4 g4 f#4 g4 | f#4 e4 a4 b4 | g4 g4 a4 a4 | o3 d1</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- lamentatio: choralis IV vocum organo in a minor, studium sextarum
+       auctarum. i V6 i iv6 -> sexta Italica (D -> D# in tenore) -> V;
+       Neapolitana Bb/D -> V7 -> i (Bb -> G# in superiore); sexta
+       Gallica (D D# E in superiore) -> V; sexta Germanica -> i64 ->
+       V7 -> I (tertia Picardiae; i64 quintas Mozartianas vitat).
+       Sextae auctae non declaratae ('r'). Stylus choralis. Generator:
+       build/plantae_s4/sexta_aucta/lamentatio.py -->
+  <carmen titulus="lamentatio" stylus="choralis" tempus="60"
+          metrum="4/4" clavis="a minor">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <acorda mensura="1" textus="Am E/G# Am Dm/F | r:2 E:2 | Am Dm Bb/D:2 | E7:2 Am:2 | Am/C Dm/F r:2 | E | Am F Dm/F r | Am/E E7 A:2"/>
+    <fermata mensura="2" ictus="3"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="6"/>
+    <fermata mensura="8" ictus="3"/>
+    <pars titulus="superius" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o5 c4 o4 b4 a4 a4 | a2 g#2 | o5 c4 d4 o4 b-2 | g#2 a2 | o5 e4 d4 d#2 | e1 | e4 c4 d4 c4 | c4 o4 b4 a2</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o4 e4 e4 e4 d4 | d#2 e2 | e4 f4 d2 | d2 c2 | e4 f4 a2 | g#1 | a4 a4 d4 d#4 | e4 d4 c#2</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o3 a4 b4 o4 c4 o3 a4 | a2 b2 | a4 a4 f2 | e2 e2 | a4 a4 b2 | b1 | o4 c4 c4 o3 a4 a4 | a4 g#4 a2</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="organum" lucrum="0.75">
+      <frustum mensura="1"><textus!>o2 a4 g#4 a4 f4 | f2 e2 | a4 o3 d4 d2 | o2 e2 a2 | o3 c4 f4 f2 | e1 | o2 a4 o3 f4 f4 f4 | e4 e4 o2 a2</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- lamentatio_chorus: lamentatio a choro IV vocum cantatum (superius altus
+       tenor bassus, tabulae formantium vocum suarum); notae eaedem.
+       Generator: build/plantae_s4/choralis/chorus.py -->
+  <carmen titulus="lamentatio_chorus" stylus="choralis" tempus="60"
+          metrum="4/4" clavis="a minor">
+    <reverberatio aula="0.8" mollities="0.5" latitudo="1" lucrum="0.4"/>
+    <acorda mensura="1" textus="Am E/G# Am Dm/F | r:2 E:2 | Am Dm Bb/D:2 | E7:2 Am:2 | Am/C Dm/F r:2 | E | Am F Dm/F r | Am/E E7 A:2"/>
+    <fermata mensura="2" ictus="3"/>
+    <fermata mensura="4" ictus="3"/>
+    <fermata mensura="6"/>
+    <fermata mensura="8" ictus="3"/>
+    <pars titulus="superius" instrumentum="superius" lucrum="0.5">
+      <frustum mensura="1"><textus!>o5 c4 o4 b4 a4 a4 | a2 g#2 | o5 c4 d4 o4 b-2 | g#2 a2 | o5 e4 d4 d#2 | e1 | e4 c4 d4 c4 | c4 o4 b4 a2</textus></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="altus" lucrum="0.55">
+      <frustum mensura="1"><textus!>o4 e4 e4 e4 d4 | d#2 e2 | e4 f4 d2 | d2 c2 | e4 f4 a2 | g#1 | a4 a4 d4 d#4 | e4 d4 c#2</textus></frustum>
+    </pars>
+    <pars titulus="tenor" instrumentum="tenor" lucrum="0.6">
+      <frustum mensura="1"><textus!>o3 a4 b4 o4 c4 o3 a4 | a2 b2 | a4 a4 f2 | e2 e2 | a4 a4 b2 | b1 | o4 c4 c4 o3 a4 a4 | a4 g#4 a2</textus></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="bassus" lucrum="0.7">
+      <frustum mensura="1"><textus!>o2 a4 g#4 a4 f4 | f2 e2 | a4 o3 d4 d2 | o2 e2 a2 | o3 c4 f4 f2 | e1 | o2 a4 o3 f4 f4 f4 | e4 e4 o2 a2</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- primus: cantus modi I (d dorius) sine textu, schola super ison
+       D, metrum liberum (incisa '|', punctum octava; nota ante
+       divisionem longior, spiritus r8 in fine phrasis). Initium D -> A
+       (finalis -> repercussio), b molle (Bb) super A, phrases in A, A,
+       F, D cadunt; subtonium C ante finem. Generator:
+       musica/fontes/primus.py -->
+  <carmen titulus="primus" tempus="80" metrum="liberum" clavis="d dorius">
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <instrumentum titulus="ison_d" basis="schola" vocalis="o"
+        vox="bassus" amplitudo="0.5" ambitus="36..60"/>
+    <pars titulus="cantus" instrumentum="schola" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o4 l8 d e f g a a g4 | a b- a g f g a4. r8 | a o5 c d c o4 a g4 | a o5 c o4 b a g a a4. r8 | f g a g4 | f e d e f g f e f4. r8 | d e f g f e d4 | c d e f4 | e d2.</textus></frustum>
+    </pars>
+    <pars titulus="ison" instrumentum="ison_d" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 d1 & | d1 & d4 | d2. & d8 & | d1 & d4 | d2 & d8 & | d1 & d2 | d1 & | d2 & d8 & | d2. & d8</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- ave: melodia primi (modus I, d dorius, metrum liberum) cum
+       verbis Ave Maria - primum carmen cantatum (carmen.h VERBA).
+       Incisa: Ave Maria | gratia plena, Dominus | tecum, benedicta |
+       tu in mulieribus, et benedictus fructus | ventris tui | Iesus.
+       Melismata in "Ma-ri-a", "ple-na", "Do-mi-nus te-cum".
+       Generator: musica/fontes/ave.py -->
+  <carmen titulus="ave" tempus="80" metrum="liberum" clavis="d dorius">
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <instrumentum titulus="ison_d" basis="schola" vocalis="o"
+        vox="bassus" amplitudo="0.5" ambitus="36..60"/>
+    <pars titulus="cantus" instrumentum="schola" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o4 l8 d e f g a a g4 | a b- a g f g a4. r8 | a o5 c d c o4 a g4 | a o5 c o4 b a g a a4. r8 | f g a g4 | f e d e f g f e f4. r8 | d e f g f e d4 | c d e f4 | e d2.</textus>
+        <verba!>A-ve Ma-ri-a_ _ gra-ti-a ple-na_ _ Do-mi_ _ nus_ te_ _ _ cum_ _ be-ne-dic-ta tu in mu-li-e-ri-bus_ _ et be-ne-dic-tus fruc-tus ven-tris tu-i, Ie-sus.</verba></frustum>
+    </pars>
+    <pars titulus="ison" instrumentum="ison_d" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 d1 & | d1 & d4 | d2. & d8 & | d1 & d4 | d2 & d8 & | d1 & d2 | d1 & | d2 & d8 & | d2. & d8</textus></frustum>
+    </pars>
+  </carmen>
+
+  <!-- salve: Salve Regina, tonus simplex (modus V, f lydius cum b
+       molle: clavis c4, do = F). Fons: Liber Usualis (1961) p. 279,
+       GregoBase 2435 (transcriptio Andrew Hinkley). Rhythmus
+       Solesmensis: punctum octava, mora x2, episema x1.5, nota ante
+       quilisma x1.5, unisoni ligati; divisiones '|' cum spiritu (minor
+       r16, maior r8). Schola sola. Generator:
+       musica/fontes/salve.py -->
+  <carmen titulus="salve" tempus="80" metrum="liberum" clavis="f lydius">
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <pars titulus="cantus" instrumentum="schola" lucrum="1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 f8 a8 o4 c8 d8 c4 d8 f8 e8 d8 c8 d8 c8 c4 r16 | f8 c8 d8 o3 b-4 g4 r16 | a8 b-8 o4 c8 o3 a8 a8 g8 f4 r8 | o4 c8 d8 e8 f8 c4 r16 | d8 e8 f8 e8 d8 c8 d8 c4 r8 | f8 c8 d8 o3 b-8 g8 a8. r16 | a8 o4 c8 d8 f8 d8 c8. r16 | d8 c8 o3 b-8 a8 g8 a8 g8 f4 r8 | o4 c8 d8 e8 f8. c8 d8 f8 e8 d8 c4 r16 | f8 c8 d8 o3 b-8. g8 a8 b-8 o4 c8 o3 b-8 o4 d8 c8 c8. r16 | o3 b-8 a8 g8 a8 g8 f4 r8 | o4 c8 d8 e8 f4 e8 c8 d8 c8 c8 d8 f8 e8 d8 c4 r16 | o3 f8 o4 c8. d8 f8 e8 d8 c8 o3 a8. b-8 a8 g8 f4 r8 | a8. b-8 o4 c8 o3 a4 f4 r8 | o4 c8. d8 e8 f8 e8 d8 c8 c4 r8 | f4. c8 d8 o3 b-4 g8 a8 b-8 o4 c8. r16 | o3 f8 b-8 a8 g8 f8 f4</textus>
+        <verba!>Sal-ve Re-gi-na ma-ter mi-se-ri-cor-di-ae Vi-ta dul-ce-do et spes no-stra sal _-ve Ad te cla-ma-mus ex-su-les fi-li-i He-vae Ad te sus-pi-ra-mus ge-men-tes et flen-tes in hac la-cri-ma-rum val-le E-ia er-go Ad-vo-ca-ta no-stra il-los tu-os mi-se-ri-cor-des o-cu-los ad nos con-ver _-te Et Je _-sum be-ne-di-ctum fru-ctum ven-tris tu-i no-bis post hoc ex-si-li-um os-ten _-de O _ _ cle-mens O _ _ _ _ pi _-a O _ _ _ _ dul _-cis Vir-go Ma-ri _-a</verba></frustum>
+    </pars>
+  </carmen>
+
+  <!-- nata_lux: Thomas Tallis, O nata lux de lumine (hymnus ad Laudes
+       in Transfiguratione; Cantiones sacrae 1575), V voces SATTB a
+       cappella. Fons: editio Andrew Sims (CPDL #80317, 2024, sine
+       lineis mensurae, licentia CPDL), MusicXML. Incisa = versus
+       hymni; versus ultimi (Nos membra ... corporis) repetuntur ut in
+       editione. Finis in G maiore (B naturalis alti: tertia
+       Picardiae). Generator: musica/fontes/nata_lux.py -->
+  <carmen titulus="nata_lux" tempus="72" metrum="liberum" clavis="g dorius">
+    <instrumentum titulus="altus" basis="schola" vox="altus"/>
+    <instrumentum titulus="bassus" basis="schola" vox="bassus"/>
+    <instrumentum titulus="superius" basis="schola" vox="superius"/>
+    <instrumentum titulus="tenor" basis="schola" vox="tenor"/>
+    <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
+    <pars titulus="superius" instrumentum="superius" lucrum="0.75" positio="-0.3"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o5 d4 e-4 c4 d2. o4 a4 b-4 g4 a2 | o5 e4 f4 d4 e2 c4 d4 o4 b-4 a2 g2 r4 | o5 d4 c4 o4 a4 b-2. b-4 a4 a4 g4. f8 g8 | a8 b-4 o5 c4 c4 d2. o4 b-4 o5 c4 c4 d2 r4 | f4 e-4 c4 d2. d4 c4 o4 a4 b-2. | a4 g4 e4 a2. o5 d4 d4 c+4 d2 r4 | o4 a4 a4 g4 a2. a4 a4 g4 a2. | o5 d4 o4 a4 b-4 a2 g4 g2 f+4 g2. | a4 a4 g4 a2. a4 a4 g4 a2. | o5 d4 o4 a4 b-4 a2 g4 g2 f+4 g2.</textus>
+        <verba!>O na-ta lux de lu-mi-ne Je-su re-demp-tor sae-cu _ li di-gna-re cle-mens sup-pli-cum _ _ lau _ des pre-ces que su-me-re Qui car-ne quon-dam con-te-gi di-gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris</verba></frustum>
+    </pars>
+    <pars titulus="altus" instrumentum="altus" lucrum="0.75" positio="0.3"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o4 g4 g4 g4 f4. e8 d4 d4 d4 d4 e4. d8 | c+4 o5 c4 o4 b-4 b-4 a2 a4 g2 f+4 g2 r4 | d4 e4 f4 g2. d4 f4 f4 e-2 & e-8 & | e-8 o3 b-4 o4 e-4 e-4 d4. e-8 f4 g4 g4 c4 f2 r4 | f4 g4 a4 b-2. f4 a4 a4 g2. | d4 e4 e4 f4. e8 f8 g8 a4 g4 e4 f+2 r4 | f4 f4 d4 f2. f4 f4 d4 f2. | f4 f4 d4 f2 e-2 d4 d4 o3 b2. | o4 f4 f4 d4 f2. f4 f4 d4 f2. | f4 f4 d4 f2 e-2 d4 d4 o3 b2.</textus>
+        <verba!>O na-ta lux _ _ de lu-mi-ne _ _ Je-su re-demp-tor sae-cu-li di-gna-re cle-mens sup-pli-cum lau-des pre-ces _ _ que su-me-re Qui car-ne quon-dam con-te-gi di-gna-tus es _ _ pro _ per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor-po-ris</verba></frustum>
+    </pars>
+    <pars titulus="tenor_primus" instrumentum="tenor" lucrum="0.75" positio="-0.1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 b-4 o4 c4 o3 g4 a4. g8 f4 f4 d4 o4 d4 c+4. o3 b8 | a2 o4 f4 g4 e4 f2 o3 b-4 o4 d4 d4 d2 r4 | o3 b-4 a4 a4 g2. b-4 o4 c4 d4 o3 g4. a8 b-8 & | b-8 b-4 b-4 a4 b-2. b-4 o4 e-4 e-4 d2 r4 | d4 c4 c4 o3 b-4. o4 c8 d4. e-8 f4 f4 d2. | o3 a4 b4 o4 c+4 d2. d4 e4 e4 d2 r4 | d4 d4 d4 d2. d4 d4 d4 d2. | d4 d4 o3 b-4 o4 d4. c8 o3 b-4 o4 c4 o3 a4 a4 g2. | o4 d4 d4 d4 d2. d4 d4 d4 d2. | d4 d4 o3 b-4 o4 d4. c8 o3 b-4 o4 c4 o3 a4 a4 g2.</textus>
+        <verba!>O na-ta lux _ _ de lu-mi-ne _ _ Je-su re-demp-tor sae-cu-li di-gna-re cle-mens sup-pli-cum _ _ lau-des pre-ces que su-me-re Qui car-ne quon-dam _ con _ te-gi di-gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti _ cor _ po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti _ cor _ po-ris</verba></frustum>
+    </pars>
+    <pars titulus="tenor_secundus" instrumentum="tenor" lucrum="0.75" positio="0.1"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 g4 g4 c4 f4. g8 a4 a4 g4 g4 e2 | r4 o4 c4 d4 o3 b-4 o4 c2 o3 a4 o4 d4. c8 o3 a4 b2 r4 | g4 g4 f4 d2 g2 a4 f4 b-4. a8 g8 & | g8 f4 e-4 c4 f2 f4 b-2 a4 b-2 r4 | b-4 a4 a4 f2 b-2 o4 c4 d4 o3 b-4. a8 b-8 o4 c8 | d4 o3 g4 g4 a2. a4 b-4 o4 c4 o3 a2 r4 | a4 a4 b-4 a2. a4 a4 b-4 a2. | a4 a4 g4 f2 g4 e-4 f4. e-8 d2. | a4 a4 b-4 a2. a4 a4 b-4 a2. | a4 a4 g4 f2 g4 e-4 f4. e-8 d2.</textus>
+        <verba!>O na-ta lux _ _ de lu-mi-ne Je-su re-demp-tor sae-cu _ li di-gna-re cle-mens sup-pli-cum _ _ lau-des pre-ces que su-me-re Qui car-ne quon-dam con-te-gi _ _ di _ gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris</verba></frustum>
+    </pars>
+    <pars titulus="bassus" instrumentum="bassus" lucrum="0.75" positio="0"
+          reverberatio="0.55">
+      <frustum mensura="1"><textus!>o3 g4 c4 e-4 d2. d4 o2 g4 b-4 a2 & | a4 o3 a4 b-4 g4 a2 f4 g4 d2 o2 g2 r4 | b-4 o3 c4 d4 o2 g2 g4 o3 g4 f4 d4 e-2 & e-8 & | e-8 d4 c4 c4 o2 b-4. o3 c8 d4 e-4 c4 c4 o2 b-2 r4 | o3 d4 e-4 f4 o2 b-2 b-4 o3 b-4 a4 f4 g2. | f4 e4 e4 d2. f4 g4 a4 d2 r4 | d4 f4 g4 d2. d4 f4 g4 d2. | d4 d4 g4 d2 e-4 c4 d4 d4 o2 g2. | o3 d4 f4 g4 d2. d4 f4 g4 d2. | d4 d4 g4 d2 e-4 c4 d4 d4 o2 g2.</textus>
+        <verba!>O na-ta lux de lu-mi-ne Je-su re-demp-tor sae-cu-li di-gna-re cle-mens sup _ pli-cum lau-des pre-ces _ _ que su-me-re Qui car-ne quon-dam con _ te-gi di-gna-tus es pro per-di-tis Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris Nos mem-bra con-fer ef-fi-ci tu-i be-a-ti cor _ po-ris</verba></frustum>
+    </pars>
+  </carmen>
 </carmina>

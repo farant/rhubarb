@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- reticulum_tacitum: divisions 11, nota 5/11 quartae = 436.36 pulsus -> 436 (longitudo MML dicibilis) - approximatio tamen nominanda (M5), numquam rotundatio tacita -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Tibia</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>11</divisions><time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>5</duration></note>
+      <note><rest/><duration>39</duration></note>
+    </measure>
+  </part>
+</score-partwise>

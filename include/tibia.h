@@ -36,7 +36,23 @@
  *             formantes vocalis (tabula tenoris Csound: a e i o u);
  *             vocalis fracta formantes inter vicinas linealiter ducit.
  *             Formantes fixi (vocalis), non notam sequuntur - vox
- *             cantans (schola)
+ *             cantans (schola). Tabula formantium per VOCEM (Csound
+ *             "Formant Values"): tenor (ordinaria), bassus, altus,
+ *             superius (soprano) - vocis gravioris formantes
+ *             humiliores (a: bassus 600, tenor 650, altus et superius
+ *             800 cycli/s); vocalis intra tabulam vocis fractionem
+ *             servat.
+ * AEQUATIO (FORMANTES): lucrum per notam (TibiaVox.aequatio) ita
+ *             ponitur ut serra notae (exemplar unum) per formantes
+ *             vocalis efficacem 0.29 x amplitudo habeat, quacumque
+ *             vocali, voce, nota (sine aequatione +/- XI dB per
+ *             C3..D5: harmonica in formantem cadens resonat). Potentia
+ *             ex responsione colorum ad harmonicas notae usque ad
+ *             Nyquist computatur, semel per notam (non per exemplum);
+ *             aequatio non ultra x4 (+12 dB) supra lucrum commune
+ *             formantium. Glissando: aequatio ad notam metam cum
+ *             altitudine linealiter ducitur; saltus (quadra 0) per V
+ *             ms. Vibratus non aequatur (nota nominalis).
  * UNISONUS (UNDA, FORMANTES): unda in 'unisonus' exemplaria (I..VII)
  * per 'dispersio' centesimas semitonii aequaliter dispersa (+/-
  * dimidium), phasis initii 0 omnibus (phases dispersae fundamentalem
@@ -120,6 +136,9 @@ nomen structura {
                                       * semitonii (+/- dimidium) */
                     f32 mora_vibrati; /* secundae ad vibratum plenum (0
                                        * = statim) */
+                    f32 vox;         /* FORMANTES: tabula vocis - 0
+                                      * tenor (ordinaria), 1 bassus,
+                                      * 2 altus, 3 superius */
 } TibiaParametra;
 
 nomen enumeratio {
@@ -165,6 +184,12 @@ nomen structura {
                 f32 detrimenta[TIBIA_PARTIALES_NUMERUS];
       SonusResonans formantes[TIBIA_FORMANTES_NUMERUS];
                 f32 lucra_formantium[TIBIA_FORMANTES_NUMERUS];
+                /* AEQUATIO: lucrum currens, meta, passus, quadra
+                 * reliqua (FORMANTES; ceteris 1) */
+                f32 aequatio;
+                f32 meta_aequationis;
+                f32 passus_aequationis;
+                i32 reliqua_aequationis;
       SonusResonans colum_resonans;
       SonusResonans colum_flatus;
                Sors sors_flatus;

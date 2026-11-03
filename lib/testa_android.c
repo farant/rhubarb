@@ -691,6 +691,8 @@ _initium_facere (
     t->ambitus.densitas              = _densitas(t->activitas);
     t->ambitus.imago_glutinata       = _imaginem_nullam;
     t->ambitus.textum_exportare      = _textum_nullum;
+    /* plan-5 T5: nullum rete adhuc (D10) - reactor et veredarius NIHIL */
+    t->ambitus.machina               = "Android";
     si (!testa_cursum_incipere(&t->cursus, &t->ambitus,
             applicatio_initium, &causa))
     {

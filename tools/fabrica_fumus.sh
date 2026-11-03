@@ -151,6 +151,9 @@
 #        vestigia_umbra.txt: scriptura cruda in plagulam NON secutam
 #        extra aream (c) = discordia vestigii et invalidationis; libro
 #        nominata (a), secuta (b), nulla (d) = concordia
+#   LXX  legentes (budget B9): 'fabrica legentes VIA' - membra quorum
+#        clausura viam continet (ingressus) et actiones quarum
+#        vestigium eam legit (lectio); via nullius: nihil
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # PARS PURA (2026-10-23, desideratum …VXWK8): casus arborem VIVAM
@@ -1331,6 +1334,24 @@ lxix_d=$(awk -F'\t' -v p=fumus-lxix '$1 == "cursus" && $2 == "initium" && $4 == 
 [ "$lxix_d" = "2" ] || lxix_ok=0
 if [ "$lxix_ok" -eq 1 ]; then echo "  LXIX umbra: a/b/d concordes, c discordia vestigii et invalidationis (factum 2) OK"; else echo "  LXIX FRACTUM (factum c: $lxix_d)"; for m in a b c d; do sed "s/^/      $m: /" "$A/probatio_$m/vestigia_umbra.txt" 2>/dev/null || echo "      $m: (nulla plagula)"; done; fracta=1; fi
 
+# LXX (2026-10-27, budget B9 2a): LEGENTES - quis viam legit? membra
+# per CLAUSURAM (ingressus fasciculus: probatio_a bib.h includit,
+# probatio_b non) et actiones per VESTIGIUM (generator g lectiones="verum"
+# dat.txt legit, linea L in fabrica.db). Cohortes interventionum (mensor)
+# titulos affectos ex eo sumunt.
+radix_c
+printf 'datum\n' > "$T/r/dat.txt"
+printf 'D="${FABRICA_SCRIPTURA:-.}"; [ -n "${FABRICA_LECTIONES:-}" ] && printf "L\\tdat.txt\\n" >> "$FABRICA_LECTIONES"; cat dat.txt > "$D/gb"\n' > "$T/r/gen_gb.sh"
+printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n  <actio titulus="g" genus="generator" lectiones="verum">\n    <mandatum>\n      <verbum! (>sh\n      <verbum! (>gen_gb.sh\n    </mandatum>\n    <ingressus genus="fasciculus" via="gen_gb.sh"/>\n    <exitus via="gb" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' > "$T/r/aedificatio.stml"
+(cd "$T/r" && "$F" sanare gb) > "$T/lxx_s" 2>&1
+(cd "$T/r" && "$F" legentes -machina lib/bib.c) > "$T/lxx_1" 2>&1; rc1=$?
+(cd "$T/r" && "$F" legentes -machina dat.txt) > "$T/lxx_2" 2>&1; rc2=$?
+(cd "$T/r" && "$F" legentes -machina nulla.c) > "$T/lxx_3" 2>&1; rc3=$?
+if [ "$rc1" -eq 0 ] && grep -q "^LEGENS	probationes_t/probatio_a	ingressus:" "$T/lxx_1" \
+   && ! grep -q "probationes_t/probatio_b" "$T/lxx_1" \
+   && [ "$rc2" -eq 0 ] && grep -q "^LEGENS	g	lectio:L	dat.txt$" "$T/lxx_2" \
+   && [ "$rc3" -eq 0 ] && ! grep -q "^LEGENS" "$T/lxx_3"; then echo "  LXX  legentes: membrum per clausuram, actio per vestigium, via nullius nihil OK"; else echo "  LXX  FRACTUM (rc=$rc1 $rc2 $rc3)"; sed 's/^/      1: /' "$T/lxx_1" | head -6; sed 's/^/      2: /' "$T/lxx_2" | head -4; sed 's/^/      3: /' "$T/lxx_3" | head -3; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
-echo "fumus fabricae: sanum (pars pura: casus LXIII; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
+echo "fumus fabricae: sanum (pars pura: casus LXIV; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"
 exit 0

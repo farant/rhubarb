@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- nota_una: pars una, mensura una, C4 quarta (divisiones 1); titulus et compositor ex identificatione -->
+<score-partwise version="4.0">
+  <work><work-title>Probatio</work-title></work>
+  <identification><creator type="composer">Anonymus</creator></identification>
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes>
+        <divisions>1</divisions>
+        <time><beats>1</beats><beat-type>4</beat-type></time>
+      </attributes>
+      <note>
+        <pitch><step>C</step><octave>4</octave></pitch>
+        <duration>1</duration><voice>1</voice><type>quarter</type>
+      </note>
+    </measure>
+  </part>
+</score-partwise>

@@ -583,6 +583,12 @@ nomen structura {
      * ceterorum non computantur); ceterae actiones gradus parentes
      * manent sine membris. Vacua (mensura 0, ordinarium) = omnes. */
     chorda gradus_solus;
+    /* MONITUM (parcum …5NQBP): nuntius NON fractus actionis - e.g.
+     * scriptura '~/' extra vestigium quam diarium institutionum
+     * (~/.rhubarb/institutiones.tsv) explicat: institutio aliena (main
+     * post fusionem) dum actio currebat, non actio ipsa. NIHIL licet:
+     * tum nuntius non editur (suturae fictae). */
+    vacuum (*monere)(vacuum* datum, chorda nuntius);
 } FabricaSutura;
 
 /* species viae (sutura->species) */

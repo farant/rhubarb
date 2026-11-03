@@ -1,0 +1,24 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: longitudo mensurae = contentum (pausa mensurae 3 quartae); music21 mensuram II longiorem facit
+P1	0	1/2	71	B	0	0	-
+P1	1/2	1/2	71	B	0	0	-
+P1	1	1/2	71	B	0	0	-
+P1	9/2	1/2	67	G	0	0	-
+P1	9/2	1/2	71	B	0	0	-
+P1	5	1/2	67	G	0	0	-
+P1	5	1/2	71	B	0	0	-
+P1	11/2	1/2	67	G	0	0	-
+P1	11/2	1/2	71	B	0	0	-
+P1	6	1/2	67	G	0	0	-
+P1	6	1/2	71	B	0	0	-
+P1	13/2	1/2	67	G	0	0	-
+P1	13/2	1/2	71	B	0	0	-
+P1	7	1/2	67	G	0	0	-
+P1	7	1/2	71	B	0	0	-
+P1	15/2	1/2	67	G	0	0	-
+P1	15/2	1/2	71	B	0	0	-
+P1	8	1/2	67	G	0	0	-
+P1	8	1/2	71	B	0	0	-
+P1	17/2	1/2	67	G	0	0	-
+P1	17/2	1/2	71	B	0	0	-

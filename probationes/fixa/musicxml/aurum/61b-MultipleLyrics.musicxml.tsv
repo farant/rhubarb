@@ -1,0 +1,11 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# divergentia: lyric number non integer -> versus 0 (exemplar, versus_textus servatur); music21 renumerat
+P1	0	1	67	G	0	0	0:begin:6., 7.TRA|1:begin:1.Tra|2:begin:2.-4./5. tra
+P1	1	1	67	G	0	0	0:middle:LA|1:middle:la|2:middle:la
+P1	2	1	67	G	0	0	0:end:LA,|1:end:la,|2:end:la,
+P1	3	1	67	G	0	0	0:single:JA!|1:single:ja!|2:single:ja!
+P1	4	1	67	G	0	0	-
+P1	5	1	67	G	0	0	0:begin:TRA|1:begin:Tra|2:begin:Tra
+P1	6	1	67	G	0	0	-
+P1	7	1	67	G	0	0	0:end:RA...|1:end:ra...|2:end:ra.

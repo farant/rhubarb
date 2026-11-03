@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- motus_plures: tres motus in fasciculo uno (numeri iterum "1"); motus II "D.C. al Fine" - D.C. ad initium MOTUS, post fine motus III sequitur, cuius repetitio sumitur -> 0 1 2 3 4 2 3 5 6 5 6 -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="1">
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>F</step><octave>4</octave></pitch><duration>2</duration></note>
+      <direction><direction-type><words>Fine</words></direction-type><sound fine="yes"/></direction>
+    </measure>
+    <measure number="3">
+      <note><pitch><step>G</step><octave>4</octave></pitch><duration>2</duration></note>
+      <direction><direction-type><words>Menuetto D.C. al Fine</words></direction-type><sound dacapo="yes"/></direction>
+    </measure>
+    <measure number="1">
+      <barline location="left"><repeat direction="forward"/></barline>
+      <note><pitch><step>A</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>B</step><octave>4</octave></pitch><duration>2</duration></note>
+      <barline location="right"><repeat direction="backward"/></barline>
+    </measure>
+  </part>
+</score-partwise>

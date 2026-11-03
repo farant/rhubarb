@@ -52,6 +52,11 @@ i32
 tls_bearssl_versio (
     TlsBearssl* connexio);
 
+/* ALPN electum (vacua si nullum aut ante pactionem) */
+chorda
+tls_bearssl_protocollum (
+    TlsBearssl* connexio);
+
 TlsGradus
 tls_bearssl_gradus (
     TlsBearssl* connexio);

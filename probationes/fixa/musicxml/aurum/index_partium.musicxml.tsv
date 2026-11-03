@@ -1,0 +1,8 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 non legit - aurum ex probationibus unitatis (probatio_musicxml.c)
+P1	0	1	72	C	0	0	-
+P3	0	1	48	C	0	0	-
+P4	0	1	60	C	0	0	-
+!	monitum	14	7:5
+!	monitum	14	23:3

@@ -1678,3 +1678,94 @@ Size guard ("magnitudo nodi") is now "size == field sum rounded up to pointer al
 hilarius projection pool 72,069 -> 67,435 KiB (16 B x nodes). Today's total: 86.1 -> 65.9 MiB (-23%).
 
 The oratio allocation golden moved by +1 on cicero.txt (`allocationes_arboris` 1186508 -> 1186509), its only change. Controlled experiment (probe build/sonda_partes/sonda_oratio_alloc.c): the same code at 128 B gives 1186509, padded to 144 B gives 1186508. So it is size-dependent arena-boundary drift, the same mechanism as html adversarius_2 (html_arbor.worklog.md 2026-10-22). Golden moved by exactly that number.
+
+## 2026-10-29 — writer: early-exit line count, one-append indentation (budget B1 B5, B9)
+
+`_lineae_contenti` counted every newline of an element's whole content
+only so the pretty printer could compare with STML_CLAUSURA_TACITA_LINEAE
+(30) — O(content × depth). Now `_lineae_excedunt(aed, initium, limes)`
+stops at line limes+1. `_scribere_indentatio` appended "  " once per level
+(strlen + memcpy each); now 2×nivel bytes from a 64-space buffer in
+chunks. Test gap closed: an off-by-one plant on the limit stayed green —
+nothing exercised the boundary. probatio_stml_pulchrum section III now
+finds the boundary (<a> with 20..40 <c/> children) and pins it: 29
+children → '</>', 30 → named; identical with the old stml.c. Plants:
+limit off-by-one → III red; nivel instead of 2×nivel → eventus_stml and
+norma_stml round-trips red.
+
+## 2026-10-30 — raw and escaped writers append by runs (budget B1 B14)
+
+`_crudum_fugatum_scribere` made one 1-byte append and one
+`stml_crudi_sequentia_est` call per byte. `_scribere_evasus` made one
+append per byte. Both now append whole runs. The raw writer's run stops
+at '<' (only there can a closing sequence start) and at '\n' (only
+there does the indentation prefix apply). The escaped writer's run
+stops at `<`, `>` and `&`. Output is identical, and allocation counts
+too: all computus golds pass unchanged.
+
+Coverage gap found by the plant: nothing pinned a MULTILINE raw element
+round trip with more than one line, so "runs stop only at '<'" (prefix
+lost after '\n') passed every stml suite. Added a case to probatio_stml
+section E (`<code!\>` with three lines and a '<' mid-line). The plant
+is now FRACTA there.
+
+## 2026-10-30 — tokenizer moves the cursor by runs (budget B1 B4)
+
+`_tok_legere_textus`, the name loop in `_tok_legere_nomen` and
+`_tok_praeterire_spatium` each called `_tok_aspicere` + `_tok_progredi(1)`
+per byte: two bounds checks and a newline/column branch per byte. Now:
+- text finds the next '<' with memchr;
+- names (never contain '\n') add the run length to the column;
+- whitespace scans to the end of the run.
+All three then call `_tok_saltare(ctx, finis)`, which counts newlines
+with memchr and sets the column from the last newline (1 + bytes
+after it), or adds the run length if there was none. Same tokens,
+lines and columns.
+
+Coverage gap found by the plant: nothing checked token columns after a
+run that crosses newlines ("column += span even after a newline"
+passed every stml suite). Added probatio_stml XIV.F: for every lexema
+of a document whose text and in-tag whitespace cross newlines, line
+and column are recomputed byte by byte from its offset, as a second
+oracle. The plant is now FRACTA there.
+
+## 2026-10-30 — parser trivia interned through a small cache (budget B1 B8)
+
+Pretty-printed arbor STML trivia are almost all "\n" or runs of k
+spaces, and each one paid fnv1a, a probe and a compare in
+`chorda_internare`. `_trivia_internare(ctx, s)` returns a pointer kept
+in `StmlParserContext` (`trivia_nl`, `trivia_spatia[LXIV]`), filled
+lazily through `chorda_internare`, so it is the same canonical pointer
+and the same allocations. Anything else goes straight to
+`chorda_internare`. Used for text spatia_ante/post, the pending
+spatia_ante handed to the next element, and `_spatia_apponere`'s
+first assignment.
+
+Plant note: the idea file suggested "index the cache by len-1". That is
+an EQUIVALENT mutant: the slot is still unique per length, so output
+never changes, and it rightly passed. The meaningful plant drops the
+"spaces only" predicate, so every short trivia of length L shares a
+slot ("\n  " vs "   "). That fails probatio_stml_aurea (fidelity) and
+probatio_stml_pulchrum (fixed point).
+
+## 2026-10-30 — capture pass keeps child lists without captures (budget B1 B3)
+
+`_processare_captiones` second pass allocated two new Xars per parent
+(`novi_liberi`, then `clean`) and copied every child pointer, whenever
+the document had any capture form at all. Arbor STML always does.
+After the recursive first pass we now scan the children once. If none
+is a capturing element (ANTE and not raw, RETRO, FARCIMEN) and none is
+NIHIL, the second pass would rewrite the same list in the same order,
+so we return and keep `liberi`. Byte-identical output.
+
+This one moves allocation counts DOWN by ~17-22% per document, so it
+carries Fran's single computus re-gold (ruling 2026-10-30). Seven golds
+were regenerated with COMPUTUS_SCRIBERE=1 (css, md, html, toml,
+crusta, briar, oratio; silva unchanged). Audited: only
+allocationes_arboris changed, every value lower, no other column or
+row touched. B13 (attribute-element check only on recorded parents)
+was deliberately left out: medium risk (first-error ordering after
+capture moves nodes) for ~0.05 min.
+
+Plant: predicate without RETRO → probatio_stml (captured NIHIL :678)
+and probatio_stml_aurea (:731) FRACTA.

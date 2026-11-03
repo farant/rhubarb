@@ -217,7 +217,30 @@ compile_libraries() {
     done
     numerus=$(grep -c . "$vocationes")
 
-    if ! "$COMPILATOR" --plures "$vocationes" 2>&1; then
+    # PARTES PARALLELAE (budget B1 E8, 2026-10-29): --plures unum
+    # processum missas SERIATIM compilat (regressio frigida post
+    # 2026-10-23: CDXIV missae ~LXX s). Lineae per FILA partes in
+    # gyrum distributae, processus unus per partem (thesaurus communis
+    # - ut olim xargs -P). Mensura: frigide 70.5 s -> 29.2 s, calide
+    # 0.49 -> 0.29 s (IV fila), obiecta eadem. FILA 1 = processus unus.
+    local fila_bib="${FILA:-1}" pars rc_bib=0
+    local -a natos=()
+    if [ "$fila_bib" -gt 1 ] && [ "$numerus" -gt "$fila_bib" ]; then
+        rm -f "$vocationes".pars.*
+        awk -v n="$fila_bib" -v f="$vocationes.pars" \
+            '{ print > (f "." (NR % n)) }' "$vocationes"
+        for pars in "$vocationes".pars.*; do
+            "$COMPILATOR" --plures "$pars" 2>&1 &
+            natos+=($!)
+        done
+        for pars in "${natos[@]}"; do
+            wait "$pars" || rc_bib=1
+        done
+        rm -f "$vocationes".pars.*
+    else
+        "$COMPILATOR" --plures "$vocationes" 2>&1 || rc_bib=1
+    fi
+    if [ "$rc_bib" -ne 0 ]; then
         echo -e "${RED}✗ FAILED: bibliothecae (fons a clang supra nominatus)${RESET}"
         return 1
     fi

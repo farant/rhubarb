@@ -209,9 +209,17 @@ _sectio_quinta (
                 setenv("FABRICA_LECTIONES", LIBER, I);
                 per (j = ZEPHYRUM; j < D; j++)
                 {
-                    lectiones_notare(LECTIO_LEGIT,
-                        "probationes/via_longior_ad_probandum_"
-                        "lineas_integras.c");
+                    character via[CXXVIII];
+
+                    /* via per iterationem varia: memoria linearum
+                     * (B2 I2) lineas IDENTICAS omittit - propositum
+                     * (lineae O_APPEND sub concurrentia integrae)
+                     * manet */
+                    sprintf(via, "probationes/via_longior_ad_probandum_"
+                        "lineas_integras_%u_%u.c",
+                        (insignatus integer)k,
+                        (insignatus integer)j);
+                    lectiones_notare(LECTIO_LEGIT, via);
                 }
                 _exit(ZEPHYRUM);
             }
@@ -225,6 +233,44 @@ _sectio_quinta (
         CREDO_AEQUALIS_I32(omnes, M);
         CREDO_AEQUALIS_I32(integrae, M);
     }
+}
+
+/* IIIb. MEMORIA LINEARUM (budget B2 I2): linea identica in processu
+ * semel scribitur; collisio (LECTIONES_MEMORIA_LOCI=1: omnes lineae
+ * locum unum) lineam NOVAM numquam amittit - x.c, x.h, x.c, x.c ->
+ * tres lineae (ultima omissa), ambae viae praesentes */
+interior vacuum
+_sectio_memoriae_linearum (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+     chorda  liber;
+      pid_t  filius;
+        i32  omnes;
+
+    piscina = c->piscina;
+    /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
+     * liber sub probatione extra canalem purgatur */
+    (vacuum)remove(LIBER);
+    filius = fork();
+    si (filius == ZEPHYRUM)
+    {
+        setenv("LECTIONES_MEMORIA_LOCI", "1", I);
+        setenv("FABRICA_LECTIONES", LIBER, I);
+        lectiones_notare(LECTIO_LEGIT, "probationes/x.c");
+        lectiones_notare(LECTIO_LEGIT, "probationes/x.h");
+        lectiones_notare(LECTIO_LEGIT, "probationes/x.c");
+        lectiones_notare(LECTIO_LEGIT, "probationes/x.c");
+        _exit(ZEPHYRUM);
+    }
+    (vacuum)waitpid(filius, NIHIL, ZEPHYRUM);
+    liber = filum_legere_totum(LIBER, piscina);
+    (vacuum)_lineae_integrae(liber, &omnes);
+    CREDO_AEQUALIS_I32(omnes, III);
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "L\tprobationes/x.h\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
+        "L\tprobationes/x.c\n", piscina)));
 }
 
 /* IId. EXSECUTIO (P): processus_exsequi argv[0] ANTE fork notat -
@@ -354,6 +400,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "III. filii duo paralleli: lineae integrae", _sectio_quinta,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "IIIb. memoria linearum: identica semel, collisio nihil amittit",
+      _sectio_memoriae_linearum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

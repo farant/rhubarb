@@ -47,6 +47,10 @@
  * venit (pars muta, exemplar mutatum, '@') ad finem suum clauditur.
  * Sonitus ('@') non glissant.
  *
+ * VERBA: nota cum vocali (CarmenNota.vocalis >= 0) tibiam vocis suae
+ * cum ea vocali incipit (tibia.vocalis; solum FORMANTES audiunt);
+ * nota continuata ('/') vocalem notae primae servat.
+ *
  * Instrumenta: primum carminis ipsius (carmen_instrumentum: carminis,
  * libri), deinde per resolutorem (CantorResolutor): instrumentum partis
  * -> TibiaParametra, '@titulus' -> SonitusParametra; patches usoris

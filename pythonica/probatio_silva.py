@@ -537,6 +537,43 @@ finally:
     os.unlink(os.path.join(silva.RADIX, vet))
     silva.VETITAE = tuple(v for v in silva.VETITAE if v != vet)
 
+_grex('sigillum: contentum, non commissum (budget B1 E1)')
+import shutil  # noqa: E402
+import subprocess  # noqa: E402
+import tempfile  # noqa: E402
+rep_s = tempfile.mkdtemp(prefix='sigillum_rep.')
+try:
+    def _g(*a):
+        subprocess.run(['git', '-c', 'commit.gpgsign=false', '-c',
+                        'core.hooksPath=/dev/null'] + list(a), cwd=rep_s,
+                       capture_output=True, check=True)
+    _g('init', '-q')
+    _g('config', 'user.email', 'f@x')
+    _g('config', 'user.name', 'f')
+    open(os.path.join(rep_s, 'a.txt'), 'w').write('unus\n')
+    _g('add', 'a.txt')
+    _g('commit', '-q', '-m', 'i')
+    open(os.path.join(rep_s, 'a.txt'), 'w').write('duo\n')
+    s_ante = silva.sigillum_arboris(radix=rep_s)
+    u_ante = silva.sigillum_arboris('unci', radix=rep_s)
+    _g('commit', '-q', '-am', 'ii')
+    credo(silva.sigillum_arboris(radix=rep_s) == s_ante,
+          'sigillum: commissio contentum non mutat - receptum supersunt')
+    credo(silva.sigillum_arboris('unci', radix=rep_s) != u_ante,
+          'sigillum: porta PORTAE_CAPUT (unci) post commissionem rancida')
+    open(os.path.join(rep_s, 'a.txt'), 'w').write('tres\n')
+    credo(silva.sigillum_arboris(radix=rep_s) != s_ante,
+          'sigillum: contentum mutatum = rancidum')
+    open(os.path.join(rep_s, 'b.txt'), 'w').write('nova\n')
+    s_nova = silva.sigillum_arboris(radix=rep_s)
+    _g('add', 'b.txt')
+    _g('commit', '-q', '-am', 'iii')
+    credo(silva.sigillum_arboris(radix=rep_s) != s_nova,
+          'sigillum: plagula nova secuta = status secutorum mutatus'
+          ' (portae git ls-files legunt)')
+finally:
+    shutil.rmtree(rep_s, ignore_errors=True)
+
 _grex('metiri')
 # registrum coctum (2026-09-15): involucrum tenue instrumenti C89 -
 # declaratio orationis commissa RECENS (rc 0, viae ambae nominatae);
@@ -2207,6 +2244,68 @@ finally:
     import shutil
     shutil.rmtree(_od, ignore_errors=True)
 
+_grex('interventio: commissio mutationem perficientiae notat (mensor FICTUS)')
+# mensor SUBSTITUITUR stipula argumenta notans: porta pythonica NUMQUAM
+# in annales vivos scribat (budget B9)
+_md = tempfile.mkdtemp(prefix='silva_interventio_')
+_mstip = os.path.join(_md, 'mensor_fictus.sh')
+_macta = os.path.join(_md, 'acta.txt')
+open(_mstip, 'w').write(
+    '#!/bin/bash\n'
+    'printf "%s\\n" "$*" >> "' + _macta + '"\n'
+    '[ -n "${FICTA_MENSOR_RC:-}" ] && { echo "commissum ignotum" >&2; exit "$FICTA_MENSOR_RC"; }\n'
+    'echo "interventio 01x: $4 \'$6\' - 2 viae mutatae, 3 tituli affecti"\n')
+os.chmod(_mstip, 0o755)
+_mi_vera = silva.MENSOR_IMPERIUM
+silva.MENSOR_IMPERIUM = [_mstip]
+try:
+    credo(silva.interventio_praeiudicare(None, None) == [], 'interventio nulla: nulla causa')
+    credo(silva.interventio_praeiudicare('B5 velocior', 'B5') == [], 'interventio cum titulo et mensore: licet')
+    c = silva.interventio_praeiudicare(None, 'B5')
+    credo(len(c) == 1 and 'sine interventio=' in c[0], 'budget sine interventione: causa')
+    c = silva.interventio_praeiudicare('  ', None)
+    credo(len(c) == 1 and 'titulum poscit' in c[0], 'titulus vacuus: causa')
+    silva.MENSOR_IMPERIUM = [os.path.join(_md, 'nusquam')]
+    c = silva.interventio_praeiudicare('x', None)
+    credo(len(c) == 1 and 'absens' in c[0] and 'mensor_struere' in c[0], 'mensor absens: causa ante portas')
+    # CAUSAE OMNES SIMUL: via vetita ET mensor absens, ANTE portam ullam
+    try:
+        silva.commissio('nihil', ['silva/grammatica/c89-formatted.stml'], portae=['ficta-quae-non-est'], interventio='x')
+        credo(False, 'commissio cum causis duabus (interventio)')
+    except silva.SilvaError as ex:
+        credo('(2 causae)' in str(ex) and 'VETITA' in str(ex) and 'absens' in str(ex),
+              'commissio: via vetita ET mensor absens SIMUL relata, nihil cursum')
+    silva.MENSOR_IMPERIUM = [_mstip]
+
+    # notatio: sha plenum, titulus, budget - argumenta recta
+    open(_macta, 'w').close()
+    _pl = 'a' * 40
+    lin = silva.interventio_notare(_pl, 'B5 velocior', 'B5')
+    credo(open(_macta).read().splitlines() == ['interventio notare -commissum %s -titulus B5 velocior -budget B5' % _pl],
+          'notatio: interventio notare -commissum PLENUM -titulus -budget')
+    credo(lin.startswith('interventio 01x:') and 'tituli affecti' in lin, 'notatio: linea ultima mensoris redditur')
+    open(_macta, 'w').close()
+    silva.interventio_notare(_pl, 'sine budget')
+    credo('-budget' not in open(_macta).read(), 'notatio sine budget: -budget non missum')
+
+    # notatio FRACTA: error CLARUS, hash fertur, NOLI iterare, imperium pasta-paratum
+    os.environ['FICTA_MENSOR_RC'] = '1'
+    try:
+        silva.interventio_notare(_pl, 'B5 velocior', 'B5')
+        credo(False, 'notatio fracta')
+    except silva.SilvaInterventioError as ex:
+        credo(ex.hash == _pl, 'SilvaInterventioError hash commissi fert')
+        credo('FACTUM EST' in str(ex) and 'NOLI iterare' in str(ex) and 'commissum ignotum' in str(ex),
+              'error dicit commissum STARE et causam mensoris dat')
+        credo(('-titulus "B5 velocior" -budget B5') in str(ex).split('Ad notandum manu:')[1],
+              'error imperium pasta-paratum dat (titulus citatus)')
+    del os.environ['FICTA_MENSOR_RC']
+finally:
+    silva.MENSOR_IMPERIUM = _mi_vera
+    os.environ.pop('FICTA_MENSOR_RC', None)
+    import shutil
+    shutil.rmtree(_md, ignore_errors=True)
+
 _grex('linea auctoris: SEMEL')
 _n1 = silva._nuntium_cum_trailer('titulus\n\ncorpus\n\nCo-Authored-By: Exemplar X <x@y>\n')
 credo(_n1.count('Co-Authored-By:') == 1 and 'Exemplar X' in _n1, 'nuntius lineam auctoris iam ferens: nulla altera appenditur')
@@ -2680,22 +2779,44 @@ try:
         silva.FABRICA_BIN = _fabrica_ordinis([('ficta-prae-c', 'praeiudicium', '500', 'commissio'),
                                              ('ficta-prob-2', 'probatio', '9000', 'fusio')])
         _pfs = silva._producentes_fusionis_sanare
+        _ips = silva._instrumenta_portarum_sanare
         _pfs_vocata = []
-        silva._producentes_fusionis_sanare = lambda: _pfs_vocata.append(cursae_ante())
+        _ordo_phasium = []
+        silva._producentes_fusionis_sanare = lambda: (
+            _ordo_phasium.append('producentes'),
+            _pfs_vocata.append(cursae_ante()))
+        silva._instrumenta_portarum_sanare = lambda b: (
+            _ordo_phasium.append('instrumenta'))
         cursae_ante = lambda: (open(_olog).read().split() if os.path.exists(_olog) else [])
         try:
             eff, err, cursae = _fusio((True, [], 'abcdef12', ['x.c']))
         finally:
             silva._producentes_fusionis_sanare = _pfs
+            silva._instrumenta_portarum_sanare = _ips
         credo(_pfs_vocata == [[]],
               'fusio: producentes sanantur SEMEL ANTE portas (parcum …J1AJ5V2)',
               causa=repr(_pfs_vocata))
+        credo(_ordo_phasium == ['producentes', 'instrumenta'],
+              'fusio: producentes PRIMUM, deinde instrumenta portarum'
+              ' (parcum …XPBJD: producens sanatus binarium recens stalum'
+              ' reddebat)', causa=repr(_ordo_phasium))
         credo(err is None and cursae == ['ficta-prae-c', 'ficta-prob-2']
               and 'DILATA' not in eff,
               'fusio: debita rami et viarum, gradus ambo cursi', causa=repr((err, cursae, eff[-400:])))
         credo('FUSIO PARATA' in eff and 'git merge --ff-only' in eff
               and not os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: viridis - debita purgata, ritus impressus', causa=repr(eff[-300:]))
+        # CURSUS FUSIONIS (budget B0): fusio = arbor cursuum ut commissio -
+        # phases et portae filii eius (olim portae sine parente: tabula
+        # fusionis tres quaestiones et SQL poscebat)
+        _lc = _cursus_lineae()
+        _fus = [l for l in _lc if l[3] == 'fusio']
+        _ff = set(l[3] for l in _lc if _fus and l[2] == _fus[-1][1])
+        credo(_fus and _fus[-1][4] == 'transiit'
+              and {'phasis:portae debitae', 'porta:ficta-prae-c',
+                   'porta:ficta-prob-2'} <= _ff,
+              'cursus: fusio notata (transiit), phases et portae filii eius',
+              causa=repr((_fus[-1][3:5] if _fus else None, sorted(_ff))))
         # M. rubrum: porta debiti nominata cum commissione (bisectio); debita servata
         with contextlib.redirect_stdout(io.StringIO()):
             silva._debita_fusionis_scribere('c0ffee1', {'ficta-prob-1': 'z.c tegit'})
@@ -2705,6 +2826,11 @@ try:
         credo(err is not None and 'ficta-prob-1 non sana' in err and 'bisectio: c0ffee1' in err
               and os.path.exists(silva.DEBITA_FUSIONIS_VIA),
               'fusio: rubra - commissio debens nominata, debita servata', causa=repr(err))
+        _fus = [l for l in _cursus_lineae() if l[3] == 'fusio']
+        credo(_fus and _fus[-1][4] == 'fractus'
+              and _fus[-1][14].startswith('SilvaError: '),
+              'cursus: fusio rubra notata (fractus, nota = refusio)',
+              causa=repr(_fus[-1][3:5] + [_fus[-1][14][:80]] if _fus else None))
         # M2. PERGIT (…CECATG): duae probationes rubrae + viridis inter eas - OMNES
         # cursae, ambae nominatae cum commissionibus suis, tabula una; commissio
         # (B supra) adhuc prima rubra sistit
@@ -3461,6 +3587,7 @@ _tu_conatus = 'commissio:' + subprocess.run(
     cwd=RADIX).stdout.strip()[:12]
 try:
     os.environ['PORTAE_TRANSLATIO_UMBRA'] = '1'
+    os.environ['PORTAE_TRANSLATIO'] = 'umbra'
     silva._translationes_umbrae = _tu_fictum
     out, v, err = _tu_currere(['ficta-umbra-v'])
     rec_via = silva._translationis_receptum_via('ficta-umbra-v')
@@ -3485,6 +3612,35 @@ try:
           and '[scopus a: nullum - receptum conatus alius]' in out
           and _tu_acta()[-1][3:5] == ['portat', 'nullum'],
           'umbra: receptum traditum; scopus a nullum si conatus alius', causa=out)
+    # ACTIVA (A.3, Franus 2026-10-31): scopus a - receptum EIUSDEM conatus
+    # portatur (porta non cursa), auditus I ex N tamen currit, conatus
+    # alius currit
+    os.environ['PORTAE_TRANSLATIO'] = 'a'
+    os.environ['PORTAE_TRANSLATIO_AUDITUS'] = '0'
+    rec['conatus'] = _tu_conatus
+    json.dump(rec, open(rec_via, 'w'))
+    k = open(_tu_n).read().count('x')
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(v == ['ficta-umbra-v'] and open(_tu_n).read().count('x') == k
+          and 'non iterum cursa (translatio, scopus a)' in out
+          and '[translatum: 1 via mutata' in out
+          and _tu_acta()[-1][7] == '0',
+          'translatio activa: scopus a portatur, porta non cursa, viridis',
+          causa=out)
+    os.environ['PORTAE_TRANSLATIO_AUDITUS'] = '1'
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(open(_tu_n).read().count('x') == k + 1
+          and 'ficta-umbra-v auditur (I ex 1)' in out,
+          'translatio activa: auditus portationem tamen currit', causa=out)
+    os.environ['PORTAE_TRANSLATIO_AUDITUS'] = '0'
+    rec = json.load(open(rec_via))
+    rec['conatus'] = 'commissio:alius'
+    json.dump(rec, open(rec_via, 'w'))
+    out, v, err = _tu_currere(['ficta-umbra-v'])
+    credo(open(_tu_n).read().count('x') == k + 2
+          and '(translatio, scopus a)' not in out,
+          'translatio activa: conatus alius (scopus b) currit', causa=out)
+    os.environ['PORTAE_TRANSLATIO'] = 'umbra'
     # rubra quae portaretur: DISSENSUS nominatus, actum, receptum nullum
     out, v, err = _tu_currere(['ficta-umbra-r'], pergere=True)
     credo(err is not None
@@ -3503,10 +3659,11 @@ try:
     def _tu_fractum(n, r):
         raise silva.SilvaError('fictum fractum')
     silva._translationes_umbrae = _tu_fractum
+    k = open(_tu_n).read().count('x')
     out, v, err = _tu_currere(['ficta-umbra-v'])
     credo(v == ['ficta-umbra-v']
           and 'MONITUM: umbra translationis omissa (fictum fractum)' in out
-          and open(_tu_n).read().count('x') == 3,
+          and open(_tu_n).read().count('x') == k + 1,
           'umbra: fractura sua = MONITUM, porta tamen cursa', causa=out)
     # clausa: nulla vocatio, nulla linea
     silva._translationes_umbrae = _tu_fictum
@@ -3518,6 +3675,8 @@ try:
           'umbra: PORTAE_TRANSLATIO_UMBRA=0 claudit', causa=out)
 finally:
     os.environ['PORTAE_TRANSLATIO_UMBRA'] = '0'
+    os.environ.pop('PORTAE_TRANSLATIO', None)
+    os.environ.pop('PORTAE_TRANSLATIO_AUDITUS', None)
     silva._translationes_umbrae = _tu_verum
     silva.TRANSLATIO_DIR, silva.TRANSLATIO_ACTA = _tu_dir, _tu_acta_via
     silva.FABRICA_BIN = _tu_fb

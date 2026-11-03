@@ -143,3 +143,29 @@ hash kept) → 810 innominati; restored → clean. Other owed gates (25)
 run in the snapshot: 19 green; the 6 red fail identically WITHOUT the
 latina change (snapshot artefacts: one-commit history for probatio_git,
 no Mach-O build products, frigida/briar-fumus/silex-semen environment).
+
+## 2026-10-30 — pinned oracle output cached by content (budget B1 A6)
+
+`materia/oraculum_probare.sh` ran the pinned oracle over all 881 files
+on every gate run (~34 s of the ~80 s gate). That oracle is silva at a
+fixed commit. Its output for a file is a pure function of the pinned
+code, the path and the file bytes: the Latin lexicon is built in, and
+no IO happens besides reading the file. So each file's line and STML
+document now live in `build/oraculum_silvae/memoria/<key>/`, named
+`<sha256 of file>.<path with / as %>`. The pinned oracle runs only on
+files whose key misses.
+
+Key gotcha: hash the OBJECTS (oraculum.o + amalgama.o), not the binary.
+`oraculum_silvae_struere.sh` relinks the pinned binary every run, and
+the link is not deterministic (new sha each time), while the compiles
+are. Keying on the binary missed 100% and pruned the cache every run.
+
+Cached documents are hard-linked into `documenta/` (577 MB; copying
+would eat the savings). `documenta/` is rm -rf'd each run, which
+removes only the links. A default-corpus run prunes cache entries it
+did not use, plus other keys' directories.
+
+Measured at load 13: cold 91 s, warm 42-45 s. pignus.txt and all 881
+documents are byte-identical to the uncached run. Plant: corrupt one
+cached document → the live oracle names include/actio.h (lectio
+dispar, comparator lexema/valor), gate FRACTUM.

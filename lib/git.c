@@ -2489,6 +2489,93 @@ git_arbores_differre (
 
 
 /* ==================================================
+ * ANTECESSIO (budget B9) - vide git.h
+ * ================================================== */
+
+#define GIT_ANTECESSIO_LAXITAS  ((s64)LXXXVI * (s64)M + (s64)CD)
+
+b32
+git_continet (
+       GitRepositorium* repositorium,
+    constans character* posterius,
+    constans character* prius,
+               Piscina* piscina,
+                   b32* continet)
+{
+      GitCommissum  basis;
+    TabulaDispersa* visa;
+               Xar* agmen;
+               i32  caput = ZEPHYRUM;
+               s64  limes;
+
+    *continet = FALSUM;
+    si (   repositorium == NIHIL || posterius == NIHIL || prius == NIHIL
+        || piscina      == NIHIL)
+    {
+        redde FALSUM;
+    }
+    basis = git_commissum_legere(repositorium, prius, piscina);
+    si (!basis.successus)
+    {
+        redde FALSUM;
+    }
+    si (strcmp(posterius, prius) == ZEPHYRUM)
+    {
+        *continet = VERUM;
+        redde VERUM;
+    }
+    limes  = basis.tempus - GIT_ANTECESSIO_LAXITAS;
+    visa   = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    agmen  = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (visa == NIHIL || agmen == NIHIL)
+    {
+        redde FALSUM;
+    }
+    *(chorda*)xar_addere(agmen) = chorda_transcribere(chorda_ex_literis(
+        posterius, piscina), piscina);
+    dum (caput < xar_numerus(agmen))
+    {
+              chorda sha = *(chorda*)xar_obtinere(agmen, caput);
+        GitCommissum c;
+                 i32 k;
+
+        caput++;
+        si (tabula_dispersa_continet(visa, sha))
+        {
+            perge;
+        }
+        (vacuum)tabula_dispersa_inserere(visa, sha, NIHIL);
+        si (chorda_aequalis_literis(sha, prius))
+        {
+            *continet = VERUM;
+            redde VERUM;
+        }
+        c = git_commissum_legere(repositorium, chorda_ut_cstr(sha,
+            piscina), piscina);
+        si (!c.successus)
+        {
+            redde FALSUM;
+        }
+        si (c.tempus < limes)
+        {
+            perge;   /* vetustius quam prius: non expanditur */
+        }
+        per (k = ZEPHYRUM; c.parentes != NIHIL
+             && k < xar_numerus(c.parentes); k++)
+        {
+            chorda* cella = (chorda*)xar_addere(agmen);
+
+            si (cella != NIHIL)
+            {
+                *cella = *(chorda*)xar_obtinere(c.parentes, k);
+            }
+        }
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
  * INDEX (fabrica-plan-8 G2) - vide git.h
  *
  * Forma (Documentation/gitformat-index.txt): caput XII octeti

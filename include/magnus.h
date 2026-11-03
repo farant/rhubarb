@@ -31,12 +31,12 @@
 
 /* Membra PRIVATA - per functiones tantum legenda.
  * Invarians: si valor in s64 capit, membra == NIHIL et valor in
- * 'parvus'; aliter signum (+1/-1) et longitudo membrorum (>= II,
- * membrum summum non nullum). Ergo forma canonica et unica. */
+ * 'parvus'; aliter parvus = signum (+1/-1) x longitudo membrorum
+ * (>= II, membrum summum non nullum). Ergo forma canonica et unica.
+ * XVI octeti (budget B1 D1, 2026-10-28): in arm64 per registra
+ * transit - structura maior per memoriam (memcpy, sub ASan vocatio). */
 nomen structura {
-     s64  parvus;
-     s32  signum;
-     i32  longitudo;
+     s64  parvus;      /* membra != NIHIL: signum * longitudo */
      i32* membra;      /* ordine parvo primum, basis 2^32 */
 } Magnus;
 

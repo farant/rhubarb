@@ -1,0 +1,122 @@
+<!--
+  xml.registrum.stml - DECLARATIO registri generum (xml)
+
+  FONS UNUS tabularum coctarum xml_registrum_coctum.{h,c}
+  (materia/coquere.sh; canon materia/grammatica/registrum.canon).
+  Genera APPENDUNTUR, numquam interponuntur: ordo = enumeratio =
+  offsets; permutatio sigillum canonis movet (pinna, manu mota cum
+  causa). Ordo LOCORUM intra genus = ordo EMISSIONIS: loci ordine
+  octetorum fontis (attributa ante tok_finis, liberi ante
+  tok_clausura).
+
+  Vocabularium: project-specs/xml-arbor-spec.md par. IV; forma lexici
+  et elementi ex html (html.registrum.stml): '<titulus' et '</titulus'
+  lexemata singula, '>' et '/>' sua.
+
+  TOTALITAS (X6): omnis octetus in arbore; quod grammatica ponere non
+  potest 'malum' fit - ergo OMNIA errata relata, non primum solum.
+  Tag finalis absens aut alienus ab aedificatore nuntiatur (WFC:
+  Element Type Match), non per absentiam loci: elementum vacuum
+  ('/>') tag finalem legitime non habet.
+
+  TEXTUS IN CONTENTO ET IN PROLOGO: spatia inter elementa contentum
+  sunt (genus 'textus'), non trivia; lector profunditatem nescit, ergo
+  spatia prologi et epilogi quoque 'textus' sunt - coctio spatia sola
+  ibi praeterit et alia recusat. Trivia (SPATIA) intra tags et
+  declarationes SOLUM. Commentaria et instructiones contentum sunt.
+
+  DECLARATIONES DTD (<!ELEMENT, <!ATTLIST, <!ENTITY, <!NOTATION) genus
+  unum 'declaratio' cum partibus lexematum: significationem xml_dtd
+  legit (spec X2), non grammatica.
+-->
+<registrum grammatica="xml" praefixum="XML" typus="XmlGenus"
+  sedes="xml/fontes">
+
+  <genus titulus="documentum"
+    nota="Radix: prologus (declaratio-xml, doctype, commentaria, instructiones, textus spatiorum), elementum radicis, epilogus, mala - ordine octetorum + lexema FINIS">
+    <locus titulus="liberi" species="lista-nodus"/>
+    <locus titulus="cauda"  species="token"/>
+  </genus>
+
+  <genus titulus="signum-ordinis" nota="BOM UTF-8 (EF BB BF) ad octetum primum">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="declaratio-xml"
+    nota="&lt;?xml version=... encoding=... standalone=...?&gt; ad initium solum (post BOM)">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="attributa"    species="lista-nodus"/>
+    <locus titulus="tok_clausura" species="token" absentia="'?&gt;' deest"/>
+  </genus>
+
+  <genus titulus="doctype"
+    nota="&lt;!DOCTYPE titulus [SYSTEM 's' | PUBLIC 'p' 's'] [pars interna]&gt;">
+    <locus titulus="tok_apertura"  species="token"/>
+    <locus titulus="tok_titulus"   species="token" absentia="titulus typi deest"/>
+    <locus titulus="id_externum"   species="lista-token"/>
+    <locus titulus="pars_interna"  species="nodus"/>
+    <locus titulus="tok_clausura"  species="token" absentia="'&gt;' deest"/>
+  </genus>
+
+  <genus titulus="pars-interna"
+    nota="[ declarationes, referentiae parametri, commentaria, instructiones ]">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="liberi"       species="lista-nodus"/>
+    <locus titulus="tok_clausura" species="token" absentia="']' deest"/>
+  </genus>
+
+  <genus titulus="declaratio"
+    nota="&lt;!ELEMENT, &lt;!ATTLIST, &lt;!ENTITY, &lt;!NOTATION: genus lexematis aperturae dicit, partes xml_dtd legit">
+    <locus titulus="tok_apertura" species="token"/>
+    <locus titulus="partes"       species="lista-token"/>
+    <locus titulus="tok_clausura" species="token" absentia="'&gt;' deest"/>
+  </genus>
+
+  <genus titulus="referentia-parametri" nota="%titulus; inter declarationes partis internae">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="elementum"
+    nota="&lt;titulus attributa&gt; liberi &lt;/titulus&gt;, aut &lt;titulus attributa/&gt; (tok_finis '/&gt;', liberi et clausura nulli)">
+    <locus titulus="tok_apertura"       species="token"/>
+    <locus titulus="attributa"          species="lista-nodus"/>
+    <locus titulus="tok_finis"          species="token" absentia="'&gt;' deest"/>
+    <locus titulus="liberi"             species="lista-nodus"/>
+    <locus titulus="tok_clausura"       species="token"/>
+    <locus titulus="tok_clausura_finis" species="token"/>
+  </genus>
+
+  <genus titulus="attributum" nota="titulus = 'valor' (et pseudo-attributa declarationis XML)">
+    <locus titulus="tok_titulus" species="token"/>
+    <locus titulus="tok_aequale" species="token" absentia="'=' deest"/>
+    <locus titulus="tok_valor"   species="token" absentia="valor deest"/>
+  </genus>
+
+  <genus titulus="textus" nota="Characteres contenti (spatia incluse) usque ad '&lt;' aut '&amp;'">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="referentia" nota="&amp;titulus; aut &amp;#N; aut &amp;#xH;: coctio expandit">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="cdata" nota="&lt;![CDATA[ ... ]]&gt;: textus crudus">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="commentarium" nota="&lt;!-- ... --&gt;: contentum, non trivium">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="instructio" nota="&lt;?scopus data?&gt;: coctio scopum et data dividit">
+    <locus titulus="tok" species="token"/>
+  </genus>
+
+  <genus titulus="malum"
+    nota="Totalitas (X6): lexemata quae grammatica ponere non potuit - octeti manent, sanitas negatur"
+    diagnosticum="lexemata quae grammatica ponere non potuit"
+    inanis="verum">
+    <locus titulus="tokens" species="lista-token"/>
+  </genus>
+
+</registrum>

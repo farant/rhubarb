@@ -64,3 +64,13 @@ followed by a mutation of `a` and a later use of `x` found one production
 candidate (lib/rivus_eventuum.c:92, a false positive: the reset is followed
 by `redde`) plus the audit probes. Views held in structs are not visible
 to that scan; the ASan sweep covers them.
+
+## 2026-10-28 — appendere_character writes directly when there is room (budget B1 C5)
+
+Every single-byte append went through `_appendere_interna` → a 1-byte
+memcpy via the dyld stub (444 of 1,940 `_appendere_interna` samples in
+probatio_silva_arbor_plagula came from appendere_character). Now: buffer
+present and offset < capacitas → store the byte and bump offset; anything
+else (no buffer, full) → the common path, which handles growth and the
+self-append case exactly as before. probatio_chorda_aedificator 35/35;
+plant (offset not bumped) → :61 red.

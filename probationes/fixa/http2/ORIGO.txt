@@ -1,0 +1,14 @@
+tabulae HTTP/2 - ab tools/http2_tabulare.sh scriptae (http2-plan C5)
+
+dies:     2026-10-31T23:04:16Z
+go:       go version go1.23.2 darwin/arm64
+servus:   tools/oracula/http2_servus.go (bibliotheca norma sola)
+cliens:   probatio_http2_nexus (HTTP2_TABULAE), commit 5356484a
+casus:    salve eco multae magnum abire
+
+<casus>.servus.bin   octeti a servo (decrypti, post TLS)
+<casus>.cliens.bin   octeti a cliente (praefatio primum)
+<casus>.go.log       GODEBUG=http2debug=2 (formae a servo scriptae/lectae)
+
+Non byte pro byte iterabiles (caput 'date' servi): renovare per
+./tools/http2_tabulare.sh; probatio_http2_reproductio eas legit sine Go.

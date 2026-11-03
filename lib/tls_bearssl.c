@@ -459,6 +459,32 @@ _parare (
     c->iudex.connexio  = c;
     br_ssl_engine_set_x509(e, &c->iudex.vtable);
     br_ssl_engine_set_buffer(e, c->capsa, BR_SSL_BUFSIZE_BIDI, I);
+    /* ALPN (RFC 7301): nomina in piscina copiata - vocantis index
+     * pactionem non excedere debet */
+    si (   optiones && optiones->protocolla
+        && optiones->protocolla_numerus > ZEPHYRUM)
+    {
+         constans character** nomina;
+                        i32   k;
+
+        nomina = (constans character**)piscina_allocare(c->piscina,
+            (i64)optiones->protocolla_numerus
+            * (i64)magnitudo(constans character*));
+        si (nomina == NIHIL)
+        {
+            redde "Allocatio fallita";
+        }
+        per (k = ZEPHYRUM; k < optiones->protocolla_numerus; k++)
+        {
+            nomina[k] = _copiare(optiones->protocolla[k], c->piscina);
+            si (nomina[k] == NIHIL)
+            {
+                redde "Allocatio fallita";
+            }
+        }
+        br_ssl_engine_set_protocol_names(e, nomina,
+            (size_t)optiones->protocolla_numerus);
+    }
     si (!br_ssl_client_reset(&c->cc, c->hospes, ZEPHYRUM))
     {
         redde _erratum_machinae(br_ssl_engine_last_error(e));
@@ -618,6 +644,23 @@ tls_bearssl_versio (
         redde ZEPHYRUM;
     }
     redde (i32)br_ssl_engine_get_version(&c->cc.eng);
+}
+
+chorda
+tls_bearssl_protocollum (
+    TlsBearssl* c)
+{
+     constans character* p;
+                 chorda  vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (c == NIHIL || !c->pacta)
+    {
+        redde vacua;
+    }
+    p = br_ssl_engine_get_selected_protocol(&c->cc.eng);
+    redde p ? chorda_ex_literis(p, c->piscina) : vacua;
 }
 
 /* obstruens: tcp cum moris (timeout_ms -> moris fossae), pactio per

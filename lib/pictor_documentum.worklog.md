@@ -463,3 +463,40 @@ the local listings matched ANY `<x>/documentum`, so a foreign picture
 `aliena/<R>/p` - `spatium_documenti` now refuses the `aliena/` prefix
 (covers pictor_documenta_enumerare and _recentia). Opening shares
 `documentum_ex_manifesto` with the local open.
+
+## 2026-10-27 - Shared list, foreign thumbnails, ULID names (communio-plan-5 T3, quarta)
+
+`pictor_aliena_recentia` = the "Shared pictures" list: every foreign
+picture (`aliena/<replica>/...` manifests), newest first by the WRITER's
+time (`identitas.hora`) of its latest act - not by local seq, which is
+only arrival order on this device. Same mechanism as
+`pictor_documenta_recentia` (act kinds from `historia_genera`, plus
+`plagula-condita` to date an empty picture), but keyed `replica\ngenus`
+and read once per foreign replica with
+`volumen_acta_generum_replicae_legere` (the own-replica rule in the other
+direction: a picture's acts are its writer's). Ties: replica, then
+spatium (no test - equal hybrid times across replicas need forged acts).
+
+`pictor_pinacem_alienum_facere` shares `_pinacem_ex_documento` with
+`pictor_pinacem_facere`, so a foreign thumbnail is pixel-identical to the
+one its writer would draw (test). New pictures are named by
+`moneta_ulid` (D9/D12) instead of `pictura-<n>`; old names keep working.
+
+## 2026-10-27 - Edit a copy (communio-plan-5 T4, quarta)
+
+`pictor_exemplum_facere` (pictor_applicatio.c): opens the foreign
+picture in a throwaway pool, creates a NEW own picture exactly like New
+picture (ULID name, this device's canvas), fits the foreign composite
+with `pictor_imaginem_aptare` (contain + Atkinson, transparent kept) and
+inserts it as one layer above the top one - the same act a confirmed
+paste writes (`pictor_documentum_imaginem_inserere`), skipping the
+pending-paste UI. The origin is an attribute on the copy's own manifest,
+`<documentum ... origo="<replica>:<spatium>"/>`, written by re-saving the
+manifest (upsert -> one more `plagula-condita`, which also dates the copy
+first in My pictures). The test compares the copy's composite fingerprint
+with a reference picture built the same way, for a foreign picture both
+larger and smaller than the canvas.
+
+## 2026-10-30 - spectaculum: 1:1 viewer image
+
+`pictor_spectaculum_alienum_facere` + `pictor_spectaculi_divisor`: the viewer no longer uses `pictor_imaginem_aptare` ("contain": area-down / bilinear-up + Atkinson), which softened pixel art and enlarged small pictures. k = smallest integer with picture/k inside the box (1 if it fits; never enlarged); every k-th projection pixel copied (nearest, no dithering), centred, alpha < 128 -> theme background. Known cost: at k >= 2 (phone picture on the Mac) 1-px strokes can drop out - accepted ("will have to resize somehow"). `pictor_communia_pinax` caches both "alienus:" (grid) and "spectatus:" keys in the same table.

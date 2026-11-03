@@ -160,6 +160,13 @@ _normalizare (
     {
         redde _elementum(k, polynomium_nullum(), magnus_ex_s64(I));
     }
+    /* denominator +I: gcd(quodvis, I) = I et signum iam positivum -
+     * forma canonica iam est (budget B1 D3; -I per viam communem, quae
+     * signum corrigit) */
+    si (magnus_compara(denominator, magnus_ex_s64(I)) == ZEPHYRUM)
+    {
+        redde _elementum(k, numerator, denominator);
+    }
     g = magnus_divisor_communis(polynomium_contentum(numerator,
         piscina),
         denominator, piscina);
@@ -1834,6 +1841,22 @@ algebraicus_adde (
     {
         redde _invalidum();
     }
+    /* VIAE BREVES (budget B1 D3): addendus nullus -> alter (iam
+     * canonicus); denominatores aequales -> (a + b) / d sine productis
+     * crucis (quaternio._summa omne productum a 0 + p incipit) */
+    si (algebraicus_est_nullum(a))
+    {
+        redde b;
+    }
+    si (algebraicus_est_nullum(b))
+    {
+        redde a;
+    }
+    si (magnus_aequalis(a.denominator, b.denominator))
+    {
+        redde _normalizare(k, polynomium_adde(a.numerator, b.numerator,
+            piscina), a.denominator, piscina);
+    }
     redde _normalizare(k, polynomium_adde(polynomium_multiplica_scalari(
         a.numerator, b.denominator, piscina),
         polynomium_multiplica_scalari(b.numerator, a.denominator,
@@ -1879,6 +1902,15 @@ algebraicus_multiplica (
     si (k == NIHIL)
     {
         redde _invalidum();
+    }
+    /* factor nullus -> nullum (budget B1 D3) */
+    si (algebraicus_est_nullum(a))
+    {
+        redde a;
+    }
+    si (algebraicus_est_nullum(b))
+    {
+        redde b;
     }
     /* gradus < 2d - 1: exponentes semper intra fines */
     (vacuum)polynomium_multiplica(a.numerator, b.numerator, piscina,

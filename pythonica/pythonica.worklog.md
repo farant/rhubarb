@@ -1424,3 +1424,63 @@ Tests: five cases on the step itself + case L asserts the call happens once befo
 scopes, computed in C) once per plan and adds those patterns to each step. Out-of-tree targets
 ('~', '/') skip the query - the consilium policy rules judge them. A failing query raises
 SilvaError (an old bin/fabrica without -vestigium says so). Detail: lib/fabrica.worklog.md.
+
+## 2026-10-30 — gate receipts keyed on content, survive the commit (budget B1 E1)
+
+Fran's ruling: the merge check re-running commit-tier gates on identical
+content is NOT meant as a second proof or a flake hunt. In the measured
+merge, 18 gates (246 s) passed inside `commissio` and then ran again in
+`fusio_probare`, only because `sigillum_arboris()` hashed `HEAD` and
+`recepta_viva_delere()` wiped every live receipt after each commit.
+
+Now `_sigillum_contenti()` = the git tree of the tracked files as they
+are on disk plus the new non-ignored files with their contents
+(VETITAE excluded as before). The tree comes from a COPY of the real
+index (so the stat cache keeps it fast, ~0.3 s), `add -u`, then
+`write-tree`. A commit doesn't change content, so the seal is the same
+before and after, receipts survive, and `fusio_probare` prints "non
+iterum cursa" for them. After a commit, `recepta_viva_rancida_delere()`
+removes only the receipts that are no longer valid.
+
+Exceptions, from an audit of all 57 annotated gate scripts and of
+fabrica's git reads:
+- `PORTAE_CAPUT` = unci (git read-tree HEAD), formator-delta (`-delta
+  HEAD` on a tracked file), aequivalentia (git diff basis). These seal
+  HEAD too, so they always re-run after a commit.
+- Gates that read `git ls-files` (vexilla, unitates, generata, sera,
+  diagnostica), plus fabrica's tracked-path snapshot: a new file is
+  hashed as "new" while untracked and as part of the tree once
+  committed. A commit that starts tracking files therefore changes the
+  seal, and every gate re-runs. Deliberately conservative.
+- fabrica's `repositorium:commissum` key: no action in any
+  aedificatio.stml uses it today. If one ever does, its gate joins
+  PORTAE_CAPUT.
+- A mid-merge index with conflict entries: write-tree fails and we
+  fall back to the old seal (HEAD + diff). That can only be stricter.
+
+Test: temp repo. Commit keeps the seal; unci's seal changes; edited
+content changes it; a newly tracked file changes it. Plant: HEAD in
+every seal → "commissio contentum non mutat" FRACTUM.
+
+## 2026-10-30 — fusio_probare: heal producers BEFORE judging gate binaries (park …XPBJD)
+
+In the 20f603f1 merge check, briar-fumus refused to start ("bin/briar
+... non RECENS") although the pre-gate phase had just printed
+"instrumenta portarum: 23 recentia". The order was the bug:
+`fusio_probare` judged and healed the gate binaries first, then ran
+`_producentes_fusionis_sanare`, which regenerated
+build/capsula_corpus_silicis.c (in briar's closure) and with it made
+bin/briar stale again. A later gate happened to heal briar mid-run (the
+binaries were fresh again when the run ended). `commissio` already had
+the right order (producers in its fabrica phase, gate binaries after).
+Swapped the two phases in fusio_probare. Test L now records phase order.
+Plant: original order → "producentes PRIMUM, deinde instrumenta" FRACTUM.
+
+Correction to a first guess: name mapping is NOT a problem. lib/portae.c
+already adds the hyphen variant (tools/briar_spectator.c →
+bin/briar-spectator) as a second candidate.
+
+Tooling note: `silva.planta(..., tolerans='spatia')` on a multi-line
+Python anchor re-flowed the indentation and produced an IndentationError
+("signum absens"), which is not a valid plant. For Python files, hand-plant
+with an exact replace plus backup/restore.

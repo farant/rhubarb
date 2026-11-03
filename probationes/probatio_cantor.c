@@ -541,6 +541,35 @@ _sectio_instrumenta (
                  == sonitus_praeparatum("punctum")->forma);
 }
 
+/* verba (cantor.h): nota cum vocali tibiam eius vocalis incipit
+ * (o i a); sine verbis vocalis instrumenti */
+interior vacuum
+_sectio_verba (
+    CredoContextus* c)
+{
+    constans Carmen* k = _carmen(c,
+        "<carmina><carmen titulus=\"v\" tempus=\"120\">"
+        "<pars titulus=\"c\" instrumentum=\"schola\">"
+        "<frustum mensura=\"1\"><textus!>l4 c d e</textus>"
+        "<verba!>Do-mi-na</verba></frustum></pars>"
+        "<pars titulus=\"s\" instrumentum=\"schola\">"
+        "<frustum mensura=\"1\"><textus!>l4 e</textus></frustum>"
+        "</pars></carmen></carmina>");
+
+    CREDO_NECESSE (k != NIHIL && concentus != NIHIL);
+    CREDO_NECESSE (cantor_incipere(cantor, k, ZEPHYRUM));
+    _currere(CMXCIX * II);
+    CREDO_NECESSE (_numerus(MIXTURA_IUSSUM_TIBIAM) >= IV);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_TIBIAM, ZEPHYRUM)->tibia.vocalis
+                 == 3.0f);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_TIBIAM, I)->tibia.vocalis
+                 == tibia_praeparatum("schola")->vocalis);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_TIBIAM, II)->tibia.vocalis
+                 == 2.0f);
+    CREDO_VERUM (_iussum(MIXTURA_IUSSUM_TIBIAM, III)->tibia.vocalis
+                 == 0.0f);
+}
+
 /* instrumenta libri: ante resolutorem (etiam proprium) - carmen suum
  * sonum definit */
 interior vacuum
@@ -1254,6 +1283,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vivum", _sectio_vivum, _parare, NIHIL, NIHIL, NIHIL },
     { "instrumenta", _sectio_instrumenta, _parare, NIHIL, NIHIL,
         NIHIL },
+    { "verba", _sectio_verba, _parare, NIHIL, NIHIL, NIHIL },
     { "instrumenta_libri", _sectio_instrumenta_libri, _parare, NIHIL,
         NIHIL,
         NIHIL },

@@ -22,7 +22,7 @@
 #include "chorda_aedificator.h"
 #include "internamentum.h"
 #include "xar.h"
-#include "xml.h"
+#include "xml_documentum.h"
 #include "stml.h"
 #include "filum.h"
 #include <stdio.h>
@@ -96,20 +96,43 @@ _ad_literas (
 /* textus liberi <titulus> elementi, aut "" */
 interior vacuum
 _textus_liberi (
-               XmlNodus* e,
+     constans XmlCoctus* e,
      constans character* titulus,
               character* exitus,
                     s32  capacitas,
                 Piscina* p)
 {
-    XmlNodus* l = xml_invenire_liberum(e, titulus);
+     constans XmlCoctus* l = xml_filius(e, titulus);
+                 chorda  t;
 
-    si (l == NIHIL)
+    si (l == NIHIL || !xml_textus_totus(l, p, &t))
     {
         exitus[ZEPHYRUM] = '\0';
         redde;
     }
-    _ad_literas(xml_textus_internus(l, p), exitus, capacitas);
+    _ad_literas(t, exitus, capacitas);
+}
+
+/* filii titulo dato (Xar de constans XmlCoctus*) */
+interior Xar*
+_filii (
+               Piscina* p,
+    constans XmlCoctus* e,
+    constans character* titulus)
+{
+                   Xar* x = xar_creare(p,
+                               (i32)magnitudo(constans XmlCoctus*));
+    constans XmlCoctus* f;
+
+    si (x == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (f = xml_filius(e, titulus); f; f = xml_frater(f, titulus))
+    {
+        *(constans XmlCoctus**)xar_addere(x) = f;
+    }
+    redde x;
 }
 
 interior b32
@@ -187,43 +210,43 @@ _in_indice (
 }
 
 /* radix ISO_4217 (resultus aut documentum aut elementum) */
-interior XmlNodus*
+interior constans XmlCoctus*
 _radix_iso (
     constans character* via,
              character* publicatum,
                Piscina* p)
 {
-         chorda  textus = filum_legere_totum(via, p);
-    XmlResultus  r;
-         chorda* pb;
+                 chorda textus = filum_legere_totum(via, p);
+          XmlDocumentum* d;
+    constans XmlCoctus* radix;
+                 chorda  pb;
 
     si (textus.datum == NIHIL || textus.mensura == ZEPHYRUM)
     {
         _mori("legi non potest", via);
     }
-    r = xml_legere(textus, p, internamentum_creare(p));
-    si (!r.successus || r.radix == NIHIL)
+    d      = xml_documentum_legere(textus, p);
+    radix  = xml_documentum_radix(d);
+    si (!xml_documentum_successus(d) || radix == NIHIL)
     {
         _mori("XML malum", via);
     }
-    si (   r.radix->titulus == NIHIL || !chorda_aequalis_literis(
-        *r.radix->titulus, "ISO_4217"))
+    si (!chorda_aequalis_literis(xml_titulus(radix), "ISO_4217"))
     {
-        XmlNodus* iso = xml_invenire_liberum(r.radix, "ISO_4217");
+        constans XmlCoctus* iso = xml_filius(radix, "ISO_4217");
 
         si (iso == NIHIL)
         {
             _mori("radix ISO_4217 deest", via);
         }
-        r.radix = iso;
+        radix = iso;
     }
-    pb = xml_attributum_capere(r.radix, "Pblshd");
-    si (pb == NIHIL)
+    si (!xml_attributum(radix, "Pblshd", &pb))
     {
         _mori("Pblshd deest", via);
     }
-    _ad_literas(*pb, publicatum, XXXII);
-    redde r.radix;
+    _ad_literas(pb, publicatum, XXXII);
+    redde radix;
 }
 
 interior vacuum
@@ -231,25 +254,26 @@ _legere_unum (
     constans character* via,
                Piscina* p)
 {
-     XmlNodus* radix   = _radix_iso(via, publicatum_unum, p);
-     XmlNodus* tabula  = xml_invenire_liberum(radix, "CcyTbl");
-          Xar* ingressus;
-          s32  i;
+     constans XmlCoctus* radix   = _radix_iso(via, publicatum_unum, p);
+     constans XmlCoctus* tabula  = xml_filius(radix, "CcyTbl");
+                    Xar* ingressus;
+                    s32  i;
 
     si (tabula == NIHIL)
     {
         _mori("CcyTbl deest", via);
     }
-    ingressus = xml_invenire_omnes_liberos(tabula, "CcyNtry", p);
+    ingressus = _filii(p, tabula, "CcyNtry");
     per (i = ZEPHYRUM; ingressus
         && i < (s32)xar_numerus(ingressus); i++)
     {
-         XmlNodus* e = *(XmlNodus**)xar_obtinere(ingressus, (i32)i);
-        character  codex[VIII];
-        character  unitates[XVI];
-        character  numerus[XVI];
-        character  titulus[TITULUS_MAXIMUS];
-              s32  k;
+         constans XmlCoctus* e =
+             *(constans XmlCoctus**)xar_obtinere(ingressus, (i32)i);
+                  character codex[VIII];
+                  character unitates[XVI];
+                  character numerus[XVI];
+                  character titulus[TITULUS_MAXIMUS];
+                        s32 k;
 
         _textus_liberi(e, "Ccy", codex, VIII, p);
         si (codex[ZEPHYRUM] == '\0')
@@ -315,22 +339,24 @@ _legere_tertium (
     constans character* via,
                Piscina* p)
 {
-     XmlNodus* radix   = _radix_iso(via, publicatum_tertium, p);
-     XmlNodus* tabula  = xml_invenire_liberum(radix, "HstrcCcyTbl");
-          Xar* ingressus;
-          s32  i;
+     constans XmlCoctus* radix = _radix_iso(via, publicatum_tertium,
+         p);
+     constans XmlCoctus* tabula = xml_filius(radix, "HstrcCcyTbl");
+                    Xar* ingressus;
+                    s32  i;
 
     si (tabula == NIHIL)
     {
         _mori("HstrcCcyTbl deest", via);
     }
-    ingressus = xml_invenire_omnes_liberos(tabula, "HstrcCcyNtry", p);
+    ingressus = _filii(p, tabula, "HstrcCcyNtry");
     per (i = ZEPHYRUM; ingressus
         && i < (s32)xar_numerus(ingressus); i++)
     {
-         XmlNodus* e = *(XmlNodus**)xar_obtinere(ingressus, (i32)i);
-        character  codex[VIII];
-        character  numerus[XVI];
+         constans XmlCoctus* e =
+             *(constans XmlCoctus**)xar_obtinere(ingressus, (i32)i);
+                  character codex[VIII];
+                  character numerus[XVI];
 
         _textus_liberi(e, "Ccy", codex, VIII, p);
         _textus_liberi(e, "CcyNbr", numerus, XVI, p);

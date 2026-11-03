@@ -23,16 +23,34 @@
  * Auxilia: creatio canonica
  * ================================================== */
 
+/* FORMA XVI OCTETORUM (budget B1 D1, 2026-10-28): membra != NIHIL ->
+ * parvus = signum x longitudo (ut _mp_size GMP). Magnus olim XXIV
+ * octeti: in arm64 structura > XVI octetis per memoriam transit et
+ * redditur, ergo omnis copia valoris = memcpy, quod ASan in vocationem
+ * __asan_memcpy vertit (~35% probationis cellae sub venenum). XVI
+ * octeti per registra x0/x1 transeunt - nulla copia. */
+interior s32
+_signum_membrorum (
+    Magnus a)
+{
+    redde (a.parvus < ZEPHYRUM) ? -I : I;
+}
+
+interior i32
+_longitudo_membrorum (
+    Magnus a)
+{
+    redde (i32)((a.parvus < ZEPHYRUM) ? -a.parvus : a.parvus);
+}
+
 interior Magnus
 _parvus (
     s64 valor)
 {
     Magnus a;
 
-    a.parvus     = valor;
-    a.signum     = ZEPHYRUM;
-    a.longitudo  = ZEPHYRUM;
-    a.membra     = NIHIL;
+    a.parvus = valor;
+    a.membra = NIHIL;
     redde a;
 }
 
@@ -99,9 +117,7 @@ _ex_signo_et_modulo (
     {
         redde _parvus(-(s64)(modulus - 1ULL) - I);
     }
-    a.parvus            = ZEPHYRUM;
-    a.signum            = signum;
-    a.longitudo         = II;
+    a.parvus            = (s64)signum * (s64)II;
     a.membra            = _membra_nova(piscina, II);
     a.membra[ZEPHYRUM]  = (i32)modulus;
     a.membra[I]         = (i32)(modulus >> XXXII);
@@ -141,10 +157,8 @@ _ex_moduli_propriis (
             redde _parvus(-(s64)(modulus - 1ULL) - I);
         }
     }
-    a.parvus     = ZEPHYRUM;
-    a.signum     = signum;
-    a.longitudo  = longitudo;
-    a.membra     = moduli;
+    a.parvus = (s64)signum * (s64)longitudo;
+    a.membra = moduli;
     redde a;
 }
 
@@ -170,8 +184,8 @@ _aspectus (
     alioquin
     {
         *moduli     = a.membra;
-        *longitudo  = a.longitudo;
-        *signum     = a.signum;
+        *longitudo  = _longitudo_membrorum(a);
+        *signum     = _signum_membrorum(a);
     }
 }
 
@@ -595,7 +609,7 @@ magnus_signum (
 {
     si (a.membra != NIHIL)
     {
-        redde a.signum;
+        redde _signum_membrorum(a);
     }
     redde (a.parvus > ZEPHYRUM) - (a.parvus < ZEPHYRUM);
 }
@@ -656,7 +670,8 @@ magnus_nega (
         redde _ex_signo_et_modulo(I, MAGNUS_LIMES_NEGATIVUS, piscina);
     }
     /* membra partita: +2^63 negatum in s64 capit */
-    redde _ex_moduli_propriis(-a.signum, a.membra, a.longitudo);
+    redde _ex_moduli_propriis(-_signum_membrorum(a), a.membra,
+        _longitudo_membrorum(a));
 }
 
 Magnus
@@ -952,9 +967,9 @@ _per_alternas (
        b32 ambo)
 {
     b32 a_magnus = a.membra != NIHIL
-        && a.longitudo > MAGNUS_LIMES_ALTERNARUM;
+        && _longitudo_membrorum(a) > MAGNUS_LIMES_ALTERNARUM;
     b32 b_magnus = b.membra != NIHIL
-        && b.longitudo > MAGNUS_LIMES_ALTERNARUM;
+        && _longitudo_membrorum(b) > MAGNUS_LIMES_ALTERNARUM;
 
     redde ambo ? (a_magnus && b_magnus) : (a_magnus || b_magnus);
 }
@@ -1043,8 +1058,8 @@ _transcribere (
     {
         redde a;
     }
-    copia.membra = _membra_nova(piscina, a.longitudo);
-    per (k = ZEPHYRUM; k < a.longitudo; k++)
+    copia.membra = _membra_nova(piscina, _longitudo_membrorum(a));
+    per (k = ZEPHYRUM; k < _longitudo_membrorum(a); k++)
     {
         copia.membra[k] = a.membra[k];
     }
@@ -1104,11 +1119,11 @@ magnus_residuum_parvum (
     }
     /* Horner super membra ab summo: residuum < n < 2^32, ergo
      * (residuum << 32) | membrum < 2^64 */
-    per (k = a.longitudo; k-- > ZEPHYRUM;)
+    per (k = _longitudo_membrorum(a); k-- > ZEPHYRUM;)
     {
         residuum = ((residuum << XXXII) | (i64)a.membra[k]) % (i64)n;
     }
-    si (a.signum < ZEPHYRUM && residuum != ZEPHYRUM)
+    si (_signum_membrorum(a) < ZEPHYRUM && residuum != ZEPHYRUM)
     {
         residuum = (i64)n - residuum;
     }
@@ -1134,6 +1149,25 @@ magnus_divisor_communis (
             Magnus y = magnus_absolutum(b, piscina);
 
     _apex_alternarum = ZEPHYRUM;
+    /* AMBO PARVI (budget B1 D2): Euclides in i64 - olim per
+     * magnus_divide et copias valoris (59% huius functionis sub ASan
+     * memcpy erat); gcd unicum, >= 0, ergo idem fructus.
+     * _ex_signo_et_modulo casum unum extra s64 tractat (gcd(S64_MIN,
+     * 0) = 2^63). */
+    si (a.membra == NIHIL && b.membra == NIHIL)
+    {
+        i64 m = _absolutum_s64(a.parvus);
+        i64 n = _absolutum_s64(b.parvus);
+
+        dum (n != ZEPHYRUM)
+        {
+            i64 r = m % n;
+
+            m = n;
+            n = r;
+        }
+        redde _ex_signo_et_modulo(I, m, piscina);
+    }
     /* operandus pauci membrorum: in piscina vocantis (vide
      * _per_alternas) */
     si (!_per_alternas(a, b, VERUM) || !_alternae_aperire(&al))

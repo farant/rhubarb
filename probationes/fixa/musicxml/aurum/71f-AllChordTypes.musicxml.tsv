@@ -1,0 +1,40 @@
+DATA musicxml tabula 1
+# pars	initium	longitudo	midi	littera	alteratio	gratia	versus
+# oraculum: music21 10.5.2 congruit (2026-10-30)
+P1	0	1	60	C	0	0	1:single:major
+P1	1	1	60	C	0	0	1:single:minor
+P1	2	1	60	C	0	0	1:single:augmented
+P1	3	1	60	C	0	0	1:single:diminished
+P1	4	1	60	C	0	0	1:single:dominant
+P1	5	1	60	C	0	0	1:single:major-seventh
+P1	6	1	60	C	0	0	1:single:minor-seventh
+P1	7	1	60	C	0	0	1:single:diminished-seventh
+P1	8	1	60	C	0	0	1:single:augmented-seventh
+P1	9	1	60	C	0	0	1:single:half-diminished
+P1	10	1	60	C	0	0	1:single:major-minor
+P1	11	1	60	C	0	0	1:single:major-sixth
+P1	12	1	60	C	0	0	1:single:minor-sixth
+P1	13	1	60	C	0	0	1:single:dominant-ninth
+P1	14	1	60	C	0	0	1:single:major-ninth
+P1	15	1	60	C	0	0	1:single:minor-ninth
+P1	16	1	60	C	0	0	1:single:dominant-11th
+P1	17	1	60	C	0	0	1:single:major-11th
+P1	18	1	60	C	0	0	1:single:minor-11th
+P1	19	1	60	C	0	0	1:single:dominant-13th
+P1	20	1	60	C	0	0	1:single:major-13th
+P1	21	1	60	C	0	0	1:single:minor-13th
+P1	22	1	60	C	0	0	1:single:suspended-second
+P1	23	1	60	C	0	0	1:single:suspended-fourth
+P1	24	1	60	C	0	0	1:single:Neapolitan
+P1	25	1	60	C	0	0	1:single:Italians
+P1	26	1	60	C	0	0	1:single:French
+P1	27	1	60	C	0	0	1:single:German
+P1	28	1	60	C	0	0	1:single:pedal
+P1	29	1	60	C	0	0	1:single:power
+P1	30	1	60	C	0	0	1:single:Tristan
+P1	31	1	60	C	0	0	1:single:other
+P1	32	2	60	C	0	0	1:single:Inversion
+P1	34	1/2	60	C	0	0	1:single:Fbb/C
+P1	69/2	1/2	60	C	0	0	1:single:G#/D#
+P1	36	1	60	C	0	0	1:single:C-3+5b
+P1	37	1	60	C	0	0	1:single:C-1+6b

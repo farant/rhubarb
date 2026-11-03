@@ -25,3 +25,11 @@ ClientHello order: server_name, supported_groups, signature_algorithms,
 supported_versions, cookie (CH2 only), key_share. CH2 keeps
 supported_groups {x25519, secp256r1} (RFC 8446 4.1.2: only key_share,
 cookie, early_data, psk, padding may change).
+
+## 2026-10-31 - ALPN (http2-plan T7)
+
+- ClientHello gains extension 0x0010 only when `Tls13SalutatioParametri.protocolla` is given; without it the hello is byte-identical (the RFC 8448 replays in probatio_tls13_* still pass, and the ALPN suite checks the length drops by exactly the 18 extension octets for {"h2","http/1.1"}). Names must be 1..255 octets or the writer refuses (fractus).
+- `tls13_extensiones_legere` now also returns the ALPN name from EncryptedExtensions; a list that does not hold exactly one non-empty name is malformed (RFC 7301 3.1). CertificateRequest passes NIHIL. The machine (`lib/tls13.c`, STADIUM_EE) checks the name was offered (`tls13_protocollum_oblatum`), else illegal_parameter (RFC 7301 3.2), and keeps it for `tls13_machina_protocollum`.
+- BearSSL: `br_ssl_engine_set_protocol_names` before `br_ssl_client_reset`, names copied into the connection piscina; `br_ssl_engine_get_selected_protocol` after the handshake. The descensus path (TLS13 -> BearSSL on the same connection) goes through the same `_parare`, so ALPN survives the fallback (tested against `openssl s_server -tls1_2 -alpn h2`).
+- SecureTransport: not wired (C7) - `tls_protocollum` returns empty there.
+- Gotcha: `nomen` (typedef macro) as a Cursor variable name -> examen REICE; `servus_tls.h` helpers are `interior` - a suite must call `servum_tls_incipere` or -Wunused-function fails the build.

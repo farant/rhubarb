@@ -416,6 +416,18 @@ pictor_imago_fons (
     {
         redde pictor_pinacotheca_pinax(pf->pinacotheca, provenientia);
     }
+    /* plan-5 T6: "alienus:..." -> pinax picturae alienae;
+     * "spectatus:..." -> spectaculum 1:1 (Franus 2026-10-30) */
+    si (   pf->communia
+        && (   (   provenientia.mensura > VIII
+                && memcmp(provenientia.datum, "alienus:", VIII)
+                   == ZEPHYRUM)
+            || (   provenientia.mensura > X
+                && memcmp(provenientia.datum, "spectatus:", X)
+                   == ZEPHYRUM)))
+    {
+        redde pictor_communia_pinax(pf->communia, provenientia);
+    }
     si (chorda_aequalis(provenientia,
             pictor_documentum_sigillum_hex(pf->doc, pf->doc->piscina)))
     {
@@ -581,6 +593,18 @@ figura_quadrati (
             VERUM);
         redde;
     }
+    /* spectator 1:1 (Franus 2026-10-30): "spectatus:..." - imago
+     * nodum totum tegit, sine margine aut fundo quadrati */
+    si (   c->titulus.mensura > X
+        && memcmp(c->titulus.datum, "spectatus:", X) == ZEPHYRUM)
+    {
+        f.x         = ZEPHYRUM;
+        f.y         = ZEPHYRUM;
+        f.latitudo  = c->fines.latitudo;
+        f.altitudo  = c->fines.altitudo;
+        mandata_imago(m, c->titulus, f);
+        redde;
+    }
     /* pinacotheca D3: "pagina:p / n" - textus centratus sine margine */
     si (   c->titulus.mensura > VII
         && memcmp(c->titulus.datum, "pagina:", VII) == ZEPHYRUM)
@@ -648,6 +672,32 @@ figura_quadrati (
         iconem_pingere(m, icon_lineae, II, II);
         redde;
     }
+    /* plan-5 T7: campus textus "campus:<textus>" - sinistrorsum, cauda
+     * si longior, cursor post textum */
+    si (t.mensura >= VII && memcmp(t.datum, "campus:", VII) == ZEPHYRUM)
+    {
+          s32 capacitas;
+        Fines k;
+
+        reliquum.datum    = t.datum + VII;
+        reliquum.mensura  = t.mensura - VII;
+        capacitas         = (c->fines.latitudo - XII) / VI;
+        capacitas         = capacitas < I ? I : capacitas;
+        si ((s32)reliquum.mensura > capacitas)
+        {
+            reliquum.datum    += reliquum.mensura - (i32)capacitas;
+            reliquum.mensura  = (i32)capacitas;
+        }
+        mandata_textus(m, IV, (c->fines.altitudo - VIII) / II, reliquum,
+            ZEPHYRUM, figura_color_thematis(COLOR_TEXT));
+        k.x         = IV + VI * (s32)reliquum.mensura;
+        k.y         = (c->fines.altitudo - VIII) / II;
+        k.latitudo  = I;
+        k.altitudo  = VIII;
+        mandata_rectangulum(m, k, figura_color_thematis(COLOR_TEXT),
+            VERUM);
+        redde;
+    }
     /* glutinatio pendens: "textus:<litterae>" centrata (A, B, OK, X) */
     si (t.mensura > VII && memcmp(t.datum, "textus:", VII) == ZEPHYRUM)
     {
@@ -689,7 +739,9 @@ figura_quadrati (
     }
     /* pinacotheca D4: pinax - imago (fons "pinax:..." sine
      * ':electum') intra marginem II; margo accentus si aperta */
-    si (t.mensura > VI && memcmp(t.datum, "pinax:", VI) == ZEPHYRUM)
+    si (   (t.mensura > VI && memcmp(t.datum, "pinax:", VI) == ZEPHYRUM)
+        || (t.mensura > VIII
+            && memcmp(t.datum, "alienus:", VIII) == ZEPHYRUM))
     {
         Fines g;
 
@@ -1008,11 +1060,13 @@ figura_palettae (
      * communi, importare ex numero liberorum (II aut III) */
     si (chorda_aequalis_literis(c->id, "elenchus"))
     {
-           Elenchus e;
-        ElenchusRes res[III];
+                         Elenchus  e;
+                      ElenchusRes  res[V];
+           constans PictorFigurae* pf = (constans PictorFigurae*)ctx;
+         PictorElenchiCondiciones  k;
 
-        pictor_elenchum_parare(c->liberi
-            && xar_numerus(c->liberi) == III, res, &e);
+        k = pictor_elenchi_condiciones(pf ? pf->compositio : NIHIL);
+        pictor_elenchum_parare(&k, res, &e);
         elenchus_figura(c, m, thema, &e);
         redde;
     }

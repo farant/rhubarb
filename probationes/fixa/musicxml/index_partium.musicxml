@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- index_partium: part-group praeteritur; P2 in indice sine part (omissa); P4 sine score-part (servata, titulus = id) -->
+<score-partwise version="4.0">
+  <part-list>
+    <part-group type="start" number="1"><group-symbol>bracket</group-symbol></part-group>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+    <score-part id="P2"><part-name>Altus</part-name></score-part>
+    <part-group type="stop" number="1"/>
+    <score-part id="P3"><part-name>Bassus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>1</duration></note>
+    </measure>
+  </part>
+  <part id="P3">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note><pitch><step>C</step><octave>3</octave></pitch><duration>1</duration></note>
+    </measure>
+  </part>
+  <part id="P4">
+    <measure number="1">
+      <attributes><divisions>1</divisions></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>1</duration></note>
+    </measure>
+  </part>
+</score-partwise>

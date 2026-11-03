@@ -3914,3 +3914,19 @@ mode (`photographia` = explicit opt-out). Verdicts are unchanged; each
 member that RUNS leaves `<area>vestigia_umbra.txt` and a
 `fabrica.umbra_discordia` fact - evidence accumulates with every commit.
 Cost: the tracked snapshot twice per member that runs (~50 ms).
+
+## 2026-10-27 - `fabrica legentes` (budget B9 2a)
+
+"Which actions read this file?" - for mensor's intervention cohorts (an
+intervention only splits the history of titles it can affect). Two
+sources, both needed: (1) member CLOSURES - a test member links its
+library but never reads the source at runtime (probatio_css_arbor's trace
+has one row), and member expansion already puts every closure file in the
+member's inputs (`ingressus:fasciculus`), so `_declarationes_colligere`
+gives them for free; directory-style inputs (plagulae) match a path under
+them. (2) the last TRACE per action (fabrica.db `lectiones`): L/X/A on the
+path (relative or absolute under the root), D on its parent directory -
+e.g. the silva corpus suites list lib/ and read every source as data.
+Real tree: lib/piscina.c -> 617 actions (every member of every composite
++ 25 build actions), lib/mensura_quaestio.c -> 33, ~4.5 s. fumus LXX;
+plants (closure match off, trace query off) each red.

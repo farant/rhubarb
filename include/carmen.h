@@ -30,7 +30,13 @@
  *             clavis, fermata): tempus N mensurae (1 = initium;
  *             unitas = carmen_tempus_mensurae, ut locus 'M:T' - in 6/8
  *             octavae tres)
- *   metrum    N/D, D potentia II (1..64), N 1..64
+ *   metrum    N/D, D potentia II (1..64), N 1..64; aut "liberum"
+ *             (cantus liber): mensurae ex lineis '|' partis primae
+ *             (frustum unum ad mensuram 1) - quodque incisum mensura
+ *             sua, longitudine scripta; post lineam ultimam mensura
+ *             usque ad finem partis. Tempus mensurae (ictus, M:T):
+ *             octava (punctum). Liberum solum in carmine: <metrum>,
+ *             agogica, comitatus cum libero vitia.
  *   agogica   in carmine (metro initiali) aut in <metrum>: pondera
  *             K partium aequalium mensurae ("0.86 1.15 0.99" in 3/4;
  *             "2 1 2 1 2 1 2 1" = octavae inaequales in 4/4), normata
@@ -39,9 +45,15 @@
  *             0.99". Valet usque ad metrum proximum (sine agogica =
  *             aequale). K 2..XVI, pondera > 0, mensura in K partes
  *             pulsuum integras divisibilis
- *   clavis    littera [#|b] maior|minor [caerulea] (quintae -7..7, ut
- *             MusicXML; caerulea = blues: toni b3 b5 b7 tonicae in
- *             clave - censura.h, functio.h)
+ *   clavis    littera [#|b] (maior|minor [caerulea] | MODUS) (quintae
+ *             -7..7, ut MusicXML; caerulea = blues: toni b3 b5 b7
+ *             tonicae in clave - censura.h, functio.h). MODI
+ *             ecclesiastici (Glareanus): ionius, dorius, phrygius,
+ *             lydius, mixolydius, aeolius - littera = FINALIS, scala
+ *             = collectio diatonica rotata ("d dorius" = notae albae
+ *             super D; "g dorius" cum Bb; "e phrygius" albae super E).
+ *             Plagales (hypodorius ...) clavem eandem habent - ambitus
+ *             solum differt, non hic.
  *   tempus    20..400 quartae per minutum (ordinarium CXX); sine
  *             'usque' gradus; cum usque="M" clivus: a tempore vigente
  *             ad valorem, linearis in pulsibus, finis ad initium
@@ -118,6 +130,20 @@
  *             (transposita); emendatio non mutat (fontem nominat)
  *   textus    MML (cantus.h) SINE 't' - tempus carminis est; '@'
  *             praeparatum per notam (percussio sonitus) admittitur
+ *   verba     <frustum mensura="M"><textus!>...</textus>
+ *             [<verba!>Sal-ve Re-gi-na, ma-ter_ mi-se-ri-cor-di-ae
+ *             </verba>]</frustum>
+ *             VERBA (cantus cum textu): syllabae notis ordine
+ *             adsignantur (pausae omissae; nota ligata una): spatium
+ *             aut '-' syllabas dividit; '_' notam proximam syllabae
+ *             priori addit (melisma); interpunctio , . ; : ! ? omissa.
+ *             Syllabae plures quam notae: vitium; notae post ultimam
+ *             syllabam vocalem eius servant.
+ *             VOCALIS syllabae (Latina ecclesiastica): ae, oe -> e; au
+ *             -> a; y -> i; u post q aut g ante vocalem, et i initialis
+ *             ante vocalem (consonantes: "qui", "Ie-sus") omittuntur;
+ *             deinde vocalis prima (litterae majusculae ut minusculae);
+ *             syllaba sine vocali vocalem priorem servat.
  *   pars      instrumentum necessarium; lucrum 0..1 (1); positio
  *             -1..1 (0, potentia constans); reverberatio 0..1 (0:
  *             missio ad aulam); mutus, solus (attributa sine valore);
@@ -146,6 +172,7 @@
  *                 lapsus, tenor, remissio, vibratus, celeritas, gravia,
  *                 amplitudo, decrementum, claritas, ratio, index,
  *                 partiales="r:a:d ...", vocalis (a|e|i|o|u aut 0..4),
+ *                 vox (tenor|bassus|altus|superius: tabula formantium),
  *                 flatus, resonans, acumen, motus (-48..48),
  *                 unisonus (1..7), dispersio (centesimae 0..100),
  *                 mora (vibrati, secundae);
@@ -199,6 +226,10 @@ nomen structura {
           b32 acordi;        /* nota generata ex acordo declarato
                                * (comitatus): acordi est, numquam
                                * aliena (explicatio) */
+          f32 vocalis;       /* verba: 0..4 (a e i o u); -1 =
+                               * instrumenti */
+       chorda syllaba;       /* verba: syllaba ut scripta (nota prima
+                               * eius; melisma vacua) */
 } CarmenNota;
 
 nomen structura {
@@ -243,6 +274,9 @@ nomen structura {
        i32 numerus_ponderum;                 /* 0 = aequale */
     chorda inaequalitas;                     /* 'agogica' ut scripta;
                                               * vacua */
+       b32 liberum;     /* mensura ex inciso scripto (numerator 0,
+                         * denominator VIII: tempus octava) */
+       s64 longitudo;   /* liberum: pulsus mensurae */
 } CarmenMetrum;
 
 nomen structura {
@@ -250,6 +284,9 @@ nomen structura {
     s32 quintae;              /* -7 (7 b) .. 7 (7 #) */
     b32 minor;
     b32 caerulea;             /* modus caeruleus (blues) */
+    s32 modus;                /* 0 nullus (maior/minor tonales); 1
+                               * ionius 2 dorius 3 phrygius 4 lydius
+                               * 5 mixolydius 6 aeolius */
 } CarmenClavis;
 
 /* sectio nominata: [pulsus, usque) */

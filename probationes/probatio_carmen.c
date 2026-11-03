@@ -233,6 +233,44 @@ _sectio_legere (
     CREDO_VERUM (k->claves[I].minor);
     CREDO_VERUM (k->claves[I].caerulea);
 
+    CREDO_GRADUS ("modi ecclesiastici: finalis, collectio, modus");
+    {
+        hic_manens constans character* constans claves[] = {
+            "d dorius", "g dorius", "e phrygius", "f lydius",
+            "g mixolydius", "a aeolius", "c ionius", "f# phrygius",
+            "bb mixolydius", NIHIL };
+        hic_manens constans s32 quintae[] = {
+            ZEPHYRUM, -I, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM,
+            ZEPHYRUM, II, -III };
+        hic_manens constans s32 modi[] = {
+            II, II, III, IV, V, VI, I, III, V };
+        i32 i;
+
+        per (i = ZEPHYRUM; claves[i] != NIHIL; i++)
+        {
+            character* s = (character*)piscina_allocare(c->piscina,
+                CXXVIII);
+
+            sprintf(s, " clavis=\"%s\"", claves[i]);
+            CREDO_NECESSE (_legere(c, _carmen(c, s,
+                "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+                "mensura=\"1\"><textus!>c1</textus></frustum></pars>"),
+                &liber));
+            k = &liber.carmina[ZEPHYRUM];
+            CREDO_AEQUALIS_S32 (k->claves[ZEPHYRUM].quintae,
+                quintae[i]);
+            CREDO_AEQUALIS_S32 (k->claves[ZEPHYRUM].modus, modi[i]);
+            CREDO_FALSUM (k->claves[ZEPHYRUM].minor);
+        }
+    }
+    /* clavis tonalis: modus nullus */
+    CREDO_NECESSE (_legere(c, _carmen(c, " clavis=\"d minor\"",
+        "<pars titulus=\"a\" instrumentum=\"aether\"><frustum "
+        "mensura=\"1\"><textus!>c1</textus></frustum></pars>"),
+        &liber));
+    CREDO_AEQUALIS_S32 (liber.carmina[ZEPHYRUM].claves[ZEPHYRUM].modus,
+                        ZEPHYRUM);
+
     CREDO_GRADUS ("clavis acuta, tempus mensura I, '@' cum t");
     CREDO_NECESSE (_legere(c, _carmen(c, " clavis=\"f# minor\"",
         "<tempus mensura=\"1\" valor=\"100\"/>"
@@ -292,6 +330,12 @@ _sectio_vitia (
     _vitium(c, _carmen(c, " clavis=\"f maior blues\"", pars_bona), "x",
             "", -I, ZEPHYRUM);
     _vitium(c, _carmen(c, " clavis=\"f caerulea\"", pars_bona), "x", "",
+            -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"d dorian\"", pars_bona), "x", "",
+            -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"d dorius caerulea\"", pars_bona),
+            "x", "", -I, ZEPHYRUM);
+    _vitium(c, _carmen(c, " clavis=\"c# lydius\"", pars_bona), "x", "",
             -I, ZEPHYRUM);
     _vitium(c, _carmen(c, " clavis=\"f maior caerulea \"", pars_bona),
             "x", "", -I, ZEPHYRUM);
@@ -614,7 +658,7 @@ _sectio_instrumenta (
     b = carmina_invenire(&liber, _ch(c, "b"));
     CREDO_NECESSE (a != NIHIL && b != NIHIL);
     /* sine instrumentario ordinario (XI, sub libro) */
-    CREDO_AEQUALIS_I32 (a->numerus_instrumentarii, XI);
+    CREDO_AEQUALIS_I32 (a->numerus_instrumentarii, XIII);
     CREDO_AEQUALIS_I32 (a->numerus_instrumentorum
                         - a->numerus_instrumentarii, VIII);
     CREDO_AEQUALIS_I32 (b->numerus_instrumentorum
@@ -865,6 +909,10 @@ hic_manens constans character LIBER_FORMANTIUM[] =
     " vocalis=\"1.5\" flatus=\"0.2\"/>"
     "<instrumentum titulus=\"pad\" forma=\"serra\" resonans=\"800\""
     " acumen=\"6\" motus=\"-12\"/>"
+    "<instrumentum titulus=\"bassus_x\" basis=\"schola\""
+    " vox=\"bassus\"/>"
+    "<instrumentum titulus=\"superius_x\" basis=\"bassus_x\""
+    " vox=\"superius\"/>"
     "<carmen titulus=\"a\"><pars titulus=\"p\" "
     "instrumentum=\"schola_u\">"
     "<frustum mensura=\"1\"><textus!>c4</textus></frustum></pars>"
@@ -898,6 +946,12 @@ _sectio_formantes (
                  && x->parametra.acumen == 6.0f
                  && x->parametra.motus == -12.0f
                  && x->parametra.forma == (f32)SONUS_UNDA_SERRA);
+    x = carmen_instrumentum(a, _ch(c, "bassus_x"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (x->parametra.vox == 1.0f);
+    x = carmen_instrumentum(a, _ch(c, "superius_x"));
+    CREDO_NECESSE (x != NIHIL);
+    CREDO_VERUM (x->parametra.vox == 3.0f);
 }
 
 interior vacuum
@@ -909,6 +963,10 @@ _sectio_formantes_vitia (
 
     CREDO_VERUM (_instrumentum_recusat(c,
         "<instrumentum titulus=\"x\" vocalis=\"y\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" vox=\"soprano\"/>", causa));
+    CREDO_VERUM (_instrumentum_recusat(c,
+        "<instrumentum titulus=\"x\" vox=\"1\"/>", causa));
     CREDO_VERUM (_instrumentum_recusat(c,
         "<instrumentum titulus=\"x\" vocalis=\"5\"/>", causa));
     CREDO_VERUM (_instrumentum_recusat(c,
@@ -971,10 +1029,10 @@ _sectio_instrumentarium (
                             b32  ambitus = VERUM;
 
     memset(&v, ZEPHYRUM, magnitudo(v));
-    CREDO_GRADUS ("ordinarium: XI instrumenta, ambitus omnibus");
+    CREDO_GRADUS ("ordinarium: XIII instrumenta, ambitus omnibus");
     CREDO_NECESSE (instrumentarium_ordinarium(c->piscina, &domus, &n,
                                               &v));
-    CREDO_AEQUALIS_I32 (n, XI);
+    CREDO_AEQUALIS_I32 (n, XIII);
     per (i = ZEPHYRUM; i < n; i++)
     {
         ambitus = ambitus && (domus[i].infima > ZEPHYRUM
@@ -1001,8 +1059,18 @@ _sectio_instrumentarium (
     CREDO_VERUM (   domus[VII].parametra.genus == 4.0f
                  && domus[VII].parametra.vocalis == 0.0f
                  && domus[VII].infima == XLVIII);
+    CREDO_VERUM (domus[VII].parametra.vox == 0.0f);
     CREDO_CHORDA_AEQUALIS_LITERIS (domus[VIII].titulus, "superius");
-    CREDO_VERUM (domus[VIII].parametra.vocalis == 3.0f);
+    CREDO_VERUM (   domus[VIII].parametra.vocalis == 3.0f
+                 && domus[VIII].parametra.vox == 3.0f);
+    CREDO_CHORDA_AEQUALIS_LITERIS (domus[XI].titulus, "altus");
+    CREDO_VERUM (   domus[XI].parametra.vox == 2.0f
+                 && domus[XI].infima == LIII
+                 && domus[XI].summa == LXXVII);
+    CREDO_CHORDA_AEQUALIS_LITERIS (domus[XII].titulus, "bassus");
+    CREDO_VERUM (   domus[XII].parametra.vox == 1.0f
+                 && domus[XII].infima == XL
+                 && domus[XII].summa == LXIV);
     CREDO_CHORDA_AEQUALIS_LITERIS (domus[IX].titulus, "cornu");
     CREDO_VERUM (domus[IX].parametra.motus == 18.0f);
     CREDO_CHORDA_AEQUALIS_LITERIS (domus[X].titulus, "clarinetum");
@@ -1049,8 +1117,8 @@ _sectio_instrumentarium (
     CREDO_NECESSE (_legere(c, LIBER_DOMUS, &liber));
     k = carmina_invenire(&liber, _ch(c, "k"));
     CREDO_NECESSE (k != NIHIL);
-    CREDO_AEQUALIS_I32 (k->numerus_instrumentarii, XI);
-    CREDO_AEQUALIS_I32 (k->numerus_instrumentorum, XII);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentarii, XIII);
+    CREDO_AEQUALIS_I32 (k->numerus_instrumentorum, XIV);
     x = carmen_instrumentum(k, _ch(c, "cembalo_mollis"));
     CREDO_VERUM (   x != NIHIL && x->parametra.claritas == 0.5f
                  && x->parametra.decrementum == 1.2f
@@ -1758,6 +1826,171 @@ _sectio_bina (
         "</pars>"), "comitatus: figura bina ignota"));
 }
 
+#define VERBA_CARMEN(textus, verba) \
+    "<carmina><carmen titulus=\"v\" clavis=\"d dorius\">" \
+    "<pars titulus=\"c\" instrumentum=\"schola\"><frustum " \
+    "mensura=\"1\"><textus!>" textus "</textus><verba!>" verba \
+    "</verba></frustum></pars></carmen></carmina>"
+
+/* verba (carmen.h): syllabae notis ordine (pausa omissa), '_' melisma,
+ * interpunctio omissa, qui -> i, Ie -> e, post ultimam vocalis manet;
+ * ae oe au y; majusculae, gui/gus, syllaba sine vocali; sine verbis
+ * -1; plures syllabae quam notae vitium; comitatus -1 */
+interior vacuum
+_sectio_verba (
+    CredoContextus* c)
+{
+    hic_manens constans f32 vocales[X] = {
+        0.0f, 1.0f, 1.0f, 1.0f, 2.0f, 0.0f, 2.0f, 1.0f, 4.0f, 4.0f };
+    hic_manens constans f32 diphthongi[IX] = {
+        1.0f, 2.0f, 1.0f, 2.0f, 0.0f, 0.0f, 2.0f, 2.0f, 1.0f };
+    hic_manens constans f32 consonantes[X] = {
+        0.0f, 1.0f, 0.0f, 2.0f, 2.0f, 0.0f, 4.0f, 3.0f, 1.0f, 1.0f };
+                 Carmina  liber;
+     constans CarmenPars* pars;
+     constans CarmenNota* n;
+                     i32  i;
+
+    CREDO_NECESSE (_legere(c, VERBA_CARMEN(
+        "o4 d4 e4 f4 r4 | g4 a4 b4 a4 | g4 f4 d2",
+        "Sal-ve Re_ gi-na, qui Ie-sus."), &liber));
+    n = liber.carmina[ZEPHYRUM].partes[ZEPHYRUM].frusta[ZEPHYRUM].notae;
+    CREDO_NECESSE (liber.carmina[ZEPHYRUM].partes[ZEPHYRUM]
+                       .frusta[ZEPHYRUM].numerus == X);
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        CREDO_VERUM (n[i].vocalis == vocales[i]);
+    }
+    CREDO_CHORDA_AEQUALIS_LITERIS (n[ZEPHYRUM].syllaba, "Sal");
+    CREDO_CHORDA_AEQUALIS_LITERIS (n[II].syllaba, "Re");
+    CREDO_AEQUALIS_I32 (n[III].syllaba.mensura, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS (n[VI].syllaba, "qui");
+    CREDO_CHORDA_AEQUALIS_LITERIS (n[VII].syllaba, "Ie");
+    CREDO_AEQUALIS_I32 (n[IX].syllaba.mensura, ZEPHYRUM);
+    CREDO_NECESSE (_legere(c, VERBA_CARMEN(
+        "o4 d4 e4 f4 g4 | a4 g4 f4 e4 | d1",
+        "cae-li coe-pit lau-dat Ky-ri-e"), &liber));
+    n = liber.carmina[ZEPHYRUM].partes[ZEPHYRUM].frusta[ZEPHYRUM].notae;
+    per (i = ZEPHYRUM; i < IX; i++)
+    {
+        CREDO_VERUM (n[i].vocalis == diphthongi[i]);
+    }
+    /* majusculae; gui (u consonans) sed gus; syllaba sine vocali */
+    CREDO_NECESSE (_legere(c, VERBA_CARMEN(
+        "o4 d4 e4 f4 g4 | a4 g4 f4 e4 | d2 e2",
+        "A-ve san-gui-nis an-gus Quo CAE s"), &liber));
+    n = liber.carmina[ZEPHYRUM].partes[ZEPHYRUM].frusta[ZEPHYRUM].notae;
+    per (i = ZEPHYRUM; i < X; i++)
+    {
+        CREDO_VERUM (n[i].vocalis == consonantes[i]);
+    }
+    CREDO_VERUM (_causa_est(c, VERBA_CARMEN("o4 d4 e4",
+        "Sal-ve Re-gi"), "verba: syllabae plures quam notae"));
+    CREDO_VERUM (_causa_est(c, VERBA_CARMEN("o4 d4 e4", "  "),
+        "verba sine syllabis"));
+    CREDO_NECESSE (_legere(c, _liber_ternarius(c,
+        "<acorda mensura=\"1\" textus=\"C | C | C\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<frustum mensura=\"1\"><textus!>c2.</textus></frustum>"
+        "<comitatus figura=\"valsa\" mensura=\"2\" usque=\"3\"/>"
+        "</pars>"), &liber));
+    pars = &liber.carmina[ZEPHYRUM].partes[ZEPHYRUM];
+    CREDO_VERUM (pars->frusta[ZEPHYRUM].notae[ZEPHYRUM].vocalis
+        == -1.0f);
+    CREDO_VERUM (pars->frusta[I].notae[ZEPHYRUM].vocalis == -1.0f);
+}
+
+#define LIBERUM_CARMEN(cantus, cetera) \
+    "<carmina>" FIGURA_TERNARIA "<carmen titulus=\"l\" " \
+    "metrum=\"liberum\" clavis=\"d dorius\"><pars titulus=\"c\" " \
+    "instrumentum=\"schola\"><frustum mensura=\"1\"><textus!>" \
+    cantus "</textus></frustum></pars>" cetera "</carmen></carmina>"
+
+/* metrum liberum (carmen.h): mensurae ex '|' partis primae, longitudo
+ * scripta; ultra ultimam longitudo ultima; tempus mensurae octava;
+ * pars altera et fermata per mensuram liberam; '|' initialis, finalis
+ * et '||' mensuram vacuam non faciunt; sine '|' mensura una; vitia */
+interior vacuum
+_sectio_liberum (
+    CredoContextus* c)
+{
+    constans s64  longitudines[III]  = { 2880, 3360, 2880 };
+    constans s64  initia[IV]         = { 0, 2880, 6240, 9120 };
+         Carmina  liber;
+ constans Carmen* k;
+             i32  i;
+
+    CREDO_NECESSE (_legere(c, LIBERUM_CARMEN(
+        "o4 l8 d e f g a4 | a8 g f e d4. | f8 g a2",
+        "<pars titulus=\"o\" instrumentum=\"schola\"><frustum "
+        "mensura=\"2\"><textus!>o3 d4.</textus></frustum></pars>"
+        "<fermata mensura=\"3\"/>"), &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_metrorum == III);
+    per (i = ZEPHYRUM; i < III; i++)
+    {
+        CREDO_VERUM (k->metra[i].liberum);
+        CREDO_AEQUALIS_S64 (k->metra[i].longitudo, longitudines[i]);
+        CREDO_AEQUALIS_I32 (k->metra[i].numerus_ponderum, ZEPHYRUM);
+    }
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        CREDO_AEQUALIS_S64 (carmen_pulsus_mensurae(k, i + I),
+                            initia[i]);
+    }
+    CREDO_AEQUALIS_S64 (carmen_tempus_mensurae(k, 3000), (s64)CDLXXX);
+    CREDO_AEQUALIS_S64 (k->partes[I].frusta[ZEPHYRUM].pulsus,
+                        (s64)MMDCCCLXXX);
+    CREDO_AEQUALIS_S64 (k->coronae[ZEPHYRUM].pulsus, (s64)6240);
+    /* '|' initialis, '||', '|' finalis */
+    CREDO_NECESSE (_legere(c, LIBERUM_CARMEN("| o4 d4 e4 || f4 g4 |",
+        ""),
+                           &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_metrorum == II);
+    CREDO_AEQUALIS_S64 (k->metra[I].pulsus, (s64)MCMXX);
+    CREDO_AEQUALIS_S64 (k->metra[I].longitudo, (s64)MCMXX);
+    /* sine '|': mensura una, partis tota */
+    CREDO_NECESSE (_legere(c, LIBERUM_CARMEN("o4 d4 e4 f2.", ""),
+                           &liber));
+    k = &liber.carmina[ZEPHYRUM];
+    CREDO_NECESSE (k->numerus_metrorum == I);
+    CREDO_AEQUALIS_S64 (k->metra[ZEPHYRUM].longitudo, (s64)4800);
+    /* vitia */
+    CREDO_VERUM (_causa_est(c, LIBERUM_CARMEN("o4 d4 | e4",
+        "<metrum mensura=\"2\" valor=\"3/4\"/>"),
+        "metrum liberum: sine <metrum> et agogica"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\" "
+        "agogica=\"vindobonensis\"><pars titulus=\"c\" "
+        "instrumentum=\"schola\"><frustum mensura=\"1\"><textus!>"
+        "o4 d4</textus></frustum></pars></carmen></carmina>",
+        "metrum liberum: sine <metrum> et agogica"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\">"
+        "<pars titulus=\"c\" instrumentum=\"schola\"><frustum "
+        "mensura=\"2\"><textus!>o4 d4</textus></frustum></pars>"
+        "</carmen></carmina>",
+        "metrum liberum: pars prima frustum unum ad mensuram 1"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liberum\">"
+        "<pars titulus=\"c\" instrumentum=\"schola\"><frustum "
+        "mensura=\"1\"><textus!>o4 d4</textus></frustum><frustum "
+        "mensura=\"3\"><textus!>o4 d4</textus></frustum></pars>"
+        "</carmen></carmina>",
+        "metrum liberum: pars prima frustum unum ad mensuram 1"));
+    CREDO_VERUM (_causa_est(c, LIBERUM_CARMEN("o4 d4 | e4",
+        "<acorda mensura=\"1\" textus=\"C | C\"/>"
+        "<pars titulus=\"s\" instrumentum=\"aether\">"
+        "<comitatus figura=\"valsa\" mensura=\"1\"/></pars>"),
+        "comitatus cum metro libero (figurae per mensuram)"));
+    CREDO_VERUM (_causa_est(c,
+        "<carmina><carmen titulus=\"l\" metrum=\"liber\"><pars "
+        "titulus=\"c\" instrumentum=\"schola\"><frustum mensura="
+        "\"1\"><textus!>o4 d4</textus></frustum></pars></carmen>"
+        "</carmina>", "metrum non N/D (D potentia II)"));
+}
+
 interior vacuum
 _sectio_comitatus_vitia (
     CredoContextus* c)
@@ -2169,6 +2402,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "portamentum", _sectio_illapsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus", _sectio_comitatus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "bina", _sectio_bina, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "verba", _sectio_verba, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "liberum", _sectio_liberum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "comitatus_vitia", _sectio_comitatus_vitia, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "instrumenta", _sectio_instrumenta, NIHIL, NIHIL, NIHIL, NIHIL },

@@ -71,3 +71,11 @@ interned. Test section "attributum vacuum": both quote styles, attributes
 after the empty ones still read, write-then-reread round trip keeps the
 empty value. Plant (empty -> NIHIL) red. Store EPUBs with `alt=""` or
 `xmlns=""` (common) now open; 9 checked (codex probe), all read.
+
+## 2026-10-30 — retired
+
+lib/xml.c and include/xml.h deleted (xml_arbor P15, sexta). Replacement:
+`xml/fontes/xml_documentum.h` (XML 1.0 5th ed. + Namespaces, W3C suite
+clean). Consumers moved: codex, horreum, plist, the pecunia generator.
+This worklog stays as the record of the old parser's defects; see
+xml/CLAUDE.md for the new library.

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- conversio_varia: sound tempo 500 (coercitum 400), alter 0.5 (microtonus), mensura 2 armatura 2 (d maior) et metrum 3/4 -->
+<score-partwise version="4.0">
+  <work><work-title>Varia</work-title></work>
+  <identification><creator type="composer">Ignotus</creator><creator type="lyricist">Poeta</creator><rights>CC0</rights></identification>
+  <part-list>
+    <score-part id="P1"><part-name>Violin I</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><key><fifths>0</fifths></key><time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <sound tempo="500"/>
+      <note><pitch><step>C</step><alter>0.5</alter><octave>4</octave></pitch><duration>2</duration></note>
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <attributes><key><fifths>2</fifths><mode>major</mode></key><time><beats>3</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>F</step><alter>1</alter><octave>4</octave></pitch><duration>3</duration></note>
+    </measure>
+  </part>
+</score-partwise>

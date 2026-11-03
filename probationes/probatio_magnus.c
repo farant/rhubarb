@@ -292,28 +292,34 @@ _ex (
     redde m;
 }
 
-/* forma canonica: parvus si capit; aliter signum +-1, longitudo >= 2,
- * membrum summum non nullum, et valor extra s64 */
+/* forma canonica: parvus si capit; aliter (forma XVI octetorum,
+ * budget B1 D1) parvus = signum x longitudo, longitudo >= 2, membrum
+ * summum non nullum, et valor extra s64 */
 interior b32
 _canonicus (
     Magnus m)
 {
+    s32 signum;
+    i32 longitudo;
+
     si (m.membra == NIHIL)
     {
-        redde m.signum == ZEPHYRUM && m.longitudo == ZEPHYRUM;
+        redde VERUM;
     }
-    si (m.signum != I && m.signum != -I) redde FALSUM;
-    si (m.longitudo < II) redde FALSUM;
-    si (m.membra[m.longitudo - I] == ZEPHYRUM) redde FALSUM;
-    si (m.longitudo == II)
+    si (m.parvus == ZEPHYRUM) redde FALSUM;
+    signum     = (m.parvus < ZEPHYRUM) ? -I : I;
+    longitudo  = (i32)((m.parvus < ZEPHYRUM) ? -m.parvus : m.parvus);
+    si (longitudo < II) redde FALSUM;
+    si (m.membra[longitudo - I] == ZEPHYRUM) redde FALSUM;
+    si (longitudo == II)
     {
         i64 modulus = ((i64)m.membra[I] << XXXII) | m.membra[ZEPHYRUM];
 
-        si (m.signum > ZEPHYRUM && modulus <= 0x7FFFFFFFFFFFFFFFULL)
+        si (signum > ZEPHYRUM && modulus <= 0x7FFFFFFFFFFFFFFFULL)
         {
             redde FALSUM;
         }
-        si (m.signum < ZEPHYRUM && modulus <= 0x8000000000000000ULL)
+        si (signum < ZEPHYRUM && modulus <= 0x8000000000000000ULL)
         {
             redde FALSUM;
         }

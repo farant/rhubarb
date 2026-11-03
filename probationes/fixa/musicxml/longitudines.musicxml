@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- longitudines: divisions 60 - quarta (4), dimidia punctata (2.), tripla quartarum (6), quinque quartae in 5/4 (1&4), quintupla sedecimarum (20) -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Tibia</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>60</divisions><time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>5</octave></pitch><duration>60</duration></note>
+      <note><pitch><step>D</step><octave>5</octave></pitch><duration>180</duration></note>
+    </measure>
+    <measure number="2">
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>40</duration><time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification></note>
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>40</duration><time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification></note>
+      <note><pitch><step>E</step><octave>5</octave></pitch><duration>40</duration><time-modification><actual-notes>3</actual-notes><normal-notes>2</normal-notes></time-modification></note>
+      <note><pitch><step>F</step><octave>5</octave></pitch><duration>120</duration></note>
+    </measure>
+    <measure number="3">
+      <attributes><time><beats>5</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>G</step><octave>5</octave></pitch><duration>300</duration></note>
+    </measure>
+    <measure number="4">
+      <attributes><time><beats>4</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>12</duration><time-modification><actual-notes>5</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>12</duration><time-modification><actual-notes>5</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>12</duration><time-modification><actual-notes>5</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>12</duration><time-modification><actual-notes>5</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><pitch><step>A</step><octave>5</octave></pitch><duration>12</duration><time-modification><actual-notes>5</actual-notes><normal-notes>4</normal-notes></time-modification></note>
+      <note><rest/><duration>180</duration></note>
+    </measure>
+  </part>
+</score-partwise>

@@ -53,9 +53,8 @@ COMPILATOR="$RADIX_DIR/bin/compilator"
 if [ ! -x "$COMPILATOR" ]; then
     "$RADIX_DIR/tools/compilator_struere.sh" > /dev/null 2>&1 || COMPILATOR=""
 fi
-newest_header () {
-    find "$RADIX_DIR/include" -name '*.h' -newer "$1" 2>/dev/null | head -1
-}
+source "$RADIX_DIR/tools/caput_recens.sh"
+caput_recens_directoria "$RADIX_DIR/include"
 # compilare <fons> <obiectum> <capita_extra...> -- <vexilla...>
 #   per compilatorem: semper vocatur (ipse iudicat, identicum non
 #   rescribit). Sine eo: mos vetus (mtime fontis/capitum + caput
@@ -71,7 +70,7 @@ compilare () {
         "$COMPILATOR" "$@" -c "$src" -o "$obj" || return 1
     else
         local c stalum=0
-        { [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; } && stalum=1
+        { [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || caput_recentius "$obj"; } && stalum=1
         for c in "${capita[@]+"${capita[@]}"}"; do ! [ "$obj" -nt "$c" ] && stalum=1; done
         [ "$stalum" = "1" ] && { clang "$@" -c "$src" -o "$obj" || return 1; }
     fi

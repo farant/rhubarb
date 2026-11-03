@@ -44,7 +44,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/capsula_radicis.sh"
 # RADICES CLIENTIUM materiae: caput et implementatio in eodem directorio
 # (toml Q12/Q13). Idem ordo et eadem nomina ac SILEX_RADICES_CLIENTIUM
 # in lib/silex.c - probatio_silex utrumque conferre cogit.
-RADICES_CLIENTIUM=(materia/fontes toml/fontes)
+RADICES_CLIENTIUM=(materia/fontes toml/fontes xml/fontes)
 
 corpus_symbola_generare () {
     local TABULA=corpus.symbola.tsv
@@ -160,8 +160,16 @@ corpus_infixum_regenerare () {
 }
 
 # actio fabricae 'corpus_silicis' (plan 1b T6): scriptum directe vocatum
+# directoria radicum clientium EX RADICES_CLIENTIUM (olim 'materia
+# toml' manu: xml_arbor P16 radicem tertiam addidit et umbra iudicis eam
+# non nexuit - capsula XIX plagulis brevior, 'regeneratio differt')
 if [ "${BASH_SOURCE[0]}" = "$0" ]; then
-    capsula_radicis_parare lib include vendor materia toml tools natura \
-        silva canones.registrum aedilis.canon canon.canon || exit 1
+    declare -a DIRECTORIA_RADICUM=()
+    for radix in "${RADICES_CLIENTIUM[@]}"; do
+        DIRECTORIA_RADICUM+=("${radix%%/*}")
+    done
+    capsula_radicis_parare lib include vendor "${DIRECTORIA_RADICUM[@]}" \
+        tools natura silva canones.registrum aedilis.canon canon.canon \
+        || exit 1
     corpus_infixum_regenerare || exit 1
 fi

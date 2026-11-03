@@ -30,20 +30,20 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                       { { 0.0f, 0.0f, 0.0f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* chiptune: pulsus quartae, mollitus supra VI milia */
     { "quadrans",   { 0.0f, 0.25f, { 0.002f, 0.08f, 0.7f, 0.08f },
                       0.0f, 0.0f, 6000.0f, 0.35f,
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                       { { 0.0f, 0.0f, 0.0f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     { "triangulum", { 2.0f, 0.5f,  { 0.002f, 0.05f, 0.9f, 0.05f },
                       0.0f, 0.0f, 0.0f, 0.6f,
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                       { { 0.0f, 0.0f, 0.0f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* Karplus-Strong: involucrum plenum (chorda ipsa decrescit), manu
      * tacta remittit; -60 dB in 2.5 s (citharae similis), claritas
      * media; amplitudo plena - impulsus cito cadit */
@@ -52,7 +52,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                       1.0f, 2.5f, 0.5f, 0.0f, 0.0f,
                       { { 0.0f, 0.0f, 0.0f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* FM: ratio 1.4 (inharmonica), index VI decrescens (1/e in 0.4 s),
      * impetus 2 ms, lapsus longus sine tenore */
     { "campana",    { 0.0f, 0.5f,  { 0.002f, 3.0f,  0.0f, 1.0f },
@@ -60,7 +60,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                       2.0f, 0.4f, 0.0f, 1.4f, 6.0f,
                       { { 0.0f, 0.0f, 0.0f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* organum: registra 8' 4' 2 2/3' 2' (rationes 1 2 3 4), tenet;
      * impetus 30 ms (aer in fistula) */
     { "organum",    { 0.0f, 0.5f,  { 0.03f,  0.0f,  1.0f, 0.15f },
@@ -70,7 +70,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                         { 3.0f, 0.4f, 0.0f },
                         { 4.0f, 0.3f, 0.0f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* marimba: lamina accommodata 1 : 3.9 : 9.2, superiores citius
      * cadunt */
     { "marimba",    { 0.0f, 0.5f,  { 0.001f, 0.0f,  1.0f, 0.3f },
@@ -79,7 +79,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                       { { 1.0f, 1.0f, 0.6f }, { 3.9f, 0.5f, 0.15f },
                         { 9.2f, 0.2f, 0.05f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* glockenspiel: lamina libera 1 : 2.76 : 5.40 : 8.93, longa */
     { "glockenspiel", { 0.0f, 0.5f, { 0.001f, 0.0f, 1.0f, 1.5f },
                       0.0f, 0.0f, 0.0f, 0.4f,
@@ -88,7 +88,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                         { 5.40f, 0.3f, 0.4f },
                         { 8.93f, 0.15f, 0.2f } },
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* schola: serra per formantes vocalis a (tenor), impetus 80 ms,
      * vibratus lenis, flatus parvus (aer in voce) */
     { "schola",     { 1.0f, 0.5f,  { 0.08f,  0.0f,  1.0f, 0.25f },
@@ -96,7 +96,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                       4.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                       { { 0.0f, 0.0f, 0.0f } },
                       0.0f, 0.03f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* fistula: partiales 1 2 3 debiles, flatus circa notam, impetus
      * 60 ms, vibratus parvus */
     { "fistula",    { 0.0f, 0.5f,  { 0.06f,  0.0f,  1.0f, 0.12f },
@@ -105,7 +105,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                       { { 1.0f, 1.0f, 0.0f }, { 2.0f, 0.25f, 0.0f },
                         { 3.0f, 0.08f, 0.0f } },
                       0.0f, 0.15f, 0.0f, 0.0f, 0.0f,
-                      0.0f, 0.0f, 0.0f } },
+                      0.0f, 0.0f, 0.0f, 0.0f } },
     /* nubes: serra, impetus 0.8 s, colum resonans a CD cycli/s (Q 4)
      * per II octavas tenore apertum; apex ~2.3 x amplitudo
      * (resonantia) */
@@ -114,7 +114,7 @@ hic_manens constans TibiaPraeparatum tibiae_praeparata[] = {
                       0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
                       { { 0.0f, 0.0f, 0.0f } },
                       0.0f, 0.0f, 400.0f, 4.0f, 24.0f,
-                      0.0f, 0.0f, 0.0f } }
+                      0.0f, 0.0f, 0.0f, 0.0f } }
 };
 
 #define TIBIAE_PRAEPARATA                                           \
@@ -356,42 +356,170 @@ _partialium_proximum (
     redde (f32)x;
 }
 
-/* formantes tenoris (Csound, "Formant Values" appendix): frequentia
- * (cycli/s), lucrum (dB ad primum), latitudo (cycli/s) */
+/* formantes per vocem (Csound, "Formant Values" appendix): frequentia
+ * (cycli/s), lucrum (dB ad primum), latitudo (cycli/s) - vocales a e i
+ * o u */
 nomen structura {
     f32 frequentia[TIBIA_FORMANTES_NUMERUS];
     f32 decibelia[TIBIA_FORMANTES_NUMERUS];
     f32 latitudo[TIBIA_FORMANTES_NUMERUS];
 } TibiaVocalis;
 
-hic_manens constans TibiaVocalis VOCALES[V] = {
-    /* a */
-    { { 650.0f, 1080.0f, 2650.0f, 2900.0f, 3250.0f },
-      { 0.0f, -6.0f, -7.0f, -8.0f, -22.0f },
-      { 80.0f, 90.0f, 120.0f, 130.0f, 140.0f } },
-    /* e */
-    { { 400.0f, 1700.0f, 2600.0f, 3200.0f, 3580.0f },
-      { 0.0f, -14.0f, -12.0f, -14.0f, -20.0f },
-      { 70.0f, 80.0f, 100.0f, 120.0f, 120.0f } },
-    /* i */
-    { { 290.0f, 1870.0f, 2800.0f, 3250.0f, 3540.0f },
-      { 0.0f, -15.0f, -18.0f, -20.0f, -30.0f },
-      { 40.0f, 90.0f, 100.0f, 120.0f, 120.0f } },
-    /* o */
-    { { 400.0f, 800.0f, 2600.0f, 2800.0f, 3000.0f },
-      { 0.0f, -10.0f, -12.0f, -12.0f, -26.0f },
-      { 40.0f, 80.0f, 100.0f, 120.0f, 120.0f } },
-    /* u */
-    { { 350.0f, 600.0f, 2700.0f, 2900.0f, 3300.0f },
-      { 0.0f, -20.0f, -17.0f, -14.0f, -26.0f },
-      { 40.0f, 60.0f, 100.0f, 120.0f, 120.0f } }
+/* ordine TibiaParametra.vox: tenor, bassus, altus, superius */
+hic_manens constans TibiaVocalis VOCES[IV][V] = {
+    /* tenor */
+    { { { 650.0f, 1080.0f, 2650.0f, 2900.0f, 3250.0f },
+        { 0.0f, -6.0f, -7.0f, -8.0f, -22.0f },
+        { 80.0f, 90.0f, 120.0f, 130.0f, 140.0f } },
+      { { 400.0f, 1700.0f, 2600.0f, 3200.0f, 3580.0f },
+        { 0.0f, -14.0f, -12.0f, -14.0f, -20.0f },
+        { 70.0f, 80.0f, 100.0f, 120.0f, 120.0f } },
+      { { 290.0f, 1870.0f, 2800.0f, 3250.0f, 3540.0f },
+        { 0.0f, -15.0f, -18.0f, -20.0f, -30.0f },
+        { 40.0f, 90.0f, 100.0f, 120.0f, 120.0f } },
+      { { 400.0f, 800.0f, 2600.0f, 2800.0f, 3000.0f },
+        { 0.0f, -10.0f, -12.0f, -12.0f, -26.0f },
+        { 40.0f, 80.0f, 100.0f, 120.0f, 120.0f } },
+      { { 350.0f, 600.0f, 2700.0f, 2900.0f, 3300.0f },
+        { 0.0f, -20.0f, -17.0f, -14.0f, -26.0f },
+        { 40.0f, 60.0f, 100.0f, 120.0f, 120.0f } } },
+    /* bassus */
+    { { { 600.0f, 1040.0f, 2250.0f, 2450.0f, 2750.0f },
+        { 0.0f, -7.0f, -9.0f, -9.0f, -20.0f },
+        { 60.0f, 70.0f, 110.0f, 120.0f, 130.0f } },
+      { { 400.0f, 1620.0f, 2400.0f, 2800.0f, 3100.0f },
+        { 0.0f, -12.0f, -9.0f, -12.0f, -18.0f },
+        { 40.0f, 80.0f, 100.0f, 120.0f, 120.0f } },
+      { { 250.0f, 1750.0f, 2600.0f, 3050.0f, 3340.0f },
+        { 0.0f, -30.0f, -16.0f, -22.0f, -28.0f },
+        { 60.0f, 90.0f, 100.0f, 120.0f, 120.0f } },
+      { { 400.0f, 750.0f, 2400.0f, 2600.0f, 2900.0f },
+        { 0.0f, -11.0f, -21.0f, -20.0f, -40.0f },
+        { 40.0f, 80.0f, 100.0f, 120.0f, 120.0f } },
+      { { 350.0f, 600.0f, 2400.0f, 2675.0f, 2950.0f },
+        { 0.0f, -20.0f, -32.0f, -28.0f, -36.0f },
+        { 40.0f, 80.0f, 100.0f, 120.0f, 120.0f } } },
+    /* altus */
+    { { { 800.0f, 1150.0f, 2800.0f, 3500.0f, 4950.0f },
+        { 0.0f, -4.0f, -20.0f, -36.0f, -60.0f },
+        { 80.0f, 90.0f, 120.0f, 130.0f, 140.0f } },
+      { { 400.0f, 1600.0f, 2700.0f, 3300.0f, 4950.0f },
+        { 0.0f, -24.0f, -30.0f, -35.0f, -60.0f },
+        { 60.0f, 80.0f, 120.0f, 150.0f, 200.0f } },
+      { { 350.0f, 1700.0f, 2700.0f, 3700.0f, 4950.0f },
+        { 0.0f, -20.0f, -30.0f, -36.0f, -60.0f },
+        { 50.0f, 100.0f, 120.0f, 150.0f, 200.0f } },
+      { { 450.0f, 800.0f, 2830.0f, 3500.0f, 4950.0f },
+        { 0.0f, -9.0f, -16.0f, -28.0f, -55.0f },
+        { 70.0f, 80.0f, 100.0f, 130.0f, 135.0f } },
+      { { 325.0f, 700.0f, 2530.0f, 3500.0f, 4950.0f },
+        { 0.0f, -12.0f, -30.0f, -40.0f, -64.0f },
+        { 50.0f, 60.0f, 170.0f, 180.0f, 200.0f } } },
+    /* superius (soprano) */
+    { { { 800.0f, 1150.0f, 2900.0f, 3900.0f, 4950.0f },
+        { 0.0f, -6.0f, -32.0f, -20.0f, -50.0f },
+        { 80.0f, 90.0f, 120.0f, 130.0f, 140.0f } },
+      { { 350.0f, 2000.0f, 2800.0f, 3600.0f, 4950.0f },
+        { 0.0f, -20.0f, -15.0f, -40.0f, -56.0f },
+        { 60.0f, 100.0f, 120.0f, 150.0f, 200.0f } },
+      { { 270.0f, 2140.0f, 2950.0f, 3900.0f, 4950.0f },
+        { 0.0f, -12.0f, -26.0f, -26.0f, -44.0f },
+        { 60.0f, 90.0f, 100.0f, 120.0f, 120.0f } },
+      { { 450.0f, 800.0f, 2830.0f, 3800.0f, 4950.0f },
+        { 0.0f, -11.0f, -22.0f, -22.0f, -50.0f },
+        { 70.0f, 80.0f, 100.0f, 130.0f, 135.0f } },
+      { { 325.0f, 700.0f, 2700.0f, 3800.0f, 4950.0f },
+        { 0.0f, -16.0f, -35.0f, -40.0f, -60.0f },
+        { 50.0f, 60.0f, 170.0f, 180.0f, 200.0f } } }
 };
 
 /* lucrum formantium commune: serra per cola media angusta multum
  * attenuatur (efficax ~0.1 x amplitudo sine eo); 2.4 = efficax
- * ~0.25 x amplitudo, apex < 1.2 x amplitudo per C3..D5 (mensuratum,
- * vide worklog) */
+ * mediana 0.29 x amplitudo per voces, vocales, C3..D5. AEQUATIO
+ * (tibia.h) super id per notam: efficax 0.29 exacte, non ultra x4 */
 #define TIBIA_FORMANTIUM_LUCRUM 2.4f
+#define TIBIA_FORMANTIUM_EFFICAX 0.29
+#define TIBIA_AEQUATIO_MAXIMA 4.0
+/* saltus altitudinis (quadra 0): aequatio per V ms */
+#define TIBIA_AEQUATIO_SALTUS (SONUS_FREQUENTIA / CC)
+
+/* responsio coli ad e^jw (cos/sin w et 2w): H = (b0 + b1 z + b2 z^2)
+ * / (1 + a1 z + a2 z^2), z = e^-jw; pars realis et imaginaria additae
+ * cum lucro */
+interior vacuum
+_responsionem_addere (
+       constans SonusResonans* r,
+                          f64  lucrum,
+                 constans f64* cs,
+                          f64* re,
+                          f64* im)
+{
+    f64 nr = (f64)r->b0 + (f64)r->b1 * cs[ZEPHYRUM]
+        + (f64)r->b2 * cs[II];
+    f64 ni  = -((f64)r->b1 * cs[I] + (f64)r->b2 * cs[III]);
+    f64 dr  = 1.0 + (f64)r->a1 * cs[ZEPHYRUM] + (f64)r->a2 * cs[II];
+    f64 di  = -((f64)r->a1 * cs[I] + (f64)r->a2 * cs[III]);
+    f64 d   = dr * dr + di * di;
+
+    *re += lucrum * (nr * dr + ni * di) / d;
+    *im += lucrum * (ni * dr - nr * di) / d;
+}
+
+/* AEQUATIO: lucrum ut serra ad notam (harmonica k: 2 / (pi k)) per
+ * cola formantium (coefficientes ipsi, H(e^jw) exacte) efficacem
+ * TIBIA_FORMANTIUM_EFFICAX habeat; harmonicae usque ad Nyquist */
+interior f32
+_aequationem_computare (
+    constans TibiaVox* v,
+                  f32  nota)
+{
+    f64 f0        = (f64)sonus_notae_frequentia(nota);
+    f64 potentia  = 0.0;
+    f64 g;
+    i32 k;
+    i32 j;
+
+    si (f0 <= 0.0)
+    {
+        redde 1.0f;
+    }
+    per (k = I; (f64)k * f0 < (f64)SONUS_FREQUENTIA / 2.0; k++)
+    {
+        f64 w     = TIBIA_DUO_PI * (f64)k * f0 / (f64)SONUS_FREQUENTIA;
+        f64 cs[IV];
+        f64 re  = 0.0;
+        f64 im  = 0.0;
+        f64 a   = 2.0 / (TIBIA_DUO_PI / 2.0 * (f64)k);
+
+        /* cos w, sin w, cos 2w, sin 2w */
+        cs[ZEPHYRUM]  = cos(w);
+        cs[I]         = sin(w);
+        cs[II]        = cos(2.0 * w);
+        cs[III]       = sin(2.0 * w);
+        per (j = ZEPHYRUM; j < TIBIA_FORMANTES_NUMERUS; j++)
+        {
+            _responsionem_addere(&v->formantes[j],
+                (f64)v->lucra_formantium[j], cs, &re, &im);
+        }
+        potentia += a * a * (re * re + im * im) / 2.0;
+    }
+    g = potentia > 0.0 ? TIBIA_FORMANTIUM_EFFICAX / sqrt(potentia)
+                       : TIBIA_AEQUATIO_MAXIMA;
+    redde (f32)(g < TIBIA_AEQUATIO_MAXIMA ? g : TIBIA_AEQUATIO_MAXIMA);
+}
+
+/* AEQUATIO: ad metam per n exempla */
+interior vacuum
+_aequationem_ducere (
+    TibiaVox* v,
+         f32  nota,
+         i32  n)
+{
+    v->meta_aequationis     = _aequationem_computare(v, nota);
+    v->passus_aequationis   = (v->meta_aequationis - v->aequatio)
+                            / (f32)n;
+    v->reliqua_aequationis  = n;
+}
 
 /* FORMANTES: vocalis in [0, 4]; fractio inter vicinas linealiter
  * (frequentia, dB, latitudo) */
@@ -402,19 +530,24 @@ _formantes_parare (
 {
     f32 vocalis = p->vocalis < 0.0f ? 0.0f
                 : (p->vocalis > 4.0f ? 4.0f : p->vocalis);
-    i32 a = (i32)vocalis;
-    i32 b = a < IV ? a + I : IV;
-    f32 t = vocalis - (f32)a;
-    i32 k;
+    f32 vox = p->vox < 0.0f ? 0.0f : (p->vox
+        > 3.0f ? 3.0f : p->vox);
+    constans TibiaVocalis* vocales  = VOCES[(i32)(vox + 0.5f)];
+                      i32  a        = (i32)vocalis;
+                      i32  b         = a < IV ? a
+                          + I : IV;
+                      f32 t         = vocalis
+                          - (f32)a;
+                      i32 k;
 
     per (k = ZEPHYRUM; k < TIBIA_FORMANTES_NUMERUS; k++)
     {
-        f32 f  = (1.0f - t) * VOCALES[a].frequentia[k]
-               + t * VOCALES[b].frequentia[k];
-        f32 db = (1.0f - t) * VOCALES[a].decibelia[k]
-               + t * VOCALES[b].decibelia[k];
-        f32 l  = (1.0f - t) * VOCALES[a].latitudo[k]
-               + t * VOCALES[b].latitudo[k];
+        f32 f  = (1.0f - t) * vocales[a].frequentia[k]
+               + t * vocales[b].frequentia[k];
+        f32 db = (1.0f - t) * vocales[a].decibelia[k]
+               + t * vocales[b].decibelia[k];
+        f32 l  = (1.0f - t) * vocales[a].latitudo[k]
+               + t * vocales[b].latitudo[k];
 
         sonus_resonans_parare(&v->formantes[k], SONUS_RESONANS_MEDIA,
                               f, f / l);
@@ -452,7 +585,15 @@ _formantium_proximum (
         y += v->lucra_formantium[k]
             * sonus_resonans_proximum(&v->formantes[k], x);
     }
-    redde y;
+    si (v->reliqua_aequationis > ZEPHYRUM)
+    {
+        v->reliqua_aequationis--;
+        /* ex meta, non summando (error f32 non colligitur);
+         * ultimo passu meta EXACTA */
+        v->aequatio = v->meta_aequationis - v->passus_aequationis
+                    * (f32)v->reliqua_aequationis;
+    }
+    redde y * v->aequatio;
 }
 
 /* FLATUS: colum medium circa notam (Q II); lucrum ut strepitus
@@ -559,9 +700,11 @@ tibia_vocem_parare (
                   * TIBIA_CIRCULUS;
     v->incrementum_vibrati = incrementum > 0.0 && incrementum
         < TIBIA_CIRCULUS ? (i32)incrementum : ZEPHYRUM;
-    v->nota    = nota;
-    v->meta    = nota;
-    v->aperta  = VERUM;
+    v->nota              = nota;
+    v->meta              = nota;
+    v->aperta            = VERUM;
+    v->aequatio          = 1.0f;
+    v->meta_aequationis  = 1.0f;
     _frequentiam_ponere(v, nota);
     si (v->genus == TIBIA_CHORDA)
     {
@@ -583,6 +726,7 @@ tibia_vocem_parare (
     alioquin si (v->genus == TIBIA_FORMANTES)
     {
         _formantes_parare(v, p);
+        v->aequatio = _aequationem_computare(v, nota);
     }
     v->flatus    = p->flatus < 0.0f ? 0.0f
                  : (p->flatus > 1.0f ? 1.0f : p->flatus);
@@ -610,6 +754,11 @@ tibia_notam_ponere (
          f32  nota,
          i32  quadra)
 {
+    si (v->genus == TIBIA_FORMANTES)
+    {
+        _aequationem_ducere(v, nota, quadra > ZEPHYRUM
+            ? quadra : TIBIA_AEQUATIO_SALTUS);
+    }
     si (quadra == ZEPHYRUM)
     {
         v->nota     = nota;

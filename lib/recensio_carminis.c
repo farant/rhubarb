@@ -358,11 +358,19 @@ recensio_carminis_textus (
     bene = chorda_aedificator_appendere_literis(a, ": ") && bene;
     bene = _clavem_scribere(k, a) && bene;
     bene = chorda_aedificator_appendere_literis(a, ", ") && bene;
-    bene = chorda_aedificator_appendere_i32(a,
-        k->metra[ZEPHYRUM].numerator) && bene;
-    bene = chorda_aedificator_appendere_character(a, '/') && bene;
-    bene = chorda_aedificator_appendere_i32(a,
-        k->metra[ZEPHYRUM].denominator) && bene;
+    si (k->metra[ZEPHYRUM].liberum)
+    {
+        bene = chorda_aedificator_appendere_literis(a, "liberum")
+            && bene;
+    }
+    alioquin
+    {
+        bene = chorda_aedificator_appendere_i32(a,
+            k->metra[ZEPHYRUM].numerator) && bene;
+        bene = chorda_aedificator_appendere_character(a, '/') && bene;
+        bene = chorda_aedificator_appendere_i32(a,
+            k->metra[ZEPHYRUM].denominator) && bene;
+    }
     bene = chorda_aedificator_appendere_literis(a, ", ") && bene;
     bene = chorda_aedificator_appendere_i32(a,
         k->tempora_scripta[ZEPHYRUM].tempus) && bene;
@@ -642,11 +650,18 @@ recensio_carminis_json (
     {
         redde NIHIL;
     }
-    (vacuum)chorda_aedificator_appendere_i32(a,
-        k->metra[ZEPHYRUM].numerator);
-    (vacuum)chorda_aedificator_appendere_character(a, '/');
-    (vacuum)chorda_aedificator_appendere_i32(a,
-        k->metra[ZEPHYRUM].denominator);
+    si (k->metra[ZEPHYRUM].liberum)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a, "liberum");
+    }
+    alioquin
+    {
+        (vacuum)chorda_aedificator_appendere_i32(a,
+            k->metra[ZEPHYRUM].numerator);
+        (vacuum)chorda_aedificator_appendere_character(a, '/');
+        (vacuum)chorda_aedificator_appendere_i32(a,
+            k->metra[ZEPHYRUM].denominator);
+    }
     json_objectum_ponere(o, "metrum", _chorda_json(piscina,
         chorda_aedificator_finire(a)));
     json_objectum_ponere(o, "tempus", json_integer_creare(piscina,
