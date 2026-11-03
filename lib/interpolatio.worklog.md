@@ -154,3 +154,9 @@ The calibration test needed an adversarial polynomial: a random wrong candidate 
 The mirror test with laqueus evaluators moves to T2 (probatio_laqueus_rete); here the mirror checker evaluates f(1/x) of a test polynomial, with the precondition f(2) != f(1/2) asserted.
 
 Plants: build/verificatio/plantae_t1.py, 12 registered, 12 red as registered (A-L). Plant L first failed to plant at all: silva.planta refuses a multi-line anchor replaced by fewer lines (format guard); rewritten as `(FALSUM && ...)` with the same line count.
+
+## 2026-11-03 - verificatio acceptance (interpolatio-verificatio-plan T3)
+
+All criteria met; details in the plan's "T3 results". Section XI verified: 45/45 byte-identical, 45/45 RELATIO lines equal to T0's registration (prime count, k_max, evaluations). 14 x 801 verified with the frozen 79e7fad9 kernel as checker: IDEM, 7 of 23 primes, 3262 s CPU. P2t median 3.875x over three ABBA pairs at 12 x 801 (threshold 2.5x).
+
+Measurement lesson: on a shared machine (load 7-21 from other sessions) the absolute 12 x 801 times swung by 40% between pairs while the ABBA ratio moved by 3%. The P3 residual method ((B - evalsV x A/evalsP) / B) came out +0.33%, -1.09%, -3.07%: its noise floor here is about +/-3%, so it cannot certify a 2% threshold on its own. The component estimate (k_true x main point + m x frozen point = 1.46 s, 0.90%) carries P3. For a future sub-percent claim, measure the checks directly (time the m certifying calls inside one run) rather than by subtraction across runs.

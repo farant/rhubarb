@@ -500,6 +500,65 @@ brackets.txt; `-promovere` computed the 8 remaining primes, IDEM.
   new one, so P3 may fail on the certifying checks alone; that is a
   result, not a reason to change the threshold.)
 
+## T3 results (2026-11-03)
+
+One binary for every run: build/verificatio/uncinus_mensura_t3, built
+at f3a8120f (the commit that registered the protocol). Raw outputs in
+build/verificatio/ (t3_xi.out, t3_14x801.out, t3_abba.out; not
+committed); comparison by build/verificatio/t3_comparare.py.
+
+**Pass criteria: all met.**
+- Section XI verified (automatic checker, seed 1211479356458440815
+  FORTUITUM): 45 of 45 UNCINUS lines byte-identical to brackets.txt;
+  45 of 45 RELATIO lines agree with T0 on prime count (= k_true), k_max
+  and aestimationes. 35 VERIFICATUM/ACCEPTUM, 10 PROBATUM/AD_LIMITEM
+  (exactly the k_max = 1 braids). Checkers: sui:temperley 29,
+  sui:vertex 11, and the cross route on exactly the 5 braids the 5% rule
+  predicts (9 × 102, 11 × 202 → vertex; 10 × 101, 11 × 102, 12 × 201 →
+  temperley). Mean evaluation ratio 3.062 (T0: 3.06). Custos peak 3 MB.
+- 14 × 801 verified with the frozen kernel (seed 16724211433253038847
+  FORTUITUM): IDEM with uncinus_14x801.txt; 7 of 23 primes (P1);
+  verificator congelatus:79e7fad9; evaluation ratio 3.429 (P2 exact);
+  3262.25 s CPU; custos peak 14 MB.
+
+**P1, P2, P4 (exact): hold.** 6 primes at 12 × 801 (in every B run of
+P2t, and in section XI), 7 at 14 × 801; prime counts and evaluation
+counts equal T0's on all 46 rows (section XI's 45 + 14 × 801).
+
+**P2t (time): holds, median 3.875× (threshold 2.5×).**
+
+| pair | order | A proved (s) | B verified (s) | load before A / B (1 min) | A/B |
+| --- | --- | ---: | ---: | --- | ---: |
+| 0 | AB | 624.77 | 163.52 | 20.6 / 15.7 | 3.821 |
+| 1 | BA | 674.77 | 174.13 | 8.3 / 9.3 | 3.875 |
+| 2 | AB | 480.80 | 121.69 | 9.9 / 7.0 | 3.951 |
+
+Every run byte-identical to brackets.txt. The machine was shared with
+other sessions (load 7–21): absolute times swing by 40% between pairs,
+the ratio by 3%. The time ratio sits at or slightly above the count
+ratio 3.827 (self-checks included); a likely cause, not measured, is
+that the proved run reconstructs across 23 primes and the verified run
+across 6.
+
+**P3 (overhead): holds, < 2%, but carried by the component estimate.**
+- Residual method as registered (B − 3378 × A/12949) / B per pair:
+  +0.33%, −1.09%, −3.07%. All under 2%; the negative values show that
+  under this load the residual resolves only about ±3%, so on its own
+  it cannot certify 2%.
+- Component estimate (section VI, n = 12, celeritas T3, load 4):
+  6 self-checks × 0.0450 s + 4 certifying × 0.2986 s (frozen) = 1.46 s
+  = 0.90% of the median B. The T1 worry (frozen kernel slower per point)
+  is real (6.6× per point) but m = 4 keeps it under 1%.
+
+**14 × 801 time (descriptive, as registered).** 3262 s verified against
+7282 s proved (celeritas, 2026-10-31): 2.23×, below the count ratio
+3.43. Per evaluation 0.826 s today against 0.539 s then; the loads were
+15–18 (running beside section XI) against 6–9. Not a same-conditions
+comparison, which is why the protocol gates time only at 12 × 801.
+
+**Not done:** the post-hoc vertex check at 14 × 801 (3.63 GiB, ruled out
+by Q3 + T0). No threshold moved.
+
 ## Tests
 
 - All existing suites green and unchanged (PROBATUM default).
