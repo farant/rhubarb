@@ -65,3 +65,99 @@ benchmark guards it.
 Next (same budget): deterministic LR fast path (step 1b), then the
 preprocessor's name-keyed macro table (step 2: intern identifiers, table by
 id), then flat arrays / bitsets in the hot loops (step 3).
+
+## 2026-11-03 — silva budget step 1b: deterministic fast path
+
+Profile after 1a (`sample` of percursus parse-only): GLR 28% of the run;
+inside it container calls ~35% (xar_obtinere 18%, xar_addere 13%,
+xar_numerus 4%), `_vias_recursio` 13%, the tree builder only ~15%.
+Main cause: `_index_quaerere` scans every reduce-index entry of the step
+with one `xar_obtinere` call per entry, and C expressions run chains of
+~17 unit reductions per token (identifier -> primary -> ... ->
+assignment) — quadratic in chain length, per token. Plus per reduction:
+a `SilvaGSSVia` (32 values) appended to an Xar, recursion, index append,
+reducenda append.
+
+Change: `_passum_celerem_currere`. When the frontier is one node, walk
+the chain: one action -> SHIFT finishes the step; REDUCE reads its single
+path through `praedecessor_primus` straight into a stack array, looks up
+goto, checks the (status, basis) key against a small local chain array,
+builds, creates the node, continues. It hands off to the general path
+BEFORE doing anything for the current action when: actions != 1, a path
+node has `praedecessores_ceteri` (several paths) or no predecessor, goto
+missing, key repeats, ACCEPT/RECUPERARE, chain full (64). Hand-off writes
+the chain into the index exactly as the general path would have (processed
+links exhausted, the current node unexhausted and queued in reducenda),
+so the general path continues as if it had run all along. Counters
+(reductiones_factae, eventa_marginis_novi) are kept on the fast path too.
+
+Kill switch: `SilvaGLR.via_celer` (VERUM by default, set in
+`silva_glr_creare`). FALSUM = general path only. It is the oracle for the
+differential test and a one-line diagnosis ("is it the fast path?").
+
+Bench (`silva_mensura.sh`, baseline re-taken at e6772b14 same session):
+
+| | before | after |
+|---|---|---|
+| percursus parse-only: instructions | 364.2 G | 310.9 G (-14.6%) |
+| cycles | 89.6 G | 86.0 G (-4%, load 4.2 -> 4.8) |
+| percursus -semantica: instructions | 779.6 G | 719.5 G (-7.7%) |
+| computus glr phase, lib/stml.c (min of 7) | 12.37 ms | 8.93 ms (-28%) |
+| silva_expandere.c | 5.95 ms | 4.47 ms (-25%) |
+| lib/chorda.c | 3.12 ms | 2.27 ms (-27%) |
+| oratio_resolutio.c | 10.81 ms | 8.58 ms (-21%) |
+
+Cycles fall much less than instructions here (unlike 1a): the removed
+work was cheap, cache-hot container calls at high IPC, not memory
+traffic. The glr-phase timings (min of 7) are the steadier signal.
+
+Equivalence: aequivalentia -conferre, 483 files: 482 byte-identical (the
+changed silva_glr.c itself differs). New check this step: a scratch probe
+(arbor.c with the tree output replaced by parsura counters: fusiones,
+transmutationes, transmutationes_negatae, eventa_marginis_novi,
+frons_maxima, segmenta) — identical on all 482 unchanged files. The corpus
+exercises everything: 199,726 fusions, 133,218 transmutations, 311,211
+new-edge events.
+
+Test: differential section in probatio_silva_ambiguitas.c — the same
+token stream parsed with via_celer on and off; trees structurally equal
+(tokens by identity), all counters equal, nodi_creati and
+reductiones_factae equal. Inputs: sceletum and imparilis forks
+(compaction, transmutation) and C89 snippets (frontier merge, `T * p;`
+forks, chained assignment, casts), with coverage assertions (fusions,
+transmutations, new-edge events > 0, frontier > 2) so the test can't go
+vacuous.
+
+Plants (silva.planta on probatio_silva_ambiguitas, plus corpus runs):
+- C (ignore `praedecessores_ceteri`): red. F (values reversed): red.
+  G (pending node not queued): red.
+- E (fast-path new-edge counter dropped): red only after adding
+  `a = b = c = d;` — the first inputs produced new-edge events only in
+  the general path; chained assignment repeats the "assignment after ="
+  state on different bases inside one deterministic chain.
+- B (processed chain links not written to the index on hand-off): green
+  on every suite at first. Corpus run: trees identical but `marg` off by
+  1-2 in 16 files — after a hand-off, a general-path reduction reaches a
+  chain link's STATE on another basis (status_visus), and without the
+  links in the index that event is lost. Greedy reduction of lib/carmen.c
+  with a plant-B probe vs a good probe gave `void g(void) { a[*n] = y; }`;
+  added to the differential test -> red.
+- A (links not marked exhausted) and D (repeated key not handed off):
+  corpus byte-identical AND counters identical — unreachable on C89. They
+  matter only if a later branch re-reaches a chain link's exact key (same
+  nonterminal over the same span), which needs a grammar cycle (X =>+ X).
+  Kept for exactness on any grammar (the general path handles cycles via
+  the index; D also stops the fast path spinning on one). Guarded by
+  reasoning, not by a test.
+
+Lesson (again, cf. 1a): output equivalence alone missed B — the counter
+probe caught it. Counters are product (spec-v2 par 12.2), so they belong
+in the equivalence check whenever the GLR engine changes. Probe recipe:
+copy silva/instrumenta/principalia/arbor.c, replace the tree write with a
+printf of parsura counters, link against silva/build objects (see
+arbor.sh); env NUMER_FONS lets a scratch text stand in for a repo path so
+aedilis still supplies the header closure.
+
+Computus golden: allocations fall slightly (index/reducenda segments no
+longer touched in deterministic steps) — regenerated in the same commit,
+cause named.

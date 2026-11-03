@@ -12254,6 +12254,12 @@ nomen structura {
     vacuum* pergere_datum;
        i32  passus_pergendi;
 
+    /* Via celer (2026-11-03, budget silvae gradus Ib): passus frontis
+     * unius et actionis unius sine indice/reducendis curritur; exitus
+     * idem. VERUM ordinarie; FALSUM = via generalis sola (oraculum
+     * probationis differentialis, et diagnosis: "an via celer?"). */
+    b32 via_celer;
+
     /* Statisticae parsurae novissimae (etiam in fructum copiatae -
      * numeratores sunt PRODUCTUM, non depuratio: spec-v2 par 12.2) */
     i32 frons_maxima;
@@ -71062,6 +71068,24 @@ nomen structura {
        SilvaPiscina* silva_piscina_arborum;
 } SilvaGLRPassus;
 
+/* Anulus catenae viae celeris: nodus reductione creatus cum clavi
+ * indicis sua - in indicem transfertur si via celer cedit */
+nomen structura {
+              s32  status;
+    SilvaGSSNodus* basis;
+    SilvaGSSNodus* nodus;
+} SilvaCatenaeAnulus;
+
+/* Reductiones maximae per passum celerem (catena unitatum expressionis
+ * C ~XVII); ultra = cessio ad viam generalem */
+#define SILVA_GLR_CATENA_MAXIMA 64
+
+/* Exitus viae celeris */
+#define SILVA_GLR_CELER_NULLUS     0  /* nihil factum: generalis tota */
+#define SILVA_GLR_CELER_PERFECTUS  1  /* translatio facta, finis */
+#define SILVA_GLR_CELER_RELICTUS   2  /* frons processa; reliquum in
+                                       * reducenda, catena in indice */
+
 
 /* ==================================================
  * Aequalitas structuralis (recursio generica - modellum
@@ -72155,6 +72179,192 @@ _nodum_processare (
 
 
 /* ==================================================
+ * Via celer (passus determinatus)
+ * ================================================== */
+
+/* VIA CELER (2026-11-03, budget silvae gradus Ib): passus fere omnis
+ * determinatus est - frons nodi UNIUS, actio UNA in quoque nodo usque
+ * ad translationem. Tunc index, reducenda, viae effimerae et recursio
+ * superflua sunt: catena reductionum in serie locali tenetur, via per
+ * praedecessores primos legitur, valores in seriem acervi scribuntur.
+ *
+ * Exitus idem ac viae generalis (nodi, ordo, valores, numeratores).
+ * Ubi passus determinatus esse desinit - actiones non una, via non
+ * unica (praedecessores ceteri), clavis (status, basis) iterata, goto
+ * absens, ACCIPERE, catena plena - via celer CEDIT ANTE effectum ullum
+ * actionis currentis: catena in indicem transfertur sicut generalis
+ * eam scripsisset (anuli processi exhausti), nodus currens in
+ * reducenda ponitur, et generalis pergit quasi semper cucurrisset. */
+interior i32
+_passum_celerem_currere (
+          SilvaGLR* glr,
+     SilvaGSSNodus* frontis,
+    SilvaGLRPassus* passus)
+{
+    SilvaCatenaeAnulus  catena[SILVA_GLR_CATENA_MAXIMA];
+            SilvaValor  valores[SILVA_GLR_DEXTRUM_MAXIMUM];
+                   i32  numerus_catenae    = ZEPHYRUM;
+         SilvaGSSNodus* currens            = frontis;
+                   b32  currens_processus  = FALSUM;
+                   i32  k;
+
+    dum (VERUM)
+    {
+             constans SilvaTabActio* actio;
+         constans SilvaTabProductio* prod;
+                      SilvaGSSNodus* basis;
+                      SilvaGSSNodus* novus;
+                         SilvaValor  valor_novus;
+                                s32  goto_status;
+                                i32  longitudo;
+                                b32  status_visus = FALSUM;
+
+        si (_actiones_invenire(glr->tabula, currens->status,
+                passus->terminale, &actio) != I)
+        {
+            frange;
+        }
+        si (actio->actio == (s32)SILVA_TAB_ACTIO_TRANSPONERE)
+        {
+            SilvaGSSNodus** slot;
+
+            si (passus->lexema == NIHIL)
+            {
+                frange;
+            }
+            novus = _nodus_creare(glr, actio->valor,
+                silva_valor_token(passus->lexema), passus->lexema);
+            si (novus == NIHIL)
+            {
+                frange;
+            }
+            novus->praedecessor_primus = currens;
+            slot = (SilvaGSSNodus**)silva_xar_addere(passus->frons_nova);
+            si (slot != NIHIL)
+            {
+                *slot = novus;
+            }
+            redde SILVA_GLR_CELER_PERFECTUS;
+        }
+        si (   actio->actio    != (s32)SILVA_TAB_ACTIO_REDUCERE
+            || numerus_catenae >= SILVA_GLR_CATENA_MAXIMA)
+        {
+            frange;
+        }
+        prod       = &glr->tabula->productiones[actio->valor];
+        longitudo  = prod->longitudo;
+        si (longitudo > (i32)SILVA_GLR_DEXTRUM_MAXIMUM)
+        {
+            frange;
+        }
+
+        /* Via unica: nodi viae (basi exclusa) praedecessorem unum
+         * habent; valores dextrorsum-sinistrorsum ut _vias_recursio.
+         * NIHIL = viae plures aut nullae - generalis iudicat. */
+        basis = currens;
+        per (k = ZEPHYRUM; k < longitudo && basis != NIHIL; k++)
+        {
+            si (basis->praedecessores_ceteri != NIHIL)
+            {
+                basis = NIHIL;
+            }
+            alioquin
+            {
+                valores[longitudo - I - k] = basis->valor;
+                basis =
+                    basis->praedecessor_primus;
+            }
+        }
+        si (basis == NIHIL)
+        {
+            frange;
+        }
+        goto_status = _goto_quaerere(glr->tabula, basis->status,
+            prod->sinistrum);
+        si (goto_status < ZEPHYRUM)
+        {
+            frange;
+        }
+
+        /* Clavis iterata = compactio aut transmutatio - generalis */
+        per (k = ZEPHYRUM; k < numerus_catenae; k++)
+        {
+            si (catena[k].status == goto_status)
+            {
+                si (catena[k].basis == basis)
+                {
+                    frange;
+                }
+                status_visus = VERUM;
+            }
+        }
+        si (k < numerus_catenae)
+        {
+            frange;
+        }
+
+        valor_novus = glr->constructor(passus->silva_piscina_arborum,
+            actio->valor, valores);
+        glr->reductiones_factae++;
+        si (status_visus)
+        {
+            glr->eventa_marginis_novi++;  /* classis Farshi */
+        }
+        novus = _nodus_creare(glr, goto_status, valor_novus,
+            currens->lexema);
+        si (novus == NIHIL)
+        {
+            /* Ut generalis: reductio amissa, currens tamen processus */
+            currens_processus = VERUM;
+            frange;
+        }
+        novus->praedecessor_primus      = basis;
+        catena[numerus_catenae].status  = goto_status;
+        catena[numerus_catenae].basis   = basis;
+        catena[numerus_catenae].nodus   = novus;
+        numerus_catenae++;
+        currens = novus;
+    }
+
+    /* Cessio: catena in indicem sicut generalis eam scripsisset */
+    si (numerus_catenae == ZEPHYRUM && !currens_processus)
+    {
+        redde SILVA_GLR_CELER_NULLUS;
+    }
+    per (k = ZEPHYRUM; k < numerus_catenae; k++)
+    {
+        SilvaIndexIntroitus* recens;
+                        b32  pendens;
+
+        pendens = (k + I == numerus_catenae && !currens_processus)
+            ? VERUM : FALSUM;
+        recens = (SilvaIndexIntroitus*)silva_xar_addere(passus->index);
+        si (recens == NIHIL)
+        {
+            frange;
+        }
+        recens->status            = catena[k].status;
+        recens->basis             = catena[k].basis;
+        recens->nodus             = catena[k].nodus;
+        recens->exhaustus         = pendens ? FALSUM : VERUM;
+        recens->est_ambiguum      = FALSUM;
+        recens->interpretationes  = silva_valor_nihil();
+        si (pendens)
+        {
+            SilvaIndexIntroitus** slot = (SilvaIndexIntroitus**)
+                silva_xar_addere(passus->reducenda);
+
+            si (slot != NIHIL)
+            {
+                *slot = recens;
+            }
+        }
+    }
+    redde SILVA_GLR_CELER_RELICTUS;
+}
+
+
+/* ==================================================
  * API
  * ================================================== */
 
@@ -72305,6 +72515,7 @@ silva_glr_creare (
     glr->pergere          = NIHIL;
     glr->pergere_datum    = NIHIL;
     glr->passus_pergendi  = SILVA_GLR_PASSUS_PERGENDI_DEFALTUM;
+    glr->via_celer        = VERUM;
     _statisticas_purgare(glr);
     redde glr;
 }
@@ -72389,6 +72600,7 @@ silva_glr_parsare (
         SilvaGLRPassus passus;
                    i32 fi;
                    i32 cursor;
+                   i32 exitus;
 
         /* Intermissio (Phase 7): interrogatio determinata per passum
          * lexematum; FALSUM = fractura munda (gubernator recuperat) */
@@ -72444,15 +72656,30 @@ silva_glr_parsare (
          * crescit dum exhauritur; introitus indicis per valorem in
          * Xar sedent, monstratores stabiles trans additiones).
          * exhaustus POST processionem signatur - fenestra
-         * transmutationis his signis definitur. */
-        per (fi = ZEPHYRUM; fi < silva_xar_numerus(frons); fi++)
+         * transmutationis his signis definitur. Frons nodi unius:
+         * via celer primum (gradus Ib); cedens generali tradit. */
+        exitus = SILVA_GLR_CELER_NULLUS;
+        si (glr->via_celer && silva_xar_numerus(frons) == I)
         {
             SilvaGSSNodus** ref =
-                (SilvaGSSNodus**)silva_xar_obtinere(frons, fi);
+                (SilvaGSSNodus**)silva_xar_obtinere(frons, ZEPHYRUM);
 
             si (ref != NIHIL && *ref != NIHIL)
             {
-                _nodum_processare(glr, *ref, &passus);
+                exitus = _passum_celerem_currere(glr, *ref, &passus);
+            }
+        }
+        si (exitus == SILVA_GLR_CELER_NULLUS)
+        {
+            per (fi = ZEPHYRUM; fi < silva_xar_numerus(frons); fi++)
+            {
+                SilvaGSSNodus** ref =
+                    (SilvaGSSNodus**)silva_xar_obtinere(frons, fi);
+
+                si (ref != NIHIL && *ref != NIHIL)
+                {
+                    _nodum_processare(glr, *ref, &passus);
+                }
             }
         }
         cursor = ZEPHYRUM;
