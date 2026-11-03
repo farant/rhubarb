@@ -233,7 +233,7 @@ nomen structura {
     /* ALTERATIO */
    GabcAlteratioGenus alteratio;
                   b32 molle;     /* X Y: signum editoris (minus) */
-                  b32 parenthesis; /* x? y? #? */
+                  b32 parenthesis; /* x? y? #?; DIVISIO: `? ,? */
 
     /* CLAVIS */
             character clavis;    /* 'c' aut 'f' */
@@ -304,8 +304,9 @@ nomen structura {
 nomen structura {
         GabcTextus* textus;       /* cursus textus, ordine */
                i32  numerus_textuum;
-               b32  verbum_incipit; /* spatium ante syllabam (aut
-                                    * prima) */
+               b32  verbum_incipit; /* textus adest et (textus primus
+                                    * aut spatium post textum
+                                    * priorem); sine textu FALSUM */
                s32 vocalis_initium; /* '{' in octetis textus cantati
                                      * coniuncti; -1 = nulla */
                s32  vocalis_finis;

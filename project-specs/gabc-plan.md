@@ -269,10 +269,10 @@ divisio	virgula|minima|minor|maior|finalis
   (T3–T5 add columns' content, not new line kinds, except `spatium`,
   `fractio`, `custos`, `signum` in T4.)
 
-- [ ] **Step 1: Measure** — time `gabc_legere` target: none needed
+- [x] **Step 1: Measure** — time `gabc_legere` target: none needed
   yet; confirm `salve_2435.gabc` header ends with `%%` on its own line
   and the body starts with `(c4)`.
-- [ ] **Step 2: Failing tests** in `probatio_gabc.c`, each comparing
+- [x] **Step 2: Failing tests** in `probatio_gabc.c`, each comparing
   the dump of a fixture to an expected string in the test:
   - `_caput_probare` — `name:Salve;` `mode:5;` `annotation:Ant.;`
     twice, an unknown `foo:bar;`, a `%` comment line: pairs in order,
@@ -294,16 +294,49 @@ divisio	virgula|minima|minor|maior|finalis
   - `_salve_legere_probare` — the real file reads with
     `gabc_successus` VERUM and 0 VITIUM; syllable count pinned (count
     it in Step 1).
-- [ ] **Step 3: Run** `./compile_tests.sh gabc` — red (nothing
+- [x] **Step 3: Run** `./compile_tests.sh gabc` — red (nothing
   implemented; exit must NOT be 2).
-- [ ] **Step 4: Implement** the scanner: header until a line that is
+- [x] **Step 4: Implement** the scanner: header until a line that is
   exactly `%%` (header values end at `;` and may span lines);
   body: text up to `(`, notes up to `)`. Two passes are fine: scan
   into elements, then resolve `gradus` (needs the clef in force).
-- [ ] **Step 5: Run** — green. **Plant:** resolve `gradus` against
+- [x] **Step 5: Run** — green. **Plant:** resolve `gradus` against
   the first clef only → `_claves_probare` FRACTUM.
-- [ ] **Step 6: Commit** (gate `radix`), worklog `lib/gabc.worklog.md`
+- [x] **Step 6: Commit** (gate `radix`), worklog `lib/gabc.worklog.md`
   started.
+
+**Executed 2026-11-03.** Step 1: `salve_2435.gabc` header ends
+with `%%` on its own line (line 6), body starts `(c4)`; counted with
+shell tools, not the reader: **141 syllables** (18 bar-only), **145
+notes** - both pinned in `_salve_legere_probare`. Red against a stub
+(exit 1, not 2); green on the first full run. **Plant:** `gradus`
+resolved against the clef of syllable 0 only -> `_claves_probare`
+FRACTUM, restored, green (`silva.planta`, gate `radix`, filtrum
+`gabc`).
+Decisions made while implementing (worklog `lib/gabc.worklog.md`):
+- the scanner **consumes** all of Gregorio's note syntax now (so the
+  Salve reads with 0 diagnostics) but **records** only notes, neumes,
+  clefs, bars and accidentals; shape/rhythm signs (T3), spaces,
+  breaks, custos, brackets, `{` `}`, nabc (T4) are consumed and not
+  yet kept - a G5 debt T4 closes, said in the `lib/gabc.c` header;
+- dump `divisio` line has three columns more than drafted:
+  `divisio <genus> <numerus> <alta> <parenthesis>`; all line kinds
+  (incl. `alteratio` `spatium` `fractio` `custos` `signum`) already
+  print, grammar fixed in the `probatio_gabc.c` header comment;
+  `formae` letters fixed now: `I v V s o O w W r R = q ~ < > - @`;
+- `verbum_incipit` = text present AND (first text OR whitespace since
+  the previous text); textless syllables FALSE (`ve(gh) (hg)re(g)` ->
+  `re` begins a word); header comment updated;
+- `GabcElementum.parenthesis` also marks `` `? `` `,?` (header comment
+  updated);
+- notes before any clef resolve as **c3** (old `initial-key` default);
+  a secondary clef `@c2` does not move `do`;
+- a bar touching a note in the same parentheses (`(g;h)`, before or
+  after) -> monitum `GABC_DIVISIO_IN_NEUMA` at the bar;
+- header: `%` comment stripped per line; body: `%` is a comment only
+  between syllables (inside text it is literal - T4); unclosed `(`
+  reads notes to end of input;
+- glossarium: `nabc` (ignotum-permissum), `modificator`.
 
 ---
 

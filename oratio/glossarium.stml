@@ -2011,6 +2011,8 @@
   <!-- gabc T1 (2026-11-03): cantus Gregorianus - nomina neumarum et signorum notationis quadratae (include/gabc.h); termini Latini medii aevi et Solesmenses -->
   <vocabulum lemma="gabc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (textus cantus Gregoriani, Gregorio), ut plist / musicxml; bibliotheca gabc 2026-11-03"/>
   <vocabulum lemma="nlba" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="signum textus gabc (no line break area, Gregorio): syllabae inter quas linea non frangitur (include/gabc.h)"/>
+  <vocabulum lemma="nabc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (notatio neumatica St. Galli in gabc post '|', Gregorio); lib/gabc.c consumit, T4 opacum servat"/>
+  <vocabulum lemma="modificator" lingua="latina" classis="substantivum" nota="modificator, -oris m. (Lat. tard.): qui modum ponit; hic signum post notam formam aut rhythmum mutans (lib/gabc.c)"><forma textus="modificator"/><forma textus="modificatoris"/></vocabulum>
   <vocabulum lemma="oriscus" lingua="latina" classis="substantivum" nota="oriscus, -i m. (notatio neumatica): nota undulata, saepe unisona post notam priorem (include/gabc.h)"><forma textus="oriscus"/></vocabulum>
   <vocabulum lemma="quilisma" lingua="latina" classis="substantivum" nota="quilisma, -atis n. (Graece kylisma): nota tremula serrata inter tertiam ascendentem (include/gabc.h)"><forma textus="quilisma"/></vocabulum>
   <vocabulum lemma="quilismaticus" lingua="latina" classis="adiectivum" nota="quilismaticus, -a, -um: quilisma continens - pes quilismaticus (include/gabc.h)"><forma textus="quilismaticus"/></vocabulum>

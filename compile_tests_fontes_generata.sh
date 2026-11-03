@@ -146,6 +146,7 @@ declare -a SOURCE_FILES=(
     "lib/fractio.c"
     "lib/friatio.c"
     "lib/functio.c"
+    "lib/gabc.c"
     "lib/git.c"
     "lib/glyphae_ductae.c"
     "lib/harmonia.c"
