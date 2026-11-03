@@ -4,7 +4,7 @@ Status: DRAFT v3 (2026-11-02). Q1 DECIDED by Fran 2026-11-02 (accepted,
 with conditions). Design review done (consiliarius-verificatio, approve
 after fixes; every finding placed, see "Design review" at the end). Q2
 and Q3 DECIDED by Fran 2026-11-02 (s = 64; frozen-kernel checker for the
-14 × 801 headline). Next: T0.
+14 × 801 headline). T0 DONE 2026-11-02 (see "T0 amendment"). Next: T1.
 
 Agreed with Fran (2026-11-02): after the TL speed pass
 (temperley-celeritas-plan.md, done) and the Regina comparison
@@ -227,13 +227,14 @@ Let D = Q − P_C ≠ 0. A certifying check passes wrongly only if:
 
 Per check ε₁ = ε_a + ε_b. Certification can happen at most at stages
 1 … k_max − 1 (stage k_max is proved), so overall
-≤ (k_max − 1) · ε₁^m. In integers (C89 has no log2; 11 × 102 sits 0.18
-from a boundary): e = ⌊−log₂ ε₁⌋ by exact Magnus comparisons, then
-m = ⌈(s + ⌈log₂(k_max − 1)⌉) / e⌉.
+≤ (k_max − 1) · ε₁^m. **m is computed exactly** (T0 amendment): with
+ε₁ = a/b as an exact fraction, m is the smallest m with
+(k_max − 1) · a^m · 2^s ≤ b^m, in Magnus. (v3's recipe, e = ⌊−log₂ ε₁⌋
+then m = ⌈(s + ⌈log₂(k_max − 1)⌉)/e⌉, rounds twice and asks for one check
+too many on 13 of the 36 braids that can stop early; T0 found it.)
 
-Hand values (design review): 14 × 801 (K_q ≈ 540): ε₁ ≈ 2^-17.64, e = 17,
-m = 4. 12 × 801 (K_q 561): 2^-17.58, m = 4. 11 × 102 (K_q ≈ 73): 2^-20.63,
-e = 20, m = 4.
+Values (T0, exact): 14 × 801 (K_q = 561): m = 4. 12 × 801 (K_q = 561):
+m = 4. 11 × 102 (K_q = 73): m = 4. 3 × 50 (K_q = 37, k_max = 2): m = 3.
 
 ### Promotion (VERIFICATUM → PROBATUM) (M1)
 
@@ -294,10 +295,126 @@ through `interpolatio_polynomium_relatum`.
 - **P3 (overhead).** (self-checks + certifying checks) × per-point cost
   (from the A/B runs) + a standalone timing of the staged CRT on stored
   residues < 2% of the verified run's CPU at 12 × 801. Check counts are
-  exact: (k_true − 1) self-checks + m certifying (no false self-pass
-  expected).
+  exact (T0 amendment): k_true self-checks (one per stage 1 … k_true; the
+  last one passes) + m certifying, no false self-pass expected; at the
+  bound, k_max − 1 self-checks.
 - **P4 (D136 set, exact).** On all 45 brackets, VERIFICATUM's prime count
   equals the T0-computed k_true for each braid.
+
+## T0 amendment (2026-11-02)
+
+Tool: `uncinus_mensura -sectio XIII` (no evaluation at all: a-priori
+window and limes by `laqueus_pd_fenestra`, the interpolation prime
+sequence reproduced (residue 1 mod 4, below 2^31 for TL, below 2^32 for
+vertex), k_true from the known brackets (`-uncini` brackets.txt and
+uncinus_14x801.txt), today's dispatcher route with no memory limit as in
+XI, the vertex cost by `laqueus_via_eligere`, m exact in Magnus) and
+`-sectio XIV` (segmented sieve). Raw output build/verificatio/
+t0_fundamentum.out (not committed). Under custos: 2 MB peak.
+
+Checks that passed on all 46 rows: the tool's writhe equals each known
+bracket's writhe (same word); every known bracket lies inside the
+a-priori window; no coefficient reaches the proved limes; 12 × 801's
+PROBATUM count 12,949 equals the count measured in the speed plan's T0;
+the tool's m equals an independent exact-fraction computation.
+
+**N** = 25,348,870 primes ≡ 1 mod 4 in [2^30, 2^31) (and 25,348,667
+≡ 3 mod 4; sum 50,697,537 = π(2^31) − π(2^30) = 105,097,565 − 54,400,028,
+CONGRUIT; 1.9 s). Equal to the design review's independent count.
+
+**Exact registration** (route = today's dispatcher; evals P = (k_max + 1)
+× (K_q + 2), evals V = k_true × (K_q + 2) when k_true < k_max, else = P;
+ratio = P / V, interpolation evaluations only; m for s = 64, exact):
+
+| braid | route | K_q | limes | bits | k_max | k_true | m | evals P | evals V | ratio |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 3 × 20 | TL | 15 | 14 | 2 | 1 | 1 | 0 | 34 | 34 | 1.000 |
+| 3 × 50 | TL | 37 | 34 | 5 | 2 | 1 | 3 | 117 | 39 | 3.000 |
+| 3 × 102 | TL | 72 | 72 | 11 | 3 | 1 | 4 | 296 | 74 | 4.000 |
+| 3 × 202 | TL | 147 | 151 | 24 | 6 | 1 | 4 | 1043 | 149 | 7.000 |
+| 4 × 21 | TL | 15 | 16 | 2 | 1 | 1 | 0 | 34 | 34 | 1.000 |
+| 4 × 51 | TL | 39 | 36 | 5 | 2 | 1 | 3 | 123 | 41 | 3.000 |
+| 4 × 101 | TL | 80 | 66 | 15 | 3 | 1 | 4 | 328 | 82 | 4.000 |
+| 4 × 201 | TL | 159 | 127 | 35 | 5 | 2 | 4 | 966 | 322 | 3.000 |
+| 5 × 20 | TL | 15 | 15 | 1 | 1 | 1 | 0 | 34 | 34 | 1.000 |
+| 5 × 50 | TL | 39 | 40 | 5 | 2 | 1 | 3 | 123 | 41 | 3.000 |
+| 5 × 102 | TL | 76 | 82 | 16 | 3 | 1 | 4 | 312 | 78 | 4.000 |
+| 5 × 202 | TL | 149 | 157 | 37 | 6 | 2 | 4 | 1057 | 302 | 3.500 |
+| 6 × 21 | TL | 17 | 15 | 1 | 1 | 1 | 0 | 38 | 38 | 1.000 |
+| 6 × 51 | TL | 40 | 41 | 13 | 2 | 1 | 3 | 126 | 42 | 3.000 |
+| 6 × 101 | TL | 80 | 73 | 21 | 3 | 1 | 4 | 328 | 82 | 4.000 |
+| 6 × 201 | TL | 145 | 154 | 50 | 6 | 2 | 4 | 1029 | 294 | 3.500 |
+| 7 × 20 | vertex | 17 | 13 | 2 | 1 | 1 | 0 | 38 | 38 | 1.000 |
+| 7 × 50 | TL | 39 | 32 | 6 | 2 | 1 | 3 | 123 | 41 | 3.000 |
+| 7 × 102 | TL | 74 | 87 | 22 | 3 | 1 | 4 | 304 | 76 | 4.000 |
+| 7 × 202 | TL | 148 | 167 | 39 | 6 | 2 | 4 | 1050 | 300 | 3.500 |
+| 8 × 21 | vertex | 16 | 15 | 1 | 1 | 1 | 0 | 36 | 36 | 1.000 |
+| 8 × 51 | TL | 36 | 41 | 7 | 2 | 1 | 3 | 114 | 38 | 3.000 |
+| 8 × 101 | TL | 75 | 84 | 25 | 3 | 1 | 4 | 308 | 77 | 4.000 |
+| 8 × 201 | TL | 140 | 166 | 39 | 6 | 2 | 4 | 994 | 284 | 3.500 |
+| 9 × 20 | vertex | 15 | 15 | 2 | 1 | 1 | 0 | 34 | 34 | 1.000 |
+| 9 × 50 | vertex | 37 | 37 | 9 | 2 | 1 | 3 | 117 | 39 | 3.000 |
+| 9 × 102 | TL | 72 | 88 | 17 | 3 | 1 | 4 | 296 | 74 | 4.000 |
+| 9 × 202 | TL | 141 | 175 | 52 | 6 | 2 | 4 | 1001 | 286 | 3.500 |
+| 10 × 21 | vertex | 17 | 17 | 3 | 1 | 1 | 0 | 38 | 38 | 1.000 |
+| 10 × 51 | vertex | 40 | 42 | 9 | 2 | 1 | 3 | 126 | 42 | 3.000 |
+| 10 × 101 | vertex | 75 | 85 | 24 | 3 | 1 | 4 | 308 | 77 | 4.000 |
+| 10 × 201 | TL | 144 | 162 | 42 | 6 | 2 | 4 | 1022 | 292 | 3.500 |
+| 11 × 20 | vertex | 17 | 9 | 1 | 1 | 1 | 0 | 38 | 38 | 1.000 |
+| 11 × 50 | vertex | 34 | 39 | 3 | 2 | 1 | 3 | 108 | 36 | 3.000 |
+| 11 × 102 | vertex | 73 | 82 | 16 | 3 | 1 | 4 | 300 | 75 | 4.000 |
+| 11 × 202 | TL | 146 | 175 | 47 | 6 | 2 | 4 | 1036 | 296 | 3.500 |
+| 12 × 21 | vertex | 18 | 14 | 2 | 1 | 1 | 0 | 40 | 40 | 1.000 |
+| 12 × 51 | vertex | 39 | 43 | 4 | 2 | 1 | 3 | 123 | 41 | 3.000 |
+| 12 × 101 | vertex | 76 | 86 | 19 | 3 | 1 | 4 | 312 | 78 | 4.000 |
+| 12 × 201 | vertex | 143 | 165 | 42 | 6 | 2 | 4 | 1015 | 290 | 3.500 |
+| 8 × 401 | TL | 277 | 329 | 67 | 11 | 3 | 4 | 3348 | 837 | 4.000 |
+| 8 × 801 | TL | 583 | 642 | 193 | 22 | 7 | 4 | 13455 | 4095 | 3.286 |
+| 10 × 401 | TL | 275 | 334 | 82 | 12 | 3 | 4 | 3601 | 831 | 4.333 |
+| 12 × 401 | TL | 277 | 333 | 91 | 12 | 3 | 4 | 3627 | 837 | 4.333 |
+| 12 × 801 | TL | 561 | 654 | 175 | 22 | 6 | 4 | 12949 | 3378 | 3.833 |
+| 14 × 801 | TL | 561 | 662 | 195 | 23 | 7 | 4 | 13512 | 3941 | 3.429 |
+
+So:
+- **P1** = 6 at 12 × 801, 7 at 14 × 801 (unchanged).
+- **P2** (interpolation evaluations) = 12,949 / 3,378 = 3.833 at 12 × 801,
+  13,512 / 3,941 = 3.429 at 14 × 801; with self-checks counted as main
+  evaluations, 12,949 / 3,384 = 3.827 and 13,512 / 3,948 = 3.422.
+- **P4** = the k_true column, braid by braid. 10 braids (c ≈ 20) have
+  k_max = 1: no stage before the bound, so VERIFICATUM = PROBATUM there
+  (status AD_LIMITEM). Over the 45, the mean evaluation ratio is 3.06
+  (descriptive; v2's "≥ 2×" is superseded by the exact column).
+- 14 × 801: K_q = 561, not ≈ 540 (the review inferred it from "~13,000
+  points"); per prime 563 evaluations; PROBATUM 24 primes (23 + ADDITUS).
+  2.0 h → about 35 min CPU in VERIFICATUM.
+
+**Vertex at 14 × 801** (`laqueus_via_eligere`, no evaluation): workspace
+3,895,358,656 bytes (3.63 GiB), 2.89 × 10¹² multiplications per point,
+about 89 min per point at the D136 1.85 ns calibration. Over the 2 GiB
+limit, so by the Q3 decision there is no post-hoc vertex check (it would
+fit this 16 GB machine if the limit were raised for one run: 4 points ≈
+6 h; Fran's call, not planned). 12 × 801 for comparison: 0.52 GiB,
+1.44 × 10¹¹, about 4 min per point.
+
+**L2 lever** (the separate proved improvement, desideratum 01M6FNZH):
+comparing the exact product with 2^(limes+1) saves one prime on 5 of the
+46: 3 × 202, 8 × 801, 10 × 401, 12 × 401, 14 × 801.
+
+**PRNG pinned:** sors = PCG32 XSH-RR (64-bit state, 32-bit output,
+O'Neill) seeded through SplitMix64 (`sors_seminare(semen, series)`);
+draws by `sors_intra` (Lemire, unbiased). probatio_sors pins golden output
+vectors, so the generator cannot drift silently. relatio names it
+"sors PCG32-XSH-RR/SplitMix64".
+
+**Entropy source:** `moneta_octeti_fortuiti` (lib/moneta.c; /dev/urandom,
+NO fallback: on failure it returns FALSUM and leaves the buffer
+untouched, and the caller refuses). That is exactly rule 4's contract,
+so no new function is needed; the tools read 8 bytes from it for a
+FORTUITUM seed and refuse if it fails.
+
+**Corrections to v3:** m computed exactly (Error bound); self-checks =
+k_true (P3, counting-checker test); bound vectors and a double-rounding
+plant (Tests). No threshold moved.
 
 ## Tests
 
@@ -307,8 +424,8 @@ through `interpolatio_polynomium_relatum`.
   - **undersized modulus**: a constructed polynomial too big for the first
     primes; the verified result is correct and uses more than the minimal
     prime count;
-  - **counting checker** (H4a): checker calls = (k_true − 1) self + m
-    certifying, and = relatio.m;
+  - **counting checker** (H4a): main-evaluator checks = k_true (one self-
+    check per stage, T0 amendment), certifying calls = m = relatio.m;
   - **reference draws** (H4b): an independent reimplementation of the
     documented draw procedure (pinned PRNG, range, rejection) reproduces
     relatio's list of (q, index) pairs exactly from the seed;
@@ -322,10 +439,11 @@ through `interpolatio_polynomium_relatum`.
     is not mirror-symmetric (Q(A) ≠ Q(A⁻¹));
   - **seeds**: two seeds give different check primes; the same seed
     reproduces exactly;
-  - **bound vectors** (M3): 14 × 801 (K_q measured) → e = 17, m = 4;
-    11 × 102 → e = 20, m = 4; synthetic vectors placed so each one-bit
-    error flips m: c = 4 vs 8, k_max vs k_max − 1, limes vs limes + 1,
-    q_min 2^31 vs 2^30;
+  - **bound vectors** (M3, T0 values): 14 × 801 (K 561, limes 662,
+    k_max 23) → m = 4; 11 × 102 (K 73, limes 82, k_max 3) → 4; 3 × 50
+    (K 37, limes 34, k_max 2) → 3 (the double-rounding recipe gives 4);
+    synthetic vectors placed so each one-bit error flips m: c = 4 vs 8,
+    k_max vs k_max − 1, limes vs limes + 1, q_min 2^31 vs 2^30;
   - **calibration**: narrowed check range (q ≈ 2^10–2^12, ε₁ ≈ 2^-3), many
     seeds on an undersized candidate with m = 1: the observed false-pass
     rate is > 0 and ≤ the formula. The bound is a live upper bound;
@@ -347,6 +465,8 @@ through `interpolatio_polynomium_relatum`.
   - main evaluator used as certifier → mirror red;
   - laqueus always uses self-check → laqueus cross-route red;
   - m computed one too small → bound-vectors red;
+  - m by the double-rounding recipe (⌊e⌋, ⌈log₂⌉) → bound-vectors red
+    (3 × 50);
   - promotion restarting from prime 1 → promotion count red;
   - promotion skips the R = Q comparison → +M_k corruption red.
 

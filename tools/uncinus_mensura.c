@@ -35,6 +35,13 @@
  *   XII  (solum per -sectio XII) verba tricarum D136 ad comparationem
  *        externam: "VERBUM n c | g1 g2 ..." (g > 0 = sigma_g
  *        positivum), omnes XLV aut una per -fila N -longitudo L
+ *   XIII (solum per -sectio XIII; interpolatio-verificatio-plan T0)
+ *        fundamentum verificationis SINE aestimatione: fenestra a
+ *        priori K, limes, k_max (TL et vertex), k verus ex uncino noto
+ *        (-uncini VIA, forma brackets.txt, usque ad IV), m, aestimationes
+ *        PROBATUM/VERIFICATUM, sumptus vertex; XLV + 14 x 801 aut una
+ *   XIV  (solum per -sectio XIV) cribrum: primi in [2^30, 2^31) per
+ *        residuum mod 4, summa contra pi(2^31) - pi(2^30)
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -46,7 +53,7 @@
  * Usus: ./bin/aedilis tools/uncinus_mensura.c && bash
  *   build/aedilis/uncinus_mensura/struere.sh &&
  *   ./build/aedilis/uncinus_mensura/uncinus_mensura [-machina]
- *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII]
+ *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV]
  *   -machina: lineae "MENSURA <sectio> clavis=valor ..."
  */
 #include "latina.h"
@@ -60,6 +67,7 @@
 #include "temperley.h"
 #include "congruentia.h"
 #include "tabula_nodorum.h"
+#include "filum.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -2098,6 +2106,611 @@ _sectio_verborum (
     }
 }
 
+
+/* ==================================================
+ * XIII-XIV: fundamentum verificationis (interpolatio-verificatio-plan
+ * T0) - numeri sine aestimatione ulla
+ * ================================================== */
+
+#define PRIMI_SERIEI_MAXIMI 160      /* limes <= 2c bita; 2c/30 + 2 */
+#define TEXTUS_UNCINORUM_MAXIMI IV
+
+/* floor(log2 p), p >= 2 (idem ac interpolatio _bita_infra) */
+interior i32
+_bita_primi (
+    i32 p)
+{
+    i32 bita = ZEPHYRUM;
+
+    dum (p > I)
+    {
+        p >>= I;
+        bita++;
+    }
+    redde bita;
+}
+
+/* primus maximus < limes, = 1 (mod 4), aptus: (p - 1)/4 >= necessaria
+ * - idem ac interpolatio _primus_proximus cum residuo I, modulo IV,
+ * passu IV (mdc(4, p - 1) = 4); 0 si nullus */
+interior i32
+_primus_seriei (
+    s64 limes,
+    s64 necessaria)
+{
+    s64 n = limes - (s64)I;
+
+    n = n - ((n % (s64)IV - (s64)I + (s64)IV) % (s64)IV);
+    dum (n >= (s64)V)
+    {
+        si (   congruentia_est_primus((i32)n)
+            && (n - (s64)I) / (s64)IV >= necessaria)
+        {
+            redde (i32)n;
+        }
+        n -= (s64)IV;
+    }
+    redde ZEPHYRUM;
+}
+
+nomen structura {
+    i32 k_maximus;   /* primi restitutionis PROBATUM, sine addito */
+    i32 k_verus;     /* primus k: 2 max|c| < M_k (0 si ignotus) */
+    i32 k_magnus;    /* primus k: M_k >= 2^(limes + 1) exacte (L2) */
+    b32 violatus;    /* max|c| >= 2^limes: limes probatus fallit */
+    i32 primi[PRIMI_SERIEI_MAXIMI];
+} SeriesPrimorum;
+
+/* series ut interpolatio_polynomium: primi descendentes infra
+ * limes_primorum donec summa floor(log2 p) >= limes + 1, deinde
+ * ADDITUS (primi[k_maximus]). maximus: |c| maximus uncini noti, aut
+ * NIHIL. FALSUM si primi desunt aut series nimis longa. */
+interior b32
+_seriem_computare (
+                 s64  limes_primorum,
+                 i32  limes,
+                 s64  necessaria,
+     constans Magnus* maximus,
+             Piscina* piscina,
+      SeriesPrimorum* series)
+{
+       s64 bita       = ZEPHYRUM;
+       s64 p          = limes_primorum;
+    Magnus productum  = magnus_ex_s64((s64)I);
+    Magnus bis_maximus;
+       i32 k    = ZEPHYRUM;
+       i32 j;
+
+    dum (bita < (s64)limes + (s64)I)
+    {
+        si (k + I >= PRIMI_SERIEI_MAXIMI)
+        {
+            redde FALSUM;
+        }
+        p = (s64)_primus_seriei(p, necessaria);
+        si (p == ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        series->primi[k++]  = (i32)p;
+        bita                += (s64)_bita_primi((i32)p);
+    }
+    series->k_maximus  = k;
+    series->primi[k]   = _primus_seriei(p, necessaria);
+    si (series->primi[k] == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    series->k_verus   = ZEPHYRUM;
+    series->k_magnus  = ZEPHYRUM;
+    series->violatus  = maximus != NIHIL
+        && magnus_bitorum(*maximus) > limes;
+    bis_maximus = maximus != NIHIL ? magnus_adde(*maximus, *maximus,
+        piscina)
+        : productum;
+    per (j = ZEPHYRUM; j < k; j++)
+    {
+        productum = magnus_multiplica(productum,
+            magnus_ex_s64((s64)series->primi[j]),
+            piscina);
+        si (   maximus != NIHIL && series->k_verus == ZEPHYRUM
+            && magnus_compara(bis_maximus, productum) < ZEPHYRUM)
+        {
+            series->k_verus = j + I;
+        }
+        si (   series->k_magnus          == ZEPHYRUM
+            && magnus_bitorum(productum) >= limes + II)
+        {
+            series->k_magnus = j + I;
+        }
+    }
+    redde VERUM;
+}
+
+/* integer signatus ex datis[*positio..]: '-' optionale, digiti */
+interior b32
+_integrum_legere (
+     constans i8* data,
+             i32  finis,
+             i32* positio,
+             s32* valor)
+{
+    s32 signum  = I;
+    s32 v       = ZEPHYRUM;
+    i32 initium;
+
+    si (*positio < finis && data[*positio] == '-')
+    {
+        signum = -(s32)I;
+        (*positio)++;
+    }
+    initium = *positio;
+    dum (   *positio < finis && data[*positio] >= '0'
+         && data[*positio] <= '9')
+    {
+        v = v * (s32)X + (s32)(data[*positio] - '0');
+        (*positio)++;
+    }
+    *valor = signum * v;
+    redde *positio > initium;
+}
+
+/* positio primae occurrentiae signi in [initium, finis); finis si
+ * nulla */
+interior i32
+_quaerere_in_linea (
+           constans i8* data,
+                   i32  initium,
+                   i32  finis,
+    constans character* signum)
+{
+    i32 mensura = (i32)strlen(signum);
+    i32 k;
+
+    per (k = initium; k + mensura <= finis; k++)
+    {
+        si (memcmp(data + k, signum, (size_t)mensura) == ZEPHYRUM)
+        {
+            redde k;
+        }
+    }
+    redde finis;
+}
+
+/* linea "plexusN x L | n N | c L | writhe W | A^lo .. c c ..." (forma
+ * brackets.txt) in textibus: scriptura, imus verus, numerus
+ * coefficientium (exponentes consecutivi), |c| maximus. FALSUM si
+ * nulla aut malformata. */
+interior b32
+_uncinum_notum_legere (
+    constans chorda* textus,
+                i32  numerus_textuum,
+                i32  fila,
+                i32  longitudo,
+            Piscina* piscina,
+                s32* scriptura,
+                s32* imus_verus,
+                i32* numerus,
+             Magnus* maximus)
+{
+    character praefixum[LXIV];
+          i32 mensura_praefixi;
+          i32 t;
+
+    sprintf(praefixum, "plexus%u x %u |", fila, longitudo);
+    mensura_praefixi = (i32)strlen(praefixum);
+    per (t = ZEPHYRUM; t < numerus_textuum; t++)
+    {
+         i8* data     = textus[t].datum;
+        i32  finis    = textus[t].mensura;
+        i32  initium  = ZEPHYRUM;
+
+        dum (initium < finis)
+        {
+            i32 terminus = initium;
+            i32 k;
+
+            dum (terminus < finis && data[terminus] != '\n')
+            {
+                terminus++;
+            }
+            si (   terminus - initium >= mensura_praefixi
+                && memcmp(data + initium, praefixum,
+                (size_t)mensura_praefixi) == ZEPHYRUM)
+            {
+                k = _quaerere_in_linea(data, initium, terminus,
+                    "writhe ") + VII;
+                si (   k > terminus
+                    || !_integrum_legere(data, terminus, &k,
+                    scriptura))
+                {
+                    redde FALSUM;
+                }
+                k = _quaerere_in_linea(data, k, terminus, "A^") + II;
+                si (   k > terminus
+                    || !_integrum_legere(data, terminus, &k,
+                    imus_verus))
+                {
+                    redde FALSUM;
+                }
+                k = _quaerere_in_linea(data, k, terminus, "..") + II;
+                *numerus = ZEPHYRUM;
+                *maximus = magnus_ex_s64(ZEPHYRUM);
+                dum (k < terminus)
+                {
+                    chorda signum_c;
+                    Magnus c;
+                       i32 initium_signi;
+
+                    dum (k < terminus && data[k] == ' ')
+                    {
+                        k++;
+                    }
+                    si (k >= terminus)
+                    {
+                        frange;
+                    }
+                    initium_signi = k;
+                    dum (k < terminus && data[k] != ' ')
+                    {
+                        k++;
+                    }
+                    signum_c.datum    = data + initium_signi;
+                    signum_c.mensura  = k - initium_signi;
+                    si (!magnus_ex_chorda(signum_c, piscina, &c))
+                    {
+                        redde FALSUM;
+                    }
+                    c = magnus_absolutum(c, piscina);
+                    si (magnus_compara(c, *maximus) > ZEPHYRUM)
+                    {
+                        *maximus = c;
+                    }
+                    (*numerus)++;
+                }
+                redde *numerus > ZEPHYRUM;
+            }
+            initium = terminus + I;
+        }
+    }
+    redde FALSUM;
+}
+
+/* m: minimus cum (k_maximus - 1) eps1^m <= 2^-s (s = LXIV), EXACTE:
+ * eps1 = a/b = c (K - 1)/(2^30 - r) + floor((limes + 1)/30) / 2^24,
+ * c = 8, r = 9; comparatio (k_maximus - 1) a^m 2^s <= b^m in Magnus
+ * (T0: recipe integra floor/ceil recensionis M3 m uno nimis dat in XIII
+ * tricis). k_maximus <= 1: 0 (nullus gradus ante limitem). *exponens =
+ * floor(-log2 eps1) et *epsilon (f64) descriptiva tantum. */
+interior i32
+_probationes_necessariae (
+        i32  coefficientes,
+        i32  limes,
+        i32  k_maximus,
+    Piscina* piscina,
+        i32* exponens,
+        f64* epsilon)
+{
+    constans s64 basis      = (s64)0x40000000UL - (s64)IX;   /* 2^30 - r */
+    constans s64 duae_xxiv  = (s64)0x1000000UL;          /* 2^24 */
+             f64 periculum = 8.0 * (f64)(coefficientes - I) / (f64)basis
+                 + (f64)((limes + I) / XXX) / (f64)duae_xxiv;
+       f64 t = 1.0;
+       i32 e = ZEPHYRUM;
+       i32 m;
+    Magnus a;
+    Magnus b;
+    Magnus sinistra;
+    Magnus dextra;
+
+    dum (periculum <= t / 2.0 && e < LXIV)
+    {
+        t /= 2.0;
+        e++;
+    }
+    *exponens  = e;
+    *epsilon   = periculum;
+    si (k_maximus <= I)
+    {
+        redde ZEPHYRUM;
+    }
+    a = magnus_adde(magnus_ex_s64((s64)VIII * (s64)(coefficientes - I)
+        * duae_xxiv), magnus_ex_s64((s64)((limes + I) / XXX) * basis),
+        piscina);
+    b = magnus_ex_s64(basis * duae_xxiv);
+    /* sinistra = (k - 1) 2^64 a^m, dextra = b^m */
+    sinistra = magnus_multiplica(magnus_ex_s64((s64)(k_maximus - I)),
+        magnus_multiplica(magnus_ex_s64((s64)0x100000000UL),
+        magnus_ex_s64((s64)0x100000000UL), piscina), piscina);
+    dextra = magnus_ex_s64((s64)I);
+    per (m = I; m <= LXIV; m++)
+    {
+        sinistra  = magnus_multiplica(sinistra, a, piscina);
+        dextra    = magnus_multiplica(dextra, b, piscina);
+        si (magnus_compara(sinistra, dextra) <= ZEPHYRUM)
+        {
+            redde m;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+/* XIII: una trica - fenestra a priori, limes, series TL (primi < 2^31)
+ * et vertex (< 2^32), via electa (octeti sine limite, ut XI), sumptus
+ * vertex, k verus ex uncino noto, aestimationes PROBATUM et
+ * VERIFICATUM in via electa */
+interior vacuum
+_fundamentum_tricae (
+             i32     fila,
+             i32     longitudo_data,
+    constans chorda* textus,
+             i32     numerus_textuum)
+{
+                Piscina* piscina = piscina_generare_dynamicum(
+                    "mensura_fundamentum", 1048576);
+                   Sors  s;
+                    i32  longitudo  = longitudo_data;
+                    s32* verbum     = NIHIL;
+                    i32* pd;
+                    i32  transitus;
+                    s32  imus;
+                    s32  summus;
+                    i32  limes;
+                 Magnus  limes_exactus;
+                    i32  coefficientes;
+                    s64  necessaria;
+                    s32  scriptura       = ZEPHYRUM;
+                    s32  scriptura_nota  = ZEPHYRUM;
+                    s32  imus_verus      = ZEPHYRUM;
+                    i32  numerus_notus   = ZEPHYRUM;
+                 Magnus  maximus;
+                    b32  notus;
+         SeriesPrimorum  series_temperley;
+         SeriesPrimorum  series_vertex;
+         SeriesPrimorum* electa;
+             LaqueusVia  via = LAQUEUS_VIA_NULLA;
+      ContractioSumptus  sv;
+LaqueusTemperleySumptus  st;
+                    i32  e;
+                    i32  m;
+                    f64  periculum;
+                    i32  per_primum;
+                    i32  k_finis;
+                    i64  probatum;
+                    i64  verificatum;
+                    i64  principales;
+                    i32  j;
+
+    sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
+    si (   _plexus_fortuitus(&s, fila, &longitudo, piscina, &verbum)
+        == NIHIL
+        || !laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina, &pd,
+        &transitus)
+        || !laqueus_pd_fenestra(pd, transitus, piscina, &imus, &summus,
+        &limes, &limes_exactus))
+    {
+        imprimere("   %u x %u: REFUTATUM (verbum, pd aut fenestra)\n",
+            fila,
+            longitudo);
+        piscina_destruere(piscina);
+        redde;
+    }
+    per (j = ZEPHYRUM; j < longitudo; j++)
+    {
+        scriptura += verbum[j] > ZEPHYRUM ? (s32)I : -(s32)I;
+    }
+    coefficientes  = (i32)((summus - imus) / IV) + I;
+    necessaria     = (s64)coefficientes + (s64)II;
+    per_primum     = coefficientes + II;
+    notus = _uncinum_notum_legere(textus, numerus_textuum, fila,
+        longitudo, piscina, &scriptura_nota, &imus_verus,
+        &numerus_notus,
+        &maximus);
+    si (   !_seriem_computare((s64)0x80000000UL, limes, necessaria,
+           notus ? &maximus : NIHIL, piscina, &series_temperley)
+        || !_seriem_computare((s64)0xFFFFFFFFUL, limes, necessaria,
+           notus ? &maximus : NIHIL, piscina, &series_vertex))
+    {
+        imprimere("   %u x %u: series primorum defecit\n", fila,
+            longitudo);
+        piscina_destruere(piscina);
+        redde;
+    }
+    si (!laqueus_via_eligere(verbum, longitudo, fila,
+        CONTRACTIO_SATURATUM, piscina, &via, &sv, &st))
+    {
+        imprimere("   %u x %u: via non eligibilis\n", fila, longitudo);
+        piscina_destruere(piscina);
+        redde;
+    }
+    electa = via
+        == LAQUEUS_VIA_TEMPERLEY ? &series_temperley : &series_vertex;
+    m = _probationes_necessariae(coefficientes, limes,
+        electa->k_maximus,
+        piscina, &e, &periculum);
+    /* VERIFICATUM: k_verus primi si k_verus < k_maximus (probationes
+     * sui in gradibus 1 .. k_verus, ultima transit, deinde m
+     * certificantes), aliter ad limitem: k_maximus + ADDITUS,
+     * probationes sui in gradibus 1 .. k_maximus - 1 (gradus k_maximus
+     * probatus est) */
+    k_finis = notus && electa->k_verus > ZEPHYRUM
+        && electa->k_verus < electa->k_maximus ? electa->k_verus
+        : electa->k_maximus + I;
+    probatum     = (i64)(electa->k_maximus + I) * (i64)per_primum;
+    verificatum  = (i64)k_finis * (i64)per_primum;
+    principales  = verificatum + (i64)(k_finis <= electa->k_maximus
+        ? k_finis : electa->k_maximus - I);
+    imprimere("FUNDAMENTUM n=%u c=%u via=%s imus=%d summus=%d K=%u "
+        "limes=%u scriptura=%d", fila, longitudo,
+        via == LAQUEUS_VIA_TEMPERLEY ? "temperley" : "vertex", imus,
+        summus, coefficientes, limes, scriptura);
+    si (notus)
+    {
+        imprimere(" bita=%u imus_verus=%d summus_verus=%d scriptura_nota=%d"
+            "%s%s", magnus_bitorum(maximus), imus_verus, imus_verus
+            + (s32)numerus_notus - (s32)I, scriptura_nota,
+            scriptura_nota != scriptura ? " SCRIPTURA_DIVERSA" : "",
+            imus_verus < imus
+                || imus_verus + (s32)numerus_notus - (s32)I
+            > summus ? " EXTRA_FENESTRAM" : "");
+    }
+    alioquin
+    {
+        imprimere(" uncinus=ignotus");
+    }
+    imprimere(" kmax_tl=%u kmax_vx=%u kvera_tl=%u kvera_vx=%u kmagnus_tl=%u"
+        " kmagnus_vx=%u%s e=%u m=%u eps=%.3e aest_probatum=%llu"
+        " aest_verificatum=%llu aest_principales=%llu ratio=%.3f"
+        " ratio_principales=%.3f vx_octeti=%llu vx_mult=%llu vx_lat=%u"
+        " tl_octeti=%llu tl_mult=%llu\n",
+        series_temperley.k_maximus, series_vertex.k_maximus,
+        series_temperley.k_verus, series_vertex.k_verus,
+        series_temperley.k_magnus,
+        series_vertex.k_magnus, series_temperley.violatus
+            || series_vertex.violatus ? " LIMES_VIOLATUS" : "",
+        e, m, periculum,
+        (unsigned long long)probatum, (unsigned long long)verificatum,
+        (unsigned long long)principales,
+        (f64)probatum / (f64)verificatum,
+        (f64)probatum / (f64)principales,
+        (unsigned long long)sv.octeti_officinae,
+        (unsigned long long)sv.multiplicationes, sv.latitudo,
+        (unsigned long long)st.octeti,
+        (unsigned long long)st.multiplicationes);
+    fflush(stdout);
+    piscina_destruere(piscina);
+}
+
+/* XIII: omnes XLV tricae D136 et 14 x 801, aut una (-fila, -longitudo);
+ * uncini noti ex viis (forma brackets.txt) */
+interior vacuum
+_sectio_fundamenti (
+             i32                  fila_data,
+             i32                  longitudo_data,
+    constans character* constans* viae,
+             i32                  numerus_viarum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("mensura_textus",
+        1048576);
+      chorda textus[TEXTUS_UNCINORUM_MAXIMI];
+         i32 k;
+
+    per (k = ZEPHYRUM; k < numerus_viarum; k++)
+    {
+        textus[k] = filum_legere_totum(viae[k], piscina);
+        imprimere("uncini noti: %s (%u octeti)\n", viae[k],
+            textus[k].mensura);
+    }
+    imprimere("\nXIII. fundamentum verificationis (sine aestimatione)\n");
+    si (fila_data != ZEPHYRUM)
+    {
+        _fundamentum_tricae(fila_data, longitudo_data, textus,
+            numerus_viarum);
+    }
+    alioquin
+    {
+        per (k = ZEPHYRUM; k < XL + V; k++)
+        {
+            i32 fila;
+            i32 longitudo;
+
+            _trica_probationis(k, &fila, &longitudo);
+            _fundamentum_tricae(fila, longitudo, textus,
+                numerus_viarum);
+        }
+        _fundamentum_tricae(XIV, DCCCI, textus, numerus_viarum);
+    }
+    piscina_destruere(piscina);
+}
+
+/* XIV: cribrum segmentatum - primi in [2^30, 2^31) per residuum mod 4.
+ * Probatio: summa = pi(2^31) - pi(2^30) = 105097565 - 54400028 =
+ * 50697537 (OEIS A007053). */
+interior vacuum
+_sectio_cribri (vacuum)
+{
+    Piscina* piscina = piscina_generare_dynamicum("mensura_cribrum",
+        1048576);
+    constans i64  imum       = (i64)0x40000000UL;
+    constans i64  summum     = (i64)0x80000000UL;
+    constans i64  segmentum  = (i64)0x400000UL;   /* 2^22 numeri */
+    constans i32  radix      = 46341;             /* > sqrt(2^31) */
+              i8* parvi;
+              i8* compositi;
+             i32* primi_parvi;
+             i32  numerus_parvorum  = ZEPHYRUM;
+             i64  unum              = ZEPHYRUM;
+             i64  tria              = ZEPHYRUM;
+             i64  initium;
+             i32  j;
+             i32  k;
+         clock_t  t0 = clock();
+
+    parvi = (i8*)piscina_allocare(piscina, (memoriae_index)(radix + I));
+    primi_parvi = (i32*)piscina_allocare(piscina, (memoriae_index)radix
+        * magnitudo(i32));
+    compositi = (i8*)piscina_allocare(piscina,
+        (memoriae_index)(segmentum
+        / (i64)II));
+    memset(parvi, ZEPHYRUM, (size_t)(radix + I));
+    per (j = II; j <= radix; j++)
+    {
+        si (parvi[j] == ZEPHYRUM)
+        {
+            si (j > II)
+            {
+                primi_parvi[numerus_parvorum++] = j;
+            }
+            per (k = j * j; k <= radix; k += j)
+            {
+                parvi[k] = I;
+            }
+        }
+    }
+    per (initium = imum; initium < summum; initium += segmentum)
+    {
+        /* compositi[t] pro numero impari initium + 2t + 1 */
+        memset(compositi, ZEPHYRUM, (size_t)(segmentum / (i64)II));
+        per (j = ZEPHYRUM; j < numerus_parvorum; j++)
+        {
+            i64 p = (i64)primi_parvi[j];
+            i64 q = ((initium + p - (i64)I) / p) * p;
+
+            si (q % (i64)II == ZEPHYRUM)
+            {
+                q += p;
+            }
+            per (; q < initium + segmentum; q += (i64)II * p)
+            {
+                compositi[(q - initium - (i64)I) / (i64)II] = I;
+            }
+        }
+        per (k = ZEPHYRUM; (i64)k < segmentum / (i64)II; k++)
+        {
+            si (compositi[k] == ZEPHYRUM)
+            {
+                si (((initium + (i64)II * (i64)k + (i64)I) % (i64)IV)
+                    == (i64)I)
+                {
+                    unum++;
+                }
+                alioquin
+                {
+                    tria++;
+                }
+            }
+        }
+    }
+    imprimere("\nXIV. cribrum [2^30, 2^31)\n");
+    imprimere("CRIBRUM unum_mod_quattuor=%llu tria_mod_quattuor=%llu "
+        "summa=%llu expectata=50697537 %s tempus_s=%.1f\n",
+        (unsigned long long)unum, (unsigned long long)tria,
+        (unsigned long long)(unum + tria),
+        unum + tria == (i64)50697537UL ? "CONGRUIT" : "DISCORDAT",
+        _secundae(t0));
+    piscina_destruere(piscina);
+}
+
 s32
 principale (
                s32  argc,
@@ -2111,6 +2724,8 @@ principale (
                    i64  semen      = (i64)MMXXVIII;
                    i32  paria      = IX;
                    b32  fila_data  = FALSUM;
+    constans character* viae_uncinorum[TEXTUS_UNCINORUM_MAXIMI];
+                   i32  numerus_viarum = ZEPHYRUM;
 
     per (i = I; i < argc; i++)
     {
@@ -2149,6 +2764,12 @@ principale (
         {
             semen = (i64)strtoul(argv[++i], NIHIL, X);
         }
+        alioquin si (   strcmp(argv[i], "-uncini") == ZEPHYRUM
+                     && i + I < argc
+                     && numerus_viarum < TEXTUS_UNCINORUM_MAXIMI)
+        {
+            viae_uncinorum[numerus_viarum++] = argv[++i];
+        }
     }
     si (sectio != NIHIL && strcmp(sectio, "V") == ZEPHYRUM)
     {
@@ -2174,6 +2795,18 @@ principale (
     si (sectio != NIHIL && strcmp(sectio, "XI") == ZEPHYRUM)
     {
         _sectio_probationis_finalis();
+        redde ZEPHYRUM;
+    }
+    si (sectio != NIHIL && strcmp(sectio, "XIII") == ZEPHYRUM)
+    {
+        _sectio_fundamenti(fila_data ? fila : ZEPHYRUM, longitudo
+            == DCCC ? DCCCI : longitudo, viae_uncinorum,
+            numerus_viarum);
+        redde ZEPHYRUM;
+    }
+    si (sectio != NIHIL && strcmp(sectio, "XIV") == ZEPHYRUM)
+    {
+        _sectio_cribri();
         redde ZEPHYRUM;
     }
     si (sectio != NIHIL && strcmp(sectio, "XII") == ZEPHYRUM)

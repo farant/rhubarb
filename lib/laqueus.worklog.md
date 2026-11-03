@@ -917,3 +917,14 @@ but irrelevant at 0.25 s.
 The useful find: the coefficient bound is 3-5x loose (bits/limes 16/82,
 19/86, 24/85, 17/88; 14x801 195/662), so most primes are wasted. Ledger
 desideratum 01M6F2RT: early termination + random-point verification.
+
+## 2026-11-02 - interpolatio-verificatio T0: baseline without evaluation
+
+New tool sections in tools/uncinus_mensura.c: XIII (per braid, no evaluation: a-priori window and limes via laqueus_pd_fenestra, the interpolation prime sequence reproduced, k_true from known brackets, dispatcher route, vertex cost via laqueus_via_eligere, exact m) and XIV (segmented sieve of [2^30, 2^31), 1.9 s, N = 25,348,870 primes = 1 mod 4, sum checked against pi(2^31) - pi(2^30)).
+
+Finds:
+- The design review's integer recipe for m (e = floor(-log2 eps), m = ceil((s + ceil(log2(k_max - 1)))/e)) rounds twice and asks for one check too many on 13 of 36 braids that can stop early (all c ~ 50 braids: 4 instead of 3; all 801-crossing braids: 5 instead of 4). Fix: exact comparison (k_max - 1) a^m 2^s <= b^m with eps = a/b in Magnus; the tool does it and matches a Python Fraction check on all 46 rows. 3 x 50 is the test vector that separates the two.
+- Self-checks per verified run = k_true, not k_true - 1: the stopping stage also self-checks (and passes) before the m certifying checks.
+- 14 x 801: K_q = 561 (as 12 x 801), not ~540; vertex workspace 3.63 GiB (over the 2 GiB limit), 2.89e12 multiplications per point (~89 min at 1.85 ns).
+- The exact-product lever (desideratum 01M6FNZH) saves a prime on 5 of 46 braids.
+- An identifier trap I fell into: `duplex` (= double) and `M` (= 1000) are latina macros; the compile errors were obscure ("expected expression", "passing int to Magnus"). Renamed bis_maximus / productum.
