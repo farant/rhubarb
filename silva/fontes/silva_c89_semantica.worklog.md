@@ -1100,3 +1100,23 @@ Narrative and decision: silva/phase-log.md 2026-11-04 (M0b DECISUS 2 AMENDED).
 - Otherwise the excludenda harvest fails with "typedef redefinition with different types": anonymous structs and enums are distinct types even when identical.
 - The generator reports that as "compilatio fracta sine signis", which points nowhere near the cause.
 - Macros shared with silva.h must be token-identical, so use digits, not Roman numerals (as `REPOSITIO_*` already does).
+
+## 2026-11-04 — analysare_clausa: consumers migrated (bis step 3)
+
+- **Converted:**
+  - examen.c, silva_iudicium.c, renominare.c, nexus_percursus.c;
+  - officina: cursor.c, fusor.c, interpretare.c, praeparator.c, probatio_officina_vindex.c;
+  - probatio_silva_exemplaria_{inutilia,obsoleta}.c.
+
+  Each one is now a single call with `SILVA_CLAUSURA_ORDINARIA`. `fructus` is NIHIL except in nexus_percursus, which keeps its `plagulae_sem2` count via `fructus.secunda`.
+- **Left manual, on purpose:**
+  - `silva_c89_politicam_imponere` (silva_c89_oraculum.c) uses `_politica_expressionis`, not the semantic closure.
+  - The tests in probatio_silva_c89 / _scribere / _semantica / _commissio test recanonicare itself, before and after a flip. Folding them into the shared function would hide exactly what they test.
+- **How to find the call sites:** grep `recanonicare *(` over the worktree. legati indexes the MAIN checkout, so `vocantes` returned 0 here. Not a bug in legati, just the wrong tree for worktree work.
+- **Formatter needed two passes on two files** (ictus on desideratum 01M39WWS):
+  - In interpretare.c, an untouched declaration block flipped to double spacing, and `-vitia` then flagged it. A second `-scribere` restored the HEAD layout.
+  - fusor.c went the other way and converged in one pass.
+  - Habit: after `-scribere`, compare the `-vitia` counts against HEAD copies per file.
+- **Measured** (old examen binary from before the edit against new, 596 files, `-machina`): output and exit codes identical on every file; instructions -6.3% in total.
+  - Instruction counts under `xargs -P 6` showed false regressions of up to +9%. Serial re-runs showed random +170 M spikes on BOTH binaries (kernel, page cache), and a steady state lower for the new binary on every suspect file.
+  - Re-measure suspects serially before believing them.

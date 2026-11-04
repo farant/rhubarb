@@ -14696,3 +14696,10 @@ tabularium region 'c89 parser'. Next by decree …XX0BZ: JS.
 **Effect.** Same tree, old two-pass binary against new: `percursus -semantica` 496.7 -> 390.7 G instructions (-21.3%). Reports identical; per-file peak 644 -> 597 MB.
 
 **Consumers.** percursus moved in this commit. examen, silva_iudicium, renominare, nexus_percursus, officina (cursor, fusor, interpretare, praeparator) and the test recipes move next: until then they still run both passes, which is correct, just slower.
+
+**Consumers moved (step 3, same day).** Every remaining production caller now goes through `silva_c89_semantica_analysare_clausa`:
+- silva tools: examen, silva_iudicium, renominare, nexus_percursus;
+- officina: cursor, fusor, interpretare, praeparator, and the vindex test loader;
+- the two exemplaria test recipes.
+
+renominare and nexus_percursus already skipped sem₂ by hand when nothing flipped; they now share the one implementation. nexus_percursus still counts its sem₂ files, from `fructus.secunda`. Still manual, on purpose: `silva_c89_politicam_imponere` (a different resolver, not the analysis loop) and the tests that drive recanonicare step by step (probatio_silva_c89, _scribere, _semantica, _commissio). Checked: examen old against new over 596 files (lib/, silva/, officina/) gives identical output and exit codes on every file. Instructions 390.2 -> 365.5 G (-6.3%); per-file startup dominates small files (~-3%), and the big ones save ~-23% (silva.c amalgam, probatio_silva_c89.c, hospes.c). Suites: silva 57/57, officina 17/17.

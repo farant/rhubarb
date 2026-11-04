@@ -329,17 +329,8 @@ _recipe_examinis (
         fructus->recusa = VERUM;
         redde VERUM;
     }
-    sem = silva_c89_semantica_analysare_cum_systemate(opus, parsura,
-        systema_parsura);
-    si (sem != NIHIL && oraculum != NIHIL)
-    {
-        (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
-        silva_oraculum_responsa_vacare(oraculum);
-        (vacuum)silva_recanonicare(parsura->commissio, oraculum,
-            silva_c89_resolutor, NIHIL);
-        sem = silva_c89_semantica_analysare_cum_systemate(opus,
-            parsura, systema_parsura);
-    }
+    sem = silva_c89_semantica_analysare_clausa(opus, parsura,
+        systema_parsura, oraculum, SILVA_CLAUSURA_ORDINARIA, NIHIL);
     si (sem == NIHIL)
     {
         redde FALSUM;
