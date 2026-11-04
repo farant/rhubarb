@@ -120,6 +120,18 @@ pictor_documenta_recentia (
      Volumen* volumen,
      Piscina* piscina);
 
+/* pulsus-plan T9: picturae propriae quas acta tangunt (genera historiae
+ * cuiusque picturae, aut "plagula-condita" cum via documenti), ordine
+ * primae apparitionis, sine duplicibus; acta aliena et non picturarum
+ * praetermittuntur. Xar de chorda (spatium; "" = radix), NIHIL si
+ * argumenta mala */
+Xar*
+pictor_spatia_actorum (
+                  Volumen* volumen,
+    constans VolumenActum* acta,
+                      i32  numerus,
+                  Piscina* piscina);
+
 /* gutta k puncti i ictus: offsetus (dx, dy) in disco radii r,
  * determinatus ex (semen, i, k) per sors */
 vacuum
@@ -404,6 +416,12 @@ nomen structura {
                 Piscina* scheda;     /* NIHIL donec prima apertio */
                     Xar* picturae;   /* PictorPicturaAliena, recentia */
          TabulaDispersa* pinaces;    /* provenientia -> Imago* */
+    /* pulsus-plan T10: grex tactus (PictorPicturaAliena, ordine dato)
+     * in scheda sua - parare eum non tollit; onerans = tactus exspectat
+     * picturas nondum advectas (rete "Loading...") */
+                 Piscina* grex_scheda;
+                     Xar* grex;
+                     b32  onerans;
 } PictorCommunia;
 
 /* apertio aut renovatio (acta advecta): scheda vacatur, picturae
@@ -428,6 +446,36 @@ pictor_communia_index (
     constans PictorCommunia* p,
                      chorda  replica,
                      chorda  spatium);
+
+/* pulsus-plan T10: GREX - picturae notificationis pressae, ordine
+ * dato. res = Xar de chorda "<replica>:<spatium>"; quaeque per
+ * pictor_communia_index resolvitur (post parare), ignotae et duplices
+ * praetermittuntur. FALSUM (grex sublatus) si nulla resolvitur. */
+b32
+pictor_communia_gregem_ponere (
+    PictorCommunia* p,
+      constans Xar* res);
+
+vacuum
+pictor_communia_gregem_tollere (
+    PictorCommunia* p);
+
+/* 0 = nullus grex */
+i32
+pictor_communia_gregis_numerus (
+    constans PictorCommunia* p);
+
+/* index in p->picturae membri i gregis; -1 si nunc ignotum */
+s32
+pictor_communia_gregis_index (
+    constans PictorCommunia* p,
+                        i32  i);
+
+/* locus picturae k (index in p->picturae) in grege; -1 si abest */
+s32
+pictor_communia_gregis_locus (
+    constans PictorCommunia* p,
+                        s32  k);
 
 /* provenientia "pinax:<lat>x<alt>:<seq>:<spatium>" -> pinax (in
  * scheda factus si nondum; seq in clave, ergo pictura mutata pinacem

@@ -1,0 +1,100 @@
+<!-- organum.stml - manifestum navigatoris (genus "navigator"; navigator
+     N3.2, spec project-specs/navigator-spec.md): index articulorum
+     servatorum, articulus paginatus. Bibliotheca (navigator_
+     bibliotheca.h) per ligamen a parente, communis omnibus lateribus -
+     hic solum status visus. Locus paginae versionem nominat: comes
+     (Cmd+T) versionis suae est (spec V.11, V.16). -->
+<organum genus="navigator" versio="1">
+
+  <ligamina>
+    <ligamen nomen="bibliotheca" genus="navigator" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="navigator.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="navigator.agere"
+            semita="ligatio" historia="impelle">
+      <optio>index</optio>
+      <optio>pagina</optio>
+      <optio>eventus</optio>
+      <optio>sententia</optio>
+    </campus>
+    <campus nomen="articulus" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="ligatio"
+            historia="impelle"
+            nota="ULID articuli aperti; in indice absens"/>
+    <campus nomen="versio" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            ambitus="ligatio"
+            nota="ULID versionis lectae; absens = versio ultima"/>
+    <campus nomen="pagina" typus="numerus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            ambitus="ligatio" nota="pagina in articulo (ab 0)"/>
+    <campus nomen="columna" typus="numerus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            ambitus="ligatio"
+            nota="N3.5: pagina in columna laterali paginae currentis
+                  (infobox); absens = columna principalis"/>
+    <campus nomen="sententia" typus="numerus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            ambitus="ligatio"
+            nota="N6: initium sententiae currentis (offset in textu
+                  articuli)"/>
+    <campus nomen="dominium" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            nota="N3.4: gradus indicis - vacuum = radix (dominia
+                  favorum), 'wikipedia.org' = favores eius per hospitem"/>
+    <campus nomen="electus" typus="textus" vita="persistens"
+            scriptor="navigator.agere"
+            nota="N3.4: ordo electus in radice ('d:wikipedia.org';
+                  N3.4b 'a:ULID' recentium); absens = primus"/>
+    <campus nomen="electus_articulus" typus="textus" vita="persistens"
+            scriptor="navigator.agere"
+            nota="ULID articuli electi in indice; absens = primus"/>
+    <campus nomen="quaestio" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            nota="N3.3b: verba quaestionis (restitutio eam iterat)"/>
+    <campus nomen="quaestio_hospes" typus="textus" vita="persistens"
+            scriptor="navigator.agere" semita="status"
+            nota="hospes quaestionis ('la.wikipedia.org')"/>
+    <campus nomen="electus_eventus" typus="numerus" vita="transiens"
+            scriptor="navigator.agere"
+            nota="eventus electus (ab 0); absens = primus"/>
+    <campus nomen="nexus_occulti" typus="numerus" vita="persistens"
+            scriptor="navigator.agere"
+            nota="N4.5: 1 = nexus in textu articuli celati (lectio
+                  munda); index nexuum semper nexus"/>
+    <campus nomen="nexus" typus="numerus" vita="transiens"
+            scriptor="navigator.agere"
+            nota="N4.3: initium nexus electi (offset in textu paginae
+                  currentis); absens = nullus"/>
+    <campus nomen="nota" typus="textus" vita="transiens"
+            scriptor="navigator.agere"
+            nota="nuntius in linea ima ('article not found')"/>
+    <campus nomen="prompta" typus="electio" vita="transiens"
+            absens="nulla" scriptor="navigator.agere"
+            nota="N3.3: linea promptae (membrum__prompta)">
+      <optio>nulla</optio>
+      <optio>url</optio>
+    </campus>
+    <campus nomen="prompta_textus" typus="textus" vita="transiens"
+            scriptor="navigator.agere"/>
+    <campus nomen="prompta_cursor" typus="numerus" vita="transiens"
+            scriptor="navigator.agere"/>
+  </status>
+
+  <!-- argumentum nudum: vacuum = index; ULID articuli = articulus,
+       versio ultima, pagina servata (N3.4c: ubi relictus) -->
+  <cognomina>
+    <cognomen semita="navigator/index"/>
+    <cognomen typus="textus" semita="navigator/pagina/{}"/>
+    <cognomen typus="textus" semita="navigator/sententia/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

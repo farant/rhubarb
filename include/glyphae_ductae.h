@@ -21,6 +21,19 @@
  * (⏺ ⏵ ⏸ ▶ ▲ ▼ ■ □), claves (⌘ ⌥ ⏎),
  * ⚠ ⎿ ⧉ ⋮ ☐ ☒ ≤ ≥ ≡, et – — …
  * (fons ad '-' '.' vertebat).
+ *
+ * Ambitus v3 (litterae notatae, Franus 2026-10-28): litterae cum
+ * notis COMPOSITAE - basis (pictura nostra aut fons VI x VIII) et
+ * notae supra in ordinibus 0-I (corpus minusculae ab ordine II;
+ * punctum i demptum); maiusculae notatae ad corpus (ordines II-VI)
+ * contractae, ordo aequalis sequenti demptus, ut notae easdem II
+ * ordines habeant. Notae: macron, breve, acutus/tonos, gravis,
+ * circumflexus (perispomeni), diaeresis, spiritus lenis et asper
+ * (sinistra) cum accentu (dextra), iota subscriptum (ordo VII).
+ * Tabula (CCLIX): Latina Ext-A (vocales cum macron et breve, et
+ * maiusculae), Graeca cum tonis (U+0386-03CE), Graeca extensa
+ * (U+1F00-1FFF) - ex decompositione Unicode semel scripta. ɣ (U+0263)
+ * pictura sola.
  */
 #ifndef GLYPHAE_DUCTAE_H
 #define GLYPHAE_DUCTAE_H

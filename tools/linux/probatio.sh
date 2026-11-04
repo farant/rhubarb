@@ -75,7 +75,19 @@ for titulus in "$@"; do
 done
 echo 'exit $([ "$fractae" = "0" ] && echo 0 || echo 1)' >> "$SCRIPTUM"
 
+# /etc/machine-id: vasa alpine nullum habent, et machina_identitas
+# (RECUSAT, NON DEGENERAT) tum vacua est - volumen sine machina acta
+# scribere non potest, ergo omnis probatio voluminis temporarii
+# (cives, communio, pulsus...) in vase frangebatur. Identitas semel per
+# hospitem facta (fortuita, stabilis inter cursus, a Mac diversa) et
+# sola lectione inserta; hospites Linux veri (droplet) suam habent.
+MACHINA="build/porta_linux/machine-id"
+if [ ! -s "$MACHINA" ]; then
+    od -An -N16 -tx1 /dev/urandom | tr -d ' \n' > "$MACHINA" && echo >> "$MACHINA"
+fi
+
 docker run --rm -v "$PWD":/rhubarb:ro -w /rhubarb \
+    -v "$PWD/$MACHINA":/etc/machine-id:ro \
     "rhubarb-proba-$IMAGO" sh "/rhubarb/$SCRIPTUM"
 EXITUS=$?
 if [ "$EXITUS" = "0" ]; then

@@ -654,7 +654,8 @@ graeca_probare (
     CREDO_FALSUM(glyphae_ductae_est(0x0391));
     CREDO_FALSUM(glyphae_ductae_est(0x03BF));
     CREDO_FALSUM(glyphae_ductae_est(0x03A2));
-    CREDO_FALSUM(glyphae_ductae_est(0x03CA));
+    /* 0x03CA (iota cum diaeresi) nunc composita (XVII) */
+    CREDO_FALSUM(glyphae_ductae_est(0x03D0));
     CREDO_FALSUM(glyphae_ductae_est(0x208A));
     CREDO_FALSUM(glyphae_ductae_est(0x221C));
 }
@@ -708,6 +709,139 @@ _sectio_decima (
 
     (vacuum)c;
     ellipsin_mediam_probare(larva);
+}
+
+/* X: nota alba U+2705 (Franus 2026-10-27, tofu in terminale - Claude
+ * Code eam scribit): signum ut ✔ (U+2714) pingitur, sine quadrato
+ * viridi; cellula lata (II) - pictura in cellula prima */
+interior vacuum
+_sectio_undecima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* nota_gravis[] = {
+        "......", ".....#", "....##", ".#.##.",
+        ".###..", "..#...", "......", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2705));
+    CREDO_VERUM(pictura_est(0x2705, nota_gravis, larva));
+    CREDO_VERUM(pictura_est(0x2714, nota_gravis, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x2704));
+    CREDO_FALSUM(glyphae_ductae_est(0x2706));
+}
+
+/* XI: fere aequale U+2248 (Franus 2026-10-27): duae undae ordinum
+ * binorum, altitudine eadem qua ≡ (ordines I-V) */
+interior vacuum
+_sectio_duodecima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* fere_aequale[] = {
+        "......", "..##.#", ".#..#.", "......",
+        "..##.#", ".#..#.", "......", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2248));
+    CREDO_VERUM(pictura_est(0x2248, fere_aequale, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x2247));
+    CREDO_FALSUM(glyphae_ductae_est(0x2249));
+}
+
+/* XII: sagitta utrimque U+2194 (Franus 2026-10-27, tofu in terminale):
+ * hastile per latitudinem totam, capita ut in sagittis ← et → */
+interior vacuum
+_sectio_tertia_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* utrimque[] = {
+        "......", "......", ".#..#.", "######",
+        ".#..#.", "......", "......", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2194));
+    CREDO_VERUM(pictura_est(0x2194, utrimque, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x2195));
+}
+
+/* XIII: IPA (Franus 2026-10-27: pronuntiationes Vicipaediae tofu in
+ * navigatore) - vocales et consonantes Anglicae, accentus, longa;
+ * litterae versae ex fonte ipso (e, a, v versa; c inversum) */
+nomen structura {
+                    s32  runa;
+     constans character* pictura[VIII];
+} PicturaPhonetica;
+
+interior vacuum
+_sectio_quarta_decima (
+    CredoContextus* c)
+{
+    PicturaPhonetica tabula[] = {
+        { 0x014B, { "......", "......", ".#.##.", ".##..#",
+            ".#...#", ".#...#", ".#...#", "...##." } },
+        { 0x0250, { "......", "......", ".####.", ".#...#",
+            ".####.", ".#....", "..###.", "......" } },
+        { 0x0251, { "......", "......", "..####", ".#...#",
+            ".#...#", ".#..##", "..##.#", "......" } },
+        { 0x0252, { "......", "......", ".#.##.", ".##..#",
+            ".#...#", ".#...#", ".####.", "......" } },
+        { 0x0254, { "......", "......", "..###.", ".#...#",
+            ".....#", ".#...#", "..###.", "......" } },
+        { 0x0259, { "......", "......", "..###.", ".....#",
+            ".#####", ".#...#", "..###.", "......" } },
+        { 0x025B, { "......", "......", "..####", ".#....",
+            "..###.", ".#....", "..####", "......" } },
+        { 0x025C, { "......", "......", ".####.", ".....#",
+            "..###.", ".....#", ".####.", "......" } },
+        { 0x0261, { "......", "......", "..##.#", ".#..##",
+            ".#...#", "..####", ".....#", "..###." } },
+        { 0x026A, { "......", "......", "..###.", "...#..",
+            "...#..", "...#..", "..###.", "......" } },
+        { 0x0279, { "......", "......", "....#.", "....#.",
+            "....#.", ".#..#.", "..##.#", "......" } },
+        { 0x027E, { "......", "......", "...##.", "..#...",
+            "..#...", "..#...", "..#...", "......" } },
+        { 0x0283, { "....##", "...#..", "...#..", "...#..",
+            "...#..", "...#..", "...#..", ".##..." } },
+        { 0x028A, { "......", "......", ".##.##", ".#...#",
+            ".#...#", ".#...#", "..###.", "......" } },
+        { 0x028C, { "......", "......", "...#..", "..#.#.",
+            ".#...#", ".#...#", ".#...#", "......" } },
+        { 0x0292, { "......", "......", ".#####", "....#.",
+            "...##.", ".....#", ".#...#", "..###." } },
+        { 0x0294, { "..###.", ".#...#", ".....#", "....#.",
+            "...#..", "...#..", "...#..", "......" } },
+        { 0x02C8, { "...#..", "...#..", "...#..", "......",
+            "......", "......", "......", "......" } },
+        { 0x02CC, { "......", "......", "......", "......",
+            "......", "...#..", "...#..", "...#.." } },
+        { 0x02D0, { "......", "......", "..###.", "...#..",
+            "......", "...#..", "..###.", "......" } },
+        { 0x02D1, { "......", "......", "..###.", "...#..",
+            "......", "......", "......", "......" } },
+        { ZEPHYRUM, { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL,
+            NIHIL } }
+    };
+                    i8 larva[MAXIMA + XVI];
+                   i32 i;
+                   i32 mala = ZEPHYRUM;
+
+    (vacuum)c;
+    per (i = ZEPHYRUM; tabula[i].runa; i++)
+    {
+        si (   !glyphae_ductae_est(tabula[i].runa)
+            || !pictura_est(tabula[i].runa, tabula[i].pictura, larva))
+        {
+            imprimere("  IPA U+%04X non pictum\n",
+                (insignatus integer)tabula[i].runa);
+            mala++;
+        }
+    }
+    CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
+    CREDO_FALSUM(glyphae_ductae_est(0x0258));   /* ɘ: nondum */
+    CREDO_FALSUM(glyphae_ductae_est(0x0253));   /* ɓ: nondum */
 }
 
 interior vacuum
@@ -800,6 +934,157 @@ _sectio_nona (
     graeca_probare(larva);
 }
 
+/* XIV: i in circulo U+24D8 (Franus 2026-10-27: nexus auditionis
+ * Vicipaediae, "/ə'kwaɪnəs/ ⓘ") - circulus ut ◯, i intus */
+interior vacuum
+_sectio_quinta_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* informatio[] = {
+        "..###.", ".#.#.#", ".#...#", ".#.#.#",
+        ".#.#.#", ".#.#.#", "..###.", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x24D8));
+    CREDO_VERUM(pictura_est(0x24D8, informatio, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x24D7));
+    CREDO_FALSUM(glyphae_ductae_est(0x24D9));
+}
+
+/* XV: tecta U+2308/2309 (Franus 2026-10-28, tofu in navigatore) -
+ * '[' et ']' fontis ipsius sine linea ima */
+interior vacuum
+_sectio_sexta_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* sinistrum[] = {
+        ".###..", ".#....", ".#....", ".#....",
+        ".#....", ".#....", ".#....", "......" };
+    constans character* dextrum[] = {
+        ".###..", "...#..", "...#..", "...#..",
+        "...#..", "...#..", "...#..", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2308));
+    CREDO_VERUM(pictura_est(0x2308, sinistrum, larva));
+    CREDO_VERUM(glyphae_ductae_est(0x2309));
+    CREDO_VERUM(pictura_est(0x2309, dextrum, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x230A));
+}
+
+/* XVI: anguli mathematici U+27E8/27E9 (Franus 2026-10-28) - alti et
+ * tenues, apex in ordine III, ordines eosdem ac tecta */
+interior vacuum
+_sectio_septima_decima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* sinister[] = {
+        "...#..", "..#...", "..#...", ".#....",
+        "..#...", "..#...", "...#..", "......" };
+    constans character* dexter[] = {
+        "..#...", "...#..", "...#..", "....#.",
+        "...#..", "...#..", "..#...", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x27E8));
+    CREDO_VERUM(pictura_est(0x27E8, sinister, larva));
+    CREDO_VERUM(glyphae_ductae_est(0x27E9));
+    CREDO_VERUM(pictura_est(0x27E9, dexter, larva));
+    CREDO_FALSUM(glyphae_ductae_est(0x27EA));
+}
+
+/* XVII: litterae notatae compositae (Franus 2026-10-28: macron et
+ * accentus Graeci in Vicipaedia) - basis (fons aut pictura nostra) et
+ * notae in ordinibus 0-1; maiusculae ad corpus (ordines II-VI)
+ * contractae; iota subscriptum in ordine VII */
+interior vacuum
+_sectio_duodevicesima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+                    i8  alpha[MAXIMA + XVI];
+    constans character* e_macron[] = {
+        "......", ".####.", "..###.", ".#...#",
+        ".#####", ".#....", "..###.", "......" };
+    constans character* i_macron[] = {
+        "......", ".####.", "...##.", "....#.",
+        "....#.", "....#.", "...###", "......" };
+    constans character* E_macron[] = {
+        "......", ".####.", ".#####", ".#....",
+        ".####.", ".#....", ".#####", "......" };
+    constans character* o_tono[] = {
+        "....#.", "...#..", "..###.", ".#...#",
+        ".#...#", ".#...#", "..###.", "......" };
+    constans character* o_aspero[] = {
+        "..##..", "..#...", "..###.", ".#...#",
+        ".#...#", ".#...#", "..###.", "......" };
+    constans character* o_aspero_acuto[] = {
+        "##...#", "#...#.", "..###.", ".#...#",
+        ".#...#", ".#...#", "..###.", "......" };
+    constans character* gamma_latina[] = {
+        "......", "......", ".#...#", ".#...#",
+        "..#.#.", "...#..", "..#.#.", "...#.." };
+             s32 r;
+             i32 numerus;
+             i32 i;
+
+    (vacuum)c;
+    CREDO_GRADUS("Latina: e et i (punctum demptum) cum macron, E "
+        "contracta");
+    CREDO_VERUM(pictura_est(0x0113, e_macron, larva));
+    CREDO_VERUM(pictura_est(0x012B, i_macron, larva));
+    CREDO_VERUM(pictura_est(0x0112, E_macron, larva));
+
+    CREDO_GRADUS("Graeca: tonos, spiritus asper, asper + acutus");
+    CREDO_VERUM(pictura_est(0x03CC, o_tono, larva));
+    CREDO_VERUM(pictura_est(0x1F41, o_aspero, larva));
+    CREDO_VERUM(pictura_est(0x1F45, o_aspero_acuto, larva));
+
+    CREDO_GRADUS("iota subscriptum: alpha (ordines 0-VI) + ordo VII");
+    CREDO_VERUM(glyphae_ductae_pingere(0x1FB3, LAT, ALT, larva));
+    CREDO_VERUM(glyphae_ductae_pingere(0x03B1, LAT, ALT, alpha));
+    CREDO_VERUM(memcmp(larva, alpha, (memoriae_index)(VII * LAT))
+        == ZEPHYRUM);
+    CREDO_VERUM(larva[VII * LAT + II] != ZEPHYRUM);
+
+    CREDO_GRADUS("gamma Latina (IPA) U+0263");
+    CREDO_VERUM(pictura_est(0x0263, gamma_latina, larva));
+
+    CREDO_GRADUS("ambitus: Graeca extensa CCXVII, tonos XX, Latina "
+        "XXII; koronis (sine littera) non");
+    numerus = ZEPHYRUM;
+    per (r = 0x1F00; r <= 0x1FFF; r++)
+    {
+        si (glyphae_ductae_est(r))
+        {
+            numerus++;
+            CREDO_VERUM(glyphae_ductae_pingere(r, LAT, ALT, larva));
+        }
+    }
+    CREDO_AEQUALIS_I32(numerus, CCXVII);
+    numerus = ZEPHYRUM;
+    per (r = 0x0386; r <= 0x03CE; r++)
+    {
+        numerus += glyphae_ductae_est(r) ? I : ZEPHYRUM;
+    }
+    CREDO_VERUM(numerus >= XX);
+    numerus = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < XXII; i++)
+    {
+        constans s32 latina[] = { 0x0100, 0x0101, 0x0102, 0x0103,
+            0x0112, 0x0113, 0x0114, 0x0115, 0x012A, 0x012B, 0x012C,
+            0x012D, 0x014C, 0x014D, 0x014E, 0x014F, 0x016A, 0x016B,
+            0x016C, 0x016D, 0x0232, 0x0233 };
+
+        numerus += glyphae_ductae_est(latina[i]) ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32(numerus, XXII);
+    CREDO_FALSUM(glyphae_ductae_est(0x1FBD));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: lineae (Ghostty linesChar)", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -818,6 +1103,22 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "VIII: symbola v3 (Graeca, mathematica)", _sectio_nona, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "IX: ellipsis media (pinacotheca)", _sectio_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "X: nota alba (U+2705)", _sectio_undecima, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "XI: fere aequale (U+2248)", _sectio_duodecima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XII: sagitta utrimque (U+2194)", _sectio_tertia_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "XIII: IPA", _sectio_quarta_decima,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "XIV: i in circulo (U+24D8)", _sectio_quinta_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XV: tecta (U+2308, U+2309)", _sectio_sexta_decima, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "XVI: anguli (U+27E8, U+27E9)", _sectio_septima_decima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
+    { "XVII: litterae notatae", _sectio_duodevicesima, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

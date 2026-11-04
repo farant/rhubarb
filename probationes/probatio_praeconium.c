@@ -338,6 +338,79 @@ _probare_legere_ab (
     CREDO_AEQUALIS_S64(positio, (s64)ZEPHYRUM);
 }
 
+/* ===== comites P8: hami tmux praeconis ===== */
+
+#define HAMUS_PRAECONIS(nomen_hami)                                   \
+    "set-hook -g " nomen_hami " \"run-shell -b '/x/bin/praeco tmux "  \
+    "\\\"#{socket_path}\\\" \\\"#{pane_id}\\\"'\"\n"
+
+/* fasciculus hamorum: tres hami, via absoluta in quoque; via cum ' aut
+ * " recusatur (citatio frangeretur) */
+interior vacuum
+_probare_tmux_configurationem (
+    CredoContextus* c)
+{
+    CREDO_GRADUS("tres hami, via praeconis absoluta");
+    CREDO_CHORDA_AEQUALIS_LITERIS(praeconium_tmux_configuratio(
+        "/x/bin/praeco", c->piscina),
+        "# praeco tmux (comites P8) - generatum a "
+        "'praeco tmux instituere'\n"
+        HAMUS_PRAECONIS("session-window-changed")
+        HAMUS_PRAECONIS("client-session-changed")
+        HAMUS_PRAECONIS("window-pane-changed"));
+
+    CREDO_GRADUS("via cum ' aut \": chorda vacua");
+    CREDO_AEQUALIS_I32(praeconium_tmux_configuratio("/x/it's/praeco",
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(praeconium_tmux_configuratio("/x/\"/praeco",
+        c->piscina).mensura, ZEPHYRUM);
+}
+
+#define SECTIO_TMUX(fasciculus)                                       \
+    "# praeco tmux: initium\n"                                        \
+    "source-file -q \"" fasciculus "\"\n"                             \
+    "# praeco tmux: finis\n"
+
+/* ~/.tmux.conf: sectio signata appenditur aut substituitur, cetera
+ * intacta; iterata nihil mutat */
+interior vacuum
+_probare_tmux_conf (
+    CredoContextus* c)
+{
+    chorda semel;
+
+    CREDO_GRADUS("conf vacua: sectio sola");
+    CREDO_CHORDA_AEQUALIS_LITERIS(praeconium_tmux_conf(
+        chorda_ex_literis("", c->piscina), "/h/c/tmux.conf",
+        c->piscina), SECTIO_TMUX("/h/c/tmux.conf"));
+
+    CREDO_GRADUS("conf sine sectione: in fine appenditur");
+    CREDO_CHORDA_AEQUALIS_LITERIS(praeconium_tmux_conf(
+        chorda_ex_literis("set -g mouse on\n", c->piscina),
+        "/h/c/tmux.conf", c->piscina),
+        "set -g mouse on\n" SECTIO_TMUX("/h/c/tmux.conf"));
+    /* linea ultima sine '\n': finitur ante sectionem */
+    CREDO_CHORDA_AEQUALIS_LITERIS(praeconium_tmux_conf(
+        chorda_ex_literis("set -g mouse on", c->piscina),
+        "/h/c/tmux.conf", c->piscina),
+        "set -g mouse on\n" SECTIO_TMUX("/h/c/tmux.conf"));
+
+    CREDO_GRADUS("sectio prior in medio: substituitur loco suo");
+    CREDO_CHORDA_AEQUALIS_LITERIS(praeconium_tmux_conf(
+        chorda_ex_literis("set -g mouse on\n"
+        SECTIO_TMUX("/vetus/tmux.conf") "set -g base-index 1\n",
+        c->piscina), "/h/c/tmux.conf", c->piscina),
+        "set -g mouse on\n" SECTIO_TMUX("/h/c/tmux.conf")
+        "set -g base-index 1\n");
+
+    CREDO_GRADUS("iterata: idem textus");
+    semel = praeconium_tmux_conf(chorda_ex_literis(
+        "set -as terminal-features \",x:RGB\"\n", c->piscina),
+        "/h/c/tmux.conf", c->piscina);
+    CREDO_VERUM(chorda_aequalis(praeconium_tmux_conf(semel,
+        "/h/c/tmux.conf", c->piscina), semel));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ex_hamo", _probare_ex_hamo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "praecisio", _probare_praecisionem, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -348,6 +421,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       aream_purgare, NIHIL, NIHIL },
     { "legere_ab", _probare_legere_ab, aream_parare, aream_purgare,
       NIHIL, NIHIL },
+    { "tmux_configuratio", _probare_tmux_configurationem, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "tmux_conf", _probare_tmux_conf, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -91,6 +91,22 @@ _sectio_secunda (
         /* Limites Latin-1 supplement */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00A0),
             0x20);  /* NBSP -> space */
+
+        /* spatia typographica -> spatium (Vicipaedia: tenue, capillare
+         * - Franus 2026-10-27, tofu in navigatore) */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2000),
+            0x20);  /* en quad */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x2009),
+            0x20);  /* spatium tenue */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x200A),
+            0x20);  /* spatium capillare */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x202F),
+            0x20);  /* spatium angustum non frangens */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x205F),
+            0x20);  /* spatium mathematicum */
+        CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x3000),
+            0x20);  /* spatium ideographicum */
+        CREDO_FALSUM(fons_codepoint_ad_glypham(0x200B) == 0x20);
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00A1),
             0xA1);  /* inverted ! */
         CREDO_AEQUALIS_S32((s32)fons_codepoint_ad_glypham(0x00FF),

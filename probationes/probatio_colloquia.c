@@ -370,6 +370,90 @@ _probare_gradatim (
         c->piscina)), xar_numerus(semel) + I);
 }
 
+/* comites P7: colloquium addere (ordine recentissimum primum) */
+interior vacuum
+colloquium_addere (
+                   Xar* l,
+    constans character* sessio,
+    constans character* servitor,
+    constans character* panellus,
+       StatusColloquii  status,
+               Piscina* p)
+{
+    Colloquium* k;
+
+    k = (Colloquium*)xar_addere(l);
+    si (!k)
+    {
+        redde;
+    }
+    memset(k, ZEPHYRUM, magnitudo(*k));
+    k->sessio    = chorda_ex_literis(sessio, p);
+    k->servitor  = chorda_ex_literis(servitor, p);
+    k->panellus  = chorda_ex_literis(panellus, p);
+    k->status    = status;
+}
+
+/* sessio in panello: titulus sessionis ex inventa (NIHIL -> "") */
+interior chorda
+sessio_panelli (
+                   Xar* l,
+    constans character* servitor,
+    constans character* panellus,
+               Piscina* p)
+{
+    constans Colloquium* k;
+
+    k = colloquium_panelli(l, chorda_ex_literis(servitor, p),
+        chorda_ex_literis(panellus, p));
+    redde k ? k->sessio : chorda_ex_literis("", p);
+}
+
+/* comites P7: panellus %3 in servitore ordinario - s-nova (post
+ * /clear: s-vetus CLAUSUM praeteritur, s-antiqua vivens sed antiquior
+ * vincitur); servitor "-", vacuus et via plena ".../default" idem;
+ * servitor alius suam sessionem habet; nihil in %4 */
+interior vacuum
+_probare_panellum_sessionis (
+    CredoContextus* c)
+{
+         Xar* l;
+     Piscina* p;
+
+    p = c->piscina;
+    l = xar_creare(p, (i32)magnitudo(Colloquium));
+    CREDO_NECESSE(l != NIHIL);
+    colloquium_addere(l, "s-alia", "/tmp/tmux-501/alius", "%3",
+        COLLOQUIUM_OTIOSUM, p);
+    colloquium_addere(l, "s-nova", "/tmp/tmux-501/default", "%3",
+        COLLOQUIUM_LABORAT, p);
+    colloquium_addere(l, "s-vetus", "/tmp/tmux-501/default", "%3",
+        COLLOQUIUM_CLAUSUM, p);
+    colloquium_addere(l, "s-antiqua", "/tmp/tmux-501/default", "%3",
+        COLLOQUIUM_OTIOSUM, p);
+    colloquium_addere(l, "s-quinta", "/tmp/tmux-501/default", "%5",
+        COLLOQUIUM_PERFECIT, p);
+    colloquium_addere(l, "s-clausa", "/tmp/tmux-501/default", "%6",
+        COLLOQUIUM_CLAUSUM, p);
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l, "-", "%3", p),
+        "s-nova");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l, "", "%3", p),
+        "s-nova");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l,
+        "/tmp/tmux-501/default", "%3", p), "s-nova");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l,
+        "/tmp/tmux-501/alius", "%3", p), "s-alia");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l, "-", "%5", p),
+        "s-quinta");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l, "-", "%4", p), "");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l, "-", "%6", p), "");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l,
+        "/tmp/tmux-501/tertius", "%3", p), "");
+    CREDO_CHORDA_AEQUALIS_LITERIS(sessio_panelli(l, "-", "", p), "");
+    CREDO_VERUM(colloquium_panelli(NIHIL, chorda_ex_literis("-", p),
+        chorda_ex_literis("%3", p)) == NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transitus", _probare_transitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stop_linea", _probare_stop_lineam, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -381,6 +465,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _probare_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "incrementalis", _probare_gradatim, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "panellus_sessionis", _probare_panellum_sessionis, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

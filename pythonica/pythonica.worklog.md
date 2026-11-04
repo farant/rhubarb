@@ -1484,3 +1484,38 @@ Tooling note: `silva.planta(..., tolerans='spatia')` on a multi-line
 Python anchor re-flowed the indentation and produced an IndentationError
 ("signum absens"), which is not a valid plant. For Python files, hand-plant
 with an exact replace plus backup/restore.
+
+## 2026-11-02 — budget B2 J4: content seal once per receipt sweep + clean-tree fast path
+
+`recepta_viva()` (run by `recepta_viva_rancida_delere` after EVERY
+commit, and by fusio) sealed the whole tree once PER RECEIPT
+(~130 ms each: rev-parse --git-path, add -u into a temp index,
+write-tree, ls-files -o). Now a `_SigillaLectionis` object computes the
+content seal (and HEAD, for PORTAE_CAPUT gates) lazily ONCE per sweep and
+`receptum_vivum`/`receptum_validum` take it via `sigilla=`. Exactly
+equivalent: no subprocess runs between the iterations. Lifetime = one
+sweep, never cached across calls (plant: memo shared across instances ->
+"recepta_viva: arbor mutata = rancidum" FRACTUM). portae_pendentes uses
+the same object. Quinta, 7 receipts: 1.04 -> 0.20 s per sweep (scales
+linearly: ~62 receipts -> ~8 s saved per commit).
+
+Clean-tree fast path in `_sigillum_contenti(celeriter=True)`:
+`git --no-optional-locks status --porcelain -z --untracked-files=normal`
+empty => index == HEAD, tracked files unchanged, no non-ignored new
+files => the temp-index write-tree IS HEAD^{tree} and novae is empty, so
+the seal is sha256('arbor ' + HEAD^{tree}) — byte-identical to the full
+path. Tests compare celeriter vs full on a clean repo, with an untracked
+file, and with an index-only change. Plant `--untracked-files=no` ->
+"plagula nova non ignorata - via munda non sumitur" FRACTUM. Gain is small
+and noisy (clean main ~80-120 vs 120-180 ms); on a dirty tree it COSTS the
+status call (~58 ms) on top. `--no-optional-locks` keeps status from
+rewriting the real index.
+
+`git rev-parse --git-path index` is cached per cwd (_VIAE_INDICIS).
+
+Not done (analyst's (b)): handing gate i's post-run seal to gate i+1's
+receipt check. It would have to be threaded through _porta_cruda,
+_porta_per_fabricam and _porta_per_gradum, and any Python-side write to a
+tracked file between gates (planta writes plants in-process!) would make
+a reused seal lie. Revisit only with explicit threading, never a global
+memo.

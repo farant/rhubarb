@@ -160,25 +160,25 @@ lineam_metiri (
     redde linea_finis;
 }
 
-/* segmentum [a, b) involvere: verba ad spatia ASCII, verbum longum ad
- * runam secatur; continuatio indentata (cellulae indentationis);
- * *intervallum ante lineam primam, deinde nihil */
+/* segmentum [a, b) in lineas mensas (x, sine y) addere: verba ad spatia
+ * ASCII, verbum longum ad runam secatur; continuatio indentata
+ * (cellulae indentationis) */
 interior b32
 segmentum_involvere (
-    Dispositor* d,
-        chorda  textus,
-           i32  a,
-           i32  b,
-           i32  fons,
-           s32  cellulae,
-           s32  indentatio,
-           s32* intervallum)
+          Xar* lineae,
+       chorda  textus,
+          i32  a,
+          i32  b,
+          i32  fons,
+          s32  cellulae,
+          s32  indentatio)
 {
-    i32 positio;
-    i32 linea_finis;
-    i32 ultimum;
-    s32 n;
-    b32 prima;
+    LectorLinea* l;
+            i32  positio;
+            i32  linea_finis;
+            i32  ultimum;
+            s32  n;
+            b32  prima;
 
     positio  = a;
     prima    = VERUM;
@@ -197,15 +197,258 @@ segmentum_involvere (
         {
             n = I;
         }
-        linea_finis = lineam_metiri(textus, positio, b, n, &ultimum);
-        si (!lineam_ponere(d, positio, ultimum, fons, prima ? ZEPHYRUM
-                : indentatio * fons_latitudo(fons), *intervallum))
+        linea_finis  = lineam_metiri(textus, positio, b, n, &ultimum);
+        l            = (LectorLinea*)xar_addere(lineae);
+        si (!l)
         {
             redde FALSUM;
         }
-        *intervallum  = ZEPHYRUM;
-        prima         = FALSUM;
-        positio       = linea_finis;
+        l->initium  = positio;
+        l->finis    = ultimum;
+        l->fons     = fons;
+        l->x =
+            prima ? ZEPHYRUM : indentatio * fons_latitudo(fons);
+        l->y     = ZEPHYRUM;
+        prima    = FALSUM;
+        positio  = linea_finis;
+    }
+    redde VERUM;
+}
+
+/* clausula mensa: lineae [prima, prima + numerus) in Xar linearum */
+nomen structura {
+           i32 prima;
+           s32 numerus;
+    CodexGenus genus;
+} ClausulaMensa;
+
+interior constans LectorLinea*
+lineam_mensam (
+    Xar* lineae,
+    i32  i)
+{
+    redde (constans LectorLinea*)xar_obtinere(lineae, i);
+}
+
+interior constans ClausulaMensa*
+clausulam_mensam (
+    Xar* clausulae,
+    i32  i)
+{
+    redde (constans ClausulaMensa*)xar_obtinere(clausulae, i);
+}
+
+/* pagina currens sine lineis? */
+interior b32
+pagina_vacua (
+    Dispositor* d)
+{
+    redde xar_numerus(((LectorPagina*)xar_obtinere(d->paginae,
+        d->currens))->lineae) == ZEPHYRUM;
+}
+
+/* quot lineae [s, s + n) in pagina capiunt a *y (intervallum ante
+ * primam, nisi pagina vacua - tum prima semper capit)? *y et *vacua
+ * promoventur ut lineam_ponere */
+interior s32
+capiunt (
+           Xar* lineae,
+           i32  s,
+           s32  n,
+           s32  intervallum,
+           s32  altitudo,
+           s32* y,
+           b32* vacua)
+{
+    constans LectorLinea* l;
+                     s32  k;
+                     s32  spatium;
+                     s32  h;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        l        = lineam_mensam(lineae, s + (i32)k);
+        h        = fons_altitudo(l->fons);
+        spatium  = k == ZEPHYRUM && !*vacua ? intervallum : ZEPHYRUM;
+        si (!*vacua && *y + spatium + h > altitudo)
+        {
+            frange;
+        }
+        *y      += spatium + h + (l->fons == FONS_PARVUS
+            ? INTERVALLUM_LINEARUM : ZEPHYRUM);
+        *vacua  = FALSUM;
+    }
+    redde k;
+}
+
+/* lineae quas clausula non titulus in pagina tenere debet: III aut
+ * pauciores = omnes (finditur numquam: II supra, II infra), aliter
+ * II */
+interior s32
+servandae (
+    constans ClausulaMensa* c)
+{
+    redde c->numerus <= III ? c->numerus : II;
+}
+
+/* grex ab i (tituli consecutivi + lineae servandae clausulae
+ * sequentis) capit - in pagina currente aut (ex_vacua) in nova? */
+interior b32
+grex_capit (
+    Dispositor* d,
+           Xar* lineae,
+           Xar* clausulae,
+           i32  i,
+           b32  ex_vacua)
+{
+    constans ClausulaMensa* c;
+                       s32  y;
+                       b32  vacua;
+                       s32  n;
+
+    y      = ex_vacua ? ZEPHYRUM : d->y;
+    vacua  = ex_vacua || pagina_vacua(d);
+    per (; i < xar_numerus(clausulae); i++)
+    {
+        c = clausulam_mensam(clausulae, i);
+        n = c->genus == CODEX_TITULUS ? c->numerus : servandae(c);
+        si (capiunt(lineae, c->prima, n, INTERVALLUM, d->altitudo, &y,
+                &vacua) < n)
+        {
+            redde FALSUM;
+        }
+        si (c->genus != CODEX_TITULUS)
+        {
+            frange;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+lineas_ponere (
+    Dispositor* d,
+           Xar* lineae,
+           i32  s,
+           s32  n,
+           s32  intervallum)
+{
+    constans LectorLinea* l;
+                     s32  k;
+
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        l = lineam_mensam(lineae, s + (i32)k);
+        si (!lineam_ponere(d, l->initium, l->finis, l->fons, l->x,
+                k == ZEPHYRUM ? intervallum : ZEPHYRUM))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* titulus: totus in pagina una, et cum titulis sequentibus et lineis
+ * servandis clausulae proximae; non capiunt sed in pagina nova
+ * caperent: pagina nova. Titulus pagina altior: fluit (lineam_ponere
+ * frangit) */
+interior b32
+titulum_ponere (
+    Dispositor* d,
+           Xar* lineae,
+           Xar* clausulae,
+           i32  i)
+{
+    constans ClausulaMensa* c = clausulam_mensam(clausulae, i);
+                       s32  y;
+                       b32  vacua;
+
+    si (   !pagina_vacua(d) && !grex_capit(d, lineae, clausulae, i,
+               FALSUM)
+        && grex_capit(d, lineae, clausulae, i, VERUM))
+    {
+        si (!paginam_novam(d))
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (!pagina_vacua(d))
+    {
+        /* grex nusquam capit: titulus saltem integer */
+        y      = d->y;
+        vacua  = FALSUM;
+        si (   capiunt(lineae, c->prima, c->numerus, INTERVALLUM,
+                   d->altitudo, &y, &vacua) < c->numerus
+            && !paginam_novam(d))
+        {
+            redde FALSUM;
+        }
+    }
+    redde lineas_ponere(d, lineae, c->prima, c->numerus, INTERVALLUM);
+}
+
+/* paragraphus aut versus: finditur solum ubi II lineae saltem supra et
+ * infra manent; aliter in paginam novam totus (pars reliqua). Pagina
+ * vacua quae non sufficit: quot capiunt (effugium) */
+interior b32
+clausulam_ponere (
+                Dispositor* d,
+                       Xar* lineae,
+    constans ClausulaMensa* c)
+{
+    i32 s;
+    s32 r;
+    s32 f;
+    s32 k;
+    s32 y;
+    s32 spatium;
+    b32 vacua;
+
+    s        = c->prima;
+    r        = c->numerus;
+    spatium  = INTERVALLUM;
+    dum (r > ZEPHYRUM)
+    {
+        y      = d->y;
+        vacua  = pagina_vacua(d);
+        f = capiunt(lineae, s, r, spatium, d->altitudo, &y,
+            &vacua);
+        k = f;
+        si (f < r)
+        {
+            si (r - k < II)
+            {
+                k = r - II;      /* ultima sola infra: altera transit */
+            }
+            si (k < II)
+            {
+                k = ZEPHYRUM;    /* prima sola supra: tota transit */
+            }
+            si (k == ZEPHYRUM && !pagina_vacua(d))
+            {
+                si (!paginam_novam(d))
+                {
+                    redde FALSUM;
+                }
+                spatium = ZEPHYRUM;
+                perge;
+            }
+            si (k == ZEPHYRUM)
+            {
+                k = f;           /* pagina vacua non sufficit */
+            }
+        }
+        si (!lineas_ponere(d, lineae, s, k, spatium))
+        {
+            redde FALSUM;
+        }
+        s        += (i32)k;
+        r        -= k;
+        spatium  = ZEPHYRUM;
+        si (r > ZEPHYRUM && !paginam_novam(d))
+        {
+            redde FALSUM;
+        }
     }
     redde VERUM;
 }
@@ -219,12 +462,14 @@ lector_paginare (
 {
                 Dispositor  d;
     constans CodexClausula* b;
+                       Xar* lineae;
+                       Xar* clausulae;
+             ClausulaMensa* m;
                        i32  i;
                        i32  a;
                        i32  j;
                        i32  fons;
                        s32  cellulae;
-                       s32  intervallum;
 
     si (!caput || !piscina)
     {
@@ -233,10 +478,13 @@ lector_paginare (
     d.paginae   = xar_creare(piscina, (i32)magnitudo(LectorPagina));
     d.altitudo  = (s32)altitudo;
     d.piscina   = piscina;
-    si (!d.paginae || !paginam_novam(&d))
+    lineae      = xar_creare(piscina, (i32)magnitudo(LectorLinea));
+    clausulae   = xar_creare(piscina, (i32)magnitudo(ClausulaMensa));
+    si (!d.paginae || !lineae || !clausulae || !paginam_novam(&d))
     {
         redde NIHIL;
     }
+    /* I: mensura - lineae per clausulam (latitudo sola) */
     per (i = ZEPHYRUM; caput->clausulae
         && i < xar_numerus(caput->clausulae); i++)
     {
@@ -251,29 +499,54 @@ lector_paginare (
         {
             cellulae = I;
         }
-        intervallum = INTERVALLUM;
+        m = (ClausulaMensa*)xar_addere(clausulae);
+        si (!m)
+        {
+            redde NIHIL;
+        }
+        m->prima = xar_numerus(lineae);
+        m->genus = b->genus;
         si (b->genus == CODEX_PARAGRAPHUS)
         {
-            si (!segmentum_involvere(&d, caput->textus, b->initium,
-                    b->finis, fons, cellulae, ZEPHYRUM, &intervallum))
+            si (!segmentum_involvere(lineae, caput->textus, b->initium,
+                    b->finis, fons, cellulae, ZEPHYRUM))
             {
                 redde NIHIL;
             }
-            perge;
         }
-        a = b->initium;
-        per (j = b->initium; j <= b->finis; j++)
+        alioquin
         {
-            si (j == b->finis || caput->textus.datum[j] == '\n')
+            a = b->initium;
+            per (j = b->initium; j <= b->finis; j++)
             {
-                si (!segmentum_involvere(&d, caput->textus, a, j, fons,
-                        cellulae, b->genus == CODEX_VERSUS ? INDENTATIO
-                        : ZEPHYRUM, &intervallum))
+                si (j == b->finis || caput->textus.datum[j] == '\n')
                 {
-                    redde NIHIL;
+                    si (!segmentum_involvere(lineae, caput->textus, a,
+                        j,
+                            fons, cellulae, b->genus == CODEX_VERSUS
+                            ? INDENTATIO : ZEPHYRUM))
+                    {
+                        redde NIHIL;
+                    }
+                    a = j + I;
                 }
-                a = j + I;
             }
+        }
+        m->numerus = (s32)(xar_numerus(lineae) - m->prima);
+        si (m->numerus == ZEPHYRUM)
+        {
+            xar_removere_ultimum(clausulae);
+        }
+    }
+    /* II: positio - leges fractionum */
+    per (i = ZEPHYRUM; i < xar_numerus(clausulae); i++)
+    {
+        si (clausulam_mensam(clausulae, i)->genus == CODEX_TITULUS
+            ? !titulum_ponere(&d, lineae, clausulae, i)
+            : !clausulam_ponere(&d, lineae, clausulam_mensam(clausulae,
+                i)))
+        {
+            redde NIHIL;
         }
     }
     redde d.paginae;

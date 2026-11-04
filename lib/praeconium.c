@@ -2,6 +2,7 @@
 #include "postulata_posix.h"
 #include "praeconium.h"
 #include "filum.h"
+#include "chorda_aedificator.h"
 #include "json.h"
 #include "lectiones.h"
 
@@ -417,4 +418,119 @@ praeconium_legere_ab (
     }
     *positio += finis;
     redde l;
+}
+
+/* ===== comites P8: hami tmux ===== */
+
+hic_manens constans character* constans hami_tmux[] = {
+    "session-window-changed", "client-session-changed",
+    "window-pane-changed", NIHIL };
+
+hic_manens constans character signum_initii[] =
+    "# praeco tmux: initium\n";
+hic_manens constans character signum_finis[] =
+    "# praeco tmux: finis\n";
+
+chorda
+praeconium_tmux_configuratio (
+    constans character* praeco,
+               Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  i32  i;
+
+    a = chorda_aedificator_creare(piscina, DXII);
+    si (   !a || !praeco || strchr(praeco, '\'')
+        || strchr(praeco, '"'))
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    chorda_aedificator_appendere_literis(a, "# praeco tmux (comites P8)"
+        " - generatum a 'praeco tmux instituere'\n");
+    per (i = ZEPHYRUM; hami_tmux[i]; i++)
+    {
+        chorda_aedificator_appendere_literis(a, "set-hook -g ");
+        chorda_aedificator_appendere_literis(a, hami_tmux[i]);
+        chorda_aedificator_appendere_literis(a, " \"run-shell -b '");
+        chorda_aedificator_appendere_literis(a, praeco);
+        chorda_aedificator_appendere_literis(a, " tmux "
+            "\\\"#{socket_path}\\\" \\\"#{pane_id}\\\"'\"\n");
+    }
+    redde chorda_aedificator_finire(a);
+}
+
+/* initium lineae 'signum' (cum '\n') in textu ab 'ab'; -1 si nulla */
+interior s32
+lineam_invenire (
+                 chorda  textus,
+                    i32  ab,
+     constans character* signum,
+                Piscina* piscina)
+{
+    chorda acus;
+       s32 k;
+
+    acus = chorda_ex_literis(signum, piscina);
+    dum (ab <= textus.mensura)
+    {
+        k = chorda_invenire_index(chorda_sectio(textus, ab,
+            textus.mensura), acus);
+        si (k < ZEPHYRUM)
+        {
+            redde -I;
+        }
+        si (   ab + (i32)k                   == ZEPHYRUM
+            || textus.datum[ab + (i32)k - I] == '\n')
+        {
+            redde (s32)(ab + (i32)k);
+        }
+        ab += (i32)k + I;
+    }
+    redde -I;
+}
+
+chorda
+praeconium_tmux_conf (
+                 chorda  conf,
+     constans character* fasciculus,
+                Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  s32  initium;
+                  s32  finis;
+
+    a = chorda_aedificator_creare(piscina, (memoriae_index)
+        conf.mensura + CCLVI);
+    si (!a || !fasciculus)
+    {
+        redde conf;
+    }
+    initium  = lineam_invenire(conf, ZEPHYRUM, signum_initii, piscina);
+    finis    = initium < ZEPHYRUM ? -I : lineam_invenire(conf,
+        (i32)initium, signum_finis, piscina);
+    si (finis >= ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_chorda(a, chorda_sectio(conf,
+            ZEPHYRUM, (i32)initium));
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_chorda(a, conf);
+        si (   conf.mensura > ZEPHYRUM
+            && conf.datum[conf.mensura - I] != '\n')
+        {
+            chorda_aedificator_appendere_literis(a, "\n");
+        }
+    }
+    chorda_aedificator_appendere_literis(a, signum_initii);
+    chorda_aedificator_appendere_literis(a, "source-file -q \"");
+    chorda_aedificator_appendere_literis(a, fasciculus);
+    chorda_aedificator_appendere_literis(a, "\"\n");
+    chorda_aedificator_appendere_literis(a, signum_finis);
+    si (finis >= ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_chorda(a, chorda_sectio(conf,
+            (i32)finis + (i32)strlen(signum_finis), conf.mensura));
+    }
+    redde chorda_aedificator_finire(a);
 }

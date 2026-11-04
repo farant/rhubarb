@@ -36,6 +36,8 @@
 #include "pictor_applicatio.h"
 #include "pictor_communio.h"
 #include "testa_cursus.h"
+#include "pulsus_forma.h"
+#include "veredarius_pulsus.h"
 #include "filum.h"
 #include "credo.h"
 #include <stdio.h>
@@ -49,6 +51,8 @@ hic_manens InternamentumChorda* intern;
 /* servitium claviaturae fictum: genus ultimum et numerus vocationum */
 hic_manens i32                  claviatura_genus;
 hic_manens i32                  claviatura_vocationes;
+/* pulsus-plan T9: vocationes pulsum_petere fictae */
+hic_manens i32 pulsus_petitiones;
 
 interior vacuum
 _parare (
@@ -59,6 +63,7 @@ _parare (
     claviatura_genus       = (i32)TESTA_CLAVIATURA_NULLA;
     claviatura_vocationes  = ZEPHYRUM;
     thema_initiare();
+    pulsus_petitiones = ZEPHYRUM;
 }
 
 interior vacuum
@@ -96,6 +101,7 @@ nomen structura {
     CommunioServus* servus;
            Reactor* reactor;
         Veredarius* veredarius;
+  VeredariusPulsus  pulsus;     /* pulsus-plan T9 */
          Hospitium* hospitium;
       Epistularius* epistularius;
                i32  portus;
@@ -150,6 +156,7 @@ orbem_parare (
     {
         redde FALSUM;
     }
+    veredarium_pulsus_parare(&o->pulsus, o->veredarius, o->reactor);
     o->epistularius = epistularium_aperire(piscina, o->reactor,
         "fictus",
         lit(""), NIHIL);
@@ -200,7 +207,7 @@ constans character* basis)
     p->app.montatio.actiones_ctx.claviaturam_ponere =
         claviaturam_fictam_ponere;
     p->pc = pictor_communionem_aperire(piscina, o->reactor,
-        o->veredarius,
+        &o->pulsus.v,
         v, o->via, basis ? basis : o->basis, NIHIL, NIHIL);
     si (!p->pc)
     {
@@ -471,20 +478,67 @@ _sectio_salutatio (
     orbem_purgare(&o);
 }
 
+/* pulsus-plan T9: testa ficta - pulsum_petere numerat, tesseram dat */
+
+interior b32
+_pulsum_petere_fictum (
+               vacuum* sui,
+    TestaPulsusSignum  signum,
+    TestaPulsusTactus  tactus,
+               vacuum* ctx)
+{
+    (vacuum)sui;
+    (vacuum)tactus;
+    pulsus_petitiones++;
+    signum(ctx, lit("c0ffee00"), lit(""));
+    redde VERUM;
+}
+
+/* agere donec veredarius pulsus nota k-ta (methodus, finis viae) */
+interior constans character*
+donec_pulsus (
+                  Orbis* o,
+              character  methodus,
+     constans character* finis,
+                    i32  k)
+{
+    i32 gyri;
+
+    per (gyri = ZEPHYRUM; !veredarius_pulsus_corpus(&o->pulsus,
+             methodus, finis, k) && gyri < CC; gyri++)
+    {
+        (vacuum)reactor_poll(o->reactor, X);
+    }
+    redde veredarius_pulsus_corpus(&o->pulsus, methodus, finis, k);
+}
+
 interior vacuum
 _sectio_codice (
     CredoContextus* c)
 {
-     Orbis  o;
-   Volumen* v;
-    Pictor  p;
-    chorda  codex;
- character  t[XVI];
+               Orbis  o;
+             Volumen* v;
+              Pictor  p;
+              chorda  codex;
+           character  t[XVI];
+        TestaAmbitus  a;
+       PulsusEventus  ev;
+              chorda  causa;
+              chorda  id;
+  constans character* corpus;
 
     (vacuum)c;
     CREDO_NECESSE(orbem_parare(&o));
     v = volumen_temporarium(piscina, "probatio_pictor_inscriptio_b");
     CREDO_NECESSE(v && pictorem_aedificare(&p, &o, v, NIHIL));
+    /* pulsus-plan T9: ut apps/pictor/pictor.c - ante inscriptionem
+     * nihil petitur */
+    memset(&a, ZEPHYRUM, magnitudo(a));
+    a.pulsum_petere    = _pulsum_petere_fictum;
+    a.pulsus_ambitus   = "sandbox";
+    pulsus_petitiones  = ZEPHYRUM;
+    pictor_communio_pulsum_parare(p.pc, &a);
+    CREDO_AEQUALIS_I32(pulsus_petitiones, ZEPHYRUM);
     CREDO_VERUM(premere_nodum(&p, "salutatio.inscribere"));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera(&p, "palette"),
         "inscriptio");
@@ -521,12 +575,34 @@ _sectio_codice (
         "pagina:Signed in as Franciscus", M * V));
     CREDO_AEQUALIS_I32(claviatura_genus, (i32)TESTA_CLAVIATURA_NULLA);
     CREDO_VERUM(pictor_communio_inscripta(p.pc));
+
+    CREDO_GRADUS("pulsus: post inscriptionem petitur, tessera inscribitur");
+    CREDO_AEQUALIS_I32(pulsus_petitiones, I);
+    CREDO_VERUM(donec_pulsus(&o, 'U', "/communio/pulsus/inscriptio",
+        ZEPHYRUM) != NIHIL);
     CREDO_VERUM(premere_nodum(&p, "inscriptio.confirmata"));
     CREDO_CHORDA_AEQUALIS_LITERIS(ephemera(&p, "palette"), "");
+
+    CREDO_GRADUS("menu: Notify family now -> statim cum pictura aperta");
     CREDO_VERUM(premere_nodum(&p, "quadratum.elenchus"));
     CREDO_AEQUALIS_I32(xar_numerus(nodus_arboris(&p,
         "elenchus")->liberi),
-        III);
+        IV);
+    CREDO_VERUM(premere_nodum(&p, "elenchus.3"));
+    corpus = donec_pulsus(&o, 'P', "/communio/pulsus/eventus",
+        ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(corpus);
+    CREDO_NECESSE(pulsus_eventum_legere(lit(corpus), piscina, &ev,
+        &causa));
+    CREDO_VERUM(ev.statim);
+    CREDO_NECESSE(xar_numerus(ev.res) == I);
+    id = chorda_concatenare(chorda_concatenare(volumen_replica(v),
+        lit(":"), piscina), lit(p.app.montatio.doc->historia->spatium),
+        piscina);
+    CREDO_VERUM(chorda_aequalis(*(chorda*)xar_obtinere(ev.res,
+        ZEPHYRUM),
+        id));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ephemera(&p, "palette"), "");
     CREDO_FALSUM(chorda_continet(pendens_legere(v),
         lit("example.org")));
     pictor_communionem_claudere(p.pc);

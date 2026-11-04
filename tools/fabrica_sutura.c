@@ -158,7 +158,8 @@ hic_manens Sigillum _identitas_clang_sigillum;
 
 /* identitas clang ut bin/compilator (tools/compilator.c
  * _identitas_compilatoris): FABRICA_CLANG = octeti eius; aliter via
- * vera ('clang -print-prog-name=clang') cum mensura, mtime, inodo */
+ * vera (compilator_clang_verum: COMPILATOR_CLANG_VERUM cursus aut
+ * 'clang -print-prog-name=clang') cum mensura, mtime, inodo */
 interior b32
 _identitas (
      vacuum* datum,
@@ -167,11 +168,8 @@ _identitas (
      chorda* causa_out)
 {
        constans character* proprius;
-       constans character* argv[III];
-        ProcessusResultus  resultus;
                 character  via[IV * MXXIV];
                 character  memoria[IV * MXXIV + CXXVIII];
-           memoriae_index  longitudo;
        structura stat    status;
 
     (vacuum)datum;
@@ -195,26 +193,12 @@ _identitas (
         *identitas_out = _identitas_clang_sigillum;
         redde VERUM;
     }
-    argv[0]   = "clang";
-    argv[I]   = "-print-prog-name=clang";
-    argv[II]  = NIHIL;
-    resultus  = processus_exsequi(argv, XXX * M, piscina);
-    si (   !resultus.successus || resultus.codex_exitus != ZEPHYRUM
-        || resultus.effusio.mensura == ZEPHYRUM
-        || resultus.effusio.mensura >= (i32)magnitudo(via))
+    si (!compilator_clang_verum("clang", via, magnitudo(via), piscina))
     {
         *causa_out = chorda_ex_literis("clang -print-prog-name fractum",
             piscina);
         redde FALSUM;
     }
-    longitudo = (memoriae_index)resultus.effusio.mensura;
-    memcpy(via, resultus.effusio.datum, longitudo);
-    dum (   longitudo > ZEPHYRUM
-         && (via[longitudo - I] == '\n' || via[longitudo - I] == '\r'))
-    {
-        longitudo--;
-    }
-    via[longitudo] = '\0';
     si (stat(via, &status) != ZEPHYRUM)
     {
         *causa_out = chorda_concatenare(chorda_ex_literis(

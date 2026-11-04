@@ -1442,6 +1442,248 @@ _diploma_certificatum_habet (
     redde FALSUM;
 }
 
+
+/* ==================================================
+ * pulsus-plan T11: diploma evolutionis (push in telephono)
+ * ================================================== */
+
+chorda
+nundinae_apple_certificatum_evolutionis (
+    JsonValor* responsum,
+      Piscina* p)
+{
+     JsonValor* data;
+     JsonValor* d;
+     JsonValor* a;
+        chorda  vac;
+        chorda  genus;
+        chorda  id;
+        chorda  exspirat;
+        chorda  optimum;
+           i32  i;
+
+    vac = chorda_ex_literis("", p);
+    id = vac;
+    optimum = vac;
+    data = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        d = json_tabulatum_obtinere(data, i);
+        a = d ? json_objectum_capere(d, "attributes") : NIHIL;
+        genus = a ? json_capere_chorda(a, "certificateType", vac) : vac;
+        si (   !chorda_aequalis_literis(genus, "DEVELOPMENT")
+            && !chorda_aequalis_literis(genus, "IOS_DEVELOPMENT"))
+        {
+            perge;
+        }
+        exspirat = json_capere_chorda(a, "expirationDate", vac);
+        si (   id.mensura == ZEPHYRUM
+            || chorda_comparare(exspirat, optimum)
+            > ZEPHYRUM)
+        {
+            id       = json_capere_chorda(d, "id", vac);
+            optimum  = exspirat;
+        }
+    }
+    redde id;
+}
+
+b32
+nundinae_apple_apparatus_legere (
+    JsonValor* responsum,
+          Xar* exitus,
+      Piscina* p)
+{
+     JsonValor* data;
+     JsonValor* d;
+     JsonValor* a;
+        chorda  vac;
+        chorda  classis;
+           i32  i;
+
+    data = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    si (!data || !exitus)
+    {
+        redde FALSUM;
+    }
+    vac = chorda_ex_literis("", p);
+    per (i = ZEPHYRUM; i < json_tabulatum_numerus(data); i++)
+    {
+        d = json_tabulatum_obtinere(data, i);
+        a = d ? json_objectum_capere(d, "attributes") : NIHIL;
+        si (!a)
+        {
+            perge;
+        }
+        classis = json_capere_chorda(a, "deviceClass", vac);
+        si (   chorda_aequalis_literis(json_capere_chorda(a, "platform",
+                   vac), "IOS")
+            && chorda_aequalis_literis(json_capere_chorda(a, "status",
+                   vac), "ENABLED")
+            && (   chorda_aequalis_literis(classis, "IPHONE")
+                || chorda_aequalis_literis(classis, "IPAD")))
+        {
+            *(chorda*)xar_addere(exitus) = json_capere_chorda(d, "id",
+                vac);
+        }
+    }
+    redde VERUM;
+}
+
+chorda
+nundinae_apple_diploma_invenire (
+             JsonValor* responsum,
+    constans character* genus,
+               Piscina* p)
+{
+     JsonValor* data;
+     JsonValor* a;
+        chorda  vac;
+           i32  i;
+
+    vac   = chorda_ex_literis("", p);
+    data  = responsum ? json_objectum_capere(responsum, "data") : NIHIL;
+    per (i = ZEPHYRUM; data && i < json_tabulatum_numerus(data); i++)
+    {
+        a = json_objectum_capere(json_tabulatum_obtinere(data, i),
+            "attributes");
+        si (   a && chorda_aequalis_literis(json_capere_chorda(a,
+                   "profileType", vac), genus)
+            && chorda_aequalis_literis(json_capere_chorda(a,
+                   "profileState", vac), "ACTIVE"))
+        {
+            redde json_capere_chorda(a, "profileContent", vac);
+        }
+    }
+    redde vac;
+}
+
+chorda
+nundinae_apple_diploma_corpus (
+                 chorda  titulus,
+     constans character* genus,
+                 chorda  id_signi,
+                 chorda  id_certificati,
+           constans Xar* apparatus,
+                Piscina* p)
+{
+     JsonValor* a;
+     JsonValor* rel;
+     JsonValor* tab;
+     JsonValor* res;
+     JsonValor* r;
+           i32  i;
+
+    a = json_objectum_creare(p);
+    json_objectum_ponere(a, "name", json_chorda_creare(p, titulus));
+    json_objectum_ponere(a, "profileType", json_chorda_creare_literis(p,
+        genus));
+    rel = json_objectum_creare(p);
+    json_objectum_ponere(rel, "bundleId", _relatio("bundleIds",
+        id_signi,
+        FALSUM, p));
+    json_objectum_ponere(rel, "certificates", _relatio("certificates",
+        id_certificati, VERUM, p));
+    si (apparatus)
+    {
+        tab = json_tabulatum_creare(p);
+        per (i = ZEPHYRUM; i < xar_numerus(apparatus); i++)
+        {
+            res = json_objectum_creare(p);
+            json_objectum_ponere(res, "type",
+                json_chorda_creare_literis(p,
+                "devices"));
+            json_objectum_ponere(res, "id", json_chorda_creare(p,
+                *(constans chorda*)xar_obtinere(apparatus, i)));
+            json_tabulatum_addere(tab, res);
+        }
+        r = json_objectum_creare(p);
+        json_objectum_ponere(r, "data", tab);
+        json_objectum_ponere(rel, "devices", r);
+    }
+    redde _corpus_rei("profiles", a, rel, p);
+}
+
+b32
+nundinae_apple_diploma_evolutionis (
+    NundinaeApple* n,
+           chorda  id_signi,
+           chorda  titulus,
+           chorda* contentum,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p)
+{
+    NundinaeAppleResponsum  r;
+                    chorda  vac;
+                    chorda  id_certificati;
+                       Xar* apparatus;
+
+    vac = chorda_ex_literis("", p);
+    si (creatum)
+    {
+        *creatum = FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET, _via(p,
+        "/v1/bundleIds/%A/profiles?limit=200", id_signi, vac), vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *contentum = nundinae_apple_diploma_invenire(r.corpus,
+        "IOS_APP_DEVELOPMENT", p);
+    si (contentum->mensura > ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET,
+        "/v1/certificates?limit=200", vac, p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    id_certificati = nundinae_apple_certificatum_evolutionis(r.corpus,
+        p);
+    si (id_certificati.mensura == ZEPHYRUM)
+    {
+        *causa =
+            chorda_ex_literis("nundinae_apple: nullum certificatum "
+            "evolutionis (Xcode: Settings > Accounts > Manage "
+            "Certificates)", p);
+        redde FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_GET,
+        "/v1/devices?filter%5Bplatform%5D=IOS&limit=200", vac, p);
+    apparatus = xar_creare(p, (i32)magnitudo(chorda));
+    si (   !_vocatio_bona(r, causa)
+        || !nundinae_apple_apparatus_legere(r.corpus, apparatus, p))
+    {
+        redde FALSUM;
+    }
+    si (xar_numerus(apparatus) == ZEPHYRUM)
+    {
+        *causa =
+            chorda_ex_literis("nundinae_apple: nullum apparatus iOS "
+            "inscriptus", p);
+        redde FALSUM;
+    }
+    r = nundinae_apple_vocare(n, HTTP_POST, "/v1/profiles",
+        nundinae_apple_diploma_corpus(titulus, "IOS_APP_DEVELOPMENT",
+        id_signi, id_certificati, apparatus, p), p);
+    si (!_vocatio_bona(r, causa))
+    {
+        redde FALSUM;
+    }
+    *contentum = json_capere_chorda(json_objectum_capere(
+        json_objectum_capere(r.corpus, "data"), "attributes"),
+        "profileContent", vac);
+    si (creatum)
+    {
+        *creatum = VERUM;
+    }
+    redde contentum->mensura > ZEPHYRUM;
+}
+
 b32
 nundinae_apple_diploma (
     NundinaeApple* n,
@@ -1456,7 +1698,6 @@ nundinae_apple_diploma (
     NundinaeAppleResponsum  r;
                  JsonValor* data;
                  JsonValor* a;
-                 JsonValor* rel;
                     chorda  vac;
                        i32  i;
 
@@ -1490,18 +1731,10 @@ nundinae_apple_diploma (
             redde contentum->mensura > ZEPHYRUM;
         }
     }
-    a = json_objectum_creare(p);
-    json_objectum_ponere(a, "name", json_chorda_creare(p, titulus));
-    json_objectum_ponere(a, "profileType", json_chorda_creare_literis(p,
-        "IOS_APP_STORE"));
-    rel = json_objectum_creare(p);
-    json_objectum_ponere(rel, "bundleId", _relatio("bundleIds",
-        id_signi,
-        FALSUM, p));
-    json_objectum_ponere(rel, "certificates", _relatio("certificates",
-        id_certificati, VERUM, p));
     r = nundinae_apple_vocare(n, HTTP_POST, "/v1/profiles",
-        _corpus_rei("profiles", a, rel, p), p);
+        nundinae_apple_diploma_corpus(titulus, "IOS_APP_STORE",
+        id_signi,
+        id_certificati, NIHIL, p), p);
     si (!_vocatio_bona(r, causa))
     {
         redde FALSUM;

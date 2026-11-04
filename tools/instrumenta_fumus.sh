@@ -57,6 +57,9 @@ mkdir -p "$MEMORIA_ORACULI"
 # nexus (vexilla + identitas obiectorum et binarii) idem - nexus
 # deterministicus, re-nexus nihil probat. Vide lib/aedilis.c.
 export AEDILIS_NEXUS_SERVARE=1
+# COMMISSUM SEMEL (budget B2 J6): HEAD semel, non git bis per programma
+AEDILIS_COMMISSUM="$(git rev-parse --short HEAD 2>/dev/null)"
+export AEDILIS_COMMISSUM
 
 git ls-files -co --exclude-standard '*.c' '*.thistle' \
     | ./tools/iudex_unitatum.sh instrumenta > "$T/iudicatae" 2> "$T/iudex_err" \

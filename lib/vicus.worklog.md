@@ -1040,3 +1040,200 @@ LESSON: `bin/aedilis apps/x/x.c` only WRITES build/aedilis/x/struere.sh
 - it does not compile. My 6a-6d "vicus builds / smoke run" used a
 binary from before the arc (the first after-measurement showed the old
 60/s for that reason). Build = `bash build/aedilis/x/struere.sh`.
+
+## 2026-10-27 - quies T7: re-measured after the merge (main fa6927d9)
+
+Main's bin/vicus (rebuilt after the ff), `-quies`, `.backup` copy of
+paginae-proba.volumen, fake tmux (`exit 1`) first on PATH, ~5 min
+while sessions were active (the copy reads the REAL colloquia
+eventa.jsonl, so every hook event from any session reaches it - ~37
+in those 5 min, most from the measuring session's own tool calls).
+
+- Quiet stretches: 1-5 pulses per 10-16 s, `top` 0.0%. Main thread
+  99.7% in mach_msg over a 20 s sample.
+- Bursts: 15-25 pulses/s for a few seconds, `top` 5-14%. A 60 s
+  sample caught one: mixtura_reddere + CoreAudio threads + toast
+  painting = notification chime + toast (16 ms while sounding, by
+  design).
+- Average after start-up: 5.7 pulses/s and ~2.8% CPU (7.7 s CPU over
+  ~270 s) - while sessions were busy. Before the arc: 60/s and ~5%
+  constant, idle or not. The 6e numbers (1 pulse per 14-19 s, 0.0-0.1%)
+  are the no-events case.
+
+Live vicus (Fran's, secunda build) while it showed a streaming
+terminal pane: 4-20% - painting the terminal (terminale_figura,
+tabula_pixelorum_vacare), as expected. Found there: comites'
+`locum_terminalis_inspicere` runs tmux SYNCHRONOUSLY in the pulse
+(multiplexor_clientes + multiplexor_panelli, cached 1 s): 233 of 251
+pulse samples in 10 s, ~23 ms blocked per second while the front
+terminal streams with a Notes companion open. Not an idle cost.
+Filed as desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4 (fix: async like T2,
+or only on foreground-signature change like T2b).
+
+## 2026-10-27 - BUG (quies T2b): manual tmux attach never recorded with many terminal panes
+
+Fran: after a tmux server restart + vicus restart, panes stopped coming
+back attached. Chain: the server restart renamed the session (now `0`),
+so the saved restore arguments pointed at sessions that no longer
+existed - vicus correctly dropped them. The bug: re-attaching BY HAND
+(`tmux attach -t 0` in a vicus terminal) was never recorded, so the
+next restart had nothing to restore. Reproduced live twice.
+
+Found with a logging build run by Fran on the real volume (two checks
+at start-up, none after the attach) and then by reading
+`frontes_signare`: the foreground signature was
+`signum * 2^20 + 1 + pgrp` per terminal pane in an unsigned 64-bit
+value. Every later pane shifts the earlier ones up 20 bits, so after
+four more panes an early pane is shifted out entirely. Fran has TEN
+terminal panes; the tmux pane was the 6th - its foreground change could
+not move the signature, so no check ran, and the 5 s re-check only
+covers panes already known to run tmux. Tests had one or two panes.
+
+Fix: `signum = (signum ^ pgrp) * MULTIPLICATOR_SIGNI` (FNV-1a 64-bit
+prime, odd): each step is a bijection, so a change in ANY one pane
+always changes the signature. Test: probatio_vicus_quies section
+frontes_multae (six panes, program starts in the FIRST) - red before,
+green after; plant = the exact old statement -> red at the same step.
+Note for plants: my first plant `(signum ^ g) + signum*2^20` was green
+- it keeps signum through the xor, so it is not the old formula.
+
+Also learned: `vicus_acervo_aperire` opens by identity (kind +
+argument) - a second terminal with no argument just brings the first
+one forward; tests that need N terminals give each a distinct plain
+argument. And: the session runs inside tmux, so a private tmux server
+needs `env -u TMUX -u TMUX_PANE TMUX_TMPDIR=...` on every call (a bare
+`tmux new-session` landed on Fran's real server - removed at once).
+
+## 2026-10-27 - comites P7.4: companion per Claude Code session, no tmux in the pulse
+
+Spec project-specs/comites.md §XI. A terminal pane's locus now comes
+from a CACHE (TerminaleInVico.memoria: server, tmux session, active
+window index + name, active pane id) that the terminalia system fills
+- it now starts `list-panes -a` next to `list-clients` for every
+server (colloquia sessions' servers, each terminal pane's own server
+from its restore argument - NEW, the comites test server is only known
+that way - then the default), on the same T2b schedule, never waiting.
+Locus: live Claude session in the cached active pane
+(colloquium_panelli over colloquia_visus_fontis, titles included) ->
+`terminale/claude/<session id>`, title = session title; else
+`terminale/tmux/<session>/<window>`; else `terminale/<pane id>`.
+Cmd+T / focus-left (locum_renovare) still do ONE synchronous refresh
+of the cache. Closes desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4 (P4 ran
+list-clients + list-panes synchronously once a second while following).
+
+Found on the way: the colloquia session state only advanced inside
+colloquia_visus_fontem_pulsare, i.e. only while a sessions PANE was
+pulsed (that pulse also polls tmux synchronously). New
+colloquia_visus_fontem_legere (events only, own arena) called by the
+notifications system when specula reports the log changed; a version
+counter in the source makes the sessions pane's pulse still report the
+change. Also widened the terminal title buffer (session < 100 + " / "
++ window < 60 could overflow 128 - latent since P4).
+
+Trade-off (agreed): a tmux window switch now shows in the companion
+within 5 s (the visible-tmux re-check), not 1 s; Cmd+T is immediate.
+
+Tests: probatio_vicus_comites_terminale section claude (private tmux
+server, events in a log in the test area: tmux key -> SessionStart ->
+`terminale/claude/s-claude-1` "gamma" + Cmd+T companion -> /clear ->
+s-claude-2 -> SessionEnd -> tmux key); the suite now opens the
+notifications reader. probatio_vicus_quies comes_sine_processu (a
+following companion spawns no tmux for 3 s); its counters now count a
+check as one list-clients line (a check is two processes now).
+Plants: sync lookup on every read -> quies red; reader not called ->
+claude red; version check dropped -> colloquia_visus red.
+
+## 2026-10-27 — restore lost again: a failed tmux query cleared the argument
+
+Fran restarted vicus (onto the P7.4 build) and the tmux pane came back
+as a plain shell. Evidence: the pane's shell started at 09:35:40 with
+no attach attempted (Fran: clean prompt, no tmux error), the tmux
+server had survived since the night before, and Fran's own
+`tmux attach -t 0` came 34 s later. So the `tmux <servitor> <sessio>`
+argument was already gone from the layout at startup. Quit does not
+touch it (the host's finis only closes the volume). The restore test
+(probatio_vicus_saltus) passed on the current code.
+
+Cause (since T6): terminalia_applicare treated "this pane's tty is not
+in the client list" as "detached" and cleared the argument, even when
+the list-clients query had FAILED (exit != 0, timeout) - clientes_addere
+just returned with nothing added. Once cleared, nothing brought the
+argument back: the 5 s visible-tmux re-check keys off the argument
+itself, and switching tmux windows doesn't change the pane's foreground
+group. One bad query in a long run = no restore at the next start.
+
+Fix: clientes_addere reports whether the server answered; the
+terminalia system collects the servers that did (confirmati) and
+terminalia_applicare clears a tmux argument only when ITS server
+answered without listing the pane - otherwise argument and cached
+locus stay untouched. Each pane's current argument also names a
+server to query (servitor_argumenti), so a pane attached by hand to a
+server no Claude session mentions can still be confirmed detached.
+
+Test: probatio_vicus_quies section quaestio_defecta (fake tmux exits 1
+while `<area>/deficit` exists): record `tmux - beta`, fail the queries
+-> argument stays (red before), then a successful empty answer ->
+cleared. Plant (guard short-circuited with FALSUM) red at exactly that
+step; vicus 29/29.
+
+## 2026-10-27 — comites P8.3: a `tmux` event wakes the terminalia query
+
+tmux hooks (praeco tmux, see praeconium.worklog) append an event
+`tmux` to the notifications log when a window, pane or client session
+changes. The notifications system already wakes on that log (specula)
+and reads it every pulse; after admonitiones_sequi it now checks the
+pulse's events (sequax.eventus, ALL kinds) for `tmux` and sets
+ContextusAdmonitionum.terminalia_excitata. terminalia_debita treats the
+flag like a foreground change (query due now), terminalia_morari
+returns 0 while it is set, and starting a query clears it - a switch
+that lands while a query is in flight sets it again, so the next query
+follows. No terminal panes: the flag is dropped. The 5 s visible-tmux
+re-check stays as the fallback for servers without the hooks.
+
+Test: probatio_vicus_quies section eventus_tmux (shell in front, no 5 s
+rule): a `status` event starts no query in 1 s; a `tmux` event starts
+one within 500 ms (red before). Plant (scan short-circuited) red at
+that step. vicus 29/29.
+
+## 2026-10-27 — comites P9: Ctrl+1…9 switches the focused terminal's tmux window
+
+New VicusFacies hook `clavem_sumere(ctx, ev, agere)` (Fran approved
+the header): a FOCUSED pane can claim a key before vicus routes it.
+Two steps - destinare asks with agere=FALSUM (no side effects) and, if
+claimed, routes the event (down AND up) to the root instead of the
+pane; the root handler calls again with agere=VERUM on key-down; the
+key-up is swallowed (same shape as Cmd+digits).
+
+Terminal: claims Ctrl+0..9 (exactly Ctrl among Shift/Ctrl/Alt/Cmd -
+side-flags ignored) only when its cache says tmux is attached
+(memoria.nota) - answered from memory, no process. Acting:
+multiplexor_fenestram_eligere on the cached server/session (Ctrl+0 =
+window 10, like Cmd+0 = tenth tab); success sets renovandum so the
+locus refreshes at once even without the P8 hooks; a missing window
+does nothing (Fran) but the key is still claimed. No tmux -> not
+claimed -> the shell gets it as before. macOS sends no text event
+while Ctrl/Cmd is held (fenestra_macos.m), so only key-down/up need
+swallowing.
+
+Test: probatio_vicus_comites_terminale section claves (private
+server, real key events through manus_ludus): Ctrl+<secunda> -> tmux
+window switched and locus within 200 ms; Ctrl+9 -> nothing; a plain
+terminal in front -> window unchanged. Plants red: root action off;
+refresh off. NOT covered: the destinare routing - the terminal today
+does not consume Ctrl+digit, so the key bubbles to the root anyway
+(plant stayed green). Kept as the header's guarantee (the pane never
+sees a claimed key) in case the terminal ever encodes Ctrl+digit. The
+"plain terminal" step only shows the window did not change, not that
+the shell received the key.
+
+## 2026-10-27 — comites P9b: Ctrl+N also from the left page
+
+Fran: in a spread with a tmux terminal on the right, Ctrl+N should
+work whether the left scriba or the right terminal has focus.
+latus_sumens (lib/vicus.c) asks the focused pane first; if it does not
+claim the key and focus is on the left, it asks the active tab's
+right-front pane. Header comment in vicus.h updated (Fran approved).
+Scriba has no Ctrl+digit bindings, so nothing is shadowed; a plain
+terminal on the right does not claim, so the key still goes to the
+left pane. Test: claves step "focus sinister (scriba)"; plant (only
+the focused pane asked) red at that step.

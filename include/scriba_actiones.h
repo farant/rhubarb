@@ -115,6 +115,27 @@ scriba_actiones_paginam_ostendere (
           ScribaActiones* sa,
                   chorda  titulus);
 
+/* chronica C4b: ut scriba_actiones_paginam_ostendere, cursor in linea
+ * data (columna 0; linea ultra paginam: prima) */
+b32
+scriba_actiones_paginam_ostendere_ad_lineam (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                  chorda  titulus,
+                     i32  linea);
+
+/* chronica C6: cursor in cellula (linea, columna); extra paginam:
+ * 0 */
+b32
+scriba_actiones_paginam_ostendere_ad_cellulam (
+    constans InsulaRamus* ramus,
+                   Motus* motus,
+          ScribaActiones* sa,
+                  chorda  titulus,
+                     i32  linea,
+                     i32  columna);
+
 /* folium laboris = copia proiectionis documenti */
 vacuum
 scriba_actiones_initiare (

@@ -90,7 +90,8 @@ nomen chorda (*TitulusPinacis)(constans vacuum* ctx, s32 k,
 
 /* rete XII pinacum: dialogus 'nomen', nodi "<praefixum><k>", bullae
  * "<nomen>.prior|pagina|posterior|claudere", actio "<nomen>.agere";
- * numerus 0 et 'vacua' -> textus "<nomen>.vacua" in medio */
+ * numerus 0 et 'vacua' -> textus "<nomen>.vacua" in medio; 'linea'
+ * (NIHIL = "n / m") loco paginae (pulsus-plan T10: "Loading...") */
 interior Componens*
 rete_componere (
                         Piscina* piscina,
@@ -102,6 +103,7 @@ rete_componere (
                  TitulusPinacis  titulus_pinacis,
                 constans vacuum* ctx,
              constans character* vacua,
+             constans character* linea,
                           Fines  fp,
                             s32  latitudo_superficiei,
                             s32  altitudo_superficiei,
@@ -273,7 +275,11 @@ rete_componere (
 
                 sprintf(pg, "pagina:%ld / %ld", (longus)(pagina + I),
                     (longus)paginae);
-                componens_ponere_titulum(n, pg);
+                componens_ponere_titulum(n, linea
+                    ? chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+                    "pagina:", piscina), chorda_ex_literis(linea,
+                    piscina),
+                    piscina), piscina) : pg);
             }
             alioquin
             {
@@ -336,7 +342,8 @@ pinacothecam_componere (
         (pc
             && pc->picturae) ? (s32)xar_numerus(pc->picturae) : ZEPHYRUM,
         attributum_s32(ramus, "pagina_pinacothecae", ZEPHYRUM),
-        _titulus_pinacothecae, &tp, NIHIL, fp, latitudo_superficiei,
+        _titulus_pinacothecae, &tp, NIHIL, NIHIL, fp,
+        latitudo_superficiei,
         altitudo_superficiei, cw, ch);
 }
 
@@ -541,9 +548,12 @@ communia_componere (
         (pc
             && pc->picturae) ? (s32)xar_numerus(pc->picturae) : ZEPHYRUM,
         attributum_s32(ramus, "pagina_communium", ZEPHYRUM),
-        _titulus_communium, pc, cfg->inscripta
+        _titulus_communium, pc, (pc && pc->onerans)
+        ? "Loading new pictures\xE2\x80\xA6" : cfg->inscripta
         ? "No shared pictures yet." : "Sign in to see shared pictures.",
-        fp, latitudo_superficiei, altitudo_superficiei, cw, ch);
+        (pc
+            && pc->onerans) ? "Loading\xE2\x80\xA6" : NIHIL, fp,
+            latitudo_superficiei, altitudo_superficiei, cw, ch);
 }
 
 /* plan-5 T7: dialogus formae columnae - lineae fixae (altitudines in
@@ -850,6 +860,13 @@ pictor_elenchum_parare (
     {
         res[n].titulus   = "inscriptio.aperire";
         res[n++].textus  = "Sign in\xE2\x80\xA6";
+    }
+    /* pulsus-plan T9 (spec III.4): inscriptis solum - cum "Sign in…"
+     * numquam simul, ergo V res sufficiunt */
+    si (c && c->communio && c->inscripta)
+    {
+        res[n].titulus   = "pulsus.statim";
+        res[n++].textus  = "Notify family now";
     }
     per (e->numerus = ZEPHYRUM; e->numerus < (i32)n; e->numerus++)
     {

@@ -23,19 +23,33 @@
 #include "pictor_documentum.h"
 #include "pictor_communio.h"
 #include "filum.h"
+#include "pulsus_forma.h"
+#include "testa_cursus.h"
+#include "veredarius_pulsus.h"
+#include "insula.h"
+#include "componens.h"
+#include "dispensator.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
 
 hic_manens Piscina* piscina;
 hic_manens i32      mutationes;
+/* pulsus-plan T9: vocationes pulsum_petere fictae */
+hic_manens i32 pulsus_petitiones;
+/* pulsus-plan T10: tactus quem pictor testae dedit (tangere) */
+hic_manens TestaPulsusTactus tactus_captus;
+hic_manens vacuum*           tactus_ctx;
 
 interior vacuum
 _parare (
     CredoContextus* c)
 {
-    piscina     = c->piscina;
-    mutationes  = ZEPHYRUM;
+    piscina            = c->piscina;
+    mutationes         = ZEPHYRUM;
+    pulsus_petitiones  = ZEPHYRUM;
+    tactus_captus      = NIHIL;
+    tactus_ctx         = NIHIL;
     thema_initiare();
 }
 
@@ -96,6 +110,7 @@ nomen structura {
              Reactor* reactor;
           Veredarius* domesticus;
     VeredariusNotans  notans;
+    VeredariusPulsus  pulsus;     /* pulsus-plan T9 */
            Hospitium* hospitium;
                  i32  portus;
            character  basis[LXIV];
@@ -170,10 +185,11 @@ orbem_parare (
     o->reactor = reactor_creare(piscina);
     o->domesticus = o->reactor ? veredarium_domesticum_creare(piscina,
         o->reactor) : NIHIL;
+    veredarium_pulsus_parare(&o->pulsus, o->domesticus, o->reactor);
     o->notans.v.petere     = _notans_petere;
     o->notans.v.abrumpere  = _notans_abrumpere;
     o->notans.v.sui        = &o->notans;
-    o->notans.fundus       = o->domesticus;
+    o->notans.fundus       = &o->pulsus.v;
     redde o->servus && o->domesticus && hospitium_aperire(o)
         && apparatum_dare(o, primus, "Mac", o->via_a, o->id_a)
         && apparatum_dare(o, amanda, "iPhone", o->via_b, id_b);
@@ -541,6 +557,315 @@ _sectio_revocatus (
     orbem_purgare(&o);
 }
 
+
+/* ==================================================
+ * pulsus-plan T9: pulsus in pictore
+ * ================================================== */
+
+#define TESSERA_FICTA \
+    "a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1"
+
+
+/* testa ficta: pulsum_petere numerat et tesseram statim dat */
+interior b32
+_pulsum_petere_fictum (
+               vacuum* sui,
+    TestaPulsusSignum  signum,
+    TestaPulsusTactus  tactus,
+               vacuum* ctx)
+{
+    (vacuum)sui;
+    tactus_captus  = tactus;
+    tactus_ctx     = ctx;
+    pulsus_petitiones++;
+    signum(ctx, lit(TESSERA_FICTA), lit(""));
+    redde VERUM;
+}
+
+interior vacuum
+ambitum_fictum (
+    TestaAmbitus* a)
+{
+    memset(a, ZEPHYRUM, magnitudo(*a));
+    a->pulsum_petere   = _pulsum_petere_fictum;
+    a->pulsus_ambitus  = "sandbox";
+}
+
+/* agere donec n eventus missi (aut M ms), deinde paulum ultra */
+interior b32
+donec_eventus (
+    Orbis* o,
+      i32  n)
+{
+    i32 gyri;
+
+    per (gyri = ZEPHYRUM; !veredarius_pulsus_corpus(&o->pulsus, 'P',
+             "/communio/pulsus/eventus", n - I) && gyri < C; gyri++)
+    {
+        agere(o, X);
+    }
+    agere(o, CC);
+    redde veredarius_pulsus_corpus(&o->pulsus, 'P',
+        "/communio/pulsus/eventus", n - I) != NIHIL;
+}
+
+/* eventus k-tus missus, lectus */
+interior b32
+eventum_legere (
+            Orbis* o,
+              i32  k,
+    PulsusEventus* ev)
+{
+     constans character* corpus;
+                 chorda  causa;
+
+    corpus = veredarius_pulsus_corpus(&o->pulsus, 'P',
+        "/communio/pulsus/eventus", k);
+    redde corpus && pulsus_eventum_legere(lit(corpus), piscina, ev,
+        &causa);
+}
+
+interior chorda
+id_picturae (
+               Volumen* v,
+    constans character* spatium)
+{
+    redde chorda_concatenare(chorda_concatenare(volumen_replica(v),
+        lit(":"), piscina), lit(spatium), piscina);
+}
+
+interior vacuum
+_sectio_pulsus_eventus (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+         PictorCommunio* pa;
+         PictorCommunio* pb;
+       PictorDocumentum* p;
+       PictorDocumentum* q;
+           TestaAmbitus  a;
+          PulsusEventus  ev;
+                 chorda  tessera;
+                 chorda  ambitus;
+                 chorda  thema;
+                 chorda  causa;
+     constans character* corpus;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    intern = internamentum_creare(piscina);
+    va = volumen_temporarium(piscina, "probatio_pictor_communio_h");
+    CREDO_NECESSE(intern && va);
+    pa = communionem(&o, va, o.via_a);
+    CREDO_NECESSE_NON_NIHIL(pa);
+    ambitum_fictum(&a);
+    pulsus_petitiones = ZEPHYRUM;
+    pictor_communio_pulsum_parare(pa, &a);
+    CREDO_AEQUALIS_I32(pulsus_petitiones, I);
+    /* picturae duae ante initium: fasciculus unus, missa una */
+    p = pictor_documentum_creare(piscina, intern, va, "p", C, LX, II);
+    q = pictor_documentum_creare(piscina, intern, va, "q", C, LX, II);
+    CREDO_NECESSE(   p && q && ictus(p, X, II) > ZEPHYRUM
+                  && ictus(q, XX, III) > ZEPHYRUM);
+    pictor_communio_incipere(pa);
+    CREDO_VERUM(donec_eventus(&o, I));
+
+    CREDO_GRADUS("inscriptio: tessera, sandbox, thema");
+    corpus = veredarius_pulsus_corpus(&o.pulsus, 'U',
+        "/communio/pulsus/inscriptio", ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(corpus);
+    CREDO_VERUM(pulsus_inscriptionem_legere(lit(corpus), piscina,
+        &tessera, &ambitus, &thema, &causa));
+    CREDO_CHORDA_AEQUALIS_LITERIS(tessera, TESSERA_FICTA);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ambitus, "sandbox");
+    CREDO_CHORDA_AEQUALIS_LITERIS(thema, "earth.golden.pictor");
+
+    CREDO_GRADUS("eventus unus: res duae <replica>:<spatium>");
+    CREDO_NIHIL(veredarius_pulsus_corpus(&o.pulsus, 'P',
+        "/communio/pulsus/eventus", I));
+    CREDO_NECESSE(eventum_legere(&o, ZEPHYRUM, &ev));
+    CREDO_CHORDA_AEQUALIS_LITERIS(ev.clavis, "pictor.picturae");
+    CREDO_CHORDA_AEQUALIS_LITERIS(ev.thema, "earth.golden.pictor");
+    CREDO_AEQUALIS_I32(ev.mora_s, CCC);
+    CREDO_FALSUM(ev.statim);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ev.unus,
+        "{persona} shared a picture");
+    CREDO_CHORDA_AEQUALIS_LITERIS(ev.plures,
+        "{persona} shared {numerus} pictures");
+    CREDO_NECESSE(xar_numerus(ev.res) == II);
+    CREDO_VERUM(chorda_aequalis(*(chorda*)xar_obtinere(ev.res,
+        ZEPHYRUM),
+        id_picturae(va, "p")));
+    CREDO_VERUM(chorda_aequalis(*(chorda*)xar_obtinere(ev.res, I),
+        id_picturae(va, "q")));
+
+    CREDO_GRADUS("statim: pictura aperta, deinde nulla");
+    CREDO_VERUM(pictor_communio_pulsum_statim(pa, "p"));
+    CREDO_VERUM(donec_eventus(&o, II));
+    CREDO_NECESSE(eventum_legere(&o, I, &ev));
+    CREDO_VERUM(ev.statim);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ev.clavis, "pictor.picturae");
+    CREDO_NECESSE(xar_numerus(ev.res) == I);
+    CREDO_VERUM(chorda_aequalis(*(chorda*)xar_obtinere(ev.res,
+        ZEPHYRUM),
+        id_picturae(va, "p")));
+    CREDO_VERUM(pictor_communio_pulsum_statim(pa, NIHIL));
+    CREDO_VERUM(donec_eventus(&o, III));
+    CREDO_NECESSE(eventum_legere(&o, II, &ev));
+    CREDO_VERUM(ev.statim);
+    CREDO_AEQUALIS_I32(xar_numerus(ev.res), ZEPHYRUM);
+
+    CREDO_GRADUS("non inscriptus: pulsum_petere numquam, statim nihil");
+    vb = volumen_temporarium(piscina, "probatio_pictor_communio_i");
+    CREDO_NECESSE_NON_NIHIL(vb);
+    pb = communionem(&o, vb, "/tmp/probatio_pictor_communio_nulla");
+    CREDO_NECESSE_NON_NIHIL(pb);
+    pulsus_petitiones = ZEPHYRUM;
+    pictor_communio_pulsum_parare(pb, &a);
+    pictor_communio_incipere(pb);
+    CREDO_AEQUALIS_I32(pulsus_petitiones, ZEPHYRUM);
+    CREDO_FALSUM(pictor_communio_pulsum_statim(pb, "p"));
+    pictor_communionem_claudere(pa);
+    pictor_communionem_claudere(pb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+/* pulsus-plan T10: notificatio pressa - corpus ut APNs tradit */
+interior vacuum
+tangere (
+    constans character* id,
+                   b32  plures)
+{
+    character corpus[DXII];
+
+    sprintf(corpus, "{\"aps\":{\"alert\":{\"title\":\"pictor\","
+        "\"body\":\"Amanda shared a picture\"}},\"pulsus\":{"
+        "\"clavis\":\"pictor.picturae\",\"res\":[%s%s%s],\"a\":"
+        "\"civis\"%s}}", id ? "\"" : "", id ? id : "", id ? "\"" : "",
+        plures ? ",\"plures\":true" : "");
+    tactus_captus(tactus_ctx, lit(corpus));
+}
+
+interior chorda
+attributum_app (
+    PictorApplicatio* app,
+  constans character* titulus)
+{
+    chorda* a;
+
+    a = insula_attributum(app->repo, titulus);
+    redde a ? chorda_ex_literis(chorda_ut_cstr(*a, piscina), piscina)
+            : lit("");
+}
+
+interior chorda
+titulus_app (
+    PictorApplicatio* app,
+  constans character* id)
+{
+    Componens* n;
+
+    dispensator_recomponere(app->d);
+    n = componens_invenire_per_id(dispensator_arbor(app->d), lit(id));
+    redde n ? chorda_ex_literis(chorda_ut_cstr(n->titulus, piscina),
+        piscina) : lit("");
+}
+
+interior vacuum
+_sectio_grex_tactus (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+       PictorApplicatio  app;
+         PictorCommunio* pa;
+         PictorCommunio* pb;
+       PictorDocumentum* p;
+           TestaAmbitus  a;
+              character  id[CXXVIII];
+              character  ignota[CXXVIII];
+                    i32  gyri;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    intern = internamentum_creare(piscina);
+    va = volumen_temporarium(piscina, "probatio_pictor_communio_j");
+    vb = volumen_temporarium(piscina, "probatio_pictor_communio_k");
+    CREDO_NECESSE(intern && va && vb);
+    CREDO_NECESSE(pictor_applicatio_aedificare(&app, piscina, intern,
+        va,
+        CCXV, CDXIX));
+    app.montatio.compositio.elenchus_praesto = VERUM;
+    pa = communionem(&o, va, o.via_a);
+    pb = communionem(&o, vb, o.via_b);
+    CREDO_NECESSE(pa && pb);
+    pictor_communionem_ligare(pa, &app.montatio, app.d, "Mac");
+    ambitum_fictum(&a);
+    pictor_communio_pulsum_parare(pa, &a);
+    CREDO_NECESSE(tactus_captus != NIHIL);
+    pictor_communio_incipere(pa);
+    pictor_communio_incipere(pb);
+    agere(&o, CC);
+    sprintf(id, "%s:p", chorda_ut_cstr(volumen_replica(vb), piscina));
+    sprintf(ignota, "%s:nulla", chorda_ut_cstr(volumen_replica(vb),
+        piscina));
+
+    CREDO_GRADUS("pictura nondum advecta: rete cum Loading");
+    tangere(id, FALSUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "communia");
+    CREDO_VERUM(app.montatio.communia.onerans);
+    CREDO_CHORDA_AEQUALIS_LITERIS(titulus_app(&app, "communia.vacua"),
+        "pagina:Loading new pictures\xE2\x80\xA6");
+
+    CREDO_GRADUS("B pingit: post advenerunt spectator in p");
+    p = pictor_documentum_creare(piscina, intern, vb, "p", C, LX, II);
+    CREDO_NECESSE(p && ictus(p, X, II) > ZEPHYRUM);
+    pictor_communio_excitare(pb);
+    per (gyri = ZEPHYRUM; gyri < D && !chorda_aequalis_literis(
+             attributum_app(&app, "spectata"), id); gyri++)
+    {
+        (vacuum)reactor_poll(o.reactor, X);
+    }
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "spectata"), id);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "spectator");
+    CREDO_FALSUM(app.montatio.communia.onerans);
+
+    CREDO_GRADUS("pictura nota: spectator statim");
+    tangere(id, FALSUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "spectator");
+    CREDO_FALSUM(app.montatio.communia.onerans);
+
+    CREDO_GRADUS("plures: rete sine Loading");
+    tangere(id, VERUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "communia");
+    CREDO_FALSUM(app.montatio.communia.onerans);
+
+    CREDO_GRADUS("ignota: post moram rete, Loading tollitur");
+    pictor_communio_tactus_moram_ponere(pa, CC);
+    tangere(ignota, FALSUM);
+    CREDO_VERUM(app.montatio.communia.onerans);
+    agere(&o, CD);
+    CREDO_FALSUM(app.montatio.communia.onerans);
+    CREDO_CHORDA_AEQUALIS_LITERIS(attributum_app(&app, "palette"),
+        "communia");
+    pictor_communionem_claudere(pa);
+    pictor_communionem_claudere(pb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "advenit, auctor, index servatus", _sectio_advenit, _parare,
         _purgare, NIHIL, NIHIL },
@@ -549,6 +874,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "resumptio", _sectio_resumptio, _parare, _purgare, NIHIL, NIHIL },
     { "revocatus", _sectio_revocatus, _parare, _purgare, NIHIL, NIHIL },
     { "somnus", _sectio_somnus, _parare, _purgare, NIHIL, NIHIL },
+    { "pulsus eventus", _sectio_pulsus_eventus, _parare, _purgare,
+        NIHIL, NIHIL },
+    { "grex: tactus", _sectio_grex_tactus, _parare, _purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -277,3 +277,34 @@ examen 91 skips them too).
 Measured against a HEAD snapshot (git archive): examen -machina over
 the 184 house files containing annotations — 209 rows, identical
 before and after. No house annotation lived in those homes.
+
+## 2026-11-02 — budget B2 F1: unit extents in one walk per unit
+
+`_affigere` was annotations × units × (full subtree walk via
+`silva_nodus_extensionem`, one source per walk) — 13.5% of
+`percursus -semantica`, 10.9% of obsoleta. Caching per distinct
+`fons_index` had given only −2% (annotations come from many headers).
+Now each unit's subtree is walked ONCE, collecting a (fons, min, max)
+triple per source into one flat Xar (`extensiones[initia[u] ..
+initia[u+1])`, usually 1–3 per unit); the per-annotation loop looks up
+its own source. Accumulator rule copied from `silva_valor_extensionem`
+(root of origin, byte_offset >= 0, min < 0 = nothing). INTERIOR/SUPRA
+logic and comparison order unchanged. If the tables can't be allocated
+it falls back to the old per-call walk.
+
+Test first (the spec warned the suite was single-source, so a "source
+ignored" plant would pass): case XII — header and main with
+interleaved offsets (header annotation 12, `secundus` 53; main
+annotation 19, `tertius` 60), so a lookup that ignores the source puts
+the main annotation SUPRA `secundus`. Case XII b — a unit spanning two
+sources (`int tabula[] = {` + `#include "valores.h"` + `};`): a walk that
+merges sources would drag main's minimum to 0 and call the annotation
+at 0 INTERIOR. Both passed on the old code. Plants: lookup ignoring
+fons -> XII red; walk merging sources -> XII b red; restored green.
+
+Parity: percursus -semantica, old and new binaries on the same tree:
+1,456 output lines identical (excluding ms/MB). (A first run that
+swapped the source file between builds differed by +38 symbols — the
+sweep reads silva_annotationes.c itself.) Instructions 854.1 G ->
+791.5 G (−7.3%), cycles 362.7 G -> 315.8 G (−12.9%); wall time was too
+noisy at load ~10 to quote.

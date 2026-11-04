@@ -270,6 +270,23 @@ laqueus_alexander_ex_pd (
  * project-specs/contractio-plan.md.
  * ================================================== */
 
+/* fenestra uncinus et limes coefficientium ex codice PD nodi (c >= 2),
+ * sine rete: imus et summus = fenestra Kauffman [-c - 2|s_B| + 2, c +
+ * 2|s_A| - 2] ad classem 3w modulo 4 rotundata; limes = bita B (vide
+ * laqueus_modulus_vertex_limes), limes_exactus = B (NIHIL licet). Idem
+ * ac modulus vertex in eodem codice. Codex ut laqueus_uncinus_ex_pd;
+ * FALSUM si codex invalidus aut transitus < 2 (exitus non tacti).
+ * Memoria O(c) in piscina. */
+b32
+laqueus_pd_fenestra (
+    constans i32* pd,
+             i32  transitus,
+         Piscina* piscina,
+             s32* imus,
+             s32* summus,
+             i32* limes,
+          Magnus* limes_exactus);
+
 nomen structura LaqueusModulusVertex LaqueusModulusVertex; /* opacum */
 
 /* structura semel: gyrationes, rete, ordo, officina (<= octeti_maximi
@@ -368,6 +385,146 @@ laqueus_jones_ex_pd_rete (
               Piscina* piscina,
            Polynomium* exitus,
     ContractioSumptus* sumptus);
+
+
+/* ==================================================
+ * Uncinus clausurae tricae per modulos Temperley-Lieb
+ *
+ * <clausura(b)>_delta = Sigma_j Delta_j(delta) tr rho_j(b) in modulis
+ * standard W_{n,j} (temperley.h), <clausura(b)> = ille / delta;
+ * sigma_i^(+-1) -> A^(+-1) 1 + A^(-+1) e_i, delta = -A^2 - A^-2.
+ * Dimensiones summa d^2 = Catalan(n) pro ~2^(2n) statibus moduli
+ * vertex: celerior in tricis longis, tardior in brevibus multorum
+ * filorum (knotapel D136). Puncta, codices status, fenestra et limes
+ * EADEM ac modulus vertex (functiones interiores communes); primi
+ * tamen infra 2^31 tantum (temperley-celeritas-plan G1, 2026-10-31:
+ * reductio una in nucleo), ergo interpolatio primis infra 2^31.
+ * Vide project-specs/temperley-lieb-plan.md et
+ * temperley-celeritas-plan.md (nucleus in loco).
+ * ================================================== */
+
+nomen structura LaqueusModulusTemperley LaqueusModulusTemperley; /* opacum */
+
+/* sumptus sine aedificatione (formae clausae): multiplicationes per
+ * punctum = longitudo x summa d_j^2 (nominales, pretio viae; nucleus in
+ * loco ~0.28 x summam per litteram vere tangit); octeti = quae limes
+ * octeti_maximi numerat - alveus unus (max d^2 x 4), ordo temporarius
+ * (max d x 4), tabulae ordinum DELTA cum fontibus ((fila - 1) x d(n-2,
+ * j) x (4 + 1 + 4 fila) per modulum), structura - a filis solis
+ * pendentia. NON numerantur memoria O(c) (verbum, codex
+ * PD, fenestra, limes) nec interpolationis, ut in modulo vertex rete
+ * non numeratur, nec apex transiens modulorum temperley in
+ * creatione (reficiuntur; ~1.2 MB ad XVI fila, ~1%). {0, 0} si fila 0
+ * aut > XVI. */
+nomen structura {
+    i64 multiplicationes;
+    i64 octeti;
+} LaqueusTemperleySumptus;
+
+LaqueusTemperleySumptus
+laqueus_temperley_sumptus (
+    i32 fila,
+    i32 longitudo);
+
+/* structura semel: tabulae ordinum DELTA et fontium (ex temperley),
+ * alveus unus et ordo temporarius, verbum copiatum et scriptura,
+ * fenestra et limes (laqueus_pd_fenestra). Verbum ut
+ * laqueus_pd_ex_plexu. NIHIL si verbum refutatur, catena (componentes
+ * plures: fenestra et limes nodorum tantum), longitudo < 2, fila > XVI,
+ * octeti > octeti_maximi, aut alveus non allocatus (alveus et ordo soli
+ * per piscina_conari_allocare: tabulae et moduli piscina_allocare utuntur,
+ * ergo piscina certae magnitudinis ibi abortare potest). Refutatio post
+ * pretium nihil in piscina relinquit. */
+LaqueusModulusTemperley*
+laqueus_modulus_temperley_creare (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina);
+
+/* contractus idem ac laqueus_modulus_vertex_aestimare (puncta eadem,
+ * INUTILE ubi delta = 0, ERRATUM eadem) PRAETER p >= 2^31: ERRATUM
+ * (celeritas G1). *punctum et *valor non tacti nisi UTILE. Nihil
+ * allocat. */
+s32
+laqueus_modulus_temperley_aestimare (
+    LaqueusModulusTemperley* mt,
+                        i32  omega,
+                        i32  p,
+                        i32* punctum,
+                        i32* valor);
+
+/* uncinus exactus per interpolatio (quaestio vertex, primis infra 2^31).
+ * FALSUM si
+ * restitutio refutat (exitus non tangitur). */
+b32
+laqueus_modulus_temperley_uncinus (
+    LaqueusModulusTemperley* mt,
+                    Piscina* piscina,
+                 Polynomium* exitus);
+
+/* bita limitis (idem ac laqueus_pd_fenestra); 0 si mt NIHIL */
+i32
+laqueus_modulus_temperley_limes (
+    constans LaqueusModulusTemperley* mt);
+
+/* via per quam uncinus clausurae tricae computatur */
+nomen enumeratio {
+    LAQUEUS_VIA_NULLA = ZEPHYRUM,     /* c <= 1: forma clausa */
+    LAQUEUS_VIA_VERTEX = I,
+    LAQUEUS_VIA_TEMPERLEY = II
+} LaqueusVia;
+
+/* via vilior SINE aestimatione et sine officina allocata (memoria
+ * pretii reficitur). Refutationes primum: verbum ut laqueus_pd_ex_plexu
+ * (catenae, fila intacta, litterae extra ambitum) -> FALSUM. c <= 1 ->
+ * NULLA. Aliter viae eligibiles - vertex: officina <= octeti_maximi;
+ * temperley: fila <= XVI et octeti <= octeti_maximi - et vilior per
+ * pretium integrum (multiplicationes x CLXXXV vertex, x XXI temperley:
+ * ns per multiplicationem nominalem x C - D136 1.85 et 1.5, temperley
+ * deinde 6.98x celerior, temperley-celeritas-plan T3), saturatum;
+ * aequalitas ad
+ * temperley. FALSUM si neutra eligibilis. sumptus_* NIHIL licent
+ * (aliter scripti: nulli pro via NULLA aut non computata;
+ * sumptus_vertex ordinem a consilio redditum describit etiam si officina
+ * eius limitem excedit - vertex tunc non eligibilis). Exitus non
+ * tacti si FALSUM. */
+b32
+laqueus_via_eligere (
+                constans s32* verbum,
+                         i32  longitudo,
+                         i32  fila,
+                         i64  octeti_maximi,
+                     Piscina* piscina,
+                  LaqueusVia* via,
+           ContractioSumptus* sumptus_vertex,
+     LaqueusTemperleySumptus* sumptus_temperley);
+
+/* uncinus Kauffman (et Jones) clausurae tricae per viam electam
+ * (laqueus_via_eligere); c = 0 -> 1, c = 1 -> -A^(+-3) (Jones 1). Via
+ * electa si fallit, altera NON tentatur (ambae exactae: defectus vitium
+ * est). via NIHIL licet. FALSUM si verbum refutatur, neutra via
+ * eligibilis, aut restitutio refutat (exitus non tacti). */
+b32
+laqueus_uncinus_ex_plexu (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina,
+      Polynomium* exitus,
+      LaqueusVia* via);
+
+b32
+laqueus_jones_ex_plexu (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+             i64  octeti_maximi,
+         Piscina* piscina,
+      Polynomium* exitus,
+      LaqueusVia* via);
 
 /* codex PD per motus Reidemeister I et II simplificatus: dum motus
  * aliquis applicari potest, transitus removentur (R1: ansa - transitus

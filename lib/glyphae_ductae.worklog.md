@@ -465,3 +465,67 @@ ellipses differ only in height. 2 x 2 dots like the period do not fit
 three across in six columns. App text reaches these glyphs through
 secunda's a625afcb (fenestra_textus asks glyphae_ductae first) - merged
 into quarta with main the same day (entry above).
+
+## 2026-10-27 - ✅ (U+2705, secunda)
+
+Fran saw ✅ as tofu in a vicus terminal pane (Claude Code writes it).
+✓ and ✔ were already drawn; ✅ was not in the table. Drawn as the same
+picture as ✔ (U+2714), without the emoji's green square - Fran: "can
+just be a checkmark". It is a wide character (two cells): terminale
+draws a ducta glyph at one cell's width at the first cell, so the
+check sits in the left cell and the right cell shows the background.
+Test: probatio_glyphae_ductae section X (red before the entry: not
+recognised, not drawn). Not done: a trailing U+FE0F (emoji
+presentation, e.g. ✔️) still makes the grapheme two runes and falls to
+the font - Fran saw no case of it.
+Same day: ≈ (U+2248, Fran) - two two-row waves (`..##.#` over
+`.#..#.`) on rows 1-2 and 4-5, the vertical extent of ≡ (rows 1, 3,
+5). Section XI, red before the entry.
+
+## 2026-10-27 - ↔ (U+2194, secunda)
+
+Fran saw ↔ as tofu (Claude's messages use it, e.g. "URL ↔ API URL").
+Drawn from ← and →: shaft across the full width on row 3, barbs at
+columns 1 and 4 on rows 2 and 4, so each tip is the cell edge (← and
+→ keep column 0 empty; with two heads that left a stubby bar).
+Section XII, red before the entry.
+
+## 2026-10-27 - IPA batch 1 (U+014B, U+0250-02D1; secunda)
+
+Fran saw Wikipedia pronunciations as tofu in navigator ("ɔːˈɡʌɪ..."). 21
+glyphs: the English IPA set (ə ɐ ɑ ɒ ɔ ɛ ɜ ɪ ʊ ʌ ɡ ʃ ʒ ŋ ɹ ɾ ʔ) plus
+stress ˈ ˌ and length ː ˑ. Same grid as the base font's lowercase:
+columns 1-5, x-height rows 2-6, ascenders from row 0, descenders row 7.
+Turned/mirrored letters are DERIVED from the base font so they match it
+exactly: ə = e rotated 180, ɐ = a rotated, ʌ = v rotated, ɔ = c
+mirrored; ɡ = the base font's g (already single-storey). ɹ is r rotated
+without its foot serif (the serif would land on top). θ, ð, æ, ø, ç
+already existed (Greek table / Latin-1 in the font). Not yet: combining
+marks (U+0300-036F - a single-cell table cannot stack them), the rest of
+the IPA block (ɲ ʎ ʁ ɣ ɨ ʉ œ ...). Section XIII.
+
+## 2026-10-28 - v3 accented letters composed (macrons, Greek accents)
+
+Fran (navigator / Wikipedia): ɣ ē ό ὁ were tofu; asked for the whole
+macron and Greek-accent families. Instead of hand-drawing hundreds of
+pictures, a composer: base letter + marks. Table `compositae` (259)
+was written ONCE by a scratch script from Python's unicodedata 15.0
+NFD (same practice as symbola.py): Latin Ext-A macron/breve vowels,
+Greek tonos U+0386-03CE, Greek Extended U+1F00-1FFF whose marks are
+all in {macron, breve, acute, grave, perispomeni, diaeresis, psili,
+dasia, ypogegrammeni} and whose base is a letter (koronis etc. are
+spacing marks - skipped). Bases come from our own pictures (α η ι ρ
+υ ω Ω ...) or straight from fons_6x8 (Latin; Greek capitals and
+omicron via their Latin look-alikes) - fons_6x8.h is header data
+(static), so no link dependency on fons.c was added.
+
+Layout: lowercase body rows 2-6, marks in rows 0-1 (rows 0-1 cleared
+first - dotless i). Capitals with marks are SQUEEZED to rows 2-6
+(drop a row equal to its successor, searching from the middle; none ->
+the middle row) so they get the same two mark rows; the header first
+said "one row like the font's É" - changed so breathings stay
+distinguishable. Breathing + accent: breathing in cols 0-1, accent in
+3-5; diaeresis (row 1) + accent (row 0); iota subscript = row 7 col 2.
+Perispomeni drawn as a circumflex-like cap in both positions.
+Old test VIII asserted ϊ (U+03CA) was NOT ours; it is now - the
+"unassigned neighbour" check moved to ϐ (U+03D0).

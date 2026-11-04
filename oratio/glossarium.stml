@@ -109,6 +109,35 @@
     <forma textus="analysin" casus="accusativus" numerus="singularis"/>
   </vocabulum>
 
+  <vocabulum lemma="servitor" lingua="latina" classis="substantivum"
+    nota="WORDS servitor, servitoris N 3 M (servus, minister): vox domus pro servitore tmux (socket); formae obliquae pro PanellusServitoris, servitorem_quaerere (comites P7 2026-10-27)">
+    <forma textus="servitoris" casus="genitivus" numerus="singularis"/>
+    <forma textus="servitorem" casus="accusativus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="vicipaedia" lingua="latina" classis="substantivum"
+    nota="Latinum recens: Vicipaedia = Wikipedia (nomen editionis Latinae ipsius); vox domus pro adaptatore lib/vicipaedia.c (navigator N1 2026-10-27)">
+    <forma textus="vicipaedia" casus="nominativus" numerus="singularis"/>
+    <forma textus="vicipaediae" casus="genitivus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="navigator" lingua="latina" classis="substantivum"
+    nota="WORDS navigator, navigatoris N 3 M (nauta): vox domus pro latere navigatoris paginarum interretis (lib/navigator.c, apps/navigator; navigator N3.2 2026-10-27); formae obliquae pro navigatorem_montare_in_vico, ContextusNavigatoris">
+    <forma textus="navigatorem" casus="accusativus" numerus="singularis"/>
+    <forma textus="navigatoris" casus="genitivus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="rheum" lingua="latina" classis="substantivum"
+    nota="Latinum botanicum (Gk. rheon): genus Rheum, rhabarbarum; nomen sectionis probatio_vicipaedia (_probare_rheum, fixum rhubarb.html; navigator N1 2026-10-27)">
+    <forma textus="rheum" casus="nominativus" numerus="singularis"/>
+    <forma textus="rhei" casus="genitivus" numerus="singularis"/>
+  </vocabulum>
+
+  <vocabulum lemma="insecabilis" lingua="latina" classis="adiectivum"
+    nota="Latinum classicum (Quint., Sen.): quod secari non potest; spatium insecabile = non-breaking space U+00A0 (INSECABILE in probatio_vicipaedia; navigator N1 2026-10-27)">
+    <forma textus="insecabile" casus="nominativus" numerus="singularis" genus="neutrum"/>
+  </vocabulum>
+
   <vocabulum lemma="approximatio" lingua="latina" classis="substantivum"
     nota="Latinum serum (approximare, Tertullianus): appropinquatio - conversor musicxml_carmen.h: mutatio soni aut cantus quam carmen exigit (spec musicxml M5); WORDS caret">
     <sensus>approximation; a drawing near</sensus>
@@ -443,6 +472,7 @@
     <forma textus="interpolatione" casus="ablativus" numerus="singularis" genus="femininum"/>
   </vocabulum>
   <vocabulum lemma="lagrange" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J.-L. Lagrange (interpolatio Lagrange, polynomium per puncta; lib/interpolatio.c)"/>
+  <vocabulum lemma="temperley" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: H. N. V. Temperley (algebra Temperley-Lieb TL_n, moduli standard; lib/temperley.c)"/>
   <vocabulum lemma="tensor" lingua="latina" classis="substantivum" nota="Latina posterior: tensor, -oris m., qui tendit (tendo); mathematica: tabula multilinearis super indices (lib/contractio.c)">
     <forma textus="tensor" casus="nominativus" numerus="singularis" genus="masculinum"/>
     <forma textus="tensoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
@@ -1137,6 +1167,7 @@
   <vocabulum lemma="hpack" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HPACK - compressio capitum HTTP/2 (RFC 7541); bibliotheca hpack (http2-plan T1, 2026-10-30)"/>
   <vocabulum lemma="alpn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ALPN - Application-Layer Protocol Negotiation (RFC 7301), extensio TLS; TlsOptiones.protocolla (http2-plan T7, 2026-10-31)"/>
   <vocabulum lemma="apns" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="APNs - Apple Push Notification service; tessera_apns_facere, tools/apns (http2-plan T10-T11, 2026-10-31)"/>
+  <vocabulum lemma="sandbox" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ambitus APNs Apple (api.sandbox.push.apple.com) - verbum Apple et valor filo ambitus pulsus; hospes_sandbox in ApnsConfiguratio et apns.stml (pulsus-plan C7, 2026-11-02)"/>
   <vocabulum lemma="es256" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="ES256 - ECDSA P-256 cum SHA-256 (RFC 7518 3.4); bibliotheca tessera_es256 (http2-plan T10, 2026-10-31)"/>
   <vocabulum lemma="http2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="HTTP/2 (RFC 9113) - nomen protocolli; bibliothecae http2_forma, http2, http2_nexus (http2-plan T4, 2026-10-31)"/>
   <vocabulum lemma="tls13" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="TLS 1.3 (RFC 8446) - nomen protocolli; cliens proprius lib/tls13*.c (tls13 T1, 2026-10-16)"/>

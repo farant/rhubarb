@@ -65,6 +65,13 @@ url_decodificare (
      chorda  codificata,
     Piscina* piscina);
 
+/* Decode percent-encoded VIAM (RFC 3986): ut url_decodificare sed
+ * '+' manet '+' (solum formae x-www-form-urlencoded '+' = spatium) */
+chorda
+url_viam_decodificare (
+     chorda  codificata,
+    Piscina* piscina);
+
 
 /* ========================================================================
  * FUNCTIONES - QUERY STRING

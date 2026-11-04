@@ -1,0 +1,9 @@
+<!-- conspectus_eventa_comitis.stml - eventa libri comitis (chronica
+     C2; C: lib/chronica_fontes.c). Clavis = locus ('/' continet -
+     suffixum '/paginae' eam terminat), ut conspectus_comites. Non
+     quaerendum: tabula chronicae libros ipsa enumerat. Infixa in
+     lib/conspectus_infixa.c per tools/conspectus_infigere.sh. -->
+<conspectus nomen="eventa_comitis" versio="1">
+  <clavis typus="textus"/>
+  <fons spatium="comes/{clavis}/paginae"/>
+</conspectus>

@@ -105,6 +105,17 @@ colloquia_panellos_applicare (
     Xar* colloquia,
     Xar* panelli);
 
+/* comites P7: sessio Claude in panello tmux - colloquium
+ * recentissimum non CLAUSUM cuius panellus == panellus et servitor
+ * idem ("-" aut vacuus = servitor ordinarius: via cuius nomen
+ * ultimum "default"); colloquia ordine colloquia_status_legere
+ * (recentissimum primum). NIHIL si nullum */
+constans Colloquium*
+colloquium_panelli (
+           Xar* colloquia,
+        chorda  servitor,
+        chorda  panellus);
+
 /* totum: cauda libri (octeti) + tituli + tmux (m NIHIL = sine tmux;
  * tmux absens: panelli non applicantur) */
 Xar*

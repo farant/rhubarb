@@ -33,8 +33,11 @@
  * = nodus omnium applicationum, clausura CV post fusionem (nomenclator,
  * calendarium, quaestio interna) et crescit cum applicationibus; iam
  * semel (2026-10-14) caput gracilius pro limite elevato electum erat.
+ * CXCII -> CCLVI 2026-11-02 (Franus): clausura CCXVIII post fusionem
+ * main in secundam (navigator, chronica + http2, pictor_communio) -
+ * ~38 MB.
  * Mensura: bin/aedilis <f> --partes | grep -c '^C'. */
-#define CLAUSURA_MAXIMA  CXCII
+#define CLAUSURA_MAXIMA  CCLVI
 #define VIA_MAXIMA       512
 #define CAUSAE_MAXIMAE   32
 

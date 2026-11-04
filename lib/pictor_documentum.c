@@ -1336,6 +1336,90 @@ pictor_documenta_recentia (
     redde l;
 }
 
+Xar*
+pictor_spatia_actorum (
+                  Volumen* volumen,
+    constans VolumenActum* acta,
+                      i32  numerus,
+                  Piscina* piscina)
+{
+                     Xar* spatia;
+                     Xar* l;
+          TabulaDispersa* index;
+                  chorda* s;
+                  chorda  via;
+      constans character* g[IV];
+            JsonResultus  r;
+                  vacuum* v;
+                     i32  i;
+                     i32  j;
+                     i32  n;
+                     b32  novum;
+
+    si (!volumen || !piscina || (!acta && numerus > ZEPHYRUM))
+    {
+        redde NIHIL;
+    }
+    l       = xar_creare(piscina, (i32)magnitudo(chorda));
+    spatia  = pictor_documenta_enumerare(volumen, piscina);
+    si (!l || !spatia)
+    {
+        redde NIHIL;
+    }
+    n      = xar_numerus(spatia);
+    index  = tabula_dispersa_creare_chorda(piscina, n * IV + XVI);
+    si (!index)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        s = (chorda*)xar_obtinere(spatia, i);
+        historia_genera(piscina, chorda_ut_cstr(*s, piscina),
+            GENUS_ICTUUM, g);
+        per (j = ZEPHYRUM; j < IV; j++)
+        {
+            (vacuum)tabula_dispersa_inserere(index,
+                chorda_ex_literis(g[j], piscina), s);
+        }
+    }
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        s = NIHIL;
+        si (chorda_aequalis_literis(acta[i].genus, "plagula-condita"))
+        {
+            r = json_legere(acta[i].datum, piscina);
+            si (   r.successus
+                && spatium_documenti(json_capere_chorda(r.radix, "via",
+                       chorda_ex_literis("", piscina)), &via))
+            {
+                per (j = ZEPHYRUM; j < n && !s; j++)
+                {
+                    si (chorda_aequalis(*(chorda*)xar_obtinere(spatia,
+                            j), via))
+                    {
+                        s = (chorda*)xar_obtinere(spatia, j);
+                    }
+                }
+            }
+        }
+        alioquin si (tabula_dispersa_invenire(index, acta[i].genus, &v))
+        {
+            s = (chorda*)v;
+        }
+        novum = s != NIHIL;
+        per (j = ZEPHYRUM; novum && j < xar_numerus(l); j++)
+        {
+            novum = !chorda_aequalis(*(chorda*)xar_obtinere(l, j), *s);
+        }
+        si (novum)
+        {
+            *(chorda*)xar_addere(l) = *s;
+        }
+    }
+    redde l;
+}
+
 /* clavis manifesti: "spatium/documentum" (spatium vacuum: nuda) */
 interior chorda
 clavis_manifesti (
@@ -2499,6 +2583,161 @@ pictor_communia_index (
         a = (PictorPicturaAliena*)xar_obtinere(p->picturae, i);
         si (   chorda_aequalis(a->replica, replica)
             && chorda_aequalis(a->spatium, spatium))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* "<replica>:<spatium>" -> partes (in memoria id); FALSUM si ':'
+ * abest aut replica vacua */
+interior b32
+_id_findere (
+     chorda  id,
+     chorda* replica,
+     chorda* spatium)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < id.mensura && id.datum[i] != ':'; i++)
+    {
+    }
+    si (i == ZEPHYRUM || i >= id.mensura)
+    {
+        redde FALSUM;
+    }
+    replica->datum    = id.datum;
+    replica->mensura  = i;
+    spatium->datum    = id.datum + i + I;
+    spatium->mensura  = id.mensura - i - I;
+    redde VERUM;
+}
+
+vacuum
+pictor_communia_gregem_tollere (
+    PictorCommunia* p)
+{
+    si (!p)
+    {
+        redde;
+    }
+    si (p->grex_scheda)
+    {
+        piscina_vacare(p->grex_scheda);
+    }
+    p->grex = NIHIL;
+}
+
+b32
+pictor_communia_gregem_ponere (
+    PictorCommunia* p,
+      constans Xar* res)
+{
+    PictorPicturaAliena  a;
+    PictorPicturaAliena* b;
+                 chorda  replica;
+                 chorda  spatium;
+                    i32  i;
+                    i32  j;
+                    b32  novum;
+
+    si (!p)
+    {
+        redde FALSUM;
+    }
+    pictor_communia_gregem_tollere(p);
+    si (!res || !p->picturae)
+    {
+        redde FALSUM;
+    }
+    si (!p->grex_scheda)
+    {
+        p->grex_scheda = piscina_generare_dynamicum("communia_grex",
+            (memoriae_index)IV * (memoriae_index)M);
+    }
+    p->grex = p->grex_scheda ? xar_creare(p->grex_scheda,
+        (i32)magnitudo(PictorPicturaAliena)) : NIHIL;
+    si (!p->grex)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(res); i++)
+    {
+        si (   !_id_findere(*(constans chorda*)xar_obtinere(res, i),
+                &replica, &spatium)
+            || pictor_communia_index(p, replica, spatium) < ZEPHYRUM)
+        {
+            perge;
+        }
+        novum = VERUM;
+        per (j = ZEPHYRUM; novum && j < xar_numerus(p->grex); j++)
+        {
+            b = (PictorPicturaAliena*)xar_obtinere(p->grex, j);
+            novum = !chorda_aequalis(b->replica, replica)
+                || !chorda_aequalis(b->spatium, spatium);
+        }
+        si (!novum)
+        {
+            perge;
+        }
+        a.replica = chorda_ex_literis(chorda_ut_cstr(replica,
+            p->grex_scheda), p->grex_scheda);
+        a.spatium = chorda_ex_literis(chorda_ut_cstr(spatium,
+            p->grex_scheda), p->grex_scheda);
+        a.hora                                      = ZEPHYRUM;
+        *(PictorPicturaAliena*)xar_addere(p->grex)  = a;
+    }
+    si (xar_numerus(p->grex) == ZEPHYRUM)
+    {
+        pictor_communia_gregem_tollere(p);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+i32
+pictor_communia_gregis_numerus (
+    constans PictorCommunia* p)
+{
+    redde (p && p->grex) ? xar_numerus(p->grex) : ZEPHYRUM;
+}
+
+s32
+pictor_communia_gregis_index (
+    constans PictorCommunia* p,
+                        i32  i)
+{
+    PictorPicturaAliena* a;
+
+    si (i >= pictor_communia_gregis_numerus(p))
+    {
+        redde -I;
+    }
+    a = (PictorPicturaAliena*)xar_obtinere(p->grex, i);
+    redde pictor_communia_index(p, a->replica, a->spatium);
+}
+
+s32
+pictor_communia_gregis_locus (
+    constans PictorCommunia* p,
+                        s32  k)
+{
+    PictorPicturaAliena* a;
+    PictorPicturaAliena* b;
+                    i32  i;
+
+    si (   !p || !p->picturae || k < ZEPHYRUM
+        || k >= (s32)xar_numerus(p->picturae))
+    {
+        redde -I;
+    }
+    a = (PictorPicturaAliena*)xar_obtinere(p->picturae, (i32)k);
+    per (i = ZEPHYRUM; i < pictor_communia_gregis_numerus(p); i++)
+    {
+        b = (PictorPicturaAliena*)xar_obtinere(p->grex, i);
+        si (   chorda_aequalis(a->replica, b->replica)
+            && chorda_aequalis(a->spatium, b->spatium))
         {
             redde (s32)i;
         }

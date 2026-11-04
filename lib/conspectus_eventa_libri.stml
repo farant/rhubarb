@@ -1,0 +1,8 @@
+<!-- conspectus_eventa_libri.stml - eventa paginae unius libri
+     communis vici (chronica C2; C: lib/chronica_fontes.c). Clavis =
+     nomen paginae, ut conspectus_liber. Non quaerendum. Infixa in
+     lib/conspectus_infixa.c per tools/conspectus_infigere.sh. -->
+<conspectus nomen="eventa_libri" versio="1">
+  <clavis typus="textus"/>
+  <fons spatium="paginae/{clavis}"/>
+</conspectus>

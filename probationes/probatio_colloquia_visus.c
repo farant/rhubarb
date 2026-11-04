@@ -346,6 +346,40 @@ _probare_fontem (
         ZEPHYRUM))->sessio, "s-d");
 }
 
+/* comites P7: fontem_legere - eventus novi sine pulsu (sine tmux)
+ * statum mutant; pulsus sequens 'mutatum' tamen reddit (versio), deinde
+ * FALSUM; liber immutatus: FALSUM */
+interior vacuum
+_probare_fontem_legere (
+    CredoContextus* c)
+{
+                 Mundus* w;
+                    Xar* l;
+    constans Colloquium* k;
+
+    w = mundus(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_FALSUM(colloquia_visus_fontem_legere(&w->fons));
+    CREDO_FALSUM(colloquia_visus_fontem_pulsare(&w->fons, ZEPHYRUM));
+    CREDO_NECESSE(filum_appendere_firmiter(w->via, chorda_ex_literis(
+        "{\"tempus\":400,\"sessio\":\"s-d\",\"eventus\":"
+        "\"UserPromptSubmit\",\"panellus\":\"%9\",\"servitor\":\"\","
+        "\"via\":\"/w/delta\",\"transcriptum\":\"\",\"genus\":\"\","
+        "\"nuntius\":\"lectum sine pulsu\"}\n", c->piscina)));
+    CREDO_VERUM(colloquia_visus_fontem_legere(&w->fons));
+    l = colloquia_visus_fontis(&w->fons, c->piscina);
+    k = colloquium(l, "s-d");
+    CREDO_NECESSE(k != NIHIL);
+    CREDO_AEQUALIS_S32((s32)k->status, (s32)COLLOQUIUM_LABORAT);
+    CREDO_CHORDA_AEQUALIS_LITERIS(k->linea, "lectum sine pulsu");
+    /* nihil novi in libro: legere FALSUM; pulsus tamen mutationem
+     * videt (versio), semel */
+    CREDO_FALSUM(colloquia_visus_fontem_legere(&w->fons));
+    CREDO_VERUM(colloquia_visus_fontem_pulsare(&w->fons, ZEPHYRUM));
+    CREDO_FALSUM(colloquia_visus_fontem_pulsare(&w->fons, ZEPHYRUM));
+    CREDO_FALSUM(colloquia_visus_fontem_legere(NIHIL));
+}
+
 /* greges: s-b te eget (r3), s-c s-d otiosae (r1 r4), s-a clausa (r2,
  * solum cum 'c') */
 interior vacuum
@@ -972,6 +1006,8 @@ _probare_moram (
 
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fons", _probare_fontem, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fons_legere", _probare_fontem_legere, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { "finire", _probare_finire, NIHIL, NIHIL, NIHIL, NIHIL },
     { "greges", _probare_greges, NIHIL, NIHIL, NIHIL, NIHIL },
     { "claves", _probare_claves, NIHIL, NIHIL, NIHIL, NIHIL },
