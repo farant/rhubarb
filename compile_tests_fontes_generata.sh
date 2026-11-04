@@ -70,6 +70,7 @@ declare -a SOURCE_FILES=(
     "lib/cliens_tabularii.c"
     "lib/clonatio_macos.c"
     "lib/codex.c"
+    "lib/codificator_a64.c"
     "lib/codificator_terminalis.c"
     "lib/colloquia.c"
     "lib/colloquia_visus.c"

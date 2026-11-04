@@ -5276,3 +5276,56 @@ DIFFERUNT); plants 2 (ARCA bumps the cursor again -> "arca in ansa"
 FRACTA, apex 144 -> 16128; inaequalis emission skipped -> "ramus
 -0.0" FRACTA), both IDEM; examen ACCIPE on 4 files; formator at or
 under baseline; vocabula NOVA 0.
+
+### T3 — codificator_a64, the A64 encoder library (G22-23) — 2026-11-03
+
+Header approved by Fran, with four additions to the plan's text:
+FP-register loads/stores (LDR_FP_IMM, STR_FP_IMM, LDP_FP, STP_FP -
+Task 9 keeps d8-d15 callee-saved and spills float intervals), the
+CodificatorA64Conditio and CodificatorA64Modus enums the plan named
+but never defined, and the register-31 rule (SP in ADD/SUB_IMM,
+logical-immediate Rd and memory bases; XZR elsewhere). 64 formae.
+Field use per forma is a comment block above the struct (UBFM/SBFM:
+immediatum = immr, translatio = imms; FMOV_GEN: translatio =
+direction; SCVTF..FCVTZU: translatio = FP width; FMOV_IMM: immediatum
+= imm8; pairs: rm = Rt2).
+
+lib/codificator_a64.c: one validating encoder per instruction class,
+range-checked before the word is built (no silent truncation, no
+silent SUB-for-negative-ADD). bitmask: smallest repeating period,
+popcount, then the left rotation that brings the run to bit 0 (at
+most 64 tries) - simpler than the LLVM shifted-mask arithmetic and
+obviously exhaustive. constans: MOVN when more 0xFFFF chunks than
+0x0000, else MOVZ, then MOVK (<= 4 words; no ORR-bitmask shortcut,
+YAGNI). Emitter: contiguous word buffer (doubling in the piscina,
+because codificator_a64_verba hands out one pointer), labels in a
+Xar, branches re-encoded at finire with the byte distance; an unset
+label or an out-of-range distance -> FALSUM + causa naming word,
+label and distance.
+
+Golden: probationes/fixa/codificator_a64/semen.tsv (273 hand rows, 66
+of them "!causa" refusals) + 5334 bitmask + 256 FMOV generated rows
+-> tools/codificator_a64_oraculum.sh -> aurum.tsv (5863 rows, 5797
+words from `clang -cc1as -filetype asm -show-encoding`). Re-pin is
+byte-for-byte stable (cmp IDEM, twice). Gates never call clang.
+
+Suite probatio_codificator_a64 (credo v2, root): "aurum" (every row;
+every forma has a row), "bitmask omnes" (all 8192 N:immr:imms triples
+decoded by the suite's own DecodeBitMasks: 5334 valid 64-bit and 1302
+32-bit patterns round-trip; 0, ~0 and junk refused), "fmov omnes"
+(256 imm8 through the suite's own VFPExpandImm; 0.0, -0.0, 0.1, 32.0,
+0.0625, 1.03125 refused), "constans" (10 values, exact word counts,
+hand-simulated MOVZ/MOVN/MOVK, every word present in aurum), "notae"
+(b.ne forward, b backward, cbz at +1048572 and -1048576, one word past
+the edge -> FALSUM + causa, unset label -> FALSUM).
+
+Deviation from the plan text: none in substance. The plan's "~30
+formae" comment was wrong (64). The 4-field-overloads above are
+documentation of the approved struct, not new fields.
+
+BARS (T3): suite red first (stub, 0/5), green 5/5; root suite 463/463 (393 s);
+plants 3 (bitmask rotation +1 -> "bitmask omnes" 9/10 and
+"aurum" FRACTA; LDR scale dropped -> "aurum" FRACTA; fixup sign
+flipped -> "notae" FRACTA), all IDEM; examen ACCIPE on 3 files;
+formator CONFORMIS (formatted in-tree); vocabula NOVA 0 (47 A64
+mnemonics and field names added to the glossary as permitted terms).
