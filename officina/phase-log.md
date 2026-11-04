@@ -5365,3 +5365,42 @@ hardware; hint check removed -> "locus optatus" FRACTA) + 1 certifier
 plant, all IDEM; auspex_posix CERTIFICATAE; examen ACCIPE on 3 files;
 formator CONFORMIS (systema_posix.h at its HEAD baseline 17);
 vocabula NOVA 0.
+
+### T5 — officina_medulla_fluxus, medulla analyses (G24) — 2026-11-04
+
+Header approved by Fran (the plan's text; one forced rename: the
+parameter `registrum` is the latina.h macro for `register`, now
+index_registri). officina/fontes/officina_medulla_fluxus.{h,c}:
+successors from the terminator's block operands, predecessors
+(ascending, deduplicated), iterative DFS (reachability, postorder,
+back edges), natural loops (depth; same header merged), backend order
+= RPO with each loop body pulled contiguous behind its header,
+liveness by iteration in postorder, intervals as [min, max] covers of
+block-boundary liveness plus every use and def, call positions for
+live-across-call. Call arguments are read from the operand stack.
+Never writes the function.
+
+Suite probatio_officina_fluxus (officina, credo v2), all expectations
+hand-computed in tables: "praedecessores" ($dum_probat, 11 blocks),
+"ordo" (order 0 1 2 5 7 4 6 3 8 9 10, loop depths, flat-index map
+incl. out-of-range, unreachable @insequens_1 absent and its temp never
+live), "iunctura" (%t1 written in two blocks -> [3, 10]), "usus sine
+definitione" (%u defined on one path -> from 0), "vocationem transit"
+(%c crosses; argument-only %b and call result %d do not), "pactum"
+(fluxus/omnia/summa/aggregata text identical after computare).
+
+Deviation from the plan text: the plant "ramus successors swapped ->
+praedecessores FRACTA" cannot fire (pred sets are order-free); it
+breaks "ordo". Added "second successor dropped" for praedecessores.
+No aedificatio.stml change yet (no launcher uses the module until
+Task 6); the amalgam picked it up through its generated source list
+(fontes_generata.h regenerated; officina.h unchanged).
+
+BARS (T5): suite red first (stub, 0/6), green 6/6; officina 18/18 (17
++ the new suite); amalgamare VERIFICATUM (hospes 81/81, nm 0); root
+suite 463/464 - probatio_http_vocatio flaked under load (connection
+counts in its redirect sections; alone 3/3 green; filed 01M6KJ58);
+plants 3 (b/c swapped -> "ordo"; second successor
+dropped -> "praedecessores" + downstream; later defs ignored ->
+"iunctura" only), all IDEM; examen ACCIPE on 3 files; formator
+CONFORMIS (in-tree); vocabula NOVA 0 (postordo/rpo renamed).
