@@ -201,3 +201,18 @@ testa_congruentia_initus).
 
 A comment containing `android/*` broke auspex_posix (-Wcomment: `/*`
 inside a block comment) - the host TU compiles this whole file.
+
+## 2026-11-04 — MAP_JIT, PROT_EXEC, pthread.h, libkern/OSCacheControl.h (officina M5 T4)
+
+lib/memoria_exsecutabilis_macos.c (the house's one JIT-memory file)
+was REICE: PROT_EXEC and MAP_JIT unknown here, and
+pthread_jit_write_protect_np / sys_icache_invalidate synthesized as
+implicit int calls. Added the two macros to the sys/mman.h section
+(Darwin values 0x04, 0x0800 from the SDK) and two new one-prototype
+sections. auspex_posix asserts PROT_EXEC == 0x04 && MAP_JIT == 0x0800;
+plant MAP_JIT 0x0801 -> TU nostrum DISSENTIT, restored, certified.
+The five API words (pthread, jit, protect, icache, invalidate) went
+into oratio's tolerated set by deliberate regeneration (English words,
+so not glossary - Android precedent); diff checked: +5, and -3 words
+already vanished from tracked code (navigatoris, protocollum,
+reactor).

@@ -526,14 +526,25 @@ int            closedir(DIR* dir);
 /* <sectio caput="sys/mman.h"/> sys/mman.h (valores Darwin) */
 #define PROT_READ   0x01
 #define PROT_WRITE  0x02
+#define PROT_EXEC   0x04     /* memoria_exsecutabilis (M5 T4) */
 #define MAP_SHARED  0x0001   /* circulus: probatio duorum processuum (sonus S3a) */
 #define MAP_PRIVATE 0x0002
+#define MAP_JIT     0x0800   /* memoria_exsecutabilis (M5 T4) */
 #define MAP_ANON    0x1000
 #define MAP_FAILED  ((void*)-1)
 
 void* mmap(void* sedes, size_t mensura, int tutela, int vexilla,
            int fossa, off_t offset);
 int   munmap(void* sedes, size_t mensura);
+
+/* <sectio caput="pthread.h"/> pthread.h - solum scriptura JIT per
+ * filum (macOS 11+; memoria_exsecutabilis, officina M5 T4). Fila
+ * ipsa domus non adhibet. */
+void pthread_jit_write_protect_np(int tutela);
+
+/* <sectio caput="libkern/OSCacheControl.h"/> libkern/OSCacheControl.h
+ * (memoria_exsecutabilis, officina M5 T4) */
+void sys_icache_invalidate(void* initium, size_t mensura);
 
 /* <sectio caput="termios.h"/> termios.h (forma Darwin arm64:
  * tcflag_t = unsigned long, NCCS 20) */

@@ -5329,3 +5329,39 @@ plants 3 (bitmask rotation +1 -> "bitmask omnes" 9/10 and
 flipped -> "notae" FRACTA), all IDEM; examen ACCIPE on 3 files;
 formator CONFORMIS (formatted in-tree); vocabula NOVA 0 (47 A64
 mnemonics and field names added to the glossary as permitted terms).
+
+### T4 — memoria_exsecutabilis, the executable-memory layer (F18-19) — 2026-11-04
+
+Header approved by Fran with three changes to the plan's text:
+sigillare returns b32 (FALSUM for a range outside the region; write is
+closed either way), a requested address of ZEPHYRUM means "any", and
+the size must be a whole number of 16 KiB pages (refused, not
+rounded). lib/memoria_exsecutabilis_macos.c is the only house file
+with MAP_JIT, pthread_jit_write_protect_np and sys_icache_invalidate:
+one hinted mmap (no MAP_FIXED), refusal + unmap if the kernel places
+it elsewhere; aperire/sigillare flip the per-thread JIT write switch,
+sigillare also invalidates the icache for the range.
+
+Suite probatio_memoria_exsecutabilis (credo v2, root): "scribere
+sigillare vocare" (movz w0,#42; ret -> 42; out-of-range seals FALSUM),
+"rescribere" (same address rewritten to return 7, 200,000 calls, plus
+20,000 alternating 7/9 rewrites), "locus optatus" (base == hint
+0x280000000000; second reservation there NIHIL + causa; free and
+reserve again; bad sizes refused), "furca" (child runs the code, exit
+status 42).
+
+Deviation from the plan text: examen REICE'd the library - its system
+lexicon (silva/fontes/systema_posix.h) lacked PROT_EXEC, MAP_JIT and
+the two functions. Added them (sys/mman.h section + sections pthread.h
+and libkern/OSCacheControl.h), certified in officina/auspex_posix.sh
+(plant MAP_JIT 0x0801 -> DISSENTIT, restored). The five Apple API
+words went into oratio's tolerated set by deliberate regeneration
+(Android precedent); the diff also drops three already-vanished words.
+
+BARS (T4): suite red first (stub, 0/4), green 4/4; officina 17/17;
+root 464/464 (311 s); plants 2 (invalidation removed -> "rescribere"
+FRACTA in the plan's 200,000-call loop: staleness is real on this
+hardware; hint check removed -> "locus optatus" FRACTA) + 1 certifier
+plant, all IDEM; auspex_posix CERTIFICATAE; examen ACCIPE on 3 files;
+formator CONFORMIS (systema_posix.h at its HEAD baseline 17);
+vocabula NOVA 0.
