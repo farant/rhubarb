@@ -676,6 +676,74 @@ _salve_probare (
     }
 }
 
+/* ACCEPTIO fixa (T10): liber nunc ex conversore venit, ergo parilitas
+ * cum salve.py (deleto) contra copiam notarum eius fixam:
+ * probationes/fixa/gabc/salve_py_notae.tsv (initium longitudo nota
+ * littera syllaba; '#' commentarium, '-' melisma) */
+interior vacuum
+_salve_fixum_probare (
+    CredoContextus* c)
+{
+         Conversio v = _convertere_datum(c, filum_legere_totum(
+                           "musica/fontes/salve_2435.gabc", c->piscina),
+                           NIHIL);
+            chorda d = filum_legere_totum(
+                           "probationes/fixa/gabc/salve_py_notae.tsv",
+                           c->piscina);
+   constans Carmen* nos;
+               i32  i = ZEPHYRUM;
+               i32  k = ZEPHYRUM;
+
+    CREDO_NECESSE (v.successus && v.lectum && d.mensura > ZEPHYRUM);
+    nos = &v.liber.carmina[ZEPHYRUM];
+    dum (i < d.mensura)
+    {
+                        i32  initium = i;
+                     longus  campi[III];
+                  character  littera;
+                  character  syllaba[XXXII];
+                        s64  p = -I;
+        constans CarmenNota* x;
+                  character  linea[CXXVIII];
+                        i32  n;
+
+        dum (i < d.mensura && d.datum[i] != '\n')
+        {
+            i++;
+        }
+        n = i - initium;
+        i++;
+        si (n == ZEPHYRUM || d.datum[initium] == '#' || n >= CXXVIII)
+        {
+            perge;
+        }
+        memcpy(linea, d.datum + initium, (size_t)n);
+        linea[n] = '\0';
+        si (sscanf(linea, "%ld\t%ld\t%ld\t%c\t%31s", &campi[ZEPHYRUM],
+                &campi[I], &campi[II], &littera, syllaba) != V)
+        {
+            CREDO_VERUM (FALSUM);
+            frange;
+        }
+        x = _nota(nos, k, &p);
+        si (   x               == NIHIL || p != (s64)campi[ZEPHYRUM]
+            || x->longitudo    != (s64)campi[I]
+            || (longus)x->nota != campi[II] || x->littera != littera
+            || !chorda_aequalis_literis(x->syllaba,
+                   strcmp(syllaba, "-") == ZEPHYRUM ? "" : syllaba))
+        {
+            imprimere("  salve fixa nota %u: %s\n",
+                (insignatus integer)k,
+                linea);
+            CREDO_VERUM (FALSUM);
+            frange;
+        }
+        k++;
+    }
+    CREDO_AEQUALIS_I32 (k, _notae(nos));
+    CREDO_AEQUALIS_I32 (k, CXXXIX);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "rhythmus Solesmensis (G8)", _rhythmum_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
@@ -695,6 +763,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "totalitas: praefixa Salve", _totalitatem_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "ACCEPTIO: Salve = salve libri", _salve_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ACCEPTIO: Salve = notae salve.py fixae", _salve_fixum_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

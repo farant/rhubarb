@@ -32,15 +32,18 @@
  *              do absolutum (MIDI) = forma.do_fixum; aut (do_fixum -1)
  *              summus - sonus notae altissimae: nota altissima
  *              cantus in summo stat EXACTE (ordinarie LXV = F4; Salve
- *              2435: do = F, ut salve.py). Nomen do ex classe toni:
- *              C Db D Eb E F Gb G Ab A Bb B (bemolles praeferuntur).
+ *              2435: do = F, ut salve.py olim). Nomen do ex classe
+ *              toni: C Db D Eb E F Gb G Ab A Bb B (bemolles
+ *              praeferuntur).
  *              Littera notae = littera do + gradus; signum ex scala
  *              maiore do + alteratio; signum duplex -> enharmonice
  *              (MML signum unum fert; nota structurae, non
  *              approximatio). Octava MML litterae SCRIPTAE (Cb4 =
  *              'o4 c-'). Extra MIDI XII..CXIX (o0..o8) -> octava mota
  *              (approximatio)
- *   RHYTHMUS   (G8, regulae salve.py, ordine) in sextis decimis:
+ *   RHYTHMUS   (G8, regulae salve.py deleti, ordine; notae eius
+ *              fixae: probationes/fixa/gabc/salve_py_notae.tsv) in
+ *              sextis decimis:
  *              1. nota quaelibet (punctum, inclinatum, virga,
  *                 stropha, oriscus, quilisma, cavum, liquescens) = II
  *                 (octava)
@@ -77,7 +80,7 @@
  *              quoque - carmen vocalem ordinariam dat). Syllaba sine
  *              notis non cantatur ('*()' ...). Nullus textus in cantu
  *              -> verba nulla.
- *              PURGATIO (salve.py syllaba_munda, Latine extensa):
+ *              PURGATIO (syllaba_munda salve.py olim, Latine extensa):
  *              textus solum CANTATUS, non ELISIO; '{' '}' tolluntur;
  *              ae oe ligatae -> ae oe (etiam cum accentu); vocales
  *              accentu notatae -> sine accentu; deinde solum A-Z a-z

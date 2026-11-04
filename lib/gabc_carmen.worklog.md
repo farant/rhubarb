@@ -48,3 +48,21 @@ test in `_verba_variae_probare`. Remaining unknown letters in the whole
 corpus (303) are mostly Polish (ł ś ż ć) - correct approximations. Corpus
 sample: all 82 convert and re-read; 15389 carmen notes; 2 keys without a
 mode name.
+
+## 2026-11-04 — T10: the book's Salve comes from the converter
+
+Fran approved the book change. `carmina.stml`'s `salve` is now
+`auditio -gabc musica/fontes/salve_2435.gabc -titulus salve` (the
+`<carmen>` element only; the book's own comment block kept, generator line
+updated, one phrase "= clavis carminis f ionius" added). Inside `<carmen>`
+the only change is `clavis="f lydius"` -> `"f ionius"`. `lib/carmina_infixum.c`
+regenerated (tools/carmina_infigere.sh). `musica/fontes/salve.py` deleted.
+
+Parity outlives the generator: before deleting it, its notes were written
+to `probationes/fixa/gabc/salve_py_notae.tsv` (onset, length, MIDI, letter,
+syllable; 139 notes, syllables assigned the way carmen does, `_` -> empty),
+and `_salve_fixum_probare` compares the converted Salve to that file - the
+book comparison alone would now be circular. Hand plant: one MIDI 60 -> 61
+in the TSV -> section FRACTA at note 2; restored. No other suite reads the
+book's salve (carmen, censura, partitura, recensio use korobeiniki, stella,
+vesperae) - all re-run green.
