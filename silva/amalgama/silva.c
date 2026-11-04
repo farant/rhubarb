@@ -14091,9 +14091,20 @@ structura SilvaSemantica {
     TypusC89* primitivi[PRIMITIVUM_NUMERUS];
     TypusC89* typus_erroris;
 
-    /* internamentum derivatorum (series linearis - complete
-     * primum, optima post; percursus mensurabit) */
-    SilvaXar* derivati;              /* TypusC89* */
+    /* internamentum derivatorum: tabula aperta (potentia II,
+     * sondatio linearis, onus <= dimidium). signa = signum | I
+     * (ZEPHYRUM = locus vacuus) - series densa, sola in sondatione
+     * lecta; derivata[k] solum cum signum congruit tangitur.
+     * (Olim series linearis: XIV% percursus -semantica.) */
+     TypusC89** derivata;
+          i32*  derivata_signa;
+          i32   derivata_capacitas;
+          i32   derivata_numerus;
+    /* larva signi: omnia bita (creare). Probatio ZEPHYRUM ponit -
+     * signa omnia congruunt et _derivata_paria SOLA discernit (aliter
+     * signum discernit et paria solum in collisionibus rarissimis
+     * agit, vitium eius probationibus invisibile) */
+          i32 derivata_larva;
 
     /* scopi (Chunk B - regula sanationis: registra-ante-usum in
      * AMBULATIONE UNA ordine fontis) */
@@ -94317,6 +94328,64 @@ _formam_primitivi_ponere (
     t->ordinatio            = (m > ZEPHYRUM) ? m : I;
 }
 
+/* Tabula derivatorum (vide SilvaSemantica.derivata): locum vacuum
+ * primum post indicem signi ponit - sine probatione duplicis */
+interior vacuum
+_derivatum_collocare (
+     TypusC89** derivata,
+          i32*  signa,
+          i32   capacitas,
+     TypusC89*  typus,
+          i32   signum)
+{
+    i32 larva;
+    i32 k;
+
+    larva  = capacitas - I;
+    k      = (signum >> I) & larva;
+    dum (signa[k] != ZEPHYRUM)
+    {
+        k = (k + I) & larva;
+    }
+    signa[k]     = signum;
+    derivata[k]  = typus;
+}
+
+/* Tabulam capacitatis datae (potentia II) parat et typos veteres
+ * transfert - signa servata, nihil recomputatur. Allocatio fracta:
+ * FALSUM, tabula vetus intacta. */
+interior b32
+_derivata_parare (
+    SilvaSemantica* sem,
+               i32  capacitas)
+{
+     TypusC89** derivata;
+          i32*  signa;
+          i32   i;
+
+    derivata = (TypusC89**)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)capacitas * magnitudo(TypusC89*));
+    signa = (i32*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)capacitas * magnitudo(i32));
+    si (derivata == NIHIL || signa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset(signa, ZEPHYRUM, (memoriae_index)capacitas * magnitudo(i32));
+    per (i = ZEPHYRUM; i < sem->derivata_capacitas; i++)
+    {
+        si (sem->derivata_signa[i] != ZEPHYRUM)
+        {
+            _derivatum_collocare(derivata, signa, capacitas,
+                sem->derivata[i], sem->derivata_signa[i]);
+        }
+    }
+    sem->derivata            = derivata;
+    sem->derivata_signa      = signa;
+    sem->derivata_capacitas  = capacitas;
+    redde VERUM;
+}
+
 SilvaSemantica*
 silva_c89_semantica_creare (
     SilvaPiscina* piscina)
@@ -94337,7 +94406,10 @@ silva_c89_semantica_creare (
     memset(sem, ZEPHYRUM, magnitudo(SilvaSemantica));
     sem->piscina      = piscina;
     sem->limes_posix  = -I;   /* absens donec systema cum limite */
-    sem->derivati     = silva_xar_creare(piscina, (i32)magnitudo(TypusC89*));
+    /* MXXIV loca: medius TU CCCLXI derivatos habet (DOD 2026-11-03),
+     * onus dimidium sine crescentia */
+    (vacuum)_derivata_parare(sem, MXXIV);
+    sem->derivata_larva = ~(i32)ZEPHYRUM;
     sem->symbola = silva_xar_creare(piscina,
         (i32)magnitudo(SemanticaSymbolum*));
     sem->diagnostica = silva_xar_creare(piscina,
@@ -94362,7 +94434,7 @@ silva_c89_semantica_creare (
     sem->stirpes_ambitus  = NIHIL;
     sem->scopus_summus    = _scopum_creare(piscina, NIHIL);
     sem->scopus_currens   = sem->scopus_summus;
-    si (   sem->derivati    == NIHIL || sem->symbola == NIHIL
+    si (   sem->derivata    == NIHIL || sem->symbola == NIHIL
         || sem->diagnostica == NIHIL || sem->typationes == NIHIL
         || sem->nexus       == NIHIL || sem->scopus_summus == NIHIL)
     {
@@ -94409,8 +94481,85 @@ silva_c89_typus_primitivum (
 
 /* ==================================================
  * Internamentum derivatorum (aequalitas structuralis in creatione,
- * identitas monstratoris post - series linearis, complete primum)
+ * identitas monstratoris post - tabula aperta per signum structurae)
  * ================================================== */
+
+/* Signum: verba (numeri, monstratores bipartiti) multiplicatione
+ * aurea miscentur, _signum_finire (fmix32, murmur3) bita alta in
+ * humilia plicat - index ex bitis humilibus sumitur. Quidquid
+ * _derivata_paria confert signum intrat, ergo paria => signa paria. */
+interior i32
+_signum_verbum (
+    i32 h,
+    i32 verbum)
+{
+    redde (h ^ verbum) * (i32)0x9E3779B1UL;
+}
+
+interior i32
+_signum_monstratoris (
+                 i32  h,
+     constans vacuum* p)
+{
+    memoriae_index v;
+
+    v = (memoriae_index)p;
+    h = _signum_verbum(h, (i32)(v & (memoriae_index)0xFFFFFFFFUL));
+    redde _signum_verbum(h, (i32)((v >> XVI) >> XVI));
+}
+
+interior i32
+_signum_finire (
+    i32 h)
+{
+    h ^= h >> XVI;
+    h *= (i32)0x85EBCA6BUL;
+    h ^= h >> XIII;
+    h *= (i32)0xC2B2AE35UL;
+    redde h ^ (h >> XVI);
+}
+
+interior i32
+_signum_derivati (
+    constans TypusC89* t)
+{
+    i32 h;
+    i32 k;
+
+    h = _signum_verbum((i32)0x811C9DC5UL, (i32)t->genus);
+    commutatio (t->genus)
+    {
+        casus TYPUS_C89_MONSTRATOR:
+            h = _signum_monstratoris(h, t->datum.monstrator.internum);
+            frange;
+        casus TYPUS_C89_ACIES:
+            h = _signum_monstratoris(h, t->datum.acies.elementum);
+            h = _signum_verbum(h, (i32)t->datum.acies.numerus);
+            frange;
+        casus TYPUS_C89_QUALIFICATUS:
+            h = _signum_monstratoris(h,
+                t->datum.qualificatus.internum);
+            h = _signum_verbum(h, t->datum.qualificatus.quales);
+            frange;
+        casus TYPUS_C89_FUNCTIO:
+            h = _signum_monstratoris(h, t->datum.functio.reditus);
+            h = _signum_verbum(h,
+                t->datum.functio.numerus_parametrorum);
+            h = _signum_verbum(h, (i32)t->datum.functio.est_variadica);
+            h = _signum_verbum(h,
+                (i32)t->datum.functio.est_prototypata);
+            per (k = ZEPHYRUM;
+                 k < t->datum.functio.numerus_parametrorum; k++)
+            {
+                h = _signum_monstratoris(h,
+                    t->datum.functio.parametra[k]);
+            }
+            frange;
+        ordinarius:
+            frange;
+    }
+    redde _signum_finire(h);
+}
 
 interior b32
 _derivata_paria (
@@ -94469,18 +94618,25 @@ _derivatum_internare (
        SilvaSemantica* sem,
     constans TypusC89* exemplar)
 {
-         i32  i;
-    TypusC89* novum;
+     TypusC89* novum;
+          i32  signum;
+          i32  larva;
+          i32  k;
 
-    per (i = ZEPHYRUM; i < silva_xar_numerus(sem->derivati); i++)
+    /* sondatio: signa densa leguntur, typus solum signo congruente */
+    signum  = (_signum_derivati(exemplar) & sem->derivata_larva) | I;
+    larva   = sem->derivata_capacitas - I;
+    k       = (signum >> I) & larva;
+    dum (sem->derivata_signa[k] != ZEPHYRUM)
     {
-        TypusC89* t = *(TypusC89**)silva_xar_obtinere(sem->derivati, i);
-
-        si (_derivata_paria(t, exemplar))
+        si (   sem->derivata_signa[k] == signum
+            && _derivata_paria(sem->derivata[k], exemplar))
         {
-            redde t;
+            redde sem->derivata[k];
         }
+        k = (k + I) & larva;
     }
+
     novum = (TypusC89*)silva_piscina_allocare(sem->piscina,
         (memoriae_index)magnitudo(TypusC89));
     si (novum == NIHIL)
@@ -94488,14 +94644,28 @@ _derivatum_internare (
         redde sem->typus_erroris;
     }
     *novum = *exemplar;
-    {
-        TypusC89** locus = (TypusC89**)silva_xar_addere(sem->derivati);
 
-        si (locus != NIHIL)
+    /* onus <= dimidium: crescit ante collocationem. Crescentia
+     * fracta: collocatur dum locus vacuus superest (sondatio semper
+     * terminatur), aliter typus non internatus redditur (ut olim
+     * xar_addere fractum) */
+    si ((sem->derivata_numerus + I) * II > sem->derivata_capacitas)
+    {
+        si (_derivata_parare(sem, sem->derivata_capacitas * II))
         {
-            *locus = novum;
+            _derivatum_collocare(sem->derivata, sem->derivata_signa,
+                sem->derivata_capacitas, novum, signum);
+            sem->derivata_numerus++;
+            redde novum;
+        }
+        si (sem->derivata_numerus + II > sem->derivata_capacitas)
+        {
+            redde novum;
         }
     }
+    sem->derivata_signa[k]  = signum;
+    sem->derivata[k]        = novum;
+    sem->derivata_numerus++;
     redde novum;
 }
 

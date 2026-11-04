@@ -666,9 +666,20 @@ structura SilvaSemantica {
     TypusC89* primitivi[PRIMITIVUM_NUMERUS];
     TypusC89* typus_erroris;
 
-    /* internamentum derivatorum (series linearis - complete
-     * primum, optima post; percursus mensurabit) */
-    Xar* derivati;              /* TypusC89* */
+    /* internamentum derivatorum: tabula aperta (potentia II,
+     * sondatio linearis, onus <= dimidium). signa = signum | I
+     * (ZEPHYRUM = locus vacuus) - series densa, sola in sondatione
+     * lecta; derivata[k] solum cum signum congruit tangitur.
+     * (Olim series linearis: XIV% percursus -semantica.) */
+     TypusC89** derivata;
+          i32*  derivata_signa;
+          i32   derivata_capacitas;
+          i32   derivata_numerus;
+    /* larva signi: omnia bita (creare). Probatio ZEPHYRUM ponit -
+     * signa omnia congruunt et _derivata_paria SOLA discernit (aliter
+     * signum discernit et paria solum in collisionibus rarissimis
+     * agit, vitium eius probationibus invisibile) */
+          i32 derivata_larva;
 
     /* scopi (Chunk B - regula sanationis: registra-ante-usum in
      * AMBULATIONE UNA ordine fontis) */

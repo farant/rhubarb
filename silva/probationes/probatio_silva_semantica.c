@@ -244,6 +244,150 @@ _symbolum_indicis (
     redde NIHIL;
 }
 
+/* Internamentum per tabulam: genera (qualificati, functiones) et
+ * crescentia - numerus typorum cuiusque generis creatur, deinde
+ * iterum petitur. Bis vocatur: tabula ordinaria, et larva signi
+ * ZEPHYRUM (collisiones omnes - _derivata_paria sola discernit). */
+interior vacuum
+_internamentum_tabulae_probare (
+           Piscina* piscina,
+    SilvaSemantica* sem,
+               i32  numerus)
+{
+          TypusC89* intus = silva_c89_typus_primitivum(sem,
+              PRIMITIVUM_INTEGER);
+          TypusC89* ch = silva_c89_typus_primitivum(sem,
+              PRIMITIVUM_CHARACTER);
+           TypusC89*  par_a[II];
+           TypusC89*  par_b[II];
+           TypusC89*  par_c[II];
+           TypusC89*  unus[I];
+           TypusC89** catena;
+           TypusC89** acies;
+           TypusC89** functiones;
+                i32   k;
+                i32   discrepantiae;
+
+    /* const int * (monstrator ad constans) != int * const */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_monstrator(sem,
+            silva_c89_typus_qualificatus(sem, intus,
+                QUALIS_CONSTANS)),
+        silva_c89_typus_qualificatus(sem,
+            silva_c89_typus_monstrator(sem, intus),
+            QUALIS_CONSTANS));
+    /* quales distincti; involucrum super involucrum iungitur */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_qualificatus(sem, intus, QUALIS_CONSTANS),
+        silva_c89_typus_qualificatus(sem, intus,
+            QUALIS_VOLATILIS));
+    CREDO_AEQUALIS_PTR (
+        silva_c89_typus_qualificatus(sem,
+            silva_c89_typus_qualificatus(sem, intus,
+                QUALIS_CONSTANS),
+            QUALIS_VOLATILIS),
+        silva_c89_typus_qualificatus(sem, intus,
+            QUALIS_CONSTANS | QUALIS_VOLATILIS));
+
+    /* functiones: series diversae, contentum idem -> typus idem.
+     * Typus internatus seriem suam retinet - nulla series post
+     * usum mutatur. */
+    par_a[0] = intus;
+    par_a[1] = ch;
+    par_b[0] = intus;
+    par_b[1] = ch;
+    par_c[0] = intus;
+    par_c[1] = intus;
+    CREDO_AEQUALIS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_b, II, FALSUM,
+            VERUM));
+    /* parametrum unum diversum */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_c, II, FALSUM,
+            VERUM));
+    /* praefixum idem, numerus diversus */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, I, FALSUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM));
+    /* variadica */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, II, VERUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM));
+    /* () non prototypata != (void) */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, NIHIL, ZEPHYRUM,
+            FALSUM, FALSUM),
+        silva_c89_typus_functio(sem, intus, NIHIL, ZEPHYRUM,
+            FALSUM, VERUM));
+    /* reditus */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, ch, par_a, II, FALSUM, VERUM),
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM));
+
+    /* crescentia: numerus catenae monstratorum + acies + functiones
+     * (MMM multo plures quam capacitas initialis), deinde omnes
+     * iterum petiti - idem typus, et inter se distincti */
+    catena = (TypusC89**)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(TypusC89*));
+    acies = (TypusC89**)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(TypusC89*));
+    functiones = (TypusC89**)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(TypusC89*));
+    CREDO_NON_NIHIL (catena);
+    CREDO_NON_NIHIL (acies);
+    CREDO_NON_NIHIL (functiones);
+    catena[0] = intus;
+    per (k = I; k <= numerus; k++)
+    {
+        catena[k]  = silva_c89_typus_monstrator(sem, catena[k - I]);
+        acies[k]   = silva_c89_typus_acies(sem, ch, (s32)k);
+        functiones[k] = silva_c89_typus_functio(sem, catena[k],
+            &catena[k - I], I, FALSUM, VERUM);
+    }
+    discrepantiae = ZEPHYRUM;
+    per (k = I; k <= numerus; k++)
+    {
+        unus[0] = catena[k - I];
+        si (silva_c89_typus_monstrator(sem, catena[k - I])
+            != catena[k])
+        {
+            discrepantiae++;
+        }
+        si (silva_c89_typus_acies(sem, ch, (s32)k) != acies[k])
+        {
+            discrepantiae++;
+        }
+        si (silva_c89_typus_functio(sem, catena[k], unus, I,
+                FALSUM, VERUM) != functiones[k])
+        {
+            discrepantiae++;
+        }
+        si (   catena[k] == catena[k - I]
+            || (k > I && acies[k] == acies[k - I])
+            || (k > I && functiones[k] == functiones[k - I]))
+        {
+            discrepantiae++;
+        }
+    }
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (catena[numerus]->genus,
+        (s32)TYPUS_C89_MONSTRATOR);
+    CREDO_AEQUALIS_PTR (catena[numerus]->datum.monstrator.internum,
+        catena[numerus - I]);
+    CREDO_AEQUALIS_S32 (acies[numerus]->datum.acies.numerus,
+        (s32)numerus);
+}
+
+
 s32 principale (vacuum)
 {
     Piscina* piscina;
@@ -640,6 +784,31 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_PTR (
             silva_c89_typus_qualificatus(sem, intus, ZEPHYRUM),
             intus);
+    }
+
+
+    /* ========================================================
+     * PROBARE: internamentum per tabulam - genera, crescentia
+     * ======================================================== */
+
+    {
+        imprimere("\n--- Probans internamentum per tabulam ---\n");
+        _internamentum_tabulae_probare(piscina,
+            silva_c89_semantica_creare(piscina), MMM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: internamentum - signa omnia congruentia
+     * ======================================================== */
+
+    {
+        SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
+
+        imprimere("\n--- Probans internamentum sine signis ---\n");
+        /* omnes in sondatione una: aequalitas structuralis sola */
+        sem->derivata_larva = ZEPHYRUM;
+        _internamentum_tabulae_probare(piscina, sem, CCC);
     }
 
 

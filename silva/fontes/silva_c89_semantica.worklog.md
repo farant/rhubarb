@@ -1038,3 +1038,42 @@ lines above the call ("TOLERA irritum" twice, tried on filum.c:771).
 right after it also matches. A blank line in between still does not
 (test). Each element is still judged on its own: an unused second code
 stays IRRITUM. Plant (match clause -> FALSUM) red at the new cases.
+
+## 2026-11-04 — derived types interned by a flat table, not a linear scan (budget silvae, DOD audit #2b)
+
+The 2026-07-08 plan said "if percursus -semantica shows cost, switch to a hashed key".
+
+**The cost.** The DOD audit measured it:
+- 12.3 M interning calls, 2.25 G scan steps, 14% of the run.
+- Every miss walked the whole Xar: 61% of function-type requests are misses.
+- Each step was an out-of-line `xar_obtinere` plus a deref of a scattered TypusC89.
+
+**The table.**
+- `SilvaSemantica.derivata` / `derivata_signa`: open addressing, power-of-two capacity, linear probing, load <= 1/2. MXXIV slots to start (an average TU has 361 derived types).
+- `signa` is a dense i32 series holding signature | 1 (0 = empty slot). Probing reads only that series; `derivata[k]` is dereferenced only when the signature matches.
+- Growth carries the stored signatures over, with no rehashing. The probe index is `signum >> 1`, because bit 0 is the occupancy mark.
+
+**The signature.**
+- Every field `_derivata_paria` compares feeds the signature, so paria-equal implies signature-equal.
+- Mixing: golden-ratio multiply per word, pointers split into two words, fmix32 at the end so the low (index) bits see the high ones.
+
+**Dropped from the audit's plan.** It proposed edge pointers on TypusC89 (`monstrator_ad`, `qualificatus_ad[3]`) plus a table for functions only. That would change the public struct, and any struct copy (`*novum = *exemplar`) would carry stale edges. One table covers all four kinds. If a profile ever shows interning again, pointer edges are the next step.
+
+**Measured.**
+- percursus -semantica: 609.93 -> 497.04 G instructions (-18.5%), cycles 206 -> 168 G.
+- Old and new binaries over the SAME tree (the corpus includes these very files): 608.76 -> 496.67 G.
+- The reports are identical (symbols, typed expressions, diagnostics per file) except preparation memory, +1.2 MB across 126: the 12 KB starting table instead of a Xar.
+- More than the audit's ~90 G estimate: each scan step was also a cache miss.
+
+**Testing seam: `derivata_larva`.**
+- With a discriminating signature, two different types almost never reach `_derivata_paria`. It became a tiebreaker on 32-bit collisions (~0.1 per whole-repo run, my estimate).
+- So plants dropping the parameter or qualifier comparison stayed GREEN: a comparator bug invisible to tests, which would surface once a month as a wrong type identity.
+- `derivata_larva` (all ones from `creare`) masks the signature. The test sets it to 0: every type collides into one probe cluster, and paria alone tells them apart.
+- `_internamentum_tabulae_probare` runs twice: a normal table with MMM of each kind (growth), and a fully colliding one with CCC.
+
+**Plants, 9/9 red:**
+- parameters, qualifiers, return type, parameter count, variadic, prototyped, or array count not compared;
+- growth without carrying entries over;
+- placement index without `>> 1`.
+
+**Not done.** `_parametra_tractare` still allocates the parameter series before interning knows whether it's a hit. It's memory, not time; leave it.
