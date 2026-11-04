@@ -42,6 +42,7 @@ nomen structura {
      MateriaNodus* attributum;   /* pendens (TAG, DECLARATIO_XML) */
      MateriaNodus* malum;        /* malum apertum huius loci */
               i32  status;
+              i32  basis;       /* liberi pendentes ab hoc indice */
 } GradusArboris;
 
 nomen structura {
@@ -49,6 +50,7 @@ nomen structura {
         XmlLector  lector;
               Xar* gradus;      /* GradusArboris */
               Xar* pendentia;   /* MateriaToken* trivia */
+              Xar* liberi;      /* MateriaValor pendentes (acervus) */
      MateriaToken* prior;       /* lexema non trivium ultimum */
      MateriaNodus* documentum;
        XmlParsura* relatio;
@@ -68,12 +70,61 @@ _vertex (
         - I) : NIHIL;
 }
 
+interior s32
+_locus_liberorum (
+    constans GradusArboris* g);
+interior b32
+_ponere_listam (
+     Aedificatio* p,
+    MateriaNodus* nodus,
+             s32  locus,
+             Xar* lista);
+
+/* liberi pendentes gradus in listam EXACTAM loci sui (ante mutationem
+ * generis aut extollationem) */
+interior vacuum
+_figere (
+      Aedificatio* p,
+    GradusArboris* g)
+{
+    i32  n = xar_numerus(p->liberi) - g->basis;
+    i32  k;
+    Xar* x;
+
+    si (n == ZEPHYRUM)
+    {
+        redde;
+    }
+    x = xar_creare_cum_magnitudine(p->piscina,
+        (i32)magnitudo(MateriaValor), n);
+    si (x == NIHIL)
+    {
+        p->memoria_defecit = VERUM;
+        redde;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        MateriaValor* d = (MateriaValor*)xar_addere(x);
+
+        si (d == NIHIL)
+        {
+            p->memoria_defecit = VERUM;
+            redde;
+        }
+        *d = *(MateriaValor*)xar_obtinere(p->liberi, g->basis + k);
+    }
+    (vacuum)_ponere_listam(p, g->nodus, _locus_liberorum(g), x);
+    xar_truncare(p->liberi, g->basis);
+}
+
 interior vacuum
 _extollere (
     Aedificatio* p)
 {
     si (xar_numerus(p->gradus) > I)
     {
+        _figere(p, (GradusArboris*)xar_obtinere(p->gradus,
+            xar_numerus(p->gradus) - I));
         xar_removere_ultimum(p->gradus);
     }
 }
@@ -131,21 +182,6 @@ _appendere_token (
 }
 
 interior vacuum
-_appendere_nodum (
-     Aedificatio* p,
-    MateriaNodus* nodus,
-             i32  locus,
-    MateriaNodus* filius)
-{
-    si (   nodus == NIHIL || filius == NIHIL
-        || !materia_nodus_appendere(p->piscina, nodus, locus,
-            materia_valor_nodus(filius), MATERIA_LOCUS_LISTA_NODUS))
-    {
-        p->memoria_defecit = VERUM;
-    }
-}
-
-interior vacuum
 _ponere_nodum (
      Aedificatio* p,
     MateriaNodus* nodus,
@@ -158,6 +194,24 @@ _ponere_nodum (
     {
         p->memoria_defecit = VERUM;
     }
+}
+
+interior b32
+_ponere_listam (
+     Aedificatio* p,
+    MateriaNodus* nodus,
+             s32  locus,
+             Xar* lista)
+{
+    si (   nodus == NIHIL || locus < ZEPHYRUM
+        || !materia_nodus_ponere(nodus, (i32)locus,
+        materia_valor_lista(lista),
+            MATERIA_LOCUS_LISTA_NODUS))
+    {
+        p->memoria_defecit = VERUM;
+        redde FALSUM;
+    }
+    redde VERUM;
 }
 
 interior vacuum
@@ -180,6 +234,7 @@ _impellere (
     g->attributum  = NIHIL;
     g->malum       = NIHIL;
     g->status      = status;
+    g->basis       = xar_numerus(p->liberi);
     n              = xar_numerus(p->gradus);
     si (p->relatio != NIHIL && n > p->relatio->profunditas_maxima)
     {
@@ -187,25 +242,27 @@ _impellere (
     }
 }
 
-/* lexema in locum liberorum gradus (malum apertum aut novum) */
-interior i32
+/* lexema in locum liberorum gradus (malum apertum aut novum). -I si
+ * gradus liberos non habet: s32, quia i32 insignatum est (ibi '< 0'
+ * numquam verum) */
+interior s32
 _locus_liberorum (
     constans GradusArboris* g)
 {
     commutatio (g->genus)
     {
         casus GRADUS_DOCUMENTUM:
-            redde (i32)XML_DOCUMENTUM_LIBERI;
+            redde (s32)XML_DOCUMENTUM_LIBERI;
         casus GRADUS_CONTENTUM:
-            redde (i32)XML_ELEMENTUM_LIBERI;
+            redde (s32)XML_ELEMENTUM_LIBERI;
         casus GRADUS_TAG:
-            redde (i32)XML_ELEMENTUM_ATTRIBUTA;
+            redde (s32)XML_ELEMENTUM_ATTRIBUTA;
         casus GRADUS_DECLARATIO_XML:
-            redde (i32)XML_DECLARATIO_XML_ATTRIBUTA;
+            redde (s32)XML_DECLARATIO_XML_ATTRIBUTA;
         casus GRADUS_PARS_INTERNA:
-            redde (i32)XML_PARS_INTERNA_LIBERI;
+            redde (s32)XML_PARS_INTERNA_LIBERI;
         ordinarius:
-            redde (i32)-I;
+            redde -(s32)I;
     }
 }
 
@@ -216,15 +273,22 @@ _liberum (
          GradusArboris* g,
           MateriaNodus* filius)
 {
-    i32 locus = _locus_liberorum(g);
+    s32 locus = _locus_liberorum(g);
+    MateriaValor* d;
 
     g->malum = NIHIL;
-    si (locus < ZEPHYRUM)
+    si (locus < ZEPHYRUM || filius == NIHIL)
     {
         p->memoria_defecit = VERUM;
         redde;
     }
-    _appendere_nodum(p, g->nodus, locus, filius);
+    d = (MateriaValor*)xar_addere(p->liberi);
+    si (d == NIHIL)
+    {
+        p->memoria_defecit = VERUM;
+        redde;
+    }
+    *d = materia_valor_nodus(filius);
 }
 
 /* lexema in malum loci gradus (contigua in malum unum) */
@@ -380,12 +444,15 @@ _solvere (
               i32 numerus = xar_numerus(p->pendentia);
     MateriaToken** plana;
               i32  j;
+    MateriaToken*  locale[VIII];
 
     si (numerus == ZEPHYRUM)
     {
         redde;
     }
-    plana = (MateriaToken**)piscina_allocare_ordinatum(p->piscina,
+    /* series temporaria: trivia_*_ponere seriem exactam ipsa copiat */
+    plana = numerus <= VIII ? locale
+        : (MateriaToken**)piscina_allocare_ordinatum(p->piscina,
         (memoriae_index)magnitudo(MateriaToken*)
             * (memoriae_index)numerus,
         (memoriae_index)magnitudo(MateriaToken*));
@@ -543,6 +610,7 @@ _contentum (
             g = _vertex(p);
             _ponere_token(p, g->nodus, (i32)XML_ELEMENTUM_TOK_CLAUSURA,
                 t);
+            _figere(p, g);
             g->genus = GRADUS_TAG_FINALIS;
             redde VERUM;
         }
@@ -628,6 +696,7 @@ _attributa (
             {
                 _ponere_token(p, g->nodus, (i32)XML_ELEMENTUM_TOK_FINIS,
                     t);
+                _figere(p, g);
                 g->genus       = GRADUS_CONTENTUM;
                 g->attributum  = NIHIL;
                 g->malum       = NIHIL;
@@ -657,6 +726,7 @@ _attributa (
              * non clausus - elementum apertum manet */
             si (g->genus == GRADUS_TAG)
             {
+                _figere(p, g);
                 g->genus       = GRADUS_CONTENTUM;
                 g->attributum  = NIHIL;
                 g->malum       = NIHIL;
@@ -1007,6 +1077,7 @@ _parsare (
     p.relatio    = relatio;
     p.gradus     = xar_creare(piscina, (i32)magnitudo(GradusArboris));
     p.pendentia  = xar_creare(piscina, (i32)magnitudo(MateriaToken*));
+    p.liberi     = xar_creare(piscina, (i32)magnitudo(MateriaValor));
     p.diagnostica = xar_creare(piscina,
         (i32)magnitudo(MateriaDiagnosticum));
     si (relatio != NIHIL)
@@ -1019,7 +1090,7 @@ _parsare (
             mensura, fragmentum == (s32)XML_FRAGMENTUM_PARS_INTERNA
                 ? XML_MODUS_PARS_INTERNA : XML_MODUS_CONTENTUM);
     si (   p.gradus      == NIHIL || p.pendentia == NIHIL
-        || p.diagnostica == NIHIL || !lector_bonus)
+        || p.diagnostica == NIHIL || p.liberi == NIHIL || !lector_bonus)
     {
         redde NIHIL;
     }
@@ -1056,6 +1127,12 @@ _parsare (
         {
             frange;
         }
+    }
+    /* gradus aperti (documentum semper, elementa sine tag finali) */
+    dum (!p.memoria_defecit && xar_numerus(p.gradus) > ZEPHYRUM)
+    {
+        _figere(&p, _vertex(&p));
+        xar_removere_ultimum(p.gradus);
     }
     si (p.memoria_defecit)
     {

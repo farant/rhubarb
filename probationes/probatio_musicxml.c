@@ -1063,6 +1063,25 @@ _saltus_probare (
         "0:1 1:1 2:1 3:1 1:2 2:2"));
 }
 
+/* post D.C. repetitiones non iterantur, conclusio ultima sola - aurum
+ * manu ex usu musico (desideratum …ZWJFNNM73N) */
+interior vacuum
+_post_saltum_probare (
+    CredoContextus* c)
+{
+    MusicxmlOrdo* r = _ordo_fixi(c, "repetitio_post_saltum.musicxml");
+
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 2:1 1:2 2:2 3:1 0:2 1:3 2:3 3:2"));
+    CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
+    r = _ordo_fixi(c, "conclusiones_post_saltum.musicxml");
+    CREDO_NECESSE (r != NIHIL);
+    CREDO_VERUM (_aequat(_visitationes(c, r),
+        "0:1 1:1 0:2 2:2 3:1 0:3 2:2 3:2"));
+    CREDO_AEQUALIS_I32 (r->numerus_vitiorum, ZEPHYRUM);
+}
+
 interior vacuum
 _saltus_verbis_probare (
     CredoContextus* c)
@@ -1241,6 +1260,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ordo: conclusiones per transitum", _conclusiones_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordo: D.S. al coda, al fine", _saltus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ordo: post D.C. sine repetitione", _post_saltum_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordo: saltus verbis solis", _saltus_verbis_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },

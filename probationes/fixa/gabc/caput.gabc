@@ -1,0 +1,11 @@
+% caput: paria ordine, annotation bis, clavis ignota servata, valor per lineas
+name: Salve;
+% commentarium in capite
+mode:5;
+annotation:Ant.;
+annotation:V;
+foo:bar;
+commentary:unus
+duo;;
+%%
+(c4) a(g)

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- conclusiones_post_saltum: m1 [1: m2 :| [2: m3] m4 D.C. - post D.C.
+     conclusio ultima sola (prima praeteritur), repetitio non iteratur:
+     0 1 0 2 3 | 0 2 3 (finis). Aurum manu, ex usu musico -->
+<score-partwise version="4.0">
+  <part-list>
+    <score-part id="P1"><part-name>Cantus</part-name></score-part>
+  </part-list>
+  <part id="P1">
+    <measure number="1">
+      <attributes><divisions>1</divisions><time><beats>2</beats><beat-type>4</beat-type></time></attributes>
+      <note><pitch><step>C</step><octave>4</octave></pitch><duration>2</duration></note>
+    </measure>
+    <measure number="2">
+      <barline location="left"><ending number="1" type="start"/></barline>
+      <note><pitch><step>D</step><octave>4</octave></pitch><duration>2</duration></note>
+      <barline location="right"><bar-style>light-heavy</bar-style><ending number="1" type="stop"/><repeat direction="backward"/></barline>
+    </measure>
+    <measure number="3">
+      <barline location="left"><ending number="2" type="start"/></barline>
+      <note><pitch><step>E</step><octave>4</octave></pitch><duration>2</duration></note>
+      <barline location="right"><ending number="2" type="discontinue"/></barline>
+    </measure>
+    <measure number="4">
+      <note><pitch><step>F</step><octave>4</octave></pitch><duration>2</duration></note>
+      <direction><direction-type><words>D.C.</words></direction-type><sound dacapo="yes"/></direction>
+    </measure>
+  </part>
+</score-partwise>
