@@ -8,7 +8,8 @@ then approve after fixes); every finding placed in v2, see "Design
 review" at the end. T0's concurrency experiment DONE; the rest of T0 was
 answered by the review's measurements (see "T0"). Q1-Q3 DECIDED by Fran
 2026-11-03 (all as recommended). T1 DONE 2026-11-03 (see "T1 notes").
-T2 DONE 2026-11-03 (see "T2 notes").
+T2 DONE 2026-11-03 (see "T2 notes"). T3 DONE 2026-11-04 (see "T3
+notes"; the worker timeout became a silence timeout).
 
 Agreed order (interpolatio-verificatio-plan.md, status line): early
 stopping (done, 624f407c), then parallel points (this plan, temperley-
@@ -185,10 +186,17 @@ K + puncta_addita independent points (563 at 14 × 801: T3 counted
     line names the worker, exit code and stderr tail, and the batch
     returns FALSUM (M3, L6, L7);
   - a piscina per batch, reset after each batch (M3).
-- **Timeout (Q2, L8):** per worker, 10 × slice size × measured seconds
+- **Timeout (Q2, L8):** ~~per worker, 10 × slice size × measured seconds
   per point, with seconds per point estimated from
   `laqueus_temperley_sumptus` and the measured ns per multiplication,
-  floor 60 s.
+  floor 60 s.~~ REPLACED in T3 (Fran, 2026-11-04, option A): a
+  **silence timeout**. The worker prints `OPUS SIGNUM` as soon as its
+  module is built and flushes each index line as it is computed; the
+  parent kills a worker whose output has not grown for max(600 s,
+  50 × estimated seconds per point), on the house clock (stops during
+  sleep); no overall deadline. `-silentium S` overrides the bound
+  (tests). Why: the 10× deadline refused healthy workers twice in T3's
+  P1 (burner load, a dark-wake cycle), see "T3 notes".
 - **Timing (M6):** the tool prints wall time (house clock) and the
   children's CPU next to the parent's `clock()`; T3's scripts read wall
   and total CPU, not the parent's CPU alone.
@@ -346,6 +354,172 @@ No threshold moved.
   - T1 and T3 also reddened `refutationes` (bonus: a lying worker makes
     every refusal case refuse for the wrong reason first).
 
+## T3 protocol (registered 2026-11-03, before any T3 measurement)
+
+- One binary for every run: build/verificatio/uncinus_mensura_l3_t3,
+  built from a0c98416. Fixed seed (`-semen_verificationis 7`). Every run
+  under tools/custos.sh (4,096 MB) and `caffeinate -i`, detached. Raw
+  outputs build/verificatio/l3_t3_*.out; comparison script
+  l3_t3_comparare.py (not committed).
+- Machine at registration: load 281 (1 min). Cause: 8 orphaned
+  `yes > /dev/null` processes from a quarta session, 6 h old, saturating
+  all 8 cores. Not ours, not killed. The exact checks (P1, P2,
+  refusals) run now; the timing runs (P3, P4, 14 × 801 with P5) wait
+  until the machine is quiet, on Fran's word, so their figures describe
+  the design and not the burners.
+- **P1.** Section XI, `-modus verificatum -tractus`, for each checker
+  automaticus, sui, via, congelatus: serial and W = 1, 2, 3, 4, 7 (24
+  runs). 12 × 801 is one of XI's 45 braids, so it runs at every W (more
+  than L11's minimum of W = 4 and 7). Pass:
+  - UNCINUS, RELATIO and TRACTUS lines identical to that checker's
+    serial run, all 45 braids, in order;
+  - every serial UNCINUS line equal to brackets.txt;
+  - in each worker run, 32 braids print `OPIFICES W | ...` and 13 print
+    `OPIFICES 0 | via vertex|nulla`; no `OPIFEX REFUTATUS`;
+  - a braid a checker cannot serve fails identically in serial and W
+    runs (counted and reported, not a P1 failure).
+- **P2 (tool counters).** The library's counts were checked by the T1
+  and T2 suites. For every TL braid in every worker run, with a = 1 if
+  `additus` ≠ 0 (the k_max = 1 limit prime) and 0 otherwise:
+  fasciculi = primi + a + sui; opera = W · (primi + a) + sui (each main
+  batch has at least 7 indices, so it uses all W workers);
+  aestimationes divisible by primi + a (no top-ups). Derived from the
+  code and checked against a 2-braid probe of the binary (3 × 20 and
+  3 × 50 at W = 2) before this registration. Spot checks = batches is
+  not visible from the tool; the T2 suite covers it.
+- **Refusals at scale.** 12 × 801 (section VIII), W = 4: each of the 8
+  faults at index 0, plus `occide@282` (third slice of the first batch:
+  141/141/141/140). Pass: REFUTATUM, no UNCINUS line, `OPIFEX
+  REFUTATUS` with the expected causa, no process under build/opifices/
+  afterwards, the run's copy directory gone.
+- **P3 (when quiet).** Section VIII 12 × 801, `-verificator congelatus`;
+  A = serial, B = W 4; pair k runs AB if k is even, BA if odd; 5 pairs;
+  load before each run. Wall time taken outside the process for both A
+  and B (same method). Each run's UNCINUS/RELATIO lines equal. Gate as
+  registered: median A/B ≥ 1.6×.
+- **P4 (when quiet).** Worker mode called directly on the T3 binary,
+  word from section XII for n × 801 (n = 12, 14, 16), p = 2147483629:
+  - start-up s = median wall of 9 runs with `-ab 4294967295 -numerus
+    1`: exec, parsing, module build, then the batch refuses on index
+    overflow before any evaluation (exit 1). This is the real start-up
+    minus the fingerprint and the printing;
+  - per point = (wall of `-ab 0 -numerus k` − s) / k, k = 141, 20, 3 at
+    12, 14, 16 strands;
+  - full batch per worker B = 141 × per point (563 / 4 rounded up);
+  - pass: s ≤ 0.02 · B at each n.
+- **14 × 801 and P5 (when quiet).** Section VIII, `-verificator
+  congelatus`, W = 4, once. UNCINUS must equal uncinus_14x801.txt;
+  RELATIO 7 primes, aestimationes 3,941. Wall and total CPU are
+  reported against interpolatio-verificatio T3's serial 3,262 s CPU
+  (descriptive). The custos peak is reported against (W + parent
+  modules) × octeti.
+
+### Amendment (2026-11-04, after the first exact run, before the rerun)
+
+- The first exact run (binary a0c98416) found the 10× deadline
+  refusing healthy workers. Fran chose option A, a silence timeout (see
+  "Tool"). One binary for every rerun: build/verificatio/
+  uncinus_mensura_l3_t3b, built from the working tree with
+  tools/uncinus_mensura.c sha256 19dbeb287424dd1b. The committed T3
+  source (582dd54d2f430e2d) differs only by formatting: the silence
+  bound moved into `_silentium_operis`, one assignment reordered;
+  acceptatio_l3_t3.py green on that build. The first run's results stay
+  as supporting evidence.
+- The route count in P1 was wrong as registered: 31 TL / 14 vertex,
+  not 32 / 13. Review M4 miscounted, and the interpolatio-verificatio T3
+  checker tally already said 31 / 14. P1 now takes each serial run's
+  routes as the expected split; the deviation is reported.
+- Rerun:
+  - refusals at scale as registered, plus `pende@282` with
+    `-silentium 5` (causa silentium) and `lente@0` with `-silentium 1`
+    (must succeed, UNCINUS = brackets.txt);
+  - P1 and P2 for automaticus, sui and congelatus at serial and W = 1,
+    2, 3, 4, 7; `via` at serial, W = 1 and 4 only, because its 12 × 801
+    cross-checks run in the parent and take most of an hour per run;
+  - custos wall cap 6 h (the 2 h cap cut off four `via` runs).
+- Machine quiet at amendment: burners removed on Fran's word, load
+  5.7 (1 min). The timing phase follows the exact rerun, as registered.
+
+## T3 notes (2026-11-04)
+
+Raw outputs and scripts in build/verificatio/ (not committed):
+l3_t3_*.out (first run, binary a0c98416), l3_t3b_*.out (rerun, binary
+b), l3_t3_comparare.py (verdicts: l3_t3b_comparatio.txt),
+l3_t3_tempora.py (l3_t3b_tempora.log), l3_t3_stragulum.py.
+
+**First exact run (binary a0c98416): no wrong answer, but the deadline
+failed.** Every completed braid equalled serial (cut-off runs as a
+prefix). Two kinds of failure, neither a wrong value:
+- the 10× worker deadline refused healthy workers at 12 × 401 and
+  12 × 801 (`congelatus` W = 1, 2). Causes stacked: the 0.21 ns/mult
+  estimate is ~1.7× low at 12 × 801; 8 orphaned `yes > /dev/null` from a
+  quarta load test held all cores for ~17 h (workers got 20-30% of a
+  core); a maintenance-sleep / DarkWake cycle (processus' clock skips
+  true sleep but runs in dark wakes). Refusal was correct by rule 4,
+  but a 16 × 801 run would likely die the same way;
+- custos' 2 h wall cap cut four `via` runs inside 12 × 801 (its vertex
+  cross-checks run in the parent: 1,515 s CPU, not parallelised).
+Fran chose option A: the silence timeout (see "Tool"). Worker: SIGNUM at
+once, one index at a time, fflush per line. Parent: kill after max(600 s,
+50 × per-point estimate) without output growth, house clock, no total
+deadline; `-silentium S`; faults `pende`, `lente`. Plants (plantae_l3_t3
+.py) 5/5 red as registered: S1 silence never checked, S2 growth not
+tracked, S3 no per-line fflush (block-buffered pipe: a slow worker looks
+silent), and T2's wrong-p and letter-flip plants on the rewritten loop.
+(S2 first failed to plant: silva.planta refuses a replacement with fewer
+lines; rewritten to keep the line count.)
+
+**Rerun (binary b): all exact checks pass.**
+- Refusals at 12 × 801: 11/11 (the 8 faults at index 0, `occide@282`,
+  `pende@282` → causa silentium after 5 s, `lente@0` → correct bracket
+  after 223 s against a 1 s bound). No stray process, no copy left.
+- P1: every worker run byte-identical to its serial run (automaticus,
+  sui, congelatus at W = 1, 2, 3, 4, 7; via at W = 1, 4); every serial
+  run 45/45 = brackets.txt. Routes 31 TL / 14 vertex in every run
+  (registered 32 / 13 was review M4's miscount, see Amendment).
+- P2: fasciculi = primi + a + sui and opera = W · (primi + a) + sui on
+  all 31 TL braids of every worker run; no top-ups.
+- custos peak 564 MB (the vertex checker module, `via`).
+
+**P4 (start-up): holds.** Worker start-up (exec, parse, module build;
+median of 9) against a full batch slice of 141 points:
+
+| n × 801 | start-up | per point | slice B | s / B |
+| --- | ---: | ---: | ---: | ---: |
+| 12 | 4.5 ms | 0.043 s | 6.1 s | 0.07% |
+| 14 | 6.0 ms | 0.593 s | 84 s | 0.007% |
+| 16 | 15 ms | 10.0 s | 1,412 s | 0.001% |
+
+**P3 (time): holds, median 2.52× (gate 1.6×; review expected ~2.2×).**
+12 × 801, `-verificator congelatus`, every run identical:
+
+| pair | order | serial (s) | W = 4 (s) | load before (1 min) | ratio |
+| --- | --- | ---: | ---: | --- | ---: |
+| 0 | AB | 195.6 | 140.2 | 8.9 / 9.4 | 1.395 |
+| 1 | BA | 231.4 | 120.2 | 39.4 / 41.9 | 1.925 |
+| 2 | AB | 185.7 | 73.7 | 16.0 / 10.6 | 2.520 |
+| 3 | BA | 203.2 | 72.1 | 30.2 / 23.1 | 2.816 |
+| 4 | AB | 188.2 | 72.1 | 13.0 / 7.2 | 2.611 |
+
+Worker CPU was steady (233-243 s, ~1.2× serial: T0's concurrency
+slowdown); the spread is wall only. I first guessed stragglers (equal
+slices on mixed P/E cores). l3_t3_stragulum.py refuted it: 4 equal
+slices of 12 × 801 finish within 1-3% of each other, and 16 slices
+handed out dynamically gain 2%. The slow pairs ran while other sessions
+loaded the machine (pair 0's workers averaged ~1.7 cores).
+
+**14 × 801, W = 4 (descriptive): 1,418 s wall, ~2.3× the serial 3,262 s
+(interpolatio-verificatio T3).** IDEM with uncinus_14x801.txt; 7 primes,
+aestimationes 3,941, as registered; workers 4,059 s CPU (1.24× serial),
+parent 37.6 s.
+
+**P5 (memory): custos peak 31 MB** against (4 workers + main module +
+frozen kernel) × 4.7 MB (tl_octeti at 14 × 801, T0) = 28.5 MB.
+
+Implication for 16 × 801 (12-14 h serial): ~5-6 h with 4 workers on a
+quiet machine, as the plan targeted. A per-point cost of 10 s sits far
+inside the 600 s silence floor.
+
 ## Registered predictions
 
 - **P1 (exact).** Byte-identical UNCINUS, RELATIO and TRACTUS (fixed
@@ -454,7 +628,9 @@ No threshold moved.
   promotion stay single-point until something needs them (a proved
   16 × 801 would need ~3× the primes: ~15-18 h even with workers).
   Recommend: as drafted.
-- **Q2. Worker timeout.** DECIDED 2026-11-03 (as recommended). Recommend the bound in "Tool" (10× the
+- **Q2. Worker timeout.** DECIDED 2026-11-03 (as recommended);
+  REVISED 2026-11-04 to a silence timeout (T3 finding, option A, see
+  "Tool"). Recommend the bound in "Tool" (10× the
   estimate, floor 60 s), so a hung worker becomes a refusal, not a
   stuck run.
 - **Q3. Small batches in-process.** DECIDED 2026-11-03: dropped, as in
@@ -465,12 +641,20 @@ No threshold moved.
 
 ## AUDIENDA
 
-- Real worker start-up through uncinus_mensura: not measured (P4, T3).
+- ~~Real worker start-up through uncinus_mensura: not measured~~
+  measured in T3 (P4: 4.5-15 ms).
 - `UNCINUS_OPUS_VITIUM` ships in the tool binary (worker mode only,
   inert without the variable).
 - An interrupted run (Ctrl-C) leaves build/opifices/<pid>/ behind
-  (atexit does not run); harmless, delete by hand.
-- No wall-time speedup of the real design measured yet (P3).
+  (atexit does not run); harmless, delete by hand. Also after SIGKILL
+  (custos cap, SIGPIPE from `| head`): five such directories in T3.
+- ~~No wall-time speedup of the real design measured yet~~ measured in
+  T3 (P3 2.52×, 14 × 801 2.3×).
+- The `via` checker at 12 × 801 and above is serial in the parent
+  (vertex module, ~1,500 s CPU at 12 × 801); workers do not help it.
+- Silence timeout: a worker that loops forever while printing would
+  never be killed (there is no total deadline); the parent still checks
+  each line strictly, so it could not inject values, only stall.
 - Frozen kernel memory at 16 × 801: not measured.
 - macOS first-exec scan of the copied binary (syspolicyd): may add a
   one-time delay per new copy path; not checked.

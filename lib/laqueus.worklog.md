@@ -1004,3 +1004,33 @@ the refusal cases; `statim` (fail before computing) is the one that makes
 
 Trap hit: `i64` is unsigned here, so `v > (maximum - d) / 10` wraps when
 d > maximum; `-3` passed as a letter on 3 strands until guarded.
+
+## 2026-11-04 - L3 T3 (puncta-parallela): the worker deadline was the weak part
+
+First exact run (binary a0c98416): no wrong answer anywhere, but the 10x
+deadline (10 x slice x 0.21 ns/mult estimate, floor 60 s) refused healthy
+workers twice. Causes stacked: the nominal estimate is ~1.7x low at
+12 x 801 (0.035 vs ~0.06 s/point); 8 orphaned `yes > /dev/null` from a
+quarta load test held every core for ~17 h (workers got 20-30% of a
+core); and a maintenance-sleep / DarkWake cycle - processus' clock is
+CLOCK_UPTIME_RAW, which skips true sleep but runs during dark wakes, when
+our processes barely run. A total deadline cannot tell "slow" from
+"hung", and a 16 x 801 run (hours, no retry, laptop) would likely die.
+
+Fix (Fran, option A): silence timeout. The worker prints SIGNUM as soon
+as the module exists, then evaluates ONE index at a time and fflushes
+each line; the parent polls processus_effusio_hactenus and kills a
+worker whose output length has not changed for max(600 s, 50 x per-point
+estimate) on the house clock (mach_absolute_time, stops in sleep); no
+total deadline. `-silentium S` for tests; faults `pende` (silent after
+line 1, gives up at 60 s so it never orphans forever) and `lente` (200 ms
+per line). Plant S3 is the one to remember: without the per-line fflush,
+stdout to a pipe is block-buffered, a slow worker's output sits in its
+buffer until exit, and the parent sees silence - the same false kill in
+a new shape.
+
+Also: custos' wall cap cut four `via` runs (its 12 x 801 vertex
+cross-checks run in the parent, 1,500 s CPU, not parallelised); a
+SIGKILLed parent leaves build/opifices/<pid>/ (atexit skipped) - five
+such directories cleaned by hand. P1's registered route count 32/13 was
+copied from a review miscount; the real split is 31 TL / 14 vertex.

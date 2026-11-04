@@ -62,10 +62,14 @@
  *        UNCINUS/RELATIO/TRACTUS idem ac serialis; post eas "OPIFICES
  *        W | fasciculi B | opera O | murale s | cpu_filiorum s |
  *        cpu_parentis s"; operarius refutatus -> "OPIFEX REFUTATUS
- *        ..." et uncinus REFUTATUM. Modus operarii (internus, argumenta
- *        stricta): -opus -fila N -verbum g1,.. -primus p -ab i
- *        -numerus k; UNCINUS_OPUS_VITIUM="<genus>@<ab>" vitium imponit
- *        (casus refutationis acceptationis, vide _vitium_operis)
+ *        ..." et uncinus REFUTATUM. Operarius qui per max(DC s, L x
+ *        secundas aestimatas per punctum) nihil scripsit occiditur
+ *        (causa silentium; -silentium S mutat); nullus terminus totus.
+ *        Modus operarii (internus, argumenta stricta): -opus -fila N
+ *        -verbum g1,.. -primus p -ab i -numerus k (SIGNUM statim,
+ *        deinde linea per indicem simul ac computata);
+ *        UNCINUS_OPUS_VITIUM="<genus>@<ab>" vitium imponit (casus
+ *        refutationis acceptationis, vide _vitium_operis)
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -2762,8 +2766,7 @@ _sectio_cribri (vacuum)
 
 #define OPIFICES_ORDINARII     IV
 #define OPIFICES_MAXIMI        LXIV
-#define MORA_OPERIS_MINIMA_MS  ((i64)60000)          /* LX s */
-#define MORA_OPERIS_MAXIMA_MS  ((i64)0x7FFFFFFFUL)
+#define SILENTIUM_DATUM_MAXIMUM ((i64)86400)        /* -silentium, s */
 #define VERBUM_OPERIS_MAXIMUM  ((i64)100000)         /* litterae */
 #define NUMERUS_OPERIS_MAXIMUS ((i64)0x100000)       /* indices */
 
@@ -2772,6 +2775,8 @@ nomen structura {
      constans character* binarium;              /* copia congelata */
      constans character* directorium;           /* eius directorium */
               character  aedificatio[XXXIII];   /* LC_UUID, hex */
+                    i64  silentium;             /* -silentium S; 0 = per
+                                                 * aestimationem */
 } Opifices;
 
 nomen structura {
@@ -2948,7 +2953,9 @@ _verbum_operis_legere (
  * exitus (exitus 1 post effusionem totam), statim (exitus 1 ante
  * aestimationem: ceteri adhuc currunt), finis (sine OPUS FINIS),
  * signum (signum falsum), duplex (index iteratus), extra (index extra
- * partem), primus (p falsum redditum). Sine variabili: nihil. */
+ * partem), primus (p falsum redditum), pende (post lineam primam
+ * tacet, post LX s exitus 1: silentium), lente (CC ms post omnem
+ * lineam: tardus sed vivus). Sine variabili: nihil. */
 interior constans character*
 _vitium_operis (
     i64 ab)
@@ -2980,6 +2987,18 @@ _vitium_est (
 
     redde vitium != NIHIL && strncmp(vitium, genus, m) == ZEPHYRUM
         && vitium[m] == '@';
+}
+
+/* dormire ms millisecundas (vitia pende et lente) */
+interior vacuum
+_opus_dormire (
+    i32 ms)
+{
+    structura timespec mora;
+
+    mora.tv_sec   = (longus)(ms / M);
+    mora.tv_nsec  = (longus)(ms % M) * (longus)M * (longus)M;
+    (vacuum)nanosleep(&mora, NIHIL);
 }
 
 /* modus -opus (operarius), argumenta STRICTA et ordine fixo:
@@ -3058,26 +3077,35 @@ _opus (
         * magnitudo(i32));
     status   = (s32*)piscina_allocare(piscina, (memoriae_index)numerus
         * magnitudo(s32));
-    si (   mt == NIHIL || !_aedificationem_legere(aedificatio)
-        || !laqueus_modulus_temperley_fasciculus(mt, (i32)ab,
-           (i32)numerus, (i32)primus, puncta, valores, status))
+    si (mt == NIHIL || !_aedificationem_legere(aedificatio))
     {
-        fprintf(stderr, "opus: modulus aut fasciculus refutatus\n");
+        fprintf(stderr, "opus: modulus refutatus\n");
         piscina_destruere(piscina);
         redde I;
     }
+    /* SIGNUM statim, deinde linea per indicem simul ac computata est
+     * (fflush): parens silentium metitur, non tempus totum (T3) */
     vitium = _vitium_operis(ab);
     signum = laqueus_modulus_temperley_signum(mt);
     imprimere("OPUS SIGNUM %016llx %s %u\n", (unsigned long long)(signum
         ^ (_vitium_est(vitium, "signum") ? (i64)I : ZEPHYRUM)),
         aedificatio, (i32)primus
         + (_vitium_est(vitium, "primus") ? (i32)IV : ZEPHYRUM));
+    fflush(stdout);
     per (k = ZEPHYRUM; (i64)k < numerus; k++)
     {
         si (_vitium_est(vitium, "occide") && (i64)k == numerus / II)
         {
             fflush(stdout);
             (vacuum)raise(SIGKILL);
+        }
+        si (!laqueus_modulus_temperley_fasciculus(mt, (i32)ab + k, I,
+            (i32)primus, puncta + k, valores + k, status + k))
+        {
+            fprintf(stderr, "opus: fasciculus refutatus (index %u)\n",
+                (i32)ab + k);
+            piscina_destruere(piscina);
+            redde I;
         }
         imprimere("OPUS %u %u %u %d\n", (i32)ab + k
             + (_vitium_est(vitium, "extra") && k == ZEPHYRUM
@@ -3087,6 +3115,17 @@ _opus (
         {
             imprimere("OPUS %u %u %u %d\n", (i32)ab, puncta[k],
                 valores[k], (integer)status[k]);
+        }
+        fflush(stdout);
+        si (_vitium_est(vitium, "pende") && k == ZEPHYRUM)
+        {
+            _opus_dormire(LX * M);      /* tacet; post LX s exitus 1 */
+            piscina_destruere(piscina);
+            redde I;
+        }
+        si (_vitium_est(vitium, "lente"))
+        {
+            _opus_dormire(CC);          /* progreditur, sed lente */
         }
     }
     si (!_vitium_est(vitium, "finis"))
@@ -3102,36 +3141,46 @@ _opus (
     redde _vitium_est(vitium, "exitus") ? I : ZEPHYRUM;
 }
 
+/* horologium muri (house: fenestra_tempus), secundae */
+interior f64
+_murale (vacuum)
+{
+    redde (f64)fenestra_tempus_obtinere_pulsus()
+        / fenestra_tempus_obtinere_frequentiam();
+}
+
 /* contextus fasciculi parentis (una trica) */
 nomen structura {
        constans Opifices* opifices;
                      i32  fila;
       constans character* verbum;          /* "g1,g2,..." */
                      i64  signum;          /* laqueus_temperley_signum */
-                     f64  secundae_puncti; /* aestimatio (mora) */
+                     f64  secundae_puncti; /* aestimatio */
+                     f64  silentium;       /* s sine linea -> occisus */
                  Piscina* piscina;         /* per fasciculum refecta */
                      i64  fasciculi;
                      i64  opera;
 } ContextusOperum;
 
-/* mora operarii: X x indices x secundae per punctum, LX s minimum
- * (consilium Q2) */
-interior i32
-_mora_operis (
-    constans ContextusOperum* co,
-                         i32  numerus)
-{
-    f64 ms = (f64)X * (f64)numerus * co->secundae_puncti * 1000.0;
+/* silentium operarii (T3, consilium Q2 recognitum): occiditur si
+ * effusio eius per tot secundas non crevit - max(DC s, L x secundae
+ * per punctum), aut -silentium S. Horologium domus (in somno stat);
+ * nullus terminus totus: tardus sed vivus numquam refutatur. */
+#define SILENTIUM_MINIMUM_S    ((f64)600.0)
+#define SILENTIUM_PUNCTA       ((f64)50.0)
 
-    si (ms < (f64)MORA_OPERIS_MINIMA_MS)
+interior f64
+_silentium_operis (
+    i64 datum,
+    f64 secundae_puncti)
+{
+    f64 s = SILENTIUM_PUNCTA * secundae_puncti;
+
+    si (datum > ZEPHYRUM)
     {
-        redde (i32)MORA_OPERIS_MINIMA_MS;
+        redde (f64)datum;
     }
-    si (ms > (f64)MORA_OPERIS_MAXIMA_MS)
-    {
-        redde (i32)MORA_OPERIS_MAXIMA_MS;
-    }
-    redde (i32)ms;
+    redde s > SILENTIUM_MINIMUM_S ? s : SILENTIUM_MINIMUM_S;
 }
 
 /* linea proxima [*positio, '\n') in partes spatio singulo divisas;
@@ -3330,6 +3379,8 @@ _fasciculus_operum (
           Processus* processus[OPIFICES_MAXIMI];
                 i32  ab[OPIFICES_MAXIMI];
                 i32  quot[OPIFICES_MAXIMI];
+     memoriae_index  visa[OPIFICES_MAXIMI];     /* effusio hactenus */
+                f64  ultimum[OPIFICES_MAXIMI];  /* quando crevit */
                 i32  w = co->opifices->numerus < numerus
                     ? co->opifices->numerus : numerus;
                 i32 currentes  = ZEPHYRUM;
@@ -3345,6 +3396,8 @@ _fasciculus_operum (
         ab[k]         = locus;
         locus         += quot[k];
         processus[k]  = NIHIL;
+        visa[k]       = ZEPHYRUM;
+        ultimum[k]    = _murale();
     }
     per (k = ZEPHYRUM; k < w && bene; k++)
     {
@@ -3371,8 +3424,9 @@ _fasciculus_operum (
         argumenta[X]         = "-numerus";
         argumenta[XI]        = copia;
         argumenta[XII]       = NIHIL;
-        processus[k] = processus_incipere(argumenta, _mora_operis(co,
-            quot[k]), co->piscina);
+        processus[k] = processus_incipere(argumenta, ZEPHYRUM,
+            co->piscina);
+        ultimum[k]   = _murale();
         si (processus[k] == NIHIL)
         {
             _opus_refutatum_imprimere(co, k, ab[k], quot[k],
@@ -3394,9 +3448,33 @@ _fasciculus_operum (
              ProcessusResultus  r;
             constans character* causa;
 
-            si (   processus[k]                    == NIHIL
-                || processus_pulsare(processus[k]) != PROCESSUS_PARATUS)
+            si (processus[k] == NIHIL)
             {
+                perge;
+            }
+            si (processus_pulsare(processus[k]) != PROCESSUS_PARATUS)
+            {
+                memoriae_index n = processus_effusio_hactenus(
+                    processus[k]).mensura;
+                f64 nunc = _murale();
+
+                si (n != visa[k])
+                {
+                    visa[k]     = n;
+                    ultimum[k]  = nunc;
+                }
+                si (nunc - ultimum[k] <= co->silentium)
+                {
+                    perge;
+                }
+                /* tacuit: occidere, metere, refutare */
+                processus_abrumpere(processus[k]);
+                r             = processus_metere(processus[k]);
+                processus[k]  = NIHIL;
+                currentes--;
+                _opus_refutatum_imprimere(co, k, ab[k], quot[k],
+                    "silentium", &r);
+                bene = FALSUM;
                 perge;
             }
             r             = processus_metere(processus[k]);
@@ -3463,14 +3541,6 @@ _verbum_textus (
     }
     textus[positio] = '\0';
     redde textus;
-}
-
-/* horologium muri (house: fenestra_tempus), secundae */
-interior f64
-_murale (vacuum)
-{
-    redde (f64)fenestra_tempus_obtinere_pulsus()
-        / fenestra_tempus_obtinere_frequentiam();
 }
 
 /* tempus processoris filiorum messorum (usoris + systematis), secundae */
@@ -3556,6 +3626,7 @@ _opifices_parare (
         redde FALSUM;
     }
     opifices->numerus      = numerus;
+    opifices->silentium    = ZEPHYRUM;
     opifices->binarium     = binarium;
     opifices->directorium  = directorium;
     imprimere("OPIFICES %u | binarium %s | aedificatio %s\n", numerus,
@@ -3828,6 +3899,8 @@ _uncinum_verificatum (
         co.secundae_puncti  = (f64)st.multiplicationes * 0.21e-9;
         co.fasciculi        = ZEPHYRUM;
         co.opera            = ZEPHYRUM;
+        co.silentium = _silentium_operis(pv->opifices->silentium,
+            co.secundae_puncti);
         co.piscina = piscina_generare_dynamicum("mensura_opifices",
             65536);
         si (   co.piscina == NIHIL
@@ -4144,6 +4217,7 @@ principale (
   ParametriVerificandi  pv;
                    b32  semen_datum      = FALSUM;
                    i64  opifices_petiti  = ZEPHYRUM;
+                   i64  silentium_datum  = ZEPHYRUM;
               Opifices  opifices;
                Piscina* piscina_opificum = NIHIL;
 
@@ -4263,6 +4337,18 @@ principale (
                 }
             }
         }
+        alioquin si (strcmp(argv[i], "-silentium") == ZEPHYRUM)
+        {
+            si (   i + I           >= argc
+                || !_argumentum_decimale(argv[++i],
+                   SILENTIUM_DATUM_MAXIMUM, &silentium_datum)
+                || silentium_datum == ZEPHYRUM)
+            {
+                imprimere("-silentium S: 1 .. %llu secundae\n",
+                    (unsigned long long)SILENTIUM_DATUM_MAXIMUM);
+                redde I;
+            }
+        }
         alioquin si (   strcmp(argv[i], "-uncini") == ZEPHYRUM
                      && i + I < argc
                      && numerus_viarum < TEXTUS_UNCINORUM_MAXIMI)
@@ -4295,7 +4381,13 @@ principale (
         {
             redde I;
         }
-        pv.opifices = &opifices;
+        opifices.silentium  = silentium_datum;
+        pv.opifices         = &opifices;
+    }
+    alioquin si (silentium_datum > ZEPHYRUM)
+    {
+        imprimere("-silentium: cum -opifices solum\n");
+        redde I;
     }
     si (pv.activa && !semen_datum)
     {
