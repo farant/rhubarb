@@ -78,6 +78,21 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/praeco" provenientia="relatio"/>
   </actio>
+  <!-- negotia (negotia-plan T2): negotia et facultates in volumine
+       vici (creare / facultas / mutare / involvere / index) -->
+  <actio titulus="negotia" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/negotia_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/negotia"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/negotia/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/negotia_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/negotia" provenientia="relatio"/>
+  </actio>
   <!-- auditio (sonus M5c): sonus et musica in terminali - praeparata,
        cantus, carmina (-carmen/-partitura/-censura/-auscultare/
        -recensio [-json]); instrumentum agentis componentis -->

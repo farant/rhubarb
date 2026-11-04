@@ -33,3 +33,33 @@ suffix returns NIHIL with `ambiguum` set - never the first match.
 Plants (all red in the named section, restored IDEM): identical edit
 appends (revisiones), renovare never reads (alius scriptor), suffix
 first-match wins (suffixum ambiguum).
+
+## 2026-11-04 — T2: the CLI (tools/negotia.c)
+
+- **stdin body**: `filum_legere_totum` sizes the read with `stat`, which
+  is 0 for a pipe, so `-corpus-filum -` would read nothing. The tool
+  reads every body file through `filum_octeti_*` ("/dev/stdin" for
+  "-") into a chorda_aedificator, then drops trailing newlines so
+  `-corpus T` and a heredoc of the same text give the same body (and an
+  identical `mutare` writes nothing).
+- **Reads never create a volume**: index / ostendere / revisiones open
+  with `volumen_aperire` (a typo'd `-volumen` is refused, exit 1);
+  only writing commands use `volumen_aperire_aut_creare`.
+- Flags are checked per command (bitmask in `IMPERIA`), so
+  `creare x -status shipped` is a usage error instead of a silently
+  ignored flag. Invalid status token = usage (2), not refusal (1).
+- `involvere` checks the session id is `[0-9A-Za-z-]+` already here:
+  T6 puts it in a shell command line.
+- Ambiguous suffix candidates are enumerated by the CLI (the library
+  only says "ambiguous"); for features it walks every project.
+- Smoke test (scratchpad `negotia_fumus.sh`) forces an ambiguous
+  one-character suffix by creating projects until two ULIDs share a
+  last character.
+- **Plants by hand** (binary + smoke, planta is blind there); backup
+  and script in `build/plantae_negotia_t2/`. Two plants of the same
+  byte length written in the same second left the PREVIOUS plant's
+  object in place (aedilis struere.sh judges by mtime) - plant 3
+  "survived" for the wrong reason. Fixed with a 1.2 s sleep before
+  each write and before the restore.
+- `-provenientia` (fabrica T7) wired as in praeco: without it
+  `bin/fabrica iudicare` calls bin/negotia IGNOTUM.
