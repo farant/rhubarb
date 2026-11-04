@@ -5404,3 +5404,70 @@ plants 3 (b/c swapped -> "ordo"; second successor
 dropped -> "praedecessores" + downstream; later defs ignored ->
 "iunctura" only), all IDEM; examen ACCIPE on 3 files; formator
 CONFORMIS (in-tree); vocabula NOVA 0 (postordo/rpo renamed).
+
+### T6 — NATIVUM + effugium: PAUSED after prep — 2026-11-04
+
+State: header approved by Fran (below); lexicon prep committed
+(888bfbc5a: real struct sigaction union form, siginfo_t, stack_t +
+sigaltstack, ucontext/mcontext pc+fp, SA_/SS_/SIGSTKSZ, sigsetjmp/
+siglongjmp - all certified by officina/auspex_posix.sh). Nothing else
+of T6 is in the tree. Ledger: opus M5 6 stays susceptum.
+
+Why paused: twice, a response writing the effugium implementation
+(the trampoline / entry / escape code in officina_effugium.c) was cut
+off by a safety classifier - not a tool error. The assistant will not
+regenerate that content. Open decision for Fran: (1) Fran writes the
+effugium layer and the assistant does the machinula wiring, define,
+build list, tests, plants and gates; (2) leave M5 paused; (3) revisit
+the plan's native path first. Tasks 7-10 all build on T6.
+
+Approved header (plan text + two additions):
+- officina_effugium.h as in the plan (OFFICINA_NATIVUM_LOCUS
+  0x2FFFF0000000UL, _MENSURA 0x10000000UL; EffugiumGenus REDDITUM/
+  SALTUS/VITIUM; EffugiumFructus; EffugiumArgumenta; parare, area,
+  vocare, salire), PLUS:
+  - `s32 officina_effugium_installationes (vacuum);` - how many times
+    sigaction installed the handler (1 after parare, however often
+    called) - the plan's RF4 test needs it;
+  - officina_effugium_area returns NIHIL before parare.
+- officina_machinula.h: machinula_nativum_ponere as in the plan; NOT
+  added to the amalgam's public officina.h yet (no hospes row needed).
+- officina_conexio.h: CONEXIO_SIGNUM_NATIVUM 4 (index = entry address).
+- Handler chains to the previous action (incl. credo's); SIG_DFL or
+  SIG_IGN -> reset and re-raise.
+
+Scope decided for T6:
+- NATIVUM arm marshals register-class scalars only (ints -> x, f32/f64
+  -> d as bit patterns; f32 in the low half), typed from the call
+  site's MedullaTypusLiminis. Untyped argument -> halt (the plant).
+  Aggregates, > 8 of a class (stack), variadic calls, %reditus -> halt
+  naming Task 8 (the plan gives them to Task 8, incl. the entry thunk
+  side).
+- Return: x0 canonicalised by the call's typus; f64 = d0 bits; f32 =
+  low 32 bits of d0.
+- SALTUS -> MACHINULA_VITIUM with codex = trap code; VITIUM ->
+  MACHINULA_VITIUM, nuntius naming signal and pc. Machinula reusable.
+- Native top function in aperire/currere: called directly (params
+  zero), result typed by the function's typus_reditus (found via the
+  symbol's modulus_index/index_localis); aperire returns FALSUM with
+  genus BENE (already finished; not steppable).
+- Indirect-call signum check must accept NATIVUM. Only aperire and the
+  VOCARE arm read a FUNCTIO descriptor's index (checked).
+- Process-global state: own permanent piscina inside parare (credo
+  section piscinas die after each section); altstack static.
+- Trampoline occupies [0, 0x1000) of the area; hand-written test code
+  goes after it. An extra test section exercises the trampoline's
+  stack-word copy (stack args are otherwise first used in Task 8).
+- officina/compile_probationes.sh RADIX_FONTES needs "codificator_a64"
+  and "memoria_exsecutabilis_macos".
+
+Step split agreed with Fran (one T6 commit at the end):
+1. area + trampoline + vocare + salire (no signals) - tests: native
+   return through the trampoline, stack words, salire -> SALTUS.
+2. fault handler (once, on sigaltstack, chaining) - tests: null load
+   -> VITIUM and process survives; installationes == 1; plant:
+   handler not chaining.
+3. machinula seam - the plan's "nativum vocatum" (use an f64 argument
+   so untyped marshalling fails the plant), "nativum principale",
+   "saltus" (reuse after halt), "transitus iteratus" (10^6 calls,
+   constant stack apex); plant: untyped args.
