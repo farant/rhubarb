@@ -158,3 +158,31 @@ of SOUNDS (`auditio radius`). Playing a SONG (`-carmen`, `-sonare`)
 goes through cantor straight to the audio device, so a stub does not
 silence it. A silent check for the song path still needs a way to
 stop playback (none yet).
+
+## 2026-11-04 — `-gabc` (gabc plan T8) and the first auditio smoke test
+
+`-gabc VIA [-do P] [-strictus] [-titulus T]` behaves exactly like
+`-musicxml`: alone it prints the book on stdout and the converter's report
+on stderr (exit 3 with approximations, 1 on a parse error or a strict
+refusal); with `-sonare`, `-carmen`, `-partitura` … the converted book is
+the source. `-do` takes a note name through `partitura_notam_legere`
+("F4", "Bb3") and sets `do_fixum`; without it the highest note lands on
+F4. A chant with no `name:` header (and no `-titulus`) takes the file name.
+`-gabc` with `-musicxml` → exit 2; `-do` without `-gabc` → exit 2.
+
+Shared, not copied: the tail both converters had (report to stderr, wrap in
+`<carmina>`, re-read, title, exit code) is `_conversionem_perficere`;
+`_musicxml_convertere` now calls it too. The validation checks use one
+`conversum` (= the -musicxml or -gabc path).
+
+No suite covered `-musicxml` (it was checked by hand, see 2026-11-02), so
+there was nothing to mirror: `tools/auditio_fumus.sh` (gate
+`auditio-fumus`, `instrumentum="bin/auditio"`) is new. 17 checks: book
+re-read through `-liber … -carmina`, `-partitura` title line, usage exits,
+`-do B3`/`Bb3` first note, approximation exit 3, strict exit 1 with empty
+stdout, `-titulus`, file-name title, parse error, and `-musicxml nata_lux`
+through the shared tail. It does not play sound (no way to silence cantor).
+
+Plant by hand (planta could not name the gate while the script was
+untracked): `-do` ignored → the two `-do` checks FRACTUM; restored with
+cp + touch, rebuilt, green.

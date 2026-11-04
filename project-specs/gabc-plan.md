@@ -649,19 +649,19 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
   `-do` takes a pitch name (`F4`, `Bb3`) → `do_fixum`. `-gabc` and
   `-musicxml` together → exit 2 with usage.
 
-- [ ] **Step 1: Measure** — find how `-musicxml` is tested (grep the
+- [x] **Step 1: Measure** — find how `-musicxml` is tested (grep the
   suites for `"-musicxml"`); mirror it.
-- [ ] **Step 2: Failing tests** — `-gabc salve_2435.gabc` prints a
+- [x] **Step 2: Failing tests** — `-gabc salve_2435.gabc` prints a
   `<carmina>` that `carmina_legere` accepts; `-gabc … -partitura`
   output begins with the expected title line; `-gabc` + `-musicxml`
   → exit 2; `-do Bb3` moves every note down a semitone relative to
   `-do B3`.
-- [ ] **Step 3–5:** implement by sharing the `-musicxml` path
+- [x] **Step 3–5:** implement by sharing the `-musicxml` path
   (`tools/auditio.c:549-640`), not copying it — factor a common
   "converted source" helper if the two would otherwise duplicate more
   than the reader/converter calls. Green. **Plant:** ignore `-do` →
   its test FRACTUM.
-- [ ] **Step 6: Commit** (gates `radix` + the auditio tool's gate;
+- [x] **Step 6: Commit** (gates `radix` + the auditio tool's gate;
   rebuild auditio before commit per house rule). Tell Fran the
   command to hear the Salve: `auditio -gabc
   musica/fontes/salve_2435.gabc -sonare`.
@@ -788,4 +788,17 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
   note has both, the plan's prediction was wrong); ties across syllables
   -> note count red. Both restored, cmp equal. The nexus test found a
   real bug (breath counted twice in link rows), fixed.
+
+### T8 — executed 2026-11-04
+
+- Measured: no suite covers `-musicxml` (hand-checked, auditio worklog
+  2026-11-02), and no gate covers auditio. New `tools/auditio_fumus.sh`
+  (gate `auditio-fumus`, instrument `bin/auditio`), 17 checks, also the
+  first automated check of `-musicxml`. No sound tested (cantor cannot be
+  silenced).
+- `tools/auditio.c`: `-gabc`, `-do` (via `partitura_notam_legere`);
+  shared tail `_conversionem_perficere` used by both converters.
+- Plant (by hand, gate unknown to planta while untracked): `-do` ignored
+  -> both `-do` checks FRACTUM; restored, rebuilt, green.
+- Hear the Salve: `auditio -gabc musica/fontes/salve_2435.gabc -sonare`.
 
