@@ -2085,4 +2085,10 @@
   <vocabulum lemma="opc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: campus opc (codex operationis) in verbo instructionis (lib/codificator_a64.c)"/>
   <vocabulum lemma="scvtf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: SCVTF (integer signatus -> fluitans) (lib/codificator_a64.c)"/>
   <vocabulum lemma="ucvtf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: UCVTF (integer insignatus -> fluitans) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="revisio" lingua="latina" classis="substantivum" nota="Latina media (revisere): mutatio servata rei stantis, actum unum in volumine; negotia_revisiones (include/negotia.h)">
+    <forma textus="revisio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="revisionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="revisiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="revisionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
 </glossarium>
