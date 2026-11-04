@@ -1065,6 +1065,49 @@ silva_c89_ambigua_indecisa_numerare (
     constans SilvaCommissio* commissio,
      constans SilvaOraculum* oraculum);
 
+/* CLAUSURA (M0b DECISUS 2; emendatum 2026-11-04, budget silvae):
+ * analysis prima -> symbola plagulae in oraculum -> responsa
+ * vacata -> recanonicare -> analysis secunda SOLUM si aliquid
+ * versum est. Typatio canonicae relativa est; si nihil versum,
+ * arbor eadem est et analysis prima EST analysis post ultimum
+ * recanonicare. Pendet ex hoc: analysis functio PURA arboris et
+ * systematis est - oraculum non legit (nec attingit), arborem non
+ * scribit, statum occultum (hic_manens mutabilem) non tenet, ordo
+ * eius a monstratoribus non pendet. Modus PROBANS id probat:
+ * secunda semper agitur (sedibus aliis) et signa ambarum
+ * conferuntur ubi nihil versum (porta examen-corpus, percursus
+ * -bis-probare). oraculum NIHIL = sine clausura (analysis una).
+ * Fructus NIHIL licet. Una sedes formulae: vocantes eam non
+ * transcribunt. */
+nomen enumeratio {
+    SILVA_CLAUSURA_ORDINARIA = 0,   /* secunda solum si versae > 0 */
+    SILVA_CLAUSURA_PROBANS          /* secunda semper; signa
+                                     * conferuntur si versae == 0 */
+} SilvaClausuraModus;
+
+/* cifrae, non numeri Romani: silva.h eadem macra possidet et
+ * redefinitio solum signis identicis licet (ut REPOSITIO_*) */
+#define SILVA_DISCREPANTIA_NODI         1    /* typatio + nexus */
+#define SILVA_DISCREPANTIA_SYMBOLA      2
+#define SILVA_DISCREPANTIA_DIAGNOSTICA  4
+
+nomen structura {
+    i32 versae;          /* lectiones canonicae versae */
+    b32 clausa;          /* clausura acta (prima + oraculum) */
+    b32 secunda;         /* analysis secunda acta */
+    i32 discrepantiae;   /* PROBANS, versae == 0: SILVA_DISCREPANTIA_*;
+                          * ZEPHYRUM = analyses eaedem */
+} SilvaClausuraFructus;
+
+SilvaSemantica*
+silva_c89_semantica_analysare_clausa (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+    constans SilvaParsura* systema,
+            SilvaOraculum* oraculum,
+                      s32  modus,
+     SilvaClausuraFructus* fructus);
+
 
 /* ==================================================
  * Index (Chunk D): superficies quaestionis symbolorum - primus

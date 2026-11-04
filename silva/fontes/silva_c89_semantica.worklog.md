@@ -1077,3 +1077,26 @@ The 2026-07-08 plan said "if percursus -semantica shows cost, switch to a hashed
 - placement index without `>> 1`.
 
 **Not done.** `_parametra_tractare` still allocates the parameter series before interning knows whether it's a hit. It's memory, not time; leave it.
+
+## 2026-11-04 — analysare_clausa: closure in one place, second analysis only on a flip
+
+Narrative and decision: silva/phase-log.md 2026-11-04 (M0b DECISUS 2 AMENDED).
+
+**Code notes.**
+- **Fingerprints (`_signa_analysis`) carry only what is stable across two analyses of one tree:**
+  - tree node pointers (the same tree);
+  - names and rendered types (`silva_c89_typum_scribere`; TypusC89 objects are per-analysis, so their pointers can't be compared);
+  - tag declaring nodes;
+  - diagnostic fields, including `causa` text and `via`.
+- They reuse the `_signum_*` mixers from the interning table.
+- Three channels give three words, so a difference names its channel (`SILVA_DISCREPANTIA_*`).
+- **Arena shift.** PROBANS allocates a pad of 16..4096 bytes before sem₂, on top of the natural shift (sem₂ is allocated after sem₁). Address-dependent order would show up as a difference.
+- **No printing in the library** (examen 96/97). The result struct reports; the tool prints `[bis discrepat] <via> (nodi n, symbola n, diagnostica n)`.
+- **Oracle plant skipped on purpose.** The analysis can't reach the oracle at all: neither SilvaParsura nor SilvaCommissio carries one. The only route would be a global, which the hidden-static plants cover.
+- **Plant P3 (a static adding a diagnostic on even calls)** was caught in the suite by an OLDER test (expected zero diagnostics) before the new PROBANS assertion. Applied by hand to the corpus run, it flagged all 374 sampled files in the diagnostic channel. Lesson: when a plant goes red, check WHICH assertion caught it.
+- **Cost of the full verification run** (`-bis-probare 1`): 559.7 G against 390.7 normal. The gate's 1/8 sample costs ~+5%.
+
+**Trap: new PUBLIC types.** A type that silva.h also declares has to go in `CADENDA_TYPEDEF` in `silva/instrumenta/principalia/amalgamator.c`, so its internal typedef is dropped from the amalgam.
+- Otherwise the excludenda harvest fails with "typedef redefinition with different types": anonymous structs and enums are distinct types even when identical.
+- The generator reports that as "compilatio fracta sine signis", which points nowhere near the cause.
+- Macros shared with silva.h must be token-identical, so use digits, not Roman numerals (as `REPOSITIO_*` already does).

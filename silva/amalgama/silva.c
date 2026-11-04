@@ -2010,6 +2010,37 @@ silva_c89_ambigua_indecisa_numerare (
     const SilvaCommissio* commissio,
      const SilvaOraculum* oraculum);
 
+/* Clausura (M0b DECISUS 2, emendatum 2026-11-04): analysis prima ->
+ * symbola in oraculum -> recanonicare -> secunda SOLUM si aliquid
+ * versum (analysis pura: prima EST analysis post ultimum
+ * recanonicare). PROBANS: secunda semper, signa collata ubi nihil
+ * versum (discrepantiae != 0 = analysis non pura). oraculum NULL =
+ * analysis una; fructus NULL licet. Formulam ne transcribas. */
+typedef enum {
+    SILVA_CLAUSURA_ORDINARIA = 0,
+    SILVA_CLAUSURA_PROBANS
+} SilvaClausuraModus;
+
+#define SILVA_DISCREPANTIA_NODI         1
+#define SILVA_DISCREPANTIA_SYMBOLA      2
+#define SILVA_DISCREPANTIA_DIAGNOSTICA  4
+
+typedef struct {
+    unsigned int versae;          /* lectiones canonicae versae */
+    int          clausa;          /* clausura acta */
+    int          secunda;         /* analysis secunda acta */
+    unsigned int discrepantiae;   /* SILVA_DISCREPANTIA_* */
+} SilvaClausuraFructus;
+
+SilvaSemantica*
+silva_c89_semantica_analysare_clausa (
+            SilvaPiscina* piscina,
+      const SilvaParsura* parsura,
+      const SilvaParsura* systema,
+           SilvaOraculum* oraculum,
+                      int modus,
+    SilvaClausuraFructus* fructus);
+
 /* Quaestio symboli (a scopo fili post analysem) */
 SemanticaSymbolum*
 silva_c89_symbolum_invenire (
@@ -14489,6 +14520,21 @@ i32
 silva_c89_ambigua_indecisa_numerare (
     constans SilvaCommissio* commissio,
      constans SilvaOraculum* oraculum);
+
+/* cifrae, non numeri Romani: silva.h eadem macra possidet et
+ * redefinitio solum signis identicis licet (ut REPOSITIO_*) */
+#define SILVA_DISCREPANTIA_NODI         1    /* typatio + nexus */
+#define SILVA_DISCREPANTIA_SYMBOLA      2
+#define SILVA_DISCREPANTIA_DIAGNOSTICA  4
+
+SilvaSemantica*
+silva_c89_semantica_analysare_clausa (
+                  SilvaPiscina* piscina,
+    constans SilvaParsura* parsura,
+    constans SilvaParsura* systema,
+            SilvaOraculum* oraculum,
+                      s32  modus,
+     SilvaClausuraFructus* fructus);
 
 
 /* ==================================================
@@ -100709,6 +100755,267 @@ silva_c89_ambigua_indecisa_numerare (
         }
     }
     redde indecisa;
+}
+
+
+/* ==================================================
+ * Clausura (M0b DECISUS 2, emendatum 2026-11-04) - vide caput.
+ * Signa analysis pro modo PROBANS: solum quae inter analyses
+ * stabilia sunt intrant - nodi arboris (eadem arbor), tituli, typi
+ * REDDITI (typi ipsi per analysin allocantur: monstratores eorum
+ * incomparabiles), sedes declarationis tag (nodus arboris).
+ * ================================================== */
+
+#define _SIGNUM_SEMEN ((i32)0x811C9DC5UL)
+
+interior i32
+_signum_octetorum (
+                    i32  h,
+     constans character* octeti,
+                    i32  mensura)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        h = _signum_verbum(h, (i32)(insignatus character)octeti[k]);
+    }
+    redde _signum_verbum(h, mensura);
+}
+
+interior i32
+_signum_typi_redditi (
+                   i32  h,
+     constans TypusC89* t)
+{
+    character textus[MMXLVIII];
+          i32 mensura;
+
+    si (t == NIHIL)
+    {
+        redde _signum_verbum(h, ZEPHYRUM);
+    }
+    mensura = (i32)silva_c89_typum_scribere(t, textus,
+        (insignatus integer)magnitudo(textus));
+    h = _signum_octetorum(h, textus, mensura);
+    commutatio (t->genus)
+    {
+        casus TYPUS_C89_STRUCTURA:
+        casus TYPUS_C89_UNIO:
+            h = _signum_monstratoris(h, t->datum.tag.declarans);
+            frange;
+        casus TYPUS_C89_ENUMERATUS:
+            h = _signum_monstratoris(h, t->datum.enumeratus.declarans);
+            frange;
+        ordinarius:
+            frange;
+    }
+    redde h;
+}
+
+interior i32
+_signum_symboli (
+                            i32  h,
+     constans SemanticaSymbolum* s)
+{
+    si (s == NIHIL)
+    {
+        redde _signum_verbum(h, ZEPHYRUM);
+    }
+    h = _signum_verbum(h, (i32)s->genus);
+    h = _signum_octetorum(h, (constans character*)s->titulus.datum,
+        s->titulus.mensura);
+    h = _signum_monstratoris(h, s->declarans);
+    h = _signum_verbum(h, s->repositio);
+    h = _signum_verbum(h, s->profunditas);
+    h = _signum_verbum(h, (i32)s->ex_systemate);
+    h = _signum_verbum(h, (i32)s->est_implicitum);
+    h = _signum_verbum(h, (i32)s->usus);
+    h = _signum_verbum(h, (i32)(i64)s->valor);
+    h = _signum_verbum(h, (i32)((i64)s->valor >> XVI >> XVI));
+    redde _signum_typi_redditi(h, s->typus);
+}
+
+/* Nodi omnes arboris (ordine fontis): typatio (naturalis,
+ * conversus) et nexus symboli ubi adsunt */
+interior vacuum
+_signum_nodorum (
+    constans SilvaSemantica* sem,
+                 SilvaValor  valor,
+                        i32* h)
+{
+    si (valor.genus == SILVA_VALOR_LISTA)
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM; i < (i32)silva_valor_lista_numerus(valor);
+             i++)
+        {
+            SilvaValor* elem = silva_valor_lista_obtinere(valor, i);
+
+            si (elem != NIHIL)
+            {
+                _signum_nodorum(sem, *elem, h);
+            }
+        }
+        redde;
+    }
+    si (valor.genus != SILVA_VALOR_NODUS || valor.datum.nodus == NIHIL)
+    {
+        redde;
+    }
+    {
+        constans SilvaNodus* nodus = valor.datum.nodus;
+          constans TypusC89* naturalis =
+              silva_c89_typus_expressionis(sem, nodus);
+        constans TypusC89* conversus =
+            silva_c89_conversio_expressionis(sem, nodus);
+        constans SemanticaSymbolum* symbolum =
+            silva_c89_symbolum_nodi(sem, nodus);
+        i32 i;
+
+        si (   naturalis != NIHIL || conversus != NIHIL
+            || symbolum  != NIHIL)
+        {
+            *h = _signum_monstratoris(*h, nodus);
+            *h = _signum_verbum(*h, (i32)nodus->genus);
+            *h = _signum_typi_redditi(*h, naturalis);
+            *h = _signum_typi_redditi(*h, conversus);
+            *h = _signum_symboli(*h, symbolum);
+        }
+        per (i = ZEPHYRUM; i < nodus->numerus_locorum; i++)
+        {
+            _signum_nodorum(sem, nodus->loci[i], h);
+        }
+    }
+}
+
+interior i32
+_signum_diagnosticorum (
+    constans SilvaSemantica* sem)
+{
+    i32 h;
+    i32 i;
+
+    h = _SIGNUM_SEMEN;
+    per (i = ZEPHYRUM; i < silva_xar_numerus(sem->diagnostica); i++)
+    {
+        constans SemanticaDiagnosticum* d =
+            (constans SemanticaDiagnosticum*)silva_xar_obtinere(
+                sem->diagnostica, i);
+        constans character* causa = (d->causa != NIHIL) ? d->causa : "";
+
+        h = _signum_verbum(h, (i32)d->codex);
+        h = _signum_verbum(h, (i32)d->severitas);
+        h = _signum_verbum(h, (i32)d->provisionale);
+        h = _signum_monstratoris(h, d->nodus);
+        h = _signum_monstratoris(h, d->socius);
+        h = _signum_verbum(h, d->linea);
+        h = _signum_verbum(h, d->columna);
+        h = _signum_verbum(h, d->longitudo);
+        h = _signum_verbum(h, (i32)d->fons_index);
+        h = _signum_octetorum(h, (constans character*)d->via.datum,
+            d->via.mensura);
+        h = _signum_octetorum(h, causa, (i32)strlen(causa));
+    }
+    redde _signum_verbum(h, silva_xar_numerus(sem->diagnostica));
+}
+
+interior vacuum
+_signa_analysis (
+    constans SilvaSemantica* sem,
+      constans SilvaParsura* parsura,
+                        i32* signa)
+{
+    i32 h;
+    i32 i;
+
+    h = _SIGNUM_SEMEN;
+    _signum_nodorum(sem, parsura->commissio->radix, &h);
+    signa[ZEPHYRUM] = h;
+
+    h = _SIGNUM_SEMEN;
+    per (i = ZEPHYRUM; i < silva_xar_numerus(sem->symbola); i++)
+    {
+        h = _signum_symboli(h,
+            *(constans SemanticaSymbolum**)silva_xar_obtinere(sem->symbola,
+                i));
+    }
+    signa[I] = _signum_verbum(h, silva_xar_numerus(sem->symbola));
+
+    signa[II] = _signum_diagnosticorum(sem);
+}
+
+SilvaSemantica*
+silva_c89_semantica_analysare_clausa (
+                  SilvaPiscina* piscina,
+    constans SilvaParsura* parsura,
+    constans SilvaParsura* systema,
+            SilvaOraculum* oraculum,
+                      s32  modus,
+     SilvaClausuraFructus* fructus)
+{
+          SilvaSemantica* prima;
+          SilvaSemantica* secunda;
+    SilvaClausuraFructus  locale;
+                     b32  probans;
+                     i32  signa_prima[III];
+                     i32  signa_secunda[III];
+                     i32  k;
+
+    si (fructus == NIHIL)
+    {
+        fructus = &locale;
+    }
+    fructus->versae         = ZEPHYRUM;
+    fructus->clausa         = FALSUM;
+    fructus->secunda        = FALSUM;
+    fructus->discrepantiae  = ZEPHYRUM;
+
+    prima = silva_c89_semantica_analysare_cum_systemate(piscina,
+        parsura, systema);
+    si (prima == NIHIL || oraculum == NIHIL)
+    {
+        redde prima;
+    }
+    (vacuum)silva_c89_semantica_oraculum_augere(prima, oraculum);
+    silva_oraculum_responsa_vacare(oraculum);
+    fructus->versae = (i32)silva_recanonicare(parsura->commissio,
+        oraculum, silva_c89_resolutor, NIHIL);
+    fructus->clausa = VERUM;
+
+    probans = (modus == (s32)SILVA_CLAUSURA_PROBANS
+        && fructus->versae == ZEPHYRUM) ? VERUM : FALSUM;
+    si (fructus->versae == ZEPHYRUM && !probans)
+    {
+        /* arbor eadem: prima EST analysis post ultimum recanonicare */
+        redde prima;
+    }
+
+    si (probans)
+    {
+        _signa_analysis(prima, parsura, signa_prima);
+        /* secunda sedibus aliis quam prima (iam ex natura, plus
+         * intervallum variabile): ordo per monstratores pendens
+         * discrepantiam faceret */
+        (vacuum)silva_piscina_allocare(piscina, (memoriae_index)
+            (((signa_prima[ZEPHYRUM] >> III) & (i32)CCLV) + I) * XVI);
+    }
+    secunda = silva_c89_semantica_analysare_cum_systemate(piscina,
+        parsura, systema);
+    fructus->secunda = VERUM;
+    si (probans && secunda != NIHIL)
+    {
+        _signa_analysis(secunda, parsura, signa_secunda);
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            si (signa_prima[k] != signa_secunda[k])
+            {
+                fructus->discrepantiae |= (i32)I << k;
+            }
+        }
+    }
+    redde secunda;
 }
 
 

@@ -2011,6 +2011,113 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: clausura per analysare_clausa (DECISUS 2 emendatum
+     * 2026-11-04) - secunda solum si aliquid versum; PROBANS:
+     * analyses eaedem ubi nihil versum
+     * ======================================================== */
+
+    {
+        constans character* fons_versio =
+            "void f(void)\n"
+            "{\n"
+            "    typedef int T;\n"
+            "    T x;\n"
+            "    (T)(x);\n"
+            "}\n";
+        /* sine versione, sed typi, enumeratio, vocationes et
+         * diagnosticum (vocatio implicita h) - signa non vacua */
+        constans character* fons_placidus =
+            "typedef struct { int a; char* b; } Par;\n"
+            "enum color { RUBER, VIRIDIS = 3 };\n"
+            "static int g(int k) { return k * 2; }\n"
+            "int f(Par* p, int n)\n"
+            "{\n"
+            "    int i;\n"
+            "    long s = 0;\n"
+            "    for (i = 0; i < n; i++)\n"
+            "    {\n"
+            "        s += g(p[i].a) + VIRIDIS;\n"
+            "    }\n"
+            "    return (int)s + h();\n"
+            "}\n";
+        SilvaClausuraFructus  fructus;
+               SilvaOraculum* oraculum;
+                SilvaParsura* parsura;
+              SilvaSemantica* sem;
+         constans SilvaNodus* elem;
+                  SilvaValor  expr_v;
+
+        imprimere("\n--- Probans clausuram (analysare_clausa) ---\n");
+
+        /* versio: secunda agitur, (T)(x) post versionem int */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_versio, (i32)strlen(fons_versio), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_ORDINARIA, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_VERUM (fructus.clausa);
+        CREDO_VERUM (fructus.versae >= I);
+        CREDO_VERUM (fructus.secunda);
+        elem = _elementum_corporis(parsura, 0, II);
+        CREDO_NON_NIHIL (elem);
+        expr_v = silva_c89_sententia_expressionis_expressio(elem);
+        CREDO_VERUM (expr_v.genus == SILVA_VALOR_NODUS);
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            expr_v.datum.nodus),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
+
+        /* nihil versum: secunda NON agitur - prima auctoritativa */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_placidus, (i32)strlen(fons_placidus), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_ORDINARIA, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_VERUM (fructus.clausa);
+        CREDO_AEQUALIS_I32 (fructus.versae, ZEPHYRUM);
+        CREDO_FALSUM (fructus.secunda);
+        CREDO_VERUM (silva_c89_diagnostica_numerus(sem) >= I);
+
+        /* PROBANS, nihil versum: secunda agitur, analyses eaedem */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_placidus, (i32)strlen(fons_placidus), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_PROBANS, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_AEQUALIS_I32 (fructus.versae, ZEPHYRUM);
+        CREDO_VERUM (fructus.secunda);
+        CREDO_AEQUALIS_I32 (fructus.discrepantiae, ZEPHYRUM);
+
+        /* PROBANS cum versione: analyses differre DEBENT - nulla
+         * collatio, nulla discrepantia nuntiata */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_versio, (i32)strlen(fons_versio), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_PROBANS, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_VERUM (fructus.versae >= I);
+        CREDO_VERUM (fructus.secunda);
+        CREDO_AEQUALIS_I32 (fructus.discrepantiae, ZEPHYRUM);
+
+        /* sine oraculo: analysis una, nulla clausura */
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, NIHIL, SILVA_CLAUSURA_ORDINARIA, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_FALSUM (fructus.clausa);
+        CREDO_FALSUM (fructus.secunda);
+        CREDO_AEQUALIS_I32 (fructus.versae, ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * PROBARE (M1a Chunk A): exporta demissionis - nexus
      * symbolorum (sedes usus -> symbolum, etiam implicitus) +
      * octeti chordae decodati (fugae, fragmenta, L-parca)

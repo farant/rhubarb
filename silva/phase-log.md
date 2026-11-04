@@ -14669,3 +14669,30 @@ Plan B finished (T14–T19c-1): silva is materia's C89 frontend; see the
 closing RELATIO in `materia/phase-log.md` (2026-09-26) and
 `silva/CLAUDE.md` (PHASIS V PERFECTA). Open C89-parser follow-ups live in
 tabularium region 'c89 parser'. Next by decree …XX0BZ: JS.
+
+## 2026-11-04 — M0b DECISUS 2 AMENDED: the second analysis runs only when closure flipped something
+
+**Original (2026-07-08, l.6213).** Typing is canonical-relative, so the authoritative analysis runs after closure. sem₁ feeds closure, recanonicare runs, and sem₂ is the answer, every file, always. Made complete-first, with the cost "invisible per census". It named its own way back: "a skip-flag for the feeder pass".
+
+**What measurement showed.**
+- Closure flips 10 nodes in 4 of 3,054 files, so for 99.9% of files sem₂ re-analysed the identical tree.
+- After the derived-type interning change (ad9f41d4), the two passes were ~40% of `percursus -semantica`.
+
+**Amendment (Fran approved in session, 2026-11-04).** `silva_c89_semantica_analysare_clausa` runs sem₂ only if `versae > 0`; otherwise sem₁ IS the analysis after the last recanonicare. The contract in silva.h ("analyze after your last recanonicare") is unchanged in substance.
+
+**What it rests on: the analysis is a pure function of (tree, systema).**
+- It never reaches the oracle: neither SilvaParsura nor SilvaCommissio carries one, and it is never passed in.
+- It writes nothing to the tree.
+- It keeps no mutable static state.
+- Its output order doesn't depend on addresses.
+
+**Proved before landing.** A scratch differential over the whole corpus compared sem₁ and sem₂ on every file that didn't flip: 2,987/2,987 identical (per-node typing and symbol links, symbol list, diagnostic list; ~12.3 M lines). The 4 flipping files all differ, as they should.
+
+**Kept proved.**
+- `SILVA_CLAUSURA_PROBANS` always runs sem₂, at shifted arena addresses, and compares fingerprints of the two.
+- The examen-corpus gate runs `percursus -semantica -bis-probare 8`: a fixed eighth of the corpus by path hash, 374 comparisons. Any difference is a hard failure, and so is zero comparisons ("silence is not success").
+- Plants, all red: always skip, never skip, a hidden static that changes diagnostics (374/374 flagged), one that changes symbols, and the gate without the flag.
+
+**Effect.** Same tree, old two-pass binary against new: `percursus -semantica` 496.7 -> 390.7 G instructions (-21.3%). Reports identical; per-file peak 644 -> 597 MB.
+
+**Consumers.** percursus moved in this commit. examen, silva_iudicium, renominare, nexus_percursus, officina (cursor, fusor, interpretare, praeparator) and the test recipes move next: until then they still run both passes, which is correct, just slower.
