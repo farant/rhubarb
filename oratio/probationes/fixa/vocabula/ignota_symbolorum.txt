@@ -505,6 +505,7 @@ dir0
 dir1
 dirbuf
 dirs
+disable
 discardans
 dispatch
 display
@@ -1264,6 +1265,7 @@ mblen
 mbstowcs
 mbtowc
 mc
+mcontext
 mcp
 megabytes
 memchr
@@ -1283,6 +1285,7 @@ michaeae
 milliseconds
 mimen
 mimina
+minsigstksz
 mintare
 mintatae
 mintationis
@@ -1428,6 +1431,7 @@ old
 on
 onln
 only
+onstack
 op1
 op2
 open
@@ -1939,13 +1943,17 @@ sig1
 sigabrt
 sigaction
 sigalrm
+sigaltstack
 sigbus
 sigcont
 sigemptyset
 sigfpe
 sigill
+siginfo
 sigint
+sigjmp
 sigkill
+siglongjmp
 sign
 signabilis
 signal
@@ -1953,6 +1961,8 @@ signed
 sigpipe
 sigsegv
 sigset
+sigsetjmp
+sigstksz
 sigterm
 sigtstp
 sigusr1
@@ -2265,6 +2275,7 @@ typeof
 types
 ub
 uchar
+ucontext
 uev
 uid
 uint

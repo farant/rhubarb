@@ -216,3 +216,25 @@ into oratio's tolerated set by deliberate regeneration (English words,
 so not glossary - Android precedent); diff checked: +5, and -3 words
 already vanished from tracked code (navigatoris, protocollum,
 reactor).
+
+## 2026-11-04 — signal context, sigaltstack, sigsetjmp (officina M5 T6 prep)
+
+For officina's escape layer (native-code faults -> machinula halts):
+- struct sigaction now has Darwin's real shape: union __sigaction_u
+  { __sa_handler; __sa_sigaction } + the same `sa_handler` /
+  `sa_sigaction` macros the SDK uses. Size/offsets unchanged (16; 0,
+  8, 12); the four existing users (processus_posix, reactor,
+  terminalis_posix, tessera_pons_posix) stay ACCIPE.
+- siginfo_t opaque (never dereferenced); SA_ONSTACK 0x1, SA_SIGINFO
+  0x40, SS_DISABLE 0x4, MINSIGSTKSZ 32768, SIGSTKSZ 131072; stack_t
+  (24) and sigaltstack().
+- ucontext_t (56; uc_mcontext at 48) -> struct __darwin_mcontext64
+  (__es 16 bytes, __ss at 16) -> struct __darwin_arm_thread_state64
+  (272; __fp 232, __pc 256). Non-opaque form (the opaque __opaque_pc
+  variant is arm64e/ptrauth only). __ns (NEON state, 16-aligned) is
+  left out of mcontext on purpose: its size is never taken.
+- setjmp.h POSIX section: sigjmp_buf int[49] (arm64 _JBLEN 48 + 1),
+  sigsetjmp, siglongjmp.
+All certified in officina/auspex_posix.sh (setjmp.h added to TU
+verum). Plant: __pc and __sp swapped -> TU nostrum DISSENTIT,
+restored IDEM, certified.
