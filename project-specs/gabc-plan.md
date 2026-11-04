@@ -566,9 +566,9 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
     constans character* via, ChordaAedificator* exitus);
 ```
 
-- [ ] **Step 1: Measure** — read `include/musicxml_carmen.h` whole;
+- [x] **Step 1: Measure** — read `include/musicxml_carmen.h` whole;
   match its naming and report shape where they fit.
-- [ ] **Step 2: Draft the header** with the conversion table in its
+- [x] **Step 2: Draft the header** with the conversion table in its
   head comment (spec §III): pitch (do from `summus`: the chant's
   highest note lands exactly on `summus`; `do_fixum` overrides),
   rhythm G8 rule by rule, incises and breaths, verba purging,
@@ -577,8 +577,8 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
   name → `"<do> maior"` + approximation), mode number in a comment.
   *(Default `summus` = F4 is Claude's call: it reproduces `salve.py`'s
   do = F4 for the Salve without an override.)*
-- [ ] **Step 3: STOP — show Fran the header.** Record changes.
-- [ ] **Step 4: Commit** (lint only).
+- [x] **Step 3: STOP — show Fran the header.** Record changes.
+- [x] **Step 4: Commit** (lint only).
 
 ---
 
@@ -752,3 +752,22 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
   `_vitia_formae_probare` red; stray `]` → NIHIL → `_totalitatem_probare`
   red (totality was born green on the already-total T3 reader). All
   restored byte-identical.
+
+### T6 — executed 2026-11-03
+
+- Header `include/gabc_carmen.h` drafted from `musicxml_carmen.h`'s shape;
+  Fran approved it unchanged. Beyond the plan's sketch: `tempus` (80) and
+  `instrumentum` (schola) in the form; link rows carry `longitudo`,
+  `numerus` (tied gabc notes) and `elementum` (the neume); the report
+  carries `do_midi` and `clavis`. Approximations: key without a mode name,
+  note out of range, unknown letter. Five counted signs.
+- Calls recorded in the header: key from the flat collection when more
+  than half of the ti notes are flat (`"d aeolius"` for a mode I chant
+  full of B flats); the Salve's church reverb and part settings written
+  always (keeps the T10 diff to key + comment); parse error or no notes
+  -> FALSUM. T7 must verify: `..` = both last notes (Gregorio source), and
+  how cantus places `o4 c-` (Cb spelling under do = Gb).
+- Same commit: the G4 enum gaps Fran approved (nine names, see
+  `lib/gabc.worklog.md`); plant ancus-without-`~` -> `_figuras_probare`
+  FRACTUM, restored.
+

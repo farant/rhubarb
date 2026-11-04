@@ -422,7 +422,7 @@ _formas_probare (
         "neuma\t0\t1\tvirga\n"
         "nota\tg\t-3\t0\tv\t0\t0\t0\t4:8\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t1\t1\t-\n"
+        "neuma\t1\t1\tvirga reversa\n"
         "nota\tg\t-3\t0\tV\t0\t0\t0\t4:11\n"
         "spatium\tglyphae\t-\n"
         "neuma\t2\t1\tstropha\n"
@@ -920,25 +920,35 @@ interior constans character* FIGURAE[][II] = {
     { "ggof",    "pressus" },
     { "gr",      "punctum" },
     { "g@h",     "pes" },
+    { "gV",      "virga reversa" },
+    { "goh",     "pes quassus" },
+    { "goh~",    "pes quassus" },
+    { "gwhg",    "torculus quilismaticus" },
+    { "fgwh",    "scandicus quilismaticus" },
+    { "ghgih",   "torculus resupinus flexus" },
+    { "ghih",    "scandicus flexus" },
+    { "ghoig",   "salicus flexus" },
+    { "giHGF",   "pes subtripunctis" },
+    { "hgf~",    "ancus" },
+    { "-hgf~",   "ancus" },
     /* ignotae: Gregorius in glyphas plures dividit, aut nomen deest */
     { "gog",     "ignota" },
     { "gg",      "ignota" },
     { "hgf",     "ignota" },
-    { "hgf~",    "ignota" },
     { "ghij",    "ignota" },
     { "-hgh",    "ignota" },
     { "-ghi",    "ignota" },
     { "g-h",     "ignota" },
     { "gh~i",    "ignota" },
-    { "gV",      "ignota" },
-    { "goh",     "ignota" },
-    { "gwhg",    "ignota" },
-    { "fgwh",    "ignota" },
-    { "giHGF",   "ignota" },
     { "hG",      "ignota" },
     { "gvg",     "ignota" },
     { "gR",      "ignota" },
     { "-g",      "ignota" },
+    { "hgfe~",   "ignota" },
+    { "-ghih",   "ignota" },
+    { "ghihg",   "ignota" },
+    { "gwhi",    "ignota" },
+    { "gwhgf",   "ignota" },
     { NIHIL, NIHIL }
 };
 

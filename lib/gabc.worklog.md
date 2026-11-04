@@ -221,3 +221,30 @@ apart). Salve: 126 neumes = 111 punctum, 6 clivis, 2 pes, 2 pes
 quilismaticus, 5 IGNOTA (`ff ee jj jjj ghffd` — unisons). Totality
 68806/0, ASan+UBSan clean. Plant: pes and clivis rows swapped -> neumae
 dump FRACTA; restored byte-for-byte.
+
+## 2026-11-03 — G4 names added (with T6)
+
+Fran approved adding the enum gaps (header change to `gabc.h`). Nine members,
+each placed beside its relative (the dump prints names, not numbers, so order
+is free):
+
+| name | signature | source |
+|---|---|---|
+| virga reversa | `r` | G_VIRGA_REVERSA |
+| pes quassus | `o+p` | G_PODATUS with oriscus first (shape PesQuassus) |
+| torculus quilismaticus | `w+p-p` | shape TorculusQuilisma |
+| torculus resupinus flexus | `p+p-p+p-p` (debilis ok) | G_TORCULUS_RESUPINUS_FLEXUS |
+| scandicus quilismaticus | `p+w+p` | Solesmes; Gregorio splits (quilisma starts a glyph) |
+| scandicus flexus | `p+p+p-p` | Solesmes; Gregorio ends the scandicus glyph |
+| salicus flexus | `p+o+p-p` | G_SALICUS_FLEXUS |
+| ancus | `p-p-p`, last `~` (debilis ok) | G_ANCUS: G_FLEXA + lower note L_DEMINUTUS |
+| pes subtripunctis | `p+p-i-i-i` (debilis ok) | Solesmes, like subbipunctis |
+
+Left out: porrectus with quilisma (no Gregorio glyph). `hgf` without `~`
+stays IGNOTA (Gregorio splits it); `hgfe~`, `-ghih`, `ghihg`, `gwhi`,
+`gwhgf` are new IGNOTA boundary rows. Oracle `t5_figurae.py` got the same
+rows; on the dumps it changed `gV` (now virga reversa) and, wrongly, the
+`-g` line again (the T3 dump ambiguity) - restored by hand to `-`.
+Glossarium: `subtripunctis`. Plant: ancus without the `~` requirement ->
+`_figuras_probare` FRACTUM (l.989); restored, cmp equal. 19/19, ASan+UBSan
+clean.

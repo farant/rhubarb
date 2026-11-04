@@ -2025,6 +2025,7 @@
   <vocabulum lemma="scandicus" lingua="latina" classis="substantivum" nota="scandicus, -i m. (ex scandere): neuma tribus notis ascendentibus (include/gabc.h)"><forma textus="scandicus"/></vocabulum>
   <vocabulum lemma="salicus" lingua="latina" classis="substantivum" nota="salicus, -i m.: scandicus cuius nota media oriscus est (include/gabc.h)"><forma textus="salicus"/></vocabulum>
   <vocabulum lemma="subbipunctis" lingua="latina" classis="adiectivum" nota="subbipunctis (locutio fixa: pes subbipunctis = pes cum duobus punctis inclinatis descendentibus) (include/gabc.h)"><forma textus="subbipunctis"/></vocabulum>
+  <vocabulum lemma="subtripunctis" lingua="latina" classis="adiectivum" nota="subtripunctis (locutio fixa: pes subtripunctis = pes cum tribus punctis inclinatis descendentibus) (include/gabc.h)"><forma textus="subtripunctis"/></vocabulum>
   <vocabulum lemma="sublineatus" lingua="latina" classis="adiectivum" nota="sublineatus, -a, -um (Latinitas recens, ex sub + lineare): linea subducta notatus - stilus textus (include/gabc.h)"><forma textus="sublineatus"/></vocabulum>
   <vocabulum lemma="teletypus" lingua="latina" classis="substantivum" nota="teletypus, -i m. (Latinitas recens, Lexicon recentis Latinitatis): litterae aequilatae - stilus textus gabc tt (include/gabc.h)"><forma textus="teletypus"/></vocabulum>
   <vocabulum lemma="protrusio" lingua="latina" classis="substantivum" nota="protrusio, -onis f. (ex protrudere): textus ultra marginem prominens - signum textus gabc pr (include/gabc.h)"><forma textus="protrusio"/></vocabulum>

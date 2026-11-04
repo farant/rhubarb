@@ -2814,7 +2814,9 @@ gabc_vitia_scribere (
  * claudit - ergo debilis nisi in prima et liquescens nisi in ultima
  * figuram nominatam nullam dant; unisonus puncta separat. Compositae
  * quas Gregorius in glyphas plures dividit (climacus, pes subbipunctis,
- * salicus, pressus) ex nomenclatura Solesmensi. Quod tabula non novit
+ * salicus, scandicus flexus, pes subtripunctis, pressus) ex
+ * nomenclatura Solesmensi. Ancus = clivis + nota inferior deminuta
+ * (Gregorius G_ANCUS). Quod tabula non novit
  * IGNOTA est - numquam nomen falsum.
  *
  * CLASSES: p punctum (cavum quoque), i inclinatum, v virga, r virga
@@ -2835,32 +2837,43 @@ nomen structura {
 /* ordo valet: regula prima quae congruit vincit (deminuta ante
  * simplicem) */
 hic_manens constans RegulaFigurae REGULAE_FIGURARUM[] = {
-    { "p",        FALSUM, FALSUM, GABC_FIGURA_PUNCTUM },
-    { "i",        FALSUM, FALSUM, GABC_FIGURA_PUNCTUM_INCLINATUM },
-    { "v",        FALSUM, FALSUM, GABC_FIGURA_VIRGA },
-    { "s",        FALSUM, FALSUM, GABC_FIGURA_STROPHA },
-    { "o",        FALSUM, FALSUM, GABC_FIGURA_ORISCUS },
-    { "v=v",      FALSUM, FALSUM, GABC_FIGURA_BIVIRGA },
-    { "v=v=v",    FALSUM, FALSUM, GABC_FIGURA_TRIVIRGA },
-    { "s=s",      FALSUM, FALSUM, GABC_FIGURA_DISTROPHA },
-    { "s=s=s",    FALSUM, FALSUM, GABC_FIGURA_TRISTROPHA },
-    { "p+p",      VERUM,  VERUM,  GABC_FIGURA_EPIPHONUS },
-    { "p+p",      VERUM,  FALSUM, GABC_FIGURA_PES },
-    { "q+p",      FALSUM, FALSUM, GABC_FIGURA_PES_QUADRATUS },
-    { "w+p",      FALSUM, FALSUM, GABC_FIGURA_PES_QUILISMATICUS },
-    { "p-p",      VERUM,  VERUM,  GABC_FIGURA_CEPHALICUS },
-    { "p-p",      VERUM,  FALSUM, GABC_FIGURA_CLIVIS },
-    { "p+p-p",    VERUM,  FALSUM, GABC_FIGURA_TORCULUS },
-    { "p+p-p+p",  VERUM,  FALSUM, GABC_FIGURA_TORCULUS_RESUPINUS },
-    { "p-p+p",    FALSUM, FALSUM, GABC_FIGURA_PORRECTUS },
-    { "p-p+p-p",  FALSUM, FALSUM, GABC_FIGURA_PORRECTUS_FLEXUS },
-    { "p+p+p",    FALSUM, FALSUM, GABC_FIGURA_SCANDICUS },
-    { "p+o+p",    FALSUM, FALSUM, GABC_FIGURA_SALICUS },
-    { "p-i-i*",   FALSUM, FALSUM, GABC_FIGURA_CLIMACUS },
-    { "v-i-i*",   FALSUM, FALSUM, GABC_FIGURA_CLIMACUS },
-    { "p+p-i-i",  VERUM,  FALSUM, GABC_FIGURA_PES_SUBBIPUNCTIS },
-    { "p=p-p",    FALSUM, FALSUM, GABC_FIGURA_PRESSUS },
-    { "p=o-p",    FALSUM, FALSUM, GABC_FIGURA_PRESSUS }
+    { "p",         FALSUM, FALSUM, GABC_FIGURA_PUNCTUM },
+    { "i",         FALSUM, FALSUM, GABC_FIGURA_PUNCTUM_INCLINATUM },
+    { "v",         FALSUM, FALSUM, GABC_FIGURA_VIRGA },
+    { "r",         FALSUM, FALSUM, GABC_FIGURA_VIRGA_REVERSA },
+    { "s",         FALSUM, FALSUM, GABC_FIGURA_STROPHA },
+    { "o",         FALSUM, FALSUM, GABC_FIGURA_ORISCUS },
+    { "v=v",       FALSUM, FALSUM, GABC_FIGURA_BIVIRGA },
+    { "v=v=v",     FALSUM, FALSUM, GABC_FIGURA_TRIVIRGA },
+    { "s=s",       FALSUM, FALSUM, GABC_FIGURA_DISTROPHA },
+    { "s=s=s",     FALSUM, FALSUM, GABC_FIGURA_TRISTROPHA },
+    { "p+p",       VERUM,  VERUM,  GABC_FIGURA_EPIPHONUS },
+    { "p+p",       VERUM,  FALSUM, GABC_FIGURA_PES },
+    { "q+p",       FALSUM, FALSUM, GABC_FIGURA_PES_QUADRATUS },
+    { "w+p",       FALSUM, FALSUM, GABC_FIGURA_PES_QUILISMATICUS },
+    { "o+p",       FALSUM, FALSUM, GABC_FIGURA_PES_QUASSUS },
+    { "p-p",       VERUM,  VERUM,  GABC_FIGURA_CEPHALICUS },
+    { "p-p",       VERUM,  FALSUM, GABC_FIGURA_CLIVIS },
+    { "p+p-p",     VERUM,  FALSUM, GABC_FIGURA_TORCULUS },
+    { "w+p-p",     FALSUM, FALSUM, GABC_FIGURA_TORCULUS_QUILISMATICUS },
+    { "p+p-p+p",   VERUM,  FALSUM, GABC_FIGURA_TORCULUS_RESUPINUS },
+    { "p+p-p+p-p", VERUM,  FALSUM,
+      GABC_FIGURA_TORCULUS_RESUPINUS_FLEXUS },
+    { "p-p+p",     FALSUM, FALSUM, GABC_FIGURA_PORRECTUS },
+    { "p-p+p-p",   FALSUM, FALSUM, GABC_FIGURA_PORRECTUS_FLEXUS },
+    { "p+p+p",     FALSUM, FALSUM, GABC_FIGURA_SCANDICUS },
+    { "p+w+p",     FALSUM, FALSUM,
+      GABC_FIGURA_SCANDICUS_QUILISMATICUS },
+    { "p+p+p-p",   FALSUM, FALSUM, GABC_FIGURA_SCANDICUS_FLEXUS },
+    { "p+o+p",     FALSUM, FALSUM, GABC_FIGURA_SALICUS },
+    { "p+o+p-p",   FALSUM, FALSUM, GABC_FIGURA_SALICUS_FLEXUS },
+    { "p-i-i*",    FALSUM, FALSUM, GABC_FIGURA_CLIMACUS },
+    { "v-i-i*",    FALSUM, FALSUM, GABC_FIGURA_CLIMACUS },
+    { "p-p-p",     VERUM,  VERUM,  GABC_FIGURA_ANCUS },
+    { "p+p-i-i",   VERUM,  FALSUM, GABC_FIGURA_PES_SUBBIPUNCTIS },
+    { "p+p-i-i-i", VERUM,  FALSUM, GABC_FIGURA_PES_SUBTRIPUNCTIS },
+    { "p=p-p",     FALSUM, FALSUM, GABC_FIGURA_PRESSUS },
+    { "p=o-p",     FALSUM, FALSUM, GABC_FIGURA_PRESSUS }
 };
 
 #define NUMERUS_REGULARUM_FIGURARUM \
@@ -2869,12 +2882,15 @@ hic_manens constans RegulaFigurae REGULAE_FIGURARUM[] = {
 
 /* titulus per GabcFigura, ordine enumerationis */
 hic_manens constans character* TITULI_FIGURARUM[] = {
-    "ignota", "punctum", "punctum inclinatum", "virga", "stropha",
-    "oriscus", "bivirga", "trivirga", "distropha", "tristropha", "pes",
-    "pes quadratus", "pes quilismaticus", "epiphonus", "clivis",
-    "cephalicus", "torculus", "torculus resupinus", "porrectus",
-    "porrectus flexus", "scandicus", "salicus", "climacus",
-    "pes subbipunctis", "pressus"
+    "ignota", "punctum", "punctum inclinatum", "virga", "virga reversa",
+    "stropha", "oriscus", "bivirga", "trivirga", "distropha",
+    "tristropha", "pes", "pes quadratus", "pes quilismaticus",
+    "pes quassus", "epiphonus", "clivis", "cephalicus", "torculus",
+    "torculus quilismaticus", "torculus resupinus",
+    "torculus resupinus flexus", "porrectus", "porrectus flexus",
+    "scandicus", "scandicus quilismaticus", "scandicus flexus",
+    "salicus", "salicus flexus", "climacus", "ancus",
+    "pes subbipunctis", "pes subtripunctis", "pressus"
 };
 
 interior character
