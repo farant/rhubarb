@@ -5239,3 +5239,40 @@ demissio, caught first by the aggregata golden; f32 call-site type
 as raw bits -> machinula, caught first by the vocationes fixture;
 signature check off -> conexio), all red, all IDEM; examen ACCIPE on
 13 files; formator at or under baseline.
+
+### T2 — arca static slot (E14), float branches (E15), census (E17) — 2026-11-03
+
+Header approved by Fran. ARCA no longer moves the stack cursor:
+machinula lays out every arca of a function at freeze time
+(_arcas_disponere: an offset per ARCA instruction, region size and
+largest alignment on the plana), _tabulatum_impellere reserves the
+region right after the registers in the same bump, and ARCA returns
+base + offset. An arca in a loop yields the same slot (the peak had
+grown 16 bytes per iteration: 112 -> 16096 over 1000); each recursion
+frame has its own. A non-immediate size halts "arca sine magnitudine
+immediata". demissio: every branch condition goes through
+_conditionem, which adds `inaequalis.fT x, 0.0` for f32/f64
+conditions (si, dum, fac-dum, per, ternarius, && and || operands);
+-0.0 is now false. Both contracts written into vocabularium §III.
+
+E17 census (decision for Task 7, details in officina_demissio.worklog
+2026-11-03): over fusor -textus lib/ (430 modules / 11992 functions),
+the only s32-written registers reaching a 64-bit use are 129 shift
+counts (blake2b, argon2id, sigillum) - correct C, harmless on aarch64
+(LSLV/LSRV/ASRV take the count mod 64). Zero other sites. Task 7
+therefore refuses "registrum s32 in usu 64" by name, with the shift
+count operand exempt; no sxtw.
+
+Deviation from the plan text: the census outcome is the zero-sites
+branch PLUS a named exemption (shift counts) that the plan's two
+branches did not foresee. "arca recursio" passed before the change as
+well (the old bump gave distinct addresses too); it guards the new
+layout against a per-function (not per-frame) slot.
+
+BARS (T2): officina 17/17 suites (same count as T0), amalgamare
+VERIFICATUM (hospes 81/81); no golden changed; cursor TABULA identical
+to T0 (452 decipulae, 1 sistera, 0 nexus fracti / 453; STDOUT 0
+DIFFERUNT); plants 2 (ARCA bumps the cursor again -> "arca in ansa"
+FRACTA, apex 144 -> 16128; inaequalis emission skipped -> "ramus
+-0.0" FRACTA), both IDEM; examen ACCIPE on 4 files; formator at or
+under baseline; vocabula NOVA 0.

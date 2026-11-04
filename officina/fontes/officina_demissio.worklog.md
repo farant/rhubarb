@@ -304,3 +304,40 @@ cursor/interpretare run (DECISUS 9, always-on).
 - HFA: recursive (struct = sum, union = max, array = n x elem), no
   bitfields, then size == count x base size (catches padding, e.g.
   {double; float} = 16 bytes, 2 members, not HFA anyway by mixed base).
+
+## 2026-11-03 - M5 T2: float branch conditions (E15) + E17 census
+
+**E15.** `ramus` reads its condition as an integer word, so `if (d)` with
+`d = -0.0` (bits 0x8000000000000000) took the true branch. All nine
+condition sites (si / dum / fac-dum / per / ternarius / both operands of
+&& and ||) now go through `_conditionem(d, nodus)`: `_ut_valor`, then, if
+the condition's final type is f32/f64, `%c = inaequalis.fT x, 0.0`. The
+switch site already compares s32 and is untouched. `!x` already lowered
+to `aequalis.T x, 0`, which machinula compares as floats, so it was right.
+No golden changed (no float conditions in the pinned fixtures).
+
+**E17 census** (decides Task 7). Question: does demissio ever feed an
+s32-written register into a 64-bit use without `extendere`? Method: a
+one-off script (scratchpad m5_censura_e17.py) over `fusor.sh -textus
+lib/` (430 modules / 11992 functions; 408 / 11508 under ./lib/). Per
+function, flow-insensitively: the set of types each register is written
+with (parameters included; comparisons write i32, arca/locus i64,
+conversions their TO type), against every use whose width is 64
+(.i64/.s64 operands, conversion FROM types, legere/scribere/copia
+addresses, typed vocare args, register callees, redde in s64/i64
+functions). Script sanity-checked on a planted module: the four planted
+uses were found, the use behind extendere was not.
+
+Result: **129 sites, all of them shift counts** - operand 2 of
+`sinistrorsum.i64` / `dextrorsum.i64` written as s32 (64 blake2b.c, 64
+argon2id.c rotations, 1 sigillum.c). C promotes a shift's operands
+separately, so the count stays int; that is correct. No other use of
+any kind: no s32 index into an address, no s32 argument passed as s64,
+no s32 returned as s64, no mixed-width register. s8/s16: 0.
+
+Consequence for Task 7: the plan's "zero sites" branch applies, with one
+named exemption. The backend refuses a function with an s32-written
+register in a 64-bit use ("registrum s32 in usu 64"), EXCEPT the count
+operand of a 64-bit shift: aarch64 LSLV/LSRV/ASRV read the count mod 64,
+and a count >= 64 is undefined behavior in C anyway, so the upper 32 bits
+never matter. No sxtw is needed anywhere.

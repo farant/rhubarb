@@ -553,6 +553,131 @@ _sectio_f32 (
     regio_destruere(regio);
 }
 
+
+/* ==================================================
+ * PROBARE: arca = locellus staticus per instructionem (M5 E14)
+ * - arca in ansa eundem locellum reddit, ergo apex stivae post
+ * M iterationes idem ac post unam; recursio: locellus proprius
+ * per tabulatum (scriptura ante vocationem post eam manet)
+ * ================================================== */
+
+interior vacuum
+_sectio_arca_ansa (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* textus_literis =
+        "modulus \"arca_ansa.medulla\"\n"
+        "\n"
+        "functio $par () -> s32\n"
+        "@initium:\n"
+        "    %p = arca 16, 8\n"
+        "    scribere.s32 %p, 42\n"
+        "    %v = legere.s32 %p\n"
+        "    redde %v\n"
+        "\n"
+        "functio $ansa (s32 %n) -> s32\n"
+        "@initium:\n"
+        "    %i = movere.s32 0\n"
+        "    %v = movere.s32 0\n"
+        "    salire @proba\n"
+        "@proba:\n"
+        "    %c = minor.s32 %i, %n\n"
+        "    ramus %c -> @corpus | @finis\n"
+        "@corpus:\n"
+        "    %q = arca 16, 8\n"
+        "    %v = vocare.s32 $par\n"
+        "    scribere.s32 %q, %v\n"
+        "    %v = legere.s32 %q\n"
+        "    %i = addere.s32 %i, 1\n"
+        "    salire @proba\n"
+        "@finis:\n"
+        "    redde %v\n"
+        "\n"
+        "functio $unus () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $ansa, s32 1\n"
+        "    redde %r\n"
+        "\n"
+        "functio $mille () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $ansa, s32 1000\n"
+        "    redde %r\n";
+        Regio* regio = NIHIL;
+    Machinula* machinula = _machinulam_parare(piscina,
+        _ch(textus_literis), &regio);
+    MachinulaExitus exitus;
+     memoriae_index apex_unius;
+
+    CREDO_NON_NIHIL (machinula);
+    si (machinula == NIHIL)
+    {
+        redde;
+    }
+    exitus = machinula_currere(machinula, _ch("unus"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+    apex_unius  = machinula_stiva_apex(machinula);
+    exitus      = machinula_currere(machinula, _ch("mille"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+    si (machinula_stiva_apex(machinula) != apex_unius)
+    {
+        imprimere("FRACTA apex: unus %lu, mille %lu\n",
+            (unsigned long)apex_unius,
+            (unsigned long)machinula_stiva_apex(machinula));
+    }
+    CREDO_VERUM (machinula_stiva_apex(machinula) == apex_unius);
+    regio_destruere(regio);
+}
+
+interior vacuum
+_sectio_arca_recursio (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* textus_literis =
+        "modulus \"arca_recursio.medulla\"\n"
+        "\n"
+        "functio $gradus (s32 %n, i64 %prior) -> s32\n"
+        "@initium:\n"
+        "    %p = arca 16, 8\n"
+        "    scribere.s32 %p, %n\n"
+        "    %dist = inaequalis.i64 %p, %prior\n"
+        "    %z = aequalis.s32 %n, 0\n"
+        "    ramus %z -> @fundus | @altius\n"
+        "@fundus:\n"
+        "    %r0 = multiplicare.s32 %dist, 42\n"
+        "    redde %r0\n"
+        "@altius:\n"
+        "    %m = subtrahere.s32 %n, 1\n"
+        "    %r = vocare.s32 $gradus, s32 %m, i64 %p\n"
+        "    %w = legere.s32 %p\n"
+        "    %idem = aequalis.s32 %w, %n\n"
+        "    %t1 = multiplicare.s32 %r, %dist\n"
+        "    %t2 = multiplicare.s32 %t1, %idem\n"
+        "    redde %t2\n"
+        "\n"
+        "functio $main () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $gradus, s32 5, i64 0\n"
+        "    redde %r\n";
+        Regio* regio = NIHIL;
+    Machinula* machinula = _machinulam_parare(piscina,
+        _ch(textus_literis), &regio);
+    MachinulaExitus exitus;
+
+    CREDO_NON_NIHIL (machinula);
+    si (machinula == NIHIL)
+    {
+        redde;
+    }
+    exitus = machinula_currere(machinula, _ch("main"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+    regio_destruere(regio);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fixturas (exsecutio -> 42)", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -565,6 +690,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ansas plagularum", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "numeratores", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "f32 immediatum", _sectio_f32, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arca in ansa", _sectio_arca_ansa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arca recursio", _sectio_arca_recursio, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

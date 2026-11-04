@@ -5,6 +5,7 @@
 
 #include "officina_demissio.h"
 #include "officina_medulla_textus.h"
+#include "officina_machinula.h"
 #include "credo.h"
 #include "lectiones.h"
 
@@ -661,6 +662,111 @@ _hfa_probare (
     }
 }
 
+
+/* ==================================================
+ * PROBARE: conditio fluitans (M5 E15) - ramus legit verbum
+ * integrum; -0.0 bitis non nullis falsum est in C, ergo demissio
+ * 'inaequalis.fT x, 0.0' ante ramum emittit (si, dum, ternarius,
+ * &&). Demissum et in machinula curritum: omnes -> 42.
+ * ================================================== */
+
+interior s64
+_currere_demissum (
+               Piscina* piscina,
+        MedullaModulus* modulus,
+    constans character* functio)
+{
+       Regio* regio    = regio_generare(piscina);
+     Conexio* conexio  = conexio_creare(piscina, regio);
+    Machinula* machinula;
+    MachinulaExitus exitus;
+
+    si (   !conexio_modulum_addere(conexio, modulus)
+        || !conexio_nectere(conexio))
+    {
+        regio_destruere(regio);
+        redde -I;
+    }
+    machinula = machinula_creare(piscina, conexio, regio);
+    si (machinula == NIHIL)
+    {
+        regio_destruere(regio);
+        redde -I;
+    }
+    exitus = machinula_currere(machinula, _ch(functio));
+    regio_destruere(regio);
+    si (exitus.genus != MACHINULA_BENE)
+    {
+        redde -II;
+    }
+    redde exitus.codex;
+}
+
+interior vacuum
+_ramum_fluitantem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina         = c->piscina;
+          SilvaPiscina* piscina_silvae  = (SilvaPiscina*)c->datum;
+    constans character* fons_literis =
+        "int si_negativum(void)\n"
+        "{\n"
+        "    double d = -0.0;\n"
+        "    if (d)\n"
+        "        return 1;\n"
+        "    return 42;\n"
+        "}\n"
+        "int ternarius(void)\n"
+        "{\n"
+        "    float f = -0.0f;\n"
+        "    return f ? 1 : 42;\n"
+        "}\n"
+        "int ansa(void)\n"
+        "{\n"
+        "    double x = 3.0;\n"
+        "    int n = 0;\n"
+        "    while (x)\n"
+        "    {\n"
+        "        x = x - 1.0;\n"
+        "        n = n + 14;\n"
+        "    }\n"
+        "    return n;\n"
+        "}\n"
+        "int coniunctio(void)\n"
+        "{\n"
+        "    double a = 0.25;\n"
+        "    double z = -0.0;\n"
+        "    if (a && z)\n"
+        "        return 1;\n"
+        "    return 42;\n"
+        "}\n";
+    MedullaModulus* modulus;
+    chorda textus;
+
+    si (piscina_silvae == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    modulus = _demittere(piscina, piscina_silvae, _ch(fons_literis),
+        "ramus_fluitans.c");
+    CREDO_NON_NIHIL (modulus);
+    si (modulus == NIHIL)
+    {
+        redde;
+    }
+    textus = medulla_textum_scribere(piscina, modulus);
+    CREDO_VERUM (chorda_continet(textus, _ch("inaequalis.f64")));
+    CREDO_VERUM (chorda_continet(textus, _ch("inaequalis.f32")));
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "si_negativum")
+        == (s64)XLII);
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "ternarius")
+        == (s64)XLII);
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "ansa")
+        == (s64)XLII);
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "coniunctio")
+        == (s64)XLII);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "demissionem: officina/probationes/fixa/scalaria.c",
         _scalaria_probare, _silvam_parare, _silvam_purgare, NIHIL,
@@ -682,6 +788,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "hfa", _hfa_probare, _silvam_parare, _silvam_purgare, NIHIL,
         NIHIL },
+    { "ramus -0.0", _ramum_fluitantem_probare, _silvam_parare,
+        _silvam_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

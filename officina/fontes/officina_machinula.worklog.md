@@ -341,3 +341,26 @@ which demissio's MAGNITUDO_EXPRESSIONIS lowering cannot size ->
 'magnitudo inaestimabilis' (officina_demissio.c ~2760). Bridges for
 open/write/close were drafted and backed out (no test could exercise
 them until the sizeof gap is fixed). Ledger park filed.
+
+## 2026-11-03 - M5 T2: arca as a static slot (E14)
+
+ARCA used to bump `stiva_cursor` every time it ran, so an arca inside a
+loop (a struct-return temporary, a by-value aggregate argument copy)
+grew the frame by its size per iteration until the function returned.
+Test "arca in ansa": the peak went from 112 bytes after 1 iteration to
+16096 after 1000 (16 per iteration). Native code (Task 3+) needs a fixed
+frame, so the IR contract is now one static slot per arca instruction.
+
+Layout: `_arcas_disponere` runs at freeze time, per function. Each ARCA
+whose magnitudo and ordinatio are immediates (every demissio emitter
+passes immediates) gets an offset into the frame's arca region (s32,
+parallel to the flat instructions; -1 = no slot), with the same rule as
+before (alignment at least 16). The plana records the region's size and
+largest alignment. `_tabulatum_impellere` puts the region right after the
+registers, in the same bump (aligned, rounded to 16), and stores
+`t->basis_arcarum`; ARCA is now `stiva_basis + basis_arcarum + offset`,
+with no cursor movement. A hand-written arca with a register size halts
+"arca sine magnitudine immediata" instead of growing silently. Arca
+memory is not zeroed, as before. Recursion: every frame gets its own
+region (test "arca recursio": write before the recursive call, read
+after it, 5 levels deep).

@@ -69,12 +69,28 @@ exactly this pair)
                                   address (QBE alloc lineage; slots for
                                   address-taken locals + aggregates; optional
                                   titulus attribute feeds indicium at M3)
+                                  CONTRACT (M5 E14, DECISUS 2026-11-03):
+                                  one STATIC slot per arca instruction per
+                                  frame — executing the same arca again
+                                  (a loop) yields the same address; each
+                                  frame (recursion) has its own. magnitudo
+                                  and ordinatio are immediates (machinula
+                                  lays slots out at freeze time; any other
+                                  operand halts "arca sine magnitudine
+                                  immediata"). Alignment is at least 16.
     locus %d, $symbolum           address of datum/functio
     copia %dest, %src, magnitudo  aggregate copy (bytes)
 
 **Fluxus**
     salire @b                                 unconditional jump
     ramus %c -> @verum | @falsum              branch: nonzero -> first target
+                                              CONTRACT (M5 E15, DECISUS
+                                              2026-11-03): %c is INTEGRAL.
+                                              A fluitans condition is first
+                                              made integral by demissio:
+                                              %c = inaequalis.fT x, 0.0
+                                              (-0.0 has nonzero bits but
+                                              is false in C)
     redde [src]                               return (operand absent = vacuum)
     vocare                                    call; forms in §V
     sistere "causa"                           TRAP: carries diagnostic +

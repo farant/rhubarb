@@ -991,6 +991,27 @@ _ramus (
         medulla_op_bloccum(verum), medulla_op_bloccum(falsum));
 }
 
+/* conditio rami (M5 E15): ramus verbum integrum legit, ergo
+ * conditio fluitans per 'inaequalis.fT x, 0.0' in veritatem
+ * integram vertitur - -0.0 bitis non nullis in C falsum est */
+interior s32
+_conditionem (
+               Demissio* d,
+    constans SilvaNodus* nodus)
+{
+    s32 mt     = _typus_medullae(_typus_finalis(d, _canonicus(nodus)));
+    s32 valor  = _ut_valor(d, nodus);
+
+    si (mt != MEDULLA_TYPUS_F64 && mt != MEDULLA_TYPUS_F32)
+    {
+        redde valor;
+    }
+    redde _em(d, nodus, MEDULLA_OP_INAEQUALIS, mt,
+        MEDULLA_TYPUS_NIHIL, _registrum_temporarium(d),
+        medulla_op_registrum(valor), medulla_op_immediatum_f(0.0),
+        medulla_op_nihil());
+}
+
 /* movere operandi in registrum novum (typus datur) */
 interior s32
 _movere (
@@ -2103,7 +2124,7 @@ _brevem (
 
     (vacuum)_movere(d, nodus, MEDULLA_TYPUS_S32, fructus,
         medulla_op_immediatum(est_et ? 0 : 1));
-    primus = _ut_valor(d, sin_v.datum.nodus);
+    primus = _conditionem(d, sin_v.datum.nodus);
     si (est_et)
     {
         _ramus(d, nodus, medulla_op_registrum(primus), b_alter,
@@ -2116,7 +2137,7 @@ _brevem (
     }
     d->bloccus = b_alter;
     {
-        s32 secundus = _ut_valor(d, dex_v.datum.nodus);
+        s32 secundus = _conditionem(d, dex_v.datum.nodus);
 
         si (est_et)
         {
@@ -2684,7 +2705,7 @@ _ternarium (
     {
         mt = MEDULLA_TYPUS_S64;   /* monstratores compositi etc. */
     }
-    conditio = _ut_valor(d, cond_v.datum.nodus);
+    conditio = _conditionem(d, cond_v.datum.nodus);
     _ramus(d, nodus, medulla_op_registrum(conditio), b_verum,
         b_falsum);
     d->bloccus = b_verum;
@@ -4078,7 +4099,7 @@ _sententiam (
             s32 b_falsum = habet_alioquin
                 ? _bloccum_novum(d, "si_falsum") : -I;
             s32 b_finis   = _bloccum_novum(d, "si_finis");
-            s32 conditio  = _ut_valor(d, cond_v.datum.nodus);
+            s32 conditio  = _conditionem(d, cond_v.datum.nodus);
 
             _ramus(d, nodus, medulla_op_registrum(conditio),
                 b_verum, habet_alioquin ? b_falsum : b_finis);
@@ -4109,7 +4130,7 @@ _sententiam (
             d->bloccus = b_proba;
             {
                 SilvaValor cond_v    = silva_c89_dum_conditio(nodus);
-                       s32 conditio  = _ut_valor(d,
+                       s32 conditio  = _conditionem(d,
                            cond_v.datum.nodus);
 
                 _ramus(d, nodus, medulla_op_registrum(conditio),
@@ -4158,7 +4179,7 @@ _sententiam (
             {
                 SilvaValor cond_v = silva_c89_fac_dum_conditio(
                     nodus);
-                s32 conditio = _ut_valor(d, cond_v.datum.nodus);
+                s32 conditio = _conditionem(d, cond_v.datum.nodus);
 
                 _ramus(d, nodus, medulla_op_registrum(conditio),
                     b_corpus, b_finis);
@@ -4216,7 +4237,7 @@ _sententiam (
                 }
                 si (cond_v.genus == SILVA_VALOR_NODUS)
                 {
-                    s32 conditio = _ut_valor(d, cond_v.datum.nodus);
+                    s32 conditio = _conditionem(d, cond_v.datum.nodus);
 
                     _ramus(d, nodus, medulla_op_registrum(conditio),
                         b_corpus, b_finis);
