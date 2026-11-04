@@ -186,3 +186,15 @@ through the shared tail. It does not play sound (no way to silence cantor).
 Plant by hand (planta could not name the gate while the script was
 untracked): `-do` ignored → the two `-do` checks FRACTUM; restored with
 cp + touch, rebuilt, green.
+
+**Same day, follow-up:** the gate was declared in the script but not
+registered: commissio and planta only know gates listed in `PORTAE`
+(`pythonica/silva.py`), so the T8 commit never ran it (I ran it by hand).
+Now registered. Proving it through planta exposed two traps: (1) the gate
+used whatever `bin/auditio` was there, so a source plant stayed green (mute
+gate) -> the script now builds from source first (~7 s); (2) after planta's
+restore the planted object survived, because aedilis' generated builder
+judges by `-nt` and /bin/bash 3.2 compares whole seconds (restore landed in
+the same second as the planted compile) -> the script removes the objects of
+the files it covers before building. planta: red on the two `-do` checks,
+green after restore. Ledger parcum 01M5XD21FEJW523NBK03VWJKVB (ictus).

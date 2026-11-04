@@ -1653,6 +1653,10 @@ PORTAE = {
     # aurum commissum, sub custode X GB; corpus absens = OMISSA nominata
     'musicxml-oraculum': (['./tools/musicxml_silvestria.sh'],
                           r'MUSICXML SILVESTRIA: (sana|FRACTA|OMISSA)'),
+    # fontes conversi auditionis (-gabc, -musicxml; plan gabc T8):
+    # instrumentum bin/auditio, sonus non probatur
+    'auditio-fumus': (['./tools/auditio_fumus.sh'],
+                      r'fumus auditio: (omnia sana|\d+ FRACTA)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],
                       r'aequivalentia: (sana|FRACTA)'),

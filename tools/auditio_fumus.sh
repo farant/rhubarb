@@ -2,7 +2,9 @@
 # tools/auditio_fumus.sh - porta natalis fontium conversorum auditionis
 # (-gabc, gabc plan T8; -musicxml, musicxml M12)
 #
-# bin/auditio ut instrumentum (struere: ./tools/auditio_struere.sh).
+# bin/auditio EX FONTIBUS HODIERNIS: fumus ipse prius struit (~7 s) -
+# binarium stalum portam mutam faceret (planta in fonte, porta viridis:
+# visum 2026-11-04).
 # Sonum NON probat (-sonare per cantorem ad apparatum it - nulla via
 # tacendi, auditio.worklog.md 2026-11-02); probat liber conversus,
 # fons libri (-partitura), vexilla et exitus:
@@ -19,9 +21,16 @@
 set -u
 RADIX="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$RADIX" || exit 2
-if [ ! -x bin/auditio ]; then
-    echo "fumus auditio: bin/auditio absens (./tools/auditio_struere.sh) - nihil actum"
-    exit 2
+# obiecta fontium tectorum (currit) tolluntur: struere.sh aedilis per
+# '-nt' iudicat, et bash 3.2 secundas solas comparat - fons restitutus
+# eadem secunda ac obiectum plantatum (fumus < I s) obiectum servaret
+for o in tools__auditio lib__gabc lib__gabc_carmen lib__musicxml lib__musicxml_carmen; do
+    rm -f "build/aedilis/obiecta/$o.o"
+done
+if ! ./tools/auditio_struere.sh > /dev/null 2>&1 || [ ! -x bin/auditio ]; then
+    echo "  FRACTUM ./tools/auditio_struere.sh"
+    echo "fumus auditio: 1 FRACTA"
+    exit 1
 fi
 T=$(mktemp -d)
 trap 'rm -rf "$T"' EXIT
