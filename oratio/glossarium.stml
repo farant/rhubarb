@@ -2010,6 +2010,9 @@
 
   <!-- gabc T1 (2026-11-03): cantus Gregorianus - nomina neumarum et signorum notationis quadratae (include/gabc.h); termini Latini medii aevi et Solesmenses -->
   <vocabulum lemma="gabc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (textus cantus Gregoriani, Gregorio), ut plist / musicxml; bibliotheca gabc 2026-11-03"/>
+  <vocabulum lemma="midi" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (Musical Instrument Digital Interface): numerus toni 0..127, ut plist / gabc; do_midi in gabc_carmen 2026-11-03"/>
+  <vocabulum lemma="mml" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (Music Macro Language, textus frusti carminis, cantus.h), ut plist / gabc; gabc_carmen 2026-11-03"/>
+  <vocabulum lemma="transcriptio" lingua="latina" classis="substantivum" nota="transcriptio, -onis: litterarum in aliud alphabetum translatio (Cod. Iust.; hic: littera cum signis -> ASCII, lib/gabc_carmen.c)"><forma textus="transcriptio"/><forma textus="transcriptiones"/><forma textus="transcriptionum"/></vocabulum>
   <vocabulum lemma="nlba" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="signum textus gabc (no line break area, Gregorio): syllabae inter quas linea non frangitur (include/gabc.h)"/>
   <vocabulum lemma="nabc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (notatio neumatica St. Galli in gabc post '|', Gregorio); lib/gabc.c consumit, T4 opacum servat"/>
   <vocabulum lemma="modificator" lingua="latina" classis="substantivum" nota="modificator, -oris m. (Lat. tard.): qui modum ponit; hic signum post notam formam aut rhythmum mutans (lib/gabc.c)"><forma textus="modificator"/><forma textus="modificatoris"/><forma textus="modificatorem"/></vocabulum>
@@ -2018,7 +2021,7 @@
   <vocabulum lemma="quilismaticus" lingua="latina" classis="adiectivum" nota="quilismaticus, -a, -um: quilisma continens - pes quilismaticus (include/gabc.h)"><forma textus="quilismaticus"/></vocabulum>
   <vocabulum lemma="semicirculus" lingua="latina" classis="substantivum" nota="semicirculus, -i m. (Plin., Vitr.): dimidius circulus - signum supra notam gabc r4/r5 (include/gabc.h)"><forma textus="semicirculus"/></vocabulum>
   <vocabulum lemma="neumaticum" lingua="latina" classis="adiectivum" nota="neumaticus, -a, -um: ad neumam pertinens - spatium neumaticum (incisio inter elementa neumae, gabc /) (include/gabc.h)"><forma textus="neumaticum"/></vocabulum>
-  <vocabulum lemma="bemolle" lingua="latina" classis="substantivum" nota="bemolle (b molle, Guido; Ital. bemolle): signum alterationis quod notam semitonio deprimit, gabc x (include/gabc.h)"><forma textus="bemolle"/></vocabulum>
+  <vocabulum lemma="bemolle" lingua="latina" classis="substantivum" nota="bemolle (b molle, Guido; Ital. bemolle): signum alterationis quod notam semitonio deprimit, gabc x (include/gabc.h)"><forma textus="bemolle"/><forma textus="bemolles"/></vocabulum>
   <vocabulum lemma="trivirga" lingua="latina" classis="substantivum" nota="trivirga, -ae f.: tres virgae unisonae (include/gabc.h)"><forma textus="trivirga"/></vocabulum>
   <vocabulum lemma="distropha" lingua="latina" classis="substantivum" nota="distropha, -ae f.: duae strophae unisonae (include/gabc.h)"><forma textus="distropha"/></vocabulum>
   <vocabulum lemma="tristropha" lingua="latina" classis="substantivum" nota="tristropha, -ae f.: tres strophae unisonae (include/gabc.h)"><forma textus="tristropha"/></vocabulum>

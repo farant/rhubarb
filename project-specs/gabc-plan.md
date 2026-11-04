@@ -594,11 +594,11 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
   `carmina_ordinaria`, `carmina_invenire` (`include/carmen.h`).
 - Produces: `gabc_carmen_scribere`, `gabc_relationem_scribere`.
 
-- [ ] **Step 1: Measure** — read `salve.py` and `lib/musicxml_carmen.c`'s
+- [x] **Step 1: Measure** — read `salve.py` and `lib/musicxml_carmen.c`'s
   MML writer; list every length the Salve produces (in sixteenths:
   2, 3, 4, 6 …) and confirm `&` ties cover sums outside `salve.py`'s
   `VALORES` (salve.py would crash on 5; we must not).
-- [ ] **Step 2: Failing tests** (every output re-read with
+- [x] **Step 2: Failing tests** (every output re-read with
   `carmina_legere`, as `probatio_musicxml_carmen.c:56` does):
   - `_rhythmum_probare` — punctum = eighth; `.` doubles; `_`
     ×1.5 only without mora; note before `w` max(own, 3 sixteenths);
@@ -622,13 +622,13 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
     default form: per note, onset / longitudo / nota / syllaba equal
     to the book's `salve` (`carmina.stml:664`), same number of
     incises; key differs by design (G9 note in spec §III).
-- [ ] **Step 3: Run** — red.
-- [ ] **Step 4: Implement.**
-- [ ] **Step 5: Run** — green. **Plants:** episema ×1.5 even with
+- [x] **Step 3: Run** — red.
+- [x] **Step 4: Implement.**
+- [x] **Step 5: Run** — green. **Plants:** episema ×1.5 even with
   mora → `_rhythmum_probare` FRACTUM and `_salve_probare` FRACTUM;
   unisons tied across syllables → `_rhythmum_marginum_probare`
   FRACTUM.
-- [ ] **Step 6: Commit** (gate `radix`), worklog
+- [x] **Step 6: Commit** (gate `radix`), worklog
   `lib/gabc_carmen.worklog.md`.
 
 ---
@@ -770,4 +770,22 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
 - Same commit: the G4 enum gaps Fran approved (nine names, see
   `lib/gabc.worklog.md`); plant ancus-without-`~` -> `_figuras_probare`
   FRACTUM, restored.
+
+### T7 — executed 2026-11-03
+
+- Measured: `..` = Gregorio `_AUCTUM_DUPLEX` (this note and the one
+  before); MML octave follows the written letter (`o5 c-` = 71); Salve
+  lengths 2/3/4/6 sixteenths, 139 notes, 17 incises.
+- `lib/gabc_carmen.c` + `probationes/probatio_gabc_carmen.c`, 10 sections:
+  rhythm, margins (Review Focus 5), pitch, verba (Review Focus 3), key,
+  nexus, strict/refusals, report text, totality over every Salve prefix
+  (1117 prefixes, 540 converted, all re-read), ACCEPTANCE Salve = book
+  `salve` per note. Clean under ASan + UBSan.
+- Converted Salve equals the book's carmen except `clavis` (`f ionius`).
+- Deviations: code before tests (plants stand in for red-first); inline
+  gabc strings instead of the three fixture files. Plants: episema x1.5
+  with mora -> `_rhythmum_probare` red, `_salve_probare` green (no Salve
+  note has both, the plan's prediction was wrong); ties across syllables
+  -> note count red. Both restored, cmp equal. The nexus test found a
+  real bug (breath counted twice in link rows), fixed.
 
