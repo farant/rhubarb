@@ -8,6 +8,7 @@ then approve after fixes); every finding placed in v2, see "Design
 review" at the end. T0's concurrency experiment DONE; the rest of T0 was
 answered by the review's measurements (see "T0"). Q1-Q3 DECIDED by Fran
 2026-11-03 (all as recommended). T1 DONE 2026-11-03 (see "T1 notes").
+T2 DONE 2026-11-03 (see "T2 notes").
 
 Agreed order (interpolatio-verificatio-plan.md, status line): early
 stopping (done, 624f407c), then parallel points (this plan, temperley-
@@ -285,6 +286,66 @@ No threshold moved.
     caught by `puncta iterata` and `puncta opposita` as registered.
   - B (adapter unbounded) also reddened `puncta opposita` (bonus).
 
+## T2 notes (2026-11-03)
+
+- Built as designed: `laqueus_modulus_temperley_fasciculus`,
+  `laqueus_modulus_temperley_signum`, the three hook members (defaults
+  NIHIL / 0), the spot-checking wrapper, vertex route → FALSUM, NULLA
+  untouched; worker mode, frozen copy, parent batch evaluator (pulsare +
+  20 ms), timeout, `OPIFICES` lines, `-opifices [N]`.
+- Additions and small deviations:
+  - `laqueus_temperley_signum(verbum, ...)`: the same fingerprint without
+    a module (word → PD → window), so the parent does not build a third
+    module just to compare (P5). A test checks both agree.
+  - Build id = the LC_UUID of the *running* image, read from memory
+    (`_dyld_get_image_header`): parent code vs worker code, no file read;
+    the byte copy keeps the UUID. Printed at start: `OPIFICES W |
+    binarium ... | aedificatio <uuid>`.
+  - `laqueus_modulus_temperley_fasciculus` takes a typed module, not
+    `vacuum*`; callers adapt in one line. It zeroes punctum/valor where
+    not UTILE, so worker output is total.
+  - The spot check compares status always, punctum/valor only where
+    UTILE (the library reads nothing else).
+  - The hooked call also requires `electa == TEMPERLEY` itself
+    (defensive: a vertex module never reaches the TL spot check).
+  - The parent also checks coverage: indices read back from accepted
+    workers = the batch (`causa tectura`), not only per-worker
+    completeness; a slice never started is not left to the library's
+    ERRATUM preset.
+  - Fault injection for T3's refusal cases, worker mode only:
+    `UNCINUS_OPUS_VITIUM="<genus>@<ab>"`, kinds occide, exitus, statim,
+    finis, signum, primus, duplex, extra. Without the variable: nothing.
+  - The worker computes its slice, then prints (so `occide` fires after
+    the work). `OPIFICES` also prints `cpu_parentis`.
+- Smoke test found a bug before any plant: the strict decimal parser
+  underflowed (`i64` is unsigned: `maximum - d` wrapped), so `-3` passed
+  as a letter on 3 strands. Guarded with `d > maximum` first.
+- probatio_laqueus_rete: 4 new sections (37 in all), 153,865 checks:
+  `fasciculus temperley`, `fasciculi in via` (3 certain TL brackets ×
+  AUTOMATICUS/VIA_ALTERA × capacity unbounded/3: exitus and relatio
+  identical; indices requested = aestimationes + probationes_sui),
+  `fasciculus extra viam`, `fasciculus divergens`.
+  - Neither certain bracket has k_max = 1; the figure-eight
+    σ1 σ2⁻¹ σ1 σ2⁻¹ (3 strands) does and is now the third case.
+- Acceptance (small; T3 does the full P1): build/verificatio/
+  acceptatio_l3_t2.py - 8 × 201 TL at W = 1, 2, 3, 4, 7 identical to
+  serial; 12 × 101 vertex identical with `OPIFICES 0 | via vertex`; the 8
+  injected faults refuse with the expected `causa`; `statim@0` at
+  12 × 801 leaves no worker and no copy behind.
+- Plants: build/verificatio/plantae_l3_t2.py, 8/8 red as registered
+  (plantae_l3_t2.out; L1 rerun in plantae_l3_t2_b.out).
+  - L1 (spot check removed) first stayed GREEN: the sign-flipped worker
+    gives values that look random in the true window, so the coefficient
+    bound refuses anyway. That is not H2's case. Added a worker that
+    returns a *valid* wrong polynomial (bracket + A^e, e inside the window
+    and bound): with the spot check removed the k_max = 1 figure-eight
+    returns VERUM with the wrong bracket (H2 reproduced); k_max > 1
+    braids are still refused by the certificate (DISCORDIA after 4
+    batches). With the spot check, refused at the first batch. Recorded
+    as a post-hoc amendment of the divergent-evaluator test.
+  - T1 and T3 also reddened `refutationes` (bonus: a lying worker makes
+    every refusal case refuse for the wrong reason first).
+
 ## Registered predictions
 
 - **P1 (exact).** Byte-identical UNCINUS, RELATIO and TRACTUS (fixed
@@ -405,6 +466,10 @@ No threshold moved.
 ## AUDIENDA
 
 - Real worker start-up through uncinus_mensura: not measured (P4, T3).
+- `UNCINUS_OPUS_VITIUM` ships in the tool binary (worker mode only,
+  inert without the variable).
+- An interrupted run (Ctrl-C) leaves build/opifices/<pid>/ behind
+  (atexit does not run); harmless, delete by hand.
 - No wall-time speedup of the real design measured yet (P3).
 - Frozen kernel memory at 16 × 801: not measured.
 - macOS first-exec scan of the copied binary (syspolicyd): may add a

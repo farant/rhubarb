@@ -54,6 +54,18 @@
  *        -promovere VIA: paria UNCINUS + RELATIO promoventur (primi
  *        reliqui soli; residua primorum usorum HEREDITARIA ex UNCINUS -
  *        vide interpolatio.h, AUCTORITAS HEREDITARIA)
+ *   OPIFICES (puncta-parallela-plan T2): -opifices [N] (IV; 1 .. LXIV)
+ *        cum -modus verificatum et -sectio VIII aut XI: tricae viae
+ *        TEMPERLEY valores principales per N processus operarios
+ *        (copia congelata binarii in build/opifices/<pid>/, deleta ad
+ *        exitum); ceterae seriales ("OPIFICES 0 | via vertex").
+ *        UNCINUS/RELATIO/TRACTUS idem ac serialis; post eas "OPIFICES
+ *        W | fasciculi B | opera O | murale s | cpu_filiorum s |
+ *        cpu_parentis s"; operarius refutatus -> "OPIFEX REFUTATUS
+ *        ..." et uncinus REFUTATUM. Modus operarii (internus, argumenta
+ *        stricta): -opus -fila N -verbum g1,.. -primus p -ab i
+ *        -numerus k; UNCINUS_OPUS_VITIUM="<genus>@<ab>" vitium imponit
+ *        (casus refutationis acceptationis, vide _vitium_operis)
  * Tempus = tempus PROCESSORIS (clock). Driver bibliothecae
  * (laqueus_modulus_vertex_uncinus); aestimationes et primi ex
  * numeratoribus structurae (laqueus_modulus_vertex_vocationes); sectio
@@ -68,6 +80,7 @@
  *   [-sectio I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII|XIII|XIV]
  *   -machina: lineae "MENSURA <sectio> clavis=valor ..."
  */
+#include "postulata_posix.h"
 #include "latina.h"
 #include "piscina.h"
 #include "sors.h"
@@ -81,10 +94,17 @@
 #include "tabula_nodorum.h"
 #include "filum.h"
 #include "moneta.h"
+#include "processus.h"
+#include "via.h"
+#include "fenestra_tempus.h"
+#include "macho.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/resource.h>
 
 #define OCTETI_MAXIMI ((i64)0x80000000UL)   /* 2 GiB officina */
 
@@ -2730,6 +2750,30 @@ _sectio_cribri (vacuum)
  * in sectionibus VIII et XI, -promovere VIA
  * ================================================== */
 
+
+/* ==================================================
+ * Opifices (puncta-parallela-plan T2): -opifices [N] cum -modus
+ * verificatum, via TEMPERLEY sola. Valores principales (et probationum
+ * sui, fasciculi unius indicis) per processus operarios: copia
+ * CONGELATA huius binarii (build/opifices/<pid>/) in modo -opus. Nullus
+ * valor principalis in processu (recensio H2); laqueus fasciculum
+ * quemque in modulo suo semel probat.
+ * ================================================== */
+
+#define OPIFICES_ORDINARII     IV
+#define OPIFICES_MAXIMI        LXIV
+#define MORA_OPERIS_MINIMA_MS  ((i64)60000)          /* LX s */
+#define MORA_OPERIS_MAXIMA_MS  ((i64)0x7FFFFFFFUL)
+#define VERBUM_OPERIS_MAXIMUM  ((i64)100000)         /* litterae */
+#define NUMERUS_OPERIS_MAXIMUS ((i64)0x100000)       /* indices */
+
+nomen structura {
+                    i32  numerus;               /* W */
+     constans character* binarium;              /* copia congelata */
+     constans character* directorium;           /* eius directorium */
+              character  aedificatio[XXXIII];   /* LC_UUID, hex */
+} Opifices;
+
 nomen structura {
     b32 activa;
     i64 semen;
@@ -2737,7 +2781,787 @@ nomen structura {
     i32 verificator;       /* LAQUEUS_VERIFICATOR_* */
     b32 congelatus;        /* nucleus 79e7fad9 (EXTERNUS) */
     b32 tractus;           /* lineae TRACTUS post RELATIO */
+    constans Opifices* opifices;   /* NIHIL: serialis (ordinarie) */
 } ParametriVerificandi;
+
+/* dyld (macOS): caput imaginis; imago 0 = binarium principale.
+ * Declaratio propria pro <mach-o/dyld.h> (examen capita mach-o non
+ * legit); caput ut octeti legitur, constantes ex macho.h. */
+externus constans vacuum*
+_dyld_get_image_header (
+    i32 imago);
+
+/* verbum XXXII bitorum in octeto locus (ordo machinae, sine
+ * alignatione) */
+interior i32
+_verbum_imaginis (
+    constans i8* locus)
+{
+    i32 v;
+
+    memcpy(&v, locus, magnitudo(i32));
+    redde v;
+}
+
+/* aedificatio = LC_UUID imaginis principalis IN MEMORIA (non ex disco):
+ * eadem in parente et in copia congelata, alia post quamcumque
+ * aedificationem novam. Caput LXIV bitorum: magica (0), mandatorum
+ * numerus (XVI), mandata ab octeto XXXII; mandatum: genus (0), mensura
+ * (IV), uuid ab VIII. FALSUM si non inventum. */
+interior b32
+_aedificationem_legere (
+    character exitus[XXXIII])
+{
+    constans i8* caput = (constans i8*)_dyld_get_image_header(ZEPHYRUM);
+    constans i8* locus;
+            i32  numerus;
+            i32  k;
+            i32  j;
+
+    si (   caput                   == NIHIL
+        || _verbum_imaginis(caput) != (i32)MACHO_MAGICA_64)
+    {
+        redde FALSUM;
+    }
+    numerus  = _verbum_imaginis(caput + XVI);
+    locus    = caput + XXXII;
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (_verbum_imaginis(locus) == (i32)MACHO_LC_UUID)
+        {
+            per (j = ZEPHYRUM; j < XVI; j++)
+            {
+                sprintf(exitus + II * j, "%02x",
+                    (insignatus integer)locus[VIII + j]);
+            }
+            redde VERUM;
+        }
+        locus += _verbum_imaginis(locus + IV);
+    }
+    redde FALSUM;
+}
+
+/* numerus decimalis STRICTUS: digiti soli, sine zephyro praevio (nisi
+ * "0"), valor <= maximum (sine superfluitate) */
+interior b32
+_decimale_strictum (
+    constans i8* data,
+            i32  mensura,
+            i64  maximum,
+            i64* valor)
+{
+    i64 v = ZEPHYRUM;
+    i32 k;
+
+    si (   mensura == ZEPHYRUM || mensura > XX
+        || (mensura > I && data[ZEPHYRUM] == '0'))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        i64 d;
+
+        si (data[k] < '0' || data[k] > '9')
+        {
+            redde FALSUM;
+        }
+        d = (i64)(data[k] - '0');
+        /* i64 insignatum: d > maximum ante subtractionem */
+        si (d > maximum || v > (maximum - d) / (i64)X)
+        {
+            redde FALSUM;
+        }
+        v = v * (i64)X + d;
+    }
+    *valor = v;
+    redde VERUM;
+}
+
+interior b32
+_argumentum_decimale (
+    constans character* textus,
+                   i64  maximum,
+                   i64* valor)
+{
+    redde _decimale_strictum((constans i8*)textus, (i32)strlen(textus),
+        maximum, valor);
+}
+
+/* verbum "g1,g2,..." (g != 0, |g| < fila) -> litterae; FALSUM si
+ * deforme */
+interior b32
+_verbum_operis_legere (
+    constans character* textus,
+                   i32  fila,
+              Piscina*  piscina,
+                  s32** verbum,
+                  i32*  longitudo)
+{
+    constans i8* data     = (constans i8*)textus;
+            i32  mensura  = (i32)strlen(textus);
+            i32  numerus  = I;
+            i32  k;
+            i32  initium  = ZEPHYRUM;
+            i32  n        = ZEPHYRUM;
+            s32* litterae;
+
+    per (k = ZEPHYRUM; k < mensura; k++)
+    {
+        si (data[k] == ',')
+        {
+            numerus++;
+        }
+    }
+    si (mensura == ZEPHYRUM || (i64)numerus > VERBUM_OPERIS_MAXIMUM)
+    {
+        redde FALSUM;
+    }
+    litterae = (s32*)piscina_allocare(piscina, (memoriae_index)numerus
+        * magnitudo(s32));
+    per (k = ZEPHYRUM; k <= mensura; k++)
+    {
+        si (k == mensura || data[k] == ',')
+        {
+            b32 negativa  = data[initium] == '-';
+            i64 g         = ZEPHYRUM;
+            i32 a         = initium + (negativa ? I : ZEPHYRUM);
+
+            si (   !_decimale_strictum(data + a, k - a, (i64)fila - I,
+                   &g)
+                || g == ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+            litterae[n++]  = negativa ? -(s32)g : (s32)g;
+            initium        = k + I;
+        }
+    }
+    *verbum     = litterae;
+    *longitudo  = n;
+    redde VERUM;
+}
+
+/* vitium operarii IMPOSITUM (acceptatio T3, casus refutationis sine
+ * aedificatione nova): UNCINUS_OPUS_VITIUM = "<genus>@<ab>" afficit
+ * operarium cuius -ab id est. Genera: occide (SIGKILL post dimidium),
+ * exitus (exitus 1 post effusionem totam), statim (exitus 1 ante
+ * aestimationem: ceteri adhuc currunt), finis (sine OPUS FINIS),
+ * signum (signum falsum), duplex (index iteratus), extra (index extra
+ * partem), primus (p falsum redditum). Sine variabili: nihil. */
+interior constans character*
+_vitium_operis (
+    i64 ab)
+{
+    constans character* v = getenv("UNCINUS_OPUS_VITIUM");
+    constans character* at;
+                   i64  locus;
+
+    si (v == NIHIL)
+    {
+        redde NIHIL;
+    }
+    at = strchr(v, '@');
+    si (   at    == NIHIL
+        || !_argumentum_decimale(at + I, (i64)0xFFFFFFFFUL, &locus)
+        || locus != ab)
+    {
+        redde NIHIL;
+    }
+    redde v;
+}
+
+interior b32
+_vitium_est (
+    constans character* vitium,
+    constans character* genus)
+{
+    size_t m = strlen(genus);
+
+    redde vitium != NIHIL && strncmp(vitium, genus, m) == ZEPHYRUM
+        && vitium[m] == '@';
+}
+
+/* modus -opus (operarius), argumenta STRICTA et ordine fixo:
+ *   -opus -fila N -verbum g1,g2,.. -primus p -ab i -numerus k
+ * lineae: OPUS SIGNUM <signum hex> <aedificatio> <p>, deinde per
+ * indicem OPUS <index> <punctum> <valor> <status> (status -1/0/1,
+ * ERRATUM et INUTILE data sunt), deinde OPUS FINIS <k>. Exitus 0 solum
+ * si omnia scripta (ferror). */
+interior s32
+_opus (
+                   s32  argc,
+    constans character* constans* argv)
+{
+    constans character* signa[V] = {
+        "-fila", "-verbum", "-primus", "-ab", "-numerus"
+    };
+                    Piscina* piscina;
+                        i64  fila       = ZEPHYRUM;
+                        i64  primus     = ZEPHYRUM;
+                        i64  ab         = ZEPHYRUM;
+                        i64  numerus    = ZEPHYRUM;
+                        s32* verbum     = NIHIL;
+                        i32  longitudo  = ZEPHYRUM;
+    LaqueusModulusTemperley* mt;
+                        i32* puncta;
+                        i32* valores;
+                        s32* status;
+                  character  aedificatio[XXXIII];
+         constans character* vitium;
+                        i64  signum;
+                        i32  k;
+
+    si (argc != XII)
+    {
+        fprintf(stderr,
+            "opus: -opus -fila N -verbum g1,g2,.. -primus p "
+            "-ab i -numerus k\n");
+        redde I;
+    }
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        si (strcmp(argv[II + II * k], signa[k]) != ZEPHYRUM)
+        {
+            fprintf(stderr, "opus: %s exspectatum\n", signa[k]);
+            redde I;
+        }
+    }
+    piscina = piscina_generare_dynamicum("mensura_opus", 1048576);
+    si (   _argumentum_decimale(argv[IX], (i64)0xFFFFFFFFUL, &ab)
+        && _vitium_est(_vitium_operis(ab), "statim"))
+    {
+        fprintf(stderr, "opus: vitium statim impositum\n");
+        piscina_destruere(piscina);
+        redde I;
+    }
+    si (   !_argumentum_decimale(argv[III], (i64)TEMPERLEY_FILA_MAXIMA,
+           &fila)
+        || fila < (i64)II
+        || !_verbum_operis_legere(argv[V], (i32)fila, piscina, &verbum,
+           &longitudo)
+        || !_argumentum_decimale(argv[VII], (i64)0xFFFFFFFFUL, &primus)
+        || !_argumentum_decimale(argv[IX], (i64)0xFFFFFFFFUL, &ab)
+        || !_argumentum_decimale(argv[XI], NUMERUS_OPERIS_MAXIMUS,
+           &numerus)
+        || numerus == ZEPHYRUM)
+    {
+        fprintf(stderr, "opus: argumentum deforme\n");
+        piscina_destruere(piscina);
+        redde I;
+    }
+    mt = laqueus_modulus_temperley_creare(verbum, longitudo, (i32)fila,
+        CONTRACTIO_SATURATUM, piscina);
+    puncta   = (i32*)piscina_allocare(piscina, (memoriae_index)numerus
+        * magnitudo(i32));
+    valores  = (i32*)piscina_allocare(piscina, (memoriae_index)numerus
+        * magnitudo(i32));
+    status   = (s32*)piscina_allocare(piscina, (memoriae_index)numerus
+        * magnitudo(s32));
+    si (   mt == NIHIL || !_aedificationem_legere(aedificatio)
+        || !laqueus_modulus_temperley_fasciculus(mt, (i32)ab,
+           (i32)numerus, (i32)primus, puncta, valores, status))
+    {
+        fprintf(stderr, "opus: modulus aut fasciculus refutatus\n");
+        piscina_destruere(piscina);
+        redde I;
+    }
+    vitium = _vitium_operis(ab);
+    signum = laqueus_modulus_temperley_signum(mt);
+    imprimere("OPUS SIGNUM %016llx %s %u\n", (unsigned long long)(signum
+        ^ (_vitium_est(vitium, "signum") ? (i64)I : ZEPHYRUM)),
+        aedificatio, (i32)primus
+        + (_vitium_est(vitium, "primus") ? (i32)IV : ZEPHYRUM));
+    per (k = ZEPHYRUM; (i64)k < numerus; k++)
+    {
+        si (_vitium_est(vitium, "occide") && (i64)k == numerus / II)
+        {
+            fflush(stdout);
+            (vacuum)raise(SIGKILL);
+        }
+        imprimere("OPUS %u %u %u %d\n", (i32)ab + k
+            + (_vitium_est(vitium, "extra") && k == ZEPHYRUM
+            ? (i32)numerus : ZEPHYRUM), puncta[k], valores[k],
+            (integer)status[k]);
+        si (_vitium_est(vitium, "duplex") && k == ZEPHYRUM)
+        {
+            imprimere("OPUS %u %u %u %d\n", (i32)ab, puncta[k],
+                valores[k], (integer)status[k]);
+        }
+    }
+    si (!_vitium_est(vitium, "finis"))
+    {
+        imprimere("OPUS FINIS %u\n", (i32)numerus);
+    }
+    fflush(stdout);
+    piscina_destruere(piscina);
+    si (ferror(stdout))
+    {
+        redde I;
+    }
+    redde _vitium_est(vitium, "exitus") ? I : ZEPHYRUM;
+}
+
+/* contextus fasciculi parentis (una trica) */
+nomen structura {
+       constans Opifices* opifices;
+                     i32  fila;
+      constans character* verbum;          /* "g1,g2,..." */
+                     i64  signum;          /* laqueus_temperley_signum */
+                     f64  secundae_puncti; /* aestimatio (mora) */
+                 Piscina* piscina;         /* per fasciculum refecta */
+                     i64  fasciculi;
+                     i64  opera;
+} ContextusOperum;
+
+/* mora operarii: X x indices x secundae per punctum, LX s minimum
+ * (consilium Q2) */
+interior i32
+_mora_operis (
+    constans ContextusOperum* co,
+                         i32  numerus)
+{
+    f64 ms = (f64)X * (f64)numerus * co->secundae_puncti * 1000.0;
+
+    si (ms < (f64)MORA_OPERIS_MINIMA_MS)
+    {
+        redde (i32)MORA_OPERIS_MINIMA_MS;
+    }
+    si (ms > (f64)MORA_OPERIS_MAXIMA_MS)
+    {
+        redde (i32)MORA_OPERIS_MAXIMA_MS;
+    }
+    redde (i32)ms;
+}
+
+/* linea proxima [*positio, '\n') in partes spatio singulo divisas;
+ * FALSUM si linea sine '\n', pars vacua, aut partes > maximum */
+interior b32
+_lineam_secare (
+    chorda  textus,
+       i32* positio,
+    chorda* partes,
+       i32  maximum,
+       i32* numerus)
+{
+    i32 initium  = *positio;
+    i32 k        = *positio;
+
+    *numerus = ZEPHYRUM;
+    dum (k < textus.mensura && textus.datum[k] != '\n')
+    {
+        k++;
+    }
+    si (k == textus.mensura)
+    {
+        redde FALSUM;
+    }
+    *positio = k + I;
+    dum (initium <= k)
+    {
+        i32 finis = initium;
+
+        dum (finis < k && textus.datum[finis] != ' ')
+        {
+            finis++;
+        }
+        si (finis == initium || *numerus == maximum)
+        {
+            redde FALSUM;
+        }
+        partes[*numerus].datum    = textus.datum + initium;
+        partes[*numerus].mensura  = finis - initium;
+        (*numerus)++;
+        initium = finis + I;
+    }
+    redde VERUM;
+}
+
+interior b32
+_linea_aequalis (
+                chorda  textus,
+                   i32* positio,
+    constans character* expectata)
+{
+    i32 m = (i32)strlen(expectata);
+
+    si (   *positio + m               >= textus.mensura
+        || memcmp(textus.datum + *positio, expectata, (size_t)m)
+           != ZEPHYRUM
+        || textus.datum[*positio + m] != '\n')
+    {
+        redde FALSUM;
+    }
+    *positio += m + I;
+    redde VERUM;
+}
+
+/* effusio operarii w (indices ab .. ab + quot - 1) probata et in
+ * vectores scripta; causa refutationis aliter */
+interior constans character*
+_opus_legere (
+    constans ContextusOperum* co,
+    constans ProcessusResultus* r,
+                         i32  ab,
+                         i32  quot,
+                         i32  p,
+                         i32  index_primus,
+                         i32* puncta,
+                         i32* valores,
+                         s32* status)
+{
+    character expectata[CXXVIII];
+       chorda partes[VI];
+          i32 positio = ZEPHYRUM;
+          i32 n;
+          i32 j;
+
+    si (   !r->successus || r->error != PROCESSUS_OK || r->signum != 0
+        || r->codex_exitus != 0)
+    {
+        redde "exitus";
+    }
+    sprintf(expectata, "OPUS SIGNUM %016llx %s %u",
+        (unsigned long long)co->signum, co->opifices->aedificatio, p);
+    si (!_linea_aequalis(r->effusio, &positio, expectata))
+    {
+        redde "signum";
+    }
+    per (j = ZEPHYRUM; j < quot; j++)
+    {
+        i64 index;
+        i64 punctum;
+        i64 valor;
+        i64 s;
+        b32 negativus;
+
+        si (   !_lineam_secare(r->effusio, &positio, partes, VI, &n)
+            || n != V || partes[ZEPHYRUM].mensura != IV
+            || memcmp(partes[ZEPHYRUM].datum, "OPUS", IV) != ZEPHYRUM
+            || !_decimale_strictum(partes[I].datum, partes[I].mensura,
+               (i64)0xFFFFFFFFUL, &index)
+            || index != (i64)(ab + j))
+        {
+            redde "index";
+        }
+        negativus = partes[IV].mensura == II
+            && partes[IV].datum[ZEPHYRUM] == '-';
+        si (   !_decimale_strictum(partes[II].datum, partes[II].mensura,
+               (i64)p - I, &punctum)
+            || !_decimale_strictum(partes[III].datum,
+            partes[III].mensura,
+               (i64)p - I, &valor)
+            || !_decimale_strictum(partes[IV].datum
+                + (negativus ? I : ZEPHYRUM),
+               partes[IV].mensura - (negativus ? I : ZEPHYRUM), (i64)I,
+               &s)
+            || (negativus && s != (i64)I)
+            || ((negativus || s == ZEPHYRUM)
+                && (punctum != ZEPHYRUM || valor != ZEPHYRUM)))
+        {
+            redde "valor";
+        }
+        puncta[ab + j - index_primus]   = (i32)punctum;
+        valores[ab + j - index_primus]  = (i32)valor;
+        status[ab + j - index_primus]   = negativus
+            ? INTERPOLATIO_ERRATUM : s == (i64)I ? INTERPOLATIO_UTILE
+            : INTERPOLATIO_INUTILE;
+    }
+    sprintf(expectata, "OPUS FINIS %u", quot);
+    si (   !_linea_aequalis(r->effusio, &positio, expectata)
+        || positio != r->effusio.mensura)
+    {
+        redde "finis";
+    }
+    redde NIHIL;
+}
+
+/* linea diagnostica operarii refutati: causa, exitus, signum, cauda
+ * errati (lineae in spatia) */
+interior vacuum
+_opus_refutatum_imprimere (
+      constans ContextusOperum* co,
+                           i32  opifex,
+                           i32  ab,
+                           i32  quot,
+            constans character* causa,
+    constans ProcessusResultus* r)
+{
+    i32 initium = r != NIHIL && r->erratum.mensura > CLX
+        ? r->erratum.mensura - CLX : ZEPHYRUM;
+    i32 k;
+
+    imprimere("OPIFEX REFUTATUS | fasciculus %llu | opifex %u | ab %u | "
+        "indices %u | causa %s", (unsigned long long)co->fasciculi,
+        opifex, ab, quot, causa);
+    si (r != NIHIL)
+    {
+        imprimere(" | exitus %u | signum %u | error %s | erratum ",
+            r->codex_exitus, r->signum,
+            processus_error_nomen(r->error));
+        per (k = initium; k < r->erratum.mensura; k++)
+        {
+            character x = (character)r->erratum.datum[k];
+
+            imprimere("%c", x == '\n' ? ' ' : x);
+        }
+    }
+    imprimere("\n");
+    fflush(stdout);
+}
+
+/* InterpolatioAestimatorFasciculi parentis: [index_primus, + numerus)
+ * in min(W, numerus) partes contiguas quam aequales, operarii simul
+ * (processus_incipere, pulsare + XX ms), effusio quaeque probata.
+ * Defectus quilibet: ceteri occiduntur et metuntur, FALSUM (regula 4:
+ * nec acceptatio partialis nec iteratio). */
+interior b32
+_fasciculus_operum (
+    vacuum* contextus,
+       i32  index_primus,
+       i32  numerus,
+       i32  p,
+       i32* puncta,
+       i32* valores,
+       s32* status)
+{
+    ContextusOperum* co    = (ContextusOperum*)contextus;
+     PiscinaNotatio  nota  = piscina_notare(co->piscina);
+          Processus* processus[OPIFICES_MAXIMI];
+                i32  ab[OPIFICES_MAXIMI];
+                i32  quot[OPIFICES_MAXIMI];
+                i32  w = co->opifices->numerus < numerus
+                    ? co->opifices->numerus : numerus;
+                i32 currentes  = ZEPHYRUM;
+                i32 locus      = index_primus;
+                i32 lecta      = ZEPHYRUM;   /* indices probati */
+                b32 bene       = VERUM;
+                i32 k;
+
+    co->fasciculi++;
+    per (k = ZEPHYRUM; k < w; k++)
+    {
+        quot[k]       = numerus / w + (k < numerus % w ? I : ZEPHYRUM);
+        ab[k]         = locus;
+        locus         += quot[k];
+        processus[k]  = NIHIL;
+    }
+    per (k = ZEPHYRUM; k < w && bene; k++)
+    {
+         constans character* argumenta[XIII];
+                  character  fila[XII];
+                  character  primus[XII];
+                  character  initium[XII];
+                  character  copia[XII];
+
+        sprintf(fila, "%u", co->fila);
+        sprintf(primus, "%u", p);
+        sprintf(initium, "%u", ab[k]);
+        sprintf(copia, "%u", quot[k]);
+        argumenta[ZEPHYRUM]  = co->opifices->binarium;
+        argumenta[I]         = "-opus";
+        argumenta[II]        = "-fila";
+        argumenta[III]       = fila;
+        argumenta[IV]        = "-verbum";
+        argumenta[V]         = co->verbum;
+        argumenta[VI]        = "-primus";
+        argumenta[VII]       = primus;
+        argumenta[VIII]      = "-ab";
+        argumenta[IX]        = initium;
+        argumenta[X]         = "-numerus";
+        argumenta[XI]        = copia;
+        argumenta[XII]       = NIHIL;
+        processus[k] = processus_incipere(argumenta, _mora_operis(co,
+            quot[k]), co->piscina);
+        si (processus[k] == NIHIL)
+        {
+            _opus_refutatum_imprimere(co, k, ab[k], quot[k],
+                "incipere", NIHIL);
+            bene = FALSUM;
+        }
+        alioquin
+        {
+            co->opera++;
+            currentes++;
+        }
+    }
+    dum (bene && currentes > ZEPHYRUM)
+    {
+        b32 mutatum = FALSUM;
+
+        per (k = ZEPHYRUM; k < w && bene; k++)
+        {
+             ProcessusResultus  r;
+            constans character* causa;
+
+            si (   processus[k]                    == NIHIL
+                || processus_pulsare(processus[k]) != PROCESSUS_PARATUS)
+            {
+                perge;
+            }
+            r             = processus_metere(processus[k]);
+            processus[k]  = NIHIL;
+            currentes--;
+            mutatum       = VERUM;
+            causa = _opus_legere(co, &r, ab[k], quot[k], p,
+                index_primus, puncta, valores, status);
+            si (causa != NIHIL)
+            {
+                _opus_refutatum_imprimere(co, k, ab[k], quot[k], causa,
+                    &r);
+                bene = FALSUM;
+            }
+            alioquin
+            {
+                lecta += quot[k];
+            }
+        }
+        si (!mutatum && bene)
+        {
+            structura timespec mora;
+
+            mora.tv_sec   = ZEPHYRUM;
+            mora.tv_nsec  = XX * (longus)M * (longus)M;
+            (vacuum)nanosleep(&mora, NIHIL);   /* XX ms sine obstaculo */
+        }
+    }
+    per (k = ZEPHYRUM; k < w; k++)
+    {
+        si (processus[k] != NIHIL)
+        {
+            processus_abrumpere(processus[k]);
+        }
+    }
+    /* fasciculus totus ab operariis probatis tectus (pars omissa non
+     * per ERRATUM bibliothecae solum capitur) */
+    si (bene && lecta != numerus)
+    {
+        _opus_refutatum_imprimere(co, w, index_primus, numerus,
+            "tectura", NIHIL);
+        bene = FALSUM;
+    }
+    piscina_reficere(co->piscina, nota);
+    redde bene;
+}
+
+/* verbum "g1,g2,..." pro argumentis operariorum */
+interior constans character*
+_verbum_textus (
+    constans s32* verbum,
+             i32  longitudo,
+         Piscina* piscina)
+{
+    character* textus = (character*)piscina_allocare(piscina,
+        (memoriae_index)longitudo * (memoriae_index)V + I);
+          i32 positio = ZEPHYRUM;
+          i32 k;
+
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        positio += (i32)sprintf(textus + positio, k == ZEPHYRUM ? "%d"
+            : ",%d", (integer)verbum[k]);
+    }
+    textus[positio] = '\0';
+    redde textus;
+}
+
+/* horologium muri (house: fenestra_tempus), secundae */
+interior f64
+_murale (vacuum)
+{
+    redde (f64)fenestra_tempus_obtinere_pulsus()
+        / fenestra_tempus_obtinere_frequentiam();
+}
+
+/* tempus processoris filiorum messorum (usoris + systematis), secundae */
+interior f64
+_cpu_filiorum (vacuum)
+{
+    structura rusage usus;
+
+    si (getrusage(RUSAGE_CHILDREN, &usus) != ZEPHYRUM)
+    {
+        redde 0.0;
+    }
+    redde (f64)usus.ru_utime.tv_sec + (f64)usus.ru_utime.tv_usec / 1e6
+        + (f64)usus.ru_stime.tv_sec + (f64)usus.ru_stime.tv_usec / 1e6;
+}
+
+/* directorium copiae congelatae, pro atexit */
+interior constans character* directorium_opificum = NIHIL;
+
+interior vacuum
+_opifices_purgare (vacuum)
+{
+    si (directorium_opificum != NIHIL)
+    {
+        (vacuum)filum_arborem_delere(directorium_opificum);
+        directorium_opificum = NIHIL;
+    }
+}
+
+/* copia congelata binarii (via argv[0], semel absoluta) in
+ * <cwd>/build/opifices/<pid>/, aedificatio, purgatio ad exitum. FALSUM
+ * (causa impressa) si impossibilis. */
+interior b32
+_opifices_parare (
+    constans character* via_propria,
+                   i32  numerus,
+               Piscina* piscina,
+              Opifices* opifices)
+{
+                chorda  fons;
+                chorda  currens;
+             character* directorium;
+             character* binarium;
+    constans character* fons_literae;
+
+    si (strchr(via_propria, '/') == NIHIL)
+    {
+        imprimere("-opifices: binarium per viam invoca (argv[0] sine "
+            "'/': %s)\n", via_propria);
+        redde FALSUM;
+    }
+    fons     = via_absoluta(chorda_ex_literis(via_propria, piscina),
+        piscina);
+    currens  = via_directorium_currens(piscina);
+    si (fons.mensura == ZEPHYRUM || currens.mensura == ZEPHYRUM)
+    {
+        imprimere("-opifices: via binarii aut directorii non resoluta\n");
+        redde FALSUM;
+    }
+    fons_literae  = chorda_ut_cstr(fons, piscina);
+    directorium   = (character*)piscina_allocare(piscina,
+        (memoriae_index)currens.mensura + LXIV);
+    binarium      = (character*)piscina_allocare(piscina,
+        (memoriae_index)currens.mensura + CXXVIII);
+    sprintf(directorium, "%.*s/build/opifices/%d",
+        (integer)currens.mensura, (constans character*)currens.datum,
+        (integer)getpid());
+    sprintf(binarium, "%s/uncinus_mensura", directorium);
+    si (   !filum_directorium_creare_cum_parentibus(directorium)
+        || !filum_copiare(fons_literae, binarium)
+        || !filum_modum_ponere(binarium, 0755))
+    {
+        imprimere("-opifices: copia congelata non facta (%s)\n",
+            binarium);
+        (vacuum)filum_arborem_delere(directorium);
+        redde FALSUM;
+    }
+    directorium_opificum = directorium;
+    (vacuum)atexit(_opifices_purgare);
+    si (!_aedificationem_legere(opifices->aedificatio))
+    {
+        imprimere("-opifices: LC_UUID non inventum\n");
+        redde FALSUM;
+    }
+    opifices->numerus      = numerus;
+    opifices->binarium     = binarium;
+    opifices->directorium  = directorium;
+    imprimere("OPIFICES %u | binarium %s | aedificatio %s\n", numerus,
+        binarium, opifices->aedificatio);
+    redde VERUM;
+}
 
 /* verificator congelatus: nucleus VETUS (sectio VI) cum puncto PROPRIO
  * (recensio M7): omega = index + 2, A = i omega^2, i hic computatum, non
@@ -2946,6 +3770,11 @@ _uncinum_verificatum (
                     Polynomium f    = polynomium_nullum();
                     LaqueusVia via  = LAQUEUS_VIA_NULLA;
                        clock_t t0;
+               ContextusOperum co;
+                    LaqueusVia via_operum     = LAQUEUS_VIA_NULLA;
+                           b32 operosa        = FALSUM;
+                           f64 murale_initii  = 0.0;
+                           f64 cpu_initii     = 0.0;
 
     sors_seminare(&s, (i64)MMXXVIII, ZEPHYRUM);
     si (_plexus_fortuitus(&s, fila, &longitudo, piscina, &verbum)
@@ -2981,7 +3810,47 @@ _uncinum_verificatum (
         o.verificator  = LAQUEUS_VERIFICATOR_EXTERNUS;
         o.alienus      = &congelatus;
     }
-    t0 = clock();
+    /* opifices per tricam: via TEMPERLEY sola (recensio M4) */
+    si (   pv->opifices != NIHIL
+        && laqueus_via_eligere(verbum, longitudo, fila,
+           CONTRACTIO_SATURATUM, piscina, &via_operum, NIHIL, NIHIL)
+        && via_operum   == LAQUEUS_VIA_TEMPERLEY)
+    {
+        LaqueusTemperleySumptus st = laqueus_temperley_sumptus(fila,
+            longitudo);
+
+        co.opifices  = pv->opifices;
+        co.fila      = fila;
+        co.verbum    = _verbum_textus(verbum, longitudo,
+            piscina);
+        co.signum    = ZEPHYRUM;
+        /* ns per multiplicationem nominalem 0.21 (pretium viae XXI / C) */
+        co.secundae_puncti  = (f64)st.multiplicationes * 0.21e-9;
+        co.fasciculi        = ZEPHYRUM;
+        co.opera            = ZEPHYRUM;
+        co.piscina = piscina_generare_dynamicum("mensura_opifices",
+            65536);
+        si (   co.piscina == NIHIL
+            || !laqueus_temperley_signum(verbum, longitudo, fila,
+               piscina, &co.signum))
+        {
+            imprimere("   %u x %u: signum operum refutatum\n", fila,
+                longitudo);
+            si (co.piscina != NIHIL)
+            {
+                piscina_destruere(co.piscina);
+            }
+            piscina_destruere(piscina);
+            redde;
+        }
+        o.fasciculus_temperley  = _fasciculus_operum;
+        o.contextus_fasciculi   = &co;
+        o.capacitas_fasciculi   = ZEPHYRUM;
+        operosa                 = VERUM;
+    }
+    murale_initii  = _murale();
+    cpu_initii     = _cpu_filiorum();
+    t0             = clock();
     si (!laqueus_uncinus_ex_plexu_verificatum(verbum, longitudo, fila,
         &o,
         piscina, &f, &via, &r))
@@ -3002,6 +3871,22 @@ _uncinum_verificatum (
         {
             _tractus_imprimere(fila, longitudo, &r);
         }
+    }
+    /* tempus muri et processoris filiorum (recensio M6): parentis
+     * clock() solum suum tempus videt */
+    si (operosa)
+    {
+        imprimere("OPIFICES %u | fasciculi %llu | opera %llu | murale %.2f "
+            "| cpu_filiorum %.2f | cpu_parentis %.2f\n",
+            pv->opifices->numerus, (unsigned long long)co.fasciculi,
+            (unsigned long long)co.opera, _murale() - murale_initii,
+            _cpu_filiorum() - cpu_initii, _secundae(t0));
+        piscina_destruere(co.piscina);
+    }
+    alioquin si (pv->opifices != NIHIL)
+    {
+        imprimere("OPIFICES 0 | via %s\n", via_operum
+            == LAQUEUS_VIA_VERTEX ? "vertex" : "nulla");
     }
     fflush(stdout);
     piscina_destruere(piscina);
@@ -3257,8 +4142,17 @@ principale (
                    i32  numerus_viarum = ZEPHYRUM;
     constans character* via_promovendi = NIHIL;
   ParametriVerificandi  pv;
-                   b32  semen_datum = FALSUM;
+                   b32  semen_datum      = FALSUM;
+                   i64  opifices_petiti  = ZEPHYRUM;
+              Opifices  opifices;
+               Piscina* piscina_opificum = NIHIL;
 
+    /* modus operarii ANTE omnia (argumenta stricta, puncta-parallela) */
+    si (argc > I && strcmp(argv[I], "-opus") == ZEPHYRUM)
+    {
+        redde _opus(argc, argv);
+    }
+    pv.opifices     = NIHIL;
     pv.activa       = FALSUM;
     pv.semen        = ZEPHYRUM;
     pv.semen_origo  = INTERPOLATIO_SEMEN_DATUM;
@@ -3353,6 +4247,22 @@ principale (
         {
             via_promovendi = argv[++i];
         }
+        alioquin si (strcmp(argv[i], "-opifices") == ZEPHYRUM)
+        {
+            opifices_petiti = (i64)OPIFICES_ORDINARII;
+            si (   i + I < argc && argv[i + I][ZEPHYRUM] >= '0'
+                && argv[i + I][ZEPHYRUM] <= '9')
+            {
+                si (   !_argumentum_decimale(argv[++i],
+                       (i64)OPIFICES_MAXIMI, &opifices_petiti)
+                    || opifices_petiti == ZEPHYRUM)
+                {
+                    imprimere("-opifices N: 1 .. %u\n",
+                        OPIFICES_MAXIMI);
+                    redde I;
+                }
+            }
+        }
         alioquin si (   strcmp(argv[i], "-uncini") == ZEPHYRUM
                      && i + I < argc
                      && numerus_viarum < TEXTUS_UNCINORUM_MAXIMI)
@@ -3364,6 +4274,28 @@ principale (
     {
         _sectio_promotionis(via_promovendi);
         redde ZEPHYRUM;
+    }
+    si (opifices_petiti > ZEPHYRUM)
+    {
+        /* opifices: -modus verificatum cum sectione VIII aut XI solum */
+        si (   !pv.activa || sectio == NIHIL
+            || (   strcmp(sectio, "VIII") != ZEPHYRUM
+                && strcmp(sectio, "XI") != ZEPHYRUM))
+        {
+            imprimere("-opifices: cum -modus verificatum et -sectio "
+                "VIII aut XI solum\n");
+            redde I;
+        }
+        piscina_opificum =
+            piscina_generare_dynamicum("mensura_opificum",
+            4096);
+        si (   piscina_opificum == NIHIL
+            || !_opifices_parare(argv[ZEPHYRUM], (i32)opifices_petiti,
+               piscina_opificum, &opifices))
+        {
+            redde I;
+        }
+        pv.opifices = &opifices;
     }
     si (pv.activa && !semen_datum)
     {

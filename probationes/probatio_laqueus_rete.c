@@ -3261,6 +3261,430 @@ _probare_verificationem_laquei_refutatam (
 
 
 /* ==================================================
+ * Fasciculi (puncta-parallela-plan T2): aestimator per fasciculos
+ * vocantis in via TEMPERLEY, probatio in modulo proprio, signum
+ * ================================================== */
+
+/* fasciculus vocantis in processu super modulum ALTERUM (operarius
+ * simulatus): numerat fasciculos, indices, fasciculos unius indicis */
+nomen structura {
+    LaqueusModulusTemperley* modulus;
+                        i64  petita;
+                        i32  fasciculi;
+                        i32  singuli;
+                        b32  deficere;    /* FALSUM reddit (transitus) */
+                        b32  addere;      /* valor + punctum^exponens */
+                        s32  exponens;
+} FasciculusLaquei;
+
+interior vacuum
+_fasciculum_laquei_initium (
+           FasciculusLaquei* fl,
+    LaqueusModulusTemperley* modulus)
+{
+    fl->modulus    = modulus;
+    fl->petita     = ZEPHYRUM;
+    fl->fasciculi  = ZEPHYRUM;
+    fl->singuli    = ZEPHYRUM;
+    fl->deficere   = FALSUM;
+    fl->addere     = FALSUM;
+    fl->exponens   = ZEPHYRUM;
+}
+
+interior b32
+_fasciculus_laquei (
+    vacuum* contextus,
+       i32  index_primus,
+       i32  numerus,
+       i32  p,
+       i32* puncta,
+       i32* valores,
+       s32* status)
+{
+    FasciculusLaquei* fl = (FasciculusLaquei*)contextus;
+                 i32  j;
+
+    fl->fasciculi++;
+    fl->petita += (i64)numerus;
+    si (numerus == I)
+    {
+        fl->singuli++;
+    }
+    si (   fl->deficere
+        || !laqueus_modulus_temperley_fasciculus(fl->modulus,
+           index_primus, numerus, p, puncta, valores, status))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; fl->addere && j < numerus; j++)
+    {
+        i32 basis = puncta[j];
+        i32 potentia;
+
+        si (status[j] != INTERPOLATIO_UTILE)
+        {
+            perge;
+        }
+        si (fl->exponens < ZEPHYRUM)
+        {
+            (vacuum)congruentia_inversa(puncta[j], p, &basis);
+        }
+        potentia = congruentia_potentia(basis, (i64)(fl->exponens
+            < ZEPHYRUM ? -fl->exponens : fl->exponens), p);
+        valores[j] = congruentia_adde(valores[j], potentia, p);
+    }
+    redde VERUM;
+}
+
+/* relationes membro per membrum aequales (tractus et primi inclusi),
+ * ut in probatio_interpolatio */
+interior vacuum
+_relationes_aequales (
+    constans InterpolatioRelatio* a,
+    constans InterpolatioRelatio* b)
+{
+    i32 j;
+
+    CREDO_AEQUALIS_I32(a->genus, b->genus);
+    CREDO_AEQUALIS_I32(a->status, b->status);
+    CREDO_AEQUALIS_I32(a->numerus_primorum, b->numerus_primorum);
+    CREDO_AEQUALIS_I32(a->primus_additus, b->primus_additus);
+    CREDO_AEQUALIS_I32(a->k_maximus, b->k_maximus);
+    CREDO_VERUM(a->aestimationes == b->aestimationes);
+    CREDO_AEQUALIS_I32(a->probationes_sui, b->probationes_sui);
+    CREDO_AEQUALIS_I32(a->probationes_certificantes,
+        b->probationes_certificantes);
+    CREDO_AEQUALIS_I32(a->probationes_requisitae,
+        b->probationes_requisitae);
+    CREDO_AEQUALIS_I32(a->bita_erroris, b->bita_erroris);
+    CREDO_VERUM(_tituli_aequales(a->titulus_verificatoris,
+        b->titulus_verificatoris));
+    CREDO_AEQUALIS_I32(a->numerus_tractuum, b->numerus_tractuum);
+    si (   a->numerus_tractuum == b->numerus_tractuum
+        && a->tractus          != NIHIL && b->tractus != NIHIL)
+    {
+        per (j = ZEPHYRUM; j < a->numerus_tractuum; j++)
+        {
+            CREDO_AEQUALIS_I32(a->tractus[j].gradus,
+                b->tractus[j].gradus);
+            CREDO_AEQUALIS_I32(a->tractus[j].primus,
+                b->tractus[j].primus);
+            CREDO_AEQUALIS_I32(a->tractus[j].index,
+                b->tractus[j].index);
+            CREDO_VERUM(a->tractus[j].certificans
+                == b->tractus[j].certificans);
+            CREDO_VERUM(a->tractus[j].transiit
+                == b->tractus[j].transiit);
+        }
+    }
+    si (   a->k_maximus == b->k_maximus && a->primi != NIHIL
+        && b->primi     != NIHIL)
+    {
+        per (j = ZEPHYRUM; j <= a->k_maximus; j++)
+        {
+            CREDO_AEQUALIS_I32(a->primi[j], b->primi[j]);
+        }
+    }
+}
+
+/* fasciculus = aestimator singulus index post indicem (primus magnus
+ * et parvus, ubi INUTILE apparet); refutationes; signum moduli = signum
+ * verbi, et mutatur littera una signo mutato */
+interior vacuum
+_probare_fasciculum_temperley (
+    CredoContextus* c)
+{
+                    Piscina* piscina    = c->piscina;
+                        i32  longitudo  = CI;
+                        s32* verbum = _trica_certa(VIII, &longitudo,
+                            (i32)2594227919UL, piscina);
+                        s32* mutatum;
+    LaqueusModulusTemperley* mt;
+               constans i32  primi[II] = { (i32)2147483629UL, XXIX };
+                        i32  puncta[XL];
+                        i32  valores[XL];
+                        s32  status[XL];
+                        i64  signum         = ZEPHYRUM;
+                        i64  signum_mutati  = ZEPHYRUM;
+                        i32  inutilia       = ZEPHYRUM;
+                        i32  k;
+                        i32  j;
+
+    CREDO_NECESSE_NON_NIHIL(verbum);
+    mt = _temperley(verbum, longitudo, VIII, piscina);
+    CREDO_NECESSE_NON_NIHIL(mt);
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        CREDO_NECESSE(laqueus_modulus_temperley_fasciculus(mt, V, XL,
+            primi[k], puncta, valores, status));
+        per (j = ZEPHYRUM; j < XL; j++)
+        {
+            i32 punctum  = ZEPHYRUM;
+            i32 valor    = ZEPHYRUM;
+            s32 s = laqueus_modulus_temperley_aestimare(mt, V + j + II,
+                primi[k], &punctum, &valor);
+
+            CREDO_AEQUALIS_I32((i32)status[j], (i32)s);
+            CREDO_AEQUALIS_I32(puncta[j], punctum);
+            CREDO_AEQUALIS_I32(valores[j], valor);
+            si (s != INTERPOLATIO_UTILE)
+            {
+                inutilia++;
+            }
+        }
+    }
+    /* praecondicio: p = 29 indices INUTILES in fasciculo habet */
+    CREDO_VERUM(inutilia > ZEPHYRUM);
+    CREDO_FALSUM(laqueus_modulus_temperley_fasciculus(mt, V, ZEPHYRUM,
+        primi[ZEPHYRUM], puncta, valores, status));
+    CREDO_FALSUM(laqueus_modulus_temperley_fasciculus(NIHIL, V, I,
+        primi[ZEPHYRUM], puncta, valores, status));
+    CREDO_FALSUM(laqueus_modulus_temperley_fasciculus(mt, V, I,
+        primi[ZEPHYRUM], puncta, NIHIL, status));
+    CREDO_FALSUM(laqueus_modulus_temperley_fasciculus(mt,
+        (i32)0xFFFFFFFEUL, I, primi[ZEPHYRUM], puncta, valores,
+        status));
+    CREDO_NECESSE(laqueus_modulus_temperley_fasciculus(mt,
+        (i32)0xFFFFFFFDUL, I, primi[ZEPHYRUM], puncta, valores,
+        status));
+
+    CREDO_NECESSE(laqueus_temperley_signum(verbum, longitudo, VIII,
+        piscina, &signum));
+    CREDO_VERUM(signum == laqueus_modulus_temperley_signum(mt));
+    CREDO_VERUM(signum != ZEPHYRUM);
+    mutatum = (s32*)piscina_allocare(piscina, (memoriae_index)longitudo
+        * magnitudo(s32));
+    per (j = ZEPHYRUM; j < longitudo; j++)
+    {
+        mutatum[j] = verbum[j];
+    }
+    mutatum[L] = -mutatum[L];
+    CREDO_NECESSE(laqueus_temperley_signum(mutatum, longitudo, VIII,
+        piscina, &signum_mutati));
+    CREDO_VERUM(signum_mutati != signum);
+    CREDO_VERUM(laqueus_modulus_temperley_signum(NIHIL) == ZEPHYRUM);
+    CREDO_FALSUM(laqueus_temperley_signum(verbum, I, VIII, piscina,
+        &signum));
+    CREDO_FALSUM(laqueus_temperley_signum(verbum, longitudo, XVII,
+        piscina, &signum));
+}
+
+/* via TEMPERLEY cum fasciculo in processu super modulum alterum =
+ * sine eo, membro per membrum (uncini certi, verificator automaticus et
+ * via altera, capacitas sine limite et III); indices petiti = consumpti
+ * + probationes sui (regula 3, P2); fasciculi unius indicis >= sui */
+interior vacuum
+_probare_fasciculos_in_via (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans UncinusCertus  certi[III] = {
+        { III, L, (i32)2213358261UL, -(s32)XXII, UNCINUS_3_50,
+          (i32)(magnitudo(UNCINUS_3_50) / magnitudo(s64)) },
+        { VIII, CI, (i32)2594227919UL, -(s32)LXIX, UNCINUS_8_101,
+          (i32)(magnitudo(UNCINUS_8_101) / magnitudo(s64)) },
+        { VIII, CCI, (i32)3522731884UL, -(s32)CXXXV, UNCINUS_8_201,
+          (i32)(magnitudo(UNCINUS_8_201) / magnitudo(s64)) }
+    };
+    i32 k;
+    i32 modus;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        per (modus = ZEPHYRUM; modus < IV; modus++)
+        {
+            PiscinaNotatio  nota       = piscina_notare(piscina);
+                       i32  longitudo  = certi[k].longitudo;
+                       s32* verbum = _trica_certa(certi[k].fila,
+                           &longitudo, certi[k].vestigium_verbi,
+                           piscina);
+            LaqueusOptionesVerificandi o =
+                laqueus_optiones_verificandi_ordinariae();
+            InterpolatioRelatio r;
+            InterpolatioRelatio rf;
+               FasciculusLaquei fl;
+                     Polynomium f                 = polynomium_nullum();
+                     Polynomium g                 = polynomium_nullum();
+                     LaqueusVia via               = LAQUEUS_VIA_NULLA;
+                     LaqueusVia via_fasciculorum  = LAQUEUS_VIA_NULLA;
+
+            CREDO_NECESSE_NON_NIHIL(verbum);
+            o.octeti_maximi  = OCTETI_MAXIMI;
+            o.semen          = (i64)(k * IV + modus + LI);
+            o.verificator    = modus % II == ZEPHYRUM
+                ? LAQUEUS_VERIFICATOR_AUTOMATICUS
+                : LAQUEUS_VERIFICATOR_VIA_ALTERA;
+            CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(verbum,
+                longitudo, certi[k].fila, &o, piscina, &f, &via, &r));
+            _fasciculum_laquei_initium(&fl, _temperley(verbum,
+                longitudo,
+                certi[k].fila, piscina));
+            CREDO_NECESSE_NON_NIHIL(fl.modulus);
+            o.fasciculus_temperley  = _fasciculus_laquei;
+            o.contextus_fasciculi   = &fl;
+            o.capacitas_fasciculi   = modus < II ? ZEPHYRUM : III;
+            CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(verbum,
+                longitudo, certi[k].fila, &o, piscina, &g,
+                &via_fasciculorum, &rf));
+            CREDO_VERUM(polynomium_aequalis(f, g));
+            CREDO_VERUM(polynomium_aequalis(g,
+                _uncinus_certus(&certi[k],
+                piscina)));
+            CREDO_AEQUALIS_I32((i32)via_fasciculorum, (i32)via);
+            _relationes_aequales(&r, &rf);
+            CREDO_VERUM(fl.petita == rf.aestimationes
+                + (i64)rf.probationes_sui);
+            CREDO_VERUM(fl.singuli >= rf.probationes_sui);
+            CREDO_VERUM(fl.fasciculi > rf.probationes_sui);
+            piscina_reficere(piscina, nota);
+        }
+    }
+}
+
+/* fasciculus in via VERTEX: FALSUM sine vocatione; via NULLA (c <= 1):
+ * fasciculus non vocatur, relatio formae clausae; transitus fractus
+ * (fasciculus FALSUM): FALSUM, exitus non tactus */
+interior vacuum
+_probare_fasciculum_extra_viam (
+    CredoContextus* c)
+{
+                    Piscina* piscina    = c->piscina;
+                        i32  longitudo  = CII;
+                        s32* verbum = _trica_certa(XI, &longitudo,
+                            (i32)1527719524UL, piscina);
+                        i32  longitudo_tl  = CI;
+                        s32* verbum_tl = _trica_certa(VIII,
+                            &longitudo_tl, (i32)2594227919UL, piscina);
+    LaqueusOptionesVerificandi o =
+        laqueus_optiones_verificandi_ordinariae();
+           InterpolatioRelatio r;
+              FasciculusLaquei fl;
+                    Polynomium f    = polynomium_nullum();
+                    LaqueusVia via  = LAQUEUS_VIA_NULLA;
+                           s32 unum[I];
+
+    CREDO_NECESSE_NON_NIHIL(verbum);
+    CREDO_NECESSE_NON_NIHIL(verbum_tl);
+    CREDO_NECESSE(laqueus_uncinus_ex_plexu(verbum, longitudo, XI,
+        CONTRACTIO_SATURATUM, piscina, &f, &via));
+    CREDO_NECESSE(via == LAQUEUS_VIA_VERTEX);
+    _fasciculum_laquei_initium(&fl, _temperley(verbum_tl, longitudo_tl,
+        VIII, piscina));
+    o.fasciculus_temperley  = _fasciculus_laquei;
+    o.contextus_fasciculi   = &fl;
+    o.semen                 = (i64)LIX;
+    f                       = polynomium_nullum();
+    CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum, longitudo,
+        XI, &o, piscina, &f, NIHIL, &r));
+    CREDO_AEQUALIS_I32(fl.fasciculi, ZEPHYRUM);
+    CREDO_VERUM(polynomium_est_nullum(f));
+
+    unum[ZEPHYRUM] = (s32)I;
+    CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(unum, I, II, &o,
+        piscina, &f, &via, &r));
+    CREDO_AEQUALIS_I32((i32)via, (i32)LAQUEUS_VIA_NULLA);
+    CREDO_AEQUALIS_I32(fl.fasciculi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(r.genus, INTERPOLATIO_PROBATUM);
+    CREDO_VERUM(_tituli_aequales(r.titulus_verificatoris,
+        "forma clausa"));
+    CREDO_VERUM(magnus_aequalis(polynomium_coefficiens(f, (s32)III),
+        magnus_ex_s64(-(s64)I)));
+
+    fl.deficere  = VERUM;
+    f            = polynomium_nullum();
+    CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum_tl,
+        longitudo_tl, VIII, &o, piscina, &f, NIHIL, &r));
+    CREDO_AEQUALIS_I32(fl.fasciculi, I);
+    CREDO_VERUM(polynomium_est_nullum(f));
+}
+
+/* fasciculus divergens, duo genera: (a) operarius ex verbo littera una
+ * signo mutato (valores quasi fortuiti: limes coefficientium iam
+ * refutaret); (b) operarius polynomium VALIDUM alienum reddit, uncinus
+ * + A^e (e gradus imus veri, intra fenestram et limitem) - divergentia
+ * systematica recensionis H2. Probatio in modulo proprio utrumque
+ * refutat in fasciculo primo, numquam PROBATUM - etiam ubi k_max = 1
+ * (nihil comparatur: sine probatione (b) uncinus falsus AD_LIMITEM
+ * probaretur). */
+interior vacuum
+_probare_fasciculum_divergentem (
+    CredoContextus* c)
+{
+                   Piscina* piscina = c->piscina;
+    constans UncinusCertus  certi[II] = {
+        { III, L, (i32)2213358261UL, -(s32)XXII, UNCINUS_3_50,
+          (i32)(magnitudo(UNCINUS_3_50) / magnitudo(s64)) },
+        { VIII, CI, (i32)2594227919UL, -(s32)LXIX, UNCINUS_8_101,
+          (i32)(magnitudo(UNCINUS_8_101) / magnitudo(s64)) }
+    };
+    /* nodus figurae octonariae: sigma_1 sigma_2^-1 sigma_1 sigma_2^-1 */
+    s32 octonarius[IV] = { I, -(s32)II, I, -(s32)II };
+    i32 k;
+    b32 k_unus = FALSUM;
+
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        PiscinaNotatio  nota       = piscina_notare(piscina);
+                   i32  fila       = k < II ? certi[k].fila : III;
+                   i32  longitudo  = k < II ? certi[k].longitudo : IV;
+                   s32* verbum = k < II ? _trica_certa(fila, &longitudo,
+                       certi[k].vestigium_verbi, piscina) : octonarius;
+                               s32* mutatum;
+                        LaqueusVia  via = LAQUEUS_VIA_NULLA;
+        LaqueusOptionesVerificandi  o =
+            laqueus_optiones_verificandi_ordinariae();
+        InterpolatioRelatio r;
+           FasciculusLaquei fl;
+                 Polynomium f = polynomium_nullum();
+                        i32 j;
+                        s32 exponens;
+
+        CREDO_NECESSE_NON_NIHIL(verbum);
+        mutatum = (s32*)piscina_allocare(piscina,
+            (memoriae_index)longitudo * magnitudo(s32));
+        per (j = ZEPHYRUM; j < longitudo; j++)
+        {
+            mutatum[j] = verbum[j];
+        }
+        mutatum[longitudo / II]  = -mutatum[longitudo / II];
+        o.semen                  = (i64)(k + LXI);
+        CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(verbum,
+            longitudo, fila, &o, piscina, &f, &via, &r));
+        CREDO_NECESSE(via == LAQUEUS_VIA_TEMPERLEY);
+        si (r.k_maximus == I)
+        {
+            k_unus = VERUM;
+        }
+        exponens = polynomium_gradus_imus(f);
+        _fasciculum_laquei_initium(&fl, _temperley(mutatum, longitudo,
+            fila, piscina));
+        CREDO_NECESSE_NON_NIHIL(fl.modulus);
+        o.fasciculus_temperley  = _fasciculus_laquei;
+        o.contextus_fasciculi   = &fl;
+        f                       = polynomium_nullum();
+        CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum,
+            longitudo, fila, &o, piscina, &f, NIHIL, &r));
+        CREDO_VERUM(polynomium_est_nullum(f));
+        CREDO_AEQUALIS_I32(fl.fasciculi, I);
+
+        _fasciculum_laquei_initium(&fl, _temperley(verbum, longitudo,
+            fila, piscina));
+        CREDO_NECESSE_NON_NIHIL(fl.modulus);
+        fl.addere    = VERUM;
+        fl.exponens  = exponens;
+        f            = polynomium_nullum();
+        CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum,
+            longitudo, fila, &o, piscina, &f, NIHIL, &r));
+        CREDO_VERUM(polynomium_est_nullum(f));
+        CREDO_AEQUALIS_I32(fl.fasciculi, I);
+        piscina_reficere(piscina, nota);
+    }
+    /* praecondicio: exemplum unum cum k_max = 1 */
+    CREDO_VERUM(k_unus);
+}
+
+
+/* ==================================================
  * Suita
  * ================================================== */
 
@@ -3327,6 +3751,14 @@ interior constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "verificatio refutata", _probare_verificationem_laquei_refutatam,
       NIHIL, NIHIL, NIHIL, NIHIL },
+    { "fasciculus temperley", _probare_fasciculum_temperley, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "fasciculi in via", _probare_fasciculos_in_via, NIHIL, NIHIL,
+      NIHIL, NIHIL },
+    { "fasciculus extra viam", _probare_fasciculum_extra_viam, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "fasciculus divergens", _probare_fasciculum_divergentem, NIHIL,
+      NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

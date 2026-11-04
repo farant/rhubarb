@@ -470,6 +470,44 @@ i32
 laqueus_modulus_temperley_limes (
     constans LaqueusModulusTemperley* mt);
 
+/* fasciculus indicum (puncta-parallela-plan): status[j], puncta[j],
+ * valores[j] indicis index_primus + j (j < numerus), omega = index + 2
+ * ut in uncino et via verificata - eadem ac
+ * laqueus_modulus_temperley_aestimare index post indicem, sed puncta et
+ * valores ZEPHYRUM ubi non UTILE. Pura in (p, index). Forma
+ * InterpolatioAestimatorFasciculi est praeter contextum typatum
+ * (vocans per adaptatorem vocat). FALSUM si mt aut vector NIHIL,
+ * numerus 0, aut index ultimus + 2 supra 2^32 - 1. */
+b32
+laqueus_modulus_temperley_fasciculus (
+    LaqueusModulusTemperley* mt,
+                        i32  index_primus,
+                        i32  numerus,
+                        i32  p,
+                        i32* puncta,
+                        i32* valores,
+                        s32* status);
+
+/* signum moduli (puncta-parallela-plan regula 2): FNV-1a LXIV bitorum
+ * super fila, longitudo, verbum copiatum, scriptura, fenestra (imus,
+ * summus) et limes - quae valores moduli determinant. Operarius (alius
+ * processus) id cum signo vocantis comparat. 0 si mt NIHIL. */
+i64
+laqueus_modulus_temperley_signum (
+    constans LaqueusModulusTemperley* mt);
+
+/* idem signum SINE modulo (verbum -> codex PD -> fenestra), ne vocans
+ * modulum alterum aedificet solum ut signum comparet. Refutationes ut
+ * laqueus_modulus_temperley_creare praeter octeti; FALSUM (*signum non
+ * tactum) si refutatur. Nihil in piscina relinquit. */
+b32
+laqueus_temperley_signum (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+         Piscina* piscina,
+             i64* signum);
+
 /* via per quam uncinus clausurae tricae computatur */
 nomen enumeratio {
     LAQUEUS_VIA_NULLA = ZEPHYRUM,     /* c <= 1: forma clausa */
@@ -545,12 +583,19 @@ laqueus_jones_ex_plexu (
 /* membra post laqueus_optiones_verificandi_ordinariae() posita */
 nomen structura {
     i64 octeti_maximi;      /* officinae principalis ET verificatoris
-                             * simul (CONTRACTIO_SATURATUM: nullus limes) */
+                             * simul (CONTRACTIO_SATURATUM: nullus
+                             * limes), in HOC processu: operarii
+                             * fasciculi modulos suos aedificant */
     i64 semen;              /* semen tractuum (0), a vocante */
     i32 semen_origo;        /* INTERPOLATIO_SEMEN_DATUM aut _FORTUITUM */
     i32 bita_securitatis;   /* s (LXIV) */
     i32 verificator;        /* LAQUEUS_VERIFICATOR_* (AUTOMATICUS) */
     constans InterpolatioVerificator* alienus;  /* EXTERNUS solum (NIHIL) */
+    /* valores principales per fasciculos vocantis (NIHIL: in processu;
+     * via TEMPERLEY sola, vide laqueus_uncinus_ex_plexu_verificatum) */
+    InterpolatioAestimatorFasciculi fasciculus_temperley;
+    vacuum* contextus_fasciculi;
+    i32 capacitas_fasciculi;   /* fasciculus maximus (0 = sine limite) */
 } LaqueusOptionesVerificandi;
 
 LaqueusOptionesVerificandi
@@ -566,7 +611,19 @@ laqueus_optiones_verificandi_ordinariae (
  * "temperley", "sui:<via>" aut alieni. c <= 1: forma clausa,
  * relatio PROBATUM sine primis. FALSUM (exitus non tangitur) si verbum
  * refutatur, neutra via eligibilis, VIA_ALTERA impossibilis, EXTERNUS
- * sine alieno, aut interpolatio refutat (DISCORDIA in relatione). */
+ * sine alieno, aut interpolatio refutat (DISCORDIA in relatione).
+ *
+ * fasciculus_temperley (puncta-parallela-plan): via TEMPERLEY valores
+ * principales (et probationum sui) per eum petuntur
+ * (interpolatio_polynomium_relatum_fasciculis, capacitas_fasciculi),
+ * indice ut laqueus_modulus_temperley_fasciculus (omega = index + 2).
+ * Fasciculus quisque in modulo PROPRIO semel probatur: index
+ * index_primus + (p mod numerus) iterum aestimatur, et status (punctum
+ * et valor ubi UTILE) aequales esse debent - aliter fasciculus
+ * refutatur et uncinus FALSUM (divergentia operariorum systematica
+ * aliter AD_LIMITEM falso probaretur). Via VERTEX cum fasciculo:
+ * FALSUM (numquam tacite neglectus). Via NULLA: fasciculus non
+ * vocatur. Verificatores immutati (SUI modulo in processu). */
 b32
 laqueus_uncinus_ex_plexu_verificatum (
                            constans s32* verbum,

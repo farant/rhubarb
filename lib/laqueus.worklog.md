@@ -968,3 +968,39 @@ point at 2 copies and ~1.7x at 6-8. This machine is a fanless MacBook
 Air M2 (4P + 4E), other sessions pushed load to 75 during the run.
 Practical throughput at 16 strands: ~2.1-2.5x at 4-8 workers, not the 3x
 I had guessed. Use that for L3's registered threshold.
+
+## 2026-11-03 - L3 T2: batch hook, spot check, workers in uncinus_mensura
+
+The verified entry takes `fasciculus_temperley` (TL route only). Every
+batch is spot-checked on laqueus's own module at index_primus + (p mod
+numerus): status equal, punctum/valor equal where UTILE. The fingerprint
+`laqueus_modulus_temperley_signum` (FNV-1a 64 over fila, longitudo,
+word, writhe, window, limes) has a module-free twin
+`laqueus_temperley_signum` so the parent need not build a third module.
+
+The useful lesson came from plant L1 (spot check removed): my first
+divergent worker (one letter's sign flipped) did NOT need the spot check.
+Its values are random-looking against the true window, so the restored
+coefficients blow the coefficient bound and the run refuses anyway. The
+review's H2 danger is a worker whose wrong answer is still a *valid
+small polynomial*: bracket + A^e with e in the window. With k_max = 1
+nothing compares (self-checks go through the same lying batch function
+and agree with it), and the run returned VERUM with the wrong bracket.
+k_max > 1 was caught by the certificate (in-process SUI) anyway. So: the
+spot check is what closes k_max = 1, and a "divergent" test must diverge
+plausibly, not randomly.
+
+Tool side (tools/uncinus_mensura.c): workers are a frozen byte copy of
+the binary in build/opifices/<pid>/; build id = LC_UUID of the running
+image read from memory (`_dyld_get_image_header` + load commands, strict
+C89 compiles fine with <mach-o/loader.h>), so it compares running code,
+not files. Worker output is parsed strictly: first line and FINIS line
+compared as whole strings (sprintf the expected line, memcmp), data lines
+token by token, index must be ab + j in order. Parent also counts
+coverage. Fault injection `UNCINUS_OPUS_VITIUM="<genus>@<ab>"` exists for
+the refusal cases; `statim` (fail before computing) is the one that makes
+"other workers stopped" observable - with the others still computing at
+12 x 801, a missing abrumpere leaves visible orphans.
+
+Trap hit: `i64` is unsigned here, so `v > (maximum - d) / 10` wraps when
+d > maximum; `-3` passed as a letter on 3 strands until guarded.
