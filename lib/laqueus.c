@@ -4343,15 +4343,16 @@ laqueus_optiones_verificandi_ordinariae (
 {
     LaqueusOptionesVerificandi o;
 
-    o.octeti_maximi         = CONTRACTIO_SATURATUM;
-    o.semen                 = ZEPHYRUM;
-    o.semen_origo           = INTERPOLATIO_SEMEN_DATUM;
-    o.bita_securitatis      = LXIV;
-    o.verificator           = LAQUEUS_VERIFICATOR_AUTOMATICUS;
-    o.alienus               = NIHIL;
-    o.fasciculus_temperley  = NIHIL;
-    o.contextus_fasciculi   = NIHIL;
-    o.capacitas_fasciculi   = ZEPHYRUM;
+    o.octeti_maximi             = CONTRACTIO_SATURATUM;
+    o.semen                     = ZEPHYRUM;
+    o.semen_origo               = INTERPOLATIO_SEMEN_DATUM;
+    o.bita_securitatis          = LXIV;
+    o.verificator               = LAQUEUS_VERIFICATOR_AUTOMATICUS;
+    o.alienus                   = NIHIL;
+    o.fasciculus_temperley      = NIHIL;
+    o.contextus_fasciculi       = NIHIL;
+    o.capacitas_fasciculi       = ZEPHYRUM;
+    o.probationes_fasciculorum  = NIHIL;
     redde o;
 }
 
@@ -4407,11 +4408,13 @@ _verificator_viae (
 /* fasciculus vocantis cum probatione in modulo proprio (puncta-
  * parallela-plan regula 2): index index_primus + (p mod numerus) iterum
  * in processu aestimatur, a semine independens; status (et punctum,
- * valor ubi UTILE) aequales esse debent, aliter FALSUM */
+ * valor ubi UTILE) aequales esse debent, aliter FALSUM; probationes
+ * (si non NIHIL) numerantur */
 nomen structura {
     InterpolatioAestimatorFasciculi  fasciculus;
                              vacuum* contextus;
             LaqueusModulusTemperley* modulus;
+     LaqueusProbationesFasciculorum* probationes;
 } FasciculusProbatus;
 
 interior b32
@@ -4429,6 +4432,7 @@ _fasciculus_probatus (
                    i32  punctum  = ZEPHYRUM;
                    i32  valor    = ZEPHYRUM;
                    s32  s;
+                   b32  aequales;
 
     si (   numerus == ZEPHYRUM
         || !fp->fasciculus(fp->contextus, index_primus, numerus, p,
@@ -4441,12 +4445,17 @@ _fasciculus_probatus (
     s = laqueus_modulus_temperley_aestimare(fp->modulus, index_primus
         + j
         + II, p, &punctum, &valor);
-    si (s != status[j])
+    aequales = s == status[j] && (s != INTERPOLATIO_UTILE
+        || (punctum == puncta[j] && valor == valores[j]));
+    si (fp->probationes != NIHIL)
     {
-        redde FALSUM;
+        fp->probationes->factae++;
+        si (!aequales)
+        {
+            fp->probationes->refutatae++;
+        }
     }
-    redde s != INTERPOLATIO_UTILE
-        || (punctum == puncta[j] && valor == valores[j]);
+    redde aequales;
 }
 
 /* modulus viae (VERTEX aut TEMPERLEY) et quaestio PROBATA eius; FALSUM
@@ -4529,6 +4538,12 @@ laqueus_uncinus_ex_plexu_verificatum (
                  Polynomium  f = polynomium_nullum();
                         b32  alterum;
 
+    si (   optiones                           != NIHIL
+        && optiones->probationes_fasciculorum != NIHIL)
+    {
+        optiones->probationes_fasciculorum->factae     = ZEPHYRUM;
+        optiones->probationes_fasciculorum->refutatae  = ZEPHYRUM;
+    }
     si (   optiones == NIHIL || exitus == NIHIL || relatio == NIHIL
         || piscina  == NIHIL
         || optiones->verificator > LAQUEUS_VERIFICATOR_EXTERNUS
@@ -4667,9 +4682,10 @@ laqueus_uncinus_ex_plexu_verificatum (
     {
         FasciculusProbatus fp;
 
-        fp.fasciculus  = optiones->fasciculus_temperley;
-        fp.contextus   = optiones->contextus_fasciculi;
-        fp.modulus     = (LaqueusModulusTemperley*)contextus;
+        fp.fasciculus   = optiones->fasciculus_temperley;
+        fp.contextus    = optiones->contextus_fasciculi;
+        fp.modulus      = (LaqueusModulusTemperley*)contextus;
+        fp.probationes  = optiones->probationes_fasciculorum;
         si (!interpolatio_polynomium_relatum_fasciculis(
             _fasciculus_probatus, &fp, optiones->capacitas_fasciculi,
             &verificator, &q, piscina, &f, relatio))

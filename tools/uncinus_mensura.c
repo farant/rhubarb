@@ -60,9 +60,13 @@
  *        (copia congelata binarii in build/opifices/<pid>/, deleta ad
  *        exitum); ceterae seriales ("OPIFICES 0 | via vertex").
  *        UNCINUS/RELATIO/TRACTUS idem ac serialis; post eas "OPIFICES
- *        W | fasciculi B | opera O | murale s | cpu_filiorum s |
- *        cpu_parentis s"; operarius refutatus -> "OPIFEX REFUTATUS
- *        ..." et uncinus REFUTATUM. Operarius qui per max(DC s, L x
+ *        W | fasciculi B | opera O | probationes P | murale s |
+ *        cpu_filiorum s | cpu_parentis s" (P = probationes in modulo
+ *        proprio, = B successu); operarius refutatus -> "OPIFEX
+ *        REFUTATUS ..." et uncinus REFUTATUM; probatio in modulo
+ *        proprio refutata -> "OPIFICES DIVERGENTIA ..." et REFUTATUM.
+ *        -promovere cum -opifices aut -silentium refutatur. Operarius
+ *        qui per max(DC s, L x
  *        secundas aestimatas per punctum) nihil scripsit occiditur
  *        (causa silentium; -silentium S mutat); nullus terminus totus.
  *        Modus operarii (internus, argumenta stricta): -opus -fila N
@@ -2955,7 +2959,10 @@ _verbum_operis_legere (
  * signum (signum falsum), duplex (index iteratus), extra (index extra
  * partem), primus (p falsum redditum), pende (post lineam primam
  * tacet, post LX s exitus 1: silentium), lente (CC ms post omnem
- * lineam: tardus sed vivus). Sine variabili: nihil. */
+ * lineam: tardus sed vivus), aedificatio (aedificatio aliena in
+ * SIGNUM), cauda (linea post OPUS FINIS), falsum (valor UTILIS + 1:
+ * forma recta, valor falsus - probatio in modulo proprio sola
+ * refutat). Sine variabili: nihil. */
 interior constans character*
 _vitium_operis (
     i64 ab)
@@ -3087,6 +3094,11 @@ _opus (
      * (fflush): parens silentium metitur, non tempus totum (T3) */
     vitium = _vitium_operis(ab);
     signum = laqueus_modulus_temperley_signum(mt);
+    si (_vitium_est(vitium, "aedificatio"))
+    {
+        aedificatio[ZEPHYRUM] = aedificatio[ZEPHYRUM]
+            == '0' ? '1' : '0';
+    }
     imprimere("OPUS SIGNUM %016llx %s %u\n", (unsigned long long)(signum
         ^ (_vitium_est(vitium, "signum") ? (i64)I : ZEPHYRUM)),
         aedificatio, (i32)primus
@@ -3106,6 +3118,11 @@ _opus (
                 (i32)ab + k);
             piscina_destruere(piscina);
             redde I;
+        }
+        si (   _vitium_est(vitium, "falsum")
+            && status[k] == INTERPOLATIO_UTILE)
+        {
+            valores[k] = (i32)(((i64)valores[k] + I) % primus);
         }
         imprimere("OPUS %u %u %u %d\n", (i32)ab + k
             + (_vitium_est(vitium, "extra") && k == ZEPHYRUM
@@ -3131,6 +3148,10 @@ _opus (
     si (!_vitium_est(vitium, "finis"))
     {
         imprimere("OPUS FINIS %u\n", (i32)numerus);
+    }
+    si (_vitium_est(vitium, "cauda"))
+    {
+        imprimere("OPUS cauda\n");
     }
     fflush(stdout);
     piscina_destruere(piscina);
@@ -3842,6 +3863,7 @@ _uncinum_verificatum (
                     LaqueusVia via  = LAQUEUS_VIA_NULLA;
                        clock_t t0;
                ContextusOperum co;
+LaqueusProbationesFasciculorum pf;
                     LaqueusVia via_operum     = LAQUEUS_VIA_NULLA;
                            b32 operosa        = FALSUM;
                            f64 murale_initii  = 0.0;
@@ -3916,11 +3938,14 @@ _uncinum_verificatum (
             piscina_destruere(piscina);
             redde;
         }
-        o.fasciculus_temperley  = _fasciculus_operum;
-        o.contextus_fasciculi   = &co;
-        o.capacitas_fasciculi   = ZEPHYRUM;
-        operosa                 = VERUM;
+        o.fasciculus_temperley      = _fasciculus_operum;
+        o.contextus_fasciculi       = &co;
+        o.capacitas_fasciculi       = ZEPHYRUM;
+        o.probationes_fasciculorum  = &pf;
+        operosa                     = VERUM;
     }
+    pf.factae      = ZEPHYRUM;
+    pf.refutatae   = ZEPHYRUM;
     murale_initii  = _murale();
     cpu_initii     = _cpu_filiorum();
     t0             = clock();
@@ -3928,6 +3953,14 @@ _uncinum_verificatum (
         &o,
         piscina, &f, &via, &r))
     {
+        /* divergentia (regula 2) nominatur, non status NULLUS solum
+         * (recensio T4 L8) */
+        si (pf.refutatae > ZEPHYRUM)
+        {
+            imprimere("OPIFICES DIVERGENTIA | fasciculus %llu | valor "
+                "operarii != moduli proprii\n",
+                (unsigned long long)co.fasciculi);
+        }
         imprimere("   %u x %u: REFUTATUM (status %s, %.2f s)\n", fila,
             longitudo, _status_titulus(r.status), _secundae(t0));
     }
@@ -3949,10 +3982,12 @@ _uncinum_verificatum (
      * clock() solum suum tempus videt */
     si (operosa)
     {
-        imprimere("OPIFICES %u | fasciculi %llu | opera %llu | murale %.2f "
+        imprimere("OPIFICES %u | fasciculi %llu | opera %llu | "
+            "probationes %llu | murale %.2f "
             "| cpu_filiorum %.2f | cpu_parentis %.2f\n",
             pv->opifices->numerus, (unsigned long long)co.fasciculi,
-            (unsigned long long)co.opera, _murale() - murale_initii,
+            (unsigned long long)co.opera,
+            (unsigned long long)pf.factae, _murale() - murale_initii,
             _cpu_filiorum() - cpu_initii, _secundae(t0));
         piscina_destruere(co.piscina);
     }
@@ -4358,6 +4393,13 @@ principale (
     }
     si (via_promovendi != NIHIL)
     {
+        /* promotio serialis: -opifices et -silentium non tacite
+         * neglecta (recensio T4 L9) */
+        si (opifices_petiti > ZEPHYRUM || silentium_datum > ZEPHYRUM)
+        {
+            imprimere("-promovere: sine -opifices et -silentium\n");
+            redde I;
+        }
         _sectio_promotionis(via_promovendi);
         redde ZEPHYRUM;
     }

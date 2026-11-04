@@ -1034,3 +1034,38 @@ cross-checks run in the parent, 1,500 s CPU, not parallelised); a
 SIGKILLed parent leaves build/opifices/<pid>/ (atexit skipped) - five
 such directories cleaned by hand. P1's registered route count 32/13 was
 copied from a review miscount; the real split is 31 TL / 14 vertex.
+
+## 2026-11-04 - L3 T4 (puncta-parallela): review fixes, and a correction to T3
+
+Independent review (recensor-parallela) approved with no H/M, nine L.
+
+Correction to the T3 entry above: "processus' clock is CLOCK_UPTIME_RAW,
+which runs during dark wakes" vs "the house clock (mach_absolute_time,
+stops in sleep)" is wrong as a contrast. On macOS CLOCK_UPTIME_RAW *is*
+mach_absolute_time (man clock_gettime; the reviewer measured 0 ns
+apart). The silence timeout still fixes the deadline problem because it
+resets on every line, not because of the clock. A dark wake can still
+tick the clock while our processes barely run, so 16 x 801 runs with the
+lid open on AC (`caffeinate -i` does not stop lid sleep).
+
+The review's plant Q1 showed "spot checks = batches" was claimed but
+never tested (nothing counted them). laqueus now takes an optional
+counter, `probationes_fasciculorum` -> {factae, refutatae}, zeroed at
+entry. That one struct answers two findings: the suite asserts
+factae = batches (L1), and the tool can finally say *why* a run was
+refused - `OPIFICES DIVERGENTIA` when refutatae > 0 instead of a bare
+`REFUTATUM (status NULLUS)` (L8). A transport failure counts nothing
+(the check never ran), which keeps the two refusal kinds apart.
+
+New worker faults for acceptance: `aedificatio` (foreign build id in
+SIGNUM), `cauda` (a line after FINIS), `falsum` (UTILE value + 1:
+well-formed and wrong, so only the spot check can refuse it - run at
+W = 1 so the faulty slice is the whole first batch and the spot index
+is guaranteed to land in it). `-promovere` now refuses `-opifices` /
+`-silentium` instead of ignoring them.
+
+Worth remembering from the review's plants: with the spot check removed,
+a worker returning a *valid* wrong polynomial on every slice printed a
+wrong UNCINUS at k_max = 1 (3 x 20) - the extra K + 2 points per prime
+catch partial faults, but nothing else catches a consistent one. Rule 6
+is not theoretical.

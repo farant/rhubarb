@@ -9,7 +9,9 @@ review" at the end. T0's concurrency experiment DONE; the rest of T0 was
 answered by the review's measurements (see "T0"). Q1-Q3 DECIDED by Fran
 2026-11-03 (all as recommended). T1 DONE 2026-11-03 (see "T1 notes").
 T2 DONE 2026-11-03 (see "T2 notes"). T3 DONE 2026-11-04 (see "T3
-notes"; the worker timeout became a silence timeout).
+notes"; the worker timeout became a silence timeout). T4 DONE 2026-11-04
+(recensor-parallela: APPROVE, no H, no M, nine L; fixes in "Review
+(T4)").
 
 Agreed order (interpolatio-verificatio-plan.md, status line): early
 stopping (done, 624f407c), then parallel points (this plan, temperley-
@@ -194,7 +196,9 @@ K + puncta_addita independent points (563 at 14 × 801: T3 counted
   module is built and flushes each index line as it is computed; the
   parent kills a worker whose output has not grown for max(600 s,
   50 × estimated seconds per point), on the house clock (stops during
-  sleep); no overall deadline. `-silentium S` overrides the bound
+  sleep - but so does processus' CLOCK_UPTIME_RAW: on macOS both are
+  mach_absolute_time, T4 L5; the per-line reset is what fixes the
+  deadline, not the clock); no overall deadline. `-silentium S` overrides the bound
   (tests). Why: the 10× deadline refused healthy workers twice in T3's
   P1 (burner load, a dark-wake cycle), see "T3 notes".
 - **Timing (M6):** the tool prints wall time (house clock) and the
@@ -203,10 +207,15 @@ K + puncta_addita independent points (563 at 14 × 801: T3 counted
 - **Flags:** `-opifices` (4) or `-opifices N`; absent = serial. With
   `-modus verificatum` on sections VIII and XI.
 - **Output:** UNCINUS/RELATIO/TRACTUS unchanged (rule 1); after RELATIO
-  `OPIFICES W | fasciculi B | opera O | murale s | cpu_filiorum s`.
+  `OPIFICES W | fasciculi B | opera O | murale s | cpu_filiorum s`;
+  from T4 `| probationes P` after opera (spot checks, = B on success,
+  L1) and, on a spot-check refusal, `OPIFICES DIVERGENTIA | fasciculus
+  N | ...` before REFUTATUM (L8).
 - **Process group (L14):** workers share the parent's group: Ctrl-C and
-  custos stop them; if the parent crashes, a worker finishes its slice
-  and dies on SIGPIPE. Accepted, noted.
+  custos stop them; if the parent crashes, each worker dies on SIGPIPE
+  at its next per-line write (since T3's per-line flush; T4 L7 measured
+  0.6 s at small sizes, worst case ~W × one point, ~40 s at 16 × 801).
+  Accepted, noted.
 
 ## T0 (2026-11-03)
 
@@ -386,7 +395,10 @@ No threshold moved.
   aestimationes divisible by primi + a (no top-ups). Derived from the
   code and checked against a 2-braid probe of the binary (3 × 20 and
   3 × 50 at W = 2) before this registration. Spot checks = batches is
-  not visible from the tool; the T2 suite covers it.
+  not visible from the tool; the T2 suite covers it. [T4 L1: it did
+  not - nothing counted spot checks. From T4 laqueus counts them
+  (`probationes_fasciculorum`), probatio_laqueus_rete asserts
+  checks = batches, and the tool prints `probationes`.]
 - **Refusals at scale.** 12 × 801 (section VIII), W = 4: each of the 8
   faults at index 0, plus `occide@282` (third slice of the first batch:
   141/141/141/140). Pass: REFUTATUM, no UNCINUS line, `OPIFEX
@@ -455,7 +467,8 @@ prefix). Two kinds of failure, neither a wrong value:
   estimate is ~1.7× low at 12 × 801; 8 orphaned `yes > /dev/null` from a
   quarta load test held all cores for ~17 h (workers got 20-30% of a
   core); a maintenance-sleep / DarkWake cycle (processus' clock skips
-  true sleep but runs in dark wakes). Refusal was correct by rule 4,
+  true sleep but runs in dark wakes [T4 L5: so does the house clock -
+  both are mach_absolute_time on macOS]). Refusal was correct by rule 4,
   but a 16 × 801 run would likely die the same way;
 - custos' 2 h wall cap cut four `via` runs inside 12 × 801 (its vertex
   cross-checks run in the parent: 1,515 s CPU, not parallelised).
@@ -617,7 +630,16 @@ inside the 600 s silence floor.
   re-checks rules 2-4 and the refusal paths with its own plants.
 - **After the plan:** 16 × 801, VERIFICATUM, W = 4, under custos (with
   `CUSTOS_MORA` raised above its 3,600 s default, L8) and
-  `caffeinate -i`, as its own step on Fran's word.
+  `caffeinate -i`, as its own step on Fran's word. Operating rules from
+  T4's review:
+  - lid open and on AC: `caffeinate -i` does not stop lid sleep, and
+    neither clock protects against dark wakes (L5);
+  - never suspend it (Ctrl-Z, `kill -STOP`) for more than the silence
+    bound, 600 s: on resume every worker is killed for silence, a
+    refusal (L4);
+  - no session deletes `build/opifices/<pid>/` while that pid runs:
+    the workers exec that copy, and a missing copy refuses the batch
+    (L6).
 
 ## Open questions for Fran
 
@@ -646,8 +668,17 @@ inside the 600 s silence floor.
 - `UNCINUS_OPUS_VITIUM` ships in the tool binary (worker mode only,
   inert without the variable).
 - An interrupted run (Ctrl-C) leaves build/opifices/<pid>/ behind
-  (atexit does not run); harmless, delete by hand. Also after SIGKILL
-  (custos cap, SIGPIPE from `| head`): five such directories in T3.
+  (atexit does not run); harmless, delete by hand - but only a
+  directory whose `<pid>` is not running (T4 L6: deleting a live run's
+  copy refuses its next batch). Also after SIGKILL (custos cap, SIGPIPE
+  from `| head`): five such directories in T3.
+- Workers inherit their earlier siblings' pipe read ends (processus
+  sets no CLOEXEC on them; worker k holds 3 per earlier sibling, T4
+  L7). Harmless here; a processus change would touch every caller, so
+  left for processus's own work.
+- A stopped (not sleeping) process group keeps the house clock running:
+  a suspend longer than the silence bound kills every worker (T4 L4).
+  Operator rule in "Tasks", not code.
 - ~~No wall-time speedup of the real design measured yet~~ measured in
   T3 (P3 2.52×, 14 × 801 2.3×).
 - The `via` checker at 12 × 801 and above is serial in the parent
@@ -726,3 +757,81 @@ Findings and where they went:
   defaults NIHIL / 0, octeti per process.
 - **L13** checks' wall share → ~2% stated; cost rule unchanged.
 - **L14** orphans, argv[0] → noted; executable path resolved once.
+
+## Review (T4, 2026-11-04, recensor-parallela)
+
+Verdict: APPROVE; no H, no M, nine L. Built from a scratch copy of
+37b7428c (`git archive`; the tertia tree only read). Full report saved
+as build/verificatio/recensio_l3_t4.md (not committed); harnesses in the
+session scratchpad recensio_l3_t4/. Verified:
+- suites in the copy: interpolatio 38/38, laqueus_rete 37/37;
+- rule 2: the fingerprint binds fila, length, word, writhe, window and
+  limes, p echoed, build id = in-memory LC_UUID (a mid-run binary swap
+  with one LC_UUID byte changed is refused at batch 1); a wrong point
+  confined to some slices is refused by the K + 2 points of its prime
+  even without the spot check (plant W1L); only a whole-batch
+  consistent wrong polynomial escapes that, and the spot check refuses
+  it at batch 1 (W2), while without it 3 × 20 printed a **wrong
+  UNCINUS** (W2L, k_max = 1);
+- rule 3: 54/54 extra worker runs (3 × 20 to 12 × 401, W = 1, 2, 3, 4, 7,
+  automaticus and congelatus) byte-identical to serial, counter
+  identities hold in all;
+- rule 4: parser 35/35 crafted outputs; the poll loop correct in 30
+  hostile behaviours (byte dribble, split lines, partial line then hang,
+  stdout closed while alive, never exits, 8 MiB stderr, 8 MiB after
+  FINIS, SIGTERM, grandchild holding the pipe) and 18 kill-race runs;
+  no child left unreaped; processus drains both pipes every poll, so a
+  full pipe cannot make a healthy worker look silent;
+- flags: every bad `-silentium` / `-opifices` combination exits 1.
+
+Findings and where they went:
+- **L1** "spot checks = batches" claimed (P2, T3 protocol) but never
+  tested; the reviewer's plant Q1 (no spot check on batches of 1) left
+  laqueus_rete green → `LaqueusProbationesFasciculorum` (factae,
+  refutatae) via the new verified option `probationes_fasciculorum`
+  (NIHIL by default; zeroed at entry); "fasciculi in via" asserts
+  checks = batches, "fasciculus divergens" counts 1/1 and gains case
+  (c), a worker lying on one-index batches only → FALSUM; the tool
+  prints `probationes P`; acceptance check `probationes`.
+- **L2** build-id half of the fingerprint untested → worker fault
+  `aedificatio`, acceptance expects causa signum.
+- **L3** trailing output after FINIS untested → fault `cauda`, expects
+  causa finis.
+- **L4** a stopped process group longer than the silence bound kills
+  healthy workers → operator rule ("Tasks"), AUDIENDA; no code.
+- **L5** T3's clock rationale wrong (CLOCK_UPTIME_RAW is
+  mach_absolute_time on macOS; 0 ns apart) → corrected in "Tool", T3
+  notes, worklog; lid open and AC for 16 × 801.
+- **L6** hand-cleaning `build/opifices/` can kill a live run → AUDIENDA
+  says only dead pids; operator rule.
+- **L7** inherited sibling pipe fds; orphan text stale → "Process
+  group" and AUDIENDA updated; CLOEXEC left for processus.
+- **L8** a spot-check refusal printed only `REFUTATUM (status NULLUS)`
+  → `OPIFICES DIVERGENTIA | fasciculus N | ...` from `refutatae`; worker
+  fault `falsum` (UTILE values + 1: well-formed, wrong) at W = 1,
+  acceptance check `divergentia`.
+- **L9** `-promovere` ignored `-opifices` / `-silentium` → refused,
+  exit 1; acceptance check `promovere`.
+
+### T4 plants (registered 2026-11-04, before the run)
+
+Script build/verificatio/plantae_l3_t4.py; acceptance
+build/verificatio/acceptatio_l3_t4.py (T3's plus `probationes`,
+`divergentia`, `promovere`, faults `aedificatio`, `cauda`). Each plant
+compiles and must turn exactly the named checks red (others may also go
+red only where stated):
+- Q1 laqueus skips the spot check on batches of 1 → laqueus_rete "fasciculi
+  in via" and "fasciculus divergens";
+- D1 laqueus never counts a refused check → "fasciculus divergens";
+- D2 same mutation, tool gate → acceptance `divergentia`;
+- C1 laqueus never counts a check made → acceptance `probationes`;
+- R1 tool accepts output after FINIS → acceptance `refutationes` (cauda);
+- R2 tool takes the build id from the worker's own line → acceptance
+  `refutationes` (aedificatio);
+- P8 tool never prints the divergence line → acceptance `divergentia`;
+- P9 tool drops the `-promovere` refusal → acceptance `promovere`.
+
+Result (plantae_l3_t4.out): 8/8 red exactly as registered, nothing else
+red. Unplanted: laqueus_rete green (new assertions in "fasciculi in via",
+"fasciculus extra viam", "fasciculus divergens"), acceptatio_l3_t4
+green (21 s).

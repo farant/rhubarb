@@ -580,6 +580,15 @@ laqueus_jones_ex_plexu (
                                                     * FALSUM */
 #define LAQUEUS_VERIFICATOR_EXTERNUS     III       /* optiones->alienus */
 
+/* probationes fasciculorum in modulo proprio (puncta-parallela-plan
+ * regula 2), a laqueus_uncinus_ex_plexu_verificatum numeratae */
+nomen structura {
+    i64 factae;      /* fasciculi probati: successu = fasciculi
+                      * vocantis (P2) */
+    i64 refutatae;   /* probatio refutata = divergentia operariorum
+                      * (0 aut 1: refutatio cursum finit) */
+} LaqueusProbationesFasciculorum;
+
 /* membra post laqueus_optiones_verificandi_ordinariae() posita */
 nomen structura {
     i64 octeti_maximi;      /* officinae principalis ET verificatoris
@@ -596,6 +605,9 @@ nomen structura {
     InterpolatioAestimatorFasciculi fasciculus_temperley;
     vacuum* contextus_fasciculi;
     i32 capacitas_fasciculi;   /* fasciculus maximus (0 = sine limite) */
+    /* NIHIL: non numerantur; aliter ad initium nullae, deinde
+     * numerantur (recensio T4 L1, L8) */
+    LaqueusProbationesFasciculorum* probationes_fasciculorum;
 } LaqueusOptionesVerificandi;
 
 LaqueusOptionesVerificandi
@@ -621,7 +633,10 @@ laqueus_optiones_verificandi_ordinariae (
  * index_primus + (p mod numerus) iterum aestimatur, et status (punctum
  * et valor ubi UTILE) aequales esse debent - aliter fasciculus
  * refutatur et uncinus FALSUM (divergentia operariorum systematica
- * aliter AD_LIMITEM falso probaretur). Via VERTEX cum fasciculo:
+ * aliter AD_LIMITEM falso probaretur). probationes_fasciculorum (si
+ * datae) probationes factas et refutatas numerant: refutatae > 0 =
+ * FALSUM per divergentiam, non per fasciculum vocantis (transitus
+ * fractus nihil numerat). Via VERTEX cum fasciculo:
  * FALSUM (numquam tacite neglectus). Via NULLA: fasciculus non
  * vocatur. Verificatores immutati (SUI modulo in processu). */
 b32

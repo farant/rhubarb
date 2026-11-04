@@ -3274,7 +3274,9 @@ nomen structura {
                         i32  singuli;
                         b32  deficere;    /* FALSUM reddit (transitus) */
                         b32  addere;      /* valor + punctum^exponens */
-                        s32  exponens;
+                        b32  singuli_soli;  /* addere in fasciculis
+                                             * unius indicis solum */
+                        s32 exponens;
 } FasciculusLaquei;
 
 interior vacuum
@@ -3282,13 +3284,14 @@ _fasciculum_laquei_initium (
            FasciculusLaquei* fl,
     LaqueusModulusTemperley* modulus)
 {
-    fl->modulus    = modulus;
-    fl->petita     = ZEPHYRUM;
-    fl->fasciculi  = ZEPHYRUM;
-    fl->singuli    = ZEPHYRUM;
-    fl->deficere   = FALSUM;
-    fl->addere     = FALSUM;
-    fl->exponens   = ZEPHYRUM;
+    fl->modulus       = modulus;
+    fl->petita        = ZEPHYRUM;
+    fl->fasciculi     = ZEPHYRUM;
+    fl->singuli       = ZEPHYRUM;
+    fl->deficere      = FALSUM;
+    fl->addere        = FALSUM;
+    fl->singuli_soli  = FALSUM;
+    fl->exponens      = ZEPHYRUM;
 }
 
 interior b32
@@ -3316,7 +3319,10 @@ _fasciculus_laquei (
     {
         redde FALSUM;
     }
-    per (j = ZEPHYRUM; fl->addere && j < numerus; j++)
+    per (j = ZEPHYRUM;
+         fl->addere && (!fl->singuli_soli || numerus == I)
+             && j < numerus;
+         j++)
     {
         i32 basis = puncta[j];
         i32 potentia;
@@ -3472,7 +3478,9 @@ _probare_fasciculum_temperley (
 /* via TEMPERLEY cum fasciculo in processu super modulum alterum =
  * sine eo, membro per membrum (uncini certi, verificator automaticus et
  * via altera, capacitas sine limite et III); indices petiti = consumpti
- * + probationes sui (regula 3, P2); fasciculi unius indicis >= sui */
+ * + probationes sui (regula 3, P2); fasciculi unius indicis >= sui;
+ * probationes in modulo proprio = fasciculi, nulla refutata (P2,
+ * recensio T4 L1) */
 interior vacuum
 _probare_fasciculos_in_via (
     CredoContextus* c)
@@ -3503,6 +3511,7 @@ _probare_fasciculos_in_via (
             InterpolatioRelatio r;
             InterpolatioRelatio rf;
                FasciculusLaquei fl;
+ LaqueusProbationesFasciculorum pf;
                      Polynomium f                 = polynomium_nullum();
                      Polynomium g                 = polynomium_nullum();
                      LaqueusVia via               = LAQUEUS_VIA_NULLA;
@@ -3520,12 +3529,19 @@ _probare_fasciculos_in_via (
                 longitudo,
                 certi[k].fila, piscina));
             CREDO_NECESSE_NON_NIHIL(fl.modulus);
-            o.fasciculus_temperley  = _fasciculus_laquei;
-            o.contextus_fasciculi   = &fl;
-            o.capacitas_fasciculi   = modus < II ? ZEPHYRUM : III;
+            o.fasciculus_temperley      = _fasciculus_laquei;
+            o.contextus_fasciculi       = &fl;
+            o.capacitas_fasciculi       = modus < II ? ZEPHYRUM : III;
+            o.probationes_fasciculorum  = &pf;
+
+            /* sordes: ad initium nullae ponuntur */
+            pf.factae     = (i64)XCIX;
+            pf.refutatae  = (i64)XCIX;
             CREDO_NECESSE(laqueus_uncinus_ex_plexu_verificatum(verbum,
                 longitudo, certi[k].fila, &o, piscina, &g,
                 &via_fasciculorum, &rf));
+            CREDO_VERUM(pf.factae == (i64)fl.fasciculi);
+            CREDO_VERUM(pf.refutatae == ZEPHYRUM);
             CREDO_VERUM(polynomium_aequalis(f, g));
             CREDO_VERUM(polynomium_aequalis(g,
                 _uncinus_certus(&certi[k],
@@ -3559,6 +3575,7 @@ _probare_fasciculum_extra_viam (
         laqueus_optiones_verificandi_ordinariae();
            InterpolatioRelatio r;
               FasciculusLaquei fl;
+LaqueusProbationesFasciculorum pf;
                     Polynomium f    = polynomium_nullum();
                     LaqueusVia via  = LAQUEUS_VIA_NULLA;
                            s32 unum[I];
@@ -3590,12 +3607,15 @@ _probare_fasciculum_extra_viam (
     CREDO_VERUM(magnus_aequalis(polynomium_coefficiens(f, (s32)III),
         magnus_ex_s64(-(s64)I)));
 
-    fl.deficere  = VERUM;
-    f            = polynomium_nullum();
+    /* transitus fractus: nulla probatio facta, nulla refutata */
+    fl.deficere                 = VERUM;
+    f                           = polynomium_nullum();
+    o.probationes_fasciculorum  = &pf;
     CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum_tl,
         longitudo_tl, VIII, &o, piscina, &f, NIHIL, &r));
     CREDO_AEQUALIS_I32(fl.fasciculi, I);
     CREDO_VERUM(polynomium_est_nullum(f));
+    CREDO_VERUM(pf.factae == ZEPHYRUM && pf.refutatae == ZEPHYRUM);
 }
 
 /* fasciculus divergens, duo genera: (a) operarius ex verbo littera una
@@ -3605,7 +3625,10 @@ _probare_fasciculum_extra_viam (
  * systematica recensionis H2. Probatio in modulo proprio utrumque
  * refutat in fasciculo primo, numquam PROBATUM - etiam ubi k_max = 1
  * (nihil comparatur: sine probatione (b) uncinus falsus AD_LIMITEM
- * probaretur). */
+ * probaretur). Probatio facta una, refutata una. (c) ut (b), sed in
+ * fasciculis unius indicis solum (probationes sui): FALSUM ubi
+ * probationes sui sunt (recensio T4 L1: probatio in fasciculis unius
+ * indicis non omittitur). */
 interior vacuum
 _probare_fasciculum_divergentem (
     CredoContextus* c)
@@ -3620,7 +3643,8 @@ _probare_fasciculum_divergentem (
     /* nodus figurae octonariae: sigma_1 sigma_2^-1 sigma_1 sigma_2^-1 */
     s32 octonarius[IV] = { I, -(s32)II, I, -(s32)II };
     i32 k;
-    b32 k_unus = FALSUM;
+    b32 k_unus     = FALSUM;
+    b32 sui_visae  = FALSUM;
 
     per (k = ZEPHYRUM; k < III; k++)
     {
@@ -3633,11 +3657,13 @@ _probare_fasciculum_divergentem (
                         LaqueusVia  via = LAQUEUS_VIA_NULLA;
         LaqueusOptionesVerificandi  o =
             laqueus_optiones_verificandi_ordinariae();
-        InterpolatioRelatio r;
-           FasciculusLaquei fl;
-                 Polynomium f = polynomium_nullum();
-                        i32 j;
-                        s32 exponens;
+           InterpolatioRelatio r;
+              FasciculusLaquei fl;
+LaqueusProbationesFasciculorum pf;
+                    Polynomium f = polynomium_nullum();
+                           i32 j;
+                           s32 exponens;
+                           i32 sui;
 
         CREDO_NECESSE_NON_NIHIL(verbum);
         mutatum = (s32*)piscina_allocare(piscina,
@@ -3655,17 +3681,20 @@ _probare_fasciculum_divergentem (
         {
             k_unus = VERUM;
         }
-        exponens = polynomium_gradus_imus(f);
+        sui       = r.probationes_sui;
+        exponens  = polynomium_gradus_imus(f);
         _fasciculum_laquei_initium(&fl, _temperley(mutatum, longitudo,
             fila, piscina));
         CREDO_NECESSE_NON_NIHIL(fl.modulus);
-        o.fasciculus_temperley  = _fasciculus_laquei;
-        o.contextus_fasciculi   = &fl;
-        f                       = polynomium_nullum();
+        o.fasciculus_temperley      = _fasciculus_laquei;
+        o.contextus_fasciculi       = &fl;
+        o.probationes_fasciculorum  = &pf;
+        f                           = polynomium_nullum();
         CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum,
             longitudo, fila, &o, piscina, &f, NIHIL, &r));
         CREDO_VERUM(polynomium_est_nullum(f));
         CREDO_AEQUALIS_I32(fl.fasciculi, I);
+        CREDO_VERUM(pf.factae == (i64)I && pf.refutatae == (i64)I);
 
         _fasciculum_laquei_initium(&fl, _temperley(verbum, longitudo,
             fila, piscina));
@@ -3677,10 +3706,32 @@ _probare_fasciculum_divergentem (
             longitudo, fila, &o, piscina, &f, NIHIL, &r));
         CREDO_VERUM(polynomium_est_nullum(f));
         CREDO_AEQUALIS_I32(fl.fasciculi, I);
+        CREDO_VERUM(pf.factae == (i64)I && pf.refutatae == (i64)I);
+
+        /* (c) mendax in probationibus sui solum */
+        _fasciculum_laquei_initium(&fl, _temperley(verbum, longitudo,
+            fila, piscina));
+        CREDO_NECESSE_NON_NIHIL(fl.modulus);
+        fl.addere        = VERUM;
+        fl.singuli_soli  = VERUM;
+        fl.exponens      = exponens;
+        f                = polynomium_nullum();
+        si (sui > ZEPHYRUM)
+        {
+            CREDO_FALSUM(laqueus_uncinus_ex_plexu_verificatum(verbum,
+                longitudo, fila, &o, piscina, &f, NIHIL, &r));
+            CREDO_VERUM(polynomium_est_nullum(f));
+            CREDO_VERUM(fl.singuli >= I);
+            CREDO_VERUM(pf.refutatae == (i64)I);
+            CREDO_VERUM(pf.factae == (i64)fl.fasciculi);
+            sui_visae = VERUM;
+        }
         piscina_reficere(piscina, nota);
     }
-    /* praecondicio: exemplum unum cum k_max = 1 */
+    /* praecondiciones: exemplum unum cum k_max = 1, unum cum
+     * probationibus sui (casus c) */
     CREDO_VERUM(k_unus);
+    CREDO_VERUM(sui_visae);
 }
 
 
