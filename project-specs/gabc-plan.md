@@ -483,11 +483,11 @@ Decisions:
 - Consumes: T2–T4 (`GabcElementum` of genus NEUMA, its notes).
 - Produces: `gabc_figura`; dump column 4 of `neuma` lines filled.
 
-- [ ] **Step 1: Measure** — from the Gregorio documentation, write
+- [x] **Step 1: Measure** — from the Gregorio documentation, write
   the table of contours → names this task pins, and note each source
   page in the Executed note. Rows that the docs leave unclear are
   `_IGNOTA` (not guessed).
-- [ ] **Step 2: Failing test** `_figuras_probare`, table-driven, at
+- [x] **Step 2: Failing test** `_figuras_probare`, table-driven, at
   least: `g` punctum · `gv` virga · `G` punctum inclinatum · `gh` pes
   · `hg` clivis · `ghg` torculus · `hgh` porrectus · `gih` scandicus?
   (per docs) · `hGF` climacus · `gwh` pes quilismaticus · `gog`
@@ -496,13 +496,33 @@ Decisions:
   `giHG` pes subbipunctis · liquescent `gh~` (epiphonus) and `hg~`
   (cephalicus) · `-gh` initio debilis pes. Plus: unknown contours →
   `_IGNOTA`, never a wrong name.
-- [ ] **Step 3: Run** — red. **Step 4: Implement** as a small rule
+- [x] **Step 3: Run** — red. **Step 4: Implement** as a small rule
   table keyed by contour + form bits (no special cases in code paths
   the table can express).
-- [ ] **Step 5: Run** — green. **Plant:** swap pes and clivis rows →
+- [x] **Step 5: Run** — green. **Plant:** swap pes and clivis rows →
   FRACTUM.
-- [ ] **Step 6: Commit** (gate `radix`). The Gregorio-oracle corpus
+- [x] **Step 6: Commit** (gate `radix`). The Gregorio-oracle corpus
   check (spec §VII-1) is NOT here; it waits on Fran's decision.
+
+**Executed 2026-11-03.** Table source = Gregorio
+`src/gabc/gabc-glyphs-determination.c` (`add_note_to_a_glyph`),
+`src/struct.h` (glyph enum), `src/gregoriotex/gregoriotex-write.c`
+(names); the web docs (`gabc/details.html`) only cover pes forms and
+liquescence. Answers to the plan's questions: `gih` = torculus (`ghi` is
+the scandicus); `gog` = IGNOTA (Gregorio: oriscus + punctum, two glyphs).
+Pressus (no Gregorio glyph) = the shape both traditions share: "p=p-p",
+"p=o-p" (Claude's call). Rules: unison splits puncta; debilis only on the
+first note, liquescence only on the last, else IGNOTA; deminuta last note
+gives epiphonus / cephalicus, other liquescence keeps the base name.
+Table = `REGULAE_FIGURARUM` (26 rows, signature + debilis + deminuta).
+Test `_figuras_probare` 38 named + 18 IGNOTA rows; older dumps' 110 neuma
+lines filled by an independent Python oracle (agreed except `-g`: the
+dump writes `-` for both "no forms" and initio debilis — T3 grammar
+flaw, flagged). Salve: 111 punctum, 6 clivis, 2 pes, 2 pes
+quilismaticus, 5 IGNOTA (unisons). **Plant:** pes and clivis rows
+swapped → `_neumas_probare` FRACTUM; restored, cmp equal. Enum gaps
+(pes quassus, virga reversa, quilisma torculus, ancus, …) listed in the
+worklog for Fran.
 
 ---
 

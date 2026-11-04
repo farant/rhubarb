@@ -163,3 +163,61 @@ red. All restored byte-identical (cmp).
 **Bug caught by the formae dump**: the new `casus '<'` (for `<nlba>` in notes)
 shadowed `<` as the augmented-ascending modifier; a non-nlba `<` now falls to
 `_modificatorem_legere`.
+
+## 2026-11-03 — T5: neume shape classification (G4)
+
+**Source.** The web docs barely name neumes. The real rules are in Gregorio's
+`src/gabc/gabc-glyphs-determination.c` (`add_note_to_a_glyph`, read
+2026-11-03) plus the glyph enum in `src/struct.h` and the names in
+`src/gregoriotex/gregoriotex-write.c`. Key facts:
+- Gregorio's *glyph* is smaller than our *neume* (notes between spaces):
+  it splits `giHG` into pes + 2 puncta inclinata, `hvGF` into virga +
+  inclinata. Our enum names whole neumes (climacus, pes subbipunctis), so
+  we classify the group, using Gregorio's rules for what can be inside one.
+- A unison between puncta always splits (`gg`, `ff` are two glyphs).
+- An initio debilis note always STARTS a glyph; a liquescent (`~ < >`)
+  always ENDS one. So debilis anywhere but first, or liquescence anywhere
+  but last -> IGNOTA. Scandicus and porrectus need a non-debilis first note
+  (Gregorio's `is_normal_punctum`); pes, clivis, torculus allow it.
+- `gih` is a torculus (the plan wondered "scandicus?"); `ghi` is the
+  scandicus.
+- Oriscus and quilisma always start a glyph: `gwh` = quilisma pes,
+  `gwhg` = Gregorio's "TorculusQuilisma" (no enum member -> IGNOTA),
+  `goh` = pes quassus (no member -> IGNOTA). `ghoi` (punctum + pes quassus)
+  and `ghOi` (Gregorio's G_SALICUS glyph) are both the salicus.
+- MAX_AMBITUS = 5 splits wide intervals in Gregorio; it is a font limit
+  ("patch for fonts"), so we ignore it.
+
+**Design.** Each neume gets a signature: one class letter per note
+(p i v r s o w q x) and an interval sign between neighbours (`+ - =`):
+`ghg` = "p+p-p". A rule table (`REGULAE_FIGURARUM`) maps signatures to
+figures, first match wins; `*` repeats the last pair (climacus
+"p-i-i*"). Two columns: `debilis` (first note may be initio debilis) and
+`deminuta` (last note must be `~` — epiphonus and cephalicus rows sit
+before pes and clivis). Liquescence on the last note otherwise keeps the
+base name (`ghg~` torculus, `gh<` pes, `g~` punctum): the note carries it.
+More than one shape bit on a note -> class x -> IGNOTA.
+
+**Calls (mine).** Pressus: Gregorio never names it and sources disagree
+(Vatican: punctum before a clivis at the unison; semiology: oriscus at the
+unison then lower). Only the shared shape is a pressus: "p=p-p", "p=o-p".
+`gog` stays IGNOTA. Climacus first note may be punctum or virga
+(GregoBase writes both `hGF` and `hvGF`).
+
+**Enum gaps (names Gregorio has, our approved enum lacks):** pes quassus,
+virga reversa, torculus/porrectus with quilisma, salicus flexus, torculus
+resupinus flexus, ancus, scandicus flexus, pes subtripunctis, 3-note
+quilisma figure `fgwh`. All IGNOTA now; adding members = header change
+(Fran).
+
+**Verification.** `_figuras_probare`: 38 named rows + 18 IGNOTA rows. The
+110 `neuma` lines in older dumps were filled by an INDEPENDENT Python
+re-implementation (`build/plantae_gabc/t5_figurae.py`) reading each
+dump's own `nota` lines; C and Python agreed on all but `-g`, where the
+Python read the dump wrong: the formae column writes `-` both for "no
+forms" and for the initio-debilis letter, so `g` and `-g` dump the same
+(T3 grammar flaw, noted in the test header; neuma line now tells them
+apart). Salve: 126 neumes = 111 punctum, 6 clivis, 2 pes, 2 pes
+quilismaticus, 5 IGNOTA (`ff ee jj jjj ghffd` — unisons). Totality
+68806/0, ASan+UBSan clean. Plant: pes and clivis rows swapped -> neumae
+dump FRACTA; restored byte-for-byte.

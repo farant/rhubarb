@@ -5,7 +5,8 @@
  * project-specs/gabc-plan.md T2 (nucleus): caput, syllabae, textus
  * simplex, notae, neumae, claves, divisiones, tabula canonica; T3
  * formae, signa rhythmica, alterationes; T4 spatia, fractiones,
- * custodes, textus ornatus, signa opaca, vitia formae, totalitas.
+ * custodes, textus ornatus, signa opaca, vitia formae, totalitas; T5
+ * figurae neumarum (G4: tabula FIGURAE; columna figura in tabula).
  *
  * GRAMMATICA TABULAE (gabc_tabulam_scribere), linea una per rem,
  * columnae tabulis separatae; textus effugitur (\t \n \r \\):
@@ -33,6 +34,8 @@
  * capitella teletypus elisio protrusio); signa: n N e E p (nlba initium
  * finis, euouae initium finis, purga). Spatium "!" ante spatium aliud
  * (inseparabile Gregorii) = duo elementa: nullum, deinde spatium.
+ * CAUTIO: formae '-' et littera initio debilis '-' idem scribuntur
+ * (nota "-g" et "g" in tabula aequales); figura eas distinguit.
  */
 
 #include "latina.h"
@@ -136,7 +139,7 @@ _caput_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t11:8\n");
 }
 
@@ -181,25 +184,25 @@ _neumas_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t2\t-\n"
+        "neuma\t0\t2\tpes\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:8\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:9\n"
         "syllaba\t2\t1\tb\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:14\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t3\t1\t-\n"
+        "neuma\t3\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:16\n"
         "syllaba\t3\t1\tc\n"
-        "neuma\t4\t2\t-\n"
+        "neuma\t4\t2\tpes\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:21\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:22\n"
         "spatium\tneumaticum\t-\n"
-        "neuma\t6\t2\t-\n"
+        "neuma\t6\t2\tclivis\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:24\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:25\n"
         "syllaba\t4\t1\td\n"
-        "neuma\t8\t1\t-\n"
+        "neuma\t8\t1\tpunctum\n"
         "nota\tj\t0\t0\t-\t0\t0\t0\t4:30\n");
 }
 
@@ -217,17 +220,17 @@ _claves_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:8\n"
         "syllaba\t2\t0\t\n"
         "clavis\tf\t3\t0\n"
         "syllaba\t3\t1\tb\n"
-        "neuma\t1\t1\t-\n"
+        "neuma\t1\t1\tpunctum\n"
         "nota\th\t3\t0\t-\t0\t0\t0\t4:18\n"
         "syllaba\t4\t0\t\n"
         "clavis\tc\t1\t0\n"
         "syllaba\t5\t1\tc\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\td\t0\t0\t-\t0\t0\t0\t4:28\n");
 }
 
@@ -255,30 +258,30 @@ _divisiones_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:8\n"
         "syllaba\t2\t0\t\n"
         "divisio\tvirgula\t0\t0\t0\n"
         "syllaba\t3\t1\tb\n"
-        "neuma\t1\t1\t-\n"
+        "neuma\t1\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:17\n"
         "syllaba\t4\t0\t\n"
         "divisio\tminima\t0\t0\t0\n"
         "syllaba\t5\t1\tc\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:26\n"
         "syllaba\t6\t0\t\n"
         "divisio\tminor\t0\t0\t0\n"
         "syllaba\t7\t1\td\n"
-        "neuma\t3\t1\t-\n"
+        "neuma\t3\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:35\n"
         "syllaba\t8\t0\t\n"
         "divisio\tmaior\t0\t0\t0\n"
         "syllaba\t9\t1\te\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:44\n"
         "divisio\tminor\t0\t0\t0\n"
-        "neuma\t5\t1\t-\n"
+        "neuma\t5\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:46\n"
         "syllaba\t10\t0\t\n"
         "divisio\tfinalis\t0\t0\t0\n"
@@ -310,16 +313,16 @@ _textum_sine_notis_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\tve\n"
-        "neuma\t0\t2\t-\n"
+        "neuma\t0\t2\tpes\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:9\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:10\n"
         "syllaba\t2\t0\t\n"
-        "neuma\t2\t2\t-\n"
+        "neuma\t2\t2\tclivis\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:14\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:15\n"
         "syllaba\t3\t1\t*\n"
         "syllaba\t4\t1\tre\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:25\n"
         "syllaba\t5\t0\t\n"
         "divisio\tfinalis\t0\t0\t0\n");
@@ -416,19 +419,19 @@ _formas_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tvirga\n"
         "nota\tg\t-3\t0\tv\t0\t0\t0\t4:8\n"
         "spatium\tglyphae\t-\n"
         "neuma\t1\t1\t-\n"
         "nota\tg\t-3\t0\tV\t0\t0\t0\t4:11\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tstropha\n"
         "nota\tg\t-3\t0\ts\t0\t0\t0\t4:14\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t3\t1\t-\n"
+        "neuma\t3\t1\toriscus\n"
         "nota\tg\t-3\t0\to\t0\t0\t0\t4:17\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\toriscus\n"
         "nota\tg\t-3\t0\tO\t0\t0\t0\t4:20\n"
         "spatium\tglyphae\t-\n"
         "neuma\t5\t1\t-\n"
@@ -437,7 +440,7 @@ _formas_probare (
         "neuma\t6\t1\t-\n"
         "nota\tg\t-3\t0\tW\t0\t0\t0\t4:26\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t7\t1\t-\n"
+        "neuma\t7\t1\tpunctum\n"
         "nota\tg\t-3\t0\tr\t0\t0\t0\t4:29\n"
         "spatium\tglyphae\t-\n"
         "neuma\t8\t1\t-\n"
@@ -452,52 +455,52 @@ _formas_probare (
         "neuma\t11\t1\t-\n"
         "nota\tg\t-3\t0\tq\t0\t0\t0\t4:42\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t12\t1\t-\n"
+        "neuma\t12\t1\tpunctum\n"
         "nota\tg\t-3\t0\t~\t0\t0\t0\t4:45\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t13\t1\t-\n"
+        "neuma\t13\t1\tpunctum\n"
         "nota\tg\t-3\t0\t<\t0\t0\t0\t4:48\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t14\t1\t-\n"
+        "neuma\t14\t1\tpunctum\n"
         "nota\tg\t-3\t0\t>\t0\t0\t0\t4:51\n"
         "spatium\tglyphae\t-\n"
         "neuma\t15\t1\t-\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:55\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t16\t1\t-\n"
+        "neuma\t16\t1\tpunctum\n"
         "nota\tg\t-3\t0\t@\t0\t0\t0\t4:58\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t17\t1\t-\n"
+        "neuma\t17\t1\tpunctum inclinatum\n"
         "nota\tg\t-3\t0\tI\t0\t0\t0\t4:60\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t18\t1\t-\n"
+        "neuma\t18\t1\tpunctum inclinatum\n"
         "nota\tg\t-3\t0\tI\t0\t0\t0\t4:62\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t19\t1\t-\n"
+        "neuma\t19\t1\toriscus\n"
         "nota\tg\t-3\t0\to\t0\t0\t0\t4:65\n"
         "syllaba\t2\t1\tb\n"
-        "neuma\t20\t2\t-\n"
+        "neuma\t20\t2\tbivirga\n"
         "nota\tg\t-3\t0\tv\t0\t0\t0\t5:3\n"
         "nota\tg\t-3\t0\tv\t0\t0\t0\t5:5\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t22\t3\t-\n"
+        "neuma\t22\t3\ttristropha\n"
         "nota\tg\t-3\t0\ts\t0\t0\t0\t5:7\n"
         "nota\tg\t-3\t0\ts\t0\t0\t0\t5:9\n"
         "nota\tg\t-3\t0\ts\t0\t0\t0\t5:10\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t25\t1\t-\n"
+        "neuma\t25\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:12\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t26\t1\t-\n"
+        "neuma\t26\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:16\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t27\t1\t-\n"
+        "neuma\t27\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:20\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t28\t1\t-\n"
+        "neuma\t28\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:24\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t29\t1\t-\n"
+        "neuma\t29\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:28\n");
 }
 
@@ -520,31 +523,31 @@ _signa_rhythmica_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t1\t0\t0\t4:8\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t1\t1\t-\n"
+        "neuma\t1\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t2\t0\t0\t4:11\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t1\t0\t0\t4:15\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t3\t1\t-\n"
+        "neuma\t3\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t1\t0\t4:19\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t3\t0\t4:22\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t5\t1\t-\n"
+        "neuma\t5\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t13\t0\t4:26\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t6\t1\t-\n"
+        "neuma\t6\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t1\t4:31\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t7\t1\t-\n"
+        "neuma\t7\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t1\t4:34\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t8\t1\t-\n"
+        "neuma\t8\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t1\t1\t1\t4:38\n");
 }
 
@@ -640,60 +643,60 @@ _spatia_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:8\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t1\t1\t-\n"
+        "neuma\t1\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:10\n"
         "spatium\tneumaticum\t-\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\ti\t-1\t0\t-\t0\t0\t0\t4:12\n"
         "spatium\tmagnum\t-\n"
-        "neuma\t3\t1\t-\n"
+        "neuma\t3\t1\tpunctum\n"
         "nota\tj\t0\t0\t-\t0\t0\t0\t4:15\n"
         "spatium\tdimidium\t-\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\tpunctum\n"
         "nota\tk\t1\t0\t-\t0\t0\t0\t4:18\n"
         "spatium\tinseparabile\t-\n"
-        "neuma\t5\t1\t-\n"
+        "neuma\t5\t1\tpunctum\n"
         "nota\tl\t2\t0\t-\t0\t0\t0\t4:21\n"
         "spatium\tnullum\t-\n"
-        "neuma\t6\t1\t-\n"
+        "neuma\t6\t1\tpunctum\n"
         "nota\tm\t3\t0\t-\t0\t0\t0\t4:23\n"
         "syllaba\t2\t1\tb\n"
-        "neuma\t7\t1\t-\n"
+        "neuma\t7\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:28\n"
         "spatium\tnullum\t-\n"
         "spatium\tneumaticum\t-\n"
-        "neuma\t8\t1\t-\n"
+        "neuma\t8\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:31\n"
         "spatium\tnullum\t-\n"
         "spatium\tmagnum\t-\n"
-        "neuma\t9\t1\t-\n"
+        "neuma\t9\t1\tpunctum\n"
         "nota\ti\t-1\t0\t-\t0\t0\t0\t4:35\n"
         "spatium\tnullum\t-\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t10\t1\t-\n"
+        "neuma\t10\t1\tpunctum\n"
         "nota\tj\t0\t0\t-\t0\t0\t0\t4:38\n"
         "spatium\tnullum\t-\n"
         "spatium\tfactor\t2\n"
-        "neuma\t11\t1\t-\n"
+        "neuma\t11\t1\tpunctum\n"
         "nota\tk\t1\t0\t-\t0\t0\t0\t4:44\n"
         "spatium\tfactor\t-0.5\n"
-        "neuma\t12\t1\t-\n"
+        "neuma\t12\t1\tpunctum\n"
         "nota\tl\t2\t0\t-\t0\t0\t0\t4:52\n"
         "spatium\tneumaticum\t-\n"
         "spatium\tfactor\t3\n"
-        "neuma\t13\t1\t-\n"
+        "neuma\t13\t1\tpunctum\n"
         "nota\tm\t3\t0\t-\t0\t0\t0\t4:58\n"
         "syllaba\t3\t1\tc\n"
-        "neuma\t14\t1\t-\n"
+        "neuma\t14\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:63\n"
         "spatium\tdimidium\t-\n"
-        "neuma\t15\t1\t-\n"
+        "neuma\t15\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:67\n"
         "spatium\tinseparabile\t-\n"
-        "neuma\t16\t1\t-\n"
+        "neuma\t16\t1\tpunctum\n"
         "nota\ti\t-1\t0\t-\t0\t0\t0\t4:71\n");
 }
 
@@ -711,31 +714,31 @@ _fractiones_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:8\n"
         "fractio\t1\t0\n"
-        "neuma\t1\t1\t-\n"
+        "neuma\t1\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:10\n"
         "fractio\t0\t0\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\ti\t-1\t0\t-\t0\t0\t0\t4:12\n"
         "syllaba\t2\t1\tb\n"
         "fractio\t1\t1\n"
-        "neuma\t3\t1\t-\n"
+        "neuma\t3\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:19\n"
         "fractio\t1\t-1\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:22\n"
         "fractio\t0\t1\n"
-        "neuma\t5\t1\t-\n"
+        "neuma\t5\t1\tpunctum\n"
         "nota\ti\t-1\t0\t-\t0\t0\t0\t4:25\n"
         "fractio\t0\t-1\n"
         "syllaba\t3\t1\tc\n"
-        "neuma\t6\t1\t-\n"
+        "neuma\t6\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:32\n"
         "custos\t-\n"
         "syllaba\t4\t1\td\n"
-        "neuma\t7\t1\t-\n"
+        "neuma\t7\t1\tpunctum\n"
         "nota\tj\t0\t0\t-\t0\t0\t0\t4:39\n");
 }
 
@@ -761,7 +764,7 @@ _custodem_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t2\t-\n"
+        "neuma\t0\t2\tpes\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:8\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:9\n"
         "syllaba\t2\t0\t\n"
@@ -770,7 +773,7 @@ _custodem_probare (
         "syllaba\t3\t0\t\n"
         "clavis\tc\t3\t0\n"
         "syllaba\t4\t1\tb\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\ti\t1\t0\t-\t0\t0\t0\t4:25\n");
 }
 
@@ -801,80 +804,196 @@ _textum_ornatum_probare (
         "syllaba\t1\t1\tAlle\n"
         "textus\tcantatus\tb\tAl\n"
         "textus\tcantatus\tib\tle\n"
-        "neuma\t0\t1\t-\n"
+        "neuma\t0\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:25\n"
         "syllaba\t2\t1\t\xE2\x84\x9F.\n"
-        "neuma\t1\t1\t-\n"
+        "neuma\t1\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:41\n"
         "syllaba\t3\t1\tclara\n"
         "textus\tcantatus\t-\tcla\n"
         "textus\tcantatus\te\tra\n"
-        "neuma\t2\t2\t-\n"
+        "neuma\t2\t2\tpes\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:57\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:58\n"
         "syllaba\t4\t1\tDo\n"
         "textus\tcantatus\t-\tDo\n"
         "textus\ttranslatio\t-\tLord\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:70\n"
         "syllaba\t5\t1\tmi\n"
         "textus\tcantatus\t-\tmi\n"
         "textus\ttranslatio\t-\t/\n"
-        "neuma\t5\t1\t-\n"
+        "neuma\t5\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:79\n"
         "syllaba\t6\t1\tever\n"
         "vocalis\t1\t3\n"
-        "neuma\t6\t1\t-\n"
+        "neuma\t6\t1\tpunctum\n"
         "nota\te\t-5\t0\t-\t0\t0\t0\t4:89\n"
         "syllaba\t7\t1\tve\n"
         "textus\tsupra\t-\tPs.\n"
         "textus\tcantatus\t-\tve\n"
-        "neuma\t7\t1\t-\n"
+        "neuma\t7\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:18\n"
         "syllaba\t8\t1\tna\n"
         "textus\tverbatim\t-\t\\\\foo(x)\n"
         "textus\tcantatus\t-\tna\n"
-        "neuma\t8\t1\t-\n"
+        "neuma\t8\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t5:38\n"
         "syllaba\t9\t1\tet\n"
         "signa\tn\n"
-        "neuma\t9\t1\t-\n"
+        "neuma\t9\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:50\n"
         "syllaba\t10\t1\tin\n"
         "signa\tN\n"
-        "neuma\t10\t1\t-\n"
+        "neuma\t10\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t5:63\n"
         "syllaba\t11\t1\tE\n"
         "signa\teE\n"
-        "neuma\t11\t1\t-\n"
+        "neuma\t11\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:77\n"
         "syllaba\t12\t1\ta(b\n"
         "signa\tp\n"
-        "neuma\t12\t1\t-\n"
+        "neuma\t12\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:92\n"
         "syllaba\t13\t1\tx\xE2\x80\xBFy\n"
-        "neuma\t13\t1\t-\n"
+        "neuma\t13\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t5:99\n"
         "syllaba\t14\t1\tab\n"
         "textus\tcantatus\ti\tab\n"
-        "neuma\t14\t1\t-\n"
+        "neuma\t14\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t6:7\n"
         "syllaba\t15\t1\tcd\n"
         "textus\tcantatus\ti\tcd\n"
-        "neuma\t15\t1\t-\n"
+        "neuma\t15\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t6:17\n"
         "syllaba\t16\t1\t\xC7\xBD\xC5\x93\xE2\x9C\xB6\xE2\x80\xA0\xE2\x84\xA3\n"
-        "neuma\t16\t1\t-\n"
+        "neuma\t16\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t6:75\n"
         "syllaba\t17\t1\tfi:\n"
         "textus\tcantatus\t-\tfi\n"
         "textus\tcantatus\tp\t:\n"
-        "neuma\t17\t1\t-\n"
+        "neuma\t17\t1\tpunctum\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t6:86\n");
 }
 
 /* T4 (G5): signum quodque cum textu fontis exacto et nota cui adhaeret
  * (nota ultima neumae apertae, aliter -1); [ll:1] neumam non frangit */
+/* T5: figurae neumarum (G4). Regulae Gregorii
+ * (gabc-glyphs-determination.c): unisonus puncta separat, debilis
+ * glypham incipit, liquescens claudit; ignota numquam falsa. */
+interior constans character* FIGURAE[][II] = {
+    { "g",       "punctum" },
+    { "gv",      "virga" },
+    { "G",       "punctum inclinatum" },
+    { "gs",      "stropha" },
+    { "go",      "oriscus" },
+    { "gh",      "pes" },
+    { "hg",      "clivis" },
+    { "ghg",     "torculus" },
+    { "gih",     "torculus" },
+    { "hgh",     "porrectus" },
+    { "ghi",     "scandicus" },
+    { "hGF",     "climacus" },
+    { "hvGFE",   "climacus" },
+    { "gwh",     "pes quilismaticus" },
+    { "gWh",     "pes quilismaticus" },
+    { "gqh",     "pes quadratus" },
+    { "gvv",     "bivirga" },
+    { "gvgv",    "bivirga" },
+    { "gvvv",    "trivirga" },
+    { "gss",     "distropha" },
+    { "gsgsgs",  "tristropha" },
+    { "hghg",    "porrectus flexus" },
+    { "gihi",    "torculus resupinus" },
+    { "giHG",    "pes subbipunctis" },
+    { "gh~",     "epiphonus" },
+    { "hg~",     "cephalicus" },
+    { "gh<",     "pes" },
+    { "hg>",     "clivis" },
+    { "ghg~",    "torculus" },
+    { "-gh",     "pes" },
+    { "-gig",    "torculus" },
+    { "-gh~",    "epiphonus" },
+    { "ghoi",    "salicus" },
+    { "ghOi",    "salicus" },
+    { "ggf",     "pressus" },
+    { "ggof",    "pressus" },
+    { "gr",      "punctum" },
+    { "g@h",     "pes" },
+    /* ignotae: Gregorius in glyphas plures dividit, aut nomen deest */
+    { "gog",     "ignota" },
+    { "gg",      "ignota" },
+    { "hgf",     "ignota" },
+    { "hgf~",    "ignota" },
+    { "ghij",    "ignota" },
+    { "-hgh",    "ignota" },
+    { "-ghi",    "ignota" },
+    { "g-h",     "ignota" },
+    { "gh~i",    "ignota" },
+    { "gV",      "ignota" },
+    { "goh",     "ignota" },
+    { "gwhg",    "ignota" },
+    { "fgwh",    "ignota" },
+    { "giHGF",   "ignota" },
+    { "hG",      "ignota" },
+    { "gvg",     "ignota" },
+    { "gR",      "ignota" },
+    { "-g",      "ignota" },
+    { NIHIL, NIHIL }
+};
+
+interior vacuum
+_figuras_probare (
+    CredoContextus* c)
+{
+    character fons[LXIV];
+    character exspectatum[LXIV];
+    character inventum[LXIV];
+          i32 k;
+
+    per (k = ZEPHYRUM; FIGURAE[k][ZEPHYRUM] != NIHIL; k++)
+    {
+                  GabcCantus* g;
+        constans GabcSyllaba* s;
+          constans character* titulus = "(syllaba deest)";
+
+        sprintf(fons, "%%%%\n(c4)a(%s)", FIGURAE[k][ZEPHYRUM]);
+        g = gabc_legere(chorda_ex_literis(fons, c->piscina),
+            c->piscina);
+        CREDO_NECESSE (g != NIHIL);
+        si (g->numerus_syllabarum > I)
+        {
+            s        = &g->syllabae[I];
+            titulus  = "(non neuma una)";
+            si (   s->numerus_elementorum      == I
+                && s->elementa[ZEPHYRUM].genus == GABC_EL_NEUMA)
+            {
+                titulus = gabc_figurae_titulus(
+                    gabc_figura(g, &s->elementa[ZEPHYRUM]));
+            }
+        }
+        sprintf(exspectatum, "%s -> %s", FIGURAE[k][ZEPHYRUM],
+            FIGURAE[k][I]);
+        sprintf(inventum, "%s -> %s", FIGURAE[k][ZEPHYRUM], titulus);
+        CREDO_CHORDA_AEQUALIS_LITERIS (
+            chorda_ex_literis(inventum, c->piscina), exspectatum);
+        CREDO_AEQUALIS_I32 (g->numerus_vitiorum, ZEPHYRUM);
+    }
+
+    {   /* elementum non neuma (clavis) -> ignota */
+        GabcCantus* g = gabc_legere(
+            chorda_ex_literis("%%\n(c4)a(g)", c->piscina), c->piscina);
+
+        CREDO_NECESSE (g->syllabae[ZEPHYRUM].elementa[ZEPHYRUM].genus
+            == GABC_EL_CLAVIS);
+        CREDO_AEQUALIS_I32 ((i32)gabc_figura(g,
+            &g->syllabae[ZEPHYRUM].elementa[ZEPHYRUM]),
+            (i32)GABC_FIGURA_IGNOTA);
+        CREDO_NECESSE (strcmp(gabc_figurae_titulus(GABC_FIGURA_PRESSUS),
+            "pressus") == ZEPHYRUM);
+    }
+}
+
 interior vacuum
 _signa_opaca_probare (
     CredoContextus* c)
@@ -888,52 +1007,52 @@ _signa_opaca_probare (
         "syllaba\t0\t0\t\n"
         "clavis\tc\t4\t0\n"
         "syllaba\t1\t1\ta\n"
-        "neuma\t0\t2\t-\n"
+        "neuma\t0\t2\tclivis\n"
         "nota\te\t-5\t0\t-\t0\t0\t0\t4:8\n"
         "nota\td\t-6\t0\t-\t0\t0\t0\t4:15\n"
         "signum\t[ll:1]\t0\n"
         "spatium\tglyphae\t-\n"
-        "neuma\t2\t1\t-\n"
+        "neuma\t2\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t1\t1\t4:17\n"
         "signum\t[oh:h]\t2\n"
         "syllaba\t2\t1\tb\n"
-        "neuma\t3\t1\t-\n"
+        "neuma\t3\t1\tpunctum\n"
         "nota\tf\t-4\t0\t-\t0\t0\t0\t4:30\n"
         "signum\t|vi\t3\n"
-        "neuma\t4\t1\t-\n"
+        "neuma\t4\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:35\n"
         "signum\t|pe\t4\n"
         "syllaba\t3\t1\tc\n"
         "signum\t[nocustos]\t-1\n"
-        "neuma\t5\t1\t-\n"
+        "neuma\t5\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:53\n"
         "syllaba\t4\t1\td\n"
         "signum\t@[\t-1\n"
-        "neuma\t6\t2\t-\n"
+        "neuma\t6\t2\tpes\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t4:60\n"
         "nota\th\t-2\t0\t-\t0\t0\t0\t4:61\n"
         "signum\t]\t7\n"
         "syllaba\t5\t1\te\n"
         "signum\t{\t-1\n"
-        "neuma\t8\t1\t-\n"
+        "neuma\t8\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:4\n"
         "signum\t}\t8\n"
         "syllaba\t6\t1\tf\n"
         "signum\t[[\t-1\n"
-        "neuma\t9\t1\t-\n"
+        "neuma\t9\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:12\n"
         "signum\t]]\t9\n"
         "syllaba\t7\t1\tg\n"
-        "neuma\t10\t1\t-\n"
+        "neuma\t10\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:19\n"
         "signum\t[alt:x$]y]\t10\n"
         "syllaba\t8\t1\th\n"
-        "neuma\t11\t1\t-\n"
+        "neuma\t11\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:34\n"
         "signum\t[cs:t]\t11\n"
         "syllaba\t9\t1\ti\n"
         "signum\t<nlba>\t-1\n"
-        "neuma\t12\t1\t-\n"
+        "neuma\t12\t1\tpunctum\n"
         "nota\tg\t-3\t0\t-\t0\t0\t0\t5:51\n"
         "signum\t</nlba>\t12\n");
 }
@@ -1279,6 +1398,8 @@ interior constans CredoSectio SECTIONES[] = {
     { "textus ornatus: stili, sp, translatio, vocalis, signa",
         _textum_ornatum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "signa opaca cum textu fontis et nota", _signa_opaca_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
+    { "figurae neumarum (G4): tabula, ignotae", _figuras_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia formae: loci, BOM et CRLF tacent", _vitia_formae_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },

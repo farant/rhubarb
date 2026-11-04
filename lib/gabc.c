@@ -2805,15 +2805,230 @@ gabc_vitia_scribere (
 
 /* ==================================================
  * Figurae (T5)
+ *
+ * Neuma = notae inter spatia (elementum unum). Figura ex SIGNATURA:
+ * classis cuiusque notae, et inter vicinas intervallum ('+' ascendit,
+ * '-' descendit, '=' unisonus): "p+p-p" torculus est. Regulae ex
+ * Gregorio (src/gabc/gabc-glyphs-determination.c, lectum 2026-11-03):
+ * nota initio debilis glypham novam incipit, liquescens (~ < >)
+ * claudit - ergo debilis nisi in prima et liquescens nisi in ultima
+ * figuram nominatam nullam dant; unisonus puncta separat. Compositae
+ * quas Gregorius in glyphas plures dividit (climacus, pes subbipunctis,
+ * salicus, pressus) ex nomenclatura Solesmensi. Quod tabula non novit
+ * IGNOTA est - numquam nomen falsum.
+ *
+ * CLASSES: p punctum (cavum quoque), i inclinatum, v virga, r virga
+ * reversa, s stropha, o oriscus (o O), w quilisma (w W), q quadratum,
+ * x aliud (linea, linea punctum, formae plures simul).
  * ================================================== */
+
+#define FORMAE_LIQUESCENTES (GABC_FORMA_LIQUESCENS \
+    | GABC_FORMA_AUCTA_ASCENDENS | GABC_FORMA_AUCTA_DESCENDENS)
+
+nomen structura {
+     constans character* signatura; /* '*': par ultimum iteratur */
+                    b32  debilis;   /* prima initio debilis licet */
+                    b32  deminuta;  /* ultima '~' requiritur */
+             GabcFigura  figura;
+} RegulaFigurae;
+
+/* ordo valet: regula prima quae congruit vincit (deminuta ante
+ * simplicem) */
+hic_manens constans RegulaFigurae REGULAE_FIGURARUM[] = {
+    { "p",        FALSUM, FALSUM, GABC_FIGURA_PUNCTUM },
+    { "i",        FALSUM, FALSUM, GABC_FIGURA_PUNCTUM_INCLINATUM },
+    { "v",        FALSUM, FALSUM, GABC_FIGURA_VIRGA },
+    { "s",        FALSUM, FALSUM, GABC_FIGURA_STROPHA },
+    { "o",        FALSUM, FALSUM, GABC_FIGURA_ORISCUS },
+    { "v=v",      FALSUM, FALSUM, GABC_FIGURA_BIVIRGA },
+    { "v=v=v",    FALSUM, FALSUM, GABC_FIGURA_TRIVIRGA },
+    { "s=s",      FALSUM, FALSUM, GABC_FIGURA_DISTROPHA },
+    { "s=s=s",    FALSUM, FALSUM, GABC_FIGURA_TRISTROPHA },
+    { "p+p",      VERUM,  VERUM,  GABC_FIGURA_EPIPHONUS },
+    { "p+p",      VERUM,  FALSUM, GABC_FIGURA_PES },
+    { "q+p",      FALSUM, FALSUM, GABC_FIGURA_PES_QUADRATUS },
+    { "w+p",      FALSUM, FALSUM, GABC_FIGURA_PES_QUILISMATICUS },
+    { "p-p",      VERUM,  VERUM,  GABC_FIGURA_CEPHALICUS },
+    { "p-p",      VERUM,  FALSUM, GABC_FIGURA_CLIVIS },
+    { "p+p-p",    VERUM,  FALSUM, GABC_FIGURA_TORCULUS },
+    { "p+p-p+p",  VERUM,  FALSUM, GABC_FIGURA_TORCULUS_RESUPINUS },
+    { "p-p+p",    FALSUM, FALSUM, GABC_FIGURA_PORRECTUS },
+    { "p-p+p-p",  FALSUM, FALSUM, GABC_FIGURA_PORRECTUS_FLEXUS },
+    { "p+p+p",    FALSUM, FALSUM, GABC_FIGURA_SCANDICUS },
+    { "p+o+p",    FALSUM, FALSUM, GABC_FIGURA_SALICUS },
+    { "p-i-i*",   FALSUM, FALSUM, GABC_FIGURA_CLIMACUS },
+    { "v-i-i*",   FALSUM, FALSUM, GABC_FIGURA_CLIMACUS },
+    { "p+p-i-i",  VERUM,  FALSUM, GABC_FIGURA_PES_SUBBIPUNCTIS },
+    { "p=p-p",    FALSUM, FALSUM, GABC_FIGURA_PRESSUS },
+    { "p=o-p",    FALSUM, FALSUM, GABC_FIGURA_PRESSUS }
+};
+
+#define NUMERUS_REGULARUM_FIGURARUM \
+    ((i32)(magnitudo(REGULAE_FIGURARUM) \
+        / magnitudo(REGULAE_FIGURARUM[ZEPHYRUM])))
+
+/* titulus per GabcFigura, ordine enumerationis */
+hic_manens constans character* TITULI_FIGURARUM[] = {
+    "ignota", "punctum", "punctum inclinatum", "virga", "stropha",
+    "oriscus", "bivirga", "trivirga", "distropha", "tristropha", "pes",
+    "pes quadratus", "pes quilismaticus", "epiphonus", "clivis",
+    "cephalicus", "torculus", "torculus resupinus", "porrectus",
+    "porrectus flexus", "scandicus", "salicus", "climacus",
+    "pes subbipunctis", "pressus"
+};
+
+interior character
+_classis_notae (
+    constans GabcNota* nota)
+{
+          i32 formae   = nota->formae;
+          i32 genera   = ZEPHYRUM;
+    character classis  = 'p';
+
+    si (formae & GABC_FORMA_INCLINATUM)
+    {
+        genera++;
+        classis = 'i';
+    }
+    si (formae & GABC_FORMA_VIRGA)
+    {
+        genera++;
+        classis = 'v';
+    }
+    si (formae & GABC_FORMA_VIRGA_REVERSA)
+    {
+        genera++;
+        classis = 'r';
+    }
+    si (formae & GABC_FORMA_STROPHA)
+    {
+        genera++;
+        classis = 's';
+    }
+    si (formae & (GABC_FORMA_ORISCUS | GABC_FORMA_ORISCUS_SCAPUS))
+    {
+        genera++;
+        classis = 'o';
+    }
+    si (formae & (GABC_FORMA_QUILISMA | GABC_FORMA_QUILISMA_QUADRATUM))
+    {
+        genera++;
+        classis = 'w';
+    }
+    si (formae & GABC_FORMA_QUADRATUM)
+    {
+        genera++;
+        classis = 'q';
+    }
+    si (formae & (GABC_FORMA_LINEA | GABC_FORMA_LINEA_PUNCTUM))
+    {
+        genera++;
+        classis = 'x';
+    }
+    redde genera > I ? 'x' : classis;
+}
+
+interior character
+_intervallum (
+    constans GabcNota* prior,
+    constans GabcNota* nota)
+{
+    si (nota->positio > prior->positio)
+    {
+        redde '+';
+    }
+    si (nota->positio < prior->positio)
+    {
+        redde '-';
+    }
+    redde '=';
+}
+
+/* signatura notas omnes tegit? classis prima, deinde paria
+ * (intervallum, classis); '*' in fine par ultimum iterat */
+interior b32
+_signaturam_aequat (
+     constans character* signatura,
+      constans GabcNota* notae,
+                    i32  numerus)
+{
+    i32 i;
+    i32 j;
+
+    si (signatura[ZEPHYRUM] != _classis_notae(&notae[ZEPHYRUM]))
+    {
+        redde FALSUM;
+    }
+    i = I;
+    per (j = I; j < numerus; j++)
+    {
+        si (signatura[i] == '*')
+        {
+            i -= II;
+        }
+        si (   signatura[i] == '\0'
+            || signatura[i] != _intervallum(&notae[j - I], &notae[j])
+            || signatura[i + I] != _classis_notae(&notae[j]))
+        {
+            redde FALSUM;
+        }
+        i += II;
+    }
+    redde signatura[i] == '\0' || signatura[i] == '*';
+}
 
 GabcFigura
 gabc_figura (
        constans GabcCantus* cantus,
     constans GabcElementum* neuma)
 {
-    (vacuum)cantus;
-    (vacuum)neuma;
+     constans GabcNota* notae;
+                   i32  numerus;
+                   i32  j;
+                   i32  k;
+
+    si (   cantus         == NIHIL || neuma == NIHIL
+        || neuma->genus   != GABC_EL_NEUMA
+        || neuma->numerus == ZEPHYRUM
+        || neuma->prima > cantus->numerus_notarum
+        || neuma->numerus > cantus->numerus_notarum - neuma->prima)
+    {
+        redde GABC_FIGURA_IGNOTA;
+    }
+    notae    = &cantus->notae[neuma->prima];
+    numerus  = neuma->numerus;
+
+    /* Gregorius: debilis incipit, liquescens claudit glypham */
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        si (   (j > ZEPHYRUM
+            && (notae[j].formae & GABC_FORMA_INITIO_DEBILIS))
+            || (j + I < numerus
+                && (notae[j].formae & FORMAE_LIQUESCENTES)))
+        {
+            redde GABC_FIGURA_IGNOTA;
+        }
+    }
+
+    per (k = ZEPHYRUM; k < NUMERUS_REGULARUM_FIGURARUM; k++)
+    {
+        constans RegulaFigurae* r = &REGULAE_FIGURARUM[k];
+
+        si (   (notae[ZEPHYRUM].formae & GABC_FORMA_INITIO_DEBILIS)
+            && !r->debilis)
+        {
+            perge;
+        }
+        si (   r->deminuta
+            && !(notae[numerus - I].formae & GABC_FORMA_LIQUESCENS))
+        {
+            perge;
+        }
+        si (_signaturam_aequat(r->signatura, notae, numerus))
+        {
+            redde r->figura;
+        }
+    }
     redde GABC_FIGURA_IGNOTA;
 }
 
@@ -2821,6 +3036,12 @@ constans character*
 gabc_figurae_titulus (
     GabcFigura figura)
 {
-    (vacuum)figura;
+    i32 index = (i32)figura;
+
+    si (index < (i32)(magnitudo(TITULI_FIGURARUM)
+                      / magnitudo(TITULI_FIGURARUM[0])))
+    {
+        redde TITULI_FIGURARUM[index];
+    }
     redde "ignota";
 }
