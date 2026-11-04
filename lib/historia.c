@@ -467,9 +467,18 @@ historia_struere (
     h->intern     = intern;
     h->proiectio  = proiectio;
     /* spatium nominum (R2): 's/' ante genus, notas, checkpoints;
-     * vacuum = nomina nuda (volumina vetera) */
-    h->spatium              = (spatium && spatium[ZEPHYRUM]) ? spatium
-                                                             : "";
+     * vacuum = nomina nuda (volumina vetera). Copiatur in piscinam:
+     * vocator spatium in acervo tenere potest (pulsus T11) */
+    h->spatium = "";
+    si (spatium && spatium[ZEPHYRUM])
+    {
+        h->spatium = chorda_ut_cstr(chorda_ex_literis(spatium, piscina),
+            piscina);
+        si (!h->spatium)
+        {
+            redde NIHIL;
+        }
+    }
     historia_genera(piscina, h->spatium, genus, genera);
     h->genus                = genera[ZEPHYRUM];
     h->genus_rami           = genera[I];
