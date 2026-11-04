@@ -248,3 +248,35 @@ rows; on the dumps it changed `gV` (now virga reversa) and, wrongly, the
 Glossarium: `subtripunctis`. Plant: ancus without the `~` requirement ->
 `_figuras_probare` FRACTUM (l.989); restored, cmp equal. 19/19, ASan+UBSan
 clean.
+
+## 2026-11-04 — T9: the GregoBase corpus
+
+**Terms.** GregoBase's About page: "All chant transcriptions are released
+under CC0". Source used: bacor's GregoBaseCorpus v0.4 (2020-07-22, from a
+GregoBase export of 2019-10-24, CC0, zip sha256 d417a984…). Editions may
+still be protected (Solesmes claims rights; 1961 books debated in the EU), so
+the committed sample takes only chants whose sources were ALL printed by
+1930: 82 chants (Graduale Romanum 1908 61, Antiphonale Romanum 1912 14, …),
+every mode >= 5, F clef 8; no Kyriale exists in that pool. Fran approved.
+`tools/gabc_arcessere.sh` re-downloads and verifies (default) or re-selects
+(`-eligere`).
+
+**Whole corpus (9130 files, measured, not committed).** 3.4 s under
+ASan+UBSan, no crash; 97.9% with no VITIUM. Errors left are the SOURCES'
+against current Gregorio, checked in Gregorio's own lexer before deciding:
+`’` (U+2019) as ictus is "unrecognized character" in gabc-notes; `<sp>'AE`
+and `<sp>V/.` are not in gregoriotex-symbols.tex; and `$<` is an escaped
+`<` inside `<v>` in gabc-score-determination.l (`<verb,alt>(\$.|[^<])+`),
+so `<v>$\stgr$</v>` never closes there either (files from 2019, maybe an
+older Gregorio). So those stay diagnostics. I had told Fran Gregorio accepts
+`’` - it does not.
+
+**Fixed.** `GABC_DIVISIO_IN_NEUMA` is gone (enum member removed from gabc.h,
+with the `post_notam` parameter that only fed it): 2883 warnings in the
+corpus were all normal GregoBase writing like `(fe.,e)` `(gg;gggg)`, which
+Gregorio accepts. `divisiones.gabc`'s `e(g;h)` now pins "no warning".
+
+**Neume long tail (sample: 9368 neumes, 814 IGNOTA).** Top unknown contours:
+`p=p` 101, `p-p=p-p` 80, `p=p=p` 51, `pv-pI-pI+p` (climacus resupinus) 34,
+`p+p-p=p-p` 33, `pw` (lone quilisma) 31, `p=p+p` 25, `p+p-pI-pI+p` (pes
+subbipunctis resupinus) 22. Ledger nota filed for part 2.

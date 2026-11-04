@@ -92,8 +92,6 @@ nomen enumeratio {
     GABC_SIGNUM_IGNOTUM,         /* monitum: signum textus aut '[x:]' Gregorio
                                   * ignotum (opacum servatur) */
     GABC_ALTERATIO_SINE_POSITIONE, /* vitium: x y # sine littera ante */
-    GABC_DIVISIO_IN_NEUMA,       /* monitum: divisio intra notas
-                                  * coniunctas */
     GABC_CLAVIS_MALA,            /* vitium: linea clavis extra
                                   * systema */
     GABC_POSITIO_EXTRA,          /* monitum: positio supra systema

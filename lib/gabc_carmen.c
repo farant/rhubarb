@@ -273,13 +273,14 @@ hic_manens constans Transcriptio TRANSCRIPTIONES[] = {
     ((i32)(magnitudo(TRANSCRIPTIONES) / magnitudo(TRANSCRIPTIONES[0])))
 
 /* signa nota quae tacite tolluntur: interpunctio Latin-1, × ÷,
- * interpunctio generalis, litterae-signa (R/ V/), sagittae, dingbats
- * (cruces) */
+ * accentus compositi (U+0300..036F, post vocalem scripti), interpunctio
+ * generalis, litterae-signa (R/ V/), sagittae, dingbats (cruces) */
 interior b32
 _signum_notum (
     s32 runa)
 {
     redde (runa >= 0x80 && runa <= 0xBF) || runa == 0xD7 || runa == 0xF7
+        || (runa >= 0x300 && runa <= 0x36F)
         || (runa >= 0x2000 && runa <= 0x206F)
         || (runa >= 0x2100 && runa <= 0x21FF)
         || (runa >= 0x2700 && runa <= 0x27BF);

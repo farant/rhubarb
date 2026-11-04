@@ -243,16 +243,12 @@ _divisiones_probare (
 
     CREDO_NECESSE (g != NIHIL);
     CREDO_VERUM (gabc_successus(g));
-    CREDO_NECESSE (g->numerus_vitiorum == I);
-    CREDO_AEQUALIS_S32 ((s32)g->vitia[ZEPHYRUM].gravitas,
-        (s32)GABC_MONITUM);
-    CREDO_AEQUALIS_S32 ((s32)g->vitia[ZEPHYRUM].genus,
-        (s32)GABC_DIVISIO_IN_NEUMA);
+    /* (g;h): divisio intra notas sine monito - GregoBase sic ubique
+     * scribit et Gregorius accipit (T9: 2883 monita in 9130 cantibus) */
+    CREDO_AEQUALIS_I32 (g->numerus_vitiorum, ZEPHYRUM);
     a = chorda_aedificator_creare(c->piscina, CCLVI);
     CREDO_VERUM (gabc_vitia_scribere(g, "divisiones.gabc", a));
-    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_aedificator_finire(a),
-        "divisiones.gabc:4:45: monitum: divisio intra notas"
-        " coniunctas\n");
+    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_aedificator_finire(a), "");
     CREDO_CHORDA_AEQUALIS_LITERIS (_tabula(c, g),
         "caput\tname\tdivisiones\n"
         "syllaba\t0\t0\t\n"
@@ -1387,7 +1383,7 @@ interior constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "claves: mutatio sequentes solas resolvit", _claves_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
-    { "divisiones: genera et monitum intra neumam",
+    { "divisiones: genera, intra notas sine monito",
         _divisiones_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "textus sine notis, notae sine textu",
         _textum_sine_notis_probare, NIHIL, NIHIL, NIHIL, NIHIL },

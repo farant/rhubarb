@@ -702,13 +702,14 @@ _alterationem_legere (
     redde k - j;
 }
 
-/* divisio ad j; longitudo. post_notam: nota coniuncta praecedit */
+/* divisio ad j; longitudo. Divisio intra notas coniunctas ('g;h',
+ * 'fe.,e') sine monito: GregoBase sic ubique scribit, Gregorius
+ * accipit (T9) */
 interior i32
 _divisionem_legere (
     Lector* l,
        i32  j,
-       i32  b,
-       b32  post_notam)
+       i32  b)
 {
     GabcElementum* el  = _elementum_novum(l, GABC_EL_DIVISIO, j);
                i8  ch  = l->datum[j];
@@ -764,11 +765,6 @@ _divisionem_legere (
                 k++;
             }
         }
-    }
-    si (post_notam || _notam_incipit(l, k, b))
-    {
-        _vitium(l, GABC_MONITUM, GABC_DIVISIO_IN_NEUMA, j,
-            "divisio intra notas coniunctas");
     }
     redde k - j;
 }
@@ -1146,7 +1142,7 @@ _notas_legere (
                 }
                 frange;
             casus '`': casus '^': casus ',': casus ';': casus ':':
-                j += _divisionem_legere(l, j, b, neuma >= ZEPHYRUM);
+                j += _divisionem_legere(l, j, b);
                 neuma = -I;
                 frange;
             casus '[':

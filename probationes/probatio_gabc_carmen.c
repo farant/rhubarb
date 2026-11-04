@@ -422,6 +422,12 @@ _verba_variae_probare (
     CREDO_AEQUALIS_I32 (_approximationes(&v.relatio,
         GABC_CARMEN_LITTERA_IGNOTA), I);
 
+    /* accentus compositus (U+0301 post vocalem, T9): tacite tollitur */
+    v = _convertere(c, "%%\n(c4)Ma(g)ri\xcc\x81(gh)a(g)", NIHIL);
+    CREDO_NECESSE (v.successus && v.lectum);
+    CREDO_VERUM (_continet(c, v.textus, "<verba!>Ma-ri _-a</verba>"));
+    CREDO_AEQUALIS_I32 (v.relatio.numerus_approximationum, ZEPHYRUM);
+
     /* notae ante textum primum */
     v = _convertere(c, "%%\n(c4)(g) a(h)", NIHIL);
     CREDO_NECESSE (v.successus && v.lectum);

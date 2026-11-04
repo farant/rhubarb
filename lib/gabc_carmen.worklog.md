@@ -39,3 +39,12 @@ first). The plants stand in for "born red": episema x1.5 with mora ->
 `_salve_probare` stays green - the plan's prediction was wrong); ties
 across syllables -> note count red. Fixtures are inline gabc strings, not
 the plan's three `.gabc` files (each test reads alone).
+
+## 2026-11-04 — T9
+
+Combining marks (U+0300..036F, decomposed accents: 16 in the corpus) are now
+dropped silently in syllable cleanup instead of counting as unknown letters;
+test in `_verba_variae_probare`. Remaining unknown letters in the whole
+corpus (303) are mostly Polish (ł ś ż ć) - correct approximations. Corpus
+sample: all 82 convert and re-read; 15389 carmen notes; 2 keys without a
+mode name.

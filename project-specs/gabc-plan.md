@@ -679,20 +679,20 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
 - Create: `probationes/probatio_gabc_corpus.c` (or a section of the
   existing suite if the sample is small)
 
-- [ ] **Step 1: Measure** — check GregoBase's download format and
+- [x] **Step 1: Measure** — check GregoBase's download format and
   terms (spec AUDIENDA); pick a sample of ~50–100 chants across
   office parts (antiphons, hymns, responsories, introits, Kyriale),
   modes I–VIII, and both clefs; record why each was picked if not
   random. STOP and show Fran the terms and sample size before
   committing third-party text.
-- [ ] **Step 2: Test** — every manifest file reads with no crash
+- [x] **Step 2: Test** — every manifest file reads with no crash
   under ASan; VITIUM count 0 for all, or each exception listed in the
   manifest with its reason; total monitum counts by kind pinned (the
   long tail, G5); every file converts and `carmina_legere` accepts
   the output; approximation counts by kind pinned.
-- [ ] **Step 3:** fix what the corpus breaks (each fix its own small
+- [x] **Step 3:** fix what the corpus breaks (each fix its own small
   test in T2–T7's suites first).
-- [ ] **Step 4: Commit** (gate `radix`). File a ledger nota for the
+- [x] **Step 4: Commit** (gate `radix`). File a ledger nota for the
   top unmodeled constructs, so part 2 and later work see them.
 
 ---
@@ -801,4 +801,22 @@ b32 gabc_relationem_scribere (constans GabcCarmenRelatio* relatio,
 - Plant (by hand, gate unknown to planta while untracked): `-do` ignored
   -> both `-do` checks FRACTUM; restored, rebuilt, green.
 - Hear the Salve: `auditio -gabc musica/fontes/salve_2435.gabc -sonare`.
+
+### T9 — executed 2026-11-04
+
+- Terms: GregoBase transcriptions CC0 (About page); bacor GregoBaseCorpus
+  v0.4 CC0. Sample limited to sources all printed <= 1930 (editions may be
+  protected). Fran approved 82 chants, ~100 KB:
+  `probationes/fixa/gabc/gregobase/` + `gregobase.manifestum`;
+  `tools/gabc_arcessere.sh` verifies against the pinned zip.
+- Whole corpus measured (9130): no crash under ASan+UBSan, 97.9% without
+  VITIUM. Remaining errors checked against Gregorio's lexer and kept
+  (source errors there too): `’` as ictus, `<sp>'AE`, `<sp>V/.`, `$<`
+  inside `<v>`.
+- Fixed (test first each): bar-inside-neume warning removed (enum member
+  out of gabc.h; 2883 false warnings); decomposed accents dropped silently
+  in verba.
+- `probatio_gabc_corpus.c`: 0 VITIUM; monita pinned (1); 9368 neumes /
+  814 IGNOTA pinned; all convert and re-read, 15389 notes, 2 approximations
+  pinned. Plant: clivis rule broken -> IGNOTA pin FRACTUM; restored.
 
