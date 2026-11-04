@@ -17093,7 +17093,7 @@ _limen_parametri_ponere (
                Demissio* d,
     MedullaTypusLiminis  limen)
 {
-                  i32 n = officina_xar_numerus(d->functio->parametra);
+                  i32  n = officina_xar_numerus(d->functio->parametra);
     MedullaParametrum* parametrum;
 
     si (n == ZEPHYRUM)
@@ -17671,8 +17671,8 @@ _datum_chordae_mensurae (
     constans SilvaNodus* nodus,
                     s32  mensura_data)
 {
-     SilvaChorda octeti;
-          OfficinaChorda titulus;
+     SilvaChorda  octeti;
+          OfficinaChorda  titulus;
     MedullaDatum* datum;
              s32  mensura;
           OfficinaChorda  visus;
