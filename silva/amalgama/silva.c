@@ -85085,7 +85085,16 @@ _formam_texturae_invenire (
     redde FALSUM;
 }
 
-/* Status passus texturae */
+/* Status passus texturae.
+ *
+ * Extenta (2026-11-03, budget silvae): olim quaeque regio extentum
+ * CUIUSQUE elementi radicis per ambulationem subarboris totius
+ * recomputabat - regiones x arbor (vendor/bearssl_amalgama.c: ~XCII%
+ * parsurae, 9.6% percursus). Extentum elementi a subarbore sua sola
+ * pendet, et textura subarbores numquam mutat (nodo conditionali
+ * novo involvit) - ergo series parallela radici, semel computata et
+ * in retextura una cum lista renovata. NIHIL (allocatio defecit) =
+ * computatio per regionem ut olim (numquam responsum falsum). */
 nomen structura {
                           SilvaPiscina* piscina;
     constans SilvaRegistrumCoctum* tabularium;
@@ -85094,7 +85103,107 @@ nomen structura {
                          TexForma  conditionalis; /* a=rami b=finis */
                          TexForma  sumptus;  /* a=directiva b=contentum c=conditio_id */
                          TexForma  omissus;  /* a=directiva b=cruda c=conditio_id */
+                      TexExtentum* extenta;  /* per elementum radicis */
+                              i32  numerus_extentorum;
+                              i32* congreganda;  /* bitset per
+                                                  * elementum, reusus */
+                              i32 verba_congregandorum;
 } TexturaStatus;
+
+/* Bitset (verba i32): pone / quaere */
+interior vacuum
+_congregandum_ponere (
+     i32* verba,
+     i32  e)
+{
+    verba[e / XXXII] |= ((i32)I << (e % XXXII));
+}
+
+interior b32
+_congregandum_est (
+     constans i32* verba,
+              i32  e)
+{
+    redde ((verba[e / XXXII] >> (e % XXXII)) & I) ? VERUM : FALSUM;
+}
+
+/* Extentum elementi e radicis: ex serie si adest, aliter computatum
+ * (solum NODUS - cetera sine positione, fons -1) */
+interior vacuum
+_extentum_elementi (
+    constans TexturaStatus* st,
+                       i32  e,
+                SilvaValor* elem,
+               TexExtentum* extentum)
+{
+    si (st->extenta != NIHIL && e < st->numerus_extentorum)
+    {
+        *extentum = st->extenta[e];
+        redde;
+    }
+    extentum->fons     = -I;
+    extentum->initium  = ZEPHYRUM;
+    extentum->finis    = ZEPHYRUM;
+    si (elem != NIHIL && elem->genus == SILVA_VALOR_NODUS)
+    {
+        _extentum_valoris(*elem, extentum);
+    }
+}
+
+/* Seriem extentorum radicis currentis computare (semel per passum) */
+interior vacuum
+_extenta_computare (
+    TexturaStatus* st)
+{
+    i32 n;
+    i32 e;
+
+    n = silva_valor_lista_numerus(st->radix);
+    st->extenta = (TexExtentum*)silva_piscina_allocare(st->piscina,
+        (memoriae_index)magnitudo(TexExtentum)
+            * (memoriae_index)(n > ZEPHYRUM ? n : I));
+    st->numerus_extentorum = ZEPHYRUM;
+    si (st->extenta == NIHIL)
+    {
+        redde;
+    }
+    per (e = ZEPHYRUM; e < n; e++)
+    {
+        _extentum_elementi(st, e, silva_valor_lista_obtinere(st->radix,
+            e), &st->extenta[e]);
+    }
+    st->numerus_extentorum = n;
+}
+
+/* Bitset congregandorum pro n elementis (vacuum): reusus, crescit
+ * solum si n excedit. NIHIL si allocatio defecit. */
+interior i32*
+_congreganda_parare (
+    TexturaStatus* st,
+              i32  n)
+{
+    i32 verba;
+
+    verba = (n + XXXI) / XXXII;
+    si (verba == ZEPHYRUM)
+    {
+        verba = I;
+    }
+    si (st->congreganda == NIHIL || verba > st->verba_congregandorum)
+    {
+        st->congreganda = (i32*)silva_piscina_allocare(st->piscina,
+            (memoriae_index)magnitudo(i32) * (memoriae_index)verba);
+        st->verba_congregandorum = (st->congreganda
+            != NIHIL) ? verba : ZEPHYRUM;
+        si (st->congreganda == NIHIL)
+        {
+            redde NIHIL;
+        }
+    }
+    memset(st->congreganda, ZEPHYRUM,
+        (memoriae_index)magnitudo(i32) * (memoriae_index)verba);
+    redde st->congreganda;
+}
 
 /* Lexemata laminae in locum listae-token appendere */
 interior vacuum
@@ -85139,7 +85248,7 @@ _regionem_texere (
            s32  primum_congregatum  = -I;
            s32  primum_post         = -I;
            b32  degradata           = FALSUM;
-           b32* congreganda;
+           i32* congreganda;
            i32  e;
 
     si (regio->rami == NIHIL || silva_xar_numerus(regio->rami) == ZEPHYRUM)
@@ -85196,11 +85305,8 @@ _regionem_texere (
     }
 
     /* Elementa classificare */
-    numerus_elementorum = silva_valor_lista_numerus(st->radix);
-    congreganda = (b32*)silva_piscina_allocare(st->piscina,
-        (memoriae_index)(magnitudo(b32)
-            * (numerus_elementorum > ZEPHYRUM
-                ? (memoriae_index)numerus_elementorum : I)));
+    numerus_elementorum  = silva_valor_lista_numerus(st->radix);
+    congreganda          = _congreganda_parare(st, numerus_elementorum);
     si (congreganda == NIHIL)
     {
         st->parsura->regiones_omissae++;
@@ -85211,15 +85317,11 @@ _regionem_texere (
          SilvaValor* elem = silva_valor_lista_obtinere(st->radix, e);
         TexExtentum  extentum;
 
-        congreganda[e] = FALSUM;
         si (elem == NIHIL || elem->genus != SILVA_VALOR_NODUS)
         {
             perge;
         }
-        extentum.fons     = -I;
-        extentum.initium  = ZEPHYRUM;
-        extentum.finis    = ZEPHYRUM;
-        _extentum_valoris(*elem, &extentum);
+        _extentum_elementi(st, e, elem, &extentum);
         si (extentum.fons == -II)
         {
             /* opacum: positio incerta - degradatio conservativa */
@@ -85248,7 +85350,7 @@ _regionem_texere (
             && extentum.initium >= ramus_sumptus->corpus_initium
             && extentum.finis <= ramus_sumptus->corpus_finis)
         {
-            congreganda[e] = VERUM;
+            _congregandum_ponere(congreganda, e);
             si (primum_congregatum == -I)
             {
                 primum_congregatum = (s32)e;
@@ -85302,7 +85404,7 @@ _regionem_texere (
             {
                 per (e = ZEPHYRUM; e < numerus_elementorum; e++)
                 {
-                    si (congreganda[e])
+                    si (_congregandum_est(congreganda, e))
                     {
                         SilvaValor* elem = silva_valor_lista_obtinere(
                             st->radix, e);
@@ -85336,9 +85438,31 @@ _regionem_texere (
          * in positione ordinali primi congregati (aut ante primum
          * elementum eiusdem fontis post regionem; aut in fine) */
         {
-            SilvaValor lista_nova = silva_valor_lista_nova(st->piscina);
-                   i32 positio_insertionis;
-                   b32 insertum = FALSUM;
+             SilvaValor lista_nova =
+                 silva_valor_lista_nova(st->piscina);
+                    i32  positio_insertionis;
+                    b32  insertum      = FALSUM;
+            TexExtentum* extenta_nova  = NIHIL;
+            TexExtentum  extentum_conditionalis;
+                    i32  n_nova = ZEPHYRUM;
+
+            /* series extentorum una cum lista: conditionalis extentum
+             * SEMEL (nodus iam plenus), ceteri ex serie veteri */
+            si (st->extenta != NIHIL)
+            {
+                extenta_nova = (TexExtentum*)silva_piscina_allocare(
+                    st->piscina, (memoriae_index)magnitudo(TexExtentum)
+                    * (memoriae_index)(numerus_elementorum + I));
+            }
+            extentum_conditionalis.fons     = -I;
+            extentum_conditionalis.initium  = ZEPHYRUM;
+            extentum_conditionalis.finis    = ZEPHYRUM;
+            si (extenta_nova != NIHIL)
+            {
+                _extentum_valoris(
+                    silva_valor_nodus(nodus_conditionalis),
+                    &extentum_conditionalis);
+            }
 
             si (primum_congregatum >= ZEPHYRUM)
             {
@@ -85362,8 +85486,12 @@ _regionem_texere (
                         st->piscina, lista_nova,
                         silva_valor_nodus(nodus_conditionalis));
                     insertum = VERUM;
+                    si (extenta_nova != NIHIL)
+                    {
+                        extenta_nova[n_nova++] = extentum_conditionalis;
+                    }
                 }
-                si (congreganda[e])
+                si (_congregandum_est(congreganda, e))
                 {
                     perge;  /* in contentum migravit */
                 }
@@ -85372,6 +85500,11 @@ _regionem_texere (
                 {
                     lista_nova = silva_valor_lista_appendere(
                         st->piscina, lista_nova, *elem);
+                    si (extenta_nova != NIHIL)
+                    {
+                        _extentum_elementi(st, e, elem,
+                            &extenta_nova[n_nova++]);
+                    }
                 }
             }
             si (!insertum)
@@ -85379,8 +85512,14 @@ _regionem_texere (
                 lista_nova = silva_valor_lista_appendere(st->piscina,
                     lista_nova,
                     silva_valor_nodus(nodus_conditionalis));
+                si (extenta_nova != NIHIL)
+                {
+                    extenta_nova[n_nova++] = extentum_conditionalis;
+                }
             }
-            st->radix = lista_nova;
+            st->radix               = lista_nova;
+            st->extenta             = extenta_nova;
+            st->numerus_extentorum  = n_nova;
         }
     }
 
@@ -85440,10 +85579,15 @@ _texere (
             "silva_parsare: formae texturae in registro absunt\n");
         redde radix;
     }
-    st.piscina     = piscina;
-    st.tabularium  = tabularium;
-    st.parsura     = parsura;
-    st.radix       = radix;
+    st.piscina               = piscina;
+    st.tabularium            = tabularium;
+    st.parsura               = parsura;
+    st.radix                 = radix;
+    st.extenta               = NIHIL;
+    st.numerus_extentorum    = ZEPHYRUM;
+    st.congreganda           = NIHIL;
+    st.verba_congregandorum  = ZEPHYRUM;
+    _extenta_computare(&st);
     _regiones_texere(&st, expansio->regiones);
     redde st.radix;
 }

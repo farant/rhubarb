@@ -616,6 +616,64 @@ s32 principale (vacuum)
             "#if !defined(NUSQUAM)\nint p;\n#endif\n", NIHIL));
     }
 
+
+    /* ==================================================
+     * PROBARE: regiones multae, elementa ultra XXXII (budget silvae,
+     * 2026-11-03: extenta semel per passum, bitset congregandorum).
+     * Series extentorum per retexturas tres parallela radici manere
+     * debet; bitset trans verba (XL elementa in regione una, indices
+     * XL..LXXIX) et inter regiones vacuari.
+     * ================================================== */
+
+    {
+        SilvaParsura* parsura;
+           character  fons[MMXLVIII];
+                 i32  n;
+                 i32  k;
+
+        imprimere("\n--- Probans regiones multas ---\n");
+
+        n = ZEPHYRUM;
+        per (k = ZEPHYRUM; k < XL; k++)
+        {
+            n = n + (i32)sprintf(fons + n, "int a%u;\n", k);
+        }
+        n = n + (i32)sprintf(fons + n, "#if 1\n");
+        per (k = ZEPHYRUM; k < XL; k++)
+        {
+            n = n + (i32)sprintf(fons + n, "int b%u;\n", k);
+        }
+        n = n + (i32)sprintf(fons + n,
+            "#endif\n#if 1\nint z;\n#endif\n"
+            "#if 1\n#if 1\nint q;\n#endif\nint r;\nint s;\n#endif\n");
+
+        parsura = NIHIL;
+        CREDO_VERUM (_fidelis(piscina, fons, &parsura));
+        si (parsura != NIHIL)
+        {
+            SilvaNodus* primus;
+
+            CREDO_AEQUALIS_I32 (parsura->regiones_textae, IV);
+            CREDO_AEQUALIS_I32 (parsura->regiones_omissae, ZEPHYRUM);
+            /* XL declarationes + conditionales III supremae */
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                parsura->commissio->radix), XL + III);
+            primus = _elementum_generis(parsura, g_conditionalis);
+            CREDO_NON_NIHIL (primus);
+            si (primus != NIHIL)
+            {
+                SilvaValor* r0 = silva_valor_lista_obtinere(
+                    primus->loci[l_rami], ZEPHYRUM);
+
+                si (r0 != NIHIL)
+                {
+                    CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                        r0->datum.nodus->loci[l_s_contentum]), XL);
+                }
+            }
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 
