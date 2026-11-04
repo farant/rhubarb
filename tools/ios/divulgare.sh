@@ -26,10 +26,15 @@ apparatus () { echo "ios/divulgare.sh: $*" >&2; exit 2; }
 fractum () { echo "ios/divulgare.sh: FRACTUM: $*" >&2; exit 1; }
 
 APP=""; MODUS=""; NOTAE=""
+# vexilla alternativa: simul recusantur (ultimum vincebat - '-siccum
+# -notae' vere divulgabat, 2026-11-04)
+SIMUL="-siccum et -notae simul: elige unum (siccum primum, deinde -notae)"
 while [ $# -gt 0 ]; do
     case "$1" in
-        -siccum) MODUS=siccum ;;
+        -siccum) [ "$MODUS" != notae ] || apparatus "$SIMUL"
+                 MODUS=siccum ;;
         -notae) [ $# -ge 2 ] || apparatus "-notae plagulam postulat"
+                [ "$MODUS" != siccum ] || apparatus "$SIMUL"
                 MODUS=notae; NOTAE="$2"; shift ;;
         -*) apparatus "optio ignota: $1" ;;
         *) [ -z "$APP" ] || apparatus "applicatio una: $APP et $1"; APP="$1" ;;
