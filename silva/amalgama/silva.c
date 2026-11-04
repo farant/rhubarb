@@ -46072,13 +46072,28 @@ nomen structura {
 hic_manens constans MateriaTokenForma FORMA_C89 =
     { (i32)magnitudo(SilvaTokenCauda) };
 
+/* silva_token_ex_fonte caput MateriaToken campum per campum scribit:
+ * LXIV octeti sine lacunis (materia_token.h). Campus novus mensuram
+ * mutat et hic aedificationem frangit - tunc ibi quoque scribe. */
+nomen character _silva_token_caput_notum[
+    (magnitudo(SilvaToken) == (memoriae_index)LXIV) ? I : -I];
+
 /* Cauda C89 lexematis - MUTABILIS etiam ex lexemate constanti (ut
- * materia_token_cauda: datum frontis est, non lexematis) */
+ * materia_token_cauda: datum frontis est, non lexematis).
+ * Idem quod materia_token_cauda sed sine vocatione trans unitatem
+ * (in omni accessore calida): cauda in EADEM allocatione post
+ * MateriaToken sequitur (materia_token.h). Sine vexillo NIHIL, ut
+ * illa - numquam punctator ultra allocationem. */
 interior SilvaTokenCauda*
 _cauda_c89 (
     constans SilvaToken* token)
 {
-    redde (SilvaTokenCauda*)silva_materia_token_cauda(token);
+    si ((token->vexilla & MATERIA_TOKEN_CAUDA) == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    redde (SilvaTokenCauda*)(size_t)((constans character*)token
+        + magnitudo(SilvaToken));
 }
 
 
@@ -46139,23 +46154,40 @@ silva_token_ex_fonte (
                  i32  columna,
                  s32  fons_index)
 {
-    SilvaToken* token;
+         SilvaToken* token;
+    SilvaTokenCauda* cauda;
 
-    token = _token_novum(piscina);
+    /* Via calidissima (omne lexema fontis): allocatio una, quisque
+     * campus SEMEL scriptus - non materia_token_creare (vocatio
+     * trans unitatem, memset caudae variabilis; -III% percursus).
+     * Caput hic ut in materia_token_creare; _silva_token_caput_notum
+     * (supra) aedificationem frangit si MateriaToken campum auget. */
+    token = (SilvaToken*)silva_piscina_allocare_ordinatum(piscina,
+        (memoriae_index)(magnitudo(SilvaToken)
+            + magnitudo(SilvaTokenCauda)),
+        (memoriae_index)magnitudo(vacuum*));
     si (token == NIHIL)
     {
         redde NIHIL;
     }
+    token->valor         = valor;
+    token->spatia_ante   = NIHIL;
+    token->spatia_post   = NIHIL;
+    token->numerus_ante  = ZEPHYRUM;
+    token->numerus_post  = ZEPHYRUM;
+    token->genus         = (s32)genus;
+    token->byte_offset   = byte_offset;
+    token->linea         = linea;
+    token->columna       = columna;
+    token->fons_index    = fons_index;
+    token->vexilla       = MATERIA_TOKEN_CAUDA;
 
-    token->genus                    = (s32)genus;
-    token->valor                    = valor;
-    token->byte_offset              = byte_offset;
-    _cauda_c89(token)->longitudo    = valor.mensura;
-    token->linea                    = linea;
-    token->columna                  = columna;
-    token->fons_index               = fons_index;
-    _cauda_c89(token)->standard     = SILVA_STANDARD_C89;
-    _cauda_c89(token)->origo.genus  = SILVA_ORIGO_FONS;
+    cauda = _cauda_c89(token);
+    memset(&cauda->origo, ZEPHYRUM, magnitudo(cauda->origo));
+    cauda->origo.genus  = SILVA_ORIGO_FONS;
+    cauda->longitudo    = valor.mensura;
+    cauda->standard     = SILVA_STANDARD_C89;
+    cauda->scissurae    = NIHIL;
 
     redde token;
 }
