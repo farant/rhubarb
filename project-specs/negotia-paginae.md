@@ -137,7 +137,7 @@ error is named (unknown fragment, unfilled or extra argument). Example:
 
 ```
 <designum latitudo="600" altitudo="700">
-  <#ordo titulus="@t" status="@s">
+  <#@ordo t="@t" s="@s">
     <linea altitudo="2">
       <globulum status="&@s;"/>
       <textus>&@t;</textus>
@@ -145,8 +145,8 @@ error is named (unknown fragment, unfilled or extra argument). Example:
   </#>
   <columna>
     <textus fons="titulus">negotia</textus>
-    <<#ordo t="library" s="shipped">>
-    <<#ordo t="vision" s="planned">>
+    <<#@ordo t="library" s="shipped">>
+    <<#@ordo t="vision" s="planned">>
     <mandata> ... raw primitives ... </mandata>
   </columna>
 </designum>

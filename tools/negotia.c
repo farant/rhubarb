@@ -19,6 +19,8 @@
  *   negotia pagina-mutare <pagina> [-titulus T]
  *                  [-corpus T | -corpus-filum F]
  *   negotia paginae <negotium>  ("<suffixum>  <genus>  <titulus>")
+ *   negotia png <pagina> <via.png>       adumbratio (pictor: T4)
+ *   negotia png -filum <F.stml> <via.png>  filum sine pagina
  *
  * <negotium>, <facultas>: id plenum aut suffixum unicum. S: planned |
  * partial | shipped (aut proposita | inchoata | perfecta; ordinarie
@@ -53,6 +55,8 @@
 #include "volumen.h"
 #include "negotia.h"
 #include "via.h"
+#include "adumbratio.h"
+#include "thema.h"
 #include "provenientia.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -68,6 +72,12 @@
 #define VEX_TITULUS      XVI
 #define VEX_VIA          XXXII
 #define VEX_GENUS        LXIV
+#define VEX_FILUM        CXXVIII
+
+/* superficies ordinaria adumbrationis sine latitudine declarata
+ * (latus dextrum vici) */
+#define ADUMBRATIO_LATITUDO  DC
+#define ADUMBRATIO_ALTITUDO  DCC
 
 nomen enumeratio {
     IMP_INDEX = 0,
@@ -79,7 +89,8 @@ nomen enumeratio {
     IMP_INVOLVERE,
     IMP_PAGINA,
     IMP_PAGINAM_MUTARE,
-    IMP_PAGINAE
+    IMP_PAGINAE,
+    IMP_PNG
 } ImperiumGenus;
 
 nomen structura {
@@ -104,7 +115,8 @@ hic_manens constans Imperium IMPERIA[] = {
                                   | VEX_CORPUS_FILUM,      VERUM  },
     { "pagina-mutare", I,     VEX_TITULUS | VEX_CORPUS
                                   | VEX_CORPUS_FILUM,      VERUM  },
-    { "paginae",    I,        ZEPHYRUM,                    FALSUM }
+    { "paginae",    I,        ZEPHYRUM,                    FALSUM },
+    { "png",        II,       VEX_FILUM,                   FALSUM }
 };
 
 #define IMPERIA_NUMERUS \
@@ -122,6 +134,7 @@ nomen structura {
      constans character* titulus;
      constans character* via;
      constans character* genus;
+     constans character* filum;
 } Argumenta;
 
 interior s32
@@ -142,6 +155,8 @@ usum_imprimere (vacuum)
         "      negotia pagina-mutare <pagina> [-titulus T]"
         " [-corpus T | -corpus-filum F]\n"
         "      negotia paginae <negotium>\n"
+        "      negotia png <pagina> <via.png>\n"
+        "      negotia png -filum <F.stml> <via.png>\n"
         "      (omnia: -volumen V; S: planned | partial | shipped;"
         " F '-' = stdin)\n");
     redde II;
@@ -213,6 +228,11 @@ argumenta_legere (
         {
             a->genus    = argv[++k];
             a->vexilla  |= VEX_GENUS;
+        }
+        alioquin si (strcmp(v, "-filum") == ZEPHYRUM)
+        {
+            a->filum    = argv[++k];
+            a->vexilla  |= VEX_FILUM;
         }
         alioquin
         {
@@ -453,6 +473,34 @@ paginas_imprimere (
             negotia_pagina_genus_titulus(g->genus),
             (integer)g->titulus.mensura,
             (constans character*)g->titulus.datum);
+    }
+    redde ZEPHYRUM;
+}
+
+/* adumbratio -> PNG; vitium nominatum (exitus I), PNG tamen paginae
+ * vitii scribitur ut videri possit */
+interior s32
+adumbrationem_scribere (
+                chorda  documentum,
+    constans character* via,
+               Piscina* piscina)
+{
+    AdumbratioResultus r;
+
+    thema_initiare();
+    r = adumbrationem_reddere(documentum, ADUMBRATIO_LATITUDO,
+        ADUMBRATIO_ALTITUDO, piscina, internamentum_creare(piscina));
+    si (!adumbrationem_png_scribere(&r, via, piscina))
+    {
+        fprintf(stderr, "negotia: PNG scribi non potest: %s\n", via);
+        redde I;
+    }
+    si (r.vitium.mensura > ZEPHYRUM)
+    {
+        fprintf(stderr, "negotia: adumbratio: %.*s\n",
+            (integer)r.vitium.mensura,
+            (constans character*)r.vitium.datum);
+        redde I;
     }
     redde ZEPHYRUM;
 }
@@ -705,6 +753,24 @@ exsequi (
             }
             redde ZEPHYRUM;
         }
+        casus IMP_PNG:
+        {
+            constans NegotiiPagina* g;
+
+            g = paginam_resolvere(n, a->positiva[ZEPHYRUM], piscina);
+            si (!g)
+            {
+                redde I;
+            }
+            si (g->genus != NEGOTIA_PAGINA_ADUMBRATIO)
+            {
+                fprintf(stderr, "negotia: paginae pictoris nondum"
+                    " (T4)\n");
+                redde I;
+            }
+            redde adumbrationem_scribere(g->corpus, a->positiva[I],
+                piscina);
+        }
         casus IMP_PAGINAE:
             redde paginas_imprimere(n, a->positiva[ZEPHYRUM], piscina);
         casus IMP_PAGINA:
@@ -800,13 +866,32 @@ principale (
             g    = (ImperiumGenus)k;
         }
     }
-    si (   !imp || a.numerus_positivorum != imp->positiva
+    si (   !imp || a.numerus_positivorum != (g == IMP_PNG && a.filum
+               ? I : imp->positiva)
         || (a.vexilla & ~imp->vexilla) != ZEPHYRUM
         || (a.corpus && a.corpus_filum))
     {
         redde usum_imprimere();
     }
     piscina = piscina_generare_dynamicum("negotia", M * M);
+    /* png -filum: sine volumine */
+    si (g == IMP_PNG && a.filum)
+    {
+        chorda documentum;
+
+        si (!corpus_legere(a.filum, piscina, &documentum))
+        {
+            fprintf(stderr, "negotia: filum '%s' legi non potest\n",
+                a.filum);
+            piscina_destruere(piscina);
+            redde I;
+        }
+        exitus = adumbrationem_scribere(documentum,
+            a.positiva[ZEPHYRUM],
+            piscina);
+        piscina_destruere(piscina);
+        redde exitus;
+    }
     si (   a.status
         && !negotia_status_legere(chorda_ex_literis(a.status,
         piscina), &status))

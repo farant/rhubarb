@@ -23,6 +23,7 @@ declare -a SOURCE_FILES=(
     "lib/admonitiones.c"
     "lib/admonitiones_visus.c"
     "lib/admonitiones_volantes.c"
+    "lib/adumbratio.c"
     "lib/aedilis.c"
     "lib/aemulator.c"
     "lib/aemulator_hospes.c"
