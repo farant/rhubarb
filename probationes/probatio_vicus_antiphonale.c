@@ -136,6 +136,12 @@ _iussum_probare (
         c->piscina), "Alpha");
     montatio  = l->montatio;
     id        = l->id;
+    /* P7: porta soni in montatione (mutus et porta nulla in ea
+     * iudicantur) */
+    CREDO_VERUM(((AntiphonaleMontatio*)montatio)->porta.incipere
+        != NIHIL);
+    CREDO_VERUM(((AntiphonaleMontatio*)montatio)->porta.pulsus
+        != NIHIL);
 
     CREDO_GRADUS("$antiphonale(~/b.gabc): idem latus, plagula nova");
     verbum_ferire(x, m, "$antiphonale(~/b.gabc)");

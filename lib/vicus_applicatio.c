@@ -2949,6 +2949,63 @@ aetherophonum_describere (
  * Antiphonale (gabc pars II P6)
  * ================================================== */
 
+/* P7: porta antiphonalis super slotas carminis portae soni - mutus
+ * TOTUS carmen negat (ut aetherophonum); porta nulla aut slota NIHIL =
+ * mutum */
+interior b32
+antiphonae_incipere (
+    vacuum* ctx,
+    chorda  carmen,
+       s64  pulsus)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (   !soni->posita || !soni->vicus || !soni->porta.carmen_incipere
+        || veritas_radicis_vici(soni->vicus, "sonus_mutus"))
+    {
+        redde FALSUM;
+    }
+    redde soni->porta.carmen_incipere(soni->porta.ctx, carmen, pulsus);
+}
+
+interior vacuum
+antiphonae_quaerere (
+    vacuum* ctx,
+       s64  pulsus)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita && soni->porta.carmen_quaerere)
+    {
+        soni->porta.carmen_quaerere(soni->porta.ctx, pulsus);
+    }
+}
+
+interior vacuum
+antiphonae_sistere (
+    vacuum* ctx)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita && soni->porta.carmen_sistere)
+    {
+        soni->porta.carmen_sistere(soni->porta.ctx);
+    }
+}
+
+interior s64
+antiphonae_pulsus (
+    vacuum* ctx)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (!soni->posita || !soni->porta.carmen_pulsus)
+    {
+        redde -I;
+    }
+    redde soni->porta.carmen_pulsus(soni->porta.ctx);
+}
+
 interior b32
 antiphonale_montare_in_vico (
                  vacuum* sedes,
@@ -2962,12 +3019,18 @@ antiphonale_montare_in_vico (
                     i32  altitudo,
                  vacuum* ctx)
 {
-    ContextusSoni* soni = (ContextusSoni*)ctx;
+       ContextusSoni* soni = (ContextusSoni*)ctx;
+    AntiphonalePorta  porta;
 
     (vacuum)volumen;
+    porta.incipere  = antiphonae_incipere;
+    porta.quaerere  = antiphonae_quaerere;
+    porta.sistere   = antiphonae_sistere;
+    porta.pulsus    = antiphonae_pulsus;
+    porta.ctx       = soni;
     redde soni && antiphonale_montare((AntiphonaleMontatio*)sedes,
         piscina, intern, repo, id, argumentum, latitudo, altitudo,
-        NIHIL,
+        &porta,
         soni->systemata);
 }
 

@@ -12,6 +12,7 @@
 #include "gabc.h"
 #include "gabc_compositio.h"
 #include "gabc_pictura.h"
+#include "gabc_carmen.h"
 #include "specula.h"
 #include "reactor.h"
 #include "filum.h"
@@ -31,17 +32,24 @@
 #define ANTIPHONALE_VIA        DXII
 #define ANTIPHONALE_VEXILLUM   CCLVI
 #define MORA_SINE_SPECULA      XVI
+#define MORA_SONANS            XXXIII    /* pulsus dum sonat (P7) */
+#define ANTIPHONALE_GLOBULUS   XVI       /* latitudo globuli canendi */
 #define VISUS_ANTIPHONALIS     I
 
 hic_manens constans character actio_antiphonalis[] =
     "antiphonale.agere";
 
-/* versio bona: unitas una (G18) - textus, cantus; compositio in
- * piscina propria (relaxatio sine versione nova) */
+/* versio bona: unitas una (G18) - textus, cantus, carmen et nexus;
+ * compositio in piscina propria (relaxatio sine versione nova) */
 nomen structura {
             Piscina* piscina;
              chorda  textus;
          GabcCantus* cantus;
+             chorda  carmen;      /* textus libri <carmina>; vacuus =
+                                   * non sonabile (porta legit) */
+  GabcCarmenRelatio  relatio;     /* nexus ordine initii (G11) */
+                s64  finis;       /* pulsus post nexum ultimum */
+          character  causa[CXXVIII];  /* cur non sonabile */
             Piscina* piscina_compositionis;
      GabcCompositio* compositio;
                 i32  latitudo;
@@ -54,6 +62,11 @@ nomen structura {
        Specula* specula;
         Versio* versio;           /* NIHIL = nulla bona */
      character  vexillum[ANTIPHONALE_VEXILLUM];   /* "" = nullum */
+    /* sonus (P7): sonat = petitum nec sistitum; illuminata = syllaba
+     * nexus currentis; electa = syllaba ictu electa sistente (-1) */
+           b32 sonat;
+           s32 illuminata;
+           s32 electa;
 } Antiphonale;
 
 
@@ -259,6 +272,137 @@ pagina_currens (
 
 
 /* ==================================================
+ * Carmen et nexus (P7)
+ * ================================================== */
+
+/* conversor -> textus libri <carmina> in piscina versionis (porta
+ * legit: latus carmen.h nescit); causa si non */
+interior vacuum
+carmen_aedificare (
+    Versio* v)
+{
+      GabcCarmenForma  forma;
+    ChordaAedificator* a;
+    ChordaAedificator* b;
+                  i32  n;
+
+    v->carmen.datum     = NIHIL;
+    v->carmen.mensura   = ZEPHYRUM;
+    v->causa[ZEPHYRUM]  = '\0';
+    gabc_carmen_formam_ordinariam(&forma);
+    a = chorda_aedificator_creare(v->piscina, MMM);
+    b = chorda_aedificator_creare(v->piscina, MMM);
+    si (!a || !b)
+    {
+        sprintf(v->causa, "out of memory");
+        redde;
+    }
+    si (!gabc_carmen_scribere(v->cantus, &forma, v->piscina, a,
+            &v->relatio))
+    {
+        sprintf(v->causa, "%s", v->cantus->numerus_notarum == ZEPHYRUM
+            ? "no notes" : "the converter refused it");
+        redde;
+    }
+    chorda_aedificator_appendere_literis(b, "<carmina>\n");
+    chorda_aedificator_appendere_chorda(b,
+        chorda_aedificator_finire(a));
+    chorda_aedificator_appendere_literis(b, "</carmina>\n");
+    si (v->relatio.numerus_nexuum == ZEPHYRUM)
+    {
+        sprintf(v->causa, "no notes");
+        redde;
+    }
+    v->carmen  = chorda_aedificator_finire(b);
+    n          = v->relatio.numerus_nexuum;
+    v->finis   = v->relatio.nexus[n - I].initium
+               + v->relatio.nexus[n - I].longitudo;
+}
+
+/* nexus ultimus cuius initium <= pulsus (quaestio bipartita); -1 */
+interior s32
+nexus_ad_pulsum (
+    constans Versio* v,
+                s64  pulsus)
+{
+    s32 imum;
+    s32 summum;
+    s32 medium;
+
+    si (   v == NIHIL || v->carmen.mensura == ZEPHYRUM
+        || pulsus < ZEPHYRUM)
+    {
+        redde -I;
+    }
+    imum    = ZEPHYRUM;
+    summum  = (s32)v->relatio.numerus_nexuum;
+    dum (imum < summum)
+    {
+        medium = (imum + summum) / II;
+        si (v->relatio.nexus[medium].initium <= pulsus)
+        {
+            imum = medium + I;
+        }
+        alioquin
+        {
+            summum = medium;
+        }
+    }
+    redde imum - I;
+}
+
+interior s32
+syllaba_ad_pulsum (
+    constans Versio* v,
+                s64  pulsus)
+{
+    s32 n = nexus_ad_pulsum(v, pulsus);
+
+    redde n < ZEPHYRUM ? -I : (s32)v->relatio.nexus[n].syllaba;
+}
+
+/* nexus primus syllabae >= s (directio +I) aut ultimus syllabae <= s
+ * (directio -I, eius syllabae nexus primus); -1 si nullus */
+interior s32
+nexus_syllabae (
+    constans Versio* v,
+                s32  s,
+                s32  directio)
+{
+    s32 i;
+    s32 n;
+    s32 inventa;
+
+    si (v == NIHIL || v->carmen.mensura == ZEPHYRUM)
+    {
+        redde -I;
+    }
+    n = (s32)v->relatio.numerus_nexuum;
+    si (directio > ZEPHYRUM)
+    {
+        per (i = ZEPHYRUM; i < n; i++)
+        {
+            si ((s32)v->relatio.nexus[i].syllaba >= s)
+            {
+                redde i;
+            }
+        }
+        redde -I;
+    }
+    inventa = -I;
+    per (i = n - I; i >= ZEPHYRUM; i--)
+    {
+        si ((s32)v->relatio.nexus[i].syllaba <= s)
+        {
+            inventa = (s32)v->relatio.nexus[i].syllaba;
+            frange;
+        }
+    }
+    redde inventa < ZEPHYRUM ? -I : nexus_syllabae(v, inventa, I);
+}
+
+
+/* ==================================================
  * Lectio (G13)
  * ================================================== */
 
@@ -266,15 +410,17 @@ pagina_currens (
  * destruitur), aliter vexillum. VERUM si quid mutatum */
 interior b32
 relegere (
-    Antiphonale* a)
+    AntiphonaleMontatio* m)
 {
-     character  vexillum[ANTIPHONALE_VEXILLUM];
-       Piscina* p;
-        chorda  textus;
-    GabcCantus* cantus;
-        Versio* nova;
-           b32  mutatum;
-           i32  i;
+    Antiphonale* a = (Antiphonale*)m->figurae_ctx;
+            s64  pulsus;
+      character  vexillum[ANTIPHONALE_VEXILLUM];
+        Piscina* p;
+         chorda  textus;
+     GabcCantus* cantus;
+         Versio* nova;
+            b32  mutatum;
+            i32  i;
 
     si (a->via[ZEPHYRUM] == '\0')
     {
@@ -335,10 +481,13 @@ relegere (
             nova = (Versio*)piscina_allocare(p, magnitudo(Versio));
             si (nova)
             {
-                memset(nova, ZEPHYRUM, magnitudo(Versio));
-                nova->piscina  = p;
-                nova->textus   = textus;
-                nova->cantus   = cantus;
+                memset(nova, ZEPHYRUM,
+                    magnitudo(Versio));
+                nova->piscina =
+                                                           p;
+                nova->textus = textus;
+                nova->cantus = cantus;
+                carmen_aedificare(nova);
             }
         }
         si (nova == NIHIL)
@@ -350,7 +499,37 @@ relegere (
     strcpy(a->vexillum, vexillum);
     si (nova)
     {
-        /* vetus solum post novam aedificatam */
+        /* G18: sonans ad pulsum eundem in versionem novam transit
+         * (cantor monstratorem solum tenet); brevior aut non sonabilis
+         * sistit. Vetus solum post novam aedificatam et traditam */
+        si (a->sonat)
+        {
+            pulsus =
+                m->porta.pulsus ? m->porta.pulsus(m->porta.ctx) : -I;
+            si (pulsus < ZEPHYRUM)
+            {
+                a->sonat = FALSUM;
+            }
+            alioquin si (   nova->carmen.mensura == ZEPHYRUM
+                         || pulsus               >= nova->finis
+                         || !m->porta.incipere)
+            {
+                si (m->porta.sistere)
+                {
+                    m->porta.sistere(m->porta.ctx);
+                }
+                a->sonat = FALSUM;
+            }
+            alioquin si (!m->porta.incipere(m->porta.ctx, nova->carmen,
+                             pulsus))
+            {
+                a->sonat = FALSUM;
+            }
+            si (!a->sonat)
+            {
+                a->illuminata = -I;
+            }
+        }
         versionem_destruere(a->versio);
         a->versio  = nova;
         mutatum    = VERUM;
@@ -370,6 +549,13 @@ viam_ponere (
         specula_claudere(a->specula);
         a->specula = NIHIL;
     }
+    si (a->sonat && m->porta.sistere)
+    {
+        m->porta.sistere(m->porta.ctx);
+    }
+    a->sonat       = FALSUM;
+    a->illuminata  = -I;
+    a->electa      = -I;
     versionem_destruere(a->versio);
     a->versio              = NIHIL;
     a->vexillum[ZEPHYRUM]  = '\0';
@@ -380,7 +566,7 @@ viam_ponere (
         a->via[ANTIPHONALE_VIA - I] = '\0';
         a->specula = specula_creare(m->piscina, a->via);
     }
-    (vacuum)relegere(a);
+    (vacuum)relegere(m);
 }
 
 
@@ -483,7 +669,125 @@ fac_minus (
     redde spatium_movere((AntiphonaleMontatio*)ctx, -II);
 }
 
+/* syllaba visa sonans aut electa */
+interior s32
+syllaba_currens (
+    constans Antiphonale* a)
+{
+    redde a->sonat ? a->illuminata : a->electa;
+}
+
+/* sonans: quaerere ad nexum; sistens: eligere */
+interior b32
+ad_syllabam_ire (
+    AntiphonaleMontatio* m,
+                    s32  nexus)
+{
+    Antiphonale* a = (Antiphonale*)m->figurae_ctx;
+            s32  s;
+
+    si (nexus < ZEPHYRUM || a->versio == NIHIL)
+    {
+        redde VERUM;
+    }
+    s = (s32)a->versio->relatio.nexus[nexus].syllaba;
+    si (a->sonat)
+    {
+        si (m->porta.quaerere)
+        {
+            m->porta.quaerere(m->porta.ctx,
+                a->versio->relatio.nexus[nexus].initium);
+        }
+        a->illuminata = s;
+    }
+    alioquin
+    {
+        a->electa = s;
+    }
+    redde VERUM;
+}
+
+interior b32
+fac_canere (
+    vacuum* ctx)
+{
+    AntiphonaleMontatio* m = (AntiphonaleMontatio*)ctx;
+            Antiphonale* a = (Antiphonale*)m->figurae_ctx;
+                    s32  nexus;
+                    s64  pulsus;
+
+    si (a->sonat)
+    {
+        si (m->porta.sistere)
+        {
+            m->porta.sistere(m->porta.ctx);
+        }
+        a->sonat       = FALSUM;
+        a->electa      = a->illuminata;
+        a->illuminata  = -I;
+        redde VERUM;
+    }
+    si (a->versio == NIHIL)
+    {
+        redde VERUM;
+    }
+    si (a->versio->carmen.mensura == ZEPHYRUM)
+    {
+        sprintf(a->vexillum, "not playable: %.200s", a->versio->causa);
+        redde VERUM;
+    }
+    si (!m->porta.incipere)
+    {
+        redde VERUM;
+    }
+    nexus   = a->electa >= ZEPHYRUM ? nexus_syllabae(a->versio,
+        a->electa,
+                  I) : ZEPHYRUM;
+    pulsus  = nexus
+        >= ZEPHYRUM ? a->versio->relatio.nexus[nexus].initium
+                                : ZEPHYRUM;
+    si (m->porta.incipere(m->porta.ctx, a->versio->carmen, pulsus))
+    {
+        a->sonat       = VERUM;
+        a->illuminata  = syllaba_ad_pulsum(a->versio, pulsus);
+        a->electa      = -I;
+    }
+    redde VERUM;
+}
+
+interior b32
+fac_priorem_syllabam (
+    vacuum* ctx)
+{
+    AntiphonaleMontatio* m = (AntiphonaleMontatio*)ctx;
+            Antiphonale* a = (Antiphonale*)m->figurae_ctx;
+                    s32  s = syllaba_currens(a);
+
+    si (s <= ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    redde ad_syllabam_ire(m, nexus_syllabae(a->versio, s - I, -I));
+}
+
+interior b32
+fac_proximam_syllabam (
+    vacuum* ctx)
+{
+    AntiphonaleMontatio* m = (AntiphonaleMontatio*)ctx;
+            Antiphonale* a = (Antiphonale*)m->figurae_ctx;
+
+    redde ad_syllabam_ire(m, nexus_syllabae(a->versio,
+        syllaba_currens(a) + I, I));
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
+    { "antiphonale.canere", "Play / stop", " ", VISUS_ANTIPHONALIS,
+        ZEPHYRUM, fac_canere },
+    { "antiphonale.syllaba_prior", "Previous syllable", "Left",
+        VISUS_ANTIPHONALIS, ZEPHYRUM, fac_priorem_syllabam },
+    { "antiphonale.syllaba_proxima", "Next syllable", "Right",
+        VISUS_ANTIPHONALIS, ZEPHYRUM, fac_proximam_syllabam },
     { "antiphonale.proxima", "Next page", "PageDown",
         VISUS_ANTIPHONALIS,
         ZEPHYRUM, fac_proximam },
@@ -548,9 +852,44 @@ agere (
         {
             redde paginam_movere(m, -I);
         }
-        si (chorda_aequalis_literis(nodus->id, "sagitta_proxima"))
+        si (chorda_aequalis_literis(nodus->id,
+                     "sagitta_proxima"))
         {
             redde paginam_movere(m, I);
+        }
+        si (chorda_aequalis_literis(nodus->id, "globulus_canere"))
+        {
+            redde fac_canere(m);
+        }
+        si (chorda_aequalis_literis(nodus->id, "antiphonale"))
+        {
+               Antiphonale* a     = (Antiphonale*)m->figurae_ctx;
+            GabcCompositio* comp  = compositio_currens(m);
+                   Punctum  p;
+                       s32  s;
+
+            si (comp == NIHIL)
+            {
+                redde FALSUM;
+            }
+            p.x  = (s32)ev->datum.mus.x;
+            p.y  = (s32)ev->datum.mus.y;
+            p    = destinatio_ad_locale(nodus, p);
+            s    = gabc_compositio_syllaba_ad_punctum(comp,
+                (i32)pagina_currens(m, comp), p.x
+                    - ANTIPHONALE_LIMBUS_X,
+                p.y - ANTIPHONALE_LIMBUS_Y);
+            si (s < ZEPHYRUM)
+            {
+                redde FALSUM;
+            }
+            si (a->sonat)
+            {
+                redde ad_syllabam_ire(m, nexus_syllabae(a->versio, s,
+                    I));
+            }
+            a->electa = s;
+            redde VERUM;
         }
     }
     redde FALSUM;
@@ -629,11 +968,13 @@ figura_antiphonalis (
        constans Antiphonale* a;
     constans GabcCompositio* comp;
                       Fines  f;
+          GabcPicturaStatus  status;
                       Fines  fundus;
                       Fines  vexillum;
                      chorda  titulus;
                   character  pes[CCLVI];
                         s32  pagina;
+                        s32  y_pedis;
 
     (vacuum)thema;
     f.x         = ZEPHYRUM;
@@ -673,19 +1014,34 @@ figura_antiphonalis (
     pagina = pagina_currens(m, comp);
     si (comp)
     {
+        status.syllaba_illuminata  = syllaba_currens(a);
+        status.nota_illuminata     = -I;
         (vacuum)gabc_paginam_pingere(comp, (i32)pagina,
-            ANTIPHONALE_LIMBUS_X, ANTIPHONALE_LIMBUS_Y, NIHIL, md);
+            ANTIPHONALE_LIMBUS_X, ANTIPHONALE_LIMBUS_Y, &status, md);
     }
     /* linea ima: "< titulus · 2/5 >" */
     titulus = titulum_capere(m);
-    sprintf(pes, "<  %.*s  %d/%u  >", (integer)(titulus.mensura > C
+    /* "<  >/#  titulus  2/5  >": sagitta, globulus canendi (sonans
+     * quadratum, aliter triangulum), titulus et pagina, sagitta */
+    y_pedis = f.altitudo - ANTIPHONALE_LIMBUS_Y - ANTIPHONALE_LINEA
+        + II;
+    textum_pingere(md, ANTIPHONALE_LIMBUS_X + II, y_pedis,
+        chorda_ex_literis("<", md->piscina), COLOR_TEXT);
+    textum_pingere(md, ANTIPHONALE_LIMBUS_X + ANTIPHONALE_SAGITTA,
+        y_pedis,
+        chorda_ex_literis(a->sonat ? "\xE2\x96\xA0" : "\xE2\x96\xB6",
+            md->piscina), a->sonat ? COLOR_ACCENT_PRIMARY : COLOR_TEXT);
+    sprintf(pes, "%.*s  %d/%u", (integer)(titulus.mensura > C
         ? C : titulus.mensura), titulus.datum
         ? (constans character*)titulus.datum : "",
         (integer)(pagina + I),
         comp ? (unsigned)comp->numerus_paginarum : 0u);
-    textum_pingere(md, ANTIPHONALE_LIMBUS_X + II, f.altitudo
-        - ANTIPHONALE_LIMBUS_Y - ANTIPHONALE_LINEA + II,
-        chorda_ex_literis(pes, md->piscina), COLOR_TEXT);
+    textum_pingere(md, ANTIPHONALE_LIMBUS_X + ANTIPHONALE_SAGITTA
+        + ANTIPHONALE_GLOBULUS, y_pedis, chorda_ex_literis(pes,
+        md->piscina), COLOR_TEXT);
+    textum_pingere(md, f.latitudo - ANTIPHONALE_LIMBUS_X - VIII,
+        y_pedis,
+        chorda_ex_literis(">", md->piscina), COLOR_TEXT);
     /* vexillum vitii supra paginam */
     si (a->vexillum[ZEPHYRUM])
     {
@@ -718,6 +1074,7 @@ antiphonale_componere (
               Componens* radix;
               Componens* prior;
               Componens* proxima;
+              Componens* globulus;
                   Fines  f;
                   Fines  s;
 
@@ -731,9 +1088,12 @@ antiphonale_componere (
         PARTES_TABULA);
     prior    = componens_creare(piscina, intern, "sagitta_prior",
         PARTES_NULLUM);
-    proxima  = componens_creare(piscina, intern, "sagitta_proxima",
+    proxima  = componens_creare(piscina, intern,
+                               "sagitta_proxima",
+                               PARTES_NULLUM);
+    globulus = componens_creare(piscina, intern, "globulus_canere",
         PARTES_NULLUM);
-    si (!radix || !prior || !proxima)
+    si (!radix || !prior || !proxima || !globulus)
     {
         redde radix;
     }
@@ -756,9 +1116,16 @@ antiphonale_componere (
     componens_ponere_actio(prior, actio_antiphonalis);
     s.x = f.latitudo - ANTIPHONALE_LIMBUS_X - ANTIPHONALE_SAGITTA;
     componens_ponere_fines(proxima, s);
-    componens_ponere_actio(proxima, actio_antiphonalis);
+    componens_ponere_actio(proxima,
+        actio_antiphonalis);
+    s.x = ANTIPHONALE_LIMBUS_X
+                                    + ANTIPHONALE_SAGITTA;
+    s.latitudo = ANTIPHONALE_GLOBULUS;
+    componens_ponere_fines(globulus, s);
+    componens_ponere_actio(globulus, actio_antiphonalis);
     componens_addere_liberum(radix, prior);
     componens_addere_liberum(radix, proxima);
+    componens_addere_liberum(radix, globulus);
     redde radix;
 }
 
@@ -808,6 +1175,8 @@ antiphonale_montare (
         redde FALSUM;
     }
     memset(a, ZEPHYRUM, magnitudo(Antiphonale));
+    a->illuminata   = -I;
+    a->electa       = -I;
     m->figurae_ctx  = a;
     m->actiones     = actio_registrum_creare(piscina, intern);
     m->figurae      = figura_registrum_creare(piscina);
@@ -847,8 +1216,12 @@ b32
 antiphonale_pulsare (
     vacuum* ctx)
 {
-    AntiphonaleMontatio* m = (AntiphonaleMontatio*)ctx;
-            Antiphonale* a;
+     AntiphonaleMontatio* m = (AntiphonaleMontatio*)ctx;
+             Antiphonale* a;
+          GabcCompositio* comp;
+                     s64  pulsus;
+                     s32  s;
+                     b32  mutatum;
 
     si (!m || !m->figurae_ctx)
     {
@@ -859,14 +1232,46 @@ antiphonale_pulsare (
     {
         redde FALSUM;
     }
+    mutatum = FALSUM;
     si (a->specula == NIHIL)
     {
         /* platforma sine specula aut directorium absens: relegere ut
          * pulsus crebri */
-        a->specula = specula_creare(m->piscina, a->via);
-        redde relegere(a);
+        a->specula  = specula_creare(m->piscina, a->via);
+        mutatum     = relegere(m);
     }
-    redde specula_exhaurire(a->specula) && relegere(a);
+    alioquin si (specula_exhaurire(a->specula))
+    {
+        mutatum = relegere(m);
+    }
+    /* sonus (P7): syllaba nexus currentis illuminatur, pagina eam
+     * sequitur (etiam post relaxationem: zoom, permutatio). Illuminatio
+     * sonum mora apparatus praecedit (v1, worklog) */
+    si (a->sonat)
+    {
+        pulsus = m->porta.pulsus ? m->porta.pulsus(m->porta.ctx) : -I;
+        s      = pulsus < ZEPHYRUM ? -I : syllaba_ad_pulsum(a->versio,
+                     pulsus);
+        si (pulsus < ZEPHYRUM)
+        {
+            a->sonat = FALSUM;
+        }
+        si (s != a->illuminata)
+        {
+            a->illuminata  = s;
+            mutatum        = VERUM;
+        }
+        comp = s >= ZEPHYRUM ? compositio_currens(m) : NIHIL;
+        si (   comp && s < (s32)comp->numerus_syllabarum
+            && comp->syllabae[s].pagina >= ZEPHYRUM
+            && comp->syllabae[s].pagina != pagina_currens(m, comp))
+        {
+            (vacuum)numerum_scribere(m, "pagina",
+                comp->syllabae[s].pagina);
+            mutatum = VERUM;
+        }
+    }
+    redde mutatum;
 }
 
 Mora
@@ -884,6 +1289,10 @@ antiphonale_mora (
     si (a->via[ZEPHYRUM] == '\0')
     {
         redde -I;
+    }
+    si (a->sonat)
+    {
+        redde MORA_SONANS;
     }
     redde a->specula ? -I : MORA_SINE_SPECULA;
 }

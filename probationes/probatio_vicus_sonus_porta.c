@@ -5,8 +5,8 @@
  * FICTUS (mixtura offline, horologium manuale, iussa servata) - nihil
  * sonat. Tempus procedit: mixtura redditur, deinde porta->agere (ut
  * vicus omni pulsu). Carmen: incipere -> pulsus crescit; quaerere
- * salit; sistere et tacere (mutus) -> -1; finis naturalis -> -1;
- * agere cantorem agit (notae post primam iubentur). */
+ * salit; textus malus FALSUM; sistere et tacere (mutus) -> -1; finis
+ * naturalis -> -1; agere cantorem agit (notae post primam iubentur). */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -140,21 +140,13 @@ _currere (
     }
 }
 
-interior constans Carmen*
+/* textus libri (porta eum legit) */
+interior chorda
 _carmen (
         CredoContextus* c,
     constans character* stml)
 {
-           Carmina* liber;
-    CarminisVitium  vitium;
-
-    liber = (Carmina*)piscina_allocare(c->piscina, magnitudo(Carmina));
-    si (!carmina_legere(chorda_ex_literis(stml, c->piscina), c->piscina,
-                        liber, &vitium) || liber->numerus < I)
-    {
-        redde NIHIL;
-    }
-    redde &liber->carmina[ZEPHYRUM];
+    redde chorda_ex_literis(stml, c->piscina);
 }
 
 interior i32
@@ -178,13 +170,18 @@ interior vacuum
 _carmen_probare (
     CredoContextus* c)
 {
-    constans Carmen* scala;
-    constans Carmen* breve;
-                s64  pulsus;
+             chorda scala;
+             chorda breve;
+                s64 pulsus;
 
     scala = _carmen(c, CARMEN_SCALA);
     breve = _carmen(c, CARMEN_BREVE);
-    CREDO_NECESSE (scala != NIHIL && breve != NIHIL);
+    CREDO_GRADUS ("textus malus: FALSUM");
+    CREDO_NECESSE (scala.mensura > ZEPHYRUM
+        && breve.mensura > ZEPHYRUM);
+    CREDO_FALSUM (porta.carmen_incipere != NIHIL
+        && porta.carmen_incipere(porta.ctx, _carmen(c, "<carmina>"),
+               ZEPHYRUM));
     CREDO_NECESSE (porta.ctx != NIHIL && porta.carmen_incipere != NIHIL
         && porta.carmen_quaerere != NIHIL
         && porta.carmen_sistere != NIHIL

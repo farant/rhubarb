@@ -8,6 +8,7 @@
 #include "cantuale.h"
 #include "fenestra_tempus.h"
 #include "cantor.h"
+#include "carmen.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -33,6 +34,9 @@ nomen structura {
              Piscina* piscina;
               Cantor* cantor;
                  b32  carmen_sonat;
+    /* carmen sonans in piscina propria (lectum ex textu); vetus post
+     * cantor_incipere novi destruitur */
+            Piscina* carmen_piscina;
 } PortaSoni;
 
 
@@ -167,14 +171,20 @@ porta_tacere (
     tintinnabulum_tacere(p->t);
 }
 
-/* carmen a pulso; etiam permutatio (cantor solum monstratorem tenet) */
+/* textus libri a pulso; etiam permutatio: lectum in piscinam novam,
+ * cantor id accipit (solum monstratorem tenet), deinde vetus
+ * destruitur. Textus malus: nihil mutatum */
 interior b32
 porta_carmen_incipere (
-                     vacuum* ctx,
-    constans structura Carmen* carmen,
-                        s64  pulsus)
+    vacuum* ctx,
+    chorda  carmen,
+       s64  pulsus)
 {
-    PortaSoni* p = (PortaSoni*)ctx;
+         PortaSoni* p = (PortaSoni*)ctx;
+           Piscina* nova;
+           Carmina* liber;
+    CarminisVitium  vitium;
+               b32  incepit;
 
     si (p->cantor == NIHIL)
     {
@@ -185,8 +195,34 @@ porta_carmen_incipere (
         }
         cantor_regio(p->cantor, FALSUM, ZEPHYRUM, ZEPHYRUM);
     }
-    p->carmen_sonat = cantor_incipere(p->cantor, carmen, pulsus);
-    redde p->carmen_sonat;
+    nova = piscina_generare_dynamicum("vicus_carmen",
+             (memoriae_index)(CCLVI * MXXIV));
+    liber = nova ? (Carmina*)piscina_allocare(nova, magnitudo(Carmina))
+                 : NIHIL;
+    memset(&vitium, ZEPHYRUM, magnitudo(vitium));
+    si (   !liber || !carmina_legere(carmen, nova, liber, &vitium)
+        || liber->numerus < I)
+    {
+        si (nova)
+        {
+            piscina_destruere(nova);
+        }
+        redde FALSUM;
+    }
+    incepit = cantor_incipere(p->cantor, &liber->carmina[ZEPHYRUM],
+        pulsus);
+    si (!incepit)
+    {
+        piscina_destruere(nova);
+        redde FALSUM;
+    }
+    si (p->carmen_piscina)
+    {
+        piscina_destruere(p->carmen_piscina);
+    }
+    p->carmen_piscina  = nova;
+    p->carmen_sonat    = VERUM;
+    redde VERUM;
 }
 
 interior vacuum

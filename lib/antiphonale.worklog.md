@@ -51,3 +51,36 @@ textured. Now, as navigator and chronica: a COLOR_BACKGROUND rectangle
 inside a 6 x 8 border (ANTIPHONALE_LIMBUS_X/Y), and the page, banner,
 bottom line and arrow hit areas all live inside it; the layout width and
 height shrink by the border. Test `_fundus_intra_limbum` (red before).
+
+## 2026-11-05 — P7: playback in the pane
+
+Space (or the ▶/■ button in the bottom line) plays from pulse 0 or from
+the selected syllable and stops; a click selects a syllable when stopped
+and seeks to its first link row when playing; Left/Right go to the
+previous/next syllable that has notes. Every pulse while playing (mora
+XXXIII) reads the port's pulse, lights the syllable of the last link row
+whose start <= pulse (binary search; a breath between incisa keeps the
+previous syllable lit), and turns the page to it — also after a zoom or
+a swap moved it (Review Focus 5). A good save while playing calls
+incipere(new, P) BEFORE the old version is destroyed; a version shorter
+than P, or not playable, stops; a bad save keeps playing the old one
+(G18). A chant with no notes draws, and Space says "not playable: <why>"
+in the banner (Review Focus 2). The highlight leads the sound by the
+audio device latency (cantor's pulse is the mixer clock) — accepted v1.
+
+**The pane must not know carmen.h.** First cut built the Carmen in the
+pane (carmina_legere) and ludus_tessera — which links vicus — failed on
+mixtura/sonus/tibia: carmen.c pulls the sound engine. vicus_sonus.h says
+vicus knows no sound. So the pane only runs the converter (gabc_carmen:
+text + link table, pure) and hands the carmen TEXT to the port; the
+port (vicus_sonus_porta.c, sound tier) parses it into its own piscina
+and frees the previous one after cantor holds the new. P5's slot changed
+from `constans Carmen*` to `chorda` accordingly.
+
+**Closing the pane while playing** leaves the sound running until it
+ends or vicus mutes — vicus has no unmount hook for panes yet.
+
+**Editing lesson:** a whitespace-tolerant regex replace (indentation as
+`\s+`) swallowed the newline before each replaced block and joined ~26
+line pairs; caught by the formatter's long-line report, split by a
+script restricted to the added lines. Exact replacements from now on.

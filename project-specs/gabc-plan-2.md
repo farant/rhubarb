@@ -713,6 +713,16 @@ part 1 link table `GabcCarmenRelatio.nexus` (rows sorted by
   pulse 0; page does not follow).
 - [ ] **Step 4: Commit.**
 
+**Executed 2026-11-05.** All six test sections as planned plus the play
+button ("globulus_canere") in the bottom line. Design change: the pane
+hands the carmen as TEXT to the port, which parses it — P5's
+`carmen_incipere` slot now takes `chorda` (the pane may not link
+carmen.h: it pulls mixtura/sonus into vicus and ludus_tessera). vicus
+wraps the slots in an AntiphonalePorta that refuses when muted. Tests:
+antiphonale_latus 9 sections, vicus_antiphonale (port wired),
+vicus_sonus_porta (bad text FALSE), vicus 34/34, ludus_tessera 8/8 with
+no sound libraries. Plants: two, red then green.
+
 ---
 
 ## Task P8: Steering, the first composition, Fran tries it (STOP)

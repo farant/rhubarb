@@ -220,8 +220,8 @@ declare -a RADIX_FONTES=(
     "gabc"
     "gabc_compositio"
     "gabc_pictura"
-    "neumae_ductae"
-    # aemulator A3: reditus (tessera -> octeti -> aemulator)
+    "neumae_ductae"    "gabc_carmen"     # gabc pars II P7: textus carminis (porta legit)
+# aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
     "sors"
     # vicus-latera S1c: terminale genus vici (tabula t1 ordinaria)

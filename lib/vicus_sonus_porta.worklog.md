@@ -67,3 +67,12 @@ constructor `vicus_sonus_porta()` moved to lib/vicus_sonus_auditus.c
 vicus_terminalis.c include. Forma constants VICUS_SONUS_VOCES/ANULI are
 shared through the header. `Carmen` got a struct tag so vicus_sonus.h
 can name `structura Carmen` without including carmen.h.
+
+## 2026-11-05 — P7: carmen_incipere takes TEXT
+
+The slot now takes the book text (`chorda`, a <carmina> with the carmen
+first), not a Carmen*: the antiphonale pane must not link carmen.h (it
+pulls the sound engine into vicus and ludus_tessera). The port parses
+into a fresh piscina, hands it to cantor_incipere, then destroys the
+previous carmen's piscina (G18 ownership lives here now). Bad text:
+FALSE, previous carmen keeps playing.

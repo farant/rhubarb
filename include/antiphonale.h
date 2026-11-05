@@ -40,12 +40,10 @@
 #include "organum_montatio.h"
 #include "fasti.h"
 
-/* carmen.h non includitur in capite (vicus musicam nescit) */
-structura Carmen;
-
 nomen structura {
-    b32    (*incipere)(vacuum* ctx, constans structura Carmen* carmen,
-                       s64 pulsus);
+    /* carmen = textus libri <carmina> (gabc_carmen.h + involucrum):
+     * porta eum legit (latus carmen.h nescit - stratum soni) */
+    b32    (*incipere)(vacuum* ctx, chorda carmen, s64 pulsus);
     vacuum (*quaerere)(vacuum* ctx, s64 pulsus);
     vacuum (*sistere)(vacuum* ctx);
     s64    (*pulsus)(vacuum* ctx);       /* -1 si non sonat */
