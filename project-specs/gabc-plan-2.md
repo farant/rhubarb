@@ -575,6 +575,16 @@ s64    (*carmen_pulsus)(vacuum* ctx);    /* -1 si non sonat */
   pulsus without the sonat check).
 - [ ] **Step 4: Commit** (gates `radix` + whatever commissio owes for
   vicus files; `ludus_tessera` links vicus_applicatio).
+**Executed 2026-11-04.** Slots as specified; validation needed no
+change. Real port tested on a fake exitus in a NEW file
+`probationes/probatio_vicus_sonus_porta.c` (vicus app tests keep their
+fake port) through a new `vicus_sonus_porta_cum_exitu`; that pulled
+CoreAudio into the test archive, so the CoreAudio constructor moved to
+`lib/vicus_sonus_auditus.c` (apps include `vicus_sonus_auditus.h`).
+`Carmen` gained a struct tag (forward-declared in vicus_sonus.h). Port
+keeps its own playing flag (cantor_sonat lingers after sistere).
+Cantor swap: position after 1 s is 2 quarters minus ~50 ms start margin
+(concentus mora + margo); ASan clean. Plants: two, red then green.
 
 ---
 

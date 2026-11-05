@@ -13,6 +13,9 @@
 #include "latina.h"
 #include "chorda.h"
 
+/* carmen.h non includitur (vicus musicam nescit): tag solum */
+structura Carmen;
+
 nomen structura {
     /* occasio: genus admonitionis ("permissio", "finis", "vitium");
      * FALSUM = nihil sonat (genus sine cantione, exitus nullus) */
@@ -42,6 +45,20 @@ nomen structura {
      * clausuram (CONCENTUS_QUIES post sonum ultimum); -1 si clausus.
      * NIHIL = XVI (mos vetus) */
     s64    (*mora)(vacuum* ctx);
+    /* CARMEN (gabc pars II P5, tabula antiphonale): slotae OPTIONALES -
+     * NIHIL licet (portae fictae veteres, porta sine cantore).
+     * incipere: carmen novum a pulso dato - etiam PERMUTATIO (G18:
+     * versio nova ad pulsum currentem; carmen vetus statim liberari
+     * potest, cantor solum monstratorem tenet). Carmen vivat dum
+     * sonat. FALSUM = exitus recusat. */
+    b32    (*carmen_incipere)(vacuum* ctx,
+                              constans structura Carmen* carmen,
+                              s64 pulsus);
+    vacuum (*carmen_quaerere)(vacuum* ctx, s64 pulsus);
+    vacuum (*carmen_sistere)(vacuum* ctx);
+    /* positio currens in pulsibus (horologium exitus, sine mora
+     * apparatus); -1 si carmen non sonat (sistitum, finitum, mutus) */
+    s64    (*carmen_pulsus)(vacuum* ctx);
     vacuum* ctx;
 } VicusPortaSoni;
 

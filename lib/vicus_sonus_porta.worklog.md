@@ -38,3 +38,32 @@ their gates first, then the tintinnabulum's quiesce closes the device
 after the releases. PortaSoni is now memset - piscina_allocare memory is
 not zeroed, and garbage handles could have read as live. No unit test
 (real CoreAudio); Fran's ears.
+
+## 2026-11-04 — gabc part 2 P5: carmen in the port; CoreAudio split out
+
+Four OPTIONAL slots in VicusPortaSoni (carmen_incipere / quaerere /
+sistere / pulsus); old fakes leave them NIHIL and
+vicus_applicatio_soni_portam_ponere keeps validating only the old ones.
+The Cantor is created lazily on the port's concentus at the first
+carmen_incipere; porta_agere calls cantor_agere after concentus_agere;
+tacere (mute) stops it. `carmen_incipere` is also the G18 swap: cantor
+holds only the carmen pointer and its voices store part indices, so the
+old carmen may be freed the moment it returns (probatio_cantor
+"permutatio": old carmen poisoned + piscina destroyed, ASan via
+tools/sonda.sh clean).
+
+**Own "playing" flag.** cantor_sonat stays VERUM for a moment after
+cantor_sistere while voices fade, so carmen_pulsus = -1 unless the port's
+flag (set by incipere, cleared by sistere/tacere) AND cantor_sonat
+(natural end) both hold.
+
+**Split.** Testing the real port on a fake exitus pulled
+concentus_auditus -> auditus_macos.m into the test archive, and the test
+link carries no AudioToolbox — EVERY test stopped linking. So this file
+now builds the port over any ConcentusExitus
+(vicus_sonus_porta_cum_exitu) and knows no CoreAudio; the CoreAudio
+constructor `vicus_sonus_porta()` moved to lib/vicus_sonus_auditus.c
+(include/vicus_sonus_auditus.h), which only apps/vicus/vicus.c and
+vicus_terminalis.c include. Forma constants VICUS_SONUS_VOCES/ANULI are
+shared through the header. `Carmen` got a struct tag so vicus_sonus.h
+can name `structura Carmen` without including carmen.h.

@@ -410,6 +410,7 @@ declare -a SOURCE_FILES=(
     "lib/vicus_applicatio.c"
     "lib/vicus_quaestio_interna.c"
     "lib/vicus_quaestio_porta.c"
+    "lib/vicus_sonus_porta.c"
     "lib/vigilia.c"
     "lib/villa_agens.c"
     "lib/villa_lectores.c"
