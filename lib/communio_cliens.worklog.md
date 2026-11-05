@@ -156,3 +156,26 @@ INTRARE/CONFIRMARE requests are left alone.
 - **Registration lives in memory only** until 204 - the app calls `pulsum_inscribere` at every launch and when iOS hands a new token, so nothing to persist.
 - **Hook gets the accepted acts, not "spatia"** (plan said spatia): a picture's space is pictor's notion (document path prefix), not communio's - the device's communio space is one per device and the client never needs it. `CommunioMissa(ctx, acta, numerus)` gets the first `accepta` acts of the batch (refused ones never), copied into a contiguous array in the lane's arena, valid only during the call. pictor (T9) maps them to `<replica>:<spatium>`.
 - Test trap: the partial-acceptance case must use the *second* device token - the first device's replica binding was already taken by the earlier volume in the same section (409 at bind, nothing uploaded, hook silent).
+
+## 2026-11-05 — tergum T3: `tractiones_vacuae`, `mora` in status, public default
+
+Background wake (tergum) needs a "caught up" signal, and `communio_cliens_otiosus`
+can't give one: with a long-poll, DESCENSUS is always in flight, so `otiosus` is
+never true. The new counter `tractiones_vacuae` rises once per DESCENSUS pull
+that *succeeded* with no acts and no `plura` - the same branch in `_importare`
+that sets `s->otiosa = VERUM`. A pull that imported something, or said `plura`,
+doesn't count; a failed pull doesn't count either (it never reaches
+`_importare`'s tail). So "counter passed the value noted before renovare" means
+"a full pull chain ran to the end after that point" - including the plura case.
+
+Test "tractiones vacuae (tergum)": D acts on A (> 2 pages of CC, so `plura`
+twice), B stopped while A uploads, then B notes v0, renovare, and the loop
+checks the counter after every reactor pass. At the first moment it passes v0,
+B's `recepta` == all of A's communicable acts. Mutation check: moving the `++`
+above the plura branch (count every successful pull) fails that assertion
+(recepta short) - so it pins the exact branch.
+
+`mora` copies `cliens->mora` (seconds). `MORA_ORDINARIA` moved from the .c to
+the header as `COMMUNIO_MORA_ORDINARIA` (XXV) so pictor can restore it after a
+wake without guessing - restoring `pc->mora` alone would put 0 in production,
+where nobody set it.

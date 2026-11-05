@@ -1532,6 +1532,90 @@ _sectio_derivata_multa (
 
 
 /* ==================================================
+ * tergum T3: tractiones vacuae - "assecutus" pro excitatione
+ * ================================================== */
+
+/* reactor agitur donec tractiones_vacuae > v0 (aut tectum); numerus
+ * post OMNEM gyrum probatur, ut momentum ipsum capiatur */
+interior b32
+donec_vacua_post (
+             Orbis* o,
+    CommunioCliens* c,
+               i32  v0,
+               i32  tectum_ms)
+{
+    i32 gyri;
+
+    per (gyri = ZEPHYRUM; communio_cliens_status(c).tractiones_vacuae
+         <= v0 && gyri < tectum_ms / X; gyri++)
+    {
+        (vacuum)reactor_poll(o->reactor, X);
+    }
+    redde communio_cliens_status(c).tractiones_vacuae > v0;
+}
+
+interior vacuum
+_sectio_tractiones_vacuae (
+    CredoContextus* c)
+{
+             Orbis  o;
+           Volumen* va;
+           Volumen* vb;
+    CommunioCliens* ca;
+    CommunioCliens* cb;
+               i32  k;
+               i32  v0;
+               i32  summa;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    va = volumen_temporarium(piscina, "probatio_communio_va");
+    vb = volumen_temporarium(piscina, "probatio_communio_vb");
+    CREDO_NECESSE(va && vb);
+    ca = clientem(&o, va, o.ta, NIHIL);
+    cb = clientem(&o, vb, o.tb, NIHIL);
+    CREDO_NECESSE(ca && cb);
+
+    CREDO_GRADUS("mora in statu");
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).mora,
+        COMMUNIO_MORA_ORDINARIA);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).mora, ZEPHYRUM);
+
+    CREDO_GRADUS("servus vacuus: tractio vacua numeratur");
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).tractiones_vacuae,
+        ZEPHYRUM);
+    communio_cliens_incipere(cb);
+    CREDO_VERUM(donec_vacua_post(&o, cb, ZEPHYRUM, M * V));
+    communio_cliens_sistere(cb);
+
+    CREDO_GRADUS("assecutus = completus (plura bis)");
+    per (k = ZEPHYRUM; k < D; k++)
+    {
+        CREDO_NECESSE(actum_addere(va, "x/actum", "{}") > ZEPHYRUM);
+    }
+    summa = acta_communicanda(va);
+    CREDO_NECESSE(summa > (i32)COMMUNIO_ACTA_MAXIMA * (i32)II);
+    communio_cliens_incipere(ca);
+    CREDO_NECESSE(donec_otiosus(&o, ca, M * V));
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).recepta, ZEPHYRUM);
+    communio_cliens_incipere(cb);
+    v0 = communio_cliens_status(cb).tractiones_vacuae;
+    communio_cliens_renovare(cb);
+    CREDO_VERUM(donec_vacua_post(&o, cb, v0, M * V));
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).recepta, summa);
+    CREDO_AEQUALIS_I32(acta_replicae(vb, volumen_replica(va)), summa);
+
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+
+/* ==================================================
  * plan-3 T6: communio inscribere (apparatus se ipse inscribit)
  * ================================================== */
 
@@ -2739,6 +2823,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _parare, _purgare, NIHIL, NIHIL },
     { "derivata multa (recensio)", _sectio_derivata_multa, _parare,
         _purgare, NIHIL, NIHIL },
+    { "tractiones vacuae (tergum)", _sectio_tractiones_vacuae,
+        _parare, _purgare, NIHIL, NIHIL },
     { "inscriptio per codicem (plan-5 T2)", _sectio_inscriptio_codice,
         _parare, _purgare, NIHIL, NIHIL },
     { "inscriptio: codex falsus et normalis",
