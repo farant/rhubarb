@@ -1069,3 +1069,24 @@ a worker returning a *valid* wrong polynomial on every slice printed a
 wrong UNCINUS at k_max = 1 (3 x 20) - the extra K + 2 points per prime
 catch partial faults, but nothing else catches a consistent one. Rule 6
 is not theoretical.
+
+## 2026-11-05 - 16 x 801 VERIFICATUM at W = 4
+
+First real use of the L3 workers past 14 strands: ACCEPTUM in 3 h 38 min
+wall (6 of 23 primes, 3,402 points, error bound 2^-65, congelatus
+checker), 12 batches = 12 spot checks, peak 285 MB. Record in
+knotapel/demo_136_tl_braid_closures/uncinus_16x801_verificatum.txt
+(UNCINUS + RELATIO, rule 7). Details in puncta-parallela-plan.md
+"16 x 801".
+
+Worth knowing for the next long run: per-point CPU was ~14.5 s against
+6.5-9 s on a quiet machine, because other sessions held the load at
+8-10 for hours. The workers still got ~95% of a core each, so the time
+went into slower CPU-seconds, not waiting - likely workers landing on
+efficiency cores, or shared memory bandwidth (not measured). Wall time
+matters more than per-point time here, and it was fine.
+
+Cheap sanity check worth keeping: the bracket at A = 1 is
+(-1)^writhe (-2)^(components - 1), and both writhe and components come
+from the braid word alone (permutation cycles), so it checks the run
+against something it never computed. Held for 16 x 801 and 14 x 801.

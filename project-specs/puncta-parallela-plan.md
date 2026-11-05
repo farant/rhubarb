@@ -11,7 +11,8 @@ answered by the review's measurements (see "T0"). Q1-Q3 DECIDED by Fran
 T2 DONE 2026-11-03 (see "T2 notes"). T3 DONE 2026-11-04 (see "T3
 notes"; the worker timeout became a silence timeout). T4 DONE 2026-11-04
 (recensor-parallela: APPROVE, no H, no M, nine L; fixes in "Review
-(T4)").
+(T4)"). 16 × 801 DONE 2026-11-05: VERIFICATUM ACCEPTUM in 3 h 38 min
+(see "16 × 801").
 
 Agreed order (interpolatio-verificatio-plan.md, status line): early
 stopping (done, 624f407c), then parallel points (this plan, temperley-
@@ -640,6 +641,7 @@ inside the 600 s silence floor.
   - no session deletes `build/opifices/<pid>/` while that pid runs:
     the workers exec that copy, and a missing copy refuses the batch
     (L6).
+  DONE 2026-11-05, see "16 × 801".
 
 ## Open questions for Fran
 
@@ -835,3 +837,43 @@ Result (plantae_l3_t4.out): 8/8 red exactly as registered, nothing else
 red. Unplanted: laqueus_rete green (new assertions in "fasciculi in via",
 "fasciculus extra viam", "fasciculus divergens"), acceptatio_l3_t4
 green (21 s).
+
+## 16 × 801 (2026-11-05)
+
+Run on Fran's word from tertia at 3dbc4629 (main after the L3 merge).
+Binary: build/verificatio/uncinus_mensura_16x801, a frozen copy of
+build/aedilis/uncinus_mensura (none of its 56 sources changed in the
+merge; acceptatio_l3_t4 green on it, 21 s). Command, under custos
+(CUSTOS_MEMORIA_MB 4096, CUSTOS_MORA 72000) and `caffeinate -i -w`,
+lid open on AC, detached:
+
+    uncinus_mensura_16x801 -sectio VIII -fila 16 -longitudo 801
+        -modus verificatum -verificator congelatus -opifices 4
+
+Seed FORTUITUM (rule 7 records it); the braid is D136's default.
+Raw output: build/verificatio/xvi_801.out. Record (rule 7: UNCINUS +
+RELATIO verbatim, the pair -promovere reads):
+knotapel/demo_136_tl_braid_closures/uncinus_16x801_verificatum.txt.
+
+- **Result:** VERIFICATUM ACCEPTUM, via temperley, checker
+  congelatus:79e7fad9, 6 primes of k_max 23 (14 × 801 needed 7),
+  aestimationes 3,402, sui 6, certificantes 4, m 4, error bound
+  2^-65, seed 5601738250719264661.
+- **The bracket:** a knot (one component), writhe 19,
+  A^-511 .. A^513, 257 nonzero terms, all exponents ≡ 1 mod 4,
+  leading coefficient -32, largest coefficient 52 digits.
+- **Workers:** fasciculi 12 = probationes 12 (one spot check per batch,
+  T4 L1), opera 30, no divergence, no silence refusal.
+- **Cost:** wall 13,092 s (3 h 38 min); workers 49,310 CPU-s, parent
+  273 s; custos peak 285 MB of 4,096. Machine load 8-10 for most of the
+  run (a quinta fabrica session, mediaanalysisd, Spotlight): ~14.5
+  CPU-s per point against 6.5-9 s measured quiet, so per-point cost
+  roughly doubled under contention. Wall still beat the 5-6 h target:
+  fewer primes and points than budgeted (3,402 against ~3,940).
+- **Independent check** (not from the run): from the braid word alone
+  (section XII), components 1 and writhe 19; the bracket at A = 1 must
+  be (-1)^w (-2)^(mu-1) = -1, and the sum of the coefficients is -1.
+  The same check holds on uncinus_14x801.txt.
+- **Not done:** promotion to PROBATUM (the remaining 17 primes,
+  ~15-18 h even with workers; v1 promotion is single-point, Q1). Its
+  own step if ever wanted.
