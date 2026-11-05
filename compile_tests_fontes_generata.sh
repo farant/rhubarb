@@ -250,6 +250,7 @@ declare -a SOURCE_FILES=(
     "lib/navigator_paginae.c"
     "lib/navigator_petitio.c"
     "lib/nervus.c"
+    "lib/neumae_ductae.c"
     "lib/nomenclator.c"
     "lib/nomina.c"
     "lib/norma.c"

@@ -355,6 +355,19 @@ whatever P1's approved headers say.
   short.
 - [ ] **Step 6: Worklog + commit** (gate `radix`).
 
+**Executed 2026-11-04.** Follows the APPROVED P1 header, not the sketch
+above: no caulis piece (stems are compositio rectangles; the stem law
+moved to the virga, parametrum II..VI), BEMOLLE, custos ±I, plus LINEA
+and r1-r5 signs. Head = spatium wide, spatium-1 tall (punctum VIII is
+8x7, origo (0,3)) so heads centre on a row — Ruling in the ledger and
+worklog. Pictures: 20 hand-derived (rectangles, at VIII and XII), 14
+pinned by eye (curves, slants; oriscus deepened after a look at XXIV).
+Laws at every even spatium VI..XLVIII: guard bytes, ink, origin row
+inked, virga stem n*s/2, shared head height, mask ≤ NEUMAE_LARVA_MAXIMA.
+Plants: four, all red then green (porrectus short, virga stem left,
+guard byte at XLVIII, stem one pixel short). Section names: I quadrata,
+II curvae, III mensurae, IV leges, V ambitus.
+
 ---
 
 ## Task P3: `gabc_compositio` — neumes from pieces, syllables, lines, pages
