@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 nomen structura {
             Volumen* volumen;
@@ -153,8 +154,92 @@ _iussum_probare (
         c->piscina), "Beta");
 }
 
+/* lineam eventus "antiphonale" in librum praeconii appendit */
+interior b32
+eventum_scribere (
+     constans character* liber,
+                    s64  tempus,
+     constans character* via,
+                Piscina* piscina)
+{
+    character linea[DXII];
+
+    sprintf(linea, "{\"tempus\":%lld,\"sessio\":\"\",\"eventus\":"
+        "\"antiphonale\",\"panellus\":\"\",\"servitor\":\"\",\"via\":"
+        "\"\",\"transcriptum\":\"\",\"genus\":\"\","
+        "\"nuntius\":\"%s\"}\n",
+        (long long)tempus, via);
+    redde filum_appendere_firmiter(liber, chorda_ex_literis(linea,
+        piscina));
+}
+
+/* P8: praeco antiphonale - eventus recentissimus post initium vici
+ * latus antiphonale aperit aut mutat; vetus (ante initium)
+ * neglegitur */
+interior vacuum
+_praeco_probare (
+    CredoContextus* c)
+{
+        Mundus* x = (Mundus*)c->datum;
+         Vicus* v;
+    VicusLatus* l;
+        vacuum* montatio;
+     character  liber[CCLVI];
+     character  a[CCLVI];
+     character  b[CCLVI];
+           s64  nunc;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    sprintf(liber, "%s/colloquia.jsonl", credo_area(c));
+    sprintf(a, "%s/a.gabc", credo_area(c));
+    sprintf(b, "%s/b.gabc", credo_area(c));
+    CREDO_NECESSE(filum_scribere_literis(a,
+        "name:Alpha;\n%%\n(c4) a(g)\n"));
+    CREDO_NECESSE(filum_scribere_literis(b,
+        "name:Beta;\n%%\n(c4) b(h)\n"));
+    nunc = (s64)time(NIHIL) * M;
+    CREDO_NECESSE(eventum_scribere(liber, CD, a, c->piscina));
+    CREDO_NECESSE(vicus_activam_ponere(v, "3"));
+    CREDO_VERUM(vicus_applicatio_admonitiones_aperire(&x->app, liber));
+
+    /* cauda libri in apertione numquam inter eventus pulsus venit
+     * (sequax a fine legit); eventus tempore ante initium vici post
+     * apertionem lectus (liber rotatus et relectus, horologium
+     * scriptoris retro) per tempus neglegitur */
+    CREDO_GRADUS("eventus ante initium vici: neglegitur");
+    CREDO_NECESSE(eventum_scribere(liber, CD + I, a, c->piscina));
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    CREDO_NIHIL(latus_antiphonale(v));
+
+    CREDO_GRADUS("eventus novus: latus antiphonale in fronte");
+    CREDO_NECESSE(eventum_scribere(liber, nunc + LX * M, b,
+        c->piscina));
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    l = latus_antiphonale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_CHORDA_AEQUALIS_LITERIS(antiphonale_titulus(l->montatio,
+        c->piscina), "Beta");
+    montatio = l->montatio;
+
+    CREDO_GRADUS("eventus alter: idem latus, plagula nova");
+    CREDO_NECESSE(eventum_scribere(liber, nunc + LXI * M, a,
+        c->piscina));
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    l = latus_antiphonale(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(l->montatio == montatio);
+    CREDO_CHORDA_AEQUALIS_LITERIS(antiphonale_titulus(l->montatio,
+        c->piscina), "Alpha");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iussum $antiphonale", _iussum_probare, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "praeco antiphonale", _praeco_probare, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

@@ -534,3 +534,35 @@ praeconium_tmux_conf (
     }
     redde chorda_aedificator_finire(a);
 }
+
+
+/* ==================================================
+ * Antiphonale (gabc pars II P8)
+ * ================================================== */
+
+/* alveus realpath (PATH_MAX macOS M+XXIV, Linux IV*M+XCVI - maximum;
+ * examen <limits.h> non novit, ut praeco.c) */
+#define PRAECONIUM_VIA_MAXIMA (IV * M + XCVI)
+
+b32
+praeconium_antiphonale_parare (
+    constans character* via,
+     PraeconiumEventus* e,
+               Piscina* piscina)
+{
+    character* plena;
+
+    si (!via || !e || !piscina || !filum_existit(via))
+    {
+        redde FALSUM;
+    }
+    plena = (character*)piscina_allocare(piscina,
+        PRAECONIUM_VIA_MAXIMA);
+    si (!plena || !realpath(via, plena))
+    {
+        redde FALSUM;
+    }
+    e->eventus = chorda_ex_literis("antiphonale", piscina);
+    e->nuntius = chorda_ex_literis(plena, piscina);
+    redde VERUM;
+}

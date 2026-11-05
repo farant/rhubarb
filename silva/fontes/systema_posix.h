@@ -243,6 +243,7 @@ int     chdir(const char* via);
  * ut C89; hae POSIX solae) */
 int setenv(const char* nomen, const char* valor, int superscribere);
 int unsetenv(const char* nomen);
+char* realpath(const char* via, char* plena);
 int putenv(char* par);
 
 /* <sectio caput="unistd.h"/> unistd.h - fossae normales */

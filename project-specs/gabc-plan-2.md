@@ -745,6 +745,19 @@ no sound libraries. Plants: two, red then green.
   (`vicus_acervo_mutare`) and brings it to the front; an event older
   than vicus's start is ignored.
 - [ ] **Step 3: Red; implement; green; plants; commit.**
+**Steps 1-3 executed 2026-11-05.** `praeco antiphonale <via>` (logic in
+`praeconium_antiphonale_parare`: realpath, missing file -> exit 1);
+vicus handles the newest `antiphonale` event of the pulse in the
+admonitiones system (vicus_acervo_mutare) and ignores events stamped
+before its start - the follower never delivers the startup tail, so the
+test appends a stale-stamped event after opening (the case the filter
+guards: rotated log re-read, skewed writer clock). realpath declared in
+systema_posix.h (praeco.c had three implicit-declaration warnings) +
+glossary entry. First composition: an ORIGINAL mode 8 antiphon,
+`musica/compositiones/ave_maria.gabc` (no Kyrie in the CC0 sample, and a
+known melody written from memory could be wrong under its real name).
+G17's mechanism recorded in the spec. Plants: three, red then green.
+
 - [ ] **Step 4: STOP — Fran tries it live in vicus:** Claude runs
   `praeco antiphonale musica/compositiones/<x>.gabc`, edits the file
   in the conversation; Fran watches it redraw, plays, clicks, edits

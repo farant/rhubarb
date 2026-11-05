@@ -2778,6 +2778,33 @@ cantum_recentissimum (
     redde NIHIL;
 }
 
+/* gabc pars II P8: eventus "antiphonale" recentissimus pulsus (post
+ * initium vici) latus antiphonale in fronte plagulam suam aperit
+ * (vicus_acervo_mutare: idem latus si adest). VERUM si petitum */
+interior b32
+antiphonale_eventum_tractare (
+                       Vicus* v,
+                         Xar* eventus,
+                         s64  initium_ms,
+                     Piscina* scheda)
+{
+    constans PraeconiumEventus* e;
+                           i32  i;
+
+    per (i = eventus ? xar_numerus(eventus) : ZEPHYRUM; i > ZEPHYRUM;
+         i--)
+    {
+        e = (constans PraeconiumEventus*)xar_obtinere(eventus, i - I);
+        si (   chorda_aequalis_literis(e->eventus, "antiphonale")
+            && e->tempus >= initium_ms && e->nuntius.mensura > ZEPHYRUM)
+        {
+            redde vicus_acervo_mutare(v, "antiphonale",
+                chorda_ut_cstr(e->nuntius, scheda));
+        }
+    }
+    redde FALSUM;
+}
+
 /* pulsus soni: admonitio nova et cantus eodem pulsu ordine temporis -
  * posterior ultimus vocatur, ergo in tintinnabulo vincit */
 interior vacuum
@@ -3166,6 +3193,9 @@ nomen structura {
            Admonitiones* transientes;
                     s64  transiens_ultimum;
                     i32  transientium;
+    /* gabc pars II P8: initium vici (ms ab epocha) - eventus
+     * "antiphonale" priores (cauda libri in apertione) neglecti */
+                    s64 initium_ms;
 } ContextusAdmonitionum;
 
 interior s64
@@ -3472,6 +3502,12 @@ systema_admonitionum (
     }
     sonum_pulsus(ca->sonus, v, nova,
         cantum_recentissimum(ca->sequax.eventus));
+    si (antiphonale_eventum_tractare(v, ca->sequax.eventus,
+        ca->initium_ms,
+            ca->sequax.scheda))
+    {
+        mutatum = VERUM;
+    }
     u = (s32)admonitiones_non_lectae(ca->index);
     si (u != ca->non_lectae)
     {
@@ -5726,6 +5762,7 @@ ContextusNomenclatoris* cn;
         cad->index        = admonitiones_creare(piscina, CC);
         cad->transientes  = admonitiones_creare(piscina, XVI);
         cad->non_lectae   = -I;
+        cad->initium_ms   = (s64)time(NIHIL) * M;
         cad->systemata    = systemata;
         cad->piscina      = piscina;
         cad->vicus        = app->vicus;

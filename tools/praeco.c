@@ -13,6 +13,11 @@
  *                            et caret, exitus 1, nihil scriptum;
  *                            -titulus/-genus ex cantuali infixo
  *                            (titulum electum imprimit)
+ *   praeco antiphonale <via> plagulam .gabc in latere antiphonale
+ *                            vici aperit (eventus "antiphonale", via
+ *                            absoluta; relativa ad cwd); plagula
+ *                            absens: exitus 1, nihil scriptum (gabc
+ *                            pars II P8)
  *   praeco cantuale          cantilenae libri: titulus, genera, textus
  *   praeco cauda [n]         ultimi n eventus (XX) legibiles
  *   praeco tmux <servitor> <panellus>
@@ -480,6 +485,32 @@ cantus (
     redde ZEPHYRUM;
 }
 
+/* gabc pars II P8: plagula .gabc in latere antiphonale vici (eventus
+ * "antiphonale", via absoluta); viam plenam imprimit */
+interior integer
+antiphonale_mittere (
+                Piscina* piscina,
+     constans character* via)
+{
+    PraeconiumEventus e;
+
+    ambitus(&e, piscina);
+    si (!praeconium_antiphonale_parare(via, &e, piscina))
+    {
+        fprintf(stderr, "praeco: antiphonale: plagula abest: %s\n",
+            via);
+        redde I;
+    }
+    si (!praeconium_scribere(praeconium_via(piscina), &e, piscina))
+    {
+        fprintf(stderr, "praeco: scribere non potui\n");
+        redde I;
+    }
+    imprimere("%.*s\n", (integer)e.nuntius.mensura,
+        (constans character*)e.nuntius.datum);
+    redde ZEPHYRUM;
+}
+
 /* cantilenae libri infixi: titulus, genera, [intactus], textus */
 interior integer
 cantuale_monstrare (
@@ -597,6 +628,10 @@ principale (
     {
         redde cantuale_monstrare(piscina);
     }
+    si (strcmp(argv[I], "antiphonale") == ZEPHYRUM && argc == III)
+    {
+        redde antiphonale_mittere(piscina, argv[II]);
+    }
     si (strcmp(argv[I], "cauda") == ZEPHYRUM)
     {
         redde cauda(piscina, argc >= III ? atoi(argv[II]) : XX);
@@ -613,6 +648,7 @@ principale (
     fprintf(stderr,
         "usus: praeco hamus | status <textus> | cantus [-intactus] "
         "<mml> | cantus -titulus T | cantus -genus G | cantuale | "
-        "cauda [n] | tmux <servitor> <panellus> | tmux instituere\n");
+        "antiphonale <via> | cauda [n] | tmux <servitor> <panellus> | "
+        "tmux instituere\n");
     redde I;
 }
