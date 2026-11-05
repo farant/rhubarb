@@ -1120,3 +1120,26 @@ Narrative and decision: silva/phase-log.md 2026-11-04 (M0b DECISUS 2 AMENDED).
 - **Measured** (old examen binary from before the edit against new, 596 files, `-machina`): output and exit codes identical on every file; instructions -6.3% in total.
   - Instruction counts under `xargs -P 6` showed false regressions of up to +9%. Serial re-runs showed random +170 M spikes on BOTH binaries (kernel, page cache), and a steady state lower for the new binary on every suspect file.
   - Re-measure suspects serially before believing them.
+
+## 2026-11-04 — token sweeps, step 1 (professiones, canal, standarda)
+
+Per-pass instruction counts from a probe build (proc_pid_rusage around each post-walk pass, `percursus -semantica`, the whole tree) put the post-walk sweeps at ~40 G of 108.4 G of semantics. Step 1 takes the local wins only. Results are the same by construction.
+
+- **`_in_chorda_quaerere`: memchr for the needle's first byte, then memcmp on the rest.** It used to call strncmp at every byte position; strncmp plus two PLT stubs were 77% of `_professiones_colligere`. It's equivalent because the needle has no NUL in its first n bytes, so `strncmp == 0` iff `memcmp == 0`. The bound is the last start position, `datum + mensura - n`, inclusive, which matters for a tag at the very end of a `//` comment: test XII c, plant C.
+- **`_canalem_examinare`: one sweep for 96 and 97.**
+  - The cheap filters (identifier, radix in the main file, '(' next) now run BEFORE `tabula_dispersa_invenire`, which used to be hashed for every identifier in every included header (56% of the pass).
+  - 96 is emitted inline. 97 hits are collected (t0, t, gp) and emitted after the loop, each code with its own `visa`, so the order of diagnostics and tolera absorptions is exactly the old two-sweep order.
+  - `_tolera_absorbere_sedem` matches the codex exactly, so the two codes never touch each other's tolerae anyway.
+  - The old `i + I < m` guard before `_modus_scribens` is subsumed by the '(' test.
+- **standarda:** the `fons_index` test now comes before `silva_token_standard`. This barely moved (8.01 -> 7.95 G). The cost is the per-token trivia walk itself (out-of-line `silva_token_ante/post/*_numerus`, `silva_token_radix`), not the standard lookup. That is step 2 (one shared trivia table) or inline accessors.
+- **Measured** (probe, quinta at 31b086c0 plus this change):
+  - semantics 108.42 -> 95.65 G (-11.8%);
+  - `percursus -semantica` 389.1 -> 376.0 G (-3.4%);
+  - professiones 16.25 -> 6.63 G, canal 4.06 -> 1.53 G, portabilitas_colligere 1.34 -> 0.75 G (it uses the same search helper).
+  - examen over 596 files: -1.2% (examen's mix is different; the sweeps are a smaller share there).
+- **Verified:**
+  - examen old/new over 596 files: output, stderr and exit code identical.
+  - Old probe binary against new on today's tree: percursus report identical apart from the `tempus` line. Against the s10 report, symbols and typings rose slightly only because this file grew.
+- **Coverage gaps found and closed:** before this, no test had a comment with two tags (a priority swap would survive) and no test had a tag at a comment's end (an off-by-one in the search would survive). Dropping the sutura tag also survived, since sutura and no-profession both pass. Added portabilitas XII: vernaculum+sutura -> 0, vernaculum+portabile -> 0, `// <vernaculum/>` -> 1, `// <<vernaculum/>` -> 1.
+- **Weak plant, caught.** The first boundary plant (`p <= ultima` -> `p < ultima`) stayed GREEN even with `// <vernaculum/>`, because the memchr window (`ultima - p + 1`) still reaches the last position. The loop bound only matters right after a false '<' match one byte before it. Case d (`<<`) hits exactly that, and both plants (loop bound, window minus one) are now red. Plants A (tag dropped), B (vernaculum before sutura), D (97 hits dropped -> forma), E (canal fons inverted -> forma) and F (standarda fons inverted -> examen) were all red.
+- The corpus contains no 88 or 97 diagnostics (97 sites all carry tolerae), so the corpus diff can't see those codes. The suites (portabilitas, forma's fixa_custodiae 97 = II) are what guard them.

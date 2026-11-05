@@ -14703,3 +14703,10 @@ tabularium region 'c89 parser'. Next by decree …XX0BZ: JS.
 - the two exemplaria test recipes.
 
 renominare and nexus_percursus already skipped sem₂ by hand when nothing flipped; they now share the one implementation. nexus_percursus still counts its sem₂ files, from `fructus.secunda`. Still manual, on purpose: `silva_c89_politicam_imponere` (a different resolver, not the analysis loop) and the tests that drive recanonicare step by step (probatio_silva_c89, _scribere, _semantica, _commissio). Checked: examen old against new over 596 files (lib/, silva/, officina/) gives identical output and exit codes on every file. Instructions 390.2 -> 365.5 G (-6.3%); per-file startup dominates small files (~-3%), and the big ones save ~-23% (silva.c amalgam, probatio_silva_c89.c, hospes.c). Suites: silva 57/57, officina 17/17.
+
+**Token sweeps, step 1 (same day).** A probe build counted instructions per post-walk pass: the sweeps were ~40 G of 108.4 G of semantics, most of it re-sweeping every token of the TU, headers included, for rare things that matter mostly in the main file. Local changes only, results the same by construction:
+- the comment search does memchr+memcmp instead of strncmp at every byte;
+- codes 96 and 97 share one sweep, with the cheap main-file and '(' tests before the hash lookup, and 97 still emitted after 96;
+- standarda tests fons first.
+
+Effect: semantics 108.4 -> 95.7 G (-11.8%), `percursus -semantica` 389.1 -> 376.0 G (-3.4%); professiones 16.3 -> 6.6, canal 4.1 -> 1.5. standarda barely moved, because its cost is the trivia walk itself. Checked: examen old against new, 596 files, identical; percursus reports identical on the same tree. New test portabilitas XII covers tag priority and the search's last position, where no test looked before; 8 plants, all red. Next: one shared comment table (step 2), then annotation placement without the whole-tree walk (step 3).

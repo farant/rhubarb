@@ -97367,20 +97367,37 @@ _in_chorda_quaerere (
                 SilvaChorda  fenum,
     constans character* acus)
 {
-    i32 n = (i32)strlen(acus);
-    i32 i;
+     constans i8* initium;
+     constans i8* ultima;
+     constans i8* p;
+             i32  n = (i32)strlen(acus);
 
     si (n == ZEPHYRUM || fenum.datum == NIHIL || fenum.mensura < n)
     {
         redde -I;
     }
-    per (i = ZEPHYRUM; i + n <= fenum.mensura; i++)
+    /* memchr octetum primum acus quaerit, memcmp reliquum comparat -
+     * olim strncmp in omni octeto (professiones 88: ~77% transitus
+     * in strncmp, mensuratum 2026-11-04). Idem fructus: acus NUL
+     * intra n non habet, ergo strncmp == 0 sicut memcmp == 0. */
+    initium  = fenum.datum;
+    ultima   = fenum.datum + (fenum.mensura - n);
+    p        = initium;
+    dum (p <= ultima)
     {
-        si (strncmp((constans character*)fenum.datum + i, acus,
-                (memoriae_index)n) == ZEPHYRUM)
+        p = (constans i8*)memchr(p,
+            (integer)(insignatus character)acus[ZEPHYRUM],
+            (memoriae_index)(ultima - p) + (memoriae_index)I);
+        si (p == NIHIL)
         {
-            redde (s32)i;
+            redde -I;
         }
+        si (memcmp(p + I, acus + I, (memoriae_index)(n - I))
+            == ZEPHYRUM)
+        {
+            redde (s32)(p - initium);
+        }
+        p++;
     }
     redde -I;
 }
@@ -97685,8 +97702,8 @@ _standardum_trivii (
       constans SilvaToken* trivium)
 {
     si (   trivium                       == NIHIL
-        || silva_token_standard(trivium) == SILVA_STANDARD_C89
-        || trivium->fons_index           != parsura->fons_princeps)
+        || trivium->fons_index           != parsura->fons_princeps
+        || silva_token_standard(trivium) == SILVA_STANDARD_C89)
     {
         redde;
     }
@@ -97710,8 +97727,8 @@ _standarda_lexematis (
     {
         redde;
     }
-    si (   silva_token_standard(radix) != SILVA_STANDARD_C89
-        && radix->fons_index           == parsura->fons_princeps)
+    si (   radix->fons_index           == parsura->fons_princeps
+        && silva_token_standard(radix) != SILVA_STANDARD_C89)
     {
         _standardum_trivii(sem, parsura, radix);
     }
@@ -98462,17 +98479,117 @@ _declaratum_est (
     }
 }
 
+/* sedes canalis una (96 aut 97) nuntiatur: sedes eadem bis non
+ * (visa, per codicem), tolera per lineam absorbet, aliter
+ * diagnosticum */
+interior vacuum
+_canalis_sedem_nuntiare (
+                   SilvaSemantica* sem,
+            constans SilvaParsura* parsura,
+                              s32  codex,
+                       SilvaToken* t0,
+                       SilvaToken* t,
+    constans GradusPortabilitatis* gp,
+                              SilvaXar* visa)
+{
+    character* nuntius;
+          i32* locus;
+          i32  k;
+
+    per (k = ZEPHYRUM; k + I < silva_xar_numerus(visa); k += II)
+    {
+        si (   *(i32*)silva_xar_obtinere(visa, k)     == t->linea
+            && *(i32*)silva_xar_obtinere(visa, k + I) == t->columna)
+        {
+            redde;
+        }
+    }
+    locus = (i32*)silva_xar_addere(visa);
+    si (locus != NIHIL)
+    {
+        *locus = t->linea;
+    }
+    locus = (i32*)silva_xar_addere(visa);
+    si (locus != NIHIL)
+    {
+        *locus = t->columna;
+    }
+    si (_tolera_absorbere_sedem(sem, t->fons_index, t->linea, codex))
+    {
+        redde;
+    }
+    nuntius = (character*)silva_piscina_allocare(sem->piscina,
+        (memoriae_index)II * t0->valor.mensura
+        + (memoriae_index)gp->pro.mensura + (memoriae_index)DXII);
+    si (nuntius == NIHIL)
+    {
+        redde;
+    }
+    si (codex == (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA)
+    {
+        sprintf(nuntius, "'%.*s' scripturam extra canalem"
+            " lectionum facit (liber lectionum eam non videt -"
+            " fabrica membrum ex libro solo iudicare nequit,"
+            " fabrica-8)%s%.*s%s",
+            (int)t0->valor.mensura,
+            (constans character*)t0->valor.datum,
+            gp->scriptura && gp->pro.mensura > ZEPHYRUM
+                ? " - pro eo '" : (gp->scriptura ? ""
+                : " - pro eo 'lectiones_fopen' (eadem forma)"),
+            gp->scriptura ? (int)gp->pro.mensura : ZEPHYRUM,
+            (constans character*)gp->pro.datum,
+            gp->scriptura && gp->pro.mensura > ZEPHYRUM ? "'" : "");
+        /* N4 (transformare): emendatio mechanica nominata -
+         * regulae silva/transformationes/<functio>.stml */
+        si (_regulae_mechanicae(t0->valor))
+        {
+            sprintf(nuntius + strlen(nuntius),
+                "; emendatio mechanica:"
+                " ./silva/transformare.sh -regulae"
+                " silva/transformationes/%.*s.stml <viae>",
+                (int)t0->valor.mensura,
+                (constans character*)t0->valor.datum);
+        }
+    }
+    alioquin
+    {
+        sprintf(nuntius, "'%.*s' canalem lectionum praeterit (liber"
+            " lectionum vocationem non videt - fabrica ingressum"
+            " nescit, transitus vetus servaretur)%s%.*s%s",
+            (int)t0->valor.mensura,
+            (constans character*)t0->valor.datum,
+            gp->pro.mensura > ZEPHYRUM ? " - pro eo '" : "",
+            (int)gp->pro.mensura,
+            (constans character*)gp->pro.datum,
+            gp->pro.mensura > ZEPHYRUM ? "'" : "");
+    }
+    _portabilitatis_diagnosticum(sem, parsura, t, codex, nuntius);
+}
+
+nomen structura {
+                       SilvaToken* t0;
+                       SilvaToken* t;
+    constans GradusPortabilitatis* gp;
+} CanalisScriptura;
+
+/* canalis (96) et scriptura cruda (97, fabrica-8) ambulatione una:
+ * 96 in ambulatione nuntiatur, 97 colliguntur et post eam
+ * nuntiantur - ordo diagnosticorum et absorptionum idem ac olim
+ * (ambulationes duae). Probationes viles (fons principalis, '('
+ * sequens) ANTE quaestionem tabulae: olim tabula_dispersa_invenire
+ * in omni identificatore capitum inclusorum (~56% transitus,
+ * mensuratum 2026-11-04). */
 interior vacuum
 _canalem_examinare (
            SilvaSemantica* sem,
-    constans SilvaParsura* parsura,
-                      s32  codex)
+    constans SilvaParsura* parsura)
 {
-      SilvaXar* fluxus;
-      SilvaXar* visa;
-      i32  m;
-      i32  i;
-      i32  k;
+    SilvaXar* fluxus;
+    SilvaXar* visa;
+    SilvaXar* visa_scripturae;
+    SilvaXar* scripturae;
+    i32  m;
+    i32  i;
 
     si (   sem->gradus_tabula == NIHIL || parsura == NIHIL
         || parsura->lexemata  == NIHIL
@@ -98480,9 +98597,13 @@ _canalem_examinare (
     {
         redde;
     }
-    fluxus  = parsura->lexemata;
-    visa    = silva_xar_creare(sem->piscina, (i32)magnitudo(i32));
-    si (visa == NIHIL)
+    fluxus           = parsura->lexemata;
+    visa             = silva_xar_creare(sem->piscina, (i32)magnitudo(i32));
+    visa_scripturae  = silva_xar_creare(sem->piscina, (i32)magnitudo(i32));
+    scripturae       = silva_xar_creare(sem->piscina,
+        (i32)magnitudo(CanalisScriptura));
+    si (   visa       == NIHIL || visa_scripturae == NIHIL
+        || scripturae == NIHIL)
     {
         redde;
     }
@@ -98495,32 +98616,10 @@ _canalem_examinare (
                            SilvaToken* post;
                                vacuum* datum_g = NIHIL;
         constans GradusPortabilitatis* gp;
-                            character* nuntius;
-                                  i32* locus;
-                                  b32  iam = FALSUM;
+                                  b32  canalis;
+                                  b32  scriptura;
 
-        si (   t0 == NIHIL || t0->genus != SILVA_LEX_IDENTIFICATOR
-            || !silva_tabula_dispersa_invenire(sem->gradus_tabula, t0->valor,
-                   &datum_g))
-        {
-            perge;
-        }
-        gp = (constans GradusPortabilitatis*)datum_g;
-        si (gp == NIHIL)
-        {
-            perge;
-        }
-        si (   codex == (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS
-            && !gp->canalis)
-        {
-            perge;
-        }
-        si (   codex == (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA
-            && !gp->scriptura
-            && !(   gp->canalis
-                 && (   silva_chorda_aequalis_literis(t0->valor, "fopen")
-                     || silva_chorda_aequalis_literis(t0->valor, "freopen"))
-                 && i + I < m && _modus_scribens(fluxus, i)))
+        si (t0 == NIHIL || t0->genus != SILVA_LEX_IDENTIFICATOR)
         {
             perge;
         }
@@ -98535,84 +98634,53 @@ _canalem_examinare (
         {
             perge;
         }
-        si (_declaratum_est(fluxus, i))
+        si (!silva_tabula_dispersa_invenire(sem->gradus_tabula, t0->valor,
+                &datum_g))
         {
             perge;
         }
-        per (k = ZEPHYRUM; k + I < silva_xar_numerus(visa); k += II)
+        gp = (constans GradusPortabilitatis*)datum_g;
+        si (gp == NIHIL)
         {
-            si (   *(i32*)silva_xar_obtinere(visa, k)     == t->linea
-                && *(i32*)silva_xar_obtinere(visa, k + I) == t->columna)
+            perge;
+        }
+        canalis    = gp->canalis;
+        scriptura  = gp->scriptura
+            || (   gp->canalis
+                && (   silva_chorda_aequalis_literis(t0->valor, "fopen")
+                    || silva_chorda_aequalis_literis(t0->valor, "freopen"))
+                && _modus_scribens(fluxus, i));
+        si ((!canalis && !scriptura) || _declaratum_est(fluxus, i))
+        {
+            perge;
+        }
+        si (canalis)
+        {
+            _canalis_sedem_nuntiare(sem, parsura,
+                (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS, t0, t, gp, visa);
+        }
+        si (scriptura)
+        {
+            CanalisScriptura* s = (CanalisScriptura*)silva_xar_addere(
+                scripturae);
+
+            si (s != NIHIL)
             {
-                iam = VERUM;
-                frange;
+                s->t0  = t0;
+                s->t   = t;
+                s->gp  = gp;
             }
         }
-        si (iam)
-        {
-            perge;
-        }
-        locus = (i32*)silva_xar_addere(visa);
-        si (locus != NIHIL)
-        {
-            *locus = t->linea;
-        }
-        locus = (i32*)silva_xar_addere(visa);
-        si (locus != NIHIL)
-        {
-            *locus = t->columna;
-        }
-        si (_tolera_absorbere_sedem(sem, t->fons_index, t->linea,
-            codex))
-        {
-            perge;
-        }
-        nuntius = (character*)silva_piscina_allocare(sem->piscina,
-            (memoriae_index)II * t0->valor.mensura
-            + (memoriae_index)gp->pro.mensura + (memoriae_index)DXII);
-        si (nuntius == NIHIL)
-        {
-            perge;
-        }
-        si (codex == (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA)
-        {
-            sprintf(nuntius, "'%.*s' scripturam extra canalem"
-                " lectionum facit (liber lectionum eam non videt -"
-                " fabrica membrum ex libro solo iudicare nequit,"
-                " fabrica-8)%s%.*s%s",
-                (int)t0->valor.mensura,
-                (constans character*)t0->valor.datum,
-                gp->scriptura && gp->pro.mensura > ZEPHYRUM
-                    ? " - pro eo '" : (gp->scriptura ? ""
-                    : " - pro eo 'lectiones_fopen' (eadem forma)"),
-                gp->scriptura ? (int)gp->pro.mensura : ZEPHYRUM,
-                (constans character*)gp->pro.datum,
-                gp->scriptura && gp->pro.mensura > ZEPHYRUM ? "'" : "");
-            /* N4 (transformare): emendatio mechanica nominata -
-             * regulae silva/transformationes/<functio>.stml */
-            si (_regulae_mechanicae(t0->valor))
-            {
-                sprintf(nuntius + strlen(nuntius),
-                    "; emendatio mechanica:"
-                    " ./silva/transformare.sh -regulae"
-                    " silva/transformationes/%.*s.stml <viae>",
-                    (int)t0->valor.mensura,
-                    (constans character*)t0->valor.datum);
-            }
-        }
-        alioquin
-        {
-            sprintf(nuntius, "'%.*s' canalem lectionum praeterit (liber"
-                " lectionum vocationem non videt - fabrica ingressum"
-                " nescit, transitus vetus servaretur)%s%.*s%s",
-                (int)t0->valor.mensura,
-                (constans character*)t0->valor.datum,
-                gp->pro.mensura > ZEPHYRUM ? " - pro eo '" : "",
-                (int)gp->pro.mensura,
-                (constans character*)gp->pro.datum,
-                gp->pro.mensura > ZEPHYRUM ? "'" : "");
-        }
-        _portabilitatis_diagnosticum(sem, parsura, t, codex, nuntius);
+    }
+    m = silva_xar_numerus(scripturae);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        CanalisScriptura* s = (CanalisScriptura*)silva_xar_obtinere(
+            scripturae, i);
+
+        _canalis_sedem_nuntiare(sem, parsura,
+            (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA, s->t0, s->t, s->gp,
+            visa_scripturae);
     }
 }
 
@@ -100618,11 +100686,9 @@ silva_c89_semantica_analysare_cum_systemate (
     _mores_credo_examinare(sem, parsura);
     /* canalis lectionum (96): ANTE toleras irritas - absorptio usum
      * notat */
-    _canalem_examinare(sem, parsura,
-        (s32)EXAMEN_CODEX_CANALIS_PRAETERITUS);
-    /* scriptura cruda (97, fabrica-8): eadem ambulatio, tabula sua */
-    _canalem_examinare(sem, parsura,
-        (s32)EXAMEN_CODEX_SCRIPTURA_PRAETERITA);
+    /* scriptura cruda (97, fabrica-8): ambulatione eadem, post 96
+     * nuntiata */
+    _canalem_examinare(sem, parsura);
     /* TOLERA irrita (gradus severi): suppressiones quae nihil
      * absorbuerunt aut sine causa - post ambulationem totam */
     _toleras_irritas_examinare(sem, parsura);
