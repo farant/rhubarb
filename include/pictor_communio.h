@@ -20,6 +20,7 @@
 #include "veredarius.h"
 #include "pictor_applicatio.h"
 #include "testa_cursus.h"
+#include "communio_cliens.h"
 
 /* picturae advectae, index apparatuum, status inscriptionis mutatus */
 nomen vacuum (*PictorCommunioMutata)(vacuum* ctx);
@@ -184,5 +185,32 @@ vacuum
 pictor_communio_tactus_moram_ponere (
     PictorCommunio* pc,
                i32  ms);
+
+
+/* ==================================================
+ * tergum-plan T6: excitatio in tergo (tergum-spec III.4)
+ *
+ * pulsum_parare etiam excitationem testae inscribit (a->
+ * excitationem_ponere; NIHIL in macOS, Android). Pulsus advenit:
+ * corpus malum aut clavis aliena -> NIHIL; cliens recusatus aut nullus
+ * -> DEFECTUS; aliter recepta et tractiones_vacuae notantur, mora 0,
+ * renovare; cum tractiones_vacuae notatas transeunt (assecuta) -> NOVA
+ * si recepta crevit, aliter NIHIL. Terminus (XX s) -> DEFECTUS. Pulsus
+ * propinqui (IV ad summum) fenestram communicant: posterior iterum
+ * notat et renovat; omnes simul finiuntur. Mora semper restituitur:
+ * posita (moram_ponere) aut COMMUNIO_MORA_ORDINARIA - numquam 0 nisi
+ * posita.
+ * ================================================== */
+
+/* probationes: terminus fenestrae in ms (0 = ordinarius, XX s) */
+vacuum
+pictor_communio_excitationis_terminum_ponere (
+    PictorCommunio* pc,
+               i32  ms);
+
+/* status clientis communionis (ZEPHYRUM si nullus) - lectio sola */
+CommunioStatus
+pictor_communio_status (
+    constans PictorCommunio* pc);
 
 #endif /* PICTOR_COMMUNIO_H */

@@ -40,6 +40,9 @@ hic_manens i32 pulsus_petitiones;
 /* pulsus-plan T10: tactus quem pictor testae dedit (tangere) */
 hic_manens TestaPulsusTactus tactus_captus;
 hic_manens vacuum*           tactus_ctx;
+/* tergum-plan T6: excitatio quam pictor testae dedit */
+hic_manens TestaPulsusExcitatio excitatio_capta;
+hic_manens vacuum*              excitatio_ctx;
 
 interior vacuum
 _parare (
@@ -50,6 +53,8 @@ _parare (
     pulsus_petitiones  = ZEPHYRUM;
     tactus_captus      = NIHIL;
     tactus_ctx         = NIHIL;
+    excitatio_capta    = NIHIL;
+    excitatio_ctx      = NIHIL;
     thema_initiare();
 }
 
@@ -582,13 +587,26 @@ _pulsum_petere_fictum (
     redde VERUM;
 }
 
+/* tergum-plan T6: testa ficta - excitationem capit */
+interior vacuum
+_excitationem_ponere_fictum (
+                  vacuum* sui,
+    TestaPulsusExcitatio  excitatio,
+                  vacuum* ctx)
+{
+    (vacuum)sui;
+    excitatio_capta  = excitatio;
+    excitatio_ctx    = ctx;
+}
+
 interior vacuum
 ambitum_fictum (
     TestaAmbitus* a)
 {
     memset(a, ZEPHYRUM, magnitudo(*a));
-    a->pulsum_petere   = _pulsum_petere_fictum;
-    a->pulsus_ambitus  = "sandbox";
+    a->pulsum_petere        = _pulsum_petere_fictum;
+    a->pulsus_ambitus       = "sandbox";
+    a->excitationem_ponere  = _excitationem_ponere_fictum;
 }
 
 /* agere donec n eventus missi (aut M ms), deinde paulum ultra */
@@ -866,6 +884,285 @@ _sectio_grex_tactus (
     orbem_purgare(&o);
 }
 
+
+/* ==================================================
+ * tergum-plan T6: excitatio in tergo
+ *
+ * A (recipiens) reactorem PROPRIUM habet: dum "dormit" (iOS in tergo
+ * suspensa) probatio eum non agit - tractio eius longa in itinere manet
+ * et acta B non importat, etiam si servus ei respondit. Pulsus eam
+ * excitat ut iOS: excitatio capta cum corpore vero vocatur.
+ * ================================================== */
+
+nomen structura {
+                     i32 vocationes;
+    TestaExcitatioExitus exitus;
+} Finitio;
+
+interior vacuum
+_finire_fictum (
+                  vacuum* sui,
+    TestaExcitatioExitus  exitus)
+{
+    Finitio* f = (Finitio*)sui;
+
+    f->vocationes++;
+    f->exitus = exitus;
+}
+
+/* servus et B (o->reactor) et A (ra) */
+interior vacuum
+ambo_agere (
+       Orbis* o,
+     Reactor* ra,
+         i32  ms)
+{
+    i32 gyri;
+
+    per (gyri = ZEPHYRUM; gyri < ms / X; gyri++)
+    {
+        (vacuum)reactor_poll(o->reactor, V);
+        (vacuum)reactor_poll(ra, V);
+    }
+}
+
+interior b32
+donec_finita (
+       Orbis* o,
+     Reactor* ra,
+     Finitio* f,
+         i32  ms)
+{
+    i32 gyri;
+
+    per (gyri = ZEPHYRUM; f->vocationes == ZEPHYRUM && gyri < ms / X;
+         gyri++)
+    {
+        (vacuum)reactor_poll(o->reactor, V);
+        (vacuum)reactor_poll(ra, V);
+    }
+    ambo_agere(o, ra, C);
+    redde f->vocationes > ZEPHYRUM;
+}
+
+/* B solum (A dormit): donec servus omnia acta B accepit */
+interior b32
+donec_missa (
+             Orbis* o,
+    PictorCommunio* pb,
+           Volumen* vb)
+{
+    i32 gyri;
+
+    pictor_communio_excitare(pb);
+    per (gyri = ZEPHYRUM; gyri < D
+         && pictor_communio_status(pb).missa < acta_communicanda(vb);
+         gyri++)
+    {
+        agere(o, X);
+    }
+    redde pictor_communio_status(pb).missa >= acta_communicanda(vb);
+}
+
+/* pulsus ut APNs tradit: corpus verum pulsus_corpus_facere */
+interior vacuum
+pulsu_excitare (
+               Volumen* vb,
+    constans character* spatium,
+               Finitio* f)
+{
+    Xar* res;
+
+    memset(f, ZEPHYRUM, magnitudo(*f));
+    res = xar_creare(piscina, (i32)magnitudo(chorda));
+    *(chorda*)xar_addere(res) = id_picturae(vb, spatium);
+    excitatio_capta(excitatio_ctx, pulsus_corpus_facere(lit("pictor"),
+        lit("Amanda shared a picture"), lit("pictor.picturae"),
+        lit("civis"), res, piscina), _finire_fictum, f);
+}
+
+interior i32
+aliena_numerus (
+    Volumen* v)
+{
+    Xar* l = pictor_aliena_recentia(v, piscina);
+
+    redde l ? xar_numerus(l) : ZEPHYRUM;
+}
+
+interior vacuum
+_sectio_excitatio (
+    CredoContextus* c)
+{
+                  Orbis  o;
+                Reactor* ra;
+             Veredarius* domesticus_a;
+       VeredariusNotans  na;
+                Volumen* va;
+                Volumen* vb;
+    InternamentumChorda* intern;
+         PictorCommunio* pa;
+         PictorCommunio* pb;
+       PictorDocumentum* p;
+       PictorDocumentum* q;
+       PictorDocumentum* r;
+           TestaAmbitus  a;
+                Finitio  f;
+                Finitio  g;
+                    i32  recepta;
+                    i32  petitiones;
+                    i32  k;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    intern = internamentum_creare(piscina);
+    va = volumen_temporarium(piscina,
+        "probatio_pictor_communio_xa");
+    vb = volumen_temporarium(piscina,
+        "probatio_pictor_communio_xb");
+    ra = reactor_creare(piscina);
+    domesticus_a = ra ? veredarium_domesticum_creare(piscina,
+        ra) : NIHIL;
+    CREDO_NECESSE(intern && va && vb && domesticus_a);
+    memset(&na, ZEPHYRUM, magnitudo(na));
+    na.v.petere     = _notans_petere;
+    na.v.abrumpere  = _notans_abrumpere;
+    na.v.sui        = &na;
+    na.fundus       = domesticus_a;
+    /* A sine mora posita (productio): mora ordinaria XXV */
+    pa = pictor_communionem_aperire(piscina, ra, &na.v, va, o.via_a,
+        o.basis, _mutata, NIHIL);
+    pb = communionem(&o, vb, o.via_b);
+    CREDO_NECESSE(pa && pb);
+    ambitum_fictum(&a);
+    pictor_communio_pulsum_parare(pa, &a);
+    CREDO_NECESSE(excitatio_capta != NIHIL && excitatio_ctx == pa);
+    pictor_communio_incipere(pa);
+    pictor_communio_incipere(pb);
+    ambo_agere(&o, ra, CCC);
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).mora,
+        COMMUNIO_MORA_ORDINARIA);
+
+    CREDO_GRADUS("nova: pictura advecta ante tactum");
+    p = pictor_documentum_creare(piscina, intern, vb, "p", C, LX, II);
+    CREDO_NECESSE(p && ictus(p, X, II) > ZEPHYRUM);
+    CREDO_NECESSE(donec_missa(&o, pb, vb));
+    CREDO_AEQUALIS_I32(aliena_numerus(va), ZEPHYRUM);
+    pulsu_excitare(vb, "p", &f);
+    CREDO_VERUM(donec_finita(&o, ra, &f, M * V));
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_NOVA);
+    CREDO_AEQUALIS_I32(aliena_numerus(va), I);
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).mora,
+        COMMUNIO_MORA_ORDINARIA);
+
+    CREDO_GRADUS("emendatio: pictura iam praesens, ictus novi");
+    ambo_agere(&o, ra, CC);
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        CREDO_NECESSE(ictus(p, XX + k * X, III) > ZEPHYRUM);
+    }
+    CREDO_NECESSE(donec_missa(&o, pb, vb));
+    CREDO_VERUM(acta_replicae(va, volumen_replica(vb))
+        < acta_communicanda(vb));
+    pulsu_excitare(vb, "p", &f);
+    CREDO_VERUM(donec_finita(&o, ra, &f, M * V));
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_NOVA);
+    CREDO_AEQUALIS_I32(acta_replicae(va, volumen_replica(vb)),
+        acta_communicanda(vb));
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).mora,
+        COMMUNIO_MORA_ORDINARIA);
+
+    CREDO_GRADUS("nihil novi: tractio una, recepta eadem");
+    ambo_agere(&o, ra, CC);
+    recepta = pictor_communio_status(pa).recepta;
+    pulsu_excitare(vb, "p", &f);
+    CREDO_VERUM(donec_finita(&o, ra, &f, M * V));
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_NIHIL);
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).recepta, recepta);
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).mora,
+        COMMUNIO_MORA_ORDINARIA);
+
+    CREDO_GRADUS("duae excitationes: fenestra communis, finis semel");
+    q = pictor_documentum_creare(piscina, intern, vb, "q", C, LX, II);
+    CREDO_NECESSE(q && ictus(q, X, IV) > ZEPHYRUM);
+    CREDO_NECESSE(donec_missa(&o, pb, vb));
+    pulsu_excitare(vb, "q", &f);
+    r = pictor_documentum_creare(piscina, intern, vb, "r", C, LX, II);
+    CREDO_NECESSE(r && ictus(r, X, V) > ZEPHYRUM);
+    CREDO_NECESSE(donec_missa(&o, pb, vb));
+    CREDO_AEQUALIS_I32(f.vocationes, ZEPHYRUM);
+    pulsu_excitare(vb, "r", &g);
+    CREDO_VERUM(donec_finita(&o, ra, &f, M * V));
+    CREDO_VERUM(donec_finita(&o, ra, &g, M * V));
+    ambo_agere(&o, ra, CC);
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32(g.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_NOVA);
+    CREDO_AEQUALIS_I32((i32)g.exitus, (i32)TESTA_EXCITATIO_NOVA);
+    CREDO_AEQUALIS_I32(aliena_numerus(va), III);
+    CREDO_AEQUALIS_I32(acta_replicae(va, volumen_replica(vb)),
+        acta_communicanda(vb));
+
+    CREDO_GRADUS("terminus: servus absens - defectus, mora XXV");
+    hospitium_destruere(o.hospitium);
+    o.hospitium = NIHIL;
+    pictor_communio_excitationis_terminum_ponere(pa, CCC);
+    pulsu_excitare(vb, "p", &f);
+    CREDO_VERUM(donec_finita(&o, ra, &f, M * II));
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_DEFECTUS);
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).mora,
+        COMMUNIO_MORA_ORDINARIA);
+    CREDO_NECESSE(hospitium_aperire(&o));
+    pictor_communio_excitationis_terminum_ponere(pa, ZEPHYRUM);
+
+    CREDO_GRADUS("mora posita: post fenestram eadem (0)");
+    pictor_communio_moram_ponere(pa, ZEPHYRUM);
+    ambo_agere(&o, ra, CCC);
+    pulsu_excitare(vb, "p", &f);
+    CREDO_VERUM(donec_finita(&o, ra, &f, M * V));
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).mora, ZEPHYRUM);
+
+    CREDO_GRADUS("corpus malum aut clavis aliena: nihil statim");
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    excitatio_capta(excitatio_ctx, lit("non json"), _finire_fictum, &f);
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_NIHIL);
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    excitatio_capta(excitatio_ctx, lit("{\"aps\":{},\"pulsus\":{"
+        "\"clavis\":\"alia.clavis\",\"res\":[],\"a\":\"civis\"}}"),
+        _finire_fictum, &f);
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_NIHIL);
+
+    CREDO_GRADUS("sine cliente (revocatus): defectus statim, nulla petitio");
+    CREDO_NECESSE(communio_apparatum_revocare(o.servus, lit(o.id_a)));
+    pictor_communio_excitare(pa);
+    per (k = ZEPHYRUM; k < CC && pictor_communio_inscripta(pa); k++)
+    {
+        ambo_agere(&o, ra, X);
+    }
+    CREDO_NECESSE(!pictor_communio_inscripta(pa));
+    petitiones = na.petitiones;
+    pulsu_excitare(vb, "p", &f);
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_DEFECTUS);
+    ambo_agere(&o, ra, CC);
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32(na.petitiones, petitiones);
+
+    pictor_communionem_claudere(pa);
+    pictor_communionem_claudere(pb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    reactor_destruere(ra);
+    orbem_purgare(&o);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "advenit, auctor, index servatus", _sectio_advenit, _parare,
         _purgare, NIHIL, NIHIL },
@@ -876,6 +1173,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "somnus", _sectio_somnus, _parare, _purgare, NIHIL, NIHIL },
     { "pulsus eventus", _sectio_pulsus_eventus, _parare, _purgare,
         NIHIL, NIHIL },
+    { "excitatio (tergum)", _sectio_excitatio, _parare, _purgare, NIHIL,
+        NIHIL },
     { "grex: tactus", _sectio_grex_tactus, _parare, _purgare, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
