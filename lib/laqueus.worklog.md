@@ -917,3 +917,155 @@ but irrelevant at 0.25 s.
 The useful find: the coefficient bound is 3-5x loose (bits/limes 16/82,
 19/86, 24/85, 17/88; 14x801 195/662), so most primes are wasted. Ledger
 desideratum 01M6F2RT: early termination + random-point verification.
+
+## 2026-11-02 - interpolatio-verificatio T0: baseline without evaluation
+
+New tool sections in tools/uncinus_mensura.c: XIII (per braid, no evaluation: a-priori window and limes via laqueus_pd_fenestra, the interpolation prime sequence reproduced, k_true from known brackets, dispatcher route, vertex cost via laqueus_via_eligere, exact m) and XIV (segmented sieve of [2^30, 2^31), 1.9 s, N = 25,348,870 primes = 1 mod 4, sum checked against pi(2^31) - pi(2^30)).
+
+Finds:
+- The design review's integer recipe for m (e = floor(-log2 eps), m = ceil((s + ceil(log2(k_max - 1)))/e)) rounds twice and asks for one check too many on 13 of 36 braids that can stop early (all c ~ 50 braids: 4 instead of 3; all 801-crossing braids: 5 instead of 4). Fix: exact comparison (k_max - 1) a^m 2^s <= b^m with eps = a/b in Magnus; the tool does it and matches a Python Fraction check on all 46 rows. 3 x 50 is the test vector that separates the two.
+- Self-checks per verified run = k_true, not k_true - 1: the stopping stage also self-checks (and passes) before the m certifying checks.
+- 14 x 801: K_q = 561 (as 12 x 801), not ~540; vertex workspace 3.63 GiB (over the 2 GiB limit), 2.89e12 multiplications per point (~89 min at 1.85 ns).
+- The exact-product lever (desideratum 01M6FNZH) saves a prime on 5 of 46 braids.
+- An identifier trap I fell into: `duplex` (= double) and `M` (= 1000) are latina macros; the compile errors were obscure ("expected expression", "passing int to Magnus"). Renamed bis_maximus / productum.
+
+## 2026-11-02 - interpolatio-verificatio T2: verified brackets through laqueus and the tool
+
+`laqueus_uncinus_ex_plexu_verificatum` (options struct `LaqueusOptionesVerificandi`: octeti_maximi for main + checker together, semen, semen_origo, s, verificator AUTOMATICUS / SUI / VIA_ALTERA / EXTERNUS, alienus) and `laqueus_uncinus_promovere` (rebuilds the module of the recorded route; the prime prefix must match). Laqueus checkers declare c = 8, r = 9; the point map reduces omega mod p, so check indices up to q - 1 are safe.
+
+The automatic rule (cross route iff m x price_other <= (k_max + 1)(K + 2) x price_main / 20, and both workspaces fit) almost never picks the cross route: the dispatcher already chose the cheaper route, so the other one is only acceptable when the two cost about the same. On the D136 set it picks it for 9 x 102 (TL -> vertex, ratio 3.35 vs limit 3.70), 10 x 101, 11 x 102 (vertex -> TL, 1.39 vs 3.75), 11 x 202, 12 x 201; NOT for 8 x 101 (vertex 49x dearer) as plan v3 assumed, so the test uses 9 x 102 and 11 x 102 (word hashes 250855745, 1527719524) and checks 8 x 101 stays self.
+
+Mirror test with laqueus evaluators: a checker that reports <D>(A) at the point A^-1 (TL module of the same braid) -> DISCORDIA on 8 x 101 (precondition: bracket not symmetric under A <-> A^-1).
+
+Tool (`uncinus_mensura`): `-modus verificatum` with sections VIII and XI, `-semen_verificationis X` (else 8 bytes from `moneta_octeti_fortuiti`, printed, FORTUITUM; `-semen` stays the section V braid seed), `-verificator automaticus|sui|via|congelatus`, `-promovere VIA` (pairs of UNCINUS + RELATIO lines). The frozen checker wraps section VI's 79e7fad9 kernel with its own point code (own i via the smallest non-residue, own delta). First check: 8 x 401 with the frozen checker stopped at 3 of 11 primes (T0's k_true), 837 evaluations (T0's count), byte-identical to brackets.txt; promotion computed 8 primes and reproduced it.
+
+Latina traps hit in one task: `externus` (= extern) as a struct field, `casus` (= case) as an array name. Renamed alienus / exempla.
+
+Plants: build/verificatio/plantae_t2.py, 4 of 4 red as registered (always self-check; VIA_ALTERA ignored; cost rule without the 5% factor; external checker ignored).
+
+## 2026-11-03 - verificatio T4 review: cost-rule and label tests
+
+The 5% cost rule had no braid between the thresholds, so "5% -> 50%" and "rule ignores m" mutants survived. 8 x 51 (TL main, ratio m * price_vertex / ((k_max+1)(K+2) price_TL) = 0.067) sits above 1/20 but below both 1/2 and m/20, so it pins both; found by scanning T0's FUNDAMENTUM cost columns (build/verificatio/t0_fundamentum.out). Its word hash 2481405640 recomputed in Python from tools/uncinus_mensura -sectio XII words with the test's _misce (reproduces the three known hashes). The test now also asserts each example's m and the communia label (rule 2). r = 9 -> 0 remains untested at this level on purpose: no numerical effect at q >= 2^30.
+
+Plant note: T2 plant B's single-line anchor was re-wrapped by commissio's formatter after the T2 run; planta then refuses the replacement (format guard). Plant scripts kept in build/ go stale this way after their commit - rerun with the current text.
+
+## 2026-11-03 - TL kernel under concurrent copies (L3 groundwork)
+
+Experiment registered and run before drafting the L3 plan (predictions,
+results: build/verificatio/concurrentia_praedictio.md; driver in the
+session scratchpad, linking uncinus_mensura's objects). N = 1..8 copies
+of one-point TL evaluation at 12/14/16 x 801, CPU s/point per copy,
+12 strands as the cache-resident control.
+
+Memory bandwidth is NOT the limiter: beyond the control, 16 strands
+loses only ~10% at 4-6 copies and ~18% at 8 (predicted <= 15% / 30%).
+So column blocks stay deferred; at most they would recover that ~10-18%.
+14 strands loses 17% at 4 copies (predicted <= 10%), consistent with
+four ~4 MB module matrices sharing the 16 MB P-cluster L2.
+
+The larger effect is size-independent: even the control costs 1.35x per
+point at 2 copies and ~1.7x at 6-8. This machine is a fanless MacBook
+Air M2 (4P + 4E), other sessions pushed load to 75 during the run.
+Practical throughput at 16 strands: ~2.1-2.5x at 4-8 workers, not the 3x
+I had guessed. Use that for L3's registered threshold.
+
+## 2026-11-03 - L3 T2: batch hook, spot check, workers in uncinus_mensura
+
+The verified entry takes `fasciculus_temperley` (TL route only). Every
+batch is spot-checked on laqueus's own module at index_primus + (p mod
+numerus): status equal, punctum/valor equal where UTILE. The fingerprint
+`laqueus_modulus_temperley_signum` (FNV-1a 64 over fila, longitudo,
+word, writhe, window, limes) has a module-free twin
+`laqueus_temperley_signum` so the parent need not build a third module.
+
+The useful lesson came from plant L1 (spot check removed): my first
+divergent worker (one letter's sign flipped) did NOT need the spot check.
+Its values are random-looking against the true window, so the restored
+coefficients blow the coefficient bound and the run refuses anyway. The
+review's H2 danger is a worker whose wrong answer is still a *valid
+small polynomial*: bracket + A^e with e in the window. With k_max = 1
+nothing compares (self-checks go through the same lying batch function
+and agree with it), and the run returned VERUM with the wrong bracket.
+k_max > 1 was caught by the certificate (in-process SUI) anyway. So: the
+spot check is what closes k_max = 1, and a "divergent" test must diverge
+plausibly, not randomly.
+
+Tool side (tools/uncinus_mensura.c): workers are a frozen byte copy of
+the binary in build/opifices/<pid>/; build id = LC_UUID of the running
+image read from memory (`_dyld_get_image_header` + load commands, strict
+C89 compiles fine with <mach-o/loader.h>), so it compares running code,
+not files. Worker output is parsed strictly: first line and FINIS line
+compared as whole strings (sprintf the expected line, memcmp), data lines
+token by token, index must be ab + j in order. Parent also counts
+coverage. Fault injection `UNCINUS_OPUS_VITIUM="<genus>@<ab>"` exists for
+the refusal cases; `statim` (fail before computing) is the one that makes
+"other workers stopped" observable - with the others still computing at
+12 x 801, a missing abrumpere leaves visible orphans.
+
+Trap hit: `i64` is unsigned here, so `v > (maximum - d) / 10` wraps when
+d > maximum; `-3` passed as a letter on 3 strands until guarded.
+
+## 2026-11-04 - L3 T3 (puncta-parallela): the worker deadline was the weak part
+
+First exact run (binary a0c98416): no wrong answer anywhere, but the 10x
+deadline (10 x slice x 0.21 ns/mult estimate, floor 60 s) refused healthy
+workers twice. Causes stacked: the nominal estimate is ~1.7x low at
+12 x 801 (0.035 vs ~0.06 s/point); 8 orphaned `yes > /dev/null` from a
+quarta load test held every core for ~17 h (workers got 20-30% of a
+core); and a maintenance-sleep / DarkWake cycle - processus' clock is
+CLOCK_UPTIME_RAW, which skips true sleep but runs during dark wakes, when
+our processes barely run. A total deadline cannot tell "slow" from
+"hung", and a 16 x 801 run (hours, no retry, laptop) would likely die.
+
+Fix (Fran, option A): silence timeout. The worker prints SIGNUM as soon
+as the module exists, then evaluates ONE index at a time and fflushes
+each line; the parent polls processus_effusio_hactenus and kills a
+worker whose output length has not changed for max(600 s, 50 x per-point
+estimate) on the house clock (mach_absolute_time, stops in sleep); no
+total deadline. `-silentium S` for tests; faults `pende` (silent after
+line 1, gives up at 60 s so it never orphans forever) and `lente` (200 ms
+per line). Plant S3 is the one to remember: without the per-line fflush,
+stdout to a pipe is block-buffered, a slow worker's output sits in its
+buffer until exit, and the parent sees silence - the same false kill in
+a new shape.
+
+Also: custos' wall cap cut four `via` runs (its 12 x 801 vertex
+cross-checks run in the parent, 1,500 s CPU, not parallelised); a
+SIGKILLed parent leaves build/opifices/<pid>/ (atexit skipped) - five
+such directories cleaned by hand. P1's registered route count 32/13 was
+copied from a review miscount; the real split is 31 TL / 14 vertex.
+
+## 2026-11-04 - L3 T4 (puncta-parallela): review fixes, and a correction to T3
+
+Independent review (recensor-parallela) approved with no H/M, nine L.
+
+Correction to the T3 entry above: "processus' clock is CLOCK_UPTIME_RAW,
+which runs during dark wakes" vs "the house clock (mach_absolute_time,
+stops in sleep)" is wrong as a contrast. On macOS CLOCK_UPTIME_RAW *is*
+mach_absolute_time (man clock_gettime; the reviewer measured 0 ns
+apart). The silence timeout still fixes the deadline problem because it
+resets on every line, not because of the clock. A dark wake can still
+tick the clock while our processes barely run, so 16 x 801 runs with the
+lid open on AC (`caffeinate -i` does not stop lid sleep).
+
+The review's plant Q1 showed "spot checks = batches" was claimed but
+never tested (nothing counted them). laqueus now takes an optional
+counter, `probationes_fasciculorum` -> {factae, refutatae}, zeroed at
+entry. That one struct answers two findings: the suite asserts
+factae = batches (L1), and the tool can finally say *why* a run was
+refused - `OPIFICES DIVERGENTIA` when refutatae > 0 instead of a bare
+`REFUTATUM (status NULLUS)` (L8). A transport failure counts nothing
+(the check never ran), which keeps the two refusal kinds apart.
+
+New worker faults for acceptance: `aedificatio` (foreign build id in
+SIGNUM), `cauda` (a line after FINIS), `falsum` (UTILE value + 1:
+well-formed and wrong, so only the spot check can refuse it - run at
+W = 1 so the faulty slice is the whole first batch and the spot index
+is guaranteed to land in it). `-promovere` now refuses `-opifices` /
+`-silentium` instead of ignoring them.
+
+Worth remembering from the review's plants: with the spot check removed,
+a worker returning a *valid* wrong polynomial on every slice printed a
+wrong UNCINUS at k_max = 1 (3 x 20) - the extra K + 2 points per prime
+catch partial faults, but nothing else catches a consistent one. Rule 6
+is not theoretical.
