@@ -100,6 +100,27 @@ _annotationem_addere (
     a->error            = lecta.error;
 }
 
+/* trivium unum: commentum ancoratum solum */
+interior vacuum
+_ex_trivio (
+                    Xar* fructus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+    constans SilvaToken* tr)
+{
+    si (   tr == NIHIL
+        || ((s32)tr->genus != SILVA_LEX_COMMENTUM_CLAUSUM
+            && (s32)tr->genus != SILVA_LEX_COMMENTUM_LINEA))
+    {
+        redde;
+    }
+    si (tr->byte_offset < ZEPHYRUM)
+    {
+        redde;   /* synthetica - in fonte non exsistunt */
+    }
+    _annotationem_addere(fructus, piscina, intern, tr);
+}
+
 /* trivia lexematis unius (ambo latera): commenta ancorata sola */
 interior vacuum
 _ex_lexemate (
@@ -119,21 +140,29 @@ _ex_lexemate (
 
         per (j = ZEPHYRUM; j < numerus; j++)
         {
-            constans SilvaToken* tr = (latus == ZEPHYRUM)
-                ? silva_token_ante(tok, j) : silva_token_post(tok, j);
-
-            si (   tr == NIHIL
-                || ((s32)tr->genus != SILVA_LEX_COMMENTUM_CLAUSUM
-                    && (s32)tr->genus != SILVA_LEX_COMMENTUM_LINEA))
-            {
-                perge;
-            }
-            si (tr->byte_offset < ZEPHYRUM)
-            {
-                perge;   /* synthetica - in fonte non exsistunt */
-            }
-            _annotationem_addere(fructus, piscina, intern, tr);
+            _ex_trivio(fructus, piscina, intern, (latus == ZEPHYRUM)
+                ? silva_token_ante(tok, j) : silva_token_post(tok, j));
         }
+    }
+}
+
+/* commenta praecollecta (SilvaCommentum; NIHIL licet) */
+interior vacuum
+_ex_commentis (
+                    Xar* fructus,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+           constans Xar* commenta)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; commenta != NIHIL && i < xar_numerus(commenta);
+         i++)
+    {
+        constans SilvaCommentum* c = (constans SilvaCommentum*)
+            xar_obtinere(commenta, i);
+
+        _ex_trivio(fructus, piscina, intern, c->trivium);
     }
 }
 
@@ -476,6 +505,73 @@ _affigere (
     }
 }
 
+/* OCTETI EXTRA FLUXUM (silva-migratio T17b, 2026-09-25): tres
+ * domus lexematum fontis quae nec fluxum expansum nec lineas
+ * directivae consumptas intrant - commenta eorum annotationi
+ * INVISIBILIA erant:
+ *   - laminae invocationum (extenta; vacuae praesertim - octeti
+ *     in reinserenda solum: '__attribute__((x)) /+ <tolera> +/');
+ *   - lineae structurales regionum (#if/#elif/#else, #endif) -
+ *     regio eas possidet, directivae numquam;
+ *   - rami NON sumpti (laminae crudae) - idioma '#ifdef
+ *     __GNUC__' + tolera supra '#define' intra ramum; '#if 0'
+ *     excepto.
+ * Duplicata per (fons, byte_offset) omissa (_annotationem_
+ * addere); ordo post directivas, ante caudam. */
+interior vacuum
+_extra_fluxum (
+                      Xar* fructus,
+                  Piscina* piscina,
+      InternamentumChorda* intern,
+    constans SilvaParsura* parsura)
+{
+    i32 i;
+
+    si (parsura->expansio != NIHIL)
+    {
+        constans SilvaExpansio* exp = parsura->expansio;
+
+        per (i = ZEPHYRUM;
+             exp->extenta != NIHIL && i < xar_numerus(exp->extenta);
+             i++)
+        {
+            constans SilvaExtentumInvocationis* ext =
+                (constans SilvaExtentumInvocationis*)xar_obtinere(
+                    exp->extenta, i);
+
+            si (ext != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern, ext->lamina);
+            }
+        }
+        per (i = ZEPHYRUM;
+             exp->rami != NIHIL && i < xar_numerus(exp->rami); i++)
+        {
+            constans SilvaRamus* ramus =
+                *(SilvaRamus* constans*)xar_obtinere(exp->rami, i);
+
+            si (ramus == NIHIL)
+            {
+                perge;
+            }
+            _ex_serie(fructus, piscina, intern, ramus->directiva);
+            /* '#if 0' = codex commentatus: annotationes eius mortuae
+             * (ut examen 91 eum praeterit) - tolera ibi IRRITA
+             * falso nuntiaretur */
+            si (!ramus->est_numquam)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->lexemata_cruda);
+            }
+            si (ramus->regio != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->regio->directiva_finis);
+            }
+        }
+    }
+}
+
 
 /* ==================================================
  * API
@@ -568,62 +664,7 @@ silva_annotationes_colligere (
             }
         }
     }
-    /* OCTETI EXTRA FLUXUM (silva-migratio T17b, 2026-09-25): tres
-     * domus lexematum fontis quae nec fluxum expansum nec lineas
-     * directivae consumptas intrant - commenta eorum annotationi
-     * INVISIBILIA erant:
-     *   - laminae invocationum (extenta; vacuae praesertim - octeti
-     *     in reinserenda solum: '__attribute__((x)) /+ <tolera> +/');
-     *   - lineae structurales regionum (#if/#elif/#else, #endif) -
-     *     regio eas possidet, directivae numquam;
-     *   - rami NON sumpti (laminae crudae) - idioma '#ifdef
-     *     __GNUC__' + tolera supra '#define' intra ramum; '#if 0'
-     *     excepto.
-     * Duplicata per (fons, byte_offset) omissa (_annotationem_
-     * addere); ordo post directivas, ante caudam. */
-    si (parsura->expansio != NIHIL)
-    {
-        constans SilvaExpansio* exp = parsura->expansio;
-
-        per (i = ZEPHYRUM;
-             exp->extenta != NIHIL && i < xar_numerus(exp->extenta);
-             i++)
-        {
-            constans SilvaExtentumInvocationis* ext =
-                (constans SilvaExtentumInvocationis*)xar_obtinere(
-                    exp->extenta, i);
-
-            si (ext != NIHIL)
-            {
-                _ex_serie(fructus, piscina, intern, ext->lamina);
-            }
-        }
-        per (i = ZEPHYRUM;
-             exp->rami != NIHIL && i < xar_numerus(exp->rami); i++)
-        {
-            constans SilvaRamus* ramus =
-                *(SilvaRamus* constans*)xar_obtinere(exp->rami, i);
-
-            si (ramus == NIHIL)
-            {
-                perge;
-            }
-            _ex_serie(fructus, piscina, intern, ramus->directiva);
-            /* '#if 0' = codex commentatus: annotationes eius mortuae
-             * (ut examen 91 eum praeterit) - tolera ibi IRRITA
-             * falso nuntiaretur */
-            si (!ramus->est_numquam)
-            {
-                _ex_serie(fructus, piscina, intern,
-                    ramus->lexemata_cruda);
-            }
-            si (ramus->regio != NIHIL)
-            {
-                _ex_serie(fructus, piscina, intern,
-                    ramus->regio->directiva_finis);
-            }
-        }
-    }
+    _extra_fluxum(fructus, piscina, intern, parsura);
     /* trivia caudae: commentarium post lexema ultimum in EOF
      * equitat (casus scopi plagulae) - si EOF extra lexemata est,
      * hic attingitur; duplicata innocua */
@@ -631,6 +672,46 @@ silva_annotationes_colligere (
     {
         _ex_lexemate(fructus, piscina, intern, parsura->lexema_finis);
     }
+    _affigere(piscina, parsura, fructus);
+    redde fructus;
+}
+
+Xar*
+silva_annotationes_ex_commentis (
+                   Piscina* piscina,
+     constans SilvaParsura* parsura,
+       InternamentumChorda* intern,
+    constans SilvaCommenta* commenta)
+{
+    Xar* fructus;
+
+    si (piscina == NIHIL || parsura == NIHIL || commenta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fructus = xar_creare(piscina, (i32)magnitudo(SilvaAnnotatio));
+    si (fructus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (parsura->lexemata == NIHIL)
+    {
+        redde fructus;
+    }
+    si (intern == NIHIL)
+    {
+        intern = internamentum_creare(piscina);
+        si (intern == NIHIL)
+        {
+            redde NIHIL;
+        }
+    }
+    /* ordo ut silva_annotationes_colligere: fluxus, directivae,
+     * extra fluxum, cauda */
+    _ex_commentis(fructus, piscina, intern, commenta->fluxus);
+    _ex_commentis(fructus, piscina, intern, commenta->directivae);
+    _extra_fluxum(fructus, piscina, intern, parsura);
+    _ex_commentis(fructus, piscina, intern, commenta->finis);
     _affigere(piscina, parsura, fructus);
     redde fructus;
 }

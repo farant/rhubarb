@@ -2203,6 +2203,21 @@ s32 principale (vacuum)
     _codicem_probare(piscina,
         "int x;\n// finis",
         (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
+    /* linea directivae trivium suum fert (sedes per lineam, ordine
+     * linearum - commenta fluxus, verritiones gradus II) */
+    _codicem_probare(piscina,
+        "#define X 1 // directiva\nint y = X;\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
+    /* radix macri lexemata plura expansa communis: semel (radices
+     * consecutivae aequales semel ambulantur). Commentarium in linea
+     * SUA - in linea 'return' trivium posterius eius esset, non
+     * radicis */
+    _codicem_probare(piscina,
+        "#define P(a) ((a) + (a))\n"
+        "int f(int v);\n"
+        "int f(int v)\n{\n    return\n        // ante macrum\n"
+        "        P(v);\n}\n",
+        (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);
     _codicem_probare(piscina,
         "int f(_Bool b) { return b; }\n",
         (s32)EXAMEN_CODEX_STANDARDUM_ALIENUM, I);

@@ -14710,3 +14710,17 @@ renominare and nexus_percursus already skipped sem₂ by hand when nothing flipp
 - standarda tests fons first.
 
 Effect: semantics 108.4 -> 95.7 G (-11.8%), `percursus -semantica` 389.1 -> 376.0 G (-3.4%); professiones 16.3 -> 6.6, canal 4.1 -> 1.5. standarda barely moved, because its cost is the trivia walk itself. Checked: examen old against new, 596 files, identical; percursus reports identical on the same tree. New test portabilitas XII covers tag priority and the search's last position, where no test looked before; 8 plants, all red. Next: one shared comment table (step 2), then annotation placement without the whole-tree walk (step 3).
+
+**Token sweeps, step 2 (same day).** professiones, standarda and the annotation collector each walked every token of the TU, headers included, to read the same trivia. Now one lazy sweep per parsura (`_commenta_pigra`) fills four lists:
+- comments of the fluxus, own and radix;
+- comments of directive lines;
+- comments of the EOF token;
+- standarda sites.
+
+Each list stays in its consumer's old order. The collector got a second entry point, `silva_annotationes_ex_commentis`; the old one stays for identitates and hospes.
+
+Effect: semantics 95.7 -> 82.1 G (-14.1%), `percursus -semantica` 376.0 -> 362.9 G (-3.5%); standarda 7.95 -> 0.60, professiones 6.63 -> 0.37, while the collector, now carrying the table build, is flat. Over both steps: semantics 108.4 -> 82.1 G (-24%), run 389.1 -> 362.9 G (-6.7%).
+
+Checked: examen old against new on 596 files, identical; percursus reports identical. A new semantica test compares the old collector against the table path annotation by annotation, and two new 89 cases cover a directive line and a multi-token macro; 7 of 8 plants red. The eighth (cauda list) is unreachable by any producer today, in the old collector too.
+
+Fixture lesson: a same-line comment is the previous token's trailing trivia, so a "radix" comment has to sit on its own line. Next: step 3, annotation placement without the per-unit tree walk (~6 G).

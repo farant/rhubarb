@@ -106,6 +106,38 @@ silva_annotationes_colligere (
     constans SilvaParsura* parsura,
       InternamentumChorda* intern);
 
+/* Commenta praecollecta (budget fusionis, verritiones gradus II):
+ * trivia commentaria quae collector ipse ex fluxu caperet, ab
+ * ambulatione communi vocatoris (semantica: professiones et
+ * standarda eadem ambulatione) iam collecta. proprium VERUM =
+ * trivium lexematis ipsius, FALSUM = radicis originis eius. */
+nomen structura {
+     SilvaToken* trivium;
+            b32  proprium;
+} SilvaCommentum;
+
+/* Series tres, quaeque ordine quo collector eas ambulat: fluxus =
+ * lexemata parsurae (cuiusque proprium, deinde radicis si alia),
+ * directivae = lineae directivae consumptae (idem), finis =
+ * lexema_finis (proprium solum). Elementa SilvaCommentum; trivia
+ * synthetica (byte_offset < 0) collector ipse omittit. */
+nomen structura {
+    constans Xar* fluxus;
+    constans Xar* directivae;
+    constans Xar* finis;
+} SilvaCommenta;
+
+/* Ut silva_annotationes_colligere, sed series lexematum et
+ * directivarum NON ambulantur - commenta praecollecta leguntur
+ * (laminae invocationum et rami ut olim). Fructus idem si commenta
+ * ordinem contractus servant (probatio_silva_semantica confert). */
+Xar*
+silva_annotationes_ex_commentis (
+                   Piscina* piscina,
+     constans SilvaParsura* parsura,
+       InternamentumChorda* intern,
+    constans SilvaCommenta* commenta);
+
 /* Unitates supremae parsurae: radix commissionis ("fortasse
  * religata") hodie LISTA sententiarum est, post normalizationem
  * NODUS esse posset - ambo hic accepta, nodi soli redduntur.

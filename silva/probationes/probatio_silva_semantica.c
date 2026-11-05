@@ -13,6 +13,9 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
+#include "silva_annotationes.h"
+#include "silva_arbor.h"
+#include "silva_tabulae.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -387,6 +390,47 @@ _internamentum_tabulae_probare (
         (s32)numerus);
 }
 
+
+/* annotationes semanticae (commenta fluxus, verritiones gradus II)
+ * contra collectorem solum: numerus, ordo, sedes, affixio */
+interior vacuum
+_commenta_conferre (
+         Piscina* piscina,
+    SilvaParsura* parsura,
+             i32  expectata)
+{
+               Xar* sola;
+    SilvaSemantica* sem;
+               i32  n;
+               i32  i;
+
+    sola  = silva_annotationes_colligere(piscina, parsura, NIHIL);
+    sem   = silva_c89_semantica_analysare(piscina, parsura);
+    CREDO_NON_NIHIL (sola);
+    CREDO_NON_NIHIL (sem);
+    si (sola == NIHIL || sem == NIHIL)
+    {
+        redde;
+    }
+    n = xar_numerus(sola);
+    CREDO_AEQUALIS_I32 (n, expectata);
+    CREDO_VERUM (sem->annotationes != NIHIL
+        ? xar_numerus(sem->annotationes) == n : n == ZEPHYRUM);
+    per (i = ZEPHYRUM; sem->annotationes != NIHIL && i < n
+             && i < xar_numerus(sem->annotationes); i++)
+    {
+        constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
+            xar_obtinere(sola, i);
+        constans SilvaAnnotatio* b = (constans SilvaAnnotatio*)
+            xar_obtinere(sem->annotationes, i);
+
+        CREDO_VERUM (b->fons_index == a->fons_index);
+        CREDO_VERUM (b->byte_offset == a->byte_offset);
+        CREDO_VERUM (b->modus == a->modus);
+        CREDO_VERUM (b->unitas == a->unitas);
+        CREDO_VERUM (b->parsata == a->parsata);
+    }
+}
 
 s32 principale (vacuum)
 {
@@ -2193,6 +2237,73 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (init);
         CREDO_VERUM (!silva_c89_chorda_decodere(piscina, init,
             &octeti));
+    }
+
+
+    /* ==================================================
+     * Commenta fluxus (budget fusionis, verritiones gradus II):
+     * annotationes semanticae (silva_annotationes_ex_commentis,
+     * commenta ex ambulatione communi) EAEDEM ac collectoris soli
+     * (silva_annotationes_colligere). Fixa omnes domus tangit:
+     * lexema ordinarium, radix macri sola (commentarium in linea
+     * sua ante invocationem - in linea 'return' trivium posterius
+     * 'return' esset), linea directivae, ramus '#if 0' et ramus non
+     * sumptus, cauda. Deinde parsura per arborem STML relecta:
+     * lexemata NIHIL - collector et semantica ambo statim redeunt
+     * (nihil collectum). Series 'finis' igitur hodie a nullo
+     * producente sola attingitur: in parsatione EOF ultimum
+     * lexematum est, in arbore lexemata desunt - ramus
+     * defensivus, in collectore vetere aeque.
+     * ================================================== */
+
+    imprimere("\n--- Commenta fluxus: collector idem ---\n");
+    {
+        constans character* fons =
+            "#define M(x) ((x) + 1)\n"
+            "/* <nota" " a=\"directiva\"/> */\n"
+            "#define N 2\n"
+            "#if 0\n"
+            "/* <nota" " a=\"mortua\"/> */\n"
+            "#endif\n"
+            "#ifdef NONDUM_DEFINITUM\n"
+            "/* <nota" " a=\"ramus\"/> */\n"
+            "int r;\n"
+            "#endif\n"
+            "int f(int v);\n"
+            "int f(int v)\n"
+            "{\n"
+            "    /* <nota" " a=\"prima\"/> */\n"
+            "    return\n"
+            "        /* <nota" " a=\"radix\"/> */ M(v) + N;\n"
+            "}\n"
+            "/* <nota" " a=\"cauda\"/> */\n";
+               SilvaParsura* parsura  = _parsare(piscina, fons);
+        SilvaArborScriptura  scriptura;
+           SilvaArborVitium  vitium;
+
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            /* omnes sex: 'mortua' quoque - trivium ante '#endif' est,
+             * et lineam '#endif' collector legit (lamina rami '#if 0'
+             * sola omittitur) */
+            _commenta_conferre(piscina, parsura, VI);
+            scriptura = silva_arbor_scribere_parsuram(piscina, parsura,
+                &SILVA_C89_REGISTRUM, "c89", parsura->fons_princeps,
+                NIHIL);
+            CREDO_VERUM (scriptura.successus);
+            si (scriptura.successus)
+            {
+                parsura = silva_arbor_legere_parsuram(piscina, NIHIL,
+                    scriptura.textus, &SILVA_C89_REGISTRUM, "c89",
+                    &vitium);
+                CREDO_NON_NIHIL (parsura);
+                si (parsura != NIHIL)
+                {
+                    _commenta_conferre(piscina, parsura, ZEPHYRUM);
+                }
+            }
+        }
     }
 
     credo_imprimere_compendium();

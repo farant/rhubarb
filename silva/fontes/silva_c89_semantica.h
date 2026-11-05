@@ -780,6 +780,18 @@ structura SilvaSemantica {
     constans SilvaParsura* annotationes_parsura;
                       Xar* annotationes;
 
+    /* commenta fluxus (budget fusionis, verritiones gradus II):
+     * ambulatio UNA lexematum (et radicum), finis, linearum
+     * directivae per parsuram - collector annotationum,
+     * professiones (88), standarda (89) hinc legunt. Elementa
+     * SilvaCommentum (silva_annotationes.h) et SedesAliena
+     * (in .c). */
+    constans SilvaParsura* commenta_parsura;
+                      Xar* commenta_fluxus;
+                      Xar* commenta_directivae;
+                      Xar* commenta_finis;
+                      Xar* sedes_alienae;
+
     /* FLUXUS-0 (2026-07-17): CFG per definitionem RETENTI (decisio
      * Q7 colloquii - codex-est-basis-datorum; elementa
      * FluxusFunctionis*, silva_c89_fluxus.h). Aedificati in

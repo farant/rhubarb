@@ -13183,6 +13183,38 @@ silva_annotationes_colligere (
     constans SilvaParsura* parsura,
       SilvaInternamentumChorda* intern);
 
+/* Commenta praecollecta (budget fusionis, verritiones gradus II):
+ * trivia commentaria quae collector ipse ex fluxu caperet, ab
+ * ambulatione communi vocatoris (semantica: professiones et
+ * standarda eadem ambulatione) iam collecta. proprium VERUM =
+ * trivium lexematis ipsius, FALSUM = radicis originis eius. */
+nomen structura {
+     SilvaToken* trivium;
+            b32  proprium;
+} SilvaCommentum;
+
+/* Series tres, quaeque ordine quo collector eas ambulat: fluxus =
+ * lexemata parsurae (cuiusque proprium, deinde radicis si alia),
+ * directivae = lineae directivae consumptae (idem), finis =
+ * lexema_finis (proprium solum). Elementa SilvaCommentum; trivia
+ * synthetica (byte_offset < 0) collector ipse omittit. */
+nomen structura {
+    constans SilvaXar* fluxus;
+    constans SilvaXar* directivae;
+    constans SilvaXar* finis;
+} SilvaCommenta;
+
+/* Ut silva_annotationes_colligere, sed series lexematum et
+ * directivarum NON ambulantur - commenta praecollecta leguntur
+ * (laminae invocationum et rami ut olim). Fructus idem si commenta
+ * ordinem contractus servant (probatio_silva_semantica confert). */
+SilvaXar*
+silva_annotationes_ex_commentis (
+                   SilvaPiscina* piscina,
+     constans SilvaParsura* parsura,
+       SilvaInternamentumChorda* intern,
+    constans SilvaCommenta* commenta);
+
 /* Unitates supremae parsurae: radix commissionis ("fortasse
  * religata") hodie LISTA sententiarum est, post normalizationem
  * NODUS esse posset - ambo hic accepta, nodi soli redduntur.
@@ -14235,6 +14267,18 @@ structura SilvaSemantica {
      * Elementa SilvaAnnotatio. */
     constans SilvaParsura* annotationes_parsura;
                       SilvaXar* annotationes;
+
+    /* commenta fluxus (budget fusionis, verritiones gradus II):
+     * ambulatio UNA lexematum (et radicum), finis, linearum
+     * directivae per parsuram - collector annotationum,
+     * professiones (88), standarda (89) hinc legunt. Elementa
+     * SilvaCommentum (silva_annotationes.h) et SedesAliena
+     * (in .c). */
+    constans SilvaParsura* commenta_parsura;
+                      SilvaXar* commenta_fluxus;
+                      SilvaXar* commenta_directivae;
+                      SilvaXar* commenta_finis;
+                      SilvaXar* sedes_alienae;
 
     /* FLUXUS-0 (2026-07-17): CFG per definitionem RETENTI (decisio
      * Q7 colloquii - codex-est-basis-datorum; elementa
@@ -92113,6 +92157,238 @@ interior constans ExamenTolerabilis _tolerabiles[] = {
      * nodo, tunc familia intrat. */
 };
 
+
+/* ==================================================
+ * Commenta fluxus (budget fusionis, verritiones gradus II)
+ *
+ * Ambulatio UNA lexematum (radicibus originis quoque), lexematis
+ * finis et linearum directivae per parsuram. Consumptores tres qui
+ * olim quisque fluxum totum (capita inclusa!) ambulabant hinc
+ * legunt: collector annotationum (commenta propria et radicum),
+ * professiones (88; commenta propria), standarda (89; sedes
+ * non-C89 fontis principalis per radices, consecutivae semel).
+ * Ordo cuiusque seriei = ordo ambulationis olim suae.
+ * ================================================== */
+
+nomen structura {
+     SilvaToken* sedes;   /* radix aut trivium eius */
+            s32  linea;   /* index lineae directivae; -I = fluxus,
+                          * finis */
+} SedesAliena;
+
+#define COMMENTA_SINE_SEDIBUS (-II)
+
+interior vacuum
+_sedem_alienam_notare (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura,
+               SilvaToken* t,
+                      s32  linea)
+{
+    SedesAliena* s;
+
+    si (   t->fons_index           != parsura->fons_princeps
+        || silva_token_standard(t) == SILVA_STANDARD_C89)
+    {
+        redde;
+    }
+    s = (SedesAliena*)silva_xar_addere(sem->sedes_alienae);
+    si (s != NIHIL)
+    {
+        s->sedes = t;
+        s->linea = linea;
+    }
+}
+
+/* lexematis unius trivia: commenta -> series (NIHIL = nulla);
+ * linea != COMMENTA_SINE_SEDIBUS: sedes standardi - lexema ipsum
+ * primum, deinde trivia ante et post (ordo olim
+ * _standarda_lexematis) */
+interior vacuum
+_commenta_lexematis (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura,
+                      SilvaXar* series,
+               SilvaToken* tok,
+                      b32  proprium,
+                      s32  linea)
+{
+    i32 latus;
+
+    si (linea != COMMENTA_SINE_SEDIBUS)
+    {
+        _sedem_alienam_notare(sem, parsura, tok, linea);
+    }
+    per (latus = ZEPHYRUM; latus < II; latus++)
+    {
+        i32 k = (latus == ZEPHYRUM) ? silva_token_ante_numerus(tok)
+                                    : silva_token_post_numerus(tok);
+        i32 j;
+
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            SilvaToken* tr = (latus == ZEPHYRUM)
+                ? silva_token_ante(tok, j) : silva_token_post(tok, j);
+
+            si (tr == NIHIL)
+            {
+                perge;
+            }
+            si (   series != NIHIL
+                && (   tr->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+                    || tr->genus == SILVA_LEX_COMMENTUM_LINEA))
+            {
+                SilvaCommentum* c = (SilvaCommentum*)silva_xar_addere(
+                    series);
+
+                si (c != NIHIL)
+                {
+                    c->trivium   = tr;
+                    c->proprium  = proprium;
+                }
+            }
+            si (linea != COMMENTA_SINE_SEDIBUS)
+            {
+                _sedem_alienam_notare(sem, parsura, tr, linea);
+            }
+        }
+    }
+}
+
+/* lexema cum radice sua: proprium semper, radix si alia (collector);
+ * standarda in radice si linea data */
+interior vacuum
+_commenta_cum_radice (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura,
+                      SilvaXar* series,
+               SilvaToken* tok,
+               SilvaToken* radix,
+                      s32  linea)
+{
+    si (radix == tok)
+    {
+        _commenta_lexematis(sem, parsura, series, tok, VERUM, linea);
+        redde;
+    }
+    _commenta_lexematis(sem, parsura, series, tok, VERUM,
+        COMMENTA_SINE_SEDIBUS);
+    si (radix != NIHIL)
+    {
+        _commenta_lexematis(sem, parsura, series, radix, FALSUM,
+            linea);
+    }
+}
+
+interior vacuum
+_commenta_pigra (
+           SilvaSemantica* sem,
+    constans SilvaParsura* parsura)
+{
+    SilvaToken* radix_prior = NIHIL;
+           b32  standarda;
+           i32  i;
+           i32  m;
+
+    si (sem->commenta_parsura == parsura)
+    {
+        redde;
+    }
+    sem->commenta_parsura     = parsura;
+    sem->commenta_fluxus      = silva_xar_creare(sem->piscina,
+        (i32)magnitudo(SilvaCommentum));
+    sem->commenta_directivae  = silva_xar_creare(sem->piscina,
+        (i32)magnitudo(SilvaCommentum));
+    sem->commenta_finis       = silva_xar_creare(sem->piscina,
+        (i32)magnitudo(SilvaCommentum));
+    sem->sedes_alienae      = silva_xar_creare(sem->piscina,
+        (i32)magnitudo(SedesAliena));
+    si (   parsura                  == NIHIL
+        || parsura->lexemata        == NIHIL
+        || sem->commenta_fluxus     == NIHIL
+        || sem->commenta_directivae == NIHIL
+        || sem->commenta_finis      == NIHIL
+        || sem->sedes_alienae       == NIHIL)
+    {
+        redde;
+    }
+    standarda = parsura->fons_princeps >= ZEPHYRUM;
+
+    /* fluxus: radices consecutivae aequales standardis semel */
+    m = silva_xar_numerus(parsura->lexemata);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        SilvaToken* tok = *(SilvaToken**)silva_xar_obtinere(
+            parsura->lexemata, i);
+        SilvaToken* radix;
+               b32  novus;
+
+        si (tok == NIHIL)
+        {
+            perge;
+        }
+        radix = silva_token_radix(tok);
+        novus = radix != NIHIL && radix != radix_prior;
+        si (novus)
+        {
+            radix_prior = radix;
+        }
+        _commenta_cum_radice(sem, parsura, sem->commenta_fluxus, tok,
+            radix, (standarda && novus) ? -I : COMMENTA_SINE_SEDIBUS);
+    }
+
+    /* finis: commenta propria; standarda in radice nisi ultima
+     * fluxus iam ('//x' in fine plagulae bis nuntiabatur) */
+    si (parsura->lexema_finis != NIHIL)
+    {
+        SilvaToken* radix = silva_token_radix(parsura->lexema_finis);
+
+        _commenta_lexematis(sem, parsura, sem->commenta_finis,
+            parsura->lexema_finis, VERUM, COMMENTA_SINE_SEDIBUS);
+        si (standarda && radix != NIHIL && radix != radix_prior)
+        {
+            _commenta_lexematis(sem, parsura, NIHIL, radix, FALSUM,
+                -I);
+        }
+    }
+
+    /* lineae directivae: trivia sua secum ferunt (lex E2/gradus);
+     * standarda in radice cuiusque lexematis, sine compressione */
+    si (parsura->directivae != NIHIL)
+    {
+        i32 dm = silva_xar_numerus(parsura->directivae);
+        i32 di;
+
+        per (di = ZEPHYRUM; di < dm; di++)
+        {
+            SilvaXar* linea = *(SilvaXar**)silva_xar_obtinere(parsura->directivae,
+                di);
+            i32 tm;
+            i32 ti;
+
+            si (linea == NIHIL)
+            {
+                perge;
+            }
+            tm = silva_xar_numerus(linea);
+            per (ti = ZEPHYRUM; ti < tm; ti++)
+            {
+                SilvaToken* tok = *(SilvaToken**)silva_xar_obtinere(linea,
+                    ti);
+
+                si (tok == NIHIL)
+                {
+                    perge;
+                }
+                _commenta_cum_radice(sem, parsura,
+                    sem->commenta_directivae, tok,
+                    silva_token_radix(tok),
+                    standarda ? (s32)di : COMMENTA_SINE_SEDIBUS);
+            }
+        }
+    }
+}
+
 /* ambulatio annotationum UNA communis per parsuram (frustum E2):
  * collector silva_annotationes (lexemata + radices originis +
  * lineae directivae + EOF) semel currit; consumptores (passus
@@ -92124,6 +92400,8 @@ _annotationes_pigre (
            SilvaSemantica* sem,
     constans SilvaParsura* parsura)
 {
+    SilvaCommenta commenta;
+
     si (sem->annotationes_parsura == parsura)
     {
         redde sem->annotationes;
@@ -92134,8 +92412,14 @@ _annotationes_pigre (
     {
         redde NIHIL;
     }
-    sem->annotationes = silva_annotationes_colligere(sem->piscina,
-        parsura, NIHIL);
+    /* commenta fluxus ex ambulatione communi (gradus II) - collector
+     * series lexematum et directivarum non iterum ambulat */
+    _commenta_pigra(sem, parsura);
+    commenta.fluxus      = sem->commenta_fluxus;
+    commenta.directivae  = sem->commenta_directivae;
+    commenta.finis       = sem->commenta_finis;
+    sem->annotationes = silva_annotationes_ex_commentis(sem->piscina,
+        parsura, NIHIL, &commenta);
     redde sem->annotationes;
 }
 
@@ -97714,47 +97998,10 @@ _standardum_trivii (
             : "lexema standardi alieni (C99/extensio)");
 }
 
+/* '#define NOMEN(' ... '...' ... ')' - macro variadica C99 (sedes
+ * radicum lineae iam nuntiatae - ordo olim idem) */
 interior vacuum
-_standarda_lexematis (
-           SilvaSemantica* sem,
-    constans SilvaParsura* parsura,
-      constans SilvaToken* radix)
-{
-    i32 j;
-    i32 k;
-
-    si (radix == NIHIL)
-    {
-        redde;
-    }
-    si (   radix->fons_index           == parsura->fons_princeps
-        && silva_token_standard(radix) != SILVA_STANDARD_C89)
-    {
-        _standardum_trivii(sem, parsura, radix);
-    }
-    si (silva_token_ante_numerus(radix) > ZEPHYRUM)
-    {
-        k = silva_token_ante_numerus(radix);
-        per (j = ZEPHYRUM; j < k; j++)
-        {
-            _standardum_trivii(sem, parsura, silva_token_ante(radix,
-                j));
-        }
-    }
-    si (silva_token_post_numerus(radix) > ZEPHYRUM)
-    {
-        k = silva_token_post_numerus(radix);
-        per (j = ZEPHYRUM; j < k; j++)
-        {
-            _standardum_trivii(sem, parsura, silva_token_post(radix,
-                j));
-        }
-    }
-}
-
-/* '#define NOMEN(' ... '...' ... ')' - macro variadica C99 */
-interior vacuum
-_standarda_directivae (
+_standarda_variadica (
            SilvaSemantica* sem,
     constans SilvaParsura* parsura,
                       SilvaXar* linea)
@@ -97768,11 +98015,6 @@ _standarda_directivae (
         redde;
     }
     m = silva_xar_numerus(linea);
-    per (i = ZEPHYRUM; i < m; i++)
-    {
-        _standarda_lexematis(sem, parsura,
-            silva_token_radix(*(SilvaToken**)silva_xar_obtinere(linea, i)));
-    }
     si (m < V)
     {
         redde;
@@ -97815,9 +98057,10 @@ _standarda_examinare (
            SilvaSemantica* sem,
     constans SilvaParsura* parsura)
 {
-    constans SilvaToken* radix_prior = NIHIL;
-                    i32  i;
-                    i32  m;
+    i32 i;
+    i32 k = ZEPHYRUM;
+    i32 m;
+    i32 n;
 
     si (   parsura           == NIHIL
         || parsura->lexemata == NIHIL
@@ -97825,38 +98068,38 @@ _standarda_examinare (
     {
         redde;
     }
-    m = silva_xar_numerus(parsura->lexemata);
+    /* sedes ex commentis fluxus (gradus II): radices fluxus
+     * (consecutivae semel), finis, lineae directivae - ordine olim
+     * ambulationis propriae */
+    _commenta_pigra(sem, parsura);
+    si (sem->sedes_alienae == NIHIL)
+    {
+        redde;
+    }
+    n = silva_xar_numerus(sem->sedes_alienae);
+    dum (   k < n && ((SedesAliena*)silva_xar_obtinere(
+               sem->sedes_alienae, k))->linea < ZEPHYRUM)
+    {
+        _standardum_trivii(sem, parsura, ((SedesAliena*)
+            silva_xar_obtinere(sem->sedes_alienae, k))->sedes);
+        k++;
+    }
+    si (parsura->directivae == NIHIL)
+    {
+        redde;
+    }
+    m = silva_xar_numerus(parsura->directivae);
     per (i = ZEPHYRUM; i < m; i++)
     {
-        constans SilvaToken* radix = silva_token_radix(
-            *(SilvaToken**)silva_xar_obtinere(parsura->lexemata, i));
-
-        si (radix == NIHIL || radix == radix_prior)
+        dum (   k < n && ((SedesAliena*)silva_xar_obtinere(
+                   sem->sedes_alienae, k))->linea == (s32)i)
         {
-            perge;
+            _standardum_trivii(sem, parsura, ((SedesAliena*)
+                silva_xar_obtinere(sem->sedes_alienae, k))->sedes);
+            k++;
         }
-        radix_prior = radix;
-        _standarda_lexematis(sem, parsura, radix);
-    }
-    /* FINIS: in lexematibus saepe ultimum iam est - bis ne visatur
-     * ('//x' in fine plagulae bis nuntiabatur, mensuratum) */
-    {
-        constans SilvaToken* finis = silva_token_radix(
-            parsura->lexema_finis);
-
-        si (finis != NIHIL && finis != radix_prior)
-        {
-            _standarda_lexematis(sem, parsura, finis);
-        }
-    }
-    si (parsura->directivae != NIHIL)
-    {
-        m = silva_xar_numerus(parsura->directivae);
-        per (i = ZEPHYRUM; i < m; i++)
-        {
-            _standarda_directivae(sem, parsura,
-                *(SilvaXar**)silva_xar_obtinere(parsura->directivae, i));
-        }
+        _standarda_variadica(sem, parsura,
+            *(SilvaXar**)silva_xar_obtinere(parsura->directivae, i));
     }
 }
 
@@ -98855,32 +99098,24 @@ _professionem_trivium (
     }
 }
 
+/* commenta propria seriei (radicum commenta professionibus numquam
+ * lecta - ambulatio olim propria lexematum solum) */
 interior vacuum
-_professionum_trivia_omnia (
-    SilvaSemantica* sem,
-        SilvaToken* t)
+_professiones_ex_commentis (
+       SilvaSemantica* sem,
+         constans SilvaXar* series)
 {
-    i32 j;
-    i32 k;
+    i32 i;
 
-    si (t == NIHIL)
+    per (i = ZEPHYRUM; series != NIHIL && i < silva_xar_numerus(series);
+         i++)
     {
-        redde;
-    }
-    si (silva_token_ante_numerus(t) > ZEPHYRUM)
-    {
-        k = silva_token_ante_numerus(t);
-        per (j = ZEPHYRUM; j < k; j++)
+        constans SilvaCommentum* c = (constans SilvaCommentum*)
+            silva_xar_obtinere(series, i);
+
+        si (c->proprium)
         {
-            _professionem_trivium(sem, silva_token_ante(t, j));
-        }
-    }
-    si (silva_token_post_numerus(t) > ZEPHYRUM)
-    {
-        k = silva_token_post_numerus(t);
-        per (j = ZEPHYRUM; j < k; j++)
-        {
-            _professionem_trivium(sem, silva_token_post(t, j));
+            _professionem_trivium(sem, c->trivium);
         }
     }
 }
@@ -98890,9 +99125,6 @@ _professiones_colligere (
            SilvaSemantica* sem,
     constans SilvaParsura* parsura)
 {
-    i32 i;
-    i32 m;
-
     si (parsura == NIHIL || parsura->lexemata == NIHIL)
     {
         redde;
@@ -98903,38 +99135,12 @@ _professiones_colligere (
     {
         redde;
     }
-    m = silva_xar_numerus(parsura->lexemata);
-    per (i = ZEPHYRUM; i < m; i++)
-    {
-        _professionum_trivia_omnia(sem, *(SilvaToken**)silva_xar_obtinere(
-            parsura->lexemata, i));
-    }
-    _professionum_trivia_omnia(sem, parsura->lexema_finis);
-    /* lineae directivae trivia sua secum ferunt (lex E2/gradus) */
-    si (parsura->directivae != NIHIL)
-    {
-        i32 dm = silva_xar_numerus(parsura->directivae);
-        i32 di;
-
-        per (di = ZEPHYRUM; di < dm; di++)
-        {
-            SilvaXar* linea = *(SilvaXar**)silva_xar_obtinere(parsura->directivae,
-                di);
-            i32 tm;
-            i32 ti;
-
-            si (linea == NIHIL)
-            {
-                perge;
-            }
-            tm = silva_xar_numerus(linea);
-            per (ti = ZEPHYRUM; ti < tm; ti++)
-            {
-                _professionum_trivia_omnia(sem, *(SilvaToken**)
-                    silva_xar_obtinere(linea, ti));
-            }
-        }
-    }
+    /* ex commentis fluxus (gradus II): lexemata, finis, lineae
+     * directivae - ordo olim idem (prima professio fontis vincit) */
+    _commenta_pigra(sem, parsura);
+    _professiones_ex_commentis(sem, sem->commenta_fluxus);
+    _professiones_ex_commentis(sem, sem->commenta_finis);
+    _professiones_ex_commentis(sem, sem->commenta_directivae);
 }
 
 interior vacuum
@@ -113164,6 +113370,27 @@ _annotationem_addere (
     a->error            = lecta.error;
 }
 
+/* trivium unum: commentum ancoratum solum */
+interior vacuum
+_ex_trivio (
+                    SilvaXar* fructus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern,
+    constans SilvaToken* tr)
+{
+    si (   tr == NIHIL
+        || ((s32)tr->genus != SILVA_LEX_COMMENTUM_CLAUSUM
+            && (s32)tr->genus != SILVA_LEX_COMMENTUM_LINEA))
+    {
+        redde;
+    }
+    si (tr->byte_offset < ZEPHYRUM)
+    {
+        redde;   /* synthetica - in fonte non exsistunt */
+    }
+    _annotationem_addere(fructus, piscina, intern, tr);
+}
+
 /* trivia lexematis unius (ambo latera): commenta ancorata sola */
 interior vacuum
 _ex_lexemate (
@@ -113183,21 +113410,29 @@ _ex_lexemate (
 
         per (j = ZEPHYRUM; j < numerus; j++)
         {
-            constans SilvaToken* tr = (latus == ZEPHYRUM)
-                ? silva_token_ante(tok, j) : silva_token_post(tok, j);
-
-            si (   tr == NIHIL
-                || ((s32)tr->genus != SILVA_LEX_COMMENTUM_CLAUSUM
-                    && (s32)tr->genus != SILVA_LEX_COMMENTUM_LINEA))
-            {
-                perge;
-            }
-            si (tr->byte_offset < ZEPHYRUM)
-            {
-                perge;   /* synthetica - in fonte non exsistunt */
-            }
-            _annotationem_addere(fructus, piscina, intern, tr);
+            _ex_trivio(fructus, piscina, intern, (latus == ZEPHYRUM)
+                ? silva_token_ante(tok, j) : silva_token_post(tok, j));
         }
+    }
+}
+
+/* commenta praecollecta (SilvaCommentum; NIHIL licet) */
+interior vacuum
+_ex_commentis (
+                    SilvaXar* fructus,
+                SilvaPiscina* piscina,
+    SilvaInternamentumChorda* intern,
+           constans SilvaXar* commenta)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; commenta != NIHIL && i < silva_xar_numerus(commenta);
+         i++)
+    {
+        constans SilvaCommentum* c = (constans SilvaCommentum*)
+            silva_xar_obtinere(commenta, i);
+
+        _ex_trivio(fructus, piscina, intern, c->trivium);
     }
 }
 
@@ -113540,6 +113775,73 @@ _affigere (
     }
 }
 
+/* OCTETI EXTRA FLUXUM (silva-migratio T17b, 2026-09-25): tres
+ * domus lexematum fontis quae nec fluxum expansum nec lineas
+ * directivae consumptas intrant - commenta eorum annotationi
+ * INVISIBILIA erant:
+ *   - laminae invocationum (extenta; vacuae praesertim - octeti
+ *     in reinserenda solum: '__attribute__((x)) /+ <tolera> +/');
+ *   - lineae structurales regionum (#if/#elif/#else, #endif) -
+ *     regio eas possidet, directivae numquam;
+ *   - rami NON sumpti (laminae crudae) - idioma '#ifdef
+ *     __GNUC__' + tolera supra '#define' intra ramum; '#if 0'
+ *     excepto.
+ * Duplicata per (fons, byte_offset) omissa (_annotationem_
+ * addere); ordo post directivas, ante caudam. */
+interior vacuum
+_extra_fluxum (
+                      SilvaXar* fructus,
+                  SilvaPiscina* piscina,
+      SilvaInternamentumChorda* intern,
+    constans SilvaParsura* parsura)
+{
+    i32 i;
+
+    si (parsura->expansio != NIHIL)
+    {
+        constans SilvaExpansio* exp = parsura->expansio;
+
+        per (i = ZEPHYRUM;
+             exp->extenta != NIHIL && i < silva_xar_numerus(exp->extenta);
+             i++)
+        {
+            constans SilvaExtentumInvocationis* ext =
+                (constans SilvaExtentumInvocationis*)silva_xar_obtinere(
+                    exp->extenta, i);
+
+            si (ext != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern, ext->lamina);
+            }
+        }
+        per (i = ZEPHYRUM;
+             exp->rami != NIHIL && i < silva_xar_numerus(exp->rami); i++)
+        {
+            constans SilvaRamus* ramus =
+                *(SilvaRamus* constans*)silva_xar_obtinere(exp->rami, i);
+
+            si (ramus == NIHIL)
+            {
+                perge;
+            }
+            _ex_serie(fructus, piscina, intern, ramus->directiva);
+            /* '#if 0' = codex commentatus: annotationes eius mortuae
+             * (ut examen 91 eum praeterit) - tolera ibi IRRITA
+             * falso nuntiaretur */
+            si (!ramus->est_numquam)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->lexemata_cruda);
+            }
+            si (ramus->regio != NIHIL)
+            {
+                _ex_serie(fructus, piscina, intern,
+                    ramus->regio->directiva_finis);
+            }
+        }
+    }
+}
+
 
 /* ==================================================
  * API
@@ -113632,62 +113934,7 @@ silva_annotationes_colligere (
             }
         }
     }
-    /* OCTETI EXTRA FLUXUM (silva-migratio T17b, 2026-09-25): tres
-     * domus lexematum fontis quae nec fluxum expansum nec lineas
-     * directivae consumptas intrant - commenta eorum annotationi
-     * INVISIBILIA erant:
-     *   - laminae invocationum (extenta; vacuae praesertim - octeti
-     *     in reinserenda solum: '__attribute__((x)) /+ <tolera> +/');
-     *   - lineae structurales regionum (#if/#elif/#else, #endif) -
-     *     regio eas possidet, directivae numquam;
-     *   - rami NON sumpti (laminae crudae) - idioma '#ifdef
-     *     __GNUC__' + tolera supra '#define' intra ramum; '#if 0'
-     *     excepto.
-     * Duplicata per (fons, byte_offset) omissa (_annotationem_
-     * addere); ordo post directivas, ante caudam. */
-    si (parsura->expansio != NIHIL)
-    {
-        constans SilvaExpansio* exp = parsura->expansio;
-
-        per (i = ZEPHYRUM;
-             exp->extenta != NIHIL && i < silva_xar_numerus(exp->extenta);
-             i++)
-        {
-            constans SilvaExtentumInvocationis* ext =
-                (constans SilvaExtentumInvocationis*)silva_xar_obtinere(
-                    exp->extenta, i);
-
-            si (ext != NIHIL)
-            {
-                _ex_serie(fructus, piscina, intern, ext->lamina);
-            }
-        }
-        per (i = ZEPHYRUM;
-             exp->rami != NIHIL && i < silva_xar_numerus(exp->rami); i++)
-        {
-            constans SilvaRamus* ramus =
-                *(SilvaRamus* constans*)silva_xar_obtinere(exp->rami, i);
-
-            si (ramus == NIHIL)
-            {
-                perge;
-            }
-            _ex_serie(fructus, piscina, intern, ramus->directiva);
-            /* '#if 0' = codex commentatus: annotationes eius mortuae
-             * (ut examen 91 eum praeterit) - tolera ibi IRRITA
-             * falso nuntiaretur */
-            si (!ramus->est_numquam)
-            {
-                _ex_serie(fructus, piscina, intern,
-                    ramus->lexemata_cruda);
-            }
-            si (ramus->regio != NIHIL)
-            {
-                _ex_serie(fructus, piscina, intern,
-                    ramus->regio->directiva_finis);
-            }
-        }
-    }
+    _extra_fluxum(fructus, piscina, intern, parsura);
     /* trivia caudae: commentarium post lexema ultimum in EOF
      * equitat (casus scopi plagulae) - si EOF extra lexemata est,
      * hic attingitur; duplicata innocua */
@@ -113695,6 +113942,46 @@ silva_annotationes_colligere (
     {
         _ex_lexemate(fructus, piscina, intern, parsura->lexema_finis);
     }
+    _affigere(piscina, parsura, fructus);
+    redde fructus;
+}
+
+SilvaXar*
+silva_annotationes_ex_commentis (
+                   SilvaPiscina* piscina,
+     constans SilvaParsura* parsura,
+       SilvaInternamentumChorda* intern,
+    constans SilvaCommenta* commenta)
+{
+    SilvaXar* fructus;
+
+    si (piscina == NIHIL || parsura == NIHIL || commenta == NIHIL)
+    {
+        redde NIHIL;
+    }
+    fructus = silva_xar_creare(piscina, (i32)magnitudo(SilvaAnnotatio));
+    si (fructus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (parsura->lexemata == NIHIL)
+    {
+        redde fructus;
+    }
+    si (intern == NIHIL)
+    {
+        intern = silva_internamentum_creare(piscina);
+        si (intern == NIHIL)
+        {
+            redde NIHIL;
+        }
+    }
+    /* ordo ut silva_annotationes_colligere: fluxus, directivae,
+     * extra fluxum, cauda */
+    _ex_commentis(fructus, piscina, intern, commenta->fluxus);
+    _ex_commentis(fructus, piscina, intern, commenta->directivae);
+    _extra_fluxum(fructus, piscina, intern, parsura);
+    _ex_commentis(fructus, piscina, intern, commenta->finis);
     _affigere(piscina, parsura, fructus);
     redde fructus;
 }
