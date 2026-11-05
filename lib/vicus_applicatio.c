@@ -16,6 +16,8 @@
 #include "lector.h"
 #include "navigator.h"
 #include "navigator_bibliotheca.h"
+#include "negotia.h"
+#include "negotia_visus.h"
 #include "lectiones.h"
 #include "indagatio.h"
 #include "indagatio_genera.h"
@@ -4929,6 +4931,140 @@ navigatorem_describere (
 
 
 /* ==================================================
+ * Negotia (negotia-plan T3)
+ * ================================================== */
+
+/* Negotia communia omnibus lateribus, in volumine vici pigre aperta
+ * (ut navigator); porta: negotium ex indice = latus novum in acervo
+ * (T5 anulum ponet) */
+nomen structura {
+                 Vicus* vicus;
+               Piscina* piscina;
+               Volumen* volumen;
+               Negotia* negotia;
+       StatusSystemata* systemata;
+    NegotiaVisusPortae  portae;
+} ContextusNegotiorum;
+
+interior Negotia*
+negotia_communia (
+    ContextusNegotiorum* cg)
+{
+    si (!cg->negotia && cg->volumen)
+    {
+        cg->negotia = negotia_aperire(cg->volumen, NIHIL, NIHIL,
+            cg->piscina);
+    }
+    redde cg->negotia;
+}
+
+interior b32
+negotium_aperire_in_vico (
+     vacuum* ctx,
+     chorda  negotium)
+{
+    ContextusNegotiorum* cg = (ContextusNegotiorum*)ctx;
+              character  id[CXXVIII];
+
+    si (   !cg || negotium.mensura == ZEPHYRUM
+        || negotium.mensura >= (i32)magnitudo(id))
+    {
+        redde FALSUM;
+    }
+    memcpy(id, negotium.datum, (memoriae_index)negotium.mensura);
+    id[negotium.mensura] = '\0';
+    redde vicus_acervo_aperire(cg->vicus, "negotia", id);
+}
+
+interior b32
+negotia_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusNegotiorum* cg;
+        NegotiaMontatio* m;
+
+    (vacuum)volumen;
+    cg  = (ContextusNegotiorum*)ctx;
+    m   = (NegotiaMontatio*)sedes;
+    si (   !cg
+        || !negotia_visus_montare(m, piscina, intern, repo, id,
+               negotia_communia(cg), &cg->portae, latitudo, altitudo,
+               cg->systemata))
+    {
+        redde FALSUM;
+    }
+    /* id aut suffixum negotii; ignotum: index manet */
+    si (argumentum && argumentum[ZEPHYRUM])
+    {
+        (vacuum)negotia_visus_argumentum_ponere(m, argumentum);
+    }
+    redde VERUM;
+}
+
+interior b32
+negotiorum_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde negotia_visus_argumentum_ponere((NegotiaMontatio*)ctx,
+        argumentum);
+}
+
+/* pulsus per M ms: scripturae aliorum processuum (bin/negotia) */
+interior VicusPulsus
+negotia_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = negotia_visus_reficere((NegotiaMontatio*)ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior Mora
+negotia_morari (
+    vacuum* ctx)
+{
+    redde (Mora)negotia_visus_mora((constans NegotiaMontatio*)ctx);
+}
+
+interior vacuum
+negotia_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    NegotiaMontatio* m;
+
+    m                 = (NegotiaMontatio*)montatio;
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = negotia_visus_componere;
+    f->componere_ctx  = m;
+    f->ramus          = &m->ramus;
+    /* Esc quod latus non consumpsit (index; negotium ab argumento):
+     * latus prius */
+    f->effugium_redit         = VERUM;
+    f->argumentum_ponere      = negotiorum_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->locus_titulus          = negotia_visus_locus_titulus;
+    f->locus_titulus_ctx      = m;
+    f->pulsare                = negotia_pulsare_in_vico;
+    f->pulsare_ctx            = m;
+    f->mora                   = negotia_morari;
+}
+
+
+/* ==================================================
  * Indagatio (genera-datorum D5, S3b)
  * ================================================== */
 
@@ -5416,6 +5552,7 @@ ContextusNomenclatoris* cn;
     ContextusSanctorum* sanctorum;
      ContextusLectoris* lectoris;
   ContextusNavigatoris* navigatoris;
+   ContextusNegotiorum* negotiorum;
  ContextusIndagationis* ci;
        StatusSystemata* systemata;
 
@@ -5507,6 +5644,19 @@ ContextusNomenclatoris* cn;
         navigatoris->intern     = intern;
         navigatoris->volumen    = volumen;
         navigatoris->systemata  = systemata;
+    }
+    /* negotia (T3): communia, pigre aperta in volumine vici */
+    negotiorum = (ContextusNegotiorum*)piscina_allocare(piscina,
+        magnitudo(ContextusNegotiorum));
+    si (negotiorum)
+    {
+        memset(negotiorum, ZEPHYRUM, magnitudo(ContextusNegotiorum));
+        negotiorum->vicus                    = app->vicus;
+        negotiorum->piscina                  = piscina;
+        negotiorum->volumen                  = volumen;
+        negotiorum->systemata                = systemata;
+        negotiorum->portae.ctx               = negotiorum;
+        negotiorum->portae.negotium_aperire  = negotium_aperire_in_vico;
     }
     /* D5 S4: registrum commune sanctos quaerit (corpus pigre) */
     si (ck && sanctorum)
@@ -5628,6 +5778,10 @@ ContextusNomenclatoris* cn;
         || !navigatoris
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "nav",
                "navigator", NIHIL, piscina)
+        /* negotia T3: $projects (index), $projects(id aut suffixum) */
+        || !negotiorum
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus, "projects",
+               "negotia", NIHIL, piscina)
         /* chronica C3: $timeline (annus servatus), $timeline(1274) */
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "timeline",
                "chronica", NIHIL, piscina)
@@ -5689,6 +5843,9 @@ ContextusNomenclatoris* cn;
                magnitudo(NavigatorMontatio),
                navigatorem_montare_in_vico,
                navigatorem_describere, navigatoris)
+        || !vicus_genus_addere(app->vicus, "negotia",
+               magnitudo(NegotiaMontatio), negotia_montare_in_vico,
+               negotia_describere, negotiorum)
         || !vicus_genus_addere(app->vicus, "chronica",
                magnitudo(ChronicaMontatio), chronicam_montare_in_vico,
                chronicam_describere, ci)

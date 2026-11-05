@@ -214,6 +214,13 @@ figura_ordinem_electum_pingere (
     Mandata* md,
       Fines  f);
 
+/* ordo sub mure (negotia-plan T3): exemplar leve colore selectionis -
+ * levior quam ordo electus, qui eum vincit */
+vacuum
+figura_ordinem_super_pingere (
+    Mandata* md,
+      Fines  f);
+
 /* fascia: fundus et exemplar leve (titulus gregis, dies hebdomadis) */
 vacuum
 figura_fasciam_pingere (

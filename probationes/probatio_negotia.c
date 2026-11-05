@@ -459,6 +459,99 @@ _probare_iterum_apertum (
         c->piscina)), I);
 }
 
+interior vacuum
+_probare_summarium (
+    CredoContextus* c)
+{
+                     Mundus* m = (Mundus*)c->datum;
+                     chorda  ng;
+                     chorda  vacuum_ng;
+                        i32  k;
+    hic_manens constans s32  status[] = {
+        NEGOTIA_PERFECTA, NEGOTIA_INCHOATA, NEGOTIA_PERFECTA,
+        NEGOTIA_PROPOSITA };
+
+    CREDO_NECESSE_NON_NIHIL(m->n);
+    ng = negotia_negotium_creare(m->n, lit("a", c->piscina),
+        lit("", c->piscina));
+    vacuum_ng = negotia_negotium_creare(m->n, lit("b", c->piscina),
+        lit("", c->piscina));
+
+    CREDO_GRADUS("negotium vacuum, ignotum: vacua");
+    CREDO_AEQUALIS_I32(negotia_summarium(m->n, vacuum_ng,
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(negotia_summarium(m->n, lit("ignotum",
+        c->piscina), c->piscina).mensura, ZEPHYRUM);
+
+    CREDO_GRADUS("ordo: shipped, partial, planned, conversations");
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        (vacuum)negotia_facultatem_creare(m->n, ng, lit("f",
+            c->piscina), status[k], lit("", c->piscina));
+    }
+    (vacuum)negotia_colloquium_adiungere(m->n, ng, lit("s1",
+        c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(negotia_summarium(m->n, ng,
+        c->piscina), "2 shipped \302\267 1 partial \302\267 1 planned"
+        " \302\267 1 conversation");
+    (vacuum)negotia_colloquium_adiungere(m->n, ng, lit("s2",
+        c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(negotia_summarium(m->n, ng,
+        c->piscina), "2 shipped \302\267 1 partial \302\267 1 planned"
+        " \302\267 2 conversations");
+
+    CREDO_GRADUS("colloquia sola");
+    (vacuum)negotia_colloquium_adiungere(m->n, vacuum_ng, lit("s3",
+        c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(negotia_summarium(m->n, vacuum_ng,
+        c->piscina), "1 conversation");
+}
+
+interior vacuum
+_probare_versio (
+    CredoContextus* c)
+{
+      Mundus* m = (Mundus*)c->datum;
+     Volumen* v2;
+     Negotia* n2;
+         i32  numerator_alter;
+      chorda  ng;
+         s64  ante;
+         s64  post;
+
+    CREDO_NECESSE_NON_NIHIL(m->n);
+    CREDO_GRADUS("scriptura propria versionem movet");
+    ante = negotia_versio(m->n);
+    ng   = negotia_negotium_creare(m->n, lit("a", c->piscina),
+        lit("", c->piscina));
+    post = negotia_versio(m->n);
+    CREDO_VERUM(post > ante);
+
+    CREDO_GRADUS("mutatio par: versio manet");
+    CREDO_VERUM(negotia_negotium_mutare(m->n, ng, lit("a", c->piscina),
+        lit("", c->piscina)));
+    CREDO_VERUM(negotia_versio(m->n) == post);
+
+    CREDO_GRADUS("scriptor alius: post renovare solum");
+    v2 = volumen_aperire(c->piscina, volumen_via(m->volumen));
+    CREDO_NECESSE_NON_NIHIL(v2);
+    numerator_alter = C;
+    n2 = negotia_aperire(v2, moneta_numerator, &numerator_alter,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(n2);
+    (vacuum)negotia_facultatem_creare(n2, ng, lit("f", c->piscina),
+        NEGOTIA_PROPOSITA, lit("", c->piscina));
+    CREDO_VERUM(negotia_versio(m->n) == post);
+    CREDO_VERUM(negotia_renovare(m->n));
+    ante = negotia_versio(m->n);
+    CREDO_VERUM(ante > post);
+
+    CREDO_GRADUS("renovare vacua: versio manet");
+    CREDO_FALSUM(negotia_renovare(m->n));
+    CREDO_VERUM(negotia_versio(m->n) == ante);
+    volumen_claudere(v2);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creare et legere", _probare_creare, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -479,6 +572,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "iterum apertum", _probare_iterum_apertum, mundum_parare,
         mundum_purgare,
         NIHIL, NIHIL },
+    { "summarium", _probare_summarium, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "versio", _probare_versio, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -67,6 +67,13 @@ b32
 negotia_renovare (
     Negotia* n);
 
+/* versio: crescit cum acta nova leguntur (etiam generum alienorum);
+ * lateribus pluribus Negotia* communem pulsantibus mutationem
+ * nuntiat */
+s64
+negotia_versio (
+    constans Negotia* n);
+
 i32
 negotia_numerus (
     constans Negotia* n);
@@ -151,6 +158,15 @@ negotia_colloquium_adiungere (
 /* chorda (sessiones), ordine adiunctionis */
 Xar*
 negotia_colloquia (
+    constans Negotia* n,
+              chorda  negotium,
+             Piscina* piscina);
+
+/* "3 shipped · 2 partial · 4 planned · 2 conversations" (partes
+ * nullae omittuntur; vacua si nihil aut negotium ignotum) - bin/negotia
+ * index et visus */
+chorda
+negotia_summarium (
     constans Negotia* n,
               chorda  negotium,
              Piscina* piscina);

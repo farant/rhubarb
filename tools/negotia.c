@@ -378,51 +378,18 @@ indicem_imprimere (
     Piscina* piscina)
 {
     i32 k;
-    i32 j;
 
     per (k = ZEPHYRUM; k < negotia_numerus(n); k++)
     {
         constans Negotium* x = negotia_index(n, k);
-                      Xar* fs;
-                      Xar* cs;
-                      i32  numeri[III];
-                   chorda  s       = suffixum(x->id);
-                      b32  primum  = VERUM;
-                      s32  st;
+                   chorda  s = suffixum(x->id);
+                   chorda  t = negotia_summarium(n, x->id, piscina);
 
-        fs = negotia_facultates(n, x->id, piscina);
-        cs = negotia_colloquia(n, x->id, piscina);
-        memset(numeri, ZEPHYRUM, magnitudo(numeri));
-        per (j = ZEPHYRUM; fs && j < xar_numerus(fs); j++)
-        {
-            st = ((constans NegotiiFacultas*)xar_obtinere(fs, j))
-                ->status;
-            si (st >= ZEPHYRUM && st <= (s32)NEGOTIA_PERFECTA)
-            {
-                numeri[st]++;
-            }
-        }
-        imprimere("%.*s  %.*s", (integer)s.mensura,
+        imprimere("%.*s  %.*s%s%.*s\n", (integer)s.mensura,
             (constans character*)s.datum, (integer)x->titulus.mensura,
-            (constans character*)x->titulus.datum);
-        /* ordo: perfectae, inchoatae, propositae */
-        per (st = (s32)NEGOTIA_PERFECTA; st >= ZEPHYRUM; st--)
-        {
-            si (numeri[st] > ZEPHYRUM)
-            {
-                imprimere("%s%u %s", primum ? "  " : " · ",
-                    (insignatus integer)numeri[st],
-                    negotia_status_titulus(st));
-                primum = FALSUM;
-            }
-        }
-        si (cs && xar_numerus(cs) > ZEPHYRUM)
-        {
-            imprimere("%s%u conversation%s", primum ? "  " : " · ",
-                (insignatus integer)xar_numerus(cs),
-                xar_numerus(cs) == I ? "" : "s");
-        }
-        imprimere("\n");
+            (constans character*)x->titulus.datum, t.mensura
+            > ZEPHYRUM ? "  " : "", (integer)t.mensura,
+            (constans character*)t.datum);
     }
     redde ZEPHYRUM;
 }

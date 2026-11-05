@@ -30,6 +30,7 @@
 #include "scriba_applicatio.h"
 #include "vicus.h"
 #include "vicus_applicatio.h"
+#include "negotia.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -443,6 +444,31 @@ _sectio_prima (
         r = insula_ramus(v->repo, "sancti", "1_dextrum_sancti");
         a = insula_ramus_attributum(&r, "sanctus_apertus");
         CREDO_VERUM(a && chorda_aequalis_literis(*a, "thomas-aquinas"));
+    }
+    CREDO_GRADUS("XVI: negotia ($projects; negotium per argumentum)");
+    {
+           Negotia* ng;
+            chorda  id;
+       InsulaRamus  r;
+            chorda* a;
+
+        /* scriptor alius in volumine vici (ut bin/negotia) */
+        ng = negotia_aperire(vol_imum, NIHIL, NIHIL, piscina);
+        CREDO_NECESSE_NON_NIHIL(ng);
+        id = negotia_negotium_creare(ng, chorda_ex_literis("negotia",
+            piscina), chorda_ex_literis("", piscina));
+        CREDO_CHORDA_NON_VACUA(id);
+        CREDO_VERUM(vicus_acervo_aperire(v, "negotia", NIHIL));
+        (vacuum)vicus_pulsare(v);
+        CREDO_VERUM(frons_est(v, "1_dextrum_negotia"));
+        CREDO_VERUM(vicus_acervo_aperire(v, "negotia",
+            chorda_ut_cstr(id,
+            piscina)));
+        (vacuum)vicus_pulsare(v);
+        CREDO_VERUM(frons_est(v, "1_dextrum_negotia_2"));
+        r = insula_ramus(v->repo, "negotia", "1_dextrum_negotia_2");
+        a = insula_ramus_attributum(&r, "negotium");
+        CREDO_VERUM(a && chorda_aequalis(*a, id));
     }
     volumen_claudere(vol_imum);
     volumen_claudere(vol);

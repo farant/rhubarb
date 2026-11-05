@@ -154,6 +154,9 @@ declare -a RADIX_FONTES=(
     "sancti"
     "sancti_canon"
     "sancti_visus"
+    # negotia-plan T3: negotia in vico ($projects)
+    "negotia"
+    "negotia_visus"
     # lector L3: liber EPUB in vico (bibliotheca, paginae)
     "lector"
     "lector_bibliotheca"

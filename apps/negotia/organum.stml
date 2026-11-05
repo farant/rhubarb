@@ -1,0 +1,54 @@
+<!-- organum.stml - manifestum negotiorum (genus "negotia"; iussum
+     $projects; negotia-plan T3, spec project-specs/negotia.md): index
+     negotiorum et facultates negotii. Negotia (negotia.h) per ligamen a
+     parente, in volumine vici, communia omnibus lateribus - hic solum
+     status visus. -->
+<organum genus="negotia" versio="1">
+
+  <ligamina>
+    <ligamen nomen="negotia" genus="negotia" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="negotia.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="negotia.agere"
+            semita="ligatio" historia="impelle"
+            nota="T4 optionem facultas addet">
+      <optio>index</optio>
+      <optio>negotium</optio>
+    </campus>
+    <campus nomen="negotium" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="ligatio"
+            historia="impelle"
+            nota="ULID negotii aperti; in indice absens"/>
+    <campus nomen="origo" typus="electio" vita="persistens"
+            absens="argumentum" scriptor="negotia.agere"
+            nota="unde negotium apertum: argumentum (Esc latus prius
+                  per vicum) aut index (in loco, sine porta; Esc ad
+                  indicem)">
+      <optio>argumentum</optio>
+      <optio>index</optio>
+    </campus>
+    <campus nomen="electa" typus="textus" vita="transiens"
+            scriptor="negotia.agere"
+            nota="id rei electae (negotium aut facultas); absens =
+                  prima paginae"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="negotia.agere" nota="electa paginam sequitur"/>
+    <campus nomen="super" typus="textus" vita="transiens"
+            scriptor="negotia.agere"
+            nota="id ordinis sub mure ('r2'); absens = nullus"/>
+  </status>
+
+  <cognomina>
+    <cognomen semita="negotia/index"/>
+    <cognomen typus="textus" semita="negotia/negotium/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

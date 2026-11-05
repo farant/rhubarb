@@ -515,6 +515,13 @@ negotia_renovare (
     redde acta_legere(n);
 }
 
+s64
+negotia_versio (
+    constans Negotia* n)
+{
+    redde n ? n->seq : ZEPHYRUM;
+}
+
 i32
 negotia_numerus (
     constans Negotia* n)
@@ -855,6 +862,69 @@ negotia_colloquia (
         }
     }
     redde x;
+}
+
+chorda
+negotia_summarium (
+    constans Negotia* n,
+              chorda  negotium,
+             Piscina* piscina)
+{
+    ChordaAedificator* a;
+                  Xar* fs;
+                  Xar* cs;
+                  i32  numeri[III];
+                  i32  colloquia;
+                  s32  st;
+                  i32  i;
+                  b32  primum = VERUM;
+
+    si (!n || !piscina || !negotium_per_id(n, negotium))
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    memset(numeri, ZEPHYRUM, magnitudo(numeri));
+    fs = negotia_facultates(n, negotium, piscina);
+    per (i = ZEPHYRUM; fs && i < xar_numerus(fs); i++)
+    {
+        st = ((constans NegotiiFacultas*)xar_obtinere(fs, i))->status;
+        si (status_validus(st))
+        {
+            numeri[st]++;
+        }
+    }
+    cs         = negotia_colloquia(n, negotium, piscina);
+    colloquia  = cs ? xar_numerus(cs) : ZEPHYRUM;
+    a          = chorda_aedificator_creare(piscina, LXIV);
+    /* ordo: perfectae, inchoatae, propositae, colloquia */
+    per (st = (s32)NEGOTIA_PERFECTA; st >= ZEPHYRUM; st--)
+    {
+        si (numeri[st] > ZEPHYRUM)
+        {
+            si (!primum)
+            {
+                (vacuum)chorda_aedificator_appendere_literis(a,
+                    " \302\267 ");
+            }
+            (vacuum)chorda_aedificator_appendere_i32(a, numeri[st]);
+            (vacuum)chorda_aedificator_appendere_character(a, ' ');
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                negotia_status_titulus(st));
+            primum = FALSUM;
+        }
+    }
+    si (colloquia > ZEPHYRUM)
+    {
+        si (!primum)
+        {
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                " \302\267 ");
+        }
+        (vacuum)chorda_aedificator_appendere_i32(a, colloquia);
+        (vacuum)chorda_aedificator_appendere_literis(a, colloquia == I
+            ? " conversation" : " conversations");
+    }
+    redde chorda_aedificator_spectare(a);
 }
 
 constans character*
