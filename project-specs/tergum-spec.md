@@ -334,6 +334,27 @@ TestFlight build 11 is published on Fran's go, as always.
 - How pictor watches `tractiones_vacuae`: a reactor timer or a
   callback.
 
+## VIII. As run
+
+- **Layer #1, 2026-11-05 01:59 UTC (Fran's phone, TestFlight 10).**
+  Exemplar access log (`-acta` is on):
+  - 01:59:24 cold open: `GET /communio/acta`, `GET`/`POST
+    /communio/apparatus`, `PUT /communio/pulsus/inscriptio 204`.
+  - 01:59:37 `POST /communio/acta 200` and `POST
+    /communio/pulsus/eventus 202`, in the same second. 202 is the
+    route's normal answer (`lib/pulsus.c:1094`); the plan's "200" was
+    a typo.
+  - 01:59:49 `GET /communio/acta 200`, about 12 s after the upload,
+    while the phone was on the home screen or locked.
+  - **Passed, with no code change.** One caveat: ASCENSUS ticks every
+    1 s, so a stroke drawn 2 s before the swipe may upload while
+    pictor is still in front. The test shows the edit is not lost
+    and the reactor keeps running after close (the 01:59:49 pull).
+    It does not prove an upload that *started* in the background.
+    The stricter check is airplane mode on, draw, swipe home, then
+    airplane mode off and lock; the upload can then only happen in
+    the background.
+
 ## AUDIENDA (not verified while writing)
 
 - **Alert plus content-available.** I believe iOS wakes the app for
