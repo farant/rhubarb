@@ -4,6 +4,7 @@
  *   "negotium"           {id, titulus, descriptio}
  *   "negotii-facultas"   {id, negotium, titulus, status, corpus}
  *   "negotii-colloquium" {negotium, sessio, via}
+ *   "negotii-pagina"     {id, negotium, genus, titulus, corpus}
  * Status praesens = actum ultimum per id. Omnis mutatio servata =
  * actum unum = REVISIO una (numquam deletur); mutatio statui
  * praesenti par nihil scribit. Acta OMNIUM replicarum leguntur (res
@@ -191,5 +192,75 @@ b32
 negotia_status_legere (
     chorda  verbum,
        s32* status_out);
+
+/* PAGINAE (negotia-paginae T1): paginae negotii in anulo - genus
+ * fixum per paginam; corpus = documentum adumbrationis (pictor:
+ * vacuum, pictura in actis pictoris ipsius, spatium negotia/<id>).
+ * Imago plena per actum, revisiones ut facultatum; actum paginae
+ * activitas negotii est. */
+nomen enumeratio {
+    NEGOTIA_PAGINA_PICTOR = 0,      /* "pictor" */
+    NEGOTIA_PAGINA_ADUMBRATIO       /* "adumbratio" */
+} NegotiaPaginaGenus;
+
+nomen structura {
+    chorda id;               /* ULID; dicitur suffixo VI characterum */
+    chorda negotium;
+       s32 genus;            /* NegotiaPaginaGenus */
+    chorda titulus;
+    chorda corpus;
+       s64 seq;              /* actum huius revisionis */
+    chorda momentum;         /* ISO 8601, ex actu */
+} NegotiiPagina;
+
+/* reddit id; vacua si refutatum (titulus vacuus, negotium ignotum,
+ * genus extra NegotiaPaginaGenus) */
+chorda
+negotia_paginam_creare (
+    Negotia* n,
+     chorda  negotium,
+        s32  genus,
+     chorda  titulus,
+     chorda  corpus);
+
+/* imago plena praeter genus (fixum); par praesenti: VERUM, nihil
+ * scriptum; FALSUM si ignota aut titulus vacuus */
+b32
+negotia_paginam_mutare (
+    Negotia* n,
+     chorda  id,
+     chorda  titulus,
+     chorda  corpus);
+
+/* id plenum aut suffixum unicum (ut negotia_negotium_invenire) */
+constans NegotiiPagina*
+negotia_paginam_invenire (
+    constans Negotia* n,
+              chorda  id,
+                 b32* ambiguum_out);
+
+/* NegotiiPagina (copiae status praesentis), ordine creationis */
+Xar*
+negotia_paginae (
+    constans Negotia* n,
+              chorda  negotium,
+             Piscina* piscina);
+
+/* NegotiiPagina (copiae), vetustissima prima; NIHIL si ignota */
+Xar*
+negotia_paginae_revisiones (
+    constans Negotia* n,
+              chorda  id,
+             Piscina* piscina);
+
+/* "pictor" / "adumbratio"; "?" extra ambitum */
+constans character*
+negotia_pagina_genus_titulus (
+    s32 genus);
+
+b32
+negotia_pagina_genus_legere (
+    chorda  verbum,
+       s32* genus_out);
 
 #endif /* NEGOTIA_H */

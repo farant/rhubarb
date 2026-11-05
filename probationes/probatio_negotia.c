@@ -601,6 +601,131 @@ _probare_viam_colloquii (
         c->piscina)), "/c");
 }
 
+interior constans NegotiiPagina*
+pagina_ad (
+    Xar* x,
+    i32  k)
+{
+    redde (constans NegotiiPagina*)xar_obtinere(x, k);
+}
+
+/* negotia-paginae T1: paginae utriusque generis; revisiones; mutatio
+ * par nihil scribit; genus fixum; refutationes nihil scribunt */
+interior vacuum
+_probare_paginas (
+    CredoContextus* c)
+{
+                    Mundus* m = (Mundus*)c->datum;
+                    chorda  ng;
+                    chorda  pa;
+                    chorda  pp;
+                       Xar* ps;
+                       Xar* rs;
+                       s64  seq;
+                       s32  g;
+    constans NegotiiPagina* x;
+
+    CREDO_NECESSE_NON_NIHIL(m->n);
+    ng = negotia_negotium_creare(m->n, lit("negotia", c->piscina),
+        lit("", c->piscina));
+    pa = negotia_paginam_creare(m->n, ng, NEGOTIA_PAGINA_ADUMBRATIO,
+        lit("index", c->piscina), lit("<adumbratio/>", c->piscina));
+    pp = negotia_paginam_creare(m->n, ng, NEGOTIA_PAGINA_PICTOR,
+        lit("affectus", c->piscina), lit("", c->piscina));
+    CREDO_CHORDA_NON_VACUA(pa);
+    CREDO_CHORDA_NON_VACUA(pp);
+
+    CREDO_GRADUS("legere, ordine creationis");
+    ps = negotia_paginae(m->n, ng, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(ps);
+    CREDO_NECESSE(xar_numerus(ps) == II);
+    CREDO_VERUM(chorda_aequalis(pagina_ad(ps, ZEPHYRUM)->id, pa));
+    CREDO_AEQUALIS_S32(pagina_ad(ps, ZEPHYRUM)->genus,
+        NEGOTIA_PAGINA_ADUMBRATIO);
+    CREDO_CHORDA_AEQUALIS_LITERIS(pagina_ad(ps, ZEPHYRUM)->corpus,
+        "<adumbratio/>");
+    CREDO_AEQUALIS_S32(pagina_ad(ps, I)->genus, NEGOTIA_PAGINA_PICTOR);
+    CREDO_LITERAE_AEQUALES(negotia_pagina_genus_titulus(
+        NEGOTIA_PAGINA_ADUMBRATIO), "adumbratio");
+    CREDO_VERUM(negotia_pagina_genus_legere(lit("pictor", c->piscina),
+        &g));
+    CREDO_AEQUALIS_S32(g, NEGOTIA_PAGINA_PICTOR);
+    CREDO_FALSUM(negotia_pagina_genus_legere(lit("designum",
+        c->piscina), &g));
+    x = negotia_paginam_invenire(m->n, pa, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_VERUM(chorda_aequalis(x->negotium, ng));
+    CREDO_VERUM(chorda_aequalis(negotia_index(m->n, ZEPHYRUM)->id, ng));
+
+    CREDO_GRADUS("revisiones; par nihil scribit");
+    CREDO_VERUM(negotia_paginam_mutare(m->n, pa, lit("index",
+        c->piscina),
+        lit("<adumbratio altitudo=\"9\"/>", c->piscina)));
+    seq = volumen_seq_ultimum(m->volumen);
+    CREDO_VERUM(negotia_paginam_mutare(m->n, pa, lit("index",
+        c->piscina),
+        lit("<adumbratio altitudo=\"9\"/>", c->piscina)));
+    CREDO_AEQUALIS_S64(volumen_seq_ultimum(m->volumen), seq);
+    rs = negotia_paginae_revisiones(m->n, pa, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(rs);
+    CREDO_NECESSE(xar_numerus(rs) == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(pagina_ad(rs, ZEPHYRUM)->corpus,
+        "<adumbratio/>");
+    CREDO_AEQUALIS_S32(negotia_paginam_invenire(m->n, pa, NIHIL)->genus,
+        NEGOTIA_PAGINA_ADUMBRATIO);
+
+    CREDO_GRADUS("refutationes nihil scribunt");
+    seq = volumen_seq_ultimum(m->volumen);
+    CREDO_AEQUALIS_I32(negotia_paginam_creare(m->n, ng,
+        NEGOTIA_PAGINA_PICTOR, lit("", c->piscina), lit("",
+        c->piscina)).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(negotia_paginam_creare(m->n, lit("zzz",
+        c->piscina), NEGOTIA_PAGINA_PICTOR, lit("t", c->piscina),
+        lit("",
+        c->piscina)).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(negotia_paginam_creare(m->n, ng, VII,
+        lit("t", c->piscina), lit("", c->piscina)).mensura, ZEPHYRUM);
+    CREDO_FALSUM(negotia_paginam_mutare(m->n, pa, lit("", c->piscina),
+        lit("", c->piscina)));
+    CREDO_FALSUM(negotia_paginam_mutare(m->n, lit("ignota", c->piscina),
+        lit("t", c->piscina), lit("", c->piscina)));
+    CREDO_AEQUALIS_S64(volumen_seq_ultimum(m->volumen), seq);
+    CREDO_NIHIL(negotia_paginae_revisiones(m->n, lit("ignota",
+        c->piscina), c->piscina));
+}
+
+/* scriptor alius: pagina nova post renovare videtur */
+interior vacuum
+_probare_paginam_alterius (
+    CredoContextus* c)
+{
+      Mundus* m = (Mundus*)c->datum;
+     Volumen* v2;
+     Negotia* n2;
+         i32  numerator_alter;
+      chorda  ng;
+      chorda  pa;
+
+    CREDO_NECESSE_NON_NIHIL(m->n);
+    ng = negotia_negotium_creare(m->n, lit("a", c->piscina),
+        lit("", c->piscina));
+    v2 = volumen_aperire(c->piscina, volumen_via(m->volumen));
+    CREDO_NECESSE_NON_NIHIL(v2);
+    numerator_alter = C;
+    n2 = negotia_aperire(v2, moneta_numerator, &numerator_alter,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(n2);
+    pa = negotia_paginam_creare(n2, ng, NEGOTIA_PAGINA_ADUMBRATIO,
+        lit("p", c->piscina), lit("<adumbratio/>", c->piscina));
+    CREDO_CHORDA_NON_VACUA(pa);
+    CREDO_NIHIL(negotia_paginam_invenire(m->n, pa, NIHIL));
+    CREDO_VERUM(negotia_renovare(m->n));
+    CREDO_NON_NIHIL(negotia_paginam_invenire(m->n, pa, NIHIL));
+    CREDO_AEQUALIS_I32(xar_numerus(negotia_paginae(m->n, ng,
+        c->piscina)), I);
+    volumen_claudere(v2);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "creare et legere", _probare_creare, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
@@ -626,6 +751,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "versio", _probare_versio, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
     { "via colloquii", _probare_viam_colloquii, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "paginae", _probare_paginas, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "pagina alius scriptor", _probare_paginam_alterius, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

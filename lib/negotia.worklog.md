@@ -72,3 +72,16 @@ apply (via empty). Re-linking with a new via appends an act (latest
 wins); an empty via never clears a stored one and writes nothing. The
 internal lookup became `nexum_invenire` (returns the link) instead of
 a yes/no check.
+
+## 2026-11-05 — negotia-paginae T1: page records
+
+`negotii-pagina` acts `{id, negotium, genus, titulus, corpus}` follow
+the feature pattern exactly (full snapshot, revisions list, identical
+edit writes nothing, suffix lookup refuses ambiguity). Genus is fixed
+per page twice over: `negotia_paginam_mutare` always writes the
+current genus, and `paginam_applicare` ignores an act that would change
+genus or project (defensive, as for features' project). A page act is
+project activity (`seq_activitatis`). CLI: `pagina` (-genus required,
+bad/absent = usage 2), `pagina-mutare`, `paginae`. Test gotcha: with the
+stub the page list was empty and indexing it segfaulted the whole
+suite - list-length checks before indexing are CREDO_NECESSE.

@@ -14,6 +14,11 @@
  *                  [-corpus T | -corpus-filum F]
  *   negotia revisiones <facultas>
  *   negotia involvere <negotium> <sessio> [-via D]
+ *   negotia pagina <negotium> <titulus> -genus pictor|adumbratio
+ *                  [-corpus T | -corpus-filum F]        -> id
+ *   negotia pagina-mutare <pagina> [-titulus T]
+ *                  [-corpus T | -corpus-filum F]
+ *   negotia paginae <negotium>  ("<suffixum>  <genus>  <titulus>")
  *
  * <negotium>, <facultas>: id plenum aut suffixum unicum. S: planned |
  * partial | shipped (aut proposita | inchoata | perfecta; ordinarie
@@ -62,6 +67,7 @@
 #define VEX_CORPUS_FILUM VIII
 #define VEX_TITULUS      XVI
 #define VEX_VIA          XXXII
+#define VEX_GENUS        LXIV
 
 nomen enumeratio {
     IMP_INDEX = 0,
@@ -70,7 +76,10 @@ nomen enumeratio {
     IMP_FACULTAS,
     IMP_MUTARE,
     IMP_REVISIONES,
-    IMP_INVOLVERE
+    IMP_INVOLVERE,
+    IMP_PAGINA,
+    IMP_PAGINAM_MUTARE,
+    IMP_PAGINAE
 } ImperiumGenus;
 
 nomen structura {
@@ -90,7 +99,12 @@ hic_manens constans Imperium IMPERIA[] = {
                                   | VEX_CORPUS
                                   | VEX_CORPUS_FILUM,      VERUM  },
     { "revisiones", I,        ZEPHYRUM,                    FALSUM },
-    { "involvere",  II,       VEX_VIA,                     VERUM  }
+    { "involvere",  II,       VEX_VIA,                     VERUM  },
+    { "pagina",     II,       VEX_GENUS | VEX_CORPUS
+                                  | VEX_CORPUS_FILUM,      VERUM  },
+    { "pagina-mutare", I,     VEX_TITULUS | VEX_CORPUS
+                                  | VEX_CORPUS_FILUM,      VERUM  },
+    { "paginae",    I,        ZEPHYRUM,                    FALSUM }
 };
 
 #define IMPERIA_NUMERUS \
@@ -107,6 +121,7 @@ nomen structura {
      constans character* corpus_filum;
      constans character* titulus;
      constans character* via;
+     constans character* genus;
 } Argumenta;
 
 interior s32
@@ -122,6 +137,11 @@ usum_imprimere (vacuum)
         " [-corpus T | -corpus-filum F]\n"
         "      negotia revisiones <facultas>\n"
         "      negotia involvere <negotium> <sessio> [-via D]\n"
+        "      negotia pagina <negotium> <titulus> -genus"
+        " pictor|adumbratio [-corpus T | -corpus-filum F]\n"
+        "      negotia pagina-mutare <pagina> [-titulus T]"
+        " [-corpus T | -corpus-filum F]\n"
+        "      negotia paginae <negotium>\n"
         "      (omnia: -volumen V; S: planned | partial | shipped;"
         " F '-' = stdin)\n");
     redde II;
@@ -188,6 +208,11 @@ argumenta_legere (
         {
             a->via      = argv[++k];
             a->vexilla  |= VEX_VIA;
+        }
+        alioquin si (strcmp(v, "-genus") == ZEPHYRUM)
+        {
+            a->genus    = argv[++k];
+            a->vexilla  |= VEX_GENUS;
         }
         alioquin
         {
@@ -353,6 +378,83 @@ facultatem_resolvere (
         }
     }
     redde NIHIL;
+}
+
+interior constans NegotiiPagina*
+paginam_resolvere (
+      constans Negotia* n,
+    constans character* verbum,
+               Piscina* piscina)
+{
+    constans NegotiiPagina* g;
+                       b32  ambiguum = FALSUM;
+                    chorda  id;
+                       i32  k;
+                       i32  j;
+
+    id  = chorda_ex_literis(verbum, piscina);
+    g   = negotia_paginam_invenire(n, id, &ambiguum);
+    si (g)
+    {
+        redde g;
+    }
+    si (!ambiguum)
+    {
+        fprintf(stderr, "negotia: pagina '%s' ignota\n", verbum);
+        redde NIHIL;
+    }
+    fprintf(stderr, "negotia: suffixum '%s' ambiguum:\n", verbum);
+    per (k = ZEPHYRUM; k < negotia_numerus(n); k++)
+    {
+        Xar* gs = negotia_paginae(n, negotia_index(n, k)->id, piscina);
+
+        per (j = ZEPHYRUM; gs && j < xar_numerus(gs); j++)
+        {
+            g = (constans NegotiiPagina*)xar_obtinere(gs, j);
+            si (chorda_terminatur(g->id, id))
+            {
+                fprintf(stderr, "  %.*s  %.*s\n",
+                    (integer)g->id.mensura,
+                    (constans character*)g->id.datum,
+                    (integer)g->titulus.mensura,
+                    (constans character*)g->titulus.datum);
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* "<suffixum>  <genus>  <titulus>" per paginam, ordine creationis */
+interior s32
+paginas_imprimere (
+      constans Negotia* n,
+    constans character* verbum,
+               Piscina* piscina)
+{
+    constans Negotium* x;
+                  Xar* gs;
+                  i32  j;
+
+    x = negotium_resolvere(n, verbum, piscina);
+    si (!x)
+    {
+        redde I;
+    }
+    gs = negotia_paginae(n, x->id, piscina);
+    per (j = ZEPHYRUM; gs && j < xar_numerus(gs); j++)
+    {
+         constans NegotiiPagina* g;
+                         chorda  s;
+
+        g = (constans NegotiiPagina*)xar_obtinere(gs, j);
+        s = suffixum(g->id);
+        imprimere("%.*s  %s  %.*s\n", (integer)s.mensura,
+            (constans character*)s.datum,
+            negotia_pagina_genus_titulus(g->genus),
+            (integer)g->titulus.mensura,
+            (constans character*)g->titulus.datum);
+    }
+    redde ZEPHYRUM;
 }
 
 /* corpus ex -corpus aut -corpus-filum; *datum FALSUM si neutrum */
@@ -603,10 +705,57 @@ exsequi (
             }
             redde ZEPHYRUM;
         }
+        casus IMP_PAGINAE:
+            redde paginas_imprimere(n, a->positiva[ZEPHYRUM], piscina);
+        casus IMP_PAGINA:
+        {
+            constans Negotium* x;
+                          s32  genus;
+
+            si (   !a->genus || !negotia_pagina_genus_legere(
+                chorda_ex_literis(a->genus, piscina), &genus))
+            {
+                fprintf(stderr, "negotia: -genus pictor aut"
+                    " adumbratio\n");
+                redde II;
+            }
+            x = negotium_resolvere(n, a->positiva[ZEPHYRUM], piscina);
+            si (   !x || !corpus_ex_argumentis(a, piscina, &corpus,
+                &corpus_datum))
+            {
+                redde I;
+            }
+            id = negotia_paginam_creare(n, x->id, genus,
+                chorda_ex_literis(a->positiva[I], piscina), corpus_datum
+                ? corpus : chorda_ex_literis("", piscina));
+            frange;
+        }
+        casus IMP_PAGINAM_MUTARE:
+        {
+            constans NegotiiPagina* g;
+                     NegotiiPagina  v;
+
+            g = paginam_resolvere(n, a->positiva[ZEPHYRUM], piscina);
+            si (   !g || !corpus_ex_argumentis(a, piscina, &corpus,
+                &corpus_datum))
+            {
+                redde I;
+            }
+            v = *g;
+            si (!negotia_paginam_mutare(n, v.id, a->titulus
+                ? chorda_ex_literis(a->titulus, piscina) : v.titulus,
+                corpus_datum ? corpus : v.corpus))
+            {
+                fprintf(stderr, "negotia: mutatio paginae refutata"
+                    " (titulus vacuus?)\n");
+                redde I;
+            }
+            redde ZEPHYRUM;
+        }
         ordinarius:
             redde II;
     }
-    /* creare, facultas: id plenum */
+    /* creare, facultas, pagina: id plenum */
     si (id.mensura == ZEPHYRUM)
     {
         fprintf(stderr, "negotia: refutatum (titulus vacuus?)\n");

@@ -16,6 +16,7 @@
 #define GENUS_NEGOTII       "negotium"
 #define GENUS_FACULTATIS    "negotii-facultas"
 #define GENUS_COLLOQUII     "negotii-colloquium"
+#define GENUS_PAGINAE       "negotii-pagina"
 
 nomen structura {
     NegotiiFacultas  praesens;
@@ -29,6 +30,12 @@ nomen structura {
     chorda via;       /* T6: directorium colloquii; vacua = ignota */
 } NexusColloquii;
 
+/* negotia-paginae T1 */
+nomen structura {
+    NegotiiPagina  praesens;
+              Xar* revisiones;   /* NegotiiPagina, vetustissima prima */
+} PaginaInterna;
+
 structura Negotia {
        Volumen* volumen;
        Piscina* piscina;
@@ -38,6 +45,7 @@ structura Negotia {
            Xar* ordo;         /* Negotium*, activitate decrescente */
            Xar* facultates;   /* FacultasInterna, ordine creationis */
            Xar* colloquia;    /* NexusColloquii, ordine adiunctionis */
+           Xar* paginae;      /* PaginaInterna, ordine creationis */
            s64  seq;          /* cursor: actum ultimum visum */
 };
 
@@ -47,6 +55,10 @@ hic_manens constans character* constans SIGNA_STATUS[] = {
 
 hic_manens constans character* constans TITULI_STATUS[] = {
     "planned", "partial", "shipped"
+};
+
+hic_manens constans character* constans SIGNA_PAGINAE[] = {
+    "pictor", "adumbratio"
 };
 
 interior chorda
@@ -64,6 +76,14 @@ status_validus (
     s32 status)
 {
     redde status >= NEGOTIA_PROPOSITA && status <= NEGOTIA_PERFECTA;
+}
+
+interior b32
+genus_paginae_validum (
+    s32 genus)
+{
+    redde genus >= NEGOTIA_PAGINA_PICTOR
+        && genus <= NEGOTIA_PAGINA_ADUMBRATIO;
 }
 
 
@@ -105,6 +125,25 @@ facultatem_per_id (
         si (chorda_aequalis(f->praesens.id, id))
         {
             redde f;
+        }
+    }
+    redde NIHIL;
+}
+
+interior PaginaInterna*
+paginam_per_id (
+    constans Negotia* n,
+              chorda  id)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(n->paginae); i++)
+    {
+        PaginaInterna* g = (PaginaInterna*)xar_obtinere(n->paginae, i);
+
+        si (chorda_aequalis(g->praesens.id, id))
+        {
+            redde g;
         }
     }
     redde NIHIL;
@@ -272,6 +311,57 @@ colloquium_applicare (
     activitatem_notare(x, seq);
 }
 
+/* pagina: imago plena; genus et negotium non mutantur */
+interior vacuum
+paginam_applicare (
+                  Negotia* n,
+                JsonValor* radix,
+    constans VolumenActum* actum)
+{
+          Negotium* x;
+     PaginaInterna* g;
+     NegotiiPagina  r;
+     NegotiiPagina* locus;
+
+    memset(&r, ZEPHYRUM, magnitudo(r));
+    r.id        = json_capere_chorda(radix, "id", vacua());
+    r.negotium  = json_capere_chorda(radix, "negotium", vacua());
+    x           = negotium_per_id(n, r.negotium);
+    si (   r.id.mensura == ZEPHYRUM || !x
+        || !negotia_pagina_genus_legere(json_capere_chorda(radix,
+               "genus", vacua()), &r.genus))
+    {
+        redde;
+    }
+    r.titulus   = json_capere_chorda(radix, "titulus", vacua());
+    r.corpus    = json_capere_chorda(radix, "corpus", vacua());
+    r.seq       = actum->seq;
+    r.momentum  = actum->momentum;
+    g           = paginam_per_id(n, r.id);
+    si (!g)
+    {
+        g = (PaginaInterna*)xar_addere(n->paginae);
+        si (!g)
+        {
+            redde;
+        }
+        g->revisiones = xar_creare(n->piscina,
+            (i32)magnitudo(NegotiiPagina));
+    }
+    alioquin si (   !chorda_aequalis(g->praesens.negotium, r.negotium)
+                 || g->praesens.genus != r.genus)
+    {
+        redde;
+    }
+    g->praesens  = r;
+    locus        = (NegotiiPagina*)xar_addere(g->revisiones);
+    si (locus)
+    {
+        *locus = r;
+    }
+    activitatem_notare(x, actum->seq);
+}
+
 interior vacuum
 actum_applicare (
                   Negotia* n,
@@ -296,6 +386,10 @@ actum_applicare (
     alioquin si (chorda_aequalis_literis(actum->genus, GENUS_COLLOQUII))
     {
         colloquium_applicare(n, r.radix, actum->seq);
+    }
+    alioquin si (chorda_aequalis_literis(actum->genus, GENUS_PAGINAE))
+    {
+        paginam_applicare(n, r.radix, actum);
     }
 }
 
@@ -337,12 +431,12 @@ ordinem_reficere (
     }
 }
 
-/* acta trium generum post cursorem; VERUM si qua applicata */
+/* acta quattuor generum post cursorem; VERUM si qua applicata */
 interior b32
 acta_legere (
     Negotia* n)
 {
-     constans character* genera[IV];
+     constans character* genera[V];
                     Xar* acta;
                     s64  ultimum;
                     i32  i;
@@ -350,7 +444,8 @@ acta_legere (
     genera[ZEPHYRUM]  = GENUS_NEGOTII;
     genera[I]         = GENUS_FACULTATIS;
     genera[II]        = GENUS_COLLOQUII;
-    genera[III]       = NIHIL;
+    genera[III]       = GENUS_PAGINAE;
+    genera[IV]        = NIHIL;
     ultimum           = volumen_seq_ultimum(n->volumen);
     acta = volumen_acta_generum_legere(n->volumen, n->seq, genera,
         n->piscina);
@@ -478,6 +573,29 @@ facultatem_scribere (
     redde actum_scribere(n, GENUS_FACULTATIS, aed);
 }
 
+interior b32
+paginam_scribere (
+    Negotia* n,
+     chorda  id,
+     chorda  negotium,
+        s32  genus,
+     chorda  titulus,
+     chorda  corpus)
+{
+    ChordaAedificator* aed;
+
+    aed = chorda_aedificator_creare(n->piscina, CCLVI);
+    chorda_aedificator_appendere_character(aed, '{');
+    campum_scribere(aed, "id", id, VERUM);
+    campum_scribere(aed, "negotium", negotium, FALSUM);
+    campum_scribere(aed, "genus",
+        chorda_ex_literis(SIGNA_PAGINAE[genus],
+        n->piscina), FALSUM);
+    campum_scribere(aed, "titulus", titulus, FALSUM);
+    campum_scribere(aed, "corpus", corpus, FALSUM);
+    redde actum_scribere(n, GENUS_PAGINAE, aed);
+}
+
 
     /* ==================================================
      * Interfacies
@@ -511,7 +629,8 @@ negotia_aperire (
         (i32)magnitudo(FacultasInterna));
     n->colloquia   = xar_creare(piscina,
         (i32)magnitudo(NexusColloquii));
-    n->ordo        = xar_creare(piscina, (i32)magnitudo(Negotium*));
+    n->paginae  = xar_creare(piscina, (i32)magnitudo(PaginaInterna));
+    n->ordo     = xar_creare(piscina, (i32)magnitudo(Negotium*));
     (vacuum)acta_legere(n);
     redde n;
 }
@@ -982,6 +1101,208 @@ negotia_status_legere (
             si (status_out)
             {
                 *status_out = s;
+            }
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+
+/* ==================================================
+ * Paginae (negotia-paginae T1)
+ * ================================================== */
+
+chorda
+negotia_paginam_creare (
+    Negotia* n,
+     chorda  negotium,
+        s32  genus,
+     chorda  titulus,
+     chorda  corpus)
+{
+     Negotium* x;
+       chorda  id;
+
+    si (   !n || titulus.mensura == ZEPHYRUM
+        || !genus_paginae_validum(genus))
+    {
+        redde vacua();
+    }
+    x = negotium_per_id(n, negotium);
+    si (!x)
+    {
+        redde vacua();
+    }
+    id = identitatem_cudere(n);
+    si (!paginam_scribere(n, id, x->id, genus, titulus, corpus))
+    {
+        redde vacua();
+    }
+    redde id;
+}
+
+b32
+negotia_paginam_mutare (
+    Negotia* n,
+     chorda  id,
+     chorda  titulus,
+     chorda  corpus)
+{
+    PaginaInterna* g;
+
+    si (!n || titulus.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    g = paginam_per_id(n, id);
+    si (!g)
+    {
+        redde FALSUM;
+    }
+    si (   chorda_aequalis(g->praesens.titulus, titulus)
+        && chorda_aequalis(g->praesens.corpus, corpus))
+    {
+        redde VERUM;
+    }
+    redde paginam_scribere(n, g->praesens.id, g->praesens.negotium,
+        g->praesens.genus, titulus, corpus);
+}
+
+constans NegotiiPagina*
+negotia_paginam_invenire (
+    constans Negotia* n,
+              chorda  id,
+                 b32* ambiguum_out)
+{
+    constans PaginaInterna* inventa;
+                       i32  congruentes;
+                       i32  i;
+
+    si (ambiguum_out)
+    {
+        *ambiguum_out = FALSUM;
+    }
+    si (!n || id.mensura == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    inventa = paginam_per_id(n, id);
+    si (inventa)
+    {
+        redde &inventa->praesens;
+    }
+    congruentes = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < xar_numerus(n->paginae); i++)
+    {
+        constans PaginaInterna* g = (constans PaginaInterna*)
+            xar_obtinere(n->paginae, i);
+
+        si (chorda_terminatur(g->praesens.id, id))
+        {
+            inventa = g;
+            congruentes++;
+        }
+    }
+    si (congruentes > I)
+    {
+        si (ambiguum_out)
+        {
+            *ambiguum_out = VERUM;
+        }
+        redde NIHIL;
+    }
+    redde inventa ? &inventa->praesens : NIHIL;
+}
+
+Xar*
+negotia_paginae (
+    constans Negotia* n,
+              chorda  negotium,
+             Piscina* piscina)
+{
+    Xar* x;
+    i32  i;
+
+    si (!n || !piscina)
+    {
+        redde NIHIL;
+    }
+    x = xar_creare(piscina, (i32)magnitudo(NegotiiPagina));
+    per (i = ZEPHYRUM; x && i < xar_numerus(n->paginae); i++)
+    {
+        constans PaginaInterna* g = (constans PaginaInterna*)
+            xar_obtinere(n->paginae, i);
+        NegotiiPagina* locus;
+
+        si (!chorda_aequalis(g->praesens.negotium, negotium))
+        {
+            perge;
+        }
+        locus = (NegotiiPagina*)xar_addere(x);
+        si (locus)
+        {
+            *locus = g->praesens;
+        }
+    }
+    redde x;
+}
+
+Xar*
+negotia_paginae_revisiones (
+    constans Negotia* n,
+              chorda  id,
+             Piscina* piscina)
+{
+    constans PaginaInterna* g;
+                       Xar* x;
+                       i32  i;
+
+    si (!n || !piscina)
+    {
+        redde NIHIL;
+    }
+    g = paginam_per_id(n, id);
+    si (!g)
+    {
+        redde NIHIL;
+    }
+    x = xar_creare(piscina, (i32)magnitudo(NegotiiPagina));
+    per (i = ZEPHYRUM; x && i < xar_numerus(g->revisiones); i++)
+    {
+        NegotiiPagina* locus = (NegotiiPagina*)xar_addere(x);
+
+        si (locus)
+        {
+            *locus =
+                *(constans NegotiiPagina*)xar_obtinere(g->revisiones,
+                i);
+        }
+    }
+    redde x;
+}
+
+constans character*
+negotia_pagina_genus_titulus (
+    s32 genus)
+{
+    redde genus_paginae_validum(genus) ? SIGNA_PAGINAE[genus] : "?";
+}
+
+b32
+negotia_pagina_genus_legere (
+    chorda  verbum,
+       s32* genus_out)
+{
+    s32 g;
+
+    per (g = NEGOTIA_PAGINA_PICTOR; g <= NEGOTIA_PAGINA_ADUMBRATIO; g++)
+    {
+        si (chorda_aequalis_literis(verbum, SIGNA_PAGINAE[g]))
+        {
+            si (genus_out)
+            {
+                *genus_out = g;
             }
             redde VERUM;
         }
