@@ -93179,6 +93179,11 @@ _declaratorem_fn_invenire (
 {
     i32 k;
 
+    /* lectio canonica: involucrum AMBIGUUM interpretationes ordine
+     * listae fert, non canonica primum - descensus generalis lectionem
+     * alteram (lexemata communia) invenire posset (corpore toto
+     * 2026-11-04: ambigua ante declaratorem functionis nulla) */
+    nodus = _canonicum(nodus);
     si (nodus == NIHIL)
     {
         redde NIHIL;
