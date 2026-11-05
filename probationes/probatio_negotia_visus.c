@@ -21,6 +21,7 @@
 #include "moneta.h"
 #include "negotia.h"
 #include "negotia_visus.h"
+#include "chorda_aedificator.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -95,8 +96,7 @@ seminare (
     (vacuum)negotia_negotium_creare(w->n, lit("beta", p), lit("", p));
     alpha = negotia_negotium_creare(w->n, lit("alpha", p), lit("", p));
     (vacuum)negotia_facultatem_creare(w->n, alpha, lit("bibliotheca",
-        p),
-        NEGOTIA_PERFECTA, lit("", p));
+        p), NEGOTIA_PERFECTA, lit("acta in volumine", p));
     (vacuum)negotia_facultatem_creare(w->n, alpha, lit("tabula", p),
         NEGOTIA_PROPOSITA, lit("", p));
 }
@@ -267,6 +267,50 @@ textus_pictus (
         }
     }
     redde FALSUM;
+}
+
+/* y textus primi qui fragmentum continet; -1 si nullus */
+interior s32
+textus_y (
+                Mandata* md,
+     constans character* fragmentum)
+{
+    constans Mandatum* x;
+                  i32  i;
+               chorda  f;
+
+    f = chorda_ex_literis(fragmentum, md->piscina);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, f))
+        {
+            redde x->fines.y;
+        }
+    }
+    redde -I;
+}
+
+/* omnis textus intra altitudinem lateris (linea VIII pixela) */
+interior b32
+textus_intra (
+    Mandata* md,
+        s32  altitudo)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && (x->fines.y < ZEPHYRUM || x->fines.y + VIII > altitudo))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 /* linea sub mure: rectangulum exemplaris colore selectionis (figura_
@@ -562,6 +606,188 @@ _probare_paginas (
     CREDO_VERUM(adest(l, "r5", c->piscina));
 }
 
+/* ictus in facultatem: visus facultas, corpus et historia; Enter
+ * etiam aperit */
+interior vacuum
+_probare_facultatem (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Mandata* md;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    seminare(w, c->piscina);
+    l = latus_montare(c, w, "c1", "2", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(ictus(l, "r1", EVENTUS_MUS_DEPRESSUS, c->piscina));
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "facultas"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "facultas", "3"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "negotium", "2"));
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(textus_pictus(md, "bibliotheca"));
+    CREDO_VERUM(textus_pictus(md, "shipped"));
+    CREDO_VERUM(textus_pictus(md, "acta in volumine"));
+    CREDO_VERUM(textus_pictus(md, "History"));
+    CREDO_VERUM(locus_est(l, "alpha \302\267 bibliotheca", c->piscina));
+
+    CREDO_GRADUS("Enter in facultate electa aperit");
+    l = latus_montare(c, w, "c2", "2", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    clavis(l, 'j');
+    clavis_specialis(l, (s32)CLAVIS_REDITUS);
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "facultas"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "facultas", "4"));
+    CREDO_VERUM(textus_pictus(reddere(w, l, c->piscina), "tabula"));
+}
+
+/* III revisiones: III lineae historiae, recentissima prima */
+interior vacuum
+_probare_historiam (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Mandata* md;
+        s32  y1;
+        s32  y2;
+        s32  y3;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    seminare(w, c->piscina);
+    CREDO_VERUM(negotia_facultatem_mutare(w->n, lit("3", c->piscina),
+        lit("bibliotheca", c->piscina), NEGOTIA_INCHOATA, lit("secunda",
+        c->piscina)));
+    CREDO_VERUM(negotia_facultatem_mutare(w->n, lit("3", c->piscina),
+        lit("bibliotheca", c->piscina), NEGOTIA_PERFECTA, lit(
+        "tertia\nlinea altera", c->piscina)));
+    l = latus_montare(c, w, "c1", "negotia/facultas/2/3", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "facultas"));
+    md = reddere(w, l, c->piscina);
+    y1 = textus_y(md, " \302\267 shipped \302\267 tertia");
+    y2 = textus_y(md, " \302\267 partial \302\267 secunda");
+    /* CCLXXX pixela: linea praecisa post "acta in" */
+    y3 = textus_y(md, " \302\267 shipped \302\267 acta in");
+    CREDO_VERUM(y1 >= ZEPHYRUM);
+    CREDO_VERUM(y2 > y1);
+    CREDO_VERUM(y3 > y2);
+    /* linea prima corporis sola in historia */
+    CREDO_VERUM(textus_y(md, "\302\267 shipped \302\267 linea altera")
+        < ZEPHYRUM);
+}
+
+/* Esc: ad facultates, electa = facultas; Esc iterum non consumitur
+ * (ab argumento) */
+interior vacuum
+_probare_redire (
+    CredoContextus* c)
+{
+    Mundus* w = (Mundus*)c->datum;
+     Latus* l;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    seminare(w, c->piscina);
+    l = latus_montare(c, w, "c1", "2", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(ictus(l, "r2", EVENTUS_MUS_DEPRESSUS, c->piscina));
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "facultas"));
+    clavis_specialis(l, (s32)CLAVIS_EFFUGIUM);
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "negotium"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "facultas", NIHIL));
+    CREDO_VERUM(campus_est(&l->m.ramus, "electa", "4"));
+    CREDO_VERUM(locus_est(l, "alpha", c->piscina));
+    clavis_specialis(l, (s32)CLAVIS_EFFUGIUM);
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "negotium"));
+}
+
+/* corpus CC linearum: pagina prima intra latus, sagitta, ] paginam
+ * secundam */
+interior vacuum
+_probare_corpus_longum (
+    CredoContextus* c)
+{
+               Mundus* w = (Mundus*)c->datum;
+                Latus* l;
+              Mandata* md;
+    ChordaAedificator* a;
+               chorda  f;
+                  i32  k;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    seminare(w, c->piscina);
+    a = chorda_aedificator_creare(c->piscina, MMXLVIII);
+    per (k = ZEPHYRUM; k < CC; k++)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a, "linea ");
+        (vacuum)chorda_aedificator_appendere_i32(a, k);
+        (vacuum)chorda_aedificator_appendere_character(a, '\n');
+    }
+    f = negotia_facultatem_creare(w->n, lit("2", c->piscina), lit(
+        "longa", c->piscina), NEGOTIA_PROPOSITA,
+        chorda_aedificator_spectare(a));
+    CREDO_CHORDA_NON_VACUA(f);
+    l = latus_montare(c, w, "c1", "2", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(ictus(l, "r3", EVENTUS_MUS_DEPRESSUS, c->piscina));
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "facultas"));
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(textus_pictus(md, "linea 0"));
+    CREDO_FALSUM(textus_pictus(md, "linea 199"));
+    CREDO_VERUM(textus_intra(md, CCLVI));
+    CREDO_VERUM(adest(l, "pagina-proxima", c->piscina));
+    clavis(l, ']');
+    CREDO_VERUM(campus_est(&l->m.ramus, "pagina_textus", "1"));
+    md = reddere(w, l, c->piscina);
+    CREDO_FALSUM(textus_pictus(md, "linea 0"));
+    CREDO_VERUM(textus_intra(md, CCLVI));
+    CREDO_VERUM(ictus(l, "pagina-proxima", EVENTUS_MUS_DEPRESSUS,
+        c->piscina));
+    CREDO_VERUM(campus_est(&l->m.ramus, "pagina_textus", "2"));
+}
+
+/* titulus UTF-8 longus in ordine: praecisus per characteres, numquam
+ * character dimidius */
+interior vacuum
+_probare_praecisionem (
+    CredoContextus* c)
+{
+               Mundus* w = (Mundus*)c->datum;
+                Latus* l;
+              Mandata* md;
+    ChordaAedificator* a;
+    constans Mandatum* x;
+                  i32  k;
+                  b32  inventum = FALSUM;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    seminare(w, c->piscina);
+    a = chorda_aedificator_creare(c->piscina, CC);
+    per (k = ZEPHYRUM; k < LX; k++)
+    {
+        (vacuum)chorda_aedificator_appendere_literis(a, "\303\251");
+    }
+    CREDO_CHORDA_NON_VACUA(negotia_facultatem_creare(w->n, lit("2",
+        c->piscina), chorda_aedificator_spectare(a), NEGOTIA_PROPOSITA,
+        lit("", c->piscina)));
+    l = latus_montare(c, w, "c1", "2", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    md = reddere(w, l, c->piscina);
+    per (k = ZEPHYRUM; k < xar_numerus(md->elementa); k++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, k);
+        si (   x->genus == MANDATUM_TEXTUS && x->textus.mensura >= II
+            && x->textus.datum[ZEPHYRUM] == (i8)0xC3)
+        {
+            inventum = VERUM;
+            CREDO_AEQUALIS_I32(x->textus.mensura % II, ZEPHYRUM);
+            CREDO_VERUM(x->textus.mensura >= L);
+            CREDO_VERUM(x->textus.mensura < CXX);
+        }
+    }
+    CREDO_VERUM(inventum);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "index", _probare_indicem, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -581,6 +807,16 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "paginae", _probare_paginas, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
+    { "facultas", _probare_facultatem, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "historia", _probare_historiam, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "redire", _probare_redire, mundum_parare, mundum_purgare, NIHIL,
+        NIHIL },
+    { "corpus longum", _probare_corpus_longum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "praecisio", _probare_praecisionem, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

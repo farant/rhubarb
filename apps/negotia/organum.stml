@@ -16,15 +16,24 @@
   <status>
     <campus nomen="visus" typus="electio" vita="persistens"
             absens="index" scriptor="negotia.agere"
-            semita="ligatio" historia="impelle"
-            nota="T4 optionem facultas addet">
+            semita="ligatio" historia="impelle">
       <optio>index</optio>
       <optio>negotium</optio>
+      <optio>facultas</optio>
     </campus>
     <campus nomen="negotium" typus="textus" vita="persistens"
             scriptor="negotia.agere" semita="ligatio"
             historia="impelle"
             nota="ULID negotii aperti; in indice absens"/>
+    <campus nomen="facultas" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="ligatio"
+            historia="impelle"
+            nota="T4: ULID facultatis apertae; absens extra visum
+                  facultatis"/>
+    <campus nomen="pagina_textus" typus="numerus" vita="persistens"
+            scriptor="negotia.agere" semita="status" ambitus="ligatio"
+            nota="T4: pagina corporis et historiae (ab 0); facultate
+                  mutata ad absens"/>
     <campus nomen="origo" typus="electio" vita="persistens"
             absens="argumentum" scriptor="negotia.agere"
             nota="unde negotium apertum: argumentum (Esc latus prius

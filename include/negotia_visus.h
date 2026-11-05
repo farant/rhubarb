@@ -12,8 +12,16 @@
  * status (planned / partial / shipped), titulus. Vacuum: "No features
  * yet - add one with `negotia facultas`".
  *
+ * FACULTAS ("<negotium> · <facultas>"): titulus, globulus status,
+ * corpus (ad latitudinem lateris involutum), deinde "History": linea
+ * per revisionem, recentissima prima - "2026-11-04 23:38 · shipped ·
+ * <linea prima corporis>". Corpus et historia lineae unius seriei,
+ * per paginas secta (numquam extra latus pictae); sagittae et [ ]
+ * paginas vertunt. Esc ad facultates (electa = facultas haec); Esc
+ * ibi ut supra.
+ *
  * MUS PRIMUM: linea sub mure illuminatur (campus super); ictus unus
- * aperit (negotium in indice; facultas: T4); sagittae paginarum
+ * aperit (negotium in indice, facultas in negotio); sagittae paginarum
  * ictu. Claves: j k (electa), [ ] (paginae), Enter (aperire), Esc
  * (latus prius per vicum).
  *
