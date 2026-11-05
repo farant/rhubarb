@@ -25,6 +25,8 @@
 #define ANTIPHONALE_ALTITUDO   CCCXX
 #define ANTIPHONALE_LINEA      XII       /* linea ima et vexillum */
 #define ANTIPHONALE_SAGITTA    XXIV      /* latitudo areae sagittae */
+#define ANTIPHONALE_LIMBUS_X   VI        /* margo texturae foci (ut */
+#define ANTIPHONALE_LIMBUS_Y   VIII      /* navigator, chronica) */
 #define ANTIPHONALE_SPATIUM    VIII
 #define ANTIPHONALE_VIA        DXII
 #define ANTIPHONALE_VEXILLUM   CCLVI
@@ -148,14 +150,24 @@ superficies (
         : "superficies_altitudo", v);
 }
 
-/* area paginae: tota supra lineam imam */
+/* area paginae: intra limbum, supra lineam imam */
 interior i32
 altitudo_paginae (
     constans AntiphonaleMontatio* m)
 {
-    s32 a = superficies(m, FALSUM) - ANTIPHONALE_LINEA;
+    s32 a = superficies(m, FALSUM) - II * ANTIPHONALE_LIMBUS_Y
+          - ANTIPHONALE_LINEA;
 
     redde a > ZEPHYRUM ? (i32)a : I;
+}
+
+interior i32
+latitudo_paginae (
+    constans AntiphonaleMontatio* m)
+{
+    s32 l = superficies(m, VERUM) - II * ANTIPHONALE_LIMBUS_X;
+
+    redde l > ZEPHYRUM ? (i32)l : I;
 }
 
 interior vacuum
@@ -222,7 +234,7 @@ compositio_currens (
 {
     Antiphonale* a = (Antiphonale*)m->figurae_ctx;
 
-    redde componere_ad(a->versio, (i32)superficies(m, VERUM),
+    redde componere_ad(a->versio, latitudo_paginae(m),
         altitudo_paginae(m), spatium_currens(m));
 }
 
@@ -433,8 +445,9 @@ spatium_movere (
     {
         redde FALSUM;
     }
-    c = componere_ad(a->versio, (i32)superficies(m, VERUM),
-        altitudo_paginae(m), (i32)spatium);
+    c = componere_ad(a->versio, latitudo_paginae(m),
+        altitudo_paginae(m),
+        (i32)spatium);
     si (c && prima >= ZEPHYRUM && c->syllabae[prima].pagina >= ZEPHYRUM)
     {
         redde numerum_scribere(m, "pagina", c->syllabae[prima].pagina);
@@ -616,6 +629,7 @@ figura_antiphonalis (
        constans Antiphonale* a;
     constans GabcCompositio* comp;
                       Fines  f;
+                      Fines  fundus;
                       Fines  vexillum;
                      chorda  titulus;
                   character  pes[CCLVI];
@@ -628,6 +642,14 @@ figura_antiphonalis (
     f.altitudo  = c->fines.altitudo;
     figura_mensam_pingere(md, f, chorda_aequalis_literis(c->titulus,
         "focatum"));
+    /* fundus intra limbum: textura foci solum in margine (ut
+     * navigator, chronica) */
+    fundus.x         = ANTIPHONALE_LIMBUS_X;
+    fundus.y         = ANTIPHONALE_LIMBUS_Y;
+    fundus.latitudo  = f.latitudo - II * ANTIPHONALE_LIMBUS_X;
+    fundus.altitudo  = f.altitudo - II * ANTIPHONALE_LIMBUS_Y;
+    mandata_rectangulum(md, fundus, figura_color_thematis(
+        COLOR_BACKGROUND), VERUM);
     si (!m || !m->figurae_ctx)
     {
         redde;
@@ -636,21 +658,23 @@ figura_antiphonalis (
     comp  = a->versio ? a->versio->compositio : NIHIL;
     si (a->via[ZEPHYRUM] == '\0')
     {
-        textum_pingere(md, VIII, VIII, chorda_ex_literis(
+        textum_pingere(md, ANTIPHONALE_LIMBUS_X + VIII,
+            ANTIPHONALE_LIMBUS_Y + VIII, chorda_ex_literis(
             "Open a chant with $antiphonale(path)", md->piscina),
             COLOR_TEXT_DIM);
     }
     alioquin si (a->versio && comp == NIHIL)
     {
-        textum_pingere(md, VIII, XX, chorda_ex_literis(
+        textum_pingere(md, ANTIPHONALE_LIMBUS_X + VIII,
+            ANTIPHONALE_LIMBUS_Y + XX, chorda_ex_literis(
             "pane too narrow for this staff size", md->piscina),
             COLOR_TEXT_DIM);
     }
     pagina = pagina_currens(m, comp);
     si (comp)
     {
-        (vacuum)gabc_paginam_pingere(comp, (i32)pagina, ZEPHYRUM,
-            ZEPHYRUM, NIHIL, md);
+        (vacuum)gabc_paginam_pingere(comp, (i32)pagina,
+            ANTIPHONALE_LIMBUS_X, ANTIPHONALE_LIMBUS_Y, NIHIL, md);
     }
     /* linea ima: "< titulus · 2/5 >" */
     titulus = titulum_capere(m);
@@ -659,18 +683,20 @@ figura_antiphonalis (
         ? (constans character*)titulus.datum : "",
         (integer)(pagina + I),
         comp ? (unsigned)comp->numerus_paginarum : 0u);
-    textum_pingere(md, II, f.altitudo - ANTIPHONALE_LINEA + II,
+    textum_pingere(md, ANTIPHONALE_LIMBUS_X + II, f.altitudo
+        - ANTIPHONALE_LIMBUS_Y - ANTIPHONALE_LINEA + II,
         chorda_ex_literis(pes, md->piscina), COLOR_TEXT);
     /* vexillum vitii supra paginam */
     si (a->vexillum[ZEPHYRUM])
     {
-        vexillum.x         = ZEPHYRUM;
-        vexillum.y         = ZEPHYRUM;
-        vexillum.latitudo  = f.latitudo;
+        vexillum.x         = ANTIPHONALE_LIMBUS_X;
+        vexillum.y         = ANTIPHONALE_LIMBUS_Y;
+        vexillum.latitudo  = fundus.latitudo;
         vexillum.altitudo  = ANTIPHONALE_LINEA;
         mandata_rectangulum(md, vexillum, figura_color_thematis(
             COLOR_ERROR), VERUM);
-        textum_pingere(md, II, II, chorda_ex_literis(a->vexillum,
+        textum_pingere(md, ANTIPHONALE_LIMBUS_X + II,
+            ANTIPHONALE_LIMBUS_Y + II, chorda_ex_literis(a->vexillum,
             md->piscina), COLOR_BACKGROUND);
     }
 }
@@ -722,13 +748,13 @@ antiphonale_componere (
     {
         componens_ponere_titulum(radix, "focatum");
     }
-    s.x         = ZEPHYRUM;
-    s.y         = f.altitudo - ANTIPHONALE_LINEA;
+    s.x         = ANTIPHONALE_LIMBUS_X;
+    s.y         = f.altitudo - ANTIPHONALE_LIMBUS_Y - ANTIPHONALE_LINEA;
     s.latitudo  = ANTIPHONALE_SAGITTA;
     s.altitudo  = ANTIPHONALE_LINEA;
     componens_ponere_fines(prior, s);
     componens_ponere_actio(prior, actio_antiphonalis);
-    s.x = f.latitudo - ANTIPHONALE_SAGITTA;
+    s.x = f.latitudo - ANTIPHONALE_LIMBUS_X - ANTIPHONALE_SAGITTA;
     componens_ponere_fines(proxima, s);
     componens_ponere_actio(proxima, actio_antiphonalis);
     componens_addere_liberum(radix, prior);

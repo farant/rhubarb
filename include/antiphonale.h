@@ -12,9 +12,11 @@
  * sine clave. Versio = unitas una cum piscina sua (textus, cantus,
  * compositio); vetus solum destruitur postquam nova aedificata est.
  *
- * PICTURA: pagina compositionis (gabc_compositio.h, gabc_pictura.h) ad
- * latitudinem lateris; linea ima "< titulus · 2/5 >" (sagittae
- * ictu paginam vertunt). Titulus = caput name, aliter nomen plagulae.
+ * PICTURA: fundus planus intra limbum (VI x VIII; textura foci solum
+ * in margine, ut navigator); pagina compositionis (gabc_compositio.h,
+ * gabc_pictura.h) ad latitudinem intra limbum; linea ima "< titulus ·
+ * 2/5 >" (sagittae ictu paginam vertunt). Titulus = caput name,
+ * aliter nomen plagulae.
  * CLAVES: PageDown / PageUp (et j / k) paginae; + (aut =) et - spatium
  * (VI..XLVIII, gradu II) - syllaba prima visa in conspectu manet.
  * Compositio pigre in componere cum latitudo aut spatium mutatur.

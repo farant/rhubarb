@@ -155,6 +155,31 @@ _quadrata (
     redde n;
 }
 
+/* fundus planus intra limbum: rectangulum COLOR_BACKGROUND (VI, VIII,
+ * L - XII, A - XVI) - textura foci solum in margine */
+interior b32
+_fundus_intra_limbum (
+    Mandata* md)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus          == MANDATUM_RECTANGULUM && x->impletum
+            && x->color.genus    == COLOR_MANDATI_THEMA
+            && x->color.valor    == (i32)COLOR_BACKGROUND
+            && x->fines.x        == VI && x->fines.y == VIII
+            && x->fines.latitudo == LATITUDO - XII
+            && x->fines.altitudo == ALTITUDO - XVI)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _clavis (
        Mundus* w,
@@ -236,6 +261,7 @@ _aperire_probare (
     CREDO_VERUM (_textus_continet(md, "1/1"));
     CREDO_MAIOR_AUT_AEQUALIS_I32 (_quadrata(md, COLOR_TEXT_DIM), IV);
     CREDO_AEQUALIS_I32 (_quadrata(md, COLOR_ERROR), ZEPHYRUM);
+    CREDO_VERUM (_fundus_intra_limbum(md));
     titulus = antiphonale_titulus(&w->m, c->piscina);
     CREDO_VERUM (chorda_aequalis_literis(titulus, "Probatio"));
 

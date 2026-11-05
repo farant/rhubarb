@@ -42,3 +42,12 @@ typed path fits the 80-column scriba line.
 **Not yet:** sound (P7); the pane does not pulse in the background
 (vivit_in_fundo FALSE) — a save while another pane is in front shows on
 return.
+
+## 2026-11-04 — plain background inside the border (Fran)
+
+figura_mensam_pingere fills the whole pane with the focus texture when
+focused; the pane drew straight on it, so the whole background was
+textured. Now, as navigator and chronica: a COLOR_BACKGROUND rectangle
+inside a 6 x 8 border (ANTIPHONALE_LIMBUS_X/Y), and the page, banner,
+bottom line and arrow hit areas all live inside it; the layout width and
+height shrink by the border. Test `_fundus_intra_limbum` (red before).
