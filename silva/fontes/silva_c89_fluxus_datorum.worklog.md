@@ -87,3 +87,50 @@ visit sequence is unchanged, not just the fixed point.
 - provenance 5.36 -> 1.33 G; data flow ~11.3 -> ~7.3 G.
 - Full-path visits 1.47 M -> 122 k; cells copied 104 M -> 2.6 M.
 - `percursus -semantica` median 355.5 -> 351.0 G; report identical (3/3 runs).
+
+## 2026-11-05 — item 4: forms through tracked rows + the shared two-bit lattice
+
+**Shared lattice.** Provenance's fast path and forms are the same shape: a three-step chain
+IMUM < MEDIUM < SUMMUM. It now lives in one section: `GradusTrium`, `BitaGraduum`
+(attacta/summa x introitus/exitus), and helpers `_gradum_bitis_ponere`, `_gradum_ex_bitis`,
+`_verba_valida_parare`, `_bita_graduum_parare`, `_bita_graduum_exitum_initiare`,
+`_bita_graduum_summa`, `_bita_graduum_iungere`. Provenance maps IGNOTA/NEUTRA/AMISSA onto it
+(`_gradus_stirpis` / `_stirps_gradus`); forms map IGNOTA/ALIA/MIXTA (`_gradus_formae` / `_forma_gradus`).
+The old `ultimum` last-word mask became the `valida` bit array: def-omnia sets exactly the valid bits.
+
+**Forms** (`_punctum_fixum_formarum`, one path for every build; the old dense loop is gone):
+- Tracked = variables with a DEFINITIO whose form is outside {IGNOTA, ALIA, MIXTA} (that is,
+  SUBTRACTIO). `_forma_valoris` only ever yields SUBTRACTIO or ALIA, so an untracked variable
+  can only be IGNOTA, ALIA, or MIXTA (def-omnia / join), which is exactly the lattice.
+- Tracked cells live in compact rows `tractae_introitus/exitus[b * capax + ordo[v]]`, joined
+  with `_formam_iungere`; everyone else lives in bits. `valida` excludes tracked variables, so
+  their bits stay 0. Without that, def-omnia could set a tracked variable's bits and a later
+  join could flip a bit with no cell change - an extra visit. Results would still match (no
+  widening), but the visit order would not.
+- At the end, expansion into the same s32 `formae_introitus/exitus`.
+
+**Checks.**
+- **Differential vs HEAD data flow** (same callbacks): 64,841 builds, 2,817 with tracked
+  variables, every cell of every table (provenance too, after the refactor) identical.
+- **Suite:** the dense reference `_formae_oraculum` (the old algorithm, in the test file) is
+  compared cell by cell against the build on: tracked + untracked across a branch, a consistent
+  tracked join, def-omnia with both kinds, no subtraction + loop + unreachable, 70 members ahead
+  of x/y (second word).
+- **Plants, 5/5 red:**
+  - tracked definition forced to ALIA (examen on subtractio_formae.severum: codex 80 6 -> 5);
+  - untracked definition one step too high;
+  - summa joined with AND;
+  - def-omnia not touching tracked cells;
+  - wrong variables tracked.
+- **Not testable:** the `valida` exclusion of tracked bits only affects visit order (see above).
+
+**Gate gap found:** `silva/examen_vectis.sh` runs `build/examen` without rebuilding it, so
+`silva.planta(..., 'examen-vectis')` stayed green on P1 - it tested the previous binary. The
+plant had to be run by hand (rebuild + fixture). Ledger desideratum 01M6P6F7, linked to the
+older question 01M3NNZM.
+
+**Result** (overhead-corrected phase probe):
+- forms 2.55 -> 1.38 G (the full forms loop: 0 visits now); data flow ~7.3 -> ~6.1 G.
+- `percursus -semantica` median 352.4 -> 351.0 G; report identical (3/3).
+- ~1.4 G remains in each converted fixed point - per-block setup + expanding 27 M cells - not
+  yet split; a candidate if it matters.

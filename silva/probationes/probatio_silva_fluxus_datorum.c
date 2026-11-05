@@ -670,6 +670,211 @@ _stirpes_vias_conferre (
     redde amissa;
 }
 
+/* Oraculum formarum: punctum fixum DENSUM (tabula plena, exemplar
+ * ante ordines tractos - budget fusionis, ambulatio principalis
+ * IV) super eventa et graphum aedificationis. Introitus et exitus
+ * per blocum in tabulis n_bloci x n_loci. */
+interior s32
+_oraculi_iunctio (
+    s32 a,
+    s32 b)
+{
+    si (a == (s32)FLUXUS_FORMA_IGNOTA)
+    {
+        redde b;
+    }
+    si (b == (s32)FLUXUS_FORMA_IGNOTA || a == b)
+    {
+        redde a;
+    }
+    redde (s32)FLUXUS_FORMA_MIXTA;
+}
+
+interior vacuum
+_formae_oraculum (
+          Piscina*  piscina,
+    FluxusDatorum*  d,
+              s32** introitus,
+              s32** exitus)
+{
+    i32  n_var   = xar_numerus(d->variabiles);
+    i32  n_loci  = (n_var > ZEPHYRUM) ? n_var : I;
+    i32  n_b     = xar_numerus(d->bloci);
+    i32  intro   = d->fluxus->introitus->index;
+    s32* in;
+    s32* ex;
+    b32* in_indice;
+    i32* opus;
+    i32  caput = ZEPHYRUM;
+    i32  cauda = ZEPHYRUM;
+    i32  i;
+
+    in = (s32*)piscina_allocare(piscina,
+        (memoriae_index)(n_b * n_loci) * magnitudo(s32));
+    ex = (s32*)piscina_allocare(piscina,
+        (memoriae_index)(n_b * n_loci) * magnitudo(s32));
+    in_indice = (b32*)piscina_allocare(piscina,
+        (memoriae_index)n_b * magnitudo(b32));
+    opus = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(n_b * n_loci + n_b + I) * magnitudo(i32));
+    per (i = ZEPHYRUM; i < n_b * n_loci; i++)
+    {
+        in[i] = (s32)FLUXUS_FORMA_IGNOTA;
+        ex[i] = (s32)FLUXUS_FORMA_IGNOTA;
+    }
+    per (i = ZEPHYRUM; i < n_b; i++)
+    {
+        in_indice[i] = FALSUM;
+    }
+    per (i = ZEPHYRUM; i < n_var; i++)
+    {
+        FluxusVariabilis* v = (FluxusVariabilis*)xar_obtinere(
+            d->variabiles, i);
+
+        si (v->parametrum)
+        {
+            in[intro * n_loci + i] = (s32)FLUXUS_FORMA_ALIA;
+        }
+    }
+    opus[cauda++]     = intro;
+    in_indice[intro]  = VERUM;
+    dum (caput < cauda)
+    {
+                        i32  b = opus[caput++];
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            d->bloci, b);
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            xar_obtinere(d->fluxus->bloci, b);
+        i32 e;
+        i32 k;
+
+        in_indice[b] = FALSUM;
+        per (i = ZEPHYRUM; i < n_var; i++)
+        {
+            ex[b * n_loci + i] = in[b * n_loci + i];
+        }
+        per (e = ZEPHYRUM; e < xar_numerus(db->eventa); e++)
+        {
+            FluxusEventum* ev = (FluxusEventum*)xar_obtinere(
+                db->eventa, e);
+
+            si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO)
+            {
+                perge;
+            }
+            si (ev->variabilis < ZEPHYRUM)
+            {
+                per (i = ZEPHYRUM; i < n_var; i++)
+                {
+                    ex[b * n_loci + i] = (s32)FLUXUS_FORMA_MIXTA;
+                }
+            }
+            alioquin
+            {
+                ex[b * n_loci + (i32)ev->variabilis] = ev->forma;
+            }
+        }
+        per (k = ZEPHYRUM; k < xar_numerus(fb->margines); k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                xar_obtinere(fb->margines, k);
+            b32 mutatum = FALSUM;
+            i32 t;
+
+            si (margo->destinatio == NIHIL)
+            {
+                perge;
+            }
+            t = margo->destinatio->index;
+            per (i = ZEPHYRUM; i < n_var; i++)
+            {
+                s32 novum = _oraculi_iunctio(in[t * n_loci + i],
+                    ex[b * n_loci + i]);
+
+                si (novum != in[t * n_loci + i])
+                {
+                    in[t * n_loci + i]  = novum;
+                    mutatum             = VERUM;
+                }
+            }
+            si (mutatum && !in_indice[t])
+            {
+                opus[cauda++]  = t;
+                in_indice[t]   = VERUM;
+            }
+        }
+    }
+    *introitus  = in;
+    *exitus     = ex;
+}
+
+/* Formae aedificationis contra oraculum densum: omnes cellulae
+ * omnium blocorum pares. Reddit numerum cellularum SUBTRACTIO
+ * (introitus aut exitus - ne collatio vacua praetereat); -1 si
+ * deficit. */
+interior s32
+_formas_conferre (
+               Piscina* piscina,
+    constans character* fons,
+        FluxusDatorum** datorum)
+{
+    FluxusDatorum* d = _extrahere(piscina, fons);
+              s32* in;
+              s32* ex;
+              s32  subtractiones = ZEPHYRUM;
+              i32  n_loci;
+              i32  b;
+
+    *datorum = d;
+    CREDO_NON_NIHIL (d);
+    si (d == NIHIL)
+    {
+        redde -I;
+    }
+    _formae_oraculum(piscina, d, &in, &ex);
+    n_loci = (xar_numerus(d->variabiles) > ZEPHYRUM)
+        ? xar_numerus(d->variabiles) : I;
+    per (b = ZEPHYRUM; b < xar_numerus(d->bloci); b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            d->bloci, b);
+        i32 v;
+
+        per (v = ZEPHYRUM; v < n_loci; v++)
+        {
+            CREDO_VERUM (db->formae_introitus[v]
+                == in[b * n_loci + v]);
+            CREDO_VERUM (db->formae_exitus[v]
+                == ex[b * n_loci + v]);
+            si (   db->formae_introitus[v]
+                    == (s32)FLUXUS_FORMA_SUBTRACTIO
+                || db->formae_exitus[v]
+                    == (s32)FLUXUS_FORMA_SUBTRACTIO)
+            {
+                subtractiones++;
+            }
+        }
+    }
+    redde subtractiones;
+}
+
+/* Forma variabilis nominatae ad exitum functionis */
+interior s32
+_forma_ad_exitum (
+         FluxusDatorum* d,
+    constans character* titulus)
+{
+    FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+        d->bloci, d->fluxus->exitus->index);
+    s32 v = _variabilis_titulo(d, titulus);
+
+    si (v < ZEPHYRUM)
+    {
+        redde -I;
+    }
+    redde db->formae_introitus[v];
+}
+
 /* Stirps membri (basis, titulus) ad exitum functionis */
 interior s32
 _stirps_membri_ad_exitum (
@@ -1362,6 +1567,96 @@ s32 principale (vacuum)
                     (s32)FLUXUS_STIRPS_AMISSA);
                 CREDO_AEQUALIS_S32 (_stirps_membri_ad_exitum(d,
                     "m69"), (s32)FLUXUS_STIRPS_NEUTRA);
+            }
+        }
+    }
+
+
+    /* ==================================================
+     * Formae per ordines tractos (budget fusionis, ambulatio
+     * principalis IV): ordines SUBTRACTIO in cellulis compactis,
+     * ceteri in bitis duobus - collatio cum oraculo denso
+     * ================================================== */
+
+    {
+        FluxusDatorum* d;
+                  s32  subtractiones;
+
+        /* tractus x (SUBTRACTIO cum ALIA -> MIXTA), y non tractus
+         * (ALIA cum IGNOTA -> ALIA), parametra ALIA */
+        subtractiones = _formas_conferre(piscina,
+            "int f(int a, int b, int c) { int x; int y;"
+            " if (c) { x = a - b; y = 1; } else { x = a; }"
+            " return x + y; }", &d);
+        CREDO_VERUM (subtractiones > ZEPHYRUM);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "x"),
+                (s32)FLUXUS_FORMA_MIXTA);
+            CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "y"),
+                (s32)FLUXUS_FORMA_ALIA);
+            CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "a"),
+                (s32)FLUXUS_FORMA_ALIA);
+        }
+
+        /* iunctio consentiens tractorum: SUBTRACTIO servatur */
+        subtractiones = _formas_conferre(piscina,
+            "int f(int a, int b, int c) { int x;"
+            " if (c) { x = a - b; } else { x = b - a; }"
+            " return x; }", &d);
+        CREDO_VERUM (subtractiones > ZEPHYRUM);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "x"),
+                (s32)FLUXUS_FORMA_SUBTRACTIO);
+        }
+
+        /* def-omnia: tractus et non tracti MIXTA, definitio
+         * sequens ALIA */
+        subtractiones = _formas_conferre(piscina,
+            "int f(int a, int b) { int x; int y; y = a - b;"
+            " x = sizeof(g2); return x + y; }", &d);
+        CREDO_AEQUALIS_S32 (subtractiones, ZEPHYRUM);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "y"),
+                (s32)FLUXUS_FORMA_MIXTA);
+            CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "a"),
+                (s32)FLUXUS_FORMA_MIXTA);
+            CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "x"),
+                (s32)FLUXUS_FORMA_ALIA);
+        }
+
+        /* sine SUBTRACTIO (ordo tractus nullus): ansa et blocus
+         * inattingibilis */
+        subtractiones = _formas_conferre(piscina,
+            "int f(int a, int c) { int x; x = a;"
+            " while (c) { x = x + 1; } return x; x = 2; }", &d);
+        CREDO_AEQUALIS_S32 (subtractiones, ZEPHYRUM);
+
+        /* ordines ultra LXIV (membra LXX ante x, y): verbum alterum,
+         * tractus in ansa */
+        {
+            character fons[MMM];
+                  i32 k;
+
+            strcpy(fons, "int f(int a, int b, int c) { struct S s; ");
+            per (k = ZEPHYRUM; k < LXX; k++)
+            {
+                sprintf(fons + strlen(fons), "s.m%u = %u; ",
+                    (insignatus integer)k, (insignatus integer)k);
+            }
+            strcat(fons, "{ int x; int y; x = a; y = 1;"
+                " while (c) { x = x - b; } return x + y; } }");
+            subtractiones = _formas_conferre(piscina, fons, &d);
+            CREDO_VERUM (subtractiones > ZEPHYRUM);
+            si (d != NIHIL)
+            {
+                CREDO_VERUM (_variabilis_titulo(d, "x") > (s32)LXIV);
+                CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "x"),
+                    (s32)FLUXUS_FORMA_MIXTA);
+                CREDO_AEQUALIS_S32 (_forma_ad_exitum(d, "y"),
+                    (s32)FLUXUS_FORMA_ALIA);
             }
         }
     }
