@@ -659,6 +659,17 @@ s32 antiphonale_fossa (vacuum* ctx, i32* eventus);
   cleared on a bad save; old unit freed before the new is built).
 - [ ] **Step 4: Commit** (gates `radix`, `ludus_tessera`, the
   organa / generated-file gates commissio names).
+**Executed 2026-11-04.** Modelled on aetherophonum (custom figure,
+injected port) rather than chronica. `antiphonale_pulsare` returns b32
+(vicus wraps it in VicusPulsus - panes do not include vicus.h); added
+`antiphonale_titulus` (locus_titulus). `$antiphonale` is a small iussum
+over vicus_acervo_mutare with "~/" expansion. Side changes: specula
+watches NOTE_ATTRIB (truncation to empty was invisible; reading proven
+silent), membrum__praecepta gained Left/Right/PageUp/PageDown.
+Tests: antiphonale_latus 3 sections (aperire, servatio = RF1, paginae +
+zoom keeping the first visible syllable), vicus_antiphonale 1; vicus 34/34,
+organum 3/3, ludus_tessera 8/8; vicus and vicus_terminalis build.
+Plants: three, red then green.
 
 ---
 

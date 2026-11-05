@@ -781,6 +781,7 @@ struct kevent {
 #define NOTE_DELETE   0x00000001
 #define NOTE_WRITE    0x00000002
 #define NOTE_EXTEND   0x00000004
+#define NOTE_ATTRIB   0x00000008
 #define NOTE_RENAME   0x00000020
 
 int kqueue(void);

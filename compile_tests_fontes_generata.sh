@@ -29,6 +29,7 @@ declare -a SOURCE_FILES=(
     "lib/aetherophonum.c"
     "lib/agenda.c"
     "lib/agmen.c"
+    "lib/antiphonale.c"
     "lib/anulus.c"
     "lib/apns.c"
     "lib/apns_mittens.c"

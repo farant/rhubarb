@@ -216,6 +216,11 @@ declare -a RADIX_FONTES=(
     "reactor"         # vicus quies T6: fossae laterum in reactore
     "specula_macos"   # vicus quies T6c: specula libri praeconii
     "aetherophonum"   # sonus S5c: latus theremin (sine sono: porta)
+    "antiphonale"     # gabc pars II P6: latus cantus gabc
+    "gabc"
+    "gabc_compositio"
+    "gabc_pictura"
+    "neumae_ductae"
     # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
     "sors"

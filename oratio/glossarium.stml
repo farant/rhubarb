@@ -1119,6 +1119,7 @@
   <vocabulum lemma="kqueue" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis BSD/Darwin (cauda notitiarum nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="kevent" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis et structurae BSD/Darwin (notitia nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="evtonly" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri O_EVTONLY (Darwin: descriptor solum pro notitiis); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="attrib" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri NOTE_ATTRIB (kqueue: attributa plagulae mutata - truncatio ad nihil); systema_posix.h 2026-11-04 pro specula (gabc pars II P6)"/>
   <vocabulum lemma="evfilt" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EVFILT_VNODE (filtrum kqueue); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="vnode" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EVFILT_VNODE (nodus plagulae in nucleo BSD); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="clear" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EV_CLEAR (kqueue: nota semel redditur); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
