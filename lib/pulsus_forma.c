@@ -456,6 +456,10 @@ _corpus (
     json_objectum_ponere(systema, "thread-id",
         json_chorda_creare(piscina,
         clavis));
+    /* tergum: iOS appem in tergo excitat ut acta advecta trahat
+     * antequam monitum tangitur (testa, didReceiveRemoteNotification) */
+    json_objectum_ponere(systema, "content-available",
+        json_integer_creare(piscina, I));
     per (i = ZEPHYRUM; i < n; i++)
     {
         json_tabulatum_addere(tab, json_chorda_creare(piscina,
