@@ -368,6 +368,17 @@ _violationem_probare (Piscina* piscina, constans character* fons,
 #define INT_SUMMUM 2147483647L
 #define U32_SUMMUM 4294967295L
 
+/* XX locales initiati: ordines datorum supra limen indicis
+ * (FLUXUS_INDEX_LIMEN XVI) ANTE variabilem probatam - quaestiones
+ * per tabulam dispersam, fines ex tabula puncti fixi (budget
+ * fusionis, ambulatio principalis I) */
+#define VIGINTI_LOCALES \
+    "int v00 = 0; int v01 = 1; int v02 = 2; int v03 = 3;" \
+    " int v04 = 4; int v05 = 5; int v06 = 6; int v07 = 7;" \
+    " int v08 = 8; int v09 = 9; int v10 = 10; int v11 = 11;" \
+    " int v12 = 12; int v13 = 13; int v14 = 14; int v15 = 15;" \
+    " int v16 = 16; int v17 = 17; int v18 = 18; int v19 = 19; "
+
 integer
 principale (vacuum)
 {
@@ -923,6 +934,43 @@ principale (vacuum)
         "void f(unsigned n);\n"
         "void g(void) { if (0) { f(99u); } }",
         I, "LV. f(99) in codice mortuo -> violatio (sine fluxu)");
+
+    /* LVI. functiones magnae (XX locales ante): indices ordinum et
+     * tabula finium (budget fusionis) - fructus idem ac IX, XVIII,
+     * XIX in functionibus parvis */
+    imprimere("--- LVI: functiones supra limen indicis ---\n");
+    _adfirma(piscina,
+        "void f(void) { " VIGINTI_LOCALES "int i;"
+        " for (i = 0; i < 10; i++) { int u = i; } { int post = i; } }",
+        "i", III, 0L, 9L,
+        "LVI-a. ansa post latificationem (XX locales) -> [0,9]");
+    _adfirma(piscina,
+        "void f(void) { " VIGINTI_LOCALES "int i;"
+        " for (i = 0; i < 10; i++) { int u = i; } { int post = i; } }",
+        "i", IV, 10L, INT_SUMMUM,
+        "LVI-b. post ansam (XX locales) -> [10,max]");
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; unsigned k; }; void f(void) { "
+        VIGINTI_LOCALES "struct S s; s.m = 5u; s.k = 9u;"
+        " { unsigned u = s.m; } }",
+        "m", I, 5L, 5L,
+        "LVI-c. s.m = 5, s.k = 9 (XX locales) -> m [5,5]"
+        " (clavis titulum membri fert)");
+    _adfirma_membrum(piscina,
+        "struct S { unsigned m; }; struct S g(void);"
+        " void f(void) { " VIGINTI_LOCALES "struct S s; s.m = 5u;"
+        " s = g(); { unsigned u = s.m; } }",
+        "m", I, 0L, U32_SUMMUM,
+        "LVI-d. s = g() delet (XX locales) -> fines u32");
+    /* latificatio ad fines TYPI variabilis ipsius (unsigned), non
+     * ordinis alieni (int v00): tabula finium per ordinem - punctum
+     * fixum ipsum, non replay, eam legit */
+    _adfirma(piscina,
+        "void f(void) { " VIGINTI_LOCALES "unsigned i;"
+        " for (i = 0u; i < 10u; i++) { unsigned u = i; }"
+        " { unsigned post = i; } }",
+        "i", IV, 10L, U32_SUMMUM,
+        "LVI-e. post ansam unsigned (XX locales) -> [10,u32]");
 
     credo_imprimere_compendium();
 

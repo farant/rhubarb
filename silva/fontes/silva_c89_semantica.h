@@ -816,6 +816,15 @@ structura SilvaSemantica {
      * bifasium alterum; elementa IntervallumCandidatus). */
     Xar* intervalla_functionum;
     Xar* candidata_intervallorum;
+
+    /* fines variabilium (budget fusionis, ambulatio principalis I):
+     * _intervallum_variabilis_summum per ordinem SEMEL, solum intra
+     * _intervalla_computare (fines_datorum NIHIL extra - replay
+     * post ambulationem fines ipse computat). Elementa
+     * SemanticaIntervallum, numero fines_numerus. */
+    constans structura FluxusDatorum* fines_datorum;
+                               vacuum* fines;
+                                  i32  fines_numerus;
 };
 
 SilvaSemantica*

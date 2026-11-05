@@ -14730,3 +14730,14 @@ Fixture lesson: a same-line comment is the previous token's trailing trivia, so 
 Checked first by a whole-corpus differential: 677,913 units, extents identical, leaf sets equal for every scanned unit. It also found that 1,410 units' trees share subtrees (the same tokens twice, a DAG); that is harmless for extents but unexplained, so it's filed. Effect: placement 7.3% -> 2.7% of semantic time. Instructions barely move, because the walk was cache-miss bound.
 
 Over the three steps, `percursus -semantica`: 389.1 -> 363.3 G instructions, semantics 108.4 -> 81.8 G (-25%). Tests: annotationes XIII (unit edges, macro start, woven conditional); 4 plants, all red.
+
+**Main walk profiled, item 1 (2026-11-05).** A probe with self/inclusive buckets split the ~64 G user walk:
+- interval analysis 18.0 G;
+- annotation collection 14.9 G;
+- statement and expression typing 11.3 G;
+- data flow 11.2 G;
+- top-level declarations ~7.5 G.
+
+Intervals are a dense fixed-point: every block visit and every edge copies or joins all n_var intervals, 335 M element operations corpus-wide. Only 36% of the variables can ever hold an interval.
+
+Item 1 takes the exact pieces: type bounds once per fixed-point instead of per event, and per-function variable maps on `FluxusDatorum` instead of linear scans (88 M steps corpus-wide), used by both data flow and intervals. Effect: intervals 18.0 -> 15.9 G, data flow 11.2 -> 10.9 G, run -0.75%. Checked: examen over 596 files identical, percursus report identical; new interval tests LVI a-e run with twenty locals ahead of the variable under test, so the maps and the cache are live; 3 plants, all red. The earlier shared-subtree question is answered (kept GLR ambiguities, canonical walk unaffected), and `_declaratorem_fn_invenire` now descends canonically. Next, item 2: interval vectors over integral variables only (differential first).

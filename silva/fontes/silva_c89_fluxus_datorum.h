@@ -33,6 +33,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "tabula_dispersa.h"
 #include "silva_nodus.h"
 #include "silva_c89_fluxus.h"
 
@@ -180,6 +181,13 @@ structura FluxusDatorum {
     Xar* bloci;                        /* FluxusDatorumBlocus (valore,
                                         * parallelus fluxus->bloci) */
     i32 numerus_verborum;             /* verba i64 per statum */
+    /* indices ordinum (budget fusionis): NIHIL infra limen
+     * variabilium - quaestio tunc linearis. Clavis = octeti
+     * monstratoris identitatis (+ octeti tituli membri); valor =
+     * index primus. Per silva_c89_fluxus_datorum_variabilis /
+     * _membrum legendi. */
+    TabulaDispersa* index_variabilium;
+    TabulaDispersa* index_membrorum;
 };
 
 
@@ -264,6 +272,22 @@ nomen structura {
  * extractio) - sed campi singuli NIHIL licent (symbolum NIHIL =
  * tabulae vacuae, robustum). Numquam NIHIL reddit nisi fluxus NIHIL.
  * Vocator monstratorem in FluxusFunctionis.datorum reponit. */
+/* Index ordinis variabilis (non membri) per identitatem symboli;
+ * -1 absens. Ordo primus si plures (nulli sunt: ordines per
+ * invenire-aut-addere creantur). */
+s32
+silva_c89_fluxus_datorum_variabilis (
+    constans FluxusDatorum* datorum,
+           constans vacuum* identitas);
+
+/* Index ordinis membri per (identitatem basis, titulum membri); -1
+ * absens. Tituli pares octetis (mensura 0 cum mensura 0 par). */
+s32
+silva_c89_fluxus_datorum_membrum (
+    constans FluxusDatorum* datorum,
+           constans vacuum* identitas,
+                    chorda  titulus_membri);
+
 FluxusDatorum*
 silva_c89_fluxus_datorum_aedificare (
                           Piscina* piscina,

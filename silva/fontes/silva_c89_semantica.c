@@ -12246,6 +12246,25 @@ _intervallum_variabilis_summum (
         imum, summum);
 }
 
+/* fines ordinis v: ex tabula si _intervalla_computare currit pro hoc
+ * datorum (functio pura variabilis - tabulae typorum intra
+ * functionem non mutantur), aliter computati ut olim */
+interior SemanticaIntervallum
+_summum_variabilis (
+             SilvaSemantica* sem,
+     constans FluxusDatorum* datorum,
+                        s32  v)
+{
+    si (   sem->fines_datorum == datorum && v >= ZEPHYRUM
+        && (i32)v < sem->fines_numerus)
+    {
+        redde ((constans SemanticaIntervallum*)sem->fines)[v];
+    }
+    redde _intervallum_variabilis_summum(sem,
+        (constans FluxusVariabilis*)xar_obtinere(datorum->variabiles,
+            (i32)v));
+}
+
 /* effugium effectivum: ordo membri effugium BASIS consulit (ordines
  * post eventum effugii creati vexillum proprium non ferrent) */
 interior b32
@@ -12275,21 +12294,9 @@ _intervalla_variabilis_index (
     constans FluxusDatorum* datorum,
            constans vacuum* identitas)
 {
-    i32 i;
-    i32 m = xar_numerus(datorum->variabiles);
-
-    per (i = ZEPHYRUM; i < m; i++)
-    {
-        constans FluxusVariabilis* var =
-            (constans FluxusVariabilis*)xar_obtinere(
-                datorum->variabiles, i);
-
-        si (var->identitas == identitas && !var->membrum_est)
-        {
-            redde (s32)i;
-        }
-    }
-    redde -I;
+    /* praedicatum idem (identitas, non membrum); index datorum post
+     * limen, aliter linearis (budget fusionis) */
+    redde silva_c89_fluxus_datorum_variabilis(datorum, identitas);
 }
 
 /* index ordinis membri per (identitatem basis, titulum membri) */
@@ -12302,6 +12309,16 @@ _intervalla_membri_index (
     i32 i;
     i32 m = xar_numerus(datorum->variabiles);
 
+    /* titulus non vacuus: paritas octetorum datorum eadem ac
+     * _chordae_pares_contractus - index datorum (budget fusionis).
+     * Vacuus aut NIHIL: contractus hic NIHIL numquam par habet,
+     * datorum mensuram 0 par - via linearis propria */
+    si (   titulus_membri.mensura > ZEPHYRUM
+        && titulus_membri.datum != NIHIL)
+    {
+        redde silva_c89_fluxus_datorum_membrum(datorum, identitas,
+            titulus_membri);
+    }
     per (i = ZEPHYRUM; i < m; i++)
     {
         constans FluxusVariabilis* var =
@@ -12405,7 +12422,7 @@ _intervallum_lecti (
     si (   _intervalla_effugit(datorum, var)
         || ambitus[v].status == (s32)SEMANTICA_INTERVALLUM_IGNOTUM)
     {
-        redde _intervallum_variabilis_summum(sem, var);
+        redde _summum_variabilis(sem, datorum, v);
     }
     redde ambitus[v];
 }
@@ -12885,11 +12902,7 @@ _intervalla_transferre (
 
         per (v = ZEPHYRUM; v < n_var; v++)
         {
-            constans FluxusVariabilis* vv =
-                (constans FluxusVariabilis*)xar_obtinere(
-                    datorum->variabiles, v);
-
-            ambitus[v] = _intervallum_variabilis_summum(sem, vv);
+            ambitus[v] = _summum_variabilis(sem, datorum, (s32)v);
         }
         redde;
     }
@@ -12937,8 +12950,8 @@ _intervalla_transferre (
 
                 si (vv->membrum_est && vv->basis == ev->variabilis)
                 {
-                    ambitus[v] = _intervallum_variabilis_summum(sem,
-                        vv);
+                    ambitus[v] = _summum_variabilis(sem, datorum,
+                        (s32)v);
                 }
             }
         }
@@ -12949,7 +12962,7 @@ _intervalla_transferre (
     {
         redde;
     }
-    summum_var = _intervallum_variabilis_summum(sem, var);
+    summum_var = _summum_variabilis(sem, datorum, ev->variabilis);
     si (   _intervalla_effugit(datorum, var)
         || summum_var.status != (s32)SEMANTICA_INTERVALLUM_VALIDUM)
     {
@@ -15496,6 +15509,27 @@ _intervalla_computare (
         *locus                               = fluxus->introitus->index;
         in_indice[fluxus->introitus->index]  = VERUM;
     }
+    /* fines omnium ordinum SEMEL (budget fusionis): transfer et
+     * latificatio eos per eventum/marginem recomputabant; tabula
+     * solum hoc puncto fixo valet (purgata infra) */
+    {
+        SemanticaIntervallum* fines = (SemanticaIntervallum*)
+            piscina_allocare(sem->piscina, (memoriae_index)n_var
+                * magnitudo(SemanticaIntervallum));
+
+        si (fines != NIHIL)
+        {
+            per (v = ZEPHYRUM; v < n_var; v++)
+            {
+                fines[v] = _intervallum_variabilis_summum(sem,
+                    (constans FluxusVariabilis*)xar_obtinere(
+                        datorum->variabiles, v));
+            }
+            sem->fines          = fines;
+            sem->fines_numerus  = n_var;
+            sem->fines_datorum  = datorum;
+        }
+    }
     dum (lector < xar_numerus(index_operis))
     {
         i32 index_bloci = *(i32*)xar_obtinere(index_operis, lector);
@@ -15563,11 +15597,8 @@ _intervalla_computare (
                     && novum.status
                         == (s32)SEMANTICA_INTERVALLUM_VALIDUM)
                 {
-                    constans FluxusVariabilis* var =
-                        (constans FluxusVariabilis*)xar_obtinere(
-                            datorum->variabiles, v);
-                    SemanticaIntervallum fines =
-                        _intervallum_variabilis_summum(sem, var);
+                    SemanticaIntervallum fines = _summum_variabilis(sem,
+                        datorum, (s32)v);
 
                     si (fines.status
                         == (s32)SEMANTICA_INTERVALLUM_VALIDUM)
@@ -15597,7 +15628,7 @@ _intervalla_computare (
                 in_indice[index_dest]  = VERUM;
             }
         }
-    }
+    }    sem->fines_datorum = NIHIL;
 }
 
 /* replay ab introitu bloci ad eventum cuius nodus datur; ambitus

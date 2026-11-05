@@ -134,6 +134,221 @@ _est_sectio (
  * Tabula variabilium + emissio
  * ================================================== */
 
+
+/* ==================================================
+ * Indices ordinum (budget fusionis, ambulatio principalis I)
+ *
+ * Quaestio ordinis per identitatem olim linearis: corpore toto
+ * LXXXVIII M passus (datorum ~X medius, intervalla semanticae
+ * ~XXV). Post FLUXUS_INDEX_LIMEN variabiles tabula dispersa; clavis
+ * = octeti monstratoris identitatis (+ octeti tituli membri), in
+ * buffer vocatoris composita (quaestio nihil allocat). Insertio
+ * solum si absens: ordo PRIMUS servatur - fructus idem ac quaestio
+ * linearis. Functiones parvae (medius VII variabiles) lineares
+ * manent, ubi friatio carior esset.
+ * ================================================== */
+
+#define FLUXUS_INDEX_LIMEN    XVI
+#define FLUXUS_CLAVIS_MAXIMA  CCLVI
+
+/* clavem in buffer componere; FALSUM si titulus non capit */
+interior b32
+_clavem_componere (
+     constans vacuum* identitas,
+              chorda  titulus,
+           character* buffer,
+              chorda* clavis)
+{
+    memoriae_index n = magnitudo(constans vacuum*);
+
+    si ((memoriae_index)titulus.mensura > FLUXUS_CLAVIS_MAXIMA - n)
+    {
+        redde FALSUM;
+    }
+    memcpy(buffer, &identitas, n);
+    si (titulus.mensura > ZEPHYRUM)
+    {
+        memcpy(buffer + n, titulus.datum,
+            (memoriae_index)titulus.mensura);
+    }
+    clavis->datum    = (i8*)buffer;
+    clavis->mensura  = (i32)(n + (memoriae_index)titulus.mensura);
+    redde VERUM;
+}
+
+interior b32
+_membri_tituli_pares (
+    chorda a,
+    chorda b);
+
+s32
+silva_c89_fluxus_datorum_variabilis (
+    constans FluxusDatorum* datorum,
+           constans vacuum* identitas)
+{
+    i32 i;
+    i32 m;
+
+    si (datorum == NIHIL)
+    {
+        redde -I;
+    }
+    si (datorum->index_variabilium != NIHIL)
+    {
+        character  buffer[FLUXUS_CLAVIS_MAXIMA];
+           chorda  clavis;
+           chorda  vacuus;
+           vacuum* valor = NIHIL;
+
+        vacuus.mensura  = ZEPHYRUM;
+        vacuus.datum    = NIHIL;
+        (vacuum)_clavem_componere(identitas, vacuus, buffer, &clavis);
+        si (tabula_dispersa_invenire(datorum->index_variabilium, clavis,
+                &valor))
+        {
+            redde (s32)(memoriae_index)valor;
+        }
+        redde -I;
+    }
+    m = xar_numerus(datorum->variabiles);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusVariabilis* v = (constans FluxusVariabilis*)
+            xar_obtinere(datorum->variabiles, i);
+
+        si (v->identitas == identitas && !v->membrum_est)
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+s32
+silva_c89_fluxus_datorum_membrum (
+    constans FluxusDatorum* datorum,
+           constans vacuum* identitas,
+                    chorda  titulus_membri)
+{
+    character buffer[FLUXUS_CLAVIS_MAXIMA];
+       chorda clavis;
+          i32 i;
+          i32 m;
+
+    si (datorum == NIHIL)
+    {
+        redde -I;
+    }
+    si (   datorum->index_membrorum != NIHIL
+        && _clavem_componere(identitas, titulus_membri, buffer,
+               &clavis))
+    {
+        vacuum* valor = NIHIL;
+
+        si (tabula_dispersa_invenire(datorum->index_membrorum, clavis,
+                &valor))
+        {
+            redde (s32)(memoriae_index)valor;
+        }
+        redde -I;
+    }
+    m = xar_numerus(datorum->variabiles);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusVariabilis* v = (constans FluxusVariabilis*)
+            xar_obtinere(datorum->variabiles, i);
+
+        si (   v->membrum_est && v->identitas == identitas
+            && _membri_tituli_pares(v->titulus_membri, titulus_membri))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* ordinem unum in indicem (si absens - ordo primus vincit); clavis
+ * in piscina servatur. Titulus longior quam buffer: non indicatur,
+ * et quaestio eius linearis manet (compositio fracta) */
+interior vacuum
+_ordinem_indicare (
+                 Piscina* piscina,
+           FluxusDatorum* datorum,
+                     i32  index)
+{
+    constans FluxusVariabilis* v = (constans FluxusVariabilis*)
+        xar_obtinere(datorum->variabiles, index);
+               TabulaDispersa* tabula;
+                    character  buffer[FLUXUS_CLAVIS_MAXIMA];
+                       chorda  clavis;
+                       chorda  titulus;
+                           i8* servata;
+
+    titulus.mensura  = ZEPHYRUM;
+    titulus.datum    = NIHIL;
+    si (v->membrum_est)
+    {
+        titulus  = v->titulus_membri;
+        tabula   = datorum->index_membrorum;
+    }
+    alioquin
+    {
+        tabula   = datorum->index_variabilium;
+    }
+    si (   tabula == NIHIL
+        || !_clavem_componere(v->identitas, titulus, buffer, &clavis)
+        || tabula_dispersa_continet(tabula, clavis))
+    {
+        redde;
+    }
+    servata = (i8*)piscina_allocare(piscina,
+        (i32)clavis.mensura);
+    si (servata == NIHIL)
+    {
+        redde;
+    }
+    memcpy(servata, clavis.datum, (memoriae_index)clavis.mensura);
+    clavis.datum = servata;
+    (vacuum)tabula_dispersa_inserere(tabula, clavis,
+        (vacuum*)(memoriae_index)index);
+}
+
+/* post additionem ordinis 'index': indicem continuare, aut ad limen
+ * aedificare ex omnibus ordinibus (ordine) */
+interior vacuum
+_indicem_renovare (
+    FluxusExtractor* ex,
+                i32  index)
+{
+     FluxusDatorum* datorum = ex->datorum;
+               i32  i;
+
+    si (datorum->index_variabilium != NIHIL)
+    {
+        _ordinem_indicare(ex->piscina, datorum, index);
+        redde;
+    }
+    si (xar_numerus(datorum->variabiles) < FLUXUS_INDEX_LIMEN)
+    {
+        redde;
+    }
+    datorum->index_variabilium = tabula_dispersa_creare_chorda(
+        ex->piscina, LXIV);
+    datorum->index_membrorum = tabula_dispersa_creare_chorda(
+        ex->piscina, LXIV);
+    si (   datorum->index_variabilium == NIHIL
+        || datorum->index_membrorum   == NIHIL)
+    {
+        datorum->index_variabilium  = NIHIL;
+        datorum->index_membrorum    = NIHIL;
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(datorum->variabiles); i++)
+    {
+        _ordinem_indicare(ex->piscina, datorum, i);
+    }
+}
+
 /* Index densus: invenire aut addere per identitatem. Ordines
  * membrorum praetermissi (identitas basis consulto communis -
  * titulus_membri eos discriminat, inquisitio basium hic). */
@@ -142,19 +357,16 @@ _variabilis_index (
                  FluxusExtractor* ex,
     constans FluxusSymbolumFacta* facta)
 {
-                 i32  i;
-                 i32  m = xar_numerus(ex->datorum->variabiles);
-    FluxusVariabilis* v;
+                  s32 inventus = silva_c89_fluxus_datorum_variabilis(
+                      ex->datorum, facta->identitas);
+                  i32  m;
+     FluxusVariabilis* v;
 
-    per (i = ZEPHYRUM; i < m; i++)
+    si (inventus >= ZEPHYRUM)
     {
-        v = (FluxusVariabilis*)xar_obtinere(ex->datorum->variabiles,
-            i);
-        si (v->identitas == facta->identitas && !v->membrum_est)
-        {
-            redde (s32)i;
-        }
+        redde inventus;
     }
+    m = xar_numerus(ex->datorum->variabiles);
     v = (FluxusVariabilis*)xar_addere(ex->datorum->variabiles);
     v->identitas = facta->identitas;
     v->titulus = facta->titulus;
@@ -165,6 +377,7 @@ _variabilis_index (
     v->basis = -I;
     v->titulus_membri.mensura = ZEPHYRUM;
     v->titulus_membri.datum = NIHIL;
+    _indicem_renovare(ex, m);
     redde (s32)m;
 }
 
@@ -191,22 +404,18 @@ _variabilis_membri_index (
     constans FluxusSymbolumFacta* facta_basis,
                           chorda  titulus_membri)
 {
-                 s32  index_basis = _variabilis_index(ex, facta_basis);
-                 i32  i;
-                 i32  m = xar_numerus(ex->datorum->variabiles);
+                 s32 index_basis = _variabilis_index(ex, facta_basis);
+                 s32 inventus = silva_c89_fluxus_datorum_membrum(
+                     ex->datorum, facta_basis->identitas,
+                     titulus_membri);
+                 i32  m;
     FluxusVariabilis* v;
 
-    per (i = ZEPHYRUM; i < m; i++)
+    si (inventus >= ZEPHYRUM)
     {
-        v = (FluxusVariabilis*)xar_obtinere(ex->datorum->variabiles,
-            i);
-        si (   v->membrum_est
-            && v->identitas == facta_basis->identitas
-            && _membri_tituli_pares(v->titulus_membri, titulus_membri))
-        {
-            redde (s32)i;
-        }
+        redde inventus;
     }
+    m = xar_numerus(ex->datorum->variabiles);
     v = (FluxusVariabilis*)xar_addere(ex->datorum->variabiles);
     v->identitas = facta_basis->identitas;
     v->titulus = facta_basis->titulus;
@@ -216,6 +425,7 @@ _variabilis_membri_index (
     v->membrum_est = VERUM;
     v->basis = index_basis;
     v->titulus_membri = titulus_membri;
+    _indicem_renovare(ex, m);
     redde (s32)m;
 }
 
@@ -1574,6 +1784,8 @@ silva_c89_fluxus_datorum_aedificare (
         (i32)magnitudo(FluxusVariabilis));
     datorum->bloci = xar_creare(piscina,
         (i32)magnitudo(FluxusDatorumBlocus));
+    datorum->index_variabilium  = NIHIL;
+    datorum->index_membrorum    = NIHIL;
 
     ex.piscina = piscina;
     si (auxilia != NIHIL)
