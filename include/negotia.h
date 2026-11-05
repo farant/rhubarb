@@ -3,7 +3,7 @@
  * VERITAS = acta trium generum (JSON), quodque IMAGO PLENA rei:
  *   "negotium"           {id, titulus, descriptio}
  *   "negotii-facultas"   {id, negotium, titulus, status, corpus}
- *   "negotii-colloquium" {negotium, sessio}
+ *   "negotii-colloquium" {negotium, sessio, via}
  * Status praesens = actum ultimum per id. Omnis mutatio servata =
  * actum unum = REVISIO una (numquam deletur); mutatio statui
  * praesenti par nihil scribit. Acta OMNIUM replicarum leguntur (res
@@ -147,13 +147,23 @@ negotia_revisiones (
               chorda  facultas,
              Piscina* piscina);
 
-/* nexus negotium -> sessio Claude; idempotens (iterum: VERUM, nihil
- * scriptum); FALSUM si negotium ignotum aut sessio vacua */
+/* nexus negotium -> sessio Claude, cum directorio via (vacua licet:
+ * ignota); par praesenti: VERUM, nihil scriptum; via nova: actum
+ * novum (ultimum vincit; via vacua numquam servatam delet). FALSUM si
+ * negotium ignotum aut sessio vacua */
 b32
 negotia_colloquium_adiungere (
     Negotia* n,
      chorda  negotium,
-     chorda  sessio);
+     chorda  sessio,
+     chorda  via);
+
+/* via colloquii ad adiunctionem servata; vacua si nulla */
+chorda
+negotia_colloquii_via (
+    constans Negotia* n,
+              chorda  negotium,
+              chorda  sessio);
 
 /* chorda (sessiones), ordine adiunctionis */
 Xar*

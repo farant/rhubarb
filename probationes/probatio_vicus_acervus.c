@@ -548,6 +548,18 @@ frons_generis (
                argumentum) : d->argumentum.mensura == ZEPHYRUM);
 }
 
+interior b32
+campus_est_vici (
+    constans InsulaRamus* ramus,
+      constans character* titulus,
+      constans character* valor)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(ramus, titulus);
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
 /* Cmd + runa (petitio), sine pulsu */
 interior vacuum
 anuli_clavis (
@@ -756,6 +768,73 @@ _anulus_per_tabulam (
     volumen_claudere(w->vol);
 }
 
+/* negotia T6: negotium cum colloquio adiuncto - anulus [negotium,
+ * colloquium]; Cmd+L: sessio ignota (fons non apertus) -> charta;
+ * Resume cum sessione mala refutatur (terminale verum numquam: tmux et
+ * claude verae currerent) */
+interior vacuum
+_colloquium_in_anulo (
+    CredoContextus* c)
+{
+        MundusAnuli* w;
+            Negotia* ng;
+             chorda  id;
+    NegotiaMontatio* nm;
+        InsulaRamus  r;
+                i32  n;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    ng = negotia_aperire(w->vol, NIHIL, NIHIL, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(ng);
+    id = negotia_negotium_creare(ng, chorda_ex_literis("negotia",
+        c->piscina), chorda_ex_literis("", c->piscina));
+    CREDO_VERUM(negotia_colloquium_adiungere(ng, id, chorda_ex_literis(
+        "s9", c->piscina), chorda_ex_literis("/tmp/x", c->piscina)));
+    CREDO_VERUM(vicus_acervo_aperire(w->v, "negotia", NIHIL));
+    (vacuum)vicus_pulsare(w->v);
+    nm = (NegotiaMontatio*)vicus_latus(vicus_activa(w->v),
+        VICUS_DEXTRUM)->montatio;
+    CREDO_NECESSE(nm && nm->portae && nm->portae->negotium_aperire);
+    CREDO_VERUM(nm->portae->negotium_aperire(nm->portae->ctx, id));
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(   vicus_activa(w->v)->anulus
+                && xar_numerus(vicus_activa(w->v)->anulus) == II);
+    CREDO_VERUM(frons_generis(w->v, "negotia", chorda_ut_cstr(id,
+        c->piscina)));
+
+    CREDO_GRADUS("Cmd+L: charta colloquii");
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", "colloquium/s9"));
+    r = insula_ramus(w->v->repo, "negotia", chorda_ut_cstr(
+        vicus_latus(vicus_activa(w->v), VICUS_DEXTRUM)->id,
+        c->piscina));
+    CREDO_VERUM(campus_est_vici(&r, "visus", "colloquium"));
+    CREDO_VERUM(campus_est_vici(&r, "colloquium", "s9"));
+
+    CREDO_GRADUS("Resume: sessio mala refutatur");
+    nm = (NegotiaMontatio*)vicus_latus(vicus_activa(w->v),
+        VICUS_DEXTRUM)->montatio;
+    n  = numerus_acervi(w->v);
+    CREDO_FALSUM(nm->portae->colloquium_resumere(nm->portae->ctx,
+        chorda_ex_literis(";rm x", c->piscina),
+        chorda_ex_literis("/tmp",
+        c->piscina)));
+    CREDO_FALSUM(nm->portae->colloquium_resumere(nm->portae->ctx,
+        chorda_ex_literis("s9", c->piscina), chorda_ex_literis("",
+        c->piscina)));
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_AEQUALIS_I32(numerus_acervi(w->v), n);
+    CREDO_GRADUS("Cmd+H: ad negotium");
+    anuli_clavis(w, 'h');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", chorda_ut_cstr(id,
+        c->piscina)));
+    volumen_claudere(w->vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "acervus lateris dextri per iussa", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -768,6 +847,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "anulus restitutus", _anulus_restitutus, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "anulus per tabulam", _anulus_per_tabulam, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "colloquium in anulo", _colloquium_in_anulo, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

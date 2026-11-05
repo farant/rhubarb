@@ -1805,6 +1805,56 @@ hic_manens constans character exspectatio_terminalis[] =
     "s=$(stty -g); stty -echo -icanon min 0 time 50; "
     "printf '\\033[5n'; dd bs=1 count=4 >/dev/null 2>&1; stty \"$s\"";
 
+/* negotia T6: "<sessio> <via>" (via post spatium primum: spatia licet)
+ * -> {concha, "-l", "-c", "<exspectatio>; <mandatum resumendi>"};
+ * NIHIL si mandatum refutatum */
+interior constans character* constans*
+argumenta_resumendi (
+    constans character* reliquum,
+               Piscina* piscina)
+{
+           character*  copia;
+           character*  via;
+              chorda   mandatum;
+  constans character*  concha;
+   ChordaAedificator*  a;
+  constans character** v;
+
+    copia = (character*)piscina_allocare(piscina, (memoriae_index)
+        strlen(reliquum) + I);
+    si (!copia)
+    {
+        redde NIHIL;
+    }
+    strcpy(copia, reliquum);
+    via = strchr(copia, ' ');
+    si (!via)
+    {
+        redde NIHIL;
+    }
+    *via++    = '\0';
+    mandatum  = colloquia_mandatum_resumendi(copia, via, piscina);
+    concha    = getenv("SHELL");
+    concha    = (concha && concha[ZEPHYRUM]) ? concha : "/bin/zsh";
+    a         = chorda_aedificator_creare(piscina, CCLVI);
+    v         = (constans character**)piscina_allocare(piscina,
+        V * magnitudo(constans character*));
+    si (mandatum.mensura == ZEPHYRUM || !a || !v)
+    {
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_literis(a, exspectatio_terminalis);
+    chorda_aedificator_appendere_literis(a, "; ");
+    chorda_aedificator_appendere_chorda(a, mandatum);
+    v[ZEPHYRUM]  = concha;
+    v[I]         = "-l";
+    v[II]        = "-c";
+    v[III] = chorda_ut_cstr(chorda_aedificator_finire(a),
+        piscina);
+    v[IV] = NIHIL;
+    redde v;
+}
+
 /* T4c/T6: argumentum lateris terminalis "tmux <servitor|-> <sessio>"
  * -> "/bin/sh -c '<exspectatio>; <tmux -u [-S servitor] attach -t
  * =<sessio>>; exec $SHELL -l'" (verba citata; sessio ultima: spatia
@@ -1826,6 +1876,12 @@ argumenta_terminalis (
           constans character** v;
                          i32   i;
 
+    /* negotia T6: "claude <sessio> <via>" -> concha login: tmux
+     * new-session -A in via, claude --resume (colloquia.h) */
+    si (argumentum && strncmp(argumentum, "claude ", VII) == ZEPHYRUM)
+    {
+        redde argumenta_resumendi(argumentum + VII, piscina);
+    }
     si (!argumentum || strncmp(argumentum, "tmux ", V) != ZEPHYRUM)
     {
         redde NIHIL;
@@ -3145,12 +3201,16 @@ latus_adhaerens (
  * panellus in sessione sua eligitur (select-window + select-pane);
  * latus terminalis vici sessioni adhaerens (quavis tabula) ostenditur
  * et focatur; nullum -> terminale novum in acervo tabulae activae
- * "tmux <servitor|-> <sessio>" (petitio). */
+ * "tmux <servitor|-> <sessio>" (petitio). negotia T6 (Franus 11-04):
+ * in_tabula = anulus negotii - latus adhaerens alibi NON quaeritur:
+ * terminale in acervo tabulae ACTIVAE (praesens in frontem, aliter
+ * montatur), tabula numquam mutatur. */
 interior b32
-saltus (
+saltus_modo (
     ContextusAdmonitionum* ca,
                    chorda  panellus_id,
-                   chorda  servitor)
+                   chorda  servitor,
+                      b32  in_tabula)
 {
                      Multiplexor  mx;
     constans MultiplexorPanellus* panellus;
@@ -3177,8 +3237,8 @@ saltus (
     }
     sessio = panellus->sessio;
     (vacuum)multiplexor_panellum_eligere(&mx, panellus->id, ca->scheda);
-    l = latus_adhaerens(ca->vicus, multiplexor_clientes(&mx,
-        ca->scheda), sessio);
+    l = in_tabula ? NIHIL : latus_adhaerens(ca->vicus,
+        multiplexor_clientes(&mx, ca->scheda), sessio);
     si (l)
     {
         redde vicus_latus_focare(ca->vicus, chorda_ut_cstr(l->id,
@@ -3195,6 +3255,15 @@ saltus (
     aperiendum = chorda_concatenare(aperiendum, sessio, ca->scheda);
     redde vicus_acervo_aperire(ca->vicus, "terminale", chorda_ut_cstr(
         aperiendum, ca->scheda));
+}
+
+interior b32
+saltus (
+    ContextusAdmonitionum* ca,
+                   chorda  panellus_id,
+                   chorda  servitor)
+{
+    redde saltus_modo(ca, panellus_id, servitor, FALSUM);
 }
 
 /* porta actionis admonitionum: "panellus" -> argumentum "<panellus>
@@ -4944,6 +5013,8 @@ nomen structura {
                Negotia* negotia;
        StatusSystemata* systemata;
     NegotiaVisusPortae  portae;
+    /* T6: fons sessionum et saltus (admonitiones) */
+ ContextusAdmonitionum* admonitionum;
 } ContextusNegotiorum;
 
 interior Negotia*
@@ -4973,17 +5044,127 @@ negotium_aperire_in_vico (
     }
     memcpy(id, negotium.datum, (memoriae_index)negotium.mensura);
     id[negotium.mensura] = '\0';
-    /* T5: anulus tabulae = latera negotii (T6 colloquia addet) */
+    /* T5/T6: anulus tabulae = negotium, deinde colloquia eius
+     * (ordine adiunctionis; genus virtuale "colloquium") */
     {
-        constans character* genera[I];
-        constans character* argumenta[I];
+                        Xar*  cs;
+         constans character** genera;
+         constans character** argumenta;
+                        i32   n;
+                        i32   k;
 
-        genera[ZEPHYRUM]     = "negotia";
-        argumenta[ZEPHYRUM]  = id;
-        (vacuum)vicus_anulum_ponere(cg->vicus, genera, argumenta, I,
-            ZEPHYRUM);
+        cs = negotia_communia(cg) ? negotia_colloquia(cg->negotia,
+            negotium, cg->piscina) : NIHIL;
+        n  = I + (cs ? xar_numerus(cs) : ZEPHYRUM);
+        genera     = (constans character**)piscina_allocare(cg->piscina,
+            (memoriae_index)n * magnitudo(constans character*));
+        argumenta  = (constans character**)piscina_allocare(cg->piscina,
+            (memoriae_index)n * magnitudo(constans character*));
+        si (genera && argumenta)
+        {
+            genera[ZEPHYRUM]     = "negotia";
+            argumenta[ZEPHYRUM]  = id;
+            per (k = I; k < n; k++)
+            {
+                genera[k]     = "colloquium";
+                argumenta[k]  =
+                    chorda_ut_cstr(*(chorda*)xar_obtinere(cs,
+                    k - I), cg->piscina);
+            }
+            (vacuum)vicus_anulum_ponere(cg->vicus, genera, argumenta, n,
+                ZEPHYRUM);
+        }
     }
     redde vicus_acervo_aperire(cg->vicus, "negotia", id);
+}
+
+/* T6: colloquium ex libro praeconii (recentissimum primum); FALSUM si
+ * fons nondum apertus aut sessio ignota */
+interior b32
+colloquium_legere_in_vico (
+        vacuum* ctx,
+        chorda  sessio,
+       Piscina* p,
+    Colloquium* out)
+{
+    ContextusNegotiorum* cg = (ContextusNegotiorum*)ctx;
+                    Xar* l;
+                    i32  i;
+
+    si (!cg || !cg->admonitionum)
+    {
+        redde FALSUM;
+    }
+    l = colloquia_visus_fontis(&cg->admonitionum->fons, p);
+    per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
+    {
+        constans Colloquium* c = (constans Colloquium*)xar_obtinere(l,
+            i);
+
+        si (chorda_aequalis(c->sessio, sessio))
+        {
+            *out = *c;
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* T6: Resume - terminale "claude <sessio> <via>" (argumenta_terminalis
+ * -> tmux new-session -A in via); mandatum malum: nihil */
+interior b32
+colloquium_resumere_in_vico (
+     vacuum* ctx,
+     chorda  sessio,
+     chorda  via)
+{
+    ContextusNegotiorum* cg = (ContextusNegotiorum*)ctx;
+                 chorda  argumentum;
+
+    si (   !cg || colloquia_mandatum_resumendi(chorda_ut_cstr(sessio,
+               cg->piscina), chorda_ut_cstr(via, cg->piscina),
+               cg->piscina).mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    argumentum = chorda_concatenare(chorda_ex_literis("claude ",
+        cg->piscina), sessio, cg->piscina);
+    argumentum = chorda_concatenare(argumentum, chorda_ex_literis(" ",
+        cg->piscina), cg->piscina);
+    argumentum = chorda_concatenare(argumentum, via, cg->piscina);
+    redde vicus_acervo_aperire(cg->vicus, "terminale", chorda_ut_cstr(
+        argumentum, cg->piscina));
+}
+
+/* T6: aperitor generis virtualis "colloquium" (anulus): panellus tmux
+ * notus -> saltus IN TABULA ACTIVA (Franus 11-04: latus dextrum
+ * tabulae negotii, numquam tabula alia; saltus ipse tmux interrogat,
+ * panellus mortuus FALSUM); aliter charta colloquii */
+interior b32
+colloquium_aperire_in_vico (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    ContextusNegotiorum* cg = (ContextusNegotiorum*)ctx;
+             Colloquium  c;
+                 chorda  sessio;
+                 chorda  charta;
+
+    si (!cg || !argumentum || !argumentum[ZEPHYRUM])
+    {
+        redde FALSUM;
+    }
+    sessio = chorda_ex_literis(argumentum, cg->piscina);
+    si (   colloquium_legere_in_vico(cg, sessio, cg->piscina, &c)
+        && c.panellus.mensura > ZEPHYRUM
+        && saltus_modo(cg->admonitionum, c.panellus, c.servitor, VERUM))
+    {
+        redde VERUM;
+    }
+    charta = chorda_concatenare(chorda_ex_literis("colloquium/",
+        cg->piscina), sessio, cg->piscina);
+    redde vicus_acervo_aperire(cg->vicus, "negotia", chorda_ut_cstr(
+        charta, cg->piscina));
 }
 
 interior b32
@@ -5068,9 +5249,12 @@ negotia_describere (
     f->argumentum_ponere_ctx  = m;
     f->locus_titulus          = negotia_visus_locus_titulus;
     f->locus_titulus_ctx      = m;
-    f->pulsare                = negotia_pulsare_in_vico;
-    f->pulsare_ctx            = m;
-    f->mora                   = negotia_morari;
+    /* T6: charta colloquii -> notae colloquii ipsius */
+    f->locus        = negotia_visus_locus;
+    f->locus_ctx    = m;
+    f->pulsare      = negotia_pulsare_in_vico;
+    f->pulsare_ctx  = m;
+    f->mora         = negotia_morari;
 }
 
 
@@ -5667,6 +5851,10 @@ ContextusNomenclatoris* cn;
         negotiorum->systemata                = systemata;
         negotiorum->portae.ctx               = negotiorum;
         negotiorum->portae.negotium_aperire  = negotium_aperire_in_vico;
+        negotiorum->portae.colloquium_legere =
+            colloquium_legere_in_vico;
+        negotiorum->portae.colloquium_resumere =
+            colloquium_resumere_in_vico;
     }
     /* D5 S4: registrum commune sanctos quaerit (corpus pigre) */
     si (ck && sanctorum)
@@ -5719,6 +5907,10 @@ ContextusNomenclatoris* cn;
             "terminalia", XVI * M);
     }
     app->admonitionum = cad;
+    si (negotiorum)
+    {
+        negotiorum->admonitionum = cad;
+    }
     /* sonus S4: porta nulla donec applicatio ponit */
     soni = (ContextusSoni*)piscina_allocare(piscina,
         magnitudo(ContextusSoni));
@@ -5856,6 +6048,8 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "negotia",
                magnitudo(NegotiaMontatio), negotia_montare_in_vico,
                negotia_describere, negotiorum)
+        || !vicus_aperitorem_addere(app->vicus, "colloquium",
+               colloquium_aperire_in_vico, negotiorum)
         || !vicus_genus_addere(app->vicus, "chronica",
                magnitudo(ChronicaMontatio), chronicam_montare_in_vico,
                chronicam_describere, ci)

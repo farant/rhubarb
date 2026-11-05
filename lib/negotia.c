@@ -26,6 +26,7 @@ nomen structura {
 nomen structura {
     chorda negotium;
     chorda sessio;
+    chorda via;       /* T6: directorium colloquii; vacua = ignota */
 } NexusColloquii;
 
 structura Negotia {
@@ -109,8 +110,8 @@ facultatem_per_id (
     redde NIHIL;
 }
 
-interior b32
-nexus_exstat (
+interior NexusColloquii*
+nexum_invenire (
     constans Negotia* n,
               chorda  negotium,
               chorda  sessio)
@@ -119,16 +120,16 @@ nexus_exstat (
 
     per (i = ZEPHYRUM; i < xar_numerus(n->colloquia); i++)
     {
-        constans NexusColloquii* x = (constans NexusColloquii*)
-            xar_obtinere(n->colloquia, i);
+        NexusColloquii* x = (NexusColloquii*)xar_obtinere(n->colloquia,
+            i);
 
         si (   chorda_aequalis(x->negotium, negotium)
             && chorda_aequalis(x->sessio, sessio))
         {
-            redde VERUM;
+            redde x;
         }
     }
-    redde FALSUM;
+    redde NIHIL;
 }
 
 interior vacuum
@@ -241,22 +242,33 @@ colloquium_applicare (
     NexusColloquii* nexus;
             chorda  negotium;
             chorda  sessio;
+            chorda  via;
 
     negotium  = json_capere_chorda(radix, "negotium", vacua());
     sessio    = json_capere_chorda(radix, "sessio", vacua());
+    via       = json_capere_chorda(radix, "via", vacua());
     x         = negotium_per_id(n, negotium);
-    si (   !x || sessio.mensura == ZEPHYRUM
-        || nexus_exstat(n, negotium, sessio))
+    si (!x || sessio.mensura == ZEPHYRUM)
     {
         redde;
     }
-    nexus = (NexusColloquii*)xar_addere(n->colloquia);
+    /* T6: nexus iteratus cum via = via nova (acta veteres sine via) */
+    nexus = nexum_invenire(n, negotium, sessio);
     si (!nexus)
     {
-        redde;
+        nexus = (NexusColloquii*)xar_addere(n->colloquia);
+        si (!nexus)
+        {
+            redde;
+        }
+        nexus->negotium  = negotium;
+        nexus->sessio    = sessio;
+        nexus->via       = vacua();
     }
-    nexus->negotium  = negotium;
-    nexus->sessio    = sessio;
+    si (via.mensura > ZEPHYRUM)
+    {
+        nexus->via = via;
+    }
     activitatem_notare(x, seq);
 }
 
@@ -806,10 +818,12 @@ b32
 negotia_colloquium_adiungere (
     Negotia* n,
      chorda  negotium,
-     chorda  sessio)
+     chorda  sessio,
+     chorda  via)
 {
-             Negotium* x;
-    ChordaAedificator* aed;
+              Negotium* x;
+     ChordaAedificator* aed;
+        NexusColloquii* nexus;
 
     si (!n || sessio.mensura == ZEPHYRUM)
     {
@@ -820,7 +834,10 @@ negotia_colloquium_adiungere (
     {
         redde FALSUM;
     }
-    si (nexus_exstat(n, x->id, sessio))
+    /* par praesenti aut via vacua super nexum exstantem: nihil */
+    nexus = nexum_invenire(n, x->id, sessio);
+    si (   nexus && (via.mensura == ZEPHYRUM
+                     || chorda_aequalis(nexus->via, via)))
     {
         redde VERUM;
     }
@@ -828,6 +845,10 @@ negotia_colloquium_adiungere (
     chorda_aedificator_appendere_character(aed, '{');
     campum_scribere(aed, "negotium", x->id, VERUM);
     campum_scribere(aed, "sessio", sessio, FALSUM);
+    si (via.mensura > ZEPHYRUM)
+    {
+        campum_scribere(aed, "via", via, FALSUM);
+    }
     redde actum_scribere(n, GENUS_COLLOQUII, aed);
 }
 
@@ -862,6 +883,18 @@ negotia_colloquia (
         }
     }
     redde x;
+}
+
+chorda
+negotia_colloquii_via (
+    constans Negotia* n,
+              chorda  negotium,
+              chorda  sessio)
+{
+    NexusColloquii* x;
+
+    x = n ? nexum_invenire(n, negotium, sessio) : NIHIL;
+    redde x ? x->via : vacua();
 }
 
 chorda

@@ -454,6 +454,32 @@ _probare_panellum_sessionis (
         chorda_ex_literis("%3", p)) == NIHIL);
 }
 
+/* T6 (negotia): mandatum resumendi - forma exacta, via citata,
+ * sessio aut via mala refutatur */
+interior vacuum
+_probare_mandatum_resumendi (
+    CredoContextus* c)
+{
+    CREDO_CHORDA_AEQUALIS_LITERIS(colloquia_mandatum_resumendi(
+        "134c8417-d34b-49a2", "/tmp/a b", c->piscina),
+        "unset TMUX; exec tmux new-session -A -s 'claude-134c8417' -c"
+        " '/tmp/a b' 'exec \"$SHELL\" -l -c \"claude --resume"
+        " 134c8417-d34b-49a2; exec \\\"$SHELL\\\" -l\"'");
+    CREDO_GRADUS("via cum apostropho citata");
+    CREDO_VERUM(chorda_continet(colloquia_mandatum_resumendi("abc",
+        "/tmp/it's", c->piscina), chorda_ex_literis(
+        "-c '/tmp/it'\\''s' ", c->piscina)));
+    CREDO_GRADUS("refutata");
+    CREDO_AEQUALIS_I32(colloquia_mandatum_resumendi(";rm x", "/tmp",
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(colloquia_mandatum_resumendi("a b", "/tmp",
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(colloquia_mandatum_resumendi("", "/tmp",
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(colloquia_mandatum_resumendi("abc", "",
+        c->piscina).mensura, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transitus", _probare_transitus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "stop_linea", _probare_stop_lineam, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -461,6 +487,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL,
       NIHIL },
     { "tituli", _probare_titulos, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mandatum resumendi", _probare_mandatum_resumendi, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "panelli", _probare_panellos, NIHIL, NIHIL, NIHIL, NIHIL },
     { "legere", _probare_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "incrementalis", _probare_gradatim, NIHIL, NIHIL, NIHIL,

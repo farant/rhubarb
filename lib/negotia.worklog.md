@@ -63,3 +63,12 @@ first-match wins (suffixum ambiguum).
   each write and before the restore.
 - `-provenientia` (fabrica T7) wired as in praeco: without it
   `bin/fabrica iudicare` calls bin/negotia IGNOTUM.
+
+## 2026-11-04 — T6: directory on the conversation link
+
+`negotii-colloquium` acts carry `via` (the session's cwd, recorded by
+`negotia involvere`, `-via D` to override). Older acts without it still
+apply (via empty). Re-linking with a new via appends an act (latest
+wins); an empty via never clears a stored one and writes nothing. The
+internal lookup became `nexum_invenire` (returns the link) instead of
+a yes/no check.

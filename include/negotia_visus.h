@@ -20,6 +20,17 @@
  * paginas vertunt. Esc ad facultates (electa = facultas haec); Esc
  * ibi ut supra.
  *
+ * CHARTA COLLOQUII (genus virtuale "colloquium" anuli; T6): sessio
+ * Claude finita aut ignota - titulus, directorium, tempus ultimum
+ * ("2026-11-04 21:12"), linea status ultima; ignota: "Not in the
+ * session log" cum id nudo. Directorium ex libro praeconii, aliter ex
+ * nexu negotii (negotia_colloquii_via). Bottone "Resume" (clavis r):
+ * porta colloquium_resumere(sessio, via); sine via obscurus. Sessio
+ * non finita (non CLAUSUM, eventus intra XV minuta): "May still be
+ * running outside tmux" - r primum armat, secundum resumit. Locus
+ * comitis = "terminale/claude/<sessio>" (notae colloquii ipsius).
+ * Argumentum "colloquium/<sessio>" (sessio [0-9A-Za-z-]+).
+ *
  * MUS PRIMUM: linea sub mure illuminatur (campus super); ictus unus
  * aperit (negotium in indice, facultas in negotio); sagittae paginarum
  * ictu. Claves: j k (electa), [ ] (paginae), Enter (aperire), Esc
@@ -45,11 +56,17 @@
 #include "dispensator.h"
 #include "organum_montatio.h"
 #include "negotia.h"
+#include "colloquia.h"
 
-/* portae hospitis (T6 colloquium_aperire addet); VERUM si acta */
+/* portae hospitis; VERUM si acta */
 nomen structura {
     vacuum* ctx;
     b32 (*negotium_aperire)(vacuum* ctx, chorda negotium);
+    /* T6: colloquium ex libro praeconii; FALSUM si ignotum */
+    b32 (*colloquium_legere)(vacuum* ctx, chorda sessio, Piscina* p,
+        Colloquium* out);
+    /* T6: terminale "claude --resume" in directorio via */
+    b32 (*colloquium_resumere)(vacuum* ctx, chorda sessio, chorda via);
 } NegotiaVisusPortae;
 
 nomen structura {
@@ -110,6 +127,13 @@ negotia_visus_reficere (
 s64
 negotia_visus_mora (
     constans NegotiaMontatio* m);
+
+/* comites (facies.locus; ctx = NegotiaMontatio*): charta colloquii ->
+ * "terminale/claude/<sessio>"; aliter vacua (locus ordinarius) */
+chorda
+negotia_visus_locus (
+     vacuum* ctx,
+    Piscina* piscina);
 
 /* comites P1 (facies.locus_titulus; ctx = NegotiaMontatio*):
  * "Projects" aut titulus negotii aperti */

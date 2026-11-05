@@ -62,3 +62,38 @@ figure context for `SemitaOrganum`).
 - No cognomen `negotia/facultas/{}` (a bare id is a project); the
   route is `negotia/facultas/<project>/<feature>`, validated (feature
   must exist and belong to that project) before semita_applicare.
+
+## 2026-11-04 — T6: conversations in the ring, card, Resume
+
+- **Order of preference** (Fran 11-04): a live tmux pane -> jump
+  (`saltus`, same as a click in $sessions); otherwise the card, where
+  Resume is one deliberate key/click (Cmd+L must stay cheap - stepping
+  never starts a Claude process).
+- The host opener tries `saltus` whenever the session record has a
+  pane, NOT only when `panellus_vivit`: that flag is refreshed only
+  while $sessions is visible. saltus asks tmux itself and returns
+  FALSUM for a dead pane -> card.
+- **The jump stays in the project's tab** (Fran's live check 11-04:
+  the first version reused $sessions' saltus, which focuses a vicus
+  terminal attached to that tmux session on ANY tab - it switched
+  tabs). `saltus_modo(..., in_tabula)` skips that search and opens /
+  fronts the "tmux <servitor> <sessio>" terminal in the active tab's
+  stack; $sessions keeps the old behaviour. Two vicus terminals may
+  then show one tmux session (tmux allows it; same window in both).
+- **Resume runs inside tmux** (`colloquia_mandatum_resumendi`):
+  `unset TMUX; exec tmux new-session -A -s 'claude-<8>' -c '<via>'
+  '...claude --resume <id>...'` through a login shell (a Dock-launched
+  vicus has a short PATH). `-A` attaches if that tmux session exists,
+  so Resume twice never starts a second Claude; the resumed session is
+  then jumpable like any other.
+- **Directory**: the session log's cwd, else the one stored on the
+  project link (`negotia involvere` records it - survives log
+  rotation).
+- **"May still be running outside tmux"**: known, not CLAUSUM, event
+  within 15 min -> first r arms (`resumere` = armatum), second resumes.
+- Card argument `colloquium/<sessio>` writes its fields directly (no
+  semita); `colloquium` field is semita="status".
+- Host test never opens a valid Resume terminal: it would start a real
+  tmux session running claude on Fran's server. The quoting is tested
+  purely in probatio_colloquia "mandatum resumendi"; the jump itself is
+  the existing saltus, checked live.

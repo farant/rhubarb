@@ -20,6 +20,7 @@
       <optio>index</optio>
       <optio>negotium</optio>
       <optio>facultas</optio>
+      <optio>colloquium</optio>
     </campus>
     <campus nomen="negotium" typus="textus" vita="persistens"
             scriptor="negotia.agere" semita="ligatio"
@@ -34,6 +35,16 @@
             scriptor="negotia.agere" semita="status" ambitus="ligatio"
             nota="T4: pagina corporis et historiae (ab 0); facultate
                   mutata ad absens"/>
+    <campus nomen="colloquium" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="status"
+            nota="T6: sessio Claude chartae (visus colloquium)"/>
+    <campus nomen="resumere" typus="electio" vita="transiens"
+            absens="nullum" scriptor="negotia.agere"
+            nota="T6: armatum = r primum pressum (sessio fortasse
+                  viva extra tmux); r secundum resumit">
+      <optio>nullum</optio>
+      <optio>armatum</optio>
+    </campus>
     <campus nomen="origo" typus="electio" vita="persistens"
             absens="argumentum" scriptor="negotia.agere"
             nota="unde negotium apertum: argumentum (Esc latus prius

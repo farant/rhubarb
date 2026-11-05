@@ -13,17 +13,20 @@
  *   negotia mutare <facultas> [-titulus T] [-status S]
  *                  [-corpus T | -corpus-filum F]
  *   negotia revisiones <facultas>
- *   negotia involvere <negotium> <sessio>
+ *   negotia involvere <negotium> <sessio> [-via D]
  *
  * <negotium>, <facultas>: id plenum aut suffixum unicum. S: planned |
  * partial | shipped (aut proposita | inchoata | perfecta; ordinarie
  * planned). mutare solum campos nominatos reponit (ceteri ex statu
  * praesenti). -corpus-filum per filum_* legitur ("-" = stdin).
+ * involvere directorium colloquii servat (T6: Resume ibi): -via D,
+ * ordinarie directorium currens (sessio ipsa vocat).
  *
  * Effusio: ids plena (creare, facultas); in indicibus suffixum VI
  * characterum + titulus. index: "<suffixum>  <titulus>  3 shipped ·
  * 2 partial · 4 planned · 2 conversations". ostendere: negotium,
- * descriptio, facultates (status, suffixum, titulus), colloquia.
+ * descriptio, facultates (status, suffixum, titulus), colloquia (cum
+ * via servata).
  * revisiones: "<momentum>  <status>  <linea prima corporis>",
  * vetustissima prima.
  *
@@ -44,6 +47,7 @@
 #include "filum.h"
 #include "volumen.h"
 #include "negotia.h"
+#include "via.h"
 #include "provenientia.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -57,6 +61,7 @@
 #define VEX_CORPUS       IV
 #define VEX_CORPUS_FILUM VIII
 #define VEX_TITULUS      XVI
+#define VEX_VIA          XXXII
 
 nomen enumeratio {
     IMP_INDEX = 0,
@@ -85,7 +90,7 @@ hic_manens constans Imperium IMPERIA[] = {
                                   | VEX_CORPUS
                                   | VEX_CORPUS_FILUM,      VERUM  },
     { "revisiones", I,        ZEPHYRUM,                    FALSUM },
-    { "involvere",  II,       ZEPHYRUM,                    VERUM  }
+    { "involvere",  II,       VEX_VIA,                     VERUM  }
 };
 
 #define IMPERIA_NUMERUS \
@@ -101,6 +106,7 @@ nomen structura {
      constans character* corpus;
      constans character* corpus_filum;
      constans character* titulus;
+     constans character* via;
 } Argumenta;
 
 interior s32
@@ -115,7 +121,7 @@ usum_imprimere (vacuum)
         "      negotia mutare <facultas> [-titulus T] [-status S]"
         " [-corpus T | -corpus-filum F]\n"
         "      negotia revisiones <facultas>\n"
-        "      negotia involvere <negotium> <sessio>\n"
+        "      negotia involvere <negotium> <sessio> [-via D]\n"
         "      (omnia: -volumen V; S: planned | partial | shipped;"
         " F '-' = stdin)\n");
     redde II;
@@ -177,6 +183,11 @@ argumenta_legere (
         {
             a->titulus = argv[++k];
             a->vexilla |= VEX_TITULUS;
+        }
+        alioquin si (strcmp(v, "-via") == ZEPHYRUM)
+        {
+            a->via      = argv[++k];
+            a->vexilla  |= VEX_VIA;
         }
         alioquin
         {
@@ -437,10 +448,13 @@ ostendere (
         (insignatus integer)(cs ? xar_numerus(cs) : ZEPHYRUM));
     per (j = ZEPHYRUM; cs && j < xar_numerus(cs); j++)
     {
-        chorda* c = (chorda*)xar_obtinere(cs, j);
+         chorda* c    = (chorda*)xar_obtinere(cs, j);
+         chorda  via  = negotia_colloquii_via(n, x->id, *c);
 
-        imprimere("  %.*s\n", (integer)c->mensura,
-            (constans character*)c->datum);
+        imprimere("  %.*s%s%.*s\n", (integer)c->mensura,
+            (constans character*)c->datum, via.mensura > ZEPHYRUM
+            ? "  " : "", (integer)via.mensura,
+            (constans character*)via.datum);
     }
     redde ZEPHYRUM;
 }
@@ -580,7 +594,10 @@ exsequi (
             }
             x = negotium_resolvere(n, a->positiva[ZEPHYRUM], piscina);
             si (   !x || !negotia_colloquium_adiungere(n, x->id,
-                chorda_ex_literis(a->positiva[I], piscina)))
+                chorda_ex_literis(a->positiva[I], piscina),
+                via_absoluta(
+                chorda_ex_literis(a->via ? a->via : ".", piscina),
+                piscina)))
             {
                 redde I;
             }

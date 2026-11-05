@@ -34,6 +34,8 @@
 #define VISUS_INDICIS        I
 #define VISUS_NEGOTII        II
 #define VISUS_FACULTATIS     IV
+#define VISUS_COLLOQUII      VIII
+#define VIVA_MS              ((s64)XV * (s64)LX * (s64)M)   /* XV min */
 #define NEGOTIA_SPATIUM      X        /* pixela per lineam textus */
 #define REQUIRIT_ELECTAM     I
 
@@ -227,6 +229,7 @@ nomen structura {
                        Album* l;
     constans NegotiiFacultas* facultas; /* visus facultas; aliter
                                          * NIHIL */
+                          b32 charta;   /* T6: visus colloquium */
 } Ordines;
 
 interior i32
@@ -288,8 +291,10 @@ ordines_parare (
     o->facultates  = o->negotium ? negotia_facultates(m->negotia,
         o->negotium->id, p) : NIHIL;
     o->facultas  = facultas_aperta(m, o->negotium);
-    o->l         = album_creare(p, capacitas(m));
-    n            = numerus_rerum(m, o);
+    o->charta    = chorda_aequalis_literis(campus(m, "visus"),
+        "colloquium") && campus(m, "colloquium").mensura > ZEPHYRUM;
+    o->l  = album_creare(p, capacitas(m));
+    n     = numerus_rerum(m, o);
     per (i = ZEPHYRUM; o->l && i < n; i++)
     {
         sprintf(id, "r%u", (insignatus integer)(i + I));
@@ -581,6 +586,177 @@ pagina_textus_currens (
 
 
 /* ==================================================
+ * Charta colloquii (T6): sessio Claude finita aut ignota
+ * ================================================== */
+
+nomen structura {
+        chorda sessio;
+    Colloquium c;
+           b32 notum;          /* in libro praeconii */
+        chorda via;            /* liber, aliter nexus negotii */
+           b32 fortasse_viva;  /* non CLAUSUM, eventus intra XV min */
+} Charta;
+
+/* sessio Claude tuta: [0-9A-Za-z-]+ */
+interior b32
+sessio_tuta (
+    chorda s)
+{
+    i32 k;
+
+    si (s.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < s.mensura; k++)
+    {
+        character c = (character)s.datum[k];
+
+        si (!(   (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z')
+              || (c >= 'a' && c <= 'z') || c == '-'))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* via ex nexu negotii cuiusvis (primum inventum) */
+interior chorda
+via_ex_nexu (
+    constans NegotiaMontatio* m,
+                      chorda  sessio)
+{
+    chorda via;
+       i32 k;
+
+    per (k = ZEPHYRUM; k < negotia_numerus(m->negotia); k++)
+    {
+        via = negotia_colloquii_via(m->negotia,
+            negotia_index(m->negotia,
+            k)->id, sessio);
+        si (via.mensura > ZEPHYRUM)
+        {
+            redde via;
+        }
+    }
+    via.datum    = NIHIL;
+    via.mensura  = ZEPHYRUM;
+    redde via;
+}
+
+interior vacuum
+chartam_parare (
+    constans NegotiaMontatio* m,
+                    Piscina* p,
+                     Charta* ch)
+{
+    s64 nunc;
+
+    memset(ch, ZEPHYRUM, magnitudo(Charta));
+    ch->sessio  = campus(m, "colloquium");
+    ch->notum   = m->portae && m->portae->colloquium_legere
+        && m->portae->colloquium_legere(m->portae->ctx, ch->sessio, p,
+               &ch->c);
+    ch->via     = (ch->notum && ch->c.via.mensura > ZEPHYRUM)
+                ? ch->c.via : via_ex_nexu(m, ch->sessio);
+    nunc        = (s64)time(NIHIL) * (s64)M;
+    ch->fortasse_viva = ch->notum && ch->c.status != COLLOQUIUM_CLAUSUM
+        && nunc - ch->c.tempus < VIVA_MS;
+}
+
+/* ms ab epocha -> "2026-11-04 21:12" (hora locali) */
+interior chorda
+tempus_locale (
+         s64  ms,
+     Piscina* p)
+{
+         time_t t;
+    structura tm* tm_info;
+      character textus[XXXII];
+
+    t        = (time_t)(ms / (s64)M);
+    tm_info  = localtime(&t);
+    si (!tm_info)
+    {
+        redde chorda_ex_literis("", p);
+    }
+    sprintf(textus, "%04d-%02d-%02d %02d:%02d",
+        (integer)(tm_info->tm_year + MCM), (integer)(tm_info->tm_mon
+            + I),
+        (integer)tm_info->tm_mday, (integer)tm_info->tm_hour,
+        (integer)tm_info->tm_min);
+    redde chorda_ex_literis(textus, p);
+}
+
+/* "<praefixum><valor>" praecisum ad columnas */
+interior vacuum
+lineam_paris_addere (
+                    Xar* lineae,
+     constans character* praefixum,
+                 chorda  valor,
+                    i32  columnae,
+                    i32  genus,
+                Piscina* p)
+{
+    ChordaAedificator* a;
+
+    a = chorda_aedificator_creare(p, LXIV);
+    (vacuum)chorda_aedificator_appendere_literis(a, praefixum);
+    (vacuum)chorda_aedificator_appendere_chorda(a, valor);
+    lineam_addere(lineae,
+        runas_praecidere(chorda_aedificator_spectare(a),
+        columnae), genus);
+}
+
+/* lineae chartae (Xar de LineaFacultatis) */
+interior Xar*
+lineae_chartae (
+    constans NegotiaMontatio* m,
+             constans Charta* ch,
+                     Piscina* p)
+{
+    Xar* lineae;
+    i32  columnae;
+
+    lineae    = xar_creare(p, (i32)magnitudo(LineaFacultatis));
+    columnae  = columnae_textus(m);
+    si (!lineae)
+    {
+        redde NIHIL;
+    }
+    si (!ch->notum)
+    {
+        lineam_addere(lineae,
+            chorda_ex_literis("Not in the session log",
+            p), LINEA_TITULUS);
+    }
+    lineam_paris_addere(lineae, "Session: ", ch->sessio, columnae,
+        LINEA_CORPUS, p);
+    lineam_paris_addere(lineae, "Directory: ", ch->via.mensura
+        > ZEPHYRUM ? ch->via : chorda_ex_literis("(unknown)", p),
+        columnae, LINEA_CORPUS, p);
+    si (ch->notum)
+    {
+        lineam_paris_addere(lineae, "Last active: ", tempus_locale(
+            ch->c.tempus, p), columnae, LINEA_CORPUS, p);
+        si (ch->c.linea.mensura > ZEPHYRUM)
+        {
+            lineam_paris_addere(lineae, "Status: ", ch->c.linea,
+                columnae, LINEA_HISTORIA, p);
+        }
+    }
+    si (ch->fortasse_viva)
+    {
+        lineam_addere(lineae, chorda_ex_literis("", p), LINEA_VACUA);
+        lineam_addere(lineae, chorda_ex_literis(
+            "May still be running outside tmux", p), LINEA_TITULUS);
+    }
+    redde lineae;
+}
+
+
+/* ==================================================
  * Praecepta
  * ================================================== */
 
@@ -607,7 +783,8 @@ interior i32
 visus_currens (
     constans ContextusPraecepti* cp)
 {
-    redde cp->o.facultas ? VISUS_FACULTATIS
+    redde cp->o.charta ? VISUS_COLLOQUII
+         : cp->o.facultas ? VISUS_FACULTATIS
          : cp->o.negotium ? VISUS_NEGOTII : VISUS_INDICIS;
 }
 
@@ -877,6 +1054,32 @@ fac_textum_proximum (
     redde paginam_textus_vertere((ContextusPraecepti*)ctx, I);
 }
 
+/* T6: Resume (r, ictus) - sine via nihil; sessio fortasse viva: r
+ * primum armat, secundum resumit */
+interior b32
+fac_resumere (
+    vacuum* ctx)
+{
+    ContextusPraecepti* cp = (ContextusPraecepti*)ctx;
+                Charta  ch;
+
+    chartam_parare(cp->m, cp->p, &ch);
+    si (ch.via.mensura == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    si (   ch.fortasse_viva
+        && !chorda_aequalis_literis(campus(cp->m, "resumere"),
+        "armatum"))
+    {
+        redde campum_scribere(cp->m, "resumere", "armatum");
+    }
+    (vacuum)campum_scribere(cp->m, "resumere", "");
+    redde cp->m->portae && cp->m->portae->colloquium_resumere
+        && cp->m->portae->colloquium_resumere(cp->m->portae->ctx,
+               ch.sessio, ch.via);
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "negotia.proximum", "Next project", "j", VISUS_INDICIS, ZEPHYRUM,
         fac_proximam },
@@ -904,6 +1107,10 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_textum_proximum },
     { "negotia.ad_facultates", "Back to features", "Esc",
         VISUS_FACULTATIS, ZEPHYRUM, fac_ad_facultates },
+    { "negotia.resumere", "Resume conversation", "r", VISUS_COLLOQUII,
+        ZEPHYRUM, fac_resumere },
+    { "negotia.charta_redire", "Back", "Esc", VISUS_COLLOQUII, ZEPHYRUM,
+        fac_redire },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -986,6 +1193,10 @@ agere (
         || ev->datum.mus.botton != MUS_SINISTER)
     {
         redde FALSUM;
+    }
+    si (cp.o.charta && chorda_aequalis_literis(nodus->id, "resumere"))
+    {
+        redde fac_resumere(&cp);
     }
     n = nodus->partes == PARTES_ITEM ? id_ordinis(nodus->id) : ZEPHYRUM;
     si (n > ZEPHYRUM)
@@ -1209,6 +1420,7 @@ figura_tabulae (
               Fines  mensa;
              chorda  super;
                 Xar* lineae;
+             Charta  ch;
                 s32  e;
                 s32  k;
                 s32  n;
@@ -1241,7 +1453,15 @@ figura_tabulae (
     n       = album_paginae(o.l);
     super   = campus(m, "super");
     lineae  = NIHIL;
-    si (o.facultas)
+    memset(&ch, ZEPHYRUM, magnitudo(ch));
+    si (o.charta)
+    {
+        chartam_parare(m, md->piscina, &ch);
+        lineae  = lineae_chartae(m, &ch, md->piscina);
+        n       = I;
+        k       = ZEPHYRUM;
+    }
+    alioquin si (o.facultas)
     {
         lineae  = lineae_facultatis(m, o.facultas, md->piscina);
         n       = paginae_textus(m, lineae);
@@ -1253,7 +1473,10 @@ figura_tabulae (
         si (chorda_aequalis_literis(f->id, "titulus"))
         {
             textum_pingere(md, f->fines.x + IV, f->fines.y + II,
-                o.facultas ? praecidere(o.facultas->titulus,
+                o.charta ? praecidere(ch.notum && ch.c.titulus.mensura
+                > ZEPHYRUM ? ch.c.titulus : chorda_ex_literis(
+                "Conversation", md->piscina), f->fines.latitudo - VIII)
+                : o.facultas ? praecidere(o.facultas->titulus,
                 f->fines.latitudo - VIII) : o.negotium ? praecidere(
                 o.negotium->titulus, f->fines.latitudo - VIII)
                 : chorda_ex_literis("Projects", md->piscina),
@@ -1262,7 +1485,26 @@ figura_tabulae (
         }
         alioquin si (chorda_aequalis_literis(f->id, "caput"))
         {
-            caput_pingere(m, md, f, &o);
+            si (o.charta)
+            {
+                textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                    chorda_ex_literis("Claude conversation",
+                    md->piscina),
+                    ZEPHYRUM, COLOR_TEXT_DIM);
+            }
+            alioquin
+            {
+                caput_pingere(m, md, f, &o);
+            }
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "resumere"))
+        {
+            figura_globulum_pingere(md, f->fines, chorda_ex_literis(
+                chorda_aequalis_literis(campus(m, "resumere"),
+                "armatum")
+                ? "Press r again to resume" : "Resume (r)",
+                md->piscina),
+                ch.via.mensura > ZEPHYRUM ? ZEPHYRUM : FIGURA_OBSCURUM);
         }
         alioquin si (chorda_aequalis_literis(f->id, "index_paginae"))
         {
@@ -1448,6 +1690,15 @@ disponere (
     regio = locum_addere(dp, radix_d, DISPOSITIO_COLUMNA,
         DISPOSITIO_CRESCENS, ZEPHYRUM, DISPOSITIO_CRESCENS, ZEPHYRUM);
     ordines_parare(m, piscina, &o);
+    si (o.charta)
+    {
+        (vacuum)componentem_locare(dp, regio, "textus", PARTES_INDEX,
+            DISPOSITIO_CRESCENS, ZEPHYRUM, capacitas(m) - IV);
+        (vacuum)componentem_locare(dp, regio, "resumere",
+            PARTES_BOTTONE,
+            DISPOSITIO_FIXA, XXVI, III);
+        redde;
+    }
     si (o.facultas)
     {
         (vacuum)componentem_locare(dp, regio, "textus", PARTES_INDEX,
@@ -1638,6 +1889,38 @@ negotia_visus_argumentum_ponere (
         redde FALSUM;
     }
     arg = argumentum ? argumentum : "";
+    /* T6: charta colloquii "colloquium/<sessio>" (campi directe) */
+    si (strncmp(arg, "colloquium/", XI) == ZEPHYRUM)
+    {
+        constans character* t[X];
+        constans character* v[X];
+
+        si (!sessio_tuta(chorda_ex_literis(arg + XI, m->piscina)))
+        {
+            redde FALSUM;
+        }
+        t[ZEPHYRUM]  = "visus";
+        v[ZEPHYRUM]  = "colloquium";
+        t[I]         = "colloquium";
+        v[I]         = arg + XI;
+        t[II]        = "negotium";
+        v[II]        = "";
+        t[III]       = "facultas";
+        v[III]       = "";
+        t[IV]        = "pagina_textus";
+        v[IV]        = "";
+        t[V]         = "origo";
+        v[V]         = "";
+        t[VI]        = "electa";
+        v[VI]        = "";
+        t[VII]       = "pagina";
+        v[VII]       = "";
+        t[VIII]      = "super";
+        v[VIII]      = "";
+        t[IX]        = "resumere";
+        v[IX]        = "";
+        redde campos_scribere(m, t, v, X);
+    }
     /* id nudum aut suffixum unicum -> id plenum (cognomen typatum) */
     si (arg[ZEPHYRUM] && !strchr(arg, '/'))
     {
@@ -1727,6 +2010,22 @@ negotia_visus_mora (
 }
 
 chorda
+negotia_visus_locus (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    NegotiaMontatio* m = (NegotiaMontatio*)ctx;
+
+    si (   !m || !chorda_aequalis_literis(campus(m, "visus"),
+               "colloquium"))
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    redde chorda_concatenare(chorda_ex_literis("terminale/claude/",
+        piscina), campus(m, "colloquium"), piscina);
+}
+
+chorda
 negotia_visus_locus_titulus (
      vacuum* ctx,
     Piscina* piscina)
@@ -1737,6 +2036,15 @@ negotia_visus_locus_titulus (
            ChordaAedificator* a;
 
     m = (NegotiaMontatio*)ctx;
+    si (m && chorda_aequalis_literis(campus(m, "visus"), "colloquium"))
+    {
+        Charta ch;
+
+        chartam_parare(m, piscina, &ch);
+        redde (ch.notum && ch.c.titulus.mensura > ZEPHYRUM)
+            ? chorda_transcribere(ch.c.titulus, piscina)
+            : chorda_ex_literis("Conversation", piscina);
+    }
     x = m ? apertum(m) : NIHIL;
     f = x ? facultas_aperta(m, x) : NIHIL;
     si (f)

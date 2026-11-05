@@ -25,6 +25,7 @@
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 nomen structura {
                 Volumen* volumen;
@@ -40,6 +41,11 @@ nomen structura {
     NegotiaVisusPortae  portae;
                    i32  aperta;
              character  acta[LXIV];
+    /* T6: colloquium fictum (porta colloquium_legere) et resumptio */
+            Colloquium fictum;
+                   b32 fictum_notum;
+                   i32 resumpta;
+             character resumptum[CXXVIII];
 } Latus;
 
 interior vacuum
@@ -102,6 +108,41 @@ seminare (
 }
 
 interior b32
+colloquium_fictum (
+      vacuum* ctx,
+      chorda  sessio,
+     Piscina* p,
+  Colloquium* out)
+{
+    Latus* l = (Latus*)ctx;
+
+    (vacuum)p;
+    si (!l->fictum_notum || !chorda_aequalis(l->fictum.sessio, sessio))
+    {
+        redde FALSUM;
+    }
+    *out = l->fictum;
+    redde VERUM;
+}
+
+/* "<sessio> <via>" in resumptum */
+interior b32
+resumere_fictum (
+     vacuum* ctx,
+     chorda  sessio,
+     chorda  via)
+{
+    Latus* l = (Latus*)ctx;
+
+    l->resumpta++;
+    sprintf(l->resumptum, "%.*s %.*s", (integer)(sessio.mensura < L
+        ? sessio.mensura : L), (constans character*)sessio.datum,
+        (integer)(via.mensura < L ? via.mensura : L),
+        (constans character*)via.datum);
+    redde VERUM;
+}
+
+interior b32
 porta_ficta (
      vacuum* ctx,
      chorda  negotium)
@@ -129,8 +170,10 @@ latus_montare (
 
     l = (Latus*)piscina_allocare(c->piscina, magnitudo(Latus));
     memset(l, ZEPHYRUM, magnitudo(Latus));
-    l->portae.ctx               = l;
-    l->portae.negotium_aperire  = porta_ficta;
+    l->portae.ctx                  = l;
+    l->portae.negotium_aperire     = porta_ficta;
+    l->portae.colloquium_legere    = colloquium_fictum;
+    l->portae.colloquium_resumere  = resumere_fictum;
     si (   !negotia_visus_montare(&l->m, c->piscina, w->intern, w->repo,
                id, w->n, cum_porta ? &l->portae : NIHIL, CCLXXX,
                altitudo, NIHIL)
@@ -788,6 +831,160 @@ _probare_praecisionem (
     CREDO_VERUM(inventum);
 }
 
+/* latus chartae: colloquium fictum ante argumentum (porta legitur in
+ * pictura) */
+interior Latus*
+chartam_montare (
+          CredoContextus* c,
+                  Mundus* w,
+      constans character* sessio,
+                     b32  notum,
+      constans character* via,
+         StatusColloquii  status,
+                     s64  tempus)
+{
+    Latus* l;
+
+    l = latus_montare(c, w, "c1", NIHIL, VERUM, CCLVI);
+    si (!l)
+    {
+        redde NIHIL;
+    }
+    memset(&l->fictum, ZEPHYRUM, magnitudo(Colloquium));
+    l->fictum.sessio   = lit(sessio, c->piscina);
+    l->fictum.titulus  = lit("concilium", c->piscina);
+    l->fictum.via      = lit(via, c->piscina);
+    l->fictum.linea    = lit("commit done", c->piscina);
+    l->fictum.status   = status;
+    l->fictum.tempus   = tempus;
+    l->fictum_notum    = notum;
+    {
+        character arg[LXIV];
+
+        sprintf(arg, "colloquium/%s", sessio);
+        si (!negotia_visus_argumentum_ponere(&l->m, arg))
+        {
+            redde NIHIL;
+        }
+    }
+    dispensator_recomponere(l->d);
+    redde l;
+}
+
+interior b32
+locus_lateris_est (
+                  Latus* l,
+     constans character* locus,
+                Piscina* p)
+{
+    redde chorda_aequalis_literis(negotia_visus_locus(&l->m, p), locus);
+}
+
+/* sessio finita: charta - titulus, directorium, linea, Resume; locus
+ * comitis colloquii */
+interior vacuum
+_probare_colloquium_mortuum (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Mandata* md;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    l = chartam_montare(c, w, "s1", VERUM, "/tmp/x", COLLOQUIUM_CLAUSUM,
+        (s64)M);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "colloquium"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "colloquium", "s1"));
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(textus_pictus(md, "concilium"));
+    CREDO_VERUM(textus_y(md, "/tmp/x") >= ZEPHYRUM);
+    CREDO_VERUM(textus_y(md, "commit done") >= ZEPHYRUM);
+    CREDO_VERUM(textus_y(md, "Resume") >= ZEPHYRUM);
+    CREDO_VERUM(textus_y(md, "May still be running") < ZEPHYRUM);
+    CREDO_VERUM(locus_lateris_est(l, "terminale/claude/s1",
+        c->piscina));
+    CREDO_VERUM(locus_est(l, "concilium", c->piscina));
+    CREDO_GRADUS("argumentum malum");
+    CREDO_FALSUM(negotia_visus_argumentum_ponere(&l->m,
+        "colloquium/;rm"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "colloquium", "s1"));
+}
+
+/* sessio ignota: "Not in the session log" et id; sine via Resume
+ * nihil agit; via ex nexu negotii */
+interior vacuum
+_probare_colloquium_ignotum (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Mandata* md;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    l = chartam_montare(c, w, "s2", FALSUM, "", COLLOQUIUM_IGNOTUM,
+        ZEPHYRUM);
+    CREDO_NECESSE_NON_NIHIL(l);
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(textus_y(md, "Not in the session log") >= ZEPHYRUM);
+    CREDO_VERUM(textus_y(md, "s2") >= ZEPHYRUM);
+    clavis(l, 'r');
+    CREDO_AEQUALIS_I32(l->resumpta, ZEPHYRUM);
+    CREDO_GRADUS("via ex nexu negotii");
+    seminare(w, c->piscina);
+    CREDO_VERUM(negotia_colloquium_adiungere(w->n, lit("2", c->piscina),
+        lit("s2", c->piscina), lit("/tmp/y", c->piscina)));
+    clavis(l, 'r');
+    CREDO_AEQUALIS_I32(l->resumpta, I);
+    CREDO_LITERAE_AEQUALES(l->resumptum, "s2 /tmp/y");
+}
+
+/* ictus in Resume et clavis r: porta cum sessione et via */
+interior vacuum
+_probare_resumere (
+    CredoContextus* c)
+{
+    Mundus* w = (Mundus*)c->datum;
+     Latus* l;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    l = chartam_montare(c, w, "s1", VERUM, "/tmp/a b",
+        COLLOQUIUM_CLAUSUM, (s64)M);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(ictus(l, "resumere", EVENTUS_MUS_DEPRESSUS,
+        c->piscina));
+    CREDO_AEQUALIS_I32(l->resumpta, I);
+    CREDO_LITERAE_AEQUALES(l->resumptum, "s1 /tmp/a b");
+    clavis(l, 'r');
+    CREDO_AEQUALIS_I32(l->resumpta, II);
+}
+
+/* sessio non finita, recens: monitum; r primum armat, secundum
+ * resumit */
+interior vacuum
+_probare_resumere_armatum (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Mandata* md;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    l = chartam_montare(c, w, "s1", VERUM, "/tmp/x", COLLOQUIUM_LABORAT,
+        (s64)time(NIHIL) * (s64)M);
+    CREDO_NECESSE_NON_NIHIL(l);
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(textus_y(md, "May still be running outside tmux")
+        >= ZEPHYRUM);
+    clavis(l, 'r');
+    CREDO_AEQUALIS_I32(l->resumpta, ZEPHYRUM);
+    CREDO_VERUM(campus_est(&l->m.ramus, "resumere", "armatum"));
+    CREDO_VERUM(textus_y(reddere(w, l, c->piscina), "Press r again")
+        >= ZEPHYRUM);
+    clavis(l, 'r');
+    CREDO_AEQUALIS_I32(l->resumpta, I);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "index", _probare_indicem, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -817,6 +1014,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "praecisio", _probare_praecisionem, mundum_parare, mundum_purgare,
         NIHIL, NIHIL },
+    { "colloquium mortuum", _probare_colloquium_mortuum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "colloquium ignotum", _probare_colloquium_ignotum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "resumere", _probare_resumere, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
+    { "resumere armatum", _probare_resumere_armatum, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
