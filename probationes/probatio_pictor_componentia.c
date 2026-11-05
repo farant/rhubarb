@@ -287,6 +287,62 @@ _sectio_quinta (
         componens_scribere_stml(arbor, piscina, intern, VERUM)));
 }
 
+/* pulsus-plan T9: res menu cum titulo */
+interior s32
+res_index (
+     constans Elenchus* e,
+    constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < e->numerus; i++)
+    {
+        si (strcmp(e->res[i].titulus, titulus) == ZEPHYRUM)
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* pulsus-plan T9 (spec III.4): "Notify family now" solum inscriptis */
+interior vacuum
+_sectio_pulsus_statim (
+    CredoContextus* ctx)
+{
+    PictorElenchiCondiciones k;
+                 ElenchusRes res[V];
+                    Elenchus e;
+                         s32 i;
+
+    (vacuum)ctx;
+    memset(&k, ZEPHYRUM, magnitudo(k));
+    k.importare  = VERUM;
+    k.communio   = VERUM;
+    k.inscripta  = VERUM;
+    pictor_elenchum_parare(&k, res, &e);
+    CREDO_AEQUALIS_I32(e.numerus, V);
+    i = res_index(&e, "pulsus.statim");
+    CREDO_NECESSE(i >= ZEPHYRUM);
+    CREDO_VERUM(strcmp(e.res[i].textus, "Notify family now")
+        == ZEPHYRUM);
+    CREDO_VERUM(e.res[i].habilis);
+    CREDO_AEQUALIS_S32(res_index(&e, "inscriptio.aperire"), -I);
+
+    CREDO_GRADUS("non inscriptus: Sign in…, non Notify");
+    k.inscripta = FALSUM;
+    pictor_elenchum_parare(&k, res, &e);
+    CREDO_AEQUALIS_S32(res_index(&e, "pulsus.statim"), -I);
+    CREDO_VERUM(res_index(&e, "inscriptio.aperire") >= ZEPHYRUM);
+
+    CREDO_GRADUS("sine communione: neutrum");
+    k.communio   = FALSUM;
+    k.inscripta  = VERUM;
+    pictor_elenchum_parare(&k, res, &e);
+    CREDO_AEQUALIS_S32(res_index(&e, "pulsus.statim"), -I);
+    CREDO_AEQUALIS_I32(e.numerus, III);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "Actio ex instrumento", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -297,6 +353,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _sectio_quarta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "Puritas et exemplar (gradus III)", _sectio_quinta, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "pulsus statim", _sectio_pulsus_statim, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

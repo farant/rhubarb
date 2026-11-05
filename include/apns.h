@@ -20,15 +20,17 @@
     "0000000000000000000000000000000000000000000000000000000000000000"
 
 /* ~/.rhubarb/ios/apns.stml: <apns clavis_via= clavis_id= turma= thema=
- * hospes= [portus=] [ancora=]/> - ancora et portus probationibus
- * (servus localis); clavis_via "~/" expanditur. Nullum secretum in
- * plagula. */
+ * hospes= [hospes_sandbox=] [portus=] [ancora=]/> - ancora et portus
+ * probationibus (servus localis); clavis_via "~/" expanditur. Nullum
+ * secretum in plagula. hospes = ambitus "productio", hospes_sandbox =
+ * "sandbox" (vacuum = nullae missiones sandbox; pulsus-plan C7). */
 nomen structura {
     chorda clavis_via;
     chorda clavis_id;
     chorda turma;
     chorda thema;          /* apns-topic: bundle ID */
     chorda hospes;
+    chorda hospes_sandbox; /* optionale */
        i32 portus;         /* ordinarie CDXLIII */
     chorda ancora;         /* via ad CA DER; vacua = fiducia systematis */
 } ApnsConfiguratio;

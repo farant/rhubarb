@@ -2,7 +2,8 @@
  * bibliotheca norma sola) pro probationibus: binarium construere,
  * servum in portu libero incipere (GODEBUG=http2debug=2 -> tabula),
  * claudere. Sine 'go' suita II reddere debet (spec D5). Usus:
- * probatio_apns_vivum (http2-plan T11). */
+ * probatio_apns_vivum (http2-plan T11), probatio_apns_mittens (pulsus-plan
+ * T4). */
 #ifndef SERVUS_ORACULI_H
 #define SERVUS_ORACULI_H
 
@@ -105,23 +106,27 @@ _servus_oraculi_auscultat (
     redde VERUM;
 }
 
-/* servus cum certificato <fixa>/localhost.{pem,key}; tabula formarum in
- * <tabula>; vexilla addita (e.g. "-modus iterare") */
+/* servus cum certificato <fixa>/localhost.{pem,key} in portu dato (0 =
+ * liber); tabula formarum in <tabula>; vexilla addita (e.g. "-modus
+ * iterare"). Portus datus: servus renatus in eodem portu (apns_mittens
+ * "renata"). */
 interior b32
-servum_oraculi_incipere (
+servum_oraculi_incipere_portu (
            ServusOraculi* s,
       constans character* binarium,
       constans character* fixa,
       constans character* tabula,
       constans character* vexilla,
+                     i32  portus,
                  Piscina* p)
 {
           character  mandatum[MMXLVIII];
  constans character* argumenta[IV];
                 i32  k;
 
-    s->processus  = NIHIL;
-    s->portus     = _servi_oraculi_portus(p);
+    s->processus = NIHIL;
+    s->portus = portus
+        != ZEPHYRUM ? portus : _servi_oraculi_portus(p);
     si (   s->portus == ZEPHYRUM || strlen(binarium) + strlen(fixa) * II
         + strlen(tabula) + strlen(vexilla) > MD)
     {
@@ -150,6 +155,19 @@ servum_oraculi_incipere (
         (vacuum)usleep(L * M);
     }
     redde FALSUM;
+}
+
+interior b32
+servum_oraculi_incipere (
+           ServusOraculi* s,
+      constans character* binarium,
+      constans character* fixa,
+      constans character* tabula,
+      constans character* vexilla,
+                 Piscina* p)
+{
+    redde servum_oraculi_incipere_portu(s, binarium, fixa, tabula,
+        vexilla, ZEPHYRUM, p);
 }
 
 interior vacuum

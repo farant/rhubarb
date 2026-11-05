@@ -2036,7 +2036,7 @@ _credo_volumina_iudicare (
      constans character* socii[V];
               character  appellatio[DXII];
               character  via[MXXIV + DXII];
-              character  expressio[CCCLXXXIV];
+              character  expressio[DXII];
                     i32  k;
                     i32  tectum;
 

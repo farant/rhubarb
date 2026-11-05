@@ -39298,8 +39298,14 @@ silva_materia_nodus_creare (
         redde NIHIL;
     }
 
+    /* loci in EADEM allocatione post caput (allocatio una pro duabus;
+     * Reger op. 74: -1,44 M allocationes). Ordinatio tuta: magnitudo
+     * structurae ad ordinationem suam (punctator) impletur, ergo
+     * nodus + I ordinatus est pro MateriaValor. Nemo loci repunctat. */
     nodus = (SilvaNodus*)silva_piscina_allocare_ordinatum(piscina,
-        (memoriae_index)magnitudo(SilvaNodus),
+        (memoriae_index)magnitudo(SilvaNodus)
+            + (memoriae_index)numerus_locorum
+                * (memoriae_index)magnitudo(SilvaValor),
         (memoriae_index)magnitudo(vacuum*));
     si (nodus == NIHIL)
     {
@@ -39313,14 +39319,7 @@ silva_materia_nodus_creare (
 
     si (numerus_locorum > ZEPHYRUM)
     {
-        nodus->loci = (SilvaValor*)silva_piscina_allocare_ordinatum(piscina,
-            (memoriae_index)numerus_locorum
-                * (memoriae_index)magnitudo(SilvaValor),
-            (memoriae_index)magnitudo(vacuum*));
-        si (nodus->loci == NIHIL)
-        {
-            redde NIHIL;
-        }
+        nodus->loci = (SilvaValor*)(vacuum*)(nodus + I);
         per (i = ZEPHYRUM; i < numerus_locorum; i++)
         {
             nodus->loci[i] = silva_materia_valor_nihil();

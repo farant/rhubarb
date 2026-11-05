@@ -655,13 +655,14 @@
   </carmen>
 
   <!-- salve: Salve Regina, tonus simplex (modus V, f lydius cum b
-       molle: clavis c4, do = F). Fons: Liber Usualis (1961) p. 279,
+       molle = clavis carminis f ionius: clavis c4, do = F).
+       Fons: Liber Usualis (1961) p. 279,
        GregoBase 2435 (transcriptio Andrew Hinkley). Rhythmus
        Solesmensis: punctum octava, mora x2, episema x1.5, nota ante
        quilisma x1.5, unisoni ligati; divisiones '|' cum spiritu (minor
-       r16, maior r8). Schola sola. Generator:
-       musica/fontes/salve.py -->
-  <carmen titulus="salve" tempus="80" metrum="liberum" clavis="f lydius">
+       r16, maior r8). Schola sola. Generator: auditio -gabc
+       musica/fontes/salve_2435.gabc -titulus salve (gabc_carmen.h) -->
+  <carmen titulus="salve" tempus="80" metrum="liberum" clavis="f ionius">
     <reverberatio aula="0.9" mollities="0.6" latitudo="1" lucrum="0.5"/>
     <pars titulus="cantus" instrumentum="schola" lucrum="1"
           reverberatio="0.55">

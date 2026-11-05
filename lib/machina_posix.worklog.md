@@ -68,3 +68,7 @@ The post-edit hook caught two invented `chorda_aedificator` function
 names before compilation. Real names are
 `chorda_aedificator_appendere_literis` and `chorda_aedificator_finire`.
 Checking the header beats guessing from a naming pattern.
+
+## 2026-11-02 - containers have no /etc/machine-id (pulsus T6)
+
+Alpine test containers ship without `/etc/machine-id`, so `machina_identitas` returns empty there and every volume refuses to write acts - `volumen_creare`/`volumen_temporarium` return NIHIL with no message. The library is right to refuse; `tools/linux/probatio.sh` now mounts a per-host random id (`build/porta_linux/machine-id`) read-only. Other container scripts (percursus, horreum_vivum, fumus_tabulariumd) do not mount it yet - if one of them opens a volume and fails silently, this is why.

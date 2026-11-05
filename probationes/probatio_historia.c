@@ -898,10 +898,50 @@ _sectio_secunda (
     volumen_claudere(vol);
 }
 
+/* pulsus T11: spatium copiatur - vocator (pictura.nova) spatium in
+ * acervo tenet; historia monstratorem eius servabat, qui post reditum
+ * pendebat ("Notify family now" octetos fortuitos mittebat) */
+interior vacuum
+_sectio_tertia (
+    CredoContextus* c)
+{
+                Piscina* piscina;
+    InternamentumChorda* intern;
+                Volumen* vol;
+               Historia* h;
+               Historia* h2;
+                Ludicra  l;
+                Ludicra  l2;
+              character  spatium[XVI];
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    memset(&l, ZEPHYRUM, magnitudo(l));
+    memset(&l2, ZEPHYRUM, magnitudo(l2));
+    vol = volumen_temporarium(piscina, "probatio_historia_spatium");
+    CREDO_NECESSE_NON_NIHIL(vol);
+    strcpy(spatium, "picta");
+    h = historia_creare(piscina, intern, vol, spatium, "numerus",
+        "probatio:checkpoint", II, proiectio(&l));
+    CREDO_NECESSE_NON_NIHIL(h);
+    memset(spatium, 'X', magnitudo(spatium) - I);
+    spatium[magnitudo(spatium) - I] = '\0';
+    CREDO_VERUM(strcmp(h->spatium, "picta") == ZEPHYRUM);
+    strcpy(spatium, "picta");
+    h2 = historia_aperire(piscina, intern, vol, spatium, "numerus",
+        "probatio:checkpoint", II, proiectio(&l2));
+    CREDO_NECESSE_NON_NIHIL(h2);
+    memset(spatium, 'Y', magnitudo(spatium) - I);
+    CREDO_VERUM(strcmp(h2->spatium, "picta") == ZEPHYRUM);
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "cauda actorum cum proiectione ludicra", _sectio_prima, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "genera nominata (pinacotheca)", _sectio_secunda, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "spatium copiatum (pulsus T11)", _sectio_tertia, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
