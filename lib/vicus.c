@@ -45,6 +45,7 @@ nomen structura {
                          * VICUS_DEXTRUM) */
        b32 aditus;      /* comites P5a: post advocatum aditus pendet
                          * (Esc in prompta revocat) */
+       b32 anulus;      /* negotia T5: gradus anuli (gradus +I / -I) */
 } PetitioAcervi;
 
 /* comites P5a: gradus aditus tabulae (VicusTabula.aditus_gradus) */
@@ -71,6 +72,13 @@ nomen structura {
     chorda genus;
     chorda argumentum;   /* vacuum = sine argumento */
 } LatusCycli;
+
+/* negotia T5: genus virtuale anuli - gradus aperitorem vocat */
+nomen structura {
+           chorda  genus;
+    VicusAperitor  aperire;
+           vacuum* ctx;
+} Aperitor;
 
 interior chorda
 chorda_nulla_vici (vacuum)
@@ -288,7 +296,39 @@ indicem_scribere (
             latus_appendere(a,
                 (constans VicusLatus*)xar_obtinere(t->acervus, k));
         }
-        chorda_aedificator_appendere_literis(a, "</acervus></tabula>");
+        chorda_aedificator_appendere_literis(a, "</acervus>");
+        /* negotia T5: anulus tabulae et positio */
+        si (t->anulus && xar_numerus(t->anulus) > ZEPHYRUM)
+        {
+            character positio[XVI];
+
+            sprintf(positio, "%u",
+                (insignatus integer)t->anulus_positio);
+            chorda_aedificator_appendere_literis(a,
+                "<anulus positio=\"");
+            chorda_aedificator_appendere_literis(a, positio);
+            chorda_aedificator_appendere_literis(a, "\">");
+            per (k = ZEPHYRUM; k < xar_numerus(t->anulus); k++)
+            {
+                constans LatusCycli* c;
+
+                c = (constans LatusCycli*)xar_obtinere(t->anulus, k);
+                chorda_aedificator_appendere_literis(a,
+                    "<latus genus=\"");
+                valorem_appendere(a, c->genus);
+                chorda_aedificator_appendere_literis(a, "\"");
+                si (c->argumentum.mensura > ZEPHYRUM)
+                {
+                    chorda_aedificator_appendere_literis(a,
+                        " argumentum=\"");
+                    valorem_appendere(a, c->argumentum);
+                    chorda_aedificator_appendere_literis(a, "\"");
+                }
+                chorda_aedificator_appendere_literis(a, "/>");
+            }
+            chorda_aedificator_appendere_literis(a, "</anulus>");
+        }
+        chorda_aedificator_appendere_literis(a, "</tabula>");
     }
     chorda_aedificator_appendere_literis(a, "</tabulae>");
     redde volumen_praesens_ponere(v->volumen,
@@ -606,6 +646,21 @@ est_imperium_cycli (
         || ev->datum.clavis.runa == '[');
 }
 
+/* negotia T5: Cmd+H / Cmd+L (sine Shift, Ctrl, Alt) = anulus */
+interior b32
+est_imperium_anuli (
+    constans Eventus* ev)
+{
+    redde ev
+        && (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+            || ev->genus == EVENTUS_CLAVIS_LIBERATUS)
+        && (ev->datum.clavis.modificantes & MOD_SUPER)
+        && !(ev->datum.clavis.modificantes
+             & (MOD_SHIFT | MOD_IMPERIUM | MOD_ALT))
+        && (   ev->datum.clavis.runa == 'h'
+            || ev->datum.clavis.runa == 'l');
+}
+
 /* comites P3: Cmd+T (sine Shift, Ctrl, Alt) = liber comes */
 interior b32
 est_imperium_comitis (
@@ -789,6 +844,7 @@ destinare (
 
     aditum_observare((Vicus*)ctx, ev, piscina);
     si (arbor && (   est_imperium_tabulae(ev) || est_imperium_cycli(ev)
+                  || est_imperium_anuli(ev)
                   || est_imperium_comitis(ev)
                   || est_imperium_quaestionis(ev)
                   || brevitatem_invenire((constans Vicus*)ctx, ev)
@@ -1750,6 +1806,17 @@ radicem_tractare (
         }
         redde VERUM;
     }
+    /* negotia T5: Cmd+L / Cmd+H - gradus anuli (depressa agit,
+     * liberata devoratur; anulus nullus aut unius: devoratur) */
+    si (est_imperium_anuli(ev))
+    {
+        si (ev->genus == EVENTUS_CLAVIS_DEPRESSUS)
+        {
+            (vacuum)vicus_anulo_gradi(v,
+                ev->datum.clavis.runa == 'l' ? I : -I);
+        }
+        redde VERUM;
+    }
     /* comites P3: Cmd+T (depressa agit, liberata devoratur) */
     si (est_imperium_comitis(ev))
     {
@@ -2235,6 +2302,41 @@ tabulam_legere (
                 /* semitae R4d: applicatur pulsu primo (organa vici
                  * post creationem ponuntur) */
                 d->semita_servata = attributum_nodi(m, "semita");
+            }
+        }
+        /* negotia T5: anulus (genera non iudicantur - aperitores
+         * fortasse postea addentur) */
+        alioquin si (chorda_aequalis_literis(*filius->titulus,
+                     "anulus"))
+        {
+            LatusCycli* c;
+                   s32  positio;
+
+            t->anulus = xar_creare(v->piscina,
+                (i32)magnitudo(LatusCycli));
+            per (k = ZEPHYRUM; t->anulus
+                 && k < stml_numerus_liberorum(filius); k++)
+            {
+                m = stml_liberum_ad_indicem(filius, k);
+                si (   m->genus              != STML_NODUS_ELEMENTUM
+                    || !chorda_aequalis_literis(*m->titulus, "latus")
+                    || genus_nodi(m).mensura == ZEPHYRUM)
+                {
+                    perge;
+                }
+                c = (LatusCycli*)xar_addere(t->anulus);
+                si (c)
+                {
+                    c->genus       = genus_nodi(m);
+                    c->argumentum  = attributum_nodi(m, "argumentum");
+                }
+            }
+            a = stml_attributum_capere(filius, "positio");
+            si (   a && chorda_ut_s32(*a, &positio)
+                && positio >= ZEPHYRUM
+                && t->anulus && (i32)positio < xar_numerus(t->anulus))
+            {
+                t->anulus_positio = (i32)positio;
             }
         }
     }
@@ -3820,6 +3922,191 @@ vicus_cyclo_gradi (
     redde VERUM;
 }
 
+/* negotia T5: aperitor generis virtualis; NIHIL si nullus */
+interior constans Aperitor*
+aperitorem_invenire (
+    constans Vicus* v,
+            chorda  genus)
+{
+    constans Aperitor* a;
+                  i32  i;
+
+    per (i = ZEPHYRUM; v->aperitores && i < xar_numerus(v->aperitores);
+         i++)
+    {
+        a = (constans Aperitor*)xar_obtinere(v->aperitores, i);
+        si (chorda_aequalis(a->genus, genus))
+        {
+            redde a;
+        }
+    }
+    redde NIHIL;
+}
+
+/* negotia T5: gradus anuli applicatus - positio ex fronte (latus
+ * anuli in fronte), aliter servata; circulariter. Aperitor generis
+ * virtualis vocatur (acervus intactus), aliter ut aperitio */
+interior b32
+anulum_applicare (
+                     Vicus* v,
+    constans PetitioAcervi* p)
+{
+            VicusTabula* t;
+             VicusLatus* frons;
+    constans LatusCycli* c;
+      constans Aperitor* a;
+          PetitioAcervi  q;
+                    s32  n;
+                    s32  positio;
+                    i32  k;
+
+    t = tabula_invenire(v, p->tabula);
+    n = (t && t->anulus) ? (s32)xar_numerus(t->anulus) : ZEPHYRUM;
+    si (n < II)
+    {
+        redde FALSUM;
+    }
+    positio  = (s32)t->anulus_positio;
+    frons    = frons_acervi(t);
+    per (k = ZEPHYRUM; frons && k < (i32)n; k++)
+    {
+        c = (constans LatusCycli*)xar_obtinere(t->anulus, k);
+        si (   chorda_aequalis(c->genus, frons->genus)
+            && chorda_aequalis(c->argumentum, frons->argumentum))
+        {
+            positio = (s32)k;
+            frange;
+        }
+    }
+    positio            = ((positio + p->gradus) % n + n) % n;
+    t->anulus_positio  = (i32)positio;
+    c                  = (constans LatusCycli*)xar_obtinere(t->anulus,
+        (i32)positio);
+    a                  = aperitorem_invenire(v, c->genus);
+    si (a)
+    {
+        (vacuum)indicem_scribere(v);
+        redde a->aperire(a->ctx, chorda_ut_cstr(c->argumentum,
+            v->piscina));
+    }
+    memset(&q, ZEPHYRUM, magnitudo(PetitioAcervi));
+    q.tabula      = p->tabula;
+    q.genus       = c->genus;
+    q.argumentum  = c->argumentum;
+    si (!petitionem_applicare(v, &q))
+    {
+        redde FALSUM;
+    }
+    redde indicem_scribere(v);
+}
+
+b32
+vicus_anulum_ponere (
+                           Vicus* v,
+    constans character* constans* genera,
+    constans character* constans* argumenta,
+                             i32  numerus,
+                             i32  positio)
+{
+            VicusTabula* t;
+                    Xar* anulus;
+             LatusCycli* c;
+                 chorda  g;
+     constans character* a;
+                    i32  k;
+
+    t = v ? vicus_activa(v) : NIHIL;
+    si (   !t || (numerus > ZEPHYRUM && !genera)
+        || (numerus > ZEPHYRUM && positio >= numerus))
+    {
+        redde FALSUM;
+    }
+    anulus = xar_creare(v->piscina, (i32)magnitudo(LatusCycli));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        g = genera[k] ? internare(v, genera[k]) : chorda_nulla_vici();
+        c = (   !chorda_vacua(g) && anulus
+             && (genus_invenire(v, g) || aperitorem_invenire(v, g)))
+            ? (LatusCycli*)xar_addere(anulus) : NIHIL;
+        si (!c)
+        {
+            redde FALSUM;
+        }
+        a         = argumenta ? argumenta[k] : NIHIL;
+        c->genus  = g;
+        c->argumentum  = (a && a[ZEPHYRUM] != '\0')
+                       ? chorda_transcribere(chorda_ex_literis(a,
+                             v->piscina), v->piscina)
+                       : chorda_nulla_vici();
+    }
+    t->anulus          = numerus > ZEPHYRUM ? anulus : NIHIL;
+    t->anulus_positio  = numerus > ZEPHYRUM ? positio : ZEPHYRUM;
+    redde indicem_scribere(v);
+}
+
+b32
+vicus_anulo_gradi (
+    Vicus* v,
+      s32  directio)
+{
+      VicusTabula* t;
+    PetitioAcervi* p;
+
+    t = v ? vicus_activa(v) : NIHIL;
+    si (   !t || !t->anulus || xar_numerus(t->anulus) < II
+        || (directio != I && directio != -I) || !v->petitiones)
+    {
+        redde FALSUM;
+    }
+    p = (PetitioAcervi*)xar_addere(v->petitiones);
+    si (!p)
+    {
+        redde FALSUM;
+    }
+    memset(p, ZEPHYRUM, magnitudo(PetitioAcervi));
+    p->tabula      = v->activa;
+    p->genus       = chorda_nulla_vici();
+    p->argumentum  = chorda_nulla_vici();
+    p->gradus      = directio;
+    p->anulus      = VERUM;
+    redde VERUM;
+}
+
+b32
+vicus_aperitorem_addere (
+                   Vicus* v,
+      constans character* genus,
+           VicusAperitor  aperire,
+                  vacuum* ctx)
+{
+     Aperitor* a;
+       chorda  g;
+
+    si (!v || !genus || !genus[ZEPHYRUM] || !aperire)
+    {
+        redde FALSUM;
+    }
+    g = internare(v, genus);
+    si (chorda_vacua(g) || aperitorem_invenire(v, g))
+    {
+        redde FALSUM;
+    }
+    si (!v->aperitores)
+    {
+        v->aperitores = xar_creare(v->piscina,
+            (i32)magnitudo(Aperitor));
+    }
+    a = v->aperitores ? (Aperitor*)xar_addere(v->aperitores) : NIHIL;
+    si (!a)
+    {
+        redde FALSUM;
+    }
+    a->genus    = g;
+    a->aperire  = aperire;
+    a->ctx      = ctx;
+    redde VERUM;
+}
+
 b32
 vicus_acervo_aperire (
                   Vicus* v,
@@ -4117,6 +4404,7 @@ vicus_pulsare (
 
         p = (constans PetitioAcervi*)xar_obtinere(v->petitiones, i);
         (vacuum)(p->historia ? historiam_applicare(v, p)
+               : p->anulus ? anulum_applicare(v, p)
                : p->gradus != ZEPHYRUM ? cyclum_applicare(v, p)
                                        : petitionem_applicare(v, p));
         pingendum = VERUM;

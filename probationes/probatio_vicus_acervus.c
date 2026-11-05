@@ -31,6 +31,7 @@
 #include "vicus.h"
 #include "vicus_applicatio.h"
 #include "negotia.h"
+#include "negotia_visus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -445,7 +446,7 @@ _sectio_prima (
         a = insula_ramus_attributum(&r, "sanctus_apertus");
         CREDO_VERUM(a && chorda_aequalis_literis(*a, "thomas-aquinas"));
     }
-    CREDO_GRADUS("XVI: negotia ($projects; negotium per argumentum)");
+    CREDO_GRADUS("XVI: negotia ($projects; porta: anulus et latus)");
     {
            Negotia* ng;
             chorda  id;
@@ -461,9 +462,20 @@ _sectio_prima (
         CREDO_VERUM(vicus_acervo_aperire(v, "negotia", NIHIL));
         (vacuum)vicus_pulsare(v);
         CREDO_VERUM(frons_est(v, "1_dextrum_negotia"));
-        CREDO_VERUM(vicus_acervo_aperire(v, "negotia",
-            chorda_ut_cstr(id,
-            piscina)));
+        /* porta vera lateris (ictus in indice): anulus tabulae
+         * [negotium], deinde latus novum (T5) */
+        {
+            NegotiaMontatio* nm;
+
+            nm = (NegotiaMontatio*)vicus_latus(vicus_activa(v),
+                VICUS_DEXTRUM)->montatio;
+            CREDO_NECESSE(nm && nm->portae
+                && nm->portae->negotium_aperire);
+            CREDO_VERUM(nm->portae->negotium_aperire(nm->portae->ctx,
+                id));
+            CREDO_VERUM(   vicus_activa(v)->anulus
+                        && xar_numerus(vicus_activa(v)->anulus) == I);
+        }
         (vacuum)vicus_pulsare(v);
         CREDO_VERUM(frons_est(v, "1_dextrum_negotia_2"));
         r = insula_ramus(v->repo, "negotia", "1_dextrum_negotia_2");
@@ -474,9 +486,289 @@ _sectio_prima (
     volumen_claudere(vol);
 }
 
+
+/* ==================================================
+ * negotia T5: anulus (Cmd+H / Cmd+L), per tabulam
+ * ================================================== */
+
+nomen structura {
+            Volumen* vol;
+    VicusApplicatio  app;
+              Vicus* v;
+         ManusLudus* m;
+                i32  aperta;
+          character  acta[LXIV];
+} MundusAnuli;
+
+/* anulus trium generum planorum, extra cyclum */
+hic_manens constans character* constans anulus_tres[] = {
+    "sancti", "negotia", "pictor" };
+hic_manens constans character* constans argumenta_trium[] = {
+    "thomas-aquinas", NIHIL, "anulus" };
+
+interior MundusAnuli*
+mundum_anuli (
+    CredoContextus* c)
+{
+    MundusAnuli* w;
+
+    thema_initiare();
+    (vacuum)setenv("SHELL", "/bin/sh", I);
+    (vacuum)setenv("RHUBARB_SANCTI", "probationes/fixa/sancti", I);
+    w = (MundusAnuli*)piscina_allocare(c->piscina,
+        magnitudo(MundusAnuli));
+    memset(w, ZEPHYRUM, magnitudo(MundusAnuli));
+    w->vol = volumen_temporarium(c->piscina, "probatio_vicus_anulus");
+    si (   !w->vol
+        || !vicus_applicatio_aedificare(&w->app, c->piscina,
+               internamentum_creare(c->piscina), w->vol, CDLXXX,
+               CDLXXX + VICUS_ALTITUDO_TABULARUM))
+    {
+        redde NIHIL;
+    }
+    w->v = w->app.vicus;
+    w->m = manus_ludus_creare(c->piscina, w->app.d);
+    (vacuum)vicus_activam_ponere(w->v, "1");
+    dispensator_recomponere(w->app.d);
+    redde w;
+}
+
+/* frons dextra: genus et argumentum (NIHIL = sine) */
+interior b32
+frons_generis (
+                  Vicus* v,
+     constans character* genus,
+     constans character* argumentum)
+{
+    VicusLatus* d;
+
+    d = vicus_latus(vicus_activa(v), VICUS_DEXTRUM);
+    redde d && d->montata && chorda_aequalis_literis(d->genus, genus)
+        && (argumentum ? chorda_aequalis_literis(d->argumentum,
+               argumentum) : d->argumentum.mensura == ZEPHYRUM);
+}
+
+/* Cmd + runa (petitio), sine pulsu */
+interior vacuum
+anuli_clavis (
+    MundusAnuli* w,
+      character  runa)
+{
+    (vacuum)manus_ludus_clavem(w->m, runa, MOD_SUPER);
+}
+
+interior b32
+aperitor_fictus (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    MundusAnuli* w = (MundusAnuli*)ctx;
+
+    w->aperta++;
+    strncpy(w->acta, argumentum ? argumentum : "", LX);
+    redde VERUM;
+}
+
+/* Cmd+L bis: tertium in fronte; nihil ante pulsum */
+interior vacuum
+_anulus_gradus (
+    CredoContextus* c)
+{
+     MundusAnuli* w;
+          chorda  frons;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_anulum_ponere(w->v, anulus_tres, argumenta_trium,
+        III, ZEPHYRUM));
+    frons = vicus_latus(vicus_activa(w->v), VICUS_DEXTRUM)->id;
+    anuli_clavis(w, 'l');
+    anuli_clavis(w, 'l');
+    CREDO_VERUM(chorda_aequalis(vicus_latus(vicus_activa(w->v),
+        VICUS_DEXTRUM)->id, frons));
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "pictor", "anulus"));
+    CREDO_VERUM(focus_est(w->v, VICUS_DEXTRUM));
+    volumen_claudere(w->vol);
+}
+
+/* circulariter: L ab ultimo ad primum, H a primo ad ultimum */
+interior vacuum
+_anulus_circulus (
+    CredoContextus* c)
+{
+    MundusAnuli* w;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_anulum_ponere(w->v, anulus_tres, argumenta_trium,
+        III, II));
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "sancti", "thomas-aquinas"));
+    anuli_clavis(w, 'h');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "pictor", "anulus"));
+    anuli_clavis(w, 'h');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", NIHIL));
+    volumen_claudere(w->vol);
+}
+
+/* anulus unius aut nullus: acervus, frons, focus intacti */
+interior vacuum
+_anulus_unius (
+    CredoContextus* c)
+{
+     MundusAnuli* w;
+          chorda  frons;
+             i32  n;
+             i32  focus;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_anulum_ponere(w->v, anulus_tres, argumenta_trium,
+        I, ZEPHYRUM));
+    CREDO_FALSUM(vicus_anulo_gradi(w->v, I));
+    n      = numerus_acervi(w->v);
+    frons  = vicus_latus(vicus_activa(w->v), VICUS_DEXTRUM)->id;
+    focus  = vicus_activa(w->v)->focus;
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_AEQUALIS_I32(numerus_acervi(w->v), n);
+    CREDO_VERUM(chorda_aequalis(vicus_latus(vicus_activa(w->v),
+        VICUS_DEXTRUM)->id, frons));
+    CREDO_AEQUALIS_I32(vicus_activa(w->v)->focus, focus);
+    CREDO_GRADUS("anulus nullus");
+    CREDO_VERUM(vicus_anulum_ponere(w->v, NIHIL, NIHIL, ZEPHYRUM,
+        ZEPHYRUM));
+    CREDO_FALSUM(vicus_anulo_gradi(w->v, -I));
+    anuli_clavis(w, 'h');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_AEQUALIS_I32(numerus_acervi(w->v), n);
+    CREDO_AEQUALIS_I32(vicus_activa(w->v)->focus, focus);
+    CREDO_GRADUS("refutationes");
+    {
+        hic_manens constans character* constans ignota[] =
+            { "ignotum" };
+
+        CREDO_FALSUM(vicus_anulum_ponere(w->v, ignota, NIHIL, I,
+            ZEPHYRUM));
+        CREDO_FALSUM(vicus_anulum_ponere(w->v, anulus_tres,
+            argumenta_trium, III, III));
+    }
+    volumen_claudere(w->vol);
+}
+
+/* genus virtuale: aperitor argumentum accipit, acervus intactus */
+interior vacuum
+_anulus_aperitor (
+    CredoContextus* c)
+{
+     MundusAnuli* w;
+             i32  n;
+    hic_manens constans character* constans genera[] = {
+        "virtuale", "sancti" };
+    hic_manens constans character* constans argumenta[] = {
+        "a1", "thomas-aquinas" };
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_aperitorem_addere(w->v, "virtuale",
+        aperitor_fictus, w));
+    CREDO_FALSUM(vicus_aperitorem_addere(w->v, "virtuale",
+        aperitor_fictus, w));
+    CREDO_VERUM(vicus_anulum_ponere(w->v, genera, argumenta, II, I));
+    n = numerus_acervi(w->v);
+    anuli_clavis(w, 'l');
+    CREDO_AEQUALIS_I32(w->aperta, ZEPHYRUM);
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_AEQUALIS_I32(w->aperta, I);
+    CREDO_LITERAE_AEQUALES(w->acta, "a1");
+    CREDO_AEQUALIS_I32(numerus_acervi(w->v), n);
+    volumen_claudere(w->vol);
+}
+
+/* Cmd+] cyclum gradit; positio anuli servata */
+interior vacuum
+_anulus_et_cyclus (
+    CredoContextus* c)
+{
+    MundusAnuli* w;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_anulum_ponere(w->v, anulus_tres, argumenta_trium,
+        III, ZEPHYRUM));
+    gradus(w->v, w->m, ']');
+    CREDO_VERUM(frons_generis(w->v, "admonitiones", NIHIL));
+    /* frons extra anulum: positio servata (0) -> negotia */
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", NIHIL));
+    CREDO_AEQUALIS_I32(vicus_activa(w->v)->anulus_positio, I);
+    volumen_claudere(w->vol);
+}
+
+/* dispositio: anulus et positio scripta et restituta */
+interior vacuum
+_anulus_restitutus (
+    CredoContextus* c)
+{
+        MundusAnuli* w;
+    VicusApplicatio  app;
+        VicusTabula* t;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_anulum_ponere(w->v, anulus_tres, argumenta_trium,
+        III, ZEPHYRUM));
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(index_continet(w->vol, c->piscina,
+        "<anulus positio=\"1\">"));
+    CREDO_VERUM(vicus_applicatio_aedificare(&app, c->piscina,
+        internamentum_creare(c->piscina), w->vol, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    CREDO_VERUM(vicus_activam_ponere(app.vicus, "1"));
+    t = vicus_activa(app.vicus);
+    CREDO_NECESSE(t != NIHIL);
+    CREDO_VERUM(t->anulus != NIHIL && xar_numerus(t->anulus) == III);
+    CREDO_AEQUALIS_I32(t->anulus_positio, I);
+    volumen_claudere(w->vol);
+}
+
+/* tabula altera anulum non habet; prima servat */
+interior vacuum
+_anulus_per_tabulam (
+    CredoContextus* c)
+{
+    MundusAnuli* w;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_anulum_ponere(w->v, anulus_tres, argumenta_trium,
+        III, ZEPHYRUM));
+    CREDO_VERUM(vicus_activam_ponere(w->v, "2"));
+    CREDO_FALSUM(vicus_anulo_gradi(w->v, I));
+    CREDO_VERUM(vicus_activam_ponere(w->v, "1"));
+    CREDO_VERUM(vicus_anulo_gradi(w->v, I));
+    volumen_claudere(w->vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "acervus lateris dextri per iussa", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "anulus gradus", _anulus_gradus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "anulus circulus", _anulus_circulus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "anulus unius", _anulus_unius, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "anulus aperitor", _anulus_aperitor, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "anulus et cyclus", _anulus_et_cyclus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "anulus restitutus", _anulus_restitutus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "anulus per tabulam", _anulus_per_tabulam, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

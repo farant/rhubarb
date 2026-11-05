@@ -25,8 +25,8 @@
  * ictu. Claves: j k (electa), [ ] (paginae), Enter (aperire), Esc
  * (latus prius per vicum).
  *
- * Negotium ex indice apertum = porta negotium_aperire (vicus: latus
- * novum in acervo, T5 anulum ponet); sine porta visus in loco mutatur
+ * Negotium ex indice apertum = porta negotium_aperire (vicus: anulus
+ * tabulae et latus novum in acervo); sine porta visus in loco mutatur
  * (historia impelle). Pulsus per M ms: negotia_renovare - scripturae
  * aliorum processuum (bin/negotia, alia arbor) intra secundum
  * apparent. */

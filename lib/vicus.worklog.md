@@ -1237,3 +1237,28 @@ Scriba has no Ctrl+digit bindings, so nothing is shadowed; a plain
 terminal on the right does not claim, so the key still goes to the
 left pane. Test: claves step "focus sinister (scriba)"; plant (only
 the focused pane asked) red at that step.
+
+## 2026-11-04 — negotia T5: the ring (Cmd+H / Cmd+L)
+
+- **Per tab, unlike the cycle** (per Vicus): `VicusTabula.anulus` (Xar
+  of LatusCycli) + `anulus_positio`. Written in the tab record as
+  `<anulus positio="k"><latus genus argumentum/></anulus>` after
+  `<acervus>`; read back in `tabulam_legere` WITHOUT judging genera
+  (openers - virtual genera - may be registered after vicus_aperire).
+- **Current position = the ring entry in front, else the stored one.**
+  After Esc or Cmd+] the front is elsewhere and the stored position
+  still says where you were; when the front IS a ring entry (two steps
+  queued in one pulse, or a pane reached by other means) it wins. Same
+  idea as the cycle reading its position from the front.
+- Step = petition with `anulus` set (dispatch checks it BEFORE
+  `gradus`, which the ring also uses for +I/-I - otherwise the cycle
+  applier would take it).
+- **Virtual genera** (`vicus_aperitorem_addere`): the step calls the
+  opener with the entry's argument and touches no stack - T6's
+  "colloquium" decides itself between a tmux terminal and the ended
+  session card.
+- Key: exactly Cmd (no Shift/Ctrl/Alt) + 'h'/'l', routed to the root in
+  `destinare` like Cmd+]/Cmd+T; down acts, up swallowed; no ring or a
+  ring of one: swallowed, nothing changes.
+- Tests: own vicus per section on a fresh temp volume (sections stay
+  independent, so a plant goes red in its own section).

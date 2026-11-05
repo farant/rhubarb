@@ -2091,4 +2091,11 @@
     <forma textus="revisiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
     <forma textus="revisionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
   </vocabulum>
+  <vocabulum lemma="aperitor" lingua="latina" classis="substantivum" nota="vox domus (aperire; classice apertor): qui latus aperit pro genere virtuali anuli vici; VicusAperitor, vicus_aperitorem_addere (include/vicus.h, negotia T5)">
+    <forma textus="aperitor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitore" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
 </glossarium>

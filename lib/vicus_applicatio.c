@@ -4935,8 +4935,8 @@ navigatorem_describere (
  * ================================================== */
 
 /* Negotia communia omnibus lateribus, in volumine vici pigre aperta
- * (ut navigator); porta: negotium ex indice = latus novum in acervo
- * (T5 anulum ponet) */
+ * (ut navigator); porta: negotium ex indice = anulus tabulae (T5) et
+ * latus novum in acervo */
 nomen structura {
                  Vicus* vicus;
                Piscina* piscina;
@@ -4973,6 +4973,16 @@ negotium_aperire_in_vico (
     }
     memcpy(id, negotium.datum, (memoriae_index)negotium.mensura);
     id[negotium.mensura] = '\0';
+    /* T5: anulus tabulae = latera negotii (T6 colloquia addet) */
+    {
+        constans character* genera[I];
+        constans character* argumenta[I];
+
+        genera[ZEPHYRUM]     = "negotia";
+        argumenta[ZEPHYRUM]  = id;
+        (vacuum)vicus_anulum_ponere(cg->vicus, genera, argumenta, I,
+            ZEPHYRUM);
+    }
     redde vicus_acervo_aperire(cg->vicus, "negotia", id);
 }
 
