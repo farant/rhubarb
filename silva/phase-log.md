@@ -14724,3 +14724,9 @@ Effect: semantics 95.7 -> 82.1 G (-14.1%), `percursus -semantica` 376.0 -> 362.9
 Checked: examen old against new on 596 files, identical; percursus reports identical. A new semantica test compares the old collector against the table path annotation by annotation, and two new 89 cases cover a directive line and a multi-token macro; 7 of 8 plants red. The eighth (cauda list) is unreachable by any producer today, in the old collector too.
 
 Fixture lesson: a same-line comment is the previous token's trailing trivia, so a "radix" comment has to sit on its own line. Next: step 3, annotation placement without the per-unit tree walk (~6 G).
+
+**Token sweeps, step 3 (same day).** Annotation placement (`_affigere`) got each unit's per-file byte extent by walking the unit's whole subtree. A unit's leaves are a contiguous run of the lexeme stream, so one scan of the stream gives every extent; the first and last leaves bound each unit's range. The exception is woven `#if` regions, whose directive lines and untaken branches are leaves but not stream tokens. They are always top-level units starting with `#`, and they keep the old walk. A leaf missing from stream order sends the whole file back to the walk.
+
+Checked first by a whole-corpus differential: 677,913 units, extents identical, leaf sets equal for every scanned unit. It also found that 1,410 units' trees share subtrees (the same tokens twice, a DAG); that is harmless for extents but unexplained, so it's filed. Effect: placement 7.3% -> 2.7% of semantic time. Instructions barely move, because the walk was cache-miss bound.
+
+Over the three steps, `percursus -semantica`: 389.1 -> 363.3 G instructions, semantics 108.4 -> 81.8 G (-25%). Tests: annotationes XIII (unit edges, macro start, woven conditional); 4 plants, all red.

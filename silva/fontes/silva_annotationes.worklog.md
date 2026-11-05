@@ -308,3 +308,29 @@ swapped the source file between builds differed by +38 symbols — the
 sweep reads silva_annotationes.c itself.) Instructions 854.1 G ->
 791.5 G (−7.3%), cycles 362.7 G -> 315.8 G (−12.9%); wall time was too
 noisy at load ~10 to quote.
+
+## 2026-11-04 — token sweeps step 3: unit extents from the lexeme stream
+
+After F1 (one walk per unit), `_affigere` still walked every unit's whole subtree to get its (fons, min, max) triples. Sampling put it at 7.3% of semantic-analysis time. Now `_extensiones_ex_lexematis` gets them from ONE scan of `parsura->lexemata`:
+- Each unit's first and last leaf come from an O(depth) descent (`_folium_nodi`, same order as `_extensiones_valoris`).
+- The scan finds the first leaf in the stream and accumulates every token up to the last leaf, with the same rule as the walk (radix of origin, byte_offset >= 0).
+- If a leaf isn't found in stream order, it returns FALSUM and `_affigere` rebuilds the tables with the old walk (`_extensiones_ex_arboribus`).
+
+**Woven conditionals are the exception.** silva_parsare.c's stratum-0 weaving makes some `#if` regions tree nodes, whose leaves include directive tokens and the raw laminae of untaken branches. None of those are in the stream. Weaving only gathers top-level elements, so such a node IS a unit (or is nested in one), and its first leaf is the `#` (SILVA_LEX_CANCELLUM) of its first directive, a token the preprocessed stream never carries. Units whose first leaf is `#` are walked as before. Misjudging one costs speed, never correctness.
+
+**Differential before switching** (scratch copy computing both, percursus -semantica over the whole tree; 1,689 collector calls, 677,913 units):
+- extents identical for every unit;
+- for all 677,208 scanned units, the set of tree leaves EQUALS the set of stream tokens in the range;
+- 705 conditional units walked; 0 whole-file fallbacks;
+- 1,410 units had leaves out of stream order. Every one of them (1,410 = 1,410) is a tree with DUPLICATE leaves: the same token pointers appear twice, so the tree shares a subtree (a DAG). In the first cases found it was a `sizeof (...)` from a macro. Min/max are idempotent, so extents are unaffected, but the old walk did that work twice. Where the shared subtrees come from is open (ledger).
+- First attempt without the `#` rule fell back on 252 of 1,689 calls; the cause was top-level woven guards in `#line` amalgam snapshots (knotapel demo-snapshot.c).
+
+**Effect:**
+- Instructions barely move (collector bucket 15.62 -> 14.94 G; semantics 82.14 -> 81.75 G).
+- Time does: `_affigere` fell from 7.3% to 2.7% of sampled semantic time (485 -> 183 samples), `silva_annotationes_ex_commentis` from 551 to 246.
+- The walk was memory-bound (pointer chasing, cache misses), which instruction counts don't see. Whole-run cycles are too noisy at load ~7 to show ~1%.
+- Lesson: my "~5 G" estimate came from sample share, a time measure, and I wrongly read it as instructions. Check which one a profile actually measures.
+
+**Tests:** annotationes XIII. (a) right after a unit's first token: INTERIOR; (b) right before its last: INTERIOR; (c) a unit starting with a macro expansion: SUPRA by the radix; (d) inside the untaken branch of a woven top-level `#ifdef`: INTERIOR of the conditional unit. Plants: last token skipped -> XIII red; first skipped -> XIII red; radix ignored -> VIII red; conditional walk skipped -> XIII d red.
+
+**Amalgam trap (same day).** The first ritual run broke `./silva/amalgamare.sh`: "definitio duplicata '_extensionem_lexematis'". silva_c89_semantica.c already has a static of that name, and the amalgam is ONE translation unit, so statics must be unique across all of silva/fontes. The per-file builds and suites can't see this; only the amalgam (and everything generated from it) breaks. Renamed to `_extensionem_ex_lexemate`. Before naming a new static here, `grep -l "^name (" silva/fontes/*.c`.
