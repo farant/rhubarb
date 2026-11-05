@@ -106,6 +106,8 @@
       <verbum! (>officina/fontes/officina_medulla.c
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
+      <verbum! (>officina/instrumenta/sessio.c
+      <verbum! (>officina/instrumenta/bibliothecae.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__colloquium_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
@@ -163,6 +165,7 @@
       <verbum! (>officina/fontes/officina_medulla.c
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
+      <verbum! (>officina/instrumenta/bibliothecae.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__interpretare_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>

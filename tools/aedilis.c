@@ -219,9 +219,9 @@ _differentiam_currere (
         && xar_numerus(oraculum_solum) == 0) ? 0 : 1;
 }
 
-/* Provenientia git (optima conatio; NIHIL si abest) */
+/* Provenientia git ex filio (optima conatio; NIHIL si abest) */
 interior constans character*
-_commissum_obtinere (
+_commissum_ex_git (
     Piscina* piscina)
 {
                 chorda  textus;
@@ -229,7 +229,7 @@ _commissum_obtinere (
     constans character* via_temporaria;
              character  mandatum[256];
 
-        via_temporaria = _via_temporaria("commissum", piscina);
+    via_temporaria = _via_temporaria("commissum", piscina);
     sprintf(mandatum, "git rev-parse --short HEAD > %s 2>/dev/null",
         via_temporaria);
     si (system(mandatum) != 0)
@@ -254,6 +254,44 @@ _commissum_obtinere (
     }
     textus.mensura = finis;
     redde chorda_ut_cstr(textus, piscina);
+}
+
+/* Provenientia git, SEMEL PER PROCESSUM (budget B2 J6): olim git
+ * bis per derivationem (manifestum + struere.sh) - ~29 ex 39 ms,
+ * ~611 derivationes per fusionem. Nunc (1) AEDILIS_COMMISSUM ex
+ * ambitu si datum (portae HEAD semel computant et exportant; arbor
+ * gelata est dum porta currit), (2) aliter git semel, valor in
+ * memoria processus. Valor in commentis solum it (manifestum,
+ * struere.sh), numquam in verdictum. */
+interior constans character*
+_commissum_obtinere (
+    Piscina* piscina)
+{
+    hic_manens                b32  paratum = FALSUM;
+    hic_manens          character  memoria[64];
+    hic_manens constans character* valor   = NIHIL;
+               constans character* ambitus;
+
+    si (paratum)
+    {
+        redde valor;
+    }
+    paratum = VERUM;
+    ambitus = getenv("AEDILIS_COMMISSUM");
+    si (   ambitus != NIHIL && ambitus[0] != '\0'
+        && strlen(ambitus) < magnitudo(memoria))
+    {
+        strcpy(memoria, ambitus);
+        valor = memoria;
+        redde valor;
+    }
+    valor = _commissum_ex_git(piscina);
+    si (valor != NIHIL && strlen(valor) < magnitudo(memoria))
+    {
+        strcpy(memoria, valor);
+        valor = memoria;
+    }
+    redde valor;
 }
 
 /* Partes fructus ut TSV: O obiecta, C capita, S systemata, V vendores */

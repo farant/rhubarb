@@ -830,6 +830,303 @@ _sectio_omnes_mortui (
     _foramen_claudere(&f);
 }
 
+/* ===== redirectiones (navigator N2.3) ===== */
+
+/* servus unus gradu uno (connexio manet aperta) */
+interior ServusScriptus*
+_servus_unus (
+               Reactor* r,
+          ServusGradus* g,
+    constans character* octeti,
+               Piscina* p)
+{
+    g->octeti    = octeti;
+    g->mensura   = ZEPHYRUM;
+    g->mora_ms   = ZEPHYRUM;
+    g->claudere  = FALSUM;
+    redde servum_scriptum_creare(r, g, I, p);
+}
+
+/* "HTTP/1.1 <status>\r\nLocation: <locus>\r\nContent-Length: 5\r\n\r\n
+ * motus" in capsam (locus NIHIL = sine Location) */
+interior constans character*
+_responsum_redirectionis (
+             character* capsa,
+                   i32  status,
+    constans character* locus)
+{
+    si (locus)
+    {
+        sprintf(capsa, "HTTP/1.1 %u Redirectio\r\nLocation: %s\r\n"
+            "Content-Length: 5\r\n\r\nmotus",
+            (insignatus integer)status, locus);
+    }
+    alioquin
+    {
+        sprintf(capsa, "HTTP/1.1 %u Redirectio\r\n"
+            "Content-Length: 5\r\n\r\nmotus",
+            (insignatus integer)status);
+    }
+    redde capsa;
+}
+
+/* petitio quam servus ultimo accepit */
+interior chorda
+_petitio_servi (
+    ServusScriptus* s)
+{
+    redde chorda_aedificator_spectare(s->petitio);
+}
+
+interior b32
+_continet (
+                chorda  fenum,
+    constans character* acus,
+               Piscina* p)
+{
+    redde chorda_continet(fenum, chorda_ex_literis(acus, p));
+}
+
+interior b32
+_incipit (
+                chorda  fenum,
+    constans character* acus,
+               Piscina* p)
+{
+    redde chorda_incipit(fenum, chorda_ex_literis(acus, p));
+}
+
+interior b32
+_reactor_vacuus (
+    Reactor* r)
+{
+    redde reactor_numerus_fd(r) == ZEPHYRUM
+        && reactor_numerus_timer(r) == ZEPHYRUM;
+}
+
+/* A -> 302 -> B (origo alia: portus alius) */
+interior vacuum
+_sectio_redirectio (
+    CredoContextus* c)
+{
+                Reactor* r = reactor_creare(c->piscina);
+           ServusGradus  ga;
+           ServusGradus  gb;
+         ServusScriptus* a;
+         ServusScriptus* b;
+              character  locus[CXXVIII];
+              character  capsa[CCLVI];
+              character  url_b[CXXVIII];
+             Observatio  o;
+            HttpPetitio* pet;
+            HttpVocatio* v;
+    HttpVocatioOptiones  opt;
+           HttpResultus  res;
+
+    b = _servus_unus(r, &gb, RESPONSUM_LONGITUDINIS, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(b);
+    sprintf(locus, "http://127.0.0.1:%u/b",
+        (insignatus integer)b->portus);
+    a = _servus_unus(r, &ga, _responsum_redirectionis(capsa, CCCII,
+        locus), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(a);
+    _observationem_initiare(&o, c->piscina);
+    pet = _petitio("http", "127.0.0.1", a->portus, c->piscina);
+    http_petitio_caput_addere(pet, "User-Agent", "proba/1");
+    http_petitio_caput_addere(pet, "Authorization", "Bearer secretum");
+    memset(&opt, ZEPHYRUM, magnitudo(opt));
+    opt.redirectiones_maximae = V;
+    v = http_vocare(r, pet, _rivus, &o, _finis, &o, &opt, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(v);
+    CREDO_NECESSE(_currere(r, v, III * M));
+    res = http_vocatio_resultus(v);
+
+    CREDO_GRADUS("responsum ultimum B, finis semel");
+    CREDO_AEQUALIS_I32(o.finis, I);
+    CREDO_AEQUALIS_I32((i32)http_vocatio_status(v),
+        (i32)HTTP_VOCATIO_FINITA);
+    CREDO_VERUM(res.successus && res.responsum->status == CC);
+    CREDO_GRADUS("rivus solum corpus B (non 'motus')");
+    CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(o.corpus),
+        "Salve");
+    CREDO_GRADUS("URL ultima = B");
+    sprintf(url_b, "http://127.0.0.1:%u/b",
+        (insignatus integer)b->portus);
+    CREDO_CHORDA_AEQUALIS_LITERIS(http_vocatio_url(v), url_b);
+    CREDO_GRADUS("B: GET /b, User-Agent transit, Authorization non");
+    CREDO_AEQUALIS_I32(a->acceptae, I);
+    CREDO_AEQUALIS_I32(b->acceptae, I);
+    CREDO_VERUM(_incipit(_petitio_servi(b), "GET /b HTTP/1.1\r\n",
+        c->piscina));
+    CREDO_VERUM(_continet(_petitio_servi(b), "User-Agent: proba/1",
+        c->piscina));
+    CREDO_FALSUM(_continet(_petitio_servi(b), "Authorization",
+        c->piscina));
+    servum_scriptum_claudere(a);
+    servum_scriptum_claudere(b);
+    CREDO_GRADUS("reactor vacuus post finem");
+    CREDO_VERUM(_reactor_vacuus(r));
+}
+
+/* A -> 302 Location relativa ad se ipsum: circulus */
+interior vacuum
+_sectio_redirectio_circulus (
+    CredoContextus* c)
+{
+                Reactor* r = reactor_creare(c->piscina);
+           ServusGradus  ga;
+         ServusScriptus* a;
+              character  capsa[CCLVI];
+              character  url[CXXVIII];
+             Observatio  o;
+            HttpPetitio* pet;
+            HttpVocatio* v;
+    HttpVocatioOptiones  opt;
+           HttpResultus  res;
+
+    a = _servus_unus(r, &ga, _responsum_redirectionis(capsa, CCCII,
+        "/iterum?x=1"), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(a);
+
+    CREDO_GRADUS("limes III: HTTP_ERROR_REDIRECTIO, IV connexiones");
+    _observationem_initiare(&o, c->piscina);
+    pet = _petitio("http", "127.0.0.1", a->portus, c->piscina);
+    http_petitio_caput_addere(pet, "Authorization", "Bearer secretum");
+    memset(&opt, ZEPHYRUM, magnitudo(opt));
+    opt.redirectiones_maximae = III;
+    v = http_vocare(r, pet, _rivus, &o, _finis, &o, &opt, c->piscina);
+    CREDO_NECESSE(_currere(r, v, III * M));
+    res = http_vocatio_resultus(v);
+    CREDO_AEQUALIS_I32(o.finis, I);
+    CREDO_AEQUALIS_I32((i32)http_vocatio_status(v),
+        (i32)HTTP_VOCATIO_IRRITA);
+    CREDO_AEQUALIS_I32((i32)res.error, (i32)HTTP_ERROR_REDIRECTIO);
+    CREDO_AEQUALIS_I32(a->acceptae, IV);
+    sprintf(url, "http://127.0.0.1:%u/iterum?x=1",
+        (insignatus integer)a->portus);
+    CREDO_CHORDA_AEQUALIS_LITERIS(http_vocatio_url(v), url);
+    CREDO_GRADUS("origo eadem: Authorization manet");
+    CREDO_VERUM(_incipit(_petitio_servi(a), "GET /iterum?x=1 HTTP/1.1",
+        c->piscina));
+    CREDO_VERUM(_continet(_petitio_servi(a), "Authorization: Bearer",
+        c->piscina));
+
+    CREDO_GRADUS("ordinarium (0): 302 redditur ut est");
+    _observationem_initiare(&o, c->piscina);
+    v = http_vocare(r, _petitio("http", "127.0.0.1", a->portus,
+        c->piscina), _rivus, &o, _finis, &o, NIHIL, c->piscina);
+    CREDO_NECESSE(_currere(r, v, III * M));
+    res = http_vocatio_resultus(v);
+    CREDO_VERUM(res.successus && res.responsum->status == CCCII);
+    CREDO_AEQUALIS_I32(a->acceptae, V);
+    CREDO_AEQUALIS_I32(o.rivi, ZEPHYRUM);
+    sprintf(url, "http://127.0.0.1:%u/v1/proba",
+        (insignatus integer)a->portus);
+    CREDO_CHORDA_AEQUALIS_LITERIS(http_vocatio_url(v), url);
+    servum_scriptum_claudere(a);
+    CREDO_VERUM(_reactor_vacuus(r));
+}
+
+/* POST: 303 -> GET sine corpore; 307 -> POST cum corpore */
+interior vacuum
+_redirectio_post (
+                Reactor* r,
+                    i32  status,
+         ServusScriptus** b_exitus,
+               Piscina* p)
+{
+    /* servi gradus et responsum ultra reditum tenent: ex piscina */
+           ServusGradus* ga;
+           ServusGradus* gb;
+              character* capsa;
+              character  locus[CXXVIII];
+         ServusScriptus* a;
+         ServusScriptus* b;
+             Observatio  o;
+            HttpPetitio* pet;
+            HttpVocatio* v;
+    HttpVocatioOptiones  opt;
+              character  url[CXXVIII];
+
+    ga = (ServusGradus*)piscina_allocare(p, magnitudo(ServusGradus));
+    gb = (ServusGradus*)piscina_allocare(p, magnitudo(ServusGradus));
+    capsa = (character*)piscina_allocare(p, CCLVI);
+    b = _servus_unus(r, gb, RESPONSUM_LONGITUDINIS, p);
+    sprintf(locus, "http://127.0.0.1:%u/b",
+        (insignatus integer)b->portus);
+    a = _servus_unus(r, ga, _responsum_redirectionis(capsa, status,
+        locus), p);
+    sprintf(url, "http://127.0.0.1:%u/v1/proba",
+        (insignatus integer)a->portus);
+    pet = http_petitio_creare(p, HTTP_POST, url);
+    http_petitio_caput_addere(pet, "Content-Type",
+        "application/x-www-form-urlencoded");
+    http_petitio_corpus_ponere(pet, "x=1", III);
+    _observationem_initiare(&o, p);
+    memset(&opt, ZEPHYRUM, magnitudo(opt));
+    opt.redirectiones_maximae = V;
+    v = http_vocare(r, pet, _rivus, &o, _finis, &o, &opt, p);
+    (vacuum)_currere(r, v, III * M);
+    servum_scriptum_claudere(a);
+    *b_exitus = b;
+}
+
+interior vacuum
+_sectio_redirectio_methodus (
+    CredoContextus* c)
+{
+           Reactor* r = reactor_creare(c->piscina);
+    ServusScriptus* b;
+
+    CREDO_GRADUS("303 post POST: GET sine corpore");
+    _redirectio_post(r, CCCIII, &b, c->piscina);
+    CREDO_VERUM(_incipit(_petitio_servi(b), "GET /b HTTP/1.1",
+        c->piscina));
+    CREDO_FALSUM(_continet(_petitio_servi(b), "x=1", c->piscina));
+    CREDO_FALSUM(_continet(_petitio_servi(b), "Content-Type",
+        c->piscina));
+    servum_scriptum_claudere(b);
+
+    CREDO_GRADUS("307 post POST: POST cum corpore");
+    _redirectio_post(r, CCCVII, &b, c->piscina);
+    CREDO_VERUM(_incipit(_petitio_servi(b), "POST /b HTTP/1.1",
+        c->piscina));
+    CREDO_VERUM(chorda_terminatur(_petitio_servi(b),
+        chorda_ex_literis("\r\n\r\nx=1", c->piscina)));
+    servum_scriptum_claudere(b);
+    CREDO_VERUM(_reactor_vacuus(r));
+}
+
+/* 3xx sine Location: redditur ut est */
+interior vacuum
+_sectio_redirectio_sine_loco (
+    CredoContextus* c)
+{
+                Reactor* r = reactor_creare(c->piscina);
+           ServusGradus  ga;
+         ServusScriptus* a;
+              character  capsa[CCLVI];
+             Observatio  o;
+            HttpVocatio* v;
+    HttpVocatioOptiones  opt;
+           HttpResultus  res;
+
+    a = _servus_unus(r, &ga, _responsum_redirectionis(capsa, CCCII,
+        NIHIL), c->piscina);
+    CREDO_NECESSE_NON_NIHIL(a);
+    _observationem_initiare(&o, c->piscina);
+    memset(&opt, ZEPHYRUM, magnitudo(opt));
+    opt.redirectiones_maximae = V;
+    v = http_vocare(r, _petitio("http", "127.0.0.1", a->portus,
+        c->piscina), _rivus, &o, _finis, &o, &opt, c->piscina);
+    CREDO_NECESSE(_currere(r, v, III * M));
+    res = http_vocatio_resultus(v);
+    CREDO_VERUM(res.successus && res.responsum->status == CCCII);
+    CREDO_AEQUALIS_I32(a->acceptae, I);
+    servum_scriptum_claudere(a);
+    CREDO_VERUM(_reactor_vacuus(r));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "divisiones", _sectio_divisiones, NIHIL, NIHIL, NIHIL, NIHIL },
     { "manet apertum", _sectio_manet_apertum, NIHIL, NIHIL, NIHIL,
@@ -851,6 +1148,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL },
     { "omnes mortui", _sectio_omnes_mortui, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "redirectio", _sectio_redirectio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "redirectio circulus", _sectio_redirectio_circulus, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "redirectio methodus", _sectio_redirectio_methodus, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "redirectio sine loco", _sectio_redirectio_sine_loco, NIHIL,
+        NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -1,0 +1,2048 @@
+/* probatio_navigator_latus.c - navigator in latere (N3.2): index
+ * per hospitem (electus j k, ictus, duplex), articulus paginatus (j k,
+ * sagittae pedis, Esc), versio in loco (comes versionis suae), semitae
+ * (argumentum, locus, titulus loci), bibliotheca vacua, notae in pede.
+ * Bibliotheca in volumine temporario: Rhubarb (fixum verum, en),
+ * Rheum et Beta (la; Beta duas versiones habet). */
+#include "latina.h"
+#include "piscina.h"
+#include "chorda.h"
+#include "internamentum.h"
+#include "insula.h"
+#include "componens.h"
+#include "dispensator.h"
+#include "eventus.h"
+#include "figura.h"
+#include "mandatum.h"
+#include "thema.h"
+#include "fons.h"
+#include "color.h"
+#include "coloratio.h"
+#include "volumen.h"
+#include "moneta.h"
+#include "filum.h"
+#include "vicipaedia.h"
+#include "navigator_bibliotheca.h"
+#include "navigator.h"
+#include "navigator_petitio.h"
+#include "reactor.h"
+#include "servus_scriptus.h"
+#include "credo.h"
+#include <stdio.h>
+#include <string.h>
+
+#define LATITUDO  CCCLX
+#define ALTITUDO  CDLXXII
+
+#define PAGINA(titulus, corpus) \
+    "<html><head><title>" titulus "</title></head><body>" \
+    "<section data-mw-section-id=\"0\">" corpus "</section>" \
+    "</body></html>"
+
+#define URL_ANGLICUM "https://en.wikipedia.org/wiki/Rhubarb"
+#define URL_RHEUM   "https://la.wikipedia.org/wiki/Rheum"
+#define URL_BETA    "https://la.wikipedia.org/wiki/Beta"
+
+nomen structura {
+         InternamentumChorda* intern;
+          InsulaRepositorium* repo;
+                     Volumen* volumen;
+        NavigatorBibliotheca* bibliotheca;
+                         i32  numerator;
+           NavigatorMontatio  m;
+                 Dispensator* d;
+                         b32  notae;      /* notas_habet probationis */
+                     Piscina* p;
+                     Reactor* reactor;    /* N3.3: petitiones */
+    NavigatorPetitioOptiones  optiones;   /* radix ad servum scriptum */
+} Mundus;
+
+interior Reactor*
+reactor_mundi (
+    vacuum* ctx)
+{
+    redde ((Mundus*)ctx)->reactor;
+}
+
+interior b32
+notas_habere (
+    vacuum* ctx,
+    chorda  locus)
+{
+    (vacuum)locus;
+    redde ((Mundus*)ctx)->notae;
+}
+
+interior vacuum
+offerre (
+                 Mundus* w,
+     constans character* url,
+                 chorda  html)
+{
+    (vacuum)navigator_versionem_offerre(w->bibliotheca,
+        chorda_ex_literis(
+        url, w->p), chorda_ex_literis(url, w->p), "vicipaedia", html,
+        vicipaedia_articulus, NIHIL);
+}
+
+/* latus super bibliothecam; plena: Rhubarb (1, versio 2), Rheum (3,
+ * 4), Beta (5, versiones 6 et 7) */
+interior Mundus*
+mundus (
+    CredoContextus* c,
+               b32  plena)
+{
+    Mundus* w;
+     Motus* motus;
+
+    thema_initiare();
+    w = (Mundus*)piscina_allocare(c->piscina, magnitudo(Mundus));
+    memset(w, ZEPHYRUM, magnitudo(Mundus));
+    c->datum   = w;   /* purgare volumen claudit, etiam post NECESSE */
+    w->p       = c->piscina;
+    w->intern  = internamentum_creare(c->piscina);
+    w->volumen  = volumen_temporarium(c->piscina,
+        "probatio_navigator");
+    w->bibliotheca  = w->volumen ? navigator_bibliotheca_aperire(
+        w->volumen, moneta_numerator, &w->numerator,
+        c->piscina) : NIHIL;
+    si (!w->bibliotheca)
+    {
+        redde NIHIL;
+    }
+    si (plena)
+    {
+        offerre(w, URL_ANGLICUM, filum_legere_totum(
+            "probationes/fixa/vicipaedia/rhubarb.html", c->piscina));
+        offerre(w, URL_RHEUM, chorda_ex_literis(PAGINA("Rheum",
+            "<p>Rheum est <a rel=\"mw:WikiLink\" href=\"./Planta\">"
+            "genus</a> plantarum.</p>"), c->piscina));
+        offerre(w, URL_BETA, chorda_ex_literis(PAGINA("Beta",
+            "<p>Beta est planta.</p>"), c->piscina));
+        offerre(w, URL_BETA, chorda_ex_literis(PAGINA("Beta",
+            "<p>Beta vulgaris est olus.</p>"), c->piscina));
+        /* N3.4: index favores solos monstrat - omnes tres favores */
+        (vacuum)navigator_favorem_ponere(w->bibliotheca,
+            chorda_ex_literis("1", c->piscina), VERUM);
+        (vacuum)navigator_favorem_ponere(w->bibliotheca,
+            chorda_ex_literis("3", c->piscina), VERUM);
+        (vacuum)navigator_favorem_ponere(w->bibliotheca,
+            chorda_ex_literis("5", c->piscina), VERUM);
+    }
+    w->repo = insula_repositorium_creare(c->piscina, w->intern,
+        "<hospes/>");
+    si (   !w->repo
+        || !navigator_montare(&w->m, c->piscina, w->intern, w->repo,
+               "n1", w->bibliotheca, LATITUDO, ALTITUDO, NIHIL))
+    {
+        redde NIHIL;
+    }
+    w->m.notas_habet = notas_habere;
+    w->m.notas_habet_ctx = w;
+    w->reactor = reactor_creare(c->piscina);
+    w->m.reactor = reactor_mundi;
+    w->m.reactor_ctx = w;
+    w->optiones.agens = chorda_ex_literis("proba/1", c->piscina);
+    w->m.optiones_petitionis = &w->optiones;
+    w->d = dispensator_creare(c->piscina, w->intern, w->repo,
+        w->m.actiones, navigator_componere, &w->m, CCC);
+    si (!w->d)
+    {
+        redde NIHIL;
+    }
+    motus         = dispensator_motus(w->d);
+    motus->ramus  = w->m.ramus;
+    dispensator_recomponere(w->d);
+    redde w;
+}
+
+interior vacuum
+mundum_claudere (
+    Mundus* w)
+{
+    si (w && w->volumen)
+    {
+        volumen_claudere(w->volumen);
+        w->volumen = NIHIL;
+    }
+}
+
+interior vacuum
+mundum_purgare (
+    CredoContextus* c)
+{
+    mundum_claudere((Mundus*)c->datum);
+}
+
+interior vacuum
+clavis (
+       Mundus* w,
+    character  typus)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.producta  = (s32)(insignatus character)typus;
+    e.datum.clavis.clavis    = (clavis_t)typus;
+    e.datum.clavis.runa      = (s32)typus;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+interior vacuum
+clavis_nominata (
+       Mundus* w,
+     clavis_t  k,
+          s32  producta)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis    = k;
+    e.datum.clavis.producta  = producta;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+/* N4.3: Tab (cum Shift si retro) */
+interior vacuum
+tabula (
+     Mundus* w,
+        b32  retro)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                      = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis        = CLAVIS_TABULA;
+    e.datum.clavis.producta      = IX;
+    e.datum.clavis.runa          = IX;
+    e.datum.clavis.modificantes  = retro ? (i32)MOD_SHIFT : ZEPHYRUM;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+interior b32
+campus_est (
+                 Mundus* w,
+     constans character* titulus,
+     constans character* valor)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&w->m.ramus, titulus);
+    si (valor == NIHIL)
+    {
+        redde a == NIHIL || a->mensura == ZEPHYRUM;
+    }
+    redde a && chorda_aequalis_literis(*a, valor);
+}
+
+/* textus pictus continens fragmentum? */
+interior b32
+pictum (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* x;
+                   i32  i;
+
+    md = mandata_creare(p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* textus continens fragmentum colore dato pictus? */
+interior b32
+pictum_colore_mandati (
+                  Mundus* w,
+      constans character* fragmentum,
+            ColorMandati  quaesitus,
+                 Piscina* p)
+{
+                Mandata* md;
+      constans Mandatum* x;
+                    i32  i;
+
+    md         = mandata_creare(p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus       == MANDATUM_TEXTUS
+            && x->color.genus == quaesitus.genus
+            && x->color.valor == quaesitus.valor
+            && (   fragmentum[ZEPHYRUM] == '\0'   /* "": ullus */
+                || chorda_continet(x->textus, chorda_ex_literis(
+                       fragmentum, p))))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* textus continens fragmentum colore thematis pictus? */
+interior b32
+pictum_colore (
+                  Mundus* w,
+      constans character* fragmentum,
+              ColorThema  color,
+                 Piscina* p)
+{
+    redde pictum_colore_mandati(w, fragmentum, figura_color_thematis(
+        color), p);
+}
+
+/* x (px) textus primi qui fragmentum continet; -1 si nullum */
+interior s32
+x_picti (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+               Mandata* md;
+     constans Mandatum* x;
+                   i32  i;
+
+    md = mandata_creare(p, w->intern);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_continet(x->textus, chorda_ex_literis(fragmentum,
+                p)))
+        {
+            redde x->fines.x;
+        }
+    }
+    redde -I;
+}
+
+/* N4.2: ictus in medio runae primae fragmenti (textus pictus) */
+interior b32
+ictus_in_textu (
+                 Mundus* w,
+     constans character* fragmentum,
+                Piscina* p)
+{
+                Mandata* md;
+      constans Mandatum* x;
+                Eventus  e;
+                 chorda  f;
+                    s32  k;
+                    i32  i;
+                    i32  j;
+
+    md  = mandata_creare(p, w->intern);
+    f   = chorda_ex_literis(fragmentum, p);
+    pingere(dispensator_arbor(w->d), w->m.figurae, ZEPHYRUM, md);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        k = x->genus
+            == MANDATUM_TEXTUS ? chorda_invenire_index(x->textus,
+            f) : -I;
+        si (k < ZEPHYRUM)
+        {
+            perge;
+        }
+        memset(&e, ZEPHYRUM, magnitudo(Eventus));
+        e.genus        = EVENTUS_MUS_DEPRESSUS;
+        e.datum.mus.x  = x->fines.x + fons_latitudo(x->fons) / II;
+        per (j = ZEPHYRUM; j < (i32)k; j++)
+        {
+            si ((x->textus.datum[j] & 0xC0) != 0x80)
+            {
+                e.datum.mus.x += fons_latitudo(x->fons);
+            }
+        }
+        e.datum.mus.y       = x->fines.y + fons_altitudo(x->fons) / II;
+        e.datum.mus.botton  = MUS_SINISTER;
+        dispensator_tractare(w->d, &e);
+        dispensator_recomponere(w->d);
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+/* N4.1: color nexuum vici (#rubricae in editore) */
+interior ColorMandati
+color_nexus (vacuum)
+{
+    ColorMandati c;
+
+    c.genus  = COLOR_MANDATI_RGBA;
+    c.valor  = color_ad_pixelum(thema_color_ex_indice_colorationis(
+        COLORATIO_LINK));
+    redde c;
+}
+
+/* ictus (aut duplex) in medio componentis id */
+interior b32
+ictus_in (
+                 Mundus* w,
+     constans character* id,
+                    b32  geminus,
+                Piscina* p)
+{
+     Componens* c;
+       Eventus  e;
+
+    c = componens_invenire_per_id(dispensator_arbor(w->d),
+        chorda_ex_literis(id, p));
+    si (!c || c->fines.altitudo <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = geminus ? EVENTUS_MUS_DUPLEX
+                                 : EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = c->fines.x + c->fines.latitudo / II;
+    e.datum.mus.y       = c->fines.y + c->fines.altitudo / II;
+    e.datum.mus.botton  = MUS_SINISTER;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+    redde VERUM;
+}
+
+interior b32
+argumentum (
+                 Mundus* w,
+     constans character* arg)
+{
+    b32 r;
+
+    r = navigator_argumentum_ponere(&w->m, arg);
+    dispensator_recomponere(w->d);
+    redde r;
+}
+
+/* ===== N3.3: aperire per URL ===== */
+
+/* servus scriptus gradu uno (octeti NIHIL et claudere FALSUM =
+ * tacitus); radix optionum ad eum */
+interior ServusScriptus*
+servum_ponere (
+                Mundus* w,
+    constans character* octeti,
+                   b32  claudere)
+{
+    ServusGradus* g;
+  ServusScriptus* s;
+       character* radix;
+
+    g = (ServusGradus*)piscina_allocare(w->p, magnitudo(ServusGradus));
+    g->octeti = octeti;
+    g->mensura = ZEPHYRUM;
+    g->mora_ms = ZEPHYRUM;
+    g->claudere = claudere;
+    s = servum_scriptum_creare(w->reactor, g, (octeti || claudere) ? I
+        : ZEPHYRUM, w->p);
+    si (s)
+    {
+        radix = (character*)piscina_allocare(w->p, LXIV);
+        sprintf(radix, "http://127.0.0.1:%u",
+            (insignatus integer)s->portus);
+        w->optiones.radix_fontis = radix;
+    }
+    redde s;
+}
+
+interior constans character*
+responsum_ducenti (
+    constans character* corpus,
+               Piscina* p)
+{
+    character* s;
+
+    s = (character*)piscina_allocare(p, (memoriae_index)(strlen(corpus)
+        + CXXVIII));
+    sprintf(s, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n"
+        "Content-Length: %u\r\n\r\n%s",
+        (insignatus integer)strlen(corpus), corpus);
+    redde s;
+}
+
+/* litterae in promptam, deinde Enter */
+interior vacuum
+scribere (
+                Mundus* w,
+    constans character* textus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; textus[i]; i++)
+    {
+        clavis(w, textus[i]);
+    }
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+}
+
+/* reactor poscitur usque ad pulsum mutatum (petitio finita) */
+interior b32
+pervenire (
+    Mundus* w)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < CL; k++)
+    {
+        (vacuum)reactor_poll(w->reactor, XX);
+        si (navigator_pulsare(&w->m))
+        {
+            dispensator_recomponere(w->d);
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior b32
+prompta_clausa (
+    Mundus* w)
+{
+    redde campus_est(w, "prompta", NIHIL)
+        || campus_est(w, "prompta", "nulla");
+}
+
+interior vacuum
+_sectio_aperire (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Planta",
+        "<p>Planta viva est.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("o: prompta url aperitur; mora nulla sine petitione");
+    CREDO_AEQUALIS_I32((i32)navigator_mora(&w->m), (i32)-I);
+    clavis(w, 'o');
+    CREDO_VERUM(campus_est(w, "prompta", "url"));
+
+    CREDO_GRADUS("URL + Enter: petitio, nota 'Fetching', index manet");
+    scribere(w, "https://la.wikipedia.org/wiki/Planta");
+    CREDO_VERUM(prompta_clausa(w));
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Planta",
+        c->piscina));
+
+    CREDO_GRADUS("petitio finita: articulus apertus, versio fixa");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Planta",
+        c->piscina)) != NIHIL);
+    CREDO_VERUM(!campus_est(w, "versio", NIHIL));
+    CREDO_VERUM(pictum(w, "Planta viva est.", c->piscina));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+    CREDO_FALSUM(navigator_pulsare(&w->m));
+
+    CREDO_GRADUS("URL servata: statim, sine rete");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis(w, 'o');
+    scribere(w, "https://la.wikipedia.org/wiki/Beta");
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("$nav(URL): argumentum cum :// petit");
+    CREDO_VERUM(argumentum(w, "https://la.wikipedia.org/wiki/Herba"));
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Herba",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_AEQUALIS_I32(s->acceptae, II);
+    servum_scriptum_claudere(s);
+}
+
+interior vacuum
+_sectio_errores (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, "HTTP/1.1 404 Not Found\r\nContent-Length: 0"
+        "\r\n\r\n", FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("404: 'Not found', nihil servatum");
+    clavis(w, 'o');
+    scribere(w, "https://la.wikipedia.org/wiki/Nusquam");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Not found", c->piscina));
+    CREDO_AEQUALIS_I32(navigator_articulorum_numerus(w->bibliotheca),
+        III);
+
+    CREDO_GRADUS("situs alienus: 'Unsupported site', sine rete");
+    clavis(w, 'o');
+    scribere(w, "https://example.com/pagina");
+    CREDO_VERUM(pictum(w, "Unsupported site", c->piscina));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("verba sine '://': quaestio; 404 -> 'Not found'");
+    clavis(w, 'o');
+    scribere(w, "rhabarbarum");
+    CREDO_VERUM(pictum(w,
+        "Searching en.wikipedia.org for 'rhabarbarum'",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Not found", c->piscina));
+    servum_scriptum_claudere(s);
+}
+
+/* petitio nova pendentem abrumpit STATIM (non solum in pulsu
+ * proximo): prima ad servum tardum (CCC ms) qui bene responderet;
+ * reactor sine pulsu poscitur - sine abruptione prima servaretur et
+ * ut petitio currens acciperetur. Globulus "Open URL...". */
+interior vacuum
+_sectio_supersedere (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+      ServusGradus* g;
+    ServusScriptus* tardus;
+    ServusScriptus* vivus;
+         character* radix;
+               i32  k;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    g = (ServusGradus*)piscina_allocare(c->piscina,
+        magnitudo(ServusGradus));
+    g->octeti   = responsum_ducenti(PAGINA("Prima", "<p>Prima.</p>"),
+        c->piscina);
+    g->mensura   = ZEPHYRUM;
+    g->mora_ms   = CCC;
+    g->claudere  = FALSUM;
+    tardus       = servum_scriptum_creare(w->reactor, g, I, c->piscina);
+    CREDO_NECESSE_NON_NIHIL(tardus);
+    radix = (character*)piscina_allocare(c->piscina, LXIV);
+    sprintf(radix, "http://127.0.0.1:%u",
+        (insignatus integer)tardus->portus);
+    w->optiones.radix_fontis = radix;
+
+    CREDO_GRADUS("globulus 'Open URL...': prompta aperitur");
+    CREDO_VERUM(pictum(w, "Open URL", c->piscina));
+    CREDO_VERUM(ictus_in(w, "aperire-url", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "prompta", "url"));
+    scribere(w, "https://la.wikipedia.org/wiki/Prima");
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Prima",
+        c->piscina));
+    per (k = ZEPHYRUM; k < V; k++)
+    {
+        (vacuum)reactor_poll(w->reactor, X);
+    }
+
+    CREDO_GRADUS("altera (servus alius) primam statim abrumpit");
+    vivus = servum_ponere(w, responsum_ducenti(PAGINA("Altera",
+        "<p>Altera pagina.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(vivus);
+    clavis(w, 'o');
+    scribere(w, "https://la.wikipedia.org/wiki/Altera");
+    per (k = ZEPHYRUM; k < L; k++)
+    {
+        (vacuum)reactor_poll(w->reactor, X);   /* sine pulsu */
+    }
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Altera pagina.", c->piscina));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis("https://la.wikipedia.org/wiki/Prima",
+        c->piscina)) == NIHIL);
+    CREDO_AEQUALIS_I32(navigator_articulorum_numerus(w->bibliotheca),
+        IV);
+    servum_scriptum_claudere(tardus);
+    servum_scriptum_claudere(vivus);
+}
+
+/* N3.3b: quaestio - eventus, electio, apertio (servatus statim,
+ * alius petitur), mus, "No results", hospes ex articulo, Esc */
+interior vacuum
+_sectio_quaestio (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+    ServusScriptus* a;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti("{\"pages\":["
+        "{\"key\":\"Roma\",\"title\":\"Roma\","
+        "\"description\":\"Urbs aeterna\"},"
+        "{\"key\":\"Beta\",\"title\":\"Beta\","
+        "\"description\":\"Genus plantarum\"}]}", c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("'la: Roma': quaestio in la.wikipedia.org");
+    clavis(w, 'o');
+    scribere(w, "la: Roma");
+    CREDO_VERUM(pictum(w, "Searching la.wikipedia.org for 'Roma'",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(chorda_incipit(chorda_aedificator_spectare(s->petitio),
+        chorda_ex_literis("GET /w/rest.php/v1/search/page?q=Roma"
+        "&limit=20",
+        c->piscina)));
+
+    CREDO_GRADUS("eventus: titulus - descriptio, campi quaestionis");
+    CREDO_VERUM(campus_est(w, "visus", "eventus"));
+    CREDO_VERUM(campus_est(w, "quaestio", "Roma"));
+    CREDO_VERUM(campus_est(w, "quaestio_hospes", "la.wikipedia.org"));
+    CREDO_VERUM(pictum(w, "Urbs aeterna", c->piscina));
+    CREDO_VERUM(pictum(w, "Genus plantarum", c->piscina));
+
+    CREDO_GRADUS("j + Enter in 'Beta' (servatus): statim, sine rete");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus_eventus", "1"));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("in pagina (la): sine praefixo, hospes articuli");
+    clavis(w, 'o');
+    scribere(w, "Roma");
+    CREDO_VERUM(pictum(w, "Searching la.wikipedia.org for 'Roma'",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "eventus"));
+
+    CREDO_GRADUS("mus: duplex in 'Roma' (non servatus): petitur");
+    a = servum_ponere(w, responsum_ducenti(PAGINA("Roma",
+        "<p>Roma caput mundi.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(a);
+    CREDO_VERUM(ictus_in(w, "r1", VERUM, c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(pictum(w, "Roma caput mundi.", c->piscina));
+    servum_scriptum_claudere(a);
+
+    CREDO_GRADUS("Esc ex eventibus: ad paginam si articulus");
+    clavis(w, 'o');
+    servum_scriptum_claudere(s);
+    s = servum_ponere(w, responsum_ducenti("{\"pages\":[{\"key\":"
+        "\"X\",\"title\":\"X\"}]}", c->piscina), FALSUM);
+    scribere(w, "X");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(campus_est(w, "visus", "eventus"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    servum_scriptum_claudere(s);
+
+    CREDO_GRADUS("nulli eventus: 'No results', visus manet");
+    s = servum_ponere(w, responsum_ducenti("{\"pages\":[]}",
+        c->piscina), FALSUM);
+    clavis(w, 'o');
+    scribere(w, "nihil");
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "No results", c->piscina));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    servum_scriptum_claudere(s);
+}
+
+/* N4.1: nexus colore nexuum pinguntur - in articulo (segmentum
+ * lineae), in indice nexuum, et nexus in lineam sequentem fluens */
+interior vacuum
+_sectio_nexus (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("Rheum: 'genus' nexus, cetera textus");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(pictum_colore_mandati(w, "genus", color_nexus(),
+        c->piscina));
+    CREDO_FALSUM(pictum_colore_mandati(w, "Rheum est", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore(w, "Rheum est", COLOR_TEXT, c->piscina));
+    CREDO_VERUM(pictum_colore(w, "plantarum.", COLOR_TEXT, c->piscina));
+    CREDO_FALSUM(pictum_colore(w, "genus", COLOR_TEXT, c->piscina));
+
+    CREDO_GRADUS("segmenta contigua: x per runas (VI px)");
+    CREDO_AEQUALIS_S32(x_picti(w, "genus", c->piscina), x_picti(w,
+        "Rheum est", c->piscina) + X * VI);
+    CREDO_AEQUALIS_S32(x_picti(w, "plantarum", c->piscina), x_picti(w,
+        "genus", c->piscina) + V * VI);
+
+    CREDO_GRADUS("index nexuum: linea 'Planta' nexus, titulus non");
+    clavis(w, 'j');
+    CREDO_VERUM(pictum_colore_mandati(w, "Planta", color_nexus(),
+        c->piscina));
+    CREDO_FALSUM(pictum_colore_mandati(w, "Links", color_nexus(),
+        c->piscina));
+
+    CREDO_GRADUS("nexus in lineas duas fluens: utraque coloratur, "
+        "textus post eum non");
+    offerre(w, "https://la.wikipedia.org/wiki/Numeri",
+        chorda_ex_literis(
+        PAGINA("Numeri", "<p>Initium <a rel=\"mw:WikiLink\" "
+        "href=\"./Numeri\">unus duo tres quattuor quinque sex septem "
+        "octo novem decem</a> finis.</p>"), c->piscina));
+    CREDO_VERUM(argumentum(w, "8"));
+    CREDO_VERUM(pictum_colore_mandati(w, "unus", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore_mandati(w, "decem", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore(w, "finis.", COLOR_TEXT, c->piscina));
+    CREDO_VERUM(pictum_colore(w, "Initium", COLOR_TEXT, c->piscina));
+    mundum_claudere(w);
+}
+
+/* N4.2: ictus in nexu aperit - petitio (Vicipaedia), servatus
+ * statim, extra nexum nihil, situs alienus nuntiatur, index nexuum */
+interior vacuum
+_sectio_ictus_nexuum (
+    CredoContextus* c)
+{
+                         Mundus* w = mundus(c, VERUM);
+                 ServusScriptus* s;
+    constans NavigatorArticulus* a;
+                         chorda  numeri;
+                         chorda  planta;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Planta",
+        "<p>Planta viva est.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+    offerre(w, "https://la.wikipedia.org/wiki/Numeri",
+        chorda_ex_literis(
+        PAGINA("Numeri", "<p>Vide <a rel=\"mw:WikiLink\" "
+        "href=\"./Beta\">Betam</a> et <a rel=\"mw:ExtLink\" "
+        "href=\"https://example.org/x\">situm</a> alienum.</p>"),
+        c->piscina));
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Numeri", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    numeri = chorda_transcribere(a->identitas, c->piscina);
+
+    CREDO_GRADUS("ictus extra nexum: nihil");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(ictus_in_textu(w, "Rheum est", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+    CREDO_VERUM(campus_est(w, "nota", NIHIL));
+    CREDO_AEQUALIS_I32(s->acceptae, ZEPHYRUM);
+
+    CREDO_GRADUS("ictus in 'genus': Planta petitur et aperitur");
+    CREDO_VERUM(ictus_in_textu(w, "genus", c->piscina));
+    CREDO_VERUM(pictum(w, "Fetching la.wikipedia.org/wiki/Planta",
+        c->piscina));
+    CREDO_VERUM(pervenire(w));
+    CREDO_VERUM(pictum(w, "Planta viva est.", c->piscina));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Planta", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    planta = chorda_transcribere(a->identitas, c->piscina);
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(planta,
+        c->piscina)));
+
+    CREDO_GRADUS("nexus servatus (Betam): statim, sine rete");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(ictus_in_textu(w, "Betam", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+
+    CREDO_GRADUS("limes: spatium post nexum non aperit");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(ictus_in_textu(w, " et ", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(numeri,
+        c->piscina)));
+
+    CREDO_GRADUS("situs alienus: 'Unsupported site: example.org/x'");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(ictus_in_textu(w, "situm", c->piscina));
+    CREDO_VERUM(pictum(w, "Unsupported site: example.org/x",
+        c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(numeri,
+        c->piscina)));
+
+    CREDO_GRADUS("index nexuum: ictus in linea 'Planta' (servata)");
+    CREDO_VERUM(argumentum(w, "3"));
+    clavis(w, 'j');
+    CREDO_VERUM(ictus_in_textu(w, "Planta", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", chorda_ut_cstr(planta,
+        c->piscina)));
+    CREDO_AEQUALIS_I32(s->acceptae, I);
+    servum_scriptum_claudere(s);
+    mundum_claudere(w);
+}
+
+/* N4.3: Tab / S-Tab eligunt (trans paginas), electus inversus et pes
+ * scopum monstrat, Enter aperit, Esc tollit deinde ad indicem, j
+ * tollit */
+interior vacuum
+_sectio_clavis_nexuum (
+    CredoContextus* c)
+{
+                         Mundus* w = mundus(c, VERUM);
+    constans NavigatorArticulus* a;
+                         chorda  numeri;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    offerre(w, "https://la.wikipedia.org/wiki/Numeri",
+        chorda_ex_literis(
+        PAGINA("Numeri", "<p>Vide <a rel=\"mw:WikiLink\" "
+        "href=\"./Beta\">Betam</a> et <a rel=\"mw:ExtLink\" "
+        "href=\"https://example.org/x\">situm</a> alienum.</p>"),
+        c->piscina));
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Numeri", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    numeri = chorda_transcribere(a->identitas, c->piscina);
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("Tab: primus (Betam) electus, inversus, pes scopum");
+    tabula(w, FALSUM);
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 la.wikipedia.org/wiki/Beta",
+        c->piscina));
+
+    CREDO_GRADUS("Tab: situm; S-Tab: Betam iterum");
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "situm", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_FALSUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 example.org/x", c->piscina));
+    tabula(w, VERUM);
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("Esc: electio tollitur, pagina manet; Esc: index");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+
+    CREDO_GRADUS("Tab, Enter: Beta aperitur (ut ictus)");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(numeri, c->piscina)));
+    tabula(w, FALSUM);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("trans paginas: genus (I), Tab -> Planta (indicis)");
+    CREDO_VERUM(argumentum(w, "3"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "genus", COLOR_BACKGROUND,
+        c->piscina));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_VERUM(pictum_colore(w, "Planta", COLOR_BACKGROUND,
+        c->piscina));
+    tabula(w, VERUM);
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_VERUM(pictum_colore(w, "genus", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("j: electio tollitur");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("sine nexibus (Beta): Tab nihil eligit");
+    CREDO_VERUM(argumentum(w, "5"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    mundum_claudere(w);
+}
+
+/* N4.5: ~ nexus textus articuli celat - color textus, ictus et Tab
+ * eos praetereunt; index nexuum activus; electio tollitur; ~
+ * restituit */
+interior vacuum
+_sectio_nexus_celati (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w, "3"));
+    tabula(w, FALSUM);
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("~: celati, electio tollitur, 'genus' ut textus");
+    clavis(w, '~');
+    CREDO_VERUM(campus_est(w, "nexus_occulti", "1"));
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(pictum_colore(w, "genus", COLOR_TEXT, c->piscina));
+    CREDO_FALSUM(pictum_colore_mandati(w, "genus", color_nexus(),
+        c->piscina));
+
+    CREDO_GRADUS("ictus in 'genus': nihil");
+    CREDO_VERUM(ictus_in_textu(w, "genus", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+    CREDO_VERUM(campus_est(w, "nota", NIHIL));
+
+    CREDO_GRADUS("Tab: statim index nexuum (Planta), ibi activus");
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_VERUM(pictum_colore(w, "Planta", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("~ iterum: nexus redeunt");
+    clavis(w, 'k');
+    clavis(w, '~');
+    CREDO_VERUM(campus_est(w, "nexus_occulti", NIHIL));
+    CREDO_VERUM(pictum_colore_mandati(w, "genus", color_nexus(),
+        c->piscina));
+    mundum_claudere(w);
+}
+
+/* N6.1: visus sententiae - s ex pagina (sententia prima paginae), j k
+ * per sententias, s / Esc ad paginam continentem, index nexuum sine
+ * sententiis, sagittae pedis */
+interior vacuum
+_sectio_sententia (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+       s32  prima;
+       s32  altera;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w, "1"));
+
+    CREDO_GRADUS("s in pagina I: sententia I, titulus, 'sentence 1/'");
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    prima = (s32)-I;
+    CREDO_VERUM(chorda_ut_s32(*insula_ramus_attributum(&w->m.ramus,
+        "sententia"), &prima));
+
+    CREDO_GRADUS("j: sententia II (offset maior); k: I iterum");
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    altera = (s32)-I;
+    CREDO_VERUM(chorda_ut_s32(*insula_ramus_attributum(&w->m.ramus,
+        "sententia"), &altera));
+    CREDO_VERUM(altera > prima);
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+
+    CREDO_GRADUS("mus: sagitta proxima -> sententia II");
+    CREDO_VERUM(ictus_in(w, "pagina-proxima", FALSUM, c->piscina));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+
+    CREDO_GRADUS("s: ad paginam I (continentem)");
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+
+    CREDO_GRADUS("ex pagina II: sententia eius prima; Esc ad II");
+    clavis(w, 'j');
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_FALSUM(pictum(w, "sentence 1/", c->piscina));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+
+    CREDO_GRADUS("index nexuum: s nihil");
+    {
+        i32 i;
+
+        per (i = ZEPHYRUM; i < C; i++)
+        {
+            clavis(w, 'j');
+        }
+    }
+    clavis(w, 's');
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    mundum_claudere(w);
+}
+
+/* N6.2: locus visus sententiae nominat articulum, versionem,
+ * sententiam; applicatus eandem aperit; offset medius ad initium
+ * coactus; nudus positionem servatam sequitur; pilcrow notarum */
+interior vacuum
+_sectio_sententia_locus (
+    CredoContextus* c)
+{
+     Mundus* w = mundus(c, VERUM);
+     chorda  locus;
+        s32  secunda;
+  character  via[CXXVIII];
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_VERUM(argumentum(w, "1"));
+    clavis(w, 's');
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    secunda = (s32)-I;
+    CREDO_VERUM(chorda_ut_s32(*insula_ramus_attributum(&w->m.ramus,
+        "sententia"), &secunda));
+
+    CREDO_GRADUS("locus: navigator/sententia/1, versio, sententia");
+    locus = chorda_transcribere(navigator_locus(&w->m, c->piscina),
+        c->piscina);
+    CREDO_VERUM(chorda_incipit(locus, chorda_ex_literis(
+        "navigator/sententia/1", c->piscina)));
+    CREDO_VERUM(chorda_continet(locus, chorda_ex_literis("versio=2",
+        c->piscina)));
+    sprintf(via, "sententia=%d", (integer)secunda);
+    CREDO_VERUM(chorda_continet(locus, chorda_ex_literis(via,
+        c->piscina)));
+
+    CREDO_GRADUS("locus applicatus (post indicem): sententia eadem");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+
+    CREDO_GRADUS("offset medius: ad initium sententiae coactus");
+    sprintf(via, "navigator/sententia/1?sententia=%d",
+        (integer)(secunda + III));
+    CREDO_VERUM(argumentum(w, via));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    sprintf(via, "%d", (integer)secunda);
+    CREDO_VERUM(campus_est(w, "sententia", via));
+    CREDO_VERUM(campus_est(w, "versio", "2"));
+
+    CREDO_GRADUS("nudus: positio servata (sententia II)");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(argumentum(w, "navigator/sententia/1"));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+
+    CREDO_GRADUS("nudus in visu sententiae eodem: campus vetus (II) "
+        "non manet, positio servata (sententia I) vincit");
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    {
+        NavigatorPositio q;
+
+        q.versio      = chorda_ex_literis("2", c->piscina);
+        q.offset      = ZEPHYRUM;
+        q.in_nexibus  = FALSUM;
+        CREDO_VERUM(navigator_positionem_scribere(w->bibliotheca,
+            chorda_ex_literis("1", c->piscina), &q));
+    }
+    CREDO_VERUM(argumentum(w, "navigator/sententia/1"));
+    CREDO_VERUM(pictum(w, "sentence 1/", c->piscina));
+
+    CREDO_GRADUS("notae: pilcrow in pede sententiae");
+    CREDO_FALSUM(pictum(w, "\302\266", c->piscina));
+    w->notae = VERUM;
+    CREDO_VERUM(pictum(w, "\302\266", c->piscina));
+    mundum_claudere(w);
+}
+
+/* N6.3: nexus in visu sententiae - color, ictus, Tab trans
+ * sententias, electus et pes, Enter, Esc, j tollit, ~ celat */
+interior vacuum
+_sectio_sententia_nexus (
+    CredoContextus* c)
+{
+                         Mundus* w = mundus(c, VERUM);
+    constans NavigatorArticulus* a;
+                         chorda  duae;
+                         chorda  locus;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    offerre(w, "https://la.wikipedia.org/wiki/Duae", chorda_ex_literis(
+        PAGINA("Duae", "<p>Vide <a rel=\"mw:WikiLink\" "
+        "href=\"./Beta\">Betam</a> hodie. Et <a rel=\"mw:ExtLink\" "
+        "href=\"https://example.org/x\">situm</a> alienum.</p>"),
+        c->piscina));
+    a = navigator_articulum_invenire(w->bibliotheca, chorda_ex_literis(
+        "https://la.wikipedia.org/wiki/Duae", c->piscina));
+    CREDO_NECESSE_NON_NIHIL(a);
+    duae = chorda_transcribere(a->identitas, c->piscina);
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(duae, c->piscina)));
+    clavis(w, 's');
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "sentence 2/", c->piscina));
+    locus = chorda_transcribere(navigator_locus(&w->m, c->piscina),
+        c->piscina);
+
+    CREDO_GRADUS("color: 'Betam' nexus, 'Vide' textus");
+    CREDO_VERUM(pictum_colore_mandati(w, "Betam", color_nexus(),
+        c->piscina));
+    CREDO_VERUM(pictum_colore(w, "Vide", COLOR_TEXT, c->piscina));
+
+    CREDO_GRADUS("ictus in 'Betam': Beta (servata) aperitur");
+    CREDO_VERUM(ictus_in_textu(w, "Betam", c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+
+    CREDO_GRADUS("Tab: Betam electus, pes scopum; Tab: sententia III, "
+        "situm; S-Tab: Betam");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 la.wikipedia.org/wiki/Beta",
+        c->piscina));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    CREDO_VERUM(pictum_colore(w, "situm", COLOR_BACKGROUND,
+        c->piscina));
+    CREDO_VERUM(pictum(w, "\342\206\222 example.org/x", c->piscina));
+    tabula(w, VERUM);
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_BACKGROUND,
+        c->piscina));
+
+    CREDO_GRADUS("Esc: electio tollitur, visus manet; Esc: pagina");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+
+    CREDO_GRADUS("Tab, Enter: aperit; j tollit electionem");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    tabula(w, FALSUM);
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    clavis(w, 'k');
+    tabula(w, FALSUM);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+
+    CREDO_GRADUS("~ (in pagina) etiam sententiam afficit");
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(duae, c->piscina)));
+    clavis(w, '~');
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    CREDO_VERUM(pictum_colore(w, "Betam", COLOR_TEXT, c->piscina));
+    CREDO_VERUM(ictus_in_textu(w, "Betam", c->piscina));
+    CREDO_VERUM(campus_est(w, "visus", "sententia"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    mundum_claudere(w);
+}
+
+interior b32
+latitudinem_ponere (
+                 Mundus* w,
+     constans character* latitudo);
+
+interior b32
+altitudinem_ponere (
+                 Mundus* w,
+     constans character* altitudo);
+
+/* N3.5: componens id datum in arbore? */
+interior b32
+componens_est (
+                 Mundus* w,
+     constans character* id,
+                Piscina* p)
+{
+    redde componens_invenire_per_id(dispensator_arbor(w->d),
+        chorda_ex_literis(id, p)) != NIHIL;
+}
+
+/* N3.5: columna lateralis (infobox) - signum, l / h / Esc, j k intra,
+ * mus, locus, nexus, pagina sine columna */
+interior vacuum
+_sectio_columna (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+            chorda  locus;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Plant",
+        "<p>Plantae.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+
+    CREDO_GRADUS("pagina I Rhubarb: signum columnae; Rheum: nullum");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_FALSUM(componens_est(w, "columna-intrare", c->piscina));
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(componens_est(w, "columna-intrare", c->piscina));
+
+    CREDO_GRADUS("l: columna (infobox taxi), pes 'side 1/'");
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(pictum(w, "Rhubarb (culinary hybrid)", c->piscina));
+    CREDO_VERUM(pictum(w, "Kingdom: ", c->piscina));
+    CREDO_VERUM(pictum(w, "side 1/", c->piscina));
+    CREDO_VERUM(componens_est(w, "columna-redire", c->piscina));
+
+    CREDO_GRADUS("locus columnam nominat; applicatus restituit");
+    locus = chorda_transcribere(navigator_locus(&w->m, c->piscina),
+        c->piscina);
+    CREDO_VERUM(chorda_continet(locus, chorda_ex_literis("columna=0",
+        c->piscina)));
+
+    CREDO_GRADUS("h: ad paginam possessoris (I), columna absens");
+    clavis(w, 'h');
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_FALSUM(pictum(w, "side 1/", c->piscina));
+    CREDO_VERUM(argumentum(w, chorda_ut_cstr(locus, c->piscina)));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+
+    CREDO_GRADUS("Esc in columna: ad paginam (non indicem)");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+
+    CREDO_GRADUS("mus: signum dextrum intrat, sinistrum redit");
+    CREDO_VERUM(ictus_in(w, "columna-intrare", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(ictus_in(w, "columna-redire", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+
+    CREDO_GRADUS("area humilis (CC px): j k intra columnam (paginae "
+        "plures), pagina principalis manet");
+    CREDO_VERUM(altitudinem_ponere(w, "200"));
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "columna", "1"));
+    CREDO_VERUM(pictum(w, "side 2/", c->piscina));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis(w, 'h');
+    CREDO_VERUM(altitudinem_ponere(w, "472"));
+
+    CREDO_GRADUS("titulus loci in columna: 'Rhubarb - side 1/'");
+    clavis(w, 'l');
+    CREDO_VERUM(chorda_incipit(navigator_locus_titulus(&w->m,
+        c->piscina), chorda_ex_literis("Rhubarb - side 1/",
+        c->piscina)));
+    clavis(w, 'h');
+
+    CREDO_GRADUS("columnae duae: pagina I et 'Uses' (posterior)");
+    {
+        i32 i;
+        i32 signa      = ZEPHYRUM;
+        i32 posterior  = ZEPHYRUM;
+
+        per (i = ZEPHYRUM; i < XXX; i++)
+        {
+            si (componens_est(w, "columna-intrare", c->piscina))
+            {
+                signa++;
+                si (!campus_est(w, "pagina", "0"))
+                {
+                    posterior = I;
+                    clavis(w, 'l');
+                    CREDO_VERUM(pictum(w, "Rhubarb, raw", c->piscina));
+                    clavis(w, 'h');
+                }
+            }
+            clavis(w, 'j');
+        }
+        CREDO_AEQUALIS_I32(signa, II);
+        CREDO_VERUM(posterior == I);
+    }
+
+    CREDO_GRADUS("columna in pagina sine columna non manet: k ad "
+        "paginam I - non in columna");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/1?pagina=1&columna=0"));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_FALSUM(pictum(w, "side 1/", c->piscina));
+
+    CREDO_GRADUS("nexus in columna: ictus petit (servus scriptus)");
+    clavis(w, 'l');
+    CREDO_VERUM(ictus_in_textu(w, "Plantae", c->piscina));
+    CREDO_VERUM(pictum(w, "Fetching", c->piscina));
+    servum_scriptum_claudere(s);
+    mundum_claudere(w);
+}
+
+/* N3.5b: Tab in columna laterali - nexus columnae (trans paginas
+ * eius, numquam extra), pes scopum, Enter aperit, Esc bis */
+interior vacuum
+_sectio_columna_tabula (
+    CredoContextus* c)
+{
+            Mundus* w = mundus(c, VERUM);
+    ServusScriptus* s;
+               i32  i;
+               b32  extra;
+               b32  secunda;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    s = servum_ponere(w, responsum_ducenti(PAGINA("Plant",
+        "<p>Plantae.</p>"), c->piscina), FALSUM);
+    CREDO_NECESSE_NON_NIHIL(s);
+    CREDO_VERUM(argumentum(w, "1"));
+    clavis(w, 'l');
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+
+    CREDO_GRADUS("Tab: nexus columnae electus (inversus), pes scopum");
+    CREDO_FALSUM(pictum_colore(w, "", COLOR_BACKGROUND, c->piscina));
+    tabula(w, FALSUM);
+    CREDO_VERUM(pictum_colore(w, "", COLOR_BACKGROUND, c->piscina));
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(pictum(w, "\342\206\222 en.wikipedia.org/wiki/",
+        c->piscina));
+
+    CREDO_GRADUS("Esc: electio tollitur, columna manet; Esc: pagina");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "columna", NIHIL));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+
+    CREDO_GRADUS("Enter: nexus columnae aperitur (petitio)");
+    clavis(w, 'l');
+    tabula(w, FALSUM);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(pictum(w, "Fetching en.wikipedia.org/wiki/",
+        c->piscina));
+
+    CREDO_GRADUS("area humilis: Tab in paginam columnae secundam, "
+        "numquam extra columnam; S-Tab redit");
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(altitudinem_ponere(w, "200"));
+    clavis(w, 'l');
+    extra    = FALSUM;
+    secunda  = FALSUM;
+    per (i = ZEPHYRUM; i < CC; i++)
+    {
+        tabula(w, FALSUM);
+        si (   campus_est(w, "columna", NIHIL)
+            || !campus_est(w, "pagina", "0"))
+        {
+            extra = VERUM;
+        }
+        si (campus_est(w, "columna", "1"))
+        {
+            secunda = VERUM;
+        }
+    }
+    CREDO_FALSUM(extra);
+    CREDO_VERUM(secunda);
+    per (i = ZEPHYRUM; i < CC; i++)
+    {
+        tabula(w, VERUM);
+    }
+    CREDO_VERUM(campus_est(w, "columna", "0"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+
+    CREDO_GRADUS("in pagina columnae II (j) Tab nexum eius eligit, non "
+        "paginae I columnae");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "columna", "1"));
+    tabula(w, FALSUM);
+    CREDO_VERUM(campus_est(w, "columna", "1"));
+    CREDO_FALSUM(campus_est(w, "nexus", NIHIL));
+    CREDO_VERUM(altitudinem_ponere(w, "472"));
+    servum_scriptum_claudere(s);
+    mundum_claudere(w);
+}
+
+/* N3.4b: recentes in radice - apertio notat, ordo, j/Enter aperit,
+ * b in ordine recenti, mus, sine favoribus grex "Bookmarks" nuntium
+ * habet */
+interior vacuum
+_sectio_recentes (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+       Xar* l;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("initio nulli: grex 'Recent' abest");
+    CREDO_FALSUM(pictum(w, "Recent", c->piscina));
+
+    CREDO_GRADUS("apertio notat: Rheum, deinde Rhubarb (primus)");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(argumentum(w, "1"));
+    l = navigator_recentes(w->bibliotheca, c->piscina);
+    CREDO_AEQUALIS_I32(xar_numerus(l), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS((*(constans NavigatorArticulus**)
+        xar_obtinere(l, ZEPHYRUM))->identitas, "1");
+
+    CREDO_GRADUS("radix: grex 'Recent' cum titulis et hospite");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "Bookmarks", c->piscina));
+    CREDO_VERUM(pictum(w, "Recent", c->piscina));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "Rheum", c->piscina));
+    CREDO_VERUM(pictum(w, "la.wikipedia.org", c->piscina));
+
+    CREDO_GRADUS("j post dominia: recentes; Enter aperit");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus", "a:1"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus", "a:3"));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+
+    CREDO_GRADUS("b in ordine recenti: favor vertitur, ordo manet");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus", "a:3"));
+    clavis(w, 'b');
+    CREDO_FALSUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    CREDO_VERUM(pictum(w, "Rheum", c->piscina));
+    clavis(w, 'b');
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+
+    CREDO_GRADUS("mus: ictus eligit, duplex aperit (a2 = Rhubarb)");
+    CREDO_VERUM(ictus_in(w, "a2", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "electus", "a:1"));
+    CREDO_VERUM(ictus_in(w, "a2", VERUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "articulus", "1"));
+
+    CREDO_GRADUS("favores nulli, recentes adsunt: nuntius in grege");
+    (vacuum)navigator_favorem_ponere(w->bibliotheca, chorda_ex_literis(
+        "1", c->piscina), FALSUM);
+    (vacuum)navigator_favorem_ponere(w->bibliotheca, chorda_ex_literis(
+        "3", c->piscina), FALSUM);
+    (vacuum)navigator_favorem_ponere(w->bibliotheca, chorda_ex_literis(
+        "5", c->piscina), FALSUM);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "No bookmarks yet", c->piscina));
+    CREDO_VERUM(pictum(w, "Recent", c->piscina));
+    CREDO_FALSUM(ictus_in(w, "d1", FALSUM, c->piscina));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "1"));
+    mundum_claudere(w);
+}
+
+/* N3.4c: area lateris mutata (ut vicus superficiem nuntiat) */
+interior vacuum
+_superficiem_scribere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "superficies_latitudo",
+        (constans character*)ctx);
+}
+
+interior b32
+latitudinem_ponere (
+                 Mundus* w,
+     constans character* latitudo)
+{
+       b32 r;
+    chorda prior;
+
+    /* scriptor manifesti (organum_commune): dispensator */
+    prior = w->repo->scriptor;
+    insula_scriptorem_ponere(w->repo, chorda_ex_literis("dispensator",
+        w->p));
+    r = mutare_ramum(&w->m.ramus, _superficiem_scribere,
+        (vacuum*)(memoriae_index)latitudo);
+    insula_scriptorem_ponere(w->repo, prior);
+    dispensator_recomponere(w->d);
+    redde r;
+}
+
+interior vacuum
+_altitudinem_scribere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    insula_attributum_ponere(radix, p, in, "superficies_altitudo",
+        (constans character*)ctx);
+}
+
+/* N3.5: altitudo lateris (ut latitudinem_ponere) */
+interior b32
+altitudinem_ponere (
+                 Mundus* w,
+     constans character* altitudo)
+{
+       b32 r;
+    chorda prior;
+
+    prior = w->repo->scriptor;
+    insula_scriptorem_ponere(w->repo, chorda_ex_literis("dispensator",
+        w->p));
+    r = mutare_ramum(&w->m.ramus, _altitudinem_scribere,
+        (vacuum*)(memoriae_index)altitudo);
+    insula_scriptorem_ponere(w->repo, prior);
+    dispensator_recomponere(w->d);
+    redde r;
+}
+
+/* positio servata articuli (offset; -1 si nulla) */
+interior s32
+offset_servatum (
+                 Mundus* w,
+     constans character* articulus,
+                Piscina* p)
+{
+    NavigatorPositio q;
+
+    redde navigator_positionem_legere(w->bibliotheca, chorda_ex_literis(
+        articulus, p), &q, p) ? (s32)q.offset : -I;
+}
+
+/* N3.4c: pagina memoratur - j servat, aperire restituit; nexus
+ * explicitus paginam suam tenet (nec servat); versio alia: pagina
+ * prima; index nexuum; area mutata: pagina offset continens */
+interior vacuum
+_sectio_positio (
+    CredoContextus* c)
+{
+               Mundus* w = mundus(c, VERUM);
+     NavigatorPositio  q;
+               chorda  ultima;
+                  s32  offset;
+                  s32  i;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("aperire servat; j j servat paginam III");
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_AEQUALIS_S32(offset_servatum(w, "1", c->piscina), ZEPHYRUM);
+    clavis(w, 'j');
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "pagina", "2"));
+    CREDO_VERUM(offset_servatum(w, "1", c->piscina) > ZEPHYRUM);
+
+    CREDO_GRADUS("Esc, Enter: pagina III restituta");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "articulus", "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "2"));
+
+    CREDO_GRADUS("nexus cum pagina: pagina sua, positio non mutatur");
+    offset = offset_servatum(w, "1", c->piscina);
+    CREDO_VERUM(argumentum(w, "navigator/pagina/1?pagina=1"));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_AEQUALIS_S32(offset_servatum(w, "1", c->piscina), offset);
+
+    CREDO_GRADUS("argumentum nudum: restituit");
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "2"));
+
+    CREDO_GRADUS("area angustior: pagina offset continens");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    /* CL px: area textus CXXVI px (ex CCXL) - paginae fere duplices */
+    CREDO_VERUM(latitudinem_ponere(w, "150"));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_FALSUM(campus_est(w, "pagina", "2"));
+    CREDO_VERUM(offset_servatum(w, "1", c->piscina) <= offset);
+    clavis(w, 'j');
+    CREDO_VERUM(offset_servatum(w, "1", c->piscina) > offset);
+    CREDO_VERUM(latitudinem_ponere(w, "360"));
+
+    CREDO_GRADUS("index nexuum: pagina ultima restituitur");
+    per (i = ZEPHYRUM; i < C; i++)
+    {
+        clavis(w, 'j');
+    }
+    ultima = chorda_transcribere(*insula_ramus_attributum(&w->m.ramus,
+        "pagina"), c->piscina);
+    CREDO_VERUM(navigator_positionem_legere(w->bibliotheca,
+        chorda_ex_literis("1", c->piscina), &q, c->piscina)
+        && q.in_nexibus);
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "pagina", chorda_ut_cstr(ultima,
+        c->piscina)));
+
+    CREDO_GRADUS("versio alia servata: pagina prima");
+    q.versio      = chorda_ex_literis("ALIA", c->piscina);
+    q.offset      = M;
+    q.in_nexibus  = FALSUM;
+    CREDO_VERUM(navigator_positionem_scribere(w->bibliotheca,
+        chorda_ex_literis("1", c->piscina), &q));
+    CREDO_VERUM(argumentum(w, "1"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    mundum_claudere(w);
+}
+
+/* N3.4: favores - b in pagina et in dominio, stella pedis (mus),
+ * non favores absunt, dominium sine favoribus */
+interior vacuum
+_sectio_favores (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("b in pagina: favor tollitur; stella flava, obscura");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    CREDO_VERUM(pictum_colore(w, "\342\230\205", COLOR_WARNING,
+        c->piscina));
+    clavis(w, 'b');
+    CREDO_FALSUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    CREDO_VERUM(pictum_colore(w, "\342\230\205", COLOR_TEXT_DIM,
+        c->piscina));
+    CREDO_FALSUM(pictum_colore(w, "\342\230\205", COLOR_WARNING,
+        c->piscina));
+
+    CREDO_GRADUS("ictus in stella: favor iterum; b iterum tollit");
+    CREDO_VERUM(ictus_in(w, "favor", FALSUM, c->piscina));
+    CREDO_VERUM(navigator_articulum_invenire(w->bibliotheca,
+        chorda_ex_literis(URL_RHEUM, c->piscina))->favor);
+    clavis(w, 'b');
+
+    CREDO_GRADUS("Esc: dominium; non favor (Rheum) abest");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "Beta", c->piscina));
+    CREDO_FALSUM(pictum(w, "Rheum", c->piscina));
+
+    CREDO_GRADUS("b in electo (Rhubarb, primus): tollitur ex indice");
+    clavis(w, 'b');
+    CREDO_FALSUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "Beta", c->piscina));
+
+    CREDO_GRADUS("ultimus tollitur: radix sine favoribus");
+    clavis(w, 'b');
+    CREDO_FALSUM(pictum(w, "Beta", c->piscina));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "No bookmarks yet", c->piscina));
+    CREDO_AEQUALIS_I32(navigator_articulorum_numerus(w->bibliotheca),
+        III);
+
+    CREDO_GRADUS("Esc ex pagina, dominio sine favoribus: radix");
+    CREDO_VERUM(argumentum(w, "3"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    mundum_claudere(w);
+}
+
+interior vacuum
+_sectio_index (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("N3.4 radix: 'Saved', 'Bookmarks', dominium, numerus");
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(pictum(w, "Saved", c->piscina));
+    CREDO_VERUM(pictum(w, "Bookmarks", c->piscina));
+    CREDO_VERUM(pictum(w, "wikipedia.org", c->piscina));
+    CREDO_VERUM(pictum(w, "3 bookmarks", c->piscina));
+    CREDO_FALSUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
+        c->piscina), "Saved");
+
+    CREDO_GRADUS("Enter in dominio: descendit; favores per hospitem");
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
+        c->piscina), "Saved - wikipedia.org");
+    CREDO_VERUM(pictum(w, "en.wikipedia.org", c->piscina));
+    CREDO_VERUM(pictum(w, "la.wikipedia.org", c->piscina));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "Rheum", c->piscina));
+    CREDO_VERUM(pictum(w, "2 versions", c->piscina));
+    CREDO_VERUM(pictum(w, "1 version", c->piscina));
+
+    CREDO_GRADUS("ordo: hospites, deinde tituli (Rhubarb Beta Rheum)");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus_articulus", "5"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus_articulus", "3"));
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "electus_articulus", "3"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "electus_articulus", "5"));
+
+    CREDO_GRADUS("mus: ictus eligit, duplex aperit");
+    CREDO_VERUM(ictus_in(w, "r1", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "electus_articulus", "1"));
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(ictus_in(w, "r3", VERUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+
+    CREDO_GRADUS("Esc: ad indicem, electus manet");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "articulus", NIHIL));
+    CREDO_VERUM(campus_est(w, "electus_articulus", "5"));
+
+    CREDO_GRADUS("Enter: articulus electus, pagina prima");
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "5"));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    CREDO_VERUM(campus_est(w, "versio", "7"));
+
+    CREDO_GRADUS("Esc ex pagina: dominium manet; Esc iterum: radix");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    CREDO_VERUM(campus_est(w, "dominium", NIHIL));
+    CREDO_VERUM(pictum(w, "Bookmarks", c->piscina));
+
+    CREDO_GRADUS("mus: duplex in dominio descendit");
+    CREDO_VERUM(ictus_in(w, "d1", VERUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "dominium", "wikipedia.org"));
+    mundum_claudere(w);
+}
+
+interior vacuum
+_sectio_pagina (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);   /* in dominium */
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+
+    CREDO_GRADUS("Rhubarb: titulus, textus, pes (hospes, paginae)");
+    CREDO_VERUM(campus_est(w, "articulus", "1"));
+    CREDO_VERUM(pictum(w, "Rhubarb", c->piscina));
+    CREDO_VERUM(pictum(w, "fleshy, edible stalks", c->piscina));
+    CREDO_VERUM(pictum(w, "Rhubarb - en.wikipedia.org - 1/",
+        c->piscina));
+
+    CREDO_GRADUS("j k: paginae; limes ad initium");
+    clavis(w, 'j');
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_VERUM(pictum(w, " - 2/", c->piscina));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+    clavis(w, 'k');
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+
+    CREDO_GRADUS("mus: sagittae pedis");
+    CREDO_VERUM(ictus_in(w, "pagina-proxima", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "pagina", "1"));
+    CREDO_VERUM(ictus_in(w, "pagina-prior", FALSUM, c->piscina));
+    CREDO_VERUM(campus_est(w, "pagina", "0"));
+
+    CREDO_GRADUS("limes ad finem: j in pagina ultima manet");
+    per (;;)
+    {
+        chorda* a = insula_ramus_attributum(&w->m.ramus, "pagina");
+        chorda  ante = a ? chorda_transcribere(*a, c->piscina)
+                         : chorda_ex_literis("", c->piscina);
+
+        clavis(w, 'j');
+        a = insula_ramus_attributum(&w->m.ramus, "pagina");
+        si (a && chorda_aequalis(*a, ante))
+        {
+            frange;
+        }
+    }
+    CREDO_VERUM(pictum(w, "Rhubarb - en.wikipedia.org", c->piscina));
+
+    CREDO_GRADUS("notae: pilcrow in pede si locus notas habet");
+    CREDO_FALSUM(pictum(w, "\302\266", c->piscina));
+    w->notae = VERUM;
+    CREDO_VERUM(pictum(w, "\302\266", c->piscina));
+    mundum_claudere(w);
+}
+
+interior vacuum
+_sectio_versio (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+    chorda  locus;
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("sine versione: ultima, et versio FIGITUR (locus)");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/5"));
+    CREDO_VERUM(pictum(w, "Beta vulgaris est olus.", c->piscina));
+    CREDO_VERUM(campus_est(w, "versio", "7"));
+
+    CREDO_GRADUS("versio nominata: vetus legitur");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/5?versio=6"));
+    CREDO_VERUM(pictum(w, "Beta est planta.", c->piscina));
+    CREDO_FALSUM(pictum(w, "vulgaris", c->piscina));
+
+    CREDO_GRADUS("locus versionem nominat (comes versionis suae)");
+    locus = navigator_locus(&w->m, c->piscina);
+    CREDO_VERUM(chorda_incipit(locus, chorda_ex_literis(
+        "navigator/pagina/5", c->piscina)));
+    CREDO_VERUM(chorda_continet(locus, chorda_ex_literis("versio=6",
+        c->piscina)));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
+        c->piscina), "Beta - la.wikipedia.org - 1/1");
+
+    CREDO_GRADUS("comites: campi alieni numquam in loco");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/5?versio=6&pagina=0&"
+        "sententia=7&dominium=wikipedia.org&quaestio=picard&"
+        "quaestio_hospes=en.wikipedia.org"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus(&w->m, c->piscina),
+        "navigator/pagina/5?versio=6&pagina=0");
+
+    CREDO_GRADUS("comites: articulus alius sine versione = ultima "
+        "nominata");
+    CREDO_VERUM(argumentum(w, "navigator/pagina/3?quaestio=rheum"));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus(&w->m, c->piscina),
+        "navigator/pagina/3?versio=4&pagina=0");
+
+    CREDO_GRADUS("index: locus sine articulo; dominium articuli");
+    clavis_nominata(w, CLAVIS_EFFUGIUM, XXVII);
+    locus = navigator_locus(&w->m, c->piscina);
+    CREDO_FALSUM(chorda_continet(locus, chorda_ex_literis("versio",
+        c->piscina)));
+    CREDO_FALSUM(chorda_continet(locus, chorda_ex_literis("/5",
+        c->piscina)));
+    CREDO_CHORDA_AEQUALIS_LITERIS(navigator_locus_titulus(&w->m,
+        c->piscina), "Saved - wikipedia.org");
+    mundum_claudere(w);
+}
+
+interior vacuum
+_sectio_argumentum (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, VERUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+
+    CREDO_GRADUS("identitas nuda: articulus, pagina prima");
+    CREDO_VERUM(argumentum(w, "3"));
+    CREDO_VERUM(campus_est(w, "visus", "pagina"));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+    /* N4.1: linea per segmenta (nexus 'genus' suo colore) */
+    CREDO_VERUM(pictum(w, "Rheum est ", c->piscina));
+    CREDO_VERUM(pictum(w, "genus", c->piscina));
+    CREDO_VERUM(pictum(w, " plantarum.", c->piscina));
+
+    CREDO_GRADUS("index nexuum: pagina nova post articulum (N3.1b)");
+    CREDO_VERUM(pictum(w, "Rheum - la.wikipedia.org - 1/2",
+        c->piscina));
+    CREDO_FALSUM(pictum(w, "Links", c->piscina));
+    clavis(w, 'j');
+    CREDO_VERUM(pictum(w, "Links", c->piscina));
+    CREDO_VERUM(pictum(w, "Planta", c->piscina));
+    CREDO_FALSUM(pictum(w, "plantarum", c->piscina));
+    CREDO_VERUM(pictum(w, "Rheum - la.wikipedia.org - 2/2",
+        c->piscina));
+    clavis(w, 'k');
+    CREDO_VERUM(pictum(w, "plantarum", c->piscina));
+
+    CREDO_GRADUS("articulus ignotus: FALSUM, nihil mutatum");
+    CREDO_FALSUM(argumentum(w, "99"));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+    CREDO_FALSUM(argumentum(w, "navigator/pagina/99"));
+    CREDO_VERUM(campus_est(w, "articulus", "3"));
+
+    CREDO_GRADUS("vacuum: index");
+    CREDO_VERUM(argumentum(w, ""));
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    mundum_claudere(w);
+}
+
+interior vacuum
+_sectio_vacua (
+    CredoContextus* c)
+{
+    Mundus* w = mundus(c, FALSUM);
+
+    CREDO_NECESSE_NON_NIHIL(w);
+    CREDO_GRADUS("bibliotheca vacua: nuntius, Enter nihil");
+    CREDO_VERUM(pictum(w, "No bookmarks yet", c->piscina));
+    clavis_nominata(w, CLAVIS_REDITUS, XIII);
+    CREDO_VERUM(campus_est(w, "visus", "index"));
+    mundum_claudere(w);
+}
+
+hic_manens constans CredoSectio SECTIONES[] = {
+    { "aperire", _sectio_aperire, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "errores", _sectio_errores, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "supersedere", _sectio_supersedere, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "quaestio", _sectio_quaestio, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "index", _sectio_index, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "favores", _sectio_favores, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "positio", _sectio_positio, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "recentes", _sectio_recentes, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "nexus", _sectio_nexus, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "ictus nexuum", _sectio_ictus_nexuum, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "clavis nexuum", _sectio_clavis_nexuum, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "nexus celati", _sectio_nexus_celati, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "sententia", _sectio_sententia, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "sententia locus", _sectio_sententia_locus, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "sententia nexus", _sectio_sententia_nexus, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "columna", _sectio_columna, NIHIL, mundum_purgare, NIHIL, NIHIL },
+    { "columna tabula", _sectio_columna_tabula, NIHIL, mundum_purgare,
+        NIHIL, NIHIL },
+    { "pagina", _sectio_pagina, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "versio", _sectio_versio, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "argumentum", _sectio_argumentum, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { "vacua", _sectio_vacua, NIHIL, mundum_purgare, NIHIL,
+        NIHIL },
+    { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
+};
+
+s32
+principale (
+    vacuum)
+{
+    redde credo_suitam_currere("navigator_latus", SECTIONES);
+}

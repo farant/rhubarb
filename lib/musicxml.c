@@ -24,7 +24,10 @@
  * ================================================== */
 
 nomen structura {
-    Piscina* piscina;
+    Piscina* piscina;        /* vocantis: exemplar solum */
+    Piscina* scrinium;       /* arca inflata et documentum XML: post
+                              * lectionem destruitur (_chordas_servare
+                              * chordas exemplaris prius copiat) */
         Xar* vitia;          /* MusicxmlVitium */
         s64  divisiones;     /* divisio operis */
         b32  concentus;      /* concert-score: numquam transponitur */
@@ -2628,7 +2631,7 @@ _documentum_legere (
             "legitur", _vacua());
         redde VERUM;
     }
-    d = xml_documentum_legere(datum, l->piscina);
+    d = xml_documentum_legere(datum, l->scrinium);
     si (d == NIHIL)
     {
         redde FALSUM;
@@ -2721,7 +2724,7 @@ _arcam_legere (
                        chorda  via;
 
     vitium  = _vacua();
-    s       = sarcina_aperire(datum, l->piscina, &vitium);
+    s       = sarcina_aperire(datum, l->scrinium, &vitium);
     si (s == NIHIL)
     {
         _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
@@ -2729,16 +2732,16 @@ _arcam_legere (
             ZEPHYRUM, "arca ZIP mala: ", vitium);
         redde VERUM;
     }
-    e = sarcina_invenire(s, chorda_ex_literis(CONTINENS, l->piscina));
+    e = sarcina_invenire(s, chorda_ex_literis(CONTINENS, l->scrinium));
     si (   e == NIHIL
-        || !sarcina_legere(s, e, l->piscina, &textus, &vitium))
+        || !sarcina_legere(s, e, l->scrinium, &textus, &vitium))
     {
         _vitium_locatum(l, MUSICXML_VITIUM, MUSICXML_ARCA_MALA,
             ZEPHYRUM,
             ZEPHYRUM, CONTINENS " deest aut non legitur: ", vitium);
         redde VERUM;
     }
-    d = xml_documentum_legere(textus, l->piscina);
+    d = xml_documentum_legere(textus, l->scrinium);
     si (d == NIHIL)
     {
         redde FALSUM;
@@ -2762,7 +2765,7 @@ _arcam_legere (
     }
     e = sarcina_invenire(s, via);
     si (   e == NIHIL
-        || !sarcina_legere(s, e, l->piscina, &textus, &vitium))
+        || !sarcina_legere(s, e, l->scrinium, &textus, &vitium))
     {
         ChordaAedificator* a = chorda_aedificator_creare(l->piscina,
             LXIV);
@@ -2795,6 +2798,136 @@ _arcam_legere (
 
 
 /* ==================================================
+ * Chordae servandae (scrinium destruendum)
+ * ================================================== */
+
+/* chorda extra datum (documentum coctum, arca inflata in scrinio) in
+ * piscinam vocantis; intra datum manet (caput: datum vivit dum opus).
+ * FALSUM = memoria deficit */
+interior b32
+_chordam_servare (
+     Lector* l,
+     chorda  datum,
+     chorda* c)
+{
+    size_t initium  = (size_t)(vacuum*)datum.datum;
+    size_t ipsa     = (size_t)(vacuum*)c->datum;
+
+    si (   c->mensura == ZEPHYRUM
+        || (   ipsa >= initium
+            && ipsa + (size_t)c->mensura
+               <= initium + (size_t)datum.mensura))
+    {
+        redde VERUM;
+    }
+    *c = chorda_transcribere(*c, l->piscina);
+    redde c->mensura > ZEPHYRUM;
+}
+
+/* omnes chordae exemplaris (XXVI campi, include/musicxml.h;
+ * MusicxmlVitium.causa semper in piscina vocantis aedificatur): campus
+ * chordae novus in capite hic addendus est, aliter in scrinium
+ * destructum ostendit (sonda corporis sub ASan id capit) */
+interior b32
+_mensuram_servare (
+              Lector* l,
+              chorda  datum,
+     MusicxmlMensura* m)
+{
+    i32 i;
+    i32 k;
+    b32 bene = _chordam_servare(l, datum, &m->numerus);
+
+    per (i = ZEPHYRUM; i < m->numerus_attributorum; i++)
+    {
+        MusicxmlAttributa* a = &m->attributa[i];
+
+        bene = _chordam_servare(l, datum, &a->clavis.modus) && bene;
+        bene = _chordam_servare(l, datum, &a->metrum.symbolum) && bene;
+        per (k = ZEPHYRUM; k < a->metrum.numerus_partium; k++)
+        {
+            bene = _chordam_servare(l, datum,
+                &a->metrum.partes[k].pulsus) && bene;
+        }
+    }
+    per (i = ZEPHYRUM; i < m->numerus_linearum; i++)
+    {
+        bene = _chordam_servare(l, datum, &m->lineae[i].stilus) && bene;
+        bene = _chordam_servare(l, datum,
+            &m->lineae[i].conclusionum_textus) && bene;
+    }
+    per (i = ZEPHYRUM; i < m->numerus_directionum; i++)
+    {
+        bene = _chordam_servare(l, datum, &m->directiones[i].vox)
+            && bene;
+        bene = _chordam_servare(l, datum, &m->directiones[i].textus)
+            && bene;
+    }
+    per (i = ZEPHYRUM; i < m->numerus_notarum; i++)
+    {
+        MusicxmlNota* n = &m->notae[i];
+
+        bene = _chordam_servare(l, datum, &n->vox) && bene;
+        bene = _chordam_servare(l, datum, &n->instrumentum) && bene;
+        per (k = ZEPHYRUM; k < n->numerus_signorum; k++)
+        {
+            bene = _chordam_servare(l, datum, &n->signa[k].titulus)
+                && bene;
+        }
+        per (k = ZEPHYRUM; k < n->numerus_syllabarum; k++)
+        {
+            bene = _chordam_servare(l, datum,
+                &n->syllabae[k].versus_textus) && bene;
+            bene = _chordam_servare(l, datum, &n->syllabae[k].textus)
+                && bene;
+        }
+    }
+    redde bene;
+}
+
+interior b32
+_chordas_servare (
+           Lector* l,
+           chorda  datum,
+     MusicxmlOpus* opus)
+{
+    i32 p;
+    i32 i;
+    b32 bene = VERUM;
+
+    bene = _chordam_servare(l, datum, &opus->versio) && bene;
+    bene = _chordam_servare(l, datum, &opus->titulus_operis) && bene;
+    bene = _chordam_servare(l, datum, &opus->numerus_operis) && bene;
+    bene = _chordam_servare(l, datum, &opus->titulus_motus) && bene;
+    bene = _chordam_servare(l, datum, &opus->numerus_motus) && bene;
+    bene = _chordam_servare(l, datum, &opus->compositor) && bene;
+    bene = _chordam_servare(l, datum, &opus->poeta) && bene;
+    bene = _chordam_servare(l, datum, &opus->ius) && bene;
+    per (p = ZEPHYRUM; p < opus->numerus_partium; p++)
+    {
+        MusicxmlPars* pars = &opus->partes[p];
+
+        bene = _chordam_servare(l, datum, &pars->id) && bene;
+        bene = _chordam_servare(l, datum, &pars->titulus) && bene;
+        bene = _chordam_servare(l, datum, &pars->abbreviatio) && bene;
+        per (i = ZEPHYRUM; i < pars->numerus_instrumentorum; i++)
+        {
+            bene = _chordam_servare(l, datum, &pars->instrumenta[i].id)
+                && bene;
+            bene = _chordam_servare(l, datum,
+                &pars->instrumenta[i].titulus) && bene;
+        }
+        per (i = ZEPHYRUM; i < pars->numerus_mensurarum; i++)
+        {
+            bene = _mensuram_servare(l, datum, &pars->mensurae[i])
+                && bene;
+        }
+    }
+    redde bene;
+}
+
+
+/* ==================================================
  * API
  * ================================================== */
 
@@ -2805,6 +2938,7 @@ musicxml_legere (
 {
           Lector  l;
     MusicxmlOpus* opus;
+             b32  bene;
 
     si (piscina == NIHIL)
     {
@@ -2821,13 +2955,27 @@ musicxml_legere (
     l.divisiones  = I;
     l.concentus   = FALSUM;
     l.vitia       = xar_creare(piscina, (i32)magnitudo(MusicxmlVitium));
-    si (l.vitia == NIHIL)
+    /* documentum XML (~XXXVIII x textus) solum durante lectione: opus
+     * in piscina vocantis manet, scrinium post _chordas_servare
+     * destruitur (Reger op. 74: apex idem, piscina vocantis exemplar
+     * solum) */
+    l.scrinium    = piscina_generare_dynamicum("musicxml_scrinium",
+        (memoriae_index)(MXXIV * MXXIV));
+    si (l.vitia == NIHIL || l.scrinium == NIHIL)
     {
+        si (l.scrinium != NIHIL)
+        {
+            piscina_destruere(l.scrinium);
+        }
         redde NIHIL;
     }
     opus->divisiones = I;
-    si (_arca_signum(datum) ? !_arcam_legere(&l, datum, opus)
-                            : !_documentum_legere(&l, datum, opus))
+    bene = _arca_signum(datum) ? _arcam_legere(&l, datum, opus)
+                               : _documentum_legere(&l, datum, opus);
+    bene = bene && _chordas_servare(&l, datum, opus);
+    piscina_destruere(l.scrinium);
+    l.scrinium = NIHIL;
+    si (!bene)
     {
         redde NIHIL;
     }

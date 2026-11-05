@@ -40,3 +40,38 @@ Plants red: UTF-8 cut, notification genus key, TMUX socket split,
 directory not created, tool_input key order, RHUBARB_COLLOQUIA ignored.
 Examen caught a parameter named `nomen` (latina.h typedef) and a const
 cast-away in a helper during writing.
+
+## 2026-10-27 — comites P8: tmux hooks (`praeco tmux`, `praeco tmux instituere`)
+
+New event `tmux` (servitor = #{socket_path}, panellus = #{pane_id})
+written by `praeco tmux <servitor> <panellus>`, which tmux hooks call
+on session-window-changed, client-session-changed and
+window-pane-changed. Checked on a private server first: all three
+fire; `set-hook -g window-pane-changed` lands as a window hook (shows
+under `show-hooks -gw`) and still fires; sourcing the same lines again
+REPLACES the hook ([0]), never duplicates. `#{pane_id}` is the pane
+that is active AFTER the change - for a window switch that is the new
+window's active pane, which is why the live test checks the window
+hook and the pane hook with separate commands (a combined
+select-window + select-pane let one hook's line satisfy the other
+step; the first plant showed it).
+
+Pure helpers here: `praeconium_tmux_configuratio` (hook file text,
+absolute praeco path - a tmux server started with a short PATH must
+still find it; a path with ' or " gives "" since the quoting would
+break) and `praeconium_tmux_conf` (marked block "# praeco tmux:
+initium/finis" with `source-file -q "<file>"`, replaced in place or
+appended, rest untouched). The hooks live in praeco's OWN file
+(<colloquia dir>/tmux.conf) rather than in ~/.tmux.conf directly:
+applying them live means sourcing a file, and re-sourcing Fran's
+~/.tmux.conf would repeat its `set -as` appends every time.
+
+`instituere` (tools/praeco.c): own path via realpath (argv[0], or a
+PATH search when it has no '/'); ~/.tmux.conf written through a temp
+file + rename, symlinks resolved first (the link's target changes,
+not the link), one-time copy to `.ante-praeco`; then source-file into
+$TMUX's server (else the default). Exit 0 always for `praeco tmux`
+(run-shell would print a failure in tmux's status line). Sandboxed
+check (fake HOME, RHUBARB_COLLOQUIA, private server via $TMUX): block
+added once ("sectio iam praesens" on the second run), backup intact,
+a window switch wrote a `tmux` event.

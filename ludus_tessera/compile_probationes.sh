@@ -51,6 +51,8 @@ declare -a INCLUDE_FLAGS=(
     "-I$RADIX_DIR/tessera/instrumenta/musivum"
     "-I$LT_DIR/fontes"
     "-I$LT_DIR/probationes"
+    "-I$RADIX_DIR/html/fontes"
+    "-I$RADIX_DIR/materia/fontes"
     # A3: ludus_toy.h (applicatio ludicra probationum radicis)
     "-I$RADIX_DIR/probationes"
 )
@@ -134,6 +136,10 @@ declare -a RADIX_FONTES=(
     "conspectus_infixa" # proiectiones D4b: declarationes infixae
     "indagatio"        # genera-datorum D5: quaestio per textum plenum
     "indagatio_genera" # D5 S2: genera quaerenda domus
+    "chronica_eventus" # chronica C1: eventa ex lineis paginae
+    "chronica_nomina" # chronica C5a: declarationes personarum, locorum
+    "chronica_fontes" # chronica C2: eventa librorum in tabulam
+    "chronica"        # chronica C3: latus tabulae temporum
     "indagatio_visus"  # D5 S3b: latus indagationis in vico ($search)
     "elenchus"         # agenda-plan M2b: menu contextuale (calendarium)
     "membrum__album"   # nomenclator-plan U1: index paginatus (calendarium)
@@ -219,6 +225,36 @@ declare -a RADIX_FONTES=(
     "pseudoterminale"
     "pseudoterminale_posix"
     "glyphae_ductae"
+    # navigator N3.2: latus navigatoris in vico ($nav) - bibliotheca,
+    # paginae, adaptator Vicipaediae (arbor HTML: sectio 2c)
+    "navigator"
+    "navigator_bibliotheca"
+    "navigator_paginae"
+    "vicipaedia"
+    "articulus"
+    "uri"
+    "url"
+    "navigator_petitio" # N3.3: petitio in reactore vici
+    # N3.3: clausura petitionis HTTPS (http_vocatio, nomina, tcp, TLS
+    # 1.2/1.3 super BearSSL, fiducia) - variantes posix (C pura; ita
+    # suitae TLS etiam sub Linux currunt)
+    "fiducia_der"
+    "fiducia_diffisa_tabula" # N3.3: tabula (data, non functio)
+    "fiducia_diffisa"
+    "tls13_clavis"
+    "tls13_nuntii"
+    "tls13_recordum"
+    "fiducia_posix"
+    "tls13"
+    "tls_bearssl"
+    "tls_securetransport_posix"
+    "tls_tls13"
+    "nomina"
+    "nomina_posix"
+    "tcp_posix"
+    "tls"
+    "http"
+    "http_vocatio"
 )
 
 FILTER="${1:-}"
@@ -302,6 +338,16 @@ for src in "$RADIX_DIR"/tessera/fontes/*.c \
     obj_files="$obj_files $BUILD_DIR/tessera_$base.o"
 done
 
+# ---- 2c. arbor HTML (navigator N3.2: vicipaedia) + materia quae 1b
+#          non tenet (coctor, scribere, sedes) ----
+for src in "$RADIX_DIR"/html/fontes/*.c \
+           "$RADIX_DIR/materia/fontes/materia_coctor.c" \
+           "$RADIX_DIR/materia/fontes/materia_scribere.c" \
+           "$RADIX_DIR/materia/fontes/materia_sedes.c"; do
+    base="${src##*/}"; base="${base%.c}"
+    _vocationem_addere "$src" "$BUILD_DIR/arbor_$base.o"
+    obj_files="$obj_files $BUILD_DIR/arbor_$base.o"
+done
 # VENDICATA PER THESAURUM (budget B1 E7, 2026-10-28): fontes magni
 # communes (vendor/sqlite3.c ~IX.V MB, silva/amalgama/silva.c ~V MB) per
 # bin/compilator EX RADICE, argumentis iisdem ac compile_tests.sh: clavis
@@ -329,6 +375,18 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
             -DSQLITE_OMIT_LOAD_EXTENSION -DSQLITE_OMIT_DEPRECATED \
             -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -c vendor/sqlite3.c; then
         echo "FRACTA: sqlite3.c" ; exit 1
+    fi
+fi
+obj_files="$obj_files $obj"
+
+# ---- 2d. BearSSL vendicata (navigator N3.3: petitio HTTPS in vico) -
+#          RELAXATUM ut compile_tests.sh radicis ----
+src="$RADIX_DIR/vendor/bearssl_amalgama.c"
+obj="$BUILD_DIR/vendor_bearssl_amalgama.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
+    echo "  [vendicatum] bearssl_amalgama.c"
+    if ! clang -O2 -I"$RADIX_DIR/vendor" -c "$src" -o "$obj"; then
+        echo "FRACTA: bearssl_amalgama.c" ; exit 1
     fi
 fi
 obj_files="$obj_files $obj"

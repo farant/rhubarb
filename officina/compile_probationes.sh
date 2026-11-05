@@ -76,6 +76,14 @@ declare -a RADIX_FONTES=(
     "lectiones"    # vigilia per librum legit (fabrica plan 5 T5a)
     "filum"        # probationes per filum delent (fabrica-8, 2026-10-27)
     "processus_posix"
+    # bibliothecae (officina-bibliothecae T2): clausura aedilis
+    "aedilis"
+    "aedilis_silva"
+    "via"
+    "stml"
+    "thesaurus"
+    "selectio"
+    "iter_directoria"
 )
 
 FILTER="${1:-}"
@@ -92,44 +100,35 @@ if [ -n "$FILTER" ]; then
     fi
 fi
 
-# CAPUT RECENTISSIMUM SEMEL (exemplar radicis 2026-08-25): find
-# per obiectum retiratum - aequivalentia: aliquod caput recentius
-# obiecto <=> recentissimum recentius obiecto. Custos: nihil
-# inventum = viae find pravae = custodia capitum MORTUA - CLAMAT.
-CAPUT_RECENS=""
-while IFS= read -r caput_via; do
-    # <tolera codex="lint:nt-aequalitas" (>maximum quaeritur, non comparatio duorum: in aequalitate utrumlibet aeque valet
-    if [ -z "$CAPUT_RECENS" ] || [ "$caput_via" -nt "$CAPUT_RECENS" ]; then
-        CAPUT_RECENS="$caput_via"
-    fi
-done < <(find "$RADIX_DIR/include" "$OFF_DIR/fontes" "$RADIX_DIR/silva/amalgama" "$RADIX_DIR/silva/instrumenta" "$RADIX_DIR/silva/fontes" "$RADIX_DIR/materia/fontes" -name '*.h' 2>/dev/null)
-if [ -z "$CAPUT_RECENS" ]; then
-    echo "CAUTIO: nullum caput inventum (viae find pravae?) - custodia recompilationis capitum MORTUA" >&2
-fi
-
-newest_header () {
-    if [ -n "$CAPUT_RECENS" ] && ! [ "$1" -nt "$CAPUT_RECENS" ]; then
-        echo "$CAPUT_RECENS"
-    fi
+# ---- 1-3. obiecta per compilatorem (budget B2 E3/J9) ----
+# Olim clang per obiectum sub regulis mtime manu scriptis (caput
+# recentissimum, capita singula nominata, amalgama tesserae SINE capitibus):
+# caput tactum sine mutatione omnia recompilabat, caput non nominatum
+# obiectum stalum relinquebat (silva.h forma mutata -> corruptio ABI).
+# Nunc bin/compilator --plures processu uno (clavis = cwd + argumenta +
+# octeti fontis et OMNIUM capitum depfile; obiectum identicum non
+# rescribitur) - exemplar tessera 1b7f5edc, gesta f3a54629.
+source "$RADIX_DIR/tools/cursor_communis.sh" || exit 1
+source "$RADIX_DIR/tools/nexus_probationis.sh"
+cursor_instrumenta_parare || exit 1
+: > "$CLAUSURAE_DIR/mandata.tsv"
+VOCATIONES="$BUILD_DIR/obiecta.vocationes"
+: > "$VOCATIONES"
+obj_files=""
+# vocatio cum radicibus PROPRIIS (obiecta officinae radices varias
+# poscunt: amalgama tesserae sola include/, silva_lexicon fontes silvae)
+_vocatio_addere () {   # <fons> <obiectum> <vexilla radicum...>
+    local fons="$1" obj="$2"
+    shift 2
+    printf '%s\t%s\n' "$obj" "${GCC_FLAGS[*]} $* -c $fons" \
+        >> "$CLAUSURAE_DIR/mandata.tsv"
+    echo "${GCC_FLAGS[*]} $* -c $fons -o $obj" >> "$VOCATIONES"
+    obj_files="$obj_files $obj"
 }
 
-# AEQUALITAS (2026-09-07, ut silva/compile_probationes.sh 2026-08-27):
-# mtimes secundo mensurantur - fons et obiectum EODEM SECUNDO scripta
-# '-nt' non satisfaciunt et recompilatio TACITE omittitur (ritus
-# plantae: culpa restituta, porta adhuc rubra contra .o plantatum).
-# Remedium ubique: in aequalitate RECOMPILA ('! obj -nt src').
-# ---- 1. dependency objects (incremental) ----
-obj_files=""
 for f in "${RADIX_FONTES[@]}"; do
-    src="$RADIX_DIR/lib/$f.c"
-    obj="$BUILD_DIR/$f.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [dep] $f.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $f.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
+    _vocatio_addere "$RADIX_DIR/lib/$f.c" "$BUILD_DIR/$f.o" \
+        "${INCLUDE_FLAGS[@]}"
 done
 
 # VENDICATA PER THESAURUM (budget B1 E7, 2026-10-28): fontes magni
@@ -148,7 +147,7 @@ _vendicatum_compilare () {   # <obiectum> <argumenta clang, fons RADICI relativu
     fi
 }
 
-# ---- 2. the silva amalgam as object (demissio's substrate) ----
+# amalgama silvae ut obiectum (substratum demissionis) - via vendicata
 src="$RADIX_DIR/silva/amalgama/silva.c"
 obj="$BUILD_DIR/amalgama_silva.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
@@ -159,133 +158,46 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
 fi
 obj_files="$obj_files $obj"
 
-# ---- 2b. tessera amalgam + vindex visum (M3 chunk 6: probationes
-#          cellularum sine capite; obiecta inutilia innocua) ----
-src="$RADIX_DIR/tessera/amalgama/tessera.c"
-obj="$BUILD_DIR/amalgama_tessera.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ]; then
-    echo "  [amalgama] tessera.c"
-    if ! clang "${GCC_FLAGS[@]}" "-I$RADIX_DIR/include" -c "$src" -o "$obj"; then
-        echo "FRACTA: amalgama tessera" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-src="$OFF_DIR/instrumenta/vindex_visum.c"
-obj="$BUILD_DIR/vindex_visum.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/vindex_visum.h" ]; then
-    echo "  [vindex] vindex_visum.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-        -I"$RADIX_DIR/tessera/amalgama" -I"$OFF_DIR/instrumenta" \
-        -c "$src" -o "$obj"; then
-        echo "FRACTA: vindex_visum" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-
-# ---- 2c-0. nexus_ordines (unitas ordinum communis - legatus) ----
-src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
-obj="$BUILD_DIR/nexus_ordines.o"
-# newest_header: silva.h mutatio formae (SilvaMacroVista v0.2!) sine
-# ea obiectum vetus + amalgama recens = corruptio ABI in acervo
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$RADIX_DIR/silva/instrumenta/nexus_ordines.h" ] \
-    || [ -n "$(newest_header "$obj")" ]; then
-    echo "  [ordines] nexus_ordines.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-        -c "$src" -o "$obj"; then
-        echo "FRACTA: nexus_ordines" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-
-# ---- 2c-0b. silva_lexicon (compositio systematis - praeparator) ----
-src="$RADIX_DIR/silva/instrumenta/silva_lexicon.c"
-obj="$BUILD_DIR/silva_lexicon.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$RADIX_DIR/silva/instrumenta/silva_lexicon.h" ] \
-    || [ -n "$(newest_header "$obj")" ]; then
-    echo "  [lexicon] silva_lexicon.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "-I$RADIX_DIR/silva/fontes" "-I$RADIX_DIR/materia/fontes" \
-        -c "$src" -o "$obj"; then
-        echo "FRACTA: silva_lexicon" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-
-# ---- 2c. praeparator (unitas oneratorum communis) + sessio ----
-src="$OFF_DIR/instrumenta/praeparator.c"
-obj="$BUILD_DIR/praeparator.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/praeparator.h" ] \
-    || [ -n "$(newest_header "$obj")" ]; then
-    echo "  [praeparator] praeparator.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-        -c "$src" -o "$obj"; then
-        echo "FRACTA: praeparator" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-
-# compendium capitis (communis legato et briar - 2026-09-24)
-src="$OFF_DIR/instrumenta/compendium.c"
-obj="$BUILD_DIR/compendium.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/compendium.h" ] \
-    || [ -n "$(newest_header "$obj")" ]; then
-    echo "  [compendium] compendium.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-        -c "$src" -o "$obj"; then
-        echo "FRACTA: compendium" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-
-src="$OFF_DIR/instrumenta/sessio.c"
-obj="$BUILD_DIR/sessio.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/sessio.h" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/praeparator.h" ] \
-    || [ -n "$(newest_header "$obj")" ]; then
-    echo "  [sessio] sessio.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-        -c "$src" -o "$obj"; then
-        echo "FRACTA: sessio" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-
-src="$OFF_DIR/instrumenta/legatus.c"
-obj="$BUILD_DIR/legatus.o"
-if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/legatus.h" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/praeparator.h" ] \
-    || ! [ "$obj" -nt "$OFF_DIR/instrumenta/compendium.h" ] \
-    || [ -n "$(newest_header "$obj")" ]; then
-    echo "  [legatus] legatus.c"
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" \
-        -c "$src" -o "$obj"; then
-        echo "FRACTA: legatus" ; exit 1
-    fi
-fi
-obj_files="$obj_files $obj"
-
-# ---- 3. officina fontes ----
-shopt -s nullglob
-for src in "$OFF_DIR"/fontes/*.c; do
-    [ -f "$src" ] || continue
-    base="${src##*/}"; base="${base%.c}"
-    obj="$BUILD_DIR/$base.o"
-    if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] || [ -n "$(newest_header "$obj")" ]; then
-        echo "  [officina] $base.c"
-        if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj"; then
-            echo "FRACTA: $base.c" ; exit 1
-        fi
-    fi
-    obj_files="$obj_files $obj"
+# amalgama tesserae + vindex visum (M3 chunk 6: probationes cellularum
+# sine capite; obiecta inutilia innocua)
+_vocatio_addere "$RADIX_DIR/tessera/amalgama/tessera.c" \
+    "$BUILD_DIR/amalgama_tessera.o" "-I$RADIX_DIR/include"
+_vocatio_addere "$OFF_DIR/instrumenta/vindex_visum.c" \
+    "$BUILD_DIR/vindex_visum.o" "${INCLUDE_FLAGS[@]}" \
+    "-I$RADIX_DIR/tessera/amalgama" "-I$OFF_DIR/instrumenta"
+# nexus_ordines (unitas ordinum communis - legatus)
+_vocatio_addere "$RADIX_DIR/silva/instrumenta/nexus_ordines.c" \
+    "$BUILD_DIR/nexus_ordines.o" "${INCLUDE_FLAGS[@]}"
+# silva_lexicon (compositio systematis - praeparator): unitas silvae,
+# radices fontium silvae et materiae PROPRIAE (vide supra)
+_vocatio_addere "$RADIX_DIR/silva/instrumenta/silva_lexicon.c" \
+    "$BUILD_DIR/silva_lexicon.o" "${INCLUDE_FLAGS[@]}" \
+    "-I$RADIX_DIR/silva/fontes" "-I$RADIX_DIR/materia/fontes"
+# praeparator (unitas oneratorum communis), compendium capitis (communis
+# legato et briar), sessio, bibliothecae (#include -> plagulae,
+# officina-bibliothecae T2), legatus
+for m in praeparator compendium sessio bibliothecae legatus; do
+    _vocatio_addere "$OFF_DIR/instrumenta/$m.c" "$BUILD_DIR/$m.o" \
+        "${INCLUDE_FLAGS[@]}"
 done
 
+# fontes officinae
+shopt -s nullglob
+for src in "$OFF_DIR"/fontes/*.c; do
+    base="${src##*/}"; base="${base%.c}"
+    _vocatio_addere "$src" "$BUILD_DIR/$base.o" "${INCLUDE_FLAGS[@]}"
+done
+ante="$(stat -f '%i %N' "$BUILD_DIR"/*.o 2>/dev/null)"
+if ! _cursor_plures_currere "$VOCATIONES"; then
+    echo "FRACTA: obiecta (fons a clang supra nominatus)" ; exit 1
+fi
+post="$(stat -f '%i %N' "$BUILD_DIR"/*.o 2>/dev/null)"
+echo "  obiecta: $(grep -c . "$VOCATIONES") per bin/compilator, $(comm -13 <(echo "$ante" | sort) <(echo "$post" | sort) | grep -c .) mutata"
+
 # ---- 4. discover, compile, run probationes ----
+# Probatio per compilatorem (obiectum in build/probationes/), nexus SOLUM
+# si signum nexus mutatum (tools/nexus_probationis.sh): olim omnis
+# probatio omni cursu compilata et nexa.
 total=0 ; passed=0 ; failed_names=""
 for test_file in "$OFF_DIR"/probationes/probatio_*.c; do
     name="$(basename "$test_file" .c)"
@@ -294,10 +206,17 @@ for test_file in "$OFF_DIR"/probationes/probatio_*.c; do
     fi
     total=$((total + 1))
     bin="$BUILD_DIR/$name"
+    obj="$BUILD_DIR/probationes/$name.o"
     echo ""
     echo "=== $name ==="
-    if ! clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" "$test_file" $obj_files -o "$bin"; then
+    if ! _cursor_compilare "$test_file" "$obj"; then
         echo "FRACTA (compilatio): $name"
+        failed_names="$failed_names $name"
+        continue
+    fi
+    # shellcheck disable=SC2086 (obj_files: verba consulto scissa)
+    if ! probationem_nectere "$bin" "${GCC_FLAGS[*]}" "$obj" $obj_files; then
+        echo "FRACTA (nexus): $name"
         failed_names="$failed_names $name"
         continue
     fi
@@ -325,7 +244,8 @@ if [ "$total" -eq 0 ]; then
     exit 2
 fi
 
-# canalis excubitoris: verdictum post-constructionem (tacet nisi
-# stala - obiecta stala POST constructionem = foramen regularum)
-"$RADIX_DIR/excubitor.sh" -tacitus "officina/build/" >&2 || true
+# canalis excubitoris remotus (budget B2 E3/J9): obiecta per
+# compilatorem (clavis contenti) - mtime iudicium excubitoris superfluum
+# et mendax (obiectum identicum non rescribitur: post caput tactum
+# 'STALA' falso clamaret), ut tessera, gesta et compile_tests.sh
 exit 0

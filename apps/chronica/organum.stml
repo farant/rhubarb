@@ -1,0 +1,51 @@
+<!-- organum.stml - manifestum chronicae (genus "chronica"; chronica
+     C3, spec project-specs/chronica-spec.md): tabula temporum ex
+     eventis notarum (<event year=...>): flumen continuum (ordinarium)
+     aut annus per paginam. Fontes
+     (chronica_fontes.h) a vico dati - hic solum status visus. Annus
+     in loco: comes (Cmd+T) anni sui est. -->
+<organum genus="chronica" versio="1">
+
+  <actiones>
+    <actio nomen="chronica.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="flumen" scriptor="chronica.agere"
+            semita="ligatio" historia="impelle">
+      <optio>flumen</optio>
+      <optio>annus</optio>
+      <optio>personae</optio>
+      <optio>loca</optio>
+      <optio>persona</optio>
+      <optio>locus</optio>
+    </campus>
+    <campus nomen="nomen" typus="textus" vita="persistens"
+            scriptor="chronica.agere" semita="status" historia="impelle"
+            nota="persona aut locus visus (titulus exactus)"/>
+    <campus nomen="annus" typus="numerus" vita="persistens"
+            scriptor="chronica.agere" semita="ligatio"
+            nota="annus visus (negativus = a.C.n.)"/>
+    <campus nomen="pagina" typus="numerus" vita="persistens"
+            scriptor="chronica.agere" semita="status"
+            ambitus="ligatio"
+            nota="annus: pagina in anno; flumen: pagina post eam ubi
+                  annus incipit (ab 0)"/>
+    <campus nomen="electus" typus="textus" vita="transiens"
+            scriptor="chronica.agere"
+            nota="res electa: '<liber>#<pagina>#<linea>.<columna>'
+                  eventus; + '#p<k>' persona k, '#l' locus; absens =
+                  nulla"/>
+  </status>
+
+  <!-- argumentum nudum (visus fluminis): vacuum = positio servata;
+       numerus = annus -->
+  <cognomina>
+    <cognomen semita="chronica/flumen"/>
+    <cognomen typus="numerus" semita="chronica/flumen/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

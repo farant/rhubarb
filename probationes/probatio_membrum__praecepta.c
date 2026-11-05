@@ -160,6 +160,15 @@ _probare_claves (
     /* forma longior ignota: nihil (olim littera prima congruebat) */
     e = clavis((clavis_t)'T', 'T', 't', (i32)MOD_SHIFT);
     CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
+    /* N4.3: "Tab" sine Shift, "S-Tab" cum Shift (navigator nexus) */
+    e = clavis(CLAVIS_TABULA, IX, IX, ZEPHYRUM);
+    CREDO_VERUM(praecepta_clavis_congruit("Tab", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("S-Tab", &e));
+    e = clavis(CLAVIS_TABULA, IX, IX, (i32)MOD_SHIFT);
+    CREDO_VERUM(praecepta_clavis_congruit("S-Tab", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
+    e = clavis(CLAVIS_TABULA, IX, IX, (i32)MOD_IMPERIUM);
+    CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
 }
 
 /* ad clavem per visum: "a" in A = t.a, in B = t.g; Enter solum in B */

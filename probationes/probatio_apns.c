@@ -68,6 +68,18 @@ _sectio_configuratio (
         "api.sandbox.push.apple.com");
     CREDO_AEQUALIS_I32(cfg.portus, CDXLIII);
     CREDO_AEQUALIS_I32(cfg.ancora.mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(cfg.hospes_sandbox.mensura, ZEPHYRUM);
+
+    CREDO_GRADUS("hospes_sandbox optionale (pulsus-plan C7)");
+    CREDO_NECESSE(configurationem_scribere(via, "<apns clavis_via=\""
+        "apns.clavis\" clavis_id=\"PROBA12345\" turma=\"TURMA12345\""
+        " thema=\"earth.golden.pictor\" hospes=\"api.push.apple.com\""
+        " hospes_sandbox=\"api.sandbox.push.apple.com\"/>"));
+    CREDO_VERUM(apns_configurationem_legere(via, &cfg, &causa,
+        piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(cfg.hospes, "api.push.apple.com");
+    CREDO_CHORDA_AEQUALIS_LITERIS(cfg.hospes_sandbox,
+        "api.sandbox.push.apple.com");
 
     CREDO_GRADUS("portus et ancora (probationes); ~/ expanditur");
     CREDO_NECESSE(configurationem_scribere(via, "<apns clavis_via=\""

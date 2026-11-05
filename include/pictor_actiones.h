@@ -67,6 +67,10 @@ nomen structura {
           vacuum (*inscriptionem_abicere)(vacuum* ctx);
     /* plan-5 T8: EVENTUS_RESUMPTIO -> communio excitatur (ctx idem) */
           vacuum (*communio_excitare)(vacuum* ctx);
+    /* pulsus-plan T9: "Notify family now" - eventus statim cum
+     * pictura aperta (spatium; NIHIL = nulla) (ctx idem) */
+             b32 (*pulsum_statim)(vacuum* ctx,
+                 constans character* spatium);
                 vacuum* inscriptio_ctx;
 TestaClaviaturamPonere  claviaturam_ponere;
                 vacuum* claviatura_ctx;
@@ -190,6 +194,19 @@ pictor_spectatorem_agere (
              Componens* nodus,
       constans Eventus* ev,
                 vacuum* ctx);
+
+/* pulsus-plan T10: notificatio pressa - grex (res: Xar de chorda
+ * "<replica>:<spatium>", communia iam paratae a vocante) in spectatore,
+ * pictura prima; ← → et tractus intra gregem circulariter, X gregem
+ * tollit et ad rete paginam 1 redit. Nulla nota aut res NIHIL (plures)
+ * -> rete Shared pictures pagina 1, grex sublatus. solum_e_rete: nihil
+ * nisi rete apertum (tactus dilatus non rapit). VERUM si spectator. */
+b32
+pictor_gregem_aperire_in (
+    InsulaRepositorium* repo,
+        PictorActiones* pa,
+          constans Xar* res,
+                   b32  solum_e_rete);
 
 /* plan-5 T7: salutatio prima (communio praesto, nondum visa, non
  * inscriptus) aut inscriptio pendens -> palette "salutatio" /

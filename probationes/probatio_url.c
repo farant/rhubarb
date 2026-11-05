@@ -252,6 +252,26 @@ probatio_nullum_argumenta(Piscina* piscina)
     printf("\n");
 }
 
+/* viae (navigator N2.2): '+' manet - titulus Vicipaediae "C++" */
+interior vacuum
+probatio_viam_decodificare (
+    Piscina* piscina)
+{
+    CREDO_CHORDA_AEQUALIS_LITERIS(url_viam_decodificare(
+        chorda_ex_literis("C++", piscina), piscina), "C++");
+    CREDO_CHORDA_AEQUALIS_LITERIS(url_viam_decodificare(
+        chorda_ex_literis("C%2B%2B", piscina), piscina), "C++");
+    CREDO_CHORDA_AEQUALIS_LITERIS(url_viam_decodificare(
+        chorda_ex_literis("Caf%C3%A9_au_lait", piscina), piscina),
+        "Caf\xC3\xA9_au_lait");
+    CREDO_CHORDA_AEQUALIS_LITERIS(url_viam_decodificare(
+        chorda_ex_literis("AC%2fDC", piscina), piscina), "AC/DC");
+    CREDO_CHORDA_AEQUALIS_LITERIS(url_viam_decodificare(
+        chorda_ex_literis("a%20b%zz", piscina), piscina), "a b%zz");
+    CREDO_AEQUALIS_I32(url_viam_decodificare(chorda_ex_literis("",
+        piscina), piscina).mensura, ZEPHYRUM);
+}
+
 
 /* ==================================================
  * SECTIONES
@@ -306,6 +326,13 @@ _sectio_septima (
     probatio_nullum_argumenta(c->piscina);
 }
 
+interior vacuum
+_sectio_octava (
+    CredoContextus* c)
+{
+    probatio_viam_decodificare(c->piscina);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "codificatio simplex", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -316,6 +343,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "params construere", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "params parse", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "nullum argumenta", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "viam decodificare", _sectio_octava, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

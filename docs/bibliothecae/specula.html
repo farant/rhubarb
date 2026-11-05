@@ -1,0 +1,31 @@
+<!doctype html>
+<!-- GENERATUM: docs/instrumenta/pagina_bibliothecae.py - noli manu mutare -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>specula</title>
+<link rel="stylesheet" href="../stilus.css">
+</head>
+<body>
+
+<p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
+<h1>specula</h1>
+<p class="subtitulus">specula plagulae: fossa quae legenda fit cum plagula mutatur (scripta, extensa, deleta, renominata, creata) - ansa (reactor, fenestra) in ea exspectat et plagulam solum tunc legit, numquam per pulsum (vicus quies T6c: …</p>
+
+<p>Watches one file and gives a loop a descriptor that becomes readable when the file changes: written, extended, deleted, renamed, or created after being absent. The loop waits on it (in a reactor or the window&#x27;s run loop) and reads the file only then, never every pulse. specula_exhaurire empties the pending notices and says whether the file changed; it must be called on every wake, or the loop spins. If the file is absent it watches the parent directory until the file appears. After a delete or rename (log rotation) it reopens the same path. It never reads the file itself. On macOS and iOS it uses kqueue on an O_EVTONLY descriptor, which doesn&#x27;t keep a volume from unmounting. On Linux and Android inotify isn&#x27;t written yet, so specula_creare returns NIHIL and the caller goes back to frequent pulses. Written 2026-10-26 for vicus quies, where it replaced reading the notifications log on every pulse.</p>
+
+<table>
+<tbody>
+<tr><td>Header</td><td><a href="../../include/specula.h"><code>include/specula.h</code></a></td></tr>
+<tr><td>Implementation</td><td><a href="../../lib/specula_macos.c"><code>lib/specula_macos.c</code></a> <span class="nota">(4 functions)</span>, <a href="../../lib/specula_posix.c"><code>lib/specula_posix.c</code></a> <span class="nota">(4 functions)</span></td></tr>
+<tr><td>Last change</td><td>2026-10-26 ee2654d5</td></tr>
+<tr><td>Group</td><td><a href="greges.html#fundamenta">Foundation</a></td></tr>
+</tbody>
+</table>
+<p class="nota">A stub: one paragraph so far. Generated from the ledger
+inventory <em>bibliothecae (include)</em>; edit the inventory, not this
+page.</p>
+
+</body>
+</html>

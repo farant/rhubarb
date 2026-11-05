@@ -91,3 +91,12 @@
 ## 2026-10-31 - ES256 signing moved to tessera_es256 (http2-plan T10)
 
 `nundinae_apple_tesseram_facere` keeps its identifier checks and its JSON (header with typ, claims with exp and aud) and calls `tessera_es256_facere` for the signing. BearSSL's ECDSA uses RFC 6979 deterministic nonces, so `probatio_tessera_es256` proves the token is byte-identical to the core called with the same JSON; this suite's own token test (parts, claims, signature verification, truncated key) passes unchanged. The new `tessera_apns_facere` builds Apple's push token ({"alg":"ES256","kid"} / {"iss","iat"}).
+
+## 2026-11-03 - pulsus-plan T11 step 0: development profile for push
+
+- Phone installs (`app.sh -tabula`) used the Xcode wildcard profile `Q5WC9FQ3J2.*` with a hand-written entitlements file. Wildcard profiles cannot carry capabilities, so there was no `aps-environment` and `registerForRemoteNotifications` could never succeed.
+- New: `nundinae_apple -evolutio <app>` reuses an ACTIVE IOS_APP_DEVELOPMENT profile for earth.golden.<app>, or creates one with the latest DEVELOPMENT/IOS_DEVELOPMENT certificate and every ENABLED iOS iPhone/iPad. It writes `~/.rhubarb/ios/profila/earth.golden.<app>.evolutio.mobileprovision`.
+- `tools/ios/communia.sh ios_profilum_proprium` prefers that file when it is valid for the connected phone, else falls back to the wildcard. `app.sh` copies `aps-environment` from the chosen profile into the entitlements.
+- A device registered after the profile was made is NOT added: the ACTIVE profile is reused and app.sh falls back to the wildcard (no push) with a stderr hint. Never delete; a fresh profile would need the old one to stop being ACTIVE.
+- Names: changing an App ID's capabilities turns its existing profiles INVALID, and -parare would then create a replacement under the same name. New profiles (App Store and Development) now carry " YYYY-MM-DD" so names never collide; lookup is by type + state, never by name.
+- Pure parts tested with fixtures (certificatum_evolutionis, apparatus_legere, diploma_invenire, diploma_corpus); the App Store create path now builds its body through diploma_corpus too.

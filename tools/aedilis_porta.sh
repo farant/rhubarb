@@ -38,11 +38,24 @@ MEMORIA_ORACULI="$(mktemp -d)"
 # THESAURUS (fabrica plan 2 T3): cursus portae = generatio una
 # (purgatio generationes ultimas servat, non processus aedilis)
 export THESAURUS_GENERATIO="${THESAURUS_GENERATIO:-$(date -u +%Y%m%dT%H%M%S)-porta-aedilis-$$}"
-trap 'rm -rf "$MEMORIA_ORACULI"' EXIT
+trap 'rm -rf "$MEMORIA_ORACULI" "${CT:-}" "${VR:-}"' EXIT
 # NEXUS SERVATUS (budget B1 E10): probatio cuius signum nexus (vexilla
 # + identitas obiectorum et binarii) idem est non renectitur - nexus
 # deterministicus; derivatio et compilatio tamen omni cursu currunt.
 export AEDILIS_NEXUS_SERVARE=1
+# COMMISSUM SEMEL (budget B2 J6): HEAD semel per portam (arbor gelata),
+# non 'git rev-parse' bis per derivationem (~29 ex 39 ms). Derivatio
+# una sine ambitu (aedilis git ipse vocat) in directorium temporarium;
+# valor eius exportatur - git hic non vocatur (effectus scripti: .git
+# legere = ignotum, transitus non servaretur)
+CT="$(mktemp -d)"
+_commissum_scripti () {
+    sed -n 's/^# generatum: [0-9]* | commissum: //p' "$CT/struere.sh"
+}
+AEDILIS_COMMISSUM= ./bin/aedilis probationes/probatio_xar.c \
+    --exitus "$CT" --thesaurus build/aedilis/obiecta > /dev/null 2>&1
+COMMISSUM_PORTAE="$(_commissum_scripti)"
+export AEDILIS_COMMISSUM="$COMMISSUM_PORTAE"
 
 for f in probationes/probatio_*.c; do
     basis="$(basename "$f" .c)"
@@ -144,6 +157,52 @@ if [ "$ns1$ns2$ns3$ns4" = "1010" ]; then
 else
     echo "FRACTA (nexus servatus): servatus per gradus $ns1$ns2$ns3$ns4, exspectatum 1010"
     fracta="$fracta nexus_servatus"
+fi
+
+# COMMISSUM (budget B2 J6): valor ex ambitu in commentum it (planta:
+# ambitus neglectus aut corruptus -> FRACTA); sine ambitu valor ex git
+# (supra) forma hex brevis
+AEDILIS_COMMISSUM=feedface ./bin/aedilis probationes/probatio_xar.c \
+    --exitus "$CT" --thesaurus build/aedilis/obiecta > /dev/null 2>&1
+cs1="$(_commissum_scripti)"
+rm -rf "$CT"
+case "$COMMISSUM_PORTAE" in
+    ""|*[!0-9a-f]*) cs2="" ;;
+    *) cs2="$COMMISSUM_PORTAE" ;;
+esac
+if [ "$cs1" = "feedface" ] && [ "${#cs2}" -ge 7 ]; then
+    echo "bona: commissum (ambitus feedface; sine ambitu HEAD $cs2)"
+else
+    echo "FRACTA (commissum): ambitus '$cs1' (feedface), git '$COMMISSUM_PORTAE'"
+    fracta="$fracta commissum"
+fi
+
+# CAPUT RECENTISSIMUM (budget B2 J7): vetustum() caput recentissimum
+# semel computat. Scriptum probatio_xar in directorio temporario
+# (obiecta clausurae per 'cp -p', mtime servato): (1) nihil mutatum ->
+# nulla recompilatio; (2) caput absens in principio CAPITA et caput
+# RECENS in fine -> omnia obiecta recompilantur. Olim nulla porta caput
+# scriptorum aedilis tangebat.
+VR="$(mktemp -d)"
+mkdir -p "$VR/obiecta"
+./bin/aedilis probationes/probatio_xar.c --exitus "$VR" \
+    --obiecta "$VR/obiecta" --thesaurus build/aedilis/obiecta \
+    > /dev/null 2>&1
+for o in $(sed -n 's/^compilare "[^"]*" "\([^"]*\)".*/\1/p' "$VR/struere.sh"); do
+    cp -p "build/aedilis/obiecta/$o" "$VR/obiecta/$o"
+done
+vr_n=$(grep -c '^compilare "' "$VR/struere.sh")
+vr1=$(bash "$VR/struere.sh" 2>&1 | grep -c '\[obiectum\]')
+touch "$VR/recens.h"
+sed -i '' -e "s|^CAPITA=\"|CAPITA=\"$VR/absens.h |" \
+    -e "/^CAPITA=/s|\"\$| $VR/recens.h\"|" "$VR/struere.sh"
+vr2=$(bash "$VR/struere.sh" 2>&1 | grep -c '\[obiectum\]')
+rm -rf "$VR"
+if [ "$vr_n" -gt 0 ] && [ "$vr1" = 0 ] && [ "$vr2" = "$vr_n" ]; then
+    echo "bona: caput recentissimum (recens 0/$vr_n; caput tactum $vr2/$vr_n)"
+else
+    echo "FRACTA (caput recentissimum): recens $vr1 (0), caput tactum $vr2 ($vr_n)"
+    fracta="$fracta caput_recentissimum"
 fi
 
 finis=$(date +%s)

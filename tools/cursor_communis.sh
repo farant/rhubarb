@@ -50,6 +50,25 @@ cursor_instrumenta_parare () {
     export FABRICA_THESAURUS="$THESAURUS"
     CLAUSURAE_DIR="$BUILD_DIR/clausurae"
     mkdir -p "$CLAUSURAE_DIR" "$BUILD_DIR/probationes"
+    compilator_clang_exportare
+    return 0
+}
+
+# VIA VERA CLANG SEMEL PER CURSUM (budget B2 J8): bin/compilator
+# singulus olim 'clang -print-prog-name=clang' omni processu currebat
+# (~XI ms; ~DCL processus per fusionem). Exportata ("clang" TAB via)
+# filii omnes legunt (compilator_clang_verum, lib/compilator.c); iam
+# exportata (cursor parens, silva.py) non iteratur. Fractura tacet:
+# compilator ipse resolvit ut olim.
+compilator_clang_exportare () {
+    case "${COMPILATOR_CLANG_VERUM:-}" in
+        clang$'\t'/*) return 0 ;;
+    esac
+    local via
+    via="$(clang -print-prog-name=clang 2>/dev/null)" || return 0
+    case "$via" in
+        /*) export COMPILATOR_CLANG_VERUM="clang"$'\t'"$via" ;;
+    esac
     return 0
 }
 

@@ -101,6 +101,10 @@ _communionem_aperire (
     (vacuum)pictor_communio_inscriptionem_resumere(h->communio);
     pictor_communio_incipere(h->communio);
     (vacuum)pictor_salutationem_ponere(h->montatio);
+    /* pulsus-plan T9: notificationes (iOS) - nunc si inscripta, aliter
+     * post inscriptionem. T10: post salutationem, quia tactus initii
+     * frigidi hic traditur et palettam suam ponit */
+    pictor_communio_pulsum_parare(h->communio, a);
 }
 
 b32

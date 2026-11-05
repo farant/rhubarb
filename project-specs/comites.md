@@ -138,6 +138,9 @@ scriba book in the volume (pages, own viewed page)
 | **P5a** | View relations slice: `quaestio` (Cmd+F). Implemented 2026-10-22: manifest `<aditus><iter nomen="quaestio" semita="URI" advocare="verum"/></aditus>` (organum.canon; `organum_iter`), host key Cmd+F -> `vicus_aditum_sequi(v, "quaestio")` on the FOCUSED pane. With `semita`: that view opens at the URI (mutare, focus right) and is advocated; without: the pane's own `facies.advocatum`. Answers: calendar -> `indagatio?genus=res`, scriba -> `indagatio?genus=liber`, saints -> `sancti/index` + its prompt, contacts and search -> their own prompt; terminal declares nothing (Cmd+F swallowed). Esc on the summoned prompt (still open, nothing committed, no click) cancels the whole summon: right history back to before, focus back to its side (Fran 2026-10-22; also Cmd+Shift+F). |
 | **P5b** | Companions searchable. Implemented 2026-10-22: record `comes/<locus>/comes` (label + the right view's canonical route; text children, not attributes - the STML writer emits attribute values raw) written by the app's `comitem_ponere` wrapper when shown (only when changed); search kind `comites` (cluster "Companion notes", title = label [+ " · page"], route `scriba/<page>?liber=comes/<locus>`); the gate opens the paired route on the right, `vicus_comitem_ostendere` shows the companion at that page on the left (follow starts from the CURRENT front; focus left after petitions); `IndagatioPetitio.clavis` + search field `clavis`; scriba `facies.iter_semita` makes Cmd+F in a companion search only it. Known gap: a record-only change (e.g. renamed contact) re-indexes only when a page of that companion changes. |
 | **P6 (lector L5)** | Lazy companions. DONE 2026-10-24 (plan `project-specs/lector-l5-plan.md`): showing or following a companion writes NOTHING - not the book index, the page manifest, the `comes` record nor `<prefix>/visus`. The gate opens `comes/...` books with `scriba_liber_aperire_pigre`; pages are `scriba_documentum_nasciturum`; the first non-empty commit (or new / named page) gives birth: page, then index, then the record with the companion's latest title and route (`ComesPendens` in `ContextusScribae`). Other scriba books unchanged. Empty companions from before are not cleaned up; the lector note mark counts a companion only when it has text. |
+| **P7** | Claude Code sessions (Fran 2026-10-27). Plan below (§XI). |
+| **P8** | tmux hooks tell vicus about window/pane switches (Fran 2026-10-27). Plan below (§XII). |
+| **P9** | Ctrl+1…9 switches the focused terminal's tmux window (Fran 2026-10-27). §XII. |
 | later | Drawing mode (§VII). (Saints as a search kind: done in D5 S4.) |
 
 ## VII. Future consumer: drawing mode (Fran 2026-10-22)
@@ -183,3 +186,85 @@ None at the spec level; header text and names come with each phase.
   (expected trivial: one route read).
 - Not designed: what happens to companions when an entity is deleted
   (a deleted contact's companion book stays; orphan listing later).
+
+## XI. P7: one companion per Claude Code session (Fran 2026-10-27)
+
+**Goal.** When the front terminal's active tmux pane runs a Claude
+Code session, its companion is that SESSION's book, not the tmux
+window's: `terminale/claude/<session id>`, title = the session's title
+(colloquia: `/rename` > ai-title > directory). The same book comes back
+wherever the session runs, after `claude --resume` and after a
+`/rename`.
+
+**Decided (Fran 2026-10-27).** Key = session id (checked on the live
+event log: 13 resumed sessions, every one kept its id). `/clear`
+starts a new id -> a new, empty companion. A pane with no live Claude
+session keeps the P4 key (`terminale/tmux/<session>/<window>`).
+Existing tmux-window books stay where they are (no carry-over). Same
+change: no tmux process in the pulse (desideratum
+01M5XVKDY603XWG3SYXYKQQ4Q4 - P4's lookup ran list-clients +
+list-panes synchronously once a second while the terminal streamed).
+
+**Shape.** Which Claude session is in a tmux pane is already known in
+memory: colloquia's live state (`ContextusAdmonitionum.fons.status`,
+fed by the notifications log) gives each session its pane (`%17`) and
+server. What is not known without tmux is which pane is ACTIVE in the
+window the terminal's client shows. So:
+- the terminalia system (quies T2/T2b) starts `list-panes` next to
+  `list-clients`, per server, on the same schedule (foreground change,
+  one confirmation 1 s later, every 5 s while a visible pane runs
+  tmux), never waiting; results go into each terminal pane's cache
+  (session, window index and name, active pane id);
+- the locus is computed from that cache plus colloquia, in memory -
+  no process in the pulse;
+- Cmd+T and focus-left (`locum_renovare`) keep ONE synchronous query:
+  a user action, rare, and it must not read a 5 s-old window.
+
+| Task | Content |
+|---|---|
+| **P7.1** | Headers (Fran first): `colloquium_panelli` (colloquia.h), `multiplexor_panellos_incipere` (multiplexor.h). Approved 2026-10-27. |
+| **P7.2** | `colloquium_panelli`: pure; tests on fixture sessions (match, server "-" = default socket, CLAUSUM skipped, most recent wins after `/clear`). DONE 2026-10-27 (section panellus_sessionis; two plants red). |
+| **P7.3** | `multiplexor_panellos_incipere`: tests with the fake tmux (as `multiplexor_clientes_incipere`). DONE 2026-10-27 (section panellos_incipere; plant red). |
+| **P7.4** | vicus: panes queried in the terminalia system, per-pane cache, locus from cache + colloquia. Tests (fake tmux + fixture events): Claude pane -> `terminale/claude/<id>` with its title; SessionEnd -> tmux key; `/clear` -> new id; no tmux process during pulses outside the schedule. Plant: the old synchronous lookup restored -> the process-count test red. DONE 2026-10-27: also `colloquia_visus_fontem_legere` + version (Fran approved; session state advanced only with a sessions pane), each pane's own server queried; window switch follows within 5 s. Plants red (3). |
+| **P7.5** | Live look with Fran (two Claude sessions in two tmux windows, resume, /clear); worklog, ledger (close the desideratum), commit on Fran's word. DONE 2026-10-27: Fran used the per-session companions live through P8-P9 (window/pane switches, Cmd+T); `claude --resume` and `/clear` not exercised separately live (covered by the claude section). Desideratum 01M5XVKDY603XWG3SYXYKQQ4Q4 closed. |
+
+## XII. P8-P9: tmux switches reach vicus at once (Fran 2026-10-27)
+
+**Why.** Since P7.4 a tmux window or pane switch reaches the companion
+only through the terminalia system's 5 s re-check (vicus cannot see a
+switch inside tmux: the pane's foreground program stays `tmux`).
+
+**P8 - hooks.** tmux 3.4 runs a command on `session-window-changed`,
+`client-session-changed` and `window-pane-changed` (checked on a
+private server 2026-10-27: all three fire, `#{socket_path}` and
+`#{pane_id}` expand to the server and the NEW active pane; sourcing
+the same `set-hook` lines again replaces, never duplicates). Each hook
+runs `run-shell -b '<praeco> tmux "#{socket_path}" "#{pane_id}"'`,
+which appends an event `tmux` to the notifications log; vicus already
+wakes on that log (specula), and a `tmux` event among the pulse's new
+events makes the terminalia query run at once. The 5 s re-check stays
+as a fallback (servers without the hooks) until the hooks have proven
+themselves.
+
+Installation: `praeco tmux instituere` writes praeco's own hook file
+(`<colloquia dir>/tmux.conf`, absolute praeco path inside - a tmux
+server started with a short PATH must still find it), puts a marked
+block into `~/.tmux.conf` that sources it (replaced on re-runs), and
+sources it into the running server - no tmux restart. A separate file
+rather than re-sourcing `~/.tmux.conf`: Fran's conf has `set -as`
+appends, which would duplicate on every re-source.
+
+**P9 - Ctrl+1…9.** Focused terminal pane attached to tmux (cache
+`nota`): Ctrl+N runs `select-window -t =<session>:N` on that pane's
+server (Fran's `base-index 1`: Ctrl+1 = window 1), then the locus
+refreshes at once. Cmd+Shift+digits were rejected: Cmd+Shift+3/4/5 are
+macOS screenshot keys, taken before the app sees them.
+
+| Task | Content |
+|---|---|
+| **P8.1** | Headers (Fran first): event `tmux` doc (praeconium.h, approved 2026-10-27), `praeconium_tmux_configuratio`, `praeconium_tmux_conf` (praeconium.h), `multiplexor_configurationem_legere` (multiplexor.h); praeco usage. Approved 2026-10-27 (hooks in praeco's own file, sourced from a marked block). |
+| **P8.2** | Pure functions + praeco `tmux` / `tmux instituere`. Tests: hook text, block insert/replace/keep the rest, file sourced into a private server and a window switch runs the hook (fake praeco script). DONE 2026-10-27: sections tmux_configuratio, tmux_conf (praeconium), hami_praeconis (multiplexor; window and pane hook checked separately); plants red (3); sandboxed `instituere` check. Test tmux servers now start with a fixture config, not Fran's ~/.tmux.conf. |
+| **P8.3** | vicus: `tmux` event -> terminalia query in the same wake. Test: event appended -> query without waiting 5 s. Plant. DONE 2026-10-27: `terminalia_excitata` set from the pulse's events (quies section eventus_tmux: `status` -> no query, `tmux` -> query within 500 ms; plant red). 5 s re-check kept as fallback. |
+| **P8.4** | Live: install from the secunda build (hook points at its path), switch windows/panes; after the merge re-run from `~/.bin`. DONE 2026-10-27 (Fran: switching is "very fast now"; 3 hooks in the server, events in the log, backup `~/.tmux.conf.ante-praeco`). OWED after the merge: re-run `praeco tmux instituere` from `~/.bin`. |
+| **P9.1** | Header: `multiplexor_fenestram_eligere` (multiplexor.h). Then Ctrl+N in vicus; tests on a private server; live look. Headers approved 2026-10-27 (+ VicusFacies `clavem_sumere`). Implemented: sections fenestram_eligere (multiplexor), claves (comites_terminale); plants red (2; the routing guard in destinare is uncovered - see vicus.worklog). Live look DONE 2026-10-27 (Fran: "works great!"). |
+

@@ -78,3 +78,16 @@ and cursuum pools and NIHILs the pointers; idempotent. vicus calls it
 through `vicus_applicatio_admonitiones_claudere`. Test uses a fake mensor
 (`sleep 1; touch marker`): finire must return < 0.5 s and the marker must
 never appear.
+
+## 2026-10-27 - comites P7.4: colloquia_visus_fontem_legere + versio
+
+The session state (ColloquiorumFons.status) advanced only in
+fontem_pulsare - only while a sessions pane was pulsed, which also
+polls tmux. vicus needs it without that pane (companion key for a
+Claude session in a terminal pane), so fontem_legere reads ONLY new
+events (praeconium_legere_ab from positio, own temporary arena - the
+fons scheda belongs to the pane's pulse) and applies them. Since a
+second reader consumes events the pane's pulse would no longer see,
+`versio` counts applications and fontem_pulsare reports `mutatum` when
+`versio != versio_pulsata`. Test section fons_legere; plant (version
+check dropped) red in section fons.

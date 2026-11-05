@@ -31,6 +31,21 @@ nomen b32 (*TestaTextumPonere)(vacuum* ctx, chorda textus);
  * EVENTUS_DEPOSITIO (via plagulae) venit. */
 nomen b32 (*TestaImaginemEligere)(vacuum* ctx);
 
+/* pulsus-plan T8: notificationes APNs (iOS solum).
+ * signum: tessera apparatus hex minuscula; vacua + causa = negata aut
+ * defectus (vocatur in omni initio quo iOS tesseram dat).
+ * tactus: notificatio pressa - userInfo totum ut JSON (applicatio
+ * "pulsus" legit, pulsus_tactum_legere); tactus initii frigidi
+ * tenetur et post primum pulsum_petere traditur.
+ * pulsum_petere: permissionem (monitum + sonus) petit et inscribit;
+ * VERUM = petitio incepta. Omnia in filo principali, extra quadrum;
+ * chordae solum intra functionem valent. */
+nomen vacuum (*TestaPulsusSignum)(vacuum* ctx, chorda tessera_hex,
+    chorda causa);
+nomen vacuum (*TestaPulsusTactus)(vacuum* ctx, chorda corpus_json);
+nomen b32 (*TestaPulsumPetere)(vacuum* sui, TestaPulsusSignum signum,
+    TestaPulsusTactus tactus, vacuum* ctx);
+
 /* quod testa applicationi praebet */
 nomen structura {
                Piscina* piscina;            /* testa possidet et destruit */
@@ -74,6 +89,12 @@ nomen structura {
     /* plan-5 T7/T9: claviatura systematis (iOS); NIHIL = physica */
 TestaClaviaturamPonere  claviaturam_ponere;
                 vacuum* claviatura_ctx;
+    /* pulsus-plan T8 (iOS): NIHIL ubi non sustinetur (macOS, Android
+     * - ambitus ZEPHYRUM impletus). pulsus_ambitus "sandbox" |
+     * "productio" ex aedificatione (app.sh -DPULSUS_AMBITUS, C8) */
+     TestaPulsumPetere  pulsum_petere;
+                vacuum* pulsus_ctx;
+    constans character* pulsus_ambitus;
 } TestaAmbitus;
 
 /* quod applicatio testae reddit (testa eam ZEPHYRUM implet ante) */
@@ -113,6 +134,14 @@ testa_optiones_legere (
               s32   argc,
         character** argv,
     TestaOptiones*  o);
+
+/* pulsus-plan T8: octeti (tessera APNs) -> hex minuscula in piscina;
+ * vacua si NIHIL aut n 0 (testa_ios.m eam adhibet) */
+chorda
+testa_signum_hex (
+    constans i8* octeti,
+            i32  n,
+        Piscina* piscina);
 
 /* basis programmatis ("bin/pictor" -> "pictor"): titulus piscinae, ut olim
  * per applicationem; "applicatio" si NIHIL aut vacua */

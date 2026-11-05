@@ -61,19 +61,24 @@ imperium_in (
      constans character* a5,
                 Piscina* p)
 {
-    constans character* v[X];
+    constans character* v[XII];
      ProcessusResultus  r;
 
+    /* comites P8: -f fixum - servitor probationis ~/.tmux.conf
+     * usoris non legit (hami praeconis eventus in librum verum
+     * scriberent; indices ab I olim ex conf usoris pendebant) */
     v[ZEPHYRUM]  = s->binarium;
-    v[I]         = "-S";
-    v[II]        = socket;
-    v[III]       = a0;
-    v[IV]        = a1;
-    v[V]         = a2;
-    v[VI]        = a3;
-    v[VII]       = a4;
-    v[VIII]      = a5;
-    v[IX]        = NIHIL;
+    v[I]         = "-f";
+    v[II]        = "probationes/fixa/multiplexor/servitor.conf";
+    v[III]       = "-S";
+    v[IV]        = socket;
+    v[V]         = a0;
+    v[VI]        = a1;
+    v[VII]       = a2;
+    v[VIII]      = a3;
+    v[IX]        = a4;
+    v[X]         = a5;
+    v[XI]        = NIHIL;
     r            = processus_exsequi(v, V * M, p);
     redde r.successus && r.codex_exitus == ZEPHYRUM;
 }

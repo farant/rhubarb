@@ -168,3 +168,33 @@ testa_cursum_dimittere (
         c->forma.finis(c->forma.finis_ctx);
     }
 }
+
+chorda
+testa_signum_hex (
+    constans i8* octeti,
+            i32  n,
+        Piscina* piscina)
+{
+       hic_manens constans character HEX[] = "0123456789abcdef";
+                              chorda h;
+                                 i32 i;
+
+    h.datum    = NIHIL;
+    h.mensura  = ZEPHYRUM;
+    si (!octeti || n == ZEPHYRUM || !piscina)
+    {
+        redde h;
+    }
+    h.datum = (i8*)piscina_allocare(piscina, (memoriae_index)n * II);
+    si (!h.datum)
+    {
+        redde h;
+    }
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        h.datum[i * II]      = (i8)HEX[(octeti[i] >> IV) & 0xf];
+        h.datum[i * II + I]  = (i8)HEX[octeti[i] & 0xf];
+    }
+    h.mensura = n * II;
+    redde h;
+}

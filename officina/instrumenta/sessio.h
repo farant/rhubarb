@@ -112,7 +112,9 @@ typedef struct {
     b32 sine_capitibus; /* ambulatio capitum omissa (probae
                                  * velociores; #include tunc deest) */
     /* bibliothecae demissae SEMEL in mundum (viae radici relativae,
-     * e.g. "lib/piscina.c") */
+     * e.g. "lib/piscina.c") - ADDITAMENTUM tantum: turni #include
+     * clausuram suam per aedilem onerant (officina-bibliothecae);
+     * hic solum quod nullum caput declarat */
     const char* const* plagulae;
     s32 plagulae_numerus;
     b32 sine_recusationibus;  /* modus scripti: scripturae/

@@ -30,3 +30,36 @@
 - Inverting mask 0 (`(x + y) % II == I`) is RED: 5/40 symbols unreadable (ECC-M V2 decoded 14 of 26 octets). Restored, green.
 
 **Still in the prae step:** library compiles (1.9 s wall, about 7.7 s CPU; a `bin/compilator` batch mode would amortize the per-call startup and compiler identification) and `amalgamata_probare` (0.9 s; could also become its own gate, as could the post-step oracles).
+
+## 2026-11-02 — budget B2 G6/J5b: tests link an archive, one full link per run
+
+Every radix test linked all 419 library objects (+4 frameworks): an
+18.4 MB binary each, ~8 GB written per frigida. Fran's ruling (J5b,
+tabularium decision 01M6FQ3GYV): link each test against
+`build/probationes/libradix.a` (`ar rcs`, once per run, ~0.3 s) with
+`-ObjC`, and keep the whole-library guarantees — no duplicate globals,
+no unresolved externs, which the per-test link proved as a side effect
+— with ONE link per run: an empty `main` with `-Wl,-all_load` against
+the same archive (`nexus_radicis_parare`, called once before the tests
+on both the serial and the FILA path; failure = run fails, counted as
+"nexus_plenus").
+
+Trap found while prototyping: an EMPTY archive (zsh didn't word-split
+the object list, so `ar` got one giant name) made the `-all_load` link
+pass. The runner now checks the member count (minus __.SYMDEF) against
+the object list.
+
+`-ObjC` is insurance: no .m defines a category or looks a class up by
+name today, so nothing exercises it (binary 332 KB with it vs ~130 KB
+without). `build/test_logs/obiecta_probationum.txt` is no longer
+written (only a frozen computus fixture names it).
+
+Plants (lib/cursor.c, which probatio_xar never pulls in): a second
+definition of COLOR_NIGER -> "duplicate symbol '_COLOR_NIGER'", NEXUS
+PLENUS FRACTUS; a call to a function defined nowhere -> "Undefined
+symbols", NEXUS PLENUS FRACTUS. In both, probatio_xar itself still
+passed — under the old scheme every test would have failed instead.
+Restored green.
+
+Full run: 434/434 passed, 223 s (wall unchanged — the suite is mostly
+waiting); build/probationes 5.9 GB -> 752 MB.

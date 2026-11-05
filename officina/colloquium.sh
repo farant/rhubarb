@@ -75,11 +75,33 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
 fi
 obj_files="$obj_files $obj"
 
+# nexus_ordines (praeparator eam vocat post 8bbf97f7; deerat usque
+# ad 2026-11-02 - parcum 01M4XR3Q; porta: probatio_officina_lanceatores)
+src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
+obj="$BUILD_DIR/nexus_ordines.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || caput_recentius "$obj"; then
+    echo "  [ordines] nexus_ordines.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
+
 src="$OFF_DIR/instrumenta/praeparator.c"
 obj="$BUILD_DIR/praeparator.o"
 if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
     || caput_recentius "$obj"; then
     echo "  [praeparator] praeparator.c" >&2
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
+
+# bibliothecae (#include -> plagulae per aedilem; sessio eam vocat in
+# turnis directivis - officina-bibliothecae T3)
+src="$OFF_DIR/instrumenta/bibliothecae.c"
+obj="$BUILD_DIR/bibliothecae.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || caput_recentius "$obj"; then
+    echo "  [bibliothecae] bibliothecae.c" >&2
     clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
 fi
 obj_files="$obj_files $obj"

@@ -188,3 +188,137 @@ via compilator, probatio_ludus_tessera_pons FRACTA (:157).
 
 Remaining E3 suites (tessera, gesta, officina, briar, oratio): not
 done in this pass.
+
+## 2026-11-02 — budget B2 E3/J9 suite II: tessera via the compilator + link skip
+
+tessera/compile_probationes.sh now goes through tools/cursor_communis.sh
+(H5 helpers): library + tessera sources as ONE `compilator --plures`
+(44 lines), each test object via `_cursor_compilare` (per-test failure
+semantics kept: one broken test = that test FRACTA, others run), and the
+test binary is relinked only when its link signature changes (flags +
+`stat -f '%N %i %m %z'` of the test object, every library object and the
+binary itself; stored in `<bin>.nexus`, as aedilis E10). The compilator
+never rewrites an identical object, so inode/mtime are stable across
+hits; a removed source changes the object list and therefore the
+signature. Excubitor call at the end removed (mtime verdict lies once
+identical objects are not rewritten), as ludus_tessera.
+
+Remember to reset `$CLAUSURAE_DIR/mandata.tsv` when not calling
+cursor_clausuras_derivare (it appends forever otherwise).
+
+Measured: warm 4 -> 1 s; after `touch include/chorda.h` 48 s (44
+recompiles) -> 1 s. Plant: inverted `tessera_stilus_aequalis` -> 1 object
+changed, tests relinked, 10/15 FRACTA; revert green. First plant attempt
+(dropping the `ornamenta` comparison) was an equivalent mutant: the test's
+a/b styles also differ in colour.
+
+## 2026-11-02 — E3/J9 suite III: gesta + shared tools/nexus_probationis.sh
+
+The test-link skip moved into tools/nexus_probationis.sh
+(`probationem_nectere <bin> "<flags>" <objects...>`), sourced by the
+runners only — a new file rather than cursor_communis.sh so the change
+does not fan out to every suite that sources the cursor. tessera now uses
+it too. gesta: sqlite stays on the E7 vendored path (source-newer rule);
+32 library + gesta objects through one `--plures`, tests per
+`_cursor_compilare`, excubitor call removed. Measured: warm 8 -> 7 s (the
+tests themselves, daemons and sqlite, dominate), header touch 54 -> 10 s.
+Plant: `!` on the first `_est` of gesta_inventarium_eventus_est -> 1
+object changed, 3/7 (probatio_gesta_inventarium and dependents), revert
+7/7.
+
+## 2026-11-02 — E3/J9 suite IV: officina
+
+officina had the most hand-written mtime rules: newest-header for most
+objects, per-object header lists for the instrumenta units, and the
+tessera amalgam on a source-only rule (header changes never rebuilt it).
+All 33 objects except the E7 vendored silva amalgam now go through one
+`--plures`; a local `_vocatio_addere <src> <obj> <include flags...>`
+keeps each unit's own include roots (tessera amalgam: include/ only;
+silva_lexicon: silva/fontes + materia/fontes). First run rewrote exactly
+1 object — consistent with the old header-blind amalgam rule. Measured:
+warm 16 -> 11 s, header touch 68 -> 11 s. Plant: punctum_tollere returns
+FALSUM after removing -> 1 object changed, 13/15; revert 15/15.
+
+Gate blind spot (bit the officina commit): the gesta commit ADDED
+tools/nexus_probationis.sh, whose comment named the flags array; the
+vexilla gate ("every script naming it sources vexilla.sh") scans tracked
+files only, and the new file was untracked while that commit's gates ran
+— so it passed, and the NEXT commit touching any .sh failed on it. Same
+shape as portae-declaratae needing `git add -N`. Fix here: the comment no
+longer names the array. Worth a ledger note: gates that enumerate scripts
+via git ls-files should include the commit's own new files.
+
+## 2026-11-02 — E3/J9 suite V: briar
+
+82 objects (all but the E7 vendored sqlite and silva amalgam) through one
+`--plures`, including the generated build/capsula_facies_briar.c (its old
+rule was source-only); silva_lexicon keeps its private -Isilva/fontes.
+The old "custodia vetustatis / custodia capitum" blocks (same-second mtime
+equality, newest header) are gone — the content-keyed compilator makes
+them moot. `--obiecta` mode unchanged (objects at the same paths). Tests
+per `_cursor_compilare` + `probationem_nectere`; mensor_suitae timings
+kept around them. Measured: warm 12 -> 8 s; after a header touch the
+object phase is 6 s with 0 rewrites (old: 82 recompiles).
+
+FINDING (not fixed, separate item): the pre-step `corpus_symbola_generare`
+(tools/corpus_infixum.sh, "[symbola] corpus.symbola.tsv (nexus
+incrementalis)") took 83 s ALONE after `touch include/chorda.h` (load ~9).
+It dominates briar's header-touch time now, old and new alike.
+
+Plant: `_digiti` accepts only 0-8 -> 1 object changed, 19/20
+(probatio_briar_dialectus); revert 20/20.
+
+## 2026-11-02 — E3/J9 suite VII: oratio (E3 complete)
+
+76 objects through one `--plures`. The post-build excubitor check was a
+real SAFETY gate here (stale -> exit 2, "custodia capitum caput
+ignoravit"), guarding the hand-written header index. With content-keyed
+compilation there is no header index left to guard, and keeping it would
+turn every header touch into a false STALA -> exit 2 (identical objects
+are not rewritten), so it is removed with that reasoning in the comment.
+Measured: no visible wall-time change — warm 66 -> 66 s (the tests are
+~60 s), header touch 112 -> 118 s with 0 recompiles (old: 76). The touch
+cost lives elsewhere:
+
+FINDING (not fixed, separate item): `silva/nexus.sh -renovare`, run by
+this runner before the tests, took 51 s after `touch include/chorda.h`
+(2 s on a second run). With briar's corpus_symbola pre-step (83 s) these
+are the two remaining header-touch hogs in the suites.
+
+Plant: initials accepted only A-I -> 1 object changed, 16/19
+(probatio_oratio_arbor "J. Smith came."); revert 19/19.
+
+E3/J9 summary (all six raw-clang runners now on the compilator):
+ludus_tessera 765f1f2e, tessera 1b7f5edc, gesta f3a54629, officina
+85629289, briar c6ab2020, oratio (this commit).
+
+## 2026-11-02 — budget B2 J8: clang's real path once per run
+
+Every single-call `bin/compilator` process ran `clang
+-print-prog-name=clang` to find the real toolchain binary behind the
+/usr/bin/clang trampoline (the identity is keyed on that binary's
+path + stat, memo in the thesaurus). The in-process memo (T3b) only
+helped `--plures` and fabrica; the ~650 single-call processes per merge
+(probatio_una, `_cursor_compilare`, the iudex_unitatum hook) each paid
+~11 ms.
+
+Now `compilator_clang_verum()` (new, public, lib/compilator.c; also used
+by tools/fabrica_sutura.c, which had a copy of the same resolver) reads
+`COMPILATOR_CLANG_VERUM="clang<TAB>/abs/path"` first. It is honored only
+when the key equals the clang name being resolved and the path exists;
+otherwise print-prog-name as before. Exporters, each a no-op if already
+set: `compilator_clang_exportare` in tools/cursor_communis.sh (called
+by cursor_instrumenta_parare, so every runner and the hook), and
+`silva._clang_verum()` inside `_cursu_notatum` (porta / commissio /
+fusio), restored when the run ends. Run-scoped, not machine-scoped: an
+Xcode switch mid-run would mis-key only the rest of that run, the same
+exposure the in-process memo already had (the J8c cross-process memo
+was NOT done; that needs Fran's ruling on what counts as "compiler
+changed").
+
+Measured: single-call hit 17.2 -> 6.8 ms min (median 30 -> 7).
+Compilator gate section XIII (fake clang first on PATH counting calls):
+exported real path -> hit with no clang exec; foreign key ("gcc") ->
+ignored; other path -> different identity, miss. Plants: key not
+compared -> XIII red at step 16; export ignored -> red at step 14;
+restored green.

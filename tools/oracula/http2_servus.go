@@ -18,7 +18,12 @@
 //	                x-thema, x-genus, x-auctoritas redduntur; sine
 //	                "bearer " 403 MissingProviderToken; aliter 400
 //	                BadDeviceToken - cum -modus iterare signum nullum
-//	                400 DeviceTokenNotForTopic (regula iterandi)
+//	                400 DeviceTokenNotForTopic (regula iterandi).
+//	                Praefixa signi (pulsus-plan T4, apns_mittens):
+//	                c8 200; c410 410 Unregistered; c429 429 bis, deinde
+//	                200; c403 403 ExpiredProviderToken semel, deinde 200;
+//	                c500 semper 500. Petitio quaeque in stderr: "apns:
+//	                signum= thema= genus= prioritas= expiratio= corpus="
 package main
 
 import (
@@ -30,6 +35,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -77,15 +83,24 @@ func main() {
 		}()
 	})
 
+	var sera sync.Mutex
+	visae := map[string]int{}
 	mux.HandleFunc("/3/device/", func(w http.ResponseWriter, r *http.Request) {
 		signum := strings.TrimPrefix(r.URL.Path, "/3/device/")
 		auctoritas := r.Header.Get("authorization")
+		corpus, _ := io.ReadAll(r.Body)
+		fmt.Fprintf(os.Stderr, "apns: signum=%s thema=%s genus=%s prioritas=%s expiratio=%s corpus=%s\n",
+			signum, r.Header.Get("apns-topic"), r.Header.Get("apns-push-type"),
+			r.Header.Get("apns-priority"), r.Header.Get("apns-expiration"), corpus)
+		sera.Lock()
+		visae[signum]++
+		vices := visae[signum]
+		sera.Unlock()
 		w.Header().Set("apns-id", "00000000-0000-0000-0000-000000000001")
 		w.Header().Set("x-thema", r.Header.Get("apns-topic"))
 		w.Header().Set("x-genus", r.Header.Get("apns-push-type"))
 		w.Header().Set("x-auctoritas", auctoritas)
 		w.Header().Set("content-type", "application/json")
-		io.Copy(io.Discard, r.Body)
 		switch {
 		case r.Method != http.MethodPost:
 			w.WriteHeader(http.StatusMethodNotAllowed)
@@ -93,6 +108,22 @@ func main() {
 		case !strings.HasPrefix(auctoritas, "bearer ") || len(auctoritas) == len("bearer "):
 			w.WriteHeader(http.StatusForbidden)
 			w.Write([]byte(`{"reason":"MissingProviderToken"}`))
+		case strings.HasPrefix(signum, "c8"),
+			strings.HasPrefix(signum, "c429") && vices > 2,
+			strings.HasPrefix(signum, "c403") && vices > 1:
+			w.WriteHeader(http.StatusOK)
+		case strings.HasPrefix(signum, "c410"):
+			w.WriteHeader(http.StatusGone)
+			w.Write([]byte(`{"reason":"Unregistered"}`))
+		case strings.HasPrefix(signum, "c429"):
+			w.WriteHeader(http.StatusTooManyRequests)
+			w.Write([]byte(`{"reason":"TooManyRequests"}`))
+		case strings.HasPrefix(signum, "c403"):
+			w.WriteHeader(http.StatusForbidden)
+			w.Write([]byte(`{"reason":"ExpiredProviderToken"}`))
+		case strings.HasPrefix(signum, "c500"):
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(`{"reason":"InternalServerError"}`))
 		case *modus == "iterare" && strings.Trim(signum, "0") == "":
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(`{"reason":"DeviceTokenNotForTopic"}`))

@@ -1,0 +1,83 @@
+DATA gabc gregobase manifestum 1 (GregoBaseCorpus v0.4 bacor, zip sha256 d417a98471ba7dfdf988c27ced8a6cf3ef95110d82b6f05b11296e935e9b5bf4; exportatio GregoBase 2019-10-24; CC0 1.0; fontes omnes <= 1930; tools/gabc_arcessere.sh; columnae: plagula sha256 pars modus clavis fontes causa incipit)
+00537.gabc	947166f52367acdbacc15beb259cf5cfe0e1e5483ee7b0a29641074c3f4a28bb	hy	1	c	Graduale Romanum 1908	quota hy	Gloria laus
+01400.gabc	ad16f81466f4d618ef1a21b0f4493350dd82d748c00a831404a86bd573e18afb	in	7	c	Graduale Romanum 1908	quota in	Exspecta Dominum
+01441.gabc	d630d25d0c9d1dfc3fed2830a339b6a4be9ed6fc8a4032208641be6158903f7a	an	7	c	Graduale Romanum 1908	quota an	Cum Angelis
+01447.gabc	1aec7745fb85c9d8a88e4a5a9a2d4eed15aa8c966ec9eb815b8d0ee7dd11c778	gr	5	c	Graduale Romanum 1908	modus 5	Omnes de Saba
+01457.gabc	7aca361b1731c263a4fa1b86583055fc93920bb43e3ceac71e2d496d62694c21	co	6	c	Graduale Romanum 1908	modus 6	Dicit Dominus
+01473.gabc	21a37ecfce8cb3ec8e20c5a1bbbf665f45c0f264c37005b108fc2ce7d05d9797	gr	3	c	Graduale Romanum 1908	quota gr	Exaltabo te
+01485.gabc	c63d8782c99d6f0df1d21d173002faff52f3442ffa9daa887bf5a8806d8d3185	se	7	c	Graduale Romanum 1908	quota se	Lauda Sion
+01487.gabc	1319a8fb475724e4953e8535d7d5abe00226c10bb83c7c250f9b2fec72ee0409	of	1	c	Graduale Romanum 1908	quota of	Confitebor tibi... in toto
+01520.gabc	2013ca6999e2822b23f4611ff21451ee0ce4a21604901fb05b00961c4b5bc61b	an	4	c	Graduale Romanum 1908	quota an	Crucem tuam
+01529.gabc	d8323ed6127ae79131c94a1dea2711a6683bfde2aa4a4632802708c5e005a7e6	hy	1	c	Graduale Romanum 1908	quota hy	Pange lingua... praelium
+01535.gabc	cdfdfc4f025938dea628a2a03e0f39670c2f5974671a4cf2866939fff5674c87	al	8	c	Graduale Romanum 1908	quota al	Confitemini... quoniam (In Lit.)
+01568.gabc	7ed8fcc37499edba73c50084d71e321adea00d29fbe2ee3fcd50fed4848b9574	re	2	f	Graduale Romanum 1908	quota re	Ingrediente Domino
+01591.gabc	b1b3d5ce23132d738284ec53b6c16aa20a97ec5d3cf852aeb792f56f8441c730	gr	5	c	Graduale Romanum 1908	quota gr	Exiit sermo
+01601.gabc	f56031ba9d0aa3b9d6f6d94e50a9e894878d387def95d8012f89aa3ed8fb83d4	al	7	c	Graduale Romanum 1908	quota al	Deus qui sedes
+01621.gabc	f603ba1a7baf86f3a0c0a266460ab1bf755d51a00f4f3946c4f59c92ef94e1c3	co	6	c	Graduale Romanum 1908	modus 6	Qui manducat
+01671.gabc	fef83524c1d7ef7037507df2bb8ba68e8bc9ec3bf01a1879b6011c58b505d494	of	3	c	Graduale Romanum 1908	quota of	Exsulta satis
+01677.gabc	be790cc36dc07fe4afe081bfde41464ad858bc8696497391fb80d1c5dad6dfb2	co	6	c	Graduale Romanum 1908	modus 6	Pascha nostrum
+01698.gabc	f07c1c68abff1c9fcb85165a14620b4029906f50741d3d62872980d99ac8743f	in	5	c	Graduale Romanum 1908	quota in	Deus in loco sancto
+01699.gabc	5c4326be7c79280440a81f315f0e2e273cd11bd9874a67ac50d64b6cd8507537	of	2	f	Graduale Romanum 1908	quota of	Anima nostra
+01718.gabc	cf822841d6609f7d687867fe5f64e680d879b334c6189efe46d6fa805a8af4ba	se	1	c	Graduale Romanum 1908	quota se	Victimae paschali
+01743.gabc	0b411d87615a07105ab7da01ba4e2a93efeb9e295b35d2bbda5d81f9d09e2d6b	co	7	c	Graduale Romanum 1908	quota co	Ne tradideris me
+01751.gabc	05d6cf85d0540a2d0faa274dff9985cfc11fbf64fdf8bf7d3b1ad8dc54370eb4	of	8	c	Graduale Romanum 1908	quota of	Emitte Spiritum
+01784.gabc	52db425b6229c70ed4539f3983ef6947cfa5c99dc3ab4f384cea0d0d4efa3cae	gr	1	c	Graduale Romanum 1908	quota gr	Sciant gentes
+02377.gabc	0fdb3ebe98e3530f71dda884f8c58f297ac2d7d7302b865915b57fb51fc9b44b	tr	8	c	Graduale Romanum 1908	quota tr	Commovisti
+03228.gabc	dbfd6c2a042fedc9988586822aa4d76f4059ccd42dce52cecf86eca6934abc0d	al	8	c	Graduale Romanum 1908	quota al	Specie tua
+03290.gabc	d314f21276d2e5380d40e502affb07171edebf28a4369e05419b3a4c18e42218	an	7	c	Antiphonale Romanum 1912	quota an	Assumpta est Maria
+03324.gabc	b4e7e9cfa9f58ac7e043d7bcc8f8327358408ee2ec675cd6f53fb97789ebca6a	hy	-	c	Antiphonale Romanum 1912	quota hy	Memento salutis Auctor
+03360.gabc	e33b8d17a2cb8799897867ff4e0b1bfb54da78db35db2311b406260e25b14a6e	of	2	c	Graduale Romanum 1908	quota of	In omnem terram
+03363.gabc	cc254a4c680c9b9b040aeaec340df35e213d167f401157bde2ec3568ea676644	gr	7	c	Graduale Romanum 1908	quota gr	Clamaverunt
+03385.gabc	34ac44e2fd538548b41bf6341a7586b121761343d005199fc68ac5de5cb4ff29	al	7	c	Graduale Romanum 1908	quota al	Levita Laurentius
+03393.gabc	3d2f271839470a823096693f6232409bc4ad1a733626f8b46c91c553401e781b	co	1	c	Graduale Romanum 1908	quota co	Et si coram
+03408.gabc	781e738660cda20b3273cede76e25e8c1ba9823a2139e29af2e977bfb458c354	of	2	f	Graduale Romanum 1908	quota of	Quando orabas
+03420.gabc	893f738873661c39c501b0734bc4d74f120a743126c9fd1a1b57686b89a5383f	tr	2	f	Graduale Romanum 1908	quota tr	Gaude Maria
+03428.gabc	e0aff9a596c9a76344bf9b6f9e36cdec140fbd23e446229bed0fe5d0551039bb	in	7	c	Graduale Romanum 1908	quota in	Erit quasi signum
+03441.gabc	de411bd32704116f6d2f5a2c2e65da6469e75a2bb2110d5e7f20aeb665a5ef4b	se	1	c	Graduale Romanum 1908	quota se	Dies irae
+03498.gabc	8bdb48d420477ac63610f71cb75ed64f19030cf5a622acb889ae0e43f5747f44	in	2	f	Graduale Romanum 1908	quota in	Vultum tuum
+03508.gabc	010c3360fc0861d19c4e0f7517368232ff8125ac4dccd4c2963f6d5db699c523	co	8	c	Graduale Romanum 1908	quota co	Omnes gentes quascumque (Com)
+03525.gabc	4c86ae5e6729891ec3d266b03111532e64171f8c529ac10343f67a50215ec849	in	3	c	Graduale Romanum 1908	quota in	Sacerdotes ejus
+03528.gabc	e6d2049afe2165a245a41daa1c570c7323e8864d4fa844de060f0e9df4351cfa	co	7	c	Graduale Romanum 1908	quota co	Factus est sine alleluia
+03551.gabc	c7544d00a8f02ebd5cfcd2593f7d2d33aaae980c80273c0d1ea28555c8100c14	gr	5	c	Graduale Romanum 1908	quota gr	Electi mei
+03558.gabc	b4a8f454eb1032fc0e674013acc9b66e6f4e999d6cc6fb16dc9af055d66d711d	al	8	c	Graduale Romanum 1908	quota al	Dominus salvavit
+03561.gabc	bd932661ada166e37ada225e401c6dec7b0d17d6885c6fe3884cfcd0c06bf363	hy	3	c	Graduale Romanum 1908	quota hy	Te Deum (tonus solemn)
+03578.gabc	97dfb5eb028ff4cdaf04bad8abbd5c96b2efde4a5f975c02e7dc7255b849e344	tr	2	f	Graduale Romanum 1908	quota tr	Gratificavit nos
+03626.gabc	3f081091d2d4c73cd7e6d94751aea1d564f5ec3cea6ba0a1212a828465629937	gr	4	c	Graduale Romanum 1908	quota gr	Domine praevenisti
+03636.gabc	d957e6a719ead6e0492fd9545a6d79373c26e1ee804043059a88d4529b88c5d6	an	4	c	Graduale Romanum 1908	quota an	Asperges me (ad lib) II.
+03639.gabc	c4318128b632704e899da4de43dbe158113de1d64e8055417e0bf9f875731fee	co	3	c	Graduale Romanum 1908	quota co	Vigilate
+03687.gabc	be7e4966f54e4b46ec8d97295befcecbf2d4027ccd2e69135ff24ca2ee45affa	al	1	c	Graduale Romanum 1908	quota al	Corona tribulationis
+03722.gabc	513b494b31a64fe20fe8ff0825e844ea4a8389c4db16927c449c991e7c9660e1	in	1	c	Graduale Romanum 1908	quota in	Gaudeamus... Mariae... solemnitate
+03732.gabc	514fe830047f14462e44b0c6d843fe1442e3fa27cdffc109a32563986019de6f	in	3	c	Graduale Romanum 1908	quota in	Exsultabo in Jerusalem
+03741.gabc	225aa29a109080922b6cfb28efe67c3eeabf9976d1d8d3a49e36e9e7824de768	of	1	c	Graduale Romanum 1908	quota of	Recordare Virgo
+03745.gabc	df3ea712aa3d6bd2f64a10393ec19d8879523834fd934feb33569ca7c3dc030c	tr	8	c	Graduale Romanum 1908	quota tr	Domine Deus
+03751.gabc	bb65d368321588308a63e258a9fa1a22b9de660290267199d1fa715a8cb85bd7	co	1	c	Graduale Romanum 1908	quota co	Communicantes
+03758.gabc	cab1f3c78a93b8b51dddf2bf9bacbf7648269c474f6c9a03efb3c5a67b87b443	hy	8	c	Graduale Romanum 1908	quota hy	AEterne Rex
+03772.gabc	a900c3d0d120080ae6a6e32f678019bb5ec199f05b299da1b756170d625c0a59	in	3	c	Graduale Romanum 1908	quota in	In nomine Jesu... Ps. Domine
+03781.gabc	f3a0e0f1dfefacc310155177b901df98ea6c41ee98fa2d00f1dbdc5c7fce94e2	co	8	c	Graduale Romanum 1908	quota co	In omnem terram
+03783.gabc	d2c414181f6a6100b6501e589532eb70d6c4da934d2caa8f0cee68c729a363c0	of	6	c	Graduale Romanum 1908	modus 6	Benedictio perituri
+03791.gabc	6f92edbade0dc44e70ccd2809be828b355a24e98b5cd20335f408e324598a041	al	1	c	Graduale Romanum 1908	quota al	Ave Rex noster
+03819.gabc	103dd6d1efa351d6469c2fd8961ea21ac0d66d481958e47598796afc66fe8dde	re	-	c	Graduale Romanum 1908	quota re	Subvenite
+03883.gabc	2fd8c09729ab73d39204356ebd9c45fcf45fafb3ce25fb41b0dfaa725c00ce49	co	4	c	Graduale Romanum 1908	quota co	Quam pulchri
+03895.gabc	a8fc123dd72559f52245e158218f502a280523211455f0c876548e9aca859e01	al	4	c	Graduale Romanum 1908	quota al	In conspectu... Domine Deus
+03897.gabc	787a1744e5d304f4e2749bd99cc2220fbc8bde9fc6ca6a6ef51a3656d3cba90b	of	1	c	Graduale Romanum 1908	quota of	Laetamini in Domino (OFF. cum Alleluia)
+03912.gabc	5a88435ac1fd909a761c6819519462abd09e64ae1a41b15f480507f861e5d779	gr	3	c	Graduale Romanum 1908	quota gr	Hic est qui venit
+03917.gabc	64c3d20f665df3223c5c991a570b9f0ce8736e13795cfa33da82424566123ab0	gr	5	c	Graduale Romanum 1908	quota gr	Relinqui domum
+04272.gabc	474097dfd90bcade294c9dd8f044cb11f4076c0593e0a5010ec59064470c0fef	an	8	c	Antiphonale Romanum 1912	quota an	Veniet fortior
+04314.gabc	dd3e212d47f650f4bc45a1710021cbd9716ed9800a0fdd824f2a27de2395fdb7	an	1	c	Antiphonale Romanum 1912	quota an	Deposuit Dominus
+04647.gabc	4fb596bcd3ee9fda2463a9460bc76d1886374bdd8d3ff28a7f87ffd639b8dfee	an	4	c	Antiphonale Romanum 1912	quota an	Euge serve bone (Conf. non Pont.)
+04649.gabc	b9b0be097aef51cf80dc5dbd200c65723f53714c41830880e94c370b81bb06a2	an	8	c	Antiphonale Romanum 1912	quota an	Simile est regnum
+04658.gabc	78b8e36ae9e746bec59259cb83117ef439f72e30d33a1bc7e13137fbd6720819	an	1	c	Antiphonale Romanum 1912	quota an	Ecce nomen Domini
+04667.gabc	e8a41b997dca1190feddcef5f3db344e4cb3843169168ea3dc99c94da55b10d9	rb	-	f	Antiphonale Romanum 1912	quota rb	Veni ad liberandum
+04669.gabc	aa49df42df70def3e2d70d35c8c0ca708f23004f253ab9d327b8ee69ca427991	rb	-	f	Antiphonale Romanum 1912	quota rb	Super te Jerusalem orietur
+07396.gabc	5ec001e6426bd0bf3a1e1a90dcb464dec85ebfaedf66d628e8816e874349db80	hy	1	c	Antiphonale Romanum 1912	quota hy	Cœli Deus sanctíssime
+07558.gabc	cd59e30b0269edef58df66f32b14da420700b26843bff4e363c0fae50a218d50	va	-	c	Cantus varii romano-seraphici 1902	quota va	Veni, Regina nostra
+07652.gabc	ca40d39c32817b3fef2a563c9d780800bba6ea64a9ebfb068719dc1d45e87b52	va	-	c	Cantus varii romano-seraphici 1902	quota va	Profitentes Trinitatem
+07655.gabc	aae881cb4e369f6f856847196e66e335f178ef09a3dd899c01c159c48d970f41	va	-	c	Cantus varii romano-seraphici 1902	quota va	Adoro te devote
+07898.gabc	5d71a5e1118755bdada0fc2e60aeb5ad3eb1b558d40295c4f7454fd434540e3a	hy	4	?	Hymnarium Cisterciense 1909	quota hy	Vox clara
+07940.gabc	1116cb70d7ad7f3c41e599e7f3f655f22b63880709e51b50c11a508ead0661fd	an	1	c	Antiphonale Romanum 1912	quota an	Cantantibus organis
+08083.gabc	b4e74426126179df9ee860a8b4d432990aee12855ce81be6edc2b0cf088550f3	an	1	c	Antiphonale Romanum 1912	quota an	Domine non est exaltatum
+08178.gabc	3a9cce4175153bec5acd4021eff0acf42326fd5f6668c6cf53df03e0fbbdf8ec	an	6	c	Antiphonale Romanum 1912	quota an	Domine refugium
+08195.gabc	c4bbc2db27cb833c7a1c0e72f9dde934035978eb2b3a6cc849a5da5ea59cc2e4	ps	1	c	Antiphonale Romanum 1912	quota ps	Misericórdias Dómini
+08236.gabc	02e2ec3e88e2713c9f563478a76927a0ada4d76ba53b7a5444018483a92a2f1d	hy	-	c	Cantus varii romano-seraphici 1902	quota hy	Laudes claras
+08662.gabc	d683cc9a0957312ec313a5a320bf6d135946fe12b8a2b65aa462adc4f36230a0	re	1	c	Cantus varii romano-seraphici 1902	quota re	Si quæris
+09138.gabc	543740c0abbc99ebd8575e0c3938f50cf091ad7099e5ad946cea1f2cd2081ede	re	7	c	Processionarium O.P. (Cormier) 1913	quota re	Cives apostolorum

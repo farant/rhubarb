@@ -11,7 +11,7 @@
 
 <p class="nota"><a href="../index.html">Rhubarb</a> · <a href="index.html">Bibliothecae</a></p>
 <h1>Bibliothecae per greges</h1>
-<p class="subtitulus">The 248 libraries in include/, in 15 groups</p>
+<p class="subtitulus">The 249 libraries in include/, in 15 groups</p>
 
 <p>The same libraries as the <a href="index.html">table</a>, clustered by
 area, each group with a paragraph on what it is and how its libraries
@@ -21,7 +21,7 @@ revised; it lives in the ledger (the lens <em>grex</em> on
 bibliothecarum</em>), not in this page.</p>
 
 <ul class="greges">
-<li><a href="#fundamenta">Foundation</a> <span class="nota">(27)</span></li>
+<li><a href="#fundamenta">Foundation</a> <span class="nota">(28)</span></li>
 <li><a href="#textus">Text</a> <span class="nota">(15)</span></li>
 <li><a href="#stml">STML and data formats</a> <span class="nota">(15)</span></li>
 <li><a href="#parsatores">Parsers: the C89 lineage</a> <span class="nota">(9)</span></li>
@@ -39,7 +39,7 @@ bibliothecarum</em>), not in this page.</p>
 </ul>
 
 <h2 id="fundamenta">I. Foundation</h2>
-<p class="nota">27 libraries, 27 described</p>
+<p class="nota">28 libraries, 28 described</p>
 <p>What every other library stands on. latina is the dialect itself; piscina (arenas), chorda (strings with a length, never NUL-terminated), xar (growable arrays), tabula_dispersa (hash tables) and internamentum (interned strings) are the data structures nearly every function takes or returns; credo is the test framework every probatio uses. Around them, the plain services a C89 program has to write for itself: files, paths and directory walks, child processes without a shell, hashing (friatio to disperse, sigillum&#x27;s SHA-256 to identify), identifiers (moneta, uuid), seedable random numbers (sors) and the fake names, dates and Latin drawn from them (fictio), DEFLATE (flatura), the battery&#x27;s charge (energia), Roman numerals for latina&#x27;s own number block. Most were written in the first weeks (October-November 2025) and have been hardened since; their headers are where the &#x27;why it exists&#x27; paragraphs are densest.</p>
 <table class="bibliothecae">
 <thead><tr><th>Library</th><th>In one sentence <span class="nota">(or the header's own gloss)</span></th></tr></thead>
@@ -66,6 +66,7 @@ bibliothecarum</em>), not in this page.</p>
 <tr class="descripta"><td><a href="processus.html">processus</a></td><td>Running child processes: argv as a vector (execvp), NEVER a shell string, so quoting bugs cannot exist; stdout and stderr captured separately; a hard timeout that kills; …</td></tr>
 <tr class="descripta"><td><a href="sigillum.html">sigillum</a></td><td>SHA-256 as a content seal: the hash used where a hash IS an identity, so collision resistance matters (friatio&#x27;s hashes only spread keys across a table).</td></tr>
 <tr class="descripta"><td><a href="sors.html">sors</a></td><td>Seedable, deterministic random numbers: the same seed gives the same sequence on every machine, compiler and version, because the generators are integer-only (PCG32 for …</td></tr>
+<tr class="descripta"><td><a href="specula.html">specula</a></td><td>Watches one file and gives a loop a descriptor that becomes readable when the file changes: written, extended, deleted, renamed, or created after being absent.</td></tr>
 <tr class="descripta"><td><a href="tabula_dispersa.html">tabula_dispersa</a></td><td>The house hash map: open addressing over a flat array of slots, keyed by chorda, with void* values, allocated in a piscina.</td></tr>
 <tr class="descripta"><td><a href="tempus.html">tempus</a></td><td>Time for interactive programs: a global frame clock (delta and total time, a target frame rate with waiting, frame statistics) and independent timers, plus the small …</td></tr>
 <tr class="descripta"><td><a href="uuid.html">uuid</a></td><td>UUIDs: version 7 (48 bits of Unix milliseconds, then random bits, so they sort by creation time) and version 5 (a SHA-1 of a namespace and a name, so the same name …</td></tr>

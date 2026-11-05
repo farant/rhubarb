@@ -263,6 +263,8 @@
     <!-- nexus silvae: cache arboris (incrementalis), alii quoque -->
     <vestigium via="build/nexus.tsv" forma="plagula" communis="verum"/>
     <vestigium via="build/inclusiones.tsv" forma="plagula" communis="verum"/>
+    <!-- sigilla contentus nexus incrementalis (budget B2 N1) -->
+    <vestigium via="build/nexus.sigilla.tsv" forma="plagula" communis="verum"/>
     <vestigium via="silva/build" communis="verum"/>
     <ingressus genus="plagulae" via="lib" suffixa=".c .m"/>
     <ingressus genus="plagulae" via="include" suffixa=".h"/>

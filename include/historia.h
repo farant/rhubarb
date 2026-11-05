@@ -92,7 +92,7 @@ structura Historia {
                 Piscina* piscina;
     InternamentumChorda* intern;
       HistoriaProiectio  proiectio;
-     constans character* spatium;          /* R2; "" = nullum */
+     constans character* spatium;          /* R2; "" = nullum; copia */
      constans character* genus;            /* actorum (cum spatio) */
      constans character* genus_rami;
      constans character* genus_coniunctionis;
@@ -129,7 +129,8 @@ historia_genera (
      constans character* genera[IV]);
 
 /* historia nova: proiectio vacatur, cursor 0. Volumen non tangitur.
- * intervallum <= 0 -> LXIV. NIHIL si argumenta mala. */
+ * intervallum <= 0 -> LXIV. NIHIL si argumenta mala. spatium in
+ * piscinam copiatur (vocator id in acervo tenere potest). */
 Historia*
 historia_creare (
                 Piscina* piscina,
