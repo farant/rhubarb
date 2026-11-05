@@ -159,6 +159,7 @@ declare -a SOURCE_FILES=(
     "lib/functio.c"
     "lib/gabc.c"
     "lib/gabc_carmen.c"
+    "lib/gabc_compositio.c"
     "lib/git.c"
     "lib/glyphae_ductae.c"
     "lib/harmonia.c"

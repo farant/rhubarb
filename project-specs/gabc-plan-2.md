@@ -437,6 +437,20 @@ in quotes. Then one line per syllable locus.
   many; connecting line on the left in a pes.
 - [ ] **Step 6: Worklog + commit** (gate `radix`).
 
+**Executed 2026-11-04.** Built as frusta (chunks between breakable
+spaces / fractio) placed with two cursors (notes, text) into a system,
+finished with custos, justification, hyphens, text row, staff lines,
+page. Rulings (ledger): greedy longest-known-figure segmentation instead
+of the header's side-by-side fallback; two cursors instead of one; bars
+without their own s*3/4 margins. Tests use inline gabc and relative
+neume dumps rather than fixture files; dump grammar gained a tinctura
+column. Two hand expectations were wrong and corrected (pressus line at
+the boundary column 15; Salve text row from the lowest item of the
+WHOLE line, clivis stem in rí(dc)). Salve dump pinned (546 lines);
+corpus 82 x {VI, VIII, XXIV}: 473 pages, 109925 picta, 0 out of bounds.
+Plants: four, all red then green; the vowel plant only trips the Salve
+dump.
+
 ---
 
 ## Task P4: `gabc_pictura`, œ/Œ/ǽ, and Claude's eyes (STOP: Fran looks at the Salve)
