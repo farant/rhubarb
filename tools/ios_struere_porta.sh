@@ -22,6 +22,40 @@ per_ordinem () {
 }
 per_ordinem -siccum -notae /dev/null
 per_ordinem -notae /dev/null -siccum
+# tergum-plan T4: UIBackgroundModes [remote-notification] in Info.plist
+# solum si profilum push fert (aps-environment); bis = idem
+modi_tergi () {
+    local dir cum sine info rc
+    apparatus () { echo "PORTA IOS-STRUERE: FRACTA (modi tergi: $*)"; exit 1; }
+    . tools/ios/communia.sh
+    dir=$(mktemp -d -t modi_tergi) || apparatus "mktemp"
+    cum="$dir/cum.plist"; sine="$dir/sine.plist"; info="$dir/Info.plist"
+    plutil -create xml1 "$sine" && plutil -insert Entitlements -dictionary "$sine" \
+        && plutil -insert Entitlements.get-task-allow -bool true "$sine" \
+        && cp "$sine" "$cum" \
+        && plutil -insert Entitlements.aps-environment -string production "$cum" \
+        || apparatus "profila ficta"
+    fictum_info () {
+        sed -e "s/@TITULUS@/zz/g" -e "s/@INVOLUCRUM@/org.example.zz/g" \
+            -e "s/@PLATFORMA@/iPhoneOS/g" -e "s/@VERSIO@/1.0/g" \
+            -e "s/@AEDIFICATIO@/1/g" tools/ios/Info.forma.plist > "$info" \
+            || apparatus "Info.plist fictum"
+    }
+    fictum_info
+    ios_modos_tergi_ponere "$sine" "$info"; rc=$?
+    [ $rc -eq 0 ] || apparatus "sine aps exitus $rc"
+    plutil -extract UIBackgroundModes raw -o - "$info" > /dev/null 2>&1 \
+        && apparatus "sine aps UIBackgroundModes adest"
+    ios_modos_tergi_ponere "$cum" "$info" && ios_modos_tergi_ponere "$cum" "$info" \
+        || apparatus "cum aps exitus non 0"
+    [ "$(plutil -extract UIBackgroundModes.0 raw -o - "$info" 2>/dev/null)" = remote-notification ] \
+        || apparatus "cum aps remote-notification deest"
+    [ "$(plutil -extract UIBackgroundModes raw -o - "$info")" = 1 ] \
+        || apparatus "bis positum: non unum elementum"
+    plutil -lint "$info" > /dev/null || apparatus "Info.plist invalidum"
+    rm -rf "$dir"
+}
+( modi_tergi ) || exit 1
 ./tools/ios/app.sh apps/pictor/pictor.c -simulator
 rc=$?
 case $rc in
