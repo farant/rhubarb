@@ -282,7 +282,11 @@ constans character* quid,
         }
         redde;
     }
-    _horam_ponere(s, REPETITIO_MS, _semita_hora);
+    /* tergum (recensio finalis): mora 0 = fenestra excitationis (XX s)
+     * aut probationes - defectus brevis (rete, DNS, nexus vetus post
+     * somnum) post QUAESTIO iterum, ne fenestra tota pereat */
+    _horam_ponere(s, c->mora == ZEPHYRUM ? QUAESTIO_MS : REPETITIO_MS,
+        _semita_hora);
 }
 
 interior vacuum

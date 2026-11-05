@@ -1752,6 +1752,8 @@ nomen structura {
            i32  posts;
            i32  gets;
            i32  puts;
+    /* tergum (recensio): GET /communio/acta proxima n deficiunt (rete) */
+           i32 deficiant;
 } VeredariusNotans;
 
 interior b32
@@ -1776,6 +1778,11 @@ _notans_petere (
     alioquin
     {
         n->gets++;
+        si (n->deficiant > ZEPHYRUM && strstr(p->url, "/communio/acta"))
+        {
+            n->deficiant--;
+            redde FALSUM;
+        }
     }
     redde n->fundus->petere(n->fundus->sui, p, pi, finis, ctx,
         signum);
@@ -2783,6 +2790,80 @@ _sectio_pulsus_cauda (
     orbem_purgare(&o);
 }
 
+
+/* tergum (recensio finalis): mora 0 (fenestra excitationis) - defectus
+ * brevis iterum post QUAESTIO, non post XXX s; aliter fenestra XX s
+ * ob singulum rete fractum nihil trahit */
+interior vacuum
+_sectio_defectus_brevis (
+    CredoContextus* c)
+{
+               Orbis  o;
+             Volumen* va;
+             Volumen* vb;
+      CommunioCliens* ca;
+      CommunioCliens* cb;
+    VeredariusNotans  nb;
+                 i32  k;
+                 i32  summa;
+                 i32  gyri;
+
+    (vacuum)c;
+    CREDO_NECESSE(orbem_parare(&o));
+    va = volumen_temporarium(piscina, "probatio_communio_da");
+    vb = volumen_temporarium(piscina, "probatio_communio_db");
+    CREDO_NECESSE(va && vb);
+    per (k = ZEPHYRUM; k < X; k++)
+    {
+        CREDO_NECESSE(actum_addere(va, "x/actum", "{}") > ZEPHYRUM);
+    }
+    summa  = acta_communicanda(va);
+    ca     = clientem(&o, va, o.ta, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(ca);
+    communio_cliens_moram_ponere(ca, ZEPHYRUM);
+    communio_cliens_incipere(ca);
+    CREDO_NECESSE(donec_otiosus(&o, ca, M * V));
+    memset(&nb, ZEPHYRUM, magnitudo(nb));
+    nb.v.petere     = _notans_petere;
+    nb.v.abrumpere  = _notans_abrumpere;
+    nb.v.sui        = &nb;
+    nb.fundus       = o.veredarius;
+    nb.deficiant    = I;
+    cb = communio_clientem_creare(piscina, o.reactor, &nb.v, vb,
+        o.basis,
+        chorda_ex_literis(o.tb, piscina), NIHIL, NIHIL);
+    CREDO_NECESSE_NON_NIHIL(cb);
+    communio_cliens_moram_ponere(cb, ZEPHYRUM);
+    communio_cliens_incipere(cb);
+    per (gyri = ZEPHYRUM; gyri < CCC
+         && communio_cliens_status(cb).recepta < summa; gyri++)
+    {
+        (vacuum)reactor_poll(o.reactor, X);
+    }
+    CREDO_AEQUALIS_I32(nb.deficiant, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(communio_cliens_status(cb).recepta, summa);
+    CREDO_VERUM(communio_cliens_status(cb).connexus);
+
+    CREDO_GRADUS("mora ordinaria: defectus manet XXX s");
+    communio_cliens_sistere(cb);
+    communio_cliens_moram_ponere(cb, COMMUNIO_MORA_ORDINARIA);
+    nb.deficiant = I;
+    communio_cliens_incipere(cb);
+    per (gyri = ZEPHYRUM; gyri < CC; gyri++)
+    {
+        (vacuum)reactor_poll(o.reactor, X);
+    }
+    CREDO_AEQUALIS_I32(nb.deficiant, ZEPHYRUM);
+    CREDO_FALSUM(communio_cliens_status(cb).connexus);
+
+    communio_clientem_destruere(ca);
+    communio_clientem_destruere(cb);
+    volumen_claudere(va);
+    volumen_claudere(vb);
+    orbem_purgare(&o);
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "transferre, iterum, idempotens", _sectio_transferre, _parare,
         _purgare, NIHIL, NIHIL },
@@ -2825,6 +2906,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _purgare, NIHIL, NIHIL },
     { "tractiones vacuae (tergum)", _sectio_tractiones_vacuae,
         _parare, _purgare, NIHIL, NIHIL },
+    { "defectus brevis (tergum)", _sectio_defectus_brevis, _parare,
+        _purgare, NIHIL, NIHIL },
     { "inscriptio per codicem (plan-5 T2)", _sectio_inscriptio_codice,
         _parare, _purgare, NIHIL, NIHIL },
     { "inscriptio: codex falsus et normalis",

@@ -179,3 +179,25 @@ above the plura branch (count every successful pull) fails that assertion
 the header as `COMMUNIO_MORA_ORDINARIA` (XXV) so pictor can restore it after a
 wake without guessing - restoring `pc->mora` alone would put 0 in production,
 where nobody set it.
+
+## 2026-11-05 — tergum final review: fast retry while mora == 0
+
+Final whole-branch review (Important 1): `_defectus` always waited
+`REPETITIO_MS` (XXX s) before retrying a path. The background wake window is
+XX s, so ONE transient failure - a stale connection on the first request after
+waking (common on iOS), a DNS blip, a dropped packet on cellular - ended the
+window DEFECTUS with nothing fetched, and Amanda got "Loading..." anyway.
+
+Fix in the client (spec III.3: client bugs found here are fixed in the client):
+with `mora == 0` the retry is `QUAESTIO_MS` (1 s). In production mora is 0 only
+inside the wake window (pictor restores XXV on every exit), so the hammering is
+bounded by the XX s deadline. Not done in pictor by re-calling renovare: that
+would abort a slow-but-healthy pull on high-latency cellular over and over.
+Untouched: the pulsus path's own retry and the server-refused-acts retry (not
+transient).
+
+Tests: probatio_communio "defectus brevis (tergum)" - first GET acta fails,
+mora 0 -> everything arrives within 3 s (FRACTA before); with mora XXV the
+failure still waits (step 2). probatio_pictor_communio "excitatio" step "rete
+semel fractum in fenestra" - first pull in the window fails -> NOVA, picture
+present (FRACTA without the client fix).

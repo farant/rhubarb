@@ -79,6 +79,8 @@ nomen structura {
     Veredarius* fundus;
            i32  petitiones;
            i32  abrumptiones;
+    /* tergum (recensio): GET /communio/acta proxima n deficiunt */
+           i32 deficiant;
 } VeredariusNotans;
 
 interior b32
@@ -93,6 +95,12 @@ _notans_petere (
     VeredariusNotans* n = (VeredariusNotans*)sui;
 
     n->petitiones++;
+    si (   n->deficiant > ZEPHYRUM && p->methodus == VEREDARIUS_GET
+        && strstr(p->url, "/communio/acta"))
+    {
+        n->deficiant--;
+        redde FALSUM;
+    }
     redde n->fundus->petere(n->fundus->sui, p, pi, finis, ctx, signum);
 }
 
@@ -1006,6 +1014,7 @@ _sectio_excitatio (
        PictorDocumentum* p;
        PictorDocumentum* q;
        PictorDocumentum* r;
+       PictorDocumentum* s;
            TestaAmbitus  a;
                 Finitio  f;
                 Finitio  g;
@@ -1105,6 +1114,20 @@ _sectio_excitatio (
     CREDO_AEQUALIS_I32(aliena_numerus(va), III);
     CREDO_AEQUALIS_I32(acta_replicae(va, volumen_replica(vb)),
         acta_communicanda(vb));
+
+    CREDO_GRADUS("rete semel fractum in fenestra: nova tamen");
+    s = pictor_documentum_creare(piscina, intern, vb, "s", C, LX, II);
+    CREDO_NECESSE(s && ictus(s, X, VI) > ZEPHYRUM);
+    CREDO_NECESSE(donec_missa(&o, pb, vb));
+    na.deficiant = I;
+    pulsu_excitare(vb, "s", &f);
+    CREDO_VERUM(donec_finita(&o, ra, &f, M * V));
+    CREDO_AEQUALIS_I32(na.deficiant, ZEPHYRUM);
+    CREDO_AEQUALIS_I32(f.vocationes, I);
+    CREDO_AEQUALIS_I32((i32)f.exitus, (i32)TESTA_EXCITATIO_NOVA);
+    CREDO_AEQUALIS_I32(aliena_numerus(va), IV);
+    CREDO_AEQUALIS_I32(pictor_communio_status(pa).mora,
+        COMMUNIO_MORA_ORDINARIA);
 
     CREDO_GRADUS("terminus: servus absens - defectus, mora XXV");
     hospitium_destruere(o.hospitium);
