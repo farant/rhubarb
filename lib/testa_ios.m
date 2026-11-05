@@ -102,6 +102,12 @@ _pulsum_petere (
     TestaPulsusTactus  tactus,
                vacuum* ctx);
 
+interior vacuum
+_excitationem_ponere (
+                  vacuum* sui,
+    TestaPulsusExcitatio  excitatio,
+                  vacuum* ctx);
+
 /* instantia una (scaena una, UIApplicationSupportsMultipleScenes
  * FALSUM) */
 hic_manens TestaIOS       _testa;
@@ -963,6 +969,8 @@ _initium_facere (
     _testa.ambitus.pulsum_petere   = _pulsum_petere;
     _testa.ambitus.pulsus_ctx      = NIHIL;
     _testa.ambitus.pulsus_ambitus  = PULSUS_AMBITUS;
+    /* tergum-plan T5: excitatio in tergo */
+    _testa.ambitus.excitationem_ponere = _excitationem_ponere;
     _testa.ambitus.reactor     = reactor_creare(_testa.piscina);
     _testa.ambitus.veredarius  = _testa.ambitus.reactor
         ? _veredarium_parare() : NIHIL;
@@ -1658,6 +1666,197 @@ _gratiam_incipere (
     }] retain];
 }
 
+/* ==================================================
+ * Excitatio in tergo (tergum-plan T5)
+ *
+ * Pulsus cum content-available iOS appem excitat (Info.plist
+ * UIBackgroundModes remote-notification, app.sh T4): fenestra
+ * completionem tenet, reactorem omni GRATIA_PULSUS_S agit (nisi
+ * pulsator gratiae iam agit) et terminum XXV s armat. Applicatio
+ * (pictor T6) finire semel vocat; terminus = Failed. Fenestrae IV
+ * simul (pulsus duo propinqui); plures statim NoData. Tesserae
+ * (anulus XVI) finire_sui sunt: generatio fenestrae servatur, ut
+ * finire serum fenestram iam reusam non claudat.
+ * ================================================== */
+
+#define EXCITATIONES_MAXIMAE  IV
+#define EXCITATIO_TERMINUS_S  XXV
+#define TESSERAE_EXCITATIONIS XVI
+
+nomen structura {
+                                        b32  viva;
+                                        i32  generatio;
+    vacuum (^completio)(UIBackgroundFetchResult);
+                                   NSTimer*  terminus;
+} FenestraExcitationis;
+
+nomen structura {
+    i32 index;
+    i32 generatio;
+} TesseraExcitationis;
+
+hic_manens TestaPulsusExcitatio  _excitatio          = NIHIL;
+hic_manens vacuum*               _excitatio_ctx      = NIHIL;
+hic_manens FenestraExcitationis  _excitationes[EXCITATIONES_MAXIMAE];
+hic_manens TesseraExcitationis   _tesserae[TESSERAE_EXCITATIONIS];
+hic_manens i32                   _tessera_proxima    = ZEPHYRUM;
+hic_manens i32                   _generatio_proxima  = ZEPHYRUM;
+hic_manens NSTimer*              _excitatio_pulsator = nil;
+
+interior b32
+_excitationes_vivae (
+    vacuum)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < EXCITATIONES_MAXIMAE; k++)
+    {
+        si (_excitationes[k].viva)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_fenestram_claudere (
+                   i32  k,
+    UIBackgroundFetchResult  fructus)
+{
+    vacuum (^completio)(UIBackgroundFetchResult);
+
+    si (!_excitationes[k].viva)
+    {
+        redde;
+    }
+    completio = _excitationes[k].completio;
+    [_excitationes[k].terminus invalidate];
+    [_excitationes[k].terminus release];
+    _excitationes[k].terminus   = nil;
+    _excitationes[k].completio  = nil;
+    _excitationes[k].viva       = FALSUM;
+    si (!_excitationes_vivae())
+    {
+        [_excitatio_pulsator invalidate];
+        [_excitatio_pulsator release];
+        _excitatio_pulsator = nil;
+    }
+    completio(fructus);
+    [completio release];
+}
+
+/* TestaExcitatioFinire: sui = tessera; prima vocatio vincit */
+interior vacuum
+_excitationem_finire (
+                  vacuum* sui,
+    TestaExcitatioExitus  exitus)
+{
+    TesseraExcitationis* t;
+    UIBackgroundFetchResult  fructus;
+
+    t = (TesseraExcitationis*)sui;
+    si (   !t || t->index >= EXCITATIONES_MAXIMAE
+        || !_excitationes[t->index].viva
+        || _excitationes[t->index].generatio != t->generatio)
+    {
+        redde;
+    }
+    fructus = exitus == TESTA_EXCITATIO_NOVA
+        ? UIBackgroundFetchResultNewData
+        : exitus == TESTA_EXCITATIO_NIHIL
+        ? UIBackgroundFetchResultNoData
+        : UIBackgroundFetchResultFailed;
+    _fenestram_claudere(t->index, fructus);
+}
+
+/* TestaAmbitus.excitationem_ponere (sui = pulsus_ctx, non adhibetur) */
+interior vacuum
+_excitationem_ponere (
+                  vacuum* sui,
+    TestaPulsusExcitatio  excitatio,
+                  vacuum* ctx)
+{
+    (vacuum)sui;
+    _excitatio      = excitatio;
+    _excitatio_ctx  = ctx;
+}
+
+interior vacuum
+_excitationem_aperire (
+    NSDictionary* info,
+    vacuum (^completio)(UIBackgroundFetchResult))
+{
+                 NSData* corpus;
+                Piscina* p;
+                 chorda  c;
+                    i32  k;
+                    i32  n;
+    TesseraExcitationis* t;
+
+    si (!_excitatio || !_testa.ambitus.reactor)
+    {
+        completio(UIBackgroundFetchResultNoData);
+        redde;
+    }
+    per (k = ZEPHYRUM; k < EXCITATIONES_MAXIMAE
+         && _excitationes[k].viva; k++)
+    {
+    }
+    si (k >= EXCITATIONES_MAXIMAE)
+    {
+        completio(UIBackgroundFetchResultNoData);
+        redde;
+    }
+    _generatio_proxima++;
+    _excitationes[k].viva       = VERUM;
+    _excitationes[k].generatio  = _generatio_proxima;
+    _excitationes[k].completio  = [completio copy];
+    _excitationes[k].terminus   = [[NSTimer
+        scheduledTimerWithTimeInterval:(NSTimeInterval)
+        EXCITATIO_TERMINUS_S repeats:NO block:^(NSTimer* hora) {
+        (vacuum)hora;
+        _fenestram_claudere(k, UIBackgroundFetchResultFailed);
+    }] retain];
+    si (!_excitatio_pulsator)
+    {
+        _excitatio_pulsator = [[NSTimer scheduledTimerWithTimeInterval:
+            GRATIA_PULSUS_S repeats:YES block:^(NSTimer* hora) {
+            (vacuum)hora;
+            si (!_gratia_pulsator)
+            {
+                (vacuum)reactor_poll(_testa.ambitus.reactor, ZEPHYRUM);
+            }
+        }] retain];
+    }
+    t = &_tesserae[_tessera_proxima];
+    _tessera_proxima = (_tessera_proxima + I) % TESSERAE_EXCITATIONIS;
+    t->index      = k;
+    t->generatio  = _excitationes[k].generatio;
+    corpus = (info && [NSJSONSerialization isValidJSONObject:info])
+        ? [NSJSONSerialization dataWithJSONObject:info options:0
+              error:NULL] : nil;
+    n = corpus ? (i32)[corpus length] : ZEPHYRUM;
+    p = piscina_generare_dynamicum("pulsus_excitatio",
+        (memoriae_index)n + MXXIV);
+    c.datum    = NIHIL;
+    c.mensura  = ZEPHYRUM;
+    si (p && n > ZEPHYRUM)
+    {
+        c.datum    = (i8*)piscina_allocare(p, (memoriae_index)n + I);
+        c.mensura  = c.datum ? n : ZEPHYRUM;
+        si (c.datum)
+        {
+            memcpy(c.datum, [corpus bytes], (size_t)n);
+        }
+    }
+    _excitatio(_excitatio_ctx, c, _excitationem_finire, t);
+    si (p)
+    {
+        piscina_destruere(p);
+    }
+}
+
 /* scaena (D9): Info.plist UISceneDelegateClassName = TestaScaenaDelegatus */
 @interface TestaScaenaDelegatus : UIResponder <UIWindowSceneDelegate>
 @property (retain, nonatomic) UIWindow* window;
@@ -1737,6 +1936,15 @@ _gratiam_incipere (
     didFailToRegisterForRemoteNotificationsWithError:(NSError*)error {
     (vacuum)applicatio;
     _signum_tradere(nil, [error localizedDescription]);
+}
+
+/* tergum-plan T5: pulsus content-available (in tergo aut in fronte) */
+- (void)application:(UIApplication*)applicatio
+    didReceiveRemoteNotification:(NSDictionary*)info
+          fetchCompletionHandler:
+              (void (^)(UIBackgroundFetchResult))completio {
+    (vacuum)applicatio;
+    _excitationem_aperire(info, completio);
 }
 @end
 

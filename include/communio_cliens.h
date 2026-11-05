@@ -40,6 +40,10 @@
 
 nomen structura CommunioCliens CommunioCliens;
 
+/* mora tractionis ordinaria in secundis (long-poll); tergum T3: publica
+ * ut pictor eam post excitationem restituat (numquam 0 in productione) */
+#define COMMUNIO_MORA_ORDINARIA XXV
+
 /* post acta importata (numerus > 0): applicatio documenta aperta
  * sequitur (pictor_documentum_sequi) */
 nomen vacuum (*CommunioAdvenerunt)(vacuum* ctx, i32 numerus);
@@ -50,6 +54,10 @@ nomen structura {
        s64 descensus;
        i32 missa;        /* acta accepta a servo (summa) */
        i32 recepta;      /* acta importata (summa) */
+       i32 tractiones_vacuae;  /* tergum T3: tractiones DESCENSUS
+                                * successae sine actis et sine 'plura'
+                                * (assecutus) - summa */
+       i32 mora;         /* tergum T3: mora tractionis currens (s) */
        b32 connexus;     /* petitio ultima successit */
        b32 recusata;     /* plan-5 T5: servus tesseram recusavit (401) -
                           * cliens desiit; numquam iterum petit */

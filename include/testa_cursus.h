@@ -46,6 +46,25 @@ nomen vacuum (*TestaPulsusTactus)(vacuum* ctx, chorda corpus_json);
 nomen b32 (*TestaPulsumPetere)(vacuum* sui, TestaPulsusSignum signum,
     TestaPulsusTactus tactus, vacuum* ctx);
 
+/* tergum-plan T5: excitatio in tergo (iOS: pulsus content-available,
+ * didReceiveRemoteNotification:fetchCompletionHandler:). testa
+ * fenestram aperit (reactorem agit, terminus XXV s) et excitatio
+ * vocatur; applicatio finire SEMEL vocat cum exitu - vocatio prima
+ * vincit, posteriores nihil agunt. corpus = userInfo ut JSON, solum
+ * intra vocationem valet. Sine excitatione aut sine reactore testa
+ * statim NIHIL respondet. Omnia in filo principali. */
+nomen enumeratio {
+    TESTA_EXCITATIO_NOVA = ZEPHYRUM,    /* acta nova importata */
+    TESTA_EXCITATIO_NIHIL,              /* assecuta, nihil novi */
+    TESTA_EXCITATIO_DEFECTUS            /* rete aut terminus */
+} TestaExcitatioExitus;
+nomen vacuum (*TestaExcitatioFinire)(vacuum* sui,
+    TestaExcitatioExitus exitus);
+nomen vacuum (*TestaPulsusExcitatio)(vacuum* ctx, chorda corpus_json,
+    TestaExcitatioFinire finire, vacuum* finire_sui);
+nomen vacuum (*TestaExcitationemPonere)(vacuum* sui,
+    TestaPulsusExcitatio excitatio, vacuum* ctx);
+
 /* quod testa applicationi praebet */
 nomen structura {
                Piscina* piscina;            /* testa possidet et destruit */
@@ -95,6 +114,8 @@ TestaClaviaturamPonere  claviaturam_ponere;
      TestaPulsumPetere  pulsum_petere;
                 vacuum* pulsus_ctx;
     constans character* pulsus_ambitus;
+    /* tergum-plan T5 (iOS; sui = pulsus_ctx): NIHIL in macOS, Android */
+TestaExcitationemPonere excitationem_ponere;
 } TestaAmbitus;
 
 /* quod applicatio testae reddit (testa eam ZEPHYRUM implet ante) */

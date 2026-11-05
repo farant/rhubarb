@@ -222,7 +222,8 @@ _sectio_corpus (
     CREDO_CHORDA_AEQUALIS_LITERIS(corpus,
         "{\"aps\":{\"alert\":{\"title\":\"pictor\",\"body\":"
         "\"Fran shared 3 pictures\"},\"sound\":\"default\","
-        "\"thread-id\":\"pictor.picturae\"},\"pulsus\":{\"clavis\":"
+        "\"thread-id\":\"pictor.picturae\",\"content-available\":1},"
+        "\"pulsus\":{\"clavis\":"
         "\"pictor.picturae\",\"res\":[\"R1:a\",\"R1:b\",\"R2:c\"],"
         "\"a\":\"CIVIS1\"}}");
 
@@ -237,6 +238,9 @@ _sectio_corpus (
     corpus = pulsus_corpus_facere(lit("pictor"), lit("Fran shared 400"),
         lit("pictor.picturae"), lit("CIVIS1"), multa, piscina);
     CREDO_MINOR_AUT_AEQUALIS_I32(corpus.mensura, PULSUS_CORPUS_MAXIMUM);
+    /* tergum T2: excitatio etiam in corpore truncato */
+    CREDO_VERUM(chorda_continet(corpus,
+        lit("\"content-available\":1")));
     CREDO_VERUM(pulsus_tactum_legere(corpus, piscina, &t));
     CREDO_VERUM(t.plures);
     CREDO_MAIOR_I32(xar_numerus(t.res), ZEPHYRUM);

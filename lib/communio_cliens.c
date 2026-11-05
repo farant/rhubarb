@@ -27,7 +27,6 @@
 #define FASCICULI_OCTETI       ((i32)DXII * (i32)M)
 #define QUAESTIO_MS        M             /* ascensus: acta nova */
 #define REPETITIO_MS       ((i32)XXX * (i32)M)
-#define MORA_ORDINARIA     XXV
 #define MORA_MARGO_S       XV
 #define TEMPUS_PETITIONIS  ((i32)XXX * (i32)M)
 #define LECTIO_MAXIMA      ((i32)COMMUNIO_ACTA_MAXIMA * (i32)II)
@@ -100,6 +99,7 @@ structura CommunioCliens {
                    s64  descensus;
                    i32  missa;
                    i32  recepta;
+                   i32  tractiones_vacuae;  /* tergum T3 */
                    b32  connexus;
              character  error[ERROR_MAXIMUS];
              character* error_ipse;
@@ -282,7 +282,11 @@ constans character* quid,
         }
         redde;
     }
-    _horam_ponere(s, REPETITIO_MS, _semita_hora);
+    /* tergum (recensio finalis): mora 0 = fenestra excitationis (XX s)
+     * aut probationes - defectus brevis (rete, DNS, nexus vetus post
+     * somnum) post QUAESTIO iterum, ne fenestra tota pereat */
+    _horam_ponere(s, c->mora == ZEPHYRUM ? QUAESTIO_MS : REPETITIO_MS,
+        _semita_hora);
 }
 
 interior vacuum
@@ -676,6 +680,7 @@ _importare (
         redde;
     }
     s->otiosa = VERUM;
+    c->tractiones_vacuae++;
     si (c->mora == ZEPHYRUM)
     {
         _horam_ponere(s, QUAESTIO_MS, _semita_hora);
@@ -1211,7 +1216,7 @@ communio_clientem_creare (
     c->volumen     = volumen;
     c->advenerunt  = advenerunt;
     c->ctx         = ctx;
-    c->mora        = MORA_ORDINARIA;
+    c->mora        = COMMUNIO_MORA_ORDINARIA;
     c->error_ipse  = c->error;
     strcpy(c->basis, basis);
     memcpy(c->tessera, tessera.datum, (size_t)tessera.mensura);
@@ -1251,8 +1256,8 @@ communio_cliens_moram_ponere (
 {
     si (cliens)
     {
-        cliens->mora = secundae > MORA_ORDINARIA ? MORA_ORDINARIA
-                                                 : secundae;
+        cliens->mora = secundae > COMMUNIO_MORA_ORDINARIA
+                       ? COMMUNIO_MORA_ORDINARIA : secundae;
     }
 }
 
@@ -1379,14 +1384,16 @@ communio_cliens_status (
     {
         redde s;
     }
-    s.ascensus       = cliens->ascensus;
-    s.descensus      = cliens->descensus;
-    s.missa          = cliens->missa;
-    s.recepta        = cliens->recepta;
-    s.connexus       = cliens->connexus;
-    s.recusata       = cliens->recusata;
-    s.error.datum    = (i8*)cliens->error_ipse;
-    s.error.mensura  = cliens->error_mensura;
+    s.ascensus           = cliens->ascensus;
+    s.descensus          = cliens->descensus;
+    s.missa              = cliens->missa;
+    s.recepta            = cliens->recepta;
+    s.tractiones_vacuae  = cliens->tractiones_vacuae;
+    s.mora               = cliens->mora;
+    s.connexus           = cliens->connexus;
+    s.recusata           = cliens->recusata;
+    s.error.datum        = (i8*)cliens->error_ipse;
+    s.error.mensura      = cliens->error_mensura;
     redde s;
 }
 
