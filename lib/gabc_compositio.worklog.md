@@ -64,3 +64,14 @@ custos computed through the old clef; vowel centred on the last note
 (caught ONLY by the pinned Salve dump — the centring tests use single
 notes); greedy fill one syllable too many; pes connecting line on the
 left.
+
+## 2026-11-04 — P4 changes from looking at real renders
+
+Two rules changed after neumae -scala 2 renders (Salve, Dies irae,
+Ingrediente): hyphen between syllables of one word now at a gap of half
+a cell (a few px gap without hyphen read as two words); ligature stems
+(clivis, porrectus, ancus) end s/2 + s/4 below the lower note instead
+of using the virga's rule (which ran a whole space below the head).
+Rubric runs may carry `. , :` ("℣."), but need at least one rubric sign.
+GabcCompositio carries `forma`. Salve dump and corpus totals re-pinned
+(471 pages, 111800 picta).

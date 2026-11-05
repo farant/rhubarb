@@ -643,7 +643,8 @@ textum_metiri (
     tm->centrum = co->cw * a + co->cw * longitudo / II;
 }
 
-/* rubrica: signum c aut solum * † ℟ ℣ + et spatia */
+/* rubrica: signum c aut solum * † ℟ ℣ + et spatia (et . , : ut
+ * "℣." - P4) */
 interior b32
 rubrica_est (
     constans GabcTextus* t)
@@ -651,23 +652,31 @@ rubrica_est (
     constans i8* p;
     constans i8* finis;
             s32  runa;
+            b32  signum;
 
     si (t->stilus & GABC_STILUS_COLORATUS)
     {
         redde VERUM;
     }
-    p      = t->textus.datum;
-    finis  = p + t->textus.mensura;
+    p       = t->textus.datum;
+    finis   = p + t->textus.mensura;
+    signum  = FALSUM;
     dum (p < finis)
     {
         runa = utf8_decodere(&p, finis);
-        si (runa != '*' && runa != '+' && runa != ' ' && runa != 0x2020
-            && runa != 0x211F && runa != 0x2123)
+        si (   runa == '*' || runa == '+' || runa == 0x2020
+            || runa == 0x211F
+            || runa == 0x2123)
+        {
+            signum = VERUM;
+        }
+        alioquin si (   runa != ' ' && runa != '.' && runa != ','
+                     && runa != ':')
         {
             redde FALSUM;
         }
     }
-    redde t->textus.mensura > ZEPHYRUM;
+    redde signum;
 }
 
 /* cursus textus cantati emittuntur ab x (ordo postea); latitudo */
@@ -909,7 +918,7 @@ lineam_connectere (
     }
 }
 
-/* caulis sinister a y deorsum ad medium spatii sub nota inferiore */
+/* caulis sinister a y deorsum ultra notam inferiorem */
 interior vacuum
 caulem_ponere (
     Compositor* co,
@@ -923,8 +932,10 @@ caulem_ponere (
 {
     s32 finis;
 
-    finis = y_positionis(co, positio_infima)
-          + (positio_infima % II ? III : II) * co->h;
+    /* s/II + s/IV infra centrum notae inferioris: ultra caput, numquam
+     * in linea (P4: regula virgae caulem dimidio spatio longiorem
+     * dabat - visum in Dies irae, Ingrediente) */
+    finis = y_positionis(co, positio_infima) + co->h + co->q;
     rectangulum_emittere(ad, x, y, co->k, finis - y + I,
         GABC_TINCTURA_ATRAMENTUM, syllaba, elementum, nota);
 }
@@ -2067,7 +2078,7 @@ systema_finire (
             perge;
         }
         hiatus = rb->textus_initium - ra->textus_finis;
-        si (hiatus >= co->cw)
+        si (hiatus >= co->cw / II)
         {
             datum = (i8*)piscina_allocare(co->piscina, I);
             si (datum)
@@ -2672,6 +2683,7 @@ gabc_componere (
 
     /* exitus: picta sine capsis, paginae, loci */
     numerus                   = xar_numerus(co->omnia);
+    comp->forma               = *forma;
     comp->numerus_syllabarum  = cantus->numerus_syllabarum;
     comp->numerus_notarum     = cantus->numerus_notarum;
     comp->numerus_paginarum   = (i32)(co->pagina + I);

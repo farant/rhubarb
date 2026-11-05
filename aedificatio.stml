@@ -94,6 +94,21 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/auditio" provenientia="relatio"/>
   </actio>
+  <!-- neumae (gabc pars II P4): cantus gabc in PNG sine fenestra -
+       eadem pictura ac tabula antiphonale (oculi Claudii) -->
+  <actio titulus="neumae" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/neumae_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/neumae"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/neumae/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/neumae_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/neumae" provenientia="relatio"/>
+  </actio>
   <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
        silvae (silva._clonare_ignorata) -->
   <actio titulus="clonare" genus="institutio">
@@ -1321,6 +1336,7 @@
     <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_pictor.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_ludus_imago" via="build/probatio_ludus_imago_quattuor.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_terminale" via="build/probatio_terminale.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_gabc_pictura" via="build/gabc_salve_pagina_1.png" causa="imago Salve ad inspectionem (gabc P4)"/>
     <debitum_scripturae membrum="probatio_vicus_paginae" via="build/probatio_vicus_paginae.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_vicus_iussa" via="build/probatio_vicus_iussa.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_pictor_aspergillum" via="build/probatio_pictor_aspergillum.png" causa="imago ad inspectionem"/>
@@ -1404,6 +1420,15 @@
     <ingressus genus="fasciculus" via="tools/instituere.sh"/>
     <exitus via="~/.bin/auditio" scriptura="auditio" provenientia="regeneratio"/>
   </actio>
+  <actio titulus="institutio_neumae" genus="institutio" memorabilis="verum" celer="verum">
+    <mandatum>
+      <verbum! (>./tools/instituere.sh
+      <verbum! (>bin/neumae
+    </mandatum>
+    <ingressus genus="fasciculus" via="bin/neumae"/>
+    <ingressus genus="fasciculus" via="tools/instituere.sh"/>
+    <exitus via="~/.bin/neumae" scriptura="neumae" provenientia="regeneratio"/>
+  </actio>
   <!-- colloquia T10b (Franus 2026-10-16): vicus 'mensor quaestio
        currentes -machina' vocat - ~/.bin/mensor, ut praeco -->
   <actio titulus="institutio_mensor" genus="institutio" memorabilis="verum" celer="verum">
@@ -1450,6 +1475,8 @@
     <pars actio="institutio_mensor"/>
     <pars actio="auditio"/>
     <pars actio="institutio_auditio"/>
+    <pars actio="neumae"/>
+    <pars actio="institutio_neumae"/>
   </compositum>
   <compositum titulus="briar">
     <pars actio="corpus_silicis"/>

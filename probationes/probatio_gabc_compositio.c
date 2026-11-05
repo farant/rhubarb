@@ -345,13 +345,13 @@ _neumae_probare (
     /* clivis: caulis sinister ad medium spatii (g in spatio: II
      * gradus infra), inferius IUXTA */
     NEUMAE("(c4) a(hg)", I,
-        "punctum:0 0 0;rect 0 0 1x13;punctum:0 8 4;rect 7 0 1x5");
+        "punctum:0 0 0;rect 0 0 1x11;punctum:0 8 4;rect 7 0 1x5");
     NEUMAE("(c4) a(ghg)", I,
         "punctum:0 0 0;punctum:0 8 -4;rect 7 -4 1x5;punctum:0 16 0;"
         "rect 15 -4 1x5");
     /* porrectus: tertia SUPRA finem lineae obliquae */
     NEUMAE("(c4) a(hgh)", I,
-        "porrectus:1 0 0;rect 0 0 1x13;punctum:0 8 0;rect 15 0 1x5");
+        "porrectus:1 0 0;rect 0 0 1x11;punctum:0 8 0;rect 15 0 1x5");
     NEUMAE("(c4) a(hvGF)", I,
         "virga:3 0 0;inclinatum:0 8 4;inclinatum:0 14 8");
     /* scandicus: caput, deinde pes IUXTA */
@@ -370,12 +370,12 @@ _neumae_probare (
     NEUMAE("(c4) a(gh~)", I,
         "punctum:0 0 0;deminutum:0 3 -4;rect 7 -4 1x5");
     NEUMAE("(c4) a(hg~)", I,
-        "punctum:0 0 0;rect 0 0 1x13;deminutum:0 8 4;rect 7 0 1x5");
+        "punctum:0 0 0;rect 0 0 1x11;deminutum:0 8 4;rect 7 0 1x5");
     /* figura ignota: segmenta longissima nota (torculus + clivis),
      * s/II inter aequales */
     NEUMAE("(c4) a(ghffd)", I,
         "punctum:0 0 0;punctum:0 8 -4;rect 7 -4 1x5;punctum:0 16 4;"
-        "rect 15 -4 1x9;punctum:0 28 4;rect 28 4 1x21;punctum:0 36 12;"
+        "rect 15 -4 1x9;punctum:0 28 4;rect 28 4 1x15;punctum:0 36 12;"
         "rect 35 4 1x9");
     NEUMAE("(c4) a(jjj)", I,
         "punctum:0 0 0;punctum:0 12 0;punctum:0 24 0");
@@ -955,8 +955,8 @@ _salvem_probare (
     /* systema unum (latitudo IV millia): manu derivata - titulus VIII x
      * XVI, initialis scala II (XL / XVI), intentio XX, linea ima LXIV;
      * ordo textus ex imo totius systematis: caulis clivis ri(dc)
-     * usque ad medium spatii sub c (+XII, imum XIII) + s/IV = XV ->
-     * LXXIX */
+     * usque ad s/II + s/IV sub c (+X, imum XI) + s/IV = XIII ->
+     * LXXVII */
     gabc_compositionis_formam_ordinariam(&forma);
     forma.latitudo  = (IV * M);
     comp            = gabc_componere(cantus, &forma, c->piscina);
@@ -973,16 +973,16 @@ _salvem_probare (
     CREDO_VERUM(_pictum_est(_pictum(comp, GABC_PICTUM_PARS, I, -I),
         GABC_PICTUM_PARS, XLII, LXVIII));
     CREDO_VERUM(_pictum_est(_textus(comp, I), GABC_PICTUM_TEXTUS, XLIII,
-        LXXIX));
+        LXXVII));
     CREDO_VERUM(_pictum_est(_pictum(comp, GABC_PICTUM_PARS, II, -I),
         GABC_PICTUM_PARS, LX, LX));
     CREDO_VERUM(_pictum_est(_textus(comp, II), GABC_PICTUM_TEXTUS, LV,
-        LXXIX));
+        LXXVII));
     CREDO_VERUM(_pictum_est(_pictum(comp, GABC_PICTUM_PARS, III, -I),
         GABC_PICTUM_PARS, LXXXIV, LII));
     CREDO_VERUM(_pictum_est(_textus(comp, III), GABC_PICTUM_TEXTUS,
         LXXIX,
-        LXXIX));
+        LXXVII));
     CREDO_VERUM(_pictum_est(_pictum(comp, GABC_PICTUM_PARS, III,
         (s32)NEUMAE_ICTUS), GABC_PICTUM_PARS, LXXXVIII, LX));
 
@@ -1135,10 +1135,11 @@ _corpus_probare (
         (unsigned)plagulae, (unsigned)paginae, (unsigned)picta,
         (unsigned)extra);
     CREDO_AEQUALIS_I32(plagulae, LXXXII);
-    /* summae fixae (VI + VIII + XXIV; P3, 2026-11-04): mutatio
+    /* summae fixae (VI + VIII + XXIV; P3, rescriptae P4: lineolae,
+     * caules): mutatio
      * compositionis hic apparet - causa in worklog nominanda */
-    CREDO_AEQUALIS_I32(paginae, CDLXXIII);
-    CREDO_AEQUALIS_I32(picta, CIX * M + CMXXV);
+    CREDO_AEQUALIS_I32(paginae, CDLXXI);
+    CREDO_AEQUALIS_I32(picta, CXI * M + DCCC);
     CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
     CREDO_AEQUALIS_I32(extra, ZEPHYRUM);
 }

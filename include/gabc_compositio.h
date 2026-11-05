@@ -25,9 +25,10 @@
  * verticalis k lata in margine communi, a centro ad centrum. SUPRA =
  * caput sequens in eadem columna, linea connectens in margine dextro.
  * Caulis ligaturae: rectangulum k latum in margine sinistro capitis
- * primi, a centro eius deorsum ad medium spatii primum quod spatium
- * saltem infra centrum notae inferioris iacet (nota in spatio: II
- * gradus; in linea: III) - eadem regula parametrum VIRGAE dat.
+ * primi, a centro eius deorsum usque ad s/II + s/IV infra centrum
+ * notae inferioris (ultra caput, numquam in linea; P4 post visum).
+ * Caulis VIRGAE longior: ad medium spatii primum quod spatium saltem
+ * infra centrum iacet (nota in spatio: II gradus; in linea: III).
  *   punctum, virga, stropha, oriscus, quilisma, cavum ...: pars una
  *     ex formis notae (GabcNota.formae); W ut quilisma, O ut oriscus
  *     cum caule sinistro.
@@ -109,7 +110,8 @@
  *   Cursor sequens = max(finis notarum + s, finis textus + cellula
  *   una si verbum novum sequitur, aliter finis textus). Inter
  *   syllabas eiusdem verbi '-' in medio intervalli pingitur si
- *   intervallum saltem cellulam unam latum est.
+ *   intervallum saltem dimidiam cellulam latum est (P4: syllabae
+ *   paucis pixelis separatae ut verba legebantur).
  *   Littera prima syllabae primae ad initialem transit (si initialis
  *   adest).
  *
@@ -215,6 +217,8 @@ nomen structura {
 } GabcCompositionisForma;
 
 nomen structura {
+    GabcCompositionisForma forma; /* qua composita est (pictura spatium
+                                   * et paginam legit) */
     GabcPictum* picta;           /* omnia, ordine paginarum */
            i32  numerus_pictorum;
            i32* paginae;         /* numerus_paginarum + I: pagina p =

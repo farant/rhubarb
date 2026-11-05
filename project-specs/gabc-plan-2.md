@@ -519,6 +519,15 @@ b32 gabc_paginam_pingere (constans GabcCompositio* c, i32 pagina,
 - [ ] **Step 6: STOP — show Fran the Salve PNG** (and the three
   others). Taste is Fran's: proportions, stem lengths, the porrectus,
   the initial. Adjust, then commit (gates `radix`, `neumae-fumus`).
+**Executed 2026-11-04 (before Fran's look).** Copy of the mask helper
+(mandatum must not know thema; debt in the tabularium). Rubric red as
+RGBA (INDEX means syntax colours). GabcCompositio gained `forma`.
+Salve page 1: 1539 commands, 0.2 ms to rasterize — no cache. Test PNG
+written flat to `build/gabc_salve_pagina_1.png` (no mkdir in tests).
+neumae gained `-scala K` (2 = what vicus shows on Retina). Fixed from
+the look: hyphen at half-cell gaps, shorter ligature stems, ℟ ℣
+pictures + rubric runs with punctuation. Plants: pictura three
+(highlight, initial style 2, combining mark), fumus one (-scala).
 
 ---
 
