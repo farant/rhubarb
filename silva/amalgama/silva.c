@@ -90976,7 +90976,9 @@ interior vacuum
 _stirpes_exitum_computare (
                     FluxusDatorum* datorum,
               FluxusDatorumBlocus* b,
-    constans FluxusDatorumAuxilia* aux)
+    constans FluxusDatorumAuxilia* aux,
+                     constans s32* primus,
+                     constans s32* proximus)
 {
     i32 n_var = silva_xar_numerus(datorum->variabiles);
     i32 v;
@@ -91009,19 +91011,15 @@ _stirpes_exitum_computare (
         {
             si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
             {
-                /* dele conservativum: ordines membrorum basis */
-                per (v = ZEPHYRUM; v < n_var; v++)
-                {
-                    constans FluxusVariabilis* vv =
-                        (constans FluxusVariabilis*)silva_xar_obtinere(
-                            datorum->variabiles, v);
+                /* dele conservativum: ordines membrorum basis
+                 * (catena semel aedificata) */
+                s32 membrum;
 
-                    si (   vv        != NIHIL && vv->membrum_est
-                        && vv->basis == (s32)ev->variabilis)
-                    {
-                        b->stirpes_exitus[v] =
-                            (s32)FLUXUS_STIRPS_AMISSA;
-                    }
+                per (membrum = primus[ev->variabilis];
+                     membrum >= ZEPHYRUM; membrum = proximus[membrum])
+                {
+                    b->stirpes_exitus[membrum] =
+                        (s32)FLUXUS_STIRPS_AMISSA;
                 }
             }
             b->stirpes_exitus[ev->variabilis] =
@@ -91029,6 +91027,382 @@ _stirpes_exitum_computare (
                 ? aux->stirps_valoris_ambitu(aux->contextus,
                       ev->fons_valoris, datorum, b->stirpes_exitus)
                 : ev->stirps;
+        }
+    }
+}
+
+/* Membra per basim (budget fusionis, ambulatio principalis III):
+ * catena ordinum membrorum cuiusque basis semel per aedificationem
+ * - olim omnis DEFINITIO in omni visitatione tabulam totam
+ * scrutabatur (corpore LXV M passus). primus[basis] = membrum
+ * primum (-1 nullum), proximus[membrum] = sequens. Ordo catenae
+ * nihil refert: membra omnia AMISSA ponuntur. */
+interior vacuum
+_membra_basium_ligare (
+          SilvaPiscina*  piscina,
+    FluxusDatorum*  datorum,
+              s32** primus,
+              s32** proximus)
+{
+    i32 n_var   = silva_xar_numerus(datorum->variabiles);
+    i32 n_loci  = (n_var > ZEPHYRUM) ? n_var : I;
+    s32 v;
+
+    *primus = (s32*)silva_piscina_allocare(piscina,
+        (memoriae_index)n_loci * magnitudo(s32));
+    *proximus = (s32*)silva_piscina_allocare(piscina,
+        (memoriae_index)n_loci * magnitudo(s32));
+    per (v = ZEPHYRUM; v < (s32)n_loci; v++)
+    {
+        (*primus)[v]    = -I;
+        (*proximus)[v]  = -I;
+    }
+    per (v = (s32)n_var - I; v >= ZEPHYRUM; v--)
+    {
+        constans FluxusVariabilis* vv = (constans FluxusVariabilis*)
+            silva_xar_obtinere(datorum->variabiles, (i32)v);
+
+        si (   vv        != NIHIL && vv->membrum_est
+            && vv->basis >= ZEPHYRUM && vv->basis < (s32)n_var)
+        {
+            (*proximus)[v]        = (*primus)[vv->basis];
+            (*primus)[vv->basis]  = v;
+        }
+    }
+}
+
+
+/* ==================================================
+ * Via celeris stirpium (budget fusionis, ambulatio principalis III)
+ *
+ * Sine classificatore ambitu-conscio et sine stirpe PRIMA+n ullius
+ * definitionis reticulum ad tres valores cadit: IGNOTA, NEUTRA,
+ * AMISSA (corpore LXXXVI% functionum: parsurae sine typo signato,
+ * ubi semantica involucra NIHIL ponit). Bita duo per variabilem:
+ * ATTACTA (NEUTRA aut AMISSA) et AMISSA - IGNOTA (0,0), NEUTRA
+ * (1,0), AMISSA (1,1). Iunctio = OR utriusque, eadem ac
+ * _stirpem_iungere in his tribus valoribus. Bita ultra n_var
+ * semper 0, ergo mutatum <=> cellula mutata: ordo operis idem ac
+ * via plena. Tabulae s32 post finem expanduntur - status idem.
+ * ================================================== */
+
+nomen structura {
+    i64* attacta_introitus;
+    i64* amissa_introitus;
+    i64* attacta_exitus;
+    i64* amissa_exitus;
+} StirpesBitorum;
+
+/* VERUM si ambitu absens et nulla definitio stirpem extra
+ * {IGNOTA, NEUTRA, AMISSA} fert */
+interior b32
+_stirpes_celeres_licent (
+           constans FluxusDatorum* datorum,
+    constans FluxusDatorumAuxilia* aux)
+{
+    i32 numerus_blocorum = silva_xar_numerus(datorum->bloci);
+    i32 b;
+
+    si (aux != NIHIL && aux->stirps_valoris_ambitu != NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        constans FluxusDatorumBlocus* db =
+            (constans FluxusDatorumBlocus*)silva_xar_obtinere(
+                datorum->bloci, b);
+        i32 e;
+        i32 m = silva_xar_numerus(db->eventa);
+
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            constans FluxusEventum* ev = (constans FluxusEventum*)
+                silva_xar_obtinere(db->eventa, e);
+
+            si (   ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+                && ev->genus
+                    != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+            {
+                perge;
+            }
+            si (   ev->stirps < (s32)FLUXUS_STIRPS_IGNOTA
+                || ev->stirps > (s32)FLUXUS_STIRPS_AMISSA)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_stirpem_bitis_ponere (
+    i64* attacta,
+    i64* amissa,
+    s32  v,
+    s32  stirps)
+{
+    i32 w      = (i32)(v / (s32)LXIV);
+    i64 bitum  = (i64)I << (i32)(v % (s32)LXIV);
+
+    si (stirps == (s32)FLUXUS_STIRPS_IGNOTA)
+    {
+        attacta[w]  &= ~bitum;
+        amissa[w]   &= ~bitum;
+    }
+    alioquin si (stirps == (s32)FLUXUS_STIRPS_NEUTRA)
+    {
+        attacta[w]  |= bitum;
+        amissa[w]   &= ~bitum;
+    }
+    alioquin
+    {
+        attacta[w]  |= bitum;
+        amissa[w]   |= bitum;
+    }
+}
+
+interior s32
+_stirpem_ex_bitis (
+     constans i64* attacta,
+     constans i64* amissa,
+              i32  v)
+{
+    i64 bitum = (i64)I << (v % (i32)LXIV);
+
+    si ((amissa[v / (i32)LXIV] & bitum) != ZEPHYRUM)
+    {
+        redde (s32)FLUXUS_STIRPS_AMISSA;
+    }
+    si ((attacta[v / (i32)LXIV] & bitum) != ZEPHYRUM)
+    {
+        redde (s32)FLUXUS_STIRPS_NEUTRA;
+    }
+    redde (s32)FLUXUS_STIRPS_IGNOTA;
+}
+
+/* Exitus = introitus + definitiones, ut _stirpes_exitum_computare
+ * sine classificatore (columna ev->stirps) */
+interior vacuum
+_stirpes_celeres_exitum_computare (
+    constans FluxusDatorumBlocus* b,
+                  StirpesBitorum* bita,
+                    constans s32* primus,
+                    constans s32* proximus,
+                             i32  n_verba,
+                             i64  ultimum)
+{
+    i32 w;
+    i32 e;
+    i32 m = silva_xar_numerus(b->eventa);
+
+    memcpy(bita->attacta_exitus, bita->attacta_introitus,
+        (memoriae_index)n_verba * magnitudo(i64));
+    memcpy(bita->amissa_exitus, bita->amissa_introitus,
+        (memoriae_index)n_verba * magnitudo(i64));
+    per (e = ZEPHYRUM; e < m; e++)
+    {
+        constans FluxusEventum* ev = (constans FluxusEventum*)
+            silva_xar_obtinere(b->eventa, e);
+
+        si (   ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+            && ev->genus != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+        {
+            perge;
+        }
+        si (ev->variabilis < ZEPHYRUM)
+        {
+            /* def-omnia (folium opacum): provenientia perit */
+            per (w = ZEPHYRUM; w < n_verba; w++)
+            {
+                bita->attacta_exitus[w]  = ~(i64)ZEPHYRUM;
+                bita->amissa_exitus[w]   = ~(i64)ZEPHYRUM;
+            }
+            bita->attacta_exitus[n_verba - I]  &= ultimum;
+            bita->amissa_exitus[n_verba - I]   &= ultimum;
+            perge;
+        }
+        si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+        {
+            s32 membrum;
+
+            per (membrum = primus[ev->variabilis];
+                 membrum >= ZEPHYRUM; membrum = proximus[membrum])
+            {
+                _stirpem_bitis_ponere(bita->attacta_exitus,
+                    bita->amissa_exitus, membrum,
+                    (s32)FLUXUS_STIRPS_AMISSA);
+            }
+        }
+        _stirpem_bitis_ponere(bita->attacta_exitus,
+            bita->amissa_exitus, ev->variabilis, ev->stirps);
+    }
+}
+
+interior vacuum
+_punctum_fixum_stirpium_celere (
+          SilvaPiscina* piscina,
+    FluxusDatorum* datorum,
+     constans s32* primus,
+     constans s32* proximus)
+{
+    i32  n_var             = silva_xar_numerus(datorum->variabiles);
+    i32  n_loci            = (n_var > ZEPHYRUM) ? n_var : I;
+    i32  n_verba           = (n_var + (i32)LXIV - I) / (i32)LXIV;
+    i32  numerus_blocorum  = silva_xar_numerus(datorum->bloci);
+    i64  ultimum;
+    i32  b;
+    i32  v;
+    b32* in_indice;
+    SilvaXar* index_operis;
+    i32  lector = ZEPHYRUM;
+
+    StirpesBitorum* bita;
+
+    si (n_verba == ZEPHYRUM)
+    {
+        n_verba = I;
+    }
+    si (n_var == ZEPHYRUM)
+    {
+        ultimum = ZEPHYRUM;
+    }
+    alioquin si (n_var % (i32)LXIV == ZEPHYRUM)
+    {
+        ultimum = ~(i64)ZEPHYRUM;
+    }
+    alioquin
+    {
+        ultimum = ((i64)I << (n_var % (i32)LXIV)) - (i64)I;
+    }
+    bita = (StirpesBitorum*)silva_piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(StirpesBitorum));
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        StirpesBitorum* sb = &bita[b];
+
+        sb->attacta_introitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        sb->amissa_introitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        sb->attacta_exitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        sb->amissa_exitus = (i64*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        _verba_implere(sb->attacta_introitus, n_verba, ZEPHYRUM);
+        _verba_implere(sb->amissa_introitus, n_verba, ZEPHYRUM);
+        _verba_implere(sb->attacta_exitus, n_verba, ZEPHYRUM);
+        _verba_implere(sb->amissa_exitus, n_verba, ZEPHYRUM);
+    }
+
+    /* introitus: parametra stirpem NEUTRAM ferunt */
+    {
+        StirpesBitorum* sb = &bita[datorum->fluxus->introitus->index];
+
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            FluxusVariabilis* var = (FluxusVariabilis*)silva_xar_obtinere(
+                datorum->variabiles, v);
+
+            si (var->parametrum)
+            {
+                _stirpem_bitis_ponere(sb->attacta_introitus,
+                    sb->amissa_introitus, (s32)v,
+                    (s32)FLUXUS_STIRPS_NEUTRA);
+            }
+        }
+    }
+
+    in_indice = (b32*)silva_piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(b32));
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        in_indice[b] = FALSUM;
+    }
+    index_operis = silva_xar_creare(piscina, (i32)magnitudo(i32));
+    {
+        i32* locus = (i32*)silva_xar_addere(index_operis);
+
+        *locus = datorum->fluxus->introitus->index;
+        in_indice[datorum->fluxus->introitus->index] = VERUM;
+    }
+
+    dum (lector < silva_xar_numerus(index_operis))
+    {
+        i32 index_bloci = *(i32*)silva_xar_obtinere(index_operis, lector);
+
+               StirpesBitorum* sb = &bita[index_bloci];
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            silva_xar_obtinere(datorum->fluxus->bloci, index_bloci);
+        i32 m;
+        i32 k;
+
+        lector++;
+        in_indice[index_bloci] = FALSUM;
+        _stirpes_celeres_exitum_computare(
+            (constans FluxusDatorumBlocus*)silva_xar_obtinere(
+                datorum->bloci, index_bloci),
+            sb, primus, proximus, n_verba, ultimum);
+
+        m = silva_xar_numerus(fb->margines);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                silva_xar_obtinere(fb->margines, k);
+            StirpesBitorum* sd;
+                       b32  mutatum = FALSUM;
+                       i32  w;
+
+            si (margo->destinatio == NIHIL)
+            {
+                perge;
+            }
+            sd = &bita[margo->destinatio->index];
+            per (w = ZEPHYRUM; w < n_verba; w++)
+            {
+                i64 attacta_novum = sd->attacta_introitus[w]
+                    | sb->attacta_exitus[w];
+                i64 amissa_novum = sd->amissa_introitus[w]
+                    | sb->amissa_exitus[w];
+
+                si (   attacta_novum != sd->attacta_introitus[w]
+                    || amissa_novum  != sd->amissa_introitus[w])
+                {
+                    sd->attacta_introitus[w]  = attacta_novum;
+                    sd->amissa_introitus[w]   = amissa_novum;
+                    mutatum                   = VERUM;
+                }
+            }
+            si (mutatum && !in_indice[margo->destinatio->index])
+            {
+                i32* locus = (i32*)silva_xar_addere(index_operis);
+
+                *locus = margo->destinatio->index;
+                in_indice[margo->destinatio->index] = VERUM;
+            }
+        }
+    }
+
+    /* expansio: tabulae s32 ut via plena eas relinqueret */
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
+            datorum->bloci, b);
+        StirpesBitorum* sb = &bita[b];
+
+        db->stirpes_introitus = (s32*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->stirpes_exitus = (s32*)silva_piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->stirpes_introitus[ZEPHYRUM]  = (s32)FLUXUS_STIRPS_IGNOTA;
+        db->stirpes_exitus[ZEPHYRUM]     = (s32)FLUXUS_STIRPS_IGNOTA;
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            db->stirpes_introitus[v] = _stirpem_ex_bitis(
+                sb->attacta_introitus, sb->amissa_introitus, v);
+            db->stirpes_exitus[v] = _stirpem_ex_bitis(
+                sb->attacta_exitus, sb->amissa_exitus, v);
         }
     }
 }
@@ -91047,7 +91421,16 @@ _punctum_fixum_stirpium (
     b32* in_indice;
     SilvaXar* index_operis;
     i32  lector = ZEPHYRUM;
+    s32* primus;
+    s32* proximus;
 
+    _membra_basium_ligare(piscina, datorum, &primus, &proximus);
+    si (_stirpes_celeres_licent(datorum, aux))
+    {
+        _punctum_fixum_stirpium_celere(piscina, datorum, primus,
+            proximus);
+        redde;
+    }
     per (b = ZEPHYRUM; b < numerus_blocorum; b++)
     {
         FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)silva_xar_obtinere(
@@ -91107,7 +91490,7 @@ _punctum_fixum_stirpium (
 
         lector++;
         in_indice[index_bloci] = FALSUM;
-        _stirpes_exitum_computare(datorum, db, aux);
+        _stirpes_exitum_computare(datorum, db, aux, primus, proximus);
 
         m = silva_xar_numerus(fb->margines);
         per (k = ZEPHYRUM; k < m; k++)
@@ -91481,6 +91864,10 @@ _datorum_stirps_ambitu_ligamen (
        constans SilvaNodus* expressio,
     constans FluxusDatorum* datorum,
               constans s32* stirpes);
+interior vacuum
+_datorum_stirpes_ligare (
+           SilvaSemantica* sem,
+     FluxusDatorumAuxilia* aux);
 interior vacuum
 _signata_fluxus_examinare (
                SilvaSemantica* sem,
@@ -97504,9 +97891,7 @@ _fluxum_examinare (
             _datorum_parametrum_constans_ligamen;
         aux_datorum.parametrum_accumulat = _fluxus_accumulat_ligamen;
         aux_datorum.expressio_acies = _datorum_expressio_acies_ligamen;
-        aux_datorum.stirps_valoris = _datorum_stirps_ligamen;
-        aux_datorum.stirps_valoris_ambitu =
-            _datorum_stirps_ambitu_ligamen;
+        _datorum_stirpes_ligare(sem, &aux_datorum);
         aux_datorum.canonicum = _fluxus_canonicum_ligamen;
         aux_datorum.contextus = sem;
         fluxus->datorum = silva_c89_fluxus_datorum_aedificare(
@@ -100430,14 +100815,13 @@ _credo_scripta_colligere (
            FluxusDatorum* d;
                      i32  b;
 
-    aux.symbolum               = _credo_symbolum_ligamen;
-    aux.parametrum_constans    = _datorum_parametrum_constans_ligamen;
-    aux.parametrum_accumulat   = _fluxus_accumulat_ligamen;
-    aux.expressio_acies        = _datorum_expressio_acies_ligamen;
-    aux.stirps_valoris         = _datorum_stirps_ligamen;
-    aux.stirps_valoris_ambitu  = _datorum_stirps_ambitu_ligamen;
-    aux.canonicum              = _fluxus_canonicum_ligamen;
-    aux.contextus              = sem;
+    aux.symbolum              = _credo_symbolum_ligamen;
+    aux.parametrum_constans   = _datorum_parametrum_constans_ligamen;
+    aux.parametrum_accumulat  = _fluxus_accumulat_ligamen;
+    aux.expressio_acies       = _datorum_expressio_acies_ligamen;
+    _datorum_stirpes_ligare(sem, &aux);
+    aux.canonicum = _fluxus_canonicum_ligamen;
+    aux.contextus = sem;
     d = silva_c89_fluxus_datorum_aedificare(sem->piscina, f->fluxus,
         &aux);
     si (d == NIHIL)
@@ -106142,6 +106526,29 @@ _datorum_stirps_ligamen (
         redde (s32)FLUXUS_STIRPS_NEUTRA;
     }
     redde _stirps_ordinalis(sem, g);
+}
+
+/* involucra stirpium pro auxiliis datorum: registro signatorum
+ * vacuo (nullus typus signatus in parsura) ambo involucra NEUTRAM
+ * semper redderent - NIHIL ponuntur, et datorum viam celerem
+ * stirpium capit (budget fusionis, ambulatio principalis III;
+ * corpore LXXXVI% functionum). Status tabularum idem: datorum
+ * involucro absente definitiones NEUTRAS facit. */
+interior vacuum
+_datorum_stirpes_ligare (
+           SilvaSemantica* sem,
+     FluxusDatorumAuxilia* aux)
+{
+    _contractus_colligere(sem);   /* registrum ante iudicium */
+    si (   sem->signata_typorum              == NIHIL
+        || silva_xar_numerus(sem->signata_typorum) == ZEPHYRUM)
+    {
+        aux->stirps_valoris         = NIHIL;
+        aux->stirps_valoris_ambitu  = NIHIL;
+        redde;
+    }
+    aux->stirps_valoris         = _datorum_stirps_ligamen;
+    aux->stirps_valoris_ambitu  = _datorum_stirps_ambitu_ligamen;
 }
 
 /* involucrum ambitu-conscium (v2): campi ambientes positi circa

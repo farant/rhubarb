@@ -601,6 +601,99 @@ _stirps_ad_exitum (
     redde db->stirpes_introitus[v];
 }
 
+/* Classificator ambitu-conscius NEUTER: semper NEUTRA. Praesentia
+ * eius viam plenam stirpium cogit cum valoribus viae celeris
+ * (budget fusionis, ambulatio principalis III) - collatio exacta */
+interior s32
+_probatio_stirps_neutra (
+                    vacuum* contextus,
+       constans SilvaNodus* expressio,
+    constans FluxusDatorum* datorum,
+              constans s32* stirpes)
+{
+    (vacuum)contextus;
+    (vacuum)expressio;
+    (vacuum)datorum;
+    (vacuum)stirpes;
+    redde (s32)FLUXUS_STIRPS_NEUTRA;
+}
+
+/* Via celeris (involucra NIHIL) contra viam plenam (classificator
+ * neuter): omnes cellulae introitus et exitus omnium blocorum
+ * pares. Reddit numerum cellularum AMISSA viae celeris (ne
+ * collatio vacua praetereat); -1 si aedificatio deficit. *celer
+ * aedificationem celerem accipit. */
+interior s32
+_stirpes_vias_conferre (
+               Piscina* piscina,
+    constans character* fons,
+        FluxusDatorum** celer)
+{
+    FluxusDatorum* c = _extrahere_cum(piscina, fons, NIHIL, NIHIL);
+    FluxusDatorum* q = _extrahere_cum(piscina, fons, NIHIL,
+        _probatio_stirps_neutra);
+    s32 amissa = ZEPHYRUM;
+    i32 b;
+
+    *celer = c;
+    CREDO_NON_NIHIL (c);
+    CREDO_NON_NIHIL (q);
+    si (c == NIHIL || q == NIHIL)
+    {
+        redde -I;
+    }
+    CREDO_AEQUALIS_I32 (xar_numerus(c->variabiles),
+        xar_numerus(q->variabiles));
+    CREDO_AEQUALIS_I32 (xar_numerus(c->bloci), xar_numerus(q->bloci));
+    per (b = ZEPHYRUM; b < xar_numerus(c->bloci); b++)
+    {
+        FluxusDatorumBlocus* blocus_celer;
+        FluxusDatorumBlocus* blocus_plenus;
+                        i32  v;
+                        i32  n = xar_numerus(c->variabiles);
+
+        blocus_celer = (FluxusDatorumBlocus*)xar_obtinere(c->bloci, b);
+        blocus_plenus = (FluxusDatorumBlocus*)xar_obtinere(q->bloci, b);
+        per (v = ZEPHYRUM; v < n; v++)
+        {
+            CREDO_VERUM (blocus_celer->stirpes_introitus[v]
+                == blocus_plenus->stirpes_introitus[v]);
+            CREDO_VERUM (blocus_celer->stirpes_exitus[v]
+                == blocus_plenus->stirpes_exitus[v]);
+            si (blocus_celer->stirpes_introitus[v]
+                == (s32)FLUXUS_STIRPS_AMISSA)
+            {
+                amissa++;
+            }
+        }
+    }
+    redde amissa;
+}
+
+/* Stirps membri (basis, titulus) ad exitum functionis */
+interior s32
+_stirps_membri_ad_exitum (
+         FluxusDatorum* d,
+    constans character* membrum)
+{
+    FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+        d->bloci, d->fluxus->exitus->index);
+    i32 v;
+
+    per (v = ZEPHYRUM; v < xar_numerus(d->variabiles); v++)
+    {
+        FluxusVariabilis* fv = (FluxusVariabilis*)xar_obtinere(
+            d->variabiles, v);
+
+        si (   fv->membrum_est && _nomen_aequale(fv->titulus_membri,
+                membrum))
+        {
+            redde db->stirpes_introitus[v];
+        }
+    }
+    redde -I;
+}
+
 /* Status ad introitum bloci usus primi variabilis nominatae */
 interior vacuum
 _status_ad_usum (FluxusDatorum* d, constans character* usus_titulus,
@@ -1182,6 +1275,94 @@ s32 principale (vacuum)
         {
             CREDO_AEQUALIS_I32 ((i32)_stirps_ad_exitum(d, "x"),
                 (i32)FLUXUS_STIRPS_PRIMA);
+        }
+    }
+
+
+    /* ==================================================
+     * Via celeris stirpium (budget fusionis, ambulatio principalis
+     * III): sine classificatore ambitu-conscio et sine PRIMA+n bita
+     * duo per variabilem - collatio cellularum cum via plena
+     * ================================================== */
+
+    {
+        FluxusDatorum* d;
+                  s32  amissa;
+
+        /* membra duo, basis redefinita in ramo uno: catena membrorum
+         * (ambo AMISSA), iunctio NEUTRA cum AMISSA -> AMISSA */
+        amissa = _stirpes_vias_conferre(piscina,
+            "int f(int c) { struct S s; s.m = 1; s.k = 2;"
+            " if (c) { s = g(); } return s.m + s.k; }", &d);
+        CREDO_VERUM (amissa > ZEPHYRUM);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (_stirps_membri_ad_exitum(d, "m"),
+                (s32)FLUXUS_STIRPS_AMISSA);
+            CREDO_AEQUALIS_S32 (_stirps_membri_ad_exitum(d, "k"),
+                (s32)FLUXUS_STIRPS_AMISSA);
+        }
+
+        /* definitio in ramo uno: IGNOTA cum NEUTRA -> NEUTRA;
+         * numquam definita manet IGNOTA */
+        amissa = _stirpes_vias_conferre(piscina,
+            "int f(int c) { int x; int y; if (c) { x = 1; }"
+            " return x + y; }", &d);
+        CREDO_AEQUALIS_S32 (amissa, ZEPHYRUM);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (_stirps_ad_exitum(d, "x"),
+                (s32)FLUXUS_STIRPS_NEUTRA);
+            CREDO_AEQUALIS_S32 (_stirps_ad_exitum(d, "y"),
+                (s32)FLUXUS_STIRPS_IGNOTA);
+        }
+
+        /* def-omnia (folium AMBIGUUS, canonicum NIHIL): omnes
+         * AMISSA, definitio sequens NEUTRA reponit */
+        amissa = _stirpes_vias_conferre(piscina,
+            "int f(void) { int y; struct S s; s.m = 1;"
+            " x = sizeof(g2); return y + s.m; }", &d);
+        CREDO_VERUM (amissa > ZEPHYRUM);
+        si (d != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (_stirps_ad_exitum(d, "y"),
+                (s32)FLUXUS_STIRPS_AMISSA);
+            CREDO_AEQUALIS_S32 (_stirps_membri_ad_exitum(d, "m"),
+                (s32)FLUXUS_STIRPS_AMISSA);
+            CREDO_AEQUALIS_S32 (_stirps_ad_exitum(d, "x"),
+                (s32)FLUXUS_STIRPS_NEUTRA);
+        }
+
+        /* ansa et blocus inattingibilis (post redde) */
+        amissa = _stirpes_vias_conferre(piscina,
+            "int f(int a, int c) { int x; x = a;"
+            " while (c) { x = x - 1; } return x; x = 2; }", &d);
+        CREDO_AEQUALIS_S32 (amissa, ZEPHYRUM);
+
+        /* ordines ultra LXIV (membra LXX): verbum alterum, masca
+         * verbi ultimi, catena longa; basis redefinita in ansa */
+        {
+            character fons[MMM];
+                  i32 k;
+
+            strcpy(fons, "int f(int c) { struct S s; ");
+            per (k = ZEPHYRUM; k < LXX; k++)
+            {
+                sprintf(fons + strlen(fons), "s.m%u = %u; ",
+                    (insignatus integer)k, (insignatus integer)k);
+            }
+            strcat(fons, "while (c) { s = g(); s.m69 = 1; }"
+                " return s.m0 + s.m69; }");
+            amissa = _stirpes_vias_conferre(piscina, fons, &d);
+            CREDO_VERUM (amissa > ZEPHYRUM);
+            si (d != NIHIL)
+            {
+                CREDO_VERUM (xar_numerus(d->variabiles) > LXIV);
+                CREDO_AEQUALIS_S32 (_stirps_membri_ad_exitum(d, "m0"),
+                    (s32)FLUXUS_STIRPS_AMISSA);
+                CREDO_AEQUALIS_S32 (_stirps_membri_ad_exitum(d,
+                    "m69"), (s32)FLUXUS_STIRPS_NEUTRA);
+            }
         }
     }
 

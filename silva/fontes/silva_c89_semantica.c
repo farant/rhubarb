@@ -261,6 +261,10 @@ _datorum_stirps_ambitu_ligamen (
     constans FluxusDatorum* datorum,
               constans s32* stirpes);
 interior vacuum
+_datorum_stirpes_ligare (
+           SilvaSemantica* sem,
+     FluxusDatorumAuxilia* aux);
+interior vacuum
 _signata_fluxus_examinare (
                SilvaSemantica* sem,
     constans FluxusFunctionis* fluxus);
@@ -6283,9 +6287,7 @@ _fluxum_examinare (
             _datorum_parametrum_constans_ligamen;
         aux_datorum.parametrum_accumulat = _fluxus_accumulat_ligamen;
         aux_datorum.expressio_acies = _datorum_expressio_acies_ligamen;
-        aux_datorum.stirps_valoris = _datorum_stirps_ligamen;
-        aux_datorum.stirps_valoris_ambitu =
-            _datorum_stirps_ambitu_ligamen;
+        _datorum_stirpes_ligare(sem, &aux_datorum);
         aux_datorum.canonicum = _fluxus_canonicum_ligamen;
         aux_datorum.contextus = sem;
         fluxus->datorum = silva_c89_fluxus_datorum_aedificare(
@@ -9209,14 +9211,13 @@ _credo_scripta_colligere (
            FluxusDatorum* d;
                      i32  b;
 
-    aux.symbolum               = _credo_symbolum_ligamen;
-    aux.parametrum_constans    = _datorum_parametrum_constans_ligamen;
-    aux.parametrum_accumulat   = _fluxus_accumulat_ligamen;
-    aux.expressio_acies        = _datorum_expressio_acies_ligamen;
-    aux.stirps_valoris         = _datorum_stirps_ligamen;
-    aux.stirps_valoris_ambitu  = _datorum_stirps_ambitu_ligamen;
-    aux.canonicum              = _fluxus_canonicum_ligamen;
-    aux.contextus              = sem;
+    aux.symbolum              = _credo_symbolum_ligamen;
+    aux.parametrum_constans   = _datorum_parametrum_constans_ligamen;
+    aux.parametrum_accumulat  = _fluxus_accumulat_ligamen;
+    aux.expressio_acies       = _datorum_expressio_acies_ligamen;
+    _datorum_stirpes_ligare(sem, &aux);
+    aux.canonicum = _fluxus_canonicum_ligamen;
+    aux.contextus = sem;
     d = silva_c89_fluxus_datorum_aedificare(sem->piscina, f->fluxus,
         &aux);
     si (d == NIHIL)
@@ -14921,6 +14922,29 @@ _datorum_stirps_ligamen (
         redde (s32)FLUXUS_STIRPS_NEUTRA;
     }
     redde _stirps_ordinalis(sem, g);
+}
+
+/* involucra stirpium pro auxiliis datorum: registro signatorum
+ * vacuo (nullus typus signatus in parsura) ambo involucra NEUTRAM
+ * semper redderent - NIHIL ponuntur, et datorum viam celerem
+ * stirpium capit (budget fusionis, ambulatio principalis III;
+ * corpore LXXXVI% functionum). Status tabularum idem: datorum
+ * involucro absente definitiones NEUTRAS facit. */
+interior vacuum
+_datorum_stirpes_ligare (
+           SilvaSemantica* sem,
+     FluxusDatorumAuxilia* aux)
+{
+    _contractus_colligere(sem);   /* registrum ante iudicium */
+    si (   sem->signata_typorum              == NIHIL
+        || xar_numerus(sem->signata_typorum) == ZEPHYRUM)
+    {
+        aux->stirps_valoris         = NIHIL;
+        aux->stirps_valoris_ambitu  = NIHIL;
+        redde;
+    }
+    aux->stirps_valoris         = _datorum_stirps_ligamen;
+    aux->stirps_valoris_ambitu  = _datorum_stirps_ambitu_ligamen;
 }
 
 /* involucrum ambitu-conscium (v2): campi ambientes positi circa
