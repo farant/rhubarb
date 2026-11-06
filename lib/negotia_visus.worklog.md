@@ -138,3 +138,26 @@ figure context for `SemitaOrganum`).
   words (revisio_aperta, revisio_movere, fac_revisio_proxima/prior).
   `silva/renominare.sh` refuses dirty files (git is its undo), so
   mid-task renames go by whole-word regex.
+
+## 2026-11-06 — T6 slice: mock-up pages in the Cmd+H/L ring
+
+Fran wanted the ring before T4 (pictor pages) / T5 (notes), so T6 runs
+as a slice: ring = project, its conversations, then MOCK-UP pages by
+their own last act (seq desc). Pictor pages stay out until T4 (opening
+("pictor", "negotia/<id>") now would create a stray picture in
+pictor's shared list); notes/pictor activity join the ordering later.
+
+- One builder, `anulum_negotii_ponere` (vicus_applicatio.c), used by
+  the open port AND by a host system `anulus_negotii` that rebuilds
+  the active tab's ring when negotia_versio moves or the active tab
+  changes. The project of a ring is read from the ring itself (entry
+  0 = ("negotia", id)) via the new `vicus_anuli_latus` - not a host
+  map, so rings restored after a restart refresh too.
+- Position: the entry at the old position is looked up in the new
+  ring; vicus also reads position from the front pane when stepping.
+- The system's mora is M only while the active tab has a project
+  ring, else -1 - an unconditional M broke vicus_quies (idle = every
+  system answers -1).
+- vicus_admonitiones "systema" failed once in the full parallel run
+  (second pulse expected FALSUM) and passed alone twice and in the
+  next full run: load-dependent, not this change.

@@ -4043,6 +4043,41 @@ vicus_anulum_ponere (
 }
 
 b32
+vicus_anuli_latus (
+    constans Vicus* v,
+               i32  k,
+            chorda* genus,
+            chorda* argumentum)
+{
+    constans VicusTabula* t = NIHIL;
+     constans LatusCycli* c;
+                     i32  i;
+
+    per (i = ZEPHYRUM; v && !t && i < xar_numerus(v->tabulae); i++)
+    {
+        t = (constans VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (!chorda_aequalis(t->id, v->activa))
+        {
+            t = NIHIL;
+        }
+    }
+    si (!t || !t->anulus || k >= xar_numerus(t->anulus))
+    {
+        redde FALSUM;
+    }
+    c = (constans LatusCycli*)xar_obtinere(t->anulus, k);
+    si (genus)
+    {
+        *genus = c->genus;
+    }
+    si (argumentum)
+    {
+        *argumentum = c->argumentum;
+    }
+    redde VERUM;
+}
+
+b32
 vicus_anulo_gradi (
     Vicus* v,
       s32  directio)

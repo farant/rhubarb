@@ -761,6 +761,163 @@ _anulus_deinde_aperitio (
     volumen_claudere(w->vol);
 }
 
+/* negotia-paginae T6: latus k anuli est (genus, argumentum; NIHIL =
+ * sine) */
+interior b32
+anuli_latus_est (
+                  Vicus* v,
+                    i32  k,
+     constans character* genus,
+     constans character* argumentum)
+{
+    chorda g;
+    chorda a;
+
+    redde vicus_anuli_latus(v, k, &g, &a)
+        && chorda_aequalis_literis(g, genus)
+        && (argumentum ? chorda_aequalis_literis(a, argumentum)
+                       : a.mensura == ZEPHYRUM);
+}
+
+/* T6: negotium per portam lateris (ut ictus in indice); paginae a
+ * et b adumbrationis (b recentior) et pictoris p per Negotia alterum
+ * (ut bin/negotia). Argumenta "adumbratio/<id>" in arg_a, arg_b */
+nomen structura {
+     Negotia* ng;
+      chorda  x;
+      chorda  a;
+      chorda  b;
+   character  arg_a[LXIV];
+   character  arg_b[LXIV];
+} NegotiumAnuli;
+
+interior b32
+negotium_anuli_parare (
+      MundusAnuli* w,
+    NegotiumAnuli* q,
+          Piscina* p)
+{
+     NegotiaMontatio* nm;
+                 b32  ok;
+
+    q->ng = negotia_aperire(w->vol, NIHIL, NIHIL, p);
+    si (!q->ng)
+    {
+        redde FALSUM;
+    }
+    q->x = negotia_negotium_creare(q->ng, chorda_ex_literis("negotia",
+        p), chorda_ex_literis("", p));
+    q->a = negotia_paginam_creare(q->ng, q->x,
+        NEGOTIA_PAGINA_ADUMBRATIO,
+        chorda_ex_literis("a", p), chorda_ex_literis("<adumbratio/>",
+        p));
+    q->b = negotia_paginam_creare(q->ng, q->x,
+        NEGOTIA_PAGINA_ADUMBRATIO,
+        chorda_ex_literis("b", p), chorda_ex_literis("<adumbratio/>",
+        p));
+    (vacuum)negotia_paginam_creare(q->ng, q->x, NEGOTIA_PAGINA_PICTOR,
+        chorda_ex_literis("p", p), chorda_ex_literis("", p));
+    sprintf(q->arg_a, "adumbratio/%.*s", (integer)q->a.mensura,
+        (constans character*)q->a.datum);
+    sprintf(q->arg_b, "adumbratio/%.*s", (integer)q->b.mensura,
+        (constans character*)q->b.datum);
+    (vacuum)vicus_acervo_aperire(w->v, "negotia", NIHIL);
+    (vacuum)vicus_pulsare(w->v);
+    nm = (NegotiaMontatio*)vicus_latus(vicus_activa(w->v),
+        VICUS_DEXTRUM)->montatio;
+    si (!nm || !nm->portae || !nm->portae->negotium_aperire)
+    {
+        redde FALSUM;
+    }
+    ok = nm->portae->negotium_aperire(nm->portae->ctx, q->x);
+    (vacuum)vicus_pulsare(w->v);
+    redde ok;
+}
+
+/* anulus = negotium, paginae adumbrationis recentissima prima;
+ * pictoris nulla (T4); Cmd+L ad recentissimam */
+interior vacuum
+_anulus_paginarum (
+    CredoContextus* c)
+{
+      MundusAnuli* w;
+    NegotiumAnuli  q;
+        character  x[LXIV];
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_NECESSE(negotium_anuli_parare(w, &q, c->piscina));
+    sprintf(x, "%.*s", (integer)q.x.mensura,
+        (constans character*)q.x.datum);
+    CREDO_VERUM(anuli_latus_est(w->v, ZEPHYRUM, "negotia", x));
+    CREDO_VERUM(anuli_latus_est(w->v, I, "negotia", q.arg_b));
+    CREDO_VERUM(anuli_latus_est(w->v, II, "negotia", q.arg_a));
+    CREDO_FALSUM(vicus_anuli_latus(w->v, III, NIHIL, NIHIL));
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", q.arg_b));
+    volumen_claudere(w->vol);
+}
+
+/* revisio paginae vetustioris: prima post pulsum; frons manet */
+interior vacuum
+_anulus_revisio_movet (
+    CredoContextus* c)
+{
+      MundusAnuli* w;
+    NegotiumAnuli  q;
+        character  x[LXIV];
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_NECESSE(negotium_anuli_parare(w, &q, c->piscina));
+    sprintf(x, "%.*s", (integer)q.x.mensura,
+        (constans character*)q.x.datum);
+    CREDO_VERUM(negotia_paginam_mutare(q.ng, q.a, chorda_ex_literis("a",
+        c->piscina), chorda_ex_literis("<adumbratio><columna/>"
+        "</adumbratio>", c->piscina)));
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(anuli_latus_est(w->v, I, "negotia", q.arg_a));
+    CREDO_VERUM(anuli_latus_est(w->v, II, "negotia", q.arg_b));
+    CREDO_VERUM(frons_generis(w->v, "negotia", x));
+    volumen_claudere(w->vol);
+}
+
+/* pagina nova per Negotia alterum: in anulo post pulsum; positio
+ * frontem sequitur */
+interior vacuum
+_anulus_renovatus (
+    CredoContextus* c)
+{
+      MundusAnuli* w;
+    NegotiumAnuli  q;
+           chorda  n;
+        character  arg_n[LXIV];
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_NECESSE(negotium_anuli_parare(w, &q, c->piscina));
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", q.arg_b));
+    n = negotia_paginam_creare(q.ng, q.x, NEGOTIA_PAGINA_ADUMBRATIO,
+        chorda_ex_literis("n", c->piscina), chorda_ex_literis(
+        "<adumbratio/>", c->piscina));
+    CREDO_CHORDA_NON_VACUA(n);
+    sprintf(arg_n, "adumbratio/%.*s", (integer)n.mensura,
+        (constans character*)n.datum);
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(anuli_latus_est(w->v, I, "negotia", arg_n));
+    CREDO_VERUM(anuli_latus_est(w->v, II, "negotia", q.arg_b));
+    CREDO_VERUM(frons_generis(w->v, "negotia", q.arg_b));
+    CREDO_AEQUALIS_I32(vicus_activa(w->v)->anulus_positio, II);
+    /* Cmd+L a b (II) -> a (III) */
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", q.arg_a));
+    volumen_claudere(w->vol);
+}
+
 /* Cmd+] cyclum gradit; positio anuli servata */
 interior vacuum
 _anulus_et_cyclus (
@@ -906,6 +1063,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "anulus deinde aperitio", _anulus_deinde_aperitio, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "anulus paginarum", _anulus_paginarum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "anulus revisio movet", _anulus_revisio_movet, NIHIL, NIHIL,
+        NIHIL, NIHIL },
+    { "anulus renovatus", _anulus_renovatus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "anulus restitutus", _anulus_restitutus, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "anulus per tabulam", _anulus_per_tabulam, NIHIL, NIHIL, NIHIL,

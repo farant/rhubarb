@@ -56,7 +56,11 @@
  * (latus prius per vicum).
  *
  * Negotium ex indice apertum = porta negotium_aperire (vicus: anulus
- * tabulae et latus novum in acervo); sine porta visus in loco mutatur
+ * tabulae = negotium, colloquia eius, deinde paginae adumbrationis
+ * activitate recentissima prima ("adumbratio/<id plenum>"; pictoris
+ * post T4, notae post T5) - et latus novum in acervo). Anulus
+ * tabulae activae renovatur cum negotia_versio movetur aut tabula
+ * mutatur; frons manet. Sine porta visus in loco mutatur
  * (historia impelle). Pulsus per M ms: negotia_renovare - scripturae
  * aliorum processuum (bin/negotia, alia arbor) intra secundum
  * apparent. */

@@ -5015,6 +5015,9 @@ nomen structura {
     NegotiaVisusPortae  portae;
     /* T6: fons sessionum et saltus (admonitiones) */
  ContextusAdmonitionum* admonitionum;
+    /* paginae T6: anulus renovatus pro (tabula, versio) */
+                    s64 anulus_versio;
+                 chorda anulus_tabula;
 } ContextusNegotiorum;
 
 interior Negotia*
@@ -5027,6 +5030,167 @@ negotia_communia (
             cg->piscina);
     }
     redde cg->negotia;
+}
+
+/* paginae T6: anulus tabulae activae pro negotio id - negotium,
+ * colloquia eius (ordine adiunctionis), paginae adumbrationis
+ * activitate (seq) recentissima prima; pictoris post T4. Positio =
+ * latus positionis prioris in anulo novo, aliter ZEPHYRUM */
+interior b32
+anulum_negotii_ponere (
+    ContextusNegotiorum* cg,
+     constans character* id)
+{
+                   Piscina*  scheda;
+                       Xar*  cs;
+                       Xar*  ps;
+    constans NegotiiPagina** paginae;
+        constans character** genera;
+        constans character** argumenta;
+               VicusTabula*  t;
+                    chorda   negotium;
+                    chorda   genus_prius;
+                    chorda   argumentum_prius;
+                       b32   prius;
+                       b32   ok;
+                       i32   nc;
+                       i32   np;
+                       i32   n;
+                       i32   k;
+                       i32   j;
+                       i32   positio;
+
+    t = vicus_activa(cg->vicus);
+    si (!t || !negotia_communia(cg))
+    {
+        redde FALSUM;
+    }
+    scheda = piscina_generare_dynamicum("anulus_negotii", XVI * M);
+    si (!scheda)
+    {
+        redde FALSUM;
+    }
+    prius     = vicus_anuli_latus(cg->vicus, t->anulus_positio,
+        &genus_prius, &argumentum_prius);
+    negotium  = chorda_ex_literis(id, scheda);
+    cs        = negotia_colloquia(cg->negotia, negotium, scheda);
+    ps        = negotia_paginae(cg->negotia, negotium, scheda);
+    nc        = cs ? xar_numerus(cs) : ZEPHYRUM;
+    np        = ps ? xar_numerus(ps) : ZEPHYRUM;
+    paginae   = (constans NegotiiPagina**)piscina_allocare(scheda,
+        (memoriae_index)(np + I) * magnitudo(constans NegotiiPagina*));
+    genera    = (constans character**)piscina_allocare(scheda,
+        (memoriae_index)(I + nc + np) * magnitudo(constans character*));
+    argumenta = (constans character**)piscina_allocare(scheda,
+        (memoriae_index)(I + nc + np) * magnitudo(constans character*));
+    si (!paginae || !genera || !argumenta)
+    {
+        piscina_destruere(scheda);
+        redde FALSUM;
+    }
+    /* paginae adumbrationis, insertione seq decrescente */
+    n = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < np; k++)
+    {
+        constans NegotiiPagina* x;
+
+        x = (constans NegotiiPagina*)xar_obtinere(ps, k);
+        si (x->genus != NEGOTIA_PAGINA_ADUMBRATIO)
+        {
+            perge;
+        }
+        per (j = n; j > ZEPHYRUM && paginae[j - I]->seq < x->seq; j--)
+        {
+            paginae[j] = paginae[j - I];
+        }
+        paginae[j] = x;
+        n++;
+    }
+    genera[ZEPHYRUM]     = "negotia";
+    argumenta[ZEPHYRUM]  = id;
+    per (k = ZEPHYRUM; k < nc; k++)
+    {
+        genera[I + k]     = "colloquium";
+        argumenta[I + k]  = chorda_ut_cstr(*(chorda*)xar_obtinere(cs,
+            k),
+            scheda);
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        genera[I + nc + k]     = "negotia";
+        argumenta[I + nc + k]  = chorda_ut_cstr(chorda_concatenare(
+            chorda_ex_literis("adumbratio/", scheda), paginae[k]->id,
+            scheda), scheda);
+    }
+    n        += I + nc;
+    positio  = ZEPHYRUM;
+    per (k = ZEPHYRUM; prius && k < n; k++)
+    {
+        si (   chorda_aequalis_literis(genus_prius, genera[k])
+            && chorda_aequalis_literis(argumentum_prius, argumenta[k]))
+        {
+            positio = k;
+        }
+    }
+    ok = vicus_anulum_ponere(cg->vicus, genera, argumenta, n, positio);
+    piscina_destruere(scheda);
+    redde ok;
+}
+
+/* paginae T6: systema hospitis - anulus tabulae activae cuius latus
+ * primum ("negotia", id) est renovatur cum negotia_versio movetur aut
+ * tabula activa mutatur (frons manet: vicus positionem ex fronte
+ * legit) */
+interior b32
+anulum_negotii_renovare (
+     Vicus* v,
+    vacuum* ctx)
+{
+    ContextusNegotiorum* cg = (ContextusNegotiorum*)ctx;
+            VicusTabula* t;
+                 chorda  genus;
+                 chorda  argumentum;
+                    s64  versio;
+              character  id[CXXVIII];
+
+    t = vicus_activa(v);
+    si (   !cg || !t || !vicus_anuli_latus(v, ZEPHYRUM, &genus,
+               &argumentum)
+        || !chorda_aequalis_literis(genus, "negotia")
+        || argumentum.mensura == ZEPHYRUM
+        || argumentum.mensura >= (i32)magnitudo(id)
+        || !negotia_communia(cg))
+    {
+        redde FALSUM;
+    }
+    (vacuum)negotia_renovare(cg->negotia);
+    versio = negotia_versio(cg->negotia);
+    si (   versio == cg->anulus_versio
+        && chorda_aequalis(t->id, cg->anulus_tabula))
+    {
+        redde FALSUM;
+    }
+    cg->anulus_versio = versio;
+    cg->anulus_tabula = t->id;
+    memcpy(id, argumentum.datum, (memoriae_index)argumentum.mensura);
+    id[argumentum.mensura] = '\0';
+    (vacuum)anulum_negotii_ponere(cg, id);
+    redde FALSUM;
+}
+
+/* M ms solum dum anulus tabulae activae negotii est; aliter -I
+ * (otium vici non impeditur) */
+interior Mora
+anuli_negotii_mora (
+    vacuum* ctx)
+{
+    ContextusNegotiorum* cg = (ContextusNegotiorum*)ctx;
+                 chorda  genus;
+
+    redde (   cg && vicus_anuli_latus(cg->vicus, ZEPHYRUM, &genus,
+                  NIHIL)
+           && chorda_aequalis_literis(genus, "negotia"))
+        ? (Mora)M : (Mora)-I;
 }
 
 interior b32
@@ -5044,37 +5208,9 @@ negotium_aperire_in_vico (
     }
     memcpy(id, negotium.datum, (memoriae_index)negotium.mensura);
     id[negotium.mensura] = '\0';
-    /* T5/T6: anulus tabulae = negotium, deinde colloquia eius
-     * (ordine adiunctionis; genus virtuale "colloquium") */
-    {
-                        Xar*  cs;
-         constans character** genera;
-         constans character** argumenta;
-                        i32   n;
-                        i32   k;
-
-        cs = negotia_communia(cg) ? negotia_colloquia(cg->negotia,
-            negotium, cg->piscina) : NIHIL;
-        n  = I + (cs ? xar_numerus(cs) : ZEPHYRUM);
-        genera     = (constans character**)piscina_allocare(cg->piscina,
-            (memoriae_index)n * magnitudo(constans character*));
-        argumenta  = (constans character**)piscina_allocare(cg->piscina,
-            (memoriae_index)n * magnitudo(constans character*));
-        si (genera && argumenta)
-        {
-            genera[ZEPHYRUM]     = "negotia";
-            argumenta[ZEPHYRUM]  = id;
-            per (k = I; k < n; k++)
-            {
-                genera[k]     = "colloquium";
-                argumenta[k]  =
-                    chorda_ut_cstr(*(chorda*)xar_obtinere(cs,
-                    k - I), cg->piscina);
-            }
-            (vacuum)vicus_anulum_ponere(cg->vicus, genera, argumenta, n,
-                ZEPHYRUM);
-        }
-    }
+    /* T5/T6: anulus tabulae = negotium, colloquia eius (genus
+     * virtuale "colloquium"), paginae adumbrationis */
+    (vacuum)anulum_negotii_ponere(cg, id);
     redde vicus_acervo_aperire(cg->vicus, "negotia", id);
 }
 
@@ -6080,6 +6216,8 @@ ContextusNomenclatoris* cn;
                systema_terminalium, terminalia_morari, cad)
         || !vicus_systema_cum_mora_addere(app->vicus, "sonus",
                systema_soni, soni_morari, soni)
+        || !vicus_systema_cum_mora_addere(app->vicus, "anulus_negotii",
+               anulum_negotii_renovare, anuli_negotii_mora, negotiorum)
         || !vicus_aperire(app->vicus, INDEX_ORDINARIUS)
         || !vicus_stratum_addere(app->vicus, "volantes"))
     {

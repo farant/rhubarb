@@ -685,6 +685,16 @@ vicus_anulum_ponere (
                              i32  numerus,
                              i32  positio);
 
+/* negotia-paginae T6: latus k anuli tabulae activae (genus,
+ * argumentum; vacuum = sine) - hospes anulum ex latere primo
+ * renovat. FALSUM si anulus nullus aut k extra ambitum */
+b32
+vicus_anuli_latus (
+    constans Vicus* v,
+               i32  k,
+            chorda* genus,
+            chorda* argumentum);
+
 /* gradus anuli (+I aut -I) in tabula activa: PETITIO. FALSUM si
  * directio mala, tabula activa nulla, aut anulus nullus aut unius
  * (nihil petitur) */
