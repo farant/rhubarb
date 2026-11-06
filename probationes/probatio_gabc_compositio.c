@@ -656,6 +656,7 @@ _lineas_probare (
                     i32  n;
                     i32  in_primo;
                     s32  infima;
+                    s32  x_iustum;
 
     /* z frangit et iustificat: custos ad marginem dextrum */
     comp = _componere(c, SINE_INITIALI "(c4) a(g) (z) b(g)", NIHIL);
@@ -665,10 +666,16 @@ _lineas_probare (
     p = _pictum(comp, GABC_PICTUM_PARS, -II, (s32)NEUMAE_CUSTOS);
     CREDO_AEQUALIS_S32(p->y - _linea_infima(comp, ZEPHYRUM), -XII);
     CREDO_AEQUALIS_S32(p->parametrum, I);
+    /* clavis sola intervallum iustificationis non est (Gregorio): a
+     * ad sinistram manet ut sine iustificatione, custos tamen ad
+     * marginem */
+    x_iustum = _pictum(comp, GABC_PICTUM_PARS, I, -I)->x;
     /* Z frangit sine iustificatione */
     comp = _componere(c, SINE_INITIALI "(c4) a(g) (Z) b(g)", NIHIL);
     CREDO_AEQUALIS_I32(_systemata(comp), II);
     CREDO_VERUM(_finis_custodis(comp) < CMLII);
+    CREDO_AEQUALIS_S32(x_iustum, _pictum(comp, GABC_PICTUM_PARS, I,
+        -I)->x);
     /* z- custodem vetat */
     comp = _componere(c, SINE_INITIALI "(c4) a(g) (z-) b(g)", NIHIL);
     CREDO_AEQUALIS_I32(_numerus_partium(comp, NEUMAE_CUSTOS, -II),
@@ -694,6 +701,12 @@ _lineas_probare (
         }
     }
     CREDO_AEQUALIS_I32(in_primo, LVIII);
+    /* systema primum avide fractum et iustificatum: syllaba prima
+     * post clavem ut in systemate non iustificato */
+    x_iustum  = _pictum(comp, GABC_PICTUM_PARS, I, -I)->x;
+    comp      = _componere(c, SINE_INITIALI "(c4) a(g)", NIHIL);
+    CREDO_AEQUALIS_S32(x_iustum, _pictum(comp, GABC_PICTUM_PARS, I,
+        -I)->x);
 
     /* titulus et annotatio solum in pagina prima; paginae systemata
      * tota tenent */
@@ -1192,10 +1205,12 @@ _corpus_probare (
     CREDO_AEQUALIS_I32(plagulae, LXXXII);
     /* summae fixae (VI + VIII + XXIV; P3, rescriptae P4: lineolae,
      * caules; recensio finalis: textus syllabae fractae cum parte
-     * prima - XI lineolae falsae in spatio XXIV sublatae): mutatio
-     * compositionis hic apparet - causa in worklog nominanda */
+     * prima - XI lineolae falsae in spatio XXIV sublatae; clavis sola
+     * non intervallum iustificationis - III lineolae, intervalla
+     * mutata): mutatio compositionis hic apparet - causa in worklog
+     * nominanda */
     CREDO_AEQUALIS_I32(paginae, CDLXXI);
-    CREDO_AEQUALIS_I32(picta, CXI * M + DCCLXXXIX);
+    CREDO_AEQUALIS_I32(picta, CXI * M + DCCXCII);
     CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
     CREDO_AEQUALIS_I32(extra, ZEPHYRUM);
 }
