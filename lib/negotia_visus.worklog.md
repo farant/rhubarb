@@ -97,3 +97,19 @@ figure context for `SemitaOrganum`).
   tmux session running claude on Fran's server. The quoting is tested
   purely in probatio_colloquia "mandatum resumendi"; the jump itself is
   the existing saltus, checked live.
+
+## 2026-11-05 — negotia-paginae T3: mock-up view
+
+- New view option or field in `apps/negotia/organum.stml` does nothing
+  until `./tools/organa_infigere.sh` regenerates `lib/organa_infixa.c`
+  (the manifest is compiled in). Symptom: the argument is refused
+  (campos_scribere rejects the unknown option) and every new section
+  aborts at latus_montare.
+- The field is `adumbratio`, not the plan's `pagina` - `pagina` was
+  already the list page number (transiens).
+- The rendered mock-up is cached in NegotiaFigurae (own arena, vacated
+  on change), keyed by page id + act seq + region size; a revision by
+  another process shows up after the pulse because negotia_renovare
+  brings the new act (new seq).
+- Look check without the live volume: build/adumbratio_latus.c (scratch,
+  ignored) mounts the pane on a temporary volume and writes a PNG.

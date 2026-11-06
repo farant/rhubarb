@@ -631,6 +631,33 @@ liberos_addere (
  * Pictura
  * ================================================== */
 
+/* sub in md intra fines: coetus cum sectione, origo coetus =
+ * fines.x/y (+ translatio, hic 0); sectio = fines in spatio parentis */
+interior vacuum
+transcribere (
+             Mandata* md,
+    constans Mandata* sub,
+               Fines  fines,
+              chorda  provenientia)
+{
+    i32 coetus;
+    i32 k;
+
+    coetus = (i32)mandata_coetus_incipere(md, fines, VERUM, ZEPHYRUM,
+        ZEPHYRUM, I, provenientia);
+    per (k = ZEPHYRUM; k < xar_numerus(sub->elementa); k++)
+    {
+        Mandatum* locus = (Mandatum*)xar_addere(md->elementa);
+
+        si (locus)
+        {
+            *locus = *(constans Mandatum*)xar_obtinere(sub->elementa,
+                k);
+        }
+    }
+    mandata_coetus_finire(md, coetus);
+}
+
 /* elementum mandata: nomina colorum -> gradus, serializatio, lectio,
  * coetus translatus in capsam (cum sectione) */
 interior b32
@@ -643,7 +670,6 @@ mandata_pingere (
       StmlNodus* liberum;
         Mandata* sub;
          chorda  textus;
-            i32  coetus;
             i32  k;
 
     per (liberum = stml_primus_liberum(nodus); liberum;
@@ -689,21 +715,8 @@ mandata_pingere (
         vitium_ponere(f, nodus->linea, "mandata mala", *nodus->titulus);
         redde FALSUM;
     }
-    /* origo coetus = fines.x/y (+ translatio, hic 0); sectio = fines
-     * in spatio parentis */
-    coetus = (i32)mandata_coetus_incipere(md, fines, VERUM, ZEPHYRUM,
-        ZEPHYRUM, I, chorda_ex_literis("mandata", f->piscina));
-    per (k = ZEPHYRUM; k < xar_numerus(sub->elementa); k++)
-    {
-        Mandatum* locus = (Mandatum*)xar_addere(md->elementa);
-
-        si (locus)
-        {
-            *locus = *(constans Mandatum*)xar_obtinere(sub->elementa,
-                k);
-        }
-    }
-    mandata_coetus_finire(md, coetus);
+    transcribere(md, sub, fines, chorda_ex_literis("mandata",
+        f->piscina));
     redde VERUM;
 }
 
@@ -1091,4 +1104,17 @@ adumbrationem_png_scribere (
     delineare_mandata(r->mandata, t, NIHIL, NIHIL);
     redde tabula_pixelorum_in_imaginem(t, piscina, &im)
         && imago_png_scribere(&im, via, piscina).successus;
+}
+
+vacuum
+adumbrationem_inserere (
+     constans AdumbratioResultus* r,
+                         Mandata* md,
+                           Fines  fines)
+{
+    si (r && r->mandata && md)
+    {
+        transcribere(md, r->mandata, fines, chorda_ex_literis(
+            "adumbratio", md->piscina));
+    }
 }

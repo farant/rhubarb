@@ -157,6 +157,8 @@ declare -a RADIX_FONTES=(
     # negotia-plan T3: negotia in vico ($projects)
     "negotia"
     "negotia_visus"
+    "adumbratio"       # negotia-paginae T3: pagina adumbrationis
+    "imago_png"        # adumbratio: PNG (bin/negotia png)
     # lector L3: liber EPUB in vico (bibliotheca, paginae)
     "lector"
     "lector_bibliotheca"

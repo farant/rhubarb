@@ -985,6 +985,192 @@ _probare_resumere_armatum (
     CREDO_AEQUALIS_I32(l->resumpta, I);
 }
 
+/* negotia-paginae T3: alpha "2", pagina adumbrationis "index" = "5"
+ * (post seminare) */
+interior chorda
+paginam_seminare (
+                 Mundus* w,
+                Piscina* p,
+     constans character* corpus)
+{
+    seminare(w, p);
+    redde negotia_paginam_creare(w->n, lit("2", p),
+        NEGOTIA_PAGINA_ADUMBRATIO, lit("index", p), lit(corpus, p));
+}
+
+/* coetus lateris "adumbratio" (cum sectione) qui textum continentem
+ * fragmentum in subarbore habet; -1 si nullus */
+interior s32
+coetus_adumbrationis (
+                Mandata* md,
+     constans character* fragmentum)
+{
+    constans Mandatum* x;
+    constans Mandatum* y;
+                  i32  i;
+                  i32  k;
+               chorda  f;
+
+    f = chorda_ex_literis(fragmentum, md->piscina);
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus != MANDATUM_COETUS || !x->sectio
+            || !chorda_aequalis_literis(x->provenientia, "adumbratio"))
+        {
+            perge;
+        }
+        per (k = i + I; k < i + x->magnitudo_arboris
+             && k < xar_numerus(md->elementa); k++)
+        {
+            y = (constans Mandatum*)xar_obtinere(md->elementa, k);
+            si (   y->genus == MANDATUM_TEXTUS
+                && chorda_continet(y->textus,
+                f))
+            {
+                redde (s32)i;
+            }
+        }
+    }
+    redde -I;
+}
+
+#define ADUMBRATIO_SALVE "<adumbratio><columna spatium=\"1\">" \
+    "<textus>salve</textus></columna></adumbratio>"
+
+/* argumentum -> visus adumbratio: textus adumbrationis, titulus, id,
+ * locus et titulus loci; argumenta mala nihil mutant */
+interior vacuum
+_probare_adumbrationem (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Mandata* md;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    CREDO_CHORDA_NON_VACUA(paginam_seminare(w, c->piscina,
+        ADUMBRATIO_SALVE));
+    l = latus_montare(c, w, "c1", "adumbratio/5", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "adumbratio"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "adumbratio", "5"));
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(coetus_adumbrationis(md, "salve") >= ZEPHYRUM);
+    CREDO_VERUM(textus_pictus(md, "index"));
+    CREDO_VERUM(textus_pictus(md, "Mock-up \302\267 5"));
+    CREDO_VERUM(locus_lateris_est(l, "negotia/pagina/5", c->piscina));
+    CREDO_VERUM(locus_est(l, "alpha \302\267 index", c->piscina));
+    CREDO_GRADUS("argumentum malum");
+    CREDO_CHORDA_NON_VACUA(negotia_paginam_creare(w->n, lit("2",
+        c->piscina), NEGOTIA_PAGINA_PICTOR, lit("affectus", c->piscina),
+        lit("", c->piscina)));
+    CREDO_FALSUM(negotia_visus_argumentum_ponere(&l->m,
+        "adumbratio/6"));
+    CREDO_FALSUM(negotia_visus_argumentum_ponere(&l->m,
+        "adumbratio/ZZZ"));
+    CREDO_FALSUM(negotia_visus_argumentum_ponere(&l->m, "adumbratio/"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "visus", "adumbratio"));
+    CREDO_VERUM(campus_est(&l->m.ramus, "adumbratio", "5"));
+}
+
+/* documentum malum: pagina vitii in latere */
+interior vacuum
+_probare_adumbrationem_malam (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Mandata* md;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    CREDO_CHORDA_NON_VACUA(paginam_seminare(w, c->piscina,
+        "<adumbratio><rota/></adumbratio>"));
+    l = latus_montare(c, w, "c1", "adumbratio/5", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(coetus_adumbrationis(md, "Mock-up error") >= ZEPHYRUM);
+    CREDO_VERUM(coetus_adumbrationis(md, "rota") >= ZEPHYRUM);
+}
+
+/* adumbratio MCC x MCC: in coetu praeciso intra latus */
+interior vacuum
+_probare_maiorem_latere (
+    CredoContextus* c)
+{
+               Mundus* w = (Mundus*)c->datum;
+                Latus* l;
+              Mandata* md;
+                  s32  k;
+    constans Mandatum* x;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    CREDO_CHORDA_NON_VACUA(paginam_seminare(w, c->piscina,
+        "<adumbratio latitudo=\"1200\" altitudo=\"1200\">"
+        "<columna spatium=\"1\"><textus>magna</textus></columna>"
+        "</adumbratio>"));
+    l = latus_montare(c, w, "c1", "adumbratio/5", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    md  = reddere(w, l, c->piscina);
+    k   = coetus_adumbrationis(md, "magna");
+    CREDO_NECESSE(k >= ZEPHYRUM);
+    x  = (constans Mandatum*)xar_obtinere(md->elementa, (i32)k);
+    CREDO_VERUM(x->fines.x >= ZEPHYRUM && x->fines.y >= ZEPHYRUM);
+    CREDO_VERUM(x->fines.x + x->fines.latitudo <= CCLXXX);
+    CREDO_VERUM(x->fines.y + x->fines.altitudo <= CCLVI);
+}
+
+/* revisio per alterum Negotia: pulsus -> textus novus, vetus abest */
+interior vacuum
+_probare_adumbrationem_revisam (
+    CredoContextus* c)
+{
+     Mundus* w = (Mundus*)c->datum;
+      Latus* l;
+    Volumen* v2;
+    Negotia* n2;
+        i32  numerator_alter;
+    Mandata* md;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    CREDO_CHORDA_NON_VACUA(paginam_seminare(w, c->piscina,
+        ADUMBRATIO_SALVE));
+    l = latus_montare(c, w, "c1", "adumbratio/5", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(coetus_adumbrationis(reddere(w, l, c->piscina), "salve")
+        >= ZEPHYRUM);
+    v2 = volumen_aperire(c->piscina, volumen_via(w->volumen));
+    CREDO_NECESSE_NON_NIHIL(v2);
+    numerator_alter = C;
+    n2 = negotia_aperire(v2, moneta_numerator, &numerator_alter,
+        c->piscina);
+    CREDO_NECESSE_NON_NIHIL(n2);
+    CREDO_VERUM(negotia_paginam_mutare(n2, lit("5", c->piscina),
+        lit("index", c->piscina), lit("<adumbratio><columna "
+        "spatium=\"1\"><textus>vale</textus></columna></adumbratio>",
+        c->piscina)));
+    CREDO_VERUM(negotia_visus_reficere(&l->m));
+    dispensator_recomponere(l->d);
+    md = reddere(w, l, c->piscina);
+    CREDO_VERUM(coetus_adumbrationis(md, "vale") >= ZEPHYRUM);
+    CREDO_VERUM(coetus_adumbrationis(md, "salve") < ZEPHYRUM);
+    CREDO_GRADUS("pagina nova sine pulsu");
+    {
+           chorda id;
+        character arg[LXIV];
+
+        id = negotia_paginam_creare(n2, lit("2", c->piscina),
+            NEGOTIA_PAGINA_ADUMBRATIO, lit("nova", c->piscina),
+            lit(ADUMBRATIO_SALVE, c->piscina));
+        CREDO_CHORDA_NON_VACUA(id);
+        sprintf(arg, "adumbratio/%.*s", (integer)id.mensura,
+            (constans character*)id.datum);
+        CREDO_VERUM(negotia_visus_argumentum_ponere(&l->m, arg));
+        CREDO_VERUM(campus_est(&l->m.ramus, "adumbratio", arg + XI));
+    }
+    volumen_claudere(v2);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "index", _probare_indicem, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -1022,6 +1208,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "resumere armatum", _probare_resumere_armatum, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "adumbratio", _probare_adumbrationem, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "adumbratio mala", _probare_adumbrationem_malam, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "maior latere", _probare_maiorem_latere, mundum_parare,
+        mundum_purgare, NIHIL, NIHIL },
+    { "adumbratio revisa", _probare_adumbrationem_revisam,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

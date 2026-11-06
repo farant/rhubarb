@@ -21,6 +21,7 @@
       <optio>negotium</optio>
       <optio>facultas</optio>
       <optio>colloquium</optio>
+      <optio>adumbratio</optio>
     </campus>
     <campus nomen="negotium" typus="textus" vita="persistens"
             scriptor="negotia.agere" semita="ligatio"
@@ -38,6 +39,10 @@
     <campus nomen="colloquium" typus="textus" vita="persistens"
             scriptor="negotia.agere" semita="status"
             nota="T6: sessio Claude chartae (visus colloquium)"/>
+    <campus nomen="adumbratio" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="status"
+            nota="negotia-paginae T3: id plenum paginae (visus
+                  adumbratio)"/>
     <campus nomen="resumere" typus="electio" vita="transiens"
             absens="nullum" scriptor="negotia.agere"
             nota="T6: armatum = r primum pressum (sessio fortasse

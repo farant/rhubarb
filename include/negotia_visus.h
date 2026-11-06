@@ -31,6 +31,18 @@
  * comitis = "terminale/claude/<sessio>" (notae colloquii ipsius).
  * Argumentum "colloquium/<sessio>" (sessio [0-9A-Za-z-]+).
  *
+ * PAGINA ADUMBRATIONIS (visus "adumbratio"; negotia-paginae T3):
+ * titulus = titulus paginae; caput "Mock-up · <id VI>". Infra
+ * adumbratio ab angulo sinistro supero ad mensuram declaratam
+ * (absens: regio tota), ad regionem praecisa (coetus cum sectione).
+ * Documentum malum: pagina vitii ("Mock-up error" + nuntius), numquam
+ * vacuum. Redditio servata dum pagina (id, seq) et regio eaedem;
+ * revisio alterius processus per pulsum (negotia_renovare -> seq
+ * nova) iterum redditur. Locus comitis "negotia/pagina/<id plenum>";
+ * titulus loci "<negotium> · <pagina>". Argumentum
+ * "adumbratio/<pagina>" (id plenum aut suffixum unicum); pagina
+ * ignota aut pictoris (T4): FALSUM, nihil mutatum.
+ *
  * MUS PRIMUM: linea sub mure illuminatur (campus super); ictus unus
  * aperit (negotium in indice, facultas in negotio); sagittae paginarum
  * ictu. Claves: j k (electa), [ ] (paginae), Enter (aperire), Esc
@@ -129,14 +141,16 @@ negotia_visus_mora (
     constans NegotiaMontatio* m);
 
 /* comites (facies.locus; ctx = NegotiaMontatio*): charta colloquii ->
- * "terminale/claude/<sessio>"; aliter vacua (locus ordinarius) */
+ * "terminale/claude/<sessio>"; pagina adumbrationis ->
+ * "negotia/pagina/<id plenum>"; aliter vacua (locus ordinarius) */
 chorda
 negotia_visus_locus (
      vacuum* ctx,
     Piscina* piscina);
 
 /* comites P1 (facies.locus_titulus; ctx = NegotiaMontatio*):
- * "Projects" aut titulus negotii aperti */
+ * "Projects" aut titulus negotii aperti; pagina adumbrationis ->
+ * "<negotium> · <pagina>" */
 chorda
 negotia_visus_locus_titulus (
      vacuum* ctx,

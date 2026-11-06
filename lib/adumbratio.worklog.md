@@ -33,3 +33,16 @@ written to PNG (`tabula_pixelorum_creare_nuda` + `delineare_mandata` +
 - Plants (all red in their sections, restored IDEM): expansion skipped
   (fragmenta), double translation (mandata), error swallowed to an
   empty list (vitia).
+
+## 2026-11-05 — T2 commit refused once; T3 embedding
+
+- The radix gate refused the first T2 commit: `probatio_adumbratio`
+  wrote `build/probatio_adumbratio.png` ("scripsit extra vestigium").
+  Suites may only write inside their own area - `credo_area(c)` (a
+  TMPDIR directory per section, deleted after). The PNG section now
+  writes there.
+- `adumbrationem_inserere(r, md, fines)` (T3) and the `<mandata>`
+  escape hatch share one helper, `transcribere`: coetus with sectio,
+  fines = box, translatio 0, elements copied. The copied elements keep
+  chordae in r's arena, so r must outlive the paint (the negotia pane
+  keeps r in its own cached arena).

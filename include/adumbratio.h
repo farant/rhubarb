@@ -81,4 +81,13 @@ adumbrationem_png_scribere (
              constans character* via,
                         Piscina* piscina);
 
+/* r in md intra fines: coetus cum sectione, origo = angulus sinister
+ * superus finium; mandata r transcribuntur (chordae in piscina r
+ * manent - r vivat dum md pingitur) */
+vacuum
+adumbrationem_inserere (
+     constans AdumbratioResultus* r,
+                         Mandata* md,
+                           Fines  fines);
+
 #endif /* ADUMBRATIO_H */

@@ -15,6 +15,7 @@
 #include "paginarium.h"
 #include "chorda_aedificator.h"
 #include "fasti.h"
+#include "adumbratio.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -35,6 +36,7 @@
 #define VISUS_NEGOTII        II
 #define VISUS_FACULTATIS     IV
 #define VISUS_COLLOQUII      VIII
+#define VISUS_ADUMBRATIONIS  XVI
 #define VIVA_MS              ((s64)XV * (s64)LX * (s64)M)   /* XV min */
 #define NEGOTIA_SPATIUM      X        /* pixela per lineam textus */
 #define REQUIRIT_ELECTAM     I
@@ -48,6 +50,14 @@ nomen structura {
               Piscina* scheda;
                   s32  latitudo_montationis;
                   s32  altitudo_montationis;
+    /* T3 paginae: redditio adumbrationis servata (piscina sua, vacata
+     * cum pagina, revisio aut regio mutatur) */
+                      Piscina* adumbratio_piscina;
+           AdumbratioResultus  adumbratio;   /* mandata NIHIL = nulla */
+                    character  adumbratio_id[XXXII];
+                          s64  adumbratio_seq;
+                          s32  adumbratio_latitudo;
+                          s32  adumbratio_altitudo;
 } NegotiaFigurae;
 
 
@@ -217,6 +227,27 @@ facultas_aperta (
            && chorda_aequalis(f->negotium, x->id)) ? f : NIHIL;
 }
 
+/* T3 paginae: pagina adumbrationis aperta (visus adumbratio, id
+ * exactum); NIHIL aliter */
+interior constans NegotiiPagina*
+pagina_aperta (
+    constans NegotiaMontatio* m)
+{
+    constans NegotiiPagina* x;
+                    chorda  id;
+
+    si (!chorda_aequalis_literis(campus(m, "visus"), "adumbratio"))
+    {
+        redde NIHIL;
+    }
+    id = campus(m, "adumbratio");
+    x  = id.mensura > ZEPHYRUM ? negotia_paginam_invenire(m->negotia,
+        id,
+        NIHIL) : NIHIL;
+    redde (   x && chorda_aequalis(x->id, id)
+           && x->genus == NEGOTIA_PAGINA_ADUMBRATIO) ? x : NIHIL;
+}
+
 
 /* ==================================================
  * Ordines (album): index = negotia ordine activitatis; negotium =
@@ -229,7 +260,9 @@ nomen structura {
                        Album* l;
     constans NegotiiFacultas* facultas; /* visus facultas; aliter
                                          * NIHIL */
-                          b32 charta;   /* T6: visus colloquium */
+                          b32  charta;   /* T6: visus colloquium */
+       constans NegotiiPagina* pagina;   /* T3 paginae: visus
+                                         * adumbratio */
 } Ordines;
 
 interior i32
@@ -293,8 +326,9 @@ ordines_parare (
     o->facultas  = facultas_aperta(m, o->negotium);
     o->charta    = chorda_aequalis_literis(campus(m, "visus"),
         "colloquium") && campus(m, "colloquium").mensura > ZEPHYRUM;
-    o->l  = album_creare(p, capacitas(m));
-    n     = numerus_rerum(m, o);
+    o->pagina  = pagina_aperta(m);
+    o->l       = album_creare(p, capacitas(m));
+    n          = numerus_rerum(m, o);
     per (i = ZEPHYRUM; o->l && i < n; i++)
     {
         sprintf(id, "r%u", (insignatus integer)(i + I));
@@ -784,6 +818,7 @@ visus_currens (
     constans ContextusPraecepti* cp)
 {
     redde cp->o.charta ? VISUS_COLLOQUII
+         : cp->o.pagina ? VISUS_ADUMBRATIONIS
          : cp->o.facultas ? VISUS_FACULTATIS
          : cp->o.negotium ? VISUS_NEGOTII : VISUS_INDICIS;
 }
@@ -1111,6 +1146,8 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_resumere },
     { "negotia.charta_redire", "Back", "Esc", VISUS_COLLOQUII, ZEPHYRUM,
         fac_redire },
+    { "negotia.adumbratio_redire", "Back", "Esc", VISUS_ADUMBRATIONIS,
+        ZEPHYRUM, fac_redire },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -1406,6 +1443,60 @@ textum_facultatis_pingere (
     }
 }
 
+/* T3 paginae: redditio paginae p ad regionem latitudo x altitudo,
+ * servata dum id, seq et regio eaedem; NIHIL si piscina deest */
+interior constans AdumbratioResultus*
+adumbrationem_servatam (
+            NegotiaFigurae* f,
+    constans NegotiiPagina* p,
+                       s32  latitudo,
+                       s32  altitudo)
+{
+    si (!f->adumbratio_piscina)
+    {
+        f->adumbratio_piscina = piscina_generare_dynamicum(
+            "negotia_adumbratio", LXIV * M);
+        si (!f->adumbratio_piscina)
+        {
+            redde NIHIL;
+        }
+    }
+    si (   f->adumbratio.mandata && f->adumbratio_seq == p->seq
+        && f->adumbratio_latitudo == latitudo
+        && f->adumbratio_altitudo == altitudo
+        && chorda_aequalis_literis(p->id, f->adumbratio_id))
+    {
+        redde &f->adumbratio;
+    }
+    piscina_vacare(f->adumbratio_piscina);
+    f->adumbratio = adumbrationem_reddere(p->corpus, latitudo, altitudo,
+        f->adumbratio_piscina, f->m->intern);
+    f->adumbratio_seq       = p->seq;
+    f->adumbratio_latitudo  = latitudo;
+    f->adumbratio_altitudo  = altitudo;
+    sprintf(f->adumbratio_id, "%.*s", (integer)(p->id.mensura < XXXI
+        ? p->id.mensura : XXXI), (constans character*)p->id.datum);
+    redde f->adumbratio.mandata ? &f->adumbratio : NIHIL;
+}
+
+/* "Mock-up · <id VI>" (suffixum quo pagina appellatur) */
+interior chorda
+caput_paginae (
+    constans NegotiiPagina* p,
+                   Piscina* piscina)
+{
+    chorda s;
+
+    s = p->id;
+    si (s.mensura > VI)
+    {
+        s.datum    += s.mensura - VI;
+        s.mensura  = VI;
+    }
+    redde chorda_concatenare(chorda_ex_literis("Mock-up \302\267 ",
+        piscina), s, piscina);
+}
+
 interior vacuum
 figura_tabulae (
     constans Componens* c,
@@ -1461,6 +1552,11 @@ figura_tabulae (
         n       = I;
         k       = ZEPHYRUM;
     }
+    alioquin si (o.pagina)
+    {
+        n = I;
+        k = ZEPHYRUM;
+    }
     alioquin si (o.facultas)
     {
         lineae  = lineae_facultatis(m, o.facultas, md->piscina);
@@ -1476,6 +1572,8 @@ figura_tabulae (
                 o.charta ? praecidere(ch.notum && ch.c.titulus.mensura
                 > ZEPHYRUM ? ch.c.titulus : chorda_ex_literis(
                 "Conversation", md->piscina), f->fines.latitudo - VIII)
+                : o.pagina ? praecidere(o.pagina->titulus,
+                f->fines.latitudo - VIII)
                 : o.facultas ? praecidere(o.facultas->titulus,
                 f->fines.latitudo - VIII) : o.negotium ? praecidere(
                 o.negotium->titulus, f->fines.latitudo - VIII)
@@ -1491,6 +1589,12 @@ figura_tabulae (
                     chorda_ex_literis("Claude conversation",
                     md->piscina),
                     ZEPHYRUM, COLOR_TEXT_DIM);
+            }
+            alioquin si (o.pagina)
+            {
+                textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
+                    caput_paginae(o.pagina, md->piscina), ZEPHYRUM,
+                    COLOR_TEXT_DIM);
             }
             alioquin
             {
@@ -1530,6 +1634,18 @@ figura_tabulae (
         alioquin si (chorda_aequalis_literis(f->id, "textus"))
         {
             textum_facultatis_pingere(m, md, f, lineae, k);
+        }
+        alioquin si (   o.pagina
+                     && chorda_aequalis_literis(f->id, "adumbratio"))
+        {
+            constans AdumbratioResultus* r;
+
+            r = adumbrationem_servatam(contextus, o.pagina,
+                f->fines.latitudo, f->fines.altitudo);
+            si (r)
+            {
+                adumbrationem_inserere(r, md, f->fines);
+            }
         }
         alioquin si (chorda_aequalis_literis(f->id, "nihil"))
         {
@@ -1697,6 +1813,12 @@ disponere (
         (vacuum)componentem_locare(dp, regio, "resumere",
             PARTES_BOTTONE,
             DISPOSITIO_FIXA, XXVI, III);
+        redde;
+    }
+    si (o.pagina)
+    {
+        (vacuum)componentem_locare(dp, regio, "adumbratio",
+            PARTES_INDEX, DISPOSITIO_CRESCENS, ZEPHYRUM, capacitas(m));
         redde;
     }
     si (o.facultas)
@@ -1889,6 +2011,9 @@ negotia_visus_argumentum_ponere (
         redde FALSUM;
     }
     arg = argumentum ? argumentum : "";
+    /* scripturae aliorum processuum (bin/negotia) ante lectionem - id
+     * modo creatum ante pulsum proximum invenitur */
+    (vacuum)negotia_renovare(m->negotia);
     /* T6: charta colloquii "colloquium/<sessio>" (campi directe) */
     si (strncmp(arg, "colloquium/", XI) == ZEPHYRUM)
     {
@@ -1918,6 +2043,42 @@ negotia_visus_argumentum_ponere (
         t[VIII]      = "super";
         v[VIII]      = "";
         t[IX]        = "resumere";
+        v[IX]        = "";
+        redde campos_scribere(m, t, v, X);
+    }
+    /* T3 paginae: "adumbratio/<pagina>" (id plenum aut suffixum
+     * unicum; pictoris T4) */
+    si (strncmp(arg, "adumbratio/", XI) == ZEPHYRUM)
+    {
+        constans NegotiiPagina* p;
+            constans character* t[X];
+            constans character* v[X];
+
+        p = arg[XI] ? negotia_paginam_invenire(m->negotia,
+            chorda_ex_literis(arg + XI, m->piscina), NIHIL) : NIHIL;
+        si (!p || p->genus != NEGOTIA_PAGINA_ADUMBRATIO)
+        {
+            redde FALSUM;
+        }
+        t[ZEPHYRUM]  = "visus";
+        v[ZEPHYRUM]  = "adumbratio";
+        t[I]         = "adumbratio";
+        v[I]         = chorda_ut_cstr(p->id, m->piscina);
+        t[II]        = "negotium";
+        v[II]        = "";
+        t[III]       = "facultas";
+        v[III]       = "";
+        t[IV]        = "pagina_textus";
+        v[IV]        = "";
+        t[V]         = "origo";
+        v[V]         = "";
+        t[VI]        = "electa";
+        v[VI]        = "";
+        t[VII]       = "pagina";
+        v[VII]       = "";
+        t[VIII]      = "super";
+        v[VIII]      = "";
+        t[IX]        = "colloquium";
         v[IX]        = "";
         redde campos_scribere(m, t, v, X);
     }
@@ -2016,6 +2177,11 @@ negotia_visus_locus (
 {
     NegotiaMontatio* m = (NegotiaMontatio*)ctx;
 
+    si (m && chorda_aequalis_literis(campus(m, "visus"), "adumbratio"))
+    {
+        redde chorda_concatenare(chorda_ex_literis("negotia/pagina/",
+            piscina), campus(m, "adumbratio"), piscina);
+    }
     si (   !m || !chorda_aequalis_literis(campus(m, "visus"),
                "colloquium"))
     {
@@ -2044,6 +2210,22 @@ negotia_visus_locus_titulus (
         redde (ch.notum && ch.c.titulus.mensura > ZEPHYRUM)
             ? chorda_transcribere(ch.c.titulus, piscina)
             : chorda_ex_literis("Conversation", piscina);
+    }
+    si (m && pagina_aperta(m))
+    {
+        constans NegotiiPagina* p = pagina_aperta(m);
+
+        /* "<negotium> · <pagina>" (comites: locus paginae) */
+        x = negotia_negotium_invenire(m->negotia, p->negotium, NIHIL);
+        a = chorda_aedificator_creare(piscina, LXIV);
+        si (x)
+        {
+            (vacuum)chorda_aedificator_appendere_chorda(a, x->titulus);
+            (vacuum)chorda_aedificator_appendere_literis(a,
+                " \302\267 ");
+        }
+        (vacuum)chorda_aedificator_appendere_chorda(a, p->titulus);
+        redde chorda_aedificator_spectare(a);
     }
     x = m ? apertum(m) : NIHIL;
     f = x ? facultas_aperta(m, x) : NIHIL;

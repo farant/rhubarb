@@ -481,6 +481,30 @@ _sectio_prima (
         r = insula_ramus(v->repo, "negotia", "1_dextrum_negotia_2");
         a = insula_ramus_attributum(&r, "negotium");
         CREDO_VERUM(a && chorda_aequalis(*a, id));
+        CREDO_GRADUS("XVII: $projects(adumbratio/<pagina>)");
+        {
+               chorda pid;
+            character arg[LXIV];
+                  i32 k;
+
+            pid = negotia_paginam_creare(ng, id,
+                NEGOTIA_PAGINA_ADUMBRATIO, chorda_ex_literis("index",
+                piscina), chorda_ex_literis("<adumbratio/>", piscina));
+            CREDO_CHORDA_NON_VACUA(pid);
+            sprintf(arg, "adumbratio/%.*s", (integer)VI,
+                (constans character*)pid.datum + pid.mensura - VI);
+            CREDO_VERUM(vicus_acervo_aperire(v, "negotia", arg));
+            per (k = ZEPHYRUM; k < III; k++)
+            {
+                (vacuum)vicus_pulsare(v);
+            }
+            CREDO_VERUM(frons_est(v, "1_dextrum_negotia_3"));
+            r = insula_ramus(v->repo, "negotia", "1_dextrum_negotia_3");
+            a = insula_ramus_attributum(&r, "visus");
+            CREDO_VERUM(a && chorda_aequalis_literis(*a, "adumbratio"));
+            a = insula_ramus_attributum(&r, "adumbratio");
+            CREDO_VERUM(a && chorda_aequalis(*a, pid));
+        }
     }
     volumen_claudere(vol_imum);
     volumen_claudere(vol);
