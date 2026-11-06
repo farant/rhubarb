@@ -363,11 +363,11 @@ pictum	0	pars	588	168	punctum:0	atramentum	127	0	120
 pictum	0	pars	596	164	quilisma:0	atramentum	127	2	121
 pictum	0	pars	596	160	punctum:0	atramentum	127	2	122
 pictum	0	rect	603	160	1x5	atramentum	127	2	122
+pictum	0	textus	589	193	"O"/0	atramentum	127	-1	-1
 pictum	0	pars	610	156	punctum:0	atramentum	127	4	123
 pictum	0	rect	610	156	1x11	atramentum	127	4	123
 pictum	0	pars	618	160	punctum:0	atramentum	127	4	124
 pictum	0	rect	617	156	1x5	atramentum	127	4	124
-pictum	0	textus	589	193	"O"/0	atramentum	127	-1	-1
 pictum	0	pars	634	164	punctum:0	atramentum	128	0	125
 pictum	0	rect	634	164	1x11	atramentum	128	0	125
 pictum	0	pars	642	168	punctum:0	atramentum	128	0	126
@@ -381,6 +381,7 @@ pictum	0	rect	683	156	1x25	atramentum	130	0	-1
 pictum	0	pars	692	156	punctum:0	atramentum	131	0	128
 pictum	0	pars	704	156	punctum:0	atramentum	131	0	129
 pictum	0	pars	716	156	punctum:0	atramentum	131	0	130
+pictum	0	textus	693	193	"O"/0	atramentum	131	-1	-1
 pictum	0	pars	736	168	punctum:0	atramentum	131	2	131
 pictum	0	pars	744	164	punctum:0	atramentum	131	2	132
 pictum	0	rect	743	164	1x5	atramentum	131	2	132
@@ -391,7 +392,6 @@ pictum	0	rect	764	172	1x15	atramentum	131	2	134
 pictum	0	pars	772	180	punctum:0	atramentum	131	2	135
 pictum	0	rect	771	172	1x9	atramentum	131	2	135
 pictum	0	pars	756	180	ictus:0	atramentum	131	2	133
-pictum	0	textus	693	193	"O"/0	atramentum	131	-1	-1
 pictum	0	pars	788	176	punctum:0	atramentum	132	0	136
 pictum	0	pars	788	172	punctum:0	atramentum	132	0	137
 pictum	0	rect	795	172	1x5	atramentum	132	0	137

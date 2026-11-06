@@ -260,6 +260,35 @@ _systemata (
     redde n / IV;
 }
 
+/* systema picti p (ordine; lineae systematis ante picta eius
+ * emittuntur, IV per systema); -1 si p nullum */
+interior s32
+_systema_picti (
+    constans GabcCompositio* comp,
+        constans GabcPictum* p)
+{
+    i32 i;
+    i32 n;
+    i32 finis;
+
+    si (p == NIHIL)
+    {
+        redde -I;
+    }
+    finis  = (i32)(p - comp->picta);
+    n      = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < finis; i++)
+    {
+        si (   comp->picta[i].genus    == GABC_PICTUM_RECTANGULUM
+            && comp->picta[i].tinctura == GABC_TINCTURA_SYSTEMA
+            && comp->picta[i].syllaba  == -I)
+        {
+            n++;
+        }
+    }
+    redde (s32)(n / IV) - I;
+}
+
 /* y lineae imae systematis k (ordine) */
 interior s32
 _linea_infima (
@@ -755,6 +784,32 @@ _latitudinem_probare (
         CREDO_AEQUALIS_S32(comp->notae[i].pagina >= ZEPHYRUM ? I : 0,
             I);
     }
+    /* melisma in systemate primo incipit (clavis sola systema non
+     * implet), textus cum parte prima manet (spec G7) */
+    p = _pictum(comp, GABC_PICTUM_PARS, I, -I);
+    CREDO_AEQUALIS_S32(_systema_picti(comp, p), ZEPHYRUM);
+    t1 = _textus(comp, I);
+    CREDO_AEQUALIS_S32(_systema_picti(comp, t1), ZEPHYRUM);
+    CREDO_VERUM(t1 != NIHIL && t1->x < p->x + IV * VIII);
+
+    /* melisma post syllabas: textus in systemate notae primae eius */
+    strcpy(textus, SINE_INITIALI "(c4) Al(g)le(h) lu(g");
+    per (i = I; i < XL; i++)
+    {
+        strcat(textus, i % II ? "/h" : "/g");
+    }
+    strcat(textus, ")ia.(f) (::)");
+    comp = _componere(c, textus, &forma);
+    CREDO_NON_NIHIL(comp);
+    p   = _pictum(comp, GABC_PICTUM_PARS, III, -I);
+    t1  = _textus(comp, III);
+    CREDO_NON_NIHIL(p);
+    CREDO_NON_NIHIL(t1);
+    CREDO_AEQUALIS_S32(_systema_picti(comp, t1),
+        _systema_picti(comp, p));
+    CREDO_VERUM(t1 != NIHIL && p != NIHIL && t1->x < p->x + IV * VIII);
+    CREDO_AEQUALIS_S32(_systema_picti(comp, _pictum(comp,
+        GABC_PICTUM_PARS, I, -I)), ZEPHYRUM);
 
     /* textus latior notis: textus sequens post eum */
     comp = _componere(c,
@@ -1136,10 +1191,11 @@ _corpus_probare (
         (unsigned)extra);
     CREDO_AEQUALIS_I32(plagulae, LXXXII);
     /* summae fixae (VI + VIII + XXIV; P3, rescriptae P4: lineolae,
-     * caules): mutatio
+     * caules; recensio finalis: textus syllabae fractae cum parte
+     * prima - XI lineolae falsae in spatio XXIV sublatae): mutatio
      * compositionis hic apparet - causa in worklog nominanda */
     CREDO_AEQUALIS_I32(paginae, CDLXXI);
-    CREDO_AEQUALIS_I32(picta, CXI * M + DCCC);
+    CREDO_AEQUALIS_I32(picta, CXI * M + DCCLXXXIX);
     CREDO_AEQUALIS_I32(mala, ZEPHYRUM);
     CREDO_AEQUALIS_I32(extra, ZEPHYRUM);
 }

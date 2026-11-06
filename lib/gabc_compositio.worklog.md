@@ -75,3 +75,33 @@ of using the virga's rule (which ran a whole space below the head).
 Rubric runs may carry `. , :` ("℣."), but need at least one rubric sign.
 GabcCompositio carries `forma`. Salve dump and corpus totals re-pinned
 (471 pages, 111800 picta).
+
+## 2026-11-06 — final review: split syllable text, clef-only first line
+
+Two defects found by the whole-branch review (Review Focus 3), both in
+`syllabam_ponere`:
+
+- **Text of a syllable broken mid-melisma landed on the LAST line.** The
+  text was emitted after the frusta loop, and `frangere()` inside the
+  loop had already started a new system, so `co->systema` was the last
+  continuation line while x was computed on the first. Spec G7: text
+  stays with the first part. Now `textum_syllabae_ponere` runs right
+  after the first frustum is placed (before any mid-syllable break);
+  `supra_emittere` moved with it (same bug). After a mid-syllable break
+  `systema_incipere` resets `textus_finis`, so the next syllable's text
+  starts fresh on the continuation line.
+- **Clef-only syllable made the first line "full".** `(c4)` places a
+  frustum, which set `plenum`, so a too-wide first syllable broke BEFORE
+  itself and left line 1 with only a clef and a custos. New
+  `co->cantatum` (notes, alteration, bar or text — not a bare clef or
+  custos; `Frustum.cantatum` from `frusta_aedificare`) guards the
+  "move the whole syllable to the next line" check. `plenum` still
+  decides whether a system is emitted and the mid-syllable breaks.
+
+Salve dump changed in order only (text now follows its first frustum,
+same coordinates). Corpus: 111800 -> 111789 picta, pages unchanged —
+all at spatium 24, 8 chants; e.g. 03895 p2: "ló" now under its
+melisma's first notes on line 2, and the stray hyphen it used to make
+with "rum" on line 3 is gone. No corpus chant hit the clef-only case.
+Test: `_latitudinem_probare` (melisma first syllable starts on system
+0 with its text; "Al le lu(40)ia": text on its first note's system).

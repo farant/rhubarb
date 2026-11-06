@@ -46,6 +46,8 @@ nomen structura {
              s32 elementum_primum;
              s32 elementum_sequens;
              b32 finit_custode;
+             b32 cantatum;                /* neuma, alteratio, divisio
+                                           * (non clavis sola) */
     ClavisStatus clavis;         /* in initio frusti */
 } Frustum;
 
@@ -106,6 +108,7 @@ nomen structura {
     s32  cursor_notae;
     s32  textus_finis;
     b32  plenum;
+    b32  cantatum;               /* notae aut textus, non clavis sola */
     b32  ultimum_custos;
     s32  fractio_syllaba;
     s32  fractio_elementum;
@@ -1863,6 +1866,10 @@ frusta_aedificare (
             co->libramentum = x + al;
         }
         f->finit_custode  = el->genus == GABC_EL_CUSTOS;
+        si (el->genus != GABC_EL_CLAVIS && el->genus != GABC_EL_CUSTOS)
+        {
+            f->cantatum = VERUM;
+        }
         x                 += w;
     }
     f->numerus            = xar_numerus(co->frusta_picta) - f->primum;
@@ -1897,6 +1904,7 @@ systema_incipere (
     xar_vacare(co->systema);
     xar_vacare(co->positae);
     co->plenum          = FALSUM;
+    co->cantatum        = FALSUM;
     co->ultimum_custos  = FALSUM;
     co->x_linea         = co->margo
                         + (co->systematis_index
@@ -2242,6 +2250,28 @@ frustum_ponere (
     }
     co->plenum          = VERUM;
     co->ultimum_custos  = f->finit_custode;
+    si (f->cantatum)
+    {
+        co->cantatum = VERUM;
+    }
+}
+
+/* textus syllabae ad x in systemate currente */
+interior vacuum
+textum_syllabae_ponere (
+    Compositor* co,
+           s32  syllaba,
+           s32  x)
+{
+    SyllabaPosita* r;
+
+    r                  = positam_capere(co, syllaba);
+    r->textus          = VERUM;
+    r->textus_initium  = x;
+    r->textus_finis    = x + textum_emittere_syllabae(co, syllaba, x);
+    co->textus_finis   = r->textus_finis;
+    co->plenum         = VERUM;
+    co->cantatum       = VERUM;
 }
 
 interior vacuum
@@ -2266,7 +2296,6 @@ syllabam_ponere (
            s32  syllaba)
 {
     TextusMensura  tm;
-    SyllabaPosita* r;
           Frustum* f;
           Frustum* g;
               s32  numerus;
@@ -2346,7 +2375,7 @@ syllabam_ponere (
             + x_textus
             + tm.latitudo
                                                         : o);
-        si ((notae || textus) && dextra > co->limes && co->plenum)
+        si ((notae || textus) && dextra > co->limes && co->cantatum)
         {
             frangere(co, syllaba, f->elementum_primum, VERUM, ZEPHYRUM,
                 &f->clavis);
@@ -2378,34 +2407,29 @@ syllabam_ponere (
                 }
             }
             frustum_ponere(co, f, syllaba, x);
+            si (i == a && textus)
+            {
+                /* textus cum parte prima manet (G7): ante fractionem
+                 * mediam syllabae ponitur */
+                textum_syllabae_ponere(co, syllaba, o + x_textus);
+            }
+            si (i == a && prima && notae)
+            {
+                supra_emittere(co, syllaba, o + x_notarum);
+            }
             si (f->numerus > ZEPHYRUM)
             {
                 finis = x + f->latitudo;
             }
             x += f->latitudo;
         }
-        si (textus)
-        {
-            r                  = positam_capere(co, syllaba);
-            r->textus          = VERUM;
-            r->textus_initium  = o + x_textus;
-            r->textus_finis    = o + x_textus
-                               + textum_emittere_syllabae(co, syllaba, o
-                               + x_textus);
-            co->textus_finis  = r->textus_finis;
-            co->plenum        = VERUM;
-        }
-        alioquin si (notae)
+        si (!textus && notae)
         {
             co->textus_finis = maximum(co->textus_finis, finis);
         }
         si (notae)
         {
             co->cursor_notae = maximum(co->cursor_notae, finis + co->s);
-            si (prima)
-            {
-                supra_emittere(co, syllaba, o + x_notarum);
-            }
         }
 
         /* fractio scripta */
