@@ -410,7 +410,8 @@ interior b32
 liberos_addere (
         Faber* f,
     StmlNodus* nodus,
-          s32  parens);
+          s32  parens,
+          s32  genus_parentis);
 
 /* globulus: textus ex status aut textus= */
 interior b32
@@ -460,7 +461,8 @@ interior b32
 nodum_addere (
          Faber* f,
      StmlNodus* nodus,
-           s32  parens)
+           s32  parens,
+           s32  genus_parentis)
 {
      constans SpeciesNodi* sp;
           DispositioForma  forma;
@@ -497,6 +499,13 @@ nodum_addere (
                 / LITTERA;
             forma.altitudo.genus  = DISPOSITIO_FIXA;
             forma.altitudo.valor  = v == LITTERA_TITULI ? II : I;
+            /* in linea: altitudo lineae, textus centratur */
+            si (   genus_parentis == NODUS_LINEA
+                || genus_parentis == NODUS_ORDO)
+            {
+                forma.altitudo.genus    = DISPOSITIO_CRESCENS;
+                forma.altitudo.minimum  = forma.altitudo.valor;
+            }
             frange;
         casus NODUS_GLOBULUM:
             si (!globuli_textum(f, nodus, &textus, &status))
@@ -577,14 +586,16 @@ nodum_addere (
     locus->index = index;
     locus->nodus = nodus;
     locus->genus = sp->genus;
-    redde sp->capsa ? liberos_addere(f, nodus, index) : VERUM;
+    redde sp->capsa ? liberos_addere(f, nodus, index, sp->genus)
+                    : VERUM;
 }
 
 interior b32
 liberos_addere (
          Faber* f,
      StmlNodus* nodus,
-           s32  parens)
+           s32  parens,
+           s32  genus_parentis)
 {
     StmlNodus* liberum;
 
@@ -609,7 +620,7 @@ liberos_addere (
         }
         si (liberum->genus == STML_NODUS_ELEMENTUM)
         {
-            si (!nodum_addere(f, liberum, parens))
+            si (!nodum_addere(f, liberum, parens, genus_parentis))
             {
                 redde FALSUM;
             }
@@ -774,6 +785,7 @@ locum_pingere (
         {
             i32 fons;
             s32 lat;
+            s32 y;
 
             textus  = textum_nodi(f, nodus);
             gradus  = COLOR_TEXT;
@@ -796,18 +808,24 @@ locum_pingere (
             lat   = fons == FONS_TITULI ? LITTERA_TITULI : LITTERA;
             textus = chorda_transcribere(runas_praecidere(textus,
                 fines.latitudo / lat), md->piscina);
+            /* verticaliter centratus in capsa sua */
+            y = fines.y;
+            si (fines.altitudo > fons_altitudo(fons))
+            {
+                y += (fines.altitudo - fons_altitudo(fons)) / II;
+            }
             si (!verum_legere(f, nodus, "audax", &v))
             {
                 redde FALSUM;
             }
             si (v)
             {
-                figura_textum_audacem(md, fines.x, fines.y, textus,
+                figura_textum_audacem(md, fines.x, y, textus,
                     figura_color_thematis(gradus));
             }
             alioquin
             {
-                mandata_textus(md, fines.x, fines.y, textus, fons,
+                mandata_textus(md, fines.x, y, textus, fons,
                     figura_color_thematis(gradus));
             }
             redde VERUM;
@@ -1044,7 +1062,7 @@ adumbrationem_reddere (
         forma.latitudo.genus  = DISPOSITIO_CRESCENS;
         forma.altitudo.genus  = DISPOSITIO_CRESCENS;
         radix_d               = dispositio_addere(f.d, -I, &forma);
-        (vacuum)liberos_addere(&f, radix, radix_d);
+        (vacuum)liberos_addere(&f, radix, radix_d, NODUS_COLUMNA);
     }
     si (f.vitium.mensura == ZEPHYRUM)
     {

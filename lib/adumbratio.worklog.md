@@ -46,3 +46,23 @@ written to PNG (`tabula_pixelorum_creare_nuda` + `delineare_mandata` +
   fines = box, translatio 0, elements copied. The copied elements keep
   chordae in r's arena, so r must outlive the paint (the negotia pane
   keeps r in its own cached arena).
+
+## 2026-11-06 — labels centred in their rows (reverses the T2 grid choice)
+
+- Fran: labels next to chips sat at the top of the row. Rows are
+  `<linea altitudo="2">` (16px); the chip fills them, `<textus>` got a
+  fixed 1-cell box and drew at its top. The T2 note above ("text sits
+  on cell boundaries, no +4px nudge") was the cause - reversed.
+- Now: a `<textus>` whose parent is `<linea>` or `<ordo>` defaults to
+  altitudo CRESCENS with minimum = its fixed height (1, titulus 2), so
+  it fills the row's height (dispositio: CRESCENS on the cross axis =
+  parent's inner extent) and an apta row of text alone keeps height 1.
+  Every textus is drawn at y + (box - fons_altitudo) / 2 - +4 for
+  parvus in a 2-cell row, as the hand-written panes do. Explicit
+  altitudo= still wins (read after the defaults).
+- Only rows: a CRESCENS textus in a growing `<columna>` would share the
+  leftover space with `<spatium/>` and drift down. The first test used
+  a fit-height column, so that plant stayed GREEN; the test column is
+  now crescens with a trailing spacer, like real mock-ups.
+- Plants (5, all red, restored IDEM): no grow in rows, no centring,
+  minimum dropped, bold path not centred, grow in columns too.

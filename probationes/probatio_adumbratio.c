@@ -145,6 +145,63 @@ _probare_globulum (
     CREDO_AEQUALIS_I32(x->color.valor, (i32)COLOR_TEXT_DIM);
 }
 
+/* textus in linea altitudinem lineae implet et verticaliter
+ * centratur (Franus 2026-11-06: tituli ad summum lineae haerebant):
+ * linea II, fons parvus (8 px) -> +4; in columna non movetur; linea
+ * apta cum textu solo altitudinem I servat; altitudo expressa vincit;
+ * titulus (16 px) in linea II -> +0; audax quoque centratur;
+ * columna crescens cum spatio: textus eius non crescit */
+interior vacuum
+_probare_centratum (
+    CredoContextus* c)
+{
+     AdumbratioResultus  r;
+      constans Mandatum* x;
+
+    r = reddere(c, "<adumbratio latitudo=\"120\" altitudo=\"128\">"
+        "<columna altitudo=\"crescens\">"
+        "<linea altitudo=\"2\"><globulum status=\"shipped\"/>"
+        "<textus>library</textus></linea>"
+        "<textus>infra</textus>"
+        "<linea><textus>sola</textus></linea>"
+        "<textus>post</textus>"
+        "<linea altitudo=\"2\"><globulum status=\"planned\"/>"
+        "<textus altitudo=\"1\">summa</textus></linea>"
+        "<linea altitudo=\"2\"><textus fons=\"titulus\">T</textus>"
+        "</linea>"
+        "<linea altitudo=\"2\"><globulum status=\"shipped\"/>"
+        "<textus audax=\"verum\">fortis</textus></linea>"
+        "<spatium/></columna></adumbratio>");
+    CREDO_AEQUALIS_I32(r.vitium.mensura, ZEPHYRUM);
+    CREDO_GRADUS("linea II: +4");
+    x = textus_invenire(r.mandata, "library");
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_S32(x->fines.y, IV);
+    CREDO_GRADUS("columna: sine translatione");
+    x = textus_invenire(r.mandata, "infra");
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_S32(x->fines.y, XVI);
+    CREDO_GRADUS("linea apta: altitudo I");
+    x = textus_invenire(r.mandata, "sola");
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_S32(x->fines.y, XXIV);
+    x = textus_invenire(r.mandata, "post");
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_S32(x->fines.y, XXXII);
+    CREDO_GRADUS("altitudo expressa vincit");
+    x = textus_invenire(r.mandata, "summa");
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_S32(x->fines.y, XL);
+    CREDO_GRADUS("titulus in linea II");
+    x = textus_invenire(r.mandata, "T");
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_S32(x->fines.y, LVI);
+    CREDO_GRADUS("audax");
+    x = textus_invenire(r.mandata, "fortis");
+    CREDO_NECESSE_NON_NIHIL(x);
+    CREDO_AEQUALIS_S32(x->fines.y, LXXVI);
+}
+
 /* mandata in capsa spatio II: coetus cum origine (12, 16) et
  * translatione nulla (origo = fines + translatio: bis numerata
  * primitiva extra sectionem iacerent), primitiva coordinatis suis;
@@ -265,6 +322,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "textus", _probare_textum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fragmenta", _probare_fragmenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "globulus", _probare_globulum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "centratum", _probare_centratum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mandata", _probare_mandata, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vitia", _probare_vitia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "png", _probare_png, NIHIL, NIHIL, NIHIL, NIHIL },

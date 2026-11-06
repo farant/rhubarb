@@ -30,7 +30,10 @@
  *   <campus>                 campus (figura_campum_pingere)
  * FOLIA:
  *   <textus fons="parvus|titulus" color="<color>" audax="verum">..
- *     </textus>   (latitudo apta = longitudo textus)
+ *     </textus>   (latitudo apta = longitudo textus; in <linea> aut
+ *     <ordo> altitudo ordinaria crescens = altitudo lineae, minimum
+ *     I (titulus II); textus in capsa sua verticaliter centratur,
+ *     fons_altitudo)
  *   <globulum status="shipped|partial|planned"/> aut
  *     <globulum textus=".." electum="verum" obscurum="verum"/>
  *   <sagitta directio="sinistra|dextra" obscura="verum"/>
