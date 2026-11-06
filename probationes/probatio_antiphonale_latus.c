@@ -6,7 +6,8 @@
  *
  * aperire: titulus (name) et lineae systematis pinguntur, linea ima
  * "1/1"; titulus lateris = name, aliter nomen plagulae. servatio
- * (Review Focus 1): vitium, plagula vacua, deletio -> pictura servata,
+ * (Review Focus 1): vitium, plagula vacua, deletio, renominatio
+ * super plagulam (editores) -> pictura servata,
  * vexillum (linea:columna, causa / empty / missing); creatio bona ->
  * pictura nova, vexillum ablatum. paginae: PageDown / PageUp, sagittae
  * ictu; + / - spatium, syllaba prima visa manet. */
@@ -364,9 +365,10 @@ interior vacuum
 _servatum_probare (
     CredoContextus* c)
 {
-     Mundus* w;
-    Mandata* md;
-        i32  lineae;
+       Mundus* w;
+      Mandata* md;
+          i32  lineae;
+    character  temporaria[CCCXII];
 
     w = _mundum(c, "servatio.gabc", CANTUS_BONUS);
     CREDO_NECESSE (w != NIHIL);
@@ -402,6 +404,31 @@ _servatum_probare (
     md = _reddere(w, c->piscina);
     CREDO_VERUM (_textus_continet(md, "Alter"));
     CREDO_FALSUM (_textus_continet(md, "Probatio"));
+    CREDO_AEQUALIS_I32 (_quadrata(md, COLOR_ERROR), ZEPHYRUM);
+
+    /* editores per renominationem servant: plagula nova (inode novus)
+     * super veterem movetur - specula plagulam novam sequi debet */
+    CREDO_GRADUS ("renominatio super plagulam: pictura nova");
+    sprintf(temporaria, "%s.tmp", w->via);
+    CREDO_NECESSE (filum_scribere_literis(temporaria, CANTUS_BONUS));
+    CREDO_NECESSE (filum_movere(temporaria, w->via));
+    CREDO_VERUM (antiphonale_pulsare(&w->m));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "Probatio"));
+    CREDO_FALSUM (_textus_continet(md, "Alter"));
+
+    CREDO_GRADUS ("renominatio iterum (vitium): vexillum");
+    CREDO_NECESSE (filum_scribere_literis(temporaria, CANTUS_MALUS));
+    CREDO_NECESSE (filum_movere(temporaria, w->via));
+    CREDO_VERUM (antiphonale_pulsare(&w->m));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "3:"));
+
+    CREDO_GRADUS ("post renominationem scriptura in loco: capitur");
+    CREDO_NECESSE (filum_scribere_literis(w->via, CANTUS_ALTER));
+    CREDO_VERUM (antiphonale_pulsare(&w->m));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "Alter"));
     CREDO_AEQUALIS_I32 (_quadrata(md, COLOR_ERROR), ZEPHYRUM);
 }
 
@@ -817,7 +844,7 @@ _mutum_probare (
     CREDO_AEQUALIS_I32 (w->incepta, ZEPHYRUM);
     md = _reddere(w, c->piscina);
     CREDO_VERUM (_textus_continet(md, "Mutus"));
-    CREDO_VERUM (_textus_continet(md, "not playable"));
+    CREDO_VERUM (_textus_continet(md, "not playable: no notes"));
     CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "");
 
     CREDO_GRADUS ("porta recusat (mutus): nihil illuminatum");
@@ -860,7 +887,9 @@ _vexilla_electamque_probare (
     CREDO_AEQUALIS_I32 (w->sistita, I);
     CREDO_FALSUM (w->sonat);
     md = _reddere(w, c->piscina);
-    CREDO_VERUM (_textus_continet(md, "not playable"));
+    CREDO_VERUM (_textus_continet(md, "not playable: no notes"));
+    /* ut Spatio sistente: syllaba ubi sonus stetit electa manet */
+    CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "b");
 
     CREDO_GRADUS ("Spatium recusatum (mutus): vexillum; postea sonans "
                   "tollit");
@@ -913,22 +942,124 @@ _vexilla_electamque_probare (
     CREDO_AEQUALIS_S64 (w->pulsus_incepti, CMLX);
 }
 
+nomen structura {
+    constans character* latitudo;
+    constans character* altitudo;
+} Superficies;
+
+interior vacuum
+_superficiem_scribere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    Superficies* s = (Superficies*)ctx;
+
+    insula_attributum_ponere(radix, p, in, "superficies_latitudo",
+        s->latitudo);
+    insula_attributum_ponere(radix, p, in, "superficies_altitudo",
+        s->altitudo);
+}
+
+/* area lateris mutata, ut vicus superficiem nuntiat (scriptor
+ * "dispensator", organum_commune) */
+interior b32
+_superficiem_ponere (
+                 Mundus* w,
+     constans character* latitudo,
+     constans character* altitudo,
+                Piscina* p)
+{
+            b32 r;
+         chorda prior;
+    Superficies s;
+
+    s.latitudo  = latitudo;
+    s.altitudo  = altitudo;
+    prior       = w->repo->scriptor;
+    insula_scriptorem_ponere(w->repo, chorda_ex_literis("dispensator",
+        p));
+    r = mutare_ramum(&w->m.ramus, _superficiem_scribere, &s);
+    insula_scriptorem_ponere(w->repo, prior);
+    dispensator_recomponere(w->d);
+    redde r;
+}
+
+/* XXX syllabae "qN", quaeque in systemate suo ((z)); sine fractionibus
+ * plures in systemate - eadem tempora */
+interior vacuum
+_cantum_longum (
+    character* cantus,
+          b32  fractiones)
+{
+    character syllaba[XXXII];
+          i32 i;
+
+    strcpy(cantus, "name:Longus;\ninitial-style:0;\n%%\n(c4)");
+    per (i = ZEPHYRUM; i < XXX; i++)
+    {
+        sprintf(syllaba, fractiones ? " q%d(g) (z)" : " q%d(g)",
+            (integer)i);
+        strcat(cantus, syllaba);
+    }
+}
+
+/* pagina visa (ab 0) ex linea ima "k/N"; -1 si nulla. Attributum
+ * "pagina" ultra finem stare potest (pagina_currens coercet) */
+interior s32
+_pagina_visa (
+    Mandata* md)
+{
+    constans Mandatum* x;
+                  i32  i;
+                  i32  k;
+                  s32  n;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (x->genus != MANDATUM_TEXTUS)
+        {
+            perge;
+        }
+        per (k = I; k + I < x->textus.mensura; k++)
+        {
+            si (   x->textus.datum[k] != '/'
+                || x->textus.datum[k - I] < '0'
+                || x->textus.datum[k - I] > '9'
+                || x->textus.datum[k + I] < '0'
+                || x->textus.datum[k + I] > '9')
+            {
+                perge;
+            }
+            n = ZEPHYRUM;
+            dum (   k > ZEPHYRUM && x->textus.datum[k - I] >= '0'
+                 && x->textus.datum[k - I] <= '9')
+            {
+                k--;
+            }
+            dum (x->textus.datum[k] != '/')
+            {
+                n = n * X + (s32)(x->textus.datum[k] - '0');
+                k++;
+            }
+            redde n - I;
+        }
+    }
+    redde -I;
+}
+
 interior vacuum
 _dispositionem_vivam_probare (
     CredoContextus* c)
 {
     character  cantus[(IV * M)];
-    character  syllaba[XXXII];
        Mundus* w;
       Mandata* md;
-          i32  i;
+          s32  pagina;
 
-    strcpy(cantus, "name:Longus;\ninitial-style:0;\n%%\n(c4)");
-    per (i = ZEPHYRUM; i < XXX; i++)
-    {
-        sprintf(syllaba, " q%d(g) (z)", (integer)i);
-        strcat(cantus, syllaba);
-    }
+    _cantum_longum(cantus, VERUM);
     w = _mundum(c, "longus.gabc", cantus);
     CREDO_NECESSE (w != NIHIL);
     _spatium(w);
@@ -951,9 +1082,42 @@ _dispositionem_vivam_probare (
     md = _reddere(w, c->piscina);
     CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "q25");
 
+    CREDO_GRADUS ("superficies mutata sonante: illuminata visa");
+    md      = _reddere(w, c->piscina);
+    pagina  = _pagina_visa(md);
+    CREDO_VERUM (_superficiem_ponere(w, "480", "960", c->piscina));
+    (vacuum)_ad_pulsum(w, (s64)(XXV * CDLXXX));
+    md = _reddere(w, c->piscina);
+    CREDO_MINOR_S32 (_pagina_visa(md), pagina);
+    CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "q25");
+    pagina = _pagina_visa(md);
+    CREDO_VERUM (_superficiem_ponere(w, "240", "240", c->piscina));
+    (vacuum)_ad_pulsum(w, (s64)(XXV * CDLXXX));
+    md = _reddere(w, c->piscina);
+    CREDO_MAIOR_S32 (_pagina_visa(md), pagina);
+    CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "q25");
+
     CREDO_GRADUS ("pagina ad initium: syllaba prima");
     (vacuum)_ad_pulsum(w, ZEPHYRUM);
-    CREDO_AEQUALIS_S32 (_campus(w, "pagina", ZEPHYRUM), ZEPHYRUM);
+    md = _reddere(w, c->piscina);
+    CREDO_AEQUALIS_S32 (_pagina_visa(md), ZEPHYRUM);
+
+    /* permutatio sine (z): systemata pauciora, q25 in pagina priore,
+     * tempora eadem */
+    CREDO_GRADUS ("permutatio syllabam sonantem in paginam aliam "
+                  "movet: pagina sequitur");
+    (vacuum)_ad_pulsum(w, (s64)(XXV * CDLXXX));
+    md      = _reddere(w, c->piscina);
+    pagina  = _pagina_visa(md);
+    CREDO_MAIOR_S32 (pagina, ZEPHYRUM);
+    _cantum_longum(cantus, FALSUM);
+    CREDO_NECESSE (filum_scribere_literis(w->via, cantus));
+    CREDO_VERUM (_ad_pulsum(w, (s64)(XXV * CDLXXX)));
+    CREDO_AEQUALIS_I32 (w->incepta, II);
+    CREDO_AEQUALIS_S64 (w->pulsus_incepti, (s64)(XXV * CDLXXX));
+    md = _reddere(w, c->piscina);
+    CREDO_MINOR_S32 (_pagina_visa(md), pagina);
+    CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "q25");
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {
