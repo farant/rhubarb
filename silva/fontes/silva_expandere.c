@@ -82,6 +82,8 @@ silva_expansio_creare (
     exp->inclusiones = xar_creare(piscina, magnitudo(SilvaInclusio));
     exp->extenta = xar_creare(piscina,
         magnitudo(SilvaExtentumInvocationis));
+    exp->directivae_notandae  = NIHIL;
+    exp->fons_capturae        = -I;
     exp->indices_extentorum = (SilvaIndicesExtentorum*)piscina_allocare(
         piscina, (memoriae_index)magnitudo(SilvaIndicesExtentorum));
     si (exp->indices_extentorum != NIHIL)
@@ -418,7 +420,17 @@ _lamina_capere (
     redde lamina;
 }
 
-/* Lineam directivae in directivae_out capere (si petitum) */
+/* Lineam directivae in directivae_out capere (si petitum).
+ *
+ * LINEAE NOTANDAE (budget fusionis, item V b): ambulator triviorum
+ * (commenta fluxus) olim OMNEM lineam legebat - XLV M lexemata per
+ * cursum, XCVIII% capitum (#define per plagulam includentem iterum).
+ * Linea notanda est si lexema eius commentum lexatum fert, si fontes
+ * miscet, aut si fontis capturae (principalis) est; ceterae nihil in
+ * seriem ferunt nec sedem standardi (fons alienus). Exactum per
+ * constructionem: lexemata lineae lexatoris sunt (silva_lexare - origo
+ * FONS, radix ipsa; trivia a lexatore SOLO attachata, eiusdem fontis),
+ * ergo SILVA_TOKEN_COMMENTUM_LEXATUM triviis eorum fidem habet. */
 interior vacuum
 _directivam_capere (
     SilvaExpansio* exp,
@@ -427,16 +439,59 @@ _directivam_capere (
               i32  a,
               i32  b)
 {
-    Xar** locus;
+     Xar** locus;
+     Xar*  lamina;
+     s32   fons     = -I;
+     b32   notanda  = FALSUM;
+     i32   j;
 
     si (directivae == NIHIL)
     {
         redde;
     }
     locus = (Xar**)xar_addere(directivae);
-    si (locus != NIHIL)
+    si (locus == NIHIL)
     {
-        *locus = _lamina_capere(exp, lexemata, a, b);
+        /* linea absens: indices sequentes errarent */
+        exp->directivae_notandae = NIHIL;
+        redde;
+    }
+    lamina = xar_creare(exp->piscina, magnitudo(SilvaToken*));
+    per (j = a; j < b; j++)
+    {
+        SilvaToken* t = *(SilvaToken**)xar_obtinere(lexemata, j);
+
+        _lexema_addere(lamina, t);
+        si (t == NIHIL)
+        {
+            notanda = VERUM;
+            perge;
+        }
+        si (j == a)
+        {
+            fons = t->fons_index;
+        }
+        si (   t->fons_index                                != fons
+            || (t->vexilla & SILVA_TOKEN_COMMENTUM_LEXATUM) != ZEPHYRUM)
+        {
+            notanda = VERUM;
+        }
+    }
+    *locus = lamina;
+    si (exp->directivae_notandae == NIHIL)
+    {
+        redde;
+    }
+    si (notanda || fons == exp->fons_capturae)
+    {
+        i32* index = (i32*)xar_addere(exp->directivae_notandae);
+
+        si (index == NIHIL)
+        {
+            exp->directivae_notandae = NIHIL;
+            redde;
+        }
+        *index = xar_numerus(directivae) - I;
     }
 }
 
@@ -2038,8 +2093,24 @@ silva_expansio_directivas_processare (
     directivae  = NIHIL;
     si (directivae_out != NIHIL)
     {
+        i32 k;
+
         directivae       = xar_creare(exp->piscina, magnitudo(Xar*));
         *directivae_out  = directivae;
+        exp->directivae_notandae = xar_creare(exp->piscina,
+            (i32)magnitudo(i32));
+        exp->fons_capturae = -I;
+        per (k = ZEPHYRUM; lexemata != NIHIL
+             && k < xar_numerus(lexemata); k++)
+        {
+            SilvaToken* t = *(SilvaToken**)xar_obtinere(lexemata, k);
+
+            si (t != NIHIL)
+            {
+                exp->fons_capturae = t->fons_index;
+                frange;
+            }
+        }
     }
     _plagulam_processare(exp, lexemata, VERUM, reliqua, directivae);
     redde reliqua;

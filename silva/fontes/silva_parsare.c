@@ -304,6 +304,7 @@ _lexemata_parsare_interna (
     parsura->lexemata                 = NIHIL;
     parsura->expansio                 = NIHIL;
     parsura->directivae               = NIHIL;
+    parsura->directivae_notandae      = NIHIL;
     parsura->fons_princeps            = -I;
     parsura->numerus_errorum          = ZEPHYRUM;
     parsura->numerus_segmentorum      = ZEPHYRUM;
@@ -1506,6 +1507,11 @@ _fistula_interna (
         parsura->expansio       = expansio;
         parsura->directivae     = directivae;
         parsura->fons_princeps  = fons_index;
+        /* lineae notandae fontem principalem per fontem capturae
+         * noscunt - aliter omnes legendae */
+        parsura->directivae_notandae =
+            (expansio->fons_capturae == fons_index)
+                ? expansio->directivae_notandae : NIHIL;
 
         /* Vexilla expansionis in fructum (fines/intermissio in
          * praeprocessore tactae) */

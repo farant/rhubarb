@@ -248,9 +248,19 @@ structura SilvaExpansio {
                                  * (per valorem) - invocationes
                                  * functio-similes strati 0 */
     SilvaIndicesExtentorum* indices_extentorum; /* cache quaestionum */
-               i32  profunditas_includendi;
-               s32  fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
-               i32  signum_activum; /* generatio positionalis cuius
+               Xar* directivae_notandae; /* Xar de i32: indices linearum
+                                          * in directivae_out captarum
+                                          * quas ambulator triviorum
+                                          * legere debet (item V b,
+                                          * _directivam_capere); NIHIL
+                                          * sine captura aut si
+                                          * allocatio fracta */
+               s32 fons_capturae;  /* fons lexematum ad
+                                     * directivas_processare traditorum
+                                     * (fons principalis); -1 ignotus */
+               i32 profunditas_includendi;
+               s32 fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
+               i32 signum_activum; /* generatio positionalis cuius
                                      * status quaeritur; 0 = vivus */
                i32  signum_ultimum; /* signum novissime datum */
      SilvaMacroDef* def_attributi; /* __attribute__ internum (T17a):

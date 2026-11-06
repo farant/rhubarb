@@ -70,3 +70,7 @@ The machine had load 90–145 during most of this work: 8 orphaned `yes` process
 **Computus golden.** Memory columns only (usus/apex/otiosa/allocationes and *_lexandi; e.g. arrays.c usus 310,728 -> 294,504: no pending-trivia Xars). Token counts unchanged. Regenerated in the same commit.
 
 **What's left in the lexer:** token construction (`silva_token_ex_fonte` -> `materia_token_creare`/`_cauda`, piscina allocation) is now the largest piece. It sits behind the materia token API, outside steps 1–3. The -flto note above (+24% raw) still applies.
+
+## 2026-11-06 — SILVA_TOKEN_COMMENTUM_LEXATUM (budget fusionis item 5b)
+
+`silva_spatia_attachere` now marks the token that receives a comment trivium (bit IV of `vexilla`): it tracks the first and last comment index in each pending trivia run, then the prior token gets the bit if the first comment falls before the newline split and the next token if the last one falls at or after it. Lexer-only signal: the trivia setters don't maintain it, so only raw lexer tokens may be trusted (the expander reads it on captured directive lines). Details and measurements in silva_annotationes.worklog.md (item 5b). Test: probatio_silva_lexema "vexillum commenti lexati".

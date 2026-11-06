@@ -1402,11 +1402,19 @@ _commenta_pigra (
      * standarda in radice cuiusque lexematis, sine compressione */
     si (parsura->directivae != NIHIL)
     {
-        i32 dm = xar_numerus(parsura->directivae);
-        i32 di;
+        /* lineae notandae solae (item V b): ceterae commentum nullum
+         * ferunt et fontis alieni sunt - nihil in seriem nec in sedes
+         * (silva_expandere.c, _directivam_capere) */
+         constans Xar* notandae  = parsura->directivae_notandae;
+                  i32  dm        = (notandae != NIHIL)
+                                      ? xar_numerus(notandae)
+                                      : xar_numerus(parsura->directivae);
+                  i32 k;
 
-        per (di = ZEPHYRUM; di < dm; di++)
+        per (k = ZEPHYRUM; k < dm; k++)
         {
+            i32 di = (notandae != NIHIL)
+                ? *(constans i32*)xar_obtinere(notandae, k) : k;
             Xar* linea = *(Xar**)xar_obtinere(parsura->directivae,
                 di);
             i32 tm;

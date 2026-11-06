@@ -872,8 +872,13 @@ typedef struct SilvaParsura {
     double ms_committendi;
 
     /* Mortes (T15): SilvaXar de SilvaMors (interna) - una per nodum
-     * ERROR; NULL si nullus. ULTIMUS campus: offsets priores manent. */
+     * ERROR; NULL si nullus. Campi novi post eum: offsets priores
+     * manent. */
     SilvaXar* mortes;
+
+    /* Lineae directivae notandae (item V b): SilvaXar de int, indices
+     * in directivae; NULL = omnes legendae. ULTIMUS campus. */
+    SilvaXar* directivae_notandae;
 } SilvaParsura;
 
 SilvaParsura*
@@ -8771,6 +8776,8 @@ nomen structura {
 
 #define MATERIA_TOKEN_INITIUM_LINEAE  ((i32)I)
 #define MATERIA_TOKEN_CAUDA           ((i32)II)
+/* bita IV et superiora FRONTIS sunt (e.g. SILVA_TOKEN_*); materia ea
+ * numquam legit nec ponit */
 
 
 /* ==================================================
@@ -10281,6 +10288,14 @@ typedef char silva_assertio_xar_segmentorum[
 #define SILVA_STANDARD_C99       1
 #define SILVA_STANDARD_EXTENSIO  2
 
+/* Vexillum frontis in MateriaToken.vexilla (budget fusionis, item V
+ * b): lexator trivium COMMENTUM huic lexemati attachavit
+ * (silva_spatia_attachere). Signum LEXATORIS solum - setteres trivia
+ * (silva_token_*_ponere/addere/vacare) id non renovant, ergo in
+ * lexematibus lexatoris crudis solum fide dignum (lineae directivae
+ * captae: _directivam_capere). */
+#define SILVA_TOKEN_COMMENTUM_LEXATUM ((i32)IV)
+
 
 /* ==================================================
  * Fons - identitas plagulae
@@ -10884,9 +10899,19 @@ structura SilvaExpansio {
                                  * (per valorem) - invocationes
                                  * functio-similes strati 0 */
     SilvaIndicesExtentorum* indices_extentorum; /* cache quaestionum */
-               i32  profunditas_includendi;
-               s32  fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
-               i32  signum_activum; /* generatio positionalis cuius
+               SilvaXar* directivae_notandae; /* Xar de i32: indices linearum
+                                          * in directivae_out captarum
+                                          * quas ambulator triviorum
+                                          * legere debet (item V b,
+                                          * _directivam_capere); NIHIL
+                                          * sine captura aut si
+                                          * allocatio fracta */
+               s32 fons_capturae;  /* fons lexematum ad
+                                     * directivas_processare traditorum
+                                     * (fons principalis); -1 ignotus */
+               i32 profunditas_includendi;
+               s32 fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
+               i32 signum_activum; /* generatio positionalis cuius
                                      * status quaeritur; 0 = vivus */
                i32  signum_ultimum; /* signum novissime datum */
      SilvaMacroDef* def_attributi; /* __attribute__ internum (T17a):
@@ -48263,6 +48288,8 @@ silva_spatia_attachere (
            i32   n;
            i32   ab;
            i32   divisio;
+           s32   primum_commentum   = -I;   /* in pendentibus [ab, i) */
+           s32   ultimum_commentum  = -I;
 
     vera   = silva_xar_creare(piscina, magnitudo(SilvaToken*));
     prior  = NIHIL;
@@ -48275,6 +48302,15 @@ silva_spatia_attachere (
 
         si (_est_trivia(token->genus))
         {
+            si (   token->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+                || token->genus == SILVA_LEX_COMMENTUM_LINEA)
+            {
+                si (primum_commentum < ZEPHYRUM)
+                {
+                    primum_commentum = (s32)i;
+                }
+                ultimum_commentum = (s32)i;
+            }
             perge;
         }
 
@@ -48304,18 +48340,32 @@ silva_spatia_attachere (
              * seriem exactam copiat - pars pendentium in alveo contiguo
              * (acervus pro casu communi, piscina ultra). Latus totum
              * ponitur, ut olim Xar novus assignabatur. */
+            /* SILVA_TOKEN_COMMENTUM_LEXATUM: commentum in parte cuique
+             * lateri tradita (primum < divisio: prior; ultimum >=
+             * divisio: lexema) */
             si (divisio > ab && prior != NIHIL)
             {
                 _trivia_tradere(piscina, prior, VERUM, cruda, ab,
                     divisio);
+                si (   primum_commentum >= ZEPHYRUM
+                    && primum_commentum < (s32)divisio)
+                {
+                    prior->vexilla |= SILVA_TOKEN_COMMENTUM_LEXATUM;
+                }
             }
             si (divisio < i)
             {
                 _trivia_tradere(piscina, token, FALSUM, cruda, divisio,
                     i);
+                si (ultimum_commentum >= (s32)divisio)
+                {
+                    token->vexilla |= SILVA_TOKEN_COMMENTUM_LEXATUM;
+                }
             }
         }
-        ab = i + I;
+        ab                 = i + I;
+        primum_commentum   = -I;
+        ultimum_commentum  = -I;
 
         locus = (SilvaToken**)silva_xar_addere(vera);
         si (locus != NIHIL)
@@ -48516,6 +48566,8 @@ silva_expansio_creare (
     exp->inclusiones = silva_xar_creare(piscina, magnitudo(SilvaInclusio));
     exp->extenta = silva_xar_creare(piscina,
         magnitudo(SilvaExtentumInvocationis));
+    exp->directivae_notandae  = NIHIL;
+    exp->fons_capturae        = -I;
     exp->indices_extentorum = (SilvaIndicesExtentorum*)silva_piscina_allocare(
         piscina, (memoriae_index)magnitudo(SilvaIndicesExtentorum));
     si (exp->indices_extentorum != NIHIL)
@@ -48852,7 +48904,17 @@ _lamina_capere (
     redde lamina;
 }
 
-/* Lineam directivae in directivae_out capere (si petitum) */
+/* Lineam directivae in directivae_out capere (si petitum).
+ *
+ * LINEAE NOTANDAE (budget fusionis, item V b): ambulator triviorum
+ * (commenta fluxus) olim OMNEM lineam legebat - XLV M lexemata per
+ * cursum, XCVIII% capitum (#define per plagulam includentem iterum).
+ * Linea notanda est si lexema eius commentum lexatum fert, si fontes
+ * miscet, aut si fontis capturae (principalis) est; ceterae nihil in
+ * seriem ferunt nec sedem standardi (fons alienus). Exactum per
+ * constructionem: lexemata lineae lexatoris sunt (silva_lexare - origo
+ * FONS, radix ipsa; trivia a lexatore SOLO attachata, eiusdem fontis),
+ * ergo SILVA_TOKEN_COMMENTUM_LEXATUM triviis eorum fidem habet. */
 interior vacuum
 _directivam_capere (
     SilvaExpansio* exp,
@@ -48861,16 +48923,59 @@ _directivam_capere (
               i32  a,
               i32  b)
 {
-    SilvaXar** locus;
+     SilvaXar** locus;
+     SilvaXar*  lamina;
+     s32   fons     = -I;
+     b32   notanda  = FALSUM;
+     i32   j;
 
     si (directivae == NIHIL)
     {
         redde;
     }
     locus = (SilvaXar**)silva_xar_addere(directivae);
-    si (locus != NIHIL)
+    si (locus == NIHIL)
     {
-        *locus = _lamina_capere(exp, lexemata, a, b);
+        /* linea absens: indices sequentes errarent */
+        exp->directivae_notandae = NIHIL;
+        redde;
+    }
+    lamina = silva_xar_creare(exp->piscina, magnitudo(SilvaToken*));
+    per (j = a; j < b; j++)
+    {
+        SilvaToken* t = *(SilvaToken**)silva_xar_obtinere(lexemata, j);
+
+        _lexema_addere(lamina, t);
+        si (t == NIHIL)
+        {
+            notanda = VERUM;
+            perge;
+        }
+        si (j == a)
+        {
+            fons = t->fons_index;
+        }
+        si (   t->fons_index                                != fons
+            || (t->vexilla & SILVA_TOKEN_COMMENTUM_LEXATUM) != ZEPHYRUM)
+        {
+            notanda = VERUM;
+        }
+    }
+    *locus = lamina;
+    si (exp->directivae_notandae == NIHIL)
+    {
+        redde;
+    }
+    si (notanda || fons == exp->fons_capturae)
+    {
+        i32* index = (i32*)silva_xar_addere(exp->directivae_notandae);
+
+        si (index == NIHIL)
+        {
+            exp->directivae_notandae = NIHIL;
+            redde;
+        }
+        *index = silva_xar_numerus(directivae) - I;
     }
 }
 
@@ -50472,8 +50577,24 @@ silva_expansio_directivas_processare (
     directivae  = NIHIL;
     si (directivae_out != NIHIL)
     {
+        i32 k;
+
         directivae       = silva_xar_creare(exp->piscina, magnitudo(SilvaXar*));
         *directivae_out  = directivae;
+        exp->directivae_notandae = silva_xar_creare(exp->piscina,
+            (i32)magnitudo(i32));
+        exp->fons_capturae = -I;
+        per (k = ZEPHYRUM; lexemata != NIHIL
+             && k < silva_xar_numerus(lexemata); k++)
+        {
+            SilvaToken* t = *(SilvaToken**)silva_xar_obtinere(lexemata, k);
+
+            si (t != NIHIL)
+            {
+                exp->fons_capturae = t->fons_index;
+                frange;
+            }
+        }
     }
     _plagulam_processare(exp, lexemata, VERUM, reliqua, directivae);
     redde reliqua;
@@ -84613,6 +84734,7 @@ _lexemata_parsare_interna (
     parsura->lexemata                 = NIHIL;
     parsura->expansio                 = NIHIL;
     parsura->directivae               = NIHIL;
+    parsura->directivae_notandae      = NIHIL;
     parsura->fons_princeps            = -I;
     parsura->numerus_errorum          = ZEPHYRUM;
     parsura->numerus_segmentorum      = ZEPHYRUM;
@@ -85815,6 +85937,11 @@ _fistula_interna (
         parsura->expansio       = expansio;
         parsura->directivae     = directivae;
         parsura->fons_princeps  = fons_index;
+        /* lineae notandae fontem principalem per fontem capturae
+         * noscunt - aliter omnes legendae */
+        parsura->directivae_notandae =
+            (expansio->fons_capturae == fons_index)
+                ? expansio->directivae_notandae : NIHIL;
 
         /* Vexilla expansionis in fructum (fines/intermissio in
          * praeprocessore tactae) */
@@ -93263,11 +93390,19 @@ _commenta_pigra (
      * standarda in radice cuiusque lexematis, sine compressione */
     si (parsura->directivae != NIHIL)
     {
-        i32 dm = silva_xar_numerus(parsura->directivae);
-        i32 di;
+        /* lineae notandae solae (item V b): ceterae commentum nullum
+         * ferunt et fontis alieni sunt - nihil in seriem nec in sedes
+         * (silva_expandere.c, _directivam_capere) */
+         constans SilvaXar* notandae  = parsura->directivae_notandae;
+                  i32  dm        = (notandae != NIHIL)
+                                      ? silva_xar_numerus(notandae)
+                                      : silva_xar_numerus(parsura->directivae);
+                  i32 k;
 
-        per (di = ZEPHYRUM; di < dm; di++)
+        per (k = ZEPHYRUM; k < dm; k++)
         {
+            i32 di = (notandae != NIHIL)
+                ? *(constans i32*)silva_xar_obtinere(notandae, k) : k;
             SilvaXar* linea = *(SilvaXar**)silva_xar_obtinere(parsura->directivae,
                 di);
             i32 tm;

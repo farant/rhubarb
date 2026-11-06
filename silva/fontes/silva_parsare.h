@@ -142,10 +142,17 @@ nomen structura {
     duplex ms_committendi;
 
     /* Mortes (T15): Xar de SilvaMors, una per nodum ERROR, ordine
-     * fontis; NIHIL si nullus. ULTIMUS campus consulto: silva.h
+     * fontis; NIHIL si nullus. Campi novi POST eum (silva.h
      * structuram manu speculatur, et consumptores contra silva.c
-     * commissum nectunt dum regeneratur - offsets priores manent. */
+     * commissum nectunt dum regeneratur - offsets priores manent). */
     Xar* mortes;
+
+    /* Lineae directivae notandae (item V b): Xar de i32, indices in
+     * directivae (crescentes) linearum quae commentum lexatum ferunt,
+     * fontes miscent, aut fontis principalis sunt; ceterae trivia
+     * nulla notanda ferunt. NIHIL = omnes legendae (ingressus
+     * lexematum, lectio STML, allocatio fracta). ULTIMUS campus. */
+    Xar* directivae_notandae;
 } SilvaParsura;
 
 

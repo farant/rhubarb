@@ -170,3 +170,7 @@ Time fell more than instructions: the removed work was inserts into a table that
 **Computus golden.** Memory columns only (allocationes, apex, usus, otiosa; e.g. arrays.c allocations 4501 -> 4499: no per-generation table). Regenerated in the same commit.
 
 **What's left (not done).** Lookups are now ~40% of expansion: every generation rescans the WHOLE stream and hashes every identifier again. Two directions: (1) intern at lex time, so tokens carry a title id (changes SilvaToken/materia, an API change, outside steps 1-3); (2) stop rescanning unchanged stretches (a semantic redesign of the generation model, which `strata_out` exposes).
+
+## 2026-11-06 — notable directive lines (budget fusionis item 5b)
+
+`_directivam_capere` builds the line copy itself now (no `_lamina_capere`) so that, in the same loop, it can note whether any token carries `SILVA_TOKEN_COMMENTUM_LEXATUM`, whether sources mix, and whether the line belongs to `fons_capturae` (set in `silva_expansio_directivas_processare` from the first token of the list it was given). Such lines' indices go into `directivae_notandae` (i32, increasing); a failed allocation drops the whole list (NIHIL = every line must be read). The comment table walks only these. Details in silva_annotationes.worklog.md (item 5b).

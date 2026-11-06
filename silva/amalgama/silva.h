@@ -858,8 +858,13 @@ typedef struct SilvaParsura {
     double ms_committendi;
 
     /* Mortes (T15): SilvaXar de SilvaMors (interna) - una per nodum
-     * ERROR; NULL si nullus. ULTIMUS campus: offsets priores manent. */
+     * ERROR; NULL si nullus. Campi novi post eum: offsets priores
+     * manent. */
     SilvaXar* mortes;
+
+    /* Lineae directivae notandae (item V b): SilvaXar de int, indices
+     * in directivae; NULL = omnes legendae. ULTIMUS campus. */
+    SilvaXar* directivae_notandae;
 } SilvaParsura;
 
 SilvaParsura*

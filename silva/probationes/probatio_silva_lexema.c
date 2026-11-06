@@ -172,6 +172,45 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: SILVA_TOKEN_COMMENTUM_LEXATUM (budget fusionis, item V
+     * b) - lexema cui lexator trivium commentum attachavit, latere
+     * utroque divisionis per novam lineam
+     * ======================================================== */
+
+    {
+               Xar* lexemata;
+               b32  signa[VI];
+               i32  k;
+
+        imprimere("\n--- Probans vexillum commenti lexati ---\n");
+
+        /* p.post = ' /' '* c *' '/ ' (sine nova linea: totum trailing);
+         * q.post = '\n', r.ante = '// d\n'; r.post = '\n', s.ante =
+         * '/' '* e *' '/\n'; s.post = ' '; t nihil */
+        lexemata = _lexare(piscina,
+            "p /" "* c *" "/ q\n// d\nr\n/" "* e *" "/\ns t");
+        CREDO_VERUM (xar_numerus(lexemata) >= V);
+        per (k = ZEPHYRUM; k < V && k < xar_numerus(lexemata); k++)
+        {
+            signa[k] = (_ad(lexemata, k)->vexilla
+                & SILVA_TOKEN_COMMENTUM_LEXATUM) != ZEPHYRUM;
+        }
+        CREDO_VERUM  (signa[ZEPHYRUM]);   /* p: post */
+        CREDO_FALSUM (signa[I]);          /* q: nova linea sola */
+        CREDO_VERUM  (signa[II]);         /* r: ante ('//') */
+        CREDO_VERUM  (signa[III]);        /* s: ante (post divisionem) */
+        CREDO_FALSUM (signa[IV]);         /* t */
+
+        /* commentum ante lexema primum (prior nullus): leading */
+        lexemata = _lexare(piscina, "/" "* l *" "/ u v");
+        CREDO_VERUM ((_ad(lexemata, ZEPHYRUM)->vexilla
+            & SILVA_TOKEN_COMMENTUM_LEXATUM) != ZEPHYRUM);
+        CREDO_VERUM ((_ad(lexemata, I)->vexilla
+            & SILVA_TOKEN_COMMENTUM_LEXATUM) == ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * PROBARE: CRLF - valor verbatim
      * ======================================================== */
 
