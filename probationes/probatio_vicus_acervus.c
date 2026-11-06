@@ -504,6 +504,21 @@ _sectio_prima (
             CREDO_VERUM(a && chorda_aequalis_literis(*a, "adumbratio"));
             a = insula_ramus_attributum(&r, "adumbratio");
             CREDO_VERUM(a && chorda_aequalis(*a, pid));
+            CREDO_GRADUS("XVIII: Cmd+J, foco sinistro (T3b)");
+            CREDO_VERUM(negotia_paginam_mutare(ng, pid,
+                chorda_ex_literis("index", piscina), chorda_ex_literis(
+                "<adumbratio><columna><textus>b</textus></columna>"
+                "</adumbratio>", piscina)));
+            (vacuum)negotia_visus_reficere((NegotiaMontatio*)
+                vicus_latus(vicus_activa(v), VICUS_DEXTRUM)->montatio);
+            CREDO_VERUM(vicus_focum_ponere(v, VICUS_SINISTRUM));
+            (vacuum)manus_ludus_clavem(m, 'j', MOD_SUPER);
+            (vacuum)vicus_pulsare(v);
+            CREDO_VERUM(focus_est(v, VICUS_SINISTRUM));
+            CREDO_VERUM(frons_est(v, "1_dextrum_negotia_3"));
+            r = insula_ramus(v->repo, "negotia", "1_dextrum_negotia_3");
+            a = insula_ramus_attributum(&r, "revisio");
+            CREDO_VERUM(a && a->mensura > ZEPHYRUM);
         }
     }
     volumen_claudere(vol_imum);

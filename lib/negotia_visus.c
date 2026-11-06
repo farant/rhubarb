@@ -248,6 +248,55 @@ pagina_aperta (
            && x->genus == NEGOTIA_PAGINA_ADUMBRATIO) ? x : NIHIL;
 }
 
+/* T3b: seq revisionis ut textus campi "revisio" */
+interior vacuum
+seq_scribere (
+          s64  seq,
+    character* scriptum)
+{
+    sprintf(scriptum, "%ld", (longus)seq);
+}
+
+/* T3b: revisio visa paginae p - campus "revisio" (seq), vacuus aut
+ * ignotus = recentissima; index et numerus revisionum redduntur */
+interior constans NegotiiPagina*
+revisio_aperta (
+    constans NegotiaMontatio* m,
+      constans NegotiiPagina* p,
+                     Piscina* piscina,
+                         i32* index,
+                         i32* numerus)
+{
+                       Xar* r;
+                    chorda  s;
+    constans NegotiiPagina* x;
+                       i32  i;
+                 character  scriptum[XXIV];
+
+    *index    = ZEPHYRUM;
+    *numerus  = p ? I : ZEPHYRUM;
+    r         = p ? negotia_paginae_revisiones(m->negotia, p->id,
+        piscina) : NIHIL;
+    si (!r || xar_numerus(r) == ZEPHYRUM)
+    {
+        redde p;
+    }
+    *numerus  = xar_numerus(r);
+    *index    = *numerus - I;
+    s         = campus(m, "revisio");
+    per (i = ZEPHYRUM; s.mensura > ZEPHYRUM && i < *numerus; i++)
+    {
+        x = (constans NegotiiPagina*)xar_obtinere(r, i);
+        seq_scribere(x->seq, scriptum);
+        si (chorda_aequalis_literis(s, scriptum))
+        {
+            *index = i;
+            frange;
+        }
+    }
+    redde (constans NegotiiPagina*)xar_obtinere(r, *index);
+}
+
 
 /* ==================================================
  * Ordines (album): index = negotia ordine activitatis; negotium =
@@ -262,7 +311,11 @@ nomen structura {
                                          * NIHIL */
                           b32  charta;   /* T6: visus colloquium */
        constans NegotiiPagina* pagina;   /* T3 paginae: visus
-                                         * adumbratio */
+                                         * adumbratio; T3b: revisio
+                                         * visa (copia) */
+                          i32 revisio;  /* T3b: index (vetustissima
+                                         * 0) */
+                          i32 revisiones;
 } Ordines;
 
 interior i32
@@ -326,9 +379,10 @@ ordines_parare (
     o->facultas  = facultas_aperta(m, o->negotium);
     o->charta    = chorda_aequalis_literis(campus(m, "visus"),
         "colloquium") && campus(m, "colloquium").mensura > ZEPHYRUM;
-    o->pagina  = pagina_aperta(m);
-    o->l       = album_creare(p, capacitas(m));
-    n          = numerus_rerum(m, o);
+    o->pagina  = revisio_aperta(m, pagina_aperta(m), p, &o->revisio,
+        &o->revisiones);
+    o->l  = album_creare(p, capacitas(m));
+    n     = numerus_rerum(m, o);
     per (i = ZEPHYRUM; o->l && i < n; i++)
     {
         sprintf(id, "r%u", (insignatus integer)(i + I));
@@ -1115,6 +1169,57 @@ fac_resumere (
                ch.sessio, ch.via);
 }
 
+/* T3b: revisio gradu (+I recentior, -I vetustior); recentissima ->
+ * campus purgatus (sequitur); extremis nihil */
+interior b32
+revisio_movere (
+    ContextusPraecepti* cp,
+                   s32  gradus)
+{
+                       Xar* r;
+    constans NegotiiPagina* x;
+                       s32  k;
+                 character  scriptum[XXIV];
+
+    si (!cp->o.pagina)
+    {
+        redde FALSUM;
+    }
+    k = (s32)cp->o.revisio + gradus;
+    si (k < ZEPHYRUM || k >= (s32)cp->o.revisiones)
+    {
+        redde FALSUM;
+    }
+    si (k == (s32)cp->o.revisiones - I)
+    {
+        redde campum_scribere(cp->m, "revisio", "");
+    }
+    r = negotia_paginae_revisiones(cp->m->negotia, cp->o.pagina->id,
+        cp->p);
+    x = (r && (i32)k < xar_numerus(r))
+        ? (constans NegotiiPagina*)xar_obtinere(r, (i32)k) : NIHIL;
+    si (!x)
+    {
+        redde FALSUM;
+    }
+    seq_scribere(x->seq, scriptum);
+    redde campum_scribere(cp->m, "revisio", scriptum);
+}
+
+interior b32
+fac_revisio_proxima (
+    vacuum* ctx)
+{
+    redde revisio_movere((ContextusPraecepti*)ctx, I);
+}
+
+interior b32
+fac_revisio_prior (
+    vacuum* ctx)
+{
+    redde revisio_movere((ContextusPraecepti*)ctx, -I);
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "negotia.proximum", "Next project", "j", VISUS_INDICIS, ZEPHYRUM,
         fac_proximam },
@@ -1148,6 +1253,10 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         fac_redire },
     { "negotia.adumbratio_redire", "Back", "Esc", VISUS_ADUMBRATIONIS,
         ZEPHYRUM, fac_redire },
+    { "negotia.revisio_recentior", "Newer revision", "s-k",
+        VISUS_ADUMBRATIONIS, ZEPHYRUM, fac_revisio_proxima },
+    { "negotia.revisio_vetustior", "Older revision", "s-j",
+        VISUS_ADUMBRATIONIS, ZEPHYRUM, fac_revisio_prior },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -1479,13 +1588,18 @@ adumbrationem_servatam (
     redde f->adumbratio.mandata ? &f->adumbratio : NIHIL;
 }
 
-/* "Mock-up · <id VI>" (suffixum quo pagina appellatur) */
+/* "Mock-up · <id VI>" (suffixum quo pagina appellatur); T3b:
+ * " · rev N/M" si revisiones plures */
 interior chorda
 caput_paginae (
     constans NegotiiPagina* p,
+                       i32  revisio,
+                       i32  revisiones,
                    Piscina* piscina)
 {
-    chorda s;
+       chorda s;
+       chorda c;
+    character rev[XL];
 
     s = p->id;
     si (s.mensura > VI)
@@ -1493,8 +1607,16 @@ caput_paginae (
         s.datum    += s.mensura - VI;
         s.mensura  = VI;
     }
-    redde chorda_concatenare(chorda_ex_literis("Mock-up \302\267 ",
+    c = chorda_concatenare(chorda_ex_literis("Mock-up \302\267 ",
         piscina), s, piscina);
+    si (revisiones > I)
+    {
+        sprintf(rev, " \302\267 rev %u/%u", (insignatus integer)(revisio
+            + I), (insignatus integer)revisiones);
+        c = chorda_concatenare(c, chorda_ex_literis(rev, piscina),
+            piscina);
+    }
+    redde c;
 }
 
 interior vacuum
@@ -1593,8 +1715,8 @@ figura_tabulae (
             alioquin si (o.pagina)
             {
                 textum_pingere(md, f->fines.x + IV, f->fines.y + IV,
-                    caput_paginae(o.pagina, md->piscina), ZEPHYRUM,
-                    COLOR_TEXT_DIM);
+                    caput_paginae(o.pagina, o.revisio, o.revisiones,
+                    md->piscina), ZEPHYRUM, COLOR_TEXT_DIM);
             }
             alioquin
             {
@@ -2051,8 +2173,8 @@ negotia_visus_argumentum_ponere (
     si (strncmp(arg, "adumbratio/", XI) == ZEPHYRUM)
     {
         constans NegotiiPagina* p;
-            constans character* t[X];
-            constans character* v[X];
+            constans character* t[XI];
+            constans character* v[XI];
 
         p = arg[XI] ? negotia_paginam_invenire(m->negotia,
             chorda_ex_literis(arg + XI, m->piscina), NIHIL) : NIHIL;
@@ -2080,7 +2202,9 @@ negotia_visus_argumentum_ponere (
         v[VIII]      = "";
         t[IX]        = "colloquium";
         v[IX]        = "";
-        redde campos_scribere(m, t, v, X);
+        t[X]         = "revisio";
+        v[X]         = "";
+        redde campos_scribere(m, t, v, XI);
     }
     /* id nudum aut suffixum unicum -> id plenum (cognomen typatum) */
     si (arg[ZEPHYRUM] && !strchr(arg, '/'))
@@ -2240,4 +2364,49 @@ negotia_visus_locus_titulus (
     }
     redde x ? chorda_transcribere(x->titulus, piscina)
             : chorda_ex_literis("Projects", piscina);
+}
+
+b32
+negotia_visus_clavem_sumere (
+               vacuum* ctx,
+     constans Eventus* ev,
+                  b32  agere)
+{
+        NegotiaMontatio* m;
+         NegotiaFigurae* privatum;
+    constans Praeceptum* t;
+     ContextusPraecepti  cp;
+                Eventus  e;
+                    i32  visus;
+
+    m = (NegotiaMontatio*)ctx;
+    si (   !m || !ev || !(ev->datum.clavis.modificantes & MOD_SUPER)
+        || (   ev->genus != EVENTUS_CLAVIS_DEPRESSUS
+            && ev->genus != EVENTUS_CLAVIS_LIBERATUS))
+    {
+        redde FALSUM;
+    }
+    privatum = (NegotiaFigurae*)m->figurae_ctx;
+    si (!privatum)
+    {
+        redde FALSUM;
+    }
+    piscina_vacare(privatum->scheda);
+    contextum_parare(m, privatum->scheda, &cp);
+    /* liberata quoque sumitur (forma depressionem quaerit) */
+    e        = *ev;
+    e.genus  = EVENTUS_CLAVIS_DEPRESSUS;
+    visus    = visus_currens(&cp);
+    t        = praecepta_ad_clavem(TABULA_PRAECEPTORUM, visus, &e);
+    si (!t || t->clavis[ZEPHYRUM] != 's' || t->clavis[I] != '-')
+    {
+        redde FALSUM;
+    }
+    si (   agere && ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+        && praecepta_status(t, visus, requisita_negotiorum, &cp)
+           == PRAECEPTUM_PRAESTO)
+    {
+        (vacuum)t->fn(&cp);
+    }
+    redde VERUM;
 }

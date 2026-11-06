@@ -42,6 +42,13 @@
  * titulus loci "<negotium> · <pagina>". Argumentum
  * "adumbratio/<pagina>" (id plenum aut suffixum unicum); pagina
  * ignota aut pictoris (T4): FALSUM, nihil mutatum.
+ * REVISIONES (T3b): Cmd+K recentior, Cmd+J vetustior (negotia_
+ * paginae_revisiones; recentissima summa). Campus "revisio" = seq
+ * revisionis visae; vacuus = recentissima, quae revisionem novam
+ * sequitur; vetus fixa manet dum revisiones crescunt. Cmd+K ad
+ * recentissimam campum purgat. Extremis nihil fit. Caput
+ * "Mock-up · <id VI> · rev N/M" (M > I solum). Argumentum
+ * "adumbratio/<pagina>" revisionem purgat (nexus = recentissima).
  *
  * MUS PRIMUM: linea sub mure illuminatur (campus super); ictus unus
  * aperit (negotium in indice, facultas in negotio); sagittae paginarum
@@ -155,5 +162,15 @@ chorda
 negotia_visus_locus_titulus (
      vacuum* ctx,
     Piscina* piscina);
+
+/* comites P9 (facies.clavem_sumere; ctx = NegotiaMontatio*): clavis
+ * Super quam tabula praeceptorum in visu currenti habet (Cmd+J /
+ * Cmd+K in pagina adumbrationis); agere FALSUM = quaestio sola,
+ * agere VERUM = praeceptum agitur */
+b32
+negotia_visus_clavem_sumere (
+               vacuum* ctx,
+     constans Eventus* ev,
+                  b32  agere);
 
 #endif /* NEGOTIA_VISUS_H */

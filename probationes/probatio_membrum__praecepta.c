@@ -169,6 +169,21 @@ _probare_claves (
     CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
     e = clavis(CLAVIS_TABULA, IX, IX, (i32)MOD_IMPERIUM);
     CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
+    /* negotia-paginae T3b: "s-k" = Super (Cmd) + littera; sine Shift,
+     * Imperio, Alt; littera sola Super non accipit */
+    e = clavis((clavis_t)'k', 'k', 'k', (i32)MOD_SUPER);
+    CREDO_VERUM(praecepta_clavis_congruit("s-k", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-j", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("k", &e));
+    e = clavis((clavis_t)'k', 'K', 'k', (i32)(MOD_SUPER | MOD_SHIFT));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
+    e = clavis((clavis_t)'k', ZEPHYRUM, 'k', (i32)(MOD_SUPER
+        | MOD_IMPERIUM));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
+    e = clavis((clavis_t)'k', 'k', 'k', (i32)(MOD_SUPER | MOD_ALT));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
+    e = clavis((clavis_t)'k', 'k', 'k', ZEPHYRUM);
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
 }
 
 /* ad clavem per visum: "a" in A = t.a, in B = t.g; Enter solum in B */

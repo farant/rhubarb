@@ -5255,6 +5255,10 @@ negotia_describere (
     f->pulsare      = negotia_pulsare_in_vico;
     f->pulsare_ctx  = m;
     f->mora         = negotia_morari;
+    /* T3b: Cmd+J / Cmd+K in pagina adumbrationis (etiam foco
+     * sinistro) */
+    f->clavem_sumere      = negotia_visus_clavem_sumere;
+    f->clavem_sumere_ctx  = m;
 }
 
 

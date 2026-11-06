@@ -12,8 +12,9 @@
  *
  * Formae clavium: "x" (character productus, sine Imperio aut Super;
  * "X", "<", "[" item), "Enter", "Esc", "Up", "Down" (sagittae, sine
- * modificatoribus), "C-r" (Imperium + littera), "Tab" et "S-Tab"
- * (tabulatio sine / cum Shift; sine Imperio).
+ * modificatoribus), "C-r" (Imperium + littera), "s-k" (Super/Cmd +
+ * littera, sine Shift, Imperio, Alt; negotia-paginae T3b), "Tab" et
+ * "S-Tab" (tabulatio sine / cum Shift; sine Imperio).
  */
 #ifndef MEMBRUM__PRAECEPTA_H
 #define MEMBRUM__PRAECEPTA_H

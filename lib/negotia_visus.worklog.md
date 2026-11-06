@@ -113,3 +113,28 @@ figure context for `SemitaOrganum`).
   brings the new act (new seq).
 - Look check without the live volume: build/adumbratio_latus.c (scratch,
   ignored) mounts the pane on a temporary volume and writes a PNG.
+
+## 2026-11-06 — T3b: revisions on Cmd+J / Cmd+K
+
+- Panes already had a way to claim keys before vicus routes them:
+  `facies.clavem_sumere` (comites P9, the terminal's Ctrl+1..9). It is
+  asked for the focused pane, else the right front pane when focus is
+  left - so Cmd+J works while typing in the scriba page. It is asked
+  for BOTH press and release (question only); claim both or the
+  release leaks to the focused pane.
+- Rather than hard-code J/K, `membrum__praecepta` got a form "s-k"
+  (Super + letter, no Shift/Ctrl/Alt; matched on runa) and the pane
+  claims exactly the "s-" rows of its table valid in the current view.
+  Any pane can now declare Cmd keys in its table.
+- Field `revisio` = seq of the revision viewed, empty = newest. Empty
+  is what makes "follow new revisions when on newest, stay put when on
+  an older one" free: no comparison against a remembered count.
+  Stepping K onto the newest clears it; the argument clears it.
+- `Ordines.pagina` now carries the revision COPY (from
+  negotia_paginae_revisiones), so title/caput/render all show that
+  revision; the render cache is keyed on seq, so old revisions cache
+  without change.
+- Lint: revisionem/recentiorem/revidere were NOVA - renamed to known
+  words (revisio_aperta, revisio_movere, fac_revisio_proxima/prior).
+  `silva/renominare.sh` refuses dirty files (git is its undo), so
+  mid-task renames go by whole-word regex.

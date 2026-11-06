@@ -1171,6 +1171,137 @@ _probare_adumbrationem_revisam (
     volumen_claudere(v2);
 }
 
+/* T3b: clavis Super (Cmd) ad latus per facies.clavem_sumere; VERUM
+ * si sumpta. agere VERUM: praeceptum agitur, deinde recompositio */
+interior b32
+clavis_super (
+        Latus* l,
+    character  runa,
+          i32  modificantes,
+          b32  liberata,
+          b32  agere)
+{
+    Eventus e;
+        b32 r;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus  = liberata ? EVENTUS_CLAVIS_LIBERATUS
+                        : EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis = (clavis_t)runa;
+    e.datum.clavis.producta = (s32)(insignatus character)runa;
+    e.datum.clavis.runa = (s32)(insignatus character)runa;
+    e.datum.clavis.modificantes = (i32)MOD_SUPER | modificantes;
+    r = negotia_visus_clavem_sumere(&l->m, &e, agere);
+    si (agere)
+    {
+        dispensator_recomponere(l->d);
+    }
+    redde r;
+}
+
+/* pagina "5" revisa per w->n: textus unus in columna */
+interior vacuum
+mutare_paginam (
+                 Mundus* w,
+                  Latus* l,
+     constans character* textus,
+                Piscina* p)
+{
+    character corpus[CCLVI];
+
+    sprintf(corpus, "<adumbratio><columna spatium=\"1\"><textus>%s"
+        "</textus></columna></adumbratio>", textus);
+    (vacuum)negotia_paginam_mutare(w->n, lit("5", p), lit("index", p),
+        lit(corpus, p));
+    (vacuum)negotia_visus_reficere(&l->m);
+    dispensator_recomponere(l->d);
+}
+
+/* textus adumbrationis visus et caput */
+interior b32
+revisio_visa (
+                 Mundus* w,
+                  Latus* l,
+     constans character* textus,
+     constans character* caput,
+                Piscina* p)
+{
+    Mandata* md;
+
+    md = reddere(w, l, p);
+    redde coetus_adumbrationis(md, textus) >= ZEPHYRUM
+        && textus_pictus(md, caput);
+}
+
+/* T3b: Cmd+J vetustior, Cmd+K recentior; vetus fixa dum revisiones
+ * crescunt; in recentissima revisio nova sequitur; argumentum
+ * purgat; claves extra paginam non sumuntur */
+interior vacuum
+_probare_revisiones (
+    CredoContextus* c)
+{
+    Mundus* w = (Mundus*)c->datum;
+     Latus* l;
+       i32  i;
+
+    CREDO_NECESSE_NON_NIHIL(w->n);
+    CREDO_CHORDA_NON_VACUA(paginam_seminare(w, c->piscina,
+        "<adumbratio><columna spatium=\"1\"><textus>una</textus>"
+        "</columna></adumbratio>"));
+    l = latus_montare(c, w, "c1", "adumbratio/5", VERUM, CCLVI);
+    CREDO_NECESSE_NON_NIHIL(l);
+    mutare_paginam(w, l, "duo", c->piscina);
+    mutare_paginam(w, l, "tres", c->piscina);
+    CREDO_VERUM(revisio_visa(w, l, "tres",
+        "Mock-up \302\267 5 \302\267 rev 3/3", c->piscina));
+    CREDO_GRADUS("claves sumptae");
+    CREDO_VERUM(clavis_super(l, 'j', ZEPHYRUM, FALSUM, FALSUM));
+    CREDO_VERUM(clavis_super(l, 'k', ZEPHYRUM, FALSUM, FALSUM));
+    CREDO_VERUM(clavis_super(l, 'j', ZEPHYRUM, VERUM, FALSUM));
+    CREDO_FALSUM(clavis_super(l, 'h', ZEPHYRUM, FALSUM, FALSUM));
+    CREDO_FALSUM(clavis_super(l, 'j', (i32)MOD_SHIFT, FALSUM, FALSUM));
+    CREDO_VERUM(revisio_visa(w, l, "tres",
+        "Mock-up \302\267 5 \302\267 rev 3/3", c->piscina));
+    CREDO_GRADUS("Cmd+J ad vetustissimam, ultra nihil");
+    (vacuum)clavis_super(l, 'j', ZEPHYRUM, FALSUM, VERUM);
+    CREDO_VERUM(revisio_visa(w, l, "duo",
+        "Mock-up \302\267 5 \302\267 rev 2/3", c->piscina));
+    CREDO_FALSUM(campus_est(&l->m.ramus, "revisio", NIHIL));
+    (vacuum)clavis_super(l, 'j', ZEPHYRUM, FALSUM, VERUM);
+    (vacuum)clavis_super(l, 'j', ZEPHYRUM, FALSUM, VERUM);
+    CREDO_VERUM(revisio_visa(w, l, "una",
+        "Mock-up \302\267 5 \302\267 rev 1/3", c->piscina));
+    CREDO_GRADUS("revisio nova: vetus fixa manet");
+    mutare_paginam(w, l, "quattuor", c->piscina);
+    CREDO_VERUM(revisio_visa(w, l, "una",
+        "Mock-up \302\267 5 \302\267 rev 1/4", c->piscina));
+    CREDO_GRADUS("Cmd+K ad recentissimam: campus purgatus, sequitur");
+    per (i = ZEPHYRUM; i < IV; i++)
+    {
+        (vacuum)clavis_super(l, 'k', ZEPHYRUM, FALSUM, VERUM);
+    }
+    CREDO_VERUM(revisio_visa(w, l, "quattuor",
+        "Mock-up \302\267 5 \302\267 rev 4/4", c->piscina));
+    CREDO_VERUM(campus_est(&l->m.ramus, "revisio", NIHIL));
+    mutare_paginam(w, l, "quinque", c->piscina);
+    CREDO_VERUM(revisio_visa(w, l, "quinque",
+        "Mock-up \302\267 5 \302\267 rev 5/5", c->piscina));
+    CREDO_GRADUS("argumentum revisionem purgat");
+    (vacuum)clavis_super(l, 'j', ZEPHYRUM, FALSUM, VERUM);
+    CREDO_VERUM(revisio_visa(w, l, "quattuor",
+        "Mock-up \302\267 5 \302\267 rev 4/5", c->piscina));
+    CREDO_VERUM(negotia_visus_argumentum_ponere(&l->m, "adumbratio/5"));
+    dispensator_recomponere(l->d);
+    CREDO_VERUM(campus_est(&l->m.ramus, "revisio", NIHIL));
+    CREDO_VERUM(revisio_visa(w, l, "quinque",
+        "Mock-up \302\267 5 \302\267 rev 5/5", c->piscina));
+    CREDO_GRADUS("extra paginam: non sumptae");
+    CREDO_VERUM(negotia_visus_argumentum_ponere(&l->m, "2"));
+    dispensator_recomponere(l->d);
+    CREDO_FALSUM(clavis_super(l, 'j', ZEPHYRUM, FALSUM, FALSUM));
+    CREDO_FALSUM(clavis_super(l, 'k', ZEPHYRUM, FALSUM, FALSUM));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "index", _probare_indicem, mundum_parare, mundum_purgare, NIHIL,
         NIHIL },
@@ -1216,6 +1347,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         mundum_purgare, NIHIL, NIHIL },
     { "adumbratio revisa", _probare_adumbrationem_revisam,
         mundum_parare, mundum_purgare, NIHIL, NIHIL },
+    { "revisiones", _probare_revisiones, mundum_parare, mundum_purgare,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

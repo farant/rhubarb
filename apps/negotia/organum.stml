@@ -43,6 +43,10 @@
             scriptor="negotia.agere" semita="status"
             nota="negotia-paginae T3: id plenum paginae (visus
                   adumbratio)"/>
+    <campus nomen="revisio" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="status"
+            nota="negotia-paginae T3b: seq revisionis visae; vacuus =
+                  recentissima (revisionem novam sequitur)"/>
     <campus nomen="resumere" typus="electio" vita="transiens"
             absens="nullum" scriptor="negotia.agere"
             nota="T6: armatum = r primum pressum (sessio fortasse
