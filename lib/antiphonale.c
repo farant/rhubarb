@@ -35,6 +35,8 @@
  * iterum temptare omni CCL ms */
 #define MORA_SINE_SPECULA      CCL
 #define MORA_SONANS            XXXIII    /* pulsus dum sonat (P7) */
+/* porta incipere recusat: vicus solum mutus aut sine apparatu soni */
+#define VEXILLUM_MUTUM         "can't play: sound muted or unavailable"
 #define ANTIPHONALE_GLOBULUS   XVI       /* latitudo globuli canendi */
 #define VISUS_ANTIPHONALIS     I
 
@@ -523,11 +525,20 @@ relegere (
                     m->porta.sistere(m->porta.ctx);
                 }
                 a->sonat = FALSUM;
+                si (nova->carmen.mensura == ZEPHYRUM)
+                {
+                    /* cur sistit dicitur (ut fac_canere) */
+                    sprintf(a->vexillum, "not playable: %.200s",
+                        nova->causa);
+                    a->electa = a->illuminata;
+                }
             }
             alioquin si (!m->porta.incipere(m->porta.ctx, nova->carmen,
                              pulsus))
             {
                 a->sonat = FALSUM;
+                sprintf(a->vexillum, "%s", VEXILLUM_MUTUM);
+                a->electa = a->illuminata;
             }
             si (!a->sonat)
             {
@@ -537,6 +548,12 @@ relegere (
         versionem_destruere(a->versio);
         a->versio  = nova;
         mutatum    = VERUM;
+        /* electa indicem servat (permutatio melodiam plerumque mutat,
+         * syllabas non); versio brevior: ad syllabam ultimam */
+        si (a->electa >= (s32)nova->cantus->numerus_syllabarum)
+        {
+            a->electa = (s32)nova->cantus->numerus_syllabarum - I;
+        }
     }
     redde mutatum;
 }
@@ -779,6 +796,11 @@ fac_canere (
     nexus   = a->electa >= ZEPHYRUM ? nexus_syllabae(a->versio,
         a->electa,
                   I) : ZEPHYRUM;
+    si (nexus < ZEPHYRUM && a->electa >= ZEPHYRUM)
+    {
+        /* electa post notam ultimam: a nota ultima, non ab initio */
+        nexus = nexus_syllabae(a->versio, a->electa, -I);
+    }
     pulsus  = nexus
         >= ZEPHYRUM ? a->versio->relatio.nexus[nexus].initium
                                 : ZEPHYRUM;
@@ -787,6 +809,14 @@ fac_canere (
         a->sonat       = VERUM;
         a->illuminata  = syllaba_ad_pulsum(a->versio, pulsus);
         a->electa      = -I;
+        si (strcmp(a->vexillum, VEXILLUM_MUTUM) == ZEPHYRUM)
+        {
+            a->vexillum[ZEPHYRUM] = '\0';
+        }
+    }
+    alioquin
+    {
+        sprintf(a->vexillum, "%s", VEXILLUM_MUTUM);
     }
     redde VERUM;
 }

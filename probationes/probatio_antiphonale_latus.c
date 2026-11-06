@@ -840,6 +840,79 @@ _mutum_probare (
     CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "");
 }
 
+/* recensio finalis: vexilla soni, electa post permutationem, ictus post
+ * notam ultimam */
+interior vacuum
+_vexilla_electamque_probare (
+    CredoContextus* c)
+{
+     Mundus* w;
+    Mandata* md;
+
+    CREDO_GRADUS ("permutatio sonante, versio sine notis: vexillum");
+    w = _mundum(c, "tres.gabc", CANTUS_TRES);
+    CREDO_NECESSE (w != NIHIL);
+    _spatium(w);
+    (vacuum)_ad_pulsum(w, CDLXXX);
+    CREDO_NECESSE (filum_scribere_literis(w->via,
+        "name:Tres;\ninitial-style:0;\n%%\n(c4) a() b() c()\n"));
+    CREDO_VERUM (_ad_pulsum(w, CDLXXX));
+    CREDO_AEQUALIS_I32 (w->sistita, I);
+    CREDO_FALSUM (w->sonat);
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "not playable"));
+
+    CREDO_GRADUS ("Spatium recusatum (mutus): vexillum; postea sonans "
+                  "tollit");
+    w = _mundum(c, "tres_mutus.gabc", CANTUS_TRES);
+    CREDO_NECESSE (w != NIHIL);
+    w->recusare = VERUM;
+    _spatium(w);
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "muted"));
+    w->recusare = FALSUM;
+    _spatium(w);
+    CREDO_VERUM (w->sonat);
+    md = _reddere(w, c->piscina);
+    CREDO_FALSUM (_textus_continet(md, "muted"));
+
+    CREDO_GRADUS ("permutatio sonante, porta recusat: vexillum");
+    (vacuum)_ad_pulsum(w, CDLXXX);
+    w->recusare = VERUM;
+    CREDO_NECESSE (filum_scribere_literis(w->via,
+        "name:Tres;\ninitial-style:0;\n%%\n(c4) a(g) b(i) c(g)\n"));
+    CREDO_VERUM (_ad_pulsum(w, CDLXXX));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "muted"));
+
+    CREDO_GRADUS ("electa post permutationem: index manet, brevior "
+                  "ad ultimam");
+    w = _mundum(c, "tres_electa.gabc", CANTUS_TRES);
+    CREDO_NECESSE (w != NIHIL);
+    CREDO_VERUM (_ictus_textus(w, "c", c->piscina));
+    CREDO_NECESSE (filum_scribere_literis(w->via,
+        "name:Tres;\ninitial-style:0;\n%%\n(c4) a(ghg) b(h) c(g)\n"));
+    (vacuum)_ad_pulsum(w, ZEPHYRUM);
+    md = _reddere(w, c->piscina);
+    CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "c");
+    CREDO_NECESSE (filum_scribere_literis(w->via,
+        "name:Tres;\ninitial-style:0;\n%%\n(c4) a(g) b(h)\n"));
+    (vacuum)_ad_pulsum(w, ZEPHYRUM);
+    md = _reddere(w, c->piscina);
+    CREDO_LITERAE_AEQUALES (_illuminata(md, c->piscina), "b");
+    _spatium(w);
+    CREDO_AEQUALIS_S64 (w->pulsus_incepti, CDLXXX);
+
+    CREDO_GRADUS ("ictus post notam ultimam, Spatium: a nota ultima");
+    w = _mundum(c, "tres_finis.gabc",
+        "name:Tres;\ninitial-style:0;\n%%\n(c4) a(g) b(h) c(g) d()\n");
+    CREDO_NECESSE (w != NIHIL);
+    CREDO_VERUM (_ictus_textus(w, "d", c->piscina));
+    _spatium(w);
+    CREDO_AEQUALIS_I32 (w->incepta, I);
+    CREDO_AEQUALIS_S64 (w->pulsus_incepti, CMLX);
+}
+
 interior vacuum
 _dispositionem_vivam_probare (
     CredoContextus* c)
@@ -898,6 +971,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "mutum (RF2)", _mutum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "dispositio viva (RF5)", _dispositionem_vivam_probare, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "vexilla et electa", _vexilla_electamque_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

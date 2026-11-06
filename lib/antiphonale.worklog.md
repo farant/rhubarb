@@ -100,3 +100,23 @@ MORA_SINE_SPECULA is now 250 ms — the same interval is the re-read
 cadence on platforms without a watcher (Android), still live enough.
 Test: section "directorium absens" (200 pulses, `piscina_summa_usus`
 unchanged; mora >= 250; folder + file created -> picked up, mora -1).
+
+## 2026-11-06 — review minors 1-4: banners, selection after a swap, click past the end
+
+- A live swap into a version with no notes stopped the sound silently;
+  now it sets "not playable: <reason>" like Space does, and keeps the
+  place (electa = the lit syllable).
+- `incipere` refused (vicus refuses only when muted or without an audio
+  device) used to do nothing visible: banner VEXILLUM_MUTUM ("can't
+  play: sound muted or unavailable"), both on Space and on a swap
+  mid-play; the next successful Space clears that banner (only that
+  one — a parse-error banner stays).
+- Selection after a swap keeps its INDEX, not its musical position:
+  the common edit reshapes a melody (Jesus melisma) and keeps the
+  syllables, so the index stays right while the pulse would land inside
+  an earlier, longer melisma. Playback still maps by pulse (G18 —
+  sound is time). A shorter version clamps the selection to the last
+  syllable (before: it vanished and Space played from the top).
+- Click on a syllable after the last note, then Space: starts at the
+  last note (`nexus_syllabae(..., -I)`), not at the beginning.
+Test: section "vexilla et electa" (6 checks red before).
