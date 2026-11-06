@@ -61,6 +61,23 @@ nomen enumeratio {
     SILVA_EVENTUM_DELETIO
 } SilvaEventumGenus;
 
+/* Sedes tituli macro (2026-11-03, budget silvae gradus II): titulus
+ * quisque semel in exp->sedes_macrorum internatur; sedes statum
+ * eius tenet. Status vivus = def_viva. Tabula POSITIONALIS
+ * generationis (olim TabulaDispersa nova per generationem, omnibus
+ * actis replicatis - latina.h milia fert) = def_positionalis cum
+ * signo generationis: signum alienum = absens, ergo tabula nova
+ * signo novo nascitur sine allocatione, et replicatio eventi duae
+ * scriptiones sunt sine friatione. */
+nomen structura {
+    SilvaMacroDef* def_viva;          /* status vivus; NIHIL = non
+                                        * definitum */
+    SilvaMacroDef* def_positionalis;  /* valet solum si signum ==
+                                        * exp->signum_activum */
+              i32 signum;            /* generatio positionalis quae
+                                        * def_positionalis scripsit */
+} SilvaMacroSedes;
+
 nomen structura {
     SilvaEventumGenus  genus;
                   s32  fons_index;
@@ -71,6 +88,9 @@ nomen structura {
                   s32  positus;      /* index in fluxu reliquorum a quo
                                      * eventum valet (status ad punctum -
                                      * semantica cpp pro #undef medio) */
+      SilvaMacroSedes* sedes;        /* sedes tituli (replicatio sine
+                                     * friatione); NIHIL si allocatio
+                                     * defecit */
 } SilvaEventum;
 
 
@@ -212,7 +232,9 @@ nomen structura SilvaExpansio SilvaExpansio;
 structura SilvaExpansio {
            Piscina* piscina;
                Xar* fontes;     /* Xar de SilvaFons (per valorem) */
-    TabulaDispersa* macros;     /* status vivus - via defalta */
+    TabulaDispersa* sedes_macrorum; /* titulus (chorda) ->
+                                     * SilvaMacroSedes*: status vivus
+                                     * et positionalis (gradus II) */
                Xar* acta;       /* Xar de SilvaEventum (per valorem) */
                Xar* definitiones; /* Xar de i32: indices eventorum
                                    * DEFINITIO in acta, ordine - macro
@@ -228,8 +250,9 @@ structura SilvaExpansio {
     SilvaIndicesExtentorum* indices_extentorum; /* cache quaestionum */
                i32  profunditas_includendi;
                s32  fons_api;   /* fons syntheticus "<api>"; -1 = nondum */
-    TabulaDispersa* tabula_activa; /* tabula temporalis expansionis
-                                    * positionalis; NIHIL = tabula viva */
+               i32  signum_activum; /* generatio positionalis cuius
+                                     * status quaeritur; 0 = vivus */
+               i32  signum_ultimum; /* signum novissime datum */
      SilvaMacroDef* def_attributi; /* __attribute__ internum (T17a):
                                     * pigre creatum, EXTRA tabulam -
                                     * defined() id non videt */

@@ -388,19 +388,11 @@ _plagulam_fundere (
         piscina_destruere(piscina_officinae);
         redde;
     }
-    sem = silva_c89_semantica_analysare_cum_systemate(
-        piscina_arboris, parsura, systema_parsura);
-    si (sem != NIHIL && oraculum != NIHIL)
-    {
-        (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
-        silva_oraculum_responsa_vacare(oraculum);
-        (vacuum)silva_recanonicare(parsura->commissio, oraculum,
-            silva_c89_resolutor, NIHIL);
-        /* analysi secunda contra arborem versam - typatio
-         * canonicae-relativa (contractus demissionis) */
-        sem = silva_c89_semantica_analysare_cum_systemate(
-            piscina_arboris, parsura, systema_parsura);
-    }
+    /* analysis post ultimum recanonicare - typatio
+     * canonicae-relativa (contractus demissionis) */
+    sem = silva_c89_semantica_analysare_clausa(piscina_arboris,
+        parsura, systema_parsura, oraculum, SILVA_CLAUSURA_ORDINARIA,
+        NIHIL);
     c1 = clock();
     ms_arboris += (duplex)(c1 - c0) * 1000.0
         / (duplex)CLOCKS_PER_SEC;
@@ -435,8 +427,8 @@ _plagulam_fundere (
 
     /* circulus: scriptura -> lector -> scriptura byte-idem */
     {
-                chorda  scriptura;
-                chorda  secunda;
+                chorda scriptura;
+                chorda secunda;
         MedullaModulus* iterum;
           unsigned int  linea = 0;
 

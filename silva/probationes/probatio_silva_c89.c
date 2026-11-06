@@ -1044,6 +1044,61 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: FRONS FUSA - nodus GSS praedecessoribus pluribus
+     * (budget silvae gradus I, 2026-11-03)
+     * ======================================================== */
+
+    /* "T bytes[16]" in parametro, T ignotum: duae lectiones -
+     * (a) typus T, declarator bytes[16]; (b) typi T bytes,
+     * declarator abstractus [16]. Ambo acervi '[' in statum eundem
+     * transferunt: frons fusa nodum praedecessoribus DUOBUS facit,
+     * et reductio parametri vias ambas per eum enumerat. Praedecessor
+     * secundus (praedecessores_ceteri) neglectus lectionem (b) perdit
+     * - ambigui 0. Casus in corpore ~1 M per percursum. */
+    {
+         SilvaParsura* parsura;
+          SilvaNodus**  slot;
+           SilvaNodus*  ambiguum;
+           SilvaValor   interps;
+                  i32   i;
+
+        imprimere("\n--- Probans frontem fusam (praedecessores) ---\n");
+
+        parsura = _parsare(piscina, "void f(T bytes[16]);");
+        CREDO_VERUM (parsura->successus);
+        CREDO_AEQUALIS_I32 (xar_numerus(parsura->commissio->ambigui),
+            I);
+        slot = (SilvaNodus**)xar_obtinere(parsura->commissio->ambigui,
+            ZEPHYRUM);
+        CREDO_NON_NIHIL (slot);
+        ambiguum = (slot != NIHIL) ? *slot : NIHIL;
+        CREDO_NON_NIHIL (ambiguum);
+        si (ambiguum != NIHIL)
+        {
+            CREDO_AEQUALIS_S32 (ambiguum->genus,
+                (s32)SILVA_C89_GENUS_AMBIGUUS);
+            interps = silva_c89_ambiguus_interpretationes(ambiguum);
+            CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(interps), II);
+            per (i = ZEPHYRUM;
+                 i < II && i < silva_valor_lista_numerus(interps); i++)
+            {
+                SilvaNodus* parametrum = _elementum(interps, i);
+
+                CREDO_NON_NIHIL (parametrum);
+                si (parametrum == NIHIL) perge;
+                CREDO_AEQUALIS_S32 (parametrum->genus,
+                    (s32)SILVA_C89_GENUS_PARAMETRUM);
+                /* lectio (a) specificatorem unum, (b) duos habet -
+                 * ordo viarum: praedecessor primus ante ceteros */
+                CREDO_AEQUALIS_I32 (silva_valor_lista_numerus(
+                    silva_c89_parametrum_specificatores(parametrum)),
+                    i + I);
+            }
+        }
+    }
+
+
+    /* ========================================================
      * PROBARE: oraculum vertit - collapsus in fistula + '
      * recanonicare UTROQUE SENSU (involucrum manet)
      * ======================================================== */

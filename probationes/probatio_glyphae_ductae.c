@@ -1085,6 +1085,39 @@ _sectio_duodevicesima (
     CREDO_FALSUM(glyphae_ductae_est(0x1FBD));
 }
 
+/* œ Œ ℟ ℣ (picturae v2) et ǽ (composita: æ fontis cum
+ * acuto) - textus Latinus cantus (gabc pars II, P4) */
+interior vacuum
+_sectio_undevicesima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* ligatura_minuscula[] = {
+        "......", "......", ".#.##.", "#.#..#",
+        "#.####", "#.#...", ".#.###", "......" };
+    constans character* ligatura_maiuscula[] = {
+        ".#####", "#..#..", "#..#..", "#..###",
+        "#..#..", "#..#..", ".#####", "......" };
+    /* æ fontis (ordines II-VI) cum acuto (0-I) */
+    constans character* ae_acutum[] = {
+        "....#.", "...#..", ".##.##", "...#.#",
+        ".#####", ".#.#..", ".#####", "......" };
+
+    constans character* responsum[] = {
+        "####..", "#...#.", "#...#.", "####..",
+        "#.#..#", "#..##.", "#..##.", "......" };
+    constans character* versiculus[] = {
+        "#...#.", "#...##", ".#.##.", ".#.#..",
+        ".#.#..", "..#...", "..#...", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(pictura_est(0x211F, responsum, larva));
+    CREDO_VERUM(pictura_est(0x2123, versiculus, larva));
+    CREDO_VERUM(pictura_est(0x0153, ligatura_minuscula, larva));
+    CREDO_VERUM(pictura_est(0x0152, ligatura_maiuscula, larva));
+    CREDO_VERUM(pictura_est(0x01FD, ae_acutum, larva));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: lineae (Ghostty linesChar)", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -1120,6 +1153,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL },
     { "XVII: litterae notatae", _sectio_duodevicesima, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "XVIII: oe OE R V ae acutum (gabc)", _sectio_undevicesima, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

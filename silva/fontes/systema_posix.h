@@ -243,6 +243,7 @@ int     chdir(const char* via);
  * ut C89; hae POSIX solae) */
 int setenv(const char* nomen, const char* valor, int superscribere);
 int unsetenv(const char* nomen);
+char* realpath(const char* via, char* plena);
 int putenv(char* par);
 
 /* <sectio caput="unistd.h"/> unistd.h - fossae normales */
@@ -781,6 +782,7 @@ struct kevent {
 #define NOTE_DELETE   0x00000001
 #define NOTE_WRITE    0x00000002
 #define NOTE_EXTEND   0x00000004
+#define NOTE_ATTRIB   0x00000008
 #define NOTE_RENAME   0x00000020
 
 int kqueue(void);

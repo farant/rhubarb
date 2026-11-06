@@ -670,6 +670,76 @@ s32 principale (vacuum)
         }
     }
 
+
+    /* ==================================================
+     * XIII. Margines unitatis (budget fusionis, verritiones gradus
+     * III: extensiones per lexemata, non per arbores). (a) post
+     * lexema PRIMUM unitatis: INTERIOR - scansio primum omittens
+     * minimum post annotationem poneret. (b) ante lexema ULTIMUM:
+     * INTERIOR - ultimum omittens maximum ante eam. (c) unitas a
+     * macro incipiens: radix originis (invocatio) sedem dat, non
+     * lexema expansum. (d) regio conditionalis texta (unitas folio
+     * primo '#'): annotatio in ramo non sumpto - folia extra
+     * fluxum, arbore ambulata.
+     * ================================================== */
+
+    {
+        constans character* fontes[IV];
+                       s32  modi[IV];
+                       i32  unitates[IV];
+                       i32  k;
+
+        fontes[ZEPHYRUM]  =
+            "static /* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAJ\"/> */"
+            " int primus;\n"
+            "int secundus;\n";
+        modi[ZEPHYRUM]      = (s32)SILVA_ANNOTATIO_INTERIOR;
+        unitates[ZEPHYRUM]  = ZEPHYRUM;
+        fontes[I]  =
+            "int primus /* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAK\"/> */"
+            " ;\n"
+            "int secundus;\n";
+        modi[I]      = (s32)SILVA_ANNOTATIO_INTERIOR;
+        unitates[I]  = ZEPHYRUM;
+        fontes[II]  =
+            "#define DECLARATIO static int\n"
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAM\"/> */\n"
+            "DECLARATIO x;\n";
+        modi[II]      = (s32)SILVA_ANNOTATIO_SUPRA;
+        unitates[II]  = ZEPHYRUM;
+        fontes[III]  =
+            "#ifdef NONDUM_DEFINITUM\n"
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAN\"/> */\n"
+            "int a;\n"
+            "#else\n"
+            "int b;\n"
+            "#endif\n"
+            "int c;\n";
+        modi[III]      = (s32)SILVA_ANNOTATIO_INTERIOR;
+        unitates[III]  = ZEPHYRUM;
+
+        imprimere("\n--- Probans margines unitatis ---\n");
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+             SilvaParsura* parsura      = NIHIL;
+                      Xar* annotationes = _colligere(piscina,
+                          fontes[k], &parsura);
+
+            CREDO_NON_NIHIL (annotationes);
+            si (annotationes == NIHIL || xar_numerus(annotationes) != I)
+            {
+                CREDO_AEQUALIS_I32 (annotationes != NIHIL
+                    ? xar_numerus(annotationes) : ZEPHYRUM, I);
+                perge;
+            }
+            CREDO_AEQUALIS_S32 ((s32)_annotatio(annotationes,
+                ZEPHYRUM)->modus, modi[k]);
+            CREDO_AEQUALIS_PTR (_annotatio(annotationes,
+                ZEPHYRUM)->unitas, _unitas(piscina, parsura,
+                unitates[k]));
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

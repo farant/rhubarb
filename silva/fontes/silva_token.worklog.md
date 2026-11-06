@@ -123,3 +123,37 @@ ran them") broke exactly as its header warns: officina/ and
 tessera/amalgamare.sh compile silva's lexer, which now needs
 `materia_token`. Fixed (include + `mech_materia_token.o` + header
 guard); both regenerate their committed amalgams byte-identical.
+
+## 2026-11-03 — token construction in one pass (budget silvae, DOD audit #2)
+
+**What.**
+- `_cauda_c89` finds the tail by pointer arithmetic: tail = header + 64, flag still checked, NIHIL without it, as in materia.
+- `silva_token_ex_fonte` allocates once and writes each header and tail field once.
+- Before, every source token went through `_token_novum`, then `materia_token_creare` (memset 128 B, dummy values), and every field was then rewritten.
+- Every tail accessor was also a cross-TU call into `materia_token_cauda`.
+
+**Measured (percursus parse-only, whole repo, instructions).**
+- Baseline: 237.19 G.
+- (a) arithmetic tail + creare called with the real values: 229.88 G.
+- (b) plus one-pass ex_fonte: 222.25 / 223.31 G (two runs; pointer-keyed hash tables make runs vary by a few tenths of a G).
+- About −6% in total, matching the audit prototype (−6.1%).
+
+**Tried and dropped: (c), a one-pass `materia_token_creare`.**
+- Explicit header writes, memset of the tail only, silva calling it with real values.
+- Result 229.06 G, barely better than (a).
+- The cost was never the size of the memset: it is the cross-TU call plus a memset whose size isn't known at compile time. Without LTO nothing inlines across `materia_token.o`.
+- If `-flto` ever lands, (c) would put this knowledge back in materia at the same speed. Revisit then.
+
+**The coupling, and its tripwire.**
+- silva now writes `MateriaToken`'s header field by field (materia's knowledge).
+- `_silva_token_caput_notum` (typedef with a negative array size) breaks the build if `magnitudo(MateriaToken) != 64`.
+- The header is 64 B with no padding, so any new field changes the size.
+- Alignment is `magnitudo(vacuum*)`, the same as materia's `_ORDINATIO`.
+
+**Test.**
+- A fresh arena returns zeroed memory, so a forgotten field read as 0 and the old test could not see it.
+- New section "ex_fonte super memoriam sordidam": mark, allocate 256 B, fill with 0xA5, reset, build the token on top. It checks every header field, the exact flag word, and the whole origin union (pasta is the largest member).
+- Trap: credo keeps its records in the SAME arena, so no CREDO may run between the mark and the token. My first draft did, the token overwrote a credo record, and the run segfaulted.
+- Plants, all red there: numerus_post / spatia_ante / standard / scissurae omitted, origin not zeroed, `vexilla |=`, tail offset −8.
+
+**Equivalence.** aequivalentia over corpus 4 (483 + 76 #if-heavy files): 558/559 byte-identical (silva_token.c itself).

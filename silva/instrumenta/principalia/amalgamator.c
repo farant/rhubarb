@@ -84,6 +84,8 @@ interior constans character* constans CADENDA_TYPEDEF[] = {
     "TypusC89Genus", "TypusC89Primitivum", "TypusC89",
     "TypusC89Membrum", "SemanticaSymbolumGenus", "SemanticaSymbolum",
     "SemanticaDiagnosticum", "SilvaSemantica",
+    /* clausura (DECISUS 2 emendatum, 2026-11-04) */
+    "SilvaClausuraModus", "SilvaClausuraFructus",
     "ExamenSeveritas", "ExamenCodex", "ExamenLicentia",
     /* annotationes STML (2026-07-21): typi stml quos silva.h
      * possidet + typi annotationum proprii + internamentum

@@ -408,29 +408,18 @@ _plagulam_percurrere (
 
     si (parsura != NIHIL && parsura->successus)
     {
-        SilvaSemantica* sem =
-            silva_c89_semantica_analysare_cum_systemate(
-                piscina_arboris, parsura, systema_parsura);
+        SilvaClausuraFructus clausura;
+              SilvaSemantica* sem;
 
-        si (sem != NIHIL && oraculum_plagulae != NIHIL)
+        /* rung 3 scalae: secunda solum post mutationes (arbor
+         * intacta -> prima IAM auctoritas; canonicae-relativum:
+         * symbolum_nodi contra arborem versam) */
+        sem = silva_c89_semantica_analysare_clausa(piscina_arboris,
+            parsura, systema_parsura, oraculum_plagulae,
+            SILVA_CLAUSURA_ORDINARIA, &clausura);
+        si (clausura.secunda)
         {
-            (vacuum)silva_c89_semantica_oraculum_augere(sem,
-                oraculum_plagulae);
-            silva_oraculum_responsa_vacare(oraculum_plagulae);
-            /* rung 3 scalae: recanonicare numerum mutationum
-             * reddit - 0 = arbor intacta, sem1 IAM auctoritas
-             * (semantics-praeservans constructione; barra paritatis
-             * octetim id probat). sem2 solum post mutationes
-             * (canonicae-relativum: symbolum_nodi contra arborem
-             * versam). */
-            si (silva_recanonicare(parsura->commissio,
-                    oraculum_plagulae, silva_c89_resolutor, NIHIL)
-                > ZEPHYRUM)
-            {
-                sem = silva_c89_semantica_analysare_cum_systemate(
-                    piscina_arboris, parsura, systema_parsura);
-                plagulae_sem2++;
-            }
+            plagulae_sem2++;
         }
         si (sem != NIHIL)
         {

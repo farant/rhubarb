@@ -66,11 +66,17 @@ nomen SilvaValor (*SilvaGLRFabricaAmbigui) (
 
 nomen structura SilvaGSSNodus SilvaGSSNodus;
 
+/* Praedecessores (2026-11-03, budget silvae gradus I): nodus fere
+ * omnis praedecessorem UNUM habet - primus in nodo ipso sedet, Xar
+ * solum cum secundus advenit (ambiguitas). Ordo additionis servatur:
+ * primus, deinde ceteri ordine suo - enumeratio viarum eadem. */
 structura SilvaGSSNodus {
-           s32  status;
-    SilvaValor  valor;
-           Xar* praedecessores;   /* SilvaGSSNodus* (dedup in additione) */
-    SilvaToken* lexema;           /* lexema quo creatus (diagnostica/fusio) */
+              s32  status;
+       SilvaValor  valor;
+    SilvaGSSNodus* praedecessor_primus;    /* NIHIL = nullus */
+              Xar* praedecessores_ceteri;  /* SilvaGSSNodus*; NIHIL donec
+                                            * secundus (dedup in additione) */
+      SilvaToken* lexema;    /* lexema quo creatus (diagnostica/fusio) */
 };
 
 
@@ -98,6 +104,12 @@ nomen structura {
     b32     (*pergere)(vacuum* datum);   /* NIHIL = numquam rogare */
     vacuum* pergere_datum;
        i32  passus_pergendi;
+
+    /* Via celer (2026-11-03, budget silvae gradus Ib): passus frontis
+     * unius et actionis unius sine indice/reducendis curritur; exitus
+     * idem. VERUM ordinarie; FALSUM = via generalis sola (oraculum
+     * probationis differentialis, et diagnosis: "an via celer?"). */
+    b32 via_celer;
 
     /* Statisticae parsurae novissimae (etiam in fructum copiatae -
      * numeratores sunt PRODUCTUM, non depuratio: spec-v2 par 12.2) */

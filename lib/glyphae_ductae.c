@@ -182,6 +182,12 @@ interior constans Symbolum symbola[] = {
     { 0x014B,   /* ŋ latin small letter eng (n cauda infra) */
         { "......", "......", ".#.##.", ".##..#",
           ".#...#", ".#...#", ".#...#", "...##." } },
+    { 0x0152,   /* Œ latin capital ligature oe (cantus, gabc P4) */
+        { ".#####", "#..#..", "#..#..", "#..###",
+          "#..#..", "#..#..", ".#####", "......" } },
+    { 0x0153,   /* œ latin small ligature oe (cantus, gabc P4) */
+        { "......", "......", ".#.##.", "#.#..#",
+          "#.####", "#.#...", ".#.###", "......" } },
     { 0x0250,   /* ɐ latin small letter turned a (a versum) */
         { "......", "......", ".####.", ".#...#",
           ".####.", ".#....", "..###.", "......" } },
@@ -425,6 +431,12 @@ interior constans Symbolum symbola[] = {
     { 0x2089,   /* ₉ subscript nine */
         { "......", "......", "......", ".###..",
           ".#.#..", ".###..", "...#..", ".###.." } },
+    { 0x211F,   /* ℟ response (cantus, gabc P4) */
+        { "####..", "#...#.", "#...#.", "####..",
+          "#.#..#", "#..##.", "#..##.", "......" } },
+    { 0x2123,   /* ℣ versicle (cantus, gabc P4) */
+        { "#...#.", "#...##", ".#.##.", ".#.#..",
+          ".#.#..", "..#...", "..#...", "......" } },
     { 0x2190,   /* ← leftwards arrow */
         { "......", "......", "..#...", ".#####",
           "..#...", "......", "......", "......" } },
@@ -1574,6 +1586,7 @@ interior constans Composita compositae[] = {
     { 0x016B, 0x0075, NOTA_MACRON },   /* ū */
     { 0x016C, 0x0055, NOTA_BREVE },   /* Ŭ */
     { 0x016D, 0x0075, NOTA_BREVE },   /* ŭ */
+    { 0x01FD, 0x00E6, NOTA_ACUTUS },   /* ǽ (cantus, gabc P4) */
     { 0x0232, 0x0059, NOTA_MACRON },   /* Ȳ */
     { 0x0233, 0x0079, NOTA_MACRON },   /* ȳ */
     { 0x0386, 0x0391, NOTA_ACUTUS },   /* Ά */
@@ -1850,8 +1863,9 @@ compositam_quaerere (
 /* ordines VIII x VI ('#' plenum) cum terminatore */
 nomen character Ordines[VIII][VII];
 
-/* basis: pictura nostra (Graeca), aliter fons ipse (Latina; Graeca
- * Latinis similes per litteras Latinas); FALSUM si ignota */
+/* basis: pictura nostra (Graeca), aliter fons ipse (Latina, et
+ * Latin-1 ut æ; Graeca Latinis similes per litteras Latinas); FALSUM
+ * si ignota */
 interior b32
 basim_implere (
         s32 basis,
@@ -1883,7 +1897,8 @@ basim_implere (
         casus 0x03BF: c = 'o'; frange;
         ordinarius:   c = basis; frange;
     }
-    si (c < 0x20 || c > 0x7E)
+    /* fons VI x VIII ordine Latin-1: ASCII et U+00A0-00FF (æ: ǽ) */
+    si (c < 0x20 || (c > 0x7E && c < 0xA0) || c > 0xFF)
     {
         redde FALSUM;
     }

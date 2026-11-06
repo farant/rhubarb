@@ -226,17 +226,9 @@ _plagulam_demittere (
         silva_piscina_destruere(piscina_arboris);
         redde NIHIL;
     }
-    sem = silva_c89_semantica_analysare_cum_systemate(
-        piscina_arboris, parsura, mundus->systema_parsura);
-    si (sem != NIHIL && oraculum != NIHIL)
-    {
-        (vacuum)silva_c89_semantica_oraculum_augere(sem, oraculum);
-        silva_oraculum_responsa_vacare(oraculum);
-        (vacuum)silva_recanonicare(parsura->commissio, oraculum,
-            silva_c89_resolutor, NIHIL);
-        sem = silva_c89_semantica_analysare_cum_systemate(
-            piscina_arboris, parsura, mundus->systema_parsura);
-    }
+    sem = silva_c89_semantica_analysare_clausa(piscina_arboris,
+        parsura, mundus->systema_parsura, oraculum,
+        SILVA_CLAUSURA_ORDINARIA, NIHIL);
     si (sem == NIHIL)
     {
         silva_piscina_destruere(piscina_arboris);

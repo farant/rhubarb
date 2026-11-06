@@ -24,9 +24,11 @@ structura Specula {
     character* parens;
 };
 
-/* notae plagulae: quidquid contentum aut viam mutat */
+/* notae plagulae: quidquid contentum aut viam mutat; NOTE_ATTRIB pro
+ * truncatione ad nihil (fopen "w" sine scriptura: nec WRITE nec
+ * EXTEND - gabc pars II P6, plagula vacua in antiphonali) */
 #define NOTAE_PLAGULAE                                              \
-    (NOTE_WRITE | NOTE_EXTEND | NOTE_DELETE | NOTE_RENAME)
+    (NOTE_WRITE | NOTE_EXTEND | NOTE_ATTRIB | NOTE_DELETE | NOTE_RENAME)
 
 interior b32
 notare (

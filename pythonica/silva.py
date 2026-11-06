@@ -1657,6 +1657,10 @@ PORTAE = {
     # instrumentum bin/auditio, sonus non probatur
     'auditio-fumus': (['./tools/auditio_fumus.sh'],
                       r'fumus auditio: (omnia sana|\d+ FRACTA)'),
+    # instrumentum neumae (plan gabc-2 P4): cantus gabc in PNG sine
+    # fenestra - exitus, latitudo, scala, vitium, corpus
+    'neumae-fumus': (['./tools/neumae_fumus.sh'],
+                     r'fumus neumae: (omnia sana|\d+ FRACTA)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],
                       r'aequivalentia: (sana|FRACTA)'),

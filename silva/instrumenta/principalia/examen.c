@@ -2,8 +2,9 @@
  *
  * Recipe percursus FIDELE: contextus + capita repositorii praebita
  * (inclusio vera) + lexicon systematis (canalis macrorum) + oraculum
- * praeseminatum + BIS-ANALYSIS post recanonicare (sem2
- * auctoritativum - typatio relativa canonicae).
+ * praeseminatum + clausura (silva_c89_semantica_analysare_clausa:
+ * analysis post ultimum recanonicare auctoritativa - typatio
+ * relativa canonicae).
  *
  * Usus:  examen <plagula.c> [-posix|-nudum] [-machina] [-v]
  * Exitus: 0 ACCIPE | 1 REICE | 2 INFRA | 3 RECUSO (fines tactae)
@@ -520,20 +521,11 @@ principale (
             piscina_destruere(piscina);
             redde III;
         }
-        sem = silva_c89_semantica_analysare_cum_systemate(piscina,
-            parsura, systema_parsura);
-        si (sem != NIHIL && oraculum != NIHIL)
-        {
-            /* clausura: symbola plagulae in oraculum ->
-             * recanonicare -> analysis auctoritativa */
-            (vacuum)silva_c89_semantica_oraculum_augere(sem,
-                oraculum);
-            silva_oraculum_responsa_vacare(oraculum);
-            (vacuum)silva_recanonicare(parsura->commissio, oraculum,
-                silva_c89_resolutor, NIHIL);
-            sem = silva_c89_semantica_analysare_cum_systemate(
-                piscina, parsura, systema_parsura);
-        }
+        /* clausura: symbola plagulae in oraculum -> recanonicare
+         * -> analysis secunda solum si aliquid versum */
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            systema_parsura, oraculum, SILVA_CLAUSURA_ORDINARIA,
+            NIHIL);
         si (sem == NIHIL)
         {
             fprintf(stderr, "examen: semantica fracta: %s\n", via);

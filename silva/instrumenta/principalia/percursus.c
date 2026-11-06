@@ -30,6 +30,7 @@
 #include "silva_c89_semantica.h"
 #include "silva_lexicon.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <dirent.h>   /* instrumentum solum - macOS/POSIX */
@@ -111,6 +112,29 @@ hic_manens i32 mensura_posix = ZEPHYRUM;
 hic_manens i32 plagulae_infra = ZEPHYRUM;
 hic_manens i32 summa_versorum = ZEPHYRUM;
 hic_manens i32 summa_indecisorum = ZEPHYRUM;
+/* -bis-probare N: plagulae quarum signum viae % N == 0 clausuram
+ * PROBANTEM currunt (analysis secunda semper + collatio ubi nihil
+ * versum). Porta examen-corpus N = VIII (pars fixa corporis). */
+hic_manens i32 bis_probare = ZEPHYRUM;
+hic_manens i32 bis_collationes = ZEPHYRUM;
+hic_manens i32 bis_discrepantiae = ZEPHYRUM;
+
+/* Pars fixa: signum FNV viae (non tempus, non ordo) - eadem
+ * plagulae omni cursu, ergo porta determinata */
+hic_manens b32
+_bis_eligenda (
+    constans character* via,
+                   i32  pars)
+{
+    i32 h = (i32)2166136261UL;
+
+    dum (*via != '\0')
+    {
+        h = (h ^ (i32)(insignatus character)*via) * (i32)16777619UL;
+        via++;
+    }
+    redde (h % pars == ZEPHYRUM) ? VERUM : FALSUM;
+}
 
 hic_manens b32
 _praetermittendum (
@@ -792,44 +816,53 @@ _plagulam_percurrere (
         }
         si (cum_semantica)
         {
-            /* BIS-ANALYSIS (M0b D, INTENTIO DECISUS 2): typatio
-             * RELATIVA CANONICAE est. sem1 = pabulum clausurae
-             * (annotationes eius abiciuntur); post recanonicare
-             * sem2 AUCTORITATIVA contra canonicas versas - eius
-             * numeri referuntur, eius tabula quaeritur. */
-            SilvaSemantica* sem =
-                silva_c89_semantica_analysare_cum_systemate(
-                    piscina, parsura, praep->parsura);
+            /* CLAUSURA (M0b DECISUS 2, emendatum 2026-11-04):
+             * analysis prima -> oraculum auctum symbolis plagulae
+             * (localibus!) -> recanonicare -> secunda solum si
+             * aliquid versum (silva_c89_semantica_analysare_clausa).
+             * Residuum (indecisa) post clausuram numeratur. */
+            SilvaClausuraFructus  clausura;
+                             s32  modus = SILVA_CLAUSURA_ORDINARIA;
+                  SilvaSemantica* sem;
 
-            si (sem != NIHIL)
+            si (   bis_probare > ZEPHYRUM
+                && _bis_eligenda(via, bis_probare))
             {
-                /* clausura: oraculum auctum symbolis plagulae
-                 * (localibus!) -> recanonicare + residuum */
-                si (oraculum_clausurae != NIHIL)
-                {
-                    i32 versae;
-                    i32 indecisa;
+                modus = SILVA_CLAUSURA_PROBANS;
+            }
+            sem = silva_c89_semantica_analysare_clausa(piscina,
+                parsura, praep->parsura, oraculum_clausurae, modus,
+                &clausura);
+            si (clausura.clausa)
+            {
+                i32 indecisa = (i32)
+                    silva_c89_ambigua_indecisa_numerare(
+                        parsura->commissio, oraculum_clausurae);
 
-                    (vacuum)silva_c89_semantica_oraculum_augere(
-                        sem, oraculum_clausurae);
-                    silva_oraculum_responsa_vacare(
-                        oraculum_clausurae);
-                    versae = (i32)silva_recanonicare(
-                        parsura->commissio, oraculum_clausurae,
-                        silva_c89_resolutor, NIHIL);
-                    indecisa = (i32)
-                        silva_c89_ambigua_indecisa_numerare(
-                            parsura->commissio, oraculum_clausurae);
-                    summa_versorum     += versae;
-                    summa_indecisorum  += indecisa;
-                    si (indecisa > ZEPHYRUM)
+                summa_versorum     += clausura.versae;
+                summa_indecisorum  += indecisa;
+                si (indecisa > ZEPHYRUM)
+                {
+                    imprimere("[indecisa %d] %s\n",
+                        (int)indecisa, via);
+                }
+                si (   modus           == SILVA_CLAUSURA_PROBANS
+                    && clausura.versae == ZEPHYRUM)
+                {
+                    bis_collationes++;
+                    si (clausura.discrepantiae != ZEPHYRUM)
                     {
-                        imprimere("[indecisa %d] %s\n",
-                            (int)indecisa, via);
+                        bis_discrepantiae++;
+                        imprimere("[bis discrepat] %s (nodi %d,"
+                            " symbola %d, diagnostica %d)\n", via,
+                            (clausura.discrepantiae
+                                & SILVA_DISCREPANTIA_NODI) ? 1 : 0,
+                            (clausura.discrepantiae
+                                & SILVA_DISCREPANTIA_SYMBOLA) ? 1 : 0,
+                            (clausura.discrepantiae
+                                & SILVA_DISCREPANTIA_DIAGNOSTICA)
+                                ? 1 : 0);
                     }
-                    /* analysi secunda contra arborem versam */
-                    sem = silva_c89_semantica_analysare_cum_systemate(
-                        piscina, parsura, praep->parsura);
                 }
             }
             si (sem != NIHIL)
@@ -1096,6 +1129,17 @@ principale (
         {
             cum_semantica = VERUM;
         }
+        alioquin si (   strcmp(argv[k], "-bis-probare") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            k++;
+            bis_probare = (i32)atoi(argv[k]);
+            si (bis_probare < I)
+            {
+                fprintf(stderr, "percursus: -bis-probare N (N >= 1)\n");
+                redde I;
+            }
+        }
         alioquin
         {
             radix = argv[k];
@@ -1258,6 +1302,13 @@ principale (
             (int)lineae_delendae);
         imprimere("clausura:  %d versae; %d indecisa (residuum)\n",
             (int)summa_versorum, (int)summa_indecisorum);
+        si (bis_probare > ZEPHYRUM)
+        {
+            /* silentium non est successus: collationes numerantur */
+            imprimere("bis-probare: %d collationes (pars 1/%d);"
+                " %d discrepantiae\n", (int)bis_collationes,
+                (int)bis_probare, (int)bis_discrepantiae);
+        }
         si (summa_expr_visorum > ZEPHYRUM)
         {
             imprimere("coopertura: %d/%d nodi expressionum typati"

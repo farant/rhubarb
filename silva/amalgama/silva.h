@@ -1996,6 +1996,37 @@ silva_c89_ambigua_indecisa_numerare (
     const SilvaCommissio* commissio,
      const SilvaOraculum* oraculum);
 
+/* Clausura (M0b DECISUS 2, emendatum 2026-11-04): analysis prima ->
+ * symbola in oraculum -> recanonicare -> secunda SOLUM si aliquid
+ * versum (analysis pura: prima EST analysis post ultimum
+ * recanonicare). PROBANS: secunda semper, signa collata ubi nihil
+ * versum (discrepantiae != 0 = analysis non pura). oraculum NULL =
+ * analysis una; fructus NULL licet. Formulam ne transcribas. */
+typedef enum {
+    SILVA_CLAUSURA_ORDINARIA = 0,
+    SILVA_CLAUSURA_PROBANS
+} SilvaClausuraModus;
+
+#define SILVA_DISCREPANTIA_NODI         1
+#define SILVA_DISCREPANTIA_SYMBOLA      2
+#define SILVA_DISCREPANTIA_DIAGNOSTICA  4
+
+typedef struct {
+    unsigned int versae;          /* lectiones canonicae versae */
+    int          clausa;          /* clausura acta */
+    int          secunda;         /* analysis secunda acta */
+    unsigned int discrepantiae;   /* SILVA_DISCREPANTIA_* */
+} SilvaClausuraFructus;
+
+SilvaSemantica*
+silva_c89_semantica_analysare_clausa (
+            SilvaPiscina* piscina,
+      const SilvaParsura* parsura,
+      const SilvaParsura* systema,
+           SilvaOraculum* oraculum,
+                      int modus,
+    SilvaClausuraFructus* fructus);
+
 /* Quaestio symboli (a scopo fili post analysem) */
 SemanticaSymbolum*
 silva_c89_symbolum_invenire (

@@ -134,6 +134,221 @@ _est_sectio (
  * Tabula variabilium + emissio
  * ================================================== */
 
+
+/* ==================================================
+ * Indices ordinum (budget fusionis, ambulatio principalis I)
+ *
+ * Quaestio ordinis per identitatem olim linearis: corpore toto
+ * LXXXVIII M passus (datorum ~X medius, intervalla semanticae
+ * ~XXV). Post FLUXUS_INDEX_LIMEN variabiles tabula dispersa; clavis
+ * = octeti monstratoris identitatis (+ octeti tituli membri), in
+ * buffer vocatoris composita (quaestio nihil allocat). Insertio
+ * solum si absens: ordo PRIMUS servatur - fructus idem ac quaestio
+ * linearis. Functiones parvae (medius VII variabiles) lineares
+ * manent, ubi friatio carior esset.
+ * ================================================== */
+
+#define FLUXUS_INDEX_LIMEN    XVI
+#define FLUXUS_CLAVIS_MAXIMA  CCLVI
+
+/* clavem in buffer componere; FALSUM si titulus non capit */
+interior b32
+_clavem_componere (
+     constans vacuum* identitas,
+              chorda  titulus,
+           character* buffer,
+              chorda* clavis)
+{
+    memoriae_index n = magnitudo(constans vacuum*);
+
+    si ((memoriae_index)titulus.mensura > FLUXUS_CLAVIS_MAXIMA - n)
+    {
+        redde FALSUM;
+    }
+    memcpy(buffer, &identitas, n);
+    si (titulus.mensura > ZEPHYRUM)
+    {
+        memcpy(buffer + n, titulus.datum,
+            (memoriae_index)titulus.mensura);
+    }
+    clavis->datum    = (i8*)buffer;
+    clavis->mensura  = (i32)(n + (memoriae_index)titulus.mensura);
+    redde VERUM;
+}
+
+interior b32
+_membri_tituli_pares (
+    chorda a,
+    chorda b);
+
+s32
+silva_c89_fluxus_datorum_variabilis (
+    constans FluxusDatorum* datorum,
+           constans vacuum* identitas)
+{
+    i32 i;
+    i32 m;
+
+    si (datorum == NIHIL)
+    {
+        redde -I;
+    }
+    si (datorum->index_variabilium != NIHIL)
+    {
+        character  buffer[FLUXUS_CLAVIS_MAXIMA];
+           chorda  clavis;
+           chorda  vacuus;
+           vacuum* valor = NIHIL;
+
+        vacuus.mensura  = ZEPHYRUM;
+        vacuus.datum    = NIHIL;
+        (vacuum)_clavem_componere(identitas, vacuus, buffer, &clavis);
+        si (tabula_dispersa_invenire(datorum->index_variabilium, clavis,
+                &valor))
+        {
+            redde (s32)(memoriae_index)valor;
+        }
+        redde -I;
+    }
+    m = xar_numerus(datorum->variabiles);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusVariabilis* v = (constans FluxusVariabilis*)
+            xar_obtinere(datorum->variabiles, i);
+
+        si (v->identitas == identitas && !v->membrum_est)
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+s32
+silva_c89_fluxus_datorum_membrum (
+    constans FluxusDatorum* datorum,
+           constans vacuum* identitas,
+                    chorda  titulus_membri)
+{
+    character buffer[FLUXUS_CLAVIS_MAXIMA];
+       chorda clavis;
+          i32 i;
+          i32 m;
+
+    si (datorum == NIHIL)
+    {
+        redde -I;
+    }
+    si (   datorum->index_membrorum != NIHIL
+        && _clavem_componere(identitas, titulus_membri, buffer,
+               &clavis))
+    {
+        vacuum* valor = NIHIL;
+
+        si (tabula_dispersa_invenire(datorum->index_membrorum, clavis,
+                &valor))
+        {
+            redde (s32)(memoriae_index)valor;
+        }
+        redde -I;
+    }
+    m = xar_numerus(datorum->variabiles);
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        constans FluxusVariabilis* v = (constans FluxusVariabilis*)
+            xar_obtinere(datorum->variabiles, i);
+
+        si (   v->membrum_est && v->identitas == identitas
+            && _membri_tituli_pares(v->titulus_membri, titulus_membri))
+        {
+            redde (s32)i;
+        }
+    }
+    redde -I;
+}
+
+/* ordinem unum in indicem (si absens - ordo primus vincit); clavis
+ * in piscina servatur. Titulus longior quam buffer: non indicatur,
+ * et quaestio eius linearis manet (compositio fracta) */
+interior vacuum
+_ordinem_indicare (
+                 Piscina* piscina,
+           FluxusDatorum* datorum,
+                     i32  index)
+{
+    constans FluxusVariabilis* v = (constans FluxusVariabilis*)
+        xar_obtinere(datorum->variabiles, index);
+               TabulaDispersa* tabula;
+                    character  buffer[FLUXUS_CLAVIS_MAXIMA];
+                       chorda  clavis;
+                       chorda  titulus;
+                           i8* servata;
+
+    titulus.mensura  = ZEPHYRUM;
+    titulus.datum    = NIHIL;
+    si (v->membrum_est)
+    {
+        titulus  = v->titulus_membri;
+        tabula   = datorum->index_membrorum;
+    }
+    alioquin
+    {
+        tabula   = datorum->index_variabilium;
+    }
+    si (   tabula == NIHIL
+        || !_clavem_componere(v->identitas, titulus, buffer, &clavis)
+        || tabula_dispersa_continet(tabula, clavis))
+    {
+        redde;
+    }
+    servata = (i8*)piscina_allocare(piscina,
+        (i32)clavis.mensura);
+    si (servata == NIHIL)
+    {
+        redde;
+    }
+    memcpy(servata, clavis.datum, (memoriae_index)clavis.mensura);
+    clavis.datum = servata;
+    (vacuum)tabula_dispersa_inserere(tabula, clavis,
+        (vacuum*)(memoriae_index)index);
+}
+
+/* post additionem ordinis 'index': indicem continuare, aut ad limen
+ * aedificare ex omnibus ordinibus (ordine) */
+interior vacuum
+_indicem_renovare (
+    FluxusExtractor* ex,
+                i32  index)
+{
+     FluxusDatorum* datorum = ex->datorum;
+               i32  i;
+
+    si (datorum->index_variabilium != NIHIL)
+    {
+        _ordinem_indicare(ex->piscina, datorum, index);
+        redde;
+    }
+    si (xar_numerus(datorum->variabiles) < FLUXUS_INDEX_LIMEN)
+    {
+        redde;
+    }
+    datorum->index_variabilium = tabula_dispersa_creare_chorda(
+        ex->piscina, LXIV);
+    datorum->index_membrorum = tabula_dispersa_creare_chorda(
+        ex->piscina, LXIV);
+    si (   datorum->index_variabilium == NIHIL
+        || datorum->index_membrorum   == NIHIL)
+    {
+        datorum->index_variabilium  = NIHIL;
+        datorum->index_membrorum    = NIHIL;
+        redde;
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(datorum->variabiles); i++)
+    {
+        _ordinem_indicare(ex->piscina, datorum, i);
+    }
+}
+
 /* Index densus: invenire aut addere per identitatem. Ordines
  * membrorum praetermissi (identitas basis consulto communis -
  * titulus_membri eos discriminat, inquisitio basium hic). */
@@ -142,19 +357,16 @@ _variabilis_index (
                  FluxusExtractor* ex,
     constans FluxusSymbolumFacta* facta)
 {
-                 i32  i;
-                 i32  m = xar_numerus(ex->datorum->variabiles);
-    FluxusVariabilis* v;
+                  s32 inventus = silva_c89_fluxus_datorum_variabilis(
+                      ex->datorum, facta->identitas);
+                  i32  m;
+     FluxusVariabilis* v;
 
-    per (i = ZEPHYRUM; i < m; i++)
+    si (inventus >= ZEPHYRUM)
     {
-        v = (FluxusVariabilis*)xar_obtinere(ex->datorum->variabiles,
-            i);
-        si (v->identitas == facta->identitas && !v->membrum_est)
-        {
-            redde (s32)i;
-        }
+        redde inventus;
     }
+    m = xar_numerus(ex->datorum->variabiles);
     v = (FluxusVariabilis*)xar_addere(ex->datorum->variabiles);
     v->identitas = facta->identitas;
     v->titulus = facta->titulus;
@@ -165,6 +377,7 @@ _variabilis_index (
     v->basis = -I;
     v->titulus_membri.mensura = ZEPHYRUM;
     v->titulus_membri.datum = NIHIL;
+    _indicem_renovare(ex, m);
     redde (s32)m;
 }
 
@@ -191,22 +404,18 @@ _variabilis_membri_index (
     constans FluxusSymbolumFacta* facta_basis,
                           chorda  titulus_membri)
 {
-                 s32  index_basis = _variabilis_index(ex, facta_basis);
-                 i32  i;
-                 i32  m = xar_numerus(ex->datorum->variabiles);
+                 s32 index_basis = _variabilis_index(ex, facta_basis);
+                 s32 inventus = silva_c89_fluxus_datorum_membrum(
+                     ex->datorum, facta_basis->identitas,
+                     titulus_membri);
+                 i32  m;
     FluxusVariabilis* v;
 
-    per (i = ZEPHYRUM; i < m; i++)
+    si (inventus >= ZEPHYRUM)
     {
-        v = (FluxusVariabilis*)xar_obtinere(ex->datorum->variabiles,
-            i);
-        si (   v->membrum_est
-            && v->identitas == facta_basis->identitas
-            && _membri_tituli_pares(v->titulus_membri, titulus_membri))
-        {
-            redde (s32)i;
-        }
+        redde inventus;
     }
+    m = xar_numerus(ex->datorum->variabiles);
     v = (FluxusVariabilis*)xar_addere(ex->datorum->variabiles);
     v->identitas = facta_basis->identitas;
     v->titulus = facta_basis->titulus;
@@ -216,6 +425,7 @@ _variabilis_membri_index (
     v->membrum_est = VERUM;
     v->basis = index_basis;
     v->titulus_membri = titulus_membri;
+    _indicem_renovare(ex, m);
     redde (s32)m;
 }
 
@@ -1162,12 +1372,199 @@ _punctum_fixum (
 
 
 /* ==================================================
+ * Reticulum trium graduum bitis duobus (budget fusionis, ambulatio
+ * principalis III-IV)
+ *
+ * Catena IMUM < MEDIUM < SUMMUM per variabilem bitis duobus:
+ * ATTACTA (MEDIUM aut SUMMUM) et SUMMA - IMUM (0,0), MEDIUM (1,0),
+ * SUMMUM (1,1). Iunctio = OR utriusque: IMUM identitas, aequales
+ * manent, MEDIUM cum SUMMO SUMMUM - eadem ac iunctiones formarum et
+ * stirpium in valoribus tribus quos ordines non tracti videre
+ * possunt. Bita extra 'valida' (ultra n_var, ordines tracti)
+ * semper 0, ergo bitum mutatur <=> cellula mutatur: index operis
+ * eundem ordinem servat ac tabula plena.
+ * ================================================== */
+
+nomen enumeratio {
+    GRADUS_IMUM = 0,
+    GRADUS_MEDIUM,
+    GRADUS_SUMMUM
+} GradusTrium;
+
+nomen structura {
+    i64* attacta_introitus;
+    i64* summa_introitus;
+    i64* attacta_exitus;
+    i64* summa_exitus;
+} BitaGraduum;
+
+interior vacuum
+_gradum_bitis_ponere (
+    i64* attacta,
+    i64* summa,
+    s32  v,
+    s32  gradus)
+{
+    i32 w      = (i32)(v / (s32)LXIV);
+    i64 bitum  = (i64)I << (i32)(v % (s32)LXIV);
+
+    si (gradus == (s32)GRADUS_IMUM)
+    {
+        attacta[w]  &= ~bitum;
+        summa[w]    &= ~bitum;
+    }
+    alioquin si (gradus == (s32)GRADUS_MEDIUM)
+    {
+        attacta[w]  |= bitum;
+        summa[w]    &= ~bitum;
+    }
+    alioquin
+    {
+        attacta[w]  |= bitum;
+        summa[w]    |= bitum;
+    }
+}
+
+interior s32
+_gradum_ex_bitis (
+     constans i64* attacta,
+     constans i64* summa,
+              i32  v)
+{
+    i64 bitum = (i64)I << (v % (i32)LXIV);
+
+    si ((summa[v / (i32)LXIV] & bitum) != ZEPHYRUM)
+    {
+        redde (s32)GRADUS_SUMMUM;
+    }
+    si ((attacta[v / (i32)LXIV] & bitum) != ZEPHYRUM)
+    {
+        redde (s32)GRADUS_MEDIUM;
+    }
+    redde (s32)GRADUS_IMUM;
+}
+
+/* bita ordinum 0..n_var-1 posita, cetera 0 */
+interior i64*
+_verba_valida_parare (
+     Piscina* piscina,
+         i32  n_var,
+         i32  n_verba)
+{
+    i64* valida = (i64*)piscina_allocare(piscina,
+        (memoriae_index)n_verba * magnitudo(i64));
+    s32 v;
+
+    _verba_implere(valida, n_verba, ZEPHYRUM);
+    per (v = ZEPHYRUM; v < (s32)n_var; v++)
+    {
+        _bitum_ponere(valida, v);
+    }
+    redde valida;
+}
+
+interior BitaGraduum*
+_bita_graduum_parare (
+     Piscina* piscina,
+         i32  numerus_blocorum,
+         i32  n_verba)
+{
+    BitaGraduum* bita = (BitaGraduum*)piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(BitaGraduum));
+    i32 b;
+
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        BitaGraduum* g = &bita[b];
+
+        g->attacta_introitus = (i64*)piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        g->summa_introitus = (i64*)piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        g->attacta_exitus = (i64*)piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        g->summa_exitus = (i64*)piscina_allocare(piscina,
+            (memoriae_index)n_verba * magnitudo(i64));
+        _verba_implere(g->attacta_introitus, n_verba, ZEPHYRUM);
+        _verba_implere(g->summa_introitus, n_verba, ZEPHYRUM);
+        _verba_implere(g->attacta_exitus, n_verba, ZEPHYRUM);
+        _verba_implere(g->summa_exitus, n_verba, ZEPHYRUM);
+    }
+    redde bita;
+}
+
+/* exitus = introitus (initium replay) */
+interior vacuum
+_bita_graduum_exitum_initiare (
+    BitaGraduum* g,
+            i32  n_verba)
+{
+    memcpy(g->attacta_exitus, g->attacta_introitus,
+        (memoriae_index)n_verba * magnitudo(i64));
+    memcpy(g->summa_exitus, g->summa_introitus,
+        (memoriae_index)n_verba * magnitudo(i64));
+}
+
+/* def-omnia: ordines validi omnes SUMMUM in exitu */
+interior vacuum
+_bita_graduum_summa (
+     BitaGraduum* g,
+    constans i64* valida,
+             i32  n_verba)
+{
+    i32 w;
+
+    per (w = ZEPHYRUM; w < n_verba; w++)
+    {
+        g->attacta_exitus[w]  = valida[w];
+        g->summa_exitus[w]    = valida[w];
+    }
+}
+
+/* introitus destinationis |= exitus fontis; VERUM si mutatum */
+interior b32
+_bita_graduum_iungere (
+              BitaGraduum* destinatio,
+     constans BitaGraduum* fons,
+                      i32  n_verba)
+{
+    b32 mutatum = FALSUM;
+    i32 w;
+
+    per (w = ZEPHYRUM; w < n_verba; w++)
+    {
+        i64 attacta = destinatio->attacta_introitus[w]
+            | fons->attacta_exitus[w];
+        i64 summa = destinatio->summa_introitus[w]
+            | fons->summa_exitus[w];
+
+        si (   attacta != destinatio->attacta_introitus[w]
+            || summa   != destinatio->summa_introitus[w])
+        {
+            destinatio->attacta_introitus[w]  = attacta;
+            destinatio->summa_introitus[w]    = summa;
+            mutatum                           = VERUM;
+        }
+    }
+    redde mutatum;
+}
+
+
+/* ==================================================
  * Punctum fixum formarum (fluxus formae)
  *
  * Ad exemplar chunk B (impulsus-successorum, index operis idem),
  * sed iunctio reticuli non bitalis: IGNOTA identitas, aequales
  * manent, dissentientes MIXTA. Effugium NON hic tractatur -
  * variabilis.effugit ad tempus quaestionis consulitur (perpetuum).
+ *
+ * Ordines tracti (budget fusionis, ambulatio principalis IV): soli
+ * ordines quibus definitio SUBTRACTIO ulla est (corpore I%
+ * ordinum; XCVI% aedificationum nullum habent) cellulas plenas in
+ * ordine compacto per blocum tenent. Ceteri IGNOTA, ALIA, MIXTA
+ * solum videre possunt (definitiones eorum ALIA, MIXTA per
+ * def-omnia aut iunctionem) - reticulum trium graduum supra.
+ * Tabulae s32 post finem expanduntur: status idem ac tabula plena.
  * ================================================== */
 
 interior s32
@@ -1186,25 +1583,63 @@ _formam_iungere (
     redde (s32)FLUXUS_FORMA_MIXTA;
 }
 
-/* Exitus = introitus + definitiones (replay ordine eventorum) */
+/* forma ordinis non tracti -> gradus (SUBTRACTIO numquam venit) */
+interior s32
+_gradus_formae (
+    s32 forma)
+{
+    si (forma == (s32)FLUXUS_FORMA_IGNOTA)
+    {
+        redde (s32)GRADUS_IMUM;
+    }
+    si (forma == (s32)FLUXUS_FORMA_ALIA)
+    {
+        redde (s32)GRADUS_MEDIUM;
+    }
+    redde (s32)GRADUS_SUMMUM;
+}
+
+interior s32
+_forma_gradus (
+    s32 gradus)
+{
+    si (gradus == (s32)GRADUS_IMUM)
+    {
+        redde (s32)FLUXUS_FORMA_IGNOTA;
+    }
+    si (gradus == (s32)GRADUS_MEDIUM)
+    {
+        redde (s32)FLUXUS_FORMA_ALIA;
+    }
+    redde (s32)FLUXUS_FORMA_MIXTA;
+}
+
+/* Exitus = introitus + definitiones (replay ordine eventorum):
+ * tracti in cellulis compactis, ceteri in bitis */
 interior vacuum
 _formae_exitum_computare (
-          FluxusDatorum* datorum,
-    FluxusDatorumBlocus* b)
+    constans FluxusDatorumBlocus* b,
+                     BitaGraduum* bita,
+                    constans s32* tractae_introitus,
+                             s32* tractae_exitus,
+                    constans s32* ordo,
+                    constans i64* valida,
+                             i32  n_tracti,
+                             i32  n_verba)
 {
-    i32 n_var = xar_numerus(datorum->variabiles);
-    i32 v;
     i32 e;
+    i32 t;
     i32 m = xar_numerus(b->eventa);
 
-    per (v = ZEPHYRUM; v < n_var; v++)
+    per (t = ZEPHYRUM; t < n_tracti; t++)
     {
-        b->formae_exitus[v] = b->formae_introitus[v];
+        tractae_exitus[t] = tractae_introitus[t];
     }
+    _bita_graduum_exitum_initiare(bita, n_verba);
     per (e = ZEPHYRUM; e < m; e++)
     {
-        FluxusEventum* ev = (FluxusEventum*)xar_obtinere(b->eventa,
-            e);
+        constans FluxusEventum* ev = (constans FluxusEventum*)
+            xar_obtinere(b->eventa, e);
 
         si (ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO)
         {
@@ -1213,14 +1648,21 @@ _formae_exitum_computare (
         si (ev->variabilis < ZEPHYRUM)
         {
             /* def-omnia (folium opacum): omnes MIXTA */
-            per (v = ZEPHYRUM; v < n_var; v++)
+            per (t = ZEPHYRUM; t < n_tracti; t++)
             {
-                b->formae_exitus[v] = (s32)FLUXUS_FORMA_MIXTA;
+                tractae_exitus[t] = (s32)FLUXUS_FORMA_MIXTA;
             }
+            _bita_graduum_summa(bita, valida, n_verba);
+        }
+        alioquin si (ordo[ev->variabilis] >= ZEPHYRUM)
+        {
+            tractae_exitus[ordo[ev->variabilis]] = ev->forma;
         }
         alioquin
         {
-            b->formae_exitus[ev->variabilis] = ev->forma;
+            _gradum_bitis_ponere(bita->attacta_exitus,
+                bita->summa_exitus, ev->variabilis,
+                _gradus_formae(ev->forma));
         }
     }
 }
@@ -1232,43 +1674,109 @@ _punctum_fixum_formarum (
 {
     i32  n_var             = xar_numerus(datorum->variabiles);
     i32  n_loci            = (n_var > ZEPHYRUM) ? n_var : I;
+    i32  n_verba           = (n_var + (i32)LXIV - I) / (i32)LXIV;
     i32  numerus_blocorum  = xar_numerus(datorum->bloci);
+    i32  n_tracti          = ZEPHYRUM;
+    i32  capax;
     i32  b;
     i32  v;
     b32* in_indice;
     Xar* index_operis;
     i32  lector = ZEPHYRUM;
+    s32* ordo;
+    s32* tractae_introitus;
+    s32* tractae_exitus;
+    i64* valida;
 
+    BitaGraduum* bita;
+
+    si (n_verba == ZEPHYRUM)
+    {
+        n_verba = I;
+    }
+
+    /* ordines tracti: definitio SUBTRACTIO (aut forma extra tres
+     * gradus) ulla */
+    ordo = (s32*)piscina_allocare(piscina,
+        (memoriae_index)n_loci * magnitudo(s32));
+    per (v = ZEPHYRUM; v < n_loci; v++)
+    {
+        ordo[v] = -I;
+    }
     per (b = ZEPHYRUM; b < numerus_blocorum; b++)
     {
-        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
-            datorum->bloci, b);
+        constans FluxusDatorumBlocus* db =
+            (constans FluxusDatorumBlocus*)xar_obtinere(
+                datorum->bloci, b);
+        i32 e;
+        i32 m = xar_numerus(db->eventa);
 
-        db->formae_introitus = (s32*)piscina_allocare(piscina,
-            (memoriae_index)n_loci * magnitudo(s32));
-        db->formae_exitus = (s32*)piscina_allocare(piscina,
-            (memoriae_index)n_loci * magnitudo(s32));
-        per (v = ZEPHYRUM; v < n_loci; v++)
+        per (e = ZEPHYRUM; e < m; e++)
         {
-            db->formae_introitus[v]  = (s32)FLUXUS_FORMA_IGNOTA;
-            db->formae_exitus[v]     = (s32)FLUXUS_FORMA_IGNOTA;
+            constans FluxusEventum* ev = (constans FluxusEventum*)
+                xar_obtinere(db->eventa, e);
+
+            si (   ev->genus      == (s32)FLUXUS_EVENTUM_DEFINITIO
+                && ev->variabilis >= ZEPHYRUM
+                && ev->forma      != (s32)FLUXUS_FORMA_IGNOTA
+                && ev->forma      != (s32)FLUXUS_FORMA_ALIA
+                && ev->forma      != (s32)FLUXUS_FORMA_MIXTA
+                && ordo[ev->variabilis] < ZEPHYRUM)
+            {
+                ordo[ev->variabilis] = (s32)n_tracti;
+                n_tracti++;
+            }
         }
     }
+    capax = (n_tracti > ZEPHYRUM) ? n_tracti : I;
+
+    /* bita valida: ordines non tracti solum */
+    valida = _verba_valida_parare(piscina, n_var, n_verba);
+    per (v = ZEPHYRUM; v < n_var; v++)
+    {
+        si (ordo[v] >= ZEPHYRUM)
+        {
+            valida[v / (i32)LXIV] &= ~((i64)I << (v % (i32)LXIV));
+        }
+    }
+
+    tractae_introitus = (s32*)piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * (memoriae_index)capax
+        * magnitudo(s32));
+    tractae_exitus = (s32*)piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * (memoriae_index)capax
+        * magnitudo(s32));
+    per (v = ZEPHYRUM; v < numerus_blocorum * capax; v++)
+    {
+        tractae_introitus[v]  = (s32)FLUXUS_FORMA_IGNOTA;
+        tractae_exitus[v]     = (s32)FLUXUS_FORMA_IGNOTA;
+    }
+    bita = _bita_graduum_parare(piscina, numerus_blocorum, n_verba);
 
     /* introitus: parametra formam ALIA ferunt (definita, non
      * subtractione) */
     {
-        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
-            datorum->bloci, datorum->fluxus->introitus->index);
+        i32 introitus = datorum->fluxus->introitus->index;
 
         per (v = ZEPHYRUM; v < n_var; v++)
         {
             FluxusVariabilis* var = (FluxusVariabilis*)xar_obtinere(
                 datorum->variabiles, v);
 
-            si (var->parametrum)
+            si (!var->parametrum)
             {
-                db->formae_introitus[v] = (s32)FLUXUS_FORMA_ALIA;
+                perge;
+            }
+            si (ordo[v] >= ZEPHYRUM)
+            {
+                tractae_introitus[introitus * capax + (i32)ordo[v]] =
+                    (s32)FLUXUS_FORMA_ALIA;
+            }
+            alioquin
+            {
+                _gradum_bitis_ponere(bita[introitus].attacta_introitus,
+                    bita[introitus].summa_introitus, (s32)v,
+                    (s32)GRADUS_MEDIUM);
             }
         }
     }
@@ -1290,8 +1798,7 @@ _punctum_fixum_formarum (
     dum (lector < xar_numerus(index_operis))
     {
         i32 index_bloci = *(i32*)xar_obtinere(index_operis, lector);
-        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
-            datorum->bloci, index_bloci);
+
         constans FluxusBlocus* fb = (constans FluxusBlocus*)
             xar_obtinere(datorum->fluxus->bloci, index_bloci);
         i32 m;
@@ -1299,39 +1806,82 @@ _punctum_fixum_formarum (
 
         lector++;
         in_indice[index_bloci] = FALSUM;
-        _formae_exitum_computare(datorum, db);
+        _formae_exitum_computare(
+            (constans FluxusDatorumBlocus*)xar_obtinere(
+                datorum->bloci, index_bloci),
+            &bita[index_bloci],
+            &tractae_introitus[index_bloci * capax],
+            &tractae_exitus[index_bloci * capax], ordo, valida,
+            n_tracti, n_verba);
 
         m = xar_numerus(fb->margines);
         per (k = ZEPHYRUM; k < m; k++)
         {
             constans FluxusMargo* margo = (constans FluxusMargo*)
                 xar_obtinere(fb->margines, k);
-            FluxusDatorumBlocus* dd;
-                            b32  mutatum = FALSUM;
+            i32 d;
+            i32 t;
+            b32 mutatum;
 
             si (margo->destinatio == NIHIL)
             {
                 perge;
             }
-            dd = (FluxusDatorumBlocus*)xar_obtinere(datorum->bloci,
-                margo->destinatio->index);
-            per (v = ZEPHYRUM; v < n_var; v++)
+            d = margo->destinatio->index;
+            mutatum = _bita_graduum_iungere(&bita[d],
+                &bita[index_bloci], n_verba);
+            per (t = ZEPHYRUM; t < n_tracti; t++)
             {
-                s32 novum = _formam_iungere(dd->formae_introitus[v],
-                    db->formae_exitus[v]);
+                s32* locus = &tractae_introitus[d * capax + t];
+                s32  novum = _formam_iungere(*locus,
+                    tractae_exitus[index_bloci * capax + t]);
 
-                si (novum != dd->formae_introitus[v])
+                si (novum != *locus)
                 {
-                    dd->formae_introitus[v]  = novum;
-                    mutatum                  = VERUM;
+                    *locus   = novum;
+                    mutatum  = VERUM;
                 }
             }
-            si (mutatum && !in_indice[margo->destinatio->index])
+            si (mutatum && !in_indice[d])
             {
                 i32* locus = (i32*)xar_addere(index_operis);
 
-                *locus = margo->destinatio->index;
-                in_indice[margo->destinatio->index] = VERUM;
+                *locus        = d;
+                in_indice[d]  = VERUM;
+            }
+        }
+    }
+
+    /* expansio: tabulae s32 ut tabula plena eas relinqueret */
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            datorum->bloci, b);
+        BitaGraduum* g = &bita[b];
+
+        db->formae_introitus = (s32*)piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->formae_exitus = (s32*)piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->formae_introitus[ZEPHYRUM]  = (s32)FLUXUS_FORMA_IGNOTA;
+        db->formae_exitus[ZEPHYRUM]     = (s32)FLUXUS_FORMA_IGNOTA;
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            si (ordo[v] >= ZEPHYRUM)
+            {
+                db->formae_introitus[v] =
+                    tractae_introitus[b * capax + (i32)ordo[v]];
+                db->formae_exitus[v] =
+                    tractae_exitus[b * capax + (i32)ordo[v]];
+            }
+            alioquin
+            {
+                db->formae_introitus[v] = _forma_gradus(
+                    _gradum_ex_bitis(g->attacta_introitus,
+                        g->summa_introitus, v));
+                db->formae_exitus[v] = _forma_gradus(
+                    _gradum_ex_bitis(g->attacta_exitus,
+                        g->summa_exitus, v));
             }
         }
     }
@@ -1378,7 +1928,9 @@ interior vacuum
 _stirpes_exitum_computare (
                     FluxusDatorum* datorum,
               FluxusDatorumBlocus* b,
-    constans FluxusDatorumAuxilia* aux)
+    constans FluxusDatorumAuxilia* aux,
+                     constans s32* primus,
+                     constans s32* proximus)
 {
     i32 n_var = xar_numerus(datorum->variabiles);
     i32 v;
@@ -1411,19 +1963,15 @@ _stirpes_exitum_computare (
         {
             si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
             {
-                /* dele conservativum: ordines membrorum basis */
-                per (v = ZEPHYRUM; v < n_var; v++)
-                {
-                    constans FluxusVariabilis* vv =
-                        (constans FluxusVariabilis*)xar_obtinere(
-                            datorum->variabiles, v);
+                /* dele conservativum: ordines membrorum basis
+                 * (catena semel aedificata) */
+                s32 membrum;
 
-                    si (   vv        != NIHIL && vv->membrum_est
-                        && vv->basis == (s32)ev->variabilis)
-                    {
-                        b->stirpes_exitus[v] =
-                            (s32)FLUXUS_STIRPS_AMISSA;
-                    }
+                per (membrum = primus[ev->variabilis];
+                     membrum >= ZEPHYRUM; membrum = proximus[membrum])
+                {
+                    b->stirpes_exitus[membrum] =
+                        (s32)FLUXUS_STIRPS_AMISSA;
                 }
             }
             b->stirpes_exitus[ev->variabilis] =
@@ -1431,6 +1979,300 @@ _stirpes_exitum_computare (
                 ? aux->stirps_valoris_ambitu(aux->contextus,
                       ev->fons_valoris, datorum, b->stirpes_exitus)
                 : ev->stirps;
+        }
+    }
+}
+
+/* Membra per basim (budget fusionis, ambulatio principalis III):
+ * catena ordinum membrorum cuiusque basis semel per aedificationem
+ * - olim omnis DEFINITIO in omni visitatione tabulam totam
+ * scrutabatur (corpore LXV M passus). primus[basis] = membrum
+ * primum (-1 nullum), proximus[membrum] = sequens. Ordo catenae
+ * nihil refert: membra omnia AMISSA ponuntur. */
+interior vacuum
+_membra_basium_ligare (
+          Piscina*  piscina,
+    FluxusDatorum*  datorum,
+              s32** primus,
+              s32** proximus)
+{
+    i32 n_var   = xar_numerus(datorum->variabiles);
+    i32 n_loci  = (n_var > ZEPHYRUM) ? n_var : I;
+    s32 v;
+
+    *primus = (s32*)piscina_allocare(piscina,
+        (memoriae_index)n_loci * magnitudo(s32));
+    *proximus = (s32*)piscina_allocare(piscina,
+        (memoriae_index)n_loci * magnitudo(s32));
+    per (v = ZEPHYRUM; v < (s32)n_loci; v++)
+    {
+        (*primus)[v]    = -I;
+        (*proximus)[v]  = -I;
+    }
+    per (v = (s32)n_var - I; v >= ZEPHYRUM; v--)
+    {
+        constans FluxusVariabilis* vv = (constans FluxusVariabilis*)
+            xar_obtinere(datorum->variabiles, (i32)v);
+
+        si (   vv        != NIHIL && vv->membrum_est
+            && vv->basis >= ZEPHYRUM && vv->basis < (s32)n_var)
+        {
+            (*proximus)[v]        = (*primus)[vv->basis];
+            (*primus)[vv->basis]  = v;
+        }
+    }
+}
+
+
+/* ==================================================
+ * Via celeris stirpium (budget fusionis, ambulatio principalis III)
+ *
+ * Sine classificatore ambitu-conscio et sine stirpe PRIMA+n ullius
+ * definitionis reticulum ad tres valores cadit: IGNOTA, NEUTRA,
+ * AMISSA (corpore LXXXVI% functionum: parsurae sine typo signato,
+ * ubi semantica involucra NIHIL ponit) - reticulum trium graduum
+ * (IGNOTA = IMUM, NEUTRA = MEDIUM, AMISSA = SUMMUM) bitis duobus,
+ * eadem ac _stirpem_iungere in his tribus valoribus. Tabulae s32
+ * post finem expanduntur - status idem.
+ * ================================================== */
+
+/* VERUM si ambitu absens et nulla definitio stirpem extra
+ * {IGNOTA, NEUTRA, AMISSA} fert */
+interior b32
+_stirpes_celeres_licent (
+           constans FluxusDatorum* datorum,
+    constans FluxusDatorumAuxilia* aux)
+{
+    i32 numerus_blocorum = xar_numerus(datorum->bloci);
+    i32 b;
+
+    si (aux != NIHIL && aux->stirps_valoris_ambitu != NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        constans FluxusDatorumBlocus* db =
+            (constans FluxusDatorumBlocus*)xar_obtinere(
+                datorum->bloci, b);
+        i32 e;
+        i32 m = xar_numerus(db->eventa);
+
+        per (e = ZEPHYRUM; e < m; e++)
+        {
+            constans FluxusEventum* ev = (constans FluxusEventum*)
+                xar_obtinere(db->eventa, e);
+
+            si (   ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+                && ev->genus
+                    != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+            {
+                perge;
+            }
+            si (   ev->stirps < (s32)FLUXUS_STIRPS_IGNOTA
+                || ev->stirps > (s32)FLUXUS_STIRPS_AMISSA)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    redde VERUM;
+}
+
+interior s32
+_gradus_stirpis (
+    s32 stirps)
+{
+    si (stirps == (s32)FLUXUS_STIRPS_IGNOTA)
+    {
+        redde (s32)GRADUS_IMUM;
+    }
+    si (stirps == (s32)FLUXUS_STIRPS_NEUTRA)
+    {
+        redde (s32)GRADUS_MEDIUM;
+    }
+    redde (s32)GRADUS_SUMMUM;
+}
+
+interior s32
+_stirps_gradus (
+    s32 gradus)
+{
+    si (gradus == (s32)GRADUS_IMUM)
+    {
+        redde (s32)FLUXUS_STIRPS_IGNOTA;
+    }
+    si (gradus == (s32)GRADUS_MEDIUM)
+    {
+        redde (s32)FLUXUS_STIRPS_NEUTRA;
+    }
+    redde (s32)FLUXUS_STIRPS_AMISSA;
+}
+
+/* Exitus = introitus + definitiones, ut _stirpes_exitum_computare
+ * sine classificatore (columna ev->stirps) */
+interior vacuum
+_stirpes_celeres_exitum_computare (
+    constans FluxusDatorumBlocus* b,
+                     BitaGraduum* bita,
+                    constans s32* primus,
+                    constans s32* proximus,
+                    constans i64* valida,
+                             i32  n_verba)
+{
+    i32 e;
+    i32 m = xar_numerus(b->eventa);
+
+    _bita_graduum_exitum_initiare(bita, n_verba);
+    per (e = ZEPHYRUM; e < m; e++)
+    {
+        constans FluxusEventum* ev = (constans FluxusEventum*)
+            xar_obtinere(b->eventa, e);
+
+        si (   ev->genus != (s32)FLUXUS_EVENTUM_DEFINITIO
+            && ev->genus != (s32)FLUXUS_EVENTUM_MEMBRUM_DEFINITIO)
+        {
+            perge;
+        }
+        si (ev->variabilis < ZEPHYRUM)
+        {
+            /* def-omnia (folium opacum): provenientia perit */
+            _bita_graduum_summa(bita, valida, n_verba);
+            perge;
+        }
+        si (ev->genus == (s32)FLUXUS_EVENTUM_DEFINITIO)
+        {
+            s32 membrum;
+
+            per (membrum = primus[ev->variabilis];
+                 membrum >= ZEPHYRUM; membrum = proximus[membrum])
+            {
+                _gradum_bitis_ponere(bita->attacta_exitus,
+                    bita->summa_exitus, membrum,
+                    (s32)GRADUS_SUMMUM);
+            }
+        }
+        _gradum_bitis_ponere(bita->attacta_exitus, bita->summa_exitus,
+            ev->variabilis, _gradus_stirpis(ev->stirps));
+    }
+}
+
+interior vacuum
+_punctum_fixum_stirpium_celere (
+          Piscina* piscina,
+    FluxusDatorum* datorum,
+     constans s32* primus,
+     constans s32* proximus)
+{
+    i32  n_var             = xar_numerus(datorum->variabiles);
+    i32  n_loci            = (n_var > ZEPHYRUM) ? n_var : I;
+    i32  n_verba           = (n_var + (i32)LXIV - I) / (i32)LXIV;
+    i32  numerus_blocorum  = xar_numerus(datorum->bloci);
+    i32  b;
+    i32  v;
+    b32* in_indice;
+    Xar* index_operis;
+    i32  lector = ZEPHYRUM;
+    i64* valida;
+
+    BitaGraduum* bita;
+
+    si (n_verba == ZEPHYRUM)
+    {
+        n_verba = I;
+    }
+    valida  = _verba_valida_parare(piscina, n_var, n_verba);
+    bita    = _bita_graduum_parare(piscina, numerus_blocorum, n_verba);
+
+    /* introitus: parametra stirpem NEUTRAM ferunt */
+    {
+        BitaGraduum* g = &bita[datorum->fluxus->introitus->index];
+
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            FluxusVariabilis* var = (FluxusVariabilis*)xar_obtinere(
+                datorum->variabiles, v);
+
+            si (var->parametrum)
+            {
+                _gradum_bitis_ponere(g->attacta_introitus,
+                    g->summa_introitus, (s32)v, (s32)GRADUS_MEDIUM);
+            }
+        }
+    }
+
+    in_indice = (b32*)piscina_allocare(piscina,
+        (memoriae_index)numerus_blocorum * magnitudo(b32));
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        in_indice[b] = FALSUM;
+    }
+    index_operis = xar_creare(piscina, (i32)magnitudo(i32));
+    {
+        i32* locus = (i32*)xar_addere(index_operis);
+
+        *locus = datorum->fluxus->introitus->index;
+        in_indice[datorum->fluxus->introitus->index] = VERUM;
+    }
+
+    dum (lector < xar_numerus(index_operis))
+    {
+        i32 index_bloci = *(i32*)xar_obtinere(index_operis, lector);
+
+        constans FluxusBlocus* fb = (constans FluxusBlocus*)
+            xar_obtinere(datorum->fluxus->bloci, index_bloci);
+        i32 m;
+        i32 k;
+
+        lector++;
+        in_indice[index_bloci] = FALSUM;
+        _stirpes_celeres_exitum_computare(
+            (constans FluxusDatorumBlocus*)xar_obtinere(
+                datorum->bloci, index_bloci),
+            &bita[index_bloci], primus, proximus, valida, n_verba);
+
+        m = xar_numerus(fb->margines);
+        per (k = ZEPHYRUM; k < m; k++)
+        {
+            constans FluxusMargo* margo = (constans FluxusMargo*)
+                xar_obtinere(fb->margines, k);
+
+            si (margo->destinatio == NIHIL)
+            {
+                perge;
+            }
+            si (   _bita_graduum_iungere(
+                       &bita[margo->destinatio->index],
+                       &bita[index_bloci], n_verba)
+                && !in_indice[margo->destinatio->index])
+            {
+                i32* locus = (i32*)xar_addere(index_operis);
+
+                *locus = margo->destinatio->index;
+                in_indice[margo->destinatio->index] = VERUM;
+            }
+        }
+    }
+
+    /* expansio: tabulae s32 ut via plena eas relinqueret */
+    per (b = ZEPHYRUM; b < numerus_blocorum; b++)
+    {
+        FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
+            datorum->bloci, b);
+        BitaGraduum* g = &bita[b];
+
+        db->stirpes_introitus = (s32*)piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->stirpes_exitus = (s32*)piscina_allocare(piscina,
+            (memoriae_index)n_loci * magnitudo(s32));
+        db->stirpes_introitus[ZEPHYRUM]  = (s32)FLUXUS_STIRPS_IGNOTA;
+        db->stirpes_exitus[ZEPHYRUM]     = (s32)FLUXUS_STIRPS_IGNOTA;
+        per (v = ZEPHYRUM; v < n_var; v++)
+        {
+            db->stirpes_introitus[v] = _stirps_gradus(_gradum_ex_bitis(
+                g->attacta_introitus, g->summa_introitus, v));
+            db->stirpes_exitus[v] = _stirps_gradus(_gradum_ex_bitis(
+                g->attacta_exitus, g->summa_exitus, v));
         }
     }
 }
@@ -1449,7 +2291,16 @@ _punctum_fixum_stirpium (
     b32* in_indice;
     Xar* index_operis;
     i32  lector = ZEPHYRUM;
+    s32* primus;
+    s32* proximus;
 
+    _membra_basium_ligare(piscina, datorum, &primus, &proximus);
+    si (_stirpes_celeres_licent(datorum, aux))
+    {
+        _punctum_fixum_stirpium_celere(piscina, datorum, primus,
+            proximus);
+        redde;
+    }
     per (b = ZEPHYRUM; b < numerus_blocorum; b++)
     {
         FluxusDatorumBlocus* db = (FluxusDatorumBlocus*)xar_obtinere(
@@ -1509,7 +2360,7 @@ _punctum_fixum_stirpium (
 
         lector++;
         in_indice[index_bloci] = FALSUM;
-        _stirpes_exitum_computare(datorum, db, aux);
+        _stirpes_exitum_computare(datorum, db, aux, primus, proximus);
 
         m = xar_numerus(fb->margines);
         per (k = ZEPHYRUM; k < m; k++)
@@ -1574,6 +2425,8 @@ silva_c89_fluxus_datorum_aedificare (
         (i32)magnitudo(FluxusVariabilis));
     datorum->bloci = xar_creare(piscina,
         (i32)magnitudo(FluxusDatorumBlocus));
+    datorum->index_variabilium  = NIHIL;
+    datorum->index_membrorum    = NIHIL;
 
     ex.piscina = piscina;
     si (auxilia != NIHIL)
