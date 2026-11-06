@@ -272,3 +272,20 @@ book's `natale` writes it at birth. `scriba_actiones` skips the
 `lectoris_notas_habere`: "comes/" + locus (same key comitem_sequi
 builds - a Cmd+T end-to-end test pins it) has a non-blank line; scratch
 piscina `scheda_notarum` per call because it runs on every paint.
+
+## 2026-11-06 — antiphonale: one player, one owner
+
+Final-review minor 5: vicus has ONE cantor, and every antiphonale pane's
+port wrapped the same ContextusSoni - so with two panes (two tabs, or
+tabs restored at start) pane A highlighted against B's pulse, and a
+save in A swapped its version into B's playback (`relegere` asks the
+port's pulse, then calls incipere). Fran chose player ownership over a
+general "one pane of this kind per vicus" rule in vicus.c (that would
+need a cross-tab jump-or-move decision). Now each pane's port ctx is
+its own `PortaAntiphonae` (allocated in the pane's piscina at mount);
+`ContextusSoni.possessor_carminis` = the port that last started a
+carmen successfully. Only the owner sees a pulse (others get -1, so
+their `sonat` drops on the next pulse), and only the owner can seek or
+stop. The pointer is only compared, never dereferenced. Test:
+probatio_vicus_antiphonale "possessor carminis" (panes in tabs 2 and 3
+over a fake port; 5 checks red before).
