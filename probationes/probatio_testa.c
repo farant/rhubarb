@@ -300,6 +300,9 @@ _sectio_pulsus (
     memset(&a, ZEPHYRUM, magnitudo(a));
     CREDO_VERUM(a.pulsum_petere == NIHIL && a.pulsus_ctx == NIHIL
         && a.pulsus_ambitus == NIHIL);
+    /* tergum T5: excitatio in tergo solum iOS */
+    CREDO_VERUM(a.excitationem_ponere == NIHIL);
+    CREDO_AEQUALIS_I32((i32)TESTA_EXCITATIO_NOVA, ZEPHYRUM);
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

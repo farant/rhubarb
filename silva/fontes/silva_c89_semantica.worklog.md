@@ -1038,3 +1038,170 @@ lines above the call ("TOLERA irritum" twice, tried on filum.c:771).
 right after it also matches. A blank line in between still does not
 (test). Each element is still judged on its own: an unused second code
 stays IRRITUM. Plant (match clause -> FALSUM) red at the new cases.
+
+## 2026-11-04 — derived types interned by a flat table, not a linear scan (budget silvae, DOD audit #2b)
+
+The 2026-07-08 plan said "if percursus -semantica shows cost, switch to a hashed key".
+
+**The cost.** The DOD audit measured it:
+- 12.3 M interning calls, 2.25 G scan steps, 14% of the run.
+- Every miss walked the whole Xar: 61% of function-type requests are misses.
+- Each step was an out-of-line `xar_obtinere` plus a deref of a scattered TypusC89.
+
+**The table.**
+- `SilvaSemantica.derivata` / `derivata_signa`: open addressing, power-of-two capacity, linear probing, load <= 1/2. MXXIV slots to start (an average TU has 361 derived types).
+- `signa` is a dense i32 series holding signature | 1 (0 = empty slot). Probing reads only that series; `derivata[k]` is dereferenced only when the signature matches.
+- Growth carries the stored signatures over, with no rehashing. The probe index is `signum >> 1`, because bit 0 is the occupancy mark.
+
+**The signature.**
+- Every field `_derivata_paria` compares feeds the signature, so paria-equal implies signature-equal.
+- Mixing: golden-ratio multiply per word, pointers split into two words, fmix32 at the end so the low (index) bits see the high ones.
+
+**Dropped from the audit's plan.** It proposed edge pointers on TypusC89 (`monstrator_ad`, `qualificatus_ad[3]`) plus a table for functions only. That would change the public struct, and any struct copy (`*novum = *exemplar`) would carry stale edges. One table covers all four kinds. If a profile ever shows interning again, pointer edges are the next step.
+
+**Measured.**
+- percursus -semantica: 609.93 -> 497.04 G instructions (-18.5%), cycles 206 -> 168 G.
+- Old and new binaries over the SAME tree (the corpus includes these very files): 608.76 -> 496.67 G.
+- The reports are identical (symbols, typed expressions, diagnostics per file) except preparation memory, +1.2 MB across 126: the 12 KB starting table instead of a Xar.
+- More than the audit's ~90 G estimate: each scan step was also a cache miss.
+
+**Testing seam: `derivata_larva`.**
+- With a discriminating signature, two different types almost never reach `_derivata_paria`. It became a tiebreaker on 32-bit collisions (~0.1 per whole-repo run, my estimate).
+- So plants dropping the parameter or qualifier comparison stayed GREEN: a comparator bug invisible to tests, which would surface once a month as a wrong type identity.
+- `derivata_larva` (all ones from `creare`) masks the signature. The test sets it to 0: every type collides into one probe cluster, and paria alone tells them apart.
+- `_internamentum_tabulae_probare` runs twice: a normal table with MMM of each kind (growth), and a fully colliding one with CCC.
+
+**Plants, 9/9 red:**
+- parameters, qualifiers, return type, parameter count, variadic, prototyped, or array count not compared;
+- growth without carrying entries over;
+- placement index without `>> 1`.
+
+**Not done.** `_parametra_tractare` still allocates the parameter series before interning knows whether it's a hit. It's memory, not time; leave it.
+
+## 2026-11-04 — analysare_clausa: closure in one place, second analysis only on a flip
+
+Narrative and decision: silva/phase-log.md 2026-11-04 (M0b DECISUS 2 AMENDED).
+
+**Code notes.**
+- **Fingerprints (`_signa_analysis`) carry only what is stable across two analyses of one tree:**
+  - tree node pointers (the same tree);
+  - names and rendered types (`silva_c89_typum_scribere`; TypusC89 objects are per-analysis, so their pointers can't be compared);
+  - tag declaring nodes;
+  - diagnostic fields, including `causa` text and `via`.
+- They reuse the `_signum_*` mixers from the interning table.
+- Three channels give three words, so a difference names its channel (`SILVA_DISCREPANTIA_*`).
+- **Arena shift.** PROBANS allocates a pad of 16..4096 bytes before sem₂, on top of the natural shift (sem₂ is allocated after sem₁). Address-dependent order would show up as a difference.
+- **No printing in the library** (examen 96/97). The result struct reports; the tool prints `[bis discrepat] <via> (nodi n, symbola n, diagnostica n)`.
+- **Oracle plant skipped on purpose.** The analysis can't reach the oracle at all: neither SilvaParsura nor SilvaCommissio carries one. The only route would be a global, which the hidden-static plants cover.
+- **Plant P3 (a static adding a diagnostic on even calls)** was caught in the suite by an OLDER test (expected zero diagnostics) before the new PROBANS assertion. Applied by hand to the corpus run, it flagged all 374 sampled files in the diagnostic channel. Lesson: when a plant goes red, check WHICH assertion caught it.
+- **Cost of the full verification run** (`-bis-probare 1`): 559.7 G against 390.7 normal. The gate's 1/8 sample costs ~+5%.
+
+**Trap: new PUBLIC types.** A type that silva.h also declares has to go in `CADENDA_TYPEDEF` in `silva/instrumenta/principalia/amalgamator.c`, so its internal typedef is dropped from the amalgam.
+- Otherwise the excludenda harvest fails with "typedef redefinition with different types": anonymous structs and enums are distinct types even when identical.
+- The generator reports that as "compilatio fracta sine signis", which points nowhere near the cause.
+- Macros shared with silva.h must be token-identical, so use digits, not Roman numerals (as `REPOSITIO_*` already does).
+
+## 2026-11-04 — analysare_clausa: consumers migrated (bis step 3)
+
+- **Converted:**
+  - examen.c, silva_iudicium.c, renominare.c, nexus_percursus.c;
+  - officina: cursor.c, fusor.c, interpretare.c, praeparator.c, probatio_officina_vindex.c;
+  - probatio_silva_exemplaria_{inutilia,obsoleta}.c.
+
+  Each one is now a single call with `SILVA_CLAUSURA_ORDINARIA`. `fructus` is NIHIL except in nexus_percursus, which keeps its `plagulae_sem2` count via `fructus.secunda`.
+- **Left manual, on purpose:**
+  - `silva_c89_politicam_imponere` (silva_c89_oraculum.c) uses `_politica_expressionis`, not the semantic closure.
+  - The tests in probatio_silva_c89 / _scribere / _semantica / _commissio test recanonicare itself, before and after a flip. Folding them into the shared function would hide exactly what they test.
+- **How to find the call sites:** grep `recanonicare *(` over the worktree. legati indexes the MAIN checkout, so `vocantes` returned 0 here. Not a bug in legati, just the wrong tree for worktree work.
+- **Formatter needed two passes on two files** (ictus on desideratum 01M39WWS):
+  - In interpretare.c, an untouched declaration block flipped to double spacing, and `-vitia` then flagged it. A second `-scribere` restored the HEAD layout.
+  - fusor.c went the other way and converged in one pass.
+  - Habit: after `-scribere`, compare the `-vitia` counts against HEAD copies per file.
+- **Measured** (old examen binary from before the edit against new, 596 files, `-machina`): output and exit codes identical on every file; instructions -6.3% in total.
+  - Instruction counts under `xargs -P 6` showed false regressions of up to +9%. Serial re-runs showed random +170 M spikes on BOTH binaries (kernel, page cache), and a steady state lower for the new binary on every suspect file.
+  - Re-measure suspects serially before believing them.
+
+## 2026-11-04 — token sweeps, step 1 (professiones, canal, standarda)
+
+Per-pass instruction counts from a probe build (proc_pid_rusage around each post-walk pass, `percursus -semantica`, the whole tree) put the post-walk sweeps at ~40 G of 108.4 G of semantics. Step 1 takes the local wins only. Results are the same by construction.
+
+- **`_in_chorda_quaerere`: memchr for the needle's first byte, then memcmp on the rest.** It used to call strncmp at every byte position; strncmp plus two PLT stubs were 77% of `_professiones_colligere`. It's equivalent because the needle has no NUL in its first n bytes, so `strncmp == 0` iff `memcmp == 0`. The bound is the last start position, `datum + mensura - n`, inclusive, which matters for a tag at the very end of a `//` comment: test XII c, plant C.
+- **`_canalem_examinare`: one sweep for 96 and 97.**
+  - The cheap filters (identifier, radix in the main file, '(' next) now run BEFORE `tabula_dispersa_invenire`, which used to be hashed for every identifier in every included header (56% of the pass).
+  - 96 is emitted inline. 97 hits are collected (t0, t, gp) and emitted after the loop, each code with its own `visa`, so the order of diagnostics and tolera absorptions is exactly the old two-sweep order.
+  - `_tolera_absorbere_sedem` matches the codex exactly, so the two codes never touch each other's tolerae anyway.
+  - The old `i + I < m` guard before `_modus_scribens` is subsumed by the '(' test.
+- **standarda:** the `fons_index` test now comes before `silva_token_standard`. This barely moved (8.01 -> 7.95 G). The cost is the per-token trivia walk itself (out-of-line `silva_token_ante/post/*_numerus`, `silva_token_radix`), not the standard lookup. That is step 2 (one shared trivia table) or inline accessors.
+- **Measured** (probe, quinta at 31b086c0 plus this change):
+  - semantics 108.42 -> 95.65 G (-11.8%);
+  - `percursus -semantica` 389.1 -> 376.0 G (-3.4%);
+  - professiones 16.25 -> 6.63 G, canal 4.06 -> 1.53 G, portabilitas_colligere 1.34 -> 0.75 G (it uses the same search helper).
+  - examen over 596 files: -1.2% (examen's mix is different; the sweeps are a smaller share there).
+- **Verified:**
+  - examen old/new over 596 files: output, stderr and exit code identical.
+  - Old probe binary against new on today's tree: percursus report identical apart from the `tempus` line. Against the s10 report, symbols and typings rose slightly only because this file grew.
+- **Coverage gaps found and closed:** before this, no test had a comment with two tags (a priority swap would survive) and no test had a tag at a comment's end (an off-by-one in the search would survive). Dropping the sutura tag also survived, since sutura and no-profession both pass. Added portabilitas XII: vernaculum+sutura -> 0, vernaculum+portabile -> 0, `// <vernaculum/>` -> 1, `// <<vernaculum/>` -> 1.
+- **Weak plant, caught.** The first boundary plant (`p <= ultima` -> `p < ultima`) stayed GREEN even with `// <vernaculum/>`, because the memchr window (`ultima - p + 1`) still reaches the last position. The loop bound only matters right after a false '<' match one byte before it. Case d (`<<`) hits exactly that, and both plants (loop bound, window minus one) are now red. Plants A (tag dropped), B (vernaculum before sutura), D (97 hits dropped -> forma), E (canal fons inverted -> forma) and F (standarda fons inverted -> examen) were all red.
+- The corpus contains no 88 or 97 diagnostics (97 sites all carry tolerae), so the corpus diff can't see those codes. The suites (portabilitas, forma's fixa_custodiae 97 = II) are what guard them.
+
+## 2026-11-04 — token sweeps, step 2 (one shared comment table)
+
+After step 1, the sample showed professiones, standarda and the collector's lexemata sweep spending their time on one identical motion: load every token of the TU (headers included), call the out-of-line `silva_token_{ante,post}{,_numerus}`, look at every trivium. Three full sweeps produced three filtered views of the same data.
+
+- **`_commenta_pigra(sem, parsura)`** is ONE lazy sweep per parsura, cached on SilvaSemantica (`commenta_parsura` plus four Xars, zeroed by `memset` in `creare`). It fills:
+  - `commenta_fluxus` and `commenta_directivae`: SilvaCommentum = {trivium, proprium}, in the collector's own visit order (own trivia first, then the radix's if it is a different token);
+  - `commenta_finis`: lexema_finis, own trivia only;
+  - `sedes_alienae`: {sedes, linea}, standarda's emission order. Radices of the fluxus are deduplicated only when consecutive, then the finis radix (unless it equals the last fluxus radix), then each directive token's radix with no dedup, tagged with its line index.
+- **Consumers:**
+  - `_annotationes_pigre` calls the new `silva_annotationes_ex_commentis` (silva_annotationes.c): it reads fluxus and directives from the lists, walks extenta and rami directly as before (now `_extra_fluxum`, shared with the old path), then reads the cauda list. `silva_annotationes_colligere` is unchanged for identitates and hospes and shares `_ex_trivio` and `_extra_fluxum`.
+  - `_professiones_colligere` reads the `proprium` entries of fluxus, then finis, then directives. That is its old order, which matters because the first professio per fons wins.
+  - `_standarda_examinare` emits the `linea < 0` sites, then for each directive line emits its sites followed by `_standarda_variadica` (the old `_standarda_directivae` minus its radix loop). Same interleaving as before.
+  - `_standarda_lexematis` and `_professionum_trivia_omnia` are gone.
+- **Order was the whole design problem.** Each consumer had its own order (professiones: lexemata, finis, directives; collector: lexemata, directives, extenta/rami, finis; standarda: radix chain, finis, directives with the variadic check per line). Separate lists per origin, each in source order, let every consumer keep its own order without a global sort.
+- **Measured** (probe, percursus -semantica): semantics 95.65 -> 82.14 G (-14.1%); run 376.0 -> 362.9 G (-3.5%); standarda 7.95 -> 0.60, professiones 6.63 -> 0.37, collector bucket 15.54 -> 15.62 (it now includes building the table). Peak memory +0.2 MB in praeparationes.
+- **Verified:**
+  - examen old/new over 596 files identical;
+  - old probe binary against new on the same tree: report identical apart from `tempus`;
+  - new semantica test "Commenta fluxus: collector idem" compares the old collector against the table path, annotation by annotation (fons, offset, modus, unitas, parsata), on a fixture with every kind of site: plain, radix-only, directive line, `#if 0`, untaken `#ifdef`, cauda;
+  - new examen 89 cases: a `//` on a directive line, and `//` before a multi-token macro (once).
+- **Fixture surprise:** a comment inside `#if 0` IS collected, because it is ante-trivia of `#endif` and the collector reads `regio->directiva_finis`. Only the untaken branch's raw laminae are skipped. 6 annotations, not 5.
+- **Formatter counting trap:** don't swap HEAD copies of silva/fontes headers into the tree to count `-vitia`. `formator.sh` rebuilds itself from those very sources, and the build fails. Copy `silva/build/formator` aside first and run the binary directly.
+- **Plants, first batch: 5/8 red. Three survivors, all fixture problems, not code:**
+  - P1 (radix comments dropped) and P6 (consecutive-radix dedup off) stayed green because a comment on the SAME LINE as the previous token is that token's POST trivia. `return /* x */ M(v)` hangs x on `return`, not on the radix M. A scratch tracer (scratchpad s12/vestigium: which route, L/R/F/D/DR, reaches each comment) showed it. With the comment on its own line before the invocation, the radix is the only route (7-9 expansion tokens share it), and both plants are red. P1 failed on ORDER, not count: the radix comment also arrives later through the invocation lamina (extenta), so the order-by-order comparison is what catches it.
+  - P3 (cauda list skipped) stays green, correctly. In a parse, EOF is always the last lexema, so the cauda route duplicates the fluxus. A parsura read back from STML (`silva_arbor_legere_parsuram`) has `lexemata == NIHIL`, and both collectors return before reaching the cauda. The branch is defensive, in the old collector as much as the new. The test keeps a round-trip case (both paths agree on 0).
+- Final tally: P1, P2 (directives skipped), P4 (fluxus/directive order swapped), P5 (professiones skip directives), P6, P7 (standarda directive sites dropped), P8 (finis dedup removed) red; P3 unreachable by construction.
+
+## 2026-11-05 — `_declaratorem_fn_invenire` descends canonically
+
+The shared-subtree investigation (silva_annotationes.worklog.md, ledger 01M6MXQK) found GLR `ambiguus` wrappers kept in final trees (2,577 corpus-wide). This function searched a node's children in plain list order, so inside a wrapper it could enter the NON-canonical reading first. Corpus-wide no ambiguity lies ahead of a function declarator, so it never happened, but only by observation. Now it calls `_canonicum(nodus)` first, like the main walk. No test can reach the case (the grammar's fork shapes, `sizeof`/cast/decl-vs-expr, don't sit ahead of a declarator); the proof is no change: examen over 596 files identical, suites green.
+
+## 2026-11-05 — main walk, item 1: bounds once per fixed-point, variable maps
+
+Main-walk profile (probe with self/inclusive buckets; ledger 01M6N2XY): intervals 18.0 G, data flow 11.2 G of a ~64 G user walk. Item 1 takes the exact pieces only.
+- **Bounds.** `_intervallum_variabilis_summum` (type bounds via `_fines_typi`/`_membri_typus`) was recomputed for every variable on every "unknown definition" event, for every member on a whole-object write, and per variable at widening. It is a pure function of the variable while the fixed-point runs, because no declarations are processed inside a function body. `_intervalla_computare` now fills `sem->fines` once (all n_var) just before its loop and clears `sem->fines_datorum` after; `_summum_variabilis(sem, datorum, v)` reads the table only for that datorum.
+  - **Why the window is narrow:** `_intervalla_candidata_relicta_emittere` replays intervals AFTER the whole walk, when tag and type tables may have grown, so replays compute directly as before.
+  - **Test consequence:** interval tests query through the replay, so the cache is visible only through fixed-point state (block-entry intervals after widening). LVI-e (unsigned loop counter after twenty int locals) is the case that catches a wrong-index cache; the first version of the test (int counter) let it through, because the wrong variable had identical bounds.
+- **Variable maps** live on `FluxusDatorum` (`index_variabilium`, `index_membrorum`; see fluxus_datorum.c). The interval lookups delegate: `_intervalla_variabilis_index` uses `silva_c89_fluxus_datorum_variabilis` (same predicate). `_intervalla_membri_index` delegates only for a non-empty title, because `_chordae_pares_contractus` never matches a NIHIL title while data flow's `_membri_tituli_pares` matches len 0 with len 0; the empty/NIHIL case keeps the old linear loop.
+- **Measured** (probe): intervals 18.02 -> 15.88 G, data flow 11.22 -> 10.92 G, run 362.7 -> 360.0 G (-0.75%). Small, as the counts predicted (88 M scan steps ~ 2 G). The big cost is the dense fixed-point itself (item 2).
+- **Verified:** examen over 596 files identical, percursus report identical (old binary, same tree), intervalla LVI a-e (twenty locals ahead of the variable under test, so map and cache are live). Plants: map lookup misses -> red; key without member title -> red (LVI-c has two members written in the order a collision would expose); cache returns another variable's bounds -> red (LVI-e).
+
+## 2026-11-05 — main walk, item 2: interval rows only for trackable variables
+
+The interval fixed-point kept one interval per (block, variable) and copied and joined ALL n_var on every block visit and every edge: 335 M element operations corpus-wide.
+- **Census** (scratch build hooked into `_intervalla_computare`, every function of the tree): 233,264 of 364,882 variables (63.9%) have no valid type bounds (pointers, structs, floats, u64), and NONE of them ever holds a VALIDUM interval at any block entry; contract seeds VALIDUM: 0. They are 61.5% of the element work. Their states are IGNOTUM (2.5 M cells) or OMNIA (4.8 M).
+- **Why that's exact by construction:**
+  - transfer writes them their bounds (OMNIA; the `summum_var.status != VALIDUM` guard comes before any other write);
+  - refinement writes `lectum` (OMNIA), and `_intervallum_constringere` returns unless VALIDUM;
+  - widening touches VALIDUM only; join keeps them in {IGNOTUM, OMNIA};
+  - the ONLY reader of interval values is `_intervallum_lecti`, which returns the bounds (OMNIA) for IGNOTUM, so readers can't tell the two apart; the public `silva_c89_fluxus_intervallum_ad_punctum` goes through lecti too.
+- **The trap:** they can't simply be dropped. An IGNOTUM -> OMNIA change at a block entry re-queues the block, visit counts drive widening of the TRACKED variables, so deleting the changes could alter results. Hence one bit per (block, untracked variable), with outgoing = entry | block's writes | edge's refinement writes, joined by OR (join(IGNOTUM,x)=x, OMNIA absorbing, equality ignores the fields of non-VALIDUM).
+- **Block write masks are static** (they depend on events only): observed on the block's first visit (untracked positions in `currens` are always IGNOTUM before the events), then reset from the mask on later visits.
+- **Edges refine `currens` in place.** `_intervalla_refinare` got an optional `RefinatioMemoria` (index + old value of the at most 2 positions it writes), restored after the join. This replaces the full `refinata` copy.
+- **Rows:** `tf->introitus` is now n_bloci x n_tracti, plus `tf->omnia` bits. Replays (`_intervalla_replay`, `_defs_subtractionis_probatae`, `_intervalla_severa_examinare`) expand a row back to full via `_introitum_expandere`: tracked from the row, untracked IGNOTUM/OMNIA from the bit. That reproduces exactly the old states (every OMNIA of an untracked variable is (OMNIA,0,0)).
+- **Tracked set:** valid bounds OR a VALIDUM seed (a u64 parameter with a contract; intervalla XXXIII covers it).
+- **Differential before committing** (scratch build running the HEAD fixed-point into a private table next to the new one, every function of the tree): 50,247 functions, 623,390 blocks, 13.3 M cells. Old full rows vs new rows expanded: 0 mismatches. Visit counts per block: 0 mismatches.
+- **Plants:**
+  - In the differential: drop the block mask -> 3.1 M cells / 62 k visit counts differ; drop the entry bits -> 4.9 M / 165 k; drop the refinement-written bits -> 0. That path is unreached in the corpus: a refined variable has always been defined or seeded already, so its bit is set unless the code compares an uninitialised variable. It stays for exactness; no public reader can observe it, so no suite test can either.
+  - Suites (intervalla): wrong row index in expansion -> red; VALIDUM seed not tracked -> red (XXXIII); refinement not restored -> red.
+- **Effect** (probe): intervals 15.88 -> 11.05 G (-30%), run 360.0 -> 355.2 G (-1.3%). Peak footprint moved +28 MB (item 1 had moved it -30 MB): allocation granularity of the largest file. praeparationes are identical.
+- **Script mishap, recorded:** the first splice searched `\n_intervalla_computare (\n` from the file start and hit the forward declaration at l.216, duplicating most of the file. Restored from HEAD (only this script's edits were uncommitted). Splice anchors for function bodies must search FROM the definition's comment.

@@ -14669,3 +14669,85 @@ Plan B finished (T14–T19c-1): silva is materia's C89 frontend; see the
 closing RELATIO in `materia/phase-log.md` (2026-09-26) and
 `silva/CLAUDE.md` (PHASIS V PERFECTA). Open C89-parser follow-ups live in
 tabularium region 'c89 parser'. Next by decree …XX0BZ: JS.
+
+## 2026-11-04 — M0b DECISUS 2 AMENDED: the second analysis runs only when closure flipped something
+
+**Original (2026-07-08, l.6213).** Typing is canonical-relative, so the authoritative analysis runs after closure. sem₁ feeds closure, recanonicare runs, and sem₂ is the answer, every file, always. Made complete-first, with the cost "invisible per census". It named its own way back: "a skip-flag for the feeder pass".
+
+**What measurement showed.**
+- Closure flips 10 nodes in 4 of 3,054 files, so for 99.9% of files sem₂ re-analysed the identical tree.
+- After the derived-type interning change (ad9f41d4), the two passes were ~40% of `percursus -semantica`.
+
+**Amendment (Fran approved in session, 2026-11-04).** `silva_c89_semantica_analysare_clausa` runs sem₂ only if `versae > 0`; otherwise sem₁ IS the analysis after the last recanonicare. The contract in silva.h ("analyze after your last recanonicare") is unchanged in substance.
+
+**What it rests on: the analysis is a pure function of (tree, systema).**
+- It never reaches the oracle: neither SilvaParsura nor SilvaCommissio carries one, and it is never passed in.
+- It writes nothing to the tree.
+- It keeps no mutable static state.
+- Its output order doesn't depend on addresses.
+
+**Proved before landing.** A scratch differential over the whole corpus compared sem₁ and sem₂ on every file that didn't flip: 2,987/2,987 identical (per-node typing and symbol links, symbol list, diagnostic list; ~12.3 M lines). The 4 flipping files all differ, as they should.
+
+**Kept proved.**
+- `SILVA_CLAUSURA_PROBANS` always runs sem₂, at shifted arena addresses, and compares fingerprints of the two.
+- The examen-corpus gate runs `percursus -semantica -bis-probare 8`: a fixed eighth of the corpus by path hash, 374 comparisons. Any difference is a hard failure, and so is zero comparisons ("silence is not success").
+- Plants, all red: always skip, never skip, a hidden static that changes diagnostics (374/374 flagged), one that changes symbols, and the gate without the flag.
+
+**Effect.** Same tree, old two-pass binary against new: `percursus -semantica` 496.7 -> 390.7 G instructions (-21.3%). Reports identical; per-file peak 644 -> 597 MB.
+
+**Consumers.** percursus moved in this commit. examen, silva_iudicium, renominare, nexus_percursus, officina (cursor, fusor, interpretare, praeparator) and the test recipes move next: until then they still run both passes, which is correct, just slower.
+
+**Consumers moved (step 3, same day).** Every remaining production caller now goes through `silva_c89_semantica_analysare_clausa`:
+- silva tools: examen, silva_iudicium, renominare, nexus_percursus;
+- officina: cursor, fusor, interpretare, praeparator, and the vindex test loader;
+- the two exemplaria test recipes.
+
+renominare and nexus_percursus already skipped sem₂ by hand when nothing flipped; they now share the one implementation. nexus_percursus still counts its sem₂ files, from `fructus.secunda`. Still manual, on purpose: `silva_c89_politicam_imponere` (a different resolver, not the analysis loop) and the tests that drive recanonicare step by step (probatio_silva_c89, _scribere, _semantica, _commissio). Checked: examen old against new over 596 files (lib/, silva/, officina/) gives identical output and exit codes on every file. Instructions 390.2 -> 365.5 G (-6.3%); per-file startup dominates small files (~-3%), and the big ones save ~-23% (silva.c amalgam, probatio_silva_c89.c, hospes.c). Suites: silva 57/57, officina 17/17.
+
+**Token sweeps, step 1 (same day).** A probe build counted instructions per post-walk pass: the sweeps were ~40 G of 108.4 G of semantics, most of it re-sweeping every token of the TU, headers included, for rare things that matter mostly in the main file. Local changes only, results the same by construction:
+- the comment search does memchr+memcmp instead of strncmp at every byte;
+- codes 96 and 97 share one sweep, with the cheap main-file and '(' tests before the hash lookup, and 97 still emitted after 96;
+- standarda tests fons first.
+
+Effect: semantics 108.4 -> 95.7 G (-11.8%), `percursus -semantica` 389.1 -> 376.0 G (-3.4%); professiones 16.3 -> 6.6, canal 4.1 -> 1.5. standarda barely moved, because its cost is the trivia walk itself. Checked: examen old against new, 596 files, identical; percursus reports identical on the same tree. New test portabilitas XII covers tag priority and the search's last position, where no test looked before; 8 plants, all red. Next: one shared comment table (step 2), then annotation placement without the whole-tree walk (step 3).
+
+**Token sweeps, step 2 (same day).** professiones, standarda and the annotation collector each walked every token of the TU, headers included, to read the same trivia. Now one lazy sweep per parsura (`_commenta_pigra`) fills four lists:
+- comments of the fluxus, own and radix;
+- comments of directive lines;
+- comments of the EOF token;
+- standarda sites.
+
+Each list stays in its consumer's old order. The collector got a second entry point, `silva_annotationes_ex_commentis`; the old one stays for identitates and hospes.
+
+Effect: semantics 95.7 -> 82.1 G (-14.1%), `percursus -semantica` 376.0 -> 362.9 G (-3.5%); standarda 7.95 -> 0.60, professiones 6.63 -> 0.37, while the collector, now carrying the table build, is flat. Over both steps: semantics 108.4 -> 82.1 G (-24%), run 389.1 -> 362.9 G (-6.7%).
+
+Checked: examen old against new on 596 files, identical; percursus reports identical. A new semantica test compares the old collector against the table path annotation by annotation, and two new 89 cases cover a directive line and a multi-token macro; 7 of 8 plants red. The eighth (cauda list) is unreachable by any producer today, in the old collector too.
+
+Fixture lesson: a same-line comment is the previous token's trailing trivia, so a "radix" comment has to sit on its own line. Next: step 3, annotation placement without the per-unit tree walk (~6 G).
+
+**Token sweeps, step 3 (same day).** Annotation placement (`_affigere`) got each unit's per-file byte extent by walking the unit's whole subtree. A unit's leaves are a contiguous run of the lexeme stream, so one scan of the stream gives every extent; the first and last leaves bound each unit's range. The exception is woven `#if` regions, whose directive lines and untaken branches are leaves but not stream tokens. They are always top-level units starting with `#`, and they keep the old walk. A leaf missing from stream order sends the whole file back to the walk.
+
+Checked first by a whole-corpus differential: 677,913 units, extents identical, leaf sets equal for every scanned unit. It also found that 1,410 units' trees share subtrees (the same tokens twice, a DAG); that is harmless for extents but unexplained, so it's filed. Effect: placement 7.3% -> 2.7% of semantic time. Instructions barely move, because the walk was cache-miss bound.
+
+Over the three steps, `percursus -semantica`: 389.1 -> 363.3 G instructions, semantics 108.4 -> 81.8 G (-25%). Tests: annotationes XIII (unit edges, macro start, woven conditional); 4 plants, all red.
+
+**Main walk profiled, item 1 (2026-11-05).** A probe with self/inclusive buckets split the ~64 G user walk:
+- interval analysis 18.0 G;
+- annotation collection 14.9 G;
+- statement and expression typing 11.3 G;
+- data flow 11.2 G;
+- top-level declarations ~7.5 G.
+
+Intervals are a dense fixed-point: every block visit and every edge copies or joins all n_var intervals, 335 M element operations corpus-wide. Only 36% of the variables can ever hold an interval.
+
+Item 1 takes the exact pieces: type bounds once per fixed-point instead of per event, and per-function variable maps on `FluxusDatorum` instead of linear scans (88 M steps corpus-wide), used by both data flow and intervals. Effect: intervals 18.0 -> 15.9 G, data flow 11.2 -> 10.9 G, run -0.75%. Checked: examen over 596 files identical, percursus report identical; new interval tests LVI a-e run with twenty locals ahead of the variable under test, so the maps and the cache are live; 3 plants, all red. The earlier shared-subtree question is answered (kept GLR ambiguities, canonical walk unaffected), and `_declaratorem_fn_invenire` now descends canonically. Next, item 2: interval vectors over integral variables only (differential first).
+
+**Main walk, item 2 (same day).** The interval fixed-point keeps rows only for variables that can hold a real interval. A census over the whole tree found 64% of variables without valid type bounds, and none ever holding a real interval at any block entry. Their "unknown"/"anything" distinction is invisible to readers, but it drives the work list (visit counts drive widening), so each keeps one bit per block, with outgoing = entry | the block's static write mask | the edge's refinement writes. Edges refine in place with a two-entry undo. Replays expand rows back to full form.
+
+Checked first by a whole-corpus differential running the old fixed-point beside the new: 13.3 M cells and every block's visit count identical. Planted scheduling faults showed up in millions of cells. examen over 596 files identical; percursus report identical; suite plants 3/3 red. Effect: intervals 15.9 -> 11.1 G, run 360.0 -> 355.2 G. Main walk so far: intervals 18.0 -> 11.1 G.
+
+**Main walk, item 3 (same day): data flow census, then sign provenance.** Data flow (~11.3 G) split by phase, overhead subtracted: extraction 2.5, may/must 0.9 (already bitsets), forms 2.5, sign provenance 5.4. Only 0.18% of variables ever hold a real provenance and 99.3% of builds have none; 86% of functions sit in files with no signed type registered, where both semantic classifiers return NEUTRA immediately. Forms are similar (1% of variables ever defined by subtraction).
+
+Item 3: when no signed type is registered, semantics passes NIHIL classifiers, and data flow runs provenance as two bitsets (reached, lost) joined by OR, which matches the three-value join exactly. It runs the same work list and expands into the same tables. The full path builds each struct's member list once instead of scanning every variable per assignment per visit. Checked first by a whole-corpus differential (old data flow with stock classifiers beside the new): 64,829 builds, 83% fast, every table cell identical. Suite fast-vs-full comparisons, plants 5/5 red, examen over 596 files identical, report identical. Effect: provenance 5.4 -> 1.3 G, data flow ~11.3 -> ~7.3 G, run 355.5 -> 351.0 G. Next candidate: forms the same way (item 4).
+
+**Main walk, item 4 (same day): forms.** The provenance fast path and forms share one shape (unknown < middle < top), so the two-bit lattice became a shared section and both use it. Forms keep full cells only for variables with a subtraction definition (1%, in compact per-block rows); everyone else lives in two bits, and opaque leaves set bits only for untracked variables, so the visit order is unchanged. One path for every build; the old dense loop is gone. Checked by a differential against HEAD's data flow (64,841 builds, 2,817 with tracked variables, every table identical), a dense reference fixed point in the suite compared cell by cell, plants 5/5 red. One plant needed a hand run: the examen-vectis gate uses a stale examen binary (ledger wish filed). Effect: forms 2.55 -> 1.38 G, data flow ~11.3 -> ~6.1 G over items 3-4, run 352.4 -> 351.0 G.

@@ -62,3 +62,15 @@
 3. **exemplar Linux build**: `_via` (`sprintf "%s/%s"` after a length check) - fine while every caller passed a literal, but T5's `_apns_parare` passes `clavis_via` from apns.stml and gcc cannot carry the check into the format. `_via` now memcpys under the same check.
 
 Result: 8/8 suites green under musl (Go-oracle sections print NIHIL CURSUM in the container; they ran on the Mac), `build/linux/exemplar` static x86-64; under `--platform linux/amd64` it starts, logs `pulsus: apns absens - apns.stml deest`, answers `/salus`.
+
+## 2026-11-05 — tergum T2: `content-available:1` in the alert push
+
+`_corpus` (lib/pulsus_forma.c) now puts `"content-available":1` in `aps`
+after `thread-id`. One push, not two: iOS shows the banner AND wakes the
+app in the background (testa's `didReceiveRemoteNotification:
+fetchCompletionHandler:`, tergum T5) so pictor can pull before the tap.
+The key costs 22 octets; truncation measures the rendered body, so the
+4096 limit holds without changing the budget (test: 400 ids still carry
+the key, `plures:true`). Takes effect on devices only after the exemplar
+deploy (tergum T7); until testa has the handler, iOS ignores the key for
+an app without `UIBackgroundModes` remote-notification.

@@ -216,3 +216,21 @@ after finis_prior, so the follower silently missed stroke 4. Guard: take the
 incremental path only if vivi_prior + |new live acts| == numerus_vivorum after
 recomputing; otherwise project from scratch. Test: probatio_communio "sequi
 extra ordinem" (RED before the guard).
+
+## 2026-11-04 - historia now copies `spatium` (pulsus T11)
+
+`historia_struere` stored the caller's `spatium` pointer as-is. pictor's
+"New picture" menu builds the id in a stack buffer (`character
+spatium[XXXII]` in `lib/pictor_actiones.c`), so after the handler
+returned `doc->historia->spatium` pointed at dead stack. Nothing inside
+historia reads it after creation (genera and the checkpoint prefix are
+computed into the arena at once), so it stayed invisible until pulsus
+T9's "Notify family now" read it later and sent random bytes: the server
+answered 400 ("corpus (non obiectum JSON)" for invalid UTF-8, "res" for
+control bytes) and the client dropped each event. Found live on
+2026-11-04 from five 400s in exemplar's log, none preceded by an upload.
+
+Fix at the cause: copy into the history's arena (`chorda_ut_cstr`, as
+`praefixum` already does). Test "spatium copiatum (pulsus T11)" builds
+from a buffer, overwrites it, checks create and reopen. `origo_checkpoint`
+is still kept by pointer - every caller passes a literal.

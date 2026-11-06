@@ -218,6 +218,20 @@ if [ -f "$ICON" ]; then
                "$APP/Info.plist" > /dev/null \
         || fractum "CFBundleIconName in Info.plist poni nequit"
 fi
+# tergum-plan T4 (C8): profilum cum push -> UIBackgroundModes
+# remote-notification (excitatio in tergo); tabula profilum evolutionis,
+# divulgatio profilum App Store; simulator nullum
+case $SCOPUS in
+    tabula) MODI_PROFILUM=$IOS_PROFILUM_PLIST ;;
+    divulgatio) MODI_PROFILUM="$D/profilum.plist" ;;
+    *) MODI_PROFILUM="" ;;
+esac
+if [ -n "$MODI_PROFILUM" ]; then
+    declare -F ios_modos_tergi_ponere > /dev/null || . tools/ios/communia.sh
+    ios_modos_tergi_ponere "$MODI_PROFILUM" "$APP/Info.plist" \
+        || fractum "UIBackgroundModes in Info.plist poni nequit"
+    plutil -lint "$APP/Info.plist" > /dev/null || fractum "Info.plist invalidum"
+fi
 if [ "$SCOPUS" = divulgatio ]; then
     # claves App Store (spec II.3 gradus 4): instrumenta (DT*, ut Xcode),
     # cryptographia nulla (supra probata), commissum fontis

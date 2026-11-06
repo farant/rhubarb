@@ -600,12 +600,31 @@ rm -rf "$SILVA_DIR/$LOCA"
 #    INVISIBILIS esse non debet (nec REICE nec exclusio = tacita)
 if [ "${1:-}" = "-corpus" ]; then
     echo "--- corpus verum (percursus REICE vs exclusiones) ---"
-    ./silva/percursus.sh -semantica 2>&1 \
-        | awk '/\[verdictum REICE\] / {
-                   sub(/.*\[verdictum REICE\] /, ""); print; next }
-               /\[(externa|compositio|praeparatio) fracta\] / {
-                   sub(/.*fracta\] /, ""); print "FRACTA " $0 }' \
+    # -bis-probare VIII: pars fixa corporis (signum viae) clausuram
+    # PROBANTEM currit - analysis secunda semper, signa collata ubi
+    # nihil versum (DECISUS 2 emendatum 2026-11-04: secunda aliter
+    # omittitur, quod puritatem analysis postulat; haec porta eam
+    # custodit)
+    ./silva/percursus.sh -semantica -bis-probare 8 \
+        > "$SILVA_DIR/build/percursus_corporis.txt" 2>&1
+    awk '/\[verdictum REICE\] / {
+             sub(/.*\[verdictum REICE\] /, ""); print; next }
+         /\[(externa|compositio|praeparatio) fracta\] / {
+             sub(/.*fracta\] /, ""); print "FRACTA " $0 }' \
+        "$SILVA_DIR/build/percursus_corporis.txt" \
         | sort > "$SILVA_DIR/build/reice_omnes.txt"
+    # silentium non est successus: collationes > 0 exiguntur
+    bis="$(grep '^bis-probare:' "$SILVA_DIR/build/percursus_corporis.txt")"
+    if grep -q '^\[bis discrepat\]' "$SILVA_DIR/build/percursus_corporis.txt"; then
+        grep '^\[bis discrepat\]' "$SILVA_DIR/build/percursus_corporis.txt" | sed 's/^/  /'
+        echo "  DISCREPANTIA: analysis non pura (clausura PROBANS)"
+        fracta=1
+    elif ! printf '%s\n' "$bis" | grep -qE '^bis-probare: [1-9][0-9]* collationes'; then
+        echo "  FRACTA: bis-probare non cucurrit (${bis:-linea absens})"
+        fracta=1
+    else
+        echo "  $bis"
+    fi
     # iudex examen_corporis (unitates.stml): verdicta REICE solum
     # plagularum quas iudicat contra pinnas comparantur - testimonia
     # (imagines congelatae knotapel) et archivata extra (decretum

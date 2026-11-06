@@ -21,6 +21,7 @@
 #include "silva_tabulae.h"
 #include "silva_tabulae_sceleti.h"
 #include "silva_tabulae_imparilis.h"
+#include "silva_tabulae_c89.h"
 #include "silva_glr.h"
 #include "credo.h"
 #include <stdio.h>
@@ -78,6 +79,120 @@ _interpretationes_generis (
     redde numerus;
 }
 
+/* Aequalitas structuralis (lexemata per IDENTITATEM - fluxus idem
+ * utrique parsurae datur) */
+interior b32
+_valores_pares (
+    SilvaValor a,
+    SilvaValor b)
+{
+    i32 i;
+
+    si (a.genus != b.genus)
+    {
+        redde FALSUM;
+    }
+    commutatio (a.genus)
+    {
+    casus SILVA_VALOR_NIHIL:
+        redde VERUM;
+    casus SILVA_VALOR_TOKEN:
+        redde (a.datum.token == b.datum.token) ? VERUM : FALSUM;
+    casus SILVA_VALOR_INDEX:
+        redde (a.datum.index == b.datum.index) ? VERUM : FALSUM;
+    casus SILVA_VALOR_NODUS:
+        si (a.datum.nodus == NIHIL || b.datum.nodus == NIHIL)
+        {
+            redde (a.datum.nodus == b.datum.nodus) ? VERUM : FALSUM;
+        }
+        si (   a.datum.nodus->genus != b.datum.nodus->genus
+            || a.datum.nodus->numerus_locorum
+                != b.datum.nodus->numerus_locorum)
+        {
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < a.datum.nodus->numerus_locorum; i++)
+        {
+            si (!_valores_pares(a.datum.nodus->loci[i],
+                    b.datum.nodus->loci[i]))
+            {
+                redde FALSUM;
+            }
+        }
+        redde VERUM;
+    casus SILVA_VALOR_LISTA:
+        si (silva_valor_lista_numerus(a)
+            != silva_valor_lista_numerus(b))
+        {
+            redde FALSUM;
+        }
+        per (i = ZEPHYRUM; i < silva_valor_lista_numerus(a); i++)
+        {
+            SilvaValor* ea = silva_valor_lista_obtinere(a, i);
+            SilvaValor* eb = silva_valor_lista_obtinere(b, i);
+
+            si (   ea == NIHIL || eb == NIHIL
+                || !_valores_pares(*ea, *eb))
+            {
+                redde FALSUM;
+            }
+        }
+        redde VERUM;
+    ordinarius:
+        redde FALSUM;
+    }
+}
+
+/* VIA CELER contra GENERALEM (budget silvae gradus Ib, 2026-11-03):
+ * fluxus idem bis parsatur, via celer accensa et exstincta. Generalis
+ * est oraculum: arbores structuraliter pares, numeratores omnes pares.
+ * Reddit fructum generalem pro assertionibus de copia furcarum: ne
+ * probatio vacua sit, inputa cessiones viae celeris accendere
+ * debent. */
+interior SilvaGLRFructus
+_differentialis (
+               Piscina* piscina,
+              SilvaGLR* glr,
+    constans character* fons)
+{
+                Xar* lexemata;
+    SilvaGLRFructus  celer;
+    SilvaGLRFructus  generalis;
+           SilvaGLR  glr_celer;   /* numeratores post viam celerem */
+
+    lexemata = silva_lexare(piscina, fons, (i32)strlen(fons), ZEPHYRUM);
+
+    glr->via_celer  = VERUM;
+    celer           = silva_glr_parsare(glr, lexemata, piscina);
+    glr_celer       = *glr;
+
+    glr->via_celer  = FALSUM;
+    generalis       = silva_glr_parsare(glr, lexemata, piscina);
+    glr->via_celer  = VERUM;
+
+    CREDO_VERUM (generalis.successus);
+    CREDO_AEQUALIS_S32 (celer.successus, generalis.successus);
+    CREDO_VERUM (_valores_pares(celer.valor, generalis.valor));
+    CREDO_AEQUALIS_I32 (celer.numerus_acceptorum,
+        generalis.numerus_acceptorum);
+    CREDO_AEQUALIS_I32 (celer.fusiones, generalis.fusiones);
+    CREDO_AEQUALIS_I32 (celer.transmutationes,
+        generalis.transmutationes);
+    CREDO_AEQUALIS_I32 (celer.transmutationes_negatae,
+        generalis.transmutationes_negatae);
+    CREDO_AEQUALIS_I32 (celer.eventa_marginis_novi,
+        generalis.eventa_marginis_novi);
+    CREDO_AEQUALIS_I32 (celer.frons_maxima, generalis.frons_maxima);
+    CREDO_AEQUALIS_I32 (glr_celer.nodi_creati, glr->nodi_creati);
+    CREDO_AEQUALIS_I32 (glr_celer.reductiones_factae,
+        glr->reductiones_factae);
+    imprimere("  differentialis: fus %d trm %d marg %d frons %d\n",
+        (int)generalis.fusiones, (int)generalis.transmutationes,
+        (int)generalis.eventa_marginis_novi,
+        (int)generalis.frons_maxima);
+    redde generalis;
+}
+
 /* Interpretatio prima generis dati */
 interior SilvaNodus*
 _interpretatio_generis (
@@ -131,7 +246,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* ambiguum;
              SilvaValor  interps;
              SilvaValor  canonica;
@@ -213,7 +328,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* primus;
              SilvaNodus* medius;
              SilvaNodus* ultimus;
@@ -243,7 +358,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* a;
              SilvaNodus* b;
 
@@ -293,7 +408,7 @@ s32 principale (vacuum)
      * ======================================================== */
 
     {
-        SilvaGLRFructus  fructus;
+        SilvaGLRFructus fructus;
              SilvaNodus* ambiguum;
              SilvaValor  interps;
 
@@ -368,6 +483,74 @@ s32 principale (vacuum)
             &SILVA_SCELETUM_TABULA));
         CREDO_VERUM (silva_glr_tabulam_validare(piscina,
             &SILVA_IMPARILIS_TABULA));
+    }
+
+
+    /* ========================================================
+     * PROBARE: VIA CELER = VIA GENERALIS (differentialis, gradus Ib)
+     *
+     * Via celer passus determinatos sine indice currit et in furcis
+     * generali CEDIT, catenam suam in indicem transferens. Inputa
+     * furcas, compactiones et transmutationes accendunt, ut cessiones
+     * (catena translata, anuli exhausti, nodus pendens) vere
+     * probentur - non solum passus simplices.
+     * ======================================================== */
+
+    {
+               SilvaGLR* c89;
+        SilvaGLRFructus  fructus;
+
+        imprimere("\n--- Probans viam celerem contra generalem ---\n");
+
+        fructus = _differentialis(piscina, sceletum, "foo * bar;");
+        CREDO_MAIOR_I32 (fructus.fusiones, ZEPHYRUM);
+        (vacuum)_differentialis(piscina, sceletum,
+            "int a; foo * bar; b + 1; baz * qux;");
+        fructus = _differentialis(piscina, imparilis, "foo * bar;");
+        CREDO_AEQUALIS_I32 (fructus.transmutationes, I);
+        (vacuum)_differentialis(piscina, imparilis,
+            "int a; foo * bar;");
+
+        c89 = silva_glr_creare(piscina, &SILVA_C89_TABULA,
+            silva_c89_construere, silva_c89_ambiguum_fabricare);
+        CREDO_NON_NIHIL (c89);
+        si (c89 != NIHIL)
+        {
+            /* Frons fusa (praedecessores plures) + margines novi */
+            fructus = _differentialis(piscina, c89,
+                "void f(T bytes[16]);");
+            CREDO_MAIOR_I32 (fructus.fusiones, ZEPHYRUM);
+            CREDO_MAIOR_I32 (fructus.eventa_marginis_novi, ZEPHYRUM);
+
+            /* Transmutationes: catena translata cum anulis exhaustis */
+            fructus = _differentialis(piscina, c89,
+                "int g(void) { T * p; a * b; x = y + 1 * (z - 2);"
+                " return f(p); }");
+            CREDO_MAIOR_I32 (fructus.transmutationes, ZEPHYRUM);
+
+            /* Assignatio catenata: status idem basi alia INTRA
+             * catenam celerem (margo novus sine furca) */
+            fructus = _differentialis(piscina, c89,
+                "int k(void) { a = b = c = d; return a; }");
+            CREDO_MAIOR_I32 (fructus.eventa_marginis_novi, ZEPHYRUM);
+
+            /* Status visus post cessionem: reductio generalis statum
+             * anuli catenae (basi alia) attingit - catena in indicem
+             * NON translata margines amitteret (planta B; minimum ex
+             * lib/carmen.c reductum: arbores eaedem, numeratores
+             * non) */
+            fructus = _differentialis(piscina, c89,
+                "void g(void) { a[*n] = y; }");
+            CREDO_MAIOR_I32 (fructus.eventa_marginis_novi, ZEPHYRUM);
+
+            /* Omnia simul, frons ultra duos */
+            fructus = _differentialis(piscina, c89,
+                "int h(int n) { int i; for (i = 0; i < n; i++)"
+                " { s = (T)(u) + v[i]; (q)(r); } return s; }");
+            CREDO_MAIOR_I32 (fructus.transmutationes, ZEPHYRUM);
+            CREDO_MAIOR_I32 (fructus.eventa_marginis_novi, ZEPHYRUM);
+            CREDO_MAIOR_I32 (fructus.frons_maxima, II);
+        }
     }
 
 

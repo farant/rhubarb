@@ -98,3 +98,43 @@ Also learned live: 401s on GET /communio/apparatus while a sign-in waits are the
 - Deferred opens use `solum_e_rete`: if the person left the grid while waiting, a late sync does not yank them into the viewer.
 - The group lives in `PictorCommunia.grex` in its own piscina (`grex_scheda`) as replica/spatium pairs, not indices. `pictor_communia_parare` (run on every arrival) vacates the main scheda and reorders `picturae`, so movement re-resolves through `pictor_communia_index` each step.
 - In apps/pictor/pictor.c, `pulsum_parare` now runs after `pictor_salutationem_ponere`, because the shell delivers a held cold-launch tap inside `pulsum_petere` and that tap sets the palette.
+
+## 2026-11-05 — tergum T6: background wake window
+
+`pictor_communio_pulsum_parare` now also registers `_excitatio` with testa
+(`a->excitationem_ponere`, iOS only). On a push (spec III.4):
+
+1. `pulsus_tactum_legere` + clavis `pictor.picturae` - bad JSON or another key
+   finishes NIHIL at once.
+2. No client, refused (`pc->recusata` or status.recusata), or closed: DEFECTUS
+   at once, no request.
+3. First arrival notes `recepta` and arms the deadline (XX s, settable for
+   tests); every arrival re-notes `tractiones_vacuae` (C5: its pictures reached
+   the server before its push, so a pull started after it sees them), queues
+   its finish (IV max; a fifth finishes NIHIL at once but still renovares), sets
+   mora 0 and renovares.
+4. A one-shot reactor timer re-armed every C ms reads the client status:
+   refused -> DEFECTUS; counter past the noted value -> NOVA if recepta rose,
+   else NIHIL. All pending finishes get the same result together.
+5. Every exit (caught up, deadline, refused, `claudere`) goes through
+   `_excitationem_finire`, which restores the mora: `pc->mora` if
+   `mora_posita`, else `COMMUNIO_MORA_ORDINARIA`. Never bare `pc->mora` - it's 0
+   in production and would leave the phone polling every second.
+
+Deadline is fixed from the first arrival (later arrivals don't extend it):
+pictor's XX s always lands before testa's XXV s backstop for the first window,
+so the mora is restored by pictor, not left to the backstop.
+
+Test model ("excitatio (tergum)"): A gets its OWN reactor + veredarius. While A
+"sleeps" the test polls only the server/B reactor: A's long-poll stays in
+flight and its socket may even hold the server's answer, but nothing is
+imported - like an iOS app suspended in the background. The push then calls the
+captured `_excitatio` with a real `pulsus_corpus_facere` body, and the test
+polls both reactors. Without this, the in-process server wakes A's long-poll as
+soon as B uploads, and every case would be NIHIL.
+
+Mutation checks: restoring bare `pc->mora` fails nova/emendatio/nihil (mora 0
+instead of XXV); dropping earlier pending finishes fails "duae excitationes".
+
+New read-only accessor `pictor_communio_status(pc)` (client status, ZEPHYRUM if
+none) - the tests need the client's mora/recepta, and nothing else exposed it.

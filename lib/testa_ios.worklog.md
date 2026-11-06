@@ -156,3 +156,30 @@ NULLA), so touches never pop it up by accident.
 - Strings handed to the app live in a throwaway arena, valid only during the callback.
 - `UserNotifications.framework` added to the testa_ios link rule (aedilis.stml); `app.sh` defines `PULSUS_AMBITUS` = productio for `-divulgatio`, sandbox otherwise (C8).
 - Not run on hardware yet: simulator build only (`./tools/ios/app.sh apps/pictor/pictor.c -simulator`). The wildcard development profile has no `aps-environment`, so a dev install will get `didFailToRegister...` until the explicit push profile exists (T11) - that path is the `signum("", causa)` one, harmless.
+
+## 2026-11-05 — tergum T5: background wake window (`didReceiveRemoteNotification:fetchCompletionHandler:`)
+
+A push with `content-available:1` (pulsus T2) wakes pictor in the background
+when Info.plist has `UIBackgroundModes` remote-notification (app.sh T4).
+TestaDelegatus now implements the fetch-completion method; `_excitationem_aperire`
+opens a window:
+
+- No registered `excitatio` (app hasn't called `excitationem_ponere` - e.g. a
+  cold background launch with no scene, so testa_cursum_incipere never ran) or
+  no reactor: `NoData` at once.
+- Up to IV windows at once (two pushes close together; the merging of pending
+  finishes lives in pictor, T6). A fifth answers `NoData` at once.
+- Each window keeps the completion block (copied - MRC), arms a XXV s backstop
+  (`Failed`), and the shared `_excitatio_pulsator` polls the reactor every
+  GRATIA_PULSUS_S - but skips the poll while `_gratia_pulsator` (after-close
+  grace) is already polling. The pulsator stops when the last window closes.
+- `finire_sui` is a ticket from a ring of XVI holding (slot, generation): a late
+  finish for a slot that was closed by the backstop and reused does nothing.
+  The backstop itself can't misfire on a reused slot - closing invalidates it.
+- Result mapping (plan C6): NOVA -> NewData, NIHIL -> NoData, DEFECTUS -> Failed.
+
+NO UNIT TEST for this ObjC (plan C7): it's UIKit callbacks and NSTimers. Checked
+by compiling for the simulator (gate ios-struere) and for the device (local
+divulgatio build, arm64; symbol present), and on the phone in tergum T7 (device
+checks a/b/c). The C contract (types, NIHIL on macOS/Android) is pinned in
+probatio_testa.

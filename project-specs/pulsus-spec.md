@@ -380,15 +380,60 @@ table; how fasciculum's signing option is spelled.
 - That key `LA8Z282UYC` works against the **production** APNs host
   (Apple can restrict a key to one environment); only the sandbox was
   tried.
+  **Answered 2026-11-04: it does not** - see VIII.
 - That TestFlight builds really carry `aps-environment production`
   once the regenerated distribution profile is used.
+  **Answered 2026-11-03: yes** (build 9, checked in the signed app).
 - Which identity pictor's synced pictures carry that every device
   shares (the Shared grid's `communia.pinax.<k>` is a local index).
 - That the existing App ID can be extended to macOS, or whether the
   Mac needs its own App ID (and then its own topic).
 - That nothing in `http2_nexus.c` / `apns.c` / `tls13.c` is
   Mac-specific beyond the comment noted; Linux has not compiled them.
+  **Answered: compiled for Linux (T6) and running on the droplet
+  since 2026-11-03.**
 - That URLSession-based networking on iOS needs no change for these
   two small requests.
 - iOS behavior when permission is denied and later granted in
   Settings (the app re-registers on each launch; untested).
+
+
+## VIII. As run (T11, 2026-11-03 to 11-04)
+
+- **Apple (step 1, 11-03):** PUSH_NOTIFICATIONS switched on for
+  `earth.golden.pictor`; development profile "rhubarb pictor
+  Development 2026-11-03" (Fran's three devices, `aps-environment
+  development`) made by the new `nundinae_apple -evolutio`; App Store
+  profile "... 2026-11-03" (`production`). The old App Store profile
+  went INVALID and was left in place.
+- **Droplet (step 2, 11-03):** main merged into quarta (ab12a59d) and
+  main fast-forwarded to it first, so the server runs main. Volumes
+  backed up as `*.volumen.ante-pulsus` with exemplar stopped (the
+  write-ahead logs held a week of data; a plain copy of the volume
+  file would have lost it). `apns.clavis` by `secretum_mittere.sh`,
+  `apns.stml` naming both hosts. Log: `pulsus: apns paratus -
+  api.push.apple.com, sandbox api.sandbox.push.apple.com`.
+- **Sandbox (step 3, 11-03):** development build on Fran's phone over
+  Wi-Fi; registration arrived (sandbox); `pulsus_probare fran` ->
+  Apple 200, banner on the lock screen, tap opened pictor.
+- **Production (step 5, 11-03/04):** TestFlight pictor 1.0 (9) from
+  main ab12a59d. Amanda's phone registered (production), but both
+  sends failed with **`BadEnvironmentKeyInToken`**: key LA8Z282UYC is
+  sandbox-only. Fran created key **4M5T3MMW2J (Sandbox &
+  Production)**; swapped on the droplet (`secretum_mittere.sh
+  -renovare`, `clavis_id` in `apns.stml`, restart). Then
+  `pulsus_probare amanda` -> 200 and a banner; a real drawing session
+  (uploads 15:36:39-15:39:04 UTC) produced one batch sent at
+  15:44:04 UTC, 5 minutes after the last event, accepted by Apple.
+- **Not recorded: Apple's `apns-id`s.** The server logs success or
+  failure only. Times stand in for them (ruling); logging the ids
+  (not secret) is a small follow-up.
+- **Bug found live:** "Notify family now" sent dead stack bytes as the
+  picture id (server 400, event dropped) - historia kept the
+  caller's `spatium` pointer and "New picture" builds it in a stack
+  buffer. Fixed at the cause in fdaadd4d (historia copies it); to
+  reach phones in TestFlight build 10.
+- **Lesson for the next app/key:** check a new APNs key's environment
+  in the portal before shipping; the error only shows on the first
+  production send.
+

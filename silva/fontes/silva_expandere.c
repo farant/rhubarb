@@ -71,15 +71,15 @@ silva_expansio_creare (
     {
         redde NIHIL;
     }
-    exp->piscina       = piscina;
-    exp->fontes        = xar_creare(piscina, magnitudo(SilvaFons));
-    exp->macros        = tabula_dispersa_creare_chorda(piscina, LXIV);
-    exp->acta          = xar_creare(piscina, magnitudo(SilvaEventum));
-    exp->definitiones  = xar_creare(piscina, magnitudo(i32));
-    exp->rami          = xar_creare(piscina, magnitudo(SilvaRamus*));
-    exp->regiones      = xar_creare(piscina, magnitudo(SilvaRegio*));
-    exp->includenda    = tabula_dispersa_creare_chorda(piscina, XVI);
-    exp->inclusiones   = xar_creare(piscina, magnitudo(SilvaInclusio));
+    exp->piscina = piscina;
+    exp->fontes = xar_creare(piscina, magnitudo(SilvaFons));
+    exp->sedes_macrorum = tabula_dispersa_creare_chorda(piscina, LXIV);
+    exp->acta = xar_creare(piscina, magnitudo(SilvaEventum));
+    exp->definitiones = xar_creare(piscina, magnitudo(i32));
+    exp->rami = xar_creare(piscina, magnitudo(SilvaRamus*));
+    exp->regiones = xar_creare(piscina, magnitudo(SilvaRegio*));
+    exp->includenda = tabula_dispersa_creare_chorda(piscina, XVI);
+    exp->inclusiones = xar_creare(piscina, magnitudo(SilvaInclusio));
     exp->extenta = xar_creare(piscina,
         magnitudo(SilvaExtentumInvocationis));
     exp->indices_extentorum = (SilvaIndicesExtentorum*)piscina_allocare(
@@ -97,7 +97,8 @@ silva_expansio_creare (
     }
     exp->profunditas_includendi  = ZEPHYRUM;
     exp->fons_api                = -I;
-    exp->tabula_activa           = NIHIL;
+    exp->signum_activum          = ZEPHYRUM;
+    exp->signum_ultimum          = ZEPHYRUM;
     exp->def_attributi           = NIHIL;
     exp->limen_lexematum         = SILVA_LIMEN_LEXEMATUM_DEFALTUM;
     exp->limen_generationum      = SILVA_LIMEN_GENERATIONUM_DEFALTUM;
@@ -155,9 +156,58 @@ silva_fons_addere (
 
 
 /* ==================================================
+ * Sedes titulorum (gradus II)
+ * ================================================== */
+
+/* Sedes tituli; creare VERUM = nova si absens. NIHIL si absens (aut
+ * allocatio defecit). Clavis = chorda titulus ipsa (datum vivit cum
+ * exp: textus fontis aut piscina), ut olim in tabula viva. */
+interior SilvaMacroSedes*
+_sedem_obtinere (
+    SilvaExpansio* exp,
+           chorda  titulus,
+              b32  creare)
+{
+             vacuum* valor;
+    SilvaMacroSedes* sedes;
+
+    si (exp->sedes_macrorum == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (tabula_dispersa_invenire(exp->sedes_macrorum, titulus, &valor))
+    {
+        redde (SilvaMacroSedes*)valor;
+    }
+    si (!creare)
+    {
+        redde NIHIL;
+    }
+    sedes = (SilvaMacroSedes*)piscina_allocare(exp->piscina,
+        (memoriae_index)magnitudo(SilvaMacroSedes));
+    si (sedes == NIHIL)
+    {
+        redde NIHIL;
+    }
+    sedes->def_viva          = NIHIL;
+    sedes->def_positionalis  = NIHIL;
+    sedes->signum            = ZEPHYRUM;
+    si (!tabula_dispersa_inserere(exp->sedes_macrorum, titulus,
+            (vacuum*)sedes))
+    {
+        redde NIHIL;
+    }
+    redde sedes;
+}
+
+
+/* ==================================================
  * Acta
  * ================================================== */
 
+/* Eventum scribere ET statum vivum ponere (def; NIHIL pro DELETIO):
+ * scriptor unicus actorum et status vivi, ergo ambo semper
+ * concordant */
 interior vacuum
 _eventum_scribere (
         SilvaExpansio* exp,
@@ -169,13 +219,26 @@ _eventum_scribere (
                   i32  conditio_id,
                   s32  positus)
 {
-    SilvaEventum* locus;
+       SilvaEventum* locus;
+    SilvaMacroSedes* sedes;
+
+    sedes = NIHIL;
+    si (titulus != NIHIL)
+    {
+        sedes = _sedem_obtinere(exp, *titulus, VERUM);
+    }
+    si (sedes != NIHIL)
+    {
+        sedes->def_viva = (genus
+            == SILVA_EVENTUM_DEFINITIO) ? def : NIHIL;
+    }
 
     locus = (SilvaEventum*)xar_addere(exp->acta);
     si (locus == NIHIL)
     {
         redde;
     }
+    locus->sedes        = sedes;
     locus->genus        = genus;
     locus->fons_index   = fons_index;
     locus->linea        = linea;
@@ -242,17 +305,21 @@ silva_expansio_quaerere (
     SilvaExpansio* exp,
            chorda  titulus)
 {
-            vacuum* valor;
-    TabulaDispersa* tabula;
+    SilvaMacroSedes* sedes;
 
-    /* expansio positionalis tabulam temporalem substituit */
-    tabula = (exp->tabula_activa
-        != NIHIL) ? exp->tabula_activa : exp->macros;
-    si (tabula_dispersa_invenire(tabula, titulus, &valor))
+    sedes = _sedem_obtinere(exp, titulus, FALSUM);
+    si (sedes == NIHIL)
     {
-        redde (SilvaMacroDef*)valor;
+        redde NIHIL;
     }
-    redde NIHIL;
+    /* expansio positionalis statum generationis suae substituit;
+     * signum alienum = titulus in hac generatione nondum tactus */
+    si (exp->signum_activum != ZEPHYRUM)
+    {
+        redde (sedes->signum == exp->signum_activum)
+            ? sedes->def_positionalis : NIHIL;
+    }
+    redde sedes->def_viva;
 }
 
 
@@ -507,7 +574,6 @@ _definitionem_processare (
     si (genus_dir == SILVA_DIR_UNDEF)
     {
         titulus = _chorda_figere(exp->piscina, titulus_tok->valor);
-        tabula_dispersa_delere(exp->macros, titulus_tok->valor);
         _eventum_scribere(exp, SILVA_EVENTUM_DELETIO,
             titulus_tok->fons_index, titulus_tok->linea, titulus, NIHIL,
             conditio_id, positus);
@@ -592,7 +658,6 @@ _definitionem_processare (
             *(SilvaToken**)xar_obtinere(lexemata, i));
     }
 
-    tabula_dispersa_inserere(exp->macros, *titulus, (vacuum*)def);
     _eventum_scribere(exp, SILVA_EVENTUM_DEFINITIO,
         def->fons_index, def->linea_def, titulus, def, conditio_id,
         positus);
@@ -2073,7 +2138,6 @@ _def_api_registrare (
     SilvaExpansio* exp,
     SilvaMacroDef* def)
 {
-    tabula_dispersa_inserere(exp->macros, *def->titulus, (vacuum*)def);
     _eventum_scribere(exp, SILVA_EVENTUM_DEFINITIO, def->fons_index,
         ZEPHYRUM, def->titulus, def, ZEPHYRUM, ZEPHYRUM);
 }
@@ -2915,23 +2979,25 @@ _praedefinitum_substituere (
     redde VERUM;
 }
 
-/* Nucleus generationis. tabula (si non NIHIL) = tabula operans
- * positionalis, activata per ambulationem (quaerere eam videt, etiam
- * in expansione argumentorum nidificata); positus_localis = positiones
- * eventorum in FLUXU HOC, remappatae in situ ad positiones exitus
- * (generatio proxima eas legit). Ambo NIHIL = semantica tabulae vivae. */
+/* Nucleus generationis. signum (si non 0) = tabula operans
+ * positionalis (sedes cum hoc signo), activata per ambulationem
+ * (quaerere eam videt, etiam in expansione argumentorum nidificata);
+ * positus_localis = positiones eventorum in FLUXU HOC, remappatae in
+ * situ ad positiones exitus (generatio proxima eas legit). Signum 0 et
+ * positus NIHIL = status activus manet (vivus, aut positionalis
+ * generationis amplectentis). */
 interior Xar*
 _generatio_interna (
-     SilvaExpansio* exp,
-               Xar* lexemata,
-               b32* mutatum_out,
-    TabulaDispersa* tabula,
-               s32* positus_localis)
+    SilvaExpansio* exp,
+              Xar* lexemata,
+              b32* mutatum_out,
+              i32  signum,
+              s32* positus_localis)
 {
                Xar* exitus;
         SilvaToken* token;
      SilvaMacroDef* def;
-    TabulaDispersa* tabula_prior;
+               i32  signum_prior;
                i32  i;
                i32  n;
                i32  cursor;
@@ -2943,10 +3009,10 @@ _generatio_interna (
     n        = xar_numerus(lexemata);
     i        = ZEPHYRUM;
 
-    tabula_prior = exp->tabula_activa;
-    si (tabula != NIHIL)
+    signum_prior = exp->signum_activum;
+    si (signum != ZEPHYRUM)
     {
-        exp->tabula_activa = tabula;
+        exp->signum_activum = signum;
     }
     cursor = ZEPHYRUM;
     n_acta = xar_numerus(exp->acta);
@@ -2954,7 +3020,7 @@ _generatio_interna (
     dum (i < n)
     {
         /* eventa ante lexema i applicare (status ad punctum) */
-        si (positus_localis != NIHIL && tabula != NIHIL)
+        si (positus_localis != NIHIL && signum != ZEPHYRUM)
         {
             dum (cursor < n_acta && positus_localis[cursor] <= (s32)i)
             {
@@ -2962,14 +3028,11 @@ _generatio_interna (
 
                 eventum = (SilvaEventum*)xar_obtinere(exp->acta,
                     cursor);
-                si (eventum->genus == SILVA_EVENTUM_DEFINITIO)
+                si (eventum->sedes != NIHIL)
                 {
-                    tabula_dispersa_inserere(tabula, *eventum->titulus,
-                        (vacuum*)eventum->def);
-                }
-                alioquin
-                {
-                    tabula_dispersa_delere(tabula, *eventum->titulus);
+                    eventum->sedes->def_positionalis = (eventum->genus
+                        == SILVA_EVENTUM_DEFINITIO) ? eventum->def : NIHIL;
+                    eventum->sedes->signum = signum;
                 }
                 positus_localis[cursor] = (s32)xar_numerus(exitus);
                 cursor++;
@@ -3153,7 +3216,7 @@ _generatio_interna (
             cursor++;
         }
     }
-    exp->tabula_activa = tabula_prior;
+    exp->signum_activum = signum_prior;
 
     si (mutatum_out != NIHIL)
     {
@@ -3168,7 +3231,8 @@ silva_expansio_generatio (
               Xar* lexemata,
               b32* mutatum_out)
 {
-    redde _generatio_interna(exp, lexemata, mutatum_out, NIHIL, NIHIL);
+    redde _generatio_interna(exp, lexemata, mutatum_out, ZEPHYRUM,
+        NIHIL);
 }
 
 /* Limina circuituum fixorum (Phase 7): ante quamque generationem
@@ -3300,13 +3364,18 @@ silva_expansio_expandere_reliqua (
     generationes  = ZEPHYRUM;
     dum (_generationem_licere(exp, currens, generationes))
     {
-        TabulaDispersa* tabula;
-                   Xar* exitus;
+        Xar* exitus;
 
+        /* tabula positionalis nova = signum novum (sedes omnes
+         * signo vetere absentes fiunt); 0 vivo reservatur */
+        exp->signum_ultimum++;
+        si (exp->signum_ultimum == ZEPHYRUM)
+        {
+            exp->signum_ultimum = I;
+        }
         mutatum  = FALSUM;
-        tabula   = tabula_dispersa_creare_chorda(exp->piscina, LXIV);
-        exitus = _generatio_interna(exp, currens, &mutatum, tabula,
-            positus_localis);
+        exitus = _generatio_interna(exp, currens, &mutatum,
+            exp->signum_ultimum, positus_localis);
         si (!mutatum)
         {
             frange;

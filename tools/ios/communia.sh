@@ -199,3 +199,25 @@ ios_identitatem_eligere () {
     done
     apparatus "nullum certificatum profili $(basename "$IOS_PROFILUM") in claviario (security find-identity -v -p codesigning)"
 }
+
+# tergum-plan T4: si profilum ($1, decodatum) push fert
+# (Entitlements.aps-environment), UIBackgroundModes [remote-notification]
+# in Info.plist ($2) ponit - iOS appem in tergo excitat cum pulsus
+# content-available advenit (testa didReceiveRemoteNotification).
+# Idempotens (elementum non duplicatur). 0 sive additum sive non; 1 si
+# PlistBuddy deficit.
+ios_modos_tergi_ponere () {
+    local pb k m
+    pb=/usr/libexec/PlistBuddy
+    _ios_campus "$1" Entitlements.aps-environment > /dev/null || return 0
+    if ! plutil -extract UIBackgroundModes raw -o - "$2" > /dev/null 2>&1; then
+        "$pb" -c "Add :UIBackgroundModes array" "$2" > /dev/null 2>&1 || return 1
+    fi
+    k=0
+    while m=$(_ios_campus "$2" "UIBackgroundModes.$k"); do
+        [ "$m" = remote-notification ] && return 0
+        k=$((k + 1))
+    done
+    "$pb" -c "Add :UIBackgroundModes:$k string remote-notification" "$2" \
+        > /dev/null 2>&1 || return 1
+}
