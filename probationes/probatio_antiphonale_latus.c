@@ -405,6 +405,48 @@ _servatum_probare (
     CREDO_AEQUALIS_I32 (_quadrata(md, COLOR_ERROR), ZEPHYRUM);
 }
 
+/* directorium absens (recensio finalis): specula iterum temptatur sine
+ * incremento piscinae et non crebrius quam omni CCL ms; directorio et
+ * plagula creatis latus eam capit */
+interior vacuum
+_directorium_absens_probare (
+    CredoContextus* c)
+{
+             Mundus* w;
+            Mandata* md;
+     memoriae_index  usus;
+                i32  k;
+          character  directorium[CCLVI];
+
+    w = _mundum(c, "absens/x.gabc", NIHIL);
+    CREDO_NECESSE (w != NIHIL);
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "missing"));
+
+    CREDO_GRADUS ("pulsus multi: piscina non crescit");
+    (vacuum)antiphonale_pulsare(&w->m);
+    usus = piscina_summa_usus(c->piscina);
+    per (k = ZEPHYRUM; k < CC; k++)
+    {
+        (vacuum)antiphonale_pulsare(&w->m);
+    }
+    CREDO_AEQUALIS_I64 ((i64)piscina_summa_usus(c->piscina), (i64)usus);
+
+    CREDO_GRADUS ("mora sine specula: saltem CCL ms");
+    CREDO_MAIOR_AUT_AEQUALIS_S64 ((s64)antiphonale_mora(&w->m),
+        (s64)CCL);
+
+    CREDO_GRADUS ("directorium et plagula creata: latus capit");
+    sprintf(directorium, "%s/absens", credo_area(c));
+    CREDO_NECESSE (filum_directorium_creare(directorium));
+    CREDO_NECESSE (filum_scribere_literis(w->via, CANTUS_BONUS));
+    CREDO_VERUM (antiphonale_pulsare(&w->m));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "Probatio"));
+    CREDO_FALSUM (_textus_continet(md, "missing"));
+    CREDO_AEQUALIS_S64 ((s64)antiphonale_mora(&w->m), -I);
+}
+
 
 /* ==================================================
  * III: paginae et spatium
@@ -844,6 +886,8 @@ _dispositionem_vivam_probare (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "aperire", _aperire_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "servatio", _servatum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "directorium absens", _directorium_absens_probare, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "paginae", _paginas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sonare", _sonare_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "illuminatio", _illuminationem_probare, NIHIL, NIHIL, NIHIL,

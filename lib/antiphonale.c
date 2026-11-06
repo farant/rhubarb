@@ -31,7 +31,9 @@
 #define ANTIPHONALE_SPATIUM    VIII
 #define ANTIPHONALE_VIA        DXII
 #define ANTIPHONALE_VEXILLUM   CCLVI
-#define MORA_SINE_SPECULA      XVI
+/* sine specula (directorium absens, platforma): relegere et speculam
+ * iterum temptare omni CCL ms */
+#define MORA_SINE_SPECULA      CCL
 #define MORA_SONANS            XXXIII    /* pulsus dum sonat (P7) */
 #define ANTIPHONALE_GLOBULUS   XVI       /* latitudo globuli canendi */
 #define VISUS_ANTIPHONALIS     I
@@ -60,6 +62,8 @@ nomen structura {
 nomen structura {
      character  via[ANTIPHONALE_VIA];
        Specula* specula;
+       Piscina* piscina_speculae; /* speculae solius: temptatio fracta
+                                   * aut via mutata eam destruit */
         Versio* versio;           /* NIHIL = nulla bona */
      character  vexillum[ANTIPHONALE_VEXILLUM];   /* "" = nullum */
     /* sonus (P7): sonat = petitum nec sistitum; illuminata = syllaba
@@ -538,17 +542,49 @@ relegere (
 }
 
 interior vacuum
+speculam_claudere (
+    Antiphonale* a)
+{
+    si (a->specula)
+    {
+        specula_claudere(a->specula);
+        a->specula = NIHIL;
+    }
+    si (a->piscina_speculae)
+    {
+        piscina_destruere(a->piscina_speculae);
+        a->piscina_speculae = NIHIL;
+    }
+}
+
+/* specula in piscina sua: temptatio fracta (directorium absens) nihil
+ * relinquit, ergo iterum temptari potest sine fine */
+interior vacuum
+speculam_aperire (
+    Antiphonale* a)
+{
+    speculam_claudere(a);
+    a->piscina_speculae = piscina_generare_dynamicum(
+        "antiphonale_specula", (memoriae_index)M);
+    si (a->piscina_speculae == NIHIL)
+    {
+        redde;
+    }
+    a->specula = specula_creare(a->piscina_speculae, a->via);
+    si (a->specula == NIHIL)
+    {
+        speculam_claudere(a);
+    }
+}
+
+interior vacuum
 viam_ponere (
     AntiphonaleMontatio* m,
      constans character* via)
 {
     Antiphonale* a = (Antiphonale*)m->figurae_ctx;
 
-    si (a->specula)
-    {
-        specula_claudere(a->specula);
-        a->specula = NIHIL;
-    }
+    speculam_claudere(a);
     si (a->sonat && m->porta.sistere)
     {
         m->porta.sistere(m->porta.ctx);
@@ -564,7 +600,7 @@ viam_ponere (
     {
         strncpy(a->via, via, ANTIPHONALE_VIA - I);
         a->via[ANTIPHONALE_VIA - I] = '\0';
-        a->specula = specula_creare(m->piscina, a->via);
+        speculam_aperire(a);
     }
     (vacuum)relegere(m);
 }
@@ -1235,10 +1271,10 @@ antiphonale_pulsare (
     mutatum = FALSUM;
     si (a->specula == NIHIL)
     {
-        /* platforma sine specula aut directorium absens: relegere ut
-         * pulsus crebri */
-        a->specula  = specula_creare(m->piscina, a->via);
-        mutatum     = relegere(m);
+        /* platforma sine specula aut directorium absens: relegere et
+         * iterum temptare omni pulsu (MORA_SINE_SPECULA) */
+        speculam_aperire(a);
+        mutatum = relegere(m);
     }
     alioquin si (specula_exhaurire(a->specula))
     {

@@ -84,3 +84,19 @@ ends or vicus mutes — vicus has no unmount hook for panes yet.
 `\s+`) swallowed the newline before each replaced block and joined ~26
 line pairs; caught by the formatter's long-line report, split by a
 script restricted to the added lines. Exact replacements from now on.
+
+## 2026-11-06 — final review: watcher retry leaked while the folder was missing
+
+`specula_creare` allocates the Specula and both path strings in the
+arena it is given BEFORE it can fail (parent directory missing). The
+pane passed `m->piscina` (lives as long as vicus) and, with no watcher,
+retried on every pulse at MORA_SINE_SPECULA = 16 ms: ~40 MB/hour for an
+80-char path plus a 60 Hz wake, for `$antiphonale(~/typo/x.gabc)` or a
+branch switch that removes the folder. Fix: the watcher gets its own
+arena (`piscina_speculae`); `speculam_aperire` destroys it when
+`specula_creare` fails, `speculam_claudere` destroys it on path change
+(also ends the small per-path-change leak in `viam_ponere`).
+MORA_SINE_SPECULA is now 250 ms — the same interval is the re-read
+cadence on platforms without a watcher (Android), still live enough.
+Test: section "directorium absens" (200 pulses, `piscina_summa_usus`
+unchanged; mora >= 250; folder + file created -> picked up, mora -1).

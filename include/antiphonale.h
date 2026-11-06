@@ -103,7 +103,8 @@ antiphonale_pulsare (
     vacuum* ctx);
 
 /* facies.mora: -1 dum otiosum (specula expergefacit); sine specula
- * (platforma) XVI */
+ * (platforma, directorium absens) CCL - relegit et speculam iterum
+ * temptat */
 Mora
 antiphonale_mora (
     vacuum* ctx);
