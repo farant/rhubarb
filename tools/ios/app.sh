@@ -186,8 +186,9 @@ sed -e "s/@TITULUS@/$TITULUS/g" -e "s/@INVOLUCRUM@/$INVOLUCRUM/g" \
     -e "s/@AEDIFICATIO@/$AEDIFICATIO/g" tools/ios/Info.forma.plist > "$APP/Info.plist"
 plutil -lint "$APP/Info.plist" > /dev/null || fractum "Info.plist invalidum"
 printf 'APPL????' > "$APP/PkgInfo"
-# icon (testa-ios C2 T3): apps/<app>/icon.png (quadratum, latus MXXIV
-# dividens) -> MXXIV RGB sine alpha (icones_amplificare) -> catalogus
+# icon (testa-ios C2 T3): apps/<app>/icon.png (quadratum; latus MXXIV
+# dividens -> pixel art acuta, aliter lenis) -> MXXIV RGB sine alpha
+# (icones_amplificare) -> catalogus
 # AppIcon -> Assets.car per actool (Apple; D6) -> claves in Info.plist
 ICON="$(dirname "$FONS")/icon.png"
 if [ -f "$ICON" ]; then
@@ -199,7 +200,7 @@ if [ -f "$ICON" ]; then
     mkdir -p "$CATALOGUS/AppIcon.appiconset" || apparatus "$CATALOGUS creari nequit"
     bin/icones_instrumentum -amplificare "$ICON" 1024 \
         "$CATALOGUS/AppIcon.appiconset/icon_1024.png" > "$D/icon.log" 2>&1 \
-        || { cat "$D/icon.log" >&2; fractum "icon $ICON (quadratum, latus 1024 dividens)"; }
+        || { cat "$D/icon.log" >&2; fractum "icon $ICON (quadratum)"; }
     printf '%s\n' '{"info":{"author":"rhubarb","version":1}}' > "$CATALOGUS/Contents.json"
     printf '%s\n' '{"images":[{"filename":"icon_1024.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"rhubarb","version":1}}' \
         > "$CATALOGUS/AppIcon.appiconset/Contents.json"
