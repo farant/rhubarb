@@ -16,8 +16,8 @@
  *   praeco antiphonale <via> plagulam .gabc in latere antiphonale
  *                            vici aperit (eventus "antiphonale", via
  *                            absoluta; relativa ad cwd); plagula
- *                            absens: exitus 1, nihil scriptum (gabc
- *                            pars II P8)
+ *                            absens aut via plena > CC: exitus 1,
+ *                            nihil scriptum (gabc pars II P8)
  *   praeco cantuale          cantilenae libri: titulus, genera, textus
  *   praeco cauda [n]         ultimi n eventus (XX) legibiles
  *   praeco tmux <servitor> <panellus>
@@ -497,7 +497,9 @@ antiphonale_mittere (
     ambitus(&e, piscina);
     si (!praeconium_antiphonale_parare(via, &e, piscina))
     {
-        fprintf(stderr, "praeco: antiphonale: plagula abest: %s\n",
+        fprintf(stderr, "praeco: antiphonale: %s: %s\n",
+            filum_existit(via) ? "via plena nimis longa (> CC octeti)"
+                               : "plagula abest",
             via);
         redde I;
     }

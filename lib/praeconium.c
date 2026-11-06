@@ -562,6 +562,12 @@ praeconium_antiphonale_parare (
     {
         redde FALSUM;
     }
+    /* nuntius in libro ad PRAECONIUM_NUNTIUS_MAXIMUS praeciditur: via
+     * praecisa latus "missing" monstraret - recusare */
+    si (strlen(plena) > PRAECONIUM_NUNTIUS_MAXIMUS)
+    {
+        redde FALSUM;
+    }
     e->eventus = chorda_ex_literis("antiphonale", piscina);
     e->nuntius = chorda_ex_literis(plena, piscina);
     redde VERUM;
