@@ -1262,3 +1262,19 @@ the focused pane asked) red at that step.
   ring of one: swallowed, nothing changes.
 - Tests: own vicus per section on a fresh temp volume (sections stay
   independent, so a plant goes red in its own section).
+
+## 2026-11-06 — open requests inherited the ring flag (negotia T5 bug)
+
+Fran: `$projects(adumbratio/…)` opened a pane once, then never again,
+in any tab. `v->petitiones` is reset with `xar_vacare` each pulse,
+which keeps the memory, so `xar_addere` hands back the old slot as-is.
+`vicus_anulo_gradi` / `vicus_cyclo_gradi` / historia memset their slot;
+`petitionem_addere` set fields by hand and missed `anulus` (added in
+T5) and `latus`. After one Cmd+H/L, slot 0 kept `anulus = VERUM` and
+every later open request (`$scriba`, `$projects`, …) was dispatched to
+`anulum_applicare` - silently nothing. Fix: memset in
+`petitionem_addere` too. Test "anulus deinde aperitio" (ring step,
+then open) was red at the open. Rule: any struct taken from a reused
+xar slot gets memset before its fields are set.
+Found by reading Fran's saved index from a COPY of the live volume
+(sqlite3 on scratch copy - read-only): the ring tab had no new pane.

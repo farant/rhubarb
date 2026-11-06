@@ -3755,6 +3755,9 @@ petitionem_addere (
     {
         redde FALSUM;
     }
+    /* locus iterum adhibitus (xar_vacare memoriam servat): vexilla
+     * petitionis prioris (anulus) non hereditantur */
+    memset(p, ZEPHYRUM, magnitudo(PetitioAcervi));
     p->tabula  = v->activa;
     p->genus   = g;
     p->argumentum  = (argumentum && argumentum[ZEPHYRUM] != '\0')
@@ -3762,11 +3765,6 @@ petitionem_addere (
                          v->piscina), v->piscina)
                    : chorda_nulla_vici();
     p->mutare    = mutare;
-    p->gradus    = ZEPHYRUM;
-    p->advocare  = FALSUM;
-    p->aditus    = FALSUM;
-    p->historia  = FALSUM;
-    p->locus     = ZEPHYRUM;
     redde VERUM;
 }
 

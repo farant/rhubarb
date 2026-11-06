@@ -701,6 +701,27 @@ _anulus_aperitor (
     volumen_claudere(w->vol);
 }
 
+/* aperitio post gradum anuli: petitio nova vexillum anuli prioris
+ * (locus xar petitionum iterum adhibitus) non hereditat */
+interior vacuum
+_anulus_deinde_aperitio (
+    CredoContextus* c)
+{
+    MundusAnuli* w;
+
+    w = mundum_anuli(c);
+    CREDO_NECESSE(w != NIHIL);
+    CREDO_VERUM(vicus_anulum_ponere(w->v, anulus_tres, argumenta_trium,
+        III, ZEPHYRUM));
+    anuli_clavis(w, 'l');
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "negotia", NIHIL));
+    CREDO_VERUM(vicus_acervo_aperire(w->v, "calendarium", "agenda"));
+    (vacuum)vicus_pulsare(w->v);
+    CREDO_VERUM(frons_generis(w->v, "calendarium", "agenda"));
+    volumen_claudere(w->vol);
+}
+
 /* Cmd+] cyclum gradit; positio anuli servata */
 interior vacuum
 _anulus_et_cyclus (
@@ -844,6 +865,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "anulus aperitor", _anulus_aperitor, NIHIL, NIHIL, NIHIL, NIHIL },
     { "anulus et cyclus", _anulus_et_cyclus, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "anulus deinde aperitio", _anulus_deinde_aperitio, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "anulus restitutus", _anulus_restitutus, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "anulus per tabulam", _anulus_per_tabulam, NIHIL, NIHIL, NIHIL,
