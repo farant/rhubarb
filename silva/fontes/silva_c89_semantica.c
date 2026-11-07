@@ -184,6 +184,8 @@ _contractus_argumenti (
     SilvaSemantica* sem,
             chorda  titulus_functionis,
                s32  index,
+            chorda  orthographia,
+            chorda  titulus_orthographiae,
                s64* imum,
                s64* summum,
             chorda* titulus_parametri_out);
@@ -202,10 +204,11 @@ _contractus_membri_probare (
     constans SilvaNodus* ancora);
 interior vacuum
 _contractus_argumentum_probare (
-         SilvaSemantica* sem,
-                 chorda  titulus_vocati,
-                    s32  index,
-    constans SilvaNodus* na);
+                SilvaSemantica* sem,
+                        chorda  titulus_vocati,
+    constans SemanticaSymbolum* symbolum_vocati,
+                           s32  index,
+           constans SilvaNodus* na);
 interior vacuum
 _contractus_redde_probare (
          SilvaSemantica* sem,
@@ -10842,14 +10845,24 @@ silva_c89_constans_aestimare (
         {
             SilvaValor tok_v =
                 silva_c89_folium_identificator_tok_valor(expressio);
-            SemanticaSymbolum* symbolum;
+            constans SemanticaSymbolum* symbolum;
 
             si (tok_v.genus != SILVA_VALOR_TOKEN)
             {
                 redde FALSUM;
             }
-            symbolum = silva_c89_symbolum_invenire(sem,
-                tok_v.datum.token->valor);
+            /* nexus typationis primum: fluxus post scopum corporis
+             * clausum aestimat (_fluxum_examinare post
+             * _corpus_ambulare) - quaestio per titulum localem
+             * umbrantem praeteriret et constantem enumerationis
+             * exteriorem inveniret. Titulus solum pro nodo numquam
+             * typato (scopus tunc idem ac typationis). */
+            symbolum = silva_c89_symbolum_nodi(sem, expressio);
+            si (symbolum == NIHIL)
+            {
+                symbolum = silva_c89_symbolum_invenire(sem,
+                    tok_v.datum.token->valor);
+            }
             si (   symbolum        == NIHIL
                 || symbolum->genus != SYMBOLUM_CONSTANS)
             {
@@ -13724,23 +13737,22 @@ _contractus_intervalli_probare (
 
 /* orthographia typi parametri k declarationis vocati (+ titulus
  * parametri si notus); vacua = ignota. Communis intervallis
- * (refinatio) et generibus signatis (gradus 3). */
+ * (refinatio) et generibus signatis (gradus 3). Symbolum vocati
+ * a sede vocationis datur (resolutio semel per vocationem; olim
+ * titulus hic iterum quaerebatur, bis per argumentum). */
 interior chorda
 _orthographia_parametri_vocati (
-    SilvaSemantica* sem,
-            chorda  titulus_functionis,
-               s32  index,
-            chorda* titulus_parametri_out)
+    constans SemanticaSymbolum* s,
+                           s32  index,
+                        chorda* titulus_parametri_out)
 {
-               chorda  vacua;
-    SemanticaSymbolum* s = silva_c89_symbolum_invenire(sem,
-        titulus_functionis);
-    constans SilvaNodus* declarator_fn = (s != NIHIL)
-        ? _declaratorem_fn_invenire(s->declarans) : NIHIL;
-    SilvaValor parametra;
-           i32 m;
-           i32 k;
-           s32 ordinalis = ZEPHYRUM;
+                  chorda  vacua;
+     constans SilvaNodus* declarator_fn = (s != NIHIL)
+         ? _declaratorem_fn_invenire(s->declarans) : NIHIL;
+              SilvaValor parametra;
+                     i32 m;
+                     i32 k;
+                     s32 ordinalis = ZEPHYRUM;
 
     vacua.mensura  = ZEPHYRUM;
     vacua.datum    = NIHIL;
@@ -13785,12 +13797,15 @@ _orthographia_parametri_vocati (
 
 /* contractus parametri ad sedem vocationis: inline per indicem,
  * alioquin orthographia parametri declarationis vocati (typedef
- * refinatum). titulus_parametri_out impletur si notus. */
+ * refinatum) - a vocante semel computata (cum titulo parametri).
+ * titulus_parametri_out impletur si notus. */
 interior b32
 _contractus_argumenti (
     SilvaSemantica* sem,
             chorda  titulus_functionis,
                s32  index,
+            chorda  orthographia,
+            chorda  titulus_orthographiae,
                s64* imum,
                s64* summum,
             chorda* titulus_parametri_out)
@@ -13818,17 +13833,16 @@ _contractus_argumenti (
             }
         }
     }
+    si (titulus_orthographiae.mensura > ZEPHYRUM)
     {
-        chorda orthographia = _orthographia_parametri_vocati(sem,
-            titulus_functionis, index, titulus_parametri_out);
-
-        si (   orthographia.mensura == ZEPHYRUM
-            || !_refinatio_tituli(sem, orthographia, imum, summum))
-        {
-            redde FALSUM;
-        }
-        redde VERUM;
+        *titulus_parametri_out = titulus_orthographiae;
     }
+    si (   orthographia.mensura == ZEPHYRUM
+        || !_refinatio_tituli(sem, orthographia, imum, summum))
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
 }
 
 
@@ -14657,43 +14671,45 @@ _contractus_membri_probare (
 }
 
 /* argumentum contra contractum parametri vocati (sedes: ansa
- * argumentorum casus VOCATIO typationis) */
+ * argumentorum casus VOCATIO typationis). symbolum_vocati =
+ * resolutio sedis vocationis (post registrationem implicitam). */
 interior vacuum
 _contractus_argumentum_probare (
-         SilvaSemantica* sem,
-                 chorda  titulus_vocati,
-                    s32  index,
-    constans SilvaNodus* na)
+                SilvaSemantica* sem,
+                        chorda  titulus_vocati,
+    constans SemanticaSymbolum* symbolum_vocati,
+                           s32  index,
+           constans SilvaNodus* na)
 {
        s64 c_imum    = ZEPHYRUM;
        s64 c_summum  = ZEPHYRUM;
     chorda titulus_parametri;
+    chorda titulus_parametri_g;
+    chorda orthographia;
 
-    titulus_parametri.mensura  = ZEPHYRUM;
-    titulus_parametri.datum    = NIHIL;
+    titulus_parametri.mensura    = ZEPHYRUM;
+    titulus_parametri.datum      = NIHIL;
+    titulus_parametri_g.mensura  = ZEPHYRUM;
+    titulus_parametri_g.datum    = NIHIL;
     si (titulus_vocati.mensura == ZEPHYRUM)
     {
         redde;
     }
     _contractus_colligere(sem);   /* registrum ante iudicium generis */
+    /* orthographia semel per argumentum: gradus 3 et contractus
+     * (refinatio typedef) eandem legunt */
+    orthographia = _orthographia_parametri_vocati(symbolum_vocati,
+        index, &titulus_parametri_g);
     /* gradus 3 (01KYNXXVX9): genus signatum parametri vocati */
+    si (orthographia.mensura > ZEPHYRUM)
     {
-        chorda titulus_parametri_g;
-        chorda orthographia;
-
-        titulus_parametri_g.mensura  = ZEPHYRUM;
-        titulus_parametri_g.datum    = NIHIL;
-        orthographia = _orthographia_parametri_vocati(sem,
-            titulus_vocati, index, &titulus_parametri_g);
-        si (orthographia.mensura > ZEPHYRUM)
-        {
-            _signatum_limitis_probare(sem, orthographia,
-                (titulus_parametri_g.mensura > ZEPHYRUM)
-                    ? titulus_parametri_g : titulus_vocati,
-                na, na);
-        }
+        _signatum_limitis_probare(sem, orthographia,
+            (titulus_parametri_g.mensura > ZEPHYRUM)
+                ? titulus_parametri_g : titulus_vocati,
+            na, na);
     }
     si (!_contractus_argumenti(sem, titulus_vocati, index,
+            orthographia, titulus_parametri_g,
             &c_imum, &c_summum, &titulus_parametri))
     {
         redde;
@@ -15214,8 +15230,8 @@ _sedem_fluxus_iudicare (
                             titulus_parametri.mensura  = ZEPHYRUM;
                             titulus_parametri.datum    = NIHIL;
                             orthographia =
-                                _orthographia_parametri_vocati(sem,
-                                    symbolum_fn->titulus, ordinalis,
+                                _orthographia_parametri_vocati(
+                                    symbolum_fn, ordinalis,
                                     &titulus_parametri);
                             si (orthographia.mensura > ZEPHYRUM)
                             {
@@ -19892,6 +19908,7 @@ _expressionem_typare (
                    s32  formati_exspectata[FORMATI_ARGUMENTA_MAXIMA];
              character  formati_conversiones[FORMATI_ARGUMENTA_MAXIMA];
                 chorda  titulus_vocati;
+     SemanticaSymbolum* symbolum_vocati  = NIHIL;
 
             titulus_vocati.mensura  = ZEPHYRUM;
             titulus_vocati.datum    = NIHIL;
@@ -19964,6 +19981,9 @@ _expressionem_typare (
                             /* M1a A: etiam implicitus nectitur */
                             _nexum_ponere(sem, nf, symbolum, VERUM);
                         }
+                        /* argumenta contra parametra eius
+                         * iudicantur - resolutio semel */
+                        symbolum_vocati = symbolum;
                         (vacuum)_typationem_ponere(sem, nf, tf);
                     }
                 }
@@ -20086,7 +20106,7 @@ _expressionem_typare (
                      * contractum parametri (custodes systematis/
                      * alienitatis intra probationem) */
                     _contractus_argumentum_probare(sem,
-                        titulus_vocati, (s32)a, na);
+                        titulus_vocati, symbolum_vocati, (s32)a, na);
                     si (ta != NIHIL && typus_functionis != NIHIL)
                     {
                         si (   typus_functionis
