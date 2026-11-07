@@ -3803,10 +3803,10 @@ silva_c89_semantica_creare (
         (i32)magnitudo(SemanticaSymbolum*));
     sem->diagnostica = xar_creare(piscina,
         (i32)magnitudo(SemanticaDiagnosticum));
-    /* typationes: clavis = octeti monstratoris (FNV binariae-tutum) */
-    sem->typationes = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    /* typationes: clavis = monstrator nodi */
+    sem->typationes = tabula_monstratorum_creare(piscina, CCLVI);
     /* nexus symbolorum (M1a A): clavis eadem */
-    sem->nexus = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    sem->nexus = tabula_monstratorum_creare(piscina, CCLVI);
     /* FLUXUS-0: CFG retenti (decisio Q7) */
     sem->fluxus_functionum = xar_creare(piscina,
         (i32)magnitudo(FluxusFunctionis*));
@@ -11079,14 +11079,12 @@ silva_c89_constans_aestimare (
 /* ==================================================
  * Typatio expressionum (M0b Chunk A) - tabula parallela
  * nodus -> SemanticaTypatio {naturalis, conversus}. Clavis =
- * octeti valoris monstratoris nodi (lectionis canonicae);
- * FNV super octetos binariae-tutum, fabrica _chorda sufficit.
+ * monstrator nodi (lectionis canonicae) in tabula monstratorum.
  * Genera B/C (binarium/vocatio/...) hic solum DESCENDUNTUR
  * (liberi typantur, nodus ipse nondum) - NIHIL sine strepitu.
  * ================================================== */
 
 nomen structura {
-          i8  clavis_octeti[magnitudo(vacuum*)];  /* valor monstratoris */
     TypusC89* naturalis;
     TypusC89* conversus;    /* NIHIL = nulla conversio */
 } SemanticaTypatio;
@@ -11096,18 +11094,8 @@ _typationem_invenire (
     constans SilvaSemantica* sem,
         constans SilvaNodus* nodus)
 {
-        i8  octeti[magnitudo(vacuum*)];
-    chorda  clavis;
-    vacuum* valor = NIHIL;
-
-    memcpy(octeti, &nodus, magnitudo(octeti));
-    clavis.datum    = octeti;
-    clavis.mensura  = (i32)magnitudo(octeti);
-    si (tabula_dispersa_invenire(sem->typationes, clavis, &valor))
-    {
-        redde (SemanticaTypatio*)valor;
-    }
-    redde NIHIL;
+    redde (SemanticaTypatio*)tabula_monstratorum_invenire(
+        sem->typationes, nodus);
 }
 
 interior SemanticaTypatio*
@@ -11116,12 +11104,20 @@ _typationem_ponere (
     constans SilvaNodus* nodus,
                TypusC89* naturalis)
 {
-    SemanticaTypatio* t = _typationem_invenire(sem, nodus);
-              chorda  clavis;
+    /* quaestio una: locus valet donec tabula iterum tangitur -
+     * piscina_allocare interim licet */
+              vacuum** locus = tabula_monstratorum_locus(
+                  sem->typationes, nodus);
+    SemanticaTypatio* t;
 
-    si (t != NIHIL)
+    si (locus == NIHIL)
     {
-        t->naturalis = naturalis;
+        redde NIHIL;
+    }
+    si (*locus != NIHIL)
+    {
+        t             = (SemanticaTypatio*)*locus;
+        t->naturalis  = naturalis;
         redde t;
     }
     t = (SemanticaTypatio*)piscina_allocare(sem->piscina,
@@ -11130,13 +11126,9 @@ _typationem_ponere (
     {
         redde NIHIL;
     }
-    memcpy(t->clavis_octeti, &nodus, magnitudo(t->clavis_octeti));
-    t->naturalis    = naturalis;
-    t->conversus    = NIHIL;
-    clavis.datum    = t->clavis_octeti;
-    clavis.mensura  = (i32)magnitudo(t->clavis_octeti);
-    (vacuum)tabula_dispersa_inserere(sem->typationes, clavis,
-        (vacuum*)t);
+    t->naturalis  = naturalis;
+    t->conversus  = NIHIL;
+    *locus        = (vacuum*)t;
     redde t;
 }
 
@@ -11157,13 +11149,12 @@ _conversum_ponere (
 
 /* ==================================================
  * Nexus symbolorum (M1a Chunk A) - tabula parallela sedes usus ->
- * symbolum, exemplar typationis idem (clavis = octeti monstratoris
- * nodi lectionis canonicae). Registratur ubi resolutio VERE fit:
+ * symbolum, exemplar typationis idem (clavis = monstrator nodi
+ * lectionis canonicae). Registratur ubi resolutio VERE fit:
  * folium-identificator + vocatus vocationis (etiam implicitus).
  * ================================================== */
 
 nomen structura {
-                   i8  clavis_octeti[magnitudo(vacuum*)];
     SemanticaSymbolum* symbolum;
 } SemanticaNexus;
 
@@ -11172,18 +11163,8 @@ _nexum_invenire (
     constans SilvaSemantica* sem,
         constans SilvaNodus* nodus)
 {
-        i8  octeti[magnitudo(vacuum*)];
-    chorda  clavis;
-    vacuum* valor = NIHIL;
-
-    memcpy(octeti, &nodus, magnitudo(octeti));
-    clavis.datum    = octeti;
-    clavis.mensura  = (i32)magnitudo(octeti);
-    si (tabula_dispersa_invenire(sem->nexus, clavis, &valor))
-    {
-        redde (SemanticaNexus*)valor;
-    }
-    redde NIHIL;
+    redde (SemanticaNexus*)tabula_monstratorum_invenire(sem->nexus,
+        nodus);
 }
 
 interior vacuum
@@ -11193,17 +11174,22 @@ _nexum_ponere (
       SemanticaSymbolum* symbolum,
                     b32  notare_usum)
 {
-    SemanticaNexus* n = _nexum_invenire(sem, nodus);
-            chorda  clavis;
+    vacuum** locus = tabula_monstratorum_locus(sem->nexus,
+        nodus);
+    SemanticaNexus* n;
 
     si (symbolum != NIHIL && notare_usum)
     {
         symbolum->usus = VERUM;   /* codices 69/70 */
     }
 
-    si (n != NIHIL)
+    si (locus == NIHIL)
     {
-        n->symbolum = symbolum;
+        redde;
+    }
+    si (*locus != NIHIL)
+    {
+        ((SemanticaNexus*)*locus)->symbolum = symbolum;
         redde;
     }
     n = (SemanticaNexus*)piscina_allocare(sem->piscina,
@@ -11212,12 +11198,8 @@ _nexum_ponere (
     {
         redde;
     }
-    memcpy(n->clavis_octeti, &nodus, magnitudo(n->clavis_octeti));
-    n->symbolum     = symbolum;
-    clavis.datum    = n->clavis_octeti;
-    clavis.mensura  = (i32)magnitudo(n->clavis_octeti);
-    (vacuum)tabula_dispersa_inserere(sem->nexus, clavis,
-        (vacuum*)n);
+    n->symbolum  = symbolum;
+    *locus       = (vacuum*)n;
 }
 
 /* Quales exuere (valor r) */
@@ -20579,7 +20561,7 @@ silva_c89_typationes_numerus (
     {
         redde ZEPHYRUM;
     }
-    redde tabula_dispersa_numerus(sem->typationes);
+    redde tabula_monstratorum_numerus(sem->typationes);
 }
 
 
@@ -20610,7 +20592,7 @@ silva_c89_nexus_numerus (
     {
         redde ZEPHYRUM;
     }
-    redde tabula_dispersa_numerus(sem->nexus);
+    redde tabula_monstratorum_numerus(sem->nexus);
 }
 
 b32

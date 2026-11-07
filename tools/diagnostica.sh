@@ -28,7 +28,7 @@ compilare () {
     OBJ="$OBJ $2"
 }
 for f in piscina chorda chorda_aedificator xar friatio tabula_dispersa \
-         internamentum stml stml_macros selectio similitudo canon credo \
+         tabula_monstratorum internamentum stml stml_macros selectio similitudo canon credo \
          memoria_processus_macos processus_posix css_lexema html_lexema entitates_html \
          entitates_html_tabula excerptum utf8 runae runae_tabulae \
          iter_directoria via lectiones filum; do

@@ -6790,6 +6790,16 @@ silva_piscina_allocare_ordinatum (
                   memoriae_index  mensura,
                   memoriae_index  ordinatio);
 
+
+/* ===============================================
+ * Allocatio - redde NIHIL si defectu
+ * =============================================== */
+
+static vacuum*
+silva_piscina_conari_allocare (
+                         SilvaPiscina* piscina,
+                  memoriae_index  mensura);
+
 static vacuum*
 silva_piscina_conari_allocare_ordinatum (
                          SilvaPiscina* piscina,
@@ -7326,10 +7336,6 @@ silva_tabula_dispersa_factor_oneris (
 
 static f32
 silva_tabula_dispersa_factor_deletorum (
-    SilvaTabulaDispersa* tabula);
-
-static i32
-silva_tabula_dispersa_numerus (
     SilvaTabulaDispersa* tabula);
 
 
@@ -10253,6 +10259,68 @@ externus constans s32 SILVA_RUNAE_BASES[][II];
 externus constans i32 SILVA_RUNAE_BASES_NUMERUS;
 
 #endif /* RUNAE_TABULAE_H */
+
+/* ================= ex include/tabula_monstratorum.h ================= */
+/* tabula_monstratorum.h - tabula monstratorum (pointer -> pointer map)
+ *
+ * Clavis = monstrator ipse (identitas, non contentum): sedes nodi,
+ * structurae, cuiuslibet obiecti. Valor = monstrator. Pro tabulis
+ * lateralibus quae obiecto notam affigunt sine campo in obiecto
+ * (typatio nodi, nexus symboli).
+ *
+ * Contra tabula_dispersa (claves chordae, friatio et comparatio per
+ * functiones): loci XVI octetorum {clavis, valor}, friatio monstratoris
+ * interna, comparatio ==, addressing apertum linearum, factor oneris
+ * III/IV integer. Nulla deletio, nulla iteratio - ergo ordo nullus
+ * observari potest.
+ *
+ * CLAVIS NIHIL vetatur (locus vacuus = clavis NIHIL): invenire NIHIL
+ * reddit, locus NIHIL reddit.
+ *
+ * USUS (invenire aut addere, quaestione una):
+ *   vacuum** locus = tabula_monstratorum_locus(t, nodus);
+ *   si (locus == NIHIL) ... allocatio fracta ...
+ *   si (*locus == NIHIL) *locus = valorem_novum_facere(...);
+ *   valor = *locus;
+ */
+#ifndef TABULA_MONSTRATORUM_H
+#define TABULA_MONSTRATORUM_H
+
+nomen structura TabulaMonstratorum TabulaMonstratorum;
+
+/* capacitas = loci initiales (ad potentiam II sursum, minimum XVI);
+ * tabula crescit per duplicationem. NIHIL si piscina NIHIL aut
+ * allocatio fracta. */
+static TabulaMonstratorum*
+tabula_monstratorum_creare (
+    SilvaPiscina* piscina,
+        i32  capacitas);
+
+/* valor clavis; NIHIL si absens (aut tabula/clavis NIHIL) */
+static vacuum*
+tabula_monstratorum_invenire (
+    constans TabulaMonstratorum* tabula,
+                constans vacuum* clavis);
+
+/* INVENIRE AUT ADDERE: monstrator ad valorem clavis. Clavis nova
+ * additur cum valore NIHIL - vocans eum statim implet. NIHIL si
+ * crescentia fracta (aut tabula/clavis NIHIL).
+ *
+ * VALET USQUE AD VOCATIONEM PROXIMAM locus (crescentia locos movet):
+ * scribe per eum ante additionem alteram. Allocationes piscinae
+ * interim licent - loci non moventur nisi tabula crescit. Clavis
+ * cuius valor NIHIL manet invenire NIHIL reddit sed in numero est. */
+static vacuum**
+tabula_monstratorum_locus (
+    TabulaMonstratorum* tabula,
+       constans vacuum* clavis);
+
+/* claves additae */
+static i32
+tabula_monstratorum_numerus (
+    constans TabulaMonstratorum* tabula);
+
+#endif /* TABULA_MONSTRATORUM_H */
 
 /* assertio derivae: silva.h SilvaXar.segmenta[64] ==
  * XAR_MAXIMUS_SEGMENTORUM internum */
@@ -14228,19 +14296,19 @@ structura SilvaSemantica {
 
     SilvaXar* diagnostica;           /* SemanticaDiagnosticum (valore) */
 
-    /* typatio expressionum (M0b): clavis = octeti valoris
-     * monstratoris nodi (lectionis canonicae, non involucri) ->
-     * SemanticaTypatio (in .c definita - superficies infra).
-     * FNV super octetos: chorda binaria licet, fabrica _chorda
-     * ordinaria sufficit. */
-    SilvaTabulaDispersa* typationes;
+    /* typatio expressionum (M0b): clavis = monstrator nodi
+     * (lectionis canonicae, non involucri) -> SemanticaTypatio (in .c
+     * definita - superficies infra). Tabula monstratorum (budget
+     * item VI): olim tabula_dispersa cum octetis monstratoris ut
+     * chorda (FNV + comparatio per functiones). */
+    TabulaMonstratorum* typationes;
 
     /* nexus symbolorum (M1a Chunk A): sedes usus -> symbolum -
-     * clavis eadem ac typationes (octeti monstratoris nodi).
+     * clavis eadem ac typationes (monstrator nodi).
      * Registratur in ipsa resolutione (folium-identificator +
      * vocatus vocationis); demissio officinae per
      * silva_c89_symbolum_nodi legit. */
-    SilvaTabulaDispersa* nexus;
+    TabulaMonstratorum* nexus;
 
     /* typus reditus functionis currentis (M0b B: conversio
      * valoris redde annotatur; NIHIL extra corpora) */
@@ -15456,6 +15524,20 @@ silva_piscina_allocare_ordinatum (
     memoriae_index  ordinatio)
 {
     redde _allocare_interna(piscina, mensura, ordinatio, VERUM);
+}
+
+
+/* ===========================================================
+ * ALLOCATIO - REDDE NIHIL SI DEFECIT
+ * =========================================================== */
+
+static vacuum*
+silva_piscina_conari_allocare (
+           SilvaPiscina* piscina,
+    memoriae_index  mensura)
+{
+    redde _allocare_interna(piscina, mensura,
+        PISCINA_ORDINATIO_ORDINARIA, FALSUM);
 }
 
 static vacuum*
@@ -17051,13 +17133,6 @@ silva_tabula_dispersa_factor_deletorum (
         redde 0.0f;
     }
     redde (f32)tabula->numerus_deletorum / (f32)tabula->capacitas;
-}
-
-static i32
-silva_tabula_dispersa_numerus (
-    SilvaTabulaDispersa* tabula)
-{
-    redde tabula ? tabula->numerus : ZEPHYRUM;
 }
 
 /* ================= ex lib/xar.c ================= */
@@ -46211,6 +46286,210 @@ constans s32 SILVA_RUNAE_BASES[][II] = {
 };
 
 constans i32 SILVA_RUNAE_BASES_NUMERUS = 2061;
+
+/* ================= ex lib/tabula_monstratorum.c ================= */
+
+/* limes ne (numerus + I) * IV in i32 exundet: II^XXVIII loci
+ * (IV GB locorum) */
+#define LOCI_MAXIMI ((i32)0x10000000)
+
+nomen structura {
+    constans vacuum* clavis;   /* NIHIL = locus vacuus */
+             vacuum* valor;
+} LocusMonstratoris;
+
+structura TabulaMonstratorum {
+    LocusMonstratoris* loci;
+                  i32  capacitas;   /* potentia II */
+                  i32  larva;       /* capacitas - I */
+                  i32  numerus;
+              SilvaPiscina* piscina;
+};
+
+
+/* Friatio monstratoris. Bita infima (IV) alineationis sunt et
+ * omittuntur; bita alta (>> XXXII per duos gradus, ut memoriae_index
+ * XXXII bitorum tutum sit) miscentur. Index loci = friatum & larva,
+ * ergo bita INFIMA bene misceri debent - multiplicatio sola non
+ * sufficit (bita alta solum miscet). */
+interior i32
+_monstratorem_friare (
+    constans vacuum* clavis)
+{
+    memoriae_index x = (memoriae_index)clavis;
+               i32 h;
+
+    h = (i32)(x >> IV) ^ (i32)((x >> XVI) >> XVI);
+    h ^= h >> XVI;
+    h *= 0x45d9f3bU;
+    h ^= h >> XVI;
+    redde h;
+}
+
+/* locus clavis aut locus vacuus primus in serie eius (factor oneris
+ * < I semper locum vacuum relinquit, ergo ansa finitur) */
+interior i32
+_locum_quaerere (
+    constans LocusMonstratoris* loci,
+                           i32  larva,
+               constans vacuum* clavis)
+{
+    i32 i = _monstratorem_friare(clavis) & larva;
+
+    dum (loci[i].clavis != NIHIL && loci[i].clavis != clavis)
+    {
+        i = (i + I) & larva;
+    }
+    redde i;
+}
+
+interior LocusMonstratoris*
+_locos_allocare (
+    SilvaPiscina* piscina,
+        i32  capacitas)
+{
+    LocusMonstratoris* loci;
+                  i32  i;
+
+    loci = (LocusMonstratoris*)silva_piscina_conari_allocare(piscina,
+        (memoriae_index)capacitas * magnitudo(LocusMonstratoris));
+    si (loci == NIHIL)
+    {
+        redde NIHIL;
+    }
+    per (i = ZEPHYRUM; i < capacitas; i++)
+    {
+        loci[i].clavis  = NIHIL;
+        loci[i].valor   = NIHIL;
+    }
+    redde loci;
+}
+
+static TabulaMonstratorum*
+tabula_monstratorum_creare (
+    SilvaPiscina* piscina,
+        i32  capacitas)
+{
+    TabulaMonstratorum* tabula;
+                   i32  c = XVI;
+
+    si (piscina == NIHIL || capacitas > LOCI_MAXIMI)
+    {
+        redde NIHIL;
+    }
+    dum (c < capacitas)
+    {
+        c *= II;
+    }
+    tabula = (TabulaMonstratorum*)silva_piscina_conari_allocare(piscina,
+        magnitudo(TabulaMonstratorum));
+    si (tabula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    tabula->loci = _locos_allocare(piscina, c);
+    si (tabula->loci == NIHIL)
+    {
+        redde NIHIL;
+    }
+    tabula->capacitas  = c;
+    tabula->larva      = c - I;
+    tabula->numerus    = ZEPHYRUM;
+    tabula->piscina    = piscina;
+    redde tabula;
+}
+
+static vacuum*
+tabula_monstratorum_invenire (
+    constans TabulaMonstratorum* tabula,
+                constans vacuum* clavis)
+{
+    i32 i;
+
+    si (tabula == NIHIL || clavis == NIHIL)
+    {
+        redde NIHIL;
+    }
+    i = _locum_quaerere(tabula->loci, tabula->larva, clavis);
+    redde tabula->loci[i].valor;   /* locus vacuus: NIHIL */
+}
+
+/* duplicatio: loci novi, claves iterum positae (loci veteres in
+ * piscina manent) */
+interior b32
+_tabulam_monstratorum_crescere (
+    TabulaMonstratorum* tabula)
+{
+    LocusMonstratoris* novi;
+                  i32  capacitas;
+                  i32  larva;
+                  i32  k;
+
+    si (tabula->capacitas >= LOCI_MAXIMI)
+    {
+        redde FALSUM;
+    }
+    capacitas  = tabula->capacitas * II;
+    larva      = capacitas - I;
+    novi       = _locos_allocare(tabula->piscina, capacitas);
+    si (novi == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < tabula->capacitas; k++)
+    {
+        si (tabula->loci[k].clavis != NIHIL)
+        {
+            novi[_locum_quaerere(novi, larva, tabula->loci[k].clavis)]
+                = tabula->loci[k];
+        }
+    }
+    tabula->loci       = novi;
+    tabula->capacitas  = capacitas;
+    tabula->larva      = larva;
+    redde VERUM;
+}
+
+static vacuum**
+tabula_monstratorum_locus (
+    TabulaMonstratorum* tabula,
+       constans vacuum* clavis)
+{
+    i32 i;
+
+    si (tabula == NIHIL || clavis == NIHIL)
+    {
+        redde NIHIL;
+    }
+    i = _locum_quaerere(tabula->loci, tabula->larva, clavis);
+    si (tabula->loci[i].clavis == clavis)
+    {
+        redde &tabula->loci[i].valor;   /* praesens: numquam crescit */
+    }
+    si ((tabula->numerus + I) * IV > tabula->capacitas * III)
+    {
+        si (!_tabulam_monstratorum_crescere(tabula))
+        {
+            redde NIHIL;
+        }
+        i = _locum_quaerere(tabula->loci, tabula->larva, clavis);
+    }
+    tabula->loci[i].clavis  = clavis;
+    tabula->loci[i].valor   = NIHIL;
+    tabula->numerus++;
+    redde &tabula->loci[i].valor;
+}
+
+static i32
+tabula_monstratorum_numerus (
+    constans TabulaMonstratorum* tabula)
+{
+    si (tabula == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde tabula->numerus;
+}
 
 /* ================= ex silva/fontes/silva_token.c ================= */
 
@@ -95791,10 +96070,10 @@ silva_c89_semantica_creare (
         (i32)magnitudo(SemanticaSymbolum*));
     sem->diagnostica = silva_xar_creare(piscina,
         (i32)magnitudo(SemanticaDiagnosticum));
-    /* typationes: clavis = octeti monstratoris (FNV binariae-tutum) */
-    sem->typationes = silva_tabula_dispersa_creare_chorda(piscina, CCLVI);
+    /* typationes: clavis = monstrator nodi */
+    sem->typationes = tabula_monstratorum_creare(piscina, CCLVI);
     /* nexus symbolorum (M1a A): clavis eadem */
-    sem->nexus = silva_tabula_dispersa_creare_chorda(piscina, CCLVI);
+    sem->nexus = tabula_monstratorum_creare(piscina, CCLVI);
     /* FLUXUS-0: CFG retenti (decisio Q7) */
     sem->fluxus_functionum = silva_xar_creare(piscina,
         (i32)magnitudo(FluxusFunctionis*));
@@ -103067,14 +103346,12 @@ silva_c89_constans_aestimare (
 /* ==================================================
  * Typatio expressionum (M0b Chunk A) - tabula parallela
  * nodus -> SemanticaTypatio {naturalis, conversus}. Clavis =
- * octeti valoris monstratoris nodi (lectionis canonicae);
- * FNV super octetos binariae-tutum, fabrica _chorda sufficit.
+ * monstrator nodi (lectionis canonicae) in tabula monstratorum.
  * Genera B/C (binarium/vocatio/...) hic solum DESCENDUNTUR
  * (liberi typantur, nodus ipse nondum) - NIHIL sine strepitu.
  * ================================================== */
 
 nomen structura {
-          i8  clavis_octeti[magnitudo(vacuum*)];  /* valor monstratoris */
     TypusC89* naturalis;
     TypusC89* conversus;    /* NIHIL = nulla conversio */
 } SemanticaTypatio;
@@ -103084,18 +103361,8 @@ _typationem_invenire (
     constans SilvaSemantica* sem,
         constans SilvaNodus* nodus)
 {
-        i8  octeti[magnitudo(vacuum*)];
-    SilvaChorda  clavis;
-    vacuum* valor = NIHIL;
-
-    memcpy(octeti, &nodus, magnitudo(octeti));
-    clavis.datum    = octeti;
-    clavis.mensura  = (i32)magnitudo(octeti);
-    si (silva_tabula_dispersa_invenire(sem->typationes, clavis, &valor))
-    {
-        redde (SemanticaTypatio*)valor;
-    }
-    redde NIHIL;
+    redde (SemanticaTypatio*)tabula_monstratorum_invenire(
+        sem->typationes, nodus);
 }
 
 interior SemanticaTypatio*
@@ -103104,12 +103371,20 @@ _typationem_ponere (
     constans SilvaNodus* nodus,
                TypusC89* naturalis)
 {
-    SemanticaTypatio* t = _typationem_invenire(sem, nodus);
-              SilvaChorda  clavis;
+    /* quaestio una: locus valet donec tabula iterum tangitur -
+     * piscina_allocare interim licet */
+              vacuum** locus = tabula_monstratorum_locus(
+                  sem->typationes, nodus);
+    SemanticaTypatio* t;
 
-    si (t != NIHIL)
+    si (locus == NIHIL)
     {
-        t->naturalis = naturalis;
+        redde NIHIL;
+    }
+    si (*locus != NIHIL)
+    {
+        t             = (SemanticaTypatio*)*locus;
+        t->naturalis  = naturalis;
         redde t;
     }
     t = (SemanticaTypatio*)silva_piscina_allocare(sem->piscina,
@@ -103118,13 +103393,9 @@ _typationem_ponere (
     {
         redde NIHIL;
     }
-    memcpy(t->clavis_octeti, &nodus, magnitudo(t->clavis_octeti));
-    t->naturalis    = naturalis;
-    t->conversus    = NIHIL;
-    clavis.datum    = t->clavis_octeti;
-    clavis.mensura  = (i32)magnitudo(t->clavis_octeti);
-    (vacuum)silva_tabula_dispersa_inserere(sem->typationes, clavis,
-        (vacuum*)t);
+    t->naturalis  = naturalis;
+    t->conversus  = NIHIL;
+    *locus        = (vacuum*)t;
     redde t;
 }
 
@@ -103145,13 +103416,12 @@ _conversum_ponere (
 
 /* ==================================================
  * Nexus symbolorum (M1a Chunk A) - tabula parallela sedes usus ->
- * symbolum, exemplar typationis idem (clavis = octeti monstratoris
- * nodi lectionis canonicae). Registratur ubi resolutio VERE fit:
+ * symbolum, exemplar typationis idem (clavis = monstrator nodi
+ * lectionis canonicae). Registratur ubi resolutio VERE fit:
  * folium-identificator + vocatus vocationis (etiam implicitus).
  * ================================================== */
 
 nomen structura {
-                   i8  clavis_octeti[magnitudo(vacuum*)];
     SemanticaSymbolum* symbolum;
 } SemanticaNexus;
 
@@ -103160,18 +103430,8 @@ _nexum_invenire (
     constans SilvaSemantica* sem,
         constans SilvaNodus* nodus)
 {
-        i8  octeti[magnitudo(vacuum*)];
-    SilvaChorda  clavis;
-    vacuum* valor = NIHIL;
-
-    memcpy(octeti, &nodus, magnitudo(octeti));
-    clavis.datum    = octeti;
-    clavis.mensura  = (i32)magnitudo(octeti);
-    si (silva_tabula_dispersa_invenire(sem->nexus, clavis, &valor))
-    {
-        redde (SemanticaNexus*)valor;
-    }
-    redde NIHIL;
+    redde (SemanticaNexus*)tabula_monstratorum_invenire(sem->nexus,
+        nodus);
 }
 
 interior vacuum
@@ -103181,17 +103441,22 @@ _nexum_ponere (
       SemanticaSymbolum* symbolum,
                     b32  notare_usum)
 {
-    SemanticaNexus* n = _nexum_invenire(sem, nodus);
-            SilvaChorda  clavis;
+    vacuum** locus = tabula_monstratorum_locus(sem->nexus,
+        nodus);
+    SemanticaNexus* n;
 
     si (symbolum != NIHIL && notare_usum)
     {
         symbolum->usus = VERUM;   /* codices 69/70 */
     }
 
-    si (n != NIHIL)
+    si (locus == NIHIL)
     {
-        n->symbolum = symbolum;
+        redde;
+    }
+    si (*locus != NIHIL)
+    {
+        ((SemanticaNexus*)*locus)->symbolum = symbolum;
         redde;
     }
     n = (SemanticaNexus*)silva_piscina_allocare(sem->piscina,
@@ -103200,12 +103465,8 @@ _nexum_ponere (
     {
         redde;
     }
-    memcpy(n->clavis_octeti, &nodus, magnitudo(n->clavis_octeti));
-    n->symbolum     = symbolum;
-    clavis.datum    = n->clavis_octeti;
-    clavis.mensura  = (i32)magnitudo(n->clavis_octeti);
-    (vacuum)silva_tabula_dispersa_inserere(sem->nexus, clavis,
-        (vacuum*)n);
+    n->symbolum  = symbolum;
+    *locus       = (vacuum*)n;
 }
 
 /* Quales exuere (valor r) */
@@ -112567,7 +112828,7 @@ silva_c89_typationes_numerus (
     {
         redde ZEPHYRUM;
     }
-    redde silva_tabula_dispersa_numerus(sem->typationes);
+    redde tabula_monstratorum_numerus(sem->typationes);
 }
 
 
@@ -112598,7 +112859,7 @@ silva_c89_nexus_numerus (
     {
         redde ZEPHYRUM;
     }
-    redde silva_tabula_dispersa_numerus(sem->nexus);
+    redde tabula_monstratorum_numerus(sem->nexus);
 }
 
 b32

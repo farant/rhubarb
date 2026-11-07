@@ -46,6 +46,7 @@
 #include "chorda.h"
 #include "xar.h"
 #include "tabula_dispersa.h"
+#include "tabula_monstratorum.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_parsare.h"
@@ -692,19 +693,19 @@ structura SilvaSemantica {
 
     Xar* diagnostica;           /* SemanticaDiagnosticum (valore) */
 
-    /* typatio expressionum (M0b): clavis = octeti valoris
-     * monstratoris nodi (lectionis canonicae, non involucri) ->
-     * SemanticaTypatio (in .c definita - superficies infra).
-     * FNV super octetos: chorda binaria licet, fabrica _chorda
-     * ordinaria sufficit. */
-    TabulaDispersa* typationes;
+    /* typatio expressionum (M0b): clavis = monstrator nodi
+     * (lectionis canonicae, non involucri) -> SemanticaTypatio (in .c
+     * definita - superficies infra). Tabula monstratorum (budget
+     * item VI): olim tabula_dispersa cum octetis monstratoris ut
+     * chorda (FNV + comparatio per functiones). */
+    TabulaMonstratorum* typationes;
 
     /* nexus symbolorum (M1a Chunk A): sedes usus -> symbolum -
-     * clavis eadem ac typationes (octeti monstratoris nodi).
+     * clavis eadem ac typationes (monstrator nodi).
      * Registratur in ipsa resolutione (folium-identificator +
      * vocatus vocationis); demissio officinae per
      * silva_c89_symbolum_nodi legit. */
-    TabulaDispersa* nexus;
+    TabulaMonstratorum* nexus;
 
     /* typus reditus functionis currentis (M0b B: conversio
      * valoris redde annotatur; NIHIL extra corpora) */

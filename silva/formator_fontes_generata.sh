@@ -17,6 +17,7 @@ declare -a RADIX_FONTES=(
     "stml"
     "stml_macros"
     "tabula_dispersa"
+    "tabula_monstratorum"
     "utf8"
     "via"
     "xar"

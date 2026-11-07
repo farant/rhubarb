@@ -1205,3 +1205,55 @@ The interval fixed-point kept one interval per (block, variable) and copied and 
   - Suites (intervalla): wrong row index in expansion -> red; VALIDUM seed not tracked -> red (XXXIII); refinement not restored -> red.
 - **Effect** (probe): intervals 15.88 -> 11.05 G (-30%), run 360.0 -> 355.2 G (-1.3%). Peak footprint moved +28 MB (item 1 had moved it -30 MB): allocation granularity of the largest file. praeparationes are identical.
 - **Script mishap, recorded:** the first splice searched `\n_intervalla_computare (\n` from the file start and hit the forward declaration at l.216, duplicating most of the file. Restored from HEAD (only this script's edits were uncommitted). Splice anchors for function bodies must search FROM the definition's comment.
+
+## 2026-11-06 — typing census (measurement only)
+
+The main-walk "typing" bucket is `_corpus_ambulare` (function bodies). Probe (scratchpad s19/probe; outermost body walks only, nested timers inflate by ~2 G): 16.7 G inclusive over 52,759 bodies, of which 4.1 G is the lazy annotation collection triggered inside the walk (already items 5a/5b) -> typing proper ~10 G.
+- Time sampling (`sample`, 35 s of a whole-tree run; time, not instructions): the body walk is ~5% of samples; inside it, hashing dominates: `tabula_dispersa_invenire` 23% self (35% inclusive), `friatio_fnv1a` 11%, `tabula_dispersa_inserere` 8%, memcmp 2% - ~55% of typing once annotations are excluded.
+- Call counts per run: node->typing table (`sem->typationes`) 17.3 M lookups + 6.9 M inserts (each insert looks up first: ~24 M lookups); node->symbol table (`sem->nexus`) 15.6 M + 8.3 M (~24 M lookups); `silva_c89_symbolum_invenire` 9.8 M calls / 22.9 M scope-table probes (string keys); `_orthographia_parametri_vocati` 2.66 M calls (one per call argument), each with its own symbol lookup and a walk to the k-th parameter (11.3 M steps); `_expressionem_typare` 6.35 M, `_elementum_ambulare` 2.50 M.
+- Both side tables are general chorda-keyed `TabulaDispersa`s keyed by the node pointer's 8 bytes: `fnv1a` over 8 bytes + memcmp through function pointers, and `_typationem_ponere`/`_nexum_ponere` look up before inserting (two hash operations per new entry). Nothing iterates either table (lookups, inserts, `tabula_dispersa_numerus` only), so a different table type can't change output order.
+- No pointer-keyed map exists in lib/ (`tabula_nodorum` is the knot table).
+
+## 2026-11-06 — item 6 prototype: pointer-keyed side tables
+
+Prototyped two replacements for `sem->typationes` / `sem->nexus` (scratch
+s20/, patch.py) and measured percursus -semantica, fresh binaries, 3
+interleaved runs each:
+
+| variant | instructions (G) | vs HEAD |
+|---|---|---|
+| HEAD (tabula_dispersa, fnv1a over 8 pointer bytes, lookup-then-insert) | 346.24 / 346.38 / 346.42 | — |
+| A: same table, pointer mixer as friatio + pointer compare as comparatio | 343.80 / 343.80 / 343.71 | −2.6 |
+| B: open-addressing pointer→pointer map, 16-byte slots, find-or-insert slot | 339.57 / 339.50 / 339.80 | −6.7 |
+
+Report output identical for both (typationes/nexus counts included).
+Reading: the hash function itself is ~2.6 G; the rest (~4.1 G) is the
+general table's machinery — 40-byte slots, two indirect calls, float load
+factor per insert, double lookup on insert. B takes ~2/3 of typing's ~10 G.
+Mixer: (p>>4) ^ (p>>32), xorshift-multiply 0x45d9f3b — low bits must be
+good because the slot index is `h & mask`.
+
+## 2026-11-06 — item 6 landed: typationes/nexus on tabula_monstratorum
+
+`sem->typationes` and `sem->nexus` are now `TabulaMonstratorum*` (new lib,
+see lib/tabula_monstratorum.worklog.md). `_typationem_ponere` and
+`_nexum_ponere` make ONE `tabula_monstratorum_locus` call (find-or-insert)
+instead of invenire-then-inserere; the 8-byte key copies are gone from
+SemanticaTypatio/SemanticaNexus. All `_typationem_ponere` callers discard
+its return, so returning NIHIL on failed growth is harmless.
+
+Verification:
+- percursus -semantica, fresh binaries, 3 rounds: HEAD 346.54 / 346.67 /
+  346.41 G, new 339.80 / 339.96 / 339.97 G -> -6.6 G; report identical.
+  Same as the inlined prototype, so the lib living in its own TU (one
+  extra call per lookup outside the amalgam) costs ~nothing measurable.
+- Shadow differential (scratch s20/diffpatch.py): HEAD-style tabula_dispersa
+  tables kept beside the new ones, every lookup and every find-or-insert
+  compared: 3,142 semantic contexts, 17.7 M lookups, 15.2 M find-or-insert,
+  0 disagreements. Plant (shadow insert omitted for nexus): 241,644
+  disagreements in the first 442 k lookups -> the detector works.
+  (First run died at 64 contexts: shadow registry was a fixed array; made
+  it a ring.)
+- Suite plants 4/4 red then green: locus not recognising a present key,
+  growth with the old mask (both probatio_tabula_monstratorum); typatio
+  not stored, nexus not stored (both probatio_silva_semantica).
