@@ -1167,9 +1167,12 @@ spatium_documenti (
      chorda  via,
      chorda* spatium)
 {
-    /* communio T4: picturae aliae machinae non sunt propriae */
-    si (   via.mensura                       >= VII
-        && memcmp(via.datum, "aliena/", VII) == ZEPHYRUM)
+    /* communio T4: picturae aliae machinae non sunt propriae;
+     * negotia-paginae T4: picturae paginarum negotii non bibliothecae */
+    si (   (   via.mensura >= VII
+            && memcmp(via.datum, "aliena/", VII) == ZEPHYRUM)
+        || (   via.mensura >= VIII
+            && memcmp(via.datum, "negotia/", VIII) == ZEPHYRUM))
     {
         redde FALSUM;
     }
@@ -1221,6 +1224,92 @@ pictor_documenta_enumerare (
         *(chorda*)xar_addere(l) = spatium;
     }
     redde l;
+}
+
+interior chorda
+clavis_manifesti (
+               Piscina* piscina,
+    constans character* spatium);
+
+b32
+pictor_documentum_exstat (
+               Volumen* volumen,
+    constans character* spatium,
+               Piscina* piscina)
+{
+               Xar* plagulae;
+    VolumenPlagula* pl;
+            chorda  via;
+               i32  i;
+
+    si (!volumen || !spatium || !piscina)
+    {
+        redde FALSUM;
+    }
+    via       = clavis_manifesti(piscina, spatium);
+    plagulae  = volumen_plagulas_enumerare(volumen, piscina);
+    per (i = ZEPHYRUM; plagulae && i < xar_numerus(plagulae); i++)
+    {
+        pl = (VolumenPlagula*)xar_obtinere(plagulae, i);
+        si (   chorda_aequalis(pl->via, via)
+            && chorda_aequalis_literis(pl->origo, "pictor:documentum"))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+s64
+pictor_documentum_ultimum (
+               Volumen* volumen,
+    constans character* spatium,
+               Piscina* piscina)
+{
+                     Xar* acta;
+            VolumenActum* a;
+      constans character* genera[VI];
+                  chorda  via;
+                  chorda  v;
+            JsonResultus  r;
+                     s64  seq;
+                     i32  i;
+
+    si (!pictor_documentum_exstat(volumen, spatium, piscina))
+    {
+        redde ZEPHYRUM;
+    }
+    historia_genera(piscina, spatium, GENUS_ICTUUM, genera);
+    genera[IV]  = "plagula-condita";
+    genera[V]   = NIHIL;
+    via         = clavis_manifesti(piscina, spatium);
+    /* acta propria sola (ut pictor_documenta_recentia) */
+    acta = volumen_replica(volumen).mensura > ZEPHYRUM
+         ? volumen_acta_generum_replicae_legere(volumen,
+               volumen_replica(volumen), ZEPHYRUM, genera, piscina)
+         : volumen_acta_generum_legere(volumen, ZEPHYRUM, genera,
+               piscina);
+    seq = ZEPHYRUM;
+    per (i = ZEPHYRUM; acta && i < xar_numerus(acta); i++)
+    {
+        a = (VolumenActum*)xar_obtinere(acta, i);
+        si (chorda_aequalis_literis(a->genus, "plagula-condita"))
+        {
+            r = json_legere(a->datum, piscina);
+            v = r.successus ? json_capere_chorda(r.radix, "via",
+                chorda_ex_literis("", piscina))
+                : chorda_ex_literis("", piscina);
+            si (!chorda_aequalis(v, via))
+            {
+                perge;
+            }
+        }
+        si (a->seq > seq)
+        {
+            seq = a->seq;
+        }
+    }
+    redde seq;
 }
 
 /* pinacotheca D5: acta generum picturarum (historia_genera) et

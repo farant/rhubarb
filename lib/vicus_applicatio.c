@@ -769,6 +769,9 @@ nomen structura {
     /* status-plan S3-S6: systemata repositorii vici, communia cum
      * contextu scribae (S7b: vicus_aperire ea creat) */
     StatusSystemata* systemata;
+    /* negotia-paginae T4: organa vici (ContextusOrganorum*) - locus
+     * ordinarius picturae bibliothecae; NIHIL = genus solum */
+             vacuum* organa;
 } ContextusPictoris;
 
 /* L5: porta lateris pictoris - ad portam communem (tempore vocationis
@@ -1470,18 +1473,81 @@ titulus_colloquiorum (
     redde chorda_ex_literis("Sessions", piscina);
 }
 
-/* pictura lateris (campus 'pictura') */
+/* negotia-paginae T4: latus pictoris in vico - montatio prima
+ * (latus ut PictorMontatio legitur), contextus generis pro loco */
+nomen structura {
+       PictorMontatio  m;
+    ContextusPictoris* cp;
+} LatusPictoris;
+
+/* T4: id paginae negotii ex pictura "negotia/<id>"; FALSUM aliter */
+interior b32
+pagina_picturae (
+    constans PictorMontatio* m,
+                     chorda* id)
+{
+    chorda* a;
+
+    a = insula_ramus_attributum(&m->ramus, "pictura");
+    si (   !a || a->mensura <= VIII
+        || memcmp(a->datum, "negotia/", VIII) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    id->datum    = a->datum + VIII;
+    id->mensura  = a->mensura - VIII;
+    redde VERUM;
+}
+
+/* pictura lateris (campus 'pictura'); T4: pagina negotii -> "Mood
+ * board · <id VI>" */
 interior chorda
 titulus_picturae (
      vacuum* ctx,
     Piscina* piscina)
 {
-    chorda* a;
+     chorda* a;
+     chorda  id;
 
+    si (pagina_picturae((PictorMontatio*)ctx, &id))
+    {
+        si (id.mensura > VI)
+        {
+            id.datum    += id.mensura - VI;
+            id.mensura  = VI;
+        }
+        redde chorda_concatenare(chorda_ex_literis("Mood board \302\267 ",
+            piscina), id, piscina);
+    }
     a = insula_ramus_attributum(&((PictorMontatio*)ctx)->ramus,
         "pictura");
     redde a ? chorda_transcribere(*a, piscina)
             : chorda_ex_literis("Picture", piscina);
+}
+
+/* comites (facies.locus): T4 pagina negotii -> "negotia/pagina/<id
+ * plenum>" (liber paginae, ut adumbratio); aliter locus semitae
+ * ordinarius */
+interior chorda
+locus_picturae (
+     vacuum* ctx,
+    Piscina* piscina)
+{
+    LatusPictoris* lp;
+           chorda  id;
+
+    lp = (LatusPictoris*)ctx;
+    si (pagina_picturae(&lp->m, &id))
+    {
+        redde chorda_concatenare(chorda_ex_literis("negotia/pagina/",
+            piscina), id, piscina);
+    }
+    si (lp->cp && lp->cp->organa)
+    {
+        redde semita_locus(organa_vici, lp->cp->organa, &lp->m.ramus,
+            "pictor", piscina);
+    }
+    redde chorda_ex_literis("pictor", piscina);
 }
 
 interior b32
@@ -1502,8 +1568,9 @@ pictorem_montare (
              vacuum* valor;
              chorda  clavis;
 
-    m   = (PictorMontatio*)sedes;
-    cp  = (ContextusPictoris*)ctx;
+    m                            = (PictorMontatio*)sedes;
+    cp                           = (ContextusPictoris*)ctx;
+    ((LatusPictoris*)sedes)->cp  = cp;
     si (!pictor_montare(m, piscina, intern, volumen, repo, id,
             latitudo, altitudo, cp ? cp->systemata : NIHIL))
     {
@@ -1572,9 +1639,11 @@ pictorem_describere (
     f->ramus               = &m->ramus;
     f->semitam_secuta      = pictor_semitam_secuta;
     f->semitam_secuta_ctx  = m;
-    /* comites P1: titulus loci = pictura */
+    /* comites P1: titulus loci = pictura; T4: locus paginae negotii */
     f->locus_titulus      = titulus_picturae;
     f->locus_titulus_ctx  = montatio;
+    f->locus              = locus_picturae;
+    f->locus_ctx          = montatio;
 }
 
 /* S3e: pictura lateris pictoris: semitae R4c - campus pictura (verus
@@ -5033,18 +5102,23 @@ negotia_communia (
 }
 
 /* paginae T6: anulus tabulae activae pro negotio id - negotium,
- * colloquia eius (ordine adiunctionis), paginae adumbrationis
- * activitate (seq) recentissima prima; pictoris post T4. Positio =
- * latus positionis prioris in anulo novo, aliter ZEPHYRUM */
+ * colloquia eius (ordine adiunctionis), paginae activitate
+ * recentissima prima: adumbratio (seq), T4 pictor (maximum seq et
+ * pictor_documentum_ultimum). Positio = latus (genus_frontis,
+ * argumentum_frontis) si datum, aliter latus positionis prioris in
+ * anulo novo, aliter ZEPHYRUM */
 interior b32
 anulum_negotii_ponere (
     ContextusNegotiorum* cg,
-     constans character* id)
+     constans character* id,
+     constans character* genus_frontis,
+     constans character* argumentum_frontis)
 {
                    Piscina*  scheda;
                        Xar*  cs;
                        Xar*  ps;
     constans NegotiiPagina** paginae;
+                       s64*  activitates;
         constans character** genera;
         constans character** argumenta;
                VicusTabula*  t;
@@ -5079,31 +5153,48 @@ anulum_negotii_ponere (
     np        = ps ? xar_numerus(ps) : ZEPHYRUM;
     paginae   = (constans NegotiiPagina**)piscina_allocare(scheda,
         (memoriae_index)(np + I) * magnitudo(constans NegotiiPagina*));
+    activitates = (s64*)piscina_allocare(scheda,
+        (memoriae_index)(np + I) * magnitudo(s64));
     genera    = (constans character**)piscina_allocare(scheda,
         (memoriae_index)(I + nc + np) * magnitudo(constans character*));
     argumenta = (constans character**)piscina_allocare(scheda,
         (memoriae_index)(I + nc + np) * magnitudo(constans character*));
-    si (!paginae || !genera || !argumenta)
+    si (!paginae || !activitates || !genera || !argumenta)
     {
         piscina_destruere(scheda);
         redde FALSUM;
     }
-    /* paginae adumbrationis, insertione seq decrescente */
+    /* paginae, insertione activitatis decrescente */
     n = ZEPHYRUM;
     per (k = ZEPHYRUM; k < np; k++)
     {
         constans NegotiiPagina* x;
+                           s64  act;
+                           s64  ultimum;
 
-        x = (constans NegotiiPagina*)xar_obtinere(ps, k);
-        si (x->genus != NEGOTIA_PAGINA_ADUMBRATIO)
+        x    = (constans NegotiiPagina*)xar_obtinere(ps, k);
+        act  = x->seq;
+        si (x->genus == NEGOTIA_PAGINA_PICTOR)
+        {
+            ultimum = pictor_documentum_ultimum(cg->volumen,
+                chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+                "negotia/", scheda), x->id, scheda), scheda), scheda);
+            si (ultimum > act)
+            {
+                act = ultimum;
+            }
+        }
+        alioquin si (x->genus != NEGOTIA_PAGINA_ADUMBRATIO)
         {
             perge;
         }
-        per (j = n; j > ZEPHYRUM && paginae[j - I]->seq < x->seq; j--)
+        per (j = n; j > ZEPHYRUM && activitates[j - I] < act; j--)
         {
-            paginae[j] = paginae[j - I];
+            paginae[j]      = paginae[j - I];
+            activitates[j]  = activitates[j - I];
         }
-        paginae[j] = x;
+        paginae[j]      = x;
+        activitates[j]  = act;
         n++;
     }
     genera[ZEPHYRUM]     = "negotia";
@@ -5117,13 +5208,23 @@ anulum_negotii_ponere (
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
-        genera[I + nc + k]     = "negotia";
+        b32 pictoris;
+
+        pictoris = paginae[k]->genus == NEGOTIA_PAGINA_PICTOR;
+        genera[I + nc + k] = pictoris ? "pictor" : "negotia";
         argumenta[I + nc + k]  = chorda_ut_cstr(chorda_concatenare(
-            chorda_ex_literis("adumbratio/", scheda), paginae[k]->id,
-            scheda), scheda);
+            chorda_ex_literis(pictoris ? "negotia/" : "adumbratio/",
+            scheda), paginae[k]->id, scheda), scheda);
     }
     n        += I + nc;
     positio  = ZEPHYRUM;
+    si (genus_frontis && argumentum_frontis)
+    {
+        prius        = VERUM;
+        genus_prius  = chorda_ex_literis(genus_frontis, scheda);
+        argumentum_prius  = chorda_ex_literis(argumentum_frontis,
+            scheda);
+    }
     per (k = ZEPHYRUM; prius && k < n; k++)
     {
         si (   chorda_aequalis_literis(genus_prius, genera[k])
@@ -5174,7 +5275,7 @@ anulum_negotii_renovare (
     cg->anulus_tabula = t->id;
     memcpy(id, argumentum.datum, (memoriae_index)argumentum.mensura);
     id[argumentum.mensura] = '\0';
-    (vacuum)anulum_negotii_ponere(cg, id);
+    (vacuum)anulum_negotii_ponere(cg, id, NIHIL, NIHIL);
     redde FALSUM;
 }
 
@@ -5210,8 +5311,72 @@ negotium_aperire_in_vico (
     id[negotium.mensura] = '\0';
     /* T5/T6: anulus tabulae = negotium, colloquia eius (genus
      * virtuale "colloquium"), paginae adumbrationis */
-    (vacuum)anulum_negotii_ponere(cg, id);
+    (vacuum)anulum_negotii_ponere(cg, id, NIHIL, NIHIL);
     redde vicus_acervo_aperire(cg->vicus, "negotia", id);
+}
+
+/* negotia-paginae T4: $add-pictor / $add-pictor(titulus) (Franus
+ * 2026-11-06) - negotium = anulus tabulae activae a ("negotia", id)
+ * incipiens; pagina pictoris conditur, anulus renovatur cum positione
+ * in ea, latus in fronte (montatio picturam vacuam condit).
+ * Consumitur. */
+interior b32
+pictorem_addere_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+    ContextusNegotiorum* cg = (ContextusNegotiorum*)ctx;
+                 chorda  genus;
+                 chorda  negotium;
+                 chorda  titulus;
+                 chorda  pagina;
+              character  id[CXXVIII];
+              character  argumentum[CXL];
+
+    si (iussum->numerus_argumentorum > I)
+    {
+        effectus->error = chorda_ex_literis(
+            "add-pictor: one title at most", piscina);
+        redde VERUM;
+    }
+    si (   !cg || !vicus_anuli_latus(cg->vicus, ZEPHYRUM, &genus,
+               &negotium)
+        || !chorda_aequalis_literis(genus, "negotia")
+        || negotium.mensura == ZEPHYRUM
+        || negotium.mensura >= (i32)magnitudo(id)
+        || !negotia_communia(cg))
+    {
+        effectus->error = chorda_ex_literis(
+            "add-pictor: no project in this tab", piscina);
+        redde VERUM;
+    }
+    memcpy(id, negotium.datum, (memoriae_index)negotium.mensura);
+    id[negotium.mensura] = '\0';
+    titulus = (   iussum->numerus_argumentorum == I
+               && iussum->argumenta[ZEPHYRUM].mensura > ZEPHYRUM)
+            ? iussum->argumenta[ZEPHYRUM]
+            : chorda_ex_literis("mood board", piscina);
+    pagina = negotia_paginam_creare(cg->negotia, chorda_ex_literis(id,
+        piscina), NEGOTIA_PAGINA_PICTOR, titulus, chorda_ex_literis("",
+        piscina));
+    si (   pagina.mensura        == ZEPHYRUM
+        || pagina.mensura + VIII >= (i32)magnitudo(argumentum))
+    {
+        effectus->error = chorda_ex_literis(
+            "add-pictor: page not created", piscina);
+        redde VERUM;
+    }
+    sprintf(argumentum, "negotia/%.*s", (integer)pagina.mensura,
+        (constans character*)pagina.datum);
+    (vacuum)anulum_negotii_ponere(cg, id, "pictor", argumentum);
+    si (!vicus_acervo_aperire(cg->vicus, "pictor", argumentum))
+    {
+        effectus->error = chorda_ex_literis(
+            "add-pictor: page not opened", piscina);
+    }
+    redde VERUM;
 }
 
 /* T6: colloquium ex libro praeconii (recentissimum primum); FALSUM si
@@ -6124,6 +6289,9 @@ ContextusNomenclatoris* cn;
         || !negotiorum
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "projects",
                "negotia", NIHIL, piscina)
+        /* negotia-paginae T4: $add-pictor(titulus) */
+        || !iussum_registrare(cs->iussa, "add-pictor", VERUM,
+               pictorem_addere_iussum, negotiorum)
         /* chronica C3: $timeline (annus servatus), $timeline(1274) */
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "timeline",
                "chronica", NIHIL, piscina)
@@ -6146,7 +6314,7 @@ ContextusNomenclatoris* cn;
                magnitudo(ScribaMontatio), scribam_montare,
                scribam_describere, cs)
         || !vicus_genus_addere(app->vicus, "pictor",
-               magnitudo(PictorMontatio), pictorem_montare,
+               magnitudo(LatusPictoris), pictorem_montare,
                pictorem_describere, cp)
         || !vicus_genus_addere(app->vicus, "terminale",
                magnitudo(TerminaleInVico),
@@ -6227,6 +6395,9 @@ ContextusNomenclatoris* cn;
             (int)causa.mensura, causa.datum);
         redde FALSUM;
     }
+    /* T4: locus picturae bibliothecae per organa vici (via_registrare
+     * ea creavit) */
+    cp->organa = ci->via ? (vacuum*)ci->via->organa : NIHIL;
     /* tabula praeterita (genus ignotum, montatio deficiens): nominatur,
      * ceterae currunt */
     causa = vicus_causa(app->vicus);

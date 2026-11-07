@@ -56,11 +56,21 @@
  * (latus prius per vicum).
  *
  * Negotium ex indice apertum = porta negotium_aperire (vicus: anulus
- * tabulae = negotium, colloquia eius, deinde paginae adumbrationis
- * activitate recentissima prima ("adumbratio/<id plenum>"; pictoris
- * post T4, notae post T5) - et latus novum in acervo). Anulus
- * tabulae activae renovatur cum negotia_versio movetur aut tabula
- * mutatur; frons manet. Sine porta visus in loco mutatur
+ * tabulae = negotium, colloquia eius, deinde paginae activitate
+ * recentissima prima - adumbratio ("negotia", "adumbratio/<id
+ * plenum>"), pictor ("pictor", "negotia/<id plenum>"; activitas =
+ * maximum seq paginae et pictor_documentum_ultimum); notae post T5 -
+ * et latus novum in acervo). Anulus tabulae activae renovatur cum
+ * negotia_versio movetur aut tabula mutatur; frons manet. Activitas
+ * in renovatione legitur; negotia_versio omnia acta numerat, ergo
+ * ictus picturae anulum pulsu proximo reordinat (frons et positio
+ * manent).
+ * $add-pictor / $add-pictor(titulus) (Franus 2026-11-06; in quavis
+ * pagina scribae): negotium = anulus tabulae activae a ("negotia",
+ * id) incipiens; pagina pictoris + documentum vacuum conduntur,
+ * anulus renovatur, pagina in fronte. Titulus ordinarius "mood
+ * board". Consumitur. Sine anulo negotii: nihil conditur, "add-pictor:
+ * no project in this tab". Sine porta visus in loco mutatur
  * (historia impelle). Pulsus per M ms: negotia_renovare - scripturae
  * aliorum processuum (bin/negotia, alia arbor) intra secundum
  * apparent. */

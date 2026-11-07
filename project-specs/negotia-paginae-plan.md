@@ -180,9 +180,11 @@ pane background, "Mock-up error" title, the message. CLI:
   (`pictor_picturam_ponere` :333 uses the exists check, not
   `in_bibliotheca`, for `negotia/` spatia; missing -> create empty),
   `tools/negotia.c` (`pagina -genus pictor` creates the document; `png`
-  for pictor pages)
+  for pictor pages), `lib/vicus_applicatio.c` (`$add-pictor` iussum;
+  ring gains pictor pages)
 - Test: `probationes/probatio_pictor_documentum.c` (or the pictor suite
-  holding library tests), `probationes/probatio_negotia.c` smoke via CLI
+  holding library tests), `probationes/probatio_negotia.c` smoke via CLI,
+  `probationes/probatio_vicus_acervus.c` (`$add-pictor`, ring)
 
 **Interfaces:**
 - Produces:
@@ -204,6 +206,15 @@ for a new page document: the pictor pane's default canvas. For a
 title and (b) reports companion locus `negotia/pagina/<full id>`
 (facies.locus), so Cmd+T opens the page's notebook, not pictor's.
 
+**`$add-pictor` (Fran 2026-11-06):** how Fran makes a mood board in vicus.
+Typed on any scriba page; `$add-pictor` or `$add-pictor(title)` (default
+title "mood board"). The project = the ACTIVE TAB's ring when its first
+entry is ("negotia", id) - the tab's project, not strictly the right
+pane's. Creates the pictor page + empty document, rebuilds the ring, and
+opens the page in front. Consumed on run (like `$dies`), so a second
+click cannot make a second page. No project ring -> nothing created,
+error "add-pictor: no project in this tab".
+
 - [ ] **Step 1 (red):** "negotia occulta" (a `negotia/x` document is not
   in `pictor_documenta_enumerare` / `_recentia`, but `_exstat` is VERUM),
   "ultimum" (strokes raise `_ultimum`), "documentum absens" (pane opened
@@ -211,7 +222,10 @@ title and (b) reports companion locus `negotia/pagina/<full id>`
   "aperire occultam" (pane opens an existing hidden document), "locus
   paginae" (pane on `negotia/<id>`: locus = `negotia/pagina/<id>`, id
   drawn in the title); CLI
-  smoke: `pagina -genus pictor` then `png` writes the bitmap.
+  smoke: `pagina -genus pictor` then `png` writes the bitmap;
+  "add-pictor" (project tab: page created, in the ring, in front;
+  title argument used), "add-pictor sine negotio" (no project ring:
+  error, nothing created).
 - [ ] **Step 2:** implement. **Step 3:** green; plants: prefix not
   skipped (-> "negotia occulta"); exists check reverted to library
   (-> "aperire occultam").

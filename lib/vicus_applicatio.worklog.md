@@ -272,3 +272,28 @@ book's `natale` writes it at birth. `scriba_actiones` skips the
 `lectoris_notas_habere`: "comes/" + locus (same key comitem_sequi
 builds - a Cmd+T end-to-end test pins it) has a non-blank line; scratch
 piscina `scheda_notarum` per call because it runs on every paint.
+
+## 2026-11-06 — negotia-paginae T4: pictor pages + $add-pictor
+
+- Project mood boards are pictor documents at spatium `negotia/<page id>`.
+  `spatium_documenti` skips `negotia/`, so they are out of pictor's book
+  and recents; `in_bibliotheca` (pictor_applicatio.c) answers for them via
+  `pictor_documentum_exstat` instead. An absent `negotia/` picture is
+  created even when mounting (condere FALSUM): the pane is how a board
+  gets its document, at the pane's size (CLI uses 600x700).
+- Ring: pictor pages join as ("pictor", "negotia/<id>"), activity =
+  max(page seq, pictor_documentum_ultimum). NOTE: `negotia_versio` grows
+  with ANY act read (pictor strokes too), so the anulus_negotii system
+  rebuilds the ring after each stroke — the board moves up, front and
+  positio stay (prius = latus at old positio). The approved header first
+  said "a stroke alone doesn't reorder"; corrected to match.
+- `anulum_negotii_ponere` gained (genus_frontis, argumentum_frontis):
+  $add-pictor rebuilds with positio on the new page before opening it.
+- Pictor pane got its own facies.locus (needed "negotia/pagina/<id>" for
+  boards). vicus_latus_locus has NO fallback when facies.locus is set, so
+  the pane struct is wrapped: LatusPictoris { PictorMontatio m (first, so
+  casts to PictorMontatio* still hold); ContextusPictoris* cp }, and
+  cp->organa (set after the setup chain from ci->via->organa) gives the
+  ordinary semita_locus ("pictor/x1", pinned in probatio_vicus_comites).
+- Test gotcha: on an empty scriba page a click on line II puts the cursor
+  on line 0 — type and then click the token at (0, col).

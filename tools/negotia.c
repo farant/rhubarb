@@ -19,7 +19,7 @@
  *   negotia pagina-mutare <pagina> [-titulus T]
  *                  [-corpus T | -corpus-filum F]
  *   negotia paginae <negotium>  ("<suffixum>  <genus>  <titulus>")
- *   negotia png <pagina> <via.png>       adumbratio (pictor: T4)
+ *   negotia png <pagina> <via.png>       adumbratio aut pictura
  *   negotia png -filum <F.stml> <via.png>  filum sine pagina
  *
  * <negotium>, <facultas>: id plenum aut suffixum unicum. S: planned |
@@ -56,6 +56,9 @@
 #include "negotia.h"
 #include "via.h"
 #include "adumbratio.h"
+#include "internamentum.h"
+#include "imago_png.h"
+#include "pictor_documentum.h"
 #include "thema.h"
 #include "provenientia.h"
 #include <stdio.h>
@@ -668,8 +671,46 @@ sessio_valida (
     redde VERUM;
 }
 
+/* negotia-paginae T4: spatium picturae paginae "negotia/<id plenum>" */
+interior constans character*
+spatium_paginae (
+    chorda  id,
+   Piscina* piscina)
+{
+    redde chorda_ut_cstr(chorda_concatenare(chorda_ex_literis(
+        "negotia/", piscina), id, piscina), piscina);
+}
+
+/* T4: pictura paginae -> PNG (compositum); absens nominatur */
+interior s32
+picturam_scribere (
+                Volumen* volumen,
+                 chorda  id,
+     constans character* via,
+                Piscina* piscina)
+{
+     PictorDocumentum* doc;
+           PngFructus  fr;
+
+    doc = pictor_documentum_aperire(piscina, internamentum_creare(
+        piscina), volumen, spatium_paginae(id, piscina));
+    si (!doc)
+    {
+        fprintf(stderr, "negotia: pictura paginae abest\n");
+        redde I;
+    }
+    fr = imago_png_scribere(&doc->proiectio, via, piscina);
+    si (!fr.successus)
+    {
+        fprintf(stderr, "negotia: PNG scribi non potest: %s\n", via);
+        redde I;
+    }
+    redde ZEPHYRUM;
+}
+
 interior s32
 exsequi (
+               Volumen* volumen,
                Negotia* n,
          ImperiumGenus  g,
     constans Argumenta* a,
@@ -762,11 +803,10 @@ exsequi (
             {
                 redde I;
             }
-            si (g->genus != NEGOTIA_PAGINA_ADUMBRATIO)
+            si (g->genus == NEGOTIA_PAGINA_PICTOR)
             {
-                fprintf(stderr, "negotia: paginae pictoris nondum"
-                    " (T4)\n");
-                redde I;
+                redde picturam_scribere(volumen, g->id, a->positiva[I],
+                    piscina);
             }
             redde adumbrationem_scribere(g->corpus, a->positiva[I],
                 piscina);
@@ -794,6 +834,17 @@ exsequi (
             id = negotia_paginam_creare(n, x->id, genus,
                 chorda_ex_literis(a->positiva[I], piscina), corpus_datum
                 ? corpus : chorda_ex_literis("", piscina));
+            /* T4: pictura vacua (magnitudo adumbrationis) */
+            si (   id.mensura > ZEPHYRUM
+                && genus == NEGOTIA_PAGINA_PICTOR
+                && !pictor_documentum_creare(piscina,
+                       internamentum_creare(piscina), volumen,
+                       spatium_paginae(id, piscina),
+                       ADUMBRATIO_LATITUDO, ADUMBRATIO_ALTITUDO, LXIV))
+            {
+                fprintf(stderr, "negotia: pictura condi non potest\n");
+                redde I;
+            }
             frange;
         }
         casus IMP_PAGINAM_MUTARE:
@@ -933,7 +984,7 @@ principale (
         piscina_destruere(piscina);
         redde I;
     }
-    exitus = exsequi(n, g, &a, status, piscina);
+    exitus = exsequi(volumen, n, g, &a, status, piscina);
     volumen_claudere(volumen);
     piscina_destruere(piscina);
     redde exitus;
