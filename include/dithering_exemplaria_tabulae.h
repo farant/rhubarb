@@ -6,9 +6,11 @@
  * Quod classicus in omni vocatione computat, hic semel in
  * aedificatione: ordines (bits per lineam), densitates, pondera oculo
  * SIGMA_OCULI et SIGMA_OCULI_LATI (Gaussiana in toro, quantizata
- * 0..GRADUS_MIXTI), index [exemplar][y * VIII + x]; et lux linearis
- * octeti sRGB. Valores IIDEM ac classici (_exemplar_finire,
- * color_octetus_ad_linearem): velox ex his == classicus octetim.
+ * 0..GRADUS_MIXTI), index [exemplar][y * VIII + x] - valores IIDEM
+ * ac classici (_exemplar_finire); et lux linearis octeti sRGB ut f32
+ * (%#.9g, reditus exactus) - classicus f64 per
+ * color_octetus_ad_linearem convertit, ergo a T3 velox ab eo
+ * pixelatim differre potest.
  */
 
 #ifndef DITHERING_EXEMPLARIA_TABULAE_H
@@ -27,6 +29,6 @@ extern constans s32 DITHERING_PICTOGRAMMATUM_DENSITATES[XI];
 extern constans  i8 DITHERING_PICTOGRAMMATUM_PONDERA[XI][LXIV];
 extern constans  i8 DITHERING_PICTOGRAMMATUM_PONDERA_LATA[XI][LXIV];
 
-extern constans f64 DITHERING_SRGB_LINEARIS[CCLVI];  /* f32 a T3 */
+extern constans f32 DITHERING_SRGB_LINEARIS[CCLVI];
 
 #endif /* DITHERING_EXEMPLARIA_TABULAE_H */

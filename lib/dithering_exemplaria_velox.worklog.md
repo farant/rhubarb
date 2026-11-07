@@ -71,3 +71,45 @@ Plan: `project-specs/exemplaria-velox-plan.md` (spec
 - No speed change (N = 10): lapis 600 classic 601 ms, velox 600 ms;
   meadow 709 / 688. The `exp` work was a few ms and sRGB was already
   table-backed. Differentia still 0.0 %. Big wins start in T3.
+
+## 2026-11-07 — T3: f32 planes, bitsets, cube root without pow
+
+- Every per-pixel buffer is now an `f32` plane per channel (`Plana`,
+  `Structura`); masks are `i32`-word bitsets (`_bit`, `_bit_ponere`);
+  `Opus` carries `larva_activorum` and builds `mixtio` (f32) only for
+  active pairs. OKLab is `_oklab` in f32 with `_radix_cubica`: bit
+  guess (`bits / 3 + 709921077`) + two Newton steps. Measured max
+  relative error 1.7e-6 on [1e-6, 4]; only subnormals (< 1.2e-38) are
+  off, and their cube root (~1e-13) can't move a colour.
+- The source image's OKLab is only read for L (structure tensor), so
+  only an L plane (`lumen`) is kept. `_gauss_planum` is per plane and
+  may write in place (`meta == fons`): the horizontal pass reads the
+  whole source into `tmp` first - the structure tensor and aspersio
+  blur in place. Region side arrays (`initium`, `nm`, `RegioOrdo`)
+  are sized `n / area_min + 1`, not `n`.
+- sRGB table is f32 (`%#.9gf` - the `#` keeps "0." so `0f` never
+  appears).
+- Tests: "par classicae" retired; "colores puri" (16 flat images ->
+  own index; passed on the copy, a guard) and "memoria minor" (gravis;
+  FRACTA on the copy at 247 = 247). Plants: a into the b plane ->
+  "colores puri" red; `_bit` `p >> VI` -> "determinatum" + "alpha
+  neglecta" red. Why "determinatum": with wrong bits, aspersio reads
+  `atramentum`/`charta` where nothing was written (uninitialised arena
+  bytes) - only in the planted state; normally they're read only under
+  `larva`.
+- Drift from classic: 2 px on the golem, 14 px on the meadow (the
+  tool's differentia was `%.1f` and showed 0.0 %; now `%.2f` + pixel
+  count). Memory 247 -> 81 MB (golem 600). Speed only ~1.1x - expected:
+  blur, the base pair search and the insertion-sort nearest colours
+  are T4-T6.
+
+  | imago | magnitudo | atkinson | classica | velox | arena c/v MB |
+  |---|---|---|---|---|---|
+  | lapis | 360x451 | 3.8 ms | 233 ms | 210 ms | 89/29 |
+  | lapis | 600x751 | 9.5 ms | 589 ms | 517 ms | 247/81 |
+  | lapis | 720x901 | 13.4 ms | 843 ms | 736 ms | 356/116 |
+  | pratum | 600x800 | 10.2 ms | 652 ms | 594 ms | 260/84 |
+
+- Formatter: the copy carried classic's 92-ish report-only notes
+  (60-char banners, includes after system headers, long lines); the
+  rewritten file is CONFORMIS.

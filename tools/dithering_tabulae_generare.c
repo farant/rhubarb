@@ -9,8 +9,8 @@
  * linearem octeti sRGB per color_srgb_ad_linearem (ut
  * color_octetus_ad_linearem). Scribit
  * lib/dithering_exemplaria_tabulae.c (capite
- * include/dithering_exemplaria_tabulae.h). f64 per %.17g: valor
- * scriptus legitur idem octetim.
+ * include/dithering_exemplaria_tabulae.h). Lux f32 per %#.9g (cum
+ * puncto, suffixo f): valor scriptus legitur idem octetim.
  *
  * Instrumentum aetatis aedificationis;
  * tools/dithering_tabulae_generare.sh id struit (aedilis) et currit
@@ -206,11 +206,12 @@ principale (
         DITHERING_BAYER_NUMERUS);
     _genus_scribere(f, "DITHERING_PICTOGRAMMATUM", figurae,
         DITHERING_PICTOGRAMMATA_FONTIUM);
-    fprintf(f, "constans f64 DITHERING_SRGB_LINEARIS[CCLVI] = {\n");
+    fprintf(f, "constans f32 DITHERING_SRGB_LINEARIS[CCLVI] = {\n");
     per (k = 0; k < CCLVI; k++)
     {
-        fprintf(f, "%s%.17g", k == 0 ? "    " : k % IV == 0 ? ",\n    "
-            : ", ", color_srgb_ad_linearem((f64)k / 255.0));
+        f32 lux = (f32)color_srgb_ad_linearem((f64)k / 255.0);
+        fprintf(f, "%s%#.9gf", k == 0 ? "    " : k % IV == 0 ? ",\n    "
+            : ", ", (f64)lux);
     }
     fprintf(f, "\n};\n");
     si (fclose(f) != 0)

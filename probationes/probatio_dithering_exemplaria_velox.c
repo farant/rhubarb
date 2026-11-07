@@ -6,8 +6,11 @@
  *   classica fixa     indices classici (optiones ordinariae, colores
  *                     omnes) per blake2b fixi - classicus numquam
  *                     mutatur (spec decretum 2)
- *   par classicae     velox == classicus octetim (dum copia est;
- *                     plan T3 eam removet, cum f32 differre incipit)
+ *   colores puri      per indicem i 0..XV imago plana XVIxXVI coloris
+ *                     AQUINAS_PALETTE[i], colores omnes -> indices
+ *                     omnes == i (index fractus nominatur)
+ *   memoria minor     in lapide DC: piscina_summa_usus veloci <
+ *                     classici (piscinae novae ambae)
  *   alpha neglecta    canalis alpha non legitur (ut classicus)
  *   sine memoria      nihil inter vocationes servatur: A, B, A ->
  *                     A idem
@@ -109,25 +112,76 @@ _sectio_classica_fixa (
 }
 
 interior vacuum
-_sectio_par_classicae (
+_sectio_colores_puri (
+    CredoContextus* c)
+{
+    b32  activi[XVI];
+     i8* plana = (i8*)piscina_allocare(c->piscina,
+         (memoriae_index)(XVI * XVI * IV));
+    character titulus[XXXII];
+    s32 i, p, errata;
+
+    CREDO_NECESSE(plana != NIHIL);
+    dithering_praeparare_omnes(activi);
+    per (i = 0; i < XVI; i++)
+    {
+        DitheringFructus f;
+        per (p = 0; p < XVI * XVI; p++)
+        {
+            plana[p * IV + 0] = AQUINAS_PALETTE[i][0];
+            plana[p * IV + 1] = AQUINAS_PALETTE[i][1];
+            plana[p * IV + 2] = AQUINAS_PALETTE[i][2];
+            plana[p * IV + 3] = 0xFF;
+        }
+        f = dithering_exemplaria_velox_colorum(plana, XVI, XVI, activi,
+            NIHIL, NIHIL, c->piscina);
+        CREDO_NECESSE(f.successus);
+        errata = 0;
+        per (p = 0; p < XVI * XVI; p++) si ((s32)f.indices[p]
+                                            != i) errata++;
+        sprintf(titulus, "color %d", (integer)i);
+        CREDO_LITERAE_AEQUALES(errata == 0 ? titulus : "fractus",
+            titulus);
+    }
+}
+
+/* usus arenae unius vocationis in piscina nova */
+interior memoriae_index
+_usus_vocationis (
+    DitheringExemplariaFunctio  functio,
+                constans Imago* im)
+{
+    Piscina* p = piscina_generare_dynamicum("memoria_minor",
+        (memoriae_index)(LXIV * 1024 * 1024));
+                 b32 activi[XVI];
+    DitheringFructus f;
+      memoriae_index usus = 0;
+
+    si (p == NIHIL) redde 0;
+    dithering_praeparare_omnes(activi);
+    f = functio(im->pixela, im->latitudo, im->altitudo, activi, NIHIL,
+        NIHIL, p);
+    si (f.successus) usus = piscina_summa_usus(p);
+    piscina_destruere(p);
+    redde usus;
+}
+
+interior vacuum
+_sectio_memoria_minor (
     CredoContextus* c)
 {
     constans FixuraVelox* fx = _fixura(c);
-                     b32  activi[XVI];
-                     s32  i;
+          memoriae_index  classica, velox;
 
-    dithering_praeparare_omnes(activi);
-    per (i = 0; i < FIXA_NUMERUS; i++)
-    {
-          constans Imago* im = &fx->imagines[i];
-        DitheringFructus  f = dithering_exemplaria_velox_colorum(
-            im->pixela, im->latitudo, im->altitudo, activi, NIHIL,
-            NIHIL,
-            c->piscina);
-        CREDO_NECESSE(f.successus);
-        CREDO_OCTETI_AEQUALES(f.indices, fx->classica[i].indices,
-            im->latitudo * im->altitudo);
-    }
+    classica = _usus_vocationis(dithering_exemplaria_colorum,
+        &fx->imagines[0]);
+    velox = _usus_vocationis(dithering_exemplaria_velox_colorum,
+        &fx->imagines[0]);
+    imprimere("  memoria lapidis DC: classica %lu MB, velox %lu MB\n",
+        (insignatus longus)(classica >> XX),
+        (insignatus longus)(velox >> XX));
+    CREDO_NECESSE(classica > 0 && velox > 0);
+    CREDO_VERUM(velox < classica);
 }
 
 interior vacuum
@@ -174,9 +228,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     DITHERING_EXEMPLARIA_SECTIONES_COMMUNES
     { "classica fixa", _sectio_classica_fixa, NIHIL, NIHIL, NIHIL,
         NIHIL },
-    /* gravis: classicus (et copia) ~CCL MB arenae per vocationem ad
-     * DC x DCCLI; velox T3 id minuere debet ("memoria minor") */
-    { "par classicae", _sectio_par_classicae, NIHIL, NIHIL, "gravis",
+    { "colores puri", _sectio_colores_puri, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    /* gravis: classicus ~CCL MB arenae per vocationem ad DC x DCCLI */
+    { "memoria minor", _sectio_memoria_minor, NIHIL, NIHIL, "gravis",
         NIHIL },
     { "alpha neglecta", _sectio_alpha_neglecta, NIHIL, NIHIL, NIHIL,
         NIHIL },

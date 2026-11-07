@@ -220,7 +220,11 @@ principale (
                   "  %4.0f/%-4.0f  ", ORDINES[i].titulus,
             (insignatus)im.latitudo, (insignatus)im.altitudo, ta, tc,
             tv, tc / tv, mc, mv);
-        si (d >= 0.0) imprimere("%6.1f %%\n", d);
+        si (d >= 0.0)
+        {
+            imprimere("%6.2f %% (%lu px)\n", d, (insignatus longus)(d
+                * (f64)im.latitudo * (f64)im.altitudo / 100.0 + 0.5));
+        }
         alioquin imprimere("     -\n");
         piscina_destruere(p);
     }
