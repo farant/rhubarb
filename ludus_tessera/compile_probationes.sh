@@ -79,6 +79,7 @@ declare -a RADIX_FONTES=(
     "quadrans"
     "dithering"
     "dithering_exemplaria"
+    "dithering_exemplaria_fontes"  # fontes communes (velox T2)
     "imago"
     "imago_opus"
     "color"

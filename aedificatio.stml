@@ -475,6 +475,28 @@
     <ingressus genus="manifestum" via="build/aedilis/pecunia_monetae_generare/manifestum.stml"/>
     <exitus via="lib/pecunia_monetae.c" provenientia="regeneratio"/>
   </actio>
+  <!-- tabulae exemplariorum (exemplaria-velox T2): pondera Bayer et
+       pictogrammatum, lux linearis sRGB, ex fontibus communibus;
+       generator per aedilis structus (color.h -> thema), ergo
+       directorium eius vestigium declaratum -->
+  <actio titulus="dithering_exemplaria_tabulae" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/dithering_tabulae_generare.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/dithering_tabulae_generare"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="fasciculus" via="tools/dithering_tabulae_generare.sh"/>
+    <ingressus genus="fasciculus" via="tools/dithering_tabulae_generare.c"/>
+    <ingressus genus="fasciculus" via="include/dithering_exemplaria_fontes.h"/>
+    <ingressus genus="fasciculus" via="lib/dithering_exemplaria_fontes.c"/>
+    <ingressus genus="fasciculus" via="include/dithering_exemplaria.h"/>
+    <ingressus genus="fasciculus" via="include/dithering_exemplaria_tabulae.h"/>
+    <ingressus genus="fasciculus" via="include/color.h"/>
+    <ingressus genus="fasciculus" via="lib/color.c"/>
+    <ingressus genus="manifestum" via="build/aedilis/dithering_tabulae_generare/manifestum.stml"/>
+    <exitus via="lib/dithering_exemplaria_tabulae.c" provenientia="regeneratio"/>
+  </actio>
   <!-- tabula diffisarum (fiducia-linux-plan T2): instantanea OneCRL
        fixa + index manu; generator per aedilis structus (json.h,
        stml.h), ergo directorium eius vestigium declaratum -->

@@ -41,3 +41,33 @@ Plan: `project-specs/exemplaria-velox-plan.md` (spec
   | pratum | 600x800 | 10.6 ms | 685 ms | 678 ms | 260/260 |
 
   Differentia 0.0 % on both fixtures (copy).
+
+## 2026-11-07 — T2: shared pattern sources + build-time tables
+
+- Patterns moved to `lib/dithering_exemplaria_fontes.c` (one home for
+  classic, velox and the generator). "classica fixa" stayed green, so
+  the move didn't change classic's output.
+- `tools/dithering_tabulae_generare.{sh,c}` (aedilis-built, fabrica
+  generator action `dithering_exemplaria_tabulae`) writes
+  `lib/dithering_exemplaria_tabulae.c`: Bayer/pictogram orders,
+  densities, both weight tables (same loop as classic's
+  `_exemplar_finire`), and the 256-entry sRGB->linear table as f64
+  `%.17g` (exact round trip). Velox copies its `Exemplar`s from the
+  tables (no `exp`) and converts sRGB by table. "par classicae" stayed
+  green: the tables equal classic's numbers bit for bit.
+- **Build-freshness trap (again):** the first plants on the generator
+  stayed green / stayed red after restore - aedilis' struere.sh judges
+  by `-nt` in whole seconds, so a source planted and restored within a
+  second kept the planted object (memory plant-restore-mtime). The
+  generator script now deletes its two covered objects
+  (`tools__dithering_tabulae_generare.o`,
+  `lib__dithering_exemplaria_fontes.o`) before building. Plants then:
+  Bayer entry 32 -> 31 -> "classica fixa" + "par classicae" red, and
+  `-probare` RANCIDA; generator sigma 1.0 -> 1.1 -> `-probare` RANCIDA.
+- **Finding, not changed:** `color_octetus_ad_linearem` (lib/color.c)
+  keeps a lazy `hic_manens` sRGB table - a cache by Fran's rule. Classic
+  and many others call it, so it stays for now; velox no longer uses it.
+  Candidate: replace with the generated table.
+- No speed change (N = 10): lapis 600 classic 601 ms, velox 600 ms;
+  meadow 709 / 688. The `exp` work was a few ms and sRGB was already
+  table-backed. Differentia still 0.0 %. Big wins start in T3.
