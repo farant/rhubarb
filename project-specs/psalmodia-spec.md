@@ -72,7 +72,7 @@ psalms in GregoBase use exactly this (measured, §I).
 | # | decision | whose call |
 |---|---|---|
 | P1 | **Output is gabc text and nothing else.** The fitter writes a gabc file's text (header + body); reading, drawing, converting, playing are the existing libraries'. No new pane, no carmen code in the fitter. | Claude, from the conversation; Fran agreed |
-| P2 | **The tone table is DATA**, one file (working path `musica/toni_psalmorum.stml`), read by a small reader. The format is shown to Fran and agreed **before** any tone is transcribed (it is this library's interface). How it reaches binaries (embedded like `instrumentarium.stml` via a GENERATUM C file, or read at run time) is the builder's call; embedding is the house precedent. | Fran: "step 1 would be the tone table"; format review = Fran |
+| P2 | **The tone table is DATA**, one file (working path `musica/toni_psalmorum.stml`), read by a small reader. The format is shown to Fran and agreed **before** any tone is transcribed (it is this library's interface). How it reaches binaries (embedded like `instrumentarium.stml` via a GENERATUM C file, or read at run time) is the builder's call; embedding is the house precedent. | Fran: "step 1 would be the tone table"; format approved by Fran 2026-11-07 (§II) |
 | P3 | **Tones are transcribed from a printed book, never from memory**, each entry citing its source (book, page). Prefer an edition printed by 1930 (the house rule for GregoBase imports, `tools/gabc_arcessere.sh`); a later book (Liber Usualis 1961) may be used to check or to add endings, cited. | Claude's call; book = the 1912 Antiphonale scan (§VI q2, answered) |
 | P4 | **The format must hold every tone the Office needs**, even if v1 transcribes fewer: the eight simple tones with all their endings, the tonus peregrinus, tonus in directum, and the solemn tones of the Magnificat and Benedictus (intonation on every verse, longer mediants). v1 transcribes the eight tones + peregrinus; the solemn tones follow when a consumer pulls. | Claude's call |
 | P5 | **A cadence is a list of tagged notes**: *preparatory* (one per syllable, a fixed count), *accent* (falls on an accented syllable), *added* (the note an extra unaccented syllable after an accent takes), *closing* (the notes after the accent). Two-accent cadences are two accent groups. Variant cadences the books prescribe (the "abrupt" cadence for a half-verse ending in a monosyllable or an indeclinable Hebrew name; the flex) are part of the tone's entry, not code. The exact per-tone counts come from the book (P3), not from this spec. | Claude's call |
@@ -136,24 +136,33 @@ psalms in GregoBase use exactly this (measured, §I).
 
 ## II. The tone table
 
-One entry per tone and ending. Shape (PROPOSITUM — the real format is
-agreed with Fran first, P2; the pitches below are placeholders, not
-transcribed):
+**Format agreed 2026-11-07** (Fran: "that looks good"): the file is
+`musica/toni_psalmorum.stml`, its grammar in its header comment. Tone 1
+is transcribed from AR 1912 p. 4\*–6\*. In short:
 
-```xml
-<tonus modus="8" clavis="c4" tenor="j" fons="Antiphonale 1912 p. …">
-  <initium>g h j</initium>
-  <flexa>h</flexa>
-  <mediatio>'k (j) j</mediatio>
-  <terminatio differentia="G">p:i p:j 'h g</terminatio>
-</tonus>
-```
+- `<tonus modus clavis tenor pagina>` holding `<initium>` (one note or
+  neume per syllable, in order), `<flexa>` (the pitch dropped to),
+  `<mediatio>`, and `<terminatio differentia>`.
+- A cadence is a list of slots, **one per syllable**:
+  `<praeparatio>` (fixed count, no accent), `<accentus superveniens
+  anticipata>` (lands on a stressed syllable; `superveniens` = the
+  extra note for a leftover syllable; `anticipata` = the extra note
+  goes on the stressed syllable and the accent neume moves on, AR
+  p. 6\*), `<nota>` (one syllable after the accent; the last = the
+  close). Slot contents are gabc notes (`ixi` = b-flat, `gvFED`).
+- `differentia` = the book's names (§VI q2); the reader checks the
+  letter against the last note's pitch under the clef. `vicaria` =
+  the ending the book allows instead; `ad_libitum` = a second form of
+  the same ending.
+- `<exemplum pagina pars forma differentia textus notae>`: the book's
+  printed examples, in the table (as the book does), expected notes
+  one per syllable, `r` = the extra note. They are the fitter's first
+  tests (§V). One element per syllable was chosen over a compact
+  one-line cadence: self-describing, and the stml reader rejects a
+  misspelt slot.
 
-(`'` accent, `p:` preparatory, `( )` the added note for an extra
-syllable.) The reader gives: the tone by (mode, ending) with label
-normalization (`VIII g`, `8 g`, `8.g` → one key), the clef, and each
-part as tagged gabc notes. Unknown label = a clear "no such ending"
-with the tone's list.
+Tone 1's endings a, a2, D, f, g, g2 match the GregoBase EUOUAE
+endings note for note (measured 2026-11-07).
 
 **The check that makes the table trustworthy**: every termination,
 fitted to *sæ-cu-ló-rum. A-men* (what EUOUAE stands for), must equal
@@ -186,6 +195,20 @@ cadence, place accents backwards from the end (P5), preparatory notes
 before, added notes for extra syllables, tenor for the rest;
 intonation on verse 1 (every verse for solemn tones). Styling and bars
 per P10. Header per P10.
+
+**The accent rule** (found in AR 1912's tone 1 examples; all 35 fit
+it): fit each cadence backwards. The last slot takes the last syllable.
+Each `<accentus>` takes its nominal syllable (the one before the slots
+after it), **unless that syllable immediately follows the stress of
+its own word** (*dó-MI-nus*, *sae-CU-li*, *lo-cú-TUS sum*): then the
+accent moves back onto the stress and the skipped syllable takes the
+extra note. The last syllable of a proparoxytone (*dó-mi-NUS*) can take
+an accent. A final monosyllable follows the same rule. The book's
+forms A–D (no extra note, at the end, in the middle, both) are results
+of this rule, not data. A cadence too long for its text drops its
+first notes (AR p. 6\*); the book's short-mediant example sets the
+dropped notes as one neume on the first syllable (*Qui* = `hixih`) —
+the builder makes that the rule if the other tones agree.
 
 **The end-to-end check**: the 35 written-out psalms in GregoBase.
 Strip the notes and the bold/italic from one, keep its accents, fit it
@@ -280,6 +303,13 @@ errors, fitter errors, and edition variants.
 - That the written-out GregoBase psalms follow the same tone table as
   the labels (edition variants are likely).
 - That WORDS (oratio) carries no vowel length.
+- Hebrew names: AR 1912 prints them without accents, but the music
+  shows them (*Basan* stressed on the last syllable; *Israel* sung
+  Is-ra-el, a-e two syllables, not the diphthong *ae*). The pointed
+  text or `syllabae_latinae` must carry this; how is open.
+- Whether the 1934+ Solesmes books (most of GregoBase) use a simpler
+  tone-1 mediant rule (one accent + two preparatory syllables): AR's
+  form C (*fa-ci-ÉN-ti-bus*) would differ. The corpus check shows it.
 - How monosyllables at a cadence are treated beyond the abrupt
   cadence.
 - Licences of Divinum Officium texts and of the Nova Vulgata. (The
