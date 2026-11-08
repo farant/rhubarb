@@ -1598,6 +1598,10 @@ PORTAE = {
     # solum currebat, ergo nulla commissio eam debebat
     'examen-vectis': (['./silva/examen_vectis.sh'],
                       r'VECTIS (TENET|FRACTUS)'),
+    # budget X (2026-11-07): percursus ex plagula una contra obiecta
+    # singula - relatio eadem (mores indefiniti modos dividerent)
+    'unitas-percursus': (['./silva/unitas_probare.sh'],
+                         r'UNITAS PERCURSUS: (sana|FRACTA)'),
     # latus examinis super CORPUS verum (percursus REICE contra
     # exclusiones pinnatas, ~CLX s): ante 2026-09-25 manu solum -
     # exclusiones a ~09-14 staluerant (codex 90 novus plagulas domus

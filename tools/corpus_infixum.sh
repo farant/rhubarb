@@ -70,27 +70,39 @@ corpus_symbola_generare () {
     [ -f "$RADIX/build/nexus.tsv" ] || return 1
     {
         echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h et <radix>/*.h = capita; sedes lib/*.c et <radix>/*.c profunditate 0 sine capite, non externa = statica; radices: ${RADICES_CLIENTIUM[*]}) e build/nexus.tsv - NE MANU EDITES"
-        # PRAEFILTRUM (2026-10-22): nexus.tsv ~CLXVI MB, lineae 'sedes'
-        # XVIII% solae (regulae ambae $2=="sedes" poscunt) - grep -F eas
-        # ante awk seligit: effusio eadem, ~XIV s -> ~III.III s (mensuratum)
-        LC_ALL=C grep -F "$(printf '\tsedes\t')" "$RADIX/build/nexus.tsv" |
-        awk -F'\t' -v radices="${RADICES_CLIENTIUM[*]}" '
-            BEGIN { nr = split(radices, R, " ") }
-            function in_radice(via, suffixum,    k) {
-                for (k = 1; k <= nr; k++)
-                    if (index(via, R[k] "/") == 1 && via ~ ("\\" suffixum "$") \
-                        && substr(via, length(R[k]) + 2) !~ /\//) return 1
-                return 0
-            }
-            $2=="sedes" && ($4 ~ /^include\// || in_radice($4, ".h")) { publica[$1]=1; print $1"\t"$3"\t"$4 }
-            $2=="sedes" && ($4 ~ /^lib\/[^\/]*\.c$/ || in_radice($4, ".c")) && $7=="0" && $8!="externus" \
-                && ($3=="functio" || $3=="variabile" || $3=="typedef" || $3=="constans" || $3=="macro") {
-                n=n+1; statica[n]=$1"\t"$3"\t"$4; nomina[n]=$1
-            }
-            END { for (k=1; k<=n; k++) if (!(nomina[k] in publica)) print statica[k] }
-        ' | sort -u
+        symbola_tabulam_scribere "$RADIX" "${RADICES_CLIENTIUM[@]}"
     } > "$TABULA" || return 1
     return 0
+}
+
+# symbola_tabulam_scribere <radix repositorii> <radix clientis>... -
+# ordines tabulae symbolorum (sine titulo) in exitum, ex build/nexus.tsv
+# (vocans eum renovat): capita include/*.h et <radix>/*.h, statica
+# lib/*.c et <radix>/*.c (regulae supra). Radices sine '/' finali.
+# Communis corpus_symbola_generare (RADICES_CLIENTIUM) et
+# tools/instrumentum_unitas.sh (radices instrumenti, e.g. silva/fontes).
+symbola_tabulam_scribere () {
+    local radix="$1"
+    shift
+    # PRAEFILTRUM (2026-10-22): nexus.tsv ~CLXVI MB, lineae 'sedes'
+    # XVIII% solae (regulae ambae $2=="sedes" poscunt) - grep -F eas
+    # ante awk seligit: effusio eadem, ~XIV s -> ~III.III s (mensuratum)
+    LC_ALL=C grep -F "$(printf '\tsedes\t')" "$radix/build/nexus.tsv" |
+    awk -F'\t' -v radices="$*" '
+        BEGIN { nr = split(radices, R, " ") }
+        function in_radice(via, suffixum,    k) {
+            for (k = 1; k <= nr; k++)
+                if (index(via, R[k] "/") == 1 && via ~ ("\\" suffixum "$") \
+                    && substr(via, length(R[k]) + 2) !~ /\//) return 1
+            return 0
+        }
+        $2=="sedes" && ($4 ~ /^include\// || in_radice($4, ".h")) { publica[$1]=1; print $1"\t"$3"\t"$4 }
+        $2=="sedes" && ($4 ~ /^lib\/[^\/]*\.c$/ || in_radice($4, ".c")) && $7=="0" && $8!="externus" \
+            && ($3=="functio" || $3=="variabile" || $3=="typedef" || $3=="constans" || $3=="macro") {
+            n=n+1; statica[n]=$1"\t"$3"\t"$4; nomina[n]=$1
+        }
+        END { for (k=1; k<=n; k++) if (!(nomina[k] in publica)) print statica[k] }
+    ' | sort -u
 }
 
 # plagulae corporis (iidem globi ac corpus_silicis_files), ordine C
