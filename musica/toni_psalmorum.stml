@@ -1,7 +1,9 @@
 <!-- toni_psalmorum.stml - toni psalmorum ex libro impresso.
 
      Forma a Frano probata 2026-11-07 (project-specs/psalmodia-spec.md
-     P2, II). Transcripti: Tonus Primus.
+     P2, II). Transcripti: toni I-VIII, peregrinus, in directum (AR
+     p. 3*-26*; mediationes solemnes canticorum omissae, P4). Formae
+     novae notatae PROPOSITUM Frano recensendae sunt.
 
      Fons: Antiphonale sacrosanctae Romanae ecclesiae pro diurnis
      horis, Typis polyglottis Vaticanis 1912 ("AR"), appendix Toni
@@ -9,15 +11,19 @@
      pagina="4*" = pagina libri.
 
      GRAMMATICA
-     <tonus modus clavis tenor pagina> - clavis gabc (c4: h = la);
-       tenor = nota recitationis.
+     <tonus modus clavis tenor pagina positio> - clavis gabc (c4:
+       h = la); tenor = nota recitationis. modus = 1-8, "peregrinus",
+       "in directum". positio="altera" = tonus transpositus cum
+       differentiis suis (IV: "Altera Positio", AR p. 13*).
      <initium> - notae intonationis, una (aut neuma una) pro syllaba,
        ordine, sine accentu ("prout obveniunt", AR p. 5*).
      <flexa> - nota quo vox deprimitur. Regula (AR p. 5*): syllaba
        ultima deprimitur, et paenultima si brevis; in monosyllaba vel
        voce hebraica vox in tenore sustinetur cum pausa.
      <mediatio>, <terminatio differentia> - clausula = series locorum,
-       quisque locus = syllaba una:
+       quisque locus = syllaba una. Praeparationes initiales in
+       altitudine tenoris non scribuntur (a tenore in libro
+       indistinctae):
          <praeparatio> - syllaba una, numero fixo, sine accentu;
          <accentus superveniens anticipata> - cadit in syllabam
            accentu notatam (regula infra); superveniens = nota addita
@@ -26,16 +32,33 @@
            syllaba accentus, neuma accentus in syllabam sequentem
            transit (AR p. 6*, "Superveniens anticipata");
          <nota> - syllaba una post accentum; ultima = finis.
+       casus="monosyllaba" - clausula pro semiversu in monosyllabam vel
+         vocem hebraicam desinente, solum in tonis qui eam imprimunt
+         (alias regula communis valet).
+       <mediatio ad_libitum="verum"> - mediatio altera (VI: antiqua).
+       <terminatio clavis> - totus psalmus his litteris in hac clave
+         canitur (II: "Finalis unica D vel A").
+       <terminatio tenor initium> - tenor secundae partis et intonatio
+         ejus in versu primo (peregrinus); terminatio sine differentia
+         = unica.
        differentia = littera notae ultimae (A la ... G sol), majuscula
        si finalis modi, numerus si plures in eadem nota (AR p. 3*):
-       lector hoc contra clavem probat.
+       lector hoc contra clavem probat (littera notae ultimae, sive
+       minuscula sive majuscula = inclinata), nisi nomen "*" habet
+       (A*, G*: nomina libri, nota ultima alia).
        vicaria="g" - liber permittit differentiam illam loco huius.
        ad_libitum="verum" - forma altera ejusdem differentiae.
      <exemplum> - exempla libri sub clausulis impressa: textus (accentus
        ut in libro; voces hebraicae sine signo in libro, accentus ex
        musica deductus, nota "hebr.") et notae exspectatae, una pro
        syllaba, "r" = superveniens. Probatio aptatoris haec reddere
-       debet.
+       debet. pars = versus (versus primus cum intonatione, nisi
+       primus="falsum") | semiversus | initium (solum incipit cum
+       intonatione, liber "...") | mediatio | terminatio | flexa.
+       canticum="verum" = intonatio in omni versu (AR p. 4*). forma =
+       A-D | monosyllaba | contracta | abbreviata | antiqua. nota =
+       hebr. | initium solemne (II Magníficat, exceptio libri) |
+       mediatio omissa.
 
      REGULA ACCENTUS (ex exemplis AR p. 5*-6*, omnibus congruens):
      clausula retrorsum aptatur. Nota ultima syllabam ultimam capit;
@@ -47,7 +70,14 @@
      potest. Monosyllaba finalis accentum in syllabam priorem mittit
      (eadem regula). Formae A-D libri (sine / cum supervenienti in
      fine / in medio / utrobique) huius regulae eventus sunt, non
-     data. -->
+     data.
+     TEXTUS DEFICIENS: in terminatione notae primae sine syllaba
+     omittuntur (AR p. 6*); in mediatione notae reliquae cum tenore in
+     syllabam primam contrahuntur (I: Qui = h ixi h; VII: Qui = i k j).
+     Semiversus primus (aut canticum) nimis brevis pro intonatione et
+     mediatione: mediatio omittitur (I, III: Magníficat).
+     Probatio (scriptum ad tempus, 2026-11-07): CCXLV ex CCXLVI
+     exemplis regula redduntur; exceptio = II Magníficat. -->
 <toni_psalmorum>
 
   <tonus modus="1" clavis="c4" tenor="h" pagina="4*">
@@ -62,7 +92,6 @@
     </mediatio>
 
     <terminatio differentia="D">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">gh</accentus>
@@ -70,7 +99,6 @@
     </terminatio>
 
     <terminatio differentia="D" ad_libitum="verum">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">g</accentus>
@@ -78,7 +106,6 @@
     </terminatio>
 
     <terminatio differentia="D2">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g" anticipata="verum">gf</accentus>
@@ -86,7 +113,6 @@
     </terminatio>
 
     <terminatio differentia="f">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">gh</accentus>
@@ -94,7 +120,6 @@
     </terminatio>
 
     <terminatio differentia="g">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">gh</accentus>
@@ -102,7 +127,6 @@
     </terminatio>
 
     <terminatio differentia="g2" vicaria="g">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">g</accentus>
@@ -111,7 +135,6 @@
 
     <!-- g3: superveniens in libro non impressa; g ex analogia -->
     <terminatio differentia="g3">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">g</accentus>
@@ -119,7 +142,6 @@
     </terminatio>
 
     <terminatio differentia="a">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="h">g</accentus>
@@ -127,7 +149,6 @@
     </terminatio>
 
     <terminatio differentia="a2">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">g</accentus>
@@ -135,7 +156,6 @@
     </terminatio>
 
     <terminatio differentia="a3" vicaria="a2">
-      <praeparatio>h</praeparatio>
       <praeparatio>g</praeparatio>
       <praeparatio>f</praeparatio>
       <accentus superveniens="g">gh</accentus>
@@ -146,6 +166,11 @@
     <exemplum pagina="4*" pars="versus" differentia="D"
         textus="Primus tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
         notae="f gh h h h h h h h h h g g † h h ixi h g h * h h g f gh gvFED"/>
+
+    <!-- canticum (AR p. 5*): semiversus nimis brevis pro initio et
+         mediatione - mediatio omittitur -->
+    <exemplum pagina="5*" pars="semiversus" canticum="verum"
+        nota="mediatio omissa" textus="Magníficat" notae="f gh h h"/>
 
     <!-- mediatio, formae A-D (AR p. 5*-6*) -->
     <exemplum pagina="5*" pars="mediatio" forma="A"
@@ -223,6 +248,911 @@
     <exemplum pagina="6*" pars="terminatio" forma="abbreviata"
         differentia="g" nota="hebr." textus="laus Ísrael"
         notae="f gh gr g"/>
+  </tonus>
+
+  <!-- Tonus Secundus: AR 1912 p. 8*-9* (folia n1031-n1032).
+       Mediatio solemnis Toni II (p. 9*) omissa (P4). -->
+  <tonus modus="2" clavis="f3" tenor="h" pagina="8*">
+    <initium>e f</initium>
+    <flexa>f</flexa>
+
+    <mediatio>
+      <accentus superveniens="h">i</accentus>
+      <nota>h</nota>
+    </mediatio>
+
+    <!-- "In monosyllaba vel hebraica voce" (p. 8*): syllaba ultima
+         notam accentus capit, nulla nota sequitur. -->
+    <mediatio casus="monosyllaba">
+      <nota>i</nota>
+    </mediatio>
+
+    <!-- "Finalis unica D vel A" (p. 8*). Praeparatio h ante g a
+         tenore indistincta, non scripta. -->
+    <terminatio differentia="D">
+      <praeparatio>g</praeparatio>
+      <accentus superveniens="f">e</accentus>
+      <nota>f</nota>
+    </terminatio>
+
+    <!-- PROPOSITUM: clavis in terminatione = totus tonus in hac clave
+         iisdem litteris canitur (liber clavem c3 ante terminationem
+         ponit; f sub c3 = la). -->
+    <terminatio differentia="A" clavis="c3">
+      <praeparatio>g</praeparatio>
+      <accentus superveniens="f">e</accentus>
+      <nota>f</nota>
+    </terminatio>
+
+    <exemplum pagina="8*" pars="versus" differentia="D"
+        textus="Secundus tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="e f h h h h h h h h h h f f † h h h h i h * h h h g e f"/>
+    <exemplum pagina="8*" pars="terminatio" differentia="A"
+        textus="atque sic finítur" notae="h h h g e f"/>
+
+    <!-- cantica (p. 8*): inceptio ad singulos versus (AR p. 4*).
+         PROPOSITUM: canticum="verum"; pars="semiversus" = solum
+         semiversus primus (initium + mediatio). -->
+    <!-- "Magníficat": initium solemne (= Mediatio solemnis Toni II,
+         p. 9*, "Et ex-sul-"), non regula toni simplicis. -->
+    <exemplum pagina="8*" pars="versus" differentia="D" canticum="verum"
+        nota="initium solemne"
+        textus="Magníficat * ánima mea Dóminum."
+        notae="e fe eh h * h h h h g e fr f"/>
+    <exemplum pagina="8*" pars="initium" canticum="verum"
+        textus="Et exsultávit" notae="e f h h h"/>
+    <exemplum pagina="8*" pars="semiversus" canticum="verum"
+        textus="Quia fecit mihi magna qui potens est"
+        notae="e f h h h h h h h h h i"/>
+    <exemplum pagina="8*" pars="semiversus" canticum="verum" nota="hebr."
+        textus="Benedíctus Dóminus Deus Israel"
+        notae="e f h h h h h h h h h i"/>
+    <exemplum pagina="8*" pars="initium" canticum="verum"
+        textus="Et eréxit" notae="e f h h"/>
+
+    <!-- mediatio (p. 8*) -->
+    <exemplum pagina="8*" pars="mediatio"
+        textus="púeri Dóminum" notae="h h h i hr h"/>
+    <exemplum pagina="8*" pars="mediatio"
+        textus="in judício" notae="h h i hr h"/>
+    <exemplum pagina="8*" pars="mediatio" casus="monosyllaba"
+        textus="locútus sum" notae="h h h i"/>
+    <exemplum pagina="8*" pars="mediatio" casus="monosyllaba"
+        textus="éripe me" notae="h h h i"/>
+    <exemplum pagina="8*" pars="mediatio" casus="monosyllaba"
+        textus="tua ex me" notae="h h h i"/>
+    <exemplum pagina="8*" pars="mediatio" casus="monosyllaba"
+        textus="in me est" notae="h h i"/>
+    <exemplum pagina="8*" pars="mediatio" casus="monosyllaba"
+        nota="hebr." textus="ex Sion" notae="h h i"/>
+    <exemplum pagina="8*" pars="mediatio" casus="monosyllaba"
+        nota="hebr." textus="in Ephrata" notae="h h h i"/>
+
+    <!-- terminationes (p. 8*-9*) -->
+    <exemplum pagina="8*" pars="terminatio" differentia="D"
+        textus="éripe me" notae="h g e f"/>
+    <exemplum pagina="8*" pars="terminatio" differentia="D"
+        textus="timéntibus se" notae="h h g e f"/>
+    <exemplum pagina="8*" pars="terminatio" differentia="D"
+        textus="declináte a me" notae="h h h g e f"/>
+    <exemplum pagina="9*" pars="terminatio" differentia="D"
+        textus="in saéculum saéculi" notae="h h h g e fr f"/>
+    <exemplum pagina="9*" pars="terminatio" differentia="D"
+        textus="et liberávit me" notae="h h g e fr f"/>
+    <exemplum pagina="9*" pars="terminatio" forma="abbreviata"
+        differentia="D" textus="et tímui" notae="g e fr f"/>
+  </tonus>
+
+  <!-- Tonus Tertius: AR 1912 p. 10*-12* (folia n1033-n1035).
+       Mediatio solemnis Toni III (p. 12*) omissa (P4).
+       "Adaptatio textus fit ut in Mediatione Toni 1., sed in fine, si
+       occurrat dictio acuta in antepenultima, locus datur Supervenienti
+       anticipatae" (p. 10*). -->
+  <tonus modus="3" clavis="c4" tenor="j" pagina="10*">
+    <initium>g hj</initium>
+    <flexa>h</flexa>
+
+    <mediatio>
+      <accentus superveniens="j">k</accentus>
+      <nota>j</nota>
+      <accentus superveniens="j" anticipata="verum">ih</accentus>
+      <nota>j</nota>
+    </mediatio>
+
+    <!-- b, a: praeparatio j ante h a tenore indistincta, non scripta -->
+    <terminatio differentia="b">
+      <praeparatio>h</praeparatio>
+      <accentus superveniens="j">j</accentus>
+      <nota>i</nota>
+    </terminatio>
+
+    <terminatio differentia="a">
+      <praeparatio>h</praeparatio>
+      <accentus superveniens="j">j</accentus>
+      <nota>ih</nota>
+    </terminatio>
+
+    <terminatio differentia="a2">
+      <praeparatio>ji</praeparatio>
+      <praeparatio>hi</praeparatio>
+      <accentus superveniens="g">h</accentus>
+      <nota>gh</nota>
+    </terminatio>
+
+    <terminatio differentia="g">
+      <praeparatio>ji</praeparatio>
+      <praeparatio>hi</praeparatio>
+      <accentus superveniens="g">h</accentus>
+      <nota>g</nota>
+    </terminatio>
+
+    <!-- g2: "cum solis Antiphonis Omnia, Quóniam, Dómine probásti, in
+         Vesperis ferialibus usurpatur, adhiberi potest Differentia g"
+         (p. 10*) -->
+    <terminatio differentia="g2" vicaria="g">
+      <praeparatio>h</praeparatio>
+      <praeparatio>j</praeparatio>
+      <praeparatio>i</praeparatio>
+      <accentus superveniens="g">h</accentus>
+      <nota>g</nota>
+    </terminatio>
+
+    <exemplum pagina="10*" pars="versus" differentia="b"
+        textus="Tertius tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="g hj j j j j j j j j j j h h † j j k j ih j * j j j h j i"/>
+    <exemplum pagina="10*" pars="terminatio" differentia="a"
+        textus="Atque sic finítur" notae="j j j h j ih"/>
+    <exemplum pagina="10*" pars="terminatio" differentia="a2"
+        textus="Atque sic finítur" notae="j j ji hi h gh"/>
+    <exemplum pagina="10*" pars="terminatio" differentia="g"
+        textus="Atque sic finítur" notae="j j ji hi h g"/>
+    <exemplum pagina="10*" pars="terminatio" differentia="g2"
+        textus="Atque sic finítur" notae="j h j i h g"/>
+
+    <!-- cantica (p. 10*). "Magníficat *": semiversus nimis brevis -
+         initium tantum, deinde tenor; mediatio omissa. -->
+    <exemplum pagina="10*" pars="semiversus" canticum="verum"
+        nota="mediatio omissa" textus="Magníficat"
+        notae="g hj j j"/>
+    <exemplum pagina="10*" pars="semiversus" canticum="verum"
+        textus="Et exsultávit spíritus meus"
+        notae="g hj j j j k jr j ih j"/>
+    <exemplum pagina="10*" pars="semiversus" canticum="verum"
+        textus="Quia fecit mihi magna qui potens est"
+        notae="g hj j j j j k jr j jr ih j"/>
+    <exemplum pagina="10*" pars="semiversus" canticum="verum" nota="hebr."
+        textus="Benedíctus Dóminus Deus Ísrael"
+        notae="g hj j j j j j k j jr ih j"/>
+    <exemplum pagina="10*" pars="initium" canticum="verum"
+        textus="Et eréxit" notae="g hj j j"/>
+
+    <!-- mediatio, formae A-D (p. 10*-11*) -->
+    <exemplum pagina="10*" pars="mediatio" forma="A"
+        textus="confirmátum est cor ejus" notae="j j j j k j ih j"/>
+    <exemplum pagina="10*" pars="mediatio" forma="A"
+        textus="splendóribus sanctórum" notae="j j j k j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="A"
+        textus="gáudio os nostrum" notae="j j k j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="A"
+        textus="Dóminus ex Sion" notae="j j k j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="A" nota="hebr."
+        textus="ex Basán convértam" notae="j j k j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="A"
+        textus="vivífica me" notae="j k j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="A" nota="hebr."
+        textus="in Ísrael est" notae="j k j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="B"
+        textus="miserátor Dóminus" notae="j j k j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="B"
+        textus="illuminábitur" notae="j k j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="B"
+        textus="pacem sunt Jerúsalem" notae="j j k j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="B"
+        textus="propter quod locútus sum" notae="j j k j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="B"
+        textus="séminant in lácrimis" notae="j j k j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="C"
+        textus="implébit ruínas" notae="j k jr j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="C"
+        textus="et scito cor meum" notae="j k jr j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="C"
+        textus="faciéntibus eum" notae="j j k jr j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="C" nota="hebr."
+        textus="habitántibus Cedar" notae="j j k jr j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="C"
+        textus="hómines in nos" notae="k jr j ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="D"
+        textus="ópera Dómini Dómino" notae="j j j k jr j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="D"
+        textus="super coelos sunt Dómino" notae="j j k jr j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="D"
+        textus="Jerúsalem Dóminum" notae="j k jr j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="D"
+        textus="decórem indútus est" notae="j k jr j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="D" nota="hebr."
+        textus="eam in Éphrata" notae="k jr j jr ih j"/>
+    <exemplum pagina="11*" pars="mediatio" forma="abbreviata"
+        textus="Qui fácit haec" notae="jkj jr ih j"/>
+
+    <!-- terminationes (p. 12*) -->
+    <exemplum pagina="12*" pars="terminatio" differentia="b"
+        textus="a saéculo tu es" notae="j j j h j i"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="a"
+        forma="abbreviata" textus="tu es" notae="j ih"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="b"
+        textus="timéntibus se" notae="j j h j i"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="a"
+        textus="timéntibus se" notae="j j h j ih"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="b"
+        textus="in saéculum saéculi" notae="j j j h j jr i"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="a"
+        forma="abbreviata" textus="saéculi" notae="j jr ih"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="b"
+        textus="deprecátus sum" notae="j h j jr i"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="g"
+        textus="a saéculo tu es" notae="j j ji hi h g"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="a2"
+        forma="abbreviata" textus="tu es" notae="h gh"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="g"
+        textus="timéntibus se" notae="j ji hi h g"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="a2"
+        forma="abbreviata" textus="se" notae="gh"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="g"
+        textus="in saéculum saéculi" notae="j j ji hi h gr g"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="a2"
+        forma="abbreviata" textus="saéculi" notae="h gr gh"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="a2"
+        textus="Dóminus spes ejus est" notae="j j ji hi h gr gh"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="g2"
+        textus="misericórdia ejus" notae="j j j h j i h g"/>
+    <exemplum pagina="12*" pars="terminatio" differentia="g2"
+        textus="ópera mánuum hóminum" notae="j j j h j i h gr g"/>
+  </tonus>
+
+  <!-- Tonus IV, positio ordinaria (AR p. 13*-15*). Praeparationes
+       in tenore (h) non scriptae nisi visibiles. -->
+  <tonus modus="4" clavis="c4" tenor="h" pagina="13*">
+    <initium>h gh</initium>
+    <flexa>g</flexa>
+
+    <mediatio>
+      <praeparatio>g</praeparatio>
+      <praeparatio>h</praeparatio>
+      <accentus superveniens="h">i</accentus>
+      <nota>h</nota>
+    </mediatio>
+
+    <!-- "In monosyllaba vel hebraica voce" (AR p. 14*): syllaba
+         ultima notam accentus capit, nulla nota finalis -->
+    <mediatio casus="monosyllaba">
+      <praeparatio>g</praeparatio>
+      <praeparatio>h</praeparatio>
+      <nota>i</nota>
+    </mediatio>
+
+    <terminatio differentia="g">
+      <accentus superveniens="g">h</accentus>
+      <nota>g</nota>
+    </terminatio>
+
+    <terminatio differentia="E">
+      <praeparatio>g</praeparatio>
+      <praeparatio>h</praeparatio>
+      <praeparatio>ih</praeparatio>
+      <accentus superveniens="g" anticipata="verum">gf</accentus>
+      <nota>e</nota>
+    </terminatio>
+
+    <exemplum pagina="13*" pars="versus" differentia="g"
+        textus="Quartus Tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="h gh h h h h h h h h h g g † h h g h i h * h h h h h g"/>
+    <exemplum pagina="13*" pars="terminatio" differentia="E"
+        textus="Atque sic finítur." notae="h g h ih gf e"/>
+
+    <exemplum pagina="14*" pars="mediatio"
+        textus="Dómino meo" notae="h g h i h"/>
+    <exemplum pagina="14*" pars="mediatio"
+        textus="splendóribus sanctórum" notae="h h h g h i h"/>
+    <exemplum pagina="14*" pars="mediatio"
+        textus="ópera Dómini" notae="h g h i hr h"/>
+    <exemplum pagina="14*" pars="mediatio"
+        textus="a terra ínopem" notae="h g h i hr h"/>
+    <exemplum pagina="14*" pars="mediatio" forma="monosyllaba"
+        textus="sol non uret te" notae="h h g h i"/>
+    <exemplum pagina="14*" pars="mediatio" forma="monosyllaba"
+        textus="propitiátio est" notae="h h h h g h i"/>
+    <exemplum pagina="14*" pars="mediatio" forma="monosyllaba"
+        nota="hebr." textus="Dómine David" notae="h h g h i"/>
+    <exemplum pagina="14*" pars="mediatio" forma="monosyllaba"
+        nota="hebr." textus="sunt Jerúsalem" notae="h h g h i"/>
+    <exemplum pagina="14*" pars="mediatio" forma="monosyllaba"
+        nota="hebr." textus="Dóminus ex Sion" notae="h h h g h i"/>
+    <exemplum pagina="14*" pars="mediatio" forma="monosyllaba"
+        textus="Qui fácit haec" notae="h g h i"/>
+
+    <exemplum pagina="14*" pars="terminatio" differentia="g"
+        textus="génui te" notae="h h h g"/>
+    <exemplum pagina="14*" pars="terminatio" differentia="g"
+        textus="pacem de te" notae="h h h g"/>
+    <exemplum pagina="14*" pars="terminatio" differentia="g"
+        textus="domum David" notae="h h h g"/>
+    <exemplum pagina="14*" pars="terminatio" differentia="g"
+        textus="in saéculum saéculi" notae="h h h h h gr g"/>
+    <exemplum pagina="14*" pars="terminatio" differentia="g"
+        textus="exaudívit me" notae="h h h gr g"/>
+    <exemplum pagina="14*" pars="terminatio" differentia="g"
+        textus="Jerúsalem" notae="h h gr g"/>
+
+    <exemplum pagina="14*" pars="terminatio" differentia="E"
+        textus="et congregatióne" notae="h h g h ih gf e"/>
+    <exemplum pagina="14*" pars="terminatio" differentia="E"
+        textus="lucíferum génui te" notae="h h h g h ih gf e"/>
+    <exemplum pagina="15*" pars="terminatio" differentia="E"
+        textus="in saéculum saéculi" notae="h g h ih gr gf e"/>
+    <exemplum pagina="15*" pars="terminatio" differentia="E"
+        textus="dormítet qui custódit te" notae="h h g h ih gr gf e"/>
+    <exemplum pagina="15*" pars="terminatio" differentia="E"
+        textus="órdinem Melchísedech" notae="h g h ih gr gf e"/>
+    <exemplum pagina="15*" pars="terminatio" forma="abbreviata"
+        differentia="E" textus="et tímui" notae="ih gr gf e"/>
+  </tonus>
+
+  <!-- PROPOSITUM: positio="altera" - "Altera Positio ejusdem Toni"
+       (AR p. 13*): tonus IV transpositus (finalis la, tenor re),
+       clavis c3. Differentiae c, A, A* solum hic. -->
+  <tonus modus="4" positio="altera" clavis="c3" tenor="i" pagina="13*">
+    <initium>i hi</initium>
+    <flexa>h</flexa>
+
+    <!-- superveniens non impressum; ex positione ordinaria -->
+    <mediatio>
+      <praeparatio>h</praeparatio>
+      <praeparatio>i</praeparatio>
+      <accentus superveniens="i">j</accentus>
+      <nota>i</nota>
+    </mediatio>
+
+    <!-- non impressum; ex positione ordinaria (p. 14*) translatum -->
+    <mediatio casus="monosyllaba">
+      <praeparatio>h</praeparatio>
+      <praeparatio>i</praeparatio>
+      <nota>j</nota>
+    </mediatio>
+
+    <!-- superveniens non impressum; ex differentia g translatum -->
+    <terminatio differentia="c">
+      <accentus superveniens="h">i</accentus>
+      <nota>h</nota>
+    </terminatio>
+
+    <terminatio differentia="A">
+      <praeparatio>h</praeparatio>
+      <praeparatio>i</praeparatio>
+      <praeparatio>j</praeparatio>
+      <accentus superveniens="f">h</accentus>
+      <nota>f</nota>
+    </terminatio>
+
+    <!-- "Quando Antiphona notatur cum A*, potest ad libitum adhiberi
+         Differentia sequens" (p. 13*). Nota ultima g = si, non la:
+         probatio litterae nomina cum * excipiat. Superveniens non
+         impressum; ex A. -->
+    <terminatio differentia="A*" vicaria="A">
+      <praeparatio>h</praeparatio>
+      <praeparatio>i</praeparatio>
+      <praeparatio>j</praeparatio>
+      <accentus superveniens="f">h</accentus>
+      <nota>fg</nota>
+    </terminatio>
+
+    <exemplum pagina="13*" pars="versus" differentia="c"
+        textus="Quartus Tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="i hi i i i i i i i i i h h † i i h i j i * i i i i i h"/>
+    <exemplum pagina="13*" pars="terminatio" differentia="A"
+        textus="Atque sic finítur." notae="i h i j h f"/>
+    <exemplum pagina="13*" pars="terminatio" differentia="A*"
+        textus="Atque sic finítur." notae="i h i j h fg"/>
+    <exemplum pagina="15*" pars="terminatio" differentia="A"
+        textus="loquébar pacem de te" notae="i i h i j h f"/>
+    <exemplum pagina="15*" pars="terminatio" differentia="A"
+        textus="lucíferum génui te" notae="i i i h i j h f"/>
+    <exemplum pagina="15*" pars="terminatio" differentia="A"
+        textus="in saéculum saéculi" notae="i h i j h fr f"/>
+    <exemplum pagina="15*" pars="terminatio" differentia="A"
+        textus="et exaudívit me" notae="h i j h fr f"/>
+    <exemplum pagina="15*" pars="terminatio" forma="abbreviata"
+        differentia="A" textus="et tímui" notae="j h fr f"/>
+  </tonus>
+
+  <!-- Tonus V (AR p. 16*-17*). "Mediatio fit ut in Tono 2., et eodem
+       modo corripitur ad vocem monosyllabam vel hebraicam" (p. 16*):
+       exempla mediationis nulla; superveniens et casus monosyllaba
+       ex Tono II (p. 8*: superveniens = nota finalis; in monosyllaba
+       syllaba ultima notam accentus capit). -->
+  <tonus modus="5" clavis="c3" tenor="h" pagina="16*">
+    <initium>d f</initium>
+    <flexa>f</flexa>
+
+    <mediatio>
+      <accentus superveniens="h">i</accentus>
+      <nota>h</nota>
+    </mediatio>
+
+    <mediatio casus="monosyllaba">
+      <nota>i</nota>
+    </mediatio>
+
+    <!-- "Finalis unica. a"; formae A-D (p. 17*) -->
+    <terminatio differentia="a">
+      <accentus superveniens="g">i</accentus>
+      <nota>g</nota>
+      <accentus superveniens="f">h</accentus>
+      <nota>f</nota>
+    </terminatio>
+
+    <exemplum pagina="16*" pars="versus" differentia="a"
+        textus="Quintus Tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="d f h h h h h h h h h f f † h h h h i h * h h i g h f"/>
+
+    <exemplum pagina="17*" pars="terminatio" forma="A" differentia="a"
+        textus="supersperávi" notae="h i g h f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="A" differentia="a"
+        textus="non sum oblítus" notae="h i g h f"/>
+    <!-- Sina in libro sine signo; musica non transit: oxytonum -->
+    <exemplum pagina="17*" pars="terminatio" forma="A" differentia="a"
+        nota="hebr." textus="in Siná in sancto" notae="h h i g h f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="A" differentia="a"
+        textus="qui hábitas in coelis" notae="h h h i g h f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="A" differentia="a"
+        textus="lucíferum génui te" notae="h h h h i g h f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="A" differentia="a"
+        textus="vivífica me" notae="h i g h f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="B" differentia="a"
+        textus="non commovébitur" notae="h i g h fr f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="B" differentia="a"
+        textus="sustínui te Dómine" notae="h h h i g h fr f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="B" differentia="a"
+        textus="et liberávit me" notae="h i g h fr f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="C" differentia="a"
+        textus="inimicórum tuórum" notae="h h h i gr g h f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="D" differentia="a"
+        textus="in saéculum saéculi" notae="h i gr g h fr f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="abbreviata"
+        differentia="a" textus="et tímui" notae="g h fr f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="D" differentia="a"
+        textus="in circúitu nostro sunt" notae="h h i gr g h fr f"/>
+    <exemplum pagina="17*" pars="terminatio" forma="D" differentia="a"
+        textus="in médio tui Jerúsalem" notae="h h h h i gr g h fr f"/>
+  </tonus>
+
+  <!-- Tonus VI (AR p. 18*-19*). Duae mediationes: "Apud antiquos
+       Mediatio fiebat ut in 1. Tono: sed a saeculo XVI. sensim usus
+       invaluit alterius Mediationis" (p. 18*); exempla libri solum
+       recentioris. -->
+  <tonus modus="6" clavis="c4" tenor="h" pagina="18*">
+    <initium>f gh</initium>
+    <flexa>g</flexa>
+
+    <mediatio>
+      <praeparatio>g</praeparatio>
+      <accentus superveniens="f">h</accentus>
+      <nota>f</nota>
+    </mediatio>
+
+    <mediatio casus="monosyllaba">
+      <praeparatio>g</praeparatio>
+      <nota>h</nota>
+    </mediatio>
+
+    <!-- PROPOSITUM: mediatio antiqua ut in Tono I, ad libitum.
+         Superveniens non impressum; ex Tono I. -->
+    <mediatio ad_libitum="verum">
+      <accentus superveniens="h">ixi</accentus>
+      <nota>h</nota>
+      <accentus superveniens="h">g</accentus>
+      <nota>h</nota>
+    </mediatio>
+
+    <!-- "Finalis unica. F (C)": (C) = eadem differentia cum antiphona
+         transposita (finalis do); hic non scripta. -->
+    <terminatio differentia="F">
+      <praeparatio>f</praeparatio>
+      <praeparatio>gh</praeparatio>
+      <accentus superveniens="f">g</accentus>
+      <nota>f</nota>
+    </terminatio>
+
+    <exemplum pagina="18*" pars="versus" differentia="F"
+        textus="Sextus Tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="f gh h h h h h h h h h g g † h h h g h f * h h f gh g f"/>
+    <exemplum pagina="18*" pars="mediatio" forma="antiqua"
+        textus="et sic mediátur" notae="h h ixi h g h"/>
+
+    <exemplum pagina="18*" pars="mediatio"
+        textus="pópulo suo" notae="h h g h f"/>
+    <exemplum pagina="18*" pars="mediatio"
+        textus="ópera Dómini" notae="h h g h fr f"/>
+    <exemplum pagina="18*" pars="mediatio" forma="monosyllaba"
+        textus="locútus sum" notae="h h g h"/>
+    <exemplum pagina="18*" pars="mediatio" forma="monosyllaba"
+        textus="vivífica me" notae="h h h g h"/>
+    <exemplum pagina="18*" pars="mediatio" forma="monosyllaba"
+        nota="hebr." textus="Dóminus ex Sion" notae="h h h h g h"/>
+    <exemplum pagina="18*" pars="mediatio" forma="monosyllaba"
+        nota="hebr." textus="Jerúsalem" notae="h h g h"/>
+
+    <exemplum pagina="18*" pars="terminatio" differentia="F"
+        textus="glória ejus" notae="h f gh g f"/>
+    <exemplum pagina="18*" pars="terminatio" differentia="F"
+        textus="super domum David" notae="h h f gh g f"/>
+    <exemplum pagina="18*" pars="terminatio" differentia="F"
+        textus="diligéntibus te" notae="h h f gh g f"/>
+    <exemplum pagina="19*" pars="terminatio" differentia="F"
+        textus="vivífica me" notae="h f gh g f"/>
+    <exemplum pagina="19*" pars="terminatio" differentia="F"
+        textus="loquébar pacem de te" notae="h h h f gh g f"/>
+    <exemplum pagina="19*" pars="terminatio" differentia="F"
+        textus="non commovébitur" notae="h f gh g fr f"/>
+    <exemplum pagina="19*" pars="terminatio" differentia="F"
+        textus="órdinem Melchísedech" notae="h h f gh g fr f"/>
+  </tonus>
+
+  <!-- Tonus Septimus: AR p. 19*-21* (n1042-n1044). Clavis c3 (h = do). -->
+  <tonus modus="7" clavis="c3" tenor="i" pagina="19*">
+    <initium>hg hi</initium>
+    <flexa>h</flexa>
+
+    <mediatio>
+      <accentus superveniens="j">k</accentus>
+      <nota>j</nota>
+      <accentus superveniens="j">i</accentus>
+      <nota>j</nota>
+    </mediatio>
+
+    <!-- terminationes: forma A-D (AR p. 20*-21*, differentia a) ostendit
+         locum <accentus> j cum superveniente i (ter-ra: TER j, ra i*) -->
+    <terminatio differentia="a">
+      <accentus superveniens="i">j</accentus>
+      <nota>i</nota>
+      <accentus superveniens="h">h</accentus>
+      <nota>gf</nota>
+    </terminatio>
+
+    <terminatio differentia="b">
+      <!-- superveniens i: ex differentia a (non impressum pro b) -->
+      <accentus superveniens="i">j</accentus>
+      <nota>i</nota>
+      <accentus superveniens="h">h</accentus>
+      <nota>g</nota>
+    </terminatio>
+
+    <terminatio differentia="c">
+      <!-- superveniens i: ex differentia a (non impressum pro c) -->
+      <accentus superveniens="i">j</accentus>
+      <nota>i</nota>
+      <accentus superveniens="h">h</accentus>
+      <nota>gh</nota>
+    </terminatio>
+
+    <terminatio differentia="c2">
+      <!-- superveniens i: ex differentia a (non impressum pro c2) -->
+      <accentus superveniens="i">j</accentus>
+      <nota>i</nota>
+      <accentus superveniens="h">h</accentus>
+      <nota>ih</nota>
+    </terminatio>
+
+    <terminatio differentia="d">
+      <!-- superveniens i: ex differentia a (non impressum pro d) -->
+      <accentus superveniens="i">j</accentus>
+      <nota>i</nota>
+      <accentus superveniens="h">h</accentus>
+      <nota>gi</nota>
+    </terminatio>
+
+    <!-- versus exemplaris (AR p. 19*); SEPTIMUS in libro majusculis
+         parvis sine signo, accentus additus -->
+    <exemplum pagina="19*" pars="versus" differentia="a"
+        textus="Séptimus tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="hg hi i i i i i i i i i i h h † i i k j i j * i i j i h gf"/>
+
+    <!-- mediatio, formae A-D (AR p. 20*) -->
+    <exemplum pagina="20*" pars="mediatio" forma="A"
+        textus="confirmátum est cor ejus" notae="i i i i k j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="A"
+        textus="stérilem in domo" notae="i i k j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="A"
+        textus="Tu mandásti" notae="k j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="A"
+        textus="Dóminus ex Sion" notae="i i k j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="A"
+        textus="propitiátio est" notae="i i i k j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="A"
+        textus="Bonus es tu" notae="k j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="B"
+        textus="miserátor Dóminus" notae="i i k j i jr j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="B"
+        textus="séminant in lácrimis" notae="i i k j i jr j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="B"
+        textus="propter quod locútus sum" notae="i i k j i jr j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="B"
+        textus="pacem sunt Jerúsalem" notae="i i k j i jr j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="C"
+        textus="faciéntibus eum" notae="i i k jr j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="C"
+        textus="implébit ruínas" notae="i k jr j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="C"
+        textus="ámove a me" notae="k jr j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="C"
+        textus="dicta sunt de te" notae="k jr j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="C"
+        textus="iniquitátis in me est" notae="i i i k jr j i j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="D"
+        textus="magna ópera Dómini" notae="i i k jr j i jr j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="D"
+        textus="sicut ovis quae périit" notae="i i k jr j i jr j"/>
+    <exemplum pagina="20*" pars="mediatio" forma="D" nota="hebr."
+        textus="eam in Éphrata" notae="k jr j i jr j"/>
+
+    <!-- terminationes, formae A-D, differentia a (AR p. 20*-21*) -->
+    <exemplum pagina="20*" pars="terminatio" forma="A" differentia="a"
+        textus="loquéntium iníqua" notae="i i i j i h gf"/>
+    <exemplum pagina="20*" pars="terminatio" forma="A" differentia="a"
+        textus="timéntibus se" notae="i j i h gf"/>
+    <!-- Sina: musica oxytonum (na j non transit in Si) -->
+    <exemplum pagina="20*" pars="terminatio" forma="A" differentia="a"
+        nota="hebr." textus="in Siná in sancto" notae="i i j i h gf"/>
+    <exemplum pagina="20*" pars="terminatio" forma="B" differentia="a"
+        textus="non commovébitur" notae="i j i h hr gf"/>
+    <exemplum pagina="20*" pars="terminatio" forma="B" differentia="a"
+        textus="órdinem Melchísedech" notae="i i j i h hr gf"/>
+    <exemplum pagina="21*" pars="terminatio" forma="B" differentia="a"
+        textus="Dóminus suscépit me" notae="i i j i h hr gf"/>
+    <exemplum pagina="21*" pars="terminatio" forma="B" differentia="a"
+        textus="et praecínxit se" notae="j i h hr gf"/>
+    <exemplum pagina="21*" pars="terminatio" forma="C" differentia="a"
+        textus="in terra multórum" notae="i j ir i h gf"/>
+    <exemplum pagina="21*" pars="terminatio" forma="C" differentia="a"
+        textus="retríbuit nobis" notae="i j ir i h gf"/>
+    <exemplum pagina="21*" pars="terminatio" forma="D" differentia="a"
+        textus="et usque in saéculum" notae="i j ir i h hr gf"/>
+    <exemplum pagina="21*" pars="terminatio" forma="D" differentia="a"
+        textus="in médio tui Jerúsalem" notae="i i i i j ir i h hr gf"/>
+    <exemplum pagina="21*" pars="terminatio" forma="D" differentia="a"
+        nota="hebr." textus="dicat nunc Ísrael" notae="j ir i h hr gf"/>
+
+    <!-- per varias differentias (AR p. 21*) -->
+    <exemplum pagina="21*" pars="terminatio" differentia="a"
+        textus="in saéculum saéculi" notae="i j ir i h hr gf"/>
+    <exemplum pagina="21*" pars="terminatio" differentia="b"
+        textus="saéculi" notae="h hr g"/>
+    <exemplum pagina="21*" pars="terminatio" differentia="c"
+        textus="saéculi" notae="h hr gh"/>
+    <exemplum pagina="21*" pars="terminatio" differentia="c2"
+        textus="saéculi" notae="h hr ih"/>
+    <exemplum pagina="21*" pars="terminatio" differentia="d"
+        textus="saéculi" notae="h hr gi"/>
+
+    <!-- clausulae deficientes (AR p. 21*) -->
+    <exemplum pagina="21*" pars="mediatio" forma="abbreviata"
+        textus="Qui fácit haec" notae="ikj i jr j"/>
+    <exemplum pagina="21*" pars="terminatio" forma="abbreviata"
+        differentia="a" textus="et tímui" notae="i h hr gf"/>
+  </tonus>
+
+  <!-- Tonus Octavus: AR p. 22*-23* (n1045-n1046). Clavis c4 (j = do).
+       Mediatio "fit ut in Tono 2. vel 5.; et eodem modo corripitur ad
+       vocem monosyllabam vel hebraicam" (p. 23*): exempla mediationis
+       Toni 8 non impressa; superveniens et casus monosyllaba ex
+       Tono 2 (AR p. 8*: pú-e-ri DÓ-mi-num; lo-cú-tus SUM, ex Si-ON). -->
+  <tonus modus="8" clavis="c4" tenor="j" pagina="22*">
+    <initium>g h</initium>
+    <flexa>h</flexa>
+
+    <mediatio>
+      <!-- superveniens j: ex Tono 2 (non impressum pro Tono 8) -->
+      <accentus superveniens="j">k</accentus>
+      <nota>j</nota>
+    </mediatio>
+
+    <!-- ex Tono 2, AR p. 8*: syllaba ultima notam altam capit -->
+    <mediatio casus="monosyllaba">
+      <nota>k</nota>
+    </mediatio>
+
+    <terminatio differentia="G">
+      <praeparatio>i</praeparatio>
+      <praeparatio>j</praeparatio>
+      <accentus superveniens="g">h</accentus>
+      <nota>g</nota>
+    </terminatio>
+
+    <terminatio differentia="c">
+      <praeparatio>h</praeparatio>
+      <praeparatio>j</praeparatio>
+      <accentus superveniens="j">k</accentus>
+      <nota>j</nota>
+    </terminatio>
+
+    <!-- AR p. 22*: "Quando Antiphona notatur cum G*, potest ad libitum
+         adhiberi Differentia sequens". Nota ultima h (la), non sol:
+         littera G* probationem litterae non sequitur. Superveniens g
+         ex differentia G (non impressum). -->
+    <terminatio differentia="G*" vicaria="G">
+      <praeparatio>i</praeparatio>
+      <praeparatio>j</praeparatio>
+      <accentus superveniens="g">h</accentus>
+      <nota>gh</nota>
+    </terminatio>
+
+    <!-- OCTAVUS majusculis parvis sine signo, accentus additus -->
+    <exemplum pagina="22*" pars="versus" differentia="G"
+        textus="Octávus tonus sic incípitur, sic fléctitur † et sic mediátur * atque sic finítur."
+        notae="g h j j j j j j j j j j h h † j j j j k j * j j i j h g"/>
+    <exemplum pagina="22*" pars="terminatio" differentia="c"
+        textus="Atque sic finítur." notae="j j h j k j"/>
+    <exemplum pagina="22*" pars="terminatio" differentia="G*"
+        textus="Atque sic finítur." notae="j j i j h gh"/>
+
+    <!-- terminationes G (AR p. 23*) -->
+    <exemplum pagina="23*" pars="terminatio" differentia="G"
+        textus="véritas ejus" notae="j i j h g"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="G"
+        textus="lucíferum génui te" notae="j j j j i j h g"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="G"
+        textus="diligéntibus te" notae="j j i j h g"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="G"
+        textus="non commovébitur" notae="j i j h gr g"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="G"
+        textus="in saéculum saéculi" notae="j j i j h gr g"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="G"
+        textus="et liberávit me" notae="j i j h gr g"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="G"
+        textus="órdinem Melchísedech" notae="j j i j h gr g"/>
+    <exemplum pagina="23*" pars="terminatio" forma="abbreviata"
+        differentia="G" nota="hebr." textus="laus Ísrael"
+        notae="j h gr g"/>
+
+    <!-- terminationes c (AR p. 23*) -->
+    <exemplum pagina="23*" pars="terminatio" differentia="c"
+        textus="véritas ejus" notae="j h j k j"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="c"
+        textus="a saéculo tu es" notae="j j h j k j"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="c"
+        textus="lucíferum génui te" notae="j j j j h j k j"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="c"
+        textus="vivífica me" notae="j h j k j"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="c"
+        textus="in saéculum saéculi" notae="j j h j k jr j"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="c"
+        textus="et liberávit me" notae="j h j k jr j"/>
+    <exemplum pagina="23*" pars="terminatio" differentia="c"
+        textus="tui Jerúsalem" notae="j h j k jr j"/>
+    <exemplum pagina="23*" pars="terminatio" forma="abbreviata"
+        differentia="c" textus="et salva me" notae="j k jr j"/>
+  </tonus>
+
+  <!-- Tonus Peregrinus: AR p. 24*-25* (n1047-n1048). Clavis c4.
+       "In hoc Tono Mediatio incipitur in qualicumque syllaba secundo
+       loco occurrente ante ultimum accentum" = duae <praeparatio>.
+       Tenor h in prima parte, g in secunda (terminatio tenor="g").
+       Versus primus: etiam secunda pars intonatur (do-mus: hixi), ceteri
+       in tenore g incipiunt (Facta est ... * Israel). -->
+  <tonus modus="peregrinus" clavis="c4" tenor="h" pagina="24*">
+    <initium>hixi</initium>
+    <flexa>g</flexa>
+
+    <mediatio>
+      <praeparatio>ixi</praeparatio>
+      <praeparatio>h</praeparatio>
+      <!-- superveniens f: AR p. 25* (Dó-mi-no: DÓ g, mi f, no f) -->
+      <accentus superveniens="f">g</accentus>
+      <nota>f</nota>
+    </mediatio>
+
+    <!-- "Mediatio contracta" (AR p. 24*): voce monosyllaba vel hebraica
+         in fine, tres syllabae ultimae ixi g h, accentu non curato
+         (su-per VOS, Is-ra-EL) -->
+    <mediatio casus="monosyllaba">
+      <praeparatio>ixi</praeparatio>
+      <praeparatio>g</praeparatio>
+      <nota>h</nota>
+    </mediatio>
+
+    <!-- PROPOSITUM: differentia nulla in libro (terminatio unica);
+         initium="hixi" = intonatio secundae partis, versu primo solum
+         (forma alias non habet locum intonationi secundae partis). -->
+    <terminatio tenor="g" initium="hixi">
+      <praeparatio>d</praeparatio>
+      <accentus superveniens="f">f</accentus>
+      <nota>ed</nota>
+    </terminatio>
+
+    <exemplum pagina="24*" pars="versus" nota="hebr."
+        textus="In éxitu Ísrael de Ægýpto, * domus Jacob de pópulo bárbaro."
+        notae="hixi h h h h h h ixi h g f * hixi g g g g g g d f fr ed"/>
+    <exemplum pagina="24*" pars="versus" primus="falsum"
+        textus="Facta est Judaéa sanctificátio ejus: * Ísrael potéstas ejus."
+        notae="h h h h h h h h h h ixi h g f * g g g g g d f ed"/>
+    <exemplum pagina="24*" pars="mediatio"
+        textus="Mare vidit, et fugit" notae="h h h ixi h g f"/>
+    <exemplum pagina="24*" pars="versus" primus="falsum"
+        textus="Manus habent, et non palpábunt: † pedes habent, et non ambulábunt: * non clamábunt in gútture suo."
+        notae="h h h h h h h h g † h h h h h h ixi h g f * g g g g g g g d f ed"/>
+    <exemplum pagina="24*" pars="versus" primus="falsum" forma="contracta" nota="hebr."
+        textus="Benedíxit dómui Ísrael: * benedíxit dómui Áaron."
+        notae="h h h h h h h ixi g h * g g g g g g d f fr ed"/>
+    <exemplum pagina="24*" pars="mediatio" forma="contracta"
+        textus="Adjíciat Dóminus super vos" notae="h h h h h h h ixi g h"/>
+    <exemplum pagina="25*" pars="versus"
+        textus="Benedícite ómnia ópera Dómini Dómino: * laudáte et superexaltáte eum in saécula."
+        notae="hixi h h h h h h h h h h h ixi h g fr f * hixi g g g g g g g g g g g d f fr ed"/>
+    <exemplum pagina="25*" pars="versus"
+        textus="Laudáte púeri Dóminum: * laudáte nomen Dómini."
+        notae="hixi h h h ixi h g fr f * hixi g g g d f fr ed"/>
+    <exemplum pagina="25*" pars="mediatio"
+        textus="Sit nomen Dómini benedíctum" notae="h h h h h h ixi h g f"/>
+  </tonus>
+
+  <!-- Tonus in directum: AR p. 25*-26* (n1048-n1049). Clavis c3 (h = do).
+       "pro Psalmis qui dicendi praescribuntur in Precibus Officii sine
+       Antiphona" (Ps. 145 Vesp. Def., Ps. 129 Laud., Ps. 69 Litan.).
+       Tonus verus: sine intonatione (versus primus in tenore incipit),
+       flexa, mediatio, terminatio, et forma monosyllaba utriusque.
+       PROPOSITUM: in tabula ut tonus, modus="in directum", sine
+       differentia. -->
+  <tonus modus="in directum" clavis="c3" tenor="h" pagina="25*">
+    <flexa>f</flexa>
+
+    <mediatio>
+      <praeparatio>g</praeparatio>
+      <praeparatio>f</praeparatio>
+      <accentus superveniens="h">h</accentus>
+      <nota>h</nota>
+    </mediatio>
+
+    <mediatio casus="monosyllaba">
+      <praeparatio>g</praeparatio>
+      <praeparatio>f</praeparatio>
+      <nota>h</nota>
+    </mediatio>
+
+    <terminatio>
+      <accentus superveniens="f">h</accentus>
+      <nota>f</nota>
+    </terminatio>
+
+    <!-- PROPOSITUM: casus="monosyllaba" etiam in <terminatio> (in libro:
+         "Finalis ... In monosyllaba, etc.", AR p. 26*) -->
+    <terminatio casus="monosyllaba">
+      <accentus superveniens="g">h</accentus>
+      <nota>f</nota>
+      <nota>g</nota>
+    </terminatio>
+
+    <exemplum pagina="25*" pars="versus"
+        textus="Deus, in adjutórium meum inténde: * Dómine, ad adjuvándum me festína."
+        notae="h h h h h h h h h g f h h * h h h h h h h h h h h f"/>
+    <exemplum pagina="25*" pars="flexa"
+        textus="adjútor ejus" notae="h h h h f"/>
+    <exemplum pagina="25*" pars="flexa"
+        textus="ánima mea Dóminum" notae="h h h h h h f f"/>
+    <exemplum pagina="25*" pars="mediatio"
+        textus="confídere in princípibus" notae="h h h h g f h hr h"/>
+    <exemplum pagina="25*" pars="mediatio" forma="monosyllaba"
+        textus="omnes qui quaerunt te" notae="h h h g f h"/>
+    <exemplum pagina="26*" pars="mediatio" forma="monosyllaba"
+        textus="propitiátio est" notae="h h h h g f h"/>
+    <exemplum pagina="26*" pars="mediatio" forma="monosyllaba"
+        textus="liberátor meus es tu" notae="h h h h h g f h"/>
+    <exemplum pagina="26*" pars="mediatio" forma="monosyllaba"
+        nota="hebr." textus="rédimet Ísrael" notae="h h h g f h"/>
+    <exemplum pagina="26*" pars="terminatio"
+        textus="sustínui te Dómine" notae="h h h h h h fr f"/>
+    <exemplum pagina="26*" pars="terminatio" forma="monosyllaba"
+        textus="quae in eis sunt" notae="h h h f g"/>
+    <exemplum pagina="26*" pars="terminatio" forma="monosyllaba"
+        textus="Deus ádjuva me" notae="h h h gr f g"/>
   </tonus>
 
 </toni_psalmorum>

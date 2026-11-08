@@ -137,8 +137,11 @@ psalms in GregoBase use exactly this (measured, §I).
 ## II. The tone table
 
 **Format agreed 2026-11-07** (Fran: "that looks good"): the file is
-`musica/toni_psalmorum.stml`, its grammar in its header comment. Tone 1
-is transcribed from AR 1912 p. 4\*–6\*. In short:
+`musica/toni_psalmorum.stml`, its grammar in its header comment. All
+of AR 1912's *Toni communes* is transcribed (2026-11-07): tones 1–8
+(tone 4 also in its second position), the peregrinus and *in
+directum*, with 246 of the book's examples. The solemn canticle
+cadences are not (P4; pages noted in the file). In short:
 
 - `<tonus modus clavis tenor pagina>` holding `<initium>` (one note or
   neume per syllable, in order), `<flexa>` (the pitch dropped to),
@@ -161,8 +164,30 @@ is transcribed from AR 1912 p. 4\*–6\*. In short:
   one-line cadence: self-describing, and the stml reader rejects a
   misspelt slot.
 
-Tone 1's endings a, a2, D, f, g, g2 match the GregoBase EUOUAE
-endings note for note (measured 2026-11-07).
+**How the transcription was checked** (2026-11-07):
+- Every staff was read zoomed; the endings no corpus confirms (3 b,
+  a2, g, g2; 4 c, A, A\*; 7 b, d; 8 c) and the 3/7/8 mediants were
+  re-read by a second reader against the scan.
+- GregoBase EUOUAE agrees note for note for 1 a a2 D f g g2, 3 a,
+  4 E, 5 a, 6 F, 7 a c c2, 8 G G\*, peregrinus. Tone 2 D differs by
+  one note (the corpus has do-re on *A-*, AR a single do: edition).
+  GregoBase labels with no AR ending (4 E2, 4 d, 8 g2) are later
+  editions.
+- Every ending letter matches its last note, except the book's own
+  A\* (4) and G\* (8).
+- A throwaway fitter applying §IV reproduces 245 of 246 examples; the
+  one left is tone 2's *Magníficat*, which the book sets with a
+  special (solemn) intonation.
+
+Constructs added to the format while transcribing (marked PROPOSITUM
+in the file, for Fran): `positio="altera"` (tone 4), `casus=
+"monosyllaba"` on mediants and on *in directum*'s ending, `<mediatio
+ad_libitum>` (tone 6's old mediant), `<terminatio clavis>` (tone 2
+"D or A"), `<terminatio tenor initium>` and no `differentia`
+(peregrinus), `modus="in directum"`, and example attributes
+`canticum`, `primus`, `pars="initium"`/`"semiversus"`. Lead-in notes at
+the reciting pitch are not written (the book cannot show them; their
+count only matters for italics, §VI).
 
 **The check that makes the table trustworthy**: every termination,
 fitted to *sæ-cu-ló-rum. A-men* (what EUOUAE stands for), must equal
@@ -206,9 +231,14 @@ extra note. The last syllable of a proparoxytone (*dó-mi-NUS*) can take
 an accent. A final monosyllable follows the same rule. The book's
 forms A–D (no extra note, at the end, in the middle, both) are results
 of this rule, not data. A cadence too long for its text drops its
-first notes (AR p. 6\*); the book's short-mediant example sets the
-dropped notes as one neume on the first syllable (*Qui* = `hixih`) —
-the builder makes that the rule if the other tones agree.
+first notes in an ending (AR p. 6\*); in a mediant the leftover
+notes are sung with the reciting note as one neume on the first
+syllable (tone 1 *Qui* = `hixih`, tone 7 *Qui* = `ikj`). A first
+half-verse (or a canticle's) too short for intonation plus mediant
+drops the mediant (tones 1 and 3, *Magníficat*). The one-syllable
+cadence (`casus="monosyllaba"`) is used only in tones that print one,
+when the half-verse ends in a monosyllable or a Hebrew word; endings
+have none except *in directum*.
 
 **The end-to-end check**: the 35 written-out psalms in GregoBase.
 Strip the notes and the bold/italic from one, keep its accents, fit it
@@ -304,9 +334,17 @@ errors, fitter errors, and edition variants.
   the labels (edition variants are likely).
 - That WORDS (oratio) carries no vowel length.
 - Hebrew names: AR 1912 prints them without accents, but the music
-  shows them (*Basan* stressed on the last syllable; *Israel* sung
-  Is-ra-el, a-e two syllables, not the diphthong *ae*). The pointed
-  text or `syllabae_latinae` must carry this; how is open.
+  shows them (*Basan*, *Sina* stressed on the last syllable; *Israel*,
+  *Aaron* sung with a hiatus, Is-ra-el, A-a-ron). They also choose
+  the one-syllable mediant where a tone has one (*Sion*, *David*,
+  *Jerúsalem* at the half-verse). So the pointed text or
+  `syllabae_latinae` must know which words are Hebrew; how is open.
+- Italics (P10) need the count of lead-in syllables, which AR does not
+  show when a lead-in note equals the reciting note. A later book
+  (LU 1961 italics) could add it as data; until then italics mark
+  only the lead-ins the table writes.
+- Tone 6 "F (C)" — read as the same ending for transposed antiphons;
+  not encoded.
 - Whether the 1934+ Solesmes books (most of GregoBase) use a simpler
   tone-1 mediant rule (one accent + two preparatory syllables): AR's
   form C (*fa-ci-ÉN-ti-bus*) would differ. The corpus check shows it.
