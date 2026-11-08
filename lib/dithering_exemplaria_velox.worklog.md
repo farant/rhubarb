@@ -113,3 +113,28 @@ Plan: `project-specs/exemplaria-velox-plan.md` (spec
 - Formatter: the copy carried classic's 92-ish report-only notes
   (60-char banners, includes after system headers, long lines); the
   rewritten file is CONFORMIS.
+
+## 2026-11-07 — T4: blur split + "velox fixa" pins
+
+- `_gauss_planum`: horizontal pass split into left edge / interior
+  [radius, lat - radius) / right edge (`_gauss_orae` clamps); when
+  lat < 2 radius + 1 everything is edge. Vertical pass needs no split:
+  the clamp depends only on the row, so it is hoisted to the row and
+  whole rows are summed (`exitus[x] += pondus * ordo[x]`, k outer) -
+  row-major instead of column walks.
+- **Exact refactor:** per-pixel summation order unchanged (start 0.0f,
+  k ascending), so the output is bit-identical to T3. Pinned before
+  the change (Fran approved, an addition to the plan): "velox fixa"
+  (blake2b of velox indices on both fixtures, T3 commit 6cc3089d5) and
+  "magnitudines oris" (12x12, 13x13, 25x3, 3x25, 601x2 scaena, grey
+  palette: success + active colours + digest). The plan's version
+  (success + active only) would have stayed green on its own second
+  plant: one-too-wide interior reads the next row's first pixel, a
+  small wrong value, not a crash. Re-pin only when a task means to
+  drift, and say why.
+- Plants: kernel not normalised (`/ (0.0 * summa + 1.0)` - dropping the
+  divide entirely left `summa` unused, -Werror refused the plant) -> 7
+  sections red incl. "colores puri" and both pins; `finis = lat -
+  radius + I` -> "velox fixa", "magnitudines oris", "determinatum" red.
+- Timing (N = 10): lapis 600 classic 618 / velox 488 ms (T3 517); meadow
+  646 / 490 (T3 594); lapis 720 870 / 632. Drift still 2 / 14 px.

@@ -11,6 +11,13 @@
  *                     omnes == i (index fractus nominatur)
  *   memoria minor     in lapide DC: piscina_summa_usus veloci <
  *                     classici (piscinae novae ambae)
+ *   velox fixa        indices veloces per blake2b in fixis (capti
+ *                     T3, ante obscurationem divisam) - refactio
+ *                     exacta nihil mutat; renovatur solum cum task
+ *                     differre vult (et dicit cur)
+ *   magnitudines oris XIIxXII, XIIIxXIII, XXVxIII, IIIxXXV, DCIxII
+ *                     (scaena): successus, colores activi soli,
+ *                     digestum idem ac T3
  *   alpha neglecta    canalis alpha non legitur (ut classicus)
  *   sine memoria      nihil inter vocationes servatur: A, B, A ->
  *                     A idem
@@ -40,6 +47,28 @@ hic_manens constans character* FIXA_VIAE[FIXA_NUMERUS] = {
 hic_manens constans character* CLASSICA_DIGESTA[FIXA_NUMERUS] = {
     "bcbff2e7279f3ff51f084e22edf6080cceb122329abc4a509298208a358636f6",
     "80bb381c101607d0cb8c7b653cfe6d6dfc35a8375599647c7238d51765398d0a"
+};
+
+/* blake2b-256 indicum velocium (T3, 6cc3089d5: plana f32, ante
+ * obscurationem divisam T4) */
+hic_manens constans character* VELOX_DIGESTA[FIXA_NUMERUS] = {
+    "0d160512a8ace113ad9fd8d815ee9151bf45ecbcbe7944d2071c05ba1ebb9936",
+    "4b99fcaea0b96f51be58fdd041d84b989a927d6539340b5d56959030b49e19b4"
+};
+
+#define ORAE_NUMERUS V
+
+hic_manens constans s32 ORAE_MAGNITUDINES[ORAE_NUMERUS][II] = {
+    {XII, XII}, {XIII, XIII}, {XXV, III}, {III, XXV}, {DCI, II}
+};
+
+/* idem, scaena in magnitudinibus orae, colores grisei */
+hic_manens constans character* ORAE_DIGESTA[ORAE_NUMERUS] = {
+    "8253944afa6551bd02cad46b90bf3cc61d6f6a84f684c4c322f7e1f3b059d40c",
+    "39995c9b4b2fb7962466007f09e03f9bc86c235bf9797dc7dfa239e2a558d0b2",
+    "6d4ee9f24ea6067413a1e99d96ce537ad2f5fcd05d729bc89bebc12fdbc2a916",
+    "20aba054d269361b66a39930febb5cc929e083186a17ad999c223a6db06541f8",
+    "9ed48b1080e0f7977f84a9e0bfa8b4579380f2596cd3badc9d1e7da0d3fef32d"
 };
 
 nomen structura {
@@ -115,24 +144,15 @@ interior vacuum
 _sectio_colores_puri (
     CredoContextus* c)
 {
-    b32  activi[XVI];
-     i8* plana = (i8*)piscina_allocare(c->piscina,
-         (memoriae_index)(XVI * XVI * IV));
+          b32 activi[XVI];
     character titulus[XXXII];
     s32 i, p, errata;
 
-    CREDO_NECESSE(plana != NIHIL);
     dithering_praeparare_omnes(activi);
     per (i = 0; i < XVI; i++)
     {
-        DitheringFructus f;
-        per (p = 0; p < XVI * XVI; p++)
-        {
-            plana[p * IV + 0] = AQUINAS_PALETTE[i][0];
-            plana[p * IV + 1] = AQUINAS_PALETTE[i][1];
-            plana[p * IV + 2] = AQUINAS_PALETTE[i][2];
-            plana[p * IV + 3] = 0xFF;
-        }
+                      i8* plana = _imago_plana(c->piscina, XVI, XVI, i);
+        DitheringFructus  f;
         f = dithering_exemplaria_velox_colorum(plana, XVI, XVI, activi,
             NIHIL, NIHIL, c->piscina);
         CREDO_NECESSE(f.successus);
@@ -142,6 +162,64 @@ _sectio_colores_puri (
         sprintf(titulus, "color %d", (integer)i);
         CREDO_LITERAE_AEQUALES(errata == 0 ? titulus : "fractus",
             titulus);
+    }
+}
+
+/* digestum velocis in fixo, piscina nova (memoria non cumulatur) */
+interior b32
+_velox_digestum (
+    constans Imago* im,
+         character* hex)
+{
+    Piscina* p = piscina_generare_dynamicum("velox_fixa",
+        (memoriae_index)(LXIV * 1024 * 1024));
+                 b32 activi[XVI];
+    DitheringFructus f;
+
+    si (p == NIHIL) redde FALSUM;
+    dithering_praeparare_omnes(activi);
+    f = dithering_exemplaria_velox_colorum(im->pixela, im->latitudo,
+        im->altitudo, activi, NIHIL, NIHIL, p);
+    si (f.successus) _digestum(&f, hex);
+    piscina_destruere(p);
+    redde f.successus;
+}
+
+interior vacuum
+_sectio_velox_fixa (
+    CredoContextus* c)
+{
+    constans FixuraVelox* fx = _fixura(c);
+               character  hex[LXV];
+                     s32  i;
+
+    per (i = 0; i < FIXA_NUMERUS; i++)
+    {
+        CREDO_NECESSE(_velox_digestum(&fx->imagines[i], hex));
+        CREDO_LITERAE_AEQUALES(hex, VELOX_DIGESTA[i]);
+    }
+}
+
+interior vacuum
+_sectio_magnitudines_oris (
+    CredoContextus* c)
+{
+          b32 activi[XVI];
+    character hex[LXV];
+          s32 m;
+
+    dithering_praeparare_griseum(activi);
+    per (m = 0; m < ORAE_NUMERUS; m++)
+    {
+        s32 lat = ORAE_MAGNITUDINES[m][0], alt =
+            ORAE_MAGNITUDINES[m][1];
+                      i8* rgba = _imago_scaena(c->piscina, lat, alt);
+        DitheringFructus  f = dithering_exemplaria_velox_colorum(rgba,
+            (i32)lat, (i32)alt, activi, NIHIL, NIHIL, c->piscina);
+        CREDO_NECESSE(f.successus);
+        CREDO_VERUM(_omnes_activi(&f, activi));
+        _digestum(&f, hex);
+        CREDO_LITERAE_AEQUALES(hex, ORAE_DIGESTA[m]);
     }
 }
 
@@ -233,6 +311,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     /* gravis: classicus ~CCL MB arenae per vocationem ad DC x DCCLI */
     { "memoria minor", _sectio_memoria_minor, NIHIL, NIHIL, "gravis",
         NIHIL },
+    { "velox fixa", _sectio_velox_fixa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "magnitudines oris", _sectio_magnitudines_oris, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { "alpha neglecta", _sectio_alpha_neglecta, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "sine memoria inter vocationes", _sectio_sine_memoria, NIHIL,

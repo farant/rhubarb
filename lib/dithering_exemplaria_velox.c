@@ -381,9 +381,32 @@ _larvam_allocare (
  * Obscuratio Gaussiana separabilis (limites fixi)
  * ================================================== */
 
-/* Gaussiana per planum (signatura T4; hic adhuc ansa simplex cum
- * limitibus fixis, T4 interius/oras dividit). meta == fons licet:
- * transitus primus fontem totum in tmp legit. */
+/* pixelum x ordinis cum limitibus fixis (ora) */
+interior f32
+_gauss_orae (
+    constans f32* linea,
+    constans f32* nucleus,
+             s32  radius,
+             s32  lat,
+             s32  x)
+{
+    f32 s = 0.0f;
+    s32 k;
+
+    per (k = -radius; k <= radius; k++)
+    {
+        s32 sx  = x + k < 0 ? 0 : x + k >= lat ? lat - I : x + k;
+        s       += nucleus[k + radius] * linea[sx];
+    }
+    redde s;
+}
+
+/* Gaussiana separabilis per planum, f32. Nucleus semel per
+ * vocationem (radius ceil(2.5 sigma), <= XVI, normalizatus).
+ * Ordines et columnae in oras (limites fixi, ut classicus) et
+ * interius (sine limitibus, radius .. latus - radius) divisa; si
+ * latus < 2 radius + 1, totum ora est. Summae eodem ordine ac ansa
+ * simplex: exitus idem bit pro bit. meta == fons licet. */
 interior vacuum
 _gauss_planum (
     constans f32* fons,
@@ -396,6 +419,7 @@ _gauss_planum (
     f64 pondera[XXXIII];
     f32 nucleus[XXXIII];
     s32 radius = (s32)ceil(sigma * 2.5), x, y, k, i;
+    s32 initium, finis;
     f64 summa = 0.0;
 
     si (radius > XVI) radius = XVI;
@@ -410,31 +434,50 @@ _gauss_planum (
         nucleus[i] = (f32)(pondera[i] / summa);
     }
 
+    /* ordines: interius [initium, finis) sine limitibus */
+    initium  = radius < lat ? radius : lat;
+    finis    = lat - radius;
+    si (finis < initium) finis = initium;
     per (y = 0; y < alt; y++)
     {
-        constans f32* linea = &fons[y * lat];
-        per (x = 0; x < lat; x++)
+        constans f32* linea   = &fons[y * lat];
+                 f32* exitus  = &tmp[y * lat];
+        per (x = 0; x < initium; x++)
         {
-            f32 s = 0.0f;
+            exitus[x] = _gauss_orae(linea, nucleus, radius, lat, x);
+        }
+        per (x = initium; x < finis; x++)
+        {
+            constans f32* centrum  = &linea[x];
+                     f32  s        = 0.0f;
             per (k = -radius; k <= radius; k++)
             {
-                s32 sx = x + k < 0 ? 0 : x + k >= lat ? lat - I : x + k;
-                s += nucleus[k + radius] * linea[sx];
+                s += nucleus[k + radius] * centrum[k];
             }
-            tmp[y * lat + x] = s;
+            exitus[x] = s;
+        }
+        per (x = finis; x < lat; x++)
+        {
+            exitus[x] = _gauss_orae(linea, nucleus, radius, lat, x);
         }
     }
+
+    /* columnae: limes per ordinem (non per pixelum), ergo ordines
+     * toti summantur - ora sine divisione */
     per (y = 0; y < alt; y++)
     {
-        per (x = 0; x < lat; x++)
+        f32* exitus = &meta[y * lat];
+        per (x = 0; x < lat; x++) exitus[x] = 0.0f;
+        per (k = -radius; k <= radius; k++)
         {
-            f32 s = 0.0f;
-            per (k = -radius; k <= radius; k++)
-            {
-                s32 sy = y + k < 0 ? 0 : y + k >= alt ? alt - I : y + k;
-                s += nucleus[k + radius] * tmp[sy * lat + x];
-            }
-            meta[y * lat + x] = s;
+                     s32  sy      = y + k;
+                     f32  pondus  = nucleus[k + radius];
+            constans f32* ordo;
+
+            si (sy < 0) sy = 0;
+            si (sy >= alt) sy = alt - I;
+            ordo = &tmp[sy * lat];
+            per (x = 0; x < lat; x++) exitus[x] += pondus * ordo[x];
         }
     }
 }
