@@ -451,6 +451,56 @@ conflatio_fontes_ordinare (
  * Emissio
  * ================================================== */
 
+/* Cauda inclusionis localis (ab initio, post '"' claudens) commentarium
+ * apertum relinquit? Commentaria clausa et iterum aperta in linea eadem
+ * numerantur. */
+interior b32
+_commentarium_apertum_relinquit (
+    chorda linea,
+       i32 initium)
+{
+    b32 intus  = FALSUM;
+    i32 j      = initium;
+
+    dum (j + I < linea.mensura)
+    {
+        si (   !intus && linea.datum[j] == '/'
+            && linea.datum[j + I] == '*')
+        {
+            intus  = VERUM;
+            j      = j + II;
+        }
+        alioquin si (   intus && linea.datum[j] == '*'
+                     && linea.datum[j + I] == '/')
+        {
+            intus  = FALSUM;
+            j      = j + II;
+        }
+        alioquin
+        {
+            j = j + I;
+        }
+    }
+    redde intus;
+}
+
+/* index post primum finem commentarii lineae, aut -I si nullus */
+interior s32
+_finis_commentarii (
+    chorda linea)
+{
+    i32 j;
+
+    per (j = ZEPHYRUM; j + I < linea.mensura; j++)
+    {
+        si (linea.datum[j] == '*' && linea.datum[j + I] == '/')
+        {
+            redde (s32)(j + II);
+        }
+    }
+    redde (s32)-I;
+}
+
 vacuum
 conflatio_plagulam_emittere (
             ChordaAedificator* aedificator,
@@ -458,6 +508,10 @@ conflatio_plagulam_emittere (
 {
     chorda textus  = plagula->contentum;
        i32 i       = ZEPHYRUM;
+       /* commentarium inclusionis vacuatae in lineas sequentes
+        * continuatur: vacuantur usque ad finem eius, codex post
+        * finem manet (numeri linearum servati) */
+       b32 in_commentario  = FALSUM;
 
     chorda_aedificator_appendere_literis(aedificator, "#line 1 \"");
     chorda_aedificator_appendere_chorda(aedificator, plagula->via);
@@ -466,14 +520,31 @@ conflatio_plagulam_emittere (
     {
            i32 f = i;
         chorda linea;
-        chorda ignotum;
+        chorda nomen_capitis;
 
         dum (f < textus.mensura && textus.datum[f] != '\n')
         {
             f = f + I;
         }
         linea = chorda_sectio(textus, i, f);
-        si (!conflatio_inclusio_localis(linea, &ignotum))
+        si (in_commentario)
+        {
+            s32 finis = _finis_commentarii(linea);
+
+            si (finis >= ZEPHYRUM)
+            {
+                in_commentario = FALSUM;
+                chorda_aedificator_appendere_chorda(aedificator,
+                    chorda_sectio(linea, (i32)finis, linea.mensura));
+            }
+        }
+        alioquin si (conflatio_inclusio_localis(linea, &nomen_capitis))
+        {
+            in_commentario = _commentarium_apertum_relinquit(linea,
+                (i32)(nomen_capitis.datum - linea.datum)
+                    + nomen_capitis.mensura + I);
+        }
+        alioquin
         {
             chorda_aedificator_appendere_chorda(aedificator, linea);
         }

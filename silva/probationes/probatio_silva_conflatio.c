@@ -210,6 +210,37 @@ s32 principale (vacuum)
         CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
             "#line 1 \"include/a.h\"\n\n#include <stdio.h>\nint a;\n");
 
+        /* inclusio cuius commentarium in lineas sequentes continuatur:
+         * lineae commentarii vacuantur (numeri linearum servati),
+         * codex post finem commentarii manet (silva_lexicon.c:18 -
+         * olim linea continuationis orphana restabat) */
+        a             = chorda_aedificator_creare(piscina, 256);
+        pl.contentum  = chorda_ex_literis(
+            "#include \"x.h\"  /* a\n * b */\nint x;\n", piscina);
+        conflatio_plagulam_emittere(a, &pl);
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+            "#line 1 \"include/a.h\"\n\n\nint x;\n");
+        a             = chorda_aedificator_creare(piscina, 256);
+        pl.contentum  = chorda_ex_literis(
+            "#include \"x.h\" /* a\n b\n c */ int y;\nint z;", piscina);
+        conflatio_plagulam_emittere(a, &pl);
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+            "#line 1 \"include/a.h\"\n\n\n int y;\nint z;\n");
+        /* clausum et iterum apertum in linea eadem */
+        a             = chorda_aedificator_creare(piscina, 256);
+        pl.contentum  = chorda_ex_literis(
+            "#include \"x.h\" /* a */ /* b\n c */\nint w;", piscina);
+        conflatio_plagulam_emittere(a, &pl);
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+            "#line 1 \"include/a.h\"\n\n\nint w;\n");
+        /* clausum in linea eadem: linea sequens intacta */
+        a             = chorda_aedificator_creare(piscina, 256);
+        pl.contentum  = chorda_ex_literis(
+            "#include \"x.h\" /* a */\n * v */\n", piscina);
+        conflatio_plagulam_emittere(a, &pl);
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+            "#line 1 \"include/a.h\"\n\n * v */\n");
+
         /* fons: #define ante (macra praetermissa), #undef post
          * omnium */
         a       = chorda_aedificator_creare(piscina, 256);

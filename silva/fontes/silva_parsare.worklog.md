@@ -38,3 +38,38 @@
   - The update stays, for clarity.
 
 **Left (not done):** each woven region still scans and copies the whole root list (O(regions x elements), but cheap per element). Elements are mostly in document order, so a merge or binary search over extents could replace the scan, but headers spliced inline and opaque extents break monotonicity. Unmeasured, and the rest of bearssl's 3.05 G is ordinary parsing.
+
+## 2026-11-07 - budget item 9: parse-side census (measurement only)
+
+Fresh 1 ms `sample` of `percursus -semantica` at a2c765a57 (probe built like
+the real tool: separate objects, VEXILLA -O2 -g), 27.7 k samples. Stage
+attribution by (function, line) markers in the call graph - scripts in the
+session scratchpad s23/ (gradus.py, intra.py, vocantes.py).
+
+- Parse side 64.5%: own-file parse 56.5% + lexicon re-parse 8.0%.
+  - GLR + construction 22.7% (silva_glr_parsare self 6.4%, construere 2.7%,
+    _nodum_processare 2.4%).
+  - Directives 16.7%: lexing INCLUDED HEADERS 7.0% + their trivia attach 2.6%
+    (main-file lexing is only 2.1% - headers are re-lexed in every TU, ~4.5x
+    the main-file lex), macro-table events (_eventum_scribere:230) 2.0%.
+  - Expansion 6.6%: macro lookup _generatio_interna:3117 ~2.5%.
+  - _contextum_applicare 4.1%: every TU re-registers every repo header into
+    its expansion (silva_includendum_praebere 2.6%).
+  - praecommissio 4.2%, commissio 2.9%.
+- Semantics 22.2%; percursus own work 9.2% (file reads, _typedefs_numerare +
+  _expressiones_numerare report walks 2.8%); round-trip write 3.5%.
+- Cross-cutting: xar accessors 20% of all self time (obtinere 12.5%, addere
+  6.1%, numerus 1.6%) spread over ~20 sites - call overhead on an O(1) path,
+  not an algorithm; clock() (getrusage) 2.0%.
+
+Lexicon re-parse: silva_c89_parsare_cum_contextu parses contextus->lexica
+(the composed systema text) into the per-TU oracle for every file, while
+percursus has ALREADY filled that oracle from the cached praeparatio
+(silva_c89_semantica_oraculum_augere). Possibly redundant for percursus -
+unproven; needs a differential before anything changes.
+
+LTO experiment: the same sources built with -flto=thin -> 337.5 -> 285.4 G
+instructions (-15.4%), wall 32.1 -> 26.6 s, report identical (2 runs each).
+xar_obtinere vanishes from the profile (inlined); xar_addere stays. Cost:
+ThinLTO link of percursus ~3 s wall / 10 s CPU vs ~0.2 s. A vexilla.sh flag
+touches every build - Fran's decision.

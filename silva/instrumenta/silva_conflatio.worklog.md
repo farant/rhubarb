@@ -122,3 +122,34 @@ nexus.tsv column 8 = storage class, and corpus_infixum skips `externus`
 (see silva/nexus.worklog.md). Any library that declares an external
 object locally would have hit this in any amalgam (briar, silex,
 archive).
+
+## 2026-11-07 - first non-knotapel program: percursus as a unity build (budget item 10, P0)
+
+Conflated `silva/instrumenta/principalia/percursus.c` (aedilis --partes closure:
+39 headers, 33 sources; roots -r materia/fontes/ -r silva/fontes/ -r
+silva/instrumenta/; statics table = corpus_infixum's awk with silva/fontes and
+silva/instrumenta added to the roots, 10,746 rows). Output 106,700 lines.
+
+BUG found: a local include whose line ends in a comment that continues onto
+the next line -
+
+    #include "silva_limes_posix.h"     /* SILVA_LIMES_POSIX_TITULUS - caput
+                                         * sine dependentia (T16b: briar) */
+
+is blanked as one line, so the comment's continuation line is left orphaned
+and the output does not compile (silva_lexicon.c:18-19). knotapel closures
+never had this shape. The blanking must consume the whole comment (blank
+every line it spans, keeping the line count). Patched by hand in the
+experiment's output; no source changed.
+
+After that one-line patch: compiles clean under full VEXILLA (-Werror),
+7.4 s single core. `sample` attributes to the original files through the
+#line directives (no samples on the conflated file).
+
+Measurement (percursus -semantica, 2 interleaved runs each, reports identical):
+separate objects 337.1 G / ~31.5 s; ThinLTO 285.2 G / ~27.8 s; unity 290.3 G /
+27.8 s (-13.9%, ~90% of LTO); unity + -flto=thin 288.2 G (internalization:
+625 exported text symbols -> 2). So `static`-making would buy ~2 G more; the
+last ~3 G to LTO is inlining-heuristic difference, not structure. The unity
+closure is also 16 files smaller than what percursus.sh links (it links every
+silva/fontes/*.c on purpose).
