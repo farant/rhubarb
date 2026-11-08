@@ -73,7 +73,7 @@ psalms in GregoBase use exactly this (measured, §I).
 |---|---|---|
 | P1 | **Output is gabc text and nothing else.** The fitter writes a gabc file's text (header + body); reading, drawing, converting, playing are the existing libraries'. No new pane, no carmen code in the fitter. | Claude, from the conversation; Fran agreed |
 | P2 | **The tone table is DATA**, one file (working path `musica/toni_psalmorum.stml`), read by a small reader. The format is shown to Fran and agreed **before** any tone is transcribed (it is this library's interface). How it reaches binaries (embedded like `instrumentarium.stml` via a GENERATUM C file, or read at run time) is the builder's call; embedding is the house precedent. | Fran: "step 1 would be the tone table"; format review = Fran |
-| P3 | **Tones are transcribed from a printed book, never from memory**, each entry citing its source (book, page). Prefer an edition printed by 1930 (the house rule for GregoBase imports, `tools/gabc_arcessere.sh`); a later book (Liber Usualis 1961) may be used to check or to add endings, cited. | Claude's call (§VI q2 asks Fran which book he can see) |
+| P3 | **Tones are transcribed from a printed book, never from memory**, each entry citing its source (book, page). Prefer an edition printed by 1930 (the house rule for GregoBase imports, `tools/gabc_arcessere.sh`); a later book (Liber Usualis 1961) may be used to check or to add endings, cited. | Claude's call; book = the 1912 Antiphonale scan (§VI q2, answered) |
 | P4 | **The format must hold every tone the Office needs**, even if v1 transcribes fewer: the eight simple tones with all their endings, the tonus peregrinus, tonus in directum, and the solemn tones of the Magnificat and Benedictus (intonation on every verse, longer mediants). v1 transcribes the eight tones + peregrinus; the solemn tones follow when a consumer pulls. | Claude's call |
 | P5 | **A cadence is a list of tagged notes**: *preparatory* (one per syllable, a fixed count), *accent* (falls on an accented syllable), *added* (the note an extra unaccented syllable after an accent takes), *closing* (the notes after the accent). Two-accent cadences are two accent groups. Variant cadences the books prescribe (the "abrupt" cadence for a half-verse ending in a monosyllable or an indeclinable Hebrew name; the flex) are part of the tone's entry, not code. The exact per-tone counts come from the book (P3), not from this spec. | Claude's call |
 | P6 | **Pointed text format**: plain UTF-8, one verse per line, `*` at the mediant, `†` (or `+`) at a flex, **accent marks on the stressed vowel** as liturgical books print them (á é í ó ú ǽ). Words of two syllables are accented on the first without a mark. A way to force a syllable division for the rare word the rules divide wrongly is the builder's choice. The bold/italic of a printed book is NOT input — the fitter computes it. | Claude's call |
@@ -201,6 +201,10 @@ errors, fitter errors, and edition variants.
   printed by 1930, `tools/gabc_arcessere.sh`): a handful of endings
   and psalms that satisfy it, plus hand-written cases for every edge
   case (P9), each red first with a plant.
+- **The book's own examples are the first oracle.** AR 1912 prints
+  each cadence with short texts set under it (§VI q2). Each example
+  is a fixture: the text in, the printed notes out, cited by page.
+  They are from a 1912 book, so they meet the house rule.
 - **The corpus checks** (EUOUAE endings §II, written psalms §IV) read
   the cached corpus in `build/`, as a gate in the shape of
   `musicxml-oraculum` (fabrica action, skips cleanly with a message
@@ -219,9 +223,32 @@ errors, fitter errors, and edition variants.
    calendar already counts). It does not block the tone table, the
    syllables, or the fitter — only which texts the Office step uses.
    Fran's call; licences of both text sources unchecked (AUDIENDA).
-2. **Which book Fran can see** for transcription (P3): a scan of the
-   1912 Antiphonale Romanum or another pre-1930 edition, or the Liber
-   Usualis 1961. Claude transcribes from what is available.
+2. ~~Which book~~ — **answered 2026-11-07**: Fran has no printed
+   copy; we use a public-domain scan. *Antiphonale sacrosanctae
+   Romanae ecclesiae pro diurnis horis*, Typis polyglottis Vaticanis
+   1912 (the Vatican edition), archive.org item
+   `antiphonale00anonuoft` (University of Ottawa copy, 1179 leaves,
+   clean 1950 px page images). The appendix *Toni communes*: psalm
+   tones from scan leaf 1026 (~p. 3\*) to leaf 1048 (*in directum*);
+   page 5\* = image `page/n1028`. Cite as "AR 1912 p. N\*". Second
+   witness for checking: *Liber usualis officii pro dominicis*
+   (Vatican edition, ~1913), archive.org
+   `LiberUsualisOfficiiProDominicis`, same *Toni communes*.
+   What the book itself settles (read from its rubrics, p. 3\*–5\*):
+   - ending names: the letter of the ending's last note, **capital
+     when it is the mode's final, lowercase otherwise**, numbered when
+     several end on one note (`g`, `g2`, `g3`);
+   - flex: lower the last syllable, and the one before it too if it
+     is short; on a monosyllable or Hebrew word, hold the tenor with a
+     short pause; flex on the tenor with a pause also allowed;
+   - mediants of tones 1, 3, 7 and endings of tones 5, 7 come in four
+     forms: A no *supervenient* (added) note, B at the end only, C in
+     the middle only, D both;
+   - *clausulae abbreviatae*: when the text is too short, drop the
+     cadence's first notes, keep the part the text can carry;
+   - every cadence is printed with worked text examples (e.g.
+     tone 1 mediant: "splendó-ri-bus sanctó-rum", "Dó-mi-nus ex
+     Si-on", "propi-ti-á-ti-o est"), which become fixtures (§V).
 3. **Reciting speed**: should tenor syllables be shorter than a
    neume's punctum (speech rhythm) — a converter option, or not?
 4. **Where pointed texts live** (a file per psalm under
@@ -244,10 +271,10 @@ errors, fitter errors, and edition variants.
 ## AUDIENDA (not verified when written)
 
 - The per-tone structure (how many accents and preparatory syllables
-  each mediant and termination has), the abrupt-cadence rule (which
-  tones, which endings), and the flex rule — stated from memory of the
-  books, deliberately NOT written into this spec; the transcription
-  (P3) settles them.
+  each mediant and termination has) and the abrupt-cadence rule (which
+  tones, which endings) — deliberately NOT written into this spec; the
+  transcription (P3) settles them. (The flex rule and the ending names
+  are now read from the book, §VI q2.)
 - Whether `g` and `G` (and `g2`, `G*`) in GregoBase labels are
   different endings or transcriber habit.
 - That the written-out GregoBase psalms follow the same tone table as
@@ -255,7 +282,7 @@ errors, fitter errors, and edition variants.
 - That WORDS (oratio) carries no vowel length.
 - How monosyllables at a cadence are treated beyond the abrupt
   cadence.
-- Availability of a pre-1930 Antiphonale scan; licences of Divinum
-  Officium texts and of the Nova Vulgata.
+- Licences of Divinum Officium texts and of the Nova Vulgata. (The
+  1912 Antiphonale scan exists and is readable, §VI q2.)
 - Whether existing web tools generate gabc from psalm tones (believed
   to exist; useful once as an oracle, under the third-party rules).
