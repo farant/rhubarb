@@ -138,3 +138,54 @@ Plan: `project-specs/exemplaria-velox-plan.md` (spec
   radius + I` -> "velox fixa", "magnitudines oris", "determinatum" red.
 - Timing (N = 10): lapis 600 classic 618 / velox 488 ms (T3 517); meadow
   646 / 490 (T3 594); lapis 720 870 / 632. Drift still 2 / 14 px.
+
+## 2026-11-07 — T5: nearest colours + base pair loop (no packed key)
+
+- Profiled first (scratch build with `-fno-inline`, `sample`; under -O2
+  the static helpers inline into the public function and `sample`
+  credits them to wrong lines). Golem + meadow: base 54% (pair loop
+  ~47%, `_proximi` 7%), `_proximus` **20%** (residual 11% + pictograms
+  9%) - it ran the full 16-colour insertion sort to take the first.
+- `_proximus` is now a plain minimum; `_proximi_k` is partial selection
+  (k passes of "first minimum among the rest"), writing only min(k,
+  active) entries. Ties -> lower index in both, as the stable insertion
+  sort gave. Base candidates go straight into `cand`; hatching and
+  pictogram arrays shrank to VIII / IX.
+- Base reads `DITHERING_BAYER_{DENSITATES,PONDERA,ORDINES}` directly;
+  the `bayer` Exemplar copy in the main function is gone. Exact
+  pruning: level 0 (density 0, all weights 0) is solid a for every b,
+  scored once per a at its first place; levels 1..15 of a pair are
+  skipped (`frange`) once `poena_minima` (penalty at the smallest
+  nonzero minor, computed once per pair) is >= the best. Nothing
+  skipped could be strictly better, so the choice can't change. The
+  penalty keeps classic's operation order (`poena * minor / 32.0`).
+- **Packed key dropped (plan said `a | b << IV | gradus << VIII`).**
+  Back-to-back A/B in scratch binaries: task 5 as first written was
+  *slower* than T4 on the golem (438 -> 460 ms). Bisected from "T4 +
+  new nearest functions only" (E: 433 -> 354): weights-from-table and
+  pair pointer neutral, skip rules removed still slow, the packed key
+  alone +33% overall; `sample` put it all in the base (4848 -> 7765
+  samples, +60%). Not chased into the asm (all inlined into one
+  1600-line function); three separate `opt_a/opt_b/opt_e` avoid it.
+  Lesson: time each step against the previous commit in the same
+  session - single runs drift by ~5% and the 720 golem looked "slower"
+  for noise reasons before this.
+- "pauci colores" (scaena 80x60, active {V}, {0,V}, {0,V,VI}: only
+  active colours; flat colours inside each set exact) - green on T4, a
+  guard. Pins "velox fixa" / "magnitudines oris" held: bit-identical.
+- Plants: `_proximus` tie `<` -> `<=` stayed GREEN (no exact
+  equidistant pixel in any fixture - the tie rule is unpinned; noted,
+  not chased); replaced by `_proximus` loop from i = 2 (skips the
+  second active colour) -> velox fixa + magnitudines oris red ("colores
+  puri" stays green: on a flat image the residual threshold keeps the
+  base colour). Pair skip inverted -> both pins red. `_proximi_k`
+  writes the position instead of `activi[position]` -> "colores
+  activi", "pauci colores", "magnitudines oris" red; "velox fixa" green
+  (all 16 active, position == index) - the case pauci colores exists
+  for.
+- Timing back to back (velox ms; T4 / T5): golem 360 175 / 135, golem
+  600 435 / 328, golem 720 623 / 468, meadow 494 / 344. Classic ~580 /
+  650: velox now ~1.8x classic. After-profile (no-inline): base 56%
+  (still the pair loop), `_campum_striarum` 10%, residual 9%
+  (`_proximus` 5%), structure 7% (atan2 3%) - T6 has the hatching
+  field.

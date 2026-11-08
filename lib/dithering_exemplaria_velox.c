@@ -10,6 +10,10 @@
  * T3: plana f32 per canalem (Plana, Structura), larvae ut bitsets,
  * OKLab f32 sine pow (_radix_cubica), mixtio paribus activis solis.
  * Mathesis eadem; output a classico pixelatim differre potest.
+ *
+ * T5: _proximus minimum simplex, _proximi_k electio partialis; basis
+ * tabulas Bayer ipsas legit, putatio exacta (output idem octetim ac
+ * T4).
  */
 #include "dithering_exemplaria.h"
 #include "dithering_exemplaria_fontes.h"
@@ -279,46 +283,59 @@ _mixtio (
         + w) * III];
 }
 
-/* colores activi ordine distantiae ad lab; reddit numerum
- * (<= maximum) */
+/* k colores activi proximi lab, ordine distantiae: electio partialis
+ * (k transitus "primum minimum reliquorum"). Paritas -> index minor
+ * (ordo activi), ut ordinatio per insertionem stabilis. Scribit et
+ * reddit min(k, numerus activorum). */
 interior s32
-_proximi (
+_proximi_k (
     constans Opus* o,
      constans f32* lab,
-              s32  maximum,
-              s32* ordinati)
+              s32  k,
+              s32* indices)
 {
     f32 dist[XVI];
-    s32 i, j, numerus = o->numerus_activorum;
+    i32 sumpti = 0;
+    s32 i, r, numerus = o->numerus_activorum;
+    s32 m = numerus < k ? numerus : k;
 
     per (i = 0; i < numerus; i++)
     {
-        ordinati[i]  = o->activi[i];
-        dist[i]      = _d2(lab, o->pal_lab[o->activi[i]]);
+        dist[i] = _d2(lab, o->pal_lab[o->activi[i]]);
     }
-    per (i = 1; i < numerus; i++)
+    per (r = 0; r < m; r++)
     {
-        per (j = i; j > 0 && dist[j] < dist[j - I]; j--)
+        s32 optimus = -1;
+        per (i = 0; i < numerus; i++)
         {
-            f32 td           = dist[j];
-            s32 ti           = ordinati[j];
-            dist[j]          = dist[j - I];
-            ordinati[j]      = ordinati[j - I];
-            dist[j - I]      = td;
-            ordinati[j - I]  = ti;
+            si ((sumpti >> i) & I) perge;
+            si (optimus < 0 || dist[i] < dist[optimus]) optimus = i;
         }
+        sumpti      |= (i32)I << optimus;
+        indices[r]  = o->activi[optimus];
     }
-    redde numerus < maximum ? numerus : maximum;
+    redde m;
 }
 
+/* color activus proximus: minimum simplex, paritas -> index minor */
 interior s32
 _proximus (
     constans Opus* o,
      constans f32* lab)
 {
-    s32 ordinati[XVI];
-    _proximi(o, lab, I, ordinati);
-    redde ordinati[0];
+    f32 optimum = _d2(lab, o->pal_lab[o->activi[0]]);
+    s32 optimus = o->activi[0], i;
+
+    per (i = 1; i < o->numerus_activorum; i++)
+    {
+        f32 d = _d2(lab, o->pal_lab[o->activi[i]]);
+        si (d < optimum)
+        {
+            optimum = d;
+            optimus = o->activi[i];
+        }
+    }
+    redde optimus;
 }
 
 interior integer
@@ -552,25 +569,15 @@ _opus_parare (
     redde VERUM;
 }
 
-/* exemplaria ex tabulis generatis (dithering_exemplaria_tabulae.h,
- * valores classici _exemplar_finire): nihil hic computatur */
+/* pictogrammata ex tabulis generatis (dithering_exemplaria_tabulae.h,
+ * valores classici _exemplar_finire): nihil hic computatur. Basis
+ * Bayer tabulas ipsas legit (T5). */
 interior vacuum
 _exemplaria_ex_tabulis (
-    Exemplar* bayer,
     Exemplar* figurae)
 {
     s32 k;
 
-    per (k = 0; k < DITHERING_BAYER_NUMERUS; k++)
-    {
-        memcpy(bayer[k].ordo, DITHERING_BAYER_ORDINES[k],
-            DITHERING_TEGULA);
-        memcpy(bayer[k].pondus, DITHERING_BAYER_PONDERA[k], LXIV);
-        memcpy(bayer[k].pondus_latum, DITHERING_BAYER_PONDERA_LATA[k],
-            LXIV);
-        bayer[k].densitas  = DITHERING_BAYER_DENSITATES[k];
-        bayer[k].familia   = DITHERING_PICTOGRAMMA_NULLUM;
-    }
     per (k = 0; k < DITHERING_PICTOGRAMMATA_FONTIUM; k++)
     {
         memcpy(figurae[k].ordo, DITHERING_PICTOGRAMMATUM_ORDINES[k],
@@ -650,15 +657,35 @@ _structuram_computare (
  * Stratum I: basis Bayer per areas 2x2
  * ================================================== */
 
+/* Par optimum (a, b, gradus) per aream, in opt_a / opt_b / opt_e
+ * separatis: clavis una (a | b << IV | gradus << VIII) basim LX %
+ * tardiorem fecit (T5, mensum; vide worklog). Pondera ex
+ * DITHERING_BAYER_PONDERA directe. Putatio exacta (nihil putatum
+ * stricte melius esse potest, ergo electio eadem):
+ *   - gradus densitatis 0 (pondera omnia 0) est solidum a pro omni b:
+ *     semel per a aestimatur, loco suo primo;
+ *   - gradus 1..XV paris omittuntur cum poena minima paris (minor
+ *     minimus) iam >= optimum. Densitates crescunt (4k), ergo solus
+ *     gradus 0 densitatem 0 habet et frange tutum est. */
 interior vacuum
 _basis_bayer (
-        constans Opus* o,
-       constans Plana* lin,
-       constans Plana* oculi,
-    constans Exemplar* bayer,
-                   i8* indices)
+     constans Opus* o,
+    constans Plana* lin,
+    constans Plana* oculi,
+                i8* indices)
 {
-    s32 lat = o->lat, alt = o->alt, x_areae, y_areae;
+    s32 lat = o->lat, alt = o->alt, x_areae, y_areae, e;
+    s32 minores[DITHERING_BAYER_NUMERUS], minor_minimus = LXIV;
+
+    per (e = 0; e < DITHERING_BAYER_NUMERUS; e++)
+    {
+        s32 densitas  = DITHERING_BAYER_DENSITATES[e];
+        minores[e]    = densitas < XXXII ? densitas : LXIV - densitas;
+        si (densitas > 0 && minores[e] < minor_minimus)
+        {
+            minor_minimus = minores[e];
+        }
+    }
 
     per (y_areae = 0; y_areae < alt; y_areae += GRADUS_AREAE)
     {
@@ -668,12 +695,13 @@ _basis_bayer (
                 - x_areae;
             s32 aa = y_areae + GRADUS_AREAE <= alt ? GRADUS_AREAE : alt
                 - y_areae;
-            s32 area = al * aa, i, j, k, e, nc;
+            s32 area = al * aa, i, j, k, nc;
             f64 medium_lin[III] = {0.0, 0.0, 0.0};
             f32 medium_lab[III];
             f32 loci[GRADUS_AREAE * GRADUS_AREAE][III];
+            s32 positio[GRADUS_AREAE * GRADUS_AREAE];
             s32 cand[CANDIDATI_MAX];
-            s32 ordinati[XVI];
+            s32 extrema[II];
             s32 obscurum = 0, lucidum = 0;
             f32 lumen_minimum = 9.0f, lumen_maximum = -9.0f;
             f64 optimum = 0.0;
@@ -681,7 +709,9 @@ _basis_bayer (
 
             per (i = 0; i < area; i++)
             {
-                s32 p = (y_areae + i / al) * lat + x_areae + i % al;
+                s32 sx = x_areae + i % al, sy = y_areae + i / al;
+                s32 p = sy * lat + sx;
+                positio[i] = (sy & VII) * DITHERING_TEGULA + (sx & VII);
                 per (k = 0; k < III; k++) medium_lin[k] += lin->c[k][p];
                 _triplum(oculi, p, loci[i]);
                 si (loci[i][0] < lumen_minimum)
@@ -700,24 +730,22 @@ _basis_bayer (
                 (f32)(medium_lin[2] / (f64)area), medium_lab);
 
             /* candidati: VI proximi medio + II proximi extremis
-             * utrisque (_proximi ordinem TOTUM scribit - in XVI,
-             * deinde copia) */
-            nc = _proximi(o, medium_lab, VI, ordinati);
-            per (i = 0; i < nc; i++) cand[i] = ordinati[i];
+             * utrisque */
+            nc = _proximi_k(o, medium_lab, VI, cand);
             per (j = 0; j < II; j++)
             {
-                s32 nx = _proximi(o, loci[j == 0 ? obscurum : lucidum],
-                    II, ordinati);
+                s32 extremum = j == 0 ? obscurum : lucidum;
+                s32 nx = _proximi_k(o, loci[extremum], II, extrema);
                 per (i = 0; i < nx; i++)
                 {
                     b32 adest = FALSUM;
                     per (k = 0; k < nc; k++)
                     {
-                        si (cand[k] == ordinati[i]) adest = VERUM;
+                        si (cand[k] == extrema[i]) adest = VERUM;
                     }
                     si (!adest && nc < CANDIDATI_MAX)
                     {
-                        cand[nc++] = ordinati[i];
+                        cand[nc++] = extrema[i];
                     }
                 }
             }
@@ -732,29 +760,36 @@ _basis_bayer (
 
             per (i = 0; i < nc; i++)
             {
-                s32 a = cand[i];
+                s32 a               = cand[i];
+                b32 solidum_factum  = FALSUM;
                 per (j = 0; j < nc; j++)
                 {
-                    s32 b = cand[j];
+                             s32  b = cand[j];
+                    constans f32* mixtio_paris;
+                             f64  poena, poena_minima;
                     si (a == b) perge;
+                    mixtio_paris = _mixtio(o, a, b, 0);
+                    poena = POENA_CONTRASTUS * (f64)area
+                        * o->distantia[a][b] * o->distantia[a][b];
+                    poena_minima = poena * (f64)minor_minimus / 32.0;
                     per (e = 0; e < DITHERING_BAYER_NUMERUS; e++)
                     {
-                        s32 densitas = bayer[e].densitas, minor, q;
-                        f64 err;
+                        constans i8* pondera;
+                                f64  err;
+                                s32  q;
 
-                        minor = densitas < 64 - densitas ? densitas
-                            : 64 - densitas;
-                        err = POENA_CONTRASTUS * (f64)area
-                            * o->distantia[a][b] * o->distantia[a][b]
-                            * (f64)minor / 32.0;
+                        pondera = DITHERING_BAYER_PONDERA[e];
+                        si (DITHERING_BAYER_DENSITATES[e] == 0)
+                        {
+                            si (solidum_factum) perge;
+                            solidum_factum = VERUM;
+                        }
+                        alioquin si (poena_minima >= optimum) frange;
+                        err = poena * (f64)minores[e] / 32.0;
                         per (q = 0; q < area && err < optimum; q++)
                         {
-                            s32 sx = x_areae + q % al;
-                            s32 sy = y_areae + q / al;
-                            err += _d2(_mixtio(o, a, b,
-                                (s32)bayer[e].pondus[(sy & VII)
-                                    * DITHERING_TEGULA + (sx & VII)]),
-                                loci[q]);
+                            err += _d2(&mixtio_paris[(s32)pondera[
+                                positio[q]] * III], loci[q]);
                         }
                         si (err < optimum)
                         {
@@ -770,9 +805,10 @@ _basis_bayer (
             per (i = 0; i < area; i++)
             {
                 s32 sx = x_areae + i % al, sy = y_areae + i / al;
-                indices[sy * lat + sx] =
-                    (i8)(_punctum(bayer[opt_e].ordo, sx, sy) ? opt_b
-                    : opt_a);
+                s32 punctum = _punctum(DITHERING_BAYER_ORDINES[opt_e],
+                    sx,
+                    sy);
+                indices[sy * lat + sx] = (i8)(punctum ? opt_b : opt_a);
             }
         }
     }
@@ -1082,7 +1118,7 @@ _hachuras_pingere (
                 <= alt ? AREA_HACHURARUM : alt - y_areae;
             f64 medium[III] = {0.0, 0.0, 0.0};
             f32 medium_lab[III];
-            s32 ordinati[XVI], na = 0, nc, i, j, q, w;
+            s32 ordinati[VIII], na = 0, nc, i, j, q, w;
             f64 optimum = 1e30;
             s32 opt_a = -1, opt_b = -1;
 
@@ -1100,7 +1136,7 @@ _hachuras_pingere (
             {
                 medium_lab[i] = (f32)(medium[i] / (f64)na);
             }
-            nc = _proximi(o, medium_lab, VIII, ordinati);
+            nc = _proximi_k(o, medium_lab, VIII, ordinati);
 
             per (i = 0; i < nc; i++)
             {
@@ -1227,7 +1263,7 @@ _regiones_stilizare (
                  s32  col              = titulus[mb[0]] / LXIV;
                  f64  medium_lin[III]  = {0.0, 0.0, 0.0};
                  f32  medium_lab[III];
-        s32 ordinati[XVI], nc, i, j, k, e;
+        s32 ordinati[IX], nc, i, j, k, e;
         f64 optimum = 1e30, distantia_minima;
         s32 opt_a = -1, opt_b = -1, opt_e = -1;
         b32 umbra;
@@ -1243,7 +1279,7 @@ _regiones_stilizare (
         umbra = medium_lab[0] < PICTOGRAMMATUM_UMBRA;
         distantia_minima = umbra ? PICTOGRAMMATUM_DISTANTIA_UMBRAE
             : PICTOGRAMMATUM_DISTANTIA_MIN;
-        nc = _proximi(o, medium_lab, IX, ordinati);
+        nc = _proximi_k(o, medium_lab, IX, ordinati);
 
         per (e = 0; e < DITHERING_PICTOGRAMMATA_FONTIUM; e++)
         {
@@ -1448,7 +1484,6 @@ dithering_exemplaria_velox_colorum (
                                     Opus  o;
                           memoriae_index  m1;
 
-    Exemplar bayer[DITHERING_BAYER_NUMERUS];
     Exemplar figurae[DITHERING_PICTOGRAMMATA_FONTIUM];
     Plana lin, oculi, oculi_lati, error;
     Structura st, st_campi;
@@ -1483,7 +1518,7 @@ dithering_exemplaria_velox_colorum (
     {
         redde fructus;
     }
-    _exemplaria_ex_tabulis(bayer, figurae);
+    _exemplaria_ex_tabulis(figurae);
 
     m1     = (memoriae_index)o.n;
     verba  = VERBA_LARVAE(o.n);
@@ -1580,7 +1615,7 @@ dithering_exemplaria_velox_colorum (
     }
 
     /* I basis */
-    _basis_bayer(&o, &lin, &oculi, bayer, basis);
+    _basis_bayer(&o, &lin, &oculi, basis);
 
     /* II hachurae: regiones maximae sub praesupputatione */
     _hachuras_eligere(&o, hachuratus, opt->praesupputatio_hachurarum,

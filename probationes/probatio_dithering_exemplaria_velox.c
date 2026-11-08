@@ -9,6 +9,9 @@
  *   colores puri      per indicem i 0..XV imago plana XVIxXVI coloris
  *                     AQUINAS_PALETTE[i], colores omnes -> indices
  *                     omnes == i (index fractus nominatur)
+ *   pauci colores     greges activi {V}, {0, V}, {0, V, VI}: scaena
+ *                     LXXXxLX solum activos reddit; colores puri
+ *                     intra gregem exacti
  *   memoria minor     in lapide DC: piscina_summa_usus veloci <
  *                     classici (piscinae novae ambae)
  *   velox fixa        indices veloces per blake2b in fixis (capti
@@ -165,6 +168,55 @@ _sectio_colores_puri (
     }
 }
 
+#define PAUCI_NUMERUS III
+
+/* greges colorum activorum: unus, duo, tres */
+hic_manens constans s32 PAUCI_GREGES[PAUCI_NUMERUS][IV] = {
+    {I, V, 0, 0}, {II, 0, V, 0}, {III, 0, V, VI}
+};
+
+interior vacuum
+_sectio_pauci_colores (
+    CredoContextus* c)
+{
+          b32 activi[XVI];
+    character titulus[XXXII];
+    s32 g, i, k, p, errata;
+
+    per (g = 0; g < PAUCI_NUMERUS; g++)
+    {
+                     s32  numerus = PAUCI_GREGES[g][0];
+                      i8* scaena;
+        DitheringFructus  f;
+
+        scaena = _imago_scaena(c->piscina, LXXX, LX);
+        per (i = 0; i < XVI; i++) activi[i] = FALSUM;
+        per (k = 0; k < numerus; k++) activi[PAUCI_GREGES[g][k + I]]
+                                          = VERUM;
+        f = dithering_exemplaria_velox_colorum(scaena, LXXX, LX, activi,
+            NIHIL, NIHIL, c->piscina);
+        CREDO_NECESSE(f.successus);
+        CREDO_VERUM(_omnes_activi(&f, activi));
+
+        /* colores puri intra gregem */
+        per (k = 0; k < numerus; k++)
+        {
+            s32  color = PAUCI_GREGES[g][k + I];
+             i8* plana = _imago_plana(c->piscina, XVI, XVI, color);
+            f = dithering_exemplaria_velox_colorum(plana, XVI, XVI,
+                activi, NIHIL, NIHIL, c->piscina);
+            CREDO_NECESSE(f.successus);
+            errata = 0;
+            per (p = 0; p < XVI * XVI; p++) si ((s32)f.indices[p]
+                                                != color) errata++;
+            sprintf(titulus, "grex %d color %d", (integer)numerus,
+                (integer)color);
+            CREDO_LITERAE_AEQUALES(errata == 0 ? titulus : "fractus",
+                titulus);
+        }
+    }
+}
+
 /* digestum velocis in fixo, piscina nova (memoria non cumulatur) */
 interior b32
 _velox_digestum (
@@ -307,6 +359,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "classica fixa", _sectio_classica_fixa, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "colores puri", _sectio_colores_puri, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "pauci colores", _sectio_pauci_colores, NIHIL, NIHIL, NIHIL,
         NIHIL },
     /* gravis: classicus ~CCL MB arenae per vocationem ad DC x DCCLI */
     { "memoria minor", _sectio_memoria_minor, NIHIL, NIHIL, "gravis",
