@@ -223,3 +223,90 @@ Plan: `project-specs/exemplaria-velox-plan.md` (spec
   The field only dropped 10% -> 9% (no-inline): the clamps weren't its
   cost, the 169 taps x 8 iterations over active pixels are. Structure
   7.2% -> 5.4%. Base now 58%. Velox ~1.9x classic.
+
+## 2026-11-07 — T7: exact speedups from a fresh-eyes review (-43%)
+
+Fran asked for a fresh pair of eyes. A read-only subagent (scratch
+builds only) counted the base loop and prototyped changes; I measured in
+parallel. Counts per 2x2 area (golem 600): 6 candidates (the 2+2
+"extremes" almost never add one), 30 pairs, ~454 levels entered, 73% of
+levels stop after one pixel, the `poena_minima` pair skip fires on 0.8%
+of pairs. The cost is ~51M tiny level evaluations per frame (~3.7 ns
+each), not distance math. My own triangle bound (ball around a / b)
+skipped 52% of pairs but gained only 9% (superseded). The agent's v6
+(scratch) reproduced at -44% with identical bytes; T7 is that, rewritten
+in house style, step by step with A/B after each (ms golem 600 / meadow):
+
+- **A. Skip covered base areas** (T6 316 / 331 -> 254 / 270, -20%). The
+  base runs after layers II and III and skips 2x2 areas wholly in
+  `tectum = pictus | larva`. `pictus` (new, set by `_hachuras_pingere`)
+  is "really painted": a hatched 4x4 with no qualifying pair keeps the
+  base, so `hachuratus` would be wrong. Both `memcpy(pictura_*, basis)`
+  gone; compositio takes the hatching colour under `pictus`, the
+  hatching threshold stays under `hachuratus` (oddity kept, see below).
+  Readers checked: `pictura_hachurarum` is written exactly at `pictus`,
+  `pictura_stili` exactly at `larva`; aspersio and the residual read
+  `basis` only after compositio.
+- **B. Capsule bound per pair** (-> 217 / 207). Per active pair
+  (`_capsulam_parare`, in `Opus`, ~16 KB f64): segment P = mix(w 0) ->
+  mix(w 32), rho = max distance of the 33 stored f32 mixes from it x (1
+  + 1e-6) + 1e-6. Distance to the capsule is convex, so for every level
+  `err_e >= pen_e + area * (dist(mean, segment) - rho)_+^2`.
+  `_limites_parium` computes all cand x cand bounds per area, branch-
+  free; a pair is skipped when `pen_min * (1 - 1e-12) + LB * (1 - 1e-5)
+  >= optimum`. Margins: f32 d2 >= true * (1 - 3e-7); the 1e-12 on
+  pen_min closes a theoretical f64 rounding gap the agent found in its
+  own first version.
+- **C. First-term sweep** (-> 219 / 207, only -2..3%). Level 0 out of
+  the loop (once per a, at its first place); `post_primum[e] = pen_e +
+  d2(pixel 0)` for levels 1..15 with no branches, the same f64 sum the
+  loop made, then only levels with `post_primum < optimum` are walked
+  from q = 1. The agent measured -12% before B; B leaves it little.
+- **D. Horizontal blur interior row by row** (-> 198 / 183, -7%): k
+  outer, x inner, per-pixel order unchanged (0, k ascending);
+  vectorises. Safe in place: the pass reads `fons`, writes `tmp`.
+- **E. Hatching field, 4 interior pixels at once** (-> 184 / 186, -7%
+  golem; meadow has no hatching). `_campi_quattuor` (4 independent sums,
+  own kernel and order each) and `_campi_summa` (clamped single, edges
+  and tails). **My first port was 70% slower** on the golem: I'd left out
+  the agent's "no pixel of the four active -> skip" early-out, so it
+  convolved every inactive pixel.
+
+- New pin "tecta fixa" (scaena 128, both budgets 1.0; hatching 0.358,
+  pictograms 0.468), taken on T6 c1c6498f9 before any change.
+- Plants: A (area skipped when only the first pixel is covered) -> 7
+  sections red; B (rho dropped) -> velox fixa; C (first term uses the
+  previous level's weight) -> 4 pins; D (interior seeded with the pixel
+  instead of 0) -> 6 incl. colores puri, lateres. E as first planted
+  ("+ I" on the right group limit) was a **silent plant**: groups start
+  at 6 and step 4, and at widths 128 and 600 the last group already
+  ends where the old condition allows, so the planted code never ran.
+  Replaced by the left edge (groups may start at radius - 1) -> hachurae
+  fixae + tecta fixa red.
+- Back to back, 3 pairs (T6 / T7): golem 360 129 / 74, golem 600 313 /
+  179, golem 720 446 / 255, meadow 331 / 181. Velox 3.3x classic. After
+  profile (no-inline): base 37%, residual 17%, field 10%, pictograms 7%,
+  structure 7%, aspersio 6%.
+- **Oddity kept (inherited, would drift):** a hatched 4x4 with no
+  qualifying pair keeps its base colours but gets `HACHURAE_LIMEN` 0.30
+  in the residual.
+
+Unmeasured ideas from the review (each ~1-3%, all exact), for later:
+- hatching angle only at `activus` pixels and only when `regiones_h >
+  0` (meadow then never computes it);
+- the two `_structuram_computare` calls build identical gradient
+  planes: build once, blur copies;
+- `_regiones_stilizare`: `m / lat`, `m % lat` per member per pair per
+  pattern - precompute member positions per region;
+- `_regiones_colligere`: push x, y instead of div/mod per popped pixel;
+- `_residuum`: skip both sqrts when `proximus == b` (limina >= 0, so the
+  answer is b anyway);
+- `_aspergere`: `_oklab` on every pixel but read only under `larva`;
+- eye-image OKLab only for areas not skipped;
+- `_proximi_k` branch-free rank counting; one distance pass for mean
+  and both extremes;
+- base: a per-pixel capsule bound (on golem 42-46% of pairs that pass
+  the mean bound still die in the sweep);
+- base: seed `optimum` with an upper bound U (accept the first err <=
+  U, then strict <) - identical result;
+- `CANDIDATI_MAX` XII is never reached (max 10).

@@ -17,6 +17,10 @@
  *
  * T6: campus striarum - nucleus per pixelum semel, columnae interiores
  * sine limitibus, tanh solum activis; tensor detalii sine angulo.
+ *
+ * T7 (ex recensione, exacta): basis post strata II et III areas pictas
+ * omittit; limes capsulae per par; terminus primus sine ramis; nebula
+ * ordinum per ordinem totum; campus striarum quaterni pixela.
  */
 #include "dithering_exemplaria.h"
 #include "dithering_exemplaria_fontes.h"
@@ -114,6 +118,13 @@ nomen structura {
          f32  pal_lab[XVI][III];
          f32  distantia[XVI][XVI];
          f32* mixtio;   /* [a][b][w][III], paria activa sola scripta */
+    /* capsula paris (paria activa): segmentum mixtio(w 0) ->
+     * mixtio(w XXXII) et radius quo omnes XXXIII mixtiones
+     * continentur (paulo auctus) - terminus inferior basis */
+         f64  capsula_origo[XVI][XVI][III];
+         f64  capsula_via[XVI][XVI][III];
+         f64  capsula_inversa[XVI][XVI];  /* 1 / |via|^2, 0 si nulla */
+         f64  capsula_radius[XVI][XVI];
          i32  semen;
      Piscina* piscina;
 } Opus;
@@ -467,15 +478,18 @@ _gauss_planum (
         {
             exitus[x] = _gauss_orae(linea, nucleus, radius, lat, x);
         }
-        per (x = initium; x < finis; x++)
+        /* interius per ordinem totum, k exterius (ut columnae): ordo
+         * summationis per pixelum idem (0, k crescens), sed pixela
+         * independentia - vectorizari potest */
+        per (x = initium; x < finis; x++) exitus[x] = 0.0f;
+        per (k = -radius; k <= radius; k++)
         {
-            constans f32* centrum  = &linea[x];
-                     f32  s        = 0.0f;
-            per (k = -radius; k <= radius; k++)
+                     f32  pondus = nucleus[k + radius];
+            constans f32* fons_k = &linea[k];
+            per (x = initium; x < finis; x++)
             {
-                s += nucleus[k + radius] * centrum[k];
+                exitus[x] += pondus * fons_k[x];
             }
-            exitus[x] = s;
         }
         per (x = finis; x < lat; x++)
         {
@@ -507,6 +521,68 @@ _gauss_planum (
 /* ==================================================
  * Praeparatio: palette, mixtiones, exemplaria
  * ================================================== */
+
+/* distantia puncti a segmento origo -> origo + via (inversa = 1 /
+ * |via|^2; via nulla: distantia ab origine) */
+interior f64
+_distantia_segmenti (
+     constans f64* punctum,
+     constans f64* origo,
+     constans f64* via,
+              f64  inversa)
+{
+    f64 v[III], t = 0.0, d = 0.0;
+    s32 k;
+
+    per (k = 0; k < III; k++)
+    {
+        v[k]  = punctum[k] - origo[k];
+        t     += v[k] * via[k];
+    }
+    t *= inversa;
+    t = t < 0.0 ? 0.0 : t > 1.0 ? 1.0 : t;
+    per (k = 0; k < III; k++)
+    {
+        f64 u  = v[k] - t * via[k];
+        d      += u * u;
+    }
+    redde sqrt(d);
+}
+
+/* capsula paris ex mixtionibus f32 scriptis (f64 exacte lectis):
+ * radius = distantia maxima a segmento * (1 + 1e-6) + 1e-6 - error
+ * f64 (~1e-16) longe intra augmentum */
+interior vacuum
+_capsulam_parare (
+    Opus* o,
+     s32  a,
+     s32  b)
+{
+    f64 longitudo = 0.0, radius = 0.0, punctum[III];
+    s32 k, w;
+
+    per (k = 0; k < III; k++)
+    {
+        o->capsula_origo[a][b][k] = (f64)_mixtio(o, a, b, 0)[k];
+        o->capsula_via[a][b][k] = (f64)_mixtio(o, a, b,
+            DITHERING_GRADUS_MIXTI)[k] - o->capsula_origo[a][b][k];
+        longitudo += o->capsula_via[a][b][k]
+            * o->capsula_via[a][b][k];
+    }
+    o->capsula_inversa[a][b] = longitudo > 0.0 ? 1.0 / longitudo : 0.0;
+    per (w = 0; w <= DITHERING_GRADUS_MIXTI; w++)
+    {
+        f64 d;
+        per (k = 0; k < III; k++)
+        {
+            punctum[k] = (f64)_mixtio(o, a, b, w)[k];
+        }
+        d = _distantia_segmenti(punctum, o->capsula_origo[a][b],
+            o->capsula_via[a][b], o->capsula_inversa[a][b]);
+        si (d > radius) radius = d;
+    }
+    o->capsula_radius[a][b] = radius * (1.0 + 1e-6) + 1e-6;
+}
 
 interior b32
 _opus_parare (
@@ -568,6 +644,7 @@ _opus_parare (
                 }
                 _oklab(lin[0], lin[1], lin[2], _mixtio(o, a, b, w));
             }
+            _capsulam_parare(o, a, b);
         }
     }
     redde VERUM;
@@ -664,21 +741,62 @@ _structuram_computare (
  * Stratum I: basis Bayer per areas 2x2
  * ================================================== */
 
+/* Termini inferiores parium areae (omnes, sine ramis). Mixtiones paris
+ * omnes intra capsulam (segmentum + radius); distantia a capsula
+ * convexa est, ergo pro omni gradu e >= 1:
+ *   err_e >= poena_e + area * (dist(medium, segmentum) - radius)_+^2.
+ * Diminutio: d2 f32 computata >= vera * (1 - 3e-7), summa f64 ~5e-16;
+ * poena minima * (1 - 1e-12) + limes * (1 - 1e-5) ergo stricte infra
+ * omnem err_e computatum - par omissum vincere non potuit. */
+interior vacuum
+_limites_parium (
+     constans Opus* o,
+      constans s32* cand,
+               s32  nc,
+      constans f64* medium,
+               s32  area,
+               s32  minor_minimus,
+               f64  limites[CANDIDATI_MAX][CANDIDATI_MAX])
+{
+    s32 i, j;
+
+    per (i = 0; i < nc; i++)
+    {
+        per (j = 0; j < nc; j++)
+        {
+            s32 a = cand[i], b = cand[j];
+            f64 d = _distantia_segmenti(medium, o->capsula_origo[a][b],
+                o->capsula_via[a][b], o->capsula_inversa[a][b])
+                - o->capsula_radius[a][b];
+            f64 poena = POENA_CONTRASTUS * (f64)area
+                * o->distantia[a][b] * o->distantia[a][b];
+
+            d = d > 0.0 ? d : 0.0;
+            limites[i][j] = poena * (f64)minor_minimus / 32.0
+                * (1.0 - 1e-12) + (f64)area * d * d * (1.0 - 1e-5);
+        }
+    }
+}
+
 /* Par optimum (a, b, gradus) per aream, in opt_a / opt_b / opt_e
  * separatis: clavis una (a | b << IV | gradus << VIII) basim LX %
  * tardiorem fecit (T5, mensum; vide worklog). Pondera ex
- * DITHERING_BAYER_PONDERA directe. Putatio exacta (nihil putatum
- * stricte melius esse potest, ergo electio eadem):
- *   - gradus densitatis 0 (pondera omnia 0) est solidum a pro omni b:
- *     semel per a aestimatur, loco suo primo;
- *   - gradus 1..XV paris omittuntur cum poena minima paris (minor
- *     minimus) iam >= optimum. Densitates crescunt (4k), ergo solus
- *     gradus 0 densitatem 0 habet et frange tutum est. */
+ * DITHERING_BAYER_PONDERA directe. Areae totae in tectum (pictae ab
+ * hachuris aut pictographicis) omittuntur: compositio eas superscribit.
+ * Putatio exacta (nihil putatum stricte melius esse potest, ergo
+ * electio eadem):
+ *   - gradus 0 (densitas 0, DENSITATES[0] == 0, pondera omnia 0) est
+ *     solidum a pro omni b: semel per a aestimatur, loco suo primo;
+ *   - gradus 1..XV paris omittuntur cum limes paris (_limites_parium:
+ *     capsula, poena minima) iam >= optimum;
+ *   - terminus primus graduum 1..XV sine ramis (post_primum), deinde
+ *     soli gradus sub optimo ambulantur. */
 interior vacuum
 _basis_bayer (
      constans Opus* o,
     constans Plana* lin,
     constans Plana* oculi,
+      constans i32* tectum,
                 i8* indices)
 {
     s32 lat = o->lat, alt = o->alt, x_areae, y_areae, e;
@@ -713,6 +831,19 @@ _basis_bayer (
             f32 lumen_minimum = 9.0f, lumen_maximum = -9.0f;
             f64 optimum = 0.0;
             s32 opt_a, opt_b, opt_e = 0;
+            b32 tota_tecta = VERUM;
+            f64 medium_oculi[III];
+            f64 limites[CANDIDATI_MAX][CANDIDATI_MAX];
+            f64 post_primum[DITHERING_BAYER_NUMERUS];
+            s32 positio_prima[DITHERING_BAYER_NUMERUS];
+
+            /* area tota picta: compositio eam superscribit */
+            per (i = 0; i < area && tota_tecta; i++)
+            {
+                s32 p = (y_areae + i / al) * lat + x_areae + i % al;
+                si (!_bit(tectum, p)) tota_tecta = FALSUM;
+            }
+            si (tota_tecta) perge;
 
             per (i = 0; i < area; i++)
             {
@@ -757,6 +888,23 @@ _basis_bayer (
                 }
             }
 
+            per (k = 0; k < III; k++)
+            {
+                medium_oculi[k] = 0.0;
+                per (i = 0; i < area; i++)
+                {
+                    medium_oculi[k] += (f64)loci[i][k];
+                }
+                medium_oculi[k] /= (f64)area;
+            }
+            _limites_parium(o, cand, nc, medium_oculi, area,
+                minor_minimus, limites);
+            per (e = 0; e < DITHERING_BAYER_NUMERUS; e++)
+            {
+                positio_prima[e] = (s32)DITHERING_BAYER_PONDERA[e][
+                    positio[0]] * III;
+            }
+
             /* initium: solidum proximi (etiam si color unus activus) */
             opt_a = cand[0];
             opt_b = cand[0];
@@ -773,27 +921,53 @@ _basis_bayer (
                 {
                              s32  b = cand[j];
                     constans f32* mixtio_paris;
-                             f64  poena, poena_minima;
+                             f64  poena;
                     si (a == b) perge;
                     mixtio_paris = _mixtio(o, a, b, 0);
                     poena = POENA_CONTRASTUS * (f64)area
                         * o->distantia[a][b] * o->distantia[a][b];
-                    poena_minima = poena * (f64)minor_minimus / 32.0;
-                    per (e = 0; e < DITHERING_BAYER_NUMERUS; e++)
+
+                    /* gradus 0 (densitas 0): solidum a, semel per a */
+                    si (!solidum_factum)
+                    {
+                        f64 err = poena * (f64)minores[0] / 32.0;
+                        s32 q;
+                        solidum_factum = VERUM;
+                        per (q = 0; q < area && err < optimum; q++)
+                        {
+                            err += _d2(&mixtio_paris[(s32)
+                                DITHERING_BAYER_PONDERA[0][positio[q]]
+                                * III], loci[q]);
+                        }
+                        si (err < optimum)
+                        {
+                            optimum  = err;
+                            opt_a    = a;
+                            opt_b    = b;
+                            opt_e    = 0;
+                        }
+                    }
+                    si (limites[i][j] >= optimum) perge;
+
+                    /* terminus primus graduum I..XV sine ramis: summa
+                     * eadem ac in ansa (poena + d2 pixeli 0), ergo
+                     * post_primum >= optimum gradum certe excludit */
+                    per (e = I; e < DITHERING_BAYER_NUMERUS; e++)
+                    {
+                        post_primum[e] = poena * (f64)minores[e] / 32.0
+                            + (f64)_d2(&mixtio_paris[positio_prima[e]],
+                                loci[0]);
+                    }
+                    per (e = I; e < DITHERING_BAYER_NUMERUS; e++)
                     {
                         constans i8* pondera;
                                 f64  err;
                                 s32  q;
 
-                        pondera = DITHERING_BAYER_PONDERA[e];
-                        si (DITHERING_BAYER_DENSITATES[e] == 0)
-                        {
-                            si (solidum_factum) perge;
-                            solidum_factum = VERUM;
-                        }
-                        alioquin si (poena_minima >= optimum) frange;
-                        err = poena * (f64)minores[e] / 32.0;
-                        per (q = 0; q < area && err < optimum; q++)
+                        si (post_primum[e] >= optimum) perge;
+                        pondera  = DITHERING_BAYER_PONDERA[e];
+                        err      = post_primum[e];
+                        per (q = I; q < area && err < optimum; q++)
                         {
                             err += _d2(&mixtio_paris[(s32)pondera[
                                 positio[q]] * III], loci[q]);
@@ -989,6 +1163,87 @@ _hachuras_eligere (
     *tegmen = usum / (f64)o->n;
 }
 
+/* summa nuclei (latus x latus, centrum radius) ad pixelum (x, y) campi,
+ * limitibus ad oras; ordo summationis: dy, deinde dx crescens */
+interior f32
+_campi_summa (
+    constans f32* campus,
+    constans f32* nucleus,
+             s32  lat,
+             s32  alt,
+             s32  radius,
+             s32  latus,
+             s32  x,
+             s32  y)
+{
+    f32 summa = 0.0f;
+    s32 dx, dy;
+
+    per (dy = -radius; dy <= radius; dy++)
+    {
+                 s32  sy = y + dy;
+        constans f32* linea;
+        constans f32* nl;
+
+        si (sy < 0) sy = 0;
+        si (sy >= alt) sy = alt - I;
+        linea  = &campus[sy * lat];
+        nl     = &nucleus[(dy + radius) * latus + radius];
+        per (dx = -radius; dx <= radius; dx++)
+        {
+            s32 sx  = x + dx < 0 ? 0 : x + dx >= lat ? lat - I : x + dx;
+            summa   += nl[dx] * linea[sx];
+        }
+    }
+    redde summa;
+}
+
+/* idem pro pixelis x..x+III interioribus (x >= radius, x + IV <= lat -
+ * radius): catenae summationis IV independentes, nucleus et ordo sui
+ * cuique - summae eaedem ac _campi_summa */
+interior vacuum
+_campi_quattuor (
+     constans f32*  campus,
+     constans f32** nuclei,
+              s32   lat,
+              s32   alt,
+              s32   radius,
+              s32   latus,
+              s32   x,
+              s32   y,
+              f32*  summae)
+{
+    f32 s0 = 0.0f, s1 = 0.0f, s2 = 0.0f, s3 = 0.0f;
+    s32 dx, dy;
+
+    per (dy = -radius; dy <= radius; dy++)
+    {
+                 s32  sy      = y + dy;
+                 s32  offset  = (dy + radius) * latus + radius;
+        constans f32* c;
+        constans f32 *n0, *n1, *n2, *n3;
+
+        si (sy < 0) sy = 0;
+        si (sy >= alt) sy = alt - I;
+        c   = &campus[sy * lat + x];
+        n0  = &nuclei[0][offset];
+        n1  = &nuclei[I][offset];
+        n2  = &nuclei[II][offset];
+        n3  = &nuclei[III][offset];
+        per (dx = -radius; dx <= radius; dx++)
+        {
+            s0 += n0[dx] * c[dx];
+            s1 += n1[dx] * c[dx + I];
+            s2 += n2[dx] * c[dx + II];
+            s3 += n3[dx] * c[dx + III];
+        }
+    }
+    summae[0]    = s0;
+    summae[I]    = s1;
+    summae[II]   = s2;
+    summae[III]  = s3;
+}
+
 /* Campus striarum: filtrum Gabor orientatum iteratum super strepitum
  * (more emendationis digitorum); reddit campum ~sinusoidalem [-1, 1] */
 interior vacuum
@@ -1061,47 +1316,53 @@ _campum_striarum (
         s32 na = 0;
         per (y = 0; y < alt; y++)
         {
-            per (x = 0; x < lat; x++)
+            x = 0;
+            dum (x < lat)
             {
-                         s32 q = y * lat + x;
-                         f32 s = 0.0f;
-                         b32 interius = x >= radius
-                             && x + radius < lat;
-                constans f32* nu;
-                si (!_bit(activus, q))
+                s32 q = y * lat + x, t;
+
+                /* quattuor pixela interiora simul */
+                si (x >= radius && x + IV <= lat - radius)
                 {
-                    g[q] = 0.0f;
-                    perge;
-                }
-                nu = &nuclei[(s32)index_nuclei[q] * latus * latus];
-                /* columnae intra imaginem: sine limitibus (ordo
-                 * summationis idem) */
-                per (dy = -radius; dy <= radius; dy++)
-                {
-                    s32 sy = y + dy < 0 ? 0 : y + dy >= alt ? alt - I
-                        : y + dy;
-                    constans f32* linea = &campus[sy * lat];
-                    constans f32* nl = &nu[(dy + radius) * latus
-                        + radius];
-                    si (interius)
+                             b32  activa[IV];
+                    constans f32* nu[IV];
+                             f32  summae[IV];
+                    per (t = 0; t < IV; t++)
                     {
-                        constans f32* centrum = &linea[x];
-                        per (dx = -radius; dx <= radius; dx++)
-                        {
-                            s += nl[dx] * centrum[dx];
-                        }
+                        activa[t] = _bit(activus, q + t);
+                        nu[t] = &nuclei[(activa[t] ? (s32)index_nuclei[q
+                            + t] : 0) * latus * latus];
+                    }
+                    si (!(activa[0] | activa[I] | activa[II]
+                          | activa[III]))
+                    {
+                        g[q] = g[q + I] = g[q + II] = g[q + III] = 0.0f;
+                        x += IV;
                         perge;
                     }
-                    per (dx = -radius; dx <= radius; dx++)
+                    _campi_quattuor(campus, nu, lat, alt, radius, latus,
+                        x, y, summae);
+                    per (t = 0; t < IV; t++)
                     {
-                        s32 sx = x + dx < 0 ? 0 : x + dx >= lat ? lat
-                            - I : x + dx;
-                        s += nl[dx] * linea[sx];
+                        g[q + t] = activa[t] ? summae[t] : 0.0f;
+                        si (!activa[t]) perge;
+                        sq += (f64)summae[t] * (f64)summae[t];
+                        na++;
                     }
+                    x += IV;
+                    perge;
                 }
-                g[q]  = s;
-                sq    += (f64)s * (f64)s;
-                na++;
+                si (_bit(activus, q))
+                {
+                    f32 summa = _campi_summa(campus, &nuclei[
+                        (s32)index_nuclei[q] * latus * latus], lat, alt,
+                        radius, latus, x, y);
+                    g[q]  = summa;
+                    sq    += (f64)summa * (f64)summa;
+                    na++;
+                }
+                alioquin g[q] = 0.0f;
+                x++;
             }
         }
         media_quadratica = na > 0 ? sqrt(sq / na) : 1.0;
@@ -1123,14 +1384,17 @@ _campum_striarum (
 }
 
 /* per areas 4x4: par (atramentum obscurius, charta) + tegmen per
- * pixelum ex tono; atramentum ubi campus > cos(pi * tegmen) */
+ * pixelum ex tono; atramentum ubi campus > cos(pi * tegmen). pictus:
+ * bit pixeli vere picti (area sine pari idonea basi manet, non
+ * pingitur) */
 interior vacuum
 _hachuras_pingere (
      constans Opus* o,
     constans Plana* oculi_lati,
       constans f32* campus,
       constans i32* hachuratus,
-                i8* indices)
+                i8* indices,
+               i32* pictus)
 {
     s32 lat = o->lat, alt = o->alt, x_areae, y_areae;
     s32 tegmen[AREA_HACHURARUM * AREA_HACHURARUM];
@@ -1211,6 +1475,7 @@ _hachuras_pingere (
                 indices[p] = (i8)(campus[p]
                     > cos(PI_VALOR * (f64)tegmen_opt[q]
                         / DITHERING_GRADUS_MIXTI) ? opt_a : opt_b);
+                _bit_ponere(pictus, p);
             }
         }
     }
@@ -1518,7 +1783,7 @@ dithering_exemplaria_velox_colorum (
     Plana lin, oculi, oculi_lati, error;
     Structura st, st_campi;
     f32 *lumen, *tmp, *limina, *campus;
-    i32 *hachuratus, *activus, *eligibilis, *larva;
+    i32 *hachuratus, *activus, *eligibilis, *larva, *pictus, *tectum;
     s32* regio_pixeli;
     i8 *basis, *pictura_hachurarum, *pictura_stili, *atramentum,
         *charta, *sparsum;
@@ -1570,6 +1835,8 @@ dithering_exemplaria_velox_colorum (
     activus = _larvam_allocare(piscina, o.n);
     eligibilis = _larvam_allocare(piscina, o.n);
     larva = _larvam_allocare(piscina, o.n);
+    pictus = _larvam_allocare(piscina, o.n);
+    tectum = _larvam_allocare(piscina, o.n);
     regio_pixeli = (s32*)piscina_allocare(piscina, m1 * magnitudo(s32));
     basis = (i8*)piscina_allocare(piscina, m1);
     pictura_hachurarum = (i8*)piscina_allocare(piscina, m1);
@@ -1585,6 +1852,7 @@ dithering_exemplaria_velox_colorum (
         || st_campi.angulus == NIHIL
         || hachuratus       == NIHIL || activus == NIHIL
         || eligibilis       == NIHIL || larva == NIHIL
+        || pictus           == NIHIL || tectum == NIHIL
         || regio_pixeli     == NIHIL
         || basis            == NIHIL || pictura_hachurarum == NIHIL
         || pictura_stili    == NIHIL || atramentum == NIHIL
@@ -1644,23 +1912,20 @@ dithering_exemplaria_velox_colorum (
         si (h > 0.2) _bit_ponere(activus, p);
     }
 
-    /* I basis */
-    _basis_bayer(&o, &lin, &oculi, basis);
-
-    /* II hachurae: regiones maximae sub praesupputatione */
+    /* II hachurae: regiones maximae sub praesupputatione. Strata II
+     * et III basim non legunt: basis post ea venit et areas totas
+     * pictas omittit */
     _hachuras_eligere(&o, hachuratus, opt->praesupputatio_hachurarum,
         &tegmen_h, &regiones_h);
-    memcpy(pictura_hachurarum, basis, m1);
     si (regiones_h > 0)
     {
         _campum_striarum(&o, &st_campi, activus, campus);
         _hachuras_pingere(&o, &oculi_lati, campus, hachuratus,
-            pictura_hachurarum);
+            pictura_hachurarum, pictus);
     }
 
     /* III pictographica extra hachuras */
     per (k = 0; k < verba; k++) eligibilis[k] = ~hachuratus[k];
-    memcpy(pictura_stili, basis, m1);
     si (opt->praesupputatio_pictographica > 0.0)
     {
         _regiones_stilizare(&o, &lin, &oculi_lati, st.energia,
@@ -1673,13 +1938,19 @@ dithering_exemplaria_velox_colorum (
         per (p = 0; p < o.n; p++) regio_pixeli[p] = -1;
     }
 
-    /* compositio + limina stratorum */
+    /* I basis: pixela picta (hachurae vere pictae, pictographica)
+     * compositio superscribit, ergo areae totae tectae omittuntur */
+    per (k = 0; k < verba; k++) tectum[k] = pictus[k] | larva[k];
+    _basis_bayer(&o, &lin, &oculi, tectum, basis);
+
+    /* compositio + limina stratorum (hachuratus sine pari idoneo:
+     * basis manet, limen hachurarum tamen - ut classicus) */
     per (p = 0; p < o.n; p++)
     {
         si (_bit(hachuratus, p))
         {
-            basis[p]   = pictura_hachurarum[p];
-            limina[p]  = (f32)HACHURAE_LIMEN;
+            si (_bit(pictus, p)) basis[p] = pictura_hachurarum[p];
+            limina[p] = (f32)HACHURAE_LIMEN;
         }
         alioquin si (_bit(larva, p))
         {

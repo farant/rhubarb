@@ -23,6 +23,8 @@
  *                     pratum regiones pictographicas habet
  *   hachurae fixae    scaena "hachurae" (CXXVIII, praesupputatio
  *                     0.50, fascia ad oras): digestum T5
+ *   tecta fixa        scaena CXXVIII, praesupputationes 1.0 (areae
+ *                     basis partim tectae): digestum T6
  *   magnitudines oris XIIxXII, XIIIxXIII, XXVxIII, IIIxXXV, DCIxII
  *                     (scaena): successus, colores activi soli,
  *                     digestum idem ac T3
@@ -288,6 +290,39 @@ _sectio_hachurae_fixae (
     CREDO_LITERAE_AEQUALES(hex, HACHURAE_DIGESTUM);
 }
 
+/* tecta: scaena CXXVIII, praesupputationes ambae 1.0 - tegmen magnum,
+ * areae basis multae partim tectae - digestum velocis (T6,
+ * c1c6498f9) */
+hic_manens constans character* TECTA_DIGESTUM =
+    "aa8f1707897433fc3b98cf3f8448c85f36e086936d9f51155dbcaa4b460e2c42";
+
+interior vacuum
+_sectio_tecta_fixa (
+    CredoContextus* c)
+{
+                            b32  activi[XVI];
+                             i8* rgba;
+    DitheringExemplariaOptiones  o;
+      DitheringExemplariaCensus  k;
+               DitheringFructus  f;
+                      character  hex[LXV];
+
+    rgba = _imago_scaena(c->piscina, CXXVIII, CXXVIII);
+    dithering_praeparare_omnes(activi);
+    dithering_exemplaria_optiones_ordinariae(&o);
+    o.praesupputatio_hachurarum     = 1.0;
+    o.praesupputatio_pictographica  = 1.0;
+    f = dithering_exemplaria_velox_colorum(rgba, CXXVIII, CXXVIII,
+        activi, &o, &k, c->piscina);
+    CREDO_NECESSE(f.successus);
+    CREDO_VERUM(k.tegmen_hachurarum > 0.0);
+    CREDO_VERUM(k.tegmen_pictographicum > 0.0);
+    _digestum(&f, hex);
+    imprimere("  hachurae %.3f, pictographica %.3f, digestum %s\n",
+        k.tegmen_hachurarum, k.tegmen_pictographicum, hex);
+    CREDO_LITERAE_AEQUALES(hex, TECTA_DIGESTUM);
+}
+
 /* census in fixis, optiones ordinariae: tegmina intra
  * praesupputationes; pratum regiones pictographicas habet */
 interior vacuum
@@ -444,6 +479,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "hachurae fixae", _sectio_hachurae_fixae, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "tecta fixa", _sectio_tecta_fixa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "magnitudines oris", _sectio_magnitudines_oris, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "alpha neglecta", _sectio_alpha_neglecta, NIHIL, NIHIL, NIHIL,
