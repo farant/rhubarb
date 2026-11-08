@@ -14,6 +14,9 @@
  * T5: _proximus minimum simplex, _proximi_k electio partialis; basis
  * tabulas Bayer ipsas legit, putatio exacta (output idem octetim ac
  * T4).
+ *
+ * T6: campus striarum - nucleus per pixelum semel, columnae interiores
+ * sine limitibus, tanh solum activis; tensor detalii sine angulo.
  */
 #include "dithering_exemplaria.h"
 #include "dithering_exemplaria_fontes.h"
@@ -91,7 +94,8 @@ nomen structura {
 nomen structura {
     f32* energia;      /* sqrt(trace J) */
     f32* cohaerentia;  /* ((l1 - l2) / (l1 + l2))^2 */
-    f32* angulus;      /* directio lineae, radiani [0, pi) */
+    f32* angulus;      /* directio lineae, radiani [0, pi); NIHIL =
+                        * non computatur */
 } Structura;
 
 nomen structura {
@@ -639,16 +643,19 @@ _structuram_computare (
     {
         f64 a = (f64)quadratum_x[x], b = (f64)quadratum_y[x], c =
             (f64)productum[x];
-        f64 tr   = a + b;
-        f64 di   = sqrt((a - b) * (a - b) + 4.0 * c * c);
-        f64 psi  = 0.5 * atan2(2.0 * c, a - b) + PI_VALOR / 2.0;
+        f64 tr = a + b;
+        f64 di = sqrt((a - b) * (a - b) + 4.0 * c * c);
 
-        si (psi < 0.0) psi += PI_VALOR;
-        si (psi >= PI_VALOR) psi -= PI_VALOR;
         st->energia[x]      = (f32)sqrt(tr);
         st->cohaerentia[x]  = (f32)(tr > 1e-12 ? (di / tr) * (di / tr)
             : 0.0);
-        st->angulus[x]      = (f32)psi;
+        si (st->angulus != NIHIL)
+        {
+            f64 psi = 0.5 * atan2(2.0 * c, a - b) + PI_VALOR / 2.0;
+            si (psi < 0.0) psi += PI_VALOR;
+            si (psi >= PI_VALOR) psi -= PI_VALOR;
+            st->angulus[x] = (f32)psi;
+        }
     }
 }
 
@@ -998,6 +1005,8 @@ _campum_striarum (
         (memoriae_index)(ANGULI_NUCLEORUM * latus * latus)
             * magnitudo(f32));
     f32* g = _planum(o->piscina, o->n);
+     i8* index_nuclei = (i8*)piscina_allocare(o->piscina,
+         (memoriae_index)o->n);
     f64 su = HACHURAE_PERIODUS * 0.75, sv = HACHURAE_PERIODUS * 0.5;
 
     per (k = 0; k < ANGULI_NUCLEORUM; k++)
@@ -1032,10 +1041,19 @@ _campum_striarum (
         }
     }
 
+    /* nucleus per pixelum activum semel: angulus inter iterationes
+     * non mutatur */
     per (p = 0; p < o->n; p++)
     {
-        campus[p] = _bit(activus, p) ? (f32)(2.0 * _strepitus(p % lat,
-            p / lat, o->semen + I) - 1.0) : 0.0f;
+        si (!_bit(activus, p))
+        {
+            campus[p] = 0.0f;
+            perge;
+        }
+        campus[p] = (f32)(2.0 * _strepitus(p % lat, p / lat, o->semen
+            + I) - 1.0);
+        index_nuclei[p] = (i8)((s32)floor((f64)st_campi->angulus[p]
+            / PI_VALOR * ANGULI_NUCLEORUM + 0.5) % ANGULI_NUCLEORUM);
     }
     per (it = 0; it < HACHURAE_ITERATIONES; it++)
     {
@@ -1045,18 +1063,19 @@ _campum_striarum (
         {
             per (x = 0; x < lat; x++)
             {
-                         s32  q = y * lat + x;
-                         f32  s = 0.0f;
+                         s32 q = y * lat + x;
+                         f32 s = 0.0f;
+                         b32 interius = x >= radius
+                             && x + radius < lat;
                 constans f32* nu;
                 si (!_bit(activus, q))
                 {
                     g[q] = 0.0f;
                     perge;
                 }
-                k = (s32)floor((f64)st_campi->angulus[q]
-                    / PI_VALOR * ANGULI_NUCLEORUM + 0.5)
-                    % ANGULI_NUCLEORUM;
-                nu = &nuclei[k * latus * latus];
+                nu = &nuclei[(s32)index_nuclei[q] * latus * latus];
+                /* columnae intra imaginem: sine limitibus (ordo
+                 * summationis idem) */
                 per (dy = -radius; dy <= radius; dy++)
                 {
                     s32 sy = y + dy < 0 ? 0 : y + dy >= alt ? alt - I
@@ -1064,6 +1083,15 @@ _campum_striarum (
                     constans f32* linea = &campus[sy * lat];
                     constans f32* nl = &nu[(dy + radius) * latus
                         + radius];
+                    si (interius)
+                    {
+                        constans f32* centrum = &linea[x];
+                        per (dx = -radius; dx <= radius; dx++)
+                        {
+                            s += nl[dx] * centrum[dx];
+                        }
+                        perge;
+                    }
                     per (dx = -radius; dx <= radius; dx++)
                     {
                         s32 sx = x + dx < 0 ? 0 : x + dx >= lat ? lat
@@ -1078,8 +1106,10 @@ _campum_striarum (
         }
         media_quadratica = na > 0 ? sqrt(sq / na) : 1.0;
         si (media_quadratica < 1e-12) media_quadratica = 1.0;
+        /* inactivi: g 0, tanh(0) = 0 */
         per (p = 0; p < o->n; p++)
         {
+            si (!_bit(activus, p)) perge;
             campus[p] = (f32)(it + I < HACHURAE_ITERATIONES
                 ? tanh(1.5 * g[p] / media_quadratica)
                 : g[p] / (1.41421356 * media_quadratica));
@@ -1532,7 +1562,7 @@ dithering_exemplaria_velox_colorum (
     campus = _planum(piscina, o.n);
     st.energia = _planum(piscina, o.n);
     st.cohaerentia = _planum(piscina, o.n);
-    st.angulus = _planum(piscina, o.n);
+    st.angulus = NIHIL;  /* nemo legit: sine atan2 */
     st_campi.energia = _planum(piscina, o.n);
     st_campi.cohaerentia = _planum(piscina, o.n);
     st_campi.angulus = _planum(piscina, o.n);
@@ -1550,7 +1580,7 @@ dithering_exemplaria_velox_colorum (
     fructus.indices = (i8*)piscina_allocare(piscina, m1);
     si (   !sana || lumen == NIHIL || tmp == NIHIL || limina == NIHIL
         || campus           == NIHIL || st.energia == NIHIL
-        || st.cohaerentia   == NIHIL || st.angulus == NIHIL
+        || st.cohaerentia   == NIHIL
         || st_campi.energia == NIHIL || st_campi.cohaerentia == NIHIL
         || st_campi.angulus == NIHIL
         || hachuratus       == NIHIL || activus == NIHIL

@@ -189,3 +189,37 @@ Plan: `project-specs/exemplaria-velox-plan.md` (spec
   (still the pair loop), `_campum_striarum` 10%, residual 9%
   (`_proximus` 5%), structure 7% (atan2 3%) - T6 has the hatching
   field.
+
+## 2026-11-07 — T6: hatching field, unused angle, census
+
+- Most of the plan's T6 had already landed (`_proximus` in T5, f32
+  planes and bitsets in T3). Left: `_campum_striarum` (~10%) and
+  `atan2` (~3%).
+- `_campum_striarum`: each active pixel's kernel index (from
+  `st_campi.angulus`) is computed once into an `i8` plane instead of
+  every iteration; the 13x13 convolution skips the column clamps when
+  all taps are inside the row (x in [radius, lat - radius)); `tanh` /
+  normalise only on active pixels (inactive: g = 0, tanh(0) = 0, so the
+  0.0f they start with is already right). Summation order unchanged.
+- `_structuram_computare` skips the angle when `st->angulus == NIHIL`;
+  the detail tensor passes NIHIL (nobody reads `st.angulus`) and loses
+  that plane (arena 81 -> 79 MB).
+- Tests: "census in fixis" (plan; green on T5 as a guard: golem
+  hatching 0.023, pictograms 0.289 / 101 regions, aspersio 0.029;
+  meadow 0.000 / 0.299 / 40 / 0.075). **Added "hachurae fixae"** (not in
+  the header): the third plant (field interior one column too wide -
+  reads one past the row, past the plane on the last row) stayed GREEN,
+  because fixture hatching never reaches the right edge. The shared
+  "hachurae" scene (128x128, budget 0.50) has a stripe band across the
+  full width (hatching 0.358); its velox digest was taken by running
+  the suite on the T5 commit's source (swapped in, restored, cmp) and
+  matched on T6. The plant is then red on "hachurae fixae".
+- Plants: iterations VIII -> 0 -> "velox fixa" red ("hachurae" itself
+  stays green - it only checks that something hatched); residual
+  `_proximus` -> first active colour -> "velox fixa" + "magnitudines
+  oris" red; interior one column wider -> "hachurae fixae" red.
+- Timing, four back-to-back pairs (velox ms, T5 / T6): golem 360 137 /
+  130, golem 600 338 / 324, golem 720 478 / 452, meadow 353 / 341 - 4-5%.
+  The field only dropped 10% -> 9% (no-inline): the clamps weren't its
+  cost, the 169 taps x 8 iterations over active pixels are. Structure
+  7.2% -> 5.4%. Base now 58%. Velox ~1.9x classic.

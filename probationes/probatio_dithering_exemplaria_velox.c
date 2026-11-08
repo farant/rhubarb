@@ -18,6 +18,11 @@
  *                     T3, ante obscurationem divisam) - refactio
  *                     exacta nihil mutat; renovatur solum cum task
  *                     differre vult (et dicit cur)
+ *   census in fixis   optiones ordinariae: hachurae <= 0.15,
+ *                     pictographica <= 0.30, aspersio in [0, 1];
+ *                     pratum regiones pictographicas habet
+ *   hachurae fixae    scaena "hachurae" (CXXVIII, praesupputatio
+ *                     0.50, fascia ad oras): digestum T5
  *   magnitudines oris XIIxXII, XIIIxXIII, XXVxIII, IIIxXXV, DCIxII
  *                     (scaena): successus, colores activi soli,
  *                     digestum idem ac T3
@@ -252,6 +257,75 @@ _sectio_velox_fixa (
     }
 }
 
+/* hachurae ad oras: scaena sectionis communis "hachurae" (CXXVIII,
+ * praesupputatio 0.50; fascia striarum totam latitudinem tegit) -
+ * digestum velocis (T5, 3035b41e4) */
+hic_manens constans character* HACHURAE_DIGESTUM =
+    "2f79dbea73fc439f1950992fd6a71ba3770abcb970a4d261f05d11e06c9f341a";
+
+interior vacuum
+_sectio_hachurae_fixae (
+    CredoContextus* c)
+{
+                            b32  activi[XVI];
+                             i8* rgba;
+    DitheringExemplariaOptiones  o;
+      DitheringExemplariaCensus  k;
+               DitheringFructus  f;
+                      character  hex[LXV];
+
+    rgba = _imago_scaena(c->piscina, CXXVIII, CXXVIII);
+    dithering_praeparare_omnes(activi);
+    dithering_exemplaria_optiones_ordinariae(&o);
+    o.praesupputatio_hachurarum = 0.50;
+    f = dithering_exemplaria_velox_colorum(rgba, CXXVIII, CXXVIII,
+        activi, &o, &k, c->piscina);
+    CREDO_NECESSE(f.successus);
+    CREDO_VERUM(k.tegmen_hachurarum > 0.0);
+    _digestum(&f, hex);
+    imprimere("  hachurae %.3f, digestum %s\n", k.tegmen_hachurarum,
+        hex);
+    CREDO_LITERAE_AEQUALES(hex, HACHURAE_DIGESTUM);
+}
+
+/* census in fixis, optiones ordinariae: tegmina intra
+ * praesupputationes; pratum regiones pictographicas habet */
+interior vacuum
+_sectio_census_in_fixis (
+    CredoContextus* c)
+{
+    constans FixuraVelox* fx = _fixura(c);
+                     s32  i;
+
+    per (i = 0; i < FIXA_NUMERUS; i++)
+    {
+        Piscina* p = piscina_generare_dynamicum("census_in_fixis",
+            (memoriae_index)(LXIV * 1024 * 1024));
+                              b32 activi[XVI];
+        DitheringExemplariaCensus census;
+                 DitheringFructus f;
+
+        CREDO_NECESSE(p != NIHIL);
+        dithering_praeparare_omnes(activi);
+        memset(&census, 0, magnitudo(census));
+        f = dithering_exemplaria_velox_colorum(fx->imagines[i].pixela,
+            fx->imagines[i].latitudo, fx->imagines[i].altitudo, activi,
+            NIHIL, &census, p);
+        piscina_destruere(p);
+        CREDO_NECESSE(f.successus);
+        imprimere("  %s: hachurae %.3f, pictographica %.3f (%u),"
+            " aspersio %.3f\n", FIXA_VIAE[i], census.tegmen_hachurarum,
+            census.tegmen_pictographicum,
+            (insignatus)census.regiones_pictographicae,
+            census.tegmen_aspersionis);
+        CREDO_VERUM(census.tegmen_hachurarum <= 0.15);
+        CREDO_VERUM(census.tegmen_pictographicum <= 0.30);
+        CREDO_VERUM(census.tegmen_aspersionis >= 0.0
+            && census.tegmen_aspersionis <= 1.0);
+        si (i == I) CREDO_VERUM(census.regiones_pictographicae > 0);
+    }
+}
+
 interior vacuum
 _sectio_magnitudines_oris (
     CredoContextus* c)
@@ -366,6 +440,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "memoria minor", _sectio_memoria_minor, NIHIL, NIHIL, "gravis",
         NIHIL },
     { "velox fixa", _sectio_velox_fixa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "census in fixis", _sectio_census_in_fixis, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "hachurae fixae", _sectio_hachurae_fixae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "magnitudines oris", _sectio_magnitudines_oris, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "alpha neglecta", _sectio_alpha_neglecta, NIHIL, NIHIL, NIHIL,
