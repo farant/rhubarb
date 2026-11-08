@@ -88,6 +88,33 @@ symbola_tabulam_scribere () {
     # XVIII% solae (regulae ambae $2=="sedes" poscunt) - grep -F eas
     # ante awk seligit: effusio eadem, ~XIV s -> ~III.III s (mensuratum)
     LC_ALL=C grep -F "$(printf '\tsedes\t')" "$radix/build/nexus.tsv" |
+        _symbola_seligere "$@"
+}
+
+# symbola_clausurae_scribere <radix repositorii> <viae> <radix clientis>...
+# - idem, sed ordines SOLUM plagularum in <viae> (via una per lineam,
+# relativa ad radicem; clausura instrumenti). Tempus non in grep (0,1 s)
+# sed in awk + sort super DXX K lineas 'sedes' (~2,4 s): clausura
+# percursus LXXII plagularum XV K lineas relinquit. Capita extra
+# clausuram non leguntur - nomen 'publicum' solum per caput clausurae
+# agnoscitur; fons sine capite suo sub -Wmissing-prototypes non compilat,
+# ergo caput fontis clausurae in clausura est (conflatio eadem ac cum
+# tabula tota: tools/instrumentum_unitas.worklog.md).
+symbola_clausurae_scribere () {
+    local radix="$1"
+    local viae="$2"
+    shift 2
+    # filtrum per tabulam awk ($4 in viae), NON 'grep -F -f': grep BSD
+    # (/usr/bin/grep, quem bash invenit) cum LXXII exemplaribus super
+    # nexum totum I min XLIV s tardabat (mensuratum 2026-11-07)
+    LC_ALL=C grep -F "$(printf '\tsedes\t')" "$radix/build/nexus.tsv" |
+        awk -F'\t' 'NR == FNR { viae[$0] = 1; next } ($4 in viae)' \
+            "$viae" - |
+        _symbola_seligere "$@"
+}
+
+# ordines 'sedes' nexus (stdin) -> capita et statica (regulae supra)
+_symbola_seligere () {
     awk -F'\t' -v radices="$*" '
         BEGIN { nr = split(radices, R, " ") }
         function in_radice(via, suffixum,    k) {

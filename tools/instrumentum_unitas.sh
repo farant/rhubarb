@@ -150,13 +150,32 @@ _unitatem_conflare () {
                 >> "$opus/conflator.log" 2>&1 \
             || { echo "[unitas] conflator non structus" \
                      "($opus/conflator.log)" >&2; exit 1; }
-        ./silva/nexus.sh -renovare > "$opus/nexus.log" 2>&1 \
-            || { echo "[unitas] nexus silvae non renovatus" >&2; exit 1; }
+        awk -F'\t' '$1=="C" || $1=="O" { print $2 }' "$opus/partes.tsv" \
+            > "$opus/viae.txt"
+        # nexus renovatur solum si plagula clausurae eo STRICTE recentior
+        # (aut deest): tabula ordines clausurae SOLAE legit, ergo nexus
+        # vetustior quam nulla plagula clausurae eas recentes tenet
+        # (renovatio etiam sine mutatione ~1,5 s). Cautio: plagula cum
+        # tempore VETERE restituta (cp -p, silva.planta) post nexum
+        # renovatum hic non videtur - contentum restitutum tunc idem est
+        # ac ante plantam, nexus tamen plantam tenet.
+        local -a viae_clausurae=()
+        local via_c
+        while IFS= read -r via_c; do
+            viae_clausurae+=("$via_c")
+        done < "$opus/viae.txt"
+        if [ ! -f build/nexus.tsv ] \
+                || [ -n "$(find "${viae_clausurae[@]}" -maxdepth 0 \
+                            -newer build/nexus.tsv -print -quit \
+                            2> /dev/null)" ]; then
+            ./silva/nexus.sh -renovare > "$opus/nexus.log" 2>&1 \
+                || { echo "[unitas] nexus silvae non renovatus" >&2; exit 1; }
+        fi
         # shellcheck source=/dev/null
         source tools/corpus_infixum.sh
         {
             echo "# statica (instrumentum_unitas: $radix_c; radices: $*)"
-            symbola_tabulam_scribere "$radix_repo" "$@"
+            symbola_clausurae_scribere "$radix_repo" "$opus/viae.txt" "$@"
         } > "$opus/symbola.tsv" \
             || { echo "[unitas] tabula staticorum fracta" >&2; exit 1; }
         {

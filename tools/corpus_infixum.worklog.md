@@ -27,3 +27,11 @@ tools/instrumentum_unitas.sh can reuse it with silva's own roots
 (silva/fontes, silva/instrumenta). corpus_symbola_generare calls it with
 RADICES_CLIENTIUM; corpus.symbola.tsv regenerated before and after the
 refactor is byte-identical.
+
+## 2026-11-07 - symbola_clausurae_scribere
+
+Closure-filtered variant for tools/instrumentum_unitas.sh (rows of the
+listed files only); both share `_symbola_seligere` (the old awk + sort).
+corpus.symbola.tsv still byte-identical. Filter is an awk hash on $4, NOT
+`grep -F -f`: BSD grep with 72 fixed patterns over nexus.tsv took 1 min
+44 s.

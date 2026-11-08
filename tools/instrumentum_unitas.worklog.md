@@ -56,3 +56,34 @@ Measurement (whole repo, 2 interleaved runs, report identical): unity
 Open: other silva tools (examen, formator, the LSP side) could opt in the
 same way; each needs its own cache dir, and two tools' stale builds would
 refresh silva's nexus concurrently (outside each other's lock).
+
+## 2026-11-07 - rebuild bookkeeping trimmed (item 12): smaller win than estimated
+
+Step timings of a stale rebuild (11.1 s): aedilis closure 0.40, conflator
+freshness 0.15, nexus refresh 1.46 (with nothing changed), statics table
+2.4 (awk + sort over all 520 k 'sedes' rows of the 200 MB nexus.tsv),
+conflation 0.09, clang -O2 -g 6.6 (frontend 0.2 s; -O0 whole build 0.86 s;
+the rest is the optimizer + codegen, instruction selection 14%,
+InstCombine 8.5%, inliner 5.7%, GVN 4.8%...).
+
+Two changes:
+- statics table filtered to the closure (symbola_clausurae_scribere in
+  corpus_infixum.sh): conflated percursus byte-identical to the full-table
+  conflation; closure rows identical (6,427). But the floor is one pass of
+  BSD grep over 200 MB (~1.3 s), so 2.4 -> ~1.6 s. `grep -F -f` with 72
+  patterns under BSD grep took 1 min 44 s (zsh's `grep` is ugrep - my first
+  timing, 0.1 s, came from there; scripts get /usr/bin/grep). awk alone
+  over the file 4.3 s, grep -E alternation 3.0 s.
+- nexus refresh skipped unless a closure file is strictly newer than
+  build/nexus.tsv. Only helps rebuilds NOT caused by a closure edit (flags,
+  helper, wrapper): an edited closure file genuinely needs the refresh.
+  Caveat in the code: a file restored with an OLD mtime (cp -p, planta)
+  after the nexus captured the plant is not seen.
+
+Measured end to end: wrapper touched 11.2 -> 10.3 s; closure file edited
+10.6 s. Tracing with a perl-timestamp PS4 adds ~1.4 s to the 72-path loop
+(looked like a slow conflator build at first).
+
+Real levers left: clang (chunked unity in parallel, or -O0 dev builds) and
+the index format (nexus.sh writing its 'sedes' rows - 37 MB - or per-file
+statics, so the table need not scan 200 MB).
