@@ -145,3 +145,41 @@ NULLA), so touches never pop it up by accident.
 - UIKeyInput without UITextInput cannot auto-capitalize (the keys show
   lowercase even with AllCharacters). Harmless: client and server both
   upper-case the code before comparing.
+
+## 2026-11-03 - pulsus-plan T8: push hooks (permission, token, tap, background grace)
+
+`TestaAmbitus` gains `pulsum_petere` / `pulsus_ctx` / `pulsus_ambitus` (macOS and Android leave them NIHIL: both memset the ambitus). On iOS:
+
+- **`pulsum_petere(signum, tactus, ctx)`** stores the app's callbacks, asks alert+sound, and on consent calls `registerForRemoteNotifications`; refusal or an authorization error comes back as `signum("", causa)`. The token arrives in the app delegate (`didRegisterForRemoteNotificationsWithDeviceToken`) and goes out as lowercase hex through the new pure `testa_signum_hex` (lib/testa_cursus.c, tested); registration failure -> `signum("", localizedDescription)`. iOS hands a token after every register call, so the app gets one per launch.
+- **Cold-launch taps**: the `UNUserNotificationCenter` delegate is set in `didFinishLaunching` (before the scene connects), so a tap that launched the app reaches `didReceiveNotificationResponse` even though the app has not asked anything yet - the JSON of `userInfo` is held (`_tactus_pendens`, retained NSData) and delivered on the first `pulsum_petere`. Warm taps go straight to the app. `willPresent` -> no banner in the foreground.
+- **Background grace**: `sceneDidEnterBackground` -> `beginBackgroundTask` + a 100 ms NSTimer that `reactor_poll`s the shell's reactor - needed because `_quadrum` returns early when `vivus` is FALSE, so in the background nothing else drives communio's timers or the veredarius completions. Ended after XXV s, on expiry, or in `sceneWillEnterForeground`. An event still queued when it ends stays in the volume (T7 queue) and goes on the next launch.
+- Strings handed to the app live in a throwaway arena, valid only during the callback.
+- `UserNotifications.framework` added to the testa_ios link rule (aedilis.stml); `app.sh` defines `PULSUS_AMBITUS` = productio for `-divulgatio`, sandbox otherwise (C8).
+- Not run on hardware yet: simulator build only (`./tools/ios/app.sh apps/pictor/pictor.c -simulator`). The wildcard development profile has no `aps-environment`, so a dev install will get `didFailToRegister...` until the explicit push profile exists (T11) - that path is the `signum("", causa)` one, harmless.
+
+## 2026-11-05 — tergum T5: background wake window (`didReceiveRemoteNotification:fetchCompletionHandler:`)
+
+A push with `content-available:1` (pulsus T2) wakes pictor in the background
+when Info.plist has `UIBackgroundModes` remote-notification (app.sh T4).
+TestaDelegatus now implements the fetch-completion method; `_excitationem_aperire`
+opens a window:
+
+- No registered `excitatio` (app hasn't called `excitationem_ponere` - e.g. a
+  cold background launch with no scene, so testa_cursum_incipere never ran) or
+  no reactor: `NoData` at once.
+- Up to IV windows at once (two pushes close together; the merging of pending
+  finishes lives in pictor, T6). A fifth answers `NoData` at once.
+- Each window keeps the completion block (copied - MRC), arms a XXV s backstop
+  (`Failed`), and the shared `_excitatio_pulsator` polls the reactor every
+  GRATIA_PULSUS_S - but skips the poll while `_gratia_pulsator` (after-close
+  grace) is already polling. The pulsator stops when the last window closes.
+- `finire_sui` is a ticket from a ring of XVI holding (slot, generation): a late
+  finish for a slot that was closed by the backstop and reused does nothing.
+  The backstop itself can't misfire on a reused slot - closing invalidates it.
+- Result mapping (plan C6): NOVA -> NewData, NIHIL -> NoData, DEFECTUS -> Failed.
+
+NO UNIT TEST for this ObjC (plan C7): it's UIKit callbacks and NSTimers. Checked
+by compiling for the simulator (gate ios-struere) and for the device (local
+divulgatio build, arm64; symbol present), and on the phone in tergum T7 (device
+checks a/b/c). The C contract (types, NIHIL on macOS/Android) is pinned in
+probatio_testa.

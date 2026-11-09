@@ -666,9 +666,20 @@ structura SilvaSemantica {
     TypusC89* primitivi[PRIMITIVUM_NUMERUS];
     TypusC89* typus_erroris;
 
-    /* internamentum derivatorum (series linearis - complete
-     * primum, optima post; percursus mensurabit) */
-    Xar* derivati;              /* TypusC89* */
+    /* internamentum derivatorum: tabula aperta (potentia II,
+     * sondatio linearis, onus <= dimidium). signa = signum | I
+     * (ZEPHYRUM = locus vacuus) - series densa, sola in sondatione
+     * lecta; derivata[k] solum cum signum congruit tangitur.
+     * (Olim series linearis: XIV% percursus -semantica.) */
+     TypusC89** derivata;
+          i32*  derivata_signa;
+          i32   derivata_capacitas;
+          i32   derivata_numerus;
+    /* larva signi: omnia bita (creare). Probatio ZEPHYRUM ponit -
+     * signa omnia congruunt et _derivata_paria SOLA discernit (aliter
+     * signum discernit et paria solum in collisionibus rarissimis
+     * agit, vitium eius probationibus invisibile) */
+          i32 derivata_larva;
 
     /* scopi (Chunk B - regula sanationis: registra-ante-usum in
      * AMBULATIONE UNA ordine fontis) */
@@ -769,6 +780,18 @@ structura SilvaSemantica {
     constans SilvaParsura* annotationes_parsura;
                       Xar* annotationes;
 
+    /* commenta fluxus (budget fusionis, verritiones gradus II):
+     * ambulatio UNA lexematum (et radicum), finis, linearum
+     * directivae per parsuram - collector annotationum,
+     * professiones (88), standarda (89) hinc legunt. Elementa
+     * SilvaCommentum (silva_annotationes.h) et SedesAliena
+     * (in .c). */
+    constans SilvaParsura* commenta_parsura;
+                      Xar* commenta_fluxus;
+                      Xar* commenta_directivae;
+                      Xar* commenta_finis;
+                      Xar* sedes_alienae;
+
     /* FLUXUS-0 (2026-07-17): CFG per definitionem RETENTI (decisio
      * Q7 colloquii - codex-est-basis-datorum; elementa
      * FluxusFunctionis*, silva_c89_fluxus.h). Aedificati in
@@ -793,6 +816,15 @@ structura SilvaSemantica {
      * bifasium alterum; elementa IntervallumCandidatus). */
     Xar* intervalla_functionum;
     Xar* candidata_intervallorum;
+
+    /* fines variabilium (budget fusionis, ambulatio principalis I):
+     * _intervallum_variabilis_summum per ordinem SEMEL, solum intra
+     * _intervalla_computare (fines_datorum NIHIL extra - replay
+     * post ambulationem fines ipse computat). Elementa
+     * SemanticaIntervallum, numero fines_numerus. */
+    constans structura FluxusDatorum* fines_datorum;
+                               vacuum* fines;
+                                  i32  fines_numerus;
 };
 
 SilvaSemantica*
@@ -1053,6 +1085,49 @@ i32
 silva_c89_ambigua_indecisa_numerare (
     constans SilvaCommissio* commissio,
      constans SilvaOraculum* oraculum);
+
+/* CLAUSURA (M0b DECISUS 2; emendatum 2026-11-04, budget silvae):
+ * analysis prima -> symbola plagulae in oraculum -> responsa
+ * vacata -> recanonicare -> analysis secunda SOLUM si aliquid
+ * versum est. Typatio canonicae relativa est; si nihil versum,
+ * arbor eadem est et analysis prima EST analysis post ultimum
+ * recanonicare. Pendet ex hoc: analysis functio PURA arboris et
+ * systematis est - oraculum non legit (nec attingit), arborem non
+ * scribit, statum occultum (hic_manens mutabilem) non tenet, ordo
+ * eius a monstratoribus non pendet. Modus PROBANS id probat:
+ * secunda semper agitur (sedibus aliis) et signa ambarum
+ * conferuntur ubi nihil versum (porta examen-corpus, percursus
+ * -bis-probare). oraculum NIHIL = sine clausura (analysis una).
+ * Fructus NIHIL licet. Una sedes formulae: vocantes eam non
+ * transcribunt. */
+nomen enumeratio {
+    SILVA_CLAUSURA_ORDINARIA = 0,   /* secunda solum si versae > 0 */
+    SILVA_CLAUSURA_PROBANS          /* secunda semper; signa
+                                     * conferuntur si versae == 0 */
+} SilvaClausuraModus;
+
+/* cifrae, non numeri Romani: silva.h eadem macra possidet et
+ * redefinitio solum signis identicis licet (ut REPOSITIO_*) */
+#define SILVA_DISCREPANTIA_NODI         1    /* typatio + nexus */
+#define SILVA_DISCREPANTIA_SYMBOLA      2
+#define SILVA_DISCREPANTIA_DIAGNOSTICA  4
+
+nomen structura {
+    i32 versae;          /* lectiones canonicae versae */
+    b32 clausa;          /* clausura acta (prima + oraculum) */
+    b32 secunda;         /* analysis secunda acta */
+    i32 discrepantiae;   /* PROBANS, versae == 0: SILVA_DISCREPANTIA_*;
+                          * ZEPHYRUM = analyses eaedem */
+} SilvaClausuraFructus;
+
+SilvaSemantica*
+silva_c89_semantica_analysare_clausa (
+                  Piscina* piscina,
+    constans SilvaParsura* parsura,
+    constans SilvaParsura* systema,
+            SilvaOraculum* oraculum,
+                      s32  modus,
+     SilvaClausuraFructus* fructus);
 
 
 /* ==================================================

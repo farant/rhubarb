@@ -431,8 +431,12 @@ or `-via`: the converted book stands in for `-liber`, and `-carmen`
 defaults to the converted song's title. Not with `-liber`,
 `-carmina`, or the editing modes.
 
-**Still open:** a fixture for "repeats not retaken after D.C." (no
-suite file exercises it); the two desiderata above.
+**Still open:** the two desiderata above. (The "repeats not retaken
+after D.C." fixtures landed 2026-11-02: `repetitio_post_saltum` and
+`conclusiones_post_saltum`, section "ordo: post D.C. sine
+repetitione" in `probatio_musicxml.c`. The second also pins "after a
+D.C. only the last ending sounds". Both golds were worked out by hand
+from musical practice. Each fixture has a plant that turns it red.)
 
 ---
 

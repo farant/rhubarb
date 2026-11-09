@@ -271,6 +271,40 @@ _sectio_forma_prava (
         I);
 }
 
+interior vacuum
+_sectio_pulsus (
+    CredoContextus* c)
+{
+              i8 octeti[XXXII];
+          chorda h;
+    TestaAmbitus a;
+             i32 i;
+
+    CREDO_GRADUS("signum XXXII octetorum -> LXIV hex minusculae");
+    per (i = ZEPHYRUM; i < XXXII; i++)
+    {
+        octeti[i] = (i8)(i * IX + (i32)0xa0);
+    }
+    h = testa_signum_hex(octeti, XXXII, c->piscina);
+    CREDO_AEQUALIS_I32(h.mensura, LXIV);
+    CREDO_VERUM(h.mensura == LXIV && memcmp(h.datum,
+        "a0a9b2bbc4cdd6dfe8f1fa030c151e273039424b545d666f78818a939ca5aeb7",
+        LXIV) == ZEPHYRUM);
+    CREDO_GRADUS("vacua: NIHIL, n 0");
+    CREDO_AEQUALIS_I32(testa_signum_hex(NIHIL, XXXII,
+        c->piscina).mensura,
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32(testa_signum_hex(octeti, ZEPHYRUM,
+        c->piscina).mensura, ZEPHYRUM);
+    CREDO_GRADUS("ambitus ZEPHYRUM (macOS, Android): pulsus NIHIL");
+    memset(&a, ZEPHYRUM, magnitudo(a));
+    CREDO_VERUM(a.pulsum_petere == NIHIL && a.pulsus_ctx == NIHIL
+        && a.pulsus_ambitus == NIHIL);
+    /* tergum T5: excitatio in tergo solum iOS */
+    CREDO_VERUM(a.excitationem_ponere == NIHIL);
+    CREDO_AEQUALIS_I32((i32)TESTA_EXCITATIO_NOVA, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "optiones testae", _sectio_optiones, NIHIL, NIHIL, NIHIL, NIHIL },
     { "titulus processus", _sectio_titulus, NIHIL, NIHIL, NIHIL,
@@ -282,6 +316,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "initium deficiens", _sectio_initium_deficiens, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "forma prava", _sectio_forma_prava, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pulsus (T8)", _sectio_pulsus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

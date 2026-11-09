@@ -81,3 +81,60 @@ the next launch resumes it.
 Amanda's first live sign-in: typo, then the right address; the code screen never named the address, so a typo was invisible (server answers 202 for unknown addresses and sends nothing). `epistula_missa[CCLVI]` holds the address IN MEMORY only, set in inscriptionem_incipere, wiped on abicere, INSCRIPTA and claudere; never in the volume (the pending record stays {aditus, incepta_ms}), so after a kill/resume the panel falls back to the generic text. Accessor answers during PETIT too - the panel is already "Check your email" while the request is in flight.
 
 Also learned live: 401s on GET /communio/apparatus while a sign-in waits are the link-check polling (`_inspicere`), not a fault.
+
+## 2026-11-03 - pulsus-plan T9: push in pictor
+
+- `pictor_communio_pulsum_parare(pc, ambitus)` is called once at start (apps/pictor/pictor.c). It asks the shell for permission now if signed in, otherwise right after sign-in reaches INSCRIPTA (`_inscriptio_mutata`). Once per process: a revoke + re-sign-in does not ask again, but the new client gets the stored token (`_pulsum_inscribere` runs whenever `incipere` makes a client).
+- The device token lives in memory only (`pulsus_tessera`, wiped in claudere) and is never logged; a refusal logs only the shell's cause.
+- Events come from the client's missa hook (accepted acts), on every signed-in device, whether or not this device allowed notifications - the notification is for the OTHER devices. Act -> picture mapping is `pictor_spatia_actorum` in pictor_documentum.c (same genus index as `pictor_documenta_recentia`, plus plagula-condita via). Id = `<own replica>:<spatium>`, the same pair the Shared grid's aliena entries carry (`aliena/<replica>/<spatium>/documentum`), root picture = `<replica>:`.
+- "Notify family now" (`pulsus.statim`) replaces "Sign in…" in the ⋯ menu once signed in, so the menu still fits V entries. The menu lives on the canvas, where a picture is always open, so it always sends the open picture's id; the spec's "disabled when nothing pending and nothing open" never arises there.
+- T9 passes NIHIL as the tap callback; a cold-launch tap the shell was holding is dropped until T10 wires it.
+- Tests: the suites' servers don't mount pulsus, so `probationes/veredarius_pulsus.h` wraps the veredarius, records /communio/pulsus/ requests and answers 204/202 itself.
+
+## 2026-11-03 - pulsus-plan T10: tap -> transient group
+
+- The tap handler (`_pulsus_tactus`, handed to the shell by `pulsum_petere`) reads the payload with `pulsus_tactum_legere` and ignores any clavis other than pictor.picturae. `plures` or no ids -> Shared grid page 1.
+- If every id already resolves, the viewer opens on the group at once. Otherwise the ids are copied into `tactus_scheda`, the grid shows "Loading new pictures…" (`PictorCommunia.onerans`, which also replaces the "1 / n" page label with "Loading…"), and `pictor_communio_excitare` restarts the pull. Each `advenerunt` retries, but it only opens once ALL ids resolve: a batch can arrive across several pulls, so opening on a partial set would drop pictures that are a second away. After 15 s (`TACTUS_MORA_MS`), it opens whatever resolves, or stays on the grid.
+- Deferred opens use `solum_e_rete`: if the person left the grid while waiting, a late sync does not yank them into the viewer.
+- The group lives in `PictorCommunia.grex` in its own piscina (`grex_scheda`) as replica/spatium pairs, not indices. `pictor_communia_parare` (run on every arrival) vacates the main scheda and reorders `picturae`, so movement re-resolves through `pictor_communia_index` each step.
+- In apps/pictor/pictor.c, `pulsum_parare` now runs after `pictor_salutationem_ponere`, because the shell delivers a held cold-launch tap inside `pulsum_petere` and that tap sets the palette.
+
+## 2026-11-05 — tergum T6: background wake window
+
+`pictor_communio_pulsum_parare` now also registers `_excitatio` with testa
+(`a->excitationem_ponere`, iOS only). On a push (spec III.4):
+
+1. `pulsus_tactum_legere` + clavis `pictor.picturae` - bad JSON or another key
+   finishes NIHIL at once.
+2. No client, refused (`pc->recusata` or status.recusata), or closed: DEFECTUS
+   at once, no request.
+3. First arrival notes `recepta` and arms the deadline (XX s, settable for
+   tests); every arrival re-notes `tractiones_vacuae` (C5: its pictures reached
+   the server before its push, so a pull started after it sees them), queues
+   its finish (IV max; a fifth finishes NIHIL at once but still renovares), sets
+   mora 0 and renovares.
+4. A one-shot reactor timer re-armed every C ms reads the client status:
+   refused -> DEFECTUS; counter past the noted value -> NOVA if recepta rose,
+   else NIHIL. All pending finishes get the same result together.
+5. Every exit (caught up, deadline, refused, `claudere`) goes through
+   `_excitationem_finire`, which restores the mora: `pc->mora` if
+   `mora_posita`, else `COMMUNIO_MORA_ORDINARIA`. Never bare `pc->mora` - it's 0
+   in production and would leave the phone polling every second.
+
+Deadline is fixed from the first arrival (later arrivals don't extend it):
+pictor's XX s always lands before testa's XXV s backstop for the first window,
+so the mora is restored by pictor, not left to the backstop.
+
+Test model ("excitatio (tergum)"): A gets its OWN reactor + veredarius. While A
+"sleeps" the test polls only the server/B reactor: A's long-poll stays in
+flight and its socket may even hold the server's answer, but nothing is
+imported - like an iOS app suspended in the background. The push then calls the
+captured `_excitatio` with a real `pulsus_corpus_facere` body, and the test
+polls both reactors. Without this, the in-process server wakes A's long-poll as
+soon as B uploads, and every case would be NIHIL.
+
+Mutation checks: restoring bare `pc->mora` fails nova/emendatio/nihil (mora 0
+instead of XXV); dropping earlier pending finishes fails "duae excitationes".
+
+New read-only accessor `pictor_communio_status(pc)` (client status, ZEPHYRUM if
+none) - the tests need the client's mora/recepta, and nothing else exposed it.

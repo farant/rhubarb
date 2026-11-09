@@ -98,7 +98,11 @@ rm -rf "$D" && mkdir -p "$D/obiecta" "$APP" || apparatus "$D creari nequit"
 if [ "$SCOPUS" = tabula ]; then
     . tools/ios/communia.sh
     ios_tabulam_eligere
-    ios_profilum_eligere "$D"
+    # pulsus-plan T11: profilum proprium (push) praefertur, nisi
+    # IOS_PROFILUM datum
+    if [ -n "${IOS_PROFILUM:-}" ] || ! ios_profilum_proprium "$D" "$INVOLUCRUM"; then
+        ios_profilum_eligere "$D"
+    fi
     ios_identitatem_eligere
     echo "telephonum: $IOS_NOMEN ($IOS_MODELLUM, iOS $IOS_VERSIO); profilum $(basename "$IOS_PROFILUM"); $IOS_IDENTITAS_NOMEN"
 fi
@@ -122,7 +126,12 @@ fi
 vexilla_radices ""
 CC=(xcrun --sdk "$SDK" clang -target "$SCOPUS_CLANG")
 # .c et .m eisdem vexillis domus (ut fenestra_macos.m in aedilis)
-VEXILLA=("${VEXILLA_C89[@]}" "${RADICES_C89[@]}" "-DTESTA_TITULUS=\"$TITULUS\"")
+# pulsus-plan C8: ambitus APNs tesserarum - TestFlight (divulgatio)
+# productio, reliqua (signum evolutionis) sandbox
+PULSUS_AMBITUS=sandbox
+[ "$SCOPUS" = divulgatio ] && PULSUS_AMBITUS=productio
+VEXILLA=("${VEXILLA_C89[@]}" "${RADICES_C89[@]}" "-DTESTA_TITULUS=\"$TITULUS\""
+    "-DPULSUS_AMBITUS=\"$PULSUS_AMBITUS\"")
 VFLAGS=(-O2 -DBR_ENABLE_INTRINSICS=1 -DSQLITE_ENABLE_FTS5 -DSQLITE_THREADSAFE=0
     -DSQLITE_DQS=0 -DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_OMIT_LOAD_EXTENSION
     -DSQLITE_OMIT_DEPRECATED -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1)
@@ -177,8 +186,9 @@ sed -e "s/@TITULUS@/$TITULUS/g" -e "s/@INVOLUCRUM@/$INVOLUCRUM/g" \
     -e "s/@AEDIFICATIO@/$AEDIFICATIO/g" tools/ios/Info.forma.plist > "$APP/Info.plist"
 plutil -lint "$APP/Info.plist" > /dev/null || fractum "Info.plist invalidum"
 printf 'APPL????' > "$APP/PkgInfo"
-# icon (testa-ios C2 T3): apps/<app>/icon.png (quadratum, latus MXXIV
-# dividens) -> MXXIV RGB sine alpha (icones_amplificare) -> catalogus
+# icon (testa-ios C2 T3): apps/<app>/icon.png (quadratum; latus MXXIV
+# dividens -> pixel art acuta, aliter lenis) -> MXXIV RGB sine alpha
+# (icones_amplificare) -> catalogus
 # AppIcon -> Assets.car per actool (Apple; D6) -> claves in Info.plist
 ICON="$(dirname "$FONS")/icon.png"
 if [ -f "$ICON" ]; then
@@ -190,7 +200,7 @@ if [ -f "$ICON" ]; then
     mkdir -p "$CATALOGUS/AppIcon.appiconset" || apparatus "$CATALOGUS creari nequit"
     bin/icones_instrumentum -amplificare "$ICON" 1024 \
         "$CATALOGUS/AppIcon.appiconset/icon_1024.png" > "$D/icon.log" 2>&1 \
-        || { cat "$D/icon.log" >&2; fractum "icon $ICON (quadratum, latus 1024 dividens)"; }
+        || { cat "$D/icon.log" >&2; fractum "icon $ICON (quadratum)"; }
     printf '%s\n' '{"info":{"author":"rhubarb","version":1}}' > "$CATALOGUS/Contents.json"
     printf '%s\n' '{"images":[{"filename":"icon_1024.png","idiom":"universal","platform":"ios","size":"1024x1024"}],"info":{"author":"rhubarb","version":1}}' \
         > "$CATALOGUS/AppIcon.appiconset/Contents.json"
@@ -208,6 +218,20 @@ if [ -f "$ICON" ]; then
         || /usr/libexec/PlistBuddy -c "Set :CFBundleIconName AppIcon" \
                "$APP/Info.plist" > /dev/null \
         || fractum "CFBundleIconName in Info.plist poni nequit"
+fi
+# tergum-plan T4 (C8): profilum cum push -> UIBackgroundModes
+# remote-notification (excitatio in tergo); tabula profilum evolutionis,
+# divulgatio profilum App Store; simulator nullum
+case $SCOPUS in
+    tabula) MODI_PROFILUM=$IOS_PROFILUM_PLIST ;;
+    divulgatio) MODI_PROFILUM="$D/profilum.plist" ;;
+    *) MODI_PROFILUM="" ;;
+esac
+if [ -n "$MODI_PROFILUM" ]; then
+    declare -F ios_modos_tergi_ponere > /dev/null || . tools/ios/communia.sh
+    ios_modos_tergi_ponere "$MODI_PROFILUM" "$APP/Info.plist" \
+        || fractum "UIBackgroundModes in Info.plist poni nequit"
+    plutil -lint "$APP/Info.plist" > /dev/null || fractum "Info.plist invalidum"
 fi
 if [ "$SCOPUS" = divulgatio ]; then
     # claves App Store (spec II.3 gradus 4): instrumenta (DT*, ut Xcode),
@@ -262,6 +286,12 @@ elif [ "$SCOPUS" = tabula ]; then
     # D7: profilum inclusum + iura ex eo (turma.involucrum, debugging)
     cp "$IOS_PROFILUM" "$APP/embedded.mobileprovision" \
         || apparatus "profilum exscribi nequit"
+    # pulsus-plan T11: aps-environment ex profilo (proprium solum id fert;
+    # sine eo registerForRemoteNotifications deficit)
+    IURA_APS=""
+    APS=$(_ios_campus "$IOS_PROFILUM_PLIST" Entitlements.aps-environment) \
+        && IURA_APS="	<key>aps-environment</key>
+	<string>$APS</string>"
     cat > "$D/iura.plist" <<EOF_IURA
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -273,6 +303,7 @@ elif [ "$SCOPUS" = tabula ]; then
 	<string>$IOS_TURMA</string>
 	<key>get-task-allow</key>
 	<true/>
+$IURA_APS
 </dict>
 </plist>
 EOF_IURA

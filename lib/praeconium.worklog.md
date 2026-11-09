@@ -75,3 +75,16 @@ $TMUX's server (else the default). Exit 0 always for `praeco tmux`
 check (fake HOME, RHUBARB_COLLOQUIA, private server via $TMUX): block
 added once ("sectio iam praesens" on the second run), backup intact,
 a window switch wrote a `tmux` event.
+
+## 2026-11-05 — gabc part 2 P8: `antiphonale` event
+
+`praeconium_antiphonale_parare(via, e, piscina)`: eventus "antiphonale",
+nuntius = realpath(via) (relative to the caller's cwd); a missing file
+returns FALSE and leaves the event untouched, so `praeco antiphonale`
+exits 1 without writing. vicus (admonitiones system) takes the newest
+such event of the pulse and calls vicus_acervo_mutare. The follower
+only hands over events written after it opened the log, so the startup
+tail never reaches it; vicus still ignores events stamped before its own
+start (a re-read rotated log, a writer with a clock behind). realpath
+added to silva/fontes/systema_posix.h (examen had flagged praeco.c's
+three uses as implicit declarations too).

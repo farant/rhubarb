@@ -283,6 +283,49 @@ get_object_files() {
     echo "$obj_files"
 }
 
+# NEXUS PER ARCHIVUM (budget B2 G6/J5b, decretum Frani 01M6FQ3GYV,
+# 2026-11-02): probatio quaeque olim omnia obiecta (CDXIX) nectebat -
+# binarium XVIII MB, ~VIII GB scripti per frigidam. Nunc archivum
+# build/probationes/libradix.a semel per cursum; probatio membra sola
+# quae vocat trahit (-ObjC: membra Objective-C omnia - categoriae
+# hodie nullae, cautio pro futuris). Proprietates bibliothecae TOTIUS
+# (nulla globalia duplicata, nulla externa irresoluta), quas nexus
+# per probationem obiter probabat, NEXU PLENO UNO servantur:
+# principale vacuum cum -Wl,-all_load contra idem archivum. Archivum
+# vacuum nexum plenum falso sanum faceret - numerus membrorum contra
+# listam obiectorum probatur.
+ARCHIVUM_RADICIS="build/probationes/libradix.a"
+export ARCHIVUM_RADICIS
+nexus_radicis_parare() {
+    local obj_files numerus membra
+    obj_files="$(get_object_files)"
+    mkdir -p build/probationes
+    rm -f "$ARCHIVUM_RADICIS"
+    # shellcheck disable=SC2086 (obj_files: verba consulto scissa)
+    if ! ar rcs "$ARCHIVUM_RADICIS" $obj_files; then
+        echo -e "${RED}✗ ARCHIVUM RADICIS FRACTUM (ar)${RESET}"
+        return 1
+    fi
+    numerus=$(echo $obj_files | wc -w | tr -d ' ')
+    membra=$(ar t "$ARCHIVUM_RADICIS" | grep -cv '^__\.SYMDEF')
+    if [ "$membra" -ne "$numerus" ]; then
+        echo -e "${RED}✗ ARCHIVUM RADICIS: $membra membra pro $numerus obiectis${RESET}"
+        return 1
+    fi
+    printf 'int main(void) { return 0; }\n' > build/probationes/nexus_plenus.c
+    if ! clang "${VEXILLA_C89[@]}" -c build/probationes/nexus_plenus.c \
+            -o build/probationes/nexus_plenus.o \
+       || ! clang "${VEXILLA_C89[@]}" build/probationes/nexus_plenus.o \
+            -Wl,-all_load "$ARCHIVUM_RADICIS" \
+            -framework Cocoa -framework Security -framework WebKit -framework IOKit \
+            -o build/probationes/nexus_plenus; then
+        echo -e "${RED}✗ NEXUS PLENUS FRACTUS: bibliothecae omnes simul non nectuntur (symbola duplicata aut irresoluta supra)${RESET}"
+        return 1
+    fi
+    echo -e "${BLUE}nexus plenus: $numerus obiecta simul nexa (archivum radicis)${RESET}"
+    return 0
+}
+
 compile_gui_app() {
     local app_file="$1"
     local app_name=$(basename "$app_file" .c)
@@ -378,7 +421,8 @@ compile_and_run_test() {
     echo -e "${BLUE}Testing: $test_name${RESET}"
     echo -e "${BLUE}────────────────────────────────────────${RESET}"
 
-    obj_files=$(get_object_files)
+    # bibliothecae per archivum (nexus_radicis_parare, G6/J5b)
+    obj_files=""
 
     # Obiecta extra per-probatione (capsulae speculi non globales)
     case "$test_name" in
@@ -400,7 +444,7 @@ compile_and_run_test() {
     # probationem, CXLI probationes = XXV s); ex obiecto nexus eum
     # omittit, et lldb per tabulam depurationis obiecta tamen legit.
     if ! _cursor_compilare "$test_file" "$output_binary.o" 2>&1 \
-       || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" 2>&1; then
+       || ! clang ${GCC_FLAGS[@]} "$output_binary.o" $obj_files -ObjC "$ARCHIVUM_RADICIS" -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" 2>&1; then
         echo -e "${RED}✗ COMPILATION FAILED: $test_name${RESET}"
         TESTS_FAILED=$((TESTS_FAILED + 1))
         FAILED_TESTS="$FAILED_TESTS $test_name"
@@ -636,8 +680,9 @@ run_speculum() {
 }
 
 # Operarius probationis unius (in bash filio per xargs; ambitus:
-# SINGULAE, OBIECTA, COMPILATOR, CLAUSURAE_DIR exportata). Vexilla ex
-# tools/vexilla.sh iterum fontata (tabulae bash non exportantur).
+# SINGULAE, ARCHIVUM_RADICIS, COMPILATOR, CLAUSURAE_DIR exportata).
+# Vexilla ex tools/vexilla.sh iterum fontata (tabulae bash non
+# exportantur).
 probatio_una() {
     local test_file="$1"
     local name; name=$(basename "$test_file" .c)
@@ -646,7 +691,7 @@ probatio_una() {
     local -a INC
     source "$(dirname "$0")/tools/vexilla.sh" 2>/dev/null || source tools/vexilla.sh
     read -r -a INC <<< "$INCLUDE_LINEA"
-    obj_files="$(cat "$OBIECTA")"
+    obj_files=""   # bibliothecae per archivum (G6/J5b)
     case "$name" in
         probatio_speculum_fontium|probatio_speculum)
             obj_files="$obj_files build/speculum/hospes/capsula_speculi_hospes.o" ;;
@@ -657,7 +702,7 @@ probatio_una() {
     printf '%s\t%s\n' "$output_binary.o" "${VEXILLA_C89[*]} ${INC[*]} -c $test_file" \
         >> "$CLAUSURAE_DIR/mandata.tsv"
     if ! "$COMPILATOR" "${VEXILLA_C89[@]}" "${INC[@]}" -c "$test_file" -o "$output_binary.o" > "$SINGULAE/$name.log" 2>&1 \
-       || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
+       || ! clang "${VEXILLA_C89[@]}" "$output_binary.o" $obj_files -ObjC "$ARCHIVUM_RADICIS" -framework Cocoa -framework Security -framework WebKit -framework IOKit -o "$output_binary" >> "$SINGULAE/$name.log" 2>&1; then
         echo "2 0 0" > "$SINGULAE/$name.res"
         return 0
     fi
@@ -767,6 +812,11 @@ run_all_tests() {
     # nominum imprimit et tabulas temporum implet. Res communis inter
     # probationes = vitium (aedilis plagulas temporarias fixas habuit).
     # PROBATIONES_FILA=N; ordinarius nuclei performantes.
+    if [ -n "$test_files" ] && ! nexus_radicis_parare; then
+        TESTS_FAILED=$((TESTS_FAILED + 1))
+        FAILED_TESTS="$FAILED_TESTS nexus_plenus"
+        return 1
+    fi
     if [ -n "$test_files" ]; then
         if [ "$FILA" -le 1 ] || [ $DEBUG_MODE -eq 1 ]; then
             while IFS= read -r test_file; do
@@ -777,9 +827,7 @@ run_all_tests() {
             local murus_t0 murus_t1 name rc tc tr
             SINGULAE="build/test_logs/singulae"
             rm -rf "$SINGULAE"; mkdir -p "$SINGULAE"
-            OBIECTA="build/test_logs/obiecta_probationum.txt"
-            get_object_files > "$OBIECTA"
-            export SINGULAE OBIECTA COMPILATOR CLAUSURAE_DIR
+            export SINGULAE COMPILATOR CLAUSURAE_DIR
             echo -e "${BLUE}probationes parallelae: $(echo "$test_files" | grep -c .) per $FILA fila${RESET}"
             murus_t0=$(perl -MTime::HiRes -e 'print Time::HiRes::time')
             echo "$test_files" | grep . | xargs -P "$FILA" -n 1 -I{} bash -c 'probatio_una "$1"' _ {}

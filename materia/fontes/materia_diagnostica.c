@@ -20,13 +20,9 @@
 #include "materia_exemplaria.h"
 #include "materia_excusatio.h"
 #include "stml_macros.h"
-#include "tabula_dispersa.h"
 #include <stdio.h>
 #include <string.h>
 
-/* valor praesentiae in tabula lexematum visorum: sedes sola refert
- * (VERUM in punctatorem versum monitum daret) */
-hic_manens i32 PRAESENS = I;
 
 nomen structura {
                              Piscina* piscina;
@@ -34,12 +30,17 @@ nomen structura {
     constans MateriaDiagnosticaCocta* diagnostica;
           constans MateriaOrigoUncus* uncus;
                                  Xar* exitus;
-                      TabulaDispersa* visa;
-                                 b32  fons_notus;
-                                 s32  fons;
-                                 s32  finis_maximus;
-                      MateriaTractus  ultimum;
-                                 b32  ultimum_notum;
+    /* lexemata visa: copia punctatorum (aperta, sine clave allocata)
+     * in piscina TEMPORARIA - post ambulationem destruitur */
+                             Piscina*  scrinium;
+               constans MateriaToken** visa;
+                                 i32   visa_capacitas;
+                                 i32   visa_numerus;
+                                 b32   fons_notus;
+                                 s32   fons;
+                                 s32   finis_maximus;
+                      MateriaTractus   ultimum;
+                                 b32   ultimum_notum;
     /* cumulatio tractus nodi currentis ab imo (ut scriptor, A1):
      * materia_tractus_nodi in quoque nodo quadraticum esset */
                       MateriaTractus tractus;
@@ -211,33 +212,89 @@ _vacua (
     redde VERUM;
 }
 
+/* locus in tabula visorum: punctator ipse mixtus (Fibonacci), bitis
+ * altis; larva = capacitas - I (capacitas potentia binaria) */
+interior i32
+_visum_locus (
+    constans MateriaToken* lexema,
+                      i32  larva)
+{
+    insignatus longus h = (insignatus longus)(size_t)lexema;
+
+    h = (h >> III) * 0x9E3779B97F4A7C15UL;
+    redde (i32)(h >> XXXII) & larva;
+}
+
+interior b32
+_visa_crescere (
+    Derivatio* d)
+{
+     constans MateriaToken** vetera = d->visa;
+     constans MateriaToken** tabula;
+                       i32   vetus  = d->visa_capacitas;
+                       i32   nova   = vetus * II;
+                       i32   k;
+
+    /* tabula nova in locali: si deficit, vetus manet valida (ambulatio
+     * post memoria_defecit pergit) */
+    tabula = (constans MateriaToken**)piscina_allocare(d->scrinium,
+        (memoriae_index)nova * magnitudo(constans MateriaToken*));
+    si (tabula == NIHIL)
+    {
+        redde FALSUM;
+    }
+    memset((vacuum*)tabula, ZEPHYRUM,
+        (size_t)nova * magnitudo(constans MateriaToken*));
+    d->visa            = tabula;
+    d->visa_capacitas  = nova;
+    per (k = ZEPHYRUM; k < vetus; k++)
+    {
+        si (vetera[k] != NIHIL)
+        {
+            i32 j = _visum_locus(vetera[k], nova - I);
+
+            dum (d->visa[j] != NIHIL)
+            {
+                j = (j + I) & (nova - I);
+            }
+            d->visa[j] = vetera[k];
+        }
+    }
+    redde VERUM;
+}
+
 /* VERUM si lexema iam visum (usus iteratus: transclusio); aliter
- * notatur. Clavis = octeti punctatoris ipsius. */
+ * notatur. */
 interior b32
 _visum (
                 Derivatio* d,
     constans MateriaToken* lexema)
 {
-    chorda  clavis;
-        i8* octeti;
+    i32 larva  = d->visa_capacitas - I;
+    i32 j      = _visum_locus(lexema, larva);
 
-    octeti = (i8*)piscina_allocare(d->piscina,
-        magnitudo(constans MateriaToken*));
-    si (octeti == NIHIL)
+    dum (d->visa[j] != NIHIL)
+    {
+        si (d->visa[j] == lexema)
+        {
+            redde VERUM;
+        }
+        j = (j + I) & larva;
+    }
+    /* locus vacuus ultimus numquam impletur (quaestio in eo sistit);
+     * solum post incrementum fractum attingitur */
+    si (d->visa_numerus + I >= d->visa_capacitas)
     {
         d->memoria_defecit = VERUM;
         redde VERUM;
     }
-    memcpy(octeti, &lexema, magnitudo(constans MateriaToken*));
-    clavis.datum    = octeti;
-    clavis.mensura  = (i32)magnitudo(constans MateriaToken*);
-    si (tabula_dispersa_continet(d->visa, clavis))
-    {
-        redde VERUM;
-    }
-    si (!tabula_dispersa_inserere(d->visa, clavis, &PRAESENS))
+    d->visa[j] = lexema;
+    d->visa_numerus++;
+    si (   d->visa_numerus * II > d->visa_capacitas
+        && !_visa_crescere(d))
     {
         d->memoria_defecit = VERUM;
+        redde VERUM;
     }
     redde FALSUM;
 }
@@ -581,13 +638,28 @@ materia_diagnostica_derivare (
     d.uncus        = uncus;
     d.exitus       = xar_creare(piscina,
         (i32)magnitudo(MateriaDiagnosticum));
-    d.visa         = tabula_dispersa_creare_chorda(piscina, (i32)MXXIV);
+    d.scrinium        = piscina_generare_dynamicum("diagnostica_visa",
+        (memoriae_index)(LXIV * MXXIV));
+    d.visa_capacitas  = MXXIV;
+    d.visa            = d.scrinium == NIHIL ? NIHIL
+        : (constans MateriaToken**)piscina_allocare(d.scrinium,
+            (memoriae_index)d.visa_capacitas
+                * magnitudo(constans MateriaToken*));
     si (d.exitus == NIHIL || d.visa == NIHIL)
     {
+        si (d.scrinium != NIHIL)
+        {
+            piscina_destruere(d.scrinium);
+        }
         redde NIHIL;
     }
+    memset((vacuum*)d.visa, ZEPHYRUM,
+        (size_t)d.visa_capacitas * magnitudo(constans MateriaToken*));
     _ambulare(&d, radix);
-    numerus_declaratorum = xar_numerus(d.exitus);
+    piscina_destruere(d.scrinium);
+    d.scrinium            = NIHIL;
+    d.visa                = NIHIL;
+    numerus_declaratorum  = xar_numerus(d.exitus);
     per (k = ZEPHYRUM; emissa != NIHIL && k < xar_numerus(emissa); k++)
     {
         constans MateriaDiagnosticum* e =

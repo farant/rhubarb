@@ -13,6 +13,9 @@
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
+#include "silva_annotationes.h"
+#include "silva_arbor.h"
+#include "silva_tabulae.h"
 #include "credo.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -242,6 +245,191 @@ _symbolum_indicis (
         }
     }
     redde NIHIL;
+}
+
+/* Internamentum per tabulam: genera (qualificati, functiones) et
+ * crescentia - numerus typorum cuiusque generis creatur, deinde
+ * iterum petitur. Bis vocatur: tabula ordinaria, et larva signi
+ * ZEPHYRUM (collisiones omnes - _derivata_paria sola discernit). */
+interior vacuum
+_internamentum_tabulae_probare (
+           Piscina* piscina,
+    SilvaSemantica* sem,
+               i32  numerus)
+{
+          TypusC89* intus = silva_c89_typus_primitivum(sem,
+              PRIMITIVUM_INTEGER);
+          TypusC89* ch = silva_c89_typus_primitivum(sem,
+              PRIMITIVUM_CHARACTER);
+           TypusC89*  par_a[II];
+           TypusC89*  par_b[II];
+           TypusC89*  par_c[II];
+           TypusC89*  unus[I];
+           TypusC89** catena;
+           TypusC89** acies;
+           TypusC89** functiones;
+                i32   k;
+                i32   discrepantiae;
+
+    /* const int * (monstrator ad constans) != int * const */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_monstrator(sem,
+            silva_c89_typus_qualificatus(sem, intus,
+                QUALIS_CONSTANS)),
+        silva_c89_typus_qualificatus(sem,
+            silva_c89_typus_monstrator(sem, intus),
+            QUALIS_CONSTANS));
+    /* quales distincti; involucrum super involucrum iungitur */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_qualificatus(sem, intus, QUALIS_CONSTANS),
+        silva_c89_typus_qualificatus(sem, intus,
+            QUALIS_VOLATILIS));
+    CREDO_AEQUALIS_PTR (
+        silva_c89_typus_qualificatus(sem,
+            silva_c89_typus_qualificatus(sem, intus,
+                QUALIS_CONSTANS),
+            QUALIS_VOLATILIS),
+        silva_c89_typus_qualificatus(sem, intus,
+            QUALIS_CONSTANS | QUALIS_VOLATILIS));
+
+    /* functiones: series diversae, contentum idem -> typus idem.
+     * Typus internatus seriem suam retinet - nulla series post
+     * usum mutatur. */
+    par_a[0] = intus;
+    par_a[1] = ch;
+    par_b[0] = intus;
+    par_b[1] = ch;
+    par_c[0] = intus;
+    par_c[1] = intus;
+    CREDO_AEQUALIS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_b, II, FALSUM,
+            VERUM));
+    /* parametrum unum diversum */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_c, II, FALSUM,
+            VERUM));
+    /* praefixum idem, numerus diversus */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, I, FALSUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM));
+    /* variadica */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, par_a, II, VERUM,
+            VERUM),
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM));
+    /* () non prototypata != (void) */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, intus, NIHIL, ZEPHYRUM,
+            FALSUM, FALSUM),
+        silva_c89_typus_functio(sem, intus, NIHIL, ZEPHYRUM,
+            FALSUM, VERUM));
+    /* reditus */
+    CREDO_INAEQUALITAS_PTR (
+        silva_c89_typus_functio(sem, ch, par_a, II, FALSUM, VERUM),
+        silva_c89_typus_functio(sem, intus, par_a, II, FALSUM,
+            VERUM));
+
+    /* crescentia: numerus catenae monstratorum + acies + functiones
+     * (MMM multo plures quam capacitas initialis), deinde omnes
+     * iterum petiti - idem typus, et inter se distincti */
+    catena = (TypusC89**)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(TypusC89*));
+    acies = (TypusC89**)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(TypusC89*));
+    functiones = (TypusC89**)piscina_allocare(piscina,
+        (memoriae_index)(numerus + I) * magnitudo(TypusC89*));
+    CREDO_NON_NIHIL (catena);
+    CREDO_NON_NIHIL (acies);
+    CREDO_NON_NIHIL (functiones);
+    catena[0] = intus;
+    per (k = I; k <= numerus; k++)
+    {
+        catena[k]  = silva_c89_typus_monstrator(sem, catena[k - I]);
+        acies[k]   = silva_c89_typus_acies(sem, ch, (s32)k);
+        functiones[k] = silva_c89_typus_functio(sem, catena[k],
+            &catena[k - I], I, FALSUM, VERUM);
+    }
+    discrepantiae = ZEPHYRUM;
+    per (k = I; k <= numerus; k++)
+    {
+        unus[0] = catena[k - I];
+        si (silva_c89_typus_monstrator(sem, catena[k - I])
+            != catena[k])
+        {
+            discrepantiae++;
+        }
+        si (silva_c89_typus_acies(sem, ch, (s32)k) != acies[k])
+        {
+            discrepantiae++;
+        }
+        si (silva_c89_typus_functio(sem, catena[k], unus, I,
+                FALSUM, VERUM) != functiones[k])
+        {
+            discrepantiae++;
+        }
+        si (   catena[k] == catena[k - I]
+            || (k > I && acies[k] == acies[k - I])
+            || (k > I && functiones[k] == functiones[k - I]))
+        {
+            discrepantiae++;
+        }
+    }
+    CREDO_AEQUALIS_I32 (discrepantiae, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (catena[numerus]->genus,
+        (s32)TYPUS_C89_MONSTRATOR);
+    CREDO_AEQUALIS_PTR (catena[numerus]->datum.monstrator.internum,
+        catena[numerus - I]);
+    CREDO_AEQUALIS_S32 (acies[numerus]->datum.acies.numerus,
+        (s32)numerus);
+}
+
+
+/* annotationes semanticae (commenta fluxus, verritiones gradus II)
+ * contra collectorem solum: numerus, ordo, sedes, affixio */
+interior vacuum
+_commenta_conferre (
+         Piscina* piscina,
+    SilvaParsura* parsura,
+             i32  expectata)
+{
+               Xar* sola;
+    SilvaSemantica* sem;
+               i32  n;
+               i32  i;
+
+    sola  = silva_annotationes_colligere(piscina, parsura, NIHIL);
+    sem   = silva_c89_semantica_analysare(piscina, parsura);
+    CREDO_NON_NIHIL (sola);
+    CREDO_NON_NIHIL (sem);
+    si (sola == NIHIL || sem == NIHIL)
+    {
+        redde;
+    }
+    n = xar_numerus(sola);
+    CREDO_AEQUALIS_I32 (n, expectata);
+    CREDO_VERUM (sem->annotationes != NIHIL
+        ? xar_numerus(sem->annotationes) == n : n == ZEPHYRUM);
+    per (i = ZEPHYRUM; sem->annotationes != NIHIL && i < n
+             && i < xar_numerus(sem->annotationes); i++)
+    {
+        constans SilvaAnnotatio* a = (constans SilvaAnnotatio*)
+            xar_obtinere(sola, i);
+        constans SilvaAnnotatio* b = (constans SilvaAnnotatio*)
+            xar_obtinere(sem->annotationes, i);
+
+        CREDO_VERUM (b->fons_index == a->fons_index);
+        CREDO_VERUM (b->byte_offset == a->byte_offset);
+        CREDO_VERUM (b->modus == a->modus);
+        CREDO_VERUM (b->unitas == a->unitas);
+        CREDO_VERUM (b->parsata == a->parsata);
+    }
 }
 
 s32 principale (vacuum)
@@ -640,6 +828,31 @@ s32 principale (vacuum)
         CREDO_AEQUALIS_PTR (
             silva_c89_typus_qualificatus(sem, intus, ZEPHYRUM),
             intus);
+    }
+
+
+    /* ========================================================
+     * PROBARE: internamentum per tabulam - genera, crescentia
+     * ======================================================== */
+
+    {
+        imprimere("\n--- Probans internamentum per tabulam ---\n");
+        _internamentum_tabulae_probare(piscina,
+            silva_c89_semantica_creare(piscina), MMM);
+    }
+
+
+    /* ========================================================
+     * PROBARE: internamentum - signa omnia congruentia
+     * ======================================================== */
+
+    {
+        SilvaSemantica* sem = silva_c89_semantica_creare(piscina);
+
+        imprimere("\n--- Probans internamentum sine signis ---\n");
+        /* omnes in sondatione una: aequalitas structuralis sola */
+        sem->derivata_larva = ZEPHYRUM;
+        _internamentum_tabulae_probare(piscina, sem, CCC);
     }
 
 
@@ -1842,6 +2055,113 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: clausura per analysare_clausa (DECISUS 2 emendatum
+     * 2026-11-04) - secunda solum si aliquid versum; PROBANS:
+     * analyses eaedem ubi nihil versum
+     * ======================================================== */
+
+    {
+        constans character* fons_versio =
+            "void f(void)\n"
+            "{\n"
+            "    typedef int T;\n"
+            "    T x;\n"
+            "    (T)(x);\n"
+            "}\n";
+        /* sine versione, sed typi, enumeratio, vocationes et
+         * diagnosticum (vocatio implicita h) - signa non vacua */
+        constans character* fons_placidus =
+            "typedef struct { int a; char* b; } Par;\n"
+            "enum color { RUBER, VIRIDIS = 3 };\n"
+            "static int g(int k) { return k * 2; }\n"
+            "int f(Par* p, int n)\n"
+            "{\n"
+            "    int i;\n"
+            "    long s = 0;\n"
+            "    for (i = 0; i < n; i++)\n"
+            "    {\n"
+            "        s += g(p[i].a) + VIRIDIS;\n"
+            "    }\n"
+            "    return (int)s + h();\n"
+            "}\n";
+        SilvaClausuraFructus  fructus;
+               SilvaOraculum* oraculum;
+                SilvaParsura* parsura;
+              SilvaSemantica* sem;
+         constans SilvaNodus* elem;
+                  SilvaValor  expr_v;
+
+        imprimere("\n--- Probans clausuram (analysare_clausa) ---\n");
+
+        /* versio: secunda agitur, (T)(x) post versionem int */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_versio, (i32)strlen(fons_versio), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_ORDINARIA, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_VERUM (fructus.clausa);
+        CREDO_VERUM (fructus.versae >= I);
+        CREDO_VERUM (fructus.secunda);
+        elem = _elementum_corporis(parsura, 0, II);
+        CREDO_NON_NIHIL (elem);
+        expr_v = silva_c89_sententia_expressionis_expressio(elem);
+        CREDO_VERUM (expr_v.genus == SILVA_VALOR_NODUS);
+        CREDO_AEQUALIS_PTR (silva_c89_typus_expressionis(sem,
+            expr_v.datum.nodus),
+            silva_c89_typus_primitivum(sem, PRIMITIVUM_INTEGER));
+
+        /* nihil versum: secunda NON agitur - prima auctoritativa */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_placidus, (i32)strlen(fons_placidus), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        CREDO_AEQUALIS_I32 (parsura->numerus_errorum, ZEPHYRUM);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_ORDINARIA, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_VERUM (fructus.clausa);
+        CREDO_AEQUALIS_I32 (fructus.versae, ZEPHYRUM);
+        CREDO_FALSUM (fructus.secunda);
+        CREDO_VERUM (silva_c89_diagnostica_numerus(sem) >= I);
+
+        /* PROBANS, nihil versum: secunda agitur, analyses eaedem */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_placidus, (i32)strlen(fons_placidus), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_PROBANS, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_AEQUALIS_I32 (fructus.versae, ZEPHYRUM);
+        CREDO_VERUM (fructus.secunda);
+        CREDO_AEQUALIS_I32 (fructus.discrepantiae, ZEPHYRUM);
+
+        /* PROBANS cum versione: analyses differre DEBENT - nulla
+         * collatio, nulla discrepantia nuntiata */
+        oraculum = silva_oraculum_creare(piscina);
+        parsura = silva_c89_parsare(piscina, "probatio.c",
+            fons_versio, (i32)strlen(fons_versio), oraculum);
+        CREDO_NON_NIHIL (parsura);
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, oraculum, SILVA_CLAUSURA_PROBANS, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_VERUM (fructus.versae >= I);
+        CREDO_VERUM (fructus.secunda);
+        CREDO_AEQUALIS_I32 (fructus.discrepantiae, ZEPHYRUM);
+
+        /* sine oraculo: analysis una, nulla clausura */
+        sem = silva_c89_semantica_analysare_clausa(piscina, parsura,
+            NIHIL, NIHIL, SILVA_CLAUSURA_ORDINARIA, &fructus);
+        CREDO_NON_NIHIL (sem);
+        CREDO_FALSUM (fructus.clausa);
+        CREDO_FALSUM (fructus.secunda);
+        CREDO_AEQUALIS_I32 (fructus.versae, ZEPHYRUM);
+    }
+
+
+    /* ========================================================
      * PROBARE (M1a Chunk A): exporta demissionis - nexus
      * symbolorum (sedes usus -> symbolum, etiam implicitus) +
      * octeti chordae decodati (fugae, fragmenta, L-parca)
@@ -1917,6 +2237,73 @@ s32 principale (vacuum)
         CREDO_NON_NIHIL (init);
         CREDO_VERUM (!silva_c89_chorda_decodere(piscina, init,
             &octeti));
+    }
+
+
+    /* ==================================================
+     * Commenta fluxus (budget fusionis, verritiones gradus II):
+     * annotationes semanticae (silva_annotationes_ex_commentis,
+     * commenta ex ambulatione communi) EAEDEM ac collectoris soli
+     * (silva_annotationes_colligere). Fixa omnes domus tangit:
+     * lexema ordinarium, radix macri sola (commentarium in linea
+     * sua ante invocationem - in linea 'return' trivium posterius
+     * 'return' esset), linea directivae, ramus '#if 0' et ramus non
+     * sumptus, cauda. Deinde parsura per arborem STML relecta:
+     * lexemata NIHIL - collector et semantica ambo statim redeunt
+     * (nihil collectum). Series 'finis' igitur hodie a nullo
+     * producente sola attingitur: in parsatione EOF ultimum
+     * lexematum est, in arbore lexemata desunt - ramus
+     * defensivus, in collectore vetere aeque.
+     * ================================================== */
+
+    imprimere("\n--- Commenta fluxus: collector idem ---\n");
+    {
+        constans character* fons =
+            "#define M(x) ((x) + 1)\n"
+            "/* <nota" " a=\"directiva\"/> */\n"
+            "#define N 2\n"
+            "#if 0\n"
+            "/* <nota" " a=\"mortua\"/> */\n"
+            "#endif\n"
+            "#ifdef NONDUM_DEFINITUM\n"
+            "/* <nota" " a=\"ramus\"/> */\n"
+            "int r;\n"
+            "#endif\n"
+            "int f(int v);\n"
+            "int f(int v)\n"
+            "{\n"
+            "    /* <nota" " a=\"prima\"/> */\n"
+            "    return\n"
+            "        /* <nota" " a=\"radix\"/> */ M(v) + N;\n"
+            "}\n"
+            "/* <nota" " a=\"cauda\"/> */\n";
+               SilvaParsura* parsura  = _parsare(piscina, fons);
+        SilvaArborScriptura  scriptura;
+           SilvaArborVitium  vitium;
+
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            /* omnes sex: 'mortua' quoque - trivium ante '#endif' est,
+             * et lineam '#endif' collector legit (lamina rami '#if 0'
+             * sola omittitur) */
+            _commenta_conferre(piscina, parsura, VI);
+            scriptura = silva_arbor_scribere_parsuram(piscina, parsura,
+                &SILVA_C89_REGISTRUM, "c89", parsura->fons_princeps,
+                NIHIL);
+            CREDO_VERUM (scriptura.successus);
+            si (scriptura.successus)
+            {
+                parsura = silva_arbor_legere_parsuram(piscina, NIHIL,
+                    scriptura.textus, &SILVA_C89_REGISTRUM, "c89",
+                    &vitium);
+                CREDO_NON_NIHIL (parsura);
+                si (parsura != NIHIL)
+                {
+                    _commenta_conferre(piscina, parsura, ZEPHYRUM);
+                }
+            }
+        }
     }
 
     credo_imprimere_compendium();

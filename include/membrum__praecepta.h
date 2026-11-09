@@ -12,6 +12,7 @@
  *
  * Formae clavium: "x" (character productus, sine Imperio aut Super;
  * "X", "<", "[" item), "Enter", "Esc", "Up", "Down" (sagittae, sine
+ * modificatoribus), "Left", "Right", "PageUp", "PageDown" (item sine
  * modificatoribus), "C-r" (Imperium + littera), "s-k" (Super/Cmd +
  * littera, sine Shift, Imperio, Alt; negotia-paginae T3b), "Tab" et
  * "S-Tab" (tabulatio sine / cum Shift; sine Imperio).

@@ -19,6 +19,8 @@
 #include "volumen.h"
 #include "veredarius.h"
 #include "pictor_applicatio.h"
+#include "testa_cursus.h"
+#include "communio_cliens.h"
 
 /* picturae advectae, index apparatuum, status inscriptionis mutatus */
 nomen vacuum (*PictorCommunioMutata)(vacuum* ctx);
@@ -143,5 +145,72 @@ pictor_communionem_ligare (
          PictorMontatio* montatio,
             Dispensator* d,
      constans character* machina);
+
+
+/* ==================================================
+ * pulsus-plan T9: notificationes (pulsus-spec III.4)
+ *
+ * Acta propria a servo accepta (CommunioMissa) -> eventus "pictor.
+ * picturae", res "<replica>:<spatium>" per picturam tactam, mora CCC,
+ * formae "{persona} shared a picture" / "{persona} shared {numerus}
+ * pictures" - SEMPER cum inscripta, etiam sine permissione in hoc
+ * apparatu (notificatio aliis est).
+ * ================================================== */
+
+/* testa pulsum praebet (iOS): permissio petitur nunc si inscripta, aut
+ * statim post inscriptionem - numquam ante; semel per processum.
+ * Tessera -> communio_cliens_pulsum_inscribere(.., ambitus testae,
+ * thema "earth.golden.pictor"), et iterum cum cliens novus (post
+ * revocationem). a->pulsum_petere NIHIL (macOS, Android): nihil. */
+vacuum
+pictor_communio_pulsum_parare (
+           PictorCommunio* pc,
+    constans TestaAmbitus* a);
+
+/* "Notify family now": eventus statim cum pictura propria 'spatium'
+ * (NIHIL = sine pictura: servus fasciculum pendentem statim mittit,
+ * aut nihil). FALSUM si non inscripta aut cliens nondum. */
+b32
+pictor_communio_pulsum_statim (
+         PictorCommunio* pc,
+     constans character* spatium);
+
+/* pulsus-plan T10: notificatio pressa (tactus testae, post
+ * pulsum_parare): picturae omnes notae -> spectator in grege
+ * (pictor_gregem_aperire_in); aliter rete "Loading...", communio
+ * excitatur, grex iterum post omne advenerunt; mora transacta (ordinarie
+ * XV s) -> notae aperiuntur aut rete. plures -> rete. Probationes:
+ * mora in ms. */
+vacuum
+pictor_communio_tactus_moram_ponere (
+    PictorCommunio* pc,
+               i32  ms);
+
+
+/* ==================================================
+ * tergum-plan T6: excitatio in tergo (tergum-spec III.4)
+ *
+ * pulsum_parare etiam excitationem testae inscribit (a->
+ * excitationem_ponere; NIHIL in macOS, Android). Pulsus advenit:
+ * corpus malum aut clavis aliena -> NIHIL; cliens recusatus aut nullus
+ * -> DEFECTUS; aliter recepta et tractiones_vacuae notantur, mora 0,
+ * renovare; cum tractiones_vacuae notatas transeunt (assecuta) -> NOVA
+ * si recepta crevit, aliter NIHIL. Terminus (XX s) -> DEFECTUS. Pulsus
+ * propinqui (IV ad summum) fenestram communicant: posterior iterum
+ * notat et renovat; omnes simul finiuntur. Mora semper restituitur:
+ * posita (moram_ponere) aut COMMUNIO_MORA_ORDINARIA - numquam 0 nisi
+ * posita.
+ * ================================================== */
+
+/* probationes: terminus fenestrae in ms (0 = ordinarius, XX s) */
+vacuum
+pictor_communio_excitationis_terminum_ponere (
+    PictorCommunio* pc,
+               i32  ms);
+
+/* status clientis communionis (ZEPHYRUM si nullus) - lectio sola */
+CommunioStatus
+pictor_communio_status (
+    constans PictorCommunio* pc);
 
 #endif /* PICTOR_COMMUNIO_H */

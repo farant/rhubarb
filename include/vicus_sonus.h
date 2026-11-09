@@ -42,6 +42,21 @@ nomen structura {
      * clausuram (CONCENTUS_QUIES post sonum ultimum); -1 si clausus.
      * NIHIL = XVI (mos vetus) */
     s64    (*mora)(vacuum* ctx);
+    /* CARMEN (gabc pars II P5, tabula antiphonale): slotae OPTIONALES -
+     * NIHIL licet (portae fictae veteres, porta sine cantore).
+     * incipere: TEXTUS libri carminum (<carmina> cum carmine primo
+     * sonando; gabc_carmen.h + involucrum) a pulso dato - porta eum in
+     * piscinam suam legit (vicus carmen.h nescit: lectio in strato
+     * soni, P7), ergo vocans textum statim liberare potest. Etiam
+     * PERMUTATIO (G18): versio nova ad pulsum currentem, vetus a porta
+     * liberata postquam cantor novam tenet. FALSUM = textus malus aut
+     * exitus recusat (carmen prius tunc pergit). */
+    b32    (*carmen_incipere)(vacuum* ctx, chorda carmen, s64 pulsus);
+    vacuum (*carmen_quaerere)(vacuum* ctx, s64 pulsus);
+    vacuum (*carmen_sistere)(vacuum* ctx);
+    /* positio currens in pulsibus (horologium exitus, sine mora
+     * apparatus); -1 si carmen non sonat (sistitum, finitum, mutus) */
+    s64    (*carmen_pulsus)(vacuum* ctx);
     vacuum* ctx;
 } VicusPortaSoni;
 

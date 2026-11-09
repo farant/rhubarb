@@ -649,6 +649,61 @@ s32 principale (vacuum)
     }
 
 
+    /* ==================================================
+     * PROBARE: status ad punctum PER GENERATIONES (gradus II)
+     * Tabula positionalis nova per generationem (signum novum):
+     * definitio posterior in generatione SECUNDA puncto priori
+     * invisibilis manet; argumenta (expansio nidificata) statum
+     * puncti sui vident, non statum vivum finis.
+     * ================================================== */
+
+    {
+        SilvaExpansio* exp;
+                  Xar* fructus;
+
+        imprimere("\n--- Probans statum ad punctum per generationes"
+            " ---\n");
+
+        /* A -> B -> 2 (generationes duae); X primum ante
+         * definitionem */
+        exp = _exp_novum(piscina);
+        fructus = _processare(exp, piscina,
+            "#define A B\n#define B 2\nA X\n#define X 3\nX");
+        CREDO_AEQUALIS_I32 (xar_numerus(fructus), III + I);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, 0)->valor, "2");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, I)->valor, "X");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, II)->valor, "3");
+
+        /* argumentum G ante #undef expanditur, post non (status vivus
+         * finis G non habet) */
+        exp = _exp_novum(piscina);
+        fructus = _processare(exp, piscina,
+            "#define F(x) x\n#define G 5\nF(G)\n#undef G\nF(G)");
+        CREDO_AEQUALIS_I32 (xar_numerus(fructus), II + I);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, 0)->valor, "5");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, I)->valor, "G");
+        CREDO_NIHIL (silva_expansio_quaerere(exp, _ch("G")));
+        CREDO_NON_NIHIL (silva_expansio_quaerere(exp, _ch("F")));
+
+        /* supra rescansio generationis proximae (positionalis) G
+         * recuperat; hic non potest: F interius statu vivo (F deletum)
+         * inexpansum maneret et post substitutionem caecatum F esset */
+        exp = _exp_novum(piscina);
+        fructus = _processare(exp, piscina,
+            "#define F(x) x\nF(F(2))\n#undef F\nF(3)");
+        CREDO_AEQUALIS_I32 (xar_numerus(fructus), V + I);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, 0)->valor, "2");
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, I)->valor, "F");
+
+        /* catena in generatione tertia: Y ibi iam deletum */
+        exp = _exp_novum(piscina);
+        fructus = _processare(exp, piscina,
+            "#define Y 7\n#define A B\n#define B Y\n#undef Y\nA");
+        CREDO_AEQUALIS_I32 (xar_numerus(fructus), I + I);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(fructus, 0)->valor, "Y");
+    }
+
+
     /* ========================================================
      * PROBARE: variadica - zephyrum/unum argumentum, bis usa
      * ======================================================== */

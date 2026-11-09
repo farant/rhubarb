@@ -1653,6 +1653,14 @@ PORTAE = {
     # aurum commissum, sub custode X GB; corpus absens = OMISSA nominata
     'musicxml-oraculum': (['./tools/musicxml_silvestria.sh'],
                           r'MUSICXML SILVESTRIA: (sana|FRACTA|OMISSA)'),
+    # fontes conversi auditionis (-gabc, -musicxml; plan gabc T8):
+    # instrumentum bin/auditio, sonus non probatur
+    'auditio-fumus': (['./tools/auditio_fumus.sh'],
+                      r'fumus auditio: (omnia sana|\d+ FRACTA)'),
+    # instrumentum neumae (plan gabc-2 P4): cantus gabc in PNG sine
+    # fenestra - exitus, latitudo, scala, vitium, corpus
+    'neumae-fumus': (['./tools/neumae_fumus.sh'],
+                     r'fumus neumae: (omnia sana|\d+ FRACTA)'),
     'scribe': (['./silva/scribe_fumus.sh'], r'fumus scribe: (sanum|FRACTUM)'),
     'aequivalentia': (['./silva/aequivalentia.sh', '-conferre'],
                       r'aequivalentia: (sana|FRACTA)'),
@@ -1685,6 +1693,10 @@ PORTAE = {
                   r'fumus excubitoris: (sanum|FRACTUM)'),
     'frigida': (['./gesta/frigida_fumus.sh'],
                 r'fumus frigida: (sanum|FRACTUM)'),
+    # percursus incrementalis nexus (budget B2 N1: caput tactum sine
+    # mutatione non re-iudicat; paritas contra plenum)
+    'nexus': (['./tools/nexus_fumus.sh'],
+              r'fumus nexus: (sanum|FRACTUM)'),
     # sedes annalium (domus tota, non arbor): custos, genesis expressa,
     # scriptores simul, restitutio - in sedibus temporariis solum
     'annales': (['./gesta/annales_fumus.sh'],
@@ -1978,13 +1990,46 @@ def cursus(nomen, **par):
             if '\t' in l]
 
 
+@contextlib.contextmanager
+def _clang_verum():
+    """VIA VERA CLANG per cursum (budget B2 J8): 'clang
+    -print-prog-name=clang' SEMEL, exportata ut COMPILATOR_CLANG_VERUM
+    ("clang" TAB via) - processus bin/compilator singuli portarum (~DCL
+    per fusionem, ~XI ms quisque) eam legunt (lib/compilator.c
+    compilator_clang_verum). Iam posita (cursus exterior) non
+    iteratur; post cursum restituitur (Xcode mutatum cursum proximum
+    non fallit). Fractura tacet: compilator ipse resolvit."""
+    if os.environ.get('COMPILATOR_CLANG_VERUM', '').startswith('clang\t/'):
+        yield
+        return
+    vetus = os.environ.get('COMPILATOR_CLANG_VERUM')
+    try:
+        via = subprocess.run(['clang', '-print-prog-name=clang'],
+                             capture_output=True, text=True,
+                             errors='replace').stdout.strip()
+    except OSError:
+        via = ''
+    if not via.startswith('/'):
+        yield
+        return
+    os.environ['COMPILATOR_CLANG_VERUM'] = 'clang\t' + via
+    try:
+        yield
+    finally:
+        if vetus is None:
+            os.environ.pop('COMPILATOR_CLANG_VERUM', None)
+        else:
+            os.environ['COMPILATOR_CLANG_VERUM'] = vetus
+
+
 def _cursu_notatum(titulus, exitus_ex, vocator_filiorum=None):
     """decorator: vocatio tota = cursus unus. titulus(*a, **k) -> nomen;
     exitus_ex(fructus) -> (exitus, nota) aut (exitus, nota, acta)"""
     def decorator(f):
         @functools.wraps(f)
         def involucrum(*a, **k):
-            with _cursus(titulus(*a, **k), vocator_filiorum) as c:
+            with _clang_verum(), \
+                    _cursus(titulus(*a, **k), vocator_filiorum) as c:
                 fructus = f(*a, **k)
                 e = exitus_ex(fructus)
                 c.exitus, c.nota = e[0], e[1]
@@ -4374,7 +4419,23 @@ def _umbram_post(umbra, nomen, f, secundae, cursa):
 PORTAE_CAPUT = frozenset(['unci', 'formator-delta', 'aequivalentia'])
 
 
-def _sigillum_contenti(radix=None):
+# VIA INDICIS per directorium operis (budget B2 J4): 'git rev-parse
+# --git-path index' semel per processum - via indicis arboris operis
+# non mutatur dum processus vivit
+_VIAE_INDICIS = {}
+
+
+def _via_indicis(cwd):
+    if cwd not in _VIAE_INDICIS:
+        idx = _curre(['git', 'rev-parse', '--git-path', 'index'],
+                     cwd=cwd).stdout.strip()
+        if not os.path.isabs(idx):
+            idx = os.path.join(cwd, idx)
+        _VIAE_INDICIS[cwd] = idx
+    return _VIAE_INDICIS[cwd]
+
+
+def _sigillum_contenti(radix=None, celeriter=True):
     """sigillum CONTENTI arboris operis: arbor git plagularum tractarum
     ut nunc in disco (index temporarius = copia indicis veri, cache stat
     servata; add -u, VETITAE exclusae; write-tree) + plagulae novae non
@@ -4383,13 +4444,26 @@ def _sigillum_contenti(radix=None):
     Franus 2026-10-30) - nisi commissio plagulas novas sequi incipit
     (status secutorum in sigillo: portae 'git ls-files' legunt).
     Index non scribilis (fusio media: conflictus) -> sigillum vetus
-    HEAD + differentia (tutum, numquam falso idem)."""
+    HEAD + differentia (tutum, numquam falso idem).
+
+    VIA MUNDA (budget B2 J4, celeriter): 'git status' vacuum = index
+    idem ac HEAD, plagulae tractae intactae, nulla nova non ignorata ->
+    write-tree indicis temporarii = HEAD^{tree} et novae nullae: idem
+    sigillum, ~73 pro ~130 ms (casus fusionis: arbor munda). Status non
+    vacuus -> via plena (status ~58 ms additur)."""
     import shutil
     cwd = radix or RADIX
-    idx = _curre(['git', 'rev-parse', '--git-path', 'index'],
-                 cwd=cwd).stdout.strip()
-    if not os.path.isabs(idx):
-        idx = os.path.join(cwd, idx)
+    if celeriter:
+        st = _curre(['git', '--no-optional-locks', 'status', '--porcelain',
+                     '-z', '--untracked-files=normal'], cwd=cwd)
+        if st.returncode == 0 and st.stdout == '':
+            t = _curre(['git', 'rev-parse', 'HEAD^{tree}'], cwd=cwd)
+            arbor_capitis = t.stdout.strip()
+            if t.returncode == 0 and arbor_capitis:
+                h = hashlib.sha256()
+                h.update(b'arbor ' + arbor_capitis.encode())
+                return h
+    idx = _via_indicis(cwd)
     h = hashlib.sha256()
     arbor = None
     fd, temp = tempfile.mkstemp(prefix='sigillum_index.')
@@ -4433,17 +4507,42 @@ def _sigillum_contenti(radix=None):
     return h
 
 
-def sigillum_arboris(nomen=None, radix=None):
+def sigillum_arboris(nomen=None, radix=None, contentum=None, caput=None):
     """sigillum status arboris cui receptum portae ligatur - mutatio
     contenti ulla = rancidum. Contentum solum (_sigillum_contenti):
     receptum commissionem supersunt, fusio_probare portas iam virides
     in contentu eodem non iterum currit (budget B1 E1). Portae in
-    PORTAE_CAPUT (verdictum a HEAD pendet) HEAD quoque sigillant."""
-    h = _sigillum_contenti(radix)
+    PORTAE_CAPUT (verdictum a HEAD pendet) HEAD quoque sigillant.
+    contentum/caput (budget B2 J4): sigillum contenti (hashlib) et
+    effusio 'git rev-parse HEAD' iam computata - SOLUM intra lectionem
+    unam sine processu interposito (recepta_viva); copia sumitur."""
+    h = (contentum.copy() if contentum is not None
+         else _sigillum_contenti(radix))
     if nomen is not None and nomen in PORTAE_CAPUT:
-        h.update(b'caput ' + _curre(['git', 'rev-parse', 'HEAD'],
-                                    cwd=radix).stdout.encode())
+        if caput is None:
+            caput = _curre(['git', 'rev-parse', 'HEAD'], cwd=radix).stdout
+        h.update(b'caput ' + caput.encode())
     return h.hexdigest()[:16]
+
+
+class _SigillaLectionis(object):
+    """sigilla unius lectionis receptorum (budget B2 J4): contentum et
+    HEAD semel, pigre - recepta_viva() olim arborem per receptum
+    sigillabat (LXII recepta = LXII sigilla, ~8 s post omnem
+    commissionem). Vita = lectio una; nihil inter lectiones servatur
+    (planta: memoria trans lectiones -> receptum rancidum ut sanum)."""
+
+    def __init__(self):
+        self._contentum = None
+        self._caput = None
+
+    def __call__(self, nomen):
+        if self._contentum is None:
+            self._contentum = _sigillum_contenti()
+        if nomen in PORTAE_CAPUT and self._caput is None:
+            self._caput = _curre(['git', 'rev-parse', 'HEAD']).stdout
+        return sigillum_arboris(nomen, contentum=self._contentum,
+                                caput=self._caput)
 
 
 # ---------------------------------------------------------------- photographia
@@ -4836,7 +4935,7 @@ def receptum_legere(via):
                     d.get('photographia'))
 
 
-def receptum_validum(via, viae=None):
+def receptum_validum(via, viae=None, sigilla=None):
     """Porta ex recepto. Photographicum: sana si receptum sanum, HEAD =
     basis, et plagulae 'viae' (quae committentur) contentu idem ac in
     arbore photographiae - cetera libera. Vetus: sigillum arboris vivae
@@ -4855,7 +4954,8 @@ def receptum_validum(via, viae=None):
             causa += ' [plagulae post photographiam mutatae aut extra eam:'
             causa += ' %s]' % ', '.join(mutatae[:5])
     else:
-        recens = r.sigillum == sigillum_arboris(r.nomen)
+        recens = r.sigillum == (sigilla(r.nomen) if sigilla is not None
+                                else sigillum_arboris(r.nomen))
         if r.rancida:
             causa += ' [arbor mutata DUM currebat]'
         elif not recens:
@@ -4943,7 +5043,7 @@ def _aetas(secunda):
     return '%.1f h' % (secunda / 3600.0)
 
 
-def receptum_vivum(nomen, filtrum=None):
+def receptum_vivum(nomen, filtrum=None, sigilla=None):
     """Porta ex recepto vivo (cursus proximus portae in arbore viva):
     sana si receptum sanum, non rancidum, sigillum arboris IDEM nunc;
     compendium causam fert ('[receptum vivum, ante N min]' aut
@@ -4956,7 +5056,7 @@ def receptum_vivum(nomen, filtrum=None):
     r = receptum_legere(via)
     if r.nomen != nomen or (r.filtrum or None) != (filtrum or None):
         return None
-    p = receptum_validum(via)
+    p = receptum_validum(via, sigilla=sigilla)
     if p.sana:
         p = p._replace(compendium='%s [receptum vivum, ante %s]'
                        % (p.compendium, _aetas(time.time() - r.finis)))
@@ -4969,12 +5069,13 @@ def recepta_viva():
     if not os.path.isdir(PORTAE_DIR):
         return []
     exitus = []
+    sigilla = _SigillaLectionis()
     for f in sorted(os.listdir(PORTAE_DIR)):
         if f.endswith('.viva.json'):
             via = os.path.join(PORTAE_DIR, f)
             try:
                 r = receptum_legere(via)
-                p = receptum_vivum(r.nomen, r.filtrum)
+                p = receptum_vivum(r.nomen, r.filtrum, sigilla=sigilla)
             except (SilvaError, ValueError, KeyError):
                 continue
             if p is not None:
@@ -5020,7 +5121,7 @@ def portae_pendentes():
     if not os.path.isdir(PORTAE_DIR):
         return []
     exitus = []
-    sig = sigillum_arboris()
+    sigilla = _SigillaLectionis()
     caput = _curre(['git', 'rev-parse', 'HEAD']).stdout.strip()
     for f in sorted(os.listdir(PORTAE_DIR)):
         via = os.path.join(PORTAE_DIR, f)
@@ -5033,9 +5134,7 @@ def portae_pendentes():
             if r.photographia:
                 rancida = r.rancida or r.photographia.get('basis') != caput
             else:
-                rancida = r.rancida or r.sigillum != (
-                    sigillum_arboris(r.nomen) if r.nomen in PORTAE_CAPUT
-                    else sig)
+                rancida = r.rancida or r.sigillum != sigilla(r.nomen)
             if rancida:
                 exitus.append((via, 'rancida'))
             else:

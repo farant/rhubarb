@@ -13,6 +13,11 @@ source "$(dirname "${BASH_SOURCE[0]}")/cursus.sh"
 #      <inclusa> aedilis.stml (ordine, lectio altera independens);
 # V.   vexilla_radices PRAEFIXUM -> RADICES_C89 ("-I" + praefixum +
 #      radix), relativa et praefixa;
+# VII. SIGILLUM (budget B2 J10, arbor ficta): fontatio prima sigillum
+#      scribit et latina.h tangit; iterata non tangit; tabula MUTATA
+#      cum VEXILLA_CKSUM tabulae veteris exportato TAMEN tangit (cache
+#      cksum tabulam mutatam numquam celat); via relativa radicem
+#      eandem dat.
 # VI.  RATCHET radicum manu scriptarum: scripta cum '-I' manu ==
 #      tools/radices_manu.tsv utrimque - scriptum NOVUM cum radicibus
 #      manu RUBET; scriptum in tabula sine eis RUBET (linea delenda) -
@@ -73,6 +78,29 @@ stalae=$(comm -13 <(echo "$manu") <(echo "$tabula"))
 [ -n "$nova" ] && echo "$nova" | sed 's/^/    radices manu, non in tabula (vexilla_radices adhibe): /'
 [ -z "$stalae" ]; credo $? "tabula radices_manu sine lineis stalis"
 [ -n "$stalae" ] && echo "$stalae" | sed 's/^/    sine radicibus manu iam - linea delenda: /'
+# VII. sigillum et tactus latina.h (arbor ficta: copia vexilla.sh)
+VT="$T/sigillum"
+mkdir -p "$VT/tools" "$VT/include" || exit 2
+cp tools/vexilla.sh "$VT/tools/vexilla.sh" || exit 2
+: > "$VT/include/latina.h"
+_tactus () {   # 0 si latina.h tacta (mtime ex praeterito mutatum)
+    local m
+    touch -t 202001010000 "$VT/include/latina.h"
+    env -u VEXILLA_CKSUM ${1:+VEXILLA_CKSUM="$1"} bash -c "source '$VT/tools/vexilla.sh'" 2>/dev/null
+    m=$(stat -f %m "$VT/include/latina.h")
+    touch -t 202001010000 "$VT/praeteritum"
+    [ "$m" != "$(stat -f %m "$VT/praeteritum")" ]
+}
+_tactus; credo $? "VII fontatio prima: latina.h tacta"
+[ -s "$VT/build/vexilla.sigillum" ]; credo $? "VII sigillum scriptum"
+_tactus; [ $? -ne 0 ]; credo $? "VII fontatio iterata: latina.h intacta"
+notum=$(env -u VEXILLA_CKSUM bash -c "source '$VT/tools/vexilla.sh'; printf '%s' \"\$VEXILLA_CKSUM\"" 2>/dev/null)
+sed -i '' 's/^    "-g"$/    "-g"\n    "-DVEXILLUM_FICTUM"/' "$VT/tools/vexilla.sh"
+grep -q VEXILLUM_FICTUM "$VT/tools/vexilla.sh" && _tactus "$notum"
+credo $? "VII tabula mutata cum cksum vetere exportato: latina.h TAMEN tacta"
+radix_rel=$(cd "$VT/tools" && env -u VEXILLA_CKSUM bash -c 'source ./vexilla.sh; printf "%s" "$_vexilla_radix"' 2>/dev/null)
+[ "$radix_rel" = "$(cd "$VT" && pwd)" ]; credo $? "VII via relativa: radix eadem ($radix_rel)"
+
 echo
 if [ "$fracta" -eq 0 ]; then echo "fumus vexilla: sanum"; exit 0; fi
 echo "fumus vexilla: FRACTUM ($fracta)"; exit 1

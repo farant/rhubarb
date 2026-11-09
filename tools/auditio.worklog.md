@@ -134,3 +134,67 @@ tibia_generis_titulus.
 ## 2026-10-24 - -auscultare names the limiter
 
 auscultatio_reddere_censum; the summary line adds ", limitator N quadra (-x.x dB; mixtura +y.y dBFS)" when the master limiter engaged. The un-hand-balanced vespera demo: mix +2.1 dBFS, 27 overs, WAV at full scale exactly, no clipping.
+
+## 2026-11-02 — `-musicxml -sonare` and the file-name title
+
+To hear a converted score you had to pass `-carmen <title>`, and you
+had to know the title first. A score with no work or movement title
+came out as "musicxml" (the converter's fallback; the library never
+sees the path). Now:
+
+- When `-titulus` is not given and the score has neither a work nor a
+  movement title, auditio passes the file name without its directory
+  or last extension as `forma.titulus`
+  (`musica/fontes/nata_lux_80317.mxl` → `nata_lux_80317`). The
+  converter normalizes it like any other title. A score that has a
+  title keeps it (the Brahms lied stays `9_lieder_and_songs_op_32`).
+- `-sonare` turns off "convert only" and plays the converted song,
+  like `-carmen`. Exit 2 without `-musicxml`, or with `-via` or an
+  analysis mode (`-censura`, `-partitura`, `-recensio`, `-auscultare`,
+  `-tonus`).
+
+Testing note: a stub `afplay` on PATH only catches `-via`-less renders
+of SOUNDS (`auditio radius`). Playing a SONG (`-carmen`, `-sonare`)
+goes through cantor straight to the audio device, so a stub does not
+silence it. A silent check for the song path still needs a way to
+stop playback (none yet).
+
+## 2026-11-04 — `-gabc` (gabc plan T8) and the first auditio smoke test
+
+`-gabc VIA [-do P] [-strictus] [-titulus T]` behaves exactly like
+`-musicxml`: alone it prints the book on stdout and the converter's report
+on stderr (exit 3 with approximations, 1 on a parse error or a strict
+refusal); with `-sonare`, `-carmen`, `-partitura` … the converted book is
+the source. `-do` takes a note name through `partitura_notam_legere`
+("F4", "Bb3") and sets `do_fixum`; without it the highest note lands on
+F4. A chant with no `name:` header (and no `-titulus`) takes the file name.
+`-gabc` with `-musicxml` → exit 2; `-do` without `-gabc` → exit 2.
+
+Shared, not copied: the tail both converters had (report to stderr, wrap in
+`<carmina>`, re-read, title, exit code) is `_conversionem_perficere`;
+`_musicxml_convertere` now calls it too. The validation checks use one
+`conversum` (= the -musicxml or -gabc path).
+
+No suite covered `-musicxml` (it was checked by hand, see 2026-11-02), so
+there was nothing to mirror: `tools/auditio_fumus.sh` (gate
+`auditio-fumus`, `instrumentum="bin/auditio"`) is new. 17 checks: book
+re-read through `-liber … -carmina`, `-partitura` title line, usage exits,
+`-do B3`/`Bb3` first note, approximation exit 3, strict exit 1 with empty
+stdout, `-titulus`, file-name title, parse error, and `-musicxml nata_lux`
+through the shared tail. It does not play sound (no way to silence cantor).
+
+Plant by hand (planta could not name the gate while the script was
+untracked): `-do` ignored → the two `-do` checks FRACTUM; restored with
+cp + touch, rebuilt, green.
+
+**Same day, follow-up:** the gate was declared in the script but not
+registered: commissio and planta only know gates listed in `PORTAE`
+(`pythonica/silva.py`), so the T8 commit never ran it (I ran it by hand).
+Now registered. Proving it through planta exposed two traps: (1) the gate
+used whatever `bin/auditio` was there, so a source plant stayed green (mute
+gate) -> the script now builds from source first (~7 s); (2) after planta's
+restore the planted object survived, because aedilis' generated builder
+judges by `-nt` and /bin/bash 3.2 compares whole seconds (restore landed in
+the same second as the planted compile) -> the script removes the objects of
+the files it covers before building. planta: red on the two `-do` checks,
+green after restore. Ledger parcum 01M5XD21FEJW523NBK03VWJKVB (ictus).

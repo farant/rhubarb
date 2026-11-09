@@ -68,6 +68,17 @@ praeconium_ex_hamo (
       PraeconiumEventus* e,
                 Piscina* piscina);
 
+/* gabc pars II P8: eventus "antiphonale" (praeco antiphonale): nuntius
+ * = via ABSOLUTA plagulae (realpath; relativa ad cwd vocantis) - vicus
+ * latus antiphonale in ea aperit. Ceteros campos (tempus, panellus...)
+ * vocans implet. FALSUM si plagula abest aut via nimis longa (e
+ * intactum) */
+b32
+praeconium_antiphonale_parare (
+    constans character* via,
+     PraeconiumEventus* e,
+               Piscina* piscina);
+
 /* lineam appendere (directorium creatur si necesse) */
 b32
 praeconium_scribere (

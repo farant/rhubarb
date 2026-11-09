@@ -515,6 +515,66 @@ s32 principale (vacuum)
         }
     }
 
+
+    /* ==================================================
+     * PROBARE: cursus celeres (budget silvae gradus III) - quae
+     * via celer octetorum crudorum tangit: effugium et lamina in
+     * littera, lineae in commento clauso, columnae post
+     * interpunctionem multiplicem, lamina post '.' et intra '<<='.
+     * Plantae (classis chordae cum '\\', linea non numerata,
+     * columna una, octetus secundus non inspectus, interpunctio
+     * primum solum inspiciens) olim viridia manebant.
+     * ================================================== */
+
+    {
+        Xar* lexemata;
+
+        imprimere("\n--- Probans cursus celeres ---\n");
+
+        /* effugium '\"' intra litteram: una littera */
+        lexemata = _lexare(piscina, "\"a\\\"b\" x");
+        CREDO_AEQUALIS_I32 (xar_numerus(lexemata), III);
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus,
+            (i32)SILVA_LEX_STRING_LIT);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(lexemata, 0)->valor,
+            "\"a\\\"b\"");
+
+        /* lamina intra litteram: valor mundus, scissura una */
+        lexemata = _lexare(piscina, "\"ab\\\ncd\" x");
+        CREDO_AEQUALIS_I32 (xar_numerus(lexemata), III);
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus,
+            (i32)SILVA_LEX_STRING_LIT);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(lexemata, 0)->valor,
+            "\"abcd\"");
+        CREDO_NON_NIHIL (silva_token_scissurae(_ad(lexemata, 0)));
+
+        /* commentum clausum trans lineas: x in linea III */
+        lexemata = _lexare(piscina, "/* a\nb\n */ x");
+        CREDO_AEQUALIS_I32 (_ad(lexemata, 0)->linea, III);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, 0)->columna, V);
+
+        /* columnae post interpunctionem multiplicem */
+        lexemata = _lexare(piscina, "a<<=b->c");
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
+            (i32)SILVA_LEX_SINISTRORSUM_ASSIGNATIO);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, II)->columna, V);
+        CREDO_AEQUALIS_I32 (_ad(lexemata, IV)->columna, VIII);
+
+        /* '.' lamina '5' = fluitans unum */
+        lexemata = _lexare(piscina, ".\\\n5");
+        CREDO_AEQUALIS_I32 (xar_numerus(lexemata), II);
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, 0)->genus,
+            (i32)SILVA_LEX_FLOAT);
+        CREDO_CHORDA_AEQUALIS_LITERIS (_ad(lexemata, 0)->valor, ".5");
+
+        /* lamina intra '<<=' (post primum octetum) */
+        lexemata = _lexare(piscina, "a <\\\n<= b");
+        CREDO_AEQUALIS_I32 (xar_numerus(lexemata), IV);
+        CREDO_AEQUALIS_I32 ((i32)_ad(lexemata, I)->genus,
+            (i32)SILVA_LEX_SINISTRORSUM_ASSIGNATIO);
+        CREDO_AEQUALIS_I32 (silva_token_longitudo(_ad(lexemata, I)), V);
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
 

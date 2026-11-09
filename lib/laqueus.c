@@ -3974,6 +3974,140 @@ laqueus_modulus_temperley_limes (
     redde mt == NIHIL ? ZEPHYRUM : mt->limes;
 }
 
+b32
+laqueus_modulus_temperley_fasciculus (
+    LaqueusModulusTemperley* mt,
+                        i32  index_primus,
+                        i32  numerus,
+                        i32  p,
+                        i32* puncta,
+                        i32* valores,
+                        s32* status)
+{
+    i32 j;
+
+    si (   mt     == NIHIL || puncta == NIHIL || valores == NIHIL
+        || status == NIHIL || numerus == ZEPHYRUM
+        || index_primus > (i32)0xFFFFFFFFUL - II - (numerus - I))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        puncta[j]   = ZEPHYRUM;
+        valores[j]  = ZEPHYRUM;
+        status[j]   = laqueus_modulus_temperley_aestimare(mt,
+            index_primus + j + II, p, &puncta[j], &valores[j]);
+        si (status[j] != INTERPOLATIO_UTILE)
+        {
+            puncta[j]   = ZEPHYRUM;
+            valores[j]  = ZEPHYRUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* FNV-1a LXIV bitorum, valor per octetos a minimo (ordo fixus, non
+ * machinae) */
+#define _FNV_BASIS  (((i64)0xCBF29CE4UL << XXXII) | (i64)0x84222325UL)
+#define _FNV_PRIMUS (((i64)I << XL) | (i64)0x1B3UL)
+
+interior i64
+_signum_miscere (
+    i64 signum,
+    i32 valor)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        signum ^= (i64)((valor >> (k * VIII)) & (i32)0xFFUL);
+        signum *= _FNV_PRIMUS;
+    }
+    redde signum;
+}
+
+/* signum ex partibus (modulus et verbum eadem via) */
+interior i64
+_signum_temperley (
+              i32  fila,
+              i32  longitudo,
+    constans s32*  verbum,
+              s32  imus,
+              s32  summus,
+              i32  limes)
+{
+    i64 signum     = _FNV_BASIS;
+    s32 scriptura  = ZEPHYRUM;
+    i32 k;
+
+    signum = _signum_miscere(signum, fila);
+    signum = _signum_miscere(signum, longitudo);
+    per (k = ZEPHYRUM; k < longitudo; k++)
+    {
+        signum     = _signum_miscere(signum, (i32)verbum[k]);
+        scriptura  += verbum[k] > ZEPHYRUM ? (s32)I : -(s32)I;
+    }
+    signum = _signum_miscere(signum, (i32)scriptura);
+    signum = _signum_miscere(signum, (i32)imus);
+    signum = _signum_miscere(signum, (i32)summus);
+    redde _signum_miscere(signum, limes);
+}
+
+i64
+laqueus_modulus_temperley_signum (
+    constans LaqueusModulusTemperley* mt)
+{
+    si (mt == NIHIL)
+    {
+        redde ZEPHYRUM;
+    }
+    redde _signum_temperley(mt->fila, mt->longitudo, mt->verbum,
+        mt->imus,
+        mt->summus, mt->limes);
+}
+
+b32
+laqueus_temperley_signum (
+    constans s32* verbum,
+             i32  longitudo,
+             i32  fila,
+         Piscina* piscina,
+             i64* signum)
+{
+    PiscinaNotatio  initium;
+               i32* pd;
+               i32  transitus;
+               s32  imus;
+               s32  summus;
+               i32  limes;
+            Magnus  exactus;
+               b32  bene;
+
+    si (   verbum == NIHIL || piscina == NIHIL || signum == NIHIL
+        || longitudo < II || fila == ZEPHYRUM
+        || fila > TEMPERLEY_FILA_MAXIMA)
+    {
+        redde FALSUM;
+    }
+    initium  = piscina_notare(piscina);
+    bene     = laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina,
+        &pd,
+        &transitus)
+        && transitus == longitudo
+        && laqueus_pd_fenestra(pd, transitus, piscina, &imus, &summus,
+        &limes, &exactus);
+    piscina_reficere(piscina, initium);
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    /* scriptura in _signum_temperley ex verbo, ut creare */
+    *signum = _signum_temperley(fila, longitudo, verbum, imus, summus,
+        limes);
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Via vilior: vertex aut temperley (temperley-lieb-plan T3)
@@ -4192,4 +4326,413 @@ laqueus_jones_ex_plexu (
         *via = electa;
     }
     redde VERUM;
+}
+
+
+/* ==================================================
+ * Verificatio (interpolatio-verificatio-plan T2)
+ * ================================================== */
+
+#define _COMMUNIA_VIARUM  "_punctum_eligere (i, A, delta); congruentia; " \
+    "laqueus_pd_ex_plexu"
+#define _COMMUNIA_SUI     "omnia (nucleus idem)"
+
+LaqueusOptionesVerificandi
+laqueus_optiones_verificandi_ordinariae (
+    vacuum)
+{
+    LaqueusOptionesVerificandi o;
+
+    o.octeti_maximi             = CONTRACTIO_SATURATUM;
+    o.semen                     = ZEPHYRUM;
+    o.semen_origo               = INTERPOLATIO_SEMEN_DATUM;
+    o.bita_securitatis          = LXIV;
+    o.verificator               = LAQUEUS_VERIFICATOR_AUTOMATICUS;
+    o.alienus                   = NIHIL;
+    o.fasciculus_temperley      = NIHIL;
+    o.contextus_fasciculi       = NIHIL;
+    o.capacitas_fasciculi       = ZEPHYRUM;
+    o.probationes_fasciculorum  = NIHIL;
+    redde o;
+}
+
+/* relatio formae clausae (c <= 1): PROBATUM sine primis */
+interior vacuum
+_relatio_clausa (
+                    InterpolatioRelatio* r,
+    constans LaqueusOptionesVerificandi* o)
+{
+    InterpolatioQuaestio q = interpolatio_quaestio_ordinaria();
+
+    q.modus                       = INTERPOLATIO_VERIFICATUM;
+    q.bita_securitatis            = o->bita_securitatis;
+    q.semen                       = o->semen;
+    q.semen_origo                 = o->semen_origo;
+    r->quaestio                   = q;
+    r->genus                      = INTERPOLATIO_PROBATUM;
+    r->status                     = INTERPOLATIO_AD_LIMITEM;
+    r->primi                      = NIHIL;
+    r->numerus_primorum           = ZEPHYRUM;
+    r->primus_additus             = ZEPHYRUM;
+    r->k_maximus                  = ZEPHYRUM;
+    r->aestimationes              = ZEPHYRUM;
+    r->probationes_sui            = ZEPHYRUM;
+    r->probationes_certificantes  = ZEPHYRUM;
+    r->probationes_requisitae     = ZEPHYRUM;
+    r->bita_erroris               = ZEPHYRUM;
+    r->tractus                    = NIHIL;
+    r->numerus_tractuum           = ZEPHYRUM;
+    r->titulus_verificatoris      = "forma clausa";
+    r->communia                   = NIHIL;
+    r->generator                  = INTERPOLATIO_GENERATOR;
+}
+
+interior InterpolatioVerificator
+_verificator_viae (
+    InterpolatioAestimator  aestimare,
+                    vacuum* contextus,
+        constans character* titulus,
+        constans character* communia)
+{
+    InterpolatioVerificator v;
+
+    v.aestimare        = aestimare;
+    v.contextus        = contextus;
+    v.multiplicitas    = VIII;
+    v.inutilia_maxima  = IX;
+    v.titulus          = titulus;
+    v.communia         = communia;
+    redde v;
+}
+
+/* fasciculus vocantis cum probatione in modulo proprio (puncta-
+ * parallela-plan regula 2): index index_primus + (p mod numerus) iterum
+ * in processu aestimatur, a semine independens; status (et punctum,
+ * valor ubi UTILE) aequales esse debent, aliter FALSUM; probationes
+ * (si non NIHIL) numerantur */
+nomen structura {
+    InterpolatioAestimatorFasciculi  fasciculus;
+                             vacuum* contextus;
+            LaqueusModulusTemperley* modulus;
+     LaqueusProbationesFasciculorum* probationes;
+} FasciculusProbatus;
+
+interior b32
+_fasciculus_probatus (
+    vacuum* contextus,
+       i32  index_primus,
+       i32  numerus,
+       i32  p,
+       i32* puncta,
+       i32* valores,
+       s32* status)
+{
+    FasciculusProbatus* fp       = (FasciculusProbatus*)contextus;
+                   i32  j;
+                   i32  punctum  = ZEPHYRUM;
+                   i32  valor    = ZEPHYRUM;
+                   s32  s;
+                   b32  aequales;
+
+    si (   numerus == ZEPHYRUM
+        || !fp->fasciculus(fp->contextus, index_primus, numerus, p,
+        puncta,
+        valores, status))
+    {
+        redde FALSUM;
+    }
+    j = p % numerus;
+    s = laqueus_modulus_temperley_aestimare(fp->modulus, index_primus
+        + j
+        + II, p, &punctum, &valor);
+    aequales = s == status[j] && (s != INTERPOLATIO_UTILE
+        || (punctum == puncta[j] && valor == valores[j]));
+    si (fp->probationes != NIHIL)
+    {
+        fp->probationes->factae++;
+        si (!aequales)
+        {
+            fp->probationes->refutatae++;
+        }
+    }
+    redde aequales;
+}
+
+/* modulus viae (VERTEX aut TEMPERLEY) et quaestio PROBATA eius; FALSUM
+ * si modulus non creatur */
+interior b32
+_modulus_viae (
+              constans s32*  verbum,
+                       i32   longitudo,
+                       i32   fila,
+              constans i32*  pd,
+                       i32   transitus,
+                       i64   octeti_maximi,
+                LaqueusVia   via,
+                   Piscina*  piscina,
+    InterpolatioAestimator*  aestimare,
+                    vacuum** contextus,
+      InterpolatioQuaestio*  q)
+{
+    si (via == LAQUEUS_VIA_VERTEX)
+    {
+        LaqueusModulusVertex* mv = laqueus_modulus_vertex_creare(pd,
+            transitus, octeti_maximi, piscina);
+
+        si (mv == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *aestimare  = _aestimator_verticis;
+        *contextus  = mv;
+        *q          = _quaestio_uncini(mv->imus, mv->summus, mv->limes);
+        redde VERUM;
+    }
+    si (via == LAQUEUS_VIA_TEMPERLEY)
+    {
+        LaqueusModulusTemperley* mt = laqueus_modulus_temperley_creare(
+            verbum, longitudo, fila, octeti_maximi, piscina);
+
+        si (mt == NIHIL)
+        {
+            redde FALSUM;
+        }
+        *aestimare = _aestimator_temperley;
+        *contextus = mt;
+        *q               = _quaestio_uncini(mt->imus, mt->summus,
+            mt->limes);
+        q->primus_limes  = (i32)0x80000000UL;    /* primi infra 2^31 */
+        redde VERUM;
+    }
+    redde FALSUM;
+}
+
+b32
+laqueus_uncinus_ex_plexu_verificatum (
+                         constans s32* verbum,
+                                  i32  longitudo,
+                                  i32  fila,
+    constans LaqueusOptionesVerificandi* optiones,
+                              Piscina* piscina,
+                           Polynomium* exitus,
+                           LaqueusVia* via,
+                  InterpolatioRelatio* relatio)
+{
+                 LaqueusVia  electa;
+                 LaqueusVia  altera;
+          ContractioSumptus  sv;
+    LaqueusTemperleySumptus  st;
+       InterpolatioQuaestio  q;
+       InterpolatioQuaestio  q_alterius;
+    InterpolatioVerificator  verificator;
+     InterpolatioAestimator  aestimare;
+                     vacuum* contextus;
+     InterpolatioAestimator  aestimare_alterius;
+                     vacuum* contextus_alterius;
+                        i64  octeti_principalis;
+                        i64  octeti_alterius;
+                        i64  pretium_principale;
+                        i64  pretium_alterum;
+                        i32* pd;
+                        i32  transitus;
+                 Polynomium  f = polynomium_nullum();
+                        b32  alterum;
+
+    si (   optiones                           != NIHIL
+        && optiones->probationes_fasciculorum != NIHIL)
+    {
+        optiones->probationes_fasciculorum->factae     = ZEPHYRUM;
+        optiones->probationes_fasciculorum->refutatae  = ZEPHYRUM;
+    }
+    si (   optiones == NIHIL || exitus == NIHIL || relatio == NIHIL
+        || piscina  == NIHIL
+        || optiones->verificator > LAQUEUS_VERIFICATOR_EXTERNUS
+        || (optiones->verificator == LAQUEUS_VERIFICATOR_EXTERNUS
+            && optiones->alienus == NIHIL)
+        || !laqueus_via_eligere(verbum, longitudo, fila,
+               optiones->octeti_maximi, piscina, &electa, &sv, &st))
+    {
+        redde FALSUM;
+    }
+    si (electa == LAQUEUS_VIA_NULLA)
+    {
+        b32 bene = longitudo == ZEPHYRUM;
+
+        si (bene)
+        {
+            f = polynomium_constans(magnus_ex_s64((s64)I), piscina);
+        }
+        alioquin
+        {
+            bene = polynomium_monomium(magnus_ex_s64(-(s64)I),
+                verbum[ZEPHYRUM] > ZEPHYRUM ? (s32)III : -(s32)III,
+                piscina, &f);
+        }
+        si (!bene)
+        {
+            redde FALSUM;
+        }
+        _relatio_clausa(relatio, optiones);
+        *exitus = f;
+        si (via != NIHIL)
+        {
+            *via = electa;
+        }
+        redde VERUM;
+    }
+    /* fasciculus solum via TEMPERLEY: aliter refutatio, non neglectus */
+    si (   (optiones->fasciculus_temperley != NIHIL
+            && electa != LAQUEUS_VIA_TEMPERLEY)
+        || !laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina, &pd,
+           &transitus)
+        || !_modulus_viae(verbum, longitudo, fila, pd, transitus,
+           optiones->octeti_maximi, electa, piscina, &aestimare,
+           &contextus, &q))
+    {
+        redde FALSUM;
+    }
+    altera = electa == LAQUEUS_VIA_VERTEX ? LAQUEUS_VIA_TEMPERLEY
+        : LAQUEUS_VIA_VERTEX;
+    si (electa == LAQUEUS_VIA_VERTEX)
+    {
+        octeti_principalis  = sv.octeti_officinae;
+        octeti_alterius     = st.octeti;
+        pretium_principale  = _pretium(sv.multiplicationes, CLXXXV);
+        pretium_alterum     = st.octeti
+            == ZEPHYRUM ? CONTRACTIO_SATURATUM
+            : _pretium(st.multiplicationes, XXI);
+    }
+    alioquin
+    {
+        octeti_principalis  = st.octeti;
+        octeti_alterius     = sv.octeti_officinae;
+        pretium_principale  = _pretium(st.multiplicationes, XXI);
+        pretium_alterum     = sv.multiplicationes == ZEPHYRUM
+            ? CONTRACTIO_SATURATUM : _pretium(sv.multiplicationes,
+            CLXXXV);
+    }
+    q.modus             = INTERPOLATIO_VERIFICATUM;
+    q.bita_securitatis  = optiones->bita_securitatis;
+    q.semen             = optiones->semen;
+    q.semen_origo       = optiones->semen_origo;
+    verificator = _verificator_viae(aestimare, contextus,
+        electa == LAQUEUS_VIA_VERTEX ? "sui:vertex"
+        : "sui:temperley", _COMMUNIA_SUI);
+
+    si (optiones->verificator == LAQUEUS_VERIFICATOR_EXTERNUS)
+    {
+        verificator = *optiones->alienus;
+    }
+    alioquin si (optiones->verificator != LAQUEUS_VERIFICATOR_SUI)
+    {
+        alterum = optiones->verificator
+            == LAQUEUS_VERIFICATOR_VIA_ALTERA;
+        si (!alterum)
+        {
+            i32 k_maximus;
+            i32 m;
+            i32 bita;
+            i64 puncta = ((i64)(q.gradus_summus - q.gradus_imus) / IV
+                + (i64)III);        /* K + 2 */
+
+            si (   !interpolatio_primi_probati(&q, piscina, &k_maximus)
+                || !interpolatio_probationes_necessariae(&q,
+                &verificator,
+                k_maximus, piscina, &m, &bita))
+            {
+                redde FALSUM;
+            }
+            alterum = m > ZEPHYRUM
+                && pretium_alterum != CONTRACTIO_SATURATUM
+                && (optiones->octeti_maximi == CONTRACTIO_SATURATUM
+                    || (octeti_principalis <= optiones->octeti_maximi
+                        && octeti_alterius <= optiones->octeti_maximi
+                        - octeti_principalis))
+                && _pretium(pretium_alterum, (i64)m)
+                    <= _pretium(pretium_principale, (i64)(k_maximus + I)
+                    * puncta) / (i64)XX;
+        }
+        si (alterum)
+        {
+            i64 reliqua = optiones->octeti_maximi
+                == CONTRACTIO_SATURATUM
+                ? CONTRACTIO_SATURATUM
+                : (octeti_principalis <= optiones->octeti_maximi
+                   ? optiones->octeti_maximi - octeti_principalis
+                   : ZEPHYRUM);
+
+            si (_modulus_viae(verbum, longitudo, fila, pd, transitus,
+                reliqua, altera, piscina, &aestimare_alterius,
+                &contextus_alterius, &q_alterius))
+            {
+                verificator = _verificator_viae(aestimare_alterius,
+                    contextus_alterius, altera == LAQUEUS_VIA_VERTEX
+                    ? "vertex" : "temperley", _COMMUNIA_VIARUM);
+            }
+            alioquin si (optiones->verificator
+                         == LAQUEUS_VERIFICATOR_VIA_ALTERA)
+            {
+                redde FALSUM;
+            }
+        }
+    }
+    /* electa iterum: modulus vertex numquam probationi temperley datur */
+    si (   optiones->fasciculus_temperley != NIHIL
+        && electa                         == LAQUEUS_VIA_TEMPERLEY)
+    {
+        FasciculusProbatus fp;
+
+        fp.fasciculus   = optiones->fasciculus_temperley;
+        fp.contextus    = optiones->contextus_fasciculi;
+        fp.modulus      = (LaqueusModulusTemperley*)contextus;
+        fp.probationes  = optiones->probationes_fasciculorum;
+        si (!interpolatio_polynomium_relatum_fasciculis(
+            _fasciculus_probatus, &fp, optiones->capacitas_fasciculi,
+            &verificator, &q, piscina, &f, relatio))
+        {
+            redde FALSUM;
+        }
+    }
+    alioquin si (!interpolatio_polynomium_relatum(aestimare, contextus,
+                 &verificator, &q, piscina, &f, relatio))
+    {
+        redde FALSUM;
+    }
+    *exitus = f;
+    si (via != NIHIL)
+    {
+        *via = electa;
+    }
+    redde VERUM;
+}
+
+b32
+laqueus_uncinus_promovere (
+                    constans s32* verbum,
+                             i32  longitudo,
+                             i32  fila,
+                             i64  octeti_maximi,
+                      LaqueusVia  via,
+    constans InterpolatioRelatio* relatio,
+             constans Polynomium* verificatum,
+                         Piscina* piscina,
+                      Polynomium* exitus,
+             InterpolatioRelatio* relatio_nova)
+{
+      InterpolatioQuaestio  q;
+    InterpolatioAestimator  aestimare;
+                    vacuum* contextus;
+                       i32* pd;
+                       i32  transitus;
+
+    si (   piscina == NIHIL
+        || !laqueus_pd_ex_plexu(verbum, longitudo, fila, piscina, &pd,
+           &transitus)
+        || !_modulus_viae(verbum, longitudo, fila, pd, transitus,
+           octeti_maximi, via, piscina, &aestimare, &contextus, &q))
+    {
+        redde FALSUM;
+    }
+    redde interpolatio_promovere(aestimare, contextus, &q, relatio,
+        verificatum, piscina, exitus, relatio_nova);
 }

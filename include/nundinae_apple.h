@@ -265,6 +265,44 @@ nundinae_apple_signum_invenire (
         chorda  identificator,
        Piscina* p);
 
+/* pulsus-plan T11: responsum GET /v1/certificates -> id certificati
+ * evolutionis (DEVELOPMENT aut IOS_DEVELOPMENT) exspirantis ultimi;
+ * vacua si nullum */
+chorda
+nundinae_apple_certificatum_evolutionis (
+    JsonValor* responsum,
+      Piscina* p);
+
+/* pulsus-plan T11: responsum GET /v1/devices -> Xar de chorda (id)
+ * apparatuum IOS ENABLED classis IPHONE aut IPAD, ordine; FALSUM si
+ * responsum malum */
+b32
+nundinae_apple_apparatus_legere (
+    JsonValor* responsum,
+          Xar* exitus,
+      Piscina* p);
+
+/* pulsus-plan T11: responsum GET /v1/bundleIds/{id}/profiles ->
+ * profileContent (base64) diplomatis ACTIVE generis 'genus'
+ * (IOS_APP_STORE, IOS_APP_DEVELOPMENT); vacua si nullum */
+chorda
+nundinae_apple_diploma_invenire (
+             JsonValor* responsum,
+    constans character* genus,
+               Piscina* p);
+
+/* pulsus-plan T11: corpus POST /v1/profiles - name, profileType,
+ * bundleId, certificates [id_certificati], devices (NIHIL = sine:
+ * App Store) */
+chorda
+nundinae_apple_diploma_corpus (
+                 chorda  titulus,
+     constans character* genus,
+                 chorda  id_signi,
+                 chorda  id_certificati,
+           constans Xar* apparatus,
+                Piscina* p);
+
 /* SHA-1 octetorum ut XL litterae hex MAIUSCULAE (security find-identity
  * eas imprimit) */
 chorda
@@ -330,6 +368,21 @@ nundinae_apple_certificatum_creare (
     NundinaeAppleCertificatum* exitus,
                        chorda* causa,
                       Piscina* p);
+
+/* pulsus-plan T11: diploma IOS_APP_DEVELOPMENT (ACTIVE) signi -
+ * repertum, aut creatum cum certificato evolutionis et omnibus
+ * apparatibus IOS (iPhone, iPad) - push in telephono (diploma
+ * '<turma>.*' capacitates non fert). Apparatus postea additi: diploma
+ * novum non fit (repertum redditur). NUMQUAM delet. */
+b32
+nundinae_apple_diploma_evolutionis (
+    NundinaeApple* n,
+           chorda  id_signi,
+           chorda  titulus,
+           chorda* contentum,
+              b32* creatum,
+           chorda* causa,
+          Piscina* p);
 
 /* diploma IOS_APP_STORE (ACTIVE) signi cum certificato; contentum =
  * profileContent (base64 .mobileprovision) */

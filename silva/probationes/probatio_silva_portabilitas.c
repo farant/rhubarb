@@ -561,6 +561,70 @@ s32 principale (vacuum)
         }
     }
 
+
+    /* ==================================================
+     * XII. Professiones - ordo et margo (budget fusionis, scansio
+     * memchr 2026-11-04). Commentarium tagos duos ferens: ordo
+     * portabile > sutura > vernaculum, ergo vernaculum + sutura et
+     * vernaculum + portabile transeunt. Tagus in FINE commentarii
+     * lineae (nihil post tagum - margo scansionis), etiam post '<'
+     * falsum octeto uno ante ('<<'): vernaculum, ergo flagrat.
+     * ================================================== */
+
+    imprimere("--- XII: professiones - ordo et margo ---\n");
+    {
+        constans character* capita[IV];
+                       i32  expectata[IV];
+        constans character* usor =
+            "/* <porta" "bile/> */\n"
+            "#include \"caput_o.h\"\n"
+            "int probare(void);\n"
+            "int probare(void) { return ordo_p(); }\n";
+                       i32 k;
+
+        capita[ZEPHYRUM]     = "/* <vernacu" "lum/> <sutu" "ra/> */\n"
+                               "int ordo_p(void);\n";
+        expectata[ZEPHYRUM]  = ZEPHYRUM;
+        capita[I]            = "/* <vernacu" "lum/> <porta" "bile/>"
+                               " */\n"
+                               "int ordo_p(void);\n";
+        expectata[I]         = ZEPHYRUM;
+        capita[II]           = "// <vernacu" "lum/>\n"
+                               "int ordo_p(void);\n";
+        expectata[II]        = I;
+        capita[III]          = "// <<vernacu" "lum/>\n"
+                               "int ordo_p(void);\n";
+        expectata[III]       = I;
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+            SilvaContextus* ctx      = silva_contextus_creare(piscina);
+              SilvaParsura* parsura  = NIHIL;
+            SilvaSemantica* sem      = NIHIL;
+
+            CREDO_NON_NIHIL (ctx);
+            si (ctx == NIHIL)
+            {
+                perge;
+            }
+            CREDO_VERUM (silva_contextus_praebere(ctx, "caput_o.h",
+                capita[k], (i32)strlen(capita[k])));
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "usor_o.c", usor, (i32)strlen(usor), NIHIL);
+            CREDO_NON_NIHIL (parsura);
+            si (parsura != NIHIL)
+            {
+                sem = silva_c89_semantica_analysare(piscina, parsura);
+            }
+            CREDO_NON_NIHIL (sem);
+            si (sem != NIHIL)
+            {
+                CREDO_AEQUALIS_I32 (_numerus_codicis(sem,
+                    (s32)EXAMEN_CODEX_PORTABILE_VIOLATUM),
+                    expectata[k]);
+            }
+        }
+    }
+
     credo_imprimere_compendium();
     praeteritus = credo_omnia_praeterierunt();
     piscina_destruere(piscina);

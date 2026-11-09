@@ -53,6 +53,7 @@
 #include "nexus_ordines.h"
 #include "filum.h"
 #include "lectiones.h"
+#include "friatio.h"   /* sigilla contentus (sha256) */
 
 #include <stdio.h>
 #include <string.h>
@@ -407,29 +408,18 @@ _plagulam_percurrere (
 
     si (parsura != NIHIL && parsura->successus)
     {
-        SilvaSemantica* sem =
-            silva_c89_semantica_analysare_cum_systemate(
-                piscina_arboris, parsura, systema_parsura);
+        SilvaClausuraFructus clausura;
+              SilvaSemantica* sem;
 
-        si (sem != NIHIL && oraculum_plagulae != NIHIL)
+        /* rung 3 scalae: secunda solum post mutationes (arbor
+         * intacta -> prima IAM auctoritas; canonicae-relativum:
+         * symbolum_nodi contra arborem versam) */
+        sem = silva_c89_semantica_analysare_clausa(piscina_arboris,
+            parsura, systema_parsura, oraculum_plagulae,
+            SILVA_CLAUSURA_ORDINARIA, &clausura);
+        si (clausura.secunda)
         {
-            (vacuum)silva_c89_semantica_oraculum_augere(sem,
-                oraculum_plagulae);
-            silva_oraculum_responsa_vacare(oraculum_plagulae);
-            /* rung 3 scalae: recanonicare numerum mutationum
-             * reddit - 0 = arbor intacta, sem1 IAM auctoritas
-             * (semantics-praeservans constructione; barra paritatis
-             * octetim id probat). sem2 solum post mutationes
-             * (canonicae-relativum: symbolum_nodi contra arborem
-             * versam). */
-            si (silva_recanonicare(parsura->commissio,
-                    oraculum_plagulae, silva_c89_resolutor, NIHIL)
-                > ZEPHYRUM)
-            {
-                sem = silva_c89_semantica_analysare_cum_systemate(
-                    piscina_arboris, parsura, systema_parsura);
-                plagulae_sem2++;
-            }
+            plagulae_sem2++;
         }
         si (sem != NIHIL)
         {
@@ -636,11 +626,15 @@ hic_manens TabulaDispersa* adjacentia_inversa = NIHIL; /* ad -> Xar*(chorda ex) 
 hic_manens TabulaDispersa* affecta = NIHIL;           /* clausura */
 hic_manens Xar* frons_clausurae = NIHIL;              /* chorda */
 hic_manens Xar* ads_visae = NIHIL;                    /* chorda (pro umbris basename) */
+/* sigilla contentus (budget B2 N1): via -> hex XVI */
+hic_manens TabulaDispersa* sigilla_vetera = NIHIL;
+hic_manens TabulaDispersa* sigilla_nova = NIHIL;
 
 hic_manens i32 stat_directae = ZEPHYRUM;
 hic_manens i32 stat_clausura = ZEPHYRUM;
 hic_manens i32 stat_deletae = ZEPHYRUM;
 hic_manens i32 stat_novae = ZEPHYRUM;
+hic_manens i32 stat_tactae = ZEPHYRUM;   /* mtime novum, idem */
 hic_manens i32 ordines_retenti = ZEPHYRUM;
 hic_manens i32 margines_retenti = ZEPHYRUM;
 
@@ -1017,6 +1011,270 @@ _basis_chordae (
         (memoriae_index)(via.mensura - k));
 }
 
+
+/* ==================================================
+ * SIGILLA CONTENTUS (budget B2 N1)
+ * ==================================================
+ *
+ * Copia laboris per mtime solum caput TACTUM (contentu eodem) ut
+ * mutatum tractabat: touch include/chorda.h -> MMCCCIV plagulae per
+ * clausuram re-iudicatae (48 s). Nunc build/nexus.sigilla.tsv
+ * (via TAB sha256 primi VIII octeti hex; linea prima stampam
+ * GENERATUM tabulae eiusdem fert) sigillum contentus cuiusque
+ * plagulae ambulatae tenet: plagula mtime >= stampa cuius sigillum
+ * idem est NON semen clausurae fit (tacta, non mutata).
+ *
+ * TEMPUS SIGILLI: sigillum ANTE iudicium capitur (praeparatio et
+ * _sigilla_complere ante fusionem fluminis) - editio inter
+ * sigillum et iudicium mtime > stampa nova dat et sigillum
+ * differens: cursus proximus re-iudicat (numquam tabula stala cum
+ * sigillo recenti). Sigillum post iudicium captum editionem mediam
+ * celaret.
+ *
+ * Retentae (mtime < stampa vetus) sigillum vetus ferunt - eadem
+ * praesumptio qua octeti earum veteres retinentur. Sigilla vetera
+ * stampa diversa (aut absentia) = nulla filtratio: mores pristini.
+ * Plagulae mensura praetermissae sigillum non habent. */
+
+hic_manens b32
+_sigillum_plagulae (
+    constans character* via,
+                chorda* hex_out)
+{
+         FILE* pl;
+    SHA256Contextus  ctx;
+             i8  digest[SHA256_DIGEST_MENSURA];
+      character  frustum[16384];
+ memoriae_index  lecti;
+      character* hex;
+            i32  k;
+     constans character* digiti = "0123456789abcdef";
+
+    /* <tolera codex="CANALIS_PRAETERITUS" (>sigillum = cura cache
+     * nexus communis (build/nexus.tsv), non ingressus actionis
+     * vocantis - canalis idem ac lectio parsurae (fopen crudum,
+     * debitum plagulae). Per lectiones_fopen custodia memorabilium
+     * corpus_silicis omnem plagulam arboris suspectam ut lectionem
+     * non declaratam negabat (2026-11-02, J8 sanatio) */
+    pl = fopen(via, "rb");
+    si (pl == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sha256_initiare(&ctx);
+    dum ((lecti = fread(frustum, I, magnitudo(frustum), pl)) > ZEPHYRUM)
+    {
+        sha256_addere(&ctx, (constans i8*)frustum, (i32)lecti);
+    }
+    fclose(pl);
+    sha256_finire(&ctx, digest);
+    hex = (character*)piscina_allocare(piscina_clavium, XVI);
+    si (hex == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < VIII; k++)
+    {
+        hex[II * k]      = digiti[(digest[k] >> IV) & 0xF];
+        hex[II * k + I]  = digiti[digest[k] & 0xF];
+    }
+    *hex_out = _chordam_alligare(hex, XVI);
+    redde VERUM;
+}
+
+/* sigillum novum notatum (clavis = via, quae in viae_omnes vivit) */
+hic_manens vacuum
+_sigillum_notare (
+    chorda via,
+    chorda hex)
+{
+    chorda* locus;
+
+    locus = (chorda*)piscina_allocare(piscina_clavium,
+        magnitudo(chorda));
+    si (locus == NIHIL)
+    {
+        redde;
+    }
+    *locus = hex;
+    (vacuum)tabula_dispersa_inserere(sigilla_nova, via, locus);
+}
+
+/* sigilla vetera onerare - solum si stampa eorum = stampa tabulae
+ * veteris (aliter tabula sigillorum alius generationis: ignoratur) */
+hic_manens vacuum
+_sigilla_vetera_legere (vacuum)
+{
+         memoriae_index  m = ZEPHYRUM;
+     constans character* datum;
+     constans character* linea;
+     constans character* finis;
+                   long  stampa = 0L;
+
+    datum = _plagulam_totam_legere("build/nexus.sigilla.tsv",
+        "nexus_sigilla_vetera", &m);
+    si (   datum  == NIHIL
+        || sscanf(datum, "# nexus.sigilla.tsv GENERATUM %ld",
+               &stampa) != I
+        || stampa != stampa_vetus)
+    {
+        redde;
+    }
+    sigilla_vetera = tabula_dispersa_creare_chorda(piscina_clavium,
+        DXII);
+    si (sigilla_vetera == NIHIL)
+    {
+        redde;
+    }
+    finis = datum + m;
+    linea = memchr(datum, '\n', m);
+    linea = (linea == NIHIL) ? finis : linea + I;
+    dum (linea < finis)
+    {
+        constans character* nl  = memchr(linea, '\n',
+            (memoriae_index)(finis - linea));
+        constans character* tab;
+        constans character* fl  = (nl == NIHIL) ? finis : nl;
+
+        tab = memchr(linea, '\t', (memoriae_index)(fl - linea));
+        si (tab != NIHIL && fl - (tab + I) == XVI)
+        {
+            chorda* locus = (chorda*)piscina_allocare(
+                piscina_clavium, magnitudo(chorda));
+
+            si (locus != NIHIL)
+            {
+                *locus = _chordam_alligare(tab + I, XVI);
+                (vacuum)tabula_dispersa_inserere(sigilla_vetera,
+                    _chordam_alligare(linea,
+                        (memoriae_index)(tab - linea)), locus);
+            }
+        }
+        linea = fl + I;
+    }
+}
+
+/* plagula mtime recens: contentus idem ac sigillum vetus? Sigillum
+ * novum etiam notatur (cursus hic idem non iterum computat) */
+hic_manens b32
+_contentus_idem (
+                       chorda  cv,
+    constans structura stat* st)
+{
+    chorda  hex;
+    vacuum* valor;
+
+    si (   mensura_maxima > ZEPHYRUM
+        && (long)st->st_size > (long)mensura_maxima)
+    {
+        redde FALSUM;
+    }
+    si (!_sigillum_plagulae((constans character*)cv.datum, &hex))
+    {
+        redde FALSUM;
+    }
+    _sigillum_notare(cv, hex);
+    si (   sigilla_vetera == NIHIL
+        || !tabula_dispersa_invenire(sigilla_vetera, cv, &valor)
+        || valor          == NIHIL)
+    {
+        redde FALSUM;
+    }
+    redde memcmp(((chorda*)valor)->datum, hex.datum, XVI)
+        == ZEPHYRUM;
+}
+
+/* sigilla omnium plagularum ambulatarum ANTE iudicia: retenta
+ * (mtime < stampa vetus, sigillum vetus adest) feruntur, cetera
+ * computantur */
+hic_manens vacuum
+_sigilla_complere (vacuum)
+{
+    i32 n = xar_numerus(viae_omnes);
+    i32 j;
+
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans character* v =
+            *(constans character**)xar_obtinere(viae_omnes, j);
+        chorda  cv = _chordam_alligare(v, strlen(v));
+        chorda  hex;
+        vacuum* valor;
+        structura stat st;
+
+        si (tabula_dispersa_continet(sigilla_nova, cv))
+        {
+            perge;
+        }
+        /* <tolera codex="CANALIS_PRAETERITUS" (>mtime solum ad
+         * sigillum vetus ferendum (filum_status mtime non dat); via
+         * iam in ambulatione et praeparatione stat-ata, contentus in
+         * _sigillum_plagulae legitur */
+        si (stat(v, &st) != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (   mensura_maxima > ZEPHYRUM
+            && (long)st.st_size > (long)mensura_maxima)
+        {
+            perge;
+        }
+        si (   modus_incrementalis && sigilla_vetera != NIHIL
+            && (long)st.st_mtime < stampa_vetus
+            && tabula_dispersa_invenire(sigilla_vetera, cv, &valor)
+            && valor != NIHIL)
+        {
+            _sigillum_notare(cv, *(chorda*)valor);
+            perge;
+        }
+        si (_sigillum_plagulae(v, &hex))
+        {
+            _sigillum_notare(cv, hex);
+        }
+    }
+}
+
+/* tabula sigillorum scribitur cum stampa tabularum novarum */
+hic_manens vacuum
+_sigilla_scribere (
+    long stampa)
+{
+    FILE* pl;
+    i32   n = xar_numerus(viae_omnes);
+    i32   j;
+
+    pl = lectiones_fopen("build/nexus.sigilla.tsv.nova", "w");
+    si (pl == NIHIL)
+    {
+        fprintf(stderr, "CAUTIO: nexus.sigilla.tsv non scripta"
+            " (cursus proximus sine filtratione)\n");
+        redde;
+    }
+    fprintf(pl, "# nexus.sigilla.tsv GENERATUM %ld - via TAB"
+        " sha256 (VIII octeti hex) contentus ante iudicium\n",
+        stampa);
+    per (j = ZEPHYRUM; j < n; j++)
+    {
+        constans character* v =
+            *(constans character**)xar_obtinere(viae_omnes, j);
+        vacuum* valor;
+
+        si (   tabula_dispersa_invenire(sigilla_nova,
+                _chordam_alligare(v, strlen(v)), &valor)
+            && valor != NIHIL)
+        {
+            fprintf(pl, "%s\t%.16s\n", v,
+                (constans character*)((chorda*)valor)->datum);
+        }
+    }
+    fclose(pl);
+    si (!filum_movere("build/nexus.sigilla.tsv.nova",
+            "build/nexus.sigilla.tsv"))
+    {
+        fprintf(stderr, "CAUTIO: nexus.sigilla.tsv non mota\n");
+    }
+}
+
 /* praeparatio incrementalis (viae_omnes iam collectae/ordinatae).
  * FALSUM cum causa in stderr -> plenus (numquam tacite). VERUM ->
  * greges_*, copia_iudicanda, stat_* impleta. */
@@ -1074,6 +1332,7 @@ _incrementale_praeparare (vacuum)
         }
     }
 
+    _sigilla_vetera_legere();
     greges_ordinum = tabula_dispersa_creare_chorda(piscina_clavium,
         DXII);
     greges_marginum = tabula_dispersa_creare_chorda(piscina_clavium,
@@ -1149,6 +1408,13 @@ _incrementale_praeparare (vacuum)
         }
         si ((long)st.st_mtime >= stampa_vetus)
         {
+            /* tacta sola (contentus idem, sigillum vetus): non semen
+             * - octeti veteres eius retinentur (budget B2 N1) */
+            si (_contentus_idem(cv, &st))
+            {
+                stat_tactae++;
+                perge;
+            }
             (vacuum)tabula_dispersa_inserere(directae, cv, NIHIL);
             _afficere(cv);
         }
@@ -1535,6 +1801,13 @@ principale (
 
     /* rung 5 (2): modus incrementalis temptatur (radix "." solum -
      * viae tabulae veteris radici-relativae sunt) */
+    sigilla_nova = tabula_dispersa_creare_chorda(piscina_clavium,
+        DXII);
+    si (sigilla_nova == NIHIL)
+    {
+        fprintf(stderr, "nexus_percursus: tabula deest\n");
+        redde I;
+    }
     si (!modus_plenus && strcmp(radix, ".") == ZEPHYRUM)
     {
         modus_incrementalis = _incrementale_praeparare();
@@ -1544,8 +1817,15 @@ principale (
             == ZEPHYRUM)
     {
         fprintf(stderr, "incrementale: nulla mutatio - tabulae"
-            " intactae\n");
+            " intactae (%d tactae, contentus idem)\n",
+            (int)stat_tactae);
         redde ZEPHYRUM;
+    }
+    /* sigilla ANTE iudicia (vide SIGILLA CONTENTUS) - radix "."
+     * solum: viae tabulae radici-relativae */
+    si (strcmp(radix, ".") == ZEPHYRUM)
+    {
+        _sigilla_complere();
     }
 
     /* systema + capita solum quando iudicia futura (cursus
@@ -1690,6 +1970,10 @@ principale (
             via_incl_effusionis, via_incl_finalis);
         redde I;
     }
+    si (strcmp(radix, ".") == ZEPHYRUM)
+    {
+        _sigilla_scribere((long)nunc_stampa);
+    }
 
     fprintf(stderr, "\n=== NEXUS PERCURSUS ===\n");
     fprintf(stderr, "plagulae: %d", (int)plagulae);
@@ -1715,12 +1999,13 @@ principale (
     si (modus_incrementalis)
     {
         fprintf(stderr, "incrementale: %d re-iudicatae (%d per"
-            " clausuram capitum), %d deletae, %d novae;"
-            " ordines retenti %d, margines retenti %d\n",
+            " clausuram capitum), %d deletae, %d novae, %d tactae"
+            " (contentus idem); ordines retenti %d, margines"
+            " retenti %d\n",
             (int)(stat_directae + stat_clausura),
             (int)stat_clausura, (int)stat_deletae,
-            (int)stat_novae, (int)ordines_retenti,
-            (int)margines_retenti);
+            (int)stat_novae, (int)stat_tactae,
+            (int)ordines_retenti, (int)margines_retenti);
     }
     fprintf(stderr, "tempus:   %.0f s\n",
         (duplex)(c1 - c0) / (duplex)CLOCKS_PER_SEC);

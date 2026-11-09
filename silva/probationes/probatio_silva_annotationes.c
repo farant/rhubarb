@@ -1,7 +1,8 @@
 /* probatio_silva_annotationes.c - collector annotationum STML
  * (parcum 01KY3D7EJP frustum A; casus fixi: ancoratum / prosa /
  * malformatum / multilineare-decoratum / cumulatum / plagula-
- * scopus / INTERIOR / radix-macro + nid boolean + vacuum) */
+ * scopus / INTERIOR / radix-macro + nid boolean + vacuum + fontes
+ * duo) */
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
@@ -11,6 +12,7 @@
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_parsare.h"
+#include "silva_contextus.h"
 #include "silva_c89_oraculum.h"
 #include "silva_annotationes.h"
 #include "credo.h"
@@ -539,6 +541,203 @@ s32 principale (vacuum)
             (s32)SILVA_ANNOTATIO_SUPRA);
         CREDO_AEQUALIS_PTR (a->unitas,
             _unitas(piscina, parsura, ZEPHYRUM));
+    }
+
+
+    /* ========================================================
+     * XII. FONTES DUO (budget B2 F1): extensiones unitatum PER
+     * FONTEM. Offsets capitis et principis se intercalant: caput
+     * annotationem in 12 et secundus in 53 habet, princeps
+     * annotationem in 19 et tertius in 60 - extensio sine fonte
+     * (fontes in unam conflati) annotationem capitis SUPRA tertius
+     * (19 < 53) et principis SUPRA secundus (53 < 60) poneret.
+     * Olim nulla probatio fontem alterum habebat (planta 'fons
+     * neglectus' transibat).
+     * ======================================================== */
+
+    {
+        constans character* caput =
+            "int primus;\n"
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE7F\"/> */\n"
+            "int secundus;\n";
+        constans character* fons =
+            "#include \"caput.h\"\n"
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE8G\"/> */\n"
+            "int tertius;\n";
+        SilvaContextus* ctx           = silva_contextus_creare(piscina);
+          SilvaParsura* parsura       = NIHIL;
+                   Xar* annotationes  = NIHIL;
+                   i32  k;
+        SilvaAnnotatio* in_capite    = NIHIL;
+        SilvaAnnotatio* in_principe  = NIHIL;
+
+        imprimere("\n--- Probans affixionem per fontem ---\n");
+        CREDO_NON_NIHIL (ctx);
+        si (ctx != NIHIL)
+        {
+            CREDO_VERUM (silva_contextus_praebere(ctx, "caput.h",
+                caput, (i32)strlen(caput)) >= ZEPHYRUM);
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), NIHIL);
+        }
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            CREDO_VERUM (parsura->successus);
+            annotationes = silva_annotationes_colligere(piscina,
+                parsura, NIHIL);
+        }
+        CREDO_NON_NIHIL (annotationes);
+        per (k = ZEPHYRUM; annotationes != NIHIL
+             && k < xar_numerus(annotationes); k++)
+        {
+            SilvaAnnotatio* a = _annotatio(annotationes, k);
+
+            si (a->fons_index == parsura->fons_princeps)
+            {
+                in_principe = a;
+            }
+            alioquin
+            {
+                in_capite = a;
+            }
+        }
+        CREDO_NON_NIHIL (in_capite);
+        CREDO_NON_NIHIL (in_principe);
+        si (in_capite != NIHIL && in_principe != NIHIL)
+        {
+            /* fixa ipsa: offsets intercalati ut supra */
+            CREDO_AEQUALIS_S32 (in_capite->byte_offset, (s32)XII);
+            CREDO_AEQUALIS_S32 (in_principe->byte_offset, (s32)XIX);
+            CREDO_AEQUALIS_S32 ((s32)in_capite->modus,
+                (s32)SILVA_ANNOTATIO_SUPRA);
+            CREDO_AEQUALIS_PTR (in_capite->unitas,
+                _unitas(piscina, parsura, I));
+            CREDO_AEQUALIS_S32 ((s32)in_principe->modus,
+                (s32)SILVA_ANNOTATIO_SUPRA);
+            CREDO_AEQUALIS_PTR (in_principe->unitas,
+                _unitas(piscina, parsura, II));
+        }
+    }
+
+    /* XII b. UNITAS TRANS FONTES: initiator cuius valores ex capite
+     * inclusi veniunt - unitas lexemata principis (41..) ET capitis
+     * (0..) habet. Triplae conflatae (ambulatio fontem neglegens)
+     * minimum principis 0 facerent, annotationem in 0 INTERIOR
+     * falso iudicantes; recte SUPRA. */
+    {
+        constans character* valores = "1, 2\n";
+        constans character* fons =
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDE9H\"/> */\n"
+            "int tabula[] = {\n"
+            "#include \"valores.h\"\n"
+            "};\n";
+        SilvaContextus* ctx           = silva_contextus_creare(piscina);
+          SilvaParsura* parsura       = NIHIL;
+                   Xar* annotationes  = NIHIL;
+        SilvaAnnotatio* a;
+
+        imprimere("\n--- Probans unitatem trans fontes ---\n");
+        CREDO_NON_NIHIL (ctx);
+        si (ctx != NIHIL)
+        {
+            CREDO_VERUM (silva_contextus_praebere(ctx, "valores.h",
+                valores, (i32)strlen(valores)) >= ZEPHYRUM);
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), NIHIL);
+        }
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            CREDO_VERUM (parsura->successus);
+            annotationes = silva_annotationes_colligere(piscina,
+                parsura, NIHIL);
+        }
+        CREDO_NON_NIHIL (annotationes);
+        si (annotationes != NIHIL && xar_numerus(annotationes) == I)
+        {
+            a = _annotatio(annotationes, ZEPHYRUM);
+            CREDO_AEQUALIS_S32 (a->byte_offset, ZEPHYRUM);
+            CREDO_AEQUALIS_S32 ((s32)a->modus,
+                (s32)SILVA_ANNOTATIO_SUPRA);
+            CREDO_AEQUALIS_PTR (a->unitas,
+                _unitas(piscina, parsura, ZEPHYRUM));
+        }
+        alioquin
+        {
+            CREDO_AEQUALIS_I32 (annotationes != NIHIL
+                ? xar_numerus(annotationes) : ZEPHYRUM, I);
+        }
+    }
+
+
+    /* ==================================================
+     * XIII. Margines unitatis (budget fusionis, verritiones gradus
+     * III: extensiones per lexemata, non per arbores). (a) post
+     * lexema PRIMUM unitatis: INTERIOR - scansio primum omittens
+     * minimum post annotationem poneret. (b) ante lexema ULTIMUM:
+     * INTERIOR - ultimum omittens maximum ante eam. (c) unitas a
+     * macro incipiens: radix originis (invocatio) sedem dat, non
+     * lexema expansum. (d) regio conditionalis texta (unitas folio
+     * primo '#'): annotatio in ramo non sumpto - folia extra
+     * fluxum, arbore ambulata.
+     * ================================================== */
+
+    {
+        constans character* fontes[IV];
+                       s32  modi[IV];
+                       i32  unitates[IV];
+                       i32  k;
+
+        fontes[ZEPHYRUM]  =
+            "static /* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAJ\"/> */"
+            " int primus;\n"
+            "int secundus;\n";
+        modi[ZEPHYRUM]      = (s32)SILVA_ANNOTATIO_INTERIOR;
+        unitates[ZEPHYRUM]  = ZEPHYRUM;
+        fontes[I]  =
+            "int primus /* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAK\"/> */"
+            " ;\n"
+            "int secundus;\n";
+        modi[I]      = (s32)SILVA_ANNOTATIO_INTERIOR;
+        unitates[I]  = ZEPHYRUM;
+        fontes[II]  =
+            "#define DECLARATIO static int\n"
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAM\"/> */\n"
+            "DECLARATIO x;\n";
+        modi[II]      = (s32)SILVA_ANNOTATIO_SUPRA;
+        unitates[II]  = ZEPHYRUM;
+        fontes[III]  =
+            "#ifdef NONDUM_DEFINITUM\n"
+            "/* <nid v=\"01KY3A2FQ8XN4VJ7TT9M2CDEAN\"/> */\n"
+            "int a;\n"
+            "#else\n"
+            "int b;\n"
+            "#endif\n"
+            "int c;\n";
+        modi[III]      = (s32)SILVA_ANNOTATIO_INTERIOR;
+        unitates[III]  = ZEPHYRUM;
+
+        imprimere("\n--- Probans margines unitatis ---\n");
+        per (k = ZEPHYRUM; k < IV; k++)
+        {
+             SilvaParsura* parsura      = NIHIL;
+                      Xar* annotationes = _colligere(piscina,
+                          fontes[k], &parsura);
+
+            CREDO_NON_NIHIL (annotationes);
+            si (annotationes == NIHIL || xar_numerus(annotationes) != I)
+            {
+                CREDO_AEQUALIS_I32 (annotationes != NIHIL
+                    ? xar_numerus(annotationes) : ZEPHYRUM, I);
+                perge;
+            }
+            CREDO_AEQUALIS_S32 ((s32)_annotatio(annotationes,
+                ZEPHYRUM)->modus, modi[k]);
+            CREDO_AEQUALIS_PTR (_annotatio(annotationes,
+                ZEPHYRUM)->unitas, _unitas(piscina, parsura,
+                unitates[k]));
+        }
     }
 
     credo_imprimere_compendium();

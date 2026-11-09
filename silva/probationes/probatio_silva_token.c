@@ -74,6 +74,71 @@ s32 principale (vacuum)
 
 
     /* ========================================================
+     * PROBARE: silva_token_ex_fonte super memoriam sordidam
+     * ======================================================== */
+
+    {
+        PiscinaNotatio  nota;
+             character* sordes;
+            SilvaToken* token;
+            SilvaOrigo* origo;
+                chorda  valor;
+
+        imprimere("\n--- Probans ex_fonte super memoriam "
+            "sordidam ---\n");
+
+        /* ex_fonte campos SINGULOS scribit, non memset totum. Piscina
+         * recens memoriam nullam reddit et campum omissum celat - hic
+         * memoria 0xA5 impleta, refecta, lexema super eam factum.
+         * Nullum CREDO inter notam et lexema: credo acta in eadem
+         * piscina servat, et lexema ea superscriberet. */
+        valor  = chorda_ex_literis("x", piscina);
+        nota   = piscina_notare(piscina);
+        sordes = (character*)piscina_allocare(piscina,
+            (memoriae_index)CCLVI);
+        si (sordes != NIHIL)
+        {
+            memset(sordes, 0xA5, CCLVI);
+        }
+        piscina_reficere(piscina, nota);
+
+        token = silva_token_ex_fonte(piscina, SILVA_LEX_INTEGER, valor,
+            V, II, IX, I);
+        CREDO_NON_NIHIL (sordes);
+        CREDO_NON_NIHIL (token);
+        /* lexema vere in memoria sordida (aliter probatio vana) */
+        CREDO_VERUM ((character*)token >= sordes
+            && (character*)token < sordes + CCLVI);
+
+        CREDO_AEQUALIS_I32 ((i32)token->genus, (i32)SILVA_LEX_INTEGER);
+        CREDO_AEQUALIS_S32 (token->byte_offset, V);
+        CREDO_AEQUALIS_I32 (token->linea, II);
+        CREDO_AEQUALIS_I32 (token->columna, IX);
+        CREDO_AEQUALIS_S32 (token->fons_index, I);
+        CREDO_CHORDA_AEQUALIS_LITERIS (token->valor, "x");
+        CREDO_NIHIL (token->spatia_ante);
+        CREDO_NIHIL (token->spatia_post);
+        CREDO_AEQUALIS_I32 (token->numerus_ante, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (token->numerus_post, ZEPHYRUM);
+        CREDO_AEQUALIS_I32 (token->vexilla, MATERIA_TOKEN_CAUDA);
+
+        CREDO_AEQUALIS_I32 (silva_token_longitudo(token), I);
+        CREDO_AEQUALIS_I32 ((i32)silva_token_standard(token),
+            (i32)SILVA_STANDARD_C89);
+        CREDO_NIHIL (silva_token_scissurae(token));
+
+        /* origo FONS, unio tota nulla (pasta = membrum maximum) */
+        origo = silva_token_origo(token);
+        CREDO_AEQUALIS_I32 ((i32)origo->genus, (i32)SILVA_ORIGO_FONS);
+        CREDO_NIHIL (origo->datum.pasta.sinister);
+        CREDO_NIHIL (origo->datum.pasta.dexter);
+        CREDO_NIHIL (origo->datum.pasta.invocatio);
+        CREDO_NIHIL (origo->datum.pasta.nomen_macro);
+        CREDO_NIHIL (origo->datum.pasta.caecatio);
+    }
+
+
+    /* ========================================================
      * PROBARE: catena expansionis (duae generationes)
      * ======================================================== */
 

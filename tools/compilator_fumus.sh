@@ -28,6 +28,9 @@
 #        fractum, hit, hit (quarta capita primae per MEMORIAM legit):
 #        exitus 1, fons fractus nominatus, obiecta octetim eadem ac
 #        vocationibus singulis, clang SEMEL (fractum solum)
+#   XIII VIA VERA EXPORTATA (budget B2 J8): COMPILATOR_CLANG_VERUM
+#        vera -> hit sine clang; clavis aliena neglecta; via alia ->
+#        identitas alia, miss
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/compilator deest.
 # <porta titulus="compilator" instrumentum="bin/compilator" tegit="tools/compilator_struere.sh"/>
@@ -153,6 +156,44 @@ else
     echo "  XII  FRACTUM (rc=$rc, clang $n_xii -> $(numerus))"; cat "$B/err"; fracta=1
 fi
 
+# XIII (budget B2 J8): VIA VERA EXPORTATA - sine FABRICA_CLANG, clang
+# fictus primus in PATH vocationes '-print-prog-name' notat (deinde
+# clang verum). (a) COMPILATOR_CLANG_VERUM = via vera: hit, NULLA
+# vocatio; (b) clavis aliena ("gcc" TAB via): neglecta, vocatio I;
+# (c) via ALIA (binarium alienum): identitas alia -> miss (clang
+# vocatus), non hit falsus. Plantae (2026-11-02): clavis non comparata
+# -> (b) rubet (gradus 16); exportatio neglecta -> (a) rubet (14).
+mkdir -p "$B/via"
+P="$B/vocationes"; Q="$B/omnes"
+printf '#!/bin/sh\necho x >> "%s"\ncase "$*" in *-print-prog-name*) echo x >> "%s";; esac\nexec /usr/bin/clang "$@"\n' "$RADIX/$Q" "$RADIX/$P" > "$B/via/clang"
+chmod +x "$B/via/clang"
+VERA="$(/usr/bin/clang -print-prog-name=clang)"
+vocationes () { [ -f "$P" ] && wc -l < "$P" | tr -d ' ' || echo 0; }
+omnes () { [ -f "$Q" ] && wc -l < "$Q" | tr -d ' ' || echo 0; }
+xiii () { "$C" "${VF[@]}" -c "$B/fixa/fons.c" -o "$B/o/xiii.o" 2> "$B/err"; }
+(
+    unset FABRICA_CLANG COMPILATOR_CLANG_VERUM
+    export PATH="$RADIX/$B/via:$PATH"
+    # praeparatio: identitas vera sine exportatione (vocatio I)
+    xiii || exit 11
+    [ "$(vocationes)" -eq 1 ] || exit 12
+    n=$(omnes)
+    # (a) via vera exportata: hit, clang nullo modo vocatus
+    export COMPILATOR_CLANG_VERUM="clang"$'\t'"$VERA"
+    xiii || exit 13
+    [ "$(omnes)" -eq "$n" ] || exit 14
+    # (b) clavis aliena: neglecta - vocatio una, deinde hit
+    export COMPILATOR_CLANG_VERUM="gcc"$'\t'"$VERA"
+    xiii || exit 15
+    [ "$(vocationes)" -eq 2 ] && [ "$(omnes)" -eq $((n + 1)) ] || exit 16
+    # (c) via alia (octeti clang_a): identitas alia -> miss, compilatio
+    export COMPILATOR_CLANG_VERUM="clang"$'\t'"$RADIX/$B/clang_a"
+    xiii || exit 17
+    [ "$(vocationes)" -eq 2 ] && [ "$(omnes)" -eq $((n + 2)) ] || exit 18
+    exit 0
+); rc=$?
+if [ "$rc" -eq 0 ]; then echo "  XIII via vera exportata: hit sine clang, clavis aliena neglecta, via alia miss OK"; else echo "  XIII FRACTUM (gradus $rc, vocationes $(vocationes), omnes $(omnes))"; head -5 "$B/err"; fracta=1; fi
+
 if [ "$fracta" -ne 0 ]; then echo "fumus compilatoris: FRACTUM"; exit 1; fi
-echo "fumus compilatoris: sanum (XII/XII)"
+echo "fumus compilatoris: sanum (XIII/XIII)"
 exit 0

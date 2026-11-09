@@ -2023,7 +2023,22 @@ nomen structura {
      ChordaAedificator* textus;       /* textus pendens */
              XmlCoctus* parens_textus;
                    b32  cdata;
+                chorda  simplex;      /* textus pendens sine copia */
+                   b32  habet_simplex;
 } Coquina;
+
+interior i32
+_potentia (
+    i32 n)
+{
+    i32 p = I;
+
+    dum (p < n && p < (i32)0x40000000)
+    {
+        p <<= I;
+    }
+    redde p;
+}
 
 interior XmlCoctus*
 _coctus (
@@ -2070,20 +2085,24 @@ _textum_fundere (
 {
     XmlCoctus* t;
 
-    si (q->textus == NIHIL)
+    si (q->textus == NIHIL && !q->habet_simplex)
     {
         redde;
     }
-    si (   chorda_aedificator_longitudo(q->textus) > ZEPHYRUM
+    si (   (q->textus != NIHIL
+            ? chorda_aedificator_longitudo(q->textus) > ZEPHYRUM
+            : q->simplex.mensura > ZEPHYRUM)
         && q->parens_textus != NIHIL)
     {
         t = _coctus(q->c, XML_COCTUS_TEXTUS, q->parens_textus, NIHIL);
         si (t != NIHIL)
         {
-            t->textus  = chorda_aedificator_finire(q->textus);
+            t->textus  = q->textus != NIHIL
+                ? chorda_aedificator_finire(q->textus) : q->simplex;
             t->cdata   = q->cdata;
         }
     }
+    q->habet_simplex  = FALSUM;
     q->textus         = NIHIL;
     q->parens_textus  = NIHIL;
     q->cdata          = FALSUM;
@@ -2094,20 +2113,67 @@ _textus (
       Coquina* q,
     XmlCoctus* parens)
 {
-    si (q->textus != NIHIL && q->parens_textus != parens)
+    si (   (q->textus != NIHIL || q->habet_simplex)
+        && q->parens_textus != parens)
     {
         _textum_fundere(q);
     }
     si (q->textus == NIHIL)
     {
-        q->textus = chorda_aedificator_creare(q->c->piscina, LXIV);
+        q->textus = chorda_aedificator_creare(q->c->piscina,
+            (memoriae_index)(q->habet_simplex ? q->simplex.mensura : 0)
+            + LXIV);
         q->parens_textus = parens;
         si (q->textus == NIHIL)
         {
             q->c->memoria_defecit = VERUM;
         }
+        alioquin si (q->habet_simplex)
+        {
+            chorda_aedificator_appendere_chorda(q->textus, q->simplex);
+        }
+        q->habet_simplex = FALSUM;
     }
     redde q->textus;
+}
+
+/* textus iam normatus: primum frustum sine copia (fons aut textus
+ * substitutionis, ambo piscinam vivunt) */
+interior vacuum
+_textum_simplicem (
+       Coquina* q,
+     XmlCoctus* parens,
+        chorda  s)
+{
+    si (   (q->textus != NIHIL || q->habet_simplex)
+        && q->parens_textus != parens)
+    {
+        _textum_fundere(q);
+    }
+    si (q->textus == NIHIL && !q->habet_simplex)
+    {
+        q->simplex        = s;
+        q->habet_simplex  = VERUM;
+        q->parens_textus  = parens;
+        redde;
+    }
+    chorda_aedificator_appendere_chorda(_textus(q, parens), s);
+}
+
+interior b32
+_habet_cr (
+    chorda s)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < s.mensura; i++)
+    {
+        si (s.datum[i] == '\r')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 interior AttributumDeclaratum*
@@ -2141,12 +2207,16 @@ _attributa_coquere (
     i32 n = _numerus(e, (i32)XML_ELEMENTUM_ATTRIBUTA);
     i32 k;
 
-    x->attributa = xar_creare(c->piscina,
-        (i32)magnitudo(XmlAttributumCoctum));
-    si (x->attributa == NIHIL)
+    x->attributa = NIHIL;
+    si (n > ZEPHYRUM)
     {
-        c->memoria_defecit = VERUM;
-        redde;
+        x->attributa = xar_creare_cum_magnitudine(c->piscina,
+            (i32)magnitudo(XmlAttributumCoctum), _potentia(n));
+        si (x->attributa == NIHIL)
+        {
+            c->memoria_defecit = VERUM;
+            redde;
+        }
     }
     per (k = ZEPHYRUM; k < n; k++)
     {
@@ -2192,6 +2262,19 @@ _attributa_coquere (
                 "spatium ante attributum deest");
         }
         (vacuum)_citatum(v, &crudus);
+        aed = NIHIL;
+        per (j = ZEPHYRUM; j < crudus.mensura; j++)
+        {
+            i8 b = crudus.datum[j];
+
+            si (   b == '&' || b == '<' || b == '\t' || b == '\n'
+                || b == '\r')
+            {
+                frange;
+            }
+        }
+        si (j < crudus.mensura)
+        {
         aed = chorda_aedificator_creare(c->piscina,
             (memoriae_index)crudus.mensura + I);
         si (aed == NIHIL)
@@ -2202,6 +2285,7 @@ _attributa_coquere (
         si (!_valorem_normare(c, v, crudus, VERUM, aed))
         {
             perge;
+        }
         }
         per (j = ZEPHYRUM; j < xar_numerus(x->attributa); j++)
         {
@@ -2224,11 +2308,12 @@ _attributa_coquere (
             redde;
         }
         memset(ac, ZEPHYRUM, magnitudo(*ac));
-        ac->titulus  = t->valor;
-        ac->localis  = t->valor;
-        ac->valor    = chorda_aedificator_finire(aed);
-        ac->nodus    = a;
-        d            = _declaratum(c, x->titulus, t->valor);
+        ac->titulus = t->valor;
+        ac->localis = t->valor;
+        ac->valor    = aed != NIHIL ? chorda_aedificator_finire(aed)
+            : crudus;
+        ac->nodus  = a;
+        d          = _declaratum(c, x->titulus, t->valor);
         si (d != NIHIL && !d->cdata)
         {
             ac->valor = _contrahere(c, ac->valor);
@@ -2270,6 +2355,16 @@ _attributa_coquere (
         si (!_valorem_normare(c, d->lexema, d->valor, VERUM, aed))
         {
             perge;
+        }
+        si (x->attributa == NIHIL)
+        {
+            x->attributa = xar_creare(c->piscina,
+                (i32)magnitudo(XmlAttributumCoctum));
+            si (x->attributa == NIHIL)
+            {
+                c->memoria_defecit = VERUM;
+                redde;
+            }
         }
         ac = (XmlAttributumCoctum*)xar_addere(x->attributa);
         si (ac == NIHIL)
@@ -2533,10 +2628,9 @@ _contentum_coquere (
                 {
                     frange;
                 }
-                si (g->fragmentum)
+                si (g->fragmentum || !_habet_cr(t->valor))
                 {
-                    chorda_aedificator_appendere_chorda(_textus(&q,
-                        g->coctus), t->valor);
+                    _textum_simplicem(&q, g->coctus, t->valor);
                 }
                 alioquin
                 {
@@ -2551,10 +2645,9 @@ _contentum_coquere (
                     chorda intus = _sectio(t->valor, IX,
                         t->valor.mensura - III);
 
-                    si (g->fragmentum)
+                    si (g->fragmentum || !_habet_cr(intus))
                     {
-                        chorda_aedificator_appendere_chorda(_textus(&q,
-                            g->coctus), intus);
+                        _textum_simplicem(&q, g->coctus, intus);
                     }
                     alioquin
                     {
@@ -2645,6 +2738,16 @@ _contentum_coquere (
                 si (   finis        != NIHIL
                     && finis->genus != (s32)XML_LEX_TAG_FINIS_SOLUS)
                 {
+                    {
+                        i32 m = _numerus(f, (i32)XML_ELEMENTUM_LIBERI);
+
+                        si (m > ZEPHYRUM)
+                        {
+                            x->liberi = xar_creare_cum_magnitudine(
+                                c->piscina, (i32)magnitudo(XmlCoctus*),
+                                _potentia(m));
+                        }
+                    }
                     _impellere_coctionem(&q, f,
                         (i32)XML_ELEMENTUM_LIBERI,
                         x, NIHIL, FALSUM, g->fragmentum);

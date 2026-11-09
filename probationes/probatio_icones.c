@@ -1382,6 +1382,7 @@ _sectio_amplificare (
        Imago  fons;
        Imago  ex;
        Imago  mala;
+       Imago  unus;
          i32  x;
          i32  y;
          i32  k;
@@ -1446,18 +1447,72 @@ _sectio_amplificare (
         && ex.pixela[k + I] == (i8)CXXVII
         && ex.pixela[k + II] == (i8)CXXVII
         && ex.pixela[k + III] == (i8)CCLV);
-    CREDO_GRADUS("recusationes: non quadratum, latus non divisum");
+    CREDO_GRADUS("latus non multiplex: lenis (pictura, non pixel art)");
+    unus.latitudo  = C;
+    unus.altitudo  = C;
+    unus.pixela    = (i8*)piscina_allocare(p, C * C * IV);
+    CREDO_NON_NIHIL(unus.pixela);
+    si (!unus.pixela)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < C * C * IV; k += IV)
+    {
+        unus.pixela[k]        = (i8)CC;
+        unus.pixela[k + I]    = (i8)C;
+        unus.pixela[k + II]   = (i8)L;
+        unus.pixela[k + III]  = (i8)CCLV;
+    }
+    /* C -> MXXIV auctio, C -> L deminutio: color unus manet */
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&unus, M + XXIV, &ex, p),
+        (i32)ICONES_SUCCESSUS);
+    CREDO_AEQUALIS_I32(ex.latitudo, M + XXIV);
+    CREDO_AEQUALIS_I32(ex.altitudo, M + XXIV);
+    si (ex.pixela)
+    {
+        k = ((DXII * (M + XXIV)) + DXII) * IV;
+        CREDO_VERUM(ex.pixela[k] == (i8)CC && ex.pixela[k + I] == (i8)C
+            && ex.pixela[k + II] == (i8)L && ex.pixela[k + III]
+            == (i8)CCLV);
+        k = ((M + XXIII) * (M + XXIV) + M + XXIII) * IV;
+        CREDO_VERUM(ex.pixela[k] == (i8)CC && ex.pixela[k + I] == (i8)C
+            && ex.pixela[k + II] == (i8)L);
+    }
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&unus, L, &ex, p),
+        (i32)ICONES_SUCCESSUS);
+    CREDO_AEQUALIS_I32(ex.latitudo, L);
+    si (ex.pixela)
+    {
+        k = ((XXV * L) + XXV) * IV;
+        CREDO_VERUM(ex.pixela[k] == (i8)CC && ex.pixela[k + I] == (i8)C
+            && ex.pixela[k + II] == (i8)L && ex.pixela[k + III]
+            == (i8)CCLV);
+    }
+    CREDO_GRADUS("lenis: perspicuum -> album");
+    per (k = ZEPHYRUM; k < C * C * IV; k += IV)
+    {
+        unus.pixela[k + III] = ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&unus, M + XXIV, &ex, p),
+        (i32)ICONES_SUCCESSUS);
+    si (ex.pixela)
+    {
+        k = ((DXII * (M + XXIV)) + DXII) * IV;
+        CREDO_VERUM(ex.pixela[k] == (i8)CCLV
+            && ex.pixela[k + I] == (i8)CCLV
+            && ex.pixela[k + II] == (i8)CCLV
+            && ex.pixela[k + III] == (i8)CCLV);
+    }
+    CREDO_GRADUS("recusationes: non quadratum, latus nullum, vacuus");
     mala           = fons;
     mala.altitudo  = LXIV;
     CREDO_AEQUALIS_I32((i32)icones_amplificare(&mala, M + XXIV, &ex, p),
         (i32)ICONES_ERROR_LATERA);
-    CREDO_AEQUALIS_I32((i32)icones_amplificare(&fons, M, &ex, p),
+    CREDO_AEQUALIS_I32((i32)icones_amplificare(&fons, ZEPHYRUM, &ex, p),
         (i32)ICONES_ERROR_LATERA);
-    mala.latitudo = C;
-    mala.altitudo = C;
-    CREDO_AEQUALIS_I32((i32)icones_amplificare(&mala, M + XXIV, &ex, p),
-        (i32)ICONES_ERROR_LATERA);
-    mala.pixela = NIHIL;
+    mala.latitudo  = C;
+    mala.altitudo  = C;
+    mala.pixela    = NIHIL;
     CREDO_AEQUALIS_I32((i32)icones_amplificare(&mala, M + XXIV, &ex, p),
         (i32)ICONES_ERROR_FONS);
 }

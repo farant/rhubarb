@@ -2181,14 +2181,26 @@ aedilis_scriptum_scribere_ad (
     }
     alioquin
     {
+        /* CAPUT RECENTISSIMUM SEMEL (budget B2 J7): olim omne caput
+         * contra omne obiectum '-nt' (~1 M probationes per portam
+         * aedilis). 'caput quodlibet recentius obiecto' <=> 'caput
+         * recentissimum recentius obiecto'; caput absens numquam
+         * recentissimum fit nisi omnia absunt (tum '-nt' FALSUM, ut
+         * olim). */
         chorda_aedificator_appendere_literis(s,
+            "_recens=\"\"\n"
+            "for c in $CAPITA; do\n"
+            "    if [ -z \"$_recens\" ] || [ \"$c\" -nt \"$_recens\" ];"
+            " then\n"
+            "        _recens=\"$c\"\n"
+            "    fi\n"
+            "done\n\n"
             "vetustum () {\n"
             "    obj=\"$1\"; fons=\"$2\"\n"
             "    [ ! -f \"$obj\" ] && return 0\n"
             "    [ \"$fons\" -nt \"$obj\" ] && return 0\n"
-            "    for c in $CAPITA; do\n"
-            "        [ \"$c\" -nt \"$obj\" ] && return 0\n"
-            "    done\n"
+            "    [ -n \"$_recens\" ] && [ \"$_recens\" -nt \"$obj\" ]"
+            " && return 0\n"
             "    return 1\n"
             "}\n\n");
     }

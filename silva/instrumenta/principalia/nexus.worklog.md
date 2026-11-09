@@ -213,3 +213,67 @@ then renovation skipped with return 1), better staleness: the holder's
 pid is checked with `ps -p` and a lock copied into an umbra clone is
 recognized by its foreign `radix` line, instead of the 15-minute age
 guess. Gate: `tools/sera_fumus.sh`.
+
+## 2026-11-02 — budget B2 N1: content seals for the incremental sweep
+
+Rung 5 seeded the work set from mtime alone: any file with mtime >=
+the old table's GENERATUM stamp was "changed" and its whole reverse
+include closure re-judged. `touch include/chorda.h` (identical bytes)
+re-judged 2304 of 2305 files: 48-51 s. It hit every merge (main brings
+header mtimes) and two suite pre-steps: briar's corpus_symbola_generare
+(83 s alone) and oratio's runner, both of which call -renovare.
+
+Now build/nexus.sigilla.tsv holds `via TAB sha256[0:8] hex` per walked
+file, first line carrying the SAME GENERATUM stamp as the tables (a
+sidecar from another generation is ignored -> old behaviour). An
+mtime-suspect file whose content seal matches is "tacta": not a seed,
+its old octets are retained. Seals are taken BEFORE judgment (in
+_incrementale_praeparare for suspects, _sigilla_complere for the rest,
+both before the stream merge) — a seal taken after judgment would hide
+an edit landing between parse and seal. Retained files carry their old
+seal under the same mtime < stamp presumption that retains their rows.
+Size-skipped files get no seal. Reads go through lectiones_fopen; the one
+new raw `stat` carries a <tolera> (filum_status gives no mtime).
+
+Numbers: touch chorda.h 51 -> 1.7 s ("nulla mutatio, 1 tactae"); a real
+edit of include/pecunia.h re-judges 5 (1 + 4 closure) in 2.2 s; restore
+re-judges again; parity incremental-vs-plenus octetim on nexus.tsv,
+inclusiones.tsv and the sidecar. briar corpus_symbola after a touch
+83 -> 6 s.
+
+Trap while testing: editing a header that the sweep TOOL compiles
+(chorda.h) changes celer objects (-g line info) -> nexus.sh forces
+-plenus (toolchain-force), so the incremental path is never exercised.
+Test with a header outside the tool's closure (pecunia.h).
+
+New gate `nexus` (tools/nexus_fumus.sh): scratch tree, plenus -> quiet ->
+touch (1 tacta) -> real edit (2 re-judged, 1 via closure) -> parity.
+Fixture mtimes backdated and systema_c89.h copied with -p (a fresh
+systema mtime forces plenus). Plant: content check always "idem" ->
+IV and V FRACTUM; revert green. (A first plant, `memcmp >= 0`, was only
+true half the time — killed and replaced.)
+
+## 2026-11-02 — N1 follow-up: seal reads broke corpus_silicis's memo
+
+N1's `_sigillum_plagulae` read files through `lectiones_fopen`, so every
+mtime-suspect file the sweep sealed landed in fabrica's read book. The
+corpus_silicis action (corpus_infixum.sh runs `nexus.sh -renovare`)
+declares only lib/include/its client roots, so the heal reported
+"MEMORIA NEGATA - lectiones non declaratae:
+tessera/instrumenta/principalia/excludenda_generata.h" (a regenerated
+header, hence mtime-suspect). Not caught at N1 commit time because the
+capsula output was still fresh; J8's lib/compilator.c edit forced the
+regeneration.
+
+The gap is older than N1: the parse itself reads with raw `fopen`
+(file is on the canalis debt list), so re-judged files outside the
+declared roots were always unbooked. Ruling taken here: these reads are
+upkeep of the SHARED nexus cache (build/nexus.tsv), not inputs of the
+calling action (corpus symbols are filtered to lib/include/roots) —
+declaring the whole tree would re-judge the capsula on every C change.
+So the seal read now uses the same channel as the parse (raw fopen,
+`<tolera codex="CANALIS_PRAETERITUS">` with that reason), and
+build/nexus.sigilla.tsv is declared as a shared trace of corpus_silicis
+next to build/nexus.tsv. If the nexus refresh ever becomes its own
+fabrica action, its inputs would be the whole tree and both raw reads
+could move to lectiones.

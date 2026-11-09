@@ -13,7 +13,9 @@
  *     videt; Review Focus 2).
  *   - identitas clang: /usr/bin/clang trampolinum est (CXIX KiB); verum
  *     binarium (clang -print-prog-name=clang, CCLVII MiB) semel
- *     sigillatur et per (via, mensura, mtime, inode) memoratur.
+ *     sigillatur et per (via, mensura, mtime, inode) memoratur; via
+ *     ipsa per cursum ex COMPILATOR_CLANG_VERUM (compilator_clang_
+ *     verum, budget B2 J8).
  *     FABRICA_CLANG (involucra probationum): octeti eius ipsi.
  * Hit: obiectum COPIATUR (temporarium + rename), numquam nexu duro -
  * inodus communis blobum corrumperet si quis destinationem in loco
@@ -183,6 +185,64 @@ _plagulam_sigillare (
     redde VERUM;
 }
 
+/* VIA VERA CLANG (budget B2 J8): COMPILATOR_CLANG_VERUM = "<clang>\t
+ * <via absoluta>", a cursore SEMEL exportatum (compilator_clang_
+ * exportare in tools/cursor_communis.sh; silva.py per cursum). Valet
+ * solum si clavis = clang datum et via exstat; aliter '-print-prog-
+ * name' ut olim (~XI ms - processus bin/compilator singulus, ~DCL per
+ * fusionem, eum omnes pendebant). Memoria per cursum, non per
+ * machinam: Xcode mutatum post exportationem cursum solum fallit. */
+b32
+compilator_clang_verum (
+    constans character* clang,
+             character* via_out,
+        memoriae_index  magnitudo_via,
+               Piscina* piscina)
+{
+    constans character* notum;
+    constans character* tab;
+    constans character* argv[III];
+     ProcessusResultus  resultus;
+        memoriae_index  longitudo;
+      structura stat    status;
+
+    notum  = getenv("COMPILATOR_CLANG_VERUM");
+    tab    = notum != NIHIL ? strchr(notum, '\t') : NIHIL;
+    si (tab != NIHIL)
+    {
+        longitudo = (memoriae_index)(tab - notum);
+        si (   longitudo                        == strlen(clang)
+            && strncmp(notum, clang, longitudo) == ZEPHYRUM
+            && tab[I]                           == '/'
+            && strlen(tab + I) < magnitudo_via
+            && stat(tab + I, &status)           == ZEPHYRUM)
+        {
+            strcpy(via_out, tab + I);
+            redde VERUM;
+        }
+    }
+    argv[0]   = clang;
+    argv[I]   = "-print-prog-name=clang";
+    argv[II]  = NIHIL;
+    resultus  = processus_exsequi(argv, XXX * M, piscina);
+    si (   !resultus.successus || resultus.codex_exitus != ZEPHYRUM
+        || resultus.effusio.mensura                 == ZEPHYRUM
+        || (memoriae_index)resultus.effusio.mensura >= magnitudo_via)
+    {
+        redde FALSUM;
+    }
+    longitudo = (memoriae_index)resultus.effusio.mensura;
+    memcpy(via_out, resultus.effusio.datum, longitudo);
+    dum (   longitudo > ZEPHYRUM
+         && (   via_out[longitudo - I] == '\n'
+             || via_out[longitudo - I] == '\r'))
+    {
+        longitudo--;
+    }
+    via_out[longitudo] = '\0';
+    redde VERUM;
+}
+
 /* IDENTITAS COMPILATORIS: FABRICA_CLANG -> octeti involucri; aliter
  * binarium verum per memoriam (via, mensura, mtime, inode) in
  * thesauro */
@@ -211,15 +271,12 @@ _identitas_compilatoris (
     Compilatio* c,
       Sigillum* out)
 {
-    constans character* argv[III];
-     ProcessusResultus  resultus;
-             character  via[VIA_MAXIMA];
-             character  memoria[VIA_MAXIMA + CXXVIII];
+             character via[VIA_MAXIMA];
+             character memoria[VIA_MAXIMA + CXXVIII];
       structura stat    status;
               Sigillum  clavis;
                    Xar* capta;
                    Xar* ponenda;
-        memoriae_index  longitudo;
 
     si (getenv("FABRICA_CLANG") != NIHIL)
     {
@@ -235,25 +292,9 @@ _identitas_compilatoris (
         *out = _identitas_sigillum;
         redde VERUM;
     }
-    argv[0]   = c->clang;
-    argv[I]   = "-print-prog-name=clang";
-    argv[II]  = NIHIL;
-    resultus  = processus_exsequi(argv, XXX * M, c->piscina);
-    si (   !resultus.successus || resultus.codex_exitus != ZEPHYRUM
-        || resultus.effusio.mensura == ZEPHYRUM
-        || resultus.effusio.mensura >= VIA_MAXIMA)
-    {
-        redde FALSUM;
-    }
-    longitudo = (memoriae_index)resultus.effusio.mensura;
-    memcpy(via, resultus.effusio.datum, longitudo);
-    dum (   longitudo > ZEPHYRUM
-         && (via[longitudo - I] == '\n' || via[longitudo - I] == '\r'))
-    {
-        longitudo--;
-    }
-    via[longitudo] = '\0';
-    si (stat(via, &status) != ZEPHYRUM)
+    si (   !compilator_clang_verum(c->clang, via, magnitudo(via),
+            c->piscina)
+        || stat(via, &status) != ZEPHYRUM)
     {
         redde FALSUM;
     }

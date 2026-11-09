@@ -705,6 +705,102 @@ _sectio_capacitas (
         "{\"data\":[]}", p).radix, "GAME_CENTER", p));
 }
 
+/* pulsus-plan T11: diploma evolutionis (push in telephono) - certificatum
+ * evolutionis, apparatus IOS, diploma ACTIVE generis, corpus POST */
+interior vacuum
+_sectio_diploma_evolutionis (
+    CredoContextus* c)
+{
+         Piscina* p = c->piscina;
+             Xar* apparatus;
+    JsonResultus  r;
+       JsonValor* data;
+       JsonValor* rel;
+       JsonValor* l;
+
+    CREDO_GRADUS("certificatum evolutionis: DEVELOPMENT, non DISTRIBUTION");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_certificatum_evolutionis(
+        _fixum(FIXA "certificata.json", p), p), "CERT2");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_certificatum_evolutionis(
+        json_legere_literis("{\"data\":[{\"id\":\"A\",\"attributes\":"
+        "{\"certificateType\":\"IOS_DEVELOPMENT\",\"expirationDate\":"
+        "\"2026-05-01T00:00:00.000+00:00\"}},{\"id\":\"B\","
+        "\"attributes\":{\"certificateType\":\"DEVELOPMENT\","
+        "\"expirationDate\":\"2027-01-27T00:00:00.000+00:00\"}}]}", p)
+        .radix, p), "B");
+    CREDO_AEQUALIS_I32(nundinae_apple_certificatum_evolutionis(
+        json_legere_literis("{\"data\":[]}", p).radix, p).mensura,
+        ZEPHYRUM);
+
+    CREDO_GRADUS("apparatus: IOS ENABLED, iPhone et iPad solum");
+    apparatus = xar_creare(p, (i32)magnitudo(chorda));
+    CREDO_VERUM(nundinae_apple_apparatus_legere(_fixum(
+        FIXA "apparatus.json", p), apparatus, p));
+    CREDO_NECESSE(xar_numerus(apparatus) == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(apparatus,
+        ZEPHYRUM), "DEV1");
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(apparatus, I),
+        "DEV2");
+    CREDO_FALSUM(nundinae_apple_apparatus_legere(NIHIL, apparatus, p));
+
+    CREDO_GRADUS("diploma ACTIVE generis dati; INVALID praetermissum");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_diploma_invenire(_fixum(
+        FIXA "diplomata.json", p), "IOS_APP_DEVELOPMENT", p), "CCCC");
+    CREDO_CHORDA_AEQUALIS_LITERIS(nundinae_apple_diploma_invenire(_fixum(
+        FIXA "diplomata.json", p), "IOS_APP_STORE", p), "AAAA");
+    CREDO_AEQUALIS_I32(nundinae_apple_diploma_invenire(_fixum(
+        FIXA "diplomata.json", p), "MAC_APP_DEVELOPMENT", p).mensura,
+        ZEPHYRUM);
+
+    CREDO_GRADUS("corpus POST /v1/profiles cum apparatibus");
+    r = json_legere(nundinae_apple_diploma_corpus(chorda_ex_literis(
+        "rhubarb pictor Development 2026-11-03", p),
+        "IOS_APP_DEVELOPMENT", chorda_ex_literis("BID7", p),
+        chorda_ex_literis("CERT2", p), apparatus, p), p);
+    CREDO_NECESSE(r.successus);
+    data = json_objectum_capere(r.radix, "data");
+    CREDO_NECESSE_NON_NIHIL(data);
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(data, "type",
+        chorda_ex_literis("", p)), "profiles");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(json_objectum_capere(
+        data, "attributes"), "profileType", chorda_ex_literis("", p)),
+        "IOS_APP_DEVELOPMENT");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(json_objectum_capere(
+        data, "attributes"), "name", chorda_ex_literis("", p)),
+        "rhubarb pictor Development 2026-11-03");
+    rel = json_objectum_capere(data, "relationships");
+    CREDO_NECESSE_NON_NIHIL(rel);
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(json_objectum_capere(
+        json_objectum_capere(rel, "bundleId"), "data"), "id",
+        chorda_ex_literis("", p)), "BID7");
+    l = json_objectum_capere(json_objectum_capere(rel, "certificates"),
+        "data");
+    CREDO_NECESSE(l && json_tabulatum_numerus(l) == I);
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(
+        json_tabulatum_obtinere(l, ZEPHYRUM), "id",
+        chorda_ex_literis("",
+        p)), "CERT2");
+    l = json_objectum_capere(json_objectum_capere(rel, "devices"),
+        "data");
+    CREDO_NECESSE(l && json_tabulatum_numerus(l) == II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(
+        json_tabulatum_obtinere(l, I), "type", chorda_ex_literis("",
+        p)),
+        "devices");
+    CREDO_CHORDA_AEQUALIS_LITERIS(json_capere_chorda(
+        json_tabulatum_obtinere(l, I), "id", chorda_ex_literis("", p)),
+        "DEV2");
+
+    CREDO_GRADUS("App Store: sine apparatibus");
+    r = json_legere(nundinae_apple_diploma_corpus(chorda_ex_literis("x",
+        p), "IOS_APP_STORE", chorda_ex_literis("BID7", p),
+        chorda_ex_literis("CERT1", p), NIHIL, p), p);
+    CREDO_NECESSE(r.successus);
+    CREDO_NIHIL(json_objectum_capere(json_objectum_capere(
+        json_objectum_capere(r.radix, "data"), "relationships"),
+        "devices"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tessera", _sectio_tessera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "renovatio", _sectio_renovatio, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -721,6 +817,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "distributio", _sectio_distributio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "capacitas (http2 T11)", _sectio_capacitas, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "diploma evolutionis (pulsus T11)", _sectio_diploma_evolutionis,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

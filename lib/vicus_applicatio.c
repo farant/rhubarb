@@ -28,6 +28,7 @@
 #include "fenestra_tempus.h"
 #include "praeconium.h"
 #include "aetherophonum.h"
+#include "antiphonale.h"
 #include "filum.h"
 #include "specula.h"
 #include <stdio.h>
@@ -2904,6 +2905,33 @@ cantum_recentissimum (
     redde NIHIL;
 }
 
+/* gabc pars II P8: eventus "antiphonale" recentissimus pulsus (post
+ * initium vici) latus antiphonale in fronte plagulam suam aperit
+ * (vicus_acervo_mutare: idem latus si adest). VERUM si petitum */
+interior b32
+antiphonale_eventum_tractare (
+                       Vicus* v,
+                         Xar* eventus,
+                         s64  initium_ms,
+                     Piscina* scheda)
+{
+    constans PraeconiumEventus* e;
+                           i32  i;
+
+    per (i = eventus ? xar_numerus(eventus) : ZEPHYRUM; i > ZEPHYRUM;
+         i--)
+    {
+        e = (constans PraeconiumEventus*)xar_obtinere(eventus, i - I);
+        si (   chorda_aequalis_literis(e->eventus, "antiphonale")
+            && e->tempus >= initium_ms && e->nuntius.mensura > ZEPHYRUM)
+        {
+            redde vicus_acervo_mutare(v, "antiphonale",
+                chorda_ut_cstr(e->nuntius, scheda));
+        }
+    }
+    redde FALSUM;
+}
+
 /* pulsus soni: admonitio nova et cantus eodem pulsu ordine temporis -
  * posterior ultimus vocatur, ergo in tintinnabulo vincit */
 interior vacuum
@@ -3072,6 +3100,181 @@ aetherophonum_describere (
 
 
 /* ==================================================
+ * Antiphonale (gabc pars II P6)
+ * ================================================== */
+
+/* P7: porta antiphonalis super slotas carminis portae soni - mutus
+ * TOTUS carmen negat (ut aetherophonum); porta nulla aut slota NIHIL =
+ * mutum */
+interior b32
+antiphonae_incipere (
+    vacuum* ctx,
+    chorda  carmen,
+       s64  pulsus)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (   !soni->posita || !soni->vicus || !soni->porta.carmen_incipere
+        || veritas_radicis_vici(soni->vicus, "sonus_mutus"))
+    {
+        redde FALSUM;
+    }
+    redde soni->porta.carmen_incipere(soni->porta.ctx, carmen, pulsus);
+}
+
+interior vacuum
+antiphonae_quaerere (
+    vacuum* ctx,
+       s64  pulsus)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita && soni->porta.carmen_quaerere)
+    {
+        soni->porta.carmen_quaerere(soni->porta.ctx, pulsus);
+    }
+}
+
+interior vacuum
+antiphonae_sistere (
+    vacuum* ctx)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (soni->posita && soni->porta.carmen_sistere)
+    {
+        soni->porta.carmen_sistere(soni->porta.ctx);
+    }
+}
+
+interior s64
+antiphonae_pulsus (
+    vacuum* ctx)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    si (!soni->posita || !soni->porta.carmen_pulsus)
+    {
+        redde -I;
+    }
+    redde soni->porta.carmen_pulsus(soni->porta.ctx);
+}
+
+interior b32
+antiphonale_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+       ContextusSoni* soni = (ContextusSoni*)ctx;
+    AntiphonalePorta  porta;
+
+    (vacuum)volumen;
+    porta.incipere  = antiphonae_incipere;
+    porta.quaerere  = antiphonae_quaerere;
+    porta.sistere   = antiphonae_sistere;
+    porta.pulsus    = antiphonae_pulsus;
+    porta.ctx       = soni;
+    redde soni && antiphonale_montare((AntiphonaleMontatio*)sedes,
+        piscina, intern, repo, id, argumentum, latitudo, altitudo,
+        &porta,
+        soni->systemata);
+}
+
+interior VicusPulsus
+antiphonale_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = antiphonale_pulsare(ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior b32
+antiphonalis_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde antiphonale_argumentum_ponere((AntiphonaleMontatio*)ctx,
+        argumentum);
+}
+
+interior vacuum
+antiphonale_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    AntiphonaleMontatio* m = (AntiphonaleMontatio*)montatio;
+
+    f->actiones               = m->actiones;
+    f->figurae                = m->figurae;
+    f->componere              = antiphonale_componere;
+    f->componere_ctx          = m;
+    f->pulsare                = antiphonale_pulsare_in_vico;
+    f->pulsare_ctx            = m;
+    f->mora                   = antiphonale_mora;
+    f->fossa                  = antiphonale_fossa;
+    f->effugium_redit         = VERUM;
+    f->argumentum_ponere      = antiphonalis_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->locus_titulus          = antiphonale_titulus;
+    f->locus_titulus_ctx      = m;
+}
+
+/* $antiphonale(via): latus antiphonale frontale plagulam novam accipit
+ * (vicus_acervo_mutare; nullum: montatur). "~/" = domus. */
+interior b32
+antiphonale_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+         ContextusSoni* soni = (ContextusSoni*)ctx;
+    constans character* domus;
+                chorda  via;
+
+    si (   iussum->numerus_argumentorum        != I
+        || iussum->argumenta[ZEPHYRUM].mensura == ZEPHYRUM)
+    {
+        effectus->error = chorda_ex_literis(
+            "antiphonale: unum argumentum (via plagulae .gabc)",
+            piscina);
+        redde VERUM;
+    }
+    via    = iussum->argumenta[ZEPHYRUM];
+    domus  = getenv("HOME");
+    si (   via.mensura  >= II && via.datum[ZEPHYRUM] == '~'
+        && via.datum[I] == '/' && domus)
+    {
+        chorda reliqua;
+
+        reliqua.datum    = via.datum + I;
+        reliqua.mensura  = via.mensura - I;
+        via = chorda_concatenare(chorda_ex_literis(domus, piscina),
+            reliqua, piscina);
+    }
+    si (   !soni || !soni->vicus
+        || !vicus_acervo_mutare(soni->vicus, "antiphonale",
+               chorda_ut_cstr(via, piscina)))
+    {
+        effectus->error = chorda_ex_literis(
+            "antiphonale: aperiri non potest", piscina);
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Admonitiones (colloquia-plan T4a)
  * ================================================== */
 
@@ -3117,6 +3320,9 @@ nomen structura {
            Admonitiones* transientes;
                     s64  transiens_ultimum;
                     i32  transientium;
+    /* gabc pars II P8: initium vici (ms ab epocha) - eventus
+     * "antiphonale" priores (cauda libri in apertione) neglecti */
+                    s64 initium_ms;
 } ContextusAdmonitionum;
 
 interior s64
@@ -3436,6 +3642,12 @@ systema_admonitionum (
     }
     sonum_pulsus(ca->sonus, v, nova,
         cantum_recentissimum(ca->sequax.eventus));
+    si (antiphonale_eventum_tractare(v, ca->sequax.eventus,
+        ca->initium_ms,
+            ca->sequax.scheda))
+    {
+        mutatum = VERUM;
+    }
     u = (s32)admonitiones_non_lectae(ca->index);
     si (u != ca->non_lectae)
     {
@@ -6203,6 +6415,7 @@ ContextusNomenclatoris* cn;
         cad->index        = admonitiones_creare(piscina, CC);
         cad->transientes  = admonitiones_creare(piscina, XVI);
         cad->non_lectae   = -I;
+        cad->initium_ms   = (s64)time(NIHIL) * M;
         cad->systemata    = systemata;
         cad->piscina      = piscina;
         cad->vicus        = app->vicus;
@@ -6275,6 +6488,9 @@ ContextusNomenclatoris* cn;
                "sessions", "colloquia", NIHIL, piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "theremin", "aetherophonum", NIHIL, piscina)
+        /* gabc pars II P6: $antiphonale(via) */
+        || !iussum_registrare(cs->iussa, "antiphonale", FALSUM,
+               antiphonale_iussum, soni)
         || !sanctorum
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "saints",
                "sancti", NIHIL, piscina)
@@ -6342,6 +6558,10 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "aetherophonum",
                magnitudo(AetherophoniMontatio),
                aetherophonum_montare_in_vico, aetherophonum_describere,
+               soni)
+        || !vicus_genus_addere(app->vicus, "antiphonale",
+               magnitudo(AntiphonaleMontatio),
+               antiphonale_montare_in_vico, antiphonale_describere,
                soni)
         || !vicus_genus_addere(app->vicus, "sancti",
                magnitudo(SanctorumMontatio), sanctos_montare_in_vico,

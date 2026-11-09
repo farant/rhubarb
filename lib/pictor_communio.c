@@ -8,6 +8,7 @@
 #include "filum.h"
 #include "dispensator.h"
 #include "claviatura.h"
+#include "pulsus_forma.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -18,6 +19,19 @@
 #define TEMPUS_INDICIS      ((i32)XXX * (i32)M)
 #define CLAVIS_APPARATUUM   "communio/apparatus"
 #define INDEX_MORA_MS       ((i32)M)
+/* pulsus-plan T9 (spec III.4) */
+#define PULSUS_THEMA        "earth.golden.pictor"
+#define PULSUS_CLAVIS       "pictor.picturae"
+#define PULSUS_UNUS         "{persona} shared a picture"
+#define PULSUS_PLURES       "{persona} shared {numerus} pictures"
+#define PULSUS_MORA         CCC
+#define AMBITUS_MAXIMUS     XVI
+/* pulsus-plan T10: tactus exspectat picturas nondum advectas */
+#define TACTUS_MORA_MS      ((i32)XV * (i32)M)
+/* tergum-plan T6 (C4, C5) */
+#define EXCITATIO_TERMINUS_MS ((i32)XX * (i32)M)
+#define EXCITATIO_MAXIMA      IV
+#define EXCITATIO_INSPECTIO_MS C
 
 structura PictorCommunio {
                  Piscina* piscina;
@@ -59,6 +73,32 @@ structura PictorCommunio {
      * SOLA ("Sent to ..."); numquam in volumine, vacua post
      * resumptionem, abiectionem, inscriptionem, clausuram */
                character epistula_missa[CCLVI];
+    /* pulsus-plan T9: testa (pulsum_parare), tessera apparatus hex (in
+     * memoria sola), petitio semel per processum */
+       TestaPulsumPetere  pulsum_petere;
+                  vacuum* pulsus_sui;
+               character  pulsus_ambitus[AMBITUS_MAXIMUS];
+               character  pulsus_tessera[PULSUS_TESSERA_MAXIMA + I];
+                     b32  pulsus_armatus;
+                     b32  pulsus_petitus;
+    /* pulsus-plan T10: tactus exspectans (ids nondum notae) */
+                 Piscina* tactus_scheda;
+                     Xar* tactus_res;    /* de chorda, in tactus_scheda */
+                     i32  tactus_mora;
+          ReactorTimerId  hora_tactus;
+                     b32  hora_tactus_viva;
+    /* tergum-plan T6: fenestra excitationis - finitiones pendentes,
+     * status notatus, horae (inspectio, terminus) */
+    TestaExcitatioFinire  excitatio_finire[EXCITATIO_MAXIMA];
+                  vacuum* excitatio_sui[EXCITATIO_MAXIMA];
+                     i32  excitationes;
+                     i32  excitatio_vacuae;
+                     i32  excitatio_recepta;
+                     i32  excitatio_terminus;
+          ReactorTimerId  hora_inspectionis;
+                     b32  hora_inspectionis_viva;
+          ReactorTimerId  hora_termini;
+                     b32  hora_termini_viva;
 };
 
 s32
@@ -68,6 +108,12 @@ pictor_communio_inscriptionis_gradus (
 b32
 pictor_communio_inscripta (
     constans PictorCommunio* pc);
+
+/* tergum-plan T6 */
+interior vacuum
+_excitationem_finire (
+          PictorCommunio* pc,
+    TestaExcitatioExitus  exitus);
 
 /* mutatio: montatio ligata renovatur (inscripta, Shared pictures,
  * claviatura cum inscripta celata), deinde recompositio et mutata */
@@ -297,6 +343,169 @@ _apparatus_invenire (
     redde NIHIL;
 }
 
+
+/* ==================================================
+ * pulsus-plan T10: tactus notificationis
+ * ================================================== */
+
+interior vacuum
+_nuntiare (
+    PictorCommunio* pc);
+
+/* tactus exspectans finitur: hora, ids, "Loading" */
+interior vacuum
+_tactum_finire (
+    PictorCommunio* pc)
+{
+    si (pc->hora_tactus_viva)
+    {
+        (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora_tactus);
+        pc->hora_tactus_viva = FALSUM;
+    }
+    pc->tactus_res = NIHIL;
+    si (pc->tactus_scheda)
+    {
+        piscina_vacare(pc->tactus_scheda);
+    }
+    si (pc->montatio)
+    {
+        pc->montatio->communia.onerans = FALSUM;
+    }
+}
+
+/* communia parantur; omnes: grex solum si quaeque nota (aliter
+ * FALSUM, nihil mutatum); aliter pictor_gregem_aperire_in (notae aut
+ * rete). VERUM si spectator apertus. */
+interior b32
+_gregem_temptare (
+     PictorCommunio* pc,
+       constans Xar* res,
+                b32  solum_e_rete,
+                b32  omnes)
+{
+    PictorCommunia* c;
+
+    c = &pc->montatio->communia;
+    si (!pictor_communia_parare(c))
+    {
+        redde FALSUM;
+    }
+    si (omnes)
+    {
+        si (   !res || !pictor_communia_gregem_ponere(c, res)
+            || pictor_communia_gregis_numerus(c) != xar_numerus(res))
+        {
+            pictor_communia_gregem_tollere(c);
+            redde FALSUM;
+        }
+    }
+    redde pictor_gregem_aperire_in(pc->montatio->ramus.repo,
+        &pc->montatio->actiones_ctx, res, solum_e_rete);
+}
+
+/* post advenerunt: omnes nunc notae -> spectator (si rete adhuc
+ * apertum) */
+interior vacuum
+_tactum_iterare (
+    PictorCommunio* pc)
+{
+    si (!pc->tactus_res || !pc->montatio)
+    {
+        redde;
+    }
+    si (_gregem_temptare(pc, pc->tactus_res, VERUM, VERUM))
+    {
+        _tactum_finire(pc);
+        _nuntiare(pc);
+    }
+}
+
+/* mora transacta: notae aperiuntur, aliter rete (si adhuc apertum) */
+interior vacuum
+_tactus_hora (
+    vacuum* datum)
+{
+    PictorCommunio* pc = (PictorCommunio*)datum;
+
+    pc->hora_tactus_viva = FALSUM;
+    si (pc->tactus_res && pc->montatio && !pc->clausa)
+    {
+        pc->montatio->communia.onerans = FALSUM;
+        (vacuum)_gregem_temptare(pc, pc->tactus_res, VERUM, FALSUM);
+    }
+    _tactum_finire(pc);
+    _nuntiare(pc);
+}
+
+/* testa: notificatio pressa (corpus totum ut JSON) */
+interior vacuum
+_pulsus_tactus (
+    vacuum* ctx,
+    chorda  corpus_json)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+           Piscina* temporaria;
+      PulsusTactus  tactus;
+               i32  i;
+
+    si (pc->clausa || !pc->montatio || !pc->montatio->ramus.repo)
+    {
+        redde;
+    }
+    temporaria = piscina_generare_dynamicum("pictor_tactus",
+        (memoriae_index)XVI * (memoriae_index)M);
+    si (!temporaria)
+    {
+        redde;
+    }
+    si (   !pulsus_tactum_legere(corpus_json, temporaria, &tactus)
+        || !chorda_aequalis_literis(tactus.clavis, PULSUS_CLAVIS))
+    {
+        piscina_destruere(temporaria);
+        redde;
+    }
+    _tactum_finire(pc);
+    si (   tactus.plures || !tactus.res
+        || xar_numerus(tactus.res) == ZEPHYRUM)
+    {
+        (vacuum)_gregem_temptare(pc, NIHIL, FALSUM, FALSUM);
+    }
+    alioquin si (!_gregem_temptare(pc, tactus.res, FALSUM, VERUM))
+    {
+        /* nondum advectae: ids servantur, rete "Loading", communio
+         * statim trahit; iterum post advenerunt aut moram */
+        si (!pc->tactus_scheda)
+        {
+            pc->tactus_scheda = piscina_generare_dynamicum(
+                "pictor_tactus_res", (memoriae_index)IV
+                * (memoriae_index)M);
+        }
+        pc->tactus_res = pc->tactus_scheda ? xar_creare(
+            pc->tactus_scheda, (i32)magnitudo(chorda)) : NIHIL;
+        per (i = ZEPHYRUM; pc->tactus_res
+            && i < xar_numerus(tactus.res);
+             i++)
+        {
+            *(chorda*)xar_addere(pc->tactus_res) = chorda_ex_literis(
+                chorda_ut_cstr(*(chorda*)xar_obtinere(tactus.res, i),
+                pc->tactus_scheda), pc->tactus_scheda);
+        }
+        pc->montatio->communia.onerans = pc->tactus_res != NIHIL;
+        (vacuum)_gregem_temptare(pc, NIHIL, FALSUM, FALSUM);
+        si (pc->tactus_res)
+        {
+            pc->hora_tactus = reactor_timer_adicere(pc->reactor,
+                pc->tactus_mora > ZEPHYRUM ? pc->tactus_mora
+                : TACTUS_MORA_MS, FALSUM, _tactus_hora, pc);
+            pc->hora_tactus_viva = pc->hora_tactus
+                != (ReactorTimerId)-I;
+        }
+        pictor_communio_excitare(pc);
+    }
+    piscina_destruere(temporaria);
+    _nuntiare(pc);
+}
+
 /* acta advecta: nuntiare; apparatus novus (replica ignota) -> index */
 interior vacuum
 _advenerunt (
@@ -328,6 +537,135 @@ _advenerunt (
         piscina_destruere(temporaria);
     }
     _nuntiare(pc);
+    _tactum_iterare(pc);
+}
+
+/* pulsus-plan T9: eventus in caudam clientis; res = "<replica>:" +
+ * spatium (C ad plurimum) */
+interior b32
+_eventum_nuntiare (
+       PictorCommunio* pc,
+         constans Xar* spatia,
+                  b32  statim,
+              Piscina* piscina)
+{
+    PulsusEventus ev;
+           chorda replica;
+           chorda id;
+              i32 i;
+
+    replica = volumen_replica(pc->volumen);
+    si (!pc->cliens || pc->recusata || replica.mensura == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    memset(&ev, ZEPHYRUM, magnitudo(ev));
+    ev.clavis  = chorda_ex_literis(PULSUS_CLAVIS, piscina);
+    ev.thema   = chorda_ex_literis(PULSUS_THEMA, piscina);
+    ev.unus    = chorda_ex_literis(PULSUS_UNUS, piscina);
+    ev.plures  = chorda_ex_literis(PULSUS_PLURES, piscina);
+    ev.mora_s  = PULSUS_MORA;
+    ev.statim  = statim;
+    ev.res     = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (!ev.res)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; spatia && i < xar_numerus(spatia)
+         && i < PULSUS_RES_PER_PETITIONEM; i++)
+    {
+        id = chorda_concatenare(chorda_concatenare(replica,
+            chorda_ex_literis(":", piscina), piscina),
+            *(chorda*)xar_obtinere(spatia, i), piscina);
+        *(chorda*)xar_addere(ev.res) = id;
+    }
+    communio_cliens_pulsum_nuntiare(pc->cliens, &ev);
+    redde VERUM;
+}
+
+/* acta propria accepta -> eventus de picturis tactis (si quae) */
+interior vacuum
+_missa (
+                   vacuum* ctx,
+    constans VolumenActum* acta,
+                      i32  numerus)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+           Piscina* temporaria;
+               Xar* spatia;
+
+    temporaria = piscina_generare_dynamicum("pictor_communio_missa",
+        (memoriae_index)LXIV * (memoriae_index)M);
+    spatia = temporaria ? pictor_spatia_actorum(pc->volumen, acta,
+        numerus, temporaria) : NIHIL;
+    si (spatia && xar_numerus(spatia) > ZEPHYRUM)
+    {
+        (vacuum)_eventum_nuntiare(pc, spatia, FALSUM, temporaria);
+    }
+    si (temporaria)
+    {
+        piscina_destruere(temporaria);
+    }
+}
+
+/* tessera nota et cliens: inscribere (cliens copiat) */
+interior vacuum
+_pulsum_inscribere (
+    PictorCommunio* pc)
+{
+    si (   !pc->cliens || pc->recusata || pc->pulsus_tessera[ZEPHYRUM]
+        == '\0')
+    {
+        redde;
+    }
+    communio_cliens_pulsum_inscribere(pc->cliens, chorda_ex_literis(
+        pc->pulsus_tessera, pc->scheda), chorda_ex_literis(
+        pc->pulsus_ambitus, pc->scheda), chorda_ex_literis(PULSUS_THEMA,
+        pc->scheda));
+}
+
+/* testa: tessera (aut vacua + causa: negata, defectus). Tessera
+ * numquam in nuntio. */
+interior vacuum
+_pulsus_signum (
+    vacuum* ctx,
+    chorda  tessera_hex,
+    chorda  causa)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+
+    si (pc->clausa)
+    {
+        redde;
+    }
+    si (   tessera_hex.mensura == ZEPHYRUM
+        || tessera_hex.mensura > PULSUS_TESSERA_MAXIMA)
+    {
+        fprintf(stderr, "pictor: pulsus non inscriptus - %.*s\n",
+            (integer)(causa.mensura < CCLVI ? causa.mensura : CCLVI),
+            causa.datum ? (constans character*)causa.datum : "");
+        redde;
+    }
+    memcpy(pc->pulsus_tessera, tessera_hex.datum,
+        (size_t)tessera_hex.mensura);
+    pc->pulsus_tessera[tessera_hex.mensura] = '\0';
+    _pulsum_inscribere(pc);
+}
+
+/* armatus, inscripta, nondum petitum: testam rogare */
+interior vacuum
+_pulsum_petere (
+    PictorCommunio* pc)
+{
+    si (   !pc->pulsus_armatus || pc->pulsus_petitus
+        || !pc->pulsum_petere
+        || !pictor_communio_inscripta(pc))
+    {
+        redde;
+    }
+    pc->pulsus_petitus = VERUM;
+    (vacuum)pc->pulsum_petere(pc->pulsus_sui, _pulsus_signum,
+        _pulsus_tactus, pc);
 }
 
 PictorCommunio*
@@ -445,6 +783,8 @@ pictor_communio_incipere (
         redde;
     }
     communio_cliens_recusationem_ponere(pc->cliens, _recusata, pc);
+    communio_cliens_missa_ponere(pc->cliens, _missa, pc);
+    _pulsum_inscribere(pc);
     si (pc->mora_posita)
     {
         communio_cliens_moram_ponere(pc->cliens, pc->mora);
@@ -546,8 +886,17 @@ pictor_communionem_claudere (
     {
         redde;
     }
+    _tactum_finire(pc);
+    si (pc->tactus_scheda)
+    {
+        piscina_destruere(pc->tactus_scheda);
+        pc->tactus_scheda = NIHIL;
+    }
+    /* tergum-plan T6: fenestra aperta - defectus, horae cancellatae */
+    _excitationem_finire(pc, TESTA_EXCITATIO_DEFECTUS);
     pc->clausa = VERUM;
     memset(pc->epistula_missa, ZEPHYRUM, magnitudo(pc->epistula_missa));
+    memset(pc->pulsus_tessera, ZEPHYRUM, magnitudo(pc->pulsus_tessera));
     si (pc->hora_indicis_viva)
     {
         (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora_indicis);
@@ -597,6 +946,8 @@ _inscriptio_mutata (
         memset(pc->epistula_missa, ZEPHYRUM,
             magnitudo(pc->epistula_missa));
         pictor_communio_incipere(pc);
+        /* pulsus-plan T9: statim post inscriptionem */
+        _pulsum_petere(pc);
     }
     _nuntiare(pc);
 }
@@ -795,6 +1146,14 @@ _epistula_ligata (
         piscina);
 }
 
+interior b32
+_statim_ligatum (
+                 vacuum* ctx,
+     constans character* spatium)
+{
+    redde pictor_communio_pulsum_statim((PictorCommunio*)ctx, spatium);
+}
+
 vacuum
 pictor_communionem_ligare (
          PictorCommunio* pc,
@@ -825,6 +1184,284 @@ pictor_communionem_ligare (
     montatio->actiones_ctx.codicem_dare = _codicem_ligatum;
     montatio->actiones_ctx.inscriptionem_abicere = _abicere_ligatum;
     montatio->actiones_ctx.communio_excitare = _excitare_ligatum;
+    montatio->actiones_ctx.pulsum_statim = _statim_ligatum;
     montatio->actiones_ctx.inscriptio_ctx = pc;
     pc->gradus_nuntiatus = pictor_communio_inscriptionis_gradus(pc);
+}
+
+
+/* ==================================================
+ * tergum-plan T6: excitatio in tergo
+ * ================================================== */
+
+/* fenestra clauditur: horae cancellantur, mora restituitur (posita aut
+ * ordinaria - numquam 0 nisi posita), omnes finitiones pendentes
+ * eodem exitu (copia prius: finire fortasse rursus intrat) */
+interior vacuum
+_excitationem_finire (
+          PictorCommunio* pc,
+    TestaExcitatioExitus  exitus)
+{
+    TestaExcitatioFinire  finire[EXCITATIO_MAXIMA];
+                  vacuum* sui[EXCITATIO_MAXIMA];
+                     i32  n;
+                     i32  i;
+
+    si (pc->hora_inspectionis_viva)
+    {
+        (vacuum)reactor_timer_cancellare(pc->reactor,
+            pc->hora_inspectionis);
+        pc->hora_inspectionis_viva = FALSUM;
+    }
+    si (pc->hora_termini_viva)
+    {
+        (vacuum)reactor_timer_cancellare(pc->reactor, pc->hora_termini);
+        pc->hora_termini_viva = FALSUM;
+    }
+    si (pc->cliens)
+    {
+        communio_cliens_moram_ponere(pc->cliens, pc->mora_posita
+            ? pc->mora : COMMUNIO_MORA_ORDINARIA);
+    }
+    n = pc->excitationes;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        finire[i]  = pc->excitatio_finire[i];
+        sui[i]     = pc->excitatio_sui[i];
+    }
+    pc->excitationes = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < n; i++)
+    {
+        finire[i](sui[i], exitus);
+    }
+}
+
+interior vacuum
+_excitationem_inspicere (
+    vacuum* datum);
+
+interior vacuum
+_inspectionem_armare (
+    PictorCommunio* pc)
+{
+    pc->hora_inspectionis = reactor_timer_adicere(pc->reactor,
+        EXCITATIO_INSPECTIO_MS, FALSUM, _excitationem_inspicere, pc);
+    pc->hora_inspectionis_viva = pc->hora_inspectionis
+        != (ReactorTimerId)-I;
+}
+
+/* omni C ms: recusata -> defectus; tractio vacua post notam ->
+ * assecuta */
+interior vacuum
+_excitationem_inspicere (
+    vacuum* datum)
+{
+    PictorCommunio* pc = (PictorCommunio*)datum;
+    CommunioStatus  s;
+
+    pc->hora_inspectionis_viva = FALSUM;
+    si (pc->excitationes == ZEPHYRUM)
+    {
+        redde;
+    }
+    si (pc->recusata || !pc->cliens)
+    {
+        _excitationem_finire(pc, TESTA_EXCITATIO_DEFECTUS);
+        redde;
+    }
+    s = communio_cliens_status(pc->cliens);
+    si (s.recusata)
+    {
+        _excitationem_finire(pc, TESTA_EXCITATIO_DEFECTUS);
+        redde;
+    }
+    si (s.tractiones_vacuae > pc->excitatio_vacuae)
+    {
+        _excitationem_finire(pc, s.recepta > pc->excitatio_recepta
+            ? TESTA_EXCITATIO_NOVA : TESTA_EXCITATIO_NIHIL);
+        redde;
+    }
+    _inspectionem_armare(pc);
+}
+
+interior vacuum
+_excitationis_terminus (
+    vacuum* datum)
+{
+    PictorCommunio* pc = (PictorCommunio*)datum;
+
+    pc->hora_termini_viva = FALSUM;
+    _excitationem_finire(pc, TESTA_EXCITATIO_DEFECTUS);
+}
+
+/* testa: pulsus advenit (in tergo aut in fronte) */
+interior vacuum
+_excitatio (
+                  vacuum* ctx,
+                  chorda  corpus_json,
+    TestaExcitatioFinire  finire,
+                  vacuum* finire_sui)
+{
+    PictorCommunio* pc = (PictorCommunio*)ctx;
+           Piscina* temporaria;
+      PulsusTactus  tactus;
+               b32  valet;
+    CommunioStatus  s;
+
+    si (!finire)
+    {
+        redde;
+    }
+    si (pc->clausa)
+    {
+        finire(finire_sui, TESTA_EXCITATIO_DEFECTUS);
+        redde;
+    }
+    temporaria = piscina_generare_dynamicum("pictor_excitatio",
+        (memoriae_index)XVI * (memoriae_index)M);
+    valet = temporaria && pulsus_tactum_legere(corpus_json, temporaria,
+        &tactus) && chorda_aequalis_literis(tactus.clavis,
+        PULSUS_CLAVIS);
+    si (temporaria)
+    {
+        piscina_destruere(temporaria);
+    }
+    si (!valet)
+    {
+        finire(finire_sui, TESTA_EXCITATIO_NIHIL);
+        redde;
+    }
+    si (   !pc->cliens || pc->recusata
+        || communio_cliens_status(pc->cliens).recusata)
+    {
+        finire(finire_sui, TESTA_EXCITATIO_DEFECTUS);
+        redde;
+    }
+    s = communio_cliens_status(pc->cliens);
+    si (pc->excitationes == ZEPHYRUM)
+    {
+        pc->excitatio_recepta = s.recepta;
+        pc->hora_termini = reactor_timer_adicere(pc->reactor,
+            pc->excitatio_terminus > ZEPHYRUM ? pc->excitatio_terminus
+            : EXCITATIO_TERMINUS_MS, FALSUM, _excitationis_terminus,
+            pc);
+        pc->hora_termini_viva = pc->hora_termini != (ReactorTimerId)-I;
+    }
+    /* C5: posterior iterum notat - acta eius ante pulsum in servo, ergo
+     * tractio post eum incepta ea videt */
+    pc->excitatio_vacuae = s.tractiones_vacuae;
+    si (pc->excitationes < EXCITATIO_MAXIMA)
+    {
+        pc->excitatio_finire[pc->excitationes]  = finire;
+        pc->excitatio_sui[pc->excitationes]     = finire_sui;
+        pc->excitationes++;
+    }
+    alioquin
+    {
+        finire(finire_sui, TESTA_EXCITATIO_NIHIL);
+    }
+    communio_cliens_moram_ponere(pc->cliens, ZEPHYRUM);
+    communio_cliens_renovare(pc->cliens);
+    si (!pc->hora_inspectionis_viva)
+    {
+        _inspectionem_armare(pc);
+    }
+}
+
+vacuum
+pictor_communio_excitationis_terminum_ponere (
+    PictorCommunio* pc,
+               i32  ms)
+{
+    si (pc)
+    {
+        pc->excitatio_terminus = ms;
+    }
+}
+
+CommunioStatus
+pictor_communio_status (
+    constans PictorCommunio* pc)
+{
+    CommunioStatus s;
+
+    si (pc && pc->cliens)
+    {
+        redde communio_cliens_status(pc->cliens);
+    }
+    memset(&s, ZEPHYRUM, magnitudo(s));
+    redde s;
+}
+
+
+/* ==================================================
+ * pulsus-plan T9
+ * ================================================== */
+
+vacuum
+pictor_communio_pulsum_parare (
+           PictorCommunio* pc,
+    constans TestaAmbitus* a)
+{
+    si (!pc || pc->clausa || !a || !a->pulsum_petere)
+    {
+        redde;
+    }
+    pc->pulsum_petere  = a->pulsum_petere;
+    pc->pulsus_sui     = a->pulsus_ctx;
+    strcpy(pc->pulsus_ambitus, "productio");
+    si (   a->pulsus_ambitus
+        && strlen(a->pulsus_ambitus) < magnitudo(pc->pulsus_ambitus))
+    {
+        strcpy(pc->pulsus_ambitus, a->pulsus_ambitus);
+    }
+    pc->pulsus_armatus = VERUM;
+    /* tergum-plan T6: excitatio in tergo (iOS) */
+    si (a->excitationem_ponere)
+    {
+        a->excitationem_ponere(a->pulsus_ctx, _excitatio, pc);
+    }
+    _pulsum_petere(pc);
+}
+
+b32
+pictor_communio_pulsum_statim (
+         PictorCommunio* pc,
+     constans character* spatium)
+{
+    Piscina* temporaria;
+        Xar* l;
+        b32  factum;
+
+    si (   !pc || pc->clausa || !pc->cliens
+        || !pictor_communio_inscripta(pc))
+    {
+        redde FALSUM;
+    }
+    temporaria = piscina_generare_dynamicum("pictor_communio_statim",
+        (memoriae_index)IV * (memoriae_index)M);
+    si (!temporaria)
+    {
+        redde FALSUM;
+    }
+    l = xar_creare(temporaria, (i32)magnitudo(chorda));
+    si (l && spatium)
+    {
+        *(chorda*)xar_addere(l) = chorda_ex_literis(spatium,
+            temporaria);
+    }
+    factum = l && _eventum_nuntiare(pc, l, VERUM, temporaria);
+    piscina_destruere(temporaria);
+    redde factum;
+}
+
+vacuum
+pictor_communio_tactus_moram_ponere (
+    PictorCommunio* pc,
+               i32  ms)
+{
+    si (pc)
+    {
+        pc->tactus_mora = ms;
+    }
 }
