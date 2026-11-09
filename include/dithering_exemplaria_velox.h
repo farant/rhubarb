@@ -10,6 +10,21 @@
  * paris scribit). Classicus intactus manet.
  *
  * Determinatum: idem input + optiones -> eadem indices.
+ *
+ * Differentia a classico (project-specs/exemplaria-velox.md, VIII):
+ * plana f32 et radix cubica approximata (T3) - lapis 2 px, pratum 14
+ * px ex ~450 000 diversa. Omnia post T3 exacta (digesta in probatione
+ * fixa). Velocitas (2026-11-07, N XXX, ms per quadrum, Apple silicon):
+ *
+ *   imago   magnitudo  classica  velox  arena c/v MB
+ *   lapis   360x451      226      76    89/29
+ *   lapis   600x751      581     185    247/80
+ *   lapis   720x901      840     258    356/115
+ *   pratum  600x800      663     193    260/82
+ *
+ * Ubi tempus abit (velox, sine inlining): basis XXXVII %, residuum
+ * XVII %, campus striarum X %, pictographica VII %, structura VII %,
+ * aspersio VI %.
  */
 
 #ifndef DITHERING_EXEMPLARIA_VELOX_H

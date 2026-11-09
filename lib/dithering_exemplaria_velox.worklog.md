@@ -310,3 +310,47 @@ Unmeasured ideas from the review (each ~1-3%, all exact), for later:
 - base: seed `optimum` with an upper bound U (accept the first err <=
   U, then strict <) - identical result;
 - `CANDIDATI_MAX` XII is never reached (max 10).
+
+## 2026-11-07 — tried, dropped: identical base blocks within a frame
+
+Fran asked whether in-frame repeats could be skipped (low-poly renders
+have flat faces). Counted in scratch: a base block's full input (4 eye
+pixels, 4 linear pixels, 8x8 phase, size) repeats bit-for-bit in 38-40%
+of the computed blocks on the golem, 0% on the meadow photo. An exact
+prototype (hash + full-key memcmp, result reused) kept the bytes
+identical but gained only 3-4% on the golem and cost 7% on the meadow:
+the repeats are flat background, already the cheapest blocks (the
+bounds end them almost at once), and photos pay for the hashing. Also
+leans on the spec's anti-goals (no memoization; no golem-only wins).
+Not adopted. A lower render resolution for the 3D pane (Fran is open to
+"a short hike" style) is the bigger lever: 360x451 already runs at ~74
+ms (~13.5 fps).
+
+## 2026-11-07 — tried, dropped: seeded optimum in the base
+
+Exact scheme (scratch): seed = the pair with the smallest capsule bound,
+at the level nearest its projection t * 16 (clamped 1..15), err summed
+exactly as the loop would; scan starts at U = min(solid, seed), accepts
+the first err <= U, then strict < (pruning uses <= until then; the
+capsule test is strict, so unchanged). Bytes identical. Work: levels
+walked per area golem 21.4 -> 18.0, meadow 46.1 -> 30.6; the seed beats
+the solid start in 47% / 98% of areas. Time: no change (within noise).
+After T7 the base is mostly fixed per-area work - three `_proximi_k`
+calls, 36 capsule distances (sqrt each), the 15-level first-term sweep
+per surviving pair (~7.5 pairs) - which the seed doesn't touch, and the
+seed pays for one full evaluation. Not adopted. Further base gains need
+that fixed cost cut (fewer candidates would drift; e.g. a cheaper
+capsule test or sweeping only surviving pairs' plausible levels).
+
+## 2026-11-07 — T8: verdict and docs
+
+Final run (N 30, ms): golem 360 76, golem 600 185, golem 720 258, meadow
+193; classic 226 / 581 / 840 / 663 -> 3.0-3.4x. The spec's 12 fps target
+at 600x751 (<= 83 ms) is missed (5.4 fps); 360x451 meets it (13 fps).
+Fran is open to a lower 3D render resolution ("a short hike" style,
+shown at 2x), which is the path for trying exemplaria in motion.
+Photos-vs-golem speed-up condition met (3.4x vs 3.1x). The spec has a
+dated "VIII. Result" section (table, verdict, per-task progression,
+departures, tried-and-dropped, what's left); the public header carries
+the table. Tabularium wishes: pictor paste B -> velox (after Fran's look
+verdict on the `_par.png` images); the remaining 1-3% exact list.

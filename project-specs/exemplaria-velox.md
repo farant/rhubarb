@@ -1,8 +1,10 @@
 # exemplaria velox — pattern dithering fast enough for animation
 
-Status: DRAFT 2026-11-06, brainstormed with Fran (secunda session
-134c8417) while designing the 3D model pane. Latin names are proposals
-until each task's header text is approved.
+Status: DONE 2026-11-07 (secunda, commits 1b6670c04 .. T8). Fast is
+3.1-3.4x classic, output bit-identical since T3; the 12 fps target at
+600x751 is missed (185 ms, 5.4 fps) and met at 360x451 (76 ms) - see
+VIII. Brainstormed 2026-11-06 with Fran (secunda session 134c8417)
+while designing the 3D model pane.
 
 *The question (Fran, 2026-11-06): the 3D model pane should dither every
 frame like pictor does. Atkinson keeps up easily; exemplaria (the
@@ -181,3 +183,78 @@ Each task reports the timing table and new PNGs.
 - Shimmer in motion is not addressed here and may make exemplaria
   unusable for animation regardless of speed - that is the pane's
   experiment.
+
+## VIII. Result (2026-11-07)
+
+Final run, `tools/exemplaria_mensura -n 30`, ms per frame (dither
+only), default options, all 16 colours:
+
+| image  | size    | Atkinson | classic | fast | speed-up | arena c/v MB |
+|--------|---------|----------|---------|------|----------|--------------|
+| golem  | 360x451 | 3.5      | 226     | 76   | 3.0x     | 89/29        |
+| golem  | 600x751 | 9.3      | 581     | 185  | 3.1x     | 247/80       |
+| golem  | 720x901 | 13.9     | 840     | 258  | 3.3x     | 356/115      |
+| meadow | 600x800 | 10.1     | 663     | 193  | 3.4x     | 260/82       |
+
+**Verdict.**
+- **Target (I.1, <= 83 ms at 600x751) missed:** 185 ms = 5.4 fps. At
+  360x451 the fast version runs at 76 ms (13 fps), over 12 fps. Fran
+  (2026-11-07) is open to a lower render resolution for the 3D pane ("a
+  short hike" style: render small, show at 2x as chunky pixels); about
+  300x375 should land near 45-50 ms (~20 fps). That, not more speed at
+  600x751, is the planned way to try exemplaria in motion.
+- **Photos at least as much faster as the golem (II.5): met** (meadow
+  3.4x, golem 3.1x).
+- **Same look (I.2):** drift from classic is 2 px (golem) and 14 px
+  (meadow) of ~450 000. It comes only from T3 (f32 planes,
+  approximate cube root); every later task is exact and pinned by
+  blake2b digests ("velox fixa", "magnitudines oris", "hachurae fixae",
+  "tecta fixa"). Side by side: `build/exemplaria_velox/*_par.png`
+  (classic left, fast right) - Fran's look verdict pending.
+- Classic is unchanged ("classica fixa" pinned since T1).
+
+**Where the time went, by task** (golem 600 ms): T1 copy 590 -> T3
+f32/bitsets 517 -> T4 blur 488 -> T5 nearest colours + exact pruning
+328 -> T6 hatching field 324 -> T7 review 179 (~185 at N 30). T7 came
+from a fresh-eyes review (a read-only subagent): skip base areas that
+hatching/pictograms paint over, a capsule lower bound per colour pair
+(all mixes of a pair lie within rho of the segment a -> b; distance to a
+capsule is convex, so the area mean bounds every level), a branch-free
+first-term sweep, the horizontal blur row by row, the hatching field 4
+pixels at once.
+
+**Where the time goes now** (no-inline profile): base 37%, residual 17%,
+hatching field 10%, pictograms 7%, structure tensors 7%, aspersio 6%.
+The base is mostly fixed per-area work now (three nearest-colour
+searches, 36 capsule distances, the first-term sweep per surviving
+pair).
+
+**Departures from IV.**
+- Packed pair keys dropped: holding the best choice as `a | b << 4 |
+  level << 8` made the base 60% slower (T5, bisected); three separate
+  variables avoid it.
+- Pruning went well beyond "penalty exceeds best" (which fired on <1%
+  of pairs): the capsule bound skips 74-82% of pairs.
+
+**Tried and dropped** (so nobody retries them blind; details in
+`lib/dithering_exemplaria_velox.worklog.md`):
+- In-frame dedupe of identical base blocks: 38-40% of golem blocks
+  repeat bit-for-bit (0% on the photo), but the gain was 3-4% on the
+  golem and a 7% loss on the meadow - the repeats are flat background,
+  already the cheapest blocks. Also leans on the no-memoization rule.
+- Seeding the best-so-far with a likely pair and level: exact, cut the
+  levels walked by 16-34%, no time change - the remaining base cost is
+  fixed per-area work the seed doesn't touch.
+- A plain triangle ("ball") bound per pair: -9%, superseded by the
+  capsule bound.
+
+**Left** (each ~1-3%, all exact; tabularium wish): the hatching angle
+only where used; share the two structure tensors' gradients; no
+div/mod in the region code; the residual skips both square roots when
+the nearest colour is the base colour; aspersio's OKLab only under the
+mask; branch-free nearest-colour ranking. Bigger levers are outside the
+spec: threads/processes (non-goal) or a GPU path.
+
+**pictor (VI)** is unchanged; swapping paste's B to the fast version is
+a tabularium wish, to do when Fran trusts the look.
+
