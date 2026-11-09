@@ -4,13 +4,18 @@
  * Edit unicae (postulatio 2026-07-11, parcum 01KY53MP5X).
  *
  * Usus: ./silva/selecta.sh <plagula> '<selector>'
- *           [-intra <symbolum>] [-omnia] [-proba]
+ *           [-intra <symbolum>] [-omnia] [-sedes] [-proba]
  *
  * -intra: congruentia ad subarborem definitionis nominatae scopata
  *   (filtrum: maior-aut-ipse congruit
  *   "definitio-functionis:definit(<symbolum>)" - zuccharum QC,
  *   nulla ambulatio propria).
  * -omnia: tectum mensurae plagulae sublatum.
+ * -sedes: forma machinae - linea una per congruentiam
+ *   'via\tlinea\tcolumna\tlinea_ultima' (sedes EXACTA lexematis
+ *   primi subarboris, 1-basata; nullum corpus). Consumptor:
+ *   tools/instrumentum_unitas.sh (initia declarationum functionum
+ *   pro conflatore -i).
  * -proba: porta nativa (fixtura inclusa, probationes numeratae).
  *
  * Arbor cum erroribus: CAUTIO + PERGE (nodi error quaeribiles -
@@ -49,6 +54,7 @@ nomen structura {
     s32 initium;
     s32 finis;
     i32 linea_prima;
+    i32 columna_prima;
     i32 linea_ultima;
 } Extentus;
 
@@ -63,11 +69,12 @@ _extentum_metiri (
          i32  cursor = ZEPHYRUM;
          i32  k;
 
-    ext.validus       = FALSUM;
-    ext.initium       = ZEPHYRUM;
-    ext.finis         = ZEPHYRUM;
-    ext.linea_prima   = ZEPHYRUM;
-    ext.linea_ultima  = ZEPHYRUM;
+    ext.validus        = FALSUM;
+    ext.initium        = ZEPHYRUM;
+    ext.finis          = ZEPHYRUM;
+    ext.linea_prima    = ZEPHYRUM;
+    ext.columna_prima  = ZEPHYRUM;
+    ext.linea_ultima   = ZEPHYRUM;
 
     si (series == NIHIL) redde ext;
     per (k = ZEPHYRUM; k < subiectum->numerus_locorum; k++)
@@ -113,8 +120,9 @@ _extentum_metiri (
                 si (   !ext.validus
                     || radix_lex->byte_offset < ext.initium)
                 {
-                    ext.initium      = radix_lex->byte_offset;
-                    ext.linea_prima  = radix_lex->linea;
+                    ext.initium        = radix_lex->byte_offset;
+                    ext.linea_prima    = radix_lex->linea;
+                    ext.columna_prima  = radix_lex->columna;
                 }
                 si (!ext.validus || finis_lex > ext.finis)
                 {
@@ -242,6 +250,46 @@ _proba (vacuum)
         fprintf(stderr, "selecta -proba: selector malus "
             "non reiectus\n");
         fracta = VERUM;
+    }
+    /* -sedes: sedes EXACTA lexematis primi (genus reditus in linea
+     * supra nomen, indentatum) - consumptor: conflator -i */
+    {
+        constans character* fons_sedium =
+            "int a;\n"
+            "  char*\n"
+            "f (int x);\n";
+        SilvaParsura* p2 = silva_c89_parsare(piscina, "sedes.h",
+            fons_sedium, (i32)strlen(fons_sedium), NIHIL);
+        SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+            &SILVA_C89_REGISTRUM,
+            "declaratio:habet(declarator-functionis)", &causa);
+        Xar* res = (p2 != NIHIL && q != NIHIL)
+            ? silva_quaestio_exsequi(q, p2->commissio->radix, piscina)
+            : NIHIL;
+
+        si (res == NIHIL || xar_numerus(res) != I)
+        {
+            fprintf(stderr, "selecta -proba: fixtura sedium: "
+                "congruentia una exspectata\n");
+            fracta = VERUM;
+        }
+        alioquin
+        {
+            constans SilvaQuaestioResultatum* r =
+                (constans SilvaQuaestioResultatum*)xar_obtinere(res,
+                    ZEPHYRUM);
+            Extentus ext = _extentum_metiri(p2, r->nodus, piscina);
+
+            si (   !ext.validus || ext.linea_prima != II
+                || ext.columna_prima != III || ext.linea_ultima != III)
+            {
+                fprintf(stderr, "selecta -proba: sedes %ld:%ld-%ld "
+                    "(exspectatum 2:3-3)\n", (longus)ext.linea_prima,
+                    (longus)ext.columna_prima,
+                    (longus)ext.linea_ultima);
+                fracta = VERUM;
+            }
+        }
     }
     piscina_destruere(piscina);
     si (fracta) redde II;
@@ -374,6 +422,7 @@ principale (
     Xar* resultata;
     constans character* causa = NIHIL;
     i32 congruentia = ZEPHYRUM;
+    b32 forma_sedium = FALSUM;
     integer k;
 
     per (k = I; k < argc; k++)
@@ -381,6 +430,10 @@ principale (
         si (strcmp(argv[k], "-omnia") == ZEPHYRUM)
         {
             mensura_maxima = ZEPHYRUM;
+        }
+        alioquin si (strcmp(argv[k], "-sedes") == ZEPHYRUM)
+        {
+            forma_sedium = VERUM;
         }
         alioquin si (strcmp(argv[k], "-proba") == ZEPHYRUM)
         {
@@ -404,7 +457,7 @@ principale (
     si (via == NIHIL || selector == NIHIL)
     {
         fprintf(stderr, "usus: selecta <plagula> '<selector>'"
-            " [-intra <symbolum>] [-omnia] [-proba]"
+            " [-intra <symbolum>] [-omnia] [-sedes] [-proba]"
             "  (ex radice repositorii)\n");
         redde II;
     }
@@ -551,6 +604,13 @@ principale (
             }
             ext = _extentum_metiri(parsura, r->nodus, piscina);
             si (!ext.validus) perge;
+            si (forma_sedium)
+            {
+                imprimere("%s\t%u\t%u\t%u\n", via, ext.linea_prima,
+                    ext.columna_prima, ext.linea_ultima);
+                congruentia++;
+                perge;
+            }
 
             /* initium ad initium lineae retrahere */
             dum (   ext.initium > ZEPHYRUM

@@ -153,3 +153,36 @@ separate objects 337.1 G / ~31.5 s; ThinLTO 285.2 G / ~27.8 s; unity 290.3 G /
 last ~3 G to LTO is inlining-heuristic difference, not structure. The unity
 closure is also 16 files smaller than what percursus.sh links (it links every
 silva/fontes/*.c on purpose).
+
+## 2026-11-09 — interiora: `static ` at exact positions (unity step 1)
+
+For the unity build's "dead-only" tree shaking (see
+tools/instrumentum_unitas.worklog.md, experiments 1-3). conflatio stays
+pure and dumb: it takes a table `via\tlinea\tcolumna` and inserts `static `
+at each position while emitting that header
+(conflatio_interiora_legere, conflatio_plagulam_cum_interioribus_emittere;
+conflatio_plagulam_emittere = the same with NIHIL, byte-identical). The
+conflator gets `-i <table>`; headers only. Why headers are enough: a
+function whose FIRST declaration is static has internal linkage, and the
+later plain definition inherits it (C89 6.1.2.2) - no .c file is touched.
+
+Opt-in on purpose: only valid when the output is a whole program in one
+translation unit. briar -amalgama (a library; functions must stay
+external) and knotapel snapshots never pass a table.
+
+Who computes the positions: silva, not a scanner here. The nexus only has
+the NAME position (the semantic symbol keeps the name token, not the
+declaration node), and house style puts the return type on the line
+above. `selecta <h> 'declaratio:habet(declarator-functionis)' -sedes`
+gives the exact first token of each declaration; the driver joins that
+with the nexus `functio` rows (name line inside the declaration's line
+range - this drops function-pointer typedefs, which the selector also
+matches). End-to-end check in scratch, percursus closure: conflator
+without -i = today's unity file byte for byte; with -i (522 dead
+functions) = the awk experiment's file byte for byte.
+
+Insert rule details: positions on a blanked line (local include, comment
+continuation) or past the end of the line are ignored; several positions
+on one line are applied in column order; a repeated position counts once.
+Plants (3, all red then green): column ignored, positions of earlier lines
+applied, lines miscounted.

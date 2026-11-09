@@ -87,3 +87,87 @@ Measured end to end: wrapper touched 11.2 -> 10.3 s; closure file edited
 Real levers left: clang (chunked unity in parallel, or -O0 dev builds) and
 the index format (nexus.sh writing its 'sedes' rows - 37 MB - or per-file
 statics, so the table need not scan 200 MB).
+
+## 2026-11-09 — experiment: internalize the unity (every function static)
+
+Question: does "tree shaking" (internal linkage for every closure function
+except main) pay in plain C89 the way LTO internalization did (290.3 ->
+288.2 G)? Experiment only, nothing committed: scratch copy of
+build/percursus.unitas/percursus.c with `static ` prefixed to the 623
+header prototypes the nexus lists (functio, depth 0, not already static;
+return type on the line above the name in house style, same line when the
+name column is > 1). C89 linkage rule does the rest: a later plain
+declaration/definition inherits the internal linkage of a prior `static`
+one, so the .c definitions stay untouched. Needs -Wno-unused-function
+(dead functions are now static). Compiled clean first try.
+
+- compile -c: 6.65 -> 5.64 s (-15%, 3 runs each, very stable)
+- __text: 521580 -> 394308 bytes (-24%); defined functions 968 -> 356
+- runtime, percursus -semantica (whole repo, 2 interleaved runs):
+  290.4/290.3 G -> 292.9/292.4 G (+0.8%), wall ~1% slower; lib corpus
+  46.31 -> 46.43 G (+0.26%). Reports identical (1525 / 201 lines).
+
+So plain clang -O2 does NOT reproduce LTO's gain: the "last call to a
+static" inline bonus pulls single-caller functions into their callers
+wholesale, and here that costs a little. The compile-time and size win
+is real. Unexplained yet: which inlinings cost the 2.3 G.
+
+## 2026-11-09 — experiment 2: static only for DEAD functions
+
+Dead list from the linker itself, not a call-graph guess: link the unity
+with -Wl,-dead_strip; externally visible functions present without it but
+absent with it = unreachable from main (address-taken counts as reachable;
+"dead" also covers functions already inlined at every site). 625 external
+functions, only 103 survive dead_strip; 522 dead, every one has a header
+prototype. `static` prefixed to those 522 only.
+
+- compile -c: ~6.55 -> ~5.3 s (-19%; all-static was 5.7 s)
+- __text 396824 (all-static 394308, base 521580); 382 functions
+- runtime whole repo (5 interleaved rounds): base 290.57-290.85 G,
+  dead-only 291.81-291.90 G (one outlier 291.11) = +0.4%; all-static +0.8%.
+  Report identical. Wall time drifts seconds between rounds; useless here.
+
+Why live code still changes (per-function size diff, dead-stripped base vs
+dead-only): removing dead CALLERS turns multi-caller static helpers into
+single-caller ones, and clang's last-call-to-static bonus then inlines cold
+helpers into hot functions: _allocare_segmentum_xar into xar_addere
+(312 -> 864 bytes), silva_annotationes_ex_commentis 848 -> 5612,
+_fistula_interna (silva_parsare) 460 -> 6084. Same mechanism as
+all-static, smaller dose. Apple clang does not expose the bonus
+(-mllvm -inline-last-call-to-static-bonus unknown). Dropping dead bodies at
+source level would do the same thing (the helpers lose the same callers).
+PGO is the natural fix: profile counts mark those call sites cold.
+
+Implementation sketch if adopted: always link the unity with -dead_strip;
+next build's dead list = header-prototyped functions absent from the
+previous binary (cache it in <bin>.unitas/). A stale list is always SAFE:
+static never changes behavior in a single TU, only optimization.
+
+## 2026-11-09 — experiment 3: profile-guided optimization (clang PGO)
+
+llvm-profdata ships with Xcode (xcrun llvm-profdata) - no outside install.
+Recipe: clang <flags> -fprofile-instr-generate unity.c -> run with
+LLVM_PROFILE_FILE=<x>.profraw -> xcrun llvm-profdata merge -o x.profdata ->
+clang <flags> -fprofile-instr-use=x.profdata. No new warnings under
+-Werror (same source, so no stale-profile warnings).
+
+Training: percursus -semantica lib (instrumented: ~10 s, 107 G).
+Evaluation: whole repo (lib is ~46 of the ~290 G, so partly held out).
+
+| variant                    | compile -c | __text | whole repo      |
+| base unity                 | ~6.55 s    | 522 KB | 290.55-290.85 G |
+| dead-only static           | ~5.3 s     | 397 KB | 291.76-291.85 G |
+| base unity + PGO           | 15.4 s     | 587 KB | 256.90-257.73 G |
+| dead-only static + PGO     | 9.3-11.9 s | 516 KB | 256.41-257.10 G |
+
+PGO = -11.5% instructions, reports identical (1525 lines). Cumulative vs
+separate objects (337.1 G): -24%. With PGO the dead-only variant is no
+longer worse - slightly better, and compiles ~5 s faster than base+PGO.
+xar_addere: 312 (base) / 864 (dead-only) / 612 (dead-only+PGO) bytes -
+the profile undoes part of the cold-helper inlining. Wall times useless
+this session (load average ~5; same binary 26-37 s), instructions are the
+measure. Cost: PGO compile is 1.5-2.5x slower, plus an instrumented build
+and a training run - an installed-build step, not an edit-loop step.
+Open: profile staleness policy (clang drops the profile per function whose
+CFG hash changed; when to re-train), and whether one profile can serve
+several tools sharing silva code.

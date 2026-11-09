@@ -2,15 +2,19 @@
  * (dev-time; consumptor: knotapel/archive.sh)
  *
  * Usus (ex radice repositorii):
- *   conflator [-r <radix_clientis/>]... <partes.tsv> <statica.tsv>
- *             <fons_radicis.c> <prooemium> <exitus.c>
+ *   conflator [-r <radix_clientis/>]... [-i <interiora.tsv>]
+ *             <partes.tsv> <statica.tsv> <fons_radicis.c> <prooemium>
+ *             <exitus.c>
  *
  * partes.tsv = 'aedilis <fons> --partes' (C caput, O obiectum, S
  * systema); statica.tsv = corpus.symbola.tsv (tools/corpus_infixum.sh);
  * radices clientium ex eodem (RADICES_CLIENTIUM, cum '/' finali).
  * Exitus: prooemium verbatim, capita ordine dependentiae, fontes cum
  * staticis per plagulam renominatis, fons radicis ultimus - mechanismus
- * silva_conflatio. Recusat (causa nominata, exitus 1): venditorium,
+ * silva_conflatio. -i (PROGRAMMA TOTUM solum - aedificatio unitatis):
+ * tabula 'via\tlinea\tcolumna' sedium in capitibus ubi 'static '
+ * inseritur (functiones internae fiunt; vide silva_conflatio.h).
+ * Recusat (causa nominata, exitus 1): venditorium,
  * Objective-C, plagulam clausurae extra include/, lib/ et radices.
  */
 
@@ -159,11 +163,22 @@ principale (
                 chorda  partes;
                 chorda  statica;
                 chorda  prooemium;
+    constans character* via_interiorum  = NIHIL;
+        TabulaDispersa* interiora       = NIHIL;
                    b32  bene;
                    i32  k;
+                   i32  numerus_interiorum  = ZEPHYRUM;
 
-    dum (a + I < argc && strcmp(argv[a], "-r") == ZEPHYRUM)
+    dum (   a + I < argc
+         && (   strcmp(argv[a], "-r") == ZEPHYRUM
+             || strcmp(argv[a], "-i") == ZEPHYRUM))
     {
+        si (strcmp(argv[a], "-i") == ZEPHYRUM)
+        {
+            via_interiorum  = argv[a + I];
+            a               = a + II;
+            perge;
+        }
         si (numerus_radicum >= RADICES_MAXIMAE)
         {
             fprintf(stderr, "conflator: radices nimiae\n");
@@ -175,8 +190,9 @@ principale (
     radices[numerus_radicum] = NIHIL;
     si (argc - a != V)
     {
-        fprintf(stderr, "usus: conflator [-r <radix/>]... <partes.tsv>"
-            " <statica.tsv> <fons_radicis.c> <prooemium> <exitus.c>\n");
+        fprintf(stderr, "usus: conflator [-r <radix/>]... [-i "
+            "<interiora.tsv>] <partes.tsv> <statica.tsv> "
+            "<fons_radicis.c> <prooemium> <exitus.c>\n");
         redde I;
     }
     piscina = piscina_generare_dynamicum("conflator", 4194304);
@@ -212,6 +228,22 @@ principale (
         redde I;
     }
 
+    si (via_interiorum != NIHIL)
+    {
+        chorda textus = _legere(piscina, via_interiorum, &bene);
+
+        si (bene)
+        {
+            interiora = conflatio_interiora_legere(piscina, textus);
+        }
+        si (interiora == NIHIL)
+        {
+            fprintf(stderr, "conflator: tabula interiorum non "
+                "lecta\n");
+            redde I;
+        }
+    }
+
     clausura = xar_creare(piscina, (i32)magnitudo(ConflatioPlagula));
     si (!_clausuram_legere(piscina, &contextus, partes, clausura))
     {
@@ -226,8 +258,17 @@ principale (
     chorda_aedificator_appendere_chorda(aedificator, prooemium);
     per (k = ZEPHYRUM; k < xar_numerus(capita); k++)
     {
-        conflatio_plagulam_emittere(aedificator,
-            *(constans ConflatioPlagula**)xar_obtinere(capita, k));
+        constans ConflatioPlagula* caput =
+            *(constans ConflatioPlagula**)xar_obtinere(capita, k);
+                           vacuum* v = NIHIL;
+
+        si (   interiora != NIHIL
+            && tabula_dispersa_invenire(interiora, caput->via, &v))
+        {
+            numerus_interiorum += (i32)xar_numerus((Xar*)v);
+        }
+        conflatio_plagulam_cum_interioribus_emittere(aedificator, caput,
+            (Xar*)v);
     }
     per (k = ZEPHYRUM; k < xar_numerus(fontes); k++)
     {
@@ -243,10 +284,15 @@ principale (
             argv[a + IV]);
         redde I;
     }
-    imprimere("conflator: %s (capita %d, fontes %d, radix %s)\n",
+    imprimere("conflator: %s (capita %d, fontes %d, radix %s",
         argv[a + IV], (s32)xar_numerus(capita),
         (s32)xar_numerus(fontes),
         argv[a + II]);
+    si (interiora != NIHIL)
+    {
+        imprimere(", interiora %d", (s32)numerus_interiorum);
+    }
+    imprimere(")\n");
     piscina_destruere(piscina);
     redde ZEPHYRUM;
 }

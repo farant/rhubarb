@@ -289,6 +289,96 @@ s32 principale (vacuum)
                 "#undef _g\n");
         }
     }
+
+    imprimere("\n--- Probans interiora ---\n");
+    {
+           TabulaDispersa* interiora;
+                   vacuum* v = NIHIL;
+                      Xar* sedes;
+           ConflatioSedes* s;
+        ChordaAedificator* a;
+         ConflatioPlagula  pl;
+
+        /* tabula 'via\tlinea\tcolumna': commentaria, lineae mancae et
+         * numeri non numeri praetermissi */
+        interiora = conflatio_interiora_legere(piscina,
+            chorda_ex_literis(
+                "# sedes\n"
+                "include/a.h\t2\t1\n"
+                "include/a.h\t5\t5\n"
+                "include/a.h\t5\t18\n"
+                "include/b.h\t1\t1\n"
+                "manca\n"
+                "include/c.h\tx\t1\n"
+                "include/c.h\t0\t1\n", piscina));
+        CREDO_VERUM(interiora != NIHIL);
+        CREDO_VERUM(tabula_dispersa_invenire(interiora,
+            chorda_ex_literis("include/a.h", piscina), &v));
+        sedes = (Xar*)v;
+        CREDO_AEQUALIS_I32((i32)xar_numerus(sedes), (i32)III);
+        s = (ConflatioSedes*)xar_obtinere(sedes, I);
+        CREDO_AEQUALIS_I32(s->linea, (i32)V);
+        CREDO_AEQUALIS_I32(s->columna, (i32)V);
+        CREDO_FALSUM(tabula_dispersa_invenire(interiora,
+            chorda_ex_literis("include/c.h", piscina), &v));
+        CREDO_FALSUM(tabula_dispersa_invenire(interiora,
+            chorda_ex_literis("manca", piscina), &v));
+
+        /* 'static ' ad sedem exactam: genus reditus in linea supra
+         * nomen, duae declarationes in linea una (ordine columnae) */
+        a       = chorda_aedificator_creare(piscina, 256);
+        pl.via  = chorda_ex_literis("include/a.h", piscina);
+        pl.contentum  = chorda_ex_literis(
+            "int a;\n"
+            "Xar*\n"
+            "xar_creare (\n"
+            "    int x);\n"
+            "    int f(void); int g(void);\n", piscina);
+        conflatio_plagulam_cum_interioribus_emittere(a, &pl, sedes);
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+            "#line 1 \"include/a.h\"\n"
+            "int a;\n"
+            "static Xar*\n"
+            "xar_creare (\n"
+            "    int x);\n"
+            "    static int f(void); static int g(void);\n");
+
+        /* sine sedibus = conflatio_plagulam_emittere octetim */
+        a = chorda_aedificator_creare(piscina, 256);
+        conflatio_plagulam_cum_interioribus_emittere(a, &pl, NIHIL);
+        CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+            "#line 1 \"include/a.h\"\n"
+            "int a;\n"
+            "Xar*\n"
+            "xar_creare (\n"
+            "    int x);\n"
+            "    int f(void); int g(void);\n");
+
+        /* sedes in linea vacuata (inclusio localis) et columna ultra
+         * finem lineae praetermissae; columna = finis + I licet non */
+        {
+                       Xar* aliae = xar_creare(piscina,
+                           (i32)magnitudo(ConflatioSedes));
+            ConflatioSedes* t;
+
+            t           = (ConflatioSedes*)xar_addere(aliae);
+            t->linea    = I;
+            t->columna  = I;
+            t           = (ConflatioSedes*)xar_addere(aliae);
+            t->linea    = II;
+            t->columna  = XX;
+            t           = (ConflatioSedes*)xar_addere(aliae);
+            t->linea    = III;
+            t->columna  = I;
+            a           = chorda_aedificator_creare(piscina, 256);
+            pl.contentum  = chorda_ex_literis(
+                "#include \"x.h\"\nint b;\nint c(void);", piscina);
+            conflatio_plagulam_cum_interioribus_emittere(a, &pl, aliae);
+            CREDO_CHORDA_AEQUALIS_LITERIS(chorda_aedificator_finire(a),
+                "#line 1 \"include/a.h\"\n\nint b;\n"
+                "static int c(void);\n");
+        }
+    }
     credo_imprimere_compendium();
 
     praeteritus = credo_omnia_praeterierunt();

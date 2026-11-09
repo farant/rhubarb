@@ -110,6 +110,36 @@ conflatio_plagulam_emittere (
               ChordaAedificator* aedificator,
       constans ConflatioPlagula* plagula);
 
+/* INTERIORA (aedificatio unitatis, tools/instrumentum_unitas.sh):
+ * sedes ubi 'static ' inseritur - initium declarationis functionis in
+ * capite. Declaratio prima 'static' = nexus internus; definitio
+ * sequens sine classe eum hereditat (C89 6.1.2.2), ergo fontes non
+ * tanguntur. SOLUM pro programmate toto in plagula una licet
+ * (bibliotheca conflata functiones externas servare debet): tabula
+ * absens = nihil mutatur. Sedes ex silva (selecta -sedes), numquam
+ * coniectura. linea/columna 1-basatae. */
+nomen structura {
+    i32 linea;
+    i32 columna;
+} ConflatioSedes;
+
+/* textus tabulae (lineae 'via\tlinea\tcolumna', '#' commentaria;
+ * lineae mancae praetermissae) -> via -> Xar de ConflatioSedes. NIHIL
+ * si tabula creari nequit. */
+TabulaDispersa*
+conflatio_interiora_legere (
+    Piscina* piscina,
+     chorda  textus);
+
+/* conflatio_plagulam_emittere cum 'static ' ante sedem quamque (Xar de
+ * ConflatioSedes; NIHIL licet = idem octetim). Sedes in linea vacuata
+ * aut ultra finem lineae praetermittitur. */
+vacuum
+conflatio_plagulam_cum_interioribus_emittere (
+            ChordaAedificator* aedificator,
+    constans ConflatioPlagula* plagula,
+                          Xar* sedes);
+
 /* fons cum staticis suis (contextus->statica, suffixum = stirps viae:
  * 'lib/x.c' -> '_x') */
 vacuum
