@@ -12,7 +12,13 @@
 #        percursus.c) '#line' plagularum clausurae fert, statica
 #        renominata (tabula non vacua), binarium ea recentius
 #   IV   plagula clausurae (non radix) tacta: unitas renectitur
-#   III  'percursus -semantica lib' utroque modo: relatio (sine lineis
+#   V    INTERIORA (budget XIII): aedificatio frigida PLANA est et
+#        mortua.txt ex binario nexo (-dead_strip) scribit; renexio (IV)
+#        ea applicat - 'static ' in plagula conflata ante prototypa
+#        mortuorum; cache sedium capitis cum clave aliena (= caput
+#        mutatum) renovatur, non creditur
+#   III  'percursus -semantica lib' tribus modis (unitas plana, unitas
+#        cum interioribus, obiecta): relatio (sine lineis
 #        temporis/memoriae) et exitus eadem
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
@@ -29,6 +35,9 @@ CORPUS="lib"
 UNITAS="silva/build/percursus"
 OBIECTA="silva/build/percursus_obiecta"
 CONFLATA="silva/build/percursus.unitas/percursus.c"
+MORTUA="silva/build/percursus.unitas/mortua.txt"
+INTERIORA="silva/build/percursus.unitas/interiora.tsv"
+SEDES_XAR="silva/build/percursus.unitas/sedes/include/xar.h.tsv"
 
 # I  ex fontibus SEMPER: binarium et cache unitatis deleta - porta cuius
 #    binarium non ab ipsa struitur sub planta MUTA est (silva.planta
@@ -62,6 +71,20 @@ renominata="$(grep -c '^#undef ' "$CONFLATA" 2> /dev/null)"
 [ "${renominata:-0}" -ge 100 ]
 credo $? "II statica per plagulam renominata (${renominata:-0} #undef)"
 
+# V (pars frigida) aedificatio sine mortua.txt priore plana est, et
+#   mortua ex binario suo scribit; binarium planum servatur (III)
+cp "$UNITAS" "$T/plana"
+mortua_frigida="$(grep -c . "$MORTUA" 2> /dev/null)"
+statica_frigida="$(grep -c '^static ' "$CONFLATA" 2> /dev/null)"
+[ "${mortua_frigida:-0}" -ge 100 ] && [ ! -s "$INTERIORA" ]
+credo $? "V frigida: plana (interiora nulla), mortua ${mortua_frigida:-0} ex binario"
+cp "$MORTUA" "$T/mortua.frigida" 2> /dev/null
+# cache sedium xar.h cum clave ALIENA et sede falsa: renexio (IV) eam
+# renovare debet (clavis contenti), non credere
+if [ -f "$SEDES_XAR" ]; then
+    printf '# clavis aliena\ninclude/xar.h\t1\t1\t1\n' > "$SEDES_XAR"
+fi
+
 # IV plagula CLAUSURAE (non radix) tacta -> unitas renectitur: stalitas
 #    per clausuram servatam, et involucrum viam unitatis vere sumit
 #    (binarium vetus unitatis aliter III fallere posset). Tempus
@@ -77,18 +100,38 @@ touch -r "$T/tacta.tempus" "$TACTA"
 [ "$rciv" -eq 0 ] && [ "$ante" != "$post" ]
 credo $? "IV $TACTA tacta -> unitas renexa ($ante -> $post)"
 
+# V (pars calida) renexio IV mortua frigida applicuit
+numerus_interiorum="$(grep -c . "$INTERIORA" 2> /dev/null)"
+statica_calida="$(grep -c '^static ' "$CONFLATA" 2> /dev/null)"
+[ "${numerus_interiorum:-0}" -ge 100 ] \
+    && [ $((${statica_calida:-0} - ${statica_frigida:-0})) -ge 100 ]
+credo $? "V calida: interiora ${numerus_interiorum:-0}, lineae '^static ' in conflata ${statica_frigida:-0} -> ${statica_calida:-0}"
+[ -f "$SEDES_XAR" ] && ! grep -q 'clavis aliena' "$SEDES_XAR" \
+    && [ "$(grep -c . "$SEDES_XAR")" -ge 10 ]
+credo $? "V cache sedium xar.h cum clave aliena renovata"
+if cmp -s "$MORTUA" "$T/mortua.frigida"; then
+    echo "       (mortua stabilia: eadem post interiora)"
+else
+    echo "       (mortua mutata post interiora: $(grep -c . "$MORTUA") - licet, tabula stala tuta)"
+fi
+
 # III
 "./$UNITAS" -semantica "$CORPUS" > "$T/unitas.out" 2> "$T/unitas.err"
 rcu=$?
+"$T/plana" -semantica "$CORPUS" > "$T/plana.out" 2> "$T/plana.err"
+rcp=$?
 "./$OBIECTA" -semantica "$CORPUS" > "$T/obiecta.out" 2> "$T/obiecta.err"
 rco=$?
 nudare () { grep -v -e '^tempus' -e ' ms' -e 'MB' "$1"; }
 nudare "$T/unitas.out" > "$T/unitas.nuda"
 nudare "$T/obiecta.out" > "$T/obiecta.nuda"
+nudare "$T/plana.out" > "$T/plana.nuda"
 n="$(grep -c . "$T/unitas.nuda")"
 [ "$rcu" = "$rco" ] && [ "$n" -gt 0 ] \
     && cmp -s "$T/unitas.nuda" "$T/obiecta.nuda"
 credo $? "III percursus -semantica $CORPUS: relatio eadem ($n lineae), exitus $rcu = $rco"
+[ "$rcp" = "$rco" ] && cmp -s "$T/plana.nuda" "$T/obiecta.nuda"
+credo $? "III unitas plana (frigida): relatio eadem, exitus $rcp = $rco"
 if ! cmp -s "$T/unitas.nuda" "$T/obiecta.nuda"; then
     diff "$T/obiecta.nuda" "$T/unitas.nuda" | head -20 | sed 's/^/      /'
 fi

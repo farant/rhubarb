@@ -35,3 +35,13 @@ listed files only); both share `_symbola_seligere` (the old awk + sort).
 corpus.symbola.tsv still byte-identical. Filter is an awk hash on $4, NOT
 `grep -F -f`: BSD grep with 72 fixed patterns over nexus.tsv took 1 min
 44 s.
+
+## 2026-11-09 - sedes_clausurae_scribere
+
+The grep + closure filter of symbola_clausurae_scribere split out as its
+own function (raw nexus `sedes` rows of the listed files). The unity
+driver reads those rows twice (statics table via `_symbola_seligere`,
+and the join that names header prototypes for the interiora table), so
+the grep over the whole nexus runs once. symbola_clausurae_scribere is
+now the two piped together; the conflated percursus file is byte-identical
+before and after.

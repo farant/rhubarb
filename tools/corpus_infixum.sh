@@ -107,10 +107,20 @@ symbola_clausurae_scribere () {
     # filtrum per tabulam awk ($4 in viae), NON 'grep -F -f': grep BSD
     # (/usr/bin/grep, quem bash invenit) cum LXXII exemplaribus super
     # nexum totum I min XLIV s tardabat (mensuratum 2026-11-07)
+    sedes_clausurae_scribere "$radix" "$viae" | _symbola_seligere "$@"
+}
+
+# sedes_clausurae_scribere <radix repositorii> <viae> - ordines 'sedes'
+# nexus plagularum in <viae> SOLARUM, crudi (octo columnae nexus).
+# Separatum quia tools/instrumentum_unitas.sh eosdem ordines BIS legit
+# (tabula staticorum per _symbola_seligere, et iunctio interiorum):
+# grep super nexum totum (~1,3 s) semel fit.
+sedes_clausurae_scribere () {
+    local radix="$1"
+    local viae="$2"
     LC_ALL=C grep -F "$(printf '\tsedes\t')" "$radix/build/nexus.tsv" |
         awk -F'\t' 'NR == FNR { viae[$0] = 1; next } ($4 in viae)' \
-            "$viae" - |
-        _symbola_seligere "$@"
+            "$viae" -
 }
 
 # ordines 'sedes' nexus (stdin) -> capita et statica (regulae supra)

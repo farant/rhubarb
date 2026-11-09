@@ -171,3 +171,58 @@ and a training run - an installed-build step, not an edit-loop step.
 Open: profile staleness policy (clang drops the profile per function whose
 CFG hash changed; when to re-train), and whether one profile can serve
 several tools sharing silva code.
+
+## 2026-11-09 — interiora built into the driver (item 13 step 2)
+
+The driver now does the dead-only variant by itself:
+
+- link always carries `-Wl,-dead_strip`;
+- after the link, `mortua.txt` = candidates with no text symbol (T or t)
+  in `nm -U` of the new binary. Counting `t` matters: a function made
+  static last time and still alive shows up as a local symbol and must
+  leave the list. Candidates = external functions with a prototype in a
+  closure header (position from `selecta -sedes`, name from the nexus
+  `sedes functio` row inside the declaration's line range);
+- the NEXT rebuild turns the candidates named in mortua.txt into
+  `interiora.tsv` and passes it to `conflator -i`, adding
+  `-Wno-unused-function` only then.
+
+So a cold build (no mortua.txt) is the plain unity file, byte-identical
+to before, and the first rebuild after it is the dead-only one, which is
+byte-identical to experiment 2's file (522 positions). The list is stable:
+the dead-only binary yields the same 522. A stale list is safe in both
+directions (static never changes behavior in one TU), so the list is NOT
+a staleness input and nothing rebuilds because it changed.
+
+Position cache: `<bin>.unitas/sedes/<header>.tsv`, first line
+`# <md5 header> <md5 selecta.c>`. Content keys, not mtimes, on purpose:
+silva.planta and `cp -p` restore old mtimes, and a cache written during
+a plant would otherwise look fresh afterwards. `md5 -r` over 40 files is
+~10 ms. Stale headers are re-scanned in parallel (one selecta each);
+selecta is built on demand (INSTRUMENTUM_NECTERE_SOLUM=1, 0.06 s when
+fresh) and only when some header is stale. A header selecta cannot parse
+(exit 2) is skipped with a message and not cached: fewer interiora, still
+correct.
+
+The nexus `sedes` rows of the closure are now grepped once
+(`sedes_clausurae_scribere` in corpus_infixum.sh) and read twice (statics
+table, candidate join) instead of a second 1.3 s pass.
+
+Measured: stale rebuild 10.3-10.6 -> 9.65 s (two runs, 9.70/9.64); the
+cold build is 12.65 s once (selecta freshness check + 39 scans).
+`__text` 396824 as in the experiment. Runtime cost stays the measured
++0.4% until the profile step.
+
+`UNITAS_INTERIORA=0` skips applying the table (mortua.txt is still
+refreshed) - for comparisons.
+
+Gate (silva/unitas_probare.sh) step V: cold build is plain and writes
+>= 100 dead names; the IV rebuild applies them (`^static ` lines in the
+conflated file 0 -> 522); a position cache with a foreign key and a bogus
+row is recomputed, not trusted; III now compares three binaries (plain
+unity kept from the cold build, dead-only unity, objects). Plants, each
+red then green: mortua.txt never applied; link without -dead_strip
+(mortua too short - 2 checks red); cache key ignored.
+
+Not covered: selecta exit-2 path (no header fails today), and
+UNITAS_INTERIORA=0.
