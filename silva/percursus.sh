@@ -27,13 +27,22 @@ declare -a INCLUDE_FLAGS=(
 # SILVA_UNITAS=0 = obiecta singula (via vetus), binarium SEPARATUM
 # (build/percursus_obiecta) - modi numquam binarium alterius currunt.
 # Porta unitas-percursus (silva/unitas_probare.sh) ambos confert.
+# SILVA_UNITAS=profilum = unitas PROFILATA (budget XIII gradus III):
+# binarium TERTIUM (build/percursus_profilatum), per cursum exercitii
+# '-semantica lib' optimizatum (clang PGO, ~257 G contra 290,7) -
+# aedificatio ~30 s (tres gradus), ergo non ordinaria.
 if [ "${SILVA_UNITAS:-1}" != 0 ]; then
     source "$RADIX_DIR/tools/instrumentum_unitas.sh"
-    instrumentum_unitatis_nectere "$BUILD_DIR/percursus" \
+    UNITAS_BIN="$BUILD_DIR/percursus"
+    if [ "${SILVA_UNITAS:-1}" = profilum ]; then
+        UNITAS_BIN="$BUILD_DIR/percursus_profilatum"
+        UNITAS_EXERCITATIO=(-semantica lib)
+    fi
+    instrumentum_unitatis_nectere "$UNITAS_BIN" \
         silva/instrumenta/principalia/percursus.c \
         materia/fontes silva/fontes silva/instrumenta -- \
         "${GCC_FLAGS[@]}" || exit 1
-    exec "$BUILD_DIR/percursus" "$@"
+    exec "$UNITAS_BIN" "$@"
 fi
 
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)

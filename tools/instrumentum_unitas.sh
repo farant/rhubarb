@@ -47,6 +47,25 @@
 # cache non fallit); selecta solum pro capite mutato currit.
 # UNITAS_INTERIORA=0: tabula non applicatur (mortua tamen renovantur).
 #
+# PROFILUM (budget XIII gradus III): vocans tabulam UNITAS_EXERCITATIO
+# (argumenta cursus exercitii, e.g. '(-semantica lib)') ante vocationem
+# ponit -> aedificatio PROFILATA (clang PGO; percursus 290,7 -> ~257 G,
+# relatio eadem): plagula conflata cum -fprofile-instr-generate
+# compilatur, binarium instrumentatum e radice repositorii cum
+# argumentis illis currit, 'xcrun llvm-profdata merge' profilum facit,
+# deinde compilatio vera cum -fprofile-instr-use. Tres gradus (~30 s):
+# pro binario INSTITUTO, non pro ansa editionis. Profilum in
+# <bin>.unitas/profilum.profdata cum CLAVE (md5 plagulae conflatae +
+# md5 vexillorum et argumentorum exercitii) servatur: clavis eadem =
+# exercitium omittitur (renexio sine mutatione fontis), clavis alia =
+# exercitium novum. Clavis necessaria quia clang profilum STALUM
+# TACITE tolerat (functio cuius forma mutata est profilum suum amittit,
+# nulla monitio - mensuratum 2026-11-09): sine clave lucrum sensim
+# evanesceret. Nomina functionum staticarum in profilo nomen NUDUM
+# plagulae ferunt ('percursus.c:f'), ergo directorium operis mutatum
+# profilum non frangit. Exitus exercitii non iudicatur (instrumenta
+# quaedam 1 pro REICE reddunt): profraw non vacuum sufficit.
+#
 # Usus:  source tools/instrumentum_unitas.sh
 #        instrumentum_unitatis_nectere <bin> <radix.c> [radix_clientis]...
 #            -- <argumenta clang SINE fontibus, SINE -o>
@@ -55,7 +74,8 @@
 # Exitus: 0 recens aut nexum | 1 fractum (temporaria deleta)
 # INSTRUMENTUM_NECTERE_SOLUM=1: post nexum EXIT 0 (ut instrumentum_nectere)
 # Cache: <bin>.unitas/ (partes.tsv, <stirps>.c conflata - lectu utilis;
-#        mortua.txt, interiora.tsv applicata, sedes/<via>.tsv per caput)
+#        mortua.txt, interiora.tsv applicata, sedes/<via>.tsv per caput,
+#        profilum.profdata + profilum.clavis + exercitatio.log)
 
 instrumentum_unitatis_nectere () {
     local bin="$1"
@@ -140,6 +160,15 @@ instrumentum_unitatis_nectere () {
     local -a vexilla_u=("-Wl,-dead_strip")
     if [ -s "$opus/interiora.tsv" ]; then
         vexilla_u+=("-Wno-unused-function")
+    fi
+    if [ -n "${UNITAS_EXERCITATIO+x}" ] \
+            && [ "${#UNITAS_EXERCITATIO[@]}" -gt 0 ]; then
+        if ! _unitatis_profilum_parare "$radix_repo" "$opus" "$stirps" \
+                "$cache" "$@" "${vexilla_u[@]}"; then
+            rm -rf "$opus"
+            return 1
+        fi
+        vexilla_u+=("-fprofile-instr-use=$opus/profilum.profdata")
     fi
     if ! ( cd "$radix_repo" && clang "$@" "${vexilla_u[@]}" \
                "$opus/$stirps.c" -o "$temporarium" ); then
@@ -338,5 +367,50 @@ _unitatis_interiora_scribere () {
             "$cache/mortua.txt" "$opus/candidata.tsv" \
             | sort -u > "$opus/interiora.tsv"
     fi
+    return 0
+}
+
+# extra seram: <opus>/profilum.profdata pro plagula conflata <opus>/
+# <stirps>.c parat - ex cache si clavis eadem, aliter per exercitium
+# (binarium instrumentatum + UNITAS_EXERCITATIO). Argumenta post cache =
+# vexilla clang compilationis verae (sine -fprofile-*).
+_unitatis_profilum_parare () {
+    local radix_repo="$1" opus="$2" stirps="$3" cache="$4"
+    shift 4
+    local clavis
+    clavis="$(md5 -q "$opus/$stirps.c") $(printf '%s\n' "$@" -- \
+        "${UNITAS_EXERCITATIO[@]}" | md5 -q)"
+    if [ -s "$cache/profilum.profdata" ] \
+            && [ "$(cat "$cache/profilum.clavis" 2> /dev/null)" \
+                 = "$clavis" ]; then
+        cp "$cache/profilum.profdata" "$opus/profilum.profdata" \
+            && return 0
+    fi
+    if ! ( cd "$radix_repo" && clang "$@" -fprofile-instr-generate \
+               "$opus/$stirps.c" -o "$opus/exercitium" ); then
+        echo "[unitas] binarium instrumentatum non structum" >&2
+        return 1
+    fi
+    ( cd "$radix_repo" \
+        && LLVM_PROFILE_FILE="$opus/exercitium.profraw" \
+            "$opus/exercitium" "${UNITAS_EXERCITATIO[@]}" ) \
+        > "$opus/exercitatio.log" 2>&1
+    echo "[exitus exercitii: $?]" >> "$opus/exercitatio.log"
+    cp "$opus/exercitatio.log" "$cache/exercitatio.log" 2> /dev/null
+    if [ ! -s "$opus/exercitium.profraw" ]; then
+        echo "[unitas] exercitium profilum non scripsit" \
+            "($cache/exercitatio.log)" >&2
+        return 1
+    fi
+    xcrun llvm-profdata merge -o "$opus/profilum.profdata" \
+        "$opus/exercitium.profraw" \
+        || { echo "[unitas] llvm-profdata fractum" >&2; return 1; }
+    # profilum ante clavem: clavis nova numquam profilum vetus signat
+    # nisi per fracturam inter duo mv (tunc clavis vetus manet = stala)
+    rm -f "$cache/profilum.clavis"
+    cp "$opus/profilum.profdata" "$cache/profilum.profdata.$$" \
+        && mv -f "$cache/profilum.profdata.$$" "$cache/profilum.profdata" \
+        && echo "$clavis" > "$cache/profilum.clavis.$$" \
+        && mv -f "$cache/profilum.clavis.$$" "$cache/profilum.clavis"
     return 0
 }

@@ -226,3 +226,52 @@ red then green: mortua.txt never applied; link without -dead_strip
 
 Not covered: selecta exit-2 path (no header fails today), and
 UNITAS_INTERIORA=0.
+
+## 2026-11-09 — profiled mode in the driver (item 13 step 3)
+
+Caller sets the array `UNITAS_EXERCITATIO` (arguments of the training
+run) before calling the driver -> profiled build: instrumented compile of
+the conflated file, run it from the repo root with those arguments,
+`xcrun llvm-profdata merge`, then the real compile with
+`-fprofile-instr-use`. percursus: `SILVA_UNITAS=profilum` builds a THIRD
+binary, `silva/build/percursus_profilatum`, trained on `-semantica lib`.
+The default binary and the edit loop are untouched.
+
+Retrain policy = content key. `profilum.clavis` holds md5 of the
+conflated file + md5 of (clang flags, training arguments). Same key:
+reuse the cached profile, no training. Different key: train again. The
+key is needed because clang takes a STALE profile silently: I added an
+`if` to xar_addere and compiled against the old profile - rc 0, no
+warning, under the house -Werror flags. So staleness would never fail,
+only fade. With the key the profile always matches the exact file it is
+used on.
+
+Static functions are named `<basename>:<function>` in the profile
+(`percursus.c:_alveus_nova_piscina`), so the per-process work directory
+does not matter (same file at two paths: identical binary, __text
+510080); compiling from stdin does change it (519500) - don't.
+
+Training exit code is logged, not judged (some tools exit 1 for REICE);
+a non-empty profraw is required. Weak spot: a training command that
+runs but exercises nothing still yields a profile.
+
+Timings (percursus): cold 29.5 s; rebuild with a changed file 26 s;
+rebuild with an unchanged file (profile reused) 13.3 s. The first
+rebuild after a cold build always retrains: the dead list appears, so
+the conflated file changes. Dead list under a profile: 519, not 522
+(three functions are no longer inlined everywhere).
+
+Measured, whole repo, 2 interleaved rounds, report identical (1535
+lines): unity (dead-only) 291.62 / 291.93 G; profiled 256.05 / 256.63 G
+= -12.2%. Wall 29.4/33.4 vs 28.3/31.6 s - machine noisy, the wall gain
+is smaller than the instruction gain suggests and I cannot pin it today.
+
+Gate step VI: the profiled cache is seeded with a foreign key and a
+garbage profile before the build - the build must retrain and replace
+both; training log ends in exit 0; __text differs from the plain
+unity's (512120 vs 399100); III compares four binaries. Plants, red then
+green: profile flag dropped (1 check); key trusted blindly (garbage
+profile -> compile fails, 4 checks). Gate time 36 s -> 1 min 43 s.
+
+Profile sharing between tools: not attempted. Each binary has its own
+cache dir and profile. Deferred to step 4 (examen).

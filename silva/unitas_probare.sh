@@ -17,9 +17,13 @@
 #        ea applicat - 'static ' in plagula conflata ante prototypa
 #        mortuorum; cache sedium capitis cum clave aliena (= caput
 #        mutatum) renovatur, non creditur
-#   III  'percursus -semantica lib' tribus modis (unitas plana, unitas
-#        cum interioribus, obiecta): relatio (sine lineis
-#        temporis/memoriae) et exitus eadem
+#   VI   PROFILUM (SILVA_UNITAS=profilum, binarium tertium): cache cum
+#        clave aliena et profilo corrupto praeparatur - aedificatio
+#        exercitium currere et utrumque renovare debet; profilum vere
+#        applicatum (textus binarii alius quam unitatis planae)
+#   III  'percursus -semantica lib' quattuor modis (unitas plana, unitas
+#        cum interioribus, unitas profilata, obiecta): relatio (sine
+#        lineis temporis/memoriae) et exitus eadem
 #
 # Exitus 0 sanum | 1 FRACTUM | 2 nihil actum.
 # <porta titulus="unitas-percursus" tegit="tools/instrumentum_unitas.sh tools/corpus_infixum.sh silva/percursus.sh silva/unitas_probare.sh silva/instrumenta/silva_conflatio.c silva/instrumenta/silva_conflatio.h silva/instrumenta/principalia/conflator.c" currit="silva/instrumenta/principalia/percursus.c"/>
@@ -37,6 +41,7 @@ OBIECTA="silva/build/percursus_obiecta"
 CONFLATA="silva/build/percursus.unitas/percursus.c"
 MORTUA="silva/build/percursus.unitas/mortua.txt"
 INTERIORA="silva/build/percursus.unitas/interiora.tsv"
+PROFILATA="silva/build/percursus_profilatum"
 SEDES_XAR="silva/build/percursus.unitas/sedes/include/xar.h.tsv"
 
 # I  ex fontibus SEMPER: binarium et cache unitatis deleta - porta cuius
@@ -44,6 +49,7 @@ SEDES_XAR="silva/build/percursus.unitas/sedes/include/xar.h.tsv"
 #    tempus plagulae restituit; binarium plantae 'recens' videretur:
 #    planta U4 sic viridis manebat, 2026-11-07)
 rm -rf "$UNITAS" "$UNITAS.dSYM" "$UNITAS.unitas" "$OBIECTA" "$OBIECTA.dSYM"
+rm -rf "$PROFILATA" "$PROFILATA.dSYM" "$PROFILATA.unitas"
 INSTRUMENTUM_NECTERE_SOLUM=1 ./silva/percursus.sh > "$T/unitas.struere" 2>&1
 credo $? "I unitas nexa ($UNITAS)"
 SILVA_UNITAS=0 INSTRUMENTUM_NECTERE_SOLUM=1 ./silva/percursus.sh \
@@ -115,11 +121,37 @@ else
     echo "       (mortua mutata post interiora: $(grep -c . "$MORTUA") - licet, tabula stala tuta)"
 fi
 
+# VI unitas profilata. Cache praeparata MENDAX: clavis aliena cum
+#    profilo corrupto - clavis credita compilationem frangeret (profilum
+#    illegibile) aut clavem alienam relinqueret
+mkdir -p "$PROFILATA.unitas"
+echo "clavis aliena" > "$PROFILATA.unitas/profilum.clavis"
+echo "non est profilum" > "$PROFILATA.unitas/profilum.profdata"
+SILVA_UNITAS=profilum INSTRUMENTUM_NECTERE_SOLUM=1 ./silva/percursus.sh \
+    > "$T/profilata.struere" 2>&1
+credo $? "VI unitas profilata nexa ($PROFILATA)"
+magnitudo_profili="$(wc -c < "$PROFILATA.unitas/profilum.profdata" 2> /dev/null | tr -d ' ')"
+[ "${magnitudo_profili:-0}" -ge 10000 ] \
+    && ! grep -q 'clavis aliena' "$PROFILATA.unitas/profilum.clavis" 2> /dev/null \
+    && grep -q '^\[exitus exercitii: 0\]$' "$PROFILATA.unitas/exercitatio.log" 2> /dev/null
+credo $? "VI exercitium cucurrit: profilum ${magnitudo_profili:-0} octeti, clavis renovata"
+textus () { size -m "$1" 2> /dev/null | awk '/Section __text:/ { print $3 }'; }
+textus_planae="$(textus "$T/plana")"
+textus_profilatae="$(textus "$PROFILATA")"
+[ -n "$textus_profilatae" ] && [ "$textus_profilatae" != "$textus_planae" ]
+credo $? "VI profilum applicatum: textus ${textus_profilatae:-?} (plana ${textus_planae:-?})"
+
 # III
 "./$UNITAS" -semantica "$CORPUS" > "$T/unitas.out" 2> "$T/unitas.err"
 rcu=$?
 "$T/plana" -semantica "$CORPUS" > "$T/plana.out" 2> "$T/plana.err"
 rcp=$?
+rcf=127
+if [ -x "$PROFILATA" ]; then
+    "./$PROFILATA" -semantica "$CORPUS" > "$T/profilata.out" \
+        2> "$T/profilata.err"
+    rcf=$?
+fi
 "./$OBIECTA" -semantica "$CORPUS" > "$T/obiecta.out" 2> "$T/obiecta.err"
 rco=$?
 nudare () { grep -v -e '^tempus' -e ' ms' -e 'MB' "$1"; }
@@ -132,6 +164,9 @@ n="$(grep -c . "$T/unitas.nuda")"
 credo $? "III percursus -semantica $CORPUS: relatio eadem ($n lineae), exitus $rcu = $rco"
 [ "$rcp" = "$rco" ] && cmp -s "$T/plana.nuda" "$T/obiecta.nuda"
 credo $? "III unitas plana (frigida): relatio eadem, exitus $rcp = $rco"
+nudare "$T/profilata.out" > "$T/profilata.nuda" 2> /dev/null
+[ "$rcf" = "$rco" ] && cmp -s "$T/profilata.nuda" "$T/obiecta.nuda"
+credo $? "III unitas profilata: relatio eadem, exitus $rcf = $rco"
 if ! cmp -s "$T/unitas.nuda" "$T/obiecta.nuda"; then
     diff "$T/obiecta.nuda" "$T/unitas.nuda" | head -20 | sed 's/^/      /'
 fi
