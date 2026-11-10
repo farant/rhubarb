@@ -542,6 +542,10 @@ int   munmap(void* sedes, size_t mensura);
  * filum (macOS 11+; memoria_exsecutabilis, officina M5 T4). Fila
  * ipsa domus non adhibet. */
 void pthread_jit_write_protect_np(int tutela);
+/* status JIT per filum in filio post fork restituendus (worklog
+ * memoria_exsecutabilis_macos 2026-11-10) */
+int  pthread_atfork(void (*ante)(void), void (*in_parente)(void),
+                    void (*in_filio)(void));
 
 /* <sectio caput="libkern/OSCacheControl.h"/> libkern/OSCacheControl.h
  * (memoria_exsecutabilis, officina M5 T4) */

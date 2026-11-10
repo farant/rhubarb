@@ -117,6 +117,7 @@ asymmetricae
 atan
 atan2
 atexit
+atfork
 atime
 atkinson
 atof
@@ -1733,7 +1734,6 @@ referentiae
 referentiam
 referentias
 refinare
-refinata
 refinatio
 refusio
 reg2
@@ -2230,7 +2230,6 @@ tractatorem
 tractatores
 tractatori
 tractatoris
-tractio
 trailer
 tran
 transclusio

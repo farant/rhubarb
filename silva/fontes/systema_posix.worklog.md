@@ -238,3 +238,12 @@ For officina's escape layer (native-code faults -> machinula halts):
 All certified in officina/auspex_posix.sh (setjmp.h added to TU
 verum). Plant: __pc and __sp swapped -> TU nostrum DISSENTIT,
 restored IDEM, certified.
+
+## 2026-11-10 — pthread_atfork
+
+One more prototype in the pthread.h section: pthread_atfork, for
+memoria_exsecutabilis_macos (the child of a fork must get the JIT
+write switch re-applied; see that library's worklog of this date).
+Without the entry examen reports the call as suspect (implicit
+function); with it ACCIPE. auspex_posix still certifies. The house
+still does not use threads.
