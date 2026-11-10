@@ -5,7 +5,8 @@
  * "modus" (bottones delectus), "lux", "duplex", "pictura" - et, dum
  * delectus apertus est, menu eius ULTIMUM (elenchus, PARTES_DIALOGUS).
  *
- * Quadrum: statuae_quadrum_pingere (charta perlucida) cum clavis eius
+ * Quadrum: statuae_quadrum_pingere (charta opaca, Albus) cum clavis
+ * eius
  * mutatur; clavis = sigillum statuae, cyclus, tempus cycli (ms), visus,
  * modus, mensura. Et pulsus et compositor quadrum curant, ut pictura
  * statum quem ostendit semper sequatur.
@@ -361,7 +362,7 @@ statuam_curare (
         m->causa = f.error;
     }
     /* statua nova: cyclus ab initio */
-    m->origo_ms    = nunc(m);
+    m->origo_ms    = m->hora_visa;
     m->quietum_ms  = ZEPHYRUM;
     redde VERUM;
 }
@@ -411,7 +412,7 @@ tempus_cycli_ms (
     {
         redde ZEPHYRUM;
     }
-    t = quiescit(m) ? (s64)m->quietum_ms : nunc(m) - m->origo_ms;
+    t = quiescit(m) ? (s64)m->quietum_ms : m->hora_visa - m->origo_ms;
     si (t < ZEPHYRUM)
     {
         t = ZEPHYRUM;
@@ -628,7 +629,7 @@ quadrum_curare (
     petitio.modus             = MODI[modus_currens(m)];
     petitio.latitudo          = latitudo;
     petitio.altitudo          = altitudo;
-    petitio.charta_perlucida  = VERUM;
+    petitio.charta_perlucida  = FALSUM;
     sprintf(clavis, "%.64s|%d|%d|%d|%d|%d|%d|%d|%ux%u",
         m->sigillum.mensura >= LXIV ? (constans character*)
         m->sigillum.datum : "", (integer)cyclus, (integer)tempus,
@@ -668,7 +669,10 @@ statuae_pulsare (
     {
         redde FALSUM;
     }
-    hora = nunc(m);
+    /* horologium SEMEL per pulsum legitur: compositor et eventa
+     * tempus hoc vident, ne quadrum bis per pulsum fiat */
+    hora          = nunc(m);
+    m->hora_visa  = hora;
     si (   m->volumen
         && (   !m->inspectum
             || hora - m->inspectio_ms >= STATUAE_MORA_INSPECTIONIS))
@@ -953,10 +957,10 @@ fac_quietem (
 
     si (quiescit(m))
     {
-        m->origo_ms = nunc(m) - (s64)m->quietum_ms;
+        m->origo_ms = m->hora_visa - (s64)m->quietum_ms;
         redde campum_scribere(m, "quiescit", "");
     }
-    t              = nunc(m) - m->origo_ms;
+    t              = m->hora_visa - m->origo_ms;
     m->quietum_ms  = t > ZEPHYRUM && t < 0x7FFFFFFF ? (s32)t : ZEPHYRUM;
     redde campum_scribere(m, "quiescit", "verum");
 }
@@ -1023,7 +1027,7 @@ optionem_eligere (
     }
     (vacuum)campum_scribere(m, "cyclus", m->menu_textus[index]);
     /* cyclus novus ab initio */
-    m->origo_ms    = nunc(m);
+    m->origo_ms    = m->hora_visa;
     m->quietum_ms  = ZEPHYRUM;
 }
 
@@ -1322,6 +1326,11 @@ figura_statuarum (
     figura_globulum_pingere(md, d.gemina, chorda_ex_literis("2x",
         md->piscina), attributum_veritas(&m->ramus, "duplex")
         ? FIGURA_ELECTUM : ZEPHYRUM);
+    /* fundus planus sub pictura: indicium foci (exemplar mensae) in
+     * capite manet, non circa statuam. Quadrum ipsum chartam opacam
+     * fert (Albus) */
+    mandata_rectangulum(md, d.pictura,
+        figura_color_thematis(COLOR_BACKGROUND), VERUM);
     /* pictura, aut status vacuus / recusatus */
     si (m->quadrum.pixela)
     {
@@ -1531,7 +1540,8 @@ statuae_montare (
     }
     sprintf(titulus, "statuae:%.100s", id ? id : "statuae");
     m->quadri_titulus  = chorda_ex_literis(titulus, piscina);
-    m->origo_ms        = nunc(m);
+    m->hora_visa       = nunc(m);
+    m->origo_ms        = m->hora_visa;
     indicem_relegere(m);
     m->actiones  = actio_registrum_creare(piscina, intern);
     m->figurae   = figura_registrum_creare(piscina);

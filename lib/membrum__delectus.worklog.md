@@ -35,3 +35,13 @@
 - Glossary: form `bottonem` added to the existing `botton` entry.
 - Plants: Enter does not select -> "claves"; menu allowed to cover
   the button -> "locus"; every id reported open -> "status".
+
+## 2026-11-10 - j / k with real key events (statuae T9)
+
+`delectus_eventum_agere` now turns j / k into the arrow keys before
+calling `elenchus_clavem_agere`: real key events carry the logical key
+uppercase ('J') and the typed letter in `runa`, and the menu compares
+`clavis` with lowercase. Found in vicus (the highlight did not move);
+the T7 suite had hand-built events with a lowercase `clavis`, which is
+not what the window layer sends. The suite now has a real-shaped
+event. Lesson: build key events in tests the way `manus_ludus` does.

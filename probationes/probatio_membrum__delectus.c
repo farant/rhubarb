@@ -207,6 +207,30 @@ _probare_claves (
         EVENTUS_CLAVIS_DEPRESSUS, CLAVIS_SURSUM, ZEPHYRUM, &electum,
         c->piscina), (s32)DELECTUS_DEGLUTITUM);
     CREDO_AEQUALIS_S32 (delectus_electa(&x->ramus, III), ZEPHYRUM);
+    /* eventus VERUS (fenestra, manus_ludus): clavis logica maiuscula
+     * 'J', littera in runa - j et k tamen movent */
+    {
+         Eventus ev;
+        Elenchus e = _optiones(x, OPTIONES);
+
+        memset(&ev, ZEPHYRUM, magnitudo(Eventus));
+        ev.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+        ev.datum.clavis.clavis    = (clavis_t)'J';
+        ev.datum.clavis.runa      = 'j';
+        ev.datum.clavis.producta  = 'j';
+        CREDO_AEQUALIS_S32 ((s32)delectus_eventum_agere(&x->ramus,
+            scriptor, &e, NIHIL, &ev, &electum, c->piscina),
+            (s32)DELECTUS_DEGLUTITUM);
+        CREDO_AEQUALIS_S32 (delectus_electa(&x->ramus, III), I);
+        e                         = _optiones(x, OPTIONES);
+        ev.datum.clavis.clavis    = (clavis_t)'K';
+        ev.datum.clavis.runa      = 'k';
+        ev.datum.clavis.producta  = 'k';
+        CREDO_AEQUALIS_S32 ((s32)delectus_eventum_agere(&x->ramus,
+            scriptor, &e, NIHIL, &ev, &electum, c->piscina),
+            (s32)DELECTUS_DEGLUTITUM);
+        CREDO_AEQUALIS_S32 (delectus_electa(&x->ramus, III), ZEPHYRUM);
+    }
     /* clavis aliena: deglutitur, apertus manet */
     CREDO_AEQUALIS_S32 ((s32)_agere(x, OPTIONES, NIHIL,
         EVENTUS_CLAVIS_DEPRESSUS, (clavis_t)'q', 'q', &electum,

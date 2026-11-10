@@ -312,6 +312,31 @@ _imago_picta (
     redde FALSUM;
 }
 
+/* rectangulum impletum cum finibus componentis datae */
+interior b32
+_fundus_pictus (
+               Mandata* md,
+    constans Componens* area)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus          == MANDATUM_RECTANGULUM && x->impletum
+            && x->exemplar       == ZEPHYRUM
+            && x->fines.x        == area->fines.x
+            && x->fines.y        == area->fines.y
+            && x->fines.latitudo == area->fines.latitudo
+            && x->fines.altitudo == area->fines.altitudo)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
 interior vacuum
 _sectio_primum (
     CredoContextus* c)
@@ -337,16 +362,21 @@ _sectio_primum (
     CREDO_VERUM (im->altitudo >= ALTITUDO - XXIV);
     per (k = ZEPHYRUM; k < im->latitudo * im->altitudo; k++)
     {
-        si (im->pixela[k * IV + III] == ZEPHYRUM)
+        /* quadrum totum opacum; charta (Albus FC F0 E8) et statua */
+        si (im->pixela[k * IV + III] != 255)
         {
             perlucida++;
         }
-        alioquin
+        si (   im->pixela[k * IV]      == 0xFC
+            && im->pixela[k * IV + I]  == 0xF0
+            && im->pixela[k * IV + II] == 0xE8)
         {
             opaca++;
         }
     }
-    CREDO_VERUM (perlucida > ZEPHYRUM && opaca > ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (perlucida, ZEPHYRUM);
+    CREDO_VERUM (opaca > im->latitudo * im->altitudo / IV);
+    CREDO_VERUM (opaca < im->latitudo * im->altitudo);
     /* titulus alius: nulla imago */
     CREDO_VERUM (statuae_imago_fons(chorda_ex_literis("alia",
         c->piscina), &w->m) == NIHIL);
@@ -362,6 +392,8 @@ _sectio_primum (
     CREDO_VERUM (_textus_pictus(_reddere(w, c->piscina), "lit",
         c->piscina));
     CREDO_VERUM (_imago_picta(_reddere(w, c->piscina)));
+    /* fundus planus sub pictura (rectangulum impletum areae eius) */
+    CREDO_VERUM (_fundus_pictus(_reddere(w, c->piscina), pictura));
     CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
         c->piscina), "lapis"));
     /* cyclus currit: pulsus crebri */
@@ -391,6 +423,19 @@ _sectio_tempus (
     CREDO_VERUM (_pulsus(w, C));
     CREDO_VERUM (memcmp(prior, _quadrum(w)->pixela,
         (memoriae_index)im->latitudo * im->altitudo * IV) != ZEPHYRUM);
+    /* horologium SEMEL per pulsum legitur: compositio sine pulsu
+     * (eventus, repictio) tempus novum non videt - quadrum idem, non
+     * iterum factum */
+    {
+        character clavis[CXXVIII];
+
+        strcpy(clavis, w->m.quadri_clavis);
+        w->hora += L;
+        dispensator_recomponere(w->d);
+        dispensator_recomponere(w->d);
+        CREDO_VERUM (strcmp(clavis, w->m.quadri_clavis) == ZEPHYRUM);
+        w->hora -= L;
+    }
     /* cyclus plenus (walk 1.4 s) post: idem tempus cycli, ergo
      * eadem clavis - nihil reficitur, idem quadrum */
     prior = _copia(c, _quadrum(w));

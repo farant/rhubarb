@@ -29,6 +29,7 @@
 #include "praeconium.h"
 #include "aetherophonum.h"
 #include "antiphonale.h"
+#include "statuae.h"
 #include "filum.h"
 #include "specula.h"
 #include <stdio.h>
@@ -3096,6 +3097,84 @@ aetherophonum_describere (
     /* theremin uno ictu sonat (focus et vox simul) */
     f->ictus_primus      = aetherophonum_ictus_primus;
     f->ictus_primus_ctx  = m;
+}
+
+
+/* ==================================================
+ * Statuae (statuae-plan T9): simulacra GLB animata, $models
+ * ================================================== */
+
+/* horologium lateris: tempus fenestrae (ms, monotonicum) */
+interior s64
+statuarum_nunc (
+    vacuum* ctx)
+{
+    (vacuum)ctx;
+    redde fenestra_tempus_ms();
+}
+
+/* ctx = ContextusSoni (systemata vici solum inde sumuntur; latus
+ * sonum non habet) */
+interior b32
+statuae_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+     StatuaePorta  porta;
+
+    (vacuum)argumentum;
+    porta.nunc  = statuarum_nunc;
+    porta.ctx   = NIHIL;
+    redde statuae_montare((StatuaeMontatio*)sedes, piscina, intern,
+        volumen, repo, id, &porta, latitudo, altitudo,
+        soni ? soni->systemata : NIHIL);
+}
+
+interior VicusPulsus
+statuae_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = statuae_pulsare(ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+statuae_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    StatuaeMontatio* m = (StatuaeMontatio*)montatio;
+
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = statuae_componere;
+    f->componere_ctx  = m;
+    f->fons           = statuae_imago_fons;
+    f->fons_ctx       = m;
+    /* cyclus currens: pulsus XXXIII ms; quiescens: inspectio
+     * voluminis sola (vicus quies) */
+    f->pulsare      = statuae_pulsare_in_vico;
+    f->pulsare_ctx  = m;
+    f->mora         = statuae_mora;
+    /* Esc: latus prius */
+    f->effugium_redit     = VERUM;
+    /* ictus qui latus focat iam trahit */
+    f->ictus_primus       = statuae_ictus_primus;
+    f->ictus_primus_ctx   = m;
+    f->locus_titulus      = statuae_titulus;
+    f->locus_titulus_ctx  = m;
 }
 
 
@@ -6488,6 +6567,9 @@ ContextusNomenclatoris* cn;
                "sessions", "colloquia", NIHIL, piscina)
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "theremin", "aetherophonum", NIHIL, piscina)
+        /* statuae-plan T9: $models */
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus,
+               "models", "statuae", NIHIL, piscina)
         /* gabc pars II P6: $antiphonale(via) */
         || !iussum_registrare(cs->iussa, "antiphonale", FALSUM,
                antiphonale_iussum, soni)
@@ -6563,6 +6645,9 @@ ContextusNomenclatoris* cn;
                magnitudo(AntiphonaleMontatio),
                antiphonale_montare_in_vico, antiphonale_describere,
                soni)
+        || !vicus_genus_addere(app->vicus, "statuae",
+               magnitudo(StatuaeMontatio), statuae_montare_in_vico,
+               statuae_describere, soni)
         || !vicus_genus_addere(app->vicus, "sancti",
                magnitudo(SanctorumMontatio), sanctos_montare_in_vico,
                sanctos_describere, sanctorum)

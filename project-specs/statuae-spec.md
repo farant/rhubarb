@@ -1,9 +1,10 @@
 # statuae — a vicus pane for animated low-poly models
 
-Status: APPROVED by Fran 2026-11-09; being built from
-`project-specs/statuae-plan.md` (T1 stereometria committed
-23c5ae1d7). Brainstormed 2026-11-06 .. 2026-11-09 with Fran (secunda
-session 134c8417).
+Status: BUILT 2026-11-10 (secunda, T1-T9 of
+`project-specs/statuae-plan.md`); the pane opens in vicus as
+`$models`. Measured results and what is still open are in VII.
+Approved by Fran 2026-11-09. Brainstormed 2026-11-06 .. 2026-11-09
+with Fran (secunda session 134c8417).
 
 *The question (Fran, 2026-11-06): "a 3d animated panel as a view" in
 vicus that shows his low-poly models, lets him click-drag to rotate
@@ -336,16 +337,43 @@ targets to measure against, not gates.
   before any pane exists), Bayer, store + command, dropdown button,
   pane.
 
+## VII. Results (2026-11-10)
+
+Headless vicus, optimized test build, golem walking, lit, 20 frames:
+
+| window | pane picture | Atkinson | Bayer | exemplaria | None | window repaint |
+|---|---|---|---|---|---|---|
+| 720x458 | 360x438 | 4.3 ms | 1.3 ms | 69 ms | 3.1 ms | 1.0 ms |
+| 960x561 | 480x541 | 6.3 ms | 2.0 ms | 110 ms | 4.9 ms | 1.4 ms |
+
+- Atkinson, Bayer and None hold 30 ticks a second. Exemplaria gives
+  about 14 frames a second at 360 wide and 9 at 480; the `2x` toggle
+  quarters its work.
+- Pose plus render is 0.6-0.8 ms of each frame.
+- Changed from the design while building, each recorded where it
+  happened: framing on the rest pose (decision 15, T4); Bayer with 16
+  candidates per colour instead of two (T5); a frame library shared
+  by tool and pane (T6); opaque paper in the frame over a plain
+  background, because the focused pane's background is a dot pattern
+  (T9).
+- Open, filed in the tabularium: vicus has no hook when a pane
+  closes, so a closed and reopened pane leaves its memory behind;
+  `elenchus_clavem_agere` does not see j / k from real key events;
+  whether exemplaria should reuse work between frames; dither per
+  layer.
+
 ## AUDIENDA (not verified)
 
 - The pane size in III is derived from the code and the display's
-  resolution, not read from a running vicus.
+  resolution, not read from a running vicus. Still true: the two
+  sizes in VII are the laptop display and the 1920-point external
+  display, computed the same way.
 - ~~Whether the volume's sequence number moves for the store's
   records.~~ Answered in T6: it does, and a second handle on the same
   file sees it (probatio_statuae_repositorium, section "seq").
-- The cost of vicus repainting the whole window 30 times a second
-  with a full-pane image. No pane has done this yet.
-- That the renderer meets 5 ms; nothing has been rasterized.
+- ~~The cost of vicus repainting the whole window 30 times a
+  second.~~ About 1 ms headless (VII); the copy to the real screen is
+  not measured.
+- ~~That the renderer meets 5 ms.~~ 0.6-0.8 ms (T4).
 - Exemplaria's look in motion, and Atkinson's on real rotation.
-- Whether texture rows in these files run top-down as glTF says (a
-  flipped texture shows at the first rendered frame).
+- ~~Whether texture rows run top-down.~~ They do (T4 frames).

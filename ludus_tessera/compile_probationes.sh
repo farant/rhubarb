@@ -227,6 +227,18 @@ declare -a RADIX_FONTES=(
     "gabc_compositio"
     "gabc_pictura"
     "neumae_ductae"    "gabc_carmen"     # gabc pars II P7: textus carminis (porta legit)
+    # statuae-plan T9: latus statuarum ($models) et quae trahit
+    "statuae"
+    "statuae_quadrum"
+    "statuae_repositorium"
+    "statua"
+    "statua_glb"
+    "statua_pictura"
+    "stereometria"
+    "membrum__delectus"
+    "dithering_ordinatum"
+    "dithering_exemplaria_velox"
+    "dithering_exemplaria_tabulae"
 # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
     "sors"

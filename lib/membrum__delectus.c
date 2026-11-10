@@ -317,6 +317,7 @@ delectus_eventum_agere (
                Piscina* piscina)
 {
           Elenchus e;
+           Eventus proprius;
     ElenchusExitus exitus;
                s32 index;
                s32 electa;
@@ -374,8 +375,26 @@ delectus_eventum_agere (
         (vacuum)delectus_claudere(ramus, scriptor, piscina);
         redde DELECTUS_CLAUSUM;
     }
+    /* j / k: eventus veri litteram in 'runa' ferunt et clavem
+     * logicam MAIUSCULAM ('J'); elenchus_clavem_agere minusculam in
+     * 'clavis' exspectat - ergo hic in sagittas vertuntur */
+    proprius = *ev;
+    si (!(ev->datum.clavis.modificantes
+        & (i32)(MOD_IMPERIUM | MOD_SUPER)))
+    {
+        si (   ev->datum.clavis.runa   == 'j'
+            || ev->datum.clavis.clavis == (clavis_t)'j')
+        {
+            proprius.datum.clavis.clavis = CLAVIS_DEORSUM;
+        }
+        alioquin si (   ev->datum.clavis.runa   == 'k'
+                     || ev->datum.clavis.clavis == (clavis_t)'k')
+        {
+            proprius.datum.clavis.clavis = CLAVIS_SURSUM;
+        }
+    }
     electa = e.electa;
-    exitus = elenchus_clavem_agere(&e, ev, &electa);
+    exitus = elenchus_clavem_agere(&e, &proprius, &electa);
     si (exitus == ELENCHUS_MOTUM)
     {
         (vacuum)electam_scribere(ramus, scriptor, electa, piscina);

@@ -99,6 +99,8 @@ nomen structura {
                   chorda  causa;        /* recusatio lectoris; vacua
                                          * si statua lecta */
     /* tempus cycli (kineticum) */
+                     s64 hora_visa;    /* horologium pulsus ultimi:
+                                         * tempus quod latus videt */
                      s64 origo_ms;     /* horologium ad tempus cycli
                                          * 0 */
                      s32 quietum_ms;   /* tempus cycli dum quiescit */

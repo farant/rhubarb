@@ -58,3 +58,68 @@
 - Plants: frame key ignoring the mode -> "delectus", "modi"; volume
   never re-polled -> "vacuum"; open dropdown not swallowing keys ->
   "delectus".
+
+## 2026-11-10 - T9: in vicus (`$models`)
+
+- **Glue** in `lib/vicus_applicatio.c`: genus `statuae`, verb
+  `$models`, clock `fenestra_tempus_ms`, face = actions, figures,
+  composer, image source, tick, tick interval, first-click drag,
+  place title, Esc back. `probationes/probatio_vicus_statuae.c`
+  drives it through the real application (typed and clicked
+  `$models`, real clock).
+- **The frame was being built two or three times per tick.** Found
+  by measuring, not by a test: tick and composer both read the live
+  clock, each saw a new millisecond, each rebuilt. The pane now reads
+  the clock ONCE per tick (`hora_visa`) and everything else uses that
+  value; composing without a tick cannot see new time (test "tempus",
+  and a plant). Before: exemplaria 143 ms per tick plus 72 ms in the
+  repaint. After: 69 ms and 1 ms.
+- **Measured** (headless vicus, -O2 test archive, 20 frames, golem
+  walking, lit):
+
+  | window | pane picture | Atkinson | Bayer | exemplaria | None | whole-window repaint |
+  |---|---|---|---|---|---|---|
+  | 720x458 | 360x438 | 4.3 ms | 1.3 ms | 69 ms | 3.1 ms | 1.0 ms |
+  | 960x561 | 480x541 | 6.3 ms | 2.0 ms | 110 ms | 4.9 ms | 1.4 ms |
+
+  So Atkinson, Bayer and None hold 30 ticks a second at either size;
+  exemplaria gives about 14 frames a second at 360 wide and 9 at 480.
+  Repainting the whole window is about a millisecond in the headless
+  rasterizer (the real app also copies to the screen; not measured).
+- **Bare paper.** The pane's background when focused is the house
+  focus pattern (dots), which showed around the model. The picture
+  area now gets a plain background rectangle and the frame carries
+  opaque paper (palette 5); the focus pattern stays in the header.
+  This replaces "transparent uncovered pixels" from T8.
+- **j / k in the dropdown with real key events.** Real events (and
+  `manus_ludus`) carry the logical key as an uppercase letter and the
+  typed letter in `runa`; `elenchus_clavem_agere` compares `clavis`
+  with lowercase 'j' / 'k', so it never matched and the highlight did
+  not move in vicus. T7's test had built its events by hand with a
+  lowercase `clavis`. `delectus_eventum_agere` now maps j / k to the
+  arrow keys itself (test with a real-shaped event, and a plant). The
+  same mismatch presumably affects every other user of
+  `elenchus_clavem_agere`; filed, not fixed here.
+- **No close hook.** `vicus.c` allocates a montation in the vicus
+  arena and never calls anything when a pane leaves the stack
+  (`vicus_acervo_redire` truncates). `statuae_dimittere` is therefore
+  never called by vicus: a pane that is closed and opened again
+  leaves its three arenas behind (a few MB; 30-50 MB if exemplaria
+  ran). A pane that stays in the stack is reused, not remounted.
+  Filed as a design question.
+- The golem covers about a third of a 360x438 picture: the framing
+  sphere includes its wide arms. `STATUA_MARGO` and
+  `STATUA_CAMPUS_GRADUS` in `statua_pictura.h` are the knobs.
+- Screenshots are made headless (`tabula_pixelorum_creare_nuda` +
+  `ludus_fenestra_creare` + `ludus_quadrum`), by a scratch program,
+  not by a tool in the tree.
+- **Second link failure of the project, same shape as T5's.** The
+  first T9 commit attempt failed the `ludus_tessera` gate 0/8:
+  `ludus_tessera/compile_probationes.sh` links `vicus_applicatio.o`
+  from a hand-kept library list, and the list did not have the new
+  pane and what it pulls in. Added there: statuae, statuae_quadrum,
+  statuae_repositorium, statua, statua_glb, statua_pictura,
+  stereometria, membrum__delectus, dithering_ordinatum,
+  dithering_exemplaria_velox, dithering_exemplaria_tabulae. A new
+  pane kind in `vicus_applicatio.c` always owes that list an entry;
+  run `./ludus_tessera/compile_probationes.sh` before committing.
