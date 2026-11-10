@@ -3,7 +3,7 @@
 **Ledger:** parcum 01M6V5H5V1EGK1V37TP5M6BFN1 ("psalmodia"); one opus
 per task below, filed at R1.
 
-**STATUS: DRAFT 2026-11-09.** Nothing executed yet.
+**STATUS: IN PROGRESS.** R1 done 2026-11-10 (header approved); R2 next.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > superpowers:executing-plans (inline, per house convention, no
@@ -399,4 +399,27 @@ Label rules (`signum` → modus + differentia):
 
 ## Executed notes
 
-(none yet)
+**R1 (2026-11-10).** `include/psalmodia_tabula.h` approved by Fran as
+drafted. Deviations from the sketch above, all in the approved header
+(R2-R4 follow the header, not the sketch):
+- `PsalmodiaExemplum.monosyllaba` added: the census found
+  `casus="monosyllaba"` on `<exemplum>` too (15 casus in all).
+- `PsalmodiaLocus.linea` added: R3 reports a bad note string at its
+  own line.
+- `psalmodia_successus` added (as `gabc_successus`).
+- Enum constants are `PSALMODIA_LOCUS_*`, parallel to
+  `PSALMODIA_PARS_*`.
+- **Variants: one road each.** `psalmodia_mediationem_eligere(tonus,
+  b32 ad_libitum)` (was `(tonus, monosyllaba, antiqua)`; renamed to
+  the table's attribute); the monosyllabic form of either cadence
+  only via `psalmodia_clausulam_monosyllabam`. R4's
+  `_variantes_probare` changes accordingly: tone 2's monosyllabic
+  mediatio = `clausulam_monosyllabam(tone 2, eligere(tone 2,
+  FALSUM))` -> one NOTA "i"; tone 1 the same call -> the common one.
+- Glossary: `mediatio` (with forms) and `semiversus` added; the other
+  words already resolved. Lint NOVA 0; examen ACCIPE; formator
+  CONFORMIS; header compiles alone under VEXILLA_C89.
+- The seven PROPOSITUM format additions confirmed by Fran; markers
+  removed from the table, approval dated in its head comment.
+- Ledger opera: R1 01M73CYKZTE2QP27V9KQY9TRPT, R2 01M73CYPW7FQVDHJDXWBCVFMQG,
+  R3 01M73CYSG1NKKPYQ54JSA597SS, R4 01M73CYW1ZGYMFXA85D7KCAYNA.

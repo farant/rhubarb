@@ -3,7 +3,9 @@
      Forma a Frano probata 2026-11-07 (project-specs/psalmodia-spec.md
      P2, II). Transcripti: toni I-VIII, peregrinus, in directum (AR
      p. 3*-26*; mediationes solemnes canticorum omissae, P4). Formae
-     novae notatae PROPOSITUM Frano recensendae sunt.
+     novae (clavis terminationis, canticum, positio altera, mediatio
+     ad libitum VI, peregrinus, in directum, terminatio monosyllaba)
+     a Frano probatae 2026-11-10.
 
      Fons: Antiphonale sacrosanctae Romanae ecclesiae pro diurnis
      horis, Typis polyglottis Vaticanis 1912 ("AR"), appendix Toni
@@ -275,7 +277,7 @@
       <nota>f</nota>
     </terminatio>
 
-    <!-- PROPOSITUM: clavis in terminatione = totus tonus in hac clave
+    <!-- clavis in terminatione = totus tonus in hac clave
          iisdem litteris canitur (liber clavem c3 ante terminationem
          ponit; f sub c3 = la). -->
     <terminatio differentia="A" clavis="c3">
@@ -291,7 +293,7 @@
         textus="atque sic finítur" notae="h h h g e f"/>
 
     <!-- cantica (p. 8*): inceptio ad singulos versus (AR p. 4*).
-         PROPOSITUM: canticum="verum"; pars="semiversus" = solum
+         canticum="verum"; pars="semiversus" = solum
          semiversus primus (initium + mediatio). -->
     <!-- "Magníficat": initium solemne (= Mediatio solemnis Toni II,
          p. 9*, "Et ex-sul-"), non regula toni simplicis. -->
@@ -597,7 +599,7 @@
         differentia="E" textus="et tímui" notae="ih gr gf e"/>
   </tonus>
 
-  <!-- PROPOSITUM: positio="altera" - "Altera Positio ejusdem Toni"
+  <!-- positio="altera" - "Altera Positio ejusdem Toni"
        (AR p. 13*): tonus IV transpositus (finalis la, tenor re),
        clavis c3. Differentiae c, A, A* solum hic. -->
   <tonus modus="4" positio="altera" clavis="c3" tenor="i" pagina="13*">
@@ -744,7 +746,7 @@
       <nota>h</nota>
     </mediatio>
 
-    <!-- PROPOSITUM: mediatio antiqua ut in Tono I, ad libitum.
+    <!-- mediatio antiqua ut in Tono I, ad libitum.
          Superveniens non impressum; ex Tono I. -->
     <mediatio ad_libitum="verum">
       <accentus superveniens="h">ixi</accentus>
@@ -1059,7 +1061,7 @@
       <nota>h</nota>
     </mediatio>
 
-    <!-- PROPOSITUM: differentia nulla in libro (terminatio unica);
+    <!-- differentia nulla in libro (terminatio unica);
          initium="hixi" = intonatio secundae partis, versu primo solum
          (forma alias non habet locum intonationi secundae partis). -->
     <terminatio tenor="g" initium="hixi">
@@ -1099,7 +1101,7 @@
        Antiphona" (Ps. 145 Vesp. Def., Ps. 129 Laud., Ps. 69 Litan.).
        Tonus verus: sine intonatione (versus primus in tenore incipit),
        flexa, mediatio, terminatio, et forma monosyllaba utriusque.
-       PROPOSITUM: in tabula ut tonus, modus="in directum", sine
+       in tabula ut tonus, modus="in directum", sine
        differentia. -->
   <tonus modus="in directum" clavis="c3" tenor="h" pagina="25*">
     <flexa>f</flexa>
@@ -1122,7 +1124,7 @@
       <nota>f</nota>
     </terminatio>
 
-    <!-- PROPOSITUM: casus="monosyllaba" etiam in <terminatio> (in libro:
+    <!-- casus="monosyllaba" etiam in <terminatio> (in libro:
          "Finalis ... In monosyllaba, etc.", AR p. 26*) -->
     <terminatio casus="monosyllaba">
       <accentus superveniens="g">h</accentus>
