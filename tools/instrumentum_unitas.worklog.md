@@ -275,3 +275,27 @@ profile -> compile fails, 4 checks). Gate time 36 s -> 1 min 43 s.
 
 Profile sharing between tools: not attempted. Each binary has its own
 cache dir and profile. Deferred to step 4 (examen).
+
+## 2026-11-09 — step 4 not built: the profile does not pay where percursus runs
+
+Planned step 4 was "installed builds use the profiled binary". Survey:
+there is no installed percursus or examen (no bin/ entry, no fabrica
+target; both live in silva/build/ behind wrappers). percursus has ONE
+real consumer, the examen-corpus gate (silva/examen_vectis.sh, one
+whole-repo run per gate run). examen is an object build, not unity.
+
+CPU time, whole repo, 3 interleaved rounds (load ~2.5):
+
+| build    | instructions | cycles      | wall          |
+| objects  | 337 G        | 94.2-99.4 G | 28.6-30.8 s   |
+| unity    | 291 G        | 84.1-90.5 G | 25.7-28.0 s   |
+| profiled | 256 G        | 75.7-81.4 G | 23.2-25.3 s   |
+
+Instructions overstate it: -12% instructions is ~-10% cycles, ~2.6 s per
+run. A profiled rebuild costs ~16 s more than a plain one whenever a
+closure source changed, so break-even is ~6 gate runs per source change;
+a worktree rarely gets that many. Decision (Fran, 2026-11-09): stop
+here. The profiled mode stays opt-in (SILVA_UNITAS=profilum), nothing
+defaults to it. Item 13 closed. Left open if ever wanted: examen as a
+unity build (unity alone was ~-11% cycles for percursus), profile
+sharing between tools.
