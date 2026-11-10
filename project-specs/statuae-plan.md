@@ -239,8 +239,8 @@ nomen structura {
 } Statua;
 
 /* post impletionem: ordo (FALSUM si cyclus in arbore aut parens extra
- * fines) et sphaera ambiens - positura quietis et quisque cyclus
- * XXXII temporibus aequis */
+ * fines) et sphaera ambiens positurae quietis (T4: cycli eam non
+ * augent) */
 b32 statua_finire (Statua* s, Piscina* piscina);
 
 /* matrices mundi, una per nodum (vocator nodorum locos praebet).
@@ -419,9 +419,11 @@ Fixed by this plan:
   - "lux": lit look, a face toward the light is brighter than one
     away; an emissive material equals its flat colour; the darkest
     possible face is 35 % (+-1 level) of the flat colour.
-  - "margo": the golem at four yaw angles (0, 90, 180, 270) and tilt
-    +-85 never covers a pixel on the picture's outer border, at
-    360x450 and at 450x360.
+  - "margo": the golem in its rest pose at four yaw angles (0, 90,
+    180, 270) and tilts -85, 15, 85 never covers a pixel on the
+    picture's outer border, at 360x450 and at 450x360, and covers
+    between 8 % and 60 % of it. (Rest pose: framing no longer covers
+    the clips, see spec decision 15.)
   - "prope": a triangle crossing the near plane and one wholly behind
     the eye render under `CREDO_NON_RUIT`; a zero-area triangle
     draws nothing.

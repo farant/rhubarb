@@ -438,9 +438,10 @@ _vertices_metiri (
     }
 }
 
-/* sphaera: transitus primus capsam omnium positurarum, secundus
- * distantiam maximam a centro capsae. Tempora sine involutione:
- * initium ET finis cycli sumuntur */
+/* sphaera positurae quietis: transitus primus capsam verticum,
+ * secundus distantiam maximam a centro capsae. Cycli NON intrant:
+ * pars quae in cyclo longe volat (saxum iactum) sphaeram, et ergo
+ * mensuram statuae in pictura, ne regat */
 interior b32
 _sphaeram_computare (
      Statua* s,
@@ -451,10 +452,6 @@ _sphaeram_computare (
     StereometriaVector  maximum;
                    b32  coeptum = FALSUM;
                    b32  radium;
-                   s32  cyclus;
-                   i32  exemplum;
-                   i32  exempla;
-                   f32  tempus;
 
     s->centrum  = stereometria_vector(0.0f, 0.0f, 0.0f);
     s->radius   = 0.0f;
@@ -470,22 +467,11 @@ _sphaeram_computare (
     {
         redde FALSUM;
     }
+    _positura(s, NIHIL, 0.0f, matrices);
     per (radium = FALSUM; radium <= VERUM; radium++)
     {
-        per (cyclus = -I; cyclus < (s32)s->cyclorum; cyclus++)
-        {
-            exempla = cyclus < ZEPHYRUM ? I : STATUA_SPHAERAE_EXEMPLA;
-            per (exemplum = ZEPHYRUM; exemplum < exempla; exemplum++)
-            {
-                tempus = cyclus < ZEPHYRUM ? 0.0f
-                    : s->cycli[cyclus].duratio * (f32)exemplum
-                        / (f32)(STATUA_SPHAERAE_EXEMPLA - I);
-                _positura(s, cyclus < ZEPHYRUM ? NIHIL
-                    : &s->cycli[cyclus], tempus, matrices);
-                _vertices_metiri(s, matrices, radium, &minimum,
-                    &maximum, &coeptum, &s->radius);
-            }
-        }
+        _vertices_metiri(s, matrices, radium, &minimum, &maximum,
+            &coeptum, &s->radius);
         si (!radium)
         {
             s->centrum = stereometria_scalare(

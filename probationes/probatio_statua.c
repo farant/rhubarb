@@ -6,7 +6,7 @@
  * durationem redit (negativum quoque), duratio 0 = clavis prima.
  * rotatio: slerp. sine canali: nodus quietem tenet. finire: ordo
  * parentes ante liberos; circulus, parens et indices extra fines,
- * claves decrescentes recusantur. sphaera: cubus motus intra manet.
+ * claves decrescentes recusantur. sphaera: quietem tegit, non cyclos.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -355,7 +355,6 @@ _sectio_sphaera (
                 Statua* s = _statuam_parare(c);
     StereometriaMatrix  m[II];
     StereometriaVector  p;
-                   i32  t;
                    i32  v;
                    f32  maxima = 0.0f;
                    f32  d;
@@ -364,28 +363,32 @@ _sectio_sphaera (
     _cyclum_addere(c, s, ZEPHYRUM, STATUA_TRANSLATIO, II, TEMPORA_DUO,
         MOTUS_DUO);
     CREDO_NECESSE (statua_finire(s, c->piscina));
-    /* liber (0,1,0) -> (2,1,0); cubus +-0.5: capsa x [-0.5, 2.5],
-     * y [0.5, 1.5], z [-0.5, 0.5] */
-    CREDO_VECTOR (s->centrum, 1.0f, 1.0f, 0.0f);
-    CREDO_F32_PROXIMUS (s->radius, 1.6583124f, 0.001f);
-    per (t = ZEPHYRUM; t < LXIV; t++)
+    /* sphaera QUIETIS: liber ad (0,1,0), cubus +-0.5 -> centrum
+     * (0,1,0), radius sqrt(0.75). Cyclus (liber ad (2,1,0) it) eam
+     * NON auget */
+    CREDO_VECTOR (s->centrum, 0.0f, 1.0f, 0.0f);
+    CREDO_F32_PROXIMUS (s->radius, 0.8660254f, 0.001f);
+    statua_positura(s, -I, 0.0f, m);
+    per (v = ZEPHYRUM; v < VIII; v++)
     {
-        statua_positura(s, ZEPHYRUM, (f32)t / 64.0f, m);
-        per (v = ZEPHYRUM; v < VIII; v++)
+        p = stereometria_punctum_transformare(m[I],
+            stereometria_vector(s->positiones[v * III],
+                s->positiones[v * III + I],
+                s->positiones[v * III + II]), NIHIL);
+        d = stereometria_longitudo(stereometria_subtrahere(p,
+            s->centrum));
+        si (d > maxima)
         {
-            p = stereometria_punctum_transformare(m[I],
-                stereometria_vector(s->positiones[v * III],
-                    s->positiones[v * III + I],
-                    s->positiones[v * III + II]), NIHIL);
-            d = stereometria_longitudo(stereometria_subtrahere(p,
-                s->centrum));
-            si (d > maxima)
-            {
-                maxima = d;
-            }
+            maxima = d;
         }
     }
     CREDO_VERUM (maxima <= s->radius + EPSILON);
+    /* in cyclo cubus sphaeram relinquit */
+    statua_positura(s, ZEPHYRUM, 0.9f, m);
+    p = stereometria_punctum_transformare(m[I],
+        stereometria_vector(0.0f, 0.0f, 0.0f), NIHIL);
+    CREDO_VERUM (stereometria_longitudo(stereometria_subtrahere(p,
+        s->centrum)) > s->radius);
 
     /* index verticis extra fines recusatur */
     s = _statuam_parare(c);

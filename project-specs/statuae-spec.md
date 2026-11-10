@@ -110,9 +110,13 @@ Claude's calls (2026-11-09), for Fran to check:
     emissive texture is not sampled; the model keeps one texture per
     material and a flag. Flat look: brightness 1 everywhere. The look is a header toggle (`lit` / `flat`) and a
     key.
-15. **Framing:** the model is centred and scaled so that its bounding
-    sphere over all clips fits the picture with a small margin, at any
-    rotation. Mild perspective (about 30 degrees field of view).
+15. **Framing:** the model is centred and scaled so that the bounding
+    sphere of its **rest pose** fits the picture with a small margin,
+    at any rotation. Mild perspective (30 degrees field of view).
+    (Changed 2026-11-09 in T4, Claude's call: it first said "over all
+    clips", but the golem's `boulder_throw` sends the boulder almost 8
+    units from a 2-unit golem, which made the golem tiny. A part that
+    a clip moves far away now simply leaves the picture.)
 16. **Every dither runs at pane resolution** (see III: the pane is
     already about 360x450, where exemplaria measured 76 ms). A header
     toggle `2x` renders at half size and shows each pixel doubled, for

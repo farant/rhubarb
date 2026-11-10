@@ -25,9 +25,6 @@
 #include "imago_typus.h"
 #include "stereometria.h"
 
-/* tempora quibus quisque cyclus ad sphaeram ambientem sumitur */
-#define STATUA_SPHAERAE_EXEMPLA XXXII
-
 nomen enumeratio {
     STATUA_TRANSLATIO = ZEPHYRUM,
     STATUA_ROTATIO,
@@ -111,8 +108,9 @@ nomen structura {
                    i32  texturarum;
           StatuaCyclus* cycli;
                    i32  cyclorum;
-    StereometriaVector  centrum;      /* sphaera omnes posituras
-                                       * tegens (statua_finire) */
+    StereometriaVector  centrum;      /* sphaera posituram QUIETIS
+                                       * tegens (statua_finire);
+                                       * cycli eam excedere possunt */
                    f32 radius;
 } Statua;
 
@@ -122,9 +120,10 @@ nomen structura {
  * Probat: parens cuiusque nodi intra fines et sine circulo; rete,
  * partes, indices, materiae, texturae, canales intra fines suos;
  * indicum multiplum III; claves crescentes. Deinde 'ordo' et sphaera
- * ambiens computantur: positura quietis et quisque cyclus
- * STATUA_SPHAERAE_EXEMPLA temporibus aequis. Statua sine verticibus:
- * centrum 0, radius 0.
+ * ambiens positurae quietis computantur (centrum capsae verticum,
+ * distantia maxima). Cycli sphaeram non augent: pictor statuam ad
+ * quietem metitur, et pars quae in cyclo longe abit (saxum iactum)
+ * picturam relinquit. Statua sine verticibus: centrum 0, radius 0.
  *
  * Redde: FALSUM si quid extra fines aut piscina deficit (statua tunc
  * non adhibenda)
