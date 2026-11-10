@@ -17,7 +17,9 @@
 #include "statua.h"
 #include "statua_glb.h"
 #include "statua_pictura.h"
+#include "sigillum.h"
 #include "credo.h"
+#include <stdio.h>
 #include <string.h>
 
 #define VIA_LAPIDIS "probationes/fixa/statuae/lapis.glb"
@@ -629,6 +631,57 @@ _sectio_determinatum (
     CREDO_VERUM (memcmp(a.rgba, b.rgba, 360 * 450 * IV) != ZEPHYRUM);
 }
 
+/* digesta (SHA-256 RGBA) lapidis: cyclus 0 ad 0.35 s, visus
+ * ordinarius, 360 x 450 - fixa 2026-11-09 postquam Franus picturas
+ * vidit et probavit (statuae-plan T4 / T6). Mutatio pictoris quae
+ * haec movet oculo iudicanda est, deinde refigenda */
+#define DIGESTUM_ILLUMINATI \
+    "67937aab0f600d0f10f552c9a59dbd473be27a147e0c2b0aab5ca08cc4e13d6a"
+#define DIGESTUM_PLANI \
+    "b51d57ceef053ec7a3c924a9b305edf12da859ad27fe1087d5ea8c316e08046a"
+
+interior vacuum
+_sectio_fixa (
+    CredoContextus* c)
+{
+    hic_manens constans character* constans SPERATA[II] = {
+        DIGESTUM_PLANI, DIGESTUM_ILLUMINATI
+    };
+         StatuaFructus  f;
+                Statua* s;
+    StereometriaMatrix* m;
+         StatuaPictura  p;
+           StatuaVisus  visus;
+              Sigillum  sigillum;
+             character  hex[SIGILLUM_HEX_MENSURA];
+                chorda  g;
+                   i32  k;
+
+    g = filum_legere_totum(VIA_LAPIDIS, c->piscina);
+    f = statua_glb_legere(g, c->piscina);
+    CREDO_NECESSE (f.successus);
+    s = f.statua;
+    m = (StereometriaMatrix*)_locus(c,
+        s->nodorum * magnitudo(StereometriaMatrix));
+    statua_positura(s, ZEPHYRUM, 0.35f, m);
+    visus.gyrus       = STATUA_GYRUS_ORDINARIUS;
+    visus.inclinatio  = STATUA_INCLINATIO_ORDINARIA;
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        visus.illuminatum = (b32)k;
+        CREDO_NECESSE (statua_pingere(s, m, &visus, 360, 450, &p,
+            c->piscina));
+        sigillum = sigillum_computare(p.rgba, 360 * 450 * IV);
+        sigillum_hex(&sigillum, hex);
+        si (strcmp(hex, SPERATA[k]) != ZEPHYRUM)
+        {
+            printf("  digestum %s: %s\n", k ? "illuminati" : "plani",
+                hex);
+        }
+        CREDO_VERUM (strcmp(hex, SPERATA[k]) == ZEPHYRUM);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "quadratum", _sectio_quadratum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "profunditas", _sectio_profunditas, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -641,6 +694,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vacua", _sectio_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
     { "determinatum", _sectio_determinatum, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "fixa", _sectio_fixa, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

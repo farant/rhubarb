@@ -124,6 +124,22 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/neumae" provenientia="relatio"/>
   </actio>
+  <!-- statuae (statuae-plan T6): statuae GLB in volumine vici
+       (addere / removere / enumerare) et quadra earum in PNG
+       (pingere) - oculi Claudii et Frani ante latus -->
+  <actio titulus="statuae" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/statuae_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/statuae"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/statuae/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/statuae_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/statuae" provenientia="relatio"/>
+  </actio>
   <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
        silvae (silva._clonare_ignorata) -->
   <actio titulus="clonare" genus="institutio">

@@ -339,8 +339,9 @@ targets to measure against, not gates.
 
 - The pane size in III is derived from the code and the display's
   resolution, not read from a running vicus.
-- Whether the volume's sequence number moves for the kind of record
-  the store will write (it does for negotia's).
+- ~~Whether the volume's sequence number moves for the store's
+  records.~~ Answered in T6: it does, and a second handle on the same
+  file sees it (probatio_statuae_repositorium, section "seq").
 - The cost of vicus repainting the whole window 30 times a second
   with a full-pane image. No pane has done this yet.
 - That the renderer meets 5 ms; nothing has been rasterized.

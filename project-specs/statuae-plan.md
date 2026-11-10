@@ -76,7 +76,8 @@ task named.
 | `include/statua_pictura.h`, `lib/statua_pictura.c` | renderer |
 | `include/dithering_ordinatum.h`, `lib/dithering_ordinatum.c` | Bayer, nearest |
 | `include/statuae_repositorium.h`, `lib/statuae_repositorium.c` | store |
-| `tools/statuae.c`, `tools/statuae_struere.sh`, `aedificatio.stml` | `bin/statuae` |
+| `include/statuae_quadrum.h`, `lib/statuae_quadrum.c` | one frame: pose, render, dither, paper (added in T6; tool and pane share it) |
+| `tools/statuae.c`, `tools/statuae_struere.sh`, `tools/statuae_fumus.sh`, `aedificatio.stml` | `bin/statuae` and its hand-run smoke script |
 | `include/membrum__delectus.h`, `lib/membrum__delectus.c` | dropdown member |
 | `include/statuae.h`, `lib/statuae.c`, `apps/statuae/organum.stml` | the pane |
 | `lib/vicus_applicatio.c` | genus + `$models` |
@@ -725,13 +726,10 @@ Fixed by this plan:
   the clip time from the clock, and makes a frame only if the key
   changed; it returns VERUM only then. While paused the clip time is
   frozen at the pause instant.
-- Pipeline per frame, in a frame arena emptied first:
-  `statua_positura` -> `statua_pingere` -> dither by `modus`
-  (exemplaria = `dithering_exemplaria_velox_colorum`, options NIHIL,
-  census NIHIL) -> `dithering_indices_ad_rgba` -> every pixel with
-  `tectum` 0 gets alpha 0 (the pane's own background shows) -> kept
-  as the `Imago` that `statuae_imago_fons` returns under the name
-  `statuae:<branch id>`.
+- Pipeline per frame, in a frame arena emptied first: one call of
+  `statuae_quadrum_pingere` (T6) with `charta_perlucida` VERUM; the
+  result is the `Imago` that `statuae_imago_fons` returns under the
+  name `statuae:<branch id>`.
 - `statuae_mora`: 33 while (a clip exists and not `quiescit`) or a
   drag is held; otherwise 1000 (the volume poll).
 - Poll: when 1000 ms have passed since the last one, compare
