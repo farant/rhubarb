@@ -1,0 +1,57 @@
+<!-- organum.stml - manifestum lateris statuarum (project-specs/
+     statuae-spec.md, decretum 22): simulacra GLB animata in latere
+     vici. Positio in cyclo, tractus et quadrum in memoria montationis,
+     numquam in statu - hic praeferentiae visus, persistentes, et
+     delectus apertus, transiens. -->
+<organum genus="statuae" versio="1">
+
+  <actiones>
+    <actio nomen="statuae.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="statua" typus="textus" vita="persistens"
+            scriptor="statuae.agere"
+            nota="titulus statuae visae ('[' ']'); absens aut ignotus
+                  = prima in indice"/>
+    <campus nomen="cyclus" typus="textus" vita="persistens"
+            scriptor="statuae.agere"
+            nota="titulus cycli currentis (delectus 'c'); absens aut
+                  ignotus = primus statuae"/>
+    <campus nomen="modus" typus="textus" vita="persistens"
+            scriptor="statuae.agere"
+            nota="modus dithering (delectus 'd'): atkinson, bayer,
+                  exemplaria, nullum; absens = atkinson"/>
+    <campus nomen="planum" typus="veritas" vita="persistens"
+            scriptor="statuae.agere"
+            nota="colores ut picti, sine luce ('f'); absens =
+                  illuminatum"/>
+    <campus nomen="duplex" typus="veritas" vita="persistens"
+            scriptor="statuae.agere"
+            nota="pictura dimidia mensura, pixela duplicata ('2');
+                  absens = mensura plena"/>
+    <campus nomen="quiescit" typus="veritas" vita="persistens"
+            scriptor="statuae.agere"
+            nota="cyclus sistit (Spatium); absens = currit"/>
+    <campus nomen="gyrus" typus="numerus" vita="persistens"
+            scriptor="statuae.agere"
+            nota="gyrus circa axem verticalem, decimae gradus 0..3599
+                  (tractus, 'h' 'l'); absens = CCC"/>
+    <campus nomen="inclinatio" typus="numerus" vita="persistens"
+            scriptor="statuae.agere"
+            nota="inclinatio, decimae gradus -850..850 (tractus, 'j'
+                  'k'); absens = CL"/>
+
+    <!-- transiens -->
+    <campus nomen="delectus" typus="nomen" vita="transiens"
+            aspectus="popover" scriptor="statuae.agere"
+            nota="delectus apertus (membrum__delectus): 'cyclus' aut
+                  'modus'; absens = clausi"/>
+    <campus nomen="delectus_electa" typus="numerus" vita="transiens"
+            scriptor="statuae.agere"
+            nota="optio delectus illuminata; absens = nulla"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

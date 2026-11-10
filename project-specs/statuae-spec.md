@@ -90,7 +90,8 @@ Claude's calls (2026-11-09), for Fran to check:
     (it draws only the tab row); panes such as admonitiones and
     antiphonale draw their own rows with clickable arrows. If the
     controls do not fit one row at the narrow pane width (360 px on
-    Fran's display), the dropdowns move to a second row.
+    Fran's display), the dropdowns move to a second row. (T8: at
+    360 px both fixtures fit one row; two rows start near 200 px.)
 11. **Turntable rotation.** Horizontal drag spins the model about its
     vertical axis without limit; vertical drag tilts the view between
     -85 and +85 degrees, so it never flips. Releasing leaves it where
