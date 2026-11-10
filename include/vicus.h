@@ -202,6 +202,13 @@ nomen structura {
                            constans character* titulus,
                            Piscina* piscina);
               vacuum* iter_semita_ctx;
+    /* mundus-plan T1: latus focum amisit aut absconditum est (focus
+     * in latus aliud, tabula mutata, latus aliud in fronte acervi)
+     * aut fenestra ipsa focum amisit - claves depressae liberationem
+     * suam fortasse numquam mittent; latus statum clavium tentarum
+     * purgat. Semel per amissionem. NIHIL = nihil. */
+               vacuum  (*focus_amissus)(vacuum* ctx);
+              vacuum* focus_amissus_ctx;
 } VicusFacies;
 
 nomen vacuum (*VicusDescriptor)(
@@ -347,6 +354,8 @@ nomen structura {
          ActioRegistrum* actiones;    /* hospitis + activae (T2a) */
         FiguraRegistrum* figurae;
                   Motus* motus;       /* ligatus (T3a); NIHIL nullus */
+                 chorda  focatum_prius; /* id lateris ultimo focati
+                                         * (facies.focus_amissus) */
                     Xar* petitiones;  /* S3c: aperitiones in acervo
                                        * pendentes (vicus_pulsare) */
         VicusHorologium  horologium;  /* S4: NIHIL = nullum */

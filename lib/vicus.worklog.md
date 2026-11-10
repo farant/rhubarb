@@ -1278,3 +1278,36 @@ then open) was red at the open. Rule: any struct taken from a reused
 xar slot gets memset before its fields are set.
 Found by reading Fran's saved index from a COPY of the live volume
 (sqlite3 on scratch copy - read-only): the ring tab had no new pane.
+
+## 2026-11-10 - facies.focus_amissus (mundus-plan T1)
+
+Why: the `$world` pane walks while W/A/S/D are held, so it must learn
+when a held key will never send its release.
+
+What was traced (reading, no code change needed for it): key releases
+already reach a focused pane. `EVENTUS_CLAVIS_LIBERATUS` is a "focal"
+event in `lib/destinatio.c` (`est_focalis`), so the geometric strategy
+sends it to the focused component like a press; `lib/ludus_fenestra.c`
+(`_tradere`) hands every window event to `dispensator_tractare`
+unfiltered; `manus_ludus_clavem` in tests sends press then release.
+Existing panes simply ignore releases. The root handler swallows the
+release of host chords (Cmd+digit etc.), which is right.
+
+What was added: `VicusFacies.focus_amissus(ctx)`. Two triggers:
+1. The focused pane changed. Detected in ONE place,
+   `focum_amissum_nuntiare`, called at the top of `motum_aptare`, which
+   every focus, tab and stack-front change already calls (about twelve
+   sites). It compares the id of the pane last seen focused
+   (`Vicus.focatum_prius`) with the present one and tells the old pane,
+   found again by id (`latus_per_id`), so nothing stale is called.
+   `motum_aptare` with the same pane focused (re-selecting the active
+   tab) tells nobody.
+2. The window lost focus (`EVENTUS_DEFOCUS`, observed in `destinare`
+   beside `aditum_observare`): the focused pane is told; it stays the
+   focused pane.
+
+Not covered: a pane hidden without any `motum_aptare` call. None was
+found; if one turns up, the symptom is a character that keeps walking.
+
+Test: section "focus amissus" in probatio_vicus_claves.c; three plants
+red (callback not called; DEFOCUS ignored; pane that keeps focus told).

@@ -823,6 +823,17 @@ aditum_observare (
                      ? ADITUS_REVOCANDUS : ADITUS_NULLUS;
 }
 
+/* latus monere: focum amisit (facies.focus_amissus) */
+interior vacuum
+latus_focum_amisit (
+    constans VicusLatus* l)
+{
+    si (l && l->montata && l->facies.focus_amissus)
+    {
+        l->facies.focus_amissus(l->facies.focus_amissus_ctx);
+    }
+}
+
 /* DestinatioStrategia hospitis (ctx = Vicus*): Cmd+numerus, Cmd+] / [
  * et brevitates (D5) ad radicem; ictus in
  * latus NON focatum (spatium destinati non sub Motus.spatium - S8c:
@@ -843,6 +854,11 @@ destinare (
          chorda  sp;
 
     aditum_observare((Vicus*)ctx, ev, piscina);
+    /* mundus-plan T1: fenestra focum amisit - latus focatum monetur */
+    si (ctx && ev && ev->genus == EVENTUS_DEFOCUS)
+    {
+        latus_focum_amisit(vicus_latus_focatum((Vicus*)ctx));
+    }
     si (arbor && (   est_imperium_tabulae(ev) || est_imperium_cycli(ev)
                   || est_imperium_anuli(ev)
                   || est_imperium_comitis(ev)
@@ -2062,6 +2078,57 @@ figura_divisoris (
         VERUM);
 }
 
+/* latus montatum per id (in omnibus tabulis); NIHIL si nullum */
+interior VicusLatus*
+latus_per_id (
+    constans Vicus* v,
+            chorda  id)
+{
+    VicusTabula* t;
+     VicusLatus* l;
+            i32  i;
+            i32  k;
+
+    per (i = ZEPHYRUM; i < xar_numerus(v->tabulae); i++)
+    {
+        t = (VicusTabula*)xar_obtinere(v->tabulae, i);
+        si (chorda_aequalis(t->sinistrum.id, id))
+        {
+            redde &t->sinistrum;
+        }
+        per (k = ZEPHYRUM; t->acervus && k < xar_numerus(t->acervus);
+             k++)
+        {
+            l = (VicusLatus*)xar_obtinere(t->acervus, k);
+            si (chorda_aequalis(l->id, id))
+            {
+                redde l;
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+/* mundus-plan T1: latus focatum mutatum? prius monetur. Locus unus:
+ * motum_aptare post omnem mutationem foci, tabulae et frontis
+ * vocatur. */
+interior vacuum
+focum_amissum_nuntiare (
+    Vicus* v)
+{
+    VicusLatus* l;
+        chorda  praesens;
+
+    l         = vicus_latus_focatum(v);
+    praesens  = (l && l->montata) ? l->id : chorda_nulla_vici();
+    si (   !chorda_vacua(v->focatum_prius)
+        && !chorda_aequalis(v->focatum_prius, praesens))
+    {
+        latus_focum_amisit(latus_per_id(v, v->focatum_prius));
+    }
+    v->focatum_prius = praesens;
+}
+
 /* Motus ligatus (T3a, S2a): ramus, spatium et gestus lateris FOCATI.
  * Sine latere focato montato: radix, nullus gestus. */
 interior vacuum
@@ -2070,6 +2137,7 @@ motum_aptare (
 {
     VicusLatus* l;
 
+    focum_amissum_nuntiare(v);
     si (!v->motus)
     {
         redde;

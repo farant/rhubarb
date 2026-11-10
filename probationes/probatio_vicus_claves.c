@@ -66,6 +66,29 @@ pictorem_montare (
                          latitudo, altitudo, NIHIL);
 }
 
+/* mundus-plan T1: focus amissus - numerus vocationum et montatio
+ * ultima */
+hic_manens     i32 amissi_numerus;
+hic_manens vacuum* amissi_ultimus;
+
+interior vacuum
+focum_amissum_notare (
+    vacuum* ctx)
+{
+    amissi_numerus++;
+    amissi_ultimus = ctx;
+}
+
+/* parare sectionum: status notarii inter sectiones non manet */
+interior vacuum
+amissos_purgare (
+    CredoContextus* c)
+{
+    (vacuum)c;
+    amissi_numerus = ZEPHYRUM;
+    amissi_ultimus = NIHIL;
+}
+
 interior vacuum
 scribae_gestum (
      Motus* motus,
@@ -81,13 +104,15 @@ scribam_describere (
 {
     ScribaMontatio* m;
 
-    m                 = (ScribaMontatio*)montatio;
-    f->actiones       = m->actiones;
-    f->figurae        = m->figurae;
-    f->componere      = scriba_componere;
-    f->componere_ctx  = &m->compositio;
-    f->gestum_ponere  = scribae_gestum;
-    f->gestum_ctx     = &m->actiones_ctx;
+    m                     = (ScribaMontatio*)montatio;
+    f->actiones           = m->actiones;
+    f->figurae            = m->figurae;
+    f->componere          = scriba_componere;
+    f->componere_ctx      = &m->compositio;
+    f->gestum_ponere      = scribae_gestum;
+    f->gestum_ctx         = &m->actiones_ctx;
+    f->focus_amissus      = focum_amissum_notare;
+    f->focus_amissus_ctx  = m;
 }
 
 interior vacuum
@@ -97,13 +122,15 @@ pictorem_describere (
 {
     PictorMontatio* m;
 
-    m                 = (PictorMontatio*)montatio;
-    f->actiones       = m->actiones;
-    f->figurae        = m->figurae;
-    f->componere      = pictor_componere;
-    f->componere_ctx  = &m->compositio;
-    f->fons           = pictor_imago_fons;
-    f->fons_ctx       = &m->figurae_ctx;
+    m                     = (PictorMontatio*)montatio;
+    f->actiones           = m->actiones;
+    f->figurae            = m->figurae;
+    f->componere          = pictor_componere;
+    f->componere_ctx      = &m->compositio;
+    f->fons               = pictor_imago_fons;
+    f->fons_ctx           = &m->figurae_ctx;
+    f->focus_amissus      = focum_amissum_notare;
+    f->focus_amissus_ctx  = m;
 }
 
 interior b32
@@ -274,9 +301,103 @@ InternamentumChorda* intern;
     volumen_claudere(vol);
 }
 
+/* mundus-plan T1: facies.focus_amissus - latus quod focum amittit
+ * aut absconditur semel monetur; latus focum tenens numquam */
+interior vacuum
+_sectio_focus_amissus (
+    CredoContextus* c)
+{
+            Volumen* vol;
+              Vicus* v;
+        Dispensator* d;
+         ManusLudus* m;
+             vacuum* sinistrum;
+             vacuum* dextrum;
+             vacuum* alterum;
+            Eventus  e;
+            Piscina* piscina;
+InternamentumChorda* intern;
+
+    piscina  = c->piscina;
+    intern   = internamentum_creare(piscina);
+    thema_initiare();
+    vol = volumen_temporarium(piscina, "probatio_vicus_focus_amissus");
+
+    v = vicus_creare(piscina, intern, vol, CDLXXX, CDLXXX);
+    CREDO_NON_NIHIL(v);
+    CREDO_VERUM(vicus_genus_addere(v, "scriba",
+        magnitudo(ScribaMontatio),
+        scribam_montare, scribam_describere, NIHIL));
+    CREDO_VERUM(vicus_genus_addere(v, "pictor",
+        magnitudo(PictorMontatio),
+        pictorem_montare, pictorem_describere, NIHIL));
+    CREDO_VERUM(vicus_aperire(v,
+        "<tabulae activa=\"a\">"
+        "<tabula id=\"a\" focus=\"sinistrum\">"
+        "<latus genus=\"scriba\" id=\"a_s\"/>"
+        "<acervus><latus genus=\"pictor\" id=\"a_p\"/></acervus>"
+        "</tabula>"
+        "<tabula id=\"b\"><latus genus=\"scriba\"/></tabula>"
+        "</tabulae>"));
+    sinistrum = vicus_latus(vicus_tabula(v, ZEPHYRUM),
+        VICUS_SINISTRUM)->montatio;
+    dextrum = vicus_latus(vicus_tabula(v, ZEPHYRUM),
+        VICUS_DEXTRUM)->montatio;
+    alterum = vicus_latus(vicus_tabula(v, I),
+        VICUS_SINISTRUM)->montatio;
+    d = dispensator_creare(piscina, intern, v->repo, vicus_actiones(v),
+        vicus_componere, v, CCC);
+    m = manus_ludus_creare(piscina, d);
+    vicus_dispensatorem_ligare(v, d);
+    CREDO_AEQUALIS_I32(amissi_numerus, ZEPHYRUM);
+
+    CREDO_GRADUS("I: latus focum tenens non monetur");
+    CREDO_VERUM(manus_ludus_scribere(m, "iab"));
+    CREDO_VERUM(manus_ludus_clavem(m, (character)XXVII, ZEPHYRUM));
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_SINISTRUM));
+    /* tabula activa iterum electa: motus aptatur, focus idem */
+    CREDO_VERUM(tabulam(m, '1'));
+    CREDO_VERUM(activa_est(v, "a"));
+    CREDO_AEQUALIS_I32(amissi_numerus, ZEPHYRUM);
+
+    CREDO_GRADUS("II: focus in dextrum - sinistrum monetur semel");
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    CREDO_AEQUALIS_I32(amissi_numerus, I);
+    CREDO_VERUM(amissi_ultimus == sinistrum);
+
+    CREDO_GRADUS("III: focus redit - dextrum monetur");
+    CREDO_VERUM(vicus_focum_ponere(v, VICUS_SINISTRUM));
+    CREDO_AEQUALIS_I32(amissi_numerus, II);
+    CREDO_VERUM(amissi_ultimus == dextrum);
+
+    CREDO_GRADUS("IV: tabula mutata - latus absconditum monetur");
+    CREDO_VERUM(tabulam(m, '2'));
+    CREDO_VERUM(activa_est(v, "b"));
+    CREDO_AEQUALIS_I32(amissi_numerus, III);
+    CREDO_VERUM(amissi_ultimus == sinistrum);
+    CREDO_VERUM(tabulam(m, '1'));
+    CREDO_AEQUALIS_I32(amissi_numerus, IV);
+    CREDO_VERUM(amissi_ultimus == alterum);
+
+    CREDO_GRADUS("V: fenestra focum amittit - latus focatum monetur");
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus = EVENTUS_DEFOCUS;
+    dispensator_tractare(d, &e);
+    CREDO_AEQUALIS_I32(amissi_numerus, V);
+    CREDO_VERUM(amissi_ultimus == sinistrum);
+    e.genus = EVENTUS_FOCUS;
+    dispensator_tractare(d, &e);
+    CREDO_AEQUALIS_I32(amissi_numerus, V);
+    CREDO_FALSUM(insula_mendacium(v->repo));
+
+    volumen_claudere(vol);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
-    { "commutatio tabularum per claves et ictum", _sectio_prima, NIHIL,
-        NIHIL, NIHIL, NIHIL },
+    { "commutatio tabularum per claves et ictum", _sectio_prima,
+        amissos_purgare, NIHIL, NIHIL, NIHIL },
+    { "focus amissus", _sectio_focus_amissus, amissos_purgare, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
