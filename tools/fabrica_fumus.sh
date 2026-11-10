@@ -1334,6 +1334,50 @@ lxix_d=$(awk -F'\t' -v p=fumus-lxix '$1 == "cursus" && $2 == "initium" && $4 == 
 [ "$lxix_d" = "2" ] || lxix_ok=0
 if [ "$lxix_ok" -eq 1 ]; then echo "  LXIX umbra: a/b/d concordes, c discordia vestigii et invalidationis (factum 2) OK"; else echo "  LXIX FRACTUM (factum c: $lxix_d)"; for m in a b c d; do sed "s/^/      $m: /" "$A/probatio_$m/vestigia_umbra.txt" 2>/dev/null || echo "      $m: (nulla plagula)"; done; fracta=1; fi
 
+# LXIX b (2026-11-10, fabrica-plan-8 T4): LIBER - FABRICA_VESTIGIUM=liber:
+# membra SINE ambulatione arboris iudicantur, testis = photographia
+# secutorum + lineae S libri. Eadem membra ac LXIX: a (scriptura cruda
+# x.txt cum linea S sua) FRACTUM per librum; b (scriptura cruda in
+# lib/bib.c SECUTAM) FRACTUM per photographiam secutorum; c (scriptura
+# cruda in extra.txt non secutam, extra aream) TRANSIT - caecitas nota
+# (spec 8 T4: ambulatio per cursum audita); d transit. Factum
+# fabrica.secuta adest, fabrica.photographia ABEST (nulla ambulatio).
+radix_c
+rm -f "$T/r/t/probatio_"*.c
+printf '#include <stdio.h>\n#include <stdlib.h>\nint main(void) { FILE* f = fopen("x.txt", "w"); const char* l = getenv("FABRICA_LECTIONES"); if (f) { fputs("x\\n", f); fclose(f); } if (l) { f = fopen(l, "a"); if (f) { fputs("S\\tx.txt\\n", f); fclose(f); } } return 0; }\n' > "$T/r/t/probatio_a.c"
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("lib/bib.c", "a"); if (f) { fputs("/* b */\\n", f); fclose(f); } return 0; }\n' > "$T/r/t/probatio_b.c"
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("extra.txt", "w"); if (f) { fputs("c\\n", f); fclose(f); } return 0; }\n' > "$T/r/t/probatio_c.c"
+printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_d.c"
+(cd "$T/r" && git init -q . && git add -A) > "$T/lxixb.g" 2>&1
+RP=$(cd "$T/r" && pwd -P)
+(cd "$T/r" && MENSOR_PARENS=fumus-lxixb MENSOR_SESSIO=sessio-lxixb MENSOR_ARBOR="$RP" \
+    FABRICA_VESTIGIUM=liber "$F" probare -vis probationes_t) > "$T/lxixb.e" 2>&1
+A="$T/r/build/fabrica/area/probationes_t"
+lxixb_ok=1
+grep -q '^--- probatio_a FRACTA .*scripsit extra vestigium (S, liber lectionum): x.txt' "$T/lxixb.e" || lxixb_ok=0
+grep -q '^--- probatio_b FRACTA .*scripsit extra vestigium: lib/bib.c' "$T/lxixb.e" || lxixb_ok=0
+grep -q '^--- probatio_c praeteriit' "$T/lxixb.e" || lxixb_ok=0
+grep -q '^--- probatio_d praeteriit' "$T/lxixb.e" || lxixb_ok=0
+# nulla collatio (umbra sola confert), nulla ambulatio (factum abest)
+[ -z "$(ls "$A"/probatio_*/vestigia_umbra.txt 2>/dev/null)" ] || lxixb_ok=0
+lxixb_f=$(awk -F'\t' -v p=fumus-lxixb '$1 == "cursus" && $2 == "initium" && $4 == p { c[$3] = 1 }
+    $1 != "cursus" && ($3 in c) && $4 == "fabrica.secuta" { s++ }
+    $1 != "cursus" && ($3 in c) && $4 == "fabrica.photographia" { f++ }
+    END { print (s + 0) " " (f + 0) }' "$MENSOR_DIARIUM" 2>/dev/null)
+[ "$lxixb_f" = "4 0" ] || lxixb_ok=0
+if [ "$lxixb_ok" -eq 1 ]; then echo "  LXIX b liber: a (linea S) et b (secuta) FRACTA, c (caecitas nota) et d transeunt; facta secuta 4, photographia 0 OK"; else echo "  LXIX b FRACTUM (facta secuta/photographia: $lxixb_f)"; grep '^--- ' "$T/lxixb.e" | sed 's/^/      /'; fracta=1; fi
+
+# LXIX c (2026-11-10, T4): LIBER SINE INDICE - arbor sine git (testis
+# secutorum capi nequit): ambulatio MANET, membrum numquam sine teste
+# iudicatur. Membrum c (scriptura cruda extra.txt) hic FRACTUM est.
+radix_c
+rm -f "$T/r/t/probatio_"*.c
+printf '#include <stdio.h>\nint main(void) { FILE* f = fopen("extra.txt", "w"); if (f) { fputs("c\\n", f); fclose(f); } return 0; }\n' > "$T/r/t/probatio_c.c"
+printf 'int main(void) { return 0; }\n' > "$T/r/t/probatio_d.c"
+(cd "$T/r" && FABRICA_VESTIGIUM=liber "$F" probare -vis probationes_t) > "$T/lxixc.e" 2>&1
+if grep -q '^--- probatio_c FRACTA .*scripsit extra vestigium: extra.txt' "$T/lxixc.e" \
+   && grep -q '^--- probatio_d praeteriit' "$T/lxixc.e"; then echo "  LXIX c liber sine indice git: ambulatio manet (c FRACTA, d transit) OK"; else echo "  LXIX c FRACTUM"; grep '^--- ' "$T/lxixc.e" | sed 's/^/      /'; fracta=1; fi
+
 # LXX (2026-10-27, budget B9 2a): LEGENTES - quis viam legit? membra
 # per CLAUSURAM (ingressus fasciculus: probatio_a bib.h includit,
 # probatio_b non) et actiones per VESTIGIUM (generator g lectiones="verum"

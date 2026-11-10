@@ -3930,3 +3930,47 @@ e.g. the silva corpus suites list lib/ and read every source as data.
 Real tree: lib/piscina.c -> 617 actions (every member of every composite
 + 25 build actions), lib/mensura_quaestio.c -> 33, ~4.5 s. fumus LXX;
 plants (closure match off, trace query off) each red.
+
+## 2026-11-10 - mode `liber`: members judged without the tree walk (fabrica-plan-8 T4)
+
+`FABRICA_VESTIGIUM=liber`: `_membrum_agere` skips both whole-tree walks
+and gives the three snapshot consumers (footprint comparison, debt use,
+cache invalidation) the TRACKED pair instead - `testis_ante` /
+`testis_post` = the full pair if it was taken, else the tracked pair.
+Trace S lines are checked as before. Nothing else changes: same
+comparers, same messages ("scripsit extra vestigium: lib/bib.c").
+
+Two layers, on purpose:
+- the sutura sets `sine_ambulatione` when the mode is `liber` (a
+  REQUEST);
+- the core honours it only if the tracked snapshot was really captured
+  (`ante_secuta != NIHIL`). No git index (or a capture failure) -> the
+  walk stays. A member is never judged with no witness at all.
+
+Non-member actions (`_actionem_agere`, sanare waves) keep their walks -
+out of scope in the plan. Default mode is unchanged; gates still run
+`umbra`. Nothing uses `liber` yet.
+
+Known blind spot (plan, spec 8 T4): a RAW write to an UNTRACKED path
+outside the member's area is invisible in this mode. Raw writes are a
+commit-blocking violation in our own code (examen 97), so this needs a
+foreign program or a `<tolera>` site.
+
+Fumus: LXIX b (same four members as LXIX under `liber`: a FRACTUM by
+its S line, b FRACTUM by the tracked snapshot, c passes = the blind
+spot, d passes; facts: fabrica.secuta 4, fabrica.photographia 0 and no
+vestigia_umbra.txt) and LXIX c (same mode in a tree with no git index:
+c is FRACTUM - the walk stayed). Plants, each red at its stage then
+green: verdict pair ignores the tracked snapshot (b passes - LXIX b);
+mode never recognised (walk taken, photographia facts 4 - LXIX b);
+witness guard dropped (no witness in the no-git tree, c passes -
+LXIX c).
+
+Measured, `probare -vis`, every member runs:
+- probationes_toml (13 members): photographia 39.6 / 35.5 s, liber
+  29.1 / 28.5 s = -8.8 s, ~0.68 s per member;
+- probationes_css (10 members): 9.76 -> 3.88 s (-60%), ~0.59 s per
+  member.
+More than the 0.47 s the facts suggested (520 ms walk pair vs 47 ms
+tracked pair): the walks also feed allocation and comparison work that
+the facts do not time.

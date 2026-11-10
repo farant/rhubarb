@@ -1593,7 +1593,10 @@ suturae_agentem_addere (
     }
     _directoria_extra = _directoria_extra_colligere(actiones, piscina);
     /* FABRICA_VESTIGIUM (fabrica-plan-8): 'umbra' et 'liber' testem
-     * secutorum capiunt; ordinarie (photographia) nihil mutatur */
+     * secutorum capiunt; ordinarie (photographia) nihil mutatur.
+     * 'liber' (T4) ambulationem membrorum PETIT tolli; nucleus id
+     * facit solum si testis secutorum vere captus est (arbor sine
+     * indice git: ambulatio manet) */
     {
         constans character* modus = getenv("FABRICA_VESTIGIUM");
 
@@ -1604,5 +1607,7 @@ suturae_agentem_addere (
         {
             sutura->secuta_capere = _secuta_capere;
         }
+        sutura->sine_ambulatione = (b32)(   modus != NIHIL
+            && strcmp(modus, "liber") == ZEPHYRUM);
     }
 }

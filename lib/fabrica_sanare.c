@@ -1031,6 +1031,8 @@ _membrum_agere (
                        s64  t0;
                        Xar* ante_secuta;
                        Xar* post_secuta;
+                       Xar* testis_ante;
+                       Xar* testis_post;
                        s32  discordiae;
                     chorda  diarium_ante;
 
@@ -1072,14 +1074,6 @@ _membrum_agere (
     post_secuta      = NIHIL;
     photographia_ms  = ZEPHYRUM;
     secuta_ms        = ZEPHYRUM;
-    si (sutura->vestigium_capere != NIHIL)
-    {
-        t0 = _momentum_ms(sutura);
-        (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
-        photographia_ms += _momentum_ms(sutura) - t0;
-    }
-    diarium_ante = ante != NIHIL ? _diarium_legere(sutura, piscina)
-        : chorda_ex_literis("", piscina);
     /* T2: testis secutorum (T3 eum in umbra confert) */
     si (sutura->secuta_capere != NIHIL)
     {
@@ -1088,6 +1082,21 @@ _membrum_agere (
             &ante_secuta);
         secuta_ms += _momentum_ms(sutura) - t0;
     }
+    /* LIBER (fabrica-plan-8 T4): sine ambulatione arboris - testis
+     * iudicii = photographia secutorum (cum lineis S libri, infra).
+     * Solum si testis secutorum VERE captus est: sine eo ambulatio
+     * manet (membrum numquam sine teste iudicatur). */
+    si (   sutura->vestigium_capere != NIHIL
+        && !(sutura->sine_ambulatione && ante_secuta != NIHIL))
+    {
+        t0 = _momentum_ms(sutura);
+        (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);
+        photographia_ms += _momentum_ms(sutura) - t0;
+    }
+    testis_ante   = ante != NIHIL ? ante : ante_secuta;
+    diarium_ante  = testis_ante != NIHIL
+        ? _diarium_legere(sutura, piscina)
+        : chorda_ex_literis("", piscina);
     actum.codex       = -I;
     actum.duratio_ms  = ZEPHYRUM;
     actum.cauda       = chorda_ex_literis("", piscina);
@@ -1120,6 +1129,7 @@ _membrum_agere (
         }
         secuta_ms += _momentum_ms(sutura) - t0;
     }
+    testis_post = ante != NIHIL ? post : post_secuta;
     /* UMBRA (T3): ambo testes adsunt - iudicia conferuntur */
     discordiae = -I;
     si (   ante        != NIHIL && post != NIHIL && ante_secuta != NIHIL
@@ -1148,12 +1158,11 @@ _membrum_agere (
      * lectores_cocti, tabulae_silvae et ceteri bis per cursum radicis
      * regenerabantur (~V s cursu sine mutatione). */
     _memorias_vacare(sutura, !fabrica_mutata_intra_locum(sutura, actio,
-        area, ante, post, piscina));
-    si (post != NIHIL)
+        area, testis_ante, testis_post, piscina));
+    si (testis_post != NIHIL)
     {
-        _debita_notare(sutura, actio, area, ante, post, actum.codex
-            == 0,
-            piscina);
+        _debita_notare(sutura, actio, area, testis_ante, testis_post,
+            actum.codex == 0, piscina);
     }
     si (actum.codex != 0)
     {
@@ -1162,12 +1171,13 @@ _membrum_agere (
             "");
         redde FALSUM;
     }
-    si (post != NIHIL)
+    si (testis_post != NIHIL)
     {
         Xar* extra;
 
         extra = _extra_institutionibus_explicare(sutura, actio,
-            fabrica_vestigia_comparare(actio, ante, post, piscina),
+            fabrica_vestigia_comparare(actio, testis_ante, testis_post,
+                piscina),
             diarium_ante, piscina);
         si (extra != NIHIL && xar_numerus(extra) > 0)
         {

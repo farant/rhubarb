@@ -78,7 +78,7 @@ untracked path outside its area with a raw syscall (full FRACTUM, trace
 mode MISSES it - disagreement recorded; this is exactly what T2/T4
 exist for). Plant: drop the comparison -> (c) not recorded.
 
-**T4 - mode `liber`.** Same code path without the full walk; verdict
+**T4 - mode `liber`.** DONE 2026-11-10: sutura flag `sine_ambulatione` (request) + core guard (honoured only when the tracked snapshot was captured - no git index keeps the walk); `testis_ante/post` feed footprint, debts and invalidation; fumus LXIX b + LXIX c, 3 plants. Measured -vis: toml 37.6 -> 28.8 s (13 members), css 9.76 -> 3.88 s (10 members), ~0.6-0.7 s per member. Default unchanged; nothing uses it yet. Original scope: Same code path without the full walk; verdict
 from trace + tracked snapshot. Test: (a) and (b) FRACTUM, (c) passes
 (documented blind spot until spec T4's per-run walk). Plant: tracked
 snapshot not compared -> (b) passes.
