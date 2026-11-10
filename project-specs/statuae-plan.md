@@ -1,4 +1,4 @@
-# simulacra — implementation plan
+# statuae — implementation plan
 
 > **For agentic workers:** house execution, not the skill default:
 > inline in the secunda worktree, one task per turn, Fran approves each
@@ -20,7 +20,7 @@ own tick.
 `chorda`, `xar`, `json`, `imago`, `volumen`, `dithering*`, `elenchus`,
 `componens`, `mandatum`, `organum`, `credo`).
 
-**Spec:** `project-specs/simulacra-spec.md` (approved by Fran
+**Spec:** `project-specs/statuae-spec.md` (approved by Fran
 2026-11-09). Read it first; this plan argues from it.
 
 ## Global constraints
@@ -71,17 +71,17 @@ task named.
 | file | holds |
 |---|---|
 | `include/stereometria.h`, `lib/stereometria.c` | f32 vectors, matrices, quaternions |
-| `include/simulacrum.h`, `lib/simulacrum.c` | the model value, pose, bounds |
-| `include/simulacrum_glb.h`, `lib/simulacrum_glb.c` | GLB bytes -> model |
-| `include/simulacrum_pictura.h`, `lib/simulacrum_pictura.c` | renderer |
+| `include/statua.h`, `lib/statua.c` | the model value, pose, bounds |
+| `include/statua_glb.h`, `lib/statua_glb.c` | GLB bytes -> model |
+| `include/statua_pictura.h`, `lib/statua_pictura.c` | renderer |
 | `include/dithering.h`, `lib/dithering.c` | + Bayer, + nearest |
-| `include/simulacra_repositorium.h`, `lib/simulacra_repositorium.c` | store |
-| `tools/simulacra.c`, `tools/simulacra_struere.sh`, `aedificatio.stml` | `bin/simulacra` |
+| `include/statuae_repositorium.h`, `lib/statuae_repositorium.c` | store |
+| `tools/statuae.c`, `tools/statuae_struere.sh`, `aedificatio.stml` | `bin/statuae` |
 | `include/membrum__delectus.h`, `lib/membrum__delectus.c` | dropdown member |
-| `include/simulacra.h`, `lib/simulacra.c`, `apps/simulacra/organum.stml` | the pane |
+| `include/statuae.h`, `lib/statuae.c`, `apps/statuae/organum.stml` | the pane |
 | `lib/vicus_applicatio.c` | genus + `$models` |
-| `probationes/fixa/simulacra/lapis.glb`, `fungus.glb` | fixtures |
-| `probationes/probatio_<lib>.c` per library; `probatio_vicus_simulacra.c` | tests |
+| `probationes/fixa/statuae/lapis.glb`, `fungus.glb` | fixtures |
+| `probationes/probatio_<lib>.c` per library; `probatio_vicus_statuae.c` | tests |
 | `lib/<file>.worklog.md` | finds, as they happen |
 
 ---
@@ -155,35 +155,35 @@ StereometriaVector stereometria_directionem_transformare (StereometriaMatrix m,
   or "multiplicare" must go red. Restore, `cmp`.
 - [ ] examen, formator, vocabula lint.
 
-### Task 2: simulacrum — the model and its pose
+### Task 2: statua — the model and its pose
 
-**Files:** create `include/simulacrum.h`, `lib/simulacrum.c`,
-`probationes/probatio_simulacrum.c`.
+**Files:** create `include/statua.h`, `lib/statua.c`,
+`probationes/probatio_statua.c`.
 
 **Consumes:** Task 1. **Produces:**
 
 ```c
 nomen enumeratio {
-    SIMULACRUM_TRANSLATIO = ZEPHYRUM, SIMULACRUM_ROTATIO,
-    SIMULACRUM_SCALA
-} SimulacrumProprietas;
+    STATUA_TRANSLATIO = ZEPHYRUM, STATUA_ROTATIO,
+    STATUA_SCALA
+} StatuaProprietas;
 
 nomen structura {
                      s32  nodus;
-    SimulacrumProprietas  proprietas;
+    StatuaProprietas  proprietas;
                      b32  gradatim;     /* STEP; aliter linearis */
                      i32  clavium;
                      f32* tempora;      /* crescentia */
                      f32* valores;      /* III aut IV (rotatio) per
                                          * clavem */
-} SimulacrumCanalis;
+} StatuaCanalis;
 
 nomen structura {
                chorda  titulus;
                   f32  duratio;         /* tempus clavis maximum */
-    SimulacrumCanalis* canales;
+    StatuaCanalis* canales;
                   i32  canalium;
-} SimulacrumCyclus;
+} StatuaCyclus;
 
 nomen structura {
                  s32  parens;           /* -1 = radix */
@@ -191,7 +191,7 @@ nomen structura {
        StereometriaVector  translatio;
     StereometriaQuaternio  rotatio;
        StereometriaVector  scala;
-} SimulacrumNodus;
+} StatuaNodus;
 
 nomen structura {
     s32 textura;          /* -1 = alba */
@@ -203,24 +203,24 @@ nomen structura {
     b32 repetit_t;
     b32 speculat_s;       /* repetitio speculata */
     b32 speculat_t;
-} SimulacrumMateria;
+} StatuaMateria;
 
 /* tractus triangulorum unius materiae intra rete */
 nomen structura {
     i32 index_primus;     /* in indices */
     i32 indicum;          /* multiplum III */
     s32 materia;          /* -1 = ordinaria (alba, opaca) */
-} SimulacrumPars;
+} StatuaPars;
 
-nomen structura { i32 pars_prima; i32 partium; } SimulacrumRete;
+nomen structura { i32 pars_prima; i32 partium; } StatuaRete;
 
 nomen structura {
-      SimulacrumNodus* nodi;
+      StatuaNodus* nodi;
                   i32  nodorum;
                   i32* ordo;            /* parentes ante liberos */
-       SimulacrumRete* retia;
+       StatuaRete* retia;
                   i32  retium;
-       SimulacrumPars* partes;
+       StatuaPars* partes;
                   i32  partium;
                   f32* positiones;      /* III per verticem */
                   f32* normales;        /* III per verticem */
@@ -228,25 +228,25 @@ nomen structura {
                   i32  verticum;
                   i32* indices;
                   i32  indicum;
-    SimulacrumMateria* materiae;
+    StatuaMateria* materiae;
                   i32  materiarum;
                 Imago* texturae;
                   i32  texturarum;
-     SimulacrumCyclus* cycli;
+     StatuaCyclus* cycli;
                   i32  cyclorum;
         StereometriaVector  centrum;         /* sphaera omnes cyclos tegens */
                   f32  radius;
-} Simulacrum;
+} Statua;
 
 /* post impletionem: ordo (FALSUM si cyclus in arbore aut parens extra
  * fines) et sphaera ambiens - positura quietis et quisque cyclus
  * XXXII temporibus aequis */
-b32 simulacrum_finire (Simulacrum* s, Piscina* piscina);
+b32 statua_finire (Statua* s, Piscina* piscina);
 
 /* matrices mundi, una per nodum (vocator nodorum locos praebet).
  * cyclus -1 = quies. tempus involvitur per durationem (duratio 0 =
  * clavis prima). Nodus sine canali valorem quietis tenet. */
-vacuum simulacrum_positura (constans Simulacrum* s, s32 cyclus,
+vacuum statua_positura (constans Statua* s, s32 cyclus,
     f32 tempus, StereometriaMatrix* matrices);
 ```
 
@@ -256,8 +256,10 @@ vacuum simulacrum_positura (constans Simulacrum* s, s32 cyclus,
     (0,1,0).
   - "linearis": parent translation channel keys 0 s -> (0,0,0), 1 s ->
     (2,0,0); at 0.5 the child's world origin is (1,1,0).
-  - "gradatim": same keys with `gradatim`; at 0.5 still (0,1,0), at
-    1.0 (2,1,0).
+  - "gradatim": three keys (0, 0.5, 1 s -> x 0, 1, 2) with
+    `gradatim`: at 0.25 and 0.49 still (0,1,0), at 0.5 and 0.75
+    (1,1,0). (t = 1.0 wraps to the start, so the last key cannot be
+    the check.)
   - "involutio": time 1.25 equals time 0.25; time -0.25 equals 0.75.
   - "rotatio": parent rotation keys identity -> 90 degrees about y;
     at 0.5 child x axis points to (cos 45, 0, -sin 45).
@@ -274,11 +276,11 @@ vacuum simulacrum_positura (constans Simulacrum* s, s32 cyclus,
   channels (no blend); "linearis" red. Restore, `cmp`.
 - [ ] examen, formator, lint.
 
-### Task 3: simulacrum_glb — the reader
+### Task 3: statua_glb — the reader
 
-**Files:** create `include/simulacrum_glb.h`, `lib/simulacrum_glb.c`,
-`probationes/probatio_simulacrum_glb.c`; copy the two exports to
-`probationes/fixa/simulacra/lapis.glb` and `fungus.glb`. Reference for
+**Files:** create `include/statua_glb.h`, `lib/statua_glb.c`,
+`probationes/probatio_statua_glb.c`; copy the two exports to
+`probationes/fixa/statuae/lapis.glb` and `fungus.glb`. Reference for
 the format's corners (do not copy): `../solarium/glb.c`, `skel.c`.
 
 **Consumes:** Tasks 1-2, `json.h`, `imago.h`. **Produces:**
@@ -286,12 +288,12 @@ the format's corners (do not copy): `../solarium/glb.c`, `skel.c`.
 ```c
 nomen structura {
            b32  successus;
-    Simulacrum* simulacrum;   /* NIHIL si recusatum */
+    Statua* statua;   /* NIHIL si recusatum */
         chorda  error;        /* causa verbis planis, Anglice */
-} SimulacrumFructus;
+} StatuaFructus;
 
 /* numquam ruit: omnis offset et numerus contra fines probatur */
-SimulacrumFructus simulacrum_glb_legere (chorda octeti,
+StatuaFructus statua_glb_legere (chorda octeti,
     Piscina* piscina);
 ```
 
@@ -311,7 +313,7 @@ Rules beyond the spec's lists (IV.3):
 - Animation channels targeting `weights` are refused (morph targets).
 - A texture image the decoder rejects refuses the file with the
   decoder's reason.
-- `simulacrum_finire` is called last; its FALSUM is a refusal.
+- `statua_finire` is called last; its FALSUM is a refusal.
 
 - [ ] Tests:
   - "lapis": nodes 54, retia 30, partes 40, cycli 2 named `walk`
@@ -344,39 +346,39 @@ Rules beyond the spec's lists (IV.3):
 - [ ] examen, formator, lint; worklog note on anything PixMesh does
   that the glTF text does not promise.
 
-### Task 4: simulacrum_pictura — the renderer
+### Task 4: statua_pictura — the renderer
 
-**Files:** create `include/simulacrum_pictura.h`,
-`lib/simulacrum_pictura.c`, `probationes/probatio_simulacrum_pictura.c`.
+**Files:** create `include/statua_pictura.h`,
+`lib/statua_pictura.c`, `probationes/probatio_statua_pictura.c`.
 
 **Consumes:** Tasks 1-3. **Produces:**
 
 ```c
-#define SIMULACRUM_GYRUS_ORDINARIUS        30.0f  /* gradus */
-#define SIMULACRUM_INCLINATIO_ORDINARIA    15.0f
-#define SIMULACRUM_INCLINATIO_MAXIMA       85.0f
-#define SIMULACRUM_CAMPUS_GRADUS           30.0f
-#define SIMULACRUM_MARGO                   0.08f  /* pars lateris */
-#define SIMULACRUM_LUX_FUNDI               0.35f  /* facies obscura */
+#define STATUA_GYRUS_ORDINARIUS        30.0f  /* gradus */
+#define STATUA_INCLINATIO_ORDINARIA    15.0f
+#define STATUA_INCLINATIO_MAXIMA       85.0f
+#define STATUA_CAMPUS_GRADUS           30.0f
+#define STATUA_MARGO                   0.08f  /* pars lateris */
+#define STATUA_LUX_FUNDI               0.35f  /* facies obscura */
 
 nomen structura {
     f32 gyrus;          /* gradus circa axem verticalem */
     f32 inclinatio;     /* gradus; cogitur ad +-MAXIMA */
     b32 illuminatum;    /* FALSUM = planum */
-} SimulacrumVisus;
+} StatuaVisus;
 
 nomen structura {
      i8* rgba;          /* IV per pixelum; fundus albus opacus */
-     i8* tectum;        /* I per pixelum: I = simulacrum, 0 = charta */
+     i8* tectum;        /* I per pixelum: I = statua, 0 = charta */
     i32  latitudo;
     i32  altitudo;
-} SimulacrumPictura;
+} StatuaPictura;
 
 /* FALSUM solum si piscina deficit; latitudo aut altitudo 0 = pictura
  * vacua, VERUM. Determinatum. */
-b32 simulacrum_pingere (constans Simulacrum* s,
-    constans StereometriaMatrix* matrices, constans SimulacrumVisus* visus,
-    i32 latitudo, i32 altitudo, SimulacrumPictura* exitus,
+b32 statua_pingere (constans Statua* s,
+    constans StereometriaMatrix* matrices, constans StatuaVisus* visus,
+    i32 latitudo, i32 altitudo, StatuaPictura* exitus,
     Piscina* piscina);
 ```
 
@@ -492,36 +494,36 @@ normalize to that range once and say so in the worklog.
 - [ ] examen, formator, lint; update `lib/dithering.interrogationes.stml`
   if it lists the dither modes.
 
-### Task 6: the store and `bin/simulacra`
+### Task 6: the store and `bin/statuae`
 
-**Files:** create `include/simulacra_repositorium.h`,
-`lib/simulacra_repositorium.c`,
-`probationes/probatio_simulacra_repositorium.c`, `tools/simulacra.c`,
-`tools/simulacra_struere.sh` (model on `tools/negotia_struere.sh`);
-modify `aedificatio.stml` (an `actio titulus="simulacra"` like the
+**Files:** create `include/statuae_repositorium.h`,
+`lib/statuae_repositorium.c`,
+`probationes/probatio_statuae_repositorium.c`, `tools/statuae.c`,
+`tools/statuae_struere.sh` (model on `tools/negotia_struere.sh`);
+modify `aedificatio.stml` (an `actio titulus="statuae"` like the
 negotia one at :83).
 
 **Consumes:** Tasks 3-5, `volumen.h`, `imago_png.h`. **Produces:**
 
 ```c
-#define SIMULACRA_ACTUM_ADDITUM "simulacrum-additum"
-#define SIMULACRA_ACTUM_REMOTUM "simulacrum-remotum"
+#define STATUAE_ACTUM_ADDITUM "statua-addita"
+#define STATUAE_ACTUM_REMOTUM "statua-remota"
 
 nomen structura {
     chorda titulus;
     chorda sigillum_hex;
-} SimulacraInscriptio;
+} StatuaeInscriptio;
 
 /* massa + actum in transactione una (iungit transactionem vocatoris).
  * Titulus iam notus: octeti substituuntur, locus in ordine manet.
  * Titulus vacuus aut cum '/' aut longior LXIV octetis recusatur. */
-b32 simulacra_addere (Volumen* volumen, chorda titulus, chorda octeti);
+b32 statuae_addere (Volumen* volumen, chorda titulus, chorda octeti);
 
 /* VERUM etiam si titulus aberat */
-b32 simulacra_removere (Volumen* volumen, chorda titulus);
+b32 statuae_removere (Volumen* volumen, chorda titulus);
 
-/* ordine additionis primae; Xar de SimulacraInscriptio */
-Xar* simulacra_enumerare (Volumen* volumen, Piscina* piscina);
+/* ordine additionis primae; Xar de StatuaeInscriptio */
+Xar* statuae_enumerare (Volumen* volumen, Piscina* piscina);
 ```
 
 Acts carry JSON: additum `{"titulus": "...", "massa": "<hex>",
@@ -534,16 +536,16 @@ back through `volumen_massam_promere`.
 The tool:
 
 ```
-simulacra addere <file> -volumen <path> [-titulus <name>]
-simulacra removere <title> -volumen <path>
-simulacra enumerare -volumen <path>
-simulacra pingere <file> -o <out.png> [-cyclus <n>] [-tempus <s>]
+statuae addere <file> -volumen <path> [-titulus <name>]
+statuae removere <title> -volumen <path>
+statuae enumerare -volumen <path>
+statuae pingere <file> -o <out.png> [-cyclus <n>] [-tempus <s>]
     [-gyrus <deg>] [-inclinatio <deg>] [-planum]
     [-modus atkinson|bayer|exemplaria|nullum|crudum]
     [-latitudo <w>] [-altitudo <h>]
 ```
 
-`addere` reads the file, runs `simulacrum_glb_legere`, and on refusal
+`addere` reads the file, runs `statua_glb_legere`, and on refusal
 prints the reason and exits 1 without touching the volume. The title
 defaults to the file's base name without extension. A missing
 `-volumen` is a usage error (exit 2): no default path. `enumerare`
@@ -566,13 +568,13 @@ defaults 360x450, clip 0, time 0, the default view, lit, `crudum`.
     (this closes the spec's AUDIENDA item).
 - [ ] Run: red. Implement store. Green. Plant: replay ignores
   remotum; "removere" red. Restore, `cmp`.
-- [ ] Build the tool (`./tools/simulacra_struere.sh`); tool test in
+- [ ] Build the tool (`./tools/statuae_struere.sh`); tool test in
   the same suite via `processus_*`: `addere` of a fixture into a
   temporary volume then `enumerare` prints its title; `addere` of a
   truncated fixture exits 1 and `enumerare` stays empty; no
   `-volumen` exits 2; `pingere ... -modus bayer` writes a PNG whose
   size is 360x450.
-- [ ] Write the eight judging frames to `build/simulacra/`
+- [ ] Write the eight judging frames to `build/statuae/`
   (golem and mushroom, flat and lit, `crudum`; golem lit in the four
   modes) and show Fran. On his nod, pin Task 4's two digests.
 - [ ] examen, formator, lint; `bin/fabrica sanare` for the new action.
@@ -653,8 +655,8 @@ DelectusExitus delectus_eventum_agere (InsulaRamus* ramus,
 
 ### Task 8: the pane library
 
-**Files:** create `include/simulacra.h`, `lib/simulacra.c`,
-`apps/simulacra/organum.stml`, `probationes/probatio_simulacra.c`.
+**Files:** create `include/statuae.h`, `lib/statuae.c`,
+`apps/statuae/organum.stml`, `probationes/probatio_statuae.c`.
 Pattern: `lib/aetherophonum.c` (drag with capture, `ictus_primus`,
 command table) and `lib/antiphonale.c` (`pulsare` / `mora`, header
 arrows). Run `tools/organa_infigere.sh` after writing the manifest.
@@ -662,39 +664,39 @@ arrows). Run `tools/organa_infigere.sh` after writing the manifest.
 **Consumes:** Tasks 2-7. **Produces:**
 
 ```c
-nomen structura SimulacraMontatio SimulacraMontatio;
+nomen structura StatuaeMontatio StatuaeMontatio;
 /* horologium (ms monotonica) - probationes suum praebent */
 nomen structura {
        s64  (*nunc)(vacuum* ctx);
     vacuum* ctx;
-} SimulacraPorta;
+} StatuaePorta;
 
-memoriae_index simulacra_montationis_mensura (vacuum);
-b32 simulacra_montare (SimulacraMontatio* m, Piscina* piscina,
+memoriae_index statuae_montationis_mensura (vacuum);
+b32 statuae_montare (StatuaeMontatio* m, Piscina* piscina,
     InternamentumChorda* intern, Volumen* volumen,
     InsulaRepositorium* repo, constans character* id,
-    constans SimulacraPorta* porta, i32 latitudo, i32 altitudo,
+    constans StatuaePorta* porta, i32 latitudo, i32 altitudo,
     StatusSystemata* systemata);
-Componens* simulacra_componere (InsulaRepositorium* repo,
+Componens* statuae_componere (InsulaRepositorium* repo,
     constans Motus* motus, Piscina* piscina,
     InternamentumChorda* intern, vacuum* ctx);
-b32 simulacra_pulsare (vacuum* ctx);          /* VERUM = repinge */
-Mora simulacra_mora (vacuum* ctx);
-constans Imago* simulacra_imago_fons (chorda titulus, vacuum* ctx);
-b32 simulacra_ictus_primus (vacuum* ctx, InsulaRepositorium* repo,
+b32 statuae_pulsare (vacuum* ctx);          /* VERUM = repinge */
+Mora statuae_mora (vacuum* ctx);
+constans Imago* statuae_imago_fons (chorda titulus, vacuum* ctx);
+b32 statuae_ictus_primus (vacuum* ctx, InsulaRepositorium* repo,
     Motus* motus, Componens* arbor, constans Eventus* ev);
-ActioRegistrum*  simulacra_actiones (SimulacraMontatio* m);
-FiguraRegistrum* simulacra_figurae (SimulacraMontatio* m);
+ActioRegistrum*  statuae_actiones (StatuaeMontatio* m);
+FiguraRegistrum* statuae_figurae (StatuaeMontatio* m);
 ```
 
 (The struct may be public like `AetherophoniMontatio` if the glue
 needs its size at compile time; then drop `_mensura`.)
 
-Manifest fields, all `scriptor="simulacra.agere"`:
+Manifest fields, all `scriptor="statuae.agere"`:
 
 | field | type | life | absent means |
 |---|---|---|---|
-| `simulacrum` | textus | persistens | first model |
+| `statua` | textus | persistens | first model |
 | `cyclus` | textus (clip name) | persistens | first clip |
 | `modus` | nomen: atkinson / bayer / exemplaria / nullum | persistens | atkinson |
 | `planum` | veritas | persistens | lit |
@@ -714,18 +716,18 @@ Fixed by this plan:
   rounded down, shown through `componens_ponere_transformatio` scale
   2. Either dimension 0: no frame is made and nothing is drawn.
 - Frame key = (model seal, clip, clip time in ms, gyrus, inclinatio,
-  modus, planum, picture width, height). `simulacra_pulsare` computes
+  modus, planum, picture width, height). `statuae_pulsare` computes
   the clip time from the clock, and makes a frame only if the key
   changed; it returns VERUM only then. While paused the clip time is
   frozen at the pause instant.
 - Pipeline per frame, in a frame arena emptied first:
-  `simulacrum_positura` -> `simulacrum_pingere` -> dither by `modus`
+  `statua_positura` -> `statua_pingere` -> dither by `modus`
   (exemplaria = `dithering_exemplaria_velox_colorum`, options NIHIL,
   census NIHIL) -> `dithering_indices_ad_rgba` -> every pixel with
   `tectum` 0 gets alpha 0 (the pane's own background shows) -> kept
-  as the `Imago` that `simulacra_imago_fons` returns under the name
-  `simulacra:<branch id>`.
-- `simulacra_mora`: 33 while (a clip exists and not `quiescit`) or a
+  as the `Imago` that `statuae_imago_fons` returns under the name
+  `statuae:<branch id>`.
+- `statuae_mora`: 33 while (a clip exists and not `quiescit`) or a
   drag is held; otherwise 1000 (the volume poll).
 - Poll: when 1000 ms have passed since the last one, compare
   `volumen_seq_ultimum`; on change re-list the store. The shown model
@@ -746,19 +748,19 @@ Fixed by this plan:
   remembered name is not among its clips; view resets to 300 / 150.
   Changing clip restarts clip time at 0 and keeps the view.
 - Empty store: the picture area shows `No models yet` and, below it,
-  `simulacra addere <file.glb> -volumen <volume>`. Refused model:
+  `statuae addere <file.glb> -volumen <volume>`. Refused model:
   title, then the reason, wrapped to the pane.
 
 - [ ] Tests (temporary volume with both fixtures added through the
-  store; a test clock in `SimulacraPorta`; events sent as the
+  store; a test clock in `StatuaePorta`; events sent as the
   aetherophonum suite sends them):
-  - "primum": after mount and one `pulsare`, `simulacra_imago_fons`
+  - "primum": after mount and one `pulsare`, `statuae_imago_fons`
     returns an image of the picture size with at least one alpha-0
     and one opaque pixel.
   - "tempus": advancing the clock 100 ms makes `pulsare` return VERUM
     and the image bytes change; not advancing returns FALSUM.
   - "quies": after Space, `pulsare` returns FALSUM as the clock
-    advances and `simulacra_mora` is 1000; Space again resumes from
+    advances and `statuae_mora` is 1000; Space again resumes from
     the frozen time (image equals the one at the pause instant, then
     changes).
   - "tractus": down at (100,100), move to (140,100), up: field
@@ -776,7 +778,7 @@ Fixed by this plan:
     palette colours or alpha 0.
   - "vacuum": mounting on an empty volume gives no image and a
     component tree containing the empty-state text; after
-    `simulacra_addere` and a clock advance of 1000 ms, `pulsare`
+    `statuae_addere` and a clock advance of 1000 ms, `pulsare`
     returns VERUM and an image exists. (Review focus 4)
   - "recusatum": a store entry whose blob is 10 bytes of garbage
     shows its title and a reason, no image, and `]` still moves to
@@ -799,22 +801,22 @@ Fixed by this plan:
 **Files:** modify `lib/vicus_applicatio.c` (glue beside
 `antiphonale_montare_in_vico` at :3164; `vicus_genus_addere` in the
 chain at :6529-6598; `aperiens_fixum_registrare(cs->iussa, app->vicus,
-"models", "simulacra", NIHIL, piscina)` beside :6487); create
-`probationes/probatio_vicus_simulacra.c` (model:
+"models", "statuae", NIHIL, piscina)` beside :6487); create
+`probationes/probatio_vicus_statuae.c` (model:
 `probatio_vicus_antiphonale.c`); modify
-`project-specs/simulacra-spec.md` (status, measured numbers, AUDIENDA
+`project-specs/statuae-spec.md` (status, measured numbers, AUDIENDA
 answered).
 
-Glue: `simulacra_describere` sets `actiones`, `figurae`, `componere`,
+Glue: `statuae_describere` sets `actiones`, `figurae`, `componere`,
 `fons` (+ ctx), `pulsare`, `mora`, `ictus_primus`, `effugium_redit =
 VERUM`, `locus_titulus` (the model's title). The clock port is the
 application's monotonic clock.
 
 - [ ] Tests:
   - "aperitur": `$models` typed and clicked in a scriba page opens a
-    `simulacra` pane at the front of the right stack.
+    `statuae` pane at the front of the right stack.
   - "pingitur": with a fixture in the test volume, one application
-    tick then `vicus_imago_fons` for `simulacra:<id>` returns an
+    tick then `vicus_imago_fons` for `statuae:<id>` returns an
     image.
   - "non visum": with the pane behind another in the stack, the
     application's next mora is not 33 (the hidden pane asks for
@@ -828,7 +830,7 @@ application's monotonic clock.
   per dither and the whole-window repaint cost at 30 ticks a second;
   the real pane size. Write them into the spec (III, AUDIENDA) and
   the worklog.
-- [ ] With Fran's OK only: `bin/simulacra addere` the two models into
+- [ ] With Fran's OK only: `bin/statuae addere` the two models into
   his live volume.
 - [ ] Owed gates (`./tools/portae_debitae.sh`), heal
   `speculum_hospes`, `generata_iudicare.sh`.

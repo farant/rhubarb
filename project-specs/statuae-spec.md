@@ -1,7 +1,9 @@
-# simulacra — a vicus pane for animated low-poly models
+# statuae — a vicus pane for animated low-poly models
 
-Status: DESIGN, awaiting Fran's approval. Brainstormed 2026-11-06 ..
-2026-11-09 with Fran (secunda session 134c8417). Nothing is built.
+Status: APPROVED by Fran 2026-11-09; being built from
+`project-specs/statuae-plan.md` (T1 stereometria committed
+23c5ae1d7). Brainstormed 2026-11-06 .. 2026-11-09 with Fran (secunda
+session 134c8417).
 
 *The question (Fran, 2026-11-06): "a 3d animated panel as a view" in
 vicus that shows his low-poly models, lets him click-drag to rotate
@@ -10,8 +12,12 @@ dithering applied to every frame the way pictor applies it to a pasted
 picture. Which dither looks good in motion is not known: "a bit of an
 experiment".*
 
-Names in this document (`simulacra`, `simulacrum`, the file names in
-VI) are Claude's proposals; Fran may rename any of them.
+Names: the model family is `statua` (Fran, 2026-11-09). The first
+drafts said `simulacrum` and `spatium`; both words were already taken
+in the house (`simulacrum` is a test double, probationes/
+horreum_simulacrum.h; `spatium` is the component tree's namespace), so
+the model is `statua` and the space math is `stereometria`. The other
+file names in VI are Claude's proposals.
 
 ## I. Intent
 
@@ -126,7 +132,7 @@ Claude's calls (2026-11-09), for Fran to check:
 22. **Remembered per pane:** which model, which clip, which dither,
     look, `2x`, paused, and the two rotation angles.
 23. **The two GLB files become test fixtures** under
-    `probationes/fixa/simulacra/` with short names (`lapis.glb`,
+    `probationes/fixa/statuae/` with short names (`lapis.glb`,
     `fungus.glb`; 196 KB and 107 KB). They are Fran's PixMesh exports.
 
 ## III. What was measured and found (2026-11-09)
@@ -189,7 +195,7 @@ The two files (`a-low-poly-stone-golem-composed-of-stack.glb`,
    matrices, quaternions with slerp, compose and invert for
    translation-rotation-scale. Pure functions, f32. Knows nothing
    about models.
-2. *The model* (`simulacrum`). One format-neutral value in an arena:
+2. *The model* (`statua`). One format-neutral value in an arena:
    a node tree (parent index, rest translation / rotation / scale),
    meshes as flat arrays (positions, normals, texture coordinates,
    triangle indices, one material per run of triangles), materials
@@ -235,7 +241,7 @@ The two files (`a-low-poly-stone-golem-composed-of-stack.glb`,
    picks two palette colours and lets the grid choose between them in
    proportion.
 6. *The store.* Add, remove and list models in a volume (decision 20).
-7. *The command* (`bin/simulacra`). `addere <file> [-titulus <name>]
+7. *The command* (`bin/statuae`). `addere <file> [-titulus <name>]
    [-volumen <path>]`, `removere <title>`, `enumerare`. `addere` runs
    the GLB reader first and refuses a file the pane could not show.
    The title defaults to the file name without its extension. Without
@@ -309,10 +315,10 @@ targets to measure against, not gates.
 ## VI. Left to the builder
 
 - The names: proposed `include/stereometria.h` (space math),
-  `simulacrum.h`, `simulacrum_glb.h`, `simulacrum_pictura.h`
-  (renderer), `simulacra_repositorium.h` (store),
-  `dithering_bayer_colorum` in `dithering.h`, `tools/simulacra.c`,
-  `apps/simulacra/organum.stml`, pane genus `simulacra`, opened as
+  `statua.h`, `statua_glb.h`, `statua_pictura.h`
+  (renderer), `statuae_repositorium.h` (store),
+  `dithering_bayer_colorum` in `dithering.h`, `tools/statuae.c`,
+  `apps/statuae/organum.stml`, pane genus `statuae`, opened as
   `$models`. All must pass the vocabulary lint.
 - How Bayer picks its two colours and the mixing ratio.
 - The exact act and record shape in the volume, after reading how
