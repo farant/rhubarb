@@ -372,6 +372,7 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_parser.c"
     "lib/sputnik_syntaxis.c"
     "lib/statua.c"
+    "lib/statua_glb.c"
     "lib/stereometria.c"
     "lib/stilus_terminalis.c"
     "lib/stml.c"
