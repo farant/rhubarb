@@ -123,3 +123,17 @@
   dithering_exemplaria_velox, dithering_exemplaria_tabulae. A new
   pane kind in `vicus_applicatio.c` always owes that list an entry;
   run `./ludus_tessera/compile_probationes.sh` before committing.
+
+## 2026-11-10 - background = the vicus page colour
+
+Fran: the paper around the models should be the warm colour of the
+rest of vicus, not white. The frame's uncovered pixels are
+transparent again (`charta_perlucida` VERUM) and the plain rectangle
+under the picture, in the theme's `COLOR_BACKGROUND`, shows through -
+the same colour scriba pages have (b6957d on screen). Not done by
+making the frame's paper palette index 15: the dither palette
+(`AQUINAS_PALETTE`, b4947c) and the theme palette differ by a couple
+of levels there, which would leave a faint seam; and through the
+theme the pane follows a theme change. `bin/statuae pingere` still
+writes opaque palette-5 paper. Each dither still runs on a white
+background, so the model's edge pixels are unchanged.

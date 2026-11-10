@@ -5,8 +5,8 @@
  * "modus" (bottones delectus), "lux", "duplex", "pictura" - et, dum
  * delectus apertus est, menu eius ULTIMUM (elenchus, PARTES_DIALOGUS).
  *
- * Quadrum: statuae_quadrum_pingere (charta opaca, Albus) cum clavis
- * eius
+ * Quadrum: statuae_quadrum_pingere (charta perlucida: fundus
+ * thematis sub pictura apparet) cum clavis eius
  * mutatur; clavis = sigillum statuae, cyclus, tempus cycli (ms), visus,
  * modus, mensura. Et pulsus et compositor quadrum curant, ut pictura
  * statum quem ostendit semper sequatur.
@@ -629,7 +629,7 @@ quadrum_curare (
     petitio.modus             = MODI[modus_currens(m)];
     petitio.latitudo          = latitudo;
     petitio.altitudo          = altitudo;
-    petitio.charta_perlucida  = FALSUM;
+    petitio.charta_perlucida  = VERUM;
     sprintf(clavis, "%.64s|%d|%d|%d|%d|%d|%d|%d|%ux%u",
         m->sigillum.mensura >= LXIV ? (constans character*)
         m->sigillum.datum : "", (integer)cyclus, (integer)tempus,
@@ -1326,9 +1326,10 @@ figura_statuarum (
     figura_globulum_pingere(md, d.gemina, chorda_ex_literis("2x",
         md->piscina), attributum_veritas(&m->ramus, "duplex")
         ? FIGURA_ELECTUM : ZEPHYRUM);
-    /* fundus planus sub pictura: indicium foci (exemplar mensae) in
-     * capite manet, non circa statuam. Quadrum ipsum chartam opacam
-     * fert (Albus) */
+    /* fundus sub pictura: color fundi thematis (idem ac paginae
+     * ceterorum laterum vici), planus - indicium foci (exemplar
+     * mensae) in capite manet, non circa statuam. Quadrum chartam
+     * perlucidam fert, ergo fundus hic circa statuam apparet */
     mandata_rectangulum(md, d.pictura,
         figura_color_thematis(COLOR_BACKGROUND), VERUM);
     /* pictura, aut status vacuus / recusatus */

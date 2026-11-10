@@ -326,6 +326,8 @@ _fundus_pictus (
         x = (constans Mandatum*)xar_obtinere(md->elementa, i);
         si (   x->genus          == MANDATUM_RECTANGULUM && x->impletum
             && x->exemplar       == ZEPHYRUM
+            && x->color.genus    == COLOR_MANDATI_THEMA
+            && x->color.valor    == (i32)COLOR_BACKGROUND
             && x->fines.x        == area->fines.x
             && x->fines.y        == area->fines.y
             && x->fines.latitudo == area->fines.latitudo
@@ -362,21 +364,20 @@ _sectio_primum (
     CREDO_VERUM (im->altitudo >= ALTITUDO - XXIV);
     per (k = ZEPHYRUM; k < im->latitudo * im->altitudo; k++)
     {
-        /* quadrum totum opacum; charta (Albus FC F0 E8) et statua */
-        si (im->pixela[k * IV + III] != 255)
+        /* charta perlucida (fundus thematis sub ea apparet), statua
+         * opaca; nihil inter */
+        si (im->pixela[k * IV + III] == ZEPHYRUM)
         {
             perlucida++;
         }
-        si (   im->pixela[k * IV]      == 0xFC
-            && im->pixela[k * IV + I]  == 0xF0
-            && im->pixela[k * IV + II] == 0xE8)
+        alioquin si (im->pixela[k * IV + III] == 255)
         {
             opaca++;
         }
     }
-    CREDO_AEQUALIS_I32 (perlucida, ZEPHYRUM);
-    CREDO_VERUM (opaca > im->latitudo * im->altitudo / IV);
-    CREDO_VERUM (opaca < im->latitudo * im->altitudo);
+    CREDO_AEQUALIS_I32 (perlucida + opaca, im->latitudo * im->altitudo);
+    CREDO_VERUM (perlucida > im->latitudo * im->altitudo / IV);
+    CREDO_VERUM (opaca > im->latitudo * im->altitudo / L);
     /* titulus alius: nulla imago */
     CREDO_VERUM (statuae_imago_fons(chorda_ex_literis("alia",
         c->piscina), &w->m) == NIHIL);
@@ -392,7 +393,8 @@ _sectio_primum (
     CREDO_VERUM (_textus_pictus(_reddere(w, c->piscina), "lit",
         c->piscina));
     CREDO_VERUM (_imago_picta(_reddere(w, c->piscina)));
-    /* fundus planus sub pictura (rectangulum impletum areae eius) */
+    /* fundus planus sub pictura, colore fundi thematis (rectangulum
+     * impletum areae eius) */
     CREDO_VERUM (_fundus_pictus(_reddere(w, c->piscina), pictura));
     CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
         c->piscina), "lapis"));

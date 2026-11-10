@@ -124,9 +124,11 @@ Claude's calls (2026-11-09), for Fran to check:
     toggle `2x` renders at half size and shows each pixel doubled, for
     any dither; it is there for the experiment and for exemplaria's
     frame rate.
-17. **Paper stays clean.** Pixels the model does not cover are paper
-    after dithering, whatever the dither did near the edge (error
-    diffusion must not speckle the background).
+17. **Paper stays clean.** Pixels the model does not cover are
+    background after dithering, whatever the dither did near the edge
+    (error diffusion must not speckle it). In the pane the background
+    is the theme's page colour, the same as other vicus panes (Fran,
+    2026-11-10; it was white paper first).
 18. **"None"** maps each pixel to its nearest palette colour.
 19. **All 16 colours are active.** No palette presets in this version.
 20. **Models live in the vicus volume:** the original file bytes as a
