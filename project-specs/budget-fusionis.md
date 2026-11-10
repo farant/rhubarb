@@ -294,6 +294,13 @@ runs were red on probatio_vicus_admonitiones (question 01M5YTX3XD).
 - **sqlite3.c third compile** (gesta/tabulariumd.sh, tabularium.sh):
   through bin/compilator with the root's arguments -> cache hit
   (0.88 s for `-struere`, object identical).
+- **Cold root run after (e302f5527, one run, load average 4-8, process
+  sampler every 0.5 s)**: no `fabrica digestum` process was ever
+  caught (before: 9.8 + 9.0 + 1.9 + 4 x ~2 s); sqlite3.c compiled
+  twice (11.4 and 14.1 s; before three times); silva.c twice (8.7 and
+  9.2 s, unchanged). Root suite 298 s green (11-09: 317 and 329 s; a
+  run an hour earlier at load 12: 328 s) - the total is too noisy to
+  claim more than the per-process facts.
 - **Open**: sqlite3.c second compile and silva.c second compile happen
   before bin/compilator exists (bootstrap); see the worklog for the two
   ways out and their cost.
