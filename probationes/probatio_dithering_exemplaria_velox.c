@@ -31,6 +31,12 @@
  *   alpha neglecta    canalis alpha non legitur (ut classicus)
  *   sine memoria      nihil inter vocationes servatur: A, B, A ->
  *                     A idem
+ *   larva             ..._cum_larva: larva NIHIL et larva plena ->
+ *                     indices iidem ac sine larva; larva partialis
+ *                     (discus, areae partim necessariae): colores
+ *                     activi soli ubique, colores puri exacti in
+ *                     necessariis, determinatum, digestum necessariorum
+ *                     fixum
  * Fixura suitae fixa semel legit et classicum semel currit.
  */
 #include "latina.h"
@@ -463,6 +469,183 @@ _sectio_sine_memoria (
     CREDO_OCTETI_AEQUALES(a.indices, b.indices, XCVI * LXXII);
 }
 
+/* larva partialis: discus circa medium (areae 2x2 ad oram partim
+ * necessariae) */
+interior i8*
+_larva_disci (
+    Piscina* piscina,
+        s32  lat,
+        s32  alt)
+{
+     i8* larva = (i8*)piscina_allocare(piscina,
+         (memoriae_index)(lat * alt));
+    s32  x, y, radius = (lat < alt ? lat : alt) * II / V;
+
+    per (y = 0; y < alt; y++)
+    {
+        per (x = 0; x < lat; x++)
+        {
+            s32 dx = x - lat / II, dy = y - alt / II;
+
+            larva[y * lat + x] = (i8)(dx * dx + dy * dy
+                <= radius * radius ? I : 0);
+        }
+    }
+    redde larva;
+}
+
+/* digestum indicum necessariorum (non necessaria ut 0xFF) - T
+ * larvae, 2026-11-10 */
+hic_manens constans character* LARVA_DIGESTUM =
+    "d5dfde94b1ec9dc91c5d686f266bc698288b0787230300f832ea602c87520ef1";
+
+/* idem, scaena CXXVIII x XCVI, hachurae 0.50, larva dimidii
+ * sinistri (hachurae et campus striarum intra larvam) */
+hic_manens constans character* LARVA_DIMIDII_DIGESTUM =
+    "b853c7fd10aa1344b318a9343d0a0ee7d4bea1e222ab7f404682ed9b4eb577f5";
+
+interior vacuum
+_sectio_larva (
+    CredoContextus* c)
+{
+                 b32  activi[XVI];
+                  i8* scaena  = _imago_scaena(c->piscina, XCVI, LXXII);
+                  i8* larva   = _larva_disci(c->piscina, XCVI, LXXII);
+                  i8* plena;
+                  i8* necessarii;
+    DitheringFructus  a, b, d;
+           character hex[LXV];
+           character titulus[XXXII];
+                 s32  p, i, errata, necessaria = 0;
+
+    /* NIHIL et plena: idem ac sine larva */
+    plena = (i8*)piscina_allocare(c->piscina, XCVI * LXXII);
+    memset(plena, VII, XCVI * LXXII);
+    dithering_praeparare_omnes(activi);
+    a = dithering_exemplaria_velox_colorum(scaena, XCVI, LXXII, activi,
+        NIHIL, NIHIL, c->piscina);
+    b = dithering_exemplaria_velox_cum_larva(scaena, XCVI, LXXII,
+        activi,
+        NIHIL, NIHIL, NIHIL, c->piscina);
+    CREDO_NECESSE(a.successus && b.successus);
+    CREDO_OCTETI_AEQUALES(a.indices, b.indices, XCVI * LXXII);
+    b = dithering_exemplaria_velox_cum_larva(scaena, XCVI, LXXII,
+        activi,
+        NIHIL, NIHIL, plena, c->piscina);
+    CREDO_NECESSE(b.successus);
+    CREDO_OCTETI_AEQUALES(a.indices, b.indices, XCVI * LXXII);
+
+    /* partialis, colores V et VI soli (0 non activus: memoria non
+     * scripta deprehenditur): activi soli ubique */
+    per (i = 0; i < XVI; i++) activi[i] = FALSUM;
+    activi[V] = activi[VI] = VERUM;
+    b = dithering_exemplaria_velox_cum_larva(scaena, XCVI, LXXII,
+        activi,
+        NIHIL, NIHIL, larva, c->piscina);
+    CREDO_NECESSE(b.successus);
+    CREDO_VERUM(_omnes_activi(&b, activi));
+
+    /* partialis, colores omnes: determinatum, digestum necessariorum */
+    dithering_praeparare_omnes(activi);
+    b = dithering_exemplaria_velox_cum_larva(scaena, XCVI, LXXII,
+        activi,
+        NIHIL, NIHIL, larva, c->piscina);
+    d = dithering_exemplaria_velox_cum_larva(scaena, XCVI, LXXII,
+        activi,
+        NIHIL, NIHIL, larva, c->piscina);
+    CREDO_NECESSE(b.successus && d.successus);
+    CREDO_VERUM(_omnes_activi(&b, activi));
+    necessarii  = (i8*)piscina_allocare(c->piscina, XCVI * LXXII);
+    errata      = 0;
+    per (p = 0; p < XCVI * LXXII; p++)
+    {
+        necessarii[p] = larva[p] ? b.indices[p] : (i8)0xFF;
+        si (larva[p])
+        {
+            necessaria++;
+            si (b.indices[p] != d.indices[p]) errata++;
+        }
+    }
+    CREDO_VERUM(necessaria > XCVI * LXXII / V);
+    CREDO_VERUM(necessaria < XCVI * LXXII * IV / V);
+    CREDO_AEQUALIS_S32(errata, 0);
+    d.indices = necessarii;
+    _digestum(&d, hex);
+    imprimere("  larva: necessaria %d, digestum %s\n",
+        (integer)necessaria, hex);
+    CREDO_LITERAE_AEQUALES(hex, LARVA_DIGESTUM);
+
+    /* praesupputationes et census: fractiones NECESSARIORUM, non
+     * rectanguli (scaena CXXVIII: sine larva tegmina prope limites) */
+    {
+        DitheringExemplariaOptiones o;
+          DitheringExemplariaCensus  sine, cum;
+                                 i8* magna = _imago_scaena(c->piscina,
+                                     CXXVIII, XCVI);
+                                 i8* discus = _larva_disci(c->piscina,
+                                     CXXVIII, XCVI);
+
+        dithering_exemplaria_optiones_ordinariae(&o);
+        o.praesupputatio_hachurarum = 0.50;
+        b = dithering_exemplaria_velox_cum_larva(magna, CXXVIII, XCVI,
+            activi, &o, &sine, NIHIL, c->piscina);
+        d = dithering_exemplaria_velox_cum_larva(magna, CXXVIII, XCVI,
+            activi, &o, &cum, discus, c->piscina);
+        CREDO_NECESSE(b.successus && d.successus);
+        imprimere("  sine larva: hachurae %.3f pictographica %.3f;"
+            " cum: %.3f %.3f\n", sine.tegmen_hachurarum,
+            sine.tegmen_pictographicum, cum.tegmen_hachurarum,
+            cum.tegmen_pictographicum);
+        CREDO_VERUM(cum.tegmen_hachurarum
+            <= o.praesupputatio_hachurarum + 1e-12);
+        CREDO_VERUM(cum.tegmen_pictographicum
+            <= o.praesupputatio_pictographica + 1e-12);
+        CREDO_VERUM(cum.tegmen_hachurarum + cum.tegmen_pictographicum
+            > 0.0);
+        /* dimidium sinistrum: fascia hachurarum ad oras intus est */
+        per (p = 0; p < CXXVIII * XCVI; p++)
+        {
+            discus[p] = (i8)(p % CXXVIII < LXIV ? I : 0);
+        }
+        d = dithering_exemplaria_velox_cum_larva(magna, CXXVIII, XCVI,
+            activi, &o, &cum, discus, c->piscina);
+        CREDO_NECESSE(d.successus);
+        imprimere("  dimidium: hachurae %.3f pictographica %.3f\n",
+            cum.tegmen_hachurarum, cum.tegmen_pictographicum);
+        CREDO_VERUM(cum.tegmen_hachurarum > 0.0);
+        /* hachurae intra larvam pictae: digestum necessariorum */
+        per (p = 0; p < CXXVIII * XCVI; p++)
+        {
+            si (!discus[p]) d.indices[p] = (i8)0xFF;
+        }
+        _digestum(&d, hex);
+        imprimere("  dimidium: digestum %s\n", hex);
+        CREDO_LITERAE_AEQUALES(hex, LARVA_DIMIDII_DIGESTUM);
+        CREDO_VERUM(cum.tegmen_hachurarum
+            <= o.praesupputatio_hachurarum + 1e-12);
+        CREDO_VERUM(cum.tegmen_pictographicum
+            <= o.praesupputatio_pictographica + 1e-12);
+    }
+
+    /* colores puri sub larva partiali: necessaria exacta */
+    per (i = 0; i < XVI; i++)
+    {
+        i8* plana = _imago_plana(c->piscina, XCVI, LXXII, i);
+
+        b = dithering_exemplaria_velox_cum_larva(plana, XCVI, LXXII,
+            activi, NIHIL, NIHIL, larva, c->piscina);
+        CREDO_NECESSE(b.successus);
+        errata = 0;
+        per (p = 0; p < XCVI * LXXII; p++)
+        {
+            si (larva[p] && (s32)b.indices[p] != i) errata++;
+        }
+        sprintf(titulus, "color %d", (integer)i);
+        CREDO_LITERAE_AEQUALES(errata == 0 ? titulus : "fractus",
+            titulus);
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     DITHERING_EXEMPLARIA_SECTIONES_COMMUNES
     { "classica fixa", _sectio_classica_fixa, NIHIL, NIHIL, NIHIL,
@@ -486,6 +669,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "sine memoria inter vocationes", _sectio_sine_memoria, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "larva", _sectio_larva, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

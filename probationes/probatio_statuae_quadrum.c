@@ -6,7 +6,8 @@
  * pictor non texit. crudum picturam ipsam reddit. tempus et modus
  * quadrum mutant; eadem petitio idem dat. vacua et errores. fines:
  * rectangulum tecti (margo, reticulum, coactio); exemplaria intra
- * fines solum - pixela tecta eadem ac praecisio manu facta.
+ * fines solum, tecto ut larva - pixela tecta eadem ac praecisio
+ * manu facta.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -296,23 +297,25 @@ interior vacuum
 _sectio_fines (
     CredoContextus* c)
 {
-                   Statua* s = _lapis(c);
-       StereometriaMatrix* matrices;
-            StatuaPictura  pictura;
-    StatuaeQuadrumPetitio  p;
-         DitheringFructus  f;
-                    Imago  im;
-                      b32  activi[XVI];
-                       i8  tectum[XL * XL];
-                       i8* praecisa;
-                      i32  x;
-                      i32  y;
-                      i32  lat;
-                      i32  alt;
-                      i32  px;
-                      i32  py;
-                      i32  mala;
-                      i32  tecta;
+                         Statua* s = _lapis(c);
+             StereometriaMatrix* matrices;
+                  StatuaPictura  pictura;
+          StatuaeQuadrumPetitio  p;
+               DitheringFructus  f;
+    DitheringExemplariaOptiones  optiones;
+                          Imago  im;
+                            b32  activi[XVI];
+                             i8  tectum[XL * XL];
+                             i8* praecisa;
+                             i8* larva;
+                            i32  x;
+                            i32  y;
+                            i32  lat;
+                            i32  alt;
+                            i32  px;
+                            i32  py;
+                            i32  mala;
+                            i32  tecta;
 
     /* pixelum unum (13, 21) in 40 x 40: margo 8, reticulum 8 */
     memset(tectum, ZEPHYRUM, magnitudo(tectum));
@@ -356,14 +359,23 @@ _sectio_fines (
     CREDO_VERUM (y + alt <= ALTITUDO);
     praecisa = (i8*)piscina_allocare(c->piscina,
         (memoriae_index)lat * alt * IV);
+    larva = (i8*)piscina_allocare(c->piscina,
+        (memoriae_index)lat * alt);
     per (py = ZEPHYRUM; py < alt; py++)
     {
         memcpy(praecisa + py * lat * IV,
             pictura.rgba + ((y + py) * LATITUDO + x) * IV, lat * IV);
+        memcpy(larva + py * lat,
+            pictura.tectum + (y + py) * LATITUDO + x, lat);
     }
     dithering_praeparare_omnes(activi);
-    f = dithering_exemplaria_velox_colorum(praecisa, lat, alt, activi,
-        NIHIL, NIHIL, c->piscina);
+    dithering_exemplaria_optiones_ordinariae(&optiones);
+    optiones.praesupputatio_hachurarum
+        = STATUAE_PRAESUPPUTATIO_HACHURARUM;
+    optiones.praesupputatio_pictographica
+        = STATUAE_PRAESUPPUTATIO_PICTOGRAMMATUM;
+    f = dithering_exemplaria_velox_cum_larva(praecisa, lat, alt, activi,
+        &optiones, NIHIL, larva, c->piscina);
     CREDO_NECESSE (f.successus && f.indices != NIHIL);
     CREDO_NECESSE (statuae_quadrum_pingere(s, &p, &im, c->piscina));
     mala   = ZEPHYRUM;

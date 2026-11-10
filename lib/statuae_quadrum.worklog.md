@@ -72,3 +72,69 @@ frame although the model covers only 10-20 % of it.
 - Plants ("fines" red each time): left edge not snapped; crop read
   one pixel to the right; whole frame dithered in place of the box.
 
+## 2026-11-10 - the crop passes the renderer's coverage as a mask
+
+`_exemplaria_intra_fines` now calls
+`dithering_exemplaria_velox_cum_larva` with the cropped `tectum`.
+Whole frame, 360x438: 20-33 ms (was 25-45 with the crop alone).
+Numbers and what the mask does and does not skip are in
+`lib/dithering_exemplaria_velox.worklog.md`. The "fines" section of
+the suite compares against the same masked call made by hand.
+
+## 2026-11-10 - a binding budget adds shimmer; the pane uses 45 %
+
+Fran, watching the masked build: "there might be more shimmer after
+the mask, maybe because the mask is creating more edges somehow?"
+Measured instead of guessed (scratch `stabilitas.c`: share of the
+model's pixels whose colour index changes between consecutive frames,
+30 frames, 360x438; left three columns = model still, view turning
+0.3 degrees a frame; right three = walking, view still):
+
+| version | golem | mushroom | dragon | golem | mushroom | dragon |
+|---|---|---|---|---|---|---|
+| nearest colour, no dither | 2.7 | 1.8 | 6.0 | 20.8 | 20.2 | 14.6 |
+| whole frame (first watched) | 13.3 | 11.7 | 21.6 | 35.0 | 38.0 | 33.4 |
+| crop (committed) | 13.4 | 11.5 | 21.9 | 35.3 | 38.7 | 34.2 |
+| mask, base + final only | 13.5 | 11.7 | 20.5 | 34.8 | 38.3 | 32.8 |
+| mask + nothing on paper, box budget | 13.7 | 11.7 | 21.1 | 35.0 | 38.4 | 33.3 |
+| budgets 15 / 30 % of the model | 14.5 | 13.2 | 20.8 | 35.9 | 39.4 | 36.9 |
+| budgets 45 / 90 % of the model | 13.7 | 11.7 | 21.1 | 35.0 | 38.4 | 33.3 |
+
+- The mask itself adds nothing: crop, mask and the restrictions are
+  within 0.3 points of the whole frame (the dragon giraffe is even a
+  point calmer with the final stage masked).
+- The budget is what adds shimmer, once it binds. Regions are taken
+  largest first and skipped when they do not fit, so near the limit a
+  region is hatched in one frame and not in the next - a whole patch
+  changes at once, which reads worse than the 1-3 points suggest.
+  Before today the budget never bound (hatching reached 12 / 24 / 39 %
+  of the three models, unlimited in effect).
+- The pane now passes 45 % for both budgets
+  (`STATUAE_PRAESUPPUTATIO_*`): above anything these models reach
+  (hatching up to 39 %, pictographs up to 34 %), so nothing binds and
+  the numbers return to the unlimited row. Frame time is unchanged
+  from the 15 / 30 % build: 18.6 / 23.2 / 30 / 22 ms (golem clip 0,
+  clip 1, mushroom man, dragon giraffe).
+- If less hatching is wanted, the stable knob is which pixels are
+  candidates (the energy / coherence thresholds in exemplaria), not
+  the budget.
+
+## 2026-11-10 - hatching budget 25 % of the model (Fran's try)
+
+Fran asked to lower the hatching budget a little to see it. Set to
+25 % (pictographs stay 45 %). Unlimited hatching was 12 / 25 / 39 %
+(golem / mushroom man / dragon giraffe), so only the dragon giraffe
+is cut; the mushroom man sits right at the limit. Flips between
+frames, dragon giraffe: 21.1 -> 22.5 % turning, 33.3 -> 34.8 %
+walking; the other two unchanged. At 20 % the mushroom man starts to
+pay too. Fran: "these changes are good, lets commit them for now."
+
+Outline against interior (band within 3 pixels of the outline, same
+motion): the outline flips about twice as often as the interior in
+every version (golem 25 % against 11 %). Masking the final stage
+leaves the interior identical and makes the outline calmer when
+walking (52.7 -> 49.6, 55.8 -> 52.6, 45.4 -> 41.5 %); standing, the
+dragon giraffe is calmer (30.0 -> 26.4), the mushroom man slightly
+worse (15.6 -> 16.8). Fran's guess that Atkinson is more volatile
+under a mask is not what the numbers show.
+

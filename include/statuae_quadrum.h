@@ -68,6 +68,16 @@ nomen structura {
 #define STATUAE_FINIUM_MARGO  VIII
 #define STATUAE_FINIUM_GRADUS VIII
 
+/* praesupputationes exemplarium in latere: fractiones PIXELORUM
+ * STATUAE (larva). Praesupputatio cogens regiones inter quadra eligit
+ * et omittit (maximae primum), quod tremorem auget (mensum
+ * 2026-11-10: 15 / 30 % statuae -> plus mutationum inter quadra;
+ * 45 % numquam cogit). Hachurae 25 %: periculum Frani - statuas
+ * multum hachuratas solas tangit (sine limite 12 / 25 / 39 % in
+ * lapide / fungo / dracone). Pictogrammata 45 %: non cogit. */
+#define STATUAE_PRAESUPPUTATIO_HACHURARUM    0.25
+#define STATUAE_PRAESUPPUTATIO_PICTOGRAMMATUM 0.45
+
 /*
  * statuae_fines_tecti - rectangulum minimum circa pixela tecta
  *
@@ -99,7 +109,9 @@ statuae_fines_tecti (
  * Modus exemplaria solum intra statuae_fines_tecti currit (pictura
  * praecisa, deinde reposita): pixela vacua circa statuam tempus non
  * sumunt. Pixela tecta eadem sunt ac si praecisio manu dithering
- * acciperet; a dithering quadri totius differre licet.
+ * acciperet cum tecto praeciso ut larva
+ * (dithering_exemplaria_velox_cum_larva) et praesupputationibus
+ * STATUAE_PRAESUPPUTATIO_*; a dithering quadri totius differre licet.
  *
  * Redde: FALSUM si statua aut petitio NIHIL, modus extra fines, aut
  * dithering deficit

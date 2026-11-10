@@ -354,3 +354,76 @@ dated "VIII. Result" section (table, verdict, per-task progression,
 departures, tried-and-dropped, what's left); the public header carries
 the table. Tabularium wishes: pictor paste B -> velox (after Fran's look
 verdict on the `_par.png` images); the remaining 1-3% exact list.
+
+## 2026-11-10 — mask: skip pixels the caller does not need
+
+For the statuae pane (a model on empty paper, already cropped to its
+box; see `lib/statuae_quadrum.worklog.md`). New entry point
+`dithering_exemplaria_velox_cum_larva`: one byte per pixel, non-zero =
+needed. The old entry point is a wrapper with no mask; its pinned
+digests did not move.
+
+- Base stage: an area with no needed, unpainted pixel is skipped
+  (same test as the existing "wholly painted" skip). Areas are
+  independent, so needed pixels get exactly the base they had. With a
+  mask the base is pre-filled with the first active colour so skipped
+  pixels hold a valid index.
+- Final stage: a pixel that is not needed keeps its base index and
+  neither receives nor spreads error. This DOES change needed pixels:
+  3-12 % of them differ from the unmasked crop (golem 5.4 %, mushroom
+  man 3.1 %, dragon giraffe 11.5 %), far more than an edge effect,
+  because Atkinson error chains inward. The paper is not an exact
+  palette colour, so it used to feed error into the model's edge.
+- All-ones mask and NIHIL mask: byte-identical to unmasked (tested).
+- Whole frame at 360x438, crop only -> crop + mask: golem 25.5 -> 20.5
+  ms, golem clip 1 32.7 -> 25.1, dragon giraffe 37.6 -> 27.0, mushroom
+  man 44.5 -> 32.9; at 480x541 golem 39.1 -> 35.1, mushroom man 71.5
+  -> 52.6. Base alone gave about two thirds of that.
+- Where the time is now (mushroom man, masked, share of the dither):
+  stripe field (`_campum_striarum`) 33 %, base 16 %, structure 10 %,
+  light + eyes 9 %, final 8 %, hatch painting 11 %, the rest 13 %.
+  On a photo the stripe field was 10 %; on a model against paper the
+  silhouette makes a wide band of "active" pixels (22-32 % of the
+  crop), only half of them on the model, while hatching itself lands
+  almost entirely on the model (6-10 % of the crop).
+- Measured in scratch, NOT in the tree: also clearing `activus`
+  outside the mask gives golem 19.1 ms, golem clip 1 22.0, dragon
+  giraffe 21.9, mushroom man 28.5 (480 wide: 28.7 and 46.0), and moves
+  the changed-pixel share to 5.6-15 %.
+- Plants ("larva" red each time): skipped pixel writes no index; with
+  a mask every base area skipped; mask inverted.
+
+## 2026-11-10 — mask, second step: the needed pixels ARE the image
+
+Fran asked what the hatching budget was a fraction of. Answer: of the
+image handed in, which since the crop is the box around the model -
+so the allowance moved with the pose (a limb swings out, the box
+grows, more hatching is allowed), and hatching reached 12 / 24 / 39 %
+of the golem / mushroom man / dragon giraffe's own pixels. Fran: base
+it on the model's pixels and look; maybe tune down later.
+
+With a mask (the unmasked path is untouched, digests unmoved):
+- `Opus.n_census` = number of needed pixels (= n without a mask).
+  Both budgets (hatching 15 %, pictographs 30 %) and both census
+  fractions are of that number.
+- `hachuratus`, `activus` and `eligibilis` are cleared outside the
+  mask: no hatching, stripe field or pictograph regions on paper.
+  This is the stripe-field restriction measured in scratch above, now
+  in the tree.
+- Share of the model now (20 frames, 360x438): golem hatching 10.3 %,
+  pictographs 25.2 %; mushroom man 14.1 % / 29.4 %; dragon giraffe
+  13.9 % / 2.9 %. Both budgets are close to binding on the first two.
+- Covered pixels that differ from the crop-only result: golem 11 %,
+  mushroom man 14 %, dragon giraffe 25 %. This is a different picture,
+  not an edge effect; Fran judges it in the pane.
+- Whole frame, 360x438, three back-to-back runs on a busy machine
+  (+-3 ms): golem clip 1 22-25 ms, mushroom man 29-33, dragon giraffe
+  23-26 (mask only: 26 / 33 / 27 in the same runs).
+- Test: census under a disc mask and a half mask stays within the
+  budgets; a half-mask case with hatching inside is digest-pinned.
+- Plants ("larva" red each time; the last two only after the
+  half-mask digest was added - the first version of the test let them
+  through): hatching budget from the rectangle; pictograph budget
+  from the rectangle; hatching left outside the mask; stripe field
+  computed outside the mask instead of inside.
+

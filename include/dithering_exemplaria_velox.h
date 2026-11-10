@@ -49,4 +49,35 @@ dithering_exemplaria_velox_colorum (
                DitheringExemplariaCensus* census,
                                  Piscina* piscina);
 
+/*
+ * dithering_exemplaria_velox_cum_larva - idem, pixela quae vocans non
+ * eget omittens (statua in quadro: charta circa eam tempus non sumat)
+ *
+ * @larva: I octetus per pixelum, ordo imaginis; non 0 = necessarium.
+ *         NIHIL = omnia necessaria (idem ac ..._colorum)
+ *
+ * Pixela necessaria imago sunt: praesupputationes (hachurarum,
+ * pictographica) et census fractiones NUMERI NECESSARIORUM sunt, non
+ * rectanguli; hachurae, campus striarum et pictographica extra
+ * necessaria non fiunt. Stratum basis areas sine pixelo necessario
+ * omittit; residuum pixela non necessaria omittit (errorem nec
+ * accipiunt nec diffundunt). Oculi et structura imaginem totam legunt
+ * ut ante.
+ *
+ * Pixela necessaria: larva tota non 0 -> indices iidem ac sine larva,
+ * octetus pro octeto. Larva partialis -> differre licet (error
+ * residui a pixelis omissis non venit; regiones aliae eliguntur).
+ * Pixela non necessaria: color activus aliquis, non definitus quis.
+ */
+DitheringFructus
+dithering_exemplaria_velox_cum_larva (
+                             constans i8* rgba,
+                                     i32  latitudo,
+                                     i32  altitudo,
+                            constans b32  colores_activi[XVI],
+    constans DitheringExemplariaOptiones* optiones,
+               DitheringExemplariaCensus* census,
+                             constans i8* larva,
+                                 Piscina* piscina);
+
 #endif /* DITHERING_EXEMPLARIA_VELOX_H */

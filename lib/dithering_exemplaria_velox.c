@@ -108,9 +108,12 @@ nomen structura {
 } RegioOrdo;
 
 nomen structura {
-         s32  lat;
-         s32  alt;
-         s32  n;
+         s32 lat;
+         s32 alt;
+         s32 n;
+    /* pixela necessaria (sine larva vocantis = n): fundamentum
+     * praesupputationum et census */
+         s32  n_census;
          s32  activi[XVI];
          s32  numerus_activorum;
          i32  larva_activorum;      /* bit k: color k activus */
@@ -599,6 +602,7 @@ _opus_parare (
     o->lat                = lat;
     o->alt                = alt;
     o->n                  = lat * alt;
+    o->n_census           = lat * alt;
     o->semen              = semen;
     o->piscina            = piscina;
     o->numerus_activorum  = 0;
@@ -783,6 +787,9 @@ _limites_parium (
  * tardiorem fecit (T5, mensum; vide worklog). Pondera ex
  * DITHERING_BAYER_PONDERA directe. Areae totae in tectum (pictae ab
  * hachuris aut pictographicis) omittuntur: compositio eas superscribit.
+ * Cum larva vocantis (necessaria non NIHIL) areae sine pixelo
+ * necessario non picto item omittuntur; areae ceterae ut sine larva
+ * (areae inter se non pendent, ergo pixela necessaria eadem).
  * Putatio exacta (nihil putatum stricte melius esse potest, ergo
  * electio eadem):
  *   - gradus 0 (densitas 0, DENSITATES[0] == 0, pondera omnia 0) est
@@ -797,6 +804,7 @@ _basis_bayer (
     constans Plana* lin,
     constans Plana* oculi,
       constans i32* tectum,
+      constans i32* necessaria,
                 i8* indices)
 {
     s32 lat = o->lat, alt = o->alt, x_areae, y_areae, e;
@@ -837,11 +845,16 @@ _basis_bayer (
             f64 post_primum[DITHERING_BAYER_NUMERUS];
             s32 positio_prima[DITHERING_BAYER_NUMERUS];
 
-            /* area tota picta: compositio eam superscribit */
+            /* area tota picta (compositio eam superscribit) aut non
+             * necessaria (larva vocantis: index praepositus manet) */
             per (i = 0; i < area && tota_tecta; i++)
             {
                 s32 p = (y_areae + i / al) * lat + x_areae + i % al;
-                si (!_bit(tectum, p)) tota_tecta = FALSUM;
+                si (   !_bit(tectum, p)
+                    && (necessaria == NIHIL || _bit(necessaria, p)))
+                {
+                    tota_tecta = FALSUM;
+                }
             }
             si (tota_tecta) perge;
 
@@ -1006,6 +1019,7 @@ _residuum (
     constans Plana* lin,
        constans i8* basis,
       constans f32* limina,
+      constans i32* necessaria,
              Plana* error,
                 i8* indices)
 {
@@ -1026,6 +1040,12 @@ _residuum (
             f32 t[III], lab[III], e[III];
             s32 b = (s32)basis[p], proximus, electus;
 
+            /* non necessarium: basis manet, error hic receptus perit */
+            si (necessaria != NIHIL && !_bit(necessaria, p))
+            {
+                indices[p] = (i8)b;
+                perge;
+            }
             per (k = 0; k < III; k++) t[k] = lin->c[k][p]
                                           + error->c[k][p];
             _oklab(t[0], t[1], t[2], lab);
@@ -1134,7 +1154,7 @@ _hachuras_eligere (
           i32* servatus = _larvam_allocare(o->piscina, o->n);
     RegioOrdo* ordo = (RegioOrdo*)piscina_allocare(o->piscina,
         (memoriae_index)maximum * magnitudo(RegioOrdo));
-    f64 limes = praesupputatio * (f64)o->n, usum = 0.0;
+    f64 limes = praesupputatio * (f64)o->n_census, usum = 0.0;
     s32 r, i, nr;
 
     *numerus = 0;
@@ -1160,7 +1180,7 @@ _hachuras_eligere (
     }
     memcpy(hachuratus, servatus,
         magnitudo(i32) * (memoriae_index)VERBA_LARVAE(o->n));
-    *tegmen = usum / (f64)o->n;
+    *tegmen = usum / (f64)o->n_census;
 }
 
 /* summa nuclei (latus x latus, centrum radius) ad pixelum (x, y) campi,
@@ -1521,7 +1541,7 @@ _regiones_stilizare (
         (memoriae_index)maximum * magnitudo(s32));
     RegioOrdo* ordo = (RegioOrdo*)piscina_allocare(o->piscina,
         (memoriae_index)maximum * magnitudo(RegioOrdo));
-    f64 limes = praesupputatio * (f64)o->n, usum = 0.0;
+    f64 limes = praesupputatio * (f64)o->n_census, usum = 0.0;
     s32 p, r, nr, numerus_ordinis = 0;
 
     *numerus = 0;
@@ -1639,7 +1659,7 @@ _regiones_stilizare (
         usum += (f64)numerus_r;
         (*numerus)++;
     }
-    *tegmen = usum / (f64)o->n;
+    *tegmen = usum / (f64)o->n_census;
 }
 
 
@@ -1763,14 +1783,16 @@ _aspergere (
  * Functiones publicae
  * ================================================== */
 
-DitheringFructus
-dithering_exemplaria_velox_colorum (
+/* corpus commune: larva NIHIL = pixela omnia necessaria */
+interior DitheringFructus
+_exemplaria_currere (
                              constans i8* rgba,
                                      i32  latitudo,
                                      i32  altitudo,
                             constans b32  colores_activi[XVI],
     constans DitheringExemplariaOptiones* optiones,
                DitheringExemplariaCensus* census,
+                             constans i8* larva_vocantis,
                                  Piscina* piscina)
 {
                         DitheringFructus  fructus;
@@ -1784,6 +1806,7 @@ dithering_exemplaria_velox_colorum (
     Structura st, st_campi;
     f32 *lumen, *tmp, *limina, *campus;
     i32 *hachuratus, *activus, *eligibilis, *larva, *pictus, *tectum;
+    i32* necessaria = NIHIL;
     s32* regio_pixeli;
     i8 *basis, *pictura_hachurarum, *pictura_stili, *atramentum,
         *charta, *sparsum;
@@ -1862,6 +1885,26 @@ dithering_exemplaria_velox_colorum (
         fructus.indices = NIHIL;
         redde fructus;
     }
+    /* larva vocantis: bitset; basis ubique colore activo primo
+     * praeposita (areae omissae eum servant) */
+    si (larva_vocantis != NIHIL)
+    {
+        necessaria = _larvam_allocare(piscina, o.n);
+        si (necessaria == NIHIL)
+        {
+            fructus.indices = NIHIL;
+            redde fructus;
+        }
+        o.n_census = 0;
+        per (p = 0; p < o.n; p++)
+        {
+            si (!larva_vocantis[p]) perge;
+            _bit_ponere(necessaria, p);
+            o.n_census++;
+        }
+        si (o.n_census == 0) o.n_census = I;
+        memset(basis, (integer)o.activi[0], m1);
+    }
 
     /* lux linearis, L fontis, oculi duo */
     per (p = 0; p < o.n; p++)
@@ -1912,6 +1955,18 @@ dithering_exemplaria_velox_colorum (
         si (h > 0.2) _bit_ponere(activus, p);
     }
 
+    /* larva vocantis: imago est pixela necessaria sola - nec hachurae
+     * nec campus striarum nec pictographica extra ea (praesupputationes
+     * in chartam non impenduntur; campus ibi non computatur) */
+    si (necessaria != NIHIL)
+    {
+        per (k = 0; k < verba; k++)
+        {
+            hachuratus[k]  &= necessaria[k];
+            activus[k]     &= necessaria[k];
+        }
+    }
+
     /* II hachurae: regiones maximae sub praesupputatione. Strata II
      * et III basim non legunt: basis post ea venit et areas totas
      * pictas omittit */
@@ -1925,7 +1980,11 @@ dithering_exemplaria_velox_colorum (
     }
 
     /* III pictographica extra hachuras */
-    per (k = 0; k < verba; k++) eligibilis[k] = ~hachuratus[k];
+    per (k = 0; k < verba; k++)
+    {
+        eligibilis[k] = ~hachuratus[k];
+        si (necessaria != NIHIL) eligibilis[k] &= necessaria[k];
+    }
     si (opt->praesupputatio_pictographica > 0.0)
     {
         _regiones_stilizare(&o, &lin, &oculi_lati, st.energia,
@@ -1941,7 +2000,7 @@ dithering_exemplaria_velox_colorum (
     /* I basis: pixela picta (hachurae vere pictae, pictographica)
      * compositio superscribit, ergo areae totae tectae omittuntur */
     per (k = 0; k < verba; k++) tectum[k] = pictus[k] | larva[k];
-    _basis_bayer(&o, &lin, &oculi, tectum, basis);
+    _basis_bayer(&o, &lin, &oculi, tectum, necessaria, basis);
 
     /* compositio + limina stratorum (hachuratus sine pari idoneo:
      * basis manet, limen hachurarum tamen - ut classicus) */
@@ -1970,7 +2029,8 @@ dithering_exemplaria_velox_colorum (
     }
 
     /* V residuum */
-    _residuum(&o, &lin, basis, limina, &error, fructus.indices);
+    _residuum(&o, &lin, basis, limina, necessaria, &error,
+        fructus.indices);
 
     si (census != NIHIL)
     {
@@ -1983,4 +2043,33 @@ dithering_exemplaria_velox_colorum (
     }
     fructus.successus = VERUM;
     redde fructus;
+}
+
+DitheringFructus
+dithering_exemplaria_velox_colorum (
+                             constans i8* rgba,
+                                     i32  latitudo,
+                                     i32  altitudo,
+                            constans b32  colores_activi[XVI],
+    constans DitheringExemplariaOptiones* optiones,
+               DitheringExemplariaCensus* census,
+                                 Piscina* piscina)
+{
+    redde _exemplaria_currere(rgba, latitudo, altitudo, colores_activi,
+        optiones, census, NIHIL, piscina);
+}
+
+DitheringFructus
+dithering_exemplaria_velox_cum_larva (
+                             constans i8* rgba,
+                                     i32  latitudo,
+                                     i32  altitudo,
+                            constans b32  colores_activi[XVI],
+    constans DitheringExemplariaOptiones* optiones,
+               DitheringExemplariaCensus* census,
+                             constans i8* larva,
+                                 Piscina* piscina)
+{
+    redde _exemplaria_currere(rgba, latitudo, altitudo, colores_activi,
+        optiones, census, larva, piscina);
 }

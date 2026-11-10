@@ -363,8 +363,20 @@ Headless vicus, optimized test build, golem walking, lit, 20 frames:
   25-45 ms a frame at 360 wide in place of 62-67, 39-72 ms at 480
   wide in place of 99-106. The table above predates this. Covered
   pixels differ from the full-frame dither in 6-17 % of places; stills
-  look the same. Numbers and the next lever (a mask inside
-  exemplaria) in `lib/statuae_quadrum.worklog.md`.
+  look the same. Numbers in `lib/statuae_quadrum.worklog.md`.
+- Exemplaria also skips the uncovered pixels inside that box in its
+  base and final stages (a mask from the renderer's coverage): 20-33
+  ms a frame at 360 wide, 35-53 ms at 480 wide. Details and where the
+  remaining time goes in `lib/dithering_exemplaria_velox.worklog.md`.
+- Under that mask the model's pixels are the image: the hatching
+  (15 %) and pictograph (30 %) budgets are shares of the model, not
+  of the box, and nothing is hatched or patterned on paper (Fran,
+  2026-11-10). A binding budget drops and restores whole regions
+  between frames, which Fran saw as extra shimmer at 15 / 30 % and
+  the measurement confirmed (`lib/statuae_quadrum.worklog.md`). The
+  pane sets pictographs to 45 % (never binds) and hatching to 25 %
+  (Fran's trial; it only cuts heavily hatched models). About 19-30 ms
+  a frame at 360 wide.
 - Open, filed in the tabularium: vicus has no hook when a pane
   closes, so a closed and reopened pane leaves its memory behind;
   `elenchus_clavem_agere` does not see j / k from real key events;

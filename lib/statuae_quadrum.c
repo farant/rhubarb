@@ -106,7 +106,8 @@ statuae_fines_tecti (
 }
 
 /* exemplaria intra fines tecti solum: pictura praecisa dithering
- * accipit et in exitum reponitur. Extra fines exitus non scribitur
+ * accipit (tectum praecisum ut larva: pixela vacua intra fines
+ * omittuntur) et in exitum reponitur. Extra fines exitus non scribitur
  * (vocans chartam ibi ponit). FALSUM si dithering deficit */
 interior b32
 _exemplaria_intra_fines (
@@ -114,15 +115,17 @@ _exemplaria_intra_fines (
                         i8* exitus,
                    Piscina* piscina)
 {
-    DitheringFructus  f;
-                 b32  activi[XVI];
-                 i32  x;
-                 i32  y;
-                 i32  lat;
-                 i32  alt;
-                 i32  linea;
-                  i8* praecisa;
-                  i8* picta;
+               DitheringFructus  f;
+    DitheringExemplariaOptiones  optiones;
+                            b32  activi[XVI];
+                            i32  x;
+                            i32  y;
+                            i32  lat;
+                            i32  alt;
+                            i32  linea;
+                             i8* praecisa;
+                             i8* larva;
+                             i8* picta;
 
     si (!statuae_fines_tecti(pictura->tectum, pictura->latitudo,
         pictura->altitudo, &x, &y, &lat, &alt))
@@ -133,6 +136,8 @@ _exemplaria_intra_fines (
         (memoriae_index)lat * alt * IV);
     picta    = (i8*)piscina_allocare(piscina,
         (memoriae_index)lat * alt * IV);
+    larva    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)lat * alt);
     per (linea = ZEPHYRUM; linea < alt; linea++)
     {
         memcpy(praecisa + (memoriae_index)linea * lat * IV,
@@ -140,10 +145,19 @@ _exemplaria_intra_fines (
                 + ((memoriae_index)(y + linea) * pictura->latitudo + x)
                     * IV,
             (memoriae_index)lat * IV);
+        memcpy(larva + (memoriae_index)linea * lat,
+            pictura->tectum
+                + (memoriae_index)(y + linea) * pictura->latitudo + x,
+            (memoriae_index)lat);
     }
     dithering_praeparare_omnes(activi);
-    f = dithering_exemplaria_velox_colorum(praecisa, lat, alt, activi,
-        NIHIL, NIHIL, piscina);
+    dithering_exemplaria_optiones_ordinariae(&optiones);
+    optiones.praesupputatio_hachurarum
+        = STATUAE_PRAESUPPUTATIO_HACHURARUM;
+    optiones.praesupputatio_pictographica
+        = STATUAE_PRAESUPPUTATIO_PICTOGRAMMATUM;
+    f = dithering_exemplaria_velox_cum_larva(praecisa, lat, alt, activi,
+        &optiones, NIHIL, larva, piscina);
     si (!f.successus || !f.indices)
     {
         redde FALSUM;
