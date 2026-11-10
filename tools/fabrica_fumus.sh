@@ -157,6 +157,12 @@
 #   LXX  legentes (budget B9): 'fabrica legentes VIA' - membra quorum
 #        clausura viam continet (ingressus) et actiones quarum
 #        vestigium eam legit (lectio); via nullius: nihil
+#   LXXI digestum sine gradibus (budget, 2026-11-10): 'digestum T'
+#        gradus non explicat nisi T eos poscit (T sine '/': nullus;
+#        'gradus/membrum': ille solus; gradus parens: ille). Celer ==
+#        FABRICA_DIGESTUM_PLENUM (mos vetus) pro actione, membro,
+#        parente; gradus ALIENUS putridus actionem non obstat (plenum
+#        recusat), ipsum et membra eius recusat
 #
 # Exitus: 0 sanum · 1 fractum · 2 bin/fabrica deest.
 # PARS PURA (2026-10-23, desideratum …VXWK8): casus arborem VIVAM
@@ -1439,6 +1445,46 @@ if [ "$rc1" -eq 0 ] && grep -q "^LEGENS	probationes_t/probatio_a	ingressus:" "$T
    && ! grep -q "probationes_t/probatio_b" "$T/lxx_1" \
    && [ "$rc2" -eq 0 ] && grep -q "^LEGENS	g	lectio:L	dat.txt$" "$T/lxx_2" \
    && [ "$rc3" -eq 0 ] && ! grep -q "^LEGENS" "$T/lxx_3"; then echo "  LXX  legentes: membrum per clausuram, actio per vestigium, via nullius nihil OK"; else echo "  LXX  FRACTUM (rc=$rc1 $rc2 $rc3)"; sed 's/^/      1: /' "$T/lxx_1" | head -6; sed 's/^/      2: /' "$T/lxx_2" | head -4; sed 's/^/      3: /' "$T/lxx_3" | head -3; fracta=1; fi
+
+# LXXI (2026-11-10, budget fusionis - sigilla provenientiae): DIGESTUM
+# SINE GRADIBUS. 'digestum T' olim OMNES gradus explicabat (clausura
+# cuiusque membri probationum per aedilem: XXI G instructionum, III s,
+# quamvis actio una sigillaretur; installator quisque eam vocat). Nunc
+# gradus non explicatur nisi titulus eum poscit. Mundus: gradus t
+# sanus, gradus u, generator g.
+lxxi_mundus () {   # $1 = linea debiti gradus u (vacua = sanus)
+    radix_c
+    mkdir -p "$T/r/u"
+    printf 'int main(void) { return 0; }\n' > "$T/r/u/probatio_x.c"
+    printf 'a\n' > "$T/r/a"
+    printf '<aedificatio>\n  <actio titulus="probationes_t" genus="iudicium">\n    <probationes_c exemplar="t/probatio_*.c"/>\n  </actio>\n  <actio titulus="probationes_u" genus="iudicium">\n    <probationes_c exemplar="u/probatio_*.c"/>\n%s  </actio>\n  <actio titulus="g" genus="generator">\n    <ingressus genus="fasciculus" via="a"/>\n    <exitus via="b" provenientia="regeneratio"/>\n  </actio>\n</aedificatio>\n' "$1" > "$T/r/aedificatio.stml"
+}
+lxxi_ok=1
+# a: mundus sanus - celer == plenum (actio, parens, membra duorum graduum)
+lxxi_mundus ''
+for lxxi_t in g probationes_t probationes_t/probatio_a probationes_u/probatio_x; do
+    lxxi_c=$(cd "$T/r" && "$F" digestum "$lxxi_t" 2>&1); lxxi_rc=$?
+    lxxi_p=$(cd "$T/r" && FABRICA_DIGESTUM_PLENUM=1 "$F" digestum "$lxxi_t" 2>&1); lxxi_rp=$?
+    if [ "$lxxi_rc" -ne 0 ] || [ "$lxxi_rp" -ne 0 ] || [ "$lxxi_c" != "$lxxi_p" ] \
+       || ! printf '%s\n' "$lxxi_c" | grep -qE '^[0-9a-f]{64}$'; then
+        lxxi_ok=0; echo "      LXXI a '$lxxi_t': celer $lxxi_rc '$lxxi_c' plenum $lxxi_rp '$lxxi_p'"
+    fi
+done
+(cd "$T/r" && "$F" digestum probationes_t/nullum) > "$T/lxxi_n" 2>&1; [ $? -eq 2 ] || lxxi_ok=0
+grep -q "actio ignota 'probationes_t/nullum'" "$T/lxxi_n" || lxxi_ok=0
+# b: gradus u PUTRIDUS (debitum membri ignoti) - explicatio eius recusat
+lxxi_mundus '    <debitum_scripturae membrum="probatio_zeta" via="build/z.db" causa="putridum"/>\n'
+(cd "$T/r" && "$F" digestum g) > "$T/lxxi_g" 2>&1; lxxi_r1=$?
+(cd "$T/r" && FABRICA_DIGESTUM_PLENUM=1 "$F" digestum g) > "$T/lxxi_gp" 2>&1; lxxi_r2=$?
+(cd "$T/r" && "$F" digestum probationes_t/probatio_a) > "$T/lxxi_a" 2>&1; lxxi_r3=$?
+(cd "$T/r" && "$F" digestum probationes_u/probatio_x) > "$T/lxxi_x" 2>&1; lxxi_r4=$?
+(cd "$T/r" && "$F" digestum probationes_u) > "$T/lxxi_u" 2>&1; lxxi_r5=$?
+[ "$lxxi_r1" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxxi_g" || lxxi_ok=0
+[ "$lxxi_r2" -eq 2 ] && grep -q "membrum ignotum 'probatio_zeta'" "$T/lxxi_gp" || lxxi_ok=0
+[ "$lxxi_r3" -eq 0 ] && grep -qE '^[0-9a-f]{64}$' "$T/lxxi_a" || lxxi_ok=0
+[ "$lxxi_r4" -eq 2 ] && grep -q "membrum ignotum 'probatio_zeta'" "$T/lxxi_x" || lxxi_ok=0
+[ "$lxxi_r5" -eq 2 ] && grep -q "membrum ignotum 'probatio_zeta'" "$T/lxxi_u" || lxxi_ok=0
+if [ "$lxxi_ok" -eq 1 ]; then echo "  LXXI digestum sine gradibus: celer == plenum (actio, parens, membra); gradus alienus putridus non obstat, ipse recusat OK"; else echo "  LXXI FRACTUM (putridus: g $lxxi_r1, plenum $lxxi_r2, t/a $lxxi_r3, u/x $lxxi_r4, u $lxxi_r5)"; fracta=1; fi
 
 if [ "$fracta" -ne 0 ]; then echo "fumus fabricae: FRACTUM"; exit 1; fi
 echo "fumus fabricae: sanum (pars pura: casus LXIV; vivi VII, XLVII arboris in tools/fabrica_fumus_vivus.sh)"

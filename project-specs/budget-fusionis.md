@@ -283,6 +283,21 @@ once") does not reach these: the first two happen before compilator
 exists, the third is tabulariumd's own build. 2 of today's 3 cold root
 runs were red on probatio_vicus_admonitiones (question 01M5YTX3XD).
 
+### VII.c LUCRUM (2026-11-10): stamps and the third sqlite compile
+
+- **Provenance stamps**: `fabrica digestum` expanded every test group
+  (closure of ~644 members) to seal one tool action - 21 G
+  instructions, ~3 s warm, 9-10 s cold, per call, and every installer
+  calls it. Now only the group the title asks for (none for a tool):
+  0.06-0.2 G, <0.01 s warm. 151 titles byte-identical fast vs full vs
+  old binary; fumus LXXI. Worklog lib/fabrica.worklog.md.
+- **sqlite3.c third compile** (gesta/tabulariumd.sh, tabularium.sh):
+  through bin/compilator with the root's arguments -> cache hit
+  (0.88 s for `-struere`, object identical).
+- **Open**: sqlite3.c second compile and silva.c second compile happen
+  before bin/compilator exists (bootstrap); see the worklog for the two
+  ways out and their cost.
+
 ## AUDIENDA (not verified)
 
 - Every minute figure above is an estimate from profiles taken under

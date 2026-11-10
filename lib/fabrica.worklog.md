@@ -4044,3 +4044,60 @@ shadow pass earlier today took 820 s. The photographia run had one red
 member, probatio_http_vocatio 'redirectio circulus' (l.1003) - a test
 assertion, known flaky (10 of 135 recorded runs red), 3/3 green on
 rerun, unrelated to the mode.
+
+## 2026-11-10 — `fabrica digestum` no longer expands the test groups (budget fusionis)
+
+Census VII.b of budget-fusionis.md counted ~29 s of provenance stamps
+in a cold root setup (`fabrica digestum fabrica` 9.8 s, `compilator`
+9.0 s, `aedilis` 1.9 s, `natura` 4 x ~2 s). Warm it was 21 G
+instructions and ~3 s per call WHATEVER the action. A `sample` profile
+showed why: `_digestum` -> `_declarationes_colligere` ->
+`fabrica_gradus_explicare` -> `_probationes_c_ingressus` ->
+`suturae_clausura_c` -> `aedilis_derivare` took 1887 of 2201 samples -
+the closure of every test member (~644) was derived, including the
+extractor's `system()` child, to seal ONE tool action.
+
+Change (tools/fabrica.c `_digestum`): the existing `gradus_solus`
+switch of `_declarationes_colligere` is used.
+- title without '/': no group is expanded (gradus_solus = "//", a
+  title no action can carry);
+- 'group/member': only that group;
+- the action found is itself a group parent: collect again with that
+  group expanded (kept conservative; plant II shows the stage sees it);
+- FABRICA_DIGESTUM_PLENUM in the environment = the old expand-all
+  behaviour, kept as the differential reference.
+The seal is still computed by fabrica_actionem_sigillare, the same
+function the judge uses.
+
+Proof: 151 titles of this tree (every title in `fabrica causae` and in
+the aedificatio.stml files, 3 members per group) - fast == full ==
+the old binary, byte for byte; 3 unknown titles refuse identically.
+Measured warm: compilator 21.0 G -> 0.06 G instructions (2.8 s ->
+<0.01 s), aedilis 0.10 G, natura 0.07 G, fabrica 0.20 G.
+
+Behaviour change: a rotten declaration in an UNRELATED group (e.g. a
+write debt naming an unknown member) no longer makes `digestum <tool>`
+refuse - same as `probare`'s single-group mode (fumus XLVIII). The
+group itself and its members still refuse.
+
+Fumus LXXI: healthy world - fast == full for an action, a parent and
+members of two groups, unknown member -> 2; rotten foreign group -
+`digestum g` passes, full mode refuses, the rotten group and its
+member refuse. Plants (hand: edit, fabrica_struere, fumus, restore
+with fresh mtime), each red then green: member title expands nothing
+(actio ignota); parent not retried; PLENUM ignored.
+
+Same commit: gesta/tabulariumd.sh and gesta/tabularium.sh compile
+vendor/sqlite3.c through bin/compilator from the root with the same
+arguments as compile_tests.sh and the suites (falls back to clang when
+compilator is absent). In a cold root setup this was the THIRD compile
+of sqlite3.c (~11 s); now a cache hit: `tabulariumd.sh -struere` with
+the object removed 0.88 s, object byte-identical to build/sqlite3.o.
+
+NOT done (measured, left for a ruling): the fabrica bootstrap compiles
+sqlite3.c and silva.c with raw clang before bin/compilator exists
+(generated struere.sh), so the root library pass compiles sqlite3.c
+again (~11 s) and silva.c is compiled by aedilis_struere (no -I, on
+purpose) and again for fabrica (~8 s). Sharing them needs either an
+"egg" compilator built before fabrica or the aedilis emitter using
+the cache - the emitter change restamps every generated struere.sh.
