@@ -1085,9 +1085,11 @@ _membrum_agere (
     /* LIBER (fabrica-plan-8 T4): sine ambulatione arboris - testis
      * iudicii = photographia secutorum (cum lineis S libri, infra).
      * Solum si testis secutorum VERE captus est: sine eo ambulatio
-     * manet (membrum numquam sine teste iudicatur). */
+     * manet (membrum numquam sine teste iudicatur). -conferre
+     * (vestigia_conferre) ambulationem postulat: eam servat. */
     si (   sutura->vestigium_capere != NIHIL
-        && !(sutura->sine_ambulatione && ante_secuta != NIHIL))
+        && !(   sutura->sine_ambulatione && !sutura->vestigia_conferre
+             && ante_secuta != NIHIL))
     {
         t0 = _momentum_ms(sutura);
         (vacuum)sutura->vestigium_capere(sutura->datum, piscina, &ante);

@@ -4013,3 +4013,34 @@ the diary is rotated into mensurae.volumen (table acta, genus
 cursus/mensura, datum = the diary line) mid-run. Read them with
 sqlite3 -readonly; filter by the arbor field, another worktree's 30
 member runs fell in the same time window.
+
+## 2026-11-10 - walk-free (`liber`) is the default (Fran's decision after T5)
+
+`FABRICA_VESTIGIUM` unset now means `liber`: members are judged from the
+tracked snapshot plus the S lines of their book, no tree walk
+(tools/fabrica_sutura.c). `umbra` = both witnesses compared (audit),
+`photographia` = walk only, tracked snapshot not taken. An unknown value
+behaves as `umbra`, so a typo never silently drops the walk. Two things
+keep the walk: no git index (T4 guard), and `-conferre`
+(lib/fabrica_sanare.c - it compares walk against book, so it needs the
+walk). `silva.porta` no longer forces `umbra`; an explicit mode in the
+caller's environment is inherited. Non-member actions keep their walks.
+
+Smoke: LXVIII's second run now sets `photographia` explicitly; new stage
+LXIX d (default = liber: b FRACTA by tracked snapshot, c passes, facts
+secuta 2 / photographia 0; `photographia` and `-conferre` keep the walk:
+c FRACTA). Plants, each red then green on restore: default left as walk
+(LXIX d), -conferre guard removed (LXIX d), mode always walk-free (LXIX:
+umbra loses its walk).
+
+Trap met again: restoring a planted source WITH its old mtime leaves the
+planted binary in place (fabrica_struere sees nothing to rebuild) - the
+first plant round reported garbage, including a red "restored" run.
+Restore with a fresh mtime.
+
+Measured, radix forced (`probare -vis`, 497 members, 4 lanes), same
+tree back to back: liber 570 s, photographia 789 s (-219 s, -28%); the
+shadow pass earlier today took 820 s. The photographia run had one red
+member, probatio_http_vocatio 'redirectio circulus' (l.1003) - a test
+assertion, known flaky (10 of 135 recorded runs red), 3/3 green on
+rerun, unrelated to the mode.

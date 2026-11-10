@@ -2172,12 +2172,11 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
     residua = PORTAE_RESIDUA.get(nomen, [])
     residua_facta = [(g, _curre(cmd), signum) for g, cmd, signum in residua
                      if g == 'prae']
-    # UMBRA (fabrica-plan-8 T3, decretum Franis Q2): membra in duobus
-    # iudiciis (photographiae verum + libri/secutorum) iudicantur,
-    # discordiae in <area>vestigia_umbra.txt - verdictum non mutatur.
-    # Modus expressus vocantis (e.g. 'photographia') servatur.
+    # MODUS VESTIGII (fabrica-plan-8; decretum Franis 2026-11-10 post
+    # T5): porta nihil ponit - ordinarius fabricae est 'liber' (membra
+    # sine ambulatione arboris). Modus expressus vocantis
+    # (FABRICA_VESTIGIUM=umbra ad auditum, 'photographia') hereditatur.
     ambitus = dict(os.environ)
-    ambitus.setdefault('FABRICA_VESTIGIUM', 'umbra')
     r = _curre([FABRICA_BIN, 'probare', '-machina']
                + (['-vis'] if vis else []) + (['-audit'] if auditus else [])
                + [compositum], env=ambitus)

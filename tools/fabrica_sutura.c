@@ -1592,22 +1592,24 @@ suturae_agentem_addere (
         sutura->currere_simul  = suturae_currere_simul;
     }
     _directoria_extra = _directoria_extra_colligere(actiones, piscina);
-    /* FABRICA_VESTIGIUM (fabrica-plan-8): 'umbra' et 'liber' testem
-     * secutorum capiunt; ordinarie (photographia) nihil mutatur.
-     * 'liber' (T4) ambulationem membrorum PETIT tolli; nucleus id
-     * facit solum si testis secutorum vere captus est (arbor sine
-     * indice git: ambulatio manet) */
+    /* FABRICA_VESTIGIUM (fabrica-plan-8). ORDINARIUS = 'liber'
+     * (decretum Franis 2026-11-10, post T5: DCXLIV membra concordia):
+     * variabilis absens aut 'liber' ambulationem membrorum PETIT tolli;
+     * nucleus id facit solum si testis secutorum vere captus est (arbor
+     * sine indice git: ambulatio manet) et -conferre non petitur.
+     * 'umbra' = ambo testes collati (auditus); 'photographia' =
+     * ambulatio sola, testis secutorum non capitur. Valor ignotus =
+     * umbra (ambulatio numquam tacite tollitur). */
     {
         constans character* modus = getenv("FABRICA_VESTIGIUM");
 
-        si (   modus != NIHIL
-            && (   strcmp(modus, "umbra") == ZEPHYRUM
-                || strcmp(modus, "liber") == ZEPHYRUM)
+        si (   (   modus == NIHIL
+                || strcmp(modus, "photographia") != ZEPHYRUM)
             && (_secuta_viae != NIHIL || _secuta_legere(piscina)))
         {
             sutura->secuta_capere = _secuta_capere;
         }
-        sutura->sine_ambulatione = (b32)(   modus != NIHIL
-            && strcmp(modus, "liber") == ZEPHYRUM);
+        sutura->sine_ambulatione = (b32)(   modus == NIHIL
+            || strcmp(modus, "liber") == ZEPHYRUM);
     }
 }

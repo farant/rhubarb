@@ -96,6 +96,11 @@ into build/ under its private book: debt + invalidation seen by the
 walk only). Walks 345.3 s vs tracked 28.9 s summed (median 527 vs
 44 ms per member). Details: lib/fabrica.worklog.md.
 
+**Default switched 2026-11-10** (Fran): unset = `liber`; `umbra` and
+`photographia` stay as explicit modes, `-conferre` and trees without a
+git index keep the walk. probatio_lectiones fixed first (949793b0d).
+Radix forced: 789 s -> 570 s.
+
 ## Out of scope (named so they are not forgotten)
 
 - sanare waves and non-member actions (`_actionem_agere`, park …CH1CJ)

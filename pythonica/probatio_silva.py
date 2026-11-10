@@ -1026,8 +1026,9 @@ try:
     _argv_g = open(_gradus_log).read().splitlines()
     credo(_argv_g == ['probare -machina -vis -audit gradus_fictus'],
           'porta gradus: vis/auditus -> probare -vis -audit (%r)' % (_argv_g,))
-    # UMBRA (fabrica-plan-8 T3, decretum Q2): porta compositi umbram
-    # semper ponit nisi vocans modum expresse posuit
+    # MODUS VESTIGII (fabrica-plan-8, decretum 2026-11-10): porta
+    # compositi modum NON ponit (ordinarius fabricae = liber); modus
+    # expressus vocantis hereditatur
     _vest_vetus = os.environ.pop('FABRICA_VESTIGIUM', None)
     open(_gradus_ambitus, 'w').close()
     pg = silva.porta('ficta-g')
@@ -1040,9 +1041,9 @@ try:
         del os.environ['FABRICA_VESTIGIUM']
     else:
         os.environ['FABRICA_VESTIGIUM'] = _vest_vetus
-    credo(_vest == ['umbra'] and _vest_expressum == ['photographia'],
-          'porta gradus: FABRICA_VESTIGIUM=umbra ordinarie, expressum '
-          'servatum (%r, %r)' % (_vest, _vest_expressum))
+    credo(_vest == [''] and _vest_expressum == ['photographia'],
+          'porta gradus: FABRICA_VESTIGIUM ordinarie non positum, '
+          'expressum servatum (%r, %r)' % (_vest, _vest_expressum))
     silva.FABRICA_BIN = _fabrica_gradus('reusus')
     pg = silva.porta('ficta-g')
     credo(pg.sana and '[membra cursa 0/2' in pg.compendium
