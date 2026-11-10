@@ -18,7 +18,45 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#define LIBER "build/probatio_lectiones.tsv"
+/* VIA IN AREA SECTIONIS (fabrica-plan-8 T5): liber sub probatione et
+ * plagulae fictae in area credo habitant (sub TMPDIR membri = locus
+ * eius), non in build/ - scripturae crudae extra locum membri nec in
+ * libro membri nec in secutis apparebant (umbra: discordia una). Area
+ * absens: fractura nominata, via vetus in build/ */
+interior constans character*
+_in_area (
+        CredoContextus* c,
+    constans character* cauda)
+{
+    constans character* area;
+
+    area = credo_area(c);
+    CREDO_NON_NIHIL(area);
+    si (area == NIHIL)
+    {
+        area = "build";
+    }
+    redde chorda_ut_cstr(chorda_concatenare(chorda_concatenare(
+        chorda_ex_literis(area, c->piscina), chorda_ex_literis(
+        "/probatio_lectiones_", c->piscina), c->piscina),
+        chorda_ex_literis(cauda, c->piscina), c->piscina), c->piscina);
+}
+
+/* linea libri '<littera>\t<via>\n' */
+interior chorda
+_linea (
+        CredoContextus* c,
+    constans character* littera,
+    constans character* via)
+{
+    redde chorda_concatenare(chorda_concatenare(chorda_ex_literis(
+        littera, c->piscina), chorda_ex_literis("\t", c->piscina),
+        c->piscina), chorda_concatenare(chorda_ex_literis(via,
+        c->piscina), chorda_ex_literis("\n", c->piscina), c->piscina),
+        c->piscina);
+}
+
+#define LIBER _in_area(c, "liber.tsv")
 
 /* lineas libri numerare quae '<littera>\t<via>' integrae sunt */
 interior i32
@@ -103,23 +141,21 @@ _sectio_tertia (
      * liber sub probatione extra canalem purgatur */
     (vacuum)remove(LIBER);
     /* plagula delenda SINE libro creata: S eius solum ex deletione */
-    (vacuum)filum_scribere_literis("build/probatio_lectiones_d.txt",
-        "d\n");
+    (vacuum)filum_scribere_literis(_in_area(c, "d.txt"), "d\n");
     setenv("FABRICA_LECTIONES", LIBER, I);
-    (vacuum)filum_delere("build/probatio_lectiones_d.txt");
+    (vacuum)filum_delere(_in_area(c, "d.txt"));
     setenv("LECTIONES_PROBATIO", "valor_fictus", I);
-    (vacuum)filum_scribere_literis("build/probatio_lectiones_s.txt",
-        "x\n");
+    (vacuum)filum_scribere_literis(_in_area(c, "s.txt"), "x\n");
     CREDO_CHORDA_AEQUALIS_LITERIS(chorda_ex_literis(
         lectiones_ambitus("LECTIONES_PROBATIO"), piscina),
         "valor_fictus");
     unsetenv("FABRICA_LECTIONES");
     liber = filum_legere_totum(LIBER, piscina);
-    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
-        "S\tbuild/probatio_lectiones_s.txt\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, _linea(c, "S", _in_area(c,
+        "s.txt"))));
     /* deletio = S (fabrica spec 3 T6: compilator temporarium delet) */
-    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
-        "S\tbuild/probatio_lectiones_d.txt\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, _linea(c, "S", _in_area(c,
+        "d.txt"))));
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "E\tLECTIONES_PROBATIO\tvalor_fictus\n", piscina)));
 }
@@ -147,7 +183,7 @@ _sectio_quarta (
             (vacuum)fclose(f);
         }
         CREDO_NIHIL(lectiones_fopen("include/nusquam_ii.h", "r"));
-        f = lectiones_fopen("build/probatio_lectiones_w.txt", "wb");
+        f = lectiones_fopen(_in_area(c, "w.txt"), "wb");
         CREDO_NON_NIHIL(f);
         si (f != NIHIL)
         {
@@ -169,8 +205,8 @@ _sectio_quarta (
         "L\tprobationes/probatio_lectiones.c\n", piscina)));
     CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
         "A\tinclude/nusquam_ii.h\n", piscina)));
-    CREDO_VERUM(chorda_continet(liber, chorda_ex_literis(
-        "S\tbuild/probatio_lectiones_w.txt\n", piscina)));
+    CREDO_VERUM(chorda_continet(liber, _linea(c, "S", _in_area(c,
+        "w.txt"))));
     /* machina (/dev/): non ingressus - nulla linea */
     CREDO_FALSUM(chorda_continet(liber, chorda_ex_literis(
         "/dev/null", piscina)));
@@ -180,7 +216,7 @@ _sectio_quarta (
         "A\tinclude/nusquam_iii.h\n", piscina)));
     /* <tolera codex="SCRIPTURA_PRAETERITA" (>probatio canalis
      * liber sub probatione extra canalem purgatur */
-    (vacuum)remove("build/probatio_lectiones_w.txt");
+    (vacuum)remove(_in_area(c, "w.txt"));
 }
 
 interior vacuum
@@ -364,7 +400,6 @@ interior vacuum
 _sectio_errno (
     CredoContextus* c)
 {
-    (vacuum)c;
     setenv("FABRICA_LECTIONES",
         "build/probatio_lectiones_nusquam/liber.tsv", I);
     errno = EDOM;
