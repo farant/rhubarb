@@ -217,6 +217,48 @@ f1656a51), F6 overlaps I5.
 - **G**: the root suite is mostly WAITING: ~130 of 227 s of test time is idle (poll timeouts, sleeps, real-time rules). cellae/cellae_lenta are the only real CPU cost.
 - **H**: the 10-30 frigida crusta 431 s was laptop clamshell sleep on battery (pmset), not work; caffeinate does not prevent it.
 
+## VII. Cold clone anatomy (2026-11-09, commit 06f0eaae)
+
+The merge that landed silva items 5a-13: merge commit 11.5 min, gates
+23.4 min, frigida 17.7 min (52.9 total). Frigida is the largest piece
+and mensor has no children under frigida:radix / briar / oratio /
+officina (silva and xml do record theirs). Measured with a scratch
+sampler (process tree of the frigida run every 0.5 s, leaf processes
+classified by command; nothing in the repo changed), each suite ALONE
+in a fresh clone:
+
+| suite | wall | what the time is | busy leaves (avg) |
+|---|---|---|---|
+| radix | 317 s | ~135 s serial bootstrap, then 168 s of tests | <1 core overall (~250 CPU s) |
+| briar | 193 s | clang 83 CPU s, nexus_percursus 35, fabrica 19 | 1.0-1.5 |
+| oratio | 200 s | tests 54 CPU s, clang 48, nexus_percursus 31, fabrica 20 | 1.0 |
+| officina | 155 s | clang 49 CPU s, interpretare 27, fabrica 19 | 1.0 |
+
+- **radix bootstrap (~135 s, one process at a time):** aedilis built
+  file by file (`[dep]` lines), the silva.c amalgam, compilator, 471
+  library objects, generator tools, the 4.7 MB speculum capsule; five
+  single compiles of ~9-10 CPU s each and two `fabrica digestum` runs
+  of ~9 s.
+- **radix tests (168 s):** "481 per 4 fila" - FILA is the 4 performance
+  cores of 8 - but only ~2.4 are busy on average; cellae_lenta 18.7 and
+  cellae 15.4 CPU s are the only heavy ones, and the last ~60 s is
+  many processes using no CPU (tests that wait).
+- **In the full frigida** briar/oratio/officina take 82/77/61 s, not
+  193/200/155: they reuse what radix built in the same clone. The
+  suites are NOT independent.
+- **officina alone is RED** in a fresh clone
+  (probatio_officina_lanceatores expects "mundus: 1 moduli";
+  probatio_officina_legatus): it is green in frigida only because
+  radix runs first. B7 (suites in parallel) has to fix this first.
+- probatio_vicus_admonitiones flaked again (first radix run red,
+  second green; question 01M5YTX3XD).
+
+What this says about the open rulings: a compile cache (E4) would
+remove at most the clang share (~50-90 CPU s per suite, mostly the
+shared bootstrap, which the full run pays once); the larger lever is
+that nearly everything runs on one core of eight. Ledger note
+01M71SRD3BW14D77MTXD9DJD9M.
+
 ## AUDIENDA (not verified)
 
 - Every minute figure above is an estimate from profiles taken under
