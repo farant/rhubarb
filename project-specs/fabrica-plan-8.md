@@ -90,6 +90,12 @@ the timing facts (full vs tracked). Expected: disagreements only on
 members with foreign P lines (input to step 3) and on foreign installs
 (~/.bin - input to spec T4).
 
+**T5 DONE 2026-11-10** (at 216ffe4f8): 644 members over nine composites,
+all green. One disagreeing member, probatio_lectiones (two raw writes
+into build/ under its private book: debt + invalidation seen by the
+walk only). Walks 345.3 s vs tracked 28.9 s summed (median 527 vs
+44 ms per member). Details: lib/fabrica.worklog.md.
+
 ## Out of scope (named so they are not forgotten)
 
 - sanare waves and non-member actions (`_actionem_agere`, park …CH1CJ)

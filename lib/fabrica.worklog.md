@@ -3974,3 +3974,42 @@ Measured, `probare -vis`, every member runs:
 More than the 0.47 s the facts suggested (520 ms walk pair vs 47 ms
 tracked pair): the walks also feed allocation and comparison work that
 the facts do not time.
+
+## 2026-11-10 - fabrica-plan-8 T5: shadow pass over all nine composites
+
+One serial pass, `FABRICA_VESTIGIUM=umbra bin/fabrica probare -vis
+-conferre -machina <c>` for css, html, materia, toml, saltuarius, md,
+xml, silva, radicis at 216ffe4f8. All nine green; 644 members ran
+(10/14/14/13/13/14/12/57/497), wall 1382 s (radix 820 s, silva 267 s,
+xml 161 s).
+
+Disagreements (vestigia_umbra.txt, 644 fresh files): ONE member,
+probationes_radicis/probatio_lectiones - `debitum photographia` for
+build/probatio_lectiones.tsv and build/probatio_lectiones_s.txt, and
+`invalidatio photographia=extra secuta=intra`. Cause: the test of the
+channel points the channel at its own private book (LIBER =
+build/probatio_lectiones.tsv), so its two writes into build/ land in
+neither the member's book nor the tracked snapshot. Under `liber` these
+two writes go unseen: the debt looks unused and the cache invalidation
+for "wrote outside its place" does not fire. No other member disagrees;
+the expected foreign-P-line and ~/.bin disagreements did not appear.
+
+-conferre (vestigia_collata.txt): 609 `liber` lines (paths the book
+names that the walk did not see as changed - transient or same-state
+writes, e.g. build/probatio_silex_area/*, probatio_thesaurus/blobi/*)
+and 2 `photographia` lines (the same two probatio_lectiones files).
+
+Timing facts (fabrica.photographia / fabrica.secuta, summed over the
+644 members): walks 345.3 s, tracked snapshot 28.9 s. Per member median
+527 ms vs 44 ms (min 455, p90 580, max 1527 ms). By composite: radix
+266.2 vs 22.4 s, silva 29.1 vs 2.5, md 8.0, toml 6.9, xml 7.0, html
+7.5, materia 7.6, saltuarius 6.7, css 6.3 (tracked 0.4-0.6 each). The
+sums are across lanes (radix runs 4), so wall saving is smaller than
+the sum there. T4 measured ~0.6-0.7 s saved per member end to end,
+more than the 0.48 s the facts show.
+
+Trap: the facts were not in ~/.rhubarb/mensurae.diarium afterwards -
+the diary is rotated into mensurae.volumen (table acta, genus
+cursus/mensura, datum = the diary line) mid-run. Read them with
+sqlite3 -readonly; filter by the arbor field, another worktree's 30
+member runs fell in the same time window.
