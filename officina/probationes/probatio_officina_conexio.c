@@ -87,6 +87,7 @@ _instructio (
     instructio.destinatio      = destinatio;
     instructio.extra_index     = -I;
     instructio.extra_numerus   = ZEPHYRUM;
+    instructio.argumenta_fixa  = -I;
     instructio.a               = a;
     instructio.b               = b;
     instructio.c               = medulla_op_nihil();
@@ -450,6 +451,118 @@ _sectio_quarta (
     }
 }
 
+
+/* ==================================================
+ * PROBARE: signaturae discordes (M5 B4) - externum $f duobus
+ * modulis aliter declaratum (aut contra definitionem) = fractura
+ * honesta cum symbolo; concordes nectuntur
+ * ================================================== */
+
+interior MedullaModulus*
+_modulum_legere (
+               Piscina* piscina,
+    constans character* textus)
+{
+               i32  linea = ZEPHYRUM;
+    MedullaModulus* modulus = medulla_textum_legere(piscina,
+        _ch(textus), &linea);
+
+    si (modulus == NIHIL)
+    {
+        imprimere("FRACTA lectio (linea %d)\n", (integer)linea);
+    }
+    redde modulus;
+}
+
+interior b32
+_par_nectere (
+               Piscina* piscina,
+    constans character* textus_a,
+    constans character* textus_b,
+              Conexio** conexio_out,
+                Regio** regio_out)
+{
+    MedullaModulus* a        = _modulum_legere(piscina, textus_a);
+    MedullaModulus* b        = _modulum_legere(piscina, textus_b);
+             Regio* regio    = regio_generare(piscina);
+           Conexio* conexio  = conexio_creare(piscina, regio);
+               b32  bene;
+
+    CREDO_NON_NIHIL (a);
+    CREDO_NON_NIHIL (b);
+    bene          = conexio_modulum_addere(conexio, a);
+    bene          = conexio_modulum_addere(conexio, b) && bene;
+    bene          = conexio_nectere(conexio) && bene;
+    *conexio_out  = conexio;
+    *regio_out    = regio;
+    redde bene;
+}
+
+interior vacuum
+_sectio_signaturae (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* vocans_s32 =
+        "modulus \"a.c\"\n"
+        "externum $f (s32) -> s32\n"
+        "\n"
+        "functio $a () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $f, s32 1\n"
+        "    redde %r\n";
+    constans character* vocans_f64 =
+        "modulus \"b.c\"\n"
+        "externum $f (f64) -> s32\n"
+        "\n"
+        "functio $b () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $f, f64 1.0\n"
+        "    redde %r\n";
+    constans character* vocans_s32_alter =
+        "modulus \"c.c\"\n"
+        "externum $f (s32) -> s32\n"
+        "\n"
+        "functio $c () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $f, s32 2\n"
+        "    redde %r\n";
+    constans character* definiens_i64 =
+        "modulus \"d.c\"\n"
+        "\n"
+        "functio $f (i64 %x) -> s32\n"
+        "@initium:\n"
+        "    redde 0\n";
+    Conexio* conexio  = NIHIL;
+      Regio* regio    = NIHIL;
+
+    /* externa discordia */
+    CREDO_FALSUM (_par_nectere(piscina, vocans_s32, vocans_f64,
+        &conexio, &regio));
+    CREDO_VERUM (chorda_aequalis_literis(
+        *conexio_querela_symbolum(conexio), "f"));
+    regio_destruere(regio);
+
+    /* externum contra definitionem */
+    CREDO_FALSUM (_par_nectere(piscina, vocans_s32, definiens_i64,
+        &conexio, &regio));
+    CREDO_VERUM (chorda_aequalis_literis(
+        *conexio_querela_symbolum(conexio), "f"));
+    regio_destruere(regio);
+
+    /* ordo inversus: definitio prima, externum post */
+    CREDO_FALSUM (_par_nectere(piscina, definiens_i64, vocans_s32,
+        &conexio, &regio));
+    CREDO_VERUM (chorda_aequalis_literis(
+        *conexio_querela_symbolum(conexio), "f"));
+    regio_destruere(regio);
+
+    /* concordes nectuntur */
+    CREDO_VERUM (_par_nectere(piscina, vocans_s32, vocans_s32_alter,
+        &conexio, &regio));
+    regio_destruere(regio);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nexum duorum modulorum", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -458,6 +571,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "viam lectoris", _sectio_tertia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fixturas machinulae (oneratio)", _sectio_quarta, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "signaturae discordes", _sectio_signaturae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -1,14 +1,17 @@
 modulus "aggregata.c"
+externum $externa (s32, f64) -> s32
+externum $scribens (s32, ...) -> s32
+externum $facere (r8, s32, s32) -> vacuum
 
 functio $voca (s32 %n) -> s32
 @initium_0:
     %t1 = addere.s32 %n, 1
-    %t2 = vocare.s32 $externa, %t1, 2.5
-    %t3 = vocare.s32 $scribens, 2, %n, 7
+    %t2 = vocare.s32 $externa, s32 %t1, f64 2.5
+    %t3 = vocare.s32 $scribens, s32 2 ... s32 %n, s64 7
     %t4 = addere.s32 %t2, %t3
     redde %t4
 
-functio $duplicare (i64 %reditus, i64 %p) -> vacuum
+functio $duplicare (r8 %reditus, a8 %p) -> vacuum
 @initium_0:
     %f = arca 8, 4
     %t3 = legere.s32 %p
@@ -67,7 +70,7 @@ functio $summa_seriei (i64 %v, s32 %n) -> s32
     %t30 = addere.s32 %s, %t29
     redde %t30
 
-functio $copiat (i64 %reditus, i64 %a) -> vacuum
+functio $copiat (r8 %reditus, i64 %a) -> vacuum
 @initium_0:
     %b = arca 8, 4
     copia %b, %a, 8
@@ -80,21 +83,21 @@ functio $copiat (i64 %reditus, i64 %a) -> vacuum
 
 functio $vocat_indirecte (i64 %f, s32 %x) -> s32
 @initium_0:
-    %t2 = vocare.s32 %f, %x
-    %t3 = vocare.s32 %f, %x
+    %t2 = vocare.s32 %f, s32 %x
+    %t3 = vocare.s32 %f, s32 %x
     %t4 = addere.s32 %t2, %t3
     redde %t4
 
-functio $rotunda (i64 %reditus, s32 %n) -> vacuum
+functio $rotunda (r8 %reditus, s32 %n) -> vacuum
 @initium_0:
     %p = arca 8, 4
     %t3 = arca 8, 4
     %t4 = arca 8, 4
     %t5 = addere.s32 %n, 1
-    vocare $facere, %t4, %n, %t5
+    vocare $facere, r8 %t4, s32 %n, s32 %t5
     %t6 = arca 8, 4
     copia %t6, %t4, 8
-    vocare $duplicare, %t3, %t6
+    vocare $duplicare, r8 %t3, a8 %t6
     copia %p, %t3, 8
     copia %reditus, %p, 8
     redde
@@ -103,15 +106,15 @@ functio $membrum_fructus (s32 %n) -> s32
 @initium_0:
     %t1 = arca 8, 4
     %t2 = addere.s32 %n, 1
-    vocare $facere, %t1, %n, %t2
+    vocare $facere, r8 %t1, s32 %n, s32 %t2
     %t3 = addere.i64 %t1, 4
     %t4 = legere.s32 %t3
     %t5 = arca 8, 4
     %t6 = arca 8, 4
-    vocare $facere, %t6, 3, 4
+    vocare $facere, r8 %t6, s32 3, s32 4
     %t7 = arca 8, 4
     copia %t7, %t6, 8
-    vocare $duplicare, %t5, %t7
+    vocare $duplicare, r8 %t5, a8 %t7
     %t8 = legere.s32 %t5
     %t9 = addere.s32 %t4, %t8
     redde %t9

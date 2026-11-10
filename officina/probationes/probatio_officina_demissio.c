@@ -5,6 +5,7 @@
 
 #include "officina_demissio.h"
 #include "officina_medulla_textus.h"
+#include "officina_machinula.h"
 #include "credo.h"
 #include "lectiones.h"
 
@@ -366,6 +367,406 @@ _distillationem_probare (
     }
 }
 
+
+/* ==================================================
+ * PROBARE: limina vocationum (M5 B4) - typi argumentorum,
+ * argumenta_fixa, signaturae externorum, parametra aggregata
+ * ================================================== */
+
+interior constans MedullaFunctio*
+_functionem_invenire (
+    constans MedullaModulus* modulus,
+         constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(modulus->functiones); i++)
+    {
+        MedullaFunctio** functio = (MedullaFunctio**)xar_obtinere(
+            modulus->functiones, i);
+
+        si (chorda_aequalis_literis((*functio)->titulus, titulus))
+        {
+            redde *functio;
+        }
+    }
+    redde NIHIL;
+}
+
+interior constans MedullaSignatura*
+_signaturam_invenire (
+    constans MedullaModulus* modulus,
+         constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(modulus->symbola); i++)
+    {
+        constans MedullaSymbolum* symbolum =
+            medulla_symbolum_obtinere(modulus, (s32)i);
+
+        si (   chorda_aequalis_literis(symbolum->titulus, titulus)
+            && symbolum->signatura >= ZEPHYRUM)
+        {
+            redde (constans MedullaSignatura*)xar_obtinere(
+                modulus->signaturae, (i32)symbolum->signatura);
+        }
+    }
+    redde NIHIL;
+}
+
+/* vocatio n-ta (0-basis) functionis, ordine canonico */
+interior constans MedullaInstructio*
+_vocationem_invenire (
+    constans MedullaFunctio* functio,
+                        i32  n)
+{
+    i32 b;
+    i32 visae = ZEPHYRUM;
+
+    per (b = ZEPHYRUM; b < xar_numerus(functio->blocci); b++)
+    {
+        constans MedullaBloccus* bloccus = medulla_bloccum_obtinere(
+            functio, (s32)b);
+        i32 k;
+
+        per (k = ZEPHYRUM; k < xar_numerus(bloccus->instructiones);
+             k++)
+        {
+            constans MedullaInstructio* instructio =
+                (constans MedullaInstructio*)xar_obtinere(
+                    bloccus->instructiones, k);
+
+            si (instructio->op == (s32)MEDULLA_OP_VOCARE)
+            {
+                si (visae == n)
+                {
+                    redde instructio;
+                }
+                visae++;
+            }
+        }
+    }
+    redde NIHIL;
+}
+
+interior constans MedullaTypusLiminis*
+_typum_argumenti (
+       constans MedullaFunctio* functio,
+    constans MedullaInstructio* instructio,
+                           i32  k)
+{
+    redde (constans MedullaTypusLiminis*)xar_obtinere(
+        functio->operanda_typi, (i32)instructio->extra_index + k);
+}
+
+interior constans MedullaTypusLiminis*
+_limen_signaturae (
+    constans MedullaSignatura* signatura,
+                          i32  k)
+{
+    redde (constans MedullaTypusLiminis*)xar_obtinere(
+        signatura->parametra, k);
+}
+
+interior vacuum
+_limina_probare (
+    CredoContextus* c)
+{
+          Piscina* piscina         = c->piscina;
+     SilvaPiscina* piscina_silvae  = (SilvaPiscina*)c->datum;
+           chorda  fons;
+    MedullaModulus* modulus;
+
+    si (piscina_silvae == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    fons = _plagulam_legere(piscina,
+        "officina/probationes/fixa/aggregata.c");
+    modulus = _demittere(piscina, piscina_silvae, fons,
+        "aggregata.c");
+    CREDO_NON_NIHIL (modulus);
+    si (modulus == NIHIL)
+    {
+        redde;
+    }
+    /* $voca: externa(n + 1, 2.5) + scribens(2, n, 7L) */
+    {
+        constans MedullaFunctio* voca = _functionem_invenire(modulus,
+            "voca");
+        constans MedullaInstructio* externa;
+        constans MedullaInstructio* scribens;
+
+        CREDO_NON_NIHIL ((constans vacuum*)voca);
+        si (voca == NIHIL)
+        {
+            redde;
+        }
+        externa   = _vocationem_invenire(voca, ZEPHYRUM);
+        scribens  = _vocationem_invenire(voca, I);
+        CREDO_NON_NIHIL ((constans vacuum*)externa);
+        CREDO_NON_NIHIL ((constans vacuum*)scribens);
+        si (externa == NIHIL || scribens == NIHIL)
+        {
+            redde;
+        }
+        CREDO_AEQUALIS_S32 (externa->argumenta_fixa, -I);
+        CREDO_AEQUALIS_S32 (scribens->argumenta_fixa, I);
+        CREDO_AEQUALIS_S32 (_typum_argumenti(voca, externa,
+            ZEPHYRUM)->typus, MEDULLA_TYPUS_S32);
+        CREDO_AEQUALIS_S32 (_typum_argumenti(voca, externa, I)->typus,
+            MEDULLA_TYPUS_F64);
+        /* variadica: typi promoti (7L = s64) */
+        CREDO_AEQUALIS_S32 (_typum_argumenti(voca, scribens,
+            II)->typus, MEDULLA_TYPUS_S64);
+    }
+    /* $facere declarata solum: signatura (r8, s32, s32) -> vacuum */
+    {
+        constans MedullaSignatura* facere = _signaturam_invenire(
+            modulus, "facere");
+
+        CREDO_NON_NIHIL ((constans vacuum*)facere);
+        si (facere == NIHIL)
+        {
+            redde;
+        }
+        CREDO_AEQUALIS_S32 (facere->typus_reditus,
+            MEDULLA_TYPUS_NIHIL);
+        CREDO_FALSUM (facere->est_variadica);
+        CREDO_AEQUALIS_I32 (xar_numerus(facere->parametra), III);
+        CREDO_VERUM (_limen_signaturae(facere, ZEPHYRUM)->est_reditus);
+        CREDO_AEQUALIS_I32 (_limen_signaturae(facere,
+            ZEPHYRUM)->magnitudo_octetorum, VIII);
+        CREDO_AEQUALIS_S32 (_limen_signaturae(facere, I)->typus,
+            MEDULLA_TYPUS_S32);
+        CREDO_AEQUALIS_S32 (_limen_signaturae(facere, II)->typus,
+            MEDULLA_TYPUS_S32);
+    }
+    /* $duplicare: %reditus + aggregatum valore a8 */
+    {
+        constans MedullaFunctio* duplicare = _functionem_invenire(
+            modulus, "duplicare");
+        constans MedullaParametrum* p0;
+        constans MedullaParametrum* p1;
+
+        CREDO_NON_NIHIL ((constans vacuum*)duplicare);
+        si (duplicare == NIHIL)
+        {
+            redde;
+        }
+        p0 = (constans MedullaParametrum*)xar_obtinere(
+            duplicare->parametra, ZEPHYRUM);
+        p1 = (constans MedullaParametrum*)xar_obtinere(
+            duplicare->parametra, I);
+        CREDO_VERUM (p0->limen.est_reditus);
+        CREDO_AEQUALIS_S32 (p1->limen.typus, MEDULLA_TYPUS_AGGREGATUM);
+        CREDO_AEQUALIS_I32 (p1->limen.magnitudo_octetorum, VIII);
+        CREDO_FALSUM (p1->limen.est_reditus);
+    }
+}
+
+/* HFA (AAPCS64): 1-4 membra eiusdem typi fluitantis; aliter aN */
+interior vacuum
+_hfa_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina         = c->piscina;
+          SilvaPiscina* piscina_silvae  = (SilvaPiscina*)c->datum;
+    constans character* fons_literis =
+        "struct V { double x, y; };\n"
+        "struct Q { float a[3]; float b; };\n"
+        "struct T { long a, b, c; };\n"
+        "struct M { double d; float f; };\n"
+        "struct V f(struct V v);\n"
+        "long g(struct T t, struct Q q, struct M m);\n"
+        "double h(void)\n"
+        "{\n"
+        "    struct V v; struct T t; struct Q q; struct M m;\n"
+        "    v.x = 1.0; v.y = 2.0; t.a = 1; t.b = 2; t.c = 3;\n"
+        "    return f(v).x + (double)g(t, q, m);\n"
+        "}\n";
+    MedullaModulus* modulus;
+
+    si (piscina_silvae == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    modulus = _demittere(piscina, piscina_silvae, _ch(fons_literis),
+        "hfa.c");
+    CREDO_NON_NIHIL (modulus);
+    si (modulus == NIHIL)
+    {
+        redde;
+    }
+    {
+        constans MedullaSignatura* f = _signaturam_invenire(modulus,
+            "f");
+        constans MedullaSignatura* g = _signaturam_invenire(modulus,
+            "g");
+
+        CREDO_NON_NIHIL ((constans vacuum*)f);
+        CREDO_NON_NIHIL ((constans vacuum*)g);
+        si (f == NIHIL || g == NIHIL)
+        {
+            redde;
+        }
+        /* f: (rh2xf64, h2xf64) -> vacuum */
+        CREDO_AEQUALIS_I32 (xar_numerus(f->parametra), II);
+        CREDO_VERUM (_limen_signaturae(f, ZEPHYRUM)->est_reditus);
+        CREDO_AEQUALIS_S32 (_limen_signaturae(f, ZEPHYRUM)->hfa_typus,
+            MEDULLA_TYPUS_F64);
+        CREDO_AEQUALIS_S32 (_limen_signaturae(f, I)->hfa_typus,
+            MEDULLA_TYPUS_F64);
+        CREDO_AEQUALIS_I32 (_limen_signaturae(f,
+            I)->magnitudo_octetorum, XVI);
+        /* g: (a24, h4xf32, a16) -> s64 */
+        CREDO_AEQUALIS_S32 (g->typus_reditus, MEDULLA_TYPUS_S64);
+        CREDO_AEQUALIS_S32 (_limen_signaturae(g, ZEPHYRUM)->typus,
+            MEDULLA_TYPUS_AGGREGATUM);
+        CREDO_AEQUALIS_I32 (_limen_signaturae(g,
+            ZEPHYRUM)->magnitudo_octetorum, XXIV);
+        CREDO_AEQUALIS_S32 (_limen_signaturae(g, ZEPHYRUM)->hfa_typus,
+            MEDULLA_TYPUS_NIHIL);
+        CREDO_AEQUALIS_S32 (_limen_signaturae(g, I)->hfa_typus,
+            MEDULLA_TYPUS_F32);
+        CREDO_AEQUALIS_I32 (_limen_signaturae(g,
+            I)->magnitudo_octetorum, XVI);
+        /* membra mixta (f64 + f32) -> non HFA */
+        CREDO_AEQUALIS_S32 (_limen_signaturae(g, II)->hfa_typus,
+            MEDULLA_TYPUS_NIHIL);
+        CREDO_AEQUALIS_I32 (_limen_signaturae(g,
+            II)->magnitudo_octetorum, XVI);
+    }
+    /* vocatio f(v): argumenta typata eadem ac signatura */
+    {
+        constans MedullaFunctio* h = _functionem_invenire(modulus,
+            "h");
+        constans MedullaInstructio* vocatio_f;
+
+        CREDO_NON_NIHIL ((constans vacuum*)h);
+        si (h == NIHIL)
+        {
+            redde;
+        }
+        vocatio_f = _vocationem_invenire(h, ZEPHYRUM);
+        CREDO_NON_NIHIL ((constans vacuum*)vocatio_f);
+        si (vocatio_f == NIHIL)
+        {
+            redde;
+        }
+        CREDO_VERUM (_typum_argumenti(h, vocatio_f,
+            ZEPHYRUM)->est_reditus);
+        CREDO_AEQUALIS_S32 (_typum_argumenti(h, vocatio_f,
+            I)->hfa_typus, MEDULLA_TYPUS_F64);
+    }
+}
+
+
+/* ==================================================
+ * PROBARE: conditio fluitans (M5 E15) - ramus legit verbum
+ * integrum; -0.0 bitis non nullis falsum est in C, ergo demissio
+ * 'inaequalis.fT x, 0.0' ante ramum emittit (si, dum, ternarius,
+ * &&). Demissum et in machinula curritum: omnes -> 42.
+ * ================================================== */
+
+interior s64
+_currere_demissum (
+               Piscina* piscina,
+        MedullaModulus* modulus,
+    constans character* functio)
+{
+       Regio* regio    = regio_generare(piscina);
+     Conexio* conexio  = conexio_creare(piscina, regio);
+    Machinula* machinula;
+    MachinulaExitus exitus;
+
+    si (   !conexio_modulum_addere(conexio, modulus)
+        || !conexio_nectere(conexio))
+    {
+        regio_destruere(regio);
+        redde -I;
+    }
+    machinula = machinula_creare(piscina, conexio, regio);
+    si (machinula == NIHIL)
+    {
+        regio_destruere(regio);
+        redde -I;
+    }
+    exitus = machinula_currere(machinula, _ch(functio));
+    regio_destruere(regio);
+    si (exitus.genus != MACHINULA_BENE)
+    {
+        redde -II;
+    }
+    redde exitus.codex;
+}
+
+interior vacuum
+_ramum_fluitantem_probare (
+    CredoContextus* c)
+{
+               Piscina* piscina         = c->piscina;
+          SilvaPiscina* piscina_silvae  = (SilvaPiscina*)c->datum;
+    constans character* fons_literis =
+        "int si_negativum(void)\n"
+        "{\n"
+        "    double d = -0.0;\n"
+        "    if (d)\n"
+        "        return 1;\n"
+        "    return 42;\n"
+        "}\n"
+        "int ternarius(void)\n"
+        "{\n"
+        "    float f = -0.0f;\n"
+        "    return f ? 1 : 42;\n"
+        "}\n"
+        "int ansa(void)\n"
+        "{\n"
+        "    double x = 3.0;\n"
+        "    int n = 0;\n"
+        "    while (x)\n"
+        "    {\n"
+        "        x = x - 1.0;\n"
+        "        n = n + 14;\n"
+        "    }\n"
+        "    return n;\n"
+        "}\n"
+        "int coniunctio(void)\n"
+        "{\n"
+        "    double a = 0.25;\n"
+        "    double z = -0.0;\n"
+        "    if (a && z)\n"
+        "        return 1;\n"
+        "    return 42;\n"
+        "}\n";
+    MedullaModulus* modulus;
+    chorda textus;
+
+    si (piscina_silvae == NIHIL)
+    {
+        redde;   /* sine assertione: sectio VACUA, suita FRACTA */
+    }
+    modulus = _demittere(piscina, piscina_silvae, _ch(fons_literis),
+        "ramus_fluitans.c");
+    CREDO_NON_NIHIL (modulus);
+    si (modulus == NIHIL)
+    {
+        redde;
+    }
+    textus = medulla_textum_scribere(piscina, modulus);
+    CREDO_VERUM (chorda_continet(textus, _ch("inaequalis.f64")));
+    CREDO_VERUM (chorda_continet(textus, _ch("inaequalis.f32")));
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "si_negativum")
+        == (s64)XLII);
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "ternarius")
+        == (s64)XLII);
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "ansa")
+        == (s64)XLII);
+    CREDO_VERUM (_currere_demissum(piscina, modulus, "coniunctio")
+        == (s64)XLII);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "demissionem: officina/probationes/fixa/scalaria.c",
         _scalaria_probare, _silvam_parare, _silvam_purgare, NIHIL,
@@ -383,6 +784,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _silvam_purgare, NIHIL, NIHIL },
     { "distillationem linearum", _distillationem_probare,
         _silvam_parare, _silvam_purgare, NIHIL, NIHIL },
+    { "limina", _limina_probare, _silvam_parare, _silvam_purgare,
+        NIHIL, NIHIL },
+    { "hfa", _hfa_probare, _silvam_parare, _silvam_purgare, NIHIL,
+        NIHIL },
+    { "ramus -0.0", _ramum_fluitantem_probare, _silvam_parare,
+        _silvam_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

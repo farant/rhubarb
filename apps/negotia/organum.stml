@@ -1,0 +1,83 @@
+<!-- organum.stml - manifestum negotiorum (genus "negotia"; iussum
+     $projects; negotia-plan T3, spec project-specs/negotia.md): index
+     negotiorum et facultates negotii. Negotia (negotia.h) per ligamen a
+     parente, in volumine vici, communia omnibus lateribus - hic solum
+     status visus. -->
+<organum genus="negotia" versio="1">
+
+  <ligamina>
+    <ligamen nomen="negotia" genus="negotia" a="parens"/>
+  </ligamina>
+
+  <actiones>
+    <actio nomen="negotia.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="negotia.agere"
+            semita="ligatio" historia="impelle">
+      <optio>index</optio>
+      <optio>negotium</optio>
+      <optio>facultas</optio>
+      <optio>colloquium</optio>
+      <optio>adumbratio</optio>
+    </campus>
+    <campus nomen="negotium" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="ligatio"
+            historia="impelle"
+            nota="ULID negotii aperti; in indice absens"/>
+    <campus nomen="facultas" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="ligatio"
+            historia="impelle"
+            nota="T4: ULID facultatis apertae; absens extra visum
+                  facultatis"/>
+    <campus nomen="pagina_textus" typus="numerus" vita="persistens"
+            scriptor="negotia.agere" semita="status" ambitus="ligatio"
+            nota="T4: pagina corporis et historiae (ab 0); facultate
+                  mutata ad absens"/>
+    <campus nomen="colloquium" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="status"
+            nota="T6: sessio Claude chartae (visus colloquium)"/>
+    <campus nomen="adumbratio" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="status"
+            nota="negotia-paginae T3: id plenum paginae (visus
+                  adumbratio)"/>
+    <campus nomen="revisio" typus="textus" vita="persistens"
+            scriptor="negotia.agere" semita="status"
+            nota="negotia-paginae T3b: seq revisionis visae; vacuus =
+                  recentissima (revisionem novam sequitur)"/>
+    <campus nomen="resumere" typus="electio" vita="transiens"
+            absens="nullum" scriptor="negotia.agere"
+            nota="T6: armatum = r primum pressum (sessio fortasse
+                  viva extra tmux); r secundum resumit">
+      <optio>nullum</optio>
+      <optio>armatum</optio>
+    </campus>
+    <campus nomen="origo" typus="electio" vita="persistens"
+            absens="argumentum" scriptor="negotia.agere"
+            nota="unde negotium apertum: argumentum (Esc latus prius
+                  per vicum) aut index (in loco, sine porta; Esc ad
+                  indicem)">
+      <optio>argumentum</optio>
+      <optio>index</optio>
+    </campus>
+    <campus nomen="electa" typus="textus" vita="transiens"
+            scriptor="negotia.agere"
+            nota="id rei electae (negotium aut facultas); absens =
+                  prima paginae"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="negotia.agere" nota="electa paginam sequitur"/>
+    <campus nomen="super" typus="textus" vita="transiens"
+            scriptor="negotia.agere"
+            nota="id ordinis sub mure ('r2'); absens = nullus"/>
+  </status>
+
+  <cognomina>
+    <cognomen semita="negotia/index"/>
+    <cognomen typus="textus" semita="negotia/negotium/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

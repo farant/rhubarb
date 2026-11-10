@@ -40,3 +40,27 @@
 - Gates first-green after the fixes above: hospes 25/25 (golden text
   + byte-identical round-trip through the public surface), standalone
   severitas plena, nm-intersectio 0.
+
+## 2026-11-03 — M5 T1: typed call sites (B4)
+
+- Grammar: every vocare argument is `T operand`; limen types are
+  scalar suffixes or `aN` / `hKxT` / `rN` / `rhKxT`. ` ...` marks the
+  fixed/variadic split ONLY for prototyped variadic callees
+  (argumenta_fixa >= 0); trailing ` ...` = variadic call with no
+  variadic args. `externum` lines follow `modulus`, symbol order.
+- Round-trip subtlety: externum lines intern their symbols FIRST on
+  re-parse, so symbol indices change across the round trip — text is
+  still byte-identical because externum lines print in symbol order
+  and functions/data print in their own Xar order. Indices were
+  always opaque (§VII); this is the first construct that reorders
+  them.
+- `_verbum_legere` treats '.' as a letter (symbol names like
+  $chorda_c.adiutor), so " ..." MUST be space-separated from the
+  previous operand; the dumper always writes the space. "2..." would
+  read as a float — tolerated leniency, never canonical.
+- The parser has no causa channel (NIHIL + line only); the plan's
+  "causa naming typus argumenti" would need a new out-param on
+  medulla_textum_legere (public API) — deferred, line number asserted.
+- Old builder (medulla_operanda_addere) pushes limen typus NIHIL;
+  the dumper prints such arguments bare and the lector refuses them —
+  deliberate: untyped medulla is no longer canonical.

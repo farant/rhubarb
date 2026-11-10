@@ -7,6 +7,7 @@
 #include "aedilis_silva.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
+#include "iter_directoria.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -399,6 +400,182 @@ bibliothecae_ex_via (
         redde NIHIL;
     }
     redde _resolvere(b, via, via, piscina, causa_out);
+}
+
+
+/* ==================================================
+ * mundus totus: clausura posix omnium capitum include/
+ * ================================================== */
+
+interior s32
+_chordas_comparare (
+    constans vacuum* a,
+    constans vacuum* b)
+{
+    redde (s32)chorda_comparare(*(constans chorda*)a,
+        *(constans chorda*)b);
+}
+
+/* "include/<caput>: <causa>" in omissa */
+interior vacuum
+_omissum_addere (
+          Xar* omissa,
+      Piscina* piscina,
+       chorda  caput,
+       chorda  causa)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, CXXVIII);
+               chorda* novum;
+
+    chorda_aedificator_appendere_literis(a, "include/");
+    chorda_aedificator_appendere_chorda(a, caput);
+    chorda_aedificator_appendere_literis(a, ": ");
+    chorda_aedificator_appendere_chorda(a, causa);
+    novum = (chorda*)xar_addere(omissa);
+    si (novum != NIHIL)
+    {
+        *novum = chorda_aedificator_finire(a);
+    }
+}
+
+Xar*
+bibliothecae_mundum_totum (
+     Bibliothecae*  b,
+          Piscina*  piscina,
+              Xar** omissa_out,
+           chorda*  causa_out)
+{
+               character  directorium[VIA_MAXIMA];
+     DirectoriumIterator* iter;
+    DirectoriumIntroitus* e;
+                     Xar* viae;
+                     Xar* omissa;
+                     Xar* capita;
+                     i32  k;
+
+    si (b == NIHIL || piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (strlen(b->radix) + XVI >= magnitudo(directorium))
+    {
+        _causam_ponere(piscina, causa_out,
+            "bibliothecae: radix nimis longa");
+        redde NIHIL;
+    }
+    viae    = xar_creare(piscina, (i32)magnitudo(chorda));
+    omissa  = xar_creare(piscina, (i32)magnitudo(chorda));
+    capita  = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (viae == NIHIL || omissa == NIHIL || capita == NIHIL)
+    {
+        redde NIHIL;
+    }
+
+    /* capita include/ *.h (ordine alphabetico: omissa quoque
+     * determinata) */
+    sprintf(directorium, "%s/include", b->radix);
+    iter = directorium_iterator_aperire(directorium, piscina);
+    si (iter == NIHIL)
+    {
+        _causam_ponere(piscina, causa_out,
+            "bibliothecae: include/ legi nequit");
+        redde NIHIL;
+    }
+    dum ((e = directorium_iterator_proximum(iter)) != NIHIL)
+    {
+        chorda* novum;
+
+        si (   e->genus != INTROITUS_FILUM || e->titulus.mensura < III
+            || e->titulus.datum[e->titulus.mensura - II] != (i8)'.'
+            || e->titulus.datum[e->titulus.mensura - I] != (i8)'h')
+        {
+            perge;
+        }
+        novum = (chorda*)xar_addere(capita);
+        si (novum == NIHIL)
+        {
+            directorium_iterator_claudere(iter);
+            redde NIHIL;
+        }
+        *novum = chorda_transcribere(e->titulus, piscina);
+    }
+    directorium_iterator_claudere(iter);
+    si (xar_numerus(capita) > I)
+    {
+        xar_ordinare(capita, _chordas_comparare);
+    }
+
+    /* derivatio per caput in piscina temporaria: arbores aedilis
+     * cum ea pereunt, viae solae in piscinam vocantis transcribuntur
+     * (extractor tamen parsuras per viam in b->piscina servat) */
+    per (k = ZEPHYRUM; k < xar_numerus(capita); k++)
+    {
+             chorda  caput = *(chorda*)xar_obtinere(capita, k);
+            Piscina* temporaria;
+  ChordaAedificator* textus;
+             chorda  causa;
+                Xar* clausura;
+                i32  j;
+
+        temporaria = piscina_generare_dynamicum("mundus_totus",
+            65536);
+        si (temporaria == NIHIL)
+        {
+            redde NIHIL;
+        }
+        textus = chorda_aedificator_creare(temporaria, LXIV);
+        chorda_aedificator_appendere_literis(textus, "#include \"");
+        chorda_aedificator_appendere_chorda(textus, caput);
+        chorda_aedificator_appendere_literis(textus, "\"\n");
+        causa.datum    = NIHIL;
+        causa.mensura  = ZEPHYRUM;
+        clausura = bibliothecae_ex_textu(b,
+            chorda_aedificator_finire(textus), temporaria, &causa);
+        si (clausura == NIHIL)
+        {
+            _omissum_addere(omissa, piscina, caput, causa);
+        }
+        alioquin
+        {
+            per (j = ZEPHYRUM; j < xar_numerus(clausura); j++)
+            {
+                chorda via       = *(chorda*)xar_obtinere(clausura, j);
+                   b32 praesens  = FALSUM;
+                   i32 m;
+
+                per (m = ZEPHYRUM; m < xar_numerus(viae); m++)
+                {
+                    si (chorda_aequalis(*(chorda*)xar_obtinere(viae,
+                            m), via))
+                    {
+                        praesens = VERUM;
+                        frange;
+                    }
+                }
+                si (!praesens)
+                {
+                    chorda* novum = (chorda*)xar_addere(viae);
+
+                    si (novum == NIHIL)
+                    {
+                        piscina_destruere(temporaria);
+                        redde NIHIL;
+                    }
+                    *novum = chorda_transcribere(via, piscina);
+                }
+            }
+        }
+        piscina_destruere(temporaria);
+    }
+    si (xar_numerus(viae) > I)
+    {
+        xar_ordinare(viae, _chordas_comparare);
+    }
+    si (omissa_out != NIHIL)
+    {
+        *omissa_out = omissa;
+    }
+    redde viae;
 }
 
 

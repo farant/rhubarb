@@ -12,6 +12,7 @@
 #include "concentus.h"
 #include "carmen.h"
 #include "cantor.h"
+#include "cantus.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -1273,6 +1274,82 @@ _sectio_illapsus_prospectus (
     CREDO_VERUM (fabs(x->lucrum - 0.2f) < 1e-5f);
 }
 
+
+    /* ==================================================
+     * PERMUTATIO (gabc pars II P5, G18): carmen novum ad pulsum
+     * currentem; vetus statim liberatur
+     * ================================================== */
+
+#define CARMEN_SCALA(nota_quinta)                                     \
+    "<carmina><carmen titulus=\"scala\" tempus=\"120\">"              \
+    "<pars titulus=\"m\" instrumentum=\"aether\">"                    \
+    "<frustum mensura=\"1\"><textus!>l4 c d e f " nota_quinta         \
+    " a b >c</textus></frustum></pars></carmen></carmina>"
+
+interior vacuum
+_sectio_permutatio (
+    CredoContextus* c)
+{
+           Piscina* vetus;
+           Carmina* liber;
+    CarminisVitium  vitium;
+            Carmen* a;
+   constans Carmen* b;
+               s64  pulsus;
+               s64  post;
+               i32  ante;
+               i32  k;
+               b32  sol_acutum;
+               b32  sol;
+
+    vetus = piscina_generare_dynamicum("permutatio_vetus",
+        (memoriae_index)(LXIV * MXXIV));
+    CREDO_NECESSE (vetus != NIHIL && cantor != NIHIL);
+    liber = (Carmina*)piscina_allocare(vetus, magnitudo(Carmina));
+    CREDO_NECESSE (liber != NIHIL
+        && carmina_legere(chorda_ex_literis(CARMEN_SCALA("g"), vetus),
+               vetus, liber, &vitium)
+        && liber->numerus >= I);
+    a = &liber->carmina[ZEPHYRUM];
+    b = _carmen(c, CARMEN_SCALA("g#"));
+    CREDO_NECESSE (b != NIHIL);
+    cantor_regio(cantor, FALSUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_NECESSE (cantor_incipere(cantor, a, ZEPHYRUM));
+
+    CREDO_GRADUS ("secunda una: II quartae minus initium (~L ms)");
+    _currere(M);
+    pulsus = cantor_pulsus(cantor);
+    CREDO_VERUM (pulsus >= II * CANTUS_PULSUS_QUARTAE
+        - CANTUS_PULSUS_QUARTAE / VIII);
+    CREDO_VERUM (pulsus < II * CANTUS_PULSUS_QUARTAE + XCVI);
+
+    CREDO_GRADUS ("permutatio ad pulsum eundem; vetus liberatum");
+    ante = fictus.numerus;
+    CREDO_VERUM (cantor_incipere(cantor, b, pulsus));
+    post = cantor_pulsus(cantor);
+    CREDO_VERUM (post >= pulsus && post < pulsus + XCVI);
+    memset(a, 0xA5, magnitudo(Carmen));
+    piscina_destruere(vetus);
+
+    CREDO_GRADUS ("nota mutata auditur (g# = LXVIII), g vetus non");
+    _currere(M + CCL);
+    sol_acutum  = FALSUM;
+    sol         = FALSUM;
+    per (k = ante; k < fictus.numerus; k++)
+    {
+        si (fictus.iussa[k].genus == MIXTURA_IUSSUM_TIBIAM)
+        {
+            sol_acutum  = sol_acutum || fictus.iussa[k].nota == 68.0f;
+            sol         = sol || fictus.iussa[k].nota == 67.0f;
+        }
+    }
+    CREDO_VERUM (sol_acutum);
+    CREDO_FALSUM (sol);
+    post = cantor_pulsus(cantor);
+    CREDO_VERUM (post >= pulsus + II * CANTUS_PULSUS_QUARTAE);
+    CREDO_VERUM (post < pulsus + III * CANTUS_PULSUS_QUARTAE);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "tempus", _sectio_tempus, _parare, NIHIL, NIHIL, NIHIL },
     { "mutatio", _sectio_mutatio, _parare, NIHIL, NIHIL, NIHIL },
@@ -1280,6 +1357,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "regio", _sectio_regio, _parare, NIHIL, NIHIL, NIHIL },
     { "sistere", _sectio_sistere, _parare, NIHIL, NIHIL, NIHIL },
     { "quaerere", _sectio_quaerere, _parare, NIHIL, NIHIL, NIHIL },
+    { "permutatio", _sectio_permutatio, _parare, NIHIL, NIHIL, NIHIL },
     { "vivum", _sectio_vivum, _parare, NIHIL, NIHIL, NIHIL },
     { "instrumenta", _sectio_instrumenta, _parare, NIHIL, NIHIL,
         NIHIL },

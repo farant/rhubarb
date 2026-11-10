@@ -5152,3 +5152,322 @@ scratch copy of a tracked file (path-scoped tolerations) - compare
 baselines in place, not in scratch. desiderata = a test-visible
 count of sessio's library modules ("caput solum" can only assert
 acceptance, not that nothing loaded).
+
+## M5 — dorsum nativum aarch64 (secunda, 2026-11-03 →)
+
+INTENTIO: compile medulla to arm64 in memory, per function behind
+NATIVUM descriptors, inside machinula's own world (same region,
+pointers, layout); the interpreter stays the oracle. Grounding:
+project-specs/officina-m5-fundamenta.md; decisions:
+officina-m5-interrogatio.md; spec + plan: officina-m5-spec.md,
+officina-m5-plan.md (tasks 0-10). Ledger: parcum 01KXJ2NV, opera
+"M5 0" .. "M5 10".
+
+- T0: one whole-world resolver, bibliothecae_mundum_totum (posix
+  closure of every include/*.h; refused headers are collected as
+  omissa, never fatal; sorted, deduplicated; ~8 s, ~350 MiB of
+  aedilis parses, held in a throwaway pool). The cursor's world and
+  interpretare's IGNOTA fallback both use it (new flag -index <via>
+  forces that path in tests); interpretare -plagulae keeps its lib/
+  substring scan (explicit choice, fast). The cursor's two 256-entry
+  suite loops became one Xar enumerator, _suitas_colligere.
+  Result: 453 suites enumerated (was 256, silently), world 309
+  modules / 7485 functions / 541086 instructions, 0 nexus fracti
+  (was: every suite NEXUS FRACTUS on testa_principale). Omitted
+  headers: 127 (92 vendor sqlite in closure, 32 macOS-only .m, 3 too
+  large).
+
+FOUND: credo is not interpretable. With linking fixed, 452/453 suites
+halt DECIPULA: 442 on getpid in credo's own setup
+(_credo_aream_ponere), the rest fork/setenv/signal/opendir and two
+macOS-only libraries. credo v2 imports getpid, gettimeofday,
+setjmp/longjmp, fork, waitpid, kill, signal, opendir, setenv,
+nanosleep... - most cannot be bridged sensibly. The cursor's
+differential lane (79/93, 2026-07-24) has been dead since credo v2,
+independently of the link bug. Not fixed in T0 (M5's bar does not
+use the cursor; A2 put the cursor native lane in M5b): parcum
+"credo non interpretabilis" (01M6H28D), with the vendor-softening
+idea for mundum_totum noted there. captare re-bless skipped (every
+suite stops at getpid). Test "cursor sola" therefore asserts link +
+execution ("0 nexus fracti / 1 suites"), not PRAETERIIT.
+
+BARS (T0): bibliothecae 11/11, lanceatores 6/6; plants 3 (variant
+posix -> NIHIL, dedup disabled, enumerator re-capped at 256), all
+red, all IDEM; examen ACCIPE, formator CONFORMIS / under baseline
+(cursor.c 8 -> 7), vocabula NOVA 0. Correction to the header text:
+lib/testa.c is NOT in the world - it is the macOS window shell
+(includes fenestra.h, .m-only), so testa.h is rightly omitted; the
+section "mundus totus" carries signum gravis (350 MiB > 256 MiB).
+
+### T1 — typed call sites (B4) — 2026-11-03
+
+Header approved by Fran as presented (MEDULLA_TYPUS_AGGREGATUM =
+MEDULLA_TYPUS_NUMERUS kept). Medulla now carries, per call, every
+argument's limen type (MedullaFunctio.operanda_typi, parallel to the
+operand stack) and the fixed count of a prototyped variadic call
+(argumenta_fixa; -1 otherwise); parameters carry a limen (aggregate
+params stay i64 registers); EXTERNUM symbols carry a MedullaSignatura
+from semantica (prototyped declarations only). Text grammar (sealed
+vocabulary §IV-VI amended): `T operand` arguments, `aN` / `hKxT` /
+`rN` / `rhKxT` limen types, ` ...` split, `externum` lines after
+`modulus`. HFA detection recursive (struct sum / union max / arrays),
+size-checked. machinula reads the call-site type first (old param
+fallback kept for the untyped builder); conexio refuses discordant
+signatures (extern/extern or extern/definition), naming the symbol,
+via a private side table (public Conexio mirror untouched).
+interpretare's wrapper and hospes emit typed text; hospes calls both
+new rows (81/81).
+
+Deviations from the plan text: (1) the parser has no causa string, so
+the malformed-line test asserts NIHIL + line number (a causa needs a
+new out-param on medulla_textum_legere - public API, not in the
+header); (2) "argumenta_fixa 2 on $externa" contradicted the approved
+header (-1 = non-variadic) - the test follows the header; (3) no f32
+builtin exists (C89 has no sqrtf), so "f32 immediatum" calls an
+interpreted f32 function - meaningful because machinula now prefers
+the call-site type; (4) a fourth plant was added (conexio check
+disabled).
+
+World unchanged: 309 modules / 7485 functions / 541086 instructions,
+0 fractae; no signature conflicts across the corpus.
+
+BARS (T1): officina 18/18 suites, amalgamare VERIFICATUM (hospes
+81/81); goldens re-pinned (aggregata, statica changed; scalaria,
+fluxus identical) - diffs only vocare/functio/externum lines, read;
+plants 4 (dumper drops types -> textus; variadic split +1 ->
+demissio, caught first by the aggregata golden; f32 call-site type
+as raw bits -> machinula, caught first by the vocationes fixture;
+signature check off -> conexio), all red, all IDEM; examen ACCIPE on
+13 files; formator at or under baseline.
+
+### T2 — arca static slot (E14), float branches (E15), census (E17) — 2026-11-03
+
+Header approved by Fran. ARCA no longer moves the stack cursor:
+machinula lays out every arca of a function at freeze time
+(_arcas_disponere: an offset per ARCA instruction, region size and
+largest alignment on the plana), _tabulatum_impellere reserves the
+region right after the registers in the same bump, and ARCA returns
+base + offset. An arca in a loop yields the same slot (the peak had
+grown 16 bytes per iteration: 112 -> 16096 over 1000); each recursion
+frame has its own. A non-immediate size halts "arca sine magnitudine
+immediata". demissio: every branch condition goes through
+_conditionem, which adds `inaequalis.fT x, 0.0` for f32/f64
+conditions (si, dum, fac-dum, per, ternarius, && and || operands);
+-0.0 is now false. Both contracts written into vocabularium §III.
+
+E17 census (decision for Task 7, details in officina_demissio.worklog
+2026-11-03): over fusor -textus lib/ (430 modules / 11992 functions),
+the only s32-written registers reaching a 64-bit use are 129 shift
+counts (blake2b, argon2id, sigillum) - correct C, harmless on aarch64
+(LSLV/LSRV/ASRV take the count mod 64). Zero other sites. Task 7
+therefore refuses "registrum s32 in usu 64" by name, with the shift
+count operand exempt; no sxtw.
+
+Deviation from the plan text: the census outcome is the zero-sites
+branch PLUS a named exemption (shift counts) that the plan's two
+branches did not foresee. "arca recursio" passed before the change as
+well (the old bump gave distinct addresses too); it guards the new
+layout against a per-function (not per-frame) slot.
+
+BARS (T2): officina 17/17 suites (same count as T0), amalgamare
+VERIFICATUM (hospes 81/81); no golden changed; cursor TABULA identical
+to T0 (452 decipulae, 1 sistera, 0 nexus fracti / 453; STDOUT 0
+DIFFERUNT); plants 2 (ARCA bumps the cursor again -> "arca in ansa"
+FRACTA, apex 144 -> 16128; inaequalis emission skipped -> "ramus
+-0.0" FRACTA), both IDEM; examen ACCIPE on 4 files; formator at or
+under baseline; vocabula NOVA 0.
+
+### T3 — codificator_a64, the A64 encoder library (G22-23) — 2026-11-03
+
+Header approved by Fran, with four additions to the plan's text:
+FP-register loads/stores (LDR_FP_IMM, STR_FP_IMM, LDP_FP, STP_FP -
+Task 9 keeps d8-d15 callee-saved and spills float intervals), the
+CodificatorA64Conditio and CodificatorA64Modus enums the plan named
+but never defined, and the register-31 rule (SP in ADD/SUB_IMM,
+logical-immediate Rd and memory bases; XZR elsewhere). 64 formae.
+Field use per forma is a comment block above the struct (UBFM/SBFM:
+immediatum = immr, translatio = imms; FMOV_GEN: translatio =
+direction; SCVTF..FCVTZU: translatio = FP width; FMOV_IMM: immediatum
+= imm8; pairs: rm = Rt2).
+
+lib/codificator_a64.c: one validating encoder per instruction class,
+range-checked before the word is built (no silent truncation, no
+silent SUB-for-negative-ADD). bitmask: smallest repeating period,
+popcount, then the left rotation that brings the run to bit 0 (at
+most 64 tries) - simpler than the LLVM shifted-mask arithmetic and
+obviously exhaustive. constans: MOVN when more 0xFFFF chunks than
+0x0000, else MOVZ, then MOVK (<= 4 words; no ORR-bitmask shortcut,
+YAGNI). Emitter: contiguous word buffer (doubling in the piscina,
+because codificator_a64_verba hands out one pointer), labels in a
+Xar, branches re-encoded at finire with the byte distance; an unset
+label or an out-of-range distance -> FALSUM + causa naming word,
+label and distance.
+
+Golden: probationes/fixa/codificator_a64/semen.tsv (273 hand rows, 66
+of them "!causa" refusals) + 5334 bitmask + 256 FMOV generated rows
+-> tools/codificator_a64_oraculum.sh -> aurum.tsv (5863 rows, 5797
+words from `clang -cc1as -filetype asm -show-encoding`). Re-pin is
+byte-for-byte stable (cmp IDEM, twice). Gates never call clang.
+
+Suite probatio_codificator_a64 (credo v2, root): "aurum" (every row;
+every forma has a row), "bitmask omnes" (all 8192 N:immr:imms triples
+decoded by the suite's own DecodeBitMasks: 5334 valid 64-bit and 1302
+32-bit patterns round-trip; 0, ~0 and junk refused), "fmov omnes"
+(256 imm8 through the suite's own VFPExpandImm; 0.0, -0.0, 0.1, 32.0,
+0.0625, 1.03125 refused), "constans" (10 values, exact word counts,
+hand-simulated MOVZ/MOVN/MOVK, every word present in aurum), "notae"
+(b.ne forward, b backward, cbz at +1048572 and -1048576, one word past
+the edge -> FALSUM + causa, unset label -> FALSUM).
+
+Deviation from the plan text: none in substance. The plan's "~30
+formae" comment was wrong (64). The 4-field-overloads above are
+documentation of the approved struct, not new fields.
+
+BARS (T3): suite red first (stub, 0/5), green 5/5; root suite 463/463 (393 s);
+plants 3 (bitmask rotation +1 -> "bitmask omnes" 9/10 and
+"aurum" FRACTA; LDR scale dropped -> "aurum" FRACTA; fixup sign
+flipped -> "notae" FRACTA), all IDEM; examen ACCIPE on 3 files;
+formator CONFORMIS (formatted in-tree); vocabula NOVA 0 (47 A64
+mnemonics and field names added to the glossary as permitted terms).
+
+### T4 — memoria_exsecutabilis, the executable-memory layer (F18-19) — 2026-11-04
+
+Header approved by Fran with three changes to the plan's text:
+sigillare returns b32 (FALSUM for a range outside the region; write is
+closed either way), a requested address of ZEPHYRUM means "any", and
+the size must be a whole number of 16 KiB pages (refused, not
+rounded). lib/memoria_exsecutabilis_macos.c is the only house file
+with MAP_JIT, pthread_jit_write_protect_np and sys_icache_invalidate:
+one hinted mmap (no MAP_FIXED), refusal + unmap if the kernel places
+it elsewhere; aperire/sigillare flip the per-thread JIT write switch,
+sigillare also invalidates the icache for the range.
+
+Suite probatio_memoria_exsecutabilis (credo v2, root): "scribere
+sigillare vocare" (movz w0,#42; ret -> 42; out-of-range seals FALSUM),
+"rescribere" (same address rewritten to return 7, 200,000 calls, plus
+20,000 alternating 7/9 rewrites), "locus optatus" (base == hint
+0x280000000000; second reservation there NIHIL + causa; free and
+reserve again; bad sizes refused), "furca" (child runs the code, exit
+status 42).
+
+Deviation from the plan text: examen REICE'd the library - its system
+lexicon (silva/fontes/systema_posix.h) lacked PROT_EXEC, MAP_JIT and
+the two functions. Added them (sys/mman.h section + sections pthread.h
+and libkern/OSCacheControl.h), certified in officina/auspex_posix.sh
+(plant MAP_JIT 0x0801 -> DISSENTIT, restored). The five Apple API
+words went into oratio's tolerated set by deliberate regeneration
+(Android precedent); the diff also drops three already-vanished words.
+
+BARS (T4): suite red first (stub, 0/4), green 4/4; officina 17/17;
+root 464/464 (311 s); plants 2 (invalidation removed -> "rescribere"
+FRACTA in the plan's 200,000-call loop: staleness is real on this
+hardware; hint check removed -> "locus optatus" FRACTA) + 1 certifier
+plant, all IDEM; auspex_posix CERTIFICATAE; examen ACCIPE on 3 files;
+formator CONFORMIS (systema_posix.h at its HEAD baseline 17);
+vocabula NOVA 0.
+
+### T5 — officina_medulla_fluxus, medulla analyses (G24) — 2026-11-04
+
+Header approved by Fran (the plan's text; one forced rename: the
+parameter `registrum` is the latina.h macro for `register`, now
+index_registri). officina/fontes/officina_medulla_fluxus.{h,c}:
+successors from the terminator's block operands, predecessors
+(ascending, deduplicated), iterative DFS (reachability, postorder,
+back edges), natural loops (depth; same header merged), backend order
+= RPO with each loop body pulled contiguous behind its header,
+liveness by iteration in postorder, intervals as [min, max] covers of
+block-boundary liveness plus every use and def, call positions for
+live-across-call. Call arguments are read from the operand stack.
+Never writes the function.
+
+Suite probatio_officina_fluxus (officina, credo v2), all expectations
+hand-computed in tables: "praedecessores" ($dum_probat, 11 blocks),
+"ordo" (order 0 1 2 5 7 4 6 3 8 9 10, loop depths, flat-index map
+incl. out-of-range, unreachable @insequens_1 absent and its temp never
+live), "iunctura" (%t1 written in two blocks -> [3, 10]), "usus sine
+definitione" (%u defined on one path -> from 0), "vocationem transit"
+(%c crosses; argument-only %b and call result %d do not), "pactum"
+(fluxus/omnia/summa/aggregata text identical after computare).
+
+Deviation from the plan text: the plant "ramus successors swapped ->
+praedecessores FRACTA" cannot fire (pred sets are order-free); it
+breaks "ordo". Added "second successor dropped" for praedecessores.
+No aedificatio.stml change yet (no launcher uses the module until
+Task 6); the amalgam picked it up through its generated source list
+(fontes_generata.h regenerated; officina.h unchanged).
+
+BARS (T5): suite red first (stub, 0/6), green 6/6; officina 18/18 (17
++ the new suite); amalgamare VERIFICATUM (hospes 81/81, nm 0); root
+suite 463/464 - probatio_http_vocatio flaked under load (connection
+counts in its redirect sections; alone 3/3 green; filed 01M6KJ58);
+plants 3 (b/c swapped -> "ordo"; second successor
+dropped -> "praedecessores" + downstream; later defs ignored ->
+"iunctura" only), all IDEM; examen ACCIPE on 3 files; formator
+CONFORMIS (in-tree); vocabula NOVA 0 (postordo/rpo renamed).
+
+### T6 — NATIVUM + effugium: PAUSED after prep — 2026-11-04
+
+State: header approved by Fran (below); lexicon prep committed
+(888bfbc5a: real struct sigaction union form, siginfo_t, stack_t +
+sigaltstack, ucontext/mcontext pc+fp, SA_/SS_/SIGSTKSZ, sigsetjmp/
+siglongjmp - all certified by officina/auspex_posix.sh). Nothing else
+of T6 is in the tree. Ledger: opus M5 6 stays susceptum.
+
+Why paused: twice, a response writing the effugium implementation
+(the trampoline / entry / escape code in officina_effugium.c) was cut
+off by a safety classifier - not a tool error. The assistant will not
+regenerate that content. Open decision for Fran: (1) Fran writes the
+effugium layer and the assistant does the machinula wiring, define,
+build list, tests, plants and gates; (2) leave M5 paused; (3) revisit
+the plan's native path first. Tasks 7-10 all build on T6.
+
+Approved header (plan text + two additions):
+- officina_effugium.h as in the plan (OFFICINA_NATIVUM_LOCUS
+  0x2FFFF0000000UL, _MENSURA 0x10000000UL; EffugiumGenus REDDITUM/
+  SALTUS/VITIUM; EffugiumFructus; EffugiumArgumenta; parare, area,
+  vocare, salire), PLUS:
+  - `s32 officina_effugium_installationes (vacuum);` - how many times
+    sigaction installed the handler (1 after parare, however often
+    called) - the plan's RF4 test needs it;
+  - officina_effugium_area returns NIHIL before parare.
+- officina_machinula.h: machinula_nativum_ponere as in the plan; NOT
+  added to the amalgam's public officina.h yet (no hospes row needed).
+- officina_conexio.h: CONEXIO_SIGNUM_NATIVUM 4 (index = entry address).
+- Handler chains to the previous action (incl. credo's); SIG_DFL or
+  SIG_IGN -> reset and re-raise.
+
+Scope decided for T6:
+- NATIVUM arm marshals register-class scalars only (ints -> x, f32/f64
+  -> d as bit patterns; f32 in the low half), typed from the call
+  site's MedullaTypusLiminis. Untyped argument -> halt (the plant).
+  Aggregates, > 8 of a class (stack), variadic calls, %reditus -> halt
+  naming Task 8 (the plan gives them to Task 8, incl. the entry thunk
+  side).
+- Return: x0 canonicalised by the call's typus; f64 = d0 bits; f32 =
+  low 32 bits of d0.
+- SALTUS -> MACHINULA_VITIUM with codex = trap code; VITIUM ->
+  MACHINULA_VITIUM, nuntius naming signal and pc. Machinula reusable.
+- Native top function in aperire/currere: called directly (params
+  zero), result typed by the function's typus_reditus (found via the
+  symbol's modulus_index/index_localis); aperire returns FALSUM with
+  genus BENE (already finished; not steppable).
+- Indirect-call signum check must accept NATIVUM. Only aperire and the
+  VOCARE arm read a FUNCTIO descriptor's index (checked).
+- Process-global state: own permanent piscina inside parare (credo
+  section piscinas die after each section); altstack static.
+- Trampoline occupies [0, 0x1000) of the area; hand-written test code
+  goes after it. An extra test section exercises the trampoline's
+  stack-word copy (stack args are otherwise first used in Task 8).
+- officina/compile_probationes.sh RADIX_FONTES needs "codificator_a64"
+  and "memoria_exsecutabilis_macos".
+
+Step split agreed with Fran (one T6 commit at the end):
+1. area + trampoline + vocare + salire (no signals) - tests: native
+   return through the trampoline, stack words, salire -> SALTUS.
+2. fault handler (once, on sigaltstack, chaining) - tests: null load
+   -> VITIUM and process survives; installationes == 1; plant:
+   handler not chaining.
+3. machinula seam - the plan's "nativum vocatum" (use an f64 argument
+   so untyped marshalling fails the plant), "nativum principale",
+   "saltus" (reuse after halt), "transitus iteratus" (10^6 calls,
+   constant stack apex); plant: untyped args.

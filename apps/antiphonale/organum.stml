@@ -1,0 +1,24 @@
+<!-- organum.stml - manifestum antiphonalis (gabc pars II P6, spec
+     project-specs/gabc-spec.md V): cantus gabc in latere vici. Via
+     plagulae = argumentum (identitas lateris); versio, specula et
+     vexillum in memoria montationis, numquam in statu - hic solum
+     status visus, persistens. -->
+<organum genus="antiphonale" versio="1">
+
+  <actiones>
+    <actio nomen="antiphonale.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="pagina" typus="numerus" vita="persistens"
+            scriptor="antiphonale.agere"
+            nota="pagina visa (ab 0); ultra finem = ultima"/>
+    <campus nomen="spatium" typus="numerus" vita="persistens"
+            scriptor="antiphonale.agere"
+            nota="spatium systematis, par VI..XLVIII ('+' '-'); absens
+                  = VIII"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

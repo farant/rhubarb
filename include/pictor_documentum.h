@@ -97,11 +97,31 @@ pictor_disci_pixelum (
 
 /* S3e: bibliotheca - spatia omnium documentorum pictoris in volumine
  * (plagulae originis "pictor:documentum"), ordine viae; Xar de chorda
- * ("" = documentum nudum radicis) */
+ * ("" = documentum nudum radicis). Praeter "aliena/" (communio) et
+ * "negotia/" (paginae negotiorum, negotia-paginae T4: picturae
+ * negotio propriae, non bibliothecae) - ergo nec in recentibus */
 Xar*
 pictor_documenta_enumerare (
      Volumen* volumen,
      Piscina* piscina);
+
+/* negotia-paginae T4: documentum spatii exstat (plagula
+ * "<spatium>/documentum" originis pictor:documentum), etiam extra
+ * bibliothecam ("negotia/<id>") */
+b32
+pictor_documentum_exstat (
+               Volumen* volumen,
+    constans character* spatium,
+               Piscina* piscina);
+
+/* negotia-paginae T4: seq actus ultimi picturae - ictus, ramus,
+ * cursor, coniunctio aut conditio plagulae, actis propriis solis (ut
+ * pictor_documenta_recentia); 0 si pictura ignota */
+s64
+pictor_documentum_ultimum (
+               Volumen* volumen,
+    constans character* spatium,
+               Piscina* piscina);
 
 /* pinacotheca (spec D5): pictura et seq actus sui ultimi - ictus,
  * ramus, cursor, coniunctio historiae suae, aut conditio plagulae

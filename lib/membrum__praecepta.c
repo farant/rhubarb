@@ -91,6 +91,31 @@ praecepta_clavis_congruit (
             && ev->datum.clavis.clavis == (forma[ZEPHYRUM] == 'U'
                    ? CLAVIS_SURSUM : CLAVIS_DEORSUM);
     }
+    /* negotia-paginae T3b: Super (Cmd) + littera, sine ceteris */
+    si (forma[ZEPHYRUM] == 's' && forma[I] == '-' && forma[II] != '\0')
+    {
+        redde (mod & (i32)MOD_SUPER)
+            && !(mod & (i32)(MOD_SHIFT | MOD_IMPERIUM | MOD_ALT))
+            && ev->datum.clavis.runa == (s32)(insignatus character)
+            forma[II];
+    }
+    /* gabc pars II P6: sagittae laterales et paginae, sine
+     * modificatoribus */
+    si (   strcmp(forma, "Left")     == ZEPHYRUM
+        || strcmp(forma, "Right")    == ZEPHYRUM
+        || strcmp(forma, "PageUp")   == ZEPHYRUM
+        || strcmp(forma, "PageDown") == ZEPHYRUM)
+    {
+        clavis_t c;
+
+        c = forma[ZEPHYRUM] == 'L' ? CLAVIS_SINISTER
+            : forma[ZEPHYRUM] == 'R' ? CLAVIS_DEXTER
+            : forma[IV]
+              == 'U' ? CLAVIS_PAGINA_SURSUM : CLAVIS_PAGINA_DEORSUM;
+        redde !(mod & (i32)(MOD_SHIFT | MOD_IMPERIUM | MOD_ALT
+            | MOD_SUPER))
+            && ev->datum.clavis.clavis == c;
+    }
     si (forma[ZEPHYRUM] == 'C' && forma[I] == '-')
     {
         redde (mod & (i32)MOD_IMPERIUM)

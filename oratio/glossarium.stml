@@ -1076,6 +1076,7 @@
   <vocabulum lemma="offsetum" lingua="latina" classis="substantivum" nota="offset Latinizatum, declinatio secunda (ut internamentum); entrium Anglicum 'offset' supra manet pro identificatoribus nudis (fasti_ex_iso, 2026-09-11)">
     <forma textus="offsetum" casus="nominativus" numerus="singularis" genus="neutrum"/>
   </vocabulum>
+  <vocabulum lemma="hfa" lingua="anglica" classis="ignotum-permissum" nota="AAPCS64 homogeneous floating-point aggregate (officina M5 B4: MedullaTypusLiminis.hfa_typus, 2026-11-03)"/>
   <vocabulum lemma="index" lingua="anglica" classis="ignotum-permissum" nota="sedes 3854"/>
   <vocabulum lemma="token" lingua="anglica" classis="ignotum-permissum" nota="sedes 3729">
     <forma textus="tokens"/>
@@ -1119,6 +1120,8 @@
   <vocabulum lemma="kqueue" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis BSD/Darwin (cauda notitiarum nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="kevent" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis et structurae BSD/Darwin (notitia nuclei); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="evtonly" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri O_EVTONLY (Darwin: descriptor solum pro notitiis); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
+  <vocabulum lemma="realpath" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen functionis POSIX stdlib.h (via absoluta canonica); systema_posix.h 2026-11-05 pro praeco antiphonale (gabc pars II P8)"/>
+  <vocabulum lemma="attrib" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri NOTE_ATTRIB (kqueue: attributa plagulae mutata - truncatio ad nihil); systema_posix.h 2026-11-04 pro specula (gabc pars II P6)"/>
   <vocabulum lemma="evfilt" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EVFILT_VNODE (filtrum kqueue); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="vnode" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EVFILT_VNODE (nodus plagulae in nucleo BSD); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
   <vocabulum lemma="clear" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pars macri EV_CLEAR (kqueue: nota semel redditur); systema_posix.h 2026-10-26 pro specula (vicus quies T6c)"/>
@@ -2038,6 +2041,66 @@
   <vocabulum lemma="nmtoken" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus XML 1.0 (par. 2.3): Nmtoken, signum nominis quodvis NameChar incipiens (xml/fontes/xml_nomina.c)"/>
   <vocabulum lemma="xmlts" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: XML W3C Conformance Test Suite (xmlts20130923), oraculum clientis xml (xml/xmlts_arcessere.sh)"/>
   <vocabulum lemma="qname" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus Namespaces in XML 1.0: QName, titulus qualificatus (praefixum ':' pars localis; xml/fontes/xml_coctum.c)"/>
+  <vocabulum lemma="adds" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: ADDS (additio cum signis) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="adr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: ADR (inscriptio relativa ad PC) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="adrp" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: ADRP (pagina relativa ad PC) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="asrv" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: ASRV (translatio arithmetica variabilis) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="blr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: BLR (saltus cum nexu per registrum) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="cbnz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: CBNZ (saltus si non nihil) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="cbz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: CBZ (saltus si nihil) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="csel" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: CSEL (electio condicionalis) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="csinc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: CSINC (electio cum incremento; cset) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fadd" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FADD (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fcmp" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FCMP (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fcvt" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FCVT (conversio S<->D) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fdiv" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FDIV (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fmov" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FMOV (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fmul" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FMUL (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fneg" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FNEG (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fsub" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FSUB (lib/codificator_a64.c)"/>
+  <vocabulum lemma="ldp" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: LDP (lectio paris) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="ldr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: LDR (lectio) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="ldrs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: LDRS* (lectio cum signo extenso) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="lslv" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: LSLV (lib/codificator_a64.c)"/>
+  <vocabulum lemma="lsrv" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: LSRV (lib/codificator_a64.c)"/>
+  <vocabulum lemma="madd" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: MADD (lib/codificator_a64.c)"/>
+  <vocabulum lemma="movk" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: MOVK (motus servans) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="movn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: MOVN (motus negatus) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="movz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: MOVZ (motus cum zephyris) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="msub" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: MSUB (lib/codificator_a64.c)"/>
+  <vocabulum lemma="orn" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: ORN (lib/codificator_a64.c)"/>
+  <vocabulum lemma="orr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: ORR (vel) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="sbfm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: SBFM (campus bitorum signatus) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="sdiv" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: SDIV (lib/codificator_a64.c)"/>
+  <vocabulum lemma="stp" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: STP (scriptio paris) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="subs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: SUBS (subtractio cum signis; cmp) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="ubfm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: UBFM (campus bitorum insignatus) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="udiv" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: UDIV (lib/codificator_a64.c)"/>
+  <vocabulum lemma="bitmask" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: immediatum logicum (exemplar bitorum repetitum, N:immr:imms) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="imm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: immediatum in nominibus formarum (ADD_IMM, LDR_IMM) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="imm8" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: campus imm8 FMOV immediati (VFPExpandImm) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="immr" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: campus immr (rotatio) immediati logici et UBFM/SBFM (lib/codificator_a64.c)"/>
+  <vocabulum lemma="imms" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: campus imms (magnitudo cursus) immediati logici et UBFM/SBFM (lib/codificator_a64.c)"/>
+  <vocabulum lemma="brk" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: BRK (decipula) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fcvtzs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FCVTZS (fluitans -> integer signatus, ad zephyrum) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="fcvtzu" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: FCVTZU (fluitans -> integer insignatus, ad zephyrum) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="imm16" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: campus imm16 MOVZ/MOVK/MOVN et BRK (lib/codificator_a64.c)"/>
+  <vocabulum lemma="opc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="terminus A64: campus opc (codex operationis) in verbo instructionis (lib/codificator_a64.c)"/>
+  <vocabulum lemma="scvtf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: SCVTF (integer signatus -> fluitans) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="ucvtf" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="mnemonicum A64: UCVTF (integer insignatus -> fluitans) (lib/codificator_a64.c)"/>
+  <vocabulum lemma="revisio" lingua="latina" classis="substantivum" nota="Latina media (revisere): mutatio servata rei stantis, actum unum in volumine; negotia_revisiones (include/negotia.h)">
+    <forma textus="revisio" casus="nominativus" numerus="singularis" genus="femininum"/>
+    <forma textus="revisionis" casus="genitivus" numerus="singularis" genus="femininum"/>
+    <forma textus="revisiones" casus="nominativus" numerus="pluralis" genus="femininum"/>
+    <forma textus="revisionum" casus="genitivus" numerus="pluralis" genus="femininum"/>
+  </vocabulum>
+  <vocabulum lemma="aperitor" lingua="latina" classis="substantivum" nota="vox domus (aperire; classice apertor): qui latus aperit pro genere virtuali anuli vici; VicusAperitor, vicus_aperitorem_addere (include/vicus.h, negotia T5)">
+    <forma textus="aperitor" casus="nominativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitoris" casus="genitivus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitorem" casus="accusativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitore" casus="ablativus" numerus="singularis" genus="masculinum"/>
+    <forma textus="aperitores" casus="nominativus" numerus="pluralis" genus="masculinum"/>
+  </vocabulum>
 
   <!-- gabc T1 (2026-11-03): cantus Gregorianus - nomina neumarum et signorum notationis quadratae (include/gabc.h); termini Latini medii aevi et Solesmenses -->
   <vocabulum lemma="gabc" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen formae (textus cantus Gregoriani, Gregorio), ut plist / musicxml; bibliotheca gabc 2026-11-03"/>

@@ -65,6 +65,20 @@ _sectio_plagula (
     CREDO_VERUM(specula_exhaurire(s));
     CREDO_FALSUM(legenda(s, ZEPHYRUM));
 
+    CREDO_GRADUS("truncata ad nihil (fopen w sine scriptura): videtur");
+    CREDO_NECESSE(filum_scribere_literis(via, ""));
+    CREDO_VERUM(legenda(s, CC));
+    CREDO_VERUM(specula_exhaurire(s));
+    CREDO_FALSUM(legenda(s, ZEPHYRUM));
+
+    CREDO_GRADUS("lectio sola (atime): nihil - lector se non excitat");
+    CREDO_NECESSE(filum_appendere_literis(via, "d\n"));
+    CREDO_VERUM(specula_exhaurire(s));
+    (vacuum)filum_legere_totum(via, c->piscina);
+    (vacuum)filum_legere_totum(via, c->piscina);
+    CREDO_FALSUM(legenda(s, L));
+    CREDO_FALSUM(specula_exhaurire(s));
+
     CREDO_GRADUS("claudere: fossa -1, iterum licet");
     specula_claudere(s);
     CREDO_AEQUALIS_S32(specula_fossa(s), -I);

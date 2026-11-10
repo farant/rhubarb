@@ -344,7 +344,7 @@ nomen structura {
        s32 intentiones;  /* -1 a basi, 0 vetitae, 1 liberae */
 } CarmenStylus;
 
-nomen structura {
+nomen structura Carmen {
            chorda  titulus;
      CantusTempus* tempora;           /* mappa SONANDI (clivi in
                                        * gradus), quadra computata */

@@ -209,7 +209,7 @@ _sectio_tertia (
             "\n"
             "functio $exiens () -> s32\n"
             "@initium:\n"
-            "    vocare $exit, 7\n"
+            "    vocare $exit, s32 7\n"
             "    redde 0\n"
             "\n"
             "functio $abyssus () -> s32\n"
@@ -261,12 +261,13 @@ _sectio_quarta (
             "\n"
             "functio $main () -> s32\n"
             "@initium:\n"
-            "    %p = vocare.i64 $malloc, 64\n"
-            "    %n = vocare.s32 $snprintf, %p, 64, $forma, 6, 7\n"
-            "    %l = vocare.i64 $strlen, %p\n"
+            "    %p = vocare.i64 $malloc, i64 64\n"
+            "    %n = vocare.s32 $snprintf, i64 %p, i64 64,"
+            " i64 $forma ... s32 6, s32 7\n"
+            "    %l = vocare.i64 $strlen, i64 %p\n"
             "    %t1 = amputare.i64.s32 %l\n"
             "    %t2 = addere.s32 %t1, %n\n"
-            "    vocare $free, %p\n"
+            "    vocare $free, i64 %p\n"
             "    %t3 = multiplicare.s32 %t2, 3\n"
             "    redde %t3\n"
             "\n"
@@ -310,9 +311,9 @@ _sectio_quinta (
             "\n"
             "functio $main () -> s32\n"
             "@initium:\n"
-            "    %v1 = vocare.s64 $time, 0\n"
+            "    %v1 = vocare.s64 $time, i64 0\n"
             "    %p = arca 8, 8\n"
-            "    %v2 = vocare.s64 $time, %p\n"
+            "    %v2 = vocare.s64 $time, i64 %p\n"
             "    %w = legere.s64 %p\n"
             "    %aeq = aequalis.s64 %v2, %w\n"
             "    %post = maior.s64 %v1, 1577836800\n"
@@ -360,27 +361,29 @@ _sectio_sexta (
             "@initium:\n"
             "    %via = locus $via_pr\n"
             "    %mw = locus $modus_w\n"
-            "    %pl = vocare.s64 $fopen, %via, %mw\n"
+            "    %pl = vocare.s64 $fopen, i64 %via, i64 %mw\n"
             "    %ok1 = maior_aequalis.s64 %pl, 3\n"
-            "    %c = vocare.s32 $fputc, 65, %pl\n"
+            "    %c = vocare.s32 $fputc, s32 65, i64 %pl\n"
             "    %ok2 = aequalis.s32 %c, 65\n"
             "    %bc = locus $bc_datum\n"
-            "    %w = vocare.s64 $fwrite, %bc, 1, 2, %pl\n"
+            "    %w = vocare.s64 $fwrite, i64 %bc, i64 1, i64 2,"
+            " i64 %pl\n"
             "    %ok3 = aequalis.s64 %w, 2\n"
-            "    %t = vocare.s64 $ftell, %pl\n"
+            "    %t = vocare.s64 $ftell, i64 %pl\n"
             "    %ok4 = aequalis.s64 %t, 3\n"
-            "    %f1 = vocare.s32 $fclose, %pl\n"
+            "    %f1 = vocare.s32 $fclose, i64 %pl\n"
             "    %ok5 = aequalis.s32 %f1, 0\n"
             "    %arca_st = arca 144, 8\n"
-            "    %st = vocare.s32 $stat, %via, %arca_st\n"
+            "    %st = vocare.s32 $stat, i64 %via, i64 %arca_st\n"
             "    %ok6 = aequalis.s32 %st, 0\n"
             "    %p_sz = addere.i64 %arca_st, 96\n"
             "    %sz = legere.s64 %p_sz\n"
             "    %ok7 = aequalis.s64 %sz, 3\n"
             "    %mr = locus $modus_r\n"
-            "    %pl2 = vocare.s64 $fopen, %via, %mr\n"
+            "    %pl2 = vocare.s64 $fopen, i64 %via, i64 %mr\n"
             "    %buf = arca 8, 8\n"
-            "    %r = vocare.s64 $fread, %buf, 1, 3, %pl2\n"
+            "    %r = vocare.s64 $fread, i64 %buf, i64 1, i64 3,"
+            " i64 %pl2\n"
             "    %ok8 = aequalis.s64 %r, 3\n"
             "    %b0 = legere.i8 %buf\n"
             "    %p1 = addere.i64 %buf, 1\n"
@@ -390,16 +393,16 @@ _sectio_sexta (
             "    %s01 = addere.s32 %b0, %b1\n"
             "    %sum = addere.s32 %s01, %b2\n"
             "    %ok9 = aequalis.s32 %sum, 198\n"
-            "    %f2 = vocare.s32 $fclose, %pl2\n"
-            "    %rm = vocare.s32 $remove, %via\n"
+            "    %f2 = vocare.s32 $fclose, i64 %pl2\n"
+            "    %rm = vocare.s32 $remove, i64 %via\n"
             "    %ok10 = aequalis.s32 %rm, 0\n"
             "    %tv = arca 16, 8\n"
-            "    %g = vocare.s32 $gettimeofday, %tv\n"
+            "    %g = vocare.s32 $gettimeofday, i64 %tv\n"
             "    %ok11 = aequalis.s32 %g, 0\n"
             "    %sec = legere.s64 %tv\n"
             "    %ok12 = maior.s64 %sec, 0\n"
             "    %cwb = arca 256, 8\n"
-            "    %cw = vocare.s64 $getcwd, %cwb, 256\n"
+            "    %cw = vocare.s64 $getcwd, i64 %cwb, i64 256\n"
             "    %ok13 = inaequalis.s64 %cw, 0\n"
             "    %e1 = et.i32 %ok1, %ok2\n"
             "    %e2 = et.i32 %e1, %ok3\n"
@@ -510,6 +513,171 @@ _sectio_septima (
     }
 }
 
+
+/* ==================================================
+ * PROBARE: litera f32 per typum loci vocationis (M5 B4) - typus
+ * argumenti ex vocatione, non ex parametris vocati
+ * ================================================== */
+
+interior vacuum
+_sectio_f32 (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* textus_literis =
+        "modulus \"f32.medulla\"\n"
+        "\n"
+        "functio $dimidium (f32 %x) -> f32\n"
+        "@initium:\n"
+        "    %y = multiplicare.f32 %x, 0.5\n"
+        "    redde %y\n"
+        "\n"
+        "functio $main () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.f32 $dimidium, f32 4.0\n"
+        "    %i = integrare.f32.s32 %r\n"
+        "    redde %i\n";
+        Regio* regio = NIHIL;
+    Machinula* machinula = _machinulam_parare(piscina,
+        _ch(textus_literis), &regio);
+    MachinulaExitus exitus;
+
+    CREDO_NON_NIHIL (machinula);
+    si (machinula == NIHIL)
+    {
+        redde;
+    }
+    exitus = machinula_currere(machinula, _ch("main"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)II);
+    regio_destruere(regio);
+}
+
+
+/* ==================================================
+ * PROBARE: arca = locellus staticus per instructionem (M5 E14)
+ * - arca in ansa eundem locellum reddit, ergo apex stivae post
+ * M iterationes idem ac post unam; recursio: locellus proprius
+ * per tabulatum (scriptura ante vocationem post eam manet)
+ * ================================================== */
+
+interior vacuum
+_sectio_arca_ansa (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* textus_literis =
+        "modulus \"arca_ansa.medulla\"\n"
+        "\n"
+        "functio $par () -> s32\n"
+        "@initium:\n"
+        "    %p = arca 16, 8\n"
+        "    scribere.s32 %p, 42\n"
+        "    %v = legere.s32 %p\n"
+        "    redde %v\n"
+        "\n"
+        "functio $ansa (s32 %n) -> s32\n"
+        "@initium:\n"
+        "    %i = movere.s32 0\n"
+        "    %v = movere.s32 0\n"
+        "    salire @proba\n"
+        "@proba:\n"
+        "    %c = minor.s32 %i, %n\n"
+        "    ramus %c -> @corpus | @finis\n"
+        "@corpus:\n"
+        "    %q = arca 16, 8\n"
+        "    %v = vocare.s32 $par\n"
+        "    scribere.s32 %q, %v\n"
+        "    %v = legere.s32 %q\n"
+        "    %i = addere.s32 %i, 1\n"
+        "    salire @proba\n"
+        "@finis:\n"
+        "    redde %v\n"
+        "\n"
+        "functio $unus () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $ansa, s32 1\n"
+        "    redde %r\n"
+        "\n"
+        "functio $mille () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $ansa, s32 1000\n"
+        "    redde %r\n";
+        Regio* regio = NIHIL;
+    Machinula* machinula = _machinulam_parare(piscina,
+        _ch(textus_literis), &regio);
+    MachinulaExitus exitus;
+     memoriae_index apex_unius;
+
+    CREDO_NON_NIHIL (machinula);
+    si (machinula == NIHIL)
+    {
+        redde;
+    }
+    exitus = machinula_currere(machinula, _ch("unus"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+    apex_unius  = machinula_stiva_apex(machinula);
+    exitus      = machinula_currere(machinula, _ch("mille"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+    si (machinula_stiva_apex(machinula) != apex_unius)
+    {
+        imprimere("FRACTA apex: unus %lu, mille %lu\n",
+            (unsigned long)apex_unius,
+            (unsigned long)machinula_stiva_apex(machinula));
+    }
+    CREDO_VERUM (machinula_stiva_apex(machinula) == apex_unius);
+    regio_destruere(regio);
+}
+
+interior vacuum
+_sectio_arca_recursio (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* textus_literis =
+        "modulus \"arca_recursio.medulla\"\n"
+        "\n"
+        "functio $gradus (s32 %n, i64 %prior) -> s32\n"
+        "@initium:\n"
+        "    %p = arca 16, 8\n"
+        "    scribere.s32 %p, %n\n"
+        "    %dist = inaequalis.i64 %p, %prior\n"
+        "    %z = aequalis.s32 %n, 0\n"
+        "    ramus %z -> @fundus | @altius\n"
+        "@fundus:\n"
+        "    %r0 = multiplicare.s32 %dist, 42\n"
+        "    redde %r0\n"
+        "@altius:\n"
+        "    %m = subtrahere.s32 %n, 1\n"
+        "    %r = vocare.s32 $gradus, s32 %m, i64 %p\n"
+        "    %w = legere.s32 %p\n"
+        "    %idem = aequalis.s32 %w, %n\n"
+        "    %t1 = multiplicare.s32 %r, %dist\n"
+        "    %t2 = multiplicare.s32 %t1, %idem\n"
+        "    redde %t2\n"
+        "\n"
+        "functio $main () -> s32\n"
+        "@initium:\n"
+        "    %r = vocare.s32 $gradus, s32 5, i64 0\n"
+        "    redde %r\n";
+        Regio* regio = NIHIL;
+    Machinula* machinula = _machinulam_parare(piscina,
+        _ch(textus_literis), &regio);
+    MachinulaExitus exitus;
+
+    CREDO_NON_NIHIL (machinula);
+    si (machinula == NIHIL)
+    {
+        redde;
+    }
+    exitus = machinula_currere(machinula, _ch("main"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+    regio_destruere(regio);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "fixturas (exsecutio -> 42)", _sectio_prima, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -521,6 +689,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "time aedificatum", _sectio_quinta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ansas plagularum", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "numeratores", _sectio_septima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "f32 immediatum", _sectio_f32, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arca in ansa", _sectio_arca_ansa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "arca recursio", _sectio_arca_recursio, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

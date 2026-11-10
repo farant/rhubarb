@@ -80,6 +80,7 @@ _instructio (
     instructio.typus_secundus  = MEDULLA_TYPUS_NIHIL;
     instructio.destinatio      = destinatio;
     instructio.extra_index     = -I;
+    instructio.argumenta_fixa  = -I;
     instructio.a               = a;
     instructio.b               = b;
     instructio.c               = medulla_op_nihil();
@@ -368,6 +369,281 @@ _sectio_sexta (
     }
 }
 
+
+/* ==================================================
+ * PROBARE: vocare typata (M5 B4) - argumenta typata, ' ... '
+ * fixa a variadicis separat, externum signaturam fert
+ * ================================================== */
+
+interior constans MedullaFunctio*
+_functionem_invenire (
+    constans MedullaModulus* modulus,
+         constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(modulus->functiones); i++)
+    {
+        MedullaFunctio** functio = (MedullaFunctio**)xar_obtinere(
+            modulus->functiones, i);
+
+        si (chorda_aequalis_literis((*functio)->titulus, titulus))
+        {
+            redde *functio;
+        }
+    }
+    redde NIHIL;
+}
+
+interior constans MedullaSignatura*
+_signaturam_invenire (
+    constans MedullaModulus* modulus,
+         constans character* titulus)
+{
+    i32 i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(modulus->symbola); i++)
+    {
+        constans MedullaSymbolum* symbolum =
+            medulla_symbolum_obtinere(modulus, (s32)i);
+
+        si (   chorda_aequalis_literis(symbolum->titulus, titulus)
+            && symbolum->signatura >= ZEPHYRUM)
+        {
+            redde (constans MedullaSignatura*)xar_obtinere(
+                modulus->signaturae, (i32)symbolum->signatura);
+        }
+    }
+    redde NIHIL;
+}
+
+/* lineae -> chorda una in piscina (litterae > DIX characteres C89
+ * vetat) */
+interior chorda
+_lineas_iungere (
+                Piscina*  piscina,
+     constans character** lineae,
+                    i32   numerus)
+{
+    chorda fructus;
+       i32 summa = ZEPHYRUM;
+       i32 i;
+
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        summa += (i32)strlen(lineae[i]);
+    }
+    fructus.datum = (i8*)piscina_allocare(piscina,
+        (memoriae_index)summa + I);
+    fructus.mensura = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < numerus; i++)
+    {
+        i32 longitudo = (i32)strlen(lineae[i]);
+
+        memcpy(fructus.datum + fructus.mensura, lineae[i],
+            (memoriae_index)longitudo);
+        fructus.mensura += longitudo;
+    }
+    redde fructus;
+}
+
+interior vacuum
+_sectio_typata (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+    constans character* lineae[] = {
+        "modulus \"typata.c\"\n",
+        "externum $externa (s32, f64) -> s32\n",
+        "externum $scribens (s32, ...) -> s32\n",
+        "externum $facere (r8, s32, s32) -> vacuum\n",
+        "externum $printf (i64, ...) -> s32\n",
+        "externum $vectores (rh2xf64, h2xf64, h4xf32, a24) -> vacuum\n",
+        "\n",
+        "functio $duplicare (r8 %reditus, a8 %p) -> vacuum\n",
+        "@initium:\n",
+        "    copia %reditus, %p, 8\n",
+        "    redde\n",
+        "\n",
+        "functio $voca (s32 %n) -> s32\n",
+        "@initium:\n",
+        "    %t1 = addere.s32 %n, 1\n",
+        "    %t2 = vocare.s32 $externa, s32 %t1, f64 2.5\n",
+        "    %t3 = vocare.s32 $scribens, s32 2 ... s32 %n, s64 7\n",
+        "    %t4 = arca 8, 4\n",
+        "    vocare $facere, r8 %t4, s32 %n, s32 %t1\n",
+        "    %t5 = vocare.s32 $printf, i64 $forma ...\n",
+        "    vocare $duplicare, r8 %t4, a8 %t4\n",
+        "    redde %t2\n"
+    };
+             chorda canon = _lineas_iungere(piscina, lineae,
+                 (i32)(magnitudo(lineae)
+                     / magnitudo(lineae[ZEPHYRUM])));
+                i32  linea = ZEPHYRUM;
+     MedullaModulus* modulus = medulla_textum_legere(piscina, canon,
+         &linea);
+
+    CREDO_NON_NIHIL (modulus);
+    CREDO_AEQUALIS_I32 ((i32)linea, ZEPHYRUM);
+    si (modulus == NIHIL)
+    {
+        redde;
+    }
+    /* vectis: dump(parse(t)) == t */
+    CREDO_CHORDA_AEQUALIS (medulla_textum_scribere(piscina, modulus),
+        canon);
+
+    /* structura: argumenta_fixa et typi in stiva parallela */
+    {
+        constans MedullaFunctio* voca = _functionem_invenire(modulus,
+            "voca");
+             constans MedullaBloccus* bloccus;
+          constans MedullaInstructio* externa;
+          constans MedullaInstructio* scribens;
+        constans MedullaTypusLiminis* typus;
+
+        CREDO_NON_NIHIL ((constans vacuum*)voca);
+        si (voca == NIHIL)
+        {
+            redde;
+        }
+        bloccus  = medulla_bloccum_obtinere(voca, ZEPHYRUM);
+        externa  = (constans MedullaInstructio*)xar_obtinere(
+            bloccus->instructiones, I);
+        scribens = (constans MedullaInstructio*)xar_obtinere(
+            bloccus->instructiones, II);
+        CREDO_AEQUALIS_S32 (externa->argumenta_fixa, -I);
+        CREDO_AEQUALIS_S32 (scribens->argumenta_fixa, I);
+        CREDO_AEQUALIS_S32 (scribens->extra_numerus, III);
+        typus = (constans MedullaTypusLiminis*)xar_obtinere(
+            voca->operanda_typi,
+            (i32)(scribens->extra_index + II));
+        CREDO_NON_NIHIL ((constans vacuum*)typus);
+        CREDO_AEQUALIS_S32 (typus->typus, MEDULLA_TYPUS_S64);
+        typus = (constans MedullaTypusLiminis*)xar_obtinere(
+            voca->operanda_typi,
+            (i32)(externa->extra_index + I));
+        CREDO_AEQUALIS_S32 (typus->typus, MEDULLA_TYPUS_F64);
+    }
+    /* parametra aggregata: typus registri i64, limen aggregatum */
+    {
+        constans MedullaFunctio* duplicare = _functionem_invenire(
+            modulus, "duplicare");
+        constans MedullaParametrum* reditus;
+        constans MedullaParametrum* p;
+
+        CREDO_NON_NIHIL ((constans vacuum*)duplicare);
+        si (duplicare == NIHIL)
+        {
+            redde;
+        }
+        reditus = (constans MedullaParametrum*)xar_obtinere(
+            duplicare->parametra, ZEPHYRUM);
+        p = (constans MedullaParametrum*)xar_obtinere(
+            duplicare->parametra, I);
+        CREDO_AEQUALIS_S32 (reditus->typus, MEDULLA_TYPUS_I64);
+        CREDO_VERUM (reditus->limen.est_reditus);
+        CREDO_AEQUALIS_S32 (p->typus, MEDULLA_TYPUS_I64);
+        CREDO_AEQUALIS_S32 (p->limen.typus, MEDULLA_TYPUS_AGGREGATUM);
+        CREDO_AEQUALIS_I32 (p->limen.magnitudo_octetorum, VIII);
+        CREDO_AEQUALIS_S32 (p->limen.hfa_typus, MEDULLA_TYPUS_NIHIL);
+        CREDO_FALSUM (p->limen.est_reditus);
+    }
+    /* signaturae externorum */
+    {
+        constans MedullaSignatura* facere = _signaturam_invenire(
+            modulus, "facere");
+        constans MedullaSignatura* vectores = _signaturam_invenire(
+            modulus, "vectores");
+        constans MedullaSignatura* printf_s = _signaturam_invenire(
+            modulus, "printf");
+        constans MedullaTypusLiminis* limen;
+
+        CREDO_NON_NIHIL ((constans vacuum*)facere);
+        CREDO_NON_NIHIL ((constans vacuum*)vectores);
+        CREDO_NON_NIHIL ((constans vacuum*)printf_s);
+        si (facere == NIHIL || vectores == NIHIL || printf_s == NIHIL)
+        {
+            redde;
+        }
+        CREDO_AEQUALIS_S32 (facere->typus_reditus,
+            MEDULLA_TYPUS_NIHIL);
+        CREDO_FALSUM (facere->est_variadica);
+        CREDO_AEQUALIS_I32 (xar_numerus(facere->parametra), III);
+        limen = (constans MedullaTypusLiminis*)xar_obtinere(
+            facere->parametra, ZEPHYRUM);
+        CREDO_VERUM (limen->est_reditus);
+        CREDO_AEQUALIS_I32 (limen->magnitudo_octetorum, VIII);
+        CREDO_VERUM (printf_s->est_variadica);
+        CREDO_AEQUALIS_I32 (xar_numerus(printf_s->parametra), I);
+        limen = (constans MedullaTypusLiminis*)xar_obtinere(
+            vectores->parametra, ZEPHYRUM);
+        CREDO_VERUM (limen->est_reditus);
+        CREDO_AEQUALIS_S32 (limen->hfa_typus, MEDULLA_TYPUS_F64);
+        CREDO_AEQUALIS_I32 (limen->magnitudo_octetorum, XVI);
+        limen = (constans MedullaTypusLiminis*)xar_obtinere(
+            vectores->parametra, II);
+        CREDO_AEQUALIS_S32 (limen->hfa_typus, MEDULLA_TYPUS_F32);
+        CREDO_AEQUALIS_I32 (limen->magnitudo_octetorum, XVI);
+        limen = (constans MedullaTypusLiminis*)xar_obtinere(
+            vectores->parametra, III);
+        CREDO_AEQUALIS_S32 (limen->typus, MEDULLA_TYPUS_AGGREGATUM);
+        CREDO_AEQUALIS_I32 (limen->magnitudo_octetorum, XXIV);
+        CREDO_AEQUALIS_S32 (limen->hfa_typus, MEDULLA_TYPUS_NIHIL);
+    }
+}
+
+/* lector strictus: argumentum sine typo, typi mali, externum post
+ * functionem - omnes recusati cum linea */
+interior vacuum
+_sectio_typata_errores (
+    CredoContextus* c)
+{
+     Piscina* piscina = c->piscina;
+         i32  linea;
+
+    /* argumentum sine typo (forma ante M5) */
+    CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
+        "modulus \"x\"\n"
+        "functio $g (s32 %t1) -> s32\n"
+        "@a:\n"
+        "    %t2 = vocare.s32 $f, %t1\n"
+        "    redde %t2\n"), &linea));
+    CREDO_AEQUALIS_I32 ((i32)linea, IV);
+    /* HFA membra > IV; HFA non fluitans; aggregatum vacuum */
+    CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
+        "modulus \"x\"\n"
+        "externum $f (h5xf64) -> vacuum\n"), &linea));
+    CREDO_AEQUALIS_I32 ((i32)linea, II);
+    CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
+        "modulus \"x\"\n"
+        "externum $f (h2xs32) -> vacuum\n"), &linea));
+    CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
+        "modulus \"x\"\n"
+        "externum $f (a0) -> vacuum\n"), &linea));
+    /* ' ... ' bis */
+    CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
+        "modulus \"x\"\n"
+        "functio $g () -> vacuum\n"
+        "@a:\n"
+        "    vocare $f, s32 1 ... s32 2 ... s32 3\n"
+        "    redde\n"), &linea));
+    CREDO_AEQUALIS_I32 ((i32)linea, IV);
+    /* externum post functionem; externum duplex */
+    CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
+        "modulus \"x\"\n"
+        "functio $g () -> vacuum\n"
+        "@a:\n"
+        "    redde\n"
+        "externum $f (s32) -> s32\n"), &linea));
+    CREDO_AEQUALIS_I32 ((i32)linea, V);
+    CREDO_NIHIL (medulla_textum_legere(piscina, _ch(
+        "modulus \"x\"\n"
+        "externum $f (s32) -> s32\n"
+        "externum $f (s32) -> s32\n"), &linea));
+    CREDO_AEQUALIS_I32 ((i32)linea, III);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "nomina signata", _sectio_prima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "scriptorem ($summa)", _sectio_secunda, NIHIL, NIHIL, NIHIL,
@@ -379,6 +655,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "fluitantia (%.17g)", _sectio_quinta, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "errores lectoris", _sectio_sexta, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vocare typata", _sectio_typata, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "vocare typata: errores", _sectio_typata_errores, NIHIL, NIHIL,
+        NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

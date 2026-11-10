@@ -169,6 +169,37 @@ _probare_claves (
     CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
     e = clavis(CLAVIS_TABULA, IX, IX, (i32)MOD_IMPERIUM);
     CREDO_FALSUM(praecepta_clavis_congruit("Tab", &e));
+    /* negotia-paginae T3b: "s-k" = Super (Cmd) + littera; sine Shift,
+     * Imperio, Alt; littera sola Super non accipit */
+    e = clavis((clavis_t)'k', 'k', 'k', (i32)MOD_SUPER);
+    CREDO_VERUM(praecepta_clavis_congruit("s-k", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-j", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("k", &e));
+    e = clavis((clavis_t)'k', 'K', 'k', (i32)(MOD_SUPER | MOD_SHIFT));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
+    e = clavis((clavis_t)'k', ZEPHYRUM, 'k', (i32)(MOD_SUPER
+        | MOD_IMPERIUM));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
+    e = clavis((clavis_t)'k', 'k', 'k', (i32)(MOD_SUPER | MOD_ALT));
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
+    e = clavis((clavis_t)'k', 'k', 'k', ZEPHYRUM);
+    CREDO_FALSUM(praecepta_clavis_congruit("s-k", &e));
+    /* gabc pars II P6: "Left" "Right" "PageUp" "PageDown" sine
+     * modificatoribus (antiphonale: paginae, quaerere) */
+    e = clavis(CLAVIS_SINISTER, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(praecepta_clavis_congruit("Left", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("Right", &e));
+    e = clavis(CLAVIS_DEXTER, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(praecepta_clavis_congruit("Right", &e));
+    e = clavis(CLAVIS_DEXTER, ZEPHYRUM, ZEPHYRUM, (i32)MOD_SHIFT);
+    CREDO_FALSUM(praecepta_clavis_congruit("Right", &e));
+    e = clavis(CLAVIS_PAGINA_DEORSUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(praecepta_clavis_congruit("PageDown", &e));
+    CREDO_FALSUM(praecepta_clavis_congruit("PageUp", &e));
+    e = clavis(CLAVIS_PAGINA_SURSUM, ZEPHYRUM, ZEPHYRUM, ZEPHYRUM);
+    CREDO_VERUM(praecepta_clavis_congruit("PageUp", &e));
+    e = clavis((clavis_t)'P', 'P', 'p', (i32)MOD_SHIFT);
+    CREDO_FALSUM(praecepta_clavis_congruit("PageUp", &e));
 }
 
 /* ad clavem per visum: "a" in A = t.a, in B = t.g; Enter solum in B */

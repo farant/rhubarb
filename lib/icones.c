@@ -893,11 +893,13 @@ icones_amplificare (
              Imago* exitus,
            Piscina* piscina)
 {
-    i32 factor;
-    i32 x;
-    i32 y;
-    i32 a;
-    i32 m;
+    constans Imago* origo;
+             Imago  lenis;
+               i32  factor;
+               i32  x;
+               i32  y;
+               i32  a;
+               i32  m;
 
     si (!fons || !exitus || !piscina)
     {
@@ -908,14 +910,30 @@ icones_amplificare (
     {
         redde ICONES_ERROR_FONS;
     }
-    si (   fons->latitudo         != fons->altitudo || latus == ZEPHYRUM
-        || latus % fons->latitudo != ZEPHYRUM)
+    si (fons->latitudo != fons->altitudo || latus == ZEPHYRUM)
     {
         redde ICONES_ERROR_LATERA;
     }
-    factor            = latus / fons->latitudo;
-    exitus->latitudo  = latus;
-    exitus->altitudo  = latus;
+    origo = fons;
+    si (latus % fons->latitudo == ZEPHYRUM)
+    {
+        factor = latus / fons->latitudo;
+    }
+    alioquin
+    {
+        /* pictura, non pixel art: auctio bilinearis, deminutio areae */
+        lenis = imago_scalare(fons, latus, latus,
+            latus > fons->latitudo ? IMAGO_SCALA_BILINEARIS
+                                   : IMAGO_SCALA_AREA, piscina);
+        si (!lenis.pixela)
+        {
+            redde ICONES_ERROR_MEMORIA;
+        }
+        origo   = &lenis;
+        factor  = I;
+    }
+    exitus->latitudo = latus;
+    exitus->altitudo = latus;
     exitus->pixela    = (i8*)piscina_allocare(piscina,
         (memoriae_index)latus * (memoriae_index)latus * IV);
     si (!exitus->pixela)
@@ -929,7 +947,7 @@ icones_amplificare (
             constans i8* s;
                      i8* d;
 
-            s = fons->pixela + ((y / factor) * fons->latitudo + x
+            s = origo->pixela + ((y / factor) * origo->latitudo + x
                 / factor)
                 * IV;
             d = exitus->pixela + (y * latus + x) * IV;

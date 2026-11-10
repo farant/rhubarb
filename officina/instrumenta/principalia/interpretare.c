@@ -14,7 +14,10 @@
  * Sine -plagulae (officina-bibliothecae T4): domus functionis ex
  * build/nexus.tsv, clausura per aedilem (bibliothecae.h) - exacte
  * illae plagulae. Ambigua aut recusata -> exitus 2 cum causa;
- * functio in indice ignota -> mundus totus lib/ (monitum honestum).
+ * functio in indice ignota -> mundus totus per bibliothecas
+ * (bibliothecae_mundum_totum: una implementatio per caput; M5 T0 -
+ * olim lib/ totus, testa_principale bis definitum, nexus fractus).
+ * -index <via> = index alius (ordinarie build/nexus.tsv).
  *
  * v0 (DECISUS #5): scalaria + literae chordarum; aggregata =
  * dilatio nominata. Argumenta per typum PARAMETRI evaluantur
@@ -24,7 +27,7 @@
  * machinulae semper activus).
  *
  * Usus: ./officina/interpretare.sh [-plagulae a,b,c] [-textus]
- *           [-mora n] <functio> [argumenta...]
+ *           [-mora n] [-index via] <functio> [argumenta...]
  * Exitus: 0 = BENE | 1 = halitus/functio absens | 2 = usus/mundus
  */
 
@@ -57,6 +60,7 @@ hic_manens Xar* lineae_mundi = NIHIL;    /* MedullaLineae*
 
 hic_manens constans character* plagulae_quaesitae[PLAGULAE_MAXIMAE];
 hic_manens i32 numerus_quaesitarum = ZEPHYRUM;
+hic_manens constans character* via_indicis = "build/nexus.tsv";
 
 
 /* ==================================================
@@ -366,12 +370,12 @@ _mundum_derivare (
     *ignota_out    = FALSUM;
     causa.mensura  = ZEPHYRUM;
     causa.datum    = NIHIL;
-    sedes = bibliothecae_sedem_quaerere("build/nexus.tsv", titulus,
+    sedes = bibliothecae_sedem_quaerere(via_indicis, titulus,
         piscina_officinae, &via_sedis, &causa);
     si (sedes == BIBLIOTHECAE_SEDES_IGNOTA)
     {
-        fprintf(stderr, "interpretare: %.*s - mundus totus lib/"
-            " (~30s)...\n", (int)causa.mensura,
+        fprintf(stderr, "interpretare: %.*s - mundus totus per"
+            " bibliothecas (~1 min)...\n", (int)causa.mensura,
             (constans character*)causa.datum);
         *ignota_out = VERUM;
         redde NIHIL;
@@ -431,6 +435,42 @@ _vias_demittere (
 
         _modulum_addere(ctx, chorda_ut_cstr(via, piscina_officinae));
     }
+}
+
+/* functio in indice ignota: mundus totus per bibliothecas (una
+ * implementatio per caput). Resolutor in piscina temporaria -
+ * parsurae aedilis ante demissionem pereunt. */
+hic_manens b32
+_mundum_totum_demittere (
+    constans SilvaContextus* ctx)
+{
+         Piscina* temporaria;
+    Bibliothecae* b;
+           chorda  causa;
+              Xar* viae;
+
+    temporaria = piscina_generare_dynamicum("interpretare_mundus",
+        1048576);
+    si (temporaria == NIHIL)
+    {
+        redde FALSUM;
+    }
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    b              = bibliothecae_creare(temporaria, ".", &causa);
+    viae = (b != NIHIL)
+        ? bibliothecae_mundum_totum(b, temporaria, NIHIL, &causa)
+        : NIHIL;
+    si (viae == NIHIL)
+    {
+        fprintf(stderr, "interpretare: mundus derivari nequit: %.*s\n",
+            (int)causa.mensura, (constans character*)causa.datum);
+        piscina_destruere(temporaria);
+        redde FALSUM;
+    }
+    _vias_demittere(ctx, viae);
+    piscina_destruere(temporaria);
+    redde VERUM;
 }
 
 hic_manens vacuum
@@ -516,6 +556,22 @@ _typus_fluitans (
         || typus == (s32)MEDULLA_TYPUS_F64) ? VERUM : FALSUM;
 }
 
+/* promotio variadica integralis (C89): angustiora quam 32 -> s32;
+ * ceteri typi sui (argumentum printf typatum, B4) */
+hic_manens constans character*
+_typus_promotus (
+    s32 typus)
+{
+    si (   typus == (s32)MEDULLA_TYPUS_I8
+        || typus == (s32)MEDULLA_TYPUS_I16
+        || typus == (s32)MEDULLA_TYPUS_S8
+        || typus == (s32)MEDULLA_TYPUS_S16)
+    {
+        redde "s32";
+    }
+    redde medulla_typum_titulus(typus);
+}
+
 /* datum chordae: octeti hex in quaternionibus (exemplar goldens) */
 hic_manens i32
 _datum_chordae_scribere (
@@ -595,6 +651,12 @@ principale (
             a++;
             mora_secunda = (insignatus integer)atoi(argv[a]);
         }
+        alioquin si (   strcmp(argv[a], "-index") == ZEPHYRUM
+                     && a + I < argc)
+        {
+            a++;
+            via_indicis = argv[a];
+        }
         alioquin si (titulus_functionis == NIHIL)
         {
             titulus_functionis = argv[a];
@@ -608,7 +670,8 @@ principale (
     si (titulus_functionis == NIHIL)
     {
         fprintf(stderr, "usus: interpretare [-plagulae a,b,c]"
-            " [-textus] [-mora n] <functio> [argumenta...]\n"
+            " [-textus] [-mora n] [-index via] <functio>"
+            " [argumenta...]\n"
             "      (ex radice repositorii; scalaria + literae"
             " chordarum)\n");
         redde II;
@@ -700,7 +763,10 @@ principale (
         }
         alioquin si (ignota)
         {
-            _bibliothecam_demittere(ctx);
+            si (!_mundum_totum_demittere(ctx))
+            {
+                redde II;
+            }
         }
         alioquin
         {
@@ -833,10 +899,13 @@ principale (
                           scopum->parametra, k)
                     : NIHIL;
 
+            /* typus argumenti (B4): chorda = i64 inscriptio;
+             * aliter typus parametri; sine parametro (variadica)
+             * f64 si punctum, s64 aliter */
             si (est_chorda)
             {
                 cursor += (i32)sprintf(involucrum + cursor,
-                    ", %%a%u", k);
+                    ", i64 %%a%u", k);
             }
             alioquin si (   parametrum                != NIHIL
                          && _typus_fluitans(parametrum->typus)
@@ -845,12 +914,20 @@ principale (
                 /* littera fluitans sine puncto: punctum addere
                  * (lector formam fluitantem postulat) */
                 cursor += (i32)sprintf(involucrum + cursor,
-                    ", %s.0", argumenta[k]);
+                    ", %s %s.0",
+                    medulla_typum_titulus(parametrum->typus),
+                    argumenta[k]);
             }
             alioquin
             {
+                constans character* typus_littera =
+                    (parametrum != NIHIL)
+                        ? medulla_typum_titulus(parametrum->typus)
+                        : (strchr(argumenta[k], '.') != NIHIL)
+                            ? "f64" : "s64";
+
                 cursor += (i32)sprintf(involucrum + cursor,
-                    ", %s", argumenta[k]);
+                    ", %s %s", typus_littera, argumenta[k]);
             }
         }
         cursor += (i32)sprintf(involucrum + cursor, "\n");
@@ -860,7 +937,7 @@ principale (
         {
             forma = "(vacuum)\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma\n");
+                "    vocare $printf, i64 $forma ...\n");
         }
         alioquin si (scopum->typus_reditus
                      == (s32)MEDULLA_TYPUS_F32)
@@ -872,27 +949,29 @@ principale (
              * denormale 5e-315 = inventum die natali) */
             cursor += (i32)sprintf(involucrum + cursor,
                 "    %%frd = dilatare.f32.f64 %%fr\n"
-                "    vocare $printf, $forma, %%frd\n");
+                "    vocare $printf, i64 $forma ... f64 %%frd\n");
         }
         alioquin si (scopum->typus_reditus
                      == (s32)MEDULLA_TYPUS_F64)
         {
             forma = "%g\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma, %%fr\n");
+                "    vocare $printf, i64 $forma ... f64 %%fr\n");
         }
         alioquin si (   scopum->typus_reditus >= (s32)MEDULLA_TYPUS_S8
                      && scopum->typus_reditus <= (s32)MEDULLA_TYPUS_S64)
         {
             forma = "%lld\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma, %%fr\n");
+                "    vocare $printf, i64 $forma ... %s %%fr\n",
+                _typus_promotus(scopum->typus_reditus));
         }
         alioquin
         {
             forma = "%llu\n";
             cursor += (i32)sprintf(involucrum + cursor,
-                "    vocare $printf, $forma, %%fr\n");
+                "    vocare $printf, i64 $forma ... %s %%fr\n",
+                _typus_promotus(scopum->typus_reditus));
         }
         cursor += (i32)sprintf(involucrum + cursor,
             "    redde 0\n\n");

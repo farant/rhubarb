@@ -34,6 +34,9 @@
  * maiusculae), Graeca cum tonis (U+0386-03CE), Graeca extensa
  * (U+1F00-1FFF) - ex decompositione Unicode semel scripta. ɣ (U+0263)
  * pictura sola.
+ *
+ * Cantus Latinus (gabc pars II P4, 2026-11-04): œ Œ ℟ ℣ picturae v2,
+ * ǽ composita (æ fontis cum acuto).
  */
 #ifndef GLYPHAE_DUCTAE_H
 #define GLYPHAE_DUCTAE_H

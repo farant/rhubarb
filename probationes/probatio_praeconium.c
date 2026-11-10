@@ -411,6 +411,32 @@ _probare_tmux_conf (
         "/h/c/tmux.conf", c->piscina), semel));
 }
 
+/* gabc pars II P8: eventus "antiphonale" - via absoluta (realpath);
+ * relativa ad cwd; plagula absens: FALSUM, eventus intactus */
+interior vacuum
+_probare_antiphonale (
+    CredoContextus* c)
+{
+     PraeconiumEventus  e;
+     PraeconiumEventus  signum;
+    constans character* relativa = "musica/fontes/salve_2435.gabc";
+
+    memset(&e, ZEPHYRUM, magnitudo(e));
+    CREDO_VERUM(praeconium_antiphonale_parare(relativa, &e,
+        c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS(e.eventus, "antiphonale");
+    CREDO_MAIOR_I32(e.nuntius.mensura, (i32)strlen(relativa));
+    CREDO_VERUM(e.nuntius.datum[ZEPHYRUM] == '/');
+    CREDO_VERUM(memcmp(e.nuntius.datum + e.nuntius.mensura
+        - strlen(relativa), relativa, strlen(relativa)) == ZEPHYRUM);
+
+    memset(&e, 0x5A, magnitudo(e));
+    memcpy(&signum, &e, magnitudo(e));
+    CREDO_FALSUM(praeconium_antiphonale_parare("musica/nulla.gabc", &e,
+        c->piscina));
+    CREDO_VERUM(memcmp(&e, &signum, magnitudo(e)) == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "ex_hamo", _probare_ex_hamo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "praecisio", _probare_praecisionem, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -424,6 +450,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tmux_configuratio", _probare_tmux_configurationem, NIHIL, NIHIL,
       NIHIL, NIHIL },
     { "tmux_conf", _probare_tmux_conf, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "antiphonale", _probare_antiphonale, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

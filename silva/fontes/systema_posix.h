@@ -243,6 +243,7 @@ int     chdir(const char* via);
  * ut C89; hae POSIX solae) */
 int setenv(const char* nomen, const char* valor, int superscribere);
 int unsetenv(const char* nomen);
+char* realpath(const char* via, char* plena);
 int putenv(char* par);
 
 /* <sectio caput="unistd.h"/> unistd.h - fossae normales */
@@ -526,14 +527,25 @@ int            closedir(DIR* dir);
 /* <sectio caput="sys/mman.h"/> sys/mman.h (valores Darwin) */
 #define PROT_READ   0x01
 #define PROT_WRITE  0x02
+#define PROT_EXEC   0x04     /* memoria_exsecutabilis (M5 T4) */
 #define MAP_SHARED  0x0001   /* circulus: probatio duorum processuum (sonus S3a) */
 #define MAP_PRIVATE 0x0002
+#define MAP_JIT     0x0800   /* memoria_exsecutabilis (M5 T4) */
 #define MAP_ANON    0x1000
 #define MAP_FAILED  ((void*)-1)
 
 void* mmap(void* sedes, size_t mensura, int tutela, int vexilla,
            int fossa, off_t offset);
 int   munmap(void* sedes, size_t mensura);
+
+/* <sectio caput="pthread.h"/> pthread.h - solum scriptura JIT per
+ * filum (macOS 11+; memoria_exsecutabilis, officina M5 T4). Fila
+ * ipsa domus non adhibet. */
+void pthread_jit_write_protect_np(int tutela);
+
+/* <sectio caput="libkern/OSCacheControl.h"/> libkern/OSCacheControl.h
+ * (memoria_exsecutabilis, officina M5 T4) */
+void sys_icache_invalidate(void* initium, size_t mensura);
 
 /* <sectio caput="termios.h"/> termios.h (forma Darwin arm64:
  * tcflag_t = unsigned long, NCCS 20) */
@@ -603,11 +615,24 @@ int isatty(int fossa);
  * terminalia; sig_atomic_t/signal/raise in systema_c89.h ut C89) */
 typedef unsigned int sigset_t;
 
-struct sigaction {
-    void     (*sa_handler)(int);
-    sigset_t sa_mask;
-    int      sa_flags;
+/* forma Darwin vera: unio tractatorum + macra (officina M5 T6:
+ * sa_sigaction cum SA_SIGINFO). siginfo_t opacus - numquam
+ * dereferatur. */
+typedef struct __siginfo siginfo_t;
+
+union __sigaction_u {
+    void (*__sa_handler)(int);
+    void (*__sa_sigaction)(int, siginfo_t*, void*);
 };
+
+struct sigaction {
+    union __sigaction_u __sigaction_u;
+    sigset_t            sa_mask;
+    int                 sa_flags;
+};
+
+#define sa_handler   __sigaction_u.__sa_handler
+#define sa_sigaction __sigaction_u.__sa_sigaction
 
 #define SIGBUS   10
 #define SIGCONT  19
@@ -622,10 +647,65 @@ struct sigaction {
 #define SIGUSR1  30
 #define SIGUSR2  31
 #define SA_RESTART 0x0002
+/* effugium officinae (M5 T6): tractator in acervo alterno */
+#define SA_ONSTACK  0x0001
+#define SA_SIGINFO  0x0040
+#define SS_DISABLE  0x0004
+#define MINSIGSTKSZ 32768
+#define SIGSTKSZ    131072
+
+typedef struct __darwin_sigaltstack {
+    void*  ss_sp;
+    size_t ss_size;
+    int    ss_flags;
+} stack_t;
+
+/* contextus signi (arm64, forma non opaca): pc et fp e
+ * uc_mcontext->__ss. __ns (status NEON, XVI-ordinatus) omissum -
+ * magnitudo mcontext numquam sumitur; offsets certificantur. */
+struct __darwin_arm_exception_state64 {
+    unsigned long long __far;
+    unsigned int       __esr;
+    unsigned int       __exception;
+};
+
+struct __darwin_arm_thread_state64 {
+    unsigned long long __x[29];
+    unsigned long long __fp;
+    unsigned long long __lr;
+    unsigned long long __sp;
+    unsigned long long __pc;
+    unsigned int       __cpsr;
+    unsigned int       __pad;
+};
+
+struct __darwin_mcontext64 {
+    struct __darwin_arm_exception_state64 __es;
+    struct __darwin_arm_thread_state64    __ss;
+};
+
+typedef struct __darwin_mcontext64* mcontext_t;
+
+typedef struct __darwin_ucontext {
+    int                       uc_onstack;
+    sigset_t                  uc_sigmask;
+    stack_t                   uc_stack;
+    struct __darwin_ucontext* uc_link;
+    size_t                    uc_mcsize;
+    mcontext_t                uc_mcontext;
+} ucontext_t;
 
 int sigaction(int signum, const struct sigaction* actio,
               struct sigaction* pristina);
 int sigemptyset(sigset_t* copia);
+int sigaltstack(const stack_t* novus, stack_t* pristinus);
+
+/* <sectio caput="setjmp.h"/> setjmp.h POSIX (jmp_buf/setjmp in
+ * systema_c89.h; arm64 _JBLEN XLVIII, sigjmp_buf unum plus) */
+typedef int sigjmp_buf[49];
+
+int  sigsetjmp(sigjmp_buf ambitus, int signa_servare);
+void siglongjmp(sigjmp_buf ambitus, int valor);
 
 /* <sectio caput="errno.h"/> errno.h - supplementa Undae 3 */
 #define EEXIST 17
@@ -781,6 +861,7 @@ struct kevent {
 #define NOTE_DELETE   0x00000001
 #define NOTE_WRITE    0x00000002
 #define NOTE_EXTEND   0x00000004
+#define NOTE_ATTRIB   0x00000008
 #define NOTE_RENAME   0x00000020
 
 int kqueue(void);

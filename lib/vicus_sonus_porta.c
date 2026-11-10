@@ -1,21 +1,20 @@
 /* vicus_sonus_porta.c - porta soni vera: concentus super auditus;
- * tintinnabulum et voces vivae (aetherophonum) super eum */
+ * tintinnabulum, voces vivae (aetherophonum) et carmen (cantor, tabula
+ * antiphonale - gabc pars II P5) super eum */
 
 #include "vicus_sonus_porta.h"
 #include "tintinnabulum.h"
 #include "tibia.h"
 #include "cantuale.h"
-#include "concentus_auditus.h"
 #include "fenestra_tempus.h"
+#include "cantor.h"
+#include "carmen.h"
 #include <stdio.h>
 #include <string.h>
 
-/* voces concentus: cantilena plena (XXXII) et vocibus vivis
- * (aetherophonum) locus */
-#define PORTA_VOCES XLVIII
-/* capacitates anulorum auditus (potentiae II): iussa >= sedes
- * cantilenae et SISTERE omnium; nuntii >= II x voces (auditus.h) */
-#define PORTA_ANULI CXXVIII
+/* forma: VICUS_SONUS_VOCES, VICUS_SONUS_ANULI (vicus_sonus_porta.h;
+ * iussa >= sedes cantilenae et SISTERE omnium; nuntii >= II x voces,
+ * auditus.h) */
 /* voces vivae simul (aetherophonum: una; reliquae pro lateribus
  * pluribus) - tacere (mutus) omnes claudit */
 #define PORTA_VIVAE IV
@@ -29,6 +28,15 @@ nomen structura {
     /* quies T6d: agere ultimum sonabat aut exspectabat; tempus eius */
                b32 activa;
                s64 activa_ad;
+    /* carmen: cantor pigre creatus (carmen_incipere primum); sonat =
+     * carmen petitum nec sistitum (cantor_sonat solus post sistere
+     * dum voces evanescunt VERUM manet) */
+             Piscina* piscina;
+              Cantor* cantor;
+                 b32  carmen_sonat;
+    /* carmen sonans in piscina propria (lectum ex textu); vetus post
+     * cantor_incipere novi destruitur */
+            Piscina* carmen_piscina;
 } PortaSoni;
 
 
@@ -53,9 +61,14 @@ porta_agere (
           b32  activa;
 
     /* hoc ordine: nuntii prius (sedes liberantur), deinde exspectata */
-    nunc       = fenestra_tempus_ms();
-    activa     = concentus_agere(p->concentus, nunc);
-    activa     = tintinnabulum_agere(p->t) || activa;
+    nunc    = fenestra_tempus_ms();
+    activa  = concentus_agere(p->concentus, nunc);
+    activa  = tintinnabulum_agere(p->t) || activa;
+    /* cantor POST concentus_agere (cantor.h) */
+    si (p->cantor)
+    {
+        activa = cantor_agere(p->cantor) || activa;
+    }
     p->activa  = activa;
     si (activa)
     {
@@ -150,7 +163,106 @@ porta_tacere (
         portam_vocis_claudere(p, p->vivae[k]);
         p->vivae[k].generatio = ZEPHYRUM;
     }
+    si (p->cantor)
+    {
+        cantor_sistere(p->cantor);
+    }
+    p->carmen_sonat = FALSUM;
     tintinnabulum_tacere(p->t);
+}
+
+/* textus libri a pulso; etiam permutatio: lectum in piscinam novam,
+ * cantor id accipit (solum monstratorem tenet), deinde vetus
+ * destruitur. Textus malus: nihil mutatum */
+interior b32
+porta_carmen_incipere (
+    vacuum* ctx,
+    chorda  carmen,
+       s64  pulsus)
+{
+         PortaSoni* p = (PortaSoni*)ctx;
+           Piscina* nova;
+           Carmina* liber;
+    CarminisVitium  vitium;
+               b32  incepit;
+
+    si (p->cantor == NIHIL)
+    {
+        p->cantor = cantor_creare(p->piscina, p->concentus, NIHIL);
+        si (p->cantor == NIHIL)
+        {
+            redde FALSUM;
+        }
+        cantor_regio(p->cantor, FALSUM, ZEPHYRUM, ZEPHYRUM);
+    }
+    nova = piscina_generare_dynamicum("vicus_carmen",
+             (memoriae_index)(CCLVI * MXXIV));
+    liber = nova ? (Carmina*)piscina_allocare(nova, magnitudo(Carmina))
+                 : NIHIL;
+    memset(&vitium, ZEPHYRUM, magnitudo(vitium));
+    si (   !liber || !carmina_legere(carmen, nova, liber, &vitium)
+        || liber->numerus < I)
+    {
+        si (nova)
+        {
+            piscina_destruere(nova);
+        }
+        redde FALSUM;
+    }
+    incepit = cantor_incipere(p->cantor, &liber->carmina[ZEPHYRUM],
+        pulsus);
+    si (!incepit)
+    {
+        piscina_destruere(nova);
+        redde FALSUM;
+    }
+    si (p->carmen_piscina)
+    {
+        piscina_destruere(p->carmen_piscina);
+    }
+    p->carmen_piscina  = nova;
+    p->carmen_sonat    = VERUM;
+    redde VERUM;
+}
+
+interior vacuum
+porta_carmen_quaerere (
+    vacuum* ctx,
+       s64  pulsus)
+{
+    PortaSoni* p = (PortaSoni*)ctx;
+
+    si (p->cantor && p->carmen_sonat)
+    {
+        cantor_quaerere(p->cantor, pulsus);
+    }
+}
+
+interior vacuum
+porta_carmen_sistere (
+    vacuum* ctx)
+{
+    PortaSoni* p = (PortaSoni*)ctx;
+
+    si (p->cantor)
+    {
+        cantor_sistere(p->cantor);
+    }
+    p->carmen_sonat = FALSUM;
+}
+
+interior s64
+porta_carmen_pulsus (
+    vacuum* ctx)
+{
+    PortaSoni* p = (PortaSoni*)ctx;
+
+    si (   p->cantor == NIHIL || !p->carmen_sonat
+        || !cantor_sonat(p->cantor))
+    {
+        redde -I;
+    }
+    redde cantor_pulsus(p->cantor);
 }
 
 /* vox viva: tibia praeparata (ignota = aether), vibratus aut non */
@@ -252,22 +364,19 @@ porta_vocem_dimittere (
     portam_vocis_claudere((PortaSoni*)ctx, vocem_legere(vox));
 }
 
-b32
-vicus_sonus_porta (
-    VicusPortaSoni* porta,
-           Piscina* piscina,
-               i64  semen)
+/* porta super exitum datum (auditus aut fictus) */
+interior b32
+portam_implere (
+     VicusPortaSoni* porta,
+            Piscina* piscina,
+                i64  semen,
+    ConcentusExitus* exitus)
 {
                PortaSoni* p;
                 Cantuale* liber;
-         ConcentusExitus* exitus;
           CantualeVitium  vitium;
             MixturaForma  forma;
 
-    si (!porta || !piscina)
-    {
-        redde FALSUM;
-    }
     /* liber et exitus vivunt dum tintinnabulum: in piscina vocantis */
     p = (PortaSoni*)piscina_allocare(piscina,
         magnitudo(PortaSoni));
@@ -286,13 +395,13 @@ vicus_sonus_porta (
             vitium.causa ? vitium.causa : "memoria");
         redde FALSUM;
     }
-    forma.voces   = PORTA_VOCES;
-    forma.iussa   = PORTA_ANULI;
-    forma.nuntii  = PORTA_ANULI;
-    exitus        = concentus_exitus_auditus(piscina, &forma);
-    p->concentus            = exitus == NIHIL ? NIHIL
+    forma.voces   = VICUS_SONUS_VOCES;
+    forma.iussa   = VICUS_SONUS_ANULI;
+    forma.nuntii  = VICUS_SONUS_ANULI;
+    p->piscina    = piscina;
+    p->concentus  = exitus == NIHIL ? NIHIL
         : concentus_creare(piscina, &forma, exitus);
-    p->t           = p->concentus == NIHIL ? NIHIL
+    p->t          = p->concentus == NIHIL ? NIHIL
         : tintinnabulum_creare(piscina, liber, p->concentus, semen);
     si (!p->t)
     {
@@ -306,6 +415,24 @@ vicus_sonus_porta (
     porta->vocem_ponere     = porta_vocem_ponere;
     porta->vocem_dimittere  = porta_vocem_dimittere;
     porta->mora             = porta_mora;
+    porta->carmen_incipere  = porta_carmen_incipere;
+    porta->carmen_quaerere  = porta_carmen_quaerere;
+    porta->carmen_sistere   = porta_carmen_sistere;
+    porta->carmen_pulsus    = porta_carmen_pulsus;
     porta->ctx              = p;
     redde VERUM;
+}
+
+b32
+vicus_sonus_porta_cum_exitu (
+     VicusPortaSoni* porta,
+            Piscina* piscina,
+                i64  semen,
+    ConcentusExitus* exitus)
+{
+    si (!porta || !piscina || !exitus)
+    {
+        redde FALSUM;
+    }
+    redde portam_implere(porta, piscina, semen, exitus);
 }

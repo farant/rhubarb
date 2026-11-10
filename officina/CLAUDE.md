@@ -131,8 +131,9 @@ When narrowing scope: name the deferred use case and the path back.
   quick-hypothesis loop; scalars + string literals; aggregates
   refused by name). No -plagulae = the function's home from
   build/nexus.tsv + its aedilis closure (sub-second); ambiguous or
-  mac-only -> exit 2 naming why; not in the index -> whole lib/
-  (broken: both fenestra_tempus variants collide). Silva-side read bench (censor/emitte/origo/
+  mac-only -> exit 2 naming why; not in the index -> the whole
+  world via bibliothecae_mundum_totum (posix closure of every
+  include/*.h, ~8 s; -index <via> overrides build/nexus.tsv). Silva-side read bench (censor/emitte/origo/
   nexus): see silva/CLAUDE.md + the symptom table in MEMORY.md.
 - ./officina/vindex.sh <suita.c> [-plagulae a,b,c]
   [-imago via:linea | -imago functio] — THE DEBUGGER (M3): TUI

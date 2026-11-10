@@ -44,3 +44,24 @@ header), else exactly one body, else AMBIGUA.
 Plants (all red, IDEM): detection skipped, scope kept on refusal,
 load variant NIHIL, size check x100, header preference flipped,
 origo check dropped.
+
+## 2026-11-03 — bibliothecae_mundum_totum (M5 T0)
+
+Whole-world mode for the cursor and interpretare's IGNOTA fallback:
+one bibliothecae_ex_textu per include/*.h (alphabetical), union of
+the posix closures, refusals collected as "include/x.h: causa"
+instead of failing. Measured: ~8 s and ~350 MiB peak for ~415
+headers - the AedilisSilva extractor caches parses per path in
+b->piscina, which is why callers build the Bibliothecae in a
+THROWAWAY pool and copy out only the paths (otherwise 350 MiB rides
+into every forked cursor child via COW). The per-header derivation
+also gets its own scratch pool, destroyed each iteration.
+
+Gotchas found while testing: lib/testa.c is the macOS window shell
+(fenestra.h is .m-only), so testa.h is correctly omitted - "one
+variant per header" does not mean "every lib/*.c". Vendor refusal is
+whole-header: 92 headers drop because sqlite3 appears somewhere in
+their closure, taking their house .c files with them. Softening that
+(drop only the vendor file) is parked with "credo non
+interpretabilis" (01M6H28D) - no consumer until credo runs
+interpreted.

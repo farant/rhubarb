@@ -1,0 +1,277 @@
+# semen aurei codificatoris A64 - manu scriptum
+# tools/codificator_a64_oraculum.sh -> aurum.tsv (verba ex clang)
+# textus "!causa" = codificare FALSUM reddere debet (clang non vocatur)
+# forma	latitudo	rd	rn	rm	ra	immediatum	translatio	conditio	textus
+ADD_IMM	64	0	1	0	0	0	0	-	add x0, x1, #0
+ADD_IMM	64	0	1	0	0	4095	0	-	add x0, x1, #4095
+ADD_IMM	64	2	3	0	0	4095	12	-	add x2, x3, #4095, lsl #12
+ADD_IMM	32	0	1	0	0	1	0	-	add w0, w1, #1
+ADD_IMM	64	31	31	0	0	16	0	-	add sp, sp, #16
+ADD_IMM	64	29	31	0	0	0	0	-	add x29, sp, #0
+ADD_IMM	64	0	1	0	0	4096	0	-	!imm 4096
+ADD_IMM	64	0	1	0	0	-1	0	-	!imm -1
+ADD_IMM	64	0	1	0	0	1	1	-	!translatio 1
+ADD_IMM	16	0	1	0	0	1	0	-	!latitudo 16
+ADD_IMM	64	32	1	0	0	1	0	-	!rd 32
+ADD_IMM	64	0	-1	0	0	1	0	-	!rn -1
+SUB_IMM	64	0	1	0	0	4095	0	-	sub x0, x1, #4095
+SUB_IMM	32	0	1	0	0	0	12	-	sub w0, w1, #0, lsl #12
+SUB_IMM	64	31	31	0	0	32	0	-	sub sp, sp, #32
+SUB_IMM	64	0	1	0	0	4096	0	-	!imm 4096
+SUBS_IMM	64	0	1	0	0	1	0	-	subs x0, x1, #1
+SUBS_IMM	64	31	1	0	0	4095	0	-	subs xzr, x1, #4095
+SUBS_IMM	32	0	1	0	0	7	12	-	subs w0, w1, #7, lsl #12
+SUBS_IMM	32	0	1	0	0	4096	0	-	!imm 4096
+ADD_REG	64	0	1	2	0	0	0	-	add x0, x1, x2
+ADD_REG	64	0	1	2	0	0	63	-	add x0, x1, x2, lsl #63
+ADD_REG	32	0	1	2	0	0	31	-	add w0, w1, w2, lsl #31
+ADD_REG	64	0	1	2	0	0	64	-	!translatio 64
+ADD_REG	32	0	1	2	0	0	32	-	!translatio 32
+SUB_REG	64	3	4	5	0	0	0	-	sub x3, x4, x5
+SUB_REG	32	3	4	5	0	0	1	-	sub w3, w4, w5, lsl #1
+SUB_REG	64	0	31	1	0	0	0	-	sub x0, xzr, x1
+SUB_REG	64	0	1	2	0	0	-1	-	!translatio -1
+ADDS_REG	64	0	1	2	0	0	0	-	adds x0, x1, x2
+ADDS_REG	32	0	1	2	0	0	31	-	adds w0, w1, w2, lsl #31
+SUBS_REG	64	0	1	2	0	0	0	-	subs x0, x1, x2
+SUBS_REG	32	31	1	2	0	0	0	-	subs wzr, w1, w2
+SUBS_REG	64	0	1	2	0	0	63	-	subs x0, x1, x2, lsl #63
+SUBS_REG	64	0	1	2	0	0	64	-	!translatio 64
+AND_REG	64	0	1	2	0	0	0	-	and x0, x1, x2
+AND_REG	32	0	1	2	0	0	31	-	and w0, w1, w2, lsl #31
+AND_REG	16	0	1	2	0	0	0	-	!latitudo 16
+ORR_REG	64	0	31	1	0	0	0	-	orr x0, xzr, x1
+ORR_REG	32	0	1	2	0	0	5	-	orr w0, w1, w2, lsl #5
+EOR_REG	64	0	1	2	0	0	0	-	eor x0, x1, x2
+EOR_REG	32	0	1	2	0	0	31	-	eor w0, w1, w2, lsl #31
+ORN_REG	64	0	31	1	0	0	0	-	orn x0, xzr, x1
+ORN_REG	32	0	1	2	0	0	31	-	orn w0, w1, w2, lsl #31
+ORN_REG	64	0	1	32	0	0	0	-	!rm 32
+AND_IMM	64	0	1	0	0	0xff	0	-	and x0, x1, #0xff
+AND_IMM	32	0	1	0	0	0x1	0	-	and w0, w1, #0x1
+AND_IMM	32	0	1	0	0	0x7ffffffe	0	-	and w0, w1, #0x7ffffffe
+AND_IMM	64	0	1	0	0	0x0	0	-	!exemplar 0
+AND_IMM	64	0	1	0	0	0x1234	0	-	!exemplar 0x1234
+AND_IMM	32	0	1	0	0	0x100000000	0	-	!exemplar ultra XXXII
+ORR_IMM	64	0	31	0	0	0xff	0	-	orr x0, xzr, #0xff
+ORR_IMM	32	0	31	0	0	0x55555555	0	-	orr w0, wzr, #0x55555555
+ORR_IMM	64	0	1	0	0	0xffffffffffffffff	0	-	!exemplar ~0
+EOR_IMM	64	0	1	0	0	0x8000000000000000	0	-	eor x0, x1, #0x8000000000000000
+EOR_IMM	32	0	1	0	0	0x80000000	0	-	eor w0, w1, #0x80000000
+EOR_IMM	32	0	1	0	0	0xffffffff	0	-	!exemplar ~0 XXXII
+LSLV	64	0	1	2	0	0	0	-	lsl x0, x1, x2
+LSLV	32	0	1	2	0	0	0	-	lsl w0, w1, w2
+LSLV	16	0	1	2	0	0	0	-	!latitudo 16
+LSRV	64	0	1	2	0	0	0	-	lsr x0, x1, x2
+LSRV	32	3	4	5	0	0	0	-	lsr w3, w4, w5
+ASRV	64	0	1	2	0	0	0	-	asr x0, x1, x2
+ASRV	32	0	1	2	0	0	0	-	asr w0, w1, w2
+UBFM	64	0	1	0	0	4	7	-	ubfm x0, x1, #4, #7
+UBFM	64	0	1	0	0	63	62	-	ubfm x0, x1, #63, #62
+UBFM	32	0	1	0	0	31	30	-	ubfm w0, w1, #31, #30
+UBFM	32	0	1	0	0	0	7	-	ubfm w0, w1, #0, #7
+UBFM	64	0	1	0	0	64	0	-	!immr 64
+UBFM	32	0	1	0	0	0	32	-	!imms 32
+SBFM	64	0	1	0	0	0	31	-	sbfm x0, x1, #0, #31
+SBFM	64	0	1	0	0	0	7	-	sbfm x0, x1, #0, #7
+SBFM	32	0	1	0	0	0	15	-	sbfm w0, w1, #0, #15
+SBFM	64	0	1	0	0	63	63	-	sbfm x0, x1, #63, #63
+SBFM	64	0	1	0	0	0	64	-	!imms 64
+MADD	64	0	1	2	3	0	0	-	madd x0, x1, x2, x3
+MADD	32	0	1	2	31	0	0	-	madd w0, w1, w2, wzr
+MADD	64	0	1	2	32	0	0	-	!ra 32
+MSUB	64	0	1	2	3	0	0	-	msub x0, x1, x2, x3
+MSUB	32	0	1	2	3	0	0	-	msub w0, w1, w2, w3
+SDIV	64	0	1	2	0	0	0	-	sdiv x0, x1, x2
+SDIV	32	0	1	2	0	0	0	-	sdiv w0, w1, w2
+UDIV	64	0	1	2	0	0	0	-	udiv x0, x1, x2
+UDIV	32	0	1	2	0	0	0	-	udiv w0, w1, w2
+MOVZ	64	3	0	0	0	0	0	-	movz x3, #0
+MOVZ	64	3	0	0	0	0xffff	0	-	movz x3, #0xffff
+MOVZ	64	3	0	0	0	1	16	-	movz x3, #1, lsl #16
+MOVZ	64	3	0	0	0	0x3000	32	-	movz x3, #0x3000, lsl #32
+MOVZ	64	3	0	0	0	0xdef0	0	-	movz x3, #0xdef0
+MOVZ	64	3	0	0	0	0x1234	0	-	movz x3, #0x1234
+MOVZ	32	3	0	0	0	0x5678	0	-	movz w3, #0x5678
+MOVZ	64	0	0	0	0	0xffff	48	-	movz x0, #0xffff, lsl #48
+MOVZ	64	0	0	0	0	0x10000	0	-	!imm 0x10000
+MOVZ	32	0	0	0	0	1	32	-	!translatio 32 in W
+MOVZ	64	0	0	0	0	1	8	-	!translatio 8
+MOVK	64	3	0	0	0	0x9abc	16	-	movk x3, #0x9abc, lsl #16
+MOVK	64	3	0	0	0	0x5678	32	-	movk x3, #0x5678, lsl #32
+MOVK	64	3	0	0	0	0x1234	48	-	movk x3, #0x1234, lsl #48
+MOVK	32	3	0	0	0	0x1234	16	-	movk w3, #0x1234, lsl #16
+MOVK	64	3	0	0	0	0xffff	16	-	movk x3, #0xffff, lsl #16
+MOVK	32	0	0	0	0	1	48	-	!translatio 48 in W
+MOVN	64	3	0	0	0	0	0	-	movn x3, #0
+MOVN	32	3	0	0	0	0	0	-	movn w3, #0
+MOVN	64	3	0	0	0	0xedcb	0	-	movn x3, #0xedcb
+MOVN	32	0	0	0	0	0	16	-	movn w0, #0, lsl #16
+MOVN	64	0	0	0	0	0xffff	48	-	movn x0, #0xffff, lsl #48
+MOVN	64	0	0	0	0	-1	0	-	!imm -1
+CSINC	64	0	31	31	0	0	0	NE	csinc x0, xzr, xzr, ne
+CSINC	32	0	1	2	0	0	0	LE	csinc w0, w1, w2, le
+CSEL	64	0	1	2	0	0	0	EQ	csel x0, x1, x2, eq
+CSEL	64	0	1	2	0	0	0	NE	csel x0, x1, x2, ne
+CSEL	64	0	1	2	0	0	0	HS	csel x0, x1, x2, hs
+CSEL	64	0	1	2	0	0	0	LO	csel x0, x1, x2, lo
+CSEL	64	0	1	2	0	0	0	MI	csel x0, x1, x2, mi
+CSEL	64	0	1	2	0	0	0	PL	csel x0, x1, x2, pl
+CSEL	64	0	1	2	0	0	0	VS	csel x0, x1, x2, vs
+CSEL	64	0	1	2	0	0	0	VC	csel x0, x1, x2, vc
+CSEL	64	0	1	2	0	0	0	HI	csel x0, x1, x2, hi
+CSEL	64	0	1	2	0	0	0	LS	csel x0, x1, x2, ls
+CSEL	64	0	1	2	0	0	0	GE	csel x0, x1, x2, ge
+CSEL	64	0	1	2	0	0	0	LT	csel x0, x1, x2, lt
+CSEL	64	0	1	2	0	0	0	GT	csel x0, x1, x2, gt
+CSEL	64	0	1	2	0	0	0	LE	csel x0, x1, x2, le
+CSEL	64	0	1	2	0	0	0	AL	csel x0, x1, x2, al
+CSEL	32	0	1	2	0	0	0	HS	csel w0, w1, w2, hs
+CSEL	16	0	1	2	0	0	0	EQ	!latitudo 16
+LDR_IMM	1	0	1	0	0	0	0	-	ldrb w0, [x1]
+LDR_IMM	1	0	1	0	0	4095	0	-	ldrb w0, [x1, #4095]
+LDR_IMM	2	0	1	0	0	8190	0	-	ldrh w0, [x1, #8190]
+LDR_IMM	4	0	1	0	0	16380	0	-	ldr w0, [x1, #16380]
+LDR_IMM	8	0	1	0	0	32760	0	-	ldr x0, [x1, #32760]
+LDR_IMM	8	0	31	0	0	8	0	-	ldr x0, [sp, #8]
+LDR_IMM	8	0	1	0	0	32768	0	-	!offset 32768
+LDR_IMM	8	0	1	0	0	4	0	-	!offset non alignatum
+LDR_IMM	8	0	1	0	0	-8	0	-	!offset negativum
+LDR_IMM	3	0	1	0	0	0	0	-	!octeti 3
+LDR_IMM	16	0	1	0	0	0	0	-	!octeti 16
+STR_IMM	1	0	1	0	0	4095	0	-	strb w0, [x1, #4095]
+STR_IMM	2	2	3	0	0	2	0	-	strh w2, [x3, #2]
+STR_IMM	4	0	31	0	0	4	0	-	str w0, [sp, #4]
+STR_IMM	8	29	31	0	0	32760	0	-	str x29, [sp, #32760]
+STR_IMM	2	0	1	0	0	1	0	-	!offset non alignatum
+LDRS_IMM	1	0	1	0	0	4095	0	-	ldrsb x0, [x1, #4095]
+LDRS_IMM	2	0	1	0	0	8190	0	-	ldrsh x0, [x1, #8190]
+LDRS_IMM	4	0	1	0	0	16380	0	-	ldrsw x0, [x1, #16380]
+LDRS_IMM	8	0	1	0	0	0	0	-	!octeti 8
+LDR_REG	8	0	1	2	0	0	3	-	ldr x0, [x1, x2, lsl #3]
+LDR_REG	8	0	1	2	0	0	0	-	ldr x0, [x1, x2]
+LDR_REG	1	0	1	2	0	0	0	-	ldrb w0, [x1, x2]
+LDR_REG	2	0	1	2	0	0	1	-	ldrh w0, [x1, x2, lsl #1]
+LDR_REG	4	0	1	2	0	0	2	-	ldr w0, [x1, x2, lsl #2]
+LDR_REG	8	0	1	2	0	0	2	-	!translatio 2 pro VIII
+LDR_REG	1	0	1	2	0	0	1	-	!translatio 1 pro I
+STR_REG	8	0	1	2	0	0	3	-	str x0, [x1, x2, lsl #3]
+STR_REG	1	0	1	2	0	0	0	-	strb w0, [x1, x2]
+STR_REG	2	0	1	2	0	0	0	-	strh w0, [x1, x2]
+STR_REG	4	0	1	2	0	0	2	-	str w0, [x1, x2, lsl #2]
+LDP	8	29	31	30	0	0	0	-	ldp x29, x30, [sp]
+LDP	8	29	31	30	0	16	2	-	ldp x29, x30, [sp], #16
+LDP	8	0	2	1	0	504	0	-	ldp x0, x1, [x2, #504]
+LDP	8	0	2	1	0	-512	1	-	ldp x0, x1, [x2, #-512]!
+LDP	4	0	2	1	0	252	0	-	ldp w0, w1, [x2, #252]
+LDP	4	0	2	1	0	-256	0	-	ldp w0, w1, [x2, #-256]
+LDP	8	0	2	1	0	512	0	-	!offset 512
+LDP	8	0	2	1	0	4	0	-	!offset non alignatum
+LDP	8	0	2	1	0	0	3	-	!modus 3
+STP	8	29	31	30	0	-16	1	-	stp x29, x30, [sp, #-16]!
+STP	8	29	31	30	0	0	0	-	stp x29, x30, [sp]
+STP	8	19	31	20	0	16	0	-	stp x19, x20, [sp, #16]
+STP	4	0	31	1	0	8	2	-	stp w0, w1, [sp], #8
+STP	8	0	31	1	0	-520	0	-	!offset -520
+LDR_FP_IMM	8	0	1	0	0	32760	0	-	ldr d0, [x1, #32760]
+LDR_FP_IMM	4	0	1	0	0	16380	0	-	ldr s0, [x1, #16380]
+LDR_FP_IMM	8	8	31	0	0	0	0	-	ldr d8, [sp]
+LDR_FP_IMM	2	0	1	0	0	0	0	-	!octeti 2
+LDR_FP_IMM	8	0	1	0	0	32768	0	-	!offset 32768
+STR_FP_IMM	8	0	31	0	0	8	0	-	str d0, [sp, #8]
+STR_FP_IMM	4	1	2	0	0	4	0	-	str s1, [x2, #4]
+STR_FP_IMM	8	0	1	0	0	12	0	-	!offset non alignatum
+LDP_FP	8	8	31	9	0	16	2	-	ldp d8, d9, [sp], #16
+LDP_FP	8	8	31	9	0	504	0	-	ldp d8, d9, [sp, #504]
+LDP_FP	4	0	0	1	0	-256	1	-	ldp s0, s1, [x0, #-256]!
+LDP_FP	8	8	31	9	0	512	0	-	!offset 512
+STP_FP	8	8	31	9	0	-16	1	-	stp d8, d9, [sp, #-16]!
+STP_FP	8	10	31	11	0	16	0	-	stp d10, d11, [sp, #16]
+STP_FP	4	0	0	1	0	0	0	-	stp s0, s1, [x0]
+STP_FP	16	0	0	1	0	0	0	-	!octeti 16
+ADR	64	0	0	0	0	0	0	-	adr x0, #0
+ADR	64	1	0	0	0	1048575	0	-	adr x1, #1048575
+ADR	64	1	0	0	0	-1048576	0	-	adr x1, #-1048576
+ADR	64	0	0	0	0	1048576	0	-	!imm 1048576
+ADR	32	0	0	0	0	0	0	-	!latitudo 32
+ADRP	64	0	0	0	0	4096	0	-	adrp x0, #4096
+ADRP	64	0	0	0	0	-4294967296	0	-	adrp x0, #-4294967296
+ADRP	64	0	0	0	0	4294963200	0	-	adrp x0, #4294963200
+ADRP	64	0	0	0	0	4095	0	-	!non pagina
+ADRP	64	0	0	0	0	4294967296	0	-	!imm 4294967296
+B	64	0	0	0	0	0	0	-	b #0
+B	64	0	0	0	0	134217724	0	-	b #134217724
+B	64	0	0	0	0	-134217728	0	-	b #-134217728
+B	64	0	0	0	0	-12	0	-	b #-12
+B	64	0	0	0	0	134217728	0	-	!imm 134217728
+B	64	0	0	0	0	2	0	-	!non alignatum
+BL	64	0	0	0	0	4	0	-	bl #4
+BL	64	0	0	0	0	-134217728	0	-	bl #-134217728
+BL	64	0	0	0	0	134217728	0	-	!imm 134217728
+B_COND	64	0	0	0	0	12	0	NE	b.ne #12
+B_COND	64	0	0	0	0	1048572	0	EQ	b.eq #1048572
+B_COND	64	0	0	0	0	-1048576	0	LT	b.lt #-1048576
+B_COND	64	0	0	0	0	1048576	0	EQ	!imm 1048576
+CBZ	64	0	0	0	0	1048572	0	-	cbz x0, #1048572
+CBZ	64	0	0	0	0	-1048576	0	-	cbz x0, #-1048576
+CBZ	32	5	0	0	0	8	0	-	cbz w5, #8
+CBZ	64	0	0	0	0	1048576	0	-	!imm 1048576
+CBZ	64	0	0	0	0	6	0	-	!non alignatum
+CBNZ	64	1	0	0	0	-4	0	-	cbnz x1, #-4
+CBNZ	32	0	0	0	0	1048572	0	-	cbnz w0, #1048572
+CBNZ	64	0	0	0	0	-1048580	0	-	!imm -1048580
+BR	64	0	16	0	0	0	0	-	br x16
+BR	64	0	32	0	0	0	0	-	!rn 32
+BLR	64	0	8	0	0	0	0	-	blr x8
+BLR	64	0	30	0	0	0	0	-	blr x30
+RET	64	0	30	0	0	0	0	-	ret
+RET	64	0	5	0	0	0	0	-	ret x5
+FADD	64	0	1	2	0	0	0	-	fadd d0, d1, d2
+FADD	32	3	4	5	0	0	0	-	fadd s3, s4, s5
+FSUB	64	0	1	2	0	0	0	-	fsub d0, d1, d2
+FSUB	32	3	4	5	0	0	0	-	fsub s3, s4, s5
+FMUL	64	0	1	2	0	0	0	-	fmul d0, d1, d2
+FMUL	32	3	4	5	0	0	0	-	fmul s3, s4, s5
+FDIV	64	0	1	2	0	0	0	-	fdiv d0, d1, d2
+FDIV	32	3	4	5	0	0	0	-	fdiv s3, s4, s5
+FSUB	64	31	30	29	0	0	0	-	fsub d31, d30, d29
+FADD	16	0	1	2	0	0	0	-	!latitudo 16
+FNEG	64	0	1	0	0	0	0	-	fneg d0, d1
+FNEG	32	0	1	0	0	0	0	-	fneg s0, s1
+FCMP	64	0	0	1	0	0	0	-	fcmp d0, d1
+FCMP	32	0	2	3	0	0	0	-	fcmp s2, s3
+FCMP_ZERO	64	0	0	0	0	0	0	-	fcmp d0, #0.0
+FCMP_ZERO	32	0	7	0	0	0	0	-	fcmp s7, #0.0
+FMOV_REG	64	0	1	0	0	0	0	-	fmov d0, d1
+FMOV_REG	32	0	1	0	0	0	0	-	fmov s0, s1
+FMOV_IMM	64	0	0	0	0	120	0	-	fmov d0, #1.5
+FMOV_IMM	32	0	0	0	0	191	0	-	fmov s0, #-31.0
+FMOV_IMM	64	0	0	0	0	256	0	-	!imm8 256
+FMOV_GEN	64	0	1	0	0	0	0	-	fmov d0, x1
+FMOV_GEN	64	0	1	0	0	0	1	-	fmov x0, d1
+FMOV_GEN	32	0	1	0	0	0	0	-	fmov s0, w1
+FMOV_GEN	32	0	1	0	0	0	1	-	fmov w0, s1
+FMOV_GEN	64	0	1	0	0	0	2	-	!translatio 2
+FCVT	64	0	1	0	0	0	0	-	fcvt d0, s1
+FCVT	32	0	1	0	0	0	0	-	fcvt s0, d1
+FCVT	16	0	1	0	0	0	0	-	!latitudo 16
+SCVTF	64	0	1	0	0	0	64	-	scvtf d0, x1
+SCVTF	64	0	1	0	0	0	32	-	scvtf s0, x1
+SCVTF	32	0	1	0	0	0	64	-	scvtf d0, w1
+SCVTF	32	0	1	0	0	0	32	-	scvtf s0, w1
+UCVTF	64	0	1	0	0	0	64	-	ucvtf d0, x1
+UCVTF	64	0	1	0	0	0	32	-	ucvtf s0, x1
+UCVTF	32	0	1	0	0	0	64	-	ucvtf d0, w1
+UCVTF	32	0	1	0	0	0	32	-	ucvtf s0, w1
+FCVTZS	64	0	1	0	0	0	64	-	fcvtzs x0, d1
+FCVTZS	64	0	1	0	0	0	32	-	fcvtzs x0, s1
+FCVTZS	32	0	1	0	0	0	64	-	fcvtzs w0, d1
+FCVTZS	32	0	1	0	0	0	32	-	fcvtzs w0, s1
+FCVTZU	64	0	1	0	0	0	64	-	fcvtzu x0, d1
+FCVTZU	64	0	1	0	0	0	32	-	fcvtzu x0, s1
+FCVTZU	32	0	1	0	0	0	64	-	fcvtzu w0, d1
+FCVTZU	32	0	1	0	0	0	32	-	fcvtzu w0, s1
+SCVTF	64	0	1	0	0	0	16	-	!translatio 16
+BRK	64	0	0	0	0	0	0	-	brk #0
+BRK	64	0	0	0	0	0xffff	0	-	brk #0xffff
+BRK	64	0	0	0	0	0x10000	0	-	!imm 0x10000
