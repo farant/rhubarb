@@ -74,7 +74,7 @@ task named.
 | `include/statua.h`, `lib/statua.c` | the model value, pose, bounds |
 | `include/statua_glb.h`, `lib/statua_glb.c` | GLB bytes -> model |
 | `include/statua_pictura.h`, `lib/statua_pictura.c` | renderer |
-| `include/dithering.h`, `lib/dithering.c` | + Bayer, + nearest |
+| `include/dithering_ordinatum.h`, `lib/dithering_ordinatum.c` | Bayer, nearest |
 | `include/statuae_repositorium.h`, `lib/statuae_repositorium.c` | store |
 | `tools/statuae.c`, `tools/statuae_struere.sh`, `aedificatio.stml` | `bin/statuae` |
 | `include/membrum__delectus.h`, `lib/membrum__delectus.c` | dropdown member |
@@ -443,8 +443,10 @@ Fixed by this plan:
 
 ### Task 5: Bayer and nearest in the dithering library
 
-**Files:** modify `include/dithering.h`, `lib/dithering.c`; create or
-extend `probationes/probatio_dithering.c` (check which exists first).
+**Files:** create `include/dithering_ordinatum.h`,
+`lib/dithering_ordinatum.c`, `probationes/probatio_dithering_ordinatum.c`
+(a separate module: `dithering.c` must stay free of the exemplaria
+sources, which tessera does not link).
 
 **Consumes:** `DITHERING_BAYER` (8x8 thresholds,
 `include/dithering_exemplaria_fontes.h`). **Produces:**
@@ -463,13 +465,14 @@ DitheringFructus dithering_bayer_colorum (constans i8* rgba,
     Piscina* piscina);
 ```
 
-Bayer per pixel p (RGB, same distance as Atkinson uses): a = nearest
-active colour; b = nearest active colour to the mirrored point
-`2p - a` (each channel clamped to 0..255); if b == a output a; else
-t = clamp(dot(p - a, b - a) / |b - a|^2, 0, 1) and the output is b
-when `t * 64 > DITHERING_BAYER[y & 7][x & 7] + 0.5`, else a. Ties in
-"nearest" go to the lower index. If the table's values are not 0..63,
-normalize to that range once and say so in the worklog.
+Bayer (as built; the plan's two-colour rule was dropped after it was
+seen on real frames - `lib/dithering_ordinatum.worklog.md`): for each pixel
+colour a plan of 16 candidates is made. Candidate k is the nearest
+active colour to the pixel plus the accumulated error of candidates
+0..k-1; the candidates are sorted by luminance and the output is
+`candidati[DITHERING_BAYER[y & 7][x & 7] / 4]`. Plans are kept per
+call in a table keyed by colour. Ties in "nearest" go to the lower
+index.
 
 - [ ] Tests:
   - "proximus": each palette colour maps to itself; with only black

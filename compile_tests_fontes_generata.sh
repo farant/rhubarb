@@ -122,6 +122,7 @@ declare -a SOURCE_FILES=(
     "lib/dithering_exemplaria_fontes.c"
     "lib/dithering_exemplaria_tabulae.c"
     "lib/dithering_exemplaria_velox.c"
+    "lib/dithering_ordinatum.c"
     "lib/diurna.c"
     "lib/elementa.c"
     "lib/elenchus.c"

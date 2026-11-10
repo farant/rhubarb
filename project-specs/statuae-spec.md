@@ -242,8 +242,9 @@ The two files (`a-low-poly-stone-golem-composed-of-stack.glb`,
    library with the same shape of signature (RGBA, size, active
    colours, arena -> indices). 8x8 grid anchored to the picture's
    origin, from the same pattern source exemplaria uses. Per pixel it
-   picks two palette colours and lets the grid choose between them in
-   proportion.
+   makes a plan of 16 palette colours whose average approximates the
+   pixel and lets the grid choose one. (Built in T5; a two-colour
+   version was tried first and looked garish on this palette.)
 6. *The store.* Add, remove and list models in a volume (decision 20).
 7. *The command* (`bin/statuae`). `addere <file> [-titulus <name>]
    [-volumen <path>]`, `removere <title>`, `enumerare`. `addere` runs
