@@ -259,6 +259,30 @@ shared bootstrap, which the full run pays once); the larger lever is
 that nearly everything runs on one core of eight. Ledger note
 01M71SRD3BW14D77MTXD9DJD9M.
 
+### VII.b Census of the root cold setup (2026-11-09, third run, timestamps)
+
+Log lines stamped as they appear plus every process over 1 CPU s. Tests
+start at 147 s; everything before is one process at a time except the
+library objects.
+
+| t (s) | step | wall | note |
+|---|---|---|---|
+| 0-3 | git worktree checkout | 3 | |
+| 3-15 | aedilis_struere | 12 | silva.c 8.6 s |
+| 16-70 | compilator_struere (fabrica_struere inside) | 54 | silva.c AGAIN 8.0 s (other object name); sqlite3.c 10.6 s; `fabrica digestum fabrica` 9.8 s, `... aedilis` 1.9 s, `... compilator` 9.0 s |
+| 70-99 | 471 library objects, 4 lanes | 29 | sqlite3.c a 2nd time 11.5 s (sets the lane's length); bearssl 4.2 s |
+| 99-115 | gesta/tabulariumd.sh -struere | 16 | sqlite3.c a 3rd time 10.8 s |
+| 115-129 | generators, speculum capsule, JS and QR checks | 14 | |
+| 129-147 | natura_struere + full link of 471 objects | 18 | `fabrica digestum natura` 4 x ~2 s |
+| 147-329 | 481 tests, 4 lanes | 182 | ~2.4 lanes busy |
+
+Duplicates: sqlite3.c three times (33 CPU s, two avoidable = ~22 s),
+silva.c twice (~8 s avoidable). Provenance stamps (`fabrica digestum`):
+~29 s in total, 9-10 s each for fabrica and compilator. E7 ("compiled
+once") does not reach these: the first two happen before compilator
+exists, the third is tabulariumd's own build. 2 of today's 3 cold root
+runs were red on probatio_vicus_admonitiones (question 01M5YTX3XD).
+
 ## AUDIENDA (not verified)
 
 - Every minute figure above is an estimate from profiles taken under
