@@ -234,6 +234,7 @@ declare -a SOURCE_FILES=(
     "lib/mcp_servus_http.c"
     "lib/membrum__album.c"
     "lib/membrum__charta.c"
+    "lib/membrum__delectus.c"
     "lib/membrum__elenchi.c"
     "lib/membrum__praecepta.c"
     "lib/membrum__prompta.c"

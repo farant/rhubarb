@@ -1305,7 +1305,7 @@
   <vocabulum lemma="suita" lingua="latina" classis="substantivum" nota="domus: suita probationum (credo v2 sectiones; non Latina classica)"><forma textus="suita"/><forma textus="suitam"/><forma textus="suitae"/><forma textus="suitarum"/><forma textus="suitas"/></vocabulum>
   <vocabulum lemma="dctx" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio pictor (delineare_mandata: contextus delineandi) - renominanda si placet"/>
   <vocabulum lemma="toy" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: ludus_toy.h fixtura - renominanda si placet"/>
-  <vocabulum lemma="botton" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor (fenestra): button? - renominandum si placet"><forma textus="bottonis"/></vocabulum>
+  <vocabulum lemma="botton" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor (fenestra): button? - renominandum si placet"><forma textus="bottonis"/><forma textus="bottonem"/></vocabulum>
   <vocabulum lemma="index2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
   <vocabulum lemma="radix2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
   <vocabulum lemma="repo2" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="pictor: variabilis numerata probationis - renominanda si placet"/>
