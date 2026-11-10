@@ -198,6 +198,14 @@ _probare_systema (
     CREDO_NECESSE(via != NIHIL);
     CREDO_NECESSE(aedificare(x, c));
     v = x->app.vicus;
+    /* tabula III (scriba | scriba): in tabula I terminale dextrum
+     * VISIBILE est, et concha eius promptam suo tempore scribit - sub
+     * onere inter pulsum primum et alterum, et 'CREDO_FALSUM(
+     * vicus_pulsare)' infra tunc VERUM videbat (latus mutatum, non
+     * systema admonitionum; fluctuatio 01M5YTX3XD, XXXI ex CLX simul
+     * cursis, omnes per '1_dextrum_terminale'). Latus non visibile
+     * pingendum non petit (exemplar: probatio_vicus_paginae). */
+    CREDO_NECESSE(vicus_activam_ponere(v, "3"));
     CREDO_VERUM(vicus_applicatio_admonitiones_aperire(&x->app, via));
     CREDO_FALSUM(vicus_applicatio_admonitiones_aperire(&x->app, via));
     CREDO_VERUM(vicus_pulsare(v));
