@@ -62,12 +62,44 @@ nomen structura {
 /* index palettae coloris chartae (Albus) */
 #define STATUAE_CHARTA_INDEX V
 
+/* fines tecti: margo circa pixela tecta, et gradus reticuli ad quem
+ * fines aptantur (exemplaria formas suas reticulo octonario ligat:
+ * fines non aptati formas inter quadra movent) */
+#define STATUAE_FINIUM_MARGO  VIII
+#define STATUAE_FINIUM_GRADUS VIII
+
+/*
+ * statuae_fines_tecti - rectangulum minimum circa pixela tecta
+ *
+ * @tectum: I per pixelum (StatuaPictura.tectum), ordo summus primus
+ * @x, @y, @latitudo_finium, @altitudo_finium: rectangulum; margo
+ *   STATUAE_FINIUM_MARGO additur, anguli ad multipla
+ *   STATUAE_FINIUM_GRADUS extra aptantur, deinde ad picturam coguntur
+ *
+ * Redde: FALSUM si nihil tectum aut argumentum NIHIL (exitus non
+ * mutantur)
+ */
+b32
+statuae_fines_tecti (
+    constans i8* tectum,
+            i32  latitudo,
+            i32  altitudo,
+            i32* x,
+            i32* y,
+            i32* latitudo_finium,
+            i32* altitudo_finium);
+
 /*
  * statuae_quadrum_pingere - quadrum unum
  *
  * Omnes XVI colores activi. Pixela quae statua non tegit charta
  * munda sunt, quidquid dithering prope marginem fecit. Latitudo aut
  * altitudo 0: imago vacua (pixela NIHIL), VERUM.
+ *
+ * Modus exemplaria solum intra statuae_fines_tecti currit (pictura
+ * praecisa, deinde reposita): pixela vacua circa statuam tempus non
+ * sumunt. Pixela tecta eadem sunt ac si praecisio manu dithering
+ * acciperet; a dithering quadri totius differre licet.
  *
  * Redde: FALSUM si statua aut petitio NIHIL, modus extra fines, aut
  * dithering deficit

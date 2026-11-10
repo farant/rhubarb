@@ -358,6 +358,13 @@ Headless vicus, optimized test build, golem walking, lit, 20 frames:
   by tool and pane (T6); opaque paper in the frame over a plain
   background, because the focused pane's background is a dot pattern
   (T9).
+- Exemplaria now dithers only the box around the model (8-pixel
+  margin, 8-pixel grid; Fran, 2026-11-10, after watching it move):
+  25-45 ms a frame at 360 wide in place of 62-67, 39-72 ms at 480
+  wide in place of 99-106. The table above predates this. Covered
+  pixels differ from the full-frame dither in 6-17 % of places; stills
+  look the same. Numbers and the next lever (a mask inside
+  exemplaria) in `lib/statuae_quadrum.worklog.md`.
 - Open, filed in the tabularium: vicus has no hook when a pane
   closes, so a closed and reopened pane leaves its memory behind;
   `elenchus_clavem_agere` does not see j / k from real key events;

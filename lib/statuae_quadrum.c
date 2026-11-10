@@ -42,6 +42,124 @@ statuae_modum_legere (
     redde FALSUM;
 }
 
+b32
+statuae_fines_tecti (
+    constans i8* tectum,
+            i32  latitudo,
+            i32  altitudo,
+            i32* x,
+            i32* y,
+            i32* latitudo_finium,
+            i32* altitudo_finium)
+{
+    s32 sinistrum  = (s32)latitudo;
+    s32 summum     = (s32)altitudo;
+    s32 dextrum    = -I;
+    s32 infimum    = -I;
+    s32 px;
+    s32 py;
+
+    si (!tectum || !x || !y || !latitudo_finium || !altitudo_finium)
+    {
+        redde FALSUM;
+    }
+    per (py = ZEPHYRUM; py < (s32)altitudo; py++)
+    {
+        constans i8* linea = tectum + (i32)py * latitudo;
+
+        per (px = ZEPHYRUM; px < (s32)latitudo; px++)
+        {
+            si (!linea[px])
+            {
+                perge;
+            }
+            sinistrum  = px < sinistrum ? px : sinistrum;
+            dextrum    = px > dextrum ? px : dextrum;
+            summum     = py < summum ? py : summum;
+            infimum    = py;
+        }
+    }
+    si (dextrum < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* margo; anguli extra ad reticulum; intra picturam */
+    sinistrum  -= STATUAE_FINIUM_MARGO;
+    summum     -= STATUAE_FINIUM_MARGO;
+    dextrum    += STATUAE_FINIUM_MARGO + I;
+    infimum    += STATUAE_FINIUM_MARGO + I;
+    sinistrum  = sinistrum < ZEPHYRUM ? ZEPHYRUM
+        : sinistrum / STATUAE_FINIUM_GRADUS * STATUAE_FINIUM_GRADUS;
+    summum     = summum < ZEPHYRUM ? ZEPHYRUM
+        : summum / STATUAE_FINIUM_GRADUS * STATUAE_FINIUM_GRADUS;
+    dextrum    = (dextrum + STATUAE_FINIUM_GRADUS - I)
+        / STATUAE_FINIUM_GRADUS * STATUAE_FINIUM_GRADUS;
+    infimum    = (infimum + STATUAE_FINIUM_GRADUS - I)
+        / STATUAE_FINIUM_GRADUS * STATUAE_FINIUM_GRADUS;
+    dextrum = dextrum > (s32)latitudo ? (s32)latitudo : dextrum;
+    infimum = infimum > (s32)altitudo ? (s32)altitudo : infimum;
+    *x = (i32)sinistrum;
+    *y = (i32)summum;
+    *latitudo_finium = (i32)(dextrum - sinistrum);
+    *altitudo_finium = (i32)(infimum - summum);
+    redde VERUM;
+}
+
+/* exemplaria intra fines tecti solum: pictura praecisa dithering
+ * accipit et in exitum reponitur. Extra fines exitus non scribitur
+ * (vocans chartam ibi ponit). FALSUM si dithering deficit */
+interior b32
+_exemplaria_intra_fines (
+    constans StatuaPictura* pictura,
+                        i8* exitus,
+                   Piscina* piscina)
+{
+    DitheringFructus  f;
+                 b32  activi[XVI];
+                 i32  x;
+                 i32  y;
+                 i32  lat;
+                 i32  alt;
+                 i32  linea;
+                  i8* praecisa;
+                  i8* picta;
+
+    si (!statuae_fines_tecti(pictura->tectum, pictura->latitudo,
+        pictura->altitudo, &x, &y, &lat, &alt))
+    {
+        redde VERUM;
+    }
+    praecisa = (i8*)piscina_allocare(piscina,
+        (memoriae_index)lat * alt * IV);
+    picta    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)lat * alt * IV);
+    per (linea = ZEPHYRUM; linea < alt; linea++)
+    {
+        memcpy(praecisa + (memoriae_index)linea * lat * IV,
+            pictura->rgba
+                + ((memoriae_index)(y + linea) * pictura->latitudo + x)
+                    * IV,
+            (memoriae_index)lat * IV);
+    }
+    dithering_praeparare_omnes(activi);
+    f = dithering_exemplaria_velox_colorum(praecisa, lat, alt, activi,
+        NIHIL, NIHIL, piscina);
+    si (!f.successus || !f.indices)
+    {
+        redde FALSUM;
+    }
+    dithering_indices_ad_rgba(f.indices, picta, lat, alt);
+    per (linea = ZEPHYRUM; linea < alt; linea++)
+    {
+        memcpy(exitus
+                + ((memoriae_index)(y + linea) * pictura->latitudo + x)
+                    * IV,
+            picta + (memoriae_index)linea * lat * IV,
+            (memoriae_index)lat * IV);
+    }
+    redde VERUM;
+}
+
 /* pictura cruda in palettam secundum modum; FALSUM si deficit */
 interior b32
 _dithering (
@@ -65,10 +183,7 @@ _dithering (
                 pictura->latitudo, pictura->altitudo, activi, piscina);
             frange;
         casus STATUAE_MODUS_EXEMPLARIA:
-            f = dithering_exemplaria_velox_colorum(pictura->rgba,
-                pictura->latitudo, pictura->altitudo, activi, NIHIL,
-                NIHIL, piscina);
-            frange;
+            redde _exemplaria_intra_fines(pictura, exitus, piscina);
         ordinarius:
             f = dithering_proximus_colorum(pictura->rgba,
                 pictura->latitudo, pictura->altitudo, activi, piscina);
