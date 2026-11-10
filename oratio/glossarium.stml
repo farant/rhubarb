@@ -453,6 +453,9 @@
   <vocabulum lemma="cartan" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Elie Cartan (matrix Cartan systematis radicum, probatio_reticulum.c)"/>
   <vocabulum lemma="lovasz" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Laszlo Lovasz (condicio Lovasz in reductione LLL, lib/reticulum.c)"/>
   <vocabulum lemma="lll" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: Lenstra-Lenstra-Lovasz, reductio basium reticuli (lib/reticulum.c)"/>
+  <vocabulum lemma="stereometria" lingua="latina" classis="substantivum" nota="mensura solidorum: mathematica spatii trium dimensionum in f32 - vectores, quaterniones, matrices IV x IV (include/stereometria.h; 'spatium' iam spatium nominum arboris est)"><forma textus="stereometria"/></vocabulum>
+  <vocabulum lemma="trs" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio: translatio, rotatio, scala - forma nodi glTF (stereometria_ex_trs, stereometria_in_trs)"/>
+  <vocabulum lemma="slerp" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="abbreviatio technica: spherical linear interpolation, interpolatio sphaerica quaternionum (stereometria_quaternio_slerp)"/>
   <vocabulum lemma="galois" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: Evariste Galois (automorphismi Galois, lib/cyclotomia.c)"/>
   <vocabulum lemma="gauss" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: C. F. Gauss (summae Gauss, probationes/probatio_cyclotomia.c)"/>
   <vocabulum lemma="sturm" lingua="anglica" classis="ignotum-permissum" contextus="latinus" nota="nomen proprium: J. C. F. Sturm (catena Sturm, numerus radicum realium; lib/extensio.c)"/>
