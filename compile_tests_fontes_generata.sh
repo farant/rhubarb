@@ -307,6 +307,7 @@ declare -a SOURCE_FILES=(
     "lib/pinacotheca_visus.c"
     "lib/piscina.c"
     "lib/planta_lectio.c"
+    "lib/plastica.c"
     "lib/plexus.c"
     "lib/plist.c"
     "lib/polynomium.c"
