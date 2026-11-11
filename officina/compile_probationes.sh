@@ -194,6 +194,18 @@ fi
 post="$(stat -f '%i %N' "$BUILD_DIR"/*.o 2>/dev/null)"
 echo "  obiecta: $(grep -c . "$VOCATIONES") per bin/compilator, $(comm -13 <(echo "$ante" | sort) <(echo "$post" | sort) | grep -c .) mutata"
 
+# INDEX SYMBOLORUM (build/nexus.tsv) SANATUS ante probationes
+# (2026-11-10, budget fusionis VII: officina SOLA in clone frigida
+# rubra). probatio_officina_lanceatores (interpretare sine -plagulae:
+# "mundus: 1 moduli" ex indice) et probatio_officina_legatus (modus
+# MCP: symbola, vocantes, inclusiones) indicem arboris VERAE legunt;
+# cursor hic eum numquam faciebat - viridis solum quia suita radicis
+# (aut oratio) prius cucurrerat. Mos orationis: percursus incrementalis
+# ~I s nulla mutatione, plenus (~XXXV s CPU) in arbore frigida.
+if ! "$RADIX_DIR/silva/nexus.sh" -renovare > "$BUILD_DIR/nexus_renovatio.log" 2>&1; then
+    echo "CAUTIO: index nexus non renovatus (officina/build/nexus_renovatio.log) - lanceatores et legatus contra tabulam veterem aut absentem currunt" >&2
+fi
+
 # ---- 4. discover, compile, run probationes ----
 # Probatio per compilatorem (obiectum in build/probationes/), nexus SOLUM
 # si signum nexus mutatum (tools/nexus_probationis.sh): olim omnis
