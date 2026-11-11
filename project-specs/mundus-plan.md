@@ -170,6 +170,11 @@ missing `extras` give 0 and never a refusal.
 
 ### Task 3: the scene entry in the renderer
 
+DONE 2026-11-10. Real level, every triangle, no culling: 3.7 ms at
+360x438 and 5.6 ms at 480x541 (40 ppu), 5.0 ms at 16 ppu. The
+"fixa" digest was pinned after Claude looked at the PNG
+(`build/statuae/scaena_lapis.png`); Fran has not seen it yet.
+
 **Files:** `include/statua_pictura.h`, `lib/statua_pictura.c`,
 `probationes/probatio_statua_pictura.c`.
 

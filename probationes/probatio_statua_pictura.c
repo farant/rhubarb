@@ -682,6 +682,425 @@ _sectio_fixa (
     }
 }
 
+
+/* ==================================================
+ * Scaena (mundus-plan T3): statuae locatae, visus parallelus
+ * ================================================== */
+
+#define SCAENAE_LATUS   LXIV
+
+/* scaena in positura quietis; matrices cuiusque statuae hic fiunt */
+interior StatuaScaenaPictura
+_scaenam_pingere (
+           CredoContextus* c,
+                   Statua* constans* statuae,
+    constans StereometriaMatrix* locationes,
+                      i32  numerus,
+                      f32  gyrus,
+                      f32  inclinatio,
+                      s32  origo_x,
+                      s32  origo_y)
+{
+           StatuaLocata* l;
+    StatuaScaenaPictura  p;
+      StatuaScaenaVisus  visus;
+     StereometriaMatrix* m;
+                    i32  k;
+
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    l = (StatuaLocata*)_locus(c, (numerus
+        + I) * magnitudo(StatuaLocata));
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        m = (StereometriaMatrix*)_locus(c,
+            (statuae[k]->nodorum + I) * magnitudo(StereometriaMatrix));
+        statua_positura(statuae[k], -I, 0.0f, m);
+        l[k].statua    = statuae[k];
+        l[k].matrices  = m;
+        l[k].locatio   = locationes ? locationes[k]
+            : stereometria_identitas();
+    }
+    visus.gyrus                = gyrus;
+    visus.inclinatio           = inclinatio;
+    visus.pixela_per_unitatem  = 10.0f;
+    visus.origo_x              = origo_x;
+    visus.origo_y              = origo_y;
+    visus.illuminatum          = FALSUM;
+    CREDO_VERUM (statua_scaenam_pingere(l, numerus, &visus,
+        SCAENAE_LATUS, SCAENAE_LATUS, &p, c->piscina));
+    redde p;
+}
+
+interior memoriae_index
+_scaenae_locus (
+    i32 x,
+    i32 y)
+{
+    redde (memoriae_index)y * SCAENAE_LATUS + x;
+}
+
+/* quadratum cum textura II x II (ruber, viridis / caeruleus, flavus) */
+interior Statua*
+_statuam_cum_textura (
+    CredoContextus* c)
+{
+    hic_manens constans i8 QUADRANTES[XVI] = {
+        255, 0, 0, 255, 0, 255, 0, 255, 0, 0, 255, 255, 255, 255, 0, 255
+    };
+    Statua* s = _statuam_parare(c, I, Z_UNUM);
+
+    s->materiae[ZEPHYRUM].textura = _texturam_addere(c, s, II, II,
+        QUADRANTES);
+    CREDO_VERUM (statua_finire(s, c->piscina));
+    redde s;
+}
+
+interior vacuum
+_sectio_scaena_proicere (
+    CredoContextus* c)
+{
+    StatuaScaenaVisus visus;
+                  f32 x            = 0.0f;
+                  f32 y            = 0.0f;
+                  f32 profunditas  = 0.0f;
+
+    (vacuum)c;
+    memset(&visus, ZEPHYRUM, magnitudo(visus));
+    visus.pixela_per_unitatem = 10.0f;
+    /* origo picturae proiectionem non movet: pixela MUNDI */
+    visus.origo_x = 77;
+    visus.origo_y = -5;
+    statua_scaena_proicere(&visus, stereometria_vector(1.0f, 2.0f,
+        3.0f),
+        &x, &y, &profunditas);
+    CREDO_F32_PROXIMUS (x, 10.0f, 0.0001f);
+    CREDO_F32_PROXIMUS (y, -20.0f, 0.0001f);
+    CREDO_F32_PROXIMUS (profunditas, -3.0f, 0.0001f);
+    /* gyrus XC: +x mundi ab oculo recedit (frons statuae ad dextram
+     * vertitur, ut in statua_pingere) */
+    visus.gyrus = 90.0f;
+    statua_scaena_proicere(&visus, stereometria_vector(0.0f, 0.0f,
+        1.0f),
+        &x, &y, &profunditas);
+    CREDO_F32_PROXIMUS (x, 10.0f, 0.0001f);
+    CREDO_F32_PROXIMUS (profunditas, 0.0f, 0.0001f);
+    /* inclinatio XC: oculus desuper, +y mundi ad oculum */
+    visus.gyrus       = 0.0f;
+    visus.inclinatio  = 90.0f;
+    statua_scaena_proicere(&visus, stereometria_vector(0.0f, 1.0f,
+        0.0f),
+        &x, &y, &profunditas);
+    CREDO_F32_PROXIMUS (y, 0.0f, 0.0001f);
+    CREDO_F32_PROXIMUS (profunditas, -1.0f, 0.0001f);
+}
+
+/* origines pixelis integris diversae: pixela communia eadem octetim
+ * (rgba, tectum, profunditas) */
+interior vacuum
+_sectio_scaena_lapsus (
+    CredoContextus* c)
+{
+                 Statua* s = _statuam_cum_textura(c);
+    StatuaScaenaPictura  a;
+    StatuaScaenaPictura  b;
+                    i32  x;
+                    i32  y;
+                    i32  communia  = ZEPHYRUM;
+                    i32  tecta     = ZEPHYRUM;
+                    i32  diversa   = ZEPHYRUM;
+
+    a = _scaenam_pingere(c, &s, NIHIL, I, 45.0f, 35.0f, -XXXII, -XXXII);
+    b = _scaenam_pingere(c, &s, NIHIL, I, 45.0f, 35.0f, -XXIX, -XXXVII);
+    /* pixelum mundi (wx, wy): in a ad (wx + 32, wy + 32), in b ad
+     * (wx + 29, wy + 37) -> b(x, y) = a(x + 3, y - 5) */
+    per (y = V; y < SCAENAE_LATUS; y++)
+    {
+        per (x = ZEPHYRUM; x + III < SCAENAE_LATUS; x++)
+        {
+            communia++;
+            tecta += b.tectum[_scaenae_locus(x, y)] ? I : ZEPHYRUM;
+            si (   memcmp(b.rgba + _scaenae_locus(x, y) * IV,
+                       a.rgba + _scaenae_locus(x + III, y - V) * IV, IV)
+                || b.tectum[_scaenae_locus(x, y)]
+                   != a.tectum[_scaenae_locus(x + III, y - V)]
+                || memcmp(&b.profunditas[_scaenae_locus(x, y)],
+                       &a.profunditas[_scaenae_locus(x + III, y - V)],
+                       magnitudo(f32)))
+            {
+                diversa++;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32 (diversa, ZEPHYRUM);
+    /* probatio non vacua: statua partem picturae tegit, non totam */
+    CREDO_VERUM (tecta > C);
+    CREDO_VERUM (tecta < communia);
+}
+
+/* duae statuae: propior tegit, tectum nominat; ordo pingendi nihil
+ * mutat praeter numeros tecti */
+interior vacuum
+_sectio_scaena_tectum (
+    CredoContextus* c)
+{
+                 Statua* statuae[II];
+                 Statua* inversae[II];
+     StereometriaMatrix  locationes[II];
+     StereometriaMatrix  locationes_inversae[II];
+    StatuaScaenaPictura  p;
+    StatuaScaenaPictura  q;
+                    i32  k;
+
+    statuae[ZEPHYRUM]  = _statuam_parare(c, I, Z_UNUM);
+    statuae[I]         = _statuam_parare(c, I, Z_UNUM);
+    /* altera rubra, unitate dextrorsum et unitate remotior */
+    statuae[I]->materiae[ZEPHYRUM].color[I]   = 0.0f;
+    statuae[I]->materiae[ZEPHYRUM].color[II]  = 0.0f;
+    CREDO_NECESSE (statua_finire(statuae[ZEPHYRUM], c->piscina));
+    CREDO_NECESSE (statua_finire(statuae[I], c->piscina));
+    locationes[ZEPHYRUM]  = stereometria_identitas();
+    locationes[I]         = stereometria_translatio(
+        stereometria_vector(1.0f, 0.0f, -1.0f));
+    p = _scaenam_pingere(c, statuae, locationes, II, 0.0f, 0.0f, -XXXII,
+        -XXXII);
+    /* prima x in [-10, 10), altera in [0, 20); y ambae [-10, 10) */
+    CREDO_AEQUALIS_I32 (p.tectum[_scaenae_locus(XXXII - V, XXXII)], I);
+    CREDO_AEQUALIS_I32 (p.tectum[_scaenae_locus(XXXII + V, XXXII)], I);
+    CREDO_AEQUALIS_I32 (p.tectum[_scaenae_locus(XXXII + XV, XXXII)],
+        II);
+    CREDO_AEQUALIS_I32 (p.tectum[_scaenae_locus(XXXII + XXV, XXXII)],
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (p.tectum[_scaenae_locus(XXXII - XV, XXXII)],
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (p.rgba[_scaenae_locus(XXXII + V, XXXII) * IV
+        + I],
+        255);
+    CREDO_AEQUALIS_I32 (p.rgba[_scaenae_locus(XXXII + XV, XXXII) * IV
+        + I],
+        ZEPHYRUM);
+    CREDO_F32_PROXIMUS (p.profunditas[_scaenae_locus(XXXII + V, XXXII)],
+        0.0f, 0.0001f);
+    CREDO_F32_PROXIMUS (p.profunditas[_scaenae_locus(XXXII + XV,
+        XXXII)],
+        1.0f, 0.0001f);
+    /* vacuum: album, profunditas maxima */
+    CREDO_AEQUALIS_I32 (p.rgba[ZEPHYRUM], 255);
+    CREDO_VERUM (p.profunditas[ZEPHYRUM] > 1.0e20f);
+    /* ordo inversus */
+    inversae[ZEPHYRUM]             = statuae[I];
+    inversae[I]                    = statuae[ZEPHYRUM];
+    locationes_inversae[ZEPHYRUM]  = locationes[I];
+    locationes_inversae[I]         = locationes[ZEPHYRUM];
+    q = _scaenam_pingere(c, inversae, locationes_inversae, II, 0.0f,
+        0.0f,
+        -XXXII, -XXXII);
+    CREDO_VERUM (memcmp(p.rgba, q.rgba,
+        SCAENAE_LATUS * SCAENAE_LATUS * IV) == ZEPHYRUM);
+    CREDO_VERUM (memcmp(p.profunditas, q.profunditas,
+        SCAENAE_LATUS * SCAENAE_LATUS * magnitudo(f32)) == ZEPHYRUM);
+    per (k = ZEPHYRUM; k < SCAENAE_LATUS * SCAENAE_LATUS; k++)
+    {
+        si (   (p.tectum[k] == ZEPHYRUM) != (q.tectum[k] == ZEPHYRUM)
+            || (p.tectum[k] && p.tectum[k] + q.tectum[k] != III))
+        {
+            frange;
+        }
+    }
+    CREDO_AEQUALIS_I32 (k, SCAENAE_LATUS * SCAENAE_LATUS);
+}
+
+/* locatio: translatio unitatis = X pixela exacte */
+interior vacuum
+_sectio_scaena_locatio (
+    CredoContextus* c)
+{
+                 Statua* s = _statuam_cum_textura(c);
+     StereometriaMatrix  locatio;
+    StatuaScaenaPictura  a;
+    StatuaScaenaPictura  b;
+                    i32  x;
+                    i32  y;
+                    i32  diversa = ZEPHYRUM;
+
+    locatio = stereometria_translatio(stereometria_vector(1.0f, -0.5f,
+        0.0f));
+    a = _scaenam_pingere(c, &s, NIHIL, I, 0.0f, 0.0f, -XXXII, -XXXII);
+    b = _scaenam_pingere(c, &s, &locatio, I, 0.0f, 0.0f, -XXXII,
+        -XXXII);
+    /* +x mundi: X pixela dextrorsum; -0.5 y mundi: V pixela deorsum */
+    per (y = V; y < SCAENAE_LATUS; y++)
+    {
+        per (x = X; x < SCAENAE_LATUS; x++)
+        {
+            si (   memcmp(b.rgba + _scaenae_locus(x, y) * IV,
+                       a.rgba + _scaenae_locus(x - X, y - V) * IV, IV)
+                || b.tectum[_scaenae_locus(x, y)]
+                   != a.tectum[_scaenae_locus(x - X, y - V)])
+            {
+                diversa++;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32 (diversa, ZEPHYRUM);
+    /* quadratum [-10, 10) pixela: XX x XX tecta, textura: quadrans
+     * summus sinister ruber */
+    y = ZEPHYRUM;
+    per (x = ZEPHYRUM; x < SCAENAE_LATUS * SCAENAE_LATUS; x++)
+    {
+        y += a.tectum[x] ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32 (y, XX * XX);
+    CREDO_AEQUALIS_I32 (a.rgba[_scaenae_locus(XXVII, XXVII) * IV], 255);
+    CREDO_AEQUALIS_I32 (a.rgba[_scaenae_locus(XXVII, XXVII) * IV + I],
+        ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (a.rgba[_scaenae_locus(XXXVII, XXXVII) * IV + I],
+        255);
+    CREDO_AEQUALIS_I32 (a.rgba[_scaenae_locus(XXXVII, XXXVII) * IV],
+        255);
+}
+
+/* tergum: a tergo visum non pingitur nisi bilateralis */
+interior vacuum
+_sectio_scaena_tergum (
+    CredoContextus* c)
+{
+                 Statua* s = _statuam_parare(c, I, Z_UNUM);
+    StatuaScaenaPictura  p;
+                    i32  k;
+                    i32  tecta = ZEPHYRUM;
+
+    CREDO_NECESSE (statua_finire(s, c->piscina));
+    p = _scaenam_pingere(c, &s, NIHIL, I, 180.0f, 0.0f, -XXXII, -XXXII);
+    per (k = ZEPHYRUM; k < SCAENAE_LATUS * SCAENAE_LATUS; k++)
+    {
+        tecta += p.tectum[k] ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32 (tecta, ZEPHYRUM);
+    s->materiae[ZEPHYRUM].bilateralis = VERUM;
+    p = _scaenam_pingere(c, &s, NIHIL, I, 180.0f, 0.0f, -XXXII, -XXXII);
+    per (k = ZEPHYRUM; k < SCAENAE_LATUS * SCAENAE_LATUS; k++)
+    {
+        tecta += p.tectum[k] ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32 (tecta, XX * XX);
+}
+
+interior vacuum
+_sectio_scaena_vacua (
+    CredoContextus* c)
+{
+                 Statua* s = _statuam_parare(c, I, Z_UNUM);
+     StereometriaMatrix  m[II];
+           StatuaLocata  l[II];
+      StatuaScaenaVisus  visus;
+    StatuaScaenaPictura  p;
+                    i32  k;
+
+    CREDO_NECESSE (statua_finire(s, c->piscina));
+    statua_positura(s, -I, 0.0f, m);
+    memset(l, ZEPHYRUM, magnitudo(l));
+    l[ZEPHYRUM].statua    = s;
+    l[ZEPHYRUM].matrices  = m;
+    l[ZEPHYRUM].locatio   = stereometria_identitas();
+    memset(&visus, ZEPHYRUM, magnitudo(visus));
+    visus.pixela_per_unitatem = 10.0f;
+    CREDO_VERUM (statua_scaenam_pingere(l, I, &visus, ZEPHYRUM,
+        ZEPHYRUM,
+        &p, c->piscina));
+    CREDO_VERUM (statua_scaenam_pingere(l, I, &visus, I, I, &p,
+        c->piscina));
+    CREDO_AEQUALIS_I32 (p.tectum[ZEPHYRUM], I);
+    /* nulla statua: pictura alba */
+    CREDO_VERUM (statua_scaenam_pingere(NIHIL, ZEPHYRUM, &visus, VIII,
+        VIII, &p, c->piscina));
+    per (k = ZEPHYRUM; k < LXIV; k++)
+    {
+        si (p.tectum[k] || p.rgba[k * IV] != 255)
+        {
+            frange;
+        }
+    }
+    CREDO_AEQUALIS_I32 (k, LXIV);
+    /* recusationes */
+    CREDO_FALSUM (statua_scaenam_pingere(l, STATUA_LOCATAE_MAXIMAE + I,
+        &visus, VIII, VIII, &p, c->piscina));
+    CREDO_FALSUM (statua_scaenam_pingere(l, I, NIHIL, VIII, VIII, &p,
+        c->piscina));
+    CREDO_FALSUM (statua_scaenam_pingere(NIHIL, I, &visus, VIII, VIII,
+        &p, c->piscina));
+    visus.pixela_per_unitatem = 0.0f;
+    CREDO_FALSUM (statua_scaenam_pingere(l, I, &visus, VIII, VIII, &p,
+        c->piscina));
+    visus.pixela_per_unitatem  = 10.0f;
+    l[ZEPHYRUM].statua         = NIHIL;
+    CREDO_FALSUM (statua_scaenam_pingere(l, I, &visus, VIII, VIII, &p,
+        c->piscina));
+}
+
+/* lapis in quiete, XLV / XXXV, XL pixela per unitatem, CXXVIII
+ * quadrata in pedibus eius posita: digestum fixum + determinatum */
+#define DIGESTUM_SCAENAE \
+    "0d3985455f6af5d0b52063d425d1bc170e5b541e242fb7487a12dc075a4a7ce8"
+
+interior vacuum
+_sectio_scaena_fixa (
+    CredoContextus* c)
+{
+          StatuaFructus  f;
+                 Statua* s;
+     StereometriaMatrix* m;
+           StatuaLocata  l;
+      StatuaScaenaVisus  visus;
+    StatuaScaenaPictura  p;
+    StatuaScaenaPictura  q;
+               Sigillum  sigillum;
+              character  hex[SIGILLUM_HEX_MENSURA];
+                    f32  x            = 0.0f;
+                    f32  y            = 0.0f;
+                    f32  profunditas  = 0.0f;
+                    i32  k;
+                    i32  tecta = ZEPHYRUM;
+
+    f = statua_glb_legere(filum_legere_totum(VIA_LAPIDIS, c->piscina),
+        c->piscina);
+    CREDO_NECESSE (f.successus);
+    s = f.statua;
+    m = (StereometriaMatrix*)_locus(c,
+        (s->nodorum + I) * magnitudo(StereometriaMatrix));
+    statua_positura(s, -I, 0.0f, m);
+    l.statua    = s;
+    l.matrices  = m;
+    l.locatio   = stereometria_identitas();
+    memset(&visus, ZEPHYRUM, magnitudo(visus));
+    visus.gyrus                = 45.0f;
+    visus.inclinatio           = 35.0f;
+    visus.pixela_per_unitatem  = 40.0f;
+    visus.illuminatum          = VERUM;
+    statua_scaena_proicere(&visus, s->centrum, &x, &y, &profunditas);
+    visus.origo_x = (s32)x - LXIV;
+    visus.origo_y = (s32)y - LXIV;
+    CREDO_NECESSE (statua_scaenam_pingere(&l, I, &visus, CXXVIII,
+        CXXVIII,
+        &p, c->piscina));
+    CREDO_NECESSE (statua_scaenam_pingere(&l, I, &visus, CXXVIII,
+        CXXVIII,
+        &q, c->piscina));
+    CREDO_VERUM (memcmp(p.rgba, q.rgba, CXXVIII * CXXVIII * IV)
+        == ZEPHYRUM);
+    per (k = ZEPHYRUM; k < CXXVIII * CXXVIII; k++)
+    {
+        tecta += p.tectum[k] ? I : ZEPHYRUM;
+    }
+    CREDO_VERUM (tecta > M);
+    sigillum = sigillum_computare(p.rgba, CXXVIII * CXXVIII * IV);
+    sigillum_hex(&sigillum, hex);
+    si (strcmp(hex, DIGESTUM_SCAENAE) != ZEPHYRUM)
+    {
+        printf("  digestum scaenae: %s (tecta %u)\n", hex, tecta);
+    }
+    CREDO_VERUM (strcmp(hex, DIGESTUM_SCAENAE) == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "quadratum", _sectio_quadratum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "profunditas", _sectio_profunditas, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -695,6 +1114,19 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "determinatum", _sectio_determinatum, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "fixa", _sectio_fixa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scaena_proicere", _sectio_scaena_proicere, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scaena_lapsus", _sectio_scaena_lapsus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scaena_tectum", _sectio_scaena_tectum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scaena_locatio", _sectio_scaena_locatio, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scaena_tergum", _sectio_scaena_tergum, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scaena_vacua", _sectio_scaena_vacua, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "scaena_fixa", _sectio_scaena_fixa, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

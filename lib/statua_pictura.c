@@ -54,6 +54,13 @@ nomen structura {
     f32  za;            /* z' = (za * z + zb) / -z */
     f32  zb;
     f32  prope;
+     i8  signum;        /* quod in tectum scribitur (I; scaena: index
+                         * locatae + I) */
+    /* scaena (visus parallelus) */
+    b32 parallela;
+    f64 pixela;        /* partes pixeli per unitatem mundi */
+    f64 origo_x;       /* origo picturae in partibus pixeli */
+    f64 origo_y;
 } Tabula;
 
 /* quod triangulum pingit: materia soluta */
@@ -303,7 +310,7 @@ _triangulum_schirmi (
                                    + b2 * v2->tw) / q, color))
                     {
                         tab->profunditas[locus]  = z;
-                        tab->tectum[locus]       = I;
+                        tab->tectum[locus]       = tab->signum;
                         memcpy(tab->rgba + locus * IV, color, IV);
                     }
                 }
@@ -356,6 +363,46 @@ _proicere (
     redde r;
 }
 
+/* vertex oculi in schirmum, sine perspectiva (scaena). Pixelum mundi
+ * in partes fixas rotundatur ANTE originem demptam: origo integra
+ * fractionem non mutat, ergo pictura lapsa eadem est. */
+interior VertexSchirmi
+_proicere_parallele (
+         constans Tabula* tab,
+    constans VertexOculi* v)
+{
+    VertexSchirmi r;
+              f64 limes = (f64)SCHIRMI_LIMES * PARTES_PIXELI;
+              f64 x;
+              f64 y;
+
+    x = floor((f64)v->x * tab->pixela + 0.5) - tab->origo_x;
+    y = floor(-(f64)v->y * tab->pixela + 0.5) - tab->origo_y;
+    si (x > limes)
+    {
+        x = limes;
+    }
+    si (x < -limes)
+    {
+        x = -limes;
+    }
+    si (y > limes)
+    {
+        y = limes;
+    }
+    si (y < -limes)
+    {
+        y = -limes;
+    }
+    r.x   = (s32)x;
+    r.y   = (s32)y;
+    r.z   = -v->z;
+    r.iw  = 1.0f;
+    r.sw  = v->s;
+    r.tw  = v->t;
+    redde r;
+}
+
 /* punctum in margine a -> b ubi z = -prope */
 interior VertexOculi
 _secare (
@@ -390,6 +437,16 @@ _triangulum_oculi (
               b32 intra;
               b32 intra_proximus;
 
+    si (tab->parallela)
+    {
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            s[k] = _proicere_parallele(tab, &v[k]);
+        }
+        _triangulum_schirmi(tab, &s[ZEPHYRUM], &s[I], &s[II],
+            pigmentum);
+        redde;
+    }
     per (k = ZEPHYRUM; k < III; k++)
     {
         proximus        = (k + I) % III;
@@ -508,8 +565,10 @@ _partem_pingere (
         {
             perge;
         }
-        /* frons: normalis ad oculum (in origine) spectat */
-        frons = stereometria_productum(normalis, a) < 0.0f;
+        /* frons: normalis ad oculum (in origine) spectat; scaena
+         * parallela: ad oculum secundum axem visus (+z) */
+        frons = tab->parallela ? normalis.z > 0.0f
+            : stereometria_productum(normalis, a) < 0.0f;
         si (!frons)
         {
             si (!materia || !materia->bilateralis)
@@ -619,10 +678,12 @@ statua_pingere (
     {
         tab.profunditas[k] = PROFUNDITAS_VACUA;
     }
-    tab.rgba      = exitus->rgba;
-    tab.tectum    = exitus->tectum;
-    tab.latitudo  = latitudo;
-    tab.altitudo  = altitudo;
+    tab.rgba       = exitus->rgba;
+    tab.tectum     = exitus->tectum;
+    tab.latitudo   = latitudo;
+    tab.altitudo   = altitudo;
+    tab.signum     = I;
+    tab.parallela  = FALSUM;
     /* oculus: campus per latus brevius; sphaera cum margine intra */
     radius    = statua->radius > 0.000001f ? statua->radius : 1.0f;
     dimidium  = STATUA_CAMPUS_GRADUS * 0.5f * STEREOMETRIA_PI / 180.0f;
@@ -672,6 +733,147 @@ statua_pingere (
             _partem_pingere(&tab, statua,
                 &statua->partes[rete->pars_prima + j], m,
                 _est_speculum(m), illuminatum);
+        }
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Scaena
+ * ================================================== */
+
+/* E = rotatio_x(inclinatio) * rotatio_y(gyrus) */
+interior StereometriaMatrix
+_oculus_scaenae (
+    constans StatuaScaenaVisus* visus)
+{
+    f32 gyrus       = visus->gyrus;
+    f32 inclinatio  = visus->inclinatio;
+
+    si (!(gyrus == gyrus) || (gyrus - gyrus) != 0.0f)
+    {
+        gyrus = 0.0f;
+    }
+    si (   !(inclinatio == inclinatio)
+        || (inclinatio - inclinatio) != 0.0f)
+    {
+        inclinatio = 0.0f;
+    }
+    redde stereometria_multiplicare(
+        stereometria_rotatio_x(inclinatio * STEREOMETRIA_PI / 180.0f),
+        stereometria_rotatio_y(gyrus * STEREOMETRIA_PI / 180.0f));
+}
+
+vacuum
+statua_scaena_proicere (
+    constans StatuaScaenaVisus* visus,
+            StereometriaVector  punctum,
+                           f32* x,
+                           f32* y,
+                           f32* profunditas)
+{
+    StereometriaVector p;
+
+    si (!visus || !x || !y || !profunditas)
+    {
+        redde;
+    }
+    p = stereometria_punctum_transformare(_oculus_scaenae(visus),
+        punctum, NIHIL);
+    *x            = p.x * visus->pixela_per_unitatem;
+    *y            = -p.y * visus->pixela_per_unitatem;
+    *profunditas  = -p.z;
+}
+
+b32
+statua_scaenam_pingere (
+         constans StatuaLocata* locatae,
+                           i32  numerus,
+    constans StatuaScaenaVisus* visus,
+                           i32  latitudo,
+                           i32  altitudo,
+           StatuaScaenaPictura* exitus,
+                       Piscina* piscina)
+{
+    constans StatuaLocata* locata;
+          constans Statua* statua;
+      constans StatuaRete* rete;
+       StereometriaMatrix  oculus;
+       StereometriaMatrix  basis;
+       StereometriaMatrix  m;
+                   Tabula  tab;
+           memoriae_index  pixela;
+           memoriae_index  p;
+                      i32  k;
+                      i32  n;
+                      i32  j;
+
+    si (   !visus || !exitus || !piscina || (numerus && !locatae)
+        || numerus > STATUA_LOCATAE_MAXIMAE
+        || !(visus->pixela_per_unitatem > 0.0f))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (   !locatae[k].statua
+            || (locatae[k].statua->nodorum && !locatae[k].matrices))
+        {
+            redde FALSUM;
+        }
+    }
+    memset(exitus, ZEPHYRUM, magnitudo(StatuaScaenaPictura));
+    exitus->latitudo = latitudo;
+    exitus->altitudo = altitudo;
+    si (latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    pixela          = (memoriae_index)latitudo * altitudo;
+    exitus->rgba    = (i8*)piscina_allocare(piscina, pixela * IV);
+    exitus->tectum  = (i8*)piscina_allocare(piscina, pixela);
+    exitus->profunditas  = (f32*)piscina_allocare(piscina,
+        pixela * magnitudo(f32));
+    memset(exitus->rgba, 0xFF, pixela * IV);
+    memset(exitus->tectum, ZEPHYRUM, pixela);
+    per (p = ZEPHYRUM; p < pixela; p++)
+    {
+        exitus->profunditas[p] = PROFUNDITAS_VACUA;
+    }
+    memset(&tab, ZEPHYRUM, magnitudo(tab));
+    tab.rgba         = exitus->rgba;
+    tab.tectum       = exitus->tectum;
+    tab.profunditas  = exitus->profunditas;
+    tab.latitudo     = latitudo;
+    tab.altitudo     = altitudo;
+    tab.parallela    = VERUM;
+    tab.pixela       = (f64)visus->pixela_per_unitatem * PARTES_PIXELI;
+    tab.origo_x      = (f64)visus->origo_x * PARTES_PIXELI;
+    tab.origo_y      = (f64)visus->origo_y * PARTES_PIXELI;
+    oculus           = _oculus_scaenae(visus);
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        locata      = &locatae[k];
+        statua      = locata->statua;
+        tab.signum  = (i8)(k + I);
+        basis = stereometria_multiplicare(oculus,
+            locata->locatio);
+        per (n = ZEPHYRUM; n < statua->nodorum; n++)
+        {
+            si (statua->nodi[n].rete < ZEPHYRUM)
+            {
+                perge;
+            }
+            rete = &statua->retia[statua->nodi[n].rete];
+            m = stereometria_multiplicare(basis,
+                locata->matrices[n]);
+            per (j = ZEPHYRUM; j < rete->partium; j++)
+            {
+                _partem_pingere(&tab, statua,
+                    &statua->partes[rete->pars_prima + j], m,
+                    _est_speculum(m), visus->illuminatum);
+            }
         }
     }
     redde VERUM;
