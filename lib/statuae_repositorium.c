@@ -5,6 +5,9 @@
 #include "json.h"
 #include <string.h>
 
+/* valor "genus" in acto loci */
+#define GENUS_LOCI "locus"
+
 b32
 statuae_titulus_validus (
     chorda titulus)
@@ -67,8 +70,9 @@ _acta (
         piscina);
 }
 
-Xar*
-statuae_enumerare (
+/* index generum omnium, ordine additionis */
+interior Xar*
+_enumerare_omnes (
     Volumen* volumen,
     Piscina* piscina)
 {
@@ -81,6 +85,7 @@ statuae_enumerare (
          JsonResultus  r;
                chorda  titulus;
                chorda  massa;
+               chorda  genus;
                   s32  locus;
                   i32  k;
                   i32  j;
@@ -102,6 +107,8 @@ statuae_enumerare (
             "titulus"));
         massa    = json_ad_chorda(json_objectum_capere(r.radix,
             "massa"));
+        genus    = json_ad_chorda(json_objectum_capere(r.radix,
+            "genus"));
         si (!statuae_titulus_validus(titulus))
         {
             perge;
@@ -123,6 +130,9 @@ statuae_enumerare (
                     piscina);
                 inscriptio->sigillum_hex  = chorda_transcribere(massa,
                     piscina);
+                inscriptio->genus = chorda_aequalis_literis(genus,
+                    GENUS_LOCI) ? STATUAE_GENUS_LOCUS
+                                : STATUAE_GENUS_STATUA;
             }
             perge;
         }
@@ -152,6 +162,43 @@ statuae_enumerare (
     redde index;
 }
 
+Xar*
+statuae_enumerare_generis (
+         Volumen* volumen,
+    StatuaeGenus  genus,
+         Piscina* piscina)
+{
+                  Xar* omnes = _enumerare_omnes(volumen, piscina);
+                  Xar* index = xar_creare(piscina,
+                      magnitudo(StatuaeInscriptio));
+    StatuaeInscriptio* inscriptio;
+                  i32  k;
+
+    per (k = ZEPHYRUM; omnes && index && k < xar_numerus(omnes); k++)
+    {
+        si (((StatuaeInscriptio*)xar_obtinere(omnes, k))->genus
+            != genus)
+        {
+            perge;
+        }
+        inscriptio = (StatuaeInscriptio*)xar_addere(index);
+        si (inscriptio)
+        {
+            *inscriptio = *(StatuaeInscriptio*)xar_obtinere(omnes, k);
+        }
+    }
+    redde index;
+}
+
+Xar*
+statuae_enumerare (
+    Volumen* volumen,
+    Piscina* piscina)
+{
+    redde statuae_enumerare_generis(volumen, STATUAE_GENUS_STATUA,
+        piscina);
+}
+
 /* actum cum dato JSON appendere */
 interior b32
 _actum_scribere (
@@ -159,6 +206,7 @@ _actum_scribere (
     constans character* genus,
                 chorda  titulus,
                 chorda  massa,
+          StatuaeGenus  genus_statuae,
                Piscina* piscina)
 {
     JsonValor* objectum = json_objectum_creare(piscina);
@@ -175,6 +223,12 @@ _actum_scribere (
             json_chorda_creare(piscina, massa));
         json_objectum_ponere(objectum, "forma",
             json_chorda_creare_literis(piscina, "glb"));
+        /* genus STATUA non scribitur: actum idem ac ante mundum */
+        si (genus_statuae == STATUAE_GENUS_LOCUS)
+        {
+            json_objectum_ponere(objectum, "genus",
+                json_chorda_creare_literis(piscina, GENUS_LOCI));
+        }
     }
     redde volumen_actum_appendere(volumen, genus,
         json_scribere(objectum, piscina)) > ZEPHYRUM;
@@ -186,6 +240,17 @@ statuae_addere (
      chorda  titulus,
      chorda  octeti)
 {
+    redde statuae_addere_generis(volumen, titulus, octeti,
+        STATUAE_GENUS_STATUA);
+}
+
+b32
+statuae_addere_generis (
+         Volumen* volumen,
+          chorda  titulus,
+          chorda  octeti,
+    StatuaeGenus  genus)
+{
       Piscina* piscina;
           Xar* index;
     character  hex[SIGILLUM_HEX_MENSURA];
@@ -195,13 +260,24 @@ statuae_addere (
           b32  bene;
 
     si (   !volumen || !statuae_titulus_validus(titulus)
-        || octeti.mensura == ZEPHYRUM || !octeti.datum)
+        || octeti.mensura == ZEPHYRUM || !octeti.datum
+        || (s32)genus < ZEPHYRUM || genus >= STATUAE_GENERUM)
     {
         redde FALSUM;
     }
     piscina = piscina_generare_dynamicum("statuae_addere", 0x10000);
     si (!piscina)
     {
+        redde FALSUM;
+    }
+    /* titulus in genere altero: recusatur ante omnem scripturam */
+    index = _enumerare_omnes(volumen, piscina);
+    locus = _locus(index, titulus);
+    si (   locus >= ZEPHYRUM
+        && ((StatuaeInscriptio*)xar_obtinere(index, (i32)locus))->genus
+           != genus)
+    {
+        piscina_destruere(piscina);
         redde FALSUM;
     }
     propria = !volumen_in_transactione(volumen);
@@ -214,7 +290,7 @@ statuae_addere (
     si (bene)
     {
         massa = chorda_ex_literis(hex, piscina);
-        index = statuae_enumerare(volumen, piscina);
+        index = _enumerare_omnes(volumen, piscina);
         locus = _locus(index, titulus);
         /* octeti iidem sub titulo eodem: nihil scribendum */
         si (   locus < ZEPHYRUM
@@ -222,7 +298,7 @@ statuae_addere (
                    index, (i32)locus))->sigillum_hex, massa))
         {
             bene = _actum_scribere(volumen, STATUAE_ACTUM_ADDITUM,
-                titulus, massa, piscina);
+                titulus, massa, genus, piscina);
         }
     }
     si (propria)
@@ -260,11 +336,11 @@ statuae_removere (
     }
     nulla.datum    = NIHIL;
     nulla.mensura  = ZEPHYRUM;
-    si (_locus(statuae_enumerare(volumen, piscina), titulus)
+    si (_locus(_enumerare_omnes(volumen, piscina), titulus)
         >= ZEPHYRUM)
     {
         bene = _actum_scribere(volumen, STATUAE_ACTUM_REMOTUM, titulus,
-            nulla, piscina);
+            nulla, STATUAE_GENUS_STATUA, piscina);
     }
     piscina_destruere(piscina);
     redde bene;

@@ -42,9 +42,19 @@
 /* titulus: I..LXIV octeti, sine '/' et sine characteribus regiminis */
 #define STATUAE_TITULUS_MAXIMUS  LXIV
 
+/* genus inscriptionis: persona (statua animata, latus $models et
+ * personae mundi) aut locus (statua loci, latus $world). In acto
+ * "genus":"locus"; absens = statua (acta ante mundum scripta). */
+nomen enumeratio {
+    STATUAE_GENUS_STATUA = ZEPHYRUM,
+    STATUAE_GENUS_LOCUS,
+    STATUAE_GENERUM
+} StatuaeGenus;
+
 nomen structura {
-    chorda titulus;
-    chorda sigillum_hex;   /* massa: volumen_massam_promere */
+          chorda titulus;
+          chorda sigillum_hex;   /* massa: volumen_massam_promere */
+    StatuaeGenus genus;
 } StatuaeInscriptio;
 
 /* titulus validus? (longitudo, '/', characteres regiminis) */
@@ -75,11 +85,36 @@ statuae_removere (
     Volumen* volumen,
      chorda  titulus);
 
-/* index, ordine additionis; Xar de StatuaeInscriptio (chordae ex
- * piscina). Numquam NIHIL: volumen sine statuis Xar vacuum dat */
+/* index STATUARUM (genus STATUA; loci non apparent), ordine
+ * additionis; Xar de StatuaeInscriptio (chordae ex piscina). Numquam
+ * NIHIL: volumen sine statuis Xar vacuum dat */
 Xar*
 statuae_enumerare (
     Volumen* volumen,
     Piscina* piscina);
+
+/*
+ * statuae_addere_generis - ut statuae_addere, genere dato
+ *
+ * Tituli per genera AMBO unici: titulus qui in genere altero iam est
+ * recusatur (nihil scribitur). statuae_addere = genus STATUA.
+ * statuae_removere genus utrumque tollit.
+ *
+ * Redde: FALSUM etiam si genus ignotum
+ */
+b32
+statuae_addere_generis (
+         Volumen* volumen,
+          chorda  titulus,
+          chorda  octeti,
+    StatuaeGenus  genus);
+
+/* index generis unius, ordine additionis; genus ignotum: vacuum.
+ * Numquam NIHIL */
+Xar*
+statuae_enumerare_generis (
+         Volumen* volumen,
+    StatuaeGenus  genus,
+         Piscina* piscina);
 
 #endif /* STATUAE_REPOSITORIUM_H */

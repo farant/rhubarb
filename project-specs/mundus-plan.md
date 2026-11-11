@@ -570,6 +570,9 @@ else `cyclus_quietis`.
 
 ### Task 8: places in the store
 
+DONE 2026-11-10. The mark is a `"genus":"locus"` field in the act; a
+character's act is unchanged.
+
 **Files:** `include/statuae_repositorium.h`,
 `lib/statuae_repositorium.c`,
 `probationes/probatio_statuae_repositorium.c`, `tools/statuae.c`.

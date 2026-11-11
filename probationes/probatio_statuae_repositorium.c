@@ -253,6 +253,82 @@ _sectio_transactio (
     volumen_claudere(v);
 }
 
+/* mundus-plan T8: loci - index statuarum eos non monstrat, index
+ * locorum statuas non monstrat; tituli per genera ambo unici */
+interior vacuum
+_sectio_genera (
+    CredoContextus* c)
+{
+    Volumen* v = volumen_temporarium(c->piscina, "statuae_genera");
+        Xar* index;
+     chorda  a = _ch(c, "octeti personae");
+     chorda  b = _ch(c, "octeti loci");
+     chorda  d = _ch(c, "octeti loci novi");
+        s64  seq;
+
+    CREDO_NECESSE (v != NIHIL);
+    /* vetus (sine genere) = statua */
+    CREDO_VERUM (statuae_addere(v, _ch(c, "lapis"), a));
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "silva"), b,
+        STATUAE_GENUS_LOCUS));
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "fungus"), a,
+        STATUAE_GENUS_STATUA));
+    index = statuae_enumerare(v, c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), II);
+    CREDO_VERUM (chorda_aequalis_literis(
+        _inscriptio(index, ZEPHYRUM)->titulus, "lapis"));
+    CREDO_VERUM (chorda_aequalis_literis(_inscriptio(index, I)->titulus,
+        "fungus"));
+    index = statuae_enumerare_generis(v, STATUAE_GENUS_STATUA,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), II);
+    CREDO_AEQUALIS_I32 (_inscriptio(index, ZEPHYRUM)->genus,
+        STATUAE_GENUS_STATUA);
+    index = statuae_enumerare_generis(v, STATUAE_GENUS_LOCUS,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), I);
+    CREDO_VERUM (chorda_aequalis_literis(
+        _inscriptio(index, ZEPHYRUM)->titulus, "silva"));
+    CREDO_AEQUALIS_I32 (_inscriptio(index, ZEPHYRUM)->genus,
+        STATUAE_GENUS_LOCUS);
+    CREDO_VERUM (chorda_aequalis(
+        _inscriptio(index, ZEPHYRUM)->sigillum_hex, _sigillum(c, b)));
+    /* titulus in genere altero iam est: recusatur, nihil scribitur */
+    seq = volumen_seq_ultimum(v);
+    CREDO_FALSUM (statuae_addere_generis(v, _ch(c, "lapis"), b,
+        STATUAE_GENUS_LOCUS));
+    CREDO_FALSUM (statuae_addere(v, _ch(c, "silva"), a));
+    CREDO_FALSUM (statuae_addere_generis(v, _ch(c, "aliquid"), a,
+        (StatuaeGenus)VII));
+    CREDO_VERUM (volumen_seq_ultimum(v) == seq);
+    /* locus substituitur in genere suo; idem bis nihil scribit */
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "silva"), d,
+        STATUAE_GENUS_LOCUS));
+    seq = volumen_seq_ultimum(v);
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "silva"), d,
+        STATUAE_GENUS_LOCUS));
+    CREDO_VERUM (volumen_seq_ultimum(v) == seq);
+    index = statuae_enumerare_generis(v, STATUAE_GENUS_LOCUS,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), I);
+    CREDO_VERUM (chorda_aequalis(
+        _inscriptio(index, ZEPHYRUM)->sigillum_hex, _sigillum(c, d)));
+    /* removere utrumque genus tollit; titulus deinde liber */
+    CREDO_VERUM (statuae_removere(v, _ch(c, "silva")));
+    CREDO_AEQUALIS_I32 (xar_numerus(statuae_enumerare_generis(v,
+        STATUAE_GENUS_LOCUS, c->piscina)), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (xar_numerus(statuae_enumerare(v, c->piscina)),
+        II);
+    CREDO_VERUM (statuae_addere(v, _ch(c, "silva"), a));
+    CREDO_AEQUALIS_I32 (xar_numerus(statuae_enumerare(v, c->piscina)),
+        III);
+    /* genus ignotum in indice: vacuum, numquam NIHIL */
+    index = statuae_enumerare_generis(v, (StatuaeGenus)VII, c->piscina);
+    CREDO_NECESSE (index != NIHIL);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), ZEPHYRUM);
+    volumen_claudere(v);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "addere", _sectio_addere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "substitutio", _sectio_substitutio, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -260,6 +336,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "tituli_mali", _sectio_tituli_mali, NIHIL, NIHIL, NIHIL, NIHIL },
     { "seq", _sectio_seq, NIHIL, NIHIL, NIHIL, NIHIL },
     { "transactio", _sectio_transactio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

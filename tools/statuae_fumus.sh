@@ -57,6 +57,20 @@ proba "removere ignotum innocuum" 0 "$B" removere nemo -volumen "$V"
 proba "enumerare post remotionem" 0 "$B" enumerare -volumen "$V"
 [ "$(cut -f1 "$T/out")" = "mushroom man" ] || { echo "FRACTA: remotio"; fracta=$((fracta + 1)); }
 
+# loci (mundus-plan T8): -locus, -loci; latus $models locum non videt
+proba "addere locum" 0 "$B" addere "$F/planum.glb" -volumen "$V" -titulus "clearing" -locus
+proba "enumerare loci" 0 "$B" enumerare -volumen "$V" -loci
+[ "$(cut -f1 "$T/out")" = "clearing" ] || { echo "FRACTA: enumerare -loci"; fracta=$((fracta + 1)); }
+proba "enumerare personae sine loco" 0 "$B" enumerare -volumen "$V"
+[ "$(cut -f1 "$T/out")" = "mushroom man" ] || { echo "FRACTA: locus inter personas"; fracta=$((fracta + 1)); }
+proba "titulus loci ut persona recusatur" 1 "$B" addere "$F/lapis.glb" -volumen "$V" -titulus "clearing"
+proba "titulus personae ut locus recusatur" 1 "$B" addere "$F/planum.glb" -volumen "$V" -titulus "mushroom man" -locus
+proba "-locus cum enumerare usus" 2 "$B" enumerare -volumen "$V" -locus
+proba "-loci cum addere usus" 2 "$B" addere "$F/lapis.glb" -volumen "$V" -loci
+proba "removere locum" 0 "$B" removere clearing -volumen "$V"
+proba "enumerare loci post remotionem" 0 "$B" enumerare -volumen "$V" -loci
+[ ! -s "$T/out" ] || { echo "FRACTA: locus remotus manet"; fracta=$((fracta + 1)); }
+
 for m in crudum atkinson bayer exemplaria nullum; do
     proba "pingere $m" 0 "$B" pingere "$F/lapis.glb" -o "$T/$m.png" -modus "$m" -cyclus walk -tempus 0.35
     file "$T/$m.png" 2>/dev/null | grep -q "360 x 450" || { echo "FRACTA: pingere $m: PNG 360 x 450 abest"; fracta=$((fracta + 1)); }
