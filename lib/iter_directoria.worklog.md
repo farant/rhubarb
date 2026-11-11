@@ -286,3 +286,38 @@ Debt list: tools/aedilis.c and tools/capsula_generare.c rows deleted
 iter_directoria) and credo with `<tolera>`, the crusta interposer
 (it IS opendir), knotapel demo snapshots, and the sondae_auditus
 probe that interposes opendir on purpose.
+
+## 2026-11-11 — gate `generata` was red since the walker commits
+
+Found while committing the read-mode fopen sweep: gate `generata`
+refused eleven memorable generator actions with "MEMORIA NEGATA -
+lectiones non declaratae". Seven were caused by this log's own
+commits (708a10ae6, 4c8b93793), which did not owe that gate, so it
+never ran:
+- briar capsules (facies, icon, mutationes): capsula_generare listed
+  the PARENT DIRECTORY even for a literal path (`briar/MUTATIONES.md`
+  read all of `briar/`). Invisible while the listing was a raw
+  opendir; a 'D' line once it went through the iterator. Fix in the
+  tool: a last segment without `*` is looked up with `lectiones_stat`
+  (X or A on the file itself), no listing. Hidden titles and
+  directories still skipped, a missing file still adds nothing.
+  Capsules byte-identical on the glob fixture and on a literal
+  fixture (old binary vs new). One difference: on a case-insensitive
+  volume a literal with the wrong case now matches (stat) where the
+  exact readdir comparison did not.
+- capsula_corpus_silicis: tools/corpus_infixum.sh ran
+  `./silva/nexus.sh -renovare` on every regeneration, and the indexer
+  walks the WHOLE tree (~970 directories now noted). Fran's ruling
+  (2026-11-11): the action uses the existing build/nexus.tsv; a fully
+  fresh index is an explicit build, not this action's habit. As
+  built: the index is refreshed only when absent or older than the
+  sources this action reads (lib, include, client roots - otherwise a
+  stale table would be memoized under a fresh key), and that refresh
+  runs outside the action's book (`env -u FABRICA_LECTIONES`): it is
+  maintenance of a shared cache; everything the action takes from the
+  index is covered by its declared inputs.
+Lesson: a change to a tool a generator action RUNS should owe
+`generata`; today it does not (tools/capsula_generare.c,
+silva/instrumenta/principalia/nexus_percursus.c).
+The other four refusals (amalgam actions reading their own .h) came
+from the fopen sweep and are declared there.

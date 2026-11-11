@@ -64,9 +64,30 @@ corpus_symbola_generare () {
         && [ -z "$(find lib "${RADICES_CLIENTIUM[@]}" -name '*.c' -newer "$TABULA" -print -quit 2>/dev/null)" ]; then
         return 0
     fi
-    echo "  [symbola] corpus.symbola.tsv (nexus incrementalis)"
-    # nexus = cache arboris VERAE (build/nexus.tsv), etiam sub umbra
-    ( cd "$RADIX" && ./silva/nexus.sh -renovare > /dev/null 2>&1 ) || return 1
+    echo "  [symbola] corpus.symbola.tsv (e nexu)"
+    # nexus = cache arboris VERAE (build/nexus.tsv), etiam sub umbra.
+    # INDEX EXSTANS ADHIBETUR (decretum Franis 2026-11-11): haec actio
+    # nexum NON renovat si index non vetustior est quam fontes quos ipsa
+    # legit (lib, include, radices clientium - ordines ceterarum
+    # plagularum filtrum infra abicit). Olim semper renovabat: percursus
+    # ARBOREM TOTAM ambulat, et ex quo ambulatio in libro lectionum
+    # notatur (iter_directoria), custodia memorabilium ~CM directoria non
+    # declarata videbat et memoriam negabat. Index absens aut vetustior
+    # fontibus actionis = renovatio necessaria (aliter tabula stala sub
+    # clave recenti memoraretur); ea EXTRA librum actionis currit
+    # (FABRICA_LECTIONES sublata): cura cache communis est, non lectio
+    # actionis - quod actio ex indice sumit, ingressus declarati tegunt.
+    # Recentia plena indicis = aedificatio expressa (./silva/nexus.sh
+    # -renovare), non mos huius actionis.
+    local renovandus=0
+    if [ ! -f "$RADIX/build/nexus.tsv" ]; then
+        renovandus=1
+    elif [ -n "$(cd "$RADIX" && find include lib "${RADICES_CLIENTIUM[@]}" \( -name '*.h' -o -name '*.c' \) -newer build/nexus.tsv -print -quit 2>/dev/null)" ]; then
+        renovandus=1
+    fi
+    if [ "$renovandus" = 1 ]; then
+        ( cd "$RADIX" && env -u FABRICA_LECTIONES ./silva/nexus.sh -renovare > /dev/null 2>&1 ) || return 1
+    fi
     [ -f "$RADIX/build/nexus.tsv" ] || return 1
     {
         echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h et <radix>/*.h = capita; sedes lib/*.c et <radix>/*.c profunditate 0 sine capite, non externa = statica; radices: ${RADICES_CLIENTIUM[*]}) e build/nexus.tsv - NE MANU EDITES"

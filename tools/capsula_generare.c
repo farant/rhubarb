@@ -25,6 +25,7 @@
 #include "lectiones.h"
 
 #include <stdio.h>
+#include <sys/stat.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -242,6 +243,45 @@ _expand_glob_gradus (
     {
         snprintf(plenum, sizeof(plenum), "%s",
                  praefixum[0] != '\0' ? praefixum : ".");
+    }
+    si (strchr(reliquum, '*') == NIHIL)
+    {
+        /* Segmentum ultimum LITTERALE (2026-11-11): plagula ipsa per
+         * stat quaeritur (X aut A in libro lectionum), directorium
+         * parentis NON enumeratur. Olim enumerabatur etiam pro via
+         * litterali - actio cuius capsula 'briar/MUTATIONES.md' solum
+         * continet directorium 'briar' totum legebat (lectio non
+         * declarata: custodia memorabilium negabat). Mores servati:
+         * titulus occultus et directorium omittuntur, plagula absens
+         * tacite nihil addit. */
+        structura stat  st;
+             character  full_path[1024];
+                chorda* path_chorda;
+
+        si (reliquum[0] == '.')
+        {
+            redde;
+        }
+        snprintf(filius, sizeof(filius), "%s/%s", plenum, reliquum);
+        si (lectiones_stat(filius, &st) != 0 || S_ISDIR(st.st_mode))
+        {
+            redde;
+        }
+        si (praefixum[0] != '\0')
+        {
+            snprintf(full_path, sizeof(full_path), "%s/%s",
+                     praefixum, reliquum);
+        }
+        alioquin
+        {
+            snprintf(full_path, sizeof(full_path), "%s", reliquum);
+        }
+        path_chorda = (chorda*)xar_addere(files_out);
+        si (path_chorda != NIHIL)
+        {
+            *path_chorda = chorda_ex_literis(full_path, piscina);
+        }
+        redde;
     }
     dir = directorium_iterator_aperire(plenum, piscina);
     si (dir == NIHIL)
