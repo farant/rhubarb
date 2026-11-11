@@ -31,14 +31,19 @@
  *   - notae omnes (locorum, superveniens, flexa, initium, exemplorum
  *     praeter signa crucis et asterisci) gabc legibiles: "(" clavis
  *     ") a(" notae ")" per gabc_legere; clavis terminationis si
- *     data, alias toni;
+ *     data, alias toni. Legibiles = sine VITIO gabc, syllaba una
+ *     (parenthesis nulla), nota una saltem, neumae solae (clavis
+ *     intra notas non). Clavis mala -> vitium unum, notae sub ea
+ *     non probantur;
  *   - differentia = littera notae ultimae clausulae ("CDEFGAB"[gradus
  *     mod VII], majuscula non refert), nisi nomen '*' habet (A*, G*)
  *     aut vacuum est;
  *   - eadem terminatio bis in eodem modo, positionibus ambabus
  *     numeratis (clavis: modus, differentia, monosyllaba, ad_libitum);
+ *     eadem mediatio (monosyllaba, ad_libitum) bis in tono;
  *   - anticipata sine superveniente; clausula sine loco; tenor non
  *     nota una; exemplum differentiam toni absentem nominans.
+ *   Vitia ordine linearum redduntur.
  *
  * SIGNA (psalmodia_signum_invenire): signum = modus + differentia, ut
  * cantus scribunt ("8 G", "VIII g", "8.G", "8G", "1 d", "4 A*",

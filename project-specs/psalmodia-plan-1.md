@@ -3,7 +3,8 @@
 **Ledger:** parcum 01M6V5H5V1EGK1V37TP5M6BFN1 ("psalmodia"); one opus
 per task below, filed at R1.
 
-**STATUS: IN PROGRESS.** R1, R2 done 2026-11-10; R3 next.
+**STATUS: IN PROGRESS.** R1, R2 done 2026-11-10; R3 done
+2026-11-11; R4 next.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > superpowers:executing-plans (inline, per house convention, no
@@ -448,3 +449,21 @@ Rulings:
 Plants (a) and (b) both red, restored byte-identical. Helper names
 `_veritatem_legere` / `_campus_veritatis` (the lexicon knows no
 `booleum`/`booleanum`).
+
+**R3 (2026-11-11).** Checks in `lib/psalmodia_tabula.c`; section
+`_lapsus_probare` (5 sections, 204 assertions, green). Real table
+still 0 vitia, read in ~1 ms. Rulings:
+- Readable note string = gabc success AND two syllables AND >= 1
+  note AND only neumes/accidentals/spaces in the note syllable -
+  gabc alone accepts `a()`, `a(h)x)` and `a(c3h)`; cost if wrong: a
+  legal-but-unusual string (a divisio inside a slot) flagged.
+- A bad clef is one vitium; strings under it go unchecked.
+- Same mediatio twice in one tone is a vitium ("mediatio bis in
+  tono") - not in the plan; R4's eligere needs uniqueness.
+- Vitia sorted by line at the end (clashes are found after all
+  tones). Header PROBATIONES comment updated to say all three; no
+  types changed.
+- Example tokens checked under the tone clef (validity only).
+Plants (a) and (b) red, restored byte-identical; (a)'s planta line
+names the real table first, a hand re-run showed both f3 fixtures
+red too.

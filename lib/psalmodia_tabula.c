@@ -4,9 +4,15 @@
  * sistit, contra instrumentarium_legere): index lapsuum
  * transcriptionis plenus esse debet. Tabulae magnitudines ex numero
  * liberorum ante impletionem numerantur; vitia sola in Xar crescunt.
+ *
+ * Probationes (R3) in lectione: quaeque chorda notarum per
+ * gabc_legere in piscina probationis legitur, quae ante lectionem
+ * quamque vacatur - cantus probationis tabulam non onerant. Vitia
+ * in fine ordine linearum ponuntur (bis post omnes tonos invenitur).
  */
 
 #include "psalmodia_tabula.h"
+#include "gabc.h"
 #include "internamentum.h"
 #include "stml.h"
 #include "xar.h"
@@ -19,6 +25,7 @@
 
 nomen structura {
     Piscina* piscina;
+    Piscina* probatio;           /* cantus gabc probationum, vacata */
         Xar* vitia;              /* PsalmodiaVitium */
         b32  memoria_defecit;
 } Lector;
@@ -658,6 +665,573 @@ _exemplum_legere (
 
 
 /* ==================================================
+ * Probationes: notae gabc, littera differentiae, bis
+ * ================================================== */
+
+interior constans character LITTERAE_GRADUUM[] = "CDEFGAB";
+
+/* "(clavis)" aut "(clavis) a(notae)" per gabc_legere, in piscina
+ * probationis (vacata: cantus prior perit) */
+interior constans GabcCantus*
+_gabc_legere (
+              Lector* lector,
+              chorda  clavis,
+     constans chorda* notae)
+{
+    ChordaAedificator* a;
+           GabcCantus* cantus;
+
+    piscina_vacare(lector->probatio);
+    a = chorda_aedificator_creare(lector->probatio, LXIV);
+    si (a == NIHIL)
+    {
+        lector->memoria_defecit = VERUM;
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_character(a, '(');
+    chorda_aedificator_appendere_chorda(a, clavis);
+    chorda_aedificator_appendere_character(a, ')');
+    si (notae != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(a, " a(");
+        chorda_aedificator_appendere_chorda(a, *notae);
+        chorda_aedificator_appendere_character(a, ')');
+    }
+    cantus = gabc_legere(chorda_aedificator_finire(a),
+        lector->probatio);
+    si (cantus == NIHIL)
+    {
+        lector->memoria_defecit = VERUM;
+    }
+    redde cantus;
+}
+
+/* causa VITII gabc primi (monita licent), aut vacua */
+interior chorda
+_gabc_causa (
+    constans GabcCantus* cantus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < cantus->numerus_vitiorum; k++)
+    {
+        si (cantus->vitia[k].gravitas == GABC_VITIUM)
+        {
+            redde cantus->vitia[k].causa;
+        }
+    }
+    redde _vacua();
+}
+
+/* clavis sola legibilis: syllaba una, elementum unum CLAVIS */
+interior b32
+_clavem_probare (
+      Lector* lector,
+      chorda  clavis,
+         i32  linea)
+{
+    constans GabcCantus* cantus = _gabc_legere(lector, clavis, NIHIL);
+      ChordaAedificator* a;
+                 chorda  causa;
+
+    si (cantus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    si (   gabc_successus(cantus) && cantus->numerus_syllabarum == I
+        && cantus->numerus_notarum                        == ZEPHYRUM
+        && cantus->syllabae[ZEPHYRUM].numerus_elementorum == I
+        && cantus->syllabae[ZEPHYRUM].elementa[ZEPHYRUM].genus
+           == GABC_EL_CLAVIS)
+    {
+        redde VERUM;
+    }
+    causa  = _gabc_causa(cantus);
+    a      = _causa_incipere(lector);
+    si (a != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "clavis non legibilis \"");
+        chorda_aedificator_appendere_chorda(a, clavis);
+        chorda_aedificator_appendere_literis(a, "\"");
+        si (causa.mensura > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_literis(a, ": ");
+            chorda_aedificator_appendere_chorda(a, causa);
+        }
+        _vitium_finire(lector, linea, a);
+    }
+    redde FALSUM;
+}
+
+/* notae sub clave: cantus si legibiles - gabc sine VITIO, syllaba
+ * una notarum (parenthesis in notis syllabam novam facit), nota una
+ * saltem, neumae solae cum alterationibus et spatiis (clavis mutata
+ * non). Aliter vitium in linea et NIHIL. Cantus redditus perit
+ * probatione proxima. */
+interior constans GabcCantus*
+_notas_probare (
+      Lector* lector,
+      chorda  notae,
+      chorda  clavis,
+         i32  linea)
+{
+    constans GabcCantus* cantus  = _gabc_legere(lector, clavis, &notae);
+     constans character* nostra  = NIHIL;
+                 chorda  causa   = _vacua();
+      ChordaAedificator* a;
+                    i32  k;
+
+    si (cantus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (!gabc_successus(cantus))
+    {
+        causa = _gabc_causa(cantus);
+    }
+    alioquin si (cantus->numerus_syllabarum != II)
+    {
+        nostra = "parenthesis in notis";
+    }
+    alioquin si (cantus->numerus_notarum == ZEPHYRUM)
+    {
+        nostra = "nulla nota";
+    }
+    alioquin
+    {
+        constans GabcSyllaba* syllaba = &cantus->syllabae[I];
+
+        per (k = ZEPHYRUM; k < syllaba->numerus_elementorum; k++)
+        {
+            GabcElementiGenus genus = syllaba->elementa[k].genus;
+
+            si (   genus != GABC_EL_NEUMA && genus != GABC_EL_ALTERATIO
+                && genus != GABC_EL_SPATIUM)
+            {
+                nostra = "clavis aut signum praeter notas";
+                frange;
+            }
+        }
+    }
+    si (causa.mensura == ZEPHYRUM && nostra == NIHIL)
+    {
+        redde cantus;
+    }
+    a = _causa_incipere(lector);
+    si (a != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(a,
+            "notae non legibiles \"");
+        chorda_aedificator_appendere_chorda(a, notae);
+        chorda_aedificator_appendere_literis(a, "\": ");
+        si (nostra != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(a, nostra);
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_chorda(a, causa);
+        }
+        _vitium_finire(lector, linea, a);
+    }
+    redde NIHIL;
+}
+
+interior vacuum
+_tenorem_probare (
+      Lector* lector,
+      chorda  tenor,
+      chorda  clavis,
+         i32  linea)
+{
+    constans GabcCantus* cantus = _notas_probare(lector, tenor, clavis,
+        linea);
+
+    si (cantus != NIHIL && cantus->numerus_notarum != I)
+    {
+        _vitium(lector, linea, "tenor \"", tenor, "\" non nota una");
+    }
+}
+
+/* gradus a do -> littera ("CDEFGAB"[gradus mod VII]) */
+interior character
+_littera (
+    s32 gradus)
+{
+    dum (gradus < ZEPHYRUM)
+    {
+        gradus += VII;
+    }
+    redde LITTERAE_GRADUUM[gradus % VII];
+}
+
+interior b32
+_stellam_habet (
+    chorda differentia)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < differentia.mensura; k++)
+    {
+        si (differentia.datum[k] == '*')
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* "terminatio monosyllaba "g"", "mediatio ad libitum" ... */
+interior vacuum
+_clausulam_nominare (
+             ChordaAedificator* a,
+                           b32  terminatio,
+    constans PsalmodiaClausula* clausula)
+{
+    chorda_aedificator_appendere_literis(a,
+        terminatio ? "terminatio" : "mediatio");
+    si (clausula->monosyllaba)
+    {
+        chorda_aedificator_appendere_literis(a, " monosyllaba");
+    }
+    si (clausula->ad_libitum)
+    {
+        chorda_aedificator_appendere_literis(a, " ad libitum");
+    }
+    si (!terminatio)
+    {
+        redde;
+    }
+    si (clausula->differentia.mensura == ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(a, " sine differentia");
+        redde;
+    }
+    chorda_aedificator_appendere_literis(a, " \"");
+    chorda_aedificator_appendere_chorda(a, clausula->differentia);
+    chorda_aedificator_appendere_literis(a, "\"");
+}
+
+/* clausula sine loco, anticipata sine superveniente; si clavis bona:
+ * notae locorum, tenor et initium, littera differentiae */
+interior vacuum
+_clausulam_probare (
+                        Lector* lector,
+    constans PsalmodiaClausula* clausula,
+                           b32  terminatio,
+                        chorda  clavis,
+                           b32  clavis_bona)
+{
+                     b32 ultima_lecta    = FALSUM;
+                     s32 gradus_ultimus  = ZEPHYRUM;
+                     i32 k;
+
+    si (clausula->numerus_locorum == ZEPHYRUM)
+    {
+        _vitium(lector, clausula->linea, terminatio
+            ? "<terminatio> sine loco" : "<mediatio> sine loco",
+            _vacua(), "");
+    }
+    per (k = ZEPHYRUM; k < clausula->numerus_locorum; k++)
+    {
+        constans PsalmodiaLocus* locus = &clausula->loci[k];
+
+        si (   locus->anticipata
+            && locus->superveniens.mensura == ZEPHYRUM)
+        {
+            _vitium(lector, locus->linea,
+                "anticipata sine superveniente",
+                _vacua(), "");
+        }
+        si (!clavis_bona)
+        {
+            perge;
+        }
+        {
+            constans GabcCantus* cantus = _notas_probare(lector,
+                locus->notae, clavis, locus->linea);
+
+            si (cantus != NIHIL && k + I == clausula->numerus_locorum)
+            {
+                ultima_lecta    = VERUM;
+                gradus_ultimus  =
+                    cantus->notae[cantus->numerus_notarum - I].gradus;
+            }
+        }
+        si (locus->superveniens.mensura > ZEPHYRUM)
+        {
+            (vacuum)_notas_probare(lector, locus->superveniens, clavis,
+                locus->linea);
+        }
+    }
+    si (!terminatio || !clavis_bona)
+    {
+        redde;
+    }
+    si (clausula->tenor.mensura > ZEPHYRUM)
+    {
+        _tenorem_probare(lector, clausula->tenor, clavis,
+            clausula->linea);
+    }
+    si (clausula->initium.mensura > ZEPHYRUM)
+    {
+        (vacuum)_notas_probare(lector, clausula->initium, clavis,
+            clausula->linea);
+    }
+    si (   ultima_lecta && clausula->differentia.mensura > ZEPHYRUM
+        && !_stellam_habet(clausula->differentia))
+    {
+        character littera = (character)clausula->differentia.datum[
+            ZEPHYRUM];
+        character debita = _littera(gradus_ultimus);
+
+        si (littera >= 'a' && littera <= 'z')
+        {
+            littera = (character)(littera - 'a' + 'A');
+        }
+        si (littera != debita)
+        {
+            ChordaAedificator* a = _causa_incipere(lector);
+
+            si (a != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(a,
+                    "differentia \"");
+                chorda_aedificator_appendere_chorda(a,
+                    clausula->differentia);
+                chorda_aedificator_appendere_literis(a,
+                    "\" sed nota ultima ");
+                chorda_aedificator_appendere_character(a, debita);
+                _vitium_finire(lector, clausula->linea, a);
+            }
+        }
+    }
+}
+
+/* signa notarum (praeter crucem et asteriscum); differentia nominata
+ * in tono */
+interior vacuum
+_exemplum_probare (
+                        Lector* lector,
+       constans PsalmodiaTonus* tonus,
+    constans PsalmodiaExemplum* exemplum,
+                           b32  clavis_bona)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; clavis_bona
+        && k < exemplum->numerus_notarum; k++)
+    {
+        chorda signum = exemplum->notae[k];
+
+        si (   chorda_aequalis_literis(signum, "*")
+            || chorda_aequalis_literis(signum, "\342\200\240"))
+        {
+            perge;
+        }
+        (vacuum)_notas_probare(lector, signum, tonus->clavis,
+            exemplum->linea);
+    }
+    si (exemplum->differentia.mensura == ZEPHYRUM)
+    {
+        redde;
+    }
+    per (k = ZEPHYRUM; k < tonus->numerus_terminationum; k++)
+    {
+        si (chorda_aequalis(tonus->terminationes[k].differentia,
+                exemplum->differentia))
+        {
+            redde;
+        }
+    }
+    _vitium(lector, exemplum->linea, "exemplum differentiam \"",
+        exemplum->differentia, "\" nominat quam tonus non habet");
+}
+
+interior b32
+_clausulae_pares (
+    constans PsalmodiaClausula* prima,
+    constans PsalmodiaClausula* secunda)
+{
+    redde prima->monosyllaba == secunda->monosyllaba
+        && prima->ad_libitum == secunda->ad_libitum
+        && chorda_aequalis(prima->differentia, secunda->differentia);
+}
+
+/* vitium "<clausula> bis in <ubi> (prior in linea N)" */
+interior vacuum
+_bis_notare (
+                        Lector* lector,
+                           b32  terminatio,
+    constans PsalmodiaClausula* clausula,
+    constans PsalmodiaClausula* prior,
+       constans PsalmodiaTonus* tonus)
+{
+    ChordaAedificator* a = _causa_incipere(lector);
+
+    si (a == NIHIL)
+    {
+        redde;
+    }
+    _clausulam_nominare(a, terminatio, clausula);
+    si (terminatio)
+    {
+        chorda_aedificator_appendere_literis(a, " bis in modo ");
+        chorda_aedificator_appendere_chorda(a, tonus->modus);
+    }
+    alioquin
+    {
+        chorda_aedificator_appendere_literis(a, " bis in tono");
+    }
+    chorda_aedificator_appendere_literis(a, " (prior in linea ");
+    chorda_aedificator_appendere_i32(a, prior->linea);
+    chorda_aedificator_appendere_literis(a, ")");
+    _vitium_finire(lector, clausula->linea, a);
+}
+
+/* tonus lectus: clavis, tenor, initium, flexa, clausulae, exempla;
+ * mediatio bis in tono */
+interior vacuum
+_tonum_probare (
+                     Lector* lector,
+    constans PsalmodiaTonus* tonus,
+                        i32  linea_initii,
+                        i32  linea_flexae)
+{
+    b32 clavis_bona = _clavem_probare(lector, tonus->clavis,
+        tonus->linea);
+    i32 k;
+    i32 j;
+
+    si (clavis_bona)
+    {
+        _tenorem_probare(lector, tonus->tenor, tonus->clavis,
+            tonus->linea);
+        per (k = ZEPHYRUM; k < tonus->numerus_initii; k++)
+        {
+            (vacuum)_notas_probare(lector, tonus->initium[k],
+                tonus->clavis, linea_initii);
+        }
+        si (tonus->flexa.mensura > ZEPHYRUM)
+        {
+            (vacuum)_notas_probare(lector, tonus->flexa, tonus->clavis,
+                linea_flexae);
+        }
+    }
+    per (k = ZEPHYRUM; k < tonus->numerus_mediationum; k++)
+    {
+        _clausulam_probare(lector, &tonus->mediationes[k], FALSUM,
+            tonus->clavis, clavis_bona);
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            si (_clausulae_pares(&tonus->mediationes[j],
+                    &tonus->mediationes[k]))
+            {
+                _bis_notare(lector, FALSUM, &tonus->mediationes[k],
+                    &tonus->mediationes[j], tonus);
+                frange;
+            }
+        }
+    }
+    per (k = ZEPHYRUM; k < tonus->numerus_terminationum; k++)
+    {
+        constans PsalmodiaClausula* clausula = &tonus->terminationes[k];
+
+        si (clausula->clavis.mensura > ZEPHYRUM)
+        {
+            _clausulam_probare(lector, clausula, VERUM,
+                clausula->clavis,
+                _clavem_probare(lector, clausula->clavis,
+                    clausula->linea));
+        }
+        alioquin
+        {
+            _clausulam_probare(lector, clausula, VERUM, tonus->clavis,
+                clavis_bona);
+        }
+    }
+    per (k = ZEPHYRUM; k < tonus->numerus_exemplorum; k++)
+    {
+        _exemplum_probare(lector, tonus, &tonus->exempla[k],
+            clavis_bona);
+    }
+}
+
+/* eadem terminatio bis in eodem modo, positionibus ambabus numeratis
+ * (clavis: modus, differentia, monosyllaba, ad_libitum) */
+interior vacuum
+_bis_probare (
+             Lector* lector,
+    PsalmodiaTabula* tabula)
+{
+    i32 k;
+    i32 j;
+    i32 m;
+    i32 n;
+
+    per (k = ZEPHYRUM; k < tabula->numerus_tonorum; k++)
+    {
+        constans PsalmodiaTonus* tonus = &tabula->toni[k];
+
+        per (j = ZEPHYRUM; j < tonus->numerus_terminationum; j++)
+        {
+            constans PsalmodiaClausula* prior = NIHIL;
+
+            per (m = ZEPHYRUM; m <= k && prior == NIHIL; m++)
+            {
+                constans PsalmodiaTonus* alter = &tabula->toni[m];
+                                    i32  finis;
+
+                si (!chorda_aequalis(alter->modus, tonus->modus))
+                {
+                    perge;
+                }
+                finis = m == k ? j : alter->numerus_terminationum;
+                per (n = ZEPHYRUM; n < finis; n++)
+                {
+                    si (_clausulae_pares(&alter->terminationes[n],
+                            &tonus->terminationes[j]))
+                    {
+                        prior = &alter->terminationes[n];
+                        frange;
+                    }
+                }
+            }
+            si (prior != NIHIL)
+            {
+                _bis_notare(lector, VERUM, &tonus->terminationes[j],
+                    prior, tonus);
+            }
+        }
+    }
+}
+
+/* ordo linearum, stabilis (insertio) */
+interior vacuum
+_vitia_ordinare (
+    PsalmodiaVitium* vitia,
+                i32  numerus)
+{
+                i32 k;
+                i32 j;
+    PsalmodiaVitium vitium;
+
+    per (k = I; k < numerus; k++)
+    {
+        vitium  = vitia[k];
+        j       = k;
+        dum (j > ZEPHYRUM && vitia[j - I].linea > vitium.linea)
+        {
+            vitia[j] = vitia[j - I];
+            j--;
+        }
+        vitia[j] = vitium;
+    }
+}
+
+
+/* ==================================================
  * Toni
  * ================================================== */
 
@@ -689,6 +1263,8 @@ _tonum_legere (
     b32 plenum;
     b32 initium_lectum  = FALSUM;
     b32 flexa_lecta     = FALSUM;
+    i32 linea_initii    = nodus->linea;
+    i32 linea_flexae    = nodus->linea;
     i32 k;
 
     memset(tonus, ZEPHYRUM, magnitudo(PsalmodiaTonus));
@@ -782,11 +1358,13 @@ _tonum_legere (
             *lectum = VERUM;
             si (_titulus_est(liber, "initium"))
             {
+                linea_initii = liber->linea;
                 tonus->numerus_initii = _signa_dividere(lector,
                     _folium(lector, liber), &tonus->initium);
             }
             alioquin
             {
+                linea_flexae = liber->linea;
                 tonus->flexa = _folium(lector, liber);
             }
         }
@@ -795,6 +1373,7 @@ _tonum_legere (
             _elementum_ignotum(lector, nodus, liber);
         }
     }
+    _tonum_probare(lector, tonus, linea_initii, linea_flexae);
     redde VERUM;
 }
 
@@ -843,23 +1422,20 @@ _radicem_legere (
             tabula->numerus_tonorum++;
         }
     }
+    _bis_probare(lector, tabula);
 }
 
-PsalmodiaTabula*
-psalmodia_tabulam_legere (
+/* corpus lectionis; lector paratus (piscina probationis creata) */
+interior PsalmodiaTabula*
+_tabulam_legere (
+      Lector* lector_parans,
       chorda  stml,
      Piscina* piscina)
 {
-             Lector  lector;
+             Lector  lector = *lector_parans;
     PsalmodiaTabula* tabula;
        StmlResultus  r;
 
-    si (piscina == NIHIL)
-    {
-        redde NIHIL;
-    }
-    lector.piscina = piscina;
-    lector.memoria_defecit = FALSUM;
     lector.vitia = xar_creare(piscina, (i32)magnitudo(PsalmodiaVitium));
     tabula = (PsalmodiaTabula*)piscina_allocare(piscina,
         magnitudo(PsalmodiaTabula));
@@ -896,7 +1472,34 @@ psalmodia_tabulam_legere (
     {
         xar_copiare_ad_tabulam(lector.vitia, tabula->vitia, ZEPHYRUM,
             tabula->numerus_vitiorum);
+        _vitia_ordinare(tabula->vitia, tabula->numerus_vitiorum);
     }
+    redde tabula;
+}
+
+PsalmodiaTabula*
+psalmodia_tabulam_legere (
+      chorda  stml,
+     Piscina* piscina)
+{
+             Lector  lector;
+    PsalmodiaTabula* tabula;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    lector.piscina          = piscina;
+    lector.vitia            = NIHIL;
+    lector.memoria_defecit  = FALSUM;
+    lector.probatio = piscina_generare_dynamicum("psalmodia_probatio",
+        (memoriae_index)(XVI * MXXIV));
+    si (lector.probatio == NIHIL)
+    {
+        redde NIHIL;
+    }
+    tabula = _tabulam_legere(&lector, stml, piscina);
+    piscina_destruere(lector.probatio);
     redde tabula;
 }
 

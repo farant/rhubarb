@@ -2,9 +2,9 @@
  * (include/psalmodia_tabula.h)
  *
  * Plan: project-specs/psalmodia-plan-1.md R2 (lectio, forma
- * canonica, totalitas). Tabula vera: musica/toni_psalmorum.stml;
- * cetera fixa hic in literis (UTF-8 per octales: \303\263 = o
- * acutum, \342\200\240 = crux).
+ * canonica, totalitas), R3 (lapsus transcriptionis). Tabula vera:
+ * musica/toni_psalmorum.stml; cetera fixa hic in literis (UTF-8 per
+ * octales: \303\263 = o acutum, \342\200\240 = crux).
  *
  * GRAMMATICA FORMAE CANONICAE (psalmodia_tabulam_scribere), linea una
  * per rem, columnae tabulis separatae, '-' = vacua; textus effugitur
@@ -473,6 +473,166 @@ _totalitas_probare (
         "x:2: attributum ignotum \"tonica\" in <tonus>\n");
 }
 
+
+    /* ==================================================
+     * Lapsus transcriptionis (R3)
+     * ================================================== */
+
+/* tonus bonus in linea II; lapsus a linea III */
+#define LAPSUS_INITIUM \
+    "<toni_psalmorum>\n" \
+    "<tonus modus=\"8\" clavis=\"c4\" tenor=\"j\"><terminatio" \
+    " differentia=\"G\"><nota>g</nota></terminatio></tonus>\n"
+#define LAPSUS_FINIS "</toni_psalmorum>\n"
+#define TONUS_I "<tonus modus=\"1\" clavis=\"c4\" tenor=\"h\">"
+
+/* vitium unum in linea data, causa verbum continens; tonus bonus
+ * (VIII) lectus manet */
+interior vacuum
+_lapsum_probare (
+         CredoContextus* ctx,
+     constans character* fixum,
+                    i32  linea,
+     constans character* verbum)
+{
+    PsalmodiaTabula* t = _legere(ctx, fixum);
+
+    CREDO_NECESSE (t != NIHIL);
+    si (t->numerus_vitiorum != I)
+    {
+        chorda v = _vitia(ctx, t);
+        imprimere("  exspectatum unum (%s):\n%.*s", verbum,
+            (integer)v.mensura, (character*)v.datum);
+    }
+    CREDO_NECESSE (t->numerus_vitiorum == I);
+    CREDO_AEQUALIS_I32 (t->vitia[ZEPHYRUM].linea, linea);
+    CREDO_CHORDA_CONTINET (t->vitia[ZEPHYRUM].causa,
+        chorda_ex_literis(verbum, ctx->piscina));
+    CREDO_NON_NIHIL (_tonus(t, "8", FALSUM));
+}
+
+/* nullum vitium: nomina cum '*', clavis f3, modi diversi, casus */
+interior constans character FIXUM_SINE_LAPSU[] =
+    LAPSUS_INITIUM
+    "<tonus modus=\"4\" positio=\"altera\" clavis=\"c4\" tenor=\"h\">\n"
+    "<terminatio differentia=\"A*\"><nota>g</nota></terminatio>\n"
+    "<terminatio differentia=\"G*\"><nota>h</nota></terminatio>\n"
+    "<terminatio differentia=\"G\"><nota>g</nota></terminatio>\n"
+    "<terminatio differentia=\"G\" casus=\"monosyllaba\">"
+    "<nota>g</nota></terminatio>\n"
+    "<terminatio differentia=\"G\" ad_libitum=\"verum\">"
+    "<nota>g</nota></terminatio>\n"
+    "</tonus>\n"
+    "<tonus modus=\"2\" clavis=\"f3\" tenor=\"h\">\n"
+    "<terminatio differentia=\"D\"><nota>f</nota></terminatio>\n"
+    "<exemplum pars=\"versus\" differentia=\"D\" textus=\"a b c\""
+    " notae=\"h \342\200\240 f * f\"/>\n"
+    "</tonus>\n"
+    LAPSUS_FINIS;
+
+interior vacuum
+_lapsus_probare (
+    CredoContextus* ctx)
+{
+    PsalmodiaTabula* t;
+
+    /* notae non legibiles - quisque locus notarum */
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<mediatio><nota>q</nota></mediatio></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "notae non legibiles \"q\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n<mediatio>"
+        "<accentus superveniens=\"q\">h</accentus></mediatio></tonus>\n"
+        LAPSUS_FINIS, (i32)IV, "notae non legibiles \"q\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<initium>f q</initium></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "notae non legibiles \"q\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<flexa>q</flexa></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "notae non legibiles \"q\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<exemplum pars=\"versus\" textus=\"a b\" notae=\"h q\"/>"
+        "</tonus>\n" LAPSUS_FINIS, (i32)IV,
+        "notae non legibiles \"q\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM "<tonus modus=\"peregrinus\""
+        " clavis=\"c4\" tenor=\"h\">\n<terminatio initium=\"q\">"
+        "<nota>g</nota></terminatio></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "notae non legibiles \"q\"");
+    /* foramina gabc: nulla nota, clavis mutata, parenthesis */
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<mediatio><nota></nota></mediatio></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "notae non legibiles \"\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<mediatio><nota>c3h</nota></mediatio></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "notae non legibiles \"c3h\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<mediatio><nota>h)x</nota></mediatio></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "notae non legibiles \"h)x\"");
+
+    /* littera differentiae contra notam ultimam */
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I
+        "<terminatio differentia=\"D\">\n"
+        "<nota>g</nota></terminatio></tonus>\n" LAPSUS_FINIS,
+        (i32)III, "differentia \"D\" sed nota ultima G");
+    _lapsum_probare(ctx, LAPSUS_INITIUM
+        "<tonus modus=\"2\" clavis=\"f3\" tenor=\"h\">\n"
+        "<terminatio differentia=\"E\"><nota>f</nota></terminatio>"
+        "</tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "differentia \"E\" sed nota ultima D");
+
+    /* eadem terminatio bis: in tono, per positiones ambas */
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<terminatio differentia=\"g\"><nota>g</nota></terminatio>\n"
+        "<terminatio differentia=\"g\"><nota>g</nota></terminatio>"
+        "</tonus>\n" LAPSUS_FINIS, (i32)V, "\"g\" bis in modo 1");
+    _lapsum_probare(ctx, LAPSUS_INITIUM
+        "<tonus modus=\"4\" clavis=\"c4\" tenor=\"h\"><terminatio"
+        " differentia=\"g\"><nota>g</nota></terminatio></tonus>\n"
+        "<tonus modus=\"4\" positio=\"altera\" clavis=\"c4\""
+        " tenor=\"h\"><terminatio differentia=\"g\"><nota>g</nota>"
+        "</terminatio></tonus>\n" LAPSUS_FINIS, (i32)IV,
+        "\"g\" bis in modo 4");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n"
+        "<mediatio><nota>h</nota></mediatio>\n"
+        "<mediatio><nota>g</nota></mediatio></tonus>\n" LAPSUS_FINIS,
+        (i32)V, "mediatio bis");
+
+    /* cetera */
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "<mediatio>\n"
+        "<accentus anticipata=\"verum\">h</accentus></mediatio>"
+        "</tonus>\n" LAPSUS_FINIS, (i32)IV,
+        "anticipata sine superveniente");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I
+        "<terminatio differentia=\"g\"><nota>g</nota></terminatio>\n"
+        "<exemplum pars=\"terminatio\" differentia=\"x\" textus=\"a\""
+        " notae=\"g\"/></tonus>\n" LAPSUS_FINIS,
+        (i32)IV, "differentiam \"x\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM
+        "<tonus modus=\"1\" clavis=\"c5\" tenor=\"h\">\n"
+        "<mediatio><nota>h</nota></mediatio></tonus>\n" LAPSUS_FINIS,
+        (i32)III, "clavis non legibilis \"c5\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM
+        "<tonus modus=\"1\" clavis=\"c4\" tenor=\"hh\">\n"
+        "<mediatio><nota>h</nota></mediatio></tonus>\n" LAPSUS_FINIS,
+        (i32)III, "tenor \"hh\"");
+    _lapsum_probare(ctx, LAPSUS_INITIUM TONUS_I "\n<mediatio/>"
+        "</tonus>\n" LAPSUS_FINIS, (i32)IV, "sine loco");
+
+    /* nomina '*', f3, modi et casus diversi: nihil */
+    t = _legere(ctx, FIXUM_SINE_LAPSU);
+    CREDO_NECESSE (t != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_vitia(ctx, t), "");
+
+    /* vitia ordine linearum, etiam bis (post lectionem inventum) */
+    t = _legere(ctx, LAPSUS_INITIUM
+        "<tonus modus=\"8\" clavis=\"c4\" tenor=\"j\"><terminatio"
+        " differentia=\"G\"><nota>g</nota></terminatio></tonus>\n"
+        TONUS_I "<flexa>q</flexa></tonus>\n" LAPSUS_FINIS);
+    CREDO_NECESSE (t != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_vitia(ctx, t),
+        "x:3: terminatio \"G\" bis in modo 8 (prior in linea 2)\n"
+        "x:4: notae non legibiles \"q\": signum notae sine nota\n");
+}
+
 interior constans CredoSectio SECTIONES[] = {
     { "tabula vera: XI toni sine vitio, loci, variantes",
         _tabulam_veram_probare, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -482,6 +642,9 @@ interior constans CredoSectio SECTIONES[] = {
         _exempla_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "totalitas: fracta, temere, mixta - toni boni manent",
         _totalitas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "lapsus: notae, littera differentiae, bis, cetera",
+        _lapsus_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
