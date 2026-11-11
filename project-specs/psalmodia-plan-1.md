@@ -3,8 +3,8 @@
 **Ledger:** parcum 01M6V5H5V1EGK1V37TP5M6BFN1 ("psalmodia"); one opus
 per task below, filed at R1.
 
-**STATUS: IN PROGRESS.** R1, R2 done 2026-11-10; R3 done
-2026-11-11; R4 next.
+**STATUS: DONE.** R1, R2 2026-11-10; R3, R4 2026-11-11. Next:
+part 2 (syllables + fitter), to be planned.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > superpowers:executing-plans (inline, per house convention, no
@@ -467,3 +467,22 @@ still 0 vitia, read in ~1 ms. Rulings:
 Plants (a) and (b) red, restored byte-identical; (a)'s planta line
 names the real table first, a hand re-run showed both f3 fixtures
 red too.
+
+**R4 (2026-11-11).** Lookup in `lib/psalmodia_tabula.c`; sections
+`_signa_probare`, `_variantes_probare` (7 sections, 417 assertions,
+green). Rulings:
+- Spaces inside a differentia are ignored ("1 D 2" = D2): GregoBase
+  writes it that way (step 1). Header SIGNA updated; cost if wrong:
+  none seen - no table name contains a space.
+- The star-first form ("2 * a") is not rewritten: NIHIL with reason.
+  GregoBase `p` for peregrinus left to the caller (part 2).
+- Two case-insensitive matches -> NIHIL "ambigue habet: ab, AB"
+  (fourth cause, added to the header's examples); empty label ->
+  "signum vacuum".
+- `_variantes_probare` per the R1 note: tone 6 eligere(VERUM) ->
+  "ixi"; tone 2 monosyllabam(eligere(FALSUM)) -> NOTA "i"; tone 1 ->
+  itself; in directum's ending -> its sister.
+- Whole GregoBase run: 1150/1315 named labels resolve, none wrongly;
+  ~5900 unlabelled chants in many-ending modes need part 2's reverse
+  EUOUAE check (spec §II line added).
+Plants (a) "1 Ab" red, (b) "4 A*" red; restored byte-identical.

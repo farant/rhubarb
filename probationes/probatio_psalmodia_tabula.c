@@ -2,9 +2,10 @@
  * (include/psalmodia_tabula.h)
  *
  * Plan: project-specs/psalmodia-plan-1.md R2 (lectio, forma
- * canonica, totalitas), R3 (lapsus transcriptionis). Tabula vera:
- * musica/toni_psalmorum.stml; cetera fixa hic in literis (UTF-8 per
- * octales: \303\263 = o acutum, \342\200\240 = crux).
+ * canonica, totalitas), R3 (lapsus transcriptionis), R4 (signa,
+ * variantes). Tabula vera: musica/toni_psalmorum.stml; cetera fixa
+ * hic in literis (UTF-8 per octales: \303\263 = o acutum,
+ * \342\200\240 = crux).
  *
  * GRAMMATICA FORMAE CANONICAE (psalmodia_tabulam_scribere), linea una
  * per rem, columnae tabulis separatae, '-' = vacua; textus effugitur
@@ -633,6 +634,223 @@ _lapsus_probare (
         "x:4: notae non legibiles \"q\": signum notae sine nota\n");
 }
 
+
+    /* ==================================================
+     * Signa et variantes (R4)
+     * ================================================== */
+
+interior PsalmodiaTabula*
+_tabula_vera (
+    CredoContextus* ctx)
+{
+    redde psalmodia_tabulam_legere(filum_legere_totum(
+        "musica/toni_psalmorum.stml", ctx->piscina), ctx->piscina);
+}
+
+/* signum -> terminatio communis toni (modus, altera) nominis dati */
+interior vacuum
+_signum_probare (
+              CredoContextus* ctx,
+    constans PsalmodiaTabula* tabula,
+         constans character* signum,
+         constans character* modus,
+                        b32  altera,
+         constans character* differentia)
+{
+    constans PsalmodiaClausula* cl;
+       constans PsalmodiaTonus* tonus = NIHIL;
+             ChordaAedificator* causa;
+
+    causa = chorda_aedificator_creare(ctx->piscina, CCLVI);
+    cl = psalmodia_signum_invenire(tabula, chorda_ex_literis(signum,
+        ctx->piscina), &tonus, causa);
+    si (cl == NIHIL)
+    {
+        chorda c = chorda_aedificator_finire(causa);
+
+        imprimere("  signum \"%s\": %.*s\n", signum, (integer)c.mensura,
+            (character*)c.datum);
+    }
+    CREDO_NECESSE (cl != NIHIL && tonus != NIHIL);
+    CREDO_VERUM (_aequat(tonus->modus, modus));
+    CREDO_AEQUALIS_I32 ((i32)tonus->positio_altera, (i32)altera);
+    CREDO_VERUM (_aequat(cl->differentia, differentia));
+    CREDO_FALSUM (cl->monosyllaba);
+    CREDO_FALSUM (cl->ad_libitum);
+}
+
+/* signum -> NIHIL, causa verbum continens, tonus NIHIL */
+interior vacuum
+_signum_nullum (
+              CredoContextus* ctx,
+    constans PsalmodiaTabula* tabula,
+         constans character* signum,
+         constans character* verbum)
+{
+    constans PsalmodiaClausula* cl;
+       constans PsalmodiaTonus* tonus =
+           (constans PsalmodiaTonus*)tabula;
+             ChordaAedificator* causa;
+
+    causa = chorda_aedificator_creare(ctx->piscina, CCLVI);
+    cl = psalmodia_signum_invenire(tabula, chorda_ex_literis(signum,
+        ctx->piscina), &tonus, causa);
+    CREDO_NIHIL (cl);
+    CREDO_NIHIL (tonus);
+    CREDO_CHORDA_CONTINET (chorda_aedificator_finire(causa),
+        chorda_ex_literis(verbum, ctx->piscina));
+}
+
+/* nomina eiusdem litterae diversis majusculis */
+interior constans character FIXUM_MAJUSCULAE[] =
+    "<toni_psalmorum>\n"
+    "<tonus modus=\"1\" clavis=\"c4\" tenor=\"h\">\n"
+    "<terminatio differentia=\"g\"><nota>g</nota></terminatio>\n"
+    "<terminatio differentia=\"G\"><nota>g</nota></terminatio>\n"
+    "<terminatio differentia=\"ab\"><nota>h</nota></terminatio>\n"
+    "<terminatio differentia=\"AB\"><nota>h</nota></terminatio>\n"
+    "</tonus>\n"
+    "</toni_psalmorum>\n";
+
+interior vacuum
+_signa_probare (
+    CredoContextus* ctx)
+{
+               PsalmodiaTabula* t = _tabula_vera(ctx);
+    constans PsalmodiaClausula* cl;
+       constans PsalmodiaTonus* tonus;
+             ChordaAedificator* causa;
+
+    CREDO_NECESSE (psalmodia_successus(t));
+    /* formae signorum */
+    _signum_probare(ctx, t, "8 G", "8", FALSUM, "G");
+    _signum_probare(ctx, t, "VIII g", "8", FALSUM, "G");
+    _signum_probare(ctx, t, "viii.G", "8", FALSUM, "G");
+    _signum_probare(ctx, t, "8.G", "8", FALSUM, "G");
+    _signum_probare(ctx, t, "8G", "8", FALSUM, "G");
+    _signum_probare(ctx, t, " 8  G ", "8", FALSUM, "G");
+    _signum_probare(ctx, t, "8 G*", "8", FALSUM, "G*");
+    _signum_probare(ctx, t, "1 d", "1", FALSUM, "D");
+    _signum_probare(ctx, t, "1 D2", "1", FALSUM, "D2");
+    _signum_probare(ctx, t, "1 D 2", "1", FALSUM, "D2");
+    _signum_probare(ctx, t, "1 g2", "1", FALSUM, "g2");
+    _signum_probare(ctx, t, "7 C", "7", FALSUM, "c");
+    /* modus IV: positiones ambae */
+    _signum_probare(ctx, t, "4 A*", "4", VERUM, "A*");
+    _signum_probare(ctx, t, "IV a*", "4", VERUM, "A*");
+    _signum_probare(ctx, t, "4 a", "4", VERUM, "A");
+    _signum_probare(ctx, t, "4 g", "4", FALSUM, "g");
+    _signum_probare(ctx, t, "4 e", "4", FALSUM, "E");
+    /* modus solus: terminatio unica */
+    _signum_probare(ctx, t, "5", "5", FALSUM, "a");
+    _signum_probare(ctx, t, "V", "5", FALSUM, "a");
+    _signum_probare(ctx, t, "6", "6", FALSUM, "F");
+    _signum_probare(ctx, t, "peregrinus", "peregrinus", FALSUM, "");
+    _signum_probare(ctx, t, "In Directum", "in directum", FALSUM, "");
+
+    /* NIHIL cum causa */
+    _signum_nullum(ctx, t, "2",
+        "tonus 2 plures differentias habet: D, A");
+    _signum_nullum(ctx, t, "9 G", "tonus \"9\" nullus");
+    _signum_nullum(ctx, t, "IX", "tonus \"IX\" nullus");
+    _signum_nullum(ctx, t, "8 x",
+        "tonus 8 differentiam \"x\" non habet; differentiae: G, c, G*");
+    _signum_nullum(ctx, t, "4 x", "differentiae: g, E, c, A, A*");
+    _signum_nullum(ctx, t, "1 d*", "differentiam \"d*\"");
+    _signum_nullum(ctx, t, "7 c transpos", "\"c transpos\"");
+    _signum_nullum(ctx, t, "", "signum vacuum");
+    _signum_nullum(ctx, t, "  . ", "signum vacuum");
+
+    /* modus et differentia separati */
+    tonus = NIHIL;
+    cl = psalmodia_terminationem_invenire(t, chorda_ex_literis("1",
+        ctx->piscina), chorda_ex_literis("g2", ctx->piscina), &tonus,
+        NIHIL);
+    CREDO_NECESSE (cl != NIHIL && tonus != NIHIL);
+    CREDO_VERUM (_aequat(cl->differentia, "g2"));
+    CREDO_VERUM (_aequat(tonus->modus, "1"));
+    cl = psalmodia_terminationem_invenire(t, chorda_ex_literis("VIII",
+        ctx->piscina), chorda_ex_literis("", ctx->piscina), NIHIL,
+        NIHIL);
+    CREDO_NIHIL (cl);
+
+    /* majusculae: exactum primum; aliter par unicum solum */
+    t = _legere(ctx, FIXUM_MAJUSCULAE);
+    CREDO_NECESSE (psalmodia_successus(t));
+    _signum_probare(ctx, t, "1 g", "1", FALSUM, "g");
+    _signum_probare(ctx, t, "1 G", "1", FALSUM, "G");
+    _signum_probare(ctx, t, "1 AB", "1", FALSUM, "AB");
+    _signum_nullum(ctx, t, "1 Ab",
+        "tonus 1 differentiam \"Ab\" ambigue habet: ab, AB");
+    causa = chorda_aedificator_creare(ctx->piscina, LXIV);
+    CREDO_NIHIL (psalmodia_signum_invenire(t, chorda_ex_literis("1 aB",
+        ctx->piscina), NIHIL, causa));
+}
+
+interior vacuum
+_variantes_probare (
+    CredoContextus* ctx)
+{
+               PsalmodiaTabula* t = _tabula_vera(ctx);
+       constans PsalmodiaTonus* tonus;
+    constans PsalmodiaClausula* cl;
+    constans PsalmodiaClausula* soror;
+
+    CREDO_NECESSE (psalmodia_successus(t));
+    /* VI: ad libitum (antiqua) si petita */
+    tonus = _tonus(t, "6", FALSUM);
+    CREDO_NECESSE (tonus != NIHIL);
+    cl = psalmodia_mediationem_eligere(tonus, VERUM);
+    CREDO_NECESSE (cl != NIHIL && cl->numerus_locorum > ZEPHYRUM);
+    CREDO_VERUM (cl->ad_libitum);
+    CREDO_VERUM (_aequat(cl->loci[ZEPHYRUM].notae, "ixi"));
+    cl = psalmodia_mediationem_eligere(tonus, FALSUM);
+    CREDO_NECESSE (cl != NIHIL);
+    CREDO_FALSUM (cl->ad_libitum);
+    CREDO_FALSUM (cl->monosyllaba);
+    CREDO_VERUM (cl == &tonus->mediationes[ZEPHYRUM]);
+
+    /* II: mediatio monosyllaba = nota una "i" */
+    tonus = _tonus(t, "2", FALSUM);
+    CREDO_NECESSE (tonus != NIHIL);
+    cl     = psalmodia_mediationem_eligere(tonus, FALSUM);
+    soror  = psalmodia_clausulam_monosyllabam(tonus, cl);
+    CREDO_NECESSE (soror != NIHIL && soror != cl);
+    CREDO_VERUM (soror->monosyllaba);
+    CREDO_NECESSE (soror->numerus_locorum == I);
+    CREDO_VERUM (_locus_aequat(&soror->loci[ZEPHYRUM],
+        PSALMODIA_LOCUS_NOTA, "i", ""));
+
+    /* I: ad libitum non impressa -> communis; soror nulla -> ipsa */
+    tonus = _tonus(t, "1", FALSUM);
+    CREDO_NECESSE (tonus != NIHIL);
+    cl = psalmodia_mediationem_eligere(tonus, VERUM);
+    CREDO_VERUM (cl == &tonus->mediationes[ZEPHYRUM]);
+    CREDO_VERUM (psalmodia_clausulam_monosyllabam(tonus, cl) == cl);
+    /* I D: ad libitum terminationis soror monosyllaba non est */
+    cl = _terminatio(tonus, "D");
+    CREDO_NECESSE (cl != NIHIL);
+    CREDO_VERUM (psalmodia_clausulam_monosyllabam(tonus, cl) == cl);
+
+    /* in directum: terminatio monosyllaba soror */
+    tonus = _tonus(t, "in directum", FALSUM);
+    CREDO_NECESSE (tonus != NIHIL
+        && tonus->numerus_terminationum == II);
+    cl = psalmodia_signum_invenire(t, chorda_ex_literis("in directum",
+        ctx->piscina), NIHIL, NIHIL);
+    CREDO_VERUM (cl == &tonus->terminationes[ZEPHYRUM]);
+    soror = psalmodia_clausulam_monosyllabam(tonus, cl);
+    CREDO_VERUM (soror == &tonus->terminationes[I]);
+    CREDO_VERUM (psalmodia_clausulam_monosyllabam(tonus, soror)
+        == soror);
+
+    /* NIHIL tolerata */
+    CREDO_NIHIL (psalmodia_mediationem_eligere(NIHIL, FALSUM));
+    CREDO_NIHIL (psalmodia_clausulam_monosyllabam(tonus, NIHIL));
+    CREDO_NIHIL (psalmodia_signum_invenire(NIHIL, chorda_ex_literis("8",
+        ctx->piscina), NIHIL, NIHIL));
+}
+
 interior constans CredoSectio SECTIONES[] = {
     { "tabula vera: XI toni sine vitio, loci, variantes",
         _tabulam_veram_probare, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -645,6 +863,10 @@ interior constans CredoSectio SECTIONES[] = {
     { "lapsus: notae, littera differentiae, bis, cetera",
         _lapsus_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
+    { "signa: formae cantuum, positiones ambae, causae",
+        _signa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "variantes: ad libitum, sorores monosyllabae",
+        _variantes_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

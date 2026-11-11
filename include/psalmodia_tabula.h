@@ -49,14 +49,17 @@
  * cantus scribunt ("8 G", "VIII g", "8.G", "8G", "1 d", "4 A*",
  * "5"). Modus: 1-8, I-VIII, "peregrinus", "in directum" (majuscula
  * non refert); deinde spatia aut '.' (aut nihil, si cifrae modum
- * claudunt); reliquum = differentia. Quaeritur in OMNIBUS tonis eius
+ * claudunt); reliquum = differentia, spatiis intra neglectis ("1 D
+ * 2" = D2, ut GregoBase scribit). Quaeritur in OMNIBUS tonis eius
  * modi (IV et IV altera): nomen exactum primum; aliter par sine
  * respectu majusculae, si unicum ("1 d" -> D); differentia vacua ->
  * terminatio toni unica, si una est. Formae monosyllaba et
  * ad_libitum numquam redduntur. NIHIL -> causa, e.g.:
+ *   signum vacuum
  *   tonus "9" nullus
  *   tonus 8 differentiam "x" non habet; differentiae: G, c, G*
  *   tonus 2 plures differentias habet: D, A
+ *   tonus 1 differentiam "Ab" ambigue habet: ab, AB
  *
  * FORMA CANONICA (psalmodia_tabulam_scribere, probationes): linea una
  * per tonum, clausulam, locum, exemplum; intra tonum mediationes,

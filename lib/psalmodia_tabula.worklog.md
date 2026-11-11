@@ -111,3 +111,50 @@ byte-identical (backup build/plantae_psalmodia/*.r3.ante, log r3.log):**
   f), and both f3 fixtures in `_lapsus_probare`.
 - (b) clash pass per tone, not per modus → the 4 / 4-altera fixture
   red.
+
+## 2026-11-11 — R4: lookup (labels, variants)
+
+**Measured (plan step 1): GregoBase chants.csv, (mode, mode_var).**
+Shapes the plan's rules did not cover: spaces INSIDE the name ("1 D
+2", "1 g 2", "7 c 2" — GregoBase's spelling of D2/g2/c2) and the
+star written first ("2 * a" 21x, "*a"). Not endings at all: "et 5",
+"et 2" (a second mode), "a transpos." / "c Transpos" (transposed),
+"?", "A-star", "Re". Mode column also has `p` (peregrinus, 7x) and
+`d` / `e` / `0` (mixed bag: hymns, Te Deum, Inviolata — no tone).
+Re-slice: spaces inside the differentia are ignored when matching
+(header SIGNA updated); nothing else added. The star-first form is
+NOT rewritten (tone 2 has no starred ending, so it would be NIHIL
+anyway; guessing the book's meaning is worse than reporting). `p` is
+the caller's to map (part 2) — the header's mode forms are unchanged.
+
+**Whole-corpus run** (scratch driver over every distinct label):
+named labels 1150 of 1315 chants resolve, the rest NIHIL with the
+tone's list — mostly endings AR 1912 does not print (8 g2 32x, 8 a
+20x, 5 a2, 1 d*, 4 e*) and non-endings. No label lands on a wrong
+ending. ~5900 chants have an EMPTY label in a many-ending mode: part
+2 must name their ending (spec §II's reverse EUOUAE check).
+
+**Design.**
+- One core (`_terminationem_quaerere`) for both entry points; the
+  label parser only splits mode / rest. Matching walks the table
+  twice at most (exact, then case-insensitive) with a predicate —
+  no allocation, the table stays read-only and `causa` may be NIHIL.
+- Only common forms are candidates (not `monosyllaba`, not
+  `ad_libitum`): tone 1 holds D and D-ad-libitum, and "1 d" must
+  still be unambiguous.
+- The reason quotes the differentia AS WRITTEN ("c transpos"), the
+  mode canonically ("tonus 8"); an unparseable mode is quoted as
+  written up to its run ("tonus \"IX\" nullus").
+- Roman modes: a run of I/V/X letters, case-insensitive, matched to
+  I..VIII; no pitch letter is I, V or X, so "VIIIg" splits safely.
+- `psalmodia_clausulam_monosyllabam` finds which array holds the
+  clausula by pointer EQUALITY over the array (C89 orders pointers
+  only within one array).
+- Lint: `quaelibet` unknown to the lexicon → `PAR_ULLUM`.
+
+**Plants (silva.planta, radix gate), both RED, restored
+byte-identical (backup build/plantae_psalmodia/*.r4.ante, log r4.log):**
+- (a) case-insensitive match accepted without "exactly one" → the
+  "1 Ab" ambiguity assertion red (fixture with g/G and ab/AB — the
+  plan noted no real tone has two cases of one name).
+- (b) only the first tone of a mode searched → "4 A*" (altera) red.

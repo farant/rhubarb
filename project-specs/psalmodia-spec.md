@@ -157,6 +157,14 @@ cadences are not (P4; pages noted in the file). In short:
   letter against the last note's pitch under the clef. `vicaria` =
   the ending the book allows instead; `ad_libitum` = a second form of
   the same ending.
+- **Labels** (rules in `include/psalmodia_tabula.h`, SIGNA): "8 G",
+  "VIII g", "8.G", "8G", "1 d", "1 D 2", "4 A\*", "5" find the book's
+  ending across both positions of a mode; anything else (transposed
+  endings, "et 5", endings AR does not print such as 8 g2) is NIHIL
+  with a Latin reason listing the tone's endings, never a near miss.
+  GregoBase (2026-11-11): 1150 of 1315 named labels resolve; the
+  ~5900 chants with no label in a many-ending mode need the reverse
+  check below.
 - `<exemplum pagina pars forma differentia textus notae>`: the book's
   printed examples, in the table (as the book does), expected notes
   one per syllable, `r` = the extra note. They are the fitter's first

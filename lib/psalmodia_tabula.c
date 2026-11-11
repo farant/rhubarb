@@ -1738,3 +1738,607 @@ psalmodia_vitia_scribere (
     }
     redde bene;
 }
+
+
+/* ==================================================
+ * Inventio: signa, variantes
+ * ================================================== */
+
+interior constans character* constans NUMERI_ROMANI[] = {
+    "I", "II", "III", "IV", "V", "VI", "VII", "VIII", NIHIL
+};
+
+/* comparatio par: 0 ullum (differentia vacua), 1 exacta,
+ * 2 sine respectu majusculae */
+#define PAR_ULLUM       0
+#define PAR_EXACTUM     1
+#define PAR_MAJUSCULAE  2
+
+interior character
+_minuscula (
+    character littera)
+{
+    si (littera >= 'A' && littera <= 'Z')
+    {
+        redde (character)(littera - 'A' + 'a');
+    }
+    redde littera;
+}
+
+interior b32
+_signi_separator (
+    i8 octetus)
+{
+    redde _spatium_album(octetus) || octetus == '.';
+}
+
+/* nomina paria, spatiis albis neglectis ("D 2" = "D2") */
+interior b32
+_nomina_paria (
+    chorda signum,
+    chorda titulus,
+       b32 majuscula_refert)
+{
+    i32 k = ZEPHYRUM;
+    i32 j = ZEPHYRUM;
+
+    per (;;)
+    {
+        dum (k < signum.mensura && _spatium_album(signum.datum[k]))
+        {
+            k++;
+        }
+        dum (j < titulus.mensura && _spatium_album(titulus.datum[j]))
+        {
+            j++;
+        }
+        si (k == signum.mensura || j == titulus.mensura)
+        {
+            redde k == signum.mensura && j == titulus.mensura;
+        }
+        si (majuscula_refert
+            ? signum.datum[k] != titulus.datum[j]
+            : _minuscula((character)signum.datum[k])
+              != _minuscula((character)titulus.datum[j]))
+        {
+            redde FALSUM;
+        }
+        k++;
+        j++;
+    }
+}
+
+/* chorda = literae sine respectu majusculae */
+interior b32
+_literis_par (
+                 chorda  fons,
+     constans character* literae)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < fons.mensura; k++)
+    {
+        si (   literae[k] == '\0'
+            || _minuscula((character)fons.datum[k])
+               != _minuscula(literae[k]))
+        {
+            redde FALSUM;
+        }
+    }
+    redde literae[k] == '\0';
+}
+
+/* praefixum sine respectu majusculae, deinde finis aut separator */
+interior b32
+_verbum_praefixum (
+                 chorda  fons,
+     constans character* verbum,
+                    i32* longitudo)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; verbum[k] != '\0'; k++)
+    {
+        si (   k                                    >= fons.mensura
+            || _minuscula((character)fons.datum[k]) != verbum[k])
+        {
+            redde FALSUM;
+        }
+    }
+    si (k < fons.mensura && !_signi_separator(fons.datum[k]))
+    {
+        redde FALSUM;
+    }
+    *longitudo = k;
+    redde VERUM;
+}
+
+/* initium fontis (praecisi) -> modus. numerus 1..8, aut 0 cum
+ * titulo ("peregrinus", "in directum"). longitudo = octeti modi
+ * (etiam si ignotus: textus causae). FALSUM si ignotus. */
+interior b32
+_modum_signi_legere (
+                  chorda   fons,
+                     s32*  numerus,
+      constans character** titulus,
+                     i32*  longitudo)
+{
+    i32 k = ZEPHYRUM;
+    i32 j;
+
+    *numerus = ZEPHYRUM;
+    *titulus = NIHIL;
+    si (_verbum_praefixum(fons, "peregrinus", longitudo))
+    {
+        *titulus = "peregrinus";
+        redde VERUM;
+    }
+    si (_verbum_praefixum(fons, "in directum", longitudo))
+    {
+        *titulus = "in directum";
+        redde VERUM;
+    }
+    dum (   k < fons.mensura && fons.datum[k] >= '0'
+         && fons.datum[k] <= '9')
+    {
+        k++;
+    }
+    si (k > ZEPHYRUM)
+    {
+        *longitudo = k;
+        si (   k                    == I && fons.datum[ZEPHYRUM] >= '1'
+            && fons.datum[ZEPHYRUM] <= '8')
+        {
+            *numerus = (s32)(fons.datum[ZEPHYRUM] - '0');
+            redde VERUM;
+        }
+        redde FALSUM;
+    }
+    dum (   k < fons.mensura
+         && (   _minuscula((character)fons.datum[k]) == 'i'
+            || _minuscula((character)fons.datum[k]) == 'v'
+            || _minuscula((character)fons.datum[k]) == 'x'))
+    {
+        k++;
+    }
+    si (k > ZEPHYRUM)
+    {
+        chorda romanus;
+
+        *longitudo       = k;
+        romanus.datum    = fons.datum;
+        romanus.mensura  = k;
+        per (j = ZEPHYRUM; NUMERI_ROMANI[j] != NIHIL; j++)
+        {
+            si (_literis_par(romanus, NUMERI_ROMANI[j]))
+            {
+                *numerus = (s32)(j + I);
+                redde VERUM;
+            }
+        }
+        redde FALSUM;
+    }
+    dum (k < fons.mensura && !_signi_separator(fons.datum[k]))
+    {
+        k++;
+    }
+    *longitudo = k;
+    redde FALSUM;
+}
+
+interior b32
+_tonus_modi (
+    constans PsalmodiaTonus* tonus,
+                        s32  numerus,
+         constans character* titulus)
+{
+    si (numerus > ZEPHYRUM)
+    {
+        redde tonus->modus_numerus == numerus;
+    }
+    redde titulus != NIHIL && chorda_aequalis_literis(tonus->modus,
+        titulus);
+}
+
+interior b32
+_clausula_par (
+    constans PsalmodiaClausula* clausula,
+                        chorda  differentia,
+                           i32  modus_paris)
+{
+    si (clausula->monosyllaba || clausula->ad_libitum)
+    {
+        redde FALSUM;
+    }
+    commutatio (modus_paris)
+    {
+        casus PAR_EXACTUM:
+            redde _nomina_paria(differentia, clausula->differentia,
+                VERUM);
+        casus PAR_MAJUSCULAE:
+            redde _nomina_paria(differentia, clausula->differentia,
+                FALSUM);
+        ordinarius:
+            redde VERUM;
+    }
+}
+
+/* terminatio communis prima par in tonis modi; numerus parium et
+ * tonus eius; tonus_modi = tonus primus modi (aut NIHIL) */
+interior constans PsalmodiaClausula*
+_parem_quaerere (
+       constans PsalmodiaTabula*  tabula,
+                            s32   numerus,
+             constans character*  titulus,
+                         chorda   differentia,
+                            i32   modus_paris,
+                            i32*  numerus_parium,
+        constans PsalmodiaTonus** tonus_paris,
+        constans PsalmodiaTonus** tonus_modi)
+{
+    constans PsalmodiaClausula* prima = NIHIL;
+                           i32  k;
+                           i32  j;
+
+    *numerus_parium  = ZEPHYRUM;
+    *tonus_paris     = NIHIL;
+    *tonus_modi      = NIHIL;
+    per (k = ZEPHYRUM; k < tabula->numerus_tonorum; k++)
+    {
+        constans PsalmodiaTonus* tonus = &tabula->toni[k];
+
+        si (!_tonus_modi(tonus, numerus, titulus))
+        {
+            perge;
+        }
+        si (*tonus_modi == NIHIL)
+        {
+            *tonus_modi = tonus;
+        }
+        per (j = ZEPHYRUM; j < tonus->numerus_terminationum; j++)
+        {
+            si (_clausula_par(&tonus->terminationes[j], differentia,
+                    modus_paris))
+            {
+                si (prima == NIHIL)
+                {
+                    prima         = &tonus->terminationes[j];
+                    *tonus_paris  = tonus;
+                }
+                (*numerus_parium)++;
+            }
+        }
+    }
+    redde prima;
+}
+
+/* nomina parium, ", " iuncta */
+interior vacuum
+_pares_enumerare (
+           ChordaAedificator* causa,
+    constans PsalmodiaTabula* tabula,
+                         s32  numerus,
+          constans character* titulus,
+                      chorda  differentia,
+                         i32  modus_paris)
+{
+    b32 primum = VERUM;
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < tabula->numerus_tonorum; k++)
+    {
+        constans PsalmodiaTonus* tonus = &tabula->toni[k];
+
+        si (!_tonus_modi(tonus, numerus, titulus))
+        {
+            perge;
+        }
+        per (j = ZEPHYRUM; j < tonus->numerus_terminationum; j++)
+        {
+            constans PsalmodiaClausula* clausula =
+                &tonus->terminationes[j];
+
+            si (!_clausula_par(clausula, differentia, modus_paris))
+            {
+                perge;
+            }
+            si (!primum)
+            {
+                chorda_aedificator_appendere_literis(causa, ", ");
+            }
+            primum = FALSUM;
+            si (clausula->differentia.mensura == ZEPHYRUM)
+            {
+                chorda_aedificator_appendere_literis(causa,
+                    "(sine nomine)");
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_chorda(causa,
+                    clausula->differentia);
+            }
+        }
+    }
+}
+
+/* nucleus: modus iam lectus; differentia ut scripta (praecisa) */
+interior constans PsalmodiaClausula*
+_terminationem_quaerere (
+       constans PsalmodiaTabula*  tabula,
+                            s32   numerus,
+             constans character*  titulus,
+                         chorda   differentia,
+        constans PsalmodiaTonus** tonus,
+              ChordaAedificator*  causa)
+{
+    constans PsalmodiaClausula* inventa;
+       constans PsalmodiaTonus* tonus_paris;
+       constans PsalmodiaTonus* tonus_modi;
+                           i32  pares;
+                           i32  modus_paris;
+                           b32  vacua;
+                           i32  k;
+
+    vacua = VERUM;
+    per (k = ZEPHYRUM; k < differentia.mensura; k++)
+    {
+        si (!_spatium_album(differentia.datum[k]))
+        {
+            vacua = FALSUM;
+        }
+    }
+    modus_paris = vacua ? PAR_ULLUM : PAR_EXACTUM;
+    inventa = _parem_quaerere(tabula, numerus, titulus, differentia,
+        modus_paris, &pares, &tonus_paris, &tonus_modi);
+    si (tonus_modi == NIHIL)
+    {
+        si (causa != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(causa, "tonus \"");
+            si (titulus != NIHIL)
+            {
+                chorda_aedificator_appendere_literis(causa, titulus);
+            }
+            alioquin
+            {
+                chorda_aedificator_appendere_s32(causa, numerus);
+            }
+            chorda_aedificator_appendere_literis(causa, "\" nullus");
+        }
+        redde NIHIL;
+    }
+    si (inventa == NIHIL && !vacua)
+    {
+        modus_paris  = PAR_MAJUSCULAE;
+        inventa      = _parem_quaerere(tabula, numerus, titulus,
+            differentia, modus_paris, &pares, &tonus_paris,
+            &tonus_modi);
+    }
+    si (inventa != NIHIL && (modus_paris == PAR_EXACTUM || pares == I))
+    {
+        si (tonus != NIHIL)
+        {
+            *tonus = tonus_paris;
+        }
+        redde inventa;
+    }
+    si (causa == NIHIL)
+    {
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_literis(causa, "tonus ");
+    chorda_aedificator_appendere_chorda(causa, tonus_modi->modus);
+    si (vacua)
+    {
+        chorda_aedificator_appendere_literis(causa, pares == ZEPHYRUM
+            ? " nullam terminationem habet" : " plures differentias"
+            " habet: ");
+        _pares_enumerare(causa, tabula, numerus, titulus, differentia,
+            PAR_ULLUM);
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_literis(causa, " differentiam \"");
+    chorda_aedificator_appendere_chorda(causa, differentia);
+    si (pares > I)
+    {
+        chorda_aedificator_appendere_literis(causa,
+            "\" ambigue habet: ");
+        _pares_enumerare(causa, tabula, numerus, titulus, differentia,
+            PAR_MAJUSCULAE);
+        redde NIHIL;
+    }
+    chorda_aedificator_appendere_literis(causa,
+        "\" non habet; differentiae: ");
+    _pares_enumerare(causa, tabula, numerus, titulus, differentia,
+        PAR_ULLUM);
+    redde NIHIL;
+}
+
+constans PsalmodiaClausula*
+psalmodia_terminationem_invenire (
+      constans PsalmodiaTabula*  tabula,
+                        chorda   modus,
+                        chorda   differentia,
+       constans PsalmodiaTonus** tonus,
+             ChordaAedificator*  causa)
+{
+                    s32  numerus;
+     constans character* titulus;
+                    i32  longitudo;
+
+    si (tonus != NIHIL)
+    {
+        *tonus = NIHIL;
+    }
+    si (tabula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    modus = _praecidere(modus);
+    si (   !_modum_signi_legere(modus, &numerus, &titulus, &longitudo)
+        || longitudo != modus.mensura)
+    {
+        si (causa != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(causa, "tonus \"");
+            chorda_aedificator_appendere_chorda(causa, modus);
+            chorda_aedificator_appendere_literis(causa, "\" nullus");
+        }
+        redde NIHIL;
+    }
+    redde _terminationem_quaerere(tabula, numerus, titulus,
+        _praecidere(differentia), tonus, causa);
+}
+
+constans PsalmodiaClausula*
+psalmodia_signum_invenire (
+      constans PsalmodiaTabula*  tabula,
+                        chorda   signum,
+       constans PsalmodiaTonus** tonus,
+             ChordaAedificator*  causa)
+{
+                    s32  numerus;
+     constans character* titulus;
+                    i32  longitudo;
+                    i32  k = ZEPHYRUM;
+                 chorda  reliquum;
+
+    si (tonus != NIHIL)
+    {
+        *tonus = NIHIL;
+    }
+    si (tabula == NIHIL)
+    {
+        redde NIHIL;
+    }
+    dum (k < signum.mensura && _signi_separator(signum.datum[k]))
+    {
+        k++;
+    }
+    signum.datum    += k;
+    signum.mensura  -= k;
+    signum          = _praecidere(signum);
+    si (signum.mensura == ZEPHYRUM)
+    {
+        si (causa != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(causa,
+                "signum vacuum");
+        }
+        redde NIHIL;
+    }
+    si (!_modum_signi_legere(signum, &numerus, &titulus, &longitudo))
+    {
+        si (causa != NIHIL)
+        {
+            chorda_aedificator_appendere_literis(causa, "tonus \"");
+            chorda_aedificator_appendere_chorda(causa,
+                chorda_sectio(signum, ZEPHYRUM, longitudo));
+            chorda_aedificator_appendere_literis(causa, "\" nullus");
+        }
+        redde NIHIL;
+    }
+    k = longitudo;
+    dum (k < signum.mensura && _signi_separator(signum.datum[k]))
+    {
+        k++;
+    }
+    reliquum.datum    = signum.datum + k;
+    reliquum.mensura  = signum.mensura - k;
+    redde _terminationem_quaerere(tabula, numerus, titulus, reliquum,
+        tonus, causa);
+}
+
+constans PsalmodiaClausula*
+psalmodia_mediationem_eligere (
+     constans PsalmodiaTonus* tonus,
+                         b32  ad_libitum)
+{
+    constans PsalmodiaClausula* communis = NIHIL;
+                           i32  k;
+
+    si (tonus == NIHIL || tonus->numerus_mediationum == ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
+    per (k = ZEPHYRUM; k < tonus->numerus_mediationum; k++)
+    {
+        constans PsalmodiaClausula* clausula = &tonus->mediationes[k];
+
+        si (clausula->monosyllaba)
+        {
+            perge;
+        }
+        si (ad_libitum && clausula->ad_libitum)
+        {
+            redde clausula;
+        }
+        si (!clausula->ad_libitum && communis == NIHIL)
+        {
+            communis = clausula;
+        }
+    }
+    redde communis != NIHIL ? communis : &tonus->mediationes[ZEPHYRUM];
+}
+
+/* VERUM si clausula in serie (comparatio indicum, non ordinis) */
+interior b32
+_in_serie (
+    constans PsalmodiaClausula* series,
+                           i32  numerus,
+    constans PsalmodiaClausula* clausula)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (&series[k] == clausula)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+constans PsalmodiaClausula*
+psalmodia_clausulam_monosyllabam (
+       constans PsalmodiaTonus* tonus,
+    constans PsalmodiaClausula* clausula)
+{
+    constans PsalmodiaClausula* series;
+                           i32  numerus;
+                           i32  k;
+
+    si (tonus == NIHIL || clausula == NIHIL || clausula->monosyllaba)
+    {
+        redde clausula;
+    }
+    si (_in_serie(tonus->mediationes, tonus->numerus_mediationum,
+            clausula))
+    {
+        series   = tonus->mediationes;
+        numerus  = tonus->numerus_mediationum;
+    }
+    alioquin si (_in_serie(tonus->terminationes,
+                     tonus->numerus_terminationum, clausula))
+    {
+        series   = tonus->terminationes;
+        numerus  = tonus->numerus_terminationum;
+    }
+    alioquin
+    {
+        redde clausula;
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        si (   series[k].monosyllaba
+            && series[k].ad_libitum == clausula->ad_libitum
+            && chorda_aequalis(series[k].differentia,
+                   clausula->differentia))
+        {
+            redde &series[k];
+        }
+    }
+    redde clausula;
+}
