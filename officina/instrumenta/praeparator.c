@@ -11,12 +11,12 @@
 #include "chorda.h"
 #include "tabula_dispersa.h"
 #include "xar.h"
+#include "iter_directoria.h"
 #include "nexus_ordines.h"
 #include "silva_lexicon.h"
 
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>
 #include <sys/stat.h>
 
 character*
@@ -129,6 +129,93 @@ nomen structura {
 
 /* ambulatio: candidata colligere (directoria commemorata dum
  * ambulatur - inventio capitum novorum per mtime parentis) */
+/* ambulatio: candidata colligere (directoria commemorata dum
+ * ambulatur - inventio capitum novorum per mtime parentis). Per
+ * directorium_ambulare (iter_directoria - enumeratio in libro
+ * lectionum notatur; olim gyrus opendir manu scriptus); callback
+ * directoria ipse videt, quia quodque commemorandum est. */
+nomen structura {
+       Praeparatio* p;
+           Piscina* piscina_capitum;
+               Xar* candidata;
+    memoriae_index  radix_m;
+           Piscina* piscina;   /* ambulationis (temporaria) */
+} PraeparatorAmbulatio;
+
+interior s32
+_introitus_capitum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    PraeparatorAmbulatio* a = (PraeparatorAmbulatio*)contextus;
+               character* titulus = chorda_ut_cstr(introitus->titulus,
+                                        a->piscina);
+               character* via_plena_l = chorda_ut_cstr(via_plena,
+                                            a->piscina);
+          memoriae_index m;
+
+    si (titulus == NIHIL || via_plena_l == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    si (_praetermittendum(titulus))
+    {
+        redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+    }
+    si (introitus->genus == INTROITUS_DIRECTORIUM)
+    {
+        si (introitus->est_nexus)
+        {
+            redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+        }
+        /* DIRECTORIUM ipsum commemoratur (2026-07-14, inventio
+         * capitum NOVORUM): plagula nova/deleta/renominata mtime
+         * directorii parentis pulsat (POSIX) - caput_stalum ita
+         * creationem videt, quam tempora capitum notorum sola videre
+         * non possunt. ANTE percursum stat-atur: creatio durante
+         * ambulatione proximo examine detegitur (conservativum). */
+        _tempus_commemorare(a->p, a->piscina_capitum, via_plena_l);
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    m = strlen(titulus);
+    si (   m              >= III && titulus[m - II] == '.'
+        && titulus[m - I] == 'h')
+    {
+        PraeparatorCaputCandidatus* c;
+                    memoriae_index  mv = strlen(via_plena_l);
+                         character* copia;
+
+        copia = (character*)piscina_allocare(a->piscina_capitum,
+            mv + I);
+        si (copia == NIHIL)
+        {
+            redde DIRECTORIUM_AMBULATOR_PERGE;
+        }
+        memcpy(copia, via_plena_l, mv + I);
+        c = (PraeparatorCaputCandidatus*)xar_addere(a->candidata);
+        si (c == NIHIL)
+        {
+            redde DIRECTORIUM_AMBULATOR_PERGE;
+        }
+        c->via_plena = copia;
+        /* clavis = via RADICI-RELATIVA (01KYJ6740K): expansor
+         * canonicam + basename seponit; resolutio
+         * includenti-relativa viam plenam petit. Spatium viarum
+         * legati radici-relativum est (ordines, extenta) - clavis
+         * absoluta ei aliena esset; valores viae_capitum absoluti
+         * manent (URIs) */
+        c->clavis = copia;
+        si (   a->radix_m > ZEPHYRUM && mv > a->radix_m + I
+            && copia[a->radix_m] == '/')
+        {
+            c->clavis = copia + a->radix_m + I;
+        }
+        c->basis = copia + mv - m;
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 interior vacuum
 _capita_colligere (
            Praeparatio* p,
@@ -137,82 +224,28 @@ _capita_colligere (
     constans character* via,
         memoriae_index  radix_m)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    PraeparatorAmbulatio a;
+      DirectoriumFiltrum filtrum = directorium_filtrum_omnia();
 
-    si (dir == NIHIL)
+    si (!directorium_existit(via))
     {
         redde;
     }
-    /* DIRECTORIUM ipsum commemoratur (2026-07-14, inventio capitum
-     * NOVORUM): plagula nova/deleta/renominata mtime directorii
-     * parentis pulsat (POSIX) - caput_stalum ita creationem videt,
-     * quam tempora capitum notorum sola videre non possunt.
-     * ANTE percursum stat-atur: creatio durante ambulatione
-     * proximo examine detegitur (conservativum). */
-    _tempus_commemorare(p, piscina_capitum, via);
-    dum ((introitus = readdir(dir)) != NIHIL)
+    a.p                = p;
+    a.piscina_capitum  = piscina_capitum;
+    a.candidata        = candidata;
+    a.radix_m          = radix_m;
+    a.piscina          = piscina_generare_dynamicum(
+        "praeparator_ambulatio", 1048576);
+    si (a.piscina == NIHIL)
     {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        si (_praetermittendum(introitus->d_name))
-        {
-            perge;
-        }
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_colligere(p, piscina_capitum, candidata,
-                via_plena, radix_m);
-            perge;
-        }
-        m = strlen(introitus->d_name);
-        si (   m >= III && introitus->d_name[m - II] == '.'
-            && introitus->d_name[m - I] == 'h')
-        {
-            PraeparatorCaputCandidatus* c;
-                        memoriae_index  mv = strlen(via_plena);
-                             character* copia;
-
-            copia = (character*)piscina_allocare(piscina_capitum,
-                mv + I);
-            si (copia == NIHIL)
-            {
-                perge;
-            }
-            memcpy(copia, via_plena, mv + I);
-            c = (PraeparatorCaputCandidatus*)xar_addere(candidata);
-            si (c == NIHIL)
-            {
-                perge;
-            }
-            c->via_plena = copia;
-            /* clavis = via RADICI-RELATIVA (01KYJ6740K): expansor
-             * canonicam + basename seponit; resolutio
-             * includenti-relativa viam plenam petit. Spatium viarum
-             * legati radici-relativum est (ordines, extenta) -
-             * clavis absoluta ei aliena esset; valores viae_capitum
-             * absoluti manent (URIs) */
-            c->clavis = copia;
-            si (   radix_m > ZEPHYRUM && mv > radix_m + I
-                && copia[radix_m] == '/')
-            {
-                c->clavis = copia + radix_m + I;
-            }
-            c->basis = copia + mv - m;
-        }
+        redde;
     }
-    closedir(dir);
+    /* radix ipsa quoque commemoratur (ut directoria infra) */
+    _tempus_commemorare(p, piscina_capitum, via);
+    (vacuum)directorium_ambulare(via, &filtrum, _introitus_capitum, &a,
+        a.piscina);
+    piscina_destruere(a.piscina);
 }
 
 /* ordo praebitionis: gradus (nexus_ordines_capitis_gradus super

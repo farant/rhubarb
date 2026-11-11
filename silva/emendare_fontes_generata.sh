@@ -8,6 +8,7 @@ declare -a RADIX_FONTES=(
     "filum"
     "friatio"
     "internamentum"
+    "iter_directoria"
     "lectiones"
     "memoria_processus_macos"
     "piscina"

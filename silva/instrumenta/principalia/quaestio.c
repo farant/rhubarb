@@ -46,7 +46,6 @@
 #include "silva_tabulae_c89.h"
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens constans character* VIA_BIBLIOTHECAE =
     "silva/quaestiones.stml";
@@ -166,21 +165,11 @@ hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
     "build", ".git", "results", "node_modules", NIHIL
 };
 
-hic_manens b32
-_praetermittendum (
-    constans character* titulus)
-{
-    i32 i;
-
-    per (i = ZEPHYRUM; CAPITA_PRAETERMITTENDA[i] != NIHIL; i++)
-    {
-        si (strcmp(titulus, CAPITA_PRAETERMITTENDA[i]) == ZEPHYRUM)
-        {
-            redde VERUM;
-        }
-    }
-    redde FALSUM;
-}
+/* arbor plagularum: eadem, et 'fixa' = corpora synthetica (invalida
+ * consulto) */
+hic_manens constans character* constans ARBORIS_PRAETERMITTENDA[] = {
+    "build", ".git", "results", "node_modules", "fixa", NIHIL
+};
 
 hic_manens vacuum
 _caput_praebere (
@@ -644,46 +633,48 @@ _plagulam_percurrere (
     piscina_destruere(piscina);
 }
 
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+nomen structura {
+    Percursus* percursus;
+      Piscina* piscina;
+} ArborisAmbulatio;
+
+hic_manens s32
+_plagula_visa (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    ArborisAmbulatio* a    = (ArborisAmbulatio*)contextus;
+           character* via  = chorda_ut_cstr(via_plena, a->piscina);
+
+    (vacuum)introitus;
+    si (via != NIHIL)
+    {
+        _plagulam_percurrere(a->percursus, via);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _arborem_percurrere (
              Percursus* percursus,
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    ArborisAmbulatio a;
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
+    a.percursus  = percursus;
+    a.piscina    = piscina_generare_dynamicum("quaestio_ambulatio",
+        1048576);
+    si (a.piscina == NIHIL)
     {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        /* fixa = corpora synthetica (invalida consulto) */
-        si (strcmp(introitus->d_name, "fixa") == ZEPHYRUM) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            _arborem_percurrere(percursus, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'c')
-            {
-                _plagulam_percurrere(percursus, via_plena);
-            }
-        }
+        redde;
     }
-    closedir(dir);
+    (vacuum)directorium_fontes_ambulare(via, ".c",
+        ARBORIS_PRAETERMITTENDA, _plagula_visa, &a, a.piscina);
+    piscina_destruere(a.piscina);
 }
 
 hic_manens s32

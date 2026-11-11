@@ -49,6 +49,7 @@
 #include "chorda.h"
 #include "tabula_dispersa.h"
 #include "xar.h"
+#include "iter_directoria.h"
 #include "silva.h"
 #include "nexus_ordines.h"
 #include "filum.h"
@@ -58,7 +59,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens i32 mensura_maxima = 4194304;  /* -omnia = sine tecto */
 
@@ -462,18 +462,11 @@ _est_fons_c (
         ? VERUM : FALSUM;
 }
 
-hic_manens b32
-_praetermittendum (
-    constans character* titulus)
-{
-    redde (strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "results") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM
-        /* flagrationes consulto plantatae censoris */
-        || strcmp(titulus, "censoris") == ZEPHYRUM)
-        ? VERUM : FALSUM;
-}
+/* tituli in ambulatione praetermissi (directorium: subarbor tota non
+ * intratur); 'censoris' = flagrationes consulto plantatae censoris */
+hic_manens constans character* constans VIAE_PRAETERMITTENDAE[] = {
+    "build", ".git", "results", "node_modules", "censoris", NIHIL
+};
 
 /* rung 5 (1): ambulatio vias COLLIGIT (iudicium separatum) - viae
  * praefixu "./" detracto in piscinam duplicatae, deinde ordinatae */
@@ -493,63 +486,62 @@ _viam_dupare (
     redde nova;
 }
 
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+hic_manens s32
+_via_visa (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+               Piscina* piscina = (Piscina*)contextus;
+             character* titulus = chorda_ut_cstr(introitus->titulus,
+                                      piscina);
+    constans character* v;
+    constans character* dup;
+
+    si (titulus == NIHIL || !_est_fons_c(titulus))
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    v = chorda_ut_cstr(via_plena, piscina);
+    si (v == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    si (v[ZEPHYRUM] == '.' && v[I] == '/')
+    {
+        v += II;
+    }
+    dup = _viam_dupare(v);
+    si (dup != NIHIL && viae_omnes != NIHIL)
+    {
+        constans character** sedes =
+            (constans character**)xar_addere(viae_omnes);
+
+        si (sedes != NIHIL)
+        {
+            *sedes = dup;
+        }
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _vias_colligere (
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    Piscina* piscina = piscina_generare_dynamicum("nexus_ambulatio",
+        1048576);
 
-    si (dir == NIHIL)
+    si (piscina == NIHIL)
     {
         redde;
     }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-        character via_plena[1024];
-
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        si (_praetermittendum(introitus->d_name))
-        {
-            perge;
-        }
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            _vias_colligere(via_plena);
-        }
-        alioquin si (_est_fons_c(introitus->d_name))
-        {
-            constans character* v = via_plena;
-            constans character* dup;
-
-            si (v[ZEPHYRUM] == '.' && v[I] == '/')
-            {
-                v += II;
-            }
-            dup = _viam_dupare(v);
-            si (dup != NIHIL && viae_omnes != NIHIL)
-            {
-                constans character** sedes =
-                    (constans character**)xar_addere(viae_omnes);
-
-                si (sedes != NIHIL)
-                {
-                    *sedes = dup;
-                }
-            }
-        }
-    }
-    closedir(dir);
+    (vacuum)directorium_fontes_ambulare(via, NIHIL,
+        VIAE_PRAETERMITTENDAE, _via_visa, piscina, piscina);
+    piscina_destruere(piscina);
 }
 
 hic_manens s32

@@ -34,7 +34,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens b32 verbosa = FALSUM;
 hic_manens i32 mensura_maxima = 4194304;  /* -omnia = sine tecto */
@@ -1083,40 +1082,67 @@ _est_vendor (
         ? VERUM : FALSUM;
 }
 
+/* ambulatio per directorium_ambulare (iter_directoria - enumeratio in
+ * libro lectionum notatur; olim gyrus opendir manu scriptus). Callback
+ * directoria ipse iudicat (regula vendor parentem poscit): titulus
+ * praetermittendus aut nexus ad directorium aut directorium SUB vendor
+ * -> subarbor non intratur. Tituli occulti a filtro cadunt. */
+hic_manens s32
+_introitus_percursus (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+      Piscina* piscina  = (Piscina*)contextus;
+    character* titulus  = chorda_ut_cstr(introitus->titulus, piscina);
+    character* via      = chorda_ut_cstr(via_plena, piscina);
+
+    si (titulus == NIHIL || via == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    si (_praetermittendum(titulus))
+    {
+        redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+    }
+    si (introitus->genus == INTROITUS_DIRECTORIUM)
+    {
+        memoriae_index mv = strlen(via);
+        memoriae_index mt = strlen(titulus);
+                   b32 sub_vendor;
+
+        si (introitus->est_nexus || mv <= mt)
+        {
+            redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+        }
+        /* parens = via sine '/titulus' */
+        via[mv - mt - I]  = '\0';
+        sub_vendor        = _est_vendor(via);
+        redde sub_vendor ? DIRECTORIUM_AMBULATOR_PRAETERMITTE
+                         : DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    si (_est_fons_c(titulus))
+    {
+        _plagulam_percurrere(via);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _directorium_percurrere (
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    DirectoriumFiltrum  filtrum = directorium_filtrum_omnia();
+               Piscina* piscina = piscina_generare_dynamicum(
+                                      "percursus_ambulatio", 1048576);
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
+    si (piscina == NIHIL)
     {
-        character via_plena[1024];
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            si (!_est_vendor(via))
-            {
-                _directorium_percurrere(via_plena);
-            }
-        }
-        alioquin si (_est_fons_c(introitus->d_name))
-        {
-            _plagulam_percurrere(via_plena);
-        }
+        redde;
     }
-    closedir(dir);
+    (vacuum)directorium_ambulare(via, &filtrum, _introitus_percursus,
+        piscina, piscina);
+    piscina_destruere(piscina);
 }
 
 s32

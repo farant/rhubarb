@@ -9,6 +9,7 @@
 #include "xar.h"
 #include "chorda.h"
 #include "tabula_dispersa.h"
+#include "iter_directoria.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_contextus.h"
@@ -20,7 +21,6 @@
 #include "silva_iudicium.h"
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 character*
 silva_iudicium_plagulam_legere (
@@ -61,13 +61,48 @@ silva_iudicium_plagulam_legere (
     redde textus;
 }
 
-interior b32
-_praetermittendum (
-    constans character* titulus)
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur) */
+interior constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "node_modules", NIHIL
+};
+
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+interior s32
+_caput_collectum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
-    redde strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM;
+    IudiciumApparatus* app = (IudiciumApparatus*)contextus;
+        IudiciumCaput* caput;
+            character* via;
+            character* textus;
+                  i32  mensura = ZEPHYRUM;
+
+    (vacuum)introitus;
+    via = chorda_ut_cstr(via_plena, app->piscina);
+    si (via == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    textus = silva_iudicium_plagulam_legere(app->piscina, via,
+        &mensura);
+    si (textus == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    caput = (IudiciumCaput*)xar_addere(app->capita);
+    si (caput == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    caput->via      = via;
+    caput->textus   = textus;
+    caput->mensura  = mensura;
+    redde DIRECTORIUM_AMBULATOR_PERGE;
 }
 
 interior vacuum
@@ -75,69 +110,8 @@ _capita_colligere (
      IudiciumApparatus* app,
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
-
-    si (dir == NIHIL)
-    {
-        redde;
-    }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        si (_praetermittendum(introitus->d_name))
-        {
-            perge;
-        }
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_colligere(app, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                IudiciumCaput* caput;
-                          i32  mensura = ZEPHYRUM;
-                    character* textus = silva_iudicium_plagulam_legere(
-                        app->piscina, via_plena, &mensura);
-
-                si (textus == NIHIL)
-                {
-                    perge;
-                }
-                caput = (IudiciumCaput*)xar_addere(app->capita);
-                si (caput == NIHIL)
-                {
-                    perge;
-                }
-                caput->via = (character*)piscina_allocare(
-                    app->piscina, strlen(via_plena) + I);
-                si (caput->via == NIHIL)
-                {
-                    perge;
-                }
-                strcpy(caput->via, via_plena);
-                caput->textus   = textus;
-                caput->mensura  = mensura;
-            }
-        }
-    }
-    closedir(dir);
+    (vacuum)directorium_fontes_ambulare(via, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_collectum, app, app->piscina);
 }
 
 IudiciumApparatus*

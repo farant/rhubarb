@@ -61,7 +61,6 @@
 #include "silva_tabulae_c89.h"
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens b32 verbosa = FALSUM;
 hic_manens i32 mensura_maxima = 4194304;  /* -omnia = sine tecto */
@@ -799,20 +798,36 @@ hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
     "build", ".git", "results", "node_modules", "censoris", NIHIL
 };
 
-hic_manens b32
-_praetermittendum (
-    constans character* titulus)
-{
-    i32 i;
 
-    per (i = ZEPHYRUM; CAPITA_PRAETERMITTENDA[i] != NIHIL; i++)
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+nomen structura {
+    constans SilvaContextus* ctx;
+                    Piscina* piscina;
+} FontesAmbulatio;
+
+hic_manens s32
+_fons_visus (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    FontesAmbulatio* a = (FontesAmbulatio*)contextus;
+          character* titulus = chorda_ut_cstr(introitus->titulus,
+                                   a->piscina);
+          character* via;
+
+    si (titulus == NIHIL || !_est_fons_c(titulus))
     {
-        si (strcmp(titulus, CAPITA_PRAETERMITTENDA[i]) == ZEPHYRUM)
-        {
-            redde VERUM;
-        }
+        redde DIRECTORIUM_AMBULATOR_PERGE;
     }
-    redde FALSUM;
+    via = chorda_ut_cstr(via_plena, a->piscina);
+    si (via != NIHIL)
+    {
+        _plagulam_censere(a->ctx, via);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
 }
 
 hic_manens vacuum
@@ -820,33 +835,18 @@ _directorium_censere (
     constans SilvaContextus* ctx,
          constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    FontesAmbulatio a;
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
+    a.ctx      = ctx;
+    a.piscina  = piscina_generare_dynamicum("censor_ambulatio",
+        1048576);
+    si (a.piscina == NIHIL)
     {
-        character via_plena[1024];
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            _directorium_censere(ctx, via_plena);
-        }
-        alioquin si (_est_fons_c(introitus->d_name))
-        {
-            _plagulam_censere(ctx, via_plena);
-        }
+        redde;
     }
-    closedir(dir);
+    (vacuum)directorium_fontes_ambulare(via, NIHIL,
+        CAPITA_PRAETERMITTENDA, _fons_visus, &a, a.piscina);
+    piscina_destruere(a.piscina);
 }
 
 /* --------------------------------------------------

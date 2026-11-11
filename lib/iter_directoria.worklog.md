@@ -167,3 +167,77 @@ nexus_percursus `_vias_colligere`, lustrum principale), tools/aedilis
 (2, already noting by hand), capsula tools (2 glob expanders),
 manus_instrumentum, the crusta interposer, and the tolerated channel/
 credo sites.
+
+## 2026-11-11 — the 13 remaining tool walkers rewritten by hand
+
+All raw opendir loops in silva/ and officina/ tools are gone (14 files,
+15 sites). No tool behaviour changed; what changes is that every
+enumeration now goes through iter_directoria and is noted in the
+lectiones book.
+
+Three shapes:
+- `directorium_fontes_ambulare` with the tool's own skip list as data:
+  renominare and silva_iudicium `_capita_colligere` (.h; build .git
+  node_modules), probatio_officina_capita (.h; + results), fusor
+  `_directorium_fundere` (.c), quaestio `_arborem_percurrere` (.c;
+  header list + `fixa`, own array ARBORIS_PRAETERMITTENDA), censor
+  `_directorium_censere` and nexus_percursus `_vias_colligere` (.c/.h:
+  suffix NIHIL, the callback tests the title), haruspex
+  `_directorium_inspicere` (.c/.h, NO skip list - as before; its roots
+  are source directories).
+- `directorium_ambulare` with a callback that judges directories
+  itself, where the tool needs to SEE directories: percursus
+  `_directorium_percurrere` (directories under a directory named
+  `vendor` are not entered - the callback cuts the parent out of the
+  full path) and praeparator `_capita_colligere` (every directory
+  entered is recorded for new-header detection; the root is recorded
+  before the walk, only if it exists).
+- the flat iterator (`directorium_iterator_aperire/proximum`): cursor
+  `_suitas_colligere` and the companions loop in principale,
+  interpretare `_bibliothecam_demittere`, vindex principale, lustrum
+  principale.
+
+Walkers that process files inside the callback use a temporary
+piscina for the walk (1 MB dynamic, destroyed after) so path strings
+do not pile up in a long-lived pool. Dropped with the loops: the
+1024-byte path guard (paths are chordae now). Added: cursor's
+companions loop skips a title too long for its 256-byte buffer (the
+old sprintf would have overflowed).
+
+Differential (22 invocations before/after, stdout/stderr/rc): censor
+-corpus toml and css, haruspex toml/fontes and whole corpus, percursus
+toml, css and vendor (the vendor rule: 4 files, vendor/bearssl not
+entered), quaestio -invariantia lib and silva and -omnibus, nexus
+-renovare, lustrum on ../solarium, renominare (plan), transformare
+-census (silva_iudicium), cursor -enumerare and -sola, fusor lib and
+tools, interpretare twice. Identical except timing lines, build
+chatter, and rows about the 14 edited files themselves (line numbers
+moved). build/nexus.tsv: the 2,905,264 rows of all other files are
+identical in the same order, and the set of indexed paths (3383) is
+the same.
+
+Tests: officina 18/18, renominare_proba PORTA AUREA, silva forma.
+Plant (praeparator: directory not recorded) -> probatio_officina_legatus
+"inventionem capitum novorum" red, restored green.
+
+NOT run: vindex. `./officina/vindex.sh` does not link at HEAD
+(`_nexus_ordines_capitis_gradus` undefined from praeparator.o - known,
+officina-bibliothecae-spec, since 8bbf97f7); the new loop compiles
+under the house flags and is the same shape as interpretare's, but it
+was not executed. vindex keeps readdir order unsorted, which the
+iterator reproduces on this tree (measured 2026-11-10 for the header
+walk).
+
+Baseline trap: `renominare.sh mensura x -membrum chorda` (candidates
+from nexus: 1726 files) was killed by the system after ~2 min and left
+swap at 7 of 8 GB - do not use it as a differential case; it is the
+old code and has nothing to do with the walker.
+
+Debt list: probatio_officina_capita.c had only the opendir; its row
+is deleted. The other 13 files keep their rows (raw fopen remains).
+
+Raw opendir left in the tree: tools/aedilis.c (2, notes by hand),
+tools/capsula_generare.c (2) and capsula_caudae_adiungere.c (1),
+tools/manus_instrumentum.c (1), the crusta interposer, knotapel demo
+snapshots, the sondae_auditus fixture, and the channel itself (filum,
+iter_directoria) + credo with their `<tolera>`.

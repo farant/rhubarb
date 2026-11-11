@@ -43,7 +43,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 #include <unistd.h>
 
 #define PLAGULAE_MAXIMAE XXXII
@@ -475,36 +474,44 @@ hic_manens vacuum
 _bibliothecam_demittere (
     constans SilvaContextus* ctx)
 {
-    DIR* dir = opendir("lib");
-    structura dirent* introitus;
-    character* viae[512];
-      integer  numerus = 0;
-      integer  i;
+    /* enumeratio per iter_directoria (in libro lectionum notatur;
+     * olim opendir crudum) */
+     DirectoriumIterator* iterator = directorium_iterator_aperire("lib",
+                                         piscina_officinae);
+    DirectoriumIntroitus* introitus;
+               character* viae[512];
+                 integer  numerus = 0;
+                 integer  i;
 
-    si (dir == NIHIL)
+    si (iterator == NIHIL)
     {
         fprintf(stderr, "interpretare: lib/ deest (curre ex"
             " radice)\n");
         redde;
     }
-    dum ((introitus = readdir(dir)) != NIHIL && numerus < 512)
+    dum (   numerus < 512
+         && (introitus = directorium_iterator_proximum(iterator))
+             != NIHIL)
     {
-        memoriae_index m = strlen(introitus->d_name);
+             character* titulus = chorda_ut_cstr(introitus->titulus,
+                                      piscina_officinae);
+        memoriae_index m;
 
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (   m >= III && introitus->d_name[m - II] == '.'
-            && introitus->d_name[m - I] == 'c'
-            && _plagula_congruit(introitus->d_name))
+        si (titulus == NIHIL) perge;
+        m = strlen(titulus);
+        si (titulus[ZEPHYRUM] == '.') perge;
+        si (   m              >= III && titulus[m - II] == '.'
+            && titulus[m - I] == 'c' && _plagula_congruit(titulus))
         {
             character* via = piscina_allocare(piscina_officinae,
                 m + V);
 
-            sprintf(via, "lib/%s", introitus->d_name);
+            sprintf(via, "lib/%s", titulus);
             viae[numerus] = via;
             numerus++;
         }
     }
-    closedir(dir);
+    directorium_iterator_claudere(iterator);
     qsort(viae, (memoriae_index)numerus, magnitudo(character*),
         _comparare_vias);
     per (i = 0; i < numerus; i++)

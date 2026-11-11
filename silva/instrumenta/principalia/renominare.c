@@ -32,6 +32,7 @@
 #include "xar.h"
 #include "chorda.h"
 #include "tabula_dispersa.h"
+#include "iter_directoria.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_contextus.h"
@@ -45,7 +46,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 
 /* ==================================================
@@ -346,77 +346,55 @@ _verbum_c89 (
  * capita repositorii (semel lecta, per plagulam praebita)
  * ================================================== */
 
-interior b32
-_praetermittendum (
-    constans character* titulus)
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur) */
+interior constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "node_modules", NIHIL
+};
+
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+interior s32
+_caput_collectum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
-    redde strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM;
+     constans character* via = _litterae(via_plena);
+            CaputLectum* caput;
+              character* textus;
+                    i32  mensura;
+
+    (vacuum)introitus;
+    (vacuum)contextus;
+    si (via == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    textus = _plagulam_legere(piscina_magistra, via, &mensura);
+    si (textus == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    caput = (CaputLectum*)xar_addere(capita_lecta);
+    si (caput == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    caput->via      = via;
+    caput->textus   = textus;
+    caput->mensura  = mensura;
+    redde DIRECTORIUM_AMBULATOR_PERGE;
 }
 
 interior vacuum
 _capita_colligere (
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
-
-    si (dir == NIHIL)
-    {
-        redde;
-    }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        si (_praetermittendum(introitus->d_name))
-        {
-            perge;
-        }
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_colligere(via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                CaputLectum* caput;
-                  character* textus;
-                        i32  mensura;
-
-                textus = _plagulam_legere(piscina_magistra,
-                    via_plena, &mensura);
-                si (textus == NIHIL)
-                {
-                    perge;
-                }
-                caput = (CaputLectum*)xar_addere(capita_lecta);
-                si (caput == NIHIL)
-                {
-                    perge;
-                }
-                caput->via      = _litterae(_ch(via_plena));
-                caput->textus   = textus;
-                caput->mensura  = mensura;
-            }
-        }
-    }
-    closedir(dir);
+    (vacuum)directorium_fontes_ambulare(via, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_collectum, NIHIL,
+        piscina_magistra);
 }
 
 

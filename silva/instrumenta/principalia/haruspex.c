@@ -40,7 +40,6 @@
 #include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens b32 verbosa = FALSUM;
 hic_manens i32 plagulae = ZEPHYRUM;
@@ -635,37 +634,57 @@ _plagulam_inspicere (
     piscina_destruere(piscina);
 }
 
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+nomen structura {
+    constans SilvaContextus* ctx;
+                    Piscina* piscina;
+} FontesAmbulatio;
+
+hic_manens s32
+_fons_visus (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    FontesAmbulatio* a = (FontesAmbulatio*)contextus;
+          character* titulus = chorda_ut_cstr(introitus->titulus,
+                                   a->piscina);
+          character* via;
+
+    si (   titulus == NIHIL
+        || (!_est_fons_c(titulus) && !_est_caput(titulus)))
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    via = chorda_ut_cstr(via_plena, a->piscina);
+    si (via != NIHIL)
+    {
+        _plagulam_inspicere(a->ctx, via);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
+/* fontes inspiciendi: index praetermittendorum NULLUS (ut semper -
+ * radices datae fontes ipsi sunt; solum tituli occulti cadunt) */
 hic_manens vacuum
 _directorium_inspicere (
     constans SilvaContextus* ctx,
          constans character* radix)
 {
-    DIR* dir = opendir(radix);
-    structura dirent* introitus;
-    character via[2048];
+    FontesAmbulatio a;
 
-    si (dir == NIHIL)
+    a.ctx      = ctx;
+    a.piscina  = piscina_generare_dynamicum("haruspex_ambulatio",
+        1048576);
+    si (a.piscina == NIHIL)
     {
         redde;
     }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        sprintf(via, "%s/%s", radix, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _directorium_inspicere(ctx, via);
-        }
-        alioquin si (   _est_fons_c(introitus->d_name)
-                     || _est_caput(introitus->d_name))
-        {
-            _plagulam_inspicere(ctx, via);
-        }
-    }
-    closedir(dir);
+    (vacuum)directorium_fontes_ambulare(radix, NIHIL, NIHIL,
+        _fons_visus, &a, a.piscina);
+    piscina_destruere(a.piscina);
 }
 
 s32

@@ -7,6 +7,7 @@ declare -a RADIX_FONTES=(
     "excerptum"
     "friatio"
     "internamentum"
+    "iter_directoria"
     "lectiones"
     "piscina"
     "runae"
@@ -17,5 +18,6 @@ declare -a RADIX_FONTES=(
     "tabula_dispersa"
     "tabula_monstratorum"
     "utf8"
+    "via"
     "xar"
 )
