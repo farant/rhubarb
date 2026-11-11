@@ -82,7 +82,9 @@ loci_ficti_statua (
     constans LociFictiQuadratum* q,
                             i32  numerus)
 {
-    hic_manens constans i32  INDICES[VI] = { 0, 1, 2, 0, 2, 3 };
+    /* ordo verticum: facies sursum (+y) spectat - desuper visa
+     * pingitur */
+    hic_manens constans i32  INDICES[VI] = { 0, 2, 1, 0, 3, 2 };
                      Statua* s;
                         i32  k;
                         i32  v;

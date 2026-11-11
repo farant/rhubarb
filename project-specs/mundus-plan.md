@@ -428,6 +428,11 @@ it stops; bodies do not block each other in this stage.
 
 ### Task 6: the ground picture
 
+DONE 2026-11-10. Regions are rendered with a 16-pixel margin from the
+start (no seam visible to Claude in `build/statuae/humus_suturae.png`;
+Fran to judge). Added `mundus_visus(origo_x, origo_y)` to the header:
+the one place the fixed view is assembled, which T7 also needs.
+
 **Files:** create `include/mundus_pictura.h`, `lib/mundus_pictura.c`,
 `probationes/probatio_mundus_pictura.c`.
 
