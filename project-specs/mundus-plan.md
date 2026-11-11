@@ -349,6 +349,11 @@ cell centres so a stair is a ramp, not steps.
 
 ### Task 5: the world
 
+DONE 2026-11-10. One fix reached back into T4: the body's footprint
+is measured from its cell's centre (a straight wall was "bumpy" and
+sliding stuck). New shared test level
+`probationes/mundus_locus_fictus.h`.
+
 **Files:** create `include/mundus.h`, `lib/mundus.c`,
 `probationes/probatio_mundus.c`.
 

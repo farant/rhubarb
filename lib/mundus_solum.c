@@ -464,8 +464,14 @@ mundus_solum_stare (
     {
         per (i = cella_x - ambitus; i <= cella_x + ambitus; i++)
         {
-            delta_x = _centrum(i, s->origo_x) - x;
-            delta_z = _centrum(j, s->origo_z) - z;
+            /* a centro CELLAE corporis, non a puncto ipso: iudicium
+             * intra cellam idem manet, ergo paries rectus corpori
+             * labenti levis est (a puncto mensum, paries dentatus
+             * fit et corpus haeret) */
+            delta_x = (f32)(i - cella_x)
+                / (f32)MUNDUS_CELLAE_PER_UNITATEM;
+            delta_z = (f32)(j - cella_z)
+                / (f32)MUNDUS_CELLAE_PER_UNITATEM;
             distantia = (f32)sqrt((f64)(delta_x * delta_x
                 + delta_z * delta_z));
             si (distantia > radius)

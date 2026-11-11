@@ -326,6 +326,12 @@ _sectio_radius (
     /* in scalis et in clivo medio */
     CREDO_VERUM (mundus_solum_stare(s, 6.0f, 14.0f, 0.5f));
     CREDO_VERUM (mundus_solum_stare(s, 6.0f, 10.0f, 0.5f));
+    /* vestigium a centro cellae: intra cellam eandem iudicium idem,
+     * ubicumque punctum (paries levis) */
+    CREDO_VERUM (mundus_solum_stare(s, 7.26f, 2.0f, 0.5f));
+    CREDO_VERUM (mundus_solum_stare(s, 7.49f, 2.12f, 0.5f));
+    CREDO_FALSUM (mundus_solum_stare(s, 7.51f, 2.0f, 0.5f));
+    CREDO_FALSUM (mundus_solum_stare(s, 7.74f, 2.12f, 0.5f));
     /* non gressibile, radius malus */
     CREDO_FALSUM (mundus_solum_stare(s, 2.0f, 2.0f, 0.0f));
     CREDO_FALSUM (mundus_solum_stare(s, 2.0f, 6.0f, -1.0f));

@@ -99,9 +99,12 @@ mundus_solum_altitudo (
 /*
  * mundus_solum_stare - corpus radii dati in (x, z) stare potest?
  *
- * Cella centri et omnes cellae quarum centrum intra radium iacet
- * gressibiles sunt et gradu a centro attinguntur (corpus nec in
- * parietem rupis intrat nec super marginem eius pendet).
+ * Cella centri et omnes cellae quarum centrum intra radium a centro
+ * CELLAE illius iacet gressibiles sunt et gradu a centro attinguntur
+ * (corpus nec in parietem rupis intrat nec super marginem eius
+ * pendet). Vestigium a centro cellae metitur, non a puncto ipso:
+ * iudicium intra cellam idem est, ergo corpus secundum parietem
+ * rectum sine haesitatione labitur.
  */
 b32
 mundus_solum_stare (

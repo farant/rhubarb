@@ -251,6 +251,7 @@ declare -a SOURCE_FILES=(
     "lib/multipart.c"
     "lib/multipartita.c"
     "lib/multiplexor.c"
+    "lib/mundus.c"
     "lib/mundus_solum.c"
     "lib/musicxml.c"
     "lib/musicxml_carmen.c"

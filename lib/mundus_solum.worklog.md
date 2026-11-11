@@ -56,3 +56,12 @@ before `./compile_tests.sh` can link its suite.
 
 Plants, four red: walkable wins a tie in height; radius ignored;
 heights blended across a cliff; no step test in `licet`.
+
+## 2026-11-10 - footprint from the cell centre (mundus-plan T5)
+
+`mundus_solum_stare` now measures the body's footprint from the
+centre of the cell the body is in, not from the body's exact
+position. Reason and symptom in `lib/mundus.worklog.md` ("the wall
+was bumpy"). Test: four more lines in section "radius". The real
+level's pinned counts did not change (the reachability walk there
+already stood on cell centres).
