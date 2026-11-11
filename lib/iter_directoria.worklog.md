@@ -125,3 +125,45 @@ header said so; replaced by ambigua.c + silva/ambigua.sh on
 2026-08-19; no launcher, no build rule, compiled by nothing). Its row
 leaves the legacy read-debt list (canalis_debita.tsv). The design doc
 and phase-log mentions stay as history.
+
+## 2026-11-10 — the five remaining header walkers converted
+
+examen, identitates, censor, percursus, haruspex (silva principalia) -
+the last copies of `_capita_praeparare`. Each keeps ITS OWN skip list
+exactly as it was, as data (no ruling needed, no behaviour change):
+- examen: build .git node_modules; `_caput_praebere(ctx, piscina,
+  visa, via)` - key is the full path ("./include/x.h", identical from
+  the walker);
+- identitates: vendor build .git node_modules;
+- censor: build .git results node_modules censoris (function kept over
+  the array - `_directorium_censere` still uses it);
+- percursus: build .git results node_modules; no ctx
+  (`_caput_legere(piscina, visa, via)`); array placed at the old
+  forward prototype, function kept for `_directorium_percurrere`;
+- haruspex: NO list (it has always walked build/ too - kept, not
+  fixed); its inline body moved into the callback.
+There is no `results` directory in the tree today, so the lists with
+and without it behave the same; unifying the five lists is a later,
+separate decision.
+
+Differential (12 invocations, before twice / after): examen on five
+files (one REICE with 447 lines), haruspex toml/fontes -v,
+identitates -renovare (build/identitates.tsv compared) and -porta,
+percursus toml -v and css, censor on three files and -corpus toml -
+identical except percursus' `tempus:` lines and the GENERATUM
+timestamp of identitates.tsv (both vary between two runs of the old
+code). Binaries: new walker linked in all five (percursus is a unity
+build: the walker appears as a local symbol); examen no longer
+imports opendir.
+
+Raw opendir left after this: 13 tool walkers that are NOT the header
+walker (praeparator and probatio_officina_capita `_capita_colligere`,
+renominare and silva_iudicium `_capita_colligere`, cursor
+`_suitas_colligere` + principale, fusor `_directorium_fundere`,
+interpretare `_bibliothecam_demittere`, vindex principale, censor
+`_directorium_censere`, haruspex `_directorium_inspicere`, percursus
+`_directorium_percurrere`, quaestio `_arborem_percurrere`,
+nexus_percursus `_vias_colligere`, lustrum principale), tools/aedilis
+(2, already noting by hand), capsula tools (2 glob expanders),
+manus_instrumentum, the crusta interposer, and the tolerated channel/
+credo sites.
