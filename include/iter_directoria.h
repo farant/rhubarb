@@ -140,13 +140,33 @@ directorium_filtrum_omnia (
  * Ambulator Recursivus
  * ================================================== */
 
+/* Responsa functionis callback (2026-11-10).
+ *
+ * PERGE: ambulatio pergit (directorium intratur).
+ * PRAETERMITTE: si introitus directorium est, SUBARBOR eius non
+ *   intratur (nec aperitur nec enumeratur - nulla linea lectionum);
+ *   ambulatio cum fratribus pergit. Pro filo idem ac PERGE. Numquam
+ *   vocanti redditur. Olim deerat: ambulator solum pergere aut totum
+ *   sistere poterat, et instrumenta quae 'build', '.git' vitant gyros
+ *   opendir suos manu scribebant.
+ * Valor alius quivis: ambulatio sistitur, valor vocanti redditur.
+ *
+ * NOTA: callback directorium videt solum si filtrum id accipit
+ * (genera_accepta sine INTROITUS_DIRECTORIUM -> praetermissio fieri
+ * nequit); exemplar nominis solum fila tangit. Directoria occulta sine
+ * includere_occultos nec nuntiantur nec intrantur. */
+#define DIRECTORIUM_AMBULATOR_PERGE        0
+#define DIRECTORIUM_AMBULATOR_PRAETERMITTE II
+
 /* Genus functionis callback pro ambulatore
  *
  * via_plena:  Via plena ad introitum
  * introitus:  Informatio de introitu
  * contextus:  Contextus ab usore provisus
  *
- * Reddit: 0 ad pergendum, non-0 ad terminandum
+ * Reddit: DIRECTORIUM_AMBULATOR_PERGE (0) ad pergendum,
+ *         DIRECTORIUM_AMBULATOR_PRAETERMITTE ad subarborem
+ *         praetermittendam, aliud non-0 ad terminandum
  */
 nomen s32 (*DirectoriumAmbulatorFunctio)(
     chorda                         via_plena,
@@ -163,7 +183,8 @@ nomen s32 (*DirectoriumAmbulatorFunctio)(
  *
  * Reddit: 0 si successus, -1 si error
  *
- * NOTA: Callback reddit 0 ad pergendum, non-0 ad terminandum
+ * NOTA: Callback reddit 0 ad pergendum, PRAETERMITTE ad subarborem
+ *       directorii praetermittendam, aliud non-0 ad terminandum
  */
 s32
 directorium_ambulare (

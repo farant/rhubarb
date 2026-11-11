@@ -729,6 +729,9 @@ _ambulare_recursivum (
 
     dum ((introitus = directorium_iterator_proximum(iterator)) != NIHIL)
     {
+        /* subarbor a callback praetermissa (per introitum) */
+        b32 praetermissa = FALSUM;
+
         /* Construere viam plenam */
         partes[0]  = via_currens;
         partes[I]  = introitus->titulus;
@@ -739,15 +742,21 @@ _ambulare_recursivum (
         {
             /* Vocare callback */
             fructus = functio(via_nova, introitus, contextus);
-            si (fructus != 0)
+            si (fructus == DIRECTORIUM_AMBULATOR_PRAETERMITTE)
+            {
+                praetermissa = VERUM;
+            }
+            alioquin si (fructus != 0)
             {
                 directorium_iterator_claudere(iterator);
                 redde fructus;
             }
         }
 
-        /* Recursio in directoria */
-        si (introitus->genus == INTROITUS_DIRECTORIUM)
+        /* Recursio in directoria (nisi callback subarborem
+         * praetermisit) */
+        si (   introitus->genus == INTROITUS_DIRECTORIUM
+            && !praetermissa)
         {
             /* Verificare si non est occultum (vel includere_occultos) */
             si (   filtrum                     == NIHIL

@@ -108,6 +108,46 @@ _callback_terminare_post_tres (
 }
 
 
+/* Callback: subarborem directorii nominati praetermittit et vias
+ * visas colligit (catena una, viae per '\n' separatae) */
+nomen structura {
+    constans character* praetermittendum;  /* titulus (NIHIL: nihil) */
+                   b32  etiam_fila;        /* PRAETERMITTE pro filis */
+             character  visa[IV * MXXIV];
+                   i32  numerus;
+} PraetermissioContextus;
+
+hic_manens s32
+_callback_praetermittere (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    PraetermissioContextus* ctx  = (PraetermissioContextus*)contextus;
+            memoriae_index  l    = strlen(ctx->visa);
+
+    si (l + via_plena.mensura + II < magnitudo(ctx->visa))
+    {
+        memcpy(ctx->visa + l, via_plena.datum, via_plena.mensura);
+        ctx->visa[l + via_plena.mensura]      = '\n';
+        ctx->visa[l + via_plena.mensura + I]  = '\0';
+    }
+    ctx->numerus++;
+    si (   introitus->genus      == INTROITUS_DIRECTORIUM
+        && ctx->praetermittendum != NIHIL
+        && chorda_aequalis_literis(introitus->titulus,
+               ctx->praetermittendum))
+    {
+        redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+    }
+    si (ctx->etiam_fila && introitus->genus == INTROITUS_FILUM)
+    {
+        redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
+
 /* ==================================================
  * Probationes
  * ================================================== */
@@ -505,6 +545,75 @@ _sectio_decima_secunda (
 
 
     /* ==================================================
+     * Probare: Ambulator - Subarbor Praetermissa
+     *
+     * Structura: sub1/subfile.txt, sub1/deep/deepfile.txt, sub2,
+     * .hidden_dir/inside.txt, fila radicis.
+     * ================================================== */
+
+interior vacuum
+_sectio_praetermissionis (
+    CredoContextus* c)
+{
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    /* sub1 praetermissum: ipsum visum, nihil sub eo; cetera visa;
+     * ambulatio 0 reddit (PRAETERMITTE vocanti numquam redditur) */
+    {
+        PraetermissioContextus ctx;
+                           s32 fructus;
+
+        memset(&ctx, ZEPHYRUM, magnitudo(ctx));
+        ctx.praetermittendum = "sub1";
+        fructus = directorium_ambulare(VIA_PROBATIONIS, NIHIL,
+            _callback_praetermittere, &ctx, piscina);
+        CREDO_AEQUALIS_S32(fructus, 0);
+        CREDO_VERUM(strstr(ctx.visa,
+            "/tmp/rhubarb_iter_probatio/sub1\n") != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "sub1/") == NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "deepfile.txt") == NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "/sub2\n") != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "/file1.txt\n") != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, ".hidden_dir/inside.txt\n")
+            != NIHIL);
+        /* XI introitus toti - III sub sub1 (subfile.txt, deep,
+         * deepfile.txt) */
+        CREDO_AEQUALIS_I32(ctx.numerus, VIII);
+    }
+    /* directorium profundius: deep praetermissum, sub1/subfile.txt
+     * tamen visum */
+    {
+        PraetermissioContextus ctx;
+                           s32 fructus;
+
+        memset(&ctx, ZEPHYRUM, magnitudo(ctx));
+        ctx.praetermittendum = "deep";
+        fructus = directorium_ambulare(VIA_PROBATIONIS, NIHIL,
+            _callback_praetermittere, &ctx, piscina);
+        CREDO_AEQUALIS_S32(fructus, 0);
+        CREDO_VERUM(strstr(ctx.visa, "sub1/subfile.txt\n") != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "sub1/deep\n") != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "deepfile.txt") == NIHIL);
+        CREDO_AEQUALIS_I32(ctx.numerus, X);
+    }
+    /* PRAETERMITTE pro filo = PERGE: omnia XI visa, ambulatio 0 */
+    {
+        PraetermissioContextus ctx;
+                           s32 fructus;
+
+        memset(&ctx, ZEPHYRUM, magnitudo(ctx));
+        ctx.etiam_fila = VERUM;
+        fructus = directorium_ambulare(VIA_PROBATIONIS, NIHIL,
+            _callback_praetermittere, &ctx, piscina);
+        CREDO_AEQUALIS_S32(fructus, 0);
+        CREDO_AEQUALIS_I32(ctx.numerus, XI);
+        CREDO_VERUM(strstr(ctx.visa, "deepfile.txt\n") != NIHIL);
+    }
+}
+
+
+    /* ==================================================
      * Probare: Ambulator - Profunditas Maxima
      * ================================================== */
 
@@ -703,6 +812,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL },
     { "terminationem praematuram", _sectio_decima_secunda, NIHIL, NIHIL,
         NIHIL, NIHIL },
+    { "subarborem praetermissam", _sectio_praetermissionis, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { "profunditatem maximam", _sectio_decima_tertia, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "enumerationem uno vocamine", _sectio_enumerationis, NIHIL,
