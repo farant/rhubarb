@@ -413,6 +413,77 @@ _sectio_vacua (
 }
 
 
+/* modus humi: exemplaria aliam picturam dat quam Atkinson, eadem
+ * tamen loca tegit et aeque stabilis est */
+interior vacuum
+_sectio_modus (
+    CredoContextus* c)
+{
+         Scaena* s = _scaena(c);
+    MundusHumus* h;
+             i8* a            = _octeti(c, LATUS * LATUS);
+             i8* e            = _octeti(c, LATUS * LATUS);
+             i8* f            = _octeti(c, LATUS * LATUS);
+            f32  profunditas  = 0.0f;
+            s32  px;
+            s32  py;
+            i32  x;
+            i32  y;
+            i32  diversa  = ZEPHYRUM;
+            i32  mala     = ZEPHYRUM;
+
+    h = mundus_humus_creare_modi(s->locus, s->activi,
+        MUNDUS_HUMUS_EXEMPLARIA, c->piscina);
+    CREDO_NECESSE (h != NIHIL);
+    /* circa angulum loci: pars intra, pars extra */
+    _pixelum(0.0f, 0.0f, 0.0f, &px, &py, &profunditas);
+    CREDO_VERUM (mundus_humus_copiare(s->humus, px - L, py - L, LATUS,
+        LATUS, FUNDUS, a, NIHIL));
+    CREDO_VERUM (mundus_humus_copiare(h, px - L, py - L, LATUS, LATUS,
+        FUNDUS, e, NIHIL));
+    per (x = ZEPHYRUM; x < LATUS * LATUS; x++)
+    {
+        /* tectum idem: fundus ubi et Atkinson fundum habet */
+        si (   (a[x] == FUNDUS) != (e[x] == FUNDUS)
+            || (e[x] != FUNDUS && e[x] >= XVI))
+        {
+            mala++;
+        }
+        diversa += a[x] != e[x] ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32 (mala, ZEPHYRUM);
+    CREDO_VERUM (diversa > C);
+    /* exemplaria quoque semel redacta et lapsa: copia lapsa in
+     * pixelis communibus eadem */
+    CREDO_VERUM (mundus_humus_copiare(h, px - L + II, py - L - I, LATUS,
+        LATUS, FUNDUS, f, NIHIL));
+    diversa = ZEPHYRUM;
+    per (y = I; y < LATUS; y++)
+    {
+        per (x = ZEPHYRUM; x + II < LATUS; x++)
+        {
+            /* f(x, y) = e(x + 2, y - 1) */
+            si (f[y * LATUS + x] != e[(y - I) * LATUS + x + II])
+            {
+                diversa++;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32 (diversa, ZEPHYRUM);
+    /* creare sine modo = Atkinson; modus ignotus recusatur */
+    h = mundus_humus_creare_modi(s->locus, s->activi,
+        MUNDUS_HUMUS_ATKINSON, c->piscina);
+    CREDO_NECESSE (h != NIHIL);
+    CREDO_VERUM (mundus_humus_copiare(h, px - L, py - L, LATUS, LATUS,
+        FUNDUS, f, NIHIL));
+    CREDO_VERUM (memcmp(a, f, LATUS * LATUS) == ZEPHYRUM);
+    CREDO_NIHIL (mundus_humus_creare_modi(s->locus, s->activi,
+        MUNDUS_HUMI_MODORUM, c->piscina));
+    CREDO_NIHIL (mundus_humus_creare_modi(s->locus, s->activi,
+        (MundusHumiModus)-I, c->piscina));
+}
+
+
 /* ==================================================
  * Corpora et quadrum (mundus-plan T7)
  * ================================================== */
@@ -826,6 +897,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "margo", _sectio_margo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sutura", _sectio_sutura, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacua", _sectio_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "modus", _sectio_modus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },
     { "medium", _sectio_medium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "occultum", _sectio_occultum, NIHIL, NIHIL, NIHIL, NIHIL },

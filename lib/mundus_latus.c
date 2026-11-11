@@ -29,6 +29,10 @@
 #define ORDO_ALTITUDO     XII     /* ordo capitis */
 #define LIMBUS            II
 #define SAGITTA_LATITUDO  XII
+/* globulus modi humi: "exemplaria" + limbi */
+#define HUMUS_LATITUDO    LXVIII
+#define HUMUS_EXEMPLARIA  "exemplaria"
+#define HUMUS_ATKINSON    "atkinson"
 #define LITTERA_LATITUDO  VI
 #define LITTERA_ALTITUDO  VIII
 #define VISUS_MUNDI       I
@@ -44,6 +48,7 @@ hic_manens constans character actio_mundi[] = "mundus.agere";
 nomen structura {
     Fines prior;
     Fines proxima;
+    Fines humus;        /* globulus modi humi, in fine capitis */
     Fines pictura;
       s32 numerus_x;    /* textus "2/5" */
       s32 titulus_x;
@@ -214,6 +219,7 @@ locum_tollere (
     MundusLatusMontatio* m)
 {
     piscina_vacare(m->piscina_loci);
+    piscina_vacare(m->piscina_humi);
     m->locus                  = NIHIL;
     m->solum                  = NIHIL;
     m->humus                  = NIHIL;
@@ -274,9 +280,7 @@ locum_curare (
     }
     m->locus = f.statua;
     m->solum = mundus_solum_struere(m->locus, m->piscina_loci);
-    m->humus  = mundus_humus_creare(m->locus, m->activi,
-        m->piscina_loci);
-    si (!m->solum || !m->humus)
+    si (!m->solum)
     {
         m->locus       = NIHIL;
         m->causa_loci  = chorda_ex_literis("the place is too large to "
@@ -300,6 +304,44 @@ locum_curare (
     m->mundus.corporum  = I;
     m->positum          = VERUM;
     m->hora_gradus      = m->hora_visa;
+    redde VERUM;
+}
+
+/* modus humi quem status vult (ignotus aut absens = Atkinson) */
+interior MundusHumiModus
+humi_modus_status (
+    constans MundusLatusMontatio* m)
+{
+    chorda* a = insula_ramus_attributum(&m->ramus, "humus");
+
+    redde a && chorda_aequalis_literis(*a, HUMUS_EXEMPLARIA)
+        ? MUNDUS_HUMUS_EXEMPLARIA : MUNDUS_HUMUS_ATKINSON;
+}
+
+/* humum loci curare: nulla dum locus nullus; nova (piscina vacata,
+ * regiones veteres abiectae) cum locus novus est aut modus mutatus.
+ * VERUM si quid mutatum */
+interior b32
+humum_curare (
+    MundusLatusMontatio* m)
+{
+    MundusHumiModus modus = humi_modus_status(m);
+
+    si (!m->locus)
+    {
+        redde FALSUM;
+    }
+    si (m->humus && m->humi_modus == modus)
+    {
+        redde FALSUM;
+    }
+    piscina_vacare(m->piscina_humi);
+    m->humus       = mundus_humus_creare_modi(m->locus, m->activi,
+        modus,
+        m->piscina_humi);
+    m->humi_modus  = modus;
+    /* quadrum vetus ex humo vetere factum est */
+    m->quadri_clavis[ZEPHYRUM] = '\0';
     redde VERUM;
 }
 
@@ -425,9 +467,11 @@ disponere (
     d->numerus_x  = LIMBUS + SAGITTA_LATITUDO + LIMBUS;
     x             = d->numerus_x
         + (s32)strlen(numerus) * LITTERA_LATITUDO + LIMBUS;
-    d->proxima = fines(x, ZEPHYRUM, SAGITTA_LATITUDO, ORDO_ALTITUDO);
-    d->titulus_x = x + SAGITTA_LATITUDO + LIMBUS * II;
-    d->titulus_latitudo = latitudo - d->titulus_x - LIMBUS;
+    d->proxima    = fines(x, ZEPHYRUM, SAGITTA_LATITUDO, ORDO_ALTITUDO);
+    d->titulus_x  = x + SAGITTA_LATITUDO + LIMBUS * II;
+    d->humus = fines(latitudo - HUMUS_LATITUDO - LIMBUS, ZEPHYRUM,
+        HUMUS_LATITUDO, ORDO_ALTITUDO);
+    d->titulus_latitudo = d->humus.x - d->titulus_x - LIMBUS;
     si (d->titulus_latitudo < ZEPHYRUM)
     {
         d->titulus_latitudo = ZEPHYRUM;
@@ -504,14 +548,15 @@ quadrum_curare (
     disponere(m, &d);
     latitudo = (i32)d.pictura.latitudo;
     altitudo = (i32)d.pictura.altitudo;
-    si (   !m->locus || !m->positum || !m->persona
+    si (   !m->locus || !m->humus || !m->positum || !m->persona
         || latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
     {
         redde quadrum_tollere(m);
     }
-    sprintf(clavis, "%.64s|%d|%d|%d|%d|%d|%d|%ux%u",
+    sprintf(clavis, "%.64s|%d|%d|%d|%d|%d|%d|%d|%ux%u",
         m->sigillum_personae.mensura >= LXIV
             ? (constans character*)m->sigillum_personae.datum : "",
+        (integer)m->humi_modus,
         (integer)(m->corpus.x * 1000.0f),
         (integer)(m->corpus.z * 1000.0f),
         (integer)(m->corpus.y * 1000.0f),
@@ -587,6 +632,10 @@ mundus_latus_pulsare (
         }
     }
     si (locum_curare(m))
+    {
+        mutatum = VERUM;
+    }
+    si (humum_curare(m))
     {
         mutatum = VERUM;
     }
@@ -719,11 +768,25 @@ fac_personam_proximam (
     redde personam_mutare((MundusLatusMontatio*)ctx, I);
 }
 
+/* dithering humi commutare: Atkinson <-> exemplaria */
+interior b32
+fac_humum (
+    vacuum* ctx)
+{
+    MundusLatusMontatio* m = (MundusLatusMontatio*)ctx;
+
+    redde campum_scribere(m, "humus",
+        humi_modus_status(m) == MUNDUS_HUMUS_EXEMPLARIA
+            ? "" : HUMUS_EXEMPLARIA);
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "mundus.prior", "Previous character", "[", VISUS_MUNDI, ZEPHYRUM,
         fac_personam_priorem },
     { "mundus.proxima", "Next character", "]", VISUS_MUNDI, ZEPHYRUM,
         fac_personam_proximam },
+    { "mundus.humus", "Ground dither: Atkinson / exemplaria", "g",
+        VISUS_MUNDI, ZEPHYRUM, fac_humum },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -825,6 +888,10 @@ agere (
     si (chorda_aequalis_literis(nodus->id, "sagitta_proxima"))
     {
         redde fac_personam_proximam(m);
+    }
+    si (chorda_aequalis_literis(nodus->id, "humus"))
+    {
+        redde fac_humum(m);
     }
     redde FALSUM;
 }
@@ -956,6 +1023,12 @@ figura_mundi (
         }
         textum_pingere(md, d.titulus_x, y_textus, titulus, COLOR_TEXT);
     }
+    /* globulus modi humi */
+    figura_globulum_pingere(md, d.humus, chorda_ex_literis(
+        humi_modus_status(m) == MUNDUS_HUMUS_EXEMPLARIA
+            ? HUMUS_EXEMPLARIA : HUMUS_ATKINSON, md->piscina),
+        humi_modus_status(m) == MUNDUS_HUMUS_EXEMPLARIA
+            ? FIGURA_ELECTUM : ZEPHYRUM);
     /* fundus sub pictura: color fundi thematis; quadrum extra locum
      * perlucidum est */
     mandata_rectangulum(md, d.pictura,
@@ -1038,6 +1111,7 @@ mundus_latus_componere (
     }
     /* pictura statum hunc sequatur (eventus personam modo mutavit) */
     (vacuum)personam_curare(m);
+    (vacuum)humum_curare(m);
     (vacuum)quadrum_curare(m);
     radix = componens_creare(piscina, intern, "mundus", PARTES_TABULA);
     si (!radix)
@@ -1056,6 +1130,7 @@ mundus_latus_componere (
     aream_addere(radix, piscina, intern, "pictura", d.pictura);
     aream_addere(radix, piscina, intern, "sagitta_prior", d.prior);
     aream_addere(radix, piscina, intern, "sagitta_proxima", d.proxima);
+    aream_addere(radix, piscina, intern, "humus", d.humus);
     redde radix;
 }
 
@@ -1075,6 +1150,10 @@ mundus_latus_dimittere (
     {
         piscina_destruere(m->piscina_loci);
     }
+    si (m->piscina_humi)
+    {
+        piscina_destruere(m->piscina_humi);
+    }
     si (m->piscina_personae)
     {
         piscina_destruere(m->piscina_personae);
@@ -1085,6 +1164,7 @@ mundus_latus_dimittere (
     }
     m->piscina_indicis   = NIHIL;
     m->piscina_loci      = NIHIL;
+    m->piscina_humi      = NIHIL;
     m->piscina_personae  = NIHIL;
     m->piscina_quadri    = NIHIL;
     m->personae          = NIHIL;
@@ -1144,11 +1224,13 @@ mundus_latus_montare (
         0x10000);
     m->piscina_loci      = piscina_generare_dynamicum("mundus_locus",
         0x400000);
+    m->piscina_humi      = piscina_generare_dynamicum("mundus_humus",
+        0x400000);
     m->piscina_personae  = piscina_generare_dynamicum("mundus_persona",
         0x100000);
     m->piscina_quadri    = piscina_generare_dynamicum("mundus_quadrum",
         0x400000);
-    si (   !m->piscina_indicis || !m->piscina_loci
+    si (   !m->piscina_indicis || !m->piscina_loci || !m->piscina_humi
         || !m->piscina_personae || !m->piscina_quadri)
     {
         redde FALSUM;

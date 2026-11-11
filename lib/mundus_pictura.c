@@ -8,6 +8,7 @@
 
 #include "mundus_pictura.h"
 #include "dithering.h"
+#include "dithering_exemplaria_velox.h"
 #include "statuae_quadrum.h"
 #include "stereometria.h"
 #include <math.h>
@@ -30,6 +31,7 @@ structura MundusHumus {
      StereometriaMatrix* matrices;      /* quies */
                 Piscina* piscina;
                     b32  activi[XVI];
+        MundusHumiModus  modus;
     /* regiones quas locus tangit: [i_min, i_min + latitudo) etc. */
                     s32  i_min;
                     s32  j_min;
@@ -133,13 +135,25 @@ mundus_humus_creare (
        constans b32* activi,
             Piscina* piscina)
 {
+    redde mundus_humus_creare_modi(locus, activi, MUNDUS_HUMUS_ATKINSON,
+        piscina);
+}
+
+MundusHumus*
+mundus_humus_creare_modi (
+    constans Statua* locus,
+       constans b32* activi,
+    MundusHumiModus  modus,
+            Piscina* piscina)
+{
        MundusHumus* h;
     memoriae_index  mensura;
                f32  fines[IV];
                s32  i_max;
                s32  j_max;
 
-    si (!locus || !activi || !piscina)
+    si (   !locus || !activi || !piscina || (s32)modus < ZEPHYRUM
+        || modus >= MUNDUS_HUMI_MODORUM)
     {
         redde NIHIL;
     }
@@ -151,6 +165,7 @@ mundus_humus_creare (
     memset(h, ZEPHYRUM, magnitudo(MundusHumus));
     h->locus    = locus;
     h->piscina  = piscina;
+    h->modus    = modus;
     memcpy(h->activi, activi, magnitudo(h->activi));
     h->matrices = (StereometriaMatrix*)piscina_allocare(piscina,
         ((memoriae_index)locus->nodorum + I)
@@ -228,8 +243,11 @@ _regionem_facere (
         r->indices = NIHIL;
         redde FALSUM;
     }
-    fructus = dithering_atkinson_colorum(pictura.rgba, latus, latus,
-        h->activi, h->piscina);
+    fructus = h->modus == MUNDUS_HUMUS_EXEMPLARIA
+        ? dithering_exemplaria_velox_colorum(pictura.rgba, latus, latus,
+              h->activi, NIHIL, NIHIL, h->piscina)
+        : dithering_atkinson_colorum(pictura.rgba, latus, latus,
+              h->activi, h->piscina);
     si (!fructus.successus || !fructus.indices)
     {
         piscina_reficere(h->piscina, nota);

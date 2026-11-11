@@ -44,6 +44,15 @@
 
 nomen structura MundusHumus MundusHumus;
 
+/* dithering humi: Atkinson (ordinarium) aut exemplaria. Humus semel
+ * per regionem redigitur, ergo sumptus exemplariorum (circa XLIII ms
+ * per regionem contra II-V) semel solvitur. */
+nomen enumeratio {
+    MUNDUS_HUMUS_ATKINSON = ZEPHYRUM,
+    MUNDUS_HUMUS_EXEMPLARIA,
+    MUNDUS_HUMI_MODORUM
+} MundusHumiModus;
+
 /* visus mundi cum origine data (pixela mundi), illuminatus */
 StatuaScaenaVisus
 mundus_visus (
@@ -63,6 +72,17 @@ MundusHumus*
 mundus_humus_creare (
     constans Statua* locus,
        constans b32* activi,
+            Piscina* piscina);
+
+/* ut mundus_humus_creare (quod Atkinson est), modo dato. Modus
+ * ignotus: NIHIL. Modus mutatur humo nova creata: regiones veteris
+ * in piscina eius manent, ergo vocans humo piscinam propriam dat et
+ * eam ante vacat. */
+MundusHumus*
+mundus_humus_creare_modi (
+    constans Statua* locus,
+       constans b32* activi,
+    MundusHumiModus  modus,
             Piscina* piscina);
 
 /*

@@ -15,6 +15,10 @@
             nota="titulus personae quae ambulat ('[' ']'); absens aut
                   ignotus = prima cuius titulus 'mushroom' continet,
                   aliter prima in indice"/>
+    <campus nomen="humus" typus="textus" vita="persistens"
+            scriptor="mundus.agere"
+            nota="dithering humi ('g', globulus capitis): 'exemplaria';
+                  absens aut ignotus = atkinson"/>
   </status>
 
   <basis genus="organum_commune"/>

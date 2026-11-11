@@ -96,3 +96,28 @@ Plants, six red (five here, one in statuae_quadrum): no depth test
 against the ground; mask not limited to owned pixels; frame origin
 off centre; no width cap on the scale; walk clip ignored; writing
 outside the mask.
+
+## 2026-11-10 - ground dither choice (Fran's question, after T10)
+
+Fran: "since the background is static anyway could we technically
+'bake' it with exemplaria anyway since it doesn't need to be
+recomputed every frame?" Yes: the ground is dithered once per region,
+so exemplaria's cost is paid once. `mundus_humus_creare_modi` takes
+`MundusHumiModus` (ATKINSON, EXEMPLARIA); `mundus_humus_creare` is
+Atkinson. Exemplaria runs with its default options (no mask, no
+budgets) on the region plus its 16-pixel margin.
+
+Measured (scratch `humus_exemplaria.c`): about 43 ms per region
+against 2-5 for Atkinson; a 768x512 picture whole 188 ms. No seam is
+visible between regions (the 4-pixel hatching period divides the
+256-pixel region and the 16-pixel margin). Pictures
+`build/statuae/humus_ex_{atkinson,exemplaria_totum,exemplaria_regiones}.png`.
+Claude's read of the look: grass becomes a regular dotted pattern and
+darker, cliffs lose their crack lines, characters stand out less.
+Fran chose to have a toggle and judge by eye.
+
+A humus cannot change mode: its regions sit in its arena. The caller
+gives the humus its own arena, empties it and creates a new one.
+
+Test section "modus": different picture, same coverage, and the
+exemplaria ground is as stable under a shifted copy as Atkinson's.

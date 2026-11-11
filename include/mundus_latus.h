@@ -12,6 +12,11 @@
  * cuius titulus "mushroom" continet; aliter prima. Locus initii:
  * cella gressibilis medio loci proxima (mundus_solum_initium).
  *
+ * HUMUS: dithering Atkinson (ordinarium) aut exemplaria; 'g' aut
+ * globulus in fine capitis commutat. Regiones humi servatae tunc
+ * abiciuntur et modo novo denuo fiunt cum visus eas attingit; persona
+ * ubi stat manet.
+ *
  * CLAVES: W A S D tentae ambulant, ad SCHIRMUM relatae (W sursum in
  * pictura); duae simul oblique; contrariae se tollunt. [ ] persona
  * prior / proxima (persona nova ubi vetus stabat stat). Claves tentae
@@ -28,9 +33,9 @@
  * recusata (sagittae tamen valent).
  *
  * STATUS in ramo (manifestum apps/mundus/organum.stml, persistens):
- * persona. Locus personae in mundo, claves tentae et quadrum KINETICA
- * sunt: in montatione, numquam in statu (latus clausum et iterum
- * apertum ab initio incipit).
+ * persona, humus. Locus personae in mundo, claves tentae et quadrum
+ * KINETICA sunt: in montatione, numquam in statu (latus clausum et
+ * iterum apertum ab initio incipit).
  */
 #ifndef MUNDUS_LATUS_H
 #define MUNDUS_LATUS_H
@@ -89,12 +94,16 @@ nomen structura {
                      s64  seq_visum;
                      s64  inspectio_ms;
                      b32  inspectum;
-    /* locus lectus (statua, tabula gressus, humus cum regionibus) */
+    /* locus lectus (statua, tabula gressus) */
                  Piscina* piscina_loci;
                   Statua* locus;        /* NIHIL: nullus aut
                                          * recusatus */
              MundusSolum* solum;
-             MundusHumus* humus;
+    /* humus loci cum regionibus suis, in piscina propria (modus
+     * mutatus: piscina vacatur, humus nova) */
+                 Piscina* piscina_humi;
+             MundusHumus* humus;        /* NIHIL dum locus nullus */
+         MundusHumiModus  humi_modus;   /* modus humi factae */
                   chorda  sigillum_loci;
                   chorda  causa_loci;   /* recusatio aut "nowhere to
                                          * walk"; vacua si bonus */

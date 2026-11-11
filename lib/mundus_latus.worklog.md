@@ -55,3 +55,22 @@ clips are still unexercised (no model has one).
 Plants, six red: releases ignored; focus loss does not clear the
 keys; first step measured from the last tick; screen-up inverted;
 modifiers not checked; default character not the mushroom man.
+
+## 2026-11-10 - ground dither toggle
+
+`g`, or the button at the right end of the header, switches the
+ground between Atkinson and exemplaria. Status field `humus`
+("exemplaria"; absent = Atkinson), persistent like `persona`. The
+ground now lives in its own arena (`piscina_humi`); `humum_curare`
+empties it and makes a new humus when the place is new or the mode
+differs from the status, and clears the frame key. The character
+stays where it is.
+
+Test section "humus": the frame changes, the character does not move,
+the new ground has made the same number of regions (old ones were
+dropped, not piled up), and switching back gives the first frame
+again byte for byte. Plants, four red (mode ignored in the picture
+library; mode change does not remake the ground; `g` never returns to
+Atkinson; the button does nothing).
+
+Headless picture: `build/statuae/vicus_mundus_humus_exemplaria.png`.

@@ -572,6 +572,81 @@ _sectio_persona (
     _finire(w);
 }
 
+/* dithering humi: 'g' et globulus commutant; regiones veteres
+ * abiciuntur, persona manet; retro ad Atkinson quadrum pristinum */
+interior vacuum
+_sectio_humus (
+    CredoContextus* c)
+{
+     Orbis* w = _orbem(c, _volumen(c, "mundus_humus", VERUM, II),
+         LATITUDO, ALTITUDO);
+        i8* atkinson;
+        i8* exemplaria;
+       f32  x0;
+       f32  z0;
+       i32  octeti;
+       i32  regiones;
+
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (_quadrum(w) != NIHIL);
+    octeti      = _quadrum(w)->latitudo * _quadrum(w)->altitudo * IV;
+    atkinson    = (i8*)piscina_allocare(c->piscina, octeti);
+    exemplaria  = (i8*)piscina_allocare(c->piscina, octeti);
+    memcpy(atkinson, _quadrum(w)->pixela, octeti);
+    x0        = w->m.corpus.x;
+    z0        = w->m.corpus.z;
+    regiones  = mundus_humus_regiones(w->m.humus);
+    CREDO_VERUM (regiones >= I);
+    CREDO_VERUM (_campus(w, "humus", NIHIL));
+    CREDO_VERUM (_textus_pictus(c, w, "atkinson"));
+    /* g: exemplaria */
+    _premere(w, 'g');
+    CREDO_VERUM (_campus(w, "humus", "exemplaria"));
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_MOTUS);
+    CREDO_NECESSE (_quadrum(w) != NIHIL);
+    CREDO_VERUM (_textus_pictus(c, w, "exemplaria"));
+    CREDO_FALSUM (_textus_pictus(c, w, "atkinson"));
+    memcpy(exemplaria, _quadrum(w)->pixela, octeti);
+    CREDO_VERUM (memcmp(atkinson, exemplaria, octeti) != ZEPHYRUM);
+    /* persona ubi stabat; humus nova eadem regiones fecit, non plures
+     * (veteres abiectae, non accumulatae) */
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x0, 0.0001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, z0, 0.0001f);
+    CREDO_AEQUALIS_I32 (mundus_humus_regiones(w->m.humus), regiones);
+    CREDO_VERUM (w->m.humi_modus == MUNDUS_HUMUS_EXEMPLARIA);
+    /* stans: quadrum non mutatur, pulsus rari */
+    CREDO_FALSUM (_pulsus(w, C));
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_INSPECTIONIS);
+    /* globulus: retro ad Atkinson, quadrum pristinum octetim */
+    _ictus(w, "humus", c->piscina);
+    CREDO_VERUM (_campus(w, "humus", NIHIL));
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_MOTUS);
+    CREDO_NECESSE (_quadrum(w) != NIHIL);
+    CREDO_VERUM (memcmp(atkinson, _quadrum(w)->pixela, octeti)
+        == ZEPHYRUM);
+    /* ambulat in humo exemplariorum */
+    _premere(w, 'g');
+    _premere(w, 'd');
+    _pulsus_multi(w, X);
+    _solvere(w, 'd');
+    CREDO_VERUM (w->m.corpus.x > x0 + 0.5f);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    _finire(w);
+    /* sine loco: g nihil ruit */
+    w = _orbem(c, _volumen(c, "mundus_humus_vacuus", FALSUM, I),
+        LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    _premere(w, 'g');
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_MOTUS);
+    CREDO_VERUM (_campus(w, "humus", "exemplaria"));
+    CREDO_VERUM (_quadrum(w) == NIHIL);
+    CREDO_VERUM (w->m.humus == NIHIL);
+    _finire(w);
+}
+
 interior vacuum
 _sectio_vacuum (
     CredoContextus* c)
@@ -738,6 +813,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "focus", _sectio_focus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "claves", _sectio_claves, NIHIL, NIHIL, NIHIL, NIHIL },
     { "persona", _sectio_persona, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "humus", _sectio_humus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacuum", _sectio_vacuum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusatum", _sectio_recusatum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "magnitudines", _sectio_magnitudines, NIHIL, NIHIL, NIHIL,
