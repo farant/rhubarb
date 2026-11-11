@@ -41,7 +41,6 @@ crusta/probationes/probatio_crusta_exempla.c	ante regulam (2026-10-14): migratio
 crusta/probationes/probatio_crusta_reservatio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/probationes/probatio_crusta_stml.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/probationes/probatio_crusta_totalitas.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-css/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 gesta/fontes/gesta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 gesta/fontes/tabularium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 gesta/probationes/probatio_fori.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -49,19 +48,10 @@ gesta/probationes/probatio_frigida.c	ante regulam (2026-10-14): migratio ad filu
 gesta/probationes/probatio_gesta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 gesta/probationes/probatio_tabularium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 gesta/probationes/probatio_tabulariumd.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-html/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-html/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 knotapel/demo_125_exact_crossing_depth/demo-snapshot.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
 lib/compilator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 lib/herbarium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 lib/mensura_contextus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-materia/fontes/materia_coctor.c	migratio consulta (spec §II, T2-T7): suita conversa - transitus vetus servari potest
-materia/instrumenta/oraculum_silvae.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-md/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-md/instrumenta/census.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-md/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-md/instrumenta/extenta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-md/instrumenta/html.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/amalgama/officina.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/fontes/officina_indicium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/praeparator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
@@ -131,10 +121,6 @@ silva/instrumenta/principalia/selecta.c	ante regulam (2026-10-14): migratio ad f
 silva/instrumenta/silva_amalgama.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/silva_coquere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 silva/instrumenta/silva_iudicium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tessera/probationes/probatio_tessera_folium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tessera/probationes/probatio_tessera_ponere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-toml/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-toml/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/aemulator_vttest.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/amalgama_ligator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/bitsyfont_ad_fons.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

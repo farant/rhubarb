@@ -17,6 +17,7 @@
 #include "materia_lexicon.h"
 #include "materia_nodus.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -31,7 +32,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;

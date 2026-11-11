@@ -75,3 +75,33 @@ refusal - test B3 now pins both layers (direct call = codex XCVII; call
 through a function pointer = MACHINULA_RECUSATIO, planted red). A gate run
 with a filter (`officina.machinula`) at the sweep commit hid this - when a
 sweep touches a subsystem, run its whole gate.
+
+## 2026-11-11 - read-mode fopen: rules file fopen_legens.stml (code 96)
+
+silva/transformationes/fopen_legens.stml: `fopen($via, "r")` and
+`"rb"` -> `lectiones_fopen`, codex 96, `<inclusio>lectiones.h`. Same
+reasoning as the write modes: same signature and FILE*, so the rule
+matches the call whatever consumes it. Census over the 139 debt-listed
+files: 181 fopen sites - 178 reading ("rb" 152, "r" 26), 2 writing
+(tolerated), 1 variable mode (officina amalgam, GENERATUM). Dry run:
+174 sites in 131 files, 0 refused.
+
+Kept OUT by hand before running: apps/forum/forum.c (the server token,
+already `<tolera>`), apps/quaestio/quaestio.c (the API key - gets a
+`<tolera>`, never lectiones), knotapel snapshots, officina's amalgam.
+The tool does not know a secret from a fixture; that list is the
+operator's job every time this rules file is used.
+
+Two things the mechanical rewrite got wrong in area 1, fixed by hand
+(both would have passed the tool's guard):
+- materia/instrumenta/oraculum_silvae.c is ALSO built -DORACULUM_PIGNUS
+  without lectiones.h (the 2026-10-27 lesson again): the read now goes
+  through the file's own `oraculi_fopen` alias.
+- materia/fontes/materia_coctor.c already noted its read by hand
+  (`lectiones_notare` LEGIT/ABSENS around a raw fopen): after the
+  rewrite it would have noted twice. Hand notes removed. Grep the diff
+  for `lectiones_notare` next to a rewritten call in every area.
+
+Area 1 (toml css html md materia tessera: 14 files, 15 sites): all 14
+debt rows paid and deleted (139 -> 125); six suites green; `md/arbor.sh
+README.md` under FABRICA_LECTIONES now records `L README.md`.

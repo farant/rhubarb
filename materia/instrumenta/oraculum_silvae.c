@@ -45,7 +45,10 @@ nomen SilvaChorda  ChordaOraculi;
 #define piscina_oraculi_destruere silva_piscina_destruere
 /* <tolera codex="SCRIPTURA_PRAETERITA" (>ISOLATIO pignoris: binarium
  * ad pignus solum amalgama + libc nectit (oraculum_silvae_struere.sh,
- * index LIBC) - liber lectionum non intrat; vivum per eum scribit */
+ * index LIBC) - liber lectionum non intrat; vivum per eum scribit
+ * <tolera codex="CANALIS_PRAETERITUS" (>ISOLATIO pignoris eadem:
+ * lectio quoque (oraculi_fopen modo legenti) sine libro; vivum per
+ * lectiones_fopen legit */
 #define oraculi_fopen fopen
 #else
 #include "latina.h"
@@ -119,7 +122,7 @@ _plagulam_legere (
       longus  longitudo;
     character* datum;
 
-    f = fopen(via, "rb");
+    f = oraculi_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;

@@ -18,6 +18,7 @@
 #include "tessera_opus.h"
 #include "runae.h"
 #include "credo.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -100,7 +101,7 @@ _corpus_legere (
 
     sprintf(via, "%s/probationes/fixa/runae/corpus/%s.txt",
         radix != NIHIL ? radix : "..", lingua);
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         imprimere("  FRACTA: %s legi non potest\n", via);
