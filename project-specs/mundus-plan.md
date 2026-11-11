@@ -666,6 +666,11 @@ Fixed by this plan:
 
 ### Task 10: into vicus
 
+WIRED 2026-11-10: `$world` opens the pane; vicus-level test and
+headless pictures done. The clearing was added to Fran's live volume
+with his word (2026-11-10), and he walked in the running vicus:
+"that works great".
+
 **Files:** `lib/vicus_applicatio.c` (command `world` -> pane
 `mundus`, mount and describe functions beside the statuae ones,
 `focus_amissus` wired), the ludus_tessera and tessera library lists,

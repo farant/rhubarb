@@ -239,6 +239,11 @@ declare -a RADIX_FONTES=(
     "dithering_ordinatum"
     "dithering_exemplaria_velox"
     "dithering_exemplaria_tabulae"
+    # mundus-plan T10: latus mundi ($world) et quae trahit
+    "mundus_latus"
+    "mundus_pictura"
+    "mundus"
+    "mundus_solum"
 # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
     "sors"

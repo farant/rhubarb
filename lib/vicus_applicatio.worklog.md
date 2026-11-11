@@ -297,3 +297,26 @@ piscina `scheda_notarum` per call because it runs on every paint.
   ordinary semita_locus ("pictor/x1", pinned in probatio_vicus_comites).
 - Test gotcha: on an empty scriba page a click on line II puts the cursor
   on line 0 — type and then click the token at (0, col).
+
+## 2026-11-10 - $world: the mundus pane in vicus (mundus-plan T10)
+
+Pane kind `mundus` (mount, pulse and describe functions beside the
+statuae ones; it reuses `statuarum_nunc` as its clock) and the fixed
+opener `$world`. The describe function sets `focus_amissus` to
+`mundus_latus_focus_amissus`: the first real user of the callback
+added in T1. `ludus_tessera/compile_probationes.sh` lists the four
+new libraries (mundus_latus, mundus_pictura, mundus, mundus_solum);
+tessera's runner did not need them.
+
+Test `probatio_vicus_mundus.c` runs on the real clock, as the statuae
+one does: `$world` typed and clicked opens the pane; a held `d`
+(press without release, sent straight to the dispatcher) moves the
+character; moving focus to the left pane, and opening another pane on
+top, both clear the held key through vicus. Plants, two red: command
+not registered; callback not wired.
+
+Headless pictures (scratch `vic/mundus_imago.c`, linked against the
+vicus build's objects minus `apps__vicus__vicus.o` and `lib__testa.o`):
+`build/statuae/vicus_mundus_{initium,ambulans,post_iter,lapis}.png`.
+Seen there: the golem (dark green and grey) is hard to pick out
+against the grass; the mushroom man reads well.

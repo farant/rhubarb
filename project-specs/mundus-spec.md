@@ -1,7 +1,9 @@
 # mundus — a vicus pane where a character walks around a place
 
-Status: APPROVED by Fran 2026-11-10; plan in
-`project-specs/mundus-plan.md`. Brainstormed
+Status: BUILT 2026-11-10 in secunda (T1-T10 of
+`project-specs/mundus-plan.md`), not in main; `$world` opens the pane.
+Not yet judged by Fran in the running vicus. Approved by Fran
+2026-11-10. Brainstormed
 2026-11-10 with Fran (secunda session 134c8417). Nothing is built.
 Builds on statuae (`project-specs/statuae-spec.md`), which is in
 secunda and not yet in main.

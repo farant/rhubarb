@@ -30,6 +30,7 @@
 #include "aetherophonum.h"
 #include "antiphonale.h"
 #include "statuae.h"
+#include "mundus_latus.h"
 #include "filum.h"
 #include "specula.h"
 #include <stdio.h>
@@ -3174,6 +3175,75 @@ statuae_describere (
     f->ictus_primus       = statuae_ictus_primus;
     f->ictus_primus_ctx   = m;
     f->locus_titulus      = statuae_titulus;
+    f->locus_titulus_ctx  = m;
+}
+
+
+/* ==================================================
+ * Mundus (mundus-plan T10): persona per locum ambulat, $world
+ * ================================================== */
+
+/* ctx = ContextusSoni (systemata vici solum inde sumuntur) */
+interior b32
+mundum_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+       ContextusSoni* soni = (ContextusSoni*)ctx;
+    MundusLatusPorta  porta;
+
+    (vacuum)argumentum;
+    porta.nunc  = statuarum_nunc;
+    porta.ctx   = NIHIL;
+    redde mundus_latus_montare((MundusLatusMontatio*)sedes, piscina,
+        intern, volumen, repo, id, &porta, latitudo, altitudo,
+        soni ? soni->systemata : NIHIL);
+}
+
+interior VicusPulsus
+mundum_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = mundus_latus_pulsare(ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+mundum_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    MundusLatusMontatio* m = (MundusLatusMontatio*)montatio;
+
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = mundus_latus_componere;
+    f->componere_ctx  = m;
+    f->fons           = mundus_latus_imago_fons;
+    f->fons_ctx       = m;
+    /* clavis tenta aut persona movens: pulsus XXXIII ms; stans:
+     * inspectio voluminis sola (vicus quies) */
+    f->pulsare      = mundum_pulsare_in_vico;
+    f->pulsare_ctx  = m;
+    f->mora         = mundus_latus_mora;
+    /* Esc: latus prius */
+    f->effugium_redit     = VERUM;
+    /* focus amissus: claves tentae purgantur (liberatio fortasse
+     * numquam venit), persona sistit */
+    f->focus_amissus      = mundus_latus_focus_amissus;
+    f->focus_amissus_ctx  = m;
+    f->locus_titulus      = mundus_latus_titulus;
     f->locus_titulus_ctx  = m;
 }
 
@@ -6570,6 +6640,9 @@ ContextusNomenclatoris* cn;
         /* statuae-plan T9: $models */
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "models", "statuae", NIHIL, piscina)
+        /* mundus-plan T10: $world */
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus,
+               "world", "mundus", NIHIL, piscina)
         /* gabc pars II P6: $antiphonale(via) */
         || !iussum_registrare(cs->iussa, "antiphonale", FALSUM,
                antiphonale_iussum, soni)
@@ -6648,6 +6721,9 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "statuae",
                magnitudo(StatuaeMontatio), statuae_montare_in_vico,
                statuae_describere, soni)
+        || !vicus_genus_addere(app->vicus, "mundus",
+               magnitudo(MundusLatusMontatio), mundum_montare_in_vico,
+               mundum_describere, soni)
         || !vicus_genus_addere(app->vicus, "sancti",
                magnitudo(SanctorumMontatio), sanctos_montare_in_vico,
                sanctos_describere, sanctorum)
