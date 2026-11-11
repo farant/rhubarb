@@ -2,8 +2,13 @@
  * plastica.c - descriptio textualis in statuam (plastica.h)
  *
  * Arbor STML bis ambulatur: gradus 0 probat et numerat (omnis
- * recusatio hic nascitur), gradus I tabulas statuae implet. Inter
- * gradus nihil recusari potest nisi piscina deficit.
+ * recusatio hic nascitur), gradus I tabulas statuae implet. Ambo
+ * gradus geometriam totam computant (idem iter, idem numerus);
+ * gradus I solus scribit.
+ *
+ * Omne solidum triangula per _triangulum emittit: vertices tres
+ * proprii cum normali faciei (umbratio plana), speculo currenti
+ * reflexi, triangulum sine area omissum.
  */
 
 #include "plastica.h"
@@ -14,19 +19,29 @@
 #include <math.h>
 #include <string.h>
 
-#define ERRORIS_MENSURA  CCLVI
-#define CAPSAE_VERTICES  XXIV
-#define CAPSAE_INDICES   XXXVI
+#define ERRORIS_MENSURA    CCLVI
+#define NODI_MAXIMI        (XVI * CCLVI)
+#define TRIANGULA_MAXIMA   (CC * M)
+#define PUNCTA_MAXIMA      LXIV
+#define LATERA_MAXIMA      LXIV
+#define SEGMENTA_MAXIMA    XXXII
+#define NUMERUS_MAXIMUS    CCLVI
+#define AREA_MINIMA        1.0e-10f
+#define AREA_RELATIVA_MINIMA  1.0e-5f
 
 nomen structura {
       Piscina* piscina;
        Statua* statua;
        chorda* partes;
-          i32  gradus;       /* 0 numerat, I implet */
+          i32  gradus;          /* 0 numerat, I implet */
           i32  nodorum;
           i32  solidorum;
           i32  verticum;
           i32  indicum;
+          i32  index_solidi;    /* indicum ad initium solidi */
+          i32  linea_solidi;
+          f32  speculum_x;      /* 1 aut -1: reflexio currens */
+          f32  speculum_z;
           b32  fractum;
           i32  linea;
     character  error[ERRORIS_MENSURA];
@@ -39,7 +54,7 @@ nomen structura {
 
 interior vacuum
 _appone (
-             character* destinatio,
+               Plastes* p,
                    i32* longitudo,
     constans character* fons,
                    i32  mensura)
@@ -56,9 +71,34 @@ _appone (
         {
             littera = ' ';
         }
-        destinatio[(*longitudo)++] = littera;
+        p->error[(*longitudo)++] = littera;
     }
-    destinatio[*longitudo] = '\0';
+    p->error[*longitudo] = '\0';
+}
+
+interior vacuum
+_appone_literas (
+               Plastes* p,
+                   i32* longitudo,
+    constans character* fons)
+{
+    si (fons)
+    {
+        _appone(p, longitudo, fons, (i32)strlen(fons));
+    }
+}
+
+interior vacuum
+_appone_chordam (
+            Plastes* p,
+                i32* longitudo,
+    constans chorda* fons)
+{
+    si (fons && fons->datum)
+    {
+        _appone(p, longitudo, (constans character*)fons->datum,
+            fons->mensura > LXIV ? LXIV : fons->mensura);
+    }
 }
 
 /* nuntius = ante + medium + post; prima recusatio manet */
@@ -78,17 +118,56 @@ _recusare (
     }
     p->fractum  = VERUM;
     p->linea    = linea;
-    _appone(p->error, &longitudo, ante, (i32)strlen(ante));
-    si (medium && medium->datum)
+    _appone_literas(p, &longitudo, ante);
+    _appone_chordam(p, &longitudo, medium);
+    _appone_literas(p, &longitudo, post);
+    redde FALSUM;
+}
+
+/* "<elementum> attribute 'titulus' quid" */
+interior b32
+_recusare_attributum (
+               Plastes* p,
+    constans StmlNodus* nodus,
+    constans character* titulus,
+    constans character* quid)
+{
+    i32 longitudo = ZEPHYRUM;
+
+    si (p->fractum)
     {
-        _appone(p->error, &longitudo,
-            (constans character*)medium->datum,
-            medium->mensura > LXIV ? LXIV : medium->mensura);
+        redde FALSUM;
     }
-    si (post)
+    p->fractum  = VERUM;
+    p->linea    = nodus->linea;
+    _appone_literas(p, &longitudo, "<");
+    _appone_chordam(p, &longitudo, nodus->titulus);
+    _appone_literas(p, &longitudo, "> attribute '");
+    _appone_literas(p, &longitudo, titulus);
+    _appone_literas(p, &longitudo, "' ");
+    _appone_literas(p, &longitudo, quid);
+    redde FALSUM;
+}
+
+/* "<elementum> quid" */
+interior b32
+_recusare_elementum (
+               Plastes* p,
+    constans StmlNodus* nodus,
+    constans character* quid)
+{
+    i32 longitudo = ZEPHYRUM;
+
+    si (p->fractum)
     {
-        _appone(p->error, &longitudo, post, (i32)strlen(post));
+        redde FALSUM;
     }
+    p->fractum  = VERUM;
+    p->linea    = nodus->linea;
+    _appone_literas(p, &longitudo, "<");
+    _appone_chordam(p, &longitudo, nodus->titulus);
+    _appone_literas(p, &longitudo, "> ");
+    _appone_literas(p, &longitudo, quid);
     redde FALSUM;
 }
 
@@ -105,6 +184,22 @@ _spatium (
         || littera == '\r';
 }
 
+interior b32
+_numerus_finitus (
+    chorda  verbum,
+       f32* exitus)
+{
+    f64 x;
+
+    si (   !chorda_ut_f64(verbum, &x) || !(x == x) || x > 1.0e6
+        || x < -1.0e6)
+    {
+        redde FALSUM;
+    }
+    *exitus = (f32)x;
+    redde VERUM;
+}
+
 /* 'numerus' numeri finiti spatiis separati, nec plus nec minus */
 interior b32
 _numeri (
@@ -117,9 +212,7 @@ _numeri (
 
     dum (VERUM)
     {
-        chorda verbum;
-           f64 x;
-           i32 initium;
+        i32 initium;
 
         dum (k < valor->mensura && _spatium(valor->datum[k]))
         {
@@ -134,19 +227,62 @@ _numeri (
         {
             k++;
         }
-        si (n >= numerus)
+        si (   n >= numerus
+            || !_numerus_finitus(chorda_sectio(*valor, initium, k),
+                &exitus[n]))
         {
             redde FALSUM;
         }
-        verbum = chorda_sectio(*valor, initium, k);
-        si (   !chorda_ut_f64(verbum, &x) || !(x == x)
-            || x > 1.0e6 || x < -1.0e6)
-        {
-            redde FALSUM;
-        }
-        exitus[n++] = (f32)x;
+        n++;
     }
     redde n == numerus;
+}
+
+/* paria "a,b a,b ..." in a[] et b[]; *numerus paria lecta */
+interior b32
+_paria (
+    constans chorda* valor,
+                f32* a,
+                f32* b,
+                i32* numerus)
+{
+    i32 k = ZEPHYRUM;
+
+    *numerus = ZEPHYRUM;
+    dum (VERUM)
+    {
+        i32 initium;
+        i32 comma;
+
+        dum (k < valor->mensura && _spatium(valor->datum[k]))
+        {
+            k++;
+        }
+        si (k >= valor->mensura)
+        {
+            frange;
+        }
+        initium  = k;
+        comma    = valor->mensura;
+        dum (k < valor->mensura && !_spatium(valor->datum[k]))
+        {
+            si (valor->datum[k] == ',' && comma == valor->mensura)
+            {
+                comma = k;
+            }
+            k++;
+        }
+        si (   *numerus >= PUNCTA_MAXIMA || comma == valor->mensura
+            || !_numerus_finitus(chorda_sectio(*valor, initium, comma),
+                &a[*numerus])
+            || !_numerus_finitus(chorda_sectio(*valor, comma + I, k),
+                &b[*numerus]))
+        {
+            redde FALSUM;
+        }
+        (*numerus)++;
+    }
+    redde VERUM;
 }
 
 interior s32
@@ -216,8 +352,8 @@ _titulus_est (
 /* omne attributum nodi in indice 'licita' (NIHIL terminato) est? */
 interior b32
 _attributa_licita (
-                      Plastes* p,
-             constans StmlNodus* nodus,
+                         Plastes* p,
+              constans StmlNodus* nodus,
     constans character* constans* licita)
 {
     i32 numerus = nodus->attributa ? xar_numerus(nodus->attributa)
@@ -249,9 +385,101 @@ _attributa_licita (
     redde VERUM;
 }
 
+/* attributum numeri unius; absens: *exitus = praesumptus (aut
+ * recusatur si requisitum) */
+interior b32
+_realis (
+               Plastes* p,
+    constans StmlNodus* nodus,
+    constans character* titulus,
+                   b32  requisitum,
+                   f32  praesumptus,
+                   f32* exitus)
+{
+    constans chorda* valor = stml_attributum_capere(nodus, titulus);
+
+    *exitus = praesumptus;
+    si (!valor)
+    {
+        redde requisitum
+            ? _recusare_attributum(p, nodus, titulus, "is required")
+            : VERUM;
+    }
+    si (!_numeri(valor, exitus, I))
+    {
+        redde _recusare_attributum(p, nodus, titulus,
+            "needs 1 number");
+    }
+    redde VERUM;
+}
+
+/* attributum integrum intra [minimum, maximum] */
+interior b32
+_integer (
+               Plastes* p,
+    constans StmlNodus* nodus,
+    constans character* titulus,
+                   b32  requisitum,
+                   i32  praesumptus,
+                   i32  minimum,
+                   i32  maximum,
+    constans character* quid,
+                   i32* exitus)
+{
+    constans chorda* valor = stml_attributum_capere(nodus, titulus);
+                f32  x;
+
+    *exitus = praesumptus;
+    si (!valor)
+    {
+        redde requisitum
+            ? _recusare_attributum(p, nodus, titulus, "is required")
+            : VERUM;
+    }
+    si (   !_numeri(valor, &x, I) || x < 0.0f
+        || x != (f32)floor((f64)x) || (i32)x < minimum
+        || (i32)x > maximum)
+    {
+        redde _recusare_attributum(p, nodus, titulus, quid);
+    }
+    *exitus = (i32)x;
+    redde VERUM;
+}
+
 
 /* ==================================================
- * Transformatio et proprietates communes
+ * Fortuita ex semine (integer solus: eadem in omni machina)
+ * ================================================== */
+
+interior i32
+_miscere (
+    i32 x)
+{
+    x ^= x >> XVI;
+    x *= 0x85EBCA6Bu;
+    x ^= x >> XIII;
+    x *= 0xC2B2AE35u;
+    x ^= x >> XVI;
+    redde x;
+}
+
+/* [0, 1) ex semine et duobus indicibus */
+interior f32
+_fortuna (
+    i32 semen,
+    i32 a,
+    i32 b)
+{
+    i32 x = _miscere(semen * 0x9E3779B1u + 0x7F4A7C15u);
+
+    x = _miscere(x ^ (a * 0x85EBCA77u + I));
+    x = _miscere(x ^ (b * 0xC2B2AE3Du + II));
+    redde (f32)(x >> VIII) / 16777216.0f;
+}
+
+
+/* ==================================================
+ * Transformatio et nodi
  * ================================================== */
 
 interior StereometriaQuaternio
@@ -307,9 +535,8 @@ _transformatio (
     {
         si (!_numeri(valor, n, III))
         {
-            redde _recusare(p, nodus->linea,
-                "attribute 'locus' needs 3 numbers (x y z), got '",
-                valor, "'");
+            redde _recusare_attributum(p, nodus, "locus",
+                "needs 3 numbers (x y z)");
         }
         *translatio = stereometria_vector(n[ZEPHYRUM], n[I], n[II]);
     }
@@ -318,9 +545,8 @@ _transformatio (
     {
         si (!_numeri(valor, n, I))
         {
-            redde _recusare(p, nodus->linea,
-                "attribute 'gyrus' needs 1 number (degrees), got '",
-                valor, "'");
+            redde _recusare_attributum(p, nodus, "gyrus",
+                "needs 1 number (degrees)");
         }
         *rotatio = _circa_axem(0.0f, 1.0f, 0.0f, n[ZEPHYRUM]);
     }
@@ -329,9 +555,8 @@ _transformatio (
     {
         si (!_numeri(valor, n, III))
         {
-            redde _recusare(p, nodus->linea,
-                "attribute 'rotatio' needs 3 numbers (degrees about "
-                "x y z), got '", valor, "'");
+            redde _recusare_attributum(p, nodus, "rotatio",
+                "needs 3 numbers (degrees about x y z)");
         }
         *rotatio = _componere(
             _circa_axem(1.0f, 0.0f, 0.0f, n[ZEPHYRUM]), *rotatio);
@@ -344,40 +569,70 @@ _transformatio (
     redde VERUM;
 }
 
-/* nodum novum numerare aut implere; redde indicem eius */
-interior i32
+/* nodum novum numerare aut implere. Speculum currens transformationem
+ * reflectit: M T M (translatio reflexa, rotatio coniugata), ut
+ * catena cum verticibus reflexis imaginem veram det sine scala
+ * negativa. cum_titulo: titulus elementi in tabulam partium it. */
+interior b32
 _nodus_novus (
                   Plastes* p,
        constans StmlNodus* nodus,
+                      b32  cum_titulo,
                       s32  parens,
        StereometriaVector  translatio,
-    StereometriaQuaternio  rotatio)
+    StereometriaQuaternio  rotatio,
+                      f32  scala,
+                      i32* index)
 {
-    i32 n = p->nodorum++;
+    i32 n = p->nodorum;
 
+    si (n >= NODI_MAXIMI)
+    {
+        redde _recusare_elementum(p, nodus,
+            "makes the model too large (more than 4096 parts)");
+    }
+    p->nodorum++;
+    *index = n;
     si (p->gradus)
     {
-        constans chorda* titulus =
-            stml_attributum_capere(nodus, "titulus");
-            StatuaNodus* novus = &p->statua->nodi[n];
+        StatuaNodus* novus = &p->statua->nodi[n];
 
+        translatio.x *= p->speculum_x;
+        translatio.z *= p->speculum_z;
+        si (p->speculum_x < 0.0f)
+        {
+            rotatio.y = -rotatio.y;
+            rotatio.z = -rotatio.z;
+        }
+        si (p->speculum_z < 0.0f)
+        {
+            rotatio.x = -rotatio.x;
+            rotatio.y = -rotatio.y;
+        }
         novus->parens      = parens;
         novus->rete        = -I;
         novus->signa       = ZEPHYRUM;
         novus->translatio  = translatio;
         novus->rotatio     = rotatio;
-        novus->scala       = stereometria_vector(1.0f, 1.0f, 1.0f);
-        si (titulus && titulus->mensura)
+        novus->scala       = stereometria_vector(scala, scala, scala);
+        si (cum_titulo)
         {
-            p->partes[n] = chorda_transcribere(*titulus, p->piscina);
+            constans chorda* titulus =
+                stml_attributum_capere(nodus, "titulus");
+
+            si (titulus && titulus->mensura)
+            {
+                p->partes[n] =
+                    chorda_transcribere(*titulus, p->piscina);
+            }
         }
     }
-    redde n;
+    redde VERUM;
 }
 
 
 /* ==================================================
- * Solida
+ * Solida: apparatus communis
  * ================================================== */
 
 nomen structura {
@@ -404,9 +659,8 @@ _proprietates (
     valor               = stml_attributum_capere(nodus, "color");
     si (valor && !_color(valor, q->color))
     {
-        redde _recusare(p, nodus->linea,
-            "attribute 'color' must be #rgb or #rrggbb, got '", valor,
-            "'");
+        redde _recusare_attributum(p, nodus, "color",
+            "must be #rgb or #rrggbb");
     }
     valor = stml_attributum_capere(nodus, "signum");
     si (valor)
@@ -421,9 +675,8 @@ _proprietates (
         }
         alioquin
         {
-            redde _recusare(p, nodus->linea,
-                "attribute 'signum' must be 'solidum' or "
-                "'gressibile', got '", valor, "'");
+            redde _recusare_attributum(p, nodus, "signum",
+                "must be 'solidum' or 'gressibile'");
         }
     }
     valor = stml_attributum_capere(nodus, "invisibilis");
@@ -431,47 +684,13 @@ _proprietates (
     {
         si (!_titulus_est(valor, "verum"))
         {
-            redde _recusare(p, nodus->linea,
-                "attribute 'invisibilis' must be 'verum' or absent, "
-                "got '", valor, "'");
+            redde _recusare_attributum(p, nodus, "invisibilis",
+                "must be 'verum' or absent");
         }
         q->color[III]   = 0.0f;
         q->limen_alpha  = 0.5f;
     }
     redde VERUM;
-}
-
-/* rete, partem et materiam solidi aperire: vertices et indices
- * ab offset currenti; redde indicem verticis primi */
-interior i32
-_solidum_aperire (
-                   Plastes* p,
-                       i32  nodus,
-     constans Proprietates* q,
-                       i32  verticum,
-                       i32  indicum)
-{
-           Statua* s       = p->statua;
-              i32  k       = p->solidorum;
-              i32  primus  = p->verticum;
-    StatuaMateria* materia;
-
-    s->nodi[nodus].rete        = (s32)k;
-    s->nodi[nodus].signa       = q->signa;
-    s->retia[k].pars_prima     = k;
-    s->retia[k].partium        = I;
-    s->partes[k].index_primus  = p->indicum;
-    s->partes[k].indicum       = indicum;
-    s->partes[k].materia       = (s32)k;
-    materia                    = &s->materiae[k];
-    memset(materia, ZEPHYRUM, magnitudo(*materia));
-    materia->textura      = -I;
-    memcpy(materia->color, q->color, magnitudo(materia->color));
-    materia->limen_alpha  = q->limen_alpha;
-    materia->repetit_s    = VERUM;
-    materia->repetit_t    = VERUM;
-    (vacuum)verticum;
-    redde primus;
 }
 
 /* nodus liberum elementum habet? (solidum liberos non fert) */
@@ -497,6 +716,221 @@ _habet_elementa (
     redde FALSUM;
 }
 
+/* attributa communia solidi probare, nodum, rete, partem et
+ * materiam aperire; triangula deinde per _triangulum */
+interior b32
+_solidum_aperire (
+                         Plastes* p,
+              constans StmlNodus* nodus,
+                             s32  parens,
+    constans character* constans* licita)
+{
+       StereometriaVector translatio;
+    StereometriaQuaternio rotatio;
+             Proprietates q;
+                      i32 n;
+
+    si (!p->gradus)
+    {
+        si (!_attributa_licita(p, nodus, licita))
+        {
+            redde FALSUM;
+        }
+        si (_habet_elementa(nodus))
+        {
+            redde _recusare_elementum(p, nodus,
+                "is a solid and cannot have children");
+        }
+    }
+    si (   !_transformatio(p, nodus, &translatio, &rotatio)
+        || !_proprietates(p, nodus, &q)
+        || !_nodus_novus(p, nodus, VERUM, parens, translatio, rotatio,
+            1.0f, &n))
+    {
+        redde FALSUM;
+    }
+    p->index_solidi = p->indicum;
+    p->linea_solidi = nodus->linea;
+    si (p->gradus)
+    {
+               Statua* s = p->statua;
+                  i32  k = p->solidorum;
+        StatuaMateria* materia;
+
+        s->nodi[n].rete            = (s32)k;
+        s->nodi[n].signa           = q.signa;
+        s->retia[k].pars_prima     = k;
+        s->retia[k].partium        = I;
+        s->partes[k].index_primus  = p->indicum;
+        s->partes[k].materia       = (s32)k;
+        materia                    = &s->materiae[k];
+        memset(materia, ZEPHYRUM, magnitudo(*materia));
+        materia->textura      = -I;
+        memcpy(materia->color, q.color, magnitudo(materia->color));
+        materia->limen_alpha  = q.limen_alpha;
+        materia->repetit_s    = VERUM;
+        materia->repetit_t    = VERUM;
+    }
+    redde VERUM;
+}
+
+interior b32
+_solidum_claudere (
+               Plastes* p,
+    constans StmlNodus* nodus)
+{
+    si (p->fractum)
+    {
+        redde FALSUM;
+    }
+    si (p->indicum == p->index_solidi)
+    {
+        redde _recusare_elementum(p, nodus, "has no surface");
+    }
+    si (p->gradus)
+    {
+        p->statua->partes[p->solidorum].indicum =
+            p->indicum - p->index_solidi;
+    }
+    p->solidorum++;
+    redde VERUM;
+}
+
+/* triangulum unum, extrorsum visum contra horologium (a b c) */
+interior vacuum
+_triangulum (
+               Plastes* p,
+    StereometriaVector  a,
+    StereometriaVector  b,
+    StereometriaVector  c)
+{
+    StereometriaVector normalis;
+    StereometriaVector latus_primum;
+    StereometriaVector latus_alterum;
+    StereometriaVector anguli[III];
+                   f32 longitudo;
+                   i32 k;
+
+    a.x               *= p->speculum_x;
+    a.z               *= p->speculum_z;
+    b.x               *= p->speculum_x;
+    b.z               *= p->speculum_z;
+    c.x               *= p->speculum_x;
+    c.z               *= p->speculum_z;
+    anguli[ZEPHYRUM]  = a;
+    /* reflexio una ordinem invertit; duae eum restituunt */
+    si (p->speculum_x * p->speculum_z < 0.0f)
+    {
+        anguli[I]   = c;
+        anguli[II]  = b;
+    }
+    alioquin
+    {
+        anguli[I]   = b;
+        anguli[II]  = c;
+    }
+    latus_primum  =
+        stereometria_subtrahere(anguli[I], anguli[ZEPHYRUM]);
+    latus_alterum =
+        stereometria_subtrahere(anguli[II], anguli[ZEPHYRUM]);
+    normalis   = stereometria_crux(latus_primum, latus_alterum);
+    longitudo  = stereometria_longitudo(normalis);
+    /* triangulum sine area omittitur. Limen RELATIVUM ad latera:
+     * compilator a*b - c*d in fma contrahit, unde crux laterum
+     * identicorum non exacte 0 est sed residuum rotundationis */
+    si (   p->fractum
+        || !(longitudo > AREA_RELATIVA_MINIMA
+            * stereometria_longitudo(latus_primum)
+            * stereometria_longitudo(latus_alterum)))
+    {
+        redde;
+    }
+    si (p->indicum / III >= TRIANGULA_MAXIMA)
+    {
+        (vacuum)_recusare(p, p->linea_solidi,
+            "the model is too large (more than 200000 triangles)",
+            NIHIL, NIHIL);
+        redde;
+    }
+    si (p->gradus)
+    {
+        Statua* s = p->statua;
+
+        normalis = stereometria_scalare(normalis, 1.0f / longitudo);
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            i32 v = p->verticum + k;
+
+            s->positiones[v * III]       = anguli[k].x;
+            s->positiones[v * III + I]   = anguli[k].y;
+            s->positiones[v * III + II]  = anguli[k].z;
+            s->normales[v * III]         = normalis.x;
+            s->normales[v * III + I]     = normalis.y;
+            s->normales[v * III + II]    = normalis.z;
+            s->indices[p->indicum + k]   = v;
+        }
+    }
+    p->verticum  += III;
+    p->indicum   += III;
+}
+
+/* quadrum (a b c d) extrorsum contra horologium */
+interior vacuum
+_quadrum (
+               Plastes* p,
+    StereometriaVector  a,
+    StereometriaVector  b,
+    StereometriaVector  c,
+    StereometriaVector  d)
+{
+    _triangulum(p, a, b, c);
+    _triangulum(p, a, c, d);
+}
+
+/* punctum in circulo: angulus k / latera, +x versus +z */
+interior StereometriaVector
+_in_circulo (
+    f32 radius,
+    f32 y,
+    i32 k,
+    i32 latera)
+{
+    f32 angulus = 2.0f * STEREOMETRIA_PI * (f32)(k % latera)
+        / (f32)latera;
+
+    redde stereometria_vector(radius * (f32)cos((f64)angulus), y,
+        radius * (f32)sin((f64)angulus));
+}
+
+/* magnitudo="x y z" positiva */
+interior b32
+_magnitudo (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   f32* exitus)
+{
+    constans chorda* valor =
+        stml_attributum_capere(nodus, "magnitudo");
+
+    si (   !valor || !_numeri(valor, exitus, III)
+        || !(exitus[ZEPHYRUM] > 0.0f) || !(exitus[I] > 0.0f)
+        || !(exitus[II] > 0.0f))
+    {
+        redde _recusare_attributum(p, nodus, "magnitudo",
+            "needs 3 positive numbers (x y z)");
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Solida
+ * ================================================== */
+
+#define COMMUNIA_SOLIDI \
+    "titulus", "locus", "gyrus", "rotatio", "color", "signum", \
+    "invisibilis"
+
 /* facies capsae: normalis et duo axes tangentes (u x v = normalis),
  * ut anguli (-u -v) (+u -v) (+u +v) (-u +v) extrorsum visi contra
  * horologium eant */
@@ -516,106 +950,545 @@ _capsa (
                    s32  parens)
 {
     hic_manens constans character* constans LICITA[] = {
-        "titulus", "magnitudo", "locus", "gyrus", "rotatio", "color",
-        "signum", "invisibilis", NIHIL
+        COMMUNIA_SOLIDI, "magnitudo", NIHIL
     };
     hic_manens constans s32 ANGULI[IV][II] = {
         { -1, -1 }, { 1, -1 }, { 1, 1 }, { -1, 1 }
     };
-    hic_manens constans i32  ORDO[VI] = { 0, 1, 2, 0, 2, 3 };
-         StereometriaVector  translatio;
-      StereometriaQuaternio  rotatio;
-               Proprietates  q;
-            constans chorda* valor;
-                        f32  dimidia[III];
-                        i32  n;
-                        i32  primus;
-                        i32  f;
-                        i32  a;
-                        i32  k;
+    StereometriaVector anguli[IV];
+                   f32 dimidia[III];
+                   f32 positio[III];
+                   i32 f;
+                   i32 a;
+                   i32 k;
 
-    si (!p->gradus)
-    {
-        si (!_attributa_licita(p, nodus, LICITA))
-        {
-            redde FALSUM;
-        }
-        si (_habet_elementa(nodus))
-        {
-            redde _recusare(p, nodus->linea,
-                "<capsa> is a solid and cannot have children", NIHIL,
-                NIHIL);
-        }
-    }
-    valor = stml_attributum_capere(nodus, "magnitudo");
-    si (   !valor || !_numeri(valor, dimidia, III)
-        || !(dimidia[ZEPHYRUM] > 0.0f) || !(dimidia[I] > 0.0f)
-        || !(dimidia[II] > 0.0f))
-    {
-        redde _recusare(p, nodus->linea,
-            "<capsa> needs attribute 'magnitudo' with 3 positive "
-            "numbers (x y z)", NIHIL, NIHIL);
-    }
-    si (   !_transformatio(p, nodus, &translatio, &rotatio)
-        || !_proprietates(p, nodus, &q))
+    si (   !_solidum_aperire(p, nodus, parens, LICITA)
+        || !_magnitudo(p, nodus, dimidia))
     {
         redde FALSUM;
     }
-    n = _nodus_novus(p, nodus, parens, translatio, rotatio);
-    si (p->gradus)
+    per (a = ZEPHYRUM; a < III; a++)
     {
-        Statua* s = p->statua;
+        dimidia[a] *= 0.5f;
+    }
+    per (f = ZEPHYRUM; f < VI; f++)
+    {
+        constans s32* facies = CAPSAE_FACIES[f];
 
-        primus = _solidum_aperire(p, n, &q, CAPSAE_VERTICES,
-            CAPSAE_INDICES);
-        per (a = ZEPHYRUM; a < III; a++)
+        per (k = ZEPHYRUM; k < IV; k++)
         {
-            dimidia[a] *= 0.5f;
-        }
-        per (f = ZEPHYRUM; f < VI; f++)
-        {
-            constans s32* facies = CAPSAE_FACIES[f];
-
-            per (k = ZEPHYRUM; k < IV; k++)
+            per (a = ZEPHYRUM; a < III; a++)
             {
-                i32  v         = primus + f * IV + k;
-                f32* positio   = s->positiones + v * III;
-                f32* normalis  = s->normales + v * III;
-
-                per (a = ZEPHYRUM; a < III; a++)
-                {
-                    positio[a] = dimidia[a]
-                        * (f32)(facies[a]
-                            + ANGULI[k][ZEPHYRUM] * facies[III + a]
-                            + ANGULI[k][I] * facies[VI + a]);
-                    normalis[a] = (f32)facies[a];
-                }
-                /* basis in humo: centrum ad dimidiam altitudinem */
-                positio[I] += dimidia[I];
+                positio[a] = dimidia[a]
+                    * (f32)(facies[a]
+                        + ANGULI[k][ZEPHYRUM] * facies[III + a]
+                        + ANGULI[k][I] * facies[VI + a]);
             }
-            per (k = ZEPHYRUM; k < VI; k++)
+            /* basis in humo: centrum ad dimidiam altitudinem */
+            anguli[k] = stereometria_vector(positio[ZEPHYRUM],
+                positio[I] + dimidia[I], positio[II]);
+        }
+        _quadrum(p, anguli[ZEPHYRUM], anguli[I], anguli[II],
+            anguli[III]);
+    }
+    redde _solidum_claudere(p, nodus);
+}
+
+interior b32
+_cylindrus (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_SOLIDI, "radius", "radius_summus", "altitudo",
+        "latera", NIHIL
+    };
+    StereometriaVector imum;
+    StereometriaVector summum;
+                   f32 radius;
+                   f32 radius_summus;
+                   f32 altitudo;
+                   i32 latera;
+                   i32 k;
+
+    si (   !_solidum_aperire(p, nodus, parens, LICITA)
+        || !_realis(p, nodus, "radius", VERUM, 0.0f, &radius)
+        || !_realis(p, nodus, "altitudo", VERUM, 0.0f, &altitudo))
+    {
+        redde FALSUM;
+    }
+    si (!(radius > 0.0f))
+    {
+        redde _recusare_attributum(p, nodus, "radius",
+            "must be positive");
+    }
+    si (!(altitudo > 0.0f))
+    {
+        redde _recusare_attributum(p, nodus, "altitudo",
+            "must be positive");
+    }
+    si (   !_realis(p, nodus, "radius_summus", FALSUM, radius,
+            &radius_summus)
+        || !_integer(p, nodus, "latera", FALSUM, VIII, III,
+            LATERA_MAXIMA, "must be a whole number from 3 to 64",
+            &latera))
+    {
+        redde FALSUM;
+    }
+    si (radius_summus < 0.0f)
+    {
+        redde _recusare_attributum(p, nodus, "radius_summus",
+            "must not be negative");
+    }
+    imum    = stereometria_vector(0.0f, 0.0f, 0.0f);
+    summum  = stereometria_vector(0.0f, altitudo, 0.0f);
+    per (k = ZEPHYRUM; k < latera; k++)
+    {
+        StereometriaVector b0 = _in_circulo(radius, 0.0f, k, latera);
+        StereometriaVector b1 =
+            _in_circulo(radius, 0.0f, k + I, latera);
+        StereometriaVector t0 =
+            _in_circulo(radius_summus, altitudo, k, latera);
+        StereometriaVector t1 =
+            _in_circulo(radius_summus, altitudo, k + I, latera);
+
+        _quadrum(p, b0, t0, t1, b1);
+        _triangulum(p, imum, b0, b1);
+        _triangulum(p, summum, t1, t0);
+    }
+    redde _solidum_claudere(p, nodus);
+}
+
+/* vertex sphaerae: zona j (0 = polus imus), segmentum k; asperitas
+ * radium variat, idem valor omni triangulo qui verticem tangit */
+interior StereometriaVector
+_vertex_sphaerae (
+    constans f32* dimidia,
+             i32  j,
+             i32  k,
+             i32  zonae,
+             i32  segmenta,
+             f32  asperitas,
+             i32  semen)
+{
+    f32 sinus;
+    f32 cosinus;
+    f32 angulus;
+    f32 factor;
+
+    si (j == ZEPHYRUM || j == zonae)
+    {
+        sinus    = 0.0f;
+        cosinus  = j == ZEPHYRUM ? 1.0f : -1.0f;
+        k        = ZEPHYRUM;
+    }
+    alioquin
+    {
+        f32 phi = STEREOMETRIA_PI * (f32)j / (f32)zonae;
+
+        sinus    = (f32)sin((f64)phi);
+        cosinus  = (f32)cos((f64)phi);
+        k        = k % segmenta;
+    }
+    angulus  = 2.0f * STEREOMETRIA_PI * (f32)k / (f32)segmenta;
+    factor   = 1.0f + asperitas * (_fortuna(semen, j, k) - 0.5f);
+    redde stereometria_vector(
+        dimidia[ZEPHYRUM] * factor * sinus * (f32)cos((f64)angulus),
+        dimidia[I] - dimidia[I] * factor * cosinus,
+        dimidia[II] * factor * sinus * (f32)sin((f64)angulus));
+}
+
+interior b32
+_sphaera (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_SOLIDI, "radius", "magnitudo", "segmenta",
+        "asperitas", "semen", NIHIL
+    };
+    f32 dimidia[III];
+    f32 radius;
+    f32 asperitas;
+    i32 segmenta;
+    i32 semen;
+    i32 zonae;
+    i32 j;
+    i32 k;
+
+    si (!_solidum_aperire(p, nodus, parens, LICITA))
+    {
+        redde FALSUM;
+    }
+    si (stml_attributum_capere(nodus, "magnitudo"))
+    {
+        si (stml_attributum_capere(nodus, "radius"))
+        {
+            redde _recusare_attributum(p, nodus, "radius",
+                "cannot be given together with 'magnitudo'");
+        }
+        si (!_magnitudo(p, nodus, dimidia))
+        {
+            redde FALSUM;
+        }
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            dimidia[k] *= 0.5f;
+        }
+    }
+    alioquin
+    {
+        si (!_realis(p, nodus, "radius", VERUM, 0.0f, &radius))
+        {
+            redde FALSUM;
+        }
+        si (!(radius > 0.0f))
+        {
+            redde _recusare_attributum(p, nodus, "radius",
+                "must be positive");
+        }
+        dimidia[ZEPHYRUM]  = radius;
+        dimidia[I]         = radius;
+        dimidia[II]        = radius;
+    }
+    si (   !_integer(p, nodus, "segmenta", FALSUM, VI, III,
+            SEGMENTA_MAXIMA, "must be a whole number from 3 to 32",
+            &segmenta)
+        || !_realis(p, nodus, "asperitas", FALSUM, 0.0f, &asperitas)
+        || !_integer(p, nodus, "semen", FALSUM, ZEPHYRUM, ZEPHYRUM,
+            M * M, "must be a whole number from 0 to 1000000",
+            &semen))
+    {
+        redde FALSUM;
+    }
+    si (asperitas < 0.0f || asperitas > 1.0f)
+    {
+        redde _recusare_attributum(p, nodus, "asperitas",
+            "must be between 0 and 1");
+    }
+    zonae = segmenta / II < II ? II : segmenta / II;
+    per (j = ZEPHYRUM; j < zonae; j++)
+    {
+        per (k = ZEPHYRUM; k < segmenta; k++)
+        {
+            _quadrum(p,
+                _vertex_sphaerae(dimidia, j, k, zonae, segmenta,
+                    asperitas, semen),
+                _vertex_sphaerae(dimidia, j + I, k, zonae, segmenta,
+                    asperitas, semen),
+                _vertex_sphaerae(dimidia, j + I, k + I, zonae,
+                    segmenta, asperitas, semen),
+                _vertex_sphaerae(dimidia, j, k + I, zonae, segmenta,
+                    asperitas, semen));
+        }
+    }
+    redde _solidum_claudere(p, nodus);
+}
+
+interior b32
+_cuneus (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_SOLIDI, "magnitudo", NIHIL
+    };
+    StereometriaVector a;
+    StereometriaVector b;
+    StereometriaVector c;
+    StereometriaVector d;
+    StereometriaVector e;
+    StereometriaVector f;
+                   f32 m[III];
+                   f32 dimidium_x;
+                   f32 dimidium_z;
+
+    si (   !_solidum_aperire(p, nodus, parens, LICITA)
+        || !_magnitudo(p, nodus, m))
+    {
+        redde FALSUM;
+    }
+    dimidium_x  = m[ZEPHYRUM] * 0.5f;
+    dimidium_z  = m[II] * 0.5f;
+    a           = stereometria_vector(-dimidium_x, 0.0f, -dimidium_z);
+    b           = stereometria_vector(dimidium_x, 0.0f, -dimidium_z);
+    c           = stereometria_vector(dimidium_x, 0.0f, dimidium_z);
+    d           = stereometria_vector(-dimidium_x, 0.0f, dimidium_z);
+    e           = stereometria_vector(-dimidium_x, m[I], -dimidium_z);
+    f           = stereometria_vector(-dimidium_x, m[I], dimidium_z);
+    _quadrum(p, a, b, c, d);      /* basis */
+    _quadrum(p, a, d, f, e);      /* tergum ad -x */
+    _quadrum(p, e, f, c, b);      /* clivus */
+    _triangulum(p, a, e, b);      /* latus -z */
+    _triangulum(p, d, c, f);      /* latus +z */
+    redde _solidum_claudere(p, nodus);
+}
+
+/* (b - a) x (c - a) in plano (x, z) */
+interior f32
+_crux_plana (
+    constans f32* x,
+    constans f32* z,
+             i32  a,
+             i32  b,
+             i32  c)
+{
+    redde (x[b] - x[a]) * (z[c] - z[a])
+        - (z[b] - z[a]) * (x[c] - x[a]);
+}
+
+/* segmenta (a b) et (c d) se proprie secant? */
+interior b32
+_secant (
+    constans f32* x,
+    constans f32* z,
+             i32  a,
+             i32  b,
+             i32  c,
+             i32  d)
+{
+    f32 p = _crux_plana(x, z, a, b, c);
+    f32 q = _crux_plana(x, z, a, b, d);
+    f32 r = _crux_plana(x, z, c, d, a);
+    f32 s = _crux_plana(x, z, c, d, b);
+
+    redde ((p > 0.0f && q < 0.0f) || (p < 0.0f && q > 0.0f))
+        && ((r > 0.0f && s < 0.0f) || (r < 0.0f && s > 0.0f));
+}
+
+interior b32
+_extrusio (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_SOLIDI, "puncta", "altitudo", NIHIL
+    };
+    constans chorda* valor;
+                f32  x[PUNCTA_MAXIMA];
+                f32  z[PUNCTA_MAXIMA];
+                i32  ordo[PUNCTA_MAXIMA];
+                f32  altitudo;
+                f32  area = 0.0f;
+                i32  numerus;
+                i32  reliqua;
+                i32  conatus;
+                i32  k;
+                i32  j;
+
+    si (!_solidum_aperire(p, nodus, parens, LICITA))
+    {
+        redde FALSUM;
+    }
+    valor = stml_attributum_capere(nodus, "puncta");
+    si (!valor || !_paria(valor, x, z, &numerus) || numerus < III)
+    {
+        redde _recusare_attributum(p, nodus, "puncta",
+            "needs 3 to 64 points written 'x,z x,z ...'");
+    }
+    si (!_realis(p, nodus, "altitudo", VERUM, 0.0f, &altitudo))
+    {
+        redde FALSUM;
+    }
+    si (!(altitudo > 0.0f))
+    {
+        redde _recusare_attributum(p, nodus, "altitudo",
+            "must be positive");
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        i32 proximus = (k + I) % numerus;
+
+        area += x[k] * z[proximus] - x[proximus] * z[k];
+        per (j = k + I; j < numerus; j++)
+        {
+            si (x[k] == x[j] && z[k] == z[j])
             {
-                s->indices[p->indicum + f * VI + k] =
-                    primus + f * IV + ORDO[k];
+                redde _recusare_attributum(p, nodus, "puncta",
+                    "repeats a point");
+            }
+            si (   j != proximus && (j + I) % numerus != k
+                && _secant(x, z, k, proximus, j, (j + I) % numerus))
+            {
+                redde _recusare_attributum(p, nodus, "puncta",
+                    "describes an outline that crosses itself");
             }
         }
     }
-    p->solidorum++;
-    p->verticum  += CAPSAE_VERTICES;
-    p->indicum   += CAPSAE_INDICES;
-    redde VERUM;
+    si (!(area > AREA_MINIMA) && !(area < -AREA_MINIMA))
+    {
+        redde _recusare_attributum(p, nodus, "puncta",
+            "describes an outline with no area");
+    }
+    /* ordo: desuper visum contra horologium (area hic negativa) */
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        ordo[k] = area > 0.0f ? numerus - I - k : k;
+    }
+    /* parietes */
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        i32 a = ordo[k];
+        i32 b = ordo[(k + I) % numerus];
+
+        _quadrum(p, stereometria_vector(x[a], 0.0f, z[a]),
+            stereometria_vector(x[b], 0.0f, z[b]),
+            stereometria_vector(x[b], altitudo, z[b]),
+            stereometria_vector(x[a], altitudo, z[a]));
+    }
+    /* opercula: aures abscinduntur */
+    reliqua  = numerus;
+    conatus  = ZEPHYRUM;
+    k        = ZEPHYRUM;
+    dum (reliqua >= III && conatus < reliqua)
+    {
+        i32 a      = ordo[(k + reliqua - I) % reliqua];
+        i32 b      = ordo[k % reliqua];
+        i32 c      = ordo[(k + I) % reliqua];
+        f32 crux   = _crux_plana(x, z, a, b, c);
+        b32 auris  = crux < 0.0f;
+
+        per (j = ZEPHYRUM; auris && j < reliqua; j++)
+        {
+            i32 q = ordo[j];
+
+            si (   q                          != a && q != b && q != c
+                && _crux_plana(x, z, a, b, q) <= 0.0f
+                && _crux_plana(x, z, b, c, q) <= 0.0f
+                && _crux_plana(x, z, c, a, q) <= 0.0f)
+            {
+                auris = FALSUM;
+            }
+        }
+        si (auris || crux == 0.0f)
+        {
+            si (auris)
+            {
+                _triangulum(p,
+                    stereometria_vector(x[a], altitudo, z[a]),
+                    stereometria_vector(x[b], altitudo, z[b]),
+                    stereometria_vector(x[c], altitudo, z[c]));
+                _triangulum(p, stereometria_vector(x[a], 0.0f, z[a]),
+                    stereometria_vector(x[c], 0.0f, z[c]),
+                    stereometria_vector(x[b], 0.0f, z[b]));
+            }
+            /* verticem b tollere */
+            per (j = k % reliqua; j + I < reliqua; j++)
+            {
+                ordo[j] = ordo[j + I];
+            }
+            reliqua--;
+            conatus = ZEPHYRUM;
+        }
+        alioquin
+        {
+            k = (k + I) % reliqua;
+            conatus++;
+        }
+    }
+    si (reliqua >= III)
+    {
+        redde _recusare_attributum(p, nodus, "puncta",
+            "describes an outline that could not be filled");
+    }
+    redde _solidum_claudere(p, nodus);
+}
+
+interior b32
+_tornus (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_SOLIDI, "puncta", "latera", NIHIL
+    };
+    constans chorda* valor;
+                f32  r[PUNCTA_MAXIMA];
+                f32  y[PUNCTA_MAXIMA];
+                i32  numerus;
+                i32  latera;
+                i32  j;
+                i32  k;
+
+    si (!_solidum_aperire(p, nodus, parens, LICITA))
+    {
+        redde FALSUM;
+    }
+    valor = stml_attributum_capere(nodus, "puncta");
+    si (!valor || !_paria(valor, r, y, &numerus) || numerus < II)
+    {
+        redde _recusare_attributum(p, nodus, "puncta",
+            "needs 2 to 64 points written 'r,y r,y ...'");
+    }
+    per (j = ZEPHYRUM; j < numerus; j++)
+    {
+        si (r[j] < 0.0f)
+        {
+            redde _recusare_attributum(p, nodus, "puncta",
+                "has a negative radius");
+        }
+        si (j + I < numerus && r[j] == r[j + I] && y[j] == y[j + I])
+        {
+            redde _recusare_attributum(p, nodus, "puncta",
+                "repeats a point");
+        }
+    }
+    si (!_integer(p, nodus, "latera", FALSUM, VIII, III,
+            LATERA_MAXIMA, "must be a whole number from 3 to 64",
+            &latera))
+    {
+        redde FALSUM;
+    }
+    /* superficies ad dextram itineris: ordo idem ac lateris
+     * cylindri, qui sursum eundo extrorsum spectat */
+    per (j = ZEPHYRUM; j + I < numerus; j++)
+    {
+        per (k = ZEPHYRUM; k < latera; k++)
+        {
+            _quadrum(p, _in_circulo(r[j], y[j], k, latera),
+                _in_circulo(r[j + I], y[j + I], k, latera),
+                _in_circulo(r[j + I], y[j + I], k + I, latera),
+                _in_circulo(r[j], y[j], k + I, latera));
+        }
+    }
+    redde _solidum_claudere(p, nodus);
 }
 
 
 /* ==================================================
- * Ambulatio
+ * Greges et repetitores
  * ================================================== */
+
+#define COMMUNIA_GREGIS  "titulus", "locus", "gyrus", "rotatio"
 
 interior b32
 _liberi (
                Plastes* p,
     constans StmlNodus* nodus,
                    s32  parens);
+
+/* nodus gregis cum transformatione sua */
+interior b32
+_grex_aperire (
+                         Plastes* p,
+              constans StmlNodus* nodus,
+                             s32  parens,
+    constans character* constans* licita,
+                             i32* index)
+{
+       StereometriaVector translatio;
+    StereometriaQuaternio rotatio;
+
+    redde (p->gradus || _attributa_licita(p, nodus, licita))
+        && _transformatio(p, nodus, &translatio, &rotatio)
+        && _nodus_novus(p, nodus, VERUM, parens, translatio, rotatio,
+            1.0f, index);
+}
 
 interior b32
 _grex (
@@ -624,20 +1497,210 @@ _grex (
                    s32  parens)
 {
     hic_manens constans character* constans LICITA[] = {
-        "titulus", "locus", "gyrus", "rotatio", NIHIL
+        COMMUNIA_GREGIS, NIHIL
     };
-       StereometriaVector translatio;
-    StereometriaQuaternio rotatio;
-                      i32 n;
+    i32 n;
 
-    si (   (!p->gradus && !_attributa_licita(p, nodus, LICITA))
-        || !_transformatio(p, nodus, &translatio, &rotatio))
+    redde _grex_aperire(p, nodus, parens, LICITA, &n)
+        && _liberi(p, nodus, (s32)n);
+}
+
+interior b32
+_speculum (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_GREGIS, "axis", NIHIL
+    };
+    constans chorda* axis = stml_attributum_capere(nodus, "axis");
+                f32* reflexio;
+                b32  bene;
+                i32  n;
+
+    si (!_grex_aperire(p, nodus, parens, LICITA, &n))
     {
         redde FALSUM;
     }
-    n = _nodus_novus(p, nodus, parens, translatio, rotatio);
-    redde _liberi(p, nodus, (s32)n);
+    si (_titulus_est(axis, "x"))
+    {
+        reflexio = &p->speculum_x;
+    }
+    alioquin si (_titulus_est(axis, "z"))
+    {
+        reflexio = &p->speculum_z;
+    }
+    alioquin
+    {
+        redde _recusare_attributum(p, nodus, "axis",
+            "must be 'x' or 'z'");
+    }
+    si (!_liberi(p, nodus, (s32)n))
+    {
+        redde FALSUM;
+    }
+    *reflexio  = -*reflexio;
+    bene       = _liberi(p, nodus, (s32)n);
+    *reflexio  = -*reflexio;
+    redde bene;
 }
+
+interior b32
+_series (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_GREGIS, "numerus", "gressus", "gyrus_gressus", NIHIL
+    };
+    constans chorda* valor;
+                f32  gressus[III];
+                f32  gyrus;
+                i32  numerus;
+                i32  n;
+                i32  k;
+
+    si (   !_grex_aperire(p, nodus, parens, LICITA, &n)
+        || !_integer(p, nodus, "numerus", VERUM, I, I,
+            NUMERUS_MAXIMUS, "must be a whole number from 1 to 256",
+            &numerus)
+        || !_realis(p, nodus, "gyrus_gressus", FALSUM, 0.0f, &gyrus))
+    {
+        redde FALSUM;
+    }
+    gressus[ZEPHYRUM]  = 0.0f;
+    gressus[I]         = 0.0f;
+    gressus[II]        = 0.0f;
+    valor              = stml_attributum_capere(nodus, "gressus");
+    si (valor && !_numeri(valor, gressus, III))
+    {
+        redde _recusare_attributum(p, nodus, "gressus",
+            "needs 3 numbers (x y z)");
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        i32 exemplar;
+
+        si (   !_nodus_novus(p, nodus, FALSUM, (s32)n,
+                stereometria_vector(gressus[ZEPHYRUM] * (f32)k,
+                    gressus[I] * (f32)k, gressus[II] * (f32)k),
+                _circa_axem(0.0f, 1.0f, 0.0f, gyrus * (f32)k), 1.0f,
+                &exemplar)
+            || !_liberi(p, nodus, (s32)exemplar))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior b32
+_sparsio (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_GREGIS, "numerus", "semen", "area", "gyrus_varius",
+        "magnitudo_varia", NIHIL
+    };
+    constans chorda* valor;
+                f32  area[II];
+                f32  varia;
+                b32  gyrus_varius = FALSUM;
+                i32  numerus;
+                i32  semen;
+                i32  n;
+                i32  k;
+
+    si (   !_grex_aperire(p, nodus, parens, LICITA, &n)
+        || !_integer(p, nodus, "numerus", VERUM, I, I,
+            NUMERUS_MAXIMUS, "must be a whole number from 1 to 256",
+            &numerus)
+        || !_integer(p, nodus, "semen", FALSUM, ZEPHYRUM, ZEPHYRUM,
+            M * M, "must be a whole number from 0 to 1000000",
+            &semen)
+        || !_realis(p, nodus, "magnitudo_varia", FALSUM, 0.0f,
+            &varia))
+    {
+        redde FALSUM;
+    }
+    si (varia < 0.0f || varia >= 1.0f)
+    {
+        redde _recusare_attributum(p, nodus, "magnitudo_varia",
+            "must be at least 0 and less than 1");
+    }
+    valor = stml_attributum_capere(nodus, "area");
+    si (   !valor || !_numeri(valor, area, II)
+        || area[ZEPHYRUM] < 0.0f || area[I] < 0.0f)
+    {
+        redde _recusare_attributum(p, nodus, "area",
+            "needs 2 numbers that are not negative (x z)");
+    }
+    valor = stml_attributum_capere(nodus, "gyrus_varius");
+    si (valor)
+    {
+        si (!_titulus_est(valor, "verum"))
+        {
+            redde _recusare_attributum(p, nodus, "gyrus_varius",
+                "must be 'verum' or absent");
+        }
+        gyrus_varius = VERUM;
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        /* quattuor sortes per exemplar, semper omnes: exemplar k
+         * idem manet cum attributa alia mutantur */
+        f32 x      = (_fortuna(semen, k, ZEPHYRUM) - 0.5f)
+            * area[ZEPHYRUM];
+        f32 z      = (_fortuna(semen, k, I) - 0.5f) * area[I];
+        f32 gyrus  = _fortuna(semen, k, II) * 360.0f;
+        f32 scala  = 1.0f
+            + varia * (_fortuna(semen, k, III) * 2.0f - 1.0f);
+        i32 exemplar;
+
+        si (   !_nodus_novus(p, nodus, FALSUM, (s32)n,
+                stereometria_vector(x, 0.0f, z),
+                _circa_axem(0.0f, 1.0f, 0.0f,
+                    gyrus_varius ? gyrus : 0.0f), scala, &exemplar)
+            || !_liberi(p, nodus, (s32)exemplar))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
+ * Ambulatio
+ * ================================================== */
+
+nomen b32 (*Factor)(
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens);
+
+nomen structura {
+    constans character* titulus;
+                Factor  factor;
+} Elementum;
+
+hic_manens constans Elementum ELEMENTA[] = {
+    { "capsa", _capsa },
+    { "cylindrus", _cylindrus },
+    { "sphaera", _sphaera },
+    { "cuneus", _cuneus },
+    { "extrusio", _extrusio },
+    { "tornus", _tornus },
+    { "grex", _grex },
+    { "speculum", _speculum },
+    { "series", _series },
+    { "sparsio", _sparsio },
+    { NIHIL, NIHIL }
+};
 
 interior b32
 _textus_vacuus (
@@ -668,11 +1731,12 @@ _liberi (
     i32 numerus = nodus->liberi ? xar_numerus(nodus->liberi)
         : ZEPHYRUM;
     i32 k;
+    i32 j;
 
     per (k = ZEPHYRUM; k < numerus; k++)
     {
-        StmlNodus** locus =
-            (StmlNodus**)xar_obtinere(nodus->liberi, k);
+                StmlNodus** locus =
+                    (StmlNodus**)xar_obtinere(nodus->liberi, k);
         constans StmlNodus* liber = locus ? *locus : NIHIL;
 
         si (!liber || liber->genus == STML_NODUS_COMMENTUM)
@@ -695,27 +1759,24 @@ _liberi (
                 "only elements and comments are allowed here", NIHIL,
                 NIHIL);
         }
-        si (_titulus_est(liber->titulus, "grex"))
+        per (j = ZEPHYRUM; ELEMENTA[j].titulus; j++)
         {
-            si (!_grex(p, liber, parens))
+            si (_titulus_est(liber->titulus, ELEMENTA[j].titulus))
             {
-                redde FALSUM;
+                frange;
             }
         }
-        alioquin si (_titulus_est(liber->titulus, "capsa"))
-        {
-            si (!_capsa(p, liber, parens))
-            {
-                redde FALSUM;
-            }
-        }
-        alioquin
+        si (!ELEMENTA[j].titulus)
         {
             redde _recusare(p, liber->linea, "unknown element <",
                 liber->titulus, ">");
         }
+        si (!ELEMENTA[j].factor(p, liber, parens))
+        {
+            redde FALSUM;
+        }
     }
-    redde VERUM;
+    redde !p->fractum;
 }
 
 interior b32
@@ -728,10 +1789,12 @@ _radix (
     };
     i32 n;
 
-    p->nodorum    = ZEPHYRUM;
-    p->solidorum  = ZEPHYRUM;
-    p->verticum   = ZEPHYRUM;
-    p->indicum    = ZEPHYRUM;
+    p->nodorum     = ZEPHYRUM;
+    p->solidorum   = ZEPHYRUM;
+    p->verticum    = ZEPHYRUM;
+    p->indicum     = ZEPHYRUM;
+    p->speculum_x  = 1.0f;
+    p->speculum_z  = 1.0f;
     si (!p->gradus)
     {
         constans chorda* titulus;
@@ -754,10 +1817,10 @@ _radix (
                 NIHIL);
         }
     }
-    n = _nodus_novus(p, radix, -I,
-        stereometria_vector(0.0f, 0.0f, 0.0f),
-        stereometria_quaternio_identitas());
-    si (!_liberi(p, radix, (s32)n))
+    si (   !_nodus_novus(p, radix, VERUM, -I,
+            stereometria_vector(0.0f, 0.0f, 0.0f),
+            stereometria_quaternio_identitas(), 1.0f, &n)
+        || !_liberi(p, radix, (s32)n))
     {
         redde FALSUM;
     }
@@ -819,7 +1882,8 @@ plastica_legere (
     {
         chorda causa = r.error;
 
-        (vacuum)_recusare(&p, r.successus ? ZEPHYRUM : r.linea_erroris,
+        (vacuum)_recusare(&p,
+            r.successus ? ZEPHYRUM : r.linea_erroris,
             "the description is not valid STML: ",
             causa.mensura ? &causa : NIHIL,
             causa.mensura ? NIHIL : "no root element");

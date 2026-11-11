@@ -35,9 +35,53 @@
  *                 alpha 0, limen excisionis 0.5
  * titulus         nomen partis (in tabula 'partes')
  *
- * ELEMENTA huius gradus: res (radix, titulus requisitus), grex
- * (transformatio sola), capsa (magnitudo="x y z"). Cetera solida et
- * repetitores in gradu sequenti (plastica-plan T2).
+ * SOLIDA (omnia: titulus, locus, gyrus, rotatio, color, signum,
+ * invisibilis; basis in y = 0 spatii sui):
+ *
+ *   capsa      magnitudo="x y z"
+ *   cylindrus  radius, altitudo; radius_summus (ordinarius = radius;
+ *              0 = conus); latera (ordinarius VIII; III .. LXIV)
+ *   sphaera    radius AUT magnitudo="x y z" (ellipsoides: saxa,
+ *              comae arborum); segmenta circum (ordinarius VI;
+ *              III .. XXXII; zonae = segmenta / II, minimum II);
+ *              asperitas 0 .. 1 cum semine (semen="n"): radius
+ *              cuiusque verticis variatur - vertices communes
+ *              valorem eundem tenent, rimae nullae
+ *   cuneus     magnitudo="x y z": altitudo plena ad marginem -x,
+ *              ad nihilum cadit ad +x (tecta, clivi)
+ *   extrusio   puncta="x,z x,z ..." (III .. LXIV), altitudo:
+ *              lineamentum in plano humi sursum extrusum. Concavum
+ *              licet; ordo punctorum uterque (invertitur si opus);
+ *              lineamentum se secans recusatur
+ *   tornus     puncta="r,y r,y ..." (II .. LXIV), latera: profilum
+ *              circa axem erectum tornatum. r >= 0. Superficies ad
+ *              DEXTRAM itineris spectat (r dextrorsum, y sursum):
+ *              sursum eundo extrorsum, deorsum eundo introrsum -
+ *              sic paries interior situlae fit. Fines non
+ *              clauduntur nisi profilum ad r = 0 incipit aut desinit
+ *
+ * GREGES (omnes: titulus, locus, gyrus, rotatio):
+ *
+ *   grex       transformatio sola
+ *   speculum   axis="x" aut "z": liberi ET imago eorum trans planum
+ *              ubi coordinata illa 0 est. Imago vera est (vertices
+ *              reflexi, ordo verticum inversus), non scala negativa
+ *   series     numerus="n" (I .. CCLVI), gressus="x y z",
+ *              gyrus_gressus="g": liberi n vicibus, exemplar k per
+ *              k gressus motum et k gyros versum
+ *   sparsio    numerus="n" (I .. CCLVI), semen="n", area="x z":
+ *              liberi n vicibus intra aream circa centrum sparsi;
+ *              gyrus_varius="verum" quodque fortuito vertit;
+ *              magnitudo_varia="v" (0 .. 1) quodque scala inter
+ *              1 - v et 1 + v mutat
+ *
+ * Fortuita ex semine solo (generator integer proprius): semen idem,
+ * res eadem in omni machina.
+ *
+ * RECUSAT praeterea: latera aut segmenta extra fines; profilum aut
+ * lineamentum cum punctis nimis paucis, puncto iterato aut r
+ * negativo; numerum 0; rem cuius nodi MMMMXCVI aut triangula CC
+ * milia excedunt (repetitores nidificati).
  *
  * Solidum unum = nodus unus cum reti uno; normales per faciem
  * (umbratio plana); facies extrorsum spectant.

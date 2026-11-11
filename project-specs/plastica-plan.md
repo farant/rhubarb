@@ -173,7 +173,7 @@ record.
   `capsa`.
 - [x] **Step 4:** green; plants (a face's winding flipped; the base
   centred instead of on the ground; a refusal let through).
-- [ ] **Step 5:** examen, formator, lint, worklog; commit on Fran's
+- [x] **Step 5:** examen, formator, lint, worklog; commit on Fran's
   word.
 
 ### Task 2: the other solids and the repeaters
@@ -182,7 +182,7 @@ record.
 
 **Interfaces:** consumes T1; no new functions.
 
-- [ ] **Step 1: failing tests.** `cylindrus` with `latera="6"`: 24
+- [x] **Step 1: failing tests.** `cylindrus` with `latera="6"`: 24
   triangles (6 x 2 sides, 6 + 6 caps), bounds = radius and height; a
   cone (`radius_summus="0"`) has 12. `sphaera`: every vertex at the
   radius when `asperitas` is 0; with `asperitas` and a `semen` the
@@ -194,7 +194,7 @@ record.
   symmetric, and mirrored faces still face outward. `series
   numerus="4"`: 4 copies at the step. `sparsio`: same seed same
   places; all inside `area`. Review focus 2.
-- [ ] **Step 2-4:** red, implement, green; plants (cap winding;
+- [x] **Step 2-4:** red, implement, green; plants (cap winding;
   mirror without the winding fix; scatter ignoring the seed).
 - [ ] **Step 5:** as T1.
 
