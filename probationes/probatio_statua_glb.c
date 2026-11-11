@@ -311,6 +311,45 @@ _sectio_minima (
     CREDO_AEQUALIS_S32 (f.statua->nodi[ZEPHYRUM].rete, ZEPHYRUM);
 }
 
+/* mundus-plan T2: signa nodorum ex extras.tags; forma inopinata
+ * signa nulla dat, numquam recusationem */
+interior vacuum
+_sectio_signa (
+    CredoContextus* c)
+{
+    StatuaFructus f;
+
+    f = statua_glb_legere(_glb(c, "",
+        "{\"mesh\":0,\"extras\":{\"tags\":[\"ground\",\"walkable\","
+        "\"collidable\"],\"collidable\":true}},"
+        "{\"extras\":{\"tags\":[\"water\"]}},"
+        "{\"extras\":{\"tags\":[\"decor\"]}},{}",
+        "", "", "3", "", ""), c->piscina);
+    CREDO_NECESSE (f.successus);
+    CREDO_AEQUALIS_I32 (f.statua->nodorum, IV);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[ZEPHYRUM].signa,
+        STATUA_SIGNUM_GRESSIBILE | STATUA_SIGNUM_SOLIDUM);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[I].signa, STATUA_SIGNUM_AQUA);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[II].signa, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[III].signa, ZEPHYRUM);
+    /* formae inopinatae */
+    f = statua_glb_legere(_glb(c, "",
+        "{\"mesh\":0,\"extras\":7},"
+        "{\"extras\":{\"tags\":\"walkable\"}},"
+        "{\"extras\":{\"tags\":[3,{\"walkable\":1},[\"water\"]]}},"
+        "{\"extras\":[\"walkable\"]},"
+        "{\"extras\":{\"tags\":[3,\"water\"]}}",
+        "", "", "3", "", ""), c->piscina);
+    CREDO_NECESSE (f.successus);
+    CREDO_AEQUALIS_I32 (f.statua->nodorum, V);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[ZEPHYRUM].signa, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[I].signa, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[II].signa, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[III].signa, ZEPHYRUM);
+    /* signum notum iuxta ignotum servatur */
+    CREDO_AEQUALIS_I32 (f.statua->nodi[IV].signa, STATUA_SIGNUM_AQUA);
+}
+
 interior vacuum
 _sectio_numeri_integri (
     CredoContextus* c)
@@ -659,6 +698,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "lapis", _sectio_lapis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fungus", _sectio_fungus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "minima", _sectio_minima, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "signa", _sectio_signa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "numeri_integri", _sectio_numeri_integri, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "approximata", _sectio_approximata, NIHIL, NIHIL, NIHIL, NIHIL },

@@ -139,6 +139,8 @@ called from one place (`motum_aptare`) plus window blur.
 
 ### Task 2: part marks in the model and the reader
 
+DONE 2026-11-10 (glossary: gressibilis).
+
 **Files:** `include/statua.h`, `lib/statua_glb.c`,
 `probationes/probatio_statua_glb.c`.
 

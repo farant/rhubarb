@@ -57,3 +57,14 @@
 - Glossary: `glb`, `accessor`, `normalis`, `emissivus`. The lint then
   reports `evanida 5` (words in the tolerated list that are now
   defined); the list wants regenerating at the next oratio pass.
+
+## 2026-11-10 - part marks from extras.tags (mundus-plan T2)
+
+`StatuaNodus.signa` (STATUA_SIGNUM_GRESSIBILE / SOLIDUM / AQUA) is
+read from the node's `extras.tags`, an array of strings ("walkable",
+"collidable", "water"), which is how the Retro Diffusion scene kit
+marks its parts. `extras` is free-form in glTF, so nothing about it
+can refuse a file: a non-object `extras`, a non-array `tags`, non-string
+entries and unknown words all give 0. The kit also writes
+`extras.collidable: true` beside the tags; it says nothing the tags do
+not, and is not read. Test section "signa"; three plants red.

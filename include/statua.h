@@ -51,9 +51,16 @@ nomen structura {
               i32  canalium;
 } StatuaCyclus;
 
+/* signa nodi: quid pars in loco sit (lector ea ex extras.tags
+ * plagulae legit; mundus_solum ex eis tabulam gressus struit) */
+#define STATUA_SIGNUM_GRESSIBILE  I     /* "walkable" */
+#define STATUA_SIGNUM_SOLIDUM     II    /* "collidable" */
+#define STATUA_SIGNUM_AQUA        IV    /* "water" */
+
 nomen structura {
                       s32 parens;      /* -1 = radix */
                       s32 rete;        /* -1 = nullum */
+                      i32 signa;       /* STATUA_SIGNUM_*; 0 = nullum */
        StereometriaVector translatio;  /* quies */
     StereometriaQuaternio rotatio;
        StereometriaVector scala;

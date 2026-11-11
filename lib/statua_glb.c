@@ -919,6 +919,50 @@ _retia_legere (
  * Nodi et scaena
  * ================================================== */
 
+/* signa nodi ex extras.tags (tabulatum chordarum). Forma alia,
+ * chordae ignotae, extras absens: 0 - numquam recusatio (extras
+ * liberum est, plagula sine eo aeque valet). */
+interior i32
+_signa_legere (
+    JsonValor* nodus)
+{
+    JsonValor* extra;
+    JsonValor* notae;
+    JsonValor* nota;
+       chorda  verbum;
+          i32  signa = ZEPHYRUM;
+          i32  k;
+
+    extra = json_objectum_capere(nodus, "extras");
+    si (!extra || !json_est_objectum(extra))
+    {
+        redde ZEPHYRUM;
+    }
+    notae = _tabulatum(extra, "tags");
+    per (k = ZEPHYRUM; k < _numerus_in(notae); k++)
+    {
+        nota = json_tabulatum_obtinere(notae, k);
+        si (!nota || !json_est_chorda(nota))
+        {
+            perge;
+        }
+        verbum = json_ad_chorda(nota);
+        si (chorda_aequalis_literis(verbum, "walkable"))
+        {
+            signa |= STATUA_SIGNUM_GRESSIBILE;
+        }
+        si (chorda_aequalis_literis(verbum, "collidable"))
+        {
+            signa |= STATUA_SIGNUM_SOLIDUM;
+        }
+        si (chorda_aequalis_literis(verbum, "water"))
+        {
+            signa |= STATUA_SIGNUM_AQUA;
+        }
+    }
+    redde signa;
+}
+
 interior b32
 _nodos_legere (
     Lector* l)
@@ -949,6 +993,7 @@ _nodos_legere (
         nodus          = &s->nodi[n];
         nodus->parens  = -I;
         nodus->rete    = -I;
+        nodus->signa   = _signa_legere(j);
         memset(t, ZEPHYRUM, magnitudo(t));
         memset(r, ZEPHYRUM, magnitudo(r));
         r[III]        = 1.0f;
