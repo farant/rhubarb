@@ -64,3 +64,55 @@ Census of the copied skip rule (22 files), for the conversion:
 - haruspex has the walker but no skip rule.
 Whether the differences are deliberate is decided per tool by the
 output differential, and brought to Fran where output changes.
+
+## 2026-11-10 — directorium_fontes_ambulare; ten header walkers converted
+
+The shared source-tree walker, on top of PRAETERMITTE:
+`directorium_fontes_ambulare(via, suffixum, praetermittenda, functio,
+ctx, piscina)` calls the function for every non-directory whose name
+ends in the suffix; dot names are skipped, an entry named in the
+NIHIL-terminated list is skipped (a directory: its whole subtree), a
+symlink to a directory is not entered. Tests: section "ambulatorem
+fontium" (no list 4 files; list prunes `deep`; a symlink to sub1 is
+not entered; empty suffix; early stop; unopenable root -1). Plants via
+silva.planta, each red then green: symlinked directory entered; list
+ignored; suffix ignored.
+
+Before converting, the main risk was checked directly (scratch
+program, old readdir loop against the new walker over this tree): the
+same 777 headers in the SAME ORDER with identical paths ("./x/y.h").
+Order matters - the tools key headers by basename, first wins, and 11
+basenames occur more than once. Cost of the walk alone: 0.29 -> 0.30 G
+instructions, 0.02 -> 0.04 s, +5 MB (paths built in the pool).
+
+Converted (`_capita_praeparare` -> adapter `_caput_visum` + one call;
+`_praetermittendum` -> the array CAPITA_PRAETERMITTENDA, kept as a
+function over the array only where another walker in the file still
+uses it): officina cursor, fusor, interpretare,
+probatio_officina_vindex; silva census_ambigui, emitte, infidelis,
+origo, quaestio, selecta. All ten had the same four names (build,
+.git, results, node_modules). `<dirent.h>` dropped where nothing else
+needs it. Source lists regenerated (tools/silva_fontes_generare.sh and
+the three officina snippets): + iter_directoria, via, lectiones where
+missing.
+
+Differential: 18 invocations (selecta, emitte, origo, quaestio incl.
+-invariantia and -omnibus over lib, infidelis, interpretare, cursor
+-enumerare and -sola, fusor lib), stdout + stderr + exit code, before
+(run twice: only two timing lines vary) and after: identical except
+fusor's `tempus:` line. Binaries checked by nm: the walker is linked,
+`opendir` gone from selecta/emitte/origo/infidelis (quaestio, cursor,
+fusor, interpretare keep it for their OTHER walkers - next step).
+With FABRICA_LECTIONES set, `emitte` now writes 979 'D' lines where
+it wrote none: the enumeration is visible to fabrica.
+
+Found: silva/instrumenta/principalia/census_ambigui.c has NO launcher
+and no build rule (silva/ambigua.sh builds ambigua.c) - converted and
+syntax-checked by hand only (clang -fsyntax-only, house flags). Its
+fate (delete or wire up) is Fran's.
+
+Left for the next steps: the 5 other `_capita_praeparare` copies
+(examen, percursus, renominare, haruspex, censor/nexus_percursus/
+identitates group - different skip lists and, in examen, a full-path
+key), the other hand walkers, and the read-mode fopen inside
+`_caput_praebere` (still raw - no 'L' lines yet).

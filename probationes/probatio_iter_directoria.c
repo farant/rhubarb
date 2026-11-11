@@ -614,6 +614,93 @@ _sectio_praetermissionis (
 
 
     /* ==================================================
+     * Probare: Ambulator Fontium
+     *
+     * Fila .txt structurae: file1.txt, file2.txt, sub1/subfile.txt,
+     * sub1/deep/deepfile.txt, .hidden_dir/inside.txt (occultum).
+     * ================================================== */
+
+interior vacuum
+_sectio_fontium (
+    CredoContextus* c)
+{
+    hic_manens constans character* constans praetermittenda[] = {
+        "deep", NIHIL
+    };
+    Piscina* piscina;
+
+    piscina = c->piscina;
+    /* sine indice: IV fila .txt non occulta; directoria et readme.md
+     * numquam functioni data */
+    {
+        PraetermissioContextus ctx;
+                           s32 fructus;
+
+        memset(&ctx, ZEPHYRUM, magnitudo(ctx));
+        fructus = directorium_fontes_ambulare(VIA_PROBATIONIS, ".txt",
+            NIHIL, _callback_praetermittere, &ctx, piscina);
+        CREDO_AEQUALIS_S32(fructus, 0);
+        CREDO_AEQUALIS_I32(ctx.numerus, IV);
+        CREDO_VERUM(strstr(ctx.visa, "/file1.txt\n") != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "sub1/subfile.txt\n") != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "sub1/deep/deepfile.txt\n")
+            != NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "readme.md") == NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "inside.txt") == NIHIL);
+        CREDO_VERUM(strstr(ctx.visa, "sub1\n") == NIHIL);
+    }
+    /* index: subarbor 'deep' non intratur */
+    {
+        PraetermissioContextus ctx;
+                           s32 fructus;
+
+        memset(&ctx, ZEPHYRUM, magnitudo(ctx));
+        fructus = directorium_fontes_ambulare(VIA_PROBATIONIS, ".txt",
+            praetermittenda, _callback_praetermittere, &ctx, piscina);
+        CREDO_AEQUALIS_S32(fructus, 0);
+        CREDO_AEQUALIS_I32(ctx.numerus, III);
+        CREDO_VERUM(strstr(ctx.visa, "deepfile.txt") == NIHIL);
+    }
+    /* nexus symbolicus ad directorium non intratur: subfile.txt semel */
+    {
+        PraetermissioContextus ctx;
+                           s32 fructus;
+
+        memset(&ctx, ZEPHYRUM, magnitudo(ctx));
+        system("ln -s /tmp/rhubarb_iter_probatio/sub1 "
+            "/tmp/rhubarb_iter_probatio/nexus_ad_sub1");
+        fructus = directorium_fontes_ambulare(VIA_PROBATIONIS, ".txt",
+            NIHIL, _callback_praetermittere, &ctx, piscina);
+        system("rm /tmp/rhubarb_iter_probatio/nexus_ad_sub1");
+        CREDO_AEQUALIS_S32(fructus, 0);
+        CREDO_AEQUALIS_I32(ctx.numerus, IV);
+        CREDO_VERUM(strstr(ctx.visa, "nexus_ad_sub1/") == NIHIL);
+    }
+    /* suffixum vacuum: omnia fila non occulta (V: + readme.md);
+     * terminatio praematura valorem functionis reddit */
+    {
+        PraetermissioContextus ctx;
+                           i32 numerus;
+                           s32 fructus;
+
+        memset(&ctx, ZEPHYRUM, magnitudo(ctx));
+        fructus = directorium_fontes_ambulare(VIA_PROBATIONIS, NIHIL,
+            NIHIL, _callback_praetermittere, &ctx, piscina);
+        CREDO_AEQUALIS_S32(fructus, 0);
+        CREDO_AEQUALIS_I32(ctx.numerus, V);
+        numerus = 0;
+        fructus = directorium_fontes_ambulare(VIA_PROBATIONIS, ".txt",
+            NIHIL, _callback_terminare_post_tres, &numerus, piscina);
+        CREDO_AEQUALIS_S32(fructus, I);
+        CREDO_AEQUALIS_I32(numerus, III);
+        CREDO_AEQUALIS_S32(directorium_fontes_ambulare(
+            "/tmp/rhubarb_iter_probatio/non_est", ".txt", NIHIL,
+            _callback_praetermittere, &ctx, piscina), -I);
+    }
+}
+
+
+    /* ==================================================
      * Probare: Ambulator - Profunditas Maxima
      * ================================================== */
 
@@ -814,6 +901,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "subarborem praetermissam", _sectio_praetermissionis, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "ambulatorem fontium", _sectio_fontium, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "profunditatem maximam", _sectio_decima_tertia, NIHIL, NIHIL,
         NIHIL, NIHIL },
     { "enumerationem uno vocamine", _sectio_enumerationis, NIHIL,

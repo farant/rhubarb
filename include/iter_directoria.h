@@ -195,6 +195,41 @@ directorium_ambulare (
                         Piscina* piscina);
 
 
+/* Ambulare per arborem FONTIUM: functio pro quoque filo cuius titulus
+ * suffixo finitur (e.g. ".h"), recursive.
+ *
+ * Mos ambulatorum manu scriptorum instrumentorum silvae et officinae
+ * (_capita_praeparare, in XV plagulas copiatus - 2026-11-10), nunc
+ * semel:
+ *   - tituli occulti (initium '.') praetermittuntur, fila et directoria;
+ *   - introitus cuius titulus in 'praetermittenda' stat praetermittitur
+ *     (directorium: subarbor tota non intratur - "build", ".git");
+ *   - nexus symbolicus ad directorium NON intratur (gyri manu scripti
+ *     d_type == DT_DIR poscebant);
+ *   - omnis introitus non-directorium cum suffixo functioni datur
+ *     (nexus ad filum quoque).
+ * Ordo: enumeratio directorii, filum ante subarborem fratris posterioris
+ * (idem ac gyri readdir - mensum super arborem hanc, DCCLXXVII capita).
+ *
+ * via:             radix ambulationis
+ * suffixum:        finis tituli (NIHIL aut "" = omnia fila)
+ * praetermittenda: index titulorum NIHIL-terminatus (NIHIL = nullus)
+ * functio:         via_plena = via + '/' + ... (ut ambulator);
+ *                  reddit 0 ad pergendum, non-0 ad terminandum
+ *
+ * Reddit: 0 si successus, -1 si radix aperiri nequit, aliter valor
+ *         functionis qui ambulationem stitit
+ */
+s32
+directorium_fontes_ambulare (
+             constans character*  via,
+             constans character*  suffixum,
+    constans character* constans* praetermittenda,
+     DirectoriumAmbulatorFunctio  functio,
+                          vacuum* contextus,
+                         Piscina* piscina);
+
+
 /* ==================================================
  * Utilitates
  * ================================================== */
