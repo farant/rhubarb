@@ -30,6 +30,7 @@
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
 #include "silva_lexicon.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -434,7 +435,7 @@ _plagulam_totam_legere (
     character* textus;
 
     *mensura_out  = ZEPHYRUM;
-    pl            = fopen(via, "rb");
+    pl            = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -682,7 +683,7 @@ _plagulam_percurrere (
     clock_t c0;
     clock_t c1;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);

@@ -50,7 +50,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura_out)
 {
-              FILE* plagula = fopen(via, "rb");
+              FILE* plagula = lectiones_fopen(via, "rb");
             longus  magnitudo_plagulae;
          character* textus;
     memoriae_index  lecta;
@@ -474,7 +474,7 @@ _partem_imprimere (
     {
         redde;
     }
-    plagula = fopen(via, "rb");
+    plagula = lectiones_fopen(via, "rb");
     si (plagula == NIHIL)
     {
         redde;
@@ -518,7 +518,7 @@ _solvere (
             " characteres): %s\n", praefixum);
         redde I;
     }
-    index = fopen(index_via, "r");
+    index = lectiones_fopen(index_via, "r");
     si (index == NIHIL)
     {
         fprintf(stderr, "identitates: index deest: %s (curre"

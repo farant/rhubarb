@@ -84,6 +84,9 @@
     <ingressus genus="fasciculus" via="tessera/amalgamare.sh"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- amalgamator caput amalgamae legit (lectio per librum visa
+         2026-11-11: fopen legens -> lectiones_fopen) -->
+    <ingressus genus="fasciculus" via="tessera/amalgama/tessera.h"/>
     <exitus via="tessera/amalgama/tessera.c" provenientia="regeneratio"/>
   </actio>
   <!-- FRAGMENTA RADIX_FONTES (plan 1a T6): MEMORABILIA - ingressus

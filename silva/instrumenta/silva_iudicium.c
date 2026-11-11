@@ -19,6 +19,7 @@
 #include "silva_c89_semantica.h"
 #include "silva_lexicon.h"
 #include "silva_iudicium.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -28,7 +29,7 @@ silva_iudicium_plagulam_legere (
     constans character* via,
                    i32* mensura_out)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura_l;
     character* textus;
 

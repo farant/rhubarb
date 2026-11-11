@@ -403,7 +403,7 @@ _append_assets (
         cursor = blob;
 
         /* Open target binary to get current size */
-        target_file = fopen(target_path, "rb");
+        target_file = lectiones_fopen(target_path, "rb");
         si (target_file == NIHIL)
         {
             fprintf(stderr, "Error: non possum aperire '%s'\n",

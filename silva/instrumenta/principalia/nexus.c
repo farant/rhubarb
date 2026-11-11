@@ -16,6 +16,7 @@
 #include "chorda.h"
 #include "similitudo.h"
 #include "tabula_dispersa.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -123,7 +124,7 @@ principale (
         redde II;
     }
 
-    pl = fopen(VIA_TABULAE, "rb");
+    pl = lectiones_fopen(VIA_TABULAE, "rb");
     si (pl == NIHIL)
     {
         fprintf(stderr, "nexus: %s deest - genera per"

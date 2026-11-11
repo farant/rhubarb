@@ -45,6 +45,7 @@
 #include "stml.h"
 #include "filum.h"
 #include "xar.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -377,7 +378,7 @@ _addere_tabulam (
     i32                numerus;
     ChordaAedificator* aedificator;
 
-    plagula = fopen(via_tabulae, "rb");
+    plagula = lectiones_fopen(via_tabulae, "rb");
     si (plagula == NIHIL)
     {
         fprintf(stderr, "mensor: tabula aperiri non potest: %s\n",
@@ -678,7 +679,7 @@ _titulum_annotationis (
          character* annotatio;
          character* finis;
 
-    f = fopen(via_scripti, "rb");
+    f = lectiones_fopen(via_scripti, "rb");
     si (f == NIHIL)
     {
         redde chorda_ex_literis("", piscina);
@@ -1961,7 +1962,7 @@ _scriptum_est (
             redde FALSUM;
         }
     }
-    f = fopen(plena, "rb");
+    f = lectiones_fopen(plena, "rb");
     si (f == NIHIL)
     {
         redde FALSUM;

@@ -12,6 +12,7 @@
 #include "git.h"
 #include "machina.h"
 #include "processus.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -102,7 +103,7 @@ _ramum_legere (
     memoriae_index  longitudo;
 
     sprintf(via, "%s/HEAD", repositorium->via_git);
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde chorda_ex_literis("", piscina);

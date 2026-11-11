@@ -29,6 +29,7 @@
 #include "silva_contextus.h"
 #include "silva_parsare.h"
 #include "silva_c89_oraculum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -135,7 +136,7 @@ _caput_praebere (
     clavis = chorda_ex_literis(titulus, piscina);
     si (tabula_dispersa_continet(visa, clavis)) redde;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -292,7 +293,7 @@ principale (
         _capita_praeparare(ctx, piscina_ctx, visa, ".");
     }
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         fprintf(stderr, "origo: plagula non lecta: %s\n", via);

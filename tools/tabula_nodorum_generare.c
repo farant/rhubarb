@@ -161,7 +161,7 @@ fixum_legere (
     constans character* via,
     Piscina*            piscina)
 {
-         FILE* f = fopen(via, "r");
+         FILE* f = lectiones_fopen(via, "r");
     character  linea[LINEA_MAXIMA];
 
     si (f == NIHIL)
@@ -489,7 +489,7 @@ conferre (
     constans character* via,
     Piscina*            piscina)
 {
-         FILE* f = fopen(via, "r");
+         FILE* f = lectiones_fopen(via, "r");
     character  linea[LINEA_MAXIMA];
           i32  k              = ZEPHYRUM;
           i32  discrepantiae  = ZEPHYRUM;

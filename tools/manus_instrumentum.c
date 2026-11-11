@@ -186,7 +186,7 @@ _sessionem_legere (
     integer   q;
 
     _via_sessionis(via, portus);
-    f = fopen(via, "r");
+    f = lectiones_fopen(via, "r");
     si (f == NIHIL)
     {
         redde FALSUM;
@@ -916,7 +916,7 @@ principale (
         character linea[VIAE_MENSURA];
 
         _via_diarii(diarium, sessio.portus);
-        f = fopen(diarium, "r");
+        f = lectiones_fopen(diarium, "r");
         si (f == NIHIL)
         {
             fprintf(stderr,

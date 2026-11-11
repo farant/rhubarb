@@ -17,6 +17,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "silva_amalgama.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -77,7 +78,7 @@ s32 principale (s32 argc, character** argv)
         redde I;
     }
 
-    lista = fopen(argv[II], "r");
+    lista = lectiones_fopen(argv[II], "r");
     si (lista == NIHIL)
     {
         fprintf(stderr, "amalgama_ligator: lista non lecta: %s\n",
