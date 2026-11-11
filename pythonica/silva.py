@@ -3558,6 +3558,22 @@ def _fabricam_exigere(viae, sine_fabrica=None, _sanati=(), _regenerata=False,
                  if l and not (l.split('\t')[0].isupper()
                                and l.split('\t')[0].isalpha() and '\t' in l)]
               + [l for l in r.stderr.splitlines() if l])
+    # CUSTODIA MEMORABILIUM (2026-11-11): actio memorabilis cuius
+    # regeneratio legit quod ingressus declarati non tegunt - fabrica
+    # 'RECENS' cum causa 'MEMORIA NEGATA' et exitu 0 reddit; porta
+    # generata (generata_iudicare.sh) eam FRACTAM nominat, commissio olim
+    # tacite transibat (rubedo post duas commissiones inventa). Declaratio
+    # fracta obstat etiam si artificium non commissum est (build/).
+    negatae = [o for o in ordines
+               if o[0] == 'IUDICIUM' and len(o) >= 4
+               and o[3].startswith('MEMORIA NEGATA')]
+    if negatae:
+        raise SilvaError(
+            'FABRICA (ante portas): DECLARATIO FRACTA - actio memorabilis'
+            ' legit quod ingressus eius non declarant; nihil cursum, nihil'
+            ' commissum:\n  %s\nDeclara <ingressus> in aedificatio.stml'
+            ' actionis (aut lectionem tolle); porta generata idem iudicat.'
+            % '\n  '.join('%s - %s' % (o[2], o[3]) for o in negatae))
     if r.returncode == 0:
         print(lineae[-1] if lineae else 'fabrica: sana')
         return

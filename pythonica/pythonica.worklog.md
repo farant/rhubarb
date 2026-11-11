@@ -1519,3 +1519,29 @@ _porta_per_fabricam and _porta_per_gradum, and any Python-side write to a
 tracked file between gates (planta writes plants in-process!) would make
 a reused seal lie. Revisit only with explicit threading, never a global
 memo.
+
+## 2026-11-11 — commissio refuses MEMORIA NEGATA (declaration broken)
+
+Two commits in the walker sweep (708a10ae6, 4c8b93793) left the `generata`
+gate red and nobody saw it until a third commit owed that gate. First
+reading was "gate coverage gap: tool sources don't owe generata". Wrong:
+`_fabricam_exigere` already runs `bin/fabrica iudicare -plenus -tacta` over
+the touched paths, and fabrica follows the declared `<ingressus>` edges, so
+the right artifacts WERE judged at commit time (12 for
+tools/capsula_generare.c). The hole was in reporting: a memorable action
+whose regeneration reads something undeclared comes back as status `RECENS`
+with cause `MEMORIA NEGATA ...` and exit 0. generata_iudicare.sh reads the
+cause; commissio only looked at the exit code and printed the last line.
+
+Fix: `_fabricam_exigere` scans IUDICIUM rows for a cause starting
+`MEMORIA NEGATA` and raises (DECLARATIO FRACTA), committed artifact or not
+(a broken declaration is not staleness; "non commissa non obstant" does not
+apply). Reproduced live first: removed the tessera.h `<ingressus>` from
+tessera/aedificatio.stml -> `-tacta tessera/amalgamare.sh` printed the
+refusal with rc 0; with the fix commissio refuses, restored -> passes.
+Three cases in probatio_silva.py (committed, not committed, plain `memoria`
+passes); plant (prefix changed) -> 2 FRACTUM.
+
+Not covered: an action whose generator runs a tool that is not a declared
+input (nexus_percursus.c behind silva/nexus.sh). Since b07236ea7 the corpus
+action no longer runs the indexer under the book, so left alone.
