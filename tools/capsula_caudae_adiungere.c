@@ -15,6 +15,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "iter_directoria.h"
 #include "toml.h"
 #include "filum.h"
 #include "flatura.h"
@@ -23,7 +24,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <dirent.h>
 
 
 /* ========================================================================
@@ -111,13 +111,15 @@ _expand_glob (
                    Xar* files_out,
                Piscina* piscina)
 {
-    DIR*                dir;
-    structura dirent*   entry;
-    character           path_buffer[1024];
-    constans character* slash;
-    character           dir_part[512];
-    constans character* file_pattern;
-    i32                 dir_len;
+    /* enumeratio per iter_directoria (in libro lectionum notatur;
+     * olim opendir crudum) */
+     DirectoriumIterator* dir;
+    DirectoriumIntroitus* entry;
+               character  path_buffer[1024];
+      constans character* slash;
+               character  dir_part[512];
+      constans character* file_pattern;
+                     i32  dir_len;
 
     slash = strrchr(pattern, '/');
     si (slash != NIHIL)
@@ -145,7 +147,7 @@ _expand_glob (
         path_buffer[sizeof(path_buffer) - 1] = '\0';
     }
 
-    dir = opendir(path_buffer);
+    dir = directorium_iterator_aperire(path_buffer, piscina);
     si (dir == NIHIL)
     {
         fprintf(stderr, "Error: non possum aperire directorium '%s'\n",
@@ -153,14 +155,16 @@ _expand_glob (
         redde;
     }
 
-    dum ((entry = readdir(dir)) != NIHIL)
+    dum ((entry = directorium_iterator_proximum(dir)) != NIHIL)
     {
-        si (entry->d_name[0] == '.')
+        character* titulus = chorda_ut_cstr(entry->titulus, piscina);
+
+        si (titulus == NIHIL || titulus[0] == '.')
         {
             perge;
         }
 
-        si (_glob_congruit(file_pattern, entry->d_name))
+        si (_glob_congruit(file_pattern, titulus))
         {
             character  full_path[1024];
                chorda* path_chorda;
@@ -168,12 +172,12 @@ _expand_glob (
             si (strcmp(dir_part, ".") == 0)
             {
                 snprintf(full_path, sizeof(full_path), "%s",
-                    entry->d_name);
+                    titulus);
             }
             alioquin
             {
                 snprintf(full_path, sizeof(full_path), "%s/%s",
-                    dir_part, entry->d_name);
+                    dir_part, titulus);
             }
 
             path_chorda = (chorda*)xar_addere(files_out);
@@ -184,7 +188,7 @@ _expand_glob (
         }
     }
 
-    closedir(dir);
+    directorium_iterator_claudere(dir);
 }
 
 

@@ -135,14 +135,12 @@ tessera/probationes/probatio_tessera_folium.c	ante regulam (2026-10-14): migrati
 tessera/probationes/probatio_tessera_ponere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 toml/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 toml/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/aedilis.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/aemulator_vttest.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/amalgama_ligator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/bitsyfont_ad_fons.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/briar.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/briar_spectator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/capsula_caudae_adiungere.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-tools/capsula_generare.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/diagnostica.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/fabrica_sutura.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 tools/manus_instrumentum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

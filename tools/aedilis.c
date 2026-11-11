@@ -25,6 +25,7 @@
 #include "filum.h"
 #include "via.h"
 #include "xar.h"
+#include "iter_directoria.h"
 #include "argumenta.h"
 #include "tabula_dispersa.h"
 #include "sigillum.h"
@@ -36,7 +37,6 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -554,21 +554,23 @@ _nexum_purum_currere (
                   *(chorda*)xar_obtinere(configuratio->inclusa,
                   d);
            character* dir_cstr  = chorda_ut_cstr(dir, piscina);
-                 /* lectiones: notatur */
-                 DIR* h         = opendir(dir_cstr);
-    structura dirent* introitus;
+        /* radix inclusionum enumerata: nomina = dependentia
+         * (obumbratio - fabrica plan 2); iterator ipse ABSENS aut
+         * ENUMERAVIT in libro lectionum notat (olim opendir crudum
+         * cum notis manu scriptis) */
+         DirectoriumIterator* h         = directorium_iterator_aperire(
+                                              dir_cstr, piscina);
+        DirectoriumIntroitus* introitus;
 
         si (h == NIHIL)
         {
-            lectiones_notare(LECTIO_ABSENS, dir_cstr);
             perge;
         }
-        /* radix inclusionum enumerata: nomina = dependentia
-         * (obumbratio - fabrica plan 2) */
-        lectiones_notare(LECTIO_ENUMERAVIT, dir_cstr);
-        dum ((introitus = readdir(h)) != NIHIL)
+        dum ((introitus = directorium_iterator_proximum(h)) != NIHIL)
         {
-             memoriae_index  l = strlen(introitus->d_name);
+                  character* titulus = chorda_ut_cstr(
+                                           introitus->titulus, piscina);
+             memoriae_index  l;
                   character* via;
                         Xar* directivae;
                         Xar* annotationes;
@@ -578,8 +580,13 @@ _nexum_purum_currere (
                         b32  promittit = FALSUM;
                      chorda  causa;
 
-            si (   l < 3 || introitus->d_name[l - 2] != '.'
-                || introitus->d_name[l - 1] != 'h')
+            si (titulus == NIHIL)
+            {
+                perge;
+            }
+            l = strlen(titulus);
+            si (   l < 3 || titulus[l - 2] != '.'
+                || titulus[l - 1] != 'h')
             {
                 perge;
             }
@@ -589,7 +596,7 @@ _nexum_purum_currere (
             {
                 perge;
             }
-            sprintf(via, "%s/%s", dir_cstr, introitus->d_name);
+            sprintf(via, "%s/%s", dir_cstr, titulus);
             si (   !aedilis_silva_extrahere(memor, via, piscina,
                     &directivae,
                     &annotationes, &ex_oraculo, &angulatae)
@@ -622,7 +629,7 @@ _nexum_purum_currere (
                     (constans character*)causa.datum);
             }
         }
-        closedir(h);
+        directorium_iterator_claudere(h);
     }
     printf("nexus purus: %u capita promittunt, %u fracta\n",
         (insignatus integer)promittentia, (insignatus integer)fracta);
@@ -815,19 +822,17 @@ _corpus_currere (
               constans character* varians_cstr,
                     AedilisSilva* memor)
 {
-    DIR*              d;
-    structura dirent* introitus;
-    chorda*           viae;
-    i32               numerus;
-    i32               i;
-    integer           exitus;
+     DirectoriumIterator* d;
+    DirectoriumIntroitus* introitus;
+                     Xar* collectae;
+                  chorda* viae;
+                     i32  numerus;
+                     i32  i;
+                 integer  exitus;
 
-    /* lectiones: notatur */
-    d = opendir(directorium);
-    si (d != NIHIL)
-    {
-        lectiones_notare(LECTIO_ENUMERAVIT, directorium);
-    }
+    /* enumeratio per iter_directoria (ABSENS aut ENUMERAVIT in libro
+     * lectionum notat; olim opendir crudum bis lectum per rewinddir) */
+    d = directorium_iterator_aperire(directorium, piscina);
     si (d == NIHIL)
     {
         fprintf(stderr,
@@ -835,45 +840,48 @@ _corpus_currere (
             directorium);
         redde 1;
     }
-    numerus = 0;
-    dum ((introitus = readdir(d)) != NIHIL)
+    collectae = xar_creare(piscina, (i32)magnitudo(chorda));
+    si (collectae == NIHIL)
     {
-        si (_desinit_in_c(introitus->d_name))
-        {
-            numerus++;
-        }
+        directorium_iterator_claudere(d);
+        redde 1;
     }
+    dum ((introitus = directorium_iterator_proximum(d)) != NIHIL)
+    {
+             character* titulus = chorda_ut_cstr(introitus->titulus,
+                                      piscina);
+             character* via;
+                chorda* sedes;
+        memoriae_index  l;
+
+        si (titulus == NIHIL || !_desinit_in_c(titulus))
+        {
+            perge;
+        }
+        l      = strlen(directorium) + strlen(titulus) + 2;
+        via    = (character*)piscina_allocare(piscina, l);
+        sedes  = (chorda*)xar_addere(collectae);
+        si (via == NIHIL || sedes == NIHIL)
+        {
+            directorium_iterator_claudere(d);
+            redde 1;
+        }
+        sprintf(via, "%s/%s", directorium, titulus);
+        *sedes = chorda_ex_literis(via, piscina);
+    }
+    directorium_iterator_claudere(d);
+    numerus = xar_numerus(collectae);
     viae = (chorda*)piscina_allocare(piscina,
         (memoriae_index)(numerus
             > 0 ? numerus : 1) * magnitudo(chorda));
     si (viae == NIHIL)
     {
-        closedir(d);
         redde 1;
     }
-    rewinddir(d);
-    i = 0;
-    dum ((introitus = readdir(d)) != NIHIL && i < numerus)
+    per (i = 0; i < numerus; i++)
     {
-             character* via;
-        memoriae_index  l;
-
-        si (!_desinit_in_c(introitus->d_name))
-        {
-            perge;
-        }
-        l    = strlen(directorium) + strlen(introitus->d_name) + 2;
-        via  = (character*)piscina_allocare(piscina, l);
-        si (via == NIHIL)
-        {
-            closedir(d);
-            redde 1;
-        }
-        sprintf(via, "%s/%s", directorium, introitus->d_name);
-        viae[i++] = chorda_ex_literis(via, piscina);
+        viae[i] = *(chorda*)xar_obtinere(collectae, i);
     }
-    closedir(d);
-    numerus = i;
     qsort(viae, (memoriae_index)numerus, magnitudo(chorda),
         _chordas_comparare);
     exitus = 0;

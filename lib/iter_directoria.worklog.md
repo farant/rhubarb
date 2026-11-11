@@ -241,3 +241,48 @@ tools/capsula_generare.c (2) and capsula_caudae_adiungere.c (1),
 tools/manus_instrumentum.c (1), the crusta interposer, knotapel demo
 snapshots, the sondae_auditus fixture, and the channel itself (filum,
 iter_directoria) + credo with their `<tolera>`.
+
+## 2026-11-11 — the last tool sites: aedilis, capsula tools, manus
+
+Six more raw opendir sites rewritten onto the flat iterator; with
+these, no tool in the tree enumerates a directory outside
+iter_directoria.
+- tools/aedilis.c `_nexum_purum_currere` and `_corpus_currere`: both
+  noted ABSENS/ENUMERAVIT by hand; the iterator writes the same notes
+  itself, the hand notes are gone. `_corpus_currere` read the
+  directory twice (count, rewinddir, fill); now one pass into a xar.
+- tools/capsula_generare.c `_expand_glob_gradus` (two loops): the
+  iterator's followed genus replaces the two raw `stat` calls
+  (directory segment: only directories; last segment: everything but
+  directories - a broken link is still kept, as before).
+- tools/capsula_caudae_adiungere.c `_expand_glob`.
+- tools/manus_instrumentum.c `_sessiones_legere`: own short piscina
+  (64 KB, destroyed on return) - the function had none.
+
+Differential, old binary vs new: aedilis --nexus-purus (23 headers),
+--corpus lib --partes (22,159 lines), --corpus on a missing directory
+(refusal, rc 1): identical. --corpus tools --partes differs only in
+the lines of the four edited tools themselves (they now depend on
+iter_directoria). capsula_generare on a scratch fixture (starred
+directory segment, starred last segment, literal, dot file, directory
+matching the file pattern, link to a directory): capsula_g.c/.h
+byte-identical - the entry ORDER inside the capsule is the same.
+capsula_caudae_adiungere on a compressed fixture: the appended binary
+is byte-identical. manus sessiones with no live session: identical.
+
+Not exercised: manus with LIVE sessions (none were running; the
+dead-session purge deletes files while the directory is being
+iterated, as the readdir loop did).
+
+Side find: bin/capsula_generare on book_assets/libri.toml rewrites the
+tracked capsula_libri.c/.h (the header comment wording changed since
+they were committed, and 223 k lines of data differ) - the committed
+capsule is stale against its generator. Restored, not touched.
+bin/capsula_caudae_adiungere has no builder other than
+./compile_tools.sh by hand.
+
+Debt list: tools/aedilis.c and tools/capsula_generare.c rows deleted
+(no raw IO left). Remaining opendir in the tree: the channel (filum,
+iter_directoria) and credo with `<tolera>`, the crusta interposer
+(it IS opendir), knotapel demo snapshots, and the sondae_auditus
+probe that interposes opendir on purpose.
