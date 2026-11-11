@@ -490,6 +490,14 @@ projected bounds are never made.
 
 ### Task 7: bodies and the frame
 
+DONE 2026-11-10. Measured: one body 3-5 ms; whole frame with one
+character 3.5-3.9 ms; eight in view 26.7 ms average at 480x541.
+Changes from the text below (reasons in
+`lib/mundus_pictura.worklog.md`): two passes with a per-pixel owner
+instead of far-to-near drawing; `mundus_forma` takes an arena and
+`MundusForma` gained `imum`, `medium_x`, `medium_z`; scale is capped
+by width (3 units); `mundus_quadri_origo` added to the header.
+
 **Files:** `include/statuae_quadrum.h`, `lib/statuae_quadrum.c`,
 `probationes/probatio_statuae_quadrum.c`; `include/mundus_pictura.h`,
 `lib/mundus_pictura.c`, `probationes/probatio_mundus_pictura.c`.

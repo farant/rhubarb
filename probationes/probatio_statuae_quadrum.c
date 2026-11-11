@@ -405,12 +405,84 @@ _sectio_fines (
     CREDO_AEQUALIS_I32 (mala, ZEPHYRUM);
 }
 
+/* mundus-plan T7: statuae_picturam_dithering - pictura a vocante
+ * picta; pixela extra larvam non scribuntur */
+interior vacuum
+_sectio_larva_picturae (
+    CredoContextus* c)
+{
+    b32  activi[XVI];
+     i8* rgba     = (i8*)piscina_allocare(c->piscina, LXIV * LXIV * IV);
+     i8* larva    = (i8*)piscina_allocare(c->piscina, LXIV * LXIV);
+     i8* indices  = (i8*)piscina_allocare(c->piscina, LXIV * LXIV);
+    s32  x;
+    s32  y;
+    i32  k;
+    i32  intra  = ZEPHYRUM;
+    i32  mala   = ZEPHYRUM;
+
+    dithering_praeparare_omnes(activi);
+    /* clivus colorum; larva: discus radii XXIV circa medium */
+    per (y = ZEPHYRUM; y < LXIV; y++)
+    {
+        per (x = ZEPHYRUM; x < LXIV; x++)
+        {
+            k                   = (i32)(y * LXIV + x);
+            rgba[k * IV]        = (i8)(x * IV);
+            rgba[k * IV + I]    = (i8)(y * IV);
+            rgba[k * IV + II]   = 128;
+            rgba[k * IV + III]  = 255;
+            larva[k] = (i8)((x - XXXII) * (x - XXXII)
+                + (y - XXXII) * (y - XXXII) < XXIV * XXIV);
+        }
+    }
+    memset(indices, 0xEE, LXIV * LXIV);
+    CREDO_VERUM (statuae_picturam_dithering(rgba, larva, LXIV, LXIV,
+        activi, indices, c->piscina));
+    per (k = ZEPHYRUM; k < LXIV * LXIV; k++)
+    {
+        si (larva[k])
+        {
+            intra++;
+            mala += indices[k] < XVI ? ZEPHYRUM : I;
+        }
+        alioquin
+        {
+            mala += indices[k] == 0xEE ? ZEPHYRUM : I;
+        }
+    }
+    CREDO_VERUM (intra > M);
+    CREDO_AEQUALIS_I32 (mala, ZEPHYRUM);
+    /* larva vacua: nihil scribitur */
+    memset(larva, ZEPHYRUM, LXIV * LXIV);
+    memset(indices, 0xEE, LXIV * LXIV);
+    CREDO_VERUM (statuae_picturam_dithering(rgba, larva, LXIV, LXIV,
+        activi, indices, c->piscina));
+    per (k = ZEPHYRUM; k < LXIV * LXIV && indices[k] == 0xEE; k++)
+    {
+    }
+    CREDO_AEQUALIS_I32 (k, LXIV * LXIV);
+    /* argumenta NIHIL */
+    CREDO_FALSUM (statuae_picturam_dithering(NIHIL, larva, LXIV, LXIV,
+        activi, indices, c->piscina));
+    CREDO_FALSUM (statuae_picturam_dithering(rgba, NIHIL, LXIV, LXIV,
+        activi, indices, c->piscina));
+    CREDO_FALSUM (statuae_picturam_dithering(rgba, larva, LXIV, LXIV,
+        NIHIL, indices, c->piscina));
+    CREDO_FALSUM (statuae_picturam_dithering(rgba, larva, LXIV, LXIV,
+        activi, NIHIL, c->piscina));
+    CREDO_FALSUM (statuae_picturam_dithering(rgba, larva, LXIV, LXIV,
+        activi, indices, NIHIL));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "modi", _sectio_modi, NIHIL, NIHIL, NIHIL, NIHIL },
     { "quadrum", _sectio_quadrum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mutationes", _sectio_mutationes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacua", _sectio_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fines", _sectio_fines, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "larva_picturae", _sectio_larva_picturae, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

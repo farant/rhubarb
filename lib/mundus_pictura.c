@@ -8,6 +8,7 @@
 
 #include "mundus_pictura.h"
 #include "dithering.h"
+#include "statuae_quadrum.h"
 #include "stereometria.h"
 #include <math.h>
 #include <string.h>
@@ -388,4 +389,506 @@ mundus_humus_regiones (
     constans MundusHumus* h)
 {
     redde h ? h->factae : ZEPHYRUM;
+}
+
+
+/* ==================================================
+ * Corpora et quadrum
+ * ================================================== */
+
+/* titulus fragmentum continet? (litterae ut scriptae) */
+interior b32
+_titulus_continet (
+                chorda  titulus,
+    constans character* fragmentum)
+{
+    i32 longitudo = (i32)strlen(fragmentum);
+    i32 k;
+
+    per (k = ZEPHYRUM; k + longitudo <= titulus.mensura; k++)
+    {
+        si (memcmp(titulus.datum + k, fragmentum, longitudo)
+            == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+MundusForma
+mundus_forma (
+    constans Statua* statua,
+            Piscina* piscina)
+{
+    constans StatuaRete* rete;
+    constans StatuaPars* pars;
+            MundusForma  f;
+     StereometriaMatrix* matrices = NIHIL;
+     StereometriaVector  p;
+                    f32  minima[III];
+                    f32  maxima[III];
+                    f32  altitudo;
+                    f32  latitudo;
+                    f32  coordinata;
+                    b32  aliquid = FALSUM;
+                    i32  n;
+                    i32  j;
+                    i32  k;
+                    i32  i;
+                    i32  vertex;
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    f.statua            = statua;
+    f.cyclus_ambulandi  = -I;
+    f.cyclus_quietis    = -I;
+    f.scala             = 1.0f;
+    si (!statua)
+    {
+        redde f;
+    }
+    per (k = ZEPHYRUM; k < statua->cyclorum; k++)
+    {
+        si (   f.cyclus_ambulandi < ZEPHYRUM
+            && _titulus_continet(statua->cycli[k].titulus, "walk"))
+        {
+            f.cyclus_ambulandi = (s32)k;
+        }
+        si (   f.cyclus_quietis < ZEPHYRUM
+            && _titulus_continet(statua->cycli[k].titulus, "idle"))
+        {
+            f.cyclus_quietis = (s32)k;
+        }
+    }
+    si (f.cyclus_ambulandi < ZEPHYRUM && statua->cyclorum > ZEPHYRUM)
+    {
+        f.cyclus_ambulandi = ZEPHYRUM;
+    }
+    /* capsa positurae quietis (sine piscina: per sphaeram
+     * ambientem) */
+    si (piscina)
+    {
+        matrices = (StereometriaMatrix*)piscina_allocare(piscina,
+            ((memoriae_index)statua->nodorum + I)
+                * magnitudo(StereometriaMatrix));
+    }
+    si (matrices)
+    {
+        statua_positura(statua, -I, 0.0f, matrices);
+    }
+    per (n = ZEPHYRUM; matrices && n < statua->nodorum; n++)
+    {
+        si (statua->nodi[n].rete < ZEPHYRUM)
+        {
+            perge;
+        }
+        rete = &statua->retia[statua->nodi[n].rete];
+        per (j = ZEPHYRUM; j < rete->partium; j++)
+        {
+            pars = &statua->partes[rete->pars_prima + j];
+            per (k = ZEPHYRUM; k < pars->indicum; k++)
+            {
+                vertex  = statua->indices[pars->index_primus + k] * III;
+                p       = stereometria_punctum_transformare(matrices[n],
+                    stereometria_vector(statua->positiones[vertex],
+                        statua->positiones[vertex + I],
+                        statua->positiones[vertex + II]), NIHIL);
+                per (i = ZEPHYRUM; i < III; i++)
+                {
+                    coordinata = i == ZEPHYRUM ? p.x
+                        : (i == I ? p.y : p.z);
+                    si (!aliquid || coordinata < minima[i])
+                    {
+                        minima[i] = coordinata;
+                    }
+                    si (!aliquid || coordinata > maxima[i])
+                    {
+                        maxima[i] = coordinata;
+                    }
+                }
+                aliquid = VERUM;
+            }
+        }
+    }
+    si (!aliquid)
+    {
+        si (statua->radius > 0.000001f)
+        {
+            /* sine capsa: sphaera ambiens */
+            f.scala     = MUNDUS_CORPORIS_ALTITUDO
+                / (2.0f * statua->radius);
+            f.imum      = statua->centrum.y - statua->radius;
+            f.medium_x  = statua->centrum.x;
+            f.medium_z  = statua->centrum.z;
+        }
+        redde f;
+    }
+    altitudo = maxima[I] - minima[I];
+    latitudo = maxima[ZEPHYRUM] - minima[ZEPHYRUM];
+    si (maxima[II] - minima[II] > latitudo)
+    {
+        latitudo = maxima[II] - minima[II];
+    }
+    si (altitudo > 0.000001f)
+    {
+        f.scala = MUNDUS_CORPORIS_ALTITUDO / altitudo;
+    }
+    si (latitudo * f.scala > MUNDUS_CORPORIS_LATITUDO_MAXIMA)
+    {
+        f.scala = MUNDUS_CORPORIS_LATITUDO_MAXIMA / latitudo;
+    }
+    f.imum      = minima[I];
+    f.medium_x  = (minima[ZEPHYRUM] + maxima[ZEPHYRUM]) * 0.5f;
+    f.medium_z  = (minima[II] + maxima[II]) * 0.5f;
+    redde f;
+}
+
+/* pixelum mundi (integrum, deorsum rotundatum) puncti */
+interior vacuum
+_pixelum_mundi (
+    StereometriaVector  punctum,
+                   s32* x,
+                   s32* y)
+{
+    StatuaScaenaVisus visus        = mundus_visus(ZEPHYRUM, ZEPHYRUM);
+                  f32 fractum_x    = 0.0f;
+                  f32 fractum_y    = 0.0f;
+                  f32 profunditas  = 0.0f;
+
+    statua_scaena_proicere(&visus, punctum, &fractum_x, &fractum_y,
+        &profunditas);
+    *x = (s32)floor((f64)fractum_x);
+    *y = (s32)floor((f64)fractum_y);
+}
+
+/* medium corporis in mundo (dimidia altitudo supra pedes) */
+interior StereometriaVector
+_medium_corporis (
+    constans MundusCorpus* c)
+{
+    redde stereometria_vector(c->x,
+        c->y + MUNDUS_CORPORIS_ALTITUDO * 0.5f, c->z);
+}
+
+b32
+mundus_quadri_origo (
+    constans Mundus* mundus,
+                i32  sequens,
+                i32  latitudo,
+                i32  altitudo,
+                s32* origo_x,
+                s32* origo_y)
+{
+    s32 x;
+    s32 y;
+
+    si (   !mundus || !mundus->corpora || !origo_x || !origo_y
+        || sequens >= mundus->corporum
+        || latitudo > 0x3FFFFFFF || altitudo > 0x3FFFFFFF)
+    {
+        redde FALSUM;
+    }
+    _pixelum_mundi(_medium_corporis(&mundus->corpora[sequens]), &x, &y);
+    *origo_x = x - (s32)(latitudo / II);
+    *origo_y = y - (s32)(altitudo / II);
+    redde VERUM;
+}
+
+/* ad multiplum reticuli deorsum (signatum) */
+interior s32
+_ad_reticulum (
+    s32 valor)
+{
+    s32 gradus = (s32)STATUAE_FINIUM_GRADUS;
+
+    redde valor >= ZEPHYRUM ? valor / gradus * gradus
+        : -((-valor + gradus - I) / gradus * gradus);
+}
+
+/* corpus pictum in capsa sua (gradus primus quadri) */
+nomen structura {
+    constans i8* rgba;     /* NIHIL = corpus non in visu */
+            s32  x0;       /* capsa in pixelis mundi */
+            s32  y0;
+            i32  latitudo;
+            i32  altitudo;
+} CorpusPictum;
+
+/* gradus primus: corpus in capsam suam pingere; ubi nihil propius
+ * est, profunditatem quadri et DOMINUM pixeli (signum) scribere */
+interior b32
+_corpus_pingere (
+    constans MundusCorpus* c,
+     constans MundusForma* forma,
+                      i32  signum,
+                      s32  origo_x,
+                      s32  origo_y,
+                      i32  latitudo,
+                      i32  altitudo,
+                      i32* domini,
+                      f32* profunditas,
+             CorpusPictum* pictum,
+                  Piscina* piscina)
+{
+       constans Statua* statua = forma->statua;
+          StatuaLocata  locata;
+     StatuaScaenaVisus  visus;
+   StatuaScaenaPictura  pictura;
+    StereometriaMatrix* matrices;
+ StereometriaQuaternio  rotatio;
+        memoriae_index  k;
+        memoriae_index  locus;
+                   f32  dimidium;
+                   s32  medium_x;
+                   s32  medium_y;
+                   s32  radius;
+                   s32  x0;
+                   s32  y0;
+                   s32  x1;
+                   s32  y1;
+                   s32  x;
+                   s32  y;
+                   i32  lat;
+                   i32  alt;
+
+    /* capsa: sphaera ambiens scalata circa medium corporis, ad
+     * reticulum pixelorum MUNDI (dithering corporis cum visu labente
+     * non natat), intra quadrum */
+    _pixelum_mundi(_medium_corporis(c), &medium_x, &medium_y);
+    radius = (s32)ceil((f64)(statua->radius * forma->scala
+        * MUNDUS_PIXELA_PER_UNITATEM)) + (s32)STATUAE_FINIUM_MARGO;
+    si (radius > (s32)MUNDUS_CAPSA_MAXIMA / II)
+    {
+        radius = (s32)MUNDUS_CAPSA_MAXIMA / II;
+    }
+    x0 = _ad_reticulum(medium_x - radius);
+    y0 = _ad_reticulum(medium_y - radius);
+    x1 = _ad_reticulum(medium_x + radius + (s32)STATUAE_FINIUM_GRADUS);
+    y1 = _ad_reticulum(medium_y + radius + (s32)STATUAE_FINIUM_GRADUS);
+    si (x0 < origo_x)
+    {
+        x0 = origo_x;
+    }
+    si (y0 < origo_y)
+    {
+        y0 = origo_y;
+    }
+    si (x1 > origo_x + (s32)latitudo)
+    {
+        x1 = origo_x + (s32)latitudo;
+    }
+    si (y1 > origo_y + (s32)altitudo)
+    {
+        y1 = origo_y + (s32)altitudo;
+    }
+    si (x1 <= x0 || y1 <= y0)
+    {
+        redde VERUM;
+    }
+    lat = (i32)(x1 - x0);
+    alt = (i32)(y1 - y0);
+    matrices = (StereometriaMatrix*)piscina_allocare(piscina,
+        ((memoriae_index)statua->nodorum + I)
+            * magnitudo(StereometriaMatrix));
+    si (!matrices)
+    {
+        redde FALSUM;
+    }
+    statua_positura(statua,
+        c->movetur ? forma->cyclus_ambulandi : forma->cyclus_quietis,
+        c->movetur ? c->tempus_motus : 0.0f, matrices);
+    /* locatio: pedes et medium statuae ad locum corporis, scalata,
+     * facie versa (0 = +z, crescit versus +x: rotatio circa y) */
+    dimidium         = c->facies * STEREOMETRIA_PI / 360.0f;
+    rotatio.x        = 0.0f;
+    rotatio.y        = (f32)sin((f64)dimidium);
+    rotatio.z        = 0.0f;
+    rotatio.w        = (f32)cos((f64)dimidium);
+    locata.statua    = statua;
+    locata.matrices  = matrices;
+    locata.locatio   = stereometria_multiplicare(
+        stereometria_ex_trs(stereometria_vector(c->x, c->y, c->z),
+            rotatio,
+            stereometria_vector(forma->scala, forma->scala,
+                forma->scala)),
+        stereometria_translatio(stereometria_vector(-forma->medium_x,
+            -forma->imum, -forma->medium_z)));
+    visus = mundus_visus(x0, y0);
+    si (!statua_scaenam_pingere(&locata, I, &visus, lat, alt, &pictura,
+            piscina))
+    {
+        redde FALSUM;
+    }
+    per (y = ZEPHYRUM; y < (s32)alt; y++)
+    {
+        per (x = ZEPHYRUM; x < (s32)lat; x++)
+        {
+            k      = (memoriae_index)y * lat + (memoriae_index)x;
+            locus  = (memoriae_index)(y0 - origo_y + y) * latitudo
+                + (memoriae_index)(x0 - origo_x + x);
+            si (   pictura.tectum[k]
+                && pictura.profunditas[k] < profunditas[locus])
+            {
+                profunditas[locus]  = pictura.profunditas[k];
+                domini[locus]       = signum;
+            }
+        }
+    }
+    pictum->rgba      = pictura.rgba;
+    pictum->x0        = x0;
+    pictum->y0        = y0;
+    pictum->latitudo  = lat;
+    pictum->altitudo  = alt;
+    redde VERUM;
+}
+
+/* gradus alter: pixela quorum corpus dominus est (post OMNIA corpora
+ * picta - ordo corporum nihil mutat) exemplariis redigere et in
+ * quadrum ponere */
+interior b32
+_corpus_redigere (
+    constans CorpusPictum* pictum,
+                      i32  signum,
+             constans b32* activi,
+                      s32  origo_x,
+                      s32  origo_y,
+                      i32  latitudo,
+             constans i32* domini,
+                       i8* indices,
+                  Piscina* piscina)
+{
+    memoriae_index pixela = (memoriae_index)pictum->latitudo
+        * pictum->altitudo;
+    memoriae_index  k;
+    memoriae_index  locus;
+                i8* larva;
+                i8* redacta;
+               s32  x;
+               s32  y;
+               b32  aliquid = FALSUM;
+
+    larva    = (i8*)piscina_allocare(piscina, pixela);
+    redacta  = (i8*)piscina_allocare(piscina, pixela);
+    si (!larva || !redacta)
+    {
+        redde FALSUM;
+    }
+    per (y = ZEPHYRUM; y < (s32)pictum->altitudo; y++)
+    {
+        per (x = ZEPHYRUM; x < (s32)pictum->latitudo; x++)
+        {
+            k      = (memoriae_index)y * pictum->latitudo
+                + (memoriae_index)x;
+            locus  = (memoriae_index)(pictum->y0 - origo_y + y)
+                * latitudo
+                + (memoriae_index)(pictum->x0 - origo_x + x);
+            larva[k]  = (i8)(domini[locus] == signum);
+            aliquid   = aliquid || larva[k];
+        }
+    }
+    si (!aliquid)
+    {
+        redde VERUM;
+    }
+    si (!statuae_picturam_dithering(pictum->rgba, larva,
+            pictum->latitudo, pictum->altitudo, activi, redacta,
+            piscina))
+    {
+        redde FALSUM;
+    }
+    per (y = ZEPHYRUM; y < (s32)pictum->altitudo; y++)
+    {
+        per (x = ZEPHYRUM; x < (s32)pictum->latitudo; x++)
+        {
+            k = (memoriae_index)y * pictum->latitudo
+                + (memoriae_index)x;
+            si (larva[k])
+            {
+                locus = (memoriae_index)(pictum->y0 - origo_y + y)
+                    * latitudo
+                    + (memoriae_index)(pictum->x0 - origo_x + x);
+                indices[locus] = redacta[k];
+            }
+        }
+    }
+    redde VERUM;
+}
+
+b32
+mundus_quadrum_pingere (
+             MundusHumus* humus,
+         constans Mundus* mundus,
+    constans MundusForma* formae,
+                     i32  formarum,
+                     i32  sequens,
+            constans b32* activi,
+                      i8  fundus,
+                     i32  latitudo,
+                     i32  altitudo,
+                      i8* indices,
+                 Piscina* piscina)
+{
+    constans MundusCorpus* c;
+             CorpusPictum* picta;
+                      f32* profunditas;
+                      i32* domini;
+           memoriae_index  pixela;
+                      s32  origo_x;
+                      s32  origo_y;
+                      i32  k;
+
+    si (   !humus || !mundus || !activi || !indices || !piscina
+        || (formarum && !formae)
+        || !mundus_quadri_origo(mundus, sequens, latitudo, altitudo,
+               &origo_x, &origo_y))
+    {
+        redde FALSUM;
+    }
+    si (latitudo == ZEPHYRUM || altitudo == ZEPHYRUM)
+    {
+        redde VERUM;
+    }
+    pixela       = (memoriae_index)latitudo * altitudo;
+    profunditas  = (f32*)piscina_allocare(piscina,
+        pixela * magnitudo(f32));
+    domini       = (i32*)piscina_allocare(piscina,
+        pixela * magnitudo(i32));
+    picta        = (CorpusPictum*)piscina_allocare(piscina,
+        ((memoriae_index)mundus->corporum + I)
+            * magnitudo(CorpusPictum));
+    si (   !profunditas || !domini || !picta
+        || !mundus_humus_copiare(humus, origo_x, origo_y, latitudo,
+               altitudo, fundus, indices, profunditas))
+    {
+        redde FALSUM;
+    }
+    /* dominus 0 = humus; k + I = corpus k */
+    memset(domini, ZEPHYRUM, pixela * magnitudo(i32));
+    memset(picta, ZEPHYRUM, ((memoriae_index)mundus->corporum + I)
+        * magnitudo(CorpusPictum));
+    per (k = ZEPHYRUM; k < mundus->corporum; k++)
+    {
+        c = &mundus->corpora[k];
+        si (   c->forma < ZEPHYRUM || (i32)c->forma >= formarum
+            || !formae[c->forma].statua)
+        {
+            perge;
+        }
+        si (!_corpus_pingere(c, &formae[c->forma], k + I, origo_x,
+                origo_y, latitudo, altitudo, domini, profunditas,
+                &picta[k], piscina))
+        {
+            redde FALSUM;
+        }
+    }
+    per (k = ZEPHYRUM; k < mundus->corporum; k++)
+    {
+        si (   picta[k].rgba
+            && !_corpus_redigere(&picta[k], k + I, activi, origo_x,
+                   origo_y, latitudo, domini, indices, piscina))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }

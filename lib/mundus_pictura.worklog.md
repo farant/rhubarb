@@ -46,3 +46,53 @@ test: a region rendered at the wrong offset (now: the copy must match
 a direct render of the same rectangle in coverage and depth, pixel
 for pixel) and a region made outside the place's box (now: a copy
 three regions left of and above the place makes none).
+
+## 2026-11-10 - bodies and the frame (mundus-plan T7)
+
+**Measured first** (scratch `corpus.c`, one body at world size, pose
++ render + exemplaria): mushroom man 2.9 ms, golem 4.6, dragon
+giraffe 3.3, troll 3.6; render is 0.15-0.5 ms of that, the rest is
+exemplaria. Whole frames on the real level (scratch `quadrum.c`):
+one walking character 3.5 ms at 360x438 and 3.9 ms at 480x541 (17-21
+ms on the frames that make new ground regions); EIGHT characters in
+view 26.7 ms average, 38 worst, at 480x541. So one character is far
+inside a 33 ms tick; eight are at its edge. Nothing is done about
+eight in this stage (there is one body); the remedy belongs to the
+mobs stage (reuse the dither of a body that has not changed pose,
+or a cheaper dither for mobs).
+
+**Two passes, because order must not matter.** First version: each
+body rendered, masked against the frame's depth, dithered, written,
+one after the other. Test "ordo" (the same two overlapping bodies
+listed in either order must give the same bytes) failed: a far body
+dithered before the near one was drawn used a mask that still
+included the pixels the near body would cover, and exemplaria's
+result depends on its mask. Now pass one renders every body into its
+box and records, per frame pixel, depth and OWNER (0 = ground, k + 1
+= body k); pass two dithers each body under the mask "pixels I own".
+
+**The box** is the body's scaled bounding sphere around its centre,
+grown by the margin and snapped to the 8-pixel grid in WORLD pixels,
+then clipped to the frame. World snapping matters: the frame's origin
+moves with the player, and a box snapped in frame coordinates would
+shift the dither grid under a standing body every time the player
+took a step.
+
+**Scale.** `mundus_forma` scales a model so its rest pose is 2 units
+tall, unless that would make it wider than 3 units, in which case
+width decides. Height alone made the spider (low and wide) 2.3 times
+its natural size, over 4 units across.
+
+**Idle.** A body that is not moving is posed with `cyclus_quietis` at
+time 0. No model has an idle clip today and the world keeps no clock
+for one; when one appears, a body needs an idle time beside
+`tempus_motus`.
+
+**Scratch-folder trap.** A stale copy of `mundus_pictura.h` beside the
+scratch program shadowed the real header (`#include "..."` looks in
+the source file's own folder first). Drafts now live in `vetera/`.
+
+Plants, six red (five here, one in statuae_quadrum): no depth test
+against the ground; mask not limited to owned pixels; frame origin
+off centre; no width cap on the scale; walk clip ignored; writing
+outside the mask.

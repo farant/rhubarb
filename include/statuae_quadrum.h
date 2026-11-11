@@ -116,6 +116,33 @@ statuae_fines_tecti (
  * Redde: FALSUM si statua aut petitio NIHIL, modus extra fines, aut
  * dithering deficit
  */
+/*
+ * statuae_picturam_dithering - pictura iam facta + larva -> indices
+ *
+ * Via exemplariorum statuae_quadrum (fines larvae cum margine et
+ * reticulo, larva, praesupputationes) picturae a vocante pictae
+ * oblata (mundus: corpus seorsum pictum, larva = pixela eius quae
+ * humus non occultat).
+ *
+ * @rgba:    IV per pixelum
+ * @larva:   I per pixelum; non 0 = pixelum redigendum
+ * @indices: latitudo * altitudo; pixela larvae indicem palettae
+ *           accipiunt, CETERA NON SCRIBUNTUR
+ *
+ * Larva tota vacua: VERUM, nihil scribitur.
+ *
+ * Redde: FALSUM si argumenta NIHIL aut dithering deficit
+ */
+b32
+statuae_picturam_dithering (
+    constans i8* rgba,
+    constans i8* larva,
+            i32  latitudo,
+            i32  altitudo,
+   constans b32* activi,
+             i8* indices,
+        Piscina* piscina);
+
 b32
 statuae_quadrum_pingere (
                    constans Statua* statua,

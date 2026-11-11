@@ -138,3 +138,15 @@ dragon giraffe is calmer (30.0 -> 26.4), the mushroom man slightly
 worse (15.6 -> 16.8). Fran's guess that Atkinson is more volatile
 under a mask is not what the numbers show.
 
+
+## 2026-11-10 - statuae_picturam_dithering (mundus-plan T7)
+
+The exemplaria path of this file (crop to the mask's box with margin
+and 8-pixel snapping, mask, budgets as a share of the masked pixels)
+is now a public function that takes a picture and a mask the caller
+rendered and writes palette INDICES only where the mask is set.
+`_exemplaria_intra_fines` became a thin caller of it; the pinned
+digests of `statuae_quadrum_pingere` and the "fines" comparison did
+not move. The world's frame uses it for each body with the mask
+"pixels of this body that nothing nearer covers". Test section
+"larva_picturae"; plant (write outside the mask) red.
