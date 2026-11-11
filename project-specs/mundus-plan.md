@@ -257,6 +257,13 @@ Fixed by this plan:
 
 ### Task 4: the walk map
 
+DONE 2026-11-10. Two changes from the text below, both in
+`lib/mundus_solum.worklog.md`: (1) the passability test is "step plus
+slope" (`MUNDUS_ASCENSUS_MAXIMUS` 0.75 added to the header; the real
+stairs are half-unit steps, not a ramp); (2) the real level is a
+committed fixture with pinned cell counts, and its top level is
+unreachable by design (no staircase leads there).
+
 **Files:** create `include/mundus_solum.h`, `lib/mundus_solum.c`,
 `probationes/probatio_mundus_solum.c`.
 
