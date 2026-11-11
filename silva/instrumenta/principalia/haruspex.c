@@ -159,8 +159,15 @@ _caput_visum (
     redde DIRECTORIUM_AMBULATOR_PERGE;
 }
 
-/* index NULLUS: haruspex nihil praetermittit (etiam build/ ambulat,
- * ut semper) - mos servatus, non emendatus */
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur). Olim haruspex NIHIL praetermittebat et capita
+ * directoriorum build/ quoque praebebat (CCCXLVI ex MCIII titulis;
+ * VI capita vera umbrabant, contentu eodem) - nunc index idem ac
+ * examen (decretum Franis 2026-11-10). */
+hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "node_modules", NIHIL
+};
+
 hic_manens vacuum
 _capita_praeparare (
         SilvaContextus* ctx,
@@ -173,8 +180,8 @@ _capita_praeparare (
     a.ctx      = ctx;
     a.piscina  = piscina;
     a.visa     = visa;
-    (vacuum)directorium_fontes_ambulare(radix, ".h", NIHIL,
-        _caput_visum, &a, piscina);
+    (vacuum)directorium_fontes_ambulare(radix, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_visum, &a, piscina);
 }
 
 
