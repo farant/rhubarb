@@ -3,7 +3,7 @@
 **Ledger:** parcum 01M6V5H5V1EGK1V37TP5M6BFN1 ("psalmodia"); one opus
 per task below, filed at R1.
 
-**STATUS: IN PROGRESS.** R1 done 2026-11-10 (header approved); R2 next.
+**STATUS: IN PROGRESS.** R1, R2 done 2026-11-10; R3 next.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > superpowers:executing-plans (inline, per house convention, no
@@ -423,3 +423,28 @@ drafted. Deviations from the sketch above, all in the approved header
   removed from the table, approval dated in its head comment.
 - Ledger opera: R1 01M73CYKZTE2QP27V9KQY9TRPT, R2 01M73CYPW7FQVDHJDXWBCVFMQG,
   R3 01M73CYSG1NKKPYQ54JSA597SS, R4 01M73CYW1ZGYMFXA85D7KCAYNA.
+
+**R2 (2026-11-10).** `lib/psalmodia_tabula.c`,
+`probationes/probatio_psalmodia_tabula.c` (4 sections, 105
+assertions, green; the real table: XI tones, XX mediationes, XXXV
+terminationes, CCXLVI exempla, 0 vitia, read in under 1 ms).
+Rulings:
+- Arrays sized by counting children, not grown with xar (only the
+  error list uses xar) - exact and simpler; cost if wrong: none
+  visible outside the file.
+- A `<tonus>` missing a required attribute (or with an unknown
+  modus) is reported and skipped whole; likewise an `<exemplum>`.
+  The mixed fixture therefore keeps TWO tones (1 and 3), not one.
+- A file STML cannot parse yields one vitium and no tones (STML sets
+  no root on failure); "good tones still read" holds for semantic
+  errors only. Recorded in the worklog.
+- Added to `_totalitas_probare`: a `<tonus>` with an unknown attribute
+  (`tonica`) -> exactly `x:2: attributum ignotum "tonica" in <tonus>`.
+  Plant (a) needed it; the planned fixtures never had one.
+- Dump order is tone, initium, flexa, mediationes, terminationes,
+  exempla (file order within each kind), grammar in the test's head
+  comment. The header says "ordine fontis"; within-kind is what the
+  structs can hold.
+Plants (a) and (b) both red, restored byte-identical. Helper names
+`_veritatem_legere` / `_campus_veritatis` (the lexicon knows no
+`booleum`/`booleanum`).

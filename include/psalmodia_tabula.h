@@ -54,7 +54,8 @@
  *   tonus 2 plures differentias habet: D, A
  *
  * FORMA CANONICA (psalmodia_tabulam_scribere, probationes): linea una
- * per tonum, clausulam, locum, exemplum, ordine fontis, campi tabulis
+ * per tonum, clausulam, locum, exemplum; intra tonum mediationes,
+ * terminationes, exempla, quodque genus ordine fontis; campi tabulis
  * separati; lineae fontis NON scribuntur (commentarium tabulae
  * mutatum formam non mutat). Grammatica in probatio_psalmodia_tabula.c
  * fixa.
