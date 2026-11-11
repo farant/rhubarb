@@ -1,0 +1,22 @@
+<!-- organum.stml - manifestum lateris mundi (project-specs/
+     mundus-spec.md IV.8): persona per locum ambulat in latere vici.
+     Locus personae in mundo, claves tentae et quadrum in memoria
+     montationis, numquam in statu - hic sola praeferentia personae,
+     persistens. -->
+<organum genus="mundus" versio="1">
+
+  <actiones>
+    <actio nomen="mundus.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="persona" typus="textus" vita="persistens"
+            scriptor="mundus.agere"
+            nota="titulus personae quae ambulat ('[' ']'); absens aut
+                  ignotus = prima cuius titulus 'mushroom' continet,
+                  aliter prima in indice"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

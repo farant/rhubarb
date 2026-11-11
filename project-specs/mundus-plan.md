@@ -611,6 +611,11 @@ choice after reading the existing act format.
 
 ### Task 9: the pane library
 
+DONE 2026-11-10. Pane definition `apps/mundus/organum.stml` (one
+persistent field, `persona`). The one-second "no key event" guard was
+dropped (reason in `lib/mundus_latus.worklog.md`); the pinned start
+picture is left to T10's screenshot.
+
 **Files:** create `include/mundus_latus.h`, `lib/mundus_latus.c`,
 `probationes/probatio_mundus_latus.c`.
 
