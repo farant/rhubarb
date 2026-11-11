@@ -116,3 +116,12 @@ Left for the next steps: the 5 other `_capita_praeparare` copies
 identitates group - different skip lists and, in examen, a full-path
 key), the other hand walkers, and the read-mode fopen inside
 `_caput_praebere` (still raw - no 'L' lines yet).
+
+## 2026-11-10 — census_ambigui.c deleted
+
+Fran's ruling the same day: silva/instrumenta/principalia/
+census_ambigui.c is removed (the M0 throwaway of 2026-07-08, its own
+header said so; replaced by ambigua.c + silva/ambigua.sh on
+2026-08-19; no launcher, no build rule, compiled by nothing). Its row
+leaves the legacy read-debt list (canalis_debita.tsv). The design doc
+and phase-log mentions stay as history.
