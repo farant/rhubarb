@@ -129,3 +129,10 @@ identical except timing. `cursor -sola probatio_chorda` is rc 1 on both
 sides (DECIPULA getpid) - pre-existing. vindex compiles but does not link
 at HEAD (known), so its rewritten site is unexercised. 14 debt rows deleted
 (65 -> 51); three files keep their row (other raw IO remains).
+
+Addendum (officina): the amalgam `officina/amalgama/officina.c` carries its
+OWN debt row. After the fontes were rewritten and the amalgam regenerated,
+that row was paid too, and examen-corpus (deferred gate) went red with
+"linea delenda". Run the debt check over ALL remaining rows after an
+amalgam regeneration, not just the files handed to transformare.
+(50 rows remain.)

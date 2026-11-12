@@ -52,7 +52,6 @@ knotapel/demo_125_exact_crossing_depth/demo-snapshot.c	knotapel/ extra examen co
 lib/compilator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 lib/herbarium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 lib/mensura_contextus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-officina/amalgama/officina.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/praeparator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/principalia/cursor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 officina/instrumenta/principalia/vindex.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
