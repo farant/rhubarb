@@ -332,6 +332,9 @@ _plagulam_percurrere (
     SilvaParsura* parsura;
     SilvaOraculum* oraculum_plagulae = NIHIL;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>cura cache nexus
+     * index communis (build/nexus.tsv), non ingressus actionis
+     * vocantis - vide _sigillum_plagulae (2026-11-02, J8) */
     pl = fopen(via, "rb");
     si (pl == NIHIL)
     {
@@ -659,6 +662,9 @@ _plagulam_totam_legere (
     Piscina* p;
     character* datum;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>cura cache nexus
+     * index communis (build/nexus.tsv), non ingressus actionis
+     * vocantis - vide _sigillum_plagulae (2026-11-02, J8) */
     pl = fopen(via, "rb");
     si (pl == NIHIL)
     {
@@ -1315,6 +1321,9 @@ _incrementale_praeparare (vacuum)
     {
         structura stat st;
 
+        /* <tolera codex="CANALIS_PRAETERITUS" (>cura cache nexus
+         * index communis (build/nexus.tsv), non ingressus actionis
+         * vocantis - vide _sigillum_plagulae (2026-11-02, J8) */
         si (   stat("silva/fontes/systema_c89.h", &st) != ZEPHYRUM
             || (long)st.st_mtime                       >= stampa_vetus)
         {
@@ -1393,6 +1402,9 @@ _incrementale_praeparare (vacuum)
         chorda cv = _chordam_alligare(v, strlen(v));
         structura stat st;
 
+        /* <tolera codex="CANALIS_PRAETERITUS" (>cura cache nexus
+         * index communis (build/nexus.tsv), non ingressus actionis
+         * vocantis - vide _sigillum_plagulae (2026-11-02, J8) */
         si (stat(v, &st) != ZEPHYRUM)
         {
             perge;   /* evanuit inter collectionem et hic - cursus
@@ -1572,6 +1584,9 @@ _systema_praeparare (
     SilvaContextus* ctx,
       SilvaPiscina* piscina_arboris_ctx)
 {
+         /* <tolera codex="CANALIS_PRAETERITUS" (>cura cache nexus
+          * index communis (build/nexus.tsv), non ingressus actionis
+          * vocantis - vide _sigillum_plagulae (2026-11-02, J8) */
          FILE* pl_sys = fopen("silva/fontes/systema_c89.h", "rb");
          long  mensura_sys;
     character* fons_sys;
@@ -1644,6 +1659,9 @@ _caput_praebere (
         redde;
     }
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>cura cache nexus
+     * index communis (build/nexus.tsv), non ingressus actionis
+     * vocantis - vide _sigillum_plagulae (2026-11-02, J8) */
     pl = fopen(via, "rb");
     si (pl == NIHIL)
     {

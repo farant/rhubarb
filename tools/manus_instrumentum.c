@@ -359,6 +359,8 @@ _detrahere (
         s32 fd;
 
         (vacuum)setsid();
+        /* <tolera codex="CANALIS_PRAETERITUS" (>diarium prolis
+         * descriptor scripturae diarii post setsid, non lectio */
         fd = open(diarium, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         si (fd >= 0)
         {

@@ -65,7 +65,7 @@ praeparator_tempus_plagulae (
 {
     structura stat indicium;
 
-    si (via == NIHIL || stat(via, &indicium) != ZEPHYRUM)
+    si (via == NIHIL || lectiones_stat(via, &indicium) != ZEPHYRUM)
     {
         redde 0L;
     }

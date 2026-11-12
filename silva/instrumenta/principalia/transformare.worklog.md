@@ -177,3 +177,39 @@ sealed into a book), so it was excluded from every fopen_legens run and now
 carries `<tolera codex="CANALIS_PRAETERITUS">` like forum.c's token read.
 Comment only; examen ACCIPE, debt row deleted (15 -> 14). The file has no
 gate (INTECTA) and was not rebuilt or run - no code changed.
+
+## 2026-11-12 — canalis_debita: the last 13 rows, by hand (31 sites)
+
+Census of what examen 96 still counted after the fopen sweep, then one hand
+pass. Knotapel snapshot row left on purpose (Fran) - 1 row remains.
+
+Tolerated (`CANALIS_PRAETERITUS`, reason at each site):
+- crusta interposer, 7 sites: it IS the syscall interposer, never links
+  lectiones.
+- nexus_percursus, 6 sites (4 fopen, 2 stat): shared cache upkeep, same
+  reason as the site tolerated 2026-11-02 (J8).
+- capture/detach, 5 sites: cursor freopen x2 (had SCRIPTURA only), vindex
+  capture fd, manus log fd after setsid, mensor /dev/null.
+- build and measurement machinery, 8 sites, each function read first:
+  fabrica_sutura (clang identity stat - already in the key; lstat of the
+  witness), compilator x2 (real clang path, identity sealed into the key),
+  mensura_contextus (.git probe walking up from cwd), mensor x3 (its own
+  diary and curation stamp). None is an input of the action being judged.
+
+Rewritten: forum.c stat x2 + the wallpaper fopen (by hand - the fopen rule
+would also rewrite the tolerated token read), herbarium.c stat
+($RHUBARB_HERBARIUM dir; lectiones.h include added - filum.h was already
+there so every closure already links lectiones), praeparator.c stat,
+probatio_briar_fabrica.c stat.
+
+Finds:
+- A `<tolera>` only absorbs a call on the line right after the comment. A
+  stat on the 3rd line of a multi-line condition is not absorbed (and no
+  TOLERA_IRRITUM is raised). compilator.c: both conditions split so the
+  stat has its own `si` (same behaviour).
+- `./compile_tools.sh compilator|mensor` is the WRONG builder: it fails at
+  link (provenientia_* undefined) and leaves bin/compilator and bin/mensor
+  deleted. Right: `bin/fabrica sanare bin/compilator bin/mensor`
+  (tools/compilator_struere.sh, tools/mensor_struere.sh).
+- forum has no gate (fumus is manual): compiled and linked through
+  build/aedilis/forum/struere.sh, server not started.

@@ -199,6 +199,8 @@ _identitas (
             piscina);
         redde FALSUM;
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>iudex ipse
+     * clang verum extra arborem: identitas eius in clave expresse */
     si (stat(via, &status) != ZEPHYRUM)
     {
         *causa_out = chorda_concatenare(chorda_ex_literis(
@@ -1124,6 +1126,8 @@ _vestigium_addere (
   structura timespec  tempus;
     FabricaVestigium* v;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>iudex ipse
+     * testis vestigii fabricae (photographia), non ingressus membri */
     si (lstat(via_vera, &status) != 0)
     {
         redde;

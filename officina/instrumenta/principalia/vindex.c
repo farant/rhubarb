@@ -1204,6 +1204,8 @@ principale (
 
             sprintf(via_capturae,
                 "%s/officina/build/vindex.stdout", v.radix);
+            /* <tolera codex="CANALIS_PRAETERITUS" (>captura stdout
+             * descriptor scripturae capturae (officina/build), non lectio */
             v.fd_capturae = open(via_capturae,
                 O_WRONLY | O_CREAT | O_TRUNC, 0644);
             si (v.fd_capturae >= 0)

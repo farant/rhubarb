@@ -76,6 +76,9 @@ _arborem_invenire (
     dum (VERUM)
     {
         sprintf(proba, "%s/.git", via);
+        /* <tolera codex="CANALIS_PRAETERITUS" (>mensura ipsa
+         * radix arboris per .git ascendendo quaeritur: contextus
+         * mensurae, non ingressus */
         si (stat(proba, &status) == ZEPHYRUM)
         {
             redde chorda_transcribere(chorda_ex_literis(via, piscina),

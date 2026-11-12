@@ -5,6 +5,7 @@
 #include "herbarium.h"
 #include "json.h"
 #include "filum.h"
+#include "lectiones.h"
 #include "fasti.h"
 #include "sigillum.h"
 #include "iter_directoria.h"
@@ -652,7 +653,7 @@ herbarium_sedes_ordinaria (
     }
     si (ambitus && *ambitus)
     {
-        si (stat(ambitus, &st) != 0 || !S_ISDIR(st.st_mode))
+        si (lectiones_stat(ambitus, &st) != 0 || !S_ISDIR(st.st_mode))
         {
             si (causa)
             {

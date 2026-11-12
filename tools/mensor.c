@@ -3675,6 +3675,8 @@ _purgatio_debita (
 {
     structura stat  status;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>mensura ipsa
+     * diarium et status mensoris proprii, non ingressus */
     si (stat(_curationis_via("curatio.ultima", piscina), &status) != 0)
     {
         redde VERUM;
@@ -3700,6 +3702,8 @@ _curatio_debita (
     {
         limes = strtol(getenv("MENSOR_CURARE_LIMES"), NIHIL, X);
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>mensura ipsa
+     * diarium et status mensoris proprii, non ingressus */
     si (   stat(mensura_diarium_cursuum(piscina), &status) == 0
         && (longus)status.st_size > limes)
     {
@@ -3732,6 +3736,8 @@ _curare_separatim (
     }
     (vacuum)setsid();
     {
+        /* <tolera codex="CANALIS_PRAETERITUS" (>machina
+         * /dev/null: lectiones machinas numquam notant */
         s32 fd = open("/dev/null", O_WRONLY);
 
         si (fd >= 0)
@@ -3796,6 +3802,8 @@ constans character* regula_via = getenv("MENSOR_RETENTIO");
     (vacuum)mensura_cursum_incipere(mensura_diarium_cursuum(piscina),
         &initium, piscina);
     ante = _horologium_ms();
+    /* <tolera codex="CANALIS_PRAETERITUS" (>mensura ipsa
+     * diarium et status mensoris proprii, non ingressus */
     si (stat(mensura_diarium_cursuum(piscina), &status) == 0)
     {
         octeti_diarii = (longus)status.st_size;
