@@ -128,7 +128,7 @@ _plagulam_legere (
         size_t  lecti;
 
     sprintf(plena, "%s/%s", _radix_viae(), via);
-    f = fopen(plena, "rb");
+    f = lectiones_fopen(plena, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;

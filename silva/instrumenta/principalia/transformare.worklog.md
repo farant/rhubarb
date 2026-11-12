@@ -145,3 +145,15 @@ compared old vs new - arbor x2, computus, fabrica x2 (app_vestitum and
 derivatum projects, 195 generated files, diff -r) identical except
 computus timing columns. 15 debt rows deleted (50 -> 35), checked over all
 remaining rows.
+
+## 2026-11-12 — fopen_legens: crusta (area 6)
+
+14 sites in 13 files (crusta_facies, crusta_oraculum, four tools, seven
+suites), 0 refused. `crusta/instrumenta/interpositio_macos.c` was on the
+list but has no fopen call (a dylib injected into bash - it must never
+link lectiones anyway); left out, examen ACCIPE. No amalgam. crusta_facies
+is also linked by tools/diagnostica.c and crusta/instrumenta/effectus.c
+(hook tools) through aedilis closures - gates diagnostica, unci,
+iudicium-fumus cover them. Four INTECTA tools compared old vs new (arbor
+x2, coctum, computus, facies x2): identical except computus timing.
+13 debt rows deleted (35 -> 22).
