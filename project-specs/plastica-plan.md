@@ -224,10 +224,14 @@ record.
   b32
   plastica_specimen_pingere (
       constans Statua* statua,
-      constans chorda* partes,
                Imago* exitus,
              Piscina* piscina);
   ```
+  (As built: no part-name table - the picture needs only the part
+  order, the tool prints the names. `PlasticaMensurae` also carries
+  `invisae`. No pinned digest: vertex bytes differ between
+  compilers; determinism, layout, scale and colours are pinned
+  instead. See `lib/plastica_specimen.worklog.md`.)
   `bin/plastica specimen <res.stml> -o <png>` prints the numbers and
   the part legend (colour name per part) and writes the sheet;
   refusals print `via:linea: causa` and exit 1.

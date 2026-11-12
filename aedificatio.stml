@@ -140,6 +140,22 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/statuae" provenientia="relatio"/>
   </actio>
+  <!-- plastica (plastica-plan T3): res plasticae (descriptiones
+       STML) in paginam aspectuum PNG (specimen) - oculi Claudii in
+       rem quam finxit -->
+  <actio titulus="plastica" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/plastica_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/plastica"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/plastica/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/plastica_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/plastica" provenientia="relatio"/>
+  </actio>
   <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
        silvae (silva._clonare_ignorata) -->
   <actio titulus="clonare" genus="institutio">
