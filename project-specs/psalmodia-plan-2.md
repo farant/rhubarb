@@ -3,8 +3,10 @@
 **Ledger:** parcum 01M6V5H5V1EGK1V37TP5M6BFN1 ("psalmodia"); one opus
 per task below, filed at T1.
 
-**STATUS: DRAFT (2026-11-11)** — for Fran's review. The five
-decisions marked FRAN below are asked before T1.
+**STATUS: APPROVED 2026-11-12** — Fran accepted the plan and all five
+FRAN recommendations as written. Opera: T1 01M7850MQZ, T2 01M7850R28,
+T3 01M7850V2N, T4 01M7850XXX, T5 01M78510RB, T6 01M78513GF,
+T7 01M7851695, T8 01M785197C.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use
 > superpowers:executing-plans (inline, per house convention, no
@@ -80,7 +82,7 @@ the lookup.
 - **Lookup over GregoBase** (R4): 1150 of 1315 named labels resolve;
   ~5900 chants have no label in a many-ending mode.
 
-## FRAN — decisions before T1
+## FRAN — decisions (all five ACCEPTED as recommended, 2026-11-12)
 
 1. **Hebrew names.** The fitter must know which words are Hebrew
    (hiatus *Is-ra-el*; the abrupt cadence at a half-verse end in tones
@@ -192,23 +194,23 @@ a test in the named task.
   longitudo)` — is a vowel letter (any case, accented, diaeresis, æ œ
   ǽ) at that byte; used by T4 for diagnostics.
 
-- [ ] **Step 1: Measure.** A `python3 -I` script over `chants.csv`:
+- [x] **Step 1: Measure.** A `python3 -I` script over `chants.csv`:
   for every word (syllables joined), print the division classes
   that need a rule — x, st/sc/sp, mute + liquid, gu/qu/su + vowel,
   i/j initial, hiatus pairs (ui, eu, ae with diaeresis), ch/ph/th —
   each with its counts. Record in the worklog; the header's RULES
   comment is written from it (majority = rule, minority = edition,
   counted).
-- [ ] **Step 2: Draft the header** — head comment: USUS, RULES (from
+- [x] **Step 2: Draft the header** — head comment: USUS, RULES (from
   step 1, each with its GregoBase count), ACCENT (mark → its
   syllable; two syllables unmarked → the first; one → none; three+
   unmarked → none + `signatus` FALSUM), FORCING (`-` divides,
   diaeresis = hiatus), TOTALITY (no letter → zero syllables; never
   NIHIL output).
-- [ ] **Step 3:** `./silva/examen.sh`, `./silva/formator.sh -vitia`,
+- [x] **Step 3:** `./silva/examen.sh`, `./silva/formator.sh -vitia`,
   `./oratio/vocabula.sh -nova`; header compiles alone under
   `VEXILLA_C89`.
-- [ ] **Step 4: STOP — show Fran the header.** Commit after approval.
+- [x] **Step 4: STOP — show Fran the header.** Commit after approval.
 
 ---
 
@@ -492,3 +494,15 @@ section prints `OMISSA` and passes.
 ---
 
 ## Executed notes
+
+- **T1 (2026-11-12, Fran approved the header).** Measured two
+  witnesses: GregoBase (221 595 words) and the AR 1912 OCR
+  (archive.org djvu text, 24 238 hyphenated words; only surviving
+  hyphens count). Rulings: (1) house style = AR 1912 (longest onset
+  forward: *ju-stí-ti-a*, *San-ctus*, *pro-pté-re-a*), not GregoBase's
+  majority, which mixes three styles - cost if wrong: hyphens only;
+  (2) prefix division kept (Fran: yes) - ab ad ex in ob per red sub
+  trans + vowel, sic-ut, et-énim, with a look-alike list;
+  (3) field `signatus` -> `notatus` (latina.h macro); (4) T2's sample
+  oracle checks count + accent per word, hyphen style by AR hand
+  cases. Tables in lib/syllabae_latinae.worklog.md.
