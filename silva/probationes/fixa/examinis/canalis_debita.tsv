@@ -11,22 +11,7 @@
 # 2026-10-14 ex ./silva/percursus.sh -semantica (222 plagulae, 478 sedes).
 apps/forum/forum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 apps/quaestio/quaestio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/instrumenta/computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/instrumenta/fabrica.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_amalgama.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_canon.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_computus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_contextus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 briar/probationes/probatio_briar_fabrica.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_facies.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_lexema.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_nexus.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_silva.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_spectator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_stml.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-briar/probationes/probatio_briar_totalitas.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/fontes/crusta_facies.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/fontes/crusta_oraculum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/instrumenta/arbor.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

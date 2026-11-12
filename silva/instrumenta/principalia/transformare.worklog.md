@@ -136,3 +136,12 @@ that row was paid too, and examen-corpus (deferred gate) went red with
 "linea delenda". Run the debt check over ALL remaining rows after an
 amalgam regeneration, not just the files handed to transformare.
 (50 rows remain.)
+
+## 2026-11-12 — fopen_legens: briar (area 5)
+
+17 sites in 16 files (three tools, thirteen suites), 0 refused. No amalgam,
+no hand notes. The three tools (arbor, computus, fabrica) are INTECTA:
+compared old vs new - arbor x2, computus, fabrica x2 (app_vestitum and
+derivatum projects, 195 generated files, diff -r) identical except
+computus timing columns. 15 debt rows deleted (50 -> 35), checked over all
+remaining rows.

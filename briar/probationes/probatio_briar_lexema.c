@@ -14,6 +14,7 @@
 #include "materia_token.h"
 #include "piscina.h"
 #include "xar.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +35,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
