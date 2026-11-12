@@ -1,5 +1,5 @@
 #!/bin/bash
-# tools/plastica_fumus.sh - fumus bin/plastica (plastica-plan T3):
+# tools/plastica_fumus.sh - fumus bin/plastica (plastica-plan T3, T4):
 # specimen putei (plastica/res/puteus.stml) et recusationes. Nihil
 # extra directorium temporarium scribit. Manu curritur post
 # ./tools/plastica_struere.sh.
@@ -62,6 +62,21 @@ proba "non-STML recusat" 1 "$B" specimen "$T/textus.stml" -o "$T/mala.png"
 proba "plagula absens" 1 "$B" specimen "$T/nulla.stml" -o "$T/mala.png"
 proba "via PNG mala" 1 "$B" specimen "$R/puteus.stml" -o "$T/nullum/dir/x.png"
 proba "provenientia" 0 "$B" -provenientia
+
+# texturae: pagina generum (III tabulae 384 x 384), determinata
+proba "texturae" 0 "$B" texturae -o "$T/texturae.png"
+file "$T/texturae.png" 2>/dev/null | grep -q "1152 x 384" || { echo "FRACTA: texturae: PNG 1152 x 384 abest"; fracta=$((fracta + 1)); }
+contine "genus primum" "$T/out" "^  0  cortex$"
+contine "genus ultimum" "$T/out" "^  8  granum$"
+cp "$T/texturae.png" "$T/texturae_prima.png"
+proba "texturae iterum" 0 "$B" texturae -o "$T/texturae.png"
+cmp -s "$T/texturae.png" "$T/texturae_prima.png" || { echo "FRACTA: pagina texturarum non determinata"; fracta=$((fracta + 1)); }
+proba "texturae sine -o usus" 2 "$B" texturae
+proba "texturae cum plagula usus" 2 "$B" texturae "$R/puteus.stml" -o "$T/y.png"
+printf '<res titulus="a">\n  <capsa magnitudo="1 1 1" textura="marmor"/>\n</res>\n' > "$T/textura.stml"
+proba "textura ignota recusat" 1 "$B" specimen "$T/textura.stml" -o "$T/mala.png"
+contine "via et linea texturae" "$T/err" "^$T/textura.stml:2: "
+contine "causa texturae" "$T/err" "marmor"
 
 if [ "$fracta" -eq 0 ]; then echo "PLASTICA FUMUS: OMNIA BONA"; exit 0; fi
 echo "PLASTICA FUMUS: $fracta FRACTA"; exit 1

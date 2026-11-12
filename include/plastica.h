@@ -34,6 +34,11 @@
  *                 (obex invisus rei tenuis; spec 14a) - materia
  *                 alpha 0, limen excisionis 0.5
  * titulus         nomen partis (in tabula 'partes')
+ * textura         genus texturae genitae ("saxum", "tabulae" ...) aut
+ *                 titulus texturae manu scriptae; cum semine
+ *                 (semen="n") et coloribus (colores="#o #m #c";
+ *                 absentes ex 'color' fiunt). Coordinatae per faciem,
+ *                 XVI texella per unitatem. Vide plastica_textura.h
  *
  * SOLIDA (omnia: titulus, locus, gyrus, rotatio, color, signum,
  * invisibilis; basis in y = 0 spatii sui):
@@ -75,6 +80,15 @@
  *              magnitudo_varia="v" (0 .. 1) quodque scala inter
  *              1 - v et 1 + v mutat
  *
+ * TEXTURA MANU SCRIPTA (liber <res>, ante usum; nodum non facit):
+ *
+ *   <textura titulus="t" latitudo="4" colores="#222 #fc5">
+ *     aaaa abba abba aaaa
+ *   </textura>
+ *
+ * Litterae a .. p colores ordine indicant; maxima XVI x XVI
+ * (plastica_textura.h).
+ *
  * Fortuita ex semine solo (generator integer proprius): semen idem,
  * res eadem in omni machina.
  *
@@ -89,8 +103,9 @@
  * RECUSAT, causa verbis planis Anglicis et linea plagulae: textum
  * qui STML non est; radicem aliam quam <res>; elementum aut
  * attributum ignotum; magnitudinem absentem, non numericam, nullam
- * aut negativam; signum ignotum; rem sine solidis. Statua recusata
- * NIHIL est - numquam dimidia.
+ * aut negativam; signum ignotum; texturam ignotam aut male scriptam;
+ * rem sine solidis, aut cum plus quam LXIV texturis diversis.
+ * Statua recusata NIHIL est - numquam dimidia.
  *
  * DETERMINATA: textus idem statuam eandem dat, octetum pro octeto.
  */

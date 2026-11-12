@@ -309,6 +309,7 @@ declare -a SOURCE_FILES=(
     "lib/planta_lectio.c"
     "lib/plastica.c"
     "lib/plastica_specimen.c"
+    "lib/plastica_textura.c"
     "lib/plexus.c"
     "lib/plist.c"
     "lib/polynomium.c"

@@ -1,23 +1,25 @@
 <res titulus="well">
   <!-- puteus: murus lapideus rotundus (duo ordines saxorum), aqua,
-       duo pali, tectum duarum alarum, sucula cum fune et situla.
+       duo pali, tectum stramineum duarum alarum, sucula cum fune et situla.
        Persona II unitates alta; murus ad genua, tectum supra caput. -->
 
   <!-- murus: ordo imus -->
   <series numerus="10" gyrus_gressus="36">
     <capsa titulus="saxum imum" magnitudo="0.62 0.45 0.32"
-           locus="0 0 0.85" color="#8f8676" signum="solidum"/>
+           locus="0 0 0.85" color="#8f8676" textura="saxum"
+           signum="solidum"/>
   </series>
   <!-- ordo superior, dimidio saxo versus, clarior -->
   <grex gyrus="18" locus="0 0.45 0">
     <series numerus="10" gyrus_gressus="36">
       <capsa titulus="saxum summum" magnitudo="0.62 0.4 0.32"
-             locus="0 0 0.85" color="#a89c88" signum="solidum"/>
+             locus="0 0 0.85" color="#a89c88" textura="saxum" semen="1"
+             signum="solidum"/>
     </series>
   </grex>
   <!-- labrum: anulus planus super murum -->
   <tornus titulus="labrum" puncta="1.08,0.85 1.08,0.95 0.64,0.95 0.64,0.85"
-          latera="10" color="#c8baa2"/>
+          latera="10" color="#c8baa2" textura="granum"/>
   <!-- aqua intra murum; solida ne quis in puteum ambulet -->
   <cylindrus titulus="aqua" radius="0.72" altitudo="0.3" latera="10"
              color="#2d5f8a" signum="solidum"/>
@@ -25,20 +27,21 @@
   <!-- pali ad fines iugi -->
   <speculum axis="z">
     <capsa titulus="palus" magnitudo="0.16 1.6 0.16" locus="0 0.95 0.86"
-           color="#6b4a2b"/>
+           color="#6b4a2b" textura="tabulae"/>
   </speculum>
   <!-- sucula inter palos -->
   <cylindrus titulus="sucula" radius="0.07" altitudo="1.72" latera="6"
-             locus="0 1.9 -0.86" rotatio="90 0 0" color="#5a3c22"/>
+             locus="0 1.9 -0.86" rotatio="90 0 0" color="#5a3c22"
+             textura="cortex"/>
   <cylindrus titulus="funis" radius="0.025" altitudo="0.62" latera="4"
              locus="0 1.28 0" color="#c9b48a"/>
   <cylindrus titulus="situla" radius="0.14" radius_summus="0.18"
              altitudo="0.26" latera="8" locus="0 1.04 0"
-             color="#8a6a44"/>
+             color="#8a6a44" textura="tabulae"/>
 
   <!-- tectum: duae alae a iugo cadentes -->
   <speculum axis="x">
     <cuneus titulus="ala tecti" magnitudo="1.0 0.55 2.3"
-            locus="0.5 2.45 0" color="#8c3b2a"/>
+            locus="0.5 2.45 0" color="#b08c44" textura="stramen"/>
   </speculum>
 </res>

@@ -196,7 +196,7 @@ record.
   places; all inside `area`. Review focus 2.
 - [x] **Step 2-4:** red, implement, green; plants (cap winding;
   mirror without the winding fix; scatter ignoring the seed).
-- [ ] **Step 5:** as T1.
+- [x] **Step 5:** as T1.
 
 ### Task 3: numbers, the sheet, `bin/plastica`, and the well
 
@@ -239,17 +239,17 @@ record.
   solid's top face, the rule of `mundus_solum`, restated here
   without including it.
 
-- [ ] **Step 1: failing tests.** Numbers of a known box and of a
+- [x] **Step 1: failing tests.** Numbers of a known box and of a
   thin post (0 solid cells). Sheet: size fixed, four columns by four
   rows, the raw cell is not blank, the part cell uses a different
   flat colour for each of two parts, digest pinned. Smoke script:
   the well compiles, a broken file exits 1 with a line number.
-- [ ] **Step 2-4:** red, implement, green; plants.
-- [ ] **Step 5:** write the well, in flat colours; look at the sheet;
+- [x] **Step 2-4:** red, implement, green; plants.
+- [x] **Step 5:** write the well, in flat colours; look at the sheet;
   revise until it reads as a well both raw and dithered. Show Fran
   the sheet. This answers spec AUDIENDA 1 as far as flat colours
   can.
-- [ ] **Step 6:** as T1 step 5.
+- [x] **Step 6:** as T1 step 5.
 
 ### Task 4: textures
 
@@ -280,11 +280,20 @@ modify `lib/plastica.c` (attribute `textura`, UVs).
   latitudo="8">` with rows of legend characters defines a
   hand-written texture, at most 16 x 16.
 
-- [ ] **Step 1:** measure the kit's texel density from
+  (As built: the constant is 16, measured - every material of
+  `planum.glb` sits at 16 texels per unit. Every pixel is exactly
+  one of the three colours, in the order dark, mid, light.
+  `colores` absent derives them from `color`. Generated tiles are
+  always 32 x 32 in a description. Added
+  `plastica_textura_genus(index)` and `bin/plastica texturae -o
+  <png>`, a swatch sheet of all nine. Legend letters are `a`..`p`
+  indexing `colores`. See `lib/plastica_textura.worklog.md`.)
+
+- [x] **Step 1:** measure the kit's texel density from
   `planum.glb` (texture width over the world width of one textured
   face, a throwaway program); set the constant to match and record
   the number in the worklog.
-- [ ] **Step 2: failing tests.** Each generator: same seed same
+- [x] **Step 2: failing tests.** Each generator: same seed same
   digest, other seed other digest, only colours between the three
   given. A 2-unit box face carries UVs 0..2 x constant / width. A
   17 x 17 hand texture is refused; an unknown `genus` is refused

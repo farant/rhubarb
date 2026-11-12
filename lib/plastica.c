@@ -12,6 +12,7 @@
  */
 
 #include "plastica.h"
+#include "plastica_textura.h"
 #include "stml.h"
 #include "internamentum.h"
 #include "xar.h"
@@ -28,6 +29,25 @@
 #define NUMERUS_MAXIMUS    CCLVI
 #define AREA_MINIMA        1.0e-10f
 #define AREA_RELATIVA_MINIMA  1.0e-5f
+#define TEXTURAE_MAXIMAE   LXIV
+#define MANU_MAXIMAE       XXXII
+#define COLORES_MANU       XVI
+/* facies cuius normalis tam erecta est iacet: u = x, v = z */
+#define FACIES_IACENS      1.0e-4f
+
+/* clavis texturae statuae: solida cum clave eadem texturam unam
+ * communicant. genus < PLASTICA_TEXTURA_GENERA = genita; aliter
+ * manu scripta (genus - PLASTICA_TEXTURA_GENERA) */
+nomen structura {
+    i32 genus;
+    i32 semen;
+     i8 colores[IX];
+} TexturaClavis;
+
+nomen structura {
+    chorda titulus;
+     Imago imago;
+} TexturaManu;
 
 nomen structura {
       Piscina* piscina;
@@ -45,6 +65,20 @@ nomen structura {
           b32  fractum;
           i32  linea;
     character  error[ERRORIS_MENSURA];
+    /* texturae: tabula in gradu 0 crescit, gradus I eam invenit */
+    TexturaClavis claves[TEXTURAE_MAXIMAE];
+            Imago texturae[TEXTURAE_MAXIMAE];
+              i32 texturarum;
+      TexturaManu manu[MANU_MAXIMAE];
+              i32 manu_numerus;
+    /* coordinatae solidi currentis: texella per unitatem divisa per
+     * latus texturae (0 = sine textura); ancora = punctum faciei
+     * cuius coordinatae (in unitatibus) datae sunt */
+                   f32 texella_s;
+                   f32 texella_t;
+    StereometriaVector ancora;
+                   f32 ancora_s;
+                   f32 ancora_t;
 } Plastes;
 
 
@@ -337,6 +371,59 @@ _color (
             redde FALSUM;
         }
         exitus[k] = (f32)(a * XVI + b) / 255.0f;
+    }
+    redde VERUM;
+}
+
+interior i8
+_octetus (
+    f32 x)
+{
+    redde (i8)(x * 255.0f + 0.5f);
+}
+
+/* colores spatiis separati in octetos (III per colorem); *numerus
+ * colores lecti; FALSUM si quis malus aut plures quam maximum */
+interior b32
+_colores_legere (
+    constans chorda* valor,
+                 i8* exitus,
+                i32  maximum,
+                i32* numerus)
+{
+    i32 k = ZEPHYRUM;
+
+    *numerus = ZEPHYRUM;
+    dum (VERUM)
+    {
+        chorda verbum;
+           f32 color[III];
+           i32 initium;
+           i32 a;
+
+        dum (k < valor->mensura && _spatium(valor->datum[k]))
+        {
+            k++;
+        }
+        si (k >= valor->mensura)
+        {
+            frange;
+        }
+        initium = k;
+        dum (k < valor->mensura && !_spatium(valor->datum[k]))
+        {
+            k++;
+        }
+        verbum = chorda_sectio(*valor, initium, k);
+        si (*numerus >= maximum || !_color(&verbum, color))
+        {
+            redde FALSUM;
+        }
+        per (a = ZEPHYRUM; a < III; a++)
+        {
+            exitus[*numerus * III + a] = _octetus(color[a]);
+        }
+        (*numerus)++;
     }
     redde VERUM;
 }
@@ -639,9 +726,167 @@ nomen structura {
     f32 color[IV];
     f32 limen_alpha;
     i32 signa;
+    s32 textura;        /* index in texturas statuae; -1 = nulla */
+    f32 texella_s;
+    f32 texella_t;
 } Proprietates;
 
-/* color, signum, invisibilis solidi */
+/* texturam clavis in tabula invenire aut addere (genitam hic
+ * pingere) */
+interior b32
+_textura_statuae (
+                   Plastes* p,
+        constans StmlNodus* nodus,
+    constans TexturaClavis* clavis,
+                       s32* index)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < p->texturarum; k++)
+    {
+        si (   p->claves[k].genus == clavis->genus
+            && p->claves[k].semen == clavis->semen
+            && memcmp(p->claves[k].colores, clavis->colores, IX)
+                == ZEPHYRUM)
+        {
+            *index = (s32)k;
+            redde VERUM;
+        }
+    }
+    si (k >= TEXTURAE_MAXIMAE)
+    {
+        redde _recusare_elementum(p, nodus,
+            "uses one texture too many (more than 64 different)");
+    }
+    si (clavis->genus < PLASTICA_TEXTURA_GENERA)
+    {
+        si (!plastica_textura_generare(
+            chorda_ex_literis(plastica_textura_genus(clavis->genus),
+                p->piscina), PLASTICA_TEXTURA_LATUS,
+            PLASTICA_TEXTURA_LATUS, clavis->semen, clavis->colores,
+            &p->texturae[k], p->piscina))
+        {
+            redde _recusare(p, nodus->linea, "out of memory", NIHIL,
+                NIHIL);
+        }
+    }
+    alioquin
+    {
+        p->texturae[k] =
+            p->manu[clavis->genus - PLASTICA_TEXTURA_GENERA].imago;
+    }
+    p->claves[k]  = *clavis;
+    p->texturarum++;
+    *index = (s32)k;
+    redde VERUM;
+}
+
+/* textura, semen, colores solidi (plastica_textura.h) */
+interior b32
+_proprietates_texturae (
+               Plastes* p,
+    constans StmlNodus* nodus,
+          Proprietates* q)
+{
+    constans chorda* valor   =
+        stml_attributum_capere(nodus, "textura");
+    constans chorda* colores =
+        stml_attributum_capere(nodus, "colores");
+      TexturaClavis clavis;
+                i32 numerus;
+                i32 k;
+
+    q->textura    = -I;
+    q->texella_s  = 0.0f;
+    q->texella_t  = 0.0f;
+    si (!valor)
+    {
+        redde colores
+            ? _recusare_attributum(p, nodus, "colores",
+                "needs the attribute 'textura'")
+            : VERUM;
+    }
+    memset(&clavis, ZEPHYRUM, magnitudo(clavis));
+    per (k = ZEPHYRUM; k < PLASTICA_TEXTURA_GENERA; k++)
+    {
+        si (_titulus_est(valor, plastica_textura_genus(k)))
+        {
+            frange;
+        }
+    }
+    si (k < PLASTICA_TEXTURA_GENERA)
+    {
+        clavis.genus = k;
+        si (!_integer(p, nodus, "semen", FALSUM, ZEPHYRUM, ZEPHYRUM,
+            M * M, "must be a whole number from 0 to 1000000",
+            &clavis.semen))
+        {
+            redde FALSUM;
+        }
+        si (colores)
+        {
+            /* IV loci: color quartus deprehenditur */
+            i8 lecti[XII];
+
+            si (   !_colores_legere(colores, lecti, IV, &numerus)
+                || numerus != III)
+            {
+                redde _recusare_attributum(p, nodus, "colores",
+                    "needs 3 colours written '#rgb #rgb #rgb'"
+                    " (dark, middle, light)");
+            }
+            memcpy(clavis.colores, lecti, IX);
+        }
+        alioquin
+        {
+            per (k = ZEPHYRUM; k < III; k++)
+            {
+                i32 medius = _octetus(q->color[k]);
+
+                clavis.colores[k]        = (i8)(medius * III / IV);
+                clavis.colores[III + k]  = (i8)medius;
+                clavis.colores[VI + k]   =
+                    (i8)(medius + (CCLV - medius) / IV);
+            }
+        }
+    }
+    alioquin
+    {
+        per (k = ZEPHYRUM; k < p->manu_numerus; k++)
+        {
+            si (chorda_aequalis(p->manu[k].titulus, *valor))
+            {
+                frange;
+            }
+        }
+        si (k >= p->manu_numerus)
+        {
+            redde _recusare(p, nodus->linea, "unknown texture '",
+                valor, "'");
+        }
+        si (colores)
+        {
+            redde _recusare_attributum(p, nodus, "colores",
+                "cannot be given with a hand-written texture");
+        }
+        clavis.genus = PLASTICA_TEXTURA_GENERA + k;
+    }
+    si (!_textura_statuae(p, nodus, &clavis, &q->textura))
+    {
+        redde FALSUM;
+    }
+    q->texella_s = (f32)PLASTICA_TEXELLA_PER_UNITATEM
+        / (f32)p->texturae[q->textura].latitudo;
+    q->texella_t = (f32)PLASTICA_TEXELLA_PER_UNITATEM
+        / (f32)p->texturae[q->textura].altitudo;
+    /* textura colorem fert: factor albus (alpha manet) */
+    q->color[ZEPHYRUM]  = 1.0f;
+    q->color[I]         = 1.0f;
+    q->color[II]        = 1.0f;
+    redde VERUM;
+}
+
+/* color, signum, invisibilis, textura solidi */
 interior b32
 _proprietates (
                Plastes* p,
@@ -690,7 +935,7 @@ _proprietates (
         q->color[III]   = 0.0f;
         q->limen_alpha  = 0.5f;
     }
-    redde VERUM;
+    redde _proprietates_texturae(p, nodus, q);
 }
 
 /* nodus liberum elementum habet? (solidum liberos non fert) */
@@ -749,8 +994,13 @@ _solidum_aperire (
     {
         redde FALSUM;
     }
-    p->index_solidi = p->indicum;
-    p->linea_solidi = nodus->linea;
+    p->index_solidi  = p->indicum;
+    p->linea_solidi  = nodus->linea;
+    p->texella_s     = q.texella_s;
+    p->texella_t     = q.texella_t;
+    p->ancora        = stereometria_vector(0.0f, 0.0f, 0.0f);
+    p->ancora_s      = 0.0f;
+    p->ancora_t      = 0.0f;
     si (p->gradus)
     {
                Statua* s = p->statua;
@@ -765,7 +1015,7 @@ _solidum_aperire (
         s->partes[k].materia       = (s32)k;
         materia                    = &s->materiae[k];
         memset(materia, ZEPHYRUM, magnitudo(*materia));
-        materia->textura      = -I;
+        materia->textura      = q.textura;
         memcpy(materia->color, q.color, magnitudo(materia->color));
         materia->limen_alpha  = q.limen_alpha;
         materia->repetit_s    = VERUM;
@@ -796,6 +1046,79 @@ _solidum_claudere (
     redde VERUM;
 }
 
+/* facies quae sequuntur coordinatas ab hoc puncto numerant: punctum
+ * coordinatas (s, t) in unitatibus accipit. Sic superficies curva
+ * ambitum continuum tenet (facies iacentes ancoram neglegunt) */
+interior vacuum
+_ancoram_ponere (
+               Plastes* p,
+    StereometriaVector  punctum,
+                   f32  s,
+                   f32  t)
+{
+    p->ancora    = punctum;
+    p->ancora_s  = s;
+    p->ancora_t  = t;
+}
+
+/* coordinatae texturae trianguli (ante reflexionem: imago speculi
+ * texturam reflexam fert). Texella quadrata: s secundum latus
+ * horizontale faciei dextrorsum extra visae, t deorsum secundum
+ * clivum (t = 0 ordo summus); facies iacens: s = x, t = z */
+interior vacuum
+_coordinatae (
+      constans Plastes* p,
+    StereometriaVector  a,
+    StereometriaVector  b,
+    StereometriaVector  c,
+                   f32  st[III][II])
+{
+    StereometriaVector puncta[III];
+    StereometriaVector n = stereometria_crux(
+        stereometria_subtrahere(b, a), stereometria_subtrahere(c, a));
+                   f32 longitudo  = stereometria_longitudo(n);
+                   f32 planum     =
+                       (f32)sqrt((f64)(n.x * n.x + n.z * n.z));
+                   i32 k;
+
+    memset(st, ZEPHYRUM, III * II * magnitudo(f32));
+    si (p->texella_s == 0.0f || !(longitudo > 0.0f))
+    {
+        redde;
+    }
+    puncta[ZEPHYRUM]  = a;
+    puncta[I]         = b;
+    puncta[II]        = c;
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        f32 s;
+        f32 t;
+
+        si (planum <= FACIES_IACENS * longitudo)
+        {
+            s = puncta[k].x;
+            t = puncta[k].z;
+        }
+        alioquin
+        {
+            StereometriaVector d =
+                stereometria_subtrahere(puncta[k], p->ancora);
+            /* dextrorsum: sursum x normalis; sursum per faciem:
+             * normalis x dextrorsum */
+                           f32 dexter_x = n.z / planum;
+                           f32 dexter_z = -n.x / planum;
+
+            s  = p->ancora_s + d.x * dexter_x + d.z * dexter_z;
+            t  = p->ancora_t
+                - (d.x * n.y * dexter_z + d.y * planum
+                    - d.z * n.y * dexter_x)
+                / longitudo;
+        }
+        st[k][ZEPHYRUM]  = s * p->texella_s;
+        st[k][I]         = t * p->texella_t;
+    }
+}
+
 /* triangulum unum, extrorsum visum contra horologium (a b c) */
 interior vacuum
 _triangulum (
@@ -808,9 +1131,13 @@ _triangulum (
     StereometriaVector latus_primum;
     StereometriaVector latus_alterum;
     StereometriaVector anguli[III];
+                   f32 st[III][II];
                    f32 longitudo;
+                   i32 ordo[III];
                    i32 k;
 
+    _coordinatae(p, a, b, c, st);
+    ordo[ZEPHYRUM]    = ZEPHYRUM;
     a.x               *= p->speculum_x;
     a.z               *= p->speculum_z;
     b.x               *= p->speculum_x;
@@ -823,11 +1150,15 @@ _triangulum (
     {
         anguli[I]   = c;
         anguli[II]  = b;
+        ordo[I]     = II;
+        ordo[II]    = I;
     }
     alioquin
     {
         anguli[I]   = b;
         anguli[II]  = c;
+        ordo[I]     = I;
+        ordo[II]    = II;
     }
     latus_primum  =
         stereometria_subtrahere(anguli[I], anguli[ZEPHYRUM]);
@@ -867,6 +1198,8 @@ _triangulum (
             s->normales[v * III]         = normalis.x;
             s->normales[v * III + I]     = normalis.y;
             s->normales[v * III + II]    = normalis.z;
+            s->coordinatae[v * II]       = st[ordo[k]][ZEPHYRUM];
+            s->coordinatae[v * II + I]   = st[ordo[k]][I];
             s->indices[p->indicum + k]   = v;
         }
     }
@@ -929,7 +1262,7 @@ _magnitudo (
 
 #define COMMUNIA_SOLIDI \
     "titulus", "locus", "gyrus", "rotatio", "color", "signum", \
-    "invisibilis"
+    "invisibilis", "textura", "semen", "colores"
 
 /* facies capsae: normalis et duo axes tangentes (u x v = normalis),
  * ut anguli (-u -v) (+u -v) (+u +v) (-u +v) extrorsum visi contra
@@ -1009,6 +1342,7 @@ _cylindrus (
                    f32 radius;
                    f32 radius_summus;
                    f32 altitudo;
+                   f32 latus;
                    i32 latera;
                    i32 k;
 
@@ -1043,6 +1377,8 @@ _cylindrus (
     }
     imum    = stereometria_vector(0.0f, 0.0f, 0.0f);
     summum  = stereometria_vector(0.0f, altitudo, 0.0f);
+    latus   = 2.0f * radius
+        * (f32)sin((f64)(STEREOMETRIA_PI / (f32)latera));
     per (k = ZEPHYRUM; k < latera; k++)
     {
         StereometriaVector b0 = _in_circulo(radius, 0.0f, k, latera);
@@ -1053,6 +1389,9 @@ _cylindrus (
         StereometriaVector t1 =
             _in_circulo(radius_summus, altitudo, k + I, latera);
 
+        /* ambitus: s ab angulo 0 retrorsum currit (dextrorsum
+         * extra visum est contra angulum crescentem) */
+        _ancoram_ponere(p, b0, -(f32)k * latus, 0.0f);
         _quadrum(p, b0, t0, t1, b1);
         _triangulum(p, imum, b0, b1);
         _triangulum(p, summum, t1, t0);
@@ -1107,11 +1446,12 @@ _sphaera (
 {
     hic_manens constans character* constans LICITA[] = {
         COMMUNIA_SOLIDI, "radius", "magnitudo", "segmenta",
-        "asperitas", "semen", NIHIL
+        "asperitas", NIHIL
     };
     f32 dimidia[III];
     f32 radius;
     f32 asperitas;
+    f32 passus;
     i32 segmenta;
     i32 semen;
     i32 zonae;
@@ -1168,20 +1508,38 @@ _sphaera (
         redde _recusare_attributum(p, nodus, "asperitas",
             "must be between 0 and 1");
     }
-    zonae = segmenta / II < II ? II : segmenta / II;
+    zonae   = segmenta / II < II ? II : segmenta / II;
+    passus  = STEREOMETRIA_PI * dimidia[I] / (f32)zonae;
     per (j = ZEPHYRUM; j < zonae; j++)
     {
         per (k = ZEPHYRUM; k < segmenta; k++)
         {
-            _quadrum(p,
-                _vertex_sphaerae(dimidia, j, k, zonae, segmenta,
-                    asperitas, semen),
-                _vertex_sphaerae(dimidia, j + I, k, zonae, segmenta,
-                    asperitas, semen),
-                _vertex_sphaerae(dimidia, j + I, k + I, zonae,
-                    segmenta, asperitas, semen),
-                _vertex_sphaerae(dimidia, j, k + I, zonae, segmenta,
-                    asperitas, semen));
+            StereometriaVector a = _vertex_sphaerae(dimidia, j, k,
+                zonae, segmenta, asperitas, semen);
+            StereometriaVector b = _vertex_sphaerae(dimidia, j + I, k,
+                zonae, segmenta, asperitas, semen);
+            StereometriaVector c = _vertex_sphaerae(dimidia, j + I,
+                k + I, zonae, segmenta, asperitas, semen);
+            StereometriaVector d = _vertex_sphaerae(dimidia, j, k + I,
+                zonae, segmenta, asperitas, semen);
+                           f32 infra = stereometria_longitudo(
+                               stereometria_subtrahere(d, a));
+                           f32 supra = stereometria_longitudo(
+                               stereometria_subtrahere(c, b));
+
+            /* ancora in anulo latiore (polus latitudinem non
+             * habet); t secundum meridianum */
+            si (supra > infra)
+            {
+                _ancoram_ponere(p, b, -(f32)k * supra,
+                    -(f32)(j + I) * passus);
+            }
+            alioquin
+            {
+                _ancoram_ponere(p, a, -(f32)k * infra,
+                    -(f32)j * passus);
+            }
+            _quadrum(p, a, b, c, d);
         }
     }
     redde _solidum_claudere(p, nodus);
@@ -1273,7 +1631,8 @@ _extrusio (
                 f32  z[PUNCTA_MAXIMA];
                 i32  ordo[PUNCTA_MAXIMA];
                 f32  altitudo;
-                f32  area = 0.0f;
+                f32  area    = 0.0f;
+                f32  cursus  = 0.0f;
                 i32  numerus;
                 i32  reliqua;
                 i32  conatus;
@@ -1335,6 +1694,11 @@ _extrusio (
         i32 a = ordo[k];
         i32 b = ordo[(k + I) % numerus];
 
+        /* ambitus: s secundum lineamentum crescit */
+        _ancoram_ponere(p, stereometria_vector(x[a], 0.0f, z[a]),
+            cursus, 0.0f);
+        cursus += (f32)sqrt((f64)((x[b] - x[a]) * (x[b] - x[a])
+            + (z[b] - z[a]) * (z[b] - z[a])));
         _quadrum(p, stereometria_vector(x[a], 0.0f, z[a]),
             stereometria_vector(x[b], 0.0f, z[b]),
             stereometria_vector(x[b], altitudo, z[b]),
@@ -1410,6 +1774,7 @@ _tornus (
     constans chorda* valor;
                 f32  r[PUNCTA_MAXIMA];
                 f32  y[PUNCTA_MAXIMA];
+                f32  cursus = 0.0f;
                 i32  numerus;
                 i32  latera;
                 i32  j;
@@ -1448,13 +1813,31 @@ _tornus (
      * cylindri, qui sursum eundo extrorsum spectat */
     per (j = ZEPHYRUM; j + I < numerus; j++)
     {
+        /* t secundum profilum currit (sursum eundo decrescit);
+         * ancora in anulo latiore; s retrorsum in pariete
+         * exteriore (sursum), prorsum in interiore (deorsum) */
+        b32 sursum = y[j + I] > y[j];
+        i32 anulus = r[j + I] > r[j] ? j + I : j;
+        f32 longitudo  = (f32)sqrt((f64)((r[j + I] - r[j])
+            * (r[j + I] - r[j])
+            + (y[j + I] - y[j]) * (y[j + I] - y[j])));
+        f32 sequens    = sursum ? cursus - longitudo
+            : cursus + longitudo;
+        f32 latus      = 2.0f * r[anulus]
+            * (f32)sin((f64)(STEREOMETRIA_PI / (f32)latera));
+
         per (k = ZEPHYRUM; k < latera; k++)
         {
+            _ancoram_ponere(p,
+                _in_circulo(r[anulus], y[anulus], k, latera),
+                sursum ? -(f32)k * latus : (f32)k * latus,
+                anulus == j ? cursus : sequens);
             _quadrum(p, _in_circulo(r[j], y[j], k, latera),
                 _in_circulo(r[j + I], y[j + I], k, latera),
                 _in_circulo(r[j + I], y[j + I], k + I, latera),
                 _in_circulo(r[j], y[j], k + I, latera));
         }
+        cursus = sequens;
     }
     redde _solidum_claudere(p, nodus);
 }
@@ -1675,6 +2058,163 @@ _sparsio (
 
 
 /* ==================================================
+ * Textura manu scripta
+ * ================================================== */
+
+/* elementum textura (titulus, latitudo, colores; litterae intus):
+ * liber radicis; in gradu 0 in tabulam 'manu' it, nodum nullum facit */
+interior b32
+_textura_manu (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        "titulus", "latitudo", "colores", NIHIL
+    };
+    constans chorda* titulus;
+    constans chorda* valor;
+        TexturaManu* nova;
+                 i8  colores[COLORES_MANU * III];
+                 i8  signa[PLASTICA_TEXTURA_MANU_MAXIMA
+                     * PLASTICA_TEXTURA_MANU_MAXIMA];
+                i32 colorum;
+                i32 latitudo;
+                i32 numerus = ZEPHYRUM;
+                i32 liberi  = nodus->liberi
+                    ? xar_numerus(nodus->liberi) : ZEPHYRUM;
+                i32 k;
+                i32 j;
+
+    si (p->gradus)
+    {
+        redde VERUM;
+    }
+    si (parens != ZEPHYRUM)
+    {
+        redde _recusare_elementum(p, nodus,
+            "must be a direct child of <res>");
+    }
+    si (!_attributa_licita(p, nodus, LICITA))
+    {
+        redde FALSUM;
+    }
+    titulus = stml_attributum_capere(nodus, "titulus");
+    si (!titulus || titulus->mensura == ZEPHYRUM)
+    {
+        redde _recusare_attributum(p, nodus, "titulus",
+            "is required");
+    }
+    per (k = ZEPHYRUM; k < PLASTICA_TEXTURA_GENERA; k++)
+    {
+        si (_titulus_est(titulus, plastica_textura_genus(k)))
+        {
+            redde _recusare(p, nodus->linea, "a hand-written texture"
+                " cannot take the name of the generated texture '",
+                titulus, "'");
+        }
+    }
+    per (k = ZEPHYRUM; k < p->manu_numerus; k++)
+    {
+        si (chorda_aequalis(p->manu[k].titulus, *titulus))
+        {
+            redde _recusare(p, nodus->linea, "texture '", titulus,
+                "' is defined twice");
+        }
+    }
+    si (p->manu_numerus >= MANU_MAXIMAE)
+    {
+        redde _recusare_elementum(p, nodus,
+            "is one hand-written texture too many (more than 32)");
+    }
+    si (!_integer(p, nodus, "latitudo", VERUM, I, I,
+        PLASTICA_TEXTURA_MANU_MAXIMA,
+        "must be a whole number from 1 to 16", &latitudo))
+    {
+        redde FALSUM;
+    }
+    valor = stml_attributum_capere(nodus, "colores");
+    si (   !valor
+        || !_colores_legere(valor, colores, COLORES_MANU, &colorum)
+        || colorum == ZEPHYRUM)
+    {
+        redde _recusare_attributum(p, nodus, "colores",
+            "needs 1 to 16 colours written '#rgb #rgb ...'");
+    }
+    si (_habet_elementa(nodus))
+    {
+        redde _recusare_elementum(p, nodus,
+            "holds letters only and cannot have children");
+    }
+    per (k = ZEPHYRUM; k < liberi; k++)
+    {
+        StmlNodus** locus =
+            (StmlNodus**)xar_obtinere(nodus->liberi, k);
+
+        si (   !locus || !*locus
+            || (*locus)->genus != STML_NODUS_TEXTUS
+            || !(*locus)->valor)
+        {
+            perge;
+        }
+        valor = (*locus)->valor;
+        per (j = ZEPHYRUM; j < valor->mensura; j++)
+        {
+            i8 littera = valor->datum[j];
+
+            si (_spatium(littera))
+            {
+                perge;
+            }
+            si (littera < 'a' || littera >= 'a' + colorum)
+            {
+                chorda una = chorda_sectio(*valor, j, j + I);
+
+                redde _recusare(p, nodus->linea,
+                    "<textura> uses the letter '", &una,
+                    "' which has no colour");
+            }
+            si (numerus >= PLASTICA_TEXTURA_MANU_MAXIMA
+                * PLASTICA_TEXTURA_MANU_MAXIMA)
+            {
+                redde _recusare_elementum(p, nodus,
+                    "is larger than 16 x 16");
+            }
+            signa[numerus++] = (i8)(littera - 'a');
+        }
+    }
+    si (numerus == ZEPHYRUM || numerus % latitudo)
+    {
+        redde _recusare_elementum(p, nodus,
+            "needs whole rows of 'latitudo' letters");
+    }
+    si (numerus / latitudo > PLASTICA_TEXTURA_MANU_MAXIMA)
+    {
+        redde _recusare_elementum(p, nodus, "is larger than 16 x 16");
+    }
+    nova                  = &p->manu[p->manu_numerus];
+    nova->titulus         = chorda_transcribere(*titulus, p->piscina);
+    nova->imago.latitudo  = latitudo;
+    nova->imago.altitudo  = numerus / latitudo;
+    nova->imago.pixela    = (i8*)piscina_allocare(p->piscina,
+        (memoriae_index)numerus * IV);
+    si (!nova->imago.pixela)
+    {
+        redde _recusare(p, nodus->linea, "out of memory", NIHIL,
+            NIHIL);
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        memcpy(nova->imago.pixela + k * IV, colores + signa[k] * III,
+            III);
+        nova->imago.pixela[k * IV + III] = CCLV;
+    }
+    p->manu_numerus++;
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Ambulatio
  * ================================================== */
 
@@ -1699,6 +2239,7 @@ hic_manens constans Elementum ELEMENTA[] = {
     { "speculum", _speculum },
     { "series", _series },
     { "sparsio", _sparsio },
+    { "textura", _textura_manu },
     { NIHIL, NIHIL }
 };
 
@@ -1922,8 +2463,17 @@ plastica_legere (
             p.indicum * magnitudo(i32));
         p.partes        = (chorda*)_locus(piscina,
             p.nodorum * magnitudo(chorda));
+        s->texturarum   = p.texturarum;
+        s->texturae     = (Imago*)_locus(piscina,
+            p.texturarum * magnitudo(Imago));
+        si (s->texturae)
+        {
+            memcpy(s->texturae, p.texturae,
+                p.texturarum * magnitudo(Imago));
+        }
     }
-    si (   !s || !s->nodi || !s->retia || !s->partes || !s->materiae
+    si (   !s || !s->nodi || !s->texturae || !s->retia || !s->partes
+        || !s->materiae
         || !s->positiones || !s->normales || !s->coordinatae
         || !s->indices || !p.partes)
     {
