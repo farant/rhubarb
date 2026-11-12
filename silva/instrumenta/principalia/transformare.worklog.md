@@ -168,3 +168,12 @@ unchanged. Everything is gate-covered (no INTECTA). 7 debt rows deleted
 (22 -> 15). What remains of the 139 is by hand or deliberately raw:
 apps/quaestio (API key - tolera, never lectiones), apps/forum (tolerated),
 knotapel snapshots, the channel itself and files with other raw IO.
+
+## 2026-11-12 — apps/quaestio: API key read tolerated by hand
+
+`apps/quaestio/quaestio.c` reads `~/.rhubarb/anthropic.clavis`. That read
+must never go through lectiones (the path and the fact of the read would be
+sealed into a book), so it was excluded from every fopen_legens run and now
+carries `<tolera codex="CANALIS_PRAETERITUS">` like forum.c's token read.
+Comment only; examen ACCIPE, debt row deleted (15 -> 14). The file has no
+gate (INTECTA) and was not rebuilt or run - no code changed.

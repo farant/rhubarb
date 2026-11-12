@@ -105,6 +105,8 @@ principale (
         redde ZEPHYRUM;
     }
     sprintf(via, "%s/.rhubarb/anthropic.clavis", domus);
+    /* <tolera codex="CANALIS_PRAETERITUS" (>secretum
+     * clavis API numquam per librum lectionum (sigillaretur) */
     f = fopen(via, "rb");
     si (!f)
     {
