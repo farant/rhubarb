@@ -329,6 +329,89 @@ _sectio_genera (
     volumen_claudere(v);
 }
 
+/* plastica-plan T6: res - genus tertium. Index personarum et
+ * locorum eas non monstrat; tituli per genera TRIA unici */
+interior vacuum
+_sectio_res (
+    CredoContextus* c)
+{
+    Volumen* v = volumen_temporarium(c->piscina, "statuae_res");
+        Xar* index;
+     chorda  a = _ch(c, "octeti personae");
+     chorda  b = _ch(c, "octeti loci");
+     chorda  d = _ch(c, "octeti rei");
+     chorda  e = _ch(c, "octeti rei novae");
+        s64  seq;
+
+    CREDO_NECESSE (v != NIHIL);
+    CREDO_AEQUALIS_I32 (STATUAE_GENERUM, III);
+    CREDO_VERUM (statuae_addere(v, _ch(c, "lapis"), a));
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "silva"), b,
+        STATUAE_GENUS_LOCUS));
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "puteus"), d,
+        STATUAE_GENUS_RES));
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "saepes"), d,
+        STATUAE_GENUS_RES));
+    /* personae et loci rem non vident */
+    index = statuae_enumerare(v, c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), I);
+    CREDO_VERUM (chorda_aequalis_literis(
+        _inscriptio(index, ZEPHYRUM)->titulus, "lapis"));
+    index = statuae_enumerare_generis(v, STATUAE_GENUS_LOCUS,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), I);
+    CREDO_VERUM (chorda_aequalis_literis(
+        _inscriptio(index, ZEPHYRUM)->titulus, "silva"));
+    /* res: ordine additionis, genere suo */
+    index = statuae_enumerare_generis(v, STATUAE_GENUS_RES,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), II);
+    CREDO_VERUM (chorda_aequalis_literis(
+        _inscriptio(index, ZEPHYRUM)->titulus, "puteus"));
+    CREDO_VERUM (chorda_aequalis_literis(_inscriptio(index, I)->titulus,
+        "saepes"));
+    CREDO_AEQUALIS_I32 (_inscriptio(index, ZEPHYRUM)->genus,
+        STATUAE_GENUS_RES);
+    CREDO_VERUM (chorda_aequalis(
+        _inscriptio(index, ZEPHYRUM)->sigillum_hex, _sigillum(c, d)));
+    /* titulus in genere alio iam est: recusatur, nihil scribitur */
+    seq = volumen_seq_ultimum(v);
+    CREDO_FALSUM (statuae_addere_generis(v, _ch(c, "lapis"), d,
+        STATUAE_GENUS_RES));
+    CREDO_FALSUM (statuae_addere_generis(v, _ch(c, "silva"), d,
+        STATUAE_GENUS_RES));
+    CREDO_FALSUM (statuae_addere(v, _ch(c, "puteus"), a));
+    CREDO_FALSUM (statuae_addere_generis(v, _ch(c, "puteus"), b,
+        STATUAE_GENUS_LOCUS));
+    CREDO_VERUM (volumen_seq_ultimum(v) == seq);
+    /* res substituitur in genere suo, locum servat; idem bis nihil
+     * scribit */
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "puteus"), e,
+        STATUAE_GENUS_RES));
+    seq = volumen_seq_ultimum(v);
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "puteus"), e,
+        STATUAE_GENUS_RES));
+    CREDO_VERUM (volumen_seq_ultimum(v) == seq);
+    index = statuae_enumerare_generis(v, STATUAE_GENUS_RES,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), II);
+    CREDO_VERUM (chorda_aequalis_literis(
+        _inscriptio(index, ZEPHYRUM)->titulus, "puteus"));
+    CREDO_VERUM (chorda_aequalis(
+        _inscriptio(index, ZEPHYRUM)->sigillum_hex, _sigillum(c, e)));
+    /* removere rem tollit; titulus deinde liber */
+    CREDO_VERUM (statuae_removere(v, _ch(c, "puteus")));
+    index = statuae_enumerare_generis(v, STATUAE_GENUS_RES,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (xar_numerus(index), I);
+    CREDO_VERUM (chorda_aequalis_literis(
+        _inscriptio(index, ZEPHYRUM)->titulus, "saepes"));
+    CREDO_VERUM (statuae_addere(v, _ch(c, "puteus"), a));
+    CREDO_AEQUALIS_I32 (xar_numerus(statuae_enumerare(v, c->piscina)),
+        II);
+    volumen_claudere(v);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "addere", _sectio_addere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "substitutio", _sectio_substitutio, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -337,6 +420,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "seq", _sectio_seq, NIHIL, NIHIL, NIHIL, NIHIL },
     { "transactio", _sectio_transactio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "res", _sectio_res, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

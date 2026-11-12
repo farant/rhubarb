@@ -1,13 +1,21 @@
 /* statuae.h - latus statuarum: simulacra GLB animata in latere vici,
  * dithering per quadrum (project-specs/statuae-spec.md)
  *
- * PICTURA latus implet sub ordine capitis. CAPUT: sagittae et numerus
- * (prior 1/2 proxima), titulus statuae, delectus cycli, delectus modi
- * dithering, commutatores 'lit' / 'flat' et '2x'. Si caput in ordine
+ * PICTURA latus implet sub ordine capitis. CAPUT: botto gregis
+ * ('chars' / 'props'), sagittae et numerus (prior 1/2 proxima),
+ * titulus statuae, delectus cycli, delectus modi dithering,
+ * commutatores 'lit' / 'flat' et '2x'. Si caput in ordine
  * uno non capit, delectus et commutatores in ordinem secundum eunt.
  *
- * STATUAE ex volumine (statuae_repositorium.h): index ordine
- * additionis; statua visa semel legitur (statua_glb.h) cum fit visa.
+ * GREGES duo: personae (genus STATUA) et res plasticae (genus RES;
+ * puteus, saepes). Unus apertus est; botto capitis et clavis 'g'
+ * commutant. Quisque grex statuam suam visam meminit (campi 'statua'
+ * et 'res'). Grex vacuus id dicit ("No models yet" / "No props
+ * yet"). Res eodem visu spectatur quo persona.
+ *
+ * STATUAE ex volumine (statuae_repositorium.h): index gregis aperti
+ * ordine additionis; statua visa semel legitur (statua_glb.h) cum fit
+ * visa.
  * Latus volumen_seq_ultimum semel per secundam inspicit - statua ab
  * alio processu addita (bin/statuae) sine restitutione apparet.
  * Statua quam lector recusat titulum et causam ostendit; sagittae
@@ -24,12 +32,13 @@
  * Ictus primus (latus nondum focatum) iam trahit.
  *
  * CLAVES: h l gyrus, j k inclinatio, r visus ordinarius, [ ] statua
- * prior / proxima, c delectus cycli, d delectus modi, f lit / flat,
- * 2 dimidia mensura, Spatium quies / cursus. Delectus apertus claves
+ * prior / proxima, g grex (personae / res), c delectus cycli, d
+ * delectus modi, f lit / flat, 2 dimidia mensura, Spatium quies /
+ * cursus. Delectus apertus claves
  * suas sumit (j k Reditus Esc).
  *
  * STATUS in ramo (manifestum apps/statuae/organum.stml, persistens):
- * statua, cyclus, modus, planum, duplex, quiescit, gyrus,
+ * grex, statua, res, cyclus, modus, planum, duplex, quiescit, gyrus,
  * inclinatio. Positio in cyclo, tractus et quadrum KINETICA sunt: in
  * montatione, numquam in statu.
  */
@@ -89,6 +98,7 @@ nomen structura {
                  Piscina* piscina_indicis;
                      Xar* index;        /* de StatuaeInscriptio */
                      s64  seq_visum;
+                     b32  grex_visus;   /* index gregis rerum est */
                      s64  inspectio_ms; /* horologium inspectionis
                                          * ultimae */
                      b32 inspectum;    /* semel saltem */

@@ -12,8 +12,16 @@
   <status>
     <campus nomen="statua" typus="textus" vita="persistens"
             scriptor="statuae.agere"
-            nota="titulus statuae visae ('[' ']'); absens aut ignotus
-                  = prima in indice"/>
+            nota="titulus personae visae in grege personarum ('[' ']');
+                  absens aut ignotus = prima in indice"/>
+    <campus nomen="grex" typus="textus" vita="persistens"
+            scriptor="statuae.agere"
+            nota="grex apertus ('g'): 'res' = res plasticae; absens aut
+                  aliud = personae"/>
+    <campus nomen="res" typus="textus" vita="persistens"
+            scriptor="statuae.agere"
+            nota="titulus rei visae in grege rerum ('[' ']'); absens aut
+                  ignotus = prima in indice"/>
     <campus nomen="cyclus" typus="textus" vita="persistens"
             scriptor="statuae.agere"
             nota="titulus cycli currentis (delectus 'c'); absens aut

@@ -332,7 +332,7 @@ modify `lib/plastica.c` (attribute `textura`, UVs).
   Writing the same `Statua` twice gives the same bytes.
 - [x] **Step 2-4:** red, implement, green; plants (marks dropped;
   texture wrap dropped; a clip's last key dropped).
-- [ ] **Step 5:** as T1. Record the size of the rewritten level
+- [x] **Step 5:** as T1. Record the size of the rewritten level
   beside the original (spec AUDIENDA 5).
 
 ### Task 6: the prop kind and the group switch
@@ -351,12 +351,18 @@ suites.
   props; the choice is a persistent field; the title shows which
   group is open; an empty group says so.
 
-- [ ] **Step 1: failing tests.** A prop is listed by
+  (As built: key `g`; the header button reads `chars` / `props`
+  (the long word took the title's room at 360 wide). Two fields,
+  not one: `grex` for the open group and `res` for the prop viewed,
+  so each group remembers its own model. `-res` on both `addere`
+  and `enumerare`.)
+
+- [x] **Step 1: failing tests.** A prop is listed by
   `statuae_enumerare_generis(RES)` and not by `statuae_enumerare`;
   a prop title that is already a character is refused. Pane: with
   one character and one prop, the switch shows the prop and back;
   the field survives reopening; no props shows the message.
-- [ ] **Step 2-4:** red, implement, green; plants.
+- [x] **Step 2-4:** red, implement, green; plants.
 - [ ] **Step 5:** as T1, and rebuild `bin/statuae`. After the
   commit Fran restarts vicus from secunda (spec 14d).
 

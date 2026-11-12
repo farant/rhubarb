@@ -68,6 +68,23 @@ proba "titulus personae ut locus recusatur" 1 "$B" addere "$F/planum.glb" -volum
 proba "-locus cum enumerare usus" 2 "$B" enumerare -volumen "$V" -locus
 proba "-loci cum addere usus" 2 "$B" addere "$F/lapis.glb" -volumen "$V" -loci
 proba "removere locum" 0 "$B" removere clearing -volumen "$V"
+# res (plastica-plan T6): -res cum addere et enumerare
+proba "addere rem" 0 "$B" addere "$F/lapis.glb" -volumen "$V" -titulus "puteus" -res
+proba "enumerare res" 0 "$B" enumerare -volumen "$V" -res
+[ "$(cut -f1 "$T/out")" = "puteus" ] || { echo "FRACTA: enumerare -res"; fracta=$((fracta + 1)); }
+proba "enumerare personas sine re" 0 "$B" enumerare -volumen "$V"
+grep -q "puteus" "$T/out" && { echo "FRACTA: res inter personas"; fracta=$((fracta + 1)); }
+proba "enumerare locos sine re" 0 "$B" enumerare -volumen "$V" -loci
+grep -q "puteus" "$T/out" && { echo "FRACTA: res inter locos"; fracta=$((fracta + 1)); }
+proba "titulus rei ut persona recusatur" 1 "$B" addere "$F/lapis.glb" -volumen "$V" -titulus "puteus"
+proba "titulus personae ut res recusatur" 1 "$B" addere "$F/lapis.glb" -volumen "$V" -titulus "mushroom man" -res
+proba "-res cum -locus usus" 2 "$B" addere "$F/lapis.glb" -volumen "$V" -titulus "x" -res -locus
+proba "-res cum -loci usus" 2 "$B" enumerare -volumen "$V" -res -loci
+proba "-res cum removere usus" 2 "$B" removere "puteus" -volumen "$V" -res
+proba "-res cum pingere usus" 2 "$B" pingere "$F/lapis.glb" -o "$T/r.png" -res
+proba "removere rem" 0 "$B" removere "puteus" -volumen "$V"
+proba "enumerare res post remotionem" 0 "$B" enumerare -volumen "$V" -res
+[ ! -s "$T/out" ] || { echo "FRACTA: res remota manet"; fracta=$((fracta + 1)); }
 proba "enumerare loci post remotionem" 0 "$B" enumerare -volumen "$V" -loci
 [ ! -s "$T/out" ] || { echo "FRACTA: locus remotus manet"; fracta=$((fracta + 1)); }
 

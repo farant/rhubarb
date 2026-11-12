@@ -978,6 +978,194 @@ _sectio_memoria (
     _finire(w);
 }
 
+/* campum 'grex' EXTRA latus mutare (ut restitutio aut processus
+ * alius): valor vacuus campum tollit */
+interior vacuum
+_gregem_extra_ponere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    constans character* valor = (constans character*)ctx;
+
+    si (!valor[ZEPHYRUM])
+    {
+        (vacuum)insula_attributum_tollere(radix, "grex");
+        redde;
+    }
+    insula_attributum_ponere(radix, p, in, "grex", valor);
+}
+
+interior b32
+_grex_extra (
+                Mundus* w,
+    constans character* valor,
+               Piscina* p)
+{
+    chorda prior = w->m.ramus.repo->scriptor;
+    /* mutator ctx non constans poscit: copia in piscina */
+    character* copia = (character*)piscina_allocare(p,
+        strlen(valor) + I);
+       b32 bene;
+
+    si (!copia)
+    {
+        redde FALSUM;
+    }
+    memcpy(copia, valor, strlen(valor) + I);
+    insula_scriptorem_ponere(w->m.ramus.repo,
+        chorda_ex_literis("statuae.agere", p));
+    bene = mutare_ramum(&w->m.ramus, _gregem_extra_ponere, copia);
+    insula_scriptorem_ponere(w->m.ramus.repo, prior);
+    redde bene;
+}
+
+/* plastica-plan T6: grex rerum. 'g' et botto capitis inter personas
+ * et res commutant; quisque grex statuam suam meminit; grex vacuus
+ * id dicit; campus reapertionem superat */
+interior vacuum
+_sectio_grex (
+    CredoContextus* c)
+{
+            Volumen* v = _volumen(c, "statuae_grex", II);
+             Mundus* w;
+    StatuaeMontatio  altera;
+       StatuaePorta  porta;
+            Mandata* md;
+
+    CREDO_NECESSE (v != NIHIL);
+    CREDO_VERUM (statuae_addere_generis(v, chorda_ex_literis("puteus",
+        c->piscina), filum_legere_totum(VIA_LAPIDIS, c->piscina),
+        STATUAE_GENUS_RES));
+    CREDO_VERUM (statuae_addere_generis(v, chorda_ex_literis("saepes",
+        c->piscina), filum_legere_totum(VIA_FUNGI, c->piscina),
+        STATUAE_GENUS_RES));
+    w = _mundum(c, v, DC, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    /* personae primum: res inter eas non apparent */
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "lapis"));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_pictus(md, "1/2", c->piscina));
+    CREDO_VERUM (_textus_pictus(md, "chars", c->piscina));
+    CREDO_FALSUM (_textus_pictus(md, "props", c->piscina));
+    CREDO_VERUM (_campus(w, "grex", NIHIL));
+    _clavis(w, ']');
+    CREDO_VERUM (_campus(w, "statua", "fungus"));
+    /* 'g': res */
+    _clavis(w, 'g');
+    CREDO_VERUM (_campus(w, "grex", "res"));
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "puteus"));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_pictus(md, "1/2", c->piscina));
+    CREDO_VERUM (_textus_pictus(md, "props", c->piscina));
+    CREDO_VERUM (_textus_pictus(md, "puteus", c->piscina));
+    CREDO_FALSUM (_textus_pictus(md, "chars", c->piscina));
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    CREDO_VERUM (_imago_picta(md));
+    /* ']' rem mutat, campum 'res' scribit; 'statua' intacta */
+    _clavis(w, ']');
+    CREDO_VERUM (_campus(w, "res", "saepes"));
+    CREDO_VERUM (_campus(w, "statua", "fungus"));
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "saepes"));
+    CREDO_VERUM (_textus_pictus(_reddere(w, c->piscina), "2/2",
+        c->piscina));
+    /* 'g' iterum: personae, ubi relictae */
+    _clavis(w, 'g');
+    CREDO_VERUM (_campus(w, "grex", NIHIL));
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "fungus"));
+    CREDO_VERUM (_textus_pictus(_reddere(w, c->piscina), "chars",
+        c->piscina));
+    /* botto capitis idem facit; res ubi relicta */
+    CREDO_NECESSE (_nodus(w, "grex", c->piscina) != NIHIL);
+    _mus(w, "grex", EVENTUS_MUS_DEPRESSUS, II, II, c->piscina);
+    CREDO_VERUM (_campus(w, "grex", "res"));
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "saepes"));
+    /* res ab alio processu addita post secundam apparet */
+    CREDO_VERUM (statuae_addere_generis(v, chorda_ex_literis("saxum",
+        c->piscina), filum_legere_totum(VIA_LAPIDIS, c->piscina),
+        STATUAE_GENUS_RES));
+    CREDO_VERUM (_pulsus(w, 1100));
+    CREDO_VERUM (_textus_pictus(_reddere(w, c->piscina), "2/3",
+        c->piscina));
+    /* campus extra latus mutatus (restitutio): pulsus IPSE indicem
+     * gregis alterius legit et mutationem nuntiat. Cyclus quiescit
+     * et res visa prima est (index vetus eandem daret): sine cura
+     * gregis pulsus nihil mutatum diceret */
+    _clavis(w, ' ');
+    _clavis(w, '[');
+    CREDO_VERUM (_campus(w, "res", "puteus"));
+    (vacuum)_pulsus(w, XXXIII);
+    CREDO_FALSUM (_pulsus(w, XXXIII));
+    CREDO_NECESSE (_grex_extra(w, "", c->piscina));
+    CREDO_VERUM (_pulsus(w, XXXIII));
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "fungus"));
+    CREDO_VERUM (_textus_pictus(_reddere(w, c->piscina), "2/2",
+        c->piscina));
+    CREDO_FALSUM (_pulsus(w, XXXIII));
+    CREDO_NECESSE (_grex_extra(w, "res", c->piscina));
+    CREDO_VERUM (_pulsus(w, XXXIII));
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "puteus"));
+    CREDO_VERUM (_textus_pictus(_reddere(w, c->piscina), "1/3",
+        c->piscina));
+    _clavis(w, ']');
+    /* reapertio: latus novum in repositorio eodem gregem et rem
+     * meminit */
+    statuae_dimittere(&w->m);
+    porta.nunc  = _nunc;
+    porta.ctx   = w;
+    memset(&altera, ZEPHYRUM, magnitudo(altera));
+    CREDO_NECESSE (statuae_montare(&altera, c->piscina, w->intern, v,
+        w->repo, "s1", &porta, DC, ALTITUDO, NIHIL));
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&altera,
+        c->piscina), "saepes"));
+    statuae_dimittere(&altera);
+    volumen_claudere(v);
+}
+
+/* grex rerum vacuus: nuntius proprius; personae intactae */
+interior vacuum
+_sectio_grex_vacuus (
+    CredoContextus* c)
+{
+     Mundus* w = _mundum(c, _volumen(c, "statuae_grex_vacuus", I),
+         LATITUDO, ALTITUDO);
+    Mandata* md;
+
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    _clavis(w, 'g');
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_quadrum(w) == NIHIL);
+    CREDO_VERUM (_textus_pictus(md, "No props yet", c->piscina));
+    CREDO_VERUM (_textus_pictus(md, "0/0", c->piscina));
+    CREDO_VERUM (_textus_pictus(md, "props", c->piscina));
+    CREDO_FALSUM (_textus_pictus(md, "No models yet", c->piscina));
+    CREDO_FALSUM (_imago_picta(md));
+    CREDO_AEQUALIS_I32 (statuae_titulus(&w->m, c->piscina).mensura,
+        ZEPHYRUM);
+    /* claves in grege vacuo nihil ruunt */
+    _clavis(w, ']');
+    _clavis(w, 'c');
+    CREDO_VERUM (_campus(w, "res", NIHIL));
+    _clavis(w, 'g');
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    CREDO_VERUM (chorda_aequalis_literis(statuae_titulus(&w->m,
+        c->piscina), "lapis"));
+    _finire(w);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "primum", _sectio_primum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tempus", _sectio_tempus, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -992,6 +1180,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "dispositio", _sectio_dispositio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "memoria", _sectio_memoria, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "grex", _sectio_grex, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "grex_vacuus", _sectio_grex_vacuus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

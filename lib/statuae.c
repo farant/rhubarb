@@ -35,6 +35,8 @@
 #define LITTERA_ALTITUDO     VIII
 #define LUX_LATITUDO         XXXII   /* "flat" */
 #define DUPLEX_LATITUDO      XX      /* "2x" */
+#define GREX_LATITUDO        XXXVIII /* "chars" / "props" */
+#define GREX_RERUM           "res"   /* valor campi 'grex' */
 #define GYRUS_ORDINARIUS     CCC     /* decimae gradus */
 #define INCLINATIO_ORDINARIA CL
 #define INCLINATIO_MAXIMA    850
@@ -57,6 +59,7 @@ hic_manens constans character* constans MODORUM_NOMINA[IV] = {
 
 /* dispositio lateris (spatium radicis) */
 nomen structura {
+    Fines grex;
     Fines prior;
     Fines proxima;
     Fines cyclus;
@@ -274,13 +277,32 @@ inscriptio (
     redde (StatuaeInscriptio*)xar_obtinere(m->index, k);
 }
 
+/* grex rerum apertus? (campus 'grex' = "res"; aliter personae) */
+interior b32
+grex_rerum (
+    constans StatuaeMontatio* m)
+{
+    chorda* a = insula_ramus_attributum(&m->ramus, "grex");
+
+    redde a && chorda_aequalis_literis(*a, GREX_RERUM);
+}
+
+/* campus qui titulum statuae visae in grege aperto tenet: quisque
+ * grex suam meminit */
+interior constans character*
+campus_visae (
+    constans StatuaeMontatio* m)
+{
+    redde grex_rerum(m) ? "res" : "statua";
+}
+
 /* locus statuae visae in indice: titulus status, aliter prima; -1 si
  * index vacuus */
 interior s32
 locus_statuae (
     constans StatuaeMontatio* m)
 {
-    chorda* a = insula_ramus_attributum(&m->ramus, "statua");
+    chorda* a = insula_ramus_attributum(&m->ramus, campus_visae(m));
        i32  k;
 
     si (statuarum_numerus(m) == ZEPHYRUM)
@@ -302,10 +324,31 @@ indicem_relegere (
     StatuaeMontatio* m)
 {
     piscina_vacare(m->piscina_indicis);
+    m->grex_visus = grex_rerum(m);
     m->index      = m->volumen
-        ? statuae_enumerare(m->volumen, m->piscina_indicis) : NIHIL;
+        ? statuae_enumerare_generis(m->volumen, m->grex_visus
+            ? STATUAE_GENUS_RES : STATUAE_GENUS_STATUA,
+            m->piscina_indicis)
+        : NIHIL;
     m->seq_visum  = m->volumen ? volumen_seq_ultimum(m->volumen)
                                : ZEPHYRUM;
+}
+
+/* index gregis aperti esse debet: si campus 'grex' mutatus est
+ * (clavis, botto, aut extra latus - restitutio), index relegitur.
+ * Omni pulsu et omni compositione, non solum ad inspectionem
+ * voluminis: aliter titulus gregis unius in indice alterius
+ * quaereretur. VERUM si relectus */
+interior b32
+gregem_curare (
+    StatuaeMontatio* m)
+{
+    si (!grex_rerum(m) == !m->grex_visus)
+    {
+        redde FALSUM;
+    }
+    indicem_relegere(m);
+    redde VERUM;
 }
 
 /* statuam visam legere si alia (aut nulla) nunc videnda est; VERUM si
@@ -503,9 +546,12 @@ disponere (
     l_cycli  = (s32)delectus_bottonis_latitudo(cycli_textus(m, p));
     l_modi   = (s32)delectus_bottonis_latitudo(chorda_ex_literis(
         MODORUM_NOMINA[modus_currens(m)], p));
-    d->prior      = fines(LIMBUS, ZEPHYRUM, SAGITTA_LATITUDO,
+    d->grex       = fines(LIMBUS, ZEPHYRUM, GREX_LATITUDO,
         ORDO_ALTITUDO);
-    d->numerus_x  = LIMBUS + SAGITTA_LATITUDO + LIMBUS;
+    x             = LIMBUS + GREX_LATITUDO + LIMBUS;
+    d->prior      = fines(x, ZEPHYRUM, SAGITTA_LATITUDO,
+        ORDO_ALTITUDO);
+    d->numerus_x  = x + SAGITTA_LATITUDO + LIMBUS;
     x             = d->numerus_x
         + (s32)strlen(numerus) * LITTERA_LATITUDO + LIMBUS;
     d->proxima    = fines(x, ZEPHYRUM, SAGITTA_LATITUDO, ORDO_ALTITUDO);
@@ -685,6 +731,10 @@ statuae_pulsare (
             mutatum = VERUM;
         }
     }
+        si (gregem_curare(m))
+        {
+        mutatum = VERUM;
+        }
     si (statuam_curare(m))
     {
         mutatum = VERUM;
@@ -876,7 +926,7 @@ statuam_mutare (
         <= STATUAE_TITULUS_MAXIMUS ? t.mensura
                                    : STATUAE_TITULUS_MAXIMUS),
         (constans character*)t.datum);
-    grex.pares[ZEPHYRUM].titulus  = "statua";
+    grex.pares[ZEPHYRUM].titulus  = campus_visae(m);
     grex.pares[ZEPHYRUM].valor    = titulus;
     grex.pares[I].titulus         = "gyrus";
     grex.pares[I].valor           = "";
@@ -898,6 +948,18 @@ fac_statuam_proximam (
     vacuum* ctx)
 {
     redde statuam_mutare((StatuaeMontatio*)ctx, I);
+}
+
+/* grex alter: personae <-> res. Index a gregem_curare relegitur
+ * (compositio proxima); visus manet */
+interior b32
+fac_gregem (
+    vacuum* ctx)
+{
+    StatuaeMontatio* m = (StatuaeMontatio*)ctx;
+
+    redde campum_scribere(m, "grex",
+        grex_rerum(m) ? "" : GREX_RERUM);
 }
 
 interior b32
@@ -980,6 +1042,8 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         ZEPHYRUM, fac_statuam_priorem },
     { "statuae.proxima", "Next model", "]", VISUS_STATUARUM, ZEPHYRUM,
         fac_statuam_proximam },
+    { "statuae.grex", "Characters / props", "g", VISUS_STATUARUM,
+        ZEPHYRUM, fac_gregem },
     { "statuae.cyclus", "Choose clip", "c", VISUS_STATUARUM, ZEPHYRUM,
         fac_delectum_cycli },
     { "statuae.modus", "Choose dither", "d", VISUS_STATUARUM, ZEPHYRUM,
@@ -1100,6 +1164,10 @@ agere (
             si (!nodus || ev->datum.mus.botton != MUS_SINISTER)
             {
                 redde FALSUM;
+            }
+            si (chorda_aequalis_literis(nodus->id, "grex"))
+            {
+                redde fac_gregem(m);
             }
             si (chorda_aequalis_literis(nodus->id, "sagitta_prior"))
             {
@@ -1294,7 +1362,9 @@ figura_statuarum (
     disponere(m, md->piscina, &d);
     locus   = locus_statuae(m);
     plures  = statuarum_numerus(m) > I;
-    /* caput: sagittae, numerus, titulus */
+    /* caput: grex, sagittae, numerus, titulus */
+    figura_globulum_pingere(md, d.grex, chorda_ex_literis(
+        grex_rerum(m) ? "props" : "chars", md->piscina), ZEPHYRUM);
     figura_sagittam_pingere(md, d.prior, -I,
         plures ? ZEPHYRUM : FIGURA_OBSCURUM);
     numerum_formare(m, numerus);
@@ -1347,12 +1417,15 @@ figura_statuarum (
     si (locus < ZEPHYRUM)
     {
         textum_pingere(md, LIMBUS * IV, d.pictura.y + XVI,
-            chorda_ex_literis("No models yet", md->piscina),
-            COLOR_TEXT);
+            chorda_ex_literis(grex_rerum(m) ? "No props yet"
+                                            : "No models yet",
+                md->piscina), COLOR_TEXT);
         textum_fractum_pingere(md, LIMBUS * IV, d.pictura.y + XXXII,
             (s32)d.pictura.latitudo - LIMBUS * VIII,
-            chorda_ex_literis("statuae addere <file.glb> -volumen "
-                "<volume>", md->piscina), COLOR_TEXT_DIM);
+            chorda_ex_literis(grex_rerum(m)
+                ? "plastica condere -volumen <volume>"
+                : "statuae addere <file.glb> -volumen <volume>",
+                md->piscina), COLOR_TEXT_DIM);
         redde;
     }
     si (m->causa.mensura > ZEPHYRUM)
@@ -1410,6 +1483,7 @@ statuae_componere (
         redde NIHIL;
     }
     /* pictura statum hunc sequatur (eventus statum modo mutavit) */
+    (vacuum)gregem_curare(m);
     (vacuum)statuam_curare(m);
     (vacuum)quadrum_curare(m, piscina);
     radix = componens_creare(piscina, intern, "statuae", PARTES_TABULA);
@@ -1428,6 +1502,7 @@ statuae_componere (
         componens_ponere_titulum(radix, "focatum");
     }
     aream_addere(radix, piscina, intern, "pictura", d.pictura);
+    aream_addere(radix, piscina, intern, "grex", d.grex);
     aream_addere(radix, piscina, intern, "sagitta_prior", d.prior);
     aream_addere(radix, piscina, intern, "sagitta_proxima", d.proxima);
     aream_addere(radix, piscina, intern, "lux", d.lux);

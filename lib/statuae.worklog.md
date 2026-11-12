@@ -137,3 +137,35 @@ of levels there, which would leave a faint seam; and through the
 theme the pane follows a theme change. `bin/statuae pingere` still
 writes opaque palette-5 paper. Each dither still runs on a white
 background, so the model's edge pixels are unchanged.
+
+## 2026-11-12 - plastica T6: the prop group
+
+- `$models` now has two groups, characters (`STATUAE_GENUS_STATUA`)
+  and props (`STATUAE_GENUS_RES`). The field `grex` ("res" = props,
+  absent = characters) says which is open; key `g` and the header
+  button `chars` / `props` switch.
+- **Each group remembers its own model.** The viewed title lives in
+  `statua` for characters and in the new field `res` for props
+  (`campus_visae`). With one field, switching groups would have
+  forgotten where you were in the other.
+- **The index is the open group's.** `indicem_relegere` reads
+  `statuae_enumerare_generis` for the open group and records which
+  group it read (`grex_visus`). `gregem_curare` re-reads whenever
+  the field and `grex_visus` disagree, and runs on every pulse and
+  every compose.
+- **Found by a plant.** The first version re-read in the key handler
+  and, for changes from outside the pane (undo), inside the
+  once-a-second volume check. A plant removing the outside path
+  stayed green; the test written to catch it failed for a real
+  reason: for up to a second the title of one group was looked up
+  in the other group's list. Hence one mechanism, ungated. The test
+  pauses the clip and views the first prop so that a stale list
+  would show the same model and the pulse would report no change.
+- **Label.** The header approved with Fran said `characters`; the
+  button is `chars`. At the ordinary 360 width the long word took
+  the title's room. The command palette entry reads "Characters /
+  props".
+- An empty prop group says "No props yet" and names
+  `plastica condere` (T7).
+- Everything else is untouched: a prop turns, tilts, dithers like a
+  character; with no clips the clip chooser is inert as before.

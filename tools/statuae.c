@@ -5,9 +5,10 @@
  *
  * Usus:
  *
- *   statuae addere <plagula.glb> -volumen V [-titulus T] [-locus]
+ *   statuae addere <plagula.glb> -volumen V [-titulus T]
+ *           [-locus | -res]
  *   statuae removere <titulus> -volumen V
- *   statuae enumerare -volumen V [-loci]
+ *   statuae enumerare -volumen V [-loci | -res]
  *   statuae pingere <plagula.glb> -o <via.png> [-cyclus N|TITULUS]
  *           [-tempus S] [-gyrus G] [-inclinatio G] [-planum]
  *           [-modus atkinson|bayer|exemplaria|nullum|crudum]
@@ -22,7 +23,10 @@
  * -locus (addere): plagula LOCUS est (latus $world in eo ambulat), non
  * persona; latus $models eum non monstrat. Titulus qui in genere
  * altero iam est recusatur. -loci (enumerare): locos pro personis.
- * removere genus utrumque tollit.
+ * -res (addere, enumerare): plagula RES est (res plastica: puteus,
+ * saepes); latus $models eam in grege rerum monstrat, non inter
+ * personas. Cum -locus aut -loci non datur.
+ * removere genus quodlibet tollit.
  *
  * pingere volumine non eget: quadrum quod latus ostenderet (charta
  * opaca). Ordinaria: 360 x 450, cyclus primus (quies si nullus),
@@ -72,6 +76,7 @@ nomen structura {
                    b32  planum;
                    b32  locus;         /* addere: genus locus */
                    b32  loci;          /* enumerare: loci */
+                   b32  res;           /* addere, enumerare: res */
                    s32  latitudo;
                    s32  altitudo;
 } Argumenta;
@@ -81,9 +86,9 @@ usum_imprimere (vacuum)
 {
     fprintf(stderr,
         "usus: statuae addere <plagula.glb> -volumen V [-titulus T]"
-        " [-locus]\n"
+        " [-locus | -res]\n"
         "      statuae removere <titulus> -volumen V\n"
-        "      statuae enumerare -volumen V [-loci]\n"
+        "      statuae enumerare -volumen V [-loci | -res]\n"
         "      statuae pingere <plagula.glb> -o <via.png>"
         " [-cyclus N|TITULUS]\n"
         "              [-tempus S] [-gyrus G] [-inclinatio G]"
@@ -163,6 +168,11 @@ argumenta_legere (
         si (strcmp(argv[k], "-loci") == ZEPHYRUM)
         {
             a->loci = VERUM;
+            perge;
+        }
+        si (strcmp(argv[k], "-res") == ZEPHYRUM)
+        {
+            a->res = VERUM;
             perge;
         }
         si (argv[k][ZEPHYRUM] != '-')
@@ -291,6 +301,19 @@ titulum_ex_via (
     redde t;
 }
 
+/* genus ex vexillis (-locus / -loci, -res); neutrum = persona */
+interior StatuaeGenus
+genus_petitum (
+    b32 locus,
+    b32 res)
+{
+    si (locus)
+    {
+        redde STATUAE_GENUS_LOCUS;
+    }
+    redde res ? STATUAE_GENUS_RES : STATUAE_GENUS_STATUA;
+}
+
 interior s32
 exsequi_addere (
     constans Argumenta* a,
@@ -317,11 +340,11 @@ exsequi_addere (
         redde I;
     }
     si (!statuae_addere_generis(volumen, titulus, octeti,
-            a->locus ? STATUAE_GENUS_LOCUS : STATUAE_GENUS_STATUA))
+            genus_petitum(a->locus, a->res)))
     {
         fprintf(stderr, "statuae: volumen additionem recusavit"
-            " (titulus fortasse in genere altero iam est: persona"
-            " contra locum): %s\n",
+            " (titulus fortasse in genere alio iam est: persona,"
+            " locus, res): %s\n",
             volumen_error(volumen) ? volumen_error(volumen) : "?");
         redde I;
     }
@@ -334,13 +357,12 @@ exsequi_addere (
 
 interior s32
 exsequi_enumerare (
-    Volumen* volumen,
-        b32  loci,
-    Piscina* piscina)
+         Volumen* volumen,
+    StatuaeGenus  genus,
+         Piscina* piscina)
 {
                   Xar* index = statuae_enumerare_generis(volumen,
-                      loci ? STATUAE_GENUS_LOCUS : STATUAE_GENUS_STATUA,
-                      piscina);
+                      genus, piscina);
     StatuaeInscriptio* x;
                   i32  k;
 
@@ -470,7 +492,7 @@ principale (
     si (strcmp(a.imperium, "pingere") == ZEPHYRUM)
     {
         si (   !a.positivum || !a.exitus || a.volumen || a.titulus
-            || a.locus || a.loci)
+            || a.locus || a.loci || a.res)
         {
             piscina_destruere(piscina);
             redde usum_imprimere();
@@ -485,7 +507,8 @@ principale (
     si (   (!addere && !removere && !enumerare) || !a.volumen
         || (enumerare ? a.positivum != NIHIL : a.positivum == NIHIL)
         || (a.titulus && !addere) || a.exitus || a.cyclus || a.modus
-        || (a.locus && !addere) || (a.loci && !enumerare))
+        || (a.locus && !addere) || (a.loci && !enumerare)
+        || (a.res && (removere || a.locus || a.loci)))
     {
         piscina_destruere(piscina);
         redde usum_imprimere();
@@ -515,7 +538,8 @@ principale (
     }
     alioquin
     {
-        exitus = exsequi_enumerare(volumen, a.loci, piscina);
+        exitus = exsequi_enumerare(volumen,
+            genus_petitum(a.loci, a.res), piscina);
     }
     volumen_claudere(volumen);
     piscina_destruere(piscina);

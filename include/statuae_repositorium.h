@@ -11,7 +11,7 @@
  *
  * Acta (datum JSON):
  *   statua-addita   {"titulus": "...", "massa": "<hex>",
- *                    "forma": "glb"}
+ *                    "forma": "glb"} (+ "genus": "locus" | "res")
  *   statua-remota   {"titulus": "..."}
  *
  * Titulus statuam nominat: additio tituli noti octetos substituit et
@@ -43,11 +43,15 @@
 #define STATUAE_TITULUS_MAXIMUS  LXIV
 
 /* genus inscriptionis: persona (statua animata, latus $models et
- * personae mundi) aut locus (statua loci, latus $world). In acto
- * "genus":"locus"; absens = statua (acta ante mundum scripta). */
+ * personae mundi), locus (statua loci, latus $world) aut res (res
+ * plastica: puteus, saepes; latus $models in grege rerum). In acto
+ * "genus":"locus" aut "genus":"res"; absens = statua (acta ante
+ * mundum scripta). Vicus qui genus non novit id ut statuam legit -
+ * ergo vicus novus ANTE rem primam in volumine currat. */
 nomen enumeratio {
     STATUAE_GENUS_STATUA = ZEPHYRUM,
     STATUAE_GENUS_LOCUS,
+    STATUAE_GENUS_RES,
     STATUAE_GENERUM
 } StatuaeGenus;
 
@@ -85,7 +89,7 @@ statuae_removere (
     Volumen* volumen,
      chorda  titulus);
 
-/* index STATUARUM (genus STATUA; loci non apparent), ordine
+/* index STATUARUM (genus STATUA; loci et res non apparent), ordine
  * additionis; Xar de StatuaeInscriptio (chordae ex piscina). Numquam
  * NIHIL: volumen sine statuis Xar vacuum dat */
 Xar*
@@ -96,9 +100,9 @@ statuae_enumerare (
 /*
  * statuae_addere_generis - ut statuae_addere, genere dato
  *
- * Tituli per genera AMBO unici: titulus qui in genere altero iam est
+ * Tituli per genera OMNIA unici: titulus qui in genere alio iam est
  * recusatur (nihil scribitur). statuae_addere = genus STATUA.
- * statuae_removere genus utrumque tollit.
+ * statuae_removere genus quodlibet tollit.
  *
  * Redde: FALSUM etiam si genus ignotum
  */

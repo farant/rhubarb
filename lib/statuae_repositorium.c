@@ -7,6 +7,7 @@
 
 /* valor "genus" in acto loci */
 #define GENUS_LOCI "locus"
+#define GENUS_REI   "res"
 
 b32
 statuae_titulus_validus (
@@ -130,9 +131,15 @@ _enumerare_omnes (
                     piscina);
                 inscriptio->sigillum_hex  = chorda_transcribere(massa,
                     piscina);
-                inscriptio->genus = chorda_aequalis_literis(genus,
-                    GENUS_LOCI) ? STATUAE_GENUS_LOCUS
-                                : STATUAE_GENUS_STATUA;
+                inscriptio->genus = STATUAE_GENUS_STATUA;
+                si (chorda_aequalis_literis(genus, GENUS_LOCI))
+                {
+                    inscriptio->genus = STATUAE_GENUS_LOCUS;
+                }
+                si (chorda_aequalis_literis(genus, GENUS_REI))
+                {
+                    inscriptio->genus = STATUAE_GENUS_RES;
+                }
             }
             perge;
         }
@@ -228,6 +235,11 @@ _actum_scribere (
         {
             json_objectum_ponere(objectum, "genus",
                 json_chorda_creare_literis(piscina, GENUS_LOCI));
+        }
+        si (genus_statuae == STATUAE_GENUS_RES)
+        {
+            json_objectum_ponere(objectum, "genus",
+                json_chorda_creare_literis(piscina, GENUS_REI));
         }
     }
     redde volumen_actum_appendere(volumen, genus,

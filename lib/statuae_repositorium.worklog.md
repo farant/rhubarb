@@ -52,3 +52,12 @@ character (it ignores the unknown field) and would show the level in
 
 Plants, three red: listing without the kind filter; kind not written
 to the act; a title from the other kind accepted.
+
+## 2026-11-12 - plastica T6: the third kind
+
+`STATUAE_GENUS_RES` ("genus":"res" in the act): a plastica prop.
+Titles are unique across all three kinds. `statuae_enumerare` still
+lists characters only, so the `$world` character chooser never sees
+a prop. Order of arrival (plastica spec 14d): an older vicus reads
+an unknown kind as a character, so the vicus that knows `res` must
+run before the first prop is written to a live volume.
