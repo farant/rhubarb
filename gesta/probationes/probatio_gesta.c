@@ -295,7 +295,7 @@ interior long
 _mensura_plagulae (
     constans character* via)
 {
-    FILE* pl = fopen(via, "rb");
+    FILE* pl = lectiones_fopen(via, "rb");
     long  n;
 
     si (pl == NIHIL)

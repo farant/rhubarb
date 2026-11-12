@@ -13,13 +13,6 @@ apps/forum/forum.c	ante regulam (2026-10-14): migratio ad filum cum tactu proxim
 apps/quaestio/quaestio.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 briar/probationes/probatio_briar_fabrica.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 crusta/instrumenta/interpositio_macos.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-gesta/fontes/gesta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-gesta/fontes/tabularium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-gesta/probationes/probatio_fori.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-gesta/probationes/probatio_frigida.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-gesta/probationes/probatio_gesta.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-gesta/probationes/probatio_tabularium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
-gesta/probationes/probatio_tabulariumd.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 knotapel/demo_125_exact_crossing_depth/demo-snapshot.c	knotapel/ extra examen commissionis (Fran 2026-10-03): corpus solum, tactus non solvit
 lib/compilator.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo
 lib/herbarium.c	ante regulam (2026-10-14): migratio ad filum cum tactu proximo

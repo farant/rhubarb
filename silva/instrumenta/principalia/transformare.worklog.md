@@ -157,3 +157,14 @@ is also linked by tools/diagnostica.c and crusta/instrumenta/effectus.c
 iudicium-fumus cover them. Four INTECTA tools compared old vs new (arbor
 x2, coctum, computus, facies x2): identical except computus timing.
 13 debt rows deleted (35 -> 22).
+
+## 2026-11-12 — fopen_legens: gesta (area 7, last mechanical area)
+
+8 sites in 7 files (gesta.c, tabularium.c, five suites), 0 refused. Read
+by hand first: the two library sites read the annals jsonl, nexus.tsv, the
+identity and citation indices and repo files named by a scope - no secret
+passes through them. No amalgam; the four source lists regenerate
+unchanged. Everything is gate-covered (no INTECTA). 7 debt rows deleted
+(22 -> 15). What remains of the 139 is by hand or deliberately raw:
+apps/quaestio (API key - tolera, never lectiones), apps/forum (tolerated),
+knotapel snapshots, the channel itself and files with other raw IO.
