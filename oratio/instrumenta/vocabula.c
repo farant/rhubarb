@@ -29,6 +29,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "xar.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,7 +41,7 @@ _plagulam_legere (
     constans character* via,
                 chorda* exitus)
 {
-          FILE* f = fopen(via, "rb");
+          FILE* f = lectiones_fopen(via, "rb");
         longus  longitudo;
             i8* memoria;
 
@@ -332,7 +333,7 @@ OratioVocabulariumVitium vitium;
         character linea[512];
 
         sprintf(via, "%s/oratio/build/corpus_c.txt", radix);
-        lista = fopen(via, "r");
+        lista = lectiones_fopen(via, "r");
         si (lista == NIHIL)
         {
             fprintf(stderr,
@@ -389,7 +390,7 @@ OratioVocabulariumVitium vitium;
             redde II;
         }
         sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
-        lista = fopen(via, "r");
+        lista = lectiones_fopen(via, "r");
         si (lista == NIHIL)
         {
             fprintf(stderr,

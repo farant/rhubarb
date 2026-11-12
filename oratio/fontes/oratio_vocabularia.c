@@ -2,6 +2,7 @@
 
 #include "oratio_vocabularia.h"
 #include "oratio_glossarium.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -18,7 +19,7 @@ _plagulam_legere (
 
     exitus->datum    = NIHIL;
     exitus->mensura  = ZEPHYRUM;
-    f                = fopen(via, "rb");
+    f                = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde FALSUM;

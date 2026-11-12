@@ -6,6 +6,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "oratio_computus.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,7 +28,7 @@ _plagulam_legere (
     longus mensura;
       i8* buffer;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;

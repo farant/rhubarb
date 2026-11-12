@@ -52,6 +52,7 @@
 #include "xar.h"
 #include <ctype.h>
 #include "specimen_corporis.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -117,7 +118,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -923,7 +924,7 @@ CREDO_GRADUS ("Iudicans corpus (plagulae md totae ut oratio)");
          i32 truncatae = ZEPHYRUM;
 
     sprintf(via, "%s/oratio/build/corpus_md.txt", radix_viae);
-    lista = fopen(via, "r");
+    lista = lectiones_fopen(via, "r");
     si (lista == NIHIL)
     {
         CREDO_CULPA ("oratio/build/corpus_md.txt absens - e radice per cursorem curre");

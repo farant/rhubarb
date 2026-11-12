@@ -25,6 +25,7 @@
 #include "chorda.h"
 #include "piscina.h"
 #include "specimen_corporis.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,7 +36,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura)
 {
-          FILE* f = fopen(via, "rb");
+          FILE* f = lectiones_fopen(via, "rb");
         longus  longitudo;
      character* memoria;
 
@@ -342,7 +343,7 @@ _corpus_probare (
         radix_viae = ".";
     }
     sprintf(via, "%s/oratio/build/corpus_md.txt", radix_viae);
-    lista = fopen(via, "r");
+    lista = lectiones_fopen(via, "r");
     si (lista == NIHIL)
     {
         CREDO_CULPA ("oratio/build/corpus_md.txt absens - e radice per cursorem curre");

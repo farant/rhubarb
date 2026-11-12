@@ -14,6 +14,7 @@
 #include "materia_nodus.h"
 #include "piscina.h"
 #include "xar.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -23,7 +24,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura)
 {
-          FILE* f = fopen(via, "rb");
+          FILE* f = lectiones_fopen(via, "rb");
         longus  longitudo;
      character* memoria;
 

@@ -105,3 +105,15 @@ Two things the mechanical rewrite got wrong in area 1, fixed by hand
 Area 1 (toml css html md materia tessera: 14 files, 15 sites): all 14
 debt rows paid and deleted (139 -> 125); six suites green; `md/arbor.sh
 README.md` under FABRICA_LECTIONES now records `L README.md`.
+
+## 2026-11-11 — fopen_legens: oratio (area 3)
+
+41 sites in 30 files (2 fontes, 10 tools, 18 suites), 0 refused; 26 files
+gained the lectiones.h include. No oratio amalgam, no -D variants, no hand
+read-notes next to the sites. Nine of the ten tools are INTECTA (no gate),
+so they were compared by hand: 12 invocations (arbor, arbor -partes -sedes,
+computus, formae, oraculum -machina, quaere, reticulum, sententiae, verba,
+vocabula -nova, vocabularium, vocabularium -coquere) old code vs new,
+stdout + stderr + rc identical except timing columns. `oraculum -regulae`
+is a 10+ minute cumulative run - do not put it in a differential.
+30 debt rows deleted (95 -> 65).

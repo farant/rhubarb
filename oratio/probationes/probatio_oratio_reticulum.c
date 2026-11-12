@@ -41,6 +41,7 @@
 #include "piscina.h"
 #include "xar.h"
 #include "oratio_reticulum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,7 +52,7 @@ _plagulam_legere (
     constans character* via,
                 chorda* fructus)
 {
-          FILE* f = fopen(via, "rb");
+          FILE* f = lectiones_fopen(via, "rb");
         longus  longitudo;
      character* memoria;
 

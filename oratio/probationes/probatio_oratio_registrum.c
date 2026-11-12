@@ -25,6 +25,7 @@
 #include "materia_coctor.h"   /* porta rancoris tabularum coctarum */
 #include "chorda.h"
 #include "piscina.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -63,7 +64,7 @@ _plagulam_legere (
     constans character* via,
                 chorda* exitus)
 {
-          FILE* f = fopen(via, "rb");
+          FILE* f = lectiones_fopen(via, "rb");
         longus  longitudo;
             i8* memoria;
 
