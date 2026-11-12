@@ -295,11 +295,11 @@ a test in the named task.
   constans character* via, ChordaAedificator*)` — `via:linea:columna:
   causa`.
 
-- [ ] **Step 1: Measure.** Re-read the table's REGULA ACCENTUS and
+- [x] **Step 1: Measure.** Re-read the table's REGULA ACCENTUS and
   TEXTUS DEFICIENS; list, from the 246 examples, every input shape
   the header must name (bars, Hebrew, forms); confirm FRAN 1-3
   answers are reflected.
-- [ ] **Step 2: Draft the header** with the interfaces above. Head
+- [x] **Step 2: Draft the header** with the interfaces above. Head
   comment: POINTED TEXT GRAMMAR (UTF-8, one verse per line, `*`
   mediant, `†`/`+` flex, accents as printed, `-` forces a division,
   diaeresis = hiatus, leading `N.` dropped, blank lines and `%`
@@ -310,8 +310,8 @@ a test in the named task.
   `mode: ;` `annotation: 8 G;` `%%`, clef, syllable = text(notes),
   styles, bars, `N. ` on the first syllable, Gloria Patri as two
   last verses); TOTALITY.
-- [ ] **Step 3:** examen, formator, lint; compiles alone.
-- [ ] **Step 4: STOP — show Fran the header.** Commit after approval.
+- [x] **Step 3:** examen, formator, lint; compiles alone.
+- [x] **Step 4: STOP — show Fran the header.** Commit after approval.
 
 ---
 
@@ -514,3 +514,14 @@ section prints `OMISSA` and passes.
   vobis-cum, super-ex-, and corrected the header example to
   *red-ém-ptor*; no dl/tl onset. Plants (a)-(c) red then green; (c)
   also red in the sample. Worklog has the details.
+- **T3 (2026-11-12, Fran approved the header).** Hebrew words: two
+  behaviours in the 26 examples (ordinary accent; "abrupt" =
+  monosyllabic sister at a half-verse end, tenor held at a flex);
+  list = division + accent + abrupt; Cedar added, Amen dropped.
+  Clef = the ending's if given (II A c3), one per psalm. Verses
+  numbered from 1 (GregoBase written psalms), Gloria unnumbered.
+  Interface rulings (worklog): `sine_gloria` (zeroed options =
+  defaults), `sine_intonatione`, the psalm carries tonus/terminatio,
+  `partem_aptare` returns a one-verse psalm and picks the
+  monosyllabic sister itself, gabc-special characters dropped with
+  an admonition.
