@@ -29,8 +29,8 @@
  *     diaeresis hiatum facit (Is-ra-ël, 76:0);
  *   - ceterae vocales contiguae hiatum faciunt: De-us (3812:27),
  *     cu-i (64:28), hu-ic (16:0), me-i, tu-a, su-á-vis (44:0);
- *     exceptiones eu: heu ceu seu neu, eu-ge, pneu-, Eu- + consonans
- *     nisi eunt- (Eu-cha-rí-sti-a, e-un-tes);
+ *     eu diphthongus solum in heu ceu seu neu, eu-ge, pneu-,
+ *     Eu-cha-rí-sti-a (27 iuncta, omnia haec); alibi e-um, e-un-tes;
  *   - i consonans: inter vocales (al-le-lú-ia, e-ius, cu-ius; 4079:10)
  *     et initio ante vocalem (Ie-sus, iam; 413:13), nisi initio ii
  *     (i-is-dem); j semper consonans;
@@ -44,18 +44,21 @@
  *   - plures: syllaba sequens catervam longissimam accipit quae
  *     syllabam incipere potest; ceterae cum priore. Incipere
  *     possunt: muta + liquida (br cr dr fr gr pr tr bl cl fl gl pl,
- *     chr phr thr chl phl; tr [78:0], cl [17:0]); s + muta (+
- *     liquida): sc sp st sch scr spl spr str (st [205:3], str
- *     [55:0]); gn [34:0], ct [92:0], pt [19:0], mn [13:3], ps [16:0],
- *     sm [1:0]. Ergo ju-stí-ti-a, San-ctus, pro-pté-re-a, o-mnes,
- *     As-sum-ptió-nis, sed us-que (s|qu [4:0]), ter-ra, ex-ten-do;
+ *     chr phr thr chl phl; non dl tl; tr [78:0], cl [17:0]);
+ *     s + muta (+ liquida): sc sp st sch scr spl spr str (st
+ *     [205:3], str [55:0]); gn [34:0], ct [92:0], pt [19:0], mn
+ *     [13:3], ps [16:0], sm [1:0]. Ergo ju-stí-ti-a, San-ctus,
+ *     pro-pté-re-a, o-mnes, As-sum-ptió-nis, sed us-que (s|qu
+ *     [4:0]), ter-ra, ex-ten-do;
  *   - praefixum + vocalis initio verbi: hyphenus post praefixum
  *     (ab ad ex in ob per red sub trans): in-imí-cus [49:3],
- *     ex-áu-di [46:3], red-émp-tor [36:2], per-én-nis [40:15],
- *     ab-í-it [12:2], ad-o-rá-re [6:5]; verba integra sic-ut
- *     [77:2], sic-u-ti, et-é-nim. Non composita (regula communis):
- *     abyss-, Abel, Adam, adip-, adeps, Adonai, reduc-, redux-,
- *     redupl-.
+ *     ex-áu-di [46:3], red-ém-ptor [36:2], per-én-nis [40:15],
+ *     ab-í-it [12:2], ad-o-rá-re [6:5]; sus- ante consonantem
+ *     (sus-cí-pe, sus-tí-ne-o, sus-pén-di-mus [AR]); verba
+ *     integra sic-ut [77:2], sic-u-ti, et-é-nim, no-bís-cum,
+ *     vo-bís-cum, su-per-ex-al-tá-re [AR]. Non composita (regula
+ *     communis): abyss-, Abel, Adam, adip-, adeps, Adonai, reduc-,
+ *     redux-, redupl-; di-scí-pu-lus [AR].
  *
  * HEBRAICA: nomina hebraica sine diaeresi regulas V sequuntur
  * (Israel -> Is-rael). Aptator (VOCES_HEBRAICAE) aut textus ea

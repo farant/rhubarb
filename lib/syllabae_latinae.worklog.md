@@ -92,3 +92,46 @@ positions. Hyphen style is tested by hand cases taken from AR hits.
   positions (finding above); hyphen style is pinned by AR hand cases.
   Cost if wrong: style drift goes unseen in the sample (hand cases
   still catch each rule).
+
+## 2026-11-12 — T2 divider built
+
+`lib/syllabae_latinae.c`: letters (UTF-8 -> base letter, acute,
+diaeresis; combining U+0300-036F stick to the letter before; '-'
+between two letters = forcing) -> vowels (rules V, left to right, so
+`quia` sees the u of qu as a consonant before judging the i) ->
+nuclei (ae oe au; eu only in the word list) -> boundaries (forcing,
+then prefix/whole-word table, then the longest onset) -> spans.
+Words up to 64 bytes run on the stack; longer ones borrow the piscina.
+
+More AR 1912 evidence found while writing the test (OCR grep):
+*sus-cé-pit* 3, *sus-ci-pe* 2, *sus-ti-nens*, *sus-pén-di-mus* (prefix
+sus- before a consonant); *nobis-cum*, *vobis-cum*; *super-ex-altâ-te*
+4; *red-émptor* 9 and *redem-ptorem* (so *red-ém-ptor*, the header's
+*red-émp-tor* example was wrong); *di-sci-pu-lis* (not a prefix).
+Added to the tables; header comment updated.
+
+Header change: the "Eu- + consonant" exception would have joined
+*eum* (common in psalms) into one syllable. GregoBase's 27 joined eu
+are only heu, ceu, seu, euge, pneuma, Eucharistia: the exception is
+now that list. *tl* and *dl* are not onsets (At-lan-tis).
+
+Sample oracle (82 files): 3295 words judged. Skipped: syllables with
+no vowel (`Ps.`, `℣.`, `†`), syllables with no notes (the cue
+"Glória() laus()" in 00537), elision, text with spaces or `*`.
+Every judged word has the source's syllable count except three,
+listed in DISCORDIAE with these rulings:
+- *Israel* 3 vs 2 (00537): Hebrew; the fitter's VOCES_HEBRAICAE.
+- *cui* 1 vs 2 (00537): hymn meter (the same book writes *Cu-i* in
+  the same hymn); psalms follow prose, *cu-i*.
+- *Patre* 1 vs 2 (03324): hymn elision written `Patr<i>e</i>`.
+Every word with the same count also has the accent on the same
+syllable as the source (0 mismatches).
+
+Plants (silva.planta, build/plantae_psalmodia/t2.log), each red then
+green: (a) diaeresis ignored in diphthongs; (b) st not an onset;
+(c) i between vowels kept a vowel - red in the hand cases AND in the
+sample (27 count errors, all *allelúia* as 5).
+
+Bug caught before the first run: i32 is unsigned, so `k - I` at
+k = 0 and a `limes = -I` sentinel silently broke the `>= 0` / `< 0`
+tests. Index sentinels are s32; neighbour checks guard `k > 0`.

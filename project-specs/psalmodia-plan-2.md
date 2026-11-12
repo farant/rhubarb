@@ -222,10 +222,10 @@ a test in the named task.
 
 **Interfaces:** Consumes T1. Produces its two functions.
 
-- [ ] **Step 1: Measure.** Count the words in the 82 committed sample
+- [x] **Step 1: Measure.** Count the words in the 82 committed sample
   files (`probationes/fixa/gabc/gregobase/`) via `gabc_legere`
   (`verbum_incipit` starts a word): the oracle size for step 2.
-- [ ] **Step 2: Write the failing tests:**
+- [x] **Step 2: Write the failing tests:**
   - `_divisio_probare`: hand cases `Dó-mi-nus`, `ex-sul-tá-te`,
     `ex-au-dí-vit`, `ju-stí-ti-a`, `lin-gua`, `san-guis`, `cu-i`,
     `De-us`, `mi-hi`, `e-jus`, `Chri-stus`, `pa-tris`, `ec-clé-si-a`,
@@ -242,17 +242,17 @@ a test in the named task.
   - `_totalitas_probare`: empty, `"--"`, `"1."`, non-UTF-8 bytes,
     4000 random bytes under `CREDO_NON_RUIT`; spans always inside the
     word and increasing.
-- [ ] **Step 3: Run** `./compile_tests.sh syllabae` → FAIL (no link).
-- [ ] **Step 4: Implement** per the header's RULES: classify letters
+- [x] **Step 3: Run** `./compile_tests.sh syllabae` → FAIL (no link).
+- [x] **Step 4: Implement** per the header's RULES: classify letters
   (vowel / consonant / mute / liquid; `u` after q, after g+vowel when
   preceded by n; initial `i`/`j` before a vowel = consonant); place
   nuclei (diphthongs ae oe au æ œ unless diaeresis); between nuclei,
   one consonant goes forward, mute + liquid goes forward, s + mute
   goes forward, `x` stays back, otherwise split before the last.
-- [ ] **Step 5: Run** → PASS. Plants: (a) treat `ae` as a diphthong
+- [x] **Step 5: Run** → PASS. Plants: (a) treat `ae` as a diphthong
   even with diaeresis → `Is-ra-ël` red; (b) send `st` back → the
   `ju-stí-ti-a` case and the sample red. Restore.
-- [ ] **Step 6: Commit.**
+- [x] **Step 6: Commit.**
 
 ---
 
@@ -506,3 +506,11 @@ section prints `OMISSA` and passes.
   (3) field `signatus` -> `notatus` (latina.h macro); (4) T2's sample
   oracle checks count + accent per word, hyphen style by AR hand
   cases. Tables in lib/syllabae_latinae.worklog.md.
+- **T2 (2026-11-12).** `lib/syllabae_latinae.c` + test (5 sections,
+  3866 assertions). Sample oracle per T1 ruling 4: 3295 words, count
+  and accent equal except 3 listed (Israel - Hebrew; cui, Patre -
+  hymn meter/elision). Rulings: eu exception narrowed to a word list
+  (*eum* is *e-um*); AR evidence added sus- + consonant, nobis-cum,
+  vobis-cum, super-ex-, and corrected the header example to
+  *red-ém-ptor*; no dl/tl onset. Plants (a)-(c) red then green; (c)
+  also red in the sample. Worklog has the details.
