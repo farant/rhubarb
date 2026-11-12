@@ -1,5 +1,5 @@
 #!/bin/bash
-# tools/plastica_fumus.sh - fumus bin/plastica (plastica-plan T3, T4):
+# tools/plastica_fumus.sh - fumus bin/plastica (plastica-plan T3, T4, T7):
 # specimen putei (plastica/res/puteus.stml) et recusationes. Nihil
 # extra directorium temporarium scribit. Manu curritur post
 # ./tools/plastica_struere.sh.
@@ -77,6 +77,69 @@ printf '<res titulus="a">\n  <capsa magnitudo="1 1 1" textura="marmor"/>\n</res>
 proba "textura ignota recusat" 1 "$B" specimen "$T/textura.stml" -o "$T/mala.png"
 contine "via et linea texturae" "$T/err" "^$T/textura.stml:2: "
 contine "causa texturae" "$T/err" "marmor"
+
+# condere (plastica-plan T7): res in volumen temporarium
+S="bin/statuae"
+[ -x "$S" ] || { echo "plastica_fumus: $S abest (./tools/statuae_struere.sh)"; exit 1; }
+V="$T/proba.volumen"
+D="$T/fontes"
+mkdir -p "$D"
+cp "$R/puteus.stml" "$D/b_puteus.stml"
+printf '<res titulus="crate">\n  <capsa magnitudo="1 1 1" textura="tabulae" color="#8c6840" signum="solidum"/>\n</res>\n' > "$D/a_arca.stml"
+proba "condere sine -volumen usus" 2 "$B" condere -fontes "$D"
+proba "condere vexillum ignotum usus" 2 "$B" condere -volumen "$V" -magnus
+proba "condere positivum usus" 2 "$B" condere "$D" -volumen "$V"
+[ ! -e "$V" ] || { echo "FRACTA: usus volumen creavit"; fracta=$((fracta + 1)); }
+proba "condere directorium absens" 1 "$B" condere -volumen "$V" -fontes "$T/nullum"
+mkdir -p "$T/vacuum"
+proba "condere directorium vacuum" 1 "$B" condere -volumen "$V" -fontes "$T/vacuum"
+contine "nullae plagulae nominantur" "$T/err" "nullae plagulae"
+proba "condere duas res" 0 "$B" condere -volumen "$V" -fontes "$D"
+contine "arca addita" "$T/out" "^addita    crate$"
+contine "puteus additus" "$T/out" "^addita    well$"
+contine "summa" "$T/out" "^plastica: 2 additae, 0 mutatae, 0 eaedem, 0 recusatae$"
+[ "$(head -1 "$T/out")" = "addita    crate" ] || { echo "FRACTA: ordo nominum (a_arca prima)"; fracta=$((fracta + 1)); }
+proba "res in volumine" 0 "$S" enumerare -volumen "$V" -res
+[ "$(cut -f1 "$T/out" | tr '\n' ',')" = "crate,well," ] || { echo "FRACTA: res in volumine: $(cut -f1 "$T/out" | tr '\n' ',')"; fracta=$((fracta + 1)); }
+proba "res non inter personas" 0 "$S" enumerare -volumen "$V"
+[ ! -s "$T/out" ] || { echo "FRACTA: res inter personas"; fracta=$((fracta + 1)); }
+# nomina partium in GLB condito (octeti massae in volumine crudi)
+grep -a -q '"name":"saxum imum"' "$V" || { echo "FRACTA: nomina partium in GLB absunt"; fracta=$((fracta + 1)); }
+# cursus alter nihil scribit
+proba "condere iterum" 0 "$B" condere -volumen "$V" -fontes "$D"
+contine "arca eadem" "$T/out" "^eadem     crate$"
+contine "puteus idem" "$T/out" "^eadem     well$"
+contine "summa eadem" "$T/out" "^plastica: 0 additae, 0 mutatae, 2 eaedem, 0 recusatae$"
+# plagula mutata: octeti substituti, ordo manet
+printf '<res titulus="crate">\n  <capsa magnitudo="1 2 1" textura="tabulae" color="#8c6840" signum="solidum"/>\n</res>\n' > "$D/a_arca.stml"
+proba "condere mutatam" 0 "$B" condere -volumen "$V" -fontes "$D"
+contine "arca mutata" "$T/out" "^mutata    crate$"
+contine "puteus intactus" "$T/out" "^eadem     well$"
+proba "ordo post mutationem" 0 "$S" enumerare -volumen "$V" -res
+[ "$(cut -f1 "$T/out" | tr '\n' ',')" = "crate,well," ] || { echo "FRACTA: ordo post mutationem"; fracta=$((fracta + 1)); }
+# titulus personae: recusatur, ceterae tamen eunt (review focus 4)
+proba "persona addita" 0 "$S" addere probationes/fixa/statuae/lapis.glb -volumen "$V" -titulus "golem"
+printf '<res titulus="golem">\n  <capsa magnitudo="1 1 1"/>\n</res>\n' > "$D/c_golem.stml"
+printf '<res titulus="post">\n  <capsa magnitudo="0.2 2 0.2" color="#6b4a2b"/>\n</res>\n' > "$D/d_palus.stml"
+printf '<res titulus="post">\n  <capsa magnitudo="0.3 2 0.3"/>\n</res>\n' > "$D/e_palus_alter.stml"
+printf '<res titulus="broken">\n  <capsa magnitudo="1 1 1"/>\n  <globus radius="1"/>\n</res>\n' > "$D/f_fracta.stml"
+proba "condere cum recusatis" 1 "$B" condere -volumen "$V" -fontes "$D"
+contine "titulus personae recusatur" "$T/err" "^$D/c_golem.stml: recusata: titulus iam persona aut locus in volumine est: golem$"
+contine "titulus bis recusatur" "$T/err" "^$D/e_palus_alter.stml: recusata: titulus iam ab alia plagula huius cursus datus: post$"
+contine "fracta cum linea" "$T/err" "^$D/f_fracta.stml:3: "
+contine "palus tamen additus" "$T/out" "^addita    post$"
+contine "summa cum recusatis" "$T/out" "^plastica: 1 additae, 0 mutatae, 2 eaedem, 3 recusatae$"
+proba "persona intacta" 0 "$S" enumerare -volumen "$V"
+[ "$(cut -f1 "$T/out")" = "golem" ] || { echo "FRACTA: persona mutata"; fracta=$((fracta + 1)); }
+# res sine fonte nominatur, non removetur
+rm "$D/b_puteus.stml" "$D/c_golem.stml" "$D/e_palus_alter.stml" "$D/f_fracta.stml"
+proba "condere sine fonte putei" 0 "$B" condere -volumen "$V" -fontes "$D"
+contine "sine fonte" "$T/out" "^sine fonte: well$"
+proba "res sine fonte manet" 0 "$S" enumerare -volumen "$V" -res
+[ "$(cut -f1 "$T/out" | tr '\n' ',')" = "crate,well,post," ] || { echo "FRACTA: res sine fonte remota: $(cut -f1 "$T/out" | tr '\n' ',')"; fracta=$((fracta + 1)); }
+# res condita per lectorem et pictorem it
+proba "enumerare cum sigillo" 0 "$S" enumerare -volumen "$V" -res
+[ "$(awk -F'\t' '$1=="well"{print length($2)}' "$T/out")" -gt 8 ] || { echo "FRACTA: sigillum putei"; fracta=$((fracta + 1)); }
 
 if [ "$fracta" -eq 0 ]; then echo "PLASTICA FUMUS: OMNIA BONA"; exit 0; fi
 echo "PLASTICA FUMUS: $fracta FRACTA"; exit 1

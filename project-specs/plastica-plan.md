@@ -363,7 +363,7 @@ suites.
   one character and one prop, the switch shows the prop and back;
   the field survives reopening; no props shows the message.
 - [x] **Step 2-4:** red, implement, green; plants.
-- [ ] **Step 5:** as T1, and rebuild `bin/statuae`. After the
+- [x] **Step 5:** as T1, and rebuild `bin/statuae`. After the
   commit Fran restarts vicus from secunda (spec 14d).
 
 ### Task 7: building props into a volume
@@ -377,12 +377,22 @@ suites.
   asset (`addita`, `eadem`, `recusata: causa`) and the props in the
   volume with no source; exit 1 if any was refused.
 
-- [ ] **Step 1: failing smoke tests** on a temporary volume: two
+  (As built: a fourth status, `mutata`, for replaced bytes. The GLB
+  is read back through the reader before it is added. Two sources
+  with one title: the second is refused. A folder with no `.stml`
+  is exit 1. Part names go into the GLB as node names. Refusals go
+  to stderr, statuses to stdout. A prop whose source is refused
+  shows as `sine fonte` in that run, since its title could not be
+  read. Hand plants against the smoke script (the tool is not a
+  gate member): eight red, one of them only after a part-name check
+  was added.)
+
+- [x] **Step 1: failing smoke tests** on a temporary volume: two
   assets appear as props; a second run writes nothing (`eadem`); a
   title held by a character is refused and the other asset still
   lands (review focus 4); a prop with no source is listed; a broken
   file is named with its line.
-- [ ] **Step 2-4:** red, implement, green.
+- [x] **Step 2-4:** red, implement, green.
 - [ ] **Step 5:** as T1. Then, once Fran's vicus has T6, run it on
   the live volume: the well is in `$models`.
 
