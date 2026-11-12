@@ -25,6 +25,7 @@
 #include "credo.h"
 #include "tabula_dispersa.h"
 #include "iter_directoria.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,7 +75,7 @@ _plagulam_legere_cruda (
     constans character* via,
                   long* mensura_fructus)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* fons;
 

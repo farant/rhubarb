@@ -14,6 +14,7 @@
 #include "iter_directoria.h"
 #include "nexus_ordines.h"
 #include "silva_lexicon.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -25,7 +26,7 @@ praeparator_plagulam_legere (
     constans character* via,
     insignatus integer* mensura_out)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura_l;
     character* textus;
 

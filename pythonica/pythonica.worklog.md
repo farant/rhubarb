@@ -1545,3 +1545,16 @@ passes); plant (prefix changed) -> 2 FRACTUM.
 Not covered: an action whose generator runs a tool that is not a declared
 input (nexus_percursus.c behind silva/nexus.sh). Since b07236ea7 the corpus
 action no longer runs the indexer under the book, so left alone.
+
+## 2026-11-12 — the new MEMORIA NEGATA refusal caught two on its first day
+
+The officina area of the fopen sweep was refused at commit:
+`excludenda_officina` (tools/amalgama_excludenda_generare.sh) reads
+officina/amalgama/officina.h undeclared. `generata` had been green because
+the action's memo was hit - the refusal only shows when the key changes and
+the action really regenerates. So a green `generata` does NOT mean no
+undeclared reads; `bin/fabrica iudicare -plenus -omnia -machina -audit`
+(88 s here; GENERATA_AUDITUS=1 for the gate) regenerates every memorable
+action and does. Ran it: one more, `excludenda_tessera` reading tessera.h.
+Both declared; second audit: 0 MEMORIA NEGATA (193 recentia, 9 stala all
+~/.bin installs a worktree cannot heal).

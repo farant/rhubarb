@@ -10,6 +10,7 @@
 #include "officina_conexio.h"
 #include "officina_medulla_textus.h"
 #include "credo.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,7 +31,7 @@ _plagulam_legere (
     fructus.mensura  = ZEPHYRUM;
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
-    plagula = fopen(via, "rb");
+    plagula = lectiones_fopen(via, "rb");
     si (plagula == NIHIL)
     {
         redde fructus;

@@ -27,6 +27,7 @@
 #include "chorda.h"
 #include "xar.h"
 #include "iter_directoria.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -158,7 +159,7 @@ _fontem_curare (
     }
     sprintf(via_plena, "%s/%.*s", v->radix, (int)via.mensura,
         (constans character*)via.datum);
-    pl = fopen(via_plena, "rb");
+    pl = lectiones_fopen(via_plena, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);

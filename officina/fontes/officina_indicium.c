@@ -1415,7 +1415,7 @@ indicium_aperire (
     {
         redde NIHIL;
     }
-    plagula = fopen(via, "rb");
+    plagula = lectiones_fopen(via, "rb");
     si (plagula == NIHIL)
     {
         redde NIHIL;

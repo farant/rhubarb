@@ -147,8 +147,8 @@ _plagulae_aequae (
     constans character* via_a,
     constans character* via_b)
 {
-    FILE* pa      = fopen(via_a, "rb");
-    FILE* pb      = fopen(via_b, "rb");
+    FILE* pa      = lectiones_fopen(via_a, "rb");
+    FILE* pb      = lectiones_fopen(via_b, "rb");
      b32  aequae  = VERUM;
 
     si (pa == NIHIL || pb == NIHIL)
@@ -204,7 +204,7 @@ _systema_legere (
     constans character* via,
                   long* mensura_fructus)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* fons;
 
@@ -258,7 +258,7 @@ _plagulam_demittere (
     {
         *lineae_exitus = NIHIL;
     }
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -416,7 +416,7 @@ _caput_praebere (
     {
         redde;
     }
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -1169,7 +1169,7 @@ principale (
                     }
                     alioquin
                     {
-                        FILE* pa = fopen(via_aurei, "rb");
+                        FILE* pa = lectiones_fopen(via_aurei, "rb");
 
                         si (pa == NIHIL)
                         {

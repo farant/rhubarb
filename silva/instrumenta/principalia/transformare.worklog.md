@@ -117,3 +117,15 @@ vocabula -nova, vocabularium, vocabularium -coquere) old code vs new,
 stdout + stderr + rc identical except timing columns. `oraculum -regulae`
 is a 10+ minute cumulative run - do not put it in a differential.
 30 debt rows deleted (95 -> 65).
+
+## 2026-11-12 — fopen_legens: officina (area 4)
+
+27 sites in 17 files (officina_indicium, praeparator, six tools, nine
+suites), 0 refused. Order held: transformare -> formator on the fontes ->
+source lists (unchanged) -> amalgamare (VERIFICATUM, hospes 81/81). Tool
+differential old vs new, 7 invocations (cursor -enumerare, cursor -sola,
+fusor lib, interpretare x2, sonda lib/chorda.c, colloquium scalaria.c):
+identical except timing. `cursor -sola probatio_chorda` is rc 1 on both
+sides (DECIPULA getpid) - pre-existing. vindex compiles but does not link
+at HEAD (known), so its rewritten site is unexercised. 14 debt rows deleted
+(65 -> 51); three files keep their row (other raw IO remains).

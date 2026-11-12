@@ -21,6 +21,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "chorda_aedificator.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -33,7 +34,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura_out)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura_l;
     character* textus;
 

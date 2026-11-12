@@ -61,6 +61,9 @@
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="tessera/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- generator excludendorum caput amalgamae legit (lectio per
+         librum visa 2026-11-12: auditus memorabilium) -->
+    <ingressus genus="fasciculus" via="tessera/amalgama/tessera.h"/>
     <!-- tessera/build/mech_*.o per globum nexa: praecondicio
          obiecta_mechanismi_tessera (1b T5; olim ingressus directorii,
          nomina solum tegens) -->

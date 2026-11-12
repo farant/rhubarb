@@ -61,6 +61,9 @@
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- generator excludendorum caput amalgamae legit (lectio per
+         librum visa 2026-11-12: custodia memorabilium in commissione) -->
+    <ingressus genus="fasciculus" via="officina/amalgama/officina.h"/>
     <!-- officina/build/mech_*.o per globum nexa: praecondicio
          obiecta_mechanismi_officina (1b T5; olim ingressus directorii,
          nomina solum tegens) -->

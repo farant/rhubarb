@@ -39,6 +39,7 @@
 #include "tabula_dispersa.h"
 #include "iter_directoria.h"
 #include "bibliothecae.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -73,7 +74,7 @@ _systema_legere (
     constans character* via,
                   long* mensura_fructus)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* fons;
 
@@ -117,7 +118,7 @@ _plagulam_demittere (
     {
         *lineae_exitus = NIHIL;
     }
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -227,7 +228,7 @@ _caput_praebere (
 
     clavis = chorda_ex_literis(titulus, piscina);
     si (tabula_dispersa_continet(visa, clavis)) redde;
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);

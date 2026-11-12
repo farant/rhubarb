@@ -19,6 +19,7 @@
 #include "officina_medulla_textus.h"
 #include "tabula_dispersa.h"
 #include "iter_directoria.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -76,7 +77,7 @@ _systema_legere (
     constans character* via,
                   long* mensura_fructus)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* fons;
 
@@ -323,7 +324,7 @@ _plagulam_fundere (
     chorda titulus_moduli;
     unio { constans character* c; i8* m; } u;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -516,7 +517,7 @@ _caput_praebere (
     {
         redde;
     }
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
