@@ -393,7 +393,7 @@ suites.
   lands (review focus 4); a prop with no source is listed; a broken
   file is named with its line.
 - [x] **Step 2-4:** red, implement, green.
-- [ ] **Step 5:** as T1. Then, once Fran's vicus has T6, run it on
+- [x] **Step 5:** as T1. Then, once Fran's vicus has T6, run it on
   the live volume: the well is in `$models`.
 
 ### Task 8: the joiner
@@ -421,7 +421,15 @@ suites.
   placement; indices of meshes, materials and textures are shifted;
   marks kept; clips of added models are dropped, the base's kept.
 
-- [ ] **Step 1: failing tests.** Counts add up; a box added at
+  (As built: placement is `locus` (a vector) and `gyrus` (degrees
+  about the upright axis), not a matrix:
+  `StatuaIungenda { statua, locus, gyrus }`. The same model added
+  several times is stored once; textures with identical pixels are
+  kept once. "Picture digest unchanged" is checked as table
+  equality of the base's part of the result. See
+  `lib/statua_iunctio.worklog.md`.)
+
+- [x] **Step 1: failing tests.** Counts add up; a box added at
   (5, 0, 7) turned 90 degrees has those world bounds; the base's
   nodes and its picture digest are unchanged with zero added;
   marks survive; the result passes `statua_finire`.

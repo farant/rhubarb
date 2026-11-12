@@ -383,6 +383,7 @@ declare -a SOURCE_FILES=(
     "lib/statua.c"
     "lib/statua_glb.c"
     "lib/statua_glb_scriptor.c"
+    "lib/statua_iunctio.c"
     "lib/statua_pictura.c"
     "lib/statuae.c"
     "lib/statuae_quadrum.c"
