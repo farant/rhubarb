@@ -253,6 +253,7 @@ declare -a SOURCE_FILES=(
     "lib/multiplexor.c"
     "lib/mundus.c"
     "lib/mundus_latus.c"
+    "lib/mundus_locus.c"
     "lib/mundus_pictura.c"
     "lib/mundus_solum.c"
     "lib/musicxml.c"

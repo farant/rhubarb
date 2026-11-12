@@ -52,7 +52,7 @@ nomen structura {
 /* frons, latus, desuper, tribus quartis (anguli visus mundi) */
 hic_manens constans Aspectus ASPECTUS[ASPECTUUM] = {
     { 0.0f, 0.0f }, { 90.0f, 0.0f }, { 0.0f, 90.0f },
-    { 45.0f, 35.0f }
+    { PLASTICA_SPECIMEN_GYRUS, PLASTICA_SPECIMEN_INCLINATIO }
 };
 
 hic_manens constans ColorPartis COLORES[PLASTICA_SPECIMEN_COLORES] = {

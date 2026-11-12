@@ -156,6 +156,21 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/plastica" provenientia="relatio"/>
   </actio>
+  <!-- mundus: loci mundi ex dispositionibus (apps/mundus/loci) in
+       volumen, et pictura rei in loco ut latus $world eam pingeret -->
+  <actio titulus="mundus" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/mundus_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/mundus"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/mundus/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/mundus_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/mundus" provenientia="relatio"/>
+  </actio>
   <!-- clonare (pythonica S3): clonefile(2) arborum pro photographiis
        silvae (silva._clonare_ignorata) -->
   <actio titulus="clonare" genus="institutio">

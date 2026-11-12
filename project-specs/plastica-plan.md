@@ -433,7 +433,7 @@ suites.
   (5, 0, 7) turned 90 degrees has those world bounds; the base's
   nodes and its picture digest are unchanged with zero added;
   marks survive; the result passes `statua_finire`.
-- [ ] **Step 2-5:** red, implement, green, plants, as T1.
+- [x] **Step 2-5:** red, implement, green, plants, as T1.
 
 ### Task 9: the layout and the furnished place
 
@@ -491,7 +491,16 @@ suites.
   draws the asset in the clearing beside the mushroom man with the
   scene's view and dithers.
 
-- [ ] **Step 1: failing tests** on the hand-made level
+  (As built: `mundus_locus_struere` returns a result struct
+  `MundusLocusInstructus { successus, statua, error, linea }`
+  instead of out-parameters. `specimen` takes `-locus "x z"` and
+  `-gyrus G` and draws two panels (Atkinson ground, exemplaria
+  ground). `condere` prints walkable cells before and after. The
+  solid rule is checked on the prop's own walk map. AUDIENDA 3, 4,
+  4a and 6 are answered; 6 needed no fix. See
+  `lib/mundus_locus.worklog.md`.)
+
+- [x] **Step 1: failing tests** on the hand-made level
   (`probationes/mundus_locus_fictus.h`): a box placed on flat
   ground stands at the ground's height and its cells turn solid;
   cells elsewhere are unchanged; a marked step makes a higher
@@ -499,8 +508,8 @@ suites.
   the frame and in front of it is not (spec AUDIENDA 4). Review
   focus 5: each bad placement fails naming its line; a thin post
   with no blocker fails, with one passes.
-- [ ] **Step 2-4:** red, implement, green; plants.
-- [ ] **Step 5:** smoke script on a temporary volume; trace whether
+- [x] **Step 2-4:** red, implement, green; plants.
+- [x] **Step 5:** smoke script on a temporary volume; trace whether
   an open place reloads when replaced (spec AUDIENDA 6) and fix it
   in `mundus_latus` if it does not, with a test.
 - [ ] **Step 6:** as T1.

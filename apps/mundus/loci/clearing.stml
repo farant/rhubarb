@@ -1,0 +1,10 @@
+<!-- clearing.stml - dispositio loci 'clearing' (latus $world):
+     locus nudus (planum.glb) et res plasticae in locis suis. Locus
+     "x z" in unitatibus mundi; altitudo ex solo sub puncto.
+     Aedificatio: bin/mundus condere -volumen V. Pictura rei unius
+     in loco: bin/mundus specimen RES -o PNG -locus "x z". -->
+<locus titulus="clearing"
+       basis="probationes/fixa/statuae/planum.glb">
+  <!-- puteus in prato superiore, prope initium -->
+  <res fons="plastica/res/puteus.stml" locus="27 29" gyrus="20"/>
+</locus>

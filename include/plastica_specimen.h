@@ -53,6 +53,10 @@
 /* latus cellae vestigii, unitates: idem ac tabula gressus mundi
  * (quattuor cellae per unitatem), hic iterum scriptum */
 #define PLASTICA_CELLA_VESTIGII      0.25f
+/* aspectus 'tres quartae' paginae: visus fixus mundi (probatio
+ * mundus_locus congruentiam cum mundus_pictura.h tenet) */
+#define PLASTICA_SPECIMEN_GYRUS      45.0f
+#define PLASTICA_SPECIMEN_INCLINATIO 35.0f
 
 nomen structura {
     StereometriaVector minimum;      /* fines positurae quietis */

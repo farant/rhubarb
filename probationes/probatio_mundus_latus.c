@@ -28,6 +28,11 @@
 #include "volumen.h"
 #include "statuae_repositorium.h"
 #include "mundus_latus.h"
+#include "statua.h"
+#include "statua_glb.h"
+#include "statua_glb_scriptor.h"
+#include "plastica.h"
+#include "mundus_locus.h"
 #include "credo.h"
 #include <stdio.h>
 #include <string.h>
@@ -707,6 +712,71 @@ _sectio_vacuum (
     _finire(w);
 }
 
+/* plastica-plan T9 (spec AUDIENDA 6): locus apertus sub titulo
+ * eodem substitutus (bin/mundus condere) relegitur - tabula gressus
+ * nova valet et pictura manet */
+interior vacuum
+_sectio_substitutus (
+    CredoContextus* c)
+{
+                  Volumen* v = _volumen(c, "mundus_substitutus",
+                      VERUM, I);
+                    Orbis* w;
+            StatuaFructus  nudus = statua_glb_legere(
+                filum_legere_totum(VIA_PLANI, c->piscina), c->piscina);
+          PlasticaFructus arca = plastica_legere(_ch(c,
+              "<res titulus=\"arca\">"
+              "<capsa magnitudo=\"2 2 2\" color=\"#855\""
+              " signum=\"solidum\"/>"
+              "</res>"), c->piscina);
+           MundusLocusRes  positio;
+    MundusLocusInstructus  instructus;
+          constans Statua* statuae[I];
+                   chorda  octeti;
+
+    CREDO_NECESSE (v != NIHIL && nudus.successus && arca.successus);
+    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.locus != NIHIL && w->m.solum != NIHIL);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    CREDO_AEQUALIS_I32 (mundus_solum_genus(w->m.solum, 27.0f, 29.0f),
+        MUNDUS_SOLUM_GRESSIBILE);
+    /* locus instructus: arca ad (27, 29) */
+    memset(&positio, ZEPHYRUM, magnitudo(positio));
+    positio.x          = 27.0f;
+    positio.z          = 29.0f;
+    positio.linea      = I;
+    statuae[ZEPHYRUM]  = arca.statua;
+    instructus = mundus_locus_struere(nudus.statua, &positio, statuae,
+        I, c->piscina);
+    CREDO_NECESSE (instructus.successus);
+    octeti = statua_glb_scribere(instructus.statua, NIHIL, c->piscina);
+    CREDO_NECESSE (octeti.datum != NIHIL);
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "clearing"), octeti,
+        STATUAE_GENUS_LOCUS));
+    /* ante inspectionem voluminis locus vetus manet */
+    (vacuum)_pulsus(w, CC);
+    CREDO_AEQUALIS_I32 (mundus_solum_genus(w->m.solum, 27.0f, 29.0f),
+        MUNDUS_SOLUM_GRESSIBILE);
+    /* post secundam: locus novus, arca solum claudit, pictura adest */
+    CREDO_VERUM (_pulsus(w, 1100));
+    CREDO_NECESSE (w->m.locus != NIHIL && w->m.solum != NIHIL);
+    CREDO_AEQUALIS_I32 (w->m.locus->nodorum,
+        instructus.statua->nodorum);
+    CREDO_AEQUALIS_I32 (mundus_solum_genus(w->m.solum, 27.0f, 29.0f),
+        MUNDUS_SOLUM_SOLIDUM);
+    CREDO_VERUM (w->m.positum);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    CREDO_VERUM (_imago_picta(c, w));
+    /* persona adhuc ambulat */
+    _premere(w, 'd');
+    _pulsus_multi(w, V);
+    _solvere(w, 'd');
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    _finire(w);
+}
+
 interior vacuum
 _sectio_recusatum (
     CredoContextus* c)
@@ -815,6 +885,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "persona", _sectio_persona, NIHIL, NIHIL, NIHIL, NIHIL },
     { "humus", _sectio_humus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacuum", _sectio_vacuum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "substitutus", _sectio_substitutus, NIHIL, NIHIL, NIHIL,
+        NIHIL },
     { "recusatum", _sectio_recusatum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "magnitudines", _sectio_magnitudines, NIHIL, NIHIL, NIHIL,
         NIHIL },
