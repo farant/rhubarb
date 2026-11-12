@@ -382,6 +382,7 @@ declare -a SOURCE_FILES=(
     "lib/sputnik_syntaxis.c"
     "lib/statua.c"
     "lib/statua_glb.c"
+    "lib/statua_glb_scriptor.c"
     "lib/statua_pictura.c"
     "lib/statuae.c"
     "lib/statuae_quadrum.c"

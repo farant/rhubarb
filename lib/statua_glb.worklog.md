@@ -68,3 +68,14 @@ can refuse a file: a non-object `extras`, a non-array `tags`, non-string
 entries and unknown words all give 0. The kit also writes
 `extras.collidable: true` beside the tags; it says nothing the tags do
 not, and is not read. Test section "signa"; three plants red.
+
+## 2026-11-12 - a unit rotation is left alone
+
+The writer (`lib/statua_glb_scriptor.c`, plastica T5) must give back
+the same `Statua` on re-read. Node rotations were always passed
+through `stereometria_quaternio_normalizare`; on a quaternion that
+is already unit length that can still move the last digit, so read,
+write, read drifted and a second write differed in bytes. The reader
+now skips the normalisation when the squared length is within 1e-6
+of one (`_longitudo_una`). Files with sloppy rotations are
+normalised as before.

@@ -298,7 +298,7 @@ modify `lib/plastica.c` (attribute `textura`, UVs).
   given. A 2-unit box face carries UVs 0..2 x constant / width. A
   17 x 17 hand texture is refused; an unknown `genus` is refused
   with its line.
-- [ ] **Step 3-5:** red, implement, green, plants; texture the well
+- [x] **Step 3-5:** red, implement, green, plants; texture the well
   and look at the sheet; as T1 step 5.
 
 ### Task 5: the GLB writer
@@ -318,11 +318,19 @@ modify `lib/plastica.c` (attribute `textura`, UVs).
   cut-out, emissive, two-sided, wrap modes), textures as PNG, marks
   as `extras.tags` (`walkable`, `collidable`, `water`), clips.
 
-- [ ] **Step 1: failing tests.** Read, write, read again and compare
+  (As built: the signature has a third argument, an optional table
+  of node names - `statua_glb_scribere(statua, tituli, piscina)` -
+  so a prop's part names reach the file. The reader gained one
+  rule: a rotation that is already unit length is not normalised
+  again, or read-write-read drifts in the last digit. Sizes:
+  `planum.glb` 3399516 -> 3318480 bytes. See
+  `lib/statua_glb_scriptor.worklog.md`.)
+
+- [x] **Step 1: failing tests.** Read, write, read again and compare
   with the first read, field by field, for a made asset with a
   texture and marks, for `fungus.glb` (clips) and for `planum.glb`.
   Writing the same `Statua` twice gives the same bytes.
-- [ ] **Step 2-4:** red, implement, green; plants (marks dropped;
+- [x] **Step 2-4:** red, implement, green; plants (marks dropped;
   texture wrap dropped; a clip's last key dropped).
 - [ ] **Step 5:** as T1. Record the size of the rewritten level
   beside the original (spec AUDIENDA 5).

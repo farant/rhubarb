@@ -919,6 +919,17 @@ _retia_legere (
  * Nodi et scaena
  * ================================================== */
 
+/* quaternio iam longitudinis I est (intra 1e-6)? */
+interior b32
+_longitudo_una (
+    constans f32* r)
+{
+    f32 quadratum = r[ZEPHYRUM] * r[ZEPHYRUM] + r[I] * r[I]
+        + r[II] * r[II] + r[III] * r[III];
+
+    redde quadratum >= 1.0f - 1.0e-6f && quadratum <= 1.0f + 1.0e-6f;
+}
+
 /* signa nodi ex extras.tags (tabulatum chordarum). Forma alia,
  * chordae ignotae, extras absens: 0 - numquam recusatio (extras
  * liberum est, plagula sine eo aeque valet). */
@@ -1013,8 +1024,14 @@ _nodos_legere (
         nodus->rotatio.y = r[I];
         nodus->rotatio.z = r[II];
         nodus->rotatio.w = r[III];
-        nodus->rotatio     = stereometria_quaternio_normalizare(
-            nodus->rotatio);
+        /* rotatio iam unitaria intacta manet: normalizatio digitum
+         * ultimum movere potest, et plagula a scriptore nostro
+         * scripta eandem statuam reddere debet */
+        si (!_longitudo_una(r))
+        {
+            nodus->rotatio = stereometria_quaternio_normalizare(
+                nodus->rotatio);
+        }
         nodus->scala       = stereometria_vector(sc[ZEPHYRUM], sc[I],
             sc[II]);
         si (json_objectum_capere(j, "matrix"))
