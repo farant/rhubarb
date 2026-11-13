@@ -257,7 +257,7 @@ call only).
   ```
   `GraphisFructus` gains `i8* illustratus` (the lit source, kept for
   the sheet).
-- [ ] Tests first: `plena` (lux 1, no lights: lit = source, byte
+- [x] Tests first: `plena` (lux 1, no lights: lit = source, byte
   for byte); `umbra` (centre pixel unchanged, corner darker by the
   stated amount); `punctum` (value at the centre, at one radius, and
   0 beyond the table; wider along x when `radius_x` is larger);
@@ -267,13 +267,30 @@ call only).
   `recusationes` (radius 0, `vis` out of range, area under 3
   points, `lux` over 1, four decimal places); `casa_lux` (digest of a small fixture
   with all four kinds).
-- [ ] Implement in integers only; the Gaussian table is a literal.
-- [ ] Plants: clamp removed; `lucens` ignored; radii swapped; `umbra`
+- [x] Implement in integers only; the Gaussian table is a literal.
+- [x] Plants: clamp removed; `lucens` ignored; radii swapped; `umbra`
   applied to lights too.
-- [ ] Check by eye: port `build/spike2d/casa.xml` by hand into a
+- [x] Check by eye: port `build/spike2d/casa.xml` by hand into a
   scratch description and compare with `sheet_d.png` (a quick PNG
   through a throwaway caller; the real sheet is T4). Record in the
   worklog what differs from the float spike.
+
+**As built (2026-11-13):** suite `graphis_lumen`, 10 sections, 10
+plants red. Light is counted in 4096ths (`GRAPHIS_LUX_UNA`), not
+256ths: smoother gradients before the dither. `graphis_illustrare`
+takes raw tables (`fons`, `lucentes`, width, height, `GraphisLux`),
+so `graphis_lumen.h` does not depend on `graphis.h`; `graphis.h`
+includes it, `GraphisTabula` gains `lucentes` and `lux`,
+`GraphisFructus` gains `illustratus`, and Atkinson now runs on the
+lit source. Strengths in the description are decimals (`lux`,
+`umbra` 0..1; light `vis` 0..2). A light must be a direct child of
+`<pictura>`; a later shape that is not `lucens` covers one that is.
+The eye check: the spike's hut converted to the real format
+(`build/spike2d/casa.stml`) matches `sheet_d.png` - the spike's
+constants are reproduced by `lux="0.55" tinctura="#d1dcff"
+umbra="0.35"`, a point light `radii="75 58"` and an area light.
+With default light a picture is byte for byte what T1 made (T1
+digests unmoved).
 
 ### Task 3: pieces (`usus`)
 

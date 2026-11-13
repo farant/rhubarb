@@ -62,6 +62,7 @@ nomen structura {
     s32 crassitudo;
      i8 color_marginis[III];
     i32 dominus;          /* 0 = sine titulo */
+    b32 lucens;           /* lucem dat nec accipit */
 } Proprietates;
 
 nomen structura {
@@ -69,6 +70,9 @@ nomen structura {
            i8* fons;
            i8* larva;
            i8* domini;
+           i8* lucentes;
+   GraphisLux  lux;
+ GraphisLumen  lumina[GRAPHIS_LUMINA_MAXIMA];
        chorda  tituli[GRAPHIS_TITULI_MAXIMI];
           i32  lineae[GRAPHIS_TITULI_MAXIMI];
           i32  titulorum;
@@ -398,10 +402,11 @@ _color (
     redde VERUM;
 }
 
-/* "0", "1", "0.45": millesimae 0 .. 1000; tres loci summum */
+/* "0", "1", "0.45": millesimae 0 .. maximum; tres loci summum */
 interior b32
 _millesimae (
     chorda  verbum,
+       i32  maximum,
        i32* exitus)
 {
     i32 k = ZEPHYRUM;
@@ -410,8 +415,8 @@ _millesimae (
     i32 loci = ZEPHYRUM;
 
     si (   verbum.mensura < I
-        || (verbum.datum[ZEPHYRUM] != '0'
-            && verbum.datum[ZEPHYRUM] != '1'))
+        || verbum.datum[ZEPHYRUM] < '0'
+        || verbum.datum[ZEPHYRUM] > '9')
     {
         redde FALSUM;
     }
@@ -440,7 +445,7 @@ _millesimae (
         pars *= X;
         loci++;
     }
-    si (integra * M + pars > M)
+    si (integra * M + pars > maximum)
     {
         redde FALSUM;
     }
@@ -654,7 +659,7 @@ _vis_legere (
                 "has no meaning on an overlay (second colour '-')");
         }
         si (   !_verba(valor, verba, I, &n) || n != I
-            || !_millesimae(verba[ZEPHYRUM], &mille)
+            || !_millesimae(verba[ZEPHYRUM], M, &mille)
             || (mille > ZEPHYRUM && mille < VIS_MINIMA_MILLE))
         {
             redde _recusare_attributum(p, nodus, "vis",
@@ -736,6 +741,28 @@ _titulum_legere (
     redde VERUM;
 }
 
+/* lucens="verum": forma lucem dat nec accipit */
+interior b32
+_lucens_legere (
+        StatusPicturae* p,
+    constans StmlNodus* nodus,
+          Proprietates* q)
+{
+    constans chorda* valor = stml_attributum_capere(nodus, "lucens");
+
+    si (!valor)
+    {
+        redde VERUM;
+    }
+    si (!chorda_aequalis_literis(*valor, "verum"))
+    {
+        redde _recusare_attributum(p, nodus, "lucens",
+            "can only be \"verum\"");
+    }
+    q->lucens = VERUM;
+    redde VERUM;
+}
+
 /* proprietates formae impletae (non lineae) */
 interior b32
 _proprietates (
@@ -751,7 +778,8 @@ _proprietates (
     si (   !_colores_legere(p, nodus, q)
         || !_exemplar_legere(p, nodus, q, &exemplar_datum)
         || !_vis_legere(p, nodus, q, exemplar_datum)
-        || !_stilum_legere(p, nodus, q, FALSUM))
+        || !_stilum_legere(p, nodus, q, FALSUM)
+        || !_lucens_legere(p, nodus, q))
     {
         redde FALSUM;
     }
@@ -804,7 +832,8 @@ _pixelum_impletionis (
             redde;
         }
         memcpy(pixelum, q->primus, III);
-        p->larva[locus] = 255;
+        p->larva[locus]     = 255;
+        p->lucentes[locus]  = (i8)q->lucens;
         /* tegumentum sine titulo regionem subiectam non rumpit */
         si (!q->dominus)
         {
@@ -827,7 +856,8 @@ _pixelum_impletionis (
         }
         p->larva[locus] = (i8)(q->vis > 255 ? 255 : q->vis);
     }
-    p->domini[locus] = (i8)q->dominus;
+    p->lucentes[locus]  = (i8)q->lucens;
+    p->domini[locus]    = (i8)q->dominus;
 }
 
 interior vacuum
@@ -846,8 +876,9 @@ _pixelum_marginis (
     p->picta++;
     locus = (i32)(y * LAT + x);
     memcpy(p->fons + locus * IV, q->color_marginis, III);
-    p->larva[locus]   = ZEPHYRUM;
-    p->domini[locus]  = (i8)q->dominus;
+    p->larva[locus]     = ZEPHYRUM;
+    p->lucentes[locus]  = (i8)q->lucens;
+    p->domini[locus]    = (i8)q->dominus;
 }
 
 /* pavimentum a / b (b > 0), etiam pro negativis (C89 divisionem
@@ -1091,19 +1122,25 @@ _ovum_pingere (
  * ================================================== */
 
 hic_manens constans character* constans LICITA_FINIUM[] = {
-    "fines", "colores", "exemplar", "vis", "stilus", "titulus", NIHIL
+    "fines", "colores", "exemplar", "vis", "stilus", "titulus",
+    "lucens", NIHIL
 };
 hic_manens constans character* constans LICITA_PUNCTORUM[] = {
-    "puncta", "colores", "exemplar", "vis", "stilus", "titulus", NIHIL
+    "puncta", "colores", "exemplar", "vis", "stilus", "titulus",
+    "lucens", NIHIL
 };
 hic_manens constans character* constans LICITA_LINEAE[] = {
-    "puncta", "stilus", "titulus", NIHIL
+    "puncta", "stilus", "titulus", "lucens", NIHIL
 };
 hic_manens constans character* constans LICITA_GREGIS[] = {
     "locus", NIHIL
 };
 hic_manens constans character* constans LICITA_RADICIS[] = {
-    "titulus", "latitudo", "altitudo", NIHIL
+    "titulus", "latitudo", "altitudo", "lux", "tinctura", "umbra",
+    NIHIL
+};
+hic_manens constans character* constans LICITA_LUMINIS[] = {
+    "locus", "radii", "area", "mollities", "color", "vis", NIHIL
 };
 
 /* forma nihil intra picturam pinxit? */
@@ -1233,6 +1270,7 @@ _forma_punctorum (
     {
         memset(&q, ZEPHYRUM, magnitudo(q));
         si (   !_stilum_legere(p, nodus, &q, VERUM)
+            || !_lucens_legere(p, nodus, &q)
             || !_titulum_legere(p, nodus, &q))
         {
             redde FALSUM;
@@ -1265,6 +1303,176 @@ _forma_punctorum (
         }
     }
     redde _picta_probare(p, nodus);
+}
+
+/* vis lucis: millesimae 0 .. maximum in partes GRAPHIS_LUX_UNA;
+ * absens: praesumpta */
+interior b32
+_vis_lucis (
+        StatusPicturae* p,
+    constans StmlNodus* nodus,
+    constans character* titulus,
+                   i32  maximum,
+                   i32  praesumpta,
+    constans character* quid,
+                   i32* exitus)
+{
+    constans chorda* valor = stml_attributum_capere(nodus, titulus);
+             chorda  verba[I];
+                i32  n;
+                i32  mille;
+
+    *exitus = praesumpta;
+    si (!valor)
+    {
+        redde VERUM;
+    }
+    si (   !_verba(valor, verba, I, &n) || n != I
+        || !_millesimae(verba[ZEPHYRUM], maximum, &mille))
+    {
+        redde _recusare_attributum(p, nodus, titulus, quid);
+    }
+    *exitus = (mille * GRAPHIS_LUX_UNA + D) / M;
+    redde VERUM;
+}
+
+/* color unus; absens: albus */
+interior b32
+_color_lucis (
+        StatusPicturae* p,
+    constans StmlNodus* nodus,
+    constans character* titulus,
+                    i8* rgb)
+{
+    constans chorda* valor = stml_attributum_capere(nodus, titulus);
+             chorda  verba[I];
+                i32  n;
+
+    memset(rgb, 255, III);
+    si (!valor)
+    {
+        redde VERUM;
+    }
+    si (   !_verba(valor, verba, I, &n) || n != I
+        || !_color(verba[ZEPHYRUM], rgb))
+    {
+        redde _recusare_attributum(p, nodus, titulus,
+            "needs one colour (0 to 15 or #rrggbb)");
+    }
+    redde VERUM;
+}
+
+/* elementum lumen: lumen puncti (locus, radii) aut areae (area,
+ * mollities) */
+interior b32
+_lumen_legere (
+        StatusPicturae* p,
+    constans StmlNodus* nodus)
+{
+    constans chorda* locus  = stml_attributum_capere(nodus, "locus");
+    constans chorda* radii  = stml_attributum_capere(nodus, "radii");
+    constans chorda* area   = stml_attributum_capere(nodus, "area");
+    constans chorda* mollis = stml_attributum_capere(nodus,
+        "mollities");
+       GraphisLumen* l;
+                s32  duo[II];
+
+    si (!_attributa_licita(p, nodus, LICITA_LUMINIS))
+    {
+        redde FALSUM;
+    }
+    si ((locus != NIHIL) == (area != NIHIL))
+    {
+        redde _recusare_elementum(p, nodus,
+            "needs locus or area (one of them, not both)");
+    }
+    si (p->lux.luminum >= GRAPHIS_LUMINA_MAXIMA)
+    {
+        redde _recusare_elementum(p, nodus,
+            "is one light too many (16 at most)");
+    }
+    l = &p->lumina[p->lux.luminum];
+    memset(l, ZEPHYRUM, magnitudo(*l));
+    si (locus)
+    {
+        si (mollis)
+        {
+            redde _recusare_attributum(p, nodus, "mollities",
+                "belongs to an area light");
+        }
+        si (!_coordinatae(locus, duo, II))
+        {
+            redde _recusare_attributum(p, nodus, "locus",
+                "needs 2 integers from -4096 to 4096");
+        }
+        l->punctum  = VERUM;
+        l->x        = duo[ZEPHYRUM];
+        l->y        = duo[I];
+        si (!radii)
+        {
+            redde _recusare_attributum(p, nodus, "radii",
+                "is required");
+        }
+        si (   !_coordinatae(radii, duo, II) || duo[ZEPHYRUM] < I
+            || duo[I] < I)
+        {
+            redde _recusare_attributum(p, nodus, "radii",
+                "needs 2 integers from 1 to 4096");
+        }
+        l->radius_x = duo[ZEPHYRUM];
+        l->radius_y = duo[I];
+    }
+    alioquin
+    {
+        s32 x[PUNCTA_MAXIMA];
+        s32 y[PUNCTA_MAXIMA];
+        i32 numerus;
+
+        si (radii)
+        {
+            redde _recusare_attributum(p, nodus, "radii",
+                "belongs to a point light");
+        }
+        si (   !_paria(area, x, y, &numerus) || numerus < III
+            || numerus > GRAPHIS_AREA_PUNCTA)
+        {
+            redde _recusare_attributum(p, nodus, "area",
+                "needs 3 to 64 points \"x,y\" of integers from -4096"
+                " to 4096");
+        }
+        l->punctorum  = numerus;
+        l->area_x     = (s32*)piscina_allocare(p->piscina,
+            (memoriae_index)(numerus * magnitudo(s32)));
+        l->area_y     = (s32*)piscina_allocare(p->piscina,
+            (memoriae_index)(numerus * magnitudo(s32)));
+        si (!l->area_x || !l->area_y)
+        {
+            redde _recusare(p, ZEPHYRUM, "out of memory", NIHIL,
+                NIHIL);
+        }
+        memcpy(l->area_x, x, numerus * magnitudo(s32));
+        memcpy(l->area_y, y, numerus * magnitudo(s32));
+        si (mollis)
+        {
+            s32 m;
+
+            si (   !_coordinatae(mollis, &m, I) || m < ZEPHYRUM
+                || m > (s32)GRAPHIS_MOLLITIES_MAXIMA)
+            {
+                redde _recusare_attributum(p, nodus, "mollities",
+                    "needs an integer from 0 to 16");
+            }
+            l->mollities = (i32)m;
+        }
+    }
+    si (   !_color_lucis(p, nodus, "color", l->color)
+        || !_vis_lucis(p, nodus, "vis", II * M, GRAPHIS_LUX_UNA,
+            "must be from 0 to 2 (three decimals at most)", &l->vis))
+    {
+        redde FALSUM;
+    }
+    p->lux.luminum++;
+    redde VERUM;
 }
 
 /* liberi radicis aut gregis */
@@ -1337,6 +1545,20 @@ _liberi (
                 bene = _forma_punctorum(p, liber, motus_x, motus_y,
                     _titulus_est(liber->titulus, "linea"));
             }
+        }
+        alioquin si (_titulus_est(liber->titulus, "lumen"))
+        {
+            si (altitudo > ZEPHYRUM)
+            {
+                redde _recusare_elementum(p, liber,
+                    "must be a direct child of <pictura>");
+            }
+            si (_habet_elementa(liber))
+            {
+                redde _recusare_elementum(p, liber,
+                    "takes no children");
+            }
+            bene = _lumen_legere(p, liber);
         }
         alioquin
         {
@@ -1424,6 +1646,8 @@ graphis_legere (
                StmlResultus  r;
            DitheringFructus  d;
               GraphisTabula* tabula;
+               GraphisLumen* lumina;
+                         i8* illustratus;
                         b32  activi[XVI];
                         i32  pixela = (i32)(LAT * ALT);
                         i32  k;
@@ -1457,9 +1681,11 @@ graphis_legere (
         (memoriae_index)(pixela * IV));
     p.larva   = (i8*)piscina_allocare(piscina, (memoriae_index)pixela);
     p.domini  = (i8*)piscina_allocare(piscina, (memoriae_index)pixela);
+    p.lucentes = (i8*)piscina_allocare(piscina,
+        (memoriae_index)pixela);
     tabula   = (GraphisTabula*)piscina_allocare(piscina,
         magnitudo(GraphisTabula));
-    si (!p.fons || !p.larva || !p.domini || !tabula)
+    si (!p.fons || !p.larva || !p.domini || !p.lucentes || !tabula)
     {
         (vacuum)_recusare(&p, ZEPHYRUM, "out of memory", NIHIL,
             NIHIL);
@@ -1467,6 +1693,8 @@ graphis_legere (
     }
     memset(p.larva, ZEPHYRUM, pixela);
     memset(p.domini, ZEPHYRUM, pixela);
+    memset(p.lucentes, ZEPHYRUM, pixela);
+    p.lux.lumina = p.lumina;
     per (k = ZEPHYRUM; k < pixela; k++)
     {
         memcpy(p.fons + k * IV, AQUINAS_PALETTE[GRAPHIS_COLOR_FUNDI],
@@ -1478,20 +1706,44 @@ graphis_legere (
             LAT, "must be 360 (the only picture size)")
         || !_magnitudo_radicis(&p, r.elementum_radix, "altitudo",
             ALT, "must be 240 (the only picture size)")
+        || !_vis_lucis(&p, r.elementum_radix, "lux", M,
+            GRAPHIS_LUX_UNA,
+            "must be from 0 to 1 (three decimals at most)",
+            &p.lux.lux)
+        || !_vis_lucis(&p, r.elementum_radix, "umbra", M, ZEPHYRUM,
+            "must be from 0 to 1 (three decimals at most)",
+            &p.lux.umbra)
+        || !_color_lucis(&p, r.elementum_radix, "tinctura",
+            p.lux.tinctura)
         || !_liberi(&p, r.elementum_radix, ZEPHYRUM, ZEPHYRUM,
             ZEPHYRUM)
         || !_regiones_probare(&p))
     {
         redde _fructus_recusatus(&p, piscina);
     }
+    illustratus = graphis_illustrare(p.fons, p.lucentes, (i32)LAT,
+        (i32)ALT, &p.lux, piscina);
+    lumina      = (GraphisLumen*)piscina_allocare(piscina,
+        (memoriae_index)((p.lux.luminum ? p.lux.luminum : I)
+            * magnitudo(GraphisLumen)));
+    si (!illustratus || !lumina)
+    {
+        (vacuum)_recusare(&p, ZEPHYRUM, "out of memory", NIHIL,
+            NIHIL);
+        redde _fructus_recusatus(&p, piscina);
+    }
+    memcpy(lumina, p.lumina, p.lux.luminum * magnitudo(GraphisLumen));
     dithering_praeparare_omnes(activi);
-    d = dithering_atkinson_colorum(p.fons, (i32)LAT, (i32)ALT,
+    d = dithering_atkinson_colorum(illustratus, (i32)LAT, (i32)ALT,
         activi, piscina);
     memset(tabula, ZEPHYRUM, magnitudo(*tabula));
-    tabula->fons       = p.fons;
-    tabula->larva      = p.larva;
-    tabula->domini     = p.domini;
-    tabula->titulorum  = p.titulorum;
+    tabula->lucentes    = p.lucentes;
+    tabula->lux         = p.lux;
+    tabula->lux.lumina  = lumina;
+    tabula->fons        = p.fons;
+    tabula->larva       = p.larva;
+    tabula->domini      = p.domini;
+    tabula->titulorum   = p.titulorum;
     tabula->tituli    = (chorda*)piscina_allocare(piscina,
         (memoriae_index)((p.titulorum ? p.titulorum : I)
             * magnitudo(chorda)));
@@ -1505,9 +1757,10 @@ graphis_legere (
     {
         tabula->tituli[k] = chorda_transcribere(p.tituli[k], piscina);
     }
-    f.successus  = VERUM;
-    f.tabula     = tabula;
-    f.indices    = d.indices;
+    f.successus    = VERUM;
+    f.tabula       = tabula;
+    f.indices      = d.indices;
+    f.illustratus  = illustratus;
     redde f;
 }
 

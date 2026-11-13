@@ -58,12 +58,14 @@
  * ubi planus = duo colores secundum densitatem exemplaris mixti
  * (biti positi / LXIV). Color unus: is ipse.
  *
- * PICTURA: fons totus semel per dithering_atkinson_colorum (omnes
- * XVI colores) transit. Fons qui solos colores palettae tenet
- * immutatus exit.
+ * PICTURA: fons illustratus totus semel per
+ * dithering_atkinson_colorum (omnes XVI colores) transit. Fons qui
+ * solos colores palettae tenet, luce plena, immutatus exit.
  *
- * Lumina, 'lucens', partes ('usus') hic nondum sunt: T2 et T3 ea
- * addunt; usque tum recusantur ut ignota.
+ * LUX (graphis_lumen.h): attributa radicis lux, tinctura, umbra;
+ * elementum <lumen> (liber radicis solum); attributum formae
+ * lucens="verum". Sine his pictura immutata manet. Partes ('usus')
+ * hic nondum sunt: T3 eas addit; usque tum recusantur ut ignotae.
  *
  * RECUSAT, cum linea: plagulam quae STML non est; radicem aliam
  * quam <pictura>; elementum aut attributum ignotum; numerum absentem,
@@ -84,6 +86,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "graphis_lumen.h"
 
 #define GRAPHIS_LATITUDO          CCCLX
 #define GRAPHIS_ALTITUDO          CCXL
@@ -98,9 +101,11 @@ nomen structura {
                          * color ante picturam */
         i8* larva;      /* vis per pixelum, 0 .. CCLV; margo et
                          * color planus 0 */
-        i8* domini;     /* 0 = nullus; n = tituli[n - I] */
-    chorda* tituli;     /* ordine plagulae */
-       i32  titulorum;
+         i8* domini;     /* 0 = nullus; n = tituli[n - I] */
+     chorda* tituli;     /* ordine plagulae */
+        i32  titulorum;
+         i8* lucentes;   /* non 0 = pixelum formae lucentis */
+ GraphisLux  lux;        /* lux ut descriptio eam dedit */
 } GraphisTabula;
 
 nomen structura {
@@ -108,6 +113,9 @@ nomen structura {
     GraphisTabula* tabula;   /* NIHIL si recusata */
                i8* indices;  /* palettae 0 .. 15, unus per pixelum;
                               * NIHIL si recusata */
+               i8* illustratus; /* rgba post lucem (graphis_lumen.h):
+                              * hic per Atkinson transit; NIHIL si
+                              * recusata */
            chorda error;    /* causa recusationis, Anglice, sine
                               * linea nova; vacua si successus */
               i32 linea;    /* linea plagulae (ab I); 0 si ignota

@@ -171,6 +171,7 @@ declare -a SOURCE_FILES=(
     "lib/git.c"
     "lib/glyphae_ductae.c"
     "lib/graphis.c"
+    "lib/graphis_lumen.c"
     "lib/harmonia.c"
     "lib/herbarium.c"
     "lib/historia.c"

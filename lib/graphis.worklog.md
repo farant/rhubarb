@@ -17,3 +17,19 @@
 - "Paints no pixel inside the picture" doubles as the test for a shape
   wholly outside the frame and for a polygon too thin to cover any
   pixel centre.
+
+## 2026-11-13 - T2, lights (lib/graphis_lumen.c)
+
+- All divisions in the light path are between non-negative numbers:
+  the falloff interpolates as `T[i] - (T[i] - T[i+1]) * rest / 256`
+  (the difference written the positive way round).
+- The falloff table is 4096 x exp(-k / 8), k = 0..64; the index is
+  4 x ((dx/rx)^2 + (dy/ry)^2), so a radius is one sigma and the light
+  ends at four radii. At three radii a 100-grey still gets 1.
+- `aedilis` build scripts are per dependency set: after a lib gains
+  a new source (graphis -> graphis_lumen) a throwaway tool needs
+  `bin/aedilis x.c` again, not just its old `struere.sh`.
+- examen reads a C comment that begins with `<tag>` as an annotation
+  ("annotatio malformata"); write "elementum lumen: ..." instead.
+- The plant log's RUBRA lines list sections by FRACTA; a section that
+  aborts on CREDO_NECESSE shows only in the RESULTATUM line.

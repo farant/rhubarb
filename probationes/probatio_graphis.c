@@ -509,8 +509,8 @@ _sectio_recusationes (
         CAUDA, II, "unknown element");
     RECUSATUR (CAPUT "<rectangulum fines=\"0 0 9 9\" colores=\"6\""
         " color=\"6\"/>" CAUDA, II, "unknown attribute 'color'");
-    RECUSATUR ("<pictura lux=\"0.5\">\n</pictura>", I,
-        "unknown attribute 'lux'");
+    RECUSATUR ("<pictura semen=\"5\">\n</pictura>", I,
+        "unknown attribute 'semen'");
     RECUSATUR (CAPUT "<rectangulum colores=\"6\"/>" CAUDA, II,
         "fines");
     RECUSATUR (CAPUT "<rectangulum fines=\"0 0 9\" colores=\"6\"/>"
