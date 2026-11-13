@@ -1,8 +1,10 @@
 # graphis — 2D pictures that Claude draws from text, and a first still-picture adventure
 
-Status: slice, names and pane layout agreed by Fran 2026-11-13 ("yes,
-that sounds good"); builder check done 2026-11-13 (section VI).
-Nothing is built.
+Status: BUILT 2026-11-13 in secunda, tasks 1-9 of
+`project-specs/graphis-plan.md` (section VII says what was built and
+where it differs from the decisions below). Not in main. Slice,
+names and pane layout agreed by Fran 2026-11-13 ("yes, that sounds
+good"); builder check done 2026-11-13 (section VI).
 Brainstormed 2026-11-13 with Fran (secunda session 134c8417). Sibling
 of plastica (`project-specs/plastica-spec.md`); meets mundus
 (`project-specs/mundus-spec.md`) only at a doorway.
@@ -232,6 +234,56 @@ Claude's calls (not discussed; change freely):
 7. Left to the builder: which file and line a refusal inside a
    `usus` piece reports, and `usus` cycles (refuse); the layout of
    the scene blob; `$scene` opens on the first scene by title.
+
+## VII. As built (2026-11-13)
+
+Each task's own note is in `project-specs/graphis-plan.md`; worklogs
+sit beside the lib files. In short:
+
+1. **Compiler** (`lib/graphis.c`): `graphis_legere` turns a
+   `<pictura>` description into palette indices 360 x 240 plus the
+   owner table of titled regions. Shapes `rectangulum`, `ovum`,
+   `polygonum`, `linea`, `grex`; attributes `colores`, `exemplar`,
+   `vis`, `stilus`, `titulus`. Integer only.
+2. **Lights** (`lib/graphis_lumen.c`): root `lux`, `tinctura`,
+   `umbra`; `<lumen>` point or area, at most 16; `lucens` shapes.
+3. **Pieces**: `<usus fons="name" locus="x y"/>`, piece files in
+   `graphis/res/` with root `<pars>`; depth 8, cycles refused; a
+   refusal names the piece and the line in it.
+4. **Eyes** (`lib/graphis_specimen.c`, `bin/graphis`): `specimen`
+   (sheet 1448 x 480: finished picture, source, mask, lit, regions),
+   `quadrum` (a part at 4x), `iudicare`.
+5. **The hut**: `apps/scaena/loci/casa_focus.stml`,
+   `casa_ostium.stml`. Added to the description: a titled `<grex>`
+   is one region for everything painted inside it (decision 17a).
+6. **Scenes** (`lib/scaena.c`): a `*.scaena.stml` sheet holds
+   `<prospectus titulus pictura>` with one `<descriptio>` and a
+   `<res titulus [exitus]>` per region; every region needs a thing
+   and every thing a region. A view becomes one blob (`SCAENA01`).
+   Types are `ScaenaProspectus`, `ScaenaRes` (builder check 6).
+7. **Store and tool** (`lib/scaena_repositorium.c`, `bin/scaena`):
+   own act kinds, apart from models; `condere`, `removere`, `index`;
+   a refused run writes nothing; `-volumen` has no default.
+8. **Pane `$scene`** (`lib/scaena_latus.c`): header, picture,
+   description, the last touched thing's text.
+
+Where the build differs from the decisions above:
+
+- An exit's line stays on screen in the view it leads to; stepping
+  with `[` `]` or the arrows clears it.
+- The pane asks for one tick a second to notice a rebuilt scene.
+- `j` / `k` choose a thing and Enter touches it (no mouse needed).
+- Text that does not fit is cut at the last whole line; no
+  scrolling.
+- Layout after Fran's first look: flat background inside a one-cell
+  margin, one blank line under the picture, two cells of padding at
+  the sides of the text, both texts in the normal text colour.
+- Exits lead only to views in the same sheet, or to `mundus`
+  (text only; the doorway is a follow-up).
+
+Follow-ups filed in the ledger (2026-11-13): the doorway between
+`$world` and `$scene` (design question), the walked perspective
+mode, animation of a picture, a "room" helper.
 
 ## AUDIENDA (not verified)
 

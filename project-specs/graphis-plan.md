@@ -588,3 +588,11 @@ header:
   (`graphis-project.md`); worklogs.
 - [ ] File in the ledger: the `$world` doorway (needs its own small
   design), the walked perspective mode, animation, a "room" helper.
+
+**As built (2026-11-13):** the hut is in Fran's live volume
+(`bin/scaena condere`, second run all `eadem`); spec has its status
+and section VII; memory `graphis-project.md` updated. Ledger: one
+note (what exists, what is open), one design question (the doorway
+between `$world` and `$scene`) and three wishes (walked perspective
+mode, animation, "room" helper). Not merged to main; Fran restarts
+vicus from secunda to look.
