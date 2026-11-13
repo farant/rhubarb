@@ -26,8 +26,14 @@
  * Relatio halitus gratis in exitu non-BENE (recordator volatus
  * machinulae semper activus).
  *
+ * -nativum (M5 T7): scopus et vocatae eius per dorsum nativum
+ * compilantur ante cursum (machinula_nativum_compilare); quod dorsum
+ * recusat interpretatum currit - 'nativum recusatum: <causa>' in
+ * stderr, fructus et exitus idem.
+ *
  * Usus: ./officina/interpretare.sh [-plagulae a,b,c] [-textus]
- *           [-mora n] [-index via] <functio> [argumenta...]
+ *           [-nativum] [-mora n] [-index via] <functio>
+ *           [argumenta...]
  * Exitus: 0 = BENE | 1 = halitus/functio absens | 2 = usus/mundus
  */
 
@@ -622,6 +628,7 @@ principale (
     constans character* argumenta[ARGUMENTA_MAXIMA];
     i32 numerus_argumentorum = ZEPHYRUM;
     b32 textus_petitus = FALSUM;
+    b32 nativum_petitum = FALSUM;
     insignatus integer mora_secunda = 60;
     integer a;
 
@@ -646,6 +653,10 @@ principale (
         alioquin si (strcmp(argv[a], "-textus") == ZEPHYRUM)
         {
             textus_petitus = VERUM;
+        }
+        alioquin si (strcmp(argv[a], "-nativum") == ZEPHYRUM)
+        {
+            nativum_petitum = VERUM;
         }
         alioquin si (strcmp(argv[a], "-omnia") == ZEPHYRUM)
         {
@@ -676,7 +687,7 @@ principale (
     si (titulus_functionis == NIHIL)
     {
         fprintf(stderr, "usus: interpretare [-plagulae a,b,c]"
-            " [-textus] [-mora n] [-index via] <functio>"
+            " [-textus] [-nativum] [-mora n] [-index via] <functio>"
             " [argumenta...]\n"
             "      (ex radice repositorii; scalaria + literae"
             " chordarum)\n");
@@ -1095,6 +1106,38 @@ principale (
                 {
                     machinula_lineas_praebere(machinula, (s32)k,
                         lineae_k);
+                }
+            }
+            /* -nativum (M5 T7): scopus (et vocatae eius) per dorsum
+             * compilatur; $main involucri interpretatum manet et
+             * scopum nativum vocat. Recusatio: causa nominata, cursus
+             * interpretatus, exitus immutatus. */
+            si (nativum_petitum)
+            {
+                chorda titulus_scopi;
+                chorda causa_nativi;
+                unio { constans character* c; i8* m; } iunctio;
+
+                iunctio.c            = titulus_functionis;
+                titulus_scopi.datum  = iunctio.m;
+                titulus_scopi.mensura =
+                    (i32)strlen(titulus_functionis);
+                causa_nativi.datum    = NIHIL;
+                causa_nativi.mensura  = ZEPHYRUM;
+                si (machinula_nativum_compilare(machinula,
+                        titulus_scopi, &causa_nativi))
+                {
+                    fprintf(stderr, "nativum: %s compilata\n",
+                        titulus_functionis);
+                }
+                alioquin
+                {
+                    fprintf(stderr, "nativum recusatum: %.*s -"
+                        " interpretata curritur\n",
+                        (int)causa_nativi.mensura,
+                        (causa_nativi.datum != NIHIL)
+                            ? (constans character*)causa_nativi.datum
+                            : "");
                 }
             }
             si (mora_secunda > 0U)

@@ -364,3 +364,32 @@ with no cursor movement. A hand-written arca with a register size halts
 memory is not zeroed, as before. Recursion: every frame gets its own
 region (test "arca recursio": write before the recursive call, read
 after it, 5 levels deep).
+
+## 2026-11-13 — signed division overflow now halts for s32 too
+
+`dividere.s32` / `residuum.s32` of INT_MIN by -1 used to wrap silently
+(INT_MIN, remainder 0); only the s64 case halted with "divisio:
+superfluxus". Cause: the check compared canonical 64-bit words against
+the 64-bit minimum, and an s32 INT_MIN is sign-extended, so it never
+matched. Found while writing the native backend's division checks (M5 T7
+step 3): the spec's E16 says "signed INT_MIN / -1" and the plan's test
+expected the halt. Nothing had tested the overflow halt in the
+interpreter before.
+
+Fran's ruling (2026-11-13): the interpreter is the stricter referee - fix
+it rather than have the backend copy the gap. Now: sb == -1 and sa equal
+to the minimum OF THE TYPE (s32 or s64) -> VITIUM "divisio: superfluxus",
+for both operations. s8/s16 unchanged: C promotes to int before dividing,
+so nothing overflows (reasoned from C; whether demissio ever emits a
+narrow-typed division was not checked).
+
+The native backend emits the same check at the type's width. Tests are in
+probatio_officina_nativum "dorsum divisio" (interpreted side asserted
+first, then parity): minimum_breve, residuum_minimi_brevis halt;
+prope_minimum_breve (INT_MIN / 1, -5 / -1, unsigned INT_MIN / UINT_MAX)
+does not. Plants: s32 clause removed in machinula -> FRACTA; backend check
+64-bit only -> FRACTA; backend's 32-bit minimum constant wrong -> FRACTA.
+
+Consequence to watch: lib code that divides a 32-bit minimum by -1 now
+halts under interpretation. Not measured - the cursor's differential lane
+is dead until credo runs.

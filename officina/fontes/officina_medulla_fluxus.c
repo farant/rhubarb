@@ -961,7 +961,12 @@ medulla_fluxus_transit_vocationem (
     }
     per (i = ZEPHYRUM; i < f->numerus_vocationum; i++)
     {
-        si (   initium < f->vocationes[i]
+        /* initium == positio usus (par): registrum in introitu
+         * vivit (parametrum aut lectum ante definitionem) et a
+         * vocatione prima legitur - ante eam vivit. Definitiones in
+         * positionibus imparibus stant, ergo fructus vocationis ipsius
+         * (initium = usus + I) non transit. */
+        si (   initium <= f->vocationes[i]
             && finis > f->vocationes[i] + I)
         {
             redde VERUM;

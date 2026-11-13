@@ -129,6 +129,20 @@ machinula_nativum_ponere (
        chorda  titulus_functionis,
        vacuum* introitus);
 
+/* M5 T7: functionem nominatam per dorsum nativum compilat et in
+ * NATIVAM vertit (dorsum machinulae proprium, primo usu creatum;
+ * officina_effugium paratur). FALSUM + causa nominata si dorsum
+ * recusat - functio interpretata manet et currit ut ante. Iam
+ * nativa: VERUM. Halitus codicis compilati (sistere, divisio) idem
+ * ac interpretati sunt: genus, nuntius, positio inspecta.
+ * Dorsum UNUM vivum per processum (area una): machinula altera
+ * compilans codicem prioris superscribit. */
+b32
+machinula_nativum_compilare (
+    Machinula* machinula,
+       chorda  titulus_functionis,
+       chorda* causa_out);
+
 /* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
  * aperire = status purgatus + tabulatum primum (VERUM si paratum);
  * gradus = instructio UNA (VERUM = pergendum); pergere = usque ad

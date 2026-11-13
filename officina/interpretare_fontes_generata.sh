@@ -1,5 +1,5 @@
 # interpretare_fontes_generata.sh - GENERATUM AB AEDILE - NE MANU EDITES
-# regeneratio: ./tools/fontes_generare.sh officina/interpretare_fontes_generata.sh officina/instrumenta/principalia/interpretare.c officina/fontes/officina_conexio.c officina/fontes/officina_demissio.c officina/fontes/officina_indicium.c officina/fontes/officina_machinula.c officina/fontes/officina_effugium.c officina/fontes/officina_medulla.c officina/fontes/officina_medulla_textus.c officina/fontes/officina_regio.c officina/instrumenta/bibliothecae.c
+# regeneratio: ./tools/fontes_generare.sh officina/interpretare_fontes_generata.sh officina/instrumenta/principalia/interpretare.c officina/fontes/officina_conexio.c officina/fontes/officina_demissio.c officina/fontes/officina_indicium.c officina/fontes/officina_machinula.c officina/fontes/officina_effugium.c officina/fontes/officina_dorsum.c officina/fontes/officina_medulla_fluxus.c officina/fontes/officina_medulla.c officina/fontes/officina_medulla_textus.c officina/fontes/officina_regio.c officina/instrumenta/bibliothecae.c
 declare -a RADIX_FONTES=(
     "aedilis"
     "aedilis_silva"

@@ -5584,3 +5584,100 @@ probatio_codificator_a64 green. Not yet run: commissio and the gates it
 owes (lib/ touched -> radix and more), fusio. Not done by design: the
 plan's Task 9 "vitium et credo" (a native fault inside a credo suite).
 Next in the plan: Task 7 (backend I, `interpretare -nativum`).
+
+### T7 — backend I (dorsum) + `interpretare -nativum` — 2026-11-12/13: COMPLETE, uncommitted until Fran's word
+
+Header approved by Fran 2026-11-12 (plan text + OfficinaDorsumSaltus:
+the trap code a stub carries, (genus << 32) | index). Built in five
+steps, each reported.
+
+officina/fontes/officina_dorsum.{h,c}:
+- Refusal pass first; whatever is not emitted is refused BY NAME and the
+  function stays interpreted. Exact strings: "functio variadica",
+  "operatio <op> nondum nativa", "vocat $<f> interpretatum" (callee not
+  compilable, a builtin, or mutual recursion), "registrum s32 in usu
+  64"; others are prefixed "dorsum:" and name the plan task.
+- Allocation: linear scan over medulla_fluxus intervals. x9-x15 for
+  intervals that do not cross a call, x19-x28 for the rest and overflow;
+  x16/x17 scratch; x0-x2 free inside an instruction (used by division
+  and trap stubs). Spill = lowest loop-depth weight, then furthest end,
+  into 8-byte frame slots. NOT covered by a failing test (changes which
+  register is spilled, not the result).
+- Frame: stp x29,x30,[sp,#-16]!; mov x29,sp; sub sp; used callee-saved
+  and spill slots at [sp + 8n]. Registers read before any definition
+  are zeroed in the prologue (F13).
+- Width model: 32-bit-and-narrower types use W forms (upper half zero);
+  the interpreter's canonical sign-extended word is NOT kept. Therefore
+  E17: a register written by a signed <= 32-bit op and read at 64 bits
+  is refused; exempt = shift count, ramus. Comparison results,
+  extendere results and immediate movere are full canonical words.
+- Selection: movere, add/sub (imm12 form when it fits), mul, neg, and/
+  or/xor/not, shifts, six comparisons signed and unsigned, cmp + ramus
+  folded to cmp; b.cond when the result's interval is exactly [def,
+  ramus use], salire/ramus with fall-through to the next block in
+  dorsal order, extendere/amputare/narrow movere, direct calls (<= 8
+  integer args), division and remainder with checks, sistere.
+- Calls: callees are compiled first (closure), entry address loaded
+  into x16; self-recursion uses the function's own future entry (the
+  area cursor). machinula_nativum_compilare then flips every compiled
+  function of the machinula.
+- pc map per function {byte offset, flat index}, binary search.
+
+machinula:
+- machinula_nativum_compilare (owns one OfficinaDorsum per machinula).
+- A native halt is decoded from the trap code; frames are rebuilt by
+  walking the native x29 chain (return address - 4 -> the caller's
+  vocare; caller positioned at index + 1 like an interpreted caller),
+  up to 256 frames. Kind, message, frame count and every frame's
+  position equal the interpreted run. The VOCARE NATIVUM arm now
+  advances the caller's instructio before the call for the same reason.
+
+Deviations and finds:
+- Plan test said INT_MIN / -1 halts. The interpreter only did so for
+  s64. Fran 2026-11-13: fix the interpreter (officina_machinula.worklog
+  has the entry); backend emits the check at the type's width.
+- T5 bug: medulla_fluxus_transit_vocationem returned FALSUM for a
+  parameter live across a call that is the function's FIRST instruction
+  (initium == the call's use position). Fixed (<=) with a new case in
+  probatio_officina_fluxus; nothing consumed the function before T7.
+- machinula_nativum_compilare was written in step 3, not 5 (halt parity
+  needs a machinula that owns its dorsum).
+- One live dorsum per code area: a second starts at
+  OFFICINA_DORSUM_INITIUM and overwrites the first. Stated in both
+  headers; a test tripped on it.
+- Amalgam: static names share one namespace - _e/_movere/_recusare
+  renamed in dorsum.c; R_ZR -> R_NULLUM, _comparatio_plicabilis ->
+  _comparatio_plicanda for the word lint.
+
+Tests: probatio_officina_nativum 34 sections (16 from T6 + 18 for the
+backend: recta, bitorum, ante definitionem, effusio, parametra,
+constantes, recusatio operationis, fixturae fluxus, summa, ramus,
+comparationes, ansae, arithmetica, divisio, sistere, latitudo,
+vocationes, recusationes). Every backend section runs the same code
+interpreted and native and compares. probatio_officina_lanceatores
+gained "interpretare -nativum" (fasti_est_bissextilis 2024 -> "1",
+exit 0, "nativum: ... compilata"; piscina_generare_dynamicum ->
+"nativum recusatum: vocat $malloc interpretatum", exit unchanged).
+Plants: 43 across the five steps (8 + 8 + 11 + 3 for the overflow
+ruling + 12 + 1; backend, machinula, fluxus, interpretare). 42 red, 3
+of those by hanging rather than failing; 1 was equivalent, not a fault
+(overflow check on 32-bit, before the ruling). Two
+plants first survived and exposed weak tests, both fixed: a dropped
+call-result move (callee left the value in the same temp) and
+middle-frame positions (parity compared only top and bottom).
+
+Known limits: narrow (8/16-bit) return extension is emitted but no
+test fails without it; mutual recursion refused; frames beyond 256
+truncated; 8/16-bit arithmetic refused (C promotes, so it should not
+occur - not measured); floats, memory, data, builtins, aggregates,
+indirect and variadic calls are Tasks 8-9.
+
+What real code does today: `interpretare -nativum fasti_est_bissextilis`
+compiles; fasti_dies_in_mense is refused ("operatio locus nondum
+nativa"), piscina_generare_dynamicum ("vocat $malloc interpretatum").
+credo is still far from native: it needs Task 8's memory and host calls.
+
+Lesson: a hand plant in a source that a LAUNCHER builds by mtime must
+not be restored with the old mtime if the launcher ran during the
+plant - the binary built from the planted source looks newer and is
+kept (lanceatores stayed red until the source was touched).

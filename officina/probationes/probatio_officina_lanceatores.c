@@ -244,6 +244,54 @@ _sectio_vindex (
         chorda_ex_literis("g gradus", piscina));
 }
 
+/* interpretare -nativum (M5 T7): scopus per dorsum compilatur ante
+ * cursum - fructus et exitus idem; scopus quem dorsum recusat
+ * interpretatus currit, causa nominata, exitus immutatus */
+interior vacuum
+_sectio_interpretare_nativum (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+     ProcessusOptiones  optiones;
+     ProcessusResultus  r;
+    constans character* argumenta[] = {
+        "officina/interpretare.sh",
+        "-nativum",
+        "fasti_est_bissextilis",
+        "2024",
+        NIHIL
+    };
+    constans character* recusanda[] = {
+        "officina/interpretare.sh",
+        "-nativum",
+        "piscina_generare_dynamicum",
+        "\"x\"",
+        "1024",
+        NIHIL
+    };
+
+    memset(&optiones, ZEPHYRUM, magnitudo(ProcessusOptiones));
+    optiones.directorium = _radix();
+    r = processus_exsequi_cum(argumenta, &optiones, MORA_AEDIFICATIONIS,
+        piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_VERUM(chorda_aequalis_literis(r.effusio, "1\n"));
+    CREDO_CHORDA_CONTINET(r.erratum, chorda_ex_literis(
+        "nativum: fasti_est_bissextilis compilata", piscina));
+    CREDO_CHORDA_CONTINET(r.erratum,
+        chorda_ex_literis("[BENE", piscina));
+
+    r = processus_exsequi_cum(recusanda, &optiones, MORA_AEDIFICATIONIS,
+        piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_CHORDA_CONTINET(r.erratum, chorda_ex_literis(
+        "nativum recusatum: ", piscina));
+    CREDO_CHORDA_CONTINET(r.erratum,
+        chorda_ex_literis("[BENE", piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "colloquium scriptum", _sectio_colloquium, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -258,6 +306,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "interpretare mundus totus", _sectio_interpretare_totus, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "vindex imago", _sectio_vindex, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "interpretare -nativum", _sectio_interpretare_nativum, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
