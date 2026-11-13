@@ -1,5 +1,6 @@
 /* probatio_officina_lanceatores.c - lanceatores officinae VERE
- * currere (colloquium.sh, interpretare.sh): aedificatio + cursus
+ * currere (colloquium.sh, interpretare.sh, cursor.sh, vindex.sh):
+ * aedificatio + cursus
  * per processum, effusio capta. Nulla porta olim lanceatorem
  * colloquii currebat - ideo nexus fractus (nexus_ordines, parcum
  * 01M4XR3Q) a 8bbf97f7 usque ad 2026-11-02 latuit.
@@ -212,6 +213,37 @@ _sectio_interpretare_totus (
         chorda_ex_literis("NEXUS FRACTUS", piscina)));
 }
 
+/* vindex.sh: lanceator debuggeris ligatur et currit. A 8bbf97f7
+ * usque ad 2026-11-12 non ligabatur (nexus_ordines deerat - idem
+ * vitium ac colloquii); nulla porta eum currebat. -imago: punctum
+ * in credo_suitam_currere, cursus ad pausam, effigies una. */
+interior vacuum
+_sectio_vindex (
+    CredoContextus* c)
+{
+               Piscina* piscina = c->piscina;
+     ProcessusOptiones  optiones;
+     ProcessusResultus  r;
+    constans character* argumenta[] = {
+        "officina/vindex.sh",
+        "probationes/probatio_chorda.c",
+        "-plagulae", "chorda,credo",
+        "-imago", "credo_suitam_currere",
+        NIHIL
+    };
+
+    memset(&optiones, ZEPHYRUM, magnitudo(ProcessusOptiones));
+    optiones.directorium = _radix();
+    r = processus_exsequi_cum(argumenta, &optiones, MORA_AEDIFICATIONIS,
+        piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_CHORDA_CONTINET(r.effusio,
+        chorda_ex_literis("VINDEX  lib/credo.c  [PAUSA]", piscina));
+    CREDO_CHORDA_CONTINET(r.effusio,
+        chorda_ex_literis("g gradus", piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "colloquium scriptum", _sectio_colloquium, NIHIL, NIHIL, NIHIL,
         NIHIL },
@@ -225,6 +257,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "interpretare mundus totus", _sectio_interpretare_totus, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "vindex imago", _sectio_vindex, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
