@@ -1,0 +1,16 @@
+% Psalmus 110 (Vulgata) - Confitébor tibi, Dómine, in toto corde meo
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm110.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Confitébor tibi, Dómine, in toto corde meo: * in consílio justórum, et congregatióne.
+Magna ópera Dómini: * exquisíta in omnes voluntátes ejus.
+Conféssio et magnificéntia opus ejus: * et justítia ejus manet in sǽculum sǽculi.
+Memóriam fecit mirabílium suórum, † miséricors et miserátor Dóminus: * escam dedit timéntibus se.
+Memor erit in sǽculum testaménti sui: * virtútem óperum suórum annuntiábit pópulo suo:
+Ut det illis hereditátem géntium: * ópera mánuum ejus véritas, et judícium.
+Fidélia ómnia mandáta ejus: † confirmáta in sǽculum sǽculi, * facta in veritáte et æquitáte.
+Redemptiónem misit pópulo suo: * mandávit in ætérnum testaméntum suum.
+% (fit reverentia)
+Sanctum, et terríbile nomen ejus: * inítium sapiéntiæ timor Dómini.
+Intelléctus bonus ómnibus faciéntibus eum: * laudátio ejus manet in sǽculum sǽculi.

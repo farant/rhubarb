@@ -1,0 +1,10 @@
+% Psalmus 130 (Vulgata) - Dómine, non est exaltátum cor meum
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm130.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Dómine, non est exaltátum cor meum: * neque eláti sunt óculi mei.
+Neque ambulávi in magnis: * neque in mirabílibus super me.
+Si non humíliter sentiébam: * sed exaltávi ánimam meam:
+Sicut ablactátus est super matre sua, * ita retribútio in ánima mea.
+Speret Israël in Dómino, * ex hoc nunc et usque in sǽculum.

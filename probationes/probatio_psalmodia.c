@@ -1503,6 +1503,121 @@ _totalitas_probare (
 }
 
 
+/* ==================================================
+ * Psalterium importatum (musica/psalmi/, Divinum Officium)
+ * ================================================== */
+
+/* admonitiones psalterii exspectatae: ceterae = textus mutatus aut
+ * aptator mutatus. Isaac: vox hebraica sine acuto (spec AUDIENDA,
+ * voces hebraicae) - Divinum Officium (Latin-gabc) Í-sa-ac canit,
+ * non abrupte; Franus decernit. */
+#define PSALTERII_ADMONITIONES \
+    "musica/psalmi/104.txt:14:50: verbum \"Isaac\" sine accentu\n"
+
+/* admonitiones psalmi ut lineae 'via:linea:columna: causa' */
+interior chorda
+_admonitiones_psalmi (
+                      Piscina* piscina,
+    constans PsalmodiaPsalmus* psalmus,
+           constans character* via)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, CXXVIII);
+
+    (vacuum)psalmodia_admonitiones_scribere(psalmus, via, a);
+    redde chorda_aedificator_finire(a);
+}
+
+/* psalmi I-CL in omni terminatione tabulae (praeter formas ad
+ * libitum et sorores monosyllabas, quas aptator ipse eligit):
+ * versus omnes aptantur, admonitiones toni non pendent (eaedem in
+ * omni terminatione) et solae sunt quas PSALTERII_ADMONITIONES
+ * nominat. LICENTIA (MIT eorum) adest. */
+interior vacuum
+_psalterium_probare (
+    CredoContextus* ctx)
+{
+          PsalmodiaTabula* t = _tabula_vera(ctx);
+        PsalmodiaOptiones  optiones;
+        ChordaAedificator* omnes = chorda_aedificator_creare(
+                               ctx->piscina, CCLVI);
+                   chorda licentia;
+                character via[LXIV];
+                      i32 aptationes    = ZEPHYRUM;
+                      i32 discrepantes  = ZEPHYRUM;
+                      i32 vacui         = ZEPHYRUM;
+                      i32 n;
+                      i32 i;
+                      i32 j;
+
+    CREDO_NECESSE (t != NIHIL);
+    licentia = filum_legere_totum("musica/psalmi/LICENTIA",
+        ctx->piscina);
+    CREDO_VERUM (licentia.mensura > XI
+        && memcmp(licentia.datum, "MIT License", XI) == ZEPHYRUM);
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.sine_gloria = VERUM;
+    per (n = I; n <= CL; n++)
+    {
+        Piscina* q = piscina_generare_dynamicum("psalterium",
+                         (memoriae_index)(CCLVI * MXXIV));
+          chorda textus;
+          chorda prima;
+             b32 primus = VERUM;
+
+        CREDO_NECESSE (q != NIHIL);
+        sprintf(via, "musica/psalmi/%d.txt", (integer)n);
+        textus = filum_legere_totum(via, q);
+        CREDO_NECESSE (textus.mensura > ZEPHYRUM);
+        prima.datum    = NIHIL;
+        prima.mensura  = ZEPHYRUM;
+        per (i = ZEPHYRUM; i < t->numerus_tonorum; i++)
+        {
+            constans PsalmodiaTonus* tonus = &t->toni[i];
+
+            per (j = ZEPHYRUM; j < tonus->numerus_terminationum; j++)
+            {
+                constans PsalmodiaClausula* term =
+                    &tonus->terminationes[j];
+                          PsalmodiaPsalmus* ps;
+                                    chorda  monita;
+
+                si (term->ad_libitum || term->monosyllaba)
+                {
+                    perge;
+                }
+                ps = psalmodia_aptare(tonus, term, textus, &optiones,
+                    q);
+                CREDO_NECESSE (ps != NIHIL);
+                aptationes++;
+                si (ps->numerus_versuum < II)
+                {
+                    vacui++;
+                }
+                monita = _admonitiones_psalmi(q, ps, via);
+                si (primus)
+                {
+                    prima   = monita;
+                    primus  = FALSUM;
+                }
+                alioquin si (   monita.mensura != prima.mensura
+                             || (prima.mensura > ZEPHYRUM
+                             && memcmp(monita.datum, prima.datum,
+                               (size_t)prima.mensura) != ZEPHYRUM))
+                {
+                    discrepantes++;
+                }
+            }
+        }
+        chorda_aedificator_appendere_chorda(omnes, prima);
+        piscina_destruere(q);
+    }
+    CREDO_VERUM (aptationes >= (i32)(CL * XXX));
+    CREDO_AEQUALIS_I32 (vacui, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (discrepantes, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS (chorda_aedificator_finire(omnes),
+        PSALTERII_ADMONITIONES);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "textus: lineae", _lineae_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "textus: signa", _signa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1519,6 +1634,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "reditus per gabc_legere", _reditum_probare,
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "totalitas", _totalitas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "psalterium importatum: CL psalmi, omnes terminationes",
+        _psalterium_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

@@ -1,0 +1,12 @@
+% Psalmus 53 (Vulgata) - Deus, in nómine tuo salvum me fac
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm53.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Deus, in nómine tuo salvum me fac: * et in virtúte tua júdica me.
+Deus, exáudi oratiónem meam: * áuribus pércipe verba oris mei.
+Quóniam aliéni insurrexérunt advérsum me, et fortes quæsiérunt ánimam meam: * et non proposuérunt Deum ante conspéctum suum.
+Ecce enim, Deus ádjuvat me: * et Dóminus suscéptor est ánimæ meæ.
+Avérte mala inimícis meis: * et in veritáte tua dispérde illos.
+Voluntárie sacrificábo tibi, * et confitébor nómini tuo, Dómine: quóniam bonum est:
+Quóniam ex omni tribulatióne eripuísti me: * et super inimícos meos despéxit óculus meus.

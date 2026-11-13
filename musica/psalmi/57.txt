@@ -1,0 +1,16 @@
+% Psalmus 57 (Vulgata) - Si vere útique justítiam loquímini
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm57.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Si vere útique justítiam loquímini: * recta judicáte, fílii hóminum.
+Étenim in corde iniquitátes operámini: * in terra injustítias manus vestræ concínnant.
+Alienáti sunt peccatóres a vulva, erravérunt ab útero: * locúti sunt falsa.
+Furor illis secúndum similitúdinem serpéntis: * sicut áspidis surdæ, et obturántis aures suas,
+Quæ non exáudiet vocem incantántium: * et venéfici incantántis sapiénter.
+Deus cónteret dentes eórum in ore ipsórum: * molas leónum confrínget Dóminus.
+Ad níhilum devénient tamquam aqua decúrrens: * inténdit arcum suum donec infirméntur.
+Sicut cera, quæ fluit, auferéntur: * supercécidit ignis, et non vidérunt solem.
+Priúsquam intellégerent spinæ vestræ rhamnum: * sicut vivéntes, sic in ira absórbet eos.
+Lætábitur justus cum víderit vindíctam: * manus suas lavábit in sánguine peccatóris.
+Et dicet homo: Si útique est fructus justo: * útique est Deus júdicans eos in terra.

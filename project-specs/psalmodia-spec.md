@@ -337,7 +337,9 @@ errors, fitter errors, and edition variants.
 4. ~~Where pointed texts live~~ — **answered 2026-11-12** (plan-2
    FRAN 4): `musica/psalmi/`, one pointed `.txt` per psalm; Ps 116
    committed at T7 (`auditio -psalmus musica/psalmi/116.txt -signum
-   "8 G"`). The rest come from Divinum Officium (Q1, answered).
+   "8 G"`). The rest come from Divinum Officium (Q1, answered):
+   imported 2026-11-13, psalms 1-150 by `tools/psalmi_arcessere.sh`
+   (pinned commit; `musica/psalmi/LICENTIA` = their MIT notice).
 
 ---
 
@@ -365,6 +367,10 @@ errors, fitter errors, and edition variants.
 - That the written-out GregoBase psalms follow the same tone table as
   the labels (edition variants are likely).
 - That WORDS (oratio) carries no vowel length.
+- Isaac (Ps 104:9, "ad Isaac:" at the mediant): unaccented, not in
+  VOCES_HEBRAICAE - the psalter's one warning. Divinum Officium's
+  gabc sings Í-sa-ac as an ordinary cadence, not abrupt; AR's rule
+  would make it abrupt. Fran's call.
 - Hebrew names: AR 1912 prints them without accents, but the music
   shows them (*Basan*, *Sina* stressed on the last syllable; *Israel*,
   *Aaron* sung with a hiatus, Is-ra-el, A-a-ron). They also choose

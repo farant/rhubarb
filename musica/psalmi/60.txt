@@ -1,0 +1,13 @@
+% Psalmus 60 (Vulgata) - Exáudi, Deus, deprecatiónem meam
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm60.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Exáudi, Deus, deprecatiónem meam: * inténde oratióni meæ.
+A fínibus terræ ad te clamávi: * dum anxiarétur cor meum, in petra exaltásti me.
+Deduxísti me, quia factus es spes mea: * turris fortitúdinis a fácie inimíci.
+Inhabitábo in tabernáculo tuo in sǽcula: * prótegar in velaménto alárum tuárum.
+Quóniam tu, Deus meus, exaudísti oratiónem meam: * dedísti hereditátem timéntibus nomen tuum.
+Dies super dies regis adícies: * annos ejus usque in diem generatiónis et generatiónis.
+Pérmanet in ætérnum in conspéctu Dei: * misericórdiam et veritátem ejus quis requíret?
+Sic psalmum dicam nómini tuo in sǽculum sǽculi: * ut reddam vota mea de die in diem.

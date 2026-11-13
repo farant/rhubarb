@@ -1,0 +1,10 @@
+% Psalmus 122 (Vulgata) - Ad te levávi óculos meos
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm122.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Ad te levávi óculos meos, * qui hábitas in cælis.
+Ecce, sicut óculi servórum * in mánibus dominórum suórum,
+Sicut óculi ancíllæ in mánibus dóminæ suæ: * ita óculi nostri ad Dóminum, Deum nostrum, donec misereátur nostri.
+Miserére nostri, Dómine, miserére nostri: * quia multum repléti sumus despectióne:
+Quia multum repléta est ánima nostra: * oppróbrium abundántibus, et despéctio supérbis.

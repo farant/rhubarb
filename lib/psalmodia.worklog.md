@@ -401,3 +401,40 @@ needed. Test `_scriptura_probare` now also composes the 8 G output and
 counts GABC_PICTUM_INITIALIS: 0 with the header, 1 for the same verses
 without it (control; it failed before the fix, red 9/14). auditio_fumus
 checks four header lines. Picture checked by eye with bin/neumae.
+
+## 2026-11-13 — psalter imported (Divinum Officium, spec VI q1)
+
+`tools/psalmi_arcessere.sh` (pattern of gabc_arcessere: fetch, python3 -I
+in build/psalmi/, compare by default, `-scribere` writes) brings psalms
+1-150 into `musica/psalmi/N.txt` + their MIT LICENSE as
+`musica/psalmi/LICENTIA`, pinned to DO commit 31d9e8b2e46a (their master
+2026-11-13; the last commit touching the psalm dir, f657971, predates
+their LICENSE file - 404). 116.txt was replaced by DO's (only change:
+verse 1 ends "pópuli:" not "pópuli."; header no longer claims AR 1912).
+
+DO format quirks, all handled in the converter: `N:V[a-z] ` prefix;
+Vulgate verse numbers inside Office verses "(8)", "(2a)"; `‡` = flex for
+singing (their horasscripts.pl: "‡ marks mediant for Breviarum Romanum
+but flexa for Antiphonale") -> `†`; Ps 118 stanza letters "(Aleph)" ->
+`% Aleph` comment line; "(fit reverentia)" (bow rubric, Ps 67, 110, 112)
+-> `% (fit reverentia)` before the verse; `$ant` (Ps 94 invitatory
+repeats) dropped. Unknown line or leftover ( ) $ digits, '*' not once,
+'†' after '*' = error, nothing written. Survey: no verse with two
+flexes, every verse has '*'; spelling uses j; diaeresis Israël (61x),
+áëris; ý in Ægýptus, abýssus etc.
+
+Measured: 150 psalms x 33 endings (all but ad libitum / monosyllabic
+sisters) = 4950 fits, ONE warning, tone-independent: 104.txt:14:50
+"Isaac" sine accentu (3-syllable Hebrew name, unaccented). DO's own
+Latin-gabc sets it Í-sa-ac as an ordinary proparoxytone cadence (1D, 2,
+4E, 8G checked), NOT abrupt - so adding it to VOCES_HEBRAICAE (all
+abrupt, decision 1) would contradict DO; left as the one expected
+warning, question for Fran. Test `_psalterium_probare` (probatio_psalmodia):
+all fits, verses >= 2, warnings identical across endings, and the
+concatenated warnings == PSALTERII_ADMONITIONES. Red first (expected ""
+-> named Isaac); plant (Ps 1 accents dropped on Beátus, consílio) red
+naming both; restored, importer compare = congruunt.
+
+Side find: DO ships every psalm already set to each tone as gabc
+(web/www/horas/Latin-gabc/Psalterium/Psalmorum/<tone>/N-<ending>.gabc,
+MIT) - a ready outside oracle for the fitter, by the same pinning.

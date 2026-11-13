@@ -1,0 +1,13 @@
+% Psalmus 129 (Vulgata) - De profúndis clamávi ad te, Dómine
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm129.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+De profúndis clamávi ad te, Dómine: * Dómine, exáudi vocem meam:
+Fiant aures tuæ intendéntes, * in vocem deprecatiónis meæ.
+Si iniquitátes observáveris, Dómine: * Dómine, quis sustinébit?
+Quia apud te propitiátio est: * et propter legem tuam sustínui te, Dómine.
+Sustínuit ánima mea in verbo ejus: * sperávit ánima mea in Dómino.
+A custódia matutína usque ad noctem: * speret Israël in Dómino.
+Quia apud Dóminum misericórdia: * et copiósa apud eum redémptio.
+Et ipse rédimet Israël, * ex ómnibus iniquitátibus ejus.
