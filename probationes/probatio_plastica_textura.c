@@ -830,6 +830,131 @@ _sectio_recusationes (
         "a</textura>\n</res>", I, "no solids");
 }
 
+/* motus_texturae: coordinatae omnis verticis tot texellis augentur;
+ * densitas manet */
+interior vacuum
+_sectio_motus (
+    CredoContextus* c)
+{
+    Statua* s = _statua(c,
+        "<res titulus=\"a\">"
+        "<capsa magnitudo=\"2 1 2\" textura=\"saxum\"/>"
+        "<capsa magnitudo=\"2 1 2\" textura=\"saxum\""
+        " motus_texturae=\"8 4\"/>"
+        "<textura titulus=\"t\" latitudo=\"16\" colores=\"#111 #eee\">"
+        "aaaaaaaabbbbbbbb</textura>"
+        "<capsa magnitudo=\"1 1 1\" textura=\"t\""
+        " motus_texturae=\"8 0\"/>"
+        "<capsa magnitudo=\"1 1 1\" textura=\"t\"/>"
+        "</res>");
+    i32 omnia;
+    i32 v;
+    i32 per_capsam;
+
+    CREDO_AEQUALIS_I32 (_latera_extenta(s, &omnia), ZEPHYRUM);
+    per_capsam = s->verticum / IV;
+    CREDO_AEQUALIS_I32 (per_capsam, XXXVI);
+    /* tegula XXXII: VIII texella = 0.25, IV = 0.125 */
+    per (v = ZEPHYRUM; v < per_capsam; v++)
+    {
+        CREDO_F64_PROXIMUS (
+            (f64)s->coordinatae[(per_capsam + v) * II]
+                - (f64)s->coordinatae[v * II], 0.25, 1.0e-5);
+        CREDO_F64_PROXIMUS (
+            (f64)s->coordinatae[(per_capsam + v) * II + I]
+                - (f64)s->coordinatae[v * II + I], 0.125, 1.0e-5);
+    }
+    /* tegula XVI x I: VIII texella = 0.5; t non motum */
+    per (v = ZEPHYRUM; v < per_capsam; v++)
+    {
+        CREDO_F64_PROXIMUS (
+            (f64)s->coordinatae[(II * per_capsam + v) * II]
+                - (f64)s->coordinatae[(III * per_capsam + v) * II],
+            0.5, 1.0e-5);
+        CREDO_F64_PROXIMUS (
+            (f64)s->coordinatae[(II * per_capsam + v) * II + I]
+                - (f64)s->coordinatae[(III * per_capsam + v) * II + I],
+            0.0, 1.0e-5);
+    }
+    /* tegula non quadrata (IV x II): motus t per ALTITUDINEM
+     * texturae dividitur - I texellum deorsum = 0.5 */
+    {
+        Statua* oblonga = _statua(c,
+            "<res titulus=\"a\">"
+            "<textura titulus=\"t\" latitudo=\"4\""
+            " colores=\"#111 #eee\">aabb bbaa</textura>"
+            "<capsa magnitudo=\"1 1 1\" textura=\"t\""
+            " motus_texturae=\"1 1\"/>"
+            "<capsa magnitudo=\"1 1 1\" textura=\"t\"/>"
+            "</res>");
+
+        per (v = ZEPHYRUM; v < per_capsam; v++)
+        {
+            CREDO_F64_PROXIMUS (
+                (f64)oblonga->coordinatae[v * II]
+                    - (f64)oblonga->coordinatae[(per_capsam + v) * II],
+                0.25, 1.0e-5);
+            CREDO_F64_PROXIMUS (
+                (f64)oblonga->coordinatae[v * II + I]
+                    - (f64)oblonga->coordinatae[
+                        (per_capsam + v) * II + I],
+                0.5, 1.0e-5);
+        }
+    }
+    /* series cum motus_texturae_gressus: exemplar k textura eadem,
+     * coordinatis k * (V, III) texellis motis; motus solidi ipsius
+     * additur */
+    {
+        Statua* series = _statua(c,
+            "<res titulus=\"a\">"
+            "<series numerus=\"3\" gressus=\"2 0 0\""
+            " motus_texturae_gressus=\"5 3\">"
+            "<capsa magnitudo=\"1 1 1\" textura=\"saxum\""
+            " motus_texturae=\"1 0\"/>"
+            "</series>"
+            "<capsa magnitudo=\"1 1 1\" textura=\"saxum\"/>"
+            "</res>");
+        i32 k;
+
+        CREDO_AEQUALIS_I32 (series->texturarum, I);
+        CREDO_AEQUALIS_I32 (series->verticum, IV * per_capsam);
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            per (v = ZEPHYRUM; v < per_capsam; v++)
+            {
+                CREDO_F64_PROXIMUS (
+                    (f64)series->coordinatae[(k * per_capsam + v) * II]
+                        - (f64)series->coordinatae[
+                            (III * per_capsam + v) * II],
+                    (1.0 + 5.0 * (f64)k) / 32.0, 1.0e-5);
+                CREDO_F64_PROXIMUS (
+                    (f64)series->coordinatae[
+                            (k * per_capsam + v) * II + I]
+                        - (f64)series->coordinatae[
+                            (III * per_capsam + v) * II + I],
+                    3.0 * (f64)k / 32.0, 1.0e-5);
+            }
+        }
+        CREDO_AEQUALIS_I32 (_latera_extenta(series, &omnia),
+            ZEPHYRUM);
+    }
+    RECUSATUR ("<res titulus=\"a\">\n"
+        "<series numerus=\"2\" motus_texturae_gressus=\"5\">\n"
+        "<capsa magnitudo=\"1 1 1\" textura=\"saxum\"/>\n"
+        "</series>\n</res>", II, "motus_texturae_gressus");
+    /* textura eadem communicatur: motus clavem non mutat */
+    CREDO_AEQUALIS_I32 (s->texturarum, II);
+    RECUSATUR ("<res titulus=\"a\">\n"
+        "<capsa magnitudo=\"1 1 1\" motus_texturae=\"8 0\"/>\n</res>",
+        II, "motus_texturae");
+    RECUSATUR ("<res titulus=\"a\">\n"
+        "<capsa magnitudo=\"1 1 1\" textura=\"saxum\""
+        " motus_texturae=\"8\"/>\n</res>", II, "motus_texturae");
+    RECUSATUR ("<res titulus=\"a\">\n"
+        "<capsa magnitudo=\"1 1 1\" textura=\"saxum\""
+        " motus_texturae=\"a b\"/>\n</res>", II, "motus_texturae");
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "genera", _sectio_genera, NIHIL, NIHIL, NIHIL, NIHIL },
     { "argumenta", _sectio_argumenta, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -848,6 +973,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "communicatio", _sectio_communicatio, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "manu", _sectio_manu, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "motus", _sectio_motus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

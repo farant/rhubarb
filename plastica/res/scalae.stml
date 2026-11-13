@@ -1,26 +1,15 @@
 <res titulus="stair">
   <!-- scalae lapideae: VIII gradus dimidiae unitatis secundum +x
        ascendentes, IV unitates altae (stratum medium loci 'clearing'
-       ad summum iungunt: 4.5 -> 8.5). Gradus summus latior est ut
+       ad summum iungunt: 4.5 -> 8.5). Gradus VII per seriem (quisque
+       dimidia unitate altior, panno texturae alio); summus latior est ut
        marginem rupis tegat. Omnes gressibiles. -->
-  <capsa titulus="gradus I" magnitudo="0.5 0.5 3" locus="0.25 0 0"
-         color="#8a8478" textura="saxum" signum="gressibile"/>
-  <capsa titulus="gradus II" magnitudo="0.5 1.0 3" locus="0.75 0 0"
-         color="#8a8478" textura="saxum" semen="1"
-         signum="gressibile"/>
-  <capsa titulus="gradus III" magnitudo="0.5 1.5 3" locus="1.25 0 0"
-         color="#8a8478" textura="saxum" signum="gressibile"/>
-  <capsa titulus="gradus IV" magnitudo="0.5 2.0 3" locus="1.75 0 0"
-         color="#8a8478" textura="saxum" semen="1"
-         signum="gressibile"/>
-  <capsa titulus="gradus V" magnitudo="0.5 2.5 3" locus="2.25 0 0"
-         color="#8a8478" textura="saxum" signum="gressibile"/>
-  <capsa titulus="gradus VI" magnitudo="0.5 3.0 3" locus="2.75 0 0"
-         color="#8a8478" textura="saxum" semen="1"
-         signum="gressibile"/>
-  <capsa titulus="gradus VII" magnitudo="0.5 3.5 3" locus="3.25 0 0"
-         color="#8a8478" textura="saxum" signum="gressibile"/>
-  <capsa titulus="gradus VIII" magnitudo="1.0 4.0 3" locus="4.0 0 0"
+  <series numerus="7" gressus="0.5 0 0" magnitudo_gressus="0 0.5 0"
+          motus_texturae_gressus="11 6">
+    <capsa titulus="gradus" magnitudo="0.5 0.5 3" locus="0.25 0 0"
+           color="#8a8478" textura="saxum" signum="gressibile"/>
+  </series>
+  <capsa titulus="gradus summus" magnitudo="1.0 4.0 3" locus="4.0 0 0"
          color="#8a8478" textura="saxum" semen="1"
          signum="gressibile"/>
 </res>

@@ -71,14 +71,40 @@
  *   speculum   axis="x" aut "z": liberi ET imago eorum trans planum
  *              ubi coordinata illa 0 est. Imago vera est (vertices
  *              reflexi, ordo verticum inversus), non scala negativa
- *   series     numerus="n" (I .. CCLVI), gressus="x y z",
+  *   series     numerus="n" (I .. CCLVI), gressus="x y z",
  *              gyrus_gressus="g": liberi n vicibus, exemplar k per
- *              k gressus motum et k gyros versum
+ *              k gressus motum et k gyros versum.
+ *              semen_gressus="n": exemplar k semini liberorum k * n
+  *              addit (saxa aspera alia quaeque; textura genita
+ *              quoque alia fit - tegula nova per exemplar).
+ *              motus_texturae_gressus="u v": exemplar k texturam
+ *              liberorum k * (u v) texellis movet - pannus alius
+ *              tegulae EIUSDEM, sine textura nova (saxa muri)
+ *              magnitudo_gressus="x y z": exemplar k magnitudini
+ *              liberorum k * (x y z) addit (capsa, cuneus, sphaera
+ *              cum magnitudine) et altitudini cylindri et
+ *              extrusionis k * y - scalae: gradus idem, quisque
+ *              altior. Radii et puncta non crescunt. Magnitudo quae
+ *              in exemplari non positiva fit recusatur. Series
+ *              nidificatae gressus suos addunt
  *   sparsio    numerus="n" (I .. CCLVI), semen="n", area="x z":
  *              liberi n vicibus intra aream circa centrum sparsi;
  *              gyrus_varius="verum" quodque fortuito vertit;
  *              magnitudo_varia="v" (0 .. 1) quodque scala inter
  *              1 - v et 1 + v mutat
+ *
+  * motus_texturae  "u v" in texellis: coordinatae texturae in omni
+ *                 facie solidi tot texellis augentur (ordinarius
+ *                 0 0). Coordinatae a medio solidi numerantur: sic
+ *                 tegula manu scripta in facie collocatur sine
+ *                 ordinibus rotatis (capsa I lata, tegula XVI:
+ *                 motus_texturae="8 0")
+ *
+ * OBEX: <res titulus="..." obex="x z"> obicem invisum solidum addit,
+ * x latum et z profundum (unus numerus = quadratus), I unitate
+ * altum, in origine rei: pars ULTIMA, titulo "obex". Pro re tenui
+ * (palus, truncus) quae per se nullam cellam gressus claudit. Obex
+ * alibi aut alter: capsa invisibilis manu scripta, ut ante.
  *
  * TEXTURA MANU SCRIPTA (liber <res>, ante usum; nodum non facit):
  *

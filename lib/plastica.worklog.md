@@ -148,3 +148,43 @@ digests stand. The test compares "description read with 3 added"
 against "the same description written with every seed 3 higher".
 A pine has no seeded geometry, so a seed only changes its texture
 patches; rocks, bushes and oaks change shape.
+
+## 2026-11-12 - description conveniences (plastica II, task 3)
+
+Four additions that came out of modelling the first ten assets:
+
+- **`motus_texturae="u v"`** on a solid adds that many texels to the
+  texture coordinates of every face. UVs count from the solid's
+  centre, so a 16-texel tile on a 1-unit box used to need its rows
+  written rotated by half; the signpost now writes its arrow the
+  natural way with `motus_texturae="8 0"`. The offset is not part of
+  the texture's key: shifted and unshifted solids share one texture.
+- **`series` steps.** `magnitudo_gressus="x y z"` adds k times that
+  to the size of each copy's children (`magnitudo` of capsa, cuneus,
+  sphaera; the y part to `altitudo` of cylindrus and extrusio). The
+  stair's seven rising steps are one line. `semen_gressus="n"` adds
+  k * n to the children's seeds. `motus_texturae_gressus="u v"`
+  shifts each copy's texture by k * (u v) texels. All three are
+  saved and restored around the loop, and a nested series adds to
+  its outer copy's values.
+- **`obex="x z"` on `<res>`** appends an unseen solid box at the
+  origin (one number = square), 1 unit tall, part title "obex",
+  always the last node. It replaces the hand-written invisible box
+  in the fence, pine, oak and signpost. To emit it without a source
+  element, `_solidum_aperire` was split (`_solidum_inire` takes the
+  properties) and the box's six faces moved to `_capsam_emittere`.
+- **Found while converting the assets: a seed per copy is the wrong
+  tool for "each stone shows a different patch".** With
+  `semen_gressus` each of the well's twenty stones got its own
+  32 x 32 generated texture. Together with the stair and the varied
+  props the furnished clearing passed the GLB reader's cap of 64
+  images, and `bin/mundus condere` refused to store it ("the file
+  has too many images") - its read-back check did its job; the map
+  command and the pinned test, which never wrote a GLB, did not
+  notice. Hence `motus_texturae_gressus` (not in the header first
+  shown to Fran): another patch of the SAME tile, no new texture.
+  The well and the stair use it. The reader's cap was raised from
+  64 to 256, and test `pratum` now writes the place to GLB, reads it
+  back and holds the texture count under 100 (it is 64 today).
+- Every converted asset kept its numbers (parts, triangles, bounds,
+  footprint) and the clearing's pins did not move.

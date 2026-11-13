@@ -4,14 +4,16 @@
        Persona II unitates alta; murus ad genua, tectum supra caput. -->
 
   <!-- murus: ordo imus -->
-  <series numerus="10" gyrus_gressus="36">
+  <series numerus="10" gyrus_gressus="36"
+          motus_texturae_gressus="7 5">
     <capsa titulus="saxum imum" magnitudo="0.62 0.45 0.32"
            locus="0 0 0.85" color="#8f8676" textura="saxum"
            signum="solidum"/>
   </series>
   <!-- ordo superior, dimidio saxo versus, clarior -->
   <grex gyrus="18" locus="0 0.45 0">
-    <series numerus="10" gyrus_gressus="36">
+    <series numerus="10" gyrus_gressus="36"
+            motus_texturae_gressus="11 3">
       <capsa titulus="saxum summum" magnitudo="0.62 0.4 0.32"
              locus="0 0 0.85" color="#a89c88" textura="saxum" semen="1"
              signum="solidum"/>

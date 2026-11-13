@@ -1,22 +1,20 @@
-<res titulus="signpost">
+<res titulus="signpost" obex="0.5">
   <!-- index viae: palus et tabula cum sagitta. Tabula I lata est et
-       coordinatae a medio eius numerantur: ordines texturae dimidio
-       (VIII texella) rotati scribuntur ut sagitta integra appareat -->
+       coordinatae a medio eius numerantur: motus_texturae VIII
+       texella tegulam in tabula collocat. Palus tenuis: obex. -->
   <textura titulus="sagitta" latitudo="16"
            colores="#b08a52 #4a321c">
     aaaaaaaaaaaaaaaa
-    aabaaaaaaaaaaaaa
-    aabbaaaaaaaaaaaa
-    bbbbbaaaaabbbbbb
-    bbbbbaaaaabbbbbb
-    aabbaaaaaaaaaaaa
-    aabaaaaaaaaaaaaa
+    aaaaaaaaaabaaaaa
+    aaaaaaaaaabbaaaa
+    aabbbbbbbbbbbaaa
+    aabbbbbbbbbbbaaa
+    aaaaaaaaaabbaaaa
+    aaaaaaaaaabaaaaa
     aaaaaaaaaaaaaaaa
   </textura>
   <capsa titulus="palus" magnitudo="0.14 1.7 0.14" color="#6b4a2b"
          textura="tabulae"/>
   <capsa titulus="tabula" magnitudo="1.0 0.5 0.07" locus="0.2 1.1 0.11"
-         textura="sagitta"/>
-  <capsa titulus="obex" magnitudo="0.5 1.7 0.5" invisibilis="verum"
-         signum="solidum"/>
+         textura="sagitta" motus_texturae="8 0"/>
 </res>

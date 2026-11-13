@@ -37,7 +37,7 @@
 #define LIMES_VERTICUM    1000000
 #define LIMES_INDICUM     3000000
 #define LIMES_CLAVIUM     1000000
-#define LIMES_IMAGINUM    LXIV
+#define LIMES_IMAGINUM    CCLVI
 #define LIMES_TEXTURAE    0x1000
 
 nomen structura {

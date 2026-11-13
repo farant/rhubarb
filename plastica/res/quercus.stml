@@ -1,10 +1,8 @@
-<res titulus="oak">
+<res titulus="oak" obex="0.6">
   <!-- quercus: truncus crassus, coma ex tribus globis asperis -->
   <cylindrus titulus="truncus" radius="0.32" radius_summus="0.24"
              altitudo="1.9" latera="7" color="#5e4428"
              textura="cortex" semen="3"/>
-  <capsa titulus="obex" magnitudo="0.6 1.9 0.6" invisibilis="verum"
-         signum="solidum"/>
   <sphaera titulus="coma" magnitudo="3.4 2.4 3.2" segmenta="8"
            asperitas="0.3" semen="5" locus="0 1.6 0" color="#4a7a34"
            textura="frondes"/>

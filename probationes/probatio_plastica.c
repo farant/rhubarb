@@ -1587,6 +1587,237 @@ _sectio_semen_additum (
     CREDO_AEQUALIS_I32 (nimia.linea, II);
 }
 
+/* fines verticum retis nodi n in spatio nodi (sine transformatione) */
+interior Fines
+_fines_nodi (
+    constans Statua* s,
+                i32  n)
+{
+    constans StatuaRete* rete = &s->retia[s->nodi[n].rete];
+    constans StatuaPars* pars = &s->partes[rete->pars_prima];
+                  Fines  f;
+                    i32  k;
+                    i32  a;
+
+    per (a = ZEPHYRUM; a < III; a++)
+    {
+        f.minimum[a] = 1.0e9f;
+        f.maximum[a] = -1.0e9f;
+    }
+    f.triangulorum = pars->indicum / III;
+    per (k = ZEPHYRUM; k < pars->indicum; k++)
+    {
+        constans f32* v = s->positiones
+            + s->indices[pars->index_primus + k] * III;
+
+        per (a = ZEPHYRUM; a < III; a++)
+        {
+            si (v[a] < f.minimum[a])
+            {
+                f.minimum[a] = v[a];
+            }
+            si (v[a] > f.maximum[a])
+            {
+                f.maximum[a] = v[a];
+            }
+        }
+    }
+    redde f;
+}
+
+/* nodi cum reti, ordine: index k-esimi */
+interior i32
+_solidum_k (
+    constans Statua* s,
+                i32  k)
+{
+    i32 n;
+
+    per (n = ZEPHYRUM; n < s->nodorum; n++)
+    {
+        si (s->nodi[n].rete >= ZEPHYRUM && k-- == ZEPHYRUM)
+        {
+            redde n;
+        }
+    }
+    redde ZEPHYRUM;
+}
+
+/* series: magnitudo_gressus et semen_gressus */
+interior vacuum
+_sectio_series_gressus (
+    CredoContextus* c)
+{
+    PlasticaFructus f = _lege(c,
+        "<res titulus=\"scalae\">"
+        "<series numerus=\"4\" gressus=\"0.5 0 0\""
+        " magnitudo_gressus=\"0 0.5 0.25\">"
+        "<capsa magnitudo=\"0.5 0.5 3\"/>"
+        "<cylindrus radius=\"0.1\" altitudo=\"1\"/>"
+        "</series>"
+        "<capsa magnitudo=\"1 1 1\"/>"
+        "</res>");
+    PlasticaFructus g;
+    PlasticaFructus sola;
+              Fines fines;
+                i32 k;
+
+    CREDO_NECESSE (f.successus);
+    /* exemplar k: capsa alta 0.5 (k + 1), lata 3 + 0.25 k; cylindrus
+     * altus 1 + 0.5 k */
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        fines = _fines_nodi(f.statua, _solidum_k(f.statua, k * II));
+        CREDO_F64_PROXIMUS ((f64)fines.maximum[I],
+            0.5 * (f64)(k + I), 1.0e-5);
+        CREDO_F64_PROXIMUS ((f64)fines.maximum[II],
+            1.5 + 0.125 * (f64)k, 1.0e-5);
+        CREDO_F64_PROXIMUS ((f64)fines.maximum[ZEPHYRUM], 0.25,
+            1.0e-5);
+        fines = _fines_nodi(f.statua,
+            _solidum_k(f.statua, k * II + I));
+        CREDO_F64_PROXIMUS ((f64)fines.maximum[I],
+            1.0 + 0.5 * (f64)k, 1.0e-5);
+        CREDO_F64_PROXIMUS ((f64)fines.maximum[ZEPHYRUM], 0.1,
+            1.0e-5);
+    }
+    /* post seriem magnitudo propria redit */
+    fines = _fines_nodi(f.statua, _solidum_k(f.statua, VIII));
+    CREDO_F64_PROXIMUS ((f64)fines.maximum[I], 1.0, 1.0e-5);
+    CREDO_F64_PROXIMUS ((f64)fines.maximum[II], 0.5, 1.0e-5);
+    /* series nidificatae: gressus adduntur */
+    g = _lege(c,
+        "<res titulus=\"a\">"
+        "<series numerus=\"2\" magnitudo_gressus=\"0 1 0\">"
+        "<series numerus=\"2\" magnitudo_gressus=\"0 0.25 0\">"
+        "<capsa magnitudo=\"1 1 1\"/>"
+        "</series>"
+        "</series>"
+        "</res>");
+    CREDO_NECESSE (g.successus);
+    fines = _fines_nodi(g.statua, _solidum_k(g.statua, ZEPHYRUM));
+    CREDO_F64_PROXIMUS ((f64)fines.maximum[I], 1.0, 1.0e-5);
+    fines = _fines_nodi(g.statua, _solidum_k(g.statua, I));
+    CREDO_F64_PROXIMUS ((f64)fines.maximum[I], 1.25, 1.0e-5);
+    fines = _fines_nodi(g.statua, _solidum_k(g.statua, II));
+    CREDO_F64_PROXIMUS ((f64)fines.maximum[I], 2.0, 1.0e-5);
+    fines = _fines_nodi(g.statua, _solidum_k(g.statua, III));
+    CREDO_F64_PROXIMUS ((f64)fines.maximum[I], 2.25, 1.0e-5);
+    /* gressus negativus ad magnitudinem non positivam: recusatur */
+    g = _lege(c,
+        "<res titulus=\"a\">\n"
+        "<series numerus=\"3\" magnitudo_gressus=\"0 -0.5 0\">\n"
+        "<capsa magnitudo=\"1 1 1\"/>\n"
+        "</series>\n</res>");
+    CREDO_FALSUM (g.successus);
+    CREDO_AEQUALIS_I32 (g.linea, III);
+    g = _lege(c,
+        "<res titulus=\"a\">\n"
+        "<series numerus=\"3\" magnitudo_gressus=\"0 1\">\n"
+        "<capsa magnitudo=\"1 1 1\"/>\n"
+        "</series>\n</res>");
+    CREDO_FALSUM (g.successus);
+    CREDO_AEQUALIS_I32 (g.linea, II);
+    /* semen_gressus: exemplar k = sphaera sola cum semine k * VII */
+    g = _lege(c,
+        "<res titulus=\"a\">"
+        "<series numerus=\"3\" gressus=\"3 0 0\" semen_gressus=\"7\">"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" semen=\"2\"/>"
+        "</series>"
+        "</res>");
+    CREDO_NECESSE (g.successus);
+    sola = _lege(c,
+        "<res titulus=\"a\">"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" semen=\"2\"/>"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" semen=\"9\"/>"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" semen=\"16\"/>"
+        "</res>");
+    CREDO_NECESSE (sola.successus);
+    CREDO_AEQUALIS_I32 (g.statua->verticum, sola.statua->verticum);
+    CREDO_VERUM (memcmp(g.statua->positiones, sola.statua->positiones,
+        g.statua->verticum * III * magnitudo(f32)) == ZEPHYRUM);
+    /* sine semen_gressus exemplaria eadem */
+    g = _lege(c,
+        "<res titulus=\"a\">"
+        "<series numerus=\"2\" gressus=\"3 0 0\">"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" semen=\"2\"/>"
+        "</series>"
+        "</res>");
+    CREDO_NECESSE (g.successus);
+    CREDO_VERUM (memcmp(g.statua->positiones,
+        g.statua->positiones + g.statua->verticum / II * III,
+        g.statua->verticum / II * III * magnitudo(f32)) == ZEPHYRUM);
+    g = _lege(c,
+        "<res titulus=\"a\">\n"
+        "<series numerus=\"2\" semen_gressus=\"-1\">\n"
+        "<capsa magnitudo=\"1 1 1\"/>\n"
+        "</series>\n</res>");
+    CREDO_FALSUM (g.successus);
+    CREDO_AEQUALIS_I32 (g.linea, II);
+}
+
+/* obex: attributum radicis obicem invisum solidum addit */
+interior vacuum
+_sectio_obex (
+    CredoContextus* c)
+{
+    PlasticaFructus f = _lege(c,
+        "<res titulus=\"palus\" obex=\"0.5\">"
+        "<cylindrus titulus=\"hasta\" radius=\"0.1\" altitudo=\"2\"/>"
+        "</res>");
+              Fines fines;
+                i32 n;
+
+    CREDO_NECESSE (f.successus);
+    /* radix, hasta, obex (ultimus) */
+    CREDO_AEQUALIS_I32 (f.statua->nodorum, III);
+    n = II;
+    CREDO_AEQUALIS_S32 (f.statua->nodi[n].parens, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[n].signa, STATUA_SIGNUM_SOLIDUM);
+    CREDO_AEQUALIS_I32 (f.statua->nodi[I].signa, ZEPHYRUM);
+    CREDO_VERUM (chorda_aequalis_literis(f.partes[n], "obex"));
+    CREDO_VERUM (chorda_aequalis_literis(f.partes[I], "hasta"));
+    fines = _fines_nodi(f.statua, n);
+    CREDO_AEQUALIS_I32 (fines.triangulorum, XII);
+    FINES_SUNT (fines, -0.25, 0.25, 0.0, 1.0, -0.25, 0.25);
+    /* invisus: alpha 0, limen 0.5 */
+    CREDO_F64_PROXIMUS ((f64)f.statua->materiae[I].color[III], 0.0,
+        1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)f.statua->materiae[I].limen_alpha, 0.5,
+        1.0e-9);
+    CREDO_AEQUALIS_S32 (f.statua->materiae[I].textura, -I);
+    /* duo numeri: x et z */
+    f = _lege(c,
+        "<res titulus=\"saepes\" obex=\"2 0.5\">"
+        "<capsa magnitudo=\"2 0.1 0.1\" locus=\"0 0.5 0\"/>"
+        "</res>");
+    CREDO_NECESSE (f.successus);
+    fines = _fines_nodi(f.statua, II);
+    FINES_SUNT (fines, -1.0, 1.0, 0.0, 1.0, -0.25, 0.25);
+    /* sine obice nihil additur */
+    f = _lege(c,
+        "<res titulus=\"a\"><capsa magnitudo=\"1 1 1\"/></res>");
+    CREDO_NECESSE (f.successus);
+    CREDO_AEQUALIS_I32 (f.statua->nodorum, II);
+    /* valores mali */
+    f = _lege(c, "<res titulus=\"a\" obex=\"0\">"
+        "<capsa magnitudo=\"1 1 1\"/></res>");
+    CREDO_FALSUM (f.successus);
+    CREDO_AEQUALIS_I32 (f.linea, I);
+    f = _lege(c, "<res titulus=\"a\" obex=\"1 -1\">"
+        "<capsa magnitudo=\"1 1 1\"/></res>");
+    CREDO_FALSUM (f.successus);
+    f = _lege(c, "<res titulus=\"a\" obex=\"1 2 3\">"
+        "<capsa magnitudo=\"1 1 1\"/></res>");
+    CREDO_FALSUM (f.successus);
+    f = _lege(c, "<res titulus=\"a\" obex=\"latus\">"
+        "<capsa magnitudo=\"1 1 1\"/></res>");
+    CREDO_FALSUM (f.successus);
+    /* obex solus rem non facit */
+    f = _lege(c, "<res titulus=\"a\" obex=\"1\"></res>");
+    CREDO_FALSUM (f.successus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "capsa", _sectio_capsa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1611,6 +1842,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL, NIHIL, NIHIL, NIHIL },
     { "semen_additum", _sectio_semen_additum, NIHIL, NIHIL, NIHIL,
       NIHIL },
+    { "series_gressus", _sectio_series_gressus, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "obex", _sectio_obex, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

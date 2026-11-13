@@ -79,3 +79,11 @@ write, read drifted and a second write differed in bytes. The reader
 now skips the normalisation when the squared length is within 1e-6
 of one (`_longitudo_una`). Files with sloppy rotations are
 normalised as before.
+
+## 2026-11-12 - image cap 64 -> 256
+
+`LIMES_IMAGINUM` was 64. A furnished place carries the level's 12
+atlases plus one small tile per (generator, seed, colours) of every
+prop, and plastica II's variety (several seeds per asset) reached
+the cap. Raised to 256. The cap exists to bound a hostile file; 256
+small images is still a modest bound.

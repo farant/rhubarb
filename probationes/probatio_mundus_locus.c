@@ -18,6 +18,7 @@
 #include "statua.h"
 #include "statua_pictura.h"
 #include "statua_glb.h"
+#include "statua_glb_scriptor.h"
 #include "plastica.h"
 #include "plastica_specimen.h"
 #include "mundus_solum.h"
@@ -1024,6 +1025,28 @@ _sectio_pratum (
             (constans character*)r.error.datum);
     }
     CREDO_NECESSE (r.successus);
+    /* locus in GLB scribitur et relegitur (lector imagines numerat:
+     * res cum multis seminibus texturas multiplicant) */
+    {
+        chorda octeti = statua_glb_scribere(r.statua, NIHIL,
+            c->piscina);
+        StatuaFructus relecta;
+
+        CREDO_NECESSE (octeti.datum != NIHIL);
+        relecta = statua_glb_legere(octeti, c->piscina);
+        si (!relecta.successus)
+        {
+            printf("locus relegi non potest: %.*s\n",
+                (integer)relecta.error.mensura,
+                (constans character*)relecta.error.datum);
+        }
+        CREDO_NECESSE (relecta.successus);
+        printf("  pratum: %u texturae, %u octeti GLB\n",
+            (insignatus)r.statua->texturarum,
+            (insignatus)octeti.mensura);
+        /* spatium sub limite lectoris (CCLVI imagines) */
+        CREDO_VERUM (r.statua->texturarum < C);
+    }
     s = mundus_solum_struere(r.statua, c->piscina);
     CREDO_NECESSE (s != NIHIL);
     per (k = ZEPHYRUM; k < s->latitudo * s->altitudo; k++)
