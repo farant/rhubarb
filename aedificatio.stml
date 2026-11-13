@@ -172,6 +172,23 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/graphis" provenientia="relatio"/>
   </actio>
+  <!-- scaena (graphis-plan T7): plagulae scaenarum
+       (apps/scaena/loci) in prospectus compositae et in volumen
+       vici conditae (condere), remotae (removere), enumeratae
+       (index) -->
+  <actio titulus="scaena" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/scaena_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/scaena"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/scaena/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/scaena_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/scaena" provenientia="relatio"/>
+  </actio>
   <!-- mundus: loci mundi ex dispositionibus (apps/mundus/loci) in
        volumen, et pictura rei in loco ut latus $world eam pingeret -->
   <actio titulus="mundus" genus="institutio">

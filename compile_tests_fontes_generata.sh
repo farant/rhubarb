@@ -354,6 +354,7 @@ declare -a SOURCE_FILES=(
     "lib/sanctorale.c"
     "lib/sarcina.c"
     "lib/scaena.c"
+    "lib/scaena_repositorium.c"
     "lib/schirmata.c"
     "lib/scriba_actiones.c"
     "lib/scriba_applicatio.c"

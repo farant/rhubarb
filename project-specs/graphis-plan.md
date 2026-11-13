@@ -507,6 +507,27 @@ is `apps/scaena/loci/casa.scaena.stml` (views `hut-hearth`,
   run all `eadem`); a broken scene writes nothing.
 - [ ] Run `bin/scaena condere` on Fran's live volume (standing OK).
 
+**As built (2026-11-13):** suite `scaena_repositorium`, 7 sections,
+10 plants red; smoke `tools/scaena_fumus.sh`, 8 hand plants red.
+Beyond the list above:
+- `scaena_titulus_validus` (a-z, 0-9, `-`, `_`; 1..64; not
+  `mundus`) and `ScaenaInscriptio {titulus, sigillum_hex}` are
+  public. `scaena_removere` returns FALSUM for a title that is not
+  there (the model store returns VERUM).
+- `condere` takes `-partes DIR` as well (pieces; default
+  `graphis/res`), prepares every view of every file first and only
+  then opens the volume, so a refused run does not even create it.
+  All views go in one transaction. Each blob is read back with
+  `scaena_legere` before it is added. The same title in two files
+  is refused. Views in the volume with no source are listed
+  (`sine fonte: T`), never removed.
+- `index -volumen V` is new: views in order with their things and
+  exits. `-volumen` has no default anywhere.
+- A refusal born in a picture names the picture's path, one born in
+  a piece the piece's path. Known limit: a piece with the same name
+  as the picture that uses it is reported under the picture's path.
+- The hut is in Fran's live volume: `hut-hearth`, `hut-door`.
+
 ### Task 8: the pane `$scene`
 
 **Files:** create `include/scaena_latus.h`, `lib/scaena_latus.c`,
