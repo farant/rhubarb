@@ -310,16 +310,28 @@ digests unmoved).
   A piece file has the root `<pars titulus="...">` and holds shapes
   and groups only (no lights, no `titulus` on shapes, no size).
   `graphis_legere` = no source: any `usus` is refused.
-- [ ] Tests first: `pars` (a piece placed twice at two offsets
+- [x] Tests first: `pars` (a piece placed twice at two offsets
   equals the same shapes written out); `pars_in_parte` (nesting to
   depth 2); `recusationes`: missing piece, a piece that uses
   itself, a cycle of two, depth over 8, a light or a titled shape
   in a piece, a refusal inside a piece (`plagula` = the piece's
   name, `linea` = its line).
-- [ ] Implement; the library does no IO (the caller's callback
+- [x] Implement; the library does no IO (the caller's callback
   does).
-- [ ] Plants: cycle check removed (must end by the depth limit, not
+- [x] Plants: cycle check removed (must end by the depth limit, not
   hang: run under CREDO_NON_PENDET); offset not added.
+
+**As built (2026-11-13):** suite `graphis_usus`, 4 sections, 8
+plants red (cycle check off, offset dropped, title in a piece
+accepted, light in a piece accepted, off-frame shape in a piece
+refused, piece name not restored after a piece, depth 7 for 8, name
+not validated). `GraphisFructus.plagula` names the piece a refusal
+came from. Piece names are a-z, 0-9 and `_` (so a name can never be
+a path). Depth is counted in pieces: 8 nested pieces pass, the 9th
+is refused in the piece that tried to use it. A shape of a piece
+that falls wholly outside the frame is not refused. A cycle is
+caught by name before the depth limit, so it never hangs. The piece
+root takes `titulus` only. First real piece: `graphis/res/sella.stml`.
 
 ### Task 4: the sheet and `bin/graphis`
 

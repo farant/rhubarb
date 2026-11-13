@@ -64,8 +64,44 @@
  *
  * LUX (graphis_lumen.h): attributa radicis lux, tinctura, umbra;
  * elementum <lumen> (liber radicis solum); attributum formae
- * lucens="verum". Sine his pictura immutata manet. Partes ('usus')
- * hic nondum sunt: T3 eas addit; usque tum recusantur ut ignotae.
+ * lucens="verum". Sine his pictura immutata manet.
+ *
+ * PARTES: forma saepe adhibita (sella, mensa, vas) in plagula sua
+ * stat et in picturam nomine ponitur:
+ *
+ *   <usus fons="sella" locus="52 168"/>
+ *
+ * 'usus' in <pictura>, in <grex> et in parte alia stare potest;
+ * locus (ordinarius "0 0") omnibus partis additur, ut grex. Pars
+ * bis posita bis pingitur.
+ *
+ * PLAGULA PARTIS:
+ *
+ *   <pars titulus="sella">
+ *     <linea puncta="4,22 2,56" stilus="3 1"/>
+ *     <rectangulum fines="4 -26 30 8" colores="9" stilus="1 0"/>
+ *     <grex locus="0 10"> ... </grex>
+ *     <usus fons="pulvinus" locus="6 16"/>
+ *   </pars>
+ *
+ * Pars formas, greges et usus tenet. NON tenet: lumina; formas
+ * titulatas (pars bis posita titulum iteraret - regio in pictura
+ * ipsa circa partem ponitur); attributa radicis praeter titulum.
+ * Forma partis quae tota extra picturam cadit non recusatur (pars
+ * in margine posita crus extra habere potest); in pictura ipsa
+ * recusatur ut antea.
+ *
+ * NOMEN FONTIS: I .. LXIV litterae ex a-z, 0-9 et '_'. Bibliotheca
+ * plagulas non legit: vocans functionem dat quae nomen in textum
+ * vertit (instrumenta ex graphis/res/<nomen>.stml legunt).
+ *
+ * RECUSAT DE PARTIBUS, cum plagula et linea: usum sine fonte dato
+ * (graphis_legere); nomen fontis malum; partem non inventam; partem
+ * quae STML non est aut radicem aliam quam <pars> habet; partem
+ * quae se ipsam adhibet, recte aut per aliam; partes plus quam VIII
+ * altas; lumen aut titulum in parte; omnem recusationem formae
+ * intra partem - tum 'plagula' nomen partis est et 'linea' linea
+ * in ea.
  *
  * RECUSAT, cum linea: plagulam quae STML non est; radicem aliam
  * quam <pictura>; elementum aut attributum ignotum; numerum absentem,
@@ -92,6 +128,8 @@
 #define GRAPHIS_ALTITUDO          CCXL
 #define GRAPHIS_TITULI_MAXIMI     CCLV
 #define GRAPHIS_REGIO_MINIMA      LXIV
+#define GRAPHIS_PARTES_ALTAE      VIII
+#define GRAPHIS_FONS_MAXIMUS      LXIV
 #define GRAPHIS_COLOR_FUNDI       V
 
 /* tabulae picturae: omnes GRAPHIS_LATITUDO x GRAPHIS_ALTITUDO,
@@ -120,6 +158,9 @@ nomen structura {
                               * linea nova; vacua si successus */
               i32 linea;    /* linea plagulae (ab I); 0 si ignota
                               * aut successus */
+           chorda plagula;  /* nomen partis in qua recusatio nata
+                              * est; vacua = descriptio ipsa aut
+                              * successus */
 } GraphisFructus;
 
 /*
@@ -143,6 +184,39 @@ graphis_legere (
  *
  * Redde: nomen (C, staticum); NIHIL extra fines
  */
+/*
+ * GraphisFons - textum partis nomine reddere
+ *
+ * @titulus:   nomen ex attributo 'fons' (iam probatum)
+ * @contextus: quod vocans dedit
+ * @piscina:   textus redditi
+ *
+ * Redde: plagula partis tota; chorda vacua (datum NIHIL) si pars
+ * non invenitur
+ */
+nomen chorda (*GraphisFons) (
+     chorda  titulus,
+     vacuum* contextus,
+    Piscina* piscina);
+
+/*
+ * graphis_legere_cum_fonte - ut graphis_legere, partibus permissis
+ *
+ * @textus:    plagula picturae
+ * @fons:      partes reddit; NIHIL = nullae (omnis 'usus' recusatur)
+ * @contextus: fonti traditur
+ * @piscina:   tabulae, indices, nuntius
+ *
+ * Redde: ut graphis_legere. graphis_legere(t, p) idem est ac
+ * graphis_legere_cum_fonte(t, NIHIL, NIHIL, p)
+ */
+GraphisFructus
+graphis_legere_cum_fonte (
+         chorda  textus,
+    GraphisFons  fons,
+         vacuum* contextus,
+        Piscina* piscina);
+
 constans character*
 graphis_exemplar_titulus (
     i32 id);

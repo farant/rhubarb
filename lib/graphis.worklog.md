@@ -33,3 +33,13 @@
   ("annotatio malformata"); write "elementum lumen: ..." instead.
 - The plant log's RUBRA lines list sections by FRACTA; a section that
   aborts on CREDO_NECESSE shows only in the RESULTATUM line.
+
+## 2026-11-13 - T3, pieces (usus)
+
+- The state struct already had `fons` (the source colour table);
+  the piece callback is `fons_partium`.
+- Every refusal copies `pars_currens` into `plagula` at the moment it
+  is born, so the name survives the unwinding out of nested pieces.
+- A plant must not leave a variable set but unused
+  (`-Wunused-but-set-variable`): `x = prior` -> `x = bene ? titulus
+  : prior`, not `x = titulus`.

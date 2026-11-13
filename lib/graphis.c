@@ -66,20 +66,26 @@ nomen structura {
 } Proprietates;
 
 nomen structura {
-      Piscina* piscina;
-           i8* fons;
-           i8* larva;
-           i8* domini;
-           i8* lucentes;
-   GraphisLux  lux;
- GraphisLumen  lumina[GRAPHIS_LUMINA_MAXIMA];
-       chorda  tituli[GRAPHIS_TITULI_MAXIMI];
-          i32  lineae[GRAPHIS_TITULI_MAXIMI];
-          i32  titulorum;
-          i32  picta;      /* pixela formae currentis intra picturam */
-          b32  fractum;
-          i32  linea;
-    character  error[ERRORIS_MENSURA];
+       Piscina* piscina;
+            i8* fons;
+            i8* larva;
+            i8* domini;
+            i8* lucentes;
+    GraphisLux  lux;
+  GraphisLumen  lumina[GRAPHIS_LUMINA_MAXIMA];
+        chorda  tituli[GRAPHIS_TITULI_MAXIMI];
+           i32  lineae[GRAPHIS_TITULI_MAXIMI];
+           i32  titulorum;
+           i32  picta;      /* pixela formae currentis intra picturam */
+   GraphisFons  fons_partium; /* NIHIL = partes nullae */
+        vacuum* contextus;
+        chorda  acervus[GRAPHIS_PARTES_ALTAE]; /* partes apertae */
+           i32  partes_altae;
+        chorda  pars_currens;  /* vacua = descriptio ipsa */
+        chorda  plagula;       /* ubi recusatio nata est */
+           b32  fractum;
+           i32  linea;
+     character  error[ERRORIS_MENSURA];
 } StatusPicturae;
 
 
@@ -152,6 +158,7 @@ _recusare (
         redde FALSUM;
     }
     p->fractum  = VERUM;
+    p->plagula  = p->pars_currens;
     p->linea    = linea;
     _appone_literas(p, &longitudo, ante);
     _appone_chordam(p, &longitudo, medium);
@@ -174,6 +181,7 @@ _recusare_attributum (
         redde FALSUM;
     }
     p->fractum  = VERUM;
+    p->plagula  = p->pars_currens;
     p->linea    = nodus->linea;
     _appone_literas(p, &longitudo, "<");
     _appone_chordam(p, &longitudo, nodus->titulus);
@@ -198,6 +206,7 @@ _recusare_elementum (
         redde FALSUM;
     }
     p->fractum  = VERUM;
+    p->plagula  = p->pars_currens;
     p->linea    = nodus->linea;
     _appone_literas(p, &longitudo, "<");
     _appone_chordam(p, &longitudo, nodus->titulus);
@@ -715,6 +724,12 @@ _titulum_legere (
     {
         redde VERUM;
     }
+    si (p->partes_altae > ZEPHYRUM)
+    {
+        redde _recusare_attributum(p, nodus, "titulus",
+            "is not allowed inside a piece (a piece placed twice"
+            " would repeat it)");
+    }
     si (   !valor || valor->mensura < I
         || valor->mensura > TITULUS_MAXIMUS)
     {
@@ -1139,6 +1154,12 @@ hic_manens constans character* constans LICITA_RADICIS[] = {
     "titulus", "latitudo", "altitudo", "lux", "tinctura", "umbra",
     NIHIL
 };
+hic_manens constans character* constans LICITA_USUS[] = {
+    "fons", "locus", NIHIL
+};
+hic_manens constans character* constans LICITA_PARTIS[] = {
+    "titulus", NIHIL
+};
 hic_manens constans character* constans LICITA_LUMINIS[] = {
     "locus", "radii", "area", "mollities", "color", "vis", NIHIL
 };
@@ -1149,7 +1170,8 @@ _picta_probare (
                StatusPicturae* p,
            constans StmlNodus* nodus)
 {
-    redde p->picta > ZEPHYRUM ? VERUM
+    /* pars in margine posita formam totam extra habere potest */
+    redde (p->picta > ZEPHYRUM || p->partes_altae > ZEPHYRUM) ? VERUM
         : _recusare_elementum(p, nodus,
             "paints no pixel inside the picture (it lies outside,"
             " or is too thin to cover a pixel centre)");
@@ -1475,7 +1497,14 @@ _lumen_legere (
     redde VERUM;
 }
 
-/* liberi radicis aut gregis */
+interior b32
+_usus (
+        StatusPicturae* p,
+    constans StmlNodus* nodus,
+                   s32  motus_x,
+                   s32  motus_y);
+
+/* liberi radicis, gregis aut partis */
 interior b32
 _liberi (
                StatusPicturae* p,
@@ -1546,8 +1575,22 @@ _liberi (
                     _titulus_est(liber->titulus, "linea"));
             }
         }
+        alioquin si (_titulus_est(liber->titulus, "usus"))
+        {
+            si (_habet_elementa(liber))
+            {
+                redde _recusare_elementum(p, liber,
+                    "takes no children");
+            }
+            bene = _usus(p, liber, motus_x, motus_y);
+        }
         alioquin si (_titulus_est(liber->titulus, "lumen"))
         {
+            si (p->partes_altae > ZEPHYRUM)
+            {
+                redde _recusare_elementum(p, liber,
+                    "is not allowed inside a piece");
+            }
             si (altitudo > ZEPHYRUM)
             {
                 redde _recusare_elementum(p, liber,
@@ -1571,6 +1614,131 @@ _liberi (
         }
     }
     redde VERUM;
+}
+
+/* nomen fontis: I .. LXIV litterae ex a-z, 0-9 et '_' */
+interior b32
+_nomen_fontis_validum (
+    constans chorda* valor)
+{
+    i32 k;
+
+    si (valor->mensura < I || valor->mensura > GRAPHIS_FONS_MAXIMUS)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < valor->mensura; k++)
+    {
+        i8 littera = valor->datum[k];
+
+        si (   !(littera >= 'a' && littera <= 'z')
+            && !(littera >= '0' && littera <= '9') && littera != '_')
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* elementum usus: partem nomine in locum ponere */
+interior b32
+_usus (
+        StatusPicturae* p,
+    constans StmlNodus* nodus,
+                   s32  motus_x,
+                   s32  motus_y)
+{
+    constans chorda* valor;
+       StmlResultus  r;
+             chorda  titulus;
+             chorda  textus;
+             chorda  prior;
+                s32  locus[II];
+                b32  bene;
+                i32  k;
+
+    si (!_attributa_licita(p, nodus, LICITA_USUS))
+    {
+        redde FALSUM;
+    }
+    valor = stml_attributum_capere(nodus, "fons");
+    si (!valor)
+    {
+        redde _recusare_attributum(p, nodus, "fons", "is required");
+    }
+    si (!_nomen_fontis_validum(valor))
+    {
+        redde _recusare_attributum(p, nodus, "fons",
+            "must be 1 to 64 characters from a-z, 0-9 and '_'");
+    }
+    titulus          = *valor;
+    locus[ZEPHYRUM]  = ZEPHYRUM;
+    locus[I]         = ZEPHYRUM;
+    valor            = stml_attributum_capere(nodus, "locus");
+    si (valor && !_coordinatae(valor, locus, II))
+    {
+        redde _recusare_attributum(p, nodus, "locus",
+            "needs 2 integers from -4096 to 4096");
+    }
+    si (!p->fons_partium)
+    {
+        redde _recusare_elementum(p, nodus,
+            "needs a source of pieces, and none was given");
+    }
+    per (k = ZEPHYRUM; k < p->partes_altae; k++)
+    {
+        si (chorda_aequalis(p->acervus[k], titulus))
+        {
+            redde _recusare(p, nodus->linea, "the piece '", &titulus,
+                "' uses itself");
+        }
+    }
+    si (p->partes_altae >= GRAPHIS_PARTES_ALTAE)
+    {
+        redde _recusare_elementum(p, nodus,
+            "nests pieces more than 8 deep");
+    }
+    textus = p->fons_partium(titulus, p->contextus, p->piscina);
+    si (!textus.datum)
+    {
+        redde _recusare(p, nodus->linea, "the piece '", &titulus,
+            "' was not found");
+    }
+    /* abhinc recusationes partem nominant */
+    titulus          = chorda_transcribere(titulus, p->piscina);
+    prior            = p->pars_currens;
+    p->pars_currens  = titulus;
+    r = stml_legere(textus, p->piscina,
+        internamentum_creare(p->piscina));
+    si (!r.successus || !r.elementum_radix)
+    {
+        chorda causa = r.error;
+
+        bene = _recusare(p, r.successus ? ZEPHYRUM : r.linea_erroris,
+            "the piece is not valid STML: ",
+            causa.mensura ? &causa : NIHIL,
+            causa.mensura ? NIHIL : "no root element");
+    }
+    alioquin si (!_titulus_est(r.elementum_radix->titulus, "pars"))
+    {
+        bene = _recusare(p, r.elementum_radix->linea,
+            "the root element of a piece must be <pars>", NIHIL,
+            NIHIL);
+    }
+    alioquin si (!_attributa_licita(p, r.elementum_radix,
+                 LICITA_PARTIS))
+    {
+        bene = FALSUM;
+    }
+    alioquin
+    {
+        p->acervus[p->partes_altae++] = titulus;
+        bene = _liberi(p, r.elementum_radix,
+            motus_x + locus[ZEPHYRUM], motus_y + locus[I], ZEPHYRUM);
+        p->partes_altae--;
+    }
+    p->pars_currens = prior;
+    redde bene;
 }
 
 /* attributum radicis, si adest, numerum datum dicere debet */
@@ -1631,8 +1799,9 @@ _fructus_recusatus (
     GraphisFructus f;
 
     memset(&f, ZEPHYRUM, magnitudo(f));
-    f.error = chorda_ex_literis(p->error, piscina);
-    f.linea = p->linea;
+    f.error    = chorda_ex_literis(p->error, piscina);
+    f.linea    = p->linea;
+    f.plagula  = chorda_transcribere(p->plagula, piscina);
     redde f;
 }
 
@@ -1640,6 +1809,16 @@ GraphisFructus
 graphis_legere (
      chorda  textus,
     Piscina* piscina)
+{
+    redde graphis_legere_cum_fonte(textus, NIHIL, NIHIL, piscina);
+}
+
+GraphisFructus
+graphis_legere_cum_fonte (
+         chorda  textus,
+    GraphisFons  fons,
+         vacuum* contextus,
+        Piscina* piscina)
 {
              GraphisFructus  f;
              StatusPicturae  p;
@@ -1659,6 +1838,8 @@ graphis_legere (
         redde f;
     }
     p.piscina = piscina;
+    p.fons_partium = fons;
+    p.contextus = contextus;
     r = stml_legere(textus, piscina, internamentum_creare(piscina));
     si (!r.successus || !r.elementum_radix)
     {

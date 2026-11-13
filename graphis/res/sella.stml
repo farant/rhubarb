@@ -1,0 +1,10 @@
+<pars titulus="sella">
+  <linea puncta="4,22 2,56" stilus="3 1"/>
+  <linea puncta="38,22 42,56" stilus="3 1"/>
+  <linea puncta="6,-26 4,22" stilus="3 1"/>
+  <linea puncta="34,-26 36,22" stilus="3 1"/>
+  <rectangulum fines="4 -26 30 8" colores="9" stilus="1 0"/>
+  <rectangulum fines="5 -8 28 6" colores="9" stilus="1 0"/>
+  <polygonum puncta="6,16 36,16 44,26 0,26" colores="9 10"
+             exemplar="textum" stilus="1 0"/>
+</pars>
