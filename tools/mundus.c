@@ -29,6 +29,11 @@
  *                             persona aut res est, aut bis in hoc
  *                             cursu (stderr)
  *
+ * Linea loci ", ostia N" addit: ostia dispositionis (<ostium>,
+ * mundus_ostia.h) contra locum INSTRUCTUM probantur et cum loco in
+ * transactione una scribuntur. Ostium recusatum locum totum recusat
+ * (VIA:LINEA: CAUSA). Ostia sola mutata: "mutata".
+ *
  * Dispositio recusata NIHIL scribit et ceteras non impedit. NIHIL
  * UMQUAM REMOVET. Viae in dispositione ad directorium currens
  * referuntur (radix repositorii).
@@ -86,6 +91,7 @@
 #include "mundus.h"
 #include "mundus_pictura.h"
 #include "mundus_locus.h"
+#include "mundus_ostia.h"
 #include "mundus_mappa.h"
 #include "provenientia.h"
 #include <math.h>
@@ -447,16 +453,22 @@ locum_condere (
 {
        MundusLocusFructus  d;
     MundusLocusInstructus  instructus;
+       MundusOstiaFructus  ostia;
             StatuaFructus  relecta;
         StatuaeInscriptio* prior;
         StatuaeInscriptio* nova;
                    Statua* basis;
+              MundusSolum* solum;
+                      Xar* ostia_priora;
                    chorda  vacua;
                    chorda  octeti;
                    chorda  sigillum;
        constans character* status;
                       i32  ante;
                       i32  post;
+                      i32  j;
+                      b32  ostia_mutata;
+                      b32  bene;
                       s32  k;
 
     vacua.datum       = NIHIL;
@@ -511,13 +523,55 @@ locum_condere (
         redde FALSUM;
     }
     ante   = cellae_gressibiles(mundus_solum_struere(basis, piscina));
-    post   = cellae_gressibiles(mundus_solum_struere(relecta.statua,
-        piscina));
+    solum  = mundus_solum_struere(relecta.statua, piscina);
+    post   = cellae_gressibiles(solum);
+    /* ostia contra locum INSTRUCTUM (res positae iam obstant);
+     * ostium recusatum locum totum recusat */
+    ostia  = mundus_ostia_probare(d.ostia, d.ostiorum, solum,
+        MUNDUS_CORPORIS_RADIUS, piscina);
+    si (!ostia.successus)
+    {
+        fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)ostia.linea,
+            (integer)ostia.error.mensura,
+            (constans character*)ostia.error.datum);
+        redde FALSUM;
+    }
+    ostia_priora  = mundus_ostia_legere(volumen, *titulus, piscina);
+    ostia_mutata  = !ostia_priora
+        || xar_numerus(ostia_priora) != ostia.numerus;
+    per (j = ZEPHYRUM; !ostia_mutata && j < ostia.numerus; j++)
+    {
+        constans MundusOstium* prius =
+            (constans MundusOstium*)xar_obtinere(ostia_priora, j);
+
+        ostia_mutata = !chorda_aequalis(prius->scaena,
+                ostia.ostia[j].scaena)
+            || prius->x_millesimae != ostia.ostia[j].x_millesimae
+            || prius->z_millesimae != ostia.ostia[j].z_millesimae
+            || prius->radius_millesimae
+                != ostia.ostia[j].radius_millesimae;
+    }
     prior  = inscriptio_tituli(statuae_enumerare_generis(volumen,
         STATUAE_GENUS_LOCUS, piscina), *titulus);
     sigillum = prior ? prior->sigillum_hex : vacua;
-    si (!statuae_addere_generis(volumen, *titulus, octeti,
-        STATUAE_GENUS_LOCUS))
+    /* locus et ostia eius in transactione una: simul mutantur */
+    bene = volumen_transactionem_incipere(volumen);
+    si (bene)
+    {
+        bene = statuae_addere_generis(volumen, *titulus, octeti,
+                STATUAE_GENUS_LOCUS)
+            && mundus_ostia_ponere(volumen, *titulus, ostia.ostia,
+                ostia.numerus);
+        si (bene)
+        {
+            bene = volumen_transactionem_committere(volumen);
+        }
+        alioquin
+        {
+            (vacuum)volumen_transactionem_revolvere(volumen);
+        }
+    }
+    si (!bene)
     {
         recusatam_nuntiare(via, "volumen additionem recusavit",
             chorda_ex_literis(volumen_error(volumen)
@@ -531,7 +585,8 @@ locum_condere (
         summa->additae++;
         status = "addita";
     }
-    alioquin si (nova && chorda_aequalis(nova->sigillum_hex, sigillum))
+    alioquin si (   nova && !ostia_mutata
+                 && chorda_aequalis(nova->sigillum_hex, sigillum))
     {
         summa->eaedem++;
         status = "eadem";
@@ -542,11 +597,11 @@ locum_condere (
         status = "mutata";
     }
     imprimere("%-9s %.*s   %u res, %u vertices,"
-        " cellae gressibiles %u -> %u\n", status,
+        " cellae gressibiles %u -> %u, ostia %u\n", status,
         (integer)titulus->mensura,
         (constans character*)titulus->datum, (insignatus)d.numerus,
         (insignatus)relecta.statua->verticum, (insignatus)ante,
-        (insignatus)post);
+        (insignatus)post, (insignatus)ostia.numerus);
     redde VERUM;
 }
 

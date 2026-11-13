@@ -457,6 +457,57 @@ _rem_legere (
             &res->semen);
 }
 
+interior b32
+_ostium_legere (
+                Lector* l,
+    constans StmlNodus* nodus,
+     MundusLocusOstium* ostium)
+{
+    hic_manens constans character* constans LICITA[] = {
+        "locus", "radius", "scaena", NIHIL
+    };
+    constans chorda* valor;
+                f32  n[II];
+                i32  k;
+
+    si (!_attributa_licita(l, nodus, LICITA))
+    {
+        redde FALSUM;
+    }
+    si (_habet_elementa(nodus))
+    {
+        redde _recusare(l, nodus->linea,
+            "<ostium> cannot have children", NIHIL, NIHIL);
+    }
+    ostium->linea  = nodus->linea;
+    valor          = stml_attributum_capere(nodus, "locus");
+    si (!valor || !_numeri(valor, n, II))
+    {
+        redde _recusare_attributum(l, nodus, "locus",
+            "needs 2 numbers (x z)");
+    }
+    ostium->x       = n[ZEPHYRUM];
+    ostium->z       = n[I];
+    ostium->radius  = MUNDUS_LOCUS_OSTII_RADIUS;
+    valor           = stml_attributum_capere(nodus, "radius");
+    si (valor && !_numeri(valor, &ostium->radius, I))
+    {
+        redde _recusare_attributum(l, nodus, "radius",
+            "needs 1 number");
+    }
+    valor = stml_attributum_capere(nodus, "scaena");
+    per (k = ZEPHYRUM; valor && k < valor->mensura; k++)
+    {
+        si (!_spatium(valor->datum[k]))
+        {
+            ostium->scaena = chorda_transcribere(*valor, l->piscina);
+            redde VERUM;
+        }
+    }
+    redde _recusare_attributum(l, nodus, "scaena",
+        "is required (title of the scene view it leads to)");
+}
+
 interior MundusLocusFructus
 _fructus (
     constans Lector* l)
@@ -522,7 +573,9 @@ mundus_locus_legere (
         (liberi + I) * magnitudo(MundusLocusRes));
     f.sparsiones  = (MundusLocusSparsio*)piscina_allocare(piscina,
         (liberi + I) * magnitudo(MundusLocusSparsio));
-    si (!f.res || !f.sparsiones)
+    f.ostia       = (MundusLocusOstium*)piscina_allocare(piscina,
+        (liberi + I) * magnitudo(MundusLocusOstium));
+    si (!f.res || !f.sparsiones || !f.ostia)
     {
         (vacuum)_recusare(&l, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
         redde _fructus(&l);
@@ -565,12 +618,23 @@ mundus_locus_legere (
             f.sparsionum++;
             perge;
         }
+        si (   liber->genus == STML_NODUS_ELEMENTUM && liber->titulus
+            && chorda_aequalis_literis(*liber->titulus, "ostium"))
+        {
+            si (!_ostium_legere(&l, liber, &f.ostia[f.ostiorum]))
+            {
+                redde _fructus(&l);
+            }
+            f.ostiorum++;
+            perge;
+        }
         si (   liber->genus != STML_NODUS_ELEMENTUM || !liber->titulus
             || !chorda_aequalis_literis(*liber->titulus, "res"))
         {
             (vacuum)_recusare(&l, liber->linea, "unknown element <",
                 liber->titulus,
-                "> (only <res> and <sparsio> are allowed here)");
+                "> (only <res>, <sparsio> and <ostium> are allowed"
+                " here)");
             redde _fructus(&l);
         }
         si (f.numerus >= MUNDUS_LOCUS_RES_MAXIMAE)

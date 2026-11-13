@@ -21,6 +21,7 @@
  *     <sparsio fons="plastica/res/frutex.stml" numerus="12" semen="5"
  *              area="20 28 44 36" distantia="2" magnitudo_varia="0.2"
  *              gyrus_varius="verum" varietates="3"/>
+ *     <ostium locus="29 46" radius="1.5" scaena="hut-door"/>
  *   </locus>
  *
  * titulus   titulus loci in volumine
@@ -44,6 +45,11 @@
  * (exemplar k semen k mod varietates habet). Sparsio quae numerum
  * suum ponere non potest RECUSATUR, positis nominatis.
  *
+ * OSTIUM: punctum ubi persona ex mundo in scaenam intrat
+ * (mundus_ostia.h). locus "x z"; radius ordinarius 1.5; scaena
+ * titulus prospectus. Hic ut scriptum redditur: fines radii, titulus
+ * et locus contra solum a mundus_ostia_probare probantur.
+ *
  * LEGERE RECUSAT, causa Anglice et linea: textum qui STML non est;
  * radicem aliam quam <locus>; elementum aut attributum ignotum;
  * titulum aut basim absentem aut vacuam; rem sine fonte; locum qui
@@ -51,7 +57,9 @@
   * magnitudinem aut semen extra fines; sparsionem sine fonte, numero
  * aut area, cum area inversa, distantia negativa, magnitudo_varia
  * extra [0, 1), gyrus_varius alio quam "verum", varietatibus extra
- * I .. XVI; plus quam MMMMXCVI res. Dispositio sine rebus licet.
+ * I .. XVI; plus quam MMMMXCVI res; ostium sine loco aut sine
+ * scaena, cum loco qui duo numeri non est, cum radio qui numerus non
+ * est, aut cum liberis. Dispositio sine rebus licet.
  *
  * STRUERE RECUSAT, lineam rei culpatae nominans (prima vincit; nihil
  * struitur):
@@ -76,6 +84,7 @@
 #include "statua.h"
 
 #define MUNDUS_LOCUS_RES_MAXIMAE  (IV * MXXIV)
+#define MUNDUS_LOCUS_OSTII_RADIUS 1.5f
 
 nomen structura {
     chorda fons;     /* via descriptionis plasticae */
@@ -102,6 +111,14 @@ nomen structura {
 } MundusLocusSparsio;
 
 nomen structura {
+    chorda scaena;   /* ut scripta; hic non probata */
+       f32 x;
+       f32 z;
+       f32 radius;   /* ordinarius 1.5 */
+       i32 linea;
+} MundusLocusOstium;
+
+nomen structura {
                    b32  successus;
                 chorda  titulus;
                 chorda  basis;     /* via GLB loci nudi */
@@ -109,6 +126,8 @@ nomen structura {
                    i32  numerus;
     MundusLocusSparsio* sparsiones;
                    i32  sparsionum;
+     MundusLocusOstium* ostia;     /* ordine plagulae */
+                   i32  ostiorum;
                 chorda  error;     /* Anglice; vacua si successus */
                    i32  linea;     /* ab I; 0 si ignota aut
                                     * successus */

@@ -84,6 +84,69 @@ contine "pratum mutatum" "$T/out" "^mutata    pratum   2 res, "
 contine "puteus bis positus semel tenetur" "$T/out" "^mutata    pratum   2 res, $VERT vertices, "
 SIG="$("$S" enumerare -volumen "$V" -loci | cut -f2)"
 
+# ostia (ostium-plan T1): cum loco scribuntur; sola mutata "mutata";
+# recusatum locum totum recusat, nihil scriptum
+contine "pratum sine ostiis" "$T/out" "^mutata    pratum   2 res, .*, ostia 0$"
+cat > "$D/a_pratum.stml" <<XX
+<locus titulus="pratum" basis="$F/planum.glb">
+  <res fons="plastica/res/puteus.stml" locus="27 29" gyrus="20"/>
+  <res fons="plastica/res/puteus.stml" locus="24 31"/>
+  <ostium locus="27 29" scaena="hut-door"/>
+</locus>
+XX
+proba "condere cum ostio" 0 "$B" condere -volumen "$V" -loci "$D"
+contine "ostium solum additum: mutata" "$T/out" "^mutata    pratum   2 res, .*, ostia 1$"
+proba "condere cum ostio iterum" 0 "$B" condere -volumen "$V" -loci "$D"
+contine "ostium idem: eadem" "$T/out" "^eadem     pratum   2 res, .*, ostia 1$"
+# campus unus ostii mutatus (radius; deinde locus, deinde scaena):
+# "mutata", et iterum "eadem"
+for O in 'locus="27 29" radius="2" scaena="hut-door"' 'locus="27 30" radius="2" scaena="hut-door"' 'locus="27 30" radius="2" scaena="hut-gate"'; do
+cat > "$D/a_pratum.stml" <<XX
+<locus titulus="pratum" basis="$F/planum.glb">
+  <res fons="plastica/res/puteus.stml" locus="27 29" gyrus="20"/>
+  <res fons="plastica/res/puteus.stml" locus="24 31"/>
+  <ostium $O/>
+</locus>
+XX
+proba "condere ostium mutatum ($O)" 0 "$B" condere -volumen "$V" -loci "$D"
+contine "ostium mutatum ($O): mutata" "$T/out" "^mutata    pratum   2 res, .*, ostia 1$"
+proba "condere ostium mutatum iterum ($O)" 0 "$B" condere -volumen "$V" -loci "$D"
+contine "ostium mutatum iterum ($O): eadem" "$T/out" "^eadem     pratum   2 res, .*, ostia 1$"
+done
+SIG_OSTII="$("$S" enumerare -volumen "$V" -loci | cut -f2)"
+cat > "$D/a_pratum.stml" <<XX
+<locus titulus="pratum" basis="$F/planum.glb">
+  <res fons="plastica/res/puteus.stml" locus="27 29" gyrus="20"/>
+  <ostium locus="27 29" scaena="hut-door"/>
+
+  <ostium locus="-500 -500" scaena="hut-door"/>
+</locus>
+XX
+proba "ostium extra locum recusatur" 1 "$B" condere -volumen "$V" -loci "$D"
+contine "ostium recusatum cum linea" "$T/err" "a_pratum.stml:5: .*outside"
+[ "$("$S" enumerare -volumen "$V" -loci | cut -f2)" = "$SIG_OSTII" ] || { echo "FRACTA: ostium recusatum locum mutavit"; fracta=$((fracta + 1)); }
+# ostium contra locum INSTRUCTUM probatur: in media turri solida
+# nusquam intra radium stare licet (in loco nudo liceret)
+printf '<res titulus="turris">\n  <capsa magnitudo="3 5 3" signum="solidum"/>\n</res>\n' > "$T/turris.stml"
+cat > "$D/a_pratum.stml" <<XX
+<locus titulus="pratum" basis="$F/planum.glb">
+  <res fons="$T/turris.stml" locus="27 29"/>
+  <ostium locus="27 29" radius="0.5" scaena="hut-door"/>
+</locus>
+XX
+proba "ostium in turri recusatur" 1 "$B" condere -volumen "$V" -loci "$D"
+contine "ostium in turri cum linea" "$T/err" "a_pratum.stml:3: .*stand"
+[ "$("$S" enumerare -volumen "$V" -loci | cut -f2)" = "$SIG_OSTII" ] || { echo "FRACTA: ostium in turri locum mutavit"; fracta=$((fracta + 1)); }
+cat > "$D/a_pratum.stml" <<XX
+<locus titulus="pratum" basis="$F/planum.glb">
+  <res fons="plastica/res/puteus.stml" locus="27 29" gyrus="20"/>
+  <res fons="plastica/res/puteus.stml" locus="24 31"/>
+</locus>
+XX
+proba "condere sine ostio rursus" 0 "$B" condere -volumen "$V" -loci "$D"
+contine "ostium sublatum: mutata" "$T/out" "^mutata    pratum   2 res, .*, ostia 0$"
+SIG="$("$S" enumerare -volumen "$V" -loci | cut -f2)"
+
 # recusationes: nihil scribitur, ceterae eunt (review focus 5)
 cat > "$D/a_pratum.stml" <<XX
 <locus titulus="pratum" basis="$F/planum.glb">
@@ -126,7 +189,7 @@ contine "basis absens" "$T/err" "^$D/d_basis.stml: recusata: basis legi non pote
 contine "non STML" "$T/err" "^$D/e_fracta.stml:"
 contine "titulus personae" "$T/err" "^$D/f_golem.stml: recusata: titulus iam persona aut res in volumine est: golem$"
 contine "titulus bis" "$T/err" "^$D/h_nudus_alter.stml: recusata: titulus iam ab alia dispositione huius cursus datus: nudus$"
-contine "nudus tamen additus" "$T/out" "^addita    nudus   0 res, [0-9]* vertices, cellae gressibiles 60626 -> 60626$"
+contine "nudus tamen additus" "$T/out" "^addita    nudus   0 res, [0-9]* vertices, cellae gressibiles 60626 -> 60626, ostia 0$"
 contine "summa cum recusatis" "$T/out" "^mundus: 1 additae, 0 mutatae, 0 eaedem, 7 recusatae$"
 [ "$(loci)" = "pratum,nudus," ] || { echo "FRACTA: loci post recusationes: $(loci)"; fracta=$((fracta + 1)); }
 [ "$("$S" enumerare -volumen "$V" -loci | head -1 | cut -f2)" = "$SIG" ] || { echo "FRACTA: dispositio recusata locum mutavit"; fracta=$((fracta + 1)); }
@@ -143,7 +206,7 @@ XX
 proba "condere scalam" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
 contine "duae res eiusdem fontis" "$T/out" "^addita    varia   2 res, "
 VERT1="$(sed -n 's/^addita    varia   2 res, \([0-9]*\) vertices.*/\1/p' "$T/out")"
-CELL1="$(sed -n 's/.*cellae gressibiles 60626 -> \([0-9]*\)$/\1/p' "$T/out")"
+CELL1="$(sed -n 's/.*cellae gressibiles 60626 -> \([0-9]*\), ostia 0$/\1/p' "$T/out")"
 # semen aliud: statua alia, vertices plures
 cat > "$E/a.stml" <<XX
 <locus titulus="varia" basis="$F/planum.glb">
@@ -167,7 +230,7 @@ cat > "$E/a.stml" <<XX
 </locus>
 XX
 proba "condere sine scala" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
-CELL0="$(sed -n 's/.*cellae gressibiles 60626 -> \([0-9]*\)$/\1/p' "$T/out")"
+CELL0="$(sed -n 's/.*cellae gressibiles 60626 -> \([0-9]*\), ostia 0$/\1/p' "$T/out")"
 [ "${CELL1:-999999}" -lt "${CELL0:-0}" ] || { echo "FRACTA: scala II non plures cellas clausit ($CELL0 / $CELL1)"; fracta=$((fracta + 1)); }
 # sparsio: XII frutices, tres varietates; determinata
 cat > "$E/a.stml" <<XX

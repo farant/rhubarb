@@ -258,6 +258,7 @@ declare -a SOURCE_FILES=(
     "lib/mundus_latus.c"
     "lib/mundus_locus.c"
     "lib/mundus_mappa.c"
+    "lib/mundus_ostia.c"
     "lib/mundus_pictura.c"
     "lib/mundus_solum.c"
     "lib/musicxml.c"
