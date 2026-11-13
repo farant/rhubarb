@@ -43,3 +43,14 @@
 - A plant must not leave a variable set but unused
   (`-Wunused-but-set-variable`): `x = prior` -> `x = bene ? titulus
   : prior`, not `x = titulus`.
+
+## 2026-11-13 - T4, sheet and bin/graphis
+
+- Hand plants on a tool: sleep BEFORE writing the mutated source as
+  well as after. The second of three plants ran against the first
+  plant's binary (the smoke's first failure line was the first
+  plant's); rerun alone with a sleep on both sides it was caught
+  properly.
+- `argv` is compacted in place: flags are consumed, file arguments
+  move down to index 2, so `iudicare` can take any number of files
+  without a second array.

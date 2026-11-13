@@ -1,0 +1,13 @@
+<pictura titulus="cubiculum" lux="0.6" umbra="0.3">
+  <rectangulum fines="0 0 360 150" colores="9 15"
+               exemplar="horizontalis_latus" vis="0.45"/>
+  <rectangulum fines="0 150 360 90" colores="9 3"
+               exemplar="margo_sinister" vis="0.4"/>
+  <rectangulum titulus="fenestra" fines="222 54 58 50" colores="5 7"
+               exemplar="cinereum_leve" vis="1" stilus="3 1"
+               lucens="verum"/>
+  <ovum titulus="stragulum" fines="96 186 150 40" colores="6 15"
+        exemplar="rhombus_lineatus" vis="1" stilus="2 6"/>
+  <usus fons="sella" locus="52 168"/>
+  <lumen locus="251 80" radii="90 70" color="#fff0d8" vis="0.7"/>
+</pictura>

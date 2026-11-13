@@ -355,12 +355,25 @@ root takes `titulus` only. First real piece: `graphis/res/sella.stml`.
   `ACCIPE` or `F:linea: reason`, exit 1 on any refusal). Pieces are
   read from `graphis/res/` or `-fontes DIR`. The sheet prints the
   titles with their pixel counts on stdout.
-- [ ] Tests first: sheet size and that each of the five panels is
+- [x] Tests first: sheet size and that each of the five panels is
   where the header says (a known pixel in each); the regions panel
   gives each title its own colour; crop refuses bounds outside.
-- [ ] Smoke script: sheet and crop of a fixture exist and are PNG;
+- [x] Smoke script: sheet and crop of a fixture exist and are PNG;
   `iudicare` exits 1 on a broken fixture and names the line.
-- [ ] Hand plants on the tool (mutate, rebuild, smoke, restore).
+- [x] Hand plants on the tool (mutate, rebuild, smoke, restore).
+
+**As built (2026-11-13):** suite `graphis_specimen`, 5 sections, 6
+plants red; tool smoke `tools/graphis_fumus.sh`, 3 hand plants red.
+The sheet is 1448 x 480, not five panels at 2x: the finished picture
+at 2x on the left, and beside it four panels at 1x (source, mask
+with `lucens` pixels in blue, lit source, regions) - five panels at
+2x would be 3600 wide and get shrunk when read. The sheet paints no
+text; `bin/graphis specimen` prints each region's number, colour
+name, title, pixel count and bounding box. `graphis_regiones`,
+`graphis_specimen_color` and `graphis_specimen_color_titulus` carry
+that. `iudicare` takes several files. A refusal born in a piece is
+reported under the piece's file path. Fixture picture:
+`probationes/fixa/graphis/cubiculum.stml`.
 
 ### Task 5: the hut, two views
 

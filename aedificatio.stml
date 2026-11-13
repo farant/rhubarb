@@ -156,6 +156,22 @@
     <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
     <exitus via="bin/plastica" provenientia="relatio"/>
   </actio>
+  <!-- graphis (graphis-plan T4): picturae planae (descriptiones
+       STML) in schedam PNG (specimen), partem auctam (quadrum) et
+       iudicium (iudicare) - oculi Claudii in picturam quam pinxit -->
+  <actio titulus="graphis" genus="institutio">
+    <mandatum>
+      <verbum! (>./tools/graphis_struere.sh
+    </mandatum>
+    <praecondicio actio="aedilis"/>
+    <vestigium via="build/aedilis/graphis"/>
+    <vestigium via="build/aedilis/obiecta" communis="verum"/>
+    <ingressus genus="manifestum" via="build/aedilis/graphis/manifestum.stml"/>
+    <ingressus genus="configuratio" via="aedilis.stml"/>
+    <ingressus genus="fasciculus" via="tools/graphis_struere.sh"/>
+    <ingressus genus="fasciculus" via="tools/provenientia_scribere.sh"/>
+    <exitus via="bin/graphis" provenientia="relatio"/>
+  </actio>
   <!-- mundus: loci mundi ex dispositionibus (apps/mundus/loci) in
        volumen, et pictura rei in loco ut latus $world eam pingeret -->
   <actio titulus="mundus" genus="institutio">
