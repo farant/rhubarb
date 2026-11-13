@@ -83,6 +83,7 @@ nomen structura {
            i32  partes_altae;
         chorda  pars_currens;  /* vacua = descriptio ipsa */
         chorda  plagula;       /* ubi recusatio nata est */
+           i32  dominus_gregis; /* grex cum titulo; 0 = nullus */
            b32  fractum;
            i32  linea;
      character  error[ERRORIS_MENSURA];
@@ -722,7 +723,15 @@ _titulum_legere (
 
     si (!valor && !_attributum_scriptum(nodus, "titulus"))
     {
+        /* forma in grege titulato regionis gregis est */
+        q->dominus = p->dominus_gregis;
         redde VERUM;
+    }
+    si (p->dominus_gregis)
+    {
+        redde _recusare_attributum(p, nodus, "titulus",
+            "is not allowed inside a titled group (the group is the"
+            " region)");
     }
     si (p->partes_altae > ZEPHYRUM)
     {
@@ -1148,7 +1157,7 @@ hic_manens constans character* constans LICITA_LINEAE[] = {
     "puncta", "stilus", "titulus", "lucens", NIHIL
 };
 hic_manens constans character* constans LICITA_GREGIS[] = {
-    "locus", NIHIL
+    "locus", "titulus", NIHIL
 };
 hic_manens constans character* constans LICITA_RADICIS[] = {
     "titulus", "latitudo", "altitudo", "lux", "tinctura", "umbra",
@@ -1531,7 +1540,9 @@ _liberi (
         si (_titulus_est(liber->titulus, "grex"))
         {
             constans chorda* valor;
+               Proprietates  regio;
                         s32  locus_gregis[II];
+                        b32  cum_titulo;
 
             si (!_attributa_licita(p, liber, LICITA_GREGIS))
             {
@@ -1550,8 +1561,23 @@ _liberi (
                 redde _recusare_elementum(p, liber,
                     "is nested more than 16 deep");
             }
+            /* grex cum titulo: omnia intra eum picta regio una */
+            memset(&regio, ZEPHYRUM, magnitudo(regio));
+            si (!_titulum_legere(p, liber, &regio))
+            {
+                redde FALSUM;
+            }
+            cum_titulo = regio.dominus != p->dominus_gregis;
+            si (cum_titulo)
+            {
+                p->dominus_gregis = regio.dominus;
+            }
             bene = _liberi(p, liber, motus_x + locus_gregis[ZEPHYRUM],
                 motus_y + locus_gregis[I], altitudo + I);
+            si (cum_titulo)
+            {
+                p->dominus_gregis = ZEPHYRUM;
+            }
         }
         alioquin si (   _titulus_est(liber->titulus, "rectangulum")
                      || _titulus_est(liber->titulus, "ovum")

@@ -54,3 +54,16 @@
 - `argv` is compacted in place: flags are consumed, file arguments
   move down to index 2, so `iudicare` can take any number of files
   without a second array.
+
+## 2026-11-13 - T5, the hut and titled groups
+
+- A region of one titled shape is not enough for real pictures: any
+  untitled shape painted over it takes its pixels (fire, pot, window
+  bars, blanket). `<grex titulus>` gives the whole group one owner
+  (`dominus_gregis`); `_titulum_legere` hands that owner to every
+  untitled shape inside, including shapes of pieces.
+- The room shell is a piece (`casa_camera`) so both views agree by
+  construction; the test compares one ceiling row of both.
+- View two has the fire behind the viewer: a wide point light placed
+  below the frame (`locus="180 270" radii="210 150"`) lights the
+  floor and fades up the back wall.

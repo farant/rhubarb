@@ -82,6 +82,10 @@ hic_manens constans Pars PARTES[] = {
     { "cum_titulo",
       "<pars>\n\n<rectangulum titulus=\"a\" fines=\"0 0 20 20\""
       " colores=\"6\"/>\n</pars>" },
+    { "cum_grege",
+      "<pars>\n<grex titulus=\"a\">\n"
+      "<rectangulum fines=\"0 0 20 20\" colores=\"6\"/>\n"
+      "</grex>\n</pars>" },
     { "forma_mala",
       "<pars>\n<rectangulum fines=\"0 0 20 20\" colores=\"6\"/>\n"
       "<rectangulum fines=\"0 0 20\" colores=\"6\"/>\n</pars>" },
@@ -231,6 +235,17 @@ _sectio_pars (
     CREDO_AEQUALIS_I32 (f.tabula->domini[5 * LAT + 5], I);
     /* pars sine titulo: pixela eius nullius sunt */
     CREDO_AEQUALIS_I32 (f.tabula->domini[12 * LAT + 15], ZEPHYRUM);
+    /* pars in grege titulato: pixela eius regionis gregis sunt */
+    f = _pictura(c,
+        "<pictura>\n"
+        "<grex titulus=\"sedes\">\n"
+        "<usus fons=\"par\" locus=\"40 40\"/>\n"
+        "</grex>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (f.tabula->titulorum, I);
+    CREDO_AEQUALIS_I32 (f.tabula->domini[41 * LAT + 41], I);
+    CREDO_AEQUALIS_I32 (f.tabula->domini[61 * LAT + 71], I);
+    CREDO_AEQUALIS_I32 (f.tabula->domini[41 * LAT + 71], ZEPHYRUM);
     /* lucens in parte valet */
     f = _pictura(c,
         "<pictura lux=\"0.5\">\n"
@@ -317,6 +332,8 @@ _sectio_recusationes (
         "cum_titulo", III, "titulus");
     RECUSATUR (CAPUT "<usus fons=\"forma_mala\"/>" CAUDA,
         "forma_mala", III, "fines");
+    RECUSATUR (CAPUT "<usus fons=\"cum_grege\"/>" CAUDA,
+        "cum_grege", II, "titulus");
     /* orbes */
     RECUSATUR (CAPUT "<usus fons=\"se_ipsam\"/>" CAUDA, "se_ipsam",
         III, "'se_ipsam' uses itself");

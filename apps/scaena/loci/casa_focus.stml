@@ -1,0 +1,67 @@
+<pictura titulus="hut: hearth wall" lux="0.55" tinctura="#d1dcff"
+         umbra="0.35">
+  <usus fons="casa_camera"/>
+
+  <!-- armarium -->
+  <rectangulum fines="80 66 44 84" colores="1 9"
+               exemplar="lineae_verticales" vis="0.5" stilus="2 0"/>
+  <linea puncta="102,66 102,150" stilus="1 0"/>
+  <linea puncta="80,74 124,74" stilus="1 0"/>
+  <ovum fines="96 106 4 4" colores="11" stilus="1 0"/>
+  <ovum fines="104 106 4 4" colores="11" stilus="1 0"/>
+
+  <!-- focus lapideus cum olla -->
+  <rectangulum fines="142 34 56 56" colores="1 3" exemplar="latericium"
+               vis="0.9" stilus="1 0"/>
+  <grex titulus="hearth">
+    <rectangulum fines="134 88 72 62" colores="1 3"
+                 exemplar="latericium" vis="0.9" stilus="2 0"/>
+    <rectangulum fines="148 106 44 44" colores="0"/>
+    <polygonum puncta="156,150 162,128 168,140 172,122 178,138 184,130 186,150"
+               colores="8 11" exemplar="tessellatum" lucens="verum"/>
+    <polygonum puncta="162,150 168,136 172,144 176,134 180,150"
+               colores="11" lucens="verum"/>
+    <ovum fines="158 112 24 16" colores="1" stilus="1 0"/>
+    <linea puncta="170,106 170,112" stilus="1 3"/>
+    <rectangulum fines="130 84 80 6" colores="9" stilus="1 0"/>
+  </grex>
+
+  <!-- fenestra -->
+  <grex titulus="window">
+    <rectangulum fines="222 54 58 50" colores="5 7"
+                 exemplar="cinereum_leve" vis="1" stilus="3 1"
+                 lucens="verum"/>
+    <polygonum puncta="222,92 240,84 262,90 280,82 280,104 222,104"
+               colores="13" lucens="verum"/>
+    <linea puncta="251,54 251,104" stilus="2 1"/>
+    <linea puncta="222,79 280,79" stilus="2 1"/>
+  </grex>
+
+  <!-- pluteus cum vasis -->
+  <rectangulum fines="218 118 68 4" colores="1" stilus="1 0"/>
+  <grex titulus="jars">
+    <rectangulum fines="224 104 12 14" colores="6 15"
+                 exemplar="tessellatum" stilus="1 0"/>
+    <ovum fines="242 102 14 16" colores="10" stilus="1 0"/>
+    <rectangulum fines="262 106 10 12" colores="12 14"
+                 exemplar="horizontalis_dispersus" stilus="1 0"/>
+  </grex>
+
+  <!-- stragulum, mensa, sella -->
+  <ovum fines="96 186 150 40" colores="6 15"
+        exemplar="rhombus_lineatus" vis="1" stilus="2 6"/>
+  <usus fons="mensa" locus="196 150"/>
+  <rectangulum titulus="book" fines="256 160 30 10" colores="2 5"
+               exemplar="lineae_horizontales" stilus="1 0"/>
+  <usus fons="candela" locus="230 130"/>
+  <usus fons="sella" locus="52 168"/>
+
+  <!-- sagitta: converte te -->
+  <polygonum titulus="turn"
+             puncta="318,220 336,220 336,212 354,224 336,236 336,228 318,228"
+             colores="5" stilus="1 0" lucens="verum"/>
+
+  <lumen locus="170 140" radii="75 58" color="#ffb873" vis="0.85"/>
+  <lumen area="214,156 286,156 322,198 226,198" mollities="3"
+         color="#fff0d8" vis="0.55"/>
+</pictura>

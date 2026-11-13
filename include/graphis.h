@@ -22,7 +22,9 @@
  *
  * COORDINATAE: pixela integra, x dextrorsum, y deorsum, origo in
  * angulo sinistro summo; -4096 .. 4096 (punctum decimale recusatur).
- * 'grex' locum suum omnibus intra se addit. Forma posterior priorem
+ * 'grex' locum suum omnibus intra se addit; grex cum titulo regio
+ * una est: omnia intra eum picta (formae, partes) ei tribuuntur, et
+ * formae intra eum titulum suum non ferunt. Forma posterior priorem
  * tegit. Fundus ante formas: color V (albus).
  *
  * FORMAE:

@@ -1,0 +1,8 @@
+<pars titulus="mensa">
+  <linea puncta="14,26 10,62" stilus="4 1"/>
+  <linea puncta="104,26 110,62" stilus="4 1"/>
+  <linea puncta="30,22 28,48" stilus="3 1"/>
+  <linea puncta="92,22 94,48" stilus="3 1"/>
+  <polygonum puncta="22,8 98,8 118,26 2,26" colores="10" stilus="1 0"/>
+  <rectangulum fines="2 26 116 6" colores="9" stilus="1 0"/>
+</pars>

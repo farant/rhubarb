@@ -368,6 +368,84 @@ _sectio_domini (
     }
 }
 
+/* grex cum titulo: omnia intra eum picta regio una */
+interior vacuum
+_sectio_grex_cum_titulo (
+    CredoContextus* c)
+{
+    GraphisFructus f = _pictura(c,
+        "<pictura>\n"
+        "<grex titulus=\"focus\" locus=\"10 10\">\n"
+        "<rectangulum fines=\"0 0 40 40\" colores=\"6\"/>\n"
+        "<rectangulum fines=\"10 10 20 20\" colores=\"0\"/>\n"
+        "<grex locus=\"50 0\">\n"
+        "<ovum fines=\"0 0 20 20\" colores=\"11\" stilus=\"1 0\"/>\n"
+        "</grex>\n"
+        "<linea puncta=\"0,50 40,50\" stilus=\"2 0\"/>\n"
+        "</grex>\n"
+        "<rectangulum fines=\"200 10 20 20\" colores=\"12\"/>\n"
+        "<rectangulum titulus=\"arca\" fines=\"300 10 20 20\""
+        " colores=\"12\"/>\n"
+        "</pictura>");
+
+    CREDO_AEQUALIS_I32 (f.tabula->titulorum, II);
+    CREDO_VERUM (chorda_aequalis_literis(f.tabula->tituli[ZEPHYRUM],
+        "focus"));
+    /* forma prima, forma eam tegens, grex intus, linea: omnes gregis */
+    CREDO_AEQUALIS_I32 (_dominus(&f, 12, 12), I);
+    CREDO_AEQUALIS_I32 (_dominus(&f, 30, 30), I);
+    CREDO_AEQUALIS_I32 (_index(&f, 30, 30), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_dominus(&f, 70, 20), I);
+    CREDO_AEQUALIS_I32 (_dominus(&f, 30, 60), I);
+    /* inter formas gregis: nullius */
+    CREDO_AEQUALIS_I32 (_dominus(&f, 55, 12), ZEPHYRUM);
+    /* post gregem clausum: forma sine titulo nullius, titulata sua */
+    CREDO_AEQUALIS_I32 (_dominus(&f, 210, 20), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_dominus(&f, 310, 20), II);
+    /* forma posterior sine titulo gregem tegit */
+    f = _pictura(c,
+        "<pictura>\n"
+        "<grex titulus=\"focus\">\n"
+        "<rectangulum fines=\"0 0 40 40\" colores=\"6\"/>\n"
+        "</grex>\n"
+        "<rectangulum fines=\"0 0 20 40\" colores=\"12\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_dominus(&f, 10, 10), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_dominus(&f, 30, 10), I);
+    /* tegumentum in grege titulato bitos positos suos possidet */
+    f = _pictura(c,
+        "<pictura>\n"
+        "<grex titulus=\"umbra\">\n"
+        "<rectangulum fines=\"0 0 40 40\" colores=\"0 -\""
+        " exemplar=\"tessellatum\"/>\n"
+        "</grex>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_dominus(&f, 0, 0) + _dominus(&f, 1, 0), I);
+    RECUSATUR ("<pictura>\n<grex titulus=\"a\">\n"
+        "<rectangulum titulus=\"b\" fines=\"0 0 20 20\""
+        " colores=\"6\"/>\n</grex>\n</pictura>", III,
+        "inside a titled group");
+    RECUSATUR ("<pictura>\n<grex titulus=\"a\">\n"
+        "<rectangulum fines=\"0 0 20 20\" colores=\"6\"/>\n"
+        "<grex>\n<grex titulus=\"b\">\n"
+        "<rectangulum fines=\"30 0 20 20\" colores=\"6\"/>\n"
+        "</grex>\n</grex>\n</grex>\n</pictura>", V,
+        "inside a titled group");
+    RECUSATUR ("<pictura>\n"
+        "<rectangulum titulus=\"a\" fines=\"0 0 20 20\""
+        " colores=\"6\"/>\n"
+        "<grex titulus=\"a\">\n"
+        "<rectangulum fines=\"30 0 20 20\" colores=\"6\"/>\n"
+        "</grex>\n</pictura>", III, "'a' is used twice");
+    RECUSATUR ("<pictura>\n"
+        "<rectangulum fines=\"0 0 20 20\" colores=\"6\"/>\n"
+        "<grex titulus=\"vacuus\">\n</grex>\n</pictura>", III,
+        "'vacuus'");
+    RECUSATUR ("<pictura>\n<grex titulus=\"\">\n"
+        "<rectangulum fines=\"0 0 20 20\" colores=\"6\"/>\n"
+        "</grex>\n</pictura>", II, "titulus");
+}
+
 interior vacuum
 _sectio_ovum_et_linea (
     CredoContextus* c)
@@ -686,6 +764,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vis", _sectio_vis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordo", _sectio_ordo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "domini", _sectio_domini, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "grex_cum_titulo", _sectio_grex_cum_titulo, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { "ovum_et_linea", _sectio_ovum_et_linea, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "praecisio", _sectio_praecisio, NIHIL, NIHIL, NIHIL, NIHIL },

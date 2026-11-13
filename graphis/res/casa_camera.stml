@@ -1,0 +1,16 @@
+<pars titulus="casa: camera">
+  <polygonum puncta="0,0 360,0 296,34 64,34" colores="1 9"
+             exemplar="lineae_verticales" vis="0.4"/>
+  <polygonum puncta="0,0 64,34 64,150 0,204" colores="1 9"
+             exemplar="horizontalis_latus" stilus="1 0"/>
+  <polygonum puncta="360,0 296,34 296,150 360,204" colores="1 9"
+             exemplar="horizontalis_latus" stilus="1 0"/>
+  <rectangulum fines="64 34 232 116" colores="9 15"
+               exemplar="horizontalis_latus" vis="0.45" stilus="1 0"/>
+  <polygonum puncta="0,204 64,150 296,150 360,204 360,240 0,240"
+             colores="9 3" exemplar="margo_sinister" vis="0.4"
+             stilus="1 0"/>
+  <linea puncta="64,34 296,34" stilus="3 1"/>
+  <linea puncta="120,0 136,34" stilus="3 1"/>
+  <linea puncta="240,0 224,34" stilus="3 1"/>
+</pars>

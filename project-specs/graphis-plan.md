@@ -381,15 +381,33 @@ reported under the piece's file path. Fixture picture:
 `apps/scaena/loci/casa_ostium.stml`, pieces in `graphis/res/`
 (`sella`, `mensa`, `vasa`), `probationes/probatio_graphis_casa.c`.
 
-- [ ] View one (hearth wall): the spike's hut ported to the real
+- [x] View one (hearth wall): the spike's hut ported to the real
   format, lights from the description. View two (door wall): the
   room turned round - door, a bed, a coat on a peg, a small window
   on the side wall, the same table seen from the other side.
-- [ ] Look at both sheets; revise until they match the chosen look.
+- [x] Look at both sheets; revise until they match the chosen look.
   Fran's word on the hut: keep or change as Claude judges.
-- [ ] Test `casa`: both compile; titles pinned (`hearth`, `window`,
+- [x] Test `casa`: both compile; titles pinned (`hearth`, `window`,
   `jars`, `book`, `turn` in view one; `door`, `bed`, `coat`, `turn`
   in view two); digests pinned.
+
+**As built (2026-11-13):** suite `graphis_casa`, 3 sections
+(titles pinned, regions solid, digests pinned, both views share the
+room). Pieces: `casa_camera` (the room shell both views share),
+`mensa`, `candela`, `sella`; pictures
+`apps/scaena/loci/casa_focus.stml` and `casa_ostium.stml`. View one
+has a cupboard where the spike had a door (the door belongs to view
+two). The hat stayed untitled.
+
+**Added to the format here: a titled group.** Drawing the hut showed
+that a region made of one titled shape gets holes wherever an
+untitled shape is painted over it (the fire in the hearth, the hill
+in the window, the blanket on the bed). `<grex titulus="hearth">`
+makes everything painted inside the group - shapes and pieces - one
+region; a shape inside it may not carry its own title, a titled
+group may not sit inside another or inside a piece. Tests: section
+`grex_cum_titulo` in `probatio_graphis`, a piece inside a titled
+group in `probatio_graphis_usus`; 3 plants red.
 
 ### Task 6: scenes
 

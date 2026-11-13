@@ -1,0 +1,5 @@
+<pars titulus="candela">
+  <rectangulum fines="0 12 5 20" colores="5" stilus="1 0"/>
+  <polygonum puncta="2,0 6,10 2,14 -1,10" colores="11" stilus="1 8"
+             lucens="verum"/>
+</pars>

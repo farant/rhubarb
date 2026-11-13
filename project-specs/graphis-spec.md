@@ -118,6 +118,10 @@ Claude's calls (not discussed; change freely):
     a titled shape that owns fewer than 64 pixels after painting; a
     duplicate title; a strength between 0 and 0.4 exclusive (finding
     9; 0 means smooth).
+17a. **A group with a title is one region** (added in plan T5,
+    2026-11-13, when the hut's regions came out full of holes):
+    everything painted inside `<grex titulus="...">` belongs to
+    it. Shapes inside carry no title of their own.
 18. **Reuse is by file.** `graphis/res/<name>.stml` holds pieces (a
     chair, a jar) that a picture places with `usus`. No variables,
     loops or conditions in the format.
