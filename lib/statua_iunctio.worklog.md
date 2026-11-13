@@ -31,3 +31,11 @@
   prop's animation yet, and merging clips would need a naming rule.
 
 Plants: see the T8 commit.
+
+## 2026-11-12 - scale (plastica II, task 2)
+
+`StatuaIungenda` gained `scala`: the scale of the added model's new
+root node, uniform. It must be positive and finite; zero is refused
+rather than read as 1, so every caller sets it. The model grows
+about its own origin (its base stays on the ground at the
+placement).

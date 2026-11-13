@@ -79,3 +79,45 @@ props were first put in ponds).
 
 Still unreachable, as on the bare level: the north-east corner and
 the plateau south of the hut.
+
+## 2026-11-12 - variation per placement (plastica II, task 2)
+
+After T10 every pine was the same pine. Three additions to the
+layout:
+
+- **`magnitudo` on a `<res>`** (0.25 .. 4): a uniform scale. It goes
+  to the joiner as `StatuaIungenda.scala`, which sets the scale of
+  the prop's new root node, so the prop grows about its own origin
+  and still stands on the ground. The solid rule is checked on the
+  scaled prop.
+- **`semen` on a `<res>`**: added to every seed inside the asset
+  (`plastica_legere_seminis`), so one file gives another rock shape
+  or texture patch. The caller compiles once per (file, seed); each
+  distinct seed is its own model in the place.
+- **`<sparsio>`**: scatter N copies in a rectangle.
+  `mundus_locus_explicare` turns scatters into plain placements
+  before the build, using the bare level's walk map: a candidate is
+  dropped if it is not walkable ground or closer than `distantia` to
+  any placement so far. Explicit `<res>` come first in the list
+  wherever they are written, so a scatter avoids all of them. Up to
+  40 candidates per copy; a scatter that cannot place all its copies
+  is REFUSED with its line and the number that fit, not silently
+  shortened. Candidates come from an integer hash of (seed, attempt,
+  channel), so the same layout gives the same place on any machine.
+- **`varietates`** on a scatter cycles the asset seed 0 .. n-1 over
+  the copies, which bounds how many distinct models a scatter adds.
+- **Zero is not "default" in the structs.** `MundusLocusRes.scala`
+  and `StatuaIungenda.scala` must be positive; the reader fills 1.
+  A struct made with memset is refused with the placement's line.
+  This cost two test helpers a line each and keeps a forgotten
+  field from quietly meaning "normal size".
+- `mundus_solum_altitudo` already fails on anything that is not
+  walkable, so the separate genus test before it in `explicare` is
+  redundant; kept because it reads as the rule.
+
+The clearing now uses all three: 71 props (42 before), walkable
+59666, reachable 45525, top plateau 5332. The pins in test `pratum`
+were copied from `bin/mundus mappa` and matched on the first run.
+One scattered pine (number 52 on the map) stands in the gap between
+the two south-west ponds and closes it; the land beyond is still
+reached from the south.

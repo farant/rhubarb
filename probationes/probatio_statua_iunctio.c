@@ -84,6 +84,7 @@ _iungenda (
     i.statua  = statua;
     i.locus   = stereometria_vector(x, y, z);
     i.gyrus   = gyrus;
+    i.scala   = 1.0f;
     redde i;
 }
 
@@ -423,6 +424,51 @@ _sectio_semel (
     FINES_SUNT (f, 4.5, 5.5, 0.0, 1.0, -0.5, 0.5);
 }
 
+/* scala: res tota circa originem suam crescit; scala non positiva
+ * aut non finita recusatur */
+interior vacuum
+_sectio_scala (
+    CredoContextus* c)
+{
+            Statua* basis    = _statua(c, BASIS);
+            Statua* arca     = _statua(c, ARCA);
+    StatuaIungenda  addenda  = _iungenda(arca, 5.0f, 0.0f, 7.0f, 0.0f);
+            Statua* s;
+             Fines  f;
+               i32  radix = basis->nodorum;
+
+    /* capsa I x I x I ad (1 0 0); scala II: centrum (5 + 2, 1, 7),
+     * latus II */
+    addenda.scala  = 2.0f;
+    s              = statua_coniungere(basis, &addenda, I, c->piscina);
+    CREDO_NECESSE (s != NIHIL);
+    CREDO_F64_PROXIMUS ((f64)s->nodi[radix].scala.x, 2.0, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)s->nodi[radix].scala.y, 2.0, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)s->nodi[radix].scala.z, 2.0, 1.0e-9);
+    f = _fines(c, s, radix, s->nodorum);
+    FINES_SUNT (f, 6.0, 8.0, 0.0, 2.0, 6.0, 8.0);
+    /* scala dimidia cum gyro XC: capsa ad (0 0 -0.5) */
+    addenda        = _iungenda(arca, 5.0f, 0.0f, 7.0f, 90.0f);
+    addenda.scala  = 0.5f;
+    s              = statua_coniungere(basis, &addenda, I, c->piscina);
+    CREDO_NECESSE (s != NIHIL);
+    f = _fines(c, s, radix, s->nodorum);
+    FINES_SUNT (f, 4.75, 5.25, 0.0, 0.5, 6.25, 6.75);
+    /* basis non scalatur */
+    f = _fines(c, s, ZEPHYRUM, radix);
+    CREDO_F64_PROXIMUS ((f64)f.maximum[ZEPHYRUM], 10.0, 1.0e-4);
+    /* scala mala */
+    addenda.scala = 0.0f;
+    CREDO_VERUM (statua_coniungere(basis, &addenda, I, c->piscina)
+        == NIHIL);
+    addenda.scala = -1.0f;
+    CREDO_VERUM (statua_coniungere(basis, &addenda, I, c->piscina)
+        == NIHIL);
+    addenda.scala = (f32)HUGE_VAL;
+    CREDO_VERUM (statua_coniungere(basis, &addenda, I, c->piscina)
+        == NIHIL);
+}
+
 /* texturae pixelis pares semel tenentur */
 interior vacuum
 _sectio_texturae (
@@ -611,6 +657,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "locus", _sectio_locus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacua", _sectio_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
     { "signa", _sectio_signa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scala", _sectio_scala, NIHIL, NIHIL, NIHIL, NIHIL },
     { "semel", _sectio_semel, NIHIL, NIHIL, NIHIL, NIHIL },
     { "texturae", _sectio_texturae, NIHIL, NIHIL, NIHIL, NIHIL },
     { "texturae_plures", _sectio_texturae_plures, NIHIL, NIHIL,

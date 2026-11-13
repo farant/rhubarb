@@ -2,21 +2,26 @@
      locus nudus (planum.glb) et res plasticae in locis suis. Locus
      "x z" in unitatibus mundi (0 .. 64); altitudo ex solo sub
      puncto. Strata loci: imum (y 0.5), medium (4.5), summum (8.5).
-     Aedificatio: bin/mundus condere -volumen V. Pictura rei unius
-     in loco: bin/mundus specimen RES -o PNG -locus "x z". -->
+     magnitudo = scala rei; semen = forma alia eiusdem rei; sparsio
+     = exemplaria in rectangulo sparsa (aquam et res alias vitat).
+     Aedificatio: bin/mundus condere -volumen V. Mappa cum numeris:
+     bin/mundus mappa HAEC -o PNG. Pictura rei unius in loco:
+     bin/mundus specimen RES -o PNG -locus "x z". -->
 <locus titulus="clearing"
        basis="probationes/fixa/statuae/planum.glb">
 
   <!-- pratum medium, prope initium (32, 32) -->
   <res fons="plastica/res/puteus.stml" locus="27 29" gyrus="20"/>
-  <res fons="plastica/res/quercus.stml" locus="38 31" gyrus="40"/>
-  <res fons="plastica/res/frutex.stml" locus="24.5 31.5"/>
-  <res fons="plastica/res/frutex.stml" locus="30 34.5" gyrus="120"/>
-  <res fons="plastica/res/frutex.stml" locus="41 33" gyrus="250"/>
+  <res fons="plastica/res/quercus.stml" locus="38 31" gyrus="40"
+       magnitudo="1.15"/>
   <res fons="plastica/res/saxum_parvum.stml" locus="33.5 29.5"/>
-  <res fons="plastica/res/saxum_parvum.stml" locus="21 33" gyrus="70"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="21 33" gyrus="70"
+       magnitudo="0.8" semen="3"/>
   <res fons="plastica/res/saxum_magnum.stml" locus="15 30.5"
        gyrus="15"/>
+  <sparsio fons="plastica/res/frutex.stml" numerus="7" semen="11"
+           area="13.5 29 44 35" distantia="3" magnitudo_varia="0.25"
+           gyrus_varius="verum" varietates="3"/>
 
   <!-- scalae ad stratum summum: pes ad z 15.75, ascendunt versus
        -z (gyrus XC), gradus summus marginem rupis (z 12) tegit -->
@@ -24,24 +29,31 @@
   <res fons="plastica/res/index_viae.stml" locus="19 17" gyrus="90"/>
 
   <!-- pratum septentrionale: pini et saxa -->
-  <res fons="plastica/res/pinus.stml" locus="6 15"/>
-  <res fons="plastica/res/pinus.stml" locus="9 17" gyrus="30"/>
+  <res fons="plastica/res/pinus.stml" locus="6 15" magnitudo="1.2"/>
+  <res fons="plastica/res/pinus.stml" locus="9 17" gyrus="30"
+       magnitudo="0.9"/>
   <res fons="plastica/res/pinus.stml" locus="4 17.5" gyrus="60"/>
   <res fons="plastica/res/saxum_magnum.stml" locus="40 15"
-       gyrus="200"/>
-  <res fons="plastica/res/frutex.stml" locus="35 14" gyrus="45"/>
+       gyrus="200" semen="5" magnitudo="1.2"/>
   <res fons="plastica/res/saxum_parvum.stml" locus="46 16"
-       gyrus="140"/>
-  <res fons="plastica/res/pinus.stml" locus="50 20" gyrus="15"/>
-  <res fons="plastica/res/pinus.stml" locus="56 16" gyrus="80"/>
+       gyrus="140" semen="6"/>
+  <res fons="plastica/res/pinus.stml" locus="50 20" gyrus="15"
+       magnitudo="1.3"/>
+  <res fons="plastica/res/pinus.stml" locus="56 16" gyrus="80"
+       magnitudo="0.85"/>
+  <sparsio fons="plastica/res/frutex.stml" numerus="5" semen="4"
+           area="24 13 60 18.5" distantia="4" magnitudo_varia="0.25"
+           gyrus_varius="verum" varietates="3"/>
 
   <!-- stratum summum: quod scalae aperiunt -->
-  <res fons="plastica/res/quercus.stml" locus="10 6" gyrus="100"/>
-  <res fons="plastica/res/pinus.stml" locus="24 4"/>
-  <res fons="plastica/res/pinus.stml" locus="27 6.5" gyrus="45"/>
+  <res fons="plastica/res/quercus.stml" locus="10 6" gyrus="100"
+       semen="2" magnitudo="1.25"/>
   <res fons="plastica/res/saxum_magnum.stml" locus="18 5"
-       gyrus="300"/>
+       gyrus="300" semen="8"/>
   <res fons="plastica/res/arca.stml" locus="13.5 9" gyrus="25"/>
+  <sparsio fons="plastica/res/pinus.stml" numerus="6" semen="3"
+           area="20 1 34 9.5" distantia="3.5" magnitudo_varia="0.25"
+           gyrus_varius="verum"/>
 
   <!-- pratum imum: casa, saepes, arcae -->
   <res fons="plastica/res/saepes.stml" locus="25 50"/>
@@ -53,15 +65,23 @@
   <res fons="plastica/res/saepes.stml" locus="23.75 44" gyrus="90"/>
   <res fons="plastica/res/saepes.stml" locus="23.75 46" gyrus="90"/>
   <res fons="plastica/res/arca.stml" locus="34.5 44.5"/>
-  <res fons="plastica/res/arca.stml" locus="34.6 45.7" gyrus="15"/>
+  <res fons="plastica/res/arca.stml" locus="34.6 45.7" gyrus="15"
+       magnitudo="0.8"/>
   <res fons="plastica/res/arca.stml" locus="35.7 45" gyrus="70"/>
-  <res fons="plastica/res/quercus.stml" locus="48 46" gyrus="200"/>
-  <res fons="plastica/res/quercus.stml" locus="6 40" gyrus="310"/>
-  <res fons="plastica/res/pinus.stml" locus="14 44"/>
-  <res fons="plastica/res/pinus.stml" locus="17 47.5" gyrus="50"/>
-  <res fons="plastica/res/pinus.stml" locus="18 57" gyrus="20"/>
-  <res fons="plastica/res/frutex.stml" locus="21.5 52" gyrus="30"/>
-  <res fons="plastica/res/frutex.stml" locus="36 51.5" gyrus="200"/>
+  <res fons="plastica/res/quercus.stml" locus="48 46" gyrus="200"
+       semen="4"/>
+  <res fons="plastica/res/quercus.stml" locus="6 40" gyrus="310"
+       semen="7" magnitudo="1.3"/>
   <res fons="plastica/res/saxum_parvum.stml" locus="46.5 39.5"
-       gyrus="20"/>
+       gyrus="20" semen="9" magnitudo="1.3"/>
+  <!-- silva occidentalis: pini inter stagna -->
+  <sparsio fons="plastica/res/pinus.stml" numerus="9" semen="7"
+           area="1.5 42 21 62.5" distantia="4" magnitudo_varia="0.3"
+           gyrus_varius="verum"/>
+  <sparsio fons="plastica/res/frutex.stml" numerus="8" semen="2"
+           area="2 38 62 62" distantia="5" magnitudo_varia="0.25"
+           gyrus_varius="verum" varietates="3"/>
+  <sparsio fons="plastica/res/saxum_parvum.stml" numerus="5" semen="6"
+           area="2 38 62 62" distantia="4" magnitudo_varia="0.3"
+           gyrus_varius="verum" varietates="4"/>
 </locus>

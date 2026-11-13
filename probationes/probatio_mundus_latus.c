@@ -746,6 +746,7 @@ _sectio_substitutus (
     memset(&positio, ZEPHYRUM, magnitudo(positio));
     positio.x          = 27.0f;
     positio.z          = 29.0f;
+    positio.scala      = 1.0f;
     positio.linea      = I;
     statuae[ZEPHYRUM]  = arca.statua;
     instructus = mundus_locus_struere(nudus.statua, &positio, statuae,

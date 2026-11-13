@@ -14,7 +14,8 @@
  *
  * condere: omnem dispositionem *.stml in DIR (ordinarium apps/mundus/
  * loci), ordine nominum: locum nudum (GLB, attributum basis) legit,
- * rem quamque semel componit (plastica), res in locis suis ponit
+  * sparsiones explicat, rem quamque (fons et semen) semel componit
+ * (plastica), res in locis suis ponit
  * (mundus_locus_struere), locum instructum in GLB scribit, per
  * lectorem relegit et ut LOCUM in volumen addit sub titulo
  * dispositionis. Linea per dispositionem:
@@ -149,11 +150,12 @@ recusatam_nuntiare (
         (constans character*)additum.datum);
 }
 
-/* rem componere; NIHIL (causa cum via et linea nuntiata) si
- * recusata */
+/* rem componere, semine omni semini eius addito; NIHIL (causa cum
+ * via et linea nuntiata) si recusata */
 interior Statua*
 rem_componere (
     constans character* via,
+                   i32  semen,
                Piscina* piscina)
 {
     PlasticaFructus f;
@@ -165,7 +167,7 @@ rem_componere (
             " read\n", via);
         redde NIHIL;
     }
-    f = plastica_legere(textus, piscina);
+    f = plastica_legere_seminis(textus, semen, piscina);
     si (!f.successus)
     {
         fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)f.linea,
@@ -313,8 +315,8 @@ inscriptio_tituli (
     redde NIHIL;
 }
 
-/* res dispositionis componere: fons idem semel (index idem). FALSUM
- * si qua recusata (causa nuntiata) */
+/* res dispositionis componere: fons et semen idem semel (index
+ * idem). FALSUM si qua recusata (causa nuntiata) */
 interior b32
 res_componere (
           constans character*  via,
@@ -329,7 +331,8 @@ res_componere (
     {
         per (j = ZEPHYRUM; j < k; j++)
         {
-            si (chorda_aequalis(d->res[j].fons, d->res[k].fons))
+            si (   chorda_aequalis(d->res[j].fons, d->res[k].fons)
+                && d->res[j].semen == d->res[k].semen)
             {
                 frange;
             }
@@ -340,7 +343,7 @@ res_componere (
             perge;
         }
         statuae[k] = rem_componere(literae(d->res[k].fons, piscina),
-            piscina);
+            d->res[k].semen, piscina);
         si (!statuae[k])
         {
             fprintf(stderr, "%s:%u: the asset of this placement was"
@@ -379,20 +382,38 @@ dispositionem_legere (
     redde VERUM;
 }
 
-/* locum nudum legere, res componere et locum instruere; FALSUM
- * (causa nuntiata) si quid recusatum */
+/* locum nudum legere, sparsiones explicare (d->res et d->numerus
+ * deinde res OMNES tenent, sparsiones nullae manent), res componere
+ * et locum instruere; FALSUM (causa nuntiata) si quid recusatum */
 interior b32
 locum_instruere (
           constans character*  via,
- constans MundusLocusFructus*  d,
+          MundusLocusFructus*  d,
                       Statua** basis,
        MundusLocusInstructus*  instructus,
                      Piscina*  piscina)
 {
-    constans Statua** statuae;
+    MundusLocusExplicatus   explicatus;
+          constans Statua** statuae;
 
-    *basis   = basim_legere(via, literae(d->basis, piscina), piscina);
-    statuae  = (constans Statua**)piscina_allocare(piscina,
+    *basis = basim_legere(via, literae(d->basis, piscina), piscina);
+    si (!*basis)
+    {
+        redde FALSUM;
+    }
+    explicatus = mundus_locus_explicare(d, *basis, piscina);
+    si (!explicatus.successus)
+    {
+        fprintf(stderr, "%s:%u: %.*s\n", via,
+            (insignatus)explicatus.linea,
+            (integer)explicatus.error.mensura,
+            (constans character*)explicatus.error.datum);
+        redde FALSUM;
+    }
+    d->res         = explicatus.res;
+    d->numerus     = explicatus.numerus;
+    d->sparsionum  = ZEPHYRUM;
+    statuae        = (constans Statua**)piscina_allocare(piscina,
         (d->numerus + I) * magnitudo(Statua*));
     si (   !*basis || !statuae
         || !res_componere(via, d, statuae, piscina))
@@ -732,7 +753,7 @@ exsequi_specimen (
                                              i32  y;
 
     thema_initiare();
-    res    = rem_componere(via, piscina);
+    res    = rem_componere(via, ZEPHYRUM, piscina);
     basis  = res ? basim_legere(via, BASIS_ORDINARIA, piscina) : NIHIL;
     si (!res || !basis)
     {
@@ -749,6 +770,7 @@ exsequi_specimen (
     }
     memset(&positio, ZEPHYRUM, magnitudo(positio));
     positio.gyrus = gyrus;
+    positio.scala = 1.0f;
     si (locus)
     {
         si (!locum_legere(locus, &positio.x, &positio.z))

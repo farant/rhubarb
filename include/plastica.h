@@ -146,4 +146,20 @@ plastica_legere (
      chorda  textus,
     Piscina* piscina);
 
+/*
+ * plastica_legere_seminis - ut plastica_legere, semine addito
+ *
+ * @semen: 0 .. 1000000; omni semini rei additur (asperitas sphaerae,
+ *         textura genita, sparsio) - plagula eadem rem aliam eiusdem
+ *         generis dat (saxum alia forma, alius pannus texturae).
+ *         Semen 0: idem ac plastica_legere
+ *
+ * Redde: ut plastica_legere; semen extra fines: recusatio, linea 0
+ */
+PlasticaFructus
+plastica_legere_seminis (
+     chorda  textus,
+        i32  semen,
+    Piscina* piscina);
+
 #endif /* PLASTICA_H */

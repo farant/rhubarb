@@ -114,6 +114,7 @@ _positio (
     r.x      = x;
     r.z      = z;
     r.gyrus  = gyrus;
+    r.scala  = 1.0f;
     r.linea  = linea;
     redde r;
 }
@@ -230,10 +231,62 @@ _sectio_legere (
     CREDO_F64_PROXIMUS ((f64)f.res[I].gyrus, 0.0, 1.0e-9);
     CREDO_AEQUALIS_I32 (f.res[I].linea, VI);
     CREDO_AEQUALIS_I32 (f.error.mensura, ZEPHYRUM);
+    /* ordinaria: scala I, semen 0, nullae sparsiones */
+    CREDO_F64_PROXIMUS ((f64)f.res[ZEPHYRUM].scala, 1.0, 1.0e-9);
+    CREDO_AEQUALIS_I32 (f.res[ZEPHYRUM].semen, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.sparsionum, ZEPHYRUM);
     /* dispositio sine rebus licet */
     f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\"/>");
     CREDO_NECESSE (f.successus);
     CREDO_AEQUALIS_I32 (f.numerus, ZEPHYRUM);
+    /* magnitudo et semen rei; sparsio cum omnibus et cum
+     * ordinariis */
+    f = _lege(c,
+        "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "  <res fons=\"p.stml\" locus=\"6 15\" magnitudo=\"1.25\""
+        " semen=\"3\"/>\n"
+        "  <sparsio fons=\"f.stml\" numerus=\"12\" semen=\"5\"\n"
+        "           area=\"20 28 44 36\" distantia=\"2\"\n"
+        "           magnitudo_varia=\"0.2\" gyrus_varius=\"verum\"\n"
+        "           varietates=\"3\"/>\n"
+        "  <res fons=\"q.stml\" locus=\"1 2\"/>\n"
+        "  <sparsio fons=\"g.stml\" numerus=\"4\""
+        " area=\"0 0 8 8\"/>\n"
+        "</locus>\n");
+    CREDO_NECESSE (f.successus);
+    CREDO_AEQUALIS_I32 (f.numerus, II);
+    CREDO_F64_PROXIMUS ((f64)f.res[ZEPHYRUM].scala, 1.25, 1.0e-9);
+    CREDO_AEQUALIS_I32 (f.res[ZEPHYRUM].semen, III);
+    CREDO_VERUM (chorda_aequalis_literis(f.res[I].fons, "q.stml"));
+    CREDO_AEQUALIS_I32 (f.res[I].linea, VII);
+    CREDO_NECESSE (f.sparsionum == II);
+    CREDO_VERUM (chorda_aequalis_literis(f.sparsiones[ZEPHYRUM].fons,
+        "f.stml"));
+    CREDO_AEQUALIS_I32 (f.sparsiones[ZEPHYRUM].numerus, XII);
+    CREDO_AEQUALIS_I32 (f.sparsiones[ZEPHYRUM].semen, V);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[ZEPHYRUM].area[ZEPHYRUM],
+        20.0, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[ZEPHYRUM].area[I], 28.0,
+        1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[ZEPHYRUM].area[II], 44.0,
+        1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[ZEPHYRUM].area[III], 36.0,
+        1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[ZEPHYRUM].distantia, 2.0,
+        1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[ZEPHYRUM].magnitudo_varia,
+        0.2, 1.0e-6);
+    CREDO_VERUM (f.sparsiones[ZEPHYRUM].gyrus_varius);
+    CREDO_AEQUALIS_I32 (f.sparsiones[ZEPHYRUM].varietates, III);
+    CREDO_AEQUALIS_I32 (f.sparsiones[ZEPHYRUM].linea, III);
+    CREDO_AEQUALIS_I32 (f.sparsiones[I].numerus, IV);
+    CREDO_AEQUALIS_I32 (f.sparsiones[I].semen, ZEPHYRUM);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[I].distantia, 1.5, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)f.sparsiones[I].magnitudo_varia, 0.0,
+        1.0e-9);
+    CREDO_FALSUM (f.sparsiones[I].gyrus_varius);
+    CREDO_AEQUALIS_I32 (f.sparsiones[I].varietates, I);
+    CREDO_AEQUALIS_I32 (f.sparsiones[I].linea, VIII);
 }
 
 interior vacuum
@@ -284,6 +337,73 @@ _sectio_legere_recusat (
     f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
         "<res fons=\"x.stml\" locus=\"1 2\"><res fons=\"y.stml\""
         " locus=\"1 2\"/></res>\n</locus>");
+    RECUSATUR (f, II, "children");
+    /* magnitudo et semen rei */
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<res fons=\"x.stml\" locus=\"1 2\" magnitudo=\"0\"/>\n"
+        "</locus>");
+    RECUSATUR (f, II, "'magnitudo'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<res fons=\"x.stml\" locus=\"1 2\" magnitudo=\"4.5\"/>\n"
+        "</locus>");
+    RECUSATUR (f, II, "'magnitudo'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<res fons=\"x.stml\" locus=\"1 2\" semen=\"-1\"/>\n"
+        "</locus>");
+    RECUSATUR (f, II, "'semen'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<res fons=\"x.stml\" locus=\"1 2\" semen=\"1.5\"/>\n"
+        "</locus>");
+    RECUSATUR (f, II, "'semen'");
+    /* sparsio */
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio numerus=\"3\" area=\"0 0 8 8\"/>\n</locus>");
+    RECUSATUR (f, II, "'fons'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" area=\"0 0 8 8\"/>\n</locus>");
+    RECUSATUR (f, II, "'numerus'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"0\""
+        " area=\"0 0 8 8\"/>\n</locus>");
+    RECUSATUR (f, II, "'numerus'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"257\""
+        " area=\"0 0 8 8\"/>\n</locus>");
+    RECUSATUR (f, II, "'numerus'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\"/>\n</locus>");
+    RECUSATUR (f, II, "'area'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\""
+        " area=\"0 0 8\"/>\n</locus>");
+    RECUSATUR (f, II, "'area'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\""
+        " area=\"8 0 0 8\"/>\n</locus>");
+    RECUSATUR (f, II, "'area'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\" area=\"0 0 8 8\""
+        " distantia=\"-1\"/>\n</locus>");
+    RECUSATUR (f, II, "'distantia'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\" area=\"0 0 8 8\""
+        " magnitudo_varia=\"1\"/>\n</locus>");
+    RECUSATUR (f, II, "'magnitudo_varia'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\" area=\"0 0 8 8\""
+        " gyrus_varius=\"ita\"/>\n</locus>");
+    RECUSATUR (f, II, "'gyrus_varius'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\" area=\"0 0 8 8\""
+        " varietates=\"17\"/>\n</locus>");
+    RECUSATUR (f, II, "'varietates'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\" area=\"0 0 8 8\""
+        " locus=\"1 2\"/>\n</locus>");
+    RECUSATUR (f, II, "'locus'");
+    f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<sparsio fons=\"x.stml\" numerus=\"3\" area=\"0 0 8 8\">"
+        "<res fons=\"y.stml\" locus=\"1 2\"/></sparsio>\n</locus>");
     RECUSATUR (f, II, "children");
     f = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
         "verba\n</locus>");
@@ -372,6 +492,211 @@ _sectio_capsa (
     CREDO_NECESSE (r.successus);
     CREDO_AEQUALIS_I32 (r.statua->nodorum, basis->nodorum);
     CREDO_AEQUALIS_I32 (r.statua->verticum, basis->verticum);
+}
+
+/* scala rei: capsa I x I scala II cellas quater tot claudit; scala
+ * non positiva recusatur */
+interior vacuum
+_sectio_scala (
+    CredoContextus* c)
+{
+                   Statua* basis = loci_ficti_locus(c);
+              MundusSolum* nudum = mundus_solum_struere(basis,
+                  c->piscina);
+              MundusSolum* instructum;
+           MundusLocusRes  positio = _positio(2.0f, 10.0f, 0.0f, IX);
+          constans Statua* statuae[I];
+    MundusLocusInstructus  r;
+                      i32  extra;
+
+    statuae[ZEPHYRUM] = _res(c, RES_ARCA);
+    positio.scala = 2.0f;
+    r = mundus_locus_struere(basis, &positio, statuae, I, c->piscina);
+    CREDO_NECESSE (r.successus);
+    CREDO_F64_PROXIMUS (
+        (f64)r.statua->nodi[basis->nodorum].scala.x, 2.0, 1.0e-9);
+    instructum = mundus_solum_struere(r.statua, c->piscina);
+    CREDO_NECESSE (nudum != NIHIL && instructum != NIHIL);
+    CREDO_AEQUALIS_I32 (_cellae_mutatae(nudum, instructum, 1.0f, 3.0f,
+        9.0f, 11.0f, &extra), LXIV);
+    CREDO_AEQUALIS_I32 (extra, ZEPHYRUM);
+    positio.scala = 0.0f;
+    r = mundus_locus_struere(basis, &positio, statuae, I, c->piscina);
+    RECUSATUR (r, IX, "scale");
+    positio.scala = -2.0f;
+    r = mundus_locus_struere(basis, &positio, statuae, I, c->piscina);
+    RECUSATUR (r, IX, "scale");
+}
+
+/* dispositio cum sparsione una (et re scripta si data) */
+interior MundusLocusFructus
+_dispositio_sparsa (
+        CredoContextus* c,
+    constans character* sparsio,
+    constans character* res)
+{
+    character alveus[DXII];
+
+    sprintf(alveus, "<locus titulus=\"a\" basis=\"b.glb\">\n%s\n"
+        "<sparsio fons=\"f.stml\" %s/>\n</locus>", res, sparsio);
+    redde _lege(c, alveus);
+}
+
+/* explicare: sparsiones in res singulas */
+interior vacuum
+_sectio_explicare (
+    CredoContextus* c)
+{
+       LociFictiQuadratum  q;
+                   Statua* planus;
+                   Statua* fictus = loci_ficti_locus(c);
+              MundusSolum* solum  = mundus_solum_struere(fictus,
+                  c->piscina);
+       MundusLocusFructus d;
+    MundusLocusExplicatus e;
+    MundusLocusExplicatus iterum;
+                      b32 semina[III];
+                      f32 minima = 1.0e9f;
+                      i32 k;
+                      i32 j;
+
+    q = loci_ficti_quadratum(0.0f, 20.0f, 0.0f, 20.0f, 0.0f, 0.0f,
+        LOCI_FICTI_GRESSIBILE);
+    planus = loci_ficti_statua(c, &q, I);
+    /* X res in area, distantia II, cum re scripta in medio */
+    d = _dispositio_sparsa(c, "numerus=\"10\" semen=\"5\""
+        " area=\"2 3 18 17\" distantia=\"2\" magnitudo_varia=\"0.25\""
+        " gyrus_varius=\"verum\" varietates=\"3\"",
+        "<res fons=\"p.stml\" locus=\"10 10\" gyrus=\"45\""
+        " magnitudo=\"1.5\" semen=\"9\"/>");
+    CREDO_NECESSE (d.successus);
+    e = mundus_locus_explicare(&d, planus, c->piscina);
+    si (!e.successus)
+    {
+        printf("explicatio recusata (linea %u): %.*s\n",
+            (insignatus)e.linea, (integer)e.error.mensura,
+            (constans character*)e.error.datum);
+    }
+    CREDO_NECESSE (e.successus);
+    CREDO_AEQUALIS_I32 (e.numerus, XI);
+    /* res scripta prima, intacta */
+    CREDO_VERUM (chorda_aequalis_literis(e.res[ZEPHYRUM].fons,
+        "p.stml"));
+    CREDO_F64_PROXIMUS ((f64)e.res[ZEPHYRUM].x, 10.0, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)e.res[ZEPHYRUM].gyrus, 45.0, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)e.res[ZEPHYRUM].scala, 1.5, 1.0e-9);
+    CREDO_AEQUALIS_I32 (e.res[ZEPHYRUM].semen, IX);
+    CREDO_AEQUALIS_I32 (e.res[ZEPHYRUM].linea, II);
+    memset(semina, ZEPHYRUM, magnitudo(semina));
+    per (k = I; k < e.numerus; k++)
+    {
+        constans MundusLocusRes* r = &e.res[k];
+
+        CREDO_VERUM (chorda_aequalis_literis(r->fons, "f.stml"));
+        CREDO_AEQUALIS_I32 (r->linea, III);
+        /* intra aream */
+        CREDO_VERUM (r->x >= 2.0f && r->x <= 18.0f);
+        CREDO_VERUM (r->z >= 3.0f && r->z <= 17.0f);
+        /* scala intra 1 +- 0.25; gyrus intra [0, 360) */
+        CREDO_VERUM (r->scala >= 0.75f && r->scala <= 1.25f);
+        CREDO_VERUM (r->gyrus >= 0.0f && r->gyrus < 360.0f);
+        CREDO_NECESSE (r->semen < III);
+        semina[r->semen] = VERUM;
+        /* distantia ab omnibus prioribus (et a re scripta) */
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            f32 spatium_x = r->x - e.res[j].x;
+            f32 spatium_z = r->z - e.res[j].z;
+
+            si (spatium_x * spatium_x + spatium_z * spatium_z < minima)
+            {
+                minima = spatium_x * spatium_x + spatium_z * spatium_z;
+            }
+        }
+    }
+    CREDO_VERUM (minima >= 4.0f - 1.0e-4f);
+    CREDO_VERUM (semina[ZEPHYRUM] && semina[I] && semina[II]);
+    /* scalae et gyri vere variant */
+    CREDO_VERUM (e.res[I].scala != e.res[II].scala);
+    CREDO_VERUM (e.res[I].gyrus != e.res[II].gyrus);
+    /* determinata */
+    iterum = mundus_locus_explicare(&d, planus, c->piscina);
+    CREDO_NECESSE (iterum.successus);
+    CREDO_AEQUALIS_I32 (iterum.numerus, e.numerus);
+    per (k = ZEPHYRUM; k < e.numerus; k++)
+    {
+        CREDO_VERUM (e.res[k].x == iterum.res[k].x
+            && e.res[k].z == iterum.res[k].z
+            && e.res[k].scala == iterum.res[k].scala
+            && e.res[k].gyrus == iterum.res[k].gyrus);
+    }
+    /* semen aliud: loca alia */
+    d = _dispositio_sparsa(c, "numerus=\"10\" semen=\"6\""
+        " area=\"2 3 18 17\" distantia=\"2\"", "");
+    CREDO_NECESSE (d.successus);
+    iterum = mundus_locus_explicare(&d, planus, c->piscina);
+    CREDO_NECESSE (iterum.successus && iterum.numerus == X);
+    CREDO_VERUM (iterum.res[ZEPHYRUM].x != e.res[I].x
+        || iterum.res[ZEPHYRUM].z != e.res[I].z);
+    /* semen sparsionis et x et z movet: sparsio eadem semine V
+     * (sine re scripta) contra semen VI */
+    d = _dispositio_sparsa(c, "numerus=\"10\" semen=\"5\""
+        " area=\"2 3 18 17\" distantia=\"2\"", "");
+    CREDO_NECESSE (d.successus);
+    e = mundus_locus_explicare(&d, planus, c->piscina);
+    CREDO_NECESSE (e.successus && e.numerus == X);
+    CREDO_VERUM (iterum.res[ZEPHYRUM].x != e.res[ZEPHYRUM].x);
+    CREDO_VERUM (iterum.res[ZEPHYRUM].z != e.res[ZEPHYRUM].z);
+    /* ordinaria: scala I, gyrus 0, semen 0 */
+    per (k = ZEPHYRUM; k < iterum.numerus; k++)
+    {
+        CREDO_F64_PROXIMUS ((f64)iterum.res[k].scala, 1.0, 1.0e-9);
+        CREDO_F64_PROXIMUS ((f64)iterum.res[k].gyrus, 0.0, 1.0e-9);
+        CREDO_AEQUALIS_I32 (iterum.res[k].semen, ZEPHYRUM);
+    }
+    /* locus fictus: aqua, saxum et extra locum vitantur */
+    d = _dispositio_sparsa(c, "numerus=\"40\" semen=\"2\""
+        " area=\"-4 -4 9 8\" distantia=\"0.5\"", "");
+    CREDO_NECESSE (d.successus);
+    e = mundus_locus_explicare(&d, fictus, c->piscina);
+    CREDO_NECESSE (e.successus);
+    CREDO_AEQUALIS_I32 (e.numerus, XL);
+    per (k = ZEPHYRUM; k < e.numerus; k++)
+    {
+        CREDO_AEQUALIS_I32 (mundus_solum_genus(solum, e.res[k].x,
+            e.res[k].z), MUNDUS_SOLUM_GRESSIBILE);
+    }
+    /* nimis multae pro area: recusatur, linea sparsionis, numerus
+     * positarum nominatur */
+    d = _dispositio_sparsa(c, "numerus=\"50\" area=\"4 4 7 7\""
+        " distantia=\"2\"", "");
+    CREDO_NECESSE (d.successus);
+    e = mundus_locus_explicare(&d, planus, c->piscina);
+    RECUSATUR (e, III, "of 50");
+    CREDO_VERUM (e.res == NIHIL);
+    /* area tota extra locum */
+    d = _dispositio_sparsa(c, "numerus=\"2\""
+        " area=\"100 100 110 110\"", "");
+    CREDO_NECESSE (d.successus);
+    e = mundus_locus_explicare(&d, planus, c->piscina);
+    RECUSATUR (e, III, "0 of 2");
+    /* sine sparsionibus: res scriptae solae (basis NIHIL licet) */
+    d = _lege(c, "<locus titulus=\"a\" basis=\"b.glb\">\n"
+        "<res fons=\"p.stml\" locus=\"1 2\"/>\n</locus>");
+    CREDO_NECESSE (d.successus);
+    e = mundus_locus_explicare(&d, NIHIL, c->piscina);
+    CREDO_NECESSE (e.successus);
+    CREDO_AEQUALIS_I32 (e.numerus, I);
+    CREDO_VERUM (chorda_aequalis_literis(e.res[ZEPHYRUM].fons,
+        "p.stml"));
+    /* argumenta mala */
+    e = mundus_locus_explicare(NIHIL, planus, c->piscina);
+    CREDO_FALSUM (e.successus);
+    e = mundus_locus_explicare(&d, planus, NIHIL);
+    CREDO_FALSUM (e.successus);
+    d = _dispositio_sparsa(c, "numerus=\"2\" area=\"0 0 8 8\"", "");
+    e = mundus_locus_explicare(&d, NIHIL, c->piscina);
+    CREDO_FALSUM (e.successus);
 }
 
 /* gradus signatus suggestum altiorem attingibile facit */
@@ -614,10 +939,10 @@ _sectio_occultatio (
 #define VIA_DISPOSITIONIS     "apps/mundus/loci/clearing.stml"
 #define NUDI_GRESSIBILES      60626
 #define NUDI_ATTINGIBILES     42881
-#define PRATI_RES          XLII
-#define PRATI_GRESSIBILES  60043
-#define PRATI_ATTINGIBILES 46683
-#define PRATI_SUMMAE       5405
+#define PRATI_RES             LXXI
+#define PRATI_GRESSIBILES     59666
+#define PRATI_ATTINGIBILES    45525
+#define PRATI_SUMMAE          5332
 
 interior vacuum
 _sectio_pratum (
@@ -626,6 +951,7 @@ _sectio_pratum (
        MundusLocusFructus d = mundus_locus_legere(
            filum_legere_totum(VIA_DISPOSITIONIS, c->piscina),
            c->piscina);
+    MundusLocusExplicatus   e;
     MundusLocusInstructus   r;
             StatuaFructus   basis;
           constans Statua** statuae;
@@ -647,19 +973,33 @@ _sectio_pratum (
     }
     CREDO_NECESSE (d.successus);
     CREDO_VERUM (chorda_aequalis_literis(d.titulus, "clearing"));
-    CREDO_AEQUALIS_I32 (d.numerus, PRATI_RES);
+    /* sparsiones in res singulas */
+    CREDO_VERUM (d.sparsionum > ZEPHYRUM);
     basis = statua_glb_legere(filum_legere_totum(
         chorda_ut_cstr(d.basis, c->piscina), c->piscina), c->piscina);
     CREDO_NECESSE (basis.successus);
-    statuae = (constans Statua**)piscina_allocare(c->piscina,
-        (d.numerus + I) * magnitudo(Statua*));
-    CREDO_NECESSE (statuae != NIHIL);
-    /* res quaeque semel componitur (fons idem, index idem) */
-    per (k = ZEPHYRUM; k < d.numerus; k++)
+    e = mundus_locus_explicare(&d, basis.statua, c->piscina);
+    si (!e.successus)
     {
+        printf("explicatio recusata (linea %u): %.*s\n",
+            (insignatus)e.linea, (integer)e.error.mensura,
+            (constans character*)e.error.datum);
+    }
+    CREDO_NECESSE (e.successus);
+    CREDO_AEQUALIS_I32 (e.numerus, PRATI_RES);
+    statuae = (constans Statua**)piscina_allocare(c->piscina,
+        (e.numerus + I) * magnitudo(Statua*));
+    CREDO_NECESSE (statuae != NIHIL);
+    /* res quaeque semel componitur (fons et semen idem, index
+     * idem) */
+    per (k = ZEPHYRUM; k < e.numerus; k++)
+    {
+        PlasticaFructus f;
+
         per (j = ZEPHYRUM; j < k; j++)
         {
-            si (chorda_aequalis(d.res[j].fons, d.res[k].fons))
+            si (   chorda_aequalis(e.res[j].fons, e.res[k].fons)
+                && e.res[j].semen == e.res[k].semen)
             {
                 frange;
             }
@@ -669,11 +1009,13 @@ _sectio_pratum (
             statuae[k] = statuae[j];
             perge;
         }
-        statuae[k] = _res(c, chorda_ut_cstr(filum_legere_totum(
-            chorda_ut_cstr(d.res[k].fons, c->piscina), c->piscina),
-            c->piscina));
+        f = plastica_legere_seminis(filum_legere_totum(
+            chorda_ut_cstr(e.res[k].fons, c->piscina), c->piscina),
+            e.res[k].semen, c->piscina);
+        CREDO_NECESSE (f.successus);
+        statuae[k] = f.statua;
     }
-    r = mundus_locus_struere(basis.statua, d.res, statuae, d.numerus,
+    r = mundus_locus_struere(basis.statua, e.res, statuae, e.numerus,
         c->piscina);
     si (!r.successus)
     {
@@ -713,7 +1055,7 @@ _sectio_pratum (
      * minus quam nudae; scalae stratum summum aperiunt, ergo
      * attingibiles PLURES quam in loco nudo */
     CREDO_VERUM (gressibiles < NUDI_GRESSIBILES);
-    CREDO_VERUM (NUDI_GRESSIBILES - gressibiles < M);
+    CREDO_VERUM (NUDI_GRESSIBILES - gressibiles < II * M);
     CREDO_VERUM (summae > M);
     CREDO_VERUM (attingibiles > NUDI_ATTINGIBILES);
     /* sine strato summo pauciores attinguntur quam in loco nudo:
@@ -740,6 +1082,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "legere_recusat", _sectio_legere_recusat, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "capsa", _sectio_capsa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scala", _sectio_scala, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "explicare", _sectio_explicare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "gradus", _sectio_gradus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "coma", _sectio_coma, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,

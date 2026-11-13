@@ -137,3 +137,14 @@ crate, signpost, stair. What modelling them taught:
 - Dithered, dark foliage and bark lose most of their texture; the
   silhouette carries the pine and the oak. Stone, thatch and planks
   keep theirs.
+
+## 2026-11-12 - a seed added from outside (plastica II, task 2)
+
+`plastica_legere_seminis(textus, semen, piscina)` adds `semen` to
+every seed the description reads (`_semen`: sphere roughness and
+texture, which share one attribute, and `sparsio`). Seed 0 is
+`plastica_legere`, so nothing that existed changes and the texture
+digests stand. The test compares "description read with 3 added"
+against "the same description written with every seed 3 higher".
+A pine has no seeded geometry, so a seed only changes its texture
+patches; rocks, bushes and oaks change shape.

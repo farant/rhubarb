@@ -60,6 +60,7 @@ nomen structura {
           i32  indicum;
           i32  index_solidi;    /* indicum ad initium solidi */
           i32  linea_solidi;
+          i32  semen_additum;   /* omni semini rei additur */
           f32  speculum_x;      /* 1 aut -1: reflexio currens */
           f32  speculum_z;
           b32  fractum;
@@ -533,6 +534,23 @@ _integer (
     redde VERUM;
 }
 
+/* attributum 'semen' (0 .. 1000000; absens 0) cum semine addito
+ * (plastica_legere_seminis) */
+interior b32
+_semen (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   i32* exitus)
+{
+    si (!_integer(p, nodus, "semen", FALSUM, ZEPHYRUM, ZEPHYRUM, M * M,
+        "must be a whole number from 0 to 1000000", exitus))
+    {
+        redde FALSUM;
+    }
+    *exitus += p->semen_additum;
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Fortuita ex semine (integer solus: eadem in omni machina)
@@ -817,9 +835,7 @@ _proprietates_texturae (
     si (k < PLASTICA_TEXTURA_GENERA)
     {
         clavis.genus = k;
-        si (!_integer(p, nodus, "semen", FALSUM, ZEPHYRUM, ZEPHYRUM,
-            M * M, "must be a whole number from 0 to 1000000",
-            &clavis.semen))
+        si (!_semen(p, nodus, &clavis.semen))
         {
             redde FALSUM;
         }
@@ -1497,9 +1513,7 @@ _sphaera (
             SEGMENTA_MAXIMA, "must be a whole number from 3 to 32",
             &segmenta)
         || !_realis(p, nodus, "asperitas", FALSUM, 0.0f, &asperitas)
-        || !_integer(p, nodus, "semen", FALSUM, ZEPHYRUM, ZEPHYRUM,
-            M * M, "must be a whole number from 0 to 1000000",
-            &semen))
+        || !_semen(p, nodus, &semen))
     {
         redde FALSUM;
     }
@@ -2002,9 +2016,7 @@ _sparsio (
         || !_integer(p, nodus, "numerus", VERUM, I, I,
             NUMERUS_MAXIMUS, "must be a whole number from 1 to 256",
             &numerus)
-        || !_integer(p, nodus, "semen", FALSUM, ZEPHYRUM, ZEPHYRUM,
-            M * M, "must be a whole number from 0 to 1000000",
-            &semen)
+        || !_semen(p, nodus, &semen)
         || !_realis(p, nodus, "magnitudo_varia", FALSUM, 0.0f,
             &varia))
     {
@@ -2410,6 +2422,15 @@ plastica_legere (
      chorda  textus,
     Piscina* piscina)
 {
+    redde plastica_legere_seminis(textus, ZEPHYRUM, piscina);
+}
+
+PlasticaFructus
+plastica_legere_seminis (
+     chorda  textus,
+        i32  semen,
+    Piscina* piscina)
+{
     PlasticaFructus  f;
             Plastes  p;
        StmlResultus  r;
@@ -2417,7 +2438,14 @@ plastica_legere (
 
     memset(&f, ZEPHYRUM, magnitudo(f));
     memset(&p, ZEPHYRUM, magnitudo(p));
-    p.piscina = piscina;
+    p.piscina        = piscina;
+    p.semen_additum  = semen;
+    si (semen > M * M)
+    {
+        (vacuum)_recusare(&p, ZEPHYRUM,
+            "the added seed must be from 0 to 1000000", NIHIL, NIHIL);
+        redde _fructus_recusatus(&p, piscina);
+    }
     r = stml_legere(textus, piscina, internamentum_creare(piscina));
     si (!r.successus || !r.elementum_radix)
     {

@@ -1496,6 +1496,97 @@ _sectio_recusationes_solidorum (
     }
 }
 
+/* plastica_legere_seminis: semen omni semini rei additum (sphaera,
+ * textura, sparsio). Semen 0 = plastica_legere; semen III idem dat
+ * ac descriptio cum seminibus III maioribus scripta */
+interior b32
+_statuae_eaedem (
+    constans Statua* a,
+    constans Statua* b)
+{
+    i32 k;
+
+    si (   a->nodorum    != b->nodorum || a->verticum != b->verticum
+        || a->indicum    != b->indicum
+        || a->texturarum != b->texturarum
+        || memcmp(a->nodi, b->nodi,
+               a->nodorum * magnitudo(StatuaNodus)) != ZEPHYRUM
+        || memcmp(a->positiones, b->positiones,
+               a->verticum * III * magnitudo(f32)) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < a->texturarum; k++)
+    {
+        si (   a->texturae[k].latitudo != b->texturae[k].latitudo
+            || a->texturae[k].altitudo != b->texturae[k].altitudo
+            || memcmp(a->texturae[k].pixela, b->texturae[k].pixela,
+                   a->texturae[k].latitudo * a->texturae[k].altitudo
+                       * IV) != ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+interior vacuum
+_sectio_semen_additum (
+    CredoContextus* c)
+{
+    constans character* scripta =
+        "<res titulus=\"a\">"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" semen=\"2\""
+        " textura=\"saxum\" color=\"#888\"/>"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" locus=\"3 0 0\"/>"
+        "<sparsio numerus=\"3\" semen=\"4\" area=\"4 4\""
+        " gyrus_varius=\"verum\">"
+        "<capsa magnitudo=\"0.2 0.2 0.2\"/>"
+        "</sparsio>"
+        "</res>";
+    constans character* aucta =
+        "<res titulus=\"a\">"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" semen=\"5\""
+        " textura=\"saxum\" color=\"#888\"/>"
+        "<sphaera radius=\"1\" asperitas=\"0.5\" locus=\"3 0 0\""
+        " semen=\"3\"/>"
+        "<sparsio numerus=\"3\" semen=\"7\" area=\"4 4\""
+        " gyrus_varius=\"verum\">"
+        "<capsa magnitudo=\"0.2 0.2 0.2\"/>"
+        "</sparsio>"
+        "</res>";
+    PlasticaFructus nuda = _lege(c, scripta);
+    PlasticaFructus nulla = plastica_legere_seminis(
+        chorda_ex_literis(scripta, c->piscina), ZEPHYRUM, c->piscina);
+    PlasticaFructus tria = plastica_legere_seminis(
+        chorda_ex_literis(scripta, c->piscina), III, c->piscina);
+    PlasticaFructus manu = _lege(c, aucta);
+    PlasticaFructus nimia;
+
+    CREDO_NECESSE (nuda.successus && nulla.successus);
+    CREDO_NECESSE (tria.successus && manu.successus);
+    CREDO_VERUM (_statuae_eaedem(nuda.statua, nulla.statua));
+    CREDO_VERUM (_statuae_eaedem(tria.statua, manu.statua));
+    CREDO_FALSUM (_statuae_eaedem(nuda.statua, tria.statua));
+    /* partes (tituli) non mutantur */
+    CREDO_VERUM (chorda_aequalis(tria.partes[ZEPHYRUM],
+        nuda.partes[ZEPHYRUM]));
+    /* semen extra fines: recusatur */
+    nimia = plastica_legere_seminis(
+        chorda_ex_literis(scripta, c->piscina), M * M + I,
+        c->piscina);
+    CREDO_FALSUM (nimia.successus);
+    CREDO_VERUM (nimia.statua == NIHIL);
+    CREDO_VERUM (nimia.error.mensura > ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (nimia.linea, ZEPHYRUM);
+    /* descriptio recusata cum semine: linea ut semper */
+    nimia = plastica_legere_seminis(chorda_ex_literis(
+        "<res titulus=\"a\">\n<globus/>\n</res>", c->piscina), III,
+        c->piscina);
+    CREDO_FALSUM (nimia.successus);
+    CREDO_AEQUALIS_I32 (nimia.linea, II);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "capsa", _sectio_capsa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordinaria", _sectio_ordinaria, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1518,6 +1609,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "sparsio", _sectio_sparsio, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusationes_solidorum", _sectio_recusationes_solidorum,
       NIHIL, NIHIL, NIHIL, NIHIL },
+    { "semen_additum", _sectio_semen_additum, NIHIL, NIHIL, NIHIL,
+      NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

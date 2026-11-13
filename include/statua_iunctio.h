@@ -11,7 +11,7 @@
  * basis eosdem nodos movet. Nihil additum: statua basi par.
  *
  * ADDENDA quaeque sub nodo radicali NOVO pendet qui locum et gyrum
- * eius fert (parens -1, sine reti, sine signis, scala I). Nodi eius
+  * eius et scalam fert (parens -1, sine reti, sine signis). Nodi eius
  * sequuntur, indicibus retium, materiarum et texturarum motis. Signa
  * nodorum manent. Gyrus: gradus circa axem erectum, sensu eodem quo
  * 'gyrus' descriptionis plasticae.
@@ -44,6 +44,9 @@ nomen structura {
        constans Statua* statua;
     StereometriaVector  locus;    /* ubi origo eius stat */
                    f32  gyrus;    /* gradus circa axem erectum */
+                   f32  scala;    /* maior quam 0; I = magnitudo
+                                   * propria. Res tota circa originem
+                                   * suam crescit */
 } StatuaIungenda;
 
 /*
@@ -56,7 +59,8 @@ nomen structura {
  *
  * Redde: statua nova finita (statua_finire); NIHIL si basis aut
  * piscina NIHIL, addendae NIHIL cum numero non 0, statua addenda
- * NIHIL, locus aut gyrus non finitus, memoria deficit aut
+ * NIHIL, locus, gyrus aut scala non finita, scala non positiva,
+ * memoria deficit aut
  * statua_finire recusat
  */
 Statua*

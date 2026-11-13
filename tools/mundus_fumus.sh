@@ -131,6 +131,72 @@ contine "summa cum recusatis" "$T/out" "^mundus: 1 additae, 0 mutatae, 0 eaedem,
 [ "$(loci)" = "pratum,nudus," ] || { echo "FRACTA: loci post recusationes: $(loci)"; fracta=$((fracta + 1)); }
 [ "$("$S" enumerare -volumen "$V" -loci | head -1 | cut -f2)" = "$SIG" ] || { echo "FRACTA: dispositio recusata locum mutavit"; fracta=$((fracta + 1)); }
 
+# magnitudo, semen et sparsio (plastica II T2)
+E="$T/loci_varia"
+mkdir -p "$E"
+cat > "$E/a.stml" <<XX
+<locus titulus="varia" basis="$F/planum.glb">
+  <res fons="plastica/res/saxum_parvum.stml" locus="27 29"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="29 31" magnitudo="2"/>
+</locus>
+XX
+proba "condere scalam" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
+contine "duae res eiusdem fontis" "$T/out" "^addita    varia   2 res, "
+VERT1="$(sed -n 's/^addita    varia   2 res, \([0-9]*\) vertices.*/\1/p' "$T/out")"
+CELL1="$(sed -n 's/.*cellae gressibiles 60626 -> \([0-9]*\)$/\1/p' "$T/out")"
+# semen aliud: statua alia, vertices plures
+cat > "$E/a.stml" <<XX
+<locus titulus="varia" basis="$F/planum.glb">
+  <res fons="plastica/res/saxum_parvum.stml" locus="27 29"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="29 31" magnitudo="2" semen="4"/>
+</locus>
+XX
+proba "condere semen" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
+contine "semen locum mutat" "$T/out" "^mutata    varia   2 res, "
+VERT2="$(sed -n 's/^mutata    varia   2 res, \([0-9]*\) vertices.*/\1/p' "$T/out")"
+[ "${VERT2:-0}" -gt "${VERT1:-999999999}" ] || { echo "FRACTA: semen aliud statuam aliam non dedit ($VERT1 -> $VERT2)"; fracta=$((fracta + 1)); }
+# semen V contra IV: saxum aliud, octeti alii
+sed -i '' 's/semen="4"/semen="5"/' "$E/a.stml"
+proba "condere semen aliud" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
+contine "semen aliud rem aliam dat" "$T/out" "^mutata    varia   2 res, "
+# scala II plures cellas claudit quam scala I
+cat > "$E/a.stml" <<XX
+<locus titulus="varia" basis="$F/planum.glb">
+  <res fons="plastica/res/saxum_parvum.stml" locus="27 29"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="29 31"/>
+</locus>
+XX
+proba "condere sine scala" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
+CELL0="$(sed -n 's/.*cellae gressibiles 60626 -> \([0-9]*\)$/\1/p' "$T/out")"
+[ "${CELL1:-999999}" -lt "${CELL0:-0}" ] || { echo "FRACTA: scala II non plures cellas clausit ($CELL0 / $CELL1)"; fracta=$((fracta + 1)); }
+# sparsio: XII frutices, tres varietates; determinata
+cat > "$E/a.stml" <<XX
+<locus titulus="varia" basis="$F/planum.glb">
+  <res fons="plastica/res/puteus.stml" locus="27 29"/>
+  <sparsio fons="plastica/res/frutex.stml" numerus="12" semen="5"
+           area="14 28 44 36" distantia="2" magnitudo_varia="0.2"
+           gyrus_varius="verum" varietates="3"/>
+</locus>
+XX
+proba "condere sparsionem" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
+contine "sparsio XIII res dat" "$T/out" "^mutata    varia   13 res, "
+proba "condere sparsionem iterum" 0 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
+contine "sparsio determinata" "$T/out" "^eadem     varia   13 res, "
+proba "mappa sparsionis" 0 "$B" mappa "$E/a.stml" -o "$T/sp.png"
+[ "$(grep -c 'plastica/res/frutex.stml  (.*)  linea 3$' "$T/out")" -eq 12 ] || { echo "FRACTA: legenda sparsionis: $(grep -c 'frutex' "$T/out") lineae"; fracta=$((fracta + 1)); }
+contine "res scripta prima" "$T/out" "^ *1  plastica/res/puteus.stml  (27.00, 29.00)  linea 2$"
+# sparsio quae non capit: recusatur cum linea et numero positarum
+cat > "$E/a.stml" <<XX
+<locus titulus="varia" basis="$F/planum.glb">
+  <sparsio fons="plastica/res/frutex.stml" numerus="50"
+           area="26 28 29 31" distantia="2"/>
+</locus>
+XX
+SIGV="$("$S" enumerare -volumen "$T/varia.volumen" -loci | cut -f2)"
+proba "sparsio nimia recusatur" 1 "$B" condere -volumen "$T/varia.volumen" -loci "$E"
+contine "sparsio nimia cum linea" "$T/err" "^$E/a.stml:2: only [0-9]* of 50 copies could be placed"
+[ "$("$S" enumerare -volumen "$T/varia.volumen" -loci | cut -f2)" = "$SIGV" ] || { echo "FRACTA: sparsio recusata locum mutavit"; fracta=$((fracta + 1)); }
+
 # specimen
 proba "specimen putei" 0 "$B" specimen plastica/res/puteus.stml -o "$T/s.png"
 file "$T/s.png" 2>/dev/null | grep -q "960 x 360" || { echo "FRACTA: specimen: PNG 960 x 360 abest"; fracta=$((fracta + 1)); }

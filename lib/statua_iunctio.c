@@ -153,7 +153,9 @@ statua_coniungere (
         si (   !addendae[n].statua || !_finitus(addendae[n].locus.x)
             || !_finitus(addendae[n].locus.y)
             || !_finitus(addendae[n].locus.z)
-            || !_finitus(addendae[n].gyrus))
+            || !_finitus(addendae[n].gyrus)
+            || !_finitus(addendae[n].scala)
+            || !(addendae[n].scala > 0.0f))
         {
             redde NIHIL;
         }
@@ -292,7 +294,8 @@ statua_coniungere (
         radix->rotatio.y   = (f32)sin((f64)dimidium);
         radix->rotatio.z   = 0.0f;
         radix->rotatio.w   = (f32)cos((f64)dimidium);
-        radix->scala       = stereometria_vector(1.0f, 1.0f, 1.0f);
+        radix->scala = stereometria_vector(addendae[n].scala,
+            addendae[n].scala, addendae[n].scala);
         per (k = ZEPHYRUM; k < a->nodorum; k++)
         {
             StatuaNodus* novus = &s->nodi[nodus + I + k];
