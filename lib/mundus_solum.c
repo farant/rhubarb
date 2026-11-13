@@ -583,3 +583,78 @@ mundus_solum_initium (
     }
     redde inventum;
 }
+
+/* cellae vicinae: IV directiones (x, z) */
+hic_manens constans s32 VICINI[VIII] = {
+    1, 0, -1, 0, 0, 1, 0, -1
+};
+
+i32
+mundus_solum_attingere (
+    constans MundusSolum* s,
+                     f32  x,
+                     f32  z,
+                     f32  radius,
+                      i8* visa,
+                 Piscina* piscina)
+{
+    memoriae_index  cellae;
+               s32* acervus;
+               i32  attactae  = ZEPHYRUM;
+               i32  n         = ZEPHYRUM;
+               s32  cella_x;
+               s32  cella_z;
+               s32  d;
+
+    si (!s || !visa || !s->genera)
+    {
+        redde ZEPHYRUM;
+    }
+    cellae = (memoriae_index)s->latitudo * s->altitudo;
+    memset(visa, ZEPHYRUM, cellae);
+    cella_x = _cella(x, s->origo_x);
+    cella_z = _cella(z, s->origo_z);
+    si (   !piscina || !_intra(s, cella_x, cella_z)
+        || !mundus_solum_stare(s, x, z, radius))
+    {
+        redde ZEPHYRUM;
+    }
+    acervus = (s32*)piscina_allocare(piscina,
+        cellae * II * magnitudo(s32));
+    si (!acervus)
+    {
+        redde ZEPHYRUM;
+    }
+    visa[_index(s, cella_x, cella_z)]  = I;
+    acervus[n++]                       = cella_x;
+    acervus[n++]                       = cella_z;
+    dum (n > ZEPHYRUM)
+    {
+        f32 punctum_x;
+        f32 punctum_z;
+
+        cella_z    = acervus[--n];
+        cella_x    = acervus[--n];
+        punctum_x  = _centrum(cella_x, s->origo_x);
+        punctum_z  = _centrum(cella_z, s->origo_z);
+        attactae++;
+        per (d = ZEPHYRUM; d < IV; d++)
+        {
+            s32 vicina_x = cella_x + VICINI[d * II];
+            s32 vicina_z = cella_z + VICINI[d * II + I];
+
+            si (   !_intra(s, vicina_x, vicina_z)
+                || visa[_index(s, vicina_x, vicina_z)]
+                || !mundus_solum_licet(s, punctum_x, punctum_z,
+                       _centrum(vicina_x, s->origo_x),
+                       _centrum(vicina_z, s->origo_z), radius))
+            {
+                perge;
+            }
+            visa[_index(s, vicina_x, vicina_z)]  = I;
+            acervus[n++]                         = vicina_x;
+            acervus[n++]                         = vicina_z;
+        }
+    }
+    redde attactae;
+}

@@ -8,6 +8,9 @@
  *
  *   mundus condere -volumen V [-loci DIR]
  *   mundus specimen <res.stml> -o <via.png> [-locus "x z"] [-gyrus G]
+ *   mundus mappa <dispositio.stml> -o <via.png> [-nudus]
+ *   mundus quadrum <dispositio.stml> -o <via.png> -locus "x z"
+ *          [-locus "x z" ...]
  *
  * condere: omnem dispositionem *.stml in DIR (ordinarium apps/mundus/
  * loci), ordine nominum: locum nudum (GLB, attributum basis) legit,
@@ -37,6 +40,20 @@
  * personae imprimuntur (fumus ea inspicit). Locus ordinarius:
  * initium loci (ubi persona incipit). Res ibi stare non potest:
  * causa nominatur, exitus 1.
+ *
+ * mappa: dispositionem struit et tabulam gressus eius pingit
+ * (mundus_mappa.h): solum altitudine coloratum, aqua, solidum, cellae
+ * quas persona ab initio non attingit roseae, reticulum cum numeris,
+ * res quaeque puncto et numero notata. Imprimit cellas gressibiles,
+ * attactas per stratum (imum infra III, medium, summum supra VII) et
+ * legendam: numerus, fons, locus, linea dispositionis. -nudus: locus
+ * nudus sine rebus. Numeri iidem sunt quos probatio 'pratum' figit.
+ *
+ * quadrum: dispositionem struit et per -locus quadrum unum pingit,
+ * persona ibi stante, ut latus $world (humus Atkinson); quadra terna
+ * in ordine. Ubi persona stare non potest causa nominatur et tabella
+ * vacua manet; si nusquam stare potest, exitus 1 et nihil scribitur.
+ * Maximum XII loca.
  *
  * -volumen SEMPER nominandum; volumen absens creatur.
  *
@@ -68,6 +85,7 @@
 #include "mundus.h"
 #include "mundus_pictura.h"
 #include "mundus_locus.h"
+#include "mundus_mappa.h"
 #include "provenientia.h"
 #include <math.h>
 #include <stdio.h>
@@ -83,6 +101,11 @@
 #define QUADRI_ALTITUDO    360
 #define CHARTA_PALETTAE    V       /* Albus */
 #define DIRECTIONES        XVI
+#define LOCA_MAXIMA        XII
+#define QUADRA_PER_ORDINEM III
+/* strata loci: altitudo supra quam cella media, deinde summa est */
+#define STRATUM_MEDIUM     3.0f
+#define STRATUM_SUMMUM     7.0f
 
 interior s32
 usum_imprimere (vacuum)
@@ -90,7 +113,10 @@ usum_imprimere (vacuum)
     fprintf(stderr,
         "usus: mundus condere -volumen V [-loci DIR]\n"
         "      mundus specimen <res.stml> -o <via.png>"
-        " [-locus \"x z\"] [-gyrus G]\n");
+        " [-locus \"x z\"] [-gyrus G]\n"
+        "      mundus mappa <dispositio.stml> -o <via.png> [-nudus]\n"
+        "      mundus quadrum <dispositio.stml> -o <via.png>"
+        " -locus \"x z\" [-locus \"x z\" ...]\n");
     redde II;
 }
 
@@ -325,6 +351,67 @@ res_componere (
     redde VERUM;
 }
 
+/* dispositionem legere; FALSUM (causa nuntiata) si recusata */
+interior b32
+dispositionem_legere (
+    constans character* via,
+    MundusLocusFructus* d,
+               Piscina* piscina)
+{
+    chorda vacua;
+    chorda textus = filum_legere_totum(via, piscina);
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    si (textus.mensura == ZEPHYRUM)
+    {
+        recusatam_nuntiare(via, "plagula legi non potest", vacua);
+        redde FALSUM;
+    }
+    *d = mundus_locus_legere(textus, piscina);
+    si (!d->successus)
+    {
+        fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)d->linea,
+            (integer)d->error.mensura,
+            (constans character*)d->error.datum);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* locum nudum legere, res componere et locum instruere; FALSUM
+ * (causa nuntiata) si quid recusatum */
+interior b32
+locum_instruere (
+          constans character*  via,
+ constans MundusLocusFructus*  d,
+                      Statua** basis,
+       MundusLocusInstructus*  instructus,
+                     Piscina*  piscina)
+{
+    constans Statua** statuae;
+
+    *basis   = basim_legere(via, literae(d->basis, piscina), piscina);
+    statuae  = (constans Statua**)piscina_allocare(piscina,
+        (d->numerus + I) * magnitudo(Statua*));
+    si (   !*basis || !statuae
+        || !res_componere(via, d, statuae, piscina))
+    {
+        redde FALSUM;
+    }
+    *instructus = mundus_locus_struere(*basis, d->res, statuae,
+        d->numerus, piscina);
+    si (!instructus->successus)
+    {
+        fprintf(stderr, "%s:%u: %.*s\n", via,
+            (insignatus)instructus->linea,
+            (integer)instructus->error.mensura,
+            (constans character*)instructus->error.datum);
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
 /* dispositionem unam struere et in volumen addere; titulus in
  * *titulus (vacuus si legi non potuit). FALSUM = recusata */
 interior b32
@@ -337,38 +424,26 @@ locum_condere (
                  Summa* summa,
                Piscina* piscina)
 {
-       MundusLocusFructus   d;
-    MundusLocusInstructus   instructus;
-            StatuaFructus   relecta;
-        StatuaeInscriptio*  prior;
-        StatuaeInscriptio*  nova;
-          constans Statua** statuae;
-                   Statua*  basis;
-                   chorda   vacua;
-                   chorda   textus;
-                   chorda   octeti;
-                   chorda   sigillum;
-       constans character*  status;
-                      i32   ante;
-                      i32   post;
-                      s32   k;
+       MundusLocusFructus  d;
+    MundusLocusInstructus  instructus;
+            StatuaFructus  relecta;
+        StatuaeInscriptio* prior;
+        StatuaeInscriptio* nova;
+                   Statua* basis;
+                   chorda  vacua;
+                   chorda  octeti;
+                   chorda  sigillum;
+       constans character* status;
+                      i32  ante;
+                      i32  post;
+                      s32  k;
 
     vacua.datum       = NIHIL;
     vacua.mensura     = ZEPHYRUM;
     titulus->datum    = NIHIL;
     titulus->mensura  = ZEPHYRUM;
-    textus            = filum_legere_totum(via, piscina);
-    si (textus.mensura == ZEPHYRUM)
+    si (!dispositionem_legere(via, &d, piscina))
     {
-        recusatam_nuntiare(via, "plagula legi non potest", vacua);
-        redde FALSUM;
-    }
-    d = mundus_locus_legere(textus, piscina);
-    si (!d.successus)
-    {
-        fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)d.linea,
-            (integer)d.error.mensura,
-            (constans character*)d.error.datum);
         redde FALSUM;
     }
     *titulus = d.titulus;
@@ -396,22 +471,8 @@ locum_condere (
             " volumine est", *titulus);
         redde FALSUM;
     }
-    basis    = basim_legere(via, literae(d.basis, piscina), piscina);
-    statuae  = (constans Statua**)piscina_allocare(piscina,
-        (d.numerus + I) * magnitudo(Statua*));
-    si (   !basis || !statuae
-        || !res_componere(via, &d, statuae, piscina))
+    si (!locum_instruere(via, &d, &basis, &instructus, piscina))
     {
-        redde FALSUM;
-    }
-    instructus = mundus_locus_struere(basis, d.res, statuae,
-        d.numerus, piscina);
-    si (!instructus.successus)
-    {
-        fprintf(stderr, "%s:%u: %.*s\n", via,
-            (insignatus)instructus.linea,
-            (integer)instructus.error.mensura,
-            (constans character*)instructus.error.datum);
         redde FALSUM;
     }
     octeti = statua_glb_scribere(instructus.statua, NIHIL, piscina);
@@ -825,25 +886,314 @@ exsequi_specimen (
     redde ZEPHYRUM;
 }
 
+
+/* ==================================================
+ * mappa et quadrum
+ * ================================================== */
+
+interior s32
+exsequi_mappam (
+    constans character* via,
+    constans character* exitus,
+                   b32  nudus,
+               Piscina* piscina)
+{
+       MundusLocusFructus  d;
+    MundusLocusInstructus  instructus;
+          MundusMappaNota* notae;
+              MundusSolum* nudum;
+              MundusSolum* solum;
+               PngFructus  png;
+                    Imago  imago;
+                   Statua* basis;
+                       i8* visa;
+           memoriae_index  cellae;
+           memoriae_index  k;
+                      f32  x = 0.0f;
+                      f32  z = 0.0f;
+                      i32  attactae;
+                      i32  strata[III];
+                      i32  n;
+
+    si (!dispositionem_legere(via, &d, piscina))
+    {
+        redde I;
+    }
+    si (nudus)
+    {
+        basis = basim_legere(via, literae(d.basis, piscina), piscina);
+        si (!basis)
+        {
+            redde I;
+        }
+        d.numerus = ZEPHYRUM;
+    }
+    alioquin si (!locum_instruere(via, &d, &basis, &instructus,
+                 piscina))
+    {
+        redde I;
+    }
+    nudum  = mundus_solum_struere(basis, piscina);
+    solum  = nudus ? nudum
+        : mundus_solum_struere(instructus.statua, piscina);
+    si (!nudum || !solum || solum->latitudo == ZEPHYRUM)
+    {
+        fprintf(stderr, "%s: locus tabulam gressus non habet\n", via);
+        redde I;
+    }
+    cellae  = (memoriae_index)solum->latitudo * solum->altitudo;
+    visa    = (i8*)piscina_allocare(piscina, cellae);
+    notae   = (MundusMappaNota*)piscina_allocare(piscina,
+        (d.numerus + I) * magnitudo(MundusMappaNota));
+    si (!visa || !notae)
+    {
+        fprintf(stderr, "mundus: memoria deficit\n");
+        redde I;
+    }
+    memset(visa, ZEPHYRUM, cellae);
+    memset(strata, ZEPHYRUM, magnitudo(strata));
+    attactae = ZEPHYRUM;
+    si (mundus_solum_initium(solum, MUNDUS_CORPORIS_RADIUS, &x, &z))
+    {
+        attactae = mundus_solum_attingere(solum, x, z,
+            MUNDUS_CORPORIS_RADIUS, visa, piscina);
+    }
+    per (k = ZEPHYRUM; k < cellae; k++)
+    {
+        si (!visa[k])
+        {
+            perge;
+        }
+        si (solum->altitudines[k] > STRATUM_SUMMUM)
+        {
+            strata[II]++;
+        }
+        alioquin si (solum->altitudines[k] > STRATUM_MEDIUM)
+        {
+            strata[I]++;
+        }
+        alioquin
+        {
+            strata[ZEPHYRUM]++;
+        }
+    }
+    per (n = ZEPHYRUM; n < d.numerus; n++)
+    {
+        notae[n].x        = d.res[n].x;
+        notae[n].z        = d.res[n].z;
+        notae[n].numerus  = n + I;
+    }
+    si (!mundus_mappa_pingere(solum, visa, notae, d.numerus, &imago,
+        piscina))
+    {
+        fprintf(stderr, "mundus: mappa pingi non potuit\n");
+        redde I;
+    }
+    png = imago_png_scribere(&imago, exitus, piscina);
+    si (!png.successus)
+    {
+        fprintf(stderr, "mundus: PNG scribi non potest: %s\n", exitus);
+        redde I;
+    }
+    si (nudus)
+    {
+        imprimere("%s: locus nudus, cellae gressibiles %u\n", via,
+            (insignatus)cellae_gressibiles(nudum));
+    }
+    alioquin
+    {
+        imprimere("%s: %u res, cellae gressibiles %u (nudae %u)\n",
+            via, (insignatus)d.numerus,
+            (insignatus)cellae_gressibiles(solum),
+            (insignatus)cellae_gressibiles(nudum));
+    }
+    imprimere("attingibiles ab initio (%.2f, %.2f): %u (imae %u,"
+        " mediae %u, summae %u)\n", (f64)x, (f64)z,
+        (insignatus)attactae, (insignatus)strata[ZEPHYRUM],
+        (insignatus)strata[I], (insignatus)strata[II]);
+    per (n = ZEPHYRUM; n < d.numerus; n++)
+    {
+        imprimere("%4u  %.*s  (%.2f, %.2f)  linea %u\n",
+            (insignatus)(n + I), (integer)d.res[n].fons.mensura,
+            (constans character*)d.res[n].fons.datum,
+            (f64)d.res[n].x, (f64)d.res[n].z,
+            (insignatus)d.res[n].linea);
+    }
+    imprimere("%s: %u x %u\n", exitus, (insignatus)imago.latitudo,
+        (insignatus)imago.altitudo);
+    redde ZEPHYRUM;
+}
+
+interior s32
+exsequi_quadra (
+     constans character*  via,
+     constans character*  exitus,
+     constans character** loca,
+                    i32   locorum,
+                Piscina*  piscina)
+{
+       MundusLocusFructus  d;
+    MundusLocusInstructus  instructus;
+            StatuaFructus  persona;
+              MundusHumus* humus;
+                   Mundus  mundus;
+             MundusCorpus  corpus;
+              MundusForma  forma;
+               PngFructus  png;
+                    Imago  pagina;
+                   Statua* basis;
+                      b32  activi[XVI];
+                       i8* indices;
+                       i8* nuda;
+           memoriae_index  pixela = (memoriae_index)QUADRI_LATITUDO
+               * QUADRI_ALTITUDO;
+           memoriae_index p;
+                      f32 x[LOCA_MAXIMA];
+                      f32 z[LOCA_MAXIMA];
+                      s32 origo_x  = ZEPHYRUM;
+                      s32 origo_y  = ZEPHYRUM;
+                      i32 picta    = ZEPHYRUM;
+                      i32 columnae;
+                      i32 k;
+                      i32 y;
+
+    per (k = ZEPHYRUM; k < locorum; k++)
+    {
+        si (!locum_legere(loca[k], &x[k], &z[k]))
+        {
+            redde usum_imprimere();
+        }
+    }
+    thema_initiare();
+    si (   !dispositionem_legere(via, &d, piscina)
+        || !locum_instruere(via, &d, &basis, &instructus, piscina))
+    {
+        redde I;
+    }
+    persona = statua_glb_legere(
+        filum_legere_totum(PERSONA_ORDINARIA, piscina), piscina);
+    dithering_praeparare_omnes(activi);
+    memset(&mundus, ZEPHYRUM, magnitudo(mundus));
+    memset(&corpus, ZEPHYRUM, magnitudo(corpus));
+    mundus.solum     = mundus_solum_struere(instructus.statua,
+        piscina);
+    mundus.corpora   = &corpus;
+    mundus.corporum  = I;
+    corpus.radius    = MUNDUS_CORPORIS_RADIUS;
+    humus            = mundus_humus_creare(instructus.statua, activi,
+        piscina);
+    columnae         = locorum < QUADRA_PER_ORDINEM ? locorum
+        : QUADRA_PER_ORDINEM;
+    pagina.latitudo  = QUADRI_LATITUDO * columnae;
+    pagina.altitudo  = QUADRI_ALTITUDO
+        * ((locorum + QUADRA_PER_ORDINEM - I) / QUADRA_PER_ORDINEM);
+    pagina.pixela    = (i8*)piscina_allocare(piscina,
+        (memoriae_index)pagina.latitudo * pagina.altitudo * IV);
+    indices  = (i8*)piscina_allocare(piscina, pixela);
+    nuda     = (i8*)piscina_allocare(piscina, pixela);
+    si (   !persona.successus || !mundus.solum || !humus
+        || !pagina.pixela || !indices || !nuda)
+    {
+        fprintf(stderr, "mundus: persona '%s', tabula gressus aut"
+            " memoria deficit\n", PERSONA_ORDINARIA);
+        redde I;
+    }
+    forma = mundus_forma(persona.statua, piscina);
+    memset(pagina.pixela, 0xFF,
+        (memoriae_index)pagina.latitudo * pagina.altitudo * IV);
+    per (k = ZEPHYRUM; k < locorum; k++)
+    {
+        i32 pixela_personae = ZEPHYRUM;
+
+        si (!mundus_corpus_ponere(&mundus, &corpus, x[k], z[k]))
+        {
+            fprintf(stderr, "quadrum %u: (%.2f, %.2f): persona ibi"
+                " stare non potest\n", (insignatus)(k + I),
+                (f64)x[k], (f64)z[k]);
+            perge;
+        }
+        si (   !mundus_quadrum_pingere(humus, &mundus, &forma, I,
+                   ZEPHYRUM, activi, CHARTA_PALETTAE, QUADRI_LATITUDO,
+                   QUADRI_ALTITUDO, indices, piscina)
+            || !mundus_quadri_origo(&mundus, ZEPHYRUM, QUADRI_LATITUDO,
+                   QUADRI_ALTITUDO, &origo_x, &origo_y)
+            || !mundus_humus_copiare(humus, origo_x, origo_y,
+                   QUADRI_LATITUDO, QUADRI_ALTITUDO, CHARTA_PALETTAE,
+                   nuda, NIHIL))
+        {
+            fprintf(stderr, "mundus: quadrum pingi non potuit\n");
+            redde I;
+        }
+        per (p = ZEPHYRUM; p < pixela; p++)
+        {
+            pixela_personae += (i32)(indices[p] != nuda[p]);
+        }
+        per (y = ZEPHYRUM; y < QUADRI_ALTITUDO; y++)
+        {
+            dithering_indices_ad_rgba(
+                indices + (memoriae_index)y * QUADRI_LATITUDO,
+                pagina.pixela
+                    + ((memoriae_index)((k / QUADRA_PER_ORDINEM)
+                            * QUADRI_ALTITUDO + y) * pagina.latitudo
+                        + (memoriae_index)(k % QUADRA_PER_ORDINEM)
+                            * QUADRI_LATITUDO) * IV,
+                QUADRI_LATITUDO, I);
+        }
+        imprimere("quadrum %u: (%.2f, %.2f) altitudo %.2f, persona %u"
+            " pixela\n", (insignatus)(k + I), (f64)x[k], (f64)z[k],
+            (f64)corpus.y, (insignatus)pixela_personae);
+        picta++;
+    }
+    si (!picta)
+    {
+        fprintf(stderr, "%s: persona in nullo loco dato stare"
+            " potest: nihil scriptum\n", via);
+        redde I;
+    }
+    png = imago_png_scribere(&pagina, exitus, piscina);
+    si (!png.successus)
+    {
+        fprintf(stderr, "mundus: PNG scribi non potest: %s\n", exitus);
+        redde I;
+    }
+    imprimere("%s: %u x %u\n", exitus, (insignatus)pagina.latitudo,
+        (insignatus)pagina.altitudo);
+    redde ZEPHYRUM;
+}
+
 externus constans ProvenientiaRelatio provenientia_mundus;
+
+nomen enumeratio {
+    IMPERIUM_CONDERE,
+    IMPERIUM_SPECIMEN,
+    IMPERIUM_MAPPA,
+    IMPERIUM_QUADRUM,
+    IMPERIA
+} Imperium;
 
 s32
 principale (
       integer   argc,
     character** argv)
 {
+    hic_manens constans character* constans IMPERIA_NOMINA[IMPERIA] = {
+        "condere", "specimen", "mappa", "quadrum"
+    };
     constans character* positivum  = NIHIL;
     constans character* volumen    = NIHIL;
     constans character* loci       = NIHIL;
     constans character* exitus     = NIHIL;
-    constans character* locus      = NIHIL;
     constans character* gyrus      = NIHIL;
+    constans character* loca[LOCA_MAXIMA];
                Piscina* piscina;
              character* finis;
-                   f64  gradus = 0.0;
-                   b32  condere;
+                   f64  gradus   = 0.0;
+                   b32  nudus    = FALSUM;
+                   b32  bene     = FALSUM;
+                   i32  locorum  = ZEPHYRUM;
+                   i32  imperium;
                integer  k;
-                   s32  r;
+                   s32  r        = I;
 
     si (provenientia_respondere((s32)argc, argv, &provenientia_mundus))
     {
@@ -853,8 +1203,14 @@ principale (
     {
         redde usum_imprimere();
     }
-    condere = strcmp(argv[I], "condere") == ZEPHYRUM;
-    si (!condere && strcmp(argv[I], "specimen") != ZEPHYRUM)
+    per (imperium = ZEPHYRUM; imperium < IMPERIA; imperium++)
+    {
+        si (strcmp(argv[I], IMPERIA_NOMINA[imperium]) == ZEPHYRUM)
+        {
+            frange;
+        }
+    }
+    si (imperium == IMPERIA)
     {
         redde usum_imprimere();
     }
@@ -862,6 +1218,24 @@ principale (
     {
         constans character** scopus = NIHIL;
 
+        si (strcmp(argv[k], "-nudus") == ZEPHYRUM)
+        {
+            si (nudus)
+            {
+                redde usum_imprimere();
+            }
+            nudus = VERUM;
+            perge;
+        }
+        si (strcmp(argv[k], "-locus") == ZEPHYRUM)
+        {
+            si (k + I >= argc || locorum >= LOCA_MAXIMA)
+            {
+                redde usum_imprimere();
+            }
+            loca[locorum++] = argv[++k];
+            perge;
+        }
         si (strcmp(argv[k], "-volumen") == ZEPHYRUM)
         {
             scopus = &volumen;
@@ -873,10 +1247,6 @@ principale (
         alioquin si (strcmp(argv[k], "-o") == ZEPHYRUM)
         {
             scopus = &exitus;
-        }
-        alioquin si (strcmp(argv[k], "-locus") == ZEPHYRUM)
-        {
-            scopus = &locus;
         }
         alioquin si (strcmp(argv[k], "-gyrus") == ZEPHYRUM)
         {
@@ -898,9 +1268,27 @@ principale (
         }
         positivum = argv[k];
     }
-    si (condere
-        ? (!volumen || positivum || exitus || locus || gyrus)
-        : (!positivum || !exitus || volumen || loci))
+    /* quae vexilla cuique imperio liceant */
+    commutatio (imperium)
+    {
+        casus IMPERIUM_CONDERE:
+            bene = volumen && !positivum && !exitus && !locorum
+                && !gyrus && !nudus;
+            frange;
+        casus IMPERIUM_SPECIMEN:
+            bene = positivum && exitus && !volumen && !loci
+                && locorum <= I && !nudus;
+            frange;
+        casus IMPERIUM_MAPPA:
+            bene = positivum && exitus && !volumen && !loci
+                && !locorum && !gyrus;
+            frange;
+        ordinarius:
+            bene = positivum && exitus && !volumen && !loci
+                && locorum >= I && !gyrus && !nudus;
+            frange;
+    }
+    si (!bene)
     {
         redde usum_imprimere();
     }
@@ -913,11 +1301,25 @@ principale (
         }
     }
     piscina = piscina_generare_dynamicum("mundus", M * M);
-    r = condere
-        ? exsequi_condere(volumen, loci ? loci : LOCI_ORDINARII,
-              piscina)
-        : exsequi_specimen(positivum, exitus, locus, (f32)gradus,
-              piscina);
+    commutatio (imperium)
+    {
+        casus IMPERIUM_CONDERE:
+            r = exsequi_condere(volumen, loci ? loci : LOCI_ORDINARII,
+                piscina);
+            frange;
+        casus IMPERIUM_SPECIMEN:
+            r = exsequi_specimen(positivum, exitus,
+                locorum ? loca[ZEPHYRUM] : NIHIL, (f32)gradus,
+                piscina);
+            frange;
+        casus IMPERIUM_MAPPA:
+            r = exsequi_mappam(positivum, exitus, nudus, piscina);
+            frange;
+        ordinarius:
+            r = exsequi_quadra(positivum, exitus, loca, locorum,
+                piscina);
+            frange;
+    }
     piscina_destruere(piscina);
     redde r;
 }

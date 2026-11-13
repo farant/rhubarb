@@ -397,13 +397,97 @@ _sectio_vacua (
     CREDO_NIHIL (mundus_solum_struere(NIHIL, c->piscina));
 }
 
+/* attingere: cellae quas corpus ambulando attingit */
+interior vacuum
+_sectio_attingere (
+    CredoContextus* c)
+{
+             Quadratum  q[III];
+           MundusSolum* s;
+                    i8* visa;
+                    i8* altera;
+                   i32  attactae;
+                   i32  numerus = ZEPHYRUM;
+                   i32  k;
+
+    /* insula I: IV x IV; insula II: II x IV, hiatu II separata;
+     * suggestus altus (y 3) insulae I adiunctus, sine gradu */
+    q[ZEPHYRUM]  = _quadratum(0.0f, 4.0f, 0.0f, 4.0f, 0.0f,
+        0.0f, GRESSIBILE);
+    q[I]         = _quadratum(6.0f, 8.0f, 0.0f, 4.0f, 0.0f,
+        0.0f, GRESSIBILE);
+    q[II]        = _quadratum(0.0f, 4.0f, 4.0f, 6.0f, 3.0f,
+        3.0f, GRESSIBILE);
+    s = mundus_solum_struere(_statuam_struere(c, q, III), c->piscina);
+    CREDO_NECESSE (s != NIHIL);
+    visa    = (i8*)_locus(c,
+        (memoriae_index)s->latitudo * s->altitudo);
+    altera  = (i8*)_locus(c,
+        (memoriae_index)s->latitudo * s->altitudo);
+    memset(visa, VII, (memoriae_index)s->latitudo * s->altitudo);
+    /* radius 0: insula I tota (XVI x XVI cellae), nihil aliud */
+    attactae = mundus_solum_attingere(s, 2.0f, 2.0f, 0.0f, visa,
+        c->piscina);
+    CREDO_AEQUALIS_I32 (attactae, CCLVI);
+    per (k = ZEPHYRUM; k < s->latitudo * s->altitudo; k++)
+    {
+        CREDO_VERUM (visa[k] == ZEPHYRUM || visa[k] == I);
+        numerus += (i32)visa[k];
+    }
+    CREDO_AEQUALIS_I32 (numerus, attactae);
+    /* cella (0, 0) attacta; insula II et suggestus non */
+    CREDO_AEQUALIS_I32 (visa[ZEPHYRUM], I);
+    CREDO_AEQUALIS_I32 (visa[II * s->latitudo + XXVI], ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (visa[XVIII * s->latitudo + IV], ZEPHYRUM);
+    /* ab insula II: VIII x XVI cellae */
+    CREDO_AEQUALIS_I32 (mundus_solum_attingere(s, 7.0f, 2.0f, 0.0f,
+        altera, c->piscina), CXXVIII);
+    CREDO_AEQUALIS_I32 (altera[ZEPHYRUM], ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (altera[II * s->latitudo + XXVI], I);
+    /* radius dimidius: margo insulae (II cellae utrimque) non
+     * attingitur: XII x XII */
+    CREDO_AEQUALIS_I32 (mundus_solum_attingere(s, 2.0f, 2.0f, 0.5f,
+        visa, c->piscina), CXLIV);
+    CREDO_AEQUALIS_I32 (visa[ZEPHYRUM], ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (visa[VIII * s->latitudo + VIII], I);
+    /* initium ubi stare non licet (hiatus; extra tabulam): 0, visa
+     * tota 0 */
+    memset(visa, VII, (memoriae_index)s->latitudo * s->altitudo);
+    CREDO_AEQUALIS_I32 (mundus_solum_attingere(s, 5.0f, 2.0f, 0.0f,
+        visa, c->piscina), ZEPHYRUM);
+    numerus = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < s->latitudo * s->altitudo; k++)
+    {
+        numerus += (i32)visa[k];
+    }
+    CREDO_AEQUALIS_I32 (numerus, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (mundus_solum_attingere(s, -50.0f, 2.0f, 0.0f,
+        visa, c->piscina), ZEPHYRUM);
+    /* argumenta NIHIL */
+    CREDO_AEQUALIS_I32 (mundus_solum_attingere(NIHIL, 2.0f, 2.0f,
+        0.0f, visa, c->piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (mundus_solum_attingere(s, 2.0f, 2.0f, 0.0f,
+        NIHIL, c->piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (mundus_solum_attingere(s, 2.0f, 2.0f, 0.0f,
+        visa, NIHIL), ZEPHYRUM);
+    /* locus fictus totus: scalae et clivus suggestum superiorem
+     * iungunt */
+    s = _locum_struere(c);
+    CREDO_NECESSE (s != NIHIL);
+    visa = (i8*)_locus(c,
+        (memoriae_index)s->latitudo * s->altitudo);
+    CREDO_VERUM (mundus_solum_attingere(s, 2.0f, 10.0f, 0.5f, visa,
+        c->piscina) > D);
+    /* suggestus superior (10, 4) attactus; aqua (2, 2) non */
+    CREDO_AEQUALIS_I32 (visa[XVI * s->latitudo + XL], I);
+    CREDO_AEQUALIS_I32 (visa[VIII * s->latitudo + VIII], ZEPHYRUM);
+}
+
 /* locus verus: numeri fixi tabulae et ambulatio per scalas */
 #define PLANI_GRESSIBILES  60626
 #define PLANI_AQUAE        3424
 #define PLANI_SOLIDAE      1486
 #define PLANI_ATTINGIBILES 42881
-
-hic_manens constans s32 VICINI[VIII] = { 1, 0, -1, 0, 0, 1, 0, -1 };
 
 interior vacuum
 _sectio_planum (
@@ -412,23 +496,14 @@ _sectio_planum (
     StatuaFructus  f;
       MundusSolum* s;
                i8* visa;
-              s32* acervus;
               i32  numeri[IV];
-              i32  attingibiles  = ZEPHYRUM;
-              i32  summae        = ZEPHYRUM;
-              i32  mediae        = ZEPHYRUM;
-              i32  n             = ZEPHYRUM;
+              i32  attingibiles;
+              i32  summae = ZEPHYRUM;
+              i32  mediae = ZEPHYRUM;
               i32  k;
-              s32  cella_x;
-              s32  cella_z;
-              s32  d;
               f32  x = 0.0f;
               f32  z = 0.0f;
-              f32  punctum_x;
-              f32  punctum_z;
-              f32  cella;
 
-    cella = 1.0f / (f32)MUNDUS_CELLAE_PER_UNITATEM;
     f = statua_glb_legere(filum_legere_totum(VIA_PLANI, c->piscina),
         c->piscina);
     CREDO_NECESSE (f.successus);
@@ -441,57 +516,28 @@ _sectio_planum (
     {
         numeri[s->genera[k]]++;
     }
-    /* ambulatio corporis radii dimidii ab initio per cellas vicinas:
-     * quot cellae attinguntur, et attingitur stratum summum? */
+    /* ambulatio corporis radii dimidii ab initio per cellas vicinas
+     * (mundus_solum_attingere): quot cellae attinguntur, et
+     * attingitur stratum summum? */
     CREDO_NECESSE (mundus_solum_initium(s, 0.5f, &x, &z));
-    visa     = (i8*)piscina_allocare(c->piscina,
+    visa = (i8*)piscina_allocare(c->piscina,
         (memoriae_index)s->latitudo * s->altitudo);
-    acervus  = (s32*)piscina_allocare(c->piscina,
-        (memoriae_index)s->latitudo * s->altitudo * II
-            * magnitudo(s32));
-    memset(visa, ZEPHYRUM, (memoriae_index)s->latitudo * s->altitudo);
-    cella_x = (s32)((x - s->origo_x) / cella);
-    cella_z = (s32)((z - s->origo_z) / cella);
-    visa[(i32)cella_z * s->latitudo + (i32)cella_x] = I;
-    acervus[n++] = cella_x;
-    acervus[n++] = cella_z;
-    dum (n > ZEPHYRUM)
+    CREDO_NECESSE (visa != NIHIL);
+    attingibiles = mundus_solum_attingere(s, x, z, 0.5f, visa,
+        c->piscina);
+    per (k = ZEPHYRUM; k < s->latitudo * s->altitudo; k++)
     {
-        cella_z = acervus[--n];
-        cella_x = acervus[--n];
-        attingibiles++;
-        punctum_x = s->origo_x + ((f32)cella_x + 0.5f) * cella;
-        punctum_z = s->origo_z + ((f32)cella_z + 0.5f) * cella;
-        si (s->altitudines[(i32)cella_z * s->latitudo + (i32)cella_x]
-            > 7.0f)
+        si (!visa[k])
+        {
+            perge;
+        }
+        si (s->altitudines[k] > 7.0f)
         {
             summae++;
         }
-        alioquin si (s->altitudines[(i32)cella_z * s->latitudo
-                     + (i32)cella_x]
-                     > 3.0f)
+        alioquin si (s->altitudines[k] > 3.0f)
         {
             mediae++;
-        }
-        per (d = ZEPHYRUM; d < IV; d++)
-        {
-            s32 vicina_x = cella_x + VICINI[d * II];
-            s32 vicina_z = cella_z + VICINI[d * II + I];
-
-            si (   vicina_x < ZEPHYRUM || vicina_z < ZEPHYRUM
-                || vicina_x >= (s32)s->latitudo
-                || vicina_z >= (s32)s->altitudo
-                || visa[(i32)vicina_z * s->latitudo + (i32)vicina_x]
-                || !mundus_solum_licet(s, punctum_x, punctum_z,
-                       punctum_x + (f32)VICINI[d * II] * cella,
-                       punctum_z + (f32)VICINI[d * II + I] * cella,
-                       0.5f))
-            {
-                perge;
-            }
-            visa[(i32)vicina_z * s->latitudo + (i32)vicina_x] = I;
-            acervus[n++] = vicina_x;
-            acervus[n++] = vicina_z;
         }
     }
     si (   numeri[MUNDUS_SOLUM_GRESSIBILE] != PLANI_GRESSIBILES
@@ -526,7 +572,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "radius", _sectio_radius, NIHIL, NIHIL, NIHIL, NIHIL },
     { "initium", _sectio_initium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacua", _sectio_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
-    { "planum", _sectio_planum, NIHIL, NIHIL, NIHIL, NIHIL },
+        { "attingere", _sectio_attingere, NIHIL, NIHIL, NIHIL, NIHIL },
+{ "planum", _sectio_planum, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

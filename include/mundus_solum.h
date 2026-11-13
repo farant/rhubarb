@@ -137,4 +137,28 @@ mundus_solum_initium (
                      f32* x,
                      f32* z);
 
+/*
+ * mundus_solum_attingere - cellae quas corpus ab (x, z) ambulando
+ * attingit
+ *
+ * Per cellas vicinas (IV directiones) it, quaque transitione inter
+ * centra cellarum per mundus_solum_licet probata. visa[cella] = I
+ * ubi attingitur, 0 aliter (ordo idem ac genera).
+ *
+ * @visa:    latitudo * altitudo octeti, a vocante praebiti
+ * @piscina: memoria laboris (acervus cellarum)
+ *
+ * Redde: numerus cellarum attactarum; 0 si corpus in (x, z) stare
+ * non potest, argumenta NIHIL aut memoria deficit (visa tunc tota 0,
+ * nisi ipsa NIHIL)
+ */
+i32
+mundus_solum_attingere (
+    constans MundusSolum* s,
+                     f32  x,
+                     f32  z,
+                     f32  radius,
+                      i8* visa,
+                 Piscina* piscina);
+
 #endif /* MUNDUS_SOLUM_H */

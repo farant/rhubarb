@@ -160,5 +160,115 @@ proba "specimen rei fractae" 1 "$B" specimen "$D/e_fracta.stml" -o "$T/u.png"
 proba "specimen rei absentis" 1 "$B" specimen "$T/nulla.stml" -o "$T/u.png"
 proba "provenientia" 0 "$B" -provenientia
 
+# pixelum <png> <x> <y>: "r g b" pixeli (lector PNG parvus: VIII bit,
+# RGB aut RGBA, sine intertextura); alba <png> <x0> <y0> <x1> <y1>:
+# numerus pixelorum NON alborum in rectangulo
+cat > "$T/pixelum.py" <<'XX'
+import sys, zlib, struct
+def lege(via):
+    d = open(via, 'rb').read()
+    assert d[:8] == b'\x89PNG\r\n\x1a\n'
+    p = 8; idat = b''; w = h = n = 0
+    while p < len(d):
+        m, t = struct.unpack('>I4s', d[p:p+8]); c = d[p+8:p+8+m]; p += 12 + m
+        if t == b'IHDR':
+            w, h, bits, genus, _, _, inter = struct.unpack('>IIBBBBB', c)
+            assert bits == 8 and inter == 0 and genus in (2, 6)
+            n = 4 if genus == 6 else 3
+        elif t == b'IDAT':
+            idat += c
+    r = zlib.decompress(idat); s = w * n; prior = bytearray(s); lineae = []
+    for y in range(h):
+        f = r[y * (s + 1)]; l = bytearray(r[y * (s + 1) + 1:(y + 1) * (s + 1)])
+        for i in range(s):
+            a = l[i - n] if i >= n else 0; b = prior[i]; c = prior[i - n] if i >= n else 0
+            if f == 1: l[i] = (l[i] + a) & 255
+            elif f == 2: l[i] = (l[i] + b) & 255
+            elif f == 3: l[i] = (l[i] + (a + b) // 2) & 255
+            elif f == 4:
+                q = a + b - c; pa = abs(q - a); pb = abs(q - b); pc = abs(q - c)
+                l[i] = (l[i] + (a if pa <= pb and pa <= pc else (b if pb <= pc else c))) & 255
+        lineae.append(l); prior = l
+    return w, h, n, lineae
+w, h, n, L = lege(sys.argv[2])
+if sys.argv[1] == 'pixelum':
+    x, y = int(sys.argv[3]), int(sys.argv[4])
+    print(*L[y][x * n:x * n + 3])
+else:
+    x0, y0, x1, y1 = map(int, sys.argv[3:7])
+    print(sum(1 for y in range(y0, y1) for x in range(x0, x1) if tuple(L[y][x * n:x * n + 3]) != (255, 255, 255)))
+XX
+pixelum() { python3 -I "$T/pixelum.py" pixelum "$@"; }
+non_alba() { python3 -I "$T/pixelum.py" alba "$@"; }
+
+# mappa (plastica II T1): tabula gressus dispositionis in imagine
+L=apps/mundus/loci/clearing.stml
+proba "mappa sine -o usus" 2 "$B" mappa "$L"
+proba "mappa sine dispositione usus" 2 "$B" mappa -o "$T/m.png"
+proba "mappa cum -locus usus" 2 "$B" mappa "$L" -o "$T/m.png" -locus "1 2"
+proba "mappa cum -volumen usus" 2 "$B" mappa "$L" -o "$T/m.png" -volumen "$V"
+[ ! -e "$T/m.png" ] || { echo "FRACTA: usus mappam scripsit"; fracta=$((fracta + 1)); }
+proba "mappa" 0 "$B" mappa "$L" -o "$T/m.png"
+file "$T/m.png" 2>/dev/null | grep -q "1040 x 1040" || { echo "FRACTA: mappa: PNG 1040 x 1040 abest"; fracta=$((fracta + 1)); }
+contine "mappa numeri" "$T/out" "^$L: [0-9]* res, cellae gressibiles [0-9]* (nudae 60626)$"
+contine "mappa attingibiles" "$T/out" "^attingibiles ab initio (31.88, 31.88): [0-9]* (imae [0-9]*, mediae [0-9]*, summae [0-9]*)$"
+SUMMAE="$(sed -n 's/^attingibiles.*summae \([0-9]*\))$/\1/p' "$T/out")"
+[ "${SUMMAE:-0}" -gt 1000 ] || { echo "FRACTA: mappa: stratum summum non attingitur (${SUMMAE:-nihil})"; fracta=$((fracta + 1)); }
+LINEA="$(grep -n 'puteus.stml' "$L" | head -1 | cut -d: -f1)"
+contine "mappa legenda cum linea" "$T/out" "^ *1  plastica/res/puteus.stml  (27.00, 29.00)  linea $LINEA$"
+# pixela: IV per cellam, margo XVI; (x, z) mundi -> 16 + 16 * x
+# initium (31.9, 31.9) attactum: viride; angulus (62, 2) gressibilis sed
+# non attactus: roseum (rubrum vincit); puteus (27, 29): punctum notae
+read -r PR PG PB <<XX
+$(pixelum "$T/m.png" 526 526)
+XX
+[ "$PG" -gt "$PR" ] || { echo "FRACTA: mappa: initium non viride ($PR $PG $PB)"; fracta=$((fracta + 1)); }
+read -r PR PG PB <<XX
+$(pixelum "$T/m.png" 1010 50)
+XX
+[ "$PR" -gt "$PG" ] || { echo "FRACTA: mappa: cellae non attactae non notatae ($PR $PG $PB)"; fracta=$((fracta + 1)); }
+[ "$(pixelum "$T/m.png" 450 480)" = "0 0 0" ] || { echo "FRACTA: mappa: nota putei abest ($(pixelum "$T/m.png" 450 480))"; fracta=$((fracta + 1)); }
+cp "$T/m.png" "$T/m_prima.png"
+proba "mappa iterum" 0 "$B" mappa "$L" -o "$T/m.png"
+cmp -s "$T/m.png" "$T/m_prima.png" || { echo "FRACTA: mappa non determinata"; fracta=$((fracta + 1)); }
+proba "mappa nuda" 0 "$B" mappa "$L" -o "$T/n.png" -nudus
+contine "nuda numeri" "$T/out" "^$L: locus nudus, cellae gressibiles 60626$"
+contine "nuda attingibiles" "$T/out" "^attingibiles ab initio (31.88, 31.88): 42881 (imae 23767, mediae 19114, summae 0)$"
+grep -q "puteus" "$T/out" && { echo "FRACTA: mappa nuda legendam habet"; fracta=$((fracta + 1)); }
+cmp -s "$T/n.png" "$T/m.png" && { echo "FRACTA: mappa nuda eadem ac instructa"; fracta=$((fracta + 1)); }
+proba "mappa dispositionis malae" 1 "$B" mappa "$D/a_pratum.stml" -o "$T/x.png"
+contine "mappa causam dicit" "$T/err" "^$D/a_pratum.stml:3: the spot lies outside the level$"
+[ ! -e "$T/x.png" ] || { echo "FRACTA: mappa recusata PNG scripsit"; fracta=$((fracta + 1)); }
+
+# quadrum: quadra loci instructi cum persona in punctis datis
+proba "quadrum sine -locus usus" 2 "$B" quadrum "$L" -o "$T/q.png"
+proba "quadrum sine -o usus" 2 "$B" quadrum "$L" -locus "29 31"
+proba "quadrum locus malus usus" 2 "$B" quadrum "$L" -o "$T/q.png" -locus "duo tres"
+proba "quadrum cum -nudus usus" 2 "$B" quadrum "$L" -o "$T/q.png" -locus "29 31" -nudus
+[ ! -e "$T/q.png" ] || { echo "FRACTA: usus quadrum scripsit"; fracta=$((fracta + 1)); }
+proba "quadrum unum" 0 "$B" quadrum "$L" -o "$T/q1.png" -locus "29 31"
+file "$T/q1.png" 2>/dev/null | grep -q "480 x 360" || { echo "FRACTA: quadrum unum: PNG 480 x 360 abest"; fracta=$((fracta + 1)); }
+contine "quadrum locum dicit" "$T/out" "^quadrum 1: (29.00, 31.00) altitudo 4\.[0-9]*, persona [0-9]* pixela$"
+P="$(sed -n 's/^quadrum 1: .*persona \([0-9]*\) pixela$/\1/p' "$T/out")"
+[ "${P:-0}" -gt 500 ] || { echo "FRACTA: quadrum: persona non picta (${P:-nulla})"; fracta=$((fracta + 1)); }
+proba "quadrum alibi" 0 "$B" quadrum "$L" -o "$T/q2.png" -locus "17.5 17.5"
+cmp -s "$T/q1.png" "$T/q2.png" && { echo "FRACTA: quadra locorum diversorum eadem"; fracta=$((fracta + 1)); }
+proba "quadra quattuor" 0 "$B" quadrum "$L" -o "$T/q4.png" -locus "29 31" -locus "17.5 17.5" -locus "-500 -500" -locus "36.5 47.5"
+file "$T/q4.png" 2>/dev/null | grep -q "1440 x 720" || { echo "FRACTA: quadra quattuor: PNG 1440 x 720 abest"; fracta=$((fracta + 1)); }
+contine "quadrum quartum" "$T/out" "^quadrum 4: (36.50, 47.50) altitudo "
+contine "quadrum ubi stare non licet" "$T/err" "^quadrum 3: (-500.00, -500.00): persona ibi stare non potest$"
+# tabellae suo quaeque loco: I et II pictae, III vacua, IV in ordine altero
+[ "$(non_alba "$T/q4.png" 0 0 480 360)" -gt 100000 ] || { echo "FRACTA: quadrum: tabella I vacua"; fracta=$((fracta + 1)); }
+[ "$(non_alba "$T/q4.png" 480 0 960 360)" -gt 100000 ] || { echo "FRACTA: quadrum: tabella II vacua"; fracta=$((fracta + 1)); }
+[ "$(non_alba "$T/q4.png" 960 0 1440 360)" -eq 0 ] || { echo "FRACTA: quadrum: tabella III non vacua"; fracta=$((fracta + 1)); }
+[ "$(non_alba "$T/q4.png" 0 360 480 720)" -gt 100000 ] || { echo "FRACTA: quadrum: tabella IV vacua"; fracta=$((fracta + 1)); }
+[ "$(non_alba "$T/q4.png" 480 360 1440 720)" -eq 0 ] || { echo "FRACTA: quadrum: tabellae V et VI non vacuae"; fracta=$((fracta + 1)); }
+cp "$T/q4.png" "$T/q4_prima.png"
+proba "quadra iterum" 0 "$B" quadrum "$L" -o "$T/q4.png" -locus "29 31" -locus "17.5 17.5" -locus "-500 -500" -locus "36.5 47.5"
+cmp -s "$T/q4.png" "$T/q4_prima.png" || { echo "FRACTA: quadra non determinata"; fracta=$((fracta + 1)); }
+proba "quadrum nusquam" 1 "$B" quadrum "$L" -o "$T/q0.png" -locus "-500 -500"
+[ ! -e "$T/q0.png" ] || { echo "FRACTA: quadrum sine persona PNG scripsit"; fracta=$((fracta + 1)); }
+proba "quadrum dispositionis malae" 1 "$B" quadrum "$D/a_pratum.stml" -o "$T/x.png" -locus "29 31"
+
 if [ "$fracta" -eq 0 ]; then echo "MUNDUS FUMUS: OMNIA BONA"; exit 0; fi
 echo "MUNDUS FUMUS: $fracta FRACTA"; exit 1

@@ -619,8 +619,6 @@ _sectio_occultatio (
 #define PRATI_ATTINGIBILES 46683
 #define PRATI_SUMMAE       5405
 
-hic_manens constans s32 VICINI[VIII] = { 1, 0, -1, 0, 0, 1, 0, -1 };
-
 interior vacuum
 _sectio_pratum (
     CredoContextus* c)
@@ -633,20 +631,13 @@ _sectio_pratum (
           constans Statua** statuae;
               MundusSolum*  s;
                        i8*  visa;
-                      s32*  acervus;
                       i32   gressibiles   = ZEPHYRUM;
-                      i32   attingibiles  = ZEPHYRUM;
+                      i32   attingibiles;
                       i32   summae        = ZEPHYRUM;
-                      i32   n             = ZEPHYRUM;
                       i32   k;
                       i32   j;
-                      s32   cella_x;
-                      s32   cella_z;
-                      s32   directio;
                       f32   x = 0.0f;
                       f32   z = 0.0f;
-                      f32   cella = 1.0f
-                          / (f32)MUNDUS_CELLAE_PER_UNITATEM;
 
     si (!d.successus)
     {
@@ -697,52 +688,15 @@ _sectio_pratum (
     {
         gressibiles += (i32)(s->genera[k] == MUNDUS_SOLUM_GRESSIBILE);
     }
-    /* ambulatio corporis radii dimidii ab initio per cellas vicinas
-     * (ut probatio_mundus_solum) */
+    /* ambulatio corporis radii dimidii ab initio */
     CREDO_NECESSE (mundus_solum_initium(s, 0.5f, &x, &z));
-    visa     = (i8*)loci_ficti_memoria(c,
+    visa = (i8*)loci_ficti_memoria(c,
         (memoriae_index)s->latitudo * s->altitudo);
-    acervus  = (s32*)loci_ficti_memoria(c,
-        (memoriae_index)s->latitudo * s->altitudo * II
-            * magnitudo(s32));
-    cella_x = (s32)((x - s->origo_x) / cella);
-    cella_z = (s32)((z - s->origo_z) / cella);
-    visa[(i32)cella_z * s->latitudo + (i32)cella_x] = I;
-    acervus[n++] = cella_x;
-    acervus[n++] = cella_z;
-    dum (n > ZEPHYRUM)
+    attingibiles = mundus_solum_attingere(s, x, z, 0.5f, visa,
+        c->piscina);
+    per (k = ZEPHYRUM; k < s->latitudo * s->altitudo; k++)
     {
-        f32 punctum_x;
-        f32 punctum_z;
-
-        cella_z = acervus[--n];
-        cella_x = acervus[--n];
-        attingibiles++;
-        punctum_x = s->origo_x + ((f32)cella_x + 0.5f) * cella;
-        punctum_z = s->origo_z + ((f32)cella_z + 0.5f) * cella;
-        summae += (i32)(s->altitudines[(i32)cella_z * s->latitudo
-            + (i32)cella_x] > 7.0f);
-        per (directio = ZEPHYRUM; directio < IV; directio++)
-        {
-            s32 vicina_x = cella_x + VICINI[directio * II];
-            s32 vicina_z = cella_z + VICINI[directio * II + I];
-
-            si (   vicina_x < ZEPHYRUM || vicina_z < ZEPHYRUM
-                || vicina_x >= (s32)s->latitudo
-                || vicina_z >= (s32)s->altitudo
-                || visa[(i32)vicina_z * s->latitudo + (i32)vicina_x]
-                || !mundus_solum_licet(s, punctum_x, punctum_z,
-                       punctum_x + (f32)VICINI[directio * II] * cella,
-                       punctum_z
-                           + (f32)VICINI[directio * II + I] * cella,
-                       0.5f))
-            {
-                perge;
-            }
-            visa[(i32)vicina_z * s->latitudo + (i32)vicina_x] = I;
-            acervus[n++] = vicina_x;
-            acervus[n++] = vicina_z;
-        }
+        summae += (i32)(visa[k] && s->altitudines[k] > 7.0f);
     }
     si (   gressibiles  != PRATI_GRESSIBILES
         || attingibiles != PRATI_ATTINGIBILES
