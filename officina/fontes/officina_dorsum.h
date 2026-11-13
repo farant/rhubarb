@@ -37,7 +37,9 @@
 nomen enumeratio {
     DORSUM_SALTUS_SISTERE = 1,
     DORSUM_SALTUS_DIVISIO_ZEPHYRUM,
-    DORSUM_SALTUS_DIVISIO_SUPERFLUXUS
+    DORSUM_SALTUS_DIVISIO_SUPERFLUXUS,
+    DORSUM_SALTUS_PONS,     /* aedificatum per pontem halitum posuit */
+    DORSUM_SALTUS_INDIRECTA /* vocatio per descriptorem non nativum */
 } OfficinaDorsumSaltus;
 
 nomen structura OfficinaDorsum OfficinaDorsum;

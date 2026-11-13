@@ -6417,6 +6417,37 @@ machinula_nativum_compilare (
        OfficinaChorda  titulus_functionis,
        OfficinaChorda* causa_out);
 
+/* M5 T8: pons publicus (D11). Aedificata = functiones libc quas
+ * machinula codici interpretato praebet. PURUM: pons statum
+ * machinulae non tangit - dorsum functionem libc ipsam vocat
+ * (inscriptio). Cum statu (malloc in regione, printf per ansas, errno
+ * in cella, recusationes sessionis): dorsum machinula_pons_nativus
+ * vocat. */
+s32
+machinula_aedificatum_quaerere (
+    OfficinaChorda titulus);                 /* index; -I si ignotum */
+b32
+machinula_aedificatum_purum (
+    s32 aedificatum);
+vacuum*
+machinula_aedificatum_inscriptio (
+    s32 aedificatum);                /* purum: functio libc; NIHIL */
+
+/* pons: codex nativus aedificatum cum statu vocat - argumenta verba
+ * canonica LXIV (f64 ut figura bitorum), pc et fp vocantis (halitus
+ * positionem inde sumit). Machinula currens ex locello statico, quem
+ * machinula ipsa circa omnem vocationem nativam ponit. */
+s64
+machinula_pons_nativus (
+               s64  aedificatum,
+      constans i64* argumenta,
+               s64  numerus,
+    memoriae_index  pc,
+    memoriae_index  fp);
+vacuum
+machinula_nativum_machinulam_ponere (
+    Machinula* machinula);
+
 /* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
  * aperire = status purgatus + tabulatum primum (VERUM si paratum);
  * gradus = instructio UNA (VERUM = pergendum); pergere = usque ad
@@ -6758,7 +6789,9 @@ officina_effugium_salire (
 nomen enumeratio {
     DORSUM_SALTUS_SISTERE = 1,
     DORSUM_SALTUS_DIVISIO_ZEPHYRUM,
-    DORSUM_SALTUS_DIVISIO_SUPERFLUXUS
+    DORSUM_SALTUS_DIVISIO_SUPERFLUXUS,
+    DORSUM_SALTUS_PONS,     /* aedificatum per pontem halitum posuit */
+    DORSUM_SALTUS_INDIRECTA /* vocatio per descriptorem non nativum */
 } OfficinaDorsumSaltus;
 
 nomen structura OfficinaDorsum OfficinaDorsum;
@@ -16322,75 +16355,116 @@ _aed_getenv (
     redde VERUM;
 }
 
+/* inscriptio functionis libc ut monstrator genericus (typus verus
+ * per conventionem AAPCS64 a vocante nativo servatur) */
+nomen vacuum (*AedificatumPurum)(vacuum);
+
+/* purum != NIHIL: aedificatum PURUM (D11) - pons statum machinulae
+ * non tangit (nec ansas, nec regionem, nec cellam errno, nec
+ * recusationes sessionis), ergo codex nativus functionem libc ipsam
+ * vocare potest. NIHIL: cum statu - per machinula_pons_nativus. */
 nomen structura {
     constans character* titulus;
          MachinulaPons  pons;
+      AedificatumPurum  purum;
 } AedificatumNota;
 
 interior constans AedificatumNota AEDIFICATA[] = {
-    { "malloc",   _aed_malloc },
-    { "free",     _aed_free },
-    { "realloc",  _aed_realloc },
-    { "strlen",   _aed_strlen },
-    { "strcpy",   _aed_strcpy },
-    { "memcpy",   _aed_memcpy },
-    { "memset",   _aed_memset },
-    { "memcmp",   _aed_memcmp },
-    { "fabs",     _aed_fabs },
-    { "exit",     _aed_exit },
-    { "printf",   _aed_printf },
-    { "fprintf",  _aed_fprintf },
-    { "snprintf", _aed_snprintf },
-    { "sprintf",  _aed_sprintf },
-    { "strcmp",   _aed_strcmp },
-    { "strncmp",  _aed_strncmp },
-    { "strchr",   _aed_strchr },
-    { "strstr",   _aed_strstr },
-    { "strncpy",  _aed_strncpy },
-    { "memmove",  _aed_memmove },
-    { "atoi",     _aed_atoi },
-    { "atof",     _aed_atof },
-    { "abs",      _aed_abs },
-    { "strtod",   _aed_strtod },
-    { "strtol",   _aed_strtol },
-    { "strtoul",  _aed_strtoul },
-    { "isalpha",  _aed_isalpha },
-    { "isdigit",  _aed_isdigit },
-    { "islower",  _aed_islower },
-    { "isupper",  _aed_isupper },
-    { "isspace",  _aed_isspace },
-    { "iscntrl",  _aed_iscntrl },
-    { "tolower",  _aed_tolower },
-    { "toupper",  _aed_toupper },
-    { "sin",      _aed_sin },
-    { "cos",      _aed_cos },
-    { "sqrt",     _aed_sqrt },
-    { "floor",    _aed_floor },
-    { "pow",      _aed_pow },
-    { "fmod",     _aed_fmod },
-    { "ldexp",    _aed_ldexp },
-    { "fflush",   _aed_fflush },
-    { "time",     _aed_time },
+    { "malloc", _aed_malloc, NIHIL },
+    { "free", _aed_free, NIHIL },
+    { "realloc", _aed_realloc, NIHIL },
+    { "strlen", _aed_strlen,
+        (AedificatumPurum)strlen },
+    { "strcpy", _aed_strcpy,
+        (AedificatumPurum)strcpy },
+    { "memcpy", _aed_memcpy,
+        (AedificatumPurum)memcpy },
+    { "memset", _aed_memset,
+        (AedificatumPurum)memset },
+    { "memcmp", _aed_memcmp,
+        (AedificatumPurum)memcmp },
+    { "fabs", _aed_fabs,
+        (AedificatumPurum)fabs },
+    { "exit", _aed_exit, NIHIL },
+    { "printf", _aed_printf, NIHIL },
+    { "fprintf", _aed_fprintf, NIHIL },
+    { "snprintf", _aed_snprintf, NIHIL },
+    { "sprintf", _aed_sprintf, NIHIL },
+    { "strcmp", _aed_strcmp,
+        (AedificatumPurum)strcmp },
+    { "strncmp", _aed_strncmp,
+        (AedificatumPurum)strncmp },
+    { "strchr", _aed_strchr,
+        (AedificatumPurum)strchr },
+    { "strstr", _aed_strstr,
+        (AedificatumPurum)strstr },
+    { "strncpy", _aed_strncpy,
+        (AedificatumPurum)strncpy },
+    { "memmove", _aed_memmove,
+        (AedificatumPurum)memmove },
+    { "atoi", _aed_atoi,
+        (AedificatumPurum)atoi },
+    { "atof", _aed_atof,
+        (AedificatumPurum)atof },
+    { "abs", _aed_abs,
+        (AedificatumPurum)abs },
+    { "strtod", _aed_strtod, NIHIL },
+    { "strtol", _aed_strtol, NIHIL },
+    { "strtoul", _aed_strtoul, NIHIL },
+    { "isalpha", _aed_isalpha,
+        (AedificatumPurum)isalpha },
+    { "isdigit", _aed_isdigit,
+        (AedificatumPurum)isdigit },
+    { "islower", _aed_islower,
+        (AedificatumPurum)islower },
+    { "isupper", _aed_isupper,
+        (AedificatumPurum)isupper },
+    { "isspace", _aed_isspace,
+        (AedificatumPurum)isspace },
+    { "iscntrl", _aed_iscntrl,
+        (AedificatumPurum)iscntrl },
+    { "tolower", _aed_tolower,
+        (AedificatumPurum)tolower },
+    { "toupper", _aed_toupper,
+        (AedificatumPurum)toupper },
+    { "sin", _aed_sin,
+        (AedificatumPurum)sin },
+    { "cos", _aed_cos,
+        (AedificatumPurum)cos },
+    { "sqrt", _aed_sqrt,
+        (AedificatumPurum)sqrt },
+    { "floor", _aed_floor,
+        (AedificatumPurum)floor },
+    { "pow", _aed_pow,
+        (AedificatumPurum)pow },
+    { "fmod", _aed_fmod,
+        (AedificatumPurum)fmod },
+    { "ldexp", _aed_ldexp,
+        (AedificatumPurum)ldexp },
+    { "fflush", _aed_fflush, NIHIL },
+    { "time", _aed_time, NIHIL },
     /* M2d: plagulae (ansae) + POSIX */
-    { "fopen",        _aed_fopen },
-    { "fclose",       _aed_fclose },
-    { "fread",        _aed_fread },
-    { "fwrite",       _aed_fwrite },
-    { "fseek",        _aed_fseek },
-    { "ftell",        _aed_ftell },
-    { "fgets",        _aed_fgets },
-    { "fputc",        _aed_fputc },
-    { "remove",       _aed_remove },
-    { "rename",       _aed_rename },
-    { "stat",         _aed_stat },
-    { "mkdir",        _aed_mkdir },
-    { "getcwd",       _aed_getcwd },
-    { "gettimeofday", _aed_gettimeofday },
-    { "localtime",    _aed_localtime },
-    { "unlink",       _aed_unlink },
-    { "clock",        _aed_clock },
+    { "fopen", _aed_fopen, NIHIL },
+    { "fclose", _aed_fclose, NIHIL },
+    { "fread", _aed_fread, NIHIL },
+    { "fwrite", _aed_fwrite, NIHIL },
+    { "fseek", _aed_fseek, NIHIL },
+    { "ftell", _aed_ftell, NIHIL },
+    { "fgets", _aed_fgets, NIHIL },
+    { "fputc", _aed_fputc, NIHIL },
+    { "remove", _aed_remove, NIHIL },
+    { "rename", _aed_rename, NIHIL },
+    { "stat", _aed_stat, NIHIL },
+    { "mkdir", _aed_mkdir, NIHIL },
+    { "getcwd", _aed_getcwd, NIHIL },
+    { "gettimeofday", _aed_gettimeofday, NIHIL },
+    { "localtime", _aed_localtime,
+        (AedificatumPurum)localtime },
+    { "unlink", _aed_unlink, NIHIL },
+    { "clock", _aed_clock, NIHIL },
     /* canalis lectionum: lib/lectiones.c legit FABRICA_LECTIONES */
-    { "getenv",       _aed_getenv }
+    { "getenv", _aed_getenv,
+        (AedificatumPurum)getenv }
 };
 /* structuralis - numerus falsus (44 vs 42 verae) lectiones extra
  * tabulam in ansa ligationis fecit; magnitudo drift vetat */
@@ -16963,52 +17037,124 @@ _memoriam_probare (
  * NATIVUM (M5 T6): vocatio codicis nativi per officina_effugium
  * ================================================== */
 
+/* machinula cuius codex nativus currit (pons eam hinc sumit);
+ * _nativum_vocare ponit et restituit */
+hic_manens Machinula* _machinula_nativa = NIHIL;
+
+s32
+machinula_aedificatum_quaerere (
+    OfficinaChorda titulus)
+{
+    i32 a;
+
+    per (a = ZEPHYRUM; a < (i32)AEDIFICATA_NUMERUS; a++)
+    {
+        si (officina_chorda_aequalis_literis(titulus, AEDIFICATA[a].titulus))
+        {
+            redde (s32)a;
+        }
+    }
+    redde -I;
+}
+
+b32
+machinula_aedificatum_purum (
+    s32 aedificatum)
+{
+    redde aedificatum >= ZEPHYRUM
+        && (i32)aedificatum < (i32)AEDIFICATA_NUMERUS
+        && AEDIFICATA[aedificatum].purum != NIHIL;
+}
+
+vacuum*
+machinula_aedificatum_inscriptio (
+    s32 aedificatum)
+{
+    AedificatumPurum  purum;
+              vacuum* inscriptio = NIHIL;
+
+    si (!machinula_aedificatum_purum(aedificatum))
+    {
+        redde NIHIL;
+    }
+    /* C89 -pedantic conversionem functionis in obiectum vetat */
+    purum = AEDIFICATA[aedificatum].purum;
+    memcpy(&inscriptio, &purum, magnitudo(inscriptio));
+    redde inscriptio;
+}
+
+vacuum
+machinula_nativum_machinulam_ponere (
+    Machinula* machinula)
+{
+    _machinula_nativa = machinula;
+}
+
+/* pons: codex nativus aedificatum cum statu vocat. Argumenta ut
+ * verba canonica LXIV (ut machinula ea praebet). Aedificatum quod
+ * halitum ponit (exit, free insanum, recusatio sessionis) ad
+ * machinulam per effugium redit - pc/fp vocantis nativi tabulata
+ * restituunt. */
+s64
+machinula_pons_nativus (
+               s64  aedificatum,
+      constans i64* argumenta,
+               s64  numerus,
+    memoriae_index  pc,
+    memoriae_index  fp)
+{
+    Machinula* m        = _machinula_nativa;
+          i64  fructus  = ZEPHYRUM;
+
+    si (   m           == NIHIL || aedificatum < ZEPHYRUM
+        || aedificatum >= (s64)AEDIFICATA_NUMERUS)
+    {
+        officina_effugium_salire(
+            (s64)((i64)DORSUM_SALTUS_PONS << XXXII), pc, fp);
+        redde ZEPHYRUM;
+    }
+    si (!_aedificatum_vocare(m, aedificatum, argumenta, (s32)numerus,
+            &fructus))
+    {
+        officina_effugium_salire(
+            (s64)((i64)DORSUM_SALTUS_PONS << XXXII), pc, fp);
+    }
+    redde (s64)fructus;
+}
+
 /* tabulata nativa quae halitus reconstruit (recursio profundior:
  * extima truncantur) */
 #define CATENA_NATIVA_MAXIMA 256
 
-/* saltus ex codice nativo in halitum machinulae vertit. Codex dorsi
- * ((genus << 32) | index) cum pc in codice dorsi: halitus IDEM ac
- * interpretatus - genus, nuntius, et tabulatum functionis nativae ad
- * instructionem halitus impulsum (inspectio et relatio paritatem
- * vident). Aliter: VITIUM cum codice crudo. */
-interior vacuum
-_nativum_saltum_tractare (
-                   Machinula* m,
-    constans EffugiumFructus* fructus)
+/* tabulata functionum nativarum ad pc/fp halitus restituit: a
+ * functione halitus per catenam x29 ([fp] = fp vocantis, [fp + 8] =
+ * inscriptio reditus) usque ad vocantem extra codicem dorsi
+ * (trampolinum). Vocans nativa in positione POST vocationem stat, ut
+ * vocans interpretata (inscriptio reditus - IV = verbum 'blr' intra
+ * codicem instructionis vocare). FALSUM (nihil impulsum) si pc extra
+ * codicem dorsi; functio_index_out = functio halitus. */
+interior b32
+_nativum_tabulata_restituere (
+         Machinula* m,
+    memoriae_index  pc,
+    memoriae_index  fp,
+               s32* functio_index_out)
 {
-    s32 genus          = (s32)(((i64)fructus->codex >> XXXII)
-        & (i64)0xFFFFFFFF);
-    s32 index = (s32)((i64)fructus->codex & (i64)0xFFFFFFFF);
-    s32 functio_index = -I;
-    i32 instructio = ZEPHYRUM;
-    constans ConexioFunctioNexa* nexa = NIHIL;
     s32 catena_functio[CATENA_NATIVA_MAXIMA];
     i32 catena_instructio[CATENA_NATIVA_MAXIMA];
-    s32 numerus_catenae = ZEPHYRUM;
-    memoriae_index fp;
+    s32 numerus_catenae  = ZEPHYRUM;
+    s32 functio_index    = -I;
+    i32 instructio       = ZEPHYRUM;
 
     si (   m->dorsum == NIHIL
-        || (   genus != DORSUM_SALTUS_SISTERE
-            && genus != DORSUM_SALTUS_DIVISIO_ZEPHYRUM
-            && genus != DORSUM_SALTUS_DIVISIO_SUPERFLUXUS)
-        || !officina_dorsum_positio(m->dorsum, fructus->pc,
-               &functio_index, &instructio))
+        || !officina_dorsum_positio(m->dorsum, pc, &functio_index,
+               &instructio))
     {
-        _halitum_ponere(m, MACHINULA_VITIUM, fructus->codex,
-            "nativum: saltus ex codice nativo");
-        redde;
+        redde FALSUM;
     }
-    /* catena tabulatorum nativorum: a functione halitus per
-     * catenam x29 ([fp] = fp vocantis, [fp + 8] = inscriptio
-     * reditus) usque ad vocantem extra codicem dorsi (trampolinum).
-     * Vocans nativa in positione POST vocationem stat, ut vocans
-     * interpretata (inscriptio reditus - IV = verbum 'blr' intra
-     * codicem instructionis vocare). */
     catena_functio[ZEPHYRUM]     = functio_index;
     catena_instructio[ZEPHYRUM]  = instructio;
     numerus_catenae              = I;
-    fp                           = fructus->fp;
     dum (fp != ZEPHYRUM && numerus_catenae < CATENA_NATIVA_MAXIMA)
     {
         constans memoriae_index* tabula = (constans memoriae_index*)fp;
@@ -17043,6 +17189,61 @@ _nativum_saltum_tractare (
         m->tabulatum_summum->instructio =
             catena_instructio[numerus_catenae];
     }
+    si (functio_index_out != NIHIL)
+    {
+        *functio_index_out = functio_index;
+    }
+    redde VERUM;
+}
+
+/* saltus ex codice nativo in halitum machinulae vertit. Codex dorsi
+ * ((genus << 32) | index) cum pc in codice dorsi: halitus IDEM ac
+ * interpretatus - genus, nuntius, et tabulata functionum nativarum
+ * ad positiones halitus impulsa (inspectio et relatio paritatem
+ * vident). Aliter: VITIUM cum codice crudo. */
+interior vacuum
+_nativum_saltum_tractare (
+                   Machinula* m,
+    constans EffugiumFructus* fructus)
+{
+    s32 genus          = (s32)(((i64)fructus->codex >> XXXII)
+        & (i64)0xFFFFFFFF);
+    s32 index = (s32)((i64)fructus->codex & (i64)0xFFFFFFFF);
+    s32 functio_index = -I;
+    constans ConexioFunctioNexa* nexa = NIHIL;
+
+    si (genus == DORSUM_SALTUS_INDIRECTA)
+    {
+        /* vocatio per descriptorem non nativum (limes C9): halitus
+         * nominatus cum positione vocantis */
+        (vacuum)_nativum_tabulata_restituere(m, fructus->pc,
+            fructus->fp, NIHIL);
+        _vitium(m, "vocatio indirecta non nativa");
+        redde;
+    }
+    si (genus == DORSUM_SALTUS_PONS)
+    {
+        /* aedificatum per pontem halitum iam posuit (exit: BENE;
+         * vitium; recusatio): tabulata solum restituuntur - functio
+         * vocans in instructione vocare stat, ut interpretata */
+        (vacuum)_nativum_tabulata_restituere(m, fructus->pc,
+            fructus->fp, NIHIL);
+        si (m->currens)
+        {
+            _vitium(m, "nativum: pons sine machinula");
+        }
+        redde;
+    }
+    si (   (   genus != DORSUM_SALTUS_SISTERE
+            && genus != DORSUM_SALTUS_DIVISIO_ZEPHYRUM
+            && genus != DORSUM_SALTUS_DIVISIO_SUPERFLUXUS)
+        || !_nativum_tabulata_restituere(m, fructus->pc, fructus->fp,
+               &functio_index))
+    {
+        _halitum_ponere(m, MACHINULA_VITIUM, fructus->codex,
+            "nativum: saltus ex codice nativo");
+        redde;
+    }
     nexa = conexio_functionem_obtinere(m->conexio,
         (s64)functio_index);
     si (genus == DORSUM_SALTUS_SISTERE)
@@ -17066,7 +17267,12 @@ _nativum_saltum_tractare (
 /* argumenta in registra AAPCS64 ordinat (integra in x, fluitantia in
  * d - classes separatae), vocat, fructum per typum vocationis
  * reddit. typi = limina loci vocationis (NIHIL licet solum sine
- * argumentis). FALSUM = halitus positus. */
+ * argumentis). FALSUM = halitus positus.
+ * Aggregata (B5, eadem lex ac _limen_collocare dorsi): <= XVI
+ * octetorum verba I aut II in x continuis, aut totum in stiva
+ * (ordinatio VIII; x reliqua vacant); maius inscriptione. %reditus
+ * <= XVI octetorum non transit - x0:x1 post reditum in locum
+ * vocantis conduntur; maior in x8. */
 interior b32
 _nativum_vocare (
                          Machinula* m,
@@ -17080,9 +17286,14 @@ _nativum_vocare (
 {
     EffugiumArgumenta ordinata;
       EffugiumFructus fructus;
+                  i64 stiva[ARGUMENTA_MAXIMA];
+       memoriae_index octeti_stivae       = ZEPHYRUM;
+                  i64 reditus_inscriptio  = ZEPHYRUM;
+       memoriae_index reditus_octeti      = ZEPHYRUM;
                   s32 k;
 
     memset(&ordinata, ZEPHYRUM, magnitudo(ordinata));
+    memset(stiva, ZEPHYRUM, magnitudo(stiva));
     *fructus_out = ZEPHYRUM;
     si (variadica)
     {
@@ -17102,8 +17313,57 @@ _nativum_vocare (
         }
         si (typus == MEDULLA_TYPUS_AGGREGATUM || typi[k].est_reditus)
         {
-            _vitium(m, "nativum: aggregatum aut %reditus (Opus VIII)");
-            redde FALSUM;
+            memoriae_index mag = (memoriae_index)
+                typi[k].magnitudo_octetorum;
+            memoriae_index verba = (mag + VII) / VIII;
+
+            si (typi[k].hfa_typus >= ZEPHYRUM || mag == ZEPHYRUM)
+            {
+                _vitium(m, "nativum: aggregatum fluitans (Opus IX)");
+                redde FALSUM;
+            }
+            si (typi[k].est_reditus)
+            {
+                si (mag > XVI)
+                {
+                    ordinata.x8 = argumenta[k];
+                }
+                alioquin
+                {
+                    reditus_inscriptio  = argumenta[k];
+                    reditus_octeti      = mag;
+                }
+                perge;
+            }
+            si (mag <= XVI)
+            {
+                si (!_memoriam_probare(m, argumenta[k], mag))
+                {
+                    redde FALSUM;
+                }
+                si ((memoriae_index)ordinata.numerus_x + verba <= VIII)
+                {
+                    memcpy(&ordinata.x[ordinata.numerus_x],
+                        (constans vacuum*)(memoriae_index)argumenta[k],
+                        mag);
+                    ordinata.numerus_x += (s32)verba;
+                    perge;
+                }
+                ordinata.numerus_x = VIII;
+                octeti_stivae = (octeti_stivae + VII)
+                    & ~(memoriae_index)VII;
+                si (octeti_stivae + verba * VIII > magnitudo(stiva))
+                {
+                    _vitium(m, "nativum: argumenta nimia");
+                    redde FALSUM;
+                }
+                memcpy((i8*)stiva + octeti_stivae,
+                    (constans vacuum*)(memoriae_index)argumenta[k],
+                    mag);
+                octeti_stivae += verba * VIII;
+                perge;
+            }
+            /* aggregatum maius: inscriptio copiae, ut i64 (infra) */
         }
         si (typus == MEDULLA_TYPUS_F64 || typus == MEDULLA_TYPUS_F32)
         {
@@ -17125,16 +17385,39 @@ _nativum_vocare (
         {
             si (ordinata.numerus_x >= VIII)
             {
-                _vitium(m, "nativum: argumenta integra plura quam"
-                    " VIII (Opus VIII)");
-                redde FALSUM;
+                /* ultra octavum: in stivam, magnitudine et
+                 * ordinatione NATURALI (Apple AAPCS64) - verba
+                 * trampolino data octetim implentur */
+                memoriae_index mag = (memoriae_index)
+                    (_latitudo_typi(typus) / 8);
+
+                octeti_stivae = (octeti_stivae + mag - I) & ~(mag - I);
+                si (octeti_stivae + mag > magnitudo(stiva))
+                {
+                    _vitium(m, "nativum: argumenta nimia");
+                    redde FALSUM;
+                }
+                memcpy((i8*)stiva + octeti_stivae, &argumenta[k], mag);
+                octeti_stivae += mag;
+                perge;
             }
             ordinata.x[ordinata.numerus_x] = argumenta[k];
             ordinata.numerus_x++;
         }
     }
-    fructus = officina_effugium_vocare(
-        (vacuum*)(memoriae_index)introitus, &ordinata);
+    si (octeti_stivae > ZEPHYRUM)
+    {
+        ordinata.stiva           = stiva;
+        ordinata.numerus_stivae  = (s32)((octeti_stivae + VII) / VIII);
+    }
+    {
+        Machinula* prior = _machinula_nativa;
+
+        _machinula_nativa = m;
+        fructus = officina_effugium_vocare(
+            (vacuum*)(memoriae_index)introitus, &ordinata);
+        _machinula_nativa = prior;
+    }
     si (fructus.genus == EFFUGIUM_SALTUS)
     {
         _nativum_saltum_tractare(m, &fructus);
@@ -17149,11 +17432,26 @@ _nativum_vocare (
             _vitium(m, "nativum: effugium non paratum");
             redde FALSUM;
         }
+        /* vitium in codice dorsi: tabulata restituuntur (positio
+         * ut in halitu interpretato; nuntius machinulae severioris
+         * differt - memoria nativa non probatur) */
+        (vacuum)_nativum_tabulata_restituere(m, fructus.pc, fructus.fp,
+            NIHIL);
         sprintf(nuntius, "nativum: signum %d ad pc 0x%lx",
             (int)fructus.signum_systematis,
             (insignatus longus)fructus.pc);
         _vitium(m, nuntius);
         redde FALSUM;
+    }
+    si (reditus_octeti > ZEPHYRUM)
+    {
+        /* x0:x1 in locum vocantis, octetos exacte */
+        si (!_memoriam_probare(m, reditus_inscriptio, reditus_octeti))
+        {
+            redde FALSUM;
+        }
+        memcpy((vacuum*)(memoriae_index)reditus_inscriptio, fructus.x,
+            reditus_octeti);
     }
     si (typus_reditus == MEDULLA_TYPUS_F64)
     {
@@ -26964,7 +27262,7 @@ officina_effugium_salire (
 #define R_SP                XXXI    /* in ADD/SUB_IMM et basi memoriae */
 #define R_NULLUM                XXXI    /* alibi */
 #define SEDES_NULLA         (-I)    /* registrum numquam vivit */
-#define TABULATUM_MAXIMUM   4080    /* sub sp,sp,#imm12 */
+#define TABULATUM_MAXIMUM   0x100000 /* sub sp duobus imm12 */
 
 nomen structura {
             vacuum* introitus;       /* NIHIL = non compilata */
@@ -27017,6 +27315,27 @@ nomen structura {
                         b32  servata_usa[SERVATA_NUMERUS];
                         s32  numerus_servatorum;
                         s64  tabulatum;      /* octeti sub x29 */
+    /* arcae (T8): locellus staticus per instructionem arca, supra
+     * loculos et servata; offset ab sp per indicem planum (-I: non
+     * arca) */
+                        s32* arcae_offset;
+    /* area pontis (T8): verba argumentorum aedificati cum statu,
+     * inter servata et arcas (offset parvus: str [sp,#imm]) */
+                        s64 pons_basis;
+    /* argumenta exeuntia in stiva (T8 gradus III): ima tabulati
+     * ([sp + 0)), ut AAPCS64 poscit; loculi supra */
+                        s64 exitus_magnitudo;
+                        s32 pons_verba;
+                        s64 arcae_basis;
+                        s64 arcae_magnitudo;
+    /* aggregata (T8 gradus IV): locellus XVI octetorum per
+     * parametrum aggregatum parvum in registris acceptum et per
+     * %reditus parvum (offset in arcis; -I: nullus); reditus parvus
+     * in 'redde' inde in x0:x1 oneratur */
+                        s32* parametri_arca;
+                        s64  reditus_arca;
+                        s32  reditus_octeti;
+                        i32  numerus_instructionum;
                         s32* notae;          /* nota per bloccum */
                         i32* basis_plana;    /* index planus primi
                                               * instructionis blocci */
@@ -27215,9 +27534,147 @@ _constantem_ponere (
 
 interior s64
 _offset_loculi (
-    s32 sedes)
+    constans Compilatio* k,
+                    s32  sedes)
 {
-    redde (s64)(-(sedes + II)) * VIII;
+    redde k->exitus_magnitudo + (s64)(-(sedes + II)) * VIII;
+}
+
+interior s32
+_octeti_typi (
+    s32 typus);
+
+/* locus argumenti integri in stiva (Apple AAPCS64: magnitudine et
+ * ordinatione NATURALI, non verbis VIII octetorum); cursor
+ * promovetur */
+interior s64
+_stivae_locum_capere (
+    s64* cursor,
+    s32  typus)
+{
+    s64 mag = (s64)_octeti_typi(typus);
+    s64 offset;
+
+    *cursor  = (*cursor + mag - I) & ~(mag - I);
+    offset   = *cursor;
+    *cursor  += mag;
+    redde offset;
+}
+
+/* sedes liminis in vocatione (Apple AAPCS64, classis integra) */
+#define LIMEN_REGISTRUM  ZEPHYRUM    /* x[index_x] (verbum I aut II) */
+#define LIMEN_STIVA      I           /* [stiva + offset] */
+#define LIMEN_X_OCTO     II          /* %reditus maior: inscriptio x8 */
+#define LIMEN_NULLUM     III         /* %reditus parvus: nihil transit,
+                                      * valor in x0:x1 redit */
+
+nomen structura {
+    s32 genus;
+    s32 index_x;    /* registrum x primum */
+    s32 octeti;     /* aggregatum parvum per VALOREM (aut %reditus):
+                     * magnitudo; scalare et inscriptio: zephyrus */
+    s32 typus;      /* scalaris (inscriptio aggregati maioris: I64) */
+    s64 offset;
+} LimenSedes;
+
+nomen structura {
+    s32 registra;   /* x proximum liberum (0 - VIII) */
+    s64 stiva;      /* octetus proximus liber stivae argumentorum */
+} LimenCursor;
+
+/* limen proximum collocat et cursorem promovet:
+ *  - %reditus <= XVI octetorum: nihil transit; maior: x8;
+ *  - aggregatum <= XVI octetorum: verba I aut II in registris x
+ *    CONTINUIS; si non capiunt, TOTUM in stivam (ordinatio VIII) et
+ *    registra x reliqua VACANT;
+ *  - aggregatum maius: inscriptio copiae, ut i64;
+ *  - scalare: registrum x, aut stiva magnitudine NATURALI. */
+interior LimenSedes
+_limen_collocare (
+                     LimenCursor* cursor,
+    constans MedullaTypusLiminis* limen)
+{
+    LimenSedes s;
+
+    memset(&s, ZEPHYRUM, magnitudo(s));
+    s.typus = limen->typus;
+    si (limen->est_reditus)
+    {
+        s.typus   = MEDULLA_TYPUS_I64;
+        s.octeti  = (s32)limen->magnitudo_octetorum;
+        s.genus   = (limen->magnitudo_octetorum <= XVI)
+            ? LIMEN_NULLUM : LIMEN_X_OCTO;
+        redde s;
+    }
+    si (limen->typus == MEDULLA_TYPUS_AGGREGATUM)
+    {
+        s.typus = MEDULLA_TYPUS_I64;
+        si (limen->magnitudo_octetorum <= XVI)
+        {
+            s32 verba = ((s32)limen->magnitudo_octetorum + VII) / VIII;
+
+            s.octeti = (s32)limen->magnitudo_octetorum;
+            si (cursor->registra + verba <= VIII)
+            {
+                s.genus           = LIMEN_REGISTRUM;
+                s.index_x         = cursor->registra;
+                cursor->registra  += verba;
+                redde s;
+            }
+            cursor->registra  = VIII;
+            cursor->stiva     = (cursor->stiva + VII) & ~(s64)VII;
+            s.genus           = LIMEN_STIVA;
+            s.offset          = cursor->stiva;
+            cursor->stiva     += (s64)verba * VIII;
+            redde s;
+        }
+    }
+    si (cursor->registra < VIII)
+    {
+        s.genus    = LIMEN_REGISTRUM;
+        s.index_x  = cursor->registra;
+        cursor->registra++;
+        redde s;
+    }
+    s.genus   = LIMEN_STIVA;
+    s.offset  = _stivae_locum_capere(&cursor->stiva, s.typus);
+    redde s;
+}
+
+/* limen quod dorsum transferre scit; FALSUM = recusatio posita */
+interior b32
+_limen_sustentum (
+                      Compilatio* k,
+    constans MedullaTypusLiminis* limen)
+{
+    si (limen->typus != MEDULLA_TYPUS_AGGREGATUM && !limen->est_reditus)
+    {
+        redde VERUM;
+    }
+    si (limen->hfa_typus >= ZEPHYRUM)
+    {
+        _compilationem_recusare(k,
+            "dorsum: aggregatum fluitans (Opus IX)");
+        redde FALSUM;
+    }
+    si (limen->magnitudo_octetorum == ZEPHYRUM)
+    {
+        _compilationem_recusare(k,
+            "dorsum: aggregatum sine magnitudine");
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+/* typus sub quo operandum liminis legitur (aggregatum et %reditus:
+ * inscriptio) */
+interior s32
+_typus_liminis (
+    constans MedullaTypusLiminis* limen)
+{
+    redde (limen->typus == MEDULLA_TYPUS_AGGREGATUM
+        || limen->est_reditus)
+        ? (s32)MEDULLA_TYPUS_I64 : limen->typus;
 }
 
 /* fontem in registrum A64 reddit: registrum allocatum ipsum, aut
@@ -27246,7 +27703,7 @@ _fons (
             redde operis;
         }
         _a64(k, CODIFICATOR_A64_LDR_IMM, VIII, operis, R_SP, 0,
-            _offset_loculi(sedes), 0);
+            _offset_loculi(k, sedes), 0);
         redde operis;
     }
     si (operandum->genus == MEDULLA_OPERANDUM_IMMEDIATUM)
@@ -27284,7 +27741,7 @@ _destinationem_condere (
     si (sedes <= -II)
     {
         _a64(k, CODIFICATOR_A64_STR_IMM, VIII, registrum_a64, R_SP, 0,
-            _offset_loculi(sedes), 0);
+            _offset_loculi(k, sedes), 0);
     }
     /* SEDES_NULLA: destinatio numquam lecta - valor abicitur */
 }
@@ -27325,6 +27782,11 @@ _op_sustenta (
     casus MEDULLA_OP_EXTENDERE:
     casus MEDULLA_OP_AMPUTARE:
     casus MEDULLA_OP_VOCARE:
+    casus MEDULLA_OP_LEGERE:
+    casus MEDULLA_OP_SCRIBERE:
+    casus MEDULLA_OP_ARCA:
+    casus MEDULLA_OP_LOCUS:
+    casus MEDULLA_OP_COPIA:
     casus MEDULLA_OP_REDDE:
         redde VERUM;
     ordinarius:
@@ -27345,8 +27807,15 @@ _operationem_recusare (
     _compilationem_recusare(k, nuntius);
 }
 
-/* vocatus directus: index functionis conexionis; -I + recusatio
- * nominata si vocatus non est functio interpretata nota */
+/* aedificatum a ut valor vocati negativus; -I recusatio manet */
+#define VOCATUS_AEDIFICATUM(a)  (-(a) - X)
+#define AEDIFICATUM_VOCATI(v)   (-(v) - X)
+#define PONS_ARGUMENTA_MAXIMA   XVI
+#define VOCATUS_INDIRECTUS      (-II)
+#define ARGUMENTA_NATIVA_MAXIMA XXXII
+
+/* vocatus directus: index functionis conexionis (>= 0), aedificatum
+ * (VOCATUS_AEDIFICATUM, <= -X), aut -I + recusatio nominata */
 interior s32
 _vocatum_resolvere (
                     Compilatio* k,
@@ -27356,10 +27825,13 @@ _vocatum_resolvere (
                    character  nuntius[CXXVIII];
                          s32  globale;
 
+    si (ins->a.genus == MEDULLA_OPERANDUM_REGISTRUM)
+    {
+        redde VOCATUS_INDIRECTUS;   /* per descriptorem in registro */
+    }
     si (ins->a.genus != MEDULLA_OPERANDUM_SYMBOLUM)
     {
-        _compilationem_recusare(k,
-            "dorsum: vocatio per monstratorem (Opus VIII)");
+        _compilationem_recusare(k, "dorsum: vocatus insanus");
         redde -I;
     }
     globale = conexio_symbolum_globale(k->d->conexio, k->modulus_index,
@@ -27374,6 +27846,16 @@ _vocatum_resolvere (
         redde k->d->functio_symboli[globale];
     }
     symbolum = conexio_symbolum_obtinere(k->d->conexio, globale);
+    /* aedificatum machinulae (decipula in AEDIFICATUM versa): index
+     * eius ut valor negativus codificatur */
+    si (   symbolum->genus == CONEXIO_SYMBOLUM_DECIPULA
+        && symbolum->sedes != NIHIL
+        && ((constans ConexioDescriptor*)symbolum->sedes)->signum
+            == CONEXIO_SIGNUM_AEDIFICATUM)
+    {
+        redde VOCATUS_AEDIFICATUM((s32)((constans ConexioDescriptor*)
+            symbolum->sedes)->index);
+    }
     sprintf(nuntius, "vocat $%.*s interpretatum",
         (symbolum->titulus.mensura < LXXX)
             ? (int)symbolum->titulus.mensura : LXXX,
@@ -27400,6 +27882,40 @@ _limen_argumenti (
     redde officina_xar_obtinere(f->operanda_typi, (i32)(ins->extra_index + j));
 }
 
+/* aedificatum PURUM directe (inscriptio libc) vocari potest si
+ * vocatio AAPCS64 integra est: non variadica, <= VIII argumenta
+ * integra, reditus integer aut nullus. Aliter per pontem (pura
+ * fluitantia: donec dorsum registra fluitantia habeat). */
+interior b32
+_aedificatum_directum (
+                    Compilatio* k,
+    constans MedullaInstructio* ins,
+                           s32  aedificatum)
+{
+    s32 j;
+
+    si (   !machinula_aedificatum_purum(aedificatum)
+        || machinula_aedificatum_inscriptio(aedificatum) == NIHIL
+        || ins->argumenta_fixa >= ZEPHYRUM || ins->extra_numerus > VIII
+        || (   ins->typus != MEDULLA_TYPUS_NIHIL
+            && !_typus_integer(ins->typus)))
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < ins->extra_numerus; j++)
+    {
+        constans MedullaTypusLiminis* limen = _limen_argumenti(k, ins,
+            j);
+
+        si (   limen == NIHIL || !_typus_integer(limen->typus)
+            || limen->est_reditus)
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
 /* typi instructionis unius; FALSUM = recusatio posita */
 interior b32
 _typi_instructionis_probare (
@@ -27414,7 +27930,39 @@ _typi_instructionis_probare (
     casus MEDULLA_OP_SALIRE:
     casus MEDULLA_OP_RAMUS:
     casus MEDULLA_OP_SISTERE:
+    casus MEDULLA_OP_COPIA:
         redde VERUM;
+    casus MEDULLA_OP_ARCA:
+        /* locellus staticus: magnitudo et ordinatio immediatae
+         * (lex machinulae E14); ordinatio ultra XVI tabulatum
+         * aliter ordinatum posceret */
+        si (   ins->a.genus != MEDULLA_OPERANDUM_IMMEDIATUM
+            || ins->b.genus != MEDULLA_OPERANDUM_IMMEDIATUM
+            || ins->a.datum.immediatum < ZEPHYRUM
+            || ins->a.datum.immediatum > (s64)TABULATUM_MAXIMUM)
+        {
+            _compilationem_recusare(k,
+                "dorsum: arca sine magnitudine immediata");
+            redde FALSUM;
+        }
+        si (ins->b.datum.immediatum > XVI)
+        {
+            _compilationem_recusare(k,
+                "dorsum: arca ordinatione ultra XVI");
+            redde FALSUM;
+        }
+        redde VERUM;
+    casus MEDULLA_OP_LOCUS:
+        si (   ins->a.genus != MEDULLA_OPERANDUM_SYMBOLUM
+            || conexio_symbolum_globale(k->d->conexio,
+                   k->modulus_index, ins->a.datum.index) < ZEPHYRUM)
+        {
+            _compilationem_recusare(k, "dorsum: locus sine symbolo");
+            redde FALSUM;
+        }
+        redde VERUM;
+    casus MEDULLA_OP_LEGERE:
+    casus MEDULLA_OP_SCRIBERE:
     casus MEDULLA_OP_MOVERE:
         si (!_typus_integer(ins->typus))
         {
@@ -27432,6 +27980,17 @@ _typi_instructionis_probare (
         }
         redde VERUM;
     casus MEDULLA_OP_VOCARE:
+    {
+        s32 vocatus = _vocatum_resolvere(k, ins);
+        b32 per_pontem;
+
+        si (vocatus == -I)
+        {
+            redde FALSUM;
+        }
+        per_pontem = vocatus <= -X
+            && !_aedificatum_directum(k, ins,
+            AEDIFICATUM_VOCATI(vocatus));
         si (   ins->typus != MEDULLA_TYPUS_NIHIL
             && !_typus_integer(ins->typus))
         {
@@ -27439,22 +27998,24 @@ _typi_instructionis_probare (
                 "dorsum: reditus vocati non integer (Opus IX)");
             redde FALSUM;
         }
-        si (ins->argumenta_fixa >= ZEPHYRUM)
+        si (!per_pontem && ins->argumenta_fixa >= ZEPHYRUM)
         {
             _compilationem_recusare(k,
                 "dorsum: vocatio variadica (Opus VIII)");
             redde FALSUM;
         }
-        si (ins->extra_numerus > VIII)
+        si (ins->extra_numerus > (per_pontem ? PONS_ARGUMENTA_MAXIMA
+                : ARGUMENTA_NATIVA_MAXIMA))
         {
-            _compilationem_recusare(k,
-                "dorsum: argumenta plura quam VIII (Opus VIII)");
+            _compilationem_recusare(k, "dorsum: argumenta nimia");
             redde FALSUM;
         }
         per (j = ZEPHYRUM; j < ins->extra_numerus; j++)
         {
             constans MedullaTypusLiminis* limen = _limen_argumenti(k,
                 ins, j);
+            constans MedullaOperandum* operandum = officina_xar_obtinere(
+                k->functio->operanda, (i32)(ins->extra_index + j));
 
             si (limen == NIHIL || limen->typus < ZEPHYRUM)
             {
@@ -27462,14 +28023,41 @@ _typi_instructionis_probare (
                     "dorsum: argumentum sine typo");
                 redde FALSUM;
             }
-            si (!_typus_integer(limen->typus) || limen->est_reditus)
+            si (per_pontem)
+            {
+                /* pons verba LXIV accipit: integra, inscriptio
+                 * aggregati, immediatum fluitans ut figura bitorum;
+                 * registrum fluitans dorsum nondum habet */
+                si (   (   limen->typus == MEDULLA_TYPUS_F32
+                        || limen->typus == MEDULLA_TYPUS_F64)
+                    && operandum->genus
+                        != MEDULLA_OPERANDUM_IMMEDIATUM_F)
+                {
+                    _compilationem_recusare(k,
+                        "dorsum: argumentum fluitans (Opus IX)");
+                    redde FALSUM;
+                }
+                si (limen->est_reditus)
+                {
+                    _compilationem_recusare(k, "dorsum: argumentum"
+                        " non integrum (Opus VIII)");
+                    redde FALSUM;
+                }
+                perge;
+            }
+            si (!_limen_sustentum(k, limen))
+            {
+                redde FALSUM;
+            }
+            si (!_typus_integer(_typus_liminis(limen)))
             {
                 _compilationem_recusare(k,
-                    "dorsum: argumentum non integrum (Opus VIII)");
+                    "dorsum: argumentum fluitans (Opus IX)");
                 redde FALSUM;
             }
         }
-        redde _vocatum_resolvere(k, ins) >= ZEPHYRUM;
+        redde VERUM;
+    }
     ordinarius:
         si (!_typus_integer_latus(ins->typus))
         {
@@ -27569,6 +28157,10 @@ _latitudines_probare (
                     casus MEDULLA_OP_MAIOR:
                     casus MEDULLA_OP_MAIOR_AEQUALIS:
                     casus MEDULLA_OP_EXTENDERE:
+                    casus MEDULLA_OP_LEGERE:   /* onus signo in LXIV
+                                                * extensum */
+                    casus MEDULLA_OP_ARCA:
+                    casus MEDULLA_OP_LOCUS:
                         perge;
                     casus MEDULLA_OP_MOVERE:
                         si (ins->a.genus
@@ -27594,6 +28186,32 @@ _latitudines_probare (
                 casus MEDULLA_OP_SALIRE:
                 casus MEDULLA_OP_RAMUS:
                 casus MEDULLA_OP_SISTERE:
+                casus MEDULLA_OP_ARCA:
+                casus MEDULLA_OP_LOCUS:
+                    frange;
+                casus MEDULLA_OP_LEGERE:
+                    lata = _lectio_lata_angusti(angusta,
+                        k->numerus_registrorum, &ins->a,
+                        MEDULLA_TYPUS_I64);
+                    frange;
+                casus MEDULLA_OP_SCRIBERE:
+                    lata = _lectio_lata_angusti(angusta,
+                               k->numerus_registrorum, &ins->a,
+                               MEDULLA_TYPUS_I64)
+                        || _lectio_lata_angusti(angusta,
+                               k->numerus_registrorum, &ins->b,
+                               ins->typus);
+                    frange;
+                casus MEDULLA_OP_COPIA:
+                    lata = _lectio_lata_angusti(angusta,
+                               k->numerus_registrorum, &ins->a,
+                               MEDULLA_TYPUS_I64)
+                        || _lectio_lata_angusti(angusta,
+                               k->numerus_registrorum, &ins->b,
+                               MEDULLA_TYPUS_I64)
+                        || _lectio_lata_angusti(angusta,
+                               k->numerus_registrorum, &ins->c,
+                               MEDULLA_TYPUS_I64);
                     frange;
                 casus MEDULLA_OP_REDDE:
                     lata = _lectio_lata_angusti(angusta,
@@ -27606,6 +28224,10 @@ _latitudines_probare (
                         k->numerus_registrorum, &ins->a, ins->typus);
                     frange;
                 casus MEDULLA_OP_VOCARE:
+                    /* descriptor vocati indirecti: inscriptio */
+                    lata = _lectio_lata_angusti(angusta,
+                        k->numerus_registrorum, &ins->a,
+                        MEDULLA_TYPUS_I64);
                     per (a = ZEPHYRUM; a < ins->extra_numerus; a++)
                     {
                         constans MedullaTypusLiminis* limen =
@@ -27616,7 +28238,7 @@ _latitudines_probare (
                                    k->numerus_registrorum,
                                    officina_xar_obtinere(f->operanda,
                                        (i32)(ins->extra_index + a)),
-                                   limen->typus))
+                                   _typus_liminis(limen)))
                         {
                             lata = VERUM;
                         }
@@ -27655,10 +28277,9 @@ _functionem_probare (
         _compilationem_recusare(k, "functio variadica");
         redde;
     }
-    si (officina_xar_numerus(f->parametra) > VIII)
+    si (officina_xar_numerus(f->parametra) > ARGUMENTA_NATIVA_MAXIMA)
     {
-        _compilationem_recusare(k,
-            "dorsum: parametra plura quam VIII (Opus VIII)");
+        _compilationem_recusare(k, "dorsum: parametra nimia");
         redde;
     }
     si (   f->typus_reditus != MEDULLA_TYPUS_NIHIL
@@ -27672,21 +28293,15 @@ _functionem_probare (
     {
         constans MedullaParametrum* p = officina_xar_obtinere(f->parametra, b);
 
-        si (   !_typus_integer_latus(p->typus)
-            && p->typus != MEDULLA_TYPUS_I8
-            && p->typus != MEDULLA_TYPUS_I16
-            && p->typus != MEDULLA_TYPUS_S8
-            && p->typus != MEDULLA_TYPUS_S16)
+        si (!_limen_sustentum(k, &p->limen))
+        {
+            redde;
+        }
+        si (   !_typus_integer(p->typus)
+            || !_typus_integer(_typus_liminis(&p->limen)))
         {
             _compilationem_recusare(k,
                 "dorsum: parametrum non integrum (Opus IX)");
-            redde;
-        }
-        si (   p->limen.typus == MEDULLA_TYPUS_AGGREGATUM
-            || p->limen.est_reditus)
-        {
-            _compilationem_recusare(k,
-                "dorsum: parametrum aggregatum (Opus VIII)");
             redde;
         }
     }
@@ -27970,9 +28585,12 @@ _registra_allocare (
             k->numerus_servatorum++;
         }
     }
-    k->tabulatum = (s64)(k->numerus_loculorum + k->numerus_servatorum)
-        * VIII;
-    k->tabulatum = (k->tabulatum + XV) & ~(s64)XV;
+    k->pons_basis = k->exitus_magnitudo + (s64)(k->numerus_loculorum
+        + k->numerus_servatorum) * VIII;
+    k->pons_basis   = (k->pons_basis + XV) & ~(s64)XV;
+    k->arcae_basis  = k->pons_basis
+        + (((s64)k->pons_verba * VIII + XV) & ~(s64)XV);
+    k->tabulatum    = k->arcae_basis + k->arcae_magnitudo;
     si (k->tabulatum > (s64)TABULATUM_MAXIMUM)
     {
         _compilationem_recusare(k, "dorsum: tabulatum nimis magnum");
@@ -27985,9 +28603,16 @@ _registra_allocare (
  * ================================================== */
 
 interior vacuum
+_inscriptionem_tabulati (
+    Compilatio* k,
+           s64  offset,
+           s32  rd);
+
+interior vacuum
 _prologum_emittere (
     Compilatio* k)
 {
+                LimenCursor  cursor;
     constans MedullaFunctio* f      = k->functio;
                         s32  locus  = k->numerus_loculorum;
                         s32  i;
@@ -27998,35 +28623,100 @@ _prologum_emittere (
     _a64(k, CODIFICATOR_A64_STP, VIII, R_FP, R_SP, R_LR, -(s64)XVI,
         CODIFICATOR_A64_ANTE);
     _a64(k, CODIFICATOR_A64_ADD_IMM, LXIV, R_FP, R_SP, 0, 0, 0);
-    si (k->tabulatum > ZEPHYRUM)
+    /* sub sp duobus immediatis XII bitorum (tabulatum < XVI MiB) */
+    si ((k->tabulatum >> XII) != ZEPHYRUM)
     {
         _a64(k, CODIFICATOR_A64_SUB_IMM, LXIV, R_SP, R_SP, 0,
-            k->tabulatum, 0);
+            k->tabulatum >> XII, XII);
+    }
+    si ((k->tabulatum & (s64)0xFFF) != ZEPHYRUM)
+    {
+        _a64(k, CODIFICATOR_A64_SUB_IMM, LXIV, R_SP, R_SP, 0,
+            k->tabulatum & (s64)0xFFF, 0);
     }
     per (i = ZEPHYRUM; i < SERVATA_NUMERUS; i++)
     {
         si (k->servata_usa[i])
         {
             _a64(k, CODIFICATOR_A64_STR_IMM, VIII, SERVATA_PRIMUM + i,
-                R_SP, 0, (s64)locus * VIII, 0);
+                R_SP, 0, k->exitus_magnitudo + (s64)locus * VIII, 0);
             locus++;
         }
     }
-    /* parametra: x0.. -> sedes (sedes numquam in x0-x7: nullus
+    /* parametra: x0.. -> sedes (sedes numquam in x0-x8: nullus
      * ordo motuum servandus) */
+    memset(&cursor, ZEPHYRUM, magnitudo(cursor));
     per (p = ZEPHYRUM; p < (i32)officina_xar_numerus(f->parametra); p++)
     {
         constans MedullaParametrum* par = officina_xar_obtinere(f->parametra, p);
                                s32  sedes = k->sedes[par->index];
+                        LimenSedes  ls = _limen_collocare(&cursor,
+                                       &par->limen);
+                               s32 fons  = ls.index_x;
 
+        si (   ls.genus == LIMEN_NULLUM
+            || (ls.genus == LIMEN_REGISTRUM && ls.octeti > ZEPHYRUM))
+        {
+            /* aggregatum parvum in registris acceptum in locellum
+             * suum conditur; %reditus parvus locellum vacuum habet.
+             * Parametrum = inscriptio locelli. */
+            s64 offset = k->arcae_basis + (s64)k->parametri_arca[p];
+
+            si (ls.genus == LIMEN_REGISTRUM)
+            {
+                _inscriptionem_tabulati(k, offset, R_OPERIS_A);
+                _a64(k, CODIFICATOR_A64_STR_IMM, VIII, ls.index_x,
+                    R_OPERIS_A, 0, 0, 0);
+                si (ls.octeti > VIII)
+                {
+                    _a64(k, CODIFICATOR_A64_STR_IMM, VIII,
+                        ls.index_x + I, R_OPERIS_A, 0, VIII, 0);
+                }
+            }
+            si (sedes == SEDES_NULLA)
+            {
+                perge;
+            }
+            fons = (sedes >= ZEPHYRUM) ? sedes : R_OPERIS_A;
+            _inscriptionem_tabulati(k, offset, fons);
+        }
+        alioquin si (ls.genus == LIMEN_X_OCTO)
+        {
+            fons = VIII;
+        }
+        alioquin si (ls.genus == LIMEN_STIVA)
+        {
+            si (sedes == SEDES_NULLA)
+            {
+                perge;
+            }
+            fons = (sedes >= ZEPHYRUM) ? sedes : R_OPERIS_A;
+            si (ls.octeti > ZEPHYRUM)
+            {
+                /* aggregatum parvum in stiva vocantis: parametrum =
+                 * inscriptio eius ibi */
+                _a64(k, CODIFICATOR_A64_ADD_IMM, LXIV, fons, R_FP, 0,
+                    (s64)XVI + ls.offset, 0);
+            }
+            alioquin
+            {
+                /* [x29 + 16 + offset], magnitudine naturali; signata
+                 * angusta signo extensa */
+                _a64(k, _typus_signatus_angustus(ls.typus)
+                    ? CODIFICATOR_A64_LDRS_IMM
+                    : CODIFICATOR_A64_LDR_IMM,
+                    _octeti_typi(ls.typus), fons, R_FP, 0,
+                    (s64)XVI + ls.offset, 0);
+            }
+        }
         si (sedes >= ZEPHYRUM)
         {
-            _registrum_movere(k, LXIV, sedes, (s32)p);
+            _registrum_movere(k, LXIV, sedes, fons);
         }
         alioquin si (sedes <= -II)
         {
-            _a64(k, CODIFICATOR_A64_STR_IMM, VIII, (s32)p, R_SP, 0,
-                _offset_loculi(sedes), 0);
+            _a64(k, CODIFICATOR_A64_STR_IMM, VIII, fons, R_SP, 0,
+                _offset_loculi(k, sedes), 0);
         }
     }
     /* registra lecta ante omnem definitionem: zephyrus (F13) */
@@ -28062,9 +28752,208 @@ _prologum_emittere (
         alioquin si (k->sedes[r] <= -II)
         {
             _a64(k, CODIFICATOR_A64_STR_IMM, VIII, R_NULLUM, R_SP, 0,
-                _offset_loculi(k->sedes[r]), 0);
+                _offset_loculi(k, k->sedes[r]), 0);
         }
     }
+}
+
+interior vacuum
+_saltum_localem_emittere (
+    Compilatio* k,
+           s32  forma,
+           s32  latitudo,
+           s32  locellus,
+           s32  conditio,
+           s32  nota);
+
+/* arcae disponuntur: locellus per instructionem arca, XVI-ordinatus
+ * (lex machinulae E14: arca in ansa eundem locellum reddit) */
+interior vacuum
+_arcas_tabulati_disponere (
+    Compilatio* k)
+{
+    constans MedullaFunctio* f = k->functio;
+                        i32  b;
+                        i32  j;
+
+    k->arcae_magnitudo  = ZEPHYRUM;
+    k->reditus_arca     = -I;
+    k->reditus_octeti   = ZEPHYRUM;
+    k->arcae_offset = officina_piscina_allocare(k->piscina, (memoriae_index)
+        (k->numerus_instructionum + I) * magnitudo(s32));
+    k->parametri_arca = officina_piscina_allocare(k->piscina, (memoriae_index)
+        (officina_xar_numerus(f->parametra) + I) * magnitudo(s32));
+    si (k->arcae_offset == NIHIL || k->parametri_arca == NIHIL)
+    {
+        _compilationem_recusare(k, "dorsum: memoria deest");
+        redde;
+    }
+    /* locelli aggregatorum liminis PRIMI in arcis (offset parvus) */
+    {
+        LimenCursor cursor;
+
+        memset(&cursor, ZEPHYRUM, magnitudo(cursor));
+        per (b = ZEPHYRUM; b < (i32)officina_xar_numerus(f->parametra); b++)
+        {
+            constans MedullaParametrum* p = officina_xar_obtinere(f->parametra,
+                b);
+            LimenSedes s = _limen_collocare(&cursor, &p->limen);
+
+            k->parametri_arca[b] = -I;
+            si (   s.genus == LIMEN_NULLUM
+                || (s.genus == LIMEN_REGISTRUM && s.octeti > ZEPHYRUM))
+            {
+                k->parametri_arca[b]  = (s32)k->arcae_magnitudo;
+                k->arcae_magnitudo    += XVI;
+            }
+            si (s.genus == LIMEN_NULLUM)
+            {
+                k->reditus_arca    = (s64)k->parametri_arca[b];
+                k->reditus_octeti  = s.octeti;
+            }
+        }
+    }
+    per (b = ZEPHYRUM; b < (i32)officina_xar_numerus(f->blocci); b++)
+    {
+        constans MedullaBloccus* bloccus = officina_xar_obtinere(f->blocci, b);
+
+        per (j = ZEPHYRUM; j < (i32)officina_xar_numerus(bloccus->instructiones);
+             j++)
+        {
+            constans MedullaInstructio* ins = officina_xar_obtinere(
+                bloccus->instructiones, j);
+
+            k->arcae_offset[k->basis_plana[b] + j] = -I;
+            si (   ins->op == MEDULLA_OP_VOCARE
+                && ins->extra_numerus > k->pons_verba)
+            {
+                k->pons_verba = ins->extra_numerus;
+            }
+            si (ins->op == MEDULLA_OP_VOCARE)
+            {
+                LimenCursor cursor;
+                        s32 a;
+
+                memset(&cursor, ZEPHYRUM, magnitudo(cursor));
+                per (a = ZEPHYRUM; a < ins->extra_numerus; a++)
+                {
+                    constans MedullaTypusLiminis* limen =
+                        _limen_argumenti(k, ins, a);
+
+                    si (limen != NIHIL)
+                    {
+                        (vacuum)_limen_collocare(&cursor, limen);
+                    }
+                }
+                cursor.stiva = (cursor.stiva + XV) & ~(s64)XV;
+                si (cursor.stiva > k->exitus_magnitudo)
+                {
+                    k->exitus_magnitudo = cursor.stiva;
+                }
+            }
+            si (   ins->op != MEDULLA_OP_ARCA
+                || !medulla_fluxus_attingibilis(k->fluxus, (s32)b))
+            {
+                perge;
+            }
+            k->arcae_offset[k->basis_plana[b] + j] =
+                (s32)k->arcae_magnitudo;
+            k->arcae_magnitudo += (ins->a.datum.immediatum + XV)
+                & ~(s64)XV;
+            si (k->arcae_magnitudo > (s64)TABULATUM_MAXIMUM)
+            {
+                _compilationem_recusare(k,
+                    "dorsum: tabulatum nimis magnum");
+                redde;
+            }
+        }
+    }
+}
+
+/* rd = sp + offset (duobus immediatis XII bitorum) */
+interior vacuum
+_inscriptionem_tabulati (
+    Compilatio* k,
+           s64  offset,
+           s32  rd)
+{
+    _a64(k, CODIFICATOR_A64_ADD_IMM, LXIV, rd, R_SP, 0,
+        offset & (s64)0xFFF, 0);
+    si ((offset >> XII) != ZEPHYRUM)
+    {
+        _a64(k, CODIFICATOR_A64_ADD_IMM, LXIV, rd, rd, 0, offset >> XII,
+            XII);
+    }
+}
+
+interior s32
+_octeti_typi (
+    s32 typus)
+{
+    commutatio (typus)
+    {
+    casus MEDULLA_TYPUS_I8:
+    casus MEDULLA_TYPUS_S8:
+        redde I;
+    casus MEDULLA_TYPUS_I16:
+    casus MEDULLA_TYPUS_S16:
+        redde II;
+    casus MEDULLA_TYPUS_I32:
+    casus MEDULLA_TYPUS_S32:
+        redde IV;
+    ordinarius:
+        redde VIII;
+    }
+}
+
+/* copia a (finis), b (fons), c (magnitudo): memmove in linea, per
+ * octetos - superpositio in utramque partem recta. x0-x2 et x16
+ * libera sunt; nulla vocatio (temporaria manent). */
+interior vacuum
+_copiam_emittere (
+                    Compilatio* k,
+    constans MedullaInstructio* ins)
+{
+    s32 nota_finis    = codificator_a64_notam_creare(k->c);
+    s32 nota_retro    = codificator_a64_notam_creare(k->c);
+    s32 nota_ante     = codificator_a64_notam_creare(k->c);
+    s32 nota_retro_c  = codificator_a64_notam_creare(k->c);
+    s32 r;
+
+    r = _fons(k, &ins->a, LXIV, 0);
+    _registrum_movere(k, LXIV, 0, r);
+    r = _fons(k, &ins->b, LXIV, I);
+    _registrum_movere(k, LXIV, I, r);
+    r = _fons(k, &ins->c, LXIV, II);
+    _registrum_movere(k, LXIV, II, r);
+    _saltum_localem_emittere(k, CODIFICATOR_A64_CBZ, LXIV, II,
+        CODIFICATOR_A64_AL, nota_finis);
+    /* finis > fons: a cauda retro (fons non obruitur) */
+    _a64(k, CODIFICATOR_A64_SUBS_REG, LXIV, R_NULLUM, 0, I, 0, 0);
+    _saltum_localem_emittere(k, CODIFICATOR_A64_B_COND, LXIV, 0,
+        CODIFICATOR_A64_HI, nota_retro);
+    codificator_a64_notam_ponere(k->c, nota_ante);
+    _a64(k, CODIFICATOR_A64_LDR_IMM, I, R_OPERIS_A, I, 0, 0, 0);
+    _a64(k, CODIFICATOR_A64_STR_IMM, I, R_OPERIS_A, 0, 0, 0, 0);
+    _a64(k, CODIFICATOR_A64_ADD_IMM, LXIV, I, I, 0, I, 0);
+    _a64(k, CODIFICATOR_A64_ADD_IMM, LXIV, 0, 0, 0, I, 0);
+    _a64(k, CODIFICATOR_A64_SUB_IMM, LXIV, II, II, 0, I, 0);
+    _saltum_localem_emittere(k, CODIFICATOR_A64_CBNZ, LXIV, II,
+        CODIFICATOR_A64_AL, nota_ante);
+    _saltum_localem_emittere(k, CODIFICATOR_A64_B, LXIV, 0,
+        CODIFICATOR_A64_AL, nota_finis);
+    codificator_a64_notam_ponere(k->c, nota_retro);
+    _a64(k, CODIFICATOR_A64_ADD_REG, LXIV, 0, 0, II, 0, 0);
+    _a64(k, CODIFICATOR_A64_ADD_REG, LXIV, I, I, II, 0, 0);
+    codificator_a64_notam_ponere(k->c, nota_retro_c);
+    _a64(k, CODIFICATOR_A64_SUB_IMM, LXIV, 0, 0, 0, I, 0);
+    _a64(k, CODIFICATOR_A64_SUB_IMM, LXIV, I, I, 0, I, 0);
+    _a64(k, CODIFICATOR_A64_LDR_IMM, I, R_OPERIS_A, I, 0, 0, 0);
+    _a64(k, CODIFICATOR_A64_STR_IMM, I, R_OPERIS_A, 0, 0, 0, 0);
+    _a64(k, CODIFICATOR_A64_SUB_IMM, LXIV, II, II, 0, I, 0);
+    _saltum_localem_emittere(k, CODIFICATOR_A64_CBNZ, LXIV, II,
+        CODIFICATOR_A64_AL, nota_retro_c);
+    codificator_a64_notam_ponere(k->c, nota_finis);
 }
 
 interior vacuum
@@ -28079,7 +28968,7 @@ _epilogum_emittere (
         si (k->servata_usa[i])
         {
             _a64(k, CODIFICATOR_A64_LDR_IMM, VIII, SERVATA_PRIMUM + i,
-                R_SP, 0, (s64)locus * VIII, 0);
+                R_SP, 0, k->exitus_magnitudo + (s64)locus * VIII, 0);
             locus++;
         }
     }
@@ -28369,6 +29258,288 @@ _divisionem_emittere (
     _destinationem_condere(k, ins->destinatio, rd);
 }
 
+/* vocatio aedificati cum statu per machinula_pons_nativus(index,
+ * argumenta, numerus, pc, fp). Argumenta ut verba canonica LXIV in
+ * aream pontis tabulati scribuntur, ut machinula ea aedificatis
+ * praebet: signata signo extensa, insignata zephyro, immediatum
+ * fluitans figura bitorum (f32 in dimidio inferiore), aggregatum
+ * inscriptione sua. */
+interior vacuum
+_pontem_emittere (
+                    Compilatio* k,
+    constans MedullaInstructio* ins,
+                           s32  aedificatum)
+{
+    s64 (*pons)(s64, constans i64*, s64, memoriae_index, memoriae_index)
+        = machinula_pons_nativus;
+    memoriae_index inscriptio;
+               s32 j;
+
+    memcpy(&inscriptio, &pons, magnitudo(inscriptio));
+    per (j = ZEPHYRUM; j < ins->extra_numerus; j++)
+    {
+        constans MedullaTypusLiminis* limen = _limen_argumenti(k, ins,
+            j);
+        constans MedullaOperandum* operandum = officina_xar_obtinere(
+            k->functio->operanda, (i32)(ins->extra_index + j));
+        s32 typus = (limen != NIHIL) ? limen->typus
+            : MEDULLA_TYPUS_S64;
+
+        si (operandum->genus == MEDULLA_OPERANDUM_IMMEDIATUM_F)
+        {
+            unio { f64 f; i64 v; } lata;
+            unio { f32 f; i32 v; } angusta;
+
+            lata.f     = operandum->datum.immediatum_f;
+            angusta.f  = (f32)operandum->datum.immediatum_f;
+            _constantem_ponere(k, (typus == MEDULLA_TYPUS_F32)
+                ? (s64)(i64)angusta.v : (s64)lata.v, LXIV,
+                R_OPERIS_A);
+        }
+        alioquin si (operandum->genus == MEDULLA_OPERANDUM_IMMEDIATUM)
+        {
+            _constantem_ponere(k, _canonicum_typi(
+                operandum->datum.immediatum, typus), LXIV, R_OPERIS_A);
+        }
+        alioquin
+        {
+            s32 r = _fons(k, operandum, _latitudo(typus), R_OPERIS_A);
+
+            commutatio (typus)
+            {
+            casus MEDULLA_TYPUS_S8:
+                _a64(k, CODIFICATOR_A64_SBFM, LXIV, R_OPERIS_A, r, 0, 0,
+                    VII);
+                frange;
+            casus MEDULLA_TYPUS_S16:
+                _a64(k, CODIFICATOR_A64_SBFM, LXIV, R_OPERIS_A, r, 0, 0,
+                    XV);
+                frange;
+            casus MEDULLA_TYPUS_S32:
+                _a64(k, CODIFICATOR_A64_SBFM, LXIV, R_OPERIS_A, r, 0, 0,
+                    XXXI);
+                frange;
+            casus MEDULLA_TYPUS_I8:
+            casus MEDULLA_TYPUS_I16:
+            casus MEDULLA_TYPUS_I32:
+                _latitudinem_aptare(k, typus, R_OPERIS_A, r);
+                frange;
+            ordinarius:
+                _registrum_movere(k, LXIV, R_OPERIS_A, r);
+                frange;
+            }
+        }
+        _a64(k, CODIFICATOR_A64_STR_IMM, VIII, R_OPERIS_A, R_SP, 0,
+            k->pons_basis + (s64)j * VIII, 0);
+    }
+    /* x0 = aedificatum; x1 = verba; x2 = numerus; x3 = pc (hic);
+     * x4 = fp */
+    _constantem_ponere(k, (s64)aedificatum, LXIV, 0);
+    _inscriptionem_tabulati(k, k->pons_basis, I);
+    _constantem_ponere(k, (s64)ins->extra_numerus, LXIV, II);
+    _a64(k, CODIFICATOR_A64_ADR, LXIV, III, 0, 0, 0, 0);
+    _registrum_movere(k, LXIV, IV, R_FP);
+    _constantem_ponere(k, (s64)inscriptio, LXIV, R_OPERIS_A);
+    _a64(k, CODIFICATOR_A64_BLR, LXIV, 0, R_OPERIS_A, 0, 0, 0);
+    si (ins->destinatio >= ZEPHYRUM)
+    {
+        s32 rd = _destinatio(k, ins->destinatio);
+
+        /* fructus pontis verbum canonicum: figura typi vocationis */
+        _latitudinem_aptare(k, ins->typus, rd, 0);
+        _destinationem_condere(k, ins->destinatio, rd);
+    }
+}
+
+/* rd = octeti (I - VIII) ab [basis + offset], EXACTE: nullus octetus
+ * ultra aggregatum legitur. operis = registrum liberum (rd != basis).
+ */
+interior vacuum
+_verbum_exactum_legere (
+    Compilatio* k,
+           s32  rd,
+           s32  basis,
+           s64  offset,
+           s32  octeti,
+           s32  operis)
+{
+    s32 situs   = ZEPHYRUM;
+    b32 primum  = VERUM;
+    s32 pars;
+
+    per (pars = VIII; pars >= I; pars /= II)
+    {
+        si (octeti - situs < pars)
+        {
+            perge;
+        }
+        si (primum)
+        {
+            _a64(k, CODIFICATOR_A64_LDR_IMM, pars, rd, basis, 0,
+                offset + situs, 0);
+            primum = FALSUM;
+        }
+        alioquin
+        {
+            _a64(k, CODIFICATOR_A64_LDR_IMM, pars, operis, basis, 0,
+                offset + situs, 0);
+            _a64(k, CODIFICATOR_A64_ORR_REG, LXIV, rd, rd, operis, 0,
+                situs * VIII);
+        }
+        situs += pars;
+    }
+}
+
+/* octetos (I - VIII) infimos rs in [basis + offset] scribit, EXACTE
+ * (vicini aggregati non tanguntur); rs destruitur */
+interior vacuum
+_verbum_exactum_scribere (
+    Compilatio* k,
+           s32  rs,
+           s32  basis,
+           s64  offset,
+           s32  octeti)
+{
+    s32 situs = ZEPHYRUM;
+    s32 pars;
+
+    per (pars = VIII; pars >= I; pars /= II)
+    {
+        si (octeti - situs < pars)
+        {
+            perge;
+        }
+        _a64(k, CODIFICATOR_A64_STR_IMM, pars, rs, basis, 0,
+            offset + situs, 0);
+        situs += pars;
+        si (situs < octeti)
+        {
+            /* lsr rs, rs, #(pars * 8) */
+            _a64(k, CODIFICATOR_A64_UBFM, LXIV, rs, rs, 0,
+                (s64)pars * VIII, LXIII);
+        }
+    }
+}
+
+/* argumenta vocationis nativae in sedes AAPCS64 ponit. Reddit
+ * magnitudinem %reditus parvi (inscriptio finis in verbo primo areae
+ * pontis servata - registrum eius vocationem non necessario transit),
+ * aut zephyrum. */
+interior s32
+_argumenta_emittere (
+                    Compilatio* k,
+    constans MedullaInstructio* ins)
+{
+    LimenCursor cursor;
+            s32 reditus_octeti = ZEPHYRUM;
+            s32 transitus;
+            s32 j;
+
+    /* transitus 0: stiva exiens ([sp + offset]) - PRIMUM, dum x0-x7
+     * adhuc libera; transitus 1: registra (sedes numquam in x0-x8:
+     * nullus ordo motuum servandus) */
+    per (transitus = ZEPHYRUM; transitus < II; transitus++)
+    {
+        memset(&cursor, ZEPHYRUM, magnitudo(cursor));
+        per (j = ZEPHYRUM; j < ins->extra_numerus; j++)
+        {
+            constans MedullaTypusLiminis* limen = _limen_argumenti(k,
+                ins, j);
+            constans MedullaOperandum* operandum = officina_xar_obtinere(
+                k->functio->operanda, (i32)(ins->extra_index + j));
+            LimenSedes s;
+                   s32 r;
+                   s32 v;
+
+            si (limen == NIHIL)
+            {
+                _compilationem_recusare(k,
+                    "dorsum: argumentum sine typo");
+                redde ZEPHYRUM;
+            }
+            s = _limen_collocare(&cursor, limen);
+            si ((s.genus == LIMEN_STIVA) != (transitus == ZEPHYRUM))
+            {
+                perge;
+            }
+            commutatio (s.genus)
+            {
+            casus LIMEN_STIVA:
+                si (s.octeti > ZEPHYRUM)
+                {
+                    r = _fons(k, operandum, LXIV, R_OPERIS_A);
+                    per (v = ZEPHYRUM; v * VIII < s.octeti; v++)
+                    {
+                        _verbum_exactum_legere(k, R_OPERIS_B, r,
+                            (s64)v * VIII,
+                            (s.octeti - v * VIII < VIII)
+                                ? s.octeti - v * VIII : VIII, 0);
+                        _a64(k, CODIFICATOR_A64_STR_IMM, VIII,
+                            R_OPERIS_B, R_SP, 0,
+                            s.offset + (s64)v * VIII, 0);
+                    }
+                    frange;
+                }
+                r = _fons(k, operandum, _latitudo(s.typus),
+                    R_OPERIS_A);
+                _a64(k, CODIFICATOR_A64_STR_IMM, _octeti_typi(s.typus),
+                    r, R_SP, 0, s.offset, 0);
+                frange;
+            casus LIMEN_REGISTRUM:
+                si (s.octeti > ZEPHYRUM)
+                {
+                    r = _fons(k, operandum, LXIV, R_OPERIS_A);
+                    per (v = ZEPHYRUM; v * VIII < s.octeti; v++)
+                    {
+                        _verbum_exactum_legere(k, s.index_x + v, r,
+                            (s64)v * VIII,
+                            (s.octeti - v * VIII < VIII)
+                                ? s.octeti - v * VIII : VIII,
+                            R_OPERIS_B);
+                    }
+                    frange;
+                }
+                r = _fons(k, operandum, _latitudo(s.typus),
+                    s.index_x);
+                _registrum_movere(k, LXIV, s.index_x, r);
+                frange;
+            casus LIMEN_X_OCTO:
+                r = _fons(k, operandum, LXIV, VIII);
+                _registrum_movere(k, LXIV, VIII, r);
+                frange;
+            ordinarius:     /* LIMEN_NULLUM */
+                r = _fons(k, operandum, LXIV, R_OPERIS_A);
+                _a64(k, CODIFICATOR_A64_STR_IMM, VIII, r, R_SP, 0,
+                    k->pons_basis, 0);
+                reditus_octeti = s.octeti;
+                frange;
+            }
+        }
+    }
+    redde reditus_octeti;
+}
+
+/* post vocationem: x0:x1 in locum %reditus parvi vocantis, octetos
+ * EXACTE */
+interior vacuum
+_reditum_parvum_condere (
+    Compilatio* k,
+           s32  octeti)
+{
+    si (octeti <= ZEPHYRUM)
+    {
+        redde;
+    }
+    _a64(k, CODIFICATOR_A64_LDR_IMM, VIII, R_OPERIS_A, R_SP, 0,
+        k->pons_basis, 0);
+    _verbum_exactum_scribere(k, 0, R_OPERIS_A, 0,
+        (octeti < VIII) ? octeti : VIII);
+    si (octeti > VIII)
+    {
+        _verbum_exactum_scribere(k, I, R_OPERIS_A, VIII, octeti - VIII);
+    }
+}
+
 /* sequens = instructio proxima in blocco (NIHIL ultima) */
 interior vacuum
 _instructionem_emittere (
@@ -28400,6 +29571,72 @@ _instructionem_emittere (
         _destinationem_condere(k, ins->destinatio, rd);
         frange;
     }
+    casus MEDULLA_OP_LEGERE:
+    {
+        /* onus typatum: signata signo in LXIV extensa (verbum
+         * canonicum plenum), insignata zephyro */
+        s32 ra      = _fons(k, &ins->a, LXIV, R_OPERIS_A);
+        s32 rd      = _destinatio(k, ins->destinatio);
+        s32 octeti  = _octeti_typi(ins->typus);
+
+        si (_typus_signatus_angustus(ins->typus))
+        {
+            _a64(k, CODIFICATOR_A64_LDRS_IMM, octeti, rd, ra, 0, 0, 0);
+        }
+        alioquin
+        {
+            _a64(k, CODIFICATOR_A64_LDR_IMM, octeti, rd, ra, 0, 0, 0);
+        }
+        _destinationem_condere(k, ins->destinatio, rd);
+        frange;
+    }
+    casus MEDULLA_OP_SCRIBERE:
+    {
+        s32 ra = _fons(k, &ins->a, LXIV, R_OPERIS_A);
+        s32 rb = _fons(k, &ins->b, lat, R_OPERIS_B);
+
+        _a64(k, CODIFICATOR_A64_STR_IMM, _octeti_typi(ins->typus), rb,
+            ra, 0, 0, 0);
+        frange;
+    }
+    casus MEDULLA_OP_ARCA:
+    {
+        s32 rd      = _destinatio(k, ins->destinatio);
+        s32 offset  = (k->mappa_numerus > ZEPHYRUM)
+            ? k->arcae_offset[k->mappa_index[k->mappa_numerus - I]]
+            : -I;
+
+        si (offset < ZEPHYRUM)
+        {
+            _compilationem_recusare(k, "dorsum: arca sine locello");
+            frange;
+        }
+        _inscriptionem_tabulati(k, k->arcae_basis + (s64)offset, rd);
+        _destinationem_condere(k, ins->destinatio, rd);
+        frange;
+    }
+    casus MEDULLA_OP_LOCUS:
+    {
+        /* inscriptio sedis symboli (datum aut descriptor functionis)
+         * ut constans - regio machinulae non movetur */
+        s32 globale = conexio_symbolum_globale(k->d->conexio,
+            k->modulus_index, ins->a.datum.index);
+        s32 rd = _destinatio(k, ins->destinatio);
+
+        si (globale < ZEPHYRUM)
+        {
+            _compilationem_recusare(k, "dorsum: locus sine symbolo");
+            frange;
+        }
+        _constantem_ponere(k, (s64)(memoriae_index)
+            conexio_symbolum_obtinere(k->d->conexio, globale)->sedes,
+            LXIV, rd);
+        _destinationem_condere(k, ins->destinatio, rd);
+        frange;
+    }
+    casus MEDULLA_OP_COPIA:
+        _copiam_emittere(k, ins);
+        frange;
     casus MEDULLA_OP_AMPUTARE:
     {
         s32 ra = _fons(k, &ins->a, lat, R_OPERIS_A);
@@ -28436,29 +29673,62 @@ _instructionem_emittere (
     casus MEDULLA_OP_VOCARE:
     {
                    s32 vocatus = _vocatum_resolvere(k, ins);
-                   s32 j;
+                   s32 reditus_octeti;
         memoriae_index inscriptio;
 
-        si (vocatus < ZEPHYRUM)
+        si (vocatus == -I)
         {
             frange;
         }
-        /* argumenta in x0.. (sedes numquam in x0-x7: nullus ordo
-         * motuum servandus) */
-        per (j = ZEPHYRUM; j < ins->extra_numerus; j++)
+        si (   vocatus <= -X
+            && !_aedificatum_directum(k, ins,
+                   AEDIFICATUM_VOCATI(vocatus)))
         {
-            constans MedullaTypusLiminis* limen = _limen_argumenti(k,
-                ins, j);
-            s32 r = _fons(k, officina_xar_obtinere(k->functio->operanda,
-                (i32)(ins->extra_index + j)),
-                _latitudo((limen != NIHIL) ? limen->typus
-                    : MEDULLA_TYPUS_S64), j);
+            _pontem_emittere(k, ins, AEDIFICATUM_VOCATI(vocatus));
+            frange;
+        }
+        reditus_octeti = _argumenta_emittere(k, ins);
+        si (vocatus == VOCATUS_INDIRECTUS)
+        {
+            /* descriptor {signum, index}: NATIVUM -> index est
+             * introitus; aliter halitus nominatus (limes C9 in
+             * exsecutione) */
+            s32 nota_nativa  = codificator_a64_notam_creare(k->c);
+            s32 rf           = _fons(k, &ins->a, LXIV, R_OPERIS_A);
 
-            _registrum_movere(k, LXIV, j, r);
+            _a64(k, CODIFICATOR_A64_LDR_IMM, VIII, R_OPERIS_B, rf, 0, 0,
+                0);
+            _a64(k, CODIFICATOR_A64_SUBS_IMM, LXIV, R_NULLUM,
+                R_OPERIS_B, 0, (s64)CONEXIO_SIGNUM_NATIVUM, 0);
+            _saltum_localem_emittere(k, CODIFICATOR_A64_B_COND, LXIV,
+                0, CODIFICATOR_A64_EQ, nota_nativa);
+            _stipitem_emittere(k, DORSUM_SALTUS_INDIRECTA, ZEPHYRUM);
+            codificator_a64_notam_ponere(k->c, nota_nativa);
+            rf = _fons(k, &ins->a, LXIV, R_OPERIS_A);
+            _a64(k, CODIFICATOR_A64_LDR_IMM, VIII, R_OPERIS_A, rf, 0,
+                VIII, 0);
+            _a64(k, CODIFICATOR_A64_BLR, LXIV, 0, R_OPERIS_A, 0, 0, 0);
+            _reditum_parvum_condere(k, reditus_octeti);
+            si (ins->destinatio >= ZEPHYRUM)
+            {
+                s32 rd = _destinatio(k, ins->destinatio);
+
+                _a64(k, CODIFICATOR_A64_ORR_REG, lat, rd, R_NULLUM, 0,
+                    0, 0);
+                _destinationem_condere(k, ins->destinatio, rd);
+            }
+            frange;
         }
         /* vocatus: se ipsam (introitus futurus = cursor areae) aut
          * iam locatam (clausura ante emissionem compilata) */
-        si (vocatus == k->functio_index)
+        si (vocatus < ZEPHYRUM)
+        {
+            /* aedificatum purum: functio libc ipsa */
+            inscriptio = (memoriae_index)
+                machinula_aedificatum_inscriptio(
+                    AEDIFICATUM_VOCATI(vocatus));
+        }
+        alioquin si (vocatus == k->functio_index)
         {
             inscriptio = (memoriae_index)memoria_exsecutabilis_basis(
                 k->d->area) + k->d->cursor;
@@ -28475,6 +29745,7 @@ _instructionem_emittere (
         }
         _constantem_ponere(k, (s64)inscriptio, LXIV, R_OPERIS_A);
         _a64(k, CODIFICATOR_A64_BLR, LXIV, 0, R_OPERIS_A, 0, 0, 0);
+        _reditum_parvum_condere(k, reditus_octeti);
         si (ins->destinatio >= ZEPHYRUM)
         {
             s32 rd = _destinatio(k, ins->destinatio);
@@ -28664,6 +29935,19 @@ _instructionem_emittere (
                 _a64(k, CODIFICATOR_A64_UBFM, XXXII, 0, 0, 0, 0, XV);
             }
         }
+        si (k->reditus_octeti > ZEPHYRUM)
+        {
+            /* %reditus parvus: locellus -> x0:x1 */
+            _inscriptionem_tabulati(k, k->arcae_basis + k->reditus_arca,
+                R_OPERIS_A);
+            _a64(k, CODIFICATOR_A64_LDR_IMM, VIII, 0, R_OPERIS_A, 0, 0,
+                0);
+            si (k->reditus_octeti > VIII)
+            {
+                _a64(k, CODIFICATOR_A64_LDR_IMM, VIII, I, R_OPERIS_A, 0,
+                    VIII, 0);
+            }
+        }
         _epilogum_emittere(k);
         frange;
     }
@@ -28848,7 +30132,12 @@ _functionem_compilare_intus (
         redde FALSUM;
     }
 
+    k.numerus_instructionum = numerus_instructionum;
     _functionem_probare(&k);
+    si (!k.fractum)
+    {
+        _arcas_tabulati_disponere(&k);
+    }
     si (!k.fractum)
     {
         _clausuram_compilare(&k);

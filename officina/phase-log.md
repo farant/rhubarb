@@ -5681,3 +5681,106 @@ Lesson: a hand plant in a source that a LAUNCHER builds by mtime must
 not be restored with the old mtime if the launcher ran during the
 plant - the binary built from the planted source looks newer and is
 kept (lanceatores stayed red until the source was touched).
+
+### T8 — backend II: memory, built-ins, calls, aggregates — 2026-11-13: COMPLETE, uncommitted until Fran's word
+
+INTENTIO: make the native backend useful on real code that touches
+memory and the host: arca/legere/scribere/copia/locus, built-in calls,
+more than eight arguments, indirect calls, and structs by value under
+Apple's AAPCS64 (B5). Done in four steps, each reported to Fran before
+the next; one commit.
+
+Header departures Fran approved before the work: (1) the bridge takes
+an argument ARRAY, not a generic AAPCS64 signature; (2) float
+parameters and returns wait for Task 9; (3) symbol and host addresses
+are loaded as constants (the region never moves), not adrp or a
+per-area slot table.
+
+RELATIO:
+
+Step 1, memory. `arca` is a static frame slot per instruction (frames
+up to 1 MiB, sp adjusted with two imm12); `legere`/`scribere` at every
+integer width, signed loads sign-extended to the full word; `copia` is
+an inline byte loop, overlap-safe in both directions; `locus` loads
+the symbol's address. A hardware fault inside native code gets its
+frames rebuilt like a trap. Halt parity is compared only when the kind
+is not BENE. NOT done: folding `addere` with an immediate into the
+address (moved to Task 10 with the timing work).
+
+Step 2, built-ins. The built-in table gained `purum` (32 pure: 23
+integer, 9 float; 29 stateful). Public: machinula_aedificatum_quaerere
+/ _purum / _inscriptio, machinula_pons_nativus(aedificatum, argumenta,
+numerus, pc, fp) - two parameters more than the approved header (pc
+and fp, for halt positions) - and machinula_nativum_machinulam_ponere.
+A pure integer built-in with <= 8 integer arguments is called
+directly at its libc address; everything else goes through the bridge
+as canonical 64-bit words in a frame area (so variadic printf works:
+the capture equals the interpreted one). A halt inside a bridged
+built-in comes back as DORSUM_SALTUS_PONS.
+
+Step 3, calls. Integer arguments beyond the eighth go on the stack at
+natural size and alignment (Apple, not 8-byte slots), in both
+directions (interpreted -> native through the trampoline's stack
+words, native -> native). Outgoing arguments sit at the bottom of the
+frame, spill slots above. Indirect calls load the descriptor: NATIVUM
+-> blr; anything else -> DORSUM_SALTUS_INDIRECTA -> VITIUM "vocatio
+indirecta non nativa" with the caller's frames (C9's boundary at run
+time). Limits: 32 arguments native, 16 through the bridge.
+
+Step 4, aggregates. One classifier (_limen_collocare) walks a limen
+list and is used by the prologue, the call site and the outgoing-area
+sizing; machinula's _nativum_vocare repeats the same rule in C:
+- %reditus <= 16 B: nothing is passed; the callee keeps a 16-byte frame
+  slot, %reditus is its address, `redde` loads x0:x1 from it; the
+  caller stores exactly N bytes into its destination (8/4/2/1 pieces
+  with lsr between). The destination address is parked in the first
+  word of the bridge area across the call - its register need not
+  survive the call.
+- %reditus > 16 B: the address in x8.
+- aN <= 16 B: one or two CONSECUTIVE x registers, loaded with exactly N
+  bytes; if they do not fit, the whole aggregate goes on the stack
+  (8-aligned) and the remaining x registers stay unused. The callee
+  stores register words into a frame slot; for a stack aggregate the
+  parameter is simply the address in the caller's outgoing area.
+- aN > 16 B: the address of the caller's copy, as an i64.
+- HFA: refused, "dorsum: aggregatum fluitans (Opus IX)".
+
+Tests: probatio_officina_nativum 42 sections (34 + fixturae memoriae,
+memoria, aedificata, argumenta multa, indirecta, chorda reddita,
+aggregata, aggregata hospitis). "aggregata hospitis" was not in the
+plan: the other sections compare the backend with the interpreter, and
+both could be wrong the same way, so there clang is the judge - real C
+functions taking and returning structs are installed as NATIVUM
+descriptors and called from interpreted and from native code, and
+backend-compiled functions are called from C through typed function
+pointers. Two T6/T7 tests changed meaning: nine integer arguments no
+longer halt (the ninth is read from the stack), and a call through a
+pointer compiles. lanceatores: piscina_generare_dynamicum and
+fasti_dies_in_mense now compile; the refused example is
+color_srgb_ad_linearem ("dorsum: reditus non integer (Opus IX)").
+
+Plants: 53 (11 + 11 + 11 + 20). 51 red; 2 in step 2 unobservable
+(sign extension of an s32 bridge argument; variadic pure). Some red
+ones hang or crash the test process rather than fail (6 hang and 1
+bus error in step 4). Weak tests found by surviving plants, all
+fixed: a signed 8-bit stack parameter hidden by a later
+re-extension; spill slots overlapping outgoing arguments (needed a
+caller that spills); a dropped indirect-call result (needed a saved
+destination register); a missing x1 load on return (the test
+function's second word equalled its incoming x1 - it now swaps).
+
+Finds:
+- `registrum` is a latina macro: a struct FIELD named so does not
+  compile. Field is index_x.
+- A native callee returning a small struct writes its own slot; the
+  interpreter writes the caller's slot directly. After a halt midway
+  the caller's memory differs between the two (status comparison does
+  not look at memory).
+- A built-in that returns a struct through the bridge is refused; none
+  seen in use.
+- An indirect call to a built-in through a pointer takes the same
+  named halt as an interpreted target; untested.
+
+Known limits carried on: floats and HFA (Task 9); credo still not
+native (traps on getpid in _credo_aream_ponere); address folding and
+adrp (Task 10); mutual recursion refused; 8/16-bit arithmetic refused.

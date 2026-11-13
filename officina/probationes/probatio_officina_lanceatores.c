@@ -261,12 +261,21 @@ _sectio_interpretare_nativum (
         "2024",
         NIHIL
     };
-    constans character* recusanda[] = {
+    /* malloc per pontem et memoria (M5 T8): functio vera lib/ */
+    constans character* cum_acervo[] = {
         "officina/interpretare.sh",
         "-nativum",
         "piscina_generare_dynamicum",
         "\"x\"",
         "1024",
+        NIHIL
+    };
+    /* fluitantia nondum (Opus IX): recusata, interpretata currit */
+    constans character* recusanda[] = {
+        "officina/interpretare.sh",
+        "-nativum",
+        "color_srgb_ad_linearem",
+        "0.5",
         NIHIL
     };
 
@@ -282,10 +291,20 @@ _sectio_interpretare_nativum (
     CREDO_CHORDA_CONTINET(r.erratum,
         chorda_ex_literis("[BENE", piscina));
 
+    r = processus_exsequi_cum(cum_acervo, &optiones,
+        MORA_AEDIFICATIONIS, piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_CHORDA_CONTINET(r.erratum, chorda_ex_literis(
+        "nativum: piscina_generare_dynamicum compilata", piscina));
+    CREDO_CHORDA_CONTINET(r.erratum,
+        chorda_ex_literis("[BENE", piscina));
+
     r = processus_exsequi_cum(recusanda, &optiones, MORA_AEDIFICATIONIS,
         piscina);
     CREDO_VERUM(r.successus);
     CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_VERUM(chorda_aequalis_literis(r.effusio, "0.214041\n"));
     CREDO_CHORDA_CONTINET(r.erratum, chorda_ex_literis(
         "nativum recusatum: ", piscina));
     CREDO_CHORDA_CONTINET(r.erratum,
