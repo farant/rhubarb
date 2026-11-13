@@ -244,6 +244,12 @@ declare -a RADIX_FONTES=(
     "mundus_pictura"
     "mundus"
     "mundus_solum"
+    # graphis-plan T8: latus scaenae ($scene) et quae trahit
+    "scaena_latus"
+    "scaena_repositorium"
+    "scaena"
+    "graphis"
+    "graphis_lumen"
 # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
     "sors"

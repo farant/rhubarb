@@ -556,6 +556,30 @@ then `./tools/organa_infigere.sh`.
   (`des->punctum_locale`); exit followed without clearing the text.
 - [ ] Both subsystem runners; screenshot read by Claude.
 
+**As built (2026-11-13):** suite `scaena_latus`, 9 sections, 17
+plants red. Changes from the list above, agreed with Fran in the
+header:
+- An exit's line stays on screen in the view it leads to (status
+  field `tactum` = `<view>/<thing>`); `[` `]` and the arrows clear
+  it. The plan's second plant is therefore the other way round: an
+  exit that clears the text turns the suite red.
+- The pane asks for one tick a second and compares the volume's
+  sequence number, so a rebuilt scene appears without a restart.
+- `j` / `k` choose a thing (named in the header like the pointer
+  does), Enter touches it.
+- Text that does not fit is cut at the last whole line.
+- Also touched: `lib/vicus_applicatio.c` (kind `scaena`, command
+  `$scene`), `lib/organa_infixa.c` (generated),
+  `ludus_tessera/compile_probationes.sh` (hand list).
+- Both texts are drawn in the normal text colour; the dim colour
+  was hard to read on the pane's background.
+- Fran's tweaks from the first screenshot (2026-11-13): a flat
+  background inside a one-cell margin, so the focus texture shows
+  only as a border; one blank text line between picture and text;
+  two character cells of padding left and right of the text. Five
+  more plants red (one stayed green first: nothing tested that text
+  stops at the bottom margin).
+
 ### Task 9: finish
 
 - [ ] Rebuild the hut into the live volume; Fran restarts vicus from

@@ -1,0 +1,27 @@
+<!-- organum.stml - manifestum lateris scaenae (project-specs/
+     graphis-spec.md 20-24): pictura stans cum rebus tangendis in
+     latere vici. Res sub indice muris in memoria montationis,
+     numquam in statu - hic prospectus ostensus et res novissime
+     tacta, persistentes. -->
+<organum genus="scaena" versio="1">
+
+  <actiones>
+    <actio nomen="scaena.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="prospectus" typus="textus" vita="persistens"
+            scriptor="scaena.agere"
+            nota="titulus prospectus ostensi ('[' ']', sagittae,
+                  exitus rei tactae); absens aut ignotus = primus in
+                  indice voluminis"/>
+    <campus nomen="tactum" typus="textus" vita="persistens"
+            scriptor="scaena.agere"
+            nota="res novissime tacta: 'prospectus/res' (prospectus in
+                  quo res est - post exitum non is qui ostenditur);
+                  absens = nulla"/>
+  </status>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>

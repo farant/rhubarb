@@ -31,6 +31,7 @@
 #include "antiphonale.h"
 #include "statuae.h"
 #include "mundus_latus.h"
+#include "scaena_latus.h"
 #include "filum.h"
 #include "specula.h"
 #include <stdio.h>
@@ -3175,6 +3176,68 @@ statuae_describere (
     f->ictus_primus       = statuae_ictus_primus;
     f->ictus_primus_ctx   = m;
     f->locus_titulus      = statuae_titulus;
+    f->locus_titulus_ctx  = m;
+}
+
+
+/* ==================================================
+ * Scaena (graphis-plan T8): pictura stans cum rebus tangendis, $scene
+ * ================================================== */
+
+/* ctx = ContextusSoni (systemata vici solum inde sumuntur) */
+interior b32
+scaenam_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+    ContextusSoni* soni = (ContextusSoni*)ctx;
+
+    (vacuum)argumentum;
+    redde scaena_latus_montare((ScaenaLatusMontatio*)sedes, piscina,
+        intern, volumen, repo, id, latitudo, altitudo,
+        soni ? soni->systemata : NIHIL);
+}
+
+interior VicusPulsus
+scaenam_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = scaena_latus_pulsare(ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior vacuum
+scaenam_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    ScaenaLatusMontatio* m = (ScaenaLatusMontatio*)montatio;
+
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = scaena_latus_componere;
+    f->componere_ctx  = m;
+    f->fons           = scaena_latus_imago_fons;
+    f->fons_ctx       = m;
+    /* inspectio voluminis semel per secundam (prospectus ab
+     * instrumento mutatus apparet) */
+    f->pulsare      = scaenam_pulsare_in_vico;
+    f->pulsare_ctx  = m;
+    f->mora         = scaena_latus_mora;
+    /* Esc: latus prius */
+    f->effugium_redit     = VERUM;
+    f->locus_titulus      = scaena_latus_titulus;
     f->locus_titulus_ctx  = m;
 }
 
@@ -6643,6 +6706,9 @@ ContextusNomenclatoris* cn;
         /* mundus-plan T10: $world */
         || !aperiens_fixum_registrare(cs->iussa, app->vicus,
                "world", "mundus", NIHIL, piscina)
+        /* graphis-plan T8: $scene */
+        || !aperiens_fixum_registrare(cs->iussa, app->vicus,
+               "scene", "scaena", NIHIL, piscina)
         /* gabc pars II P6: $antiphonale(via) */
         || !iussum_registrare(cs->iussa, "antiphonale", FALSUM,
                antiphonale_iussum, soni)
@@ -6724,6 +6790,9 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "mundus",
                magnitudo(MundusLatusMontatio), mundum_montare_in_vico,
                mundum_describere, soni)
+        || !vicus_genus_addere(app->vicus, "scaena",
+               magnitudo(ScaenaLatusMontatio), scaenam_montare_in_vico,
+               scaenam_describere, soni)
         || !vicus_genus_addere(app->vicus, "sancti",
                magnitudo(SanctorumMontatio), sanctos_montare_in_vico,
                sanctos_describere, sanctorum)
