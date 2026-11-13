@@ -1324,6 +1324,10 @@
          musicxml-oraculum (tools/musicxml_silvestria.sh) id ponit -
          sine eo sectio silvestris nihil agit -->
     <ambitus variabilis="MUSICXML_SILVESTRIA"/>
+    <!-- corpus GregoBase psalmodiae (psalmodia plan-2 T8): solum porta
+         psalmodia-oraculum (tools/psalmodia_oraculum.sh) id ponit -
+         sine eo sectiones corporis OMISSAE -->
+    <ambitus variabilis="PSALMODIA_CORPUS"/>
     <!-- HTTP/2 (http2-plan T8): RHUBARB_RETE=1 situs publicos per
          probatio_http2_nexus addit (ut probatio_http_vocatio_rete);
          HTTP2_TABULAE tabulas octetorum et formarum Go in directorium

@@ -312,8 +312,10 @@ errors, fitter errors, and edition variants.
      Si-on", "propi-ti-á-ti-o est"), which become fixtures (§V).
 3. **Reciting speed**: should tenor syllables be shorter than a
    neume's punctum (speech rhythm) — a converter option, or not?
-4. **Where pointed texts live** (a file per psalm under
-   `musica/psalmi/`?) — the plan's call once Q1 is answered.
+4. ~~Where pointed texts live~~ — **answered 2026-11-12** (plan-2
+   FRAN 4): `musica/psalmi/`, one pointed `.txt` per psalm; Ps 116
+   committed at T7 (`auditio -psalmus musica/psalmi/116.txt -signum
+   "8 G"`). Which Office supplies the rest stays Q1.
 
 ---
 

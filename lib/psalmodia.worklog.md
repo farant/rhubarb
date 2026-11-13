@@ -314,3 +314,74 @@ pass vacuously there, unknown flags already exit 2).
 stale from the new files - healed with `bin/fabrica sanare`. Lesson:
 never send a sanare log into build/ - fabrica calls the run FRACTUM
 ("scripsit extra vestigium").
+
+## 2026-11-13 - T8: corpus gate, first list (STOP for Fran)
+
+`probationes/probatio_psalmodia_corpus.c` (3 sections) reads the cached
+GregoBase corpus (`PSALMODIA_CORPUS` = build/gabc/bacor_v0.4/x, 9130
+.gabc files, one arena per file; 11 s, apex 143 MB under custos).
+Without the corpus each section says OMISSA and checks only committed
+data (table reads clean; manifest has 6 columns per line) - credo
+counts a section with no assertion as failed, so there must be one.
+
+**Measured:** 226 537 words in Latin chants (17 tagged "Lingua
+Polonica" skipped); 3809 antiphons, 652 with EUOUAE written out (6
+syllables in 1239 of 1244 files corpus-wide; 567 more are introits -
+other tones - excluded by office-part an), 38 with no label, 78 whose
+label the table does not resolve, 536 compared (spec said 610: it
+counted introits); 34 written psalms (spec said 35), 12 with a label
+we can read (header, annotation, or name: "Ps 111 8 G", "Mode 2D").
+
+**First list: 375 lines** (build/psalmodia/discordiae.tsv).
+- EUOUAE 536: 422 agree, 11 through the table's `vicaria`, 1
+  transposed, 102 disagree. By source: 2 D do-re on *A-* (43; AM
+  1934/2005, AR II 2009, Nocturnale 2002 - spec already noted it);
+  tone 3 b-b on *sæ-cu* where AR recites on c (16, AM and AR II); 1
+  D/D2 forms crossed (10, mostly AR II 2009); 1 a `g gh` on *-men* (7,
+  monastic/OP); the rest GregoBase noise (missing syllables, a "4 c"
+  that is an E ending). No table error found.
+- Psalms 12: 38 lines - verse 1 with solemn intonation (7404-7406),
+  model-verse files from Bloomfield's transcriber (8130-8134: tenor
+  lumped in one syllable, a demo flex line), a Graduale psalm (7536:
+  intonation repeated, GR ending), editions without bold (4690: 8
+  `stili` lines), 7832 "5 a" whose ending is not 5 a (mislabel?), and
+  08195 where only our `†(,)` bar differs.
+- Syllables 235 distinct (567 occurrences, 0.25%): consonantal i in
+  i-spelled texts (*ad-iu-ván-dum*, *sub-iéc-tis*, *iú-gi-ter*: we
+  give i a vowel); vowel pairs that are two syllables in names and
+  Greek words (*Mí-cha-el*, *Sa-ul*, *á-e-ra*, *Ca-phár-na-um*: we
+  read ae/au as one); *Euouae* as one word; *Israel* (161, the
+  fitter's Hebrew list handles it); then not ours - *e-lé-i-son* (we
+  = Liber), hymn meter (cui, Patre, quia), transcription slips.
+
+### Rulings at T8 (so far)
+- **6 columns** (genus, id, titulus, nostra, eorum, numerus): the
+  count makes the syllable list one line per distinct word. Cost:
+  none (corpus pinned at v0.4).
+- **Syllables compare count + accent only** (T1 ruling 4), aggregated
+  by distinct word, first id kept.
+- **Transposed = not a disagreement** (counted apart, spec).
+- **`vicaria` accepted**: AR p. 13* "quando Antiphona notatur cum A*,
+  potest ad libitum adhiberi Differentia sequens" - an antiphon
+  marked A* sings A or the starred form; 5 of the 10 A* antiphons are
+  AR 1912's own and write A. Reading the label the book's way, not
+  bending the table. Cost if wrong: 11 hidden lines.
+- **Intonation per psalm**: fit with and without intonation on every
+  verse, keep the one with fewer disagreeing verses (an edition
+  choice, not the table's); the title says "(intonatio omni versu)".
+- **Label cleanup in the test only**: mode "p" = peregrinus,
+  "-star" = `*`, name patterns; repeat marks (ij, iij) are not words;
+  non-Latin chants (GregoBase "Lingua" tag) skipped.
+- 08134's header is malformed (multi-line value ending `;` not `;;`):
+  our reader reports it as Gregorio would; the name supplies the label.
+
+**After Fran's review (same day).** Fran accepted the sorting; the
+375 lines are the manifest `probationes/fixa/psalmodia/discordiae.tsv`
+(7-line `#` header; the committed-data check skips `#` lines). Gate
+`psalmodia-oraculum` = `tools/psalmodia_oraculum.sh` (custos, OMISSA
+without corpus), registered in `pythonica/silva.py`; `PSALMODIA_CORPUS`
+declared in aedificatio.stml. Plant (build/plantae_psalmodia/t8.log):
+manifest line `euouae 02022` deleted -> "NOVA: euouae 02022 ...", gate
+FRACTA; restored, sana. Divider classes are ledger wishes
+01M7ATXS3RG8H2R6P5XCTA46RH and 01M7ATXW4WY98G7K3JFHSCG8R4; fixing
+either shrinks the manifest (the gate names the solved lines).

@@ -467,10 +467,10 @@ and the flags of FRAN 2.
 from `PSALMODIA_CORPUS` (= `build/gabc/bacor_v0.4/x`); absent → every
 section prints `OMISSA` and passes.
 
-- [ ] **Step 1: Measure.** Count, in the corpus: words (syllable
+- [x] **Step 1: Measure.** Count, in the corpus: words (syllable
   check), antiphons with a resolvable label AND a written EUOUAE
   (spec §I: 610), written psalms whose tone label parses (of 35).
-- [ ] **Step 2: Write the sections:**
+- [x] **Step 2: Write the sections:**
   - `_syllabae_corporis`: every corpus word divided by us vs the
     file; disagreements by rule class.
   - `_euouae`: per antiphon, fit *sæculórum. Amen* to its ending,
@@ -480,15 +480,15 @@ section prints `OMISSA` and passes.
     the parsed tone, compare notes, styles, bars.
   Each writes `build/psalmodia/discordiae.tsv` (kind, id, label,
   ours, theirs) and compares it with the committed manifest.
-- [ ] **Step 3: Run** → the first list. **STOP: Fran reviews it**
+- [x] **Step 3: Run** → the first list. **STOP: Fran reviews it**
   (sorted into table errors, fitter errors, edition variants). Table
   errors are fixed in the table (P3: from the book, cited), fitter
   errors in T5's code with a test; what remains is committed as
   `discordiae.tsv`.
-- [ ] **Step 4:** `tools/psalmodia_oraculum.sh` under `custos.sh`,
+- [x] **Step 4:** `tools/psalmodia_oraculum.sh` under `custos.sh`,
   registered as a porta like `musicxml-oraculum`. Plant: one manifest
   line deleted → gate red (a "new" disagreement). Restore.
-- [ ] **Step 5: Commit; Executed notes; spec §VI q4 answered; ledger
+- [x] **Step 5: Commit; Executed notes; spec §VI q4 answered; ledger
   opera closed.** Report to Fran.
 
 ---
@@ -575,3 +575,19 @@ section prints `OMISSA` and passes.
   0) - ledger question 01M7AQ6TAVDNN9ZMZSG5WBC619, not fixed here.
   Plants (a) stale embedded byte -> `infixum == fons` red, (b)
   `-sine-gloria` ignored -> fumus red; both green after.
+- **T8 (2026-11-13, Fran reviewed the first list).**
+  `probationes/probatio_psalmodia_corpus.c` (syllabae, euouae, psalmi)
+  + gate `psalmodia-oraculum` (`tools/psalmodia_oraculum.sh`, custos 4
+  GB; 11 s, apex ~140 MB). Measured: 226 537 Latin words, 652 antiphons
+  with EUOUAE written (536 comparable; the spec's 610 counted
+  introits), 34 written psalms (12 labelled). First list 375 lines:
+  EUOUAE 422 agree + 11 through `vicaria` + 1 transposed + 102 other
+  editions/noise; psalms 38 (transcription layout, editions); syllables
+  235 distinct words (0.25%). No table or fitter error; committed as
+  `probationes/fixa/psalmodia/discordiae.tsv`. Divider classes filed as
+  wishes 01M7ATXS3RG8H2R6P5XCTA46RH (consonantal i),
+  01M7ATXW4WY98G7K3JFHSCG8R4 (hiatus in names). Rulings (worklog):
+  6 columns, count+accent only, transposed apart, `vicaria` accepted
+  (AR p. 13*), intonation per psalm, label cleanup in the test. Plant:
+  one manifest line deleted -> gate red ("NOVA"), green after.
+  `PSALMODIA_CORPUS` declared as `<ambitus>`. Spec VI q4 answered.
