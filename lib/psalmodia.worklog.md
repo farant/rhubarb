@@ -438,3 +438,15 @@ naming both; restored, importer compare = congruunt.
 Side find: DO ships every psalm already set to each tone as gabc
 (web/www/horas/Latin-gabc/Psalterium/Psalmorum/<tone>/N-<ending>.gabc,
 MIT) - a ready outside oracle for the fitter, by the same pinning.
+
+**Isaac, same day (Fran chose b).** The importer now carries a
+CORRECTIONES list (psalm, old, new, cause), applied to the converted
+verse with a `% correctio: ...` comment line before it; a correction
+that matches not exactly once, or not at all, is an error (upstream text
+changed). First entry: Ps 104 "ad Isaac:" -> "ad Ísaac:", so it fits as
+an ordinary proparoxytone, as DO's Latin-gabc sings it (not abrupt).
+Correction to the earlier note: "ad Isaac:" ends verse 9 (termination),
+not the mediant. Test: PSALTERII_ADMONITIONES now "" and Ps 104 in 8 G
+must contain `su(j)<i>i</i>(i) <i>ad</i>(j) <b>Í</b>(h)sa(gr)ac:(g) (::)`
+= DO's 8/104-8G.gabc minus their mora dot (converter's, P11). Both red
+before the rewrite (Isaac warning; the guess put the accent on "sa").

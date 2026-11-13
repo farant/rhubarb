@@ -1507,12 +1507,17 @@ _totalitas_probare (
  * Psalterium importatum (musica/psalmi/, Divinum Officium)
  * ================================================== */
 
-/* admonitiones psalterii exspectatae: ceterae = textus mutatus aut
- * aptator mutatus. Isaac: vox hebraica sine acuto (spec AUDIENDA,
- * voces hebraicae) - Divinum Officium (Latin-gabc) Í-sa-ac canit,
- * non abrupte; Franus decernit. */
+/* admonitiones psalterii exspectatae (nullae): aliqua = textus
+ * mutatus aut aptator mutatus */
 #define PSALTERII_ADMONITIONES \
-    "musica/psalmi/104.txt:14:50: verbum \"Isaac\" sine accentu\n"
+    ""
+
+/* Ps 104 v. 9 in VIII G: Ísaac per correctionem importationis
+ * (Franus, quaestio 01M7BJCHC94WEVPABP4Y5GVC4Q) ut Divinum Officium
+ * Latin-gabc 8/104-8G.gabc canit - proparoxytonum ordinarium, non
+ * abruptum; mora '.' eorum conversoris est (P11) */
+#define CADENTIA_CORRECTA_VIII_G \
+    "su(j)<i>i</i>(i) <i>ad</i>(j) <b>Í</b>(h)sa(gr)ac:(g) (::)"
 
 /* admonitiones psalmi ut lineae 'via:linea:columna: causa' */
 interior chorda
@@ -1616,6 +1621,24 @@ _psalterium_probare (
     CREDO_AEQUALIS_I32 (discrepantes, ZEPHYRUM);
     CREDO_CHORDA_AEQUALIS_LITERIS (chorda_aedificator_finire(omnes),
         PSALTERII_ADMONITIONES);
+
+    /* Isaac correctus: cadentia ut Divinum Officium */
+    {
+           constans PsalmodiaTonus* tonus;
+        constans PsalmodiaClausula* term;
+                            chorda  gabc;
+
+        term = psalmodia_signum_invenire(t, chorda_ex_literis("8 G",
+            ctx->piscina), &tonus, chorda_aedificator_creare(
+            ctx->piscina, LXIV));
+        CREDO_NECESSE (term != NIHIL && tonus != NIHIL);
+        gabc = _gabc(ctx->piscina, psalmodia_aptare(tonus, term,
+            filum_legere_totum("musica/psalmi/104.txt", ctx->piscina),
+            &optiones, ctx->piscina), NIHIL);
+        CREDO_VERUM (chorda_continet(gabc,
+            chorda_ex_literis(CADENTIA_CORRECTA_VIII_G,
+            ctx->piscina)));
+    }
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

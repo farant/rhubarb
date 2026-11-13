@@ -24,6 +24,9 @@
 #   invitatorium) omittuntur. Linea alia ignota, aut signa reliqua
 #   ( ) $ cifrae, aut '*' non semel, aut '†' post '*' = vitium, nihil
 #   scribitur.
+# Correctiones (CORRECTIONES infra): textus versus mutatus, linea
+#   "% correctio: vetus -> novum (causa)" ante versum; locus qui non
+#   semel invenitur = vitium (fons mutatus).
 #
 # Fasciculi externi = data non fida: directorium proprium in
 # build/psalmi/, scriptum Python per 'python3 -I', nihil exsequitur.
@@ -52,6 +55,13 @@ VERSUS = re.compile(r'^(\d+):(\d+)[a-z]? (.*)$')
 HEBR = re.compile(r'^\(([A-Z][a-z]+)\) ')
 NUM = re.compile(r'\s*\(\d+[a-z]?\)\s*')
 vitia = []
+# (psalmus, vetus, novum, causa) - textus versus convertendi
+CORRECTIONES = [
+    (104, 'ad Isaac:', 'ad Ísaac:',
+     'vox hebraica sine acuto; ut Divinum Officium Latin-gabc canit,'
+     ' non abrupte - Franus 2026-11-13, quaestio 01M7BJCHC94WEVPABP4Y5GVC4Q'),
+]
+usae = set()
 
 def convertere(n, linea_cruda):
     exitus = []
@@ -76,6 +86,13 @@ def convertere(n, linea_cruda):
         if re.search(r'[()$0-9]', t) or t.count('*') != 1 \
                 or t.count('†') > 1 or ('†' in t and t.index('†') > t.index('*')):
             vitia.append('Psalm%d.txt:%d: post conversionem: %s' % (n, k, t))
+        for c, (ps, vetus, novum, causa) in enumerate(CORRECTIONES):
+            if ps == n and vetus in t:
+                if c in usae or t.count(vetus) != 1:
+                    vitia.append('Psalm%d.txt:%d: correctio non semel: %s' % (n, k, vetus))
+                usae.add(c)
+                exitus.append('%% correctio: %s -> %s (%s)' % (vetus, novum, causa))
+                t = t.replace(vetus, novum)
         exitus.append(t)
     versus = [v for v in exitus if not v.startswith('%')]
     incipit = versus[0].split('*')[0].strip().rstrip(',:;†').strip() if versus else ''
@@ -95,6 +112,9 @@ for n in range(1, 151):
         plagulae['%d.txt' % n] = convertere(n, f.readlines())
 with open(os.path.join(X, 'LICENSE'), encoding='utf-8') as f:
     plagulae['LICENTIA'] = f.read()
+for c, (ps, vetus, novum, causa) in enumerate(CORRECTIONES):
+    if c not in usae:
+        vitia.append('Psalm%d.txt: correctio non inventa: %s' % (ps, vetus))
 if vitia:
     for v in vitia:
         print('PSALMI ARCESSERE: ' + v, file=sys.stderr)

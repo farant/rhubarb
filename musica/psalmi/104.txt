@@ -11,7 +11,8 @@ Mementóte mirabílium ejus, quæ fecit: * prodígia ejus, et judícia oris ejus
 Semen Ábraham, servi ejus: * fílii Jacob, elécti ejus.
 Ipse Dóminus Deus noster: * in univérsa terra judícia ejus.
 Memor fuit in sǽculum testaménti sui: * verbi, quod mandávit in mille generatiónes:
-Quod dispósuit ad Ábraham: * et juraménti sui ad Isaac:
+% correctio: ad Isaac: -> ad Ísaac: (vox hebraica sine acuto; ut Divinum Officium Latin-gabc canit, non abrupte - Franus 2026-11-13, quaestio 01M7BJCHC94WEVPABP4Y5GVC4Q)
+Quod dispósuit ad Ábraham: * et juraménti sui ad Ísaac:
 Et státuit illud Jacob in præcéptum: * et Israël in testaméntum ætérnum:
 Dicens: Tibi dabo terram Chánaan, * funículum hereditátis vestræ.
 Cum essent número brevi, * paucíssimi et íncolæ ejus:

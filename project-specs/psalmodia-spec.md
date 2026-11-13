@@ -367,10 +367,11 @@ errors, fitter errors, and edition variants.
 - That the written-out GregoBase psalms follow the same tone table as
   the labels (edition variants are likely).
 - That WORDS (oratio) carries no vowel length.
-- Isaac (Ps 104:9, "ad Isaac:" at the mediant): unaccented, not in
-  VOCES_HEBRAICAE - the psalter's one warning. Divinum Officium's
-  gabc sings Í-sa-ac as an ordinary cadence, not abrupt; AR's rule
-  would make it abrupt. Fran's call.
+- ~~Isaac~~ (Ps 104:9, "ad Isaac:" ending the verse) — **decided
+  2026-11-13** (Fran): sung Í-sa-ac as an ordinary cadence, as
+  Divinum Officium's gabc does; the importer corrects the text to
+  "Ísaac" (its CORRECTIONES list). Other unaccented Hebrew names may
+  follow the same route.
 - Hebrew names: AR 1912 prints them without accents, but the music
   shows them (*Basan*, *Sina* stressed on the last syllable; *Israel*,
   *Aaron* sung with a hiatus, Is-ra-el, A-a-ron). They also choose
