@@ -84,6 +84,19 @@ typedef enum {
 
 #define MEDULLA_TYPUS_NIHIL (-1)
 
+/* typus in limine vocationis (M5 B4): scalaris = MedullaTypus;
+ * aggregatum valore = AGGREGATUM + magnitudo_octetorum (> 0) +
+ * hfa_typus (F32/F64 si HFA, NIHIL aliter); est_reditus =
+ * parametrum %reditus. Scalaria: magnitudo 0, hfa NIHIL. typus
+ * NIHIL = ignotus (medulla_operanda_addere). */
+#define MEDULLA_TYPUS_AGGREGATUM MEDULLA_TYPUS_NUMERUS
+typedef struct {
+    int          typus;
+    unsigned int magnitudo_octetorum;
+    int          hfa_typus;
+    int          est_reditus;
+} MedullaTypusLiminis;
+
 /* ==================================================
  * Operationes (vocabularium-medullae.md - SIGNATUM)
  * ================================================== */
@@ -162,6 +175,8 @@ typedef struct {
     int destinatio;               /* index registri; -1 nulla */
     int extra_index;              /* vocare: argumenta in stiva */
     int extra_numerus;
+    int argumenta_fixa;           /* vocare: numerus fixus
+                                   * (variadica); -1 non variadica */
     MedullaOperandum a;
     MedullaOperandum b;
     MedullaOperandum c;
@@ -179,8 +194,9 @@ typedef struct {
 } MedullaBloccus;
 
 typedef struct {
-    int index;                    /* registri */
-    int typus;
+    int                 index;    /* registri */
+    int                 typus;    /* registri (aggregata: i64) */
+    MedullaTypusLiminis limen;    /* typus in signatura */
 } MedullaParametrum;
 
 typedef struct {
@@ -191,6 +207,8 @@ typedef struct {
     OfficinaXar*   blocci;        /* MedullaBloccus valore */
     OfficinaXar*   registra;      /* OfficinaChorda valore */
     OfficinaXar*   operanda;      /* MedullaOperandum valore */
+    OfficinaXar*   operanda_typi; /* MedullaTypusLiminis valore,
+                                   * parallelum stivae */
     const struct SilvaNodus* origo;
 } MedullaFunctio;
 
@@ -204,7 +222,15 @@ typedef struct {
     OfficinaChorda titulus;
     int            genus;
     int            index;         /* -1 externum */
+    int            signatura;     /* in signaturae; -1 nulla */
 } MedullaSymbolum;
+
+/* signatura functionis declaratae: textus pro EXTERNIS scribit */
+typedef struct {
+    int          typus_reditus;   /* MEDULLA_TYPUS_NIHIL = vacuum */
+    int          est_variadica;
+    OfficinaXar* parametra;       /* MedullaTypusLiminis valore */
+} MedullaSignatura;
 
 typedef struct {
     unsigned int offset;          /* locellus 8 octetorum */
@@ -227,6 +253,7 @@ typedef struct {
     OfficinaXar*     data;        /* MedullaDatum* */
     OfficinaXar*     symbola;     /* MedullaSymbolum valore */
     OfficinaXar*     causae;      /* OfficinaChorda valore */
+    OfficinaXar*     signaturae;  /* MedullaSignatura valore */
 } MedullaModulus;
 
 /* ==================================================
@@ -263,6 +290,14 @@ MedullaBloccus* medulla_bloccum_obtinere(
 
 int medulla_operanda_addere(MedullaFunctio* functio,
     const MedullaOperandum* operanda, int numerus);
+/* idem cum typis (operanda_typi parallela; typi NULL non licet) */
+int medulla_operanda_typata_addere(MedullaFunctio* functio,
+    const MedullaOperandum* operanda, const MedullaTypusLiminis* typi,
+    int numerus);
+/* copia profunda -> index in signaturae; -1 si symbolum invalidum
+ * aut signatura iam posita */
+int medulla_signaturam_ponere(MedullaModulus* modulus, int symbolum,
+    const MedullaSignatura* signatura);
 
 MedullaOperandum medulla_op_nihil(void);
 MedullaOperandum medulla_op_registrum(int index);

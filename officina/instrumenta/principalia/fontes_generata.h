@@ -15,7 +15,9 @@ interior constans AmalgamaPlagula CAPITA_VENDICATA[] = {
     { "include/tabula_dispersa.h", NIHIL, EXCLUDENDA_TABULAE, FALSUM, VERUM },
     { "include/xar.h", NIHIL, EXCLUDENDA_XARIS, FALSUM, VERUM },
     { "include/postulata_posix.h", NIHIL, NIHIL, FALSUM, VERUM },
-    { "include/lectiones.h", NIHIL, EXCLUDENDA_LECTIONUM, FALSUM, VERUM }
+    { "include/lectiones.h", NIHIL, EXCLUDENDA_LECTIONUM, FALSUM, VERUM },
+    { "include/codificator_a64.h", NIHIL, EXCLUDENDA_CODIFICATORIS, FALSUM, VERUM },
+    { "include/memoria_exsecutabilis.h", NIHIL, NIHIL, FALSUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
@@ -25,7 +27,9 @@ interior constans AmalgamaPlagula CORPORA_VENDICATA[] = {
     { "lib/friatio.c", SERVANDA_FRIATIONIS, NIHIL, VERUM, VERUM },
     { "lib/tabula_dispersa.c", NIHIL, EXCLUDENDA_TABULAE, VERUM, VERUM },
     { "lib/xar.c", NIHIL, EXCLUDENDA_XARIS, VERUM, VERUM },
-    { "lib/lectiones.c", NIHIL, EXCLUDENDA_LECTIONUM, VERUM, VERUM }
+    { "lib/lectiones.c", NIHIL, EXCLUDENDA_LECTIONUM, VERUM, VERUM },
+    { "lib/codificator_a64.c", NIHIL, EXCLUDENDA_CODIFICATORIS, VERUM, VERUM },
+    { "lib/memoria_exsecutabilis_macos.c", NIHIL, EXCLUDENDA_MEMORIAE_EXSECUTABILIS, VERUM, VERUM }
 };
 
 interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
@@ -34,7 +38,10 @@ interior constans AmalgamaPlagula CAPITA_PROPRIA[] = {
     { "officina/fontes/officina_regio.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "officina/fontes/officina_conexio.h", NIHIL, NIHIL, FALSUM, FALSUM },
     { "officina/fontes/officina_machinula.h", NIHIL, NIHIL, FALSUM, FALSUM },
-    { "officina/fontes/officina_demissio.h", NIHIL, NIHIL, FALSUM, FALSUM }
+    { "officina/fontes/officina_demissio.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "officina/fontes/officina_medulla_fluxus.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "officina/fontes/officina_effugium.h", NIHIL, NIHIL, FALSUM, FALSUM },
+    { "officina/fontes/officina_dorsum.h", NIHIL, NIHIL, FALSUM, FALSUM }
 };
 
 interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
@@ -44,5 +51,8 @@ interior constans AmalgamaPlagula CORPORA_PROPRIA[] = {
     { "officina/fontes/officina_conexio.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_machinula.c", NIHIL, NIHIL, VERUM, FALSUM },
     { "officina/fontes/officina_demissio.c", NIHIL, NIHIL, VERUM, FALSUM },
-    { "officina/fontes/officina_indicium.c", NIHIL, NIHIL, VERUM, FALSUM }
+    { "officina/fontes/officina_indicium.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_medulla_fluxus.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_effugium.c", NIHIL, NIHIL, VERUM, FALSUM },
+    { "officina/fontes/officina_dorsum.c", NIHIL, NIHIL, VERUM, FALSUM }
 };

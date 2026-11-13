@@ -10,6 +10,7 @@
 #include "materia_arbor.h"
 #include "stml.h"
 #include "stml_macros.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -100,7 +101,7 @@ _plagulam_legere (
 
     exitus->datum    = NIHIL;
     exitus->mensura  = ZEPHYRUM;
-    f                = fopen(via, "rb");
+    f                = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde FALSUM;

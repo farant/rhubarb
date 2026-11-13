@@ -61,6 +61,9 @@
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_generata.h"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- generator excludendorum caput amalgamae legit (lectio per
+         librum visa 2026-11-12: custodia memorabilium in commissione) -->
+    <ingressus genus="fasciculus" via="officina/amalgama/officina.h"/>
     <!-- officina/build/mech_*.o per globum nexa: praecondicio
          obiecta_mechanismi_officina (1b T5; olim ingressus directorii,
          nomina solum tegens) -->
@@ -84,6 +87,9 @@
     <ingressus genus="fasciculus" via="officina/amalgamare.sh"/>
     <ingressus genus="fasciculus" via="officina/instrumenta/principalia/fontes_politica.sh"/>
     <ingressus genus="fasciculus" via="tools/mechanismus_fontes.sh"/>
+    <!-- amalgamator caput amalgamae legit (lectio per librum visa
+         2026-11-11: fopen legens -> lectiones_fopen) -->
+    <ingressus genus="fasciculus" via="officina/amalgama/officina.h"/>
     <exitus via="officina/amalgama/officina.c" provenientia="regeneratio"/>
   </actio>
   <!-- FRAGMENTA RADIX_FONTES (plan 1a T6): MEMORABILIA - ingressus
@@ -103,6 +109,9 @@
       <verbum! (>officina/fontes/officina_demissio.c
       <verbum! (>officina/fontes/officina_indicium.c
       <verbum! (>officina/fontes/officina_machinula.c
+      <verbum! (>officina/fontes/officina_effugium.c
+      <verbum! (>officina/fontes/officina_dorsum.c
+      <verbum! (>officina/fontes/officina_medulla_fluxus.c
       <verbum! (>officina/fontes/officina_medulla.c
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
@@ -124,9 +133,13 @@
       <verbum! (>officina/fontes/officina_demissio.c
       <verbum! (>officina/fontes/officina_indicium.c
       <verbum! (>officina/fontes/officina_machinula.c
+      <verbum! (>officina/fontes/officina_effugium.c
+      <verbum! (>officina/fontes/officina_dorsum.c
+      <verbum! (>officina/fontes/officina_medulla_fluxus.c
       <verbum! (>officina/fontes/officina_medulla.c
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
+      <verbum! (>officina/instrumenta/bibliothecae.c
     </mandatum>
     <vestigium via="build/fabrica/clausurae/officina__cursor_fontes_generata"/>
     <ingressus genus="configuratio" via="aedilis.stml"/>
@@ -143,6 +156,9 @@
       <verbum! (>officina/fontes/officina_demissio.c
       <verbum! (>officina/fontes/officina_indicium.c
       <verbum! (>officina/fontes/officina_machinula.c
+      <verbum! (>officina/fontes/officina_effugium.c
+      <verbum! (>officina/fontes/officina_dorsum.c
+      <verbum! (>officina/fontes/officina_medulla_fluxus.c
       <verbum! (>officina/fontes/officina_medulla.c
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c
@@ -162,6 +178,9 @@
       <verbum! (>officina/fontes/officina_demissio.c
       <verbum! (>officina/fontes/officina_indicium.c
       <verbum! (>officina/fontes/officina_machinula.c
+      <verbum! (>officina/fontes/officina_effugium.c
+      <verbum! (>officina/fontes/officina_dorsum.c
+      <verbum! (>officina/fontes/officina_medulla_fluxus.c
       <verbum! (>officina/fontes/officina_medulla.c
       <verbum! (>officina/fontes/officina_medulla_textus.c
       <verbum! (>officina/fontes/officina_regio.c

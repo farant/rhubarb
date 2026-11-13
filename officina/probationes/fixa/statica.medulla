@@ -57,7 +57,7 @@ functio $legens (s32 %i) -> s64
     %t34 = movere.i64 0
     %t35 = addere.i64 %t33, %t34
     %t36 = legere.i64 %t35
-    %t37 = vocare.s32 %t36, %i
+    %t37 = vocare.s32 %t36, s32 %i
     %t38 = extendere.s32.s64 %t37
     %t39 = addere.s64 %t32, %t38
     redde %t39

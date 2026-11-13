@@ -128,6 +128,9 @@ scribere (
     {
         redde;
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>oraculum effectuum
+     * interpositio ipsa: vocatio vera systematis; dylib in bash
+     * iniecta librum lectionum numquam ligat */
     fd = open(liber, O_WRONLY | O_APPEND | O_CREAT, 0644);
     si (fd >= 0)
     {
@@ -292,6 +295,9 @@ interpositum_open (
         modus = va_arg(ap, integer);
         va_end(ap);
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>oraculum effectuum
+     * interpositio ipsa: vocatio vera systematis; dylib in bash
+     * iniecta librum lectionum numquam ligat */
     rc = open(via, vexilla, modus);
     notare(legere_an(vexilla) ? "LEGERE" : "SCRIBERE", AT_FDCWD, via,
         rc);
@@ -326,6 +332,9 @@ interpositum_stat (
     constans character*  via,
     structura stat* status)
 {
+    /* <tolera codex="CANALIS_PRAETERITUS" (>oraculum effectuum
+     * interpositio ipsa: vocatio vera systematis; dylib in bash
+     * iniecta librum lectionum numquam ligat */
     integer rc = stat(via, status);
 
     notare("STAT", AT_FDCWD, via, rc);
@@ -337,6 +346,9 @@ interpositum_lstat (
     constans character*  via,
     structura stat* status)
 {
+    /* <tolera codex="CANALIS_PRAETERITUS" (>oraculum effectuum
+     * interpositio ipsa: vocatio vera systematis; dylib in bash
+     * iniecta librum lectionum numquam ligat */
     integer rc = lstat(via, status);
 
     notare("LSTAT", AT_FDCWD, via, rc);
@@ -348,6 +360,9 @@ interpositum_access (
     constans character* via,
             integer modus)
 {
+    /* <tolera codex="CANALIS_PRAETERITUS" (>oraculum effectuum
+     * interpositio ipsa: vocatio vera systematis; dylib in bash
+     * iniecta librum lectionum numquam ligat */
     integer rc = access(via, modus);
 
     notare("ACCESS", AT_FDCWD, via, rc);
@@ -384,6 +399,9 @@ interior DIR*
 interpositum_opendir (
     constans character* via)
 {
+    /* <tolera codex="CANALIS_PRAETERITUS" (>oraculum effectuum
+     * interpositio ipsa: vocatio vera systematis; dylib in bash
+     * iniecta librum lectionum numquam ligat */
     DIR* d = opendir(via);
 
     notare("OPENDIR", AT_FDCWD, via, d != NIHIL ? 0 : -1);
@@ -403,6 +421,9 @@ interpositum_execve (
 
     notare("EXECVE", AT_FDCWD, via, 0);
     argv_notare(argumenta);
+    /* <tolera codex="CANALIS_PRAETERITUS" (>oraculum effectuum
+     * interpositio ipsa: vocatio vera systematis; dylib in bash
+     * iniecta librum lectionum numquam ligat */
     fd = open(via, O_RDONLY);
     si (fd >= 0)
     {

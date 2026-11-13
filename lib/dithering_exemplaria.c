@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "dithering_exemplaria.h"
+#include "dithering_exemplaria_fontes.h"
 #include "color.h"
 
 
@@ -17,15 +18,10 @@
  * Constantae (ex periculis)
  * ============================================================ */
 
-#define TEGULA               VIII   /* latus exemplaris */
-#define GRADUS_MIXTI         XXXII  /* quantizatio ponderis obscurati */
 #define GRADUS_AREAE         II     /* basis: electio per areas 2x2 */
 #define AREA_HACHURARUM      IV     /* par hachurarum per areas 4x4 */
-#define BAYER_NUMERUS        XVI
 #define CANDIDATI_MAX        XII
 
-#define SIGMA_OCULI          1.0    /* oculus basis */
-#define SIGMA_OCULI_LATI     2.0    /* oculus regionum et hachurarum */
 #define SIGMA_STRUCTURAE       2.0    /* classes detalii */
 #define SIGMA_CAMPI          4.0    /* campus directionis hachurarum */
 #define SIGMA_UMBRAE         3.5    /* charta umbrae aspersionis */
@@ -67,10 +63,10 @@
  * ============================================================ */
 
 nomen structura {
-     i8 ordo[TEGULA];
+     i8 ordo[DITHERING_TEGULA];
     s32 densitas;
-     i8 pondus[TEGULA * TEGULA];       /* oculo SIGMA_OCULI, 0..GRADUS_MIXTI */
-     i8 pondus_latum[TEGULA * TEGULA]; /* oculo SIGMA_OCULI_LATI */
+     i8 pondus[DITHERING_TEGULA * DITHERING_TEGULA];       /* oculo DITHERING_SIGMA_OCULI, 0..DITHERING_GRADUS_MIXTI */
+     i8 pondus_latum[DITHERING_TEGULA * DITHERING_TEGULA]; /* oculo DITHERING_SIGMA_OCULI_LATI */
     DitheringPictogramma familia;      /* NULLUM pro Bayer */
 } Exemplar;
 
@@ -98,61 +94,6 @@ nomen structura {
          i32  semen;
      Piscina* piscina;
 } Opus;
-
-nomen structura {
-    DitheringPictogramma  familia;
-      constans character* lineae[TEGULA];
-} PictogrammaFons;
-
-hic_manens constans s32 BAYER[TEGULA][TEGULA] = {
-    { 0, 32,  8, 40,  2, 34, 10, 42},
-    {48, 16, 56, 24, 50, 18, 58, 26},
-    {12, 44,  4, 36, 14, 46,  6, 38},
-    {60, 28, 52, 20, 62, 30, 54, 22},
-    { 3, 35, 11, 43,  1, 33,  9, 41},
-    {51, 19, 59, 27, 49, 17, 57, 25},
-    {15, 47,  7, 39, 13, 45,  5, 37},
-    {63, 31, 55, 23, 61, 29, 53, 21}
-};
-
-#define PICTOGRAMMATA_FONTES XI
-
-hic_manens constans PictogrammaFons PICTOGRAMMATA[PICTOGRAMMATA_FONTES] =
-    {
-    {DITHERING_PICTOGRAMMA_LATERES,
-     {"########", "#.......", "#.......", "#.......", "########",
-         "....#...", "....#...", "....#..."}},
-    {DITHERING_PICTOGRAMMA_SQUAMAE,
-     {"#......#", ".#....#.", "..####..", "........", "...##...",
-         "..#..#..", "##....##", "........"}},
-    {DITHERING_PICTOGRAMMA_UNDAE,
-     {"........", "##....##", "..#..#..", "...##...", "........",
-         "........", "........", "........"}},
-    {DITHERING_PICTOGRAMMA_UNDAE,
-     {"........", "##....##", "..#..#..", "...##...", "........",
-         "##....##", "..#..#..", "...##..."}},
-    {DITHERING_PICTOGRAMMA_RHOMBI,
-     {"#.......", ".#.....#", "..#...#.", "...#.#..", "....#...",
-         "...#.#..", "..#...#.", ".#.....#"}},
-    {DITHERING_PICTOGRAMMA_TEXTUM,
-     {"#####.#.", "....#.#.", "#####.#.", "....#.#.", "#.#.####",
-         "#.#.....", "#.#.####", "#.#....."}},
-    {DITHERING_PICTOGRAMMA_CRUCES,
-     {"........", "..#.....", ".###....", "..#.....", "........",
-         "......#.", ".....###", "......#."}},
-    {DITHERING_PICTOGRAMMA_HERBA,
-     {"........", "#.#.#...", ".###....", "..#.....", "........",
-         "#...#.#.", ".....###", "......#."}},
-    {DITHERING_PICTOGRAMMA_SAGITTAE,
-     {"#......#", ".#....#.", "..#..#..", "...##...", "#......#",
-         ".#....#.", "..#..#..", "...##..."}},
-    {DITHERING_PICTOGRAMMA_ANULI,
-     {"........", "..###...", ".#...#..", ".#...#..", ".#...#..",
-         "..###...", "........", "........"}},
-    {DITHERING_PICTOGRAMMA_PUNCTA,
-     {"........", "........", "..##....", "..##....", "........",
-         "........", "......##", "......##"}}
-};
 
 
 /* ============================================================
@@ -213,7 +154,8 @@ _mixtio (
                s32  b,
                s32  w)
 {
-    redde &o->mixtio[(((a * XVI) + b) * (GRADUS_MIXTI + I) + w) * III];
+    redde &o->mixtio[(((a * XVI) + b) * (DITHERING_GRADUS_MIXTI + I)
+        + w) * III];
 }
 
 /* colores activi ordine distantiae ad lab; reddit numerum (<= maximum) */
@@ -360,7 +302,7 @@ _opus_parare (
     si (o->numerus_activorum == 0) redde FALSUM;
 
     o->mixtio = (f64*)piscina_allocare(piscina,
-        (memoriae_index)(XVI * XVI * (GRADUS_MIXTI
+        (memoriae_index)(XVI * XVI * (DITHERING_GRADUS_MIXTI
             + I) * III) * magnitudo(f64));
     si (o->mixtio == NIHIL) redde FALSUM;
     per (a = 0; a < XVI; a++)
@@ -369,13 +311,16 @@ _opus_parare (
         {
             o->distantia[a][b] = color_oklab_distantia(o->pal_lab[a],
                 o->pal_lab[b]);
-            per (w = 0; w <= GRADUS_MIXTI; w++)
+            per (w = 0; w <= DITHERING_GRADUS_MIXTI; w++)
             {
                 per (k = 0; k < III; k++)
                 {
-                    lin[k] = o->pal_lin[a][k] * (f64)(GRADUS_MIXTI - w)
-                        / GRADUS_MIXTI
-                           + o->pal_lin[b][k] * (f64)w / GRADUS_MIXTI;
+                    lin[k] =
+                        o->pal_lin[a][k] * (f64)(DITHERING_GRADUS_MIXTI
+                            - w)
+                        / DITHERING_GRADUS_MIXTI
+                           + o->pal_lin[b][k] * (f64)w
+                               / DITHERING_GRADUS_MIXTI;
                 }
                 color_linearis_ad_oklab(lin, _mixtio(o, a, b, w));
             }
@@ -393,12 +338,12 @@ _exemplar_finire (
 {
     s32 x, y, dx, dy;
 
-    memcpy(e->ordo, ordo, TEGULA);
+    memcpy(e->ordo, ordo, DITHERING_TEGULA);
     e->familia   = familia;
     e->densitas  = 0;
-    per (y = 0; y < TEGULA; y++)
+    per (y = 0; y < DITHERING_TEGULA; y++)
     {
-        per (x = 0; x < TEGULA; x++)
+        per (x = 0; x < DITHERING_TEGULA; x++)
         {
             f64 summa = 0.0, pondera = 0.0, summa_lata = 0.0,
                 pondera_lata = 0.0;
@@ -408,9 +353,9 @@ _exemplar_finire (
                 per (dx = -VI; dx <= VI; dx++)
                 {
                     f64 g = exp(-(f64)(dx * dx + dy * dy)
-                        / (2.0 * SIGMA_OCULI * SIGMA_OCULI));
+                        / (2.0 * DITHERING_SIGMA_OCULI * DITHERING_SIGMA_OCULI));
                     f64 gl = exp(-(f64)(dx * dx + dy * dy)
-                        / (2.0 * SIGMA_OCULI_LATI * SIGMA_OCULI_LATI));
+                        / (2.0 * DITHERING_SIGMA_OCULI_LATI * DITHERING_SIGMA_OCULI_LATI));
                     f64 valor = (f64)_punctum(ordo, x + dx + LXIV, y
                         + dy + LXIV);
                     summa         += g * valor;
@@ -419,10 +364,11 @@ _exemplar_finire (
                     pondera_lata  += gl;
                 }
             }
-            e->pondus[y * TEGULA + x] = (i8)(s32)(summa
-                / pondera * GRADUS_MIXTI + 0.5);
-            e->pondus_latum[y * TEGULA + x] = (i8)(s32)(summa_lata
-                / pondera_lata * GRADUS_MIXTI + 0.5);
+            e->pondus[y * DITHERING_TEGULA + x] = (i8)(s32)(summa
+                / pondera * DITHERING_GRADUS_MIXTI + 0.5);
+            e->pondus_latum[y * DITHERING_TEGULA + x] =
+                (i8)(s32)(summa_lata
+                / pondera_lata * DITHERING_GRADUS_MIXTI + 0.5);
         }
     }
 }
@@ -433,16 +379,16 @@ _bayer_parare (
     Exemplar* bayer)
 {
     s32 k, x, y;
-    i8 ordo[TEGULA];
+    i8 ordo[DITHERING_TEGULA];
 
-    per (k = 0; k < BAYER_NUMERUS; k++)
+    per (k = 0; k < DITHERING_BAYER_NUMERUS; k++)
     {
-        memset(ordo, 0, TEGULA);
-        per (y = 0; y < TEGULA; y++) per (x = 0; x
-                                         < TEGULA; x++) si (BAYER[y][x]
-                                                            < k * IV) ordo[y] =
-                                                                          (i8)(ordo[y]
-                                                                              | (0x80
+        memset(ordo, 0, DITHERING_TEGULA);
+        per (y = 0; y < DITHERING_TEGULA; y++) per (x = 0; x
+                                                   < DITHERING_TEGULA; x++) si (DITHERING_BAYER[y][x]
+                                                                                < k * IV) ordo[y] =
+                                                                                              (i8)(ordo[y]
+                                                                                              | (0x80
                                                                                                 >> x));
         _exemplar_finire(&bayer[k], ordo, DITHERING_PICTOGRAMMA_NULLUM);
     }
@@ -453,18 +399,19 @@ _pictogrammata_parare (
     Exemplar* figurae)
 {
     s32 i, x, y;
-    i8 ordo[TEGULA];
+    i8 ordo[DITHERING_TEGULA];
 
-    per (i = 0; i < PICTOGRAMMATA_FONTES; i++)
+    per (i = 0; i < DITHERING_PICTOGRAMMATA_FONTIUM; i++)
     {
-        memset(ordo, 0, TEGULA);
-        per (y = 0; y < TEGULA; y++) per (x = 0; x
-                                         < TEGULA; x++) si (PICTOGRAMMATA[i].lineae[y][x]
-                                                            == '#') ordo[y] =
+        memset(ordo, 0, DITHERING_TEGULA);
+        per (y = 0; y < DITHERING_TEGULA; y++) per (x = 0; x
+                                                   < DITHERING_TEGULA; x++) si (DITHERING_PICTOGRAMMATA[i].lineae[y][x]
+                                                                                == '#') ordo[y] =
                                                                                                                 (i8)(ordo[y]
                                                                                                       | (0x80
-                                                                        >> x));
-        _exemplar_finire(&figurae[i], ordo, PICTOGRAMMATA[i].familia);
+                                                                                            >> x));
+        _exemplar_finire(&figurae[i], ordo,
+            DITHERING_PICTOGRAMMATA[i].familia);
     }
 }
 
@@ -618,7 +565,7 @@ _basis_bayer (
                 {
                     s32 b = cand[j];
                     si (a == b) perge;
-                    per (e = 0; e < BAYER_NUMERUS; e++)
+                    per (e = 0; e < DITHERING_BAYER_NUMERUS; e++)
                     {
                         constans Exemplar* ex = &bayer[e];
                                       s32  minor = ex->densitas < 64
@@ -633,7 +580,7 @@ _basis_bayer (
                             s32 sx = x_areae + q % al, sy = y_areae + q
                                 / al;
                             err += _d2(_mixtio(o, a, b,
-                                (s32)ex->pondus[(sy & VII) * TEGULA
+                                (s32)ex->pondus[(sy & VII) * DITHERING_TEGULA
                                     + (sx & VII)]),
                                        &lab_oculi[(sy * lat
                                            + sx) * III]);
@@ -974,7 +921,7 @@ _hachuras_pingere (
                             % al;
                         f64 dm = 1e30;
                         si (!hachuratus[p]) perge;
-                        per (w = 0; w <= GRADUS_MIXTI; w++)
+                        per (w = 0; w <= DITHERING_GRADUS_MIXTI; w++)
                         {
                             f64 d = _d2(_mixtio(o, b, a, w),
                                 &lab_oculi_lati[p * III]);
@@ -998,7 +945,7 @@ _hachuras_pingere (
                 si (!hachuratus[p]) perge;
                 indices[p] = (i8)(campus[p]
                     > cos(PI_VALOR * (f64)tegmen_opt[q]
-                        / GRADUS_MIXTI) ? opt_a : opt_b);
+                        / DITHERING_GRADUS_MIXTI) ? opt_a : opt_b);
             }
         }
     }
@@ -1094,7 +1041,7 @@ _regiones_stilizare (
             umbra ? PICTOGRAMMATUM_DISTANTIA_UMBRAE : PICTOGRAMMATUM_DISTANTIA_MIN;
         nc = _proximi(o, medium_lab, IX, ordinati);
 
-        per (e = 0; e < PICTOGRAMMATA_FONTES; e++)
+        per (e = 0; e < DITHERING_PICTOGRAMMATA_FONTIUM; e++)
         {
             si (figurae[e].familia != materia[col]) perge;
             per (i = 0; i < nc; i++)
@@ -1127,7 +1074,8 @@ _regiones_stilizare (
                         s32 m = mb[q];
                         err += _d2(_mixtio(o, a, b,
                             (s32)figurae[e].pondus_latum[((m
-                                / o->lat) & VII) * TEGULA + ((m
+                                / o->lat) & VII) * DITHERING_TEGULA
+                                + ((m
                                 % o->lat) & VII)]),
                                    &lab_oculi_lati[m * III]);
                     }
@@ -1197,7 +1145,7 @@ _aspergere (
     per (p = 0; p < o->n; p++) per (k = 0; k < III; k++) r[p * III
                                                              + k] =
                                                              o->pal_lin[(s32)basis[p]][k];
-    _gauss(r, rb, o->lat, o->alt, III, SIGMA_OCULI_LATI, tmp);
+    _gauss(r, rb, o->lat, o->alt, III, DITHERING_SIGMA_OCULI_LATI, tmp);
     per (p = 0; p < o->n; p++)
     {
         f64 lab[III];
@@ -1308,8 +1256,8 @@ dithering_exemplaria_colorum (
              DitheringExemplariaOptiones  ordinariae;
     constans DitheringExemplariaOptiones* opt = optiones;
                                     Opus  o;
-                                Exemplar  bayer[BAYER_NUMERUS];
-                                Exemplar  figurae[PICTOGRAMMATA_FONTES];
+                                Exemplar  bayer[DITHERING_BAYER_NUMERUS];
+                                Exemplar  figurae[DITHERING_PICTOGRAMMATA_FONTIUM];
     memoriae_index m1, m3;
     f64 *lin, *lab, *lab_oculi, *lab_oculi_lati, *error, *tmp, *limina,
         *campus;
@@ -1397,10 +1345,11 @@ dithering_exemplaria_colorum (
                                       + k]);
         color_linearis_ad_oklab(&lin[p * III], &lab[p * III]);
     }
-    _gauss(lin, tmp, o.lat, o.alt, III, SIGMA_OCULI, error);
+    _gauss(lin, tmp, o.lat, o.alt, III, DITHERING_SIGMA_OCULI, error);
     per (p = 0; p < o.n; p++) color_linearis_ad_oklab(&tmp[p * III],
                                   &lab_oculi[p * III]);
-    _gauss(lin, tmp, o.lat, o.alt, III, SIGMA_OCULI_LATI, error);
+    _gauss(lin, tmp, o.lat, o.alt, III, DITHERING_SIGMA_OCULI_LATI,
+        error);
     per (p = 0; p < o.n; p++) color_linearis_ad_oklab(&tmp[p * III],
                                   &lab_oculi_lati[p * III]);
 

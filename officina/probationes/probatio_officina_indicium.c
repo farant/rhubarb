@@ -64,7 +64,7 @@ _plagulam_plenam_legere (
 
     fructus.datum    = NIHIL;
     fructus.mensura  = ZEPHYRUM;
-    plagula          = fopen(via, "rb");
+    plagula          = lectiones_fopen(via, "rb");
     si (plagula == NIHIL)
     {
         redde fructus;

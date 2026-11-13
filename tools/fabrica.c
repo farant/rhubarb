@@ -3271,53 +3271,114 @@ _probare (
  * digestum
  * ================================================== */
 
+/* titulus gradus qui nullius actionis esse potest: gradus_solus hoc
+ * valore NULLUM gradum explicat */
+#define DIGESTUM_GRADUS_NULLUS "//"
+
+/* Sigillum actionis UNIUS. Gradus (probationes: clausura cuiusque
+ * membri per aedilem derivata, ~DCXLIV membra) NON explicantur nisi
+ * titulus eos poscit - olim omnis vocatio omnes explicabat (XXI G
+ * instructionum, III s calida, IX-X s frigida; installator quisque
+ * hanc vocat):
+ *   titulus sine '/'        -> nullus gradus explicatur;
+ *   titulus 'gradus/membrum' -> gradus ille solus;
+ *   actio inventa ipsa gradus parens -> iterum, gradu illo explicato
+ *     (sigillum parentis membra eius respicere potest).
+ * FABRICA_DIGESTUM_PLENUM (ambitus) = mos vetus, omnes explicantur:
+ * testis differentialis (fumus LXXI). Sigillum per EANDEM functionem
+ * ac iudex computatur; actiones ceterae non mutantur explicatione. */
 interior s32
 _digestum (
     constans character* titulus,
                Piscina* piscina)
 {
-    FabricaSutura  sutura;
-              Xar* actiones;
-           chorda  causa;
-              i32  i;
+         FabricaSutura  sutura;
+                   Xar* actiones;
+                chorda  causa;
+                   i32  i;
+                   s32  conatus;
+    constans character* solus;
+    constans character* obliqua;
+             character  praefixum[CCLVI];
 
-    actiones = _declarationes_colligere(piscina, NIHIL, NIHIL);
-    si (actiones == NIHIL)
+    obliqua = strchr(titulus, '/');
+    si (getenv("FABRICA_DIGESTUM_PLENUM") != NIHIL)
     {
-        redde II;
+        solus = NIHIL;
     }
-    suturae_legentem_parare(&sutura);
-    /* lectores ingressuum IUDICIS (identitas clang, ambitus, species,
-     * effectus, repositorium): sine eis actio cum tali ingressu 'sutura
-     * sine identitate clang' recusabatur (bearssl_amalgama, 10-17) */
-    suturae_iudicii_parare(&sutura, actiones, piscina);
-    /* memoria sigillorum per cursum: communis semel sigillatur */
-    sutura.sigilla    = tabula_dispersa_creare_chorda(piscina, 1024);
-    per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
+    alioquin si (   obliqua != NIHIL
+                 && (memoriae_index)(obliqua - titulus)
+                    < magnitudo(praefixum))
     {
-         FabricaActio* actio;
-             Sigillum  sigillum;
-            character  hex[SIGILLUM_HEX_MENSURA];
+        memcpy(praefixum, titulus, (memoriae_index)(obliqua - titulus));
+        praefixum[obliqua - titulus]  = '\0';
+        solus                         = praefixum;
+    }
+    alioquin si (obliqua != NIHIL)
+    {
+        solus = NIHIL;
+    }
+    alioquin
+    {
+        solus = DIGESTUM_GRADUS_NULLUS;
+    }
+    per (conatus = ZEPHYRUM; conatus < II; conatus++)
+    {
+        b32 iterandum;
 
-        actio = (FabricaActio*)xar_obtinere(actiones, i);
-        si (!chorda_aequalis_literis(actio->titulus, titulus))
+        iterandum  = FALSUM;
+        actiones   = _declarationes_colligere(piscina, NIHIL, solus);
+        si (actiones == NIHIL)
         {
-            perge;
+            redde II;
         }
-        causa = chorda_ex_literis("", piscina);
-        /* EADEM functio ac iudex (fabrica_iudicare): plagula
-         * provenientiae exclusa - aliter scriptum et iudex
-         * dissentirent (T7: sic factum, statim deprehensum) */
-        si (!fabrica_actionem_sigillare(&sutura, actio, piscina,
-                &sigillum, &causa))
+        suturae_legentem_parare(&sutura);
+        /* lectores ingressuum IUDICIS (identitas clang, ambitus,
+         * species, effectus, repositorium): sine eis actio cum tali
+         * ingressu 'sutura sine identitate clang' recusabatur
+         * (bearssl_amalgama, 10-17) */
+        suturae_iudicii_parare(&sutura, actiones, piscina);
+        /* memoria sigillorum per cursum: communis semel sigillatur */
+        sutura.sigilla = tabula_dispersa_creare_chorda(piscina, 1024);
+        per (i = ZEPHYRUM; i < xar_numerus(actiones); i++)
         {
-            fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
-                (constans character*)causa.datum);
-            redde I;
+             FabricaActio* actio;
+                 Sigillum  sigillum;
+                character  hex[SIGILLUM_HEX_MENSURA];
+
+            actio = (FabricaActio*)xar_obtinere(actiones, i);
+            si (!chorda_aequalis_literis(actio->titulus, titulus))
+            {
+                perge;
+            }
+            /* gradus parens sine membris explicatis: iterum cum eo */
+            si (   solus != NIHIL && conatus == ZEPHYRUM
+                && actio->gradus != NIHIL && actio->membrum == NIHIL
+                && strcmp(solus, titulus) != ZEPHYRUM)
+            {
+                solus      = titulus;
+                iterandum  = VERUM;
+                frange;
+            }
+            causa = chorda_ex_literis("", piscina);
+            /* EADEM functio ac iudex (fabrica_iudicare): plagula
+             * provenientiae exclusa - aliter scriptum et iudex
+             * dissentirent (T7: sic factum, statim deprehensum) */
+            si (!fabrica_actionem_sigillare(&sutura, actio, piscina,
+                    &sigillum, &causa))
+            {
+                fprintf(stderr, "fabrica: %.*s\n", (s32)causa.mensura,
+                    (constans character*)causa.datum);
+                redde I;
+            }
+            sigillum_hex(&sigillum, hex);
+            printf("%s\n", hex);
+            redde ZEPHYRUM;
         }
-        sigillum_hex(&sigillum, hex);
-        printf("%s\n", hex);
-        redde ZEPHYRUM;
+        si (!iterandum)
+        {
+            frange;
+        }
     }
     fprintf(stderr, "fabrica: actio ignota '%s'\n", titulus);
     redde II;

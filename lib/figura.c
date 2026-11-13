@@ -505,6 +505,15 @@ figura_ordinem_electum_pingere (
 }
 
 vacuum
+figura_ordinem_super_pingere (
+    Mandata* md,
+      Fines  f)
+{
+    mandata_rectangulum_exemplar(md, f, figura_color_thematis(
+        COLOR_SELECTION), EXEMPLAR_CINEREUM_LEVE);
+}
+
+vacuum
 figura_fasciam_pingere (
     Mandata* md,
       Fines  f)

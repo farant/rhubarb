@@ -1598,6 +1598,10 @@ PORTAE = {
     # solum currebat, ergo nulla commissio eam debebat
     'examen-vectis': (['./silva/examen_vectis.sh'],
                       r'VECTIS (TENET|FRACTUS)'),
+    # budget X (2026-11-07): percursus ex plagula una contra obiecta
+    # singula - relatio eadem (mores indefiniti modos dividerent)
+    'unitas-percursus': (['./silva/unitas_probare.sh'],
+                         r'UNITAS PERCURSUS: (sana|FRACTA)'),
     # latus examinis super CORPUS verum (percursus REICE contra
     # exclusiones pinnatas, ~CLX s): ante 2026-09-25 manu solum -
     # exclusiones a ~09-14 staluerant (codex 90 novus plagulas domus
@@ -2172,12 +2176,11 @@ def _porta_per_gradum(nomen, vis=False, auditus=None):
     residua = PORTAE_RESIDUA.get(nomen, [])
     residua_facta = [(g, _curre(cmd), signum) for g, cmd, signum in residua
                      if g == 'prae']
-    # UMBRA (fabrica-plan-8 T3, decretum Franis Q2): membra in duobus
-    # iudiciis (photographiae verum + libri/secutorum) iudicantur,
-    # discordiae in <area>vestigia_umbra.txt - verdictum non mutatur.
-    # Modus expressus vocantis (e.g. 'photographia') servatur.
+    # MODUS VESTIGII (fabrica-plan-8; decretum Franis 2026-11-10 post
+    # T5): porta nihil ponit - ordinarius fabricae est 'liber' (membra
+    # sine ambulatione arboris). Modus expressus vocantis
+    # (FABRICA_VESTIGIUM=umbra ad auditum, 'photographia') hereditatur.
     ambitus = dict(os.environ)
-    ambitus.setdefault('FABRICA_VESTIGIUM', 'umbra')
     r = _curre([FABRICA_BIN, 'probare', '-machina']
                + (['-vis'] if vis else []) + (['-audit'] if auditus else [])
                + [compositum], env=ambitus)
@@ -3559,6 +3562,22 @@ def _fabricam_exigere(viae, sine_fabrica=None, _sanati=(), _regenerata=False,
                  if l and not (l.split('\t')[0].isupper()
                                and l.split('\t')[0].isalpha() and '\t' in l)]
               + [l for l in r.stderr.splitlines() if l])
+    # CUSTODIA MEMORABILIUM (2026-11-11): actio memorabilis cuius
+    # regeneratio legit quod ingressus declarati non tegunt - fabrica
+    # 'RECENS' cum causa 'MEMORIA NEGATA' et exitu 0 reddit; porta
+    # generata (generata_iudicare.sh) eam FRACTAM nominat, commissio olim
+    # tacite transibat (rubedo post duas commissiones inventa). Declaratio
+    # fracta obstat etiam si artificium non commissum est (build/).
+    negatae = [o for o in ordines
+               if o[0] == 'IUDICIUM' and len(o) >= 4
+               and o[3].startswith('MEMORIA NEGATA')]
+    if negatae:
+        raise SilvaError(
+            'FABRICA (ante portas): DECLARATIO FRACTA - actio memorabilis'
+            ' legit quod ingressus eius non declarant; nihil cursum, nihil'
+            ' commissum:\n  %s\nDeclara <ingressus> in aedificatio.stml'
+            ' actionis (aut lectionem tolle); porta generata idem iudicat.'
+            % '\n  '.join('%s - %s' % (o[2], o[3]) for o in negatae))
     if r.returncode == 0:
         print(lineae[-1] if lineae else 'fabrica: sana')
         return

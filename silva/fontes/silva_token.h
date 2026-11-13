@@ -148,6 +148,14 @@ nomen enumeratio {
 #define SILVA_STANDARD_C99       1
 #define SILVA_STANDARD_EXTENSIO  2
 
+/* Vexillum frontis in MateriaToken.vexilla (budget fusionis, item V
+ * b): lexator trivium COMMENTUM huic lexemati attachavit
+ * (silva_spatia_attachere). Signum LEXATORIS solum - setteres trivia
+ * (silva_token_*_ponere/addere/vacare) id non renovant, ergo in
+ * lexematibus lexatoris crudis solum fide dignum (lineae directivae
+ * captae: _directivam_capere). */
+#define SILVA_TOKEN_COMMENTUM_LEXATUM ((i32)IV)
+
 
 /* ==================================================
  * Fons - identitas plagulae

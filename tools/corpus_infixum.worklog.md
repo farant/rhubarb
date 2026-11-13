@@ -18,3 +18,30 @@ Changes:
 Proof: a reference run (old script) and a new run into separate scratch dirs. corpus.versio (fingerprint e9f7a1f4...), corpus.symbola.tsv (17982 lines), corpus_silicis.toml and build/capsula_corpus_silicis.{c,h} (66 MB) are all byte-identical. `bin/fabrica iudicare -plenus -tacta tools/corpus_infixum.sh`: both artifacts "regeneratio congruit".
 
 Remaining: capsula_generare compression ~4.8 s, nexus refresh ~2 s, the filtered awk ~3.3 s.
+
+## 2026-11-07 - symbola_tabulam_scribere factored out
+
+The grep+awk that writes the statics/headers rows moved into
+`symbola_tabulam_scribere <repo root> <client roots...>` so
+tools/instrumentum_unitas.sh can reuse it with silva's own roots
+(silva/fontes, silva/instrumenta). corpus_symbola_generare calls it with
+RADICES_CLIENTIUM; corpus.symbola.tsv regenerated before and after the
+refactor is byte-identical.
+
+## 2026-11-07 - symbola_clausurae_scribere
+
+Closure-filtered variant for tools/instrumentum_unitas.sh (rows of the
+listed files only); both share `_symbola_seligere` (the old awk + sort).
+corpus.symbola.tsv still byte-identical. Filter is an awk hash on $4, NOT
+`grep -F -f`: BSD grep with 72 fixed patterns over nexus.tsv took 1 min
+44 s.
+
+## 2026-11-09 - sedes_clausurae_scribere
+
+The grep + closure filter of symbola_clausurae_scribere split out as its
+own function (raw nexus `sedes` rows of the listed files). The unity
+driver reads those rows twice (statics table via `_symbola_seligere`,
+and the join that names header prototypes for the interiora table), so
+the grep over the whole nexus runs once. symbola_clausurae_scribere is
+now the two piped together; the conflated percursus file is byte-identical
+before and after.

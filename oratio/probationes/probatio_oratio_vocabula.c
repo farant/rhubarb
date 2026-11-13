@@ -90,7 +90,7 @@ _plagulam_legere (
     constans character* via,
                 chorda* exitus)
 {
-          FILE* f = fopen(via, "rb");
+          FILE* f = lectiones_fopen(via, "rb");
         longus  longitudo;
             i8* memoria;
 
@@ -712,7 +712,7 @@ _corpus_symbolorum_probare (
         }
         sprintf(via, "%s/oratio/build/corpus_c.txt", radix);
 
-        lista = fopen(via, "r");
+        lista = lectiones_fopen(via, "r");
         si (lista == NIHIL)
         {
             CREDO_CULPA ("oratio/build/corpus_c.txt absens - e radice per cursorem curre");
@@ -1085,7 +1085,7 @@ _prosam_domus_probare (
         CREDO_NON_NIHIL (corpus);
         CREDO_NECESSE_NON_NIHIL (u_prosae);
         sprintf(via, "%s/oratio/build/corpus_md.txt", radix);
-        lista = fopen(via, "r");
+        lista = lectiones_fopen(via, "r");
         si (lista == NIHIL)
         {
             CREDO_CULPA ("oratio/build/corpus_md.txt absens - e radice per cursorem curre");

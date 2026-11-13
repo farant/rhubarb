@@ -299,6 +299,11 @@ nomen structura {
      * ostensus: aperitio nova focum dextrum cogit) - privatum */
                     b32 focus_differtus;
                     i32 focus_differtus_latus;
+    /* negotia T5: anulus (Cmd+H / Cmd+L) - Xar de (genus, argumentum)
+     * privatum; NIHIL aut vacuus = nullus. Positio servata (index in
+     * anulo) */
+                    Xar* anulus;
+                    i32  anulus_positio;
 } VicusTabula;
 
 /* S4 (Franus 2026-10-09): horologium in linea tabularum, ad dextrum
@@ -363,6 +368,9 @@ nomen structura {
                 Reactor* reactor;     /* quies T6: NIHIL = nullus */
                     Xar* fossae;      /* quies T6: in reactore
                                        * inscriptae (privatum) */
+                    Xar* aperitores;  /* negotia T5: genera virtualia
+                                       * anuli (privatum); NIHIL =
+                                       * nulla */
 } Vicus;
 
 /* T4a (colloquia-plan): systema hospitis - in omni vicus_pulsare
@@ -653,6 +661,62 @@ b32
 vicus_cyclo_gradi (
     Vicus* v,
       s32  directio);
+
+/* negotia T5: ANULUS lateris dextri, PER TABULAM (cyclus per vicum) -
+ * Cmd+L (directio +I) / Cmd+H (-I), circulariter. Latus anuli =
+ * genera[k] cum argumenta[k] (identitas ut vicus_acervo_aperire;
+ * argumenta NIHIL aut argumenta[k] NIHIL = sine argumento). Positio
+ * currens = latus anuli quod in fronte est, aliter positio servata.
+ * Gradus = PETITIO (vicus_pulsare proximo): genus cum aperitore ->
+ * aperitor argumentum accipit (acervum vicus non tangit); aliter ut
+ * vicus_acervo_aperire (praesens in frontem, aliter montatur; focus
+ * dexter). Anulus nullus aut unius: clavis devoratur, nihil mutatur.
+ * Anulus et positio in dispositione tabulae scribuntur
+ * (<anulus positio="k"><latus genus=".." argumentum=".."/></anulus>
+ * iuxta <acervus>) et restituuntur. Cyclus (Cmd+] / Cmd+[)
+ * intactus. Copiantur; numerus ZEPHYRUM = anulus tollitur; positio =
+ * index lateris frontalis initio. FALSUM si tabula activa nulla,
+ * genus nec descriptum nec aperitor, aut positio extra ambitum. */
+b32
+vicus_anulum_ponere (
+                           Vicus* v,
+    constans character* constans* genera,
+    constans character* constans* argumenta,
+                             i32  numerus,
+                             i32  positio);
+
+/* negotia-paginae T6: latus k anuli tabulae activae (genus,
+ * argumentum; vacuum = sine) - hospes anulum ex latere primo
+ * renovat. FALSUM si anulus nullus aut k extra ambitum */
+b32
+vicus_anuli_latus (
+    constans Vicus* v,
+               i32  k,
+            chorda* genus,
+            chorda* argumentum);
+
+/* gradus anuli (+I aut -I) in tabula activa: PETITIO. FALSUM si
+ * directio mala, tabula activa nulla, aut anulus nullus aut unius
+ * (nihil petitur) */
+b32
+vicus_anulo_gradi (
+    Vicus* v,
+      s32  directio);
+
+/* genus VIRTUALE anuli (T6: "colloquium"): gradus ad latus huius
+ * generis aperitorem vocat loco aperitionis - aperitor ipse decidit
+ * (terminale tmux, charta sessionis finitae). VERUM si actum */
+nomen b32 (*VicusAperitor)(
+                 vacuum* ctx,
+     constans character* argumentum);
+
+/* FALSUM si genus vacuum aut iam aperitorem habet */
+b32
+vicus_aperitorem_addere (
+                   Vicus* v,
+      constans character* genus,
+           VicusAperitor  aperire,
+                  vacuum* ctx);
 
 /* T4d: latus frontale acervi tabulae activae tollitur, prior in
  * frontem venit, focus ad dextrum; dispositio servatur. FALSUM si

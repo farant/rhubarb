@@ -4,6 +4,7 @@
 #include "praeconium.h"
 #include "json.h"
 #include "lectiones.h"
+#include "chorda_aedificator.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -582,4 +583,79 @@ colloquia_legere (
         }
     }
     redde l;
+}
+
+/* T6: verbum citatum pro concha ('...', ' -> '\'') */
+interior vacuum
+citatum_appendere (
+    ChordaAedificator* a,
+   constans character* verbum)
+{
+    chorda_aedificator_appendere_character(a, '\'');
+    per (; *verbum; verbum++)
+    {
+        si (*verbum == '\'')
+        {
+            chorda_aedificator_appendere_literis(a, "'\\''");
+        }
+        alioquin
+        {
+            chorda_aedificator_appendere_character(a, *verbum);
+        }
+    }
+    chorda_aedificator_appendere_character(a, '\'');
+}
+
+/* sessio Claude: [0-9A-Za-z-]+ (in mandato crustae ponitur) */
+interior b32
+sessio_tuta (
+    constans character* s)
+{
+    i32 k;
+
+    si (!s || !s[ZEPHYRUM])
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; s[k]; k++)
+    {
+        character c = s[k];
+
+        si (!(   (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z')
+              || (c >= 'a' && c <= 'z') || c == '-'))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+chorda
+colloquia_mandatum_resumendi (
+    constans character* sessio,
+    constans character* via,
+               Piscina* piscina)
+{
+    ChordaAedificator* a;
+            character  titulus_sessionis[XVI];
+
+    si (!piscina || !sessio_tuta(sessio) || !via || !via[ZEPHYRUM])
+    {
+        redde chorda_ex_literis("", piscina);
+    }
+    sprintf(titulus_sessionis, "claude-%.8s", sessio);
+    a = chorda_aedificator_creare(piscina, CCLVI);
+    chorda_aedificator_appendere_literis(a,
+        "unset TMUX; exec tmux new-session -A -s ");
+    citatum_appendere(a, titulus_sessionis);
+    chorda_aedificator_appendere_literis(a, " -c ");
+    citatum_appendere(a, via);
+    /* mandatum tmux (sessio tuta: nullum apostrophum) - concha login
+     * Claude currit, deinde concha manet */
+    chorda_aedificator_appendere_literis(a,
+        " 'exec \"$SHELL\" -l -c \"claude --resume ");
+    chorda_aedificator_appendere_literis(a, sessio);
+    chorda_aedificator_appendere_literis(a,
+        "; exec \\\"$SHELL\\\" -l\"'");
+    redde chorda_aedificator_finire(a);
 }

@@ -462,6 +462,90 @@ _sectio_quinta (
         piscina, &pinax));
 }
 
+/* negotia-paginae T4: picturae "negotia/<id>" extra bibliothecam et
+ * recentia, sed exstant; actum ultimum per picturam; latus eas
+ * aperit (exstantes) aut condit (absentes, etiam sine condere) */
+interior vacuum
+_sectio_negotii (
+    CredoContextus* c)
+{
+              Volumen* vol;
+     PictorApplicatio  app;
+     PictorDocumentum* np;
+     PictorDocumentum* b;
+                  Xar* l;
+                  s64  ante;
+                  s64  b_ante;
+
+    thema_initiare();
+    vol = (Volumen*)c->datum;
+    CREDO_VERUM(pictor_applicatio_aedificare(&app, piscina, intern, vol,
+        CDLXXX, CDLXXX));
+    b   = pictor_documentum_creare(piscina, intern, vol, "b", C, LX,
+        LXIV);
+    np  = pictor_documentum_creare(piscina, intern, vol,
+        "negotia/01PAGINA", C, LX, LXIV);
+    CREDO_NECESSE_NON_NIHIL(b);
+    CREDO_NECESSE_NON_NIHIL(np);
+    /* plagula originis alienae sub negotia/: non pictura */
+    volumen_plagulam_condere(vol, chorda_ex_literis(
+        "negotia/s/documentum", piscina), chorda_ex_literis(
+        "<documentum latitudo=\"40\" altitudo=\"20\"/>", piscina),
+        "scriba:documentum");
+
+    CREDO_GRADUS("extra bibliothecam et recentia");
+    l = pictor_documenta_enumerare(vol, piscina);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_AEQUALIS_I32(xar_numerus(l), II);
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(l, ZEPHYRUM),
+        "b");
+    CREDO_CHORDA_AEQUALIS_LITERIS(*(chorda*)xar_obtinere(l, I), "");
+    CREDO_CHORDA_AEQUALIS_LITERIS(ordo_recens(vol), "b|");
+
+    CREDO_GRADUS("exstat");
+    CREDO_VERUM(pictor_documentum_exstat(vol, "negotia/01PAGINA",
+        piscina));
+    CREDO_VERUM(pictor_documentum_exstat(vol, "b", piscina));
+    CREDO_FALSUM(pictor_documentum_exstat(vol, "negotia/nulla",
+        piscina));
+    CREDO_FALSUM(pictor_documentum_exstat(vol, "negotia/s", piscina));
+
+    CREDO_GRADUS("actum ultimum");
+    ante    = pictor_documentum_ultimum(vol, "negotia/01PAGINA",
+        piscina);
+    b_ante  = pictor_documentum_ultimum(vol, "b", piscina);
+    CREDO_VERUM(ante > ZEPHYRUM);
+    CREDO_VERUM(ante > b_ante);
+    actum_addere(np);
+    CREDO_VERUM(pictor_documentum_ultimum(vol, "negotia/01PAGINA",
+        piscina) > ante);
+    CREDO_AEQUALIS_S64(pictor_documentum_ultimum(vol, "b", piscina),
+        b_ante);
+    CREDO_AEQUALIS_S64(pictor_documentum_ultimum(vol, "negotia/nulla",
+        piscina), ZEPHYRUM);
+    CREDO_AEQUALIS_S64(pictor_documentum_ultimum(vol, "negotia/s",
+        piscina), ZEPHYRUM);
+
+    CREDO_GRADUS("latus aperit exstantem");
+    CREDO_VERUM(pictor_picturam_ponere(&app.montatio,
+        "negotia/01PAGINA"));
+    CREDO_VERUM(app.montatio.doc != NIHIL
+        && app.montatio.doc->latitudo == C);
+    CREDO_FALSUM(pictor_picturam_ponere(&app.montatio, "negotia/s"));
+
+    CREDO_GRADUS("latus condit absentem (sine condere)");
+    CREDO_VERUM(pictor_argumentum_ponere(&app.montatio,
+        "negotia/01NOVA", FALSUM));
+    CREDO_VERUM(pictor_documentum_exstat(vol, "negotia/01NOVA",
+        piscina));
+    CREDO_VERUM(app.montatio.doc != NIHIL
+        && app.montatio.doc != np);
+    CREDO_CHORDA_AEQUALIS_LITERIS(ordo_recens(vol), "b|");
+    CREDO_FALSUM(pictor_argumentum_ponere(&app.montatio, "ignota",
+        FALSUM));
+    CREDO_FALSUM(pictor_documentum_exstat(vol, "ignota", piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "bibliotheca picturarum", _sectio_prima, _parare, _purgare, NIHIL,
         NIHIL },
@@ -474,6 +558,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "mensura: XIII x CC", _sectio_quarta, _parare, _purgare, NIHIL,
         NIHIL },
+    { "paginae negotiorum (negotia-paginae T4)", _sectio_negotii,
+        _parare, _purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

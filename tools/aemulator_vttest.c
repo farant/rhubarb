@@ -253,7 +253,7 @@ principale (
         lineae * CELLULA_Y);
     lf = ludus_fenestra_creare(piscina, app.d, app.figurae, ZEPHYRUM,
         NIHIL, NIHIL, tabula);
-    scriptum = fopen(argumenta[II], "r");
+    scriptum = lectiones_fopen(argumenta[II], "r");
     sprintf(via, "%s/index.tsv", argumenta[I]);
     index = lectiones_fopen(via, "w");
     si (!lf || !scriptum || !index)

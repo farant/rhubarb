@@ -59,3 +59,18 @@ structure tensor allocates its own scratch, twice). At 512x512 that is
 ~80 MB; at 1536x2048 it would be ~900 MB. The header says callers
 downscale to ~300-700 px; if a caller ever needs full-size images,
 reuse the scratch arrays instead of allocating per stage.
+
+## 2026-11-07 — pattern sources moved to dithering_exemplaria_fontes (exemplaria-velox T2)
+
+`BAYER`, `PICTOGRAMMATA`, `PictogrammaFons` and the constants their
+weights need (`TEGULA`, `GRADUS_MIXTI`, `BAYER_NUMERUS`, `SIGMA_OCULI`,
+`SIGMA_OCULI_LATI`) now live in `include/dithering_exemplaria_fontes.h`
++ `lib/dithering_exemplaria_fontes.c` with `DITHERING_` names, read by
+this file, `lib/dithering_exemplaria_velox.c` and the table generator
+(`tools/dithering_tabulae_generare.sh`). Output unchanged: the velox
+suite pins this file's indices on two fixtures by blake2b ("classica
+fixa", green after the move). This file still computes its weights per
+call (`_exemplar_finire`); the fast version reads the generated tables.
+
+Plant note: Bayer bits only change at thresholds k*IV, so moving an
+entry 32 -> 33 is silent (no bit flips); 32 -> 31 is the red plant.

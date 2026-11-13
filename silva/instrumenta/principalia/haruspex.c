@@ -28,6 +28,7 @@
 #include "chorda.h"
 #include "xar.h"
 #include "tabula_dispersa.h"
+#include "iter_directoria.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_contextus.h"
@@ -39,7 +40,6 @@
 #include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens b32 verbosa = FALSUM;
 hic_manens i32 plagulae = ZEPHYRUM;
@@ -64,7 +64,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura_out)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura_l;
     character* datum;
 
@@ -114,6 +114,59 @@ _est_fons_c (
     redde m > II && titulus[m - II] == '.' && titulus[m - I] == 'c';
 }
 
+/* ambulatio capitum per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus, in XV instrumenta copiatus): contextus callback */
+nomen structura {
+    SilvaContextus* ctx;
+           Piscina* piscina;
+    TabulaDispersa* visa;
+} CapitaAmbulatio;
+
+hic_manens s32
+_caput_visum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    CapitaAmbulatio* a = (CapitaAmbulatio*)contextus;
+          character* via;
+          character* titulus;
+                i32  mensura = ZEPHYRUM;
+          character* textus;
+
+    si (tabula_dispersa_continet(a->visa, introitus->titulus))
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;   /* primus vicit */
+    }
+    (vacuum)tabula_dispersa_inserere(a->visa,
+        chorda_transcribere(introitus->titulus, a->piscina),
+        (vacuum*)VERUM);
+    via      = chorda_ut_cstr(via_plena, a->piscina);
+    titulus  = chorda_ut_cstr(introitus->titulus, a->piscina);
+    si (via == NIHIL || titulus == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    textus = _plagulam_legere(a->piscina, via, &mensura);
+    si (textus != NIHIL)
+    {
+        (vacuum)silva_contextus_praebere(a->ctx, titulus, textus,
+            mensura);
+        capita_praebita++;
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur). Olim haruspex NIHIL praetermittebat et capita
+ * directoriorum build/ quoque praebebat (CCCXLVI ex MCIII titulis;
+ * VI capita vera umbrabant, contentu eodem) - nunc index idem ac
+ * examen (decretum Franis 2026-11-10). */
+hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "node_modules", NIHIL
+};
+
 hic_manens vacuum
 _capita_praeparare (
         SilvaContextus* ctx,
@@ -121,58 +174,13 @@ _capita_praeparare (
         TabulaDispersa* visa,
     constans character* radix)
 {
-    DIR* dir = opendir(radix);
-    structura dirent* introitus;
-    character via[2048];
+    CapitaAmbulatio a;
 
-    si (dir == NIHIL)
-    {
-        redde;
-    }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        sprintf(via, "%s/%s", radix, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_praeparare(ctx, piscina, visa, via);
-        }
-        alioquin si (_est_caput(introitus->d_name))
-        {
-            chorda clavis;
-            unio { constans character* c; i8* m; } u;
-
-            u.c             = introitus->d_name;
-            clavis.datum    = u.m;
-            clavis.mensura  = (i32)strlen(introitus->d_name);
-            si (tabula_dispersa_continet(visa, clavis))
-            {
-                perge;   /* primus vicit */
-            }
-            {
-                chorda copia = chorda_transcribere(clavis, piscina);
-
-                (vacuum)tabula_dispersa_inserere(visa, copia,
-                    (vacuum*)VERUM);
-            }
-            {
-                      i32  mensura = ZEPHYRUM;
-                character* textus = _plagulam_legere(piscina, via,
-                    &mensura);
-
-                si (textus != NIHIL)
-                {
-                    (vacuum)silva_contextus_praebere(ctx,
-                        introitus->d_name, textus, mensura);
-                    capita_praebita++;
-                }
-            }
-        }
-    }
-    closedir(dir);
+    a.ctx      = ctx;
+    a.piscina  = piscina;
+    a.visa     = visa;
+    (vacuum)directorium_fontes_ambulare(radix, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_visum, &a, piscina);
 }
 
 
@@ -626,37 +634,57 @@ _plagulam_inspicere (
     piscina_destruere(piscina);
 }
 
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+nomen structura {
+    constans SilvaContextus* ctx;
+                    Piscina* piscina;
+} FontesAmbulatio;
+
+hic_manens s32
+_fons_visus (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    FontesAmbulatio* a = (FontesAmbulatio*)contextus;
+          character* titulus = chorda_ut_cstr(introitus->titulus,
+                                   a->piscina);
+          character* via;
+
+    si (   titulus == NIHIL
+        || (!_est_fons_c(titulus) && !_est_caput(titulus)))
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    via = chorda_ut_cstr(via_plena, a->piscina);
+    si (via != NIHIL)
+    {
+        _plagulam_inspicere(a->ctx, via);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
+/* fontes inspiciendi: index praetermittendorum NULLUS (ut semper -
+ * radices datae fontes ipsi sunt; solum tituli occulti cadunt) */
 hic_manens vacuum
 _directorium_inspicere (
     constans SilvaContextus* ctx,
          constans character* radix)
 {
-    DIR* dir = opendir(radix);
-    structura dirent* introitus;
-    character via[2048];
+    FontesAmbulatio a;
 
-    si (dir == NIHIL)
+    a.ctx      = ctx;
+    a.piscina  = piscina_generare_dynamicum("haruspex_ambulatio",
+        1048576);
+    si (a.piscina == NIHIL)
     {
         redde;
     }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-        si (introitus->d_name[ZEPHYRUM] == '.')
-        {
-            perge;
-        }
-        sprintf(via, "%s/%s", radix, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _directorium_inspicere(ctx, via);
-        }
-        alioquin si (   _est_fons_c(introitus->d_name)
-                     || _est_caput(introitus->d_name))
-        {
-            _plagulam_inspicere(ctx, via);
-        }
-    }
-    closedir(dir);
+    (vacuum)directorium_fontes_ambulare(radix, NIHIL, NIHIL,
+        _fons_visus, &a, a.piscina);
+    piscina_destruere(a.piscina);
 }
 
 s32

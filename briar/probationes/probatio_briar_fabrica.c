@@ -19,6 +19,7 @@
 #include "silex.h"
 #include "via.h"
 #include "xar.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,7 +41,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -563,7 +564,8 @@ _salve_probare (
                 "/lib/chorda.c", NIHIL)));
             CREDO_VERUM (filum_existit(_texere(piscina, dir,
                 "/include/credo.h", NIHIL)));
-            CREDO_VERUM (stat(_texere(piscina, dir, "/aedificare.sh",
+            CREDO_VERUM (lectiones_stat(_texere(piscina, dir,
+                "/aedificare.sh",
                 NIHIL),
                 &st) == ZEPHYRUM);
             CREDO_VERUM ((st.st_mode & S_IXUSR) != ZEPHYRUM);

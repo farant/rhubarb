@@ -59,6 +59,25 @@ nomen enumeratio {
                                     * verbatim definit (redefinitio
                                     * identica = custodia gratuita) */
 
+/* typus argumenti/parametri in limine vocationis (B4). Scalaris:
+ * typus = MedullaTypus. Aggregatum valore (operandum = inscriptio
+ * copiae vocantis, ut hodie): typus = MEDULLA_TYPUS_AGGREGATUM,
+ * magnitudo_octetorum > 0, hfa_typus = F32/F64 si 1-4 membra eiusdem
+ * typi fluitantis, NIHIL aliter. est_reditus: parametrum %reditus
+ * (C7 conventio) - dorsum id in x8 aut x0:x1 transfert (B5).
+ * Scalaria: magnitudo_octetorum 0, hfa_typus NIHIL (forma normalis
+ * - limina per membra comparantur). typus NIHIL = ignotus (fabrica
+ * vetus medulla_operanda_addere; textus nudum scribit, lector
+ * recusat). AGGREGATUM extra tabulas typorum: ante indicem
+ * probandum. */
+#define MEDULLA_TYPUS_AGGREGATUM MEDULLA_TYPUS_NUMERUS
+nomen structura {
+    s32 typus;
+    i32 magnitudo_octetorum;
+    s32 hfa_typus;
+    b32 est_reditus;
+} MedullaTypusLiminis;
+
 
 /* ==================================================
  * Operationes (vocabularium-medullae.md §III - SIGNATUM)
@@ -157,6 +176,9 @@ nomen structura {
     s32 extra_index;               /* vocare: initium argumentorum
                                     * in stiva operandorum; -I */
                  s32 extra_numerus;
+                 s32 argumenta_fixa;  /* vocare: numerus fixus
+                                       * (variadica); -I = non
+                                       * variadica */
     MedullaOperandum a;
     MedullaOperandum b;
     MedullaOperandum c;
@@ -192,8 +214,10 @@ nomen structura {
 } MedullaBloccus;
 
 nomen structura {
-    s32 index;                     /* registri */
-    s32 typus;                     /* MedullaTypus */
+                    s32 index;    /* registri */
+                    s32 typus;    /* MedullaTypus (registri:
+                                    * aggregata i64) */
+    MedullaTypusLiminis limen;    /* typus in signatura */
 } MedullaParametrum;
 
 nomen structura {
@@ -206,6 +230,8 @@ nomen structura {
                                     * mensura 0 numquam (tN auto) */
     Xar* operanda;               /* stiva: MedullaOperandum valore
                                     * (argumenta vocationum) */
+    Xar* operanda_typi;          /* MedullaTypusLiminis valore,
+                                    * parallelum stivae operandorum */
     constans structura SilvaNodus* origo;
 } MedullaFunctio;
 
@@ -221,7 +247,17 @@ nomen structura {
     chorda titulus;
        s32 genus;                  /* MedullaSymbolumGenus */
        s32 index;                  /* in functiones/data; -I externum */
+       s32 signatura;              /* in modulus->signaturae; -I nulla
+                                    * (prototypus ignotus aut datum) */
 } MedullaSymbolum;
+
+/* signatura functionis declaratae (semantica): textus eam pro
+ * symbolis EXTERNIS solum scribit (linea externum) */
+nomen structura {
+     s32  typus_reditus;           /* MEDULLA_TYPUS_NIHIL = vacuum */
+     b32  est_variadica;
+     Xar* parametra;               /* MedullaTypusLiminis valore */
+} MedullaSignatura;
 
 nomen structura {
     i32 offset;                    /* in imaginem (locellus 8 octeti) */
@@ -244,6 +280,7 @@ nomen structura {
         Xar* data;                 /* MedullaDatum* */
         Xar* symbola;              /* MedullaSymbolum valore */
         Xar* causae;               /* chorda valore (sistere) */
+        Xar* signaturae;           /* MedullaSignatura valore */
 } MedullaModulus;
 
 
@@ -309,12 +346,31 @@ medulla_bloccum_obtinere (
     constans MedullaFunctio* functio,
                         s32  index);
 
-/* argumenta vocationis in stivam -> index initii (extra_index) */
+/* argumenta vocationis in stivam -> index initii (extra_index).
+ * Typi ignoti (limen NIHIL) - forma ante M5; demissio et lector
+ * typatam adhibent. */
 s32
 medulla_operanda_addere (
                MedullaFunctio* functio,
     constans MedullaOperandum* operanda,
                           s32  numerus);
+/* idem cum typis (operanda_typi parallela); typi NIHIL non licet
+ * si numerus > 0 */
+s32
+medulla_operanda_typata_addere (
+                  MedullaFunctio* functio,
+       constans MedullaOperandum* operanda,
+    constans MedullaTypusLiminis* typi,
+                             s32  numerus);
+
+/* signatura symboli (copia profunda in piscinam moduli) -> index
+ * in modulus->signaturae; -I si symbolum invalidum aut signatura
+ * iam posita (prima vincit - vocans probat) */
+s32
+medulla_signaturam_ponere (
+               MedullaModulus* modulus,
+                          s32  symbolum,
+    constans MedullaSignatura* signatura);
 
 /* fabricae operandorum (valore) */
 MedullaOperandum

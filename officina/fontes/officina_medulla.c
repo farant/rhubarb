@@ -61,8 +61,11 @@ medulla_modulum_creare (
     modulus->symbola = xar_creare(piscina,
         (i32)magnitudo(MedullaSymbolum));
     modulus->causae = xar_creare(piscina, (i32)magnitudo(chorda));
+    modulus->signaturae = xar_creare(piscina,
+        (i32)magnitudo(MedullaSignatura));
     si (   modulus->functiones == NIHIL || modulus->data == NIHIL
-        || modulus->symbola    == NIHIL || modulus->causae == NIHIL)
+        || modulus->symbola    == NIHIL || modulus->causae == NIHIL
+        || modulus->signaturae == NIHIL)
     {
         redde NIHIL;
     }
@@ -101,9 +104,63 @@ medulla_symbolum_internare (
     }
     symbolum->titulus = chorda_transcribere(titulus,
         modulus->piscina);
-    symbolum->genus = MEDULLA_SYMBOLUM_EXTERNUM;
-    symbolum->index = -I;
+    symbolum->genus      = MEDULLA_SYMBOLUM_EXTERNUM;
+    symbolum->index      = -I;
+    symbolum->signatura  = -I;
     redde (s32)(xar_numerus(modulus->symbola) - I);
+}
+
+s32
+medulla_signaturam_ponere (
+               MedullaModulus* modulus,
+                          s32  symbolum,
+    constans MedullaSignatura* signatura)
+{
+      MedullaSymbolum* sedes_symboli;
+     MedullaSignatura* sedes;
+                  i32  i;
+                  i32  m;
+
+    si (modulus == NIHIL || signatura == NIHIL)
+    {
+        redde -I;
+    }
+    sedes_symboli = (MedullaSymbolum*)xar_obtinere_s(modulus->symbola,
+        symbolum);
+    si (sedes_symboli == NIHIL || sedes_symboli->signatura >= ZEPHYRUM)
+    {
+        redde -I;
+    }
+    sedes = (MedullaSignatura*)xar_addere(modulus->signaturae);
+    si (sedes == NIHIL)
+    {
+        redde -I;
+    }
+    sedes->typus_reditus = signatura->typus_reditus;
+    sedes->est_variadica = signatura->est_variadica;
+    sedes->parametra = xar_creare(modulus->piscina,
+        (i32)magnitudo(MedullaTypusLiminis));
+    si (sedes->parametra == NIHIL)
+    {
+        redde -I;
+    }
+    m = (signatura->parametra != NIHIL)
+        ? xar_numerus(signatura->parametra) : ZEPHYRUM;
+    per (i = ZEPHYRUM; i < m; i++)
+    {
+        MedullaTypusLiminis* limen =
+            (MedullaTypusLiminis*)xar_addere(sedes->parametra);
+
+        si (limen == NIHIL)
+        {
+            redde -I;
+        }
+        *limen = *(constans MedullaTypusLiminis*)xar_obtinere(
+            signatura->parametra, i);
+    }
+    sedes_symboli->signatura =
+        (s32)(xar_numerus(modulus->signaturae) - I);
+    redde sedes_symboli->signatura;
 }
 
 constans MedullaSymbolum*
@@ -214,8 +271,11 @@ medulla_functionem_creare (
         (i32)magnitudo(chorda));
     functio->operanda = xar_creare(modulus->piscina,
         (i32)magnitudo(MedullaOperandum));
-    si (   functio->parametra == NIHIL || functio->blocci == NIHIL
-        || functio->registra  == NIHIL || functio->operanda == NIHIL)
+    functio->operanda_typi = xar_creare(modulus->piscina,
+        (i32)magnitudo(MedullaTypusLiminis));
+    si (   functio->parametra     == NIHIL || functio->blocci == NIHIL
+        || functio->registra      == NIHIL || functio->operanda == NIHIL
+        || functio->operanda_typi == NIHIL)
     {
         redde NIHIL;
     }
@@ -295,6 +355,11 @@ medulla_parametrum_addere (
     }
     parametrum->index = index;
     parametrum->typus = typus;
+    /* limen scalaris ex typo; aggregata vocans postea ponit */
+    parametrum->limen.typus                = typus;
+    parametrum->limen.magnitudo_octetorum  = ZEPHYRUM;
+    parametrum->limen.hfa_typus            = MEDULLA_TYPUS_NIHIL;
+    parametrum->limen.est_reditus          = FALSUM;
     redde index;
 }
 
@@ -350,11 +415,13 @@ medulla_bloccum_obtinere (
     redde (MedullaBloccus*)xar_obtinere_s(functio->blocci, index);
 }
 
-s32
-medulla_operanda_addere (
-               MedullaFunctio* functio,
-    constans MedullaOperandum* operanda,
-                          s32  numerus)
+/* typi NIHIL = ignoti (fabrica vetus) */
+interior s32
+_operanda_appendere (
+                  MedullaFunctio* functio,
+       constans MedullaOperandum* operanda,
+    constans MedullaTypusLiminis* typi,
+                             s32  numerus)
 {
     s32 initium;
     s32 i;
@@ -369,14 +436,50 @@ medulla_operanda_addere (
     {
         MedullaOperandum* sedes =
             (MedullaOperandum*)xar_addere(functio->operanda);
+        MedullaTypusLiminis* sedes_typi =
+            (MedullaTypusLiminis*)xar_addere(functio->operanda_typi);
 
-        si (sedes == NIHIL)
+        si (sedes == NIHIL || sedes_typi == NIHIL)
         {
             redde -I;
         }
         *sedes = operanda[i];
+        si (typi != NIHIL)
+        {
+            *sedes_typi = typi[i];
+        }
+        alioquin
+        {
+            sedes_typi->typus                = MEDULLA_TYPUS_NIHIL;
+            sedes_typi->magnitudo_octetorum  = ZEPHYRUM;
+            sedes_typi->hfa_typus            = MEDULLA_TYPUS_NIHIL;
+            sedes_typi->est_reditus          = FALSUM;
+        }
     }
     redde initium;
+}
+
+s32
+medulla_operanda_addere (
+               MedullaFunctio* functio,
+    constans MedullaOperandum* operanda,
+                          s32  numerus)
+{
+    redde _operanda_appendere(functio, operanda, NIHIL, numerus);
+}
+
+s32
+medulla_operanda_typata_addere (
+                  MedullaFunctio* functio,
+       constans MedullaOperandum* operanda,
+    constans MedullaTypusLiminis* typi,
+                             s32  numerus)
+{
+    si (numerus > ZEPHYRUM && typi == NIHIL)
+    {
+        redde -I;
+    }
+    redde _operanda_appendere(functio, operanda, typi, numerus);
 }
 
 
@@ -504,6 +607,12 @@ medulla_emittere (
             >= (s32)xar_numerus(functio->registra))
     {
         redde FALSUM;   /* registrum ignotum */
+    }
+    si (   instructio->op == (s32)MEDULLA_OP_VOCARE
+        && (   instructio->argumenta_fixa < -I
+            || instructio->argumenta_fixa > instructio->extra_numerus))
+    {
+        redde FALSUM;   /* divisio variadica extra argumenta */
     }
     sedes_blocci = (MedullaBloccus*)xar_obtinere_s(functio->blocci,
         bloccus);

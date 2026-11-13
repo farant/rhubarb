@@ -7,7 +7,6 @@
  */
 
 interior constans character* constans EXCLUDENDA_PISCINAE[] = {
-    "piscina_conari_allocare",
     "piscina_generare_certae_magnitudinis",
     "piscina_numerus_allocationum",
     "piscina_numerus_alveorum",
@@ -82,6 +81,7 @@ interior constans character* constans EXCLUDENDA_TABULAE[] = {
     "tabula_dispersa_continet_literis",
     "tabula_dispersa_iterator_initium",
     "tabula_dispersa_iterator_proximum",
+    "tabula_dispersa_numerus",
     "tabula_dispersa_status_imprimere",
     "tabula_friare_multiplicatio",
     NIHIL

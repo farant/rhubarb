@@ -59,6 +59,7 @@ static MedullaInstructio instr(int op, int typus, int destinatio,
     i.typus_secundus = MEDULLA_TYPUS_NIHIL;
     i.destinatio = destinatio;
     i.extra_index = -1;
+    i.argumenta_fixa = -1;
     i.a = a;
     i.b = b;
     i.c = medulla_op_nihil();
@@ -67,11 +68,12 @@ static MedullaInstructio instr(int op, int typus, int destinatio,
 
 static const char* AUREUM =
     "modulus \"hospes.c\"\n"
+    "externum $externa () -> s32\n"
     "\n"
     "functio $probare (s32 %n) -> s32\n"
     "@initium:\n"
     "    %d = addere.s32 %n, 1\n"
-    "    %r = vocare.s32 $externa, %d, 2.5\n"
+    "    %r = vocare.s32 $externa, s32 %d, f64 2.5\n"
     "    salire @exitus\n"
     "@exitus:\n"
     "    redde %r\n"
@@ -138,15 +140,35 @@ int main(void)
         "addere");
     {
         MedullaOperandum argumenta[2];
+        MedullaTypusLiminis typi[2];
+        MedullaSignatura signatura;
+        int s_vetus;
 
         argumenta[0] = medulla_op_registrum(r_d);
         argumenta[1] = medulla_op_immediatum_f(2.5);
+        memset(typi, 0, sizeof(typi));
+        typi[0].typus = MEDULLA_TYPUS_S32;
+        typi[0].hfa_typus = MEDULLA_TYPUS_NIHIL;
+        typi[1].typus = MEDULLA_TYPUS_F64;
+        typi[1].hfa_typus = MEDULLA_TYPUS_NIHIL;
         instructio = instr(MEDULLA_OP_VOCARE, MEDULLA_TYPUS_S32,
             r_r, medulla_op_symbolum(s_externa), medulla_op_nihil());
-        instructio.extra_index = medulla_operanda_addere(functio,
-            argumenta, 2);
+        instructio.extra_index = medulla_operanda_typata_addere(
+            functio, argumenta, typi, 2);
         instructio.extra_numerus = 2;
         proba(instructio.extra_index == 0, "stiva");
+        /* forma vetus (typi ignoti) adhuc appendit */
+        s_vetus = medulla_operanda_addere(functio, argumenta, 0);
+        proba(s_vetus == 2, "stiva vetus");
+        /* signatura externi sine parametris (Xar publice non
+         * creatur - parametra NULL = nulla); iterum -> -1 */
+        signatura.typus_reditus = MEDULLA_TYPUS_S32;
+        signatura.est_variadica = 0;
+        signatura.parametra = NULL;
+        proba(medulla_signaturam_ponere(modulus, s_externa,
+            &signatura) == 0, "signatura ponere");
+        proba(medulla_signaturam_ponere(modulus, s_externa,
+            &signatura) == -1, "signatura semel");
         proba(medulla_emittere(functio, b_initium, &instructio),
             "vocare");
     }
@@ -494,7 +516,7 @@ int main(void)
             "\n"
             "functio $main () -> s32\n"
             "@initium:\n"
-            "    %a = vocare.s32 $quadra, 6\n"
+            "    %a = vocare.s32 $quadra, s32 6\n"
             "    %t = addere.s32 %a, 6\n"
             "    redde %t\n";
         OfficinaChorda textus = ch(TEXTUS_M);

@@ -79,6 +79,7 @@ declare -a RADIX_FONTES=(
     "quadrans"
     "dithering"
     "dithering_exemplaria"
+    "dithering_exemplaria_fontes"  # fontes communes (velox T2)
     "imago"
     "imago_opus"
     "color"
@@ -154,6 +155,11 @@ declare -a RADIX_FONTES=(
     "sancti"
     "sancti_canon"
     "sancti_visus"
+    # negotia-plan T3: negotia in vico ($projects)
+    "negotia"
+    "negotia_visus"
+    "adumbratio"       # negotia-paginae T3: pagina adumbrationis
+    "imago_png"        # adumbratio: PNG (bin/negotia png)
     # lector L3: liber EPUB in vico (bibliotheca, paginae)
     "lector"
     "lector_bibliotheca"

@@ -28,14 +28,15 @@
 #include "officina_machinula.h"
 #include "officina_medulla_textus.h"
 #include "tabula_dispersa.h"
+#include "iter_directoria.h"
 #include "filum.h"
 #include "lectiones.h"
+#include "bibliothecae.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <dirent.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
@@ -146,8 +147,8 @@ _plagulae_aequae (
     constans character* via_a,
     constans character* via_b)
 {
-    FILE* pa      = fopen(via_a, "rb");
-    FILE* pb      = fopen(via_b, "rb");
+    FILE* pa      = lectiones_fopen(via_a, "rb");
+    FILE* pb      = lectiones_fopen(via_b, "rb");
      b32  aequae  = VERUM;
 
     si (pa == NIHIL || pb == NIHIL)
@@ -196,15 +197,6 @@ _vias_effusionis (
         mensura, titulus);
 }
 
-/* comparator qsort pro ordinibus character[128] (-enumerare) */
-hic_manens integer
-_comparare_nomina (
-    constans vacuum* a,
-    constans vacuum* b)
-{
-    redde strcmp((constans character*)a, (constans character*)b);
-}
-
 /* plagulam systematis in piscinam legere */
 hic_manens character*
 _systema_legere (
@@ -212,7 +204,7 @@ _systema_legere (
     constans character* via,
                   long* mensura_fructus)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* fons;
 
@@ -266,7 +258,7 @@ _plagulam_demittere (
     {
         *lineae_exitus = NIHIL;
     }
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -399,16 +391,11 @@ _plagulam_demittere (
  * Capita praeparare (fusoris exscriptum)
  * ================================================== */
 
-hic_manens b32
-_praetermittendum (
-    constans character* titulus)
-{
-    redde (strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "results") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM)
-        ? VERUM : FALSUM;
-}
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur) */
+hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "results", "node_modules", NIHIL
+};
 
 hic_manens vacuum
 _caput_praebere (
@@ -429,7 +416,7 @@ _caput_praebere (
     {
         redde;
     }
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -457,6 +444,34 @@ _caput_praebere (
     }
 }
 
+/* ambulatio capitum per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus, in XV instrumenta copiatus): contextus callback */
+nomen structura {
+    SilvaContextus* ctx;
+           Piscina* piscina;
+    TabulaDispersa* visa;
+} CapitaAmbulatio;
+
+hic_manens s32
+_caput_visum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+     CapitaAmbulatio* a = (CapitaAmbulatio*)contextus;
+           character* via;
+           character* titulus;
+
+    via      = chorda_ut_cstr(via_plena, a->piscina);
+    titulus  = chorda_ut_cstr(introitus->titulus, a->piscina);
+    si (via != NIHIL && titulus != NIHIL)
+    {
+        _caput_praebere(a->ctx, a->piscina, a->visa, via, titulus);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _capita_praeparare (
         SilvaContextus* ctx,
@@ -464,95 +479,79 @@ _capita_praeparare (
         TabulaDispersa* visa,
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    CapitaAmbulatio a;
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_praeparare(ctx, piscina, visa, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                _caput_praebere(ctx, piscina, visa, via_plena,
-                    introitus->d_name);
-            }
-        }
-    }
-    closedir(dir);
+    a.ctx      = ctx;
+    a.piscina  = piscina;
+    a.visa     = visa;
+    (vacuum)directorium_fontes_ambulare(via, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_visum, &a, piscina);
 }
 
 
 /* ==================================================
- * Mundus: plagulae .c sub lib/ (ordine alphabetico - determinismus)
+ * Mundus: bibliothecae_mundum_totum (M5 T0) - una implementatio
+ * per caput (variantis posix), ordine alphabetico. Olim lib/ totus
+ * per readdir: testa.c + testa_android.c ambo, omnis nexus fractus
+ * (testa_principale; parcum 01M6FZMA).
  * ================================================== */
 
-hic_manens integer
+/* comparator Xar pro viis (character*) - suites et mundus */
+hic_manens s32
 _comparare_vias (
     constans vacuum* a,
     constans vacuum* b)
 {
-    redde strcmp(*(character* constans*)a, *(character* constans*)b);
+    redde (s32)strcmp(*(character* constans*)a,
+        *(character* constans*)b);
 }
 
 hic_manens vacuum
 _bibliothecam_demittere (
     constans SilvaContextus* ctx)
 {
-    DIR* dir = opendir("lib");
-    structura dirent* introitus;
-    character* viae[512];
-      integer  numerus = 0;
-      integer  i;
+         Piscina* temporaria;
+    Bibliothecae* b;
+           chorda  causa;
+              Xar* viae;
+              Xar* omissa = NIHIL;
+              i32  i;
 
-    si (dir == NIHIL)
+    /* resolutor in piscina temporaria: parsurae aedilis (~350 MiB)
+     * ante demissionem pereunt, non in omnes pullos (COW) */
+    temporaria = piscina_generare_dynamicum("cursor_bibliothecae",
+        1048576);
+    si (temporaria == NIHIL)
     {
-        fprintf(stderr, "cursor: lib/ deest (curre ex radice)\n");
+        fprintf(stderr, "cursor: piscina bibliothecarum deest\n");
         redde;
     }
-    dum ((introitus = readdir(dir)) != NIHIL && numerus < 512)
+    causa.datum    = NIHIL;
+    causa.mensura  = ZEPHYRUM;
+    b              = bibliothecae_creare(temporaria, ".", &causa);
+    viae = (b != NIHIL)
+        ? bibliothecae_mundum_totum(b, temporaria, &omissa, &causa)
+        : NIHIL;
+    si (viae == NIHIL)
     {
-        memoriae_index m = strlen(introitus->d_name);
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (   m >= III && introitus->d_name[m - II] == '.'
-            && introitus->d_name[m - I] == 'c')
-        {
-            character* via = piscina_allocare(piscina_officinae,
-                m + V);
-
-            sprintf(via, "lib/%s", introitus->d_name);
-            viae[numerus] = via;
-            numerus++;
-        }
+        fprintf(stderr, "cursor: mundus derivari nequit: %.*s\n",
+            (int)causa.mensura, (constans character*)causa.datum);
+        piscina_destruere(temporaria);
+        redde;
     }
-    closedir(dir);
+    per (i = ZEPHYRUM; omissa != NIHIL && i < xar_numerus(omissa); i++)
+    {
+        chorda o = *(chorda*)xar_obtinere(omissa, i);
 
-    /* readdir ordo indeterminatus - ordinare (determinismus) */
-    qsort(viae, (memoriae_index)numerus, magnitudo(character*),
-        _comparare_vias);
-    per (i = 0; i < numerus; i++)
+        fprintf(stderr, "mundus omittit %.*s\n", (int)o.mensura,
+            (constans character*)o.datum);
+    }
+    per (i = ZEPHYRUM; i < xar_numerus(viae); i++)
     {
          MedullaLineae* lineae = NIHIL;
-        MedullaModulus* modulus = _plagulam_demittere(ctx, viae[i],
-            &lineae);
+        MedullaModulus* modulus = _plagulam_demittere(ctx,
+            chorda_ut_cstr(*(chorda*)xar_obtinere(viae, i),
+                piscina_officinae), &lineae);
 
         si (modulus != NIHIL)
         {
@@ -563,6 +562,89 @@ _bibliothecam_demittere (
             *locellus_l  = lineae;
         }
     }
+    piscina_destruere(temporaria);
+}
+
+
+/* ==================================================
+ * Suites: probationes/probatio_*.c praeter exclusiones (et -sola),
+ * ordine alphabetico, SINE TECTO (olim CCLVI tacite in -enumerare
+ * et in ansa principali - parcum 01M6FZMG). Fons unus utrique.
+ * ================================================== */
+
+hic_manens b32
+_suitas_colligere (
+    Piscina* piscina,
+        Xar* suites_out)
+{
+    /* enumeratio per iter_directoria (in libro lectionum notatur;
+     * olim opendir crudum) */
+     DirectoriumIterator* iterator = directorium_iterator_aperire(
+                                         "probationes", piscina);
+    DirectoriumIntroitus* introitus;
+
+    si (iterator == NIHIL)
+    {
+        fprintf(stderr, "cursor: probationes/ deest\n");
+        redde FALSUM;
+    }
+    dum ((introitus = directorium_iterator_proximum(iterator)) != NIHIL)
+    {
+                   b32  exclusa  = FALSUM;
+             character* titulus  = chorda_ut_cstr(introitus->titulus,
+                                        piscina);
+        memoriae_index   md;
+                   i32   k;
+             character*  via;
+             character** locellus;
+
+        si (titulus == NIHIL)
+        {
+            perge;
+        }
+        md = strlen(titulus);
+        si (strncmp(titulus, "probatio_", IX) != ZEPHYRUM)
+        {
+            perge;
+        }
+        si (   md < III || titulus[md - II] != '.'
+            || titulus[md - I] != 'c')
+        {
+            perge;
+        }
+        per (k = ZEPHYRUM; exclusiones_undae[k] != NIHIL; k++)
+        {
+            si (strcmp(titulus, exclusiones_undae[k]) == ZEPHYRUM)
+            {
+                exclusa = VERUM;
+                frange;
+            }
+        }
+        si (exclusa)
+        {
+            perge;
+        }
+        si (   sola_quaesita                  != NIHIL
+            && strstr(titulus, sola_quaesita) == NIHIL)
+        {
+            perge;
+        }
+        via = (character*)piscina_allocare(piscina, md + XVI);
+        sprintf(via, "probationes/%s", titulus);
+        locellus = (character**)xar_addere(suites_out);
+        si (locellus == NIHIL)
+        {
+            directorium_iterator_claudere(iterator);
+            redde FALSUM;
+        }
+        *locellus = via;
+    }
+    directorium_iterator_claudere(iterator);
+    si (xar_numerus(suites_out) > I)
+    {
+        xar_ordinare(suites_out, _comparare_vias);
+    }
+    redde VERUM;
 }
 
 
@@ -611,57 +693,30 @@ principale (
     /* -enumerare: vias undae imprimere et exire (sine mundo) */
     si (enumerare_petita)
     {
-        DIR* dir = opendir("probationes");
-        structura dirent* introitus;
-        hic_manens character vias[256][128];
-                     integer numerus = 0;
-                     integer i;
+        Piscina* piscina_en = piscina_generare_dynamicum(
+            "cursor_enumerare", 65536);
+            Xar* suites_en;
+            i32  i;
 
-        si (dir == NIHIL)
+        si (piscina_en == NIHIL)
         {
-            fprintf(stderr, "cursor: probationes/ deest\n");
+            fprintf(stderr, "cursor: piscina deest\n");
             redde I;
         }
-        dum ((introitus = readdir(dir)) != NIHIL && numerus < 256)
+        suites_en = xar_creare(piscina_en,
+            (i32)magnitudo(character*));
+        si (   suites_en == NIHIL || !_suitas_colligere(piscina_en,
+                suites_en))
         {
-                       b32 exclusa  = FALSUM;
-            memoriae_index md       = strlen(introitus->d_name);
-
-            si (strncmp(introitus->d_name, "probatio_", IX)
-                != ZEPHYRUM)
-            {
-                perge;
-            }
-            si (   md < III || md > CX
-                || introitus->d_name[md - II] != '.'
-                || introitus->d_name[md - I]  != 'c')
-            {
-                perge;
-            }
-            per (i = 0; exclusiones_undae[i] != NIHIL; i++)
-            {
-                si (strcmp(introitus->d_name, exclusiones_undae[i])
-                    == ZEPHYRUM)
-                {
-                    exclusa = VERUM;
-                    frange;
-                }
-            }
-            si (exclusa)
-            {
-                perge;
-            }
-            sprintf(vias[numerus], "probationes/%s",
-                introitus->d_name);
-            numerus++;
+            redde I;
         }
-        closedir(dir);
-        qsort(vias, (memoriae_index)numerus, magnitudo(vias[0]),
-            _comparare_nomina);
-        per (i = 0; i < numerus; i++)
+        per (i = ZEPHYRUM; i < xar_numerus(suites_en); i++)
         {
-            imprimere("%s\n", vias[i]);
+            imprimere("%s\n", *(character**)xar_obtinere(suites_en,
+                i));
         }
+        fprintf(stderr, "cursor: %ld suites\n",
+            (long)xar_numerus(suites_en));
         redde ZEPHYRUM;
     }
 
@@ -767,33 +822,40 @@ principale (
      * octetos descriptoris tacite servit - parca M2b in agro:
      * capsula/libri "monstrator humilis") */
     {
-        DIR* dir_c = opendir("probationes");
-        structura dirent* intro_c;
+         DirectoriumIterator* iter_c = directorium_iterator_aperire(
+                                           "probationes",
+                                           piscina_officinae);
+        DirectoriumIntroitus* intro_c;
 
-        si (dir_c != NIHIL)
+        si (iter_c != NIHIL)
         {
-            dum ((intro_c = readdir(dir_c)) != NIHIL)
+            dum ((intro_c = directorium_iterator_proximum(iter_c))
+                != NIHIL)
             {
-                memoriae_index mc = strlen(intro_c->d_name);
+                     character* titulus_c = chorda_ut_cstr(
+                                               intro_c->titulus,
+                                               piscina_officinae);
+                memoriae_index mc;
 
-                si (intro_c->d_name[ZEPHYRUM] == '.') perge;
-                si (strncmp(intro_c->d_name, "probatio_", IX)
-                    == ZEPHYRUM)
+                si (titulus_c == NIHIL) perge;
+                mc = strlen(titulus_c);
+                si (titulus_c[ZEPHYRUM] == '.') perge;
+                si (strncmp(titulus_c, "probatio_", IX) == ZEPHYRUM)
                 {
                     perge;
                 }
-                si (   mc < III || intro_c->d_name[mc - II] != '.'
-                    || intro_c->d_name[mc - I] != 'c')
+                si (   mc < III || titulus_c[mc - II] != '.'
+                    || titulus_c[mc - I] != 'c')
                 {
                     perge;
                 }
+                si (mc + XVI >= CCLVI) perge;
                 {
                          character via_c[CCLVI];
                     MedullaModulus* modulus_c;
                      MedullaLineae* lineae_c = NIHIL;
 
-                    sprintf(via_c, "probationes/%s",
-                        intro_c->d_name);
+                    sprintf(via_c, "probationes/%s", titulus_c);
                     modulus_c = _plagulam_demittere(ctx, via_c,
                         &lineae_c);
                     si (modulus_c != NIHIL)
@@ -808,7 +870,7 @@ principale (
                     }
                 }
             }
-            closedir(dir_c);
+            directorium_iterator_claudere(iter_c);
         }
     }
     fprintf(stderr, "mundus:      %ld moduli | %ld functiones |"
@@ -819,11 +881,9 @@ principale (
     /* UNDA 0: omnes suites praeter exclusiones nominatas
      * (exclusiones_undae - tabula unica, -enumerare eadem) */
     {
-        DIR* dir = opendir("probationes");
-        structura dirent* introitus;
-        character* suites[256];
-          integer  numerus_suitarum = 0;
-          integer  i;
+              Xar* suites;
+              i32  numerus_suitarum;
+              i32  i;
              long  praeteritae             = 0L;
              long  exitus_mali             = 0L;
              long  sisterae                = 0L;
@@ -844,78 +904,31 @@ principale (
             (vacuum)filum_directorium_creare("officina/build/census");
         }
 
-        si (dir == NIHIL)
+        suites = xar_creare(piscina_officinae,
+            (i32)magnitudo(character*));
+        si (   suites == NIHIL || !_suitas_colligere(piscina_officinae,
+                suites))
         {
-            fprintf(stderr, "cursor: probationes/ deest\n");
             redde I;
         }
-        dum (   (introitus = readdir(dir)) != NIHIL
-             && numerus_suitarum < 256)
-        {
-            b32 exclusa = FALSUM;
-
-            si (strncmp(introitus->d_name, "probatio_", IX)
-                != ZEPHYRUM)
-            {
-                perge;
-            }
-            {
-                memoriae_index md = strlen(introitus->d_name);
-
-                si (   md < III || introitus->d_name[md - II] != '.'
-                    || introitus->d_name[md - I] != 'c')
-                {
-                    perge;
-                }
-            }
-            per (i = 0; exclusiones_undae[i] != NIHIL; i++)
-            {
-                si (strcmp(introitus->d_name, exclusiones_undae[i])
-                    == ZEPHYRUM)
-                {
-                    exclusa = VERUM;
-                    frange;
-                }
-            }
-            si (exclusa)
-            {
-                perge;
-            }
-            si (   sola_quaesita != NIHIL
-                && strstr(introitus->d_name, sola_quaesita)
-                    == NIHIL)
-            {
-                perge;
-            }
-            {
-                memoriae_index ml = strlen(introitus->d_name);
-                character* via = piscina_allocare(piscina_officinae,
-                    ml + XVI);
-
-                sprintf(via, "probationes/%s", introitus->d_name);
-                suites[numerus_suitarum] = via;
-                numerus_suitarum++;
-            }
-        }
-        closedir(dir);
-        qsort(suites, (memoriae_index)numerus_suitarum,
-            magnitudo(character*), _comparare_vias);
+        numerus_suitarum = xar_numerus(suites);
 
         fprintf(stderr, "\n=== CURSOR: UNDA 0 (%ld suites) ===\n",
             (long)numerus_suitarum);
-        per (i = 0; i < numerus_suitarum; i++)
+        per (i = ZEPHYRUM; i < numerus_suitarum; i++)
         {
+                 character* suita = *(character**)xar_obtinere(
+                     suites, i);
              MedullaLineae* lineae_suitae = NIHIL;
             MedullaModulus* modulus_suitae =
-                _plagulam_demittere(ctx, suites[i],
-                    &lineae_suitae);
+                _plagulam_demittere(ctx, suita, &lineae_suitae);
               pid_t pullus;
             integer status;
 
             si (modulus_suitae == NIHIL)
             {
                 fprintf(stderr, "%-44s RUINA (demissio)\n",
-                    suites[i]);
+                    suita);
                 vitia++;
                 perge;
             }
@@ -943,15 +956,17 @@ principale (
                     character via_capturae[CCLVI];
                     character via_aurei[CCLVI];
 
-                    _vias_effusionis(suites[i], via_capturae,
+                    _vias_effusionis(suita, via_capturae,
                         via_aurei);
                     lectiones_notare(LECTIO_SCRIPSIT, via_capturae);
-                    /* <tolera codex="SCRIPTURA_PRAETERITA" (>captura stdout
+                    /* <tolera codex="CANALIS_PRAETERITUS" (>captura stdout
+                     * <tolera codex="SCRIPTURA_PRAETERITA" (>captura stdout
                      * freopen involucrum in lectionibus non habet - notatur
                      * supra */
                     si (freopen(via_capturae, "w", stdout) == NIHIL)
                     {
-                        /* <tolera codex="SCRIPTURA_PRAETERITA" (>machina
+                        /* <tolera codex="CANALIS_PRAETERITUS" (>machina
+                         * <tolera codex="SCRIPTURA_PRAETERITA" (>machina
                          * /dev/null: lectiones machinas numquam notant */
                         (vacuum)freopen("/dev/null", "w", stdout);
                     }
@@ -988,7 +1003,7 @@ principale (
                         conexio_querela_symbolum(conexio);
 
                     fprintf(stderr, "%-44s NEXUS FRACTUS (%.*s)",
-                        suites[i], (int)symbolum->mensura,
+                        suita, (int)symbolum->mensura,
                         (constans character*)symbolum->datum);
                     _exit(44);
                 }
@@ -1037,8 +1052,8 @@ principale (
 
                     sprintf(via_census,
                         "officina/build/census/%.*s.census",
-                        (int)(strlen(suites[i] + XII) - II),
-                        suites[i] + XII);
+                        (int)(strlen(suita + XII) - II),
+                        suita + XII);
                     pc = lectiones_fopen(via_census, "w");
                     si (pc != NIHIL)
                     {
@@ -1071,7 +1086,7 @@ principale (
                         && fructus.codex == ZEPHYRUM)
                     {
                         fprintf(stderr, "%-44s PRAETERIIT"
-                            "  %8.0f ms  %llu instr", suites[i],
+                            "  %8.0f ms  %llu instr", suita,
                             ms, (insignatus longus longus)
                             machinula_numerus_instructionum(
                                 machinula));
@@ -1080,7 +1095,7 @@ principale (
                     alioquin si (fructus.genus == MACHINULA_BENE)
                     {
                         fprintf(stderr, "%-44s EXITUS %ld"
-                            "  %8.0f ms", suites[i],
+                            "  %8.0f ms", suita,
                             (long)fructus.codex, ms);
                         _exit(40);
                     }
@@ -1091,7 +1106,7 @@ principale (
                             "PAUSA", "RECUSATIO" };
 
                         fprintf(stderr, "%-44s %s (%.*s)"
-                            "  %8.0f ms", suites[i],
+                            "  %8.0f ms", suita,
                             genera[fructus.genus],
                             (int)fructus.nuntius.mensura,
                             (constans character*)
@@ -1105,14 +1120,14 @@ principale (
             si (pullus < ZEPHYRUM)
             {
                 fprintf(stderr, "%-44s RUINA (fork fractum)\n",
-                    suites[i]);
+                    suita);
                 vitia++;
                 perge;
             }
             si (waitpid(pullus, &status, 0) < ZEPHYRUM)
             {
                 fprintf(stderr, "%-44s RUINA (waitpid)\n",
-                    suites[i]);
+                    suita);
                 vitia++;
                 perge;
             }
@@ -1121,13 +1136,13 @@ principale (
                 si (WTERMSIG(status) == SIGALRM)
                 {
                     fprintf(stderr, "%-44s TEMPUS (>%us)\n",
-                        suites[i], mora_secunda);
+                        suita, mora_secunda);
                     tempora++;
                 }
                 alioquin
                 {
                     fprintf(stderr, "%-44s RUINA (signum %d)\n",
-                        suites[i], (int)WTERMSIG(status));
+                        suita, (int)WTERMSIG(status));
                     ruinae++;
                 }
             }
@@ -1145,10 +1160,10 @@ principale (
                              character  via_aurei[CCLVI];
                     constans character* causa;
 
-                    _vias_effusionis(suites[i], via_capturae,
+                    _vias_effusionis(suita, via_capturae,
                         via_aurei);
                     causa = _exclusio_stdout_causa(
-                        suites[i] + XII);
+                        suita + XII);
                     si (causa != NIHIL)
                     {
                         fprintf(stderr, "  exclusa (%s)\n", causa);
@@ -1156,7 +1171,7 @@ principale (
                     }
                     alioquin
                     {
-                        FILE* pa = fopen(via_aurei, "rb");
+                        FILE* pa = lectiones_fopen(via_aurei, "rb");
 
                         si (pa == NIHIL)
                         {
@@ -1199,7 +1214,7 @@ principale (
                     casus 44: nexus_fracti++; frange;
                     ordinarius:
                         fprintf(stderr, "%-44s RUINA (codex pulli"
-                            " %d)\n", suites[i],
+                            " %d)\n", suita,
                             (int)codex_pulli);
                         ruinae++;
                         frange;

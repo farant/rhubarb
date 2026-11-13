@@ -63,7 +63,7 @@ _plagulam_totam_legere (
                Piscina* piscina,
     constans character* via)
 {
-      FILE* pl = fopen(via, "rb");
+      FILE* pl = lectiones_fopen(via, "rb");
       long  mensura_l;
     chorda  fructus;
         i8* datum;

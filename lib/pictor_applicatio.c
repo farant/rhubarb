@@ -307,8 +307,18 @@ dimensiones_mutator (
     insula_attributum_ponere(radix, p, in, "pictura", ostensa->spatium);
 }
 
+/* negotia-paginae T4: pictura paginae negotii ("negotia/<id>")? */
+interior b32
+spatium_negotii (
+    chorda spatium)
+{
+    redde spatium.mensura > VIII
+        && memcmp(spatium.datum, "negotia/", VIII) == ZEPHYRUM;
+}
+
 /* S3e: spatium in bibliotheca? (plagula alterius originis - scriba -
- * documentum pictoris non est, etsi "spatium/documentum") */
+ * documentum pictoris non est, etsi "spatium/documentum"). T4:
+ * pictura paginae negotii extra bibliothecam est, sed exstans valet */
 interior b32
 in_bibliotheca (
             Volumen* volumen,
@@ -318,6 +328,11 @@ in_bibliotheca (
     Xar* l;
     i32  i;
 
+    si (spatium_negotii(spatium))
+    {
+        redde pictor_documentum_exstat(volumen, chorda_ut_cstr(spatium,
+            piscina), piscina);
+    }
     l = pictor_documenta_enumerare(volumen, piscina);
     per (i = ZEPHYRUM; l && i < xar_numerus(l); i++)
     {
@@ -540,9 +555,13 @@ pictor_argumentum_ponere (
     }
     si (!uri_pictoris(argumentum))
     {
-        /* cognomen "<spatium>" (S3e/S3f) */
+        /* cognomen "<spatium>" (S3e/S3f); T4: pictura paginae negotii
+         * absens semper conditur (etiam in montatione) */
         redde pictor_picturam_ponere(m, argumentum)
-            || (condere && pictor_picturam_condere(m, argumentum));
+            || (   (   condere
+                    || spatium_negotii(chorda_ex_literis(argumentum,
+                           m->doc->piscina)))
+                && pictor_picturam_condere(m, argumentum));
     }
     /* URI: picturam exstantem ostendit, numquam condit - documentum
      * prius (ignota recusatur), deinde semita (status ceteri) */

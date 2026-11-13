@@ -17,6 +17,7 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "iter_directoria.h"
 #include "silva_token.h"
 #include "silva_lexema.h"
 #include "silva_nodus.h"
@@ -28,11 +29,11 @@
 #include "silva_contextus.h"
 #include "silva_parsare.h"
 #include "silva_scribere.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <dirent.h>
 
 #define VIA_MAXIMA 1024
 #define PLAGULAE_MAXIMAE 512
@@ -55,7 +56,7 @@ _plagulam_legere (
     i8* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -207,32 +208,33 @@ principale (
 
     /* Nomina plagularum colligere (.c + .h, planum) */
     {
-        DIR* dir = opendir(via_solarii);
-        structura dirent* introitus;
+        /* enumeratio per iter_directoria (in libro lectionum
+         * notatur; olim opendir crudum) */
+         DirectoriumIterator* iterator = directorium_iterator_aperire(
+                                             via_solarii,
+                                             piscina_census);
+        DirectoriumIntroitus* introitus;
 
-        si (dir == NIHIL)
+        si (iterator == NIHIL)
         {
             fprintf(stderr, "lustrum: %s non apertum\n", via_solarii);
             redde I;
         }
-        dum (   (introitus = readdir(dir)) != NIHIL
-             && numerus_plagularum < PLAGULAE_MAXIMAE)
+        dum (   numerus_plagularum < PLAGULAE_MAXIMAE
+             && (introitus = directorium_iterator_proximum(iterator))
+                 != NIHIL)
         {
-            si (   _suffixum_habet(introitus->d_name, ".c")
-                || _suffixum_habet(introitus->d_name, ".h"))
-            {
-                memoriae_index m = strlen(introitus->d_name) + I;
-                character* nomen_novum = (character*)piscina_allocare(
-                    piscina_census, m);
+            character* titulus = chorda_ut_cstr(introitus->titulus,
+                piscina_census);
 
-                si (nomen_novum != NIHIL)
-                {
-                    memcpy(nomen_novum, introitus->d_name, m);
-                    nomina[numerus_plagularum++] = nomen_novum;
-                }
+            si (   titulus != NIHIL
+                && (   _suffixum_habet(titulus, ".c")
+                    || _suffixum_habet(titulus, ".h")))
+            {
+                nomina[numerus_plagularum++] = titulus;
             }
         }
-        closedir(dir);
+        directorium_iterator_claudere(iterator);
     }
     /* Ordinare (insertio - numeri parvi; exitus stabilis) */
     per (k = I; k < numerus_plagularum; k++)

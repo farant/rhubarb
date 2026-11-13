@@ -2,6 +2,7 @@
 
 #include "crusta_oraculum.h"
 #include "crusta_exempla.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -25,7 +26,7 @@ crusta_oraculum_legere (
         redde NIHIL;
     }
     sprintf(plena, "%s/%s", radix, via);
-    f = fopen(plena, "rb");
+    f = lectiones_fopen(plena, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;

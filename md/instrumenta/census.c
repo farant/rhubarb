@@ -13,6 +13,7 @@
 #include "materia_registrum.h"
 #include "piscina.h"
 #include "xar.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +29,7 @@ _plagulam_legere (
     character* memoria;
         size_t lecti;
 
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;
@@ -148,7 +149,7 @@ principale (
         fprintf(stderr, "census: -corpus <lista> deest\n");
         redde II;
     }
-    lista = fopen(lista_via, "r");
+    lista = lectiones_fopen(lista_via, "r");
     si (lista == NIHIL)
     {
         fprintf(stderr, "census: lista absens: %s\n", lista_via);

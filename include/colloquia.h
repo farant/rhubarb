@@ -125,4 +125,17 @@ colloquia_legere (
                      i32  octeti,
                  Piscina* piscina);
 
+/* T6 (negotia): mandatum crustae resumendi in tmux -
+ * "unset TMUX; exec tmux new-session -A -s 'claude-<octo prima>' -c
+ * '<via>' 'exec \"$SHELL\" -l -c \"claude --resume <sessio>; exec
+ * \\\"$SHELL\\\" -l\"'" (via citata, ' -> '\''; -A: sessio tmux iam
+ * exstans adhaeretur, numquam Claude secundus). Vocans in concha
+ * login currit (PATH plenum: tmux, claude). Vacua si sessio non
+ * [0-9A-Za-z-]+ aut via vacua */
+chorda
+colloquia_mandatum_resumendi (
+    constans character* sessio,
+    constans character* via,
+               Piscina* piscina);
+
 #endif /* COLLOQUIA_H */

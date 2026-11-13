@@ -1388,6 +1388,8 @@ silva_spatia_attachere (
            i32   n;
            i32   ab;
            i32   divisio;
+           s32   primum_commentum   = -I;   /* in pendentibus [ab, i) */
+           s32   ultimum_commentum  = -I;
 
     vera   = xar_creare(piscina, magnitudo(SilvaToken*));
     prior  = NIHIL;
@@ -1400,6 +1402,15 @@ silva_spatia_attachere (
 
         si (_est_trivia(token->genus))
         {
+            si (   token->genus == SILVA_LEX_COMMENTUM_CLAUSUM
+                || token->genus == SILVA_LEX_COMMENTUM_LINEA)
+            {
+                si (primum_commentum < ZEPHYRUM)
+                {
+                    primum_commentum = (s32)i;
+                }
+                ultimum_commentum = (s32)i;
+            }
             perge;
         }
 
@@ -1429,18 +1440,32 @@ silva_spatia_attachere (
              * seriem exactam copiat - pars pendentium in alveo contiguo
              * (acervus pro casu communi, piscina ultra). Latus totum
              * ponitur, ut olim Xar novus assignabatur. */
+            /* SILVA_TOKEN_COMMENTUM_LEXATUM: commentum in parte cuique
+             * lateri tradita (primum < divisio: prior; ultimum >=
+             * divisio: lexema) */
             si (divisio > ab && prior != NIHIL)
             {
                 _trivia_tradere(piscina, prior, VERUM, cruda, ab,
                     divisio);
+                si (   primum_commentum >= ZEPHYRUM
+                    && primum_commentum < (s32)divisio)
+                {
+                    prior->vexilla |= SILVA_TOKEN_COMMENTUM_LEXATUM;
+                }
             }
             si (divisio < i)
             {
                 _trivia_tradere(piscina, token, FALSUM, cruda, divisio,
                     i);
+                si (ultimum_commentum >= (s32)divisio)
+                {
+                    token->vexilla |= SILVA_TOKEN_COMMENTUM_LEXATUM;
+                }
             }
         }
-        ab = i + I;
+        ab                 = i + I;
+        primum_commentum   = -I;
+        ultimum_commentum  = -I;
 
         locus = (SilvaToken**)xar_addere(vera);
         si (locus != NIHIL)

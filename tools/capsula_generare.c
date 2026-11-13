@@ -21,13 +21,13 @@
 #include "filum.h"
 #include "flatura.h"
 #include "via.h"
+#include "iter_directoria.h"
 #include "lectiones.h"
 
 #include <stdio.h>
+#include <sys/stat.h>
 #include <string.h>
 #include <stdlib.h>
-#include <dirent.h>
-#include <sys/stat.h>
 
 
 /* ========================================================================
@@ -136,9 +136,11 @@ _expand_glob_gradus (
              character  plenum[1024];
              character  filius[1024];
                    i32  seg_len;
-    DIR*                dir;
-    structura dirent*   entry;
-    structura stat      st;
+    /* enumeratio per iter_directoria (in libro lectionum notatur;
+     * genus introitus SECUTUM ab iteratore - olim opendir + stat
+     * cruda) */
+     DirectoriumIterator* dir;
+    DirectoriumIntroitus* entry;
 
     slash = strchr(reliquum, '/');
     si (slash != NIHIL)
@@ -185,7 +187,7 @@ _expand_glob_gradus (
             snprintf(plenum, sizeof(plenum), "%s",
                      praefixum[0] != '\0' ? praefixum : ".");
         }
-        dir = opendir(plenum);
+        dir = directorium_iterator_aperire(plenum, piscina);
         si (dir == NIHIL)
         {
             fprintf(stderr,
@@ -193,33 +195,34 @@ _expand_glob_gradus (
                     plenum);
             redde;
         }
-        dum ((entry = readdir(dir)) != NIHIL)
+        dum ((entry = directorium_iterator_proximum(dir)) != NIHIL)
         {
-            si (entry->d_name[0] == '.')
+            character* titulus = chorda_ut_cstr(entry->titulus,
+                                     piscina);
+
+            si (titulus == NIHIL || titulus[0] == '.')
             { perge;
             }
-            si (!_glob_congruit(segmentum, entry->d_name))
+            si (!_glob_congruit(segmentum, titulus))
             { perge;
             }
-            snprintf(filius, sizeof(filius), "%s/%s",
-                     plenum, entry->d_name);
-            si (stat(filius, &st) != 0 || !S_ISDIR(st.st_mode))
+            si (entry->genus != INTROITUS_DIRECTORIUM)
             {
                 perge;   /* segmentum directorii: plagulae omissae */
             }
             si (praefixum[0] != '\0')
             {
                 snprintf(filius, sizeof(filius), "%s/%s",
-                         praefixum, entry->d_name);
+                         praefixum, titulus);
             }
             alioquin
             {
-                snprintf(filius, sizeof(filius), "%s", entry->d_name);
+                snprintf(filius, sizeof(filius), "%s", titulus);
             }
             _expand_glob_gradus(base_dir, filius, slash + 1,
                                 files_out, piscina);
         }
-        closedir(dir);
+        directorium_iterator_claudere(dir);
         redde;
     }
 
@@ -241,24 +244,63 @@ _expand_glob_gradus (
         snprintf(plenum, sizeof(plenum), "%s",
                  praefixum[0] != '\0' ? praefixum : ".");
     }
-    dir = opendir(plenum);
+    si (strchr(reliquum, '*') == NIHIL)
+    {
+        /* Segmentum ultimum LITTERALE (2026-11-11): plagula ipsa per
+         * stat quaeritur (X aut A in libro lectionum), directorium
+         * parentis NON enumeratur. Olim enumerabatur etiam pro via
+         * litterali - actio cuius capsula 'briar/MUTATIONES.md' solum
+         * continet directorium 'briar' totum legebat (lectio non
+         * declarata: custodia memorabilium negabat). Mores servati:
+         * titulus occultus et directorium omittuntur, plagula absens
+         * tacite nihil addit. */
+        structura stat  st;
+             character  full_path[1024];
+                chorda* path_chorda;
+
+        si (reliquum[0] == '.')
+        {
+            redde;
+        }
+        snprintf(filius, sizeof(filius), "%s/%s", plenum, reliquum);
+        si (lectiones_stat(filius, &st) != 0 || S_ISDIR(st.st_mode))
+        {
+            redde;
+        }
+        si (praefixum[0] != '\0')
+        {
+            snprintf(full_path, sizeof(full_path), "%s/%s",
+                     praefixum, reliquum);
+        }
+        alioquin
+        {
+            snprintf(full_path, sizeof(full_path), "%s", reliquum);
+        }
+        path_chorda = (chorda*)xar_addere(files_out);
+        si (path_chorda != NIHIL)
+        {
+            *path_chorda = chorda_ex_literis(full_path, piscina);
+        }
+        redde;
+    }
+    dir = directorium_iterator_aperire(plenum, piscina);
     si (dir == NIHIL)
     {
         fprintf(stderr, "Error: non possum aperire directorium '%s'\n",
                 plenum);
         redde;
     }
-    dum ((entry = readdir(dir)) != NIHIL)
+    dum ((entry = directorium_iterator_proximum(dir)) != NIHIL)
     {
-        si (entry->d_name[0] == '.')
+        character* titulus = chorda_ut_cstr(entry->titulus, piscina);
+
+        si (titulus == NIHIL || titulus[0] == '.')
         { perge;
         }
-        si (!_glob_congruit(reliquum, entry->d_name))
+        si (!_glob_congruit(reliquum, titulus))
         { perge;
         }
-        snprintf(filius, sizeof(filius), "%s/%s", plenum,
-            entry->d_name);
-        si (stat(filius, &st) == 0 && S_ISDIR(st.st_mode))
+        si (entry->genus == INTROITUS_DIRECTORIUM)
         {
             perge;   /* directorium non est plagula */
         }
@@ -269,12 +311,12 @@ _expand_glob_gradus (
             si (praefixum[0] != '\0')
             {
                 snprintf(full_path, sizeof(full_path), "%s/%s",
-                         praefixum, entry->d_name);
+                         praefixum, titulus);
             }
             alioquin
             {
                 snprintf(full_path, sizeof(full_path), "%s",
-                         entry->d_name);
+                         titulus);
             }
             path_chorda = (chorda*)xar_addere(files_out);
             si (path_chorda != NIHIL)
@@ -283,7 +325,7 @@ _expand_glob_gradus (
             }
         }
     }
-    closedir(dir);
+    directorium_iterator_claudere(dir);
 }
 
 /* Expand a glob pattern to list of file paths */

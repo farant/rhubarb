@@ -217,6 +217,94 @@ f1656a51), F6 overlaps I5.
 - **G**: the root suite is mostly WAITING: ~130 of 227 s of test time is idle (poll timeouts, sleeps, real-time rules). cellae/cellae_lenta are the only real CPU cost.
 - **H**: the 10-30 frigida crusta 431 s was laptop clamshell sleep on battery (pmset), not work; caffeinate does not prevent it.
 
+## VII. Cold clone anatomy (2026-11-09, commit 06f0eaae)
+
+The merge that landed silva items 5a-13: merge commit 11.5 min, gates
+23.4 min, frigida 17.7 min (52.9 total). Frigida is the largest piece
+and mensor has no children under frigida:radix / briar / oratio /
+officina (silva and xml do record theirs). Measured with a scratch
+sampler (process tree of the frigida run every 0.5 s, leaf processes
+classified by command; nothing in the repo changed), each suite ALONE
+in a fresh clone:
+
+| suite | wall | what the time is | busy leaves (avg) |
+|---|---|---|---|
+| radix | 317 s | ~135 s serial bootstrap, then 168 s of tests | <1 core overall (~250 CPU s) |
+| briar | 193 s | clang 83 CPU s, nexus_percursus 35, fabrica 19 | 1.0-1.5 |
+| oratio | 200 s | tests 54 CPU s, clang 48, nexus_percursus 31, fabrica 20 | 1.0 |
+| officina | 155 s | clang 49 CPU s, interpretare 27, fabrica 19 | 1.0 |
+
+- **radix bootstrap (~135 s, one process at a time):** aedilis built
+  file by file (`[dep]` lines), the silva.c amalgam, compilator, 471
+  library objects, generator tools, the 4.7 MB speculum capsule; five
+  single compiles of ~9-10 CPU s each and two `fabrica digestum` runs
+  of ~9 s.
+- **radix tests (168 s):** "481 per 4 fila" - FILA is the 4 performance
+  cores of 8 - but only ~2.4 are busy on average; cellae_lenta 18.7 and
+  cellae 15.4 CPU s are the only heavy ones, and the last ~60 s is
+  many processes using no CPU (tests that wait).
+- **In the full frigida** briar/oratio/officina take 82/77/61 s, not
+  193/200/155: they reuse what radix built in the same clone. The
+  suites are NOT independent.
+- **officina alone is RED** in a fresh clone
+  (probatio_officina_lanceatores expects "mundus: 1 moduli";
+  probatio_officina_legatus): it is green in frigida only because
+  radix runs first. B7 (suites in parallel) has to fix this first.
+- probatio_vicus_admonitiones flaked again (first radix run red,
+  second green; question 01M5YTX3XD).
+
+What this says about the open rulings: a compile cache (E4) would
+remove at most the clang share (~50-90 CPU s per suite, mostly the
+shared bootstrap, which the full run pays once); the larger lever is
+that nearly everything runs on one core of eight. Ledger note
+01M71SRD3BW14D77MTXD9DJD9M.
+
+### VII.b Census of the root cold setup (2026-11-09, third run, timestamps)
+
+Log lines stamped as they appear plus every process over 1 CPU s. Tests
+start at 147 s; everything before is one process at a time except the
+library objects.
+
+| t (s) | step | wall | note |
+|---|---|---|---|
+| 0-3 | git worktree checkout | 3 | |
+| 3-15 | aedilis_struere | 12 | silva.c 8.6 s |
+| 16-70 | compilator_struere (fabrica_struere inside) | 54 | silva.c AGAIN 8.0 s (other object name); sqlite3.c 10.6 s; `fabrica digestum fabrica` 9.8 s, `... aedilis` 1.9 s, `... compilator` 9.0 s |
+| 70-99 | 471 library objects, 4 lanes | 29 | sqlite3.c a 2nd time 11.5 s (sets the lane's length); bearssl 4.2 s |
+| 99-115 | gesta/tabulariumd.sh -struere | 16 | sqlite3.c a 3rd time 10.8 s |
+| 115-129 | generators, speculum capsule, JS and QR checks | 14 | |
+| 129-147 | natura_struere + full link of 471 objects | 18 | `fabrica digestum natura` 4 x ~2 s |
+| 147-329 | 481 tests, 4 lanes | 182 | ~2.4 lanes busy |
+
+Duplicates: sqlite3.c three times (33 CPU s, two avoidable = ~22 s),
+silva.c twice (~8 s avoidable). Provenance stamps (`fabrica digestum`):
+~29 s in total, 9-10 s each for fabrica and compilator. E7 ("compiled
+once") does not reach these: the first two happen before compilator
+exists, the third is tabulariumd's own build. 2 of today's 3 cold root
+runs were red on probatio_vicus_admonitiones (question 01M5YTX3XD).
+
+### VII.c LUCRUM (2026-11-10): stamps and the third sqlite compile
+
+- **Provenance stamps**: `fabrica digestum` expanded every test group
+  (closure of ~644 members) to seal one tool action - 21 G
+  instructions, ~3 s warm, 9-10 s cold, per call, and every installer
+  calls it. Now only the group the title asks for (none for a tool):
+  0.06-0.2 G, <0.01 s warm. 151 titles byte-identical fast vs full vs
+  old binary; fumus LXXI. Worklog lib/fabrica.worklog.md.
+- **sqlite3.c third compile** (gesta/tabulariumd.sh, tabularium.sh):
+  through bin/compilator with the root's arguments -> cache hit
+  (0.88 s for `-struere`, object identical).
+- **Cold root run after (e302f5527, one run, load average 4-8, process
+  sampler every 0.5 s)**: no `fabrica digestum` process was ever
+  caught (before: 9.8 + 9.0 + 1.9 + 4 x ~2 s); sqlite3.c compiled
+  twice (11.4 and 14.1 s; before three times); silva.c twice (8.7 and
+  9.2 s, unchanged). Root suite 298 s green (11-09: 317 and 329 s; a
+  run an hour earlier at load 12: 328 s) - the total is too noisy to
+  claim more than the per-process facts.
+- **Open**: sqlite3.c second compile and silva.c second compile happen
+  before bin/compilator exists (bootstrap); see the worklog for the two
+  ways out and their cost.
+
 ## AUDIENDA (not verified)
 
 - Every minute figure above is an estimate from profiles taken under

@@ -45,7 +45,7 @@ _legere (
     long  mensura;
      i8* textus;
 
-    plagula = fopen(via, "rb");
+    plagula = lectiones_fopen(via, "rb");
     si (plagula == NIHIL)
     {
         redde NIHIL;

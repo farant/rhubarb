@@ -31,7 +31,10 @@
       $calendarium, $agenda, $contacts, $notifications or $sessions
       opens that kind in the active tab's stack on the next pulse;
       $pictor-next, $pictor-prev and $pictor-new cycle or create
-      pictures. A scriba page name may only use a-z, 0-9, _ and -.
+      pictures. In a tab opened on a project, $add-pictor or
+      $add-pictor(title) adds a mood board page to the project
+      (default title "mood board"), puts it in the Cmd+H/L ring and
+      opens it. A scriba page name may only use a-z, 0-9, _ and -.
       $dies or $dies(N) inserts the date N days from today as
       MM/DD/YYYY.</responsum>
   </interrogatio>

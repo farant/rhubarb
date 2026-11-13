@@ -341,3 +341,55 @@ which demissio's MAGNITUDO_EXPRESSIONIS lowering cannot size ->
 'magnitudo inaestimabilis' (officina_demissio.c ~2760). Bridges for
 open/write/close were drafted and backed out (no test could exercise
 them until the sizeof gap is fixed). Ledger park filed.
+
+## 2026-11-03 - M5 T2: arca as a static slot (E14)
+
+ARCA used to bump `stiva_cursor` every time it ran, so an arca inside a
+loop (a struct-return temporary, a by-value aggregate argument copy)
+grew the frame by its size per iteration until the function returned.
+Test "arca in ansa": the peak went from 112 bytes after 1 iteration to
+16096 after 1000 (16 per iteration). Native code (Task 3+) needs a fixed
+frame, so the IR contract is now one static slot per arca instruction.
+
+Layout: `_arcas_disponere` runs at freeze time, per function. Each ARCA
+whose magnitudo and ordinatio are immediates (every demissio emitter
+passes immediates) gets an offset into the frame's arca region (s32,
+parallel to the flat instructions; -1 = no slot), with the same rule as
+before (alignment at least 16). The plana records the region's size and
+largest alignment. `_tabulatum_impellere` puts the region right after the
+registers, in the same bump (aligned, rounded to 16), and stores
+`t->basis_arcarum`; ARCA is now `stiva_basis + basis_arcarum + offset`,
+with no cursor movement. A hand-written arca with a register size halts
+"arca sine magnitudine immediata" instead of growing silently. Arca
+memory is not zeroed, as before. Recursion: every frame gets its own
+region (test "arca recursio": write before the recursive call, read
+after it, 5 levels deep).
+
+## 2026-11-13 — signed division overflow now halts for s32 too
+
+`dividere.s32` / `residuum.s32` of INT_MIN by -1 used to wrap silently
+(INT_MIN, remainder 0); only the s64 case halted with "divisio:
+superfluxus". Cause: the check compared canonical 64-bit words against
+the 64-bit minimum, and an s32 INT_MIN is sign-extended, so it never
+matched. Found while writing the native backend's division checks (M5 T7
+step 3): the spec's E16 says "signed INT_MIN / -1" and the plan's test
+expected the halt. Nothing had tested the overflow halt in the
+interpreter before.
+
+Fran's ruling (2026-11-13): the interpreter is the stricter referee - fix
+it rather than have the backend copy the gap. Now: sb == -1 and sa equal
+to the minimum OF THE TYPE (s32 or s64) -> VITIUM "divisio: superfluxus",
+for both operations. s8/s16 unchanged: C promotes to int before dividing,
+so nothing overflows (reasoned from C; whether demissio ever emits a
+narrow-typed division was not checked).
+
+The native backend emits the same check at the type's width. Tests are in
+probatio_officina_nativum "dorsum divisio" (interpreted side asserted
+first, then parity): minimum_breve, residuum_minimi_brevis halt;
+prope_minimum_breve (INT_MIN / 1, -5 / -1, unsigned INT_MIN / UINT_MAX)
+does not. Plants: s32 clause removed in machinula -> FRACTA; backend check
+64-bit only -> FRACTA; backend's 32-bit minimum constant wrong -> FRACTA.
+
+Consequence to watch: lib code that divides a 32-bit minimum by -1 now
+halts under interpretation. Not measured - the cursor's differential lane
+is dead until credo runs.

@@ -104,7 +104,12 @@ pictor_salutationem_ponere (
 /* semitae R4c: argumentum lateris - URI ("pictor/flores") picturam
  * EXSTANTEM ostendit (semita numquam condit); cognomen "<spatium>" ut
  * ante: exstans ostenditur, ignota conditur si condere (S3f,
- * $pictor-new). FALSUM si semita mala aut pictura ignota. */
+ * $pictor-new). FALSUM si semita mala aut pictura ignota.
+ * "negotia/<id>" (pagina negotii, T4): exstans ostenditur etsi extra
+ * bibliothecam (pictor_documentum_exstat); absens conditur vacua
+ * (etiam in montatione). Titulus lateris "Mood board · <id VI>";
+ * locus comitis "negotia/pagina/<id plenum>" (Cmd+T = liber
+ * paginae, non pictoris). */
 b32
 pictor_argumentum_ponere (
           PictorMontatio* m,

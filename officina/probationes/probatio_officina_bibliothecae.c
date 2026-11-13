@@ -221,6 +221,59 @@ _sectio_systema (
     CREDO_AEQUALIS_I32(xar_numerus(viae), ZEPHYRUM);
 }
 
+/* mundus totus (M5 T0): una implementatio per caput - testa_android
+ * et *_macos numquam; capita recusata omissa nominantur, non
+ * frangunt; ordo alphabeticus sine duplicatis. (testa.c ipsa est
+ * testa fenestrae macOS - fenestra.h solum .m - ergo testa.h quoque
+ * omittitur.) Signum gravis: derivatio omnium capitum omnes fontes
+ * lib/ parsurat (~350 MiB) */
+interior vacuum
+_sectio_mundus (
+    CredoContextus* c)
+{
+    Bibliothecae* b;
+           chorda  causa;
+              Xar* viae;
+              Xar* omissa = NIHIL;
+              i32  k;
+              b32  fenestra_omissa = FALSUM;
+
+    b = _resolutor(c->piscina);
+    CREDO_NECESSE(b != NIHIL);
+    causa.datum = NIHIL;
+    causa.mensura = ZEPHYRUM;
+    viae = bibliothecae_mundum_totum(b, c->piscina, &omissa, &causa);
+    CREDO_NECESSE(viae != NIHIL);
+    CREDO_VERUM(_continet(viae, "lib/chorda.c"));
+    CREDO_FALSUM(_continet(viae, "lib/testa_android.c"));
+    CREDO_VERUM(_continet(viae, "lib/fenestra_tempus_posix.c"));
+    CREDO_FALSUM(_continet(viae, "lib/fenestra_tempus_macos.c"));
+    per (k = ZEPHYRUM; k < xar_numerus(viae); k++)
+    {
+        chorda via = *(chorda*)xar_obtinere(viae, k);
+
+        CREDO_FALSUM(via.mensura >= II
+            && via.datum[via.mensura - II] == '.'
+            && via.datum[via.mensura - I] == 'm');
+        si (k > ZEPHYRUM)
+        {
+            /* strictim crescens = ordinatum et sine duplicatis */
+            CREDO_VERUM(chorda_comparare(*(chorda*)xar_obtinere(viae,
+                k - I), via) < ZEPHYRUM);
+        }
+    }
+    CREDO_NECESSE(omissa != NIHIL);
+    per (k = ZEPHYRUM; k < xar_numerus(omissa); k++)
+    {
+        si (chorda_incipit(*(chorda*)xar_obtinere(omissa, k),
+                chorda_ex_literis("include/fenestra.h:", c->piscina)))
+        {
+            fenestra_omissa = VERUM;
+        }
+    }
+    CREDO_VERUM(fenestra_omissa);
+}
+
 /* post sectiones priores (recusationes incluse): nullus scopus
  * HUIUS processus relictus (scopus_<pid>_*: cursus priores aut
  * plantae relicta sua non numerantur) */
@@ -321,6 +374,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "caput ignotum", _sectio_ignotum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "systema", _sectio_systema, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mundus totus", _sectio_mundus, NIHIL, NIHIL, "gravis", NIHIL },
     { "nulla vestigia", _sectio_vestigia, NIHIL, NIHIL, NIHIL, NIHIL },
     { "sedes", _sectio_sedes, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

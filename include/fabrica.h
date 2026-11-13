@@ -506,6 +506,14 @@ nomen structura {
      * scripturas libri (S) conferuntur, differentiae in
      * <area>vestigia_collata.txt. FALSUM = nihil */
     b32 vestigia_conferre;
+    /* LIBER (fabrica-plan-8 T4, FABRICA_VESTIGIUM=liber): membra
+     * gradus SINE ambulatione arboris iudicantur - vestigium, debita
+     * et invalidatio ex photographia secutorum (secuta_capere) et
+     * lineis S libri. Valet solum cum secuta_capere adest et capit;
+     * actiones non-membra ambulationem servant. CAECITAS NOTA:
+     * scriptura cruda in viam NON secutam extra aream non videtur
+     * (spec 8 T4: ambulatio per cursum, audita). */
+    b32 sine_ambulatione;
     /* ==== IUDICIUM (spec 3 par. XII, T5b) - omnia NIHIL licent ==== */
     /* ambitus quem fabrica PORTAE dat: VERUM + valor si variabilis
      * adest. Lectio E cuius valor ab eo differt intra portam posita est

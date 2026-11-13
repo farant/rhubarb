@@ -1237,8 +1237,8 @@ _plagulam_legere (
     constans character* via,
                 chorda* exitus)
 {
-    /* lectiones: notatur */
-      FILE* f = fopen(via, "rb");
+    /* lectiones_fopen ipsa notat (L aut A) */
+      FILE* f = lectiones_fopen(via, "rb");
     longus  longitudo;
         i8* memoria;
 
@@ -1246,10 +1246,8 @@ _plagulam_legere (
     exitus->mensura  = ZEPHYRUM;
     si (f == NIHIL)
     {
-        lectiones_notare(LECTIO_ABSENS, via);
         redde FALSUM;
     }
-    lectiones_notare(LECTIO_LEGIT, via);
     fseek(f, 0L, SEEK_END);
     longitudo = ftell(f);
     rewind(f);

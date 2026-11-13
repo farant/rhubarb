@@ -199,6 +199,8 @@ _identitas (
             piscina);
         redde FALSUM;
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>iudex ipse
+     * clang verum extra arborem: identitas eius in clave expresse */
     si (stat(via, &status) != ZEPHYRUM)
     {
         *causa_out = chorda_concatenare(chorda_ex_literis(
@@ -1124,6 +1126,8 @@ _vestigium_addere (
   structura timespec  tempus;
     FabricaVestigium* v;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>iudex ipse
+     * testis vestigii fabricae (photographia), non ingressus membri */
     si (lstat(via_vera, &status) != 0)
     {
         redde;
@@ -1592,17 +1596,24 @@ suturae_agentem_addere (
         sutura->currere_simul  = suturae_currere_simul;
     }
     _directoria_extra = _directoria_extra_colligere(actiones, piscina);
-    /* FABRICA_VESTIGIUM (fabrica-plan-8): 'umbra' et 'liber' testem
-     * secutorum capiunt; ordinarie (photographia) nihil mutatur */
+    /* FABRICA_VESTIGIUM (fabrica-plan-8). ORDINARIUS = 'liber'
+     * (decretum Franis 2026-11-10, post T5: DCXLIV membra concordia):
+     * variabilis absens aut 'liber' ambulationem membrorum PETIT tolli;
+     * nucleus id facit solum si testis secutorum vere captus est (arbor
+     * sine indice git: ambulatio manet) et -conferre non petitur.
+     * 'umbra' = ambo testes collati (auditus); 'photographia' =
+     * ambulatio sola, testis secutorum non capitur. Valor ignotus =
+     * umbra (ambulatio numquam tacite tollitur). */
     {
         constans character* modus = getenv("FABRICA_VESTIGIUM");
 
-        si (   modus != NIHIL
-            && (   strcmp(modus, "umbra") == ZEPHYRUM
-                || strcmp(modus, "liber") == ZEPHYRUM)
+        si (   (   modus == NIHIL
+                || strcmp(modus, "photographia") != ZEPHYRUM)
             && (_secuta_viae != NIHIL || _secuta_legere(piscina)))
         {
             sutura->secuta_capere = _secuta_capere;
         }
+        sutura->sine_ambulatione = (b32)(   modus == NIHIL
+            || strcmp(modus, "liber") == ZEPHYRUM);
     }
 }

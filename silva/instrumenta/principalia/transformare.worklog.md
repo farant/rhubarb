@@ -75,3 +75,141 @@ refusal - test B3 now pins both layers (direct call = codex XCVII; call
 through a function pointer = MACHINULA_RECUSATIO, planted red). A gate run
 with a filter (`officina.machinula`) at the sweep commit hid this - when a
 sweep touches a subsystem, run its whole gate.
+
+## 2026-11-11 - read-mode fopen: rules file fopen_legens.stml (code 96)
+
+silva/transformationes/fopen_legens.stml: `fopen($via, "r")` and
+`"rb"` -> `lectiones_fopen`, codex 96, `<inclusio>lectiones.h`. Same
+reasoning as the write modes: same signature and FILE*, so the rule
+matches the call whatever consumes it. Census over the 139 debt-listed
+files: 181 fopen sites - 178 reading ("rb" 152, "r" 26), 2 writing
+(tolerated), 1 variable mode (officina amalgam, GENERATUM). Dry run:
+174 sites in 131 files, 0 refused.
+
+Kept OUT by hand before running: apps/forum/forum.c (the server token,
+already `<tolera>`), apps/quaestio/quaestio.c (the API key - gets a
+`<tolera>`, never lectiones), knotapel snapshots, officina's amalgam.
+The tool does not know a secret from a fixture; that list is the
+operator's job every time this rules file is used.
+
+Two things the mechanical rewrite got wrong in area 1, fixed by hand
+(both would have passed the tool's guard):
+- materia/instrumenta/oraculum_silvae.c is ALSO built -DORACULUM_PIGNUS
+  without lectiones.h (the 2026-10-27 lesson again): the read now goes
+  through the file's own `oraculi_fopen` alias.
+- materia/fontes/materia_coctor.c already noted its read by hand
+  (`lectiones_notare` LEGIT/ABSENS around a raw fopen): after the
+  rewrite it would have noted twice. Hand notes removed. Grep the diff
+  for `lectiones_notare` next to a rewritten call in every area.
+
+Area 1 (toml css html md materia tessera: 14 files, 15 sites): all 14
+debt rows paid and deleted (139 -> 125); six suites green; `md/arbor.sh
+README.md` under FABRICA_LECTIONES now records `L README.md`.
+
+## 2026-11-11 — fopen_legens: oratio (area 3)
+
+41 sites in 30 files (2 fontes, 10 tools, 18 suites), 0 refused; 26 files
+gained the lectiones.h include. No oratio amalgam, no -D variants, no hand
+read-notes next to the sites. Nine of the ten tools are INTECTA (no gate),
+so they were compared by hand: 12 invocations (arbor, arbor -partes -sedes,
+computus, formae, oraculum -machina, quaere, reticulum, sententiae, verba,
+vocabula -nova, vocabularium, vocabularium -coquere) old code vs new,
+stdout + stderr + rc identical except timing columns. `oraculum -regulae`
+is a 10+ minute cumulative run - do not put it in a differential.
+30 debt rows deleted (95 -> 65).
+
+## 2026-11-12 — fopen_legens: officina (area 4)
+
+27 sites in 17 files (officina_indicium, praeparator, six tools, nine
+suites), 0 refused. Order held: transformare -> formator on the fontes ->
+source lists (unchanged) -> amalgamare (VERIFICATUM, hospes 81/81). Tool
+differential old vs new, 7 invocations (cursor -enumerare, cursor -sola,
+fusor lib, interpretare x2, sonda lib/chorda.c, colloquium scalaria.c):
+identical except timing. `cursor -sola probatio_chorda` is rc 1 on both
+sides (DECIPULA getpid) - pre-existing. vindex compiles but does not link
+at HEAD (known), so its rewritten site is unexercised. 14 debt rows deleted
+(65 -> 51); three files keep their row (other raw IO remains).
+
+Addendum (officina): the amalgam `officina/amalgama/officina.c` carries its
+OWN debt row. After the fontes were rewritten and the amalgam regenerated,
+that row was paid too, and examen-corpus (deferred gate) went red with
+"linea delenda". Run the debt check over ALL remaining rows after an
+amalgam regeneration, not just the files handed to transformare.
+(50 rows remain.)
+
+## 2026-11-12 — fopen_legens: briar (area 5)
+
+17 sites in 16 files (three tools, thirteen suites), 0 refused. No amalgam,
+no hand notes. The three tools (arbor, computus, fabrica) are INTECTA:
+compared old vs new - arbor x2, computus, fabrica x2 (app_vestitum and
+derivatum projects, 195 generated files, diff -r) identical except
+computus timing columns. 15 debt rows deleted (50 -> 35), checked over all
+remaining rows.
+
+## 2026-11-12 — fopen_legens: crusta (area 6)
+
+14 sites in 13 files (crusta_facies, crusta_oraculum, four tools, seven
+suites), 0 refused. `crusta/instrumenta/interpositio_macos.c` was on the
+list but has no fopen call (a dylib injected into bash - it must never
+link lectiones anyway); left out, examen ACCIPE. No amalgam. crusta_facies
+is also linked by tools/diagnostica.c and crusta/instrumenta/effectus.c
+(hook tools) through aedilis closures - gates diagnostica, unci,
+iudicium-fumus cover them. Four INTECTA tools compared old vs new (arbor
+x2, coctum, computus, facies x2): identical except computus timing.
+13 debt rows deleted (35 -> 22).
+
+## 2026-11-12 — fopen_legens: gesta (area 7, last mechanical area)
+
+8 sites in 7 files (gesta.c, tabularium.c, five suites), 0 refused. Read
+by hand first: the two library sites read the annals jsonl, nexus.tsv, the
+identity and citation indices and repo files named by a scope - no secret
+passes through them. No amalgam; the four source lists regenerate
+unchanged. Everything is gate-covered (no INTECTA). 7 debt rows deleted
+(22 -> 15). What remains of the 139 is by hand or deliberately raw:
+apps/quaestio (API key - tolera, never lectiones), apps/forum (tolerated),
+knotapel snapshots, the channel itself and files with other raw IO.
+
+## 2026-11-12 — apps/quaestio: API key read tolerated by hand
+
+`apps/quaestio/quaestio.c` reads `~/.rhubarb/anthropic.clavis`. That read
+must never go through lectiones (the path and the fact of the read would be
+sealed into a book), so it was excluded from every fopen_legens run and now
+carries `<tolera codex="CANALIS_PRAETERITUS">` like forum.c's token read.
+Comment only; examen ACCIPE, debt row deleted (15 -> 14). The file has no
+gate (INTECTA) and was not rebuilt or run - no code changed.
+
+## 2026-11-12 — canalis_debita: the last 13 rows, by hand (31 sites)
+
+Census of what examen 96 still counted after the fopen sweep, then one hand
+pass. Knotapel snapshot row left on purpose (Fran) - 1 row remains.
+
+Tolerated (`CANALIS_PRAETERITUS`, reason at each site):
+- crusta interposer, 7 sites: it IS the syscall interposer, never links
+  lectiones.
+- nexus_percursus, 6 sites (4 fopen, 2 stat): shared cache upkeep, same
+  reason as the site tolerated 2026-11-02 (J8).
+- capture/detach, 5 sites: cursor freopen x2 (had SCRIPTURA only), vindex
+  capture fd, manus log fd after setsid, mensor /dev/null.
+- build and measurement machinery, 8 sites, each function read first:
+  fabrica_sutura (clang identity stat - already in the key; lstat of the
+  witness), compilator x2 (real clang path, identity sealed into the key),
+  mensura_contextus (.git probe walking up from cwd), mensor x3 (its own
+  diary and curation stamp). None is an input of the action being judged.
+
+Rewritten: forum.c stat x2 + the wallpaper fopen (by hand - the fopen rule
+would also rewrite the tolerated token read), herbarium.c stat
+($RHUBARB_HERBARIUM dir; lectiones.h include added - filum.h was already
+there so every closure already links lectiones), praeparator.c stat,
+probatio_briar_fabrica.c stat.
+
+Finds:
+- A `<tolera>` only absorbs a call on the line right after the comment. A
+  stat on the 3rd line of a multi-line condition is not absorbed (and no
+  TOLERA_IRRITUM is raised). compilator.c: both conditions split so the
+  stat has its own `si` (same behaviour).
+- `./compile_tools.sh compilator|mensor` is the WRONG builder: it fails at
+  link (provenientia_* undefined) and leaves bin/compilator and bin/mensor
+  deleted. Right: `bin/fabrica sanare bin/compilator bin/mensor`
+  (tools/compilator_struere.sh, tools/mensor_struere.sh).
+- forum has no gate (fumus is manual): compiled and linked through
+  build/aedilis/forum/struere.sh, server not started.

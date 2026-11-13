@@ -1,0 +1,20 @@
+<!-- silva/transformationes/fopen_legens.stml - fopen modo LEGENTI ->
+     lectiones_fopen (codex 96, debitum canalis lectionum). Eadem forma
+     (via, modus) et idem valor (FILE*), ergo vocatio ipsa rescribitur,
+     quicumque consumens. lectiones_fopen lineam L in libro scribit si
+     plagula aperta est, A si non (viae sub /dev/ non notantur); errno
+     servatur. Modus ut litterale solum: modus variabilis recusatur;
+     modi scribentes in fopen.stml (codex 97).
+     NUMQUAM secretum (clavis API, tessera) per lectiones: tales sedes
+     <tolera> ferunt et manu excluduntur ANTE hanc transformationem. -->
+<transformatio functio="fopen" codex="96">
+  <inclusio>lectiones.h</inclusio>
+  <regula>
+    <si! (>fopen($via, "r")
+    <fac! (>lectiones_fopen($via, "r")
+  </regula>
+  <regula>
+    <si! (>fopen($via, "rb")
+    <fac! (>lectiones_fopen($via, "rb")
+  </regula>
+</transformatio>

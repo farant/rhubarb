@@ -81,6 +81,18 @@ if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
 fi
 obj_files="$obj_files $obj"
 
+# nexus_ordines (praeparator eam vocat post 8bbf97f7; deerat usque
+# ad 2026-11-12 - lanceator non ligabatur; ut colloquium.sh et
+# sonda.sh; porta: probatio_officina_lanceatores)
+src="$RADIX_DIR/silva/instrumenta/nexus_ordines.c"
+obj="$BUILD_DIR/nexus_ordines.o"
+if [ ! -f "$obj" ] || ! [ "$obj" -nt "$src" ] \
+    || caput_recentius "$obj"; then
+    echo "  [ordines] nexus_ordines.c"
+    clang "${GCC_FLAGS[@]}" "${INCLUDE_FLAGS[@]}" -c "$src" -o "$obj" || exit 1
+fi
+obj_files="$obj_files $obj"
+
 for f in "praeparator" "vindex_onerator" "vindex_visum"; do
     src="$OFF_DIR/instrumenta/$f.c"
     obj="$BUILD_DIR/$f.o"

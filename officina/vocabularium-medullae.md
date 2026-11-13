@@ -69,12 +69,28 @@ exactly this pair)
                                   address (QBE alloc lineage; slots for
                                   address-taken locals + aggregates; optional
                                   titulus attribute feeds indicium at M3)
+                                  CONTRACT (M5 E14, DECISUS 2026-11-03):
+                                  one STATIC slot per arca instruction per
+                                  frame — executing the same arca again
+                                  (a loop) yields the same address; each
+                                  frame (recursion) has its own. magnitudo
+                                  and ordinatio are immediates (machinula
+                                  lays slots out at freeze time; any other
+                                  operand halts "arca sine magnitudine
+                                  immediata"). Alignment is at least 16.
     locus %d, $symbolum           address of datum/functio
     copia %dest, %src, magnitudo  aggregate copy (bytes)
 
 **Fluxus**
     salire @b                                 unconditional jump
     ramus %c -> @verum | @falsum              branch: nonzero -> first target
+                                              CONTRACT (M5 E15, DECISUS
+                                              2026-11-03): %c is INTEGRAL.
+                                              A fluitans condition is first
+                                              made integral by demissio:
+                                              %c = inaequalis.fT x, 0.0
+                                              (-0.0 has nonzero bits but
+                                              is false in C)
     redde [src]                               return (operand absent = vacuum)
     vocare                                    call; forms in §V
     sistere "causa"                           TRAP: carries diagnostic +
@@ -99,24 +115,52 @@ visible first parameter in the medulla signature — officina's VM convention;
 native ABIs map it at M5. Blocks follow; every block ends in exactly one
 terminator (salire / ramus / redde / sistere).
 
+**Limen types (M5 B4, DECISUS 2026-11-03).** Parameter and argument types
+in signatures and calls are *limen* types — a scalar suffix, or an
+aggregate passed by value (the register still holds its address, i64):
+
+    s32, f64, ...   scalar (as §I)
+    aN              aggregate, N bytes, integer class        a8, a24
+    hKxT            HFA: K (1-4) members of float type T     h2xf64, h4xf32
+    rN / rhKxT      the %reditus slot (aggregate return, C7) r8, rh2xf64
+
+    functio $duplicare (r8 %reditus, a8 %p) -> vacuum
+
 ## V. Vocare
 
-    %d = vocare.T $f, args...     direct, valued
-    vocare $f, args...            direct, vacuum
-    %d = vocare.T %fp, args...    indirect (function-pointer register)
+    %d = vocare.T $f, T a, T b    direct, valued
+    vocare $f, T a, T b           direct, vacuum
+    %d = vocare.T %fp, T a        indirect (function-pointer register)
+    %d = vocare.T $f, T a ... T b, T c    variadic: fixed ... variadic
 
-Arguments are pre-converted (M0b annotations); variadic call sites use the
-same form (callee type carries est_variadica). Builtin routing is NOT marked
-here — it is "definition absent at conexio time" (M2); est_implicitum is
+Every argument carries its limen type (M5 B4, DECISUS 2026-11-03).
+Arguments are pre-converted (M0b annotations); variadic arguments carry
+their C-promoted types (f32 -> f64, narrow ints -> s32/i32). ` ...`
+appears exactly when the callee is a prototyped variadic: fixed
+arguments are `, T x` each, then ` ...`, then the variadic arguments
+(the first after a space, the rest after `, `); a variadic call with no
+variadic arguments ends in ` ...`. Unprototyped and non-variadic calls
+have no ` ...` (in memory: argumenta_fixa = -1). An untyped argument is
+refused by the lector. Builtin routing is NOT marked here — it is
+"definition absent at conexio time" (M2); est_implicitum is
 enforcement-layer evidence only.
 
 ## VI. Modulus + datum
 
     modulus "lib/chorda.c"
+    externum $printf (i64, ...) -> s32
+    externum $facere (r8, s32, s32) -> vacuum
 
     datum $titulus magnitudo N ordinatio A
         octeti  <hex byte runs>
         relocatio <offset>, $symbolum
+
+`externum` (M5 B4) gives the signature of an EXTERNAL symbol whose
+declaration is prototyped (semantica). The lines come right after
+`modulus`, before the first `functio`/`datum`, in symbol order; one per
+symbol; unprototyped declarations and data externs get none. Conexio
+refuses (fractura honesta, naming the symbol) when two modules give one
+name different signatures, or an extern disagrees with the definition.
 
 Every string literal materializes as an anonymous datum (decoded bytes) +
 relocatio at its use sites in static images. **Relocatio is ADDITIVE**

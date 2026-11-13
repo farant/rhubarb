@@ -56,6 +56,23 @@ bibliothecae_ex_via (
                Piscina* piscina,
                 chorda* causa_out);
 
+/* Mundus totus (cursor; interpretare cum functio in indice ignota):
+ * pro omni capite include/ *.h, clausura variantis "posix" per
+ * bibliothecae_ex_textu - una implementatio per caput, ergo
+ * testa_android.c et *_macos.c numquam intrant. Capita recusata
+ * (implementatio sola .m, fons nimis magnus, caput ignotum) totum
+ * NON frangunt: in *omissa_out colliguntur, chorda
+ * "include/x.h: causa" singula. Capita sine implementatione
+ * (latina.h) nihil addunt nec omittuntur. Fructus: Xar de chorda,
+ * viae .c radici relativae, sine duplicatis, ordine alphabetico
+ * (determinismus). NIHIL + causa solum si include/ legi nequit. */
+Xar*
+bibliothecae_mundum_totum (
+     Bibliothecae*  b,
+          Piscina*  piscina,
+              Xar** omissa_out,
+           chorda*  causa_out);
+
 nomen enumeratio {
     BIBLIOTHECAE_SEDES_INVENTA = 0,
     BIBLIOTHECAE_SEDES_IGNOTA,     /* index absens aut functio

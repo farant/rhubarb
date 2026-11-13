@@ -184,6 +184,8 @@ _contractus_argumenti (
     SilvaSemantica* sem,
             chorda  titulus_functionis,
                s32  index,
+            chorda  orthographia,
+            chorda  titulus_orthographiae,
                s64* imum,
                s64* summum,
             chorda* titulus_parametri_out);
@@ -202,10 +204,11 @@ _contractus_membri_probare (
     constans SilvaNodus* ancora);
 interior vacuum
 _contractus_argumentum_probare (
-         SilvaSemantica* sem,
-                 chorda  titulus_vocati,
-                    s32  index,
-    constans SilvaNodus* na);
+                SilvaSemantica* sem,
+                        chorda  titulus_vocati,
+    constans SemanticaSymbolum* symbolum_vocati,
+                           s32  index,
+           constans SilvaNodus* na);
 interior vacuum
 _contractus_redde_probare (
          SilvaSemantica* sem,
@@ -1402,11 +1405,19 @@ _commenta_pigra (
      * standarda in radice cuiusque lexematis, sine compressione */
     si (parsura->directivae != NIHIL)
     {
-        i32 dm = xar_numerus(parsura->directivae);
-        i32 di;
+        /* lineae notandae solae (item V b): ceterae commentum nullum
+         * ferunt et fontis alieni sunt - nihil in seriem nec in sedes
+         * (silva_expandere.c, _directivam_capere) */
+         constans Xar* notandae  = parsura->directivae_notandae;
+                  i32  dm        = (notandae != NIHIL)
+                                      ? xar_numerus(notandae)
+                                      : xar_numerus(parsura->directivae);
+                  i32 k;
 
-        per (di = ZEPHYRUM; di < dm; di++)
+        per (k = ZEPHYRUM; k < dm; k++)
         {
+            i32 di = (notandae != NIHIL)
+                ? *(constans i32*)xar_obtinere(notandae, k) : k;
             Xar* linea = *(Xar**)xar_obtinere(parsura->directivae,
                 di);
             i32 tm;
@@ -3795,10 +3806,10 @@ silva_c89_semantica_creare (
         (i32)magnitudo(SemanticaSymbolum*));
     sem->diagnostica = xar_creare(piscina,
         (i32)magnitudo(SemanticaDiagnosticum));
-    /* typationes: clavis = octeti monstratoris (FNV binariae-tutum) */
-    sem->typationes = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    /* typationes: clavis = monstrator nodi */
+    sem->typationes = tabula_monstratorum_creare(piscina, CCLVI);
     /* nexus symbolorum (M1a A): clavis eadem */
-    sem->nexus = tabula_dispersa_creare_chorda(piscina, CCLVI);
+    sem->nexus = tabula_monstratorum_creare(piscina, CCLVI);
     /* FLUXUS-0: CFG retenti (decisio Q7) */
     sem->fluxus_functionum = xar_creare(piscina,
         (i32)magnitudo(FluxusFunctionis*));
@@ -10834,14 +10845,24 @@ silva_c89_constans_aestimare (
         {
             SilvaValor tok_v =
                 silva_c89_folium_identificator_tok_valor(expressio);
-            SemanticaSymbolum* symbolum;
+            constans SemanticaSymbolum* symbolum;
 
             si (tok_v.genus != SILVA_VALOR_TOKEN)
             {
                 redde FALSUM;
             }
-            symbolum = silva_c89_symbolum_invenire(sem,
-                tok_v.datum.token->valor);
+            /* nexus typationis primum: fluxus post scopum corporis
+             * clausum aestimat (_fluxum_examinare post
+             * _corpus_ambulare) - quaestio per titulum localem
+             * umbrantem praeteriret et constantem enumerationis
+             * exteriorem inveniret. Titulus solum pro nodo numquam
+             * typato (scopus tunc idem ac typationis). */
+            symbolum = silva_c89_symbolum_nodi(sem, expressio);
+            si (symbolum == NIHIL)
+            {
+                symbolum = silva_c89_symbolum_invenire(sem,
+                    tok_v.datum.token->valor);
+            }
             si (   symbolum        == NIHIL
                 || symbolum->genus != SYMBOLUM_CONSTANS)
             {
@@ -11071,14 +11092,12 @@ silva_c89_constans_aestimare (
 /* ==================================================
  * Typatio expressionum (M0b Chunk A) - tabula parallela
  * nodus -> SemanticaTypatio {naturalis, conversus}. Clavis =
- * octeti valoris monstratoris nodi (lectionis canonicae);
- * FNV super octetos binariae-tutum, fabrica _chorda sufficit.
+ * monstrator nodi (lectionis canonicae) in tabula monstratorum.
  * Genera B/C (binarium/vocatio/...) hic solum DESCENDUNTUR
  * (liberi typantur, nodus ipse nondum) - NIHIL sine strepitu.
  * ================================================== */
 
 nomen structura {
-          i8  clavis_octeti[magnitudo(vacuum*)];  /* valor monstratoris */
     TypusC89* naturalis;
     TypusC89* conversus;    /* NIHIL = nulla conversio */
 } SemanticaTypatio;
@@ -11088,18 +11107,8 @@ _typationem_invenire (
     constans SilvaSemantica* sem,
         constans SilvaNodus* nodus)
 {
-        i8  octeti[magnitudo(vacuum*)];
-    chorda  clavis;
-    vacuum* valor = NIHIL;
-
-    memcpy(octeti, &nodus, magnitudo(octeti));
-    clavis.datum    = octeti;
-    clavis.mensura  = (i32)magnitudo(octeti);
-    si (tabula_dispersa_invenire(sem->typationes, clavis, &valor))
-    {
-        redde (SemanticaTypatio*)valor;
-    }
-    redde NIHIL;
+    redde (SemanticaTypatio*)tabula_monstratorum_invenire(
+        sem->typationes, nodus);
 }
 
 interior SemanticaTypatio*
@@ -11108,12 +11117,20 @@ _typationem_ponere (
     constans SilvaNodus* nodus,
                TypusC89* naturalis)
 {
-    SemanticaTypatio* t = _typationem_invenire(sem, nodus);
-              chorda  clavis;
+    /* quaestio una: locus valet donec tabula iterum tangitur -
+     * piscina_allocare interim licet */
+              vacuum** locus = tabula_monstratorum_locus(
+                  sem->typationes, nodus);
+    SemanticaTypatio* t;
 
-    si (t != NIHIL)
+    si (locus == NIHIL)
     {
-        t->naturalis = naturalis;
+        redde NIHIL;
+    }
+    si (*locus != NIHIL)
+    {
+        t             = (SemanticaTypatio*)*locus;
+        t->naturalis  = naturalis;
         redde t;
     }
     t = (SemanticaTypatio*)piscina_allocare(sem->piscina,
@@ -11122,13 +11139,9 @@ _typationem_ponere (
     {
         redde NIHIL;
     }
-    memcpy(t->clavis_octeti, &nodus, magnitudo(t->clavis_octeti));
-    t->naturalis    = naturalis;
-    t->conversus    = NIHIL;
-    clavis.datum    = t->clavis_octeti;
-    clavis.mensura  = (i32)magnitudo(t->clavis_octeti);
-    (vacuum)tabula_dispersa_inserere(sem->typationes, clavis,
-        (vacuum*)t);
+    t->naturalis  = naturalis;
+    t->conversus  = NIHIL;
+    *locus        = (vacuum*)t;
     redde t;
 }
 
@@ -11149,13 +11162,12 @@ _conversum_ponere (
 
 /* ==================================================
  * Nexus symbolorum (M1a Chunk A) - tabula parallela sedes usus ->
- * symbolum, exemplar typationis idem (clavis = octeti monstratoris
- * nodi lectionis canonicae). Registratur ubi resolutio VERE fit:
+ * symbolum, exemplar typationis idem (clavis = monstrator nodi
+ * lectionis canonicae). Registratur ubi resolutio VERE fit:
  * folium-identificator + vocatus vocationis (etiam implicitus).
  * ================================================== */
 
 nomen structura {
-                   i8  clavis_octeti[magnitudo(vacuum*)];
     SemanticaSymbolum* symbolum;
 } SemanticaNexus;
 
@@ -11164,18 +11176,8 @@ _nexum_invenire (
     constans SilvaSemantica* sem,
         constans SilvaNodus* nodus)
 {
-        i8  octeti[magnitudo(vacuum*)];
-    chorda  clavis;
-    vacuum* valor = NIHIL;
-
-    memcpy(octeti, &nodus, magnitudo(octeti));
-    clavis.datum    = octeti;
-    clavis.mensura  = (i32)magnitudo(octeti);
-    si (tabula_dispersa_invenire(sem->nexus, clavis, &valor))
-    {
-        redde (SemanticaNexus*)valor;
-    }
-    redde NIHIL;
+    redde (SemanticaNexus*)tabula_monstratorum_invenire(sem->nexus,
+        nodus);
 }
 
 interior vacuum
@@ -11185,17 +11187,22 @@ _nexum_ponere (
       SemanticaSymbolum* symbolum,
                     b32  notare_usum)
 {
-    SemanticaNexus* n = _nexum_invenire(sem, nodus);
-            chorda  clavis;
+    vacuum** locus = tabula_monstratorum_locus(sem->nexus,
+        nodus);
+    SemanticaNexus* n;
 
     si (symbolum != NIHIL && notare_usum)
     {
         symbolum->usus = VERUM;   /* codices 69/70 */
     }
 
-    si (n != NIHIL)
+    si (locus == NIHIL)
     {
-        n->symbolum = symbolum;
+        redde;
+    }
+    si (*locus != NIHIL)
+    {
+        ((SemanticaNexus*)*locus)->symbolum = symbolum;
         redde;
     }
     n = (SemanticaNexus*)piscina_allocare(sem->piscina,
@@ -11204,12 +11211,8 @@ _nexum_ponere (
     {
         redde;
     }
-    memcpy(n->clavis_octeti, &nodus, magnitudo(n->clavis_octeti));
-    n->symbolum     = symbolum;
-    clavis.datum    = n->clavis_octeti;
-    clavis.mensura  = (i32)magnitudo(n->clavis_octeti);
-    (vacuum)tabula_dispersa_inserere(sem->nexus, clavis,
-        (vacuum*)n);
+    n->symbolum  = symbolum;
+    *locus       = (vacuum*)n;
 }
 
 /* Quales exuere (valor r) */
@@ -13734,23 +13737,22 @@ _contractus_intervalli_probare (
 
 /* orthographia typi parametri k declarationis vocati (+ titulus
  * parametri si notus); vacua = ignota. Communis intervallis
- * (refinatio) et generibus signatis (gradus 3). */
+ * (refinatio) et generibus signatis (gradus 3). Symbolum vocati
+ * a sede vocationis datur (resolutio semel per vocationem; olim
+ * titulus hic iterum quaerebatur, bis per argumentum). */
 interior chorda
 _orthographia_parametri_vocati (
-    SilvaSemantica* sem,
-            chorda  titulus_functionis,
-               s32  index,
-            chorda* titulus_parametri_out)
+    constans SemanticaSymbolum* s,
+                           s32  index,
+                        chorda* titulus_parametri_out)
 {
-               chorda  vacua;
-    SemanticaSymbolum* s = silva_c89_symbolum_invenire(sem,
-        titulus_functionis);
-    constans SilvaNodus* declarator_fn = (s != NIHIL)
-        ? _declaratorem_fn_invenire(s->declarans) : NIHIL;
-    SilvaValor parametra;
-           i32 m;
-           i32 k;
-           s32 ordinalis = ZEPHYRUM;
+                  chorda  vacua;
+     constans SilvaNodus* declarator_fn = (s != NIHIL)
+         ? _declaratorem_fn_invenire(s->declarans) : NIHIL;
+              SilvaValor parametra;
+                     i32 m;
+                     i32 k;
+                     s32 ordinalis = ZEPHYRUM;
 
     vacua.mensura  = ZEPHYRUM;
     vacua.datum    = NIHIL;
@@ -13795,12 +13797,15 @@ _orthographia_parametri_vocati (
 
 /* contractus parametri ad sedem vocationis: inline per indicem,
  * alioquin orthographia parametri declarationis vocati (typedef
- * refinatum). titulus_parametri_out impletur si notus. */
+ * refinatum) - a vocante semel computata (cum titulo parametri).
+ * titulus_parametri_out impletur si notus. */
 interior b32
 _contractus_argumenti (
     SilvaSemantica* sem,
             chorda  titulus_functionis,
                s32  index,
+            chorda  orthographia,
+            chorda  titulus_orthographiae,
                s64* imum,
                s64* summum,
             chorda* titulus_parametri_out)
@@ -13828,17 +13833,16 @@ _contractus_argumenti (
             }
         }
     }
+    si (titulus_orthographiae.mensura > ZEPHYRUM)
     {
-        chorda orthographia = _orthographia_parametri_vocati(sem,
-            titulus_functionis, index, titulus_parametri_out);
-
-        si (   orthographia.mensura == ZEPHYRUM
-            || !_refinatio_tituli(sem, orthographia, imum, summum))
-        {
-            redde FALSUM;
-        }
-        redde VERUM;
+        *titulus_parametri_out = titulus_orthographiae;
     }
+    si (   orthographia.mensura == ZEPHYRUM
+        || !_refinatio_tituli(sem, orthographia, imum, summum))
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
 }
 
 
@@ -14667,43 +14671,45 @@ _contractus_membri_probare (
 }
 
 /* argumentum contra contractum parametri vocati (sedes: ansa
- * argumentorum casus VOCATIO typationis) */
+ * argumentorum casus VOCATIO typationis). symbolum_vocati =
+ * resolutio sedis vocationis (post registrationem implicitam). */
 interior vacuum
 _contractus_argumentum_probare (
-         SilvaSemantica* sem,
-                 chorda  titulus_vocati,
-                    s32  index,
-    constans SilvaNodus* na)
+                SilvaSemantica* sem,
+                        chorda  titulus_vocati,
+    constans SemanticaSymbolum* symbolum_vocati,
+                           s32  index,
+           constans SilvaNodus* na)
 {
        s64 c_imum    = ZEPHYRUM;
        s64 c_summum  = ZEPHYRUM;
     chorda titulus_parametri;
+    chorda titulus_parametri_g;
+    chorda orthographia;
 
-    titulus_parametri.mensura  = ZEPHYRUM;
-    titulus_parametri.datum    = NIHIL;
+    titulus_parametri.mensura    = ZEPHYRUM;
+    titulus_parametri.datum      = NIHIL;
+    titulus_parametri_g.mensura  = ZEPHYRUM;
+    titulus_parametri_g.datum    = NIHIL;
     si (titulus_vocati.mensura == ZEPHYRUM)
     {
         redde;
     }
     _contractus_colligere(sem);   /* registrum ante iudicium generis */
+    /* orthographia semel per argumentum: gradus 3 et contractus
+     * (refinatio typedef) eandem legunt */
+    orthographia = _orthographia_parametri_vocati(symbolum_vocati,
+        index, &titulus_parametri_g);
     /* gradus 3 (01KYNXXVX9): genus signatum parametri vocati */
+    si (orthographia.mensura > ZEPHYRUM)
     {
-        chorda titulus_parametri_g;
-        chorda orthographia;
-
-        titulus_parametri_g.mensura  = ZEPHYRUM;
-        titulus_parametri_g.datum    = NIHIL;
-        orthographia = _orthographia_parametri_vocati(sem,
-            titulus_vocati, index, &titulus_parametri_g);
-        si (orthographia.mensura > ZEPHYRUM)
-        {
-            _signatum_limitis_probare(sem, orthographia,
-                (titulus_parametri_g.mensura > ZEPHYRUM)
-                    ? titulus_parametri_g : titulus_vocati,
-                na, na);
-        }
+        _signatum_limitis_probare(sem, orthographia,
+            (titulus_parametri_g.mensura > ZEPHYRUM)
+                ? titulus_parametri_g : titulus_vocati,
+            na, na);
     }
     si (!_contractus_argumenti(sem, titulus_vocati, index,
+            orthographia, titulus_parametri_g,
             &c_imum, &c_summum, &titulus_parametri))
     {
         redde;
@@ -15224,8 +15230,8 @@ _sedem_fluxus_iudicare (
                             titulus_parametri.mensura  = ZEPHYRUM;
                             titulus_parametri.datum    = NIHIL;
                             orthographia =
-                                _orthographia_parametri_vocati(sem,
-                                    symbolum_fn->titulus, ordinalis,
+                                _orthographia_parametri_vocati(
+                                    symbolum_fn, ordinalis,
                                     &titulus_parametri);
                             si (orthographia.mensura > ZEPHYRUM)
                             {
@@ -19902,6 +19908,7 @@ _expressionem_typare (
                    s32  formati_exspectata[FORMATI_ARGUMENTA_MAXIMA];
              character  formati_conversiones[FORMATI_ARGUMENTA_MAXIMA];
                 chorda  titulus_vocati;
+     SemanticaSymbolum* symbolum_vocati  = NIHIL;
 
             titulus_vocati.mensura  = ZEPHYRUM;
             titulus_vocati.datum    = NIHIL;
@@ -19974,6 +19981,9 @@ _expressionem_typare (
                             /* M1a A: etiam implicitus nectitur */
                             _nexum_ponere(sem, nf, symbolum, VERUM);
                         }
+                        /* argumenta contra parametra eius
+                         * iudicantur - resolutio semel */
+                        symbolum_vocati = symbolum;
                         (vacuum)_typationem_ponere(sem, nf, tf);
                     }
                 }
@@ -20096,7 +20106,7 @@ _expressionem_typare (
                      * contractum parametri (custodes systematis/
                      * alienitatis intra probationem) */
                     _contractus_argumentum_probare(sem,
-                        titulus_vocati, (s32)a, na);
+                        titulus_vocati, symbolum_vocati, (s32)a, na);
                     si (ta != NIHIL && typus_functionis != NIHIL)
                     {
                         si (   typus_functionis
@@ -20571,7 +20581,7 @@ silva_c89_typationes_numerus (
     {
         redde ZEPHYRUM;
     }
-    redde tabula_dispersa_numerus(sem->typationes);
+    redde tabula_monstratorum_numerus(sem->typationes);
 }
 
 
@@ -20602,7 +20612,7 @@ silva_c89_nexus_numerus (
     {
         redde ZEPHYRUM;
     }
-    redde tabula_dispersa_numerus(sem->nexus);
+    redde tabula_monstratorum_numerus(sem->nexus);
 }
 
 b32

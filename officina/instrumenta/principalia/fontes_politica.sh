@@ -36,6 +36,9 @@ excludenda_pro() {
         tabula_dispersa)    echo "EXCLUDENDA_TABULAE" ;;
         xar)                echo "EXCLUDENDA_XARIS" ;;
         lectiones)          echo "EXCLUDENDA_LECTIONUM" ;;
+        codificator_a64)    echo "EXCLUDENDA_CODIFICATORIS" ;;
+        memoria_exsecutabilis_macos)
+                            echo "EXCLUDENDA_MEMORIAE_EXSECUTABILIS" ;;
         *)                  echo "NIHIL" ;;
     esac
 }
@@ -46,5 +49,8 @@ excludenda_pro() {
 bases_excludendae() {
     # lectiones (2026-10-27): machinula libc hospitis per librum
     # lectionum notat (fabrica-8) - lectiones_ambitus inusitatum
-    echo "piscina chorda chorda_aedificator tabula_dispersa xar lectiones"
+    # codificator_a64, memoria_exsecutabilis_macos (2026-11-12, M5 T6):
+    # officina_effugium trampolinum codificat et aream exsecutabilem
+    # reservat - formae codificatoris plures nondum consumuntur
+    echo "piscina chorda chorda_aedificator tabula_dispersa xar lectiones codificator_a64 memoria_exsecutabilis_macos"
 }

@@ -125,6 +125,27 @@ emittere_asserta() {
     echo "IUNGO_ASSERTA(RTLD_LOCAL == 0x4 && RTLD_GLOBAL == 0x8);"
     echo "IUNGO_ASSERTA(MAP_PRIVATE == 0x0002 && MAP_ANON == 0x1000);"
     echo "IUNGO_ASSERTA(MAP_SHARED == 0x0001);"   # sonus S3a 2026-10-21
+    # memoria_exsecutabilis (officina M5 T4, 2026-11-04)
+    echo "IUNGO_ASSERTA(PROT_EXEC == 0x04 && MAP_JIT == 0x0800);"
+    # effugium officinae (M5 T6, 2026-11-04): sigaction unio,
+    # acervus alternus, contextus signi (pc/fp), sigjmp_buf
+    echo "IUNGO_ASSERTA(OFF(sigaction, sa_sigaction) == 0);"
+    echo "IUNGO_ASSERTA(SA_ONSTACK == 0x0001 && SA_SIGINFO == 0x0040);"
+    echo "IUNGO_ASSERTA(SS_DISABLE == 0x0004);"
+    echo "IUNGO_ASSERTA(MINSIGSTKSZ == 32768 && SIGSTKSZ == 131072);"
+    echo "IUNGO_ASSERTA(sizeof(stack_t) == 24);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_sigaltstack, ss_size) == 8);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_sigaltstack, ss_flags) == 16);"
+    echo "IUNGO_ASSERTA(sizeof(ucontext_t) == 56);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_ucontext, uc_stack) == 8);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_ucontext, uc_mcsize) == 40);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_ucontext, uc_mcontext) == 48);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_mcontext64, __ss) == 16);"
+    echo "IUNGO_ASSERTA(sizeof(struct __darwin_arm_exception_state64) == 16);"
+    echo "IUNGO_ASSERTA(sizeof(struct __darwin_arm_thread_state64) == 272);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_arm_thread_state64, __fp) == 232);"
+    echo "IUNGO_ASSERTA(OFF(__darwin_arm_thread_state64, __pc) == 256);"
+    echo "IUNGO_ASSERTA(sizeof(sigjmp_buf) == 196);"
     echo "IUNGO_ASSERTA(sizeof(struct termios) == 72);"
     while read -r campus off mensura; do
         echo "IUNGO_ASSERTA(OFF(termios, $campus) == $off);"
@@ -268,6 +289,7 @@ PRAEAMBULUM='#define IUNGO2(a,b) a##b
     echo "#include <netinet/in.h>"
     echo "#include <netinet/tcp.h>"
     echo "#include <signal.h>"
+    echo "#include <setjmp.h>"
     echo "#include <unistd.h>"
     echo "#include <dirent.h>"
     echo "#include <sys/mman.h>"

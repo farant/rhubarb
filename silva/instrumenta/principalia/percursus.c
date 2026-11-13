@@ -20,6 +20,7 @@
 #include "xar.h"
 #include "chorda.h"
 #include "tabula_dispersa.h"
+#include "iter_directoria.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_contextus.h"
@@ -29,11 +30,11 @@
 #include "silva_tabulae_c89.h"
 #include "silva_c89_semantica.h"
 #include "silva_lexicon.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens b32 verbosa = FALSUM;
 hic_manens i32 mensura_maxima = 4194304;  /* -omnia = sine tecto */
@@ -135,6 +136,12 @@ _bis_eligenda (
     }
     redde (h % pars == ZEPHYRUM) ? VERUM : FALSUM;
 }
+
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur) */
+hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "results", "node_modules", NIHIL
+};
 
 hic_manens b32
 _praetermittendum (
@@ -428,7 +435,7 @@ _plagulam_totam_legere (
     character* textus;
 
     *mensura_out  = ZEPHYRUM;
-    pl            = fopen(via, "rb");
+    pl            = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -505,45 +512,46 @@ _caput_legere (
     capita_praebita++;
 }
 
+/* ambulatio capitum per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus, in XV instrumenta copiatus): contextus callback */
+nomen structura {
+           Piscina* piscina;
+    TabulaDispersa* visa;
+} CapitaAmbulatio;
+
+hic_manens s32
+_caput_visum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+     CapitaAmbulatio* a = (CapitaAmbulatio*)contextus;
+           character* via;
+           character* titulus;
+
+    via      = chorda_ut_cstr(via_plena, a->piscina);
+    titulus  = chorda_ut_cstr(introitus->titulus, a->piscina);
+    si (via != NIHIL && titulus != NIHIL)
+    {
+        _caput_legere(a->piscina, a->visa, via);
+        (vacuum)titulus;
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _capita_praeparare (
                Piscina* piscina,
         TabulaDispersa* visa,
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    CapitaAmbulatio a;
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_praeparare(piscina, visa, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                _caput_legere(piscina, visa, via_plena);
-            }
-        }
-    }
-    closedir(dir);
+    a.piscina  = piscina;
+    a.visa     = visa;
+    (vacuum)directorium_fontes_ambulare(via, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_visum, &a, piscina);
 }
 
 /* Capita collecta in contextum praebere (basis aut praeparatio) */
@@ -675,7 +683,7 @@ _plagulam_percurrere (
     clock_t c0;
     clock_t c1;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -1047,11 +1055,16 @@ hic_manens b32
 _praetermittendum (
     constans character* titulus)
 {
-    redde (strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "results") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM)
-        ? VERUM : FALSUM;
+    i32 i;
+
+    per (i = ZEPHYRUM; CAPITA_PRAETERMITTENDA[i] != NIHIL; i++)
+    {
+        si (strcmp(titulus, CAPITA_PRAETERMITTENDA[i]) == ZEPHYRUM)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
 }
 
 /* via = directorium vendicatum ('vendor' aut '.../vendor')? Arbores
@@ -1070,40 +1083,67 @@ _est_vendor (
         ? VERUM : FALSUM;
 }
 
+/* ambulatio per directorium_ambulare (iter_directoria - enumeratio in
+ * libro lectionum notatur; olim gyrus opendir manu scriptus). Callback
+ * directoria ipse iudicat (regula vendor parentem poscit): titulus
+ * praetermittendus aut nexus ad directorium aut directorium SUB vendor
+ * -> subarbor non intratur. Tituli occulti a filtro cadunt. */
+hic_manens s32
+_introitus_percursus (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+      Piscina* piscina  = (Piscina*)contextus;
+    character* titulus  = chorda_ut_cstr(introitus->titulus, piscina);
+    character* via      = chorda_ut_cstr(via_plena, piscina);
+
+    si (titulus == NIHIL || via == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    si (_praetermittendum(titulus))
+    {
+        redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+    }
+    si (introitus->genus == INTROITUS_DIRECTORIUM)
+    {
+        memoriae_index mv = strlen(via);
+        memoriae_index mt = strlen(titulus);
+                   b32 sub_vendor;
+
+        si (introitus->est_nexus || mv <= mt)
+        {
+            redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+        }
+        /* parens = via sine '/titulus' */
+        via[mv - mt - I]  = '\0';
+        sub_vendor        = _est_vendor(via);
+        redde sub_vendor ? DIRECTORIUM_AMBULATOR_PRAETERMITTE
+                         : DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    si (_est_fons_c(titulus))
+    {
+        _plagulam_percurrere(via);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _directorium_percurrere (
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    DirectoriumFiltrum  filtrum = directorium_filtrum_omnia();
+               Piscina* piscina = piscina_generare_dynamicum(
+                                      "percursus_ambulatio", 1048576);
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
+    si (piscina == NIHIL)
     {
-        character via_plena[1024];
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            si (!_est_vendor(via))
-            {
-                _directorium_percurrere(via_plena);
-            }
-        }
-        alioquin si (_est_fons_c(introitus->d_name))
-        {
-            _plagulam_percurrere(via_plena);
-        }
+        redde;
     }
-    closedir(dir);
+    (vacuum)directorium_ambulare(via, &filtrum, _introitus_percursus,
+        piscina, piscina);
+    piscina_destruere(piscina);
 }
 
 s32

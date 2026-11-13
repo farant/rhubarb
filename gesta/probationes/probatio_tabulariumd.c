@@ -13,6 +13,7 @@
 #include "tcp.h"
 #include "credo.h"
 #include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -111,7 +112,7 @@ _scaenam_probare (
     /* portum anquirere (ad V secunda) */
     per (k = ZEPHYRUM; k < XXV; k++)
     {
-        FILE* pf = fopen(VIA_PORT, "r");
+        FILE* pf = lectiones_fopen(VIA_PORT, "r");
 
         si (pf != NIHIL)
         {

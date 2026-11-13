@@ -1737,6 +1737,30 @@ s32 principale (vacuum)
         "static void g(void);\n"
         "static int f(int x) { if (0) { g(); } return x; }\n",
         (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, I);
+    /* constans enumerationis 0: plicatur ut litterale - flagrat */
+    _codicem_probare(piscina,
+        "enum { CLAUSA = 0 };\n"
+        "static void g(void);\n"
+        "static int f(int x) { if (CLAUSA) { g(); } return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, I);
+    /* localis constantem enumerationis umbrans: fluxus post scopum
+     * corporis clausum aedificatur - titulus solus constantem
+     * exteriorem inveniebat et ramum plicabat (item 8, 2026-11-07);
+     * nexus typationis localem tenet - tacet */
+    _codicem_probare(piscina,
+        "enum { CLAUSA = 0 };\n"
+        "static void g(void);\n"
+        "static int f(int x) { int CLAUSA = x;"
+        " if (CLAUSA) { g(); } return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
+    /* idem in condicione ansae (scopus interior per) */
+    _codicem_probare(piscina,
+        "enum { CLAUSA = 0 };\n"
+        "static void g(void);\n"
+        "static int f(int x) { int i; for (i = 0; i < x; i++)"
+        " { int CLAUSA = i; while (CLAUSA) { g(); CLAUSA--; } }"
+        " return x; }\n",
+        (s32)EXAMEN_CODEX_SENTENTIA_INATTINGIBILIS, ZEPHYRUM);
 
 
     /* ==================================================

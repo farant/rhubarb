@@ -1026,8 +1026,9 @@ try:
     _argv_g = open(_gradus_log).read().splitlines()
     credo(_argv_g == ['probare -machina -vis -audit gradus_fictus'],
           'porta gradus: vis/auditus -> probare -vis -audit (%r)' % (_argv_g,))
-    # UMBRA (fabrica-plan-8 T3, decretum Q2): porta compositi umbram
-    # semper ponit nisi vocans modum expresse posuit
+    # MODUS VESTIGII (fabrica-plan-8, decretum 2026-11-10): porta
+    # compositi modum NON ponit (ordinarius fabricae = liber); modus
+    # expressus vocantis hereditatur
     _vest_vetus = os.environ.pop('FABRICA_VESTIGIUM', None)
     open(_gradus_ambitus, 'w').close()
     pg = silva.porta('ficta-g')
@@ -1040,9 +1041,9 @@ try:
         del os.environ['FABRICA_VESTIGIUM']
     else:
         os.environ['FABRICA_VESTIGIUM'] = _vest_vetus
-    credo(_vest == ['umbra'] and _vest_expressum == ['photographia'],
-          'porta gradus: FABRICA_VESTIGIUM=umbra ordinarie, expressum '
-          'servatum (%r, %r)' % (_vest, _vest_expressum))
+    credo(_vest == [''] and _vest_expressum == ['photographia'],
+          'porta gradus: FABRICA_VESTIGIUM ordinarie non positum, '
+          'expressum servatum (%r, %r)' % (_vest, _vest_expressum))
     silva.FABRICA_BIN = _fabrica_gradus('reusus')
     pg = silva.porta('ficta-g')
     credo(pg.sana and '[membra cursa 0/2' in pg.compendium
@@ -3229,6 +3230,35 @@ try:
     credo(err is None and 'NON commissa' in buf.getvalue() and 'build/capsula_x.c' in buf.getvalue(),
           'fabrica: stalum NON commissum nominatur, non obstat')
     silva.VIAE_COMMISSAE = lambda viae: set(viae)
+    # CUSTODIA MEMORABILIUM (2026-11-11): 'RECENS' cum causa 'MEMORIA
+    # NEGATA' et exitu 0 - olim tacite pergebat; nunc obstat, etiam
+    # artificio NON commisso (declaratio fracta, non staleness)
+    _mn = ('IUDICIUM\tRECENS\tbuild/capsula_x.c\tMEMORIA NEGATA - lectiones'
+           ' non declaratae (declara <ingressus>): res/y.txt\n'
+           'SUMMA\t1\t0\t0\t0\t0\tplenus\n')
+    for _titulus, _commissae in (('commissum', lambda viae: set(viae)),
+                                 ('NON commissum', lambda viae: set())):
+        silva.FABRICA_BIN = _fabrica_ficta(0, _mn)
+        silva.VIAE_COMMISSAE = _commissae
+        err = None
+        try:
+            with contextlib.redirect_stdout(io.StringIO()):
+                silva._fabricam_exigere(['lib/a.c'])
+        except silva.SilvaError as ex:
+            err = str(ex)
+        credo(err is not None and 'DECLARATIO FRACTA' in err
+              and 'build/capsula_x.c' in err and 'res/y.txt' in err,
+              'fabrica: MEMORIA NEGATA (exitus 0, %s) obstat' % _titulus)
+    silva.VIAE_COMMISSAE = lambda viae: set(viae)
+    # causa 'memoria' (memoria accepta) non obstat
+    silva.FABRICA_BIN = _fabrica_ficta(0, 'IUDICIUM\tRECENS\tbuild/capsula_x.c\tmemoria\nSUMMA\t1\t0\t0\t0\t0\tplenus\n')
+    err = None
+    try:
+        with contextlib.redirect_stdout(io.StringIO()):
+            silva._fabricam_exigere(['lib/a.c'])
+    except silva.SilvaError as ex:
+        err = str(ex)
+    credo(err is None, 'fabrica: RECENS per memoriam non obstat')
     # bin/fabrica deest: MONITUM, non obstat (clonus recens)
     silva.FABRICA_BIN = os.path.join(T, 'fabrica_nusquam')
     buf = io.StringIO()

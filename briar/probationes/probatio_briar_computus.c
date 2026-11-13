@@ -39,7 +39,7 @@ _plagulam_legere (
     longus mensura;
       i8* buffer;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -233,7 +233,7 @@ _aurum_conferre (
     }
 
     imprimere("  aurum: %s\n", f->via_auri);
-    aurum = fopen(f->via_auri, "r");
+    aurum = lectiones_fopen(f->via_auri, "r");
     si (aurum == NIHIL)
     {
         imprimere("  FRACTA: aurum absens - primum: COMPUTUS_SCRIBERE=1\n");

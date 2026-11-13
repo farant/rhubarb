@@ -591,7 +591,7 @@ _plagulam_legere (
     constans character* via,
                    i32* mensura_out)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura_l;
     character* textus;
 

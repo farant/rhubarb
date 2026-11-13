@@ -113,6 +113,67 @@ machinula_currere (
     Machinula* machinula,
        chorda  titulus_functionis);
 
+/* M5 T6: functionem nominatam in signum NATIVUM vertit - vocationes
+ * eius (directae et per monstratorem) ad introitum datum per
+ * officina_effugium eunt; FALSUM si titulus ignotus aut non functio.
+ * Vocans codicem ad introitum iam scripsit (officina_effugium_parare
+ * + area). Argumenta: scalaria registrorum solum, ex typis loci
+ * vocationis (integra in x, f32/f64 in d); aggregata, %reditus,
+ * variadicae et plura quam VIII classis unius -> halitus VITIUM
+ * nominans. Saltus aut vitium codicis nativi -> halitus VITIUM;
+ * machinula post halitum iterum utilis. Functio principalis nativa:
+ * aperire eam statim perficit (FALSUM, halitus BENE - non gradibilis). */
+b32
+machinula_nativum_ponere (
+    Machinula* machinula,
+       chorda  titulus_functionis,
+       vacuum* introitus);
+
+/* M5 T7: functionem nominatam per dorsum nativum compilat et in
+ * NATIVAM vertit (dorsum machinulae proprium, primo usu creatum;
+ * officina_effugium paratur). FALSUM + causa nominata si dorsum
+ * recusat - functio interpretata manet et currit ut ante. Iam
+ * nativa: VERUM. Halitus codicis compilati (sistere, divisio) idem
+ * ac interpretati sunt: genus, nuntius, positio inspecta.
+ * Dorsum UNUM vivum per processum (area una): machinula altera
+ * compilans codicem prioris superscribit. */
+b32
+machinula_nativum_compilare (
+    Machinula* machinula,
+       chorda  titulus_functionis,
+       chorda* causa_out);
+
+/* M5 T8: pons publicus (D11). Aedificata = functiones libc quas
+ * machinula codici interpretato praebet. PURUM: pons statum
+ * machinulae non tangit - dorsum functionem libc ipsam vocat
+ * (inscriptio). Cum statu (malloc in regione, printf per ansas, errno
+ * in cella, recusationes sessionis): dorsum machinula_pons_nativus
+ * vocat. */
+s32
+machinula_aedificatum_quaerere (
+    chorda titulus);                 /* index; -I si ignotum */
+b32
+machinula_aedificatum_purum (
+    s32 aedificatum);
+vacuum*
+machinula_aedificatum_inscriptio (
+    s32 aedificatum);                /* purum: functio libc; NIHIL */
+
+/* pons: codex nativus aedificatum cum statu vocat - argumenta verba
+ * canonica LXIV (f64 ut figura bitorum), pc et fp vocantis (halitus
+ * positionem inde sumit). Machinula currens ex locello statico, quem
+ * machinula ipsa circa omnem vocationem nativam ponit. */
+s64
+machinula_pons_nativus (
+               s64  aedificatum,
+      constans i64* argumenta,
+               s64  numerus,
+    memoriae_index  pc,
+    memoriae_index  fp);
+vacuum
+machinula_nativum_machinulam_ponere (
+    Machinula* machinula);
+
 /* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
  * aperire = status purgatus + tabulatum primum (VERUM si paratum);
  * gradus = instructio UNA (VERUM = pergendum); pergere = usque ad

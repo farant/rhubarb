@@ -23,6 +23,7 @@
 #include "silva_commissio.h"
 #include "silva_parsare.h"
 #include "silva_c89_oraculum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -35,7 +36,7 @@ _plagulam_legere (
     character* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     si (fseek(pl, 0L, SEEK_END) != ZEPHYRUM)
     { fclose(pl); redde NIHIL;

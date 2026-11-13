@@ -341,3 +341,45 @@ After F1 (one walk per unit), `_affigere` still walked every unit's whole subtre
 - 27 are body statements (declaratio | *sententia-expressionis).
 
 The semantic walk is canonical (`_elementum_ambulare` goes through `_canonicum`; data flow uses `_lectio_canonica`), so nothing is typed twice. Generic walkers that enter both readings: this file's `_extensiones_valoris` (min/max, harmless), `_lexema_primum` and `_signum_nodorum` (harmless), percursus `_typedefs_numerare` (statistic; no fork kind carries a typedef), and `_declaratorem_fn_invenire`, which descends in list order, not by canonica. Ambiguities ahead of a function declarator, corpus-wide: 0, so it can't pick the wrong reading today, but that holds by observation, not by construction. Ledger question 01M6MXQK closed with the numbers.
+
+## 2026-11-06 — annotation collection census (measurement only)
+
+The main-walk profile's "annotation collection" bucket (14.9 G, one lazy call per user file: `_commenta_pigra` + `silva_annotationes_ex_commentis`) split by a phase probe (scratchpad s18/probe; report identical to stock). The first probe timed every comment read, which added 1.4 M timer pairs (~11 k instructions each, +15.6 G, exactly the probe-minus-stock gap); the numbers below are corrected for that.
+- `_commenta_pigra` (the shared comment table): **9.1 G**. It visits all 26.0 M stream tokens (avg 8.3 k per file, mostly headers), 76.5 M `_commenta_lexematis` calls over 58.5 M trivia, to find 1.39 M comments. The standarda site check runs 124.7 M times (token + every trivium, on every new radix); 21.1 M of those are main-file items and the whole tree records **34** sites. Cost is spread thin (~350 instructions per token: radix, out-of-line trivia accessors, site checks), no single hot spot.
+- placement (`_affigere`, 1,706 files with annotations): **5.1 G**: extent tables 3.0 G (a second full token scan, radix + linear triple search per token), annotation x unit loop 2.0 G (11.3 M iterations, ~180 instructions each through `xar_obtinere`).
+- comment reading: prose rejection ~230 instructions per comment (~0.3 G); STML parsing of the 18,218 real annotations ~0.1 G; dedup 5.7 M comparisons, negligible.
+- Annotations: 18,218, of which 16,205 come from headers (contracts read header annotations' placement, so placement can't be limited to the main file). Max 128 per file, units max 2,305.
+- Facts for a fix: trivia arrays are written ONLY through the four silva_token.c setters (materia_token_trivia_*_ponere); the lexer marks non-C89 standard only on `//` comment trivia; SilvaTokenCauda has 3 bytes of padding after `standard`.
+
+## 2026-11-06 — item 5a: placement reads only the annotation's own source
+
+`_affigere` looked up each annotation against EVERY unit (11.3 M iterations through `xar_obtinere`), and the extent scan recorded a (fons, min, max) triple for every source a unit touched. But placement only ever reads the triple for the annotation's own source. Now:
+- `_fontes_signare` marks the sources that carry an annotation (byte map up to the largest fons; a negative fons or a failed allocation means "all sources", as before);
+- `_extensionem_notare` skips tokens whose radix source is unmarked, so the tables hold only triples that can be read (most units now have none);
+- `_extensiones_planare` copies the triples into one flat array with each triple's unit index; triples are in unit order and a unit has at most one triple per source, so scanning the flat array and keeping only `e->fons == a->fons_index` visits exactly the units the old loop accepted, in the same order;
+- `_unitatem_iudicare` holds the INTERIOR/SUPRA rule once, for the table path and the allocation-failure path (old per-unit loop kept).
+
+Checked by a whole-tree differential (HEAD's collector compiled under renamed symbols, both run on the same comment lists, every user file): 18,218 annotations, fons/offset/modus/unitas/parsata identical (2,608 INTERIOR, 15,610 SUPRA). Differential plant: empty source map -> all 18,218 differ. Suite plants: empty map -> annotationes red (SUPRA case); wrong unit index -> red (two-source case). Measured (one timer around the collector, HEAD vs new, same session): collector 5.88 -> 3.55 G.
+
+**Tried and set aside: a "trivia carry a comment" token flag** (patch kept in scratchpad s18/pars1_vexillum.patch). Exact (four setters + lazy compute for the STML reader, which writes trivia directly through `_trivia_legere`), differential-clean, plants red. But it doesn't pay: computing it eagerly in the setters cost the lexer about what it saved in `_commenta_pigra` (9.2 -> 8.0 G there; whole run unchanged within noise), and computing it lazily made `_commenta_pigra` slower (9.7 G). Reading each trivium's `standard` costs as much as the walk it replaces.
+
+**Where `_commenta_pigra` really spends:** subtraction variants (token loop only 5.6 G; + radix 6.0; + comment calls 7.7; full 8.0) put ~5.6 G in the DIRECTIVE-LINE loop: 11.2 M directive lines, 45.9 M tokens per run (vs 26 M stream tokens), of which only 160 k lines / 673 k tokens are in the main file. Header `#define` lines are walked again in every file that includes them; for them standarda sites can't fire (main file only), only comments matter (154 k directive comments in all). A per-line summary recorded when the expander consumes the line would let the walk skip them; that's an API addition to SilvaParsura, proposed separately.
+
+## 2026-11-06 — item 5b: the comment table walks only the directive lines that can matter
+
+`_commenta_pigra`'s directive loop walked all 11.2 M directive lines (45.9 M tokens) per run, 98.6% of them header `#define` lines re-walked in every including file. For a header line only comments matter (standarda sites are main-file only).
+
+**Two designs that didn't pay, measured before this one:**
+- per-line notes computed in the expander by walking each line's tokens and trivia: comment table 9.2 -> 5.3 G, but the notes cost +3.7 G (variant with notes computed but ignored: run +3.7 G). A wash: the walk moved instead of disappearing.
+- the same with the lexer bit (below) but a dense note per line: run -2.3 G; the remaining cost was the per-line check over 11.2 M notes (~1.7 G).
+
+**What shipped:**
+- the lexer (`silva_spatia_attachere`) tracks the first and last comment in each pending trivia run and sets `SILVA_TOKEN_COMMENTUM_LEXATUM` (bit IV of `MateriaToken.vexilla`; materia_token.h now reserves bits >= IV for the front end) on whichever side received one. It already reads every trivium's genus there, so the cost is two compares per trivium.
+- `_directivam_capere` copies the line and, in the same loop, reads that bit and `fons_index` per token; it records the line's index in `exp->directivae_notandae` if a token carries the bit, the line mixes sources, or the line's source is `exp->fons_capturae` (the source of the token list given to `silva_expansio_directivas_processare`). Parsare hands the list to `parsura->directivae_notandae` (last field, mirrored in silva.h) only when `fons_capturae == fons_princeps`; otherwise NIHIL = walk every line.
+- `_commenta_pigra` walks only listed lines, keeping each line's own index for standarda sites.
+
+**Why it's exact by construction:** directive lines are slices of `silva_lexare` output (both capture sites), so every token is origin FONS (its own radix), its trivia were attached once by the lexer (the bit's only writer; the setters don't touch it, documented in silva_token.h), and the trivia share the token's source. An unlisted line therefore has no comment trivium and no token or trivium in the main file: it adds nothing to the comment lists and no standarda site.
+
+**Checked:** whole-tree differential (HEAD's comment table beside the new one, every user file): comment lists, 34 standarda sites and 18,218 annotation placements identical; 287,549 of 11.19 M lines listed; soundness counters walking the trivia of every UNLISTED line: comments 0, main-file tokens or trivia 0; radix != token 0; mixed-source lines 0. Differential plant (lexer misses the prior side): 2,679 comment lists differ and 48,992 unlisted lines carry a comment. Suite plants 5/5 red (lexer prior side, lexer next side, expander ignores the bit, parsare drops the list, main lines unlisted); new tests: lexema "vexillum commenti lexati" (both sides of the newline split, leading comment before the first token), semantica "lineae directivae capitis" (listed indices exactly 0, 2, 3, 5 of 6; collector comparison with header comments above and after a `#define`).
+
+**Measured** (HEAD vs new, same session, three runs each): comment table 9.20 -> 4.11 G; `percursus -semantica` 350.42 -> 346.44 G (-4.0 G). Report identical.

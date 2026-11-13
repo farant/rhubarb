@@ -29,6 +29,14 @@ interior constans CellaNota CELLAE_NOTAE[] = {
 };
 #define CELLAE_NOTAE_NUMERUS 4
 
+/* signatura prima visa per symbolum globale (B4): externum cum
+ * signatura aut definitio (parametra functionis); NIHIL ambo =
+ * nondum visa */
+nomen structura {
+    constans MedullaSignatura* signatura;
+      constans MedullaFunctio* functio;
+} ConexioSignaturaVisa;
+
 structura Conexio {
            Piscina* piscina;
              Regio* regio;
@@ -38,12 +46,14 @@ structura Conexio {
                Xar* translationes;     /* s32* (una per modulum) */
                Xar* functiones_nexae;  /* ConexioFunctioNexa valore */
                Xar* decipulae;         /* chorda valore (tituli) */
-               b32  nexum;
-            chorda  querela;
-            chorda  querela_symbolum;
-               i32  numerus_fracturarum;
-               i32  numerus_datorum;
-               i32  numerus_cellarum;
+               Xar* signaturae_visae;  /* ConexioSignaturaVisa,
+                                        * parallela symbolis */
+               b32 nexum;
+            chorda querela;
+            chorda querela_symbolum;
+               i32 numerus_fracturarum;
+               i32 numerus_datorum;
+               i32 numerus_cellarum;
 };
 
 
@@ -102,6 +112,17 @@ _globale_internare (
     symbolum->modulus_index  = -I;
     symbolum->index_localis  = -I;
     symbolum->sedes          = NIHIL;
+    {
+        ConexioSignaturaVisa* visa =
+            xar_addere(conexio->signaturae_visae);
+
+        si (visa == NIHIL)
+        {
+            redde -I;
+        }
+        visa->signatura  = NIHIL;
+        visa->functio    = NIHIL;
+    }
 
     si (!tabula_dispersa_inserere(conexio->index_titulorum,
         symbolum->titulus,
@@ -110,6 +131,73 @@ _globale_internare (
         redde -I;
     }
     redde index;
+}
+
+
+/* ==================================================
+ * Signaturae (B4): externa et definitiones concordare debent
+ * ================================================== */
+
+interior i32
+_visae_numerus (
+    constans ConexioSignaturaVisa* visa)
+{
+    redde (visa->signatura != NIHIL)
+        ? xar_numerus(visa->signatura->parametra)
+        : xar_numerus(visa->functio->parametra);
+}
+
+interior constans MedullaTypusLiminis*
+_visae_limen (
+    constans ConexioSignaturaVisa* visa,
+                              i32  k)
+{
+    si (visa->signatura != NIHIL)
+    {
+        redde (constans MedullaTypusLiminis*)xar_obtinere(
+            visa->signatura->parametra, k);
+    }
+    redde &((constans MedullaParametrum*)xar_obtinere(
+        visa->functio->parametra, k))->limen;
+}
+
+interior b32
+_visae_concordant (
+    constans ConexioSignaturaVisa* a,
+    constans ConexioSignaturaVisa* b)
+{
+    s32 reditus_a = (a->signatura != NIHIL)
+        ? a->signatura->typus_reditus : a->functio->typus_reditus;
+    s32 reditus_b = (b->signatura != NIHIL)
+        ? b->signatura->typus_reditus : b->functio->typus_reditus;
+    b32 variadica_a = (a->signatura != NIHIL)
+        ? a->signatura->est_variadica : a->functio->est_variadica;
+    b32 variadica_b = (b->signatura != NIHIL)
+        ? b->signatura->est_variadica : b->functio->est_variadica;
+    i32 n = _visae_numerus(a);
+    i32 k;
+
+    si (   reditus_a               != reditus_b
+        || (variadica_a != FALSUM) != (variadica_b != FALSUM)
+        || n                       != _visae_numerus(b))
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < n; k++)
+    {
+        constans MedullaTypusLiminis* la = _visae_limen(a, k);
+        constans MedullaTypusLiminis* lb = _visae_limen(b, k);
+
+        si (   la->typus               != lb->typus
+            || la->magnitudo_octetorum != lb->magnitudo_octetorum
+            || la->hfa_typus           != lb->hfa_typus
+            || (la->est_reditus != FALSUM)
+                != (lb->est_reditus != FALSUM))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
 }
 
 
@@ -144,8 +232,11 @@ conexio_creare (
     conexio->functiones_nexae = xar_creare(piscina,
         (i32)magnitudo(ConexioFunctioNexa));
     conexio->decipulae = xar_creare(piscina, (i32)magnitudo(chorda));
+    conexio->signaturae_visae = xar_creare(piscina,
+        (i32)magnitudo(ConexioSignaturaVisa));
 
     si (   conexio->moduli == NIHIL || conexio->symbola == NIHIL
+        || conexio->signaturae_visae == NIHIL
         || conexio->index_titulorum == NIHIL
         || conexio->translationes == NIHIL
         || conexio->functiones_nexae == NIHIL
@@ -211,6 +302,48 @@ conexio_modulum_addere (
                 redde FALSUM;
             }
             translatio[i] = globale;
+
+            /* signatura: externum typatum aut definitio functionis
+             * contra primam visam (B4) */
+            {
+                ConexioSignaturaVisa  nova;
+                ConexioSignaturaVisa* visa = xar_obtinere(
+                    conexio->signaturae_visae, (i32)globale);
+
+                nova.signatura  = NIHIL;
+                nova.functio    = NIHIL;
+                si (   localis->genus     == MEDULLA_SYMBOLUM_EXTERNUM
+                    && localis->signatura >= ZEPHYRUM)
+                {
+                    nova.signatura = (constans MedullaSignatura*)
+                        xar_obtinere(modulus->signaturae,
+                            (i32)localis->signatura);
+                }
+                alioquin si (localis->genus
+                             == MEDULLA_SYMBOLUM_FUNCTIO)
+                {
+                    nova.functio = *(MedullaFunctio**)xar_obtinere(
+                        modulus->functiones, (i32)localis->index);
+                }
+                si (nova.signatura != NIHIL || nova.functio != NIHIL)
+                {
+                    si (   visa->signatura == NIHIL
+                        && visa->functio   == NIHIL)
+                    {
+                        *visa = nova;
+                    }
+                    alioquin si (!_visae_concordant(visa, &nova))
+                    {
+                        _querelam_ponere(conexio,
+                            "signaturae discordes symboli");
+                        conexio->querela_symbolum = ((ConexioSymbolum*)
+                            xar_obtinere(conexio->symbola,
+                                (i32)globale))->titulus;
+                        conexio->numerus_fracturarum  += I;
+                        fractum                       = VERUM;
+                    }
+                }
+            }
 
             si (localis->genus == MEDULLA_SYMBOLUM_EXTERNUM)
             {

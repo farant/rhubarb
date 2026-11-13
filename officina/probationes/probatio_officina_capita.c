@@ -29,11 +29,12 @@
 #include "credo.h"
 #include "piscina.h"
 #include "xar.h"
+#include "chorda.h"
+#include "iter_directoria.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 
 /* sedes profunditatis 0 cum repositione (sectio IV) */
 #define SEDES_MAXIMAE  XVI
@@ -127,15 +128,44 @@ _radix (vacuum)
     redde r != NIHIL ? r : ".";
 }
 
-interior b32
-_praetermittendum (
-    constans character* titulus)
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur) */
+interior constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "results", "node_modules", NIHIL
+};
+
+/* ambulatio per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus) */
+nomen structura {
+               Piscina* piscina;
+                   Xar* capita;
+    constans character* radix;
+} CapitaAmbulatio;
+
+interior s32
+_caput_collectum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
 {
-    redde (strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "results") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM)
-        ? VERUM : FALSUM;
+        CapitaAmbulatio*  a    = (CapitaAmbulatio*)contextus;
+              character*  via  = chorda_ut_cstr(via_plena, a->piscina);
+     constans character*  relativa;
+     constans character** sedes;
+
+    (vacuum)introitus;
+    si (via == NIHIL)
+    {
+        redde DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    relativa  = via + strlen(a->radix) + I;
+    sedes     = (constans character**)xar_addere(a->capita);
+    si (sedes != NIHIL)
+    {
+        *sedes = relativa;
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
 }
 
 /* capita sub radice colligere: viae RADICI-RELATIVAE in piscinam */
@@ -146,58 +176,13 @@ _capita_colligere (
     constans character* radix,
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    CapitaAmbulatio a;
 
-    si (dir == NIHIL)
-    {
-        redde;
-    }
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (   introitus->d_name[ZEPHYRUM] == '.'
-            || _praetermittendum(introitus->d_name))
-        {
-            perge;
-        }
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_colligere(piscina, capita, radix, via_plena);
-            perge;
-        }
-        m = strlen(introitus->d_name);
-        si (   m >= III && introitus->d_name[m - II] == '.'
-            && introitus->d_name[m - I] == 'h')
-        {
-            constans character* relativa = via_plena
-                + strlen(radix) + I;
-                     character*  copia;
-            constans character** sedes;
-
-            copia = (character*)piscina_allocare(piscina,
-                strlen(relativa) + I);
-            si (copia == NIHIL)
-            {
-                perge;
-            }
-            strcpy(copia, relativa);
-            sedes = (constans character**)xar_addere(capita);
-            si (sedes != NIHIL)
-            {
-                *sedes = copia;
-            }
-        }
-    }
-    closedir(dir);
+    a.piscina  = piscina;
+    a.capita   = capita;
+    a.radix    = radix;
+    (vacuum)directorium_fontes_ambulare(via, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_collectum, &a, piscina);
 }
 
 /* primum caput basename dati ordine dato */

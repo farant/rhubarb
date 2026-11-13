@@ -42,6 +42,7 @@ _instructio (
     instructio.destinatio      = destinatio;
     instructio.extra_index     = -I;
     instructio.extra_numerus   = ZEPHYRUM;
+    instructio.argumenta_fixa  = -I;
     instructio.a               = a;
     instructio.b               = b;
     instructio.c               = medulla_op_nihil();
