@@ -19,9 +19,15 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
+#include <pthread.h>
+#include <libkern/OSCacheControl.h>
 #include <math.h>
 #include <time.h>
 #include <sys/time.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <stddef.h>
+#include <sys/ucontext.h>
 
 /* ================= officina.h (verbatim) ================= */
 /* officina.h - Medulla: IR registrorum linearis (interfacies publica)
@@ -5010,6 +5016,16 @@ officina_chorda_aedificator_appendere_chorda (
     OfficinaChordaAedificator* aedificator,
                OfficinaChorda  s);
 
+
+/* ==================================================
+ * Appendere - Numeri (Integri)
+ * ================================================== */
+
+static b32
+officina_chorda_aedificator_appendere_s32 (
+    OfficinaChordaAedificator* aedificator,
+                  s32  n);
+
 static b32
 officina_chorda_aedificator_appendere_i32 (
     OfficinaChordaAedificator* aedificator,
@@ -5518,6 +5534,227 @@ lectiones_stat (
 
 #endif /* LECTIONES_H */
 
+/* ================= ex include/codificator_a64.h ================= */
+/* codificator_a64.h - codificator instructionum A64 (AArch64).
+ *
+ * Instructio structa -> verbum XXXII bitorum. Nulla approximatio
+ * tacita: forma, latitudo aut immediatum extra fines -> FALSUM.
+ * Registrum XXXI: SP in ADD/SUB_IMM et in basi memoriae (rn),
+ * aliter XZR/WZR.
+ */
+#ifndef CODIFICATOR_A64_H
+#define CODIFICATOR_A64_H
+
+/* formae; index stabilis (aurum.tsv eum nominat) */
+nomen enumeratio {
+    CODIFICATOR_A64_ADD_IMM = 0, CODIFICATOR_A64_SUB_IMM,
+    CODIFICATOR_A64_SUBS_IMM,       /* cmp */
+    CODIFICATOR_A64_ADD_REG, CODIFICATOR_A64_SUB_REG,
+    CODIFICATOR_A64_ADDS_REG, CODIFICATOR_A64_SUBS_REG,
+    CODIFICATOR_A64_AND_REG, CODIFICATOR_A64_ORR_REG,
+    CODIFICATOR_A64_EOR_REG, CODIFICATOR_A64_ORN_REG,
+    CODIFICATOR_A64_AND_IMM, CODIFICATOR_A64_ORR_IMM,
+    CODIFICATOR_A64_EOR_IMM,        /* bitmask */
+    CODIFICATOR_A64_LSLV, CODIFICATOR_A64_LSRV,
+    CODIFICATOR_A64_ASRV,
+    CODIFICATOR_A64_UBFM, CODIFICATOR_A64_SBFM,
+                                    /* lsl/lsr/asr imm, sxt/uxt */
+    CODIFICATOR_A64_MADD, CODIFICATOR_A64_MSUB,
+    CODIFICATOR_A64_SDIV, CODIFICATOR_A64_UDIV,
+    CODIFICATOR_A64_MOVZ, CODIFICATOR_A64_MOVK,
+    CODIFICATOR_A64_MOVN,
+    CODIFICATOR_A64_CSINC,          /* cset */
+    CODIFICATOR_A64_CSEL,
+    CODIFICATOR_A64_LDR_IMM, CODIFICATOR_A64_STR_IMM,
+    CODIFICATOR_A64_LDRS_IMM,       /* ldrsb/ldrsh/ldrsw, ad X */
+    CODIFICATOR_A64_LDR_REG, CODIFICATOR_A64_STR_REG,
+    CODIFICATOR_A64_LDP, CODIFICATOR_A64_STP,
+    CODIFICATOR_A64_LDR_FP_IMM, CODIFICATOR_A64_STR_FP_IMM,
+    CODIFICATOR_A64_LDP_FP, CODIFICATOR_A64_STP_FP,
+                                    /* s/d; d8-d15 servandi */
+    CODIFICATOR_A64_ADR, CODIFICATOR_A64_ADRP,
+    CODIFICATOR_A64_B, CODIFICATOR_A64_BL,
+    CODIFICATOR_A64_B_COND,
+    CODIFICATOR_A64_CBZ, CODIFICATOR_A64_CBNZ,
+    CODIFICATOR_A64_BR, CODIFICATOR_A64_BLR,
+    CODIFICATOR_A64_RET,
+    CODIFICATOR_A64_FADD, CODIFICATOR_A64_FSUB,
+    CODIFICATOR_A64_FMUL, CODIFICATOR_A64_FDIV,
+    CODIFICATOR_A64_FNEG,
+    CODIFICATOR_A64_FCMP, CODIFICATOR_A64_FCMP_ZERO,
+    CODIFICATOR_A64_FMOV_REG, CODIFICATOR_A64_FMOV_IMM,
+    CODIFICATOR_A64_FMOV_GEN,       /* x<->d, w<->s */
+    CODIFICATOR_A64_FCVT,           /* s<->d */
+    CODIFICATOR_A64_SCVTF, CODIFICATOR_A64_UCVTF,
+    CODIFICATOR_A64_FCVTZS, CODIFICATOR_A64_FCVTZU,
+    CODIFICATOR_A64_BRK,
+    CODIFICATOR_A64_NUMERUS
+} CodificatorA64Forma;
+
+/* condiciones; valores = codices A64 */
+nomen enumeratio {
+    CODIFICATOR_A64_EQ = 0, CODIFICATOR_A64_NE,
+    CODIFICATOR_A64_HS, CODIFICATOR_A64_LO,
+    CODIFICATOR_A64_MI, CODIFICATOR_A64_PL,
+    CODIFICATOR_A64_VS, CODIFICATOR_A64_VC,
+    CODIFICATOR_A64_HI, CODIFICATOR_A64_LS,
+    CODIFICATOR_A64_GE, CODIFICATOR_A64_LT,
+    CODIFICATOR_A64_GT, CODIFICATOR_A64_LE,
+    CODIFICATOR_A64_AL
+} CodificatorA64Conditio;
+
+/* modi LDP/STP (in campo translatio) */
+nomen enumeratio {
+    CODIFICATOR_A64_OFFSET = 0,     /* [rn, #imm] */
+    CODIFICATOR_A64_ANTE,           /* [rn, #imm]! */
+    CODIFICATOR_A64_POST            /* [rn], #imm */
+} CodificatorA64Modus;
+
+/* Campi per formam (praeter communia):
+ *   UBFM/SBFM        immediatum = immr, translatio = imms
+ *   *_IMM logicae    immediatum = exemplar bitorum crudum
+ *   MOVZ/MOVK/MOVN   translatio = LSL (0, 16, 32, 48)
+ *   FMOV_IMM         immediatum = imm8 (vide fmov_immediatum)
+ *   FMOV_GEN         translatio 0: generale -> FP; I: FP -> generale
+ *   FCVT             latitudo = destinationis
+ *   SCVTF .. FCVTZU  latitudo = registri generalis, translatio =
+ *                    registri FP (XXXII/LXIV)
+ *   LDP/STP (+FP)    rd = Rt, rm = Rt2, rn = basis
+ *   saltus, ADR      immediatum = distantia in octetis ab
+ *                    instructione ipsa (ADRP: paginae * 4096)
+ */
+nomen structura {
+    s32 forma;
+    s32 latitudo;      /* XXXII/LXIV (W/X; S/D); in memoria:
+                        * octeti (I/II/IV/VIII; FP IV/VIII) */
+    s32 rd, rn, rm, ra;
+    s64 immediatum;    /* imm/offset/saltus in octetis */
+    s32 translatio;    /* quantitas LSL; LDP/STP: modus */
+    s32 conditio;      /* CodificatorA64Conditio */
+} CodificatorA64Instructio;
+
+/* verbum unius instructionis; FALSUM si extra fines */
+static b32
+codificator_a64_codificare (
+    constans CodificatorA64Instructio* instructio,
+                                  i32* verbum_out);
+
+/* algorithmi publici */
+
+/* valor: exemplar bitorum crudum; FALSUM si non repraesentabile
+ * (0 et ~0 numquam) */
+static b32
+codificator_a64_bitmask (
+    i64  valor,
+    s32  latitudo,
+    i32* n_immr_imms_out);
+
+/* emissor cum notis saltuum */
+nomen structura CodificatorA64 CodificatorA64;
+
+static CodificatorA64*
+codificator_a64_creare (
+    OfficinaPiscina* piscina);
+
+static b32
+codificator_a64_emittere (
+                       CodificatorA64* c,
+    constans CodificatorA64Instructio* instructio);
+
+static s32
+codificator_a64_notam_creare (
+    CodificatorA64* c);
+
+static vacuum
+codificator_a64_notam_ponere (
+    CodificatorA64* c,
+               s32  nota);
+
+/* B, BL, B_COND, CBZ, CBNZ, ADR ad notam */
+static b32
+codificator_a64_saltum_emittere (
+                       CodificatorA64* c,
+    constans CodificatorA64Instructio* instructio,
+                                  s32  nota);
+
+/* notas resolvit; FALSUM + causa si nota non posita aut saltus
+ * extra fines */
+static b32
+codificator_a64_finire (
+    CodificatorA64* c,
+            OfficinaChorda* causa_out);
+
+static i32
+codificator_a64_numerus (
+    constans CodificatorA64* c);
+
+static constans i32*
+codificator_a64_verba (
+    constans CodificatorA64* c);
+
+#endif /* CODIFICATOR_A64_H */
+
+/* ================= ex include/memoria_exsecutabilis.h ================= */
+/* memoria_exsecutabilis.h - memoria in qua codex nativus scribitur
+ * et exsequitur (W^X)
+ *
+ * Reservatio una ad inscriptionem optatam (MAP_JIT); scriptura per
+ * filum aperitur, sigillatio scripturam claudit ET icache invalidat
+ * uno vocamine (invalidatio oblivioni dari non potest). Inscriptio
+ * optata non data -> refusio, numquam sedes tacite mota (officina:
+ * codex inter se per 'bl' vocat, inscriptiones deterministicae).
+ *
+ * Implementatio: lib/memoria_exsecutabilis_macos.c - SOLA plagula
+ * cum MAP_JIT, pthread_jit_write_protect_np, sys_icache_invalidate.
+ * Stratum independentiae: caput sine systemate.
+ */
+
+#ifndef MEMORIA_EXSECUTABILIS_H
+#define MEMORIA_EXSECUTABILIS_H
+
+nomen structura MemoriaExsecutabilis MemoriaExsecutabilis;
+
+/* Reservatio una ad inscriptio_optata (ZEPHYRUM = quaevis). NIHIL +
+ * causa si systema aliam sedem dat (regio liberatur), si mmap
+ * deficit, aut si mensura non multiplex paginae (XVI KiB). */
+static MemoriaExsecutabilis*
+memoria_exsecutabilis_reservare (
+           OfficinaPiscina* piscina,
+    memoriae_index  inscriptio_optata,
+    memoriae_index  mensura_octetorum,
+            OfficinaChorda* causa_out);
+
+static vacuum*
+memoria_exsecutabilis_basis (
+    constans MemoriaExsecutabilis* m);
+
+static memoriae_index
+memoria_exsecutabilis_mensura (
+    constans MemoriaExsecutabilis* m);
+
+/* scriptura permissa - filo vocanti solum (status per filum). Filius
+ * post fork statum parentis hereditat (apertum manet apertum,
+ * sigillatum sigillatum). */
+static vacuum
+memoria_exsecutabilis_aperire (
+    MemoriaExsecutabilis* m);
+
+/* scriptura clausa + icache invalidata pro [offset, offset+mensura).
+ * FALSUM si intervallum extra regionem (scriptura tamen clauditur,
+ * nihil invalidatur). */
+static b32
+memoria_exsecutabilis_sigillare (
+    MemoriaExsecutabilis* m,
+          memoriae_index  offset,
+          memoriae_index  mensura);
+
+/* regio redditur systemati; m post hoc invalidus */
+static vacuum
+memoria_exsecutabilis_liberare (
+    MemoriaExsecutabilis* m);
+
+#endif /* MEMORIA_EXSECUTABILIS_H */
+
 /* ================= ex officina/fontes/officina_medulla.h ================= */
 /* officina_medulla.h - Medulla: IR registrorum linearis (M1a B)
  *
@@ -5958,6 +6195,9 @@ regio_numerus_liberationum (
 #define CONEXIO_SIGNUM_INTERPRETATUM 1
 #define CONEXIO_SIGNUM_DECIPULA      2
 #define CONEXIO_SIGNUM_AEDIFICATUM   3
+/* NATIVUM (M5 T6): index = inscriptio introitus codicis nativi;
+ * machinula per officina_effugium vocat (machinula_nativum_ponere) */
+#define CONEXIO_SIGNUM_NATIVUM       4
 
 
 /* ==================================================
@@ -6146,6 +6386,22 @@ MachinulaExitus
 machinula_currere (
     Machinula* machinula,
        OfficinaChorda  titulus_functionis);
+
+/* M5 T6: functionem nominatam in signum NATIVUM vertit - vocationes
+ * eius (directae et per monstratorem) ad introitum datum per
+ * officina_effugium eunt; FALSUM si titulus ignotus aut non functio.
+ * Vocans codicem ad introitum iam scripsit (officina_effugium_parare
+ * + area). Argumenta: scalaria registrorum solum, ex typis loci
+ * vocationis (integra in x, f32/f64 in d); aggregata, %reditus,
+ * variadicae et plura quam VIII classis unius -> halitus VITIUM
+ * nominans. Saltus aut vitium codicis nativi -> halitus VITIUM;
+ * machinula post halitum iterum utilis. Functio principalis nativa:
+ * aperire eam statim perficit (FALSUM, halitus BENE - non gradibilis). */
+b32
+machinula_nativum_ponere (
+    Machinula* machinula,
+       OfficinaChorda  titulus_functionis,
+       vacuum* introitus);
 
 /* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
  * aperire = status purgatus + tabulatum primum (VERUM si paratum);
@@ -6365,6 +6621,94 @@ medulla_fluxus_transit_vocationem (
                        s32  index_registri);
 
 #endif /* OFFICINA_MEDULLA_FLUXUS_H */
+
+/* ================= ex officina/fontes/officina_effugium.h ================= */
+/* officina_effugium.h - introitus in codicem nativum et effugium ex eo
+ * (M5 T6; spec C7, D10, D12)
+ *
+ * Machinula functionem NATIVAM per trampolinum universale vocat:
+ * argumenta AAPCS64 in registra et stivam ponuntur, functio vocatur,
+ * x0:x1 et d0-d3 redduntur. Codex nativus qui pergere nequit
+ * (divisio per zephyrum, fines) officina_effugium_salire vocat:
+ * vocatio pendens statim cum EFFUGIUM_SALTUS redit, stiva nativa
+ * relicta. Signum hardware in codice nativo (lectio per monstratorem
+ * nullum, instructio illicita) idem facit cum EFFUGIUM_VITIUM;
+ * processus supervivit. Area codicis una, ad inscriptionem fixam
+ * (codex inter se per 'bl' vocat).
+ *
+ * Status processus globalis: parare semel, piscina propria permanens.
+ */
+
+#ifndef OFFICINA_EFFUGIUM_H
+#define OFFICINA_EFFUGIUM_H
+
+#define OFFICINA_NATIVUM_LOCUS   0x2FFFF0000000UL  /* F19 */
+#define OFFICINA_NATIVUM_MENSURA 0x10000000UL
+
+/* trampolinum [0, OFFICINA_EFFUGIUM_TRAMPOLINUM) areae occupat;
+ * codex vocantium post id scribitur */
+#define OFFICINA_EFFUGIUM_TRAMPOLINUM 0x1000UL
+
+nomen enumeratio {
+    EFFUGIUM_REDDITUM = 0,  /* functio rediit */
+    EFFUGIUM_SALTUS,        /* officina_effugium_salire vocata */
+    EFFUGIUM_VITIUM         /* signum hardware in codice nativo */
+} EffugiumGenus;
+
+nomen structura {
+               s32 genus;
+               s32 signum_systematis;  /* SIGSEGV... (VITIUM) */
+               s64 codex;              /* SALTUS: causa */
+    memoriae_index pc;                 /* VITIUM/SALTUS: positio */
+    memoriae_index fp;
+               i64 x[II];              /* x0:x1 reditus */
+               f64 d[IV];              /* d0-d3 reditus (HFA) */
+} EffugiumFructus;
+
+nomen structura {                      /* argumenta in AAPCS64 */
+    i64  x[VIII];
+    s32  numerus_x;
+    f64  d[VIII];
+    s32  numerus_d;
+    i64* stiva;                        /* verba, iam ordinata */
+    s32  numerus_stivae;
+    i64  x8;                           /* sret > XVI octeti */
+} EffugiumArgumenta;
+
+/* aream reservat, trampolinum scribit et tractatorem signorum
+ * (SIGSEGV, SIGBUS, SIGILL; stiva alterna) installat, semel (vocatio
+ * altera nihil agit, VERUM); FALSUM + causa si quid dari nequit.
+ * Signum extra aream aut sine vocatione pendente ad actionem priorem
+ * it (catena). */
+b32
+officina_effugium_parare (
+    OfficinaPiscina* piscina,
+     OfficinaChorda* causa_out);
+
+/* area codicis; NIHIL ante parare */
+MemoriaExsecutabilis*
+officina_effugium_area (vacuum);
+
+/* quoties tractator signorum installatus est (I post parare, quoties
+ * cumque vocatum) */
+s32
+officina_effugium_installationes (vacuum);
+
+/* functionem ad introitum vocat; genus REDDITUM, SALTUS aut VITIUM */
+EffugiumFructus
+officina_effugium_vocare (
+                        vacuum* introitus,
+    constans EffugiumArgumenta* argumenta);
+
+/* a codice nativo vocatur; numquam redit. Extra vocationem pendentem:
+ * abortus processus (nullus locus ad quem redeat) */
+vacuum
+officina_effugium_salire (
+               s64 codex,
+    memoriae_index pc,
+    memoriae_index fp);
+
+#endif /* OFFICINA_EFFUGIUM_H */
 
 /* ================= ex lib/piscina.c ================= */
 
@@ -7138,6 +7482,29 @@ _appendere_interna (
     redde VERUM;
 }
 
+/* Formata integrum signatum ad buffer
+ * Vocans praebet buffer, debet esse >= 32 bytes (tutus pro s32) */
+interior memoriae_index
+_format_integer_s32 (
+               s32  n,
+                i8* buffer,
+    memoriae_index  capacitas)
+{
+            character cstr[CXXXII];
+                  s32 mensura_signed;
+       memoriae_index mensura;
+
+    mensura_signed = snprintf(cstr, (memoriae_index)magnitudo(cstr),
+        "%d", n);
+    si (mensura_signed < ZEPHYRUM) redde ZEPHYRUM;
+
+    mensura = (memoriae_index)mensura_signed;
+    si (mensura >= capacitas) redde ZEPHYRUM;
+
+    memcpy(buffer, cstr, mensura);
+    redde mensura;
+}
+
 interior memoriae_index
 _format_integer_i32 (
                i32  n,
@@ -7244,6 +7611,27 @@ officina_chorda_aedificator_appendere_chorda (
     si (!aedificator || !s.datum) redde FALSUM;
 
     redde _appendere_interna(aedificator, s.datum, s.mensura);
+}
+
+
+/* ==================================================
+ * Appendere - Numeri
+ * ================================================== */
+
+static b32
+officina_chorda_aedificator_appendere_s32 (
+    OfficinaChordaAedificator* aedificator,
+                  s32  n)
+{
+                i8 buffer[CXXXII];
+    memoriae_index mensura;
+
+    si (!aedificator) redde FALSUM;
+
+    mensura = _format_integer_s32(n, buffer, magnitudo(buffer));
+    si (mensura == ZEPHYRUM) redde FALSUM;
+
+    redde _appendere_interna(aedificator, buffer, mensura);
 }
 
 static b32
@@ -8627,6 +9015,1240 @@ lectiones_stat (
             via);
     }
     redde r;
+}
+
+/* ================= ex lib/codificator_a64.c ================= */
+
+
+    /* ==================================================
+     * Adiumenta
+     * ================================================== */
+
+interior b32
+_registrum (
+    s32 r)
+{
+    redde r >= ZEPHYRUM && r <= XXXI;
+}
+
+/* registra rd, rn, rm (si adhibentur) */
+interior b32
+_registra (
+    constans CodificatorA64Instructio* i,
+                                  b32  cum_rd,
+                                  b32  cum_rn,
+                                  b32  cum_rm)
+{
+    si (cum_rd && !_registrum(i->rd))
+    {
+        redde FALSUM;
+    }
+    si (cum_rn && !_registrum(i->rn))
+    {
+        redde FALSUM;
+    }
+    si (cum_rm && !_registrum(i->rm))
+    {
+        redde FALSUM;
+    }
+    redde VERUM;
+}
+
+interior b32
+_latitudo_integra (
+    s32 latitudo)
+{
+    redde latitudo == XXXII || latitudo == LXIV;
+}
+
+/* bit sf (XXXI) aut typus FP (XXII..XXIII) */
+interior i32
+_sf (
+    s32 latitudo)
+{
+    redde (latitudo == LXIV) ? 0x80000000 : ZEPHYRUM;
+}
+
+interior i32
+_typus_fp (
+    s32 latitudo)
+{
+    redde (latitudo == LXIV) ? 0x00400000 : ZEPHYRUM;
+}
+
+interior i32
+_r (
+    s32 r,
+    s32 locus)
+{
+    redde (i32)r << locus;
+}
+
+/* log2 octetorum (I, II, IV, VIII) aut -I */
+interior s32
+_scala (
+    s32 octeti)
+{
+    commutatio (octeti)
+    {
+        casus I:    redde ZEPHYRUM;
+        casus II:   redde I;
+        casus IV:   redde II;
+        casus VIII: redde III;
+        ordinarius: redde -I;
+    }
+}
+
+/* distantia in octetis -> campus verborum signatus 'bita' latus */
+interior b32
+_saltus (
+    s64  distantia,
+    s32  bita,
+    i32* campus)
+{
+    s64 verba;
+    s64 limes;
+
+    si ((distantia & III) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    verba = distantia / IV;
+    limes = (s64)I << (bita - I);
+    si (verba < -limes || verba >= limes)
+    {
+        redde FALSUM;
+    }
+    *campus = (i32)((i64)verba & (((i64)I << bita) - (i64)I));
+    redde VERUM;
+}
+
+
+    /* ==================================================
+     * Formae per genus
+     * ================================================== */
+
+/* ADD/SUB/SUBS immediatum */
+interior b32
+_arithmetica_immediata (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, VERUM, FALSUM)
+        || i->immediatum < ZEPHYRUM || i->immediatum > 0xFFF
+        || (i->translatio != ZEPHYRUM && i->translatio != XII))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo)
+        | ((i->translatio == XII) ? 0x00400000 : ZEPHYRUM)
+        | ((i32)i->immediatum << X) | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* registrum translatum (LSL): ADD/SUB/ADDS/SUBS/AND/ORR/EOR/ORN */
+interior b32
+_registrum_translatum (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, VERUM, VERUM)
+        || i->translatio < ZEPHYRUM || i->translatio >= i->latitudo)
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo) | _r(i->rm, XVI)
+        | _r(i->translatio, X) | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* AND/ORR/EOR immediatum (bitmask) */
+interior b32
+_logica_immediata (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    i32 triplex;
+
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, VERUM, FALSUM)
+        || !codificator_a64_bitmask((i64)i->immediatum, i->latitudo,
+                &triplex))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo) | (triplex << X)
+        | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* tres registra sine immediato: LSLV/LSRV/ASRV/SDIV/UDIV */
+interior b32
+_tres_registra (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, VERUM, VERUM))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo) | _r(i->rm, XVI)
+        | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* UBFM/SBFM: immediatum = immr, translatio = imms; N = sf */
+interior b32
+_campus_bitorum (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, VERUM, FALSUM)
+        || i->immediatum < ZEPHYRUM
+        || i->immediatum >= (s64)i->latitudo
+        || i->translatio < ZEPHYRUM || i->translatio >= i->latitudo)
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo)
+        | ((i->latitudo == LXIV) ? 0x00400000 : ZEPHYRUM)
+        | ((i32)i->immediatum << XVI) | _r(i->translatio, X)
+        | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* MADD/MSUB */
+interior b32
+_multiplicatio (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, VERUM, VERUM) || !_registrum(i->ra))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo) | _r(i->rm, XVI)
+        | _r(i->ra, X) | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* MOVZ/MOVK/MOVN: translatio = LSL (0..48, gradu XVI) */
+interior b32
+_motus_latus (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, FALSUM, FALSUM)
+        || i->immediatum < ZEPHYRUM || i->immediatum > 0xFFFF
+        || i->translatio < ZEPHYRUM
+        || i->translatio         >= i->latitudo
+        || (i->translatio % XVI) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo)
+        | _r(i->translatio / XVI, XXI)
+        | ((i32)i->immediatum << V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* CSINC/CSEL */
+interior b32
+_electio (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, VERUM, VERUM, VERUM)
+        || i->conditio < ZEPHYRUM
+        || i->conditio > (s32)CODIFICATOR_A64_AL)
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo) | _r(i->rm, XVI)
+        | _r(i->conditio, XII) | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* LDR/STR/LDRS cum offset insignato scalato (12 bita).
+ * basis iam continet magnitudinem si opus est. */
+interior b32
+_memoria_immediata (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  s32  scala,
+                                  i32* verbum)
+{
+    s64 index;
+
+    si (   scala < ZEPHYRUM || !_registra(i, VERUM, VERUM, FALSUM)
+        || i->immediatum < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si ((i->immediatum & (((s64)I << scala) - I)) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    index = i->immediatum >> scala;
+    si (index > 0xFFF)
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | ((i32)index << X) | _r(i->rn, V)
+        | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* LDR/STR [rn, rm, LSL #s]; s = 0 aut scala */
+interior b32
+_memoria_registro (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    s32 scala;
+
+    scala = _scala(i->latitudo);
+    si (scala < ZEPHYRUM || !_registra(i, VERUM, VERUM, VERUM))
+    {
+        redde FALSUM;
+    }
+    si (   i->translatio != ZEPHYRUM
+        && (i->translatio != scala || scala == ZEPHYRUM))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _r(scala, XXX) | _r(i->rm, XVI)
+        | ((i->translatio != ZEPHYRUM) ? 0x1000 : ZEPHYRUM)
+        | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* LDP/STP (generalia et FP): rd = Rt, rm = Rt2, rn = basis */
+interior b32
+_par (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  s32  scala,
+                                  i32* verbum)
+{
+    s64 index;
+    i32 modus;
+
+    si (!_registra(i, VERUM, VERUM, VERUM))
+    {
+        redde FALSUM;
+    }
+    commutatio (i->translatio)
+    {
+        casus CODIFICATOR_A64_OFFSET: modus = 0x01000000; frange;
+        casus CODIFICATOR_A64_ANTE:   modus = 0x01800000; frange;
+        casus CODIFICATOR_A64_POST:   modus = 0x00800000; frange;
+        ordinarius:                   redde FALSUM;
+    }
+    si ((i->immediatum & (((s64)I << scala) - I)) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    index = i->immediatum / ((s64)I << scala);
+    si (index < -LXIV || index > LXIII)
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | modus | (((i32)((i64)index & 0x7F)) << XV)
+        | _r(i->rm, X) | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+/* FADD/FSUB/FMUL/FDIV/FCMP (tres aut duo registra FP) */
+interior b32
+_fp_tria (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  b32  cum_rd,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, cum_rd, VERUM, VERUM))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _typus_fp(i->latitudo) | _r(i->rm, XVI)
+        | _r(i->rn, V) | (cum_rd ? _r(i->rd, 0) : ZEPHYRUM);
+    redde VERUM;
+}
+
+/* FNEG/FMOV_REG/FCMP_ZERO (rd et/aut rn) */
+interior b32
+_fp_duo (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  b32  cum_rd,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_registra(i, cum_rd, VERUM, FALSUM))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _typus_fp(i->latitudo) | _r(i->rn, V)
+        | (cum_rd ? _r(i->rd, 0) : ZEPHYRUM);
+    redde VERUM;
+}
+
+/* SCVTF/UCVTF/FCVTZS/FCVTZU: latitudo = generalis, translatio = FP */
+interior b32
+_conversio (
+    constans CodificatorA64Instructio* i,
+                                  i32  basis,
+                                  i32* verbum)
+{
+    si (   !_latitudo_integra(i->latitudo)
+        || !_latitudo_integra(i->translatio)
+        || !_registra(i, VERUM, VERUM, FALSUM))
+    {
+        redde FALSUM;
+    }
+    *verbum = basis | _sf(i->latitudo) | _typus_fp(i->translatio)
+        | _r(i->rn, V) | _r(i->rd, 0);
+    redde VERUM;
+}
+
+
+    /* ==================================================
+     * Codificare
+     * ================================================== */
+
+static b32
+codificator_a64_codificare (
+    constans CodificatorA64Instructio* instructio,
+                                  i32* verbum_out)
+{
+    constans CodificatorA64Instructio* i;
+                                  i32  campus;
+                                  s32  scala;
+
+    i = instructio;
+    si (i == NIHIL || verbum_out == NIHIL)
+    {
+        redde FALSUM;
+    }
+    commutatio (i->forma)
+    {
+        casus CODIFICATOR_A64_ADD_IMM:
+            redde _arithmetica_immediata(i, 0x11000000, verbum_out);
+        casus CODIFICATOR_A64_SUB_IMM:
+            redde _arithmetica_immediata(i, 0x51000000, verbum_out);
+        casus CODIFICATOR_A64_SUBS_IMM:
+            redde _arithmetica_immediata(i, 0x71000000, verbum_out);
+
+        casus CODIFICATOR_A64_ADD_REG:
+            redde _registrum_translatum(i, 0x0B000000, verbum_out);
+        casus CODIFICATOR_A64_SUB_REG:
+            redde _registrum_translatum(i, 0x4B000000, verbum_out);
+        casus CODIFICATOR_A64_ADDS_REG:
+            redde _registrum_translatum(i, 0x2B000000, verbum_out);
+        casus CODIFICATOR_A64_SUBS_REG:
+            redde _registrum_translatum(i, 0x6B000000, verbum_out);
+        casus CODIFICATOR_A64_AND_REG:
+            redde _registrum_translatum(i, 0x0A000000, verbum_out);
+        casus CODIFICATOR_A64_ORR_REG:
+            redde _registrum_translatum(i, 0x2A000000, verbum_out);
+        casus CODIFICATOR_A64_EOR_REG:
+            redde _registrum_translatum(i, 0x4A000000, verbum_out);
+        casus CODIFICATOR_A64_ORN_REG:
+            redde _registrum_translatum(i, 0x2A200000, verbum_out);
+
+        casus CODIFICATOR_A64_AND_IMM:
+            redde _logica_immediata(i, 0x12000000, verbum_out);
+        casus CODIFICATOR_A64_ORR_IMM:
+            redde _logica_immediata(i, 0x32000000, verbum_out);
+        casus CODIFICATOR_A64_EOR_IMM:
+            redde _logica_immediata(i, 0x52000000, verbum_out);
+
+        casus CODIFICATOR_A64_LSLV:
+            redde _tres_registra(i, 0x1AC02000, verbum_out);
+        casus CODIFICATOR_A64_LSRV:
+            redde _tres_registra(i, 0x1AC02400, verbum_out);
+        casus CODIFICATOR_A64_ASRV:
+            redde _tres_registra(i, 0x1AC02800, verbum_out);
+        casus CODIFICATOR_A64_SDIV:
+            redde _tres_registra(i, 0x1AC00C00, verbum_out);
+        casus CODIFICATOR_A64_UDIV:
+            redde _tres_registra(i, 0x1AC00800, verbum_out);
+
+        casus CODIFICATOR_A64_UBFM:
+            redde _campus_bitorum(i, 0x53000000, verbum_out);
+        casus CODIFICATOR_A64_SBFM:
+            redde _campus_bitorum(i, 0x13000000, verbum_out);
+
+        casus CODIFICATOR_A64_MADD:
+            redde _multiplicatio(i, 0x1B000000, verbum_out);
+        casus CODIFICATOR_A64_MSUB:
+            redde _multiplicatio(i, 0x1B008000, verbum_out);
+
+        casus CODIFICATOR_A64_MOVZ:
+            redde _motus_latus(i, 0x52800000, verbum_out);
+        casus CODIFICATOR_A64_MOVK:
+            redde _motus_latus(i, 0x72800000, verbum_out);
+        casus CODIFICATOR_A64_MOVN:
+            redde _motus_latus(i, 0x12800000, verbum_out);
+
+        casus CODIFICATOR_A64_CSINC:
+            redde _electio(i, 0x1A800400, verbum_out);
+        casus CODIFICATOR_A64_CSEL:
+            redde _electio(i, 0x1A800000, verbum_out);
+
+        casus CODIFICATOR_A64_LDR_IMM:
+            scala = _scala(i->latitudo);
+            redde _memoria_immediata(i, 0x39400000 | _r(scala, XXX),
+                scala, verbum_out);
+        casus CODIFICATOR_A64_STR_IMM:
+            scala = _scala(i->latitudo);
+            redde _memoria_immediata(i, 0x39000000 | _r(scala, XXX),
+                scala, verbum_out);
+        casus CODIFICATOR_A64_LDRS_IMM:
+            /* ldrsb/ldrsh/ldrsw ad X (opc 10) */
+            scala = (i->latitudo == VIII) ? -I : _scala(i->latitudo);
+            redde _memoria_immediata(i, 0x39800000 | _r(scala, XXX),
+                scala, verbum_out);
+        casus CODIFICATOR_A64_LDR_REG:
+            redde _memoria_registro(i, 0x38606800, verbum_out);
+        casus CODIFICATOR_A64_STR_REG:
+            redde _memoria_registro(i, 0x38206800, verbum_out);
+
+        casus CODIFICATOR_A64_LDP:
+        casus CODIFICATOR_A64_STP:
+            si (i->latitudo != IV && i->latitudo != VIII)
+            {
+                redde FALSUM;
+            }
+            redde _par(i,
+                ((i->latitudo == VIII) ? 0xA8000000 : 0x28000000)
+                | ((i->forma == CODIFICATOR_A64_LDP)
+                    ? 0x00400000 : ZEPHYRUM),
+                _scala(i->latitudo), verbum_out);
+
+        casus CODIFICATOR_A64_LDR_FP_IMM:
+        casus CODIFICATOR_A64_STR_FP_IMM:
+            si (i->latitudo != IV && i->latitudo != VIII)
+            {
+                redde FALSUM;
+            }
+            scala = _scala(i->latitudo);
+            redde _memoria_immediata(i, 0x3D000000 | _r(scala, XXX)
+                | ((i->forma == CODIFICATOR_A64_LDR_FP_IMM)
+                    ? 0x00400000 : ZEPHYRUM),
+                scala, verbum_out);
+
+        casus CODIFICATOR_A64_LDP_FP:
+        casus CODIFICATOR_A64_STP_FP:
+            si (i->latitudo != IV && i->latitudo != VIII)
+            {
+                redde FALSUM;
+            }
+            redde _par(i,
+                ((i->latitudo == VIII) ? 0x6C000000 : 0x2C000000)
+                | ((i->forma == CODIFICATOR_A64_LDP_FP)
+                    ? 0x00400000 : ZEPHYRUM),
+                _scala(i->latitudo), verbum_out);
+
+        casus CODIFICATOR_A64_ADR:
+        casus CODIFICATOR_A64_ADRP:
+        {
+            s64 distantia;
+
+            si (   i->latitudo != LXIV
+                || !_registra(i, VERUM, FALSUM, FALSUM))
+            {
+                redde FALSUM;
+            }
+            distantia = i->immediatum;
+            si (i->forma == CODIFICATOR_A64_ADRP)
+            {
+                si ((distantia & 0xFFF) != ZEPHYRUM)
+                {
+                    redde FALSUM;
+                }
+                distantia /= 4096;
+            }
+            si (   distantia < -((s64)I << XX)
+                || distantia >= ((s64)I << XX))
+            {
+                redde FALSUM;
+            }
+            campus = (i32)((i64)distantia & 0x1FFFFF);
+            *verbum_out = ((i->forma == CODIFICATOR_A64_ADRP)
+                    ? 0x90000000 : 0x10000000)
+                | ((campus & III) << XXIX)
+                | ((campus >> II) << V) | _r(i->rd, 0);
+            redde VERUM;
+        }
+
+        casus CODIFICATOR_A64_B:
+        casus CODIFICATOR_A64_BL:
+            si (!_saltus(i->immediatum, XXVI, &campus))
+            {
+                redde FALSUM;
+            }
+            *verbum_out = ((i->forma == CODIFICATOR_A64_BL)
+                ? 0x94000000 : 0x14000000) | campus;
+            redde VERUM;
+        casus CODIFICATOR_A64_B_COND:
+            si (   i->conditio < ZEPHYRUM
+                || i->conditio > (s32)CODIFICATOR_A64_AL
+                || !_saltus(i->immediatum, XIX, &campus))
+            {
+                redde FALSUM;
+            }
+            *verbum_out = 0x54000000 | (campus << V)
+                | (i32)i->conditio;
+            redde VERUM;
+        casus CODIFICATOR_A64_CBZ:
+        casus CODIFICATOR_A64_CBNZ:
+            si (   !_latitudo_integra(i->latitudo)
+                || !_registra(i, VERUM, FALSUM, FALSUM)
+                || !_saltus(i->immediatum, XIX, &campus))
+            {
+                redde FALSUM;
+            }
+            *verbum_out = ((i->forma == CODIFICATOR_A64_CBNZ)
+                    ? 0x35000000 : 0x34000000)
+                | _sf(i->latitudo) | (campus << V) | _r(i->rd, 0);
+            redde VERUM;
+        casus CODIFICATOR_A64_BR:
+        casus CODIFICATOR_A64_BLR:
+        casus CODIFICATOR_A64_RET:
+            si (!_registra(i, FALSUM, VERUM, FALSUM))
+            {
+                redde FALSUM;
+            }
+            *verbum_out = ((i->forma == CODIFICATOR_A64_BR) ? 0xD61F0000
+                : (i->forma == CODIFICATOR_A64_BLR) ? 0xD63F0000
+                : 0xD65F0000) | _r(i->rn, V);
+            redde VERUM;
+
+        casus CODIFICATOR_A64_FADD:
+            redde _fp_tria(i, 0x1E202800, VERUM, verbum_out);
+        casus CODIFICATOR_A64_FSUB:
+            redde _fp_tria(i, 0x1E203800, VERUM, verbum_out);
+        casus CODIFICATOR_A64_FMUL:
+            redde _fp_tria(i, 0x1E200800, VERUM, verbum_out);
+        casus CODIFICATOR_A64_FDIV:
+            redde _fp_tria(i, 0x1E201800, VERUM, verbum_out);
+        casus CODIFICATOR_A64_FCMP:
+            redde _fp_tria(i, 0x1E202000, FALSUM, verbum_out);
+        casus CODIFICATOR_A64_FNEG:
+            redde _fp_duo(i, 0x1E214000, VERUM, verbum_out);
+        casus CODIFICATOR_A64_FMOV_REG:
+            redde _fp_duo(i, 0x1E204000, VERUM, verbum_out);
+        casus CODIFICATOR_A64_FCMP_ZERO:
+            redde _fp_duo(i, 0x1E202008, FALSUM, verbum_out);
+
+        casus CODIFICATOR_A64_FMOV_IMM:
+            si (   !_latitudo_integra(i->latitudo)
+                || !_registra(i, VERUM, FALSUM, FALSUM)
+                || i->immediatum < ZEPHYRUM || i->immediatum > CCLV)
+            {
+                redde FALSUM;
+            }
+            *verbum_out = 0x1E201000 | _typus_fp(i->latitudo)
+                | ((i32)i->immediatum << XIII) | _r(i->rd, 0);
+            redde VERUM;
+
+        casus CODIFICATOR_A64_FMOV_GEN:
+            /* x<->d (sf I, typus 01), w<->s (sf 0, typus 00);
+             * opcode 111 generale -> FP, 110 FP -> generale */
+            si (   !_latitudo_integra(i->latitudo)
+                || (i->translatio != ZEPHYRUM && i->translatio != I)
+                || !_registra(i, VERUM, VERUM, FALSUM))
+            {
+                redde FALSUM;
+            }
+            *verbum_out = 0x1E260000 | _sf(i->latitudo)
+                | _typus_fp(i->latitudo)
+                | ((i->translatio == ZEPHYRUM) ? 0x00010000 : ZEPHYRUM)
+                | _r(i->rn, V) | _r(i->rd, 0);
+            redde VERUM;
+
+        casus CODIFICATOR_A64_FCVT:
+            /* latitudo destinationis: D ex S (typus 00, opc 01),
+             * S ex D (typus 01, opc 00) */
+            si (   !_latitudo_integra(i->latitudo)
+                || !_registra(i, VERUM, VERUM, FALSUM))
+            {
+                redde FALSUM;
+            }
+            *verbum_out = ((i->latitudo == LXIV)
+                    ? 0x1E22C000 : 0x1E624000)
+                | _r(i->rn, V) | _r(i->rd, 0);
+            redde VERUM;
+
+        casus CODIFICATOR_A64_SCVTF:
+            redde _conversio(i, 0x1E220000, verbum_out);
+        casus CODIFICATOR_A64_UCVTF:
+            redde _conversio(i, 0x1E230000, verbum_out);
+        casus CODIFICATOR_A64_FCVTZS:
+            redde _conversio(i, 0x1E380000, verbum_out);
+        casus CODIFICATOR_A64_FCVTZU:
+            redde _conversio(i, 0x1E390000, verbum_out);
+
+        casus CODIFICATOR_A64_BRK:
+            si (i->immediatum < ZEPHYRUM || i->immediatum > 0xFFFF)
+            {
+                redde FALSUM;
+            }
+            *verbum_out = 0xD4200000 | ((i32)i->immediatum << V);
+            redde VERUM;
+
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
+
+    /* ==================================================
+     * Algorithmi publici
+     * ================================================== */
+
+interior i64
+_larva (
+    s32 amplitudo)
+{
+    redde (amplitudo >= LXIV) ? ~(i64)ZEPHYRUM
+        : (((i64)I << amplitudo) - (i64)I);
+}
+
+/* Exemplar = elementum (amplitudo bitorum) repetitum; elementum =
+ * cursus 'unae' unarum ad bitum 0 rotatus dextrorsum per immr. Ergo:
+ * periodum minimam quaere, unas numera, rotationem sinistrorsum
+ * quaere quae cursum ad bitum 0 reducit (LXIV temptamina summum). */
+static b32
+codificator_a64_bitmask (
+    i64  valor,
+    s32  latitudo,
+    i32* n_immr_imms_out)
+{
+    i64 v;
+    i64 larva;
+    s32 amplitudo;
+    s32 unae;
+    s32 k;
+    s32 rotatio;
+
+    si (latitudo == XXXII)
+    {
+        si ((valor >> XXXII) != ZEPHYRUM)
+        {
+            redde FALSUM;
+        }
+        v = valor | (valor << XXXII);
+    }
+    alioquin si (latitudo == LXIV)
+    {
+        v = valor;
+    }
+    alioquin
+    {
+        redde FALSUM;
+    }
+    si (v == ZEPHYRUM || v == ~(i64)ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+
+    amplitudo = LXIV;
+    dum (amplitudo > II)
+    {
+        s32 dimidium;
+
+        dimidium  = amplitudo / II;
+        larva     = _larva(dimidium);
+        si ((v & larva) != ((v >> dimidium) & larva))
+        {
+            frange;
+        }
+        amplitudo = dimidium;
+    }
+    larva  = _larva(amplitudo);
+    v      &= larva;
+
+    unae = ZEPHYRUM;
+    per (k = ZEPHYRUM; k < amplitudo; k++)
+    {
+        si ((v & ((i64)I << k)) != ZEPHYRUM)
+        {
+            unae++;
+        }
+    }
+
+    rotatio = -I;
+    per (k = ZEPHYRUM; k < amplitudo; k++)
+    {
+        i64 rotatum;
+
+        rotatum = (k == ZEPHYRUM) ? v
+            : (((v << k) | (v >> (amplitudo - k))) & larva);
+        si (rotatum == _larva(unae))
+        {
+            rotatio = k;
+            frange;
+        }
+    }
+    si (rotatio < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    si (n_immr_imms_out != NIHIL)
+    {
+        *n_immr_imms_out =
+              ((amplitudo == LXIV) ? 0x1000 : ZEPHYRUM)
+            | ((i32)rotatio << VI)
+            | ((~((i32)amplitudo - I) << I) & 0x3F)
+            | (i32)(unae - I);
+    }
+    redde VERUM;
+}
+
+
+    /* ==================================================
+     * Emissor cum notis
+     * ================================================== */
+
+nomen structura {
+                         i32 index;
+                         s32 nota;
+    CodificatorA64Instructio instructio;
+} SaltusPendens;
+
+structura CodificatorA64 {
+    OfficinaPiscina* piscina;
+        i32* verba;
+        i32  numerus;
+        i32  capacitas;
+        OfficinaXar* notae;        /* s32: index verbi, aut -I */
+        OfficinaXar* saltus;       /* SaltusPendens */
+};
+
+static CodificatorA64*
+codificator_a64_creare (
+    OfficinaPiscina* piscina)
+{
+    CodificatorA64* c;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    c = (CodificatorA64*)officina_piscina_allocare(piscina,
+        magnitudo(CodificatorA64));
+    si (c == NIHIL)
+    {
+        redde NIHIL;
+    }
+    c->piscina    = piscina;
+    c->verba      = NIHIL;
+    c->numerus    = ZEPHYRUM;
+    c->capacitas  = ZEPHYRUM;
+    c->notae      = officina_xar_creare(piscina, (i32)magnitudo(s32));
+    c->saltus     = officina_xar_creare(piscina, (i32)magnitudo(SaltusPendens));
+    si (c->notae == NIHIL || c->saltus == NIHIL)
+    {
+        redde NIHIL;
+    }
+    redde c;
+}
+
+/* verba contigua manent (codificator_a64_verba): duplicatio cum
+ * copia; vetera in piscina relinquuntur */
+interior b32
+_verbum_addere (
+    CodificatorA64* c,
+               i32  verbum)
+{
+    si (c->numerus == c->capacitas)
+    {
+        i32  nova;
+        i32* verba;
+
+        nova  = (c->capacitas == ZEPHYRUM) ? CCLVI : c->capacitas * II;
+        verba = (i32*)officina_piscina_allocare(c->piscina,
+            (memoriae_index)nova * magnitudo(i32));
+        si (verba == NIHIL)
+        {
+            redde FALSUM;
+        }
+        si (c->numerus > ZEPHYRUM)
+        {
+            memcpy(verba, c->verba,
+                (memoriae_index)c->numerus * magnitudo(i32));
+        }
+        c->verba      = verba;
+        c->capacitas  = nova;
+    }
+    c->verba[c->numerus] = verbum;
+    c->numerus++;
+    redde VERUM;
+}
+
+static b32
+codificator_a64_emittere (
+                       CodificatorA64* c,
+    constans CodificatorA64Instructio* instructio)
+{
+    i32 verbum;
+
+    si (   c == NIHIL
+        || !codificator_a64_codificare(instructio, &verbum))
+    {
+        redde FALSUM;
+    }
+    redde _verbum_addere(c, verbum);
+}
+
+static s32
+codificator_a64_notam_creare (
+    CodificatorA64* c)
+{
+    s32* nota;
+
+    si (c == NIHIL)
+    {
+        redde -I;
+    }
+    nota = (s32*)officina_xar_addere(c->notae);
+    si (nota == NIHIL)
+    {
+        redde -I;
+    }
+    *nota = -I;
+    redde (s32)officina_xar_numerus(c->notae) - I;
+}
+
+static vacuum
+codificator_a64_notam_ponere (
+    CodificatorA64* c,
+               s32  nota)
+{
+    s32* locus;
+
+    si (   c    == NIHIL || nota < ZEPHYRUM
+        || nota >= (s32)officina_xar_numerus(c->notae))
+    {
+        redde;
+    }
+    locus   = (s32*)officina_xar_obtinere(c->notae, (i32)nota);
+    *locus  = (s32)c->numerus;
+}
+
+static b32
+codificator_a64_saltum_emittere (
+                       CodificatorA64* c,
+    constans CodificatorA64Instructio* instructio,
+                                  s32  nota)
+{
+    CodificatorA64Instructio  copia;
+               SaltusPendens* pendens;
+                         i32  verbum;
+
+    si (   c    == NIHIL || instructio == NIHIL || nota < ZEPHYRUM
+        || nota >= (s32)officina_xar_numerus(c->notae))
+    {
+        redde FALSUM;
+    }
+    commutatio (instructio->forma)
+    {
+        casus CODIFICATOR_A64_B:
+        casus CODIFICATOR_A64_BL:
+        casus CODIFICATOR_A64_B_COND:
+        casus CODIFICATOR_A64_CBZ:
+        casus CODIFICATOR_A64_CBNZ:
+        casus CODIFICATOR_A64_ADR:
+            frange;
+        ordinarius:
+            redde FALSUM;
+    }
+    /* campi ceteri nunc probantur; distantia in finire */
+    copia             = *instructio;
+    copia.immediatum  = ZEPHYRUM;
+    si (!codificator_a64_codificare(&copia, &verbum))
+    {
+        redde FALSUM;
+    }
+    pendens = (SaltusPendens*)officina_xar_addere(c->saltus);
+    si (pendens == NIHIL || !_verbum_addere(c, verbum))
+    {
+        redde FALSUM;
+    }
+    pendens->index       = c->numerus - I;
+    pendens->nota        = nota;
+    pendens->instructio  = copia;
+    redde VERUM;
+}
+
+interior vacuum
+_causam_ponere (
+        CodificatorA64* c,
+                OfficinaChorda* causa_out,
+    constans character* initium,
+                   i32  index,
+                   s32  nota,
+                   s64  distantia,
+                   b32  cum_distantia)
+{
+    OfficinaChordaAedificator* aedificator;
+
+    si (causa_out == NIHIL)
+    {
+        redde;
+    }
+    aedificator = officina_chorda_aedificator_creare(c->piscina, LXIV);
+    si (aedificator == NIHIL)
+    {
+        redde;
+    }
+    officina_chorda_aedificator_appendere_literis(aedificator, initium);
+    officina_chorda_aedificator_appendere_literis(aedificator, ": verbum ");
+    officina_chorda_aedificator_appendere_s32(aedificator, (s32)index);
+    officina_chorda_aedificator_appendere_literis(aedificator, ", nota ");
+    officina_chorda_aedificator_appendere_s32(aedificator, nota);
+    si (cum_distantia)
+    {
+        officina_chorda_aedificator_appendere_literis(aedificator,
+            ", distantia ");
+        officina_chorda_aedificator_appendere_s32(aedificator, (s32)distantia);
+        officina_chorda_aedificator_appendere_literis(aedificator, " octeti");
+    }
+    *causa_out = officina_chorda_aedificator_finire(aedificator);
+}
+
+static b32
+codificator_a64_finire (
+    CodificatorA64* c,
+            OfficinaChorda* causa_out)
+{
+    i32 i;
+
+    si (c == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = ZEPHYRUM; i < officina_xar_numerus(c->saltus); i++)
+    {
+        SaltusPendens* pendens;
+                  s32  meta;
+                  s64  distantia;
+                  i32  verbum;
+
+        pendens = (SaltusPendens*)officina_xar_obtinere(c->saltus, i);
+        meta    = *(constans s32*)officina_xar_obtinere(c->notae,
+            (i32)pendens->nota);
+        si (meta < ZEPHYRUM)
+        {
+            _causam_ponere(c, causa_out, "nota non posita",
+                pendens->index, pendens->nota, ZEPHYRUM, FALSUM);
+            redde FALSUM;
+        }
+        distantia = ((s64)meta - (s64)pendens->index) * IV;
+        pendens->instructio.immediatum = distantia;
+        si (!codificator_a64_codificare(&pendens->instructio,
+                &verbum))
+        {
+            _causam_ponere(c, causa_out, "saltus extra fines",
+                pendens->index, pendens->nota, distantia, VERUM);
+            redde FALSUM;
+        }
+        c->verba[pendens->index] = verbum;
+    }
+    redde VERUM;
+}
+
+static i32
+codificator_a64_numerus (
+    constans CodificatorA64* c)
+{
+    redde (c == NIHIL) ? ZEPHYRUM : c->numerus;
+}
+
+static constans i32*
+codificator_a64_verba (
+    constans CodificatorA64* c)
+{
+    redde (c == NIHIL) ? NIHIL : c->verba;
+}
+
+/* ================= ex lib/memoria_exsecutabilis_macos.c ================= */
+
+#define MEMORIA_EXSECUTABILIS_PAGINA 0x4000
+
+structura MemoriaExsecutabilis {
+            vacuum* basis;
+    memoriae_index  mensura;
+};
+
+/* status logicus scripturae (aperire/sigillare) et manipulus furcae */
+hic_manens b32 _scriptura_aperta = FALSUM;
+hic_manens b32 _furca_instituta  = FALSUM;
+
+/* in filio post fork: status logicus parentis restituitur */
+interior vacuum
+_in_filio (vacuum)
+{
+    pthread_jit_write_protect_np(_scriptura_aperta ? ZEPHYRUM : I);
+}
+
+interior vacuum
+_memoriae_causam_ponere (
+                OfficinaChorda* causa_out,
+               OfficinaPiscina* piscina,
+    constans character* textus)
+{
+    si (causa_out != NIHIL)
+    {
+        *causa_out = officina_chorda_ex_literis(textus, piscina);
+    }
+}
+
+static MemoriaExsecutabilis*
+memoria_exsecutabilis_reservare (
+           OfficinaPiscina* piscina,
+    memoriae_index  inscriptio_optata,
+    memoriae_index  mensura_octetorum,
+            OfficinaChorda* causa_out)
+{
+    MemoriaExsecutabilis* m;
+                  vacuum* locus;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    si (   mensura_octetorum == ZEPHYRUM
+        || (mensura_octetorum % MEMORIA_EXSECUTABILIS_PAGINA)
+           != ZEPHYRUM)
+    {
+        _memoriae_causam_ponere(causa_out, piscina,
+            "mensura non multiplex paginae (XVI KiB)");
+        redde NIHIL;
+    }
+    si ((inscriptio_optata % MEMORIA_EXSECUTABILIS_PAGINA)
+        != ZEPHYRUM)
+    {
+        _memoriae_causam_ponere(causa_out, piscina,
+            "inscriptio optata non in initio paginae");
+        redde NIHIL;
+    }
+    si (!_furca_instituta)
+    {
+        si (pthread_atfork(NIHIL, NIHIL, _in_filio) != ZEPHYRUM)
+        {
+            _memoriae_causam_ponere(causa_out, piscina,
+                "pthread_atfork defecit");
+            redde NIHIL;
+        }
+        _furca_instituta = VERUM;
+    }
+    locus = mmap((vacuum*)inscriptio_optata, mensura_octetorum,
+        PROT_READ | PROT_WRITE | PROT_EXEC,
+        MAP_PRIVATE | MAP_ANON | MAP_JIT, -I, ZEPHYRUM);
+    si (locus == MAP_FAILED)
+    {
+        _memoriae_causam_ponere(causa_out, piscina,
+            "mmap MAP_JIT defecit");
+        redde NIHIL;
+    }
+    si (   inscriptio_optata     != ZEPHYRUM
+        && (memoriae_index)locus != inscriptio_optata)
+    {
+        (vacuum)munmap(locus, mensura_octetorum);
+        _memoriae_causam_ponere(causa_out, piscina,
+            "systema sedem aliam dedit (inscriptio optata occupata)");
+        redde NIHIL;
+    }
+    m = (MemoriaExsecutabilis*)officina_piscina_allocare(piscina,
+        magnitudo(MemoriaExsecutabilis));
+    si (m == NIHIL)
+    {
+        (vacuum)munmap(locus, mensura_octetorum);
+        _memoriae_causam_ponere(causa_out, piscina, "piscina defecit");
+        redde NIHIL;
+    }
+    m->basis    = locus;
+    m->mensura  = mensura_octetorum;
+    redde m;
+}
+
+static vacuum*
+memoria_exsecutabilis_basis (
+    constans MemoriaExsecutabilis* m)
+{
+    redde (m == NIHIL) ? NIHIL : m->basis;
+}
+
+static memoriae_index
+memoria_exsecutabilis_mensura (
+    constans MemoriaExsecutabilis* m)
+{
+    redde (m == NIHIL) ? ZEPHYRUM : m->mensura;
+}
+
+static vacuum
+memoria_exsecutabilis_aperire (
+    MemoriaExsecutabilis* m)
+{
+    si (m != NIHIL)
+    {
+        _scriptura_aperta = VERUM;
+        pthread_jit_write_protect_np(ZEPHYRUM);
+    }
+}
+
+static b32
+memoria_exsecutabilis_sigillare (
+    MemoriaExsecutabilis* m,
+          memoriae_index  offset,
+          memoriae_index  mensura)
+{
+    si (m == NIHIL)
+    {
+        redde FALSUM;
+    }
+    _scriptura_aperta = FALSUM;
+    pthread_jit_write_protect_np(I);
+    si (offset > m->mensura || mensura > m->mensura - offset)
+    {
+        redde FALSUM;
+    }
+    sys_icache_invalidate((character*)m->basis + offset, mensura);
+    redde VERUM;
+}
+
+static vacuum
+memoria_exsecutabilis_liberare (
+    MemoriaExsecutabilis* m)
+{
+    si (m == NIHIL || m->basis == NIHIL)
+    {
+        redde;
+    }
+    (vacuum)munmap(m->basis, m->mensura);
+    m->basis    = NIHIL;
+    m->mensura  = ZEPHYRUM;
 }
 
 /* ================= ex officina/fontes/officina_medulla.c ================= */
@@ -15247,6 +16869,157 @@ _memoriam_probare (
     redde VERUM;
 }
 
+
+/* ==================================================
+ * NATIVUM (M5 T6): vocatio codicis nativi per officina_effugium
+ * ================================================== */
+
+/* argumenta in registra AAPCS64 ordinat (integra in x, fluitantia in
+ * d - classes separatae), vocat, fructum per typum vocationis
+ * reddit. typi = limina loci vocationis (NIHIL licet solum sine
+ * argumentis). FALSUM = halitus positus. */
+interior b32
+_nativum_vocare (
+                         Machinula* m,
+                               s64  introitus,
+    constans MedullaTypusLiminis* typi,
+                      constans i64* argumenta,
+                               s32  numerus,
+                               b32  variadica,
+                               s32  typus_reditus,
+                               i64* fructus_out)
+{
+    EffugiumArgumenta ordinata;
+      EffugiumFructus fructus;
+                  s32 k;
+
+    memset(&ordinata, ZEPHYRUM, magnitudo(ordinata));
+    *fructus_out = ZEPHYRUM;
+    si (variadica)
+    {
+        _vitium(m, "nativum: vocatio variadica (Opus VIII)");
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        s32 typus = (typi != NIHIL) ? typi[k].typus
+            : MEDULLA_TYPUS_NIHIL;
+
+        si (typus < ZEPHYRUM)
+        {
+            /* sine typo classis ignota: f64 in x iret */
+            _vitium(m, "nativum: argumentum sine typo");
+            redde FALSUM;
+        }
+        si (typus == MEDULLA_TYPUS_AGGREGATUM || typi[k].est_reditus)
+        {
+            _vitium(m, "nativum: aggregatum aut %reditus (Opus VIII)");
+            redde FALSUM;
+        }
+        si (typus == MEDULLA_TYPUS_F64 || typus == MEDULLA_TYPUS_F32)
+        {
+            unio { i64 v; f64 f; } u;
+
+            si (ordinata.numerus_d >= VIII)
+            {
+                _vitium(m, "nativum: argumenta fluitantia plura quam"
+                    " VIII (Opus VIII)");
+                redde FALSUM;
+            }
+            /* figura cruda: f32 in dimidio inferiore d */
+            u.v = (typus == MEDULLA_TYPUS_F32)
+                ? (argumenta[k] & (i64)0xFFFFFFFF) : argumenta[k];
+            ordinata.d[ordinata.numerus_d] = u.f;
+            ordinata.numerus_d++;
+        }
+        alioquin
+        {
+            si (ordinata.numerus_x >= VIII)
+            {
+                _vitium(m, "nativum: argumenta integra plura quam"
+                    " VIII (Opus VIII)");
+                redde FALSUM;
+            }
+            ordinata.x[ordinata.numerus_x] = argumenta[k];
+            ordinata.numerus_x++;
+        }
+    }
+    fructus = officina_effugium_vocare(
+        (vacuum*)(memoriae_index)introitus, &ordinata);
+    si (fructus.genus == EFFUGIUM_SALTUS)
+    {
+        _halitum_ponere(m, MACHINULA_VITIUM, fructus.codex,
+            "nativum: saltus ex codice nativo");
+        redde FALSUM;
+    }
+    si (fructus.genus != EFFUGIUM_REDDITUM)
+    {
+        character nuntius[CXXVIII];
+
+        si (fructus.signum_systematis == ZEPHYRUM)
+        {
+            _vitium(m, "nativum: effugium non paratum");
+            redde FALSUM;
+        }
+        sprintf(nuntius, "nativum: signum %d ad pc 0x%lx",
+            (int)fructus.signum_systematis,
+            (insignatus longus)fructus.pc);
+        _vitium(m, nuntius);
+        redde FALSUM;
+    }
+    si (typus_reditus == MEDULLA_TYPUS_F64)
+    {
+        unio { i64 v; f64 f; } u;
+
+        u.f           = fructus.d[ZEPHYRUM];
+        *fructus_out  = u.v;
+    }
+    alioquin si (typus_reditus == MEDULLA_TYPUS_F32)
+    {
+        unio { i64 v; f64 f; } u;
+
+        u.f           = fructus.d[ZEPHYRUM];
+        *fructus_out  = u.v & (i64)0xFFFFFFFF;
+    }
+    alioquin si (typus_reditus >= ZEPHYRUM)
+    {
+        *fructus_out = _canonicum(fructus.x[ZEPHYRUM], typus_reditus);
+    }
+    redde VERUM;
+}
+
+b32
+machinula_nativum_ponere (
+    Machinula* m,
+       OfficinaChorda  titulus_functionis,
+       vacuum* introitus)
+{
+                         s32  index;
+    constans ConexioSymbolum* symbolum;
+           ConexioDescriptor* descriptor;
+
+    si (m == NIHIL || introitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    index = conexio_symbolum_quaerere(m->conexio, titulus_functionis);
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    symbolum = conexio_symbolum_obtinere(m->conexio, index);
+    si (symbolum->genus != CONEXIO_SYMBOLUM_FUNCTIO)
+    {
+        redde FALSUM;
+    }
+    /* signum in situ (ut aedificata): inscriptio descriptoris, iam
+     * in relocationibus sarcita, immota manet */
+    descriptor          = (ConexioDescriptor*)symbolum->sedes;
+    descriptor->signum  = CONEXIO_SIGNUM_NATIVUM;
+    descriptor->index   = (s64)(memoriae_index)introitus;
+    redde VERUM;
+}
+
 b32
 machinula_aperire (
     Machinula* m,
@@ -15284,6 +17057,40 @@ machinula_aperire (
             alioquin
             {
                 descriptor = symbolum->sedes;
+                si (descriptor->signum == CONEXIO_SIGNUM_NATIVUM)
+                {
+                    /* principalis nativa: statim perficitur
+                     * (parametra zephyro, ut interpretata); typus
+                     * reditus ex definitore symboli - index
+                     * descriptoris iam introitus est */
+                    constans MedullaModulus* modulus = _modulum(m,
+                        symbolum->modulus_index);
+                    constans MedullaFunctio* functio  = NIHIL;
+                                        i64  fructus   =
+                                            ZEPHYRUM;
+
+                    si (   modulus                 != NIHIL
+                        && symbolum->index_localis >= ZEPHYRUM
+                        && symbolum->index_localis
+                            < (s32)officina_xar_numerus(modulus->functiones))
+                    {
+                        functio = *(MedullaFunctio**)officina_xar_obtinere(
+                            modulus->functiones,
+                            (i32)symbolum->index_localis);
+                    }
+                    si (functio == NIHIL)
+                    {
+                        _vitium(m, "initium: nativa sine definitore");
+                    }
+                    alioquin si (_nativum_vocare(m, descriptor->index,
+                                 NIHIL, NIHIL, ZEPHYRUM, FALSUM,
+                                 functio->typus_reditus, &fructus))
+                    {
+                        _halitum_ponere(m, MACHINULA_BENE,
+                            (s64)fructus, NIHIL);
+                    }
+                    redde FALSUM;   /* iam finita - non gradibilis */
+                }
                 nexa = conexio_functionem_obtinere(m->conexio,
                     descriptor->index);
                 (vacuum)_tabulatum_impellere(m, nexa->functio,
@@ -15920,7 +17727,8 @@ machinula_gradus (Machinula* m)
                         != CONEXIO_SIGNUM_INTERPRETATUM
                     && descriptor->signum != CONEXIO_SIGNUM_DECIPULA
                     && descriptor->signum
-                        != CONEXIO_SIGNUM_AEDIFICATUM)
+                        != CONEXIO_SIGNUM_AEDIFICATUM
+                    && descriptor->signum != CONEXIO_SIGNUM_NATIVUM)
                 {
                     _vitium(m,
                         "vocatio per monstratorem insanum");
@@ -16002,6 +17810,27 @@ machinula_gradus (Machinula* m)
                 {
                     frange;
                 }
+            }
+            alioquin si (descriptor->signum == CONEXIO_SIGNUM_NATIVUM)
+            {
+                i64 fructus = ZEPHYRUM;
+
+                si (!_nativum_vocare(m, descriptor->index,
+                        (plana->operanda_typi != NIHIL)
+                            ? &plana->operanda_typi[
+                                instructio->extra_index]
+                            : NIHIL,
+                        argumenta, numerus_argumentorum,
+                        instructio->argumenta_fixa >= ZEPHYRUM,
+                        instructio->typus, &fructus))
+                {
+                    frange;   /* halitus iam positus */
+                }
+                si (instructio->destinatio >= ZEPHYRUM)
+                {
+                    t->registra[instructio->destinatio] = fructus;
+                }
+                t->instructio += I;
             }
             alioquin si (descriptor->signum
                          == CONEXIO_SIGNUM_AEDIFICATUM)
@@ -24347,4 +26176,467 @@ medulla_fluxus_transit_vocationem (
         }
     }
     redde FALSUM;
+}
+
+/* ================= ex officina/fontes/officina_effugium.c ================= */
+
+nomen vacuum (*Trampolinum)(
+                       vacuum* introitus,
+    constans EffugiumArgumenta* argumenta,
+               EffugiumFructus* fructus);
+
+hic_manens MemoriaExsecutabilis* _area         = NIHIL;
+hic_manens          Trampolinum  _trampolinum  = NIHIL;
+hic_manens                  s32  _installationes = ZEPHYRUM;
+
+/* vocatio pendens: ambitus ad quem salire redit */
+hic_manens      sigjmp_buf  _ambitus;
+hic_manens             b32  _activum = FALSUM;
+hic_manens EffugiumFructus  _redditum;   /* a trampolino scriptum */
+hic_manens EffugiumFructus  _pendens;    /* a salire aut tractatore */
+
+/* signa hardware quae codex nativus excitare potest */
+#define SIGNA_NUMERUS III
+hic_manens constans integer  SIGNA[SIGNA_NUMERUS] = {
+    SIGSEGV, SIGBUS, SIGILL
+};
+hic_manens structura sigaction  _priores[SIGNA_NUMERUS];
+hic_manens           character  _stiva_alterna[SIGSTKSZ];
+/* fines areae: tractator eos sine vocatione legit */
+hic_manens      memoriae_index  _area_basis = ZEPHYRUM;
+hic_manens      memoriae_index  _area_finis = ZEPHYRUM;
+
+/* registra trampolini */
+#define R_FRUCTUS     XIX   /* x19: EffugiumFructus* (servatum) */
+#define R_ARGUMENTA   XX    /* x20: EffugiumArgumenta* (servatum) */
+#define R_INTROITUS   XVI   /* x16: functio vocanda */
+#define R_NUMERUS     IX    /* x9:  verba stivae reliqua */
+#define R_FONS        X     /* x10: cursor verborum fontis */
+#define R_DESTINATIO  XI    /* x11: cursor in stiva nova */
+#define R_OCTETI      XII   /* x12: octeti stivae (ordinati) */
+#define R_VERBUM      XIV   /* x14: verbum in transitu */
+#define R_SP          XXXI
+#define R_FP          XXIX
+#define R_LR          XXX
+#define TABULATUM     XXXII /* octeti tabulati trampolini */
+
+interior b32
+_e (
+    CodificatorA64* c,
+               s32  forma,
+               s32  latitudo,
+               s32  rd,
+               s32  rn,
+               s32  rm,
+               s64  immediatum,
+               s32  translatio)
+{
+    CodificatorA64Instructio i;
+
+    memset(&i, ZEPHYRUM, magnitudo(i));
+    i.forma       = forma;
+    i.latitudo    = latitudo;
+    i.rd          = rd;
+    i.rn          = rn;
+    i.rm          = rm;
+    i.immediatum  = immediatum;
+    i.translatio  = translatio;
+    redde codificator_a64_emittere(c, &i);
+}
+
+/* saltus condicionalis in registro (cbz/cbnz) ad notam */
+interior b32
+_saltum_registri_emittere (
+    CodificatorA64* c,
+               s32  forma,
+               s32  latitudo,
+               s32  locellus,
+               s32  nota)
+{
+    CodificatorA64Instructio i;
+
+    memset(&i, ZEPHYRUM, magnitudo(i));
+    i.forma     = forma;
+    i.latitudo  = latitudo;
+    i.rd        = locellus;
+    redde codificator_a64_saltum_emittere(c, &i, nota);
+}
+
+interior b32
+_trampolinum_emittere (
+    CodificatorA64* c)
+{
+    s64 off_x        = (s64)offsetof(EffugiumArgumenta, x);
+    s64 off_d        = (s64)offsetof(EffugiumArgumenta, d);
+    s64 off_stiva    = (s64)offsetof(EffugiumArgumenta, stiva);
+    s64 off_numerus  = (s64)offsetof(EffugiumArgumenta, numerus_stivae);
+    s64 off_x8       = (s64)offsetof(EffugiumArgumenta, x8);
+    s64 off_fx       = (s64)offsetof(EffugiumFructus, x);
+    s64 off_fd       = (s64)offsetof(EffugiumFructus, d);
+    s32 nota_ansa;
+    s32 nota_sine_stiva;
+    s32 k;
+    b32 bene;
+
+    nota_ansa        = codificator_a64_notam_creare(c);
+    nota_sine_stiva  = codificator_a64_notam_creare(c);
+
+    /* prologus: stp x29,x30,[sp,#-32]!; mov x29,sp;
+     * stp x19,x20,[sp,#16] */
+    bene =
+           _e(c, CODIFICATOR_A64_STP, VIII, R_FP, R_SP, R_LR,
+               -(s64)TABULATUM, CODIFICATOR_A64_ANTE)
+        && _e(c, CODIFICATOR_A64_ADD_IMM, LXIV, R_FP, R_SP, 0, 0, 0)
+        && _e(c, CODIFICATOR_A64_STP, VIII, R_FRUCTUS, R_SP,
+               R_ARGUMENTA, XVI, CODIFICATOR_A64_OFFSET)
+        /* mov x19,x2; mov x20,x1; mov x16,x0 */
+        && _e(c, CODIFICATOR_A64_ORR_REG, LXIV, R_FRUCTUS, R_SP, II, 0,
+               0)
+        && _e(c, CODIFICATOR_A64_ORR_REG, LXIV, R_ARGUMENTA, R_SP, I,
+               0, 0)
+        && _e(c, CODIFICATOR_A64_ORR_REG, LXIV, R_INTROITUS, R_SP, 0,
+               0, 0)
+        /* verba stivae: w9 = numerus; nullus -> transili */
+        && _e(c, CODIFICATOR_A64_LDR_IMM, IV, R_NUMERUS, R_ARGUMENTA,
+               0, off_numerus, 0)
+        && _saltum_registri_emittere(c, CODIFICATOR_A64_CBZ, XXXII,
+        R_NUMERUS,
+               nota_sine_stiva)
+        && _e(c, CODIFICATOR_A64_LDR_IMM, VIII, R_FONS, R_ARGUMENTA, 0,
+               off_stiva, 0)
+        /* x12 = (numerus * 8 + 15) & ~15 */
+        && _e(c, CODIFICATOR_A64_UBFM, LXIV, R_OCTETI, R_NUMERUS, 0,
+               LXI, LX)
+        && _e(c, CODIFICATOR_A64_ADD_IMM, LXIV, R_OCTETI, R_OCTETI, 0,
+               XV, 0)
+        && _e(c, CODIFICATOR_A64_AND_IMM, LXIV, R_OCTETI, R_OCTETI, 0,
+               (s64)~(i64)XV, 0)
+        /* sp -= x12 (per x11: SUB_REG registrum XXXI ut XZR legit) */
+        && _e(c, CODIFICATOR_A64_ADD_IMM, LXIV, R_DESTINATIO, R_SP, 0,
+               0, 0)
+        && _e(c, CODIFICATOR_A64_SUB_REG, LXIV, R_DESTINATIO,
+               R_DESTINATIO, R_OCTETI, 0, 0)
+        && _e(c, CODIFICATOR_A64_ADD_IMM, LXIV, R_SP, R_DESTINATIO, 0,
+               0, 0);
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    /* ansa: verbum unum per circuitum, ordine ascendente */
+    codificator_a64_notam_ponere(c, nota_ansa);
+    bene =
+           _e(c, CODIFICATOR_A64_LDR_IMM, VIII, R_VERBUM, R_FONS, 0, 0,
+               0)
+        && _e(c, CODIFICATOR_A64_STR_IMM, VIII, R_VERBUM, R_DESTINATIO,
+               0, 0, 0)
+        && _e(c, CODIFICATOR_A64_ADD_IMM, LXIV, R_FONS, R_FONS, 0,
+               VIII, 0)
+        && _e(c, CODIFICATOR_A64_ADD_IMM, LXIV, R_DESTINATIO,
+               R_DESTINATIO, 0, VIII, 0)
+        && _e(c, CODIFICATOR_A64_SUB_IMM, LXIV, R_NUMERUS, R_NUMERUS,
+               0, I, 0)
+        && _saltum_registri_emittere(c, CODIFICATOR_A64_CBNZ, LXIV,
+        R_NUMERUS,
+               nota_ansa);
+    si (!bene)
+    {
+        redde FALSUM;
+    }
+    codificator_a64_notam_ponere(c, nota_sine_stiva);
+    /* d0-d7, x8, x0-x7 ex argumentis (x20 basis manet) */
+    per (k = ZEPHYRUM; k < VIII && bene; k++)
+    {
+        bene = _e(c, CODIFICATOR_A64_LDR_FP_IMM, VIII, k, R_ARGUMENTA,
+            0, off_d + (s64)k * VIII, 0);
+    }
+    bene = bene
+        && _e(c, CODIFICATOR_A64_LDR_IMM, VIII, VIII, R_ARGUMENTA, 0,
+               off_x8, 0);
+    per (k = ZEPHYRUM; k < VIII && bene; k++)
+    {
+        bene = _e(c, CODIFICATOR_A64_LDR_IMM, VIII, k, R_ARGUMENTA, 0,
+            off_x + (s64)k * VIII, 0);
+    }
+    /* vocatio; deinde x0:x1 et d0-d3 in fructum */
+    bene = bene
+        && _e(c, CODIFICATOR_A64_BLR, LXIV, 0, R_INTROITUS, 0, 0, 0)
+        && _e(c, CODIFICATOR_A64_STR_IMM, VIII, 0, R_FRUCTUS, 0,
+               off_fx, 0)
+        && _e(c, CODIFICATOR_A64_STR_IMM, VIII, I, R_FRUCTUS, 0,
+               off_fx + VIII, 0);
+    per (k = ZEPHYRUM; k < IV && bene; k++)
+    {
+        bene = _e(c, CODIFICATOR_A64_STR_FP_IMM, VIII, k, R_FRUCTUS, 0,
+            off_fd + (s64)k * VIII, 0);
+    }
+    /* epilogus: mov sp,x29 (verba stivae relinquuntur);
+     * ldp x19,x20,[sp,#16]; ldp x29,x30,[sp],#32; ret */
+    redde bene
+        && _e(c, CODIFICATOR_A64_ADD_IMM, LXIV, R_SP, R_FP, 0, 0, 0)
+        && _e(c, CODIFICATOR_A64_LDP, VIII, R_FRUCTUS, R_SP,
+               R_ARGUMENTA, XVI, CODIFICATOR_A64_OFFSET)
+        && _e(c, CODIFICATOR_A64_LDP, VIII, R_FP, R_SP, R_LR,
+               (s64)TABULATUM, CODIFICATOR_A64_POST)
+        && _e(c, CODIFICATOR_A64_RET, LXIV, 0, R_LR, 0, 0, 0);
+}
+
+interior vacuum
+_effugii_causam_ponere (
+               OfficinaPiscina* piscina,
+                OfficinaChorda* causa_out,
+    constans character* nuntius)
+{
+    si (causa_out != NIHIL && piscina != NIHIL)
+    {
+        *causa_out = officina_chorda_ex_literis(nuntius, piscina);
+    }
+}
+
+/* tractator signorum: VITIUM si pc in area et vocatio pendet, aliter
+ * catena ad actionem priorem */
+interior vacuum
+_tractator (
+      integer  signum,
+    siginfo_t* notitia,
+       vacuum* contextus_crudus)
+{
+             ucontext_t* contextus  = (ucontext_t*)contextus_crudus;
+         memoriae_index  pc         = ZEPHYRUM;
+         memoriae_index  fp         = ZEPHYRUM;
+    structura sigaction* prior      = NIHIL;
+                    s32 k;
+
+    si (contextus != NIHIL && contextus->uc_mcontext != NIHIL)
+    {
+        /* arm64 (non arm64e): campi crudi sine signatura */
+        pc = (memoriae_index)contextus->uc_mcontext->__ss.__pc;
+        fp = (memoriae_index)contextus->uc_mcontext->__ss.__fp;
+    }
+    si (_activum && pc >= _area_basis && pc < _area_finis)
+    {
+        memset(&_pendens, ZEPHYRUM, magnitudo(_pendens));
+        _pendens.genus              = EFFUGIUM_VITIUM;
+        _pendens.signum_systematis  = (s32)signum;
+        _pendens.pc                 = pc;
+        _pendens.fp                 = fp;
+        siglongjmp(_ambitus, I);
+    }
+    /* catena: signum non nostrum */
+    per (k = ZEPHYRUM; k < SIGNA_NUMERUS; k++)
+    {
+        si (SIGNA[k] == signum)
+        {
+            prior = &_priores[k];
+        }
+    }
+    si (prior == NIHIL)
+    {
+        redde;
+    }
+    si ((prior->sa_flags & SA_SIGINFO) != ZEPHYRUM)
+    {
+        si (prior->sa_sigaction != NIHIL)
+        {
+            prior->sa_sigaction(signum, notitia, contextus_crudus);
+        }
+        redde;
+    }
+    si (prior->sa_handler == SIG_DFL || prior->sa_handler == SIG_IGN)
+    {
+        /* actio prior restituitur; post reditum instructio iterum
+         * currit et sub ea cadit (vitium hardware neglegi nequit) */
+        (vacuum)sigaction(signum, prior, NIHIL);
+        redde;
+    }
+    prior->sa_handler(signum);
+}
+
+/* stiva alterna + tractator pro SIGNA; actiones priores servantur */
+interior b32
+_signa_installare (vacuum)
+{
+              stack_t stiva;
+    structura sigaction  actio;
+                  s32 k;
+
+    memset(&stiva, ZEPHYRUM, magnitudo(stiva));
+    stiva.ss_sp    = _stiva_alterna;
+    stiva.ss_size  = magnitudo(_stiva_alterna);
+    si (sigaltstack(&stiva, NIHIL) != ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    memset(&actio, ZEPHYRUM, magnitudo(actio));
+    actio.sa_sigaction = _tractator;
+    (vacuum)sigemptyset(&actio.sa_mask);
+    actio.sa_flags = SA_SIGINFO | SA_ONSTACK;
+    per (k = ZEPHYRUM; k < SIGNA_NUMERUS; k++)
+    {
+        si (sigaction(SIGNA[k], &actio, &_priores[k]) != ZEPHYRUM)
+        {
+            /* quae iam posita sunt restituuntur */
+            dum (k > ZEPHYRUM)
+            {
+                k--;
+                (vacuum)sigaction(SIGNA[k], &_priores[k], NIHIL);
+            }
+            redde FALSUM;
+        }
+    }
+    _installationes++;
+    redde VERUM;
+}
+
+b32
+officina_effugium_parare (
+    OfficinaPiscina* piscina,
+     OfficinaChorda* causa_out)
+{
+                 OfficinaPiscina* propria;
+    MemoriaExsecutabilis* area;
+          CodificatorA64* c;
+                  vacuum* basis;
+          memoriae_index  mensura;
+
+    si (_area != NIHIL)
+    {
+        redde VERUM;
+    }
+    /* piscina propria permanens: status processus globalis piscinam
+     * vocantis (sectionis credo) supervivit */
+    propria = officina_piscina_generare_dynamicum("officina_effugium", 65536);
+    si (propria == NIHIL)
+    {
+        _effugii_causam_ponere(piscina, causa_out,
+            "effugium: piscina propria fracta");
+        redde FALSUM;
+    }
+    area = memoria_exsecutabilis_reservare(propria,
+        (memoriae_index)OFFICINA_NATIVUM_LOCUS,
+        (memoriae_index)OFFICINA_NATIVUM_MENSURA, causa_out);
+    si (area == NIHIL)
+    {
+        si (causa_out != NIHIL && piscina != NIHIL)
+        {
+            /* causa in piscina propria nata: in piscinam vocantis
+             * transcribitur ante destructionem */
+            *causa_out = officina_chorda_transcribere(*causa_out, piscina);
+        }
+        officina_piscina_destruere(propria);
+        redde FALSUM;
+    }
+    c = codificator_a64_creare(propria);
+    si (   c == NIHIL || !_trampolinum_emittere(c)
+        || !codificator_a64_finire(c, causa_out))
+    {
+        _effugii_causam_ponere(piscina, causa_out,
+            "effugium: trampolinum codificari nequit");
+        memoria_exsecutabilis_liberare(area);
+        officina_piscina_destruere(propria);
+        redde FALSUM;
+    }
+    mensura = (memoriae_index)codificator_a64_numerus(c) * IV;
+    si (mensura > (memoriae_index)OFFICINA_EFFUGIUM_TRAMPOLINUM)
+    {
+        _effugii_causam_ponere(piscina, causa_out,
+            "effugium: trampolinum spatium suum excedit");
+        memoria_exsecutabilis_liberare(area);
+        officina_piscina_destruere(propria);
+        redde FALSUM;
+    }
+    basis = memoria_exsecutabilis_basis(area);
+    memoria_exsecutabilis_aperire(area);
+    memcpy(basis, codificator_a64_verba(c), mensura);
+    si (!memoria_exsecutabilis_sigillare(area, ZEPHYRUM, mensura))
+    {
+        _effugii_causam_ponere(piscina, causa_out,
+            "effugium: trampolinum sigillari nequit");
+        memoria_exsecutabilis_liberare(area);
+        officina_piscina_destruere(propria);
+        redde FALSUM;
+    }
+    _area_basis = (memoriae_index)basis;
+    _area_finis = _area_basis + memoria_exsecutabilis_mensura(area);
+    si (!_signa_installare())
+    {
+        _effugii_causam_ponere(piscina, causa_out,
+            "effugium: tractator signorum installari nequit");
+        _area_basis = ZEPHYRUM;
+        _area_finis = ZEPHYRUM;
+        memoria_exsecutabilis_liberare(area);
+        officina_piscina_destruere(propria);
+        redde FALSUM;
+    }
+    /* C89 -pedantic conversionem obiecti in functionem vetat */
+    memcpy(&_trampolinum, &basis, magnitudo(_trampolinum));
+    _area = area;
+    redde VERUM;
+}
+
+MemoriaExsecutabilis*
+officina_effugium_area (vacuum)
+{
+    redde _area;
+}
+
+s32
+officina_effugium_installationes (vacuum)
+{
+    redde _installationes;
+}
+
+EffugiumFructus
+officina_effugium_vocare (
+                        vacuum* introitus,
+    constans EffugiumArgumenta* argumenta)
+{
+    EffugiumFructus fructus;
+         sigjmp_buf ambitus_prior;
+                b32 activum_prius;
+
+    memset(&fructus, ZEPHYRUM, magnitudo(fructus));
+    si (   _trampolinum == NIHIL || introitus == NIHIL
+        || argumenta    == NIHIL)
+    {
+        /* sine area aut sine introitu: vitium sine signo */
+        fructus.genus = EFFUGIUM_VITIUM;
+        redde fructus;
+    }
+    /* locales post sigsetjmp non mutantur (aliter post saltum
+     * indeterminati): fructus vocationis in staticis iacet */
+    memcpy(&ambitus_prior, &_ambitus, magnitudo(ambitus_prior));
+    activum_prius = _activum;
+    si (sigsetjmp(_ambitus, I) == ZEPHYRUM)
+    {
+        _activum = VERUM;
+        memset(&_redditum, ZEPHYRUM, magnitudo(_redditum));
+        _trampolinum(introitus, argumenta, &_redditum);
+        _redditum.genus = EFFUGIUM_REDDITUM;
+    }
+    alioquin
+    {
+        _redditum = _pendens;
+    }
+    memcpy(&_ambitus, &ambitus_prior, magnitudo(_ambitus));
+    _activum = activum_prius;
+    redde _redditum;
+}
+
+vacuum
+officina_effugium_salire (
+               s64 codex,
+    memoriae_index pc,
+    memoriae_index fp)
+{
+    si (!_activum)
+    {
+        /* nulla vocatio pendens: nullus locus ad quem redeat */
+        abort();
+    }
+    memset(&_pendens, ZEPHYRUM, magnitudo(_pendens));
+    _pendens.genus  = EFFUGIUM_SALTUS;
+    _pendens.codex  = codex;
+    _pendens.pc     = pc;
+    _pendens.fp     = fp;
+    siglongjmp(_ambitus, I);
 }

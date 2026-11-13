@@ -20,6 +20,7 @@
 
 #include "postulata_posix.h"
 #include "officina_machinula.h"
+#include "officina_effugium.h"
 #include "lectiones.h"
 
 #include <stdio.h>
@@ -2498,6 +2499,157 @@ _memoriam_probare (
     redde VERUM;
 }
 
+
+/* ==================================================
+ * NATIVUM (M5 T6): vocatio codicis nativi per officina_effugium
+ * ================================================== */
+
+/* argumenta in registra AAPCS64 ordinat (integra in x, fluitantia in
+ * d - classes separatae), vocat, fructum per typum vocationis
+ * reddit. typi = limina loci vocationis (NIHIL licet solum sine
+ * argumentis). FALSUM = halitus positus. */
+interior b32
+_nativum_vocare (
+                         Machinula* m,
+                               s64  introitus,
+    constans MedullaTypusLiminis* typi,
+                      constans i64* argumenta,
+                               s32  numerus,
+                               b32  variadica,
+                               s32  typus_reditus,
+                               i64* fructus_out)
+{
+    EffugiumArgumenta ordinata;
+      EffugiumFructus fructus;
+                  s32 k;
+
+    memset(&ordinata, ZEPHYRUM, magnitudo(ordinata));
+    *fructus_out = ZEPHYRUM;
+    si (variadica)
+    {
+        _vitium(m, "nativum: vocatio variadica (Opus VIII)");
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        s32 typus = (typi != NIHIL) ? typi[k].typus
+            : MEDULLA_TYPUS_NIHIL;
+
+        si (typus < ZEPHYRUM)
+        {
+            /* sine typo classis ignota: f64 in x iret */
+            _vitium(m, "nativum: argumentum sine typo");
+            redde FALSUM;
+        }
+        si (typus == MEDULLA_TYPUS_AGGREGATUM || typi[k].est_reditus)
+        {
+            _vitium(m, "nativum: aggregatum aut %reditus (Opus VIII)");
+            redde FALSUM;
+        }
+        si (typus == MEDULLA_TYPUS_F64 || typus == MEDULLA_TYPUS_F32)
+        {
+            unio { i64 v; f64 f; } u;
+
+            si (ordinata.numerus_d >= VIII)
+            {
+                _vitium(m, "nativum: argumenta fluitantia plura quam"
+                    " VIII (Opus VIII)");
+                redde FALSUM;
+            }
+            /* figura cruda: f32 in dimidio inferiore d */
+            u.v = (typus == MEDULLA_TYPUS_F32)
+                ? (argumenta[k] & (i64)0xFFFFFFFF) : argumenta[k];
+            ordinata.d[ordinata.numerus_d] = u.f;
+            ordinata.numerus_d++;
+        }
+        alioquin
+        {
+            si (ordinata.numerus_x >= VIII)
+            {
+                _vitium(m, "nativum: argumenta integra plura quam"
+                    " VIII (Opus VIII)");
+                redde FALSUM;
+            }
+            ordinata.x[ordinata.numerus_x] = argumenta[k];
+            ordinata.numerus_x++;
+        }
+    }
+    fructus = officina_effugium_vocare(
+        (vacuum*)(memoriae_index)introitus, &ordinata);
+    si (fructus.genus == EFFUGIUM_SALTUS)
+    {
+        _halitum_ponere(m, MACHINULA_VITIUM, fructus.codex,
+            "nativum: saltus ex codice nativo");
+        redde FALSUM;
+    }
+    si (fructus.genus != EFFUGIUM_REDDITUM)
+    {
+        character nuntius[CXXVIII];
+
+        si (fructus.signum_systematis == ZEPHYRUM)
+        {
+            _vitium(m, "nativum: effugium non paratum");
+            redde FALSUM;
+        }
+        sprintf(nuntius, "nativum: signum %d ad pc 0x%lx",
+            (int)fructus.signum_systematis,
+            (insignatus longus)fructus.pc);
+        _vitium(m, nuntius);
+        redde FALSUM;
+    }
+    si (typus_reditus == MEDULLA_TYPUS_F64)
+    {
+        unio { i64 v; f64 f; } u;
+
+        u.f           = fructus.d[ZEPHYRUM];
+        *fructus_out  = u.v;
+    }
+    alioquin si (typus_reditus == MEDULLA_TYPUS_F32)
+    {
+        unio { i64 v; f64 f; } u;
+
+        u.f           = fructus.d[ZEPHYRUM];
+        *fructus_out  = u.v & (i64)0xFFFFFFFF;
+    }
+    alioquin si (typus_reditus >= ZEPHYRUM)
+    {
+        *fructus_out = _canonicum(fructus.x[ZEPHYRUM], typus_reditus);
+    }
+    redde VERUM;
+}
+
+b32
+machinula_nativum_ponere (
+    Machinula* m,
+       chorda  titulus_functionis,
+       vacuum* introitus)
+{
+                         s32  index;
+    constans ConexioSymbolum* symbolum;
+           ConexioDescriptor* descriptor;
+
+    si (m == NIHIL || introitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    index = conexio_symbolum_quaerere(m->conexio, titulus_functionis);
+    si (index < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    symbolum = conexio_symbolum_obtinere(m->conexio, index);
+    si (symbolum->genus != CONEXIO_SYMBOLUM_FUNCTIO)
+    {
+        redde FALSUM;
+    }
+    /* signum in situ (ut aedificata): inscriptio descriptoris, iam
+     * in relocationibus sarcita, immota manet */
+    descriptor          = (ConexioDescriptor*)symbolum->sedes;
+    descriptor->signum  = CONEXIO_SIGNUM_NATIVUM;
+    descriptor->index   = (s64)(memoriae_index)introitus;
+    redde VERUM;
+}
+
 b32
 machinula_aperire (
     Machinula* m,
@@ -2535,6 +2687,40 @@ machinula_aperire (
             alioquin
             {
                 descriptor = symbolum->sedes;
+                si (descriptor->signum == CONEXIO_SIGNUM_NATIVUM)
+                {
+                    /* principalis nativa: statim perficitur
+                     * (parametra zephyro, ut interpretata); typus
+                     * reditus ex definitore symboli - index
+                     * descriptoris iam introitus est */
+                    constans MedullaModulus* modulus = _modulum(m,
+                        symbolum->modulus_index);
+                    constans MedullaFunctio* functio  = NIHIL;
+                                        i64  fructus   =
+                                            ZEPHYRUM;
+
+                    si (   modulus                 != NIHIL
+                        && symbolum->index_localis >= ZEPHYRUM
+                        && symbolum->index_localis
+                            < (s32)xar_numerus(modulus->functiones))
+                    {
+                        functio = *(MedullaFunctio**)xar_obtinere(
+                            modulus->functiones,
+                            (i32)symbolum->index_localis);
+                    }
+                    si (functio == NIHIL)
+                    {
+                        _vitium(m, "initium: nativa sine definitore");
+                    }
+                    alioquin si (_nativum_vocare(m, descriptor->index,
+                                 NIHIL, NIHIL, ZEPHYRUM, FALSUM,
+                                 functio->typus_reditus, &fructus))
+                    {
+                        _halitum_ponere(m, MACHINULA_BENE,
+                            (s64)fructus, NIHIL);
+                    }
+                    redde FALSUM;   /* iam finita - non gradibilis */
+                }
                 nexa = conexio_functionem_obtinere(m->conexio,
                     descriptor->index);
                 (vacuum)_tabulatum_impellere(m, nexa->functio,
@@ -3171,7 +3357,8 @@ machinula_gradus (Machinula* m)
                         != CONEXIO_SIGNUM_INTERPRETATUM
                     && descriptor->signum != CONEXIO_SIGNUM_DECIPULA
                     && descriptor->signum
-                        != CONEXIO_SIGNUM_AEDIFICATUM)
+                        != CONEXIO_SIGNUM_AEDIFICATUM
+                    && descriptor->signum != CONEXIO_SIGNUM_NATIVUM)
                 {
                     _vitium(m,
                         "vocatio per monstratorem insanum");
@@ -3253,6 +3440,27 @@ machinula_gradus (Machinula* m)
                 {
                     frange;
                 }
+            }
+            alioquin si (descriptor->signum == CONEXIO_SIGNUM_NATIVUM)
+            {
+                i64 fructus = ZEPHYRUM;
+
+                si (!_nativum_vocare(m, descriptor->index,
+                        (plana->operanda_typi != NIHIL)
+                            ? &plana->operanda_typi[
+                                instructio->extra_index]
+                            : NIHIL,
+                        argumenta, numerus_argumentorum,
+                        instructio->argumenta_fixa >= ZEPHYRUM,
+                        instructio->typus, &fructus))
+                {
+                    frange;   /* halitus iam positus */
+                }
+                si (instructio->destinatio >= ZEPHYRUM)
+                {
+                    t->registra[instructio->destinatio] = fructus;
+                }
+                t->instructio += I;
             }
             alioquin si (descriptor->signum
                          == CONEXIO_SIGNUM_AEDIFICATUM)

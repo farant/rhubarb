@@ -76,14 +76,12 @@ interior constans character* constans EXCLUDENDA_CHORDAE[] = {
 interior constans character* constans EXCLUDENDA_AEDIFICATORIS[] = {
     "_evadere_json",
     "_format_duplex",
-    "_format_integer_s32",
     "chorda_aedificator_appendere_evasus_json",
     "chorda_aedificator_appendere_f64",
     "chorda_aedificator_appendere_hex_i32",
     "chorda_aedificator_appendere_indentationem",
     "chorda_aedificator_appendere_lineam_novam",
     "chorda_aedificator_appendere_literis_evasus_json",
-    "chorda_aedificator_appendere_s32",
     "chorda_aedificator_destruere",
     "chorda_aedificator_indentatio_gradus",
     "chorda_aedificator_longitudo",
@@ -143,5 +141,16 @@ interior constans character* constans EXCLUDENDA_XARIS[] = {
 
 interior constans character* constans EXCLUDENDA_LECTIONUM[] = {
     "lectiones_ambitus",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_CODIFICATORIS[] = {
+    "_fmov_valor",
+    "codificator_a64_constans",
+    "codificator_a64_fmov_immediatum",
+    NIHIL
+};
+
+interior constans character* constans EXCLUDENDA_MEMORIAE_EXSECUTABILIS[] = {
     NIHIL
 };

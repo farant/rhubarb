@@ -2128,4 +2128,10 @@
   <vocabulum lemma="protrusio" lingua="latina" classis="substantivum" nota="protrusio, -onis f. (ex protrudere): textus ultra marginem prominens - signum textus gabc pr (include/gabc.h)"><forma textus="protrusio"/></vocabulum>
   <vocabulum lemma="tractio" lingua="latina" classis="substantivum" nota="tractio, -onis f. (ex trahere): actus trahendi - tractio DESCENSUS acta a servo petit; tractiones vacuae = tractiones sine actis et sine plura (include/communio_cliens.h)"><forma textus="tractio"/><forma textus="tractiones"/></vocabulum>
   <vocabulum lemma="excitatio" lingua="latina" classis="substantivum" nota="excitatio, -onis f. (ex excitare): actus excitandi - pulsus content-available appem in tergo excitat, fenestra excitationis (include/testa_cursus.h, tergum-plan)"><forma textus="excitatio"/><forma textus="excitationem"/><forma textus="excitationis"/><forma textus="excitationes"/></vocabulum>
+  <vocabulum lemma="trampolinum" lingua="latina" classis="substantivum" nota="trampolinum, -i n. (vox domus, ex It. trampolino): frustum codicis nativi quod argumenta in registra ponit, functionem vocat et fructum reddit - pons inter machinulam et codicem nativum (officina/fontes/officina_effugium.h, officina M5 T6)"><forma textus="trampolinum"/><forma textus="trampolini"/></vocabulum>
+  <vocabulum lemma="installo" lingua="latina" classis="verbum" nota="installo, -are (Lat. medii aevi: in stallum ponere): tractatorem signorum aut instrumentum in locum suum ponere (officina/fontes/officina_effugium.c _signa_installare)">
+    <forma textus="installare" tempus="praesens" modus="infinitivus" vox="activa" forma-verbi="infinitivum"/>
+    <forma textus="installatio" nota="nomen actionis"/>
+    <forma textus="installationes" nota="nomen actionis, pluralis (officina_effugium_installationes)"/>
+  </vocabulum>
 </glossarium>

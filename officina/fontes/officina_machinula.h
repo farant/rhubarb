@@ -113,6 +113,22 @@ machinula_currere (
     Machinula* machinula,
        chorda  titulus_functionis);
 
+/* M5 T6: functionem nominatam in signum NATIVUM vertit - vocationes
+ * eius (directae et per monstratorem) ad introitum datum per
+ * officina_effugium eunt; FALSUM si titulus ignotus aut non functio.
+ * Vocans codicem ad introitum iam scripsit (officina_effugium_parare
+ * + area). Argumenta: scalaria registrorum solum, ex typis loci
+ * vocationis (integra in x, f32/f64 in d); aggregata, %reditus,
+ * variadicae et plura quam VIII classis unius -> halitus VITIUM
+ * nominans. Saltus aut vitium codicis nativi -> halitus VITIUM;
+ * machinula post halitum iterum utilis. Functio principalis nativa:
+ * aperire eam statim perficit (FALSUM, halitus BENE - non gradibilis). */
+b32
+machinula_nativum_ponere (
+    Machinula* machinula,
+       chorda  titulus_functionis,
+       vacuum* introitus);
+
 /* M3 chunk 4: gressus + puncta + inspectio (superficies vindicis).
  * aperire = status purgatus + tabulatum primum (VERUM si paratum);
  * gradus = instructio UNA (VERUM = pergendum); pergere = usque ad

@@ -76,6 +76,9 @@ declare -a RADIX_FONTES=(
     "lectiones"    # vigilia per librum legit (fabrica plan 5 T5a)
     "filum"        # probationes per filum delent (fabrica-8, 2026-10-27)
     "processus_posix"
+    # nativum (M5 T6): codex nativus et area exsecutabilis
+    "codificator_a64"
+    "memoria_exsecutabilis_macos"
     # bibliothecae (officina-bibliothecae T2): clausura aedilis
     "aedilis"
     "aedilis_silva"

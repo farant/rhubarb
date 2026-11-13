@@ -43,7 +43,7 @@ _in_filio (vacuum)
 }
 
 interior vacuum
-_causam_ponere (
+_memoriae_causam_ponere (
                 chorda* causa_out,
                Piscina* piscina,
     constans character* textus)
@@ -72,14 +72,14 @@ memoria_exsecutabilis_reservare (
         || (mensura_octetorum % MEMORIA_EXSECUTABILIS_PAGINA)
            != ZEPHYRUM)
     {
-        _causam_ponere(causa_out, piscina,
+        _memoriae_causam_ponere(causa_out, piscina,
             "mensura non multiplex paginae (XVI KiB)");
         redde NIHIL;
     }
     si ((inscriptio_optata % MEMORIA_EXSECUTABILIS_PAGINA)
         != ZEPHYRUM)
     {
-        _causam_ponere(causa_out, piscina,
+        _memoriae_causam_ponere(causa_out, piscina,
             "inscriptio optata non in initio paginae");
         redde NIHIL;
     }
@@ -87,7 +87,7 @@ memoria_exsecutabilis_reservare (
     {
         si (pthread_atfork(NIHIL, NIHIL, _in_filio) != ZEPHYRUM)
         {
-            _causam_ponere(causa_out, piscina,
+            _memoriae_causam_ponere(causa_out, piscina,
                 "pthread_atfork defecit");
             redde NIHIL;
         }
@@ -98,14 +98,15 @@ memoria_exsecutabilis_reservare (
         MAP_PRIVATE | MAP_ANON | MAP_JIT, -I, ZEPHYRUM);
     si (locus == MAP_FAILED)
     {
-        _causam_ponere(causa_out, piscina, "mmap MAP_JIT defecit");
+        _memoriae_causam_ponere(causa_out, piscina,
+            "mmap MAP_JIT defecit");
         redde NIHIL;
     }
     si (   inscriptio_optata     != ZEPHYRUM
         && (memoriae_index)locus != inscriptio_optata)
     {
         (vacuum)munmap(locus, mensura_octetorum);
-        _causam_ponere(causa_out, piscina,
+        _memoriae_causam_ponere(causa_out, piscina,
             "systema sedem aliam dedit (inscriptio optata occupata)");
         redde NIHIL;
     }
@@ -114,7 +115,7 @@ memoria_exsecutabilis_reservare (
     si (m == NIHIL)
     {
         (vacuum)munmap(locus, mensura_octetorum);
-        _causam_ponere(causa_out, piscina, "piscina defecit");
+        _memoriae_causam_ponere(causa_out, piscina, "piscina defecit");
         redde NIHIL;
     }
     m->basis    = locus;

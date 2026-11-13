@@ -5471,3 +5471,116 @@ Step split agreed with Fran (one T6 commit at the end):
    so untyped marshalling fails the plant), "nativum principale",
    "saltus" (reuse after halt), "transitus iteratus" (10^6 calls,
    constant stack apex); plant: untyped args.
+
+### T6 — resumed 2026-11-12 (Fable 5.2): steps 1 and 2 written, UNCOMMITTED
+
+Question was whether the effugium layer could be written at all after
+the two cut-offs on 2026-11-04. Answer: yes - officina_effugium.c went
+through in full, both the trampoline/entry/escape (step 1) and the
+fault handler (step 2). No cut-off, nothing reworded to get there.
+
+In the tree, not committed (T6 is one commit at the end, on Fran's word):
+- officina/fontes/officina_effugium.{h,c}: header as approved (+
+  OFFICINA_EFFUGIUM_TRAMPOLINUM 0x1000). Trampoline emitted with
+  codificator_a64 at offset 0 (frame 32 bytes, x19/x20 saved, stack
+  words copied below sp rounded to 16, d0-d7, x8, x0-x7, blr, x0:x1 +
+  d0-d3 stored). vocare = sigsetjmp(.., 1) then trampoline; previous
+  ambitus saved/restored (nesting). salire = pending result +
+  siglongjmp; abort() when no call is pending. Handler for SIGSEGV /
+  SIGBUS / SIGILL on a static sigaltstack, installed once in parare;
+  pc inside the area and a call pending -> VITIUM (signal, pc, fp);
+  anything else chains to the previous action (SA_SIGINFO handler
+  called; plain handler called; SIG_DFL/SIG_IGN restored and the
+  handler returns so the instruction re-faults under it).
+- officina/probationes/probatio_officina_nativum.c: 10 sections
+  (parare, reditus, registra integra incl. x8 -> x1, registra
+  fluitantia d0-d7 -> d0-d3, verba stivae with an odd count, saltus +
+  reuse, vitium null load with pc = entry+4 + reuse, instructio
+  illicita SIGILL, installationes == 1, catena to the suite's own
+  earlier SIGSEGV handler). 10/10, also under CREDO_ORDO mixtus:1/7/42.
+- Plants, 11, all red: unrounded stack size; x8 not loaded; salire
+  codex lost; one d result only; pending result altered; chain removed
+  (HANGS - the fault re-executes forever; killed); area bounds not
+  checked (HANGS); signal number lost; SIGILL not installed;
+  installation repeated. Two reds are hangs, not failures.
+- officina/compile_probationes.sh RADIX_FONTES += codificator_a64,
+  memoria_exsecutabilis_macos.
+
+OPEN, and why the worktree's officina suite is 18/19 right now:
+officina/fontes/*.c are the amalgam's roots, so the new file pulls
+itself, codificator_a64 and memoria_exsecutabilis_macos into
+officina.c. Three static-name collisions fixed on the way (mine
+renamed; `_causam_ponere` in lib/memoria_exsecutabilis_macos.c ->
+`_memoriae_causam_ponere` by renominare -via, lib touched). Then the
+exclusion generator stops: "nomen inclassificabile:
+codificator_a64_constans" - the two new libs have no exclusion-list
+entry in fontes_politica.sh (excludenda_pro / BASES), so their unused
+functions cannot be pruned. fontes_generata.h is regenerated (18 + 18),
+officina.c is NOT, so every launcher that needs a fresh amalgam fails
+(probatio_officina_lanceatores FRACTA; the other 18 suites green).
+Decision needed: add policy entries for the two libs (the plan's Task
+7 puts them in the launchers anyway), or keep effugium out of the
+amalgam until step 3 wires machinula to it.
+
+Not done: step 3 (machinula seam: NATIVUM arm, machinula_nativum_ponere,
+CONEXIO_SIGNUM_NATIVUM, "nativum vocatum" / "nativum principale" /
+"transitus iteratus"), and the plan's Task 9 test of a native fault
+inside a credo suite.
+
+Lesson for plants that can hang: run the suite in its own session and
+kill the group on timeout; a leftover spinning test holds
+officina/build/cursor.sera and every later run waits 600 s on it.
+
+### T6 — step 3 + amalgam, same day (2026-11-12): COMPLETE, UNCOMMITTED
+
+Amalgam (Fran: add the policy entries): fontes_politica.sh
+excludenda_pro + bases_excludendae gained codificator_a64 and
+memoria_exsecutabilis_macos; fontes and excludenda regenerated (117
+names, 6 rounds); officina.c VERIFICATUM, hospes 81/81. The four
+launcher root lists in officina/aedificatio.stml (colloquium, cursor,
+fusor, interpretare) gained officina/fontes/officina_effugium.c right
+after machinula - their scripts compile every officina/fontes object
+but link libs only from the generated list, so without it they failed
+with `_codificator_a64_creare` undefined.
+
+Step 3, the machinula seam:
+- officina_conexio.h: CONEXIO_SIGNUM_NATIVUM 4 (index = entry address).
+- machinula_nativum_ponere(m, titulus, introitus): flips the
+  descriptor in place, like the AEDIFICATUM binding. FALSUM for an
+  unknown name or a non-function.
+- _nativum_vocare: arguments by the call site's limina - ints to x,
+  f32/f64 to d as raw bits (f32 in the low half), classes counted
+  apart. Halts (VITIUM, message names it): untyped argument, aggregate
+  or %reditus, variadic call, more than 8 of a class. Result by the
+  call's typus: x0 canonicalised; f64 = d0 bits; f32 = low 32 bits.
+  SALTUS -> VITIUM with codex = trap code, nuntius "nativum: saltus ex
+  codice nativo"; VITIUM -> "nativum: signum N ad pc 0x..."; unprepared
+  effugium -> "nativum: effugium non paratum".
+- VOCARE arm: NATIVUM branch; the indirect-call signum check accepts it.
+- machinula_aperire on a NATIVUM top function: called directly, result
+  typed by the function's typus_reditus (found through the symbol's
+  modulus_index / index_localis, since the descriptor's index is now
+  the entry); halitus BENE, returns FALSUM (finished, not steppable).
+- machinula_nativum_ponere is NOT in the public officina.h yet.
+
+Tests: probatio_officina_nativum now 16 sections - the ten above plus
+"nativum vocatum" ($f(f64, s32) native: fcvtzs + add -> 42; before the
+flip the interpreted body returns 0), "nativum principale" (currere 42;
+aperire FALSUM with codex 42), "nativum saltus" (VITIUM codex 7, then
+$alter -> 42 on the same machinula), "nativum vitium" (null load,
+message names the signal, machinula reusable), "nativum argumenta
+nimia" (9 ints -> halt), "transitus iteratus" (10^6 calls from an
+interpreted loop = 1000000, stack apex equal to the 10-call run,
+installationes == 1). 16/16, also CREDO_ORDO mixtus:3/11. A Regio has a
+fixed base, one per process at a time: the suite keeps it in a static
+and a per-section purgare destroys it (a section that aborts on
+CREDO_NECESSE would otherwise starve every later one - seen).
+Plants, 6, all red: arguments marshalled without types; the 8-int
+limit lifted; SALTUS treated as a return; trap code lost; native main
+result dropped; nativum_ponere accepting an unknown name.
+
+State: officina 19/19, probatio_memoria_exsecutabilis and
+probatio_codificator_a64 green. Not yet run: commissio and the gates it
+owes (lib/ touched -> radix and more), fusio. Not done by design: the
+plan's Task 9 "vitium et credo" (a native fault inside a credo suite).
+Next in the plan: Task 7 (backend I, `interpretare -nativum`).
