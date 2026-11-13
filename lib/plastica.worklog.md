@@ -104,3 +104,36 @@ Plants (all red, file restored): top cap flipped; mirror without
 the winding swap; hash ignoring the seed (sphaera, sparsio); wedge
 side flipped; outline order not normalised; lathe quad broken;
 series step not growing; node limit lifted.
+
+## 2026-11-12 - T10: the first assets (`plastica/res`)
+
+Ten assets: well, fence section, boulder, rock, pine, oak, bush,
+crate, signpost, stair. What modelling them taught:
+
+- **A thin thing needs an unseen blocker.** Fence rails, the pine
+  and oak trunks and the signpost are thinner than two walk cells,
+  so each carries an invisible 0.5-wide solid box. The crown of a
+  tree stays unmarked: you walk under it.
+- **UVs count from the solid's own centre.** A box 1 unit wide shows
+  a 16-texel tile shifted by half (u runs -8 .. 8). The signpost's
+  arrow is therefore written with its rows rotated by 8 texels; the
+  comment in `index_viae.stml` says so. Vertically the tile is
+  aligned (the base is at y = 0).
+- **Frames as geometry, not texture.** The crate's dark frame is
+  twelve thin boxes (two nested `speculum`s), not a texture: it
+  catches light and needs no alignment.
+- **A cap on a rock reads as a hole** when it is darker than the
+  rock under dithering. The boulder's moss is lighter and flatter
+  than first drawn.
+- **Rocks sink a little** (asperity moves the lowest vertex below
+  y = 0, about 0.08). On grass that reads as a rock sitting in the
+  ground; left as is.
+- **The stair is measured, not guessed.** The level has strata at
+  y 0.5, 4.5 and 8.5; the cliff under the top plateau runs straight
+  along z = 12 (slope cells at z 11.875 and 12.125). Eight steps of
+  0.5 rise and 0.5 depth, 3 wide, all marked walkable; the top step
+  is 1.0 deep so it covers the cliff's edge. Placed with its foot
+  at z 15.75 and turned 90 degrees it joins 4.5 to 8.5 exactly.
+- Dithered, dark foliage and bark lose most of their texture; the
+  silhouette carries the pine and the oak. Stone, thatch and planks
+  keep theirs.

@@ -1,10 +1,67 @@
 <!-- clearing.stml - dispositio loci 'clearing' (latus $world):
      locus nudus (planum.glb) et res plasticae in locis suis. Locus
-     "x z" in unitatibus mundi; altitudo ex solo sub puncto.
+     "x z" in unitatibus mundi (0 .. 64); altitudo ex solo sub
+     puncto. Strata loci: imum (y 0.5), medium (4.5), summum (8.5).
      Aedificatio: bin/mundus condere -volumen V. Pictura rei unius
      in loco: bin/mundus specimen RES -o PNG -locus "x z". -->
 <locus titulus="clearing"
        basis="probationes/fixa/statuae/planum.glb">
-  <!-- puteus in prato superiore, prope initium -->
+
+  <!-- pratum medium, prope initium (32, 32) -->
   <res fons="plastica/res/puteus.stml" locus="27 29" gyrus="20"/>
+  <res fons="plastica/res/quercus.stml" locus="38 31" gyrus="40"/>
+  <res fons="plastica/res/frutex.stml" locus="24.5 31.5"/>
+  <res fons="plastica/res/frutex.stml" locus="30 34.5" gyrus="120"/>
+  <res fons="plastica/res/frutex.stml" locus="41 33" gyrus="250"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="33.5 29.5"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="21 33" gyrus="70"/>
+  <res fons="plastica/res/saxum_magnum.stml" locus="15 30.5"
+       gyrus="15"/>
+
+  <!-- scalae ad stratum summum: pes ad z 15.75, ascendunt versus
+       -z (gyrus XC), gradus summus marginem rupis (z 12) tegit -->
+  <res fons="plastica/res/scalae.stml" locus="16 15.75" gyrus="90"/>
+  <res fons="plastica/res/index_viae.stml" locus="19 17" gyrus="90"/>
+
+  <!-- pratum septentrionale: pini et saxa -->
+  <res fons="plastica/res/pinus.stml" locus="6 15"/>
+  <res fons="plastica/res/pinus.stml" locus="9 17" gyrus="30"/>
+  <res fons="plastica/res/pinus.stml" locus="4 17.5" gyrus="60"/>
+  <res fons="plastica/res/saxum_magnum.stml" locus="40 15"
+       gyrus="200"/>
+  <res fons="plastica/res/frutex.stml" locus="35 14" gyrus="45"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="46 16"
+       gyrus="140"/>
+  <res fons="plastica/res/pinus.stml" locus="50 20" gyrus="15"/>
+  <res fons="plastica/res/pinus.stml" locus="56 16" gyrus="80"/>
+
+  <!-- stratum summum: quod scalae aperiunt -->
+  <res fons="plastica/res/quercus.stml" locus="10 6" gyrus="100"/>
+  <res fons="plastica/res/pinus.stml" locus="24 4"/>
+  <res fons="plastica/res/pinus.stml" locus="27 6.5" gyrus="45"/>
+  <res fons="plastica/res/saxum_magnum.stml" locus="18 5"
+       gyrus="300"/>
+  <res fons="plastica/res/arca.stml" locus="13.5 9" gyrus="25"/>
+
+  <!-- pratum imum: casa, saepes, arcae -->
+  <res fons="plastica/res/saepes.stml" locus="25 50"/>
+  <res fons="plastica/res/saepes.stml" locus="27 50"/>
+  <res fons="plastica/res/saepes.stml" locus="29 50"/>
+  <res fons="plastica/res/saepes.stml" locus="31 50"/>
+  <res fons="plastica/res/saepes.stml" locus="33 50"/>
+  <res fons="plastica/res/saepes.stml" locus="23.75 42" gyrus="90"/>
+  <res fons="plastica/res/saepes.stml" locus="23.75 44" gyrus="90"/>
+  <res fons="plastica/res/saepes.stml" locus="23.75 46" gyrus="90"/>
+  <res fons="plastica/res/arca.stml" locus="34.5 44.5"/>
+  <res fons="plastica/res/arca.stml" locus="34.6 45.7" gyrus="15"/>
+  <res fons="plastica/res/arca.stml" locus="35.7 45" gyrus="70"/>
+  <res fons="plastica/res/quercus.stml" locus="48 46" gyrus="200"/>
+  <res fons="plastica/res/quercus.stml" locus="6 40" gyrus="310"/>
+  <res fons="plastica/res/pinus.stml" locus="14 44"/>
+  <res fons="plastica/res/pinus.stml" locus="17 47.5" gyrus="50"/>
+  <res fons="plastica/res/pinus.stml" locus="18 57" gyrus="20"/>
+  <res fons="plastica/res/frutex.stml" locus="21.5 52" gyrus="30"/>
+  <res fons="plastica/res/frutex.stml" locus="36 51.5" gyrus="200"/>
+  <res fons="plastica/res/saxum_parvum.stml" locus="46.5 39.5"
+       gyrus="20"/>
 </locus>

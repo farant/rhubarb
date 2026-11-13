@@ -59,3 +59,23 @@
   root).
 
 Plants: see the T9 commit.
+
+## 2026-11-12 - plastica T10: the furnished clearing
+
+`apps/mundus/loci/clearing.stml` places 42 props on the bare level.
+Numbers (pinned in test `pratum` of `probatio_mundus_locus`):
+walkable cells 60626 -> 60043; reachable from the start 42881 ->
+46683, of which 5405 are on the top plateau, which no stair of the
+kit reaches - ours does. Without the top plateau fewer cells are
+reachable than on the bare level (props only close cells), which the
+test also holds. Removing the stair from the layout turns the test
+red (top plateau 0).
+
+How the spots were chosen: a throwaway test program (kept out of the
+tree) drew the walk map at 2 pixels per cell with heights and
+reachability and rendered frames with the mushroom man at chosen
+spots. `bin/mundus condere` names a bad spot with its line (two
+props were first put in ponds).
+
+Still unreachable, as on the bare level: the north-east corner and
+the plateau south of the hut.

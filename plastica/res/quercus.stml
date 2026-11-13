@@ -1,0 +1,17 @@
+<res titulus="oak">
+  <!-- quercus: truncus crassus, coma ex tribus globis asperis -->
+  <cylindrus titulus="truncus" radius="0.32" radius_summus="0.24"
+             altitudo="1.9" latera="7" color="#5e4428"
+             textura="cortex" semen="3"/>
+  <capsa titulus="obex" magnitudo="0.6 1.9 0.6" invisibilis="verum"
+         signum="solidum"/>
+  <sphaera titulus="coma" magnitudo="3.4 2.4 3.2" segmenta="8"
+           asperitas="0.3" semen="5" locus="0 1.6 0" color="#4a7a34"
+           textura="frondes"/>
+  <sphaera titulus="coma dextra" magnitudo="2.0 1.5 1.9" segmenta="6"
+           asperitas="0.3" semen="8" locus="1.2 1.5 0.5"
+           color="#44702f" textura="frondes"/>
+  <sphaera titulus="coma summa" magnitudo="2.1 1.5 2.0" segmenta="6"
+           asperitas="0.3" semen="11" locus="-0.5 2.9 -0.3"
+           color="#548a3a" textura="frondes"/>
+</res>

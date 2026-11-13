@@ -1,0 +1,18 @@
+<res titulus="pine">
+  <!-- pinus: truncus et tres coni frondium. Coma sine signo: sub ea
+       ambulatur; truncus per obicem claudit. -->
+  <cylindrus titulus="truncus" radius="0.2" radius_summus="0.14"
+             altitudo="1.3" latera="6" color="#5a3c22"
+             textura="cortex"/>
+  <capsa titulus="obex" magnitudo="0.5 1.3 0.5" invisibilis="verum"
+         signum="solidum"/>
+  <cylindrus titulus="frondes imae" radius="1.15" radius_summus="0"
+             altitudo="1.7" latera="8" locus="0 1.0 0"
+             color="#2f5a34" textura="frondes"/>
+  <cylindrus titulus="frondes mediae" radius="0.9" radius_summus="0"
+             altitudo="1.5" latera="8" locus="0 2.0 0" gyrus="22"
+             color="#35653a" textura="frondes" semen="1"/>
+  <cylindrus titulus="frondes summae" radius="0.6" radius_summus="0"
+             altitudo="1.4" latera="8" locus="0 2.95 0"
+             color="#3c7040" textura="frondes" semen="2"/>
+</res>

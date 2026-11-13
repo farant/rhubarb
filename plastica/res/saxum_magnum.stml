@@ -1,0 +1,12 @@
+<res titulus="boulder">
+  <!-- saxum magnum cum saxo minore ad latus -->
+  <sphaera titulus="saxum" magnitudo="2.2 1.5 1.8" segmenta="8"
+           asperitas="0.35" semen="4" color="#807a70" textura="saxum"
+           signum="solidum"/>
+  <sphaera titulus="saxum minus" magnitudo="0.9 0.6 0.8" segmenta="6"
+           asperitas="0.4" semen="9" locus="1.15 0 0.45"
+           color="#8c867a" textura="saxum" signum="solidum"/>
+  <sphaera titulus="muscus" magnitudo="1.0 0.3 0.8" segmenta="6"
+           asperitas="0.3" semen="2" locus="-0.25 1.22 0.05"
+           color="#7aa048" textura="muscus"/>
+</res>

@@ -1,0 +1,19 @@
+<res titulus="crate">
+  <!-- arca lignea: corpus tabulatum et trabes obscurae in oris -->
+  <capsa titulus="corpus" magnitudo="0.9 0.9 0.9" locus="0 0.02 0"
+         color="#9a7446" textura="tabulae" signum="solidum"/>
+  <speculum axis="x">
+    <speculum axis="z">
+      <capsa titulus="trabs erecta" magnitudo="0.1 0.96 0.1"
+             locus="0.44 0 0.44" color="#5e4226"/>
+      <capsa titulus="trabs summa x" magnitudo="0.5 0.1 0.1"
+             locus="0.22 0.86 0.44" color="#5e4226"/>
+      <capsa titulus="trabs summa z" magnitudo="0.1 0.1 0.5"
+             locus="0.44 0.86 0.22" color="#5e4226"/>
+      <capsa titulus="trabs ima x" magnitudo="0.5 0.1 0.1"
+             locus="0.22 0 0.44" color="#5e4226"/>
+      <capsa titulus="trabs ima z" magnitudo="0.1 0.1 0.5"
+             locus="0.44 0 0.22" color="#5e4226"/>
+    </speculum>
+  </speculum>
+</res>

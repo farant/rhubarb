@@ -605,6 +605,168 @@ _sectio_occultatio (
         5.6f) > D);
 }
 
+/* locus verus instructus (apps/mundus/loci/clearing.stml cum rebus
+ * plastica/res): numeri FIXI semel visi et in mappa oculis probati
+ * (plastica-plan T10). Dispositio aut res mutata hos numeros mutat:
+ * consulto renoventur, mappa iterum inspecta. Locus nudus: 60626
+ * gressibiles, 42881 attingibiles, stratum summum numquam attingitur
+ * (probatio_mundus_solum). */
+#define VIA_DISPOSITIONIS     "apps/mundus/loci/clearing.stml"
+#define NUDI_GRESSIBILES      60626
+#define NUDI_ATTINGIBILES     42881
+#define PRATI_RES          XLII
+#define PRATI_GRESSIBILES  60043
+#define PRATI_ATTINGIBILES 46683
+#define PRATI_SUMMAE       5405
+
+hic_manens constans s32 VICINI[VIII] = { 1, 0, -1, 0, 0, 1, 0, -1 };
+
+interior vacuum
+_sectio_pratum (
+    CredoContextus* c)
+{
+       MundusLocusFructus d = mundus_locus_legere(
+           filum_legere_totum(VIA_DISPOSITIONIS, c->piscina),
+           c->piscina);
+    MundusLocusInstructus   r;
+            StatuaFructus   basis;
+          constans Statua** statuae;
+              MundusSolum*  s;
+                       i8*  visa;
+                      s32*  acervus;
+                      i32   gressibiles   = ZEPHYRUM;
+                      i32   attingibiles  = ZEPHYRUM;
+                      i32   summae        = ZEPHYRUM;
+                      i32   n             = ZEPHYRUM;
+                      i32   k;
+                      i32   j;
+                      s32   cella_x;
+                      s32   cella_z;
+                      s32   directio;
+                      f32   x = 0.0f;
+                      f32   z = 0.0f;
+                      f32   cella = 1.0f
+                          / (f32)MUNDUS_CELLAE_PER_UNITATEM;
+
+    si (!d.successus)
+    {
+        printf("dispositio recusata (linea %u): %.*s\n",
+            (insignatus)d.linea, (integer)d.error.mensura,
+            (constans character*)d.error.datum);
+    }
+    CREDO_NECESSE (d.successus);
+    CREDO_VERUM (chorda_aequalis_literis(d.titulus, "clearing"));
+    CREDO_AEQUALIS_I32 (d.numerus, PRATI_RES);
+    basis = statua_glb_legere(filum_legere_totum(
+        chorda_ut_cstr(d.basis, c->piscina), c->piscina), c->piscina);
+    CREDO_NECESSE (basis.successus);
+    statuae = (constans Statua**)piscina_allocare(c->piscina,
+        (d.numerus + I) * magnitudo(Statua*));
+    CREDO_NECESSE (statuae != NIHIL);
+    /* res quaeque semel componitur (fons idem, index idem) */
+    per (k = ZEPHYRUM; k < d.numerus; k++)
+    {
+        per (j = ZEPHYRUM; j < k; j++)
+        {
+            si (chorda_aequalis(d.res[j].fons, d.res[k].fons))
+            {
+                frange;
+            }
+        }
+        si (j < k)
+        {
+            statuae[k] = statuae[j];
+            perge;
+        }
+        statuae[k] = _res(c, chorda_ut_cstr(filum_legere_totum(
+            chorda_ut_cstr(d.res[k].fons, c->piscina), c->piscina),
+            c->piscina));
+    }
+    r = mundus_locus_struere(basis.statua, d.res, statuae, d.numerus,
+        c->piscina);
+    si (!r.successus)
+    {
+        printf("locus recusatus (linea %u): %.*s\n",
+            (insignatus)r.linea, (integer)r.error.mensura,
+            (constans character*)r.error.datum);
+    }
+    CREDO_NECESSE (r.successus);
+    s = mundus_solum_struere(r.statua, c->piscina);
+    CREDO_NECESSE (s != NIHIL);
+    per (k = ZEPHYRUM; k < s->latitudo * s->altitudo; k++)
+    {
+        gressibiles += (i32)(s->genera[k] == MUNDUS_SOLUM_GRESSIBILE);
+    }
+    /* ambulatio corporis radii dimidii ab initio per cellas vicinas
+     * (ut probatio_mundus_solum) */
+    CREDO_NECESSE (mundus_solum_initium(s, 0.5f, &x, &z));
+    visa     = (i8*)loci_ficti_memoria(c,
+        (memoriae_index)s->latitudo * s->altitudo);
+    acervus  = (s32*)loci_ficti_memoria(c,
+        (memoriae_index)s->latitudo * s->altitudo * II
+            * magnitudo(s32));
+    cella_x = (s32)((x - s->origo_x) / cella);
+    cella_z = (s32)((z - s->origo_z) / cella);
+    visa[(i32)cella_z * s->latitudo + (i32)cella_x] = I;
+    acervus[n++] = cella_x;
+    acervus[n++] = cella_z;
+    dum (n > ZEPHYRUM)
+    {
+        f32 punctum_x;
+        f32 punctum_z;
+
+        cella_z = acervus[--n];
+        cella_x = acervus[--n];
+        attingibiles++;
+        punctum_x = s->origo_x + ((f32)cella_x + 0.5f) * cella;
+        punctum_z = s->origo_z + ((f32)cella_z + 0.5f) * cella;
+        summae += (i32)(s->altitudines[(i32)cella_z * s->latitudo
+            + (i32)cella_x] > 7.0f);
+        per (directio = ZEPHYRUM; directio < IV; directio++)
+        {
+            s32 vicina_x = cella_x + VICINI[directio * II];
+            s32 vicina_z = cella_z + VICINI[directio * II + I];
+
+            si (   vicina_x < ZEPHYRUM || vicina_z < ZEPHYRUM
+                || vicina_x >= (s32)s->latitudo
+                || vicina_z >= (s32)s->altitudo
+                || visa[(i32)vicina_z * s->latitudo + (i32)vicina_x]
+                || !mundus_solum_licet(s, punctum_x, punctum_z,
+                       punctum_x + (f32)VICINI[directio * II] * cella,
+                       punctum_z
+                           + (f32)VICINI[directio * II + I] * cella,
+                       0.5f))
+            {
+                perge;
+            }
+            visa[(i32)vicina_z * s->latitudo + (i32)vicina_x] = I;
+            acervus[n++] = vicina_x;
+            acervus[n++] = vicina_z;
+        }
+    }
+    si (   gressibiles  != PRATI_GRESSIBILES
+        || attingibiles != PRATI_ATTINGIBILES
+        || summae       != PRATI_SUMMAE)
+    {
+        printf("  pratum: gressibiles %u attingibiles %u summae %u\n",
+            (insignatus)gressibiles, (insignatus)attingibiles,
+            (insignatus)summae);
+    }
+    CREDO_AEQUALIS_I32 (gressibiles, PRATI_GRESSIBILES);
+    CREDO_AEQUALIS_I32 (attingibiles, PRATI_ATTINGIBILES);
+    CREDO_AEQUALIS_I32 (summae, PRATI_SUMMAE);
+    /* res cellas claudunt, numquam addunt extra scalas: gressibiles
+     * minus quam nudae; scalae stratum summum aperiunt, ergo
+     * attingibiles PLURES quam in loco nudo */
+    CREDO_VERUM (gressibiles < NUDI_GRESSIBILES);
+    CREDO_VERUM (NUDI_GRESSIBILES - gressibiles < M);
+    CREDO_VERUM (summae > M);
+    CREDO_VERUM (attingibiles > NUDI_ATTINGIBILES);
+    /* sine strato summo pauciores attinguntur quam in loco nudo:
+     * res nihil praeter scalas aperiunt */
+    CREDO_VERUM (attingibiles - summae < NUDI_ATTINGIBILES);
+}
+
 /* pagina plastica eundem visum et eandem cellam habet quam mundus */
 interior vacuum
 _sectio_constantes (
@@ -629,6 +791,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "occultatio", _sectio_occultatio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "pratum", _sectio_pratum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "constantes", _sectio_constantes, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

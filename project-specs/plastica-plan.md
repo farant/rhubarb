@@ -512,7 +512,7 @@ suites.
 - [x] **Step 5:** smoke script on a temporary volume; trace whether
   an open place reloads when replaced (spec AUDIENDA 6) and fix it
   in `mundus_latus` if it does not, with a test.
-- [ ] **Step 6:** as T1.
+- [x] **Step 6:** as T1.
 
 ### Task 10: the first assets and the furnished clearing
 
@@ -520,17 +520,25 @@ suites.
 `apps/mundus/loci/clearing.stml`; add one test to
 `probationes/probatio_mundus_locus.c`.
 
-- [ ] **Step 1: failing test.** The furnished real level: walkable
+  (As built: ten assets - well, fence, boulder, rock, pine, oak,
+  bush, crate, signpost, stair. The layout places 42 props. Pins:
+  walkable 60043, reachable 46683, of which 5405 on the top
+  plateau. The map and frames came from a throwaway test program,
+  not from `mundus_imago`.)
+
+- [x] **Step 1: failing test.** The furnished real level: walkable
   and reachable counts differ from the bare pins only by the cells
   under props, except that with the stair the reachable count
   rises by the top plateau (numbers pinned once seen and checked
   by eye on a map picture).
-- [ ] **Step 2:** model each asset; for each, the sheet and the
+- [x] **Step 2:** model each asset; for each, the sheet and the
   in-clearing picture until it reads well dithered.
-- [ ] **Step 3:** lay out the clearing; build; walk it headless
+- [x] **Step 3:** lay out the clearing; build; walk it headless
   (`mundus_imago` scratch program) and look at the pictures.
-- [ ] **Step 4:** commit on Fran's word; run both builds on the
-  live volume; tell Fran what is there to look at.
+- [x] **Step 4:** commit on Fran's word; run both builds on the
+  live volume; tell Fran what is there to look at. (Done
+  2026-11-12; the live builds ran before the commit so Fran could
+  look first: 9 props added, `clearing` replaced.)
 
 ## Self-review (2026-11-11)
 

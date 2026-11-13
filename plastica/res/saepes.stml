@@ -1,0 +1,14 @@
+<res titulus="fence">
+  <!-- saepes: sectio duarum unitatum secundum x; pali duo, tigna
+       duo. Tigna tenuia sunt: obex invisus gressum claudit. -->
+  <speculum axis="x">
+    <capsa titulus="palus" magnitudo="0.16 1.05 0.16" locus="0.9 0 0"
+           color="#6b4a2b" textura="tabulae"/>
+  </speculum>
+  <capsa titulus="tignum superius" magnitudo="2 0.12 0.08"
+         locus="0 0.72 0" color="#86623a" textura="tabulae" semen="2"/>
+  <capsa titulus="tignum inferius" magnitudo="2 0.12 0.08"
+         locus="0 0.32 0" color="#86623a" textura="tabulae" semen="3"/>
+  <capsa titulus="obex" magnitudo="2 1 0.5" invisibilis="verum"
+         signum="solidum"/>
+</res>

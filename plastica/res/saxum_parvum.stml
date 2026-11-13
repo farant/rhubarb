@@ -1,0 +1,5 @@
+<res titulus="rock">
+  <sphaera titulus="saxum" magnitudo="1.1 0.75 0.95" segmenta="6"
+           asperitas="0.45" semen="7" color="#8a8478" textura="saxum"
+           signum="solidum"/>
+</res>

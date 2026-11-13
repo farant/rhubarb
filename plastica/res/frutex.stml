@@ -1,0 +1,8 @@
+<res titulus="bush">
+  <sphaera titulus="frutex" magnitudo="1.5 1.0 1.4" segmenta="6"
+           asperitas="0.35" semen="3" color="#3f6e30"
+           textura="frondes" signum="solidum"/>
+  <sphaera titulus="ramus" magnitudo="0.9 0.7 0.9" segmenta="6"
+           asperitas="0.35" semen="6" locus="0.55 0.25 0.35"
+           color="#4a7e36" textura="frondes"/>
+</res>
