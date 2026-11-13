@@ -278,12 +278,34 @@ errors, fitter errors, and edition variants.
 
 ## VI. Open questions
 
-1. **Which Office** — the 1962 Breviary (Gallican psalter, texts
-   with accents from projects like Divinum Officium) or the Liturgy of
-   the Hours (Nova Vulgata psalms, four-week psalter, which our
-   calendar already counts). It does not block the tone table, the
-   syllables, or the fitter — only which texts the Office step uses.
-   Fran's call; licences of both text sources unchecked (AUDIENDA).
+1. ~~Which Office~~ — **answered 2026-11-13** (Fran): **the 1962
+   Roman Breviary**, Gallican psalter, Pius X's 1911 distribution
+   (*Divino afflatu*) — the Office our chant sources belong to (AR
+   1912 is its day-hours book; most of GregoBase is this lineage, and
+   the antiphons quote the Gallican text). Not the Liturgy of the
+   Hours (Nova Vulgata: copyrighted, antiphons would not match, and
+   `eius`/`iustitia` spelling makes consonantal i urgent).
+   **Text source: Divinum Officium**
+   (`github.com/DivinumOfficium/divinum-officium`,
+   `web/www/horas/Latin/Psalterium/Psalmorum/PsalmN.txt`), the
+   Vulgate psalter (not its Bea files). Format per line
+   `N:V text * text` with `†` at the flex and printed accents —
+   our `musica/psalmi/` format but for the `N:V ` prefix; spelling
+   with j (`ejus`, `judício`), so consonantal i (wish
+   01M7ATXS3RG8H2R6P5XCTA46RH) stays a wish. Rights, checked
+   2026-11-13 (credits page): words = Sixto-Clementine Vulgate
+   (1592), public domain; accents printed in breviaries for
+   centuries (pre-1930 printings public domain); the digital files
+   are MIT-licensed by the project — we keep their copyright and
+   licence notice beside the imported files. Soft spot: their credits
+   say the accented Scripture was "graciously supplied" by Clairval
+   and part of the psalter adapted from a Stanbrook Day-Hours
+   reproduction "with his permission", then released under MIT; risk
+   judged low. Spot-check accents against a printed pre-1930
+   post-1911 breviary when a scan is found (a 1912 *Psalterium
+   Breviarii Romani* exists, not located digitized). Cost of the
+   choice, deferred until the pane picks psalms by date: a 1960-rubrics
+   calendar beside the current US one.
 2. ~~Which book~~ — **answered 2026-11-07**: Fran has no printed
    copy; we use a public-domain scan. *Antiphonale sacrosanctae
    Romanae ecclesiae pro diurnis horis*, Typis polyglottis Vaticanis
@@ -315,7 +337,7 @@ errors, fitter errors, and edition variants.
 4. ~~Where pointed texts live~~ — **answered 2026-11-12** (plan-2
    FRAN 4): `musica/psalmi/`, one pointed `.txt` per psalm; Ps 116
    committed at T7 (`auditio -psalmus musica/psalmi/116.txt -signum
-   "8 G"`). Which Office supplies the rest stays Q1.
+   "8 G"`). The rest come from Divinum Officium (Q1, answered).
 
 ---
 
@@ -360,7 +382,7 @@ errors, fitter errors, and edition variants.
   form C (*fa-ci-ÉN-ti-bus*) would differ. The corpus check shows it.
 - How monosyllables at a cadence are treated beyond the abrupt
   cadence.
-- Licences of Divinum Officium texts and of the Nova Vulgata. (The
-  1912 Antiphonale scan exists and is readable, §VI q2.)
+- ~~Licences of Divinum Officium texts~~ — checked 2026-11-13, §VI q1
+  (MIT; words public domain). Nova Vulgata no longer needed.
 - Whether existing web tools generate gabc from psalm tones (believed
   to exist; useful once as an oracle, under the third-party rules).
