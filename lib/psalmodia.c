@@ -6,9 +6,10 @@
  * (syllabae_latinae aut VOCES_HEBRAICAE) -> versus (partes,
  * admonitiones) -> aptatio.
  *
- * Aptatio hic adhuc provisoria (planum T4): tenor in omni syllaba,
- * nota ultima clausulae in syllaba ultima semiversus (soror
- * monosyllaba ubi semiversus abrupte desinit). Regula ipsa: T5.
+ * Aptatio (planum T5): per partem (ante flexam, ante mediationem,
+ * semiversus secundus) tenor, intonatio, clausula retrorsum (REGULA
+ * ACCENTUS capitis); regulae textus deficientis et intonationis
+ * occurrentis in capite.
  */
 
 #include "psalmodia.h"
@@ -99,6 +100,9 @@ nomen structura {
     PsalmodiaAdmonitio* admonitiones;
                    i32  numerus;
                    i32  capacitas;
+                   b32  pars;   /* psalmodia_partem_aptare: signa
+                                 * omittuntur, asteriscus non
+                                 * exspectatur */
 } LectorPsalmi;
 
 
@@ -775,7 +779,13 @@ _versum_legere (
     /* signa divisionis: '*' semel; '†' semel et ante '*' */
     per (k = ZEPHYRUM; k < numerus_signorum; k++)
     {
-        si (signa[k].genus == SIGNUM_MEDIATIO)
+        si (lector->pars && signa[k].genus != SIGNUM_VERBUM)
+        {
+            signa[k].servatum = FALSUM;
+            _monere_literis(lector, numerus_lineae, signa[k].columna,
+                "signum in parte omissum");
+        }
+        alioquin si (signa[k].genus == SIGNUM_MEDIATIO)
         {
             si (mediatio)
             {
@@ -962,13 +972,13 @@ _versum_legere (
     }
 
     /* semiversus secundus */
-    si (!mediatio)
+    si (!mediatio && !lector->pars)
     {
         _monere_literis(lector, numerus_lineae, finis_columna,
             "sine asterisco");
     }
-    si (syllabae_verborum == (mediatio ? syllabae_mediationis
-        : flexa ? syllabae_flexae : ZEPHYRUM))
+    si (   !lector->pars && syllabae_verborum == (mediatio
+        ? syllabae_mediationis : flexa ? syllabae_flexae : ZEPHYRUM))
     {
         _monere_literis(lector, numerus_lineae, finis_columna,
             "semiversus vacuus");
@@ -1037,7 +1047,7 @@ _textum_legere (
 
 
 /* ==================================================
- * Aptatio (provisoria, T4)
+ * Aptatio
  * ================================================== */
 
 /* soror monosyllaba si syllaba ultima partis verbum abruptum
@@ -1058,63 +1068,330 @@ _clausulam_eligere (
     redde clausula;
 }
 
-interior vacuum
-_notam_ultimam (
-    constans PsalmodiaClausula* clausula,
-              PsalmodiaSyllaba* syllaba)
+/* syllaba i accentum verbi sui proxime sequitur (dó-MI-nus) */
+interior b32
+_post_accentum (
+    constans VersusLectus* versus,
+                      i32  i)
 {
-    si (clausula != NIHIL && clausula->numerus_locorum > ZEPHYRUM)
+                      s32  verbum = versus->verbum[i];
+    constans VerbumLectum* v;
+
+    si (verbum < 0)
     {
-        syllaba->notae = clausula->loci[clausula->numerus_locorum - I]
-            .notae;
+        redde FALSUM;
+    }
+    v = &versus->verba[verbum];
+    redde v->divisio.accentus >= 0
+        && (s32)(i - v->prima) == v->divisio.accentus + I;
+}
+
+/* notae + 'r': superveniens, nota cava */
+interior chorda
+_cavam_facere (
+    Piscina* piscina,
+     chorda  notae)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, VIII);
+
+    chorda_aedificator_appendere_chorda(a, notae);
+    chorda_aedificator_appendere_character(a, 'r');
+    redde chorda_aedificator_finire(a);
+}
+
+/* locus accentus -> <b>, praeparatio -> <i>, nota -> nullus */
+interior PsalmodiaStilus
+_stilus_loci (
+    PsalmodiaLociGenus genus)
+{
+    si (genus == PSALMODIA_LOCUS_ACCENTUS)
+    {
+        redde PSALMODIA_STILUS_ACCENTUS;
+    }
+    si (genus == PSALMODIA_LOCUS_PRAEPARATIO)
+    {
+        redde PSALMODIA_STILUS_PRAEPARATIO;
+    }
+    redde PSALMODIA_STILUS_NULLUS;
+}
+
+/* clausula retrorsum in syllabas [infima, ad) (REGULA ACCENTUS).
+ * prima: syllaba infima posita (ad si nulla). Reddit numerum locorum
+ * initialium non positorum: syllabae defecerunt, aut accentus in
+ * syllabam sub infima recederet. */
+interior i32
+_clausulam_ponere (
+                       Piscina* piscina,
+                  VersusLectus* versus,
+    constans PsalmodiaClausula* clausula,
+                           i32  infima,
+                           i32  ad,
+                           i32* prima)
+{
+    PsalmodiaSyllaba* syllabae  = versus->versus.syllabae;
+                 s32  s         = (s32)ad - I;
+                 s32  l;
+
+    per (l = (s32)clausula->numerus_locorum - I; l >= ZEPHYRUM; l--)
+    {
+        constans PsalmodiaLocus* locus = &clausula->loci[l];
+
+        si (s < (s32)infima)
+        {
+            *prima = (i32)(s + I);
+            redde (i32)(l + I);
+        }
+        si (   locus->genus == PSALMODIA_LOCUS_ACCENTUS
+            && locus->superveniens.mensura > ZEPHYRUM
+            && _post_accentum(versus, (i32)s))
+        {
+            chorda cava;
+
+            si (s - I < (s32)infima)
+            {
+                *prima = (i32)(s + I);
+                redde (i32)(l + I);
+            }
+            cava = _cavam_facere(piscina, locus->superveniens);
+            syllabae[(i32)s].notae = locus->anticipata ? locus->notae
+                : cava;
+            syllabae[(i32)(s - I)].notae = locus->anticipata ? cava
+                : locus->notae;
+            syllabae[(i32)(s - I)].stilus  = PSALMODIA_STILUS_ACCENTUS;
+            s                              -= II;
+        }
+        alioquin
+        {
+            syllabae[(i32)s].notae   = locus->notae;
+            syllabae[(i32)s].stilus  = _stilus_loci(locus->genus);
+            s--;
+        }
+    }
+    *prima = (i32)(s + I);
+    redde ZEPHYRUM;
+}
+
+/* inter locos [0, reliqui) est locus non praeparatio */
+interior b32
+_reliqui_graves (
+    constans PsalmodiaClausula* clausula,
+                           i32  reliqui)
+{
+    i32 l;
+
+    per (l = ZEPHYRUM; l < reliqui; l++)
+    {
+        si (clausula->loci[l].genus != PSALMODIA_LOCUS_PRAEPARATIO)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* mediatio deficiens: tenor + notae locorum reliquorum (praeter
+ * praeparationes) + notae syllabae primae, in syllaba prima (I: Qui
+ * = h ixi h) */
+interior vacuum
+_contrahere (
+                       Piscina* piscina,
+              PsalmodiaSyllaba* prima,
+                        chorda  tenor,
+    constans PsalmodiaClausula* clausula,
+                           i32  reliqui)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, XXXII);
+                  i32  l;
+
+    chorda_aedificator_appendere_chorda(a, tenor);
+    per (l = ZEPHYRUM; l < reliqui; l++)
+    {
+        si (clausula->loci[l].genus != PSALMODIA_LOCUS_PRAEPARATIO)
+        {
+            chorda_aedificator_appendere_chorda(a,
+                clausula->loci[l].notae);
+        }
+    }
+    chorda_aedificator_appendere_chorda(a, prima->notae);
+    prima->notae = chorda_aedificator_finire(a);
+}
+
+/* flexa in syllabas [infima, ad): ultima, et paenultima proparoxytoni;
+ * verbum abruptum in tenore; intonatio occurrens flexam omittit */
+interior vacuum
+_flexam_ponere (
+     VersusLectus* versus,
+           chorda  flexa,
+              i32  infima,
+              i32  ad)
+{
+                      s32  verbum;
+    constans VerbumLectum* v;
+                      b32  antepaenultima;
+
+    si (flexa.mensura == ZEPHYRUM || ad <= infima)
+    {
+        redde;
+    }
+    verbum = versus->verbum[ad - I];
+    si (verbum < 0 || versus->verba[verbum].abrupta)
+    {
+        redde;
+    }
+    v = &versus->verba[verbum];
+    antepaenultima = v->divisio.numerus >= III
+        && v->divisio.accentus == (s32)v->divisio.numerus - III;
+    si (antepaenultima && ad < infima + II)
+    {
+        redde;
+    }
+    versus->versus.syllabae[ad - I].notae = flexa;
+    si (antepaenultima)
+    {
+        versus->versus.syllabae[ad - II].notae = flexa;
     }
 }
 
+/* notae intonationis in syllabas [ab, ad), una per syllabam */
+interior vacuum
+_intonationem_ponere (
+        VersusLectus* versus,
+                 i32  ab,
+                 i32  ad,
+     constans chorda* notae)
+{
+    i32 i;
+
+    per (i = ab; i < ad; i++)
+    {
+        versus->versus.syllabae[i].notae   = notae[i - ab];
+        versus->versus.syllabae[i].stilus  = PSALMODIA_STILUS_NULLUS;
+    }
+}
+
+/* pars una [ab, ad): tenor, intonatio, clausula. Terminatio: notae
+ * primae deficientes omittuntur, intonatio syllabas a clausula
+ * relictas capit. Ceterae: intonatio primum; mediatio deficiens in
+ * syllabam primam contrahitur, aut omittitur si intonatio eam
+ * occupat; flexa occupata omittitur. */
+interior vacuum
+_partem_ponere (
+                       Piscina* piscina,
+                  VersusLectus* versus,
+                           i32  ab,
+                           i32  ad,
+                        chorda  tenor,
+               constans chorda* intonatio,
+                           i32  numerus_intonationis,
+                PsalmodiaFinis  finis,
+       constans PsalmodiaTonus* tonus,
+    constans PsalmodiaClausula* clausula)
+{
+    i32 infima;
+    i32 prima;
+    i32 reliqui;
+    i32 i;
+
+    si (ab >= ad)
+    {
+        redde;
+    }
+    per (i = ab; i < ad; i++)
+    {
+        versus->versus.syllabae[i].notae   = tenor;
+        versus->versus.syllabae[i].stilus  = PSALMODIA_STILUS_NULLUS;
+    }
+    si (finis == PSALMODIA_FINIS_TERMINATIO)
+    {
+        prima = ad;
+        si (clausula != NIHIL)
+        {
+            clausula = _clausulam_eligere(tonus, clausula, versus,
+                (s32)(ad - I));
+            (vacuum)_clausulam_ponere(piscina, versus, clausula, ab, ad,
+                &prima);
+        }
+        _intonationem_ponere(versus, ab, ab + (numerus_intonationis
+            < prima - ab ? numerus_intonationis : prima - ab),
+            intonatio);
+        redde;
+    }
+    infima = ab + (numerus_intonationis < ad - ab ? numerus_intonationis
+        : ad - ab);
+    _intonationem_ponere(versus, ab, infima, intonatio);
+    si (finis == PSALMODIA_FINIS_FLEXA)
+    {
+        _flexam_ponere(versus, tonus->flexa, infima, ad);
+    }
+    si (finis != PSALMODIA_FINIS_MEDIATIO || clausula == NIHIL)
+    {
+        redde;
+    }
+    clausula = _clausulam_eligere(tonus, clausula, versus, (s32)(ad
+        - I));
+    reliqui = _clausulam_ponere(piscina, versus, clausula, infima, ad,
+        &prima);
+    si (!_reliqui_graves(clausula, reliqui))
+    {
+        redde;
+    }
+    si (infima > ab)
+    {
+        /* semiversus nimis brevis pro intonatione et mediatione */
+        per (i = infima; i < ad; i++)
+        {
+            versus->versus.syllabae[i].notae = tenor;
+            versus->versus.syllabae[i].stilus =
+                PSALMODIA_STILUS_NULLUS;
+        }
+    }
+    alioquin
+    {
+        _contrahere(piscina, &versus->versus.syllabae[ab], tenor,
+            clausula, reliqui);
+    }
+}
+
+/* versus: pars ante flexam (intonatio), ante mediationem (intonatio
+ * si flexa nulla), semiversus secundus (tenor et intonatio
+ * terminationis: peregrinus) */
 interior vacuum
 _versum_aptare (
+                       Piscina* piscina,
        constans PsalmodiaTonus* tonus,
     constans PsalmodiaClausula* terminatio,
     constans PsalmodiaOptiones* optiones,
-                  VersusLectus* versus)
+                  VersusLectus* versus,
+                           b32  intonatio)
 {
-    chorda tenor_secundus = terminatio->tenor.mensura > ZEPHYRUM
-        ? terminatio->tenor : tonus->tenor;
-       s32 ultima_primae  = -I;
-       s32 ultima         = -I;
-       i32 i;
+             chorda tenor_secundus = terminatio->tenor.mensura
+                         > ZEPHYRUM ? terminatio->tenor : tonus->tenor;
+    constans chorda* initium         = tonus->initium;
+                i32  numerus_initii  = intonatio ? tonus->numerus_initii
+                         : ZEPHYRUM;
+                i32 ab              = ZEPHYRUM;
 
-    per (i = ZEPHYRUM; i < versus->versus.numerus; i++)
+    si (versus->flexa >= 0)
     {
-        PsalmodiaSyllaba* s = &versus->versus.syllabae[i];
-                     b32  secunda;
-
-        si (versus->verbum[i] < 0)
-        {
-            perge;
-        }
-        secunda   = versus->mediatio < 0 || (s32)i > versus->mediatio;
-        s->notae  = secunda ? tenor_secundus : tonus->tenor;
-        si (secunda)
-        {
-            ultima = (s32)i;
-        }
-        alioquin si ((s32)i > versus->flexa)
-        {
-            ultima_primae = (s32)i;
-        }
+        _partem_ponere(piscina, versus, ab, (i32)versus->flexa,
+            tonus->tenor, initium, numerus_initii,
+            PSALMODIA_FINIS_FLEXA,
+            tonus, NIHIL);
+        numerus_initii  = ZEPHYRUM;
+        ab              = (i32)versus->flexa + I;
     }
-    si (ultima_primae >= 0)
+    si (versus->mediatio >= 0)
     {
-        _notam_ultimam(_clausulam_eligere(tonus,
-            psalmodia_mediationem_eligere(tonus, optiones->antiqua),
-            versus, ultima_primae), &versus->versus.syllabae
-            [ultima_primae]);
+        _partem_ponere(piscina, versus, ab, (i32)versus->mediatio,
+            tonus->tenor, initium, numerus_initii,
+            PSALMODIA_FINIS_MEDIATIO, tonus,
+            psalmodia_mediationem_eligere(tonus, optiones->antiqua));
+        ab = (i32)versus->mediatio + I;
     }
-    si (ultima >= 0)
-    {
-        _notam_ultimam(_clausulam_eligere(tonus, terminatio, versus,
-            ultima), &versus->versus.syllabae[ultima]);
-    }
+    _partem_ponere(piscina, versus, ab, versus->versus.numerus,
+        tenor_secundus, &terminatio->initium, intonatio
+        && terminatio->initium.mensura > ZEPHYRUM ? I : ZEPHYRUM,
+        PSALMODIA_FINIS_TERMINATIO, tonus, terminatio);
 }
 
 
@@ -1176,17 +1453,102 @@ psalmodia_aptare (
         psalmus->versus = (PsalmodiaVersus*)piscina_allocare(piscina,
             (memoriae_index)((numerus + numerus_gloriae + I)
             * magnitudo(PsalmodiaVersus)));
-        per (k = ZEPHYRUM; k < numerus; k++)
+        per (k = ZEPHYRUM; k < numerus + numerus_gloriae; k++)
         {
-            _versum_aptare(tonus, terminatio, optiones, &lecti[k]);
-            psalmus->versus[psalmus->numerus_versuum++] =
-                lecti[k].versus;
+            VersusLectus* v = k < numerus ? &lecti[k]
+                : &gloriae[k - numerus];
+
+            _versum_aptare(piscina, tonus, terminatio, optiones, v,
+                optiones->canticum || (k == ZEPHYRUM
+                && !optiones->sine_intonatione));
+            psalmus->versus[psalmus->numerus_versuum++] = v->versus;
         }
-        per (k = ZEPHYRUM; k < numerus_gloriae; k++)
+    }
+    psalmus->admonitiones          = lector.admonitiones;
+    psalmus->numerus_admonitionum  = lector.numerus;
+    redde psalmus;
+}
+
+PsalmodiaPsalmus*
+psalmodia_partem_aptare (
+       constans PsalmodiaTonus* tonus,
+    constans PsalmodiaClausula* clausula,
+                PsalmodiaFinis  finis,
+                           b32  intonatio,
+                        chorda  textus,
+                       Piscina* piscina)
+{
+        LectorPsalmi  lector;
+    PsalmodiaPsalmus* psalmus;
+        VersusLectus* lecti;
+                 i32  numerus   = ZEPHYRUM;
+              chorda  tenor;
+     constans chorda* notae            = NIHIL;
+                 i32  numerus_notarum  = ZEPHYRUM;
+
+    si (piscina == NIHIL)
+    {
+        redde NIHIL;
+    }
+    memset(&lector, ZEPHYRUM, magnitudo(lector));
+    lector.piscina  = piscina;
+    lector.pars     = VERUM;
+    psalmus = (PsalmodiaPsalmus*)piscina_allocare(piscina,
+        (memoriae_index)magnitudo(PsalmodiaPsalmus));
+    memset(psalmus, ZEPHYRUM, magnitudo(PsalmodiaPsalmus));
+    psalmus->tonus       = tonus;
+    psalmus->terminatio  = finis == PSALMODIA_FINIS_TERMINATIO
+        ? clausula : NIHIL;
+
+    si (tonus == NIHIL)
+    {
+        _monere_literis(&lector, ZEPHYRUM, ZEPHYRUM, "tonus nullus");
+    }
+    alioquin si (clausula == NIHIL && (finis == PSALMODIA_FINIS_MEDIATIO
+                 || finis == PSALMODIA_FINIS_TERMINATIO))
+    {
+        _monere_literis(&lector, ZEPHYRUM, ZEPHYRUM, "clausula nulla");
+    }
+    alioquin
+    {
+        lecti = _textum_legere(&lector, textus, FALSUM, &numerus);
+        si (numerus == ZEPHYRUM)
         {
-            _versum_aptare(tonus, terminatio, optiones, &gloriae[k]);
-            psalmus->versus[psalmus->numerus_versuum++] =
-                gloriae[k].versus;
+            _monere_literis(&lector, I, I, "pars vacua");
+        }
+        alioquin
+        {
+            si (numerus > I)
+            {
+                _monere_literis(&lector, lecti[I].versus.linea, I,
+                    "pars una exspectatur");
+            }
+            tenor = tonus->tenor;
+            si (finis == PSALMODIA_FINIS_TERMINATIO)
+            {
+                si (clausula->tenor.mensura > ZEPHYRUM)
+                {
+                    tenor = clausula->tenor;
+                }
+                si (intonatio && clausula->initium.mensura > ZEPHYRUM)
+                {
+                    notae            = &clausula->initium;
+                    numerus_notarum  = I;
+                }
+            }
+            alioquin si (intonatio)
+            {
+                notae            = tonus->initium;
+                numerus_notarum  = tonus->numerus_initii;
+            }
+            _partem_ponere(piscina, &lecti[ZEPHYRUM], ZEPHYRUM,
+                lecti[ZEPHYRUM].versus.numerus, tenor, notae,
+                numerus_notarum, finis, tonus, clausula);
+            psalmus->versus =
+                (PsalmodiaVersus*)piscina_allocare(piscina,
+                (memoriae_index)magnitudo(PsalmodiaVersus));
+            psalmus->versus[ZEPHYRUM]  = lecti[ZEPHYRUM].versus;
+            psalmus->numerus_versuum   = I;
         }
     }
     psalmus->admonitiones          = lector.admonitiones;

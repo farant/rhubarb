@@ -119,3 +119,89 @@ folded in the Hebrew key -> *Speret Israel* red (the plan named
 capitalised word); (b) columns count bytes -> "t:1:26: sine
 asterisco" red (*Laudáte*, *Dóminum*, *cælis* carry two-byte
 letters).
+
+## 2026-11-12 — T5 the fitter (psalmodia plan 2)
+
+**Measurement** (scratchpad `t5/mensura.py` over the table). 246
+examples: mediatio 92 (none 17, A 19, B 13, C 13, D 11, abbreviata 3,
+antiqua 1, contracta 1, monosyllaba 14), terminatio 125 (none 83, A 9,
+B 7, C 3, D 6, abbreviata 15, monosyllaba 2), versus 17 (contracta 1),
+semiversus 7, initium 3, flexa 2 (the plan said semiversus 8,
+mediatio 91 - miscounted then). canticum 11, primus="falsum" 3, casus
+monosyllaba 6 (plus forma="monosyllaba"/"contracta" 17 more - the
+book's two spellings of the same thing; the fitter detects both
+itself). Call per pars (test `_exemplum_aptare`):
+- mediatio -> `partem_aptare(t, eligere(t, forma=="antiqua"),
+  MEDIATIO, FALSUM)` (the common cadence; the sister is ours to pick);
+- semiversus -> the same with intonatio VERUM;
+- terminatio -> the common ending named by differentia (or the only
+  one), TERMINATIO; flexa -> NIHIL, FLEXA; initium -> NIHIL, NULLUS,
+  intonatio VERUM;
+- versus -> `psalmodia_aptare` of the one line, sine_gloria, canticum
+  from the example, sine_intonatione = !primus.
+Every example was worked by hand against the rule before coding; all
+245 came out right on paper, and the first green run gave 245/245.
+
+**The rule as built** (`_clausulam_ponere`): loci from the last,
+syllables from the part's end. An accent locus whose syllable directly
+follows its word's stress (index in word == accent + 1) recedes onto
+the stress, the skipped syllable takes superveniens + 'r'. With
+anticipata the two swap: stress = superveniens + 'r', skipped = the
+accent neuma (I D2 *saé(gr)cu(gf)*, III *po(jr)tens(ih)*, IV E). The
+stress syllable is ACCENTUS (<b>) either way.
+
+### Rulings at T5
+
+- **Plan's `_breves_probare` "tone 1 on *Qui* -> hixih" was a
+  misreading** of the spec/table: *Qui = h ixi h* is the first syllable
+  of the book's *Qui fácit haec* (already an example). The test keeps
+  that case and adds a lone *Qui* with the general rule's result.
+  Cost if wrong: two expected strings.
+- **Deficient mediant, general form**: the first syllable sings tenor
+  + every unplaced locus that is not a preparation (in order) + its
+  own notes. Book: *Qui* = h ixi h (I), i k j (VII). Extrapolated:
+  lone *Qui* (I) = hixihgh, *fácit haec* = hixihg hr h. Unplaced
+  preparations are dropped (they are "numero fixo" lead-ins; no book
+  case). Cost if wrong: long melismas on 1-2 syllable halves only.
+- **Intonation meets a cadence**: in a first part the intonation wins
+  (one note per syllable, as many as there are syllables); a mediant
+  whose non-preparatory loci do not fit after it - or whose accent
+  would recede into it - is dropped entirely (the book's *Magníficat*,
+  I and III); a flex inside it is dropped. In an ending the cadence
+  wins and the intonation (peregrinus *hixi*) takes only syllables the
+  ending left on the tenor. Cost if wrong: short first verses only.
+- **Intonation placement**: the first part of the first half (the flex
+  part when there is one). A verse with no `*` has no first half, so
+  no first-half intonation (peregrinus still intones its second half).
+  Verse 1 = output index 0, so a psalm with no verses intones its
+  Gloria.
+- **Flex**: last syllable, and the penult when the word's stress is
+  on the antepenult (accent == numerus - 3; AR "paenultima si
+  brevis"); abrupt word (monosyllable or Hebrew) holds the tenor; a
+  tone with no `<flexa>` holds the tenor.
+- **superveniens vacua** (no table entry has one): the accent does
+  not recede. Defined, never hit.
+- **`partem_aptare` input**: signs in a part -> "signum in parte
+  omissum", dropped; no "sine asterisco"; empty -> "pars vacua" at
+  1:1; more than one line -> "pars una exspectatur" at the second
+  line's column 1, first line fitted. NIHIL clausula with MEDIATIO or
+  TERMINATIO -> "clausula nulla" at 0:0.
+- **Lint**: `intonatio` (header's own word, ecclesiastical Latin) got
+  a glossary entry beside `mediatio`; the oratio gate ran green 19/19
+  (oracle unmoved). `ima` -> `infima` (never `imus`), `proparoxytonon`
+  -> `antepaenultima` (known to WORDS).
+
+**Totality now covers the real fitter**: every truncation and random
+input of `_totalitas_probare` is also fitted to all 11 real tones
+(common, canticum, and partem_aptare for every finis), under
+CREDO_NON_RUIT and in-process with `_validus`. First attempt put it
+all in the test's arena: 698 MiB > the 256 MiB ceiling (credo_memoria
+named it); each input now gets its own dynamic piscina.
+
+**Plants** (silva.planta, build/plantae_psalmodia/t5.log, backup
+psalmodia.c.t5.ante), each red then green, file byte-identical after:
+(a) accent never recedes -> exempla 123/245 (122 red: every B/C/D
+form and every ending with a hollow note), plus four `_breves`
+assertions; (b) intonation on every verse -> exempla 242/245 (the
+three peregrinus primus="falsum" verses) and `_toni_rari` (peregrinus
+verse 2, non-canticum verse 2).

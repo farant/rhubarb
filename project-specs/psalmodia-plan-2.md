@@ -357,9 +357,9 @@ worklog.
 Produces `psalmodia_partem_aptare` and the verse-level body of
 `psalmodia_aptare`.
 
-- [ ] **Step 1: Measure.** Group the 246 examples by (pars, forma,
+- [x] **Step 1: Measure.** Group the 246 examples by (pars, forma,
   tone); write the call each maps to (below) into the worklog.
-- [ ] **Step 2: Write the failing tests:**
+- [x] **Step 2: Write the failing tests:**
   - `_exempla_libri_probare`: for every example of the real table,
     the notes of the fitted syllables joined by spaces equal its
     `notae` joined by spaces. Mapping: `mediatio` →
@@ -379,7 +379,7 @@ Produces `psalmodia_partem_aptare` and the verse-level body of
   - `_toni_rari_probare` (Review Focus 4): peregrinus verse 1 second
     half starts `hixi` on tenor g; verse 2 does not; in directum has
     no intonation; tone 4 altera notes under c3; tone 6 `antiqua`.
-- [ ] **Step 3: Run** → FAIL. **Step 4: Implement** the rule as the
+- [x] **Step 3: Run** → FAIL. **Step 4: Implement** the rule as the
   table states it: per part, syllables of the cadence are assigned
   from the end (last locus → last syllable; each accent locus → its
   nominal syllable unless that syllable directly follows its word's
@@ -389,10 +389,10 @@ Produces `psalmodia_partem_aptare` and the verse-level body of
   takes the first syllables; flex lowers the last syllable, and the
   one before if the word is proparoxytone (book p. 5\*); styles: the
   syllables accent loci land on → ACCENTUS, preparatory → PRAEPARATIO.
-- [ ] **Step 5: Run** → PASS. Plants: (a) never move an accent back →
+- [x] **Step 5: Run** → PASS. Plants: (a) never move an accent back →
   forms B/D red; (b) intonation on every verse → `_toni_rari` and
   the versus examples red. Restore.
-- [ ] **Step 6: Commit.**
+- [x] **Step 6: Commit.**
 
 ---
 
@@ -536,3 +536,16 @@ section prints `OMISSA` and passes.
   space (T6 read-back decides); utf8 + runae included (runae_basis for
   the Hebrew key). Plants (a) capitals not folded -> *Israel* red,
   (b) byte columns -> column assertion red; both green after restore.
+- **T5 (2026-11-12).** The rule in `lib/psalmodia.c` (`_clausulam_ponere`,
+  `_partem_ponere`), `psalmodia_partem_aptare`; tests 8 sections, 797
+  assertions: book examples 245/245 equal + 1 skipped (II
+  *Magníficat*), `_breves_probare`, `_toni_rari_probare`, totality
+  over all 11 real tones. Measured: semiversus 7 / mediatio 92 (plan
+  said 8 / 91). Rulings (worklog): the plan's lone-*Qui* expectation
+  was a misreading (*Qui = h ixi h* is from *Qui fácit haec*); the
+  deficient mediant folds tenor + unplaced non-preparatory loci + own
+  notes onto the first syllable, preparations dropped; intonation
+  wins in a first part (mediant or flex it overlaps is dropped), the
+  ending wins in a second part; glossary `intonatio` (oratio 19/19).
+  Plants (a) no recession -> 122 examples red, (b) intonation every
+  verse -> 3 peregrinus verses + `_toni_rari` red; both green after.
