@@ -101,8 +101,8 @@ bin/auditio -liber "$T/n.stml" -carmina > /dev/null 2>&1; rc2=$?
 PS=musica/psalmi/116.txt
 bin/auditio -psalmus "$PS" -signum "8 G" > "$T/ps.gabc" 2> "$T/ps.err"; rc=$?
 [ "$rc" -eq 0 ] && [ ! -s "$T/ps.err" ]; credo $? "-psalmus 116 -signum \"8 G\": exitus 0, stderr vacuum (est $rc)"
-[ "$(sed -n 1,3p "$T/ps.gabc")" = "$(printf 'mode: 8;\nannotation: 8 G;\n%%%%')" ]
-credo $? "-psalmus: caput mode, annotation, %%"
+[ "$(sed -n 1,4p "$T/ps.gabc")" = "$(printf 'mode: 8;\nannotation: 8 G;\ninitial-style: 0;\n%%%%')" ]
+credo $? "-psalmus: caput mode, annotation, initial-style 0, %%"
 grep -qF '(c4) 1. Lau(g)dá(h)te(j) Dó(j)mi(j)num,(j) o(j)mnes(j) <b>gen</b>(k)tes:(j) *(:)' "$T/ps.gabc"
 credo $? "-psalmus: versus primus cum intonatione et mediatione"
 grep -qF 'Gló(j)ri(j)a(j) Pa(j)tri,(j)' "$T/ps.gabc"; credo $? "-psalmus: Gloria Patri addita"

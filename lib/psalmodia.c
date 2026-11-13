@@ -1633,7 +1633,9 @@ psalmodia_gabc_scribere (
             chorda_aedificator_appendere_chorda(exitus,
                 terminatio->differentia);
         }
-        chorda_aedificator_appendere_literis(exitus, ";\n");
+        /* versus primus numeratur: "1" non fiat littera initialis */
+        chorda_aedificator_appendere_literis(exitus,
+            ";\ninitial-style: 0;\n");
     }
     chorda_aedificator_appendere_literis(exitus, "%%\n");
     si (tonus == NIHIL)

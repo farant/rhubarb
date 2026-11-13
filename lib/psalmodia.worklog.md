@@ -385,3 +385,19 @@ manifest line `euouae 02022` deleted -> "NOVA: euouae 02022 ...", gate
 FRACTA; restored, sana. Divider classes are ledger wishes
 01M7ATXS3RG8H2R6P5XCTA46RH and 01M7ATXW4WY98G7K3JFHSCG8R4; fixing
 either shrinks the manifest (the gate names the solved lines).
+
+## 2026-11-13 — initial-style: 0 (Fran chose option a)
+
+Question 01M7AQ6TAVDNN9ZMZSG5WBC619: verse 1 is numbered "1. Lau...",
+so with no `initial-style` the engraver (Gregorio default 1, and our
+gabc_compositio) drew the "1" as the drop-cap initial. Fran chose (a):
+the header now carries `initial-style: 0;` after `annotation:` (only
+when a tone is present, i.e. when verses are numbered). Matches most
+GregoBase written psalms (initial=0 with "1.").
+
+Correction to the ledger note: gabc_compositio already honors
+`initial-style` (initialem_parare, 0 = none) - no renderer change was
+needed. Test `_scriptura_probare` now also composes the 8 G output and
+counts GABC_PICTUM_INITIALIS: 0 with the header, 1 for the same verses
+without it (control; it failed before the fix, red 9/14). auditio_fumus
+checks four header lines. Picture checked by eye with bin/neumae.

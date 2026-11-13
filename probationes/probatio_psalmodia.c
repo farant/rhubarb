@@ -19,6 +19,7 @@
 #include "chorda_aedificator.h"
 #include "filum.h"
 #include "gabc.h"
+#include "gabc_compositio.h"
 #include "piscina.h"
 #include "sors.h"
 #include <stdio.h>
@@ -945,6 +946,33 @@ _gabc (
     redde chorda_aedificator_finire(a);
 }
 
+/* gabc compositum: numerus litterarum initialium pictarum */
+interior i32
+_initiales (
+     Piscina* piscina,
+      chorda  gabc)
+{
+    GabcCompositionisForma  forma;
+            GabcCompositio* comp;
+                       i32  numerus = ZEPHYRUM;
+                       i32  i;
+
+    gabc_compositionis_formam_ordinariam(&forma);
+    comp = gabc_componere(gabc_legere(gabc, piscina), &forma, piscina);
+    si (comp == NIHIL)
+    {
+        redde (i32)-I;
+    }
+    per (i = ZEPHYRUM; i < comp->numerus_pictorum; i++)
+    {
+        si (comp->picta[i].genus == GABC_PICTUM_INITIALIS)
+        {
+            numerus++;
+        }
+    }
+    redde numerus;
+}
+
 /* syllaba lecta habet divisionem generis dati */
 interior b32
 _divisio_inest (
@@ -1149,9 +1177,17 @@ _scriptura_probare (
     CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, NIHIL),
         "mode: 8;\n"
         "annotation: 8 G;\n"
+        "initial-style: 0;\n"
         "%%\n"
         GABC_LAUDATE_VERSUS
         GABC_GLORIA_VIII_G);
+
+    /* initial-style: 0 - "1." versus primi non fit littera initialis
+     * (compositio); sine capite (initial-style I) initialis una */
+    CREDO_AEQUALIS_I32 (_initiales(ctx->piscina,
+        _gabc(ctx->piscina, ps, NIHIL)), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (_initiales(ctx->piscina, chorda_ex_literis(
+        "%%\n" GABC_LAUDATE_VERSUS, ctx->piscina)), I);
 
     /* sine Gloria; titulus (';' et lineae novae in titulo spatia) */
     memset(&optiones, ZEPHYRUM, magnitudo(optiones));
@@ -1164,6 +1200,7 @@ _scriptura_probare (
         "name: Ps. 116  Laudáte ;\n"
         "mode: 8;\n"
         "annotation: 8 G;\n"
+        "initial-style: 0;\n"
         "%%\n"
         GABC_LAUDATE_VERSUS);
 
@@ -1178,6 +1215,7 @@ _scriptura_probare (
     CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, NIHIL),
         "mode: 2;\n"
         "annotation: 2 A;\n"
+        "initial-style: 0;\n"
         "%%\n"
         "(c3) 1. Lau(e)dá(f)te(h) Dó(h)mi(f)num,(f) †(,) "
         "<b>o</b>(i)mnes(h) *(:) <b>gen</b>(e)tes.(f) (::)\n");
@@ -1191,6 +1229,7 @@ _scriptura_probare (
     CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, NIHIL),
         "mode: in directum;\n"
         "annotation: in directum;\n"
+        "initial-style: 0;\n"
         "%%\n"
         "(c3) 1. <b>De</b>(h)us,(h) *(:) in(h) ad(h)ju(h)<b>tó</b>(h)"
         "ri(fr)um.(f) (::)\n");

@@ -85,6 +85,8 @@
  *   name: <titulus>;          (si titulus datus)
  *   mode: <modus tabulae>;    ("8", "peregrinus", "in directum")
  *   annotation: <signum>;     (modus + " " + differentia: "8 G")
+ *   initial-style: 0;         (versus primus numeratur: "1" non fit
+ *                              littera initialis)
  *   %%
  *   (<clavis>) 1. Lau(j)dá(j)te(j) ... <b>Dó</b>(k)mi(jr)num, *(:)
  *   lau(j)... <i>e</i>(i)<b>um</b>(h)... (::)
