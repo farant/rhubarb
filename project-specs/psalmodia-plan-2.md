@@ -404,10 +404,10 @@ worklog.
 **Interfaces:** Consumes T5. Produces `psalmodia_gabc_scribere`,
 `psalmodia_admonitiones_scribere`.
 
-- [ ] **Step 1: Measure.** Read 3 of the corpus psalms' gabc for bar
+- [x] **Step 1: Measure.** Read 3 of the corpus psalms' gabc for bar
   and number spacing; settle the exact byte form, write it in the
   header's OUTPUT GRAMMAR if T3 left a choice.
-- [ ] **Step 2: Write the failing tests:**
+- [x] **Step 2: Write the failing tests:**
   - `_scriptura_probare`: Ps 116's two verses on tone 8 G with
     Gloria Patri → an expected gabc string fixed in the test; with
     `gloria` FALSUM → two verses only; header `annotation: 8 G;`.
@@ -417,11 +417,11 @@ worklog.
     ours are.
   - `_totalitas_probare`: random pointed text → gabc that reads back
     (or admonitiones only); `CREDO_NON_RUIT`.
-- [ ] **Step 3: Run** → FAIL. **Step 4: Implement.** **Step 5: Run**
+- [x] **Step 3: Run** → FAIL. **Step 4: Implement.** **Step 5: Run**
   → PASS. Plants: (a) no space before `*(:)` → reditum red (bar
   glued to text); (b) Gloria always added → `gloria` FALSUM case
   red. Restore.
-- [ ] **Step 6: Commit.**
+- [x] **Step 6: Commit.**
 
 ---
 
@@ -549,3 +549,15 @@ section prints `OMISSA` and passes.
   ending wins in a second part; glossary `intonatio` (oratio 19/19).
   Plants (a) no recession -> 122 examples red, (b) intonation every
   verse -> 3 peregrinus verses + `_toni_rari` red; both green after.
+- **T6 (2026-11-12).** `psalmodia_gabc_scribere`; tests 10 sections,
+  819 assertions: Ps 116 on VIII G byte-exact with and without Gloria,
+  titulus, II A (clef c3, flex `†(,)`), in directum; every book
+  example, Ps 116 and `« Dóminus —` read back through `gabc_legere`
+  (0 vitia, syllable count, text, word starts, bold/italic, bars);
+  random text written and re-read for all 11 tones. Measured
+  GregoBase 7536 as the house byte form; the header had already fixed
+  it. Read-back caught `$` (gabc escape: merged syllables) and `~`
+  (U+203F) - now dropped with an admonition; header list updated (one
+  line). T4's vowel-less joiner reads back - kept. Plants (a) no space
+  before `*(:)` -> scriptura/reditus/totalitas red, (b) Gloria always
+  -> sine-Gloria case red; both green after.

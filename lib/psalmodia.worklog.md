@@ -205,3 +205,52 @@ form and every ending with a hollow note), plus four `_breves`
 assertions; (b) intonation on every verse -> exempla 242/245 (the
 three peregrinus primus="falsum" verses) and `_toni_rari` (peregrinus
 verse 2, non-canticum verse 2).
+
+## 2026-11-12 — T6 writing gabc (psalmodia plan 2)
+
+**Measurement** (scratchpad `t6_mensura.py`, GregoBase psalms 64, 273,
+342, 4690, 7330, 7536). 7536 (Daniel Luis, tone 1 D) is the house
+style we copy: verse number glued to the first syllable's text
+(`2. Nam(h)`), verse 1 right after the clef, ` *(:)` and ` (::)`, a
+newline per verse, Gloria in the same style. `« Quis(h)` - GregoBase
+already writes a syllable text with a space inside. Others: Hinkley
+(64, 273, 342) adds `( )` spacers and ` :` before the bar; 4690 uses
+`<v>\greheightstar</v>(:)`; flex is `†()` or `+()` everywhere. T3's
+header already fixed every byte (no choice left for step 1); we keep
+its `†(,)` (a divisio minima under the flex) over GregoBase's empty
+`†()`.
+
+**Built**: `psalmodia_gabc_scribere` - name/mode/annotation header
+(annotation = modus + " " + differentia, or the modus alone), `%%`,
+`(clavis)` (the ending's if it has one), then per verse: number +
+". " on the first syllable (Gloria unnumbered), space before every
+word-initial syllable and before the signs, `<b>`/`<i>` around the
+whole syllable text (punctuation included, as 273/7536 do), the
+number outside the tag, ` (::)` and a newline. Tone NIHIL -> header
+and `%%` only.
+
+**Read-back found two real bugs** (random text under
+`_totalitas_probare`, now also written and re-read for every tone):
+gabc text treats `$` as an escape for the next character (a syllable
+ending in `$` swallowed the `(` and merged with the next: 620 syllables
+read for 623 written) and `~` as U+203F. Both are now dropped with an
+admonition like `( ) [ ] { } < > | %`; the header's list says so.
+
+### Rulings at T6
+
+- **Vowel-less words** (T4 ruling): `« Dó(h)mi(h)nus —(h)` reads back
+  as written - the joiner stays.
+- **Titulus**: `;`, CR and LF in `-titulus` become spaces (they end a
+  gabc header value). Cost if wrong: a title loses a semicolon.
+- **Expected hyphenation**: the T2 divider gives *o-mnes* (T1's
+  approved AR rule, longest onset forward), so the fixed Ps 116 output
+  says `o(j)mnes(j)`; notes are the same either way.
+- **Header touched**: one line - `$ ~` added to the list of dropped
+  gabc characters (behaviour, not interface). Fran reviews headers:
+  flagged in the report.
+
+**Plants** (silva.planta, build/plantae_psalmodia/t6.log, backup
+psalmodia.c.t6.ante), red then green, file byte-identical after:
+(a) no space before `*(:)` -> scriptura, reditus (the glued bar loses
+verbum_incipit) and totalitas red; (b) Gloria always added ->
+scriptura (sine Gloria) and the T4 sections that count verses red.

@@ -31,8 +31,8 @@
  *     VOCIBUS HEBRAICIS): admonitio verbum nominans; aptatur quasi
  *     sine accentu (accentus cadentiae in eo non recedit) - numquam
  *     accentus coniectus;
- *   - signa gabc in textu ( ( ) [ ] { } < > | % ) et octeti non UTF-8:
- *     admonitio, ex textu exitus omittuntur.
+ *   - signa gabc in textu ( ( ) [ ] { } < > | % $ ~ ) et octeti non
+ *     UTF-8: admonitio, ex textu exitus omittuntur.
  *
  * VOCES HEBRAICAE (decretum Frani 1, 2026-11-12): index in
  * lib/psalmodia.c, cum divisione, syllaba accentus et "abrupta".

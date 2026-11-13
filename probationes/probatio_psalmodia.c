@@ -18,6 +18,7 @@
 #include "psalmodia_tabula.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
+#include "gabc.h"
 #include "piscina.h"
 #include "sors.h"
 #include <stdio.h>
@@ -385,6 +386,11 @@ _verba_probare (
         "t:1:5: octetus 0xFF omissus\n"
         "t:1:14: signum gabc '<' omissum\n"
         "t:1:16: signum gabc '>' omissum\n");
+    /* '$' (effugium gabc) et '~' (U+203F in gabc): omittuntur (T6) */
+    VERSUS_MONITUS ("Dó$minus * re~git me.",
+        "Dó(h)mi(h)nus(f) *(*) re(h)git(h) me.(e)",
+        "t:1:3: signum gabc '$' omissum\n"
+        "t:1:14: signum gabc '~' omissum\n");
 }
 
 
@@ -582,9 +588,9 @@ _psalmus_verus (
  * Exempla libri (T5)
  * ================================================== */
 
-/* exemplum -> notae nostrae iunctae (mappa plani T5) */
-interior chorda
-_exemplum_aptare (
+/* exemplum -> psalmus noster (mappa plani T5) */
+interior PsalmodiaPsalmus*
+_exemplum_psalmus (
                 CredoContextus* ctx,
        constans PsalmodiaTonus* tonus,
     constans PsalmodiaExemplum* ex)
@@ -632,7 +638,17 @@ _exemplum_aptare (
                 ex->differentia), ex->textus, &optiones, ctx->piscina);
             frange;
     }
-    redde _notae(ctx, ps, ZEPHYRUM);
+    redde ps;
+}
+
+/* exemplum -> notae nostrae iunctae */
+interior chorda
+_exemplum_aptare (
+                CredoContextus* ctx,
+       constans PsalmodiaTonus* tonus,
+    constans PsalmodiaExemplum* ex)
+{
+    redde _notae(ctx, _exemplum_psalmus(ctx, tonus, ex), ZEPHYRUM);
 }
 
 interior vacuum
@@ -913,6 +929,328 @@ _toni_rari_probare (
 
 
 /* ==================================================
+ * Scriptura gabc et reditus (T6)
+ * ================================================== */
+
+/* psalmus -> gabc */
+interior chorda
+_gabc (
+                       Piscina* piscina,
+     constans PsalmodiaPsalmus* psalmus,
+    constans PsalmodiaOptiones* optiones)
+{
+    ChordaAedificator* a = chorda_aedificator_creare(piscina, MXXIV);
+
+    (vacuum)psalmodia_gabc_scribere(psalmus, optiones, a);
+    redde chorda_aedificator_finire(a);
+}
+
+/* syllaba lecta habet divisionem generis dati */
+interior b32
+_divisio_inest (
+    constans GabcSyllaba* g,
+             GabcDivisio  divisio)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < g->numerus_elementorum; k++)
+    {
+        si (   g->elementa[k].genus   == GABC_EL_DIVISIO
+            && g->elementa[k].divisio == divisio)
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+/* exitus gabc per gabc_legere relegitur: vitium nullum; syllabae =
+ * clavis + nostrae + divisio finalis per versum; textus, initium
+ * verbi, stilus et divisiones ubi nostra sunt. Causa prima
+ * imprimitur. */
+interior b32
+_reditus (
+                      Piscina* piscina,
+    constans PsalmodiaPsalmus* psalmus)
+{
+                chorda  gabc         = _gabc(piscina, psalmus, NIHIL);
+            GabcCantus* cantus       = gabc_legere(gabc, piscina);
+                   i32  exspectatae  = ZEPHYRUM;
+                   i32  numerus      = ZEPHYRUM;
+                   i32  k            = I;
+                   i32  v;
+                   i32  i;
+                   i32  j;
+
+    si (cantus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < cantus->numerus_vitiorum; j++)
+    {
+        si (cantus->vitia[j].gravitas == GABC_VITIUM)
+        {
+            imprimere("  reditus: vitium %.*s\n%.*s\n",
+                (integer)cantus->vitia[j].causa.mensura,
+                (character*)cantus->vitia[j].causa.datum,
+                (integer)gabc.mensura, (character*)gabc.datum);
+            redde FALSUM;
+        }
+    }
+    si (psalmus->tonus == NIHIL)
+    {
+        redde cantus->numerus_syllabarum == ZEPHYRUM;
+    }
+    exspectatae = I;
+    per (v = ZEPHYRUM; v < psalmus->numerus_versuum; v++)
+    {
+        exspectatae += psalmus->versus[v].numerus + I;
+    }
+    si (   cantus->numerus_syllabarum                     != exspectatae
+        || cantus->syllabae[ZEPHYRUM].numerus_elementorum != I
+        || cantus->syllabae[ZEPHYRUM].elementa[ZEPHYRUM].genus
+           != GABC_EL_CLAVIS)
+    {
+        imprimere("  reditus: syllabae %u pro %u\n%.*s\n",
+            cantus->numerus_syllabarum, exspectatae,
+            (integer)gabc.mensura, (character*)gabc.datum);
+        redde FALSUM;
+    }
+    per (v = ZEPHYRUM; v < psalmus->numerus_versuum; v++)
+    {
+        constans PsalmodiaVersus* versus = &psalmus->versus[v];
+
+        si (!versus->gloria)
+        {
+            numerus++;
+        }
+        per (i = ZEPHYRUM; i < versus->numerus; i++)
+        {
+             constans PsalmodiaSyllaba* s = &versus->syllabae[i];
+                  constans GabcSyllaba* g = &cantus->syllabae[k++];
+                     ChordaAedificator* a;
+                                chorda  lectus;
+                                chorda  noster;
+                                   i32  stilus     = ZEPHYRUM;
+                                   i32  exspectatus;
+                                   b32  bonum;
+
+            a = chorda_aedificator_creare(piscina, LXIV);
+            per (j = ZEPHYRUM; j < g->numerus_textuum; j++)
+            {
+                si (g->textus[j].genus == GABC_TEXTUS_CANTATUS)
+                {
+                    chorda_aedificator_appendere_chorda(a,
+                        g->textus[j].textus);
+                    stilus = g->textus[j].stilus;
+                }
+            }
+            lectus  = chorda_aedificator_finire(a);
+            a       = chorda_aedificator_creare(piscina, LXIV);
+            si (i == ZEPHYRUM && !versus->gloria)
+            {
+                chorda_aedificator_appendere_i32(a, numerus);
+                chorda_aedificator_appendere_literis(a, ". ");
+            }
+            chorda_aedificator_appendere_chorda(a, s->textus);
+            noster       = chorda_aedificator_finire(a);
+            exspectatus  = s->stilus == PSALMODIA_STILUS_ACCENTUS
+                ? GABC_STILUS_CRASSUS : s->stilus
+                == PSALMODIA_STILUS_PRAEPARATIO ? GABC_STILUS_ITALICUS
+                : ZEPHYRUM;
+            bonum = chorda_aequalis(lectus, noster)
+                && g->verbum_incipit == (i == ZEPHYRUM ? VERUM
+                : s->verbum_incipit)
+                && (stilus & (GABC_STILUS_CRASSUS
+                    | GABC_STILUS_ITALICUS))
+                == exspectatus;
+            si (bonum && _chorda_literis(s->textus, "*"))
+            {
+                bonum = _divisio_inest(g, GABC_DIVISIO_MAIOR);
+            }
+            alioquin si (bonum && _chorda_literis(s->textus, "†"))
+            {
+                bonum = _divisio_inest(g, GABC_DIVISIO_MINIMA);
+            }
+            si (!bonum)
+            {
+                imprimere("  reditus: versus %u syllaba %u \"%.*s\""
+                    " lecta \"%.*s\"\n%.*s\n", v, i,
+                    (integer)noster.mensura, (character*)noster.datum,
+                    (integer)lectus.mensura, (character*)lectus.datum,
+                    (integer)gabc.mensura, (character*)gabc.datum);
+                redde FALSUM;
+            }
+        }
+        si (   cantus->syllabae[k].numerus_textuum != ZEPHYRUM
+            || !_divisio_inest(&cantus->syllabae[k],
+                GABC_DIVISIO_FINALIS))
+        {
+            imprimere("  reditus: versus %u sine (::)\n", v);
+            redde FALSUM;
+        }
+        k++;
+    }
+    redde VERUM;
+}
+
+#define PSALMUS_LAUDATE \
+    "Laudáte Dóminum, omnes gentes: * laudáte eum, " \
+    "omnes pópuli.\n" \
+    "Quóniam confirmáta est super nos misericórdia " \
+    "ejus: * et véritas Dómini manet in ætérnum.\n"
+
+#define GABC_LAUDATE_VERSUS \
+    "(c4) 1. Lau(g)dá(h)te(j) Dó(j)mi(j)num,(j) " \
+    "o(j)mnes(j) <b>gen</b>(k)tes:(j) *(:) " \
+    "lau(j)dá(j)te(j) e(j)um,(j) <i>o</i>(i)" \
+    "<i>mnes</i>(j) <b>pó</b>(h)pu(gr)li.(g) (::)\n" \
+    "2. Quó(j)ni(j)am(j) con(j)fir(j)má(j)ta(j) " \
+    "est(j) su(j)per(j) nos(j) mi(j)se(j)ri(j)" \
+    "cór(j)di(j)a(j) <b>e</b>(k)jus:(j) *(:) " \
+    "et(j) vé(j)ri(j)tas(j) Dó(j)mi(j)ni(j) " \
+    "ma(j)net(j) <i>in</i>(i) <i>æ</i>(j)" \
+    "<b>tér</b>(h)num.(g) (::)\n"
+
+#define GABC_GLORIA_VIII_G \
+    "Gló(j)ri(j)a(j) Pa(j)tri,(j) et(j) " \
+    "<b>Fí</b>(k)li(jr)o,(j) *(:) et(j) " \
+    "Spi(j)rí(j)<i>tu</i>(i)<i>i</i>(j) " \
+    "<b>San</b>(h)cto.(g) (::)\n" \
+    "Sic(j)ut(j) e(j)rat(j) in(j) " \
+    "prin(j)cí(j)pi(j)o,(j) et(j) nunc,(j) " \
+    "et(j) <b>sem</b>(k)per,(j) *(:) et(j) " \
+    "in(j) sǽ(j)cu(j)la(j) sæ(j)cu(j)" \
+    "<i>ló</i>(i)<i>rum.</i>(j) <b>A</b>(h)men.(g) " \
+    "(::)\n"
+
+interior vacuum
+_scriptura_probare (
+    CredoContextus* ctx)
+{
+               PsalmodiaTabula* t = _tabula_vera(ctx);
+       constans PsalmodiaTonus* tonus;
+    constans PsalmodiaClausula* term;
+             PsalmodiaOptiones  optiones;
+             ChordaAedificator* causa = chorda_aedificator_creare(
+                                 ctx->piscina, LXIV);
+           PsalmodiaPsalmus* ps;
+                     chorda  textus = chorda_ex_literis(PSALMUS_LAUDATE,
+                                 ctx->piscina);
+
+    CREDO_NECESSE (t != NIHIL);
+    term = psalmodia_signum_invenire(t, chorda_ex_literis("8 G",
+        ctx->piscina), &tonus, causa);
+    CREDO_NECESSE (term != NIHIL && tonus != NIHIL);
+
+    /* Ps 116, VIII G, cum Gloria (ordinariae) */
+    ps = psalmodia_aptare(tonus, term, textus, NIHIL, ctx->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_monita(ctx, ps), "");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, NIHIL),
+        "mode: 8;\n"
+        "annotation: 8 G;\n"
+        "%%\n"
+        GABC_LAUDATE_VERSUS
+        GABC_GLORIA_VIII_G);
+
+    /* sine Gloria; titulus (';' et lineae novae in titulo spatia) */
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.sine_gloria  = VERUM;
+    optiones.titulus      = chorda_ex_literis("Ps. 116; Laudáte\n",
+        ctx->piscina);
+    ps = psalmodia_aptare(tonus, term, textus, &optiones, ctx->piscina);
+    CREDO_AEQUALIS_I32 (ps->numerus_versuum, II);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, &optiones),
+        "name: Ps. 116  Laudáte ;\n"
+        "mode: 8;\n"
+        "annotation: 8 G;\n"
+        "%%\n"
+        GABC_LAUDATE_VERSUS);
+
+    /* flexa: †(,); clavis terminationis (II A: c3) */
+    term = psalmodia_signum_invenire(t, chorda_ex_literis("2 A",
+        ctx->piscina), &tonus, causa);
+    CREDO_NECESSE (term != NIHIL && tonus != NIHIL);
+    ps = psalmodia_aptare(tonus, term, chorda_ex_literis(
+        "Laudáte Dóminum, † omnes * gentes.", ctx->piscina),
+        &optiones,
+        ctx->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, NIHIL),
+        "mode: 2;\n"
+        "annotation: 2 A;\n"
+        "%%\n"
+        "(c3) 1. Lau(e)dá(f)te(h) Dó(h)mi(f)num,(f) †(,) "
+        "<b>o</b>(i)mnes(h) *(:) <b>gen</b>(e)tes.(f) (::)\n");
+
+    /* in directum: modus sine differentia */
+    tonus = _tonus(t, "in directum", FALSUM);
+    CREDO_NECESSE (tonus != NIHIL);
+    ps = _psalmus_verus(ctx, tonus, _terminatio(tonus,
+        chorda_ex_literis("", ctx->piscina)), FALSUM, FALSUM,
+        "Deus, * in adjutórium.");
+    CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, NIHIL),
+        "mode: in directum;\n"
+        "annotation: in directum;\n"
+        "%%\n"
+        "(c3) 1. <b>De</b>(h)us,(h) *(:) in(h) ad(h)ju(h)<b>tó</b>(h)"
+        "ri(fr)um.(f) (::)\n");
+
+    /* tonus nullus: caput solum */
+    ps = psalmodia_aptare(NIHIL, term, textus, NIHIL, ctx->piscina);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_gabc(ctx->piscina, ps, NIHIL),
+        "%%\n");
+    CREDO_FALSUM (psalmodia_gabc_scribere(NIHIL, NIHIL,
+        chorda_aedificator_creare(ctx->piscina, VIII)));
+}
+
+/* exempla libri omnia et Ps 116 per gabc_legere relecta */
+interior vacuum
+_reditum_probare (
+    CredoContextus* ctx)
+{
+               PsalmodiaTabula* t = _tabula_vera(ctx);
+       constans PsalmodiaTonus* tonus;
+    constans PsalmodiaClausula* term;
+             ChordaAedificator* causa = chorda_aedificator_creare(
+                                 ctx->piscina, LXIV);
+                        i32 relecta = ZEPHYRUM;
+                        i32 k;
+                        i32 e;
+
+    CREDO_NECESSE (t != NIHIL);
+    per (k = ZEPHYRUM; k < t->numerus_tonorum; k++)
+    {
+        per (e = ZEPHYRUM; e < t->toni[k].numerus_exemplorum; e++)
+        {
+            si (_reditus(ctx->piscina, _exemplum_psalmus(ctx,
+                &t->toni[k], &t->toni[k].exempla[e])))
+            {
+                relecta++;
+            }
+        }
+    }
+    CREDO_AEQUALIS_I32 (relecta, (i32)CCXLVI);
+
+    term = psalmodia_signum_invenire(t, chorda_ex_literis("8 G",
+        ctx->piscina), &tonus, causa);
+    CREDO_NECESSE (term != NIHIL);
+    CREDO_VERUM (_reditus(ctx->piscina, psalmodia_aptare(tonus, term,
+        chorda_ex_literis(PSALMUS_LAUDATE, ctx->piscina), NIHIL,
+        ctx->piscina)));
+    /* signa sine vocali (« — ») syllabis adhaerentia relegi
+     * possunt */
+    CREDO_VERUM (_reditus(ctx->piscina, psalmodia_aptare(tonus, term,
+        chorda_ex_literis("« Dóminus — regit * me. »\n",
+        ctx->piscina),
+        NIHIL, ctx->piscina)));
+    /* tonus nullus */
+    CREDO_VERUM (_reditus(ctx->piscina, psalmodia_aptare(NIHIL, term,
+        chorda_ex_literis(PSALMUS_LAUDATE, ctx->piscina), NIHIL,
+        ctx->piscina)));
+}
+
+
+/* ==================================================
  * Totalitas
  * ================================================== */
 
@@ -946,7 +1284,8 @@ _validus (
             }
             per (k = ZEPHYRUM; k < s->textus.mensura; k++)
             {
-                si (   strchr("()[]{}<>|%", (integer)s->textus.datum[k])
+                si (   strchr("()[]{}<>|%$~",
+                    (integer)s->textus.datum[k])
                     != NIHIL && s->textus.datum[k] != '\0')
                 {
                     redde FALSUM;
@@ -987,9 +1326,10 @@ _vere_aptare (
           constans PsalmodiaClausula* med   =
               psalmodia_mediationem_eligere(tonus, FALSUM);
 
-        validi = validi
-            && _validus(psalmodia_aptare(tonus, term, textus, NIHIL,
-                piscina))
+        PsalmodiaPsalmus* ps = psalmodia_aptare(tonus, term, textus,
+                              NIHIL, piscina);
+
+        validi = validi && _validus(ps) && _reditus(piscina, ps)
             && _validus(psalmodia_aptare(tonus, term, textus, &canticum,
                 piscina));
         per (j = ZEPHYRUM; j < (i32)IV; j++)
@@ -1135,6 +1475,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL, NIHIL, NIHIL },
     { "textus breves", _breves_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "toni rari", _toni_rari_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "scriptura gabc", _scriptura_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "reditus per gabc_legere", _reditum_probare,
+        NIHIL, NIHIL, NIHIL, NIHIL },
     { "totalitas", _totalitas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

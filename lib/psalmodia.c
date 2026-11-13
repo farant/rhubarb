@@ -207,14 +207,15 @@ _spatium (
         || cp == 0xA0;
 }
 
-/* signa quae gabc in textu syllabae non patitur */
+/* signa quae gabc in textu syllabae non patitur ('$' characterem
+ * sequentem effugit, '~' = U+203F: lector gabc, T6) */
 interior b32
 _signum_gabc (
     s32 cp)
 {
     redde cp == '(' || cp == ')' || cp == '[' || cp == ']' || cp == '{'
         || cp == '}' || cp == '<' || cp == '>' || cp == '|'
-        || cp == '%';
+        || cp == '%' || cp == '$' || cp == '~';
 }
 
 /* octetus malus aut signum moderans (praeter spatia) */
@@ -1554,6 +1555,154 @@ psalmodia_partem_aptare (
     psalmus->admonitiones          = lector.admonitiones;
     psalmus->numerus_admonitionum  = lector.numerus;
     redde psalmus;
+}
+
+/* valor capitis gabc: ';' et lineae novae (finis valoris) ->
+ * spatium */
+interior vacuum
+_valorem_scribere (
+               chorda  valor,
+    ChordaAedificator* exitus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < valor.mensura; k++)
+    {
+        character c = (character)valor.datum[k];
+
+        chorda_aedificator_appendere_character(exitus, c == ';'
+            || c == '\n' || c == '\r' ? ' ' : c);
+    }
+}
+
+/* syllaba signi: '*' -> ':' (divisio maior), '†' -> ',' (minima);
+ * 0 = syllaba verbi */
+interior character
+_divisio_signi (
+    constans PsalmodiaSyllaba* syllaba)
+{
+    si (syllaba->textus.mensura == I && syllaba->textus.datum[ZEPHYRUM]
+        == '*')
+    {
+        redde ':';
+    }
+    si (   syllaba->textus.mensura == III
+        && memcmp(syllaba->textus.datum, "\xE2\x80\xA0", III)
+           == ZEPHYRUM)
+    {
+        redde ',';
+    }
+    redde 0;
+}
+
+b32
+psalmodia_gabc_scribere (
+     constans PsalmodiaPsalmus* psalmus,
+    constans PsalmodiaOptiones* optiones,
+             ChordaAedificator* exitus)
+{
+         constans PsalmodiaTonus* tonus;
+      constans PsalmodiaClausula* terminatio;
+                          chorda  clavis;
+                             i32  numerus = ZEPHYRUM;
+                             i32  v;
+                             i32  i;
+
+    si (psalmus == NIHIL || exitus == NIHIL)
+    {
+        redde FALSUM;
+    }
+    tonus       = psalmus->tonus;
+    terminatio  = psalmus->terminatio;
+    si (optiones != NIHIL && optiones->titulus.mensura > ZEPHYRUM)
+    {
+        chorda_aedificator_appendere_literis(exitus, "name: ");
+        _valorem_scribere(optiones->titulus, exitus);
+        chorda_aedificator_appendere_literis(exitus, ";\n");
+    }
+    si (tonus != NIHIL)
+    {
+        chorda_aedificator_appendere_literis(exitus, "mode: ");
+        chorda_aedificator_appendere_chorda(exitus, tonus->modus);
+        chorda_aedificator_appendere_literis(exitus, ";\nannotation: ");
+        chorda_aedificator_appendere_chorda(exitus, tonus->modus);
+        si (   terminatio != NIHIL && terminatio->differentia.mensura
+            > ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(exitus, ' ');
+            chorda_aedificator_appendere_chorda(exitus,
+                terminatio->differentia);
+        }
+        chorda_aedificator_appendere_literis(exitus, ";\n");
+    }
+    chorda_aedificator_appendere_literis(exitus, "%%\n");
+    si (tonus == NIHIL)
+    {
+        redde VERUM;
+    }
+
+    /* clavis terminationis (II A: c3) aut toni, psalmo toto */
+    clavis = terminatio != NIHIL
+        && terminatio->clavis.mensura > ZEPHYRUM
+        ? terminatio->clavis : tonus->clavis;
+    chorda_aedificator_appendere_character(exitus, '(');
+    chorda_aedificator_appendere_chorda(exitus, clavis);
+    chorda_aedificator_appendere_character(exitus, ')');
+    per (v = ZEPHYRUM; v < psalmus->numerus_versuum; v++)
+    {
+        constans PsalmodiaVersus* versus = &psalmus->versus[v];
+
+        si (v == ZEPHYRUM)
+        {
+            chorda_aedificator_appendere_character(exitus, ' ');
+        }
+        per (i = ZEPHYRUM; i < versus->numerus; i++)
+        {
+             constans PsalmodiaSyllaba* s        =
+                 &versus->syllabae[i];
+                             character divisio  = _divisio_signi(s);
+
+            si (i > ZEPHYRUM && s->verbum_incipit)
+            {
+                chorda_aedificator_appendere_character(exitus, ' ');
+            }
+            si (i == ZEPHYRUM && !versus->gloria)
+            {
+                chorda_aedificator_appendere_i32(exitus, ++numerus);
+                chorda_aedificator_appendere_literis(exitus, ". ");
+            }
+            si (divisio != 0)
+            {
+                chorda_aedificator_appendere_chorda(exitus, s->textus);
+                chorda_aedificator_appendere_character(exitus, '(');
+                chorda_aedificator_appendere_character(exitus, divisio);
+                chorda_aedificator_appendere_character(exitus, ')');
+                perge;
+            }
+            si (s->stilus == PSALMODIA_STILUS_ACCENTUS)
+            {
+                chorda_aedificator_appendere_literis(exitus, "<b>");
+            }
+            alioquin si (s->stilus == PSALMODIA_STILUS_PRAEPARATIO)
+            {
+                chorda_aedificator_appendere_literis(exitus, "<i>");
+            }
+            chorda_aedificator_appendere_chorda(exitus, s->textus);
+            si (s->stilus == PSALMODIA_STILUS_ACCENTUS)
+            {
+                chorda_aedificator_appendere_literis(exitus, "</b>");
+            }
+            alioquin si (s->stilus == PSALMODIA_STILUS_PRAEPARATIO)
+            {
+                chorda_aedificator_appendere_literis(exitus, "</i>");
+            }
+            chorda_aedificator_appendere_character(exitus, '(');
+            chorda_aedificator_appendere_chorda(exitus, s->notae);
+            chorda_aedificator_appendere_character(exitus, ')');
+        }
+        chorda_aedificator_appendere_literis(exitus, " (::)\n");
+    }
+    redde VERUM;
 }
 
 b32
