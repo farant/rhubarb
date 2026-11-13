@@ -353,6 +353,7 @@ declare -a SOURCE_FILES=(
     "lib/sancti_visus.c"
     "lib/sanctorale.c"
     "lib/sarcina.c"
+    "lib/scaena.c"
     "lib/schirmata.c"
     "lib/scriba_actiones.c"
     "lib/scriba_applicatio.c"

@@ -453,13 +453,30 @@ group in `probatio_graphis_usus`; 3 plants red.
   ```
   Blob: the word `SCAENA01`, then counted fields in a fixed order,
   numbers big-endian; `res` order equals owner numbers.
-- [ ] Tests first: build of a two-view fixture; write, read back,
+- [x] Tests first: build of a two-view fixture; write, read back,
   equal field for field; the refusals of Review focus 5 (title
   missing either way, exit to nowhere, `mundus` accepted, duplicate
   view title, empty description); reader refuses a short blob, a
   wrong first word, a count past the end.
-- [ ] Plants: exit check removed; reader's bound check removed (the
+- [x] Plants: exit check removed; reader's bound check removed (the
   short-blob test must fail, not crash: CREDO_NON_RUIT).
+
+**As built (2026-11-13):** suite `scaena`, 5 sections, 9 plants red.
+The view's type is `ScaenaProspectus` (`Scaena` was taken).
+`scaena_struere(textus, picturae, partes, contextus, piscina)` takes
+two source functions (pictures, and pieces for those pictures) and
+returns all views or none; `ScaenaFructus.plagula` names the picture
+or piece a refusal came from. View titles are a-z, 0-9, `-`, `_`;
+a view cannot be titled `mundus`. An exit to the view itself is
+refused. Text has whitespace runs collapsed. The blob is `SCAENA01`,
+counted fields with 32-bit big-endian lengths, then the two picture
+tables raw; `scaena_legere` also refuses a palette index over 15.
+One plant (field maximum loosened) first stayed GREEN: a blob with
+a 65-byte title was refused only by accident, for being misaligned.
+Tests now write hand-built views with each field one byte over its
+maximum and require the reader to refuse them. The hut's scene file
+is `apps/scaena/loci/casa.scaena.stml` (views `hut-hearth`,
+`hut-door`).
 
 ### Task 7: the store and `bin/scaena`
 

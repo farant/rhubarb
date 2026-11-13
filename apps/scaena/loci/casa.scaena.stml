@@ -1,0 +1,54 @@
+<scaenae>
+  <prospectus titulus="hut-hearth" pictura="casa_focus">
+    <descriptio>
+      A low room of logs, warm after the clearing. A fire burns in a
+      stone hearth and throws its light across the floor; a pot hangs
+      over it. Daylight comes in at one window. Someone lives here,
+      and has not gone far: the candle on the table is still lit.
+    </descriptio>
+    <res titulus="hearth">
+      The stones are black with years of smoke. Whatever is in the
+      pot has been simmering a long while. It smells of onions, and
+      of something you cannot name.
+    </res>
+    <res titulus="window">
+      Through the glass: grass, the green hill, and a sky so clear
+      you can count the specks in it.
+    </res>
+    <res titulus="jars">
+      Three jars on a shelf. Honey, by the colour. Salt. The third
+      is stoppered tight, and you would rather not shake it.
+    </res>
+    <res titulus="book">
+      A ledger, ruled by hand. Every line is a date and a tally of
+      firewood. The last entry is today.
+    </res>
+    <res titulus="turn" exitus="hut-door">
+      You turn your back to the fire.
+    </res>
+  </prospectus>
+
+  <prospectus titulus="hut-door" pictura="casa_ostium">
+    <descriptio>
+      The other end of the room. The door you came in by, a coat and
+      a hat on their pegs, a narrow bed made up with a woven blanket.
+      A small window in the side wall lets a square of light fall on
+      the floor. The fire is at your back now.
+    </descriptio>
+    <res titulus="door" exitus="mundus">
+      Planks, braced and pegged. The clearing is outside, where you
+      left it.
+    </res>
+    <res titulus="coat">
+      Heavy wool, mended at both elbows. The pockets are empty except
+      for a length of twine and one acorn.
+    </res>
+    <res titulus="bed">
+      Narrow and neatly made. The blanket is woven in a pattern of
+      diamonds, red on cream. Nobody has slept in it today.
+    </res>
+    <res titulus="turn" exitus="hut-hearth">
+      You turn back to the fire.
+    </res>
+  </prospectus>
+</scaenae>
