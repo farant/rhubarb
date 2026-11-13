@@ -1,0 +1,244 @@
+# graphis — 2D pictures that Claude draws from text, and a first still-picture adventure
+
+Status: slice, names and pane layout agreed by Fran 2026-11-13 ("yes,
+that sounds good"); builder check done 2026-11-13 (section VI).
+Nothing is built.
+Brainstormed 2026-11-13 with Fran (secunda session 134c8417). Sibling
+of plastica (`project-specs/plastica-spec.md`); meets mundus
+(`project-specs/mundus-spec.md`) only at a doorway.
+
+*The question (Fran, 2026-11-13): mundus should grow "mini-engines
+for different kinds of games"; for adventure "i would probably start
+with myst style / world builder style", later a mode "more like ff7
+style ... static backgrounds but potentially in perspective somehow
+... with a low poly 3d character moving through".*
+
+Names: `graphis` (Latin for the art of drawing) is the picture
+library; `scaena` is the still-picture adventure mode. Both are
+Claude's proposals and free in include/, lib/, apps/ and tools/.
+All file, element and function names here are proposals.
+
+## I. Intent
+
+1. **Claude draws still pictures from text.** A picture is a short
+   description file: a tree of flat shapes with colours, patterns
+   and lights. A tool turns it into a 16-colour picture.
+2. **Claude can see what it drew.** One command gives a sheet to
+   look at, so a picture is revised by looking.
+3. **A picture knows its parts.** Shapes with a title are click
+   regions; the tool gives the region map with the picture, so the
+   two can never disagree.
+4. **Fran can walk into one.** A first adventure: the hut in the
+   clearing, as still pictures with things to click and a way out.
+5. **A library, not an adventure feature.** graphis knows nothing
+   of scaena, mundus or vicus.
+
+Non-goals (this stage): a character in the picture; a depth or walk
+layer; animation (fire flicker, palette cycling); inventory, state,
+puzzles, saved games; an editor in a pane; a general framework for
+game modes; a black-and-white variant; sound.
+
+Anti-goals: copying any game's pictures, rooms or text; a picture
+language as large as a programming language; a build that gives
+different bytes from the same source; outside libraries; a format
+that could not later take a depth value per shape; a review queue in
+which Fran must approve each picture.
+
+## II. Decisions
+
+Fran's, as he made them (2026-11-13):
+
+1. **Order of modes:** still pictures with click regions first
+   (Myst / World Builder kind); the walked, perspective kind later.
+2. **Colour is the primary style.**
+3. **The look** is the right panel of
+   `build/spike2d/sheet_d.png`: smooth lit colour and hand-chosen
+   patterns mixed per shape by a mask, then one Atkinson pass. "the
+   color image of sheet_d looks best for sure".
+4. **The mask idea is his:** a value that says how much of each
+   treatment a region gets, with greys as blends.
+4a. **First slice:** the hut, two views, in a pane of its own; the
+   doorway from `$world` last. Names `graphis`, `scaena`, `$scene`
+   accepted.
+4b. **The hut picture** from the spike may stay or change, as Claude
+   judges.
+4c. **Pane layout** (his picture of it): "the top half of the pane
+   be the image and the bottom half be a text description".
+
+Found by the spike (throwaway; `build/spike2d/`, not in git):
+
+5. Hand patterns alone read as materials but are flat and heavy in
+   gold and brown (`sheet_a.png`, left).
+6. The exemplaria dither is the wrong tool for drawn pictures: it
+   re-reads hand patterns as texture (`sheet_a.png`, right) and
+   turns smooth gradients into rings (`sheet_b.png`, right).
+7. Free colour plus lighting through Atkinson gives light and mood
+   but loses materials (`sheet_e.png`, left).
+8. Pattern at full strength everywhere is too busy (`sheet_e.png`,
+   right). Strength must be chosen per shape.
+9. Below about 0.4 on a dark surface a pattern dissolves into
+   speckle.
+
+Claude's calls (not discussed; change freely):
+
+10. **One pass, one dither.** The mask blends the *source* colour of
+    each pixel between the shape's flat colour and its pattern
+    pixel; lighting multiplies the result; Atkinson
+    (`dithering_atkinson_colorum`, `include/dithering.h`) runs once
+    over the whole picture. No second dither, so no seams.
+11. **Description is STML**, like plastica. Elements: `rectangulum`,
+    `ovum`, `polygonum`, `linea`, `grex` (group with offset),
+    `lumen` (light), `usus` (place another description here).
+    Later shapes paint over earlier ones.
+12. **A shape carries:** a colour or a colour pair (palette index or
+    free `#rrggbb`); a pattern by its exemplaria name
+    (`include/exemplaria.h`); a strength 0 to 1; an outline (width,
+    colour); `lucens` for things that give light and take none
+    (window, flame); an optional title.
+13. **Lights are in the description**, not in code: ambient level
+    and tint on the root; point lights (place, radius, tint,
+    strength); area lights (a polygon, soft edge). Falloff is by
+    distance in the picture. A depth value per shape can refine
+    this later without changing the format.
+14. **Same source, same bytes.** Lighting and blending in integer
+    fixed point; no floating arithmetic in the path to the picture
+    (as `plastica_textura`).
+15. **One fixed size: 360 x 240, shown at 1x.** The pane surface is
+    360 x 450 by default (`lib/mundus_latus.c:27-28`), so the
+    picture fills the width and takes the top 240 rows under the
+    12-row header; about 198 rows (some 24 lines of 60 characters)
+    remain for text. That is Fran's top half / bottom half. A
+    second size waits for a second need.
+16. **Outputs of the compiler:** the palette picture (one index per
+    pixel), the owner map (which titled shape owns each pixel, 0 =
+    none), and the table of titled shapes. Titles only: text, exits
+    and behaviour belong to scaena.
+17. **The linter refuses**, with the line: unknown element,
+    attribute, pattern or colour; a shape wholly outside the frame;
+    a titled shape that owns fewer than 64 pixels after painting; a
+    duplicate title; a strength between 0 and 0.4 exclusive (finding
+    9; 0 means smooth).
+18. **Reuse is by file.** `graphis/res/<name>.stml` holds pieces (a
+    chair, a jar) that a picture places with `usus`. No variables,
+    loops or conditions in the format.
+19. **Where things live.** Library in `lib/` and `include/`
+    (`graphis.h`), tool `bin/graphis`, pieces in `graphis/res/`.
+    scaena: `lib/scaena.c`, layouts in `apps/scaena/loci/`, the pane
+    with the other vicus panes.
+20. **A scene file is separate from its picture.** It names the
+    picture and gives the view's description and, per title, the
+    text shown on click and
+    optionally an exit (another scene, or back to the world). A
+    picture can then be reused and checked alone.
+21. **The volume stores the built scene** (picture, owner map,
+    texts, exits), as plastica stores built GLB. Under the standing
+    OK of 2026-11-11 the build tool writes into Fran's live volume
+    without asking each time.
+22. **First slice:** the hut, two views (hearth wall; door wall),
+    each view an exit to the other, the door an exit out. A pane
+    opened with `$scene` shows the picture in its top half and text
+    in its bottom half (decision 4c).
+22a. **What the text half holds.** Each view has a description, a
+    short paragraph, always shown first. Under it, the text of the
+    thing last clicked; a new click replaces it; a new view clears
+    it. The text wraps by word in the pane's small type. In a pane
+    wider or taller than the default the picture stays 360 x 240,
+    centred in its band; the text takes the rest.
+22b. **Finding the regions.** Moving the pointer over a region
+    names it in the header row (its title); no pointer change is
+    needed for the slice.
+23. **The doorway from `$world` is a follow-up, not in this
+    slice** (changed after the builder check). The furnished place
+    is one merged GLB and the layout stays in the repo, so a door
+    position has no carrier to the running pane, mundus has no
+    trigger concept, and no pane opens another today. It needs its
+    own small design. In the slice the hut door is a region with
+    text and an exit named `mundus` that the pane shows as text
+    only ("the clearing is outside").
+23a. **Scenes are their own store in the volume:** act kinds
+    `scaena-addita` / `scaena-remota`, one blob per scene, apart
+    from statuae (whose index reads only its two act kinds,
+    `lib/statuae_repositorium.c:60-62`, and treats an unknown kind
+    as a character, `:134`). No order-of-arrival hazard, no title
+    clash.
+23b. **Pattern names** are a new small table in graphis (the
+    lowercase enum names of `include/exemplaria.h:21-61`, e.g.
+    `latericium`, `textum`); exemplaria has ids only.
+23c. **Strength word:** `vis` (plastica uses `textura` for a
+    texture kind). Flat colour of a pair = mean weighted by the
+    pattern's density, as in the spike.
+23d. **Light shape.** A point light has two radii (the spike
+    squashed the fire's falloff by 1.3 vertically); the root may
+    darken toward the corners (`umbra`). These reproduce what the
+    spike hard-coded.
+24. **No mode framework.** scaena is a library with enter, step,
+    paint and leave. What a second mode shares with it is decided
+    when the second mode exists.
+
+## III. Tools Claude needs (from the spike and from `../agi-stylist`, read only)
+
+1. `bin/graphis specimen x.stml -o x.png`: one sheet with the flat
+   source, the mask, the lit source, the final picture and the
+   region map, at 2x.
+2. `bin/graphis quadrum x.stml -o x.png -fines "x y w h"`: a crop at
+   4x, for looking at one corner.
+3. `bin/graphis iudicare x.stml`: the linter alone.
+4. `bin/scaena condere -volumen V`: build every scene into a volume;
+   adds and replaces, never removes; names a bad exit with its line.
+
+## IV. Tests
+
+- Pure-function pins: a small fixture picture, digest of the palette
+  picture and of the owner map.
+- Each refusal in decision 17, by a fixture that must fail with its
+  line.
+- Mask ends: a picture with full ambient light, no other lights,
+  palette colours only and strength 1 comes out as the patterns'
+  own pixels exactly (the dither has no error to spread); strength
+  0 on a palette colour gives that colour everywhere.
+- scaena: every exit in the committed scenes resolves; every title
+  in a scene file exists in its picture, and the reverse.
+- Pane: headless picture test (`-imago`) with a click on a region
+  and on an exit.
+- Gates are proved red first by compiling plants, as in plastica.
+
+## VI. Builder check (2026-11-13, a fresh reader against the code)
+
+1. A pane does get pointer movement with no button held
+   (`lib/fenestra_macos.m:969-973` -> `EVENTUS_MUS_MOTUS`,
+   `lib/destinatio.c:194` fills `des->punctum_locale`; used by
+   `lib/negotia_visus.c:1322-1326`, `lib/kalendarium.c:2814-2820`).
+   Decision 22b stands.
+2. `mandata_imago` crops, it does not scale
+   (`lib/delineare_mandata.c:190-193`): hence 1x (decision 15).
+3. Atkinson is plain RGB, integer only, error `>> 3`
+   (`lib/dithering.c:186-221`); the routine the spike called.
+4. Refusals with lines: `PlasticaFructus {successus, error, linea}`
+   (`include/plastica.h:149-159`), helpers in `lib/plastica.c:153-215`
+   and `:454-481`, all static; `lib/mundus_locus.c:342` has its own
+   copy. graphis copies the pattern.
+5. Pane drawing: indices -> RGBA through `AQUINAS_PALETTE`
+   (`lib/mundus_latus.c:589-601`), served by a `fons` callback
+   (`:683-696`, wired at `lib/vicus_applicatio.c:3233`), drawn with
+   `mandata_imago` (`:1038`); wrapped text is a static
+   `textum_fractum_pingere` (`:918-962`, 6 x 8 cells) to copy.
+6. `Scaena` and `ConformitasScaena` already exist as type names
+   (`lib/delineare_mandata.c:175`, `include/eventus_conformitas.h:115`):
+   scaena's own types need other names.
+7. Left to the builder: which file and line a refusal inside a
+   `usus` piece reports, and `usus` cycles (refuse); the layout of
+   the scene blob; `$scene` opens on the first scene by title.
+
+## AUDIENDA (not verified)
+
+1. Whether the look holds once lights come from the description
+   (the spike's fire, window patch and corner darkening were
+   constants in code).
+2. Whether the proposed element and attribute words pass the Latin
+   lint and the glossary.
+3. Integer lighting was not tried; the spike used floats. The look
+   must be re-checked after the change.
+4. The spike drew perspective by hand as polygons. Whether a "room"
+   helper is worth having was not tested.
+5. `../agi-stylist` was read, never run.
+6. No search was made for every way one pane might open another.
