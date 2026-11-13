@@ -301,6 +301,7 @@ declare -a SOURCE_FILES=(
     "lib/praeconium_cantus.c"
     "lib/processus_posix.c"
     "lib/provenientia.c"
+    "lib/psalmodia.c"
     "lib/psalmodia_tabula.c"
     "lib/pseudoterminale.c"
     "lib/pseudoterminale_posix.c"

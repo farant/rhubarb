@@ -326,9 +326,9 @@ a test in the named task.
 `VerbumLatinum` + Hebrew facts) used by T5; its effects are visible
 through `psalmodia_aptare` with a tone whose cadences are all tenor.
 
-- [ ] **Step 1: Measure.** Count `+` vs `†` and leading numbers in the
+- [x] **Step 1: Measure.** Count `+` vs `†` and leading numbers in the
   35 corpus psalms' text (strip notes); note in the worklog.
-- [ ] **Step 2: Write the failing tests** — `_textus_probare`: CRLF +
+- [x] **Step 2: Write the failing tests** — `_textus_probare`: CRLF +
   BOM + blank lines + `% nota` → same verses as clean text; `1.
   Dixit` → number dropped; `+` = `†`; no `*` → admonitio "sine
   asterisco" at line:col of the line end, verse fitted as a second
@@ -338,12 +338,12 @@ through `psalmodia_aptare` with a tone whose cadences are all tenor.
   admonitio; `Sion` at a half-verse end → abrupt flag; punctuation
   stays in `textus`. Random bytes and truncated lines under
   `CREDO_NON_RUIT`.
-- [ ] **Step 3: Run** → FAIL. **Step 4: Implement.** Columns count
+- [x] **Step 3: Run** → FAIL. **Step 4: Implement.** Columns count
   characters (UTF-8 lead bytes), 1-based.
-- [ ] **Step 5: Run** → PASS. Plants: (a) Hebrew lookup case-sensitive
+- [x] **Step 5: Run** → PASS. Plants: (a) Hebrew lookup case-sensitive
   only → `israel` red; (b) column counts bytes → the `Dóminus,
   Dominus` column assertion red. Restore.
-- [ ] **Step 6: Commit.**
+- [x] **Step 6: Commit.**
 
 ---
 
@@ -525,3 +525,14 @@ section prints `OMISSA` and passes.
   `partem_aptare` returns a one-verse psalm and picks the
   monosyllabic sister itself, gabc-special characters dropped with
   an admonition.
+- **T4 (2026-11-12).** `lib/psalmodia.c` reader + provisional fitter,
+  `probationes/probatio_psalmodia.c` (5 sections, 546 assertions,
+  hand-built tone). Measured: `†` 13 / `+` 7 (one transcriber) in the
+  35 corpus psalms, numbers `N.` (one `V/. 1`). Rulings (worklog):
+  T4 fitter = tenor + the cadence's last note on each half's last
+  syllable (sister if abrupt) - equals the real rule for one-locus
+  cadences; sign errors dropped with an admonition, no `*` = all
+  second half; vowel-less words join the neighbouring syllable with a
+  space (T6 read-back decides); utf8 + runae included (runae_basis for
+  the Hebrew key). Plants (a) capitals not folded -> *Israel* red,
+  (b) byte columns -> column assertion red; both green after restore.
