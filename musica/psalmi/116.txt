@@ -1,0 +1,6 @@
+% Psalmus 116 (Vulgata) - Laudáte Dóminum, omnes gentes.
+% Textus punctatus (include/psalmodia.h): versus per lineam, '*'
+% mediatio, accentus ut Antiphonale Romanum 1912 imprimit. Gloria
+% Patri ab aptatore additur.
+Laudáte Dóminum, omnes gentes: * laudáte eum, omnes pópuli.
+Quóniam confirmáta est super nos misericórdia ejus: * et véritas Dómini manet in ætérnum.

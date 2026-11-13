@@ -254,3 +254,63 @@ psalmodia.c.t6.ante), red then green, file byte-identical after:
 (a) no space before `*(:)` -> scriptura, reditus (the glued bar loses
 verbum_incipit) and totalitas red; (b) Gloria always added ->
 scriptura (sine Gloria) and the T4 sections that count verses red.
+
+## 2026-11-13 - T7: the table in binaries, `auditio -psalmus`
+
+**Measured** how `cantuale_infixum` is embedded and copied it:
+`tools/toni_psalmorum_infigere.sh` (od -> byte array, GENERATUM line 1)
+writes `lib/toni_psalmorum_infixum.c` (336 KB for the 54 KB table);
+`include/toni_psalmorum_infixum.h` carries the aedilis tag; one
+`<actio genus="generator">` in `aedificatio.stml` (inputs: the script
+and the table); `compile_tests_fontes_generare.sh` adds the .c. New
+section `_infixum_probare` (probatio_psalmodia_tabula, now 8 sections,
+423 assertions): embedded copy == the file byte for byte, reads with 0
+vitia, 11 tones.
+
+**auditio** (`tools/auditio.c`): `-psalmus VIA -signum S [-titulus T]
+[-sine-gloria] [-antiqua]`, FRAN 2. `_psalmum_aptare` reads the text,
+the embedded table, finds the ending, fits, writes gabc; admonitions
+go to stderr through `psalmodia_admonitiones_scribere`
+(`via:linea:columna: causa`). `_gabc_convertere` now takes the gabc
+text as an argument (caller reads the file), so with any play/analysis
+flag (`-sonare`, `-partitura`, `-carmen` ...) the psalm's gabc takes the
+`-gabc` path unchanged; carmen title = file name unless `-titulus`.
+auditio links runae (9 symbols) through aedilis with no list to edit.
+
+### Rulings at T7
+
+- **Admonitions = exit 1, gabc still printed** (the library always
+  writes; the user sees the warnings and the result); with a play flag
+  nothing plays - fix the text first. Cost if wrong: one condition.
+- **`-antiqua` on a tone without an ad libitum mediant** is an error
+  (exit 1, "tonus 8 mediationem ad libitum non habet"), not a silent
+  fallback to the common mediant. Cost if wrong: one check.
+- **`-do P` allowed with `-psalmus`** (it is gabc underneath).
+- **Empty psalm file** reports "legi non potuit (aut vacuus est)" -
+  filum_legere_totum gives 0 bytes for both.
+
+**Listening.** I cannot hear; I opened `build/psalmodia/116_8G.gabc` in
+the antiphonale pane (`praeco antiphonale`) for Fran, read the
+`-partitura` rendering (8 G cadences on the right steps, transposed do
+= Eb4, rest at each `*`) and looked at a `neumae` PNG: notation right
+(annotation, hollow `r` notes, bars) but **the "1" of "1. Lau" became
+the drop-cap initial**. GregoBase pairs `initial=0` with a numbered
+verse 1 (64 85 342 355 447 2231 7332-7362 8134) and `initial=1` with
+an unnumbered verse 1 (273 288 435 7405 7536); our writer numbers
+verse 1 but writes no `initial-style: 0;`, and `gabc_compositio`
+ignores `initial-style` anyway. Not fixed here (it changes the T3
+output form): ledger question 01M7AQ6TAVDNN9ZMZSG5WBC619 for Fran.
+
+**Plants** (silva.planta, build/plantae_psalmodia/t7.log, t7b.log),
+red then green, files byte-identical after: (a) one byte of the
+embedded copy changed -> `infixum == fons` red (gate radix, filter
+psalmodia_tabula); (b) auditio ignores `-sine-gloria` -> auditio-fumus
+"versus II, Gloria nulla" red. The 13 new fumus cases (section VIII)
+were also red against the old binary (11 FRACTUM; the two usage cases
+pass vacuously there, unknown flags already exit 2).
+
+`fabrica iudicare -tacta`: the new generator RECENS;
+`build/capsula_corpus_silicis.c` (embeds every lib/include file) was
+stale from the new files - healed with `bin/fabrica sanare`. Lesson:
+never send a sanare log into build/ - fabrica calls the run FRACTUM
+("scripsit extra vestigium").

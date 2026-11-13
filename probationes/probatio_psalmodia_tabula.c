@@ -3,9 +3,9 @@
  *
  * Plan: project-specs/psalmodia-plan-1.md R2 (lectio, forma
  * canonica, totalitas), R3 (lapsus transcriptionis), R4 (signa,
- * variantes). Tabula vera: musica/toni_psalmorum.stml; cetera fixa
- * hic in literis (UTF-8 per octales: \303\263 = o acutum,
- * \342\200\240 = crux).
+ * variantes); psalmodia-plan-2.md T7 (copia infixa). Tabula vera:
+ * musica/toni_psalmorum.stml; cetera fixa hic in literis (UTF-8 per
+ * octales: \303\263 = o acutum, \342\200\240 = crux).
  *
  * GRAMMATICA FORMAE CANONICAE (psalmodia_tabulam_scribere), linea una
  * per rem, columnae tabulis separatae, '-' = vacua; textus effugitur
@@ -28,6 +28,7 @@
 #include "latina.h"
 #include "credo.h"
 #include "psalmodia_tabula.h"
+#include "toni_psalmorum_infixum.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
 #include "piscina.h"
@@ -851,7 +852,31 @@ _variantes_probare (
         ctx->piscina), NIHIL, NIHIL));
 }
 
+/* tabula in binariis (plan-2 T7): copia infixa = plagula octeto pro
+ * octeto, et legitur sine vitio - copia stala hic rubet */
+interior vacuum
+_infixum_probare (
+    CredoContextus* ctx)
+{
+             chorda  fons;
+             chorda  infixum;
+    PsalmodiaTabula* t;
+
+    fons = filum_legere_totum("musica/toni_psalmorum.stml",
+        ctx->piscina);
+    CREDO_NECESSE (fons.mensura > ZEPHYRUM);
+    infixum = toni_psalmorum_infixum_textus(ctx->piscina);
+    CREDO_AEQUALIS_I32 (infixum.mensura, fons.mensura);
+    CREDO_CHORDA_AEQUALIS (infixum, fons);
+    t = psalmodia_tabulam_legere(infixum, ctx->piscina);
+    CREDO_NECESSE (t != NIHIL);
+    CREDO_AEQUALIS_I32 (t->numerus_vitiorum, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (t->numerus_tonorum, (i32)XI);
+}
+
 interior constans CredoSectio SECTIONES[] = {
+    { "infixum: copia binariorum = plagula, sine vitio",
+        _infixum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "tabula vera: XI toni sine vitio, loci, variantes",
         _tabulam_veram_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma canonica tabulae duorum tonorum", _scripturam_probare,

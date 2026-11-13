@@ -438,21 +438,21 @@ worklog.
 **Interfaces:** Produces `chorda toni_psalmorum_infixum_textus(Piscina*)`
 and the flags of FRAN 2.
 
-- [ ] **Step 1: Measure.** How `carmina_infixum` is registered with
+- [x] **Step 1: Measure.** How `carmina_infixum` is registered with
   fabrica (generator, `GENERATUM` gate) — copy the registration.
-- [ ] **Step 2: Write the failing tests:** a section in
+- [x] **Step 2: Write the failing tests:** a section in
   `probatio_psalmodia_tabula.c`: the embedded text reads with 0 vitia
   and equals the file byte for byte; `auditio_fumus.sh` cases: `-psalmus
   musica/psalmi/116.txt -signum "8 G"` → gabc on stdout that
   `auditio -gabc -` (or a temp file) accepts; `-signum "9"` → exit 1
   with `tonus "9" nullus`; `-sine-gloria` → no *Glória*.
-- [ ] **Step 3: Run** → FAIL. **Step 4: Implement.** Diagnostics go to
+- [x] **Step 3: Run** → FAIL. **Step 4: Implement.** Diagnostics go to
   stderr as `via:linea:columna: causa`; exit 1 if any.
-- [ ] **Step 5: Run** → PASS; open the output in `praeco antiphonale`
+- [x] **Step 5: Run** → PASS; open the output in `praeco antiphonale`
   and LISTEN once (note in the worklog what it sounds like). Plant:
   stale embedded copy (one byte changed) → the byte-equality
   assertion red. Restore.
-- [ ] **Step 6: Commit** (GENERATUM gate green).
+- [x] **Step 6: Commit** (GENERATUM gate green).
 
 ---
 
@@ -561,3 +561,17 @@ section prints `OMISSA` and passes.
   line). T4's vowel-less joiner reads back - kept. Plants (a) no space
   before `*(:)` -> scriptura/reditus/totalitas red, (b) Gloria always
   -> sine-Gloria case red; both green after.
+- **T7 (2026-11-13).** `tools/toni_psalmorum_infigere.sh` ->
+  `lib/toni_psalmorum_infixum.c` (GENERATUM, registered like
+  `cantuale_infixum`); `auditio -psalmus VIA -signum S [-titulus T]
+  [-sine-gloria] [-antiqua]`, play flags through the `-gabc` path;
+  `musica/psalmi/116.txt`. Tests: tabula `_infixum_probare` (8
+  sections, 423), auditio-fumus section VIII (14 cases). Rulings
+  (worklog): admonitions exit 1 with gabc still printed and nothing
+  played; `-antiqua` on a tone without one is an error; `-do` allowed.
+  Listening: opened in the antiphonale pane for Fran; the neumae PNG
+  showed the "1" of "1. Lau" drawn as the drop-cap initial (no
+  `initial-style: 0;`; GregoBase pairs numbered verse 1 with initial
+  0) - ledger question 01M7AQ6TAVDNN9ZMZSG5WBC619, not fixed here.
+  Plants (a) stale embedded byte -> `infixum == fons` red, (b)
+  `-sine-gloria` ignored -> fumus red; both green after.
