@@ -1118,6 +1118,34 @@ _sectio_undevicesima (
     CREDO_VERUM(pictura_est(0x01FD, ae_acutum, larva));
 }
 
+/* XIX: obelus U+2020 et 'non aequale' U+2260 (Franus 2026-11-12,
+ * tofu) - obelus: hasta in columna III cum transverso in ordine I;
+ * non aequale: '=' (ordines II et IV) linea obliqua transfixum */
+interior vacuum
+_sectio_vicesima (
+    CredoContextus* c)
+{
+                    i8  larva[MAXIMA + XVI];
+    constans character* obelus[] = {
+        "...#..", ".#####", "...#..", "...#..",
+        "...#..", "...#..", "...#..", "......" };
+    constans character* non_aequale[] = {
+        "......", "....#.", ".#####", "...#..",
+        ".#####", "..#...", "......", "......" };
+
+    (vacuum)c;
+    CREDO_VERUM(glyphae_ductae_est(0x2020));
+    CREDO_VERUM(pictura_est(0x2020, obelus, larva));
+    CREDO_VERUM(glyphae_ductae_est(0x2260));
+    CREDO_VERUM(pictura_est(0x2260, non_aequale, larva));
+    /* vicini non nostri manent */
+    CREDO_FALSUM(glyphae_ductae_est(0x2021));
+    CREDO_FALSUM(glyphae_ductae_est(0x2262));
+    /* vicini iam nostri intacti */
+    CREDO_VERUM(glyphae_ductae_est(0x2022));
+    CREDO_VERUM(glyphae_ductae_est(0x2261));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "I: lineae (Ghostty linesChar)", _sectio_prima, NIHIL, NIHIL,
         NIHIL, NIHIL },
@@ -1155,6 +1183,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL, NIHIL },
     { "XVIII: oe OE R V ae acutum (gabc)", _sectio_undevicesima, NIHIL,
         NIHIL, NIHIL, NIHIL },
+    { "XIX: obelus et non aequale (U+2020, U+2260)",
+        _sectio_vicesima, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

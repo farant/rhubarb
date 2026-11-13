@@ -529,3 +529,11 @@ distinguishable. Breathing + accent: breathing in cols 0-1, accent in
 Perispomeni drawn as a circumflex-like cap in both positions.
 Old test VIII asserted ϊ (U+03CA) was NOT ours; it is now - the
 "unassigned neighbour" check moved to ϐ (U+03D0).
+
+## 2026-11-12 - obelus and not-equal (Fran: tofu)
+
+† (U+2020) and ≠ (U+2260) added as v2 pictures, in sorted position
+(the table is searched by bisection). The dagger is a stem in column
+3 with the crossbar on row 1; not-equal is the font's two bars (rows
+2 and 4) with a diagonal showing on rows 1, 3 and 5. ‡ (U+2021) is
+still not ours; ≡ ≤ ≥ were already there. Test section XIX.

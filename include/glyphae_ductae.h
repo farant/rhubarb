@@ -37,6 +37,9 @@
  *
  * Cantus Latinus (gabc pars II P4, 2026-11-04): œ Œ ℟ ℣ picturae v2,
  * ǽ composita (æ fontis cum acuto).
+ *
+ * Obelus et 'non aequale' (Franus 2026-11-12, tofu): † (U+2020) et
+ * ≠ (U+2260), picturae v2.
  */
 #ifndef GLYPHAE_DUCTAE_H
 #define GLYPHAE_DUCTAE_H
