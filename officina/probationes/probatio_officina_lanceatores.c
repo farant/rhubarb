@@ -270,12 +270,24 @@ _sectio_interpretare_nativum (
         "1024",
         NIHIL
     };
-    /* fluitantia nondum (Opus IX): recusata, interpretata currit */
-    constans character* recusanda[] = {
+    /* fluitantia (M5 T9 gradus II): parametrum et reditus f64, pow
+     * directe vocata - nativa idem scribit ac interpretata */
+    constans character* cum_fluitantibus[] = {
         "officina/interpretare.sh",
         "-nativum",
         "color_srgb_ad_linearem",
         "0.5",
+        NIHIL
+    };
+    /* recusata (recursio mutua - fixum, -fons): causa in stderr,
+     * interpretata currit, fructus idem */
+    constans character* recusanda[] = {
+        "officina/interpretare.sh",
+        "-fons",
+        "officina/probationes/fixa/nativum/recusanda.c",
+        "-nativum",
+        "fixum_est_par",
+        "10",
         NIHIL
     };
 
@@ -300,13 +312,26 @@ _sectio_interpretare_nativum (
     CREDO_CHORDA_CONTINET(r.erratum,
         chorda_ex_literis("[BENE", piscina));
 
-    r = processus_exsequi_cum(recusanda, &optiones, MORA_AEDIFICATIONIS,
+    r = processus_exsequi_cum(cum_fluitantibus, &optiones,
+        MORA_AEDIFICATIONIS,
         piscina);
     CREDO_VERUM(r.successus);
     CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
     CREDO_VERUM(chorda_aequalis_literis(r.effusio, "0.214041\n"));
     CREDO_CHORDA_CONTINET(r.erratum, chorda_ex_literis(
+        "nativum: color_srgb_ad_linearem compilata", piscina));
+    CREDO_CHORDA_CONTINET(r.erratum,
+        chorda_ex_literis("[BENE", piscina));
+
+    r = processus_exsequi_cum(recusanda, &optiones, MORA_AEDIFICATIONIS,
+        piscina);
+    CREDO_VERUM(r.successus);
+    CREDO_AEQUALIS_I32(r.codex_exitus, ZEPHYRUM);
+    CREDO_VERUM(chorda_aequalis_literis(r.effusio, "1\n"));
+    CREDO_CHORDA_CONTINET(r.erratum, chorda_ex_literis(
         "nativum recusatum: ", piscina));
+    CREDO_CHORDA_CONTINET(r.erratum, chorda_ex_literis(
+        "mundus: 1 moduli", piscina));
     CREDO_CHORDA_CONTINET(r.erratum,
         chorda_ex_literis("[BENE", piscina));
 }

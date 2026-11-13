@@ -393,3 +393,23 @@ does not. Plants: s32 clause removed in machinula -> FRACTA; backend check
 Consequence to watch: lib code that divides a 32-bit minimum by -1 now
 halts under interpretation. Not measured - the cursor's differential lane
 is dead until credo runs.
+
+## 2026-11-13 — fluitare to f32 rounded twice (fixed)
+
+`fluitare.<int>.f32` converted the integer to f64 first and then cast
+that to f32. For 32-bit sources this is exact; for a 64-bit integer
+with more than 53 significant bits it rounds twice and can land on a
+different f32 than C's `(float)x`. Example: 2^60 + 2^36 + 1 is above
+the f32 tie, so C gives 2^60 + 2^37; via f64 the +1 is lost, the value
+sits exactly on the tie and rounds to even, 2^60.
+
+Found while writing the native backend's conversions (M5 T9 step 1):
+the backend converts in one step (scvtf/ucvtf straight to S), so the
+two disagreed. Following the 2026-11-13 division ruling (the
+interpreter is the referee, fix it rather than copy the gap), the f32
+case now casts the integer directly. Not asked of Fran beforehand -
+reported with step 1.
+
+Test: probatio_officina_nativum "dorsum fluitantia", `$rotundatio`
+asserts the C value on the interpreted run, then parity. Plant (old
+double cast restored): FRACTA.

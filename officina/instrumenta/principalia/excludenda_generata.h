@@ -145,9 +145,7 @@ interior constans character* constans EXCLUDENDA_LECTIONUM[] = {
 };
 
 interior constans character* constans EXCLUDENDA_CODIFICATORIS[] = {
-    "_fmov_valor",
     "codificator_a64_constans",
-    "codificator_a64_fmov_immediatum",
     NIHIL
 };
 

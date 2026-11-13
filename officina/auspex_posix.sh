@@ -130,6 +130,12 @@ emittere_asserta() {
     # effugium officinae (M5 T6, 2026-11-04): sigaction unio,
     # acervus alternus, contextus signi (pc/fp), sigjmp_buf
     echo "IUNGO_ASSERTA(OFF(sigaction, sa_sigaction) == 0);"
+    # siginfo_t forma vera (M5 T9, 2026-11-13): si_addr legitur
+    echo "IUNGO_ASSERTA(sizeof(siginfo_t) == 104);"
+    echo "IUNGO_ASSERTA(OFF(__siginfo, si_status) == 20);"
+    echo "IUNGO_ASSERTA(OFF(__siginfo, si_addr) == 24);"
+    echo "IUNGO_ASSERTA(OFF(__siginfo, si_value) == 32);"
+    echo "IUNGO_ASSERTA(OFF(__siginfo, si_band) == 40);"
     echo "IUNGO_ASSERTA(SA_ONSTACK == 0x0001 && SA_SIGINFO == 0x0040);"
     echo "IUNGO_ASSERTA(SS_DISABLE == 0x0004);"
     echo "IUNGO_ASSERTA(MINSIGSTKSZ == 32768 && SIGSTKSZ == 131072);"

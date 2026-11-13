@@ -23,6 +23,7 @@
 #include "officina_machinula.h"
 #include "officina_medulla_textus.h"
 #include "credo.h"
+#include <math.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <stdio.h>
@@ -1251,7 +1252,8 @@ _sectio_dorsum_constantes (
 }
 
 /* quod dorsum nondum emittit recusatur nominatim; functio
- * interpretata manet */
+ * interpretata manet (arithmetica XVI bitorum: C promovet, dorsum
+ * eam non emittit; ante T9 exemplum erat fluitare) */
 interior vacuum
 _sectio_dorsum_recusatio_operationis (
     CredoContextus* c)
@@ -1266,12 +1268,12 @@ _sectio_dorsum_recusatio_operationis (
         "\n"
         "functio $main () -> s32\n"
         "@initium:\n"
-        "    %p = fluitare.s32.f64 7\n"
+        "    %p = addere.s16 7, 1\n"
         "    redde 42\n");
     CREDO_NECESSE_NON_NIHIL (m);
     CREDO_FALSUM (_nativam_facere(c->piscina, m, "main", &causa));
     CREDO_VERUM (chorda_aequalis_literis(causa,
-        "operatio fluitare nondum nativa"));
+        "operatio addere nondum nativa"));
     exitus = machinula_currere(m, _ch("main"));
     CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
     CREDO_VERUM (exitus.codex == (s64)XLII);
@@ -1284,11 +1286,10 @@ _sectio_dorsum_recusatio_operationis (
 
 /* fixturam ex arbore legit ($main -> exspectatum) et utramque
  * confert */
-interior vacuum
-_fixturam_conferre (
+interior character*
+_fixturam_legere (
         CredoContextus* c,
-    constans character* via_partis,
-                   s64  exspectatum)
+    constans character* via_partis)
 {
     constans character* radix = getenv("RHUBARB_RADIX");
              character  via[CCLVI];
@@ -1297,12 +1298,30 @@ _fixturam_conferre (
 
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".", via_partis);
     textus = filum_legere_totum(via, c->piscina);
-    CREDO_NECESSE (textus.mensura > ZEPHYRUM);
+    si (textus.mensura <= ZEPHYRUM)
+    {
+        redde NIHIL;
+    }
     literae = piscina_allocare(c->piscina,
         (memoriae_index)textus.mensura + I);
-    CREDO_NECESSE_NON_NIHIL (literae);
+    si (literae == NIHIL)
+    {
+        redde NIHIL;
+    }
     memcpy(literae, textus.datum, (memoriae_index)textus.mensura);
     literae[textus.mensura] = '\0';
+    redde literae;
+}
+
+interior vacuum
+_fixturam_conferre (
+        CredoContextus* c,
+    constans character* via_partis,
+                   s64  exspectatum)
+{
+    character* literae = _fixturam_legere(c, via_partis);
+
+    CREDO_NECESSE_NON_NIHIL (literae);
     _utramque_conferre(c, literae, exspectatum);
 }
 
@@ -2273,7 +2292,7 @@ _sectio_dorsum_recusationes (
         "\n"
         "functio $g (s32 %a) -> s32\n"
         "@initium:\n"
-        "    %p = fluitare.s32.f64 %a\n"
+        "    %p = addere.s16 %a, 1\n"
         "    %b = addere.s32 %a, 1\n"
         "    redde %b\n"
         "\n"
@@ -3413,10 +3432,9 @@ _sectio_dorsum_aggregata (
     _cursus_conferre(c, m, cursus, IV, vocantes, IV);
     CREDO_VERUM (_signum_functionis("usus_mixta")
         == (s64)CONEXIO_SIGNUM_NATIVUM);
-    /* aggregatum fluitans homogeneum: recusatur nominatim (Opus IX) */
-    CREDO_FALSUM (machinula_nativum_compilare(m, _ch("hfa"), &causa));
-    CREDO_VERUM (chorda_aequalis_literis(causa,
-        "dorsum: aggregatum fluitans (Opus IX)"));
+    /* aggregatum fluitans homogeneum: a T9 gradu III compilatur
+     * (sectio 'dorsum aggregata fluitantia') */
+    CREDO_VERUM (machinula_nativum_compilare(m, _ch("hfa"), &causa));
 }
 
 
@@ -3990,6 +4008,2461 @@ _sectio_dorsum_aggregata_hospitis (
     }
 }
 
+
+    /* ==================================================
+     * DORSUM T9 gradus I: fluitantia intra functionem (registra S/D,
+     * constantes, arithmetica, comparationes ordinatae, conversiones,
+     * memoria). Functiones signaturam integram habent - argumenta et
+     * reditus fluitantes gradus II sunt.
+     * ================================================== */
+
+#define TEXTUS_FLUITANTIUM \
+    "modulus \"probatio/fluitantia.medulla\"\n" \
+    "\n" \
+    "functio $arith (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %f = fluitare.s32.f64 %a\n" \
+    "    %g = multiplicare.f64 %f, 1.5\n" \
+    "    %g = addere.f64 %g, 0.10000000000000001\n" \
+    "    %h = subtrahere.f64 %g, 3.1415926535897931\n" \
+    "    %h = dividere.f64 %h, -0.75\n" \
+    "    %n = negare.f64 %h\n" \
+    "    %m = multiplicare.f64 %n, 1000.0\n" \
+    "    %p = movere.f64 %m\n" \
+    "    %r = integrare.f64.s32 %p\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $arith32 (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %f = fluitare.s32.f32 %a\n" \
+    "    %g = multiplicare.f32 %f, 1.5\n" \
+    "    %g = addere.f32 %g, 0.10000000000000001\n" \
+    "    %h = subtrahere.f32 %g, 3.1415926535897931\n" \
+    "    %h = dividere.f32 %h, -0.75\n" \
+    "    %n = negare.f32 %h\n" \
+    "    %m = multiplicare.f32 %n, 1000.0\n" \
+    "    %p = movere.f32 %m\n" \
+    "    %r = integrare.f32.s32 %p\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $bita (s32 %a) -> s64\n" \
+    "@initium:\n" \
+    "    %l = arca 16, 8\n" \
+    "    %f = fluitare.s32.f64 %a\n" \
+    "    %g = dividere.f64 %f, 3.0\n" \
+    "    scribere.f64 %l, %g\n" \
+    "    %b = legere.s64 %l\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $bita32 (s32 %a) -> s64\n" \
+    "@initium:\n" \
+    "    %l = arca 16, 8\n" \
+    "    scribere.s64 %l, -1\n" \
+    "    %f = fluitare.s32.f32 %a\n" \
+    "    %g = multiplicare.f32 %f, 0.20000000000000001\n" \
+    "    %g = addere.f32 %g, 0.10000000000000001\n" \
+    "    scribere.f32 %l, %g\n" \
+    "    %b = legere.s64 %l\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $lege (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %l = arca 16, 8\n" \
+    "    scribere.s64 %l, 4611686018427387904\n" \
+    "    %p = addere.i64 %l, 8\n" \
+    "    scribere.s32 %p, 1075838976\n" \
+    "    %d = legere.f64 %l\n" \
+    "    %s = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %s\n" \
+    "    %f = fluitare.s32.f64 %a\n" \
+    "    %g = multiplicare.f64 %f, %d\n" \
+    "    %g = addere.f64 %g, %e\n" \
+    "    %r = integrare.f64.s32 %g\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $nan (s32 %x) -> s32\n" \
+    "@initium:\n" \
+    "    %z = movere.f64 0.0\n" \
+    "    %n = dividere.f64 %z, %z\n" \
+    "    %u = fluitare.s32.f64 %x\n" \
+    "    %s = artare.f64.f32 %n\n" \
+    "    %v = artare.f64.f32 %u\n" \
+    "    %m = movere.s32 0\n" \
+    "    %c = aequalis.f64 %n, %u\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = inaequalis.f64 %n, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 1\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor.f64 %n, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 2\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor_aequalis.f64 %n, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 3\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior.f64 %n, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 4\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior_aequalis.f64 %n, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 5\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = aequalis.f64 %u, %n\n" \
+    "    %c = sinistrorsum.s32 %c, 6\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = inaequalis.f64 %u, %n\n" \
+    "    %c = sinistrorsum.s32 %c, 7\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor.f64 %u, %n\n" \
+    "    %c = sinistrorsum.s32 %c, 8\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor_aequalis.f64 %u, %n\n" \
+    "    %c = sinistrorsum.s32 %c, 9\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior.f64 %u, %n\n" \
+    "    %c = sinistrorsum.s32 %c, 10\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior_aequalis.f64 %u, %n\n" \
+    "    %c = sinistrorsum.s32 %c, 11\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = aequalis.f64 %u, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 12\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = inaequalis.f64 %u, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 13\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor.f64 %u, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 14\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor_aequalis.f64 %u, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 15\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior.f64 %u, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 16\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior_aequalis.f64 %u, %u\n" \
+    "    %c = sinistrorsum.s32 %c, 17\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = aequalis.f32 %s, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 18\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = inaequalis.f32 %s, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 19\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor.f32 %s, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 20\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor_aequalis.f32 %s, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 21\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior.f32 %s, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 22\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior_aequalis.f32 %s, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 23\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = aequalis.f32 %v, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 24\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = inaequalis.f32 %v, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 25\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor.f32 %v, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 26\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = minor_aequalis.f32 %v, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 27\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior.f32 %v, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 28\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    %c = maior_aequalis.f32 %v, %v\n" \
+    "    %c = sinistrorsum.s32 %c, 29\n" \
+    "    %m = vel.s32 %m, %c\n" \
+    "    redde %m\n" \
+    "\n" \
+    "functio $nan_rami (s32 %x) -> s32\n" \
+    "@initium:\n" \
+    "    %z = movere.f64 0.0\n" \
+    "    %n = dividere.f64 %z, %z\n" \
+    "    %u = fluitare.s32.f64 %x\n" \
+    "    %m = movere.s32 0\n" \
+    "    salire @p0\n" \
+    "@p0:\n" \
+    "    %c = aequalis.f64 %n, %u\n" \
+    "    ramus %c -> @v0 | @p1\n" \
+    "@v0:\n" \
+    "    %m = vel.s32 %m, 1\n" \
+    "    salire @p1\n" \
+    "@p1:\n" \
+    "    %c = inaequalis.f64 %n, %u\n" \
+    "    ramus %c -> @v1 | @p2\n" \
+    "@v1:\n" \
+    "    %m = vel.s32 %m, 2\n" \
+    "    salire @p2\n" \
+    "@p2:\n" \
+    "    %c = minor.f64 %n, %u\n" \
+    "    ramus %c -> @v2 | @p3\n" \
+    "@v2:\n" \
+    "    %m = vel.s32 %m, 4\n" \
+    "    salire @p3\n" \
+    "@p3:\n" \
+    "    %c = minor_aequalis.f64 %n, %u\n" \
+    "    ramus %c -> @v3 | @p4\n" \
+    "@v3:\n" \
+    "    %m = vel.s32 %m, 8\n" \
+    "    salire @p4\n" \
+    "@p4:\n" \
+    "    %c = maior.f64 %n, %u\n" \
+    "    ramus %c -> @v4 | @p5\n" \
+    "@v4:\n" \
+    "    %m = vel.s32 %m, 16\n" \
+    "    salire @p5\n" \
+    "@p5:\n" \
+    "    %c = maior_aequalis.f64 %n, %u\n" \
+    "    ramus %c -> @v5 | @p6\n" \
+    "@v5:\n" \
+    "    %m = vel.s32 %m, 32\n" \
+    "    salire @p6\n" \
+    "@p6:\n" \
+    "    %c = aequalis.f64 %u, %u\n" \
+    "    ramus %c -> @v6 | @p7\n" \
+    "@v6:\n" \
+    "    %m = vel.s32 %m, 64\n" \
+    "    salire @p7\n" \
+    "@p7:\n" \
+    "    %c = inaequalis.f64 %u, %u\n" \
+    "    ramus %c -> @v7 | @p8\n" \
+    "@v7:\n" \
+    "    %m = vel.s32 %m, 128\n" \
+    "    salire @p8\n" \
+    "@p8:\n" \
+    "    %c = minor.f64 %u, %u\n" \
+    "    ramus %c -> @v8 | @p9\n" \
+    "@v8:\n" \
+    "    %m = vel.s32 %m, 256\n" \
+    "    salire @p9\n" \
+    "@p9:\n" \
+    "    %c = minor_aequalis.f64 %u, %u\n" \
+    "    ramus %c -> @v9 | @p10\n" \
+    "@v9:\n" \
+    "    %m = vel.s32 %m, 512\n" \
+    "    salire @p10\n" \
+    "@p10:\n" \
+    "    %c = maior.f64 %u, %u\n" \
+    "    ramus %c -> @v10 | @p11\n" \
+    "@v10:\n" \
+    "    %m = vel.s32 %m, 1024\n" \
+    "    salire @p11\n" \
+    "@p11:\n" \
+    "    %c = maior_aequalis.f64 %u, %u\n" \
+    "    ramus %c -> @v11 | @p12\n" \
+    "@v11:\n" \
+    "    %m = vel.s32 %m, 2048\n" \
+    "    salire @p12\n" \
+    "@p12:\n" \
+    "    redde %m\n" \
+    "\n" \
+    "functio $zephyrus_negativus () -> s32\n" \
+    "@initium:\n" \
+    "    %l = arca 16, 8\n" \
+    "    %d = movere.f64 -0.0\n" \
+    "    scribere.f64 %l, %d\n" \
+    "    %b = legere.s64 %l\n" \
+    "    %s = minor.s64 %b, 0\n" \
+    "    %c = inaequalis.f64 %d, 0.0\n" \
+    "    ramus %c -> @verum | @falsum\n" \
+    "@verum:\n" \
+    "    redde 1\n" \
+    "@falsum:\n" \
+    "    %r = addere.s32 %s, 41\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $rotundatio () -> s64\n" \
+    "@initium:\n" \
+    "    %a = movere.s64 1152921573326323713\n" \
+    "    %f = fluitare.s64.f32 %a\n" \
+    "    %d = dilatare.f32.f64 %f\n" \
+    "    %r = integrare.f64.s64 %d\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $conversiones () -> s64\n" \
+    "@initium:\n" \
+    "    %u = movere.i64 -9223372036854773760\n" \
+    "    %f = fluitare.i64.f64 %u\n" \
+    "    %r1 = integrare.f64.i64 %f\n" \
+    "    %n = movere.s32 -5\n" \
+    "    %g = fluitare.i32.f64 %n\n" \
+    "    %r2 = integrare.f64.s64 %g\n" \
+    "    %w = movere.s32 200\n" \
+    "    %c = amputare.s32.s8 %w\n" \
+    "    %h = fluitare.s8.f64 %c\n" \
+    "    %r3 = integrare.f64.s64 %h\n" \
+    "    %q = movere.f64 -2.75\n" \
+    "    %r4 = integrare.f64.s32 %q\n" \
+    "    %e4 = extendere.s32.s64 %r4\n" \
+    "    %t = movere.f64 300.0\n" \
+    "    %r5 = integrare.f64.i8 %t\n" \
+    "    %x5 = addere.s32 %r5, 1000\n" \
+    "    %e5 = extendere.s32.s64 %x5\n" \
+    "    %o = movere.f64 0.10000000000000001\n" \
+    "    %o32 = artare.f64.f32 %o\n" \
+    "    %o64 = dilatare.f32.f64 %o32\n" \
+    "    %o64 = multiplicare.f64 %o64, 1000000000.0\n" \
+    "    %r6 = integrare.f64.s64 %o64\n" \
+    "    %y = movere.s32 -7\n" \
+    "    %k = fluitare.s32.f32 %y\n" \
+    "    %r7 = integrare.f32.s64 %k\n" \
+    "    %i8 = fluitare.i8.f64 300\n" \
+    "    %r8 = integrare.f64.s64 %i8\n" \
+    "    %j8 = fluitare.s8.f32 200\n" \
+    "    %r9 = integrare.f32.s64 %j8\n" \
+    "    %s = movere.s64 %r1\n" \
+    "    %m = multiplicare.s64 %r8, 19\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    %m = multiplicare.s64 %r9, 23\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    %m = multiplicare.s64 %r2, 3\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    %m = multiplicare.s64 %r3, 5\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    %m = multiplicare.s64 %e4, 7\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    %m = multiplicare.s64 %e5, 11\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    %m = multiplicare.s64 %r6, 13\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    %m = multiplicare.s64 %r7, 17\n" \
+    "    %s = addere.s64 %s, %m\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $hf (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %f = fluitare.s32.f64 %a\n" \
+    "    %g = multiplicare.f64 %f, 2.5\n" \
+    "    %t = vocare.s32 $h, s32 %a\n" \
+    "    %u = fluitare.s32.f64 %t\n" \
+    "    %g = addere.f64 %g, %u\n" \
+    "    %r = integrare.f64.s32 %g\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $ante (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    ramus %a -> @pone | @finis\n" \
+    "@pone:\n" \
+    "    %f = movere.f64 2.5\n" \
+    "    salire @finis\n" \
+    "@finis:\n" \
+    "    %g = addere.f64 %f, 1.0\n" \
+    "    %r = integrare.f64.s32 %g\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $ante_vocans (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %x = fluitare.s32.f64 %a\n" \
+    "    %y = addere.f64 %x, 7.5\n" \
+    "    %z = multiplicare.f64 %y, %x\n" \
+    "    %i = integrare.f64.s32 %z\n" \
+    "    %t = vocare.s32 $ante, s32 0\n" \
+    "    %r = addere.s32 %t, %i\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $m_ante () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $ante_vocans, s32 3\n" \
+    "    %u = vocare.s32 $ante, s32 1\n" \
+    "    %v = multiplicare.s32 %u, 10\n" \
+    "    %w = addere.s32 %t, %v\n" \
+    "    redde %w\n" \
+    "\n" \
+    "functio $integrum_latum (s32 %a) -> s64\n" \
+    "@initium:\n" \
+    "    %f = fluitare.s32.f64 %a\n" \
+    "    %r = integrare.f64.s32 %f\n" \
+    "    %x = addere.s64 %r, 1\n" \
+    "    redde %x\n" \
+    "\n" \
+    "functio $h (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %b = addere.s32 %a, 1\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $multa_f (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %f = fluitare.s32.f64 %a\n" \
+    "    %f1 = addere.f64 %f, 1.5\n" \
+    "    %f2 = addere.f64 %f, 2.5\n" \
+    "    %f3 = addere.f64 %f, 3.5\n" \
+    "    %f4 = addere.f64 %f, 4.5\n" \
+    "    %f5 = addere.f64 %f, 5.5\n" \
+    "    %f6 = addere.f64 %f, 6.5\n" \
+    "    %f7 = addere.f64 %f, 7.5\n" \
+    "    %f8 = addere.f64 %f, 8.5\n" \
+    "    %f9 = addere.f64 %f, 9.5\n" \
+    "    %f10 = addere.f64 %f, 10.5\n" \
+    "    %f11 = addere.f64 %f, 11.5\n" \
+    "    %f12 = addere.f64 %f, 12.5\n" \
+    "    %f13 = addere.f64 %f, 13.5\n" \
+    "    %f14 = addere.f64 %f, 14.5\n" \
+    "    %f15 = addere.f64 %f, 15.5\n" \
+    "    %f16 = addere.f64 %f, 16.5\n" \
+    "    %f17 = addere.f64 %f, 17.5\n" \
+    "    %f18 = addere.f64 %f, 18.5\n" \
+    "    %f19 = addere.f64 %f, 19.5\n" \
+    "    %f20 = addere.f64 %f, 20.5\n" \
+    "    %t = vocare.s32 $hf, s32 %a\n" \
+    "    %s = fluitare.s32.f64 %t\n" \
+    "    %w = multiplicare.f64 %f1, 1.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f2, 2.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f3, 3.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f4, 4.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f5, 5.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f6, 6.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f7, 7.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f8, 8.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f9, 9.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f10, 10.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f11, 11.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f12, 12.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f13, 13.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f14, 14.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f15, 15.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f16, 16.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f17, 17.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f18, 18.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f19, 19.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %w = multiplicare.f64 %f20, 20.0\n" \
+    "    %s = addere.f64 %s, %w\n" \
+    "    %r = integrare.f64.s32 %s\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $multa_t (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %f = fluitare.s32.f32 %a\n" \
+    "    %f1 = addere.f32 %f, 1.25\n" \
+    "    %f2 = addere.f32 %f, 2.25\n" \
+    "    %f3 = addere.f32 %f, 3.25\n" \
+    "    %f4 = addere.f32 %f, 4.25\n" \
+    "    %f5 = addere.f32 %f, 5.25\n" \
+    "    %f6 = addere.f32 %f, 6.25\n" \
+    "    %f7 = addere.f32 %f, 7.25\n" \
+    "    %f8 = addere.f32 %f, 8.25\n" \
+    "    %f9 = addere.f32 %f, 9.25\n" \
+    "    %f10 = addere.f32 %f, 10.25\n" \
+    "    %f11 = addere.f32 %f, 11.25\n" \
+    "    %f12 = addere.f32 %f, 12.25\n" \
+    "    %f13 = addere.f32 %f, 13.25\n" \
+    "    %f14 = addere.f32 %f, 14.25\n" \
+    "    %f15 = addere.f32 %f, 15.25\n" \
+    "    %f16 = addere.f32 %f, 16.25\n" \
+    "    %f17 = addere.f32 %f, 17.25\n" \
+    "    %f18 = addere.f32 %f, 18.25\n" \
+    "    %f19 = addere.f32 %f, 19.25\n" \
+    "    %f20 = addere.f32 %f, 20.25\n" \
+    "    %s = movere.f32 0.0\n" \
+    "    %w = multiplicare.f32 %f1, 1.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f2, 2.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f3, 3.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f4, 4.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f5, 5.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f6, 6.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f7, 7.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f8, 8.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f9, 9.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f10, 10.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f11, 11.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f12, 12.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f13, 13.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f14, 14.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f15, 15.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f16, 16.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f17, 17.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f18, 18.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f19, 19.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %w = multiplicare.f32 %f20, 20.0\n" \
+    "    %s = subtrahere.f32 %s, %w\n" \
+    "    %r = integrare.f32.s32 %s\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $m_arith () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $arith, s32 7\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_arith32 () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $arith32, s32 7\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_bita () -> s64\n" \
+    "@initium:\n" \
+    "    %t = vocare.s64 $bita, s32 10\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_bita32 () -> s64\n" \
+    "@initium:\n" \
+    "    %t = vocare.s64 $bita32, s32 3\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_lege () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $lege, s32 -9\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_nan () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $nan, s32 3\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_nan_rami () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $nan_rami, s32 3\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_zephyrus () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $zephyrus_negativus\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_rotundatio () -> s64\n" \
+    "@initium:\n" \
+    "    %t = vocare.s64 $rotundatio\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_conversiones () -> s64\n" \
+    "@initium:\n" \
+    "    %t = vocare.s64 $conversiones\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_multa_f () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $multa_f, s32 3\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_multa_t () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $multa_t, s32 3\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $classis_mixta (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %r = movere.s32 1\n" \
+    "    %r = movere.f64 1.0\n" \
+    "    redde %a\n" \
+    "\n" \
+    "functio $usus_mixtus (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %f = movere.f64 1.0\n" \
+    "    %x = addere.s32 %f, 1\n" \
+    "    redde %x\n" \
+    "\n" \
+    "functio $usus_integri (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %f = addere.f64 %a, 1.0\n" \
+    "    %x = integrare.f64.s32 %f\n" \
+    "    redde %x\n"
+
+interior vacuum
+_sectio_dorsum_fluitantia (
+    CredoContextus* c)
+{
+    constans character* cursus[]   = {
+        "m_arith", "m_arith32", "m_bita", "m_bita32", "m_lege",
+        "m_zephyrus", "m_rotundatio", "m_conversiones", "m_multa_f",
+        "m_multa_t", "m_ante"
+    };
+    constans character* nativae[]  = {
+        "arith", "arith32", "bita", "bita32", "lege",
+        "zephyrus_negativus", "rotundatio", "conversiones", "multa_f",
+        "multa_t", "ante_vocans"
+    };
+       Machinula* m;
+    StatusCursus  s;
+          chorda  causa;
+             f64  tertia = 10.0 / 3.0;
+             f32  angusta = (f32)3 * 0.2f + 0.1f;
+             i64  bita;
+             i32  bita_angusta;
+
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, TEXTUS_FLUITANTIUM);
+    CREDO_NECESSE_NON_NIHIL (m);
+    /* lex (interpretata, contra C hospitis) */
+    s = _statum_capere(c->piscina, m, "m_arith");
+    CREDO_AEQUALIS_S32 (s.genus, MACHINULA_BENE);
+    CREDO_VERUM (s.codex == (s64)(s32)(-((7.0 * 1.5 + 0.1
+        - 3.1415926535897931) / -0.75) * 1000.0));
+    memcpy(&bita, &tertia, magnitudo(bita));
+    s = _statum_capere(c->piscina, m, "m_bita");
+    CREDO_VERUM ((i64)s.codex == bita);
+    /* f32 in dimidio inferiore; dimidium superius arcae non tangitur */
+    memcpy(&bita_angusta, &angusta, magnitudo(bita_angusta));
+    s = _statum_capere(c->piscina, m, "m_bita32");
+    CREDO_VERUM ((i64)s.codex == (((i64)0xFFFFFFFFUL << XXXII)
+        | (i64)bita_angusta));
+    /* -9 * 2.0 + 2.5 = -15.5 -> -15 */
+    s = _statum_capere(c->piscina, m, "m_lege");
+    CREDO_VERUM (s.codex == -(s64)XV);
+    /* -0.0: != 0.0 falsum (ramus @falsum), signum in bitis servatum */
+    s = _statum_capere(c->piscina, m, "m_zephyrus");
+    CREDO_VERUM (s.codex == (s64)XLII);
+    /* s64 -> f32 rotundatione UNA (lex C): 2^60 + 2^37 */
+    s = _statum_capere(c->piscina, m, "m_rotundatio");
+    CREDO_VERUM (s.codex == (s64)1152921642045800448L);
+    /* registrum fluitans ante definitionem lectum: zephyrus (F13),
+     * etiam post vocantem qui temporaria inquinavit - (1 + 31),
+     * deinde 3 -> 62 */
+    s = _statum_capere(c->piscina, m, "m_ante");
+    CREDO_VERUM (s.codex == (s64)LXII);
+    _cursus_conferre(c, m, cursus, XI, nativae, XI);
+    CREDO_VERUM (_signum_functionis("hf")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+    CREDO_VERUM (_signum_functionis("multa_t")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+
+    /* fructus integrare s32 verbum canonicum non fert (census E17) */
+    CREDO_FALSUM (machinula_nativum_compilare(m, _ch("integrum_latum"),
+        &causa));
+    CREDO_VERUM (chorda_aequalis_literis(causa,
+        "registrum s32 in usu 64"));
+    /* registrum medullae classem UNAM habet */
+    CREDO_FALSUM (machinula_nativum_compilare(m, _ch("classis_mixta"),
+        &causa));
+    CREDO_VERUM (chorda_aequalis_literis(causa,
+        "dorsum: registrum classis mixtae"));
+    CREDO_FALSUM (machinula_nativum_compilare(m, _ch("usus_mixtus"),
+        &causa));
+    CREDO_VERUM (chorda_aequalis_literis(causa,
+        "dorsum: registrum fluitans in usu integro"));
+    CREDO_FALSUM (machinula_nativum_compilare(m, _ch("usus_integri"),
+        &causa));
+    CREDO_VERUM (chorda_aequalis_literis(causa,
+        "dorsum: registrum integrum in usu fluitante"));
+}
+
+interior vacuum
+_sectio_dorsum_non_numeri (
+    CredoContextus* c)
+{
+    constans character* cursus[]   = { "m_nan", "m_nan_rami" };
+    constans character* nativae[]  = { "nan", "nan_rami" };
+       Machinula* m;
+    StatusCursus  s;
+
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, TEXTUS_FLUITANTIUM);
+    CREDO_NECESSE_NON_NIHIL (m);
+    /* tabula C: cum NaN sola != vera; ordo bitorum ==, !=, <, <=, >,
+     * >= per paria (n,u) (u,n) (u,u) f64, deinde (n,u) (u,u) f32 */
+    s = _statum_capere(c->piscina, m, "m_nan");
+    CREDO_AEQUALIS_S32 (s.genus, MACHINULA_BENE);
+    CREDO_VERUM (s.codex == (s64)(II | (II << VI) | (XLI << XII)
+        | (II << XVIII) | (XLI << XXIV)));
+    /* per ramos: (n,u) deinde (u,u) */
+    s = _statum_capere(c->piscina, m, "m_nan_rami");
+    CREDO_VERUM (s.codex == (s64)(II | (XLI << VI)));
+    _cursus_conferre(c, m, cursus, II, nativae, II);
+    CREDO_VERUM (_signum_functionis("nan_rami")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+}
+
+interior vacuum
+_sectio_dorsum_fixturae_conversionum (
+    CredoContextus* c)
+{
+    _fixturam_conferre(c,
+        "officina/probationes/fixa/machinula/conversiones.medulla",
+        (s64)XLII);
+}
+
+
+    /* ==================================================
+     * DORSUM T9 gradus II: argumenta et reditus fluitantes (d0-d7,
+     * ultra octavum in stiva magnitudine naturali), aedificata pura
+     * fluitantia directe, fluitantia per pontem; clang ut oraculum
+     * ================================================== */
+
+#define TEXTUS_LIMINUM_FLUITANTIUM \
+    "modulus \"probatio/limina_f.medulla\"\n" \
+    "externum $sqrt (f64) -> f64\n" \
+    "externum $pow (f64, f64) -> f64\n" \
+    "externum $fabs (f64) -> f64\n" \
+    "externum $floor (f64) -> f64\n" \
+    "externum $ldexp (f64, s32) -> f64\n" \
+    "externum $atof (i64) -> f64\n" \
+    "externum $strtod (i64, i64) -> f64\n" \
+    "externum $printf (i64, ...) -> s32\n" \
+    "\n" \
+    "functio $bita (f64 %v) -> s64\n" \
+    "@initium:\n" \
+    "    %l = arca 8, 8\n" \
+    "    scribere.f64 %l, %v\n" \
+    "    %b = legere.s64 %l\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $media (f64 %a, f64 %b) -> f64\n" \
+    "@initium:\n" \
+    "    %t = multiplicare.f64 %b, 3.0\n" \
+    "    %s = addere.f64 %a, %t\n" \
+    "    %m = dividere.f64 %s, 2.0\n" \
+    "    redde %m\n" \
+    "\n" \
+    "functio $media32 (f32 %a, f32 %b) -> f32\n" \
+    "@initium:\n" \
+    "    %t = multiplicare.f32 %b, 3.0\n" \
+    "    %s = addere.f32 %a, %t\n" \
+    "    %m = dividere.f32 %s, 2.0\n" \
+    "    redde %m\n" \
+    "\n" \
+    "functio $mixta (s32 %i, f64 %a, s64 %j, f32 %b, s32 %k) -> " \
+    "f64\n" \
+    "@initium:\n" \
+    "    %fi = fluitare.s32.f64 %i\n" \
+    "    %fj = fluitare.s64.f64 %j\n" \
+    "    %fk = fluitare.s32.f64 %k\n" \
+    "    %fb = dilatare.f32.f64 %b\n" \
+    "    %s = multiplicare.f64 %a, 2.0\n" \
+    "    %s = addere.f64 %s, %fi\n" \
+    "    %t = multiplicare.f64 %fj, 3.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %fb, 5.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %fk, 7.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $decem (f64 %a1, f64 %a2, f64 %a3, f64 %a4, f64 " \
+    "%a5, f64 %a6, f64 %a7, f64 %a8, f64 %a9, f64 %a10, f32 %b1, " \
+    "f32 %b2, f64 %c) -> f64\n" \
+    "@initium:\n" \
+    "    %s = movere.f64 %a1\n" \
+    "    %t = multiplicare.f64 %a2, 2.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a3, 3.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a4, 4.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a5, 5.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a6, 6.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a7, 7.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a8, 8.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a9, 9.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a10, 10.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %e = dilatare.f32.f64 %b1\n" \
+    "    %t = multiplicare.f64 %e, 11.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %e = dilatare.f32.f64 %b2\n" \
+    "    %t = multiplicare.f64 %e, 13.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %c, 17.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $plena (s64 %x1, s64 %x2, s64 %x3, s64 %x4, s64 " \
+    "%x5, s64 %x6, s64 %x7, s64 %x8, s64 %x9, f64 %d1, f64 %d2, " \
+    "f64 %d3, f64 %d4, f64 %d5, f64 %d6, f64 %d7, f64 %d8, f64 " \
+    "%d9, s8 %c, f32 %e) -> f64\n" \
+    "@initium:\n" \
+    "    %s = fluitare.s64.f64 %x1\n" \
+    "    %f = fluitare.s64.f64 %x9\n" \
+    "    %t = multiplicare.f64 %f, 3.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %d1, 5.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %d8, 7.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %d9, 11.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %f = fluitare.s8.f64 %c\n" \
+    "    %t = multiplicare.f64 %f, 13.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %f = dilatare.f32.f64 %e\n" \
+    "    %t = multiplicare.f64 %f, 17.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $trans (f64 %a1, f64 %a2, f64 %a3, f64 %a4, f64 " \
+    "%a5, f64 %a6, f64 %a7, f64 %a8, f64 %a9, f64 %a10) -> f64\n" \
+    "@initium:\n" \
+    "    %s = vocare.f64 $media, f64 %a1, f64 %a2\n" \
+    "    %t = multiplicare.f64 %a1, 1.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a2, 2.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a3, 3.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a4, 4.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a5, 5.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a6, 6.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a7, 7.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a8, 8.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a9, 9.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    %t = multiplicare.f64 %a10, 10.0\n" \
+    "    %s = addere.f64 %s, %t\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $per_trans () -> f64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $trans, f64 1.5, f64 2.5, f64 3.5, f64 " \
+    "4.5, f64 5.5, f64 6.5, f64 7.5, f64 8.5, f64 9.5, f64 10.5\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $m_trans () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $per_trans\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $potentia (f64 %b, s32 %n) -> f64\n" \
+    "@initium:\n" \
+    "    %z = aequalis.s32 %n, 0\n" \
+    "    ramus %z -> @unum | @gradus\n" \
+    "@unum:\n" \
+    "    %u = movere.f64 1.0\n" \
+    "    redde %u\n" \
+    "@gradus:\n" \
+    "    %m = subtrahere.s32 %n, 1\n" \
+    "    %p = vocare.f64 $potentia, f64 %b, s32 %m\n" \
+    "    %r = multiplicare.f64 %b, %p\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $h_decem (f64 %a1, f64 %a2, f64 %a3, f64 %a4, f64 " \
+    "%a5, f64 %a6, f64 %a7, f64 %a8, f64 %a9, f64 %a10, f32 %b1, " \
+    "f32 %b2, f64 %c) -> f64\n" \
+    "@initium:\n" \
+    "    %z = movere.f64 0.0\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $h_plena (s64 %x1, s64 %x2, s64 %x3, s64 %x4, s64 " \
+    "%x5, s64 %x6, s64 %x7, s64 %x8, s64 %x9, f64 %d1, f64 %d2, " \
+    "f64 %d3, f64 %d4, f64 %d5, f64 %d6, f64 %d7, f64 %d8, f64 " \
+    "%d9, s8 %c, f32 %e) -> f64\n" \
+    "@initium:\n" \
+    "    %z = movere.f64 0.0\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $h_media32 (f32 %a, f32 %b) -> f32\n" \
+    "@initium:\n" \
+    "    %z = movere.f32 0.0\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $per_media (s32 %n) -> f64\n" \
+    "@initium:\n" \
+    "    %x = fluitare.s32.f64 %n\n" \
+    "    %y = vocare.f64 $media, f64 %x, f64 0.25\n" \
+    "    %z = addere.f64 %x, %y\n" \
+    "    %w = vocare.f64 $media, f64 %z, f64 %y\n" \
+    "    %r = subtrahere.f64 %w, %x\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_media32 (s32 %n) -> f32\n" \
+    "@initium:\n" \
+    "    %x = fluitare.s32.f32 %n\n" \
+    "    %y = vocare.f32 $media32, f32 %x, f32 " \
+    "0.10000000000000001\n" \
+    "    %z = addere.f32 %x, %y\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $per_h_media32 (i64 %f, s32 %n) -> f32\n" \
+    "@initium:\n" \
+    "    %x = fluitare.s32.f32 %n\n" \
+    "    %y = vocare.f32 %f, f32 %x, f32 " \
+    "0.10000000000000001\n" \
+    "    %z = addere.f32 %x, %y\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $per_mixta () -> f64\n" \
+    "@initium:\n" \
+    "    %x = movere.f64 1.5\n" \
+    "    %j = movere.s64 1000000000000\n" \
+    "    %b = movere.f32 0.75\n" \
+    "    %r = vocare.f64 $mixta, s32 -4, f64 %x, s64 %j, f32 %b, " \
+    "s32 9\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_decem () -> f64\n" \
+    "@initium:\n" \
+    "    %x = movere.f64 2.5\n" \
+    "    %y = movere.f64 9.5\n" \
+    "    %z = movere.f32 1.25\n" \
+    "    %c = movere.f64 100.125\n" \
+    "    %r = vocare.f64 $decem, f64 1.5, f64 %x, f64 3.5, f64 " \
+    "4.5, f64 5.5, f64 6.5, f64 7.5, f64 8.5, f64 %y, f64 10.5, " \
+    "f32 %z, f32 -2.75, f64 %c\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_h_decem (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %x = movere.f64 2.5\n" \
+    "    %y = movere.f64 9.5\n" \
+    "    %z = movere.f32 1.25\n" \
+    "    %c = movere.f64 100.125\n" \
+    "    %r = vocare.f64 %f, f64 1.5, f64 %x, f64 3.5, f64 " \
+    "4.5, f64 5.5, f64 6.5, f64 7.5, f64 8.5, f64 %y, f64 10.5, " \
+    "f32 %z, f32 -2.75, f64 %c\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_plena () -> f64\n" \
+    "@initium:\n" \
+    "    %x = movere.s64 -9\n" \
+    "    %d = movere.f64 -9.5\n" \
+    "    %e = movere.f32 0.375\n" \
+    "    %r = vocare.f64 $plena, s64 5, s64 2, s64 3, s64 4, s64 " \
+    "5, s64 6, s64 7, s64 8, s64 %x, f64 1.5, f64 2.5, f64 3.5, " \
+    "f64 4.5, f64 5.5, f64 6.5, f64 7.5, f64 8.5, f64 %d, s8 -3, " \
+    "f32 %e\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_h_plena (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %x = movere.s64 -9\n" \
+    "    %d = movere.f64 -9.5\n" \
+    "    %e = movere.f32 0.375\n" \
+    "    %r = vocare.f64 %f, s64 5, s64 2, s64 3, s64 4, " \
+    "s64 5, s64 6, s64 7, s64 8, s64 %x, f64 1.5, f64 2.5, f64 " \
+    "3.5, f64 4.5, f64 5.5, f64 6.5, f64 7.5, f64 8.5, f64 %d, " \
+    "s8 -3, f32 %e\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_indirecta () -> f64\n" \
+    "@initium:\n" \
+    "    %f = locus $media\n" \
+    "    %r = vocare.f64 %f, f64 2.0, f64 4.5\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $pura (f64 %a) -> f64\n" \
+    "@initium:\n" \
+    "    %s = vocare.f64 $sqrt, f64 %a\n" \
+    "    %p = vocare.f64 $pow, f64 %a, f64 10.0\n" \
+    "    %s = addere.f64 %s, %p\n" \
+    "    %n = negare.f64 %a\n" \
+    "    %p = vocare.f64 $fabs, f64 %n\n" \
+    "    %s = addere.f64 %s, %p\n" \
+    "    %h = subtrahere.f64 %n, 0.5\n" \
+    "    %p = vocare.f64 $floor, f64 %h\n" \
+    "    %s = addere.f64 %s, %p\n" \
+    "    %p = vocare.f64 $ldexp, f64 0.75, s32 4\n" \
+    "    %s = addere.f64 %s, %p\n" \
+    "    %q = locus $numerus\n" \
+    "    %p = vocare.f64 $atof, i64 %q\n" \
+    "    %s = addere.f64 %s, %p\n" \
+    "    %s = addere.f64 %s, %a\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $scriptor (s32 %a) -> s32\n" \
+    "@initium:\n" \
+    "    %x = fluitare.s32.f64 %a\n" \
+    "    %h = dividere.f64 %x, 4.0\n" \
+    "    %g = artare.f64.f32 %h\n" \
+    "    %e = dilatare.f32.f64 %g\n" \
+    "    %q = locus $numerus\n" \
+    "    %d = vocare.f64 $strtod, i64 %q, i64 0\n" \
+    "    %f = locus $forma\n" \
+    "    %n = vocare.s32 $printf, i64 %f, f64 %h, f64 %d, s32 " \
+    "%a, f64 %e\n" \
+    "    %k = multiplicare.f64 %d, 4.0\n" \
+    "    %i = integrare.f64.s32 %k\n" \
+    "    %n = addere.s32 %n, %i\n" \
+    "    redde %n\n" \
+    "\n" \
+    "functio $m_scriptor () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $scriptor, s32 7\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $m_media () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $per_media, s32 7\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_media32 () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f32 $per_media32, s32 7\n" \
+    "    %d = dilatare.f32.f64 %r\n" \
+    "    %b = vocare.s64 $bita, f64 %d\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_mixta () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $per_mixta\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_decem () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $per_decem\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_plena () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $per_plena\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_potentia () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $potentia, f64 1.5, s32 10\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_indirecta () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $per_indirecta\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_pura () -> s64\n" \
+    "@initium:\n" \
+    "    %r = vocare.f64 $pura, f64 2.0\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_decem () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_decem\n" \
+    "    %r = vocare.f64 $per_h_decem, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_plena () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_plena\n" \
+    "    %r = vocare.f64 $per_h_plena, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_media32 () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_media32\n" \
+    "    %r = vocare.f32 $per_h_media32, i64 %f, s32 7\n" \
+    "    %d = dilatare.f32.f64 %r\n" \
+    "    %b = vocare.s64 $bita, f64 %d\n" \
+    "    redde %b\n" \
+    "\n" \
+    "datum $numerus magnitudo 4 ordinatio 1\n" \
+    "    octeti 322e3500\n" \
+    "\n" \
+    "datum $forma magnitudo 20 ordinatio 1\n" \
+    "    octeti 252e3266 20252e31 66202564 20252e33 660a0000\n"
+
+interior f64
+_hospes_decem (
+    f64 a1,
+    f64 a2,
+    f64 a3,
+    f64 a4,
+    f64 a5,
+    f64 a6,
+    f64 a7,
+    f64 a8,
+    f64 a9,
+    f64 a10,
+    f32 b1,
+    f32 b2,
+    f64 c)
+{
+    redde a1 + a2 * 2.0 + a3 * 3.0 + a4 * 4.0 + a5 * 5.0 + a6 * 6.0
+        + a7 * 7.0 + a8 * 8.0 + a9 * 9.0 + a10 * 10.0 + (f64)b1 * 11.0
+        + (f64)b2 * 13.0 + c * 17.0;
+}
+
+interior f64
+_hospes_plena (
+                   s64 x1,
+                   s64 x2,
+                   s64 x3,
+                   s64 x4,
+                   s64 x5,
+                   s64 x6,
+                   s64 x7,
+                   s64 x8,
+                   s64 x9,
+                   f64 d1,
+                   f64 d2,
+                   f64 d3,
+                   f64 d4,
+                   f64 d5,
+                   f64 d6,
+                   f64 d7,
+                   f64 d8,
+                   f64 d9,
+    signatus character c,
+                   f32 e)
+{
+    (vacuum)x2;
+    (vacuum)x3;
+    (vacuum)x4;
+    (vacuum)x5;
+    (vacuum)x6;
+    (vacuum)x7;
+    (vacuum)x8;
+    (vacuum)d2;
+    (vacuum)d3;
+    (vacuum)d4;
+    (vacuum)d5;
+    (vacuum)d6;
+    (vacuum)d7;
+    redde (f64)x1 + (f64)x9 * 3.0 + d1 * 5.0 + d8 * 7.0 + d9 * 11.0
+        + (f64)c * 13.0 + (f64)e * 17.0;
+}
+
+interior f32
+_hospes_media_angusta (
+    f32 a,
+    f32 b)
+{
+    redde (a + b * 3.0f) / 2.0f;
+}
+
+interior i64
+_bita_f64 (
+    f64 valor)
+{
+    i64 bita;
+
+    memcpy(&bita, &valor, magnitudo(bita));
+    redde bita;
+}
+
+/* valores quos $per_decem et $per_plena tradunt, per legem C */
+interior f64
+_lex_decem (vacuum)
+{
+    redde _hospes_decem(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, 9.5,
+        10.5, 1.25f, -2.75f, 100.125);
+}
+
+interior f64
+_lex_plena (vacuum)
+{
+    redde _hospes_plena(V, II, III, IV, V, VI, VII, VIII, -(s64)IX, 1.5,
+        2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, -9.5,
+        (signatus character)-III,
+        0.375f);
+}
+
+interior vacuum
+_sectio_dorsum_limina_fluitantia (
+    CredoContextus* c)
+{
+    constans character* cursus[]   = {
+        "m_media", "m_media32", "m_mixta", "m_decem", "m_plena",
+        "m_potentia", "m_indirecta", "m_pura", "m_trans"
+    };
+    constans character* nativae[]  = {
+        "bita", "per_media", "per_media32", "per_mixta", "per_decem",
+        "per_plena", "potentia", "per_indirecta", "pura", "scriptor",
+        "per_trans"
+    };
+    volatilis f64 duo     = 2.0;
+    volatilis f32 septem  = 7.0f;
+    volatilis f32 decima  = 0.1f;
+        Machinula* m;
+     StatusCursus  s;
+     StatusCursus  t;
+           chorda  captum_ante;
+           chorda  captum_post;
+              f64  lex;
+              f32  lex_angusta;
+
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, TEXTUS_LIMINUM_FLUITANTIUM);
+    CREDO_NECESSE_NON_NIHIL (m);
+    /* lex (interpretata, contra C hospitis) */
+    s = _statum_capere(c->piscina, m, "m_media");
+    CREDO_AEQUALIS_S32 (s.genus, MACHINULA_BENE);
+    CREDO_VERUM ((i64)s.codex == _bita_f64(4.25));
+    lex_angusta  = septem + _hospes_media_angusta(septem, decima);
+    s            = _statum_capere(c->piscina, m, "m_media32");
+    CREDO_VERUM ((i64)s.codex == _bita_f64((f64)lex_angusta));
+    s = _statum_capere(c->piscina, m, "m_mixta");
+    CREDO_VERUM ((i64)s.codex == _bita_f64(3000000000065.75));
+    s = _statum_capere(c->piscina, m, "m_decem");
+    CREDO_VERUM ((i64)s.codex == _bita_f64(_lex_decem()));
+    s = _statum_capere(c->piscina, m, "m_plena");
+    CREDO_VERUM ((i64)s.codex == _bita_f64(_lex_plena()));
+    s = _statum_capere(c->piscina, m, "m_potentia");
+    CREDO_VERUM ((i64)s.codex == _bita_f64(57.6650390625));
+    s = _statum_capere(c->piscina, m, "m_indirecta");
+    CREDO_VERUM ((i64)s.codex == _bita_f64(7.75));
+    /* parametra X fluitantia vocationem transeunt (servata d VIII:
+     * duo effunduntur): media(1.5, 2.5) + summa ponderata */
+    s = _statum_capere(c->piscina, m, "m_trans");
+    CREDO_VERUM ((i64)s.codex == _bita_f64(417.0));
+    lex  = sqrt(duo);
+    lex  += pow(duo, 10.0);
+    lex  += fabs(-duo);
+    lex  += floor(-duo - 0.5);
+    lex  += ldexp(0.75, IV);
+    lex  += 2.5;
+    lex  += duo;
+    s    = _statum_capere(c->piscina, m, "m_pura");
+    CREDO_VERUM ((i64)s.codex == _bita_f64(lex));
+    captum_ante = _scripturam_capere(c, m, "scriptura_f_ante.txt", &s);
+    CREDO_VERUM (chorda_aequalis_literis(captum_ante,
+        "1.75 2.5 7 1.750\n"));
+    CREDO_VERUM (s.codex == (s64)XXVII);
+
+    _cursus_conferre(c, m, cursus, IX, nativae, XI);
+    CREDO_VERUM (_signum_functionis("media")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+    CREDO_VERUM (_signum_functionis("decem")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+    CREDO_VERUM (_signum_functionis("plena")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+    /* printf et strtod per pontem cum registris fluitantibus */
+    captum_post = _scripturam_capere(c, m, "scriptura_f_post.txt", &t);
+    CREDO_VERUM (chorda_aequalis(captum_ante, captum_post));
+    CREDO_VERUM (t.codex == (s64)XXVII);
+}
+
+interior vacuum
+_sectio_dorsum_fluitantia_hospitis (
+    CredoContextus* c)
+{
+    constans character* cursus[]    = {
+        "m_h_decem", "m_h_plena", "m_h_media32"
+    };
+    constans character* vocantes[]  = {
+        "per_h_decem", "per_h_plena", "per_h_media32"
+    };
+    constans character* vocatae[]   = {
+        "decem", "plena", "media32", "mixta", "potentia", "trans"
+    };
+    f64 (*h_decem)(f64, f64, f64, f64, f64, f64, f64, f64, f64, f64,
+        f32,
+        f32, f64)                     = _hospes_decem;
+    f64 (*h_plena)(s64, s64, s64, s64, s64, s64, s64, s64, s64, f64,
+        f64,
+        f64, f64, f64, f64, f64, f64, f64, signatus character, f32)
+                                      = _hospes_plena;
+    f32 (*h_media_angusta)(f32, f32)  = _hospes_media_angusta;
+     volatilis f32 septem             = 7.0f;
+     volatilis f32 decima             = 0.1f;
+    memoriae_index inscriptio;
+               i64 exspectata[III];
+         Machinula* m;
+      StatusCursus  s;
+            chorda  causa;
+               s32  k;
+               s32  transitus;
+
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, TEXTUS_LIMINUM_FLUITANTIUM);
+    CREDO_NECESSE_NON_NIHIL (m);
+    memcpy(&inscriptio, &h_decem, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_decem", inscriptio));
+    memcpy(&inscriptio, &h_plena, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_plena", inscriptio));
+    memcpy(&inscriptio, &h_media_angusta, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_media32", inscriptio));
+    exspectata[ZEPHYRUM]  = _bita_f64(_lex_decem());
+    exspectata[I]         = _bita_f64(_lex_plena());
+    exspectata[II]        = _bita_f64((f64)(f32)(septem
+        + _hospes_media_angusta(septem, decima)));
+
+    /* I. vocans interpretatus -> C; II. vocans nativus -> C */
+    per (transitus = ZEPHYRUM; transitus < II; transitus++)
+    {
+        per (k = ZEPHYRUM; k < III; k++)
+        {
+            s = _statum_capere(c->piscina, m, cursus[k]);
+            si (   s.genus      != MACHINULA_BENE
+                || (i64)s.codex != exspectata[k])
+            {
+                imprimere("HOSPES F DISPAR %s (transitus %d): genus %d "
+                    "codex %lx exspectatum %lx %.*s\n", cursus[k],
+                    (int)transitus, (int)s.genus,
+                    (insignatus longus)s.codex,
+                    (insignatus longus)exspectata[k],
+                    (int)s.nuntius.mensura,
+                    (constans character*)s.nuntius.datum);
+            }
+            CREDO_AEQUALIS_S32 (s.genus, MACHINULA_BENE);
+            CREDO_VERUM ((i64)s.codex == exspectata[k]);
+        }
+        si (transitus == ZEPHYRUM)
+        {
+            per (k = ZEPHYRUM; k < III; k++)
+            {
+                b32 compilata = machinula_nativum_compilare(m,
+                    _ch(vocantes[k]), &causa);
+
+                si (!compilata)
+                {
+                    imprimere("RECUSATA %s: %.*s\n", vocantes[k],
+                        (int)causa.mensura,
+                        (constans character*)causa.datum);
+                }
+                CREDO_VERUM (compilata);
+            }
+            CREDO_VERUM (_signum_functionis("per_h_plena")
+                == (s64)CONEXIO_SIGNUM_NATIVUM);
+        }
+    }
+
+    /* III. C -> functio dorsi */
+    per (k = ZEPHYRUM; k < VI; k++)
+    {
+        CREDO_NECESSE (machinula_nativum_compilare(m, _ch(vocatae[k]),
+            &causa));
+        CREDO_NECESSE (_introitus_nativae(vocatae[k]) != ZEPHYRUM);
+    }
+    {
+        f64 (*f_decem)(f64, f64, f64, f64, f64, f64, f64, f64, f64, f64,
+            f32, f32, f64);
+        f64 (*f_plena)(s64, s64, s64, s64, s64, s64, s64, s64, s64, f64,
+            f64, f64, f64, f64, f64, f64, f64, f64, signatus character,
+            f32);
+        f32 (*f_media_angusta)(f32, f32);
+        f64 (*f_mixta)(s32, f64, s64, f32, s32);
+        f64 (*f_potentia)(f64, s32);
+        f64 (*f_trans)(f64, f64, f64, f64, f64, f64, f64, f64, f64,
+            f64);
+
+        inscriptio = _introitus_nativae("decem");
+        memcpy(&f_decem, &inscriptio, magnitudo(f_decem));
+        CREDO_VERUM (f_decem(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5,
+            9.5,
+            10.5, 1.25f, -2.75f, 100.125) == _lex_decem());
+
+        inscriptio = _introitus_nativae("plena");
+        memcpy(&f_plena, &inscriptio, magnitudo(f_plena));
+        CREDO_VERUM (f_plena(V, II, III, IV, V, VI, VII, VIII, -(s64)IX,
+            1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5, -9.5,
+            (signatus character)-III, 0.375f) == _lex_plena());
+
+        inscriptio = _introitus_nativae("media32");
+        memcpy(&f_media_angusta, &inscriptio,
+            magnitudo(f_media_angusta));
+        CREDO_VERUM (f_media_angusta(septem, decima)
+            == _hospes_media_angusta(septem, decima));
+
+        inscriptio = _introitus_nativae("mixta");
+        memcpy(&f_mixta, &inscriptio, magnitudo(f_mixta));
+        CREDO_VERUM (f_mixta(-(s32)IV, 1.5, (s64)1000000000000L, 0.75f,
+            (s32)IX) == 3000000000065.75);
+
+        inscriptio = _introitus_nativae("potentia");
+        memcpy(&f_potentia, &inscriptio, magnitudo(f_potentia));
+        CREDO_VERUM (f_potentia(1.5, (s32)X) == 57.6650390625);
+
+        inscriptio = _introitus_nativae("trans");
+        memcpy(&f_trans, &inscriptio, magnitudo(f_trans));
+        CREDO_VERUM (f_trans(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5,
+            9.5,
+            10.5) == 417.0);
+    }
+}
+
+interior vacuum
+_sectio_dorsum_fixturae_vocationum (
+    CredoContextus* c)
+{
+          character* literae = _fixturam_legere(c,
+              "officina/probationes/fixa/machinula/vocationes.medulla");
+          Machinula* m;
+    MachinulaExitus  exitus;
+             chorda  causa;
+
+    CREDO_NECESSE_NON_NIHIL (literae);
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, literae);
+    CREDO_NECESSE_NON_NIHIL (m);
+    exitus = machinula_currere(m, _ch("main"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+    /* $geminare per descriptorem vocatur (locus): nativa esse debet
+     * antequam $main nativa eam vocet (limes C9) */
+    CREDO_VERUM (_nativam_facere(c->piscina, m, "geminare", &causa));
+    CREDO_VERUM (_nativam_facere(c->piscina, m, "main", &causa));
+    CREDO_VERUM (causa.mensura == ZEPHYRUM);
+    exitus = machinula_currere(m, _ch("main"));
+    CREDO_AEQUALIS_S32 (exitus.genus, MACHINULA_BENE);
+    CREDO_VERUM (exitus.codex == (s64)XLII);
+}
+
+
+    /* ==================================================
+     * DORSUM T9 gradus III: aggregata fluitantia homogenea (HFA,
+     * membra I - IV eiusdem typi fluitantis): membra in registris d
+     * CONTINUIS, aut totum in stiva (ordinatione membri, magnitudine
+     * EXACTA; d reliqua vacant); %reditus HFA in d0 - d3 redit. clang
+     * ut oraculum.
+     * ================================================== */
+
+#define TEXTUS_AGGREGATORUM_FLUITANTIUM \
+    "modulus \"probatio/hfa.medulla\"\n" \
+    "\n" \
+    "functio $bita (f64 %v) -> s64\n" \
+    "@initium:\n" \
+    "    %l = arca 8, 8\n" \
+    "    scribere.f64 %l, %v\n" \
+    "    %b = legere.s64 %l\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $hfa_mixta (f64 %d1, f64 %d2, f64 %d3, f64 %d4, f64 " \
+    "%d5, f64 %d6, f64 %d7, f32 %f8, f32 %s1, h3xf32 %t, f32 " \
+    "%s2, s8 %c, h2xf64 %d, f32 %s3) -> f64\n" \
+    "@initium:\n" \
+    "    %s = movere.f64 %d1\n" \
+    "    %q = multiplicare.f64 %d7, 2.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %e = dilatare.f32.f64 %f8\n" \
+    "    %q = multiplicare.f64 %e, 3.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %e = dilatare.f32.f64 %s1\n" \
+    "    %q = multiplicare.f64 %e, 5.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %m = legere.f32 %t\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 7.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 11.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 13.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %e = dilatare.f32.f64 %s2\n" \
+    "    %q = multiplicare.f64 %e, 17.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %i = fluitare.s8.f64 %c\n" \
+    "    %q = multiplicare.f64 %i, 19.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %n = legere.f64 %d\n" \
+    "    %q = multiplicare.f64 %n, 23.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %d, 8\n" \
+    "    %n = legere.f64 %p\n" \
+    "    %q = multiplicare.f64 %n, 29.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %e = dilatare.f32.f64 %s3\n" \
+    "    %q = multiplicare.f64 %e, 31.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $h_hfa_mixta (f64 %d1, f64 %d2, f64 %d3, f64 %d4, " \
+    "f64 %d5, f64 %d6, f64 %d7, f32 %f8, f32 %s1, h3xf32 %t, f32 " \
+    "%s2, s8 %c, h2xf64 %d, f32 %s3) -> f64\n" \
+    "@initium:\n" \
+    "    %z = movere.f64 0.0\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $hfa_plena (f64 %d1, f64 %d2, f64 %d3, f64 %d4, f64 " \
+    "%d5, f64 %d6, h3xf32 %t, f32 %u, f64 %z) -> f64\n" \
+    "@initium:\n" \
+    "    %s = movere.f64 %d1\n" \
+    "    %q = multiplicare.f64 %d6, 2.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %m = legere.f32 %t\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 3.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 5.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 7.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %g = dilatare.f32.f64 %u\n" \
+    "    %q = multiplicare.f64 %g, 11.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %q = multiplicare.f64 %z, 13.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $h_hfa_plena (f64 %d1, f64 %d2, f64 %d3, f64 %d4, " \
+    "f64 %d5, f64 %d6, h3xf32 %t, f32 %u, f64 %z) -> f64\n" \
+    "@initium:\n" \
+    "    %z = movere.f64 0.0\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $hfa_registra (h3xf32 %t, f32 %x, h2xf64 %d, f64 " \
+    "%y) -> f64\n" \
+    "@initium:\n" \
+    "    %s = movere.f64 0.0\n" \
+    "    %m = legere.f32 %t\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 1.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 2.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 3.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %e = dilatare.f32.f64 %x\n" \
+    "    %q = multiplicare.f64 %e, 5.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %n = legere.f64 %d\n" \
+    "    %q = multiplicare.f64 %n, 7.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %d, 8\n" \
+    "    %n = legere.f64 %p\n" \
+    "    %q = multiplicare.f64 %n, 11.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %q = multiplicare.f64 %y, 13.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $h_hfa_registra (h3xf32 %t, f32 %x, h2xf64 %d, f64 " \
+    "%y) -> f64\n" \
+    "@initium:\n" \
+    "    %z = movere.f64 0.0\n" \
+    "    redde %z\n" \
+    "\n" \
+    "functio $per_hfa_registra (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %t = arca 16, 4\n" \
+    "    %v = movere.f32 1.25\n" \
+    "    scribere.f32 %t, %v\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %v = movere.f32 -2.5\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %v = movere.f32 3.75\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %d = arca 16, 8\n" \
+    "    %w = movere.f64 4.125\n" \
+    "    scribere.f64 %d, %w\n" \
+    "    %p = addere.i64 %d, 8\n" \
+    "    %w = movere.f64 -5.25\n" \
+    "    scribere.f64 %p, %w\n" \
+    "    %x = movere.f32 9.5\n" \
+    "    %r = vocare.f64 %f, h3xf32 %t, f32 %x, h2xf64 %d, f64 " \
+    "6.5\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $m_hfa_registra () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $hfa_registra\n" \
+    "    %r = vocare.f64 $per_hfa_registra, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_hfa_registra () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_hfa_registra\n" \
+    "    %r = vocare.f64 $per_hfa_registra, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $r4 (rh4xf64 %reditus, f64 %x) -> vacuum\n" \
+    "@initium:\n" \
+    "    scribere.f64 %reditus, %x\n" \
+    "    %v = addere.f64 %x, 1.0\n" \
+    "    %p = addere.i64 %reditus, 8\n" \
+    "    scribere.f64 %p, %v\n" \
+    "    %v = addere.f64 %x, 2.0\n" \
+    "    %p = addere.i64 %reditus, 16\n" \
+    "    scribere.f64 %p, %v\n" \
+    "    %v = addere.f64 %x, 3.0\n" \
+    "    %p = addere.i64 %reditus, 24\n" \
+    "    scribere.f64 %p, %v\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $r3 (rh3xf32 %reditus, f32 %x) -> vacuum\n" \
+    "@initium:\n" \
+    "    scribere.f32 %reditus, %x\n" \
+    "    %v = addere.f32 %x, 1.0\n" \
+    "    %p = addere.i64 %reditus, 4\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %v = addere.f32 %x, 2.0\n" \
+    "    %p = addere.i64 %reditus, 8\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $r2 (rh2xf64 %reditus, h3xf32 %t) -> vacuum\n" \
+    "@initium:\n" \
+    "    %a = legere.f32 %t\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %b = legere.f32 %p\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %c = legere.f32 %p\n" \
+    "    %s = addere.f32 %a, %b\n" \
+    "    %e = dilatare.f32.f64 %s\n" \
+    "    scribere.f64 %reditus, %e\n" \
+    "    %g = dilatare.f32.f64 %c\n" \
+    "    %g = multiplicare.f64 %g, 2.0\n" \
+    "    %p = addere.i64 %reditus, 8\n" \
+    "    scribere.f64 %p, %g\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $h_r4 (rh4xf64 %reditus, f64 %x) -> vacuum\n" \
+    "@initium:\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $h_r3 (rh3xf32 %reditus, f32 %x) -> vacuum\n" \
+    "@initium:\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $h_r2 (rh2xf64 %reditus, h3xf32 %t) -> vacuum\n" \
+    "@initium:\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $per_hfa_mixta (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %t = arca 16, 4\n" \
+    "    %v = movere.f32 1.25\n" \
+    "    scribere.f32 %t, %v\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %v = movere.f32 -2.5\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %v = movere.f32 3.75\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %d = arca 16, 8\n" \
+    "    %w = movere.f64 4.125\n" \
+    "    scribere.f64 %d, %w\n" \
+    "    %p = addere.i64 %d, 8\n" \
+    "    %w = movere.f64 -5.25\n" \
+    "    scribere.f64 %p, %w\n" \
+    "    %x = movere.f32 9.5\n" \
+    "    %r = vocare.f64 %f, f64 1.5, f64 2.5, f64 3.5, f64 4.5, " \
+    "f64 5.5, f64 6.5, f64 7.5, f32 8.25, f32 %x, h3xf32 %t, f32 " \
+    "10.5, s8 -3, h2xf64 %d, f32 12.75\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_hfa_plena (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %t = arca 16, 4\n" \
+    "    %v = movere.f32 1.25\n" \
+    "    scribere.f32 %t, %v\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %v = movere.f32 -2.5\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %v = movere.f32 3.75\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %z = movere.f64 100.125\n" \
+    "    %r = vocare.f64 %f, f64 1.5, f64 2.5, f64 3.5, f64 4.5, " \
+    "f64 5.5, f64 6.5, h3xf32 %t, f32 0.375, f64 %z\n" \
+    "    redde %r\n" \
+    "\n" \
+    "functio $per_r4 (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %l = arca 48, 8\n" \
+    "    %p = addere.i64 %l, 32\n" \
+    "    scribere.s64 %p, 1234605616436508552\n" \
+    "    vocare %f, rh4xf64 %l, f64 2.5\n" \
+    "    %s = legere.f64 %l\n" \
+    "    %p = addere.i64 %l, 8\n" \
+    "    %n = legere.f64 %p\n" \
+    "    %q = multiplicare.f64 %n, 2.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %l, 16\n" \
+    "    %n = legere.f64 %p\n" \
+    "    %q = multiplicare.f64 %n, 3.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %l, 24\n" \
+    "    %n = legere.f64 %p\n" \
+    "    %q = multiplicare.f64 %n, 4.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %l, 32\n" \
+    "    %k = legere.s64 %p\n" \
+    "    %c = aequalis.s64 %k, 1234605616436508552\n" \
+    "    %i = fluitare.s32.f64 %c\n" \
+    "    %q = multiplicare.f64 %i, 1000.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $per_r3 (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %l = arca 16, 4\n" \
+    "    %p = addere.i64 %l, 12\n" \
+    "    %v = movere.f32 64.0\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    vocare %f, rh3xf32 %l, f32 1.5\n" \
+    "    %s = movere.f64 0.0\n" \
+    "    %m = legere.f32 %l\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 1.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %l, 4\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 2.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %l, 8\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 3.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %l, 12\n" \
+    "    %m = legere.f32 %p\n" \
+    "    %e = dilatare.f32.f64 %m\n" \
+    "    %q = multiplicare.f64 %e, 1.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $per_r2 (i64 %f) -> f64\n" \
+    "@initium:\n" \
+    "    %t = arca 16, 4\n" \
+    "    %v = movere.f32 1.25\n" \
+    "    scribere.f32 %t, %v\n" \
+    "    %p = addere.i64 %t, 4\n" \
+    "    %v = movere.f32 -2.5\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %p = addere.i64 %t, 8\n" \
+    "    %v = movere.f32 3.75\n" \
+    "    scribere.f32 %p, %v\n" \
+    "    %l = arca 16, 8\n" \
+    "    vocare %f, rh2xf64 %l, h3xf32 %t\n" \
+    "    %s = movere.f64 0.0\n" \
+    "    %n = legere.f64 %l\n" \
+    "    %q = multiplicare.f64 %n, 3.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    %p = addere.i64 %l, 8\n" \
+    "    %n = legere.f64 %p\n" \
+    "    %q = multiplicare.f64 %n, 1.0\n" \
+    "    %s = addere.f64 %s, %q\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $m_hfa_mixta () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $hfa_mixta\n" \
+    "    %r = vocare.f64 $per_hfa_mixta, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_hfa_mixta () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_hfa_mixta\n" \
+    "    %r = vocare.f64 $per_hfa_mixta, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_hfa_plena () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $hfa_plena\n" \
+    "    %r = vocare.f64 $per_hfa_plena, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_hfa_plena () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_hfa_plena\n" \
+    "    %r = vocare.f64 $per_hfa_plena, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_r4 () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $r4\n" \
+    "    %r = vocare.f64 $per_r4, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_r4 () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_r4\n" \
+    "    %r = vocare.f64 $per_r4, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_r3 () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $r3\n" \
+    "    %r = vocare.f64 $per_r3, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_r3 () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_r3\n" \
+    "    %r = vocare.f64 $per_r3, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_r2 () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $r2\n" \
+    "    %r = vocare.f64 $per_r2, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n" \
+    "\n" \
+    "functio $m_h_r2 () -> s64\n" \
+    "@initium:\n" \
+    "    %f = locus $h_r2\n" \
+    "    %r = vocare.f64 $per_r2, i64 %f\n" \
+    "    %b = vocare.s64 $bita, f64 %r\n" \
+    "    redde %b\n"
+
+nomen structura { f32 a; f32 b; f32 c; } TriaFluitantia;
+nomen structura { f64 a; f64 b; } ParFluitantium;
+nomen structura { f64 a; f64 b; f64 c; f64 d; } QuattuorFluitantia;
+
+interior f64
+_hospes_hfa_mixta (
+                   f64 d1,
+                   f64 d2,
+                   f64 d3,
+                   f64 d4,
+                   f64 d5,
+                   f64 d6,
+                   f64 d7,
+                   f32 f8,
+                   f32 s1,
+        TriaFluitantia t,
+                   f32 s2,
+    signatus character c,
+        ParFluitantium d,
+                   f32 s3)
+{
+    (vacuum)d2;
+    (vacuum)d3;
+    (vacuum)d4;
+    (vacuum)d5;
+    (vacuum)d6;
+    redde d1 + d7 * 2.0 + (f64)f8 * 3.0 + (f64)s1 * 5.0 + (f64)t.a * 7.0
+        + (f64)t.b * 11.0 + (f64)t.c * 13.0 + (f64)s2 * 17.0
+        + (f64)c * 19.0 + d.a * 23.0 + d.b * 29.0 + (f64)s3 * 31.0;
+}
+
+interior f64
+_hospes_hfa_plena (
+               f64 d1,
+               f64 d2,
+               f64 d3,
+               f64 d4,
+               f64 d5,
+               f64 d6,
+    TriaFluitantia t,
+               f32 e,
+               f64 z)
+{
+    (vacuum)d2;
+    (vacuum)d3;
+    (vacuum)d4;
+    (vacuum)d5;
+    redde d1 + d6 * 2.0 + (f64)t.a * 3.0 + (f64)t.b * 5.0
+        + (f64)t.c * 7.0 + (f64)e * 11.0 + z * 13.0;
+}
+
+/* HFA in registris: t in s0 - s2, x in s3, d in d4:d5, y in d6 */
+interior f64
+_hospes_hfa_registra (
+    TriaFluitantia t,
+               f32 x,
+    ParFluitantium d,
+               f64 y)
+{
+    redde (f64)t.a + (f64)t.b * 2.0 + (f64)t.c * 3.0 + (f64)x * 5.0
+        + d.a * 7.0 + d.b * 11.0 + y * 13.0;
+}
+
+interior QuattuorFluitantia
+_hospes_quattuor (
+    f64 x)
+{
+    QuattuorFluitantia r;
+
+    r.a = x;
+    r.b = x + 1.0;
+    r.c = x + 2.0;
+    r.d = x + 3.0;
+    redde r;
+}
+
+interior TriaFluitantia
+_hospes_tria_fluitantia (
+    f32 x)
+{
+    TriaFluitantia r;
+
+    r.a = x;
+    r.b = x + 1.0f;
+    r.c = x + 2.0f;
+    redde r;
+}
+
+interior ParFluitantium
+_hospes_par_fluitantium (
+    TriaFluitantia t)
+{
+    ParFluitantium r;
+
+    r.a = (f64)(t.a + t.b);
+    r.b = (f64)t.c * 2.0;
+    redde r;
+}
+
+interior TriaFluitantia
+_tria_probationis (vacuum)
+{
+    TriaFluitantia t;
+
+    t.a = 1.25f;
+    t.b = -2.5f;
+    t.c = 3.75f;
+    redde t;
+}
+
+interior f64
+_lex_hfa_mixta (vacuum)
+{
+    ParFluitantium d;
+
+    d.a = 4.125;
+    d.b = -5.25;
+    redde _hospes_hfa_mixta(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.25f,
+        9.5f, _tria_probationis(), 10.5f, (signatus character)-III, d,
+        12.75f);
+}
+
+interior f64
+_lex_hfa_plena (vacuum)
+{
+    redde _hospes_hfa_plena(1.5, 2.5, 3.5, 4.5, 5.5, 6.5,
+        _tria_probationis(), 0.375f, 100.125);
+}
+
+interior f64
+_lex_hfa_registra (vacuum)
+{
+    ParFluitantium d;
+
+    d.a = 4.125;
+    d.b = -5.25;
+    redde _hospes_hfa_registra(_tria_probationis(), 9.5f, d, 6.5);
+}
+
+interior vacuum
+_sectio_dorsum_aggregata_fluitantia (
+    CredoContextus* c)
+{
+    constans character* cursus[]    = {
+        "m_hfa_mixta", "m_h_hfa_mixta", "m_hfa_plena", "m_h_hfa_plena",
+        "m_r4", "m_h_r4", "m_r3", "m_h_r3", "m_r2", "m_h_r2",
+        "m_hfa_registra", "m_h_hfa_registra"
+    };
+    constans character* nativae[]   = {
+        "bita", "hfa_mixta", "hfa_plena", "r4", "r3", "r2",
+        "per_hfa_mixta", "per_hfa_plena", "per_r4", "per_r3", "per_r2",
+        "hfa_registra", "per_hfa_registra"
+    };
+    f64 (*h_mixta)(f64, f64, f64, f64, f64, f64, f64, f32, f32,
+        TriaFluitantia, f32, signatus character, ParFluitantium, f32)
+                                             = _hospes_hfa_mixta;
+    f64 (*h_plena)(f64, f64, f64, f64, f64, f64, TriaFluitantia, f32,
+        f64)                                 = _hospes_hfa_plena;
+    QuattuorFluitantia (*h_quattuor)(f64)    = _hospes_quattuor;
+    TriaFluitantia (*h_tria)(f32)            = _hospes_tria_fluitantia;
+    ParFluitantium (*h_par)(TriaFluitantia)  = _hospes_par_fluitantium;
+    f64 (*h_registra)(TriaFluitantia, f32, ParFluitantium, f64)
+                                             = _hospes_hfa_registra;
+    memoriae_index inscriptio;
+               i64 exspectata[XII];
+         Machinula* m;
+      StatusCursus  s;
+               s32  k;
+
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, TEXTUS_AGGREGATORUM_FLUITANTIUM);
+    CREDO_NECESSE_NON_NIHIL (m);
+    memcpy(&inscriptio, &h_mixta, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_hfa_mixta", inscriptio));
+    memcpy(&inscriptio, &h_plena, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_hfa_plena", inscriptio));
+    memcpy(&inscriptio, &h_quattuor, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_r4", inscriptio));
+    memcpy(&inscriptio, &h_tria, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_r3", inscriptio));
+    memcpy(&inscriptio, &h_par, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_r2", inscriptio));
+    memcpy(&inscriptio, &h_registra, magnitudo(inscriptio));
+    CREDO_VERUM (_hospitem_ponere(m, "h_hfa_registra", inscriptio));
+
+    /* lex: functio medullae et functio C idem reddunt; r4: 2.5 + 7 +
+     * 13.5 + 22 + custos M; r3: 1.5 + 5 + 10.5 + custos 64; r2:
+     * (1.25 - 2.5) * 3 + 7.5 */
+    exspectata[ZEPHYRUM]  = _bita_f64(_lex_hfa_mixta());
+    exspectata[II]        = _bita_f64(_lex_hfa_plena());
+    exspectata[IV]        = _bita_f64(1045.0);
+    exspectata[VI]        = _bita_f64(81.0);
+    exspectata[VIII]      = _bita_f64(3.75);
+    exspectata[X]         = _bita_f64(_lex_hfa_registra());
+    per (k = ZEPHYRUM; k < XII; k += II)
+    {
+        exspectata[k + I] = exspectata[k];
+    }
+    /* I. omnia interpretata (cursus pares) et vocans interpretatus ->
+     * C (cursus impares) */
+    per (k = ZEPHYRUM; k < XII; k++)
+    {
+        s = _statum_capere(c->piscina, m, cursus[k]);
+        si (s.genus != MACHINULA_BENE || (i64)s.codex != exspectata[k])
+        {
+            imprimere("HFA DISPAR %s: genus %d codex %lx exspectatum "
+                "%lx %.*s\n", cursus[k], (int)s.genus,
+                (insignatus longus)s.codex,
+                (insignatus longus)exspectata[k],
+                (int)s.nuntius.mensura,
+                (constans character*)s.nuntius.datum);
+        }
+        CREDO_AEQUALIS_S32 (s.genus, MACHINULA_BENE);
+        CREDO_VERUM ((i64)s.codex == exspectata[k]);
+    }
+    /* II. vocans nativus -> functio dorsi et -> C */
+    _cursus_conferre(c, m, cursus, XII, nativae, XIII);
+    CREDO_VERUM (_signum_functionis("per_r4")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+    CREDO_VERUM (_signum_functionis("hfa_plena")
+        == (s64)CONEXIO_SIGNUM_NATIVUM);
+
+    /* III. C -> functio dorsi */
+    {
+        f64 (*f_mixta)(f64, f64, f64, f64, f64, f64, f64, f32, f32,
+            TriaFluitantia, f32, signatus character, ParFluitantium,
+            f32);
+        f64 (*f_plena)(f64, f64, f64, f64, f64, f64, TriaFluitantia,
+            f32,
+            f64);
+        QuattuorFluitantia (*f_quattuor)(f64);
+        TriaFluitantia (*f_tria)(f32);
+        ParFluitantium (*f_par)(TriaFluitantia);
+        f64 (*f_registra)(TriaFluitantia, f32, ParFluitantium, f64);
+        QuattuorFluitantia q;
+            TriaFluitantia t;
+            ParFluitantium p;
+
+        p.a         = 4.125;
+        p.b         = -5.25;
+        inscriptio  = _introitus_nativae("hfa_mixta");
+        CREDO_NECESSE (inscriptio != ZEPHYRUM);
+        memcpy(&f_mixta, &inscriptio, magnitudo(f_mixta));
+        CREDO_VERUM (f_mixta(1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.25f,
+            9.5f, _tria_probationis(), 10.5f, (signatus character)-III,
+            p, 12.75f) == _lex_hfa_mixta());
+
+        inscriptio = _introitus_nativae("hfa_plena");
+        CREDO_NECESSE (inscriptio != ZEPHYRUM);
+        memcpy(&f_plena, &inscriptio, magnitudo(f_plena));
+        CREDO_VERUM (f_plena(1.5, 2.5, 3.5, 4.5, 5.5, 6.5,
+            _tria_probationis(), 0.375f, 100.125) == _lex_hfa_plena());
+
+        inscriptio = _introitus_nativae("r4");
+        CREDO_NECESSE (inscriptio != ZEPHYRUM);
+        memcpy(&f_quattuor, &inscriptio, magnitudo(f_quattuor));
+        q = f_quattuor(2.5);
+        CREDO_VERUM (q.a == 2.5 && q.b == 3.5 && q.c == 4.5
+            && q.d == 5.5);
+
+        inscriptio = _introitus_nativae("r3");
+        CREDO_NECESSE (inscriptio != ZEPHYRUM);
+        memcpy(&f_tria, &inscriptio, magnitudo(f_tria));
+        t = f_tria(1.5f);
+        CREDO_VERUM (t.a == 1.5f && t.b == 2.5f && t.c == 3.5f);
+
+        inscriptio = _introitus_nativae("r2");
+        CREDO_NECESSE (inscriptio != ZEPHYRUM);
+        memcpy(&f_par, &inscriptio, magnitudo(f_par));
+        p = f_par(_tria_probationis());
+        CREDO_VERUM (p.a == -1.25 && p.b == 7.5);
+
+        p.a         = 4.125;
+        p.b         = -5.25;
+        inscriptio  = _introitus_nativae("hfa_registra");
+        CREDO_NECESSE (inscriptio != ZEPHYRUM);
+        memcpy(&f_registra, &inscriptio, magnitudo(f_registra));
+        CREDO_VERUM (f_registra(_tria_probationis(), 9.5f, p, 6.5)
+            == _lex_hfa_registra());
+    }
+}
+
+
+    /* ==================================================
+     * DORSUM T9 gradus IV: vitia. Vitium hardware in codice nativo ->
+     * VITIUM cum positione (functio, index planus) et tabulatis
+     * '[nativum]' signatis in relatione; stiva nativa exhausta ->
+     * VITIUM nominatum, processus vivit; vitium EXTRA codicem nativum
+     * ad actionem priorem (credo) pergit. Classes collationis pro
+     * Opere X.
+     * ================================================== */
+
+/* classis collationis cursus interpretati et nativi (Opus X):
+ *  AEQUALE              status pares (genus, codex, nuntius, tabulata)
+ *  MACHINULA_STRICTIOR  machinula interpretans vitium NOMINAT quod
+ *                       codex nativus aliter (aut non) videt - causa
+ *                       nominata:
+ *                         'memoria'  machinula omnem accessum probat
+ *                                    ("memoria: ..."); nativa signum
+ *                                    hardware accipit aut nihil
+ *                         'recursio' machinula tabulata numerat;
+ *                                    nativa stivam hospitis exhaurit
+ *  DIFFERT              omne aliud - vitium dorsi */
+#define COLLATIO_AEQUALE              ZEPHYRUM
+#define COLLATIO_DIFFERT              I
+#define COLLATIO_MACHINULA_STRICTIOR  II
+
+interior b32
+_nuntius_incipit (
+    constans StatusCursus* s,
+       constans character* literae)
+{
+    memoriae_index n = strlen(literae);
+
+    redde (memoriae_index)s->nuntius.mensura >= n
+        && memcmp(s->nuntius.datum, literae, n) == ZEPHYRUM;
+}
+
+interior s32
+_classem_conferre (
+     constans StatusCursus*  interpretata,
+     constans StatusCursus*  nativa,
+        constans character** causa_out)
+{
+    *causa_out = "";
+    si (_status_pares(interpretata, nativa))
+    {
+        redde COLLATIO_AEQUALE;
+    }
+    si (interpretata->genus != MACHINULA_VITIUM)
+    {
+        redde COLLATIO_DIFFERT;
+    }
+    si (_nuntius_incipit(interpretata, "memoria: "))
+    {
+        *causa_out = "memoria";
+        redde COLLATIO_MACHINULA_STRICTIOR;
+    }
+    si (   (   _nuntius_incipit(interpretata,
+        "stiva vocationum exhausta")
+            || _nuntius_incipit(interpretata, "stiva exhausta"))
+        && nativa->genus == MACHINULA_VITIUM
+        && _nuntius_incipit(nativa, "stiva nativa exhausta"))
+    {
+        *causa_out = "recursio";
+        redde COLLATIO_MACHINULA_STRICTIOR;
+    }
+    redde COLLATIO_DIFFERT;
+}
+
+#define TEXTUS_VITIORUM \
+    "modulus \"probatio/vitia.medulla\"\n" \
+    "\n" \
+    "functio $nullus (i64 %p) -> s32\n" \
+    "@initium:\n" \
+    "    %a = addere.i64 %p, 0\n" \
+    "    %v = legere.s32 %a\n" \
+    "    redde %v\n" \
+    "\n" \
+    "functio $per_nullum (i64 %p) -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $nullus, i64 %p\n" \
+    "    %u = addere.s32 %t, 1\n" \
+    "    redde %u\n" \
+    "\n" \
+    "functio $m_nullus () -> s32\n" \
+    "@initium:\n" \
+    "    %t = vocare.s32 $per_nullum, i64 0\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $infinita (s64 %n) -> s64\n" \
+    "@initium:\n" \
+    "    %m = addere.s64 %n, 1\n" \
+    "    %r = vocare.s64 $infinita, s64 %m\n" \
+    "    %s = addere.s64 %r, 1\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $m_infinita () -> s64\n" \
+    "@initium:\n" \
+    "    %t = vocare.s64 $infinita, s64 0\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $lata (s64 %n) -> s64\n" \
+    "@initium:\n" \
+    "    %l = arca 200000, 8\n" \
+    "    scribere.s64 %l, %n\n" \
+    "    %m = addere.s64 %n, 1\n" \
+    "    %r = vocare.s64 $lata, s64 %m\n" \
+    "    %w = legere.s64 %l\n" \
+    "    %s = addere.s64 %r, %w\n" \
+    "    redde %s\n" \
+    "\n" \
+    "functio $m_lata () -> s64\n" \
+    "@initium:\n" \
+    "    %t = vocare.s64 $lata, s64 0\n" \
+    "    redde %t\n" \
+    "\n" \
+    "functio $folium () -> vacuum\n" \
+    "@initium:\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $gradus () -> vacuum\n" \
+    "@initium:\n" \
+    "    vocare $folium\n" \
+    "    vocare $gradus\n" \
+    "    redde\n" \
+    "\n" \
+    "functio $m_gradus () -> s64\n" \
+    "@initium:\n" \
+    "    vocare $gradus\n" \
+    "    redde 1\n" \
+    "\n" \
+    "functio $viva (s64 %n) -> s64\n" \
+    "@initium:\n" \
+    "    %m = addere.s64 %n, 2\n" \
+    "    redde %m\n" \
+    "\n" \
+    "functio $m_viva () -> s64\n" \
+    "@initium:\n" \
+    "    %t = vocare.s64 $viva, s64 40\n" \
+    "    redde %t\n"
+
+/* cursum currit cum relatione halitus (ansa II) in plagulam capta */
+interior chorda
+_relationem_capere (
+        CredoContextus* c,
+             Machinula* m,
+    constans character* cursus,
+    constans character* titulus_plagulae,
+          StatusCursus* status_out)
+{
+    constans character* area = getenv("TMPDIR");
+             character  via[DXII];
+                  FILE* plagula;
+
+    sprintf(via, "%s/%s", (area != NIHIL) ? area : "/tmp",
+        titulus_plagulae);
+    plagula = lectiones_fopen(via, "w");
+    si (plagula == NIHIL)
+    {
+        chorda vacua;
+
+        vacua.datum    = NIHIL;
+        vacua.mensura  = ZEPHYRUM;
+        redde vacua;
+    }
+    machinula_ansam_ponere(m, II, plagula);
+    *status_out = _statum_capere(c->piscina, m, cursus);
+    machinula_ansam_ponere(m, II, NIHIL);
+    fclose(plagula);
+    redde filum_legere_totum(via, c->piscina);
+}
+
+/* vitium EXTRA codicem nativum: lectio per monstratorem nullum in
+ * codice hospitis */
+interior vacuum
+_vitium_hospitis (vacuum)
+{
+    volatilis s32* volatilis monstrator = NIHIL;
+
+    *monstrator = (s32)I;
+}
+
+interior vacuum
+_sectio_dorsum_nullus (
+    CredoContextus* c)
+{
+    constans character* nativae[]  = { "nullus", "per_nullum" };
+    constans character* causa_classis;
+              Machinula* m;
+           StatusCursus  ante;
+           StatusCursus  post;
+                 chorda  relatio_ante;
+                 chorda  relatio_post;
+                 chorda  causa;
+                    s32  k;
+
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, TEXTUS_VITIORUM);
+    CREDO_NECESSE_NON_NIHIL (m);
+    relatio_ante = _relationem_capere(c, m, "m_nullus",
+        "relatio_nulli_ante.txt", &ante);
+    CREDO_AEQUALIS_S32 (ante.genus, MACHINULA_VITIUM);
+    CREDO_CHORDA_CONTINET (ante.nuntius, _ch("memoria: monstrator"));
+    CREDO_FALSUM (chorda_continet(relatio_ante, _ch("[nativum]")));
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        CREDO_VERUM (machinula_nativum_compilare(m, _ch(nativae[k]),
+            &causa));
+    }
+    relatio_post = _relationem_capere(c, m, "m_nullus",
+        "relatio_nulli_post.txt", &post);
+    /* VITIUM; positio = index planus instructionis 'legere' (I) in
+     * $nullus, tabulata eadem ac interpretata */
+    CREDO_AEQUALIS_S32 (post.genus, MACHINULA_VITIUM);
+    CREDO_CHORDA_CONTINET (post.nuntius, _ch("nativum: signum "));
+    CREDO_VERUM (post.instructio_summa == I);
+    CREDO_VERUM (post.tabulata == ante.tabulata);
+    CREDO_VERUM (post.tabulata == III);
+    CREDO_AEQUALIS_S32 (post.functio_summa, ante.functio_summa);
+    CREDO_VERUM (post.instructio_summa == ante.instructio_summa);
+    CREDO_VERUM (post.vestigium == ante.vestigium);
+    /* classis: machinula strictior, causa 'memoria' */
+    CREDO_AEQUALIS_S32 (_classem_conferre(&ante, &post, &causa_classis),
+        COLLATIO_MACHINULA_STRICTIOR);
+    CREDO_VERUM (strcmp(causa_classis, "memoria") == ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_classem_conferre(&ante, &ante, &causa_classis),
+        COLLATIO_AEQUALE);
+    /* relatio: tabulata nativa signata cum titulo functionis;
+     * tabulatum interpretatum ($m_nullus) sine signo */
+    CREDO_CHORDA_CONTINET (relatio_post,
+        _ch("    nullus @initium+1 [nativum]\n"));
+    CREDO_CHORDA_CONTINET (relatio_post,
+        _ch("    per_nullum @initium+1 [nativum]\n"));
+    CREDO_CHORDA_CONTINET (relatio_post,
+        _ch("    m_nullus @initium+1\n"));
+
+    /* RF5 'vitium et credo': post vitium nativum, vitium EXTRA
+     * codicem nativum ad actionem PRIOREM pergit (tractator noster
+     * id non devorat). Actio prior in hac suita _tractator_prior est
+     * (ante effugium installatus - locum tractatoris credo tenet) */
+    {
+        s32 priores = _prior_vocatus;
+
+        si (sigsetjmp(_ambitus_prioris, I) == ZEPHYRUM)
+        {
+            _vitium_hospitis();
+        }
+        CREDO_AEQUALIS_S32 (_prior_vocatus, priores + I);
+        CREDO_AEQUALIS_S32 (_prior_signum, (s32)SIGSEGV);
+    }
+    /* et machinula iterum utilis */
+    post = _statum_capere(c->piscina, m, "m_viva");
+    CREDO_AEQUALIS_S32 (post.genus, MACHINULA_BENE);
+    CREDO_VERUM (post.codex == (s64)XLII);
+}
+
+interior vacuum
+_sectio_dorsum_stiva_exhausta (
+    CredoContextus* c)
+{
+    constans character* cursus[]   = { "m_infinita", "m_lata" };
+    constans character* nativae[]  = { "infinita", "lata", "viva" };
+    constans character* causa_classis;
+              Machinula* m;
+           StatusCursus  ante[II];
+           StatusCursus  post;
+                 chorda  relatio;
+                 chorda  causa;
+                    s32  k;
+                    s32  iteratio;
+
+    CREDO_NECESSE (_parare(c->piscina));
+    m = _machinulam_parare(c->piscina, TEXTUS_VITIORUM);
+    CREDO_NECESSE_NON_NIHIL (m);
+    /* relatio interpretata in plagulam (tabulata multa) */
+    per (k = ZEPHYRUM; k < II; k++)
+    {
+        (vacuum)_relationem_capere(c, m, cursus[k],
+            "relatio_stivae_ante.txt", &ante[k]);
+        CREDO_AEQUALIS_S32 (ante[k].genus, MACHINULA_VITIUM);
+    }
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        CREDO_VERUM (machinula_nativum_compilare(m, _ch(nativae[k]),
+            &causa));
+    }
+    /* bis: tractator et stiva alterna post primum casum integra */
+    per (iteratio = ZEPHYRUM; iteratio < II; iteratio++)
+    {
+        per (k = ZEPHYRUM; k < II; k++)
+        {
+            relatio = _relationem_capere(c, m, cursus[k],
+                "relatio_stivae_post.txt", &post);
+            CREDO_AEQUALIS_S32 (post.genus, MACHINULA_VITIUM);
+            CREDO_VERUM (chorda_aequalis_literis(post.nuntius,
+                "stiva nativa exhausta"));
+            /* cacumen in prologo functionis recurrentis (instructio
+             * prima), vocantes post vocationem */
+            CREDO_CHORDA_CONTINET (relatio, _ch((k == ZEPHYRUM)
+                ? "    infinita @initium+0 [nativum]\n"
+                  "    infinita @initium+2 [nativum]\n"
+                : "    lata @initium+0 [nativum]\n"
+                  "    lata @initium+4 [nativum]\n"));
+            CREDO_AEQUALIS_S32 (_classem_conferre(&ante[k], &post,
+                &causa_classis), COLLATIO_MACHINULA_STRICTIOR);
+            CREDO_VERUM (strcmp(causa_classis, "recursio") == ZEPHYRUM);
+        }
+        /* processus vivit; codex nativus iterum currit */
+        post = _statum_capere(c->piscina, m, "m_viva");
+        CREDO_AEQUALIS_S32 (post.genus, MACHINULA_BENE);
+        CREDO_VERUM (post.codex == (s64)XLII);
+    }
+    /* vitium in 'stp' folii (tabulatum eius nondum positum): vocans
+     * verus ($gradus post vocationem folii, +1) ex x30 restituitur,
+     * non vocans vocantis (+2) */
+    CREDO_VERUM (machinula_nativum_compilare(m, _ch("gradus"), &causa));
+    relatio = _relationem_capere(c, m, "m_gradus",
+        "relatio_stivae_post.txt", &post);
+    CREDO_VERUM (chorda_aequalis_literis(post.nuntius,
+        "stiva nativa exhausta"));
+    CREDO_CHORDA_CONTINET (relatio, _ch(
+        "    folium @initium+0 [nativum]\n"
+        "    gradus @initium+1 [nativum]\n"
+        "    gradus @initium+2 [nativum]\n"));
+    /* collatio falsa DIFFERT manet */
+    post        = ante[ZEPHYRUM];
+    post.genus  = MACHINULA_BENE;
+    CREDO_AEQUALIS_S32 (_classem_conferre(&ante[ZEPHYRUM], &post,
+        &causa_classis), COLLATIO_DIFFERT);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "parare", _sectio_parare, _sectionem_parare, _sectionem_purgare,
         NIHIL,
@@ -4093,6 +6566,29 @@ hic_manens constans CredoSectio SECTIONES[] = {
         _sectionem_purgare, NIHIL, NIHIL },
     { "dorsum aggregata hospitis", _sectio_dorsum_aggregata_hospitis,
         _sectionem_parare, _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum fluitantia", _sectio_dorsum_fluitantia, _sectionem_parare,
+        _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum nan", _sectio_dorsum_non_numeri, _sectionem_parare,
+        _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum fixturae conversionum",
+        _sectio_dorsum_fixturae_conversionum, _sectionem_parare,
+        _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum limina fluitantia", _sectio_dorsum_limina_fluitantia,
+        _sectionem_parare, _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum fluitantia hospitis", _sectio_dorsum_fluitantia_hospitis,
+        _sectionem_parare, _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum fixturae vocationum", _sectio_dorsum_fixturae_vocationum,
+        _sectionem_parare, _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum aggregata fluitantia",
+        _sectio_dorsum_aggregata_fluitantia,
+        _sectionem_parare, _sectionem_purgare, NIHIL, NIHIL },
+    { "dorsum nullus", _sectio_dorsum_nullus, _sectionem_parare,
+        _sectionem_purgare, NIHIL, NIHIL },
+    /* gravis: recursio INTERPRETATA sine fine (collatio classis
+     * 'recursio') stivam regionis machinulae totam tangit - apex
+     * ~CDXXXII MiB; cursus nativus stivam hospitis VIII MiB solum */
+    { "dorsum stiva exhausta", _sectio_dorsum_stiva_exhausta,
+        _sectionem_parare, _sectionem_purgare, "gravis", NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

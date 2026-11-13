@@ -18,6 +18,9 @@
  * (bibliothecae_mundum_totum: una implementatio per caput; M5 T0 -
  * olim lib/ totus, testa_principale bis definitum, nexus fractus).
  * -index <via> = index alius (ordinarie build/nexus.tsv).
+ * -fons <via> = mundus ex plagula UNA data (via quaelibet, etiam
+ * extra lib/ - fixum probationis, schedula): nec index nec aedilis
+ * consuluntur; plagula se ipsa stare debet.
  *
  * v0 (DECISUS #5): scalaria + literae chordarum; aggregata =
  * dilatio nominata. Argumenta per typum PARAMETRI evaluantur
@@ -32,7 +35,7 @@
  * stderr, fructus et exitus idem.
  *
  * Usus: ./officina/interpretare.sh [-plagulae a,b,c] [-textus]
- *           [-nativum] [-mora n] [-index via] <functio>
+ *           [-nativum] [-mora n] [-index via] [-fons via] <functio>
  *           [argumenta...]
  * Exitus: 0 = BENE | 1 = halitus/functio absens | 2 = usus/mundus
  */
@@ -68,6 +71,7 @@ hic_manens Xar* lineae_mundi = NIHIL;    /* MedullaLineae*
 hic_manens constans character* plagulae_quaesitae[PLAGULAE_MAXIMAE];
 hic_manens i32 numerus_quaesitarum = ZEPHYRUM;
 hic_manens constans character* via_indicis = "build/nexus.tsv";
+hic_manens constans character* via_fontis = NIHIL;
 
 
 /* ==================================================
@@ -674,6 +678,12 @@ principale (
             a++;
             via_indicis = argv[a];
         }
+        alioquin si (   strcmp(argv[a], "-fons") == ZEPHYRUM
+                     && a + I < argc)
+        {
+            a++;
+            via_fontis = argv[a];
+        }
         alioquin si (titulus_functionis == NIHIL)
         {
             titulus_functionis = argv[a];
@@ -687,8 +697,8 @@ principale (
     si (titulus_functionis == NIHIL)
     {
         fprintf(stderr, "usus: interpretare [-plagulae a,b,c]"
-            " [-textus] [-nativum] [-mora n] [-index via] <functio>"
-            " [argumenta...]\n"
+            " [-textus] [-nativum] [-mora n] [-index via]"
+            " [-fons via] <functio> [argumenta...]\n"
             "      (ex radice repositorii; scalaria + literae"
             " chordarum)\n");
         redde II;
@@ -769,7 +779,12 @@ principale (
         _capita_praeparare(ctx, piscina_ctx, visa, ".");
     }
 
-    si (numerus_quaesitarum == ZEPHYRUM)
+    si (via_fontis != NIHIL)
+    {
+        /* plagula una data: mundus totus */
+        _modulum_addere(ctx, via_fontis);
+    }
+    alioquin si (numerus_quaesitarum == ZEPHYRUM)
     {
         b32  ignota  = FALSUM;
         Xar* viae    = _mundum_derivare(titulus_functionis, &ignota);
