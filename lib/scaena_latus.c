@@ -8,6 +8,13 @@
  * partis visae), textus rei tactae (campus 'tactum'). Prospectus,
  * quadrum et textus in piscina_prospectus habitant, quae vacatur cum
  * prospectus alius legitur.
+ *
+ * HOSPES (latus aliud scaenam hospitat): functiones eaedem, tribus
+ * locis divisae - locus_prospectus (ignotus non in primum cadit),
+ * rem_tangere (exitus "mundus" m->foras ponit, nihil scribit),
+ * eventum_tractare (claves [ ] omittuntur). Prospectus qui ostendi
+ * non potest clavem "?<titulus>" in sigillum_lecti ponit, ne causa
+ * quoque pulsu denuo fiat.
  */
 #include "scaena_latus.h"
 #include "membrum__praecepta.h"
@@ -108,7 +115,7 @@ campum_scribere (
     par.titulus  = titulus;
     par.valor    = valor;
     insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
-        actio_scaenae, m->piscina));
+        m->scriptor ? m->scriptor : actio_scaenae, m->piscina));
     ok = mutare_ramum(&m->ramus, campum_ponere, &par);
     insula_scriptorem_ponere(m->ramus.repo, prior);
     redde ok;
@@ -176,7 +183,7 @@ locus_tituli (
 }
 
 /* locus prospectus ostensi: titulus status; aliter primus; -1 si
- * index vacuus */
+ * index vacuus. Hospes: titulus status aut -1 (numquam primus) */
 interior s32
 locus_prospectus (
     constans ScaenaLatusMontatio* m)
@@ -188,6 +195,10 @@ locus_prospectus (
         redde -I;
     }
     locus = locus_tituli(m, campus(m, "prospectus"));
+    si (m->hospes)
+    {
+        redde locus;
+    }
     redde locus >= ZEPHYRUM ? locus : ZEPHYRUM;
 }
 
@@ -220,6 +231,41 @@ prospectum_tollere (
     m->super                   = ZEPHYRUM;
 }
 
+/* hospes: prospectus status in volumine non est (aut campus vacat).
+ * Causa semel fit: clavis "?<titulus>" in sigillo lecti. VERUM si
+ * quid mutatum */
+interior b32
+prospectum_ignotum_curare (
+    ScaenaLatusMontatio* m)
+{
+    character alveus[SCAENA_TITULUS_MAXIMUS + LXXX];
+       chorda titulus = campus(m, "prospectus");
+       chorda clavis;
+          i32 mensura = titulus.mensura <= SCAENA_TITULUS_MAXIMUS
+              ? titulus.mensura : SCAENA_TITULUS_MAXIMUS;
+
+    sprintf(alveus, "?%.*s", (integer)mensura,
+        titulus.datum ? (constans character*)titulus.datum : "");
+    clavis = chorda_ex_literis(alveus, m->piscina_prospectus);
+    si (chordae_pares(m->sigillum_lecti, clavis))
+    {
+        redde FALSUM;
+    }
+    prospectum_tollere(m);
+    m->sigillum_lecti = chorda_ex_literis(alveus,
+        m->piscina_prospectus);
+    si (mensura == ZEPHYRUM)
+    {
+        m->causa = chorda_ex_literis("no scene is chosen",
+            m->piscina_prospectus);
+        redde VERUM;
+    }
+    sprintf(alveus, "there is no scene named '%.*s' in the volume",
+        (integer)mensura, (constans character*)titulus.datum);
+    m->causa = chorda_ex_literis(alveus, m->piscina_prospectus);
+    redde VERUM;
+}
+
 /* prospectum legere si alius (aut nullus) nunc ostendendus est.
  * VERUM si quid mutatum */
 interior b32
@@ -231,6 +277,10 @@ prospectum_curare (
                  s32  locus     = locus_prospectus(m);
                  b32  inventum  = FALSUM;
 
+    si (locus < ZEPHYRUM && m->hospes)
+    {
+        redde prospectum_ignotum_curare(m);
+    }
     si (locus < ZEPHYRUM)
     {
         si (   !m->lectus && m->sigillum_lecti.mensura == ZEPHYRUM
@@ -331,6 +381,21 @@ disponere (
               ? altitudo - caput : (s32)GRAPHIS_ALTITUDO;
           s32 x;
 
+    /* pictura in medio lateris; latus angustius partem sinistram
+     * summam ostendit */
+    d->pictura    = fines((latitudo - visa_lata) / II, caput, visa_lata,
+        visa_alta);
+    d->textus_y   = caput + (s32)GRAPHIS_ALTITUDO + LINEA_ALTITUDO;
+    si (m->hospes)
+    {
+        /* sine sagittis et numero: titulus ab initio capitis */
+        d->prior      = fines(MARGO_X + LIMBUS, MARGO_Y, ZEPHYRUM,
+            ZEPHYRUM);
+        d->proxima    = d->prior;
+        d->numerus_x  = MARGO_X + LIMBUS;
+        d->titulus_x  = MARGO_X + LIMBUS;
+        redde;
+    }
     numerum_formare(m, numerus);
     d->prior      = fines(MARGO_X + LIMBUS, MARGO_Y, SAGITTA_LATITUDO,
         ORDO_ALTITUDO);
@@ -339,11 +404,6 @@ disponere (
         + (s32)strlen(numerus) * LITTERA_LATITUDO + LIMBUS;
     d->proxima    = fines(x, MARGO_Y, SAGITTA_LATITUDO, ORDO_ALTITUDO);
     d->titulus_x  = x + SAGITTA_LATITUDO + LIMBUS * II;
-    /* pictura in medio lateris; latus angustius partem sinistram
-     * summam ostendit */
-    d->pictura    = fines((latitudo - visa_lata) / II, caput, visa_lata,
-        visa_alta);
-    d->textus_y   = caput + (s32)GRAPHIS_ALTITUDO + LINEA_ALTITUDO;
 }
 
 /* quadrum partis visae curare: indices prospectus per palettam.
@@ -572,6 +632,13 @@ rem_tangere (
         redde FALSUM;
     }
     r = &m->prospectus.res[n - I];
+    si (   m->hospes
+        && chorda_aequalis_literis(r->exitus, SCAENA_EXITUS_MUNDUS))
+    {
+        /* hospes scaenam claudit: nihil scribitur */
+        m->foras = VERUM;
+        redde VERUM;
+    }
     sprintf(tactum, "%.*s/%.*s",
         (integer)(m->prospectus.titulus.mensura
             <= SCAENA_TITULUS_MAXIMUS ? m->prospectus.titulus.mensura
@@ -732,22 +799,18 @@ res_in_puncto (
     redde dominus <= m->prospectus.rerum ? (i32)dominus : ZEPHYRUM;
 }
 
+/* eventus lateris (veri aut hospitati); VERUM si quid mutatum */
 interior b32
-agere (
-     InsulaRepositorium* repo,
-                  Motus* motus,
+eventum_tractare (
+    ScaenaLatusMontatio* m,
     constans Destinatio* des,
               Componens* nodus,
-       constans Eventus* ev,
-                 vacuum* ctx)
+       constans Eventus* ev)
 {
-    ScaenaLatusMontatio* m = (ScaenaLatusMontatio*)ctx;
     constans Praeceptum* t;
                     b32  in_pictura;
                     i32  n;
 
-    (vacuum)repo;
-    (vacuum)motus;
     in_pictura = nodus && des
         && chorda_aequalis_literis(nodus->id, "pictura");
     /* res sub indice: motus in pictura eam ponit; motus alibi et
@@ -774,6 +837,13 @@ agere (
     {
         t = praecepta_ad_clavem(TABULA_PRAECEPTORUM, VISUS_SCAENAE,
             ev);
+        /* hospes: prospectus per exitus solos mutatur */
+        si (   t && m->hospes
+            && (   t->fn == fac_prospectum_priorem
+                || t->fn == fac_prospectum_proximum))
+        {
+            redde FALSUM;
+        }
         redde t && praecepta_status(t, VISUS_SCAENAE, requisita_nulla,
             m) == PRAECEPTUM_PRAESTO && t->fn(m);
     }
@@ -802,6 +872,43 @@ agere (
         redde rem_tangere(m, n);
     }
     redde FALSUM;
+}
+
+interior b32
+agere (
+     InsulaRepositorium* repo,
+                  Motus* motus,
+    constans Destinatio* des,
+              Componens* nodus,
+       constans Eventus* ev,
+                 vacuum* ctx)
+{
+    (vacuum)repo;
+    (vacuum)motus;
+    redde eventum_tractare((ScaenaLatusMontatio*)ctx, des, nodus, ev);
+}
+
+ScaenaLatusEventum
+scaena_latus_agere_hospitis (
+    ScaenaLatusMontatio* m,
+    constans Destinatio* des,
+              Componens* nodus,
+       constans Eventus* ev)
+{
+    b32 mutatum;
+
+    si (!m || !ev)
+    {
+        redde SCAENA_LATUS_NIHIL;
+    }
+    m->foras  = FALSUM;
+    mutatum   = eventum_tractare(m, des, nodus, ev);
+    si (m->foras)
+    {
+        m->foras = FALSUM;
+        redde SCAENA_LATUS_FORAS;
+    }
+    redde mutatum ? SCAENA_LATUS_MUTATUM : SCAENA_LATUS_NIHIL;
 }
 
 
@@ -876,8 +983,9 @@ textum_fractum_pingere (
     redde y;
 }
 
-/* nuntius duarum partium loco picturae */
-interior vacuum
+/* nuntius duarum partium loco picturae. Redde: y lineae post
+ * ultimam */
+interior s32
 nuntium_pingere (
                Mandata* md,
                    s32  latitudo,
@@ -887,27 +995,26 @@ nuntium_pingere (
 {
     textum_pingere(md, TEXTUS_LIMBUS, MARGO_Y + ORDO_ALTITUDO + XVI,
         chorda_ex_literis(caput, md->piscina), COLOR_TEXT);
-    (vacuum)textum_fractum_pingere(md, TEXTUS_LIMBUS,
+    redde textum_fractum_pingere(md, TEXTUS_LIMBUS,
         MARGO_Y + ORDO_ALTITUDO + XXXII, latitudo - TEXTUS_LIMBUS * II,
         altitudo - MARGO_Y, corpus, COLOR_TEXT_DIM);
 }
 
+/* latus totum (verum aut hospitatum) */
 interior vacuum
-figura_scaenae (
-    constans Componens* c,
-               Mandata* md,
-                   i32  thema,
-                vacuum* ctx)
+latus_pingere (
+    ScaenaLatusMontatio* m,
+     constans Componens* c,
+                Mandata* md)
 {
-    ScaenaLatusMontatio* m = (ScaenaLatusMontatio*)ctx;
-             Dispositio  d;
-                  Fines  f;
-                 chorda  titulus;
-                 chorda  res;
-              character  numerus[XXXII];
-                    s32  latitudo;
-                    s32  altitudo;
-                    s32  y_textus = MARGO_Y
+             Dispositio d;
+                  Fines f;
+                 chorda titulus;
+                 chorda res;
+              character numerus[XXXII];
+                    s32 latitudo;
+                    s32 altitudo;
+                    s32 y_textus = MARGO_Y
                         + (ORDO_ALTITUDO - LITTERA_ALTITUDO) / II;
                     s32 locus;
                     s32 x;
@@ -915,7 +1022,6 @@ figura_scaenae (
                     s32 spatium;
                     b32 plures;
 
-    (vacuum)thema;
     f = fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo, c->fines.altitudo);
     figura_mensam_pingere(md, f, chorda_aequalis_literis(c->titulus,
         "focatum"));
@@ -933,14 +1039,18 @@ figura_scaenae (
     altitudo  = superficies(m, FALSUM);
     locus     = locus_prospectus(m);
     plures    = prospectuum_numerus(m) > I;
-    /* caput: sagittae, numerus, titulus prospectus, res sub indice */
-    figura_sagittam_pingere(md, d.prior, -I,
-        plures ? ZEPHYRUM : FIGURA_OBSCURUM);
-    numerum_formare(m, numerus);
-    textum_pingere(md, d.numerus_x, y_textus,
-        chorda_ex_literis(numerus, md->piscina), COLOR_TEXT_DIM);
-    figura_sagittam_pingere(md, d.proxima, I,
-        plures ? ZEPHYRUM : FIGURA_OBSCURUM);
+    /* caput: sagittae, numerus (hospes: neutrum), titulus
+     * prospectus, res sub indice */
+    si (!m->hospes)
+    {
+        figura_sagittam_pingere(md, d.prior, -I,
+            plures ? ZEPHYRUM : FIGURA_OBSCURUM);
+        numerum_formare(m, numerus);
+        textum_pingere(md, d.numerus_x, y_textus,
+            chorda_ex_literis(numerus, md->piscina), COLOR_TEXT_DIM);
+        figura_sagittam_pingere(md, d.proxima, I,
+            plures ? ZEPHYRUM : FIGURA_OBSCURUM);
+    }
     x = d.titulus_x;
     si (locus >= ZEPHYRUM)
     {
@@ -974,15 +1084,22 @@ figura_scaenae (
         figura_color_thematis(COLOR_BACKGROUND), VERUM);
     si (m->causa.mensura > ZEPHYRUM)
     {
-        nuntium_pingere(md, latitudo, altitudo,
+        y = nuntium_pingere(md, latitudo, altitudo,
             "This scene cannot be shown:", m->causa);
+        si (   m->monitum && y + LINEA_ALTITUDO + LITTERA_ALTITUDO
+            <= altitudo - MARGO_Y)
+        {
+            textum_pingere(md, TEXTUS_LIMBUS, y + LINEA_ALTITUDO,
+                chorda_ex_literis(m->monitum, md->piscina),
+                COLOR_TEXT);
+        }
         redde;
     }
     si (locus < ZEPHYRUM)
     {
-        nuntium_pingere(md, latitudo, altitudo, "No scenes yet",
-            chorda_ex_literis("bin/scaena condere -volumen <volume>",
-                md->piscina));
+        (vacuum)nuntium_pingere(md, latitudo, altitudo,
+            "No scenes yet", chorda_ex_literis(
+                "bin/scaena condere -volumen <volume>", md->piscina));
         redde;
     }
     si (m->quadrum.pixela)
@@ -1008,6 +1125,29 @@ figura_scaenae (
     }
 }
 
+interior vacuum
+figura_scaenae (
+    constans Componens* c,
+               Mandata* md,
+                   i32  thema,
+                vacuum* ctx)
+{
+    (vacuum)thema;
+    latus_pingere((ScaenaLatusMontatio*)ctx, c, md);
+}
+
+vacuum
+scaena_latus_pingere_hospitis (
+    ScaenaLatusMontatio* m,
+     constans Componens* c,
+                Mandata* md)
+{
+    si (c && md)
+    {
+        latus_pingere(m, c, md);
+    }
+}
+
 
 /* ==================================================
  * Componere et montare
@@ -1019,6 +1159,7 @@ aream_addere (
                 Piscina* piscina,
     InternamentumChorda* intern,
      constans character* id,
+     constans character* actio,
                   Fines  f)
 {
     Componens* c = componens_creare(piscina, intern, id, PARTES_NULLUM);
@@ -1028,7 +1169,7 @@ aream_addere (
         redde;
     }
     componens_ponere_fines(c, f);
-    componens_ponere_actio(c, actio_scaenae);
+    componens_ponere_actio(c, actio);
     componens_addere_liberum(radix, c);
 }
 
@@ -1066,10 +1207,38 @@ scaena_latus_componere (
     {
         componens_ponere_titulum(radix, "focatum");
     }
-    aream_addere(radix, piscina, intern, "pictura", d.pictura);
-    aream_addere(radix, piscina, intern, "sagitta_prior", d.prior);
-    aream_addere(radix, piscina, intern, "sagitta_proxima", d.proxima);
+    aream_addere(radix, piscina, intern, "pictura", actio_scaenae,
+        d.pictura);
+    aream_addere(radix, piscina, intern, "sagitta_prior",
+        actio_scaenae, d.prior);
+    aream_addere(radix, piscina, intern, "sagitta_proxima",
+        actio_scaenae, d.proxima);
     redde radix;
+}
+
+vacuum
+scaena_latus_areas_addere (
+    ScaenaLatusMontatio* m,
+              Componens* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* actio)
+{
+    Dispositio d;
+
+    si (!m || !radix || !piscina || !intern || !actio)
+    {
+        redde;
+    }
+    disponere(m, &d);
+    aream_addere(radix, piscina, intern, "pictura", actio, d.pictura);
+}
+
+b32
+scaena_latus_valet (
+    constans ScaenaLatusMontatio* m)
+{
+    redde m && m->lectus;
 }
 
 vacuum
@@ -1126,6 +1295,7 @@ scaena_latus_montare (
     m->volumen   = volumen;
     m->latitudo  = latitudo;
     m->altitudo  = altitudo;
+    m->scriptor  = actio_scaenae;
     m->ramus = id ? insula_ramus(repo, "scaena", id)
                   : insula_ramus_radix(repo);
     organum = organum_legere_genus(piscina, intern, "scaena", "scaena");
@@ -1154,4 +1324,45 @@ scaena_latus_montare (
         && actio_registrare(m->actiones, actio_scaenae, agere, m)
         && figura_registrare(m->figurae, PARTES_TABULA, ZEPHYRUM,
                figura_scaenae, m);
+}
+
+b32
+scaena_latus_montare_hospitem (
+    ScaenaLatusMontatio* m,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+            InsulaRamus  ramus,
+     constans character* scriptor,
+     constans character* quadri_titulus,
+     constans character* monitum,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+    si (!m || !piscina || !intern || !scriptor || !quadri_titulus)
+    {
+        redde FALSUM;
+    }
+    memset(m, ZEPHYRUM, magnitudo(ScaenaLatusMontatio));
+    m->piscina   = piscina;
+    m->intern    = intern;
+    m->volumen   = volumen;
+    m->latitudo  = latitudo;
+    m->altitudo  = altitudo;
+    m->ramus     = ramus;
+    m->scriptor  = scriptor;
+    m->hospes    = VERUM;
+    m->monitum   = monitum;
+    m->piscina_indicis     = piscina_generare_dynamicum(
+        "scaena_hospitis_index", 0x10000);
+    m->piscina_prospectus  = piscina_generare_dynamicum(
+        "scaena_hospitis_prospectus", 0x100000);
+    si (!m->piscina_indicis || !m->piscina_prospectus)
+    {
+        scaena_latus_dimittere(m);
+        redde FALSUM;
+    }
+    m->quadri_titulus = chorda_ex_literis(quadri_titulus, piscina);
+    indicem_relegere(m);
+    redde praecepta_verificare(TABULA_PRAECEPTORUM);
 }

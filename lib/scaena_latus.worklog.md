@@ -50,3 +50,42 @@
 - A plant that let text run into the bottom margin stayed green:
   the short-pane test only looked for a fragment of the last line.
   It now counts the lines in the band and checks each one's box.
+
+## 2026-11-13 — hosted form (ostium-plan T2)
+
+Another pane (the world) can now show a scene in its own ramus:
+`scaena_latus_montare_hospitem`, `_agere_hospitis`,
+`_pingere_hospitis`, `_areas_addere`, `_valet`. No second copy of
+the drawing or input code: the pane's own `agere` and figure are thin
+wrappers over `eventum_tractare` and `latus_pingere`, and the hosted
+entry points call the same two.
+
+Three places branch on `m->hospes`:
+
+- `locus_prospectus`: an unknown `prospectus` is -1, never the first
+  view. `prospectum_ignotum_curare` then sets the reason. To keep the
+  1-second pulse from reporting a change every time, the key
+  `"?<title>"` is stored in `sigillum_lecti` (a real seal is hex, so
+  it cannot collide).
+- `rem_tangere`: a `mundus` exit writes nothing and sets `m->foras`;
+  `_agere_hospitis` clears it before the event and turns it into
+  `SCAENA_LATUS_FORAS` after. The flag is needed because Enter
+  reaches `rem_tangere` through the command table, whose functions
+  take only the context.
+- `eventum_tractare`: the `[` `]` commands are skipped.
+
+`disponere` computes picture and text position first and only then
+branches for the header, so those two lines exist once (a plant
+anchor from T8 went ambiguous when the hosted branch duplicated
+them).
+
+**Test host.** The hosted sections build a small host inside the
+test: its own action registry, compositor and figure, on a ramus the
+real pane prepared. The dispatcher can deliver further events after
+the one sent (they change nothing), so the host keeps the last
+result that was not NIHIL and each NIHIL expectation clears it
+first. Counters live in the `Orbis` struct, not in file statics:
+examen refuses statics written in one section and never reset.
+
+The writer name is honoured: a host passing an action the manifest
+does not name cannot write the fields (`hospes_scriptor`).

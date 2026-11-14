@@ -58,6 +58,26 @@
  *               sagittas vacatur.
  * Res sub indice (mus, j k) KINETICA est: in montatione, numquam in
  * statu.
+ *
+ * HOSPES: latus aliud (mundus) scaenam in ramo SUO ostendit
+ * (project-specs/ostium-spec.md 12). Hospes campos 'prospectus' et
+ * 'tactum' in manifesto suo habet et actionem scriptoris nominat.
+ * Montatio hospitis organum non legit, registra non creat: hospes
+ * eventus et figuram ipse huc mittit.
+ *
+ * DIFFERT a latere $scene:
+ *   - sagittae, numerus "1/2" et claves [ ] absunt: prospectus per
+ *     exitus solos mutatur;
+ *   - 'prospectus' ignotus NON in primum indicis cadit: nuntius
+ *     "This scene cannot be shown:" cum causa, et sub eo monitum
+ *     hospitis (e.g. "E: go back");
+ *   - exitus "mundus" tactus nihil scribit et FORAS reddit: hospes
+ *     scaenam claudit (in $scene textus solus manet).
+ * Cetera eadem: caput (titulus prospectus, res sub indice), pictura,
+ * descriptio, textus rei tactae, mus, j k Enter.
+ *
+ * Hospes scaena_latus_pulsare in pulsu suo et ante figuram vocat;
+ * scaena_latus_imago_fons et scaena_latus_dimittere ut semper.
  */
 #ifndef SCAENA_LATUS_H
 #define SCAENA_LATUS_H
@@ -81,6 +101,12 @@
 
 /* pulsus (ms): inspectio voluminis */
 #define SCAENA_LATUS_MORA_INSPECTIONIS M
+
+nomen enumeratio {
+    SCAENA_LATUS_NIHIL = ZEPHYRUM,  /* eventus nihil mutavit */
+    SCAENA_LATUS_MUTATUM,
+    SCAENA_LATUS_FORAS              /* exitus "mundus" tactus */
+} ScaenaLatusEventum;
 
 nomen structura {
             InsulaRamus  ramus;
@@ -111,6 +137,13 @@ nomen structura {
     /* kinetica */
                     i32 super;        /* res sub indice: 0 nulla,
                                         * n = res[n - I] */
+    /* hospes */
+     constans character* scriptor;     /* actio quae campos scribit */
+                    b32  hospes;
+     constans character* monitum;      /* sub nuntio recusationis;
+                                        * NIHIL = nullum */
+                    b32 foras;        /* kineticum: exitus "mundus"
+                                        * in eventu hoc tactus */
 } ScaenaLatusMontatio;
 
 /*
@@ -168,5 +201,58 @@ chorda
 scaena_latus_titulus (
      vacuum* ctx,
     Piscina* piscina);
+
+/*
+ * scaena_latus_montare_hospitem - scaenam in ramo hospitis parare
+ *
+ * @ramus:          ramus hospitis (campi 'prospectus', 'tactum')
+ * @scriptor:       actio hospitis quae eos scribit ("mundus.agere");
+ *                  litterae diutius vivant quam montatio
+ * @quadri_titulus: provenientia picturae, hospiti propria
+ * @monitum:        linea sub "cannot be shown"; NIHIL = nulla
+ *
+ * Redde: FALSUM si argumenta NIHIL aut memoria deficit
+ */
+b32
+scaena_latus_montare_hospitem (
+    ScaenaLatusMontatio* m,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+            InsulaRamus  ramus,
+     constans character* scriptor,
+     constans character* quadri_titulus,
+     constans character* monitum,
+                    i32  latitudo,
+                    i32  altitudo);
+
+/* eventum hospitis tractare (mus in area "pictura", claves) */
+ScaenaLatusEventum
+scaena_latus_agere_hospitis (
+    ScaenaLatusMontatio* m,
+    constans Destinatio* des,
+              Componens* nodus,
+       constans Eventus* ev);
+
+/* latus totum pingere: fundus, caput, pictura, textus aut nuntius */
+vacuum
+scaena_latus_pingere_hospitis (
+    ScaenaLatusMontatio* m,
+     constans Componens* c,
+                Mandata* md);
+
+/* areas ictus scaenae radici hospitis addere, actione hospitis */
+vacuum
+scaena_latus_areas_addere (
+    ScaenaLatusMontatio* m,
+              Componens* radix,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+     constans character* actio);
+
+/* VERUM si prospectus status lectus est et ostenditur */
+b32
+scaena_latus_valet (
+    constans ScaenaLatusMontatio* m);
 
 #endif /* SCAENA_LATUS_H */

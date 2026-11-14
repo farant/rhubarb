@@ -180,6 +180,17 @@ b32 scaena_latus_valet (constans ScaenaLatusMontatio* m);
 - [ ] New plants, each red.
 - [ ] Commit on Fran's word.
 
+**As built (2026-11-13).** As the header Fran approved, plus one
+private field (`foras`, the flag behind FORAS) and a `monitum`
+parameter (the host's hint under "cannot be shown", so the scene
+code names no key). Differences from `$scene` when hosted: no
+arrows, no "n/m", no `[` `]`; an unknown or empty `prospectus` shows
+the message, never the first view; a `mundus` exit writes nothing
+and returns FORAS, so its own line is not shown. Suite
+`probatio_scaena_latus` has 14 sections (5 new, none of the 9 old
+assertions edited); 18 new plants red, and the 16 plants of graphis
+T8 re-run and still red.
+
 ### Task 3: the prompt
 
 **Consumes:** `mundus_ostia_legere` (T1).
