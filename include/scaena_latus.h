@@ -19,15 +19,16 @@
  * CAPUT: sagittae et numerus (prior 1/2 proxima), titulus
  * prospectus; ad dextram, obscurior, titulus rei sub indice muris
  * (aut clavibus electae). PICTURA: indices palettae prospectus,
- * medio lateris; latus angustius eam utrimque aequaliter secat
- * (pars media manet), brevius ab imo; numquam extra scribit. Res
- * in parte secta mure non tanguntur, clavibus (j k Enter) tamen.
+ * medio lateris, INTRA marginem (limbum foci numquam tegit). Latus
+ * quod picturam totam cum margine non capit (angustius CDXCII) eam
+ * utrimque aequaliter secat (pars media manet): in latere CDLXXX
+ * lato VI columnae utrimque cadunt. Brevius ab imo secat. Res in
+ * parte secta mure non tanguntur, clavibus (j k Enter) tamen.
  * TEXTUS: descriptio; linea vacua; textus rei tactae. Linea una
  * vacua inter picturam et textum; duae cellae litterarum ad
  * sinistram et dextram.
  * MARGO: cella una circa omnia (VI x VIII); intra eum fundus planus
- * - textura foci lateris solum in margine apparet. Pictura in
- * latere CDLXXX lato margines laterales tegit.
+ * - textura foci lateris solum in margine apparet.
  * Lineae quae in latus non cadunt non pinguntur (in hoc gradu nulla
  * volutatio).
  *

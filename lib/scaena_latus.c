@@ -374,17 +374,21 @@ disponere (
                       Dispositio* d)
 {
     character numerus[XXXII];
-          s32 latitudo = superficies(m, VERUM);
-          s32 altitudo = superficies(m, FALSUM);
-          s32 visa_lata = latitudo < (s32)GRAPHIS_LATITUDO
-              ? latitudo : (s32)GRAPHIS_LATITUDO;
+          s32 latitudo  = superficies(m, VERUM);
+          s32 altitudo  = superficies(m, FALSUM);
+          s32 intra     = latitudo - II * MARGO_X;
+          /* latus margine angustius: 'fines' latitudinem negativam
+           * in nullam vertit */
+          s32 visa_lata = intra < (s32)GRAPHIS_LATITUDO
+              ? intra : (s32)GRAPHIS_LATITUDO;
           s32 caput     = MARGO_Y + ORDO_ALTITUDO;
           s32 visa_alta = altitudo - caput < (s32)GRAPHIS_ALTITUDO
               ? altitudo - caput : (s32)GRAPHIS_ALTITUDO;
           s32 x;
 
-    /* pictura in medio lateris; latus angustius partem MEDIAM
-     * summam ostendit (utrimque aequaliter sectam) */
+    /* pictura in medio lateris, INTRA marginem (limbus foci
+     * integer manet); latus angustius partem MEDIAM summam ostendit
+     * (utrimque aequaliter sectam) */
     d->pictura    = fines((latitudo - visa_lata) / II, caput, visa_lata,
         visa_alta);
     d->sectio_x = ((s32)GRAPHIS_LATITUDO - visa_lata) / II;

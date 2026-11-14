@@ -100,3 +100,14 @@ must agree: `quadrum_curare` (pixels) and `res_in_puncto` (which
 thing is under the mouse). Things in the cut part are out of the
 mouse's reach; keys still reach them (tested with the hut's "turn"
 arrow in a pane 200 wide).
+
+## 2026-11-14 — picture inside the border
+
+Fran, in the real window: the 480 picture in a 480 pane covered the
+focus border on both sides ("widescreen"). The picture's visible
+width is now the pane's width minus the margin on each side, so a
+pane of 480 shows 468 columns (6 cut from each side by the same
+centred cut) and the border stays whole. A pane of 492 or more shows
+the whole picture. Test helpers now take PICTURE columns and subtract
+the cut; a mouse move that starts in a cut column lands outside the
+picture area, so `_pixelum` skips the first and last seven columns.

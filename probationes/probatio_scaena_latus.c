@@ -245,7 +245,9 @@ _ictus (
         (n ? n->fines.y : ZEPHYRUM) + II);
 }
 
-/* pixelum picturae (x, y) in spatio radicis: ictus aut motus */
+/* pixelum PICTURAE (x, y) - columna picturae ipsius, non partis
+ * visae - in spatio radicis: ictus aut motus. Sectio lateris
+ * (columnae utrimque non ostensae) subtrahitur */
 interior vacuum
 _in_pictura (
               Orbis* w,
@@ -254,9 +256,11 @@ _in_pictura (
                 s32  y,
             Piscina* p)
 {
-    Componens* n = _nodus(w, "pictura", p);
+    Componens* n       = _nodus(w, "pictura", p);
+          s32  sectio  = n ? ((s32)GRAPHIS_LATITUDO
+              - (s32)n->fines.latitudo) / II : ZEPHYRUM;
 
-    _mus(w, genus, (n ? n->fines.x : ZEPHYRUM) + x,
+    _mus(w, genus, (n ? n->fines.x : ZEPHYRUM) + x - sectio,
         (n ? n->fines.y : ZEPHYRUM) + y);
 }
 
@@ -289,7 +293,9 @@ _pixelum (
     }
     per (y = I; y < GRAPHIS_ALTITUDO - I; y++)
     {
-        per (x = I; x < GRAPHIS_LATITUDO - I && x < limes - I; x++)
+        /* a columna VII: sex primae in latere CDLXXX lato sectae
+         * sunt (pictura intra marginem) */
+        per (x = VII; x < GRAPHIS_LATITUDO - VII && x < limes - I; x++)
         {
             constans i8* d = p->domini + y * GRAPHIS_LATITUDO + x;
 
@@ -603,23 +609,26 @@ _sectio_primum (
     (vacuum)_pulsus(w);
     im = _quadrum(w);
     CREDO_NECESSE (im != NIHIL);
-    CREDO_AEQUALIS_I32 (im->latitudo, GRAPHIS_LATITUDO);
+    /* pictura INTRA marginem (VI utrimque): limbus foci integer */
+    CREDO_AEQUALIS_I32 (im->latitudo, GRAPHIS_LATITUDO - XII);
     CREDO_AEQUALIS_I32 (im->altitudo, GRAPHIS_ALTITUDO);
     CREDO_VERUM (_quadrum_est(im, &f.prospectus[ZEPHYRUM]));
     CREDO_FALSUM (_quadrum_est(im, &f.prospectus[I]));
     CREDO_VERUM (scaena_latus_imago_fons(_ch(c, "alia"), &w->m)
         == NIHIL);
-    /* pictura sub capite, latus totum latum */
+    /* pictura sub capite, a margine ad marginem */
     pictura = _nodus(w, "pictura", c->piscina);
     CREDO_NECESSE (pictura != NIHIL);
-    CREDO_AEQUALIS_S32 (pictura->fines.x, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (pictura->fines.x, VI);
     CREDO_AEQUALIS_S32 (pictura->fines.y, XX);
     CREDO_AEQUALIS_I32 ((i32)pictura->fines.latitudo,
-        GRAPHIS_LATITUDO);
+        GRAPHIS_LATITUDO - XII);
     CREDO_AEQUALIS_I32 ((i32)pictura->fines.altitudo,
         GRAPHIS_ALTITUDO);
     CREDO_AEQUALIS_I32 (_imagines(c, w, &fines_imaginis), I);
-    CREDO_AEQUALIS_S32 (fines_imaginis.x, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (fines_imaginis.x, VI);
+    CREDO_AEQUALIS_I32 ((i32)fines_imaginis.latitudo,
+        GRAPHIS_LATITUDO - XII);
     CREDO_AEQUALIS_S32 (fines_imaginis.y, XX);
     /* caput et descriptio; nulla res tacta, nulla sub indice */
     CREDO_VERUM (_PICTUS(c, w, "1/2"));
@@ -776,7 +785,7 @@ _sectio_super (
     CREDO_VERUM (_in_re(w, focus, "jars", EVENTUS_MUS_MOTUS,
         c->piscina));
     CREDO_VERUM (_TOTUS(c, w, "jars"));
-    _mus(w, EVENTUS_MUS_MOTUS, C, CCC);
+    _mus(w, EVENTUS_MUS_MOTUS, C, CD);
     CREDO_FALSUM (_TOTUS(c, w, "jars"));
     CREDO_AEQUALIS_I32 (w->m.super, ZEPHYRUM);
     _finire(w);
@@ -1027,35 +1036,35 @@ _sectio_magnitudines (
               i32  extra   = ZEPHYRUM;
 
     CREDO_NECESSE (f.successus && f.numerus == II);
-    /* angustum: pictura utrimque secta (pars media CC lata, a
-     * columna CXL), nihil extra latus */
+    /* angustum: pictura utrimque secta (latus CC, intra marginem
+     * CLXXXVIII: pars media a columna CXLVI), nihil extra latus */
     w = _orbem(c, _volumen(c, "scaena_angustum", VERUM), CC, ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     (vacuum)_pulsus(w);
     im = _quadrum(w);
     CREDO_NECESSE (im != NIHIL);
-    CREDO_AEQUALIS_I32 (im->latitudo, CC);
+    CREDO_AEQUALIS_I32 (im->latitudo, CLXXXVIII);
     CREDO_AEQUALIS_I32 (im->altitudo, GRAPHIS_ALTITUDO);
     CREDO_VERUM (_quadrum_est(im, &f.prospectus[ZEPHYRUM]));
     CREDO_AEQUALIS_I32 (_imagines(c, w, &fi), I);
-    CREDO_AEQUALIS_S32 (fi.x, ZEPHYRUM);
-    CREDO_VERUM (fi.x + (s32)fi.latitudo <= CC);
+    CREDO_AEQUALIS_S32 (fi.x, VI);
+    CREDO_AEQUALIS_S32 (fi.x + (s32)fi.latitudo, CC - VI);
     pictura = _nodus(w, "pictura", c->piscina);
     CREDO_NECESSE (pictura != NIHIL);
-    CREDO_AEQUALIS_I32 ((i32)pictura->fines.latitudo, CC);
+    CREDO_AEQUALIS_I32 ((i32)pictura->fines.latitudo, CLXXXVIII);
     /* res in parte visa tangitur loco suo: columna picturae minus
      * sectio */
-    CREDO_NECESSE (_pixelum(&f.prospectus[ZEPHYRUM], "hearth", CCCXL,
-        &x, &y));
-    CREDO_NECESSE (x >= CXL);
-    _in_pictura(w, EVENTUS_MUS_DEPRESSUS, x - CXL, y, c->piscina);
+    CREDO_NECESSE (_pixelum(&f.prospectus[ZEPHYRUM], "hearth",
+        CCCXXXIV, &x, &y));
+    CREDO_NECESSE (x >= CXLVI);
+    _in_pictura(w, EVENTUS_MUS_DEPRESSUS, x, y, c->piscina);
     CREDO_VERUM (_campus(w, "tactum", "hut-hearth/hearth"));
     /* res in parte SECTA (sagitta "turn" ad dextram) mure non
      * tangitur: columna ultima visa aliud est; clavibus tamen */
     CREDO_NECESSE (_pixelum(&f.prospectus[ZEPHYRUM], "turn",
         GRAPHIS_LATITUDO, &x, &y));
     CREDO_NECESSE (x >= CCCXL);
-    _in_pictura(w, EVENTUS_MUS_DEPRESSUS, CC - I, y, c->piscina);
+    _in_pictura(w, EVENTUS_MUS_DEPRESSUS, CCCXXXIII, y, c->piscina);
     CREDO_VERUM (_campus(w, "prospectus", "hut-hearth")
         || _campus(w, "prospectus", NIHIL));
     CREDO_FALSUM (_campus(w, "tactum", "hut-hearth/turn"));
@@ -1332,7 +1341,7 @@ _sectio_hospes_primum (
     CREDO_VERUM (scaena_latus_imago_fons(w->m.quadri_titulus, &h->m)
         == NIHIL);
     CREDO_AEQUALIS_I32 (_imagines(c, h, &fines_imaginis), I);
-    CREDO_AEQUALIS_S32 (fines_imaginis.x, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (fines_imaginis.x, VI);
     CREDO_AEQUALIS_S32 (fines_imaginis.y, XX);
     /* caput: titulus prospectus; nec numerus nec sagittae */
     CREDO_VERUM (_TOTUS(c, h, "hut-door"));
@@ -1346,10 +1355,10 @@ _sectio_hospes_primum (
     CREDO_VERUM (_nodus(h, "sagitta_proxima", c->piscina) == NIHIL);
     pictura = _nodus(h, "pictura", c->piscina);
     CREDO_NECESSE (pictura != NIHIL);
-    CREDO_AEQUALIS_S32 (pictura->fines.x, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (pictura->fines.x, VI);
     CREDO_AEQUALIS_S32 (pictura->fines.y, XX);
     CREDO_AEQUALIS_I32 ((i32)pictura->fines.latitudo,
-        GRAPHIS_LATITUDO);
+        GRAPHIS_LATITUDO - XII);
     CREDO_AEQUALIS_I32 ((i32)pictura->fines.altitudo,
         GRAPHIS_ALTITUDO);
     /* descriptio; fundus planus intra marginem ut in latere vero */

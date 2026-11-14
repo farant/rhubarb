@@ -66,8 +66,9 @@
 
 #define LATITUDO CCCLX
 #define ALTITUDO CDL
-/* sectiones scaenae hospitatae: latus picturam totam capit */
-#define LATITUDO_SCAENAE GRAPHIS_LATITUDO
+/* sectiones scaenae hospitatae: latus picturam totam capit (cum
+ * margine VI utrimque) */
+#define LATITUDO_SCAENAE (GRAPHIS_LATITUDO + XII)
 
 #define VIA_LAPIDIS "probationes/fixa/statuae/lapis.glb"
 #define VIA_FUNGI   "probationes/fixa/statuae/fungus.glb"
