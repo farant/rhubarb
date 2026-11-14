@@ -16,6 +16,7 @@
 #include "credo.h"
 #include "psalmodia.h"
 #include "psalmodia_tabula.h"
+#include "psalterium_infixum.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
 #include "gabc.h"
@@ -1641,6 +1642,129 @@ _psalterium_probare (
     }
 }
 
+
+/* ==================================================
+ * Psalterium infixum (psalterium planum T4)
+ * ================================================== */
+
+/* psalmi I-CL infixi octetis aequales plagulis musica/psalmi/N.txt;
+ * extra I-CL vacui; licentia infixa = musica/psalmi/LICENTIA */
+interior vacuum
+_infixum_probare (
+    CredoContextus* ctx)
+{
+       chorda infixus;
+       chorda plagula;
+    character via[LXIV];
+          i32 diversi = ZEPHYRUM;
+          i32 n;
+
+    per (n = I; n <= CL; n++)
+    {
+        Piscina* q = piscina_generare_dynamicum("psalterium_infixum",
+                         (memoriae_index)(LXIV * MXXIV));
+
+        CREDO_NECESSE (q != NIHIL);
+        sprintf(via, "musica/psalmi/%d.txt", (integer)n);
+        plagula = filum_legere_totum(via, q);
+        infixus = psalterium_infixum_psalmus(n, q);
+        CREDO_NECESSE (plagula.mensura > ZEPHYRUM);
+        si (   infixus.mensura != plagula.mensura
+            || memcmp(infixus.datum, plagula.datum,
+                (size_t)plagula.mensura) != ZEPHYRUM)
+        {
+            imprimere("psalterium_infixum: %s differt\n", via);
+            diversi++;
+        }
+        piscina_destruere(q);
+    }
+    CREDO_AEQUALIS_I32 (diversi, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (psalterium_infixum_psalmus(ZEPHYRUM,
+        ctx->piscina).mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (psalterium_infixum_psalmus(CLI,
+        ctx->piscina).mensura, ZEPHYRUM);
+
+    infixus = psalterium_infixum_licentia(ctx->piscina);
+    plagula = filum_legere_totum("musica/psalmi/LICENTIA",
+        ctx->piscina);
+    CREDO_VERUM (infixus.mensura > XI
+        && memcmp(infixus.datum, "MIT License", XI) == ZEPHYRUM);
+    CREDO_VERUM (chorda_aequalis(infixus, plagula));
+}
+
+/* psalmi I-CL infixi in omni terminatione circuli (D8: praeter ad
+ * libitum et monosyllabas) CUM Gloria Patri (latus psalterii eam
+ * canit, D7): admonitiones nullae, versus duo ultimi Gloriae */
+interior vacuum
+_psalterium_gloria_probare (
+    CredoContextus* ctx)
+{
+     PsalmodiaTabula* t             = _tabula_vera(ctx);
+                 i32  aptationes    = ZEPHYRUM;
+                 i32  admonitiones  = ZEPHYRUM;
+                 i32  sine_gloria   = ZEPHYRUM;
+                 i32  n;
+                 i32  i;
+                 i32  j;
+
+    CREDO_NECESSE (t != NIHIL);
+    per (n = I; n <= CL; n++)
+    {
+        Piscina* q = piscina_generare_dynamicum("psalterium_gloria",
+                         (memoriae_index)(CCLVI * MXXIV));
+          chorda textus;
+
+        CREDO_NECESSE (q != NIHIL);
+        textus = psalterium_infixum_psalmus(n, q);
+        CREDO_NECESSE (textus.mensura > ZEPHYRUM);
+        per (i = ZEPHYRUM; i < t->numerus_tonorum; i++)
+        {
+            constans PsalmodiaTonus* tonus = &t->toni[i];
+
+            per (j = ZEPHYRUM; j < tonus->numerus_terminationum; j++)
+            {
+                constans PsalmodiaClausula* term =
+                    &tonus->terminationes[j];
+                          PsalmodiaPsalmus* ps;
+                                       i32  v;
+
+                si (term->ad_libitum || term->monosyllaba)
+                {
+                    perge;
+                }
+                ps = psalmodia_aptare(tonus, term, textus, NIHIL, q);
+                CREDO_NECESSE (ps != NIHIL);
+                aptationes++;
+                si (ps->numerus_admonitionum > ZEPHYRUM)
+                {
+                    imprimere("Ps %d in %.*s %.*s: %.*s\n", (integer)n,
+                        (integer)tonus->modus.mensura,
+                        (constans character*)tonus->modus.datum,
+                        (integer)term->differentia.mensura,
+                        (constans character*)term->differentia.datum,
+                        (integer)_admonitiones_psalmi(q, ps,
+                            "infixum").mensura,
+                        (constans character*)_admonitiones_psalmi(q,
+                            ps, "infixum").datum);
+                }
+                admonitiones  += ps->numerus_admonitionum;
+                v             = ps->numerus_versuum;
+                si (   v < III
+                    || !ps->versus[v - I].gloria
+                    || !ps->versus[v - II].gloria
+                    || ps->versus[v - III].gloria)
+                {
+                    sine_gloria++;
+                }
+            }
+        }
+        piscina_destruere(q);
+    }
+    CREDO_VERUM (aptationes >= (i32)(CL * XXX));
+    CREDO_AEQUALIS_I32 (admonitiones, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (sine_gloria, ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "textus: lineae", _lineae_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "textus: signa", _signa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1659,6 +1783,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "totalitas", _totalitas_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "psalterium importatum: CL psalmi, omnes terminationes",
         _psalterium_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "psalterium infixum: octeti plagularum, licentia",
+        _infixum_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "psalterium infixum cum Gloria Patri: admonitiones nullae",
+        _psalterium_gloria_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

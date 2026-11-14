@@ -692,6 +692,19 @@
     <ingressus genus="fasciculus" via="musica/toni_psalmorum.stml"/>
     <exitus via="lib/toni_psalmorum_infixum.c" provenientia="regeneratio"/>
   </actio>
+  <!-- psalterium infixum (psalterium planum T4, mos
+       toni_psalmorum_infixum): musica/psalmi/1..150.txt + LICENTIA ->
+       lib/psalterium_infixum.c, latus $psalterium sine plagulis
+       vivit -->
+  <actio titulus="psalterium_infixum" genus="generator">
+    <mandatum>
+      <verbum! (>./tools/psalterium_infigere.sh
+    </mandatum>
+    <ingressus genus="fasciculus" via="tools/psalterium_infigere.sh"/>
+    <ingressus genus="plagulae" via="musica/psalmi" suffixa=".txt"/>
+    <ingressus genus="fasciculus" via="musica/psalmi/LICENTIA"/>
+    <exitus via="lib/psalterium_infixum.c" provenientia="regeneratio"/>
+  </actio>
   <!-- canon organi infixus (status-plan S1, mos norma_canon):
        organum.canon -> lib/organum_canon.c, onerator manifestorum
        sine plagula vivit -->

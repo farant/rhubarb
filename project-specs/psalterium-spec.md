@@ -260,5 +260,12 @@ C layout, and how the licence is surfaced.
   manifest and were not traced.
 - That a 263 KB embedded text adds nothing noticeable to vicus build
   time. The tone table is far smaller.
+  **Measured 2026-11-14 (T4): true.** `lib/psalterium_infixum.c` is
+  1.65 MB / 16 699 lines, generated in 0.5 s, compiled (-O2) in
+  0.13 s to a 269 KB object; vicus link 0.12 s with and without it
+  (3 runs each); binary 4.99 -> 5.25 MB. Warm vicus build 3.3 s.
+  The corpus capsule (build/, all lib/*.c) grows 77.1 -> 78.6 MB.
+  The Gloria fit is now tested too: 150 psalms x 33 endings with the
+  Gloria, 0 warnings (`_psalterium_gloria_probare`).
 - That `album_*` fits a 150-row list with the house's row height at
   the default pane size. The number of pages was not measured.

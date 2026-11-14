@@ -326,4 +326,11 @@ check is wanted (not planned).
 
 ## Executed notes
 
-(empty)
+**T4 (2026-11-14).** Generator + GENERATUM `lib/psalterium_infixum.c`
+(1.65 MB; offsets `_initia[151]`), action `psalterium_infixum` (psalms
+as one `plagulae` input). Ruling: `_gloria_probare` already existed,
+the new section is `_psalterium_gloria_probare` - cost if wrong: a
+rename. Measurements closed spec AUDIENDA 2 (link 0.12 s unchanged,
+binary +265 KB). Red by link failure, then three plants red (Ps 104
+byte; Gloria unaccented; Gloria omitted), restored green. Gloria fit:
+0 warnings over 150 x 33 on first run.
