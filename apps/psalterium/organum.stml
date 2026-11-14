@@ -1,0 +1,53 @@
+<!-- organum.stml - manifestum psalterii (genus "psalterium"; spec
+     project-specs/psalterium-spec.md III.4, planum T3): index psalmorum
+     I-CL et psalmus in tono. Textus psalmorum infixi et psalmus aptatus
+     in memoria montationis, numquam in statu - hic solum status visus. -->
+<organum genus="psalterium" versio="1">
+
+  <actiones>
+    <actio nomen="psalterium.agere"/>
+  </actiones>
+
+  <status>
+    <campus nomen="visus" typus="electio" vita="persistens"
+            absens="index" scriptor="psalterium.agere"
+            semita="ligatio" historia="impelle">
+      <optio>index</optio>
+      <optio>psalmus</optio>
+    </campus>
+    <campus nomen="psalmus" typus="numerus" vita="persistens"
+            scriptor="psalterium.agere" semita="ligatio"
+            historia="impelle"
+            nota="numerus Vulgatae I-CL; in indice absens. Extra fines
+                  (status malus) = index"/>
+    <campus nomen="signum" typus="textus" vita="persistens"
+            scriptor="psalterium.agere"
+            nota="tonus lateris ('8 G'), unus pro omnibus psalmis (D6);
+                  absens aut ignotus = 8 G"/>
+    <campus nomen="electus" typus="numerus" vita="transiens"
+            scriptor="psalterium.agere"
+            nota="psalmus electus in indice (I-CL); pagina indicis eum
+                  sequitur; absens = I"/>
+    <campus nomen="cifrae" typus="textus" vita="transiens"
+            scriptor="psalterium.agere"
+            nota="cifrae typatae in indice ('10'); absens = nullae"/>
+    <campus nomen="pagina" typus="numerus" vita="transiens"
+            scriptor="psalterium.agere"
+            nota="pagina psalmi visa (ab 0; gabc_visus scribit); psalmus
+                  novus = 0"/>
+    <campus nomen="spatium" typus="numerus" vita="persistens"
+            scriptor="psalterium.agere"
+            nota="spatium systematis, par VI..XLVIII ('+' '-'); absens
+                  = VIII"/>
+  </status>
+
+  <!-- argumentum nudum: vacuum = index; numerus = psalmus. "109,8 G"
+       (cum tono) in codice (psalterium_argumentum_ponere) -->
+  <cognomina>
+    <cognomen semita="psalterium/index"/>
+    <cognomen typus="numerus" semita="psalterium/psalmus/{}"/>
+  </cognomina>
+
+  <basis genus="organum_commune"/>
+  <montationes/>
+</organum>
