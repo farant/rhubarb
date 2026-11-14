@@ -1,0 +1,15 @@
+% Psalmus 19 (Vulgata) - Exáudiat te Dóminus in die tribulatiónis
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm19.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Exáudiat te Dóminus in die tribulatiónis: * prótegat te nomen Dei Jacob.
+Mittat tibi auxílium de sancto: * et de Sion tueátur te.
+Memor sit omnis sacrifícii tui: * et holocáustum tuum pingue fiat.
+Tríbuat tibi secúndum cor tuum: * et omne consílium tuum confírmet.
+Lætábimur in salutári tuo: * et in nómine Dei nostri magnificábimur.
+Ímpleat Dóminus omnes petitiónes tuas: * nunc cognóvi quóniam salvum fecit Dóminus Christum suum.
+Exáudiet illum de cælo sancto suo: * in potentátibus salus déxteræ ejus.
+Hi in cúrribus, et hi in equis: * nos autem in nómine Dómini, Dei nostri invocábimus.
+Ipsi obligáti sunt, et cecidérunt: * nos autem surréximus et erécti sumus.
+Dómine, salvum fac regem: * et exáudi nos in die, qua invocavérimus te.

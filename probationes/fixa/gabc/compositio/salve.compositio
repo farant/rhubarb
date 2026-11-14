@@ -5,26 +5,26 @@ pictum	0	rect	28	48	924x1	systema	-1	-1	-1
 pictum	0	rect	28	40	924x1	systema	-1	-1	-1
 pictum	0	initialis	8	40	"S"x2	atramentum	-1	-1	-1
 pictum	0	pars	28	40	clavis_c:0	atramentum	0	0	-1
-pictum	0	pars	43	68	punctum:0	atramentum	1	0	0
-pictum	0	textus	44	74	"Al"/0	atramentum	1	-1	-1
-pictum	0	pars	62	60	punctum:0	atramentum	2	0	1
-pictum	0	textus	57	74	"ve,"/0	atramentum	2	-1	-1
-pictum	0	pars	87	52	punctum:0	atramentum	3	0	2
-pictum	0	pars	91	60	ictus:0	atramentum	3	0	2
-pictum	0	textus	82	74	"Re"/0	atramentum	3	-1	-1
-pictum	0	pars	104	48	punctum:0	atramentum	4	0	3
-pictum	0	textus	99	74	"gí"/0	atramentum	4	-1	-1
-pictum	0	pars	121	52	punctum:0	atramentum	5	0	4
-pictum	0	pars	131	52	punctum_morae:0	atramentum	5	0	4
-pictum	0	textus	116	74	"na,"/0	atramentum	5	-1	-1
-pictum	0	textus	141	74	"*"/0	rubrica	6	-1	-1
-pictum	0	pars	159	48	punctum:0	atramentum	7	0	5
-pictum	0	textus	154	74	"ma"/0	atramentum	7	-1	-1
-pictum	0	pars	176	40	punctum:0	atramentum	8	0	6
-pictum	0	pars	180	48	ictus:0	atramentum	8	0	6
-pictum	0	textus	171	74	"ter"/0	atramentum	8	-1	-1
-pictum	0	pars	201	44	punctum:0	atramentum	9	0	7
-pictum	0	textus	196	74	"mi"/0	atramentum	9	-1	-1
+pictum	0	pars	42	68	punctum:0	atramentum	1	0	0
+pictum	0	textus	43	74	"Al"/0	atramentum	1	-1	-1
+pictum	0	pars	61	60	punctum:0	atramentum	2	0	1
+pictum	0	textus	56	74	"ve,"/0	atramentum	2	-1	-1
+pictum	0	pars	86	52	punctum:0	atramentum	3	0	2
+pictum	0	pars	90	60	ictus:0	atramentum	3	0	2
+pictum	0	textus	81	74	"Re"/0	atramentum	3	-1	-1
+pictum	0	pars	103	48	punctum:0	atramentum	4	0	3
+pictum	0	textus	98	74	"gí"/0	atramentum	4	-1	-1
+pictum	0	pars	120	52	punctum:0	atramentum	5	0	4
+pictum	0	pars	130	52	punctum_morae:0	atramentum	5	0	4
+pictum	0	textus	115	74	"na,"/0	atramentum	5	-1	-1
+pictum	0	textus	140	74	"*"/0	rubrica	6	-1	-1
+pictum	0	pars	158	48	punctum:0	atramentum	7	0	5
+pictum	0	textus	153	74	"ma"/0	atramentum	7	-1	-1
+pictum	0	pars	175	40	punctum:0	atramentum	8	0	6
+pictum	0	pars	179	48	ictus:0	atramentum	8	0	6
+pictum	0	textus	170	74	"ter"/0	atramentum	8	-1	-1
+pictum	0	pars	200	44	punctum:0	atramentum	9	0	7
+pictum	0	textus	195	74	"mi"/0	atramentum	9	-1	-1
 pictum	0	pars	217	48	punctum:0	atramentum	10	0	8
 pictum	0	textus	212	74	"se"/0	atramentum	10	-1	-1
 pictum	0	pars	233	52	punctum:0	atramentum	11	0	9
@@ -118,9 +118,9 @@ pictum	0	textus	915	74	"pi"/0	atramentum	47	-1	-1
 pictum	0	pars	936	64	punctum:0	atramentum	48	0	43
 pictum	0	textus	931	74	"rá"/0	atramentum	48	-1	-1
 pictum	0	pars	948	60	custos:1	atramentum	-1	-1	-1
-pictum	0	textus	94	74	"-"/0	atramentum	-1	-1	-1
-pictum	0	textus	111	74	"-"/0	atramentum	-1	-1	-1
-pictum	0	textus	166	74	"-"/0	atramentum	-1	-1	-1
+pictum	0	textus	93	74	"-"/0	atramentum	-1	-1	-1
+pictum	0	textus	110	74	"-"/0	atramentum	-1	-1	-1
+pictum	0	textus	165	74	"-"/0	atramentum	-1	-1	-1
 pictum	0	textus	207	74	"-"/0	atramentum	-1	-1	-1
 pictum	0	textus	223	74	"-"/0	atramentum	-1	-1	-1
 pictum	0	textus	239	74	"-"/0	atramentum	-1	-1	-1
@@ -430,15 +430,15 @@ pictum	0	textus	649	193	"-"/0	atramentum	-1	-1	-1
 pictum	0	textus	886	193	"-"/0	atramentum	-1	-1	-1
 pictum	0	textus	909	193	"-"/0	atramentum	-1	-1	-1
 syllaba	0	0	28	33	6x15
-syllaba	1	0	43	65	13x17
-syllaba	2	0	57	57	18x25
-syllaba	3	0	82	49	13x33
-syllaba	4	0	99	45	13x37
-syllaba	5	0	116	49	18x33
-syllaba	6	0	141	74	6x8
-syllaba	7	0	154	45	13x37
-syllaba	8	0	171	37	18x45
-syllaba	9	0	196	41	13x41
+syllaba	1	0	42	65	13x17
+syllaba	2	0	56	57	18x25
+syllaba	3	0	81	49	13x33
+syllaba	4	0	98	45	13x37
+syllaba	5	0	115	49	18x33
+syllaba	6	0	140	74	6x8
+syllaba	7	0	153	45	13x37
+syllaba	8	0	170	37	18x45
+syllaba	9	0	195	41	13x41
 syllaba	10	0	212	45	13x37
 syllaba	11	0	228	49	13x33
 syllaba	12	0	244	45	18x37

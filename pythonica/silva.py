@@ -1657,6 +1657,10 @@ PORTAE = {
     # aurum commissum, sub custode X GB; corpus absens = OMISSA nominata
     'musicxml-oraculum': (['./tools/musicxml_silvestria.sh'],
                           r'MUSICXML SILVESTRIA: (sana|FRACTA|OMISSA)'),
+    # corpus GregoBase psalmodiae (psalmodia plan-2 T8): syllabae, EUOUAE,
+    # psalmi scripti contra manifestum discordiarum; corpus absens = OMISSA
+    'psalmodia-oraculum': (['./tools/psalmodia_oraculum.sh'],
+                           r'PSALMODIA ORACULUM: (sana|FRACTA|OMISSA)'),
     # fontes conversi auditionis (-gabc, -musicxml; plan gabc T8):
     # instrumentum bin/auditio, sonus non probatur
     'auditio-fumus': (['./tools/auditio_fumus.sh'],

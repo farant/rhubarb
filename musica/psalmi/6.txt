@@ -1,0 +1,15 @@
+% Psalmus 6 (Vulgata) - Dómine, ne in furóre tuo árguas me
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm6.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Dómine, ne in furóre tuo árguas me, * neque in ira tua corrípias me.
+Miserére mei, Dómine, quóniam infírmus sum: * sana me, Dómine, quóniam conturbáta sunt ossa mea.
+Et ánima mea turbáta est valde: * sed tu, Dómine, úsquequo?
+Convértere, Dómine, et éripe ánimam meam: * salvum me fac propter misericórdiam tuam.
+Quóniam non est in morte qui memor sit tui: * in inférno autem quis confitébitur tibi?
+Laborávi in gémitu meo, † lavábo per síngulas noctes lectum meum: * lácrimis meis stratum meum rigábo.
+Turbátus est a furóre óculus meus: * inveterávi inter omnes inimícos meos.
+Discédite a me, omnes, qui operámini iniquitátem: * quóniam exaudívit Dóminus vocem fletus mei.
+Exaudívit Dóminus deprecatiónem meam, * Dóminus oratiónem meam suscépit.
+Erubéscant, et conturbéntur veheménter omnes inimíci mei: * convertántur et erubéscant valde velóciter.

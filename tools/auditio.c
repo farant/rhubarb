@@ -82,6 +82,20 @@
  *                                      altissima = F4); sine name
  *                                      titulus = nomen plagulae.
  *                                      -gabc et -musicxml simul: usus
+ *   auditio -psalmus x.txt             psalmus punctatus in tono
+ *       -signum "8 G" [-titulus T]     (psalmodia.h, tabula infixa
+ *       [-sine-gloria] [-antiqua]      toni_psalmorum_infixum.h): gabc
+ *                                      in stdout; admonitiones
+ *                                      'via:linea:columna: causa' in
+ *                                      stderr et exitus 1 (gabc tamen
+ *                                      scriptum); -signum ignotum:
+ *                                      exitus 1; -sine-gloria sine
+ *                                      Gloria Patri; -antiqua mediatio
+ *                                      ad libitum (VI). Cum -sonare,
+ *                                      -carmen, -partitura ...: gabc
+ *                                      ut -gabc convertitur (titulus
+ *                                      ordinarie nomen plagulae);
+ *                                      admonitiones non sonantur
  *
  *   auditio -carmen T -auscultare      numeri soni (auscultatio.h):
  *                                      apex, tonsura, rms totius,
@@ -160,6 +174,8 @@
 #include "musicxml_carmen.h"
 #include "gabc.h"
 #include "gabc_carmen.h"
+#include "psalmodia.h"
+#include "toni_psalmorum_infixum.h"
 #include "json.h"
 #include "chorda_aedificator.h"
 #include "filum.h"
@@ -674,11 +690,14 @@ _musicxml_convertere (
 }
 
 /* -gabc (gabc G12): cantus gabc -> liber '<carmina>', ut -musicxml.
- * do_fixum: MIDI do aut -1 (nota altissima in summo, gabc_carmen.h);
- * cantus sine name et sine -titulus -> titulus = nomen plagulae */
+ * datum: textus plagulae via (aut gabc psalmi, -psalmus); vacuum =
+ * plagula illegibilis. do_fixum: MIDI do aut -1 (nota altissima in
+ * summo, gabc_carmen.h); cantus sine name et sine -titulus ->
+ * titulus = nomen plagulae */
 interior integer
 _gabc_convertere (
      constans character*  via,
+                 chorda   datum,
                     b32   strictus,
      constans character*  titulus,
                     s32   do_fixum,
@@ -686,7 +705,6 @@ _gabc_convertere (
                  chorda*  liber,
      constans character** titulus_carminis)
 {
-                  chorda  datum   = filum_legere_totum(via, piscina);
        ChordaAedificator* a       = chorda_aedificator_creare(piscina,
                                         MMMCMXCIX);
        ChordaAedificator* r       = chorda_aedificator_creare(piscina,
@@ -730,6 +748,100 @@ _gabc_convertere (
         chorda_aedificator_finire(a), chorda_aedificator_finire(r),
         relatio.numerus_approximationum, piscina, liber,
         titulus_carminis);
+}
+
+/* -psalmus (psalmodia plan-2 T7): textus punctatus + signum toni ->
+ * gabc in *gabc, per tabulam infixam (toni_psalmorum_infixum.h).
+ * Admonitiones psalmi in stderr 'via:linea:columna: causa'. Exitus 0;
+ * 1 plagula illegibilis, tabula vitiosa, signum ignotum, -antiqua sine
+ * mediatione ad libitum (*gabc vacuum), aut admonitiones (*gabc tamen
+ * scriptum) */
+interior integer
+_psalmum_aptare (
+         constans character* via,
+         constans character* signum,
+         constans character* titulus,
+                        b32  sine_gloria,
+                        b32  antiqua,
+                    Piscina* piscina,
+                     chorda* gabc)
+{
+                        chorda textus = filum_legere_totum(via,
+                                    piscina);
+             ChordaAedificator* causa  = chorda_aedificator_creare(
+                                    piscina, CCLVI);
+             ChordaAedificator* exitus = chorda_aedificator_creare(
+                                    piscina, MMMCMXCIX);
+               PsalmodiaTabula* tabula;
+    constans PsalmodiaClausula* terminatio;
+       constans PsalmodiaTonus* tonus  = NIHIL;
+              PsalmodiaPsalmus* psalmus;
+             PsalmodiaOptiones  optiones;
+                        chorda  c;
+
+    gabc->datum    = NIHIL;
+    gabc->mensura  = ZEPHYRUM;
+    si (textus.mensura == ZEPHYRUM)
+    {
+        fprintf(stderr, "auditio: psalmus '%s' legi non potuit (aut "
+            "vacuus est)\n", via);
+        redde I;
+    }
+    tabula = psalmodia_tabulam_legere(toni_psalmorum_infixum_textus(
+        piscina), piscina);
+    si (tabula == NIHIL || causa == NIHIL || exitus == NIHIL)
+    {
+        fprintf(stderr, "auditio: memoria deficit\n");
+        redde I;
+    }
+    si (!psalmodia_successus(tabula))
+    {
+        (vacuum)psalmodia_vitia_scribere(tabula,
+            "musica/toni_psalmorum.stml (infixa)", causa);
+        c = chorda_aedificator_finire(causa);
+        fprintf(stderr, "%.*s", (integer)c.mensura,
+            (constans character*)c.datum);
+        redde I;
+    }
+    terminatio = psalmodia_signum_invenire(tabula,
+        chorda_ex_literis(signum, piscina), &tonus, causa);
+    si (terminatio == NIHIL)
+    {
+        c = chorda_aedificator_finire(causa);
+        fprintf(stderr, "auditio: -signum \"%s\": %.*s\n", signum,
+            (integer)c.mensura, (constans character*)c.datum);
+        redde I;
+    }
+    si (   antiqua
+        && psalmodia_mediationem_eligere(tonus, VERUM)
+               == psalmodia_mediationem_eligere(tonus, FALSUM))
+    {
+        fprintf(stderr, "auditio: -antiqua: tonus %.*s mediationem ad "
+            "libitum non habet\n", (integer)tonus->modus.mensura,
+            (constans character*)tonus->modus.datum);
+        redde I;
+    }
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    si (titulus != NIHIL)
+    {
+        optiones.titulus = chorda_ex_literis(titulus, piscina);
+    }
+    optiones.sine_gloria  = sine_gloria;
+    optiones.antiqua      = antiqua;
+    psalmus = psalmodia_aptare(tonus, terminatio, textus, &optiones,
+        piscina);
+    si (   psalmus == NIHIL
+        || !psalmodia_admonitiones_scribere(psalmus, via, causa)
+        || !psalmodia_gabc_scribere(psalmus, &optiones, exitus))
+    {
+        fprintf(stderr, "auditio: memoria deficit\n");
+        redde I;
+    }
+    c = chorda_aedificator_finire(causa);
+    fprintf(stderr, "%.*s", (integer)c.mensura,
+        (constans character*)c.datum);
+    *gabc = chorda_aedificator_finire(exitus);
+    redde psalmus->numerus_admonitionum > ZEPHYRUM ? I : ZEPHYRUM;
 }
 
 /* liber ordinarius; indicare = carmina monstrat; aliter carmen per
@@ -1974,6 +2086,10 @@ principale (
                      b32  scribere        = FALSUM;
       constans character* musicxml        = NIHIL;
       constans character* gabc            = NIHIL;
+      constans character* psalmus         = NIHIL;
+      constans character* signum          = NIHIL;
+                     b32  sine_gloria     = FALSUM;
+                     b32  antiqua         = FALSUM;
                character* do_datum        = NIHIL;
       constans character* conversum       = NIHIL;
                      s32  do_fixum        = -I;
@@ -2170,6 +2286,24 @@ principale (
         {
             gabc = argv[++k];
         }
+        alioquin si (   strcmp(argv[k], "-psalmus") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            psalmus = argv[++k];
+        }
+        alioquin si (   strcmp(argv[k], "-signum") == ZEPHYRUM
+                     && k + I < argc)
+        {
+            signum = argv[++k];
+        }
+        alioquin si (strcmp(argv[k], "-sine-gloria") == ZEPHYRUM)
+        {
+            sine_gloria = VERUM;
+        }
+        alioquin si (strcmp(argv[k], "-antiqua") == ZEPHYRUM)
+        {
+            antiqua = VERUM;
+        }
         alioquin si (strcmp(argv[k], "-do") == ZEPHYRUM && k + I < argc)
         {
             do_datum = argv[++k];
@@ -2215,9 +2349,25 @@ principale (
         }
     }
     conversum = musicxml != NIHIL ? musicxml : gabc;
-    si (musicxml != NIHIL && gabc != NIHIL)
+    si (conversum == NIHIL)
     {
-        fprintf(stderr, "auditio: -musicxml et -gabc non simul\n");
+        conversum = psalmus;
+    }
+    si (   (musicxml != NIHIL) + (gabc != NIHIL) + (psalmus != NIHIL)
+        > I)
+    {
+        fprintf(stderr,
+            "auditio: -musicxml, -gabc, -psalmus non simul\n");
+        redde II;
+    }
+    si (   (psalmus != NIHIL && signum == NIHIL)
+        || (   psalmus == NIHIL
+            && (signum != NIHIL || sine_gloria || antiqua)))
+    {
+        fprintf(stderr,
+            "auditio: -psalmus VIA -signum S (\"8 G\") "
+                "[-sine-gloria] [-antiqua]: -signum necessarium; "
+                "-signum, -sine-gloria, -antiqua solum cum -psalmus\n");
         redde II;
     }
     si (do_datum != NIHIL)
@@ -2228,10 +2378,12 @@ principale (
 
         t.datum    = (i8*)do_datum;
         t.mensura  = (i32)strlen(do_datum);
-        si (gabc == NIHIL || !partitura_notam_legere(t, &n, &altitudo))
+        si (   (gabc == NIHIL && psalmus == NIHIL)
+            || !partitura_notam_legere(t, &n, &altitudo))
         {
-            fprintf(stderr, "auditio: -do P solum cum -gabc; P nota ut "
-                "\"F4\", \"Bb3\" (non '%s')\n", do_datum);
+            fprintf(stderr, "auditio: -do P solum cum -gabc aut "
+                "-psalmus; P nota ut \"F4\", \"Bb3\" (non '%s')\n",
+                do_datum);
             redde II;
         }
         do_fixum = (s32)altitudo;
@@ -2296,7 +2448,8 @@ principale (
     {
         fprintf(stderr,
             "auditio: -musicxml VIA | -gabc VIA [-do P] [-strictus] "
-                "[-titulus T] solum, aut "
+                "[-titulus T] | -psalmus VIA -signum S [-titulus T] "
+                "[-sine-gloria] [-antiqua] solum, aut "
                 "cum -sonare, -carmen, -censura, -partitura, "
                 "-recensio, -auscultare, -tonus, -pars, -iterare, -via "
                 "(non cum "
@@ -2334,6 +2487,8 @@ principale (
                   "[-liber via.stml]) | -musicxml VIA [-strictus] "
                   "[-titulus T] [-sonare | -carmen T ...] | -gabc VIA "
                   "[-do P] [-strictus] [-titulus T] [-sonare | -carmen T "
+                  "...] | -psalmus VIA -signum S [-titulus T] "
+                  "[-sine-gloria] [-antiqua] [-sonare | -carmen T "
                   "...]\n");
         _praeparata_monstrare();
         redde ZEPHYRUM;
@@ -2353,11 +2508,38 @@ principale (
                            && !tonum
                            && !iterare && pars == NIHIL && via == NIHIL;
 
-        k_exitus = musicxml != NIHIL
-            ? _musicxml_convertere(musicxml, strictus, titulus_dandus,
-                  piscina, &liber_conversus, &titulus_conversus)
-            : _gabc_convertere(gabc, strictus, titulus_dandus, do_fixum,
-                  piscina, &liber_conversus, &titulus_conversus);
+        si (psalmus != NIHIL)
+        {
+            chorda gabc_psalmi;
+
+            /* admonitiones (exitus 1): gabc solum scribitur, non
+             * sonatur - textus prius emendandus */
+            k_exitus = _psalmum_aptare(psalmus, signum, titulus_dandus,
+                sine_gloria, antiqua, piscina, &gabc_psalmi);
+            si (k_exitus != ZEPHYRUM || solum)
+            {
+                si (solum && gabc_psalmi.mensura > ZEPHYRUM)
+                {
+                    (vacuum)fwrite(gabc_psalmi.datum, (size_t)I,
+                        (size_t)gabc_psalmi.mensura, stdout);
+                }
+                piscina_destruere(piscina);
+                redde k_exitus;
+            }
+            k_exitus = _gabc_convertere(psalmus, gabc_psalmi, strictus,
+                titulus_dandus, do_fixum, piscina, &liber_conversus,
+                &titulus_conversus);
+        }
+        alioquin
+        {
+            k_exitus = musicxml != NIHIL
+                ? _musicxml_convertere(musicxml, strictus,
+                      titulus_dandus, piscina, &liber_conversus,
+                      &titulus_conversus)
+                : _gabc_convertere(gabc, filum_legere_totum(gabc,
+                      piscina), strictus, titulus_dandus, do_fixum,
+                      piscina, &liber_conversus, &titulus_conversus);
+        }
         si (k_exitus == I || solum)
         {
             si (k_exitus != I)

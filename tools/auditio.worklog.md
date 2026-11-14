@@ -198,3 +198,17 @@ judges by `-nt` and /bin/bash 3.2 compares whole seconds (restore landed in
 the same second as the planted compile) -> the script removes the objects of
 the files it covers before building. planta: red on the two `-do` checks,
 green after restore. Ledger parcum 01M5XD21FEJW523NBK03VWJKVB (ictus).
+
+## 2026-11-13 - `-psalmus` (psalmodia plan-2 T7)
+
+`auditio -psalmus VIA -signum "8 G" [-titulus T] [-sine-gloria]
+[-antiqua]` prints the fitted psalm as gabc (table embedded through
+`toni_psalmorum_infixum.h`); with `-sonare`, `-partitura`, `-carmen`
+... it goes through `_gabc_convertere`, which now takes the gabc text
+instead of reading the file itself. Admonitions -> stderr
+`via:linea:columna: causa`, exit 1 (gabc still printed, nothing
+played); unknown signum -> exit 1 with the table's reason; usage
+errors exit 2. Gate `auditio-fumus` section VIII (14 cases) and its
+porta tag cover the psalmodia sources and `musica/psalmi/116.txt`;
+the object list it deletes before building grew to match. Details,
+rulings and plants: lib/psalmodia.worklog.md (T7).

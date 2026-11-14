@@ -1,0 +1,382 @@
+# discordiae.tsv - manifestum portae psalmodia-oraculum (psalmodia plan-2 T8;
+# decretum Frani 5). Corpus GregoBase v0.4 contra tabulam (AR 1912) et
+# aptatorem; a Frano recensitum 2026-11-13: errores tabulae nulli,
+# aptatoris nulli - editiones aliae, lapsus transcriptionis, classes
+# divisionis II (i consonans; vocales hiantes in nominibus). Columnae:
+# genus, id, titulus, nostra, eorum, numerus. Porta frangitur si linea
+# nova apparet aut linea haec evanescit (manifestum tunc minuendum).
+euouae	02022	1 g <- I g	h h g f gh g	h h g f g ghg	1
+euouae	03045	1 f <- 1 f	h h g f gh gf	h h g f gh g gf	1
+euouae	03234	4 E <- 4 e	h g h ih gf e	g g h f g e	1
+euouae	03237	1 a <- 1 a	h h g f g h	h h g f g gh	1
+euouae	03251	8 G <- 8 g	j j i j h g	j j i h h g	1
+euouae	03255	8 G <- 8 g	j j i j h g	j j i h h g	1
+euouae	03269	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	03270	3 a2 <- 3 a2	j j ji hi h gh	i i j hi h gh	1
+euouae	04116	3 a2 <- 3 a2	j j ji hi h gh	i i j hi h gh	1
+euouae	04124	3 a2 <- 3 a2	j j ji hi h gh	i i j hi h gh	1
+euouae	04144	4 A (altera) <- 4 a	k j k l j h	h g h i g h	1
+euouae	04179	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04198	1 D <- 1 d	h h g f gh gfed	h h g f g gfed	1
+euouae	04202	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	04232	3 g2 <- 3 g2	j h j i h g	i i ji hi h g	1
+euouae	04264	3 a2 <- 3 a2	j j ji hi h gh	i i j hi h gh	1
+euouae	04315	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04333	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	04344	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04357	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04373	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04378	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	04380	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04381	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04397	1 D2 <- 1 d2	h h g f gf d	h h g f g gfed	1
+euouae	04400	7 a <- 7 a	k k l k j ih	k k l k j hg	1
+euouae	04403	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04411	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	04423	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04424	1 g <- 1 g	h h g f gh g	h h i g h f	1
+euouae	04434	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04455	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	04459	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04461	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04462	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04463	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04464	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04465	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04466	1 D <- 1 d	h h g f gh gfed	h h g f gf d	1
+euouae	04470	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04607	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	04608	4 E <- 4 E	h g h ih gf e	h g h ih gf f	1
+euouae	04635	1 g <- 1 g	h h g f gh g	h h g f gf d	1
+euouae	07450	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07451	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07452	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07453	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07455	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07459	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07470	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07484	1 a <- 1 a	h h g f g h	h h g f gh gh	1
+euouae	07497	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07525	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	07526	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	07657	3 a2 <- 3 a2	j j ji hi h gh	i i j hi h gh	1
+euouae	07666	1 D <- 1 d	h h g f gh gfed	h h g f gf d	1
+euouae	07679	2 D <- 2 d	m m m l j k	m m m l j jk k	1
+euouae	07680	8 G <- 8 g	j j i j h g	j j i j h g g	1
+euouae	07681	1 g <- 1 g	h h g f gh g	h h g f gh g g	1
+euouae	07709	2 D <- II d	m m m l j k	m m m l jk k	1
+euouae	07710	2 D <- II d	m m m l j k	m m m l jk k	1
+euouae	07720	4 E <- IV e	h g h ih gf e	h g h ih gf g	1
+euouae	07721	4 E <- IV e	h g h ih gf e	h g h ih gf g	1
+euouae	07731	7 a <- VII a	k k l k j ih	k k m k j ih	1
+euouae	07737	1 a <- I a	h h g f g h	h h g f g gh	1
+euouae	07738	1 a <- I a	h h g f g h	h h g f g gh	1
+euouae	07764	7 c <- VII c	k k l k j ij	j j h j k j	1
+euouae	07766	8 G <- VIII g	j j i j h g	j j i h g	1
+euouae	07767	8 G <- 8 g	j j i j h g	j j i h g	1
+euouae	07768	8 G <- VIII g	j j i j h g	j j i h g	1
+euouae	07792	8 G <- VIII g	j j i j h g	h h i h h g	1
+euouae	07802	1 D2 <- 1 d2	h h g f gf d	h h g f g gfed	1
+euouae	07804	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	07818	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	07838	1 D2 <- 1 d2	h h g f gf d	h h g f g gfed	1
+euouae	07852	1 g3 <- 1 g3	h h g f g g	h h g f h g	1
+euouae	07855	1 a <- 1 a	h h g f g h	h h g f gh gfed	1
+euouae	07874	3 g <- 3 g	j j ji hi h g	i i j hi h g	1
+euouae	07876	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	07907	1 D2 <- 1 d2	h h g f gf d	h h g f g gfed	1
+euouae	07935	3 a <- 3 a	j j j h j ih	i i j h j ih	1
+euouae	07970	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	07973	2 D <- 2 D	m m m l j k	m m m l jk k	1
+euouae	08049	1 D2 <- 1 d2	h h g f gf d	h h g f g gfed	1
+euouae	08050	1 D <- 1 d	h h g f gh gfed	h h g f gf d	1
+euouae	08069	1 g2 <- 1 g2	h h g f g ghg	h h g f h g	1
+euouae	08070	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	08072	8 G <- 8 g	j j i j h g	h h i g h f	1
+euouae	08074	4 E <- 4 e	h g h ih gf e	h g h i g e	1
+euouae	08078	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	08081	4 c (altera) <- 4 c	k k k k k j	h g h i g e	1
+euouae	08092	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	08094	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	08168	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	08189	1 D <- 1 d	h h g f gh gfed	h h g f gf d	1
+euouae	08276	4 E <- 4 e	h g h ih gf e	h g h i g e	1
+euouae	08279	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	08289	2 D <- 2 d	m m m l j k	m m m l jk k	1
+euouae	09091	1 a <- 1 a	h h g f g h	h h g f g gh	1
+euouae	09118	3 g <- 3 g	j j ji hi h g	i i j hi h g	1
+euouae	09158	2 D <- II d	m m m l j k	m m m l jk k	1
+euouae	09162	1 a <- I a	h h g f g h	h h g f g gh	1
+psalmus:notae	00435:1	1 f	f gh h h i h h g h h : h h h h h h h h h h h g f gh gf	f gh h h i h h g h h : h h h h h h h h h h h g f ghg gf	1
+psalmus:notae	00435:2	1 f	gh g gf	h h h	1
+psalmus:notae	04690:1	7 c2	ji jk k k k k k k k k k k k k m l l k l : k k k l k j kj	ji jk k k k m l l k l : k k k l k j kj	1
+psalmus:notae	04690:7	7 c2	k k k k k k k k k k k m l l k l : k k k k k k k k l k k j kj	k k k k k k k k k k k m l l k l : k k k k k k k k l k k jj kj	1
+psalmus:notae	07404:1	7 a	ji jk k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k k m l k l : k k k k k k k k k k k l k j ih	gji jk k k k k k k k k k k kml ll lk kl : k k k k k k k k k k k lk k jj ih	1
+psalmus:notae	07404:2	7 a	k k k j ,	k k jkkk	1
+psalmus:notae	07405:1	8 G	g h j j j j j k j j : j j j j j j i j h g	g hg gj j ji jk k jk j j : j j j j j j i j hg g	1
+psalmus:notae	07405:2	8 G	j j h h ,	j h hjjj	1
+psalmus:notae	07406:1	8 G	g h j j j j j j j j j j j j j j j j j j j j j j j j j j j j j j j k j j : j j j i j h g g	g hg gjj ji jk k jk j j : j j j i j h g g	1
+psalmus:notae	07536:1	1 D	f gh h h h h h h i h g h : h h h h h h h h h g f gh gfed	f gh h h h h h h i h g h : h h h h h h h h h g f gh gf	1
+psalmus:notae	07536:2	1 D	h h h h h h h h h i h g h : h h h h h h h g f gh gfed	h h h h h h h h h i h g h : h h h h h h h g f gh gf	1
+psalmus:notae	07536:3	1 D	h h h h h h h h h h g , h h h h h h i h h g h : h h h h h g f gh g gfed	f gh h h h h h h g g h h h h h h h i h h g h : h h h h h g f gh g gf	1
+psalmus:notae	07536:4	1 D	h h h h h h g g , h h h i h h g h : h h h h g f gh g gfed	h h h h h h g g h h h i h h g h : h h h h g f gh g gf	1
+psalmus:notae	07536:5	1 D	h h h h h h h h h h g , h h h h h h i h h g h : h h h h h g f gh g gfed	f gh h h h h h h g g h h h h h h h i h h g h : h h h h h g f gh g gf	1
+psalmus:notae	07536:6	1 D	h h i h h g h h : h h h h h h h h h h g f gh g gfed	h h i h h g h h : h h h h h h h h h h g f gh g gf	1
+psalmus:notae	07536:7	1 D	h h h i h h g h h : h h h g f gh gfed	f gh h i h h g h h : h h h g f gh gf	1
+psalmus:notae	07536:8	1 D	h h h h h h h h h h i h g h : h h h h h h h g f gh gfed	h h h h h h h h h h i h g h : h h h h h h h g f gh gf	1
+psalmus:notae	07832:1	5 a	f h j j j j j j k j : j j j j j k i j h h	f h j j j j j j k j : j j j j j h ih g f f	1
+psalmus:notae	07832:2	5 a	j j j j j j j j j j j j j j j j j k j : j j j j j j j j j k i j h	f h j j j j j j j j j j j j j j j k j : j j j j j j j j j h ih f f	1
+psalmus:notae	07832:3	5 a	j j j j j j k j j : j j k i i j h	f h j j j j k j j : j j j h ih f f	1
+psalmus:notae	07832:4	5 a	j j j j j j j j j j j j k j : j j j j j j j k i j h	f h j j j j j j j j j j k j : j j j j j j j h ih f f	1
+psalmus:notae	08130:1	1 g	f gh h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h h i h h g h : h h h g f gh g	f gh h h h i h h gh h : h h h g f ghg g	1
+psalmus:notae	08131:1	2 D	j k m m m m m m m m m m m m n m : m m m m m m m m m m m m l j k	j k m m m m m m m m m m m m nm m : m m m m m m m m m m m m l jk k	1
+psalmus:notae	08131:2	2 D	m m m k ,	m m kmmm	1
+psalmus:notae	08133:1	8 c	g h j j j j j j j k : j j j j j j j j h j k j	g h j j j j j k j j : j j j j j j j j h j kj j	1
+psalmus:notae	08133:2	8 c	j j j j j h ,	j j j j hjjj	1
+psalmus:notae	08134:1	4 A* (altera)	k jk k k k k k j k l k k : k k k k k j k l j hi	k jk k k k k k j k l k k : k k k k k j k l jh hi	1
+psalmus:notae	08195:12	1 a	h h h h h h h h h h g , h h h h h h h h h h h h i h g h : h h h h h h h g f g h	h h h h h h h h h h g h h h h h h h h h h h h i h g h : h h h h h h h g f g h	1
+psalmus:notae	08195:16	1 a	h h h h h h h h h h h h h h g , h h h h h h h h h h h i h g h : h h h h h h h h h g f g h	h h h h h h h h h h h h h h g h h h h h h h h h h h i h g h : h h h h h h h h h g f g h	1
+psalmus:notae	08195:4	1 a	h h h h h h h h h h h h g , h h h h h i h g h : h h h h h h h h h h g f g h	h h h h h h h h h h h h g h h h h h i h g h : h h h h h h h h h h g f g h	1
+psalmus:stili	04690:10	7 c2	k k k k k k k k k k <b>m l <b>k l : k k k k k k k <b>l k <b>j kj	k k k k k k k k k k m l k l : k k k k k k k l k j kj	1
+psalmus:stili	04690:2	7 c2	k k k k k k <b>m l <b>k l : k k k <b>l k k <b>j kj	k k k k k k m l k l : k k k l k k j kj	1
+psalmus:stili	04690:3	7 c2	k k k k k k k k k k k k <b>m l <b>k l : k k k k k k k k k k k <b>l k k <b>j kj	k k k k k k k k k k k k m l k l : k k k k k k k k k k k l k k j kj	1
+psalmus:stili	04690:4	7 c2	k k k k k k k k k k k k k k k k k k <b>m l <b>k l : k k k k k k k k k k <b>l k <b>j kj	k k k k k k k k k k k k k k k k k k m l k l : k k k k k k k k k k l k j kj	1
+psalmus:stili	04690:5	7 c2	k k k k k k k k k k <b>m l <b>k l : k k k k k k k k k k k k k k <b>l k <b>j j kj	k k k k k k k k k k m l k l : k k k k k k k k k k k k k k l k j j kj	1
+psalmus:stili	04690:6	7 c2	k k k k <b>m l <b>k l : k k k k k k k k <b>l k <b>j kj	k k k k m l k l : k k k k k k k k l k j kj	1
+psalmus:stili	04690:8	7 c2	k k k k k <b>m l <b>k l : k k k k k k <b>l k <b>j kj	k k k k k m l k l : k k k k k k l k j kj	1
+psalmus:stili	04690:9	7 c2	k k k <b>m l l <b>k l l : k k <b>l k k <b>j kj	k k k m l l k l l : k k l k k j kj	1
+syllabae:accentus	04173	fœ́dera	fœ́-de-ra @1	fœ-́de-ra @2	3
+syllabae:accentus	04254	cœ́tui	cœ́-tu-i @1	cœ-́tu-i @2	3
+syllabae:accentus	08162	cœ́tibus	cœ́-ti-bus @1	cœ-́ti-bus @2	1
+syllabae:accentus	08704	cœ́peris	cœ́-pe-ris @1	cœ-́per-is @2	1
+syllabae:accentus	08825	Amœ́na	A-mœ́-na @2	A-mœ-́na @3	1
+syllabae:accentus	08826	obœ́diens	ob-œ́-di-ens @2	ob-œ-́di-ens @3	1
+syllabae:numerus	00049	Israel	Is-rael @1	Is-ra-el @-	161
+syllabae:numerus	00259	cui	cu-i @1	cui @-	22
+syllabae:numerus	00457	eleison.ij	e-le-i-so-n.ij @-	e-le-i-son.ij @-	1
+syllabae:numerus	00457	eléison.ij	e-lé-i-so-n.ij @2	e-lé-i-son.ij @2	2
+syllabae:numerus	00457	nos.ij	no-s.ij @1	nos.ij @-	2
+syllabae:numerus	00581	Ráphael	Rá-phael @1	Rá-pha-el @1	13
+syllabae:numerus	01017	Míchael	Mí-chael @1	Mí-cha-el @1	20
+syllabae:numerus	01573	suo	su-o @1	suo @-	1
+syllabae:numerus	02022	ae	ae @-	a-e @-	1
+syllabae:numerus	02030	Joíada	Jo-í-a-da @2	Jo-ía-da @2	1
+syllabae:numerus	02067	cúi	cú-i @1	cúi @1	1
+syllabae:numerus	02092	Cui	Cu-i @1	Cui @-	7
+syllabae:numerus	02113	HEu	HEu @-	HE-u @-	2
+syllabae:numerus	02172	Saul	Saul @-	Sa-ul @-	8
+syllabae:numerus	02219	Caphárnaum	Ca-phár-naum @2	Ca-phár-na-um @2	2
+syllabae:numerus	02335	Agni	A-gni @1	Agni @-	1
+syllabae:numerus	02335	arcæ	ar-cæ @1	arcæ @-	1
+syllabae:numerus	02335	Genti	Gen-ti @1	Genti @-	1
+syllabae:numerus	02335	látere	lá-te-re @1	lá-tere @1	1
+syllabae:numerus	02335	óstium	ó-sti-um @1	ó-stium @1	1
+syllabae:numerus	02335	Patre	Pa-tre @1	Patre @-	6
+syllabae:numerus	02335	redíre	red-í-re @2	re-díre @2	1
+syllabae:numerus	02335	scisso	scis-so @1	scisso @-	1
+syllabae:numerus	02460	Michael	Mi-chael @1	Mi-cha-el @-	4
+syllabae:numerus	02588	Cúi	Cú-i @1	Cúi @1	1
+syllabae:numerus	02721	Joéle	Joé-le @1	Jo-é-le @2	1
+syllabae:numerus	02781	áloe	á-loe @1	á-lo-e @1	3
+syllabae:numerus	02876	Noe	Noe @-	No-e @-	2
+syllabae:numerus	02926	quia	qui-a @1	quia @-	3
+syllabae:numerus	03241	Infúnde	In-fún-de @2	In-fúnde @2	1
+syllabae:numerus	03258	consuetudine	con-su-e-tu-di-ne @-	con-sue-tu-di-ne @-	1
+syllabae:numerus	03260	suavíssimus	su-a-vís-si-mus @3	sua-vís-si-mus @2	1
+syllabae:numerus	03308	Israel	Is-rael @1	I-sra-el @-	3
+syllabae:numerus	03335	Amen	A-men @1	Amen @-	1
+syllabae:numerus	03335	auxílium	au-xí-li-um @2	auxí-li-um @1	1
+syllabae:numerus	03335	Bélla	Bél-la @1	Bélla @1	1
+syllabae:numerus	03335	caéli	caé-li @1	caéli @1	1
+syllabae:numerus	03335	Dómino	Dó-mi-no @1	Dó-mino @1	1
+syllabae:numerus	03335	dónet	dó-net @1	dónet @1	1
+syllabae:numerus	03335	pátria	pá-tri-a @1	pátri-a @1	1
+syllabae:numerus	03335	róbur	ró-bur @1	róbur @1	1
+syllabae:numerus	03335	sine	si-ne @1	sine @-	3
+syllabae:numerus	03335	término	tér-mi-no @1	término @1	1
+syllabae:numerus	03335	trinóque	tri-nó-que @2	tri-nóque @2	1
+syllabae:numerus	03350	mansuetíssime	man-su-e-tís-si-me @4	man-sue-tís-si-me @3	1
+syllabae:numerus	03866	ínclyti	ín-cly-ti @1	ínc-lyti @1	1
+syllabae:numerus	03866	poenas	poe-nas @1	po-e-nas @-	1
+syllabae:numerus	03969	órtaest	ór-taest @1	ór-ta-est @1	2
+syllabae:numerus	03980	Pléna	Plé-na @1	Pléna @1	1
+syllabae:numerus	03981	Alpha	Al-pha @1	Alpha @-	1
+syllabae:numerus	03988	coégit	coé-git @1	co-é-git @2	1
+syllabae:numerus	03990	Dúra	Dú-ra @1	Dúra @1	1
+syllabae:numerus	03990	flámma	flám-ma @1	flámma @1	1
+syllabae:numerus	03990	Pátre	Pá-tre @1	Pátre @1	7
+syllabae:numerus	03990	véna	vé-na @1	véna @1	1
+syllabae:numerus	04014	orándo	o-rán-do @2	o-rándo @2	1
+syllabae:numerus	04018	Pietáte	Pi-e-tá-te @3	Pie-tá-te @2	1
+syllabae:numerus	04018	unitáte	u-ni-tá-te @3	uni-tá-te @2	1
+syllabae:numerus	04020	recólitur	re-có-li-tur @2	recó-li-tur @1	1
+syllabae:numerus	04024	fána	fá-na @1	fána @1	1
+syllabae:numerus	04024	gésseras	gés-se-ras @1	gésse-ras @1	1
+syllabae:numerus	04024	Inimícis	In-i-mí-cis @3	Ini-mí-cis @2	1
+syllabae:numerus	04024	lúpi	lú-pi @1	lúpi @1	1
+syllabae:numerus	04024	rábie	rá-bi-e @1	rábi-e @1	1
+syllabae:numerus	04026	chlámydem	chlá-my-dem @1	chlámy-dem @1	1
+syllabae:numerus	04026	ópera	ó-pe-ra @1	ópe-ra @1	1
+syllabae:numerus	04026	róboret	ró-bo-ret @1	róbo-ret @1	1
+syllabae:numerus	04027	psalléntium	psal-lén-ti-um @2	psallén-ti-um @1	1
+syllabae:numerus	04027	revelatióne	re-ve-la-ti-ó-ne @5	re-ve-la-ti-óne @5	1
+syllabae:numerus	04027	roborátur	ro-bo-rá-tur @3	robo-rá-tur @2	1
+syllabae:numerus	04028	cáusa	cáu-sa @1	cáusa @1	1
+syllabae:numerus	04028	duodéna	du-o-dé-na @3	du-o-déna @3	1
+syllabae:numerus	04028	Ejus	E-jus @1	Ejus @-	1
+syllabae:numerus	04028	Esse	Es-se @1	Esse @-	1
+syllabae:numerus	04028	honóre	ho-nó-re @2	honó-re @1	1
+syllabae:numerus	04028	júdices	jú-di-ces @1	júdi-ces @1	1
+syllabae:numerus	04028	sedétis	se-dé-tis @2	sedé-tis @1	1
+syllabae:numerus	04030	fáciem	fá-ci-em @1	fáci-em @1	1
+syllabae:numerus	04031	ipse	i-pse @1	ipse @-	2
+syllabae:numerus	04031	Júre	Jú-re @1	Júre @1	1
+syllabae:numerus	04034	nútu	nú-tu @1	nútu @1	1
+syllabae:numerus	04041	Jésu	Jé-su @1	Jésu @1	1
+syllabae:numerus	04046	flagitémus	fla-gi-té-mus @3	flagi-té-mus @2	1
+syllabae:numerus	04046	tíbi	tí-bi @1	tíbi @1	4
+syllabae:numerus	04048	patriárcha	pa-tri-ár-cha @3	patri-ár-cha @2	1
+syllabae:numerus	04048	Spónsa	Spón-sa @1	Spónsa @1	1
+syllabae:numerus	04054	áures	áu-res @1	áures @1	1
+syllabae:numerus	04054	éxerit	éx-e-rit @1	éxe-rit @1	1
+syllabae:numerus	04054	operábitur	o-pe-rá-bi-tur @3	ope-rá-bi-tur @2	1
+syllabae:numerus	04054	pópuli	pó-pu-li @1	pópu-li @1	1
+syllabae:numerus	04057	opímis	o-pí-mis @2	opí-mis @1	1
+syllabae:numerus	04062	árca	ár-ca @1	árca @1	1
+syllabae:numerus	04064	séxu	sé-xu @1	séxu @1	1
+syllabae:numerus	04067	gloriósa	glo-ri-ó-sa @3	glo-ri-ósa @3	1
+syllabae:numerus	04067	Jésum	Jé-sum @1	Jésum @1	1
+syllabae:numerus	04069	caeléstium	cae-lé-sti-um @2	caelésti-um @1	1
+syllabae:numerus	04069	íllis	íl-lis @1	íllis @1	1
+syllabae:numerus	04074	órdo	ór-do @1	órdo @1	1
+syllabae:numerus	04084	prece	pre-ce @1	prece @-	1
+syllabae:numerus	04084	visióne	vi-si-ó-ne @3	vi-si-óne @3	1
+syllabae:numerus	04088	bóna	bó-na @1	bóna @1	1
+syllabae:numerus	04095	Illa	Il-la @1	Illa @-	1
+syllabae:numerus	04098	mónte	món-te @1	mónte @1	1
+syllabae:numerus	04098	Squallénti	Squal-lén-ti @2	Squal-lénti @2	1
+syllabae:numerus	04101	homo	ho-mo @1	homo @-	1
+syllabae:numerus	04103	ante	an-te @1	ante @-	1
+syllabae:numerus	04114	illa	il-la @1	illa @-	1
+syllabae:numerus	04121	adiuvándum	ad-i-u-ván-dum @4	ad-iu-ván-dum @3	2
+syllabae:numerus	04124	hine	hi-ne @1	hine @-	1
+syllabae:numerus	04133	ego	e-go @1	ego @-	1
+syllabae:numerus	04158	fine	fi-ne @1	fine @-	1
+syllabae:numerus	04172	apparuísti	ap-pa-ru-í-sti @4	appa-ru-ís-ti @3	1
+syllabae:numerus	04177	die	di-e @1	die @-	1
+syllabae:numerus	04219	eléison	e-lé-i-son @2	e-léi-son @2	51
+syllabae:numerus	04248	Adàmi	A-dà-mi @-	Ad-àmi @-	1
+syllabae:numerus	04248	rogàtus	ro-gà-tus @-	rog-àtus @-	1
+syllabae:numerus	04250	tune	tu-ne @1	tune @-	1
+syllabae:numerus	04336	Michaélem	Mi-chaé-lem @2	Mi-cha-é-lem @3	3
+syllabae:numerus	04336	Michaéli	Mi-chaé-li @2	Mi-cha-é-li @3	1
+syllabae:numerus	04384	salveum	sal-ve-um @-	sal-veum @-	1
+syllabae:numerus	04393	Móysen	Mó-y-sen @1	Móy-sen @1	2
+syllabae:numerus	04464	suum	su-um @1	suum @-	1
+syllabae:numerus	04472	surréxisti	sur-ré-xi-sti @2	sur-ré-xisti @2	1
+syllabae:numerus	04480	adiútor	ad-i-ú-tor @3	ad-iú-tor @2	1
+syllabae:numerus	04505	ISrael	IS-rael @1	IS-ra-el @-	1
+syllabae:numerus	04515	parcéndo	par-cén-do @2	par-céndo @2	1
+syllabae:numerus	04541	coniúngeres	co-ni-ún-ge-res @3	con-iún-ge-res @2	1
+syllabae:numerus	04622	coniéctis	co-ni-é-ctis @3	co-niéc-tis @2	1
+syllabae:numerus	04630	coérceant	coér-ce-ant @1	co-ér-ce-ant @2	1
+syllabae:numerus	04636	cælo	cæ-lo @1	cælo @-	1
+syllabae:numerus	04672	Venite	Ve-ni-te @-	Venite @-	1
+syllabae:numerus	04673	donec	do-nec @1	donec @-	1
+syllabae:numerus	04673	exspectátio	ex-spe-ctá-ti-o @3	exspectátio @1	1
+syllabae:numerus	04722	Repet	Re-pet @1	Repet @-	5
+syllabae:numerus	04789	Israelíta	Is-rae-lí-ta @3	Is-ra-e-lí-ta @4	1
+syllabae:numerus	04840	Raymúndi	Ra-y-mún-di @3	Ray-mún-di @2	3
+syllabae:numerus	04950	Michaéle	Mi-chaé-le @2	Mi-cha-é-le @3	1
+syllabae:numerus	05365	Gélboe	Gél-boe @1	Gél-bo-e @1	1
+syllabae:numerus	05451	Repetitur	Re-pe-ti-tur @-	Repetitur @-	2
+syllabae:numerus	05516	Israélis	Is-raé-lis @2	Is-ra-é-lis @3	1
+syllabae:numerus	05626	Nicoláus	Ni-co-láus @3	Ni-co-lá-us @3	2
+syllabae:numerus	05643	Michaélis	Mi-chaé-lis @2	Mi-cha-é-lis @3	1
+syllabae:numerus	05838	Hierarchía	Hi-e-rar-chí-a @4	Hie-rar-chí-a @3	1
+syllabae:numerus	05850	Israéli	Is-raé-li @2	Is-ra-é-li @3	1
+syllabae:numerus	06026	huic	hu-ic @1	huic @-	1
+syllabae:numerus	06268	introiérunt	in-tro-ié-runt @3	in-tro-i-é-runt @4	1
+syllabae:numerus	06384	fragrántiâ	fra-grán-ti-â @2	fra-grán-tiâ @2	1
+syllabae:numerus	06384	hiánte	hi-án-te @2	hián-te @1	1
+syllabae:numerus	06422	Hyacínthe	Hy-a-cín-the @3	Hya-cín-the @2	1
+syllabae:numerus	06449	Raymúndus	Ra-y-mún-dus @3	Ray-mún-dus @2	1
+syllabae:numerus	06468	suavíssimis	su-a-vís-si-mis @3	sua-vís-si-mis @2	1
+syllabae:numerus	06552	Allelúia	Al-le-lú-ia @3	Allelúia @1	1
+syllabae:numerus	06616	ǽthere	ǽ-the-re @1	ǽ-there @1	1
+syllabae:numerus	06616	éminus	é-mi-nus @1	é-minus @1	2
+syllabae:numerus	06700	Nicoláum	Ni-co-láum @3	Ni-co-lá-um @3	1
+syllabae:numerus	06832	Hyacínthus	Hy-a-cín-thus @3	Hya-cín-thus @2	1
+syllabae:numerus	06833	Raymúnde	Ra-y-mún-de @3	Ray-mún-de @2	1
+syllabae:numerus	06903	Iisdémque	I-is-dém-que @3	Iis-dém-que @2	1
+syllabae:numerus	06917	áere	áe-re @1	á-e-re @1	1
+syllabae:numerus	06929	hyacínthis	hy-a-cín-this @3	hya-cín-this @2	1
+syllabae:numerus	07041	Nicólae	Ni-có-lae @2	Ni-có-la-e @2	1
+syllabae:numerus	07277	demus	de-mus @1	demus @-	1
+syllabae:numerus	07277	Deo	De-o @1	Deo @-	1
+syllabae:numerus	07277	Deus	De-us @1	Deus @-	1
+syllabae:numerus	07277	dícite	dí-ci-te @1	dícite @1	1
+syllabae:numerus	07277	Dóminus	Dó-mi-nus @1	Dóminus @1	1
+syllabae:numerus	07277	erat	e-rat @1	erat @-	1
+syllabae:numerus	07277	exsultemus	ex-sul-te-mus @-	exsultemus @-	1
+syllabae:numerus	07277	gaudeamus	gau-de-a-mus @-	gau-de-amus @-	1
+syllabae:numerus	07277	glória	gló-ri-a @1	glória @1	1
+syllabae:numerus	07277	iusta	iu-sta @1	iusta @-	1
+syllabae:numerus	07277	noster	no-ster @1	noster @-	1
+syllabae:numerus	07277	nostro	no-stro @1	nostro @-	1
+syllabae:numerus	07277	núptiæ	nú-pti-æ @1	núptiæ @1	1
+syllabae:numerus	07277	omnes	o-mnes @1	omnes @-	1
+syllabae:numerus	07277	Patri	Pa-tri @1	Patri @-	1
+syllabae:numerus	07277	princípio	prin-cí-pi-o @2	princípio @1	1
+syllabae:numerus	07277	regnavit	re-gna-vit @-	regnavit @-	1
+syllabae:numerus	07277	sǽcula	sǽ-cu-la @1	sǽcula @1	1
+syllabae:numerus	07277	servi	ser-vi @1	servi @-	1
+syllabae:numerus	07277	timetis	ti-me-tis @-	timetis @-	1
+syllabae:numerus	07277	uxor	u-xor @1	uxor @-	1
+syllabae:numerus	07277	venerunt	ve-ne-runt @-	venerunt @-	1
+syllabae:numerus	07277	vera	ve-ra @1	vera @-	1
+syllabae:numerus	07277	virtus	vir-tus @1	virtus @-	1
+syllabae:numerus	07291	sequntur	sequn-tur @1	se-qun-tur @-	1
+syllabae:numerus	07304	Christe	Chri-ste @1	Christe @-	1
+syllabae:numerus	07363	fílii	fí-li-i @1	fí-lii @1	1
+syllabae:numerus	07367	ádiuves	ád-i-u-ves @1	ád-iu-ves @1	1
+syllabae:numerus	07373	adiuvétis	ad-i-u-vé-tis @4	ad-iu-vé-tis @3	1
+syllabae:numerus	07411	Adáleidae	Ad-á-le-i-dae @2	A-dá-lei-dae @2	1
+syllabae:numerus	07494	Euouae	E-u-o-u-ae @-	E-u-o-u-a-e @-	6
+syllabae:numerus	07500	hu'g)militátem	hu'g)-mi-li-tá-tem @4	hu'g)mi-li-tá-tem @3	1
+syllabae:numerus	07518	dílidigunt	dí-li-di-gunt @1	díli-di-gunt @1	1
+syllabae:numerus	07532	Léctio	Lé-cti-o @1	Léc-tio @1	1
+syllabae:numerus	07538	subiéctis	sub-i-é-ctis @3	sub-iéc-tis @2	1
+syllabae:numerus	07540	íánuas	í-á-nu-as @2	íá-nu-as @1	1
+syllabae:numerus	07541	íúgiter	í-ú-gi-ter @2	íú-gi-ter @1	1
+syllabae:numerus	07541	subiecísti	sub-i-e-cí-sti @4	sub-ie-cís-ti @3	1
+syllabae:numerus	07582	Israel	Is-rael @1	Isr-a-el @-	1
+syllabae:numerus	07592	Libentérque	Li-ben-tér-que @3	Li-ben-térque @3	1
+syllabae:numerus	07612	resisténtia	re-si-stén-ti-a @3	re-si-stén-tia @3	1
+syllabae:numerus	07614	Constánti	Con-stán-ti @2	Con-stánti @2	1
+syllabae:numerus	07629	intróeas	in-tróe-as @2	in-tró-e-as @2	1
+syllabae:numerus	07673	æquum	æ-quum @1	æquum @-	2
+syllabae:numerus	07806	adiuváre	ad-i-u-vá-re @4	ad-iu-vá-re @3	1
+syllabae:numerus	07810	una	u-na @1	una @-	1
+syllabae:numerus	07830	promissiónes	pro-mis-si-ó-nes @4	pro-mis-sió-nes @3	1
+syllabae:numerus	07830	ubíque	u-bí-que @2	ubí-que @1	1
+syllabae:numerus	07831	quóniam	quó-ni-am @1	qu-ó-ni-am @2	1
+syllabae:numerus	07864	adiutórium	ad-i-u-tó-ri-um @4	a-diu-tó-ri-um @3	1
+syllabae:numerus	08101	eleison.ii	e-le-i-so-n.i-i @-	e-le-i-son.ii @-	1
+syllabae:numerus	08101	eléison.ii	e-lé-i-so-n.i-i @2	e-lé-i-son.ii @2	2
+syllabae:numerus	08147	perícula	per-í-cu-la @2	pe-rícu-la @2	1
+syllabae:numerus	08239	adiutórium	ad-i-u-tó-ri-um @4	ad-iu-tó-ri-um @3	1
+syllabae:numerus	08248	dilectióne	di-le-cti-ó-ne @4	di-lecti-ó-ne @3	1
+syllabae:numerus	08295	Vau	Vau @-	Va-u @-	1
+syllabae:numerus	08367	Béthlehem	Béth-le-hem @1	Béth-lehem @1	1
+syllabae:numerus	08440	áera	áe-ra @1	á-e-ra @1	2
+syllabae:numerus	08535	Bersabée	Ber-sa-bé-e @3	Ber-sa-bée @3	1
+syllabae:numerus	08752	Flexa	Fle-xa @1	Flexa @-	1
+syllabae:numerus	08787	Evangélii	E-van-gé-li-i @3	E-van-gé-lii @3	1
+syllabae:numerus	08853	coniúbila	co-ni-ú-bi-la @3	con-iú-bi-la @2	1
+syllabae:numerus	08929	Adiuva	Ad-i-u-va @-	Ad-iu-va @-	1
+syllabae:numerus	08952	Aigúlfus	A-i-gúl-fus @3	Ai-gúl-fus @2	1
+syllabae:numerus	09019	Prétio	Pré-ti-o @1	Pré-tio @1	1
+syllabae:numerus	09089	nostrísque	no-strís-que @2	no-strísque @2	1
+syllabae:numerus	09089	pura	pu-ra @1	pura @-	1
+syllabae:numerus	09154	adiúngi	ad-i-ún-gi @3	ad-iún-gi @2	1

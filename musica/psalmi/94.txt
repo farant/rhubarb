@@ -1,0 +1,14 @@
+% Psalmus 94 (Vulgata) - Veníte, exsultémus Dómino
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm94.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Veníte, exsultémus Dómino: * jubilémus Deo salutári nostro:
+Præoccupémus fáciem ejus in confessióne: * et in psalmis jubilémus ei.
+Quóniam Deus magnus Dóminus: * et Rex magnus super omnes deos.
+Quia in manu ejus sunt omnes fines terræ: * et altitúdines móntium ipsíus sunt.
+Quóniam ipsíus est mare, et ipse fecit illud: * et siccam manus ejus formavérunt.
+Et nos pópulus páscuæ ejus, et oves manus ejus. * Hódie si vocem ejus audiéritis, nolíte obduráre corda vestra:
+Sicut in irritatióne secúndum diem tentatiónis in desérto: * ubi tentavérunt me patres vestri, probavérunt me, et vidérunt ópera mea.
+Quadragínta annis offénsus fui generatióni illi, * et dixi: Semper hi errant corde.
+Et isti non cognovérunt vias meas, ut jurávi in ira mea: * Si introíbunt in réquiem meam.

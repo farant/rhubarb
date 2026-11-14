@@ -420,6 +420,7 @@ _probare_antiphonale (
      PraeconiumEventus  e;
      PraeconiumEventus  signum;
     constans character* relativa = "musica/fontes/salve_2435.gabc";
+             character  longa[DXII];
 
     memset(&e, ZEPHYRUM, magnitudo(e));
     CREDO_VERUM(praeconium_antiphonale_parare(relativa, &e,
@@ -434,6 +435,22 @@ _probare_antiphonale (
     memcpy(&signum, &e, magnitudo(e));
     CREDO_FALSUM(praeconium_antiphonale_parare("musica/nulla.gabc", &e,
         c->piscina));
+    CREDO_VERUM(memcmp(&e, &signum, magnitudo(e)) == ZEPHYRUM);
+
+    /* recensio finalis: via plena longior nuntio (CC) praeciderentur
+     * in libro - FALSUM, eventus intactus */
+    CREDO_GRADUS("via plena > PRAECONIUM_NUNTIUS_MAXIMUS: FALSUM");
+    sprintf(longa, "%s", credo_area(c));
+    dum (strlen(longa) <= PRAECONIUM_NUNTIUS_MAXIMUS)
+    {
+        strcat(longa, "/directorium_longum_ad_viam_extendendam");
+    }
+    CREDO_NECESSE(filum_directorium_creare_cum_parentibus(longa));
+    strcat(longa, "/x.gabc");
+    CREDO_NECESSE(filum_scribere_literis(longa, "(c4) a(g)\n"));
+    memset(&e, 0x5A, magnitudo(e));
+    memcpy(&signum, &e, magnitudo(e));
+    CREDO_FALSUM(praeconium_antiphonale_parare(longa, &e, c->piscina));
     CREDO_VERUM(memcmp(&e, &signum, magnitudo(e)) == ZEPHYRUM);
 }
 

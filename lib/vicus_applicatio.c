@@ -2813,6 +2813,9 @@ nomen structura {
     /* S5c: aetherophonum - mutus in vocatione, systemata montationis */
              Vicus* vicus;
    StatusSystemata* systemata;
+    /* antiphonale: porta lateris quae carmen ultimo incepit (cantor
+     * unus vici) - solum comparatur, numquam legitur */
+             vacuum* possessor_carminis;
 } ContextusSoni;
 
 /* campus veritatis radicis; absens = FALSUM */
@@ -3105,21 +3108,34 @@ aetherophonum_describere (
 
 /* P7: porta antiphonalis super slotas carminis portae soni - mutus
  * TOTUS carmen negat (ut aetherophonum); porta nulla aut slota NIHIL =
- * mutum */
+ * mutum. Recensio finalis: porta PER LATUS (ctx = PortaAntiphonae) -
+ * cantor unus vici, possessor = latus quod carmen ultimo incepit; solum
+ * is pulsum videt, quaerit, sistit (latus alterum incipiens priorem
+ * tacite sistit: pulsus eius -1) */
+nomen structura {
+    ContextusSoni* soni;
+} PortaAntiphonae;
+
 interior b32
 antiphonae_incipere (
     vacuum* ctx,
     chorda  carmen,
        s64  pulsus)
 {
-    ContextusSoni* soni = (ContextusSoni*)ctx;
+    PortaAntiphonae* pa    = (PortaAntiphonae*)ctx;
+      ContextusSoni* soni  = pa->soni;
 
     si (   !soni->posita || !soni->vicus || !soni->porta.carmen_incipere
         || veritas_radicis_vici(soni->vicus, "sonus_mutus"))
     {
         redde FALSUM;
     }
-    redde soni->porta.carmen_incipere(soni->porta.ctx, carmen, pulsus);
+    si (!soni->porta.carmen_incipere(soni->porta.ctx, carmen, pulsus))
+    {
+        redde FALSUM;
+    }
+    soni->possessor_carminis = pa;
+    redde VERUM;
 }
 
 interior vacuum
@@ -3127,9 +3143,11 @@ antiphonae_quaerere (
     vacuum* ctx,
        s64  pulsus)
 {
-    ContextusSoni* soni = (ContextusSoni*)ctx;
+    PortaAntiphonae* pa    = (PortaAntiphonae*)ctx;
+      ContextusSoni* soni  = pa->soni;
 
-    si (soni->posita && soni->porta.carmen_quaerere)
+    si (   soni->posita && soni->porta.carmen_quaerere
+        && soni->possessor_carminis == (vacuum*)pa)
     {
         soni->porta.carmen_quaerere(soni->porta.ctx, pulsus);
     }
@@ -3139,8 +3157,14 @@ interior vacuum
 antiphonae_sistere (
     vacuum* ctx)
 {
-    ContextusSoni* soni = (ContextusSoni*)ctx;
+    PortaAntiphonae* pa    = (PortaAntiphonae*)ctx;
+      ContextusSoni* soni  = pa->soni;
 
+    si (soni->possessor_carminis != (vacuum*)pa)
+    {
+        redde;
+    }
+    soni->possessor_carminis = NIHIL;
     si (soni->posita && soni->porta.carmen_sistere)
     {
         soni->porta.carmen_sistere(soni->porta.ctx);
@@ -3151,9 +3175,11 @@ interior s64
 antiphonae_pulsus (
     vacuum* ctx)
 {
-    ContextusSoni* soni = (ContextusSoni*)ctx;
+    PortaAntiphonae* pa    = (PortaAntiphonae*)ctx;
+      ContextusSoni* soni  = pa->soni;
 
-    si (!soni->posita || !soni->porta.carmen_pulsus)
+    si (   !soni->posita || !soni->porta.carmen_pulsus
+        || soni->possessor_carminis != (vacuum*)pa)
     {
         redde -I;
     }
@@ -3175,14 +3201,22 @@ antiphonale_montare_in_vico (
 {
        ContextusSoni* soni = (ContextusSoni*)ctx;
     AntiphonalePorta  porta;
+     PortaAntiphonae* pa;
 
     (vacuum)volumen;
+    pa = soni ? (PortaAntiphonae*)piscina_allocare(piscina,
+        magnitudo(PortaAntiphonae)) : NIHIL;
+    si (pa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    pa->soni        = soni;
     porta.incipere  = antiphonae_incipere;
     porta.quaerere  = antiphonae_quaerere;
     porta.sistere   = antiphonae_sistere;
     porta.pulsus    = antiphonae_pulsus;
-    porta.ctx       = soni;
-    redde soni && antiphonale_montare((AntiphonaleMontatio*)sedes,
+    porta.ctx       = pa;
+    redde antiphonale_montare((AntiphonaleMontatio*)sedes,
         piscina, intern, repo, id, argumentum, latitudo, altitudo,
         &porta,
         soni->systemata);

@@ -88,3 +88,16 @@ tail never reaches it; vicus still ignores events stamped before its own
 start (a re-read rotated log, a writer with a clock behind). realpath
 added to silva/fontes/systema_posix.h (examen had flagged praeco.c's
 three uses as implicit declarations too).
+
+## 2026-11-06 — antiphonale: refuse paths longer than a message
+
+Final-review minor: `praeconium_scribere` truncates the message at
+PRAECONIUM_NUNTIUS_MAXIMUS (200 bytes), so a real absolute path over 200
+was logged cut short - praeco printed the full path and exited 0, and
+the pane showed "missing: ...". The header already promised FALSUM for
+a path that is too long; the code only guarded the 4 KB realpath
+buffer. Now `praeconium_antiphonale_parare` refuses when the realpath is
+longer than 200; `praeco antiphonale` says "via plena nimis longa (> CC
+octeti)" instead of "plagula abest" when the file exists. Test:
+probatio_praeconium "antiphonale" (real file under a >200-byte path in
+the credo area; red before).

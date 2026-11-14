@@ -1,0 +1,9 @@
+% Psalmus 133 (Vulgata) - Ecce nunc benedícite Dóminum
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm133.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Ecce nunc benedícite Dóminum, * omnes servi Dómini:
+Qui statis in domo Dómini, * in átriis domus Dei nostri.
+In nóctibus extóllite manus vestras in sancta, * et benedícite Dóminum.
+Benedícat te Dóminus ex Sion, * qui fecit cælum et terram.

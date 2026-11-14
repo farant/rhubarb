@@ -1,0 +1,16 @@
+% Psalmus 45 (Vulgata) - Deus noster refúgium, et virtus
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm45.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Deus noster refúgium, et virtus: * adjútor in tribulatiónibus, quæ invenérunt nos nimis.
+Proptérea non timébimus dum turbábitur terra: * et transferéntur montes in cor maris.
+Sonuérunt, et turbátæ sunt aquæ eórum: * conturbáti sunt montes in fortitúdine ejus.
+Flúminis ímpetus lætíficat civitátem Dei: * sanctificávit tabernáculum suum Altíssimus.
+Deus in médio ejus, non commovébitur: * adjuvábit eam Deus mane dilúculo.
+Conturbátæ sunt gentes, et inclináta sunt regna: * dedit vocem suam, mota est terra.
+Dóminus virtútum nobíscum: * suscéptor noster Deus Jacob.
+Veníte, et vidéte ópera Dómini, quæ pósuit prodígia super terram: * áuferens bella usque ad finem terræ.
+Arcum cónteret, et confrínget arma: * et scuta combúret igni.
+Vacáte, et vidéte quóniam ego sum Deus: * exaltábor in géntibus, et exaltábor in terra.
+Dóminus virtútum nobíscum: * suscéptor noster Deus Jacob.

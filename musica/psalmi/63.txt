@@ -1,0 +1,16 @@
+% Psalmus 63 (Vulgata) - Exáudi, Deus, oratiónem meam cum déprecor
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm63.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Exáudi, Deus, oratiónem meam cum déprecor: * a timóre inimíci éripe ánimam meam.
+Protexísti me a convéntu malignántium: * a multitúdine operántium iniquitátem.
+Quia exacuérunt ut gládium linguas suas: * intendérunt arcum rem amáram, ut sagíttent in occúltis immaculátum.
+Súbito sagittábunt eum, et non timébunt: * firmavérunt sibi sermónem nequam.
+Narravérunt ut abscónderent láqueos: * dixérunt: Quis vidébit eos?
+Scrutáti sunt iniquitátes: * defecérunt scrutántes scrutínio.
+Accédet homo ad cor altum: * et exaltábitur Deus.
+Sagíttæ parvulórum factæ sunt plagæ eórum: * et infirmátæ sunt contra eos linguæ eórum.
+Conturbáti sunt omnes qui vidébant eos: * et tímuit omnis homo.
+Et annuntiavérunt ópera Dei, * et facta ejus intellexérunt.
+Lætábitur justus in Dómino, et sperábit in eo, * et laudabúntur omnes recti corde.

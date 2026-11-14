@@ -1,0 +1,12 @@
+% Psalmus 86 (Vulgata) - Fundaménta ejus in móntibus sanctis
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm86.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Fundaménta ejus in móntibus sanctis: * díligit Dóminus portas Sion super ómnia tabernácula Jacob.
+Gloriósa dicta sunt de te, * cívitas Dei.
+Memor ero Rahab, et Babylónis * sciéntium me.
+Ecce, alienígenæ, et Tyrus, et pópulus Æthíopum, * hi fuérunt illic.
+Numquid Sion dicet: Homo, et homo natus est in ea: * et ipse fundávit eam Altíssimus?
+Dóminus narrábit in scriptúris populórum, et príncipum: * horum, qui fuérunt in ea.
+Sicut lætántium ómnium * habitátio est in te.

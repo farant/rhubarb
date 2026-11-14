@@ -1,0 +1,12 @@
+% Psalmus 128 (Vulgata) - Sæpe expugnavérunt me a juventúte mea
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm128.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Sæpe expugnavérunt me a juventúte mea, * dicat nunc Israël.
+Sæpe expugnavérunt me a juventúte mea: * étenim non potuérunt mihi.
+Supra dorsum meum fabricavérunt peccatóres: * prolongavérunt iniquitátem suam.
+Dóminus justus concídit cervíces peccatórum: * confundántur et convertántur retrórsum omnes, qui odérunt Sion.
+Fiant sicut fænum tectórum: * quod priúsquam evellátur, exáruit:
+De quo non implévit manum suam qui metit, * et sinum suum qui manípulos cólligit.
+Et non dixérunt qui præteríbant: Benedíctio Dómini super vos: * benedíximus vobis in nómine Dómini.

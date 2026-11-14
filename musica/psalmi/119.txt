@@ -1,0 +1,11 @@
+% Psalmus 119 (Vulgata) - Ad Dóminum cum tribulárer clamávi
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm119.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Ad Dóminum cum tribulárer clamávi: * et exaudívit me.
+Dómine, líbera ánimam meam a lábiis iníquis, * et a lingua dolósa.
+Quid detur tibi, aut quid apponátur tibi * ad linguam dolósam?
+Sagíttæ poténtis acútæ, * cum carbónibus desolatóriis.
+Heu mihi, quia incolátus meus prolongátus est: † habitávi cum habitántibus Cedar: * multum íncola fuit ánima mea.
+Cum his, qui odérunt pacem, eram pacíficus: * cum loquébar illis, impugnábant me gratis.

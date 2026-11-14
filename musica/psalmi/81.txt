@@ -1,0 +1,13 @@
+% Psalmus 81 (Vulgata) - Deus stetit in synagóga deórum
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm81.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Deus stetit in synagóga deórum: * in médio autem deos dijúdicat.
+Úsquequo judicátis iniquitátem: * et fácies peccatórum súmitis?
+Judicáte egéno, et pupíllo: * húmilem, et páuperem justificáte.
+Erípite páuperem: * et egénum de manu peccatóris liberáte.
+Nesciérunt, neque intellexérunt, in ténebris ámbulant: * movebúntur ómnia fundaménta terræ.
+Ego dixi: Dii estis, * et fílii Excélsi omnes.
+Vos autem sicut hómines moriémini: * et sicut unus de princípibus cadétis.
+Surge, Deus, júdica terram: * quóniam tu hereditábis in ómnibus géntibus.

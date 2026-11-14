@@ -1,0 +1,13 @@
+% Psalmus 125 (Vulgata) - In converténdo Dóminus captivitátem Sion
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm125.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+In converténdo Dóminus captivitátem Sion: * facti sumus sicut consoláti:
+Tunc replétum est gáudio os nostrum: * et lingua nostra exsultatióne.
+Tunc dicent inter gentes: * Magnificávit Dóminus fácere cum eis.
+Magnificávit Dóminus fácere nobíscum: * facti sumus lætántes.
+Convérte, Dómine, captivitátem nostram, * sicut torrens in Austro.
+Qui séminant in lácrimis, * in exsultatióne metent.
+Eúntes ibant et flebant, * mitténtes sémina sua.
+Veniéntes autem vénient cum exsultatióne, * portántes manípulos suos.

@@ -54,6 +54,7 @@ nomen structura {
 nomen structura {
     s32 syllaba;
     i32 primum;                  /* in systemate */
+    b32 cantata;                 /* notae aut textus, non clavis sola */
     b32 textus;
     s32 textus_initium;
     s32 textus_finis;
@@ -1995,6 +1996,8 @@ systema_finire (
               i32  j;
               i32  numerus;
               i32  finis_r;
+              s32  k0;
+              s32  custos_index;
               b32  textus_adest;
               b32  supra_adest;
            chorda  lineola;
@@ -2007,6 +2010,7 @@ systema_finire (
     }
 
     /* custos */
+    custos_index = -I;
     si (custos_modus >= ZEPHYRUM && !co->ultimum_custos)
     {
         positio = nota_sequens(co, co->fractio_syllaba,
@@ -2025,15 +2029,25 @@ systema_finire (
                     finis = maximum(finis, x1);
                 }
             }
+            custos_index = (s32)xar_numerus(co->systema);
             partem_emittere(co->systema, NEUMAE_CUSTOS,
                 positio >= VIII ? -I : I, finis + co->h,
                 y_positionis(co, positio), -I, -I, -I);
         }
     }
 
-    /* iustificatio inter syllabas */
-    n = (s32)xar_numerus(co->positae);
-    si (iustificare && n >= II)
+    /* iustificatio inter syllabas cantatas: clavis sola in initio
+     * systematis intervallum non est (Gregorio) - k0 = cantata prima;
+     * cantata una: solum custos ad marginem */
+    n   = (s32)xar_numerus(co->positae);
+    k0  = ZEPHYRUM;
+    dum (   k0 < n
+         && !((SyllabaPosita*)xar_obtinere(co->positae,
+                 (i32)k0))->cantata)
+    {
+        k0++;
+    }
+    si (iustificare && n - k0 >= I)
     {
         finis = ZEPHYRUM;
         per (j = ZEPHYRUM; j < xar_numerus(co->systema); j++)
@@ -2052,15 +2066,21 @@ systema_finire (
             }
         }
         extra = co->finis_lineae - finis;
-        si (extra > ZEPHYRUM)
+        si (extra > ZEPHYRUM && n - k0 == I && custos_index >= ZEPHYRUM)
         {
-            basis     = extra / (n - I);
-            residuum  = extra % (n - I);
-            per (i = I; i < n; i++)
+            p     = (GabcPictum*)xar_obtinere(co->systema,
+                (i32)custos_index);
+            p->x  += extra;
+        }
+        alioquin si (extra > ZEPHYRUM && n - k0 >= II)
+        {
+            basis     = extra / (n - k0 - I);
+            residuum  = extra % (n - k0 - I);
+            per (i = k0 + I; i < n; i++)
             {
                 ra = (SyllabaPosita*)xar_obtinere(co->positae,
                     (i32)(i));
-                motus = basis * i + minimum(i, residuum);
+                motus = basis * (i - k0) + minimum(i - k0, residuum);
                 finis_r  = i + I < n
                          ? ((SyllabaPosita*)xar_obtinere(co->positae,
                          (i32)(i + I)))->primum
@@ -2234,14 +2254,19 @@ frustum_ponere (
                    s32  syllaba,
                    s32  x)
 {
-           i32  j;
-    GabcPictum* d;
+              i32  j;
+       GabcPictum* d;
+    SyllabaPosita* r;
 
     si (f->numerus == ZEPHYRUM)
     {
         redde;
     }
-    positam_capere(co, syllaba);
+    r = positam_capere(co, syllaba);
+    si (f->cantatum)
+    {
+        r->cantata = VERUM;
+    }
     per (j = f->primum; j < f->primum + f->numerus; j++)
     {
         d     = (GabcPictum*)xar_addere(co->systema);
@@ -2266,6 +2291,7 @@ textum_syllabae_ponere (
     SyllabaPosita* r;
 
     r                  = positam_capere(co, syllaba);
+    r->cantata         = VERUM;
     r->textus          = VERUM;
     r->textus_initium  = x;
     r->textus_finis    = x + textum_emittere_syllabae(co, syllaba, x);

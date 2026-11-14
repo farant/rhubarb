@@ -1,0 +1,13 @@
+% Psalmus 123 (Vulgata) - Nisi quia Dóminus erat in nobis, dicat nunc Israël
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm123.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Nisi quia Dóminus erat in nobis, dicat nunc Israël: * nisi quia Dóminus erat in nobis,
+Cum exsúrgerent hómines in nos, * forte vivos deglutíssent nos:
+Cum irascerétur furor eórum in nos, * fórsitan aqua absorbuísset nos.
+Torréntem pertransívit ánima nostra: * fórsitan pertransísset ánima nostra aquam intolerábilem.
+Benedíctus Dóminus * qui non dedit nos in captiónem déntibus eórum.
+Ánima nostra sicut passer erépta est * de láqueo venántium:
+Láqueus contrítus est, * et nos liberáti sumus.
+Adjutórium nostrum in nómine Dómini, * qui fecit cælum et terram.

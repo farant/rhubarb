@@ -1,0 +1,14 @@
+% Psalmus 46 (Vulgata) - Omnes gentes, pláudite mánibus
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm46.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Omnes gentes, pláudite mánibus: * jubiláte Deo in voce exsultatiónis.
+Quóniam Dóminus excélsus, terríbilis: * Rex magnus super omnem terram.
+Subjécit pópulos nobis: * et gentes sub pédibus nostris.
+Elégit nobis hereditátem suam: * spéciem Jacob, quam diléxit.
+Ascéndit Deus in júbilo: * et Dóminus in voce tubæ.
+Psállite Deo nostro, psállite: * psállite Regi nostro, psállite.
+Quóniam Rex omnis terræ Deus: * psállite sapiénter.
+Regnábit Deus super gentes: * Deus sedet super sedem sanctam suam.
+Príncipes populórum congregáti sunt cum Deo Ábraham: * quóniam dii fortes terræ veheménter eleváti sunt.
