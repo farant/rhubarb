@@ -246,6 +246,12 @@ _effugii_causam_ponere (
     }
 }
 
+/* fenestra circa sp in qua vitium stivam exhaustam significat:
+ * margo infra (stp praeindicatum, zona rubra), supra tabulatum
+ * maximum dorsi (I MiB) + margo */
+#define EFFUGIUM_STIVAE_MARGO     0x10000UL
+#define EFFUGIUM_STIVAE_FENESTRA  0x110000UL
+
 /* tractator signorum: VITIUM si pc in area et vocatio pendet, aliter
  * catena ad actionem priorem */
 interior vacuum
@@ -257,6 +263,8 @@ _tractator (
              ucontext_t* contextus  = (ucontext_t*)contextus_crudus;
          memoriae_index  pc         = ZEPHYRUM;
          memoriae_index  fp         = ZEPHYRUM;
+         memoriae_index  lr         = ZEPHYRUM;
+         memoriae_index  sp         = ZEPHYRUM;
     structura sigaction* prior      = NIHIL;
                     s32 k;
 
@@ -265,6 +273,8 @@ _tractator (
         /* arm64 (non arm64e): campi crudi sine signatura */
         pc = (memoriae_index)contextus->uc_mcontext->__ss.__pc;
         fp = (memoriae_index)contextus->uc_mcontext->__ss.__fp;
+        lr = (memoriae_index)contextus->uc_mcontext->__ss.__lr;
+        sp = (memoriae_index)contextus->uc_mcontext->__ss.__sp;
     }
     si (_activum && pc >= _area_basis && pc < _area_finis)
     {
@@ -273,6 +283,21 @@ _tractator (
         _pendens.signum_systematis  = (s32)signum;
         _pendens.pc                 = pc;
         _pendens.fp                 = fp;
+        _pendens.lr                 = lr;
+        si (notitia != NIHIL)
+        {
+            memoriae_index inscriptio =
+                (memoriae_index)notitia->si_addr;
+
+            /* stiva circa sp semper mappata est NISI exhausta:
+             * vitium intra [sp - margo, sp + tabulatum maximum +
+             * margo) = stiva hospitis exhausta (prologus: stp
+             * [sp,#-16]!, aut sub sp et scripturae supra sp novum) */
+            _pendens.inscriptio_vitii  = inscriptio;
+            _pendens.stiva_exhausta    =
+                   inscriptio + EFFUGIUM_STIVAE_MARGO >= sp
+                && inscriptio < sp + EFFUGIUM_STIVAE_FENESTRA;
+        }
         siglongjmp(_ambitus, I);
     }
     /* catena: signum non nostrum */

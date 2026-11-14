@@ -41,6 +41,12 @@ nomen structura {
                s64 codex;              /* SALTUS: causa */
     memoriae_index pc;                 /* VITIUM/SALTUS: positio */
     memoriae_index fp;
+    memoriae_index lr;                 /* VITIUM: x30 (vocans, si
+                                        * vitium ante tabulatum) */
+    memoriae_index inscriptio_vitii;   /* VITIUM: si_addr */
+               b32 stiva_exhausta;     /* VITIUM: inscriptio vitii
+                                        * iuxta sp - stiva hospitis
+                                        * exhausta */
                i64 x[II];              /* x0:x1 reditus */
                f64 d[IV];              /* d0-d3 reditus (HFA) */
 } EffugiumFructus;

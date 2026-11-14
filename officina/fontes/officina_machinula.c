@@ -95,6 +95,9 @@ nomen structura {
     memoriae_index basis_stivae;    /* cursor restaurandus in redde */
     memoriae_index basis_arcarum;   /* regio arcarum (M5 E14) */
     s32            destinatio_vocantis;   /* registrum vocantis; -I */
+    b32            nativum;         /* ex catena x29 codicis nativi
+                                     * restitutum (T9): relatio id
+                                     * '[nativum]' signat */
 } Tabulatum;
 
 nomen structura {
@@ -312,7 +315,8 @@ _positionem_imprimere (
     constans MedullaFunctio* functio,
                         s32  modulus_index,
       constans FunctioPlana* plana,
-                        i32  instructio_plana)
+                        i32  instructio_plana,
+                        b32  nativum)
 {
     constans MedullaInstructio* instructio = NIHIL;
     FILE* fl = m->ansae[II] != NIHIL ? m->ansae[II] : stderr;
@@ -352,6 +356,10 @@ _positionem_imprimere (
                 (int)(instructio_plana - plana->blocci_initia[imus]));
         }
         instructio = &plana->instructiones[instructio_plana];
+    }
+    si (nativum)
+    {
+        fprintf(fl, " [nativum]");
     }
     si (   instructio          != NIHIL && instructio->origo != NIHIL
         && m->lineae_modulorum != NIHIL)
@@ -410,7 +418,7 @@ _relationem_imprimere (constans Machinula* m)
             frange;
         }
         _positionem_imprimere(m, t->functio, t->modulus_index,
-            t->plana, t->instructio);
+            t->plana, t->instructio, t->nativum);
     }
     fprintf(fl, "cauda anuli (novissima prima):\n");
     per (i = ZEPHYRUM; i < XVI; i++)
@@ -429,7 +437,7 @@ _relationem_imprimere (constans Machinula* m)
         }
         _positionem_imprimere(m, figura->functio,
             figura->modulus_index, figura->plana,
-            figura->instructio);
+            figura->instructio, FALSUM);
     }
     fprintf(fl, "instructiones exsecutae: %llu\n",
         (insignatus longus longus)m->summa_instructionum);
@@ -2433,6 +2441,7 @@ _tabulatum_impellere (
     t->basis_stivae = m->stiva_cursor;
     t->basis_arcarum = basis_arcarum;
     t->destinatio_vocantis = destinatio_vocantis;
+    t->nativum = FALSUM;
     m->stiva_cursor += opus;
     si (m->stiva_cursor > m->apex_stivae)
     {
@@ -2650,6 +2659,7 @@ _nativum_tabulata_restituere (
          Machinula* m,
     memoriae_index  pc,
     memoriae_index  fp,
+    memoriae_index  lr,
                s32* functio_index_out)
 {
     s32 catena_functio[CATENA_NATIVA_MAXIMA];
@@ -2667,6 +2677,21 @@ _nativum_tabulata_restituere (
     catena_functio[ZEPHYRUM]     = functio_index;
     catena_instructio[ZEPHYRUM]  = instructio;
     numerus_catenae              = I;
+    /* vitium ante tabulatum positum (stp prologi: stiva exhausta):
+     * vocans in x30 stat, x29 adhuc tabulatum VOCANTIS monstrat */
+    si (lr != ZEPHYRUM && officina_dorsum_ante_tabulatum(m->dorsum, pc))
+    {
+        s32 f_vocans = -I;
+        i32 i_vocans = ZEPHYRUM;
+
+        si (officina_dorsum_positio(m->dorsum, lr - IV, &f_vocans,
+                &i_vocans))
+        {
+            catena_functio[numerus_catenae]     = f_vocans;
+            catena_instructio[numerus_catenae]  = i_vocans + I;
+            numerus_catenae++;
+        }
+    }
     dum (fp != ZEPHYRUM && numerus_catenae < CATENA_NATIVA_MAXIMA)
     {
         constans memoriae_index* tabula = (constans memoriae_index*)fp;
@@ -2700,6 +2725,7 @@ _nativum_tabulata_restituere (
         }
         m->tabulatum_summum->instructio =
             catena_instructio[numerus_catenae];
+        m->tabulatum_summum->nativum = VERUM;
     }
     si (functio_index_out != NIHIL)
     {
@@ -2729,7 +2755,7 @@ _nativum_saltum_tractare (
         /* vocatio per descriptorem non nativum (limes C9): halitus
          * nominatus cum positione vocantis */
         (vacuum)_nativum_tabulata_restituere(m, fructus->pc,
-            fructus->fp, NIHIL);
+            fructus->fp, ZEPHYRUM, NIHIL);
         _vitium(m, "vocatio indirecta non nativa");
         redde;
     }
@@ -2739,7 +2765,7 @@ _nativum_saltum_tractare (
          * vitium; recusatio): tabulata solum restituuntur - functio
          * vocans in instructione vocare stat, ut interpretata */
         (vacuum)_nativum_tabulata_restituere(m, fructus->pc,
-            fructus->fp, NIHIL);
+            fructus->fp, ZEPHYRUM, NIHIL);
         si (m->currens)
         {
             _vitium(m, "nativum: pons sine machinula");
@@ -2750,7 +2776,7 @@ _nativum_saltum_tractare (
             && genus != DORSUM_SALTUS_DIVISIO_ZEPHYRUM
             && genus != DORSUM_SALTUS_DIVISIO_SUPERFLUXUS)
         || !_nativum_tabulata_restituere(m, fructus->pc, fructus->fp,
-               &functio_index))
+               ZEPHYRUM, &functio_index))
     {
         _halitum_ponere(m, MACHINULA_VITIUM, fructus->codex,
             "nativum: saltus ex codice nativo");
@@ -2802,6 +2828,8 @@ _nativum_vocare (
        memoriae_index octeti_stivae       = ZEPHYRUM;
                   i64 reditus_inscriptio  = ZEPHYRUM;
        memoriae_index reditus_octeti      = ZEPHYRUM;
+                  s32 reditus_membra      = ZEPHYRUM;
+       memoriae_index reditus_mag_membri  = ZEPHYRUM;
                   s32 k;
 
     memset(&ordinata, ZEPHYRUM, magnitudo(ordinata));
@@ -2829,10 +2857,63 @@ _nativum_vocare (
                 typi[k].magnitudo_octetorum;
             memoriae_index verba = (mag + VII) / VIII;
 
-            si (typi[k].hfa_typus >= ZEPHYRUM || mag == ZEPHYRUM)
+            si (mag == ZEPHYRUM)
             {
-                _vitium(m, "nativum: aggregatum fluitans (Opus IX)");
+                _vitium(m, "nativum: aggregatum sine magnitudine");
                 redde FALSUM;
+            }
+            si (typi[k].hfa_typus >= ZEPHYRUM)
+            {
+                /* HFA (lex _limen_collocare dorsi): membra in d
+                 * continuis; aliter totum in stivam ordinatione
+                 * membri, octetis exactis, et d reliqua vacant;
+                 * %reditus HFA in d0 - d3 redit */
+                memoriae_index mag_membri =
+                    (typi[k].hfa_typus == MEDULLA_TYPUS_F32)
+                    ? IV : VIII;
+                           s32 membra = (s32)(mag / mag_membri);
+                           s32 v;
+
+                si (typi[k].est_reditus)
+                {
+                    reditus_inscriptio  = argumenta[k];
+                    reditus_octeti      = mag;
+                    reditus_membra      = membra;
+                    reditus_mag_membri  = mag_membri;
+                    perge;
+                }
+                si (!_memoriam_probare(m, argumenta[k], mag))
+                {
+                    redde FALSUM;
+                }
+                si (ordinata.numerus_d + membra <= VIII)
+                {
+                    per (v = ZEPHYRUM; v < membra; v++)
+                    {
+                        unio { i64 v; f64 f; } u;
+
+                        u.v = ZEPHYRUM;
+                        memcpy(&u.v, (constans i8*)(memoriae_index)
+                            argumenta[k] + (memoriae_index)v
+                            * mag_membri, mag_membri);
+                        ordinata.d[ordinata.numerus_d] = u.f;
+                        ordinata.numerus_d++;
+                    }
+                    perge;
+                }
+                ordinata.numerus_d = VIII;
+                octeti_stivae = (octeti_stivae + mag_membri - I)
+                    & ~(mag_membri - I);
+                si (octeti_stivae + mag > magnitudo(stiva))
+                {
+                    _vitium(m, "nativum: argumenta nimia");
+                    redde FALSUM;
+                }
+                memcpy((i8*)stiva + octeti_stivae,
+                    (constans vacuum*)(memoriae_index)argumenta[k],
+                    mag);
+                octeti_stivae += mag;
+                perge;
             }
             si (typi[k].est_reditus)
             {
@@ -2883,9 +2964,20 @@ _nativum_vocare (
 
             si (ordinata.numerus_d >= VIII)
             {
-                _vitium(m, "nativum: argumenta fluitantia plura quam"
-                    " VIII (Opus VIII)");
-                redde FALSUM;
+                /* ultra octavum: in stivam magnitudine NATURALI (f32
+                 * octeti IV), ut integra - lex _limen_collocare */
+                memoriae_index mag = (typus == MEDULLA_TYPUS_F32)
+                    ? IV : VIII;
+
+                octeti_stivae = (octeti_stivae + mag - I) & ~(mag - I);
+                si (octeti_stivae + mag > magnitudo(stiva))
+                {
+                    _vitium(m, "nativum: argumenta nimia");
+                    redde FALSUM;
+                }
+                memcpy((i8*)stiva + octeti_stivae, &argumenta[k], mag);
+                octeti_stivae += mag;
+                perge;
             }
             /* figura cruda: f32 in dimidio inferiore d */
             u.v = (typus == MEDULLA_TYPUS_F32)
@@ -2948,7 +3040,15 @@ _nativum_vocare (
          * ut in halitu interpretato; nuntius machinulae severioris
          * differt - memoria nativa non probatur) */
         (vacuum)_nativum_tabulata_restituere(m, fructus.pc, fructus.fp,
-            NIHIL);
+            fructus.lr, NIHIL);
+        si (fructus.stiva_exhausta)
+        {
+            /* recursio sine fine (aut tabulata nimis magna): stiva
+             * hospitis exhausta, in stiva alterna capta - nominata,
+             * ut "stiva vocationum exhausta" interpretata */
+            _vitium(m, "stiva nativa exhausta");
+            redde FALSUM;
+        }
         sprintf(nuntius, "nativum: signum %d ad pc 0x%lx",
             (int)fructus.signum_systematis,
             (insignatus longus)fructus.pc);
@@ -2962,8 +3062,23 @@ _nativum_vocare (
         {
             redde FALSUM;
         }
-        memcpy((vacuum*)(memoriae_index)reditus_inscriptio, fructus.x,
-            reditus_octeti);
+        si (reditus_membra > ZEPHYRUM)
+        {
+            /* HFA: d0 - d3 membratim (f32 in dimidio inferiore) */
+            s32 v;
+
+            per (v = ZEPHYRUM; v < reditus_membra; v++)
+            {
+                memcpy((i8*)(memoriae_index)reditus_inscriptio
+                    + (memoriae_index)v * reditus_mag_membri,
+                    &fructus.d[v], reditus_mag_membri);
+            }
+        }
+        alioquin
+        {
+            memcpy((vacuum*)(memoriae_index)reditus_inscriptio,
+                fructus.x, reditus_octeti);
+        }
     }
     si (typus_reditus == MEDULLA_TYPUS_F64)
     {
@@ -3586,8 +3701,11 @@ machinula_gradus (Machinula* m)
             }
             si (instructio->typus_secundus == MEDULLA_TYPUS_F32)
             {
+                /* rotundatio UNA ex integro (lex C): per f64 bis
+                 * rotundaretur (s64 magnum aliud f32 daret) */
                 t->registra[instructio->destinatio] =
-                    _verbum_de_f32((f32)valor);
+                    _verbum_de_f32(_typus_signatus(instructio->typus)
+                        ? (f32)(s64)a : (f32)a);
             }
             alioquin
             {

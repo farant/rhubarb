@@ -5784,3 +5784,136 @@ Finds:
 Known limits carried on: floats and HFA (Task 9); credo still not
 native (traps on getpid in _credo_aream_ponere); address folding and
 adrp (Task 10); mutual recursion refused; 8/16-bit arithmetic refused.
+
+### T9 — backend III: floating point and faults — 2026-11-13: COMPLETE, uncommitted until Fran's word
+
+Four steps, each reported and approved separately (tests first, then
+implementation, then plants).
+
+Departures from the plan, approved by Fran before step 1:
+- Float constants: FMOV-immediate when it encodes, otherwise the bit
+  pattern in x17 and `fmov`. No literal pool.
+- Out-of-range float -> integer: the interpreter does not check either
+  (both saturate in practice). Recorded, not a named difference.
+- Deep recursion is a named difference: interpreter "stiva vocationum
+  exhausta (recursio?)" / "stiva exhausta", native "stiva nativa
+  exhausta".
+
+Step 1, floats inside a function:
+- A second register class in the same linear allocator: d16-d29
+  temporaries, d8-d15 for values that cross a call, d30/d31 scratch.
+  f32 uses the S forms.
+- A medulla register has no type. Its class (x or d) is collected
+  from its definitions and every use is checked; a register used both
+  ways is refused by name ("registrum classis mixtae", "registrum
+  fluitans in usu integro", "registrum integrum in usu fluitante").
+- Comparisons are ordered (MI, LS, GT, GE, EQ, NE): NaN gives false
+  for everything but `!=`, as values and folded into branches.
+- fluitare / integrare / dilatare / artare, loads and stores, float
+  registers read before definition zeroed.
+- Interpreter fix, done on my own judgment following the division
+  ruling and reported: integer -> f32 went through f64 and rounded
+  twice. For a 64-bit integer with more than 53 significant bits that
+  differs from C's `(float)x` (2^60 + 2^36 + 1 gave 2^60, C gives
+  2^60 + 2^37). The interpreter now converts directly. Machinula
+  worklog.
+
+Step 2, float arguments and returns:
+- d0-d7, counted separately from x0-x7; past the eighth on the stack
+  at natural size (f32 4 bytes), interleaved with integer stack
+  arguments. Returns in d0 / s0.
+- Pure float built-ins (sqrt, pow, fabs, floor, ldexp, atof ...) are
+  called at their libc address. Built-ins with state take float
+  registers through the bridge as bit patterns and return floats the
+  same way (strtod; printf with floats held in registers).
+- The interpreter's own call into native code (_nativum_vocare) used
+  to halt at more than eight float arguments; it now follows the same
+  stack rule.
+- `interpretare -fons <via>`: the world from ONE given source file at
+  any path, no index. Added because the launcher test needs a refused
+  example and no scalar library function is refused any more (about
+  100 sampled). Fixture fixa/nativum/recusanda.c: mutual recursion.
+  color_srgb_ad_linearem is now the "compiles natively" example.
+
+Step 3, float structs (HFA, 1-4 members of one float type):
+- Members in consecutive d registers. If they do not fit, the whole
+  struct goes on the stack and the remaining d registers stay unused.
+- On the stack the struct is aligned to its MEMBER size and takes its
+  EXACT size (three floats: 12 bytes, alignment 4). Read off clang's
+  assembly before writing the rule; integer structs (T8) use 8-byte
+  words.
+- Returned in d0-d3, including four doubles (32 bytes, not via x8).
+- _nativum_vocare follows the same rule in both directions.
+
+Step 4, faults:
+- Frames rebuilt from the x29 chain are flagged; the halt report
+  prints them as `nullus @initium+1 [nativum]`.
+- The signal handler records the fault address, sp and x30. A fault
+  address within [sp - 64 KiB, sp + 1 MiB + 64 KiB) means the host
+  stack is exhausted (memory around sp is always mapped otherwise) ->
+  VITIUM "stiva nativa exhausta". The process lives (alternate stack)
+  and native code runs again.
+- officina_dorsum_positio maps prologue pcs to the function's first
+  instruction (it returned FALSUM, so a fault in the opening `stp`
+  lost every native frame). officina_dorsum_ante_tabulatum says
+  whether the frame record is not yet written; then the direct caller
+  is taken from x30.
+- Test helper for Task 10: _classem_conferre -> COLLATIO_AEQUALE |
+  COLLATIO_DIFFERT | COLLATIO_MACHINULA_STRICTIOR with a named reason
+  ("memoria": the interpreter checks every access; "recursio": the
+  interpreter counts frames).
+
+Tests: probatio_officina_nativum 51 sections (42 + fluitantia, nan,
+fixturae conversionum, limina fluitantia, fluitantia hospitis,
+fixturae vocationum, aggregata fluitantia, nullus, stiva exhausta).
+clang is the judge again for float calls and float structs: C
+functions (13 floats; 9 integers + 9 floats + a char + an f32; float
+structs in registers, on the stack, returned) are called from
+interpreted and native code, and backend functions are called from C
+through typed pointers. Older tests that changed: two refusal tests
+use 16-bit arithmetic as the still-refused operation; the T8 "float
+struct is refused" assertion now expects it to compile; the
+vocationes fixture compiles $geminare first (it is called through a
+descriptor - the T8 limit). "stiva exhausta" is marked gravis: the
+INTERPRETED unbounded recursion peaks near 432 MiB (the native run
+uses the 8 MiB host stack).
+
+Plants: 19 + 15 + 14 + 8 = 56, all red in the end (some hang or kill
+the test process). Weak tests found by surviving plants and fixed:
+narrow integer sources of fluitare (only out-of-range immediates show
+the extension); a float -> i8 result hidden by a later re-extension;
+float zero-init (needed a native caller that dirties temporaries); a
+float struct consuming a single d register (needed a float struct in
+registers followed by another float). Three plants in step 2 are
+caught ONLY by the clang sections (seven d registers in the backend,
+the same in the interpreter, f32 as 8 bytes on the stack): native
+calls native consistently under them.
+
+Outside officina:
+- silva/fontes/systema_posix.h: siginfo_t was opaque; the handler
+  reads si_addr and examen refused. It now has its real Darwin shape,
+  certified in auspex_posix.sh (size and four offsets; the fourth was
+  added because two plants hid behind alignment).
+- Glossary: strictior.
+
+Finds:
+- `fluitans` is a latina macro; a local array named so does not
+  compile (my slip in the launcher test).
+- "vitium et credo" (RF5) is checked against the suite's own prior
+  handler, not inside CREDO_NON_RUIT: this suite installs
+  _tractator_prior before the escape layer, so a forked child that
+  faults in host code jumps to a stale sigjmp_buf and hangs.
+- Not observable, so not planted: S or D width of a float register
+  move; 8 bytes read or written for an f32 stack slot in the present
+  argument orders; a pure float built-in forced through the bridge.
+
+Known limits carried on: a stack overflow inside libc or the bridge
+(pc outside backend code) goes to the prior handler and kills the
+process; a wild pointer that faults within about 1 MiB of sp reads as
+stack exhaustion; restored frames capped at the innermost 256; float
+structs to built-ins through the bridge go by address, untested;
+ramus on a float register and residuum on floats refused; credo still
+not native; mutual recursion refused; 8/16-bit arithmetic refused;
+address folding and adrp (Task 10). lib/processus_posix.c shows five
+examen suspects (killpg, setpgid absent from the lexicon) - not from
+this work, left alone.

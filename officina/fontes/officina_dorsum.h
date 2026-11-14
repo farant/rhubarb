@@ -67,12 +67,22 @@ officina_dorsum_introitus (
                         s32  functio_index);
 
 /* pc -> (functio, index planus instructionis medullae cuius codex
- * pc continet); FALSUM extra codicem dorsi */
+ * pc continet; prologus = instructio prima); FALSUM extra codicem
+ * dorsi */
 b32
 officina_dorsum_positio (
     constans OfficinaDorsum* d,
              memoriae_index  pc,
                         s32* functio_index_out,
                         i32* instructio_out);
+
+/* VERUM si pc in duabus instructionibus primis functionis iacet (stp
+ * x29,x30; mov x29,sp): tabulatum functionis nondum positum - x29
+ * adhuc vocantis est et vocans ipse in x30 stat (vitium stivae
+ * exhaustae in 'stp' ipso) */
+b32
+officina_dorsum_ante_tabulatum (
+    constans OfficinaDorsum* d,
+             memoriae_index  pc);
 
 #endif /* OFFICINA_DORSUM_H */
