@@ -1,13 +1,16 @@
 /* psalterium.c - psalmi I-CL in latere vici (vide include/psalterium.h)
  *
  * Auxilia pura (incipit, circulus signorum, argumentum), montatio,
- * visus indicis (album CL ordinum, linea ima, cifrae typatae). Visus
- * psalmi (aptatio, gabc_visus) planum T6. Arbor: radix "psalterium"
- * (PARTES_TABULA, figura tota); index: ordines "r<n>" et sagittae
- * lineae imae. Figura solum legit et mandata emittit.
+ * visus indicis (album CL ordinum, linea ima, cifrae typatae), visus
+ * psalmi (aptatio in piscina propria per mutationem, gabc_visus sine
+ * continuare, caput). Arbor: radix "psalterium" (PARTES_TABULA, figura
+ * tota); index: ordines "r<n>" et sagittae lineae imae; psalmus: nodi
+ * capitis "caput_*" et nodi visus (gabc_visus_componere). Figura solum
+ * legit et mandata emittit.
  */
 #include "psalterium.h"
 #include "psalterium_infixum.h"
+#include "psalmodia.h"
 #include "toni_psalmorum_infixum.h"
 #include "membrum__praecepta.h"
 #include "membrum__album.h"
@@ -29,11 +32,17 @@
 #define ORDO                 XIV       /* altitudo ordinis indicis */
 #define LITTERA              VI        /* latitudo FONS_PARVUS */
 #define CIFRAE_MAXIMAE       III
+#define MARGO_CAPITIS        XVI       /* caput visus psalmi */
+#define LATITUDO_GLOBULI     XVIII     /* "≡" "‹" "›" in capite */
 
 #define VISUS_INDICIS        I
 #define VISUS_PSALMI         II
 
 #define CREDITUM             "Divinum Officium \xC2\xB7 MIT"
+#define SIGNUM_INDICIS       "\xE2\x89\xA1"
+#define SIGNUM_PRIORIS       "\xE2\x80\xB9"
+#define SIGNUM_PROXIMI       "\xE2\x80\xBA"
+#define INTERPUNCTUM         " \xC2\xB7 "
 
 hic_manens constans character actio_psalterii[] = "psalterium.agere";
 
@@ -42,6 +51,13 @@ nomen structura {
      PsalmodiaTabula* tabula;      /* infixa, in piscina montationis */
               chorda  incipit[CL]; /* psalmi n: incipit[n - 1] */
              Piscina* scheda;      /* per actionem vacatur */
+              chorda  scriptor;    /* actio semel copiata (memoria) */
+           GabcVisus* visus;
+                 s32  ordinarium;  /* index "8 G" in circulo */
+    /* aptatio currens (eadem non iteratur: restitutio sonum non
+     * sistit); -1 = nulla */
+                 s32 psalmus_aptatus;
+                 s32 signum_aptatum;
 } Psalterium;
 
 
@@ -440,8 +456,8 @@ _campos_scribere (
     grex.valores  = valores;
     grex.numerus  = numerus;
     prior         = m->ramus.repo->scriptor;
-    insula_scriptorem_ponere(m->ramus.repo, chorda_ex_literis(
-        actio_psalterii, m->piscina));
+    insula_scriptorem_ponere(m->ramus.repo,
+        ((Psalterium*)m->figurae_ctx)->scriptor);
     ok = mutare_ramum(&m->ramus, _campos_ponere, &grex);
     insula_scriptorem_ponere(m->ramus.repo, prior);
     redde ok;
@@ -644,8 +660,8 @@ _aperire (
     PsalteriumMontatio* m,
                    s32  n)
 {
-    constans character* tituli[IV];
-    constans character* valores[IV];
+    constans character* tituli[V];
+    constans character* valores[V];
              character  numerus[XVI];
 
     si (n < I || n > CL)
@@ -653,6 +669,8 @@ _aperire (
         redde VERUM;
     }
     sprintf(numerus, "%d", (integer)n);
+    tituli[IV]         = "pagina";
+    valores[IV]        = "";
     tituli[ZEPHYRUM]   = "visus";
     valores[ZEPHYRUM]  = "psalmus";
     tituli[I]          = "psalmus";
@@ -661,7 +679,7 @@ _aperire (
     valores[II]        = numerus;
     tituli[III]        = "cifrae";
     valores[III]       = "";
-    redde _campos_scribere(m, tituli, valores, IV)
+    redde _campos_scribere(m, tituli, valores, V)
         && psalterium_semitam_secuta(m);
 }
 
@@ -745,6 +763,255 @@ _cifrae_tollere (
     redde _campos_scribere(m, tituli, valores, II);
 }
 
+
+/* ==================================================
+ * Visus psalmi: aptatio
+ * ================================================== */
+
+/* signum lateris in circulo; absens aut ignotum = "8 G" (D3, tacite) */
+interior s32
+_signum_currens (
+    constans PsalteriumMontatio* m)
+{
+     Psalterium* p = _privatum(m);
+         chorda  a = _campus(m, "signum");
+            s32  k = a.mensura > ZEPHYRUM ? psalterium_signi_index(
+                       p->tabula, a) : -I;
+
+    redde k < ZEPHYRUM ? p->ordinarium : k;
+}
+
+/* psalmum campi in signo campi aptat (si non iam aptatus): piscina
+ * propria, gabc visui SINE continuare (sonus sistit), deinde
+ * destruitur (visus textum copiat); admonitio prima = vexillum.
+ * Pagina campi ad paginas novas coercetur (tonus paginam servat;
+ * psalmus novus paginam suam ante tollit). */
+interior b32
+_aptare (
+    PsalteriumMontatio* m)
+{
+                    Psalterium* p = _privatum(m);
+                           s32  n = _campus_numerus(m, "psalmus", I,
+                               CL);
+                              s32  k = _signum_currens(m);
+          constans PsalmodiaTonus* tonus;
+       constans PsalmodiaClausula* term;
+                PsalmodiaOptiones  optiones;
+                 PsalmodiaPsalmus* ps;
+                ChordaAedificator* a;
+                          Piscina* q;
+                        character  titulus[XXIV];
+                        character  vexillum[CCLVI];
+
+    si (n < ZEPHYRUM || !p->visus)
+    {
+        redde VERUM;
+    }
+    si (   n == p->psalmus_aptatus
+        && k == p->signum_aptatum
+        && gabc_visus_habet_versionem(p->visus))
+    {
+        redde gabc_visus_paginam_movere(p->visus, ZEPHYRUM);
+    }
+    si (!_circuli_terminatio(p->tabula, (i32)k, &tonus, &term))
+    {
+        redde FALSUM;
+    }
+    q = piscina_generare_dynamicum("psalterium_aptatio",
+        (memoriae_index)(CCLVI * MXXIV));
+    si (q == NIHIL)
+    {
+        redde FALSUM;
+    }
+    sprintf(titulus, "Psalmus %d", (integer)n);
+    memset(&optiones, ZEPHYRUM, magnitudo(optiones));
+    optiones.titulus = chorda_ex_literis(titulus, q);
+    ps = psalmodia_aptare(tonus, term,
+        psalterium_infixum_psalmus((i32)n,
+        q), &optiones, q);
+    a  = chorda_aedificator_creare(q, MXXIV);
+    si (!ps || !a || !psalmodia_gabc_scribere(ps, &optiones, a))
+    {
+        piscina_destruere(q);
+        redde FALSUM;
+    }
+    (vacuum)gabc_visus_textum_ponere(p->visus,
+        chorda_aedificator_finire(
+        a), FALSUM);
+    si (ps->numerus_admonitionum > ZEPHYRUM)
+    {
+        sprintf(vexillum, "%.20s: %.200s", titulus,
+            chorda_ut_cstr(ps->admonitiones[ZEPHYRUM].causa, q));
+        gabc_visus_vexillum_ponere(p->visus, vexillum);
+    }
+    piscina_destruere(q);
+    p->psalmus_aptatus  = n;
+    p->signum_aptatum   = k;
+    redde gabc_visus_paginam_movere(p->visus, ZEPHYRUM);
+}
+
+
+/* ==================================================
+ * Visus psalmi: actiones
+ * ================================================== */
+
+/* tonus +/- I in circulo (D8; in finibus redit) */
+interior b32
+_tonum_movere (
+    PsalteriumMontatio* m,
+                   s32  gradus)
+{
+             Psalterium* p = _privatum(m);
+                    s32  numerus = (s32)psalterium_signa_numerus(
+                                       p->tabula);
+                    s32  k;
+     constans character* tituli[I];
+     constans character* valores[I];
+
+    si (numerus <= ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    k = (_signum_currens(m) + gradus + numerus)
+        % numerus;
+    tituli[ZEPHYRUM] = "signum";
+    valores[ZEPHYRUM]  = chorda_ut_cstr(psalterium_signum(p->tabula,
+        (i32)k, p->scheda), p->scheda);
+    redde _campos_scribere(m, tituli, valores, I) && _aptare(m);
+}
+
+/* psalmus +/- I; ultra CL aut ante I nihil */
+interior b32
+_psalmum_movere (
+    PsalteriumMontatio* m,
+                   s32  gradus)
+{
+    constans character* tituli[III];
+    constans character* valores[III];
+             character  numerus[XVI];
+                   s32  n = _campus_numerus(m, "psalmus", I, CL)
+                       + gradus;
+
+    si (n < I || n > CL)
+    {
+        redde VERUM;
+    }
+    sprintf(numerus, "%d", (integer)n);
+    tituli[ZEPHYRUM]   = "psalmus";
+    valores[ZEPHYRUM]  = numerus;
+    tituli[I]          = "electus";
+    valores[I]         = numerus;
+    tituli[II]         = "pagina";
+    valores[II]        = "";
+    redde _campos_scribere(m, tituli, valores, III) && _aptare(m);
+}
+
+interior b32
+fac_tonum_proximum (
+    vacuum* ctx)
+{
+    redde _tonum_movere((PsalteriumMontatio*)ctx, I);
+}
+
+interior b32
+fac_tonum_priorem (
+    vacuum* ctx)
+{
+    redde _tonum_movere((PsalteriumMontatio*)ctx, -I);
+}
+
+interior b32
+fac_psalmum_proximum (
+    vacuum* ctx)
+{
+    redde _psalmum_movere((PsalteriumMontatio*)ctx, I);
+}
+
+interior b32
+fac_psalmum_priorem (
+    vacuum* ctx)
+{
+    redde _psalmum_movere((PsalteriumMontatio*)ctx, -I);
+}
+
+/* Esc: ad indicem, psalmus electus; sonus sistit (Review Focus IV) */
+interior b32
+fac_ad_indicem (
+    vacuum* ctx)
+{
+    PsalteriumMontatio* m = (PsalteriumMontatio*)ctx;
+    constans character* tituli[III];
+    constans character* valores[III];
+             character  numerus[XVI];
+
+    sprintf(numerus, "%d", (integer)_campus_numerus(m, "psalmus", I,
+        CL));
+    tituli[ZEPHYRUM]   = "visus";
+    valores[ZEPHYRUM]  = "index";
+    tituli[I]          = "psalmus";
+    valores[I]         = "";
+    tituli[II]         = "electus";
+    valores[II]        = numerus;
+    (vacuum)gabc_visus_sistere(_privatum(m)->visus);
+    redde _campos_scribere(m, tituli, valores, III);
+}
+
+interior GabcVisus*
+_visus_eius (
+    vacuum* ctx)
+{
+    redde _privatum((PsalteriumMontatio*)ctx)->visus;
+}
+
+interior b32
+fac_canere (
+    vacuum* ctx)
+{
+    redde gabc_visus_canere(_visus_eius(ctx));
+}
+
+interior b32
+fac_syllabam_priorem (
+    vacuum* ctx)
+{
+    redde gabc_visus_syllabam_movere(_visus_eius(ctx), -I);
+}
+
+interior b32
+fac_syllabam_proximam (
+    vacuum* ctx)
+{
+    redde gabc_visus_syllabam_movere(_visus_eius(ctx), I);
+}
+
+interior b32
+fac_paginam_cantus_proximam (
+    vacuum* ctx)
+{
+    redde gabc_visus_paginam_movere(_visus_eius(ctx), I);
+}
+
+interior b32
+fac_paginam_cantus_priorem (
+    vacuum* ctx)
+{
+    redde gabc_visus_paginam_movere(_visus_eius(ctx), -I);
+}
+
+interior b32
+fac_maius (
+    vacuum* ctx)
+{
+    redde gabc_visus_spatium_movere(_visus_eius(ctx), II);
+}
+
+interior b32
+fac_minus (
+    vacuum* ctx)
+{
+    redde gabc_visus_spatium_movere(_visus_eius(ctx), -II);
+}
+
 hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
     { "psalterium.proximus", "Next psalm", "Down", VISUS_INDICIS,
         ZEPHYRUM, fac_proximum },
@@ -760,6 +1027,36 @@ hic_manens constans Praeceptum TABULA_PRAECEPTORUM[] = {
         VISUS_INDICIS, ZEPHYRUM, fac_paginam_priorem },
     { "psalterium.aperire", "Open psalm", "Enter", VISUS_INDICIS,
         ZEPHYRUM, fac_aperire },
+    { "psalterium.canere", "Play / stop", " ", VISUS_PSALMI, ZEPHYRUM,
+        fac_canere },
+    { "psalterium.syllaba_prior", "Previous syllable", "Left",
+        VISUS_PSALMI, ZEPHYRUM, fac_syllabam_priorem },
+    { "psalterium.syllaba_proxima", "Next syllable", "Right",
+        VISUS_PSALMI, ZEPHYRUM, fac_syllabam_proximam },
+    { "psalterium.cantus_proxima", "Next page", "PageDown",
+        VISUS_PSALMI, ZEPHYRUM, fac_paginam_cantus_proximam },
+    { "psalterium.cantus_prior", "Previous page", "PageUp",
+        VISUS_PSALMI, ZEPHYRUM, fac_paginam_cantus_priorem },
+    { "psalterium.cantus_deorsum", "Next page", "j", VISUS_PSALMI,
+        ZEPHYRUM, fac_paginam_cantus_proximam },
+    { "psalterium.cantus_sursum", "Previous page", "k", VISUS_PSALMI,
+        ZEPHYRUM, fac_paginam_cantus_priorem },
+    { "psalterium.maius", "Zoom in", "+", VISUS_PSALMI, ZEPHYRUM,
+        fac_maius },
+    { "psalterium.maius_aequale", "Zoom in", "=", VISUS_PSALMI,
+        ZEPHYRUM, fac_maius },
+    { "psalterium.minus", "Zoom out", "-", VISUS_PSALMI, ZEPHYRUM,
+        fac_minus },
+    { "psalterium.tonus_proximus", "Next tone", "t", VISUS_PSALMI,
+        ZEPHYRUM, fac_tonum_proximum },
+    { "psalterium.tonus_prior", "Previous tone", "T", VISUS_PSALMI,
+        ZEPHYRUM, fac_tonum_priorem },
+    { "psalterium.psalmus_proximus", "Next psalm", "]", VISUS_PSALMI,
+        ZEPHYRUM, fac_psalmum_proximum },
+    { "psalterium.psalmus_prior", "Previous psalm", "[", VISUS_PSALMI,
+        ZEPHYRUM, fac_psalmum_priorem },
+    { "psalterium.ad_indicem", "Psalm list", "Esc", VISUS_PSALMI,
+        ZEPHYRUM, fac_ad_indicem },
     { NIHIL, NIHIL, NIHIL, ZEPHYRUM, ZEPHYRUM, NIHIL }
 };
 
@@ -824,11 +1121,30 @@ agere (
         redde t && praecepta_status(t, visus, requisita_nulla, m)
             == PRAECEPTUM_PRAESTO && t->fn(m);
     }
-    si (   !nodus || visus != VISUS_INDICIS
-        || ev->genus            != EVENTUS_MUS_DEPRESSUS
+    si (   !nodus || ev->genus != EVENTUS_MUS_DEPRESSUS
         || ev->datum.mus.botton != MUS_SINISTER)
     {
         redde FALSUM;
+    }
+    si (visus == VISUS_PSALMI)
+    {
+        si (chorda_aequalis_literis(nodus->id, "caput_index"))
+        {
+            redde fac_ad_indicem(m);
+        }
+        si (chorda_aequalis_literis(nodus->id, "caput_prior"))
+        {
+            redde _psalmum_movere(m, -I);
+        }
+        si (chorda_aequalis_literis(nodus->id, "caput_proximus"))
+        {
+            redde _psalmum_movere(m, I);
+        }
+        si (chorda_aequalis_literis(nodus->id, "caput_signum"))
+        {
+            redde _tonum_movere(m, I);
+        }
+        redde gabc_visus_premere(_privatum(m)->visus, nodus, ev);
     }
     n = _id_ordinis(nodus->id);
     si (n > ZEPHYRUM)
@@ -996,6 +1312,73 @@ _indicem_pingere (
         album_paginae(l));
 }
 
+/* caput visus psalmi: "≡  ‹  ›   8 G" (nodi caput_* eodem loco);
+ * vexillum (admonitio) id tegit */
+interior vacuum
+_caput_pingere (
+     constans PsalteriumMontatio* m,
+              constans Componens* radix,
+                         Mandata* md,
+                          chorda  signum)
+{
+    s32 n = _campus_numerus(m, "psalmus", I, CL);
+    s32 y = LIMBUS_Y + (MARGO_CAPITIS - VIII) / II;
+    i32 i;
+
+    si (gabc_visus_vexillum(_privatum(m)->visus)[ZEPHYRUM] != '\0')
+    {
+        redde;
+    }
+    per (i = ZEPHYRUM; i < componens_numerus_liberorum(radix); i++)
+    {
+         Componens* f = componens_liberum(radix, i);
+               s32  x = f->fines.x + (LATITUDO_GLOBULI - LITTERA) / II;
+
+        si (chorda_aequalis_literis(f->id, "caput_index"))
+        {
+            _textum_pingere(md, x, y, chorda_ex_literis(SIGNUM_INDICIS,
+                md->piscina), COLOR_TEXT);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "caput_prior"))
+        {
+            _textum_pingere(md, x, y, chorda_ex_literis(SIGNUM_PRIORIS,
+                md->piscina), n > I ? COLOR_TEXT : COLOR_TEXT_DIM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "caput_proximus"))
+        {
+            _textum_pingere(md, x, y, chorda_ex_literis(SIGNUM_PROXIMI,
+                md->piscina), n < CL ? COLOR_TEXT : COLOR_TEXT_DIM);
+        }
+        alioquin si (chorda_aequalis_literis(f->id, "caput_signum"))
+        {
+            _textum_pingere(md, f->fines.x + LITTERA, y, signum,
+                COLOR_ACCENT_PRIMARY);
+        }
+    }
+}
+
+/* visus psalmi: gabc_visus (fundus, pagina, linea ima "Psalmus 109 ·
+ * 8 G", vexillum), deinde caput */
+interior vacuum
+_psalmum_pingere (
+    constans PsalteriumMontatio* m,
+             constans Componens* c,
+                        Mandata* md)
+{
+     Psalterium* p = _privatum(m);
+         chorda  signum = psalterium_signum(p->tabula,
+             (i32)_signum_currens(
+                    m), md->piscina);
+         chorda titulus;
+
+    titulus = chorda_concatenare(chorda_concatenare(gabc_visus_titulus(
+        p->visus), chorda_ex_literis(INTERPUNCTUM, md->piscina),
+        md->piscina), signum, md->piscina);
+    gabc_visus_pingere(p->visus, md, c->fines, chorda_aequalis_literis(
+        c->titulus, "focatum"), titulus, NIHIL);
+    _caput_pingere(m, c, md, signum);
+}
+
 interior vacuum
 figura_psalterii (
     constans Componens* c,
@@ -1008,6 +1391,11 @@ figura_psalterii (
                  Fines  fundus;
 
     (vacuum)thema;
+    si (m && m->figurae_ctx && _visus(m) == VISUS_PSALMI)
+    {
+        _psalmum_pingere(m, c, md);
+        redde;
+    }
     f.x         = ZEPHYRUM;
     f.y         = ZEPHYRUM;
     f.latitudo  = c->fines.latitudo;
@@ -1096,6 +1484,39 @@ _indicem_componere (
         PARTES_NULLUM, f);
 }
 
+/* caput (globuli "≡" "‹" "›", signum toni) et nodi visus */
+interior vacuum
+_psalmum_componere (
+    constans PsalteriumMontatio* m,
+                      Componens* radix,
+                        Piscina* piscina,
+            InternamentumChorda* intern)
+{
+     Psalterium* p = _privatum(m);
+         chorda  signum = psalterium_signum(p->tabula,
+             (i32)_signum_currens(
+                    m), piscina);
+          Fines f;
+
+    gabc_visus_componere(p->visus, radix, piscina, intern);
+    f.x         = LIMBUS_X;
+    f.y         = LIMBUS_Y;
+    f.latitudo  = LATITUDO_GLOBULI;
+    f.altitudo  = MARGO_CAPITIS;
+    _nodum_addere(radix, piscina, intern, "caput_index", PARTES_NULLUM,
+        f);
+    f.x += LATITUDO_GLOBULI;
+    _nodum_addere(radix, piscina, intern, "caput_prior", PARTES_NULLUM,
+        f);
+    f.x += LATITUDO_GLOBULI;
+    _nodum_addere(radix, piscina, intern, "caput_proximus",
+        PARTES_NULLUM, f);
+    f.x         += LATITUDO_GLOBULI + LITTERA;
+    f.latitudo  = ((s32)signum.mensura + II) * LITTERA;
+    _nodum_addere(radix, piscina, intern, "caput_signum", PARTES_NULLUM,
+        f);
+}
+
 Componens*
 psalterium_componere (
      InsulaRepositorium* repo,
@@ -1133,6 +1554,10 @@ psalterium_componere (
     si (_visus(m) == VISUS_INDICIS)
     {
         _indicem_componere(m, radix, piscina, intern);
+    }
+    alioquin
+    {
+        _psalmum_componere(m, radix, piscina, intern);
     }
     redde radix;
 }
@@ -1223,6 +1648,18 @@ psalterium_montare (
         piscina_vacare(textus);
     }
     piscina_destruere(textus);
+    p->scriptor         = chorda_ex_literis(actio_psalterii, piscina);
+    p->ordinarium       = psalterium_signi_index(p->tabula,
+        chorda_ex_literis(PSALTERIUM_SIGNUM_ORDINARIUM, piscina));
+    p->psalmus_aptatus  = -I;
+    p->signum_aptatum   = -I;
+    p->visus            = gabc_visus_creare(piscina, &m->ramus,
+        actio_psalterii, "psalterium", &m->porta, latitudo, altitudo,
+        MARGO_CAPITIS);
+    si (!p->visus || p->ordinarium < ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
     m->figurae_ctx  = p;
     m->actiones     = actio_registrum_creare(piscina, intern);
     m->figurae      = figura_registrum_creare(piscina);
@@ -1263,8 +1700,8 @@ psalterium_argumentum_ponere (
                 chorda  signum;
                    s32  psalmus = -I;
                    s32  n;
-    constans character* tituli[III];
-    constans character* valores[III];
+    constans character* tituli[IV];
+    constans character* valores[IV];
              character  numerus[XVI];
 
     si (!m || !m->figurae_ctx)
@@ -1328,6 +1765,13 @@ psalterium_argumentum_ponere (
         valores[n]  = numerus;
         n++;
     }
+    si (psalmus > ZEPHYRUM && psalmus != p->psalmus_aptatus)
+    {
+        /* psalmus novus: pagina 0 */
+        tituli[n]   = "pagina";
+        valores[n]  = "";
+        n++;
+    }
     si (signum.mensura > ZEPHYRUM)
     {
         tituli[n]   = "signum";
@@ -1338,28 +1782,44 @@ psalterium_argumentum_ponere (
         && psalterium_semitam_secuta(m);
 }
 
-/* T6: psalmum ex campis iterum aptare */
+/* post semitam (initium, historia, argumentum): psalmus ex campis
+ * aptatur (idem non iteratur); index: sonus sistit */
 b32
 psalterium_semitam_secuta (
     vacuum* ctx)
 {
-    redde ctx != NIHIL;
+    PsalteriumMontatio* m = (PsalteriumMontatio*)ctx;
+
+    si (!m || !m->figurae_ctx)
+    {
+        redde FALSUM;
+    }
+    si (_visus(m) == VISUS_INDICIS)
+    {
+        (vacuum)gabc_visus_sistere(_privatum(m)->visus);
+        redde VERUM;
+    }
+    redde _aptare(m);
 }
 
 b32
 psalterium_pulsare (
     vacuum* ctx)
 {
-    (vacuum)ctx;
-    redde FALSUM;
+    PsalteriumMontatio* m = (PsalteriumMontatio*)ctx;
+
+    redde m && m->figurae_ctx
+        && gabc_visus_pulsare(_privatum(m)->visus);
 }
 
 Mora
 psalterium_mora (
     vacuum* ctx)
 {
-    (vacuum)ctx;
-    redde -I;
+    PsalteriumMontatio* m = (PsalteriumMontatio*)ctx;
+
+    redde m && m->figurae_ctx ? gabc_visus_mora(_privatum(m)->visus)
+        : -I;
 }
 
 chorda

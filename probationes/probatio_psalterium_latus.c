@@ -6,6 +6,10 @@
  * per claves et sagittas, cifrae typatae (Review Focus III), latus
  * minimum (ordo unus in pagina), ordo ictu aperitur.
  *
+ * T6: visus psalmi: aptatio (titulus, tonus), t/T circulus, ]/[
+ * psalmi vicini, pagina, Esc, caput ictu; sonus sistitur (Review
+ * Focus IV), status malus (I), memoria (V), restitutio et URI.
+ *
  * Latus solum (ut probatio_antiphonale_latus): repositorium,
  * montatio, dispensator, eventa ficta. */
 #include "latina.h"
@@ -42,14 +46,66 @@ nomen structura {
       InsulaRepositorium* repo;
       PsalteriumMontatio  m;
              Dispensator* d;
+          GabcVisusPorta  porta;
+    /* porta ficta: horologium a probatione positum */
+                     b32 sonat;
+                     s64 pulsus;
+                     i32 incepta;
+                     i32 sistita;
 } Mundus;
 
+interior b32
+_incipere (
+    vacuum* ctx,
+    chorda  carmen,
+       s64  pulsus)
+{
+    Mundus* w = (Mundus*)ctx;
+
+    (vacuum)carmen;
+    w->incepta++;
+    w->sonat   = VERUM;
+    w->pulsus  = pulsus;
+    redde VERUM;
+}
+
+interior vacuum
+_quaerere (
+    vacuum* ctx,
+       s64  pulsus)
+{
+    ((Mundus*)ctx)->pulsus = pulsus;
+}
+
+interior vacuum
+_sistere (
+    vacuum* ctx)
+{
+    Mundus* w = (Mundus*)ctx;
+
+    w->sistita++;
+    w->sonat = FALSUM;
+}
+
+interior s64
+_pulsus (
+    vacuum* ctx)
+{
+    Mundus* w = (Mundus*)ctx;
+
+    redde w->sonat ? w->pulsus : -I;
+}
+
+/* montatio in piscina data (memoria mensurabilis) super repositorium
+ * datum (NIHIL = novum; idem = status servatus, ut vicus restituit) */
 interior Mundus*
-_mundum_mensura (
-         CredoContextus* c,
-     constans character* argumentum,
-                    i32  latitudo,
-                    i32  altitudo)
+_mundum_plenum (
+          CredoContextus* c,
+                 Piscina* piscina,
+      InsulaRepositorium* repo,
+      constans character* argumentum,
+                     i32  latitudo,
+                     i32  altitudo)
 {
     Mundus* w;
      Motus* motus;
@@ -57,12 +113,17 @@ _mundum_mensura (
     thema_initiare();
     w = (Mundus*)piscina_allocare(c->piscina, magnitudo(Mundus));
     memset(w, ZEPHYRUM, magnitudo(Mundus));
-    w->intern  = internamentum_creare(c->piscina);
-    w->repo    = insula_repositorium_creare(c->piscina, w->intern,
-        "<hospes/>");
+    w->porta.incipere  = _incipere;
+    w->porta.quaerere  = _quaerere;
+    w->porta.sistere   = _sistere;
+    w->porta.pulsus    = _pulsus;
+    w->porta.ctx       = w;
+    w->intern          = internamentum_creare(c->piscina);
+    w->repo            = repo ? repo : insula_repositorium_creare(
+        c->piscina, w->intern, "<hospes/>");
     si (   !w->repo
-        || !psalterium_montare(&w->m, c->piscina, w->intern, w->repo,
-               "p1", argumentum, latitudo, altitudo, NIHIL, NIHIL))
+        || !psalterium_montare(&w->m, piscina, w->intern, w->repo, "p1",
+               argumentum, latitudo, altitudo, &w->porta, NIHIL))
     {
         redde NIHIL;
     }
@@ -76,6 +137,17 @@ _mundum_mensura (
     motus->ramus  = w->m.ramus;
     dispensator_recomponere(w->d);
     redde w;
+}
+
+interior Mundus*
+_mundum_mensura (
+         CredoContextus* c,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo)
+{
+    redde _mundum_plenum(c, c->piscina, NIHIL, argumentum, latitudo,
+        altitudo);
 }
 
 interior Mundus*
@@ -127,6 +199,72 @@ _textus_continet (
         }
     }
     redde FALSUM;
+}
+
+/* textus pictus aequalis litteris datis (elementum unum) */
+interior b32
+_textus_aequalis (
+               Mandata* md,
+    constans character* textus)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_TEXTUS
+            && chorda_aequalis_literis(x->textus, textus))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+nomen structura {
+    constans character* titulus;
+    constans character* valor;
+} ParCampi;
+
+interior vacuum
+_campum_ponere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    ParCampi* par = (ParCampi*)ctx;
+
+    si (par->valor[ZEPHYRUM] == '\0')
+    {
+        (vacuum)insula_attributum_tollere(radix, par->titulus);
+        redde;
+    }
+    insula_attributum_ponere(radix, p, in, par->titulus, par->valor);
+}
+
+/* status ab extra scriptus (ut status servatus aut malus): scriptore
+ * psalterii; "" tollit */
+interior b32
+_campum_scribere (
+                Mundus* w,
+    constans character* titulus,
+    constans character* valor,
+               Piscina* p)
+{
+    ParCampi par;
+      chorda prior;
+         b32 ok;
+
+    par.titulus  = titulus;
+    par.valor    = valor;
+    prior        = w->repo->scriptor;
+    insula_scriptorem_ponere(w->repo, chorda_ex_literis(
+        "psalterium.agere", p));
+    ok = mutare_ramum(&w->m.ramus, _campum_ponere, &par);
+    insula_scriptorem_ponere(w->repo, prior);
+    redde ok;
 }
 
 interior vacuum
@@ -613,6 +751,291 @@ _numeri_probare (
     CREDO_VERUM (intra);
 }
 
+
+/* ==================================================
+ * Psalmus (T6)
+ * ================================================== */
+
+/* titulus lineae imae: "Psalmus N · signum" (nomen ex gabc aptato) */
+interior b32
+_pes_est (
+                Mundus* w,
+               Piscina* p,
+    constans character* expectatus)
+{
+    redde _textus_continet(_reddere(w, p), expectatus);
+}
+
+interior vacuum
+_psalmus_probare (
+    CredoContextus* c)
+{
+     PsalmodiaTabula* t = _tabula(c);
+              Mundus* w = _mundum(c, NIHIL);
+             Mandata* md;
+                 s32  octavus;
+                 i32  numerus;
+              chorda  proximum;
+              chorda  ultimum;
+           character  pes[LXIV];
+                 s32  pagina;
+
+    CREDO_NECESSE (w != NIHIL && psalmodia_successus(t));
+    numerus   = psalterium_signa_numerus(t);
+    octavus   = psalterium_signi_index(t, chorda_ex_literis("8 G",
+        c->piscina));
+    proximum  = psalterium_signum(t, (i32)((octavus + I)
+        % (s32)numerus),
+        c->piscina);
+    ultimum   = psalterium_signum(t, numerus - I, c->piscina);
+
+    /* Enter in 109: visus psalmi, gabc "Psalmus 109" in 8 G */
+    _littera(w, '1');
+    _littera(w, '0');
+    _littera(w, '9');
+    _clavis(w, CLAVIS_REDITUS, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"),
+        "psalmus");
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), CIX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (psalterium_titulus(&w->m,
+        c->piscina),
+        "Psalmus 109");
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "Psalmus 109 \xC2\xB7 8 G"));
+    /* annotatio cantus (gabc "annotation: 8 G;") supra initium */
+    CREDO_VERUM (_textus_aequalis(md, "8 G"));
+    /* caput: ad indicem, prior, proximus, tonus */
+    CREDO_VERUM (_textus_aequalis(md, "\xE2\x89\xA1"));
+
+    /* t: terminatio proxima ordine tabulae; T retro */
+    _littera(w, 't');
+    CREDO_CHORDA_AEQUALIS (_campus_textus(w, "signum"), proximum);
+    sprintf(pes, "Psalmus 109 \xC2\xB7 %.*s", (integer)proximum.mensura,
+        (constans character*)proximum.datum);
+    CREDO_VERUM (_pes_est(w, c->piscina, pes));
+    _littera(w, 'T');
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "signum"), "8 G");
+    /* circulus in finibus redit */
+    sprintf(pes, "109,%.*s", (integer)ultimum.mensura,
+        (constans character*)ultimum.datum);
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, pes));
+    CREDO_CHORDA_AEQUALIS (_campus_textus(w, "signum"), ultimum);
+    _littera(w, 't');
+    CREDO_CHORDA_AEQUALIS (_campus_textus(w, "signum"),
+        psalterium_signum(
+        t, ZEPHYRUM, c->piscina));
+    _littera(w, 'T');
+    CREDO_CHORDA_AEQUALIS (_campus_textus(w, "signum"), ultimum);
+
+    /* ] in CL et [ in I nihil */
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, "150, 8 G"));
+    _littera(w, ']');
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), CL);
+    _littera(w, '[');
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), CXLIX);
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, "1"));
+    _littera(w, '[');
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), I);
+    _littera(w, ']');
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), II);
+    CREDO_VERUM (_pes_est(w, c->piscina, "Psalmus 2 \xC2\xB7 8 G"));
+
+    /* tonus paginam servat (coercitam), psalmus novus paginam 0 */
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, "118"));
+    _clavis(w, CLAVIS_PAGINA_DEORSUM, ZEPHYRUM);
+    _littera(w, 'j');
+    CREDO_AEQUALIS_S32 (_campus(w, "pagina", ZEPHYRUM), II);
+    _littera(w, 't');
+    CREDO_AEQUALIS_S32 (_campus(w, "pagina", ZEPHYRUM), II);
+    CREDO_NECESSE (_campum_scribere(w, "pagina", "999", c->piscina));
+    _littera(w, 'T');
+    pagina = _campus(w, "pagina", ZEPHYRUM);
+    CREDO_VERUM (pagina > II && pagina < CMXCIX);
+    _littera(w, ']');
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), CXIX);
+    CREDO_AEQUALIS_S32 (_campus(w, "pagina", -I), ZEPHYRUM);
+
+    /* Esc: ad indicem, psalmus electus */
+    _clavis(w, CLAVIS_EFFUGIUM, ZEPHYRUM);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"), "index");
+    CREDO_AEQUALIS_S32 (_campus(w, "electus", ZEPHYRUM), CXIX);
+    CREDO_AEQUALIS_I32 (_campus_textus(w, "psalmus").mensura, ZEPHYRUM);
+    CREDO_VERUM (_pes_est(w, c->piscina, "119  "));
+
+    /* ictus capitis: quod claves faciunt */
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, "109, 8 G"));
+    dispensator_recomponere(w->d);   /* vicus post argumentum */
+    CREDO_VERUM (_ictus(w, "caput_proximus", c->piscina));
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), CX);
+    CREDO_VERUM (_ictus(w, "caput_prior", c->piscina));
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), CIX);
+    CREDO_VERUM (_ictus(w, "caput_signum", c->piscina));
+    CREDO_CHORDA_AEQUALIS (_campus_textus(w, "signum"), proximum);
+    CREDO_VERUM (_ictus(w, "caput_index", c->piscina));
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"), "index");
+    CREDO_AEQUALIS_S32 (_campus(w, "electus", ZEPHYRUM), CIX);
+}
+
+/* Review Focus IV: tonus, psalmus, Esc sonum sistunt */
+interior vacuum
+_sonus_probare (
+    CredoContextus* c)
+{
+     Mundus* w = _mundum(c, "109");
+        i32  ante;
+
+    CREDO_NECESSE (w != NIHIL);
+    CREDO_AEQUALIS_S32 ((s32)psalterium_mora(&w->m), -I);
+    _littera(w, ' ');
+    CREDO_AEQUALIS_I32 (w->incepta, I);
+    CREDO_VERUM (w->sonat);
+    CREDO_AEQUALIS_S32 ((s32)psalterium_mora(&w->m), XXXIII);
+    w->pulsus = CCC;
+    (vacuum)psalterium_pulsare(&w->m);
+
+    ante = w->sistita;
+    _littera(w, 't');
+    CREDO_FALSUM (w->sonat);
+    CREDO_AEQUALIS_I32 (w->sistita, ante + I);
+    CREDO_AEQUALIS_S32 ((s32)psalterium_mora(&w->m), -I);
+    /* Spatium ab initio melodiae novae */
+    _littera(w, ' ');
+    CREDO_VERUM (w->sonat);
+    CREDO_AEQUALIS_I32 (w->incepta, II);
+
+    ante = w->sistita;
+    _littera(w, ']');
+    CREDO_FALSUM (w->sonat);
+    CREDO_AEQUALIS_I32 (w->sistita, ante + I);
+
+    _littera(w, ' ');
+    CREDO_VERUM (w->sonat);
+    ante = w->sistita;
+    _clavis(w, CLAVIS_EFFUGIUM, ZEPHYRUM);
+    CREDO_FALSUM (w->sonat);
+    CREDO_AEQUALIS_I32 (w->sistita, ante + I);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"), "index");
+    CREDO_AEQUALIS_S32 ((s32)psalterium_mora(&w->m), -I);
+}
+
+/* Review Focus I: status servatus malus -> index aut 8 G, sine
+ * vexillo, sine ruina */
+interior vacuum
+_status_malus_probare (
+    CredoContextus* c)
+{
+     constans character* mali[III];
+                 Mundus* w = _mundum(c, NIHIL);
+                Mandata* md;
+                    i32  k;
+
+    CREDO_NECESSE (w != NIHIL);
+    mali[ZEPHYRUM]  = "0";
+    mali[I]         = "200";
+    mali[II]        = "";
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        CREDO_NECESSE (_campum_scribere(w, "visus", "psalmus",
+            c->piscina));
+        CREDO_NECESSE (_campum_scribere(w, "psalmus", mali[k],
+            c->piscina));
+        CREDO_VERUM (psalterium_semitam_secuta(&w->m));
+        md = _reddere(w, c->piscina);
+        CREDO_VERUM (_textus_continet(md, "  1  Be\xC3\xA1tus vir"));
+        CREDO_CHORDA_AEQUALIS_LITERIS (psalterium_titulus(&w->m,
+            c->piscina), "Psalterium");
+        _littera(w, 't');
+        _littera(w, ']');
+        CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"),
+            "psalmus");
+    }
+    /* signum ignotum: 8 G tacite */
+    CREDO_NECESSE (_campum_scribere(w, "psalmus", "109", c->piscina));
+    CREDO_NECESSE (_campum_scribere(w, "signum", "9 Q", c->piscina));
+    CREDO_VERUM (psalterium_semitam_secuta(&w->m));
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "Psalmus 109 \xC2\xB7 8 G"));
+    CREDO_FALSUM (_textus_continet(md, "9 Q"));
+    CREDO_FALSUM (_textus_continet(md, "tonus"));
+    /* t ab 8 G pergit */
+    _littera(w, 't');
+    CREDO_FALSUM (chorda_aequalis_literis(_campus_textus(w, "signum"),
+        "9 Q"));
+    CREDO_FALSUM (chorda_aequalis_literis(_campus_textus(w, "signum"),
+        "8 G"));
+}
+
+/* Review Focus V: CC mutationes toni et psalmi - piscina montationis
+ * non crescit */
+interior vacuum
+_memoria_probare (
+    CredoContextus* c)
+{
+           Piscina* p = piscina_generare_dynamicum("psalterium_memoria",
+                         (memoriae_index)(CCLVI * MXXIV));
+            Mundus* w;
+    memoriae_index  usus;
+               i32  k;
+
+    CREDO_NECESSE (p != NIHIL);
+    w = _mundum_plenum(c, p, NIHIL, "109", LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    _littera(w, 't');
+    _littera(w, ']');
+    _littera(w, '[');
+    (vacuum)_reddere(w, c->piscina);
+    usus = piscina_summa_usus(p);
+    per (k = ZEPHYRUM; k < CC; k++)
+    {
+        _littera(w, 't');
+    }
+    CREDO_AEQUALIS_I64 ((i64)piscina_summa_usus(p), (i64)usus);
+    per (k = ZEPHYRUM; k < CC; k++)
+    {
+        _littera(w, (k % II) == ZEPHYRUM ? ']' : '[');
+    }
+    (vacuum)_reddere(w, c->piscina);
+    CREDO_AEQUALIS_I64 ((i64)piscina_summa_usus(p), (i64)usus);
+    piscina_destruere(p);
+}
+
+/* status servatus (Ps 109 in 2 A) post montationem novam: idem psalmus,
+ * idem tonus; URI generis directe */
+interior vacuum
+_semita_probare (
+    CredoContextus* c)
+{
+    Mundus* w = _mundum(c, "109, 2 A");
+    Mundus* iterum;
+
+    CREDO_NECESSE (w != NIHIL);
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "signum"), "2 A");
+    /* vicus: status in repositorio manet, montatio nova, semita
+     * restituta, deinde semitam_secuta */
+    iterum = _mundum_plenum(c, c->piscina, w->repo, NIHIL, LATITUDO,
+        ALTITUDO);
+    CREDO_NECESSE (iterum != NIHIL);
+    CREDO_VERUM (psalterium_semitam_secuta(&iterum->m));
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(iterum, "visus"),
+        "psalmus");
+    CREDO_VERUM (_pes_est(iterum, c->piscina,
+        "Psalmus 109 \xC2\xB7 2 A"));
+
+    /* URI */
+    w = _mundum(c, "psalterium/psalmus/109");
+    CREDO_NECESSE (w != NIHIL);
+    CREDO_AEQUALIS_S32 (_campus(w, "psalmus", ZEPHYRUM), CIX);
+    CREDO_VERUM (_pes_est(w, c->piscina, "Psalmus 109 \xC2\xB7 8 G"));
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m,
+        "psalterium/index"));
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"), "index");
+    CREDO_FALSUM (psalterium_argumentum_ponere(&w->m,
+        "psalterium/psalmus/151"));
+    CREDO_FALSUM (psalterium_argumentum_ponere(&w->m, "151"));
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"), "index");
+    CREDO_VERUM (_mundum(c, "psalterium/psalmus/0") == NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "incipit", _incipit_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "circulus signorum", _signa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -621,6 +1044,16 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "index: ordines, paginae, claves, mus", _index_probare, NIHIL,
         NIHIL, NIHIL, NIHIL },
     { "index: cifrae typatae", _numeri_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "psalmus: tonus, psalmi vicini, pagina, Esc, caput",
+        _psalmus_probare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "psalmus: sonus sistitur", _sonus_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "status malus", _status_malus_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "memoria: CC mutationes", _memoria_probare, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "semita: restitutio et URI", _semita_probare, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

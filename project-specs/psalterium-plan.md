@@ -346,3 +346,18 @@ movement clears typed digits - cost: none known; Enter/click and
 (`psalterium_semitam_secuta` stub) - cost: T6 fills the stub;
 `$psalterium(, 8 G)` (tone without number) = "psalm number 1-150"
 error - cost if wrong: one branch.
+
+**T6 (2026-11-14).** Psalm view in `lib/psalterium.c` (fit per change
+in its own arena, gabc to the view with `continuare` FALSUM, header
+"≡ ‹ › 8 G", footer "Psalmus N · tone"); test file +5 sections (197
+checks, 10/10). Red before (4 sections; memory trivially green), the
+plan's plant (continuare VERUM) red in `_sonus_probare`, six more
+plants red. Rulings: `lib/gabc_visus.c` touched (outside the task's
+files) - `numerum_scribere` copied the scriptor into the mount arena on
+every page write, which Review Focus 5 forbids; cost if wrong: none
+for the antiphonale (its suites green). A fitter warning's banner
+covers the header text, the header nodes still answer clicks - cost
+if wrong: no header while a warning shows (none today). The same
+(psalm, tone) is not re-fitted, so a restore keeps playing - cost if
+wrong: a stale fit if the embedded texts changed at runtime
+(impossible).

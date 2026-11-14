@@ -50,9 +50,12 @@ nomen structura {
 } Versio;
 
 structura GabcVisus {
-                Piscina* piscina;
-            InsulaRamus* ramus;
-     constans character* actio;
+                 Piscina* piscina;
+             InsulaRamus* ramus;
+      constans character* actio;
+                  chorda  scriptor;        /* actio semel copiata:
+                                            * scriptura campi non
+                                            * crescit piscinam */
      constans character* radix_id;
          GabcVisusPorta  porta;
                     i32  latitudo;
@@ -134,8 +137,7 @@ numerum_scribere (
     par.titulus  = titulus;
     par.valor    = textus;
     prior        = visus->ramus->repo->scriptor;
-    insula_scriptorem_ponere(visus->ramus->repo, chorda_ex_literis(
-        visus->actio, visus->piscina));
+    insula_scriptorem_ponere(visus->ramus->repo, visus->scriptor);
     ok = mutare_ramum(visus->ramus, campum_ponere, &par);
     insula_scriptorem_ponere(visus->ramus->repo, prior);
     redde ok;
@@ -446,6 +448,7 @@ gabc_visus_creare (
     {
         redde NIHIL;
     }
+    visus->scriptor = chorda_ex_literis(visus->actio, piscina);
     redde visus;
 }
 

@@ -77,3 +77,12 @@ starts from the top on Space).
   (the known trap, memory "new include in an old lib file"). T5 adds
   psalterium.c, which vicus_applicatio.c will include in T7: add it to
   the same list then.
+
+## 2026-11-14 — psalterium T6: scriptor copied once
+
+`numerum_scribere` did `chorda_ex_literis(visus->actio, visus->piscina)`
+on every "pagina"/"spatium" write - the mount arena grew a few bytes
+per page turn (inherited from antiphonale.c). Now `visus->scriptor` is
+copied once in `gabc_visus_creare`. Found while writing the psalter's
+Review Focus 5 test (200 re-fits, mount arena flat); a plant putting
+the per-write copy back turns that test red.

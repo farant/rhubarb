@@ -95,3 +95,44 @@ builder; house rule puts all pane state in the manifest.
   stays). `silva/renominare.sh` refuses files with uncommitted
   changes ("plagulae affectae sordidae") - not a no-op; I had cut
   the message off with tail -1.
+
+## 2026-11-14 — T6: the psalm view
+
+- `_aptare`: the fit lives in its own arena for one call: embedded
+  text -> `psalmodia_aptare` (titulus "Psalmus N", Gloria on) -> gabc
+  -> `gabc_visus_textum_ponere(visus, gabc, FALSUM)` (the view COPIES
+  the text into its version arena) -> first fitter warning to the
+  banner ("Psalmus N: causa") -> arena destroyed. The (psalm, tone)
+  pair last fitted is remembered, so a restore or a repeated
+  semitam_secuta does not stop the sound or rebuild. After every fit
+  `gabc_visus_paginam_movere(visus, 0)` rewrites the page clamped to
+  the new layout: a tone change keeps the page (or the last one); a
+  psalm change clears `pagina` first (0).
+- Header (margo_supra 16 px): nodes caput_index "≡", caput_prior "‹",
+  caput_proximus "›", caput_signum (tone label, accent colour); clicks
+  do what Esc / [ / ] / t do. A banner (fitter warning) covers the
+  header text; the nodes still work. Footer title = gabc name: +
+  " · " + tone, so the footer text proves the fitted gabc carried
+  `name: Psalmus N;`. The annotation "8 G" is drawn as its own text
+  element above the initial (test `_textus_aequalis`).
+- Esc in the psalm view: visus=index, psalmus removed, electus = the
+  psalm, sound stopped. Esc in the index is not consumed (vicus
+  closes the pane).
+- MEMORY (Review Focus 5): two per-write leaks into the MOUNT arena
+  were found by `_memoria_probare` design before running: my
+  `_campos_scribere` and gabc_visus `numerum_scribere` both did
+  `chorda_ex_literis(actio, piscina)` per field write (inherited
+  from antiphonale.c). Both now copy the scriptor once at creation.
+  The gabc_visus fix also helps the antiphonale (one copy per page
+  turn, before). The test mounts in its own arena (repo and
+  dispensator stay on the test arena) and checks
+  `piscina_summa_usus` flat over 200 tone changes and 200 psalm
+  steps; plants putting either copy back go red.
+- Test harness note: after a direct `psalterium_argumentum_ponere`
+  the dispensator tree is stale; vicus recomposes after an argument,
+  so the test calls `dispensator_recomponere` (clicks failed before).
+- Plants (build/plantae_psalterium/t6.py), all red then restored:
+  continuare VERUM (the plan's plant) -> `_sonus_probare`; both
+  scriptor copies -> `_memoria_probare`; visus=psalmus without a
+  valid psalm -> status malus; unknown tone -> first ending instead
+  of 8 G; semitam_secuta without a fit; T wrap without +numerus.
