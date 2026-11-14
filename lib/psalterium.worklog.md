@@ -174,3 +174,21 @@ builder; house rule puts all pane state in the manifest.
   tiny. Header now "≡  «  »  8 G" (Latin-1, present); comments in
   psalterium.h follow. Index at that size: 55 rows per page, 3 pages
   (spec AUDIENDA 3). bin/vicus 4.99 -> 5.40 MB (psalter + pane).
+
+## 2026-11-14 — final review fixes
+
+- The `$psalterium(109, 8 G)` argument was stored as the pane's
+  IDENTITY (vicus default, `argumentum_transiens` FALSE): at restart
+  vicus mounts with it, `psalterium_montare` applies it (signum=8 G),
+  and only then restores the route - which does not carry signum
+  (D6). So a tone chosen later was lost on every restart. Now
+  `argumentum_transiens = VERUM` (vicus D5: "argument changes state,
+  not identity", as indagatio). The reviewer warned about
+  semitam_servare's "prima" rule (first route of an argument-less
+  pane not written to the index at once); the vicus restart test
+  (second VicusApplicatio on the same volume, as
+  probatio_vicus_indagatio "reapertura") shows psalm and tone both
+  survive.
+- Banner now drawn below the wrapper's margin (gabc_visus); the
+  header always draws. Page cleared on history to another psalm and
+  on Esc.

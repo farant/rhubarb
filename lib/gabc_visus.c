@@ -1102,16 +1102,17 @@ gabc_visus_pingere (
         y_pedis, chorda_ex_literis(pes, md->piscina), COLOR_TEXT);
     textum_pingere(md, f.latitudo - VISUS_LIMBUS_X - VIII, y_pedis,
         chorda_ex_literis(">", md->piscina), COLOR_TEXT);
-    /* vexillum supra paginam (et supra marginem involucri) */
+    /* vexillum supra paginam, SUB margine involucri (caput
+     * psalterii visibile manet; antiphonale: margo 0) */
     si (visus->vexillum[ZEPHYRUM])
     {
         vexillum.x         = VISUS_LIMBUS_X;
-        vexillum.y         = VISUS_LIMBUS_Y;
+        vexillum.y         = y_paginae;
         vexillum.latitudo  = fundus.latitudo;
         vexillum.altitudo  = VISUS_LINEA;
         mandata_rectangulum(md, vexillum, figura_color_thematis(
             COLOR_ERROR), VERUM);
-        textum_pingere(md, VISUS_LIMBUS_X + II, VISUS_LIMBUS_Y + II,
+        textum_pingere(md, VISUS_LIMBUS_X + II, y_paginae + II,
             chorda_ex_literis(visus->vexillum, md->piscina),
             COLOR_BACKGROUND);
     }

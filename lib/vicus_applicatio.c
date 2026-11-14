@@ -3393,8 +3393,12 @@ psalterium_describere (
     f->argumentum_ponere_ctx  = m;
     f->semitam_secuta         = psalterium_semitam_secuta;
     f->semitam_secuta_ctx     = m;
-    f->locus_titulus          = psalterium_titulus;
-    f->locus_titulus_ctx      = m;
+    /* D5: argumentum ("109,8 G") statum ponit, non identitatem - aliter
+     * initium novum argumentum iterum applicat et tonum postea
+     * electum delet (recensio finalis) */
+    f->argumentum_transiens  = VERUM;
+    f->locus_titulus         = psalterium_titulus;
+    f->locus_titulus_ctx     = m;
 }
 
 /* $psalterium, $psalterium(109), $psalterium(109, 8 G) (spec III.3):

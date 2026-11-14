@@ -86,3 +86,11 @@ per page turn (inherited from antiphonale.c). Now `visus->scriptor` is
 copied once in `gabc_visus_creare`. Found while writing the psalter's
 Review Focus 5 test (200 re-fits, mount arena flat); a plant putting
 the per-write copy back turns that test red.
+
+## 2026-11-14 — banner below margo_supra
+
+The banner (parse error, "not playable", "can't play: sound muted")
+used to sit at the top limbus, i.e. on top of the psalter's header row
+(margo_supra 16 px), hiding its buttons whenever sound was muted. It
+now starts at y_paginae = limbus + margo_supra. The antiphonale has
+margo_supra 0, so its banner is where it was (its suites unchanged).

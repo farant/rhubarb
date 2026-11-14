@@ -940,8 +940,8 @@ fac_ad_indicem (
     vacuum* ctx)
 {
     PsalteriumMontatio* m = (PsalteriumMontatio*)ctx;
-    constans character* tituli[III];
-    constans character* valores[III];
+    constans character* tituli[IV];
+    constans character* valores[IV];
              character  numerus[XVI];
 
     sprintf(numerus, "%d", (integer)_campus_numerus(m, "psalmus", I,
@@ -952,8 +952,10 @@ fac_ad_indicem (
     valores[I]         = "";
     tituli[II]         = "electus";
     valores[II]        = numerus;
+    tituli[III]        = "pagina";
+    valores[III]       = "";
     (vacuum)gabc_visus_sistere(_privatum(m)->visus);
-    redde _campos_scribere(m, tituli, valores, III);
+    redde _campos_scribere(m, tituli, valores, IV);
 }
 
 interior GabcVisus*
@@ -1313,7 +1315,7 @@ _indicem_pingere (
 }
 
 /* caput visus psalmi: "≡  «  »   8 G" (nodi caput_* eodem loco);
- * vexillum (admonitio) id tegit */
+ * vexillum infra caput pingitur (gabc_visus: sub margine) */
 interior vacuum
 _caput_pingere (
      constans PsalteriumMontatio* m,
@@ -1325,10 +1327,6 @@ _caput_pingere (
     s32 y = LIMBUS_Y + (MARGO_CAPITIS - VIII) / II;
     i32 i;
 
-    si (gabc_visus_vexillum(_privatum(m)->visus)[ZEPHYRUM] != '\0')
-    {
-        redde;
-    }
     per (i = ZEPHYRUM; i < componens_numerus_liberorum(radix); i++)
     {
          Componens* f = componens_liberum(radix, i);
@@ -1798,6 +1796,21 @@ psalterium_semitam_secuta (
     {
         (vacuum)gabc_visus_sistere(_privatum(m)->visus);
         redde VERUM;
+    }
+    /* psalmus alius quam aptatus (historia): pagina 0 (spec III.2) */
+    si (   _privatum(m)->psalmus_aptatus >= ZEPHYRUM
+        && _campus_numerus(m, "psalmus", I, CL)
+           != _privatum(m)->psalmus_aptatus)
+    {
+        constans character* tituli[I];
+        constans character* valores[I];
+
+        tituli[ZEPHYRUM]   = "pagina";
+        valores[ZEPHYRUM]  = "";
+        si (!_campos_scribere(m, tituli, valores, I))
+        {
+            redde FALSUM;
+        }
     }
     redde _aptare(m);
 }

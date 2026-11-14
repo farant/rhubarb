@@ -375,3 +375,41 @@ a command there) - cost if wrong: none seen, same drawing path;
 header psalm arrows "«" "»" instead of "‹" "›" (font lacks them) -
 cost: a glyph choice for Fran. Listening: not done by Claude (no
 ears) - offered to Fran.
+
+**Final review (2026-11-14).** One fresh reviewer (Opus) over
+0c6c96e84..951671415: "with fixes", no Critical. Fixed in one pass,
+each test red first, then green; plants restored:
+- Final: fixed Important 1 (a tone given with `$psalterium(N, tone)`
+  came back on every restart: the argument was the pane's identity,
+  re-applied at mount after the user's later tone) -
+  `f->argumentum_transiens = VERUM`; vicus test
+  `_restitutio_probare` (restart on the same volume keeps the chosen
+  tone) RED->GREEN; plant (FALSUM) red.
+- Final: fixed Important 2 (the "can't play" / muted banner hid the
+  psalm header) - gabc_visus draws the banner at `y_paginae`, below
+  the wrapper's margin (antiphonale margin 0: unchanged), header no
+  longer suppressed; `_recensio_probare` RED->GREEN; plant red.
+- Final: fixed Minor 1, regraded Important (spec III.2 "page 0 for a
+  new psalm"): history to another psalm and Esc-then-`$psalterium`
+  kept the old page - `semitam_secuta` clears `pagina` when the psalm
+  differs from the fitted one, Esc clears it; RED->GREEN; two plants
+  red.
+- Final: fixed Minor 3, regraded Important (Review Focus 2's psalm
+  half was promised in T6, untested): narrow psalm view shows "pane
+  too narrow"; pins existing behaviour, plant on the message red.
+- Final: minor (deferred): Review Focus 5's test measures the mount
+  arena only; a leaked fit or version arena (dynamic, outside it)
+  would pass. Code destroys both.
+- Final: minor (deferred): `_aptare` records the fitted pair even if
+  the view rejected the gabc (unreachable today).
+- Final: minor (deferred): Backspace in the index with no digits is
+  consumed (harmless unless vicus binds it).
+- Final: Ruling: declined-to-judge items stand as recorded by the
+  reviewer - sound on after a non-Esc close, per-mount arenas never
+  freed, stale playing icon after another pane takes the singer (all
+  house-wide / inherited from the antiphonale, no unmount hook);
+  height-20 psalm view pages overflowing systems (gabc_compositio,
+  shared); no digit timeout and Esc-with-digits closes (spec); extreme
+  narrow overflow (cosmetic); insula arena growth (vicus-wide);
+  harness quirk (ledger note) - cost if wrong: each is a separate
+  follow-up, none a regression from this branch.

@@ -218,6 +218,58 @@ _iussum_probare (
         "2 A");
 }
 
+/* recensio finalis: tonus electus post $psalterium(109, 8 G) initium
+ * novum vici (volumen idem) superat - argumentum statum ponit, non
+ * identitatem lateris (argumentum_transiens) */
+interior vacuum
+_restitutio_probare (
+    CredoContextus* c)
+{
+              Mundus* x = (Mundus*)c->datum;
+               Vicus* v;
+          ManusLudus* m;
+          VicusLatus* l;
+     VicusApplicatio  altera;
+           character  signum[XVI];
+              chorda  s;
+
+    CREDO_NECESSE(aedificare(x, c));
+    v = x->app.vicus;
+    m = manus_ludus_creare(c->piscina, x->app.d);
+    CREDO_NECESSE_NON_NIHIL(m);
+    CREDO_NECESSE(vicus_activam_ponere(v, "3"));
+    dispensator_recomponere(x->app.d);
+    verbum_ferire(x, m, "$psalterium(109, 8 G)");
+    l = latus_psalterii(v);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_VERUM(chorda_vacua(l->argumentum));
+
+    /* t in latere psalterii: tonus alius */
+    CREDO_NECESSE(vicus_focum_ponere(v, VICUS_DEXTRUM));
+    dispensator_recomponere(x->app.d);
+    (vacuum)manus_ludus_clavem(m, 't', ZEPHYRUM);
+    (vacuum)vicus_pulsare(v);
+    (vacuum)vicus_pulsare(v);
+    s = campus(latus_psalterii(v), "signum");
+    CREDO_NECESSE(s.mensura > ZEPHYRUM && s.mensura < XVI
+        && !chorda_aequalis_literis(s, "8 G"));
+    memcpy(signum, s.datum, (size_t)s.mensura);
+    signum[s.mensura] = '\0';
+
+    /* vicus iterum aedificatus super volumen idem */
+    CREDO_NECESSE(vicus_applicatio_aedificare(&altera, c->piscina,
+        internamentum_creare(c->piscina), x->volumen, CDLXXX,
+        CDLXXX + VICUS_ALTITUDO_TABULARUM));
+    CREDO_NECESSE(vicus_activam_ponere(altera.vicus, "3"));
+    (vacuum)vicus_pulsare(altera.vicus);
+    (vacuum)vicus_pulsare(altera.vicus);
+    l = latus_psalterii(altera.vicus);
+    CREDO_NECESSE_NON_NIHIL(l);
+    CREDO_CHORDA_AEQUALIS_LITERIS(psalterium_titulus(l->montatio,
+        c->piscina), "Psalmus 109");
+    CREDO_CHORDA_AEQUALIS_LITERIS(campus(l, "signum"), signum);
+}
+
 #define LATITUDO_IMAGINIS  MCC
 #define ALTITUDO_IMAGINIS  DCCC
 
@@ -277,6 +329,8 @@ _imagines_probare (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "iussum $psalterium", _iussum_probare, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
+    { "restitutio toni post initium novum", _restitutio_probare,
+        mundum_parare, mundum_purgare, NIHIL, NIHIL },
     { "imagines (fumus)", _imagines_probare, mundum_parare,
         mundum_purgare, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

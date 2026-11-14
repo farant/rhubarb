@@ -52,6 +52,7 @@ nomen structura {
                      s64 pulsus;
                      i32 incepta;
                      i32 sistita;
+                     b32 recusare;  /* porta recusat (sonus mutus) */
 } Mundus;
 
 interior b32
@@ -64,6 +65,10 @@ _incipere (
 
     (vacuum)carmen;
     w->incepta++;
+    si (w->recusare)
+    {
+        redde FALSUM;
+    }
     w->sonat   = VERUM;
     w->pulsus  = pulsus;
     redde VERUM;
@@ -1040,6 +1045,70 @@ _semita_probare (
     CREDO_VERUM (_mundum(c, "psalterium/psalmus/0") == NIHIL);
 }
 
+/* y rectanguli vexilli (COLOR_ERROR); -1 si nullum */
+interior s32
+_vexillum_y (
+    Mandata* md)
+{
+    constans Mandatum* x;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus       == MANDATUM_RECTANGULUM
+            && x->color.genus == COLOR_MANDATI_THEMA
+            && x->color.valor == (i32)COLOR_ERROR)
+        {
+            redde x->fines.y;
+        }
+    }
+    redde -I;
+}
+
+/* recensio finalis: vexillum (sonus mutus) caput non tegit; pagina 0
+ * psalmo novo per historiam et post Esc; visus psalmi angustus */
+interior vacuum
+_recensio_probare (
+    CredoContextus* c)
+{
+    Mundus* w = _mundum(c, "109");
+   Mandata* md;
+
+    CREDO_NECESSE (w != NIHIL);
+    /* porta recusat: vexillum "can't play", caput manet */
+    w->recusare = VERUM;
+    _littera(w, ' ');
+    md = _reddere(w, c->piscina);
+    CREDO_VERUM (_textus_continet(md, "can't play"));
+    CREDO_VERUM (_textus_aequalis(md, "\xE2\x89\xA1"));
+    /* vexillum sub capite: limbus VIII + margo capitis XVI */
+    CREDO_AEQUALIS_S32 (_vexillum_y(md), XXIV);
+    w->recusare = FALSUM;
+
+    /* historia: semita ad psalmum alium restituta -> pagina 0 */
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, "118"));
+    _clavis(w, CLAVIS_PAGINA_DEORSUM, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_campus(w, "pagina", ZEPHYRUM), I);
+    CREDO_NECESSE (_campum_scribere(w, "psalmus", "119", c->piscina));
+    CREDO_VERUM (psalterium_semitam_secuta(&w->m));
+    CREDO_AEQUALIS_S32 (_campus(w, "pagina", ZEPHYRUM), ZEPHYRUM);
+
+    /* Esc deinde $psalterium(eundem): pagina 0 (ut Enter) */
+    _clavis(w, CLAVIS_PAGINA_DEORSUM, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (_campus(w, "pagina", ZEPHYRUM), I);
+    _clavis(w, CLAVIS_EFFUGIUM, ZEPHYRUM);
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, "119"));
+    CREDO_AEQUALIS_S32 (_campus(w, "pagina", ZEPHYRUM), ZEPHYRUM);
+
+    /* Review Focus II: visus psalmi angustus - nuntius "pane too
+     * narrow", sine ruina */
+    w = _mundum_mensura(c, "109", XL, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    CREDO_VERUM (_textus_continet(_reddere(w, c->piscina),
+        "pane too narrow"));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "incipit", _incipit_probare, NIHIL, NIHIL, NIHIL, NIHIL },
     { "circulus signorum", _signa_probare, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1059,6 +1128,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
         NIHIL },
     { "semita: restitutio et URI", _semita_probare, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "recensio: vexillum, pagina, angustus", _recensio_probare, NIHIL,
+        NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
