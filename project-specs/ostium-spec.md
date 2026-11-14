@@ -80,7 +80,8 @@ world pane.
    world does not step.
 9. **A doorway whose scene is missing or unreadable** still enters.
    The pane says "This scene cannot be shown:" with the reason and
-   "E: go back". E (or a click on that line) leaves.
+   "E: go back". E (or a click anywhere in the pane - as built,
+   Fran 2026-11-14) leaves.
 10. **Leaving:** an exit named `mundus` returns to the 3D view. The
     character stands at the walkable cell nearest the doorway
     entered, facing as before. In `$scene` itself a `mundus` exit

@@ -19,6 +19,15 @@
  * capsa ad marginem picturae coacta. ostia_altitudo: solum ostii
  * altius quam persona; ostium in saxo altitudinem personae sumit.
  * ostia_vacua: sine persona, locus substitutus dum ostium propinquum.
+ *
+ * INTRARE ET EXIRE (ostium-plan T4). intrare: E procul nihil; E et
+ * ictus in signo intrant (campi, claves purgatae, mundus stat);
+ * intus W A S D g [ ] mortuae, scaena vivit; exitus "mundus" (mus et
+ * claves) personam in cella ostio proxima ponit, quiescentem.
+ * restitutio: latus iterum montatum intus incipit; locus iterum
+ * conditus dum intus; ostium non iam utile aut illegibile: initium.
+ * ignota: scaena absens, remota dum intus, massa recusata - nuntius,
+ * E et ictus ubivis exeunt; sine loco nihil ruit.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -44,6 +53,10 @@
 #include "mundus_ostia.h"
 #include "mundus_pictura.h"
 #include "mundus_solum.h"
+#include "graphis.h"
+#include "scaena.h"
+#include "scaena_repositorium.h"
+#include "scaena_latus.h"
 #include "stereometria.h"
 #include "credo.h"
 #include "mundus_locus_fictus.h"
@@ -57,6 +70,7 @@
 #define VIA_LAPIDIS "probationes/fixa/statuae/lapis.glb"
 #define VIA_FUNGI   "probationes/fixa/statuae/fungus.glb"
 #define VIA_PLANI   "probationes/fixa/statuae/planum.glb"
+#define VIA_CASAE   "apps/scaena/loci/casa.scaena.stml"
 
 nomen structura {
     InternamentumChorda* intern;
@@ -1126,12 +1140,6 @@ _sectio_ostia (
     area = _nodus(w, "ostium", c->piscina);
     CREDO_NECESSE (area != NIHIL);
     CREDO_VERUM (_fines_pares(area->fines, f));
-    /* in hoc gradu ictus et E nihil agunt */
-    _ictus(w, "ostium", c->piscina);
-    _premere(w, 'e');
-    _solvere(w, 'e');
-    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
-    CREDO_VERUM (_quadrum(w) != NIHIL);
     /* ambulat: signum in MUNDO fixum - in schirmo cum origine
      * quadri movetur; propinquum iff distantia <= radius, gradu
      * quoque */
@@ -1469,6 +1477,844 @@ _sectio_ostia_vacua (
     _finire(w);
 }
 
+
+/* ==================================================
+ * Intrare et exire (ostium-plan T4)
+ * ================================================== */
+
+interior chorda
+_fons_plagularum (
+    constans character* directorium,
+                chorda  titulus,
+               Piscina* piscina)
+{
+    character via[CXXVIII];
+       chorda vacua;
+
+    vacua.datum    = NIHIL;
+    vacua.mensura  = ZEPHYRUM;
+    (vacuum)sprintf(via, "%s/%.*s.stml", directorium,
+        (integer)titulus.mensura,
+        (constans character*)titulus.datum);
+    si (!filum_existit(via))
+    {
+        redde vacua;
+    }
+    redde filum_legere_totum(via, piscina);
+}
+
+interior chorda
+_fons_picturarum (
+     chorda  titulus,
+     vacuum* contextus,
+    Piscina* piscina)
+{
+    (vacuum)contextus;
+    redde _fons_plagularum("apps/scaena/loci", titulus, piscina);
+}
+
+interior chorda
+_fons_partium (
+     chorda  titulus,
+     vacuum* contextus,
+    Piscina* piscina)
+{
+    (vacuum)contextus;
+    redde _fons_plagularum("graphis/res", titulus, piscina);
+}
+
+/* casa composita: prospectus[0] hut-hearth, [1] hut-door */
+interior ScaenaFructus
+_casa (
+    CredoContextus* c)
+{
+    redde scaena_struere(filum_legere_totum(VIA_CASAE, c->piscina),
+        _fons_picturarum, _fons_partium, NIHIL, c->piscina);
+}
+
+/* casam in volumen addere */
+interior b32
+_casam_addere (
+    CredoContextus* c,
+           Volumen* v)
+{
+    ScaenaFructus f = _casa(c);
+              i32 k;
+
+    si (!v || !f.successus || f.numerus != II)
+    {
+        redde FALSUM;
+    }
+    per (k = ZEPHYRUM; k < f.numerus; k++)
+    {
+        si (!scaena_addere(v, f.prospectus[k].titulus,
+            scaena_scribere(&f.prospectus[k], c->piscina)))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+nomen structura {
+    constans character* titulus;
+    constans character* valor;
+} ParProbae;
+
+interior vacuum
+_campum_pone (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    ParProbae* par = (ParProbae*)ctx;
+
+    si (!par->valor)
+    {
+        (vacuum)insula_attributum_tollere(radix, par->titulus);
+        redde;
+    }
+    insula_attributum_ponere(radix, p, in, par->titulus, par->valor);
+}
+
+/* campum rami scribere ut latus ipsum faceret; NIHIL tollit */
+interior b32
+_campum_scribe (
+        CredoContextus* c,
+                 Orbis* w,
+    constans character* titulus,
+    constans character* valor)
+{
+    ParProbae par;
+       chorda prior = w->repo->scriptor;
+          b32 ok;
+
+    par.titulus  = titulus;
+    par.valor    = valor;
+    insula_scriptorem_ponere(w->repo, _ch(c, "mundus.agere"));
+    ok = mutare_ramum(&w->m.ramus, _campum_pone, &par);
+    insula_scriptorem_ponere(w->repo, prior);
+    redde ok;
+}
+
+/* latus dimittere et in ramo eodem iterum montare (vicus
+ * restitutus) */
+interior b32
+_iterum_montare (
+    CredoContextus* c,
+             Orbis* w)
+{
+    MundusLatusPorta  porta;
+               Motus* motus;
+
+    mundus_latus_dimittere(&w->m);
+    porta.nunc  = _nunc;
+    porta.ctx   = w;
+    si (!mundus_latus_montare(&w->m, c->piscina, w->intern, w->volumen,
+        w->repo, "m1", &porta, LATITUDO, ALTITUDO, NIHIL))
+    {
+        redde FALSUM;
+    }
+    w->d = dispensator_creare(c->piscina, w->intern, w->repo,
+        w->m.actiones, mundus_latus_componere, &w->m, CCC);
+    si (!w->d)
+    {
+        redde FALSUM;
+    }
+    motus         = dispensator_motus(w->d);
+    motus->ramus  = w->m.ramus;
+    dispensator_recomponere(w->d);
+    redde VERUM;
+}
+
+/* ictus muris in puncto radicis */
+interior vacuum
+_ictus_botonis (
+           Orbis* w,
+             s32  x,
+             s32  y,
+    mus_botton_t  botton)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus             = EVENTUS_MUS_DEPRESSUS;
+    e.datum.mus.x       = x;
+    e.datum.mus.y       = y;
+    e.datum.mus.botton  = botton;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+/* ictus sinister in puncto radicis */
+interior vacuum
+_ictus_in (
+    Orbis* w,
+      s32  x,
+      s32  y)
+{
+    _ictus_botonis(w, x, y, MUS_SINISTER);
+}
+
+/* ictus in pixelo INTERIORE regionis rei 'titulus' prospectus 'p'
+ * (pictura scaenae in area "pictura") */
+interior b32
+_rem_icere (
+                        Orbis* w,
+    constans ScaenaProspectus* p,
+           constans character* titulus,
+                      Piscina* piscina)
+{
+    Componens* n        = _nodus(w, "pictura", piscina);
+          i32  dominus  = ZEPHYRUM;
+          s32  x;
+          s32  y;
+          i32  k;
+
+    per (k = ZEPHYRUM; k < p->rerum; k++)
+    {
+        si (chorda_aequalis_literis(p->res[k].titulus, titulus))
+        {
+            dominus = k + I;
+        }
+    }
+    si (!n || dominus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    per (y = I; y < GRAPHIS_ALTITUDO - I; y++)
+    {
+        per (x = I; x < GRAPHIS_LATITUDO - I; x++)
+        {
+            constans i8* d = p->domini + y * GRAPHIS_LATITUDO + x;
+
+            si (   d[ZEPHYRUM] == dominus && d[-I] == dominus
+                && d[I] == dominus && d[-GRAPHIS_LATITUDO] == dominus
+                && d[GRAPHIS_LATITUDO] == dominus)
+            {
+                _ictus_in(w, n->fines.x + x, n->fines.y + y);
+                redde VERUM;
+            }
+        }
+    }
+    redde FALSUM;
+}
+
+interior vacuum
+_reditus (
+    Orbis* w)
+{
+    Eventus e;
+
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.clavis    = CLAVIS_REDITUS;
+    e.datum.clavis.producta  = XIII;
+    dispensator_tractare(w->d, &e);
+    dispensator_recomponere(w->d);
+}
+
+/* distantia minima a (x, z) ad centrum cellae in qua corpus stare
+ * potest, intra radium (vi bruta); negativa si nulla */
+interior f32
+_proxima_distantia (
+    constans MundusSolum* s,
+                     f32  x,
+                     f32  z,
+                     f32  radius)
+{
+    f32 cella    = 1.0f / (f32)MUNDUS_CELLAE_PER_UNITATEM;
+    f32 optimum  = -1.0f;
+    i32 i;
+    i32 j;
+
+    per (j = ZEPHYRUM; j < s->altitudo; j++)
+    {
+        per (i = ZEPHYRUM; i < s->latitudo; i++)
+        {
+            f32 medium_x = s->origo_x + ((f32)i + 0.5f) * cella;
+            f32 medium_z = s->origo_z + ((f32)j + 0.5f) * cella;
+            f32 spatium    = (f32)sqrt((f64)((medium_x - x)
+                * (medium_x - x) + (medium_z - z) * (medium_z - z)));
+
+            si (   spatium <= radius
+                && mundus_solum_stare(s, medium_x, medium_z,
+                       MUNDUS_CORPORIS_RADIUS)
+                && (optimum < 0.0f || spatium < optimum))
+            {
+                optimum = spatium;
+            }
+        }
+    }
+    redde optimum;
+}
+
+/* corpus in centro cellae stat? */
+interior b32
+_in_centro_cellae (
+    Orbis* w)
+{
+    f32 cella   = 1.0f / (f32)MUNDUS_CELLAE_PER_UNITATEM;
+    f32 pars_x  = (w->m.corpus.x - w->m.solum->origo_x) / cella;
+    f32 pars_z  = (w->m.corpus.z - w->m.solum->origo_z) / cella;
+
+    pars_x -= (f32)floor((f64)pars_x);
+    pars_z -= (f32)floor((f64)pars_z);
+    redde fabs((f64)pars_x - 0.5) < 0.001
+        && fabs((f64)pars_z - 0.5) < 0.001;
+}
+
+/* latus foris est: campi vacui, areae mundi, nulla scaenae */
+interior vacuum
+_foris_probare (
+    CredoContextus* c,
+             Orbis* w)
+{
+    CREDO_FALSUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_campus(w, "prospectus", NIHIL));
+    CREDO_VERUM (_campus(w, "tactum", NIHIL));
+    CREDO_VERUM (_campus(w, "ostium", NIHIL));
+    CREDO_VERUM (_nodus(w, "humus", c->piscina) != NIHIL);
+    CREDO_VERUM (_nodus(w, "sagitta_prior", c->piscina) != NIHIL);
+    CREDO_VERUM (mundus_latus_imago_fons(w->m.scaenae_titulus, &w->m)
+        == NIHIL);
+}
+
+/* persona ad ostium (ostii_x, ostii_z) reddita: in centro cellae
+ * gressibilis ostio PROXIMAE, quiescens */
+interior vacuum
+_ad_ostium_probare (
+    CredoContextus* c,
+             Orbis* w,
+               f32  ostii_x,
+               f32  ostii_z,
+               f32  radius)
+{
+    f32 speratum = _proxima_distantia(w->m.solum, ostii_x, ostii_z,
+        radius);
+
+    CREDO_VERUM (speratum >= 0.0f);
+    CREDO_VERUM (w->m.positum);
+    CREDO_F32_PROXIMUS (_distantia(w, ostii_x, ostii_z), speratum,
+        0.0005f);
+    CREDO_VERUM (_in_centro_cellae(w));
+    CREDO_VERUM (mundus_solum_stare(w->m.solum, w->m.corpus.x,
+        w->m.corpus.z, w->m.corpus.radius));
+    CREDO_FALSUM (w->m.corpus.movetur);
+    CREDO_FALSUM (w->m.corpus.intendit);
+    CREDO_FALSUM (w->m.tentae[ZEPHYRUM] || w->m.tentae[I]
+        || w->m.tentae[II] || w->m.tentae[III]);
+    (vacuum)c;
+}
+
+interior vacuum
+_sectio_intrare (
+    CredoContextus* c)
+{
+              Volumen* v = _volumen(c, "mundus_intrare", VERUM, II);
+                Orbis* w;
+        ScaenaFructus  casa = _casa(c);
+     ScaenaProspectus* focus;
+     ScaenaProspectus* ianua;
+         MundusOstium  o[I];
+       constans Imago* im;
+            character  speratum[LXXX];
+                  f32  x0;
+                  f32  z0;
+                  f32  ostii_x;
+                  f32  ostii_z;
+                  f32  x1;
+                  f32  z1;
+                  f32  facies;
+                  f32  tempus;
+                  i32  k;
+
+    CREDO_NECESSE (_casam_addere(c, v));
+    CREDO_NECESSE (casa.successus && casa.numerus == II);
+    focus  = &casa.prospectus[ZEPHYRUM];
+    ianua  = &casa.prospectus[I];
+    w      = _orbem(c, v, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum && _quadrum(w) != NIHIL);
+    x0 = w->m.corpus.x;
+    z0 = w->m.corpus.z;
+    _foris_probare(c, w);
+    /* E sine ostiis et cum ostio remoto: nihil */
+    _premere(w, 'e');
+    _solvere(w, 'e');
+    _foris_probare(c, w);
+    o[ZEPHYRUM] = _ostium(c, "hut-door", x0 + 4.0f, z0, 1.5f);
+    _ostia_pone(c, w, o, I);
+    _premere(w, 'e');
+    _solvere(w, 'e');
+    _foris_probare(c, w);
+    /* ostium propinquum; W TENTA dum E premitur (plan, focus 5) */
+    ostii_x      = x0 + 1.0f;
+    ostii_z      = z0 + 0.3f;
+    o[ZEPHYRUM]  = _ostium(c, "hut-door", ostii_x, ostii_z, 1.5f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+    _premere(w, 'w');
+    _pulsus_multi(w, II);
+    CREDO_VERUM (w->m.corpus.movetur);
+    CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+    facies = w->m.corpus.facies;
+    /* E cum modificante non intrat */
+    _clavis_eventus(w, 'e', VERUM, MOD_IMPERIUM);
+    _foris_probare(c, w);
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_campus(w, "prospectus", "hut-door"));
+    CREDO_VERUM (_campus(w, "tactum", NIHIL));
+    sprintf(speratum, "%d %d %d", (integer)_millesimae(ostii_x),
+        (integer)_millesimae(ostii_z), MD);
+    CREDO_VERUM (_campus(w, "ostium", speratum));
+    /* claves purgatae, mundus stat, pulsus rari */
+    CREDO_FALSUM (w->m.tentae[ZEPHYRUM] || w->m.tentae[I]
+        || w->m.tentae[II] || w->m.tentae[III]);
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_INSPECTIONIS);
+    x1      = w->m.corpus.x;
+    z1      = w->m.corpus.z;
+    tempus  = w->m.corpus.tempus_motus;
+    _pulsus_multi(w, X);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x1, 0.00001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, z1, 0.00001f);
+    /* mundus non promovetur: persona in medio passu haeret */
+    CREDO_VERUM (w->m.corpus.movetur);
+    CREDO_F32_PROXIMUS (w->m.corpus.tempus_motus, tempus, 0.00001f);
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_INSPECTIONIS);
+    _solvere(w, 'w');
+    _solvere(w, 'e');
+    /* intus: scaena ostenditur, mundi partes absunt */
+    CREDO_VERUM (_textus_pictus(c, w, "The other end of the room."));
+    CREDO_VERUM (_textus_pictus(c, w, "hut-door"));
+    CREDO_FALSUM (_textus_pictus(c, w, MUNDUS_LATUS_SIGNUM));
+    CREDO_FALSUM (_textus_pictus(c, w, "2/2"));
+    CREDO_FALSUM (_textus_pictus(c, w, "mushroom man"));
+    CREDO_FALSUM (_textus_pictus(c, w, "atkinson"));
+    CREDO_VERUM (_nodus(w, "humus", c->piscina) == NIHIL);
+    CREDO_VERUM (_nodus(w, "sagitta_prior", c->piscina) == NIHIL);
+    CREDO_VERUM (_nodus(w, "sagitta_proxima", c->piscina) == NIHIL);
+    CREDO_VERUM (_nodus(w, "ostium", c->piscina) == NIHIL);
+    CREDO_NECESSE (_nodus(w, "pictura", c->piscina) != NIHIL);
+    CREDO_AEQUALIS_I32 ((i32)_nodus(w, "pictura", c->piscina)
+        ->fines.altitudo, GRAPHIS_ALTITUDO);
+    im = mundus_latus_imago_fons(w->m.scaenae_titulus, &w->m);
+    CREDO_NECESSE (im != NIHIL);
+    CREDO_AEQUALIS_I32 (im->latitudo, GRAPHIS_LATITUDO);
+    CREDO_AEQUALIS_I32 (im->altitudo, GRAPHIS_ALTITUDO);
+    CREDO_VERUM (_imago_picta(c, w));
+    CREDO_VERUM (chorda_aequalis_literis(mundus_latus_titulus(&w->m,
+        c->piscina), "hut-door"));
+    /* W A S D, g, [ ] intus mortuae */
+    _premere(w, 'd');
+    CREDO_FALSUM (w->m.tentae[MUNDUS_LATUS_DEXTRUM]);
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_INSPECTIONIS);
+    _pulsus_multi(w, X);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x1, 0.00001f);
+    _solvere(w, 'd');
+    _premere(w, 'g');
+    CREDO_VERUM (_campus(w, "humus", NIHIL));
+    _premere(w, ']');
+    _premere(w, '[');
+    CREDO_VERUM (_campus(w, "persona", NIHIL));
+    CREDO_VERUM (_campus(w, "prospectus", "hut-door"));
+    /* E in scaena bona nihil agit */
+    _premere(w, 'e');
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    /* res tacta: textus, campus scriptore lateris */
+    CREDO_VERUM (_rem_icere(w, ianua, "coat", c->piscina));
+    CREDO_VERUM (_campus(w, "tactum", "hut-door/coat"));
+    CREDO_VERUM (_textus_pictus(c, w, "Heavy wool"));
+    /* exitus inter prospectus */
+    CREDO_VERUM (_rem_icere(w, ianua, "turn", c->piscina));
+    CREDO_VERUM (_campus(w, "prospectus", "hut-hearth"));
+    CREDO_VERUM (_textus_pictus(c, w, "A low room of logs"));
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_rem_icere(w, focus, "turn", c->piscina));
+    CREDO_VERUM (_campus(w, "prospectus", "hut-door"));
+    /* W iterum pressa intus (clavis adhuc tenta iterat): post
+     * exitum non ambulat */
+    _premere(w, 'w');
+    /* exitus "mundus": foris, ad ostium, facies ut ante */
+    CREDO_VERUM (_rem_icere(w, ianua, "door", c->piscina));
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, ostii_x, ostii_z, 1.5f);
+    CREDO_F32_PROXIMUS (w->m.corpus.facies, facies, 0.0001f);
+    /* non ubi intravit (ibi ambulabat) */
+    CREDO_VERUM (_distantia(w, x1, z1) > 0.3f);
+    /* signum statim redit, quadrum mundi quoque */
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    CREDO_VERUM (_textus_pictus(c, w, MUNDUS_LATUS_SIGNUM));
+    CREDO_VERUM (_textus_pictus(c, w, "mushroom man"));
+    CREDO_FALSUM (_textus_pictus(c, w, "The other end of the room."));
+    CREDO_VERUM (chorda_aequalis_literis(mundus_latus_titulus(&w->m,
+        c->piscina), "mushroom man"));
+    x1 = w->m.corpus.x;
+    z1 = w->m.corpus.z;
+    _pulsus_multi(w, X);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x1, 0.00001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, z1, 0.00001f);
+    CREDO_FALSUM (w->m.corpus.movetur);
+    /* foris W iterum ambulat */
+    _premere(w, 'w');
+    _pulsus_multi(w, III);
+    CREDO_VERUM (w->m.corpus.movetur);
+    _solvere(w, 'w');
+    _pulsus_multi(w, III);
+    CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+    /* ictus in signo intrat; tactum prius vacatur */
+    CREDO_NECESSE (_nodus(w, "ostium", c->piscina) != NIHIL);
+    _ictus(w, "ostium", c->piscina);
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_campus(w, "prospectus", "hut-door"));
+    CREDO_VERUM (_campus(w, "tactum", NIHIL));
+    CREDO_FALSUM (_textus_pictus(c, w, "Heavy wool"));
+    /* res sub indice (ianua, modo icta) non manet */
+    CREDO_AEQUALIS_I32 (w->m.scaena.super, ZEPHYRUM);
+    /* clavibus exit: j usque ad "door", Enter */
+    per (k = ZEPHYRUM; k < VIII; k++)
+    {
+        _premere(w, 'j');
+        si (   w->m.scaena.super > ZEPHYRUM
+            && chorda_aequalis_literis(ianua->res[w->m.scaena.super
+                - I].titulus, "door"))
+        {
+            frange;
+        }
+    }
+    CREDO_NECESSE (k < VIII);
+    _reditus(w);
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, ostii_x, ostii_z, 1.5f);
+    _finire(w);
+}
+
+interior vacuum
+_sectio_restitutio (
+    CredoContextus* c)
+{
+          Volumen* v = _volumen(c, "mundus_restitutio", VERUM, II);
+            Orbis* w;
+    ScaenaFructus  casa = _casa(c);
+     MundusOstium  o[II];
+        character  campus[LXXX];
+              f32  x0;
+              f32  z0;
+              f32  ostii_x;
+              f32  ostii_z;
+              f32  extra_x;
+              f32  initii_x = 0.0f;
+              f32  initii_z = 0.0f;
+
+    CREDO_NECESSE (_casam_addere(c, v));
+    CREDO_NECESSE (casa.successus && casa.numerus == II);
+    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum);
+    x0       = w->m.corpus.x;
+    z0       = w->m.corpus.z;
+    ostii_x  = x0 - 1.1f;
+    ostii_z  = z0 + 0.6f;
+    /* ostium SECUNDUM propinquum: scaena et punctum eius */
+    o[ZEPHYRUM]  = _ostium(c, "longe", x0 + 6.0f, z0, 1.0f);
+    o[I]         = _ostium(c, "hut-door", ostii_x, ostii_z, 2.0f);
+    _ostia_pone(c, w, o, II);
+    CREDO_NECESSE (w->m.ostium_propinquum == I);
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_campus(w, "prospectus", "hut-door"));
+    /* vicus restitutus: latus intus incipit, scaena ostenditur */
+    CREDO_NECESSE (_iterum_montare(c, w));
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_textus_pictus(c, w, "The other end of the room."));
+    CREDO_VERUM (mundus_latus_imago_fons(w->m.scaenae_titulus, &w->m)
+        != NIHIL);
+    /* quadrum mundi intus non fit */
+    CREDO_VERUM (_quadrum(w) == NIHIL);
+    CREDO_VERUM (w->m.positum);
+    CREDO_VERUM (_nodus(w, "humus", c->piscina) == NIHIL);
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_INSPECTIONIS);
+    /* exitus post restitutionem: ad ostium, non ad initium */
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, ostii_x, ostii_z, 2.0f);
+    CREDO_VERUM (_distantia(w, x0, z0) > 0.5f);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    /* 'ostium' illegibile aut extra locum: initium loci */
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium", "ibi 12 x"));
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x0, 0.0001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, z0, 0.0001f);
+    /* ad ostium redire: a tenta */
+    _premere(w, 'a');
+    _pulsus_multi(w, VI);
+    _solvere(w, 'a');
+    _pulsus_multi(w, II);
+    CREDO_NECESSE (w->m.ostium_propinquum == I);
+    CREDO_VERUM (_distantia(w, x0, z0) > 0.5f);
+    /* numeri tres boni cum cauda: illegibile, initium */
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    sprintf(campus, "%d %d 2000 x", (integer)_millesimae(ostii_x),
+        (integer)_millesimae(ostii_z));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium", campus));
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x0, 0.0001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, z0, 0.0001f);
+    /* RADIUS campi valet: punctum unitate extra marginem loci -
+     * radio 0.5 nulla cella (initium), radio III cella marginis */
+    extra_x = w->m.solum->origo_x - 1.0f;
+    CREDO_NECESSE (_proxima_distantia(w->m.solum, extra_x, z0, 0.5f)
+        < 0.0f);
+    CREDO_NECESSE (_proxima_distantia(w->m.solum, extra_x, z0, 3.0f)
+        > 0.0f);
+    CREDO_NECESSE (_campum_scribe(c, w, "prospectus", "hut-door"));
+    sprintf(campus, "%d %d 500", (integer)_millesimae(extra_x),
+        (integer)_millesimae(z0));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium", campus));
+    dispensator_recomponere(w->d);
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x0, 0.0001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, z0, 0.0001f);
+    CREDO_NECESSE (_campum_scribe(c, w, "prospectus", "hut-door"));
+    sprintf(campus, "%d %d 3000", (integer)_millesimae(extra_x),
+        (integer)_millesimae(z0));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium", campus));
+    dispensator_recomponere(w->d);
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, (f32)_millesimae(extra_x) / 1000.0f,
+        (f32)_millesimae(z0) / 1000.0f, 3.0f);
+    CREDO_VERUM (_distantia(w, x0, z0) > 3.0f);
+    /* radius immanis (campus corruptus): cella proxima tamen, sine
+     * mora */
+    CREDO_NECESSE (_campum_scribe(c, w, "prospectus", "hut-door"));
+    sprintf(campus, "%d %d 2000000000", (integer)_millesimae(ostii_x),
+        (integer)_millesimae(ostii_z));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium", campus));
+    dispensator_recomponere(w->d);
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, ostii_x, ostii_z, 2.0f);
+    CREDO_NECESSE (w->m.ostium_propinquum == I);
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium",
+        "999000 999000 1500"));
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x0, 0.0001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, z0, 0.0001f);
+    /* campus 'ostium' absens: initium */
+    _premere(w, 'a');
+    _pulsus_multi(w, VI);
+    _solvere(w, 'a');
+    _pulsus_multi(w, II);
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium", NIHIL));
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, x0, 0.0001f);
+    /* locus iterum conditus DUM INTUS (plan, focus 3): intus manet;
+     * ostium vetus in loco novo non utile: initium loci novi */
+    _premere(w, 'a');
+    _pulsus_multi(w, VI);
+    _solvere(w, 'a');
+    _pulsus_multi(w, II);
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (statuae_addere_generis(w->volumen, _ch(c, "clearing"),
+        statua_glb_scribere(loci_ficti_locus(c), NIHIL, c->piscina),
+        STATUAE_GENUS_LOCUS));
+    CREDO_VERUM (mundus_ostia_ponere(w->volumen, _ch(c, "clearing"),
+        NIHIL, ZEPHYRUM));
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_INSPECTIONIS);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_textus_pictus(c, w, "The other end of the room."));
+    CREDO_NECESSE (w->m.solum != NIHIL);
+    CREDO_NECESSE (_proxima_distantia(w->m.solum, ostii_x, ostii_z,
+        2.0f) < 0.0f);
+    CREDO_NECESSE (mundus_solum_initium(w->m.solum,
+        MUNDUS_CORPORIS_RADIUS, &initii_x, &initii_z));
+    CREDO_VERUM (_rem_icere(w, &casa.prospectus[I], "door",
+        c->piscina));
+    _foris_probare(c, w);
+    CREDO_VERUM (w->m.positum);
+    CREDO_F32_PROXIMUS (w->m.corpus.x, initii_x, 0.0001f);
+    CREDO_F32_PROXIMUS (w->m.corpus.z, initii_z, 0.0001f);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    _finire(w);
+}
+
+interior vacuum
+_sectio_ignota (
+    CredoContextus* c)
+{
+          Volumen* v = _volumen(c, "mundus_ignota", VERUM, II);
+            Orbis* w;
+    ScaenaFructus  casa = _casa(c);
+     MundusOstium  o[I];
+          Eventus  e;
+           chorda  sordes;
+              f32  x0;
+              f32  z0;
+              f32  ostii_x;
+              f32  ostii_z;
+
+    CREDO_NECESSE (casa.successus && casa.numerus == II);
+    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum);
+    x0       = w->m.corpus.x;
+    z0       = w->m.corpus.z;
+    ostii_x  = x0 + 0.9f;
+    ostii_z  = z0 - 0.4f;
+    /* scaena absens: intratur tamen; nuntius et monitum */
+    o[ZEPHYRUM] = _ostium(c, "cellar", ostii_x, ostii_z, 1.5f);
+    _ostia_pone(c, w, o, I);
+    _premere(w, 'e');
+    _solvere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_campus(w, "prospectus", "cellar"));
+    CREDO_VERUM (_textus_pictus(c, w, "This scene cannot be shown:"));
+    CREDO_VERUM (_textus_pictus(c, w, "cellar"));
+    CREDO_VERUM (_textus_pictus(c, w, MUNDUS_LATUS_MONITUM));
+    CREDO_FALSUM (_imago_picta(c, w));
+    CREDO_VERUM (_nodus(w, "humus", c->piscina) == NIHIL);
+    /* claves aliae nihil: W, j, Enter, g */
+    _premere(w, 'w');
+    _solvere(w, 'w');
+    _premere(w, 'j');
+    _reditus(w);
+    _premere(w, 'g');
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_campus(w, "humus", NIHIL));
+    CREDO_VERUM (_campus(w, "tactum", NIHIL));
+    /* E cum modificante non exit; ictus dexter non exit */
+    _clavis_eventus(w, 'e', VERUM, MOD_IMPERIUM);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    /* E exit, ad ostium */
+    _premere(w, 'e');
+    _solvere(w, 'e');
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, ostii_x, ostii_z, 1.5f);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    /* E maiuscula (Shift) quoque intrat; ictus dexter non exit,
+     * sinister ubivis exit */
+    _clavis_eventus(w, 'E', VERUM, MOD_SHIFT);
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    _ictus_botonis(w, CC, CCC, MUS_DEXTER);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    _ictus_in(w, CC, CCC);
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, ostii_x, ostii_z, 1.5f);
+    /* scaena addita dum intus: apparet; E tunc non exit */
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (scaena_addere(w->volumen, _ch(c, "cellar"),
+        scaena_scribere(&casa.prospectus[I], c->piscina)));
+    /* E ANTE pulsum et compositionem: scaena iam bona iudicatur,
+     * non ex statu vetere - non exit */
+    memset(&e, ZEPHYRUM, magnitudo(Eventus));
+    e.genus                  = EVENTUS_CLAVIS_DEPRESSUS;
+    e.datum.clavis.producta  = 'e';
+    e.datum.clavis.clavis    = (clavis_t)'e';
+    e.datum.clavis.runa      = 'e';
+    dispensator_tractare(w->d, &e);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_INSPECTIONIS);
+    CREDO_FALSUM (_textus_pictus(c, w, "cannot be shown"));
+    CREDO_VERUM (_textus_pictus(c, w, "The other end of the room."));
+    _premere(w, 'e');
+    _ictus_in(w, II, CD);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    /* remota dum intus: nuntius; E exit (plan, focus 4) */
+    CREDO_VERUM (scaena_removere(w->volumen, _ch(c, "cellar")));
+    /* pulsus SOLUS (sine compositione) scaenam sequitur */
+    CREDO_VERUM (scaena_latus_valet(&w->m.scaena));
+    w->hora += MUNDUS_LATUS_MORA_INSPECTIONIS;
+    CREDO_VERUM (mundus_latus_pulsare(&w->m));
+    CREDO_FALSUM (scaena_latus_valet(&w->m.scaena));
+    dispensator_recomponere(w->d);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_textus_pictus(c, w, "This scene cannot be shown:"));
+    CREDO_VERUM (_textus_pictus(c, w, MUNDUS_LATUS_MONITUM));
+    _premere(w, 'e');
+    _foris_probare(c, w);
+    _ad_ostium_probare(c, w, ostii_x, ostii_z, 1.5f);
+    /* massa quam lector scaenae recusat: nuntius, E exit */
+    sordes = _ch(c, "haec non est scaena");
+    CREDO_VERUM (scaena_addere(w->volumen, _ch(c, "cellar"), sordes));
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_INSPECTIONIS);
+    _premere(w, 'e');
+    CREDO_NECESSE (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_textus_pictus(c, w, "This scene cannot be shown:"));
+    CREDO_VERUM (_textus_pictus(c, w, MUNDUS_LATUS_MONITUM));
+    _premere(w, 'e');
+    _foris_probare(c, w);
+    _finire(w);
+    /* sine loco, 'prospectus' in statu: intus, E exit, nihil ruit */
+    w = _orbem(c, _volumen(c, "mundus_ignota2", FALSUM, I), LATITUDO,
+        ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    CREDO_NECESSE (_campum_scribe(c, w, "prospectus", "hut-door"));
+    CREDO_NECESSE (_campum_scribe(c, w, "ostium", "1000 1000 1500"));
+    dispensator_recomponere(w->d);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_VERUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_textus_pictus(c, w, "This scene cannot be shown:"));
+    _premere(w, 'e');
+    CREDO_FALSUM (mundus_latus_intus(&w->m));
+    CREDO_VERUM (_campus(w, "prospectus", NIHIL));
+    CREDO_VERUM (_campus(w, "ostium", NIHIL));
+    CREDO_FALSUM (w->m.positum);
+    CREDO_VERUM (_textus_pictus(c, w, "No place yet"));
+    _finire(w);
+    /* sine volumine */
+    w = _orbem(c, NIHIL, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    _premere(w, 'e');
+    CREDO_FALSUM (mundus_latus_intus(&w->m));
+    CREDO_FALSUM (mundus_latus_intus(NIHIL));
+    /* latus dimissum scaenam hospitatam quoque dimittit (piscinae
+     * eius) */
+    CREDO_VERUM (w->m.scaena_montata);
+    CREDO_VERUM (w->m.scaena.piscina_indicis != NIHIL);
+    mundus_latus_dimittere(&w->m);
+    CREDO_FALSUM (w->m.scaena_montata);
+    CREDO_VERUM (w->m.scaena.piscina_indicis == NIHIL);
+    CREDO_VERUM (w->m.scaena.piscina_prospectus == NIHIL);
+    _finire(w);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "primum", _sectio_primum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambulat", _sectio_ambulat, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1488,6 +2334,9 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "ostia_altitudo", _sectio_ostia_altitudo, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "ostia_vacua", _sectio_ostia_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "intrare", _sectio_intrare, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "restitutio", _sectio_restitutio, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ignota", _sectio_ignota, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

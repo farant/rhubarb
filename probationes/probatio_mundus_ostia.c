@@ -8,7 +8,9 @@
  * primum vincit. volumen: posita redeunt; eadem nihil scribunt;
  * novissima vincunt; vacua tollunt; loci separati; acta mala
  * praetereuntur; transactio vocatoris iungitur; index statuarum et
- * scaenarum nihil videt.
+ * scaenarum nihil videt. proximus: cella ostio proxima - centrum
+ * ipsum, proxima, paria prius, radius circulus, aqua praeterita,
+ * extra locum, exitus non scripti si nulla.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -670,6 +672,94 @@ _sectio_separata (
     volumen_claudere(v);
 }
 
+interior vacuum
+_sectio_proximus (
+    CredoContextus* c)
+{
+    LociFictiQuadratum  q[II];
+           MundusSolum* s;
+                   f32  x = -9.0f;
+                   f32  z = -9.0f;
+
+    q[ZEPHYRUM]  = loci_ficti_quadratum(0.0f, 8.0f, 0.0f, 8.0f, 0.0f,
+        0.0f, LOCI_FICTI_GRESSIBILE);
+    q[I]         = loci_ficti_quadratum(5.0f, 8.0f, 0.0f, 8.0f, 0.0f,
+        0.0f, STATUA_SIGNUM_AQUA);
+    s = mundus_solum_struere(loci_ficti_statua(c, q, II), c->piscina);
+    CREDO_NECESSE (s != NIHIL);
+    /* punctum in centro cellae: ipsum (cellae quartae unitatis) */
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, 2.125f, 4.125f, 1.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_F32_PROXIMUS (x, 2.125f, 0.0001f);
+    CREDO_F32_PROXIMUS (z, 4.125f, 0.0001f);
+    /* radius 0 in centro licet; extra centrum nulla */
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, 2.125f, 4.125f, 0.0f,
+        MUNDUS_CORPORIS_RADIUS, NIHIL, NIHIL));
+    x = -9.0f;
+    z = -9.0f;
+    CREDO_FALSUM (mundus_ostia_locus_proximus(s, 2.2f, 4.125f, 0.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_F32_PROXIMUS (x, -9.0f, 0.0001f);
+    CREDO_F32_PROXIMUS (z, -9.0f, 0.0001f);
+    /* radius negativus, etiam parvus (quadratum eius cellam
+     * centri caperet) */
+    CREDO_FALSUM (mundus_ostia_locus_proximus(s, 2.125f, 4.125f,
+        -0.05f, MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_FALSUM (mundus_ostia_locus_proximus(s, 2.125f, 4.125f,
+        -1.0f, MUNDUS_CORPORIS_RADIUS, &x, &z));
+    /* proxima, non prima intra radium */
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, 2.2f, 4.3f, 1.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_F32_PROXIMUS (x, 2.125f, 0.0001f);
+    CREDO_F32_PROXIMUS (z, 4.375f, 0.0001f);
+    /* paria: prius ordine tabulae (z, deinde x) */
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, 2.25f, 4.125f, 1.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_F32_PROXIMUS (x, 2.125f, 0.0001f);
+    CREDO_F32_PROXIMUS (z, 4.125f, 0.0001f);
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, 2.125f, 4.25f, 1.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_F32_PROXIMUS (x, 2.125f, 0.0001f);
+    CREDO_F32_PROXIMUS (z, 4.125f, 0.0001f);
+    /* in aqua (x 5 .. 8): cella sicca proxima ubi corpus TOTUM stat
+     * (dimidia unitas a ripa) */
+    CREDO_FALSUM (mundus_ostia_locus_proximus(s, 6.125f, 4.125f, 1.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, 6.125f, 4.125f, 3.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_VERUM (x < 5.0f && x > 4.0f);
+    CREDO_F32_PROXIMUS (z, 4.125f, 0.0001f);
+    CREDO_VERUM (mundus_solum_stare(s, x, z, MUNDUS_CORPORIS_RADIUS));
+    CREDO_FALSUM (mundus_solum_stare(s, x + 0.25f, z,
+        MUNDUS_CORPORIS_RADIUS));
+    /* radius circulus: ab (-1, -1) cella anguli proxima oblique
+     * iacet - radius lateri par eam non attingit, diagonali par
+     * attingit */
+    CREDO_NECESSE (mundus_ostia_locus_proximus(s, -1.0f, -1.0f, 8.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_F32_PROXIMUS (x, z, 0.0001f);
+    CREDO_VERUM (x > 0.0f && x < 1.0f);
+    CREDO_FALSUM (mundus_ostia_locus_proximus(s, -1.0f, -1.0f,
+        x + 1.0f + 0.01f, MUNDUS_CORPORIS_RADIUS, NIHIL, NIHIL));
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, -1.0f, -1.0f,
+        (x + 1.0f) * 1.4143f, MUNDUS_CORPORIS_RADIUS, NIHIL, NIHIL));
+    /* extra locum: procul nulla, radio magno margo */
+    CREDO_FALSUM (mundus_ostia_locus_proximus(s, -3.0f, 4.125f, 1.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_FALSUM (mundus_ostia_locus_proximus(s, 999.0f, 999.0f, 8.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, -3.0f, 4.125f, 5.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+    CREDO_VERUM (x > 0.0f && x < 1.0f);
+    CREDO_F32_PROXIMUS (z, 4.125f, 0.0001f);
+    /* corpus latius alibi stat */
+    CREDO_VERUM (mundus_ostia_locus_proximus(s, -3.0f, 4.125f, 6.0f,
+        1.5f, &z, NIHIL));
+    CREDO_VERUM (z > x);
+    CREDO_FALSUM (mundus_ostia_locus_proximus(NIHIL, 2.0f, 2.0f, 1.0f,
+        MUNDUS_CORPORIS_RADIUS, &x, &z));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "legere", _sectio_legere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "legere_recusat", _sectio_legere_recusat, NIHIL, NIHIL, NIHIL,
@@ -680,6 +770,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "volumen", _sectio_volumen, NIHIL, NIHIL, NIHIL, NIHIL },
     { "acta_mala", _sectio_acta_mala, NIHIL, NIHIL, NIHIL, NIHIL },
     { "separata", _sectio_separata, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "proximus", _sectio_proximus, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

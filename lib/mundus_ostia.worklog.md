@@ -36,3 +36,12 @@ doorways in one transaction. Doorways changed alone make the level
 **Generated test source list:** `tools/compile_tests_fontes_generare.sh`
 lists files git knows; a new lib file needs `git add -N` first or
 the test fails at link.
+
+## 2026-11-14 — ostium T4: mundus_ostia_locus_proximus
+
+The static "is there a standable cell within the radius" became the
+public `mundus_ostia_locus_proximus`, which also returns the nearest
+such cell (ties: earlier in table order, z then x). The world pane
+uses it to place the character on leaving a scene; `mundus_ostia_probare`
+uses it for the build check, so a doorway that passes the build always
+has a place to stand. The radius is a circle, measured to cell centres.

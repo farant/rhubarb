@@ -43,18 +43,48 @@
  * proiectum; capsa ima in puncto proiecto stat. In mundo fixum manet
  * dum persona movetur. Capsa quae extra picturam caderet ad marginem
  * picturae cogitur: ostium propinquum signum SEMPER visibile habet.
- * Area ictus "ostium" capsam tegit (in hoc gradu ictus et E nihil
- * agunt: ostium-plan T4).
+ * Area ictus "ostium" capsam tegit.
  *
  * Signum nullum: locus aut persona deest, ostia nulla, nullum
  * propinquum.
+ *
+ * INTRARE: E dum ostium propinquum est, aut ictus sinister in
+ * signo: latus scaenam ostii ostendit. Scribuntur 'prospectus'
+ * (titulus scaenae ostii), 'tactum' (vacuum), 'ostium' (punctum et
+ * radius ostii). Claves tentae purgantur. E sine ostio propinquo:
+ * nihil.
+ *
+ * INTUS (status 'prospectus' non vacuus): latus est scaena hospitis
+ * (scaena_latus.h HOSPES) - caput, pictura, descriptio, res, mus,
+ * j k Enter. W A S D, 'g', [ ] et sagittae nihil agunt; mundus non
+ * promovetur; signum non pingitur. Titulus loci: titulus prospectus.
+ * Locus iterum conditus dum intus: latus intus manet.
+ *
+ * SCAENA QUAE OSTENDI NON POTEST (deest, remota dum intus, massa
+ * recusata): nuntius scaenae cum monito "E: go back". E aut ictus
+ * sinister ubivis in latere exit.
+ *
+ * EXIRE: exitus "mundus" scaenae (aut E ut supra). 'prospectus',
+ * 'tactum', 'ostium' vacantur; persona in cella gressibili puncto
+ * 'ostium' proxima stat, intra radium eius; si nulla talis (locus
+ * mutatus) aut 'ostium' legi non potest, in loco initii. Persona
+ * quiescit: clavis ante introitum tenta post exitum non ambulat.
+ *
+ * RESTITUTIO: latus montatum cum 'prospectus' non vacuo intus
+ * incipit; exitus ut supra.
  *
  * NUNTII loco picturae: locus nullus in volumine; locus quem lector
  * recusat; locus sine cella gressibili; personae nullae; persona
  * recusata (sagittae tamen valent).
  *
  * STATUS in ramo (manifestum apps/mundus/organum.stml, persistens):
- * persona, humus. Locus personae in mundo, claves tentae et quadrum
+ *   persona     titulus personae quae ambulat
+ *   humus       dithering humi
+ *   prospectus  scaena ostensa; vacuum = foris (in mundo)
+ *   tactum      ut in scaena_latus.h
+ *   ostium      "x z radius" in millesimis: ostium per quod
+ *               intratum est
+ * Locus personae in mundo, claves tentae et quadrum
  * KINETICA sunt: in montatione, numquam in statu (latus clausum et
  * iterum apertum ab initio incipit).
  */
@@ -81,6 +111,7 @@
 #include "mundus.h"
 #include "mundus_pictura.h"
 #include "mundus_ostia.h"
+#include "scaena_latus.h"
 
 /* pulsus (ms): dum movetur; inspectio voluminis */
 #define MUNDUS_LATUS_MORA_MOTUS        XXXIII
@@ -91,6 +122,8 @@
 #define MUNDUS_LATUS_SIGNI_ALTITUDO   2.5f
 /* limbus capsae circa litteras (pixela) */
 #define MUNDUS_LATUS_SIGNI_LIMBUS     III
+/* sub nuntio scaenae quae ostendi non potest */
+#define MUNDUS_LATUS_MONITUM          "E: go back"
 
 /* claves ambulandi: index in MundusLatusMontatio.tentae */
 #define MUNDUS_LATUS_SURSUM    ZEPHYRUM   /* w */
@@ -159,6 +192,11 @@ nomen structura {
                    Imago  quadrum;      /* pixela NIHIL = nullum */
                   chorda  quadri_titulus;  /* "mundus:<id rami>" */
                character  quadri_clavis[CLX];
+    /* scaena hospitata (ostium-spec 12) */
+     ScaenaLatusMontatio scaena;       /* valet dum scaena_montata */
+                     b32 scaena_montata;
+                  chorda scaenae_titulus;  /* "mundus-scaena:<id
+                                             * rami>" */
 } MundusLatusMontatio;
 
 /*
@@ -231,6 +269,11 @@ b32
 mundus_latus_signum (
     constans MundusLatusMontatio* m,
                            Fines* fines);
+
+/* VERUM si latus scaenam ostendit (status 'prospectus' non vacuus) */
+b32
+mundus_latus_intus (
+    constans MundusLatusMontatio* m);
 
 /* latus focum amisit: claves tentae purgantur, persona sistit */
 vacuum

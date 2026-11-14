@@ -108,3 +108,40 @@ high.
 
 Screen directions in world terms (for the next person writing such
 a test): right = +x +z, left = -x -z, up = +x -z, down = -x +z.
+
+## 2026-11-14 — ostium T4: enter, leave, memory
+
+The pane embeds a hosted `ScaenaLatusMontatio` on its OWN branch
+(fields `prospectus`, `tactum`, `ostium` in `apps/mundus/organum.stml`).
+"Inside" is nothing but `prospectus` being non-empty, read from the
+state every time, never cached: a remount starts inside for free.
+
+- Inside, level and character keep being read in the pulse (leaving
+  needs the level), but the world does not step and the world frame is
+  not rebuilt. The pulse still advances `hora_gradus`, so time spent
+  inside is not replayed on leaving.
+- Leaving places the character with `mundus_ostia_locus_proximus`
+  (new, in mundus_ostia: same rule as the build-time doorway check)
+  using the spot AND radius stored in `ostium` ("x z radius",
+  thousandths); anything else (field missing, trailing junk, spot no
+  longer usable after a rebuild) falls back to the level start.
+- `scaenam_scribere` does not set the writer: it is only called from
+  inside the pane's action, where the dispatcher has already set it.
+  A plant that swapped the order of set and write stayed green, which
+  is how this was noticed; the set was removed rather than tested.
+- `agere_intus` calls `scaena_latus_pulsare` before asking
+  `scaena_latus_valet`: validity is otherwise as of the last pulse or
+  composition, and a scene added to the volume in between would be
+  judged "cannot be shown" and E would leave it.
+- Plants that stayed green and what became of them: hosted scene not
+  released (now asserted through its pools after
+  `mundus_latus_dimittere`); negative radius guard in
+  `mundus_ostia_locus_proximus` (a small negative radius squared still
+  caught the centre cell: test now uses -0.05).
+- Removed as untestable/redundant before planting: clearing held keys
+  on leaving (they are cleared on entering and nothing sets them
+  inside), a `positum` guard in `exire` (both placements refuse
+  without a walk table), resetting `hora_gradus` on leaving.
+- Not planted: the index clamps in `mundus_ostia_locus_proximus`
+  (removing one only makes a corrupt huge radius loop for minutes;
+  a test with radius 2,000,000 passes quickly with them).

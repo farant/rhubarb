@@ -41,24 +41,33 @@ _recusare (
     redde f;
 }
 
-/* est cella in qua corpus stare potest et cuius centrum intra
- * radium a (x, z) iacet? */
-interior b32
-_solum_intra_radium (
+b32
+mundus_ostia_locus_proximus (
     constans MundusSolum* s,
                      f32  x,
                      f32  z,
                      f32  radius,
-                     f32  corpus)
+                     f32  corpus,
+                     f32* locus_x,
+                     f32* locus_z)
 {
-    f32 cella  = 1.0f / (f32)MUNDUS_CELLAE_PER_UNITATEM;
-    s32 i0     = (s32)floor((f64)((x - radius - s->origo_x) / cella));
-    s32 i1     = (s32)floor((f64)((x + radius - s->origo_x) / cella));
-    s32 j0     = (s32)floor((f64)((z - radius - s->origo_z) / cella));
-    s32 j1     = (s32)floor((f64)((z + radius - s->origo_z) / cella));
+    f32 cella    = 1.0f / (f32)MUNDUS_CELLAE_PER_UNITATEM;
+    f32 optimum  = -1.0f;
+    s32 i0;
+    s32 i1;
+    s32 j0;
+    s32 j1;
     s32 i;
     s32 j;
 
+    si (!s || radius < 0.0f)
+    {
+        redde FALSUM;
+    }
+    i0 = (s32)floor((f64)((x - radius - s->origo_x) / cella));
+    i1 = (s32)floor((f64)((x + radius - s->origo_x) / cella));
+    j0 = (s32)floor((f64)((z - radius - s->origo_z) / cella));
+    j1 = (s32)floor((f64)((z + radius - s->origo_z) / cella));
     si (i0 < ZEPHYRUM)
     {
         i0 = ZEPHYRUM;
@@ -83,16 +92,26 @@ _solum_intra_radium (
             f32 medium_z   = s->origo_z + ((f32)j + 0.5f) * cella;
             f32 spatium_x  = medium_x - x;
             f32 spatium_z  = medium_z - z;
+            f32 quadratum  = spatium_x * spatium_x
+                + spatium_z * spatium_z;
 
-            si (   spatium_x * spatium_x + spatium_z * spatium_z
-                <= radius * radius
+            si (   quadratum <= radius * radius
+                && (optimum < 0.0f || quadratum < optimum)
                 && mundus_solum_stare(s, medium_x, medium_z, corpus))
             {
-                redde VERUM;
+                optimum = quadratum;
+                si (locus_x)
+                {
+                    *locus_x = medium_x;
+                }
+                si (locus_z)
+                {
+                    *locus_z = medium_z;
+                }
             }
         }
     }
-    redde FALSUM;
+    redde optimum >= 0.0f;
 }
 
 MundusOstiaFructus
@@ -162,8 +181,8 @@ mundus_ostia_probare (
             redde _recusare(piscina, o->linea,
                 "<ostium> is outside the place");
         }
-        si (!_solum_intra_radium(solum, o->x, o->z, o->radius,
-            corpus))
+        si (!mundus_ostia_locus_proximus(solum, o->x, o->z, o->radius,
+            corpus, NIHIL, NIHIL))
         {
             redde _recusare(piscina, o->linea,
                 "<ostium> has no ground to stand on within its"

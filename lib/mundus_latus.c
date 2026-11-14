@@ -14,6 +14,13 @@
  * solus pulsus computat, post gradum mundi; figura et compositor
  * mundus_latus_signum rogant, quae ex statu praesenti capsam dat -
  * area "ostium" et capsa picta semper congruunt.
+ *
+ * Scaena hospitata (ostium-plan T4): ScaenaLatusMontatio in ramo
+ * EODEM (campi 'prospectus', 'tactum' lateris huius sunt). Intus =
+ * campus 'prospectus' non vacuus - ex statu solo, numquam ex
+ * memoria: latus restitutum intus incipit. Intus eventus, figura et
+ * areae ad scaenam mittuntur; locus et persona legi pergunt (exitus
+ * eis eget), mundus non promovetur, quadrum mundi non reficitur.
  */
 #include "mundus_latus.h"
 #include "membrum__praecepta.h"
@@ -123,6 +130,71 @@ campum_scribere (
     ok = mutare_ramum(&m->ramus, campum_ponere, &par);
     insula_scriptorem_ponere(m->ramus.repo, prior);
     redde ok;
+}
+
+b32
+mundus_latus_intus (
+    constans MundusLatusMontatio* m)
+{
+    chorda* a;
+
+    si (!m)
+    {
+        redde FALSUM;
+    }
+    a = insula_ramus_attributum(&m->ramus, "prospectus");
+    redde a && a->mensura > ZEPHYRUM;
+}
+
+/* campi scaenae: 'prospectus' et 'ostium' (vacuus aut NIHIL
+ * tollit); 'tactum' semper tollitur */
+nomen structura {
+    constans character* prospectus;
+    constans character* ostium;
+} ParScaenae;
+
+interior vacuum
+scaenam_ponere (
+              StmlNodus* radix,
+                Piscina* p,
+    InternamentumChorda* in,
+                 vacuum* ctx)
+{
+    ParScaenae* par = (ParScaenae*)ctx;
+
+    (vacuum)insula_attributum_tollere(radix, "tactum");
+    si (par->prospectus && par->prospectus[ZEPHYRUM])
+    {
+        insula_attributum_ponere(radix, p, in, "prospectus",
+            par->prospectus);
+    }
+    alioquin
+    {
+        (vacuum)insula_attributum_tollere(radix, "prospectus");
+    }
+    si (par->ostium && par->ostium[ZEPHYRUM])
+    {
+        insula_attributum_ponere(radix, p, in, "ostium", par->ostium);
+    }
+    alioquin
+    {
+        (vacuum)insula_attributum_tollere(radix, "ostium");
+    }
+}
+
+/* campos scaenae mutatione UNA scribere. Solum ex actione lateris
+ * vocatur (intrare, exire): scriptor iam actio_mundi est */
+interior b32
+scaenam_scribere (
+    MundusLatusMontatio* m,
+     constans character* prospectus,
+     constans character* ostium)
+{
+    ParScaenae par;
+
+    par.prospectus  = prospectus;
+    par.ostium      = ostium;
+    redde mutare_ramum(&m->ramus, scaenam_ponere, &par);
 }
 
 interior s64
@@ -638,6 +710,103 @@ mundus_latus_signum (
     redde VERUM;
 }
 
+/* claves tentae purgantur, persona quiescit */
+interior vacuum
+quiescere (
+    MundusLatusMontatio* m)
+{
+    memset(m->tentae, ZEPHYRUM, magnitudo(m->tentae));
+    m->corpus.intendit = FALSUM;
+}
+
+/* per ostium propinquum in scaenam eius intrare; FALSUM si nullum */
+interior b32
+intrare (
+    MundusLatusMontatio* m)
+{
+    constans MundusOstium* o;
+                character  titulus[SCAENA_TITULUS_MAXIMUS + I];
+                character  locus[LXXX];
+
+    si (   !m->scaena_montata || !m->ostia
+        || m->ostium_propinquum < ZEPHYRUM
+        || (i32)m->ostium_propinquum >= xar_numerus(m->ostia))
+    {
+        redde FALSUM;
+    }
+    o  = (constans MundusOstium*)xar_obtinere(m->ostia,
+        (i32)m->ostium_propinquum);
+    si (   o->scaena.mensura == ZEPHYRUM
+        || o->scaena.mensura > SCAENA_TITULUS_MAXIMUS)
+    {
+        redde FALSUM;
+    }
+    sprintf(titulus, "%.*s", (integer)o->scaena.mensura,
+        (constans character*)o->scaena.datum);
+    sprintf(locus, "%d %d %d", (integer)o->x_millesimae,
+        (integer)o->z_millesimae, (integer)o->radius_millesimae);
+    si (!scaenam_scribere(m, titulus, locus))
+    {
+        redde FALSUM;
+    }
+    quiescere(m);
+    m->scaena.super = ZEPHYRUM;
+    redde VERUM;
+}
+
+/* ex scaena in mundum redire: campi vacantur; persona in cella
+ * puncto 'ostium' proxima (intra radium eius), aliter in initio
+ * loci */
+interior b32
+exire (
+    MundusLatusMontatio* m)
+{
+       chorda* a = insula_ramus_attributum(&m->ramus, "ostium");
+    character  alveus[LXIV];
+    character  cauda;
+      integer  puncti_x  = ZEPHYRUM;
+      integer  puncti_z  = ZEPHYRUM;
+      integer  radius    = ZEPHYRUM;
+          b32  lectum    = FALSUM;
+          f32  loci_x    = 0.0f;
+          f32  loci_z    = 0.0f;
+
+    /* ante scripturam legitur: scriptura attributum tollit */
+    si (   a && a->mensura > ZEPHYRUM
+        && a->mensura < (i32)magnitudo(alveus))
+    {
+        memcpy(alveus, a->datum, a->mensura);
+        alveus[a->mensura] = '\0';
+        lectum = sscanf(alveus, "%d %d %d %c", &puncti_x, &puncti_z,
+            &radius, &cauda) == III;
+    }
+    si (!scaenam_scribere(m, NIHIL, NIHIL))
+    {
+        redde FALSUM;
+    }
+    /* claves ab introitu purgatae manent (intus nulla tenetur);
+     * locus nullus aut sine solo: utraque positio recusat */
+    si (   !lectum
+        || !mundus_ostia_locus_proximus(m->solum,
+               (f32)puncti_x / 1000.0f, (f32)puncti_z / 1000.0f,
+               (f32)radius / 1000.0f, m->corpus.radius, &loci_x,
+               &loci_z)
+        || !mundus_corpus_ponere(&m->mundus, &m->corpus, loci_x,
+               loci_z))
+    {
+        si (mundus_solum_initium(m->solum, m->corpus.radius, &loci_x,
+            &loci_z))
+        {
+            (vacuum)mundus_corpus_ponere(&m->mundus, &m->corpus,
+                loci_x, loci_z);
+        }
+    }
+    /* signum ostii statim redit (pulsus horam gradus etiam intus
+     * promovet) */
+    (vacuum)ostium_curare(m);
+    redde VERUM;
+}
+
 /* quadrum tollere; VERUM si quid erat */
 interior b32
 quadrum_tollere (
@@ -734,6 +903,7 @@ mundus_latus_pulsare (
                     s64  hora;
                     s64  spatium;
                     b32  mutatum = FALSUM;
+                    b32  intus;
 
     si (!m)
     {
@@ -767,18 +937,31 @@ mundus_latus_pulsare (
     {
         mutatum = VERUM;
     }
+    intus = mundus_latus_intus(m);
     si (m->positum)
     {
         /* mundus tempore vero: spatium ab ultimo gradu (mundus_gradi
          * id ad 0.1 s cogit - mora longa personam non transfert) */
         spatium         = hora - m->hora_gradus;
         m->hora_gradus  = hora;
-        intentum_ponere(m);
-        si (spatium > ZEPHYRUM)
+        /* intus mundus stat (tempus intus actum non numeratur) */
+        si (!intus)
         {
-            mundus_gradi(&m->mundus,
-                spatium > M ? 1.0f : (f32)spatium / 1000.0f);
+            intentum_ponere(m);
+            si (spatium > ZEPHYRUM)
+            {
+                mundus_gradi(&m->mundus,
+                    spatium > M ? 1.0f : (f32)spatium / 1000.0f);
+            }
         }
+    }
+    si (intus)
+    {
+        si (m->scaena_montata && scaena_latus_pulsare(&m->scaena))
+        {
+            mutatum = VERUM;
+        }
+        redde mutatum;
     }
     si (ostium_curare(m))
     {
@@ -801,7 +984,8 @@ mundus_latus_mora (
     {
         redde -I;
     }
-    si (m->positum && (clavis_tenetur(m) || m->corpus.movetur))
+    si (   !mundus_latus_intus(m) && m->positum
+        && (clavis_tenetur(m) || m->corpus.movetur))
     {
         redde MUNDUS_LATUS_MORA_MOTUS;
     }
@@ -815,6 +999,13 @@ mundus_latus_imago_fons (
 {
     MundusLatusMontatio* m = (MundusLatusMontatio*)ctx;
 
+    si (   m && m->scaena_montata
+        && chorda_aequalis(provenientia, m->scaenae_titulus))
+    {
+        redde mundus_latus_intus(m)
+            ? scaena_latus_imago_fons(provenientia, &m->scaena)
+            : NIHIL;
+    }
     si (   !m || !m->quadrum.pixela
         || !chorda_aequalis(provenientia, m->quadri_titulus))
     {
@@ -831,6 +1022,10 @@ mundus_latus_titulus (
     MundusLatusMontatio* m = (MundusLatusMontatio*)ctx;
                     s32  locus;
 
+    si (m && m->scaena_montata && mundus_latus_intus(m))
+    {
+        redde scaena_latus_titulus(&m->scaena, piscina);
+    }
     si (!m || (locus = locus_personae(m)) < ZEPHYRUM)
     {
         redde chorda_ex_literis("", piscina);
@@ -849,8 +1044,7 @@ mundus_latus_focus_amissus (
     {
         redde;
     }
-    memset(m->tentae, ZEPHYRUM, magnitudo(m->tentae));
-    m->corpus.intendit = FALSUM;
+    quiescere(m);
 }
 
 
@@ -959,6 +1153,54 @@ clavis_ambulandi (
     }
 }
 
+/* E (sine modificante praeter Shift) depressa? */
+interior b32
+clavis_intrandi (
+    constans Eventus* ev)
+{
+    redde ev->genus == EVENTUS_CLAVIS_DEPRESSUS
+        && !(ev->datum.clavis.modificantes
+            & (MOD_SUPER | MOD_IMPERIUM | MOD_ALT))
+        && (   ev->datum.clavis.runa == 'e'
+            || ev->datum.clavis.runa == 'E');
+}
+
+/* eventus dum latus scaenam ostendit */
+interior b32
+agere_intus (
+    MundusLatusMontatio* m,
+    constans Destinatio* des,
+              Componens* nodus,
+       constans Eventus* ev)
+{
+    si (!m->scaena_montata)
+    {
+        redde FALSUM;
+    }
+    /* scaena statum hunc sequatur antequam iudicatur */
+    (vacuum)scaena_latus_pulsare(&m->scaena);
+    si (!scaena_latus_valet(&m->scaena))
+    {
+        /* scaena quae ostendi non potest: E aut ictus ubivis exit */
+        si (   clavis_intrandi(ev)
+            || (   ev->genus == EVENTUS_MUS_DEPRESSUS
+                && ev->datum.mus.botton == MUS_SINISTER))
+        {
+            redde exire(m);
+        }
+        redde FALSUM;
+    }
+    commutatio (scaena_latus_agere_hospitis(&m->scaena, des, nodus, ev))
+    {
+        casus SCAENA_LATUS_FORAS:
+            redde exire(m);
+        casus SCAENA_LATUS_MUTATUM:
+            redde VERUM;
+        ordinarius:
+            redde FALSUM;
+    }
+}
+
 interior b32
 agere (
      InsulaRepositorium* repo,
@@ -974,7 +1216,14 @@ agere (
 
     (vacuum)repo;
     (vacuum)motus;
-    (vacuum)des;
+    si (mundus_latus_intus(m))
+    {
+        redde agere_intus(m, des, nodus, ev);
+    }
+    si (clavis_intrandi(ev))
+    {
+        redde intrare(m);
+    }
     si (   ev->genus == EVENTUS_CLAVIS_DEPRESSUS
         || ev->genus == EVENTUS_CLAVIS_LIBERATUS)
     {
@@ -1020,6 +1269,10 @@ agere (
     si (chorda_aequalis_literis(nodus->id, "humus"))
     {
         redde fac_humum(m);
+    }
+    si (chorda_aequalis_literis(nodus->id, "ostium"))
+    {
+        redde intrare(m);
     }
     redde FALSUM;
 }
@@ -1122,6 +1375,12 @@ figura_mundi (
                     b32 plures;
 
     (vacuum)thema;
+    si (m && m->scaena_montata && mundus_latus_intus(m))
+    {
+        /* intus: scaena latus totum pingit */
+        scaena_latus_pingere_hospitis(&m->scaena, c, md);
+        redde;
+    }
     f = fines(ZEPHYRUM, ZEPHYRUM, c->fines.latitudo, c->fines.altitudo);
     figura_mensam_pingere(md, f, chorda_aequalis_literis(c->titulus,
         "focatum"));
@@ -1243,16 +1502,27 @@ mundus_latus_componere (
               Componens* radix;
              Dispositio  d;
                   Fines  signum;
+                    b32  intus;
 
     (vacuum)repo;
     si (!m)
     {
         redde NIHIL;
     }
-    /* pictura statum hunc sequatur (eventus personam modo mutavit) */
-    (vacuum)personam_curare(m);
-    (vacuum)humum_curare(m);
-    (vacuum)quadrum_curare(m);
+
+    intus = m->scaena_montata && mundus_latus_intus(m);
+    /* pictura statum hunc sequatur (eventus personam aut scaenam
+     * modo mutavit) */
+    si (intus)
+    {
+        (vacuum)scaena_latus_pulsare(&m->scaena);
+    }
+    alioquin
+    {
+        (vacuum)personam_curare(m);
+        (vacuum)humum_curare(m);
+        (vacuum)quadrum_curare(m);
+    }
     radix = componens_creare(piscina, intern, "mundus", PARTES_TABULA);
     si (!radix)
     {
@@ -1266,6 +1536,13 @@ mundus_latus_componere (
     si (motus_ramus_focatus(motus, m->ramus))
     {
         componens_ponere_titulum(radix, "focatum");
+    }
+    si (intus)
+    {
+        /* areae scaenae solae, actione lateris huius */
+        scaena_latus_areas_addere(&m->scaena, radix, piscina, intern,
+            actio_mundi);
+        redde radix;
     }
     aream_addere(radix, piscina, intern, "pictura", d.pictura);
     aream_addere(radix, piscina, intern, "sagitta_prior", d.prior);
@@ -1285,6 +1562,11 @@ mundus_latus_dimittere (
     si (!m)
     {
         redde;
+    }
+    si (m->scaena_montata)
+    {
+        scaena_latus_dimittere(&m->scaena);
+        m->scaena_montata = FALSUM;
     }
     si (m->piscina_indicis)
     {
@@ -1384,12 +1666,17 @@ mundus_latus_montare (
     }
     sprintf(titulus, "mundus:%.100s", id ? id : "mundus");
     m->quadri_titulus  = chorda_ex_literis(titulus, piscina);
-    m->hora_visa       = nunc(m);
-    m->hora_gradus     = m->hora_visa;
+    sprintf(titulus, "mundus-scaena:%.100s", id ? id : "mundus");
+    m->scaenae_titulus  = chorda_ex_literis(titulus, piscina);
+    m->scaena_montata   = scaena_latus_montare_hospitem(&m->scaena,
+        piscina, intern, volumen, m->ramus, actio_mundi, titulus,
+        MUNDUS_LATUS_MONITUM, latitudo, altitudo);
+    m->hora_visa    = nunc(m);
+    m->hora_gradus  = m->hora_visa;
     indices_relegere(m);
     m->actiones  = actio_registrum_creare(piscina, intern);
     m->figurae   = figura_registrum_creare(piscina);
-    redde m->actiones && m->figurae
+    redde m->scaena_montata && m->actiones && m->figurae
         && praecepta_verificare(TABULA_PRAECEPTORUM)
         && actio_registrare(m->actiones, actio_mundi, agere, m)
         && figura_registrare(m->figurae, PARTES_TABULA, ZEPHYRUM,

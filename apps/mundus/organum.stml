@@ -1,8 +1,9 @@
 <!-- organum.stml - manifestum lateris mundi (project-specs/
      mundus-spec.md IV.8): persona per locum ambulat in latere vici.
      Locus personae in mundo, claves tentae et quadrum in memoria
-     montationis, numquam in statu - hic sola praeferentia personae,
-     persistens. -->
+     montationis, numquam in statu - hic praeferentiae (persona,
+     humus) et scaena in qua persona est (prospectus, tactum, ostium),
+     persistentes. -->
 <organum genus="mundus" versio="1">
 
   <actiones>
@@ -19,6 +20,18 @@
             scriptor="mundus.agere"
             nota="dithering humi ('g', globulus capitis): 'exemplaria';
                   absens aut ignotus = atkinson"/>
+    <campus nomen="prospectus" typus="textus" vita="persistens"
+            scriptor="mundus.agere"
+            nota="scaena ostensa (titulus prospectus); absens = foris,
+                  in mundo (project-specs/ostium-spec.md 11)"/>
+    <campus nomen="tactum" typus="textus" vita="persistens"
+            scriptor="mundus.agere"
+            nota="res scaenae novissime tacta, ut in organo scaenae:
+                  'prospectus/res'; absens = nulla"/>
+    <campus nomen="ostium" typus="textus" vita="persistens"
+            scriptor="mundus.agere"
+            nota="ostium per quod intratum est: 'x z radius' in
+                  millesimis; exitus personam ibi ponit"/>
   </status>
 
   <basis genus="organum_commune"/>

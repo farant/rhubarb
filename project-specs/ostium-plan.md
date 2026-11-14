@@ -252,6 +252,24 @@ twice, rewritten). `mundus_ostia` added to the hand list in
 - [ ] Plants, each red. Both subsystem runners. Commit on Fran's
   word.
 
+**As built (2026-11-14).** As the header Fran approved:
+`mundus_latus_intus`, `MUNDUS_LATUS_MONITUM`, the embedded
+`ScaenaLatusMontatio`, three fields in `apps/mundus/organum.stml`.
+Fran's calls on the header: a click ANYWHERE in the pane leaves a
+scene that cannot be shown (spec 9 said "on that line"); the `ostium`
+field stores the radius too ("x z radius", thousandths); a readable
+scene with no `mundus` exit stays a content error (wish filed for
+`bin/scaena condere` to warn). One addition beyond the header:
+`mundus_ostia_locus_proximus` in `mundus_ostia.h` (nearest cell a
+body can stand on within a radius), used for leaving and now also by
+the build-time doorway check. `probatio_mundus_latus` gained 3
+sections (`intrare`, `restitutio`, `ignota`), `probatio_mundus_ostia`
+one (`proximus`); 53 plants red (three stayed green at first; see
+`lib/mundus_latus.worklog.md`). Facing is kept within a session; after
+a restart the character faces the default way. Screenshots through
+the real vicus app: `build/iactura/mundus_imago.c` with a ninth
+argument presses E.
+
 ### Task 5: the hut, and finish
 
 - [ ] Find the hut door on the map sheet (`bin/mundus mappa`,

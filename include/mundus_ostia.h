@@ -72,6 +72,30 @@ nomen structura {
 } MundusOstiaFructus;
 
 /*
+ * mundus_ostia_locus_proximus - cella ostio proxima ubi corpus stat
+ *
+ * Centrum cellae in qua corpus radii 'corpus' stare potest
+ * (mundus_solum_stare), a puncto (x, z) non plus 'radius' distans,
+ * ex talibus proximum; ex paribus prius ordine tabulae (z, deinde
+ * x). Eadem regula qua mundus_ostia_probare ostium accipit: ostium
+ * probatum semper locum habet.
+ *
+ * @locus_x, @locus_z: NIHIL licet (interrogatio sola)
+ *
+ * Redde: FALSUM (exitus non scripti) si nulla talis cella aut solum
+ * NIHIL
+ */
+b32
+mundus_ostia_locus_proximus (
+    constans MundusSolum* solum,
+                     f32  x,
+                     f32  z,
+                     f32  radius,
+                     f32  corpus,
+                     f32* locus_x,
+                     f32* locus_z);
+
+/*
  * mundus_ostia_probare - ostia dispositionis contra locum probare
  *
  * @ostia:   ut mundus_locus_legere ea dedit
