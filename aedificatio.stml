@@ -1405,6 +1405,8 @@
     <debitum_scripturae membrum="probatio_gabc_pictura" via="build/gabc_salve_pagina_1.png" causa="imago Salve ad inspectionem (gabc P4)"/>
     <debitum_scripturae membrum="probatio_vicus_paginae" via="build/probatio_vicus_paginae.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_vicus_iussa" via="build/probatio_vicus_iussa.png" causa="imago ad inspectionem"/>
+    <debitum_scripturae membrum="probatio_vicus_psalterium" via="build/probatio_vicus_psalterium_index.png" causa="imago indicis psalterii ad inspectionem (psalterium T7)"/>
+    <debitum_scripturae membrum="probatio_vicus_psalterium" via="build/probatio_vicus_psalterium_psalmus.png" causa="imago Ps 109 in 8 G ad inspectionem (psalterium T7)"/>
     <debitum_scripturae membrum="probatio_pictor_aspergillum" via="build/probatio_pictor_aspergillum.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_pictor_palette" via="build/probatio_pictor_palette.png" causa="imago ad inspectionem"/>
     <debitum_scripturae membrum="probatio_vigilia" via="build/probatio_vigilia_binarium" causa="vigilia: artificia ficta probationis"/>

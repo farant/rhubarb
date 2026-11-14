@@ -361,3 +361,17 @@ if wrong: no header while a warning shows (none today). The same
 (psalm, tone) is not re-fitted, so a restore keeps playing - cost if
 wrong: a stale fit if the embedded texts changed at runtime
 (impossible).
+
+**T7 (2026-11-14).** `$psalterium` registered in `lib/vicus_applicatio.c`
+(genus with routes, shared singer, `semitam_secuta`); new
+`probationes/probatio_vicus_psalterium.c` (command, reuse, both
+errors, index; screenshots). Rulings: a NEW vicus test file instead
+of adding to `probatio_vicus_antiphonale.c` (kept untouched as the T2
+guard) - cost if wrong: one more file; glue written before its test,
+red shown by two plants (second argument ignored - the plan's - and
+command unregistered) - cost: the order slipped once; screenshots
+from a headless test frame, not `vicus -fumus -imago` (no way to run
+a command there) - cost if wrong: none seen, same drawing path;
+header psalm arrows "«" "»" instead of "‹" "›" (font lacks them) -
+cost: a glyph choice for Fran. Listening: not done by Claude (no
+ears) - offered to Fran.

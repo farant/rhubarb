@@ -228,6 +228,12 @@ declare -a RADIX_FONTES=(
     "gabc_compositio"
     "gabc_pictura"
     "neumae_ductae"    "gabc_carmen"     # gabc pars II P7: textus carminis (porta legit)
+    "psalterium"      # psalterium T7: latus psalmorum ($psalterium)
+    "psalterium_infixum"
+    "psalmodia"
+    "psalmodia_tabula"
+    "syllabae_latinae"
+    "toni_psalmorum_infixum"
 # aemulator A3: reditus (tessera -> octeti -> aemulator)
     "aemulator"
     "sors"

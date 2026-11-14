@@ -29,6 +29,7 @@
 #include "praeconium.h"
 #include "aetherophonum.h"
 #include "antiphonale.h"
+#include "psalterium.h"
 #include "filum.h"
 #include "specula.h"
 #include <stdio.h>
@@ -3309,6 +3310,147 @@ antiphonale_iussum (
 
 
 /* ==================================================
+ * Psalterium (psalterium planum T7)
+ * ================================================== */
+
+/* porta soni ut antiphonale (PortaAntiphonae per latus: cantor unus
+ * vici - latus alterum incipiens priorem tacite sistit) */
+interior b32
+psalterium_montare_in_vico (
+                 vacuum* sedes,
+                Piscina* piscina,
+    InternamentumChorda* intern,
+                Volumen* volumen,
+     InsulaRepositorium* repo,
+     constans character* id,
+     constans character* argumentum,
+                    i32  latitudo,
+                    i32  altitudo,
+                 vacuum* ctx)
+{
+      ContextusSoni* soni = (ContextusSoni*)ctx;
+     GabcVisusPorta  porta;
+    PortaAntiphonae* pa;
+
+    (vacuum)volumen;
+    pa = soni ? (PortaAntiphonae*)piscina_allocare(piscina,
+        magnitudo(PortaAntiphonae)) : NIHIL;
+    si (pa == NIHIL)
+    {
+        redde FALSUM;
+    }
+    pa->soni        = soni;
+    porta.incipere  = antiphonae_incipere;
+    porta.quaerere  = antiphonae_quaerere;
+    porta.sistere   = antiphonae_sistere;
+    porta.pulsus    = antiphonae_pulsus;
+    porta.ctx       = pa;
+    redde psalterium_montare((PsalteriumMontatio*)sedes, piscina,
+        intern,
+        repo, id, argumentum, latitudo, altitudo, &porta,
+        soni->systemata);
+}
+
+interior VicusPulsus
+psalterium_pulsare_in_vico (
+    vacuum* ctx)
+{
+    VicusPulsus p;
+
+    p.mutatum = psalterium_pulsare(ctx);
+    p.finitus = FALSUM;
+    redde p;
+}
+
+interior b32
+psalterii_argumentum_ponere (
+                 vacuum* ctx,
+     constans character* argumentum)
+{
+    redde psalterium_argumentum_ponere((PsalteriumMontatio*)ctx,
+        argumentum);
+}
+
+interior vacuum
+psalterium_describere (
+         vacuum* montatio,
+    VicusFacies* f)
+{
+    PsalteriumMontatio* m = (PsalteriumMontatio*)montatio;
+
+    f->actiones       = m->actiones;
+    f->figurae        = m->figurae;
+    f->componere      = psalterium_componere;
+    f->componere_ctx  = m;
+    f->pulsare        = psalterium_pulsare_in_vico;
+    f->pulsare_ctx    = m;
+    f->mora           = psalterium_mora;
+    f->ramus          = &m->ramus;
+    /* Esc quod index non consumpsit (visus psalmi id consumit: ad
+     * indicem): latus prius */
+    f->effugium_redit         = VERUM;
+    f->argumentum_ponere      = psalterii_argumentum_ponere;
+    f->argumentum_ponere_ctx  = m;
+    f->semitam_secuta         = psalterium_semitam_secuta;
+    f->semitam_secuta_ctx     = m;
+    f->locus_titulus          = psalterium_titulus;
+    f->locus_titulus_ctx      = m;
+}
+
+/* $psalterium, $psalterium(109), $psalterium(109, 8 G) (spec III.3):
+ * argumenta "109,8 G" iuncta, psalterium_argumentum_legere iudicat
+ * (vitium in linea status), latus frontale accipit
+ * (vicus_acervo_mutare; nullum: montatur) */
+interior b32
+psalterium_iussum (
+    constans Iussum* iussum,
+             vacuum* ctx,
+            Piscina* piscina,
+     IussumEffectus* effectus)
+{
+        ContextusSoni* soni = (ContextusSoni*)ctx;
+    ChordaAedificator* causa;
+               chorda  argumentum;
+               chorda  signum;
+                  s32  psalmus;
+
+    si (iussum->numerus_argumentorum > II)
+    {
+        effectus->error = chorda_ex_literis(
+            "psalterium: psalm number 1-150 and a tone (109, 8 G)",
+            piscina);
+        redde VERUM;
+    }
+    argumentum = iussum->numerus_argumentorum >= I
+        ? iussum->argumenta[ZEPHYRUM] : chorda_ex_literis("", piscina);
+    si (iussum->numerus_argumentorum == II)
+    {
+        argumentum = chorda_concatenare(chorda_concatenare(argumentum,
+            chorda_ex_literis(",", piscina), piscina),
+            iussum->argumenta[I], piscina);
+    }
+    causa = chorda_aedificator_creare(piscina, LXIV);
+    si (   !causa
+        || !psalterium_argumentum_legere(argumentum, piscina, &psalmus,
+               &signum, causa))
+    {
+        effectus->error = causa ? chorda_aedificator_finire(causa)
+            : chorda_ex_literis("psalterium: psalm number 1-150",
+            piscina);
+        redde VERUM;
+    }
+    si (   !soni || !soni->vicus
+        || !vicus_acervo_mutare(soni->vicus, "psalterium",
+               chorda_ut_cstr(argumentum, piscina)))
+    {
+        effectus->error = chorda_ex_literis(
+            "psalterium: aperiri non potest", piscina);
+    }
+    redde VERUM;
+}
+
+
+/* ==================================================
  * Admonitiones (colloquia-plan T4a)
  * ================================================== */
 
@@ -6525,6 +6667,9 @@ ContextusNomenclatoris* cn;
         /* gabc pars II P6: $antiphonale(via) */
         || !iussum_registrare(cs->iussa, "antiphonale", FALSUM,
                antiphonale_iussum, soni)
+        /* psalterium planum T7: $psalterium(109, 8 G) */
+        || !iussum_registrare(cs->iussa, "psalterium", FALSUM,
+               psalterium_iussum, soni)
         || !sanctorum
         || !aperiens_fixum_registrare(cs->iussa, app->vicus, "saints",
                "sancti", NIHIL, piscina)
@@ -6596,6 +6741,10 @@ ContextusNomenclatoris* cn;
         || !vicus_genus_addere(app->vicus, "antiphonale",
                magnitudo(AntiphonaleMontatio),
                antiphonale_montare_in_vico, antiphonale_describere,
+               soni)
+        || !vicus_genus_addere(app->vicus, "psalterium",
+               magnitudo(PsalteriumMontatio),
+               psalterium_montare_in_vico, psalterium_describere,
                soni)
         || !vicus_genus_addere(app->vicus, "sancti",
                magnitudo(SanctorumMontatio), sanctos_montare_in_vico,

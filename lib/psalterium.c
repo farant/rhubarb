@@ -33,15 +33,15 @@
 #define LITTERA              VI        /* latitudo FONS_PARVUS */
 #define CIFRAE_MAXIMAE       III
 #define MARGO_CAPITIS        XVI       /* caput visus psalmi */
-#define LATITUDO_GLOBULI     XVIII     /* "≡" "‹" "›" in capite */
+#define LATITUDO_GLOBULI     XVIII     /* "≡" "«" "»" in capite */
 
 #define VISUS_INDICIS        I
 #define VISUS_PSALMI         II
 
 #define CREDITUM             "Divinum Officium \xC2\xB7 MIT"
 #define SIGNUM_INDICIS       "\xE2\x89\xA1"
-#define SIGNUM_PRIORIS       "\xE2\x80\xB9"
-#define SIGNUM_PROXIMI       "\xE2\x80\xBA"
+#define SIGNUM_PRIORIS       "\xC2\xAB"  /* fons parvus U+2039 caret */
+#define SIGNUM_PROXIMI       "\xC2\xBB"
 #define INTERPUNCTUM         " \xC2\xB7 "
 
 hic_manens constans character actio_psalterii[] = "psalterium.agere";
@@ -1312,7 +1312,7 @@ _indicem_pingere (
         album_paginae(l));
 }
 
-/* caput visus psalmi: "≡  ‹  ›   8 G" (nodi caput_* eodem loco);
+/* caput visus psalmi: "≡  «  »   8 G" (nodi caput_* eodem loco);
  * vexillum (admonitio) id tegit */
 interior vacuum
 _caput_pingere (
@@ -1484,7 +1484,7 @@ _indicem_componere (
         PARTES_NULLUM, f);
 }
 
-/* caput (globuli "≡" "‹" "›", signum toni) et nodi visus */
+/* caput (globuli "≡" "«" "»", signum toni) et nodi visus */
 interior vacuum
 _psalmum_componere (
     constans PsalteriumMontatio* m,

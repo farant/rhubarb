@@ -269,3 +269,7 @@ C layout, and how the licence is surfaced.
   Gloria, 0 warnings (`_psalterium_gloria_probare`).
 - That `album_*` fits a 150-row list with the house's row height at
   the default pane size. The number of pages was not measured.
+  **Measured 2026-11-14 (T7): fits.** Rows 14 px; a 1200 x 800 vicus
+  shows 55 rows per page (3 pages); the 480 x 320 test pane pages
+  too, and a 20 px pane still shows one row and pages
+  (`_index_probare`).

@@ -136,3 +136,41 @@ builder; house rule puts all pane state in the manifest.
   scriptor copies -> `_memoria_probare`; visus=psalmus without a
   valid psalm -> status malus; unknown tone -> first ending instead
   of 8 G; semitam_secuta without a fit; T wrap without +numerus.
+
+## 2026-11-14 — T7: $psalterium in vicus; fumus
+
+- lib/vicus_applicatio.c: genus "psalterium" (porta = PortaAntiphonae
+  per pane, so one singer per vicus is shared with the antiphonale),
+  describere sets `ramus` (routes, history - the antiphonale has
+  none), `semitam_secuta`, `effugium_redit` (only an UNCONSUMED Esc
+  closes: the psalm view consumes Esc -> index). `$psalterium`
+  handler: up to two arguments joined "109,8 G", validated by
+  `psalterium_argumentum_legere` (its reason is the status-line
+  error), then `vicus_acervo_mutare`.
+- Test: new probationes/probatio_vicus_psalterium.c (harness copied
+  from probatio_vicus_antiphonale, which stays untouched - ruling,
+  the plan said "add to it"). Status-line errors read from the scriba
+  field `nuntius`, not the drawn node (the narrow pane clips the
+  drawn text to "psalterium: ").
+- Harness quirk (ledger note 01M7DZW07E52HB57JHV161NCNX): after the
+  ~70-char tone error the next verbum_ferire never reaches the
+  handler (fprintf-traced); after the 30-char number error it does.
+  The tone step now runs last. Also seen: each verbum_ferire runs
+  the PREVIOUS command once more (its first click lands on the old
+  line) - harmless here, same in the antiphonale test.
+- Order slip: the glue was written before its test this time. Red
+  came from two plants: second argument ignored (the plan's) and
+  the command not registered; both red, restored.
+- ludus_tessera hand list: psalterium, psalterium_infixum, psalmodia,
+  psalmodia_tabula, syllabae_latinae, toni_psalmorum_infixum (vicus
+  now needs them; the commissio of T6 already flagged the runner).
+- Fumus: `vicus -fumus` opens an empty temporary volume and has no
+  way to run a command, so the screenshots come from a test section
+  that builds a 1200 x 800 vicus, strikes the commands and writes
+  the real frame through ludus_fenestra (as probatio_vicus_iussa):
+  build/probatio_vicus_psalterium_{index,psalmus}.png (declared in
+  aedificatio.stml debitum_scripturae). Looked at both. Found: the
+  6x8 font has no U+2039/U+203A - "‹" drew as a fallback box, "›"
+  tiny. Header now "≡  «  »  8 G" (Latin-1, present); comments in
+  psalterium.h follow. Index at that size: 55 rows per page, 3 pages
+  (spec AUDIENDA 3). bin/vicus 4.99 -> 5.40 MB (psalter + pane).

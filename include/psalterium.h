@@ -10,7 +10,7 @@
  *   PSALMUS - psalmus electus aptatus (psalmodia_aptare, titulus
  *            "Psalmus N", Gloria Patri) et per gabc_visus pictus
  *            (paginae, spatium, sonus). Caput supra paginam
- *            (margo visus): "≡" (ad indicem), "‹" (prior), "›"
+ *            (margo visus): "≡" (ad indicem), "«" (prior), "»"
  *            (proximus), signum toni ("8 G"). Linea ima visus:
  *            "< ▶ Psalmus 109 · 8 G  2/5 >".
  *
@@ -25,7 +25,7 @@
  *            in fine redit), ] / [ psalmus proximus / prior (ultra CL
  *            aut ante I nihil), Esc ad indicem (psalmus electus).
  * MUS: index - ordo ictu aperitur, sagittae lineae imae paginam
- *      vertunt; psalmus - "≡" "‹" "›" et signum (tonus proximus)
+ *      vertunt; psalmus - "≡" "«" "»" et signum (tonus proximus)
  *      ictu, cetera ut in visu (sagittae, globulus, syllaba).
  *
  * TONUS (D6, Franus 2026-11-14): campus unus "signum" lateris, absens

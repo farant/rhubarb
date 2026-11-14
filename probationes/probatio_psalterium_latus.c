@@ -1029,6 +1029,10 @@ _semita_probare (
     CREDO_NECESSE (psalterium_argumentum_ponere(&w->m,
         "psalterium/index"));
     CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"), "index");
+    /* argumentum vacuum ($psalterium): index */
+    CREDO_NECESSE (psalterium_argumentum_ponere(&w->m, "109"));
+    CREDO_VERUM (psalterium_argumentum_ponere(&w->m, ""));
+    CREDO_CHORDA_AEQUALIS_LITERIS (_campus_textus(w, "visus"), "index");
     CREDO_FALSUM (psalterium_argumentum_ponere(&w->m,
         "psalterium/psalmus/151"));
     CREDO_FALSUM (psalterium_argumentum_ponere(&w->m, "151"));
