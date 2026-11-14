@@ -57,3 +57,41 @@ builder; house rule puts all pane state in the manifest.
   `admonitiones == ZEPHYRUM` (old _gloria_probare red too); (3) Gloria
   appended only for canticles -> `sine_gloria == ZEPHYRUM` red. All
   restored (cmp against backups), green after.
+
+## 2026-11-14 — T5: pure helpers and the index view
+
+- lib/psalterium.c: incipit, the D8 cycle (`_circuli_terminatio`
+  walks the table skipping ad_libitum/monosyllaba; label = modus +
+  " " + differentia), `psalterium_signi_index` goes through
+  `psalmodia_signum_invenire` and compares the returned ending
+  POINTER with the cycle - so "VIII g", "8g", "8 G" all give the same
+  index, and an argument's tone is stored in cycle form ("8 G").
+- Index drawn in pixels with the gabc_visus geometry (limbus 6/8,
+  footer 12, arrows 24 wide), rows 14 px through album (one unit per
+  row; capacity = rows between limbus and footer, at least 1). Row
+  "%3d  incipit" so row 109 reads "109  Dixit Dóminus Dómino meo".
+  Footer "<  Psalterium  2/11  [10]   Divinum Officium · MIT  >"; the
+  typed digits show as "[10]". Footer arrow nodes reuse gabc_visus's
+  ids `sagitta_prior` / `sagitta_proxima` (dispatched by view).
+- Rulings (in the plan note too): digits and Backspace are handled in
+  agere before the key table (ten table rows would clutter the
+  command list); any movement clears the typed digits, even a move
+  that does nothing (Up on 1) - otherwise "151" then Up then "0"
+  would select 10. "0" alone selects nothing and clears the digits.
+  Enter / click write the route fields (visus, psalmus) + electus in
+  T5; the psalm view's fit and drawing are T6
+  (`psalterium_semitam_secuta` is a stub until then).
+  `psalterium_argumentum_ponere` is complete: URI (psalm number
+  checked BEFORE applying), "", "109", "109,8 G" (tone written to
+  `signum`). `visus=psalmus` with a psalm outside 1-150 reads as the
+  index already (Review Focus 1, tested in T6).
+- All 92 checks passed on the first run, so every section got a
+  plant (build/plantae_psalterium/t5.py): incipit ignores the cross;
+  cycle counts monosyllaba; psalm off by one; minimum capacity 2;
+  "0" alone writes electus 0 - each red in its own section, restored.
+- Lint: `ima`/`imam` (footer) renamed to `pes` (gabc_visus's word;
+  memory: never add imus); `cifram` -> `_cifrae_addere/_tollere`
+  (the glossary's cifra is "cipher"; the T3 manifest field `cifrae`
+  stays). `silva/renominare.sh` refuses files with uncommitted
+  changes ("plagulae affectae sordidae") - not a no-op; I had cut
+  the message off with tail -1.

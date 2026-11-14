@@ -312,6 +312,7 @@ declare -a SOURCE_FILES=(
     "lib/provenientia.c"
     "lib/psalmodia.c"
     "lib/psalmodia_tabula.c"
+    "lib/psalterium.c"
     "lib/psalterium_infixum.c"
     "lib/pseudoterminale.c"
     "lib/pseudoterminale_posix.c"

@@ -334,3 +334,15 @@ rename. Measurements closed spec AUDIENDA 2 (link 0.12 s unchanged,
 binary +265 KB). Red by link failure, then three plants red (Ps 104
 byte; Gloria unaccented; Gloria omitted), restored green. Gloria fit:
 0 warnings over 150 x 33 on first run.
+
+**T5 (2026-11-14).** `lib/psalterium.c` (helpers, mount, index view)
+and `probationes/probatio_psalterium_latus.c` (5 sections, 92 checks).
+Red at link before the lib; all green on first run, so five plants,
+one per section, each red there (incipit at '*' only, the planned one).
+Rulings: digits/Backspace handled before the key table, not as ten
+table rows - cost if wrong: they don't show in a command list; any
+movement clears typed digits - cost: none known; Enter/click and
+`psalterium_argumentum_ponere` write the route in T5, the fit is T6
+(`psalterium_semitam_secuta` stub) - cost: T6 fills the stub;
+`$psalterium(, 8 G)` (tone without number) = "psalm number 1-150"
+error - cost if wrong: one branch.
