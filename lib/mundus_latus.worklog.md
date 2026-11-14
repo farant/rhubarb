@@ -74,3 +74,37 @@ library; mode change does not remake the ground; `g` never returns to
 Atkinson; the button does nothing).
 
 Headless picture: `build/statuae/vicus_mundus_humus_exemplaria.png`.
+
+## 2026-11-13 — doorway prompt (ostium-plan T3)
+
+The pane reads the level's doorways (`mundus_ostia.h`) and shows
+`[E]` over the nearest one in range.
+
+**Doorways are re-read with the indices**, in `indices_relegere`, on
+every volume sequence change - not in `locum_curare`, which only
+runs when the level's seal changes. `bin/mundus condere` can change
+doorways and leave the level's bytes alone. The list lives in
+`piscina_indicis`, so a re-read can never leave a stale pointer.
+
+**One function says where the prompt is.** `mundus_latus_signum`
+computes the box from the present state; the figure draws it and the
+compositor puts the click area `ostium` on the same rectangle, so
+they cannot disagree. The pulse alone decides WHICH doorway
+(`ostium_curare`, after the world step); the guard `m->positum` in
+its loop matters: a level with nowhere to walk leaves the body at
+the origin, and a doorway near (0, 0) would otherwise count as near.
+
+**Height.** The prompt floats 2.5 above the ground AT THE DOORWAY
+(`mundus_solum_altitudo`), which can differ from the character's
+(ledge). A door in a wall has no walkable ground under it; then the
+character's height is used.
+
+**Test lesson.** `planum.glb` is not flat. A test that reused one
+ground height for four points saw the prompt 160 pixels off. Each
+point asks the walk table for its own height. Also: the fixed view
+is inclined, so 8 units "up" or "down" the screen stay inside a
+450-pixel pane; the top and bottom clamps are tested in a pane 100
+high.
+
+Screen directions in world terms (for the next person writing such
+a test): right = +x +z, left = -x -z, up = +x -z, down = -x +z.

@@ -561,9 +561,8 @@ mundus_forma (
     redde f;
 }
 
-/* pixelum mundi (integrum, deorsum rotundatum) puncti */
-interior vacuum
-_pixelum_mundi (
+vacuum
+mundus_pixelum_puncti (
     StereometriaVector  punctum,
                    s32* x,
                    s32* y)
@@ -606,7 +605,8 @@ mundus_quadri_origo (
     {
         redde FALSUM;
     }
-    _pixelum_mundi(_medium_corporis(&mundus->corpora[sequens]), &x, &y);
+    mundus_pixelum_puncti(_medium_corporis(&mundus->corpora[sequens]),
+        &x, &y);
     *origo_x = x - (s32)(latitudo / II);
     *origo_y = y - (s32)(altitudo / II);
     redde VERUM;
@@ -672,7 +672,7 @@ _corpus_pingere (
     /* capsa: sphaera ambiens scalata circa medium corporis, ad
      * reticulum pixelorum MUNDI (dithering corporis cum visu labente
      * non natat), intra quadrum */
-    _pixelum_mundi(_medium_corporis(c), &medium_x, &medium_y);
+    mundus_pixelum_puncti(_medium_corporis(c), &medium_x, &medium_y);
     radius = (s32)ceil((f64)(statua->radius * forma->scala
         * MUNDUS_PIXELA_PER_UNITATEM)) + (s32)STATUAE_FINIUM_MARGO;
     si (radius > (s32)MUNDUS_CAPSA_MAXIMA / II)

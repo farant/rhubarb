@@ -157,6 +157,17 @@ mundus_forma (
             Piscina* piscina);
 
 /*
+ * mundus_pixelum_puncti - pixelum mundi (integrum, deorsum
+ * rotundatum) puncti mundi, visu fixo. Pixelum in quadro = hoc minus
+ * origo quadri (mundus_quadri_origo).
+ */
+vacuum
+mundus_pixelum_puncti (
+    StereometriaVector  punctum,
+                   s32* x,
+                   s32* y);
+
+/*
  * mundus_quadri_origo - origo quadri (pixela mundi) ut medium corporis
  * 'sequens' in medio quadri stet
  *

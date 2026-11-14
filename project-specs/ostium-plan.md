@@ -214,6 +214,20 @@ level) and `s32 ostium_propinquum` (-1 = none; kinetic).
   `build/iactura/scaena_imago.c`).
 - [ ] Plants, each red. Commit on Fran's word.
 
+**As built (2026-11-13).** As the header Fran approved:
+`mundus_pixelum_puncti` public, `MundusLatusMontatio.ostia` and
+`.ostium_propinquum`, `mundus_latus_signum`. Doorways are re-read on
+every volume change (with the indices), not only with the level.
+The box is a background fill, a one-pixel border and `[E]`, 24 x 14
+pixels. Where the doorway spot is not walkable the character's
+height is used. `probatio_mundus_latus` gained 5 sections (`ostia`,
+`ostia_plura`, `ostia_margo`, `ostia_altitudo`, `ostia_vacua`); 27
+plants red (two stayed green at first: an untested guard for a level
+with nowhere to walk, now tested; and a plant that drew the text
+twice, rewritten). `mundus_ostia` added to the hand list in
+`ludus_tessera/compile_probationes.sh`. Screenshot recipe:
+`build/iactura/mundus_imago.c` (throwaway, not in git).
+
 ### Task 4: enter, leave, memory
 
 **Consumes:** T2's hosted form, T3's `ostium_propinquum`.

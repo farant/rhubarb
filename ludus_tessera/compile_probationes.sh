@@ -244,6 +244,8 @@ declare -a RADIX_FONTES=(
     "mundus_pictura"
     "mundus"
     "mundus_solum"
+    # ostium-plan T3: ostia loci (signum "[E]" lateris mundi)
+    "mundus_ostia"
     # graphis-plan T8: latus scaenae ($scene) et quae trahit
     "scaena_latus"
     "scaena_repositorium"

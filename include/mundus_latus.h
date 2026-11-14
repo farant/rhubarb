@@ -28,6 +28,27 @@
  * ad 0.1 s coactus. Pulsus: XXXIII ms dum clavis tenetur aut persona
  * movetur; aliter M ms (inspectio voluminis sola).
  *
+ * OSTIA (project-specs/ostium-spec.md): ostia loci ex volumine
+ * leguntur (mundus_ostia.h) cum indicibus - quotiens seq voluminis
+ * mutatur, etiam si locus ipse idem manet. Ostium PROPINQUUM est
+ * cuius punctum a centro personae non plus radio suo distat (in
+ * plano x z); ex pluribus proximum, ex paribus prius in indice.
+ * Kineticum: quoque pulsu post gradum mundi computatur.
+ *
+ * SIGNUM: dum ostium propinquum est, "[E]" in capsa parva pingitur
+ * (fundus thematis, limbus et litterae coloris textus), medio
+ * horizontali supra punctum ostii: punctum in altitudine soli sui
+ * (si ibi solum gressibile non est - ostium in pariete - in
+ * altitudine personae) plus MUNDUS_LATUS_SIGNI_ALTITUDO, visu mundi
+ * proiectum; capsa ima in puncto proiecto stat. In mundo fixum manet
+ * dum persona movetur. Capsa quae extra picturam caderet ad marginem
+ * picturae cogitur: ostium propinquum signum SEMPER visibile habet.
+ * Area ictus "ostium" capsam tegit (in hoc gradu ictus et E nihil
+ * agunt: ostium-plan T4).
+ *
+ * Signum nullum: locus aut persona deest, ostia nulla, nullum
+ * propinquum.
+ *
  * NUNTII loco picturae: locus nullus in volumine; locus quem lector
  * recusat; locus sine cella gressibili; personae nullae; persona
  * recusata (sagittae tamen valent).
@@ -59,10 +80,17 @@
 #include "mundus_solum.h"
 #include "mundus.h"
 #include "mundus_pictura.h"
+#include "mundus_ostia.h"
 
 /* pulsus (ms): dum movetur; inspectio voluminis */
 #define MUNDUS_LATUS_MORA_MOTUS        XXXIII
 #define MUNDUS_LATUS_MORA_INSPECTIONIS M
+
+#define MUNDUS_LATUS_SIGNUM           "[E]"
+/* altitudo signi supra solum ostii (persona II alta est) */
+#define MUNDUS_LATUS_SIGNI_ALTITUDO   2.5f
+/* limbus capsae circa litteras (pixela) */
+#define MUNDUS_LATUS_SIGNI_LIMBUS     III
 
 /* claves ambulandi: index in MundusLatusMontatio.tentae */
 #define MUNDUS_LATUS_SURSUM    ZEPHYRUM   /* w */
@@ -91,9 +119,14 @@ nomen structura {
                  Piscina* piscina_indicis;
                      Xar* personae;     /* de StatuaeInscriptio */
                      Xar* loci;         /* de StatuaeInscriptio */
-                     s64  seq_visum;
-                     s64  inspectio_ms;
-                     b32  inspectum;
+                     Xar* ostia;        /* de MundusOstium; in
+                                         * piscina_indicis; NIHIL =
+                                         * nulla */
+                     s32 ostium_propinquum;  /* index in ostia; -1 =
+                                               * nullum (kineticum) */
+                     s64 seq_visum;
+                     s64 inspectio_ms;
+                     b32 inspectum;
     /* locus lectus (statua, tabula gressus) */
                  Piscina* piscina_loci;
                   Statua* locus;        /* NIHIL: nullus aut
@@ -185,6 +218,19 @@ chorda
 mundus_latus_titulus (
      vacuum* ctx,
     Piscina* piscina);
+
+/*
+ * mundus_latus_signum - ubi signum ostii propinqui pingitur
+ *
+ * @fines: capsa in spatio radicis lateris
+ *
+ * Redde: FALSUM (fines non scripti) si nullum ostium propinquum est
+ * aut quadrum deest
+ */
+b32
+mundus_latus_signum (
+    constans MundusLatusMontatio* m,
+                           Fines* fines);
 
 /* latus focum amisit: claves tentae purgantur, persona sistit */
 vacuum

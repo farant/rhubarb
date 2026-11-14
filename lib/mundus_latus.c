@@ -8,6 +8,12 @@
  * eius mutatur. Clavis quadri = sigillum personae, locus et positura
  * corporis, mensura. Et pulsus et compositor quadrum curant; solus
  * pulsus mundum promovet.
+ *
+ * Ostia (ostium-plan T3): index in piscina_indicis cum indicibus
+ * relegitur (ostia sola mutata locum non mutant). Ostium propinquum
+ * solus pulsus computat, post gradum mundi; figura et compositor
+ * mundus_latus_signum rogant, quae ex statu praesenti capsam dat -
+ * area "ostium" et capsa picta semper congruunt.
  */
 #include "mundus_latus.h"
 #include "membrum__praecepta.h"
@@ -209,6 +215,14 @@ indices_relegere (
         ? statuae_enumerare_generis(m->volumen, STATUAE_GENUS_LOCUS,
               m->piscina_indicis)
         : NIHIL;
+    /* ostia loci ostensi (primi indicis) */
+    m->ostia     = m->volumen && m->loci
+        && xar_numerus(m->loci) > ZEPHYRUM
+        ? mundus_ostia_legere(m->volumen,
+              ((StatuaeInscriptio*)xar_obtinere(m->loci, ZEPHYRUM))
+                  ->titulus, m->piscina_indicis)
+        : NIHIL;
+    m->ostium_propinquum = -I;
     m->seq_visum = m->volumen ? volumen_seq_ultimum(m->volumen)
                               : ZEPHYRUM;
 }
@@ -514,6 +528,116 @@ clavis_tenetur (
         || m->tentae[III];
 }
 
+/* ostium propinquum computare: punctum a centro personae non plus
+ * radio suo distans; ex pluribus proximum, ex paribus prius. VERUM
+ * si mutatum */
+interior b32
+ostium_curare (
+    MundusLatusMontatio* m)
+{
+    s32 novum    = -I;
+    f32 optimum  = 0.0f;
+    i32 numerus  = m->ostia ? xar_numerus(m->ostia) : ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; m->positum && k < numerus; k++)
+    {
+        constans MundusOstium* o =
+            (constans MundusOstium*)xar_obtinere(m->ostia, k);
+                          f32 radius  =
+                              (f32)o->radius_millesimae / 1000.0f;
+                          f32 spatium_x  = m->corpus.x
+                              - (f32)o->x_millesimae / 1000.0f;
+                          f32 spatium_z  = m->corpus.z
+                              - (f32)o->z_millesimae / 1000.0f;
+                          f32 quadratum  = spatium_x * spatium_x
+                              + spatium_z * spatium_z;
+
+        si (   quadratum <= radius * radius
+            && (novum < ZEPHYRUM || quadratum < optimum))
+        {
+            novum    = (s32)k;
+            optimum  = quadratum;
+        }
+    }
+    si (novum == m->ostium_propinquum)
+    {
+        redde FALSUM;
+    }
+    m->ostium_propinquum = novum;
+    redde VERUM;
+}
+
+b32
+mundus_latus_signum (
+    constans MundusLatusMontatio* m,
+                           Fines* exitus)
+{
+    constans MundusOstium* o;
+               Dispositio  d;
+                      f32  x;
+                      f32  z;
+                      f32  y         = 0.0f;
+                      s32  puncti_x  = ZEPHYRUM;
+                      s32  puncti_y  = ZEPHYRUM;
+                      s32  origo_x   = ZEPHYRUM;
+                      s32  origo_y   = ZEPHYRUM;
+                      s32  latitudo;
+                      s32  altitudo;
+                      s32  capsa_x;
+                      s32  capsa_y;
+
+    si (   !m || !exitus || !m->ostia || !m->positum
+        || !m->quadrum.pixela || m->ostium_propinquum < ZEPHYRUM
+        || (i32)m->ostium_propinquum >= xar_numerus(m->ostia))
+    {
+        redde FALSUM;
+    }
+    o  = (constans MundusOstium*)xar_obtinere(m->ostia,
+        (i32)m->ostium_propinquum);
+    x = (f32)o->x_millesimae / 1000.0f;
+    z = (f32)o->z_millesimae / 1000.0f;
+    /* ostium in pariete solum gressibile non habet: altitudo
+     * personae */
+    si (!mundus_solum_altitudo(m->solum, x, z, &y))
+    {
+        y = m->corpus.y;
+    }
+    si (!mundus_quadri_origo(&m->mundus, ZEPHYRUM, m->quadrum.latitudo,
+        m->quadrum.altitudo, &origo_x, &origo_y))
+    {
+        redde FALSUM;
+    }
+    mundus_pixelum_puncti(stereometria_vector(x,
+        y + MUNDUS_LATUS_SIGNI_ALTITUDO, z), &puncti_x, &puncti_y);
+    disponere(m, &d);
+    latitudo  = (s32)(magnitudo(MUNDUS_LATUS_SIGNUM) - I)
+        * LITTERA_LATITUDO + II * MUNDUS_LATUS_SIGNI_LIMBUS;
+    altitudo  = LITTERA_ALTITUDO + II * MUNDUS_LATUS_SIGNI_LIMBUS;
+    /* medio horizontali supra punctum, ima in puncto */
+    capsa_x = d.pictura.x + (puncti_x - origo_x) - latitudo / II;
+    capsa_y = d.pictura.y + (puncti_y - origo_y) - altitudo;
+    /* ad marginem picturae coacta */
+    si (capsa_x + latitudo > d.pictura.x + (s32)d.pictura.latitudo)
+    {
+        capsa_x = d.pictura.x + (s32)d.pictura.latitudo - latitudo;
+    }
+    si (capsa_y + altitudo > d.pictura.y + (s32)d.pictura.altitudo)
+    {
+        capsa_y = d.pictura.y + (s32)d.pictura.altitudo - altitudo;
+    }
+    si (capsa_x < d.pictura.x)
+    {
+        capsa_x = d.pictura.x;
+    }
+    si (capsa_y < d.pictura.y)
+    {
+        capsa_y = d.pictura.y;
+    }
+    *exitus = fines(capsa_x, capsa_y, latitudo, altitudo);
+    redde VERUM;
+}
+
 /* quadrum tollere; VERUM si quid erat */
 interior b32
 quadrum_tollere (
@@ -655,6 +779,10 @@ mundus_latus_pulsare (
             mundus_gradi(&m->mundus,
                 spatium > M ? 1.0f : (f32)spatium / 1000.0f);
         }
+    }
+    si (ostium_curare(m))
+    {
+        mutatum = VERUM;
     }
     si (quadrum_curare(m))
     {
@@ -1038,6 +1166,17 @@ figura_mundi (
         mandata_imago(md, m->quadri_titulus, fines(d.pictura.x,
             d.pictura.y, (s32)m->quadrum.latitudo,
             (s32)m->quadrum.altitudo));
+        /* signum ostii propinqui: capsa plana, limbus, litterae */
+        si (mundus_latus_signum(m, &f))
+        {
+            mandata_rectangulum(md, f,
+                figura_color_thematis(COLOR_BACKGROUND), VERUM);
+            mandata_rectangulum(md, f,
+                figura_color_thematis(COLOR_TEXT), FALSUM);
+            textum_pingere(md, f.x + MUNDUS_LATUS_SIGNI_LIMBUS,
+                f.y + MUNDUS_LATUS_SIGNI_LIMBUS, chorda_ex_literis(
+                    MUNDUS_LATUS_SIGNUM, md->piscina), COLOR_TEXT);
+        }
         redde;
     }
     /* nuntii: locus primum, deinde persona */
@@ -1103,6 +1242,7 @@ mundus_latus_componere (
     MundusLatusMontatio* m = (MundusLatusMontatio*)ctx;
               Componens* radix;
              Dispositio  d;
+                  Fines  signum;
 
     (vacuum)repo;
     si (!m)
@@ -1131,6 +1271,10 @@ mundus_latus_componere (
     aream_addere(radix, piscina, intern, "sagitta_prior", d.prior);
     aream_addere(radix, piscina, intern, "sagitta_proxima", d.proxima);
     aream_addere(radix, piscina, intern, "humus", d.humus);
+    si (mundus_latus_signum(m, &signum))
+    {
+        aream_addere(radix, piscina, intern, "ostium", signum);
+    }
     redde radix;
 }
 
@@ -1162,21 +1306,23 @@ mundus_latus_dimittere (
     {
         piscina_destruere(m->piscina_quadri);
     }
-    m->piscina_indicis   = NIHIL;
-    m->piscina_loci      = NIHIL;
-    m->piscina_humi      = NIHIL;
-    m->piscina_personae  = NIHIL;
-    m->piscina_quadri    = NIHIL;
-    m->personae          = NIHIL;
-    m->loci              = NIHIL;
-    m->locus             = NIHIL;
-    m->solum             = NIHIL;
-    m->humus             = NIHIL;
-    m->persona           = NIHIL;
-    m->positum           = FALSUM;
-    m->mundus.solum      = NIHIL;
-    m->mundus.corporum   = ZEPHYRUM;
-    m->quadrum.pixela    = NIHIL;
+    m->piscina_indicis    = NIHIL;
+    m->piscina_loci       = NIHIL;
+    m->piscina_humi       = NIHIL;
+    m->piscina_personae   = NIHIL;
+    m->piscina_quadri     = NIHIL;
+    m->personae           = NIHIL;
+    m->loci               = NIHIL;
+    m->ostia              = NIHIL;
+    m->ostium_propinquum  = -I;
+    m->locus              = NIHIL;
+    m->solum              = NIHIL;
+    m->humus              = NIHIL;
+    m->persona            = NIHIL;
+    m->positum            = FALSUM;
+    m->mundus.solum       = NIHIL;
+    m->mundus.corporum    = ZEPHYRUM;
+    m->quadrum.pixela     = NIHIL;
 }
 
 b32
@@ -1200,11 +1346,12 @@ mundus_latus_montare (
         redde FALSUM;
     }
     memset(m, ZEPHYRUM, magnitudo(MundusLatusMontatio));
-    m->piscina   = piscina;
-    m->intern    = intern;
-    m->volumen   = volumen;
-    m->latitudo  = latitudo;
-    m->altitudo  = altitudo;
+    m->piscina            = piscina;
+    m->intern             = intern;
+    m->volumen            = volumen;
+    m->latitudo           = latitudo;
+    m->altitudo           = altitudo;
+    m->ostium_propinquum  = -I;
     si (porta)
     {
         m->porta = *porta;

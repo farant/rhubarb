@@ -11,6 +11,14 @@
  * sine loco, sine personis, locus additus apparet. recusatum: locus
  * et persona quos lector recusat, locus sine solo gressibili.
  * magnitudines: latera minima sine ruina.
+ *
+ * OSTIA (ostium-plan T3). ostia: nulla, remotum, propinquum - capsa
+ * signi ubi punctum proiectum est, textus, area; ambulanti in mundo
+ * fixum; propinquum iff distantia <= radius, gradu quoque. ostia_plura:
+ * proximum, paria prius, index substitutus sequitur. ostia_margo:
+ * capsa ad marginem picturae coacta. ostia_altitudo: solum ostii
+ * altius quam persona; ostium in saxo altitudinem personae sumit.
+ * ostia_vacua: sine persona, locus substitutus dum ostium propinquum.
  */
 #include "latina.h"
 #include "piscina.h"
@@ -33,7 +41,13 @@
 #include "statua_glb_scriptor.h"
 #include "plastica.h"
 #include "mundus_locus.h"
+#include "mundus_ostia.h"
+#include "mundus_pictura.h"
+#include "mundus_solum.h"
+#include "stereometria.h"
 #include "credo.h"
+#include "mundus_locus_fictus.h"
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -878,6 +892,583 @@ _sectio_magnitudines (
     mundus_latus_dimittere(NIHIL);
 }
 
+
+/* ==================================================
+ * Ostia
+ * ================================================== */
+
+#define SIGNI_LATITUDO (III * VI + II * MUNDUS_LATUS_SIGNI_LIMBUS)
+#define SIGNI_ALTITUDO (VIII + II * MUNDUS_LATUS_SIGNI_LIMBUS)
+#define CAPUT_LATERIS  XII
+
+interior s32
+_millesimae (
+    f32 x)
+{
+    redde (s32)floor((f64)x * 1000.0 + 0.5);
+}
+
+interior MundusOstium
+_ostium (
+        CredoContextus* c,
+    constans character* scaena,
+                   f32  x,
+                   f32  z,
+                   f32  radius)
+{
+    MundusOstium o;
+
+    o.scaena             = _ch(c, scaena);
+    o.x_millesimae       = _millesimae(x);
+    o.z_millesimae       = _millesimae(z);
+    o.radius_millesimae  = _millesimae(radius);
+    redde o;
+}
+
+/* ostia loci "clearing" ponere et volumen inspici facere */
+interior vacuum
+_ostia_pone (
+          CredoContextus* c,
+                   Orbis* w,
+    constans MundusOstium* ostia,
+                     i32  numerus)
+{
+    CREDO_VERUM (mundus_ostia_ponere(w->volumen, _ch(c, "clearing"),
+        ostia, numerus));
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_INSPECTIONIS);
+}
+
+/* capsa signi ut probatio eam computat: punctum (x, y +
+ * altitudo signi, z) proiectum, minus origo quadri, in spatio
+ * radicis; NON coacta */
+interior Fines
+_signum_speratum_alti (
+    Orbis* w,
+      f32  x,
+      f32  y,
+      f32  z,
+      i32  altitudo_lateris)
+{
+    Fines f;
+      s32 puncti_x  = ZEPHYRUM;
+      s32 puncti_y  = ZEPHYRUM;
+      s32 origo_x   = ZEPHYRUM;
+      s32 origo_y   = ZEPHYRUM;
+
+    mundus_pixelum_puncti(stereometria_vector(x,
+        y + MUNDUS_LATUS_SIGNI_ALTITUDO, z), &puncti_x, &puncti_y);
+    (vacuum)mundus_quadri_origo(&w->m.mundus, ZEPHYRUM, LATITUDO,
+        altitudo_lateris - CAPUT_LATERIS, &origo_x, &origo_y);
+    f.x         = puncti_x - origo_x - SIGNI_LATITUDO / II;
+    f.y         = CAPUT_LATERIS + puncti_y - origo_y - SIGNI_ALTITUDO;
+    f.latitudo  = SIGNI_LATITUDO;
+    f.altitudo  = SIGNI_ALTITUDO;
+    redde f;
+}
+
+interior Fines
+_signum_speratum (
+    Orbis* w,
+      f32  x,
+      f32  y,
+      f32  z)
+{
+    redde _signum_speratum_alti(w, x, y, z, ALTITUDO);
+}
+
+/* capsa ad marginem picturae coacta (ut latus facit) */
+interior Fines
+_coacta (
+    Fines f)
+{
+    si (f.x + SIGNI_LATITUDO > LATITUDO)
+    {
+        f.x = LATITUDO - SIGNI_LATITUDO;
+    }
+    si (f.y + SIGNI_ALTITUDO > ALTITUDO)
+    {
+        f.y = ALTITUDO - SIGNI_ALTITUDO;
+    }
+    si (f.x < ZEPHYRUM)
+    {
+        f.x = ZEPHYRUM;
+    }
+    si (f.y < CAPUT_LATERIS)
+    {
+        f.y = CAPUT_LATERIS;
+    }
+    redde f;
+}
+
+interior b32
+_fines_pares (
+    Fines a,
+    Fines b)
+{
+    redde a.x == b.x && a.y == b.y && a.latitudo == b.latitudo
+        && a.altitudo == b.altitudo;
+}
+
+/* mandata signi picta: rectangulum impletum et limbus his finibus,
+ * textus "[E]" intra limbum */
+interior b32
+_signum_pictum (
+    CredoContextus* c,
+             Orbis* w,
+             Fines  f)
+{
+              Mandata* md = _reddere(w, c->piscina);
+    constans Mandatum* x;
+                  b32  fundus = FALSUM;
+                  b32  limbus = FALSUM;
+                  b32  textus = FALSUM;
+                  i32  i;
+
+    per (i = ZEPHYRUM; i < xar_numerus(md->elementa); i++)
+    {
+        x = (constans Mandatum*)xar_obtinere(md->elementa, i);
+        si (   x->genus == MANDATUM_RECTANGULUM
+            && _fines_pares(x->fines, f))
+        {
+            si (x->impletum)
+            {
+                fundus = VERUM;
+            }
+            alioquin
+            {
+                limbus = VERUM;
+            }
+        }
+        si (   x->genus   == MANDATUM_TEXTUS
+            && chorda_aequalis_literis(x->textus, MUNDUS_LATUS_SIGNUM)
+            && x->fines.x == f.x + MUNDUS_LATUS_SIGNI_LIMBUS
+            && x->fines.y == f.y + MUNDUS_LATUS_SIGNI_LIMBUS)
+        {
+            /* textus POST fundum pingitur */
+            textus = fundus;
+        }
+    }
+    redde fundus && limbus && textus;
+}
+
+interior f32
+_distantia (
+    Orbis* w,
+      f32  x,
+      f32  z)
+{
+    f32 spatium_x = w->m.corpus.x - x;
+    f32 spatium_z = w->m.corpus.z - z;
+
+    redde (f32)sqrt((f64)(spatium_x * spatium_x
+        + spatium_z * spatium_z));
+}
+
+interior vacuum
+_sectio_ostia (
+    CredoContextus* c)
+{
+            Orbis* w = _orbem(c, _volumen(c, "mundus_ostia", VERUM, II),
+                LATITUDO, ALTITUDO);
+     MundusOstium  o[II];
+        Componens* area;
+            Fines  f;
+            Fines  prior;
+            Fines  speratum;
+              f32  x0;
+              f32  z0;
+              f32  y0  = 0.0f;
+              f32  ostii_x;
+              f32  ostii_z;
+              i32  k;
+              i32  propinqua  = ZEPHYRUM;
+              i32  remota     = ZEPHYRUM;
+
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum && _quadrum(w) != NIHIL);
+    x0 = w->m.corpus.x;
+    z0 = w->m.corpus.z;
+    /* nulla ostia: nullum signum */
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+    CREDO_FALSUM (_textus_pictus(c, w, MUNDUS_LATUS_SIGNUM));
+    CREDO_VERUM (_nodus(w, "ostium", c->piscina) == NIHIL);
+    CREDO_FALSUM (mundus_latus_signum(NIHIL, &f));
+    /* ostium remotum (III unitates, radius 1.5): lectum, non
+     * propinquum */
+    o[ZEPHYRUM] = _ostium(c, "hut-door", x0 + 3.0f, z0, 1.5f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.ostia != NIHIL);
+    CREDO_AEQUALIS_I32 (xar_numerus(w->m.ostia), I);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+    CREDO_FALSUM (_textus_pictus(c, w, MUNDUS_LATUS_SIGNUM));
+    /* ostium propinquum (I unitas): signum ubi punctum proiectum
+     * est. Ostia SOLA mutata (locus idem) leguntur */
+    ostii_x      = x0 + 1.0f;
+    ostii_z      = z0;
+    o[ZEPHYRUM]  = _ostium(c, "hut-door", ostii_x, ostii_z, 1.5f);
+    _ostia_pone(c, w, o, I);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    CREDO_NECESSE (mundus_solum_altitudo(w->m.solum, ostii_x, ostii_z,
+        &y0));
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    speratum = _signum_speratum(w, ostii_x, y0, ostii_z);
+    CREDO_AEQUALIS_S32 (f.x, speratum.x);
+    CREDO_AEQUALIS_S32 (f.y, speratum.y);
+    CREDO_AEQUALIS_I32 ((i32)f.latitudo, SIGNI_LATITUDO);
+    CREDO_AEQUALIS_I32 ((i32)f.altitudo, SIGNI_ALTITUDO);
+    /* supra et dextrorsum a persona (medio picturae) */
+    CREDO_VERUM (f.y + (s32)f.altitudo < CAPUT_LATERIS
+        + (ALTITUDO - CAPUT_LATERIS) / II);
+    CREDO_VERUM (_signum_pictum(c, w, f));
+    area = _nodus(w, "ostium", c->piscina);
+    CREDO_NECESSE (area != NIHIL);
+    CREDO_VERUM (_fines_pares(area->fines, f));
+    /* in hoc gradu ictus et E nihil agunt */
+    _ictus(w, "ostium", c->piscina);
+    _premere(w, 'e');
+    _solvere(w, 'e');
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    CREDO_VERUM (_quadrum(w) != NIHIL);
+    /* ambulat: signum in MUNDO fixum - in schirmo cum origine
+     * quadri movetur; propinquum iff distantia <= radius, gradu
+     * quoque */
+    prior = f;
+    _premere(w, 'd');
+    per (k = ZEPHYRUM; k < CC && remota < V; k++)
+    {
+        (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_MOTUS);
+        si (_distantia(w, ostii_x, ostii_z) <= 1.5f)
+        {
+            propinqua++;
+            CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+            CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+            speratum = _signum_speratum(w, ostii_x, y0, ostii_z);
+            CREDO_VERUM (_fines_pares(f, speratum));
+            CREDO_VERUM (_signum_pictum(c, w, f));
+        }
+        alioquin
+        {
+            remota++;
+            CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+            CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+            CREDO_FALSUM (_textus_pictus(c, w, MUNDUS_LATUS_SIGNUM));
+            CREDO_VERUM (_nodus(w, "ostium", c->piscina) == NIHIL);
+        }
+    }
+    _solvere(w, 'd');
+    CREDO_VERUM (propinqua >= III);
+    CREDO_AEQUALIS_I32 (remota, V);
+    /* dum propinquum erat, capsa in schirmo mota est */
+    CREDO_VERUM (w->m.corpus.x > x0 + 1.0f);
+    (vacuum)prior;
+    _finire(w);
+}
+
+interior vacuum
+_sectio_ostia_plura (
+    CredoContextus* c)
+{
+           Orbis* w = _orbem(c, _volumen(c, "mundus_ostia2", VERUM,
+               II), LATITUDO, ALTITUDO);
+    MundusOstium o[III];
+           Fines f;
+           Fines prior;
+             f32 x0;
+             f32 z0;
+             f32 y0 = 0.0f;
+
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum);
+    x0 = w->m.corpus.x;
+    z0 = w->m.corpus.z;
+    /* duo in radio: proximum vincit, quocumque ordine */
+    o[ZEPHYRUM]  = _ostium(c, "longe", x0 + 1.25f, z0, 2.0f);
+    o[I]         = _ostium(c, "prope", x0, z0 + 0.5f, 2.0f);
+    _ostia_pone(c, w, o, II);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, I);
+    CREDO_NECESSE (mundus_solum_altitudo(w->m.solum, x0, z0 + 0.5f,
+        &y0));
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    CREDO_VERUM (_fines_pares(f, _signum_speratum(w, x0, y0,
+        z0 + 0.5f)));
+    prior        = f;
+    o[ZEPHYRUM]  = _ostium(c, "prope", x0, z0 + 0.5f, 2.0f);
+    o[I]         = _ostium(c, "longe", x0 + 1.25f, z0, 2.0f);
+    _ostia_pone(c, w, o, II);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    CREDO_VERUM (_fines_pares(f, prior));
+    /* proximum cuius radius non attingit non numeratur: remotius
+     * cuius radius attingit vincit */
+    o[ZEPHYRUM]  = _ostium(c, "prope", x0, z0 + 0.75f, 0.5f);
+    o[I]         = _ostium(c, "longe", x0 + 1.25f, z0, 2.0f);
+    _ostia_pone(c, w, o, II);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, I);
+    /* paria (unitas una utrimque): prius in indice */
+    o[ZEPHYRUM]  = _ostium(c, "sinistrum", x0 - 1.0f, z0, 2.0f);
+    o[I]         = _ostium(c, "dextrum", x0 + 1.0f, z0, 2.0f);
+    _ostia_pone(c, w, o, II);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    o[ZEPHYRUM]  = _ostium(c, "dextrum", x0 + 1.0f, z0, 2.0f);
+    o[I]         = _ostium(c, "sinistrum", x0 - 1.0f, z0, 2.0f);
+    _ostia_pone(c, w, o, II);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    CREDO_VERUM (_fines_pares(f, _signum_speratum(w, x0 + 1.0f, y0,
+        z0)));
+    /* in margine ipso radii: propinquum (non plus radio) */
+    o[ZEPHYRUM] = _ostium(c, "margo", x0 + 1.0f, z0, 1.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    /* index vacuus: signum abit; index ex memoria non legitur */
+    _ostia_pone(c, w, NIHIL, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+    CREDO_FALSUM (_textus_pictus(c, w, MUNDUS_LATUS_SIGNUM));
+    /* ostia loci ALTERIUS non leguntur */
+    o[ZEPHYRUM] = _ostium(c, "alibi", x0, z0, 2.0f);
+    CREDO_VERUM (mundus_ostia_ponere(w->volumen, _ch(c, "cave"), o,
+        I));
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_INSPECTIONIS);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    _finire(w);
+}
+
+interior vacuum
+_sectio_ostia_margo (
+    CredoContextus* c)
+{
+           Orbis* w = _orbem(c, _volumen(c, "mundus_ostia3", VERUM,
+               II), LATITUDO, ALTITUDO);
+    MundusOstium o[I];
+           Fines f;
+           Fines speratum;
+             f32 x0;
+             f32 z0;
+             f32 y0 = 0.0f;
+             i32 k;
+             b32 sinister  = FALSUM;
+             b32 dexter    = FALSUM;
+    /* directiones mundi: in schirmo dextrorsum, sinistrorsum,
+     * sursum, deorsum */
+    hic_manens constans f32 DIRECTIONES[IV][II] = {
+        { 5.5f, 5.5f }, { -5.5f, -5.5f }, { 5.5f, -5.5f },
+        { -5.5f, 5.5f }
+    };
+
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum);
+    x0 = w->m.corpus.x;
+    z0 = w->m.corpus.z;
+    per (k = ZEPHYRUM; k < IV; k++)
+    {
+        f32 ostii_x = x0 + DIRECTIONES[k][ZEPHYRUM];
+        f32 ostii_z = z0 + DIRECTIONES[k][I];
+        s32 x_coactum;
+        s32 y_coactum;
+
+        /* radius maximus, punctum extra picturam */
+        o[ZEPHYRUM] = _ostium(c, "procul", ostii_x, ostii_z, 8.0f);
+        _ostia_pone(c, w, o, I);
+        CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+        CREDO_NECESSE (mundus_solum_altitudo(w->m.solum, ostii_x,
+            ostii_z, &y0));
+        speratum  = _signum_speratum(w, ostii_x, y0, ostii_z);
+        sinister  = sinister || speratum.x < ZEPHYRUM;
+        dexter    = dexter || speratum.x + SIGNI_LATITUDO > LATITUDO;
+        CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+        x_coactum = speratum.x < ZEPHYRUM ? ZEPHYRUM
+            : speratum.x + SIGNI_LATITUDO > LATITUDO
+                ? LATITUDO - SIGNI_LATITUDO : speratum.x;
+        y_coactum = speratum.y < CAPUT_LATERIS ? CAPUT_LATERIS
+            : speratum.y + SIGNI_ALTITUDO > ALTITUDO
+                ? ALTITUDO - SIGNI_ALTITUDO : speratum.y;
+        CREDO_AEQUALIS_S32 (f.x, x_coactum);
+        CREDO_AEQUALIS_S32 (f.y, y_coactum);
+        CREDO_AEQUALIS_I32 ((i32)f.latitudo, SIGNI_LATITUDO);
+        CREDO_AEQUALIS_I32 ((i32)f.altitudo, SIGNI_ALTITUDO);
+        CREDO_VERUM (_signum_pictum(c, w, f));
+    }
+    /* puncta vere extra picturam ceciderunt: sinistrorsum et
+     * dextrorsum */
+    CREDO_VERUM (sinister);
+    CREDO_VERUM (dexter);
+    _finire(w);
+    /* margines imus et summus: latus humile (visus inclinatus
+     * puncta supra et infra comprimit - in latere alto intra
+     * picturam manent) */
+    w = _orbem(c, _volumen(c, "mundus_ostia3b", VERUM, II), LATITUDO,
+        C);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum);
+    x0 = w->m.corpus.x;
+    z0 = w->m.corpus.z;
+    /* deorsum in schirmo = -x +z in mundo; sursum = +x -z */
+    o[ZEPHYRUM] = _ostium(c, "infra", x0 - 5.5f, z0 + 5.5f, 8.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+    CREDO_NECESSE (mundus_solum_altitudo(w->m.solum, x0 - 5.5f,
+        z0 + 5.5f, &y0));
+    speratum = _signum_speratum_alti(w, x0 - 5.5f, y0, z0 + 5.5f, C);
+    CREDO_VERUM (speratum.y + SIGNI_ALTITUDO > C);
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    CREDO_AEQUALIS_S32 (f.y, C - SIGNI_ALTITUDO);
+    CREDO_AEQUALIS_S32 (f.x, speratum.x);
+    o[ZEPHYRUM] = _ostium(c, "supra", x0 + 5.5f, z0 - 5.5f, 8.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+    CREDO_NECESSE (mundus_solum_altitudo(w->m.solum, x0 + 5.5f,
+        z0 - 5.5f, &y0));
+    speratum = _signum_speratum_alti(w, x0 + 5.5f, y0, z0 - 5.5f, C);
+    CREDO_VERUM (speratum.y < CAPUT_LATERIS);
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    CREDO_AEQUALIS_S32 (f.y, CAPUT_LATERIS);
+    CREDO_AEQUALIS_S32 (f.x, speratum.x);
+    _finire(w);
+}
+
+/* volumen cum loco FICTO (mundus_locus_fictus.h) et personis duabus */
+interior Volumen*
+_volumen_fictum (
+        CredoContextus* c,
+    constans character* praefixum)
+{
+    Volumen* v = _volumen(c, praefixum, FALSUM, II);
+     chorda  octeti = statua_glb_scribere(loci_ficti_locus(c), NIHIL,
+         c->piscina);
+
+    si (v && octeti.datum)
+    {
+        (vacuum)statuae_addere_generis(v, _ch(c, "clearing"), octeti,
+            STATUAE_GENUS_LOCUS);
+    }
+    redde v;
+}
+
+interior vacuum
+_sectio_ostia_altitudo (
+    CredoContextus* c)
+{
+           Orbis* w = _orbem(c, _volumen_fictum(c, "mundus_ostia4"),
+               LATITUDO, ALTITUDO);
+    MundusOstium o[I];
+           Fines f;
+             f32 y = 0.0f;
+             f32 lx;
+             f32 lz;
+
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum && _quadrum(w) != NIHIL);
+    /* ostium in suggesto superiore (y 4), persona infra: signum in
+     * altitudine SOLI OSTII, non personae */
+    lx           = w->m.corpus.x < 8.0f ? 8.5f : w->m.corpus.x;
+    lz           = w->m.corpus.z;
+    o[ZEPHYRUM]  = _ostium(c, "ledge", lx, lz, 8.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+    CREDO_NECESSE (mundus_solum_altitudo(w->m.solum, lx, lz, &y));
+    CREDO_F32_PROXIMUS (y, 4.0f, 0.001f);
+    CREDO_VERUM (w->m.corpus.y < 3.0f);
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    CREDO_VERUM (_fines_pares(f, _coacta(_signum_speratum(w, lx, y,
+        lz))));
+    CREDO_FALSUM (_fines_pares(f, _coacta(_signum_speratum(w, lx,
+        w->m.corpus.y, lz))));
+    /* ostium in saxo solido (ubi solum gressibile non est):
+     * altitudo PERSONAE */
+    o[ZEPHYRUM] = _ostium(c, "rock", 5.5f, 1.5f, 8.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.ostium_propinquum == ZEPHYRUM);
+    CREDO_FALSUM (mundus_solum_altitudo(w->m.solum, 5.5f, 1.5f, &y));
+    CREDO_NECESSE (mundus_latus_signum(&w->m, &f));
+    CREDO_VERUM (_fines_pares(f, _coacta(_signum_speratum(w, 5.5f,
+        w->m.corpus.y, 1.5f))));
+    _finire(w);
+}
+
+interior vacuum
+_sectio_ostia_vacua (
+    CredoContextus* c)
+{
+           Orbis* w;
+         Volumen* v;
+    MundusOstium  o[II];
+           Fines  f;
+             f32  x0;
+             f32  z0;
+
+    /* sine personis: ostium in volumine, signum nullum */
+    w = _orbem(c, _volumen(c, "mundus_ostia5", VERUM, ZEPHYRUM),
+        LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    o[ZEPHYRUM] = _ostium(c, "hut-door", 27.0f, 29.0f, 8.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+    CREDO_FALSUM (_textus_pictus(c, w, MUNDUS_LATUS_SIGNUM));
+    CREDO_VERUM (_nodus(w, "ostium", c->piscina) == NIHIL);
+    _finire(w);
+    /* sine volumine: nihil ruit */
+    w = _orbem(c, NIHIL, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, MUNDUS_LATUS_MORA_INSPECTIONIS);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+    _finire(w);
+    /* locus sine solo gressibili (persona nusquam posita): ostium
+     * circa originem lectum, numquam propinquum */
+    v = _volumen(c, "mundus_ostia7", FALSUM, I);
+    CREDO_NECESSE (v != NIHIL);
+    CREDO_VERUM (statuae_addere_generis(v, _ch(c, "clearing"),
+        filum_legere_totum(VIA_FUNGI, c->piscina),
+        STATUAE_GENUS_LOCUS));
+    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_FALSUM (w->m.positum);
+    o[ZEPHYRUM] = _ostium(c, "hut-door", 0.0f, 0.0f, 8.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.ostia != NIHIL);
+    CREDO_AEQUALIS_I32 (xar_numerus(w->m.ostia), I);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+    _finire(w);
+    /* locus substitutus dum ostium SECUNDUM propinquum est, et index
+     * simul brevior factus: index vetus non manet */
+    w = _orbem(c, _volumen(c, "mundus_ostia6", VERUM, II), LATITUDO,
+        ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (w->m.positum);
+    x0           = w->m.corpus.x;
+    z0           = w->m.corpus.z;
+    o[ZEPHYRUM]  = _ostium(c, "longe", x0 + 6.0f, z0, 1.0f);
+    o[I]         = _ostium(c, "prope", x0 + 0.5f, z0, 2.0f);
+    _ostia_pone(c, w, o, II);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, I);
+    CREDO_VERUM (statuae_addere_generis(w->volumen, _ch(c, "clearing"),
+        statua_glb_scribere(loci_ficti_locus(c), NIHIL, c->piscina),
+        STATUAE_GENUS_LOCUS));
+    o[ZEPHYRUM] = _ostium(c, "ledge", 10.0f, 4.0f, 8.0f);
+    _ostia_pone(c, w, o, I);
+    CREDO_NECESSE (w->m.positum);
+    CREDO_AEQUALIS_I32 (xar_numerus(w->m.ostia), I);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, ZEPHYRUM);
+    CREDO_VERUM (mundus_latus_signum(&w->m, &f));
+    /* locus sine ostiis: nullum */
+    _ostia_pone(c, w, NIHIL, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (w->m.ostium_propinquum, -I);
+    CREDO_FALSUM (mundus_latus_signum(&w->m, &f));
+    _finire(w);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "primum", _sectio_primum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambulat", _sectio_ambulat, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -891,6 +1482,12 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "recusatum", _sectio_recusatum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "magnitudines", _sectio_magnitudines, NIHIL, NIHIL, NIHIL,
         NIHIL },
+    { "ostia", _sectio_ostia, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ostia_plura", _sectio_ostia_plura, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ostia_margo", _sectio_ostia_margo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "ostia_altitudo", _sectio_ostia_altitudo, NIHIL, NIHIL, NIHIL,
+        NIHIL },
+    { "ostia_vacua", _sectio_ostia_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 
