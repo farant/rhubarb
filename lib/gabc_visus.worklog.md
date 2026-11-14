@@ -47,3 +47,33 @@ Subtleties T2 must keep (behaviour the tests pin):
 
 `continuare` FALSUM is new: stop the sound, selection -1 (a new melody
 starts from the top on Space).
+
+## 2026-11-14 — T2: extraction done
+
+- antiphonale.c 1381 -> 538 lines; gabc_visus.c 1168. Guard held:
+  probatio_antiphonale_latus 11/11 and probatio_vicus_antiphonale 3/3
+  before and after, both files untouched (`git diff --stat
+  probationes/` shows only the new probatio_gabc_visus.c).
+- **Plan step 3 did not go red.** The plan expected the new test to
+  fail at link before git knew lib/gabc_visus.c; it passed, because the
+  build resolves the body through the header's aedilis tag
+  (`<aedilis corpus="lib/gabc_visus.c"/>`), not through git's file
+  list. The red came from the plant instead: `continuare` ignored
+  (`si (visus->sonat && continuare == II)`) -> FRACTA at
+  probatio_gabc_visus.c:189 "continuare FALSUM: sonus sistit"; restored
+  -> green (silva.planta).
+- Small widening of the approved header: `gabc_visus_componere` also
+  sets the root's fines (the surface), since the surface rule lives in
+  the view now; the shell only creates the root, focus and actio.
+- Shell's relegere reads into a scratch arena and destroys it; the
+  view copies the text into the version's own arena. The mount arena
+  does not grow per re-read ("directorium absens" test unchanged).
+- Empty text handed to the view sets banner "empty text" and keeps the
+  version; the antiphonale never hands it empty text (it says "empty
+  file" itself).
+- First commissio refused: ludus_tessera/compile_probationes.sh keeps a
+  hand source list; antiphonale.c now needs gabc_visus.c, so 8 tessera
+  tests failed to link. Added "gabc_visus" next to "antiphonale" there
+  (the known trap, memory "new include in an old lib file"). T5 adds
+  psalterium.c, which vicus_applicatio.c will include in T7: add it to
+  the same list then.

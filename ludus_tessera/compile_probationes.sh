@@ -223,6 +223,7 @@ declare -a RADIX_FONTES=(
     "specula_macos"   # vicus quies T6c: specula libri praeconii
     "aetherophonum"   # sonus S5c: latus theremin (sine sono: porta)
     "antiphonale"     # gabc pars II P6: latus cantus gabc
+    "gabc_visus"      # psalterium T2: visus cantus ex antiphonale extractus
     "gabc"
     "gabc_compositio"
     "gabc_pictura"

@@ -194,8 +194,8 @@ gabc_visus_premere (
  * Componere, pingere, pulsus
  * ================================================== */
 
-/* compositio pigra ad superficiem currentem; nodi lineae imae sub
- * radice involucri additi */
+/* fines radicis = superficies currens; compositio pigra ad eam;
+ * nodi lineae imae sub radice involucri additi */
 vacuum
 gabc_visus_componere (
               GabcVisus* visus,
