@@ -56,6 +56,12 @@
            gyrus_varius="verum"/>
 
   <!-- pratum imum: casa, saepes, arcae -->
+  <!-- ostium casae (project-specs/ostium-spec.md): casa in basi
+       est (x 25 .. 33, z 40.5 .. 47), ianuam in parietibus visis non
+       habet; punctum ante medium parietis meridiani, ubi persona et
+       signum [E] visu fixo non teguntur. Scaena: apps/scaena/loci/
+       casa.scaena.stml -->
+  <ostium locus="29 47.75" radius="1.5" scaena="hut-door"/>
   <res fons="plastica/res/saepes.stml" locus="25 50"/>
   <res fons="plastica/res/saepes.stml" locus="27 50"/>
   <res fons="plastica/res/saepes.stml" locus="29 50"/>

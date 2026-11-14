@@ -8,8 +8,9 @@ the character is in an area they can interact with". Answer then: no;
 `mundus` shows its text only (`include/scaena_latus.h:37`). This
 closes the ledger question `01M7BBC3T43PAQFSSAAEEPQK6M`.*
 
-**Status: AGREED** (design agreed by Fran in conversation 2026-11-13;
-not built). Plan: `project-specs/ostium-plan.md`.
+**Status: BUILT** in secunda 2026-11-14 (design agreed by Fran in
+conversation 2026-11-13; tasks 1-5 of `project-specs/ostium-plan.md`,
+each with an "As built" note). Not in main. See section IV.
 
 ## I. Intent
 
@@ -107,13 +108,43 @@ Headless screenshots of the world pane (outside with prompt, inside,
 missing scene) go to Fran for the look; the real window is his to
 open.
 
+## IV. As built (2026-11-14)
+
+- **Code.** `lib/mundus_locus.c` reads `<ostium>`;
+  `lib/mundus_ostia.c` checks doorways, stores them as the act
+  `ostia-posita`, reads them back, and finds the nearest cell a body
+  can stand on (`mundus_ostia_locus_proximus`); `lib/scaena_latus.c`
+  has the hosted form; `lib/mundus_latus.c` draws the prompt, enters,
+  leaves and remembers. Tests: `probatio_mundus_ostia`,
+  `probatio_scaena_latus` (hospes sections), `probatio_mundus_latus`
+  (ostia sections, `intrare`, `restitutio`, `ignota`).
+- **Changed from the decisions above.** 4: an act of its own, not a
+  tagged node (explained there). 9: a click anywhere in the pane
+  leaves a scene that cannot be shown. 11: the `ostium` field holds
+  "x z radius" in thousandths, and "spot still usable" means a cell
+  to stand on within that radius, the same rule as the build check.
+- **The hut.** The clearing's hut is part of the base model
+  (x 25 .. 33, z 40.5 .. 47 on the map sheet). Neither wall the fixed
+  view shows (west, south) has a door, so the doorway is Claude's
+  choice: `<ostium locus="29 47.75" radius="1.5" scaena="hut-door"/>`
+  in `apps/mundus/loci/clearing.stml`, in front of the middle of the
+  south wall, where the character and the prompt are not hidden by
+  the roof. One line to move.
+- **Known limits.** A readable scene with no `mundus` exit traps the
+  pane (wish `01M7DBR01RAQ6J88SNH42E8D1S`). Facing is not kept across
+  a restart. The character's position outside is still not saved
+  (non-goal above). The hosted `mundus` exit's own text is not shown.
+  No transition effect.
+
 ## AUDIENDA (not verified)
 
 - Whether the prompt needs an outline or shadow to read against light
   ground has not been tried; decision 7's flat box is a first guess.
-- The hut's door position in the clearing has not been measured; the
-  hut is not a `<res>` of `apps/mundus/loci/clearing.stml` (it is in
-  the base model or absent). Task 5 finds it on the map sheet.
+- Nobody has walked into the hut in the real window yet (Claude
+  never opens it): the headless checks are a prompt and an entry at
+  a test doorway through the real vicus app, and the build check
+  accepting the hut doorway. Whether the south-wall spot feels right
+  is Fran's to say.
 - No measurement of what entering costs in time (reading a view blob
   and making its picture); the scene pane does the same work today
   without complaint.

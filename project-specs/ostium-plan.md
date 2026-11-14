@@ -283,3 +283,11 @@ argument presses E.
   ledger question `01M7BBC3T43PAQFSSAAEEPQK6M`; file what is left
   open. Memory files.
 - [ ] Commit on Fran's word.
+
+**As built (2026-11-14).** One building on the map sheet, in the base
+model; no door on the two walls the fixed view shows, so the doorway
+stands before the middle of the south wall (`locus="29 47.75"`,
+radius 1.5, scene `hut-door`); the build accepted it (`ostia 1`).
+Built into Fran's live volume with `bin/mundus condere`; `bin/vicus`
+rebuilt in secunda. Spec status BUILT with section IV; ledger
+question closed.
