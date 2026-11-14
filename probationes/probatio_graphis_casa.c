@@ -115,8 +115,8 @@ _regionem_plenam (
     CREDO_VERUM (regiones[index].pixela * C >= capsa * centesimae);
 }
 
-#define DIGESTUM_FOCI    0x7d47a23bu
-#define DIGESTUM_OSTII   0x3b768bf5u
+#define DIGESTUM_FOCI    0x30254be5u
+#define DIGESTUM_OSTII   0x266fc49du
 
 interior vacuum
 _digestum_probare (
@@ -154,10 +154,10 @@ _sectio_focus (
     _regionem_plenam(c, &f, II, 55);
     _regionem_plenam(c, &f, III, 95);
     /* ignis in foco regionis foci est */
-    CREDO_AEQUALIS_I32 (f.tabula->domini[140 * LAT + 170], I);
-    CREDO_VERUM (f.tabula->lucentes[140 * LAT + 170] != ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.tabula->domini[187 * LAT + 227], I);
+    CREDO_VERUM (f.tabula->lucentes[187 * LAT + 227] != ZEPHYRUM);
     /* collis in fenestra regionis fenestrae est */
-    CREDO_AEQUALIS_I32 (f.tabula->domini[98 * LAT + 250], II);
+    CREDO_AEQUALIS_I32 (f.tabula->domini[131 * LAT + 333], II);
     _digestum_probare(c, &f, "foci", DIGESTUM_FOCI);
 }
 
@@ -177,8 +177,8 @@ _sectio_ostium (
     /* lectus in perspectiva: capsa non plena */
     _regionem_plenam(c, &f, II, 50);
     /* ansa ostii et stragula lecti regionum suarum sunt */
-    CREDO_AEQUALIS_I32 (f.tabula->domini[103 * LAT + 149], I);
-    CREDO_AEQUALIS_I32 (f.tabula->domini[160 * LAT + 270], III);
+    CREDO_AEQUALIS_I32 (f.tabula->domini[137 * LAT + 199], I);
+    CREDO_AEQUALIS_I32 (f.tabula->domini[213 * LAT + 360], III);
     _digestum_probare(c, &f, "ostii", DIGESTUM_OSTII);
 }
 

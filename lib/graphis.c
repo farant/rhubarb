@@ -31,6 +31,11 @@
 #define VIS_PLENA           CCLVI
 #define VIS_ORDINARIA_MILLE 600
 #define VIS_MINIMA_MILLE    400
+/* mensura vetus descriptionis: coordinatae per LAT / LATITUDO_VETUS
+ * auctae */
+#define LATITUDO_VETUS      CCCLX
+#define ALTITUDO_VETUS      CCXL
+
 
 hic_manens constans character* constans EXEMPLARIA[EXEMPLAR_NUMERUS] =
 {
@@ -87,7 +92,28 @@ nomen structura {
            b32  fractum;
            i32  linea;
      character  error[ERRORIS_MENSURA];
+           s32  numerator;     /* scala coordinatarum: numerator /
+                                * denominator (I / I: pixela ipsa) */
+           s32 denominator;
 } StatusPicturae;
+
+/* coordinata ABSOLUTA descriptionis in pixelum: per scalam aucta,
+ * ad integrum proximum (dimidium sursum) */
+interior s32
+_augere (
+    constans StatusPicturae* p,
+                        s32  valor)
+{
+    s32 dividendus  = II * valor * p->numerator + p->denominator;
+    s32 divisor     = II * p->denominator;
+    s32 quotiens    = dividendus / divisor;
+
+    si (dividendus % divisor < ZEPHYRUM)
+    {
+        quotiens--;
+    }
+    redde quotiens;
+}
 
 
 /* ==================================================
@@ -708,7 +734,8 @@ _stilum_legere (
             "needs a width from 1 to 16 and a colour");
     }
     q->margo       = VERUM;
-    q->crassitudo  = crassitudo;
+    /* I per 4/3 = 1.33 -> I: numquam infra I cadit */
+    q->crassitudo  = _augere(p, crassitudo);
     redde VERUM;
 }
 
@@ -1224,8 +1251,14 @@ _forma_finium (
     {
         redde FALSUM;
     }
-    f[ZEPHYRUM]  += motus_x;
-    f[I]         += motus_y;
+    /* margines absoluti augentur, non latitudo: formae vicinae se
+     * tangere pergunt */
+    f[II]        = _augere(p, f[ZEPHYRUM] + motus_x + f[II]);
+    f[III]       = _augere(p, f[I] + motus_y + f[III]);
+    f[ZEPHYRUM]  = _augere(p, f[ZEPHYRUM] + motus_x);
+    f[I]         = _augere(p, f[I] + motus_y);
+    f[II]        -= f[ZEPHYRUM];
+    f[III]       -= f[I];
     p->picta     = ZEPHYRUM;
     si (ovum)
     {
@@ -1313,8 +1346,8 @@ _forma_punctorum (
     }
     per (k = ZEPHYRUM; k < numerus; k++)
     {
-        x[k] += motus_x;
-        y[k] += motus_y;
+        x[k] = _augere(p, x[k] + motus_x);
+        y[k] = _augere(p, y[k] + motus_y);
     }
     p->picta = ZEPHYRUM;
     si (q.impletur)
@@ -1437,8 +1470,8 @@ _lumen_legere (
                 "needs 2 integers from -4096 to 4096");
         }
         l->punctum  = VERUM;
-        l->x        = duo[ZEPHYRUM];
-        l->y        = duo[I];
+        l->x        = _augere(p, duo[ZEPHYRUM]);
+        l->y        = _augere(p, duo[I]);
         si (!radii)
         {
             redde _recusare_attributum(p, nodus, "radii",
@@ -1450,14 +1483,15 @@ _lumen_legere (
             redde _recusare_attributum(p, nodus, "radii",
                 "needs 2 integers from 1 to 4096");
         }
-        l->radius_x = duo[ZEPHYRUM];
-        l->radius_y = duo[I];
+        l->radius_x = _augere(p, duo[ZEPHYRUM]);
+        l->radius_y = _augere(p, duo[I]);
     }
     alioquin
     {
         s32 x[PUNCTA_MAXIMA];
         s32 y[PUNCTA_MAXIMA];
         i32 numerus;
+        i32 k;
 
         si (radii)
         {
@@ -1481,8 +1515,11 @@ _lumen_legere (
             redde _recusare(p, ZEPHYRUM, "out of memory", NIHIL,
                 NIHIL);
         }
-        memcpy(l->area_x, x, numerus * magnitudo(s32));
-        memcpy(l->area_y, y, numerus * magnitudo(s32));
+        per (k = ZEPHYRUM; k < numerus; k++)
+        {
+            l->area_x[k] = _augere(p, x[k]);
+            l->area_y[k] = _augere(p, y[k]);
+        }
         si (mollis)
         {
             s32 m;
@@ -1493,7 +1530,10 @@ _lumen_legere (
                 redde _recusare_attributum(p, nodus, "mollities",
                     "needs an integer from 0 to 16");
             }
-            l->mollities = (i32)m;
+            /* mollities aucta fines suos non excedit */
+            m = _augere(p, m);
+            l->mollities = m > (s32)GRAPHIS_MOLLITIES_MAXIMA
+                ? GRAPHIS_MOLLITIES_MAXIMA : (i32)m;
         }
     }
     si (   !_color_lucis(p, nodus, "color", l->color)
@@ -1767,21 +1807,40 @@ _usus (
     redde bene;
 }
 
-/* attributum radicis, si adest, numerum datum dicere debet */
+/* mensura descriptionis ex attributis radicis 'latitudo' et
+ * 'altitudo': absunt = pixela ipsa; mensura vetus = coordinatae
+ * auctae; aliae recusantur. Scalam ponit */
 interior b32
-_magnitudo_radicis (
+_mensura_radicis (
                StatusPicturae* p,
-           constans StmlNodus* radix,
-           constans character* titulus,
-                          s32  speratus,
-           constans character* quid)
+           constans StmlNodus* radix)
 {
-    constans chorda* valor = stml_attributum_capere(radix, titulus);
-                s32  x;
+    constans chorda* lata  = stml_attributum_capere(radix, "latitudo");
+    constans chorda* alta  = stml_attributum_capere(radix, "altitudo");
+                s32  x     = ZEPHYRUM;
+                s32  y     = ZEPHYRUM;
 
-    si (valor && (!chorda_ut_s32(*valor, &x) || x != speratus))
+    p->numerator    = I;
+    p->denominator  = I;
+    si (!lata && !alta)
     {
-        redde _recusare_attributum(p, radix, titulus, quid);
+        redde VERUM;
+    }
+    si (   !lata || !alta || !chorda_ut_s32(*lata, &x)
+        || !chorda_ut_s32(*alta, &y)
+        || !(   (x == LAT && y == ALT)
+             || (x == (s32)LATITUDO_VETUS && y == (s32)ALTITUDO_VETUS)))
+    {
+        redde _recusare_attributum(p, radix,
+            lata ? "latitudo" : "altitudo",
+            "and its pair must be 480 and 320 (plain pixels) or 360"
+            " and 240 (an older sheet, drawn 4/3 larger); give both"
+            " or neither");
+    }
+    si (x == (s32)LATITUDO_VETUS)
+    {
+        p->numerator    = LAT;
+        p->denominator  = (s32)LATITUDO_VETUS;
     }
     redde VERUM;
 }
@@ -1864,6 +1923,8 @@ graphis_legere_cum_fonte (
         redde f;
     }
     p.piscina = piscina;
+    p.numerator = I;
+    p.denominator = I;
     p.fons_partium = fons;
     p.contextus = contextus;
     r = stml_legere(textus, piscina, internamentum_creare(piscina));
@@ -1909,10 +1970,7 @@ graphis_legere_cum_fonte (
         p.fons[k * IV + III] = 255;
     }
     si (   !_attributa_licita(&p, r.elementum_radix, LICITA_RADICIS)
-        || !_magnitudo_radicis(&p, r.elementum_radix, "latitudo",
-            LAT, "must be 360 (the only picture size)")
-        || !_magnitudo_radicis(&p, r.elementum_radix, "altitudo",
-            ALT, "must be 240 (the only picture size)")
+        || !_mensura_radicis(&p, r.elementum_radix)
         || !_vis_lucis(&p, r.elementum_radix, "lux", M,
             GRAPHIS_LUX_UNA,
             "must be from 0 to 1 (three decimals at most)",

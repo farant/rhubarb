@@ -49,8 +49,10 @@
  * MASSA (scaena_scribere / scaena_legere): verbum "SCAENA01", deinde
  * campi numerati ordine fixo, numeri XXXII bitorum ordine magno:
  * titulus, descriptio, numerus rerum, res quaeque (titulus, textus,
- * exitus), indices picturae (CCCLX x CCXL octeti), domini (totidem).
- * Prospectus idem, octeti idem.
+ * exitus), indices picturae (CDLXXX x CCCXX octeti), domini
+ * (totidem). Prospectus idem, octeti idem. Massa ante picturam
+ * latiorem condita (CCCLX x CCXL) mensura sua recusatur: iterum
+ * condenda (bin/scaena condere).
  */
 
 #ifndef SCAENA_H

@@ -71,9 +71,9 @@ _sectio_scheda (
                 i8  griseum[III];
 
     CREDO_NECESSE (imago.pixela != NIHIL);
-    CREDO_AEQUALIS_I32 (imago.latitudo, 1448);
-    CREDO_AEQUALIS_I32 (imago.altitudo, 480);
-    CREDO_AEQUALIS_I32 (GRAPHIS_SPECIMEN_LATITUDO, 1448);
+    CREDO_AEQUALIS_I32 (imago.latitudo, 1928);
+    CREDO_AEQUALIS_I32 (imago.altitudo, 640);
+    CREDO_AEQUALIS_I32 (GRAPHIS_SPECIMEN_LATITUDO, 1928);
     /* omne pixelum opacum */
     per (k = ZEPHYRUM; k < imago.latitudo * imago.altitudo; k++)
     {
@@ -178,24 +178,24 @@ _sectio_quadrum (
     }
     CREDO_AEQUALIS_I32 (mala, ZEPHYRUM);
     /* pictura tota et angulus ultimus accipiuntur */
-    CREDO_VERUM (graphis_quadrum_pingere(&f, 0, 0, 360, 240,
+    CREDO_VERUM (graphis_quadrum_pingere(&f, 0, 0, LAT, ALT,
         c->piscina).pixela != NIHIL);
-    CREDO_VERUM (graphis_quadrum_pingere(&f, 359, 239, 1, 1,
+    CREDO_VERUM (graphis_quadrum_pingere(&f, LAT - I, ALT - I, 1, 1,
         c->piscina).pixela != NIHIL);
     /* extra picturam aut sine magnitudine: nihil */
     CREDO_VERUM (graphis_quadrum_pingere(&f, -1, 0, 5, 5,
         c->piscina).pixela == NIHIL);
     CREDO_VERUM (graphis_quadrum_pingere(&f, 0, -1, 5, 5,
         c->piscina).pixela == NIHIL);
-    CREDO_VERUM (graphis_quadrum_pingere(&f, 356, 0, 5, 5,
+    CREDO_VERUM (graphis_quadrum_pingere(&f, LAT - IV, 0, 5, 5,
         c->piscina).pixela == NIHIL);
-    CREDO_VERUM (graphis_quadrum_pingere(&f, 0, 236, 5, 5,
+    CREDO_VERUM (graphis_quadrum_pingere(&f, 0, ALT - IV, 5, 5,
         c->piscina).pixela == NIHIL);
     CREDO_VERUM (graphis_quadrum_pingere(&f, 0, 0, 0, 5,
         c->piscina).pixela == NIHIL);
     CREDO_VERUM (graphis_quadrum_pingere(&f, 0, 0, 5, 0,
         c->piscina).pixela == NIHIL);
-    CREDO_VERUM (graphis_quadrum_pingere(&f, 0, 0, 361, 5,
+    CREDO_VERUM (graphis_quadrum_pingere(&f, 0, 0, LAT + I, 5,
         c->piscina).pixela == NIHIL);
 }
 

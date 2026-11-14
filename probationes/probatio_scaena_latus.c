@@ -45,8 +45,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define LATITUDO  CCCLX
-#define ALTITUDO  CDL
+#define LATITUDO  CDLXXX
+#define ALTITUDO  DLXXVI
 #define VIA_CASAE "apps/scaena/loci/casa.scaena.stml"
 
 nomen structura {
@@ -550,25 +550,29 @@ _lineae_textus (
     redde numerus;
 }
 
-/* quadrum = indices prospectus per palettam, pars sinistra summa */
+/* quadrum = indices prospectus per palettam, pars MEDIA summa
+ * (latus angustius utrimque aequaliter secat) */
 interior b32
 _quadrum_est (
                constans Imago* im,
     constans ScaenaProspectus* p)
 {
+    i32 sectio;
     i32 x;
     i32 y;
 
-    si (!im || !im->pixela)
+    si (!im || !im->pixela || im->latitudo > GRAPHIS_LATITUDO)
     {
         redde FALSUM;
     }
+    sectio = (GRAPHIS_LATITUDO - im->latitudo) / II;
     per (y = ZEPHYRUM; y < im->altitudo; y++)
     {
         per (x = ZEPHYRUM; x < im->latitudo; x++)
         {
             constans i8* q = im->pixela + (y * im->latitudo + x) * IV;
-                     i8  k = p->indices[y * GRAPHIS_LATITUDO + x];
+                     i8  k = p->indices[y * GRAPHIS_LATITUDO + x
+                         + sectio];
 
             si (   q[ZEPHYRUM] != AQUINAS_PALETTE[k][ZEPHYRUM]
                 || q[I] != AQUINAS_PALETTE[k][I]
@@ -631,11 +635,11 @@ _sectio_primum (
      * in margine */
     CREDO_VERUM (_fundus(c, w, VI, VIII, LATITUDO - XII,
         ALTITUDO - XVI));
-    /* textus: linea una vacua sub pictura (XX + CCXL + X), duae
+    /* textus: linea una vacua sub pictura (XX + CCCXX + X), duae
      * cellae a fundi lateribus (VI + XII), intra marginem imum */
-    CREDO_VERUM (_lineae_textus(c, w, CCLX, XVIII, LATITUDO - XVIII,
+    CREDO_VERUM (_lineae_textus(c, w, CCCXL, XVIII, LATITUDO - XVIII,
         ALTITUDO - VIII, &primus, &extra) >= III);
-    CREDO_AEQUALIS_S32 (primus, CCLXX);
+    CREDO_AEQUALIS_S32 (primus, CCCL);
     CREDO_AEQUALIS_I32 (extra, ZEPHYRUM);
     CREDO_VERUM (_in_re(w, &f.prospectus[ZEPHYRUM], "hearth",
         EVENTUS_MUS_DEPRESSUS, c->piscina));
@@ -1023,7 +1027,8 @@ _sectio_magnitudines (
               i32  extra   = ZEPHYRUM;
 
     CREDO_NECESSE (f.successus && f.numerus == II);
-    /* angustum: pictura secta, nihil extra latus */
+    /* angustum: pictura utrimque secta (pars media CC lata, a
+     * columna CXL), nihil extra latus */
     w = _orbem(c, _volumen(c, "scaena_angustum", VERUM), CC, ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     (vacuum)_pulsus(w);
@@ -1038,23 +1043,41 @@ _sectio_magnitudines (
     pictura = _nodus(w, "pictura", c->piscina);
     CREDO_NECESSE (pictura != NIHIL);
     CREDO_AEQUALIS_I32 ((i32)pictura->fines.latitudo, CC);
-    /* res in parte visa tangitur loco suo */
-    CREDO_NECESSE (_pixelum(&f.prospectus[ZEPHYRUM], "hearth", CC, &x,
-        &y));
-    _in_pictura(w, EVENTUS_MUS_DEPRESSUS, x, y, c->piscina);
+    /* res in parte visa tangitur loco suo: columna picturae minus
+     * sectio */
+    CREDO_NECESSE (_pixelum(&f.prospectus[ZEPHYRUM], "hearth", CCCXL,
+        &x, &y));
+    CREDO_NECESSE (x >= CXL);
+    _in_pictura(w, EVENTUS_MUS_DEPRESSUS, x - CXL, y, c->piscina);
     CREDO_VERUM (_campus(w, "tactum", "hut-hearth/hearth"));
+    /* res in parte SECTA (sagitta "turn" ad dextram) mure non
+     * tangitur: columna ultima visa aliud est; clavibus tamen */
+    CREDO_NECESSE (_pixelum(&f.prospectus[ZEPHYRUM], "turn",
+        GRAPHIS_LATITUDO, &x, &y));
+    CREDO_NECESSE (x >= CCCXL);
+    _in_pictura(w, EVENTUS_MUS_DEPRESSUS, CC - I, y, c->piscina);
+    CREDO_VERUM (_campus(w, "prospectus", "hut-hearth")
+        || _campus(w, "prospectus", NIHIL));
+    CREDO_FALSUM (_campus(w, "tactum", "hut-hearth/turn"));
+    per (x = ZEPHYRUM; x < VIII && !_TOTUS(c, w, "turn"); x++)
+    {
+        _clavis(w, 'j');
+    }
+    CREDO_NECESSE (_TOTUS(c, w, "turn"));
+    _reditus(w);
+    CREDO_VERUM (_campus(w, "prospectus", "hut-door"));
     _finire(w);
     /* latum: pictura in medio; ictus loco translato */
-    w = _orbem(c, _volumen(c, "scaena_latum", VERUM), D, ALTITUDO);
+    w = _orbem(c, _volumen(c, "scaena_latum", VERUM), DCC, ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     (vacuum)_pulsus(w);
     pictura = _nodus(w, "pictura", c->piscina);
     CREDO_NECESSE (pictura != NIHIL);
-    CREDO_AEQUALIS_S32 (pictura->fines.x, LXX);
+    CREDO_AEQUALIS_S32 (pictura->fines.x, CX);
     CREDO_AEQUALIS_I32 ((i32)pictura->fines.latitudo,
         GRAPHIS_LATITUDO);
     CREDO_AEQUALIS_I32 (_imagines(c, w, &fi), I);
-    CREDO_AEQUALIS_S32 (fi.x, LXX);
+    CREDO_AEQUALIS_S32 (fi.x, CX);
     CREDO_VERUM (_in_re(w, &f.prospectus[ZEPHYRUM], "window",
         EVENTUS_MUS_DEPRESSUS, c->piscina));
     CREDO_VERUM (_campus(w, "tactum", "hut-hearth/window"));
@@ -1076,15 +1099,15 @@ _sectio_magnitudines (
     _finire(w);
     /* textus qui non capitur: lineae extra latus non pinguntur */
     w = _orbem(c, _volumen(c, "scaena_breve", VERUM), LATITUDO,
-        CCXC);
+        CCCLXX);
     CREDO_NECESSE (w != NIHIL);
     (vacuum)_pulsus(w);
     CREDO_VERUM (_PICTUS(c, w, "A low room of logs"));
     CREDO_FALSUM (_PICTUS(c, w, "is still lit."));
-    /* linea una capitur (CCLXX .. CCLXXVIII); proxima in marginem
-     * imum (CCLXXXII) caderet */
-    CREDO_AEQUALIS_I32 (_lineae_textus(c, w, CCLX, XVIII,
-        LATITUDO - XVIII, CCXC - VIII, &primus, &extra), I);
+    /* linea una capitur (CCCL .. CCCLVIII); proxima in marginem
+     * imum (CCCLXII) caderet */
+    CREDO_AEQUALIS_I32 (_lineae_textus(c, w, CCCXL, XVIII,
+        LATITUDO - XVIII, CCCLXX - VIII, &primus, &extra), I);
     CREDO_AEQUALIS_I32 (extra, ZEPHYRUM);
     _finire(w);
     /* minima: sine ruina */

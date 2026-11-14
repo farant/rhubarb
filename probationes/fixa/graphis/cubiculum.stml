@@ -1,4 +1,5 @@
-<pictura titulus="cubiculum" lux="0.6" umbra="0.3">
+<pictura titulus="cubiculum" latitudo="360" altitudo="240" lux="0.6"
+         umbra="0.3">
   <rectangulum fines="0 0 360 150" colores="9 15"
                exemplar="horizontalis_latus" vis="0.45"/>
   <rectangulum fines="0 150 360 90" colores="9 3"

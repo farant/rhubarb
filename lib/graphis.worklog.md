@@ -67,3 +67,27 @@
 - View two has the fire behind the viewer: a wide point light placed
   below the frame (`locus="180 270" radii="210 150"`) lights the
   floor and fades up the back wall.
+
+## 2026-11-14 — wider picture: 480 x 320, older sheets scaled 4/3
+
+`GRAPHIS_LATITUDO/ALTITUDO` are now 480 x 320. A root with
+`latitudo="360" altitudo="240"` marks an older sheet; `_augere`
+scales its coordinates by 480/360 (integer, round half up, floor
+fixed for negatives). No attributes = plain pixels.
+
+- Scale the ABSOLUTE coordinate, after `motus_x/y`: scaling a group
+  offset and a child separately rounds twice and shapes in different
+  groups drift a pixel apart (test: group (1,1) + shape (1,1) lands
+  on pixel 3, not 2).
+- `fines` are scaled as two edges, not as x and width: 100 + 100
+  must end at 267, not 266, or neighbours show a seam.
+- Stroke 1 stays 1 (1.33), 3 becomes 4, 16 becomes 21. No minimum
+  clamp is needed: the smallest written stroke is 1.
+- Light softness is scaled and capped at 16 because
+  `graphis_illustrare` refuses more.
+- Patterns are not scaled, so on a scaled sheet they are finer
+  relative to the shapes. Checked by eye on both hut pictures
+  (`bin/graphis specimen`): fine.
+- Tests that had the canvas size baked in were moved to LAT/ALT or
+  to the new numbers; the three "fixed" digest sheets were marked as
+  older sheets so the scaled path has digests too.

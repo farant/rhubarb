@@ -29,8 +29,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define LATUS_LATITUDO    CCCLX   /* superficies ordinaria */
-#define LATUS_ALTITUDO    CDL
+#define LATUS_LATITUDO    CDLXXX  /* superficies ordinaria */
+#define LATUS_ALTITUDO    DLXXVI
 #define ORDO_ALTITUDO     XII     /* ordo capitis */
 #define LIMBUS            II
 #define SAGITTA_LATITUDO  XII
@@ -53,6 +53,8 @@ nomen structura {
     Fines prior;
     Fines proxima;
     Fines pictura;      /* pars picturae visa */
+      s32 sectio_x;     /* columna picturae prima visa (latus
+                         * angustius utrimque aequaliter secat) */
       s32 numerus_x;    /* textus "1/2" */
       s32 titulus_x;
       s32 textus_y;     /* linea prima partis textus */
@@ -381,11 +383,12 @@ disponere (
               ? altitudo - caput : (s32)GRAPHIS_ALTITUDO;
           s32 x;
 
-    /* pictura in medio lateris; latus angustius partem sinistram
-     * summam ostendit */
+    /* pictura in medio lateris; latus angustius partem MEDIAM
+     * summam ostendit (utrimque aequaliter sectam) */
     d->pictura    = fines((latitudo - visa_lata) / II, caput, visa_lata,
         visa_alta);
-    d->textus_y   = caput + (s32)GRAPHIS_ALTITUDO + LINEA_ALTITUDO;
+    d->sectio_x = ((s32)GRAPHIS_LATITUDO - visa_lata) / II;
+    d->textus_y = caput + (s32)GRAPHIS_ALTITUDO + LINEA_ALTITUDO;
     si (m->hospes)
     {
         /* sine sagittis et numero: titulus ab initio capitis */
@@ -452,7 +455,8 @@ quadrum_curare (
         per (x = ZEPHYRUM; x < latitudo; x++)
         {
             /* lector indices supra XV recusat */
-            i8  k = m->prospectus.indices[y * GRAPHIS_LATITUDO + x];
+            i8 k = m->prospectus.indices[y * GRAPHIS_LATITUDO + x
+                + (i32)d.sectio_x];
             i8* p = pixela + (y * latitudo + x) * IV;
 
             p[ZEPHYRUM]  = AQUINAS_PALETTE[k & 0x0F][ZEPHYRUM];
@@ -787,15 +791,18 @@ res_in_puncto (
                              s32  x,
                              s32  y)
 {
-    i8 dominus;
+    Dispositio d;
+            i8 dominus;
 
+    disponere(m, &d);
     si (   !m->lectus || !m->quadrum.pixela || x < ZEPHYRUM
         || y < ZEPHYRUM || x >= (s32)m->quadrum.latitudo
         || y >= (s32)m->quadrum.altitudo)
     {
         redde ZEPHYRUM;
     }
-    dominus = m->prospectus.domini[(i32)y * GRAPHIS_LATITUDO + (i32)x];
+    dominus = m->prospectus.domini[(i32)y * GRAPHIS_LATITUDO + (i32)x
+        + (i32)d.sectio_x];
     redde dominus <= m->prospectus.rerum ? (i32)dominus : ZEPHYRUM;
 }
 

@@ -285,6 +285,41 @@ Follow-ups filed in the ledger (2026-11-13): the doorway between
 `$world` and `$scene` (design question), the walked perspective
 mode, animation of a picture, a "room" helper.
 
+## VIII. Wider picture (2026-11-14)
+
+Fran, after walking into the hut from `$world`: "expanding the width
+of the illustration so it matches the size of live fullscreen vicus
+panes"; the target size is roughly constant, so no per-pane
+rendering. His desktop is 1920 x 1200 points; vicus is that divided
+by 2, in two panes of 480.
+
+- **The picture is 480 x 320** (`GRAPHIS_LATITUDO`,
+  `GRAPHIS_ALTITUDO`), wherever sections above say 360 x 240. One
+  size; nothing is rendered per pane.
+- **A sheet says which measure its coordinates are in.** No
+  `latitudo`/`altitudo` on the root, or 480 and 320: plain pixels.
+  360 and 240: an older sheet, drawn 4/3 larger. Anything else, or
+  one without the other, is refused. (The header Fran approved had
+  the default the other way round, "absent = older sheet"; built
+  this way because some 75 test sheets and every future sheet are
+  then plain pixels with no attribute, and only the two hut pictures
+  and one fixture needed marking. One line to flip.)
+- **How an older sheet is scaled.** The ABSOLUTE position (after all
+  group and piece offsets) is multiplied and rounded to nearest; a
+  rectangle's right and bottom are scaled as edges, so neighbours
+  still meet; stroke thickness and lights (place, radii, area,
+  softness, capped at 16) likewise. Patterns are never scaled.
+  Pieces (`<usus>`) are read in the measure of the picture using
+  them.
+- **Scenes.** A view blob holds 480 x 320; one built before this is
+  refused by its size and the pane says to rebuild it. Both hut
+  views were rebuilt in Fran's volume.
+- **Narrow panes.** A pane narrower than 480 shows the MIDDLE of the
+  picture (cut equally on both sides; it used to show the left).
+  Things in the cut part cannot be clicked but `j` `k` Enter reach
+  them. On the laptop panel at its default (panes of 360) the hut's
+  "turn" arrow is cut.
+
 ## AUDIENDA (not verified)
 
 1. Whether the look holds once lights come from the description

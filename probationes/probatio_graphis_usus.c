@@ -267,12 +267,12 @@ _sectio_margo (
     /* pars in margine: forma eius tota extra non recusatur */
     f = _pictura(c,
         "<pictura>\n"
-        "<usus fons=\"par\" locus=\"335 0\"/>\n"
+        "<usus fons=\"par\" locus=\"455 0\"/>\n"
         "</pictura>");
-    CREDO_AEQUALIS_I32 (f.indices[5 * LAT + 350], VI);
+    CREDO_AEQUALIS_I32 (f.indices[5 * LAT + 470], VI);
     /* ... sed formae eaedem in pictura ipsa recusantur */
-    CREDO_FALSUM (_lege(c, "<pictura>\n" QUADRUM_AD ("335", "0")
-        QUADRUM_AD ("365", "20") "</pictura>").successus);
+    CREDO_FALSUM (_lege(c, "<pictura>\n" QUADRUM_AD ("455", "0")
+        QUADRUM_AD ("485", "20") "</pictura>").successus);
     /* pars tota extra picturam posita: nihil pingit, non recusatur */
     f = _pictura(c,
         "<pictura>\n"
@@ -408,9 +408,49 @@ _sectio_sella (
     CREDO_AEQUALIS_I32 (f.indices[(168 - 22) * LAT + 52 + 10], IX);
 }
 
+/* pars in plagula vetere (360 x 240) cum pictura augetur, loco
+ * ABSOLUTO: eadem ac formae eius in gregibus scriptae */
+interior vacuum
+_sectio_mensura (
+    CredoContextus* c)
+{
+    GraphisFructus f;
+
+    EADEM ("<pictura latitudo=\"360\" altitudo=\"240\">\n"
+           "<usus fons=\"par\" locus=\"33 7\"/>\n"
+           "</pictura>",
+           "<pictura latitudo=\"360\" altitudo=\"240\">\n"
+           "<grex locus=\"33 7\">\n"
+           "<rectangulum fines=\"0 0 20 10\" colores=\"6\""
+           " stilus=\"1 0\"/>\n"
+           "<ovum fines=\"4 2 8 6\" colores=\"11 0\""
+           " exemplar=\"tessellatum\" vis=\"1\"/>\n"
+           "</grex>\n"
+           "<grex locus=\"63 27\">\n"
+           "<rectangulum fines=\"0 0 20 10\" colores=\"6\""
+           " stilus=\"1 0\"/>\n"
+           "<ovum fines=\"4 2 8 6\" colores=\"11 0\""
+           " exemplar=\"tessellatum\" vis=\"1\"/>\n"
+           "</grex>\n"
+           "</pictura>");
+    /* aucta: quadrum 20 x 10 ad (33, 7) fit (44, 9) .. (71, 23) */
+    f = _pictura(c,
+        "<pictura latitudo=\"360\" altitudo=\"240\">\n"
+        "<usus fons=\"quadrum\" locus=\"33 7\"/>\n"
+        "</pictura>");
+    CREDO_VERUM (f.indices[IX * LAT + 44] != GRAPHIS_COLOR_FUNDI);
+    CREDO_AEQUALIS_I32 (f.indices[IX * LAT + 43], GRAPHIS_COLOR_FUNDI);
+    CREDO_VERUM (f.indices[XXII * LAT + 70] != GRAPHIS_COLOR_FUNDI);
+    CREDO_AEQUALIS_I32 (f.indices[XXII * LAT + 71],
+        GRAPHIS_COLOR_FUNDI);
+    CREDO_AEQUALIS_I32 (f.indices[XXIII * LAT + 70],
+        GRAPHIS_COLOR_FUNDI);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "pars", _sectio_pars, NIHIL, NIHIL, NIHIL, NIHIL },
     { "margo", _sectio_margo, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mensura", _sectio_mensura, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "sella", _sectio_sella, NIHIL, NIHIL, NIHIL, NIHIL },

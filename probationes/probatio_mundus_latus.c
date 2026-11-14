@@ -66,6 +66,8 @@
 
 #define LATITUDO CCCLX
 #define ALTITUDO CDL
+/* sectiones scaenae hospitatae: latus picturam totam capit */
+#define LATITUDO_SCAENAE GRAPHIS_LATITUDO
 
 #define VIA_LAPIDIS "probationes/fixa/statuae/lapis.glb"
 #define VIA_FUNGI   "probationes/fixa/statuae/fungus.glb"
@@ -1612,7 +1614,7 @@ _iterum_montare (
     porta.nunc  = _nunc;
     porta.ctx   = w;
     si (!mundus_latus_montare(&w->m, c->piscina, w->intern, w->volumen,
-        w->repo, "m1", &porta, LATITUDO, ALTITUDO, NIHIL))
+        w->repo, "m1", &porta, LATITUDO_SCAENAE, ALTITUDO, NIHIL))
     {
         redde FALSUM;
     }
@@ -1834,7 +1836,7 @@ _sectio_intrare (
     CREDO_NECESSE (casa.successus && casa.numerus == II);
     focus  = &casa.prospectus[ZEPHYRUM];
     ianua  = &casa.prospectus[I];
-    w      = _orbem(c, v, LATITUDO, ALTITUDO);
+    w      = _orbem(c, v, LATITUDO_SCAENAE, ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     (vacuum)_pulsus(w, ZEPHYRUM);
     CREDO_NECESSE (w->m.positum && _quadrum(w) != NIHIL);
@@ -2015,7 +2017,7 @@ _sectio_restitutio (
 
     CREDO_NECESSE (_casam_addere(c, v));
     CREDO_NECESSE (casa.successus && casa.numerus == II);
-    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    w = _orbem(c, v, LATITUDO_SCAENAE, ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     (vacuum)_pulsus(w, ZEPHYRUM);
     CREDO_NECESSE (w->m.positum);
@@ -2189,7 +2191,7 @@ _sectio_ignota (
               f32  ostii_z;
 
     CREDO_NECESSE (casa.successus && casa.numerus == II);
-    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    w = _orbem(c, v, LATITUDO_SCAENAE, ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     (vacuum)_pulsus(w, ZEPHYRUM);
     CREDO_NECESSE (w->m.positum);
@@ -2282,7 +2284,8 @@ _sectio_ignota (
     _foris_probare(c, w);
     _finire(w);
     /* sine loco, 'prospectus' in statu: intus, E exit, nihil ruit */
-    w = _orbem(c, _volumen(c, "mundus_ignota2", FALSUM, I), LATITUDO,
+    w = _orbem(c, _volumen(c, "mundus_ignota2", FALSUM, I),
+        LATITUDO_SCAENAE,
         ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     CREDO_NECESSE (_campum_scribe(c, w, "prospectus", "hut-door"));
@@ -2299,7 +2302,7 @@ _sectio_ignota (
     CREDO_VERUM (_textus_pictus(c, w, "No place yet"));
     _finire(w);
     /* sine volumine */
-    w = _orbem(c, NIHIL, LATITUDO, ALTITUDO);
+    w = _orbem(c, NIHIL, LATITUDO_SCAENAE, ALTITUDO);
     CREDO_NECESSE (w != NIHIL);
     _premere(w, 'e');
     CREDO_FALSUM (mundus_latus_intus(&w->m));

@@ -143,21 +143,22 @@ _sectio_umbra (
         LAT, ALT, &lux, c->piscina);
     CREDO_NECESSE (exitus != NIHIL);
     /* centrum immutatum, anguli dimidio obscuriores */
-    CREDO_AEQUALIS_I32 (_canalis(exitus, 180, 120, ZEPHYRUM), 200);
+    CREDO_AEQUALIS_I32 (_canalis(exitus, LAT / II, ALT / II, ZEPHYRUM),
+        200);
     CREDO_VERUM (_canalis(exitus, 0, 0, ZEPHYRUM) >= 100
         && _canalis(exitus, 0, 0, ZEPHYRUM) <= 102);
     CREDO_AEQUALIS_I32 (_canalis(exitus, 0, 0, ZEPHYRUM),
-        _canalis(exitus, 359, 239, ZEPHYRUM));
-    CREDO_AEQUALIS_I32 (_canalis(exitus, 0, 239, ZEPHYRUM),
-        _canalis(exitus, 359, 0, ZEPHYRUM));
+        _canalis(exitus, LAT - I, ALT - I, ZEPHYRUM));
+    CREDO_AEQUALIS_I32 (_canalis(exitus, 0, ALT - I, ZEPHYRUM),
+        _canalis(exitus, LAT - I, 0, ZEPHYRUM));
     /* medium lateris: quarta parte obscurius */
-    CREDO_VERUM (_canalis(exitus, 0, 120, ZEPHYRUM) >= 149
-        && _canalis(exitus, 0, 120, ZEPHYRUM) <= 152);
+    CREDO_VERUM (_canalis(exitus, 0, ALT / II, ZEPHYRUM) >= 149
+        && _canalis(exitus, 0, ALT / II, ZEPHYRUM) <= 152);
     /* a centro ad angulum numquam clarius */
     prior = 255;
-    per (k = ZEPHYRUM; k < 120; k++)
+    per (k = ZEPHYRUM; k < ALT / II; k++)
     {
-        i32 v = _canalis(exitus, 180 + k * III / II, 120 + k,
+        i32 v = _canalis(exitus, LAT / II + k * III / II, ALT / II + k,
             ZEPHYRUM);
 
         CREDO_VERUM (v <= prior);
@@ -618,7 +619,7 @@ _sectio_recusationes (
 
 #define DESCRIPTIO_FIXA \
     "<pictura titulus=\"lux\" lux=\"0.55\" tinctura=\"#d1dcff\"" \
-    " umbra=\"0.35\">\n" \
+    " umbra=\"0.35\" latitudo=\"360\" altitudo=\"240\">\n" \
     "<rectangulum fines=\"0 0 360 150\" colores=\"9 15\"" \
     " exemplar=\"horizontalis_latus\" vis=\"0.45\"/>\n" \
     "<rectangulum fines=\"0 150 360 90\" colores=\"9 3\"" \
@@ -632,8 +633,8 @@ _sectio_recusationes (
     " mollities=\"3\" color=\"#fff0d8\" vis=\"0.55\"/>\n" \
     "</pictura>"
 
-#define DIGESTUM_ILLUSTRATI  0x0a9cdc6eu
-#define DIGESTUM_INDICUM     0x6e4c708au
+#define DIGESTUM_ILLUSTRATI  0x31838898u
+#define DIGESTUM_INDICUM     0x363da2d2u
 
 interior vacuum
 _sectio_digestum (
@@ -660,8 +661,8 @@ _sectio_digestum (
     CREDO_AEQUALIS_I32 (illustrati, DIGESTUM_ILLUSTRATI);
     CREDO_AEQUALIS_I32 (indicum, DIGESTUM_INDICUM);
     /* fenestra lucens: fons eius immutatus manet */
-    CREDO_AEQUALIS_I32 (_canalis(a.illustratus, 240, 70, ZEPHYRUM),
-        _canalis(a.tabula->fons, 240, 70, ZEPHYRUM));
+    CREDO_AEQUALIS_I32 (_canalis(a.illustratus, 320, 93, ZEPHYRUM),
+        _canalis(a.tabula->fons, 320, 93, ZEPHYRUM));
 }
 
 hic_manens constans CredoSectio SECTIONES[] = {

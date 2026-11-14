@@ -18,6 +18,8 @@
 #include <string.h>
 
 #define LAT GRAPHIS_LATITUDO
+/* caput plagulae veteris (360 x 240), sine > */
+#define VETUS "<pictura latitudo=\"360\" altitudo=\"240\""
 #define ALT GRAPHIS_ALTITUDO
 
 interior GraphisFructus
@@ -148,9 +150,9 @@ _sectio_quadratum (
     CREDO_AEQUALIS_I32 (f.tabula->fons[I], 0x20);
     CREDO_AEQUALIS_I32 (f.tabula->fons[II], 0x30);
     CREDO_AEQUALIS_I32 (f.tabula->fons[III], 255);
-    /* magnitudo dicta, si recta, accipitur */
+    /* mensura dicta 480 x 320: pixela ipsa, ut sine attributis */
     f = _pictura(c,
-        "<pictura latitudo=\"360\" altitudo=\"240\">\n"
+        "<pictura latitudo=\"480\" altitudo=\"320\">\n"
         "<rectangulum fines=\"0 0 8 8\" colores=\"6\"/>\n"
         "</pictura>");
     CREDO_AEQUALIS_I32 (_numera(&f, VI), LXIV);
@@ -163,7 +165,7 @@ _sectio_exemplar_purum (
 {
     GraphisFructus f = _pictura(c,
         "<pictura>\n"
-        "<rectangulum fines=\"0 0 360 240\" colores=\"0 11\""
+        "<rectangulum fines=\"0 0 480 320\" colores=\"0 11\""
         " exemplar=\"latericium\" vis=\"1\"/>\n"
         "</pictura>");
     i32 x;
@@ -207,14 +209,14 @@ _sectio_vis (
     /* vis 0, color unus palettae: index unus ubique */
     f = _pictura(c,
         "<pictura>\n"
-        "<rectangulum fines=\"0 0 360 240\" colores=\"9\""
+        "<rectangulum fines=\"0 0 480 320\" colores=\"9\""
         " exemplar=\"tessellatum\" vis=\"0\"/>\n"
         "</pictura>");
     CREDO_AEQUALIS_I32 (_numera(&f, IX), LAT * ALT);
     /* vis 0, colores duo: planus = mixtura secundum densitatem */
     f = _pictura(c,
         "<pictura>\n"
-        "<rectangulum fines=\"0 0 360 240\""
+        "<rectangulum fines=\"0 0 480 320\""
         " colores=\"#000000 #404040\""
         " exemplar=\"tessellatum\" vis=\"0\"/>\n"
         "</pictura>");
@@ -226,20 +228,20 @@ _sectio_vis (
     /* vis ordinaria: 0.6 si colores duo et exemplar datum */
     f = _pictura(c,
         "<pictura>\n"
-        "<rectangulum fines=\"0 0 360 240\" colores=\"0 5\""
+        "<rectangulum fines=\"0 0 480 320\" colores=\"0 5\""
         " exemplar=\"tessellatum\"/>\n"
         "</pictura>");
     CREDO_AEQUALIS_I32 (f.tabula->larva[ZEPHYRUM], 154);
     /* ... aliter 0 */
     f = _pictura(c,
         "<pictura>\n"
-        "<rectangulum fines=\"0 0 360 240\" colores=\"0 5\"/>\n"
+        "<rectangulum fines=\"0 0 480 320\" colores=\"0 5\"/>\n"
         "</pictura>");
     CREDO_AEQUALIS_I32 (f.tabula->larva[ZEPHYRUM], ZEPHYRUM);
     /* vis media: fons inter planum et exemplar */
     f = _pictura(c,
         "<pictura>\n"
-        "<rectangulum fines=\"0 0 360 240\""
+        "<rectangulum fines=\"0 0 480 320\""
         " colores=\"#000000 #c8c8c8\""
         " exemplar=\"tessellatum\" vis=\"0.5\"/>\n"
         "</pictura>");
@@ -273,8 +275,8 @@ _sectio_ordo (
     /* tegumentum: biti vacui quod subest relinquunt */
     f = _pictura(c,
         "<pictura>\n"
-        "<rectangulum fines=\"0 0 360 240\" colores=\"6\"/>\n"
-        "<rectangulum fines=\"0 0 360 240\" colores=\"0 -\""
+        "<rectangulum fines=\"0 0 480 320\" colores=\"6\"/>\n"
+        "<rectangulum fines=\"0 0 480 320\" colores=\"0 -\""
         " exemplar=\"tessellatum\"/>\n"
         "</pictura>");
     per (y = ZEPHYRUM; y < ALT; y++)
@@ -520,9 +522,9 @@ _sectio_praecisio (
         "<rectangulum fines=\"-10 -10 20 20\" colores=\"6\"/>\n"
         "<ovum fines=\"-4000 100 4020 10\" colores=\"0\"/>\n"
         "<linea puncta=\"-4096,120 4096,120\" stilus=\"16 9\"/>\n"
-        "<polygonum puncta=\"340,-50 400,120 340,300\""
+        "<polygonum puncta=\"460,-50 520,160 460,400\""
         " colores=\"11\" stilus=\"1 0\"/>\n"
-        "<rectangulum fines=\"350 230 100 100\" colores=\"12\"/>\n"
+        "<rectangulum fines=\"470 310 100 100\" colores=\"12\"/>\n"
         "</pictura>");
 
     CREDO_AEQUALIS_I32 (_numera(&f, VI), 100);
@@ -641,7 +643,7 @@ _sectio_recusationes (
     RECUSATUR (CAPUT "<linea puncta=\"0,0 9,9\" stilus=\"1 0\""
         " colores=\"6\"/>" CAUDA, II, "unknown attribute 'colores'");
     RECUSATUR (CAPUT "<rectangulum fines=\"0 0 9 9\" colores=\"6\"/>"
-        "\n<rectangulum fines=\"400 0 9 9\" colores=\"6\"/>" CAUDA,
+        "\n<rectangulum fines=\"500 0 9 9\" colores=\"6\"/>" CAUDA,
         III, "outside");
     RECUSATUR (CAPUT "<linea puncta=\"-50,-5 -9,-9\" stilus=\"2 0\"/>"
         CAUDA, II, "outside");
@@ -665,9 +667,19 @@ _sectio_recusationes (
         " fines=\"0 0 20 20\" colores=\"6\"/>\n"
         "<rectangulum fines=\"0 0 20 17\" colores=\"12\"/>" CAUDA,
         II, "'tecta'");
+    /* mensura: paria ignota, unum sine altero, non numerus */
     RECUSATUR ("<pictura latitudo=\"320\" altitudo=\"240\">\n"
-        "</pictura>", I, "360");
-    RECUSATUR ("<pictura altitudo=\"200\">\n</pictura>", I, "240");
+        "</pictura>", I, "'latitudo'");
+    RECUSATUR ("<pictura latitudo=\"480\" altitudo=\"240\">\n"
+        "</pictura>", I, "480 and 320");
+    RECUSATUR ("<pictura latitudo=\"360\" altitudo=\"320\">\n"
+        "</pictura>", I, "360 and 240");
+    RECUSATUR ("<pictura altitudo=\"240\">\n</pictura>", I,
+        "'altitudo'");
+    RECUSATUR ("<pictura latitudo=\"360\">\n</pictura>", I,
+        "both or neither");
+    RECUSATUR ("<pictura latitudo=\"lata\" altitudo=\"240\">\n"
+        "</pictura>", I, "'latitudo'");
     /* tituli plus quam CCLV */
     n = (i32)sprintf(longa, "<pictura>\n");
     per (k = ZEPHYRUM; k < GRAPHIS_TITULI_MAXIMI + I; k++)
@@ -698,7 +710,7 @@ _sectio_recusationes (
 }
 
 #define DESCRIPTIO_FIXA \
-    "<pictura titulus=\"fixa\">\n" \
+    "<pictura titulus=\"fixa\" latitudo=\"360\" altitudo=\"240\">\n" \
     "<polygonum puncta=\"0,0 360,0 296,34 64,34\"" \
     " colores=\"1 9\" exemplar=\"lineae_verticales\" vis=\"0.5\"/>\n" \
     "<rectangulum fines=\"64 34 232 116\" colores=\"9 15\"" \
@@ -719,9 +731,9 @@ _sectio_recusationes (
     " exemplar=\"puncta_duplicia_dispersa\"/>\n" \
     "</pictura>"
 
-#define DIGESTUM_INDICUM  0x17fa4398u
-#define DIGESTUM_FONTIS   0x71449233u
-#define DIGESTUM_DOMINORUM 0xa14b367eu
+#define DIGESTUM_INDICUM  0x2e5ea73bu
+#define DIGESTUM_FONTIS   0x28a750ffu
+#define DIGESTUM_DOMINORUM 0x20f083bbu
 
 interior vacuum
 _sectio_determinata (
@@ -757,8 +769,222 @@ _sectio_determinata (
     CREDO_AEQUALIS_I32 (a.tabula->titulorum, II);
 }
 
+/* mensura vetus (360 x 240): coordinatae per 4/3 auctae */
+interior vacuum
+_sectio_mensura (
+    CredoContextus* c)
+{
+    GraphisFructus f;
+    GraphisFructus g;
+               i32 x;
+               i32 y;
+               i32 n;
+
+    /* sine attributis et cum 480 x 320: octeti idem */
+    f = _pictura(c,
+        "<pictura>\n"
+        "<rectangulum fines=\"3 5 40 30\" colores=\"6 9\""
+        " exemplar=\"tessellatum\" stilus=\"3 0\"/>\n"
+        "</pictura>");
+    g = _pictura(c,
+        "<pictura latitudo=\"480\" altitudo=\"320\">\n"
+        "<rectangulum fines=\"3 5 40 30\" colores=\"6 9\""
+        " exemplar=\"tessellatum\" stilus=\"3 0\"/>\n"
+        "</pictura>");
+    CREDO_VERUM (memcmp(f.indices, g.indices, LAT * ALT) == ZEPHYRUM);
+    /* vetus: margines aucti - 0 .. 8 fit 0 .. 11 (10.67 rotundatum) */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"0 0 8 8\" colores=\"6\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_numera(&f, VI), 121);
+    CREDO_AEQUALIS_I32 (_index(&f, X, X), VI);
+    CREDO_AEQUALIS_I32 (_index(&f, XI, X), GRAPHIS_COLOR_FUNDI);
+    /* 64 34 232 116: margines 85, 45, 395, 200 */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"64 34 232 116\" colores=\"6\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_numera(&f, VI), 310 * 155);
+    CREDO_AEQUALIS_I32 (_index(&f, 85, 45), VI);
+    CREDO_AEQUALIS_I32 (_index(&f, 84, 45), GRAPHIS_COLOR_FUNDI);
+    CREDO_AEQUALIS_I32 (_index(&f, 85, 44), GRAPHIS_COLOR_FUNDI);
+    CREDO_AEQUALIS_I32 (_index(&f, 394, 199), VI);
+    CREDO_AEQUALIS_I32 (_index(&f, 395, 199), GRAPHIS_COLOR_FUNDI);
+    CREDO_AEQUALIS_I32 (_index(&f, 394, 200), GRAPHIS_COLOR_FUNDI);
+    /* pictura vetus tota picturam novam totam implet */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"0 0 360 240\" colores=\"9\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_numera(&f, IX), LAT * ALT);
+    /* formae vicinae se tangunt: nec hiatus nec tegmen (margo
+     * communis 100 -> 133; latitudines 100 separatim auctae 133 +
+     * 133 = 266 darent, margines 267) */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"0 0 100 9\" colores=\"6\"/>\n"
+        "<rectangulum fines=\"100 0 100 9\" colores=\"12\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_index(&f, 132, V), VI);
+    CREDO_AEQUALIS_I32 (_index(&f, 133, V), XII);
+    CREDO_AEQUALIS_I32 (_index(&f, 266, V), XII);
+    CREDO_AEQUALIS_I32 (_index(&f, 267, V), GRAPHIS_COLOR_FUNDI);
+    CREDO_AEQUALIS_I32 (_numera(&f, VI), 133 * XII);
+    CREDO_AEQUALIS_I32 (_numera(&f, XII), 134 * XII);
+    /* idem deorsum */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"0 0 9 100\" colores=\"6\"/>\n"
+        "<rectangulum fines=\"0 100 9 100\" colores=\"12\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_index(&f, V, 132), VI);
+    CREDO_AEQUALIS_I32 (_index(&f, V, 133), XII);
+    CREDO_AEQUALIS_I32 (_index(&f, V, 266), XII);
+    CREDO_AEQUALIS_I32 (_index(&f, V, 267), GRAPHIS_COLOR_FUNDI);
+    /* locus ABSOLUTUS augetur: grex (1, 1) + forma (1, 1) = (2, 2)
+     * -> 3 (2.67); separatim aucta 1 + 1 = 2 daret */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum titulus=\"fundus\" fines=\"0 0 60 60\""
+        " colores=\"9\"/>\n"
+        "<grex locus=\"1 1\">\n"
+        "<grex locus=\"0 0\">\n"
+        "<rectangulum fines=\"1 1 1 1\" colores=\"6\"/>\n"
+        "</grex>\n"
+        "</grex>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_numera(&f, VI), I);
+    CREDO_AEQUALIS_I32 (_index(&f, III, III), VI);
+    /* coordinatae negativae: -3 -> -4, 3 -> 4 */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"-3 -3 6 6\" colores=\"6\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_numera(&f, VI), XVI);
+    /* -2 -> -3 (2.67 a zero), 2 -> 3 */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"-2 -2 4 4\" colores=\"6\"/>\n"
+        "</pictura>");
+    CREDO_AEQUALIS_I32 (_numera(&f, VI), IX);
+    /* puncta polygoni et lineae: (30, 30) -> (40, 40) */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<polygonum puncta=\"30,30 60,30 60,60 30,60\""
+        " colores=\"6\"/>\n"
+        "</pictura>");
+    g = _pictura(c,
+        "<pictura>\n"
+        "<polygonum puncta=\"40,40 80,40 80,80 40,80\""
+        " colores=\"6\"/>\n"
+        "</pictura>");
+    CREDO_VERUM (_numera(&f, VI) > 1500);
+    CREDO_VERUM (memcmp(f.indices, g.indices, LAT * ALT) == ZEPHYRUM);
+    /* crassitudo stili: 3 -> 4, 1 -> 1 (1.33), 16 -> 21 */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<linea puncta=\"30,30 90,30\" stilus=\"3 6\"/>\n"
+        "<linea puncta=\"30,60 90,60\" stilus=\"1 12\"/>\n"
+        "<linea puncta=\"30,120 90,120\" stilus=\"16 9\"/>\n"
+        "</pictura>");
+    g = _lege(c,
+        "<pictura>\n"
+        "<linea puncta=\"40,40 120,40\" stilus=\"4 6\"/>\n"
+        "<linea puncta=\"40,80 120,80\" stilus=\"1 12\"/>\n"
+        "<linea puncta=\"40,160 120,160\" stilus=\"21 9\"/>\n"
+        "</pictura>");
+    n = ZEPHYRUM;
+    per (y = ZEPHYRUM; y < ALT; y++)
+    {
+        n += _index(&f, 80, y) == VI ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32 (n, IV);
+    n = ZEPHYRUM;
+    per (y = ZEPHYRUM; y < ALT; y++)
+    {
+        n += _index(&f, 80, y) == XII ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32 (n, I);
+    n = ZEPHYRUM;
+    per (y = ZEPHYRUM; y < ALT; y++)
+    {
+        n += _index(&f, 80, y) == IX ? I : ZEPHYRUM;
+    }
+    CREDO_AEQUALIS_I32 (n, XXI);
+    /* stilus 21 in plagula nova recusatur (I .. XVI scriptus): duae
+     * lineae priores solae conferuntur */
+    CREDO_FALSUM (g.successus);
+    g = _pictura(c,
+        "<pictura>\n"
+        "<linea puncta=\"40,40 120,40\" stilus=\"4 6\"/>\n"
+        "<linea puncta=\"40,80 120,80\" stilus=\"1 12\"/>\n"
+        "</pictura>");
+    per (y = ZEPHYRUM; y < 120; y++)
+    {
+        per (x = ZEPHYRUM; x < LAT; x++)
+        {
+            CREDO_NECESSE (_index(&f, x, y) == _index(&g, x, y));
+        }
+    }
+    /* exemplaria NON augentur: pixela exemplaris in loco suo */
+    f = _pictura(c,
+        VETUS ">\n"
+        "<rectangulum fines=\"0 0 360 240\" colores=\"0 11\""
+        " exemplar=\"latericium\" vis=\"1\"/>\n"
+        "</pictura>");
+    n = ZEPHYRUM;
+    per (y = ZEPHYRUM; y < ALT; y++)
+    {
+        per (x = ZEPHYRUM; x < LAT; x++)
+        {
+            n += _index(&f, x, y) != (exemplar_punctum(
+                EXEMPLAR_LATERICIUM, (s32)x, (s32)y) ? ZEPHYRUM : XI)
+                ? I : ZEPHYRUM;
+        }
+    }
+    CREDO_AEQUALIS_I32 (n, ZEPHYRUM);
+    /* lumina: locus, radii, area, mollities (3 -> 4) */
+    f = _pictura(c,
+        VETUS " lux=\"0.4\">\n"
+        "<rectangulum fines=\"0 0 360 240\" colores=\"#c8c8c8\"/>\n"
+        "<lumen locus=\"90 60\" radii=\"30 24\" vis=\"1\"/>\n"
+        "<lumen area=\"180,120 240,120 240,180 180,180\""
+        " mollities=\"3\" vis=\"0.5\"/>\n"
+        "</pictura>");
+    g = _pictura(c,
+        "<pictura lux=\"0.4\">\n"
+        "<rectangulum fines=\"0 0 480 320\" colores=\"#c8c8c8\"/>\n"
+        "<lumen locus=\"120 80\" radii=\"40 32\" vis=\"1\"/>\n"
+        "<lumen area=\"240,160 320,160 320,240 240,240\""
+        " mollities=\"4\" vis=\"0.5\"/>\n"
+        "</pictura>");
+    CREDO_NECESSE (f.illustratus != NIHIL && g.illustratus != NIHIL);
+    CREDO_VERUM (memcmp(f.illustratus, g.illustratus, LAT * ALT * IV)
+        == ZEPHYRUM);
+    CREDO_VERUM (f.illustratus[(80 * LAT + 120) * IV]
+        > f.illustratus[(200 * LAT + 20) * IV]);
+    /* mollities aucta XVI non excedit (15 -> 20 -> 16) */
+    f = _pictura(c,
+        VETUS " lux=\"0.4\">\n"
+        "<rectangulum fines=\"0 0 360 240\" colores=\"#c8c8c8\"/>\n"
+        "<lumen area=\"180,120 240,120 240,180 180,180\""
+        " mollities=\"15\" vis=\"0.5\"/>\n"
+        "</pictura>");
+    g = _pictura(c,
+        "<pictura lux=\"0.4\">\n"
+        "<rectangulum fines=\"0 0 480 320\" colores=\"#c8c8c8\"/>\n"
+        "<lumen area=\"240,160 320,160 320,240 240,240\""
+        " mollities=\"16\" vis=\"0.5\"/>\n"
+        "</pictura>");
+    CREDO_NECESSE (f.illustratus != NIHIL && g.illustratus != NIHIL);
+    CREDO_VERUM (memcmp(f.illustratus, g.illustratus, LAT * ALT * IV)
+        == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "quadratum", _sectio_quadratum, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mensura", _sectio_mensura, NIHIL, NIHIL, NIHIL, NIHIL },
     { "exemplar_purum", _sectio_exemplar_purum, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "vis", _sectio_vis, NIHIL, NIHIL, NIHIL, NIHIL },

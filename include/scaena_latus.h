@@ -1,13 +1,13 @@
 /* scaena_latus.h - latus scaenae ($scene): pictura stans cum rebus
  * tangendis, in latere vici (project-specs/graphis-spec.md 20-24)
  *
- * DISPOSITIO (superficies CCCLX x CDL, omnia semel aucta):
+ * DISPOSITIO (superficies CDLXXX x DLXXVI, omnia semel aucta):
  *
  *   +--------------------------------------+
  *   | < 1/2 >  hut-hearth           hearth |  caput (ordo unus)
  *   +--------------------------------------+
  *   |                                      |
- *   |        pictura CCCLX x CCXL          |
+ *   |        pictura CDLXXX x CCCXX        |
  *   |                                      |
  *   +--------------------------------------+
  *   | descriptio prospectus, in lineas     |  textus
@@ -19,13 +19,15 @@
  * CAPUT: sagittae et numerus (prior 1/2 proxima), titulus
  * prospectus; ad dextram, obscurior, titulus rei sub indice muris
  * (aut clavibus electae). PICTURA: indices palettae prospectus,
- * medio lateris; latus angustius eam secat, numquam extra scribit.
+ * medio lateris; latus angustius eam utrimque aequaliter secat
+ * (pars media manet), brevius ab imo; numquam extra scribit. Res
+ * in parte secta mure non tanguntur, clavibus (j k Enter) tamen.
  * TEXTUS: descriptio; linea vacua; textus rei tactae. Linea una
  * vacua inter picturam et textum; duae cellae litterarum ad
  * sinistram et dextram.
  * MARGO: cella una circa omnia (VI x VIII); intra eum fundus planus
  * - textura foci lateris solum in margine apparet. Pictura in
- * latere CCCLX lato margines laterales tegit.
+ * latere CDLXXX lato margines laterales tegit.
  * Lineae quae in latus non cadunt non pinguntur (in hoc gradu nulla
  * volutatio).
  *

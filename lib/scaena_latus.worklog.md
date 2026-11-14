@@ -89,3 +89,14 @@ examen refuses statics written in one section and never reset.
 
 The writer name is honoured: a host passing an action the manifest
 does not name cannot write the fields (`hospes_scriptor`).
+
+## 2026-11-14 — wider picture; narrow panes show the middle
+
+Picture is 480 x 320 (constants from graphis.h; default surface 480
+x 576). `Dispositio.sectio_x` is the first picture column shown: a
+pane narrower than the picture cuts it equally on both sides, where
+it used to show the left part. The cut is applied in two places that
+must agree: `quadrum_curare` (pixels) and `res_in_puncto` (which
+thing is under the mouse). Things in the cut part are out of the
+mouse's reach; keys still reach them (tested with the hut's "turn"
+arrow in a pane 200 wide).

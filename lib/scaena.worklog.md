@@ -16,3 +16,10 @@
 - `stml_textus_internus` gives the raw text; whitespace is collapsed
   here (`_textus_contractus`), so prose in a scene file can be
   wrapped and indented freely.
+
+## 2026-11-14 — view blob is 480 x 320
+
+No format change beyond the size: `PIXELA` follows graphis.h. A blob
+built at 360 x 240 fails the length check in `scaena_legere` and the
+pane shows "cannot be read (rebuild it: bin/scaena condere)". The
+magic stays "SCAENA01".

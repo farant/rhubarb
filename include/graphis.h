@@ -1,7 +1,7 @@
 /*
  * graphis.h - graphis: descriptio formarum planarum in picturam
  *
- * Pictura stans (CCCLX x CCXL, XVI colores Aquinatis) ex plagula
+ * Pictura stans (CDLXXX x CCCXX, XVI colores Aquinatis) ex plagula
  * STML fit: arbor formarum planarum, quaeque cum coloribus, exemplari
  * et vi. Functio pura: plagula eadem, octeti idem in omni machina;
  * arithmetica fluitans nulla. Nihil de scaenis, de mundo aut de vico
@@ -26,6 +26,18 @@
  * una est: omnia intra eum picta (formae, partes) ei tribuuntur, et
  * formae intra eum titulum suum non ferunt. Forma posterior priorem
  * tegit. Fundus ante formas: color V (albus).
+ *
+ * MENSURA DESCRIPTIONIS: attributa radicis 'latitudo' et 'altitudo'
+ * dicunt in qua mensura coordinatae plagulae scriptae sunt:
+ *   absunt, aut "480" et "320"   pixela ipsa, nihil augetur
+ *   "360" et "240"               plagula vetus: omnia per 4/3 aucta
+ * Aliae recusantur, et unum sine altero. Augetur locus ABSOLUTUS
+ * (post locos gregum et usuum), ad integrum proximum; margo dexter
+ * et imus formae ut margines augentur, ergo formae vicinae se
+ * tangere pergunt. Crassitudo stili per 4/3 (minimum I). Lumina
+ * (locus, radii, area, mollities - haec XVI non excedit) eodem
+ * modo. Exemplaria NUMQUAM augentur: pixela eorum manent. Pars
+ * (<usus>) in mensura picturae quae ea utitur legitur.
  *
  * FORMAE:
  *
@@ -112,8 +124,9 @@
  * punctis; formam sine coloribus et sine stilo; vim inter 0 et 0.4;
  * formam totam extra picturam; titulum iteratum aut vacuum; plus
  * quam CCLV titulos; formam titulatam quae post omnes formas minus
- * LXIV pixela possidet; attributa 'latitudo' aut 'altitudo' radicis
- * quae CCCLX et CCXL non sunt (abesse licet).
+ * LXIV pixela possidet; attributa 'latitudo' et 'altitudo' radicis
+ * quae nec CDLXXX et CCCXX nec CCCLX et CCXL sunt, aut unum sine
+ * altero (ambo abesse licet).
  */
 
 #ifndef GRAPHIS_H
@@ -126,8 +139,8 @@
 #include "chorda.h"
 #include "graphis_lumen.h"
 
-#define GRAPHIS_LATITUDO          CCCLX
-#define GRAPHIS_ALTITUDO          CCXL
+#define GRAPHIS_LATITUDO          CDLXXX
+#define GRAPHIS_ALTITUDO          CCCXX
 #define GRAPHIS_TITULI_MAXIMI     CCLV
 #define GRAPHIS_REGIO_MINIMA      LXIV
 #define GRAPHIS_PARTES_ALTAE      VIII

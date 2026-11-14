@@ -42,18 +42,18 @@ proba "iudicare sine plagula usus" 2 "$B" iudicare
 [ ! -e "$T/x.png" ] || { echo "FRACTA: usus PNG scripsit"; fracta=$((fracta + 1)); }
 
 proba "specimen cubiculi" 0 "$B" specimen "$P" -o "$T/scheda.png"
-file "$T/scheda.png" 2>/dev/null | grep -q "1448 x 480" || { echo "FRACTA: scheda 1448 x 480 abest"; fracta=$((fracta + 1)); }
+file "$T/scheda.png" 2>/dev/null | grep -q "1928 x 640" || { echo "FRACTA: scheda 1928 x 640 abest"; fracta=$((fracta + 1)); }
 contine "numerus regionum" "$T/out" "^regiones: 2$"
-contine "regio prima: color, titulus, capsa" "$T/out" "  1  red     fenestra .* px  (2[0-9]*,5[0-9]*)-(2[0-9]*,1[0-9]*)$"
+contine "regio prima: color, titulus, capsa" "$T/out" "  1  red     fenestra .* px  (2[0-9]*,7[0-9]*)-(3[0-9]*,1[0-9]*)$"
 contine "regio altera" "$T/out" "  2  blue    stragulum "
-contine "magnitudo imaginis" "$T/out" "scheda.png: 1448 x 480$"
+contine "magnitudo imaginis" "$T/out" "scheda.png: 1928 x 640$"
 cp "$T/scheda.png" "$T/prima.png"
 proba "specimen iterum" 0 "$B" specimen "$P" -o "$T/scheda.png"
 cmp -s "$T/scheda.png" "$T/prima.png" || { echo "FRACTA: scheda non determinata"; fracta=$((fracta + 1)); }
 
 proba "quadrum fenestrae" 0 "$B" quadrum "$P" -o "$T/quadrum.png" -fines "210 44 80 70"
 file "$T/quadrum.png" 2>/dev/null | grep -q "320 x 280" || { echo "FRACTA: quadrum 320 x 280 abest"; fracta=$((fracta + 1)); }
-proba "quadrum extra picturam recusat" 1 "$B" quadrum "$P" -o "$T/extra.png" -fines "300 200 100 100"
+proba "quadrum extra picturam recusat" 1 "$B" quadrum "$P" -o "$T/extra.png" -fines "400 250 100 100"
 contine "fines nominantur" "$T/err" "non intra picturam"
 [ ! -e "$T/extra.png" ] || { echo "FRACTA: quadrum recusatum PNG scripsit"; fracta=$((fracta + 1)); }
 

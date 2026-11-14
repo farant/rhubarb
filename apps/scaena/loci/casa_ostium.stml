@@ -1,4 +1,5 @@
-<pictura titulus="hut: door wall" lux="0.55" tinctura="#d1dcff"
+<pictura titulus="hut: door wall" latitudo="360" altitudo="240"
+         lux="0.55" tinctura="#d1dcff"
          umbra="0.35">
   <usus fons="casa_camera"/>
 
