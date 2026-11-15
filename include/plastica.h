@@ -134,6 +134,43 @@
  * Statua recusata NIHIL est - numquam dimidia.
  *
  * DETERMINATA: textus idem statuam eandem dat, octetum pro octeto.
+ *
+ * FIGURA (radix altera): res cum articulis, quae moveri potest
+ * (project-specs/plastica-motus-spec.md IV.1).
+ *
+ *   <figura titulus="limax">
+ *     <articulus titulus="corpus" locus="0 0.4 0">
+ *       <sphaera radius="0.5" color="#6c9"/>
+ *       <articulus titulus="oculus_sin" locus="0.2 0.5 0.3">
+ *         <sphaera radius="0.08" color="#fff"/>
+ *       </articulus>
+ *     </articulus>
+ *   </figura>
+ *
+ * <figura> ut <res> legitur (solida, greges, texturae manu scriptae,
+ * semen), praeter: attributum 'obex' non habet (persona, non res
+ * loci), et articulos tenere potest.
+ *
+ * ARTICULUS: grex nominatus qui nodum UNUM facit; origo eius cardo
+ * est (circa quem pars vertitur). Positura quietis = plagula ut
+ * scripta.
+ *
+ *   titulus   necessarius, non vacuus, in plagula unicus
+ *   locus     cardo, in spatio parentis; ordinarius 0 0 0
+ *   gyrus, rotatio   ut in grege (positura quietis)
+ *
+ * Articulus sub <figura> ipsa aut sub alio articulo stat: nidus
+ * articulorum ossa figurae est. Solida et greges intra articulum
+ * cum eo moventur. Maxime LXIV articuli.
+ *
+ * Elementa <positura>, <cyclus> et <membrum>, liberi <figura>
+ * ipsius, hic praetereuntur (plastica_motus.h ea legit); alibi
+ * ignota sunt.
+ *
+ * RECUSAT praeterea, causa et linea: <articulus> in <res>; articulum
+ * intra <grex>, <speculum>, <series> aut <sparsio>; titulum
+ * absentem, vacuum aut iteratum; articulos plus quam LXIV; 'obex'
+ * in <figura>; figuram sine solidis.
  */
 
 #ifndef PLASTICA_H
@@ -146,12 +183,19 @@
 #include "chorda.h"
 #include "statua.h"
 
+#define PLASTICA_ARTICULI_MAXIMI  LXIV
+
 nomen structura {
        b32  successus;
     Statua* statua;   /* finita (statua_finire); NIHIL si recusata */
     chorda* partes;   /* statua->nodorum tituli, ordine nodorum;
                        * vacuus ubi nodus titulum non habet; NIHIL si
                        * recusata. Extra Statuam manet (spec 14b) */
+       i32* articuli; /* indices nodorum qui articuli sunt, ordine
+                       * plagulae (parens ante liberos); titulus
+                       * articuli k = partes[articuli[k]]; NIHIL si
+                       * nulli aut recusata */
+       i32 articulorum;  /* 0 pro <res> */
     chorda error;    /* causa recusationis, Anglice, sine linea
                        * nova; vacua si successus */
        i32 linea;    /* linea plagulae (ab I); 0 si ignota aut

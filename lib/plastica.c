@@ -92,6 +92,15 @@ nomen structura {
     StereometriaVector ancora;
                    f32 ancora_s;
                    f32 ancora_t;
+    /* figura: radix <figura> est; claustrum = grex aut repetitor
+     * intra quem sumus (articulum vetat), NIHIL = nullus; articuli
+     * ordine plagulae cum elementis suis (titulus iteratus) */
+    constans StmlNodus* radix;
+                   b32  figura;
+    constans character* claustrum;
+                   i32  articulorum;
+                   i32  articuli[PLASTICA_ARTICULI_MAXIMI];
+    constans StmlNodus* fontes[PLASTICA_ARTICULI_MAXIMI];
 } Plastes;
 
 
@@ -1977,6 +1986,109 @@ _grex (
         && _liberi(p, nodus, (s32)n);
 }
 
+/* "joint title 't' is used twice (first on line n)" */
+interior b32
+_recusare_iteratum (
+               Plastes* p,
+    constans StmlNodus* nodus,
+       constans chorda* titulus,
+                   i32  linea_prima)
+{
+    character digiti[XVI];
+          i32 longitudo  = ZEPHYRUM;
+          i32 k          = ZEPHYRUM;
+
+    si (p->fractum)
+    {
+        redde FALSUM;
+    }
+    p->fractum  = VERUM;
+    p->linea    = nodus->linea;
+    _appone_literas(p, &longitudo, "joint title '");
+    _appone_chordam(p, &longitudo, titulus);
+    _appone_literas(p, &longitudo, "' is used twice (first on line ");
+    fac
+    {
+        digiti[k++] = (character)('0' + (character)(linea_prima % X));
+        linea_prima /= X;
+    } dum (linea_prima && k < XVI);
+    dum (k)
+    {
+        _appone(p, &longitudo, &digiti[--k], I);
+    }
+    _appone_literas(p, &longitudo, ")");
+    redde FALSUM;
+}
+
+/* articulus: grex nominatus, nodus unus, cardo in origine sua
+ * (plastica-motus-spec IV.1). Solum sub <figura> ipsa aut sub alio
+ * articulo */
+interior b32
+_articulus (
+               Plastes* p,
+    constans StmlNodus* nodus,
+                   s32  parens)
+{
+    hic_manens constans character* constans LICITA[] = {
+        COMMUNIA_GREGIS, NIHIL
+    };
+    constans chorda* titulus =
+        stml_attributum_capere(nodus, "titulus");
+                i32 k;
+                i32 n;
+
+    si (!p->figura)
+    {
+        redde _recusare_elementum(p, nodus,
+            "is only allowed in <figura>");
+    }
+    si (p->claustrum)
+    {
+        i32 longitudo = ZEPHYRUM;
+
+        si (!p->fractum)
+        {
+            p->fractum  = VERUM;
+            p->linea    = nodus->linea;
+            _appone_literas(p, &longitudo,
+                "a joint (<articulus>) cannot be inside <");
+            _appone_literas(p, &longitudo, p->claustrum);
+            _appone_literas(p, &longitudo, ">");
+        }
+        redde FALSUM;
+    }
+    /* attributum vacuum STML ut absens reddit */
+    si (!titulus)
+    {
+        redde _recusare_elementum(p, nodus,
+            "needs a non-empty attribute 'titulus'");
+    }
+    per (k = ZEPHYRUM; k < p->articulorum; k++)
+    {
+        constans chorda* prior =
+            stml_attributum_capere(p->fontes[k], "titulus");
+
+        si (prior && chorda_aequalis(*prior, *titulus))
+        {
+            redde _recusare_iteratum(p, nodus, titulus,
+                p->fontes[k]->linea);
+        }
+    }
+    si (p->articulorum >= PLASTICA_ARTICULI_MAXIMI)
+    {
+        redde _recusare_elementum(p, nodus,
+            "is one joint too many (at most 64)");
+    }
+    si (!_grex_aperire(p, nodus, parens, LICITA, &n))
+    {
+        redde FALSUM;
+    }
+    p->articuli[p->articulorum]  = n;
+    p->fontes[p->articulorum]    = nodus;
+    p->articulorum++;
+    redde _liberi(p, nodus, (s32)n);
+}
+
 interior b32
 _speculum (
                Plastes* p,
@@ -2362,21 +2474,23 @@ nomen b32 (*Factor)(
 nomen structura {
     constans character* titulus;
                 Factor  factor;
+                   b32  claudit;   /* intra hoc articulus vetatur */
 } Elementum;
 
 hic_manens constans Elementum ELEMENTA[] = {
-    { "capsa", _capsa },
-    { "cylindrus", _cylindrus },
-    { "sphaera", _sphaera },
-    { "cuneus", _cuneus },
-    { "extrusio", _extrusio },
-    { "tornus", _tornus },
-    { "grex", _grex },
-    { "speculum", _speculum },
-    { "series", _series },
-    { "sparsio", _sparsio },
-    { "textura", _textura_manu },
-    { NIHIL, NIHIL }
+    { "capsa", _capsa, FALSUM },
+    { "cylindrus", _cylindrus, FALSUM },
+    { "sphaera", _sphaera, FALSUM },
+    { "cuneus", _cuneus, FALSUM },
+    { "extrusio", _extrusio, FALSUM },
+    { "tornus", _tornus, FALSUM },
+    { "grex", _grex, VERUM },
+    { "speculum", _speculum, VERUM },
+    { "series", _series, VERUM },
+    { "sparsio", _sparsio, VERUM },
+    { "textura", _textura_manu, FALSUM },
+    { "articulus", _articulus, FALSUM },
+    { NIHIL, NIHIL, FALSUM }
 };
 
 interior b32
@@ -2436,6 +2550,15 @@ _liberi (
                 "only elements and comments are allowed here", NIHIL,
                 NIHIL);
         }
+        /* elementa motus, liberi <figura> ipsius: plastica_motus
+         * ea legit */
+        si (   p->figura && nodus == p->radix
+            && (   _titulus_est(liber->titulus, "positura")
+                || _titulus_est(liber->titulus, "cyclus")
+                || _titulus_est(liber->titulus, "membrum")))
+        {
+            perge;
+        }
         per (j = ZEPHYRUM; ELEMENTA[j].titulus; j++)
         {
             si (_titulus_est(liber->titulus, ELEMENTA[j].titulus))
@@ -2448,9 +2571,20 @@ _liberi (
             redde _recusare(p, liber->linea, "unknown element <",
                 liber->titulus, ">");
         }
-        si (!ELEMENTA[j].factor(p, liber, parens))
         {
-            redde FALSUM;
+            constans character* prius = p->claustrum;
+                           b32  bene;
+
+            si (ELEMENTA[j].claudit)
+            {
+                p->claustrum = ELEMENTA[j].titulus;
+            }
+            bene          = ELEMENTA[j].factor(p, liber, parens);
+            p->claustrum  = prius;
+            si (!bene)
+            {
+                redde FALSUM;
+            }
         }
     }
     redde !p->fractum;
@@ -2464,36 +2598,42 @@ _radix (
     hic_manens constans character* constans LICITA[] = {
         "titulus", "obex", NIHIL
     };
+    hic_manens constans character* constans LICITA_FIGURAE[] = {
+        "titulus", NIHIL
+    };
     constans chorda* obex = stml_attributum_capere(radix, "obex");
                 f32  latera[II];
                 i32  n;
 
-    p->nodorum     = ZEPHYRUM;
-    p->solidorum   = ZEPHYRUM;
-    p->verticum    = ZEPHYRUM;
-    p->indicum     = ZEPHYRUM;
-    p->speculum_x  = 1.0f;
-    p->speculum_z  = 1.0f;
+    p->radix        = radix;
+    p->figura       = _titulus_est(radix->titulus, "figura");
+    p->articulorum  = ZEPHYRUM;
+    p->nodorum      = ZEPHYRUM;
+    p->solidorum    = ZEPHYRUM;
+    p->verticum     = ZEPHYRUM;
+    p->indicum      = ZEPHYRUM;
+    p->speculum_x   = 1.0f;
+    p->speculum_z   = 1.0f;
     si (!p->gradus)
     {
         constans chorda* titulus;
 
-        si (!_titulus_est(radix->titulus, "res"))
+        si (!p->figura && !_titulus_est(radix->titulus, "res"))
         {
             redde _recusare(p, radix->linea,
-                "the root element must be <res>, got <",
+                "the root element must be <res> or <figura>, got <",
                 radix->titulus, ">");
         }
-        si (!_attributa_licita(p, radix, LICITA))
+        si (!_attributa_licita(p, radix,
+            p->figura ? LICITA_FIGURAE : LICITA))
         {
             redde FALSUM;
         }
         titulus = stml_attributum_capere(radix, "titulus");
         si (!titulus || titulus->mensura == ZEPHYRUM)
         {
-            redde _recusare(p, radix->linea,
-                "<res> needs a non-empty attribute 'titulus'", NIHIL,
-                NIHIL);
+            redde _recusare_elementum(p, radix,
+                "needs a non-empty attribute 'titulus'");
         }
     }
     si (   !_nodus_novus(p, radix, VERUM, -I,
@@ -2505,8 +2645,7 @@ _radix (
     }
     si (!p->gradus && p->solidorum == ZEPHYRUM)
     {
-        redde _recusare(p, radix->linea, "<res> has no solids",
-            NIHIL, NIHIL);
+        redde _recusare_elementum(p, radix, "has no solids");
     }
     /* obex invisus: pars ultima, sub radice */
     si (obex)
@@ -2694,8 +2833,22 @@ plastica_legere_seminis (
             "the model could not be finished", NIHIL, NIHIL);
         redde _fructus_recusatus(&p, piscina);
     }
-    f.successus  = VERUM;
-    f.statua     = s;
-    f.partes     = p.partes;
+    si (p.articulorum)
+    {
+        f.articuli = (i32*)_locus(piscina,
+            p.articulorum * magnitudo(i32));
+        si (!f.articuli)
+        {
+            (vacuum)_recusare(&p, ZEPHYRUM, "out of memory", NIHIL,
+                NIHIL);
+            redde _fructus_recusatus(&p, piscina);
+        }
+        memcpy(f.articuli, p.articuli,
+            p.articulorum * magnitudo(i32));
+    }
+    f.articulorum  = p.articulorum;
+    f.successus    = VERUM;
+    f.statua       = s;
+    f.partes       = p.partes;
     redde f;
 }

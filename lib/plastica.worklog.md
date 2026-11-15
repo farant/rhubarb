@@ -188,3 +188,26 @@ Four additions that came out of modelling the first ten assets:
   back and holds the texture count under 100 (it is 64 today).
 - Every converted asset kept its numbers (parts, triangles, bounds,
   footprint) and the clearing's pins did not move.
+
+## 2026-11-14 - joints (plastica motus T1)
+
+`<figura>` is a second root and `<articulus>` a named group that makes
+one node (project-specs/plastica-motus-spec.md IV.1). Notes:
+
+- "Joint not allowed here" is one field, `claustrum`, set in the
+  child dispatcher (`_liberi`) from a flag in the element table and
+  restored after the handler returns. The four group handlers were
+  not touched; series and scatter call `_liberi` several times and
+  would have needed the save/restore on every path.
+- The reader runs twice (count, then fill), so the joint table is
+  rebuilt in each pass and `articulorum` must be zeroed in `_radix`.
+  Without that the second pass sees every title as a duplicate.
+- STML returns an empty attribute (`titulus=""`) as absent, so the
+  joint's title check is `!titulus` alone. A plant that allowed an
+  empty title stayed green until the redundant length test was
+  removed.
+- Motion elements (`<positura>`, `<cyclus>`, `<membrum>`) are passed
+  over only as direct children of the `<figura>` root; anywhere else
+  they are unknown elements. plastica_motus (T2) reads them.
+- A comment beginning `/* <res>:` in a test is taken for a malformed
+  annotation by examen (domesticum). Reworded.
