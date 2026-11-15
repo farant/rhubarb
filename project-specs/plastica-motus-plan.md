@@ -175,6 +175,19 @@ keys only in this task. A looping cycle gets its first pose again at
 - [ ] Plants, each red.
 - [ ] Commit on Fran's word.
 
+**As built (2026-11-14).** As the header Fran approved, plus one
+sentence: the closing key of a looping cycle is compared modulo 360,
+so keys at 0, 120, 240 close into a full turn. New module
+`plastica_motus` and suite `probatio_plastica_motus` (9 sections);
+81 plants, 80 red, one green by nature (a bounds guard whose removal
+overflows an array without changing the answer). Differences from
+this plan: the result has no `plagula` field yet (it arrives with
+skeleton sheets in task 5); `quies` is a built-in pose; `circulus`
+defaults to off; `<membrum>` is refused with "limbs are not built
+yet" until task 6; determinism is pinned by reading the same sheet
+twice and comparing every key, not by a digest. Limits: 64 poses,
+16 cycles, 64 keys and 8 moments per cycle, 60 seconds.
+
 ### Task 3: the strip
 
 **Produces:**

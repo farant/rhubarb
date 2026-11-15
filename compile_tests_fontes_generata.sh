@@ -314,6 +314,7 @@ declare -a SOURCE_FILES=(
     "lib/piscina.c"
     "lib/planta_lectio.c"
     "lib/plastica.c"
+    "lib/plastica_motus.c"
     "lib/plastica_specimen.c"
     "lib/plastica_textura.c"
     "lib/plexus.c"
