@@ -15,6 +15,7 @@
 #include "statua.h"
 #include "dithering.h"
 #include "plastica.h"
+#include "plastica_motus.h"
 #include "plastica_specimen.h"
 #include "credo.h"
 #include <stdio.h>
@@ -705,6 +706,592 @@ _sectio_pagina_invisa (
     }
 }
 
+/* ---------- linea motus (plastica-motus-spec IV.6) ---------- */
+
+#define CELLA_MOTUS PLASTICA_MOTUS_CELLA
+
+/* capsa caerulea I x II x I in articulo uno: salit (circulus, 0.5
+ * sursum in medio) et mergit (0.25 deorsum, tenetur) */
+#define SALTATOR_CORPUS \
+    "<figura titulus=\"saltator\">\n" \
+    "<articulus titulus=\"corpus\">\n" \
+    "<capsa magnitudo=\"1 2 1\" color=\"#2040c0\"/>\n" \
+    "</articulus>\n" \
+    "<positura titulus=\"alta\">" \
+    "<art titulus=\"corpus\" motus=\"0 0.5 0\"/></positura>\n" \
+    "<positura titulus=\"ima\">" \
+    "<art titulus=\"corpus\" motus=\"0 -0.25 0\"/></positura>\n"
+
+hic_manens constans character* SALTATOR =
+    SALTATOR_CORPUS
+    "<cyclus titulus=\"salit\" duratio=\"1\" circulus=\"verum\">\n"
+    "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+    "<clavis tempus=\"0.5\" positura=\"alta\"/>\n"
+    "</cyclus>\n"
+    "<cyclus titulus=\"mergit\" duratio=\"1\">\n"
+    "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+    "<clavis tempus=\"0.5\" positura=\"ima\"/>\n"
+    "</cyclus>\n"
+    "</figura>";
+
+interior PlasticaFiguraFructus
+_figura (
+        CredoContextus* c,
+    constans character* literae)
+{
+    PlasticaFiguraFructus f = plastica_figura_legere(
+        chorda_ex_literis(literae, c->piscina), ZEPHYRUM, c->piscina);
+
+    si (!f.successus)
+    {
+        printf("figura recusata (linea %u): %.*s\n",
+            (insignatus)f.linea, (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+    }
+    CREDO_NECESSE (f.successus);
+    redde f;
+}
+
+interior constans i8*
+_pixelum_motus (
+    constans Imago* imago,
+               i32  columna,
+               i32  ordo,
+               i32  x,
+               i32  y)
+{
+    redde imago->pixela
+        + ((memoriae_index)(ordo * CELLA_MOTUS + y) * imago->latitudo
+            + columna * CELLA_MOTUS + x) * IV;
+}
+
+interior Census
+_census_motus (
+    constans Imago* imago,
+               i32  columna,
+               i32  ordo,
+       Praedicatum  praedicatum)
+{
+    Census r;
+       i32 x;
+       i32 y;
+
+    memset(&r, ZEPHYRUM, magnitudo(r));
+    r.sinistrum  = (s32)CELLA_MOTUS;
+    r.summum     = (s32)CELLA_MOTUS;
+    r.dextrum    = -I;
+    r.infimum    = -I;
+    per (y = ZEPHYRUM; y < CELLA_MOTUS; y++)
+    {
+        per (x = ZEPHYRUM; x < CELLA_MOTUS; x++)
+        {
+            si (!praedicatum(_pixelum_motus(imago, columna, ordo, x,
+                y)))
+            {
+                perge;
+            }
+            r.pixela++;
+            r.sinistrum  = (s32)x < r.sinistrum ? (s32)x : r.sinistrum;
+            r.dextrum    = (s32)x > r.dextrum ? (s32)x : r.dextrum;
+            r.summum     = (s32)y < r.summum ? (s32)y : r.summum;
+            r.infimum    = (s32)y;
+        }
+    }
+    redde r;
+}
+
+/* capsa caerulea illuminata */
+interior b32
+_est_capsa_caerulea (
+    constans i8* p)
+{
+    redde p[II] > p[ZEPHYRUM] + XX && p[II] > p[I] + XX;
+}
+
+/* linea humi */
+interior b32
+_est_cinereum (
+    constans i8* p)
+{
+    redde p[ZEPHYRUM] == p[I] && p[I] == p[II] && p[ZEPHYRUM] > L
+        && p[ZEPHYRUM] < CCL;
+}
+
+/* signum cardinis */
+interior b32
+_est_signum_rubrum (
+    constans i8* p)
+{
+    redde p[ZEPHYRUM] > CC && p[I] < LX && p[II] < LX;
+}
+
+interior b32
+_non_album (
+    constans i8* p)
+{
+    redde p[ZEPHYRUM] != 255 || p[I] != 255 || p[II] != 255;
+}
+
+#define PROXIMUS_S32(valor, speratus) \
+    fac { \
+        CREDO_VERUM ((valor) >= (s32)(speratus) - I); \
+        CREDO_VERUM ((valor) <= (s32)(speratus) + I); \
+    } dum (FALSUM)
+
+interior vacuum
+_sectio_motus_numeri (
+    CredoContextus* c)
+{
+    PlasticaFiguraFructus f = _figura(c, SALTATOR);
+    PlasticaMensuraeMotus m;
+                   Statua vacua;
+
+    /* salit: ab humo ad 0.5 et redit */
+    memset(&m, 0x7F, magnitudo(m));
+    CREDO_VERUM (plastica_metiri_motum(f.statua, ZEPHYRUM, &m,
+        c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.infimum_minimum, 0.0, 1.0e-4);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, 0.5, 1.0e-4);
+    CREDO_VERUM (m.hiatus_suturae < 1.0e-3f);
+    /* mergit: 0.25 sub humum et ibi manet */
+    CREDO_VERUM (plastica_metiri_motum(f.statua, I, &m, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.infimum_minimum, -0.25, 1.0e-4);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, 0.0, 1.0e-4);
+    CREDO_F64_PROXIMUS ((f64)m.hiatus_suturae, 0.25, 1.0e-3);
+    /* argumenta mala: FALSUM, mensurae 0 */
+    memset(&m, 0x7F, magnitudo(m));
+    CREDO_FALSUM (plastica_metiri_motum(f.statua, II, &m, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.infimum_minimum, 0.0, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, 0.0, 1.0e-9);
+    CREDO_F64_PROXIMUS ((f64)m.hiatus_suturae, 0.0, 1.0e-9);
+    CREDO_FALSUM (plastica_metiri_motum(NIHIL, ZEPHYRUM, &m,
+        c->piscina));
+    CREDO_FALSUM (plastica_metiri_motum(f.statua, ZEPHYRUM, NIHIL,
+        c->piscina));
+    CREDO_FALSUM (plastica_metiri_motum(f.statua, ZEPHYRUM, &m,
+        NIHIL));
+    vacua           = *f.statua;
+    vacua.verticum  = ZEPHYRUM;
+    CREDO_FALSUM (plastica_metiri_motum(&vacua, ZEPHYRUM, &m,
+        c->piscina));
+
+    /* apex inter quadra picturae: exempla XXXII eum capiunt (clavis
+     * ad 9/32) */
+    f = _figura(c,
+        SALTATOR_CORPUS
+        "<cyclus titulus=\"citus\" duratio=\"1\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.28125\" positura=\"alta\"/>\n"
+        "<clavis tempus=\"0.3125\" positura=\"quies\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_VERUM (plastica_metiri_motum(f.statua, ZEPHYRUM, &m,
+        c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, 0.5, 1.0e-4);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_minimum, 0.0, 1.0e-4);
+
+    /* semper supra humum, semper infra: minimum et maximum ex
+     * exemplo primo incipiunt, non ex 0; hiatus in x solo et in z
+     * solo */
+    f = _figura(c,
+        SALTATOR_CORPUS
+        "<positura titulus=\"dextra\">"
+        "<art titulus=\"corpus\" motus=\"0.3 0 0\"/></positura>\n"
+        "<positura titulus=\"retro\">"
+        "<art titulus=\"corpus\" motus=\"0 0 0.4\"/></positura>\n"
+        "<cyclus titulus=\"pendet\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"alta\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"iacet\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"ima\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"labitur\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"dextra\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"recedit\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"retro\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_VERUM (plastica_metiri_motum(f.statua, ZEPHYRUM, &m,
+        c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.infimum_minimum, 0.5, 1.0e-4);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, 0.5, 1.0e-4);
+    CREDO_VERUM (plastica_metiri_motum(f.statua, I, &m, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.infimum_minimum, -0.25, 1.0e-4);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, -0.25, 1.0e-4);
+    CREDO_VERUM (plastica_metiri_motum(f.statua, II, &m, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.hiatus_suturae, 0.3, 1.0e-3);
+    CREDO_VERUM (plastica_metiri_motum(f.statua, III, &m, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.hiatus_suturae, 0.4, 1.0e-3);
+
+    /* hiatus = vertex qui MAXIME distat: pars una stat, altera it */
+    f = _figura(c,
+        "<figura titulus=\"a\">\n"
+        "<capsa magnitudo=\"1 1 1\" locus=\"3 0 0\"/>\n"
+        "<articulus titulus=\"corpus\">\n"
+        "<capsa magnitudo=\"1 1 1\"/>\n"
+        "</articulus>\n"
+        "<positura titulus=\"mota\">"
+        "<art titulus=\"corpus\" motus=\"0 0 0.7\"/></positura>\n"
+        "<cyclus titulus=\"it\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"mota\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_VERUM (plastica_metiri_motum(f.statua, ZEPHYRUM, &m,
+        c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.hiatus_suturae, 0.7, 1.0e-3);
+
+    /* hiatus per VERTICES: articulus in loco vertitur (cardo non
+     * movetur), angulus capsae 90 gradus it: chorda I */
+    f = _figura(c,
+        "<figura titulus=\"a\">\n"
+        "<articulus titulus=\"rota\">\n"
+        "<capsa magnitudo=\"1 1 1\"/>\n"
+        "</articulus>\n"
+        "<positura titulus=\"versa\">"
+        "<art titulus=\"rota\" rotatio=\"0 90 0\"/></positura>\n"
+        "<cyclus titulus=\"vertit\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"versa\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_VERUM (plastica_metiri_motum(f.statua, ZEPHYRUM, &m,
+        c->piscina));
+    CREDO_F64_PROXIMUS ((f64)m.hiatus_suturae, 1.0, 1.0e-3);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_minimum, 0.0, 1.0e-4);
+    CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, 0.0, 1.0e-4);
+}
+
+interior vacuum
+_sectio_motus_pictura (
+    CredoContextus* c)
+{
+    PlasticaFiguraFructus f = _figura(c, SALTATOR);
+                    Imago imago;
+                   Census r;
+                      i32 k;
+                      i32 x;
+                      i32 y;
+
+    CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua,
+        f.articuli, f.articulorum, &imago, c->piscina));
+    /* VIII cellae latae, duo ordines per cyclum */
+    CREDO_AEQUALIS_I32 (imago.latitudo, PLASTICA_MOTUS_LATITUDO);
+    CREDO_AEQUALIS_I32 (imago.latitudo, VIII * CXX);
+    CREDO_AEQUALIS_I32 (imago.altitudo, IV * CXX);
+    CREDO_NECESSE (imago.pixela != NIHIL);
+
+    /* a latere, quies: capsa I x II unitates = XL x LXXX pixela,
+     * pes in linea humi (C), in media cella */
+    r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, XX);
+    PROXIMUS_S32 (r.infimum, XCIX);
+    PROXIMUS_S32 (r.sinistrum, XL);
+    PROXIMUS_S32 (r.dextrum, LXXIX);
+    /* quadrum k ad tempus k / VIII: 0.25 -> X pixela, 0.5 -> XX,
+     * 0.75 -> X iterum */
+    r = _census_motus(&imago, II, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, X);
+    PROXIMUS_S32 (r.infimum, LXXXIX);
+    r = _census_motus(&imago, IV, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, ZEPHYRUM);
+    PROXIMUS_S32 (r.infimum, LXXIX);
+    r = _census_motus(&imago, VI, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, X);
+    r = _census_motus(&imago, VII, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, XV);
+    /* linea humi cinerea per cellam totam in ordine laterali, ubi
+     * figura eam non tegit; nusquam alibi */
+    per (k = ZEPHYRUM; k < VIII; k++)
+    {
+        r = _census_motus(&imago, k, ZEPHYRUM, _est_cinereum);
+        CREDO_AEQUALIS_S32 (r.summum, (s32)PLASTICA_MOTUS_HUMUS);
+        CREDO_AEQUALIS_S32 (r.infimum, (s32)PLASTICA_MOTUS_HUMUS);
+        CREDO_AEQUALIS_S32 (r.sinistrum, ZEPHYRUM);
+        CREDO_AEQUALIS_S32 (r.dextrum, (s32)CELLA_MOTUS - I);
+        r = _census_motus(&imago, k, I, _est_cinereum);
+        CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
+    }
+    /* cardo articuli ruber: in quiete ad (LX, C), in apice XX supra;
+     * III x III */
+    r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, IX);
+    CREDO_AEQUALIS_S32 (r.sinistrum, LIX);
+    CREDO_AEQUALIS_S32 (r.dextrum, LXI);
+    CREDO_AEQUALIS_S32 (r.summum, XCIX);
+    CREDO_AEQUALIS_S32 (r.infimum, CI);
+    r = _census_motus(&imago, IV, ZEPHYRUM, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, IX);
+    CREDO_AEQUALIS_S32 (r.summum, LXXIX);
+    CREDO_AEQUALIS_S32 (r.sinistrum, LIX);
+
+    /* tribus quartis: dithering - colores palettae soli, nullum
+     * signum; figura adest et in apice altius stat (XX pixela
+     * cos 35 = XVI) */
+    per (k = ZEPHYRUM; k < VIII; k++)
+    {
+        r = _census_motus(&imago, k, I, _non_album);
+        CREDO_VERUM (r.pixela > D);
+        per (y = ZEPHYRUM; y < CELLA_MOTUS; y++)
+        {
+            per (x = ZEPHYRUM; x < CELLA_MOTUS; x++)
+            {
+                constans i8* p = _pixelum_motus(&imago, k, I, x, y);
+
+                si (_non_album(p) && !_est_palettae(p))
+                {
+                    CREDO_VERUM (_est_palettae(p));
+                    redde;
+                }
+            }
+        }
+    }
+    r = _census_motus(&imago, ZEPHYRUM, I, _non_album);
+    y = (i32)r.summum;
+    x = (i32)r.infimum;
+    r = _census_motus(&imago, IV, I, _non_album);
+    PROXIMUS_S32 (r.summum, (s32)y - XVI);
+    PROXIMUS_S32 (r.infimum, (s32)x - XVI);
+    /* punctum humi sub medio figurae ad (LX, C): basis capsae
+     * (rhombus) circa id iacet */
+    r = _census_motus(&imago, ZEPHYRUM, I, _non_album);
+    CREDO_VERUM (r.infimum > (s32)PLASTICA_MOTUS_HUMUS);
+    CREDO_VERUM (r.infimum < (s32)PLASTICA_MOTUS_HUMUS + XX);
+    PROXIMUS_S32 ((r.sinistrum + r.dextrum) / II, LX);
+
+    /* cyclus alter in ordinibus II et III: mergit X pixela ad
+     * quadrum IV et ibi manet; lineam humi tegit */
+    r = _census_motus(&imago, ZEPHYRUM, II, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, XX);
+    r = _census_motus(&imago, IV, II, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, XXX);
+    PROXIMUS_S32 (r.infimum, CIX);
+    r = _census_motus(&imago, VII, II, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, XXX);
+    CREDO_VERUM (_est_capsa_caerulea(_pixelum_motus(&imago, IV, II, L,
+        PLASTICA_MOTUS_HUMUS)));
+    CREDO_VERUM (_est_cinereum(_pixelum_motus(&imago, IV, II, V,
+        PLASTICA_MOTUS_HUMUS)));
+    r = _census_motus(&imago, IV, III, _non_album);
+    CREDO_VERUM (r.pixela > D);
+    /* opaca tota */
+    CREDO_AEQUALIS_I32 (imago.pixela[III], 255);
+}
+
+interior vacuum
+_sectio_motus_scala (
+    CredoContextus* c)
+{
+    PlasticaFiguraFructus f;
+                    Imago imago;
+                   Census r;
+
+    /* alta IV unitates: semper LXXX pixela alta, latitudo sequitur */
+    f = _figura(c,
+        "<figura titulus=\"a\">\n"
+        "<capsa magnitudo=\"1 4 1\" color=\"#2040c0\"/>\n"
+        "<cyclus titulus=\"stat\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua, NIHIL,
+        ZEPHYRUM, &imago, c->piscina));
+    CREDO_AEQUALIS_I32 (imago.altitudo, II * CXX);
+    r = _census_motus(&imago, III, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, XX);
+    PROXIMUS_S32 (r.infimum, XCIX);
+    PROXIMUS_S32 (r.sinistrum, L);
+    PROXIMUS_S32 (r.dextrum, LXIX);
+    /* sine articulis signum nullum */
+    r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
+
+    /* lata VI unitates (in x): III unitates latitudinem regunt,
+     * scala dimidia - XL pixela alta; a latere z (I unitas) XX
+     * pixela */
+    f = _figura(c,
+        "<figura titulus=\"a\">\n"
+        "<capsa magnitudo=\"6 2 1\" color=\"#2040c0\"/>\n"
+        "<cyclus titulus=\"stat\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua, NIHIL,
+        ZEPHYRUM, &imago, c->piscina));
+    r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, LX);
+    PROXIMUS_S32 (r.infimum, XCIX);
+    PROXIMUS_S32 (r.sinistrum, L);
+    PROXIMUS_S32 (r.dextrum, LXIX);
+    /* lata in z quoque regit */
+    f = _figura(c,
+        "<figura titulus=\"a\">\n"
+        "<capsa magnitudo=\"1 2 6\" color=\"#2040c0\"/>\n"
+        "<cyclus titulus=\"stat\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua, NIHIL,
+        ZEPHYRUM, &imago, c->piscina));
+    r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.summum, LX);
+    PROXIMUS_S32 (r.sinistrum, ZEPHYRUM);
+    PROXIMUS_S32 (r.dextrum, CXIX);
+
+    /* figura extra originem: medium quietis in media cella; humus
+     * tamen y = 0 (capsa I supra humum pendet) */
+    f = _figura(c,
+        "<figura titulus=\"a\">\n"
+        "<capsa magnitudo=\"1 2 1\" locus=\"4 1 3\""
+        " color=\"#2040c0\"/>\n"
+        "<cyclus titulus=\"stat\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua, NIHIL,
+        ZEPHYRUM, &imago, c->piscina));
+    r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
+    PROXIMUS_S32 (r.sinistrum, XL);
+    PROXIMUS_S32 (r.dextrum, LXXIX);
+    PROXIMUS_S32 (r.summum, ZEPHYRUM);
+    PROXIMUS_S32 (r.infimum, LIX);
+    r = _census_motus(&imago, ZEPHYRUM, I, _non_album);
+    CREDO_VERUM (r.pixela > D);
+    PROXIMUS_S32 ((r.sinistrum + r.dextrum) / II, LX);
+}
+
+interior vacuum
+_sectio_motus_fines (
+    CredoContextus* c)
+{
+    PlasticaFiguraFructus f = _figura(c, SALTATOR);
+    PlasticaFiguraFructus g;
+                    Imago prima;
+                    Imago altera;
+                   Statua vacua;
+                   Census r;
+                      i32 k;
+                      i32 n;
+
+    /* argumenta mala */
+    CREDO_FALSUM (plastica_specimen_motus_pingere(NIHIL, NIHIL,
+        ZEPHYRUM, &prima, c->piscina));
+    CREDO_FALSUM (plastica_specimen_motus_pingere(f.statua, NIHIL,
+        ZEPHYRUM, NIHIL, c->piscina));
+    CREDO_FALSUM (plastica_specimen_motus_pingere(f.statua, NIHIL,
+        ZEPHYRUM, &prima, NIHIL));
+    /* sine cyclis: FALSUM */
+    g = _figura(c,
+        "<figura titulus=\"a\"><capsa magnitudo=\"1 1 1\"/></figura>");
+    CREDO_FALSUM (plastica_specimen_motus_pingere(g.statua, NIHIL,
+        ZEPHYRUM, &prima, c->piscina));
+
+    /* determinata */
+    CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua,
+        f.articuli, f.articulorum, &prima, c->piscina));
+    CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua,
+        f.articuli, f.articulorum, &altera, c->piscina));
+    CREDO_AEQUALIS_I32 ((i32)memcmp(prima.pixela, altera.pixela,
+        (memoriae_index)prima.latitudo * prima.altitudo * IV),
+        ZEPHYRUM);
+
+    /* pars quae cellam excedit praeciditur: cyclus alter IV unitates
+     * sursum et deorsum volat; ordines cycli primi intacti manent
+     * et cellae vicinae nihil accipiunt */
+    g = _figura(c,
+        SALTATOR_CORPUS
+        "<positura titulus=\"summa\">"
+        "<art titulus=\"corpus\" motus=\"0 4 0\"/></positura>\n"
+        "<positura titulus=\"infima\">"
+        "<art titulus=\"corpus\" motus=\"0 -4 0\"/></positura>\n"
+        "<positura titulus=\"dextra\">"
+        "<art titulus=\"corpus\" motus=\"0 0 -1.5\"/></positura>\n"
+        "<cyclus titulus=\"salit\" duratio=\"1\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"alta\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"volat\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.25\" positura=\"summa\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"infima\"/>\n"
+        "<clavis tempus=\"0.75\" positura=\"dextra\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"mergit\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"ima\"/>\n"
+        "</cyclus>\n"
+        "<positura titulus=\"laeva\">"
+        "<art titulus=\"corpus\" motus=\"0 0 1.5\"/></positura>\n"
+        "<cyclus titulus=\"latera\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"dextra\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"laeva\"/>\n"
+        "</cyclus>\n"
+        "</figura>");
+    CREDO_NECESSE (plastica_specimen_motus_pingere(g.statua,
+        g.articuli, g.articulorum, &altera, c->piscina));
+    CREDO_AEQUALIS_I32 (altera.altitudo, VIII * CXX);
+    CREDO_AEQUALIS_I32 ((i32)memcmp(prima.pixela, altera.pixela,
+        (memoriae_index)prima.latitudo * II * CXX * IV), ZEPHYRUM);
+    CREDO_AEQUALIS_I32 ((i32)memcmp(
+        prima.pixela + (memoriae_index)prima.latitudo * II * CXX * IV,
+        altera.pixela
+            + (memoriae_index)altera.latitudo * IV * CXX * IV,
+        (memoriae_index)prima.latitudo * II * CXX * IV), ZEPHYRUM);
+    /* summa et infima: figura tota extra cellam, signum quoque */
+    r = _census_motus(&altera, II, II, _est_capsa_caerulea);
+    CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
+    r = _census_motus(&altera, II, II, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
+    r = _census_motus(&altera, IV, II, _est_capsa_caerulea);
+    CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
+    /* dextra: II unitates = LXXX pixela ad latus - partim extra;
+     * cella sequens nihil caerulei accipit praeter figuram suam */
+    r = _census_motus(&altera, VI, II, _est_capsa_caerulea);
+    CREDO_VERUM (r.pixela > ZEPHYRUM);
+    CREDO_VERUM (r.sinistrum == ZEPHYRUM
+        || r.dextrum == (s32)CELLA_MOTUS - I);
+    r = _census_motus(&altera, VI, II, _est_signum_rubrum);
+    CREDO_VERUM (r.pixela < IX);
+    CREDO_VERUM (r.pixela > ZEPHYRUM);
+    /* signum praecisum in cellam vicinam non fluit: quadrum VII
+     * (positura eadem tenta) idem habet, quadrum V (figura infra
+     * cellam) nihil, quadrum 0 signum suum integrum */
+    k = r.pixela;
+    r = _census_motus(&altera, VII, II, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, k);
+    r = _census_motus(&altera, V, II, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
+    r = _census_motus(&altera, ZEPHYRUM, II, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, IX);
+    /* cyclus 'latera': signum ad marginem unum (quadrum 0) et ad
+     * alterum (quadra IV .. VII, positura tenta): utrumque
+     * praecisum, nihil in vicinam fluit - quadra tenta paria,
+     * quadrum I (figura intra cellam) signum integrum */
+    r = _census_motus(&altera, ZEPHYRUM, VI, _est_signum_rubrum);
+    CREDO_VERUM (r.pixela > ZEPHYRUM && r.pixela < IX);
+    n = r.pixela;
+    r = _census_motus(&altera, IV, VI, _est_signum_rubrum);
+    CREDO_VERUM (r.pixela > ZEPHYRUM && r.pixela < IX);
+    CREDO_AEQUALIS_I32 (r.pixela + n, IX);
+    k = r.pixela;
+    r = _census_motus(&altera, V, VI, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, k);
+    r = _census_motus(&altera, VI, VI, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, k);
+    r = _census_motus(&altera, VII, VI, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, k);
+    r = _census_motus(&altera, I, VI, _est_signum_rubrum);
+    CREDO_AEQUALIS_I32 (r.pixela, IX);
+    /* statua sine verticibus */
+    vacua           = *f.statua;
+    vacua.verticum  = ZEPHYRUM;
+    CREDO_FALSUM (plastica_specimen_motus_pingere(&vacua, NIHIL,
+        ZEPHYRUM, &prima, c->piscina));
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "mensurae_capsae", _sectio_mensurae_capsae, NIHIL, NIHIL,
       NIHIL, NIHIL },
@@ -728,6 +1315,14 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "pagina_partes", _sectio_pagina_partes, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "pagina_invisa", _sectio_pagina_invisa, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "motus_numeri", _sectio_motus_numeri, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "motus_pictura", _sectio_motus_pictura, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "motus_scala", _sectio_motus_scala, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "motus_fines", _sectio_motus_fines, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

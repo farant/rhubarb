@@ -6,14 +6,18 @@
  *
  * Usus:
  *
- *   plastica specimen <res.stml> -o <via.png>
+ *   plastica specimen <res.stml> -o <via.png> [-motus <via.png>]
  *   plastica texturae -o <via.png>
  *   plastica condere -volumen V [-fontes DIR]
  *
  * specimen: descriptionem legit, numeros et tabulam partium imprimit,
  * paginam (IV aspectus x IV modi, plastica_specimen.h) scribit.
  * Tabula partium: numerus partis, color eius in ordine 'partes'
- * paginae, signum, titulus; pars invisa notatur.
+ * paginae, signum, titulus; pars invisa notatur. Plagula <figura>
+ * (plastica_motus.h): praeterea linea una per cyclum (duratio,
+ * punctum infimum per cyclum, hiatus suturae) cum momentis eius, et
+ * cum -motus linea motus (VIII quadra, duo ordines per cyclum) in
+ * PNG alterum. Figura sine cyclis lineam non dat (exitus 0).
  *
  * texturae: omnia genera texturarum genitarum (plastica_textura.h)
  * in pagina una: tabulae tres (cruda, exemplaria, Atkinson), in
@@ -66,6 +70,7 @@
 #include "imago_png.h"
 #include "statua.h"
 #include "plastica.h"
+#include "plastica_motus.h"
 #include "plastica_specimen.h"
 #include "plastica_textura.h"
 #include "statuae_quadrum.h"
@@ -78,7 +83,8 @@ interior s32
 usum_imprimere (vacuum)
 {
     fprintf(stderr,
-        "usus: plastica specimen <res.stml> -o <via.png>\n"
+        "usus: plastica specimen <res.stml> -o <via.png>"
+        " [-motus <via.png>]\n"
         "      plastica texturae -o <via.png>\n"
         "      plastica condere -volumen V [-fontes DIR]\n");
     redde II;
@@ -161,16 +167,85 @@ numeros_imprimere (
     }
 }
 
+/* figura (radix <figura>): numeri cuiusque cycli cum momentis, et
+ * linea motus si petita (plastica_specimen.h). Figura sine cyclis
+ * lineam non dat */
+interior s32
+motum_exsequi (
+                constans character* via,
+                constans character* motus,
+    constans PlasticaFiguraFructus* g,
+                           Piscina* piscina)
+{
+    PlasticaMensuraeMotus m;
+               PngFructus png;
+                    Imago imago;
+                      i32 k;
+                      i32 j;
+
+    per (k = ZEPHYRUM; k < g->statua->cyclorum; k++)
+    {
+        constans StatuaCyclus* c = &g->statua->cycli[k];
+
+        (vacuum)plastica_metiri_motum(g->statua, k, &m, piscina);
+        imprimere("cyclus %u %.*s: duratio %.2f  infimum %.2f .. %.2f"
+            "  hiatus %.3f\n", (insignatus)k,
+            (integer)c->titulus.mensura,
+            (constans character*)c->titulus.datum, (f64)c->duratio,
+            (f64)m.infimum_minimum, (f64)m.infimum_maximum,
+            (f64)m.hiatus_suturae);
+        per (j = ZEPHYRUM; j < g->momentorum; j++)
+        {
+            si (g->momenta[j].cyclus == k)
+            {
+                imprimere("  momentum %.*s %.2f\n",
+                    (integer)g->momenta[j].titulus.mensura,
+                    (constans character*)g->momenta[j].titulus.datum,
+                    (f64)g->momenta[j].tempus);
+            }
+        }
+    }
+    si (!motus)
+    {
+        redde ZEPHYRUM;
+    }
+    si (g->statua->cyclorum == ZEPHYRUM)
+    {
+        imprimere("%s: figura sine cyclis, linea motus non scripta\n",
+            via);
+        redde ZEPHYRUM;
+    }
+    si (!plastica_specimen_motus_pingere(g->statua, g->articuli,
+        g->articulorum, &imago, piscina))
+    {
+        fprintf(stderr, "plastica: linea motus pingi non potuit\n");
+        redde I;
+    }
+    png = imago_png_scribere(&imago, motus, piscina);
+    si (!png.successus)
+    {
+        fprintf(stderr, "plastica: PNG scribi non potest: %s\n",
+            motus);
+        redde I;
+    }
+    imprimere("%s: %u x %u\n", motus, (insignatus)imago.latitudo,
+        (insignatus)imago.altitudo);
+    redde ZEPHYRUM;
+}
+
 interior s32
 exsequi_specimen (
     constans character* via,
     constans character* exitus,
+    constans character* motus,
                Piscina* piscina)
 {
-    PlasticaFructus f;
-         PngFructus png;
-             chorda textus;
-              Imago imago;
+    PlasticaFiguraFructus g;
+          PlasticaFructus f;
+               PngFructus png;
+                   chorda textus;
+                    Imago imago;
+
 
     textus = filum_legere_totum(via, piscina);
     si (textus.mensura == ZEPHYRUM)
@@ -187,6 +262,24 @@ exsequi_specimen (
             (constans character*)f.error.datum);
         redde I;
     }
+    si (motus && !f.figura)
+    {
+        fprintf(stderr, "plastica: -motus figuram poscit (radix"
+            " <figura>): %s\n", via);
+        redde I;
+    }
+    memset(&g, ZEPHYRUM, magnitudo(g));
+    si (f.figura)
+    {
+        g = plastica_figura_legere(textus, ZEPHYRUM, piscina);
+        si (!g.successus)
+        {
+            fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)g.linea,
+                (integer)g.error.mensura,
+                (constans character*)g.error.datum);
+            redde I;
+        }
+    }
     si (!plastica_specimen_pingere(f.statua, &imago, piscina))
     {
         fprintf(stderr, "plastica: pagina pingi non potuit\n");
@@ -202,7 +295,7 @@ exsequi_specimen (
     numeros_imprimere(via, f.statua, f.partes, piscina);
     imprimere("%s: %u x %u\n", exitus, (insignatus)imago.latitudo,
         (insignatus)imago.altitudo);
-    redde ZEPHYRUM;
+    redde f.figura ? motum_exsequi(via, motus, &g, piscina) : ZEPHYRUM;
 }
 
 /* colores exempli cuiusque generis (obscurus, medius, clarus),
@@ -652,6 +745,7 @@ principale (
 {
     constans character* via     = NIHIL;
     constans character* exitus  = NIHIL;
+    constans character* motus   = NIHIL;
                Piscina* piscina;
                integer  k;
                    b32  texturae;
@@ -716,6 +810,15 @@ principale (
             exitus = argv[++k];
             perge;
         }
+        si (strcmp(argv[k], "-motus") == ZEPHYRUM)
+        {
+            si (k + I >= argc || motus || texturae)
+            {
+                redde usum_imprimere();
+            }
+            motus = argv[++k];
+            perge;
+        }
         si (argv[k][ZEPHYRUM] == '-' || via)
         {
             redde usum_imprimere();
@@ -728,7 +831,7 @@ principale (
     }
     piscina  = piscina_generare_dynamicum("plastica", M * M);
     r        = texturae ? exsequi_texturas(exitus, piscina)
-        : exsequi_specimen(via, exitus, piscina);
+        : exsequi_specimen(via, exitus, motus, piscina);
     piscina_destruere(piscina);
     redde r;
 }

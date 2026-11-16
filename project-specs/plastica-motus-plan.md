@@ -224,6 +224,21 @@ as text too.
 - [ ] Plants, each red.
 - [ ] Commit on Fran's word.
 
+**As built (2026-11-14).** As the header Fran approved. Differences
+from this plan: two rows per cycle (side, then three-quarter), eight
+cells wide, 960 pixels, not one row of sixteen; the strip is a
+second file, `plastica specimen <sheet> -o <png> -motus <png>`; no
+lettering in the picture (the tool prints one line per cycle and its
+moments); the seam number measures every vertex; the painter writes
+into the caller's `Imago` and returns `b32`, like the rest sheet.
+`PlasticaFructus` gained `figura` (the root was `<figura>`), which
+the tool uses to decide whether to read motion. Suite
+`probatio_plastica_specimen` has 4 new sections (17); 40 library
+plants and 12 hand plants on the tool (`tools/plastica_fumus.sh`),
+all red after three weak tests were strengthened and one redundant
+check removed. Claude read a strip of a test puppet (walk and wave)
+by eye. An arm raised sideways does not show in the side row.
+
 ### Task 4: the build, and the slime
 
 - [ ] Header text to Fran (the `condere` output lines and the usage

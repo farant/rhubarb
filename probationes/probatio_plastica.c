@@ -1965,17 +1965,20 @@ _sectio_articuli (
     fines = _fines_nodi_in_statua(s, VIII);
     FINES_SUNT (fines, -0.1, 0.1, 0.0, 0.2, -1.5, -0.5);
 
+    CREDO_VERUM (f.figura);
     /* radix res: nulli articuli */
     f = _lege(c,
         "<res titulus=\"a\"><capsa magnitudo=\"1 1 1\"/></res>");
     CREDO_NECESSE (f.successus);
     CREDO_AEQUALIS_I32 (f.articulorum, ZEPHYRUM);
     CREDO_NIHIL (f.articuli);
+    CREDO_FALSUM (f.figura);
 
     /* figura sine articulis licet */
     f = _lege(c,
         "<figura titulus=\"a\"><capsa magnitudo=\"1 1 1\"/></figura>");
     CREDO_NECESSE (f.successus);
+    CREDO_VERUM (f.figura);
     CREDO_AEQUALIS_I32 (f.articulorum, ZEPHYRUM);
     CREDO_AEQUALIS_I32 (f.statua->nodorum, II);
 

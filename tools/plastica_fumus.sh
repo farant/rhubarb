@@ -1,5 +1,6 @@
 #!/bin/bash
-# tools/plastica_fumus.sh - fumus bin/plastica (plastica-plan T3, T4, T7):
+# tools/plastica_fumus.sh - fumus bin/plastica (plastica-plan T3, T4, T7;
+# plastica-motus-plan T3):
 # specimen putei (plastica/res/puteus.stml) et recusationes. Nihil
 # extra directorium temporarium scribit. Manu curritur post
 # ./tools/plastica_struere.sh.
@@ -77,6 +78,60 @@ printf '<res titulus="a">\n  <capsa magnitudo="1 1 1" textura="marmor"/>\n</res>
 proba "textura ignota recusat" 1 "$B" specimen "$T/textura.stml" -o "$T/mala.png"
 contine "via et linea texturae" "$T/err" "^$T/textura.stml:2: "
 contine "causa texturae" "$T/err" "marmor"
+
+# figura cum motu (plastica-motus-plan T3): numeri cyclorum et linea
+# motus in PNG alterum
+cat > "$T/pupa.stml" <<'FIGURA'
+<figura titulus="pupa">
+  <articulus titulus="corpus">
+    <capsa magnitudo="1 2 1" color="#2040c0"/>
+  </articulus>
+  <positura titulus="alta"><art titulus="corpus" motus="0 0.5 0"/></positura>
+  <cyclus titulus="salit" duratio="1" circulus="verum">
+    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="0.5" positura="alta"/>
+    <momentum titulus="apex" tempus="0.5"/>
+  </cyclus>
+  <cyclus titulus="stat" duratio="2">
+    <clavis tempus="0" positura="alta"/>
+  </cyclus>
+</figura>
+FIGURA
+proba "specimen figurae cum motu" 0 "$B" specimen "$T/pupa.stml" -o "$T/pupa.png" -motus "$T/pupa_motus.png"
+file "$T/pupa.png" 2>/dev/null | grep -q "640 x 640" || { echo "FRACTA: figura: pagina 640 x 640 abest"; fracta=$((fracta + 1)); }
+file "$T/pupa_motus.png" 2>/dev/null | grep -q "960 x 480" || { echo "FRACTA: figura: linea motus 960 x 480 abest"; fracta=$((fracta + 1)); }
+contine "cyclus primus" "$T/out" "^cyclus 0 salit: duratio 1.00  infimum 0.00 .. 0.50  hiatus 0.000$"
+contine "momentum cycli" "$T/out" "^  momentum apex 0.50$"
+contine "cyclus alter" "$T/out" "^cyclus 1 stat: duratio 2.00  infimum 0.50 .. 0.50  hiatus 0.000$"
+contine "mensura lineae" "$T/out" "pupa_motus.png: 960 x 480$"
+[ "$(grep -c '  momentum ' "$T/out")" -eq 1 ] || { echo "FRACTA: momentum sub cyclo alieno"; fracta=$((fracta + 1)); }
+cp "$T/pupa_motus.png" "$T/motus_prima.png"
+proba "specimen figurae iterum" 0 "$B" specimen "$T/pupa.stml" -o "$T/pupa.png" -motus "$T/pupa_motus.png"
+cmp -s "$T/pupa_motus.png" "$T/motus_prima.png" || { echo "FRACTA: linea motus non determinata"; fracta=$((fracta + 1)); }
+# sine -motus: numeri tamen, linea nulla
+rm -f "$T/pupa_motus.png"
+proba "specimen figurae sine -motus" 0 "$B" specimen "$T/pupa.stml" -o "$T/pupa.png"
+contine "numeri sine linea" "$T/out" "^cyclus 0 salit: "
+[ ! -e "$T/pupa_motus.png" ] || { echo "FRACTA: linea sine -motus scripta"; fracta=$((fracta + 1)); }
+# -motus rem (non figuram) recusat; nihil scribitur
+proba "-motus cum re recusat" 1 "$B" specimen "$R/puteus.stml" -o "$T/r.png" -motus "$T/r_motus.png"
+contine "causa -motus cum re" "$T/err" "figura"
+[ ! -e "$T/r.png" ] && [ ! -e "$T/r_motus.png" ] || { echo "FRACTA: -motus cum re PNG scripsit"; fracta=$((fracta + 1)); }
+proba "-motus sine via usus" 2 "$B" specimen "$T/pupa.stml" -o "$T/x.png" -motus
+proba "-motus bis usus" 2 "$B" specimen "$T/pupa.stml" -o "$T/x.png" -motus "$T/a.png" -motus "$T/b.png"
+proba "texturae cum -motus usus" 2 "$B" texturae -o "$T/y.png" -motus "$T/a.png"
+proba "via lineae mala" 1 "$B" specimen "$T/pupa.stml" -o "$T/pupa.png" -motus "$T/nullum/dir/m.png"
+# figura sine cyclis: pagina, linea nulla, exitus 0
+printf '<figura titulus="a">\n<articulus titulus="b"><capsa magnitudo="1 1 1"/></articulus>\n</figura>\n' > "$T/quieta.stml"
+proba "figura sine cyclis" 0 "$B" specimen "$T/quieta.stml" -o "$T/quieta.png" -motus "$T/quieta_motus.png"
+contine "sine cyclis nuntiatur" "$T/out" "figura sine cyclis"
+[ -e "$T/quieta.png" ] && [ ! -e "$T/quieta_motus.png" ] || { echo "FRACTA: figura sine cyclis: pagina aut linea"; fracta=$((fracta + 1)); }
+# motus recusatus: via et linea, nihil scriptum
+printf '<figura titulus="a">\n<articulus titulus="b"><capsa magnitudo="1 1 1"/></articulus>\n<cyclus titulus="c" duratio="1">\n<clavis tempus="0" positura="nulla"/>\n</cyclus>\n</figura>\n' > "$T/motus_malus.stml"
+proba "motus recusatus" 1 "$B" specimen "$T/motus_malus.stml" -o "$T/mm.png" -motus "$T/mm_motus.png"
+contine "via et linea motus" "$T/err" "^$T/motus_malus.stml:4: "
+contine "causa motus" "$T/err" "nulla"
+[ ! -e "$T/mm.png" ] && [ ! -e "$T/mm_motus.png" ] || { echo "FRACTA: motus recusatus PNG scripsit"; fracta=$((fracta + 1)); }
 
 # condere (plastica-plan T7): res in volumen temporarium
 S="bin/statuae"

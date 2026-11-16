@@ -2847,6 +2847,7 @@ plastica_legere_seminis (
             p.articulorum * magnitudo(i32));
     }
     f.articulorum  = p.articulorum;
+    f.figura       = p.figura;
     f.successus    = VERUM;
     f.statua       = s;
     f.partes       = p.partes;

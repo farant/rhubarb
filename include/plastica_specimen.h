@@ -31,6 +31,32 @@
  * dithering solum pixela rei tangit.
  *
  * Determinata: statua eadem paginam eandem dat, octetum pro octeto.
+ *
+ * LINEA MOTUS (figura cum cyclis; project-specs/
+ * plastica-motus-spec.md IV.6): quomodo Claudius motum videt.
+ *
+ * Imago: VIII cellae latae; DUO ordines per cyclum, ordine cyclorum
+ * statuae:
+ *
+ *   ordo primus    a latere (gyrus 90, inclinatio 0), crudum
+ *                  illuminatum; linea humi cinerea (y = 0) et
+ *                  cardines articulorum punctis rubris signati
+ *   ordo alter     tribus quartis (visus mundi), dithering
+ *                  exemplaribus - ut persona in mundo apparet
+ *
+ * Quadrum k (0 .. VII) cyclum ad tempus k * duratio / VIII monstrat.
+ * Imago litteras non fert: instrumentum titulos cyclorum et numeros
+ * ordine eodem imprimit.
+ *
+ * MAGNITUDO MUNDI: figura quiescens PLASTICA_MOTUS_ALTITUDO pixela
+ * alta pingitur (II unitates x XL pixela per unitatem), nisi latitudo
+ * tunc III unitates excedat - ut mundus personam metitur, hic iterum
+ * scriptum. Scala una per imaginem. Punctum humi sub medio figurae
+ * quiescentis in cella ad (medium, PLASTICA_MOTUS_HUMUS) stat: XX
+ * pixela infra humum patent (figura quae mergitur videtur), supra
+ * spatium saltui. Pars quae cellam excedit praeciditur.
+ *
+ * Determinata: statua eadem imaginem eandem dat.
  */
 
 #ifndef PLASTICA_SPECIMEN_H
@@ -107,6 +133,60 @@ plastica_specimen_color (
 b32
 plastica_specimen_pingere (
     constans Statua* statua,
+              Imago* exitus,
+            Piscina* piscina);
+
+#define PLASTICA_MOTUS_QUADRA     VIII
+#define PLASTICA_MOTUS_CELLA      CXX    /* pixela per latus */
+#define PLASTICA_MOTUS_ALTITUDO   LXXX   /* figura quiescens */
+#define PLASTICA_MOTUS_HUMUS      C      /* linea humi a summo cellae */
+#define PLASTICA_MOTUS_LATITUDO   CMLX   /* QUADRA x CELLA */
+/* instantia quibus numeri motus sumuntur */
+#define PLASTICA_MOTUS_EXEMPLA    XXXII
+
+nomen structura {
+    f32 infimum_minimum;  /* punctum infimum figurae (y, unitates)
+                           * per cyclum: minimum (sub 0 = in humum
+                           * mergitur) */
+    f32 infimum_maximum;  /* et maximum (supra 0 = tota volat) */
+    f32 hiatus_suturae;   /* quantum vertex ullus inter initium et
+                           * finem cycli distat (unitates): 0 = cyclus
+                           * in se redit; magnum in cyclo qui redire
+                           * debet = sutura visibilis */
+} PlasticaMensuraeMotus;
+
+/*
+ * plastica_metiri_motum - numeri cycli unius
+ *
+ * Positura ad PLASTICA_MOTUS_EXEMPLA instantia aequa sumitur; finis
+ * cycli paulo ante durationem (statua_positura tempus involvit).
+ *
+ * Redde: FALSUM (mensurae 0) si statua, mensurae aut piscina NIHIL,
+ * cyclus extra fines, aut statua sine verticibus
+ */
+b32
+plastica_metiri_motum (
+          constans Statua* statua,
+                      i32  cyclus,
+    PlasticaMensuraeMotus* mensurae,
+                  Piscina* piscina);
+
+/*
+ * plastica_specimen_motus_pingere - linea motus omnium cyclorum
+ *
+ * @articuli:  indices nodorum quorum cardines signantur (ex
+ *             PlasticaFiguraFructus); NIHIL cum numero 0 licet
+ * @exitus:    imago PLASTICA_MOTUS_LATITUDO lata, cyclorum * II *
+ *             PLASTICA_MOTUS_CELLA alta, in piscina
+ *
+ * Redde: FALSUM si statua, exitus aut piscina NIHIL, statua sine
+ * verticibus aut sine cyclis; aliter VERUM
+ */
+b32
+plastica_specimen_motus_pingere (
+    constans Statua* statua,
+       constans i32* articuli,
+                i32  articulorum,
               Imago* exitus,
             Piscina* piscina);
 

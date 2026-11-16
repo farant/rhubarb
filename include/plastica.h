@@ -196,6 +196,7 @@ nomen structura {
                        * articuli k = partes[articuli[k]]; NIHIL si
                        * nulli aut recusata */
        i32 articulorum;  /* 0 pro <res> */
+       b32 figura;       /* radix <figura> fuit (non <res>) */
     chorda error;    /* causa recusationis, Anglice, sine linea
                        * nova; vacua si successus */
        i32 linea;    /* linea plagulae (ab I); 0 si ignota aut

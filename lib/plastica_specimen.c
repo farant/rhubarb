@@ -674,3 +674,423 @@ plastica_specimen_pingere (
     }
     redde VERUM;
 }
+
+
+/* ==================================================
+ * Linea motus
+ * ================================================== */
+
+/* magnitudo mundi: persona II unitates alta (PLASTICA_MOTUS_ALTITUDO
+ * pixela), non plus III lata, XL pixela per unitatem (mundus.h,
+ * mundus_pictura.h; hic iterum scripta - plastica mundum non
+ * includit) */
+#define MOTUS_LATITUDO_MAXIMA  120.0f
+#define MOTUS_LATERIS_GYRUS    90.0f
+/* finis cycli: statua_positura tempus per durationem involvit */
+#define MOTUS_FINIS            0.9999f
+#define MOTUS_CINEREUM         CLX
+
+hic_manens constans i8 MOTUS_SIGNUM[III] = { 230, 30, 30 };
+
+/* vertices triangulorum omnium retium (cum iteratione) */
+interior i32
+_vertices_numerare (
+    constans Statua* statua)
+{
+    i32 numerus = ZEPHYRUM;
+    i32 n;
+    i32 j;
+
+    per (n = ZEPHYRUM; n < statua->nodorum; n++)
+    {
+        constans StatuaRete* rete;
+
+        si (statua->nodi[n].rete < ZEPHYRUM)
+        {
+            perge;
+        }
+        rete = &statua->retia[statua->nodi[n].rete];
+        per (j = ZEPHYRUM; j < rete->partium; j++)
+        {
+            numerus += statua->partes[rete->pars_prima + j].indicum;
+        }
+    }
+    redde numerus;
+}
+
+/* eosdem in spatio statuae ponere, III per verticem; redde y
+ * infimum */
+interior f32
+_vertices_ponere (
+                constans Statua* statua,
+    constans StereometriaMatrix* matrices,
+                            f32* exitus)
+{
+    f32 infimum = 0.0f;
+    i32 numerus = ZEPHYRUM;
+    i32 n;
+    i32 j;
+    i32 k;
+
+    per (n = ZEPHYRUM; n < statua->nodorum; n++)
+    {
+        constans StatuaRete* rete;
+
+        si (statua->nodi[n].rete < ZEPHYRUM)
+        {
+            perge;
+        }
+        rete = &statua->retia[statua->nodi[n].rete];
+        per (j = ZEPHYRUM; j < rete->partium; j++)
+        {
+            constans StatuaPars* pars =
+                &statua->partes[rete->pars_prima + j];
+
+            per (k = ZEPHYRUM; k < pars->indicum; k++)
+            {
+                      constans f32* p = statua->positiones
+                          + statua->indices[pars->index_primus + k]
+                              * III;
+                StereometriaVector v =
+                    stereometria_punctum_transformare(matrices[n],
+                        stereometria_vector(p[ZEPHYRUM], p[I], p[II]),
+                        NIHIL);
+
+                exitus[numerus * III]       = v.x;
+                exitus[numerus * III + I]   = v.y;
+                exitus[numerus * III + II]  = v.z;
+                si (!numerus || v.y < infimum)
+                {
+                    infimum = v.y;
+                }
+                numerus++;
+            }
+        }
+    }
+    redde infimum;
+}
+
+b32
+plastica_metiri_motum (
+          constans Statua* statua,
+                      i32  cyclus,
+    PlasticaMensuraeMotus* mensurae,
+                  Piscina* piscina)
+{
+    StereometriaMatrix* matrices;
+                   f32* prima;
+                   f32* currens;
+                   f32  duratio;
+                   f32  infimum;
+                   f32  hiatus = 0.0f;
+                   i32  numerus;
+                   i32  k;
+
+    si (mensurae)
+    {
+        memset(mensurae, ZEPHYRUM, magnitudo(*mensurae));
+    }
+    si (   !statua || !mensurae || !piscina
+        || cyclus >= statua->cyclorum || statua->verticum == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    numerus = _vertices_numerare(statua);
+    si (numerus == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    matrices = (StereometriaMatrix*)piscina_allocare(piscina,
+        (memoriae_index)(statua->nodorum + I)
+            * magnitudo(StereometriaMatrix));
+    prima    = (f32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * III * magnitudo(f32));
+    currens  = (f32*)piscina_allocare(piscina,
+        (memoriae_index)numerus * III * magnitudo(f32));
+    si (!matrices || !prima || !currens)
+    {
+        redde FALSUM;
+    }
+    duratio = statua->cycli[cyclus].duratio;
+    per (k = ZEPHYRUM; k < PLASTICA_MOTUS_EXEMPLA; k++)
+    {
+        statua_positura(statua, (s32)cyclus,
+            duratio * (f32)k / (f32)PLASTICA_MOTUS_EXEMPLA, matrices);
+        infimum = _vertices_ponere(statua, matrices, currens);
+        si (!k)
+        {
+            memcpy(prima, currens,
+                (memoriae_index)numerus * III * magnitudo(f32));
+            mensurae->infimum_minimum = infimum;
+            mensurae->infimum_maximum = infimum;
+        }
+        si (infimum < mensurae->infimum_minimum)
+        {
+            mensurae->infimum_minimum = infimum;
+        }
+        si (infimum > mensurae->infimum_maximum)
+        {
+            mensurae->infimum_maximum = infimum;
+        }
+    }
+    statua_positura(statua, (s32)cyclus, duratio * MOTUS_FINIS,
+        matrices);
+    (vacuum)_vertices_ponere(statua, matrices, currens);
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        f32 x = currens[k * III] - prima[k * III];
+        f32 y = currens[k * III + I] - prima[k * III + I];
+        f32 z = currens[k * III + II] - prima[k * III + II];
+        f32 d = (f32)sqrt((f64)(x * x + y * y + z * z));
+
+        si (d > hiatus)
+        {
+            hiatus = d;
+        }
+    }
+    mensurae->hiatus_suturae = hiatus;
+    redde VERUM;
+}
+
+/* pixelum cellae in imagine */
+interior i8*
+_pixelum_cellae (
+    Imago* imago,
+      i32  columna,
+      i32  ordo,
+      i32  x,
+      i32  y)
+{
+    redde imago->pixela
+        + ((memoriae_index)(ordo * PLASTICA_MOTUS_CELLA + y)
+            * imago->latitudo
+            + columna * PLASTICA_MOTUS_CELLA + x) * IV;
+}
+
+/* pixela tecta picturae in cellam; indices NIHIL = colores ipsi */
+interior vacuum
+_cellam_motus_ponere (
+                           Imago* imago,
+                             i32  columna,
+                             i32  ordo,
+    constans StatuaScaenaPictura* pictura,
+                     constans i8* indices)
+{
+    i32 x;
+    i32 y;
+
+    per (y = ZEPHYRUM; y < PLASTICA_MOTUS_CELLA; y++)
+    {
+        per (x = ZEPHYRUM; x < PLASTICA_MOTUS_CELLA; x++)
+        {
+            memoriae_index fons = (memoriae_index)y
+                * PLASTICA_MOTUS_CELLA + x;
+                       i8* p    = _pixelum_cellae(imago, columna, ordo,
+                           x, y);
+
+            si (!pictura->tectum[fons])
+            {
+                perge;
+            }
+            si (indices)
+            {
+                dithering_indices_ad_rgba(indices + fons, p, I, I);
+            }
+            alioquin
+            {
+                memcpy(p, pictura->rgba + fons * IV, III);
+            }
+        }
+    }
+}
+
+/* cardines articulorum: quadratum III x III rubrum, intra cellam */
+interior vacuum
+_cardines_signare (
+                          Imago* imago,
+                            i32  columna,
+                            i32  ordo,
+     constans StatuaScaenaVisus* visus,
+    constans StereometriaMatrix* matrices,
+                   constans i32* articuli,
+                            i32  articulorum)
+{
+    i32 j;
+    s32 dx;
+    s32 dy;
+
+    per (j = ZEPHYRUM; j < articulorum; j++)
+    {
+        StereometriaVector cardo = stereometria_punctum_transformare(
+            matrices[articuli[j]],
+            stereometria_vector(0.0f, 0.0f, 0.0f), NIHIL);
+                       f32 x;
+                       f32 y;
+                       f32 profunditas;
+                       s32 px;
+                       s32 py;
+
+        statua_scaena_proicere(visus, cardo, &x, &y, &profunditas);
+        px = (s32)floor((f64)x) - visus->origo_x;
+        py = (s32)floor((f64)y) - visus->origo_y;
+        per (dy = -I; dy <= I; dy++)
+        {
+            per (dx = -I; dx <= I; dx++)
+            {
+                si (   px + dx < ZEPHYRUM || py + dy < ZEPHYRUM
+                    || px + dx >= (s32)PLASTICA_MOTUS_CELLA
+                    || py + dy >= (s32)PLASTICA_MOTUS_CELLA)
+                {
+                    perge;
+                }
+                memcpy(_pixelum_cellae(imago, columna, ordo,
+                    (i32)(px + dx), (i32)(py + dy)), MOTUS_SIGNUM, III);
+            }
+        }
+    }
+}
+
+b32
+plastica_specimen_motus_pingere (
+    constans Statua* statua,
+       constans i32* articuli,
+                i32  articulorum,
+              Imago* exitus,
+            Piscina* piscina)
+{
+    StatuaScaenaPictura  pictura;
+      StatuaScaenaVisus  visus;
+           StatuaLocata  locata;
+       PlasticaMensurae  quies;
+     StereometriaVector  medium;
+     StereometriaMatrix* matrices;
+         memoriae_index  pixela;
+                    b32  activi[XVI];
+                    f32  altitudo;
+                    f32  latitudo;
+                    f32  scala = (f32)PLASTICA_MOTUS_ALTITUDO;
+                    f32  x;
+                    f32  y;
+                    f32  profunditas;
+                     i8* indices;
+                    i32  cyclus;
+                    i32  latus;
+                    i32  k;
+                    i32  n;
+
+    si (   !statua || !exitus || !piscina
+        || statua->verticum == ZEPHYRUM)
+    {
+        redde FALSUM;
+    }
+    /* sine cyclis imago nullius altitudinis est: allocatio nulla
+     * infra FALSUM reddit */
+    quies     = plastica_metiri(statua, piscina);
+    altitudo  = quies.maximum.y - quies.minimum.y;
+    latitudo  = quies.maximum.x - quies.minimum.x;
+    si (quies.maximum.z - quies.minimum.z > latitudo)
+    {
+        latitudo = quies.maximum.z - quies.minimum.z;
+    }
+    /* scala: pixela per unitatem figurae */
+    si (altitudo > 0.000001f)
+    {
+        scala = (f32)PLASTICA_MOTUS_ALTITUDO / altitudo;
+    }
+    si (latitudo * scala > MOTUS_LATITUDO_MAXIMA)
+    {
+        scala = MOTUS_LATITUDO_MAXIMA / latitudo;
+    }
+    medium = stereometria_vector(
+        (quies.minimum.x + quies.maximum.x) * 0.5f, 0.0f,
+        (quies.minimum.z + quies.maximum.z) * 0.5f);
+    exitus->latitudo = PLASTICA_MOTUS_LATITUDO;
+    exitus->altitudo = statua->cyclorum * II * PLASTICA_MOTUS_CELLA;
+    pixela = (memoriae_index)exitus->latitudo * exitus->altitudo;
+    exitus->pixela = (i8*)piscina_allocare(piscina, pixela * IV);
+    indices           = (i8*)piscina_allocare(piscina,
+        (memoriae_index)PLASTICA_MOTUS_CELLA * PLASTICA_MOTUS_CELLA);
+    matrices          = (StereometriaMatrix*)piscina_allocare(piscina,
+        (memoriae_index)(statua->nodorum + I)
+            * magnitudo(StereometriaMatrix));
+    si (!exitus->pixela || !indices || !matrices)
+    {
+        exitus->pixela = NIHIL;
+        redde FALSUM;
+    }
+    memset(exitus->pixela, 0xFF, pixela * IV);
+    dithering_praeparare_omnes(activi);
+    memset(&visus, ZEPHYRUM, magnitudo(visus));
+    visus.illuminatum          = VERUM;
+    visus.pixela_per_unitatem  = scala;
+    locata.statua              = statua;
+    locata.matrices            = matrices;
+    locata.locatio             = stereometria_identitas();
+    per (cyclus = ZEPHYRUM; cyclus < statua->cyclorum; cyclus++)
+    {
+        per (latus = ZEPHYRUM; latus < II; latus++)
+        {
+            i32 ordo = cyclus * II + latus;
+
+            visus.gyrus       = latus ? PLASTICA_SPECIMEN_GYRUS
+                : MOTUS_LATERIS_GYRUS;
+            visus.inclinatio  = latus ? PLASTICA_SPECIMEN_INCLINATIO
+                : 0.0f;
+            /* punctum humi sub medio figurae ad (medium, HUMUS) */
+            statua_scaena_proicere(&visus, medium, &x, &y,
+                &profunditas);
+            visus.origo_x = (s32)floor((f64)x)
+                - (s32)(PLASTICA_MOTUS_CELLA / II);
+            visus.origo_y = (s32)floor((f64)y)
+                - (s32)PLASTICA_MOTUS_HUMUS;
+            per (k = ZEPHYRUM; k < PLASTICA_MOTUS_QUADRA; k++)
+            {
+                PiscinaNotatio nota = piscina_notare(piscina);
+                           b32 bene;
+
+                statua_positura(statua, (s32)cyclus,
+                    statua->cycli[cyclus].duratio * (f32)k
+                        / (f32)PLASTICA_MOTUS_QUADRA, matrices);
+                bene = statua_scaenam_pingere(&locata, I, &visus,
+                    PLASTICA_MOTUS_CELLA, PLASTICA_MOTUS_CELLA,
+                    &pictura, piscina);
+                si (bene && latus)
+                {
+                    memset(indices, CHARTA_PALETTAE,
+                        (memoriae_index)PLASTICA_MOTUS_CELLA
+                            * PLASTICA_MOTUS_CELLA);
+                    bene = statuae_picturam_dithering(pictura.rgba,
+                        pictura.tectum, PLASTICA_MOTUS_CELLA,
+                        PLASTICA_MOTUS_CELLA, activi, indices,
+                        piscina);
+                }
+                si (bene && latus)
+                {
+                    _cellam_motus_ponere(exitus, k, ordo, &pictura,
+                        indices);
+                }
+                alioquin si (bene)
+                {
+                    /* linea humi sub figura, signa super eam */
+                    per (n = ZEPHYRUM; n < PLASTICA_MOTUS_CELLA; n++)
+                    {
+                        memset(_pixelum_cellae(exitus, k, ordo, n,
+                            PLASTICA_MOTUS_HUMUS), MOTUS_CINEREUM,
+                            III);
+                    }
+                    _cellam_motus_ponere(exitus, k, ordo, &pictura,
+                        NIHIL);
+                    _cardines_signare(exitus, k, ordo, &visus,
+                        matrices, articuli, articulorum);
+                }
+                piscina_reficere(piscina, nota);
+                si (!bene)
+                {
+                    exitus->pixela = NIHIL;
+                    redde FALSUM;
+                }
+            }
+        }
+    }
+    redde VERUM;
+}
