@@ -11,6 +11,7 @@
 #include "internamentum.h"
 #include "xar.h"
 #include "stereometria.h"
+#include "plastica_membrum.h"
 #include <math.h>
 #include <string.h>
 
@@ -41,9 +42,35 @@ nomen structura {
     f32 motus[III];
 } Artus;
 
+/* meta membri in positura */
+nomen structura {
+    b32 adest;
+    b32 inclinata;      /* finis orientationem quietis tenet */
+    f32 locus[III];     /* cardo finis, in spatio figurae */
+    f32 inclinatio;     /* gradus circa x */
+    i32 linea;          /* metae; hereditatae: positurae */
+} Meta;
+
+nomen structura {
+    chorda titulus;
+       i32 radix;       /* indices articulorum */
+       i32 medium;
+       i32 finis;
+       b32 flexus_ante;
+       f32 prima;       /* a radice ad medium */
+       f32 secunda;     /* a medio ad finem */
+    /* membrum ossium: meta ossium a fine quiescente ossium ad finem
+     * quiescentem figurae fertur, differentia per rationem
+     * longitudinum multiplicata */
+                   f32 ratio;
+    StereometriaVector finis_ossium;
+    StereometriaVector finis_figurae;
+} Membrum;
+
 nomen structura {
     chorda  titulus;
      Artus* artus;      /* articulorum */
+      Meta* metae;      /* PLASTICA_MOTUS_MEMBRA_MAXIMA */
        b32  ossium;     /* ex plagula ossium: figura substituere
                          * potest */
 } Positura;
@@ -95,6 +122,11 @@ nomen structura {
     constans StmlNodus* ossa[PLASTICA_ARTICULI_MAXIMI];
     constans StmlNodus* solida[PLASTICA_ARTICULI_MAXIMI];
                    i32  ossium;
+               Membrum  membra[PLASTICA_MOTUS_MEMBRA_MAXIMA];
+                   i32  membrorum;
+    /* ossa sola ut statua (quies ossium: factores, fines membrorum) */
+    constans Statua* quies_ossium;
+       constans i32* articuli_ossium;
 } Motor;
 
 
@@ -384,6 +416,723 @@ _positura (
     redde -I;
 }
 
+interior StereometriaQuaternio
+_circa_axem (
+    f32 x,
+    f32 y,
+    f32 z,
+    f32 gradus)
+{
+    StereometriaQuaternio q;
+                      f32 dimidium =
+                          gradus * STEREOMETRIA_PI / GRADUS_PLENI;
+                      f32 sinus    = (f32)sin((f64)dimidium);
+
+    q.x = x * sinus;
+    q.y = y * sinus;
+    q.z = z * sinus;
+    q.w = (f32)cos((f64)dimidium);
+    redde q;
+}
+
+/* a * b: b primum applicatur */
+interior StereometriaQuaternio
+_componere (
+    StereometriaQuaternio a,
+    StereometriaQuaternio b)
+{
+    StereometriaQuaternio q;
+
+    q.x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
+    q.y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x;
+    q.z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w;
+    q.w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
+    redde q;
+}
+
+/* quies articuli, deinde gradus positurae in spatio eius: circa x,
+ * deinde y, deinde z */
+interior StereometriaQuaternio
+_rotatio_articuli (
+    StereometriaQuaternio  quies,
+             constans f32* gradus)
+{
+    StereometriaQuaternio q =
+        _circa_axem(1.0f, 0.0f, 0.0f, gradus[ZEPHYRUM]);
+
+    q = _componere(_circa_axem(0.0f, 1.0f, 0.0f, gradus[I]), q);
+    q = _componere(_circa_axem(0.0f, 0.0f, 1.0f, gradus[II]), q);
+    redde stereometria_quaternio_normalizare(_componere(quies, q));
+}
+
+/* titulus in suffixo desinit et praefixum non vacuum habet */
+interior b32
+_desinit (
+    constans chorda* titulus,
+ constans character* suffixum)
+{
+    i32 mensura = (i32)strlen(suffixum);
+
+    redde titulus->mensura > mensura
+        && memcmp(titulus->datum + titulus->mensura - mensura,
+               suffixum, mensura) == ZEPHYRUM;
+}
+
+
+/* ==================================================
+ * Membra et metae
+ * ================================================== */
+
+interior StereometriaQuaternio
+_coniugatus (
+    StereometriaQuaternio q)
+{
+    q.x = -q.x;
+    q.y = -q.y;
+    q.z = -q.z;
+    redde q;
+}
+
+/* vector quaternione versus */
+interior StereometriaVector
+_vertere (
+    StereometriaQuaternio q,
+       StereometriaVector v)
+{
+    StereometriaVector u = stereometria_vector(q.x, q.y, q.z);
+    StereometriaVector t =
+        stereometria_scalare(stereometria_crux(u, v), 2.0f);
+
+    redde stereometria_addere(stereometria_addere(v,
+        stereometria_scalare(t, q.w)), stereometria_crux(u, t));
+}
+
+/* index articuli qui nodus est; -1 si nodus articulus non est */
+interior s32
+_articulus_nodi (
+    constans Motor* m,
+               s32  nodus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < m->articulorum; k++)
+    {
+        si ((s32)m->articuli[k] == nodus)
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+/* translatio, rotatio, scala nodi in positura data */
+interior vacuum
+_transformatio (
+          constans Motor* m,
+          constans Artus* artus,
+                     s32  nodus,
+      StereometriaVector* translatio,
+   StereometriaQuaternio* rotatio,
+      StereometriaVector* scala)
+{
+    constans StatuaNodus* n = &m->basis->nodi[nodus];
+                     s32  j = _articulus_nodi(m, nodus);
+
+    *translatio  = n->translatio;
+    *rotatio     = n->rotatio;
+    *scala       = n->scala;
+    si (j < ZEPHYRUM)
+    {
+        redde;
+    }
+    si (artus[j].tacta & TACTA_MOTUS)
+    {
+        translatio->x += artus[j].motus[ZEPHYRUM];
+        translatio->y += artus[j].motus[I];
+        translatio->z += artus[j].motus[II];
+    }
+    si (artus[j].tacta & TACTA_ROTATIO)
+    {
+        *rotatio = _rotatio_articuli(n->rotatio, artus[j].rotatio);
+    }
+    si (artus[j].tacta & TACTA_SCALA)
+    {
+        scala->x *= artus[j].scala[ZEPHYRUM];
+        scala->y *= artus[j].scala[I];
+        scala->z *= artus[j].scala[II];
+    }
+}
+
+/* punctum spatii figurae in spatium nodi (positura data); nodus -1:
+ * spatium figurae ipsum */
+interior StereometriaVector
+_in_spatium (
+       constans Motor* m,
+       constans Artus* artus,
+                  s32  nodus,
+   StereometriaVector  punctum)
+{
+       StereometriaVector t;
+    StereometriaQuaternio r;
+       StereometriaVector s;
+
+    si (nodus < ZEPHYRUM)
+    {
+        redde punctum;
+    }
+    punctum = _in_spatium(m, artus, m->basis->nodi[nodus].parens,
+        punctum);
+    _transformatio(m, artus, nodus, &t, &r, &s);
+    punctum = _vertere(_coniugatus(r),
+        stereometria_subtrahere(punctum, t));
+    punctum.x /= s.x;
+    punctum.y /= s.y;
+    punctum.z /= s.z;
+    redde punctum;
+}
+
+/* rotatio nodi in spatio figurae (positura data); scalae neglectae */
+interior StereometriaQuaternio
+_rotatio_mundi (
+    constans Motor* m,
+    constans Artus* artus,
+               s32  nodus)
+{
+       StereometriaVector t;
+    StereometriaQuaternio r;
+       StereometriaVector s;
+
+    si (nodus < ZEPHYRUM)
+    {
+        redde stereometria_quaternio_identitas();
+    }
+    _transformatio(m, artus, nodus, &t, &r, &s);
+    redde stereometria_quaternio_normalizare(_componere(
+        _rotatio_mundi(m, artus, m->basis->nodi[nodus].parens), r));
+}
+
+/* quaternio in gradus x y z (rotatio = Rz * Ry * Rx, ut positura) */
+interior vacuum
+_gradus_ex_rotatione (
+    StereometriaQuaternio  q,
+                      f32* gradus)
+{
+    f64 sinus = -2.0 * ((f64)q.x * q.z - (f64)q.w * q.y);
+
+    si (sinus > 1.0)
+    {
+        sinus = 1.0;
+    }
+    si (sinus < -1.0)
+    {
+        sinus = -1.0;
+    }
+    gradus[ZEPHYRUM] = (f32)(atan2(
+        2.0 * ((f64)q.y * q.z + (f64)q.w * q.x),
+        1.0 - 2.0 * ((f64)q.x * q.x + (f64)q.y * q.y))
+            * (f64)GRADUS_DIMIDII / (f64)STEREOMETRIA_PI);
+    gradus[I] = (f32)(asin(sinus) * (f64)GRADUS_DIMIDII
+        / (f64)STEREOMETRIA_PI);
+    gradus[II] = (f32)(atan2(
+        2.0 * ((f64)q.x * q.y + (f64)q.w * q.z),
+        1.0 - 2.0 * ((f64)q.y * q.y + (f64)q.z * q.z))
+            * (f64)GRADUS_DIMIDII / (f64)STEREOMETRIA_PI);
+}
+
+/* nuntius = ante + primus + medio + alter + post */
+interior b32
+_recusare_duo (
+                 Motor* m,
+                   i32  linea,
+    constans character* ante,
+       constans chorda* primus,
+    constans character* medio,
+       constans chorda* alter,
+    constans character* post)
+{
+    character cauda[II * TITULI_MENSURA + LXIV];
+          i32 n = ZEPHYRUM;
+          i32 mensura;
+
+    mensura = (i32)strlen(medio);
+    memcpy(cauda + n, medio, mensura);
+    n += mensura;
+    mensura = alter->mensura > TITULI_MENSURA ? TITULI_MENSURA
+        : alter->mensura;
+    memcpy(cauda + n, alter->datum, mensura);
+    n        += mensura;
+    mensura  = (i32)strlen(post);
+    si (mensura > LX)
+    {
+        mensura = LX;
+    }
+    memcpy(cauda + n, post, mensura);
+    cauda[n + mensura] = '\0';
+    redde _recusare(m, linea, ante, primus, cauda);
+}
+
+/* index membri titulo; -1 si nullum */
+interior s32
+_membrum (
+     constans Motor* m,
+    constans chorda* titulus)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < m->membrorum; k++)
+    {
+        si (chorda_aequalis(m->membra[k].titulus, *titulus))
+        {
+            redde (s32)k;
+        }
+    }
+    redde -I;
+}
+
+/* cardo nodi in quiete, in spatio statuae */
+interior b32
+_cardo_quietis (
+                 Motor* m,
+       constans Statua* statua,
+                   i32  nodus,
+    StereometriaVector* exitus)
+{
+    StereometriaMatrix* matrices =
+        (StereometriaMatrix*)piscina_allocare(m->piscina,
+            (memoriae_index)(statua->nodorum + I)
+                * magnitudo(StereometriaMatrix));
+
+    si (!matrices)
+    {
+        redde FALSUM;
+    }
+    statua_positura(statua, -I, 0.0f, matrices);
+    *exitus = stereometria_punctum_transformare(matrices[nodus],
+        stereometria_vector(0.0f, 0.0f, 0.0f), NIHIL);
+    redde VERUM;
+}
+
+/* elementum membrum: titulus, radix, medium, finis, flexus */
+interior b32
+_membrum_legere (
+                 Motor* m,
+    constans StmlNodus* nodus)
+{
+    hic_manens constans character* constans LICITA[] = {
+        "titulus", "radix", "medium", "finis", "flexus", NIHIL
+    };
+    hic_manens constans character* constans OSSA[] = {
+        "radix", "medium", "finis"
+    };
+         constans chorda* titulus =
+             stml_attributum_capere(nodus, "titulus");
+         constans chorda* flexus =
+             stml_attributum_capere(nodus, "flexus");
+         constans chorda* tituli[III];
+    constans StatuaNodus* medius;
+    constans StatuaNodus* ultimus;
+                 Membrum* mb;
+                     s32  ossa[III];
+                     i32  k;
+                     i32  j;
+                     i32  n;
+
+    si (   !_attributa_licita(m, nodus, LICITA)
+        || !_sine_liberis(m, nodus))
+    {
+        redde FALSUM;
+    }
+    si (!titulus)
+    {
+        redde _recusare_attributum(m, nodus, "titulus",
+            "is needed and cannot be empty");
+    }
+    si (_membrum(m, titulus) >= ZEPHYRUM)
+    {
+        redde _recusare(m, nodus->linea, "limb title '", titulus,
+            "' is used twice");
+    }
+    si (m->membrorum >= PLASTICA_MOTUS_MEMBRA_MAXIMA)
+    {
+        redde _recusare(m, nodus->linea,
+            "<membrum> is one limb too many (at most 16)", NIHIL,
+            NIHIL);
+    }
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        tituli[k] = stml_attributum_capere(nodus, OSSA[k]);
+        si (!tituli[k])
+        {
+            redde _recusare_attributum(m, nodus, OSSA[k],
+                "is needed (a joint's title)");
+        }
+        ossa[k] = _articulus(m, tituli[k]);
+        si (ossa[k] < ZEPHYRUM)
+        {
+            redde _recusare(m, nodus->linea,
+                "<membrum> names an unknown joint '", tituli[k], "'");
+        }
+    }
+    si (!flexus || (!_est(flexus, "ante") && !_est(flexus, "retro")))
+    {
+        redde _recusare_attributum(m, nodus, "flexus",
+            "must be 'ante' (knee forward) or 'retro'");
+    }
+    medius   = &m->basis->nodi[m->articuli[ossa[I]]];
+    ultimus  = &m->basis->nodi[m->articuli[ossa[II]]];
+    si (medius->parens != (s32)m->articuli[ossa[ZEPHYRUM]])
+    {
+        redde _recusare_duo(m, nodus->linea, "<membrum>: joint '",
+            tituli[I], "' is not a child of '", tituli[ZEPHYRUM], "'");
+    }
+    si (ultimus->parens != (s32)m->articuli[ossa[I]])
+    {
+        redde _recusare_duo(m, nodus->linea, "<membrum>: joint '",
+            tituli[II], "' is not a child of '", tituli[I], "'");
+    }
+    per (k = ZEPHYRUM; k < m->membrorum; k++)
+    {
+        constans Membrum* prius = &m->membra[k];
+
+        per (j = ZEPHYRUM; j < III; j++)
+        {
+            n = (i32)ossa[j];
+            si (   n == prius->radix || n == prius->medium
+                || n == prius->finis)
+            {
+                redde _recusare_duo(m, nodus->linea, "joint '",
+                    tituli[j], "' is already in the limb '",
+                    &prius->titulus, "'");
+            }
+        }
+    }
+    si (   fabs((f64)medius->translatio.x) > QUIES_MARGO
+        || fabs((f64)medius->translatio.z) > QUIES_MARGO
+        || !(medius->translatio.y < -QUIES_MARGO)
+        || fabs((f64)ultimus->translatio.x) > QUIES_MARGO
+        || fabs((f64)ultimus->translatio.z) > QUIES_MARGO
+        || !(ultimus->translatio.y < -QUIES_MARGO)
+        || fabs((f64)medius->rotatio.w) < QUIES_ROTATIO)
+    {
+        redde _recusare(m, nodus->linea, "limb '", titulus,
+            "' must hang straight down at rest ('medium' and 'finis'"
+            " below their parent, no rest turn on 'medium')");
+    }
+    mb               = &m->membra[m->membrorum++];
+    mb->titulus      = *titulus;
+    mb->radix        = (i32)ossa[ZEPHYRUM];
+    mb->medium       = (i32)ossa[I];
+    mb->finis        = (i32)ossa[II];
+    mb->flexus_ante  = _est(flexus, "ante");
+    mb->prima        = -medius->translatio.y;
+    mb->secunda      = -ultimus->translatio.y;
+    mb->ratio        = 1.0f;
+    si (m->in_ossibus)
+    {
+        constans Statua* q = m->quies_ossium;
+           constans i32* a = m->articuli_ossium;
+                    f32  longitudo =
+                        stereometria_longitudo(
+                            q->nodi[a[ossa[I]]].translatio)
+                        + stereometria_longitudo(
+                            q->nodi[a[ossa[II]]].translatio);
+
+        si (   !_cardo_quietis(m, q, m->articuli_ossium[ossa[II]],
+                   &mb->finis_ossium)
+            || !_cardo_quietis(m, m->basis, m->articuli[ossa[II]],
+                   &mb->finis_figurae))
+        {
+            redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL,
+                NIHIL);
+        }
+        si (longitudo > QUIES_MARGO)
+        {
+            mb->ratio = (mb->prima + mb->secunda) / longitudo;
+        }
+    }
+    redde VERUM;
+}
+
+/* membra sub radice legere (ante posituras) */
+interior b32
+_membra_legere (
+                 Motor* m,
+    constans StmlNodus* radix)
+{
+    constans StmlNodus* liber;
+                   b32  finis;
+                   i32  cursor = ZEPHYRUM;
+
+    dum ((liber = _liberum(m, radix, &cursor, &finis)) != NIHIL)
+    {
+        si (   _est(liber->titulus, "membrum")
+            && !_membrum_legere(m, liber))
+        {
+            redde FALSUM;
+        }
+    }
+    redde finis;
+}
+
+/* elementum meta in positura: membrum, locus, inclinatio */
+interior b32
+_metam_legere (
+                 Motor* m,
+    constans StmlNodus* nodus,
+                  Meta* metae,
+                   b32* scriptae)
+{
+    hic_manens constans character* constans LICITA[] = {
+        "membrum", "locus", "inclinatio", NIHIL
+    };
+    constans chorda* membrum =
+        stml_attributum_capere(nodus, "membrum");
+    constans chorda* locus = stml_attributum_capere(nodus, "locus");
+    constans chorda* inclinatio =
+        stml_attributum_capere(nodus, "inclinatio");
+               Meta* mt;
+                s32  k;
+
+    si (   !_attributa_licita(m, nodus, LICITA)
+        || !_sine_liberis(m, nodus))
+    {
+        redde FALSUM;
+    }
+    si (!membrum)
+    {
+        redde _recusare_attributum(m, nodus, "membrum",
+            "is needed (a limb's title)");
+    }
+    k = _membrum(m, membrum);
+    si (k < ZEPHYRUM)
+    {
+        redde _recusare(m, nodus->linea,
+            "<meta> names an unknown limb '", membrum, "'");
+    }
+    si (scriptae[k])
+    {
+        redde _recusare(m, nodus->linea, "limb '", membrum,
+            "' appears twice in this pose");
+    }
+    scriptae[k]  = VERUM;
+    mt           = &metae[k];
+    memset(mt, ZEPHYRUM, magnitudo(*mt));
+    si (!locus || !_numeri(locus, mt->locus, III))
+    {
+        redde _recusare_attributum(m, nodus, "locus",
+            "needs 3 numbers (x y z, where the limb's end goes)");
+    }
+    si (inclinatio)
+    {
+        si (!_numeri(inclinatio, &mt->inclinatio, I))
+        {
+            redde _recusare_attributum(m, nodus, "inclinatio",
+                "needs 1 number (degrees)");
+        }
+        mt->inclinata = VERUM;
+    }
+    si (m->in_ossibus)
+    {
+        constans Membrum* mb = &m->membra[k];
+
+        mt->locus[ZEPHYRUM] = mb->finis_figurae.x
+            + (mt->locus[ZEPHYRUM] - mb->finis_ossium.x) * mb->ratio;
+        mt->locus[I] = mb->finis_figurae.y
+            + (mt->locus[I] - mb->finis_ossium.y) * mb->ratio;
+        mt->locus[II] = mb->finis_figurae.z
+            + (mt->locus[II] - mb->finis_ossium.z) * mb->ratio;
+    }
+    mt->adest = VERUM;
+    mt->linea = nodus->linea;
+    redde VERUM;
+}
+
+/* metae contra <art> positurae eiusdem: scripta cum <art> membri
+ * recusatur; hereditata ab <art> tollitur. visi: I = <art> adest,
+ * II = cum rotatione */
+interior b32
+_metas_conferre (
+                 Motor* m,
+    constans StmlNodus* nodus,
+                  Meta* metae,
+          constans b32* scriptae,
+          constans b32* visi)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < m->membrorum; k++)
+    {
+        constans Membrum* mb = &m->membra[k];
+                    Meta* mt = &metae[k];
+
+        si (!mt->adest)
+        {
+            perge;
+        }
+        si (!scriptae[k])
+        {
+            mt->linea = nodus->linea;
+            si (visi[mb->radix] || visi[mb->medium])
+            {
+                mt->adest = FALSUM;
+            }
+            alioquin si (visi[mb->finis] & II)
+            {
+                mt->inclinata = FALSUM;
+            }
+            perge;
+        }
+        si (visi[mb->radix] || visi[mb->medium])
+        {
+            redde _recusare(m, mt->linea, "joint '",
+                &m->partes[m->articuli[visi[mb->radix] ? mb->radix
+                    : mb->medium]],
+                "' has an <art> and its limb a <meta> in the same"
+                " pose");
+        }
+        si (mt->inclinata && (visi[mb->finis] & II))
+        {
+            redde _recusare(m, mt->linea, "joint '",
+                &m->partes[m->articuli[mb->finis]],
+                "' has a turn and its limb a <meta> with"
+                " 'inclinatio' in the same pose");
+        }
+    }
+    redde VERUM;
+}
+
+/* metae positurae in rotationes: radix (x antrorsum, z ad latus),
+ * medium (x), finis si inclinata. Post omnes <art> */
+interior b32
+_metas_solvere (
+             Motor* m,
+             Artus* artus,
+     constans Meta* metae)
+{
+    i32 k;
+
+    per (k = ZEPHYRUM; k < m->membrorum; k++)
+    {
+              constans Membrum* mb = &m->membra[k];
+                 constans Meta* mt = &metae[k];
+          constans StatuaNodus* radix;
+        PlasticaMembrumSolutio  solutio;
+            StereometriaVector  d;
+                           f64  infra;
+
+        si (!mt->adest)
+        {
+            perge;
+        }
+        radix = &m->basis->nodi[m->articuli[mb->radix]];
+        /* meta in spatio quietis radicis, a cardine eius */
+        d = _in_spatium(m, artus, radix->parens, stereometria_vector(
+            mt->locus[ZEPHYRUM], mt->locus[I], mt->locus[II]));
+        d = stereometria_subtrahere(d, radix->translatio);
+        si (artus[mb->radix].tacta & TACTA_MOTUS)
+        {
+            d.x -= artus[mb->radix].motus[ZEPHYRUM];
+            d.y -= artus[mb->radix].motus[I];
+            d.z -= artus[mb->radix].motus[II];
+        }
+        d      = _vertere(_coniugatus(radix->rotatio), d);
+        infra  = sqrt((f64)d.x * d.x + (f64)d.y * d.y);
+        solutio = plastica_membrum_solvere(mb->prima, mb->secunda,
+            d.z, (f32)infra, mb->flexus_ante);
+        si (!solutio.successus)
+        {
+            redde _recusare(m, mt->linea, "limb '", &mb->titulus,
+                "': the target is out of reach (too far, too near,"
+                " or on the limb's root)");
+        }
+        artus[mb->radix].tacta              |= TACTA_ROTATIO;
+        artus[mb->radix].rotatio[ZEPHYRUM]  = solutio.angulus_radicis;
+        artus[mb->radix].rotatio[I]         = 0.0f;
+        artus[mb->radix].rotatio[II]        = infra > 1.0e-6
+            ? (f32)(atan2((f64)d.x, -(f64)d.y) * (f64)GRADUS_DIMIDII
+                / (f64)STEREOMETRIA_PI)
+            : 0.0f;
+        artus[mb->medium].tacta              |= TACTA_ROTATIO;
+        artus[mb->medium].rotatio[ZEPHYRUM]  = solutio.angulus_medii;
+        artus[mb->medium].rotatio[I]         = 0.0f;
+        artus[mb->medium].rotatio[II]        = 0.0f;
+        si (mt->inclinata)
+        {
+            /* finis: orientatio quietis in spatio figurae, circa x
+             * figurae inclinata */
+                              s32 nodus = (s32)m->articuli[mb->finis];
+            StereometriaQuaternio q     = _componere(
+                _circa_axem(1.0f, 0.0f, 0.0f, mt->inclinatio),
+                _rotatio_mundi(m, m->positurae[ZEPHYRUM].artus,
+                    nodus));
+
+            q = _componere(_coniugatus(_rotatio_mundi(m, artus,
+                m->basis->nodi[nodus].parens)), q);
+            q = _componere(
+                _coniugatus(m->basis->nodi[nodus].rotatio), q);
+            artus[mb->finis].tacta |= TACTA_ROTATIO;
+            _gradus_ex_rotatione(
+                stereometria_quaternio_normalizare(q),
+                artus[mb->finis].rotatio);
+        }
+    }
+    redde VERUM;
+}
+
+/* metae imaginis: in membrum par, x negato */
+interior b32
+_metas_speculare (
+             Motor* m,
+               i32  linea,
+     constans Meta* fons,
+              Meta* exitus)
+{
+    i32 k;
+    i32 j;
+
+    per (k = ZEPHYRUM; k < m->membrorum; k++)
+    {
+        constans chorda* titulus   = &m->membra[k].titulus;
+                    b32  sinister  = _desinit(titulus, "_sin");
+                    i32  par       = k;
+
+        si (!fons[k].adest)
+        {
+            perge;
+        }
+        si (sinister || _desinit(titulus, "_dex"))
+        {
+            i32 radix = titulus->mensura - IV;
+
+            per (j = ZEPHYRUM; j < m->membrorum; j++)
+            {
+                constans chorda* alter = &m->membra[j].titulus;
+
+                si (   alter->mensura == titulus->mensura
+                    && _desinit(alter, sinister ? "_dex" : "_sin")
+                    && memcmp(alter->datum, titulus->datum, radix)
+                        == ZEPHYRUM)
+                {
+                    frange;
+                }
+            }
+            si (j >= m->membrorum)
+            {
+                chorda praefixum = *titulus;
+
+                praefixum.mensura = radix;
+                redde _recusare_duo(m, linea, "limb '", titulus,
+                    "' has no partner '", &praefixum,
+                    sinister ? "_dex'" : "_sin'");
+            }
+            par = j;
+        }
+        exitus[par]                  = fons[k];
+        exitus[par].locus[ZEPHYRUM]  = -fons[k].locus[ZEPHYRUM];
+    }
+    redde VERUM;
+}
+
 
 /* ==================================================
  * Positurae
@@ -430,7 +1179,7 @@ _artum_legere (
         redde _recusare(m, nodus->linea, "joint '", titulus,
             "' appears twice in this pose");
     }
-    visi[k] = VERUM;
+    visi[k] = rotatio ? III : I;
     si (!rotatio && !scala && !motus)
     {
         redde _recusare(m, nodus->linea, "<art> needs at least one of"
@@ -487,19 +1236,6 @@ _artum_legere (
         a->tacta |= TACTA_MOTUS;
     }
     redde VERUM;
-}
-
-/* titulus in suffixo desinit et praefixum non vacuum habet */
-interior b32
-_desinit (
-    constans chorda* titulus,
- constans character* suffixum)
-{
-    i32 mensura = (i32)strlen(suffixum);
-
-    redde titulus->mensura > mensura
-        && memcmp(titulus->datum + titulus->mensura - mensura,
-               suffixum, mensura) == ZEPHYRUM;
 }
 
 /* quies paris imago est: locus trans x = 0, rotatio reflexa */
@@ -633,7 +1369,9 @@ _positura_legere (
     constans StmlNodus* liber;
               Positura* p;
                  Artus* artus;
+                  Meta* metae;
                    b32  visi[PLASTICA_ARTICULI_MAXIMI];
+                   b32  scriptae[PLASTICA_MOTUS_MEMBRA_MAXIMA];
                    b32  finis;
                    i32  cursor = ZEPHYRUM;
                    s32  locus;
@@ -669,12 +1407,16 @@ _positura_legere (
     }
     artus = (Artus*)piscina_allocare(m->piscina,
         (m->articulorum ? m->articulorum : I) * magnitudo(Artus));
-    si (!artus)
+    metae = (Meta*)piscina_allocare(m->piscina,
+        PLASTICA_MOTUS_MEMBRA_MAXIMA * magnitudo(Meta));
+    si (!artus || !metae)
     {
         redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
     }
     memset(artus, ZEPHYRUM,
         (m->articulorum ? m->articulorum : I) * magnitudo(Artus));
+    memset(metae, ZEPHYRUM,
+        PLASTICA_MOTUS_MEMBRA_MAXIMA * magnitudo(Meta));
     si (origo && speculum)
     {
         redde _recusare(m, nodus->linea, "<positura>: 'speculum' and"
@@ -691,6 +1433,8 @@ _positura_legere (
         }
         memcpy(artus, m->positurae[k].artus,
             m->articulorum * magnitudo(Artus));
+        memcpy(metae, m->positurae[k].metae,
+            PLASTICA_MOTUS_MEMBRA_MAXIMA * magnitudo(Meta));
     }
     si (speculum)
     {
@@ -706,22 +1450,38 @@ _positura_legere (
             redde FALSUM;
         }
         _speculare(m, m->positurae[k].artus, artus);
+        si (!_metas_speculare(m, nodus->linea,
+            m->positurae[k].metae, metae))
+        {
+            redde FALSUM;
+        }
     }
     memset(visi, ZEPHYRUM, magnitudo(visi));
+    memset(scriptae, ZEPHYRUM, magnitudo(scriptae));
     dum ((liber = _liberum(m, nodus, &cursor, &finis)) != NIHIL)
     {
+        si (_est(liber->titulus, "meta"))
+        {
+            si (!_metam_legere(m, liber, metae, scriptae))
+            {
+                redde FALSUM;
+            }
+            perge;
+        }
         si (!_est(liber->titulus, "art"))
         {
             redde _recusare(m, liber->linea,
-                "<positura> holds only <art>, got <", liber->titulus,
-                ">");
+                "<positura> holds only <art> and <meta>, got <",
+                liber->titulus, ">");
         }
         si (!_artum_legere(m, liber, artus, visi))
         {
             redde FALSUM;
         }
     }
-    si (!finis)
+    si (   !finis
+        || !_metas_conferre(m, nodus, metae, scriptae, visi)
+        || !_metas_solvere(m, artus, metae))
     {
         redde FALSUM;
     }
@@ -736,6 +1496,7 @@ _positura_legere (
     p           = &m->positurae[locus];
     p->titulus  = *titulus;
     p->artus    = artus;
+    p->metae    = metae;
     p->ossium   = m->in_ossibus;
     redde VERUM;
 }
@@ -1065,55 +1826,6 @@ _cyclus_legere (
  * Coctio
  * ================================================== */
 
-interior StereometriaQuaternio
-_circa_axem (
-    f32 x,
-    f32 y,
-    f32 z,
-    f32 gradus)
-{
-    StereometriaQuaternio q;
-                      f32 dimidium =
-                          gradus * STEREOMETRIA_PI / GRADUS_PLENI;
-                      f32 sinus    = (f32)sin((f64)dimidium);
-
-    q.x = x * sinus;
-    q.y = y * sinus;
-    q.z = z * sinus;
-    q.w = (f32)cos((f64)dimidium);
-    redde q;
-}
-
-/* a * b: b primum applicatur */
-interior StereometriaQuaternio
-_componere (
-    StereometriaQuaternio a,
-    StereometriaQuaternio b)
-{
-    StereometriaQuaternio q;
-
-    q.x = a.w * b.x + a.x * b.w + a.y * b.z - a.z * b.y;
-    q.y = a.w * b.y - a.x * b.z + a.y * b.w + a.z * b.x;
-    q.z = a.w * b.z + a.x * b.y - a.y * b.x + a.z * b.w;
-    q.w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z;
-    redde q;
-}
-
-/* quies articuli, deinde gradus positurae in spatio eius: circa x,
- * deinde y, deinde z */
-interior StereometriaQuaternio
-_rotatio_articuli (
-    StereometriaQuaternio  quies,
-             constans f32* gradus)
-{
-    StereometriaQuaternio q =
-        _circa_axem(1.0f, 0.0f, 0.0f, gradus[ZEPHYRUM]);
-
-    q = _componere(_circa_axem(0.0f, 1.0f, 0.0f, gradus[I]), q);
-    q = _componere(_circa_axem(0.0f, 0.0f, 1.0f, gradus[II]), q);
-    redde stereometria_quaternio_normalizare(_componere(quies, q));
-}
-
 /* canalis unus: articulus j, proprietas, clavis ad quodque tempus */
 interior b32
 _canalem_coquere (
@@ -1284,11 +1996,7 @@ _motum_legere (
                 redde FALSUM;
             }
         }
-        alioquin si (_est(liber->titulus, "membrum"))
-        {
-            redde _recusare(m, liber->linea,
-                "<membrum>: limbs are not built yet", NIHIL, NIHIL);
-        }
+
     }
     redde finis;
 }
@@ -1620,26 +2328,113 @@ _os_componere (
     redde novus;
 }
 
+/* plastica arborem compositam recusavit: nuntius eius, linea sine
+ * signo, plagula ossium si linea signum ferebat */
+interior b32
+_corpus_recusare (
+                     Motor* m,
+    constans PlasticaFructus* corpus,
+           constans chorda* titulus)
+{
+    i32 longitudo = ZEPHYRUM;
+
+    m->fractum  = VERUM;
+    m->linea    = corpus->linea & ~LINEA_OSSIUM;
+    si (corpus->linea & LINEA_OSSIUM)
+    {
+        m->plagula_erroris = chorda_transcribere(*titulus, m->piscina);
+    }
+    _appone(m, &longitudo, (constans character*)corpus->error.datum,
+        corpus->error.mensura);
+    redde FALSUM;
+}
+
+/* arbor ossium in radicem addere (solida figurae si iam collecta) */
+interior b32
+_ossa_addere (
+                  Motor* m,
+    InternamentumChorda* intern,
+              StmlNodus* radix,
+     constans StmlNodus* ossa)
+{
+    i32 numerus  = ossa->liberi ? xar_numerus(ossa->liberi) : ZEPHYRUM;
+    i32 index    = ZEPHYRUM;
+    i32 k;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+         StmlNodus** sedes = (StmlNodus**)xar_obtinere(ossa->liberi, k);
+         StmlNodus*  liber = sedes ? *sedes : NIHIL;
+         StmlNodus*  os;
+
+        si (   !liber || liber->genus != STML_NODUS_ELEMENTUM
+            || !_est(liber->titulus, "articulus"))
+        {
+            perge;
+        }
+        os = _os_componere(m, intern, liber, &index);
+        si (!os || !stml_liberum_addere(radix, os))
+        {
+            redde FALSUM;
+        }
+    }
+    redde VERUM;
+}
+
+/* ossa sola ut statua (cum solido uno ficto: plastica figuram sine
+ * solidis recusat): quies ossium pro factoribus et finibus
+ * membrorum. Ante articulos figurae collectos vocanda */
+interior b32
+_quietem_ossium_struere (
+                  Motor* m,
+    InternamentumChorda* intern,
+     constans StmlNodus* ossa,
+        constans chorda* titulus)
+{
+    PlasticaFructus  corpus;
+          StmlNodus* radix =
+              stml_elementum_creare(m->piscina, intern, "figura");
+          StmlNodus* solidum =
+              stml_elementum_creare(m->piscina, intern, "capsa");
+
+    si (   !radix || !solidum
+        || !stml_attributum_addere(radix, m->piscina, intern,
+               "titulus", "ossa")
+        || !stml_attributum_addere(solidum, m->piscina, intern,
+               "magnitudo", "1 1 1")
+        || !stml_liberum_addere(radix, solidum)
+        || !_ossa_addere(m, intern, radix, ossa))
+    {
+        redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
+    }
+    corpus = plastica_legere_arboris(radix, ZEPHYRUM, m->piscina);
+    si (!corpus.successus)
+    {
+        redde _corpus_recusare(m, &corpus, titulus);
+    }
+    m->quies_ossium     = corpus.statua;
+    m->articuli_ossium  = corpus.articuli;
+    redde VERUM;
+}
+
 /* corpus figurae cum ossibus: plagulam ossium a fonte petere, utramque
  * probare, arborem componere, plasticae tradere. *ossa = radix ossium
  * (positurae et cycli eius postea leguntur) */
 interior b32
 _corpus_ex_ossibus (
-                   Motor* m,
-               StmlNodus* figura,
-         constans chorda* titulus,
-            PlasticaFons  fons,
-                  vacuum* contextus,
-                     i32  semen,
-     InternamentumChorda* intern,
-         PlasticaFructus* corpus,
-     constans StmlNodus** ossa)
+                   Motor*  m,
+               StmlNodus*  figura,
+         constans chorda*  titulus,
+            PlasticaFons   fons,
+                  vacuum*  contextus,
+                     i32   semen,
+     InternamentumChorda*  intern,
+         PlasticaFructus*  corpus,
+      constans StmlNodus** ossa)
 {
     StmlResultus  r;
        StmlNodus* radix;
           chorda  textus;
-             i32  numerus;
-             i32  index = ZEPHYRUM;
              i32  k;
 
     si (!fons)
@@ -1673,7 +2468,8 @@ _corpus_ex_ossibus (
             "the skeleton sheet is not valid STML", NIHIL, NIHIL);
     }
     *ossa = r.elementum_radix;
-    si (!_ossa_probare(m, *ossa))
+    si (   !_ossa_probare(m, *ossa)
+        || !_quietem_ossium_struere(m, intern, *ossa, titulus))
     {
         redde FALSUM;
     }
@@ -1693,43 +2489,14 @@ _corpus_ex_ossibus (
         redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
     }
     radix->linea = figura->linea;
-    numerus = (*ossa)->liberi ? xar_numerus((*ossa)->liberi)
-        : ZEPHYRUM;
-    per (k = ZEPHYRUM; k < numerus; k++)
+    si (!_ossa_addere(m, intern, radix, *ossa))
     {
-        StmlNodus** sedes =
-            (StmlNodus**)xar_obtinere((*ossa)->liberi, k);
-         StmlNodus* liber = sedes ? *sedes : NIHIL;
-         StmlNodus* os;
-
-        si (   !liber || liber->genus != STML_NODUS_ELEMENTUM
-            || !_est(liber->titulus, "articulus"))
-        {
-            perge;
-        }
-        os = _os_componere(m, intern, liber, &index);
-        si (!os || !stml_liberum_addere(radix, os))
-        {
-            redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL,
-                NIHIL);
-        }
+        redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
     }
     *corpus = plastica_legere_arboris(radix, semen, m->piscina);
     si (!corpus->successus)
     {
-        i32 longitudo = ZEPHYRUM;
-
-        m->fractum  = VERUM;
-        m->linea    = corpus->linea & ~LINEA_OSSIUM;
-        si (corpus->linea & LINEA_OSSIUM)
-        {
-            m->plagula_erroris =
-                chorda_transcribere(*titulus, m->piscina);
-        }
-        _appone(m, &longitudo,
-            (constans character*)corpus->error.datum,
-            corpus->error.mensura);
-        redde FALSUM;
+        redde _corpus_recusare(m, corpus, titulus);
     }
     redde VERUM;
 }
@@ -1744,17 +2511,15 @@ _factores_parare (
 
     per (k = ZEPHYRUM; k < m->articulorum; k++)
     {
-        constans chorda* locus =
-            stml_attributum_capere(m->ossa[k], "locus");
-                    f32 numeri[III];
+        f32 altitudo = m->quies_ossium
+            ->nodi[m->articuli_ossium[k]].translatio.y;
 
         m->factor[k] = 1.0f;
-        si (   locus && _numeri(locus, numeri, III)
-            && numeri[I] != 0.0f)
+        si (altitudo != 0.0f)
         {
             m->factor[k] =
                 m->basis->nodi[m->articuli[k]].translatio.y
-                / numeri[I];
+                / altitudo;
         }
     }
 }
@@ -1848,29 +2613,35 @@ plastica_figura_legere_cum_fonte (
         chorda_ex_literis("quies", piscina);
     m->positurae[ZEPHYRUM].artus = (Artus*)piscina_allocare(piscina,
         (m->articulorum ? m->articulorum : I) * magnitudo(Artus));
+    m->positurae[ZEPHYRUM].metae = (Meta*)piscina_allocare(piscina,
+        PLASTICA_MOTUS_MEMBRA_MAXIMA * magnitudo(Meta));
     s = (Statua*)piscina_allocare(piscina, magnitudo(Statua));
-    si (!m->cycli || !m->positurae[ZEPHYRUM].artus || !s)
+    si (   !m->cycli || !m->positurae[ZEPHYRUM].artus
+        || !m->positurae[ZEPHYRUM].metae || !s)
     {
         (vacuum)_recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
         redde _recusatus(m, piscina);
     }
     memset(m->positurae[ZEPHYRUM].artus, ZEPHYRUM,
         (m->articulorum ? m->articulorum : I) * magnitudo(Artus));
+    memset(m->positurae[ZEPHYRUM].metae, ZEPHYRUM,
+        PLASTICA_MOTUS_MEMBRA_MAXIMA * magnitudo(Meta));
     m->positurarum = I;
     si (ossa)
     {
-        /* motus ossium primum, in plagula sua */
+        /* membra et motus ossium primum, in plagula sua */
         _factores_parare(m);
         m->plagula     = chorda_transcribere(*titulus, piscina);
         m->in_ossibus  = VERUM;
-        si (!_motum_legere(m, ossa))
+        si (!_membra_legere(m, ossa) || !_motum_legere(m, ossa))
         {
             redde _recusatus(m, piscina);
         }
         m->in_ossibus = FALSUM;
         memset(&m->plagula, ZEPHYRUM, magnitudo(m->plagula));
     }
-    si (!_motum_legere(m, r.elementum_radix))
+    si (   !_membra_legere(m, r.elementum_radix)
+        || !_motum_legere(m, r.elementum_radix))
     {
         redde _recusatus(m, piscina);
     }
@@ -1938,6 +2709,22 @@ plastica_figura_legere_cum_fonte (
             }
         }
     }
+    si (m->membrorum)
+    {
+        f.fines = (i32*)piscina_allocare(piscina,
+            m->membrorum * magnitudo(i32));
+        si (!f.fines)
+        {
+            (vacuum)_recusare(m, ZEPHYRUM, "out of memory", NIHIL,
+                NIHIL);
+            redde _recusatus(m, piscina);
+        }
+        per (k = ZEPHYRUM; k < m->membrorum; k++)
+        {
+            f.fines[k] = m->articuli[m->membra[k].finis];
+        }
+    }
+    f.finium       = m->membrorum;
     f.momentorum   = momentorum;
     f.successus    = VERUM;
     f.statua       = s;

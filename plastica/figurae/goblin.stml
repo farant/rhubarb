@@ -75,4 +75,14 @@
     <capsa titulus="calceus dex" magnitudo="0.17 0.08 0.26"
            locus="0 -0.08 0.05" color="#3a2616"/>
   </articulus>
+<!-- crura brevia: gressus ossium celeritate mundi laberetur; idem
+       positurae, cyclus brevior -->
+  <cyclus titulus="walk" duratio="0.29" circulus="verum">
+    <clavis tempus="0" positura="contactus_sin"/>
+    <clavis tempus="0.0725" positura="transitus_sin"/>
+    <clavis tempus="0.145" positura="contactus_dex"/>
+    <clavis tempus="0.2175" positura="transitus_dex"/>
+    <momentum titulus="gressus_sin" tempus="0"/>
+    <momentum titulus="gressus_dex" tempus="0.145"/>
+  </cyclus>
 </figura>

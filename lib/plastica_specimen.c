@@ -771,6 +771,94 @@ _vertices_ponere (
 }
 
 b32
+plastica_metiri_lapsum (
+    constans Statua* statua,
+                i32  cyclus,
+       constans i32* fines,
+                i32  finium,
+                f32  celeritas,
+                f32* lapsus,
+            Piscina* piscina)
+{
+    StereometriaMatrix* matrices;
+    StereometriaVector* loca;      /* (EXEMPLA + I) x finium */
+                   i32* infimi;    /* index finis infimi per instans */
+                   f32  passus;
+                   f32  summa = 0.0f;
+                   i32  k;
+                   i32  j;
+
+    si (lapsus)
+    {
+        *lapsus = 0.0f;
+    }
+    si (   !statua || !fines || !lapsus || !piscina
+        || finium == ZEPHYRUM || cyclus >= statua->cyclorum)
+    {
+        redde FALSUM;
+    }
+    per (j = ZEPHYRUM; j < finium; j++)
+    {
+        si (fines[j] >= statua->nodorum)
+        {
+            redde FALSUM;
+        }
+    }
+    matrices = (StereometriaMatrix*)piscina_allocare(piscina,
+        (memoriae_index)(statua->nodorum + I)
+            * magnitudo(StereometriaMatrix));
+    loca     = (StereometriaVector*)piscina_allocare(piscina,
+        (memoriae_index)(PLASTICA_MOTUS_EXEMPLA + I) * finium
+            * magnitudo(StereometriaVector));
+    infimi   = (i32*)piscina_allocare(piscina,
+        (memoriae_index)(PLASTICA_MOTUS_EXEMPLA + I) * magnitudo(i32));
+    si (!matrices || !loca || !infimi)
+    {
+        redde FALSUM;
+    }
+    /* instans ultimum ad durationem ipsam: statua_positura tempus
+     * involvit, ergo positura prima */
+    per (k = ZEPHYRUM; k <= PLASTICA_MOTUS_EXEMPLA; k++)
+    {
+        StereometriaVector* ordo = loca + (memoriae_index)k * finium;
+
+        statua_positura(statua, (s32)cyclus,
+            statua->cycli[cyclus].duratio
+                * (f32)k / (f32)PLASTICA_MOTUS_EXEMPLA, matrices);
+        infimi[k] = ZEPHYRUM;
+        per (j = ZEPHYRUM; j < finium; j++)
+        {
+            ordo[j] = stereometria_punctum_transformare(
+                matrices[fines[j]],
+                stereometria_vector(0.0f, 0.0f, 0.0f), NIHIL);
+            si (ordo[j].y < ordo[infimi[k]].y)
+            {
+                infimi[k] = j;
+            }
+        }
+    }
+    /* motus debitus per intervallum: retro */
+    passus = celeritas * statua->cycli[cyclus].duratio
+        / (f32)PLASTICA_MOTUS_EXEMPLA;
+    per (k = ZEPHYRUM; k < PLASTICA_MOTUS_EXEMPLA; k++)
+    {
+        constans StereometriaVector* a =
+            loca + (memoriae_index)k * finium + infimi[k];
+        constans StereometriaVector* b =
+            loca + (memoriae_index)(k + I) * finium + infimi[k];
+                                f32 x = b->x - a->x;
+                                f32 z = b->z - a->z + passus;
+
+        si (infimi[k] == infimi[k + I])
+        {
+            summa += (f32)sqrt((f64)(x * x + z * z));
+        }
+    }
+    *lapsus = summa;
+    redde VERUM;
+}
+
+b32
 plastica_metiri_motum (
           constans Statua* statua,
                       i32  cyclus,

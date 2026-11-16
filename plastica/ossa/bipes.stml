@@ -26,58 +26,149 @@
     </articulus>
   </articulus>
 
-  <!-- gressus: contactus (pes sinister ante, humum tangit), transitus
-       (sinister sustinet, dexter praeterit); dextri imagines sunt -->
+  <membrum titulus="perna_sin" radix="femur_sin" medium="crus_sin"
+           finis="pes_sin" flexus="ante"/>
+  <membrum titulus="perna_dex" radix="femur_dex" medium="crus_dex"
+           finis="pes_dex" flexus="ante"/>
+
+  <!-- stat: pedes in humo fixi (metae ad fines quiescentes), ut
+       pelvis mota genua flectat, non pedes mergat -->
+  <positura titulus="stat">
+    <meta membrum="perna_sin" locus="0.15 0.06 0" inclinatio="0"/>
+    <meta membrum="perna_dex" locus="-0.15 0.06 0" inclinatio="0"/>
+  </positura>
+
+  <!-- gressus (celeritate mundi cursus est): contactus (pes sinister
+       ante calce humum tangit, dexter retro digitis pellit),
+       transitus (sinister sub corpore sustinet, dexter sublatus
+       praeterit); dextri imagines. Pes in humo 0.4 per quartam
+       cycli retro it -->
   <positura titulus="contactus_sin">
-    <art titulus="pelvis" motus="0 -0.03 0" rotatio="0 -6 0"/>
-    <art titulus="truncus" rotatio="4 10 0"/>
-    <art titulus="caput" rotatio="0 -4 0"/>
-    <art titulus="femur_sin" rotatio="-28 0 0"/>
-    <art titulus="crus_sin" rotatio="8 0 0"/>
-    <art titulus="pes_sin" rotatio="14 0 0"/>
-    <art titulus="femur_dex" rotatio="22 0 0"/>
-    <art titulus="crus_dex" rotatio="30 0 0"/>
-    <art titulus="pes_dex" rotatio="-14 0 0"/>
-    <art titulus="bracchium_sin" rotatio="26 0 3"/>
-    <art titulus="antebracchium_sin" rotatio="-12 0 0"/>
-    <art titulus="bracchium_dex" rotatio="-26 0 -3"/>
-    <art titulus="antebracchium_dex" rotatio="-30 0 0"/>
+    <art titulus="pelvis" motus="0 -0.1 0" rotatio="0 -8 0"/>
+    <art titulus="truncus" rotatio="8 14 0"/>
+    <art titulus="caput" rotatio="-5 -6 0"/>
+    <meta membrum="perna_sin" locus="0.15 0.1 0.4" inclinatio="-18"/>
+    <meta membrum="perna_dex" locus="-0.15 0.14 -0.4" inclinatio="20"/>
+    <art titulus="bracchium_sin" rotatio="32 0 4"/>
+    <art titulus="antebracchium_sin" rotatio="-15 0 0"/>
+    <art titulus="bracchium_dex" rotatio="-32 0 -4"/>
+    <art titulus="antebracchium_dex" rotatio="-45 0 0"/>
   </positura>
   <positura titulus="transitus_sin">
-    <art titulus="pelvis" motus="0 0.02 0"/>
-    <art titulus="truncus" rotatio="2 0 0"/>
-    <art titulus="femur_sin" rotatio="-2 0 0"/>
-    <art titulus="crus_sin" rotatio="4 0 0"/>
-    <art titulus="pes_sin" rotatio="-2 0 0"/>
-    <art titulus="femur_dex" rotatio="-30 0 0"/>
-    <art titulus="crus_dex" rotatio="70 0 0"/>
-    <art titulus="pes_dex" rotatio="-25 0 0"/>
-    <art titulus="bracchium_sin" rotatio="2 0 3"/>
-    <art titulus="antebracchium_sin" rotatio="-16 0 0"/>
-    <art titulus="bracchium_dex" rotatio="-2 0 -3"/>
-    <art titulus="antebracchium_dex" rotatio="-16 0 0"/>
+    <art titulus="pelvis" motus="0 -0.04 0"/>
+    <art titulus="truncus" rotatio="5 0 0"/>
+    <meta membrum="perna_sin" locus="0.15 0.06 0" inclinatio="0"/>
+    <meta membrum="perna_dex" locus="-0.15 0.3 0.05" inclinatio="15"/>
+    <art titulus="bracchium_sin" rotatio="2 0 4"/>
+    <art titulus="antebracchium_sin" rotatio="-22 0 0"/>
+    <art titulus="bracchium_dex" rotatio="-2 0 -4"/>
+    <art titulus="antebracchium_dex" rotatio="-22 0 0"/>
   </positura>
   <positura titulus="contactus_dex" speculum="contactus_sin"/>
   <positura titulus="transitus_dex" speculum="transitus_sin"/>
 
-  <positura titulus="respirat">
-    <art titulus="pelvis" motus="0 -0.012 0"/>
+  <positura titulus="respirat" ex="stat">
+    <art titulus="pelvis" motus="0 -0.015 0"/>
     <art titulus="truncus" scala="1.02 1.03 1.03" rotatio="2 0 0"/>
     <art titulus="bracchium_sin" rotatio="0 0 5"/>
     <art titulus="bracchium_dex" rotatio="0 0 -5"/>
     <art titulus="caput" rotatio="-2 0 0"/>
   </positura>
 
+  <!-- impetus: bracchium dextrum supra caput tollitur, deinde cum
+       gressu sinistro deorsum ferit -->
+  <positura titulus="praeparat" ex="stat">
+    <art titulus="pelvis" motus="0 -0.05 -0.06" rotatio="0 -14 0"/>
+    <art titulus="truncus" rotatio="-8 -18 0"/>
+    <art titulus="caput" rotatio="4 20 0"/>
+    <art titulus="bracchium_dex" rotatio="-150 0 -18"/>
+    <art titulus="antebracchium_dex" rotatio="-45 0 0"/>
+    <art titulus="bracchium_sin" rotatio="-35 0 10"/>
+    <art titulus="antebracchium_sin" rotatio="-30 0 0"/>
+  </positura>
+  <positura titulus="ferit">
+    <art titulus="pelvis" motus="0 -0.12 0.16" rotatio="0 12 0"/>
+    <art titulus="truncus" rotatio="20 20 0"/>
+    <art titulus="caput" rotatio="-12 -14 0"/>
+    <meta membrum="perna_sin" locus="0.15 0.06 0.34" inclinatio="0"/>
+    <meta membrum="perna_dex" locus="-0.15 0.14 -0.06" inclinatio="18"/>
+    <art titulus="bracchium_dex" rotatio="-55 0 12"/>
+    <art titulus="antebracchium_dex" rotatio="-8 0 0"/>
+    <art titulus="bracchium_sin" rotatio="38 0 8"/>
+    <art titulus="antebracchium_sin" rotatio="-20 0 0"/>
+  </positura>
+
+  <!-- icta: retro pellitur, bracchia sparsa -->
+  <positura titulus="icta" ex="stat">
+    <art titulus="pelvis" motus="0 -0.06 -0.12"/>
+    <art titulus="truncus" rotatio="-20 0 6"/>
+    <art titulus="caput" rotatio="-16 0 0"/>
+    <art titulus="bracchium_sin" rotatio="-35 0 32"/>
+    <art titulus="antebracchium_sin" rotatio="-30 0 0"/>
+    <art titulus="bracchium_dex" rotatio="-35 0 -32"/>
+    <art titulus="antebracchium_dex" rotatio="-30 0 0"/>
+  </positura>
+
+  <!-- mors: genua cedunt, deinde supina iacet -->
+  <positura titulus="genua" ex="stat">
+    <art titulus="pelvis" motus="0 -0.42 -0.04"/>
+    <art titulus="truncus" rotatio="28 0 0"/>
+    <art titulus="caput" rotatio="24 0 0"/>
+    <art titulus="bracchium_sin" rotatio="10 0 12"/>
+    <art titulus="bracchium_dex" rotatio="10 0 -12"/>
+  </positura>
+  <positura titulus="cadit">
+    <art titulus="pelvis" motus="0 -0.3 -0.16" rotatio="-45 0 0"/>
+    <art titulus="truncus" rotatio="6 0 0"/>
+    <art titulus="caput" rotatio="10 0 0"/>
+    <art titulus="femur_sin" rotatio="-55 0 6"/>
+    <art titulus="femur_dex" rotatio="-55 0 -6"/>
+    <art titulus="crus_sin" rotatio="70 0 0"/>
+    <art titulus="crus_dex" rotatio="70 0 0"/>
+    <art titulus="bracchium_sin" rotatio="-20 0 35"/>
+    <art titulus="bracchium_dex" rotatio="-20 0 -35"/>
+  </positura>
+  <positura titulus="iacet">
+    <art titulus="pelvis" motus="0 -0.46 -0.3" rotatio="-88 0 0"/>
+    <art titulus="truncus" rotatio="-2 0 0"/>
+    <art titulus="caput" rotatio="-6 0 12"/>
+    <art titulus="femur_sin" rotatio="-6 0 8"/>
+    <art titulus="femur_dex" rotatio="-6 0 -8"/>
+    <art titulus="crus_sin" rotatio="8 0 0"/>
+    <art titulus="crus_dex" rotatio="8 0 0"/>
+    <art titulus="bracchium_sin" rotatio="0 0 55"/>
+    <art titulus="bracchium_dex" rotatio="0 0 -55"/>
+  </positura>
+
   <cyclus titulus="idle" duratio="2.4" circulus="verum">
-    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="0" positura="stat"/>
     <clavis tempus="1.2" positura="respirat"/>
   </cyclus>
-  <cyclus titulus="walk" duratio="0.64" circulus="verum">
+  <cyclus titulus="walk" duratio="0.44" circulus="verum">
     <clavis tempus="0" positura="contactus_sin"/>
-    <clavis tempus="0.16" positura="transitus_sin"/>
-    <clavis tempus="0.32" positura="contactus_dex"/>
-    <clavis tempus="0.48" positura="transitus_dex"/>
+    <clavis tempus="0.11" positura="transitus_sin"/>
+    <clavis tempus="0.22" positura="contactus_dex"/>
+    <clavis tempus="0.33" positura="transitus_dex"/>
     <momentum titulus="gressus_sin" tempus="0"/>
-    <momentum titulus="gressus_dex" tempus="0.32"/>
+    <momentum titulus="gressus_dex" tempus="0.22"/>
+  </cyclus>
+  <cyclus titulus="attack" duratio="0.6">
+    <clavis tempus="0" positura="stat"/>
+    <clavis tempus="0.2" positura="praeparat"/>
+    <clavis tempus="0.3" positura="ferit"/>
+    <clavis tempus="0.4" positura="ferit"/>
+    <clavis tempus="0.6" positura="stat"/>
+    <momentum titulus="ictus" tempus="0.3"/>
+  </cyclus>
+  <cyclus titulus="hurt" duratio="0.4">
+    <clavis tempus="0" positura="stat"/>
+    <clavis tempus="0.1" positura="icta"/>
+    <clavis tempus="0.4" positura="stat"/>
+  </cyclus>
+  <cyclus titulus="die" duratio="1">
+    <clavis tempus="0" positura="stat"/>
+    <clavis tempus="0.3" positura="genua"/>
+    <clavis tempus="0.55" positura="cadit"/>
+    <clavis tempus="0.8" positura="iacet"/>
   </cyclus>
 </ossa>

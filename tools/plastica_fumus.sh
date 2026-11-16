@@ -322,6 +322,38 @@ contine "ossa mutata figuram mutant" "$T/out" "^figura mutata    gemellus$"
 proba "personae cum ossibus" 0 "$S" enumerare -volumen "$T/ossa.volumen"
 [ "$(cut -f1 "$T/out" | tr '\n' ',')" = "gemellus," ] || { echo "FRACTA: personae cum ossibus: $(cut -f1 "$T/out" | tr '\n' ',')"; fracta=$((fracta + 1)); }
 
+# membra (plastica-motus-plan T6): figura vera cum ossibus bipedis -
+# lapsus pedum in cyclo "walk" solo
+proba "specimen goblini" 0 "$B" specimen plastica/figurae/goblin.stml -o "$T/goblin.png" -motus "$T/goblin_motus.png"
+contine "lapsus gressus" "$T/out" "^cyclus [0-9]* walk: .*  hiatus [0-9.]*  lapsus [0-9]\.[0-9][0-9]$"
+contine "idle sine lapsu" "$T/out" "^cyclus [0-9]* idle: .*  hiatus [0-9.]*$"
+[ "$(grep -c '  lapsus ' "$T/out")" -eq 1 ] || { echo "FRACTA: lapsus extra gressum"; fracta=$((fracta + 1)); }
+# celeritas ad altitudinem figurae relata: figura I alta quae stat,
+# gressus 0.5 s - pes immotus 4 * (1 / 2) * 0.5 = 1.00 labitur
+cat > "$T/stans.stml" <<'FIGURA'
+<figura titulus="stans">
+  <articulus titulus="pelvis" locus="0 0.5 0">
+    <capsa magnitudo="0.4 0.5 0.4"/>
+    <articulus titulus="femur">
+      <articulus titulus="crus" locus="0 -0.25 0">
+        <articulus titulus="pes" locus="0 -0.25 0">
+          <capsa magnitudo="0.1 0.1 0.1"/>
+        </articulus>
+      </articulus>
+    </articulus>
+  </articulus>
+  <membrum titulus="perna" radix="femur" medium="crus" finis="pes" flexus="ante"/>
+  <positura titulus="stat"><art titulus="pelvis" rotatio="0 0 0"/></positura>
+  <cyclus titulus="walk" duratio="0.5">
+    <clavis tempus="0" positura="stat"/>
+  </cyclus>
+</figura>
+FIGURA
+proba "specimen stantis" 0 "$B" specimen "$T/stans.stml" -o "$T/stans.png"
+contine "lapsus ad altitudinem" "$T/out" "^cyclus 0 walk: duratio 0.50 .*  lapsus 1\.00$"
+# figura sine membris: gressus sine lapsu
+proba "gressus sine membris" 0 "$B" specimen "$O/figurae/gemellus.stml" -o "$T/gem.png"
+contine "walk sine lapsu" "$T/out" "^cyclus 0 walk: .*  hiatus [0-9.]*$"
 # directoria ordinaria: plastica/res et plastica/figurae sub loco currenti;
 # figurae absentes sine errore
 mkdir -p "$T/alibi/plastica/res"

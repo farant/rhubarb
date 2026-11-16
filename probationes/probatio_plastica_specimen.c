@@ -974,6 +974,91 @@ _sectio_motus_numeri (
     CREDO_F64_PROXIMUS ((f64)m.infimum_maximum, 0.0, 1.0e-4);
 }
 
+/* pedes duo alternis humum tenent et retro eunt unitatem per
+ * secundam (cyclus II secundarum); alter sublatus redit. Nodi:
+ * 1 pes_a, 3 pes_b. 'latus': pes_a praeterea ad latus labitur */
+#define GRADIENS(latus_ante, latus_post) \
+    "<figura titulus=\"gradiens\">\n" \
+    "<articulus titulus=\"pes_a\">" \
+    "<capsa magnitudo=\"0.2 0.1 0.2\"/></articulus>\n" \
+    "<articulus titulus=\"pes_b\" locus=\"0.4 0 0\">" \
+    "<capsa magnitudo=\"0.2 0.1 0.2\"/></articulus>\n" \
+    "<positura titulus=\"p0\">" \
+    "<art titulus=\"pes_a\" motus=\"" latus_ante " 0 0.5\"/>" \
+    "<art titulus=\"pes_b\" motus=\"0 0 -0.5\"/></positura>\n" \
+    "<positura titulus=\"p1\">" \
+    "<art titulus=\"pes_b\" motus=\"0 0.2 0\"/></positura>\n" \
+    "<positura titulus=\"p2\">" \
+    "<art titulus=\"pes_a\" motus=\"" latus_post " 0 -0.5\"/>" \
+    "<art titulus=\"pes_b\" motus=\"0 0 0.5\"/></positura>\n" \
+    "<positura titulus=\"p3\">" \
+    "<art titulus=\"pes_a\" motus=\"0 0.2 0\"/></positura>\n" \
+    "<cyclus titulus=\"walk\" duratio=\"2\" circulus=\"verum\">\n" \
+    "<clavis tempus=\"0\" positura=\"p0\"/>\n" \
+    "<clavis tempus=\"0.5\" positura=\"p1\"/>\n" \
+    "<clavis tempus=\"1\" positura=\"p2\"/>\n" \
+    "<clavis tempus=\"1.5\" positura=\"p3\"/>\n" \
+    "</cyclus>\n</figura>"
+
+interior vacuum
+_sectio_motus_lapsus (
+    CredoContextus* c)
+{
+     hic_manens constans i32 FINES[] = { I, III };
+     hic_manens constans i32 INVERSI[] = { III, I };
+     hic_manens constans i32 MALI[] = { I, IX };
+       PlasticaFiguraFructus f = _figura(c, GRADIENS("0", "0"));
+                         f32 lapsus;
+
+    CREDO_NECESSE (f.successus);
+    /* celeritate ipsa pedum: nullus lapsus */
+    lapsus = 9.0f;
+    CREDO_VERUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES, II,
+        1.0f, &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 0.0, 1.0e-4);
+    /* celeritate alia: differentia per tempus quo pes humum tenet
+     * (XXX intervalla ex XXXII: duo ubi pes mutatur omittuntur) */
+    CREDO_VERUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES, II,
+        2.0f, &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 2.0 * 30.0 / 32.0, 1.0e-3);
+    CREDO_VERUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES, II,
+        0.0f, &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 2.0 * 30.0 / 32.0, 1.0e-3);
+    /* ordo finium summam non mutat; finis unus solus semper infimus
+     * habetur, etiam sublatus (redit ANTRORSUM: lapsus maior) */
+    CREDO_VERUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, INVERSI,
+        II, 2.0f, &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 2.0 * 30.0 / 32.0, 1.0e-3);
+    CREDO_VERUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES, I,
+        1.0f, &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 2.0, 1.0e-3);
+    /* lapsus ad latus: 0.2 per gressum pedis a */
+    f = _figura(c, GRADIENS("0.1", "-0.1"));
+    CREDO_NECESSE (f.successus);
+    CREDO_VERUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES, II,
+        1.0f, &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 0.2, 1.0e-3);
+    /* argumenta mala: FALSUM, lapsus 0 */
+    lapsus = 9.0f;
+    CREDO_FALSUM (plastica_metiri_lapsum(f.statua, I, FINES, II, 1.0f,
+        &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 0.0, 1.0e-9);
+    lapsus = 9.0f;
+    CREDO_FALSUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, MALI, II,
+        1.0f, &lapsus, c->piscina));
+    CREDO_F64_PROXIMUS ((f64)lapsus, 0.0, 1.0e-9);
+    CREDO_FALSUM (plastica_metiri_lapsum(NIHIL, ZEPHYRUM, FINES, II,
+        1.0f, &lapsus, c->piscina));
+    CREDO_FALSUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, NIHIL, II,
+        1.0f, &lapsus, c->piscina));
+    CREDO_FALSUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES,
+        ZEPHYRUM, 1.0f, &lapsus, c->piscina));
+    CREDO_FALSUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES, II,
+        1.0f, NIHIL, c->piscina));
+    CREDO_FALSUM (plastica_metiri_lapsum(f.statua, ZEPHYRUM, FINES, II,
+        1.0f, &lapsus, NIHIL));
+}
+
 interior vacuum
 _sectio_motus_pictura (
     CredoContextus* c)
@@ -1333,6 +1418,8 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "pagina_invisa", _sectio_pagina_invisa, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "motus_numeri", _sectio_motus_numeri, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "motus_lapsus", _sectio_motus_lapsus, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "motus_pictura", _sectio_motus_pictura, NIHIL, NIHIL, NIHIL,
       NIHIL },

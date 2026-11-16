@@ -135,3 +135,57 @@ skeleton `plastica/ossa/bipes.stml`; first figure on it
   answer. Parts overlap 0.02 at each joint; no gaps seen at these
   angles. In the world the red tunic and pale head read well against
   the grass.
+
+## 2026-11-16 - T6: limbs and foot targets
+
+- **New module `plastica_membrum`**: the two-bone solve on its own,
+  pure numbers (lengths, target ahead and below, bend direction ->
+  two angles in degrees). Root angle negative = forward, knee
+  positive = foot back, matching how the sheets already turn limbs.
+  Refuses out of reach, folded too tight, target on the root, and
+  non-finite input; margin `PLASTICA_MEMBRUM_MARGO` 1e-4.
+- **Sheet:** `<membrum titulus radix medium finis flexus>` and, in a
+  pose, `<meta membrum locus [inclinatio]>`. Targets are solved
+  after every `<art>` of the pose, so a pelvis move written after
+  the target still counts. A limb must hang straight down at rest.
+  `ex` inherits targets and solves again; an `<art>` on the limb's
+  root or middle drops the inherited target; a turn on the end joint
+  drops an inherited `inclinatio` only. `speculum` moves a target to
+  the partner limb with x negated.
+- **`inclinatio`** (not in the header): without it the foot turns
+  with the shin, and its pitch is the sum of hip and knee. With it
+  the end joint keeps its rest orientation, pitched by the given
+  angle (positive = toes down). Every foot target in bipes uses it.
+- **Skeleton targets are NOT scaled by root height** (the approved
+  header said they would be). The goblin's legs are shorter in
+  proportion than the skeleton's, and its feet came out of reach.
+  Rule now: offset of the target from the limb's REST END in the
+  skeleton, times figure limb length / skeleton limb length, added
+  to the figure's rest end. A foot on the ground in the skeleton is
+  on the ground in every figure. To know the skeleton's rest ends
+  the skeleton is built alone as a Statua with one dummy solid
+  (`_quietem_ossium_struere`); the root-height factor reads it too.
+- **Foot slide** (`plastica_metiri_lapsum`, plastica_specimen): per
+  sample the lowest limb end is taken as planted; while the same end
+  stays lowest, its motion is compared with the motion the ground
+  demands (speed x time, backward). The tool prints it for cycles
+  titled `walk` on figures with limbs, at 4 units/s x figure height
+  / 2 (the world sizes every character to 2 units).
+- **Limit of the number:** when the heel lifts before the toe, the
+  ankle pivot moves although the toe is planted, and that counts as
+  slide. The goblin's 0.17 is partly this. Measuring at the lowest
+  vertex of the foot solid would be truer.
+- **Goblin walk is its own cycle, 0.29 s** (skeleton: 0.44 s). At
+  the world's speed short legs must step faster or slide; the stride
+  a leg can reach sets the cycle time. Speed per creature is the
+  combat spec's business.
+- **Plants: 135 on the library, 5 by hand on the tool, all red in
+  the end.** Weak tests found: no joint above the pelvis was ever
+  moved, so walking up the parent chain was unobserved (fixture with
+  two moved joints above the limb); an inherited `inclinatio` with a
+  written foot turn (pose `i`); the tool's height scaling (smoke
+  fixture: a standing figure 1 tall, walk 0.5 s, slide exactly
+  1.00). Kept though green, as explicit guards: `finium == 0` and
+  `!piscina` in `plastica_metiri_lapsum` (the allocator refuses both
+  today, by its own rules). Not planted: the euler clamps in
+  `_gradus_ex_rotatione`, the length cap in `_recusare_duo`.

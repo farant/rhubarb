@@ -589,7 +589,7 @@ _sectio_recusationes (
         { CAPUT "<positura titulus=\"p\" gyrus=\"1\"/>\n" CAUDA, VI,
           "gyrus" },
         { CAPUT "<positura titulus=\"p\">\n<os/>\n</positura>\n"
-          CAUDA, VII, "holds only <art>, got <os>" },
+          CAUDA, VII, "holds only <art> and <meta>, got <os>" },
         { CAPUT "<positura titulus=\"p\">\nverba\n</positura>\n"
           CAUDA, VI, "text" },
         /* cyclus */
@@ -707,9 +707,6 @@ _sectio_recusationes (
           "<momentum titulus=\"m\" tempus=\"0.5\"/>\n"
           "<momentum titulus=\"m\" tempus=\"0.6\"/>\n</cyclus>\n"
           CAUDA, IX, "twice" },
-        /* membrum nondum */
-        { CAPUT "<membrum titulus=\"m\"/>\n" CAUDA, VI,
-          "not built yet" },
         { NIHIL, ZEPHYRUM, NIHIL }
     };
     i32 k;
@@ -1578,9 +1575,6 @@ _sectio_recusationes_ossium (
         { "<ossa titulus=\"duo\">\n"
           "<articulus titulus=\"pelvis\">\n" CAPSA "\n</articulus>\n"
           OSSA_CAUDA, FIGURA_SIMPLEX, III, "duo", "solids" },
-        { "<ossa titulus=\"duo\">\n"
-          "<articulus titulus=\"pelvis\"/>\n<membrum/>\n" OSSA_CAUDA,
-          FIGURA_SIMPLEX, III, "duo", "not built yet" },
         /* articuli ossium */
         { "<ossa titulus=\"duo\">\n"
           "<articulus titulus=\"pelvis\"/>\n"
@@ -1777,6 +1771,613 @@ _sectio_recusationes_ossium (
         chorda_ex_literis("need a source", c->piscina));
 }
 
+/* crura: nodi 0 radix, 1 pelvis, 2 capsa, 3 femur_sin, 5 crus_sin,
+ * 7 pes_sin, 9 femur_dex, 11 crus_dex, 13 pes_dex. Cardo pedis in
+ * quiete ad (0.2, 0.1, 0); ossa 0.5 et 0.4. Lineae I-XII; membra
+ * XIII et XIV */
+#define CRUS(latus, x) \
+    "<articulus titulus=\"femur_" latus "\" locus=\"" x " 0 0\">" \
+    CAPSA_I "\n" \
+    "<articulus titulus=\"crus_" latus "\" locus=\"0 -0.5 0\">" \
+    CAPSA_I "\n" \
+    "<articulus titulus=\"pes_" latus "\" locus=\"0 -0.4 0\">" \
+    CAPSA_I "\n" \
+    "</articulus></articulus></articulus>\n"
+#define CRURA_OSSA \
+    "<articulus titulus=\"pelvis\" locus=\"0 1 0\">\n" \
+    CAPSA_I "\n" CRUS("sin", "0.2") CRUS("dex", "-0.2") \
+    "</articulus>\n"
+#define PERNA(latus, flexus) \
+    "<membrum titulus=\"perna_" latus "\" radix=\"femur_" latus "\"" \
+    " medium=\"crus_" latus "\" finis=\"pes_" latus "\"" \
+    " flexus=\"" flexus "\"/>\n"
+#define CRURA_CAPUT \
+    "<figura titulus=\"crura\">\n" CRURA_OSSA PERNA("sin", "ante") \
+    PERNA("dex", "ante")
+#define POSITURA(titulus, attributa, corpus) \
+    "<positura titulus=\"" titulus "\" " attributa ">\n" corpus \
+    "</positura>\n"
+#define META_SIN(locus, cetera) \
+    "<meta membrum=\"perna_sin\" locus=\"" locus "\" " cetera "/>\n"
+#define PELVIS_MOTA \
+    "<art titulus=\"pelvis\" motus=\"0.1 -0.2 0.05\"" \
+    " rotatio=\"5 20 -8\"/>\n"
+
+/* cycli: 0 a, 1 b, 2 c, 3 d, 4 e, 5 f, 6 g, 7 h, 8 i */
+hic_manens constans character* CRURA =
+    CRURA_CAPUT
+    POSITURA("a", "", META_SIN("0.2 0.3 0.3", ""))
+    POSITURA("b", "", META_SIN("0.35 0.15 -0.2", "") PELVIS_MOTA)
+    POSITURA("c", "", META_SIN("0.2 0.3 0.3", "inclinatio=\"0\"")
+        PELVIS_MOTA)
+    POSITURA("d", "", META_SIN("0.2 0.3 0.3", "inclinatio=\"30\"")
+        PELVIS_MOTA)
+    POSITURA("e", "ex=\"b\"",
+        "<art titulus=\"pelvis\" motus=\"-0.1 -0.1 0.1\"/>\n")
+    POSITURA("f", "ex=\"a\"",
+        "<art titulus=\"femur_sin\" rotatio=\"-10 0 0\"/>\n")
+    POSITURA("g", "speculum=\"b\"", "")
+    POSITURA("h", "",
+        META_SIN("0.25 0.2 0.25", "")
+        "<meta membrum=\"perna_dex\" locus=\"-0.2 0.4 -0.3\"/>\n")
+    POSITURA("i", "ex=\"c\"",
+        "<art titulus=\"pes_sin\" rotatio=\"20 0 0\"/>\n")
+    CYCLUS_UNIUS("ca", "a") CYCLUS_UNIUS("cb", "b")
+    CYCLUS_UNIUS("cc", "c") CYCLUS_UNIUS("cd", "d")
+    CYCLUS_UNIUS("ce", "e") CYCLUS_UNIUS("cf", "f")
+    CYCLUS_UNIUS("cg", "g") CYCLUS_UNIUS("ch", "h")
+    CYCLUS_UNIUS("ci", "i")
+    "</figura>\n";
+
+#define PUNCTUM_PROPE(v, px, py, pz) \
+    fac { \
+        CREDO_F64_PROXIMUS ((f64)(v).x, (px), 1.0e-3); \
+        CREDO_F64_PROXIMUS ((f64)(v).y, (py), 1.0e-3); \
+        CREDO_F64_PROXIMUS ((f64)(v).z, (pz), 1.0e-3); \
+    } dum (FALSUM)
+
+interior vacuum
+_sectio_membra (
+    CredoContextus* c)
+{
+      PlasticaFiguraFructus  f = _lege(c, CRURA);
+            constans Statua* s;
+     constans StatuaCanalis* canalis;
+         StereometriaVector  p;
+         StereometriaVector  q;
+
+    si (!f.successus)
+    {
+        printf("membra (linea %u): %.*s\n", (insignatus)f.linea,
+            (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+    }
+    CREDO_NECESSE (f.successus);
+    s = f.statua;
+    CREDO_NECESSE (s->nodorum == XV && s->cyclorum == IX);
+    /* fines membrorum redduntur */
+    CREDO_NECESSE (f.finium == II && f.fines != NIHIL);
+    CREDO_AEQUALIS_I32 (f.fines[ZEPHYRUM], VII);
+    CREDO_AEQUALIS_I32 (f.fines[I], XIII);
+    /* quies: cardo pedis */
+    p = _punctum(s, -I, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 0.1, 0.0);
+    /* a: finis in meta; genu ANTE lineam a coxa ad pedem */
+    p = _punctum(s, ZEPHYRUM, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 0.3, 0.3);
+    q = _punctum(s, ZEPHYRUM, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    CREDO_VERUM (q.z > 0.25f);
+    CREDO_F64_PROXIMUS ((f64)q.x, 0.2, 1.0e-3);
+    /* membrum alterum intactum */
+    CREDO_NIHIL (_canalis(&s->cycli[ZEPHYRUM], IX, STATUA_ROTATIO));
+    CREDO_NIHIL (_canalis(&s->cycli[ZEPHYRUM], XI, STATUA_ROTATIO));
+    /* sine inclinatione finis non tangitur et cum crure vertitur */
+    CREDO_NIHIL (_canalis(&s->cycli[ZEPHYRUM], VII, STATUA_ROTATIO));
+    q = _punctum(s, ZEPHYRUM, 0.0f, VII, 0.0f, 0.0f, 0.2f);
+    CREDO_VERUM (fabs((f64)q.y - 0.3) > 0.02);
+    /* b: meta ad latus et retro, pelvis mota et versa (<art> POST
+     * metam scriptum): finis tamen in meta */
+    p = _punctum(s, I, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.35, 0.15, -0.2);
+    q = _punctum(s, I, 0.0f, I, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (q, 0.1, 0.8, 0.05);
+    /* c: inclinatio 0 - pes orientationem quietis tenet, pelvi
+     * versa: punctum 0.2 ante cardinem recta ante manet */
+    p = _punctum(s, II, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 0.3, 0.3);
+    p = _punctum(s, II, 0.0f, VII, 0.0f, 0.0f, 0.2f);
+    PUNCTUM_PROPE (p, 0.2, 0.3, 0.5);
+    p = _punctum(s, II, 0.0f, VII, 0.1f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.3, 0.3, 0.3);
+    /* d: XXX gradus, digiti deorsum */
+    p = _punctum(s, III, 0.0f, VII, 0.0f, 0.0f, 0.2f);
+    PUNCTUM_PROPE (p, 0.2, 0.2, 0.3 + 0.17320508);
+    p = _punctum(s, III, 0.0f, VII, 0.1f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.3, 0.3, 0.3);
+    /* e: 'ex' metam hereditat et pelvi alia iterum solvit */
+    p = _punctum(s, IV, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.35, 0.15, -0.2);
+    q = _punctum(s, IV, 0.0f, I, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (q, -0.1, 0.9, 0.1);
+    /* f: <art> in radice metam hereditatam tollit - rotatio scripta
+     * ipsa; medium flexum solutum tenet */
+    canalis = _canalis(&s->cycli[V], III, STATUA_ROTATIO);
+    CREDO_NECESSE (canalis != NIHIL);
+    CREDO_F64_PROXIMUS ((f64)canalis->valores[ZEPHYRUM], -0.08715574,
+        1.0e-5);
+    CREDO_F64_PROXIMUS ((f64)canalis->valores[II], 0.0, 1.0e-6);
+    CREDO_NON_NIHIL (_canalis(&s->cycli[V], V, STATUA_ROTATIO));
+    p = _punctum(s, V, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    CREDO_VERUM (fabs((f64)p.z - 0.3) > 0.05);
+    /* g: imago - meta in membrum par, x negato */
+    p = _punctum(s, VI, 0.0f, XIII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, -0.35, 0.15, -0.2);
+    q = _punctum(s, VI, 0.0f, I, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (q, -0.1, 0.8, 0.05);
+    CREDO_NIHIL (_canalis(&s->cycli[VI], III, STATUA_ROTATIO));
+    /* h: ambo membra */
+    p = _punctum(s, VII, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.25, 0.2, 0.25);
+    p = _punctum(s, VII, 0.0f, XIII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, -0.2, 0.4, -0.3);
+    /* i: <art> finis cum versione inclinationem hereditatam tollit
+     * (meta manet): rotatio scripta ipsa */
+    p = _punctum(s, VIII, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 0.3, 0.3);
+    canalis = _canalis(&s->cycli[VIII], VII, STATUA_ROTATIO);
+    CREDO_NECESSE (canalis != NIHIL);
+    CREDO_F64_PROXIMUS ((f64)canalis->valores[ZEPHYRUM], 0.17364818,
+        1.0e-5);
+    CREDO_F64_PROXIMUS ((f64)canalis->valores[I], 0.0, 1.0e-6);
+    CREDO_F64_PROXIMUS ((f64)canalis->valores[II], 0.0, 1.0e-6);
+
+    /* flexus retro: medium POST lineam */
+    f = _lege(c,
+        "<figura titulus=\"crura\">\n" CRURA_OSSA
+        PERNA("sin", "retro")
+        POSITURA("a", "", META_SIN("0.2 0.3 0.3", ""))
+        CYCLUS_UNIUS("ca", "a") "</figura>\n");
+    CREDO_NECESSE (f.successus);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 0.3, 0.3);
+    q = _punctum(f.statua, ZEPHYRUM, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    CREDO_VERUM (q.z < 0.05f);
+    CREDO_AEQUALIS_I32 (f.finium, I);
+    /* scala in articulo supra membrum computatur; membrum sub
+     * radice cum quiete gyrata; <art> finis sola scala cum
+     * inclinatione licet */
+    f = _lege(c,
+        "<figura titulus=\"crura\">\n"
+        "<articulus titulus=\"pelvis\" locus=\"0 1 0\" gyrus=\"40\">\n"
+        CAPSA_I "\n" CRUS("sin", "0.2") "</articulus>\n"
+        PERNA("sin", "ante")
+        POSITURA("a", "",
+            "<art titulus=\"pelvis\" scala=\"1.5 0.8 1.2\"/>\n"
+            "<art titulus=\"pes_sin\" scala=\"2\"/>\n"
+            META_SIN("0.1 0.4 0.2", "inclinatio=\"0\""))
+        CYCLUS_UNIUS("ca", "a") "</figura>\n");
+    si (!f.successus)
+    {
+        printf("scala (linea %u): %.*s\n", (insignatus)f.linea,
+            (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+    }
+    CREDO_NECESSE (f.successus);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.1, 0.4, 0.2);
+    /* articuli DUO supra membrum, uterque motus: nodi 1 basis,
+     * 3 pelvis, 5 femur, 9 pes */
+    f = _lege(c,
+        "<figura titulus=\"crura\">\n"
+        "<articulus titulus=\"basis\" locus=\"0.3 0.2 -0.1\""
+        " gyrus=\"25\">\n" CAPSA_I "\n"
+        "<articulus titulus=\"pelvis\" locus=\"0 1 0\">\n"
+        CAPSA_I "\n" CRUS("sin", "0.2") "</articulus>\n"
+        "</articulus>\n"
+        PERNA("sin", "ante")
+        POSITURA("a", "",
+            "<art titulus=\"basis\" rotatio=\"0 0 10\""
+            " motus=\"0.1 0 0.2\"/>\n"
+            "<art titulus=\"pelvis\" rotatio=\"0 15 0\"/>\n"
+            META_SIN("0.5 0.5 0.3", ""))
+        CYCLUS_UNIUS("ca", "a") "</figura>\n");
+    si (!f.successus)
+    {
+        printf("basis (linea %u): %.*s\n", (insignatus)f.linea,
+            (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+    }
+    CREDO_NECESSE (f.successus);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, IX, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.5, 0.5, 0.3);
+    /* meta recta ANTE coxam ad altitudinem eius: genu supra lineam
+     * (nulla versio ad latus) */
+    f = _lege(c,
+        CRURA_CAPUT
+        POSITURA("a", "", META_SIN("0.2 1 0.6", ""))
+        CYCLUS_UNIUS("ca", "a") "</figura>\n");
+    CREDO_NECESSE (f.successus);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, VII, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 1.0, 0.6);
+    q = _punctum(f.statua, ZEPHYRUM, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    CREDO_VERUM (q.y > 1.1f);
+    /* radix membri articulus radicalis cum quiete gyrata; positura
+     * prior motum radicis et rotationes omnium axium dat, meta in
+     * positura ex ea eas solvit (y et z prioris non manent). Nodi:
+     * 1 a, 3 b, 5 c */
+    f = _lege(c,
+        "<figura titulus=\"a\">\n"
+        "<articulus titulus=\"a\" locus=\"0 2 0\" gyrus=\"25\">"
+        CAPSA_I
+        "<articulus titulus=\"b\" locus=\"0 -0.5 0\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 -0.4 0\">" CAPSA_I
+        "</articulus></articulus></articulus>\n"
+        "<membrum titulus=\"m\" radix=\"a\" medium=\"b\""
+        " finis=\"c\" flexus=\"ante\"/>\n"
+        POSITURA("prior", "",
+            "<art titulus=\"a\" motus=\"0.3 0.2 0.1\""
+            " rotatio=\"0 30 20\"/>\n"
+            "<art titulus=\"b\" rotatio=\"0 10 10\"/>\n")
+        POSITURA("a", "ex=\"prior\"",
+            "<meta membrum=\"m\" locus=\"0.5 1.6 0.4\"/>\n")
+        CYCLUS_UNIUS("ca", "a") "</figura>\n");
+    CREDO_NECESSE (f.successus);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.5, 1.6, 0.4);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, I, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.3, 2.2, 0.1);
+    /* figura sine membris: fines nulli */
+    f = _lege(c, PUPA);
+    CREDO_NECESSE (f.successus);
+    CREDO_AEQUALIS_I32 (f.finium, ZEPHYRUM);
+    CREDO_NIHIL (f.fines);
+}
+
+/* membra et metae in ossibus: figura duplo maior metam duplam habet */
+interior vacuum
+_sectio_membra_ossium (
+    CredoContextus* c)
+{
+                 Armarium a;
+    PlasticaFiguraFructus f;
+       StereometriaVector p;
+
+    f = _lege_cum(c, &a,
+        "<ossa titulus=\"duo\">\n"
+        "<articulus titulus=\"pelvis\" locus=\"0 1 0\">\n"
+        "<articulus titulus=\"femur_sin\" locus=\"0.2 0 0\">\n"
+        "<articulus titulus=\"crus_sin\" locus=\"0 -0.5 0\">\n"
+        "<articulus titulus=\"pes_sin\" locus=\"0 -0.4 0\"/>\n"
+        "</articulus></articulus></articulus>\n"
+        PERNA("sin", "ante")
+        POSITURA("a", "", META_SIN("0.2 0.3 0.3", ""))
+        CYCLUS_UNIUS("ca", "a") "</ossa>\n",
+        "<figura titulus=\"magna\" ossa=\"duo\">\n"
+        "<articulus titulus=\"pelvis\" locus=\"0 2 0\">" CAPSA
+        "</articulus>\n"
+        "<articulus titulus=\"femur_sin\" locus=\"0.4 0 0\"/>\n"
+        "<articulus titulus=\"crus_sin\" locus=\"0 -1 0\"/>\n"
+        "<articulus titulus=\"pes_sin\" locus=\"0 -0.8 0\"/>\n"
+        POSITURA("b", "", META_SIN("0.2 0.3 0.3", ""))
+        CYCLUS_UNIUS("cb", "b") "</figura>\n");
+    si (!f.successus)
+    {
+        printf("membra ossium (linea %u): %.*s\n", (insignatus)f.linea,
+            (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+    }
+    CREDO_NECESSE (f.successus);
+    /* nodi: 1 pelvis, 2 capsa, 3 femur, 4 crus, 5 pes */
+    CREDO_NECESSE (f.finium == I);
+    CREDO_AEQUALIS_I32 (f.fines[ZEPHYRUM], V);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.4, 0.6, 0.6);
+    /* meta figurae ipsius non multiplicatur */
+    p = _punctum(f.statua, I, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 0.3, 0.3);
+    /* crura dimidia sub pelvi eadem: differentia a fine quiescente
+     * (0.2 0.1 0 in ossibus, 0.2 0.55 0 in figura) dimidiatur */
+    f = _lege_cum(c, &a,
+        "<ossa titulus=\"duo\">\n"
+        "<articulus titulus=\"pelvis\" locus=\"0 1 0\">\n"
+        "<articulus titulus=\"femur_sin\" locus=\"0.2 0 0\">\n"
+        "<articulus titulus=\"crus_sin\" locus=\"0 -0.5 0\">\n"
+        "<articulus titulus=\"pes_sin\" locus=\"0 -0.4 0\"/>\n"
+        "</articulus></articulus></articulus>\n"
+        PERNA("sin", "ante")
+        POSITURA("a", "", META_SIN("0.3 0.3 0.3", ""))
+        CYCLUS_UNIUS("ca", "a") "</ossa>\n",
+        "<figura titulus=\"brevis\" ossa=\"duo\">\n"
+        "<articulus titulus=\"pelvis\">" CAPSA "</articulus>\n"
+        "<articulus titulus=\"crus_sin\" locus=\"0 -0.25 0\"/>\n"
+        "<articulus titulus=\"pes_sin\" locus=\"0 -0.2 0\"/>\n"
+        "</figura>\n");
+    CREDO_NECESSE (f.successus);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.25, 0.65, 0.15);
+    /* membrum ossium sine longitudine (figura cardines dat): ratio I */
+    f = _lege_cum(c, &a,
+        "<ossa titulus=\"duo\">\n"
+        "<articulus titulus=\"pelvis\" locus=\"0 1 0\">\n"
+        "<articulus titulus=\"femur_sin\" locus=\"0.2 0 0\">\n"
+        "<articulus titulus=\"crus_sin\">\n"
+        "<articulus titulus=\"pes_sin\"/>\n"
+        "</articulus></articulus></articulus>\n"
+        PERNA("sin", "ante")
+        POSITURA("a", "", META_SIN("0.2 1.2 0.3", ""))
+        CYCLUS_UNIUS("ca", "a") "</ossa>\n",
+        "<figura titulus=\"brevis\" ossa=\"duo\">\n"
+        "<articulus titulus=\"pelvis\">" CAPSA "</articulus>\n"
+        "<articulus titulus=\"crus_sin\" locus=\"0 -0.5 0\"/>\n"
+        "<articulus titulus=\"pes_sin\" locus=\"0 -0.4 0\"/>\n"
+        "</figura>\n");
+    CREDO_NECESSE (f.successus);
+    p = _punctum(f.statua, ZEPHYRUM, 0.0f, V, 0.0f, 0.0f, 0.0f);
+    PUNCTUM_PROPE (p, 0.2, 0.3, 0.3);
+    /* meta ossium extra ambitum: plagula ossium, linea metae */
+    f = _lege_cum(c, &a,
+        "<ossa titulus=\"duo\">\n"
+        "<articulus titulus=\"pelvis\" locus=\"0 1 0\">\n"
+        "<articulus titulus=\"femur_sin\" locus=\"0.2 0 0\">\n"
+        "<articulus titulus=\"crus_sin\" locus=\"0 -0.5 0\">\n"
+        "<articulus titulus=\"pes_sin\" locus=\"0 -0.4 0\"/>\n"
+        "</articulus></articulus></articulus>\n"
+        PERNA("sin", "ante")
+        POSITURA("a", "", META_SIN("0.2 -0.5 0", ""))
+        "</ossa>\n",
+        "<figura titulus=\"brevis\" ossa=\"duo\">\n"
+        "<articulus titulus=\"pelvis\">" CAPSA "</articulus>\n"
+        "</figura>\n");
+    CREDO_FALSUM (f.successus);
+    CREDO_AEQUALIS_I32 (f.linea, IX);
+    CREDO_CHORDA_AEQUALIS_LITERIS (f.plagula, "duo");
+    CREDO_CHORDA_CONTINET (f.error,
+        chorda_ex_literis("out of reach", c->piscina));
+}
+
+#define MEMBRUM(attributa)  "<membrum " attributa "/>\n"
+#define CRURA_NUDA  "<figura titulus=\"crura\">\n" CRURA_OSSA
+
+interior vacuum
+_sectio_recusationes_membrorum (
+    CredoContextus* c)
+{
+    hic_manens constans Recusatio R[] = {
+        /* membrum: attributa */
+        { CRURA_NUDA MEMBRUM("radix=\"femur_sin\" medium=\"crus_sin\""
+          " finis=\"pes_sin\" flexus=\"ante\"") CAUDA, XIII,
+          "'titulus'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" medium=\"crus_sin\""
+          " finis=\"pes_sin\" flexus=\"ante\"") CAUDA, XIII,
+          "'radix'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " finis=\"pes_sin\" flexus=\"ante\"") CAUDA, XIII,
+          "'medium'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"crus_sin\" flexus=\"ante\"") CAUDA, XIII,
+          "'finis'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"crus_sin\" finis=\"pes_sin\"") CAUDA, XIII,
+          "'flexus'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"crus_sin\" finis=\"pes_sin\" flexus=\"supra\"")
+          CAUDA, XIII, "'flexus'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"crus_sin\" finis=\"pes_sin\" flexus=\"ante\""
+          " color=\"#fff\"") CAUDA, XIII, "color" },
+        { CRURA_NUDA "<membrum titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"crus_sin\" finis=\"pes_sin\" flexus=\"ante\">"
+          "<art/></membrum>\n" CAUDA, XIII, "cannot hold" },
+        /* articuli ignoti */
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"coxa\""
+          " medium=\"crus_sin\" finis=\"pes_sin\" flexus=\"ante\"")
+          CAUDA, XIII, "unknown joint 'coxa'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"genu\" finis=\"pes_sin\" flexus=\"ante\"")
+          CAUDA, XIII, "unknown joint 'genu'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"crus_sin\" finis=\"talus\" flexus=\"ante\"")
+          CAUDA, XIII, "unknown joint 'talus'" },
+        /* non in linea */
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"pelvis\""
+          " medium=\"crus_sin\" finis=\"pes_sin\" flexus=\"ante\"")
+          CAUDA, XIII, "'crus_sin' is not a child of 'pelvis'" },
+        { CRURA_NUDA MEMBRUM("titulus=\"p\" radix=\"femur_sin\""
+          " medium=\"crus_sin\" finis=\"pes_dex\" flexus=\"ante\"")
+          CAUDA, XIII, "'pes_dex' is not a child of 'crus_sin'" },
+        /* articulus in duobus membris; titulus iteratus */
+        { CRURA_NUDA PERNA("sin", "ante")
+          MEMBRUM("titulus=\"p\" radix=\"pelvis\""
+          " medium=\"femur_sin\" finis=\"crus_sin\" flexus=\"ante\"")
+          CAUDA, XIV, "already in the limb 'perna_sin'" },
+        { CRURA_NUDA PERNA("sin", "ante")
+          MEMBRUM("titulus=\"perna_sin\" radix=\"femur_dex\""
+          " medium=\"crus_dex\" finis=\"pes_dex\" flexus=\"ante\"")
+          CAUDA, XIV, "twice" },
+        /* meta */
+        { CRURA_CAPUT POSITURA("a", "",
+          "<meta membrum=\"cauda\" locus=\"0 0 0\"/>\n") CAUDA, XVI,
+          "unknown limb 'cauda'" },
+        { CRURA_CAPUT POSITURA("a", "",
+          "<meta locus=\"0 0 0\"/>\n") CAUDA, XVI, "'membrum'" },
+        { CRURA_CAPUT POSITURA("a", "",
+          META_SIN("0.2 0.3 0.3", "") META_SIN("0.2 0.3 0.2", ""))
+          CAUDA, XVII, "twice" },
+        { CRURA_CAPUT POSITURA("a", "", META_SIN("0.2 0.3", ""))
+          CAUDA, XVI, "'locus'" },
+        { CRURA_CAPUT POSITURA("a", "",
+          "<meta membrum=\"perna_sin\"/>\n") CAUDA, XVI, "'locus'" },
+        { CRURA_CAPUT POSITURA("a", "",
+          META_SIN("0.2 0.3 0.3", "inclinatio=\"x\"")) CAUDA, XVI,
+          "'inclinatio'" },
+        { CRURA_CAPUT POSITURA("a", "",
+          META_SIN("0.2 0.3 0.3", "color=\"#fff\"")) CAUDA, XVI,
+          "color" },
+        { CRURA_CAPUT POSITURA("a", "",
+          "<meta membrum=\"perna_sin\" locus=\"0.2 0.3 0.3\">"
+          "<art/></meta>\n") CAUDA, XVI, "cannot hold" },
+        /* meta et <art> membri eiusdem */
+        { CRURA_CAPUT POSITURA("a", "",
+          "<art titulus=\"femur_sin\" rotatio=\"1 0 0\"/>\n"
+          META_SIN("0.2 0.3 0.3", "")) CAUDA, XVII, "'femur_sin'" },
+        { CRURA_CAPUT POSITURA("a", "",
+          META_SIN("0.2 0.3 0.3", "")
+          "<art titulus=\"crus_sin\" scala=\"2\"/>\n") CAUDA, XVI,
+          "'crus_sin'" },
+        { CRURA_CAPUT POSITURA("a", "",
+          META_SIN("0.2 0.3 0.3", "inclinatio=\"5\"")
+          "<art titulus=\"pes_sin\" rotatio=\"1 0 0\"/>\n") CAUDA,
+          XVI, "'pes_sin'" },
+        /* extra ambitum: ultra, in coxa ipsa; hereditata */
+        { CRURA_CAPUT POSITURA("a", "", META_SIN("0.2 -5 0", ""))
+          CAUDA, XVI, "out of reach" },
+        { CRURA_CAPUT POSITURA("a", "", META_SIN("0.2 1 0", ""))
+          CAUDA, XVI, "out of reach" },
+        { CRURA_CAPUT POSITURA("a", "", META_SIN("0.2 0.3 0.3", ""))
+          POSITURA("b", "ex=\"a\"",
+          "<art titulus=\"pelvis\" motus=\"0 5 0\"/>\n") CAUDA,
+          XVIII, "out of reach" },
+        /* membrum sine pare in positura speculata */
+        { CRURA_NUDA PERNA("sin", "ante")
+          POSITURA("a", "", META_SIN("0.2 0.3 0.3", ""))
+          "<positura titulus=\"s\" speculum=\"a\"/>\n" CAUDA, XVII,
+          "'perna_sin' has no partner 'perna_dex'" },
+        /* meta extra posituram */
+        { CRURA_CAPUT "<cyclus titulus=\"c\" duratio=\"1\">\n"
+          META_SIN("0.2 0.3 0.3", "") "</cyclus>\n" CAUDA, XVI,
+          "holds only" }
+    };
+    /* articulus unus communis, in quoque loco membri prioris:
+     * catena a - b - (c - d - e, x - y) */
+    hic_manens constans character* constans COMMUNIA[][II] = {
+        { "radix=\"c\" medium=\"d\" finis=\"e\"",
+          "radix=\"a\" medium=\"b\" finis=\"c\"" },
+        { "radix=\"a\" medium=\"b\" finis=\"c\"",
+          "radix=\"c\" medium=\"d\" finis=\"e\"" },
+        { "radix=\"a\" medium=\"b\" finis=\"c\"",
+          "radix=\"b\" medium=\"x\" finis=\"y\"" }
+    };
+    /* membrum non rectum in quiete: crus ad latus, sursum, pes
+     * ante, medium cum rotatione quietis */
+    hic_manens constans character* constans OBLIQUA[] = {
+        "<articulus titulus=\"b\" locus=\"0.1 -0.5 0\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 -0.4 0\"/></articulus>",
+        "<articulus titulus=\"b\" locus=\"0 -0.5 0.1\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 -0.4 0\"/></articulus>",
+        "<articulus titulus=\"b\" locus=\"0 0.5 0\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 -0.4 0\"/></articulus>",
+        "<articulus titulus=\"b\" locus=\"0 -0.5 0\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0.1 -0.4 0\"/></articulus>",
+        "<articulus titulus=\"b\" locus=\"0 -0.5 0\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 -0.4 0.1\"/></articulus>",
+        "<articulus titulus=\"b\" locus=\"0 -0.5 0\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 0.4 0\"/></articulus>",
+        "<articulus titulus=\"b\" locus=\"0 -0.5 0\" gyrus=\"20\">"
+        CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 -0.4 0\"/></articulus>"
+    };
+    PlasticaFiguraFructus f;
+                character textus[MMXLVIII];
+                      i32 k;
+
+    _recusationes_probare(c, R, (i32)(magnitudo(R) / magnitudo(R[0])));
+    per (k = ZEPHYRUM;
+         k < (i32)(magnitudo(OBLIQUA) / magnitudo(OBLIQUA[0])); k++)
+    {
+        sprintf(textus,
+            "<figura titulus=\"a\">\n"
+            "<articulus titulus=\"a\" locus=\"0 1 0\" gyrus=\"15\">"
+            "%s</articulus>\n"
+            "<membrum titulus=\"m\" radix=\"a\" medium=\"b\""
+            " finis=\"c\" flexus=\"ante\"/>\n</figura>\n", OBLIQUA[k]);
+        f = _lege(c, textus);
+        si (f.successus)
+        {
+            printf("obliquum %u non recusatum\n", (insignatus)k);
+        }
+        CREDO_FALSUM (f.successus);
+        CREDO_AEQUALIS_I32 (f.linea, III);
+        CREDO_CHORDA_CONTINET (f.error,
+            chorda_ex_literis("straight down at rest", c->piscina));
+    }
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        sprintf(textus,
+            "<figura titulus=\"a\">\n"
+            "<articulus titulus=\"a\">"
+            "<articulus titulus=\"b\" locus=\"0 -1 0\">" CAPSA_I
+            "<articulus titulus=\"c\" locus=\"0 -1 0\">"
+            "<articulus titulus=\"d\" locus=\"0 -1 0\">"
+            "<articulus titulus=\"e\" locus=\"0 -1 0\"/>"
+            "</articulus></articulus>"
+            "<articulus titulus=\"x\" locus=\"0 -1 0\">"
+            "<articulus titulus=\"y\" locus=\"0 -1 0\"/>"
+            "</articulus></articulus></articulus>\n"
+            "<membrum titulus=\"prius\" %s flexus=\"ante\"/>\n"
+            "<membrum titulus=\"alterum\" %s flexus=\"ante\"/>\n"
+            "</figura>\n", COMMUNIA[k][ZEPHYRUM], COMMUNIA[k][I]);
+        f = _lege(c, textus);
+        CREDO_FALSUM (f.successus);
+        CREDO_AEQUALIS_I32 (f.linea, IV);
+        CREDO_CHORDA_CONTINET (f.error, chorda_ex_literis(
+            "is already in the limb 'prius'", c->piscina));
+    }
+    /* idem rectum licet (radix cum quiete gyrata) */
+    sprintf(textus,
+        "<figura titulus=\"a\">\n"
+        "<articulus titulus=\"a\" locus=\"0 1 0\" gyrus=\"15\">"
+        "<articulus titulus=\"b\" locus=\"0 -0.5 0\">" CAPSA_I
+        "<articulus titulus=\"c\" locus=\"0 -0.4 0\"/></articulus>"
+        "</articulus>\n"
+        "<membrum titulus=\"m\" radix=\"a\" medium=\"b\""
+        " finis=\"c\" flexus=\"ante\"/>\n</figura>\n");
+    f = _lege(c, textus);
+    CREDO_VERUM (f.successus);
+    /* membra XVI licent, XVII recusantur */
+    {
+        character* magna = (character*)piscina_allocare(c->piscina,
+            (memoriae_index)XVIII * DXII + DXII);
+              i32 longitudo;
+              i32 n;
+
+        per (n = PLASTICA_MOTUS_MEMBRA_MAXIMA;
+             n <= PLASTICA_MOTUS_MEMBRA_MAXIMA + I; n++)
+        {
+            longitudo = (i32)sprintf(magna, "<figura titulus=\"a\">\n");
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                longitudo += (i32)sprintf(magna + longitudo,
+                    "<articulus titulus=\"a%u\">"
+                    "<articulus titulus=\"b%u\" locus=\"0 -1 0\">"
+                    CAPSA_I
+                    "<articulus titulus=\"c%u\" locus=\"0 -1 0\"/>"
+                    "</articulus></articulus>\n", (insignatus)k,
+                    (insignatus)k, (insignatus)k);
+            }
+            per (k = ZEPHYRUM; k < n; k++)
+            {
+                longitudo += (i32)sprintf(magna + longitudo,
+                    "<membrum titulus=\"m%u\" radix=\"a%u\""
+                    " medium=\"b%u\" finis=\"c%u\" flexus=\"ante\"/>\n",
+                    (insignatus)k, (insignatus)k, (insignatus)k,
+                    (insignatus)k);
+            }
+            (vacuum)sprintf(magna + longitudo, "</figura>\n");
+            f = _lege(c, magna);
+            si (n == PLASTICA_MOTUS_MEMBRA_MAXIMA)
+            {
+                CREDO_VERUM (f.successus);
+                CREDO_AEQUALIS_I32 (f.finium, XVI);
+                perge;
+            }
+            CREDO_FALSUM (f.successus);
+            CREDO_AEQUALIS_I32 (f.linea, I + XVII + XVII);
+            CREDO_CHORDA_CONTINET (f.error,
+                chorda_ex_literis("16", c->piscina));
+        }
+    }
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "cycli", _sectio_cycli, NIHIL, NIHIL, NIHIL, NIHIL },
     { "positura", _sectio_positura, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -1796,6 +2397,11 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "substitutio", _sectio_substitutio, NIHIL, NIHIL, NIHIL,
       NIHIL },
     { "recusationes_ossium", _sectio_recusationes_ossium, NIHIL,
+      NIHIL, NIHIL, NIHIL },
+    { "membra", _sectio_membra, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "membra_ossium", _sectio_membra_ossium, NIHIL, NIHIL, NIHIL,
+      NIHIL },
+    { "recusationes_membrorum", _sectio_recusationes_membrorum, NIHIL,
       NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };

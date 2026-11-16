@@ -15,7 +15,9 @@
  * Tabula partium: numerus partis, color eius in ordine 'partes'
  * paginae, signum, titulus; pars invisa notatur. Plagula <figura>
  * (plastica_motus.h): praeterea linea una per cyclum (duratio,
- * punctum infimum per cyclum, hiatus suturae) cum momentis eius, et
+ * punctum infimum per cyclum, hiatus suturae; cyclo cuius titulus
+ * "walk" continet, in figura cum membris, etiam "lapsus N": quantum
+ * pedes per humum labantur celeritate mundi) cum momentis eius, et
  * cum -motus linea motus (VIII quadra, duo ordines per cyclum) in
  * PNG alterum. Figura sine cyclis lineam non dat (exitus 0).
  *
@@ -307,8 +309,10 @@ motum_exsequi (
                            Piscina* piscina)
 {
     PlasticaMensuraeMotus m;
+         PlasticaMensurae fines = plastica_metiri(g->statua, piscina);
                PngFructus png;
                     Imago imago;
+                      f32 lapsus;
                       i32 k;
                       i32 j;
 
@@ -318,11 +322,23 @@ motum_exsequi (
 
         (vacuum)plastica_metiri_motum(g->statua, k, &m, piscina);
         imprimere("cyclus %u %.*s: duratio %.2f  infimum %.2f .. %.2f"
-            "  hiatus %.3f\n", (insignatus)k,
+            "  hiatus %.3f", (insignatus)k,
             (integer)c->titulus.mensura,
             (constans character*)c->titulus.datum, (f64)c->duratio,
             (f64)m.infimum_minimum, (f64)m.infimum_maximum,
             (f64)m.hiatus_suturae);
+        /* gressus figurae cum membris: lapsus pedum celeritate
+         * mundi, ad altitudinem figurae relata */
+        si (   chorda_continet(c->titulus,
+                   chorda_ex_literis("walk", piscina))
+            && plastica_metiri_lapsum(g->statua, k, g->fines,
+                   g->finium, PLASTICA_MOTUS_CELERITAS
+                       * (fines.maximum.y - fines.minimum.y)
+                       / PLASTICA_MOTUS_STATURA, &lapsus, piscina))
+        {
+            imprimere("  lapsus %.2f", (f64)lapsus);
+        }
+        imprimere("\n");
         per (j = ZEPHYRUM; j < g->momentorum; j++)
         {
             si (g->momenta[j].cyclus == k)

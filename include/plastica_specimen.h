@@ -174,6 +174,39 @@ plastica_metiri_motum (
     PlasticaMensuraeMotus* mensurae,
                   Piscina* piscina);
 
+/* celeritas gressus mundi: IV unitates per secundam, persona II
+ * unitates alta (ut mundus personam metitur et movet, hic iterum
+ * scriptum). Figura altitudinis A: CELERITAS * A / STATURA */
+#define PLASTICA_MOTUS_CELERITAS  4.0f
+#define PLASTICA_MOTUS_STATURA    2.0f
+
+/*
+ * plastica_metiri_lapsum - quantum pedes per humum labantur
+ *
+ * Figura in loco graditur: pes qui humum tenet RETRO (-z) moveri
+ * debet celeritate gressus. Ad PLASTICA_MOTUS_EXEMPLA instantia finis
+ * INFIMUS quaeritur (pares: prior in 'fines'); ubi idem finis duo
+ * instantia vicina infimus est, quantum motus eius per humum (x, z)
+ * a motu debito differt additur. Instans ultimum = primum (cyclus
+ * circularis exspectatur).
+ *
+ * @fines, finium: nodi finium membrorum (PlasticaFiguraFructus)
+ * @celeritas:     unitates figurae per secundam
+ * @lapsus:        summa per cyclum, unitates; 0 = pes fixus
+ *
+ * Redde: FALSUM (lapsus 0) si statua, fines, lapsus aut piscina
+ * NIHIL, cyclus aut nodus extra fines, aut finium 0
+ */
+b32
+plastica_metiri_lapsum (
+    constans Statua* statua,
+                i32  cyclus,
+       constans i32* fines,
+                i32  finium,
+                f32  celeritas,
+                f32* lapsus,
+            Piscina* piscina);
+
 /*
  * plastica_specimen_motus_pingere - linea motus omnium cyclorum
  *

@@ -370,6 +370,19 @@ the world's walking speed.
 - [ ] Plants, each red.
 - [ ] Commit on Fran's word.
 
+**As built (2026-11-16).** As the header Fran approved, with one
+change and two additions. Change: skeleton targets are scaled per
+limb (offset from the limb's rest end x figure limb length /
+skeleton limb length), not by root height - the goblin's feet were
+out of reach under the header's rule. Additions: `inclinatio` on a
+target (the foot keeps its rest orientation, pitched); the goblin
+sheet carries its own `walk` of 0.29 s. New module
+`plastica_membrum` (suite 3/3); motus suite 17 sections, specimen
+18. bipes rewritten on targets: idle, walk, attack (moment `ictus`),
+hurt, die. Goblin: walk lowest point -0.02 .. 0.00, slide 0.17.
+135 library plants and 5 tool plants, all red. Details in
+`lib/plastica_motus.worklog.md`.
+
 ### Task 7: the dials
 
 `lenitas="linearis | lenis | tenet"` on a key; `<mora

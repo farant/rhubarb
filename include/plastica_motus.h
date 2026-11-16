@@ -64,9 +64,8 @@
  * vicinas CLXXX gradus aut plus in axe uno mutatur ("add a key
  * between": via brevissima aliter iret quam scriptum est) - clavis
  * suturae circuli modulo CCCLX confertur, ut gyrus plenus liceat;
- * momentum extra cyclum aut iteratum; <membrum> ("limbs are not
- * built yet"); elementum aut attributum ignotum. Figura recusata
- * NIHIL est.
+ * momentum extra cyclum aut iteratum; elementum aut attributum
+ * ignotum. Figura recusata NIHIL est.
  *
  * SPECULUM: positura imago alterius.
  *
@@ -120,6 +119,55 @@
  * nidificatum, aut cum gyro / rotatione. Error in plagula ossium:
  * 'plagula' titulum ossium fert et 'linea' lineam ILLIUS plagulae.
  *
+ * MEMBRUM (liber <ossa> aut <figura>): tria ossa nominat.
+ *
+ *   <membrum titulus="perna_sin" radix="femur_sin"
+ *            medium="crus_sin" finis="pes_sin" flexus="ante"/>
+ *
+ * medium liber radicis, finis liber medii. In quiete membrum rectum
+ * deorsum pendet (-y articuli radicis), medium sine rotatione
+ * quietis. flexus "ante" (genu antrorsum) aut "retro". Articulus in
+ * uno membro solo. Maxime XVI membra. Membra ante posituras
+ * leguntur, ubicumque scripta.
+ *
+ * META (in <positura>): ubi cardo FINIS membri sit, in spatio
+ * figurae (humus y = 0), pro rotationibus radicis et medii.
+ *
+ *   <meta membrum="perna_sin" locus="0.15 0.08 0.3"
+ *         inclinatio="-10"/>
+ *
+ * Rotationes solvuntur: radix antrorsum (x) et ad latus (z) vertitur
+ * sine torsione, medium flectitur (x). Meta POST omnes <art>
+ * positurae solvitur: pelvis mota aut versa pedem non movet. Membra
+ * ordine quo scripta sunt solvuntur. Scala in articulis supra
+ * membrum computatur; scala in radice aut medio ipsis non.
+ *
+ * inclinatio="g": finis orientationem QUIETIS in spatio figurae
+ *   tenet, g gradibus circa x inclinatam (positivus: digiti deorsum)
+ *   - pes planus manet quomodocumque crus stat. Absens: finis non
+ *   tangitur.
+ *
+ * 'ex' metas hereditat et in positura nova ITERUM solvit; <art> in
+ * radice aut medio metam hereditatam tollit (<art> cum rotatione in
+ * fine inclinationem hereditatam). 'speculum' metam in membrum par
+ * ("_sin" / "_dex") transfert, x negato.
+ *
+ * META OSSIUM in figuram fertur per MEMBRUM, non per altitudinem
+ * radicis: differentia metae a fine QUIESCENTE membri in ossibus per
+ * (longitudo membri figurae / ossium) multiplicatur et fini
+ * quiescenti figurae additur. Pes qui in ossibus humum tangit in
+ * omni figura humum tangit, quaecumque proportiones crurum sunt.
+ * Meta in positura figurae ipsius ut scripta manet.
+ *
+ * RECUSAT praeterea: membrum cum articulo ignoto, non in linea
+ * (medium non liber radicis, finis non liber medii), non rectum in
+ * quiete, aut articulo iam in alio membro; titulum membri iteratum;
+ * flexum ignotum; metam membri ignoti aut bis in positura; metam ET
+ * <art> radicis aut medii in positura eadem; metam cum 'inclinatio'
+ * ET <art> finis cum rotatione; metam extra ambitum ("out of reach")
+ * cum linea metae (hereditatae: positurae); membrum sine pare in
+ * positura speculata quae metam eius fert.
+ *
  * DETERMINATA: textus idem statuam eandem dat.
  */
 
@@ -138,6 +186,7 @@
 #define PLASTICA_MOTUS_CYCLI_MAXIMI       XVI
 #define PLASTICA_MOTUS_CLAVES_MAXIMAE     LXIV
 #define PLASTICA_MOTUS_MOMENTA_MAXIMA     VIII
+#define PLASTICA_MOTUS_MEMBRA_MAXIMA      XVI
 
 nomen structura {
        i32 cyclus;     /* index in statua->cycli */
@@ -154,9 +203,12 @@ nomen structura {
                  i32  articulorum;
     PlasticaMomentum* momenta;     /* ordine plagulae; NIHIL si nulla */
                  i32  momentorum;
-              chorda  error;
-                 i32  linea;
-              chorda  plagula;     /* vacua: error in figura ipsa (aut
+                 i32* fines;       /* nodi finium membrorum, ordine
+                                    * membrorum; NIHIL si nulla */
+                 i32 finium;
+              chorda error;
+                 i32 linea;
+              chorda plagula;     /* vacua: error in figura ipsa (aut
                                     * successus); aliter titulus
                                     * ossium ubi error stat */
 } PlasticaFiguraFructus;
