@@ -8,7 +8,7 @@
  *
  *   plastica specimen <res.stml> -o <via.png> [-motus <via.png>]
  *   plastica texturae -o <via.png>
- *   plastica condere -volumen V [-fontes DIR]
+ *   plastica condere -volumen V [-fontes DIR] [-figurae DIR]
  *
  * specimen: descriptionem legit, numeros et tabulam partium imprimit,
  * paginam (IV aspectus x IV modi, plastica_specimen.h) scribit.
@@ -42,6 +42,34 @@
  * tollitur (statuae removere). Plagula recusata ceteras non impedit;
  * res cuius plagula recusata est ut "sine fonte" apparet (titulus
  * eius legi non potuit).
+ *
+ * condere, FIGURAE (plastica-motus-spec IV.8): post res, omnem
+ * plagulam *.stml in directorio figurarum, ordine nominum, per
+ * plastica_figura_legere componit, in GLB scribit (cum cyclis et
+ * nominibus partium) et ut PERSONAM in volumen addit sub titulo
+ * radicis suae - latus $models eam inter personas monstrat, mundus
+ * eam ut personam offert. GLB per lectorem relegitur ANTE
+ * additionem. Linea una per plagulam:
+ *
+ *   figura addita    TITULUS
+ *   figura mutata    TITULUS   octeti substituti
+ *   figura eadem     TITULUS   nihil scriptum
+ *   VIA:LINEA: CAUSA           figura recusata (stderr)
+ *   VIA: recusata: CAUSA       titulus iam res aut locus est, aut
+ *                              bis in hoc cursu (stderr)
+ *
+ * et summa altera: "plastica: figurae: N additae, N mutatae, N
+ * eaedem, N recusatae".
+ *
+ * DIRECTORIUM FIGURARUM: -figurae DIR si datum (absens aut sine
+ * plagulis: exitus 1, nihil scriptum); aliter, si -fontes NON datum,
+ * ordinarium plastica/figurae (absens aut vacuum: nullae figurae,
+ * sine errore); -fontes datum sine -figurae: nullae figurae.
+ *
+ * Figura recusata ceteras non impedit (ut res); exitus 1 si qua
+ * recusata est. "sine fonte" pro figuris NON imprimitur: personae
+ * emptae (golem, fungus) fontem numquam habent. Plagula <figura> in
+ * directorio RERUM recusatur (res fieret quae persona esse debet).
  *
  * -volumen SEMPER nominandum (nulla via ordinaria: volumen vivum
  * solum nominatum scribitur); volumen absens creatur (ut statuae
@@ -86,7 +114,8 @@ usum_imprimere (vacuum)
         "usus: plastica specimen <res.stml> -o <via.png>"
         " [-motus <via.png>]\n"
         "      plastica texturae -o <via.png>\n"
-        "      plastica condere -volumen V [-fontes DIR]\n");
+        "      plastica condere -volumen V [-fontes DIR]"
+        " [-figurae DIR]\n");
     redde II;
 }
 
@@ -420,6 +449,7 @@ exsequi_texturas (
 }
 
 #define FONTES_ORDINARII  "plastica/res"
+#define FIGURAE_ORDINARIAE "plastica/figurae"
 #define PLAGULAE_MAXIMAE  DXII
 #define VIA_MAXIMA        MXXIV
 
@@ -531,10 +561,17 @@ rem_condere (
                 chorda* tituli,
                    s32  titulorum,
                 chorda* titulus,
+                   b32  figura,
                  Summa* summa,
                Piscina* piscina)
 {
+         StatuaeGenus genus = figura ? STATUAE_GENUS_STATUA
+             : STATUAE_GENUS_RES;
+         StatuaeGenus alienum = figura ? STATUAE_GENUS_RES
+             : STATUAE_GENUS_STATUA;
       PlasticaFructus  f;
+               Statua* statua;
+               chorda* partes;
         StatuaFructus  relecta;
     StatuaeInscriptio* prior;
     StatuaeInscriptio* nova;
@@ -554,16 +591,43 @@ rem_condere (
         recusatam_nuntiare(via, "plagula legi non potest", vacua);
         redde FALSUM;
     }
-    f = plastica_legere(textus, piscina);
-    si (!f.successus)
+    si (figura)
     {
-        fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)f.linea,
-            (integer)f.error.mensura,
-            (constans character*)f.error.datum);
-        redde FALSUM;
+        PlasticaFiguraFructus g =
+            plastica_figura_legere(textus, ZEPHYRUM, piscina);
+
+        si (!g.successus)
+        {
+            fprintf(stderr, "%s:%u: %.*s\n", via,
+                (insignatus)g.linea, (integer)g.error.mensura,
+                (constans character*)g.error.datum);
+            redde FALSUM;
+        }
+        statua = g.statua;
+        partes = g.partes;
+    }
+    alioquin
+    {
+        f = plastica_legere(textus, piscina);
+        si (!f.successus)
+        {
+            fprintf(stderr, "%s:%u: %.*s\n", via,
+                (insignatus)f.linea, (integer)f.error.mensura,
+                (constans character*)f.error.datum);
+            redde FALSUM;
+        }
+        statua = f.statua;
+        partes = f.partes;
+        si (f.figura)
+        {
+            *titulus = vacua;
+            recusatam_nuntiare(via, "figura inter res (directorium"
+                " figurarum eam poscit)", partes[ZEPHYRUM]);
+            redde FALSUM;
+        }
     }
     /* nodus 0 radix est: titulus eius titulus rei */
-    *titulus = f.partes[ZEPHYRUM];
+    *titulus = partes[ZEPHYRUM];
     si (!statuae_titulus_validus(*titulus))
     {
         recusatam_nuntiare(via, "titulus rei invalidus (I..LXIV"
@@ -580,15 +644,17 @@ rem_condere (
         }
     }
     si (   inscriptio_tituli(statuae_enumerare_generis(volumen,
-               STATUAE_GENUS_STATUA, piscina), *titulus)
+               alienum, piscina), *titulus)
         || inscriptio_tituli(statuae_enumerare_generis(volumen,
                STATUAE_GENUS_LOCUS, piscina), *titulus))
     {
-        recusatam_nuntiare(via, "titulus iam persona aut locus in"
-            " volumine est", *titulus);
+        recusatam_nuntiare(via, figura
+            ? "titulus iam res aut locus in volumine est"
+            : "titulus iam persona aut locus in volumine est",
+            *titulus);
         redde FALSUM;
     }
-    octeti = statua_glb_scribere(f.statua, f.partes, piscina);
+    octeti = statua_glb_scribere(statua, partes, piscina);
     si (!octeti.datum)
     {
         recusatam_nuntiare(via, "res in GLB scribi non potest",
@@ -603,10 +669,9 @@ rem_condere (
         redde FALSUM;
     }
     prior = inscriptio_tituli(statuae_enumerare_generis(volumen,
-        STATUAE_GENUS_RES, piscina), *titulus);
+        genus, piscina), *titulus);
     sigillum = prior ? prior->sigillum_hex : vacua;
-    si (!statuae_addere_generis(volumen, *titulus, octeti,
-        STATUAE_GENUS_RES))
+    si (!statuae_addere_generis(volumen, *titulus, octeti, genus))
     {
         recusatam_nuntiare(via, "volumen additionem recusavit",
             chorda_ex_literis(volumen_error(volumen)
@@ -614,7 +679,11 @@ rem_condere (
         redde FALSUM;
     }
     nova = inscriptio_tituli(statuae_enumerare_generis(volumen,
-        STATUAE_GENUS_RES, piscina), *titulus);
+        genus, piscina), *titulus);
+    si (figura)
+    {
+        imprimere("figura ");
+    }
     si (!prior)
     {
         summa->additae++;
@@ -635,29 +704,83 @@ rem_condere (
     redde VERUM;
 }
 
+/* plagulas directorii unius condere; tituli conditi tabulae
+ * adduntur (communi rebus et figuris: titulus bis in cursu) */
+interior vacuum
+directorium_condere (
+       constans character* directorium,
+          constans chorda* nomina,
+                      s32  numerus,
+                  Volumen* volumen,
+                   chorda* tituli,
+                      s32* titulorum,
+                      b32  figura,
+                    Summa* summa,
+                  Piscina* piscina)
+{
+    character via[VIA_MAXIMA];
+          s32 k;
+
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        chorda titulus;
+
+        si (strlen(directorium) + (memoriae_index)nomina[k].mensura
+            + II > VIA_MAXIMA)
+        {
+            fprintf(stderr, "plastica: via nimis longa in '%s'\n",
+                directorium);
+            summa->recusatae++;
+            perge;
+        }
+        sprintf(via, "%s/%.*s", directorium,
+            (integer)nomina[k].mensura,
+            (constans character*)nomina[k].datum);
+        si (!rem_condere(via, volumen, tituli, *titulorum, &titulus,
+            figura, summa, piscina))
+        {
+            summa->recusatae++;
+        }
+        si (titulus.mensura)
+        {
+            tituli[(*titulorum)++] = titulus;
+        }
+    }
+}
+
+/* figurae: directorium figurarum aut NIHIL (nullae); necessariae:
+ * directorium a vocante nominatum - absens aut vacuum error est */
 interior s32
 exsequi_condere (
     constans character* via_voluminis,
     constans character* fontes,
+    constans character* figurae,
+                   b32  necessariae,
                Piscina* piscina)
 {
       Volumen* volumen;
           Xar* index;
         Summa  summa;
+        Summa  summa_figurarum;
        chorda* nomina;
+       chorda* nomina_figurarum;
        chorda* tituli;
-    character  via[VIA_MAXIMA];
           s32  numerus;
+          s32  figurarum = ZEPHYRUM;
           s32  titulorum = ZEPHYRUM;
+          s32  rerum;
           s32  k;
           s32  j;
 
     memset(&summa, ZEPHYRUM, magnitudo(summa));
+    memset(&summa_figurarum, ZEPHYRUM, magnitudo(summa_figurarum));
     nomina = (chorda*)piscina_allocare(piscina,
         PLAGULAE_MAXIMAE * magnitudo(chorda));
-    tituli = (chorda*)piscina_allocare(piscina,
+    nomina_figurarum = (chorda*)piscina_allocare(piscina,
         PLAGULAE_MAXIMAE * magnitudo(chorda));
-    si (!nomina || !tituli)
+    tituli = (chorda*)piscina_allocare(piscina,
+        II * PLAGULAE_MAXIMAE * magnitudo(chorda));
+    si (!nomina || !nomina_figurarum || !tituli)
     {
         fprintf(stderr, "plastica: memoria deficit\n");
         redde I;
@@ -676,6 +799,32 @@ exsequi_condere (
             fontes);
         redde I;
     }
+    /* directorium figurarum ANTE volumen iudicatur: nominatum et
+     * malum nihil scribit */
+    si (figurae)
+    {
+        figurarum = plagulas_colligere(figurae, nomina_figurarum,
+            piscina);
+        si (figurarum < ZEPHYRUM && necessariae)
+        {
+            fprintf(stderr, "plastica: directorium '%s' legi non"
+                " potest (aut plus quam %u plagulae)\n", figurae,
+                (insignatus)PLAGULAE_MAXIMAE);
+            redde I;
+        }
+        si (figurarum == ZEPHYRUM && necessariae)
+        {
+            fprintf(stderr,
+                "plastica: nullae plagulae *.stml in '%s'\n",
+                figurae);
+            redde I;
+        }
+        si (figurarum <= ZEPHYRUM)
+        {
+            figurae    = NIHIL;
+            figurarum  = ZEPHYRUM;
+        }
+    }
     volumen = volumen_aperire_aut_creare(piscina, via_voluminis);
     si (!volumen)
     {
@@ -683,30 +832,9 @@ exsequi_condere (
             via_voluminis);
         redde I;
     }
-    per (k = ZEPHYRUM; k < numerus; k++)
-    {
-        chorda titulus;
-
-        si (strlen(fontes) + (memoriae_index)nomina[k].mensura + II
-            > VIA_MAXIMA)
-        {
-            fprintf(stderr, "plastica: via nimis longa in '%s'\n",
-                fontes);
-            summa.recusatae++;
-            perge;
-        }
-        sprintf(via, "%s/%.*s", fontes, (integer)nomina[k].mensura,
-            (constans character*)nomina[k].datum);
-        si (!rem_condere(via, volumen, tituli, titulorum, &titulus,
-            &summa, piscina))
-        {
-            summa.recusatae++;
-        }
-        si (titulus.mensura)
-        {
-            tituli[titulorum++] = titulus;
-        }
-    }
+    directorium_condere(fontes, nomina, numerus, volumen, tituli,
+        &titulorum, FALSUM, &summa, piscina);
+    rerum = titulorum;
     index = statuae_enumerare_generis(volumen, STATUAE_GENUS_RES,
         piscina);
     per (k = ZEPHYRUM; index && k < (s32)xar_numerus(index); k++)
@@ -714,14 +842,14 @@ exsequi_condere (
         StatuaeInscriptio* x =
             (StatuaeInscriptio*)xar_obtinere(index, (i32)k);
 
-        per (j = ZEPHYRUM; j < titulorum; j++)
+        per (j = ZEPHYRUM; j < rerum; j++)
         {
             si (chorda_aequalis(tituli[j], x->titulus))
             {
                 frange;
             }
         }
-        si (j == titulorum)
+        si (j == rerum)
         {
             imprimere("sine fonte: %.*s\n",
                 (integer)x->titulus.mensura,
@@ -732,8 +860,21 @@ exsequi_condere (
         " %u recusatae\n", (insignatus)summa.additae,
         (insignatus)summa.mutatae, (insignatus)summa.eaedem,
         (insignatus)summa.recusatae);
+    si (figurae)
+    {
+        directorium_condere(figurae, nomina_figurarum, figurarum,
+            volumen, tituli, &titulorum, VERUM, &summa_figurarum,
+            piscina);
+        imprimere("plastica: figurae: %u additae, %u mutatae,"
+            " %u eaedem, %u recusatae\n",
+            (insignatus)summa_figurarum.additae,
+            (insignatus)summa_figurarum.mutatae,
+            (insignatus)summa_figurarum.eaedem,
+            (insignatus)summa_figurarum.recusatae);
+    }
     volumen_claudere(volumen);
-    redde summa.recusatae ? I : ZEPHYRUM;
+    redde summa.recusatae || summa_figurarum.recusatae ? I
+        : ZEPHYRUM;
 }
 
 externus constans ProvenientiaRelatio provenientia_plastica;
@@ -762,35 +903,47 @@ principale (
     }
     si (strcmp(argv[I], "condere") == ZEPHYRUM)
     {
-        constans character* volumen  = NIHIL;
-        constans character* fontes   = NIHIL;
+        constans character*  volumen  = NIHIL;
+        constans character*  fontes   = NIHIL;
+        constans character*  figurae  = NIHIL;
+        constans character** locus;
 
         per (k = II; k < argc; k++)
         {
-            b32 est_volumen = strcmp(argv[k], "-volumen") == ZEPHYRUM;
-
-            si (   (!est_volumen
-                    && strcmp(argv[k], "-fontes") != ZEPHYRUM)
-                || k + I >= argc || (est_volumen ? volumen : fontes))
+            si (strcmp(argv[k], "-volumen") == ZEPHYRUM)
             {
-                redde usum_imprimere();
+                locus = &volumen;
             }
-            si (est_volumen)
+            alioquin si (strcmp(argv[k], "-fontes") == ZEPHYRUM)
             {
-                volumen = argv[++k];
+                locus = &fontes;
+            }
+            alioquin si (strcmp(argv[k], "-figurae") == ZEPHYRUM)
+            {
+                locus = &figurae;
             }
             alioquin
             {
-                fontes = argv[++k];
+                redde usum_imprimere();
             }
+            si (k + I >= argc || *locus)
+            {
+                redde usum_imprimere();
+            }
+            *locus = argv[++k];
         }
         si (!volumen)
         {
             redde usum_imprimere();
         }
         piscina  = piscina_generare_dynamicum("plastica", M * M);
+        /* figurae: nominatae; aliter ordinariae nisi fontes
+         * nominati */
         r        = exsequi_condere(volumen,
-            fontes ? fontes : FONTES_ORDINARII, piscina);
+            fontes ? fontes : FONTES_ORDINARII,
+            figurae ? figurae
+                : (fontes ? NIHIL : FIGURAE_ORDINARIAE),
+            figurae != NIHIL, piscina);
         piscina_destruere(piscina);
         redde r;
     }

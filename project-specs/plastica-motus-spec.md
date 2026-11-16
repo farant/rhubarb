@@ -219,8 +219,8 @@ chosen frame.
    each, `lib/plastica.c` `_grex_aperire`.)
 3. That the reader keeps node names and can keep `extras` on an
    animation has not been read (the writer side was).
-4. That the world's body drawing honours scale channels (the slime's
-   squash) is inferred from the golem having them, not tested.
+4. (Settled 2026-11-16: the slime's squash shows in a headless
+   picture of the world.)
 5. The foot-slide number assumes the world's fixed 4 units per
    second; a slower creature needs its own speed, which is the
    combat spec's concern.

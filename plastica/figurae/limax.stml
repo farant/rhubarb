@@ -1,0 +1,114 @@
+<!-- limax: massa caerulea quae salit (viridis in gramine latebat) (plastica-motus-plan T4). Cardo
+     corporis in humo: scala a pede premit et extendit. Frons +z. -->
+<figura titulus="slime">
+  <articulus titulus="corpus">
+    <sphaera titulus="massa" magnitudo="1.2 0.9 1.2" segmenta="12"
+             asperitas="0.04" semen="7" color="#3a9ee0"/>
+    <sphaera titulus="nitor" magnitudo="0.26 0.12 0.2"
+             locus="-0.22 0.7 0.26" color="#dff2ff"/>
+    <articulus titulus="apex" locus="0 0.84 0">
+      <sphaera titulus="gutta" radius="0.13" locus="0 -0.06 0"
+               color="#3a9ee0"/>
+    </articulus>
+    <articulus titulus="oculus_sin" locus="0.22 0.47 0.5">
+      <sphaera titulus="album sin" radius="0.12" locus="0 -0.12 0"
+               color="#ffffff"/>
+      <sphaera titulus="pupilla sin" radius="0.06" locus="0 -0.06 0.08"
+               color="#101010"/>
+    </articulus>
+    <articulus titulus="oculus_dex" locus="-0.22 0.47 0.5">
+      <sphaera titulus="album dex" radius="0.12" locus="0 -0.12 0"
+               color="#ffffff"/>
+      <sphaera titulus="pupilla dex" radius="0.06" locus="0 -0.06 0.08"
+               color="#101010"/>
+    </articulus>
+  </articulus>
+
+  <!-- positurae -->
+  <positura titulus="respirat">
+    <art titulus="corpus" scala="1.05 0.93 1.05"/>
+  </positura>
+  <positura titulus="nictat" ex="respirat">
+    <art titulus="oculus_sin" scala="1 0.12 1"/>
+    <art titulus="oculus_dex" scala="1 0.12 1"/>
+  </positura>
+  <positura titulus="pressa">
+    <art titulus="corpus" scala="1.2 0.7 1.2"/>
+  </positura>
+  <positura titulus="surgit">
+    <art titulus="corpus" scala="0.86 1.24 0.86" motus="0 0.16 0"/>
+  </positura>
+  <positura titulus="summa">
+    <art titulus="corpus" scala="0.96 1.06 0.96" motus="0 0.46 0"/>
+  </positura>
+  <positura titulus="cadit">
+    <art titulus="corpus" scala="0.9 1.16 0.9" motus="0 0.16 0"/>
+  </positura>
+  <positura titulus="allisa">
+    <art titulus="corpus" scala="1.28 0.62 1.28"/>
+  </positura>
+  <positura titulus="retracta">
+    <art titulus="corpus" scala="1.14 0.82 1.0" rotatio="-12 0 0"
+         motus="0 0.05 -0.12"/>
+  </positura>
+  <positura titulus="impetus">
+    <art titulus="corpus" scala="0.82 0.9 1.45" rotatio="14 0 0"
+         motus="0 0.14 0.4"/>
+  </positura>
+  <positura titulus="icta">
+    <art titulus="corpus" scala="1.26 0.62 1.26" rotatio="-12 0 0"
+         motus="0 0.07 -0.12"/>
+    <art titulus="oculus_sin" scala="1 0.12 1"/>
+    <art titulus="oculus_dex" scala="1 0.12 1"/>
+  </positura>
+  <positura titulus="resilit">
+    <art titulus="corpus" scala="0.9 1.18 0.9"/>
+  </positura>
+  <positura titulus="anhelat">
+    <art titulus="corpus" scala="0.84 1.26 0.84"/>
+  </positura>
+  <positura titulus="collapsa">
+    <art titulus="corpus" scala="1.5 0.3 1.5"/>
+    <art titulus="oculus_sin" scala="1 0.12 1"/>
+    <art titulus="oculus_dex" scala="1 0.12 1"/>
+  </positura>
+  <positura titulus="lacuna" ex="collapsa">
+    <art titulus="corpus" scala="1.8 0.08 1.8"/>
+  </positura>
+
+  <!-- cycli -->
+  <cyclus titulus="idle" duratio="2.4" circulus="verum">
+    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="1.2" positura="respirat"/>
+    <clavis tempus="1.5" positura="respirat"/>
+    <clavis tempus="1.6" positura="nictat"/>
+    <clavis tempus="1.7" positura="respirat"/>
+  </cyclus>
+  <cyclus titulus="walk" duratio="0.8" circulus="verum">
+    <clavis tempus="0" positura="pressa"/>
+    <clavis tempus="0.14" positura="surgit"/>
+    <clavis tempus="0.38" positura="summa"/>
+    <clavis tempus="0.58" positura="cadit"/>
+    <clavis tempus="0.68" positura="allisa"/>
+  </cyclus>
+  <cyclus titulus="attack" duratio="0.7">
+    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="0.2" positura="retracta"/>
+    <clavis tempus="0.32" positura="impetus"/>
+    <clavis tempus="0.5" positura="pressa"/>
+    <clavis tempus="0.7" positura="quies"/>
+    <momentum titulus="ictus" tempus="0.32"/>
+  </cyclus>
+  <cyclus titulus="hurt" duratio="0.45">
+    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="0.08" positura="icta"/>
+    <clavis tempus="0.24" positura="resilit"/>
+    <clavis tempus="0.45" positura="quies"/>
+  </cyclus>
+  <cyclus titulus="die" duratio="1.0">
+    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="0.18" positura="anhelat"/>
+    <clavis tempus="0.5" positura="collapsa"/>
+    <clavis tempus="0.9" positura="lacuna"/>
+  </cyclus>
+</figura>

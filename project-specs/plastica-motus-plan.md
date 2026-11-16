@@ -258,6 +258,22 @@ by eye. An arm raised sideways does not show in the side row.
 - [ ] Plants for the tool, each red.
 - [ ] Commit on Fran's word.
 
+**As built (2026-11-16).** As the header Fran approved, including
+the change from this plan that he accepted: a refused figure does
+not stop the others (exit 1, as props). Added beyond it: a `<figura>`
+sheet in the props directory is refused; duplicate titles are caught
+across props and figures of one run. Smoke script gained the figure
+cases; 18 hand plants on the tool, all red. The slime
+(`plastica/figurae/limax.stml`, title `slime`): one joint for the
+body, one for the top drop, one per eye; cycles idle, walk (a hop),
+attack with moment `ictus`, hurt, die. Revised by strip: base disc
+removed, tilted poses lifted off the ground. Seen headless in the
+world: stands, hops, scale keys show (spec AUDIENDA 4 answered);
+recoloured from green to blue because green vanished on the grass.
+Built into Fran's live volume 2026-11-16 (`figura addita slime`).
+Found, not fixed: the strip's 120 pixel cells cut off wide poses and
+forward lunges of a wide figure.
+
 Known limit, not fixed here: the world sizes every character to the
 same height (`lib/mundus_pictura.c:536`), so the slime stands as
 tall as the mushroom man when chosen as the character. Creature

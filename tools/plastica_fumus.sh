@@ -196,5 +196,90 @@ proba "res sine fonte manet" 0 "$S" enumerare -volumen "$V" -res
 proba "enumerare cum sigillo" 0 "$S" enumerare -volumen "$V" -res
 [ "$(awk -F'\t' '$1=="well"{print length($2)}' "$T/out")" -gt 8 ] || { echo "FRACTA: sigillum putei"; fracta=$((fracta + 1)); }
 
+# condere figuras (plastica-motus-plan T4): personae in volumen
+VF="$T/figurae.volumen"
+DF="$T/fontes_f"
+G="$T/figurae"
+mkdir -p "$DF" "$G"
+printf '<res titulus="cista">\n  <capsa magnitudo="1 1 1"/>\n</res>\n' > "$DF/a_cista.stml"
+cp "$T/pupa.stml" "$G/b_pupa.stml"
+proba "condere -figurae sine via usus" 2 "$B" condere -volumen "$VF" -fontes "$DF" -figurae
+proba "condere -figurae bis usus" 2 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$G" -figurae "$G"
+proba "condere figurae absentes" 1 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$T/nullum"
+proba "condere figurae vacuae" 1 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$T/vacuum"
+contine "figurae vacuae nominantur" "$T/err" "nullae plagulae"
+[ ! -e "$VF" ] || { echo "FRACTA: directorium figurarum malum volumen creavit"; fracta=$((fracta + 1)); }
+proba "condere figuram" 0 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$G"
+contine "res ante figuras" "$T/out" "^addita    cista$"
+contine "figura addita" "$T/out" "^figura addita    pupa$"
+contine "summa rerum" "$T/out" "^plastica: 1 additae, 0 mutatae, 0 eaedem, 0 recusatae$"
+contine "summa figurarum" "$T/out" "^plastica: figurae: 1 additae, 0 mutatae, 0 eaedem, 0 recusatae$"
+[ "$(tail -1 "$T/out")" = "plastica: figurae: 1 additae, 0 mutatae, 0 eaedem, 0 recusatae" ] || { echo "FRACTA: summa figurarum non ultima"; fracta=$((fracta + 1)); }
+proba "figura inter personas" 0 "$S" enumerare -volumen "$VF"
+[ "$(cut -f1 "$T/out" | tr '\n' ',')" = "pupa," ] || { echo "FRACTA: figura inter personas: $(cut -f1 "$T/out" | tr '\n' ',')"; fracta=$((fracta + 1)); }
+proba "figura non inter res" 0 "$S" enumerare -volumen "$VF" -res
+[ "$(cut -f1 "$T/out" | tr '\n' ',')" = "cista," ] || { echo "FRACTA: figura inter res"; fracta=$((fracta + 1)); }
+# cycli et nomina articulorum in GLB condito
+grep -a -q '"name":"salit"' "$VF" || { echo "FRACTA: cyclus in GLB abest"; fracta=$((fracta + 1)); }
+grep -a -q '"name":"corpus"' "$VF" || { echo "FRACTA: nomen articuli in GLB abest"; fracta=$((fracta + 1)); }
+proba "condere figuram iterum" 0 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$G"
+contine "figura eadem" "$T/out" "^figura eadem     pupa$"
+contine "summa figurarum eadem" "$T/out" "^plastica: figurae: 0 additae, 0 mutatae, 1 eaedem, 0 recusatae$"
+sed 's/duratio="2"/duratio="3"/' "$T/pupa.stml" > "$G/b_pupa.stml"
+proba "condere figuram mutatam" 0 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$G"
+contine "figura mutata" "$T/out" "^figura mutata    pupa$"
+# -fontes sine -figurae: figurae non tanguntur
+proba "condere sine figuris" 0 "$B" condere -volumen "$VF" -fontes "$DF"
+[ "$(grep -c figura "$T/out")" -eq 0 ] || { echo "FRACTA: figurae sine -figurae tactae"; fracta=$((fracta + 1)); }
+# recusatae: ceterae tamen eunt; persona empta 'sine fonte' non dicitur
+proba "persona empta" 0 "$S" addere probationes/fixa/statuae/fungus.glb -volumen "$VF" -titulus "fungus"
+cp "$T/motus_malus.stml" "$G/a_mala.stml"
+printf '<res titulus="res_inter_figuras">\n  <capsa magnitudo="1 1 1"/>\n</res>\n' > "$G/c_res.stml"
+sed 's/titulus="pupa"/titulus="cista"/' "$T/pupa.stml" > "$G/d_cista.stml"
+cp "$T/pupa.stml" "$G/e_pupa_altera.stml"
+sed 's/titulus="pupa"/titulus="nova"/' "$T/pupa.stml" > "$G/f_nova.stml"
+sed 's/titulus="pupa"/titulus="inter_res"/' "$T/pupa.stml" > "$DF/b_figura.stml"
+proba "res antiqua in volumine" 0 "$S" addere probationes/fixa/statuae/fungus.glb -volumen "$VF" -titulus "antiqua" -res
+sed 's/titulus="pupa"/titulus="antiqua"/' "$T/pupa.stml" > "$G/g_antiqua.stml"
+proba "condere figuras cum recusatis" 1 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$G"
+contine "motus malus cum linea" "$T/err" "^$G/a_mala.stml:4: "
+contine "res inter figuras recusatur" "$T/err" "^$G/c_res.stml:1: .*<figura>"
+contine "titulus rei huius cursus recusatur" "$T/err" "^$G/d_cista.stml: recusata: titulus iam ab alia plagula huius cursus datus: cista$"
+contine "titulus rei in volumine recusatur" "$T/err" "^$G/g_antiqua.stml: recusata: titulus iam res aut locus in volumine est: antiqua$"
+contine "figura bis recusatur" "$T/err" "^$G/e_pupa_altera.stml: recusata: titulus iam ab alia plagula huius cursus datus: pupa$"
+contine "figura inter res recusatur" "$T/err" "^$DF/b_figura.stml: recusata: figura inter res (directorium figurarum eam poscit): inter_res$"
+contine "nova tamen addita" "$T/out" "^figura addita    nova$"
+contine "summa figurarum cum recusatis" "$T/out" "^plastica: figurae: 1 additae, 0 mutatae, 1 eaedem, 5 recusatae$"
+contine "summa rerum cum recusata" "$T/out" "^plastica: 0 additae, 0 mutatae, 1 eaedem, 1 recusatae$"
+contine "res sine fonte tamen dicitur" "$T/out" "^sine fonte: antiqua$"
+[ "$(grep -c 'sine fonte' "$T/out")" -eq 1 ] || { echo "FRACTA: persona 'sine fonte' dicta"; fracta=$((fracta + 1)); }
+proba "personae post recusatas" 0 "$S" enumerare -volumen "$VF"
+[ "$(cut -f1 "$T/out" | tr '\n' ',')" = "pupa,fungus,nova," ] || { echo "FRACTA: personae post recusatas: $(cut -f1 "$T/out" | tr '\n' ',')"; fracta=$((fracta + 1)); }
+# figurae solae recusatae: exitus tamen 1
+rm "$DF/b_figura.stml"
+proba "condere figuras solas recusatas" 1 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$G"
+contine "res omnes bonae" "$T/out" "^plastica: 0 additae, 0 mutatae, 1 eaedem, 0 recusatae$"
+# directoria ordinaria: plastica/res et plastica/figurae sub loco currenti;
+# figurae absentes sine errore
+mkdir -p "$T/alibi/plastica/res"
+cp "$DF/a_cista.stml" "$T/alibi/plastica/res/"
+( cd "$T/alibi" && "$RADIX_DIR/$B" condere -volumen "$T/alibi.volumen" >"$T/out" 2>"$T/err" ); rc=$?
+[ "$rc" -eq 0 ] || { echo "FRACTA: ordinaria sine figuris (exitus $rc)"; fracta=$((fracta + 1)); }
+[ "$(grep -c figura "$T/out")" -eq 0 ] || { echo "FRACTA: figurae ordinariae absentes nuntiatae"; fracta=$((fracta + 1)); }
+mkdir -p "$T/alibi/plastica/figurae"
+( cd "$T/alibi" && "$RADIX_DIR/$B" condere -volumen "$T/alibi.volumen" >"$T/out" 2>"$T/err" ); rc=$?
+[ "$rc" -eq 0 ] || { echo "FRACTA: figurae ordinariae vacuae (exitus $rc)"; fracta=$((fracta + 1)); }
+cp "$T/pupa.stml" "$T/alibi/plastica/figurae/"
+( cd "$T/alibi" && "$RADIX_DIR/$B" condere -volumen "$T/alibi.volumen" >"$T/out" 2>"$T/err" ); rc=$?
+[ "$rc" -eq 0 ] || { echo "FRACTA: figurae ordinariae (exitus $rc)"; fracta=$((fracta + 1)); }
+contine "figura ordinaria addita" "$T/out" "^figura addita    pupa$"
+# omnis figura in plastica/figurae componitur et lineam motus dat
+for f in plastica/figurae/*.stml; do
+    [ -e "$f" ] || continue
+    n="$(basename "$f" .stml)"
+    proba "specimen figurae $n" 0 "$B" specimen "$f" -o "$T/f_$n.png" -motus "$T/f_${n}_motus.png"
+    contine "cycli figurae $n" "$T/out" "^cyclus 0 "
+done
+
 if [ "$fracta" -eq 0 ]; then echo "PLASTICA FUMUS: OMNIA BONA"; exit 0; fi
 echo "PLASTICA FUMUS: $fracta FRACTA"; exit 1
