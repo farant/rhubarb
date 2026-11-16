@@ -145,3 +145,28 @@ state every time, never cached: a remount starts inside for free.
 - Not planted: the index clamps in `mundus_ostia_locus_proximus`
   (removing one only makes a corrupt huge radius loop for minutes;
   a test with radius 2,000,000 passes quickly with them).
+
+## 2026-11-16 - the idle cycle plays while the character stands
+
+Fran: "can we make it also so that in mundus it uses the idle
+animation when still if a model does?" The world already chose the
+`idle` cycle for a standing character but drew it at time 0 and
+stopped ticking, so it was one frozen frame.
+
+- `MundusCorpus.tempus_quietis` (mundus.h): seconds standing still;
+  grows by dt in every step where the body does not move (not
+  intending, or blocked), cleared when it moves and by
+  `mundus_corpus_ponere`.
+- `mundus_pictura` draws the idle cycle at `tempus_quietis`.
+- `mundus_latus_mora`: `MUNDUS_LATUS_MORA_QUIETIS` (66 ms, 15 per
+  second) while placed, outside a scene, standing, with a character
+  that has an idle cycle; characters without one keep the 1 s
+  inspection tick and cost nothing. The frame key includes the idle
+  time only when there is an idle cycle.
+- A zeroed `forma` (no character) has `cyclus_quietis == 0`, which
+  reads as "has idle": the `m->persona` check in the tick is needed.
+  A plant found the test for it missing.
+- Cost: with `$world` open and a creature with `idle`, the body is
+  re-rendered 15 times a second while standing. The ground is a copy.
+- 13 plants, all red after two edge tests were added (no place, no
+  character). Rebuild with `AEDIFICARE_SOLUM=1 ./apps/vicus/vicus.sh`.

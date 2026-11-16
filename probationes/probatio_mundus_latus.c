@@ -49,6 +49,7 @@
 #include "statua_glb.h"
 #include "statua_glb_scriptor.h"
 #include "plastica.h"
+#include "plastica_motus.h"
 #include "mundus_locus.h"
 #include "mundus_ostia.h"
 #include "mundus_pictura.h"
@@ -393,6 +394,103 @@ _sectio_primum (
     CREDO_VERUM (mundus_latus_mora(&w->m)
         == MUNDUS_LATUS_MORA_INSPECTIONIS);
     CREDO_FALSUM (_pulsus(w, C));
+    _finire(w);
+}
+
+/* figura cum cyclis "idle" et "walk" eisdem: corpus premitur et
+ * redit, secunda una */
+hic_manens constans character* NUTANS =
+    "<figura titulus=\"nutans\">"
+    "<articulus titulus=\"corpus\">"
+    "<capsa magnitudo=\"1 2 1\" color=\"#c04040\"/>"
+    "<articulus titulus=\"caput\" locus=\"0 2 0\">"
+    "<capsa magnitudo=\"0.8 0.8 0.8\" color=\"#40c040\"/>"
+    "</articulus></articulus>"
+    "<positura titulus=\"p\">"
+    "<art titulus=\"corpus\" scala=\"1.4 0.6 1.4\"/></positura>"
+    "<cyclus titulus=\"idle\" duratio=\"1\" circulus=\"verum\">"
+    "<clavis tempus=\"0\" positura=\"quies\"/>"
+    "<clavis tempus=\"0.5\" positura=\"p\"/></cyclus>"
+    "<cyclus titulus=\"walk\" duratio=\"1\" circulus=\"verum\">"
+    "<clavis tempus=\"0\" positura=\"quies\"/>"
+    "<clavis tempus=\"0.5\" positura=\"p\"/></cyclus>"
+    "</figura>";
+
+/* persona cum cyclo "idle": dum stat cyclus currit (pulsus LXVI ms,
+ * quadrum mutatur); dum ambulat pulsus motus; sistit, redit */
+interior vacuum
+_sectio_quies (
+    CredoContextus* c)
+{
+                  Volumen* v = volumen_temporarium(c->piscina,
+                      "mundus_quies");
+    PlasticaFiguraFructus f = plastica_figura_legere(
+        chorda_ex_literis(NUTANS, c->piscina), ZEPHYRUM, c->piscina);
+                    Orbis* w;
+                       i8* prius;
+           memoriae_index  n;
+
+    CREDO_NECESSE (v != NIHIL && f.successus);
+    (vacuum)statuae_addere_generis(v, _ch(c, "clearing"),
+        filum_legere_totum(VIA_PLANI, c->piscina), STATUAE_GENUS_LOCUS);
+    CREDO_NECESSE (statuae_addere(v, _ch(c, "nutans"),
+        statua_glb_scribere(f.statua, f.partes, c->piscina)));
+    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_NECESSE (_quadrum(w) != NIHIL && w->m.positum);
+    CREDO_VERUM (w->m.forma.cyclus_quietis >= ZEPHYRUM);
+    n = (memoriae_index)_quadrum(w)->latitudo * _quadrum(w)->altitudo
+        * IV;
+    prius = (i8*)piscina_allocare(c->piscina, n);
+    memcpy(prius, _quadrum(w)->pixela, n);
+    /* stat: pulsus quietis; quadrum cum tempore mutatur */
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_QUIETIS);
+    CREDO_VERUM (_pulsus(w, C));
+    (vacuum)_pulsus(w, C);
+    (vacuum)_pulsus(w, C);
+    CREDO_FALSUM (w->m.corpus.movetur);
+    CREDO_F32_PROXIMUS (w->m.corpus.tempus_quietis, 0.3f, 0.01f);
+    CREDO_VERUM (memcmp(prius, _quadrum(w)->pixela, n) != ZEPHYRUM);
+    /* ambulat: pulsus motus; tempus quietis purgatur */
+    _premere(w, 'd');
+    CREDO_VERUM (mundus_latus_mora(&w->m) == MUNDUS_LATUS_MORA_MOTUS);
+    _pulsus_multi(w, V);
+    CREDO_VERUM (w->m.corpus.movetur);
+    CREDO_F32_PROXIMUS (w->m.corpus.tempus_quietis, 0.0f, 0.0001f);
+    CREDO_VERUM (mundus_latus_mora(&w->m) == MUNDUS_LATUS_MORA_MOTUS);
+    /* sistit: pulsus quietis redit, cyclus a nihilo */
+    _solvere(w, 'd');
+    _pulsus_multi(w, II);
+    CREDO_FALSUM (w->m.corpus.movetur);
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_QUIETIS);
+    CREDO_VERUM (w->m.corpus.tempus_quietis < 0.1f);
+    _finire(w);
+    /* persona cum cyclo quietis sed locus nullus (non posita):
+     * pulsus rari */
+    v = volumen_temporarium(c->piscina, "mundus_quies_sine_loco");
+    CREDO_NECESSE (v != NIHIL);
+    CREDO_NECESSE (statuae_addere(v, _ch(c, "nutans"),
+        statua_glb_scribere(f.statua, f.partes, c->piscina)));
+    w = _orbem(c, v, LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_FALSUM (w->m.positum);
+    CREDO_VERUM (w->m.persona != NIHIL);
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_INSPECTIONIS);
+    _finire(w);
+    /* locus sine persona: pulsus rari (forma vacua cyclum 0 non
+     * significat) */
+    w = _orbem(c, _volumen(c, "mundus_quies_sine_persona", VERUM,
+        ZEPHYRUM), LATITUDO, ALTITUDO);
+    CREDO_NECESSE (w != NIHIL);
+    (vacuum)_pulsus(w, ZEPHYRUM);
+    CREDO_VERUM (w->m.persona == NIHIL);
+    CREDO_VERUM (mundus_latus_mora(&w->m)
+        == MUNDUS_LATUS_MORA_INSPECTIONIS);
     _finire(w);
 }
 
@@ -2322,6 +2420,7 @@ _sectio_ignota (
 hic_manens constans CredoSectio SECTIONES[] = {
     { "primum", _sectio_primum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ambulat", _sectio_ambulat, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "quies", _sectio_quies, NIHIL, NIHIL, NIHIL, NIHIL },
     { "focus", _sectio_focus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "claves", _sectio_claves, NIHIL, NIHIL, NIHIL, NIHIL },
     { "persona", _sectio_persona, NIHIL, NIHIL, NIHIL, NIHIL },

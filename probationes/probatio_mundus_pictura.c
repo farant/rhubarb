@@ -24,6 +24,7 @@
 #include "mundus_pictura.h"
 #include "credo.h"
 #include "mundus_locus_fictus.h"
+#include "plastica_motus.h"
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -889,6 +890,76 @@ _sectio_quadri_mala (
         c->piscina));
 }
 
+/* figura cum cyclis "idle" et "walk" eisdem: corpus premitur et
+ * redit, secunda una */
+hic_manens constans character* NUTANS =
+    "<figura titulus=\"nutans\">"
+    "<articulus titulus=\"corpus\">"
+    "<capsa magnitudo=\"1 2 1\" color=\"#c04040\"/>"
+    "<articulus titulus=\"caput\" locus=\"0 2 0\">"
+    "<capsa magnitudo=\"0.8 0.8 0.8\" color=\"#40c040\"/>"
+    "</articulus></articulus>"
+    "<positura titulus=\"p\">"
+    "<art titulus=\"corpus\" scala=\"1.4 0.6 1.4\"/></positura>"
+    "<cyclus titulus=\"idle\" duratio=\"1\" circulus=\"verum\">"
+    "<clavis tempus=\"0\" positura=\"quies\"/>"
+    "<clavis tempus=\"0.5\" positura=\"p\"/></cyclus>"
+    "<cyclus titulus=\"walk\" duratio=\"1\" circulus=\"verum\">"
+    "<clavis tempus=\"0\" positura=\"quies\"/>"
+    "<clavis tempus=\"0.5\" positura=\"p\"/></cyclus>"
+    "</figura>";
+
+/* cyclus quietis ad tempus_quietis pingitur; ambulandi ad
+ * tempus_motus */
+interior vacuum
+_sectio_quies (
+    CredoContextus* c)
+{
+                 Theatrum* t = _theatrum(c, loci_ficti_locus(c));
+    PlasticaFiguraFructus  f = plastica_figura_legere(
+        chorda_ex_literis(NUTANS, c->piscina), ZEPHYRUM, c->piscina);
+                       i8* initium;
+                       i8* medium;
+                       i8* q;
+           memoriae_index  n = QUADRI_LATUS * QUADRI_LATUS;
+
+    CREDO_NECESSE (f.successus);
+    t->formae[ZEPHYRUM] = mundus_forma(f.statua, c->piscina);
+    CREDO_AEQUALIS_S32 (t->formae[ZEPHYRUM].cyclus_quietis, ZEPHYRUM);
+    CREDO_AEQUALIS_S32 (t->formae[ZEPHYRUM].cyclus_ambulandi, I);
+    (vacuum)_corpus_addere(t, ZEPHYRUM, 4.0f, 6.0f);
+    initium = _quadrum(c, t, ZEPHYRUM);
+    /* stat: tempus quietis posituram mutat; cyclus circulat */
+    t->corpora[ZEPHYRUM].tempus_quietis  = 0.5f;
+    medium                               = _quadrum(c, t, ZEPHYRUM);
+    CREDO_VERUM (memcmp(initium, medium, n) != ZEPHYRUM);
+    t->corpora[ZEPHYRUM].tempus_quietis  = 1.0f;
+    q                                    = _quadrum(c, t, ZEPHYRUM);
+    CREDO_VERUM (memcmp(initium, q, n) == ZEPHYRUM);
+    /* stat: tempus motus nihil facit */
+    t->corpora[ZEPHYRUM].tempus_quietis  = 0.0f;
+    t->corpora[ZEPHYRUM].tempus_motus    = 0.5f;
+    q                                    = _quadrum(c, t, ZEPHYRUM);
+    CREDO_VERUM (memcmp(initium, q, n) == ZEPHYRUM);
+    /* movetur: tempus motus regit, tempus quietis nihil facit */
+    t->corpora[ZEPHYRUM].movetur  = VERUM;
+    q                             = _quadrum(c, t, ZEPHYRUM);
+    CREDO_VERUM (memcmp(medium, q, n) == ZEPHYRUM);
+    t->corpora[ZEPHYRUM].tempus_motus    = 0.0f;
+    t->corpora[ZEPHYRUM].tempus_quietis  = 0.5f;
+    q                                    = _quadrum(c, t, ZEPHYRUM);
+    CREDO_VERUM (memcmp(initium, q, n) == ZEPHYRUM);
+    /* statua sine cyclo quietis: tempus quietis nihil mutat */
+    t->mundus.corporum = ZEPHYRUM;
+    (vacuum)_corpus_addere(t, I, 4.0f, 6.0f);
+    t->corpora[ZEPHYRUM].movetur         = FALSUM;
+    t->corpora[ZEPHYRUM].tempus_quietis  = 0.0f;
+    initium                              = _quadrum(c, t, ZEPHYRUM);
+    t->corpora[ZEPHYRUM].tempus_quietis  = 0.4f;
+    q                                    = _quadrum(c, t, ZEPHYRUM);
+    CREDO_VERUM (memcmp(initium, q, n) == ZEPHYRUM);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "stabilis", _sectio_stabilis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "pigra", _sectio_pigra, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -899,6 +970,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "vacua", _sectio_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
     { "modus", _sectio_modus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "forma", _sectio_forma, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "quies", _sectio_quies, NIHIL, NIHIL, NIHIL, NIHIL },
     { "medium", _sectio_medium, NIHIL, NIHIL, NIHIL, NIHIL },
     { "occultum", _sectio_occultum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ordo", _sectio_ordo, NIHIL, NIHIL, NIHIL, NIHIL },

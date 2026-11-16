@@ -52,6 +52,8 @@ nomen structura {
     b32 movetur;        /* gradu ultimo locum mutavit */
     f32 tempus_motus;   /* secundae motus continui (tempus cycli
                          * ambulandi); 0 dum quiescit */
+    f32 tempus_quietis; /* secundae quietis continuae (tempus cycli
+                         * quietis); 0 dum movetur */
     s32 forma;          /* index vocantis (quae statua); mundus eum
                          * non legit */
 } MundusCorpus;
@@ -65,7 +67,8 @@ nomen structura {
 /*
  * mundus_corpus_ponere - corpus in loco gressibili ponere
  *
- * x, z et y corporis scribuntur; motus et tempus_motus purgantur;
+ * x, z et y corporis scribuntur; motus, tempus_motus et
+ * tempus_quietis purgantur;
  * radius, facies, intentum et forma non tanguntur.
  *
  * Redde: FALSUM si argumenta NIHIL aut corpus ibi stare non potest
@@ -82,7 +85,9 @@ mundus_corpus_ponere (
  * mundus_gradi - mundum dt secundis promovere
  *
  * dt negativum aut non numerus: 0 (facies et locus manent; movetur
- * FALSUM fit). Mundus sine solo: nihil.
+ * FALSUM fit). Mundus sine solo: nihil. Corpus quod gradu non
+ * movetur (non intendit aut impeditur) tempus_quietis dt auget;
+ * quod movetur id purgat.
  */
 vacuum
 mundus_gradi (

@@ -193,7 +193,8 @@ mundus_quadri_origo (
  * @piscina:  memoria temporaria quadri
  *
  * Positura corporis: cyclus_ambulandi ad tempus_motus dum movetur;
- * aliter cyclus_quietis ad tempus 0 (aut quies).
+ * aliter cyclus_quietis ad tempus_quietis (aut positura quietis si
+ * cyclus nullus).
  *
  * Redde: FALSUM si argumenta NIHIL, sequens extra fines aut memoria
  * deficit; latitudo aut altitudo 0: VERUM, nihil scribitur

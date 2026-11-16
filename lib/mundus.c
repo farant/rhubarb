@@ -22,11 +22,12 @@ mundus_corpus_ponere (
     {
         redde FALSUM;
     }
-    c->x             = x;
-    c->z             = z;
-    c->y             = y;
-    c->movetur       = FALSUM;
-    c->tempus_motus  = 0.0f;
+    c->x               = x;
+    c->z               = z;
+    c->y               = y;
+    c->movetur         = FALSUM;
+    c->tempus_motus    = 0.0f;
+    c->tempus_quietis  = 0.0f;
     redde VERUM;
 }
 
@@ -84,8 +85,9 @@ _corpus_gradi (
         : 0.0f;
     si (!(longitudo > LONGITUDO_MINIMA) || !(dt > 0.0f))
     {
-        c->movetur       = FALSUM;
-        c->tempus_motus  = 0.0f;
+        c->movetur         = FALSUM;
+        c->tempus_motus    = 0.0f;
+        c->tempus_quietis  += dt;
         redde;
     }
     directio_x = c->intentum_x / longitudo;
@@ -128,8 +130,9 @@ _corpus_gradi (
     {
         c->y = y;
     }
-    c->movetur       = motum;
-    c->tempus_motus  = motum ? c->tempus_motus + dt : 0.0f;
+    c->movetur         = motum;
+    c->tempus_motus    = motum ? c->tempus_motus + dt : 0.0f;
+    c->tempus_quietis  = motum ? 0.0f : c->tempus_quietis + dt;
 }
 
 vacuum

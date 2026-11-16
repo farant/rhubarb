@@ -714,7 +714,7 @@ _corpus_pingere (
     }
     statua_positura(statua,
         c->movetur ? forma->cyclus_ambulandi : forma->cyclus_quietis,
-        c->movetur ? c->tempus_motus : 0.0f, matrices);
+        c->movetur ? c->tempus_motus : c->tempus_quietis, matrices);
     /* locatio: pedes et medium statuae ad locum corporis, scalata,
      * facie versa (0 = +z, crescit versus +x: rotatio circa y) */
     dimidium         = c->facies * STEREOMETRIA_PI / 360.0f;

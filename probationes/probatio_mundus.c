@@ -295,6 +295,49 @@ _sectio_facies (
     CREDO_FALSUM (s->corpus.movetur);
 }
 
+/* tempus quietis: crescit dum corpus stat, purgatur dum movetur */
+interior vacuum
+_sectio_quies (
+    CredoContextus* c)
+{
+    Scaena* s = _scaena(c, 1.0f, 6.0f);
+
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.0f, 0.0001f);
+    _currere(s, X, 0.05f);
+    CREDO_FALSUM (s->corpus.movetur);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.5f, 0.001f);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_motus, 0.0f, 0.0001f);
+    /* gradus longus ad 0.1 cogitur; dt malum nihil addit */
+    mundus_gradi(&s->mundus, 5.0f);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.6f, 0.001f);
+    mundus_gradi(&s->mundus, -1.0f);
+    mundus_gradi(&s->mundus, 0.0f);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.6f, 0.001f);
+    /* intentum sine directione: stat */
+    _intendere(s, 0.0f, 0.0f);
+    _currere(s, II, 0.05f);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.7f, 0.001f);
+    /* movetur: purgatur */
+    _intendere(s, 1.0f, 0.0f);
+    _currere(s, II, 0.05f);
+    CREDO_VERUM (s->corpus.movetur);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.0f, 0.0001f);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_motus, 0.1f, 0.001f);
+    /* sistit: a nihilo iterum */
+    s->corpus.intendit = FALSUM;
+    _currere(s, III, 0.05f);
+    CREDO_FALSUM (s->corpus.movetur);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.15f, 0.001f);
+    CREDO_F32_PROXIMUS (s->corpus.tempus_motus, 0.0f, 0.0001f);
+    /* intendit sed impeditur (margo loci): stat, tempus crescit */
+    s = _scaena(c, 2.0f, 4.5f);
+    _intendere(s, -1.0f, 0.0f);
+    _currere(s, LX, 1.0f / 30.0f);
+    CREDO_FALSUM (s->corpus.movetur);
+    CREDO_VERUM (s->corpus.tempus_quietis > 1.0f);
+    CREDO_VERUM (s->corpus.tempus_quietis < 1.9f);
+}
+
 interior vacuum
 _sectio_ponere (
     CredoContextus* c)
@@ -303,12 +346,14 @@ _sectio_ponere (
     MundusCorpus  prius;
 
     CREDO_F32_PROXIMUS (s->corpus.y, 4.0f, 0.001f);
-    s->corpus.facies        = 123.0f;
-    s->corpus.forma         = VII;
-    s->corpus.movetur       = VERUM;
-    s->corpus.tempus_motus  = 2.0f;
+    s->corpus.facies          = 123.0f;
+    s->corpus.forma           = VII;
+    s->corpus.movetur         = VERUM;
+    s->corpus.tempus_motus    = 2.0f;
+    s->corpus.tempus_quietis  = 3.0f;
     CREDO_VERUM (mundus_corpus_ponere(&s->mundus, &s->corpus, 2.0f,
         6.0f));
+    CREDO_F32_PROXIMUS (s->corpus.tempus_quietis, 0.0f, 0.0001f);
     CREDO_F32_PROXIMUS (s->corpus.x, 2.0f, 0.0001f);
     CREDO_F32_PROXIMUS (s->corpus.y, 0.0f, 0.001f);
     CREDO_F32_PROXIMUS (s->corpus.facies, 123.0f, 0.0001f);
@@ -374,6 +419,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "margo", _sectio_margo, NIHIL, NIHIL, NIHIL, NIHIL },
     { "mora_longa", _sectio_mora_longa, NIHIL, NIHIL, NIHIL, NIHIL },
     { "facies", _sectio_facies, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "quies", _sectio_quies, NIHIL, NIHIL, NIHIL, NIHIL },
     { "ponere", _sectio_ponere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "vacua", _sectio_vacua, NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }

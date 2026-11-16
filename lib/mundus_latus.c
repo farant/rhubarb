@@ -846,7 +846,7 @@ quadrum_curare (
     {
         redde quadrum_tollere(m);
     }
-    sprintf(clavis, "%.64s|%d|%d|%d|%d|%d|%d|%d|%ux%u",
+    sprintf(clavis, "%.64s|%d|%d|%d|%d|%d|%d|%d|%d|%ux%u",
         m->sigillum_personae.mensura >= LXIV
             ? (constans character*)m->sigillum_personae.datum : "",
         (integer)m->humi_modus,
@@ -855,6 +855,9 @@ quadrum_curare (
         (integer)(m->corpus.y * 1000.0f),
         (integer)(m->corpus.facies * 10.0f), (integer)m->corpus.movetur,
         (integer)(m->corpus.tempus_motus * 1000.0f),
+        /* tempus quietis quadrum mutat solum si cyclus quietis est */
+        m->forma.cyclus_quietis >= ZEPHYRUM
+            ? (integer)(m->corpus.tempus_quietis * 1000.0f) : ZEPHYRUM,
         (insignatus)latitudo, (insignatus)altitudo);
     si (strcmp(clavis, m->quadri_clavis) == ZEPHYRUM)
     {
@@ -984,10 +987,17 @@ mundus_latus_mora (
     {
         redde -I;
     }
-    si (   !mundus_latus_intus(m) && m->positum
-        && (clavis_tenetur(m) || m->corpus.movetur))
+    si (!mundus_latus_intus(m) && m->positum)
     {
-        redde MUNDUS_LATUS_MORA_MOTUS;
+        si (clavis_tenetur(m) || m->corpus.movetur)
+        {
+            redde MUNDUS_LATUS_MORA_MOTUS;
+        }
+        /* stat: cyclus quietis currit, si persona eum habet */
+        si (m->persona && m->forma.cyclus_quietis >= ZEPHYRUM)
+        {
+            redde MUNDUS_LATUS_MORA_QUIETIS;
+        }
     }
     redde m->volumen ? MUNDUS_LATUS_MORA_INSPECTIONIS : -I;
 }

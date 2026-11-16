@@ -26,7 +26,9 @@
  *
  * TEMPUS ex horologio (porta): mundus tempore vero promovetur, gradus
  * ad 0.1 s coactus. Pulsus: XXXIII ms dum clavis tenetur aut persona
- * movetur; aliter M ms (inspectio voluminis sola).
+ * movetur; LXVI ms dum persona stat et cyclum quietis ("idle")
+ * habet - cyclus ille tunc currit; aliter M ms (inspectio voluminis
+ * sola).
  *
  * OSTIA (project-specs/ostium-spec.md): ostia loci ex volumine
  * leguntur (mundus_ostia.h) cum indicibus - quotiens seq voluminis
@@ -113,8 +115,10 @@
 #include "mundus_ostia.h"
 #include "scaena_latus.h"
 
-/* pulsus (ms): dum movetur; inspectio voluminis */
+/* pulsus (ms): dum movetur; dum stat et cyclum quietis habet;
+ * inspectio voluminis */
 #define MUNDUS_LATUS_MORA_MOTUS        XXXIII
+#define MUNDUS_LATUS_MORA_QUIETIS      LXVI
 #define MUNDUS_LATUS_MORA_INSPECTIONIS M
 
 #define MUNDUS_LATUS_SIGNUM           "[E]"
