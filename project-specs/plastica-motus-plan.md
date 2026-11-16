@@ -421,3 +421,13 @@ plants, all red. Goblin and slime polished and rebuilt. Details in
   as-built notes; worklogs; memory.
 - [ ] Plants, each red.
 - [ ] Commit on Fran's word.
+
+**As built (2026-11-16).** As the header Fran approved, plus: the
+writer also refuses a moment with an empty title or a negative time
+(the reader skips the same), and `bin/statuae inspicere <title>
+-volumen V` prints a stored model's node names, cycles and moments.
+`StatuaMomentum` in `statua.h`; `statua_glb_scribere_cum_momentis`;
+`StatuaFructus.tituli / .momenta / .momentorum`. Quadruped skeleton
+and the boar (five cycles, own walk of 0.27 s). 35 + 8 library
+plants and 12 tool plants, all red; two string copies kept though
+green. Spec marked BUILT. The plan is complete.

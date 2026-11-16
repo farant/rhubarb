@@ -700,6 +700,9 @@ rem_condere (
                chorda  octeti;
                chorda  sigillum;
                   s32  k;
+    /* momenta figurae cum GLB eunt (plastica-motus-plan T8) */
+    constans StatuaMomentum* momenta     = NIHIL;
+                        i32  momentorum  = ZEPHYRUM;
 
     vacua.datum       = NIHIL;
     vacua.mensura     = ZEPHYRUM;
@@ -721,8 +724,10 @@ rem_condere (
             figuram_recusatam_nuntiare(via, &g);
             redde FALSUM;
         }
-        statua = g.statua;
-        partes = g.partes;
+        statua      = g.statua;
+        partes      = g.partes;
+        momenta     = g.momenta;
+        momentorum  = g.momentorum;
     }
     alioquin
     {
@@ -772,7 +777,8 @@ rem_condere (
             *titulus);
         redde FALSUM;
     }
-    octeti = statua_glb_scribere(statua, partes, piscina);
+    octeti = statua_glb_scribere_cum_momentis(statua, partes, momenta,
+        momentorum, piscina);
     si (!octeti.datum)
     {
         recusatam_nuntiare(via, "res in GLB scribi non potest",

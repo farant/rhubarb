@@ -1,0 +1,106 @@
+<!-- aper: sus ferus, corpus grave, crura brevia, dentes (plastica-
+     motus-plan T8). Ossa quadrupes; cardines ad proportiones suas.
+     Partes ad cardines paulum se tegunt. -->
+<figura titulus="boar" ossa="quadrupes">
+  <articulus titulus="truncus" locus="0 0.6 0"/>
+  <articulus titulus="thorax">
+    <sphaera titulus="corpus" magnitudo="0.64 0.68 1.2"
+             locus="0 -0.34 0" segmenta="10" asperitas="0.03"
+             semen="3" color="#5a4030"/>
+    <capsa titulus="iuba" magnitudo="0.1 0.1 0.75" locus="0 0.27 0.08"
+           color="#33241c"/>
+  </articulus>
+  <articulus titulus="caput" locus="0 0.02 0.48">
+    <sphaera titulus="cranium" magnitudo="0.44 0.46 0.5"
+             locus="0 -0.23 0.06" segmenta="8" color="#5a4030"/>
+    <capsa titulus="rostrum" magnitudo="0.2 0.18 0.3"
+           locus="0 -0.18 0.3" color="#6b4c3a"/>
+    <capsa titulus="nasus" magnitudo="0.17 0.15 0.05"
+           locus="0 -0.165 0.46" color="#a8786a"/>
+    <cylindrus titulus="dens sin" radius="0.035" radius_summus="0"
+               altitudo="0.18" latera="4" locus="0.1 -0.12 0.38"
+               rotatio="-15 0 -18" color="#f2ead2"/>
+    <cylindrus titulus="dens dex" radius="0.035" radius_summus="0"
+               altitudo="0.18" latera="4" locus="-0.1 -0.12 0.38"
+               rotatio="-15 0 18" color="#f2ead2"/>
+    <sphaera titulus="oculus sin" radius="0.04" locus="0.17 0.02 0.22"
+             color="#101010"/>
+    <sphaera titulus="oculus dex" radius="0.04" locus="-0.17 0.02 0.22"
+             color="#101010"/>
+  </articulus>
+  <articulus titulus="auris_sin" locus="0.14 0.17 0.02">
+    <cylindrus titulus="auris sin" radius="0.07" radius_summus="0"
+               altitudo="0.16" latera="4" locus="0 -0.02 0"
+               rotatio="0 0 -20" color="#4a3428"/>
+  </articulus>
+  <articulus titulus="auris_dex" locus="-0.14 0.17 0.02">
+    <cylindrus titulus="auris dex" radius="0.07" radius_summus="0"
+               altitudo="0.16" latera="4" locus="0 -0.02 0"
+               rotatio="0 0 20" color="#4a3428"/>
+  </articulus>
+  <articulus titulus="cauda" locus="0 0.12 -0.56">
+    <capsa titulus="cauda" magnitudo="0.05 0.05 0.2"
+           locus="0 -0.03 -0.08" color="#33241c"/>
+  </articulus>
+  <articulus titulus="armus_sin" locus="0.2 -0.12 0.36">
+    <capsa titulus="armus sin" magnitudo="0.14 0.27 0.17" locus="0 -0.25 0"
+           color="#5a4030"/>
+  </articulus>
+  <articulus titulus="cubitus_sin" locus="0 -0.22 0">
+    <capsa titulus="cubitus sin" magnitudo="0.1 0.24 0.11"
+           locus="0 -0.23 0" color="#4a3428"/>
+  </articulus>
+  <articulus titulus="ungula_ant_sin" locus="0 -0.21 0">
+    <capsa titulus="ungula ant sin" magnitudo="0.12 0.07 0.14"
+           locus="0 -0.05 0.01" color="#201810"/>
+  </articulus>
+  <articulus titulus="armus_dex" locus="-0.2 -0.12 0.36">
+    <capsa titulus="armus dex" magnitudo="0.14 0.27 0.17" locus="0 -0.25 0"
+           color="#5a4030"/>
+  </articulus>
+  <articulus titulus="cubitus_dex" locus="0 -0.22 0">
+    <capsa titulus="cubitus dex" magnitudo="0.1 0.24 0.11"
+           locus="0 -0.23 0" color="#4a3428"/>
+  </articulus>
+  <articulus titulus="ungula_ant_dex" locus="0 -0.21 0">
+    <capsa titulus="ungula ant dex" magnitudo="0.12 0.07 0.14"
+           locus="0 -0.05 0.01" color="#201810"/>
+  </articulus>
+  <articulus titulus="coxa_sin" locus="0.2 -0.12 -0.38">
+    <capsa titulus="coxa sin" magnitudo="0.16 0.28 0.22" locus="0 -0.25 0"
+           color="#5a4030"/>
+  </articulus>
+  <articulus titulus="tibia_sin" locus="0 -0.22 0">
+    <capsa titulus="tibia sin" magnitudo="0.1 0.24 0.11"
+           locus="0 -0.23 0" color="#4a3428"/>
+  </articulus>
+  <articulus titulus="ungula_post_sin" locus="0 -0.21 0">
+    <capsa titulus="ungula post sin" magnitudo="0.12 0.07 0.14"
+           locus="0 -0.05 0.01" color="#201810"/>
+  </articulus>
+  <articulus titulus="coxa_dex" locus="-0.2 -0.12 -0.38">
+    <capsa titulus="coxa dex" magnitudo="0.16 0.28 0.22" locus="0 -0.25 0"
+           color="#5a4030"/>
+  </articulus>
+  <articulus titulus="tibia_dex" locus="0 -0.22 0">
+    <capsa titulus="tibia dex" magnitudo="0.1 0.24 0.11"
+           locus="0 -0.23 0" color="#4a3428"/>
+  </articulus>
+  <articulus titulus="ungula_post_dex" locus="0 -0.21 0">
+    <capsa titulus="ungula post dex" magnitudo="0.12 0.07 0.14"
+           locus="0 -0.05 0.01" color="#201810"/>
+  </articulus>
+
+  <!-- gressus proprius: crura brevia celeritate mundi citius eunt
+       (ut goblin); positurae ossium, cyclus brevior -->
+  <cyclus titulus="walk" duratio="0.27" circulus="verum">
+    <clavis tempus="0" positura="contactus_sin"/>
+    <clavis tempus="0.0675" positura="transitus_sin"/>
+    <clavis tempus="0.135" positura="contactus_dex"/>
+    <clavis tempus="0.2025" positura="transitus_dex"/>
+    <momentum titulus="gressus_sin" tempus="0"/>
+    <momentum titulus="gressus_dex" tempus="0.135"/>
+    <mora titulus="caput" tempus="0.02"/>
+    <mora titulus="cauda" tempus="0.04"/>
+  </cyclus>
+</figura>

@@ -52,6 +52,10 @@ nomen structura {
                                             * nondum decodificata */
                    i32 imaginum;
                    i32 clavium;           /* summa, contra limitem */
+    /* iuxta statuam: nomina nodorum, momenta cyclorum */
+            chorda* tituli;
+    StatuaMomentum* momenta;
+               i32  momentorum;
 } Lector;
 
 nomen structura {
@@ -998,10 +1002,14 @@ _nodos_legere (
     }
     s->nodi = (StatuaNodus*)_locus(l,
         s->nodorum * magnitudo(StatuaNodus));
+    l->tituli = (chorda*)_locus(l, s->nodorum * magnitudo(chorda));
     per (n = ZEPHYRUM; n < s->nodorum; n++)
     {
-        j              = json_tabulatum_obtinere(nodi, n);
-        nodus          = &s->nodi[n];
+        j      = json_tabulatum_obtinere(nodi, n);
+        nodus  = &s->nodi[n];
+        /* nomen absens aut non chorda: vacuum (json_ad_chorda) */
+        l->tituli[n]   = chorda_transcribere(json_ad_chorda(
+            json_objectum_capere(j, "name")), l->piscina);
         nodus->parens  = -I;
         nodus->rete    = -I;
         nodus->signa   = _signa_legere(j);
@@ -1325,6 +1333,80 @@ _cyclos_legere (
     redde VERUM;
 }
 
+/* momentum elementi extras.moments: nomen non vacuum et tempus
+ * numericum non negativum; aliter FALSUM (praeteritur). Elementum
+ * non objectum aut nomen non chorda: json nomen vacuum dat */
+interior b32
+_momentum_legere (
+         JsonValor* j,
+    StatuaMomentum* exitus)
+{
+    chorda titulus = json_ad_chorda(json_objectum_capere(j, "name"));
+       f64 tempus;
+
+    si (   titulus.mensura == ZEPHYRUM
+        || !_numerus(json_objectum_capere(j, "time"), &tempus)
+        || !(tempus >= 0.0) || !_finitus((f32)tempus))
+    {
+        redde FALSUM;
+    }
+    exitus->titulus  = titulus;
+    exitus->tempus   = (f32)tempus;
+    redde VERUM;
+}
+
+/* momenta cyclorum ex extras.moments animationum. Forma inopinata
+ * praeteritur - numquam recusatio (extras liberum est) */
+interior vacuum
+_momenta_legere (
+    Lector* l)
+{
+         JsonValor* animationes = _tabulatum(l->radix, "animations");
+         JsonValor* notae;
+    StatuaMomentum  m;
+               i32  transitus;
+               i32  numerus = ZEPHYRUM;
+               i32  n;
+               i32  k;
+
+    /* transitus 0 numerat, transitus I implet */
+    per (transitus = ZEPHYRUM; transitus < II; transitus++)
+    {
+        si (transitus)
+        {
+            si (!numerus)
+            {
+                redde;
+            }
+            l->momenta = (StatuaMomentum*)_locus(l,
+                numerus * magnitudo(StatuaMomentum));
+        }
+        per (n = ZEPHYRUM; n < l->s->cyclorum; n++)
+        {
+            notae = _tabulatum(json_objectum_capere(
+                json_tabulatum_obtinere(animationes, n), "extras"),
+                "moments");
+            per (k = ZEPHYRUM; k < _numerus_in(notae); k++)
+            {
+                si (!_momentum_legere(
+                    json_tabulatum_obtinere(notae, k), &m))
+                {
+                    perge;
+                }
+                si (!transitus)
+                {
+                    numerus++;
+                    perge;
+                }
+                m.cyclus   = n;
+                m.titulus  = chorda_transcribere(m.titulus,
+                    l->piscina);
+                l->momenta[l->momentorum++] = m;
+            }
+        }
+    }
+}
+
 
 /* ==================================================
  * Continens et summa
@@ -1492,6 +1574,7 @@ _legere (
         redde _recusare(l, "the file is damaged: its node tree or "
             "animation keys are inconsistent");
     }
+    _momenta_legere(l);
     redde VERUM;
 }
 
@@ -1512,8 +1595,11 @@ statua_glb_legere (
     l.piscina = piscina;
     si (_legere(&l, octeti))
     {
-        f.successus  = VERUM;
-        f.statua     = l.s;
+        f.successus   = VERUM;
+        f.statua      = l.s;
+        f.tituli      = l.tituli;
+        f.momenta     = l.momenta;
+        f.momentorum  = l.momentorum;
         redde f;
     }
     f.error = chorda_ex_literis(l.error ? l.error

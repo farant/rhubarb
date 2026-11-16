@@ -37,6 +37,22 @@ proba "addere lapidem" 0 "$B" addere "$F/lapis.glb" -volumen "$V"
 contine "summarium lapidis" "$T/out" "lapis: 54 nodi, 334 trianguli, 2 cycli"
 proba "addere fungum titulo" 0 "$B" addere "$F/fungus.glb" -volumen "$V" -titulus "mushroom man"
 proba "addere lapidem iterum" 0 "$B" addere "$F/lapis.glb" -volumen "$V"
+# inspicere (plastica-motus-plan T8): nomina nodorum, cycli, momenta statuae conditae
+proba "inspicere lapidem" 0 "$B" inspicere lapis -volumen "$V"
+contine "summa inspectionis" "$T/out" "^lapis: 54 nodi, 2 cycli, 0 momenta$"
+[ "$(grep -c '^nodus ' "$T/out")" -gt 0 ] || { echo "FRACTA: inspicere nomina nulla"; fracta=$((fracta + 1)); }
+[ "$(grep -c '^cyclus ' "$T/out")" -eq 2 ] || { echo "FRACTA: inspicere cycli non II"; fracta=$((fracta + 1)); }
+contine "cyclus inspectus" "$T/out" "^cyclus [01] boulder_throw [0-9.]*$"
+proba "inspicere titulo cum spatio" 0 "$B" inspicere "mushroom man" -volumen "$V"
+contine "fungus inspectus" "$T/out" "^mushroom man: 42 nodi, 1 cycli, 0 momenta$"
+proba "inspicere ignotum" 1 "$B" inspicere nullus -volumen "$V"
+contine "ignotum nominatur" "$T/err" "'nullus' in volumine non est"
+proba "inspicere sine titulo usus" 2 "$B" inspicere -volumen "$V"
+proba "inspicere sine volumine usus" 2 "$B" inspicere lapis
+proba "inspicere cum -res usus" 2 "$B" inspicere lapis -volumen "$V" -res
+proba "inspicere cum -o usus" 2 "$B" inspicere lapis -volumen "$V" -o "$T/x.png"
+proba "inspicere volumen absens" 1 "$B" inspicere lapis -volumen "$T/nullum.volumen"
+[ ! -e "$T/nullum.volumen" ] || { echo "FRACTA: inspicere volumen creavit"; fracta=$((fracta + 1)); }
 proba "enumerare" 0 "$B" enumerare -volumen "$V"
 [ "$(wc -l < "$T/out" | tr -d ' ')" = 2 ] || { echo "FRACTA: enumerare non II lineae"; fracta=$((fracta + 1)); }
 [ "$(sed -n 1p "$T/out" | cut -f1)" = "lapis" ] || { echo "FRACTA: ordo (lapis primus)"; fracta=$((fracta + 1)); }
@@ -61,6 +77,8 @@ proba "enumerare post remotionem" 0 "$B" enumerare -volumen "$V"
 proba "addere locum" 0 "$B" addere "$F/planum.glb" -volumen "$V" -titulus "clearing" -locus
 proba "enumerare loci" 0 "$B" enumerare -volumen "$V" -loci
 [ "$(cut -f1 "$T/out")" = "clearing" ] || { echo "FRACTA: enumerare -loci"; fracta=$((fracta + 1)); }
+proba "inspicere locum" 0 "$B" inspicere clearing -volumen "$V"
+contine "locus inspectus" "$T/out" "^clearing: [0-9]* nodi, 0 cycli, 0 momenta$"
 proba "enumerare personae sine loco" 0 "$B" enumerare -volumen "$V"
 [ "$(cut -f1 "$T/out")" = "mushroom man" ] || { echo "FRACTA: locus inter personas"; fracta=$((fracta + 1)); }
 proba "titulus loci ut persona recusatur" 1 "$B" addere "$F/lapis.glb" -volumen "$V" -titulus "clearing"

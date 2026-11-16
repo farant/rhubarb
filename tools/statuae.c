@@ -9,6 +9,7 @@
  *           [-locus | -res]
  *   statuae removere <titulus> -volumen V
  *   statuae enumerare -volumen V [-loci | -res]
+ *   statuae inspicere <titulus> -volumen V
  *   statuae pingere <plagula.glb> -o <via.png> [-cyclus N|TITULUS]
  *           [-tempus S] [-gyrus G] [-inclinatio G] [-planum]
  *           [-modus atkinson|bayer|exemplaria|nullum|crudum]
@@ -27,6 +28,12 @@
  * saepes); latus $models eam in grege rerum monstrat, non inter
  * personas. Cum -locus aut -loci non datur.
  * removere genus quodlibet tollit.
+ *
+ * inspicere: quid in statua condita IUXTA figuram sit (generis
+ * cuiuslibet): "<titulus>: N nodi, C cycli, M momenta", deinde
+ * "nodus <index> <nomen>" pro quoque nodo nominato, "cyclus <index>
+ * <titulus> <duratio>" et "momentum <cyclus> <titulus> <tempus>".
+
  *
  * pingere volumine non eget: quadrum quod latus ostenderet (charta
  * opaca). Ordinaria: 360 x 450, cyclus primus (quies si nullus),
@@ -89,6 +96,7 @@ usum_imprimere (vacuum)
         " [-locus | -res]\n"
         "      statuae removere <titulus> -volumen V\n"
         "      statuae enumerare -volumen V [-loci | -res]\n"
+        "      statuae inspicere <titulus> -volumen V\n"
         "      statuae pingere <plagula.glb> -o <via.png>"
         " [-cyclus N|TITULUS]\n"
         "              [-tempus S] [-gyrus G] [-inclinatio G]"
@@ -377,6 +385,96 @@ exsequi_enumerare (
     redde ZEPHYRUM;
 }
 
+/* nomina nodorum, cycli et momenta statuae conditae */
+interior s32
+exsequi_inspicere (
+    constans Argumenta* a,
+               Volumen* volumen,
+               Piscina* piscina)
+{
+    StatuaeInscriptio* inventa = NIHIL;
+        StatuaFructus  f;
+               chorda  titulus =
+                   chorda_ex_literis(a->positivum, piscina);
+               chorda octeti;
+                  b32 adest = FALSUM;
+                  i32 genus;
+                  i32 k;
+
+    per (genus = ZEPHYRUM; genus < STATUAE_GENERUM && !inventa; genus++)
+    {
+        Xar* index = statuae_enumerare_generis(volumen,
+            (StatuaeGenus)genus, piscina);
+
+        per (k = ZEPHYRUM; index && k < xar_numerus(index); k++)
+        {
+            StatuaeInscriptio* x =
+                (StatuaeInscriptio*)xar_obtinere(index, k);
+
+            si (chorda_aequalis(x->titulus, titulus))
+            {
+                inventa = x;
+                frange;
+            }
+        }
+    }
+    si (!inventa)
+    {
+        fprintf(stderr, "statuae: '%s' in volumine non est\n",
+            a->positivum);
+        redde I;
+    }
+    octeti = volumen_massam_promere(volumen, inventa->sigillum_hex,
+        piscina, &adest);
+    si (!adest)
+    {
+        fprintf(stderr, "statuae: massa '%s' in volumine deest\n",
+            a->positivum);
+        redde I;
+    }
+    f = statua_glb_legere(octeti, piscina);
+    si (!f.successus)
+    {
+        fprintf(stderr, "statuae: %s: %.*s\n", a->positivum,
+            (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+        redde I;
+    }
+    imprimere("%s: %u nodi, %u cycli, %u momenta\n", a->positivum,
+        (insignatus)f.statua->nodorum, (insignatus)f.statua->cyclorum,
+        (insignatus)f.momentorum);
+    per (k = ZEPHYRUM; k < f.statua->nodorum; k++)
+    {
+        si (f.tituli[k].mensura)
+        {
+            imprimere("nodus %u %.*s\n", (insignatus)k,
+                (integer)f.tituli[k].mensura,
+                (constans character*)f.tituli[k].datum);
+        }
+    }
+    per (k = ZEPHYRUM; k < f.statua->cyclorum; k++)
+    {
+        constans StatuaCyclus* c = &f.statua->cycli[k];
+
+        imprimere("cyclus %u %.*s %.2f\n", (insignatus)k,
+            (integer)c->titulus.mensura,
+            (constans character*)c->titulus.datum, (f64)c->duratio);
+    }
+    per (k = ZEPHYRUM; k < f.momentorum; k++)
+    {
+        constans StatuaCyclus* c =
+            &f.statua->cycli[f.momenta[k].cyclus];
+
+        imprimere("momentum %.*s %.*s %.2f\n",
+            (integer)c->titulus.mensura,
+            (constans character*)c->titulus.datum,
+            (integer)f.momenta[k].titulus.mensura,
+            (constans character*)f.momenta[k].titulus.datum,
+            (f64)f.momenta[k].tempus);
+    }
+    redde ZEPHYRUM;
+}
+
 /* cyclus ex argumento: numerus aut titulus; absens = primus (quies
  * si statua cyclos non habet). FALSUM (cycli impressi) si ignotus */
 interior b32
@@ -478,7 +576,9 @@ principale (
           b32  addere;
           b32  removere;
           b32  enumerare;
+          b32  inspicere;
           s32  exitus;
+
 
     si (provenientia_respondere((s32)argc, argv, &provenientia_statuae))
     {
@@ -504,7 +604,10 @@ principale (
     addere     = strcmp(a.imperium, "addere") == ZEPHYRUM;
     removere   = strcmp(a.imperium, "removere") == ZEPHYRUM;
     enumerare  = strcmp(a.imperium, "enumerare") == ZEPHYRUM;
-    si (   (!addere && !removere && !enumerare) || !a.volumen
+    inspicere  = strcmp(a.imperium, "inspicere") == ZEPHYRUM;
+    si (   (!addere && !removere && !enumerare && !inspicere)
+        || !a.volumen
+        || (inspicere && (a.locus || a.loci || a.res))
         || (enumerare ? a.positivum != NIHIL : a.positivum == NIHIL)
         || (a.titulus && !addere) || a.exitus || a.cyclus || a.modus
         || (a.locus && !addere) || (a.loci && !enumerare)
@@ -535,6 +638,10 @@ principale (
         {
             fprintf(stderr, "statuae: volumen remotionem recusavit\n");
         }
+    }
+    alioquin si (inspicere)
+    {
+        exitus = exsequi_inspicere(&a, volumen, piscina);
     }
     alioquin
     {

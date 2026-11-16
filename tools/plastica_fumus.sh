@@ -219,6 +219,12 @@ proba "figura inter personas" 0 "$S" enumerare -volumen "$VF"
 [ "$(cut -f1 "$T/out" | tr '\n' ',')" = "pupa," ] || { echo "FRACTA: figura inter personas: $(cut -f1 "$T/out" | tr '\n' ',')"; fracta=$((fracta + 1)); }
 proba "figura non inter res" 0 "$S" enumerare -volumen "$VF" -res
 [ "$(cut -f1 "$T/out" | tr '\n' ',')" = "cista," ] || { echo "FRACTA: figura inter res"; fracta=$((fracta + 1)); }
+# nomina articulorum et momenta cum figura condita eunt (plastica-motus-plan T8)
+proba "inspicere figuram" 0 "$S" inspicere pupa -volumen "$VF"
+contine "summa inspectionis" "$T/out" "^pupa: 3 nodi, 2 cycli, 1 momenta$"
+contine "nomen articuli conditum" "$T/out" "^nodus 1 corpus$"
+contine "momentum conditum" "$T/out" "^momentum salit apex 0.50$"
+[ "$(grep -c '^momentum ' "$T/out")" -eq 1 ] || { echo "FRACTA: momenta condita non I"; fracta=$((fracta + 1)); }
 # cycli et nomina articulorum in GLB condito
 grep -a -q '"name":"salit"' "$VF" || { echo "FRACTA: cyclus in GLB abest"; fracta=$((fracta + 1)); }
 grep -a -q '"name":"corpus"' "$VF" || { echo "FRACTA: nomen articuli in GLB abest"; fracta=$((fracta + 1)); }

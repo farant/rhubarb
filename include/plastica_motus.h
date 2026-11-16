@@ -222,11 +222,9 @@
 #define PLASTICA_MOTUS_TENET_MARGO        0.001f
 
 
-nomen structura {
-       i32 cyclus;     /* index in statua->cycli */
-    chorda titulus;
-       f32 tempus;     /* secundae */
-} PlasticaMomentum;
+/* momentum figurae = momentum statuae (statua.h): scriptor GLB id
+ * sine conversione accipit */
+nomen StatuaMomentum PlasticaMomentum;
 
 nomen structura {
                  b32  successus;

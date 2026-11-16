@@ -9,7 +9,21 @@
  * (TRS aut 'matrix'), retia triangulorum (POSITION, NORMAL,
  * TEXCOORD_0; indices 8 / 16 / 32 bit aut nulli), materias (color
  * basis, textura, excisio alpha, emissio, bilateralis), imagines
- * insertas PNG / JPEG, animationes nodorum (LINEAR, STEP).
+ * insertas PNG / JPEG, animationes nodorum (LINEAR, STEP), nomina
+ * nodorum ('name'), momenta animationum (extras.moments).
+ *
+ * NOMINA ET MOMENTA iuxta Statuam redduntur, non in ea
+ * (project-specs/plastica-motus-spec.md IV.7): 'tituli' nomen
+ * cuiusque nodi (articulus figurae titulo invenitur), 'momenta'
+ * instantia nominata cyclorum. Momentum in plagula:
+ *
+ *   "animations": [{"name": "attack", "extras": {"moments":
+ *       [{"name": "ictus", "time": 0.3}]}, ...}]
+ *
+ * Forma inopinata (extras non objectum, moments non tabulatum,
+ * elementum sine nomine non vacuo aut sine tempore numerico non
+ * negativo) praeteritur - numquam recusatio, ut extras.tags.
+
  *
  * APPROXIMAT (figura et colores picti recti manent): alpha BLEND fit
  * excisio ad 0.5; filtrum lineare pingitur proximum; colores
@@ -41,6 +55,12 @@ nomen structura {
     Statua* statua;    /* finita (statua_finire); NIHIL si recusata */
     chorda  error;     /* causa recusationis, Anglice, sine linea
                         * nova; vacua si successus */
+    chorda* tituli;    /* statua->nodorum nomina, ordine nodorum;
+                        * vacua ubi nodus nomen non habet; NIHIL si
+                        * recusata */
+    StatuaMomentum* momenta;    /* ordine cyclorum, intra cyclum
+                                 * ordine plagulae; NIHIL si nulla */
+               i32 momentorum;
 } StatuaFructus;
 
 /*

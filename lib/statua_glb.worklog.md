@@ -87,3 +87,14 @@ atlases plus one small tile per (generator, seed, colours) of every
 prop, and plastica II's variety (several seeds per asset) reached
 the cap. Raised to 256. The cap exists to bound a hostile file; 256
 small images is still a modest bound.
+
+## 2026-11-16 - node names and moments beside the Statua
+
+`StatuaFructus` gained `tituli`, `momenta`, `momentorum` (plastica
+motus T8). Names come from each node's `name`; moments from
+`extras.moments` on an animation, read after `statua_finire`.
+Malformed entries are skipped, never refused. Type checks before
+`json_ad_chorda` / `json_objectum_capere` are not needed (json.h
+documents empty / NIHIL for the wrong type); plants showed four such
+checks dead. The string copies stay: json.h does not promise its
+strings are copies. More in `lib/plastica_motus.worklog.md`.

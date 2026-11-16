@@ -33,16 +33,18 @@ nomen structura {
 } Tractus;
 
 nomen structura {
-            Piscina* piscina;
-    constans Statua* s;
-                 i8* octeti;
-                i32  mensura;
-                i32  capacitas;
-          JsonValor* accessores;
-          JsonValor* sectiones;
-                i32  accessorum;
-                i32  sectionum;
-                b32  fractum;
+                    Piscina* piscina;
+            constans Statua* s;
+                         i8* octeti;
+                        i32  mensura;
+                        i32  capacitas;
+                  JsonValor* accessores;
+                  JsonValor* sectiones;
+                        i32  accessorum;
+                        i32  sectionum;
+                        b32  fractum;
+    constans StatuaMomentum* momenta;
+                        i32  momentorum;
 } Scriptor;
 
 
@@ -686,6 +688,44 @@ _nodi (
     json_objectum_ponere(radix, "nodes", nodi);
 }
 
+/* momenta cycli n ut extras.moments animationis, ordine dato;
+ * cyclus sine momentis extras non accipit */
+interior vacuum
+_momenta (
+     Scriptor* sc,
+    JsonValor* animatio,
+          i32  n)
+{
+    JsonValor* notae = NIHIL;
+    JsonValor* extra;
+    JsonValor* nota;
+          i32  k;
+
+    per (k = ZEPHYRUM; k < sc->momentorum; k++)
+    {
+        si (sc->momenta[k].cyclus != n)
+        {
+            perge;
+        }
+        si (!notae)
+        {
+            notae = json_tabulatum_creare(sc->piscina);
+        }
+        nota = json_objectum_creare(sc->piscina);
+        json_objectum_ponere(nota, "name",
+            json_chorda_creare(sc->piscina, sc->momenta[k].titulus));
+        json_objectum_ponere(nota, "time",
+            _realis(sc, sc->momenta[k].tempus));
+        json_tabulatum_addere(notae, nota);
+    }
+    si (notae)
+    {
+        extra = json_objectum_creare(sc->piscina);
+        json_objectum_ponere(extra, "moments", notae);
+        json_objectum_ponere(animatio, "extras", extra);
+    }
+}
+
 interior vacuum
 _cycli (
      Scriptor* sc,
@@ -722,6 +762,7 @@ _cycli (
             json_objectum_ponere(j, "name",
                 json_chorda_creare(sc->piscina, cyclus->titulus));
         }
+        _momenta(sc, j, n);
         per (k = ZEPHYRUM; k < cyclus->canalium; k++)
         {
             constans StatuaCanalis* canalis = &cyclus->canales[k];
@@ -902,6 +943,18 @@ statua_glb_scribere (
     constans chorda* tituli,
             Piscina* piscina)
 {
+    redde statua_glb_scribere_cum_momentis(statua, tituli, NIHIL,
+        ZEPHYRUM, piscina);
+}
+
+chorda
+statua_glb_scribere_cum_momentis (
+            constans Statua* statua,
+            constans chorda* tituli,
+    constans StatuaMomentum* momenta,
+                        i32  momentorum,
+                    Piscina* piscina)
+{
      Scriptor  sc;
       Tractus* tractus;
     JsonValor* radix;
@@ -918,13 +971,25 @@ statua_glb_scribere (
     vacua.datum    = NIHIL;
     vacua.mensura  = ZEPHYRUM;
     si (   !statua || !piscina || statua->nodorum == ZEPHYRUM
-        || !_probare(statua))
+        || !_probare(statua) || (momentorum && !momenta))
     {
         redde vacua;
     }
+    per (k = ZEPHYRUM; k < momentorum; k++)
+    {
+        si (   momenta[k].cyclus          >= statua->cyclorum
+            || momenta[k].titulus.mensura == ZEPHYRUM
+            || !_finitus(momenta[k].tempus)
+            || momenta[k].tempus < 0.0f)
+        {
+            redde vacua;
+        }
+    }
     memset(&sc, ZEPHYRUM, magnitudo(sc));
-    sc.piscina  = piscina;
-    sc.s        = statua;
+    sc.piscina     = piscina;
+    sc.s           = statua;
+    sc.momenta     = momenta;
+    sc.momentorum  = momentorum;
     tractus     = (Tractus*)piscina_allocare(piscina,
         (statua->partium + I) * magnitudo(Tractus));
     si (!tractus || !_tractus_metiri(statua, tractus))

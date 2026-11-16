@@ -28,8 +28,10 @@
  * NON SERVAT (Statua ea non tenet): nomina materiarum, imagines
  * JPEG ut JPEG (PNG fiunt), colorem emissionis (albus scribitur),
  * dispositionem pristinam plagulae. Nomina nodorum scribuntur si
- * tabula titulorum datur (plastica: PlasticaFructus.partes); lector
- * ea neglegit, instrumenta aliena ea ostendunt.
+ * tabula titulorum datur (plastica: PlasticaFructus.partes), et
+ * momenta cyclorum si dantur (statua_glb_scribere_cum_momentis):
+ * lector utraque IUXTA statuam reddit (StatuaFructus.tituli,
+ * .momenta).
  *
  * DETERMINATUS: statua eadem, octeti idem. Numeri fluitantes in
  * JSON ita scribuntur ut f32 exacte redeat (lector rotationem iam
@@ -69,5 +71,29 @@ statua_glb_scribere (
     constans Statua* statua,
     constans chorda* tituli,
             Piscina* piscina);
+
+/*
+ * statua_glb_scribere_cum_momentis - ut statua_glb_scribere, cum
+ * momentis cyclorum
+ *
+ * @momenta:    instantia nominata (statua.h); NIHIL si nulla
+ * @momentorum: numerus eorum; 0 = idem ac statua_glb_scribere,
+ *              octetum pro octeto
+ *
+ * Momenta cycli in animatione eius scribuntur, ordine dato:
+ * "extras": {"moments": [{"name": "ictus", "time": 0.3}]}.
+ *
+ * Redde: ut statua_glb_scribere; chorda vacua praeterea si momentum
+ * cyclum nominat quem statua non habet, titulum vacuum aut tempus
+ * negativum aut non finitum tenet, aut si momenta NIHIL sunt et
+ * numerus non 0
+ */
+chorda
+statua_glb_scribere_cum_momentis (
+            constans Statua* statua,
+            constans chorda* tituli,
+    constans StatuaMomentum* momenta,
+                        i32  momentorum,
+                    Piscina* piscina);
 
 #endif /* STATUA_GLB_SCRIPTOR_H */

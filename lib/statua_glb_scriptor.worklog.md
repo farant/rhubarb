@@ -46,3 +46,11 @@
 - `MMMM` is not a numeral in latina.h: `(IV * M)`.
 
 Plants: see the T5 commit.
+
+## 2026-11-16 - moments
+
+`statua_glb_scribere_cum_momentis` writes `StatuaMomentum`s as
+`extras.moments` on their animation (plastica motus T8); zero
+moments gives the same bytes as `statua_glb_scribere`. An animation
+without moments gets no `extras` at all. More in
+`lib/plastica_motus.worklog.md`.

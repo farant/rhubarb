@@ -694,11 +694,122 @@ _sectio_corrupta (
     CREDO_NON_PENDET (_corrupta_omnia(fungus), 60000);
 }
 
+/* plastica-motus-plan T8: nomina nodorum iuxta statuam */
+interior vacuum
+_sectio_nomina (
+    CredoContextus* c)
+{
+    StatuaFructus f;
+           chorda g = filum_legere_totum(VIA_FUNGI, c->piscina);
+              i32 n;
+              i32 nominati = ZEPHYRUM;
+
+    f = statua_glb_legere(_glb(c, "",
+        "{\"mesh\":0,\"name\":\"corpus\"},{\"name\":7},{},"
+        "{\"name\":\"\"},{\"name\":\"manus_dex\"}",
+        "", "", "3", "", ""), c->piscina);
+    CREDO_NECESSE (f.successus);
+    CREDO_NECESSE (f.statua->nodorum == V && f.tituli != NIHIL);
+    CREDO_VERUM (chorda_aequalis_literis(f.tituli[ZEPHYRUM],
+        "corpus"));
+    CREDO_AEQUALIS_I32 (f.tituli[I].mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.tituli[II].mensura, ZEPHYRUM);
+    CREDO_AEQUALIS_I32 (f.tituli[III].mensura, ZEPHYRUM);
+    CREDO_VERUM (chorda_aequalis_literis(f.tituli[IV], "manus_dex"));
+    /* nomen in piscina, non in octetis plagulae */
+    CREDO_VERUM (f.tituli[ZEPHYRUM].datum < g.datum
+        || f.tituli[ZEPHYRUM].datum >= g.datum + g.mensura);
+    /* sine momentis */
+    CREDO_NIHIL (f.momenta);
+    CREDO_AEQUALIS_I32 (f.momentorum, ZEPHYRUM);
+    /* statua empta: nomina adsunt, momenta nulla */
+    f = statua_glb_legere(g, c->piscina);
+    CREDO_NECESSE (f.successus && f.tituli != NIHIL);
+    per (n = ZEPHYRUM; n < f.statua->nodorum; n++)
+    {
+        nominati += (i32)(f.tituli[n].mensura > ZEPHYRUM);
+    }
+    CREDO_AEQUALIS_I32 (nominati, XLII);
+    CREDO_NIHIL (f.momenta);
+    CREDO_AEQUALIS_I32 (f.momentorum, ZEPHYRUM);
+    /* recusata: nulla */
+    f = statua_glb_legere(chorda_ex_literis("glTF", c->piscina),
+        c->piscina);
+    CREDO_FALSUM (f.successus);
+    CREDO_NIHIL (f.tituli);
+    CREDO_NIHIL (f.momenta);
+}
+
+#define ANIMATIO_CUM(titulus, extra) \
+    "{\"name\":\"" titulus "\"" extra ",\"samplers\":[{\"input\":2," \
+    "\"output\":3}],\"channels\":[{\"sampler\":0," \
+    "\"target\":{\"node\":0,\"path\":\"translation\"}}]}"
+
+/* plastica-motus-plan T8: momenta ex extras.moments animationis;
+ * forma inopinata praeteritur, numquam recusatio */
+interior vacuum
+_sectio_momenta (
+    CredoContextus* c)
+{
+    StatuaFructus f;
+
+    f = statua_glb_legere(_glb(c,
+        ",\"animations\":["
+        ANIMATIO_CUM("it", ",\"extras\":{\"moments\":["
+            "{\"name\":\"ictus\",\"time\":0.25},"
+            "{\"name\":\"finis\",\"time\":1}]}") ","
+        ANIMATIO_CUM("stat", "") ","
+        ANIMATIO_CUM("alter", ",\"extras\":{\"alia\":[1],\"moments\":["
+            "{\"time\":0.5,\"name\":\"b\",\"alia\":3}]}") "]",
+        "{\"mesh\":0}", "", "", "3", "", ""), c->piscina);
+    CREDO_NECESSE (f.successus && f.statua->cyclorum == III);
+    CREDO_NECESSE (f.momentorum == III && f.momenta != NIHIL);
+    CREDO_AEQUALIS_I32 (f.momenta[ZEPHYRUM].cyclus, ZEPHYRUM);
+    CREDO_VERUM (chorda_aequalis_literis(f.momenta[ZEPHYRUM].titulus,
+        "ictus"));
+    CREDO_F32_PROXIMUS (f.momenta[ZEPHYRUM].tempus, 0.25f, 0.0f);
+    CREDO_AEQUALIS_I32 (f.momenta[I].cyclus, ZEPHYRUM);
+    CREDO_VERUM (chorda_aequalis_literis(f.momenta[I].titulus,
+        "finis"));
+    CREDO_F32_PROXIMUS (f.momenta[I].tempus, 1.0f, 0.0f);
+    CREDO_AEQUALIS_I32 (f.momenta[II].cyclus, II);
+    CREDO_VERUM (chorda_aequalis_literis(f.momenta[II].titulus, "b"));
+    CREDO_F32_PROXIMUS (f.momenta[II].tempus, 0.5f, 0.0f);
+    /* formae inopinatae: solum "bonus" et "nihilum" (tempus 0)
+     * supersunt */
+    f = statua_glb_legere(_glb(c,
+        ",\"animations\":["
+        ANIMATIO_CUM("a", ",\"extras\":7") ","
+        ANIMATIO_CUM("b", ",\"extras\":{\"moments\":\"ictus\"}") ","
+        ANIMATIO_CUM("c", ",\"extras\":[{\"name\":\"x\",\"time\":1}]")
+        ","
+        ANIMATIO_CUM("d", ",\"extras\":{\"moments\":[3,\"x\","
+            "{\"name\":\"a\"},{\"time\":1},{\"name\":7,\"time\":1},"
+            "{\"name\":\"\",\"time\":1},"
+            "{\"name\":\"a\",\"time\":\"1\"},"
+            "{\"name\":\"retro\",\"time\":-0.5},[],"
+            "{\"name\":\"immane\",\"time\":1e60},"
+            "{\"name\":\"bonus\",\"time\":0.5},"
+            "{\"name\":\"nihilum\",\"time\":0}]}") "]",
+        "{\"mesh\":0}", "", "", "3", "", ""), c->piscina);
+    CREDO_NECESSE (f.successus && f.statua->cyclorum == IV);
+    CREDO_NECESSE (f.momentorum == II && f.momenta != NIHIL);
+    CREDO_AEQUALIS_I32 (f.momenta[ZEPHYRUM].cyclus, III);
+    CREDO_VERUM (chorda_aequalis_literis(f.momenta[ZEPHYRUM].titulus,
+        "bonus"));
+    CREDO_F32_PROXIMUS (f.momenta[ZEPHYRUM].tempus, 0.5f, 0.0f);
+    CREDO_VERUM (chorda_aequalis_literis(f.momenta[I].titulus,
+        "nihilum"));
+    CREDO_F32_PROXIMUS (f.momenta[I].tempus, 0.0f, 0.0f);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "lapis", _sectio_lapis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "fungus", _sectio_fungus, NIHIL, NIHIL, NIHIL, NIHIL },
     { "minima", _sectio_minima, NIHIL, NIHIL, NIHIL, NIHIL },
     { "signa", _sectio_signa, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "nomina", _sectio_nomina, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "momenta", _sectio_momenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "numeri_integri", _sectio_numeri_integri, NIHIL, NIHIL, NIHIL,
         NIHIL },
     { "approximata", _sectio_approximata, NIHIL, NIHIL, NIHIL, NIHIL },

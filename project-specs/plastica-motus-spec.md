@@ -1,7 +1,8 @@
 # plastica motus — figures with joints and motion, modelled from text
 
-Status: APPROVED by Fran 2026-11-14 ("the draft of the spec looks
-great, i think all those decisions make sense"). Nothing is built.
+Status: BUILT 2026-11-16 in secunda (plan tasks 1-8; not in main).
+See "As built" at the end. Approved by Fran 2026-11-14 ("the draft
+of the spec looks great, i think all those decisions make sense").
 Plan: `project-specs/plastica-motus-plan.md`.
 Brainstormed 2026-11-14 with Fran (secunda session 134c8417). Builds
 on plastica (`project-specs/plastica-spec.md`), statuae and mundus,
@@ -227,3 +228,55 @@ chosen frame.
 6. Rigid parts leave gaps or overlaps at a bent knee or elbow. How
    that reads under dither at world size is not known; overlapping
    the parts a little at each joint is the planned answer.
+
+## As built (2026-11-16)
+
+What the plan's eight tasks made, where it differs from the text
+above, and what is still open. Details per task are in the plan's
+as-built notes and in `lib/plastica_motus.worklog.md`.
+
+1. **Names as built.** Sheet elements: `<figura>`, `<articulus>`,
+   `<positura>` (`ex`, `speculum`), `<art>`, `<cyclus>`, `<clavis>`
+   (`lenitas`), `<momentum>`, `<mora>`, `<membrum>`, `<meta>`
+   (`inclinatio`), `<ossa>` with `<figura ossa="name">`. Libraries:
+   `plastica` (joints), `plastica_motus` (poses, cycles, limbs,
+   skeleton sheets), `plastica_membrum` (the two-bone solve),
+   `plastica_specimen` (strip and numbers). Tools: `bin/plastica
+   specimen <figura> -o <png> -motus <png>`, `bin/plastica condere`,
+   `bin/statuae inspicere`.
+2. **Differences from the design.**
+   - IV.3: five easing values, not three (`accelerat` and `tardat`
+     added). A held stretch is a repeated key 1 ms before the next,
+     not a step channel.
+   - IV.4: a target may also fix the end joint's pitch
+     (`inclinatio`). Skeleton targets scale per limb from the limb's
+     rest end, not by root height (II.6 still holds for the root's
+     own motion).
+   - IV.5: eased and held stretches are sampled; a stretch between
+     two foot targets is NOT sampled, so the foot travels by its
+     joint turns. The fix for a visible arc is another key.
+   - IV.6: the strip's cells are 160 x 120; pivots are marked;
+     numbers are lowest point, seam gap and, for `walk` on a figure
+     with limbs, foot slide at the world's speed scaled to the
+     figure's height.
+   - IV.7: moments travel as `extras.moments` on the animation;
+     names and moments come back beside the `Statua` in
+     `StatuaFructus`.
+3. **Creatures built:** slime (own joints), goblin on the biped
+   skeleton, boar on the quadruped skeleton; each with idle, walk,
+   attack (moment `ictus`), hurt, die. All three live in Fran's
+   volume.
+4. **AUDIENDA, answered.** 1: yes, for these three; walks took two
+   or three rounds of strip reading each. 3: the reader keeps node
+   names and reads `extras` on an animation (built in task 8). 5:
+   stands; the goblin and the boar carry their own shorter walk
+   cycle because the world's one speed is a run for short legs. 6:
+   parts overlap 0.02 at joints; no gaps seen at world size.
+5. **Open, for the combat spec.** The world sizes every character
+   to 2 units, so the slime is as tall as the mushroom man and the
+   boar is very large. Nothing plays `attack`, `hurt` or `die`, or
+   reads a moment or a joint name, yet. Speed per creature.
+6. **Known limits.** The foot-slide number is measured at the ankle
+   pivot and overstates slide when the heel lifts. Limbs must hang
+   straight down at rest. Feet dip up to 0.04 in attacks and 0.07 in
+   deaths. The slime's attack touches the strip's cell edge.

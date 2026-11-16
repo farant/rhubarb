@@ -1,0 +1,183 @@
+<!-- quadrupes: ossa quadrupedis (plastica-motus-plan T8). Frons +z,
+     sinistrum +x. Truncus radix est; thorax solida corporis tenet
+     (scala eius respirat sine cruribus). Crura deorsum pendent:
+     anteriora genu ANTE flectunt, posteriora RETRO. Gressus est
+     tolutim: par diagonale simul. Motus trunci per altitudinem
+     trunci figurae multiplicatur; metae per longitudinem cruris. -->
+<ossa titulus="quadrupes">
+  <articulus titulus="truncus" locus="0 0.75 0">
+    <articulus titulus="thorax"/>
+    <articulus titulus="caput" locus="0 0.05 0.55">
+      <articulus titulus="auris_sin" locus="0.12 0.15 -0.05"/>
+      <articulus titulus="auris_dex" locus="-0.12 0.15 -0.05"/>
+    </articulus>
+    <articulus titulus="cauda" locus="0 0.1 -0.6"/>
+    <articulus titulus="armus_sin" locus="0.2 -0.05 0.4">
+      <articulus titulus="cubitus_sin" locus="0 -0.33 0">
+        <articulus titulus="ungula_ant_sin" locus="0 -0.32 0"/>
+      </articulus>
+    </articulus>
+    <articulus titulus="armus_dex" locus="-0.2 -0.05 0.4">
+      <articulus titulus="cubitus_dex" locus="0 -0.33 0">
+        <articulus titulus="ungula_ant_dex" locus="0 -0.32 0"/>
+      </articulus>
+    </articulus>
+    <articulus titulus="coxa_sin" locus="0.2 -0.05 -0.4">
+      <articulus titulus="tibia_sin" locus="0 -0.33 0">
+        <articulus titulus="ungula_post_sin" locus="0 -0.32 0"/>
+      </articulus>
+    </articulus>
+    <articulus titulus="coxa_dex" locus="-0.2 -0.05 -0.4">
+      <articulus titulus="tibia_dex" locus="0 -0.33 0">
+        <articulus titulus="ungula_post_dex" locus="0 -0.32 0"/>
+      </articulus>
+    </articulus>
+  </articulus>
+
+  <membrum titulus="ante_sin" radix="armus_sin" medium="cubitus_sin"
+           finis="ungula_ant_sin" flexus="ante"/>
+  <membrum titulus="ante_dex" radix="armus_dex" medium="cubitus_dex"
+           finis="ungula_ant_dex" flexus="ante"/>
+  <membrum titulus="post_sin" radix="coxa_sin" medium="tibia_sin"
+           finis="ungula_post_sin" flexus="retro"/>
+  <membrum titulus="post_dex" radix="coxa_dex" medium="tibia_dex"
+           finis="ungula_post_dex" flexus="retro"/>
+
+  <!-- stat: ungulae in humo fixae, ut truncus motus genua flectat -->
+  <positura titulus="stat">
+    <meta membrum="ante_sin" locus="0.2 0.05 0.4" inclinatio="0"/>
+    <meta membrum="ante_dex" locus="-0.2 0.05 0.4" inclinatio="0"/>
+    <meta membrum="post_sin" locus="0.2 0.05 -0.4" inclinatio="0"/>
+    <meta membrum="post_dex" locus="-0.2 0.05 -0.4" inclinatio="0"/>
+  </positura>
+  <positura titulus="respirat" ex="stat">
+    <art titulus="truncus" motus="0 -0.012 0"/>
+    <art titulus="thorax" scala="1.03 1.03 1"/>
+    <art titulus="caput" rotatio="4 0 0"/>
+  </positura>
+  <positura titulus="auscultat" ex="respirat">
+    <art titulus="auris_sin" rotatio="0 0 -25"/>
+    <art titulus="auris_dex" rotatio="0 0 25"/>
+    <art titulus="cauda" rotatio="0 25 0"/>
+  </positura>
+
+  <!-- gressus tolutim: contactus (anterior sinister et posterior
+       dexter ante humum tangunt, alteri retro pellunt), transitus
+       (illi sub corpore sustinent, alteri sublati praetereunt);
+       dextri imagines. Ungula in humo 0.2 per quartam cycli retro -->
+  <positura titulus="contactus_sin">
+    <art titulus="truncus" motus="0 -0.09 0" rotatio="0 0 2"/>
+    <art titulus="caput" rotatio="6 -4 0"/>
+    <art titulus="cauda" rotatio="-10 14 0"/>
+    <meta membrum="ante_sin" locus="0.2 0.05 0.6" inclinatio="0"/>
+    <meta membrum="post_dex" locus="-0.2 0.05 -0.2" inclinatio="0"/>
+    <meta membrum="ante_dex" locus="-0.2 0.07 0.2" inclinatio="15"/>
+    <meta membrum="post_sin" locus="0.2 0.07 -0.6" inclinatio="15"/>
+  </positura>
+  <positura titulus="transitus_sin">
+    <art titulus="truncus" motus="0 -0.06 0"/>
+    <art titulus="caput" rotatio="-2 0 0"/>
+    <art titulus="cauda" rotatio="6 0 0"/>
+    <meta membrum="ante_sin" locus="0.2 0.05 0.4" inclinatio="0"/>
+    <meta membrum="post_dex" locus="-0.2 0.05 -0.4" inclinatio="0"/>
+    <meta membrum="ante_dex" locus="-0.2 0.22 0.42" inclinatio="10"/>
+    <meta membrum="post_sin" locus="0.2 0.22 -0.38" inclinatio="10"/>
+  </positura>
+  <positura titulus="contactus_dex" speculum="contactus_sin"/>
+  <positura titulus="transitus_dex" speculum="transitus_sin"/>
+
+  <!-- impetus: retro subsidit capite demisso, deinde prosilit et
+       caput sursum iactat (dentes) -->
+  <positura titulus="praeparat" ex="stat">
+    <art titulus="truncus" motus="0 -0.12 -0.14" rotatio="6 0 0"/>
+    <art titulus="caput" rotatio="28 0 0"/>
+    <art titulus="auris_sin" rotatio="-30 0 0"/>
+    <art titulus="auris_dex" rotatio="-30 0 0"/>
+    <art titulus="cauda" rotatio="-40 0 0"/>
+  </positura>
+  <positura titulus="ferit">
+    <art titulus="truncus" motus="0 -0.1 0.26" rotatio="-6 0 0"/>
+    <art titulus="caput" rotatio="-32 0 0"/>
+    <art titulus="cauda" rotatio="30 0 0"/>
+    <meta membrum="ante_sin" locus="0.2 0.05 0.62" inclinatio="0"/>
+    <meta membrum="ante_dex" locus="-0.2 0.05 0.56" inclinatio="0"/>
+    <meta membrum="post_sin" locus="0.2 0.05 -0.36" inclinatio="0"/>
+    <meta membrum="post_dex" locus="-0.2 0.05 -0.32" inclinatio="0"/>
+  </positura>
+
+  <!-- icta: retro pellitur, caput avertit -->
+  <positura titulus="icta" ex="stat">
+    <art titulus="truncus" motus="0 -0.1 -0.12" rotatio="-5 0 3"/>
+    <art titulus="caput" rotatio="-18 0 16"/>
+    <art titulus="auris_sin" rotatio="0 0 -30"/>
+    <art titulus="auris_dex" rotatio="0 0 30"/>
+    <art titulus="cauda" rotatio="35 0 0"/>
+  </positura>
+
+  <!-- mors: crura cedunt, deinde in latus cadit -->
+  <positura titulus="genua" ex="stat">
+    <art titulus="truncus" motus="0 -0.2 0" rotatio="4 0 0"/>
+    <art titulus="caput" rotatio="24 0 0"/>
+  </positura>
+  <positura titulus="cadit">
+    <art titulus="truncus" motus="0.1 -0.14 0" rotatio="0 0 -55"/>
+    <art titulus="caput" rotatio="16 0 10"/>
+    <art titulus="armus_sin" rotatio="-60 0 0"/>
+    <art titulus="cubitus_sin" rotatio="100 0 0"/>
+    <art titulus="armus_dex" rotatio="-30 0 0"/>
+    <art titulus="cubitus_dex" rotatio="50 0 0"/>
+    <art titulus="coxa_sin" rotatio="60 0 0"/>
+    <art titulus="tibia_sin" rotatio="-100 0 0"/>
+    <art titulus="coxa_dex" rotatio="30 0 0"/>
+    <art titulus="tibia_dex" rotatio="-50 0 0"/>
+  </positura>
+  <positura titulus="iacet">
+    <art titulus="truncus" motus="0.2 -0.35 0" rotatio="0 0 -86"/>
+    <art titulus="caput" rotatio="8 0 6"/>
+    <art titulus="armus_sin" rotatio="-14 0 0"/>
+    <art titulus="cubitus_sin" rotatio="20 0 0"/>
+    <art titulus="armus_dex" rotatio="-6 0 0"/>
+    <art titulus="cubitus_dex" rotatio="12 0 0"/>
+    <art titulus="coxa_sin" rotatio="12 0 0"/>
+    <art titulus="tibia_sin" rotatio="-18 0 0"/>
+    <art titulus="coxa_dex" rotatio="6 0 0"/>
+    <art titulus="tibia_dex" rotatio="-10 0 0"/>
+    <art titulus="cauda" rotatio="20 0 0"/>
+  </positura>
+
+  <cyclus titulus="idle" duratio="2.8" circulus="verum">
+    <clavis tempus="0" positura="stat" lenitas="lenis"/>
+    <clavis tempus="1.3" positura="respirat"/>
+    <clavis tempus="1.5" positura="auscultat"/>
+    <clavis tempus="1.7" positura="respirat" lenitas="lenis"/>
+  </cyclus>
+  <cyclus titulus="walk" duratio="0.36" circulus="verum">
+    <clavis tempus="0" positura="contactus_sin"/>
+    <clavis tempus="0.09" positura="transitus_sin"/>
+    <clavis tempus="0.18" positura="contactus_dex"/>
+    <clavis tempus="0.27" positura="transitus_dex"/>
+    <momentum titulus="gressus_sin" tempus="0"/>
+    <momentum titulus="gressus_dex" tempus="0.18"/>
+    <mora titulus="caput" tempus="0.03"/>
+    <mora titulus="cauda" tempus="0.05"/>
+  </cyclus>
+  <cyclus titulus="attack" duratio="0.7">
+    <clavis tempus="0" positura="stat" lenitas="lenis"/>
+    <clavis tempus="0.25" positura="praeparat" lenitas="accelerat"/>
+    <clavis tempus="0.35" positura="ferit"/>
+    <clavis tempus="0.45" positura="ferit" lenitas="lenis"/>
+    <clavis tempus="0.7" positura="stat"/>
+    <momentum titulus="ictus" tempus="0.35"/>
+  </cyclus>
+  <cyclus titulus="hurt" duratio="0.4">
+    <clavis tempus="0" positura="stat" lenitas="tardat"/>
+    <clavis tempus="0.1" positura="icta" lenitas="lenis"/>
+    <clavis tempus="0.4" positura="stat"/>
+  </cyclus>
+  <cyclus titulus="die" duratio="1">
+    <clavis tempus="0" positura="stat" lenitas="accelerat"/>
+    <clavis tempus="0.3" positura="genua"/>
+    <clavis tempus="0.55" positura="cadit" lenitas="accelerat"/>
+    <clavis tempus="0.8" positura="iacet"/>
+  </cyclus>
+</ossa>

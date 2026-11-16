@@ -234,3 +234,48 @@ skeleton `plastica/ossa/bipes.stml`; first figure on it
   forearms 0.06 s behind in the walk (goblin's own walk: 0.02 and
   0.04). Slime: every cycle eased; the hop slows to the top and
   accelerates down. The slime has no delay: no pose moves its drop.
+
+## 2026-11-16 - T8: names and moments through the GLB; the boar
+
+- **`StatuaMomentum` lives in `statua.h`** (cycle index, title,
+  time), beside `Statua` and not in it; `PlasticaMomentum` is now a
+  typedef of it, so the tool hands a figure's moments to the writer
+  with no conversion.
+- **Writer:** `statua_glb_scribere_cum_momentis`. Moments go on
+  their animation as `extras: {"moments": [{"name", "time"}]}`, in
+  the order given; an animation without moments gets no `extras`.
+  With zero moments the bytes equal `statua_glb_scribere`. Refused:
+  unknown cycle, empty title, negative or non-finite time, a count
+  with no table.
+- **Reader:** `StatuaFructus` gains `tituli` (one per node, empty
+  where the node has no name), `momenta`, `momentorum`. Malformed
+  entries are skipped, never refused. Moments are read AFTER
+  `statua_finire`, in two passes (count, fill).
+- **Found by plants:** four type checks in the new reader code were
+  dead, because `json_ad_chorda` and `json_objectum_capere` already
+  answer empty / NIHIL for the wrong type (documented in json.h);
+  removed. Kept though green: the two `chorda_transcribere` copies
+  (node name, moment title). The JSON parser copies strings today,
+  but its header does not promise it, and the reader's header
+  promises nothing points into the caller's bytes.
+- **`bin/statuae inspicere <title> -volumen V`** prints a stored
+  model's named nodes, cycles and moments. It is how to see that a
+  built figure carries what the combat layer will read.
+- **Tool plant runner caveat:** the first-failure line my runner
+  prints was misleading for two plants (it showed the previous
+  plant's failure); rerun by hand they were red for their own
+  reason. Print every FRACTA line next time, not the first.
+- **Quadruped skeleton** (`plastica/ossa/quadrupes.stml`): root
+  `truncus`, a separate `thorax` joint for the body solid (so
+  breathing scales the body and not the legs), four limbs; front
+  knees bend forward (`ante`), hind ones back (`retro`). The walk is
+  a trot: diagonal pairs, the right half mirrored from the left.
+- **Authoring the boar:** poses that lower or pitch the root must
+  leave every foot target in reach for the SHORTEST-legged figure
+  (the hurt pose was refused on the boar, not on the skeleton). The
+  fall needed three tries: a rolled body puts the near-side legs
+  below the root, so the roll pose holds the root high and folds
+  the legs. Lowest point in `die` is -0.07. Own walk of 0.27 s
+  (skeleton 0.36 s) brought the slide from 0.20 to 0.08.
+- **Seen in the strip, not fixed:** the boar's lit belly dithers
+  orange-red in two three-quarter frames of `die`.

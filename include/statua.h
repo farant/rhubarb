@@ -51,6 +51,15 @@ nomen structura {
               i32  canalium;
 } StatuaCyclus;
 
+/* momentum: instans nominatum cycli (ictus impetus, gressus). IUXTA
+ * Statuam manet, non in ea: scriptor GLB id fert, lector reddit
+ * (statua_glb_scriptor.h, statua_glb.h); statua_positura id nescit */
+nomen structura {
+       i32 cyclus;     /* index in statua->cycli */
+    chorda titulus;
+       f32 tempus;     /* secundae */
+} StatuaMomentum;
+
 /* signa nodi: quid pars in loco sit (lector ea ex extras.tags
  * plagulae legit; mundus_solum ex eis tabulam gressus struit) */
 #define STATUA_SIGNUM_GRESSIBILE  I     /* "walkable" */

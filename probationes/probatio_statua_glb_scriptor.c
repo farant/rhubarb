@@ -742,6 +742,144 @@ _sectio_recusationes (
     CREDO_VERUM (g.datum != NIHIL);
 }
 
+/* plastica-motus-plan T8: nomina nodorum et momenta cyclorum per
+ * GLB eunt et redeunt */
+interior vacuum
+_sectio_momenta (
+    CredoContextus* c)
+{
+    PlasticaFructus f = _res(c);
+             Statua s = *f.statua;
+       StatuaCyclus cycli[II];
+      StatuaCanalis canales[II];
+     StatuaMomentum momenta[III];
+     StatuaMomentum malum;
+      StatuaFructus r;
+                f32 tempora[III] = { 0.0f, 0.5f, 1.25f };
+                f32 loci[IX]     = { 0.0f, 0.0f, 0.0f, 1.0f, 2.0f,
+                    3.0f, -4.0f, 5.5f, 6.25f };
+             chorda g;
+             chorda nuda;
+                i32 n;
+
+    memset(canales, ZEPHYRUM, magnitudo(canales));
+    memset(cycli, ZEPHYRUM, magnitudo(cycli));
+    per (n = ZEPHYRUM; n < II; n++)
+    {
+        canales[n].nodus       = I;
+        canales[n].proprietas  = STATUA_TRANSLATIO;
+        canales[n].clavium     = III;
+        canales[n].tempora     = tempora;
+        canales[n].valores     = loci;
+        cycli[n].duratio       = 1.25f;
+        cycli[n].canales       = &canales[n];
+        cycli[n].canalium      = I;
+    }
+    cycli[ZEPHYRUM].titulus  = chorda_ex_literis("walk", c->piscina);
+    cycli[I].titulus         = chorda_ex_literis("attack", c->piscina);
+    s.cycli                  = cycli;
+    s.cyclorum               = II;
+    /* ordine mixto data: cyclus I ante cyclum 0 */
+    momenta[ZEPHYRUM].cyclus   = I;
+    momenta[ZEPHYRUM].titulus  = chorda_ex_literis("ictus", c->piscina);
+    momenta[ZEPHYRUM].tempus   = 0.3f;
+    momenta[I].cyclus          = ZEPHYRUM;
+    momenta[I].titulus         =
+        chorda_ex_literis("gressus_sin", c->piscina);
+    momenta[I].tempus   = 0.0f;
+    momenta[II].cyclus  = ZEPHYRUM;
+    momenta[II].titulus        =
+        chorda_ex_literis("gressus_dex", c->piscina);
+    momenta[II].tempus         = 0.625f;
+    g = statua_glb_scribere_cum_momentis(&s, f.partes, momenta, III,
+        c->piscina);
+    CREDO_NECESSE (g.datum != NIHIL);
+    CREDO_VERUM (_continet(c, g, "\"moments\":[{\"name\":\"ictus\""));
+    r = statua_glb_legere(g, c->piscina);
+    CREDO_NECESSE (r.successus && r.tituli != NIHIL);
+    CREDO_NECESSE (r.statua->nodorum == s.nodorum);
+    /* nomina: omnia redeunt, vacua vacua */
+    per (n = ZEPHYRUM; n < s.nodorum; n++)
+    {
+        CREDO_VERUM (chorda_aequalis(r.tituli[n], f.partes[n]));
+    }
+    CREDO_VERUM (chorda_aequalis_literis(r.tituli[II], "saxum"));
+    /* momenta: ordine cyclorum, intra cyclum ordine dato; tempus
+     * f32 exacte */
+    CREDO_NECESSE (r.momentorum == III && r.momenta != NIHIL);
+    CREDO_AEQUALIS_I32 (r.momenta[ZEPHYRUM].cyclus, ZEPHYRUM);
+    CREDO_VERUM (chorda_aequalis_literis(r.momenta[ZEPHYRUM].titulus,
+        "gressus_sin"));
+    CREDO_VERUM (_f32_pares(&r.momenta[ZEPHYRUM].tempus,
+        &momenta[I].tempus, I));
+    CREDO_AEQUALIS_I32 (r.momenta[I].cyclus, ZEPHYRUM);
+    CREDO_VERUM (chorda_aequalis_literis(r.momenta[I].titulus,
+        "gressus_dex"));
+    CREDO_VERUM (_f32_pares(&r.momenta[I].tempus, &momenta[II].tempus,
+        I));
+    CREDO_AEQUALIS_I32 (r.momenta[II].cyclus, I);
+    CREDO_VERUM (chorda_aequalis_literis(r.momenta[II].titulus,
+        "ictus"));
+    CREDO_VERUM (_f32_pares(&r.momenta[II].tempus,
+        &momenta[ZEPHYRUM].tempus, I));
+    /* statua ipsa par manet */
+    CREDO_VERUM (_statuae_pares(_lege_glb(c,
+        statua_glb_scribere(&s, f.partes, c->piscina)), r.statua));
+    /* determinatus */
+    nuda = statua_glb_scribere_cum_momentis(&s, f.partes, momenta,
+        III, c->piscina);
+    CREDO_NECESSE (nuda.mensura == g.mensura);
+    CREDO_VERUM (memcmp(nuda.datum, g.datum, g.mensura) == ZEPHYRUM);
+    /* sine momentis: octeti idem ac statua_glb_scribere, nullum
+     * "moments" */
+    nuda = statua_glb_scribere(&s, f.partes, c->piscina);
+    g    = statua_glb_scribere_cum_momentis(&s, f.partes, momenta,
+        ZEPHYRUM, c->piscina);
+    CREDO_NECESSE (nuda.datum != NIHIL && g.mensura == nuda.mensura);
+    CREDO_VERUM (memcmp(nuda.datum, g.datum, g.mensura) == ZEPHYRUM);
+    CREDO_FALSUM (_continet(c, g, "moments"));
+    r = statua_glb_legere(g, c->piscina);
+    CREDO_NECESSE (r.successus);
+    CREDO_NIHIL (r.momenta);
+    CREDO_AEQUALIS_I32 (r.momentorum, ZEPHYRUM);
+    /* sine nominibus: tabula adest, omnia vacua */
+    r = statua_glb_legere(statua_glb_scribere(&s, NIHIL, c->piscina),
+        c->piscina);
+    CREDO_NECESSE (r.successus && r.tituli != NIHIL);
+    per (n = ZEPHYRUM; n < s.nodorum; n++)
+    {
+        CREDO_AEQUALIS_I32 (r.tituli[n].mensura, ZEPHYRUM);
+    }
+    /* recusationes: cyclus ignotus, titulus vacuus, tempus
+     * negativum, non finitum, tabula nulla cum numero */
+    malum         = momenta[ZEPHYRUM];
+    malum.cyclus  = II;
+    CREDO_VERUM (statua_glb_scribere_cum_momentis(&s, f.partes,
+        &malum, I, c->piscina).datum == NIHIL);
+    malum                  = momenta[ZEPHYRUM];
+    malum.titulus.mensura  = ZEPHYRUM;
+    CREDO_VERUM (statua_glb_scribere_cum_momentis(&s, f.partes,
+        &malum, I, c->piscina).datum == NIHIL);
+    malum         = momenta[ZEPHYRUM];
+    malum.tempus  = -0.25f;
+    CREDO_VERUM (statua_glb_scribere_cum_momentis(&s, f.partes,
+        &malum, I, c->piscina).datum == NIHIL);
+    malum.tempus  = (f32)HUGE_VAL;
+    CREDO_VERUM (statua_glb_scribere_cum_momentis(&s, f.partes,
+        &malum, I, c->piscina).datum == NIHIL);
+    CREDO_VERUM (statua_glb_scribere_cum_momentis(&s, f.partes, NIHIL,
+        I, c->piscina).datum == NIHIL);
+    /* malum ultimum inter bona etiam recusat */
+    momenta[II].cyclus = V;
+    CREDO_VERUM (statua_glb_scribere_cum_momentis(&s, f.partes,
+        momenta, III, c->piscina).datum == NIHIL);
+    /* momentum ad tempus 0 et in fine licet */
+    momenta[II].cyclus = I;
+    momenta[II].tempus = 1.25f;
+    CREDO_VERUM (statua_glb_scribere_cum_momentis(&s, f.partes,
+        momenta, III, c->piscina).datum != NIHIL);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "continens", _sectio_continens, NIHIL, NIHIL, NIHIL, NIHIL },
     { "res", _sectio_res, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -751,6 +889,7 @@ hic_manens constans CredoSectio SECTIONES[] = {
     { "lapis", _sectio_lapis, NIHIL, NIHIL, NIHIL, NIHIL },
     { "planum", _sectio_planum, NIHIL, NIHIL, NIHIL, NIHIL },
     { "cyclus", _sectio_cyclus, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "momenta", _sectio_momenta, NIHIL, NIHIL, NIHIL, NIHIL },
     { "communes", _sectio_communes, NIHIL, NIHIL, NIHIL, NIHIL },
     { "otiosi", _sectio_otiosi, NIHIL, NIHIL, NIHIL, NIHIL },
     { "recusationes", _sectio_recusationes, NIHIL, NIHIL, NIHIL,
