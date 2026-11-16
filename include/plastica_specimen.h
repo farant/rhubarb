@@ -54,7 +54,9 @@
  * scriptum. Scala una per imaginem. Punctum humi sub medio figurae
  * quiescentis in cella ad (medium, PLASTICA_MOTUS_HUMUS) stat: XX
  * pixela infra humum patent (figura quae mergitur videtur), supra
- * spatium saltui. Pars quae cellam excedit praeciditur.
+ * spatium saltui. Cella CLX lata est, figura quiescens CXX ad summum:
+ * XX pixela utrimque positurae latae et impetui patent. Pars quae
+ * cellam excedit praeciditur.
  *
  * Determinata: statua eadem imaginem eandem dat.
  */
@@ -137,10 +139,11 @@ plastica_specimen_pingere (
             Piscina* piscina);
 
 #define PLASTICA_MOTUS_QUADRA     VIII
-#define PLASTICA_MOTUS_CELLA      CXX    /* pixela per latus */
+#define PLASTICA_MOTUS_CELLA      CXX    /* cella alta */
+#define PLASTICA_MOTUS_CELLA_LATA CLX    /* cella lata */
 #define PLASTICA_MOTUS_ALTITUDO   LXXX   /* figura quiescens */
 #define PLASTICA_MOTUS_HUMUS      C      /* linea humi a summo cellae */
-#define PLASTICA_MOTUS_LATITUDO   CMLX   /* QUADRA x CELLA */
+#define PLASTICA_MOTUS_LATITUDO   MCCLXXX /* QUADRA x CELLA_LATA */
 /* instantia quibus numeri motus sumuntur */
 #define PLASTICA_MOTUS_EXEMPLA    XXXII
 

@@ -864,7 +864,7 @@ _pixelum_cellae (
     redde imago->pixela
         + ((memoriae_index)(ordo * PLASTICA_MOTUS_CELLA + y)
             * imago->latitudo
-            + columna * PLASTICA_MOTUS_CELLA + x) * IV;
+            + columna * PLASTICA_MOTUS_CELLA_LATA + x) * IV;
 }
 
 /* pixela tecta picturae in cellam; indices NIHIL = colores ipsi */
@@ -881,10 +881,10 @@ _cellam_motus_ponere (
 
     per (y = ZEPHYRUM; y < PLASTICA_MOTUS_CELLA; y++)
     {
-        per (x = ZEPHYRUM; x < PLASTICA_MOTUS_CELLA; x++)
+        per (x = ZEPHYRUM; x < PLASTICA_MOTUS_CELLA_LATA; x++)
         {
             memoriae_index fons = (memoriae_index)y
-                * PLASTICA_MOTUS_CELLA + x;
+                * PLASTICA_MOTUS_CELLA_LATA + x;
                        i8* p    = _pixelum_cellae(imago, columna, ordo,
                            x, y);
 
@@ -938,7 +938,7 @@ _cardines_signare (
             per (dx = -I; dx <= I; dx++)
             {
                 si (   px + dx < ZEPHYRUM || py + dy < ZEPHYRUM
-                    || px + dx >= (s32)PLASTICA_MOTUS_CELLA
+                    || px + dx >= (s32)PLASTICA_MOTUS_CELLA_LATA
                     || py + dy >= (s32)PLASTICA_MOTUS_CELLA)
                 {
                     perge;
@@ -1009,7 +1009,8 @@ plastica_specimen_motus_pingere (
     pixela = (memoriae_index)exitus->latitudo * exitus->altitudo;
     exitus->pixela = (i8*)piscina_allocare(piscina, pixela * IV);
     indices           = (i8*)piscina_allocare(piscina,
-        (memoriae_index)PLASTICA_MOTUS_CELLA * PLASTICA_MOTUS_CELLA);
+        (memoriae_index)PLASTICA_MOTUS_CELLA_LATA
+            * PLASTICA_MOTUS_CELLA);
     matrices          = (StereometriaMatrix*)piscina_allocare(piscina,
         (memoriae_index)(statua->nodorum + I)
             * magnitudo(StereometriaMatrix));
@@ -1040,7 +1041,7 @@ plastica_specimen_motus_pingere (
             statua_scaena_proicere(&visus, medium, &x, &y,
                 &profunditas);
             visus.origo_x = (s32)floor((f64)x)
-                - (s32)(PLASTICA_MOTUS_CELLA / II);
+                - (s32)(PLASTICA_MOTUS_CELLA_LATA / II);
             visus.origo_y = (s32)floor((f64)y)
                 - (s32)PLASTICA_MOTUS_HUMUS;
             per (k = ZEPHYRUM; k < PLASTICA_MOTUS_QUADRA; k++)
@@ -1052,15 +1053,15 @@ plastica_specimen_motus_pingere (
                     statua->cycli[cyclus].duratio * (f32)k
                         / (f32)PLASTICA_MOTUS_QUADRA, matrices);
                 bene = statua_scaenam_pingere(&locata, I, &visus,
-                    PLASTICA_MOTUS_CELLA, PLASTICA_MOTUS_CELLA,
+                    PLASTICA_MOTUS_CELLA_LATA, PLASTICA_MOTUS_CELLA,
                     &pictura, piscina);
                 si (bene && latus)
                 {
                     memset(indices, CHARTA_PALETTAE,
-                        (memoriae_index)PLASTICA_MOTUS_CELLA
+                        (memoriae_index)PLASTICA_MOTUS_CELLA_LATA
                             * PLASTICA_MOTUS_CELLA);
                     bene = statuae_picturam_dithering(pictura.rgba,
-                        pictura.tectum, PLASTICA_MOTUS_CELLA,
+                        pictura.tectum, PLASTICA_MOTUS_CELLA_LATA,
                         PLASTICA_MOTUS_CELLA, activi, indices,
                         piscina);
                 }
@@ -1072,7 +1073,8 @@ plastica_specimen_motus_pingere (
                 alioquin si (bene)
                 {
                     /* linea humi sub figura, signa super eam */
-                    per (n = ZEPHYRUM; n < PLASTICA_MOTUS_CELLA; n++)
+                    per (n = ZEPHYRUM; n
+                        < PLASTICA_MOTUS_CELLA_LATA; n++)
                     {
                         memset(_pixelum_cellae(exitus, k, ordo, n,
                             PLASTICA_MOTUS_HUMUS), MOTUS_CINEREUM,

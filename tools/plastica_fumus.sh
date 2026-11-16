@@ -99,11 +99,11 @@ cat > "$T/pupa.stml" <<'FIGURA'
 FIGURA
 proba "specimen figurae cum motu" 0 "$B" specimen "$T/pupa.stml" -o "$T/pupa.png" -motus "$T/pupa_motus.png"
 file "$T/pupa.png" 2>/dev/null | grep -q "640 x 640" || { echo "FRACTA: figura: pagina 640 x 640 abest"; fracta=$((fracta + 1)); }
-file "$T/pupa_motus.png" 2>/dev/null | grep -q "960 x 480" || { echo "FRACTA: figura: linea motus 960 x 480 abest"; fracta=$((fracta + 1)); }
+file "$T/pupa_motus.png" 2>/dev/null | grep -q "1280 x 480" || { echo "FRACTA: figura: linea motus 1280 x 480 abest"; fracta=$((fracta + 1)); }
 contine "cyclus primus" "$T/out" "^cyclus 0 salit: duratio 1.00  infimum 0.00 .. 0.50  hiatus 0.000$"
 contine "momentum cycli" "$T/out" "^  momentum apex 0.50$"
 contine "cyclus alter" "$T/out" "^cyclus 1 stat: duratio 2.00  infimum 0.50 .. 0.50  hiatus 0.000$"
-contine "mensura lineae" "$T/out" "pupa_motus.png: 960 x 480$"
+contine "mensura lineae" "$T/out" "pupa_motus.png: 1280 x 480$"
 [ "$(grep -c '  momentum ' "$T/out")" -eq 1 ] || { echo "FRACTA: momentum sub cyclo alieno"; fracta=$((fracta + 1)); }
 cp "$T/pupa_motus.png" "$T/motus_prima.png"
 proba "specimen figurae iterum" 0 "$B" specimen "$T/pupa.stml" -o "$T/pupa.png" -motus "$T/pupa_motus.png"
@@ -259,6 +259,69 @@ proba "personae post recusatas" 0 "$S" enumerare -volumen "$VF"
 rm "$DF/b_figura.stml"
 proba "condere figuras solas recusatas" 1 "$B" condere -volumen "$VF" -fontes "$DF" -figurae "$G"
 contine "res omnes bonae" "$T/out" "^plastica: 0 additae, 0 mutatae, 1 eaedem, 0 recusatae$"
+# figurae cum ossibus (plastica-motus-plan T5): plagula ossium in
+# directorio 'ossa' iuxta directorium figurae
+O="$T/corpora"
+mkdir -p "$O/figurae" "$O/ossa" "$T/fontes_o"
+printf '<res titulus="arca">\n  <capsa magnitudo="1 1 1"/>\n</res>\n' > "$T/fontes_o/a_arca.stml"
+cat > "$O/ossa/duo.stml" <<'OSSA'
+<ossa titulus="duo">
+  <articulus titulus="pelvis" locus="0 1 0">
+    <articulus titulus="crus_sin" locus="0.2 0 0"/>
+    <articulus titulus="crus_dex" locus="-0.2 0 0"/>
+  </articulus>
+  <positura titulus="gradus">
+    <art titulus="crus_sin" rotatio="30 0 0"/>
+  </positura>
+  <positura titulus="gradus_dex" speculum="gradus"/>
+  <cyclus titulus="walk" duratio="1" circulus="verum">
+    <clavis tempus="0" positura="gradus"/>
+    <clavis tempus="0.5" positura="gradus_dex"/>
+  </cyclus>
+</ossa>
+OSSA
+cat > "$O/figurae/gemellus.stml" <<'FIGURA'
+<figura titulus="gemellus" ossa="duo">
+  <articulus titulus="pelvis"><capsa magnitudo="0.6 0.6 0.4"/></articulus>
+  <articulus titulus="crus_sin"><capsa magnitudo="0.2 1 0.2" locus="0 -1 0"/></articulus>
+  <articulus titulus="crus_dex"><capsa magnitudo="0.2 1 0.2" locus="0 -1 0"/></articulus>
+</figura>
+FIGURA
+proba "specimen figurae cum ossibus" 0 "$B" specimen "$O/figurae/gemellus.stml" -o "$T/gem.png" -motus "$T/gem_motus.png"
+contine "cyclus ossium" "$T/out" "^cyclus 0 walk: duratio 1.00 "
+contine "solida figurae in ossibus" "$T/out" "gemellus.stml: 3 partes "
+file "$T/gem_motus.png" 2>/dev/null | grep -q "1280 x 240" || { echo "FRACTA: ossa: linea motus 1280 x 240 abest"; fracta=$((fracta + 1)); }
+# via sine directorio: ossa in ../ossa loci currentis
+BA="$(pwd)/$B"
+( cd "$O/figurae" && "$BA" specimen gemellus.stml -o "$T/gem_nuda.png" > "$T/out_nuda" 2> "$T/err_nuda" ) || { echo "FRACTA: specimen via nuda: $(cat "$T/err_nuda")"; fracta=$((fracta + 1)); }
+# ossa absentia: via figurae, linea attributi
+sed 's/ossa="duo"/ossa="nulla"/' "$O/figurae/gemellus.stml" > "$T/orbus.stml"
+mkdir -p "$T/ossa"
+proba "ossa absentia" 1 "$B" specimen "$T/orbus.stml" -o "$T/orbus.png"
+contine "ossa absentia nominantur" "$T/err" "^$T/orbus.stml:1: unknown skeleton 'nulla'$"
+[ ! -e "$T/orbus.png" ] || { echo "FRACTA: ossa absentia PNG scripsit"; fracta=$((fracta + 1)); }
+# error in plagula ossium: via ET linea illius plagulae
+sed 's/titulus="crus_sin" rotatio/titulus="genu" rotatio/' "$O/ossa/duo.stml" > "$O/ossa/mala.stml"
+sed 's/ossa="duo"/ossa="mala"/; s/titulus="gemellus"/titulus="claudus"/' "$O/figurae/gemellus.stml" > "$O/claudus.stml"
+mkdir -p "$O/alia" && mv "$O/claudus.stml" "$O/alia/claudus.stml"
+proba "error in ossibus" 1 "$B" specimen "$O/alia/claudus.stml" -o "$T/claudus.png"
+contine "via et linea ossium" "$T/err" "^$O/alia/../ossa/mala.stml:7: .*genu"
+# error in figura cum ossibus: via figurae
+sed 's/titulus="crus_dex"/titulus="cauda"/' "$O/figurae/gemellus.stml" > "$O/alia/caudatus.stml"
+proba "error in figura cum ossibus" 1 "$B" specimen "$O/alia/caudatus.stml" -o "$T/caudatus.png"
+contine "via figurae" "$T/err" "^$O/alia/caudatus.stml:4: .*cauda"
+# condere: figura cum ossibus persona fit; ossa ipsa non conduntur
+proba "condere figuram cum ossibus" 0 "$B" condere -volumen "$T/ossa.volumen" -fontes "$T/fontes_o" -figurae "$O/figurae"
+contine "figura cum ossibus addita" "$T/out" "^figura addita    gemellus$"
+proba "condere figuram cum ossibus iterum" 0 "$B" condere -volumen "$T/ossa.volumen" -fontes "$T/fontes_o" -figurae "$O/figurae"
+contine "figura cum ossibus eadem" "$T/out" "^figura eadem     gemellus$"
+# ossa mutata figuram mutant
+sed 's/rotatio="30 0 0"/rotatio="35 0 0"/' "$O/ossa/duo.stml" > "$T/duo.nova" && mv "$T/duo.nova" "$O/ossa/duo.stml"
+proba "condere post ossa mutata" 0 "$B" condere -volumen "$T/ossa.volumen" -fontes "$T/fontes_o" -figurae "$O/figurae"
+contine "ossa mutata figuram mutant" "$T/out" "^figura mutata    gemellus$"
+proba "personae cum ossibus" 0 "$S" enumerare -volumen "$T/ossa.volumen"
+[ "$(cut -f1 "$T/out" | tr '\n' ',')" = "gemellus," ] || { echo "FRACTA: personae cum ossibus: $(cut -f1 "$T/out" | tr '\n' ',')"; fracta=$((fracta + 1)); }
+
 # directoria ordinaria: plastica/res et plastica/figurae sub loco currenti;
 # figurae absentes sine errore
 mkdir -p "$T/alibi/plastica/res"

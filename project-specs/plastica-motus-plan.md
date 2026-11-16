@@ -315,6 +315,24 @@ skeleton's of the same title.
 - [ ] Plants, each red.
 - [ ] Commit on Fran's word.
 
+**As built (2026-11-16).** As the header Fran approved. Added to it:
+the symmetry check on a mirrored pair's rest pose; `plagula` names
+the skeleton and `linea` is that sheet's line; `ex` and `speculum`
+copy when read (noted in the header); after a replaced pose every
+cycle's 180-degree check runs again. `plastica_legere_arboris` is
+new in `plastica.h` (plastica reads a tree, so the figure's solids
+and the skeleton's joints are merged as STML trees and line numbers
+survive). The tool looks for `ossa/<name>.stml` beside the figure's
+directory, no flag. Strip cells widened to 160 (Fran's yes,
+2026-11-16): `PLASTICA_MOTUS_CELLA_LATA`, strip 1280 wide, cell
+height and ground line unchanged. `plastica/ossa/bipes.stml` (13
+joints; idle and walk; moments `gressus_sin`, `gressus_dex`) and
+`plastica/figurae/goblin.stml`, built into Fran's live volume
+(`figura addita goblin`). Plants: 119 on the library, 9 by hand on
+the tool, all red. Left: the slime's attack still touches the cell
+edge in one frame; the goblin's feet dip 0.03 at contact (foot
+targets, task 6).
+
 ### Task 6: limbs and targets
 
 **Produces:**

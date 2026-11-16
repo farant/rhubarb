@@ -1,0 +1,83 @@
+<!-- bipes: ossa bipedis (plastica-motus-plan T5). Frons +z, sinistrum
+     +x. Membra deorsum pendent: rotatio x NEGATIVA membrum antrorsum
+     fert, positiva retrorsum; genu positiva flectitur (pes retro).
+     Proportiones hominis I.8 alti; figura cardines suos dat. Motus
+     pelvis per altitudinem pelvis figurae multiplicatur. -->
+<ossa titulus="bipes">
+  <articulus titulus="pelvis" locus="0 0.9 0">
+    <articulus titulus="truncus" locus="0 0.1 0">
+      <articulus titulus="caput" locus="0 0.55 0"/>
+      <articulus titulus="bracchium_sin" locus="0.3 0.5 0">
+        <articulus titulus="antebracchium_sin" locus="0 -0.3 0"/>
+      </articulus>
+      <articulus titulus="bracchium_dex" locus="-0.3 0.5 0">
+        <articulus titulus="antebracchium_dex" locus="0 -0.3 0"/>
+      </articulus>
+    </articulus>
+    <articulus titulus="femur_sin" locus="0.15 0 0">
+      <articulus titulus="crus_sin" locus="0 -0.42 0">
+        <articulus titulus="pes_sin" locus="0 -0.42 0"/>
+      </articulus>
+    </articulus>
+    <articulus titulus="femur_dex" locus="-0.15 0 0">
+      <articulus titulus="crus_dex" locus="0 -0.42 0">
+        <articulus titulus="pes_dex" locus="0 -0.42 0"/>
+      </articulus>
+    </articulus>
+  </articulus>
+
+  <!-- gressus: contactus (pes sinister ante, humum tangit), transitus
+       (sinister sustinet, dexter praeterit); dextri imagines sunt -->
+  <positura titulus="contactus_sin">
+    <art titulus="pelvis" motus="0 -0.03 0" rotatio="0 -6 0"/>
+    <art titulus="truncus" rotatio="4 10 0"/>
+    <art titulus="caput" rotatio="0 -4 0"/>
+    <art titulus="femur_sin" rotatio="-28 0 0"/>
+    <art titulus="crus_sin" rotatio="8 0 0"/>
+    <art titulus="pes_sin" rotatio="14 0 0"/>
+    <art titulus="femur_dex" rotatio="22 0 0"/>
+    <art titulus="crus_dex" rotatio="30 0 0"/>
+    <art titulus="pes_dex" rotatio="-14 0 0"/>
+    <art titulus="bracchium_sin" rotatio="26 0 3"/>
+    <art titulus="antebracchium_sin" rotatio="-12 0 0"/>
+    <art titulus="bracchium_dex" rotatio="-26 0 -3"/>
+    <art titulus="antebracchium_dex" rotatio="-30 0 0"/>
+  </positura>
+  <positura titulus="transitus_sin">
+    <art titulus="pelvis" motus="0 0.02 0"/>
+    <art titulus="truncus" rotatio="2 0 0"/>
+    <art titulus="femur_sin" rotatio="-2 0 0"/>
+    <art titulus="crus_sin" rotatio="4 0 0"/>
+    <art titulus="pes_sin" rotatio="-2 0 0"/>
+    <art titulus="femur_dex" rotatio="-30 0 0"/>
+    <art titulus="crus_dex" rotatio="70 0 0"/>
+    <art titulus="pes_dex" rotatio="-25 0 0"/>
+    <art titulus="bracchium_sin" rotatio="2 0 3"/>
+    <art titulus="antebracchium_sin" rotatio="-16 0 0"/>
+    <art titulus="bracchium_dex" rotatio="-2 0 -3"/>
+    <art titulus="antebracchium_dex" rotatio="-16 0 0"/>
+  </positura>
+  <positura titulus="contactus_dex" speculum="contactus_sin"/>
+  <positura titulus="transitus_dex" speculum="transitus_sin"/>
+
+  <positura titulus="respirat">
+    <art titulus="pelvis" motus="0 -0.012 0"/>
+    <art titulus="truncus" scala="1.02 1.03 1.03" rotatio="2 0 0"/>
+    <art titulus="bracchium_sin" rotatio="0 0 5"/>
+    <art titulus="bracchium_dex" rotatio="0 0 -5"/>
+    <art titulus="caput" rotatio="-2 0 0"/>
+  </positura>
+
+  <cyclus titulus="idle" duratio="2.4" circulus="verum">
+    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="1.2" positura="respirat"/>
+  </cyclus>
+  <cyclus titulus="walk" duratio="0.64" circulus="verum">
+    <clavis tempus="0" positura="contactus_sin"/>
+    <clavis tempus="0.16" positura="transitus_sin"/>
+    <clavis tempus="0.32" positura="contactus_dex"/>
+    <clavis tempus="0.48" positura="transitus_dex"/>
+    <momentum titulus="gressus_sin" tempus="0"/>
+    <momentum titulus="gressus_dex" tempus="0.32"/>
+  </cyclus>
+</ossa>

@@ -71,3 +71,67 @@ cycles idle, walk, attack, hurt, die.
   here.
 - The world still sizes every character to 2 units tall, so the
   slime stands as tall as the mushroom man (combat spec).
+
+## 2026-11-16 - mirrored poses, skeleton sheets, the goblin (plastica motus T5)
+
+`<positura speculum="x">`, skeleton sheets (`<ossa>`, figure
+`ossa="name"`), `plastica_figura_legere_cum_fonte`, the `plagula`
+error field, `plastica_legere_arboris` in plastica. First shared
+skeleton `plastica/ossa/bipes.stml`; first figure on it
+`plastica/figurae/goblin.stml` (idle, walk from turns alone).
+
+- **A figure with a skeleton is built by merging two STML trees,
+  not two texts.** The skeleton's joint elements are copied, the
+  figure's solids are hung inside them (the figure's own nodes, not
+  copies), and plastica reads the merged tree through the new
+  `plastica_legere_arboris`. Text merging would have lost the line
+  numbers.
+- **Which sheet an error is in:** copied skeleton nodes carry their
+  line with bit 30 set (`LINEA_OSSIUM`); plastica hands lines back
+  untouched, so a refusal on such a line is the skeleton's. One
+  plastica message prints a line number in its text (duplicate joint
+  title, "first on line N"), so duplicate titles in a skeleton are
+  caught before plastica sees them; a test checks the flag never
+  leaks into a message.
+- **Mirror = conjugation by the x reflection.** For a turn written
+  as x, then y, then z degrees the mirrored turn is (x, -y, -z)
+  exactly, for any rest pose, as long as the pair's rest poses are
+  themselves mirror images. That condition is checked (locus,
+  rest turn, parent) and refused otherwise, because a mirrored pose
+  on an asymmetric pair is silently wrong.
+- **`ex` and `speculum` copy values when read.** A skeleton pose
+  derived from another does not follow a figure's later replacement
+  of the original. A figure that replaces `contactus_sin` and wants
+  the mirror to follow must also write `contactus_dex`.
+- **After a figure replaces a pose, every cycle's 180-degree check
+  runs again,** the figure's own cycles too: a cycle written above
+  the replacement saw the old pose.
+- **Root motion scale** = figure root height / skeleton root height,
+  applied when a skeleton pose is read, to all three components.
+  A figure's own poses are not scaled.
+- **Found by plants (119 on the library, all red in the end):**
+  a pair cache nothing could observe (removed); a scratch slot for
+  the cycle being read (removed: a refused cycle refuses the figure
+  anyway); skipping motion elements when merging (plastica passes
+  them over already); a root-joint condition on the scale factor
+  (motus is refused elsewhere on other joints); an early seed check
+  in `plastica_legere_seminis` duplicated by the tree reader. Weak
+  tests strengthened: pairs with equal-length titles and a shared
+  prefix, a nested pair, an unpaired joint off the centre plane,
+  replacing at the pose and cycle limits, loose solids at a
+  skeleton figure's root.
+- **Strip cells are 160 wide now** (120 tall as before; a resting
+  figure is still at most 120 wide), so wide poses and lunges have
+  20 pixels each side. A plant showed the three-quarter row's tests
+  could not see a wrong width handed to the dither (the paper colour
+  is not pure white, so holes counted as figure); a dark-pixel check
+  now pins it.
+- **Authoring the goblin:** limbs hang down from their pivot, so a
+  NEGATIVE x turn swings a limb forward and a positive one bends the
+  knee back. The first walk sank 0.12 units: the rear foot's toe dug
+  in because foot pitch is the SUM of hip, knee and ankle turns.
+  Fixed by ankle turns that cancel most of the leg's pitch and a
+  shorter foot; now -0.03 .. 0.01. Foot targets (T6) are the real
+  answer. Parts overlap 0.02 at each joint; no gaps seen at these
+  angles. In the world the red tunic and pale head read well against
+  the grass.

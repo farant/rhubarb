@@ -19,6 +19,12 @@
  * cum -motus linea motus (VIII quadra, duo ordines per cyclum) in
  * PNG alterum. Figura sine cyclis lineam non dat (exitus 0).
  *
+ * OSSA: figura quae ossa="N" nominat plagulam ossium in directorio
+ * 'ossa' IUXTA directorium suum quaerit: DIR/../ossa/N.stml (pro
+ * plastica/figurae/goblin.stml: plastica/ossa/N.stml). Sic in
+ * specimine et in condendo; vexillum nullum. Error in plagula ossium
+ * viam ILLIUS plagulae et lineam eius fert.
+ *
  * texturae: omnia genera texturarum genitarum (plastica_textura.h)
  * in pagina una: tabulae tres (cruda, exemplaria, Atkinson), in
  * quaque genera IX ordine tabulae generum, quodque tegula bis
@@ -196,6 +202,100 @@ numeros_imprimere (
     }
 }
 
+#define VIAE_MENSURA  MXXIV
+
+nomen structura {
+    constans character* directorium;   /* plagularum ossium */
+               Piscina* piscina;
+} FonsOssium;
+
+/* directorium ossium iuxta directorium plagulae: DIR/../ossa */
+interior vacuum
+directorium_ossium (
+    constans character* via,
+             character* exitus)
+{
+    constans character* finis = strrchr(via, '/');
+                   i32  mensura = finis ? (i32)(finis - via)
+                       : ZEPHYRUM;
+
+    si (mensura > VIAE_MENSURA - XXXII)
+    {
+        mensura = VIAE_MENSURA - XXXII;
+    }
+    si (finis)
+    {
+        memcpy(exitus, via, mensura);
+    }
+    alioquin
+    {
+        exitus[mensura++] = '.';
+    }
+    memcpy(exitus + mensura, "/../ossa", IX);
+}
+
+/* via plagulae ossium tituli dati */
+interior vacuum
+via_ossium (
+    constans character* directorium,
+                chorda  titulus,
+             character* exitus)
+{
+    sprintf(exitus, "%.512s/%.*s.stml", directorium,
+        (integer)(titulus.mensura > CC ? CC : titulus.mensura),
+        (constans character*)titulus.datum);
+}
+
+/* PlasticaFons: plagula ossium ex directorio; vacua si deest */
+interior chorda
+fons_ossium (
+    chorda  titulus,
+    vacuum* contextus)
+{
+    FonsOssium* f = (FonsOssium*)contextus;
+     character  via[VIAE_MENSURA];
+
+    via_ossium(f->directorium, titulus, via);
+    redde filum_legere_totum(via, f->piscina);
+}
+
+/* figuram plagulae legere, ossibus iuxta eam quaesitis */
+interior PlasticaFiguraFructus
+figuram_legere (
+    constans character* via,
+                chorda  textus,
+               Piscina* piscina)
+{
+    FonsOssium fons;
+     character directorium[VIAE_MENSURA];
+
+    directorium_ossium(via, directorium);
+    fons.directorium  = directorium;
+    fons.piscina      = piscina;
+    redde plastica_figura_legere_cum_fonte(textus, ZEPHYRUM,
+        fons_ossium, &fons, piscina);
+}
+
+/* figura recusata: via et linea plagulae ubi error stat */
+interior vacuum
+figuram_recusatam_nuntiare (
+                constans character* via,
+    constans PlasticaFiguraFructus* g)
+{
+    character directorium[VIAE_MENSURA];
+    character ossium[VIAE_MENSURA];
+
+    si (g->plagula.mensura)
+    {
+        directorium_ossium(via, directorium);
+        via_ossium(directorium, g->plagula, ossium);
+        via = ossium;
+    }
+    fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)g->linea,
+        (integer)g->error.mensura,
+        (constans character*)g->error.datum);
+}
+
 /* figura (radix <figura>): numeri cuiusque cycli cum momentis, et
  * linea motus si petita (plastica_specimen.h). Figura sine cyclis
  * lineam non dat */
@@ -283,31 +383,35 @@ exsequi_specimen (
             via);
         redde I;
     }
-    f = plastica_legere(textus, piscina);
-    si (!f.successus)
+    /* figura (etiam cum ossibus, quam plastica_legere sola non
+     * capit) per lectorem figurae; res per plasticam. Figura
+     * recusata: causa lectoris figurae (rei recusatae causam
+     * plasticae ipse transmittit) */
+    g = figuram_legere(via, textus, piscina);
+    si (g.successus)
     {
-        fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)f.linea,
-            (integer)f.error.mensura,
-            (constans character*)f.error.datum);
-        redde I;
+        memset(&f, ZEPHYRUM, magnitudo(f));
+        f.successus    = VERUM;
+        f.statua       = g.statua;
+        f.partes       = g.partes;
+        f.articuli     = g.articuli;
+        f.articulorum  = g.articulorum;
+        f.figura       = VERUM;
+    }
+    alioquin
+    {
+        f = plastica_legere(textus, piscina);
+        si (!f.successus || f.figura)
+        {
+            figuram_recusatam_nuntiare(via, &g);
+            redde I;
+        }
     }
     si (motus && !f.figura)
     {
         fprintf(stderr, "plastica: -motus figuram poscit (radix"
             " <figura>): %s\n", via);
         redde I;
-    }
-    memset(&g, ZEPHYRUM, magnitudo(g));
-    si (f.figura)
-    {
-        g = plastica_figura_legere(textus, ZEPHYRUM, piscina);
-        si (!g.successus)
-        {
-            fprintf(stderr, "%s:%u: %.*s\n", via, (insignatus)g.linea,
-                (integer)g.error.mensura,
-                (constans character*)g.error.datum);
-            redde I;
-        }
     }
     si (!plastica_specimen_pingere(f.statua, &imago, piscina))
     {
@@ -594,13 +698,11 @@ rem_condere (
     si (figura)
     {
         PlasticaFiguraFructus g =
-            plastica_figura_legere(textus, ZEPHYRUM, piscina);
+            figuram_legere(via, textus, piscina);
 
         si (!g.successus)
         {
-            fprintf(stderr, "%s:%u: %.*s\n", via,
-                (insignatus)g.linea, (integer)g.error.mensura,
-                (constans character*)g.error.datum);
+            figuram_recusatam_nuntiare(via, &g);
             redde FALSUM;
         }
         statua = g.statua;

@@ -233,4 +233,21 @@ plastica_legere_seminis (
         i32  semen,
     Piscina* piscina);
 
+structura StmlNodus;
+
+/*
+ * plastica_legere_arboris - ut plastica_legere_seminis, ex arbore
+ * STML iam lecta
+ *
+ * @radix: elementum <res> aut <figura> (stml.h); non mutatur. Lineae
+ *         nodorum ut datae in 'linea' redduntur
+ *
+ * Pro plastica_motus, quae figuram ex ossibus et solidis componit.
+ */
+PlasticaFructus
+plastica_legere_arboris (
+    constans structura StmlNodus* radix,
+                             i32  semen,
+                         Piscina* piscina);
+
 #endif /* PLASTICA_H */

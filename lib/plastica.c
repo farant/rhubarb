@@ -2747,21 +2747,11 @@ plastica_legere_seminis (
         i32  semen,
     Piscina* piscina)
 {
-    PlasticaFructus  f;
-            Plastes  p;
-       StmlResultus  r;
-             Statua* s;
+         Plastes p;
+    StmlResultus r;
 
-    memset(&f, ZEPHYRUM, magnitudo(f));
     memset(&p, ZEPHYRUM, magnitudo(p));
-    p.piscina        = piscina;
-    p.semen_additum  = semen;
-    si (semen > M * M)
-    {
-        (vacuum)_recusare(&p, ZEPHYRUM,
-            "the added seed must be from 0 to 1000000", NIHIL, NIHIL);
-        redde _fructus_recusatus(&p, piscina);
-    }
+    p.piscina = piscina;
     r = stml_legere(textus, piscina, internamentum_creare(piscina));
     si (!r.successus || !r.elementum_radix)
     {
@@ -2774,11 +2764,42 @@ plastica_legere_seminis (
             causa.mensura ? NIHIL : "no root element");
         redde _fructus_recusatus(&p, piscina);
     }
+    redde plastica_legere_arboris(r.elementum_radix, semen, piscina);
+}
+
+PlasticaFructus
+plastica_legere_arboris (
+    constans structura StmlNodus* radix,
+                             i32  semen,
+                         Piscina* piscina)
+{
+    PlasticaFructus  f;
+            Plastes  p;
+             Statua* s;
+
+    memset(&f, ZEPHYRUM, magnitudo(f));
+    memset(&p, ZEPHYRUM, magnitudo(p));
+    p.piscina        = piscina;
+    p.semen_additum  = semen;
+    si (semen > M * M)
+    {
+        (vacuum)_recusare(&p, ZEPHYRUM,
+            "the added seed must be from 0 to 1000000", NIHIL, NIHIL);
+        redde _fructus_recusatus(&p, piscina);
+    }
+    si (!radix)
+    {
+        (vacuum)_recusare(&p, ZEPHYRUM,
+            "the description is not valid STML: no root element",
+            NIHIL, NIHIL);
+        redde _fructus_recusatus(&p, piscina);
+    }
     p.gradus = ZEPHYRUM;
-    si (!_radix(&p, r.elementum_radix))
+    si (!_radix(&p, radix))
     {
         redde _fructus_recusatus(&p, piscina);
     }
+
 
     s = (Statua*)_locus(piscina, magnitudo(Statua));
     si (s)
@@ -2827,7 +2848,7 @@ plastica_legere_seminis (
     }
     p.statua = s;
     p.gradus = I;
-    si (!_radix(&p, r.elementum_radix) || !statua_finire(s, piscina))
+    si (!_radix(&p, radix) || !statua_finire(s, piscina))
     {
         (vacuum)_recusare(&p, ZEPHYRUM,
             "the model could not be finished", NIHIL, NIHIL);

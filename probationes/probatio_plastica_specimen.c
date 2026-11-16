@@ -709,6 +709,7 @@ _sectio_pagina_invisa (
 /* ---------- linea motus (plastica-motus-spec IV.6) ---------- */
 
 #define CELLA_MOTUS PLASTICA_MOTUS_CELLA
+#define CELLA_LATA  PLASTICA_MOTUS_CELLA_LATA
 
 /* capsa caerulea I x II x I in articulo uno: salit (circulus, 0.5
  * sursum in medio) et mergit (0.25 deorsum, tenetur) */
@@ -762,7 +763,7 @@ _pixelum_motus (
 {
     redde imago->pixela
         + ((memoriae_index)(ordo * CELLA_MOTUS + y) * imago->latitudo
-            + columna * CELLA_MOTUS + x) * IV;
+            + columna * CELLA_LATA + x) * IV;
 }
 
 interior Census
@@ -777,13 +778,13 @@ _census_motus (
        i32 y;
 
     memset(&r, ZEPHYRUM, magnitudo(r));
-    r.sinistrum  = (s32)CELLA_MOTUS;
+    r.sinistrum  = (s32)CELLA_LATA;
     r.summum     = (s32)CELLA_MOTUS;
     r.dextrum    = -I;
     r.infimum    = -I;
     per (y = ZEPHYRUM; y < CELLA_MOTUS; y++)
     {
-        per (x = ZEPHYRUM; x < CELLA_MOTUS; x++)
+        per (x = ZEPHYRUM; x < CELLA_LATA; x++)
         {
             si (!praedicatum(_pixelum_motus(imago, columna, ordo, x,
                 y)))
@@ -830,6 +831,14 @@ _non_album (
     constans i8* p)
 {
     redde p[ZEPHYRUM] != 255 || p[I] != 255 || p[II] != 255;
+}
+
+/* color obscurus figurae (charta et colores clari non sunt) */
+interior b32
+_est_obscurum (
+    constans i8* p)
+{
+    redde (i32)p[ZEPHYRUM] + p[I] + p[II] < CCC;
 }
 
 #define PROXIMUS_S32(valor, speratus) \
@@ -980,17 +989,17 @@ _sectio_motus_pictura (
         f.articuli, f.articulorum, &imago, c->piscina));
     /* VIII cellae latae, duo ordines per cyclum */
     CREDO_AEQUALIS_I32 (imago.latitudo, PLASTICA_MOTUS_LATITUDO);
-    CREDO_AEQUALIS_I32 (imago.latitudo, VIII * CXX);
+    CREDO_AEQUALIS_I32 (imago.latitudo, VIII * CLX);
     CREDO_AEQUALIS_I32 (imago.altitudo, IV * CXX);
     CREDO_NECESSE (imago.pixela != NIHIL);
 
     /* a latere, quies: capsa I x II unitates = XL x LXXX pixela,
-     * pes in linea humi (C), in media cella */
+     * pes in linea humi (C), in media cella (LXXX) */
     r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
     PROXIMUS_S32 (r.summum, XX);
     PROXIMUS_S32 (r.infimum, XCIX);
-    PROXIMUS_S32 (r.sinistrum, XL);
-    PROXIMUS_S32 (r.dextrum, LXXIX);
+    PROXIMUS_S32 (r.sinistrum, LX);
+    PROXIMUS_S32 (r.dextrum, XCIX);
     /* quadrum k ad tempus k / VIII: 0.25 -> X pixela, 0.5 -> XX,
      * 0.75 -> X iterum */
     r = _census_motus(&imago, II, ZEPHYRUM, _est_capsa_caerulea);
@@ -1011,22 +1020,22 @@ _sectio_motus_pictura (
         CREDO_AEQUALIS_S32 (r.summum, (s32)PLASTICA_MOTUS_HUMUS);
         CREDO_AEQUALIS_S32 (r.infimum, (s32)PLASTICA_MOTUS_HUMUS);
         CREDO_AEQUALIS_S32 (r.sinistrum, ZEPHYRUM);
-        CREDO_AEQUALIS_S32 (r.dextrum, (s32)CELLA_MOTUS - I);
+        CREDO_AEQUALIS_S32 (r.dextrum, (s32)CELLA_LATA - I);
         r = _census_motus(&imago, k, I, _est_cinereum);
         CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
     }
-    /* cardo articuli ruber: in quiete ad (LX, C), in apice XX supra;
+    /* cardo articuli ruber: in quiete ad (LXXX, C), in apice XX supra;
      * III x III */
     r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_signum_rubrum);
     CREDO_AEQUALIS_I32 (r.pixela, IX);
-    CREDO_AEQUALIS_S32 (r.sinistrum, LIX);
-    CREDO_AEQUALIS_S32 (r.dextrum, LXI);
+    CREDO_AEQUALIS_S32 (r.sinistrum, LXXIX);
+    CREDO_AEQUALIS_S32 (r.dextrum, LXXXI);
     CREDO_AEQUALIS_S32 (r.summum, XCIX);
     CREDO_AEQUALIS_S32 (r.infimum, CI);
     r = _census_motus(&imago, IV, ZEPHYRUM, _est_signum_rubrum);
     CREDO_AEQUALIS_I32 (r.pixela, IX);
     CREDO_AEQUALIS_S32 (r.summum, LXXIX);
-    CREDO_AEQUALIS_S32 (r.sinistrum, LIX);
+    CREDO_AEQUALIS_S32 (r.sinistrum, LXXIX);
 
     /* tribus quartis: dithering - colores palettae soli, nullum
      * signum; figura adest et in apice altius stat (XX pixela
@@ -1037,7 +1046,7 @@ _sectio_motus_pictura (
         CREDO_VERUM (r.pixela > D);
         per (y = ZEPHYRUM; y < CELLA_MOTUS; y++)
         {
-            per (x = ZEPHYRUM; x < CELLA_MOTUS; x++)
+            per (x = ZEPHYRUM; x < CELLA_LATA; x++)
             {
                 constans i8* p = _pixelum_motus(&imago, k, I, x, y);
 
@@ -1055,12 +1064,19 @@ _sectio_motus_pictura (
     r = _census_motus(&imago, IV, I, _non_album);
     PROXIMUS_S32 (r.summum, (s32)y - XVI);
     PROXIMUS_S32 (r.infimum, (s32)x - XVI);
-    /* punctum humi sub medio figurae ad (LX, C): basis capsae
+    /* punctum humi sub medio figurae ad (LXXX, C): basis capsae
      * (rhombus) circa id iacet */
     r = _census_motus(&imago, ZEPHYRUM, I, _non_album);
     CREDO_VERUM (r.infimum > (s32)PLASTICA_MOTUS_HUMUS);
     CREDO_VERUM (r.infimum < (s32)PLASTICA_MOTUS_HUMUS + XX);
-    PROXIMUS_S32 ((r.sinistrum + r.dextrum) / II, LX);
+    PROXIMUS_S32 ((r.sinistrum + r.dextrum) / II, LXXX);
+    /* dithering figuram TOTAM tangit: colores obscuri usque ad
+     * basim et circa medium cellae (non charta sub ordine XC, non
+     * figura obliqua) */
+    r = _census_motus(&imago, ZEPHYRUM, I, _est_obscurum);
+    CREDO_VERUM (r.pixela > CC);
+    CREDO_VERUM (r.infimum > (s32)PLASTICA_MOTUS_HUMUS);
+    PROXIMUS_S32 ((r.sinistrum + r.dextrum) / II, LXXX);
 
     /* cyclus alter in ordinibus II et III: mergit X pixela ad
      * quadrum IV et ibi manet; lineam humi tegit */
@@ -1071,7 +1087,7 @@ _sectio_motus_pictura (
     PROXIMUS_S32 (r.infimum, CIX);
     r = _census_motus(&imago, VII, II, _est_capsa_caerulea);
     PROXIMUS_S32 (r.summum, XXX);
-    CREDO_VERUM (_est_capsa_caerulea(_pixelum_motus(&imago, IV, II, L,
+    CREDO_VERUM (_est_capsa_caerulea(_pixelum_motus(&imago, IV, II, LXX,
         PLASTICA_MOTUS_HUMUS)));
     CREDO_VERUM (_est_cinereum(_pixelum_motus(&imago, IV, II, V,
         PLASTICA_MOTUS_HUMUS)));
@@ -1103,8 +1119,8 @@ _sectio_motus_scala (
     r = _census_motus(&imago, III, ZEPHYRUM, _est_capsa_caerulea);
     PROXIMUS_S32 (r.summum, XX);
     PROXIMUS_S32 (r.infimum, XCIX);
-    PROXIMUS_S32 (r.sinistrum, L);
-    PROXIMUS_S32 (r.dextrum, LXIX);
+    PROXIMUS_S32 (r.sinistrum, LXX);
+    PROXIMUS_S32 (r.dextrum, LXXXIX);
     /* sine articulis signum nullum */
     r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_signum_rubrum);
     CREDO_AEQUALIS_I32 (r.pixela, ZEPHYRUM);
@@ -1124,8 +1140,8 @@ _sectio_motus_scala (
     r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
     PROXIMUS_S32 (r.summum, LX);
     PROXIMUS_S32 (r.infimum, XCIX);
-    PROXIMUS_S32 (r.sinistrum, L);
-    PROXIMUS_S32 (r.dextrum, LXIX);
+    PROXIMUS_S32 (r.sinistrum, LXX);
+    PROXIMUS_S32 (r.dextrum, LXXXIX);
     /* lata in z quoque regit */
     f = _figura(c,
         "<figura titulus=\"a\">\n"
@@ -1138,8 +1154,8 @@ _sectio_motus_scala (
         ZEPHYRUM, &imago, c->piscina));
     r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
     PROXIMUS_S32 (r.summum, LX);
-    PROXIMUS_S32 (r.sinistrum, ZEPHYRUM);
-    PROXIMUS_S32 (r.dextrum, CXIX);
+    PROXIMUS_S32 (r.sinistrum, XX);
+    PROXIMUS_S32 (r.dextrum, CXXXIX);
 
     /* figura extra originem: medium quietis in media cella; humus
      * tamen y = 0 (capsa I supra humum pendet) */
@@ -1154,13 +1170,13 @@ _sectio_motus_scala (
     CREDO_NECESSE (plastica_specimen_motus_pingere(f.statua, NIHIL,
         ZEPHYRUM, &imago, c->piscina));
     r = _census_motus(&imago, ZEPHYRUM, ZEPHYRUM, _est_capsa_caerulea);
-    PROXIMUS_S32 (r.sinistrum, XL);
-    PROXIMUS_S32 (r.dextrum, LXXIX);
+    PROXIMUS_S32 (r.sinistrum, LX);
+    PROXIMUS_S32 (r.dextrum, XCIX);
     PROXIMUS_S32 (r.summum, ZEPHYRUM);
     PROXIMUS_S32 (r.infimum, LIX);
     r = _census_motus(&imago, ZEPHYRUM, I, _non_album);
     CREDO_VERUM (r.pixela > D);
-    PROXIMUS_S32 ((r.sinistrum + r.dextrum) / II, LX);
+    PROXIMUS_S32 ((r.sinistrum + r.dextrum) / II, LXXX);
 }
 
 interior vacuum
@@ -1208,7 +1224,7 @@ _sectio_motus_fines (
         "<positura titulus=\"infima\">"
         "<art titulus=\"corpus\" motus=\"0 -4 0\"/></positura>\n"
         "<positura titulus=\"dextra\">"
-        "<art titulus=\"corpus\" motus=\"0 0 -1.5\"/></positura>\n"
+        "<art titulus=\"corpus\" motus=\"0 0 -2\"/></positura>\n"
         "<cyclus titulus=\"salit\" duratio=\"1\" circulus=\"verum\">\n"
         "<clavis tempus=\"0\" positura=\"quies\"/>\n"
         "<clavis tempus=\"0.5\" positura=\"alta\"/>\n"
@@ -1224,7 +1240,7 @@ _sectio_motus_fines (
         "<clavis tempus=\"0.5\" positura=\"ima\"/>\n"
         "</cyclus>\n"
         "<positura titulus=\"laeva\">"
-        "<art titulus=\"corpus\" motus=\"0 0 1.5\"/></positura>\n"
+        "<art titulus=\"corpus\" motus=\"0 0 2\"/></positura>\n"
         "<cyclus titulus=\"latera\" duratio=\"1\">\n"
         "<clavis tempus=\"0\" positura=\"dextra\"/>\n"
         "<clavis tempus=\"0.5\" positura=\"laeva\"/>\n"
@@ -1252,7 +1268,7 @@ _sectio_motus_fines (
     r = _census_motus(&altera, VI, II, _est_capsa_caerulea);
     CREDO_VERUM (r.pixela > ZEPHYRUM);
     CREDO_VERUM (r.sinistrum == ZEPHYRUM
-        || r.dextrum == (s32)CELLA_MOTUS - I);
+        || r.dextrum == (s32)CELLA_LATA - I);
     r = _census_motus(&altera, VI, II, _est_signum_rubrum);
     CREDO_VERUM (r.pixela < IX);
     CREDO_VERUM (r.pixela > ZEPHYRUM);

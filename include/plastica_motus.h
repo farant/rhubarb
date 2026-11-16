@@ -68,6 +68,58 @@
  * built yet"); elementum aut attributum ignotum. Figura recusata
  * NIHIL est.
  *
+ * SPECULUM: positura imago alterius.
+ *
+ *   <positura titulus="contactus_dex" speculum="contactus_sin">
+ *     <art titulus="caput" rotatio="0 5 0"/>
+ *   </positura>
+ *
+ * Imago trans planum x = 0 (sinistrum et dextrum): articuli "X_sin"
+ * et "X_dex" valores permutant; rotatio (x y z) fit (x -y -z), motus
+ * (x y z) fit (-x y z), scala manet. Articulus sine "_sin" / "_dex"
+ * in loco suo reflectitur. <art> liberi post imaginem valores
+ * substituunt, ut in 'ex'. 'speculum' et 'ex' simul non licent.
+ *
+ * OSSA: plagula ossium, a figuris pluribus communis.
+ *
+ *   <ossa titulus="bipes">
+ *     <articulus titulus="pelvis" locus="0 1 0">
+ *       <articulus titulus="femur_sin" locus="0.2 0 0"/>
+ *     </articulus>
+ *     <positura .../> <cyclus .../>
+ *   </ossa>
+ *
+ * Arborem articulorum (solida non tenet), posituras et cyclos fert.
+ *
+ *   <figura titulus="goblin" ossa="bipes">
+ *     <articulus titulus="femur_sin" locus="0.15 0 0">
+ *       <capsa .../>
+ *     </articulus>
+ *   </figura>
+ *
+ * Figura cum 'ossa' articulos PLANOS enumerat (non nidificatos):
+ * quisque solida in articulum ossium eius tituli suspendit et 'locus'
+ * novum dare potest (proportiones); gyrus et rotatio ossium manent.
+ * Articulus ossium non nominatus nodus vacuus manet. Ordo nodorum:
+ * arbor ossium; in quoque articulo solida figurae ante articulos
+ * liberos. Positura aut cyclus figurae eiusdem tituli ossium
+ * substituit; cyclus ossium posituram substitutam accipit. ('ex' et
+ * 'speculum' valores TUNC transcribunt cum leguntur: positura ossium
+ * ex alia derivata substitutionem posteriorem illius non sequitur.)
+ *
+ * MOTUS RADICIS: motus in positura ossium multiplicatur per
+ * (altitudo articuli radicalis in figura / in ossibus); ossium
+ * altitudo 0: factor I. Rotationes et scalae non mutantur. Motus in
+ * positura figurae ipsius non multiplicatur.
+ *
+ * RECUSAT praeterea: speculum ignotum, posterius aut cum 'ex';
+ * "X_sin" sine "X_dex" (aut contra) in positura speculata; par cuius
+ * quies imago non est (locus, rotatio aut parens); ossa ignota aut
+ * fontem absentem; titulum ossium extra a-z 0-9 _; <ossa> cum solidis
+ * aut cum 'ossa'; in figura cum ossibus articulum ignotum, iteratum,
+ * nidificatum, aut cum gyro / rotatione. Error in plagula ossium:
+ * 'plagula' titulum ossium fert et 'linea' lineam ILLIUS plagulae.
+ *
  * DETERMINATA: textus idem statuam eandem dat.
  */
 
@@ -104,7 +156,22 @@ nomen structura {
                  i32  momentorum;
               chorda  error;
                  i32  linea;
+              chorda  plagula;     /* vacua: error in figura ipsa (aut
+                                    * successus); aliter titulus
+                                    * ossium ubi error stat */
 } PlasticaFiguraFructus;
+
+/*
+ * PlasticaFons - plagulam ossium titulo dare
+ *
+ * @titulus:   valor attributi 'ossa' (a-z 0-9 _ solum)
+ * @contextus: ut plastica_figura_legere_cum_fonte datus
+ *
+ * Redde: textus plagulae totus; chorda vacua si deest
+ */
+nomen chorda (*PlasticaFons) (
+    chorda  titulus,
+    vacuum* contextus);
 
 /*
  * plastica_figura_legere - figuram cum motu in statuam vertere
@@ -114,11 +181,31 @@ nomen structura {
  * @piscina: statua, tabulae et nuntius
  *
  * Figura sine positura et sine cyclo licet: statua sine cyclis.
+ * Figura quae 'ossa' nominat recusatur ("skeleton sheets need a
+ * source"): vide plastica_figura_legere_cum_fonte.
  */
 PlasticaFiguraFructus
 plastica_figura_legere (
      chorda  textus,
         i32  semen,
     Piscina* piscina);
+
+/*
+ * plastica_figura_legere_cum_fonte - ut plastica_figura_legere, cum
+ * plagulis ossium
+ *
+ * @fons:      plagulam ossium titulo dat; NIHIL: figura cum 'ossa'
+ *             recusatur
+ * @contextus: fonti traditur
+ *
+ * Fons semel vocatur, et solum si figura 'ossa' nominat.
+ */
+PlasticaFiguraFructus
+plastica_figura_legere_cum_fonte (
+          chorda  textus,
+             i32  semen,
+    PlasticaFons  fons,
+          vacuum* contextus,
+         Piscina* piscina);
 
 #endif /* PLASTICA_MOTUS_H */

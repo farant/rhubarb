@@ -1,0 +1,78 @@
+<!-- goblin: bipes parvus, caput magnum, aures acutae, bracchia longa
+     (plastica-motus-plan T5). Ossa bipes; cardines ad proportiones
+     suas. Partes ad cardines paulum se tegunt (rimae sub flexu). -->
+<figura titulus="goblin" ossa="bipes">
+  <articulus titulus="pelvis" locus="0 0.6 0">
+    <capsa titulus="coxae" magnitudo="0.44 0.2 0.3" locus="0 -0.1 0"
+           color="#5a3a22"/>
+  </articulus>
+  <articulus titulus="truncus" locus="0 0.06 0">
+    <cylindrus titulus="tunica" radius="0.27" radius_summus="0.21"
+               altitudo="0.42" latera="8" locus="0 -0.02 0"
+               color="#a02c2c"/>
+  </articulus>
+  <articulus titulus="caput" locus="0 0.38 0">
+    <sphaera titulus="cranium" magnitudo="0.6 0.5 0.54"
+             locus="0 -0.03 0.03" segmenta="10" color="#c2d65a"/>
+    <sphaera titulus="nasus" magnitudo="0.12 0.12 0.26"
+             locus="0 0.12 0.22" color="#9fb53c"/>
+    <sphaera titulus="oculus sin" radius="0.07" locus="0.14 0.24 0.21"
+             color="#ffffff"/>
+    <sphaera titulus="oculus dex" radius="0.07" locus="-0.14 0.24 0.21"
+             color="#ffffff"/>
+    <sphaera titulus="pupilla sin" radius="0.035"
+             locus="0.14 0.275 0.26" color="#101010"/>
+    <sphaera titulus="pupilla dex" radius="0.035"
+             locus="-0.14 0.275 0.26" color="#101010"/>
+    <cylindrus titulus="auris sin" radius="0.1" radius_summus="0"
+               altitudo="0.36" latera="4" locus="0.24 0.2 0"
+               rotatio="0 0 -65" color="#9fb53c"/>
+    <cylindrus titulus="auris dex" radius="0.1" radius_summus="0"
+               altitudo="0.36" latera="4" locus="-0.24 0.2 0"
+               rotatio="0 0 65" color="#9fb53c"/>
+  </articulus>
+  <articulus titulus="bracchium_sin" locus="0.3 0.34 0">
+    <capsa titulus="umerus sin" magnitudo="0.12 0.28 0.13"
+           locus="0 -0.26 0" color="#c2d65a"/>
+  </articulus>
+  <articulus titulus="antebracchium_sin" locus="0 -0.24 0">
+    <capsa titulus="ulna sin" magnitudo="0.11 0.24 0.12"
+           locus="0 -0.24 0" color="#c2d65a"/>
+    <sphaera titulus="manus sin" radius="0.09" locus="0 -0.38 0"
+             color="#9fb53c"/>
+  </articulus>
+  <articulus titulus="bracchium_dex" locus="-0.3 0.34 0">
+    <capsa titulus="umerus dex" magnitudo="0.12 0.28 0.13"
+           locus="0 -0.26 0" color="#c2d65a"/>
+  </articulus>
+  <articulus titulus="antebracchium_dex" locus="0 -0.24 0">
+    <capsa titulus="ulna dex" magnitudo="0.11 0.24 0.12"
+           locus="0 -0.24 0" color="#c2d65a"/>
+    <sphaera titulus="manus dex" radius="0.09" locus="0 -0.38 0"
+             color="#9fb53c"/>
+  </articulus>
+  <articulus titulus="femur_sin" locus="0.13 -0.06 0">
+    <capsa titulus="coxa sin" magnitudo="0.16 0.27 0.17"
+           locus="0 -0.25 0" color="#5a3a22"/>
+  </articulus>
+  <articulus titulus="crus_sin" locus="0 -0.24 0">
+    <capsa titulus="tibia sin" magnitudo="0.13 0.24 0.14"
+           locus="0 -0.23 0" color="#c2d65a"/>
+  </articulus>
+  <articulus titulus="pes_sin" locus="0 -0.22 0">
+    <capsa titulus="calceus sin" magnitudo="0.17 0.08 0.26"
+           locus="0 -0.08 0.05" color="#3a2616"/>
+  </articulus>
+  <articulus titulus="femur_dex" locus="-0.13 -0.06 0">
+    <capsa titulus="coxa dex" magnitudo="0.16 0.27 0.17"
+           locus="0 -0.25 0" color="#5a3a22"/>
+  </articulus>
+  <articulus titulus="crus_dex" locus="0 -0.24 0">
+    <capsa titulus="tibia dex" magnitudo="0.13 0.24 0.14"
+           locus="0 -0.23 0" color="#c2d65a"/>
+  </articulus>
+  <articulus titulus="pes_dex" locus="0 -0.22 0">
+    <capsa titulus="calceus dex" magnitudo="0.17 0.08 0.26"
+           locus="0 -0.08 0.05" color="#3a2616"/>
+  </articulus>
+</figura>
