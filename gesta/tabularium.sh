@@ -72,7 +72,16 @@ fons_stalus () {    # $1 = basis, $2 = scopus; exitus 0 = recompilandum
 sqlite_obj="$BUILD_DIR/sqlite3.o"
 if [ ! -f "$sqlite_obj" ] || ! [ "$sqlite_obj" -nt "$RADIX_DIR/vendor/sqlite3.c" ]; then
     echo "  [vendor] sqlite3.c (laxum)" >&2
-    clang -c "${VENDOR_FLAGS[@]}" "$RADIX_DIR/vendor/sqlite3.c" -o "$sqlite_obj" >&2 || exit 1
+    # PER THESAURUM (budget fusionis, 2026-11-10): bin/compilator EX
+    # RADICE argumentis iisdem ac compile_tests.sh et suitae
+    # (_vendicatum_compilare) - clavis congruit, obiectum iam factum ex
+    # thesauro sumitur (frigida: sqlite3.c hic TERTIO compilabatur,
+    # ~XI s). Compilator absens -> clang ipse, ut olim.
+    if [ -x "$RADIX_DIR/bin/compilator" ]; then
+        ( cd "$RADIX_DIR" && bin/compilator "${VENDOR_FLAGS[@]}" -c vendor/sqlite3.c -o "$sqlite_obj" ) >&2 || exit 1
+    else
+        clang -c "${VENDOR_FLAGS[@]}" "$RADIX_DIR/vendor/sqlite3.c" -o "$sqlite_obj" >&2 || exit 1
+    fi
 fi
 obj_files="$sqlite_obj"
 

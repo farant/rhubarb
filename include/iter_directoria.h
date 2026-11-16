@@ -140,13 +140,33 @@ directorium_filtrum_omnia (
  * Ambulator Recursivus
  * ================================================== */
 
+/* Responsa functionis callback (2026-11-10).
+ *
+ * PERGE: ambulatio pergit (directorium intratur).
+ * PRAETERMITTE: si introitus directorium est, SUBARBOR eius non
+ *   intratur (nec aperitur nec enumeratur - nulla linea lectionum);
+ *   ambulatio cum fratribus pergit. Pro filo idem ac PERGE. Numquam
+ *   vocanti redditur. Olim deerat: ambulator solum pergere aut totum
+ *   sistere poterat, et instrumenta quae 'build', '.git' vitant gyros
+ *   opendir suos manu scribebant.
+ * Valor alius quivis: ambulatio sistitur, valor vocanti redditur.
+ *
+ * NOTA: callback directorium videt solum si filtrum id accipit
+ * (genera_accepta sine INTROITUS_DIRECTORIUM -> praetermissio fieri
+ * nequit); exemplar nominis solum fila tangit. Directoria occulta sine
+ * includere_occultos nec nuntiantur nec intrantur. */
+#define DIRECTORIUM_AMBULATOR_PERGE        0
+#define DIRECTORIUM_AMBULATOR_PRAETERMITTE II
+
 /* Genus functionis callback pro ambulatore
  *
  * via_plena:  Via plena ad introitum
  * introitus:  Informatio de introitu
  * contextus:  Contextus ab usore provisus
  *
- * Reddit: 0 ad pergendum, non-0 ad terminandum
+ * Reddit: DIRECTORIUM_AMBULATOR_PERGE (0) ad pergendum,
+ *         DIRECTORIUM_AMBULATOR_PRAETERMITTE ad subarborem
+ *         praetermittendam, aliud non-0 ad terminandum
  */
 nomen s32 (*DirectoriumAmbulatorFunctio)(
     chorda                         via_plena,
@@ -163,7 +183,8 @@ nomen s32 (*DirectoriumAmbulatorFunctio)(
  *
  * Reddit: 0 si successus, -1 si error
  *
- * NOTA: Callback reddit 0 ad pergendum, non-0 ad terminandum
+ * NOTA: Callback reddit 0 ad pergendum, PRAETERMITTE ad subarborem
+ *       directorii praetermittendam, aliud non-0 ad terminandum
  */
 s32
 directorium_ambulare (
@@ -172,6 +193,41 @@ directorium_ambulare (
     DirectoriumAmbulatorFunctio  functio,
                          vacuum* contextus,
                         Piscina* piscina);
+
+
+/* Ambulare per arborem FONTIUM: functio pro quoque filo cuius titulus
+ * suffixo finitur (e.g. ".h"), recursive.
+ *
+ * Mos ambulatorum manu scriptorum instrumentorum silvae et officinae
+ * (_capita_praeparare, in XV plagulas copiatus - 2026-11-10), nunc
+ * semel:
+ *   - tituli occulti (initium '.') praetermittuntur, fila et directoria;
+ *   - introitus cuius titulus in 'praetermittenda' stat praetermittitur
+ *     (directorium: subarbor tota non intratur - "build", ".git");
+ *   - nexus symbolicus ad directorium NON intratur (gyri manu scripti
+ *     d_type == DT_DIR poscebant);
+ *   - omnis introitus non-directorium cum suffixo functioni datur
+ *     (nexus ad filum quoque).
+ * Ordo: enumeratio directorii, filum ante subarborem fratris posterioris
+ * (idem ac gyri readdir - mensum super arborem hanc, DCCLXXVII capita).
+ *
+ * via:             radix ambulationis
+ * suffixum:        finis tituli (NIHIL aut "" = omnia fila)
+ * praetermittenda: index titulorum NIHIL-terminatus (NIHIL = nullus)
+ * functio:         via_plena = via + '/' + ... (ut ambulator);
+ *                  reddit 0 ad pergendum, non-0 ad terminandum
+ *
+ * Reddit: 0 si successus, -1 si radix aperiri nequit, aliter valor
+ *         functionis qui ambulationem stitit
+ */
+s32
+directorium_fontes_ambulare (
+             constans character*  via,
+             constans character*  suffixum,
+    constans character* constans* praetermittenda,
+     DirectoriumAmbulatorFunctio  functio,
+                          vacuum* contextus,
+                         Piscina* piscina);
 
 
 /* ==================================================

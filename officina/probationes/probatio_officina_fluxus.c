@@ -398,6 +398,33 @@ _sectio_vocatio (
         _registrum(functio, "d")));
     CREDO_FALSUM (medulla_fluxus_transit_vocationem(f,
         _registrum(functio, "e")));
+
+    /* vocatio instructio PRIMA: vocare (0,1) | addere (2,3) | redde.
+     * Parametrum %a [0,2] ante vocationem vivit (in introitu) et post
+     * eam legitur - TRANSIT (dorsum: registrum servatum). %b [0,0]
+     * argumentum solum; %d [1,2] fructus. Inventum M5 T7 gradus IV:
+     * initium == positio usus vocationis olim non transitus habebatur
+     * - parametrum in registro temporario a vocata obrutum. */
+    modulus = _legere(c->piscina, _ch(
+        "modulus \"prima.c\"\n"
+        "\n"
+        "functio $prima (s32 %a, s32 %b) -> s32\n"
+        "@initium_0:\n"
+        "    %d = vocare.s32 $alia, s32 %b\n"
+        "    %e = addere.s32 %a, %d\n"
+        "    redde %e\n"));
+    CREDO_NECESSE_NON_NIHIL (modulus);
+    functio = _functio(modulus, "prima");
+    CREDO_NECESSE_NON_NIHIL (functio);
+    f = medulla_fluxus_computare(c->piscina, functio);
+    CREDO_NECESSE_NON_NIHIL (f);
+    CREDO_VERUM (_intervallum_est(f, functio, "a", 0, II));
+    CREDO_VERUM (medulla_fluxus_transit_vocationem(f,
+        _registrum(functio, "a")));
+    CREDO_FALSUM (medulla_fluxus_transit_vocationem(f,
+        _registrum(functio, "b")));
+    CREDO_FALSUM (medulla_fluxus_transit_vocationem(f,
+        _registrum(functio, "d")));
 }
 
 

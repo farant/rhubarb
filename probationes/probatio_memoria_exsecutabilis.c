@@ -1,6 +1,7 @@
 /* probatio_memoria_exsecutabilis.c - probationes memoriae
  * exsecutabilis (scribere, sigillare, vocare; rescribere sine codice
- * stalo; locus optatus; furca)
+ * stalo; locus optatus; furca, etiam post scripturam interruptam et
+ * scriptura aperta)
  *
  * Verba manu: movz w0,#42 = 0x52800540; movz w0,#7 = 0x528000E0;
  * movz w0,#9 = 0x52800120; ret = 0xD65F03C0. Functio per memcpy ex
@@ -16,6 +17,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <time.h>
 #include <unistd.h>
 
 #define VERBUM_RESPONSUM   0x52800540
@@ -230,12 +232,121 @@ _sectio_furca (
 }
 
 
+    /* ==================================================
+     * PROBARE: furca post scripturam interruptam
+     *
+     * Dormitio INTRA fenestram scripturae commutationem contextus
+     * cogit: status servatus parentis = scriptura. Sine manipulo
+     * furcae filius in modo scripturae nascitur et vocatio SIGBUS
+     * dat (~LXXXV% per conatum in machina quieta).
+     * ================================================== */
+
+interior vacuum
+_sectio_furca_interrupta (
+    CredoContextus* c)
+{
+    s32 i;
+    s32 errata;
+
+    errata = ZEPHYRUM;
+    per (i = ZEPHYRUM; i < XX; i++)
+    {
+        MemoriaExsecutabilis* m;
+                      chorda  causa;
+             structura timespec  mora;
+                         i32* verba;
+                       pid_t  filius;
+                     integer  status;
+
+        m = memoria_exsecutabilis_reservare(c->piscina, ZEPHYRUM,
+            PAGINA, &causa);
+        CREDO_NECESSE_NON_NIHIL (m);
+        verba = (i32*)memoria_exsecutabilis_basis(m);
+        memoria_exsecutabilis_aperire(m);
+        verba[0]      = VERBUM_RESPONSUM;
+        verba[1]      = VERBUM_REDDE;
+        mora.tv_sec   = ZEPHYRUM;
+        mora.tv_nsec  = 1000000;
+        (vacuum)nanosleep(&mora, NIHIL);
+        CREDO_NECESSE (memoria_exsecutabilis_sigillare(m, ZEPHYRUM,
+            VIII));
+        filius = fork();
+        CREDO_NECESSE (filius >= ZEPHYRUM);
+        si (filius == ZEPHYRUM)
+        {
+            _exit(_vocare(memoria_exsecutabilis_basis(m)));
+        }
+        status = ZEPHYRUM;
+        si (   waitpid(filius, &status, ZEPHYRUM) != filius
+            || !WIFEXITED(status)
+            || WEXITSTATUS(status)                != XLII)
+        {
+            errata++;
+        }
+        memoria_exsecutabilis_liberare(m);
+    }
+    CREDO_AEQUALIS_S32 (errata, ZEPHYRUM);
+}
+
+
+    /* ==================================================
+     * PROBARE: furca scriptura aperta (filius scribit)
+     *
+     * Parens aperit et furcat; filius statum apertum hereditat,
+     * scribit, sigillat, vocat. Parens deinde ipse perficit.
+     * ================================================== */
+
+interior vacuum
+_sectio_furca_aperta (
+    CredoContextus* c)
+{
+    MemoriaExsecutabilis* m;
+                  chorda  causa;
+                     i32* verba;
+                   pid_t  filius;
+                 integer  status;
+
+    m = memoria_exsecutabilis_reservare(c->piscina, ZEPHYRUM, PAGINA,
+        &causa);
+    CREDO_NECESSE_NON_NIHIL (m);
+    verba = (i32*)memoria_exsecutabilis_basis(m);
+    memoria_exsecutabilis_aperire(m);
+    filius = fork();
+    CREDO_NECESSE (filius >= ZEPHYRUM);
+    si (filius == ZEPHYRUM)
+    {
+        verba[0] = VERBUM_VII;
+        verba[1] = VERBUM_REDDE;
+        si (!memoria_exsecutabilis_sigillare(m, ZEPHYRUM, VIII))
+        {
+            _exit(I);
+        }
+        _exit(_vocare(memoria_exsecutabilis_basis(m)));
+    }
+    status = ZEPHYRUM;
+    CREDO_VERUM (waitpid(filius, &status, ZEPHYRUM) == filius);
+    CREDO_VERUM (WIFEXITED(status));
+    CREDO_AEQUALIS_S32 ((s32)WEXITSTATUS(status), VII);
+
+    /* parens adhuc apertus: scribit suum */
+    verba[0] = VERBUM_IX;
+    verba[1] = VERBUM_REDDE;
+    CREDO_VERUM (memoria_exsecutabilis_sigillare(m, ZEPHYRUM, VIII));
+    CREDO_AEQUALIS_S32 (_vocare(memoria_exsecutabilis_basis(m)), IX);
+    memoria_exsecutabilis_liberare(m);
+}
+
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "scribere sigillare vocare", _sectio_vocare, NIHIL, NIHIL,
       NIHIL, NIHIL },
     { "rescribere",    _sectio_rescribere, NIHIL, NIHIL, NIHIL, NIHIL },
     { "locus optatus", _sectio_locus,      NIHIL, NIHIL, NIHIL, NIHIL },
     { "furca",         _sectio_furca,      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "furca post scripturam interruptam", _sectio_furca_interrupta,
+      NIHIL, NIHIL, NIHIL, NIHIL },
+    { "furca scriptura aperta", _sectio_furca_aperta, NIHIL, NIHIL,
+      NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

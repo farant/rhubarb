@@ -238,3 +238,28 @@ For officina's escape layer (native-code faults -> machinula halts):
 All certified in officina/auspex_posix.sh (setjmp.h added to TU
 verum). Plant: __pc and __sp swapped -> TU nostrum DISSENTIT,
 restored IDEM, certified.
+
+## 2026-11-10 — pthread_atfork
+
+One more prototype in the pthread.h section: pthread_atfork, for
+memoria_exsecutabilis_macos (the child of a fork must get the JIT
+write switch re-applied; see that library's worklog of this date).
+Without the entry examen reports the call as suspect (implicit
+function); with it ACCIPE. auspex_posix still certifies. The house
+still does not use threads.
+
+## 2026-11-13 — siginfo_t no longer opaque
+
+officina M5 T9 step 4: the effugium signal handler reads `si_addr`
+(a fault address next to sp means the host stack is exhausted), and
+examen rightly said "accessus structurae incompletae". siginfo_t now
+has its real Darwin shape: 104 bytes, si_addr at 24, si_value (union
+sigval) at 32, si_band at 40, then `__pad[7]`. si_pid / si_uid are
+written as int / unsigned int (pid_t and uid_t live in other
+sections). Certified in officina/auspex_posix.sh (size and four
+offsets: si_status 20, si_addr 24, si_value 32, si_band 40). Plants:
+si_band dropped, si_code dropped, si_status dropped -> TU nostrum
+DISSENTIT each time; restored, certified. The si_status offset was
+added because of the plants: with size and si_addr alone, dropping one
+of the six leading ints went unseen (the pointer re-aligns to 24 and
+the size stays 104).

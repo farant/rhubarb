@@ -1,0 +1,9 @@
+% Psalmus 132 (Vulgata) - Ecce quam bonum et quam jucúndum
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm132.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Ecce quam bonum et quam jucúndum, * habitáre fratres in unum:
+Sicut unguéntum in cápite, * quod descéndit in barbam, barbam Aaron,
+Quod descéndit in oram vestiménti ejus: * sicut ros Hermon, qui descéndit in montem Sion.
+Quóniam illic mandávit Dóminus benedictiónem, * et vitam usque in sǽculum.

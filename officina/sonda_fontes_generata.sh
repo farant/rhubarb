@@ -6,6 +6,7 @@ declare -a RADIX_FONTES=(
     "fasti"
     "friatio"
     "internamentum"
+    "iter_directoria"
     "json"
     "lectiones"
     "memoria_processus_macos"
@@ -16,6 +17,7 @@ declare -a RADIX_FONTES=(
     "tabellarius"
     "tabula_dispersa"
     "utf8"
+    "via"
     "vigilia"
     "xar"
 )

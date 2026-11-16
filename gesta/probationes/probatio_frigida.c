@@ -11,6 +11,7 @@
 #include "frigida.h"
 #include "credo.h"
 #include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -36,7 +37,7 @@ _plagula_litterae (
                Piscina* pn,
     constans character* via)
 {
-         FILE* f = fopen(via, "rb");
+         FILE* f = lectiones_fopen(via, "rb");
          long  mensura;
     character* fructus;
 

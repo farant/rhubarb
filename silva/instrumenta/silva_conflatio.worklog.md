@@ -122,3 +122,67 @@ nexus.tsv column 8 = storage class, and corpus_infixum skips `externus`
 (see silva/nexus.worklog.md). Any library that declares an external
 object locally would have hit this in any amalgam (briar, silex,
 archive).
+
+## 2026-11-07 - first non-knotapel program: percursus as a unity build (budget item 10, P0)
+
+Conflated `silva/instrumenta/principalia/percursus.c` (aedilis --partes closure:
+39 headers, 33 sources; roots -r materia/fontes/ -r silva/fontes/ -r
+silva/instrumenta/; statics table = corpus_infixum's awk with silva/fontes and
+silva/instrumenta added to the roots, 10,746 rows). Output 106,700 lines.
+
+BUG found: a local include whose line ends in a comment that continues onto
+the next line -
+
+    #include "silva_limes_posix.h"     /* SILVA_LIMES_POSIX_TITULUS - caput
+                                         * sine dependentia (T16b: briar) */
+
+is blanked as one line, so the comment's continuation line is left orphaned
+and the output does not compile (silva_lexicon.c:18-19). knotapel closures
+never had this shape. The blanking must consume the whole comment (blank
+every line it spans, keeping the line count). Patched by hand in the
+experiment's output; no source changed.
+
+After that one-line patch: compiles clean under full VEXILLA (-Werror),
+7.4 s single core. `sample` attributes to the original files through the
+#line directives (no samples on the conflated file).
+
+Measurement (percursus -semantica, 2 interleaved runs each, reports identical):
+separate objects 337.1 G / ~31.5 s; ThinLTO 285.2 G / ~27.8 s; unity 290.3 G /
+27.8 s (-13.9%, ~90% of LTO); unity + -flto=thin 288.2 G (internalization:
+625 exported text symbols -> 2). So `static`-making would buy ~2 G more; the
+last ~3 G to LTO is inlining-heuristic difference, not structure. The unity
+closure is also 16 files smaller than what percursus.sh links (it links every
+silva/fontes/*.c on purpose).
+
+## 2026-11-09 — interiora: `static ` at exact positions (unity step 1)
+
+For the unity build's "dead-only" tree shaking (see
+tools/instrumentum_unitas.worklog.md, experiments 1-3). conflatio stays
+pure and dumb: it takes a table `via\tlinea\tcolumna` and inserts `static `
+at each position while emitting that header
+(conflatio_interiora_legere, conflatio_plagulam_cum_interioribus_emittere;
+conflatio_plagulam_emittere = the same with NIHIL, byte-identical). The
+conflator gets `-i <table>`; headers only. Why headers are enough: a
+function whose FIRST declaration is static has internal linkage, and the
+later plain definition inherits it (C89 6.1.2.2) - no .c file is touched.
+
+Opt-in on purpose: only valid when the output is a whole program in one
+translation unit. briar -amalgama (a library; functions must stay
+external) and knotapel snapshots never pass a table.
+
+Who computes the positions: silva, not a scanner here. The nexus only has
+the NAME position (the semantic symbol keeps the name token, not the
+declaration node), and house style puts the return type on the line
+above. `selecta <h> 'declaratio:habet(declarator-functionis)' -sedes`
+gives the exact first token of each declaration; the driver joins that
+with the nexus `functio` rows (name line inside the declaration's line
+range - this drops function-pointer typedefs, which the selector also
+matches). End-to-end check in scratch, percursus closure: conflator
+without -i = today's unity file byte for byte; with -i (522 dead
+functions) = the awk experiment's file byte for byte.
+
+Insert rule details: positions on a blanked line (local include, comment
+continuation) or past the end of the line are ignored; several positions
+on one line are applied in column order; a repeated position counts once.
+Plants (3, all red then green): column ignored, positions of earlier lines
+applied, lines miscounted.

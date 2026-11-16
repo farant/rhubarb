@@ -80,7 +80,7 @@ _plagula_litterae (
                Piscina* piscina,
     constans character* via)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* textus;
 

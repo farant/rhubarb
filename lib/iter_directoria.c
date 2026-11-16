@@ -729,6 +729,9 @@ _ambulare_recursivum (
 
     dum ((introitus = directorium_iterator_proximum(iterator)) != NIHIL)
     {
+        /* subarbor a callback praetermissa (per introitum) */
+        b32 praetermissa = FALSUM;
+
         /* Construere viam plenam */
         partes[0]  = via_currens;
         partes[I]  = introitus->titulus;
@@ -739,15 +742,21 @@ _ambulare_recursivum (
         {
             /* Vocare callback */
             fructus = functio(via_nova, introitus, contextus);
-            si (fructus != 0)
+            si (fructus == DIRECTORIUM_AMBULATOR_PRAETERMITTE)
+            {
+                praetermissa = VERUM;
+            }
+            alioquin si (fructus != 0)
             {
                 directorium_iterator_claudere(iterator);
                 redde fructus;
             }
         }
 
-        /* Recursio in directoria */
-        si (introitus->genus == INTROITUS_DIRECTORIUM)
+        /* Recursio in directoria (nisi callback subarborem
+         * praetermisit) */
+        si (   introitus->genus == INTROITUS_DIRECTORIUM
+            && !praetermissa)
         {
             /* Verificare si non est occultum (vel includere_occultos) */
             si (   filtrum                     == NIHIL
@@ -805,4 +814,100 @@ directorium_ambulare (
         piscina,
         0
         );
+}
+
+
+/* ==================================================
+ * Ambulator Fontium
+ * ================================================== */
+
+nomen structura {
+              constans character* suffixum;
+                  memoriae_index  suffixum_mensura;
+    constans character* constans*  praetermittenda;
+      DirectoriumAmbulatorFunctio  functio;
+                           vacuum* contextus;
+} FontesContextus;
+
+hic_manens b32
+_fontes_praetermittendum (
+    constans FontesContextus* f,
+                      chorda  titulus)
+{
+    i32 i;
+
+    si (f->praetermittenda == NIHIL)
+    {
+        redde FALSUM;
+    }
+    per (i = 0; f->praetermittenda[i] != NIHIL; i++)
+    {
+        si (chorda_aequalis_literis(titulus, f->praetermittenda[i]))
+        {
+            redde VERUM;
+        }
+    }
+    redde FALSUM;
+}
+
+hic_manens s32
+_fontes_introitus (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+    constans FontesContextus* f = (constans FontesContextus*)contextus;
+                         s32  fructus;
+
+    si (_fontes_praetermittendum(f, introitus->titulus))
+    {
+        redde DIRECTORIUM_AMBULATOR_PRAETERMITTE;
+    }
+    si (introitus->genus == INTROITUS_DIRECTORIUM)
+    {
+        /* nexus ad directorium: non intratur */
+        redde introitus->est_nexus ? DIRECTORIUM_AMBULATOR_PRAETERMITTE
+                                   : DIRECTORIUM_AMBULATOR_PERGE;
+    }
+    si (f->suffixum_mensura > 0)
+    {
+        si (   introitus->titulus.mensura < f->suffixum_mensura
+            || memcmp(introitus->titulus.datum
+                   + introitus->titulus.mensura - f->suffixum_mensura,
+                   f->suffixum, f->suffixum_mensura) != 0)
+        {
+            redde DIRECTORIUM_AMBULATOR_PERGE;
+        }
+    }
+    fructus = f->functio(via_plena, introitus, f->contextus);
+    /* PRAETERMITTE pro filo = PERGE; aliud non-0 sistit */
+    redde fructus == DIRECTORIUM_AMBULATOR_PRAETERMITTE
+        ? DIRECTORIUM_AMBULATOR_PERGE : fructus;
+}
+
+s32
+directorium_fontes_ambulare (
+             constans character*  via,
+             constans character*  suffixum,
+    constans character* constans* praetermittenda,
+     DirectoriumAmbulatorFunctio  functio,
+                          vacuum* contextus,
+                         Piscina* piscina)
+{
+       FontesContextus f;
+    DirectoriumFiltrum filtrum;
+
+    si (via == NIHIL || functio == NIHIL || piscina == NIHIL)
+    {
+        redde -I;
+    }
+    f.suffixum = suffixum;
+    f.suffixum_mensura = suffixum != NIHIL ? strlen(suffixum) : 0;
+    f.praetermittenda = praetermittenda;
+    f.functio = functio;
+    f.contextus = contextus;
+    filtrum = directorium_filtrum_omnia();
+    filtrum.includere_occultos = FALSUM;
+    redde directorium_ambulare(via, &filtrum, _fontes_introitus, &f,
+        piscina);
 }

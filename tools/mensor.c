@@ -45,6 +45,7 @@
 #include "stml.h"
 #include "filum.h"
 #include "xar.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -377,7 +378,7 @@ _addere_tabulam (
     i32                numerus;
     ChordaAedificator* aedificator;
 
-    plagula = fopen(via_tabulae, "rb");
+    plagula = lectiones_fopen(via_tabulae, "rb");
     si (plagula == NIHIL)
     {
         fprintf(stderr, "mensor: tabula aperiri non potest: %s\n",
@@ -678,7 +679,7 @@ _titulum_annotationis (
          character* annotatio;
          character* finis;
 
-    f = fopen(via_scripti, "rb");
+    f = lectiones_fopen(via_scripti, "rb");
     si (f == NIHIL)
     {
         redde chorda_ex_literis("", piscina);
@@ -1961,7 +1962,7 @@ _scriptum_est (
             redde FALSUM;
         }
     }
-    f = fopen(plena, "rb");
+    f = lectiones_fopen(plena, "rb");
     si (f == NIHIL)
     {
         redde FALSUM;
@@ -3674,6 +3675,8 @@ _purgatio_debita (
 {
     structura stat  status;
 
+    /* <tolera codex="CANALIS_PRAETERITUS" (>mensura ipsa
+     * diarium et status mensoris proprii, non ingressus */
     si (stat(_curationis_via("curatio.ultima", piscina), &status) != 0)
     {
         redde VERUM;
@@ -3699,6 +3702,8 @@ _curatio_debita (
     {
         limes = strtol(getenv("MENSOR_CURARE_LIMES"), NIHIL, X);
     }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>mensura ipsa
+     * diarium et status mensoris proprii, non ingressus */
     si (   stat(mensura_diarium_cursuum(piscina), &status) == 0
         && (longus)status.st_size > limes)
     {
@@ -3731,6 +3736,8 @@ _curare_separatim (
     }
     (vacuum)setsid();
     {
+        /* <tolera codex="CANALIS_PRAETERITUS" (>machina
+         * /dev/null: lectiones machinas numquam notant */
         s32 fd = open("/dev/null", O_WRONLY);
 
         si (fd >= 0)
@@ -3795,6 +3802,8 @@ constans character* regula_via = getenv("MENSOR_RETENTIO");
     (vacuum)mensura_cursum_incipere(mensura_diarium_cursuum(piscina),
         &initium, piscina);
     ante = _horologium_ms();
+    /* <tolera codex="CANALIS_PRAETERITUS" (>mensura ipsa
+     * diarium et status mensoris proprii, non ingressus */
     si (stat(mensura_diarium_cursuum(piscina), &status) == 0)
     {
         octeti_diarii = (longus)status.st_size;

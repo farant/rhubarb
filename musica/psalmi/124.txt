@@ -1,0 +1,10 @@
+% Psalmus 124 (Vulgata) - Qui confídunt in Dómino, sicut mons Sion
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm124.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Qui confídunt in Dómino, sicut mons Sion: * non commovébitur in ætérnum, qui hábitat in Jerúsalem.
+Montes in circúitu ejus: † et Dóminus in circúitu pópuli sui, * ex hoc nunc et usque in sǽculum.
+Quia non relínquet Dóminus virgam peccatórum super sortem justórum: * ut non exténdant justi ad iniquitátem manus suas.
+Bénefac, Dómine, bonis, * et rectis corde.
+Declinántes autem in obligatiónes addúcet Dóminus cum operántibus iniquitátem: * pax super Israël.

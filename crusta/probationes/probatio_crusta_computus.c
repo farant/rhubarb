@@ -46,7 +46,7 @@ _plagulam_legere (
     longus mensura;
       i8* buffer;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;
@@ -202,7 +202,7 @@ _scaenam_probare (
 
     CREDO_GRADUS ("II. collatio cum auro");
     imprimere("  aurum: %s\n", via_auri);
-    aurum = fopen(via_auri, "r");
+    aurum = lectiones_fopen(via_auri, "r");
     si (aurum == NIHIL)
     {
         imprimere("  FRACTA: aurum absens - COMPUTUS_SCRIBERE=1\n");

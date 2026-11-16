@@ -15,6 +15,7 @@
 #include "silva_generare.h"
 #include "silva_coquere.h"
 #include "silva_canon_coquere.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -27,7 +28,7 @@ _plagulam_legere (
     character* buffer;
     signatus longus mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;

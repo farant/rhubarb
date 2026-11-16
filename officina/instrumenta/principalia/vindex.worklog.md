@@ -81,3 +81,34 @@ scroll the same way; they land in the capture, readable after.
 -imago mode deliberately uncaptured (headless smoke wants the
 output visible). Future pull: an effusio PANE tailing the capture
 file (the gdb-TUI answer); v0 = file + another terminal.
+
+## 2026-11-12 — launcher links again; two limits found on the way
+
+`./officina/vindex.sh` had not linked since 8bbf97f7: praeparator.c calls
+`nexus_ordines_capitis_gradus` (silva/instrumenta/nexus_ordines.c) and the
+launcher, which compiles its helper objects by hand, never got a block for
+that file. Same bug colloquium.sh had until 2026-11-02 and sonda.sh; same
+fix (block copied). Nobody saw it because no gate ran the launcher - the
+officina suite builds the vindex unit test from its own source list.
+Now `probatio_officina_lanceatores` has a section "vindex imago"
+(`-plagulae chorda,credo -imago credo_suitam_currere` -> exit 0, header
+`VINDEX  lib/credo.c  [PAUSA]`); with the block removed: FRACTA.
+
+What works headless: breakpoints by lib function name and by lib
+`via:linea` pause for real (credo_suitam_currere -> lib/credo.c:2390), and
+`probationes/probatio_chorda.c:1984` (the line in main) pauses too. The
+source panel reads through lectiones_fopen (sweep site, now exercised).
+
+Two limits, NOT fixed (both older than this work):
+1. Any credo v2 suite traps before its first section: DECIPULA
+   "decipula vocata: getpid" at lib/credo.c:2447 (machinula has no
+   getpid). `cursor.sh -sola probatio_chorda` shows the same trap, rc 1.
+   So a breakpoint inside a lib function called from a section is never
+   reached - the run ends in [DECIPULA] at main, still exit 0.
+2. Breakpoints inside the suite's own section functions do not resolve:
+   `-imago probationes/probatio_chorda.c:73` and `-imago _sectio_tertia`
+   -> "punctum -imago non positum" (exit 2), while line 1984 (main) in
+   the same file resolves. Cause not investigated (static functions
+   reached only through the SECTIONES table?).
+Also: `-imago` on a comment line gives the same "non positum" - my
+earlier differential used probatio_chorda.c:60, a comment.

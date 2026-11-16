@@ -93,6 +93,9 @@
     <!-- amalgamator legit (1b T5, D5): arcus ad latina_datum -->
     <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.h"/>
     <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.c"/>
+    <!-- amalgamator caput amalgamae legit (lectio per librum visa
+         2026-11-11: fopen legens -> lectiones_fopen) -->
+    <ingressus genus="fasciculus" via="silva/amalgama/silva.h"/>
     <exitus via="silva/instrumenta/principalia/excludenda_generata.h" provenientia="regeneratio"/>
   </actio>
   <actio titulus="amalgama_silva" genus="generator" memorabilis="verum">
@@ -115,6 +118,9 @@
     <!-- amalgamator legit (1b T5, D5): arcus ad latina_datum -->
     <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.h"/>
     <ingressus genus="fasciculus" via="silva/fontes/silva_latina_datum.c"/>
+    <!-- amalgamator caput amalgamae legit (lectio per librum visa
+         2026-11-11: fopen legens -> lectiones_fopen) -->
+    <ingressus genus="fasciculus" via="silva/amalgama/silva.h"/>
     <exitus via="silva/amalgama/silva.c" provenientia="regeneratio"/>
   </actio>
   <!-- plan 1a T5: generata silvae (GENERATUM in linea prima -

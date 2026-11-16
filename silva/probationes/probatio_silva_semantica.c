@@ -9,6 +9,7 @@
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_parsare.h"
+#include "silva_contextus.h"
 #include "silva_commissio.h"
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
@@ -2303,6 +2304,68 @@ s32 principale (vacuum)
                     _commenta_conferre(piscina, parsura, ZEPHYRUM);
                 }
             }
+        }
+    }
+
+
+    /* ==================================================
+     * Lineae directivae notandae (budget fusionis, item V b): lineae
+     * capitis sine commento a tabula commentorum praetereuntur -
+     * lineae capitis CUM commento (supra '#define' et post eum) et
+     * lineae principales legi debent
+     * ================================================== */
+
+    imprimere("\n--- Commenta fluxus: lineae directivae capitis ---\n");
+    {
+        constans character* caput =
+            "#define A 1\n"
+            "/* <nota" " a=\"supra\"/> */\n"
+            "#define B 2\n"
+            "#define C 3 /* <nota" " a=\"post\"/> */\n"
+            "#define D 4\n";
+        constans character* fons =
+            "#include \"caput.h\"\n"
+            "#define E 5\n"
+            "int x;\n";
+        SilvaContextus* ctx      = silva_contextus_creare(piscina);
+          SilvaParsura* parsura  = NIHIL;
+
+        CREDO_NON_NIHIL (ctx);
+        si (ctx != NIHIL)
+        {
+            CREDO_VERUM (silva_contextus_praebere(ctx, "caput.h",
+                caput, (i32)strlen(caput)) >= ZEPHYRUM);
+            parsura = silva_c89_parsare_cum_contextu(piscina, ctx,
+                "probatio.c", fons, (i32)strlen(fons), NIHIL);
+        }
+        CREDO_NON_NIHIL (parsura);
+        si (parsura != NIHIL)
+        {
+            CREDO_NON_NIHIL (parsura->directivae);
+            CREDO_NON_NIHIL (parsura->directivae_notandae);
+            si (   parsura->directivae          != NIHIL
+                && parsura->directivae_notandae != NIHIL)
+            {
+                Xar* n = parsura->directivae_notandae;
+
+                /* lineae: '#include' (0), A-D capitis (1-4), E (5);
+                 * notandae: principales (0, 5) et B (commentum supra,
+                 * in '#') et C (commentum post) - A et D praetereuntur */
+                CREDO_AEQUALIS_I32 (xar_numerus(parsura->directivae),
+                    VI);
+                CREDO_AEQUALIS_I32 (xar_numerus(n), IV);
+                si (xar_numerus(n) == IV)
+                {
+                    CREDO_AEQUALIS_I32 (*(i32*)xar_obtinere(n,
+                        ZEPHYRUM),
+                        ZEPHYRUM);
+                    CREDO_AEQUALIS_I32 (*(i32*)xar_obtinere(n, I), II);
+                    CREDO_AEQUALIS_I32 (*(i32*)xar_obtinere(n, II),
+                        III);
+                    CREDO_AEQUALIS_I32 (*(i32*)xar_obtinere(n, III), V);
+                }
+            }
+            _commenta_conferre(piscina, parsura, II);
         }
     }
 

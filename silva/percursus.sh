@@ -20,6 +20,31 @@ declare -a INCLUDE_FLAGS=(
     "-I$SILVA_DIR/fontes"
     "-I$RADIX_DIR/materia/fontes"
 )
+# AEDIFICATIO UNITATIS (budget X, 2026-11-07): ordinarie percursus ex
+# PLAGULA UNA - clausura vera percursus.c per conflatorem conflata et
+# semel compilata (tools/instrumentum_unitas.sh): compilator functiones
+# parvas trans plagulas inserit, 337,1 -> 290,3 G, relatio eadem.
+# SILVA_UNITAS=0 = obiecta singula (via vetus), binarium SEPARATUM
+# (build/percursus_obiecta) - modi numquam binarium alterius currunt.
+# Porta unitas-percursus (silva/unitas_probare.sh) ambos confert.
+# SILVA_UNITAS=profilum = unitas PROFILATA (budget XIII gradus III):
+# binarium TERTIUM (build/percursus_profilatum), per cursum exercitii
+# '-semantica lib' optimizatum (clang PGO, ~257 G contra 290,7) -
+# aedificatio ~30 s (tres gradus), ergo non ordinaria.
+if [ "${SILVA_UNITAS:-1}" != 0 ]; then
+    source "$RADIX_DIR/tools/instrumentum_unitas.sh"
+    UNITAS_BIN="$BUILD_DIR/percursus"
+    if [ "${SILVA_UNITAS:-1}" = profilum ]; then
+        UNITAS_BIN="$BUILD_DIR/percursus_profilatum"
+        UNITAS_EXERCITATIO=(-semantica lib)
+    fi
+    instrumentum_unitatis_nectere "$UNITAS_BIN" \
+        silva/instrumenta/principalia/percursus.c \
+        materia/fontes silva/fontes silva/instrumenta -- \
+        "${GCC_FLAGS[@]}" || exit 1
+    exec "$UNITAS_BIN" "$@"
+fi
+
 # GENERATUM AB AEDILE - fontes derivati (regeneratio: vide snippet)
 source "$SILVA_DIR/percursus_fontes_generata.sh"
 
@@ -60,7 +85,7 @@ obj_files="$obj_files $MATERIA_OBIECTA"
 # binario vetusto latebant - nunc obiecta INGRESSUS nexus sunt (infra)
 # silva_lexicon.c in linea nectendi explicite (exemplar examen.sh)
 ARBOR_SRC="$SILVA_DIR/instrumenta/principalia/percursus.c"
-ARBOR_BIN="$BUILD_DIR/percursus"
+ARBOR_BIN="$BUILD_DIR/percursus_obiecta"   # SILVA_UNITAS=0 (vide supra)
 # nexus solum si stalum, atomice (tools/instrumentum_nectere.sh,
 # …WB6Q3H): fontes, obiecta, capita instrumentorum = ingressus -
 # binarium vetustum mutationem celare non potest

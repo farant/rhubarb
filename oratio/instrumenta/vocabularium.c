@@ -27,7 +27,7 @@ _plagulam_legere (
     constans character* via,
                 chorda* exitus)
 {
-          FILE* f = fopen(via, "rb");
+          FILE* f = lectiones_fopen(via, "rb");
         longus  longitudo;
             i8* memoria;
 

@@ -39,6 +39,7 @@
 #include "selectio.h"
 #include "similitudo.h"
 #include "stml.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,7 +57,7 @@ _plagulam_legere (
                 i8* buffer;
     signatus longus  mensura;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         redde NIHIL;

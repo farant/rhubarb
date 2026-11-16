@@ -508,7 +508,7 @@ _charta_signum_limae (
 {
     structura stat status;
 
-    si (stat(via, &status) == ZEPHYRUM)
+    si (lectiones_stat(via, &status) == ZEPHYRUM)
     {
         sprintf(exitus, "%ld.%ld.%lu",
             (longus)status.st_mtime,
@@ -532,7 +532,7 @@ _charta_signum_componere (
     character s2[48];
     character s3[48];
 
-    si (stat(CHARTA_CENSUS_VIA, &probatio) != ZEPHYRUM)
+    si (lectiones_stat(CHARTA_CENSUS_VIA, &probatio) != ZEPHYRUM)
     {
         redde FALSUM;
     }
@@ -1602,7 +1602,7 @@ _tergale_capere (JsonValor* argumenta, Piscina* piscina,
     vacuum* datum, chorda* culpa)
 {
     JsonValor* fructus  = json_objectum_creare(piscina);
-         FILE* filum    = fopen(FORUM_TERGALE_VIA, "rb");
+         FILE* filum    = lectiones_fopen(FORUM_TERGALE_VIA, "rb");
        chorda  imago;
 
     (vacuum)argumenta;

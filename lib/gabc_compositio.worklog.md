@@ -105,3 +105,24 @@ melisma's first notes on line 2, and the stray hyphen it used to make
 with "rum" on line 3 is gone. No corpus chant hit the clef-only case.
 Test: `_latitudinem_probare` (melisma first syllable starts on system
 0 with its text; "Al le lu(40)ia": text on its first note's system).
+
+## 2026-11-06 — justification: a bare clef is not an interval
+
+Review minor: on a justified line (greedy break or `z`) the leftover
+width was split across every gap between placed syllables, and the
+leading `(c4)` syllable counts as one, so the first sung syllable was
+pushed right. With `z` after ONE syllable it was pushed all the way to
+the right edge with the custos. Gregorio puts no space there. Now
+`SyllabaPosita.cantata` (notes or text, set in `frustum_ponere` from
+`Frustum.cantatum` and in `textum_syllabae_ponere`); justification
+starts at the first sung syllable (k0) and spreads over the n-k0-1 gaps
+after it. A justified line with a single sung syllable moves only the
+custos to the margin (the custos index is recorded when it is emitted).
+Only LEADING clef-only syllables are skipped; a mid-line clef change
+still counts as an interval.
+Salve dump: 1-px shifts on line 1 (text and notes). Corpus 111789 ->
+111792 picta (+3 hyphens: gaps changed, hyphens appear at >= half a
+cell). Tests: `_lineas_probare` ("(c4) a(g) (z) b(g)": a at the same x
+as without justification, custos still at 952; 60-syllable greedy first
+line: first syllable at the unjustified x). Demo renders made for Fran
+(z after "Glo-ri-a").

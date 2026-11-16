@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lectiones.h"
 
 #define LATITUDO_MAXIMA 8
 #define ALTITUDO_MAXIMA 8
@@ -280,7 +281,7 @@ main (
         argv++;
     }
 
-    filum = fopen(argv[1], "r");
+    filum = lectiones_fopen(argv[1], "r");
     if (!filum)
     {
         fprintf(stderr, "Non potest aperire: %s\n", argv[1]);

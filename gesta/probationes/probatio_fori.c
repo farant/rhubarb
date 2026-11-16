@@ -12,6 +12,7 @@
 #include "chorda.h"
 #include "credo.h"
 #include "filum.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -43,7 +44,7 @@ _plagula_litterae (
                Piscina* piscina,
     constans character* via)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* textus;
 
@@ -110,7 +111,7 @@ _scaenam_probare (
         " & echo $! > " VIA_PID) == ZEPHYRUM);
     per (k = ZEPHYRUM; k < XXV; k++)
     {
-        FILE* pf = fopen(VIA_PORT, "r");
+        FILE* pf = lectiones_fopen(VIA_PORT, "r");
 
         si (pf != NIHIL)
         {

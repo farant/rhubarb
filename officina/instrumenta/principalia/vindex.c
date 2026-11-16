@@ -26,11 +26,12 @@
 #include "piscina.h"
 #include "chorda.h"
 #include "xar.h"
+#include "iter_directoria.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -158,7 +159,7 @@ _fontem_curare (
     }
     sprintf(via_plena, "%s/%.*s", v->radix, (int)via.mensura,
         (constans character*)via.datum);
-    pl = fopen(via_plena, "rb");
+    pl = lectiones_fopen(via_plena, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -1022,35 +1023,43 @@ principale (
     }
     {
         character via_lib[600];
-        DIR* dir;
-        structura dirent* introitus;
-        character* viae[512];
-        integer numerus_viarum = 0;
-        integer i;
+        /* enumeratio per iter_directoria (in libro lectionum
+         * notatur; olim opendir crudum) */
+         DirectoriumIterator* iterator;
+        DirectoriumIntroitus* introitus;
+                   character* viae[512];
+                     integer  numerus_viarum = 0;
+                     integer  i;
 
         sprintf(via_lib, "%s/lib", v.radix);
-        dir = opendir(via_lib);
-        si (dir == NIHIL)
+        iterator = directorium_iterator_aperire(via_lib,
+            v.piscina_perpetua);
+        si (iterator == NIHIL)
         {
             fprintf(stderr, "vindex: lib/ deest\n");
             redde II;
         }
-        dum (   (introitus = readdir(dir)) != NIHIL
-             && numerus_viarum < 512)
+        dum (   numerus_viarum < 512
+             && (introitus = directorium_iterator_proximum(iterator))
+                 != NIHIL)
         {
-            memoriae_index m  = strlen(introitus->d_name);
+                 character* titulus = chorda_ut_cstr(
+                                          introitus->titulus,
+                                          v.piscina_perpetua);
+            memoriae_index  m;
             b32 congruit      = (b32)(numerus_plagularum == ZEPHYRUM);
             i32 p;
 
-            si (   m < III || introitus->d_name[m - II] != '.'
-                || introitus->d_name[m - I] != 'c')
+            si (titulus == NIHIL) perge;
+            m = strlen(titulus);
+            si (   m < III || titulus[m - II] != '.'
+                || titulus[m - I] != 'c')
             {
                 perge;
             }
             per (p = ZEPHYRUM; p < numerus_plagularum; p++)
             {
-                si (strstr(introitus->d_name, plagulae[p])
-                    != NIHIL)
+                si (strstr(titulus, plagulae[p]) != NIHIL)
                 {
                     congruit = VERUM;
                 }
@@ -1060,12 +1069,12 @@ principale (
                 character* via = piscina_allocare(
                     v.piscina_perpetua, m + VI);
 
-                sprintf(via, "lib/%s", introitus->d_name);
+                sprintf(via, "lib/%s", titulus);
                 viae[numerus_viarum] = via;
                 numerus_viarum++;
             }
         }
-        closedir(dir);
+        directorium_iterator_claudere(iterator);
         per (i = 0; i < numerus_viarum; i++)
         {
             si (!vindex_onerator_demittere(v.onerator, viae[i]))
@@ -1195,6 +1204,8 @@ principale (
 
             sprintf(via_capturae,
                 "%s/officina/build/vindex.stdout", v.radix);
+            /* <tolera codex="CANALIS_PRAETERITUS" (>captura stdout
+             * descriptor scripturae capturae (officina/build), non lectio */
             v.fd_capturae = open(via_capturae,
                 O_WRONLY | O_CREAT | O_TRUNC, 0644);
             si (v.fd_capturae >= 0)

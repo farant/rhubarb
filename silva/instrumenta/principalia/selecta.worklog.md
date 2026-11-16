@@ -89,3 +89,21 @@ wrapper exit right after the link step - also usable to pre-build a tool).
 V: touching silva_lexicon.h and silva_lexicon.c relinks examen. 78 checks,
 ~45 s. Plants: lexicon.c not an input, header globs dropped, -nt for find -
 all red.
+
+## 2026-11-09 — `-sedes`: machine output with the exact start position
+
+One line per match, `via\tlinea\tcolumna\tlinea_ultima`, no body. The
+position is the first token of the subtree (root token in the principal
+file, so a Latin keyword macro like `vacuum` reports where it is written),
+1-based. First consumer: the unity build asks where each function
+prototype in a header starts
+(`declaratio:habet(declarator-functionis)`), to feed `conflator -i`.
+Note the selector also matches function-pointer typedefs (xar.h:62); the
+consumer filters by joining with the nexus `functio` rows.
+
+Cost: ~0.04 s per header, almost all of it start-up (selecta offers every
+header under `.` to the context on each run); 39 headers = 1.65 s. The
+consumer must cache per header. `-proba` gained a fixture for the column
+(indented return type on the line above the name: 2:3-3); a plant
+(column := line) makes it fail. NB `selecta -proba` is in no gate today -
+the unity gate will exercise `-sedes` end to end once the driver uses it.

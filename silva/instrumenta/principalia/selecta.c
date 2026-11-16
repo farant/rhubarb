@@ -4,13 +4,18 @@
  * Edit unicae (postulatio 2026-07-11, parcum 01KY53MP5X).
  *
  * Usus: ./silva/selecta.sh <plagula> '<selector>'
- *           [-intra <symbolum>] [-omnia] [-proba]
+ *           [-intra <symbolum>] [-omnia] [-sedes] [-proba]
  *
  * -intra: congruentia ad subarborem definitionis nominatae scopata
  *   (filtrum: maior-aut-ipse congruit
  *   "definitio-functionis:definit(<symbolum>)" - zuccharum QC,
  *   nulla ambulatio propria).
  * -omnia: tectum mensurae plagulae sublatum.
+ * -sedes: forma machinae - linea una per congruentiam
+ *   'via\tlinea\tcolumna\tlinea_ultima' (sedes EXACTA lexematis
+ *   primi subarboris, 1-basata; nullum corpus). Consumptor:
+ *   tools/instrumentum_unitas.sh (initia declarationum functionum
+ *   pro conflatore -i).
  * -proba: porta nativa (fixtura inclusa, probationes numeratae).
  *
  * Arbor cum erroribus: CAUTIO + PERGE (nodi error quaeribiles -
@@ -25,6 +30,7 @@
 #include "xar.h"
 #include "chorda.h"
 #include "tabula_dispersa.h"
+#include "iter_directoria.h"
 #include "silva_token.h"
 #include "silva_nodus.h"
 #include "silva_contextus.h"
@@ -32,9 +38,9 @@
 #include "silva_quaestio.h"
 #include "silva_c89_oraculum.h"
 #include "silva_tabulae_c89.h"
+#include "lectiones.h"
 #include <stdio.h>
 #include <string.h>
-#include <dirent.h>   /* instrumentum solum - macOS/POSIX */
 
 hic_manens i32 mensura_maxima = 4194304;  /* -omnia = sine tecto */
 
@@ -49,6 +55,7 @@ nomen structura {
     s32 initium;
     s32 finis;
     i32 linea_prima;
+    i32 columna_prima;
     i32 linea_ultima;
 } Extentus;
 
@@ -63,11 +70,12 @@ _extentum_metiri (
          i32  cursor = ZEPHYRUM;
          i32  k;
 
-    ext.validus       = FALSUM;
-    ext.initium       = ZEPHYRUM;
-    ext.finis         = ZEPHYRUM;
-    ext.linea_prima   = ZEPHYRUM;
-    ext.linea_ultima  = ZEPHYRUM;
+    ext.validus        = FALSUM;
+    ext.initium        = ZEPHYRUM;
+    ext.finis          = ZEPHYRUM;
+    ext.linea_prima    = ZEPHYRUM;
+    ext.columna_prima  = ZEPHYRUM;
+    ext.linea_ultima   = ZEPHYRUM;
 
     si (series == NIHIL) redde ext;
     per (k = ZEPHYRUM; k < subiectum->numerus_locorum; k++)
@@ -113,8 +121,9 @@ _extentum_metiri (
                 si (   !ext.validus
                     || radix_lex->byte_offset < ext.initium)
                 {
-                    ext.initium      = radix_lex->byte_offset;
-                    ext.linea_prima  = radix_lex->linea;
+                    ext.initium        = radix_lex->byte_offset;
+                    ext.linea_prima    = radix_lex->linea;
+                    ext.columna_prima  = radix_lex->columna;
                 }
                 si (!ext.validus || finis_lex > ext.finis)
                 {
@@ -243,6 +252,46 @@ _proba (vacuum)
             "non reiectus\n");
         fracta = VERUM;
     }
+    /* -sedes: sedes EXACTA lexematis primi (genus reditus in linea
+     * supra nomen, indentatum) - consumptor: conflator -i */
+    {
+        constans character* fons_sedium =
+            "int a;\n"
+            "  char*\n"
+            "f (int x);\n";
+        SilvaParsura* p2 = silva_c89_parsare(piscina, "sedes.h",
+            fons_sedium, (i32)strlen(fons_sedium), NIHIL);
+        SilvaQuaestio* q = silva_quaestio_compilare(piscina,
+            &SILVA_C89_REGISTRUM,
+            "declaratio:habet(declarator-functionis)", &causa);
+        Xar* res = (p2 != NIHIL && q != NIHIL)
+            ? silva_quaestio_exsequi(q, p2->commissio->radix, piscina)
+            : NIHIL;
+
+        si (res == NIHIL || xar_numerus(res) != I)
+        {
+            fprintf(stderr, "selecta -proba: fixtura sedium: "
+                "congruentia una exspectata\n");
+            fracta = VERUM;
+        }
+        alioquin
+        {
+            constans SilvaQuaestioResultatum* r =
+                (constans SilvaQuaestioResultatum*)xar_obtinere(res,
+                    ZEPHYRUM);
+            Extentus ext = _extentum_metiri(p2, r->nodus, piscina);
+
+            si (   !ext.validus || ext.linea_prima != II
+                || ext.columna_prima != III || ext.linea_ultima != III)
+            {
+                fprintf(stderr, "selecta -proba: sedes %ld:%ld-%ld "
+                    "(exspectatum 2:3-3)\n", (longus)ext.linea_prima,
+                    (longus)ext.columna_prima,
+                    (longus)ext.linea_ultima);
+                fracta = VERUM;
+            }
+        }
+    }
     piscina_destruere(piscina);
     si (fracta) redde II;
     imprimere("SELECTA PROBA TENET\n");
@@ -253,16 +302,11 @@ _proba (vacuum)
  * praeparatio capitum: exemplar emitte/censor (inclusio vera)
  * -------------------------------------------------- */
 
-hic_manens b32
-_praetermittendum (
-    constans character* titulus)
-{
-    redde (strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "results") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM)
-        ? VERUM : FALSUM;
-}
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur) */
+hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "results", "node_modules", NIHIL
+};
 
 hic_manens vacuum
 _caput_praebere (
@@ -281,7 +325,7 @@ _caput_praebere (
     clavis = chorda_ex_literis(titulus, piscina);
     si (tabula_dispersa_continet(visa, clavis)) redde;
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -310,6 +354,34 @@ _caput_praebere (
     }
 }
 
+/* ambulatio capitum per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus, in XV instrumenta copiatus): contextus callback */
+nomen structura {
+    SilvaContextus* ctx;
+           Piscina* piscina;
+    TabulaDispersa* visa;
+} CapitaAmbulatio;
+
+hic_manens s32
+_caput_visum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+     CapitaAmbulatio* a = (CapitaAmbulatio*)contextus;
+           character* via;
+           character* titulus;
+
+    via      = chorda_ut_cstr(via_plena, a->piscina);
+    titulus  = chorda_ut_cstr(introitus->titulus, a->piscina);
+    si (via != NIHIL && titulus != NIHIL)
+    {
+        _caput_praebere(a->ctx, a->piscina, a->visa, via, titulus);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _capita_praeparare (
         SilvaContextus* ctx,
@@ -317,40 +389,13 @@ _capita_praeparare (
         TabulaDispersa* visa,
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    CapitaAmbulatio a;
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_praeparare(ctx, piscina, visa, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                _caput_praebere(ctx, piscina, visa, via_plena,
-                    introitus->d_name);
-            }
-        }
-    }
-    closedir(dir);
+    a.ctx      = ctx;
+    a.piscina  = piscina;
+    a.visa     = visa;
+    (vacuum)directorium_fontes_ambulare(via, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_visum, &a, piscina);
 }
 
 s32
@@ -374,6 +419,7 @@ principale (
     Xar* resultata;
     constans character* causa = NIHIL;
     i32 congruentia = ZEPHYRUM;
+    b32 forma_sedium = FALSUM;
     integer k;
 
     per (k = I; k < argc; k++)
@@ -381,6 +427,10 @@ principale (
         si (strcmp(argv[k], "-omnia") == ZEPHYRUM)
         {
             mensura_maxima = ZEPHYRUM;
+        }
+        alioquin si (strcmp(argv[k], "-sedes") == ZEPHYRUM)
+        {
+            forma_sedium = VERUM;
         }
         alioquin si (strcmp(argv[k], "-proba") == ZEPHYRUM)
         {
@@ -404,7 +454,7 @@ principale (
     si (via == NIHIL || selector == NIHIL)
     {
         fprintf(stderr, "usus: selecta <plagula> '<selector>'"
-            " [-intra <symbolum>] [-omnia] [-proba]"
+            " [-intra <symbolum>] [-omnia] [-sedes] [-proba]"
             "  (ex radice repositorii)\n");
         redde II;
     }
@@ -438,7 +488,7 @@ principale (
         _capita_praeparare(ctx, piscina_ctx, visa, ".");
     }
 
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL)
     {
         fprintf(stderr, "selecta: plagula non lecta: %s\n", via);
@@ -551,6 +601,13 @@ principale (
             }
             ext = _extentum_metiri(parsura, r->nodus, piscina);
             si (!ext.validus) perge;
+            si (forma_sedium)
+            {
+                imprimere("%s\t%u\t%u\t%u\n", via, ext.linea_prima,
+                    ext.columna_prima, ext.linea_ultima);
+                congruentia++;
+                perge;
+            }
 
             /* initium ad initium lineae retrahere */
             dum (   ext.initium > ZEPHYRUM

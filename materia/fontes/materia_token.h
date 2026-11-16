@@ -63,6 +63,8 @@
 
 #define MATERIA_TOKEN_INITIUM_LINEAE  ((i32)I)
 #define MATERIA_TOKEN_CAUDA           ((i32)II)
+/* bita IV et superiora FRONTIS sunt (e.g. SILVA_TOKEN_*); materia ea
+ * numquam legit nec ponit */
 
 
 /* ==================================================

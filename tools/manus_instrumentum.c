@@ -56,6 +56,7 @@
 #include "latina.h"
 #include "piscina.h"
 #include "chorda.h"
+#include "iter_directoria.h"
 #include "manus.h"
 #include "provenientia.h"
 #include "filum.h"
@@ -65,7 +66,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <netinet/in.h>
@@ -186,7 +186,7 @@ _sessionem_legere (
     integer   q;
 
     _via_sessionis(via, portus);
-    f = fopen(via, "r");
+    f = lectiones_fopen(via, "r");
     si (f == NIHIL)
     {
         redde FALSUM;
@@ -210,28 +210,39 @@ _sessiones_legere (
     Sessio* vas,
        i32  maximum)
 {
-    character sedes[VIAE_MENSURA];
-    DIR*           d;
-    structura dirent* v;
-    i32            n = ZEPHYRUM;
+               character  sedes[VIAE_MENSURA];
+                 Piscina* piscina;
+     DirectoriumIterator* d;
+    DirectoriumIntroitus* v;
+                     i32  n = ZEPHYRUM;
 
+    /* enumeratio per iter_directoria (in libro lectionum notatur;
+     * olim opendir crudum); piscina propria, brevis */
     _sedes(sedes, magnitudo(sedes));
-    d = opendir(sedes);
-    si (d == NIHIL)
+    piscina = piscina_generare_dynamicum("manus_sessiones", 65536);
+    si (piscina == NIHIL)
     {
         redde ZEPHYRUM;
     }
-
-    dum ((v = readdir(d)) != NIHIL && n < maximum)
+    d = directorium_iterator_aperire(sedes, piscina);
+    si (d == NIHIL)
     {
-        Sessio s;
-           i32 portus;
+        piscina_destruere(piscina);
+        redde ZEPHYRUM;
+    }
 
-        si (strstr(v->d_name, ".sessio") == NIHIL)
+    dum (   n < maximum
+         && (v = directorium_iterator_proximum(d)) != NIHIL)
+    {
+           Sessio  s;
+              i32  portus;
+        character* titulus = chorda_ut_cstr(v->titulus, piscina);
+
+        si (titulus == NIHIL || strstr(titulus, ".sessio") == NIHIL)
         {
             perge;
         }
-        portus = (i32)atoi(v->d_name);
+        portus = (i32)atoi(titulus);
         si (portus == ZEPHYRUM || !_sessionem_legere(portus, &s))
         {
             perge;
@@ -247,7 +258,8 @@ _sessiones_legere (
         vas[n] = s;
         n++;
     }
-    (vacuum)closedir(d);
+    directorium_iterator_claudere(d);
+    piscina_destruere(piscina);
     redde n;
 }
 
@@ -347,6 +359,8 @@ _detrahere (
         s32 fd;
 
         (vacuum)setsid();
+        /* <tolera codex="CANALIS_PRAETERITUS" (>diarium prolis
+         * descriptor scripturae diarii post setsid, non lectio */
         fd = open(diarium, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         si (fd >= 0)
         {
@@ -904,7 +918,7 @@ principale (
         character linea[VIAE_MENSURA];
 
         _via_diarii(diarium, sessio.portus);
-        f = fopen(diarium, "r");
+        f = lectiones_fopen(diarium, "r");
         si (f == NIHIL)
         {
             fprintf(stderr,

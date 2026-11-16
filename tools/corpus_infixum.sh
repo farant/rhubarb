@@ -64,33 +64,103 @@ corpus_symbola_generare () {
         && [ -z "$(find lib "${RADICES_CLIENTIUM[@]}" -name '*.c' -newer "$TABULA" -print -quit 2>/dev/null)" ]; then
         return 0
     fi
-    echo "  [symbola] corpus.symbola.tsv (nexus incrementalis)"
-    # nexus = cache arboris VERAE (build/nexus.tsv), etiam sub umbra
-    ( cd "$RADIX" && ./silva/nexus.sh -renovare > /dev/null 2>&1 ) || return 1
+    echo "  [symbola] corpus.symbola.tsv (e nexu)"
+    # nexus = cache arboris VERAE (build/nexus.tsv), etiam sub umbra.
+    # INDEX EXSTANS ADHIBETUR (decretum Franis 2026-11-11): haec actio
+    # nexum NON renovat si index non vetustior est quam fontes quos ipsa
+    # legit (lib, include, radices clientium - ordines ceterarum
+    # plagularum filtrum infra abicit). Olim semper renovabat: percursus
+    # ARBOREM TOTAM ambulat, et ex quo ambulatio in libro lectionum
+    # notatur (iter_directoria), custodia memorabilium ~CM directoria non
+    # declarata videbat et memoriam negabat. Index absens aut vetustior
+    # fontibus actionis = renovatio necessaria (aliter tabula stala sub
+    # clave recenti memoraretur); ea EXTRA librum actionis currit
+    # (FABRICA_LECTIONES sublata): cura cache communis est, non lectio
+    # actionis - quod actio ex indice sumit, ingressus declarati tegunt.
+    # Recentia plena indicis = aedificatio expressa (./silva/nexus.sh
+    # -renovare), non mos huius actionis.
+    local renovandus=0
+    if [ ! -f "$RADIX/build/nexus.tsv" ]; then
+        renovandus=1
+    elif [ -n "$(cd "$RADIX" && find include lib "${RADICES_CLIENTIUM[@]}" \( -name '*.h' -o -name '*.c' \) -newer build/nexus.tsv -print -quit 2>/dev/null)" ]; then
+        renovandus=1
+    fi
+    if [ "$renovandus" = 1 ]; then
+        ( cd "$RADIX" && env -u FABRICA_LECTIONES ./silva/nexus.sh -renovare > /dev/null 2>&1 ) || return 1
+    fi
     [ -f "$RADIX/build/nexus.tsv" ] || return 1
     {
         echo "# corpus.symbola.tsv GENERATUM a tools/corpus_infixum.sh (sedes include/*.h et <radix>/*.h = capita; sedes lib/*.c et <radix>/*.c profunditate 0 sine capite, non externa = statica; radices: ${RADICES_CLIENTIUM[*]}) e build/nexus.tsv - NE MANU EDITES"
-        # PRAEFILTRUM (2026-10-22): nexus.tsv ~CLXVI MB, lineae 'sedes'
-        # XVIII% solae (regulae ambae $2=="sedes" poscunt) - grep -F eas
-        # ante awk seligit: effusio eadem, ~XIV s -> ~III.III s (mensuratum)
-        LC_ALL=C grep -F "$(printf '\tsedes\t')" "$RADIX/build/nexus.tsv" |
-        awk -F'\t' -v radices="${RADICES_CLIENTIUM[*]}" '
-            BEGIN { nr = split(radices, R, " ") }
-            function in_radice(via, suffixum,    k) {
-                for (k = 1; k <= nr; k++)
-                    if (index(via, R[k] "/") == 1 && via ~ ("\\" suffixum "$") \
-                        && substr(via, length(R[k]) + 2) !~ /\//) return 1
-                return 0
-            }
-            $2=="sedes" && ($4 ~ /^include\// || in_radice($4, ".h")) { publica[$1]=1; print $1"\t"$3"\t"$4 }
-            $2=="sedes" && ($4 ~ /^lib\/[^\/]*\.c$/ || in_radice($4, ".c")) && $7=="0" && $8!="externus" \
-                && ($3=="functio" || $3=="variabile" || $3=="typedef" || $3=="constans" || $3=="macro") {
-                n=n+1; statica[n]=$1"\t"$3"\t"$4; nomina[n]=$1
-            }
-            END { for (k=1; k<=n; k++) if (!(nomina[k] in publica)) print statica[k] }
-        ' | sort -u
+        symbola_tabulam_scribere "$RADIX" "${RADICES_CLIENTIUM[@]}"
     } > "$TABULA" || return 1
     return 0
+}
+
+# symbola_tabulam_scribere <radix repositorii> <radix clientis>... -
+# ordines tabulae symbolorum (sine titulo) in exitum, ex build/nexus.tsv
+# (vocans eum renovat): capita include/*.h et <radix>/*.h, statica
+# lib/*.c et <radix>/*.c (regulae supra). Radices sine '/' finali.
+# Communis corpus_symbola_generare (RADICES_CLIENTIUM) et
+# tools/instrumentum_unitas.sh (radices instrumenti, e.g. silva/fontes).
+symbola_tabulam_scribere () {
+    local radix="$1"
+    shift
+    # PRAEFILTRUM (2026-10-22): nexus.tsv ~CLXVI MB, lineae 'sedes'
+    # XVIII% solae (regulae ambae $2=="sedes" poscunt) - grep -F eas
+    # ante awk seligit: effusio eadem, ~XIV s -> ~III.III s (mensuratum)
+    LC_ALL=C grep -F "$(printf '\tsedes\t')" "$radix/build/nexus.tsv" |
+        _symbola_seligere "$@"
+}
+
+# symbola_clausurae_scribere <radix repositorii> <viae> <radix clientis>...
+# - idem, sed ordines SOLUM plagularum in <viae> (via una per lineam,
+# relativa ad radicem; clausura instrumenti). Tempus non in grep (0,1 s)
+# sed in awk + sort super DXX K lineas 'sedes' (~2,4 s): clausura
+# percursus LXXII plagularum XV K lineas relinquit. Capita extra
+# clausuram non leguntur - nomen 'publicum' solum per caput clausurae
+# agnoscitur; fons sine capite suo sub -Wmissing-prototypes non compilat,
+# ergo caput fontis clausurae in clausura est (conflatio eadem ac cum
+# tabula tota: tools/instrumentum_unitas.worklog.md).
+symbola_clausurae_scribere () {
+    local radix="$1"
+    local viae="$2"
+    shift 2
+    # filtrum per tabulam awk ($4 in viae), NON 'grep -F -f': grep BSD
+    # (/usr/bin/grep, quem bash invenit) cum LXXII exemplaribus super
+    # nexum totum I min XLIV s tardabat (mensuratum 2026-11-07)
+    sedes_clausurae_scribere "$radix" "$viae" | _symbola_seligere "$@"
+}
+
+# sedes_clausurae_scribere <radix repositorii> <viae> - ordines 'sedes'
+# nexus plagularum in <viae> SOLARUM, crudi (octo columnae nexus).
+# Separatum quia tools/instrumentum_unitas.sh eosdem ordines BIS legit
+# (tabula staticorum per _symbola_seligere, et iunctio interiorum):
+# grep super nexum totum (~1,3 s) semel fit.
+sedes_clausurae_scribere () {
+    local radix="$1"
+    local viae="$2"
+    LC_ALL=C grep -F "$(printf '\tsedes\t')" "$radix/build/nexus.tsv" |
+        awk -F'\t' 'NR == FNR { viae[$0] = 1; next } ($4 in viae)' \
+            "$viae" -
+}
+
+# ordines 'sedes' nexus (stdin) -> capita et statica (regulae supra)
+_symbola_seligere () {
+    awk -F'\t' -v radices="$*" '
+        BEGIN { nr = split(radices, R, " ") }
+        function in_radice(via, suffixum,    k) {
+            for (k = 1; k <= nr; k++)
+                if (index(via, R[k] "/") == 1 && via ~ ("\\" suffixum "$") \
+                    && substr(via, length(R[k]) + 2) !~ /\//) return 1
+            return 0
+        }
+        $2=="sedes" && ($4 ~ /^include\// || in_radice($4, ".h")) { publica[$1]=1; print $1"\t"$3"\t"$4 }
+        $2=="sedes" && ($4 ~ /^lib\/[^\/]*\.c$/ || in_radice($4, ".c")) && $7=="0" && $8!="externus" \
+            && ($3=="functio" || $3=="variabile" || $3=="typedef" || $3=="constans" || $3=="macro") {
+            n=n+1; statica[n]=$1"\t"$3"\t"$4; nomina[n]=$1
+        }
+        END { for (k=1; k<=n; k++) if (!(nomina[k] in publica)) print statica[k] }
+    ' | sort -u
 }
 
 # plagulae corporis (iidem globi ac corpus_silicis_files), ordine C

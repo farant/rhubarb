@@ -41,7 +41,7 @@ _plagulam_legere (
     fructus.mensura  = ZEPHYRUM;
     sprintf(via, "%s/%s", (radix != NIHIL) ? radix : ".",
         via_partis);
-    plagula = fopen(via, "rb");
+    plagula = lectiones_fopen(via, "rb");
     si (plagula == NIHIL)
     {
         redde fructus;

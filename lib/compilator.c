@@ -214,11 +214,15 @@ compilator_clang_verum (
         si (   longitudo                        == strlen(clang)
             && strncmp(notum, clang, longitudo) == ZEPHYRUM
             && tab[I]                           == '/'
-            && strlen(tab + I) < magnitudo_via
-            && stat(tab + I, &status)           == ZEPHYRUM)
+            && strlen(tab + I) < magnitudo_via)
         {
-            strcpy(via_out, tab + I);
-            redde VERUM;
+            /* <tolera codex="CANALIS_PRAETERITUS" (>catena instrumentorum
+             * clang verum extra arborem: identitas eius sigillo in clave */
+            si (stat(tab + I, &status) == ZEPHYRUM)
+            {
+                strcpy(via_out, tab + I);
+                redde VERUM;
+            }
         }
     }
     argv[0]   = clang;
@@ -292,9 +296,14 @@ _identitas_compilatoris (
         *out = _identitas_sigillum;
         redde VERUM;
     }
-    si (   !compilator_clang_verum(c->clang, via, magnitudo(via),
-            c->piscina)
-        || stat(via, &status) != ZEPHYRUM)
+    si (!compilator_clang_verum(c->clang, via, magnitudo(via),
+        c->piscina))
+    {
+        redde FALSUM;
+    }
+    /* <tolera codex="CANALIS_PRAETERITUS" (>catena instrumentorum
+     * clang verum extra arborem: identitas eius sigillo in clave */
+    si (stat(via, &status) != ZEPHYRUM)
     {
         redde FALSUM;
     }

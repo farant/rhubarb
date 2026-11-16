@@ -3930,3 +3930,174 @@ e.g. the silva corpus suites list lib/ and read every source as data.
 Real tree: lib/piscina.c -> 617 actions (every member of every composite
 + 25 build actions), lib/mensura_quaestio.c -> 33, ~4.5 s. fumus LXX;
 plants (closure match off, trace query off) each red.
+
+## 2026-11-10 - mode `liber`: members judged without the tree walk (fabrica-plan-8 T4)
+
+`FABRICA_VESTIGIUM=liber`: `_membrum_agere` skips both whole-tree walks
+and gives the three snapshot consumers (footprint comparison, debt use,
+cache invalidation) the TRACKED pair instead - `testis_ante` /
+`testis_post` = the full pair if it was taken, else the tracked pair.
+Trace S lines are checked as before. Nothing else changes: same
+comparers, same messages ("scripsit extra vestigium: lib/bib.c").
+
+Two layers, on purpose:
+- the sutura sets `sine_ambulatione` when the mode is `liber` (a
+  REQUEST);
+- the core honours it only if the tracked snapshot was really captured
+  (`ante_secuta != NIHIL`). No git index (or a capture failure) -> the
+  walk stays. A member is never judged with no witness at all.
+
+Non-member actions (`_actionem_agere`, sanare waves) keep their walks -
+out of scope in the plan. Default mode is unchanged; gates still run
+`umbra`. Nothing uses `liber` yet.
+
+Known blind spot (plan, spec 8 T4): a RAW write to an UNTRACKED path
+outside the member's area is invisible in this mode. Raw writes are a
+commit-blocking violation in our own code (examen 97), so this needs a
+foreign program or a `<tolera>` site.
+
+Fumus: LXIX b (same four members as LXIX under `liber`: a FRACTUM by
+its S line, b FRACTUM by the tracked snapshot, c passes = the blind
+spot, d passes; facts: fabrica.secuta 4, fabrica.photographia 0 and no
+vestigia_umbra.txt) and LXIX c (same mode in a tree with no git index:
+c is FRACTUM - the walk stayed). Plants, each red at its stage then
+green: verdict pair ignores the tracked snapshot (b passes - LXIX b);
+mode never recognised (walk taken, photographia facts 4 - LXIX b);
+witness guard dropped (no witness in the no-git tree, c passes -
+LXIX c).
+
+Measured, `probare -vis`, every member runs:
+- probationes_toml (13 members): photographia 39.6 / 35.5 s, liber
+  29.1 / 28.5 s = -8.8 s, ~0.68 s per member;
+- probationes_css (10 members): 9.76 -> 3.88 s (-60%), ~0.59 s per
+  member.
+More than the 0.47 s the facts suggested (520 ms walk pair vs 47 ms
+tracked pair): the walks also feed allocation and comparison work that
+the facts do not time.
+
+## 2026-11-10 - fabrica-plan-8 T5: shadow pass over all nine composites
+
+One serial pass, `FABRICA_VESTIGIUM=umbra bin/fabrica probare -vis
+-conferre -machina <c>` for css, html, materia, toml, saltuarius, md,
+xml, silva, radicis at 216ffe4f8. All nine green; 644 members ran
+(10/14/14/13/13/14/12/57/497), wall 1382 s (radix 820 s, silva 267 s,
+xml 161 s).
+
+Disagreements (vestigia_umbra.txt, 644 fresh files): ONE member,
+probationes_radicis/probatio_lectiones - `debitum photographia` for
+build/probatio_lectiones.tsv and build/probatio_lectiones_s.txt, and
+`invalidatio photographia=extra secuta=intra`. Cause: the test of the
+channel points the channel at its own private book (LIBER =
+build/probatio_lectiones.tsv), so its two writes into build/ land in
+neither the member's book nor the tracked snapshot. Under `liber` these
+two writes go unseen: the debt looks unused and the cache invalidation
+for "wrote outside its place" does not fire. No other member disagrees;
+the expected foreign-P-line and ~/.bin disagreements did not appear.
+
+-conferre (vestigia_collata.txt): 609 `liber` lines (paths the book
+names that the walk did not see as changed - transient or same-state
+writes, e.g. build/probatio_silex_area/*, probatio_thesaurus/blobi/*)
+and 2 `photographia` lines (the same two probatio_lectiones files).
+
+Timing facts (fabrica.photographia / fabrica.secuta, summed over the
+644 members): walks 345.3 s, tracked snapshot 28.9 s. Per member median
+527 ms vs 44 ms (min 455, p90 580, max 1527 ms). By composite: radix
+266.2 vs 22.4 s, silva 29.1 vs 2.5, md 8.0, toml 6.9, xml 7.0, html
+7.5, materia 7.6, saltuarius 6.7, css 6.3 (tracked 0.4-0.6 each). The
+sums are across lanes (radix runs 4), so wall saving is smaller than
+the sum there. T4 measured ~0.6-0.7 s saved per member end to end,
+more than the 0.48 s the facts show.
+
+Trap: the facts were not in ~/.rhubarb/mensurae.diarium afterwards -
+the diary is rotated into mensurae.volumen (table acta, genus
+cursus/mensura, datum = the diary line) mid-run. Read them with
+sqlite3 -readonly; filter by the arbor field, another worktree's 30
+member runs fell in the same time window.
+
+## 2026-11-10 - walk-free (`liber`) is the default (Fran's decision after T5)
+
+`FABRICA_VESTIGIUM` unset now means `liber`: members are judged from the
+tracked snapshot plus the S lines of their book, no tree walk
+(tools/fabrica_sutura.c). `umbra` = both witnesses compared (audit),
+`photographia` = walk only, tracked snapshot not taken. An unknown value
+behaves as `umbra`, so a typo never silently drops the walk. Two things
+keep the walk: no git index (T4 guard), and `-conferre`
+(lib/fabrica_sanare.c - it compares walk against book, so it needs the
+walk). `silva.porta` no longer forces `umbra`; an explicit mode in the
+caller's environment is inherited. Non-member actions keep their walks.
+
+Smoke: LXVIII's second run now sets `photographia` explicitly; new stage
+LXIX d (default = liber: b FRACTA by tracked snapshot, c passes, facts
+secuta 2 / photographia 0; `photographia` and `-conferre` keep the walk:
+c FRACTA). Plants, each red then green on restore: default left as walk
+(LXIX d), -conferre guard removed (LXIX d), mode always walk-free (LXIX:
+umbra loses its walk).
+
+Trap met again: restoring a planted source WITH its old mtime leaves the
+planted binary in place (fabrica_struere sees nothing to rebuild) - the
+first plant round reported garbage, including a red "restored" run.
+Restore with a fresh mtime.
+
+Measured, radix forced (`probare -vis`, 497 members, 4 lanes), same
+tree back to back: liber 570 s, photographia 789 s (-219 s, -28%); the
+shadow pass earlier today took 820 s. The photographia run had one red
+member, probatio_http_vocatio 'redirectio circulus' (l.1003) - a test
+assertion, known flaky (10 of 135 recorded runs red), 3/3 green on
+rerun, unrelated to the mode.
+
+## 2026-11-10 — `fabrica digestum` no longer expands the test groups (budget fusionis)
+
+Census VII.b of budget-fusionis.md counted ~29 s of provenance stamps
+in a cold root setup (`fabrica digestum fabrica` 9.8 s, `compilator`
+9.0 s, `aedilis` 1.9 s, `natura` 4 x ~2 s). Warm it was 21 G
+instructions and ~3 s per call WHATEVER the action. A `sample` profile
+showed why: `_digestum` -> `_declarationes_colligere` ->
+`fabrica_gradus_explicare` -> `_probationes_c_ingressus` ->
+`suturae_clausura_c` -> `aedilis_derivare` took 1887 of 2201 samples -
+the closure of every test member (~644) was derived, including the
+extractor's `system()` child, to seal ONE tool action.
+
+Change (tools/fabrica.c `_digestum`): the existing `gradus_solus`
+switch of `_declarationes_colligere` is used.
+- title without '/': no group is expanded (gradus_solus = "//", a
+  title no action can carry);
+- 'group/member': only that group;
+- the action found is itself a group parent: collect again with that
+  group expanded (kept conservative; plant II shows the stage sees it);
+- FABRICA_DIGESTUM_PLENUM in the environment = the old expand-all
+  behaviour, kept as the differential reference.
+The seal is still computed by fabrica_actionem_sigillare, the same
+function the judge uses.
+
+Proof: 151 titles of this tree (every title in `fabrica causae` and in
+the aedificatio.stml files, 3 members per group) - fast == full ==
+the old binary, byte for byte; 3 unknown titles refuse identically.
+Measured warm: compilator 21.0 G -> 0.06 G instructions (2.8 s ->
+<0.01 s), aedilis 0.10 G, natura 0.07 G, fabrica 0.20 G.
+
+Behaviour change: a rotten declaration in an UNRELATED group (e.g. a
+write debt naming an unknown member) no longer makes `digestum <tool>`
+refuse - same as `probare`'s single-group mode (fumus XLVIII). The
+group itself and its members still refuse.
+
+Fumus LXXI: healthy world - fast == full for an action, a parent and
+members of two groups, unknown member -> 2; rotten foreign group -
+`digestum g` passes, full mode refuses, the rotten group and its
+member refuse. Plants (hand: edit, fabrica_struere, fumus, restore
+with fresh mtime), each red then green: member title expands nothing
+(actio ignota); parent not retried; PLENUM ignored.
+
+Same commit: gesta/tabulariumd.sh and gesta/tabularium.sh compile
+vendor/sqlite3.c through bin/compilator from the root with the same
+arguments as compile_tests.sh and the suites (falls back to clang when
+compilator is absent). In a cold root setup this was the THIRD compile
+of sqlite3.c (~11 s); now a cache hit: `tabulariumd.sh -struere` with
+the object removed 0.88 s, object byte-identical to build/sqlite3.o.
+
+NOT done (measured, left for a ruling): the fabrica bootstrap compiles
+sqlite3.c and silva.c with raw clang before bin/compilator exists
+(generated struere.sh), so the root library pass compiles sqlite3.c
+again (~11 s) and silva.c is compiled by aedilis_struere (no -I, on
+purpose) and again for fabrica (~8 s). Sharing them needs either an
+"egg" compilator built before fabrica or the aedilis emitter using
+the cache - the emitter change restamps every generated struere.sh.

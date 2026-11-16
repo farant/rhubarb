@@ -53,7 +53,7 @@ _legere (
          i32  lecti;
 
     sprintf(via, "%s/%s", radix != NIHIL ? radix : "..", via_relativa);
-    f = fopen(via, "rb");
+    f = lectiones_fopen(via, "rb");
     si (f == NIHIL)
     {
         redde ZEPHYRUM;

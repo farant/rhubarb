@@ -9,6 +9,14 @@
  * sinit filo vocanti, (1) exsequi. Post scripturam icache invalidanda
  * est (aliter codex vetus exsequi potest); ergo sigillare utrumque
  * facit.
+ *
+ * FURCA: status scripturae per filum a fork ex statu SERVATO parentis
+ * (commutatio contextus ultima) in filium transit, non ex vivo. Parens
+ * intra fenestram scripturae ultimo commutatus filium in modo
+ * scripturae gignit - pagina ei non exsecutabilis (SIGBUS, vitium
+ * permissionis in instructione). Ergo status logicus hic servatur et
+ * manipulus pthread_atfork eum in filio restituit. Domus sine filis:
+ * status unus sufficit. Vide worklog 2026-11-10.
  */
 #include "postulata_posix.h"
 #include "memoria_exsecutabilis.h"
@@ -23,8 +31,19 @@ structura MemoriaExsecutabilis {
     memoriae_index  mensura;
 };
 
+/* status logicus scripturae (aperire/sigillare) et manipulus furcae */
+hic_manens b32 _scriptura_aperta = FALSUM;
+hic_manens b32 _furca_instituta  = FALSUM;
+
+/* in filio post fork: status logicus parentis restituitur */
 interior vacuum
-_causam_ponere (
+_in_filio (vacuum)
+{
+    pthread_jit_write_protect_np(_scriptura_aperta ? ZEPHYRUM : I);
+}
+
+interior vacuum
+_memoriae_causam_ponere (
                 chorda* causa_out,
                Piscina* piscina,
     constans character* textus)
@@ -53,30 +72,41 @@ memoria_exsecutabilis_reservare (
         || (mensura_octetorum % MEMORIA_EXSECUTABILIS_PAGINA)
            != ZEPHYRUM)
     {
-        _causam_ponere(causa_out, piscina,
+        _memoriae_causam_ponere(causa_out, piscina,
             "mensura non multiplex paginae (XVI KiB)");
         redde NIHIL;
     }
     si ((inscriptio_optata % MEMORIA_EXSECUTABILIS_PAGINA)
         != ZEPHYRUM)
     {
-        _causam_ponere(causa_out, piscina,
+        _memoriae_causam_ponere(causa_out, piscina,
             "inscriptio optata non in initio paginae");
         redde NIHIL;
+    }
+    si (!_furca_instituta)
+    {
+        si (pthread_atfork(NIHIL, NIHIL, _in_filio) != ZEPHYRUM)
+        {
+            _memoriae_causam_ponere(causa_out, piscina,
+                "pthread_atfork defecit");
+            redde NIHIL;
+        }
+        _furca_instituta = VERUM;
     }
     locus = mmap((vacuum*)inscriptio_optata, mensura_octetorum,
         PROT_READ | PROT_WRITE | PROT_EXEC,
         MAP_PRIVATE | MAP_ANON | MAP_JIT, -I, ZEPHYRUM);
     si (locus == MAP_FAILED)
     {
-        _causam_ponere(causa_out, piscina, "mmap MAP_JIT defecit");
+        _memoriae_causam_ponere(causa_out, piscina,
+            "mmap MAP_JIT defecit");
         redde NIHIL;
     }
     si (   inscriptio_optata     != ZEPHYRUM
         && (memoriae_index)locus != inscriptio_optata)
     {
         (vacuum)munmap(locus, mensura_octetorum);
-        _causam_ponere(causa_out, piscina,
+        _memoriae_causam_ponere(causa_out, piscina,
             "systema sedem aliam dedit (inscriptio optata occupata)");
         redde NIHIL;
     }
@@ -85,7 +115,7 @@ memoria_exsecutabilis_reservare (
     si (m == NIHIL)
     {
         (vacuum)munmap(locus, mensura_octetorum);
-        _causam_ponere(causa_out, piscina, "piscina defecit");
+        _memoriae_causam_ponere(causa_out, piscina, "piscina defecit");
         redde NIHIL;
     }
     m->basis    = locus;
@@ -113,6 +143,7 @@ memoria_exsecutabilis_aperire (
 {
     si (m != NIHIL)
     {
+        _scriptura_aperta = VERUM;
         pthread_jit_write_protect_np(ZEPHYRUM);
     }
 }
@@ -127,6 +158,7 @@ memoria_exsecutabilis_sigillare (
     {
         redde FALSUM;
     }
+    _scriptura_aperta = FALSUM;
     pthread_jit_write_protect_np(I);
     si (offset > m->mensura || mensura > m->mensura - offset)
     {

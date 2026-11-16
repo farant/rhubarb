@@ -23,6 +23,10 @@
  *
  * SONUS (P7) per portam (AntiphonalePorta): latus sonum non novit -
  * hospes portam ponit (vicus_sonus.h carmen_*). Porta nulla = mutum.
+ *
+ * STRATUM (psalterium planum T2): visus ipse (versio, compositio,
+ * pictura, sonus) in gabc_visus.h est; hic solum plagula - via,
+ * specula, lectio, vexilla "missing:" et "empty file", tabula clavium.
  */
 #ifndef ANTIPHONALE_H
 #define ANTIPHONALE_H
@@ -39,16 +43,10 @@
 #include "dispensator.h"
 #include "organum_montatio.h"
 #include "fasti.h"
+#include "gabc_visus.h"
 
-nomen structura {
-    /* carmen = textus libri <carmina> (gabc_carmen.h + involucrum):
-     * porta eum legit (latus carmen.h nescit - stratum soni) */
-    b32    (*incipere)(vacuum* ctx, chorda carmen, s64 pulsus);
-    vacuum (*quaerere)(vacuum* ctx, s64 pulsus);
-    vacuum (*sistere)(vacuum* ctx);
-    s64    (*pulsus)(vacuum* ctx);       /* -1 si non sonat */
-    vacuum* ctx;
-} AntiphonalePorta;
+/* porta soni: GabcVisusPorta (gabc_visus.h), nomine vetere servato */
+nomen GabcVisusPorta AntiphonalePorta;
 
 nomen structura {
           InsulaRamus  ramus;

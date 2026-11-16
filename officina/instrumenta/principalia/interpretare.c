@@ -18,6 +18,9 @@
  * (bibliothecae_mundum_totum: una implementatio per caput; M5 T0 -
  * olim lib/ totus, testa_principale bis definitum, nexus fractus).
  * -index <via> = index alius (ordinarie build/nexus.tsv).
+ * -fons <via> = mundus ex plagula UNA data (via quaelibet, etiam
+ * extra lib/ - fixum probationis, schedula): nec index nec aedilis
+ * consuluntur; plagula se ipsa stare debet.
  *
  * v0 (DECISUS #5): scalaria + literae chordarum; aggregata =
  * dilatio nominata. Argumenta per typum PARAMETRI evaluantur
@@ -26,8 +29,14 @@
  * Relatio halitus gratis in exitu non-BENE (recordator volatus
  * machinulae semper activus).
  *
+ * -nativum (M5 T7): scopus et vocatae eius per dorsum nativum
+ * compilantur ante cursum (machinula_nativum_compilare); quod dorsum
+ * recusat interpretatum currit - 'nativum recusatum: <causa>' in
+ * stderr, fructus et exitus idem.
+ *
  * Usus: ./officina/interpretare.sh [-plagulae a,b,c] [-textus]
- *           [-mora n] [-index via] <functio> [argumenta...]
+ *           [-nativum] [-mora n] [-index via] [-fons via] <functio>
+ *           [argumenta...]
  * Exitus: 0 = BENE | 1 = halitus/functio absens | 2 = usus/mundus
  */
 
@@ -37,12 +46,13 @@
 #include "officina_machinula.h"
 #include "officina_medulla_textus.h"
 #include "tabula_dispersa.h"
+#include "iter_directoria.h"
 #include "bibliothecae.h"
+#include "lectiones.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dirent.h>
 #include <unistd.h>
 
 #define PLAGULAE_MAXIMAE XXXII
@@ -61,6 +71,7 @@ hic_manens Xar* lineae_mundi = NIHIL;    /* MedullaLineae*
 hic_manens constans character* plagulae_quaesitae[PLAGULAE_MAXIMAE];
 hic_manens i32 numerus_quaesitarum = ZEPHYRUM;
 hic_manens constans character* via_indicis = "build/nexus.tsv";
+hic_manens constans character* via_fontis = NIHIL;
 
 
 /* ==================================================
@@ -73,7 +84,7 @@ _systema_legere (
     constans character* via,
                   long* mensura_fructus)
 {
-         FILE* pl = fopen(via, "rb");
+         FILE* pl = lectiones_fopen(via, "rb");
          long  mensura;
     character* fons;
 
@@ -117,7 +128,7 @@ _plagulam_demittere (
     {
         *lineae_exitus = NIHIL;
     }
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde NIHIL;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -205,16 +216,11 @@ _plagulam_demittere (
  * capita praeparare (exemplar cursor)
  * ================================================== */
 
-hic_manens b32
-_praetermittendum (
-    constans character* titulus)
-{
-    redde (strcmp(titulus, "build") == ZEPHYRUM
-        || strcmp(titulus, ".git") == ZEPHYRUM
-        || strcmp(titulus, "results") == ZEPHYRUM
-        || strcmp(titulus, "node_modules") == ZEPHYRUM)
-        ? VERUM : FALSUM;
-}
+/* tituli in ambulatione capitum praetermissi (directorium: subarbor
+ * tota non intratur) */
+hic_manens constans character* constans CAPITA_PRAETERMITTENDA[] = {
+    "build", ".git", "results", "node_modules", NIHIL
+};
 
 hic_manens vacuum
 _caput_praebere (
@@ -232,7 +238,7 @@ _caput_praebere (
 
     clavis = chorda_ex_literis(titulus, piscina);
     si (tabula_dispersa_continet(visa, clavis)) redde;
-    pl = fopen(via, "rb");
+    pl = lectiones_fopen(via, "rb");
     si (pl == NIHIL) redde;
     fseek(pl, 0L, SEEK_END);
     mensura_l = ftell(pl);
@@ -260,6 +266,34 @@ _caput_praebere (
     }
 }
 
+/* ambulatio capitum per directorium_fontes_ambulare (iter_directoria -
+ * enumeratio in libro lectionum notatur; olim gyrus opendir manu
+ * scriptus, in XV instrumenta copiatus): contextus callback */
+nomen structura {
+    SilvaContextus* ctx;
+           Piscina* piscina;
+    TabulaDispersa* visa;
+} CapitaAmbulatio;
+
+hic_manens s32
+_caput_visum (
+                           chorda  via_plena,
+    constans DirectoriumIntroitus* introitus,
+                           vacuum* contextus)
+{
+     CapitaAmbulatio* a = (CapitaAmbulatio*)contextus;
+           character* via;
+           character* titulus;
+
+    via      = chorda_ut_cstr(via_plena, a->piscina);
+    titulus  = chorda_ut_cstr(introitus->titulus, a->piscina);
+    si (via != NIHIL && titulus != NIHIL)
+    {
+        _caput_praebere(a->ctx, a->piscina, a->visa, via, titulus);
+    }
+    redde DIRECTORIUM_AMBULATOR_PERGE;
+}
+
 hic_manens vacuum
 _capita_praeparare (
         SilvaContextus* ctx,
@@ -267,39 +301,13 @@ _capita_praeparare (
         TabulaDispersa* visa,
     constans character* via)
 {
-    DIR* dir = opendir(via);
-    structura dirent* introitus;
+    CapitaAmbulatio a;
 
-    si (dir == NIHIL) redde;
-    dum ((introitus = readdir(dir)) != NIHIL)
-    {
-             character via_plena[1024];
-        memoriae_index m;
-
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (_praetermittendum(introitus->d_name)) perge;
-        si (strlen(via) + strlen(introitus->d_name) + II
-            >= magnitudo(via_plena))
-        {
-            perge;
-        }
-        sprintf(via_plena, "%s/%s", via, introitus->d_name);
-        si (introitus->d_type == DT_DIR)
-        {
-            _capita_praeparare(ctx, piscina, visa, via_plena);
-        }
-        alioquin
-        {
-            m = strlen(introitus->d_name);
-            si (   m >= III && introitus->d_name[m - II] == '.'
-                && introitus->d_name[m - I] == 'h')
-            {
-                _caput_praebere(ctx, piscina, visa, via_plena,
-                    introitus->d_name);
-            }
-        }
-    }
-    closedir(dir);
+    a.ctx      = ctx;
+    a.piscina  = piscina;
+    a.visa     = visa;
+    (vacuum)directorium_fontes_ambulare(via, ".h",
+        CAPITA_PRAETERMITTENDA, _caput_visum, &a, piscina);
 }
 
 
@@ -477,36 +485,44 @@ hic_manens vacuum
 _bibliothecam_demittere (
     constans SilvaContextus* ctx)
 {
-    DIR* dir = opendir("lib");
-    structura dirent* introitus;
-    character* viae[512];
-      integer  numerus = 0;
-      integer  i;
+    /* enumeratio per iter_directoria (in libro lectionum notatur;
+     * olim opendir crudum) */
+     DirectoriumIterator* iterator = directorium_iterator_aperire("lib",
+                                         piscina_officinae);
+    DirectoriumIntroitus* introitus;
+               character* viae[512];
+                 integer  numerus = 0;
+                 integer  i;
 
-    si (dir == NIHIL)
+    si (iterator == NIHIL)
     {
         fprintf(stderr, "interpretare: lib/ deest (curre ex"
             " radice)\n");
         redde;
     }
-    dum ((introitus = readdir(dir)) != NIHIL && numerus < 512)
+    dum (   numerus < 512
+         && (introitus = directorium_iterator_proximum(iterator))
+             != NIHIL)
     {
-        memoriae_index m = strlen(introitus->d_name);
+             character* titulus = chorda_ut_cstr(introitus->titulus,
+                                      piscina_officinae);
+        memoriae_index m;
 
-        si (introitus->d_name[ZEPHYRUM] == '.') perge;
-        si (   m >= III && introitus->d_name[m - II] == '.'
-            && introitus->d_name[m - I] == 'c'
-            && _plagula_congruit(introitus->d_name))
+        si (titulus == NIHIL) perge;
+        m = strlen(titulus);
+        si (titulus[ZEPHYRUM] == '.') perge;
+        si (   m              >= III && titulus[m - II] == '.'
+            && titulus[m - I] == 'c' && _plagula_congruit(titulus))
         {
             character* via = piscina_allocare(piscina_officinae,
                 m + V);
 
-            sprintf(via, "lib/%s", introitus->d_name);
+            sprintf(via, "lib/%s", titulus);
             viae[numerus] = via;
             numerus++;
         }
     }
-    closedir(dir);
+    directorium_iterator_claudere(iterator);
     qsort(viae, (memoriae_index)numerus, magnitudo(character*),
         _comparare_vias);
     per (i = 0; i < numerus; i++)
@@ -616,6 +632,7 @@ principale (
     constans character* argumenta[ARGUMENTA_MAXIMA];
     i32 numerus_argumentorum = ZEPHYRUM;
     b32 textus_petitus = FALSUM;
+    b32 nativum_petitum = FALSUM;
     insignatus integer mora_secunda = 60;
     integer a;
 
@@ -641,6 +658,10 @@ principale (
         {
             textus_petitus = VERUM;
         }
+        alioquin si (strcmp(argv[a], "-nativum") == ZEPHYRUM)
+        {
+            nativum_petitum = VERUM;
+        }
         alioquin si (strcmp(argv[a], "-omnia") == ZEPHYRUM)
         {
             mensura_maxima = ZEPHYRUM;
@@ -657,6 +678,12 @@ principale (
             a++;
             via_indicis = argv[a];
         }
+        alioquin si (   strcmp(argv[a], "-fons") == ZEPHYRUM
+                     && a + I < argc)
+        {
+            a++;
+            via_fontis = argv[a];
+        }
         alioquin si (titulus_functionis == NIHIL)
         {
             titulus_functionis = argv[a];
@@ -670,8 +697,8 @@ principale (
     si (titulus_functionis == NIHIL)
     {
         fprintf(stderr, "usus: interpretare [-plagulae a,b,c]"
-            " [-textus] [-mora n] [-index via] <functio>"
-            " [argumenta...]\n"
+            " [-textus] [-nativum] [-mora n] [-index via]"
+            " [-fons via] <functio> [argumenta...]\n"
             "      (ex radice repositorii; scalaria + literae"
             " chordarum)\n");
         redde II;
@@ -752,7 +779,12 @@ principale (
         _capita_praeparare(ctx, piscina_ctx, visa, ".");
     }
 
-    si (numerus_quaesitarum == ZEPHYRUM)
+    si (via_fontis != NIHIL)
+    {
+        /* plagula una data: mundus totus */
+        _modulum_addere(ctx, via_fontis);
+    }
+    alioquin si (numerus_quaesitarum == ZEPHYRUM)
     {
         b32  ignota  = FALSUM;
         Xar* viae    = _mundum_derivare(titulus_functionis, &ignota);
@@ -1089,6 +1121,38 @@ principale (
                 {
                     machinula_lineas_praebere(machinula, (s32)k,
                         lineae_k);
+                }
+            }
+            /* -nativum (M5 T7): scopus (et vocatae eius) per dorsum
+             * compilatur; $main involucri interpretatum manet et
+             * scopum nativum vocat. Recusatio: causa nominata, cursus
+             * interpretatus, exitus immutatus. */
+            si (nativum_petitum)
+            {
+                chorda titulus_scopi;
+                chorda causa_nativi;
+                unio { constans character* c; i8* m; } iunctio;
+
+                iunctio.c            = titulus_functionis;
+                titulus_scopi.datum  = iunctio.m;
+                titulus_scopi.mensura =
+                    (i32)strlen(titulus_functionis);
+                causa_nativi.datum    = NIHIL;
+                causa_nativi.mensura  = ZEPHYRUM;
+                si (machinula_nativum_compilare(machinula,
+                        titulus_scopi, &causa_nativi))
+                {
+                    fprintf(stderr, "nativum: %s compilata\n",
+                        titulus_functionis);
+                }
+                alioquin
+                {
+                    fprintf(stderr, "nativum recusatum: %.*s -"
+                        " interpretata curritur\n",
+                        (int)causa_nativi.mensura,
+                        (causa_nativi.datum != NIHIL)
+                            ? (constans character*)causa_nativi.datum
+                            : "");
                 }
             }
             si (mora_secunda > 0U)

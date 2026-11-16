@@ -871,7 +871,7 @@ _scriptum_probare (
             sprintf(via_scripti,
                 "%s/officina/probationes/fixa/sessio_scripta/"
                 "salutatio.scriptum", radix);
-            pl = fopen(via_scripti, "rb");
+            pl = lectiones_fopen(via_scripti, "rb");
             CREDO_NON_NIHIL(pl);
             fseek(pl, 0L, SEEK_END);
             m_l = ftell(pl);
@@ -896,7 +896,7 @@ _scriptum_probare (
 
             sprintf(via_effectus,
                 "%s/officina/build/salutatio_scripti.txt", radix);
-            pl = fopen(via_effectus, "rb");
+            pl = lectiones_fopen(via_effectus, "rb");
             CREDO_NON_NIHIL(pl);
             si (pl != NIHIL)
             {

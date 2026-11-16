@@ -1,0 +1,19 @@
+% Psalmus 84 (Vulgata) - Benedixísti, Dómine, terram tuam
+% Fons: Divinum Officium (commissio 31d9e8b2e46a),
+% web/www/horas/Latin/Psalterium/Psalmorum/Psalm84.txt; licentia MIT, vide LICENTIA.
+% Per tools/psalmi_arcessere.sh conversum: textus punctatus
+% (include/psalmodia.h); Gloria Patri ab aptatore additur.
+Benedixísti, Dómine, terram tuam: * avertísti captivitátem Jacob.
+Remisísti iniquitátem plebis tuæ: * operuísti ómnia peccáta eórum.
+Mitigásti omnem iram tuam: * avertísti ab ira indignatiónis tuæ.
+Convérte nos, Deus, salutáris noster: * et avérte iram tuam a nobis.
+Numquid in ætérnum irascéris nobis? * aut exténdes iram tuam a generatióne in generatiónem?
+Deus, tu convérsus vivificábis nos: * et plebs tua lætábitur in te.
+Osténde nobis, Dómine, misericórdiam tuam: * et salutáre tuum da nobis.
+Áudiam quid loquátur in me Dóminus Deus: * quóniam loquétur pacem in plebem suam.
+Et super sanctos suos: * et in eos, qui convertúntur ad cor.
+Verúmtamen prope timéntes eum salutáre ipsíus: * ut inhábitet glória in terra nostra.
+Misericórdia, et véritas obviavérunt sibi: * justítia, et pax osculátæ sunt.
+Véritas de terra orta est: * et justítia de cælo prospéxit.
+Étenim Dóminus dabit benignitátem: * et terra nostra dabit fructum suum.
+Justítia ante eum ambulábit: * et ponet in via gressus suos.

@@ -78,7 +78,7 @@ untracked path outside its area with a raw syscall (full FRACTUM, trace
 mode MISSES it - disagreement recorded; this is exactly what T2/T4
 exist for). Plant: drop the comparison -> (c) not recorded.
 
-**T4 - mode `liber`.** Same code path without the full walk; verdict
+**T4 - mode `liber`.** DONE 2026-11-10: sutura flag `sine_ambulatione` (request) + core guard (honoured only when the tracked snapshot was captured - no git index keeps the walk); `testis_ante/post` feed footprint, debts and invalidation; fumus LXIX b + LXIX c, 3 plants. Measured -vis: toml 37.6 -> 28.8 s (13 members), css 9.76 -> 3.88 s (10 members), ~0.6-0.7 s per member. Default unchanged; nothing uses it yet. Original scope: Same code path without the full walk; verdict
 from trace + tracked snapshot. Test: (a) and (b) FRACTUM, (c) passes
 (documented blind spot until spec T4's per-run walk). Plant: tracked
 snapshot not compared -> (b) passes.
@@ -89,6 +89,17 @@ composites) run `FABRICA_VESTIGIUM=umbra` + `-conferre`; one full
 the timing facts (full vs tracked). Expected: disagreements only on
 members with foreign P lines (input to step 3) and on foreign installs
 (~/.bin - input to spec T4).
+
+**T5 DONE 2026-11-10** (at 216ffe4f8): 644 members over nine composites,
+all green. One disagreeing member, probatio_lectiones (two raw writes
+into build/ under its private book: debt + invalidation seen by the
+walk only). Walks 345.3 s vs tracked 28.9 s summed (median 527 vs
+44 ms per member). Details: lib/fabrica.worklog.md.
+
+**Default switched 2026-11-10** (Fran): unset = `liber`; `umbra` and
+`photographia` stay as explicit modes, `-conferre` and trees without a
+git index keep the walk. probatio_lectiones fixed first (949793b0d).
+Radix forced: 789 s -> 570 s.
 
 ## Out of scope (named so they are not forgotten)
 

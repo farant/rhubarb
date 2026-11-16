@@ -542,6 +542,10 @@ int   munmap(void* sedes, size_t mensura);
  * filum (macOS 11+; memoria_exsecutabilis, officina M5 T4). Fila
  * ipsa domus non adhibet. */
 void pthread_jit_write_protect_np(int tutela);
+/* status JIT per filum in filio post fork restituendus (worklog
+ * memoria_exsecutabilis_macos 2026-11-10) */
+int  pthread_atfork(void (*ante)(void), void (*in_parente)(void),
+                    void (*in_filio)(void));
 
 /* <sectio caput="libkern/OSCacheControl.h"/> libkern/OSCacheControl.h
  * (memoria_exsecutabilis, officina M5 T4) */
@@ -616,9 +620,26 @@ int isatty(int fossa);
 typedef unsigned int sigset_t;
 
 /* forma Darwin vera: unio tractatorum + macra (officina M5 T6:
- * sa_sigaction cum SA_SIGINFO). siginfo_t opacus - numquam
- * dereferatur. */
-typedef struct __siginfo siginfo_t;
+ * sa_sigaction cum SA_SIGINFO). siginfo_t forma vera (CIV octeti;
+ * officina M5 T9: tractator effugii si_addr legit - inscriptio
+ * vitii stivam exhaustam prodit). */
+union sigval {
+    int   sival_int;
+    void* sival_ptr;
+};
+
+typedef struct __siginfo {
+    int           si_signo;
+    int           si_errno;
+    int           si_code;
+    int           si_pid;       /* pid_t */
+    unsigned int  si_uid;       /* uid_t */
+    int           si_status;
+    void*         si_addr;
+    union sigval  si_value;
+    long          si_band;
+    unsigned long __pad[7];
+} siginfo_t;
 
 union __sigaction_u {
     void (*__sa_handler)(int);

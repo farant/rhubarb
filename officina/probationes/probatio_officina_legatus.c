@@ -1150,7 +1150,8 @@ probatio_definitio_capitis (
            chorda  uri;
         /* cum tsv: corpus .c primum; sine tsv (arbor recens):
          * gradus declarationis solus -> caput */
-                      FILE* tsv = fopen("build/nexus.tsv", "rb");
+                      FILE* tsv = lectiones_fopen("build/nexus.tsv",
+                          "rb");
         constans character* suffixum = tsv != NIHIL
             ? "lib/piscina.c" : "include/piscina.h";
         memoriae_index m = strlen(suffixum);

@@ -38,7 +38,9 @@ memoriae_index
 memoria_exsecutabilis_mensura (
     constans MemoriaExsecutabilis* m);
 
-/* scriptura permissa - filo vocanti solum (status per filum) */
+/* scriptura permissa - filo vocanti solum (status per filum). Filius
+ * post fork statum parentis hereditat (apertum manet apertum,
+ * sigillatum sigillatum). */
 vacuum
 memoria_exsecutabilis_aperire (
     MemoriaExsecutabilis* m);

@@ -52,6 +52,7 @@
 #include "piscina.h"
 #include "stml.h"
 #include "xar.h"
+#include "lectiones.h"
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -259,7 +260,7 @@ _plagulam_legere (
         size_t  lecti;
 
     sprintf(plena, "%s/%s", radix, via);
-    f = fopen(plena, "rb");
+    f = lectiones_fopen(plena, "rb");
     si (f == NIHIL)
     {
         redde NIHIL;

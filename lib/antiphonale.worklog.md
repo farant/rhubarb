@@ -100,3 +100,53 @@ MORA_SINE_SPECULA is now 250 ms — the same interval is the re-read
 cadence on platforms without a watcher (Android), still live enough.
 Test: section "directorium absens" (200 pulses, `piscina_summa_usus`
 unchanged; mora >= 250; folder + file created -> picked up, mora -1).
+
+## 2026-11-06 — review minors 1-4: banners, selection after a swap, click past the end
+
+- A live swap into a version with no notes stopped the sound silently;
+  now it sets "not playable: <reason>" like Space does, and keeps the
+  place (electa = the lit syllable).
+- `incipere` refused (vicus refuses only when muted or without an audio
+  device) used to do nothing visible: banner VEXILLUM_MUTUM ("can't
+  play: sound muted or unavailable"), both on Space and on a swap
+  mid-play; the next successful Space clears that banner (only that
+  one — a parse-error banner stays).
+- Selection after a swap keeps its INDEX, not its musical position:
+  the common edit reshapes a melody (Jesus melisma) and keeps the
+  syllables, so the index stays right while the pulse would land inside
+  an earlier, longer melisma. Playback still maps by pulse (G18 —
+  sound is time). A shorter version clamps the selection to the last
+  syllable (before: it vanished and Space played from the top).
+- Click on a syllable after the last note, then Space: starts at the
+  last note (`nexus_syllabae(..., -I)`), not at the beginning.
+Test: section "vexilla et electa" (6 checks red before).
+
+## 2026-11-06 - review minor VIII: tests for RF1, RF2, RF5
+
+Tests only, no library change. `probatio_antiphonale_latus`:
+
+- **RF1 (rename-save):** `_servatum_probare` now saves the way editors
+  do - write `<via>.tmp`, `filum_movere` it over the chant - twice (good,
+  then VITIUM), then writes in place. The last step is the real check:
+  the watcher must follow the NEW inode after the rename, not the
+  unlinked old one. Plant (no close/re-open on NOTE_DELETE|NOTE_RENAME
+  in specula_macos.c) turns all three rename steps red.
+- **RF2 (converter refuses):** with the pane's ordinary form (strictus
+  FALSUM) `gabc_carmen_scribere` refuses a chant that HAS notes only on
+  memory failure - no file can reach "the converter refused it". The
+  reachable case (no notes) now asserts the reason text "not playable:
+  no notes". After a live swap to a no-notes version, the syllable where
+  sound stopped stays SELECTED (drawn lit), same as a Space-stop - by
+  design since minor III, not a stale highlight.
+- **RF5 (resize / swap while playing):** helper `_superficiem_ponere`
+  writes superficies_latitudo/_altitudo as scriptor "dispensator" (as
+  navigator's test does). A taller pane, a smaller pane, and a swap that
+  removes the (z) breaks (same times, q25 on an earlier page) all keep
+  q25 lit on the VISIBLE page. Plant "page follows only when the lit
+  syllable changes" turns the smaller-pane step red.
+
+Gotcha: the "pagina" attribute can sit PAST the last page after a
+relayout (taller pane -> fewer pages). Nothing breaks - pagina_currens
+clamps it for drawing, page-follow, and PageUp/PageDown - but tests
+must read the visible page ("k/N" in the bottom line, `_pagina_visa`),
+not the raw attribute.

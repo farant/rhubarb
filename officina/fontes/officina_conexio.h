@@ -53,6 +53,9 @@ nomen enumeratio {
 #define CONEXIO_SIGNUM_INTERPRETATUM 1
 #define CONEXIO_SIGNUM_DECIPULA      2
 #define CONEXIO_SIGNUM_AEDIFICATUM   3
+/* NATIVUM (M5 T6): index = inscriptio introitus codicis nativi;
+ * machinula per officina_effugium vocat (machinula_nativum_ponere) */
+#define CONEXIO_SIGNUM_NATIVUM       4
 
 /* in regione residens; inscriptio huius EST valor monstratoris
  * functionis (16 octeti, XVI-ordinata) */

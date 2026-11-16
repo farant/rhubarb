@@ -351,7 +351,7 @@ interior integer
 _mappam_alienam_conferre (
     constans character* via)
 {
-         FILE* f = fopen(via, "r");
+         FILE* f = lectiones_fopen(via, "r");
     character  linea[LINEA_MAXIMA];
           i32  introitus   = ZEPHYRUM;
           i32  discordiae  = ZEPHYRUM;
@@ -502,7 +502,7 @@ _graphemata (
 
         sprintf(via, "probationes/fixa/runae/corpus/%s.txt",
             LINGUAE_CORPORIS[j]);
-        f = fopen(via, "rb");
+        f = lectiones_fopen(via, "rb");
         si (f == NIHIL)
         {
             fprintf(stderr, "runae_oraculum: legi non potest: %s\n",
