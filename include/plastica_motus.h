@@ -168,6 +168,35 @@
  * cum linea metae (hereditatae: positurae); membrum sine pare in
  * positura speculata quae metam eius fert.
  *
+ * MODERAMINA (omnia ad libitum; cyclus sine eis ut ante coquitur,
+ * octetum pro octeto):
+ *
+ *   <clavis tempus="0.2" positura="praeparat" lenitas="accelerat"/>
+ *   <mora titulus="bracchium_sin" tempus="0.08"/>
+ *
+ *   lenitas    spatium ab hac clave ad SEQUENTEM regit: "linearis"
+ *              (ordinarius), "lenis" (lente incipit et desinit),
+ *              "accelerat" (lente incipit), "tardat" (lente
+ *              desinit), "tenet" (positura tenetur, deinde salit).
+ *              In circulo clavis ultima spatium ad suturam regit
+ *   mora       liber <cyclus>: articulus ille idem agit, tot
+ *              secundis serius (bracchia, aures, caudae). Circulus:
+ *              trans suturam; cyclus semel: in positura prima
+ *              exspectat. Semel per articulum
+ *
+ * Spatium lenitum in claves lineares coquitur, ad
+ * PLASTICA_MOTUS_FREQUENTIA per secundam a clave sua numeratas;
+ * spatium tentum clavem unam addit, PLASTICA_MOTUS_TENET_MARGO ante
+ * sequentem (canalis linearis manet). Articulus cum mora claves
+ * suas ipsas motas accipit, ad suturam iterum sectas. Momenta non
+ * moventur. Pes in meta inter claves per versiones articulorum it,
+ * non recta: si arcus apparet, clavis addenda est.
+ *
+ * RECUSAT praeterea: lenitatem ignotam; lenitatem in clave ultima
+ * cycli qui non circulat ("nothing follows"); moram articuli ignoti,
+ * articuli quem nulla positura cycli tangit, aut bis in articulo
+ * eodem; moram non positivam aut duratione non minorem.
+ *
  * DETERMINATA: textus idem statuam eandem dat.
  */
 
@@ -187,6 +216,11 @@
 #define PLASTICA_MOTUS_CLAVES_MAXIMAE     LXIV
 #define PLASTICA_MOTUS_MOMENTA_MAXIMA     VIII
 #define PLASTICA_MOTUS_MEMBRA_MAXIMA      XVI
+/* spatium lenitum tot instantiis per secundam sumitur */
+#define PLASTICA_MOTUS_FREQUENTIA         XXX
+/* spatium tentum: clavis iterata tot secundis ante sequentem */
+#define PLASTICA_MOTUS_TENET_MARGO        0.001f
+
 
 nomen structura {
        i32 cyclus;     /* index in statua->cycli */

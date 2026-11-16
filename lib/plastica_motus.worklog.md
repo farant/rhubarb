@@ -189,3 +189,48 @@ skeleton `plastica/ossa/bipes.stml`; first figure on it
   `!piscina` in `plastica_metiri_lapsum` (the allocator refuses both
   today, by its own rules). Not planted: the euler clamps in
   `_gradus_ex_rotatione`, the length cap in `_recusare_duo`.
+
+## 2026-11-16 - T7: easing and delay
+
+- **`lenitas` on a key** rules the stretch from that key to the NEXT:
+  `linearis` (default), `lenis` (smoothstep), `accelerat` (u^2),
+  `tardat` (1 - (1-u)^2), `tenet`. In a looping cycle the last key
+  rules the stretch to the seam; in a one-shot it is refused there
+  ("nothing follows").
+- **Baking.** One list of instants per cycle (`_instantia_parare`):
+  every key; inside an eased stretch one instant every 1/30 s
+  counted FROM THE STRETCH'S KEY (not a global grid), dropped when
+  within 1e-4 of the next key; for `tenet` one repeat of the key
+  1 ms before the next (skipped when the stretch is under 2 ms).
+  Each channel takes the key value, or the mix of two key values
+  (slerp for turns). A cycle with no dial gives the same keys as
+  before, byte for byte.
+- **Held stretch is not a step channel** (the plan said it would be):
+  `gradatim` is per channel, so one held key among linear ones
+  cannot be one.
+- **`<mora titulus tempus>`**: the joint's baked keys are shifted
+  as they are (eased instants included) and re-cut: in a loop, keys
+  pushed past the seam wrap to the front and the value at 0 and at
+  the end is what the joint had `mora` before the seam; in a
+  one-shot the first value waits and keys pushed past the end are
+  dropped. A key landing on the seam itself (within 1e-5) is kept
+  once. Float sums miss the seam by one step in practice
+  (0.081 + 0.209 vs 0.29; 0.09 + 0.71 vs 0.8), so the margin is
+  tested both ways.
+- **Checked at read time only:** a delay on a joint no pose of the
+  cycle touches is refused when the cycle is read. If a figure later
+  replaces a skeleton pose so that the joint is no longer touched,
+  the delay is silently without effect.
+- **Plants: 68, all red in the end.** Removed as redundant: setting
+  `lenitas` on the closing key (the cycle is zeroed), a separate
+  count for one-shot cycles in the delay (the last key always sits
+  at the end and falls out), a second way of computing the seam
+  value. Weak test: an unknown `lenitas` was only tried on a last
+  key, where the other refusal caught it. Not planted, memory
+  guards: the `k + I >= clavium` break in `_instantia_parare`, the
+  `k + II < clavium` bound in `_aestimare`.
+- **Sheets.** bipes: idle eased, attack (wind-up eased, strike
+  accelerating, recovery eased), hurt, die; arms 0.03 s and
+  forearms 0.06 s behind in the walk (goblin's own walk: 0.02 and
+  0.04). Slime: every cycle eased; the hop slows to the top and
+  accelerates down. The slime has no delay: no pose moves its drop.

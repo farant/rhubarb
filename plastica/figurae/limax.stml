@@ -78,37 +78,38 @@
 
   <!-- cycli -->
   <cyclus titulus="idle" duratio="2.4" circulus="verum">
-    <clavis tempus="0" positura="quies"/>
+    <clavis tempus="0" positura="quies" lenitas="lenis"/>
     <clavis tempus="1.2" positura="respirat"/>
     <clavis tempus="1.5" positura="respirat"/>
     <clavis tempus="1.6" positura="nictat"/>
-    <clavis tempus="1.7" positura="respirat"/>
+    <clavis tempus="1.7" positura="respirat" lenitas="lenis"/>
   </cyclus>
   <cyclus titulus="walk" duratio="0.8" circulus="verum">
-    <clavis tempus="0" positura="pressa"/>
-    <clavis tempus="0.14" positura="surgit"/>
-    <clavis tempus="0.38" positura="summa"/>
+    <!-- saltus: sursum tardat, deorsum accelerat -->
+    <clavis tempus="0" positura="pressa" lenitas="accelerat"/>
+    <clavis tempus="0.14" positura="surgit" lenitas="tardat"/>
+    <clavis tempus="0.38" positura="summa" lenitas="accelerat"/>
     <clavis tempus="0.58" positura="cadit"/>
-    <clavis tempus="0.68" positura="allisa"/>
+    <clavis tempus="0.68" positura="allisa" lenitas="lenis"/>
   </cyclus>
   <cyclus titulus="attack" duratio="0.7">
-    <clavis tempus="0" positura="quies"/>
-    <clavis tempus="0.2" positura="retracta"/>
-    <clavis tempus="0.32" positura="impetus"/>
-    <clavis tempus="0.5" positura="pressa"/>
+    <clavis tempus="0" positura="quies" lenitas="lenis"/>
+    <clavis tempus="0.2" positura="retracta" lenitas="accelerat"/>
+    <clavis tempus="0.32" positura="impetus" lenitas="tardat"/>
+    <clavis tempus="0.5" positura="pressa" lenitas="lenis"/>
     <clavis tempus="0.7" positura="quies"/>
     <momentum titulus="ictus" tempus="0.32"/>
   </cyclus>
   <cyclus titulus="hurt" duratio="0.45">
-    <clavis tempus="0" positura="quies"/>
-    <clavis tempus="0.08" positura="icta"/>
-    <clavis tempus="0.24" positura="resilit"/>
+    <clavis tempus="0" positura="quies" lenitas="tardat"/>
+    <clavis tempus="0.08" positura="icta" lenitas="lenis"/>
+    <clavis tempus="0.24" positura="resilit" lenitas="lenis"/>
     <clavis tempus="0.45" positura="quies"/>
   </cyclus>
   <cyclus titulus="die" duratio="1.0">
     <clavis tempus="0" positura="quies"/>
-    <clavis tempus="0.18" positura="anhelat"/>
-    <clavis tempus="0.5" positura="collapsa"/>
+    <clavis tempus="0.18" positura="anhelat" lenitas="accelerat"/>
+    <clavis tempus="0.5" positura="collapsa" lenitas="tardat"/>
     <clavis tempus="0.9" positura="lacuna"/>
   </cyclus>
 </figura>

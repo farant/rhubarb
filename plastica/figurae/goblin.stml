@@ -84,5 +84,9 @@
     <clavis tempus="0.2175" positura="transitus_dex"/>
     <momentum titulus="gressus_sin" tempus="0"/>
     <momentum titulus="gressus_dex" tempus="0.145"/>
+    <mora titulus="bracchium_sin" tempus="0.02"/>
+    <mora titulus="bracchium_dex" tempus="0.02"/>
+    <mora titulus="antebracchium_sin" tempus="0.04"/>
+    <mora titulus="antebracchium_dex" tempus="0.04"/>
   </cyclus>
 </figura>

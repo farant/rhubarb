@@ -141,8 +141,8 @@
   </positura>
 
   <cyclus titulus="idle" duratio="2.4" circulus="verum">
-    <clavis tempus="0" positura="stat"/>
-    <clavis tempus="1.2" positura="respirat"/>
+    <clavis tempus="0" positura="stat" lenitas="lenis"/>
+    <clavis tempus="1.2" positura="respirat" lenitas="lenis"/>
   </cyclus>
   <cyclus titulus="walk" duratio="0.44" circulus="verum">
     <clavis tempus="0" positura="contactus_sin"/>
@@ -151,24 +151,30 @@
     <clavis tempus="0.33" positura="transitus_dex"/>
     <momentum titulus="gressus_sin" tempus="0"/>
     <momentum titulus="gressus_dex" tempus="0.22"/>
+    <!-- bracchia paulo post corpus -->
+    <mora titulus="bracchium_sin" tempus="0.03"/>
+    <mora titulus="bracchium_dex" tempus="0.03"/>
+    <mora titulus="antebracchium_sin" tempus="0.06"/>
+    <mora titulus="antebracchium_dex" tempus="0.06"/>
   </cyclus>
   <cyclus titulus="attack" duratio="0.6">
-    <clavis tempus="0" positura="stat"/>
-    <clavis tempus="0.2" positura="praeparat"/>
+    <!-- lente tollit, ictus accelerat, lente redit -->
+    <clavis tempus="0" positura="stat" lenitas="lenis"/>
+    <clavis tempus="0.2" positura="praeparat" lenitas="accelerat"/>
     <clavis tempus="0.3" positura="ferit"/>
-    <clavis tempus="0.4" positura="ferit"/>
+    <clavis tempus="0.4" positura="ferit" lenitas="lenis"/>
     <clavis tempus="0.6" positura="stat"/>
     <momentum titulus="ictus" tempus="0.3"/>
   </cyclus>
   <cyclus titulus="hurt" duratio="0.4">
-    <clavis tempus="0" positura="stat"/>
-    <clavis tempus="0.1" positura="icta"/>
+    <clavis tempus="0" positura="stat" lenitas="tardat"/>
+    <clavis tempus="0.1" positura="icta" lenitas="lenis"/>
     <clavis tempus="0.4" positura="stat"/>
   </cyclus>
   <cyclus titulus="die" duratio="1">
-    <clavis tempus="0" positura="stat"/>
+    <clavis tempus="0" positura="stat" lenitas="accelerat"/>
     <clavis tempus="0.3" positura="genua"/>
-    <clavis tempus="0.55" positura="cadit"/>
+    <clavis tempus="0.55" positura="cadit" lenitas="accelerat"/>
     <clavis tempus="0.8" positura="iacet"/>
   </cyclus>
 </ossa>

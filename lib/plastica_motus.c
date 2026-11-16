@@ -26,6 +26,20 @@
 #define TACTA_SCALA    II
 #define TACTA_MOTUS    IV
 
+/* lenitas spatii a clave ad sequentem; NULLA: non scripta */
+#define LENITAS_NULLA      ZEPHYRUM
+#define LENITAS_LINEARIS   I
+#define LENITAS_LENIS      II
+#define LENITAS_ACCELERAT  III
+#define LENITAS_TARDAT     IV
+#define LENITAS_TENET      V
+
+/* instans sumptum clavi sequenti propius non ponitur */
+#define INSTANTIS_MARGO  1.0e-4f
+/* clavis mota in suturam ipsam cadit */
+#define SUTURAE_MARGO    1.0e-5f
+
+
 /* linea nodi ex plagula ossium in arbore composita (plastica eam ut
  * datam reddit) */
 #define LINEA_OSSIUM     ((i32)0x40000000)
@@ -80,6 +94,7 @@ nomen structura {
     f32 tempus;
     i32 linea;
     b32 sutura;         /* clavis addita quae circulum claudit */
+    i32 lenitas;        /* LENITAS_*: spatium ad clavem sequentem */
 } Clavis;
 
 nomen structura {
@@ -92,6 +107,10 @@ nomen structura {
     chorda momenta[PLASTICA_MOTUS_MOMENTA_MAXIMA];
        f32 tempora[PLASTICA_MOTUS_MOMENTA_MAXIMA];
        i32 momentorum;
+       b32 circularis;
+    /* mora articuli (secundae; 0 = nulla) et linea eius */
+       f32 morae[PLASTICA_ARTICULI_MAXIMI];
+       i32 lineae_morarum[PLASTICA_ARTICULI_MAXIMI];
 } Cyclus;
 
 nomen structura {
@@ -1567,14 +1586,21 @@ _clavis_legere (
                 Cyclus* c)
 {
     hic_manens constans character* constans LICITA[] = {
-        "tempus", "positura", NIHIL
+        "tempus", "positura", "lenitas", NIHIL
+    };
+    hic_manens constans character* constans LENITATES[] = {
+        "linearis", "lenis", "accelerat", "tardat", "tenet"
     };
     constans chorda* tempus = stml_attributum_capere(nodus, "tempus");
     constans chorda* positura =
         stml_attributum_capere(nodus, "positura");
+    constans chorda* lenitas =
+        stml_attributum_capere(nodus, "lenitas");
              Clavis* clavis;
                 f32  t;
                 s32  k;
+                i32  modus = LENITAS_NULLA;
+
 
     si (   !_attributa_licita(m, nodus, LICITA)
         || !_sine_liberis(m, nodus))
@@ -1620,11 +1646,29 @@ _clavis_legere (
             "<clavis> is later than the cycle's 'duratio'", NIHIL,
             NIHIL);
     }
+    si (lenitas)
+    {
+        per (modus = ZEPHYRUM; modus < V; modus++)
+        {
+            si (_est(lenitas, LENITATES[modus]))
+            {
+                frange;
+            }
+        }
+        si (modus >= V)
+        {
+            redde _recusare_attributum(m, nodus, "lenitas",
+                "must be 'linearis', 'lenis', 'accelerat', 'tardat'"
+                " or 'tenet'");
+        }
+        modus += LENITAS_LINEARIS;
+    }
     clavis            = &c->claves[c->clavium++];
     clavis->positura  = (i32)k;
     clavis->tempus    = t;
     clavis->linea     = nodus->linea;
     clavis->sutura    = FALSUM;
+    clavis->lenitas   = modus;
     redde VERUM;
 }
 
@@ -1678,6 +1722,54 @@ _momentum_legere (
     redde VERUM;
 }
 
+/* elementum mora: articulus tot secundis serius agit */
+interior b32
+_moram_legere (
+                 Motor* m,
+    constans StmlNodus* nodus,
+                Cyclus* c)
+{
+    hic_manens constans character* constans LICITA[] = {
+        "titulus", "tempus", NIHIL
+    };
+    constans chorda* titulus =
+        stml_attributum_capere(nodus, "titulus");
+    constans chorda* tempus = stml_attributum_capere(nodus, "tempus");
+                f32  t;
+                s32  j;
+
+    si (   !_attributa_licita(m, nodus, LICITA)
+        || !_sine_liberis(m, nodus))
+    {
+        redde FALSUM;
+    }
+    si (!titulus)
+    {
+        redde _recusare_attributum(m, nodus, "titulus",
+            "is needed (a joint title)");
+    }
+    si (   !tempus || !_numeri(tempus, &t, I) || !(t > 0.0f)
+        || !(t < c->duratio))
+    {
+        redde _recusare_attributum(m, nodus, "tempus",
+            "needs 1 number above 0 and below the cycle's 'duratio'");
+    }
+    j = _articulus(m, titulus);
+    si (j < ZEPHYRUM)
+    {
+        redde _recusare(m, nodus->linea,
+            "<mora> names an unknown joint '", titulus, "'");
+    }
+    si (c->morae[j] > 0.0f)
+    {
+        redde _recusare(m, nodus->linea, "<mora> names joint '",
+            titulus, "' twice in this cycle");
+    }
+    c->morae[j]           = t;
+    c->lineae_morarum[j]  = nodus->linea;
+    redde VERUM;
+}
+
 interior b32
 _cyclus_legere (
                  Motor* m,
@@ -1699,6 +1791,8 @@ _cyclus_legere (
                    b32  finis;
                    i32  cursor     = ZEPHYRUM;
                    i32  locus;
+                   i32  j;
+                   i32  k;
 
 
     si (!_attributa_licita(m, nodus, LICITA))
@@ -1769,11 +1863,18 @@ _cyclus_legere (
                 redde FALSUM;
             }
         }
+        alioquin si (_est(liber->titulus, "mora"))
+        {
+            si (!_moram_legere(m, liber, c))
+            {
+                redde FALSUM;
+            }
+        }
         alioquin
         {
             redde _recusare(m, liber->linea, "<cyclus> holds only"
-                " <clavis> and <momentum>, got <", liber->titulus,
-                ">");
+                " <clavis>, <momentum> and <mora>, got <",
+                liber->titulus, ">");
         }
     }
     si (!finis)
@@ -1787,7 +1888,31 @@ _cyclus_legere (
     }
     /* clavis ad durationem: circulus primam iterat, aliter ultima
      * tenetur */
-    ultima = &c->claves[c->clavium - I];
+    ultima         = &c->claves[c->clavium - I];
+    c->circularis  = circularis;
+    si (!circularis && ultima->lenitas != LENITAS_NULLA)
+    {
+        redde _recusare(m, ultima->linea, "'lenitas' on the last key"
+            " of a cycle that does not loop: nothing follows this"
+            " key", NIHIL, NIHIL);
+    }
+    /* mora articuli quem nulla positura cycli tangit */
+    per (j = ZEPHYRUM; j < m->articulorum; j++)
+    {
+        i32 tacta = ZEPHYRUM;
+
+        per (k = ZEPHYRUM; k < c->clavium; k++)
+        {
+            tacta |=
+                m->positurae[c->claves[k].positura].artus[j].tacta;
+        }
+        si (c->morae[j] > 0.0f && !tacta)
+        {
+            redde _recusare(m, c->lineae_morarum[j],
+                "<mora> names joint '", &m->partes[m->articuli[j]],
+                "' is not moved in this cycle");
+        }
+    }
     si (circularis)
     {
         si (!(ultima->tempus < c->duratio))
@@ -1808,6 +1933,7 @@ _cyclus_legere (
         c->claves[c->clavium].tempus  = c->duratio;
         c->claves[c->clavium].linea   = nodus->linea;
         c->claves[c->clavium].sutura  = circularis;
+
         c->clavium++;
     }
     si (!_vias_probare(m, c))
@@ -1826,66 +1952,321 @@ _cyclus_legere (
  * Coctio
  * ================================================== */
 
-/* canalis unus: articulus j, proprietas, clavis ad quodque tempus */
-interior b32
-_canalem_coquere (
-               Motor* m,
-     constans Cyclus* c,
-                 i32  j,
-                 i32  tactum,
-       StatuaCanalis* canalis)
-{
-    constans StatuaNodus* nodus  = &m->basis->nodi[m->articuli[j]];
-                     i32  lata   = tactum == TACTA_ROTATIO ? IV : III;
-                     i32  k;
+/* instans coctionis: clavis ipsa (pondus 0) aut punctum sumptum in
+ * spatio a clave ad sequentem */
+nomen structura {
+    i32 clavis;
+    f32 pondus;
+    f32 tempus;
+} Instans;
 
-    canalis->nodus       = (s32)m->articuli[j];
-    canalis->proprietas  = tactum == TACTA_ROTATIO ? STATUA_ROTATIO
-        : tactum == TACTA_SCALA ? STATUA_SCALA : STATUA_TRANSLATIO;
-    canalis->gradatim  = FALSUM;
-    canalis->clavium   = c->clavium;
-    canalis->tempora     = (f32*)piscina_allocare(m->piscina,
-        c->clavium * magnitudo(f32));
-    canalis->valores     = (f32*)piscina_allocare(m->piscina,
-        c->clavium * lata * magnitudo(f32));
-    si (!canalis->tempora || !canalis->valores)
+/* pondus lenitum: 0 .. 1 in 0 .. 1 */
+interior f32
+_lenire (
+    i32 lenitas,
+    f32 u)
+{
+    si (lenitas == LENITAS_LENIS)
+    {
+        redde u * u * (3.0f - 2.0f * u);
+    }
+    si (lenitas == LENITAS_ACCELERAT)
+    {
+        redde u * u;
+    }
+    si (lenitas == LENITAS_TARDAT)
+    {
+        redde 1.0f - (1.0f - u) * (1.0f - u);
+    }
+    redde u;
+}
+
+/* instantia cycli: claves omnes; spatium lenitum praeterea ad
+ * PLASTICA_MOTUS_FREQUENTIA per secundam a clave sua; spatium
+ * tentum clavem unam paulo ante sequentem */
+interior b32
+_instantia_parare (
+              Motor*  m,
+    constans Cyclus*  c,
+            Instans** exitus,
+                i32*  numerus)
+{
+    Instans* instantia = (Instans*)piscina_allocare(m->piscina,
+        (memoriae_index)(c->clavium * III
+            + (i32)(c->duratio * (f32)PLASTICA_MOTUS_FREQUENTIA) + IV)
+            * magnitudo(Instans));
+        i32 n = ZEPHYRUM;
+        i32 k;
+        i32 j;
+
+    si (!instantia)
     {
         redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
     }
     per (k = ZEPHYRUM; k < c->clavium; k++)
     {
-        constans Artus* a =
-            &m->positurae[c->claves[k].positura].artus[j];
-                  f32* v = canalis->valores + k * lata;
+        f32 initium   = c->claves[k].tempus;
+        f32 spatium;
+        i32 lenitas   = c->claves[k].lenitas;
 
-        canalis->tempora[k] = c->claves[k].tempus;
-        si (tactum == TACTA_ROTATIO)
+        instantia[n].clavis = k;
+        instantia[n].pondus = 0.0f;
+        instantia[n].tempus = initium;
+        n++;
+        si (k + I >= c->clavium)
         {
-            StereometriaQuaternio q =
-                _rotatio_articuli(nodus->rotatio, a->rotatio);
+            frange;
+        }
+        spatium = c->claves[k + I].tempus - initium;
+        si (lenitas == LENITAS_TENET)
+        {
+            si (spatium > 2.0f * PLASTICA_MOTUS_TENET_MARGO)
+            {
+                instantia[n].clavis = k;
+                instantia[n].pondus = 0.0f;
+                instantia[n].tempus  =
+                    c->claves[k + I].tempus
+                        - PLASTICA_MOTUS_TENET_MARGO;
+                n++;
+            }
+            perge;
+        }
+        si (lenitas == LENITAS_NULLA || lenitas == LENITAS_LINEARIS)
+        {
+            perge;
+        }
+        per (j = I; ; j++)
+        {
+            f32 t = (f32)j / (f32)PLASTICA_MOTUS_FREQUENTIA;
 
-            v[ZEPHYRUM]  = q.x;
-            v[I]         = q.y;
-            v[II]        = q.z;
-            v[III]       = q.w;
+            si (!(t < spatium - INSTANTIS_MARGO))
+            {
+                frange;
+            }
+            instantia[n].clavis = k;
+            instantia[n].pondus = _lenire(lenitas, t / spatium);
+            instantia[n].tempus = initium + t;
+            n++;
         }
-        alioquin si (tactum == TACTA_SCALA)
-        {
-            b32 tacta = (a->tacta & TACTA_SCALA) != ZEPHYRUM;
+    }
+    *exitus   = instantia;
+    *numerus  = n;
+    redde VERUM;
+}
 
-            v[ZEPHYRUM]  = nodus->scala.x
-                * (tacta ? a->scala[ZEPHYRUM] : 1.0f);
-            v[I]         = nodus->scala.y
-                * (tacta ? a->scala[I] : 1.0f);
-            v[II]        = nodus->scala.z
-                * (tacta ? a->scala[II] : 1.0f);
-        }
-        alioquin
+/* valor articuli j in clave k: rotatio IV, aliter III */
+interior vacuum
+_valor_clavis (
+     constans Motor* m,
+    constans Cyclus* c,
+                i32  j,
+                i32  tactum,
+                i32  k,
+                f32* v)
+{
+    constans StatuaNodus* nodus  = &m->basis->nodi[m->articuli[j]];
+          constans Artus* a      =
+              &m->positurae[c->claves[k].positura].artus[j];
+
+    si (tactum == TACTA_ROTATIO)
+    {
+        StereometriaQuaternio q =
+            _rotatio_articuli(nodus->rotatio, a->rotatio);
+
+        v[ZEPHYRUM]  = q.x;
+        v[I]         = q.y;
+        v[II]        = q.z;
+        v[III]       = q.w;
+    }
+    alioquin si (tactum == TACTA_SCALA)
+    {
+        b32 tacta = (a->tacta & TACTA_SCALA) != ZEPHYRUM;
+
+        v[ZEPHYRUM]  = nodus->scala.x
+            * (tacta ? a->scala[ZEPHYRUM] : 1.0f);
+        v[I]   = nodus->scala.y * (tacta ? a->scala[I] : 1.0f);
+        v[II]  = nodus->scala.z * (tacta ? a->scala[II] : 1.0f);
+    }
+    alioquin
+    {
+        v[ZEPHYRUM]  = nodus->translatio.x + a->motus[ZEPHYRUM];
+        v[I]         = nodus->translatio.y + a->motus[I];
+        v[II]        = nodus->translatio.z + a->motus[II];
+    }
+}
+
+/* inter valores duos: rotatio per sphaeram, aliter linealiter */
+interior vacuum
+_miscere (
+             i32  tactum,
+    constans f32* a,
+    constans f32* b,
+             f32  pondus,
+             f32* exitus)
+{
+    si (tactum == TACTA_ROTATIO)
+    {
+        StereometriaQuaternio p;
+        StereometriaQuaternio q;
+
+        p.x               = a[ZEPHYRUM];
+        p.y               = a[I];
+        p.z               = a[II];
+        p.w               = a[III];
+        q.x               = b[ZEPHYRUM];
+        q.y               = b[I];
+        q.z               = b[II];
+        q.w               = b[III];
+        p                 = stereometria_quaternio_slerp(p, q, pondus);
+        exitus[ZEPHYRUM]  = p.x;
+        exitus[I]         = p.y;
+        exitus[II]        = p.z;
+        exitus[III]       = p.w;
+    }
+    alioquin
+    {
+        i32 k;
+
+        per (k = ZEPHYRUM; k < III; k++)
         {
-            v[ZEPHYRUM]  = nodus->translatio.x + a->motus[ZEPHYRUM];
-            v[I]         = nodus->translatio.y + a->motus[I];
-            v[II]        = nodus->translatio.z + a->motus[II];
+            exitus[k] = a[k] + (b[k] - a[k]) * pondus;
         }
+    }
+}
+
+/* valor canalis cocti ad tempus (inter claves eius) */
+interior vacuum
+_aestimare (
+    constans StatuaCanalis* canalis,
+                       i32  tactum,
+                       f32  tempus,
+                       f32* exitus)
+{
+    i32 lata  = tactum == TACTA_ROTATIO ? IV : III;
+    i32 k     = ZEPHYRUM;
+
+    dum (   k + II < canalis->clavium
+         && canalis->tempora[k + I] <= tempus)
+    {
+        k++;
+    }
+    _miscere(tactum, canalis->valores + k * lata,
+        canalis->valores + (k + I) * lata,
+        (tempus - canalis->tempora[k])
+            / (canalis->tempora[k + I] - canalis->tempora[k]),
+        exitus);
+}
+
+/* canalem tot secundis serius: claves eaedem motae. Circulus:
+ * trans suturam, cum valore ad 0 et ad durationem qui 'mora' ante
+ * suturam erat. Cyclus semel: positura prima exspectat, claves ultra
+ * durationem omittuntur */
+interior b32
+_moram_applicare (
+              Motor* m,
+    constans Cyclus* c,
+                i32  tactum,
+                f32  mora,
+      StatuaCanalis* canalis)
+{
+     i32  lata     = tactum == TACTA_ROTATIO ? IV : III;
+     i32  veteres  = canalis->clavium;
+     f32* tempora   = (f32*)piscina_allocare(m->piscina,
+         (memoriae_index)(veteres + II) * magnitudo(f32));
+     f32* valores   = (f32*)piscina_allocare(m->piscina,
+         (memoriae_index)(veteres + II) * lata * magnitudo(f32));
+     f32 finis     = c->duratio;
+     f32 ultimus[IV];
+     i32 n         = ZEPHYRUM;
+     i32 k;
+     i32 transitus;
+
+
+    si (!tempora || !valores)
+    {
+        redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
+    }
+    /* valor ad durationem; in circulo etiam ad 0 (sutura clausa) */
+    _aestimare(canalis, tactum, finis - mora, ultimus);
+    tempora[n] = 0.0f;
+    memcpy(valores, c->circularis ? ultimus : canalis->valores,
+        lata * magnitudo(f32));
+    n++;
+    /* transitus 0: claves trans suturam latae (circulus solus);
+     * transitus I: ceterae. Clavis ultima ad durationem stat: mota
+     * semper extra cadit */
+    per (transitus = c->circularis ? ZEPHYRUM : I; transitus < II;
+        transitus++)
+    {
+        per (k = ZEPHYRUM; k + I < veteres; k++)
+        {
+            f32 t = canalis->tempora[k] + mora
+                - (transitus ? 0.0f : finis);
+
+            si (t > SUTURAE_MARGO && t < finis - SUTURAE_MARGO)
+            {
+                tempora[n] = t;
+                memcpy(valores + n * lata,
+                    canalis->valores + k * lata,
+                    lata * magnitudo(f32));
+                n++;
+            }
+        }
+    }
+    tempora[n] = finis;
+    memcpy(valores + n * lata, ultimus, lata * magnitudo(f32));
+    n++;
+    canalis->clavium = n;
+    canalis->tempora = tempora;
+    canalis->valores = valores;
+    redde VERUM;
+}
+
+/* canalis unus: articulus j, proprietas, clavis ad quodque instans */
+interior b32
+_canalem_coquere (
+                Motor* m,
+      constans Cyclus* c,
+     constans Instans* instantia,
+                  i32  numerus,
+                  i32  j,
+                  i32  tactum,
+        StatuaCanalis* canalis)
+{
+    i32 lata = tactum == TACTA_ROTATIO ? IV : III;
+    i32 k;
+
+    canalis->nodus       = (s32)m->articuli[j];
+    canalis->proprietas  = tactum == TACTA_ROTATIO ? STATUA_ROTATIO
+        : tactum == TACTA_SCALA ? STATUA_SCALA : STATUA_TRANSLATIO;
+    canalis->gradatim  = FALSUM;
+    canalis->clavium   = numerus;
+    canalis->tempora     = (f32*)piscina_allocare(m->piscina,
+        numerus * magnitudo(f32));
+    canalis->valores     = (f32*)piscina_allocare(m->piscina,
+        numerus * lata * magnitudo(f32));
+    si (!canalis->tempora || !canalis->valores)
+    {
+        redde _recusare(m, ZEPHYRUM, "out of memory", NIHIL, NIHIL);
+    }
+    per (k = ZEPHYRUM; k < numerus; k++)
+    {
+        f32* v = canalis->valores + k * lata;
+
+        canalis->tempora[k] = instantia[k].tempus;
+        _valor_clavis(m, c, j, tactum, instantia[k].clavis, v);
+        si (instantia[k].pondus > 0.0f)
+        {
+            f32 sequens[IV];
+
+            _valor_clavis(m, c, j, tactum, instantia[k].clavis + I,
+                sequens);
+            _miscere(tactum, v, sequens, instantia[k].pondus, v);
+        }
+    }
+    si (c->morae[j] > 0.0f)
+    {
+        redde _moram_applicare(m, c, tactum, c->morae[j], canalis);
     }
     redde VERUM;
 }
@@ -1901,13 +2282,19 @@ _cyclum_coquere (
     hic_manens constans i32 TACTA[] = {
         TACTA_ROTATIO, TACTA_SCALA, TACTA_MOTUS
     };
-    i32 tacta[PLASTICA_ARTICULI_MAXIMI];
-    i32 canalium  = ZEPHYRUM;
-    i32 n         = ZEPHYRUM;
-    i32 j;
-    i32 k;
-    i32 a;
+    Instans* instantia;
+        i32  numerus;
+        i32  tacta[PLASTICA_ARTICULI_MAXIMI];
+        i32  canalium  = ZEPHYRUM;
+        i32  n         = ZEPHYRUM;
+        i32  j;
+        i32  k;
+        i32  a;
 
+    si (!_instantia_parare(m, c, &instantia, &numerus))
+    {
+        redde FALSUM;
+    }
     per (j = ZEPHYRUM; j < m->articulorum; j++)
     {
         tacta[j] = ZEPHYRUM;
@@ -1938,7 +2325,8 @@ _cyclum_coquere (
         per (a = ZEPHYRUM; a < III; a++)
         {
             si (   (tacta[j] & TACTA[a])
-                && !_canalem_coquere(m, c, j, TACTA[a],
+                && !_canalem_coquere(m, c, instantia, numerus, j,
+                TACTA[a],
                     &exitus->canales[n++]))
             {
                 redde FALSUM;

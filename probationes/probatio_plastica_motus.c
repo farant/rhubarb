@@ -2378,6 +2378,392 @@ _sectio_recusationes_membrorum (
     }
 }
 
+/* moderamina (plastica-motus-plan T7): lineae I-XI corpus pupae,
+ * XII-XVII positurae; cycli a linea XVIII. Nodi: 1 corpus,
+ * 3 bracchium, 5 caput */
+#define MODERAMINA_CAPUT \
+    PUPA_CORPUS \
+    "<positura titulus=\"p\">\n" \
+    "<art titulus=\"bracchium\" rotatio=\"0 0 90\"/>\n" \
+    "<art titulus=\"corpus\" motus=\"0 1 0\"/>\n" \
+    "</positura>\n" \
+    "<positura titulus=\"q\">\n" \
+    "<art titulus=\"bracchium\" rotatio=\"0 0 -45\"/>\n"
+#define MODERAMINA_CAPUT_II \
+    MODERAMINA_CAPUT "</positura>\n"
+#define CYCLUS_LENIS(titulus, cetera, lenitas, tempus) \
+    "<cyclus titulus=\"" titulus "\" duratio=\"1\" " cetera ">\n" \
+    "<clavis tempus=\"0\" positura=\"quies\" " lenitas "/>\n" \
+    "<clavis tempus=\"" tempus "\" positura=\"p\"/>\n" \
+    "</cyclus>\n"
+
+/* clavis k canalis rotationis: versio circa z tot graduum */
+#define Z_EST(canalis, k, gradus) \
+    fac { \
+        CREDO_F64_PROXIMUS ((f64)(canalis)->valores[(k) * IV + II], \
+            sin((gradus) * 3.14159265358979 / 360.0), 1.0e-4); \
+        CREDO_F64_PROXIMUS ((f64)(canalis)->valores[(k) * IV + III], \
+            cos((gradus) * 3.14159265358979 / 360.0), 1.0e-4); \
+    } dum (FALSUM)
+#define Y_EST(canalis, k, y) \
+    CREDO_F64_PROXIMUS ((f64)(canalis)->valores[(k) * III + I], (y), \
+        1.0e-4)
+#define TEMPUS_EST(canalis, k, t) \
+    CREDO_F64_PROXIMUS ((f64)(canalis)->tempora[k], (t), 1.0e-5)
+
+/* cycli: 0 le, 1 ac, 2 ta, 3 te, 4 li, 5 nu, 6 ci, 7 br, 8 tb,
+ * 9 mg */
+interior vacuum
+_sectio_lenitas (
+    CredoContextus* c)
+{
+    PlasticaFiguraFructus f = _lege(c,
+        MODERAMINA_CAPUT_II
+        CYCLUS_LENIS("le", "", "lenitas=\"lenis\"", "0.5")
+        CYCLUS_LENIS("ac", "", "lenitas=\"accelerat\"", "0.5")
+        CYCLUS_LENIS("ta", "", "lenitas=\"tardat\"", "0.5")
+        CYCLUS_LENIS("te", "", "lenitas=\"tenet\"", "0.5")
+        CYCLUS_LENIS("li", "", "lenitas=\"linearis\"", "0.5")
+        CYCLUS_LENIS("nu", "", "", "0.5")
+        "<cyclus titulus=\"ci\" duratio=\"1\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"p\" lenitas=\"lenis\"/>\n"
+        "</cyclus>\n"
+        CYCLUS_LENIS("br", "", "lenitas=\"lenis\"", "0.1")
+        CYCLUS_LENIS("tb", "", "lenitas=\"tenet\"", "0.0015")
+        "<cyclus titulus=\"mg\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.2\" positura=\"p\" lenitas=\"lenis\"/>\n"
+        "<clavis tempus=\"0.3\" positura=\"quies\"/>\n"
+        "</cyclus>\n"
+        "</figura>\n");
+    constans StatuaCanalis* motus;
+    constans StatuaCanalis* rotatio;
+              constans f64  LENIS[]      = { 0.104, 0.45007407, 0.896 };
+              constans f64  ACCELERAT[]  = { 0.04, 0.21777778, 0.64 };
+              constans f64  TARDAT[]     = { 0.36, 0.71555556, 0.96 };
+              constans f64* CURVAE[III];
+              constans i32  INDICES[]    = { III, VII, XII };
+                       i32  k;
+                       i32  j;
+
+    CURVAE[ZEPHYRUM]  = LENIS;
+    CURVAE[I]         = ACCELERAT;
+    CURVAE[II]        = TARDAT;
+    si (!f.successus)
+    {
+        printf("lenitas (linea %u): %.*s\n", (insignatus)f.linea,
+            (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+    }
+    CREDO_NECESSE (f.successus && f.statua->cyclorum == X);
+    /* tres curvae: spatium 0 .. 0.5 ad XXX per secundam sumitur
+     * (XIV instantia intra), deinde claves 0.5 et 1 */
+    per (k = ZEPHYRUM; k < III; k++)
+    {
+        motus    = _canalis(&f.statua->cycli[k], I, STATUA_TRANSLATIO);
+        rotatio  = _canalis(&f.statua->cycli[k], III, STATUA_ROTATIO);
+        CREDO_NECESSE (motus != NIHIL && rotatio != NIHIL);
+        CREDO_NECESSE (motus->clavium == XVII);
+        CREDO_NECESSE (rotatio->clavium == XVII);
+        CREDO_FALSUM (motus->gradatim);
+        TEMPUS_EST (motus, ZEPHYRUM, 0.0);
+        Y_EST (motus, ZEPHYRUM, 1.0);
+        Z_EST (rotatio, ZEPHYRUM, 0.0);
+        per (j = ZEPHYRUM; j < III; j++)
+        {
+            TEMPUS_EST (motus, INDICES[j], (f64)INDICES[j] / 30.0);
+            TEMPUS_EST (rotatio, INDICES[j], (f64)INDICES[j] / 30.0);
+            Y_EST (motus, INDICES[j], 1.0 + CURVAE[k][j]);
+            Z_EST (rotatio, INDICES[j], 90.0 * CURVAE[k][j]);
+        }
+        TEMPUS_EST (motus, XIV, 14.0 / 30.0);
+        TEMPUS_EST (motus, XV, 0.5);
+        Y_EST (motus, XV, 2.0);
+        Z_EST (rotatio, XV, 90.0);
+        TEMPUS_EST (motus, XVI, 1.0);
+        Y_EST (motus, XVI, 2.0);
+    }
+    /* tenet: positura tenetur usque ad I ms ante clavem sequentem;
+     * canalis linearis manet */
+    motus    = _canalis(&f.statua->cycli[III], I, STATUA_TRANSLATIO);
+    rotatio  = _canalis(&f.statua->cycli[III], III, STATUA_ROTATIO);
+    CREDO_NECESSE (motus != NIHIL && rotatio != NIHIL);
+    CREDO_NECESSE (motus->clavium == IV && rotatio->clavium == IV);
+    CREDO_FALSUM (motus->gradatim);
+    TEMPUS_EST (motus, I, 0.499);
+    Y_EST (motus, I, 1.0);
+    Z_EST (rotatio, I, 0.0);
+    TEMPUS_EST (motus, II, 0.5);
+    Y_EST (motus, II, 2.0);
+    Z_EST (rotatio, II, 90.0);
+    TEMPUS_EST (motus, III, 1.0);
+    /* linearis scripta = nulla: octeti iidem, claves III */
+    CREDO_VERUM (_cycli_pares(&f.statua->cycli[IV],
+        &f.statua->cycli[V]));
+    motus = _canalis(&f.statua->cycli[V], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (motus != NIHIL && motus->clavium == III);
+    CREDO_AEQUALIS_I32 ((i32)memcmp(motus->tempora,
+        _canalis(&f.statua->cycli[IV], I, STATUA_TRANSLATIO)->tempora,
+        III * magnitudo(f32)), ZEPHYRUM);
+    TEMPUS_EST (motus, I, 0.5);
+    Y_EST (motus, I, 2.0);
+    /* circulus: clavis ultima spatium ad suturam lenit */
+    motus = _canalis(&f.statua->cycli[VI], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (motus != NIHIL && motus->clavium == XVII);
+    TEMPUS_EST (motus, I, 0.5);
+    Y_EST (motus, I, 2.0);
+    TEMPUS_EST (motus, IV, 0.5 + 3.0 / 30.0);
+    Y_EST (motus, IV, 2.0 - 0.104);
+    TEMPUS_EST (motus, XVI, 1.0);
+    Y_EST (motus, XVI, 1.0);
+    /* spatium breve 0.1: instantia ad 1/30 et 2/30; 3/30 clavis
+     * ipsa est, non bis */
+    motus = _canalis(&f.statua->cycli[VII], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (motus != NIHIL && motus->clavium == V);
+    TEMPUS_EST (motus, II, 2.0 / 30.0);
+    Y_EST (motus, II, 1.0 + 0.74074074);
+    TEMPUS_EST (motus, III, 0.1);
+    Y_EST (motus, III, 2.0);
+    /* spatium tentum brevius quam II ms: clavis nulla additur */
+    motus = _canalis(&f.statua->cycli[VIII], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (motus != NIHIL);
+    CREDO_AEQUALIS_I32 (motus->clavium, III);
+    /* spatium 0.2 .. 0.3 (in f32 paulo plus quam 0.1): instans
+     * tertium in clavem sequentem caderet, non ponitur */
+    motus = _canalis(&f.statua->cycli[IX], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (motus != NIHIL);
+    CREDO_NECESSE (motus->clavium == VI);
+    TEMPUS_EST (motus, III, 0.2 + 2.0 / 30.0);
+    TEMPUS_EST (motus, IV, 0.3);
+    Y_EST (motus, IV, 1.0);
+}
+
+/* cycli: 0 cm, 1 om, 2 ml, 3 ex, 4 tr, 5 fs, 6 fi */
+interior vacuum
+_sectio_mora (
+    CredoContextus* c)
+{
+    PlasticaFiguraFructus f = _lege(c,
+        MODERAMINA_CAPUT
+        "<art titulus=\"caput\" rotatio=\"0 0 30\"/>\n"
+        "</positura>\n"
+        "<cyclus titulus=\"cm\" duratio=\"1\" circulus=\"verum\">\n"
+        "<mora titulus=\"bracchium\" tempus=\"0.1\"/>\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.25\" positura=\"p\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"q\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"om\" duratio=\"1\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.25\" positura=\"p\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"q\"/>\n"
+        "<mora titulus=\"bracchium\" tempus=\"0.1\"/>\n"
+        "<mora titulus=\"corpus\" tempus=\"0.6\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"ml\" duratio=\"1\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\" lenitas=\"lenis\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"p\"/>\n"
+        "<mora titulus=\"bracchium\" tempus=\"0.1\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"ex\" duratio=\"1\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"p\"/>\n"
+        "<mora titulus=\"bracchium\" tempus=\"0.5\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"tr\" duratio=\"1\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.5\" positura=\"p\"/>\n"
+        "<clavis tempus=\"0.95\" positura=\"q\"/>\n"
+        "<mora titulus=\"bracchium\" tempus=\"0.1\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"fs\" duratio=\"0.29\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.081\" positura=\"p\"/>\n"
+        "<mora titulus=\"bracchium\" tempus=\"0.209\"/>\n"
+        "</cyclus>\n"
+        "<cyclus titulus=\"fi\" duratio=\"0.8\" circulus=\"verum\">\n"
+        "<clavis tempus=\"0\" positura=\"quies\"/>\n"
+        "<clavis tempus=\"0.09\" positura=\"p\"/>\n"
+        "<mora titulus=\"bracchium\" tempus=\"0.71\"/>\n"
+        "</cyclus>\n"
+        "</figura>\n");
+    constans StatuaCanalis* motus;
+    constans StatuaCanalis* rotatio;
+    constans StatuaCanalis* caput;
+
+    si (!f.successus)
+    {
+        printf("mora (linea %u): %.*s\n", (insignatus)f.linea,
+            (integer)f.error.mensura,
+            (constans character*)f.error.datum);
+    }
+    CREDO_NECESSE (f.successus && f.statua->cyclorum == VII);
+    /* circulus: claves bracchii 0.1 serius, trans suturam; ad 0 et
+     * ad durationem valor qui 0.1 ante suturam erat (inter -45 ad
+     * 0.5 et 0 ad 1: -9) */
+    rotatio = _canalis(&f.statua->cycli[ZEPHYRUM], III, STATUA_ROTATIO);
+    CREDO_NECESSE (rotatio != NIHIL && rotatio->clavium == V);
+    TEMPUS_EST (rotatio, ZEPHYRUM, 0.0);
+    Z_EST (rotatio, ZEPHYRUM, -9.0);
+    TEMPUS_EST (rotatio, I, 0.1);
+    Z_EST (rotatio, I, 0.0);
+    TEMPUS_EST (rotatio, II, 0.35);
+    Z_EST (rotatio, II, 90.0);
+    TEMPUS_EST (rotatio, III, 0.6);
+    Z_EST (rotatio, III, -45.0);
+    TEMPUS_EST (rotatio, IV, 1.0);
+    Z_EST (rotatio, IV, -9.0);
+    /* articuli sine mora intacti */
+    caput = _canalis(&f.statua->cycli[ZEPHYRUM], V, STATUA_ROTATIO);
+    motus = _canalis(&f.statua->cycli[ZEPHYRUM], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (caput != NIHIL && caput->clavium == IV);
+    CREDO_NECESSE (motus != NIHIL && motus->clavium == IV);
+    TEMPUS_EST (caput, I, 0.25);
+    TEMPUS_EST (caput, II, 0.5);
+    Z_EST (caput, II, 30.0);
+    TEMPUS_EST (motus, I, 0.25);
+    Y_EST (motus, I, 2.0);
+    /* cyclus semel: articulus in positura prima exspectat; clavis
+     * quae ultra durationem caderet omittitur, ad durationem valor
+     * interpolatus */
+    rotatio = _canalis(&f.statua->cycli[I], III, STATUA_ROTATIO);
+    CREDO_NECESSE (rotatio != NIHIL && rotatio->clavium == V);
+    TEMPUS_EST (rotatio, ZEPHYRUM, 0.0);
+    Z_EST (rotatio, ZEPHYRUM, 0.0);
+    TEMPUS_EST (rotatio, I, 0.1);
+    Z_EST (rotatio, I, 0.0);
+    TEMPUS_EST (rotatio, II, 0.35);
+    Z_EST (rotatio, II, 90.0);
+    TEMPUS_EST (rotatio, III, 0.6);
+    Z_EST (rotatio, III, -45.0);
+    TEMPUS_EST (rotatio, IV, 1.0);
+    Z_EST (rotatio, IV, -45.0);
+    motus = _canalis(&f.statua->cycli[I], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (motus != NIHIL && motus->clavium == IV);
+    Y_EST (motus, ZEPHYRUM, 1.0);
+    TEMPUS_EST (motus, I, 0.6);
+    Y_EST (motus, I, 1.0);
+    TEMPUS_EST (motus, II, 0.85);
+    Y_EST (motus, II, 2.0);
+    TEMPUS_EST (motus, III, 1.0);
+    Y_EST (motus, III, 1.4);
+    /* mora cum lenitate: instantia lenita ipsa moventur */
+    rotatio = _canalis(&f.statua->cycli[II], III, STATUA_ROTATIO);
+    CREDO_NECESSE (rotatio != NIHIL && rotatio->clavium == XVIII);
+    Z_EST (rotatio, ZEPHYRUM, 18.0);
+    TEMPUS_EST (rotatio, I, 0.1);
+    Z_EST (rotatio, I, 0.0);
+    TEMPUS_EST (rotatio, IV, 0.1 + 3.0 / 30.0);
+    Z_EST (rotatio, IV, 90.0 * 0.104);
+    TEMPUS_EST (rotatio, XVI, 0.6);
+    Z_EST (rotatio, XVI, 90.0);
+    TEMPUS_EST (rotatio, XVII, 1.0);
+    Z_EST (rotatio, XVII, 18.0);
+    motus = _canalis(&f.statua->cycli[II], I, STATUA_TRANSLATIO);
+    CREDO_NECESSE (motus != NIHIL && motus->clavium == XVII);
+    /* clavis mota in suturam ipsam cadit: semel */
+    rotatio = _canalis(&f.statua->cycli[III], III, STATUA_ROTATIO);
+    CREDO_NECESSE (rotatio != NIHIL && rotatio->clavium == III);
+    Z_EST (rotatio, ZEPHYRUM, 90.0);
+    TEMPUS_EST (rotatio, I, 0.5);
+    Z_EST (rotatio, I, 0.0);
+    TEMPUS_EST (rotatio, II, 1.0);
+    Z_EST (rotatio, II, 90.0);
+    /* clavis trans suturam lata: 0.95 + 0.1 ad 0.05 venit */
+    rotatio = _canalis(&f.statua->cycli[IV], III, STATUA_ROTATIO);
+    CREDO_NECESSE (rotatio != NIHIL && rotatio->clavium == V);
+    Z_EST (rotatio, ZEPHYRUM, -30.0);
+    TEMPUS_EST (rotatio, I, 0.05);
+    Z_EST (rotatio, I, -45.0);
+    TEMPUS_EST (rotatio, II, 0.1);
+    Z_EST (rotatio, II, 0.0);
+    TEMPUS_EST (rotatio, III, 0.6);
+    Z_EST (rotatio, III, 90.0);
+    TEMPUS_EST (rotatio, IV, 1.0);
+    Z_EST (rotatio, IV, -30.0);
+    /* summa in f32 gradu uno SUPRA durationem (0.081 + 0.209) et
+     * INFRA (0.09 + 0.71): clavis in sutura semel, non bis */
+    rotatio = _canalis(&f.statua->cycli[V], III, STATUA_ROTATIO);
+    CREDO_NECESSE (rotatio != NIHIL);
+    CREDO_AEQUALIS_I32 (rotatio->clavium, III);
+    rotatio = _canalis(&f.statua->cycli[VI], III, STATUA_ROTATIO);
+    CREDO_NECESSE (rotatio != NIHIL);
+    CREDO_AEQUALIS_I32 (rotatio->clavium, III);
+}
+
+#define CYCLUS_R(attributa, corpus) \
+    MODERAMINA_CAPUT_II \
+    "<cyclus titulus=\"c\" duratio=\"1\" " attributa ">\n" \
+    "<clavis tempus=\"0\" positura=\"quies\"/>\n" corpus \
+    "</cyclus>\n" CAUDA
+#define CLAVIS_P(tempus, cetera) \
+    "<clavis tempus=\"" tempus "\" positura=\"p\" " cetera "/>\n"
+#define MORA(attributa)  "<mora " attributa "/>\n"
+
+/* cyclus linea XVIII, clavis prima XIX, sequentia a XX */
+interior vacuum
+_sectio_recusationes_moderaminum (
+    CredoContextus* c)
+{
+    hic_manens constans Recusatio R[] = {
+        /* lenitas */
+        { CYCLUS_R("circulus=\"verum\"",
+          CLAVIS_P("0.5", "lenitas=\"mollis\"")), XX,
+          "must be 'linearis'" },
+
+        { CYCLUS_R("", CLAVIS_P("0.5", "lenitas=\"lenis\"")), XX,
+          "nothing follows" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          CLAVIS_P("1", "lenitas=\"linearis\"")), XXI,
+          "nothing follows" },
+        /* mora: attributa */
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("tempus=\"0.1\"")), XXI, "'titulus'" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"bracchium\"")), XXI, "'tempus'" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"bracchium\" tempus=\"x\"")), XXI,
+          "'tempus'" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"bracchium\" tempus=\"0\"")), XXI,
+          "'tempus'" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"bracchium\" tempus=\"-0.1\"")), XXI,
+          "'tempus'" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"bracchium\" tempus=\"1\"")), XXI,
+          "'tempus'" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"bracchium\" tempus=\"0.1\" modus=\"a\"")),
+          XXI, "'modus'" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          "<mora titulus=\"bracchium\" tempus=\"0.1\"><art/></mora>\n"),
+          XXI, "cannot hold" },
+        /* mora: articulus */
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"cauda\" tempus=\"0.1\"")), XXI,
+          "unknown joint 'cauda'" },
+        { CYCLUS_R("", MORA("titulus=\"caput\" tempus=\"0.1\"")
+          CLAVIS_P("0.5", "")), XX, "'caput' is not moved" },
+        { CYCLUS_R("", CLAVIS_P("0.5", "")
+          MORA("titulus=\"bracchium\" tempus=\"0.1\"")
+          MORA("titulus=\"corpus\" tempus=\"0.1\"")
+          MORA("titulus=\"bracchium\" tempus=\"0.2\"")), XXIII,
+          "'bracchium' twice" },
+        /* elementum ignotum in cyclo */
+        { CYCLUS_R("", CLAVIS_P("0.5", "") "<art/>\n"), XXI,
+          "<clavis>, <momentum> and <mora>, got <art>" }
+    };
+
+    _recusationes_probare(c, R, (i32)(magnitudo(R) / magnitudo(R[0])));
+    /* circulus: lenitas in clave ultima licet (spatium ad suturam);
+     * mora paulo minor duratione licet */
+    CREDO_VERUM (_lege(c, CYCLUS_R("circulus=\"verum\"",
+        CLAVIS_P("0.5", "lenitas=\"lenis\"")
+        MORA("titulus=\"bracchium\" tempus=\"0.99\""))).successus);
+}
+
 hic_manens constans CredoSectio SECTIONES[] = {
     { "cycli", _sectio_cycli, NIHIL, NIHIL, NIHIL, NIHIL },
     { "positura", _sectio_positura, NIHIL, NIHIL, NIHIL, NIHIL },
@@ -2403,6 +2789,10 @@ hic_manens constans CredoSectio SECTIONES[] = {
       NIHIL },
     { "recusationes_membrorum", _sectio_recusationes_membrorum, NIHIL,
       NIHIL, NIHIL, NIHIL },
+    { "lenitas", _sectio_lenitas, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "mora", _sectio_mora, NIHIL, NIHIL, NIHIL, NIHIL },
+    { "recusationes_moderaminum", _sectio_recusationes_moderaminum,
+      NIHIL, NIHIL, NIHIL, NIHIL },
     { NIHIL, NIHIL, NIHIL, NIHIL, NIHIL, NIHIL }
 };
 

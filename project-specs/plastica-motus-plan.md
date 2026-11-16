@@ -399,6 +399,15 @@ constant); a cycle with neither dial bakes exactly as in task 2.
 - [ ] Plants, each red.
 - [ ] Commit on Fran's word.
 
+**As built (2026-11-16).** As the header Fran approved: five
+`lenitas` values (the plan had three; `accelerat` and `tardat`
+added), `<mora>` per joint per cycle. A held stretch bakes as one
+repeated key 1 ms before the next, not as a step channel (a channel
+is step or linear as a whole). Eased stretches sample at 30 per
+second (`PLASTICA_MOTUS_FREQUENTIA`). Motus suite 20 sections. 68
+plants, all red. Goblin and slime polished and rebuilt. Details in
+`lib/plastica_motus.worklog.md`.
+
 ### Task 8: names and moments through the GLB; the boar; close
 
 - [ ] Header text to Fran (the reader's and writer's changed
